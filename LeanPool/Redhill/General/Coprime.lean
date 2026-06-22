@@ -298,6 +298,18 @@ lemma Yp1_le_U : Y F + 1 ≤ U n F :=
     _ ≤ 10 * Y F ^ 3 + 1 := by gcongr; exact Nat.le_pow zero_lt_three
     _ ≤ _ := tenY3p1_le_U
 
+private lemma rough_VW_v {B : ℕ} (hB : B ≤ U n F) :
+    ∀ {d}, 3 ≤ d → d ∣ (VW n F).v → B < d := fun lf df ↦ by
+  have := (VW n F).not_dvd
+  contrapose! df
+  exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans hB⟩)).1
+
+private lemma rough_VW_w {B : ℕ} (hB : B ≤ U n F) :
+    ∀ {d}, 3 ≤ d → d ∣ (VW n F).w → B < d := fun lf df ↦ by
+  have := (VW n F).not_dvd
+  contrapose! df
+  exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans hB⟩)).2
+
 lemma isCoprime_natAdd_natAdd {i j : Fin 6} (hij : i < j) :
     ∀ᶠ h in atTop, IsCoprime (tup n F h (natAdd n i)) (tup n F h (natAdd n j)) := by
   fin_cases i <;> simp only [reduceFinMk] at *
@@ -305,40 +317,16 @@ lemma isCoprime_natAdd_natAdd {i j : Fin 6} (hij : i < j) :
     obtain rfl | rfl | rfl | rfl | rfl : j = 1 ∨ j = 2 ∨ j = 3 ∨ j = 4 ∨ j = 5 := by lia
     · simp_rw [tup_natAdd_one, neg_right_iff, Nat.isCoprime_iff_coprime]
       exact .of_forall fun _ ↦ VWPair.of_coprime U_pos le_rfl
-    · refine isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).1
-    · refine isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).1
-    · refine isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
-    · refine isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
+    · exact isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).v) (rough_VW_v tenY3p1_le_U)
+    · exact isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).v) (rough_VW_v tenYm1_le_U)
+    · exact isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).v) (rough_VW_v Yp1_le_U)
+    · exact isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).v) (rough_VW_v Yp1_le_U)
   · simp_rw [tup_natAdd_one, neg_left_iff]
     obtain rfl | rfl | rfl | rfl : j = 2 ∨ j = 3 ∨ j = 4 ∨ j = 5 := by lia
-    · refine isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).2
-    · refine isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).2
-    · refine isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
-    · refine isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
-      contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
+    · exact isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).w) (rough_VW_w tenY3p1_le_U)
+    · exact isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).w) (rough_VW_w tenYm1_le_U)
+    · exact isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).w) (rough_VW_w Yp1_le_U)
+    · exact isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).w) (rough_VW_w Yp1_le_U)
   · obtain rfl | rfl | rfl : j = 3 ∨ j = 4 ∨ j = 5 := by lia
     exacts [isCoprime_natAdd_two_three, isCoprime_natAdd_two_four, isCoprime_natAdd_two_five]
   · obtain rfl | rfl : j = 4 ∨ j = 5 := by lia
@@ -354,6 +342,12 @@ lemma primeChain_mem_Icc {i : Fin n} : primeChain (100 * Y F ^ 6) i.1 ∈ Finset
       _ ≤ _ := by gcongr; exact Nat.one_le_pow _ _ Y_pos
   · exact Finset.single_le_sum_of_canonicallyOrdered (by simp_all)
 
+private lemma rough_primeChain {B k : ℕ} (hB : B ≤ 100 * Y F ^ 6) :
+    ∀ {d}, 3 ≤ d → d ∣ primeChain (100 * Y F ^ 6) k → B < d := fun lf df ↦ by
+  rw [Nat.dvd_prime_two_le prime_primeChain (by lia)] at df
+  subst df
+  exact primeChain_gt.trans_le' hB
+
 lemma isCoprime_castAdd_natAdd {i : Fin n} {j : Fin 6} :
     ∀ᶠ h in atTop, IsCoprime (tup n F h (castAdd 6 i)) (tup n F h (natAdd n j)) := by
   simp_rw [tup_castAdd]
@@ -365,40 +359,28 @@ lemma isCoprime_castAdd_natAdd {i : Fin n} {j : Fin 6} :
     rw [tup_natAdd_one, neg_right_iff, Nat.isCoprime_iff_coprime,
       prime_primeChain.coprime_iff_not_dvd]
     exact ((VW n F).not_dvd _ primeChain_mem_Icc).2
-  · refine isCoprime_natAdd_two_of_rough
-      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) fun {f} lf df ↦ ?_
-    rw [Nat.dvd_prime_two_le prime_primeChain (by lia)] at df
-    subst f
-    apply primeChain_gt.trans_le'
-    calc
-      _ ≤ 11 * Y F ^ 3 := by
-        rw [show 11 = 10 + 1 by rfl, add_one_mul]
-        exact add_le_add_right (Nat.one_le_pow _ _ Y_pos) _
-      _ ≤ _ := by gcongr <;> grind [Y_pos]
-  · refine isCoprime_natAdd_three_of_rough
-      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) fun {f} lf df ↦ ?_
-    rw [Nat.dvd_prime_two_le prime_primeChain (by lia)] at df
-    subst f
-    apply primeChain_gt.trans_le'
-    calc
-      _ ≤ 11 * Y F ^ 1 := by grind [Y_pos]
-      _ ≤ _ := by gcongr <;> grind [Y_pos]
-  · refine isCoprime_natAdd_four_of_rough
-      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) fun {f} lf df ↦ ?_
-    rw [Nat.dvd_prime_two_le prime_primeChain (by lia)] at df
-    subst f
-    apply primeChain_gt.trans_le'
-    calc
-      _ ≤ 2 * Y F ^ 1 := by grind [Y_pos]
-      _ ≤ _ := by gcongr <;> grind [Y_pos]
-  · refine isCoprime_natAdd_five_of_rough
-      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) fun {f} lf df ↦ ?_
-    rw [Nat.dvd_prime_two_le prime_primeChain (by lia)] at df
-    subst f
-    apply primeChain_gt.trans_le'
-    calc
-      _ ≤ 2 * Y F ^ 1 := by grind [Y_pos]
-      _ ≤ _ := by gcongr <;> grind [Y_pos]
+  · exact isCoprime_natAdd_two_of_rough
+      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) (rough_primeChain (by
+        calc
+          _ ≤ 11 * Y F ^ 3 := by
+            rw [show 11 = 10 + 1 by rfl, add_one_mul]
+            exact add_le_add_right (Nat.one_le_pow _ _ Y_pos) _
+          _ ≤ _ := by gcongr <;> grind [Y_pos]))
+  · exact isCoprime_natAdd_three_of_rough
+      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) (rough_primeChain (by
+        calc
+          _ ≤ 11 * Y F ^ 1 := by grind [Y_pos]
+          _ ≤ _ := by gcongr <;> grind [Y_pos]))
+  · exact isCoprime_natAdd_four_of_rough
+      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) (rough_primeChain (by
+        calc
+          _ ≤ 2 * Y F ^ 1 := by grind [Y_pos]
+          _ ≤ _ := by gcongr <;> grind [Y_pos]))
+  · exact isCoprime_natAdd_five_of_rough
+      (Q := fun F ↦ primeChain (100 * Y F ^ 6) _) (rough_primeChain (by
+        calc
+          _ ≤ 2 * Y F ^ 1 := by grind [Y_pos]
+          _ ≤ _ := by gcongr <;> grind [Y_pos]))
 
 theorem pairwiseCoprime_tup : ∀ᶠ h in atTop, PairwiseCoprime (tup n F h) := by
   have cp₂' := @isCoprime_castAdd_natAdd n F

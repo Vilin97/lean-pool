@@ -20,7 +20,6 @@ open Nat Finset
 /-- The coefficient of `x^j` in the paper's `f_k(x)`. This is [OEIS A111125](https://oeis.org/A111125). -/
 def C (k j : ℕ) : ℕ :=
   (k + j).choose (2 * j) + 2 * (k + j).choose (2 * j + 1)
-  -- (k + j).choose (2 * j) * (2 * k + 1) / (2 * j + 1)
 
 section
 

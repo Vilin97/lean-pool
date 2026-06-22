@@ -327,13 +327,9 @@ lemma maxAbs_tup : ∀ᶠ h in Filter.atTop, maxAbs (tup n F h) = (X F h + Y F) 
   | right i =>
     fin_cases i <;> simp only [reduceFinMk]
     · rw [tup_natAdd_zero, Int.natAbs_natCast]
-      calc
-        _ ≤ X F h + Y F := by grind [tailK]
-        _ ≤ _ := le_pow (by decide)
+      exact (le_pow (by decide)).trans' (by grind [tailK])
     · rw [tup_natAdd_one, Int.natAbs_neg, Int.natAbs_natCast]
-      calc
-        _ ≤ X F h + Y F := by grind [tailK]
-        _ ≤ _ := le_pow (by decide)
+      exact (le_pow (by decide)).trans' (by grind [tailK])
     · rw [tup_natAdd_two]
       apply (b₁_upper_bound hh).trans
       rw [pow_succ' _ 4]
