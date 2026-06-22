@@ -54,9 +54,6 @@ def coeQ : FloatRep C → ℚ
   let s := if b then -1 else 1
   s * (m / C.prec + 1) * 2^e
 
---instance : Coe (FloatRep C) ℚ where
-  --coe := coeQ
-
 lemma coe_q_false_pos {e : ℤ} {m : ℕ} :
   0 < coeQ (⟨false, e, m⟩ : FloatRep C) := by
   simp only [coeQ, Bool.false_eq_true, ↓reduceIte, one_mul]
@@ -85,9 +82,7 @@ lemma neg_valid_m {f : FloatRep C} :
 
 lemma coe_q_of_neg (f : FloatRep C) :
   coeQ (FloatRep.neg f) = -coeQ f:= by
-  by_cases h : f.s <;> simp [coeQ, h, FloatRep.neg]
-  · ring
-  ring
+  by_cases h : f.s <;> simp [coeQ, h, FloatRep.neg] <;> ring
 
 
 lemma neg_false (e : ℤ) (m : ℕ) : ⟨true, e, m⟩ = (FloatRep.neg ⟨false, e, m⟩ : FloatRep C) := rfl

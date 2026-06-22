@@ -24,15 +24,12 @@ def roundsub [R : Rounding] (q : ℚ) : SubnormRep C :=
   subnormalRound (roundFunction R) q
 
 lemma subnormal_roundsub_valid [R : Rounding] :
-  ValidSubnormalRounding (roundsub : ℚ → SubnormRep C) := by
-  unfold roundsub
-  apply subnormal_round_valid
+  ValidSubnormalRounding (roundsub : ℚ → SubnormRep C) :=
+  subnormal_round_valid (roundFunction R)
 
 lemma subnormal_roundsub_coe [R : Rounding] (s : SubnormRep C) (h : s.nonzero) :
-  roundsub (subnormalToQ s) = s := by
-  unfold roundsub
-  apply subnormal_round_coe
-  exact h
+  roundsub (subnormalToQ s) = s :=
+  subnormal_round_coe (roundFunction R) h
 
 /-- A floating-point number of the format `C`: a signed infinity, `NaN`, a valid
 normal representation, or a valid subnormal representation. -/
@@ -231,7 +228,6 @@ lemma to_float_to_rat [R : Rounding] (f : Flean.Float C) (finite : f.IsFinite)
     (nonzero : ¬f.IsZero) :
   toFloat (toRat f) = f := by
   simp only [Flean.Float.IsFinite, Bool.false_eq_true] at finite
-  --simp [Flean.Float.IsZero] at nonzero
   rcases f with _ | _ | ⟨f, ve, vm⟩ | ⟨sm, vm⟩
   <;> simp only at finite nonzero
   · have : coeQ f ≠ 0 := by
@@ -410,7 +406,6 @@ lemma float_le_float_of [R : Rounding] (q1 q2 : ℚ)
   (h1 : (toFloat (C := C) q1).IsFinite)
   (h2 : (toFloat (C := C) q2).IsFinite) (h : q1 ≤ q2) :
   toRat (toFloat (C := C) q1) ≤ toRat (toFloat (C := C) q2) := by
-  --let motive (x y : Flean.Float C) := toRat x ≤ toRat y
   by_cases h' : q1 = q2
   · rw [h']
   rcases splitIsFinite (h := h1) with ⟨q1_small, h1⟩ | ⟨q1_large, h1⟩
@@ -634,9 +629,8 @@ lemma to_float_in_range [R : Rounding] {q : ℚ} (h : |q| ≤ maxFloatQ C) :
 
 lemma float_error' [R : Rounding] (q : ℚ) (h : |q| ≤ maxFloatQ C) :
   |toRat (toFloat (C := C) q) - q|
-    ≤ max ((2 : ℚ)^C.emin / C.prec) (2 ^ (Int.log 2 |q|) / C.prec) := by
-  apply float_error
-  apply to_float_in_range h
+    ≤ max ((2 : ℚ)^C.emin / C.prec) (2 ^ (Int.log 2 |q|) / C.prec) :=
+  float_error q (to_float_in_range h)
 
 lemma float_nearest_error (q : ℚ) (h : (toFloatNearest (C := C) q).IsFinite) :
   |q - toRat (toFloatNearest (C := C) q)|

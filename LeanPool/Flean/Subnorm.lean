@@ -29,16 +29,13 @@ def SubnormRep.neg (f : SubnormRep C) : SubnormRep C :=
   ⟨¬f.s, f.m⟩
 
 lemma neg_subnorm_involutive : Function.Involutive (@SubnormRep.neg C) := by
-  unfold Function.Involutive
-  simp [SubnormRep.neg]
+  simp [Function.Involutive, SubnormRep.neg]
 
 /-- A subnormal representation is nonzero when its mantissa is nonzero. -/
 def SubnormRep.nonzero (f : SubnormRep C) : Prop := f.m ≠ 0
 
 lemma subnorm_neg_nonzero {f : SubnormRep C} (h : f.nonzero) :
-  (f.neg).nonzero := by
-  simp only [SubnormRep.nonzero, ne_eq, SubnormRep.neg, Bool.not_eq_true, Bool.decide_eq_false] at *
-  exact h
+  (f.neg).nonzero := h
 
 /-- The rational value represented by a subnormal representation. -/
 def subnormalToQ : SubnormRep C →  ℚ
@@ -98,7 +95,6 @@ def subnormalRoundDown (q : ℚ) : SubnormRep C :=
 lemma subnormal_round_coe (r : IntRounder) [rh : ValidRounder r]
   {s : SubnormRep C} (h : s.nonzero) :
   subnormalRound r (subnormalToQ s) = s := by
-  --rw [subnormalRound, subnormalToQ]
   wlog h' : s.s = false generalizing r s
   · have t1 := this (r := r.neg) (rh := (neg_valid_rounder r).2 rh) (subnorm_neg_nonzero h)
     have t2 : s.neg.s = false := by simp [SubnormRep.neg, h']

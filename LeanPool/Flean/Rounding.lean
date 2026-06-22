@@ -161,8 +161,7 @@ lemma roundf_valid (r : IntRounder) [rh : ValidRounder r] (q : ℚ) (h : q ≠ 0
   apply roundf_almost_valid (r := r) (h := h)
 
 lemma round_down_valid (q : ℚ) (h : q ≠ 0) :
-  (roundDown q : FloatRep C).validM := by
-  apply roundf_valid (r := round0) (h := h)
+  (roundDown q : FloatRep C).validM := roundf_valid round0 q h
 
 lemma roundf_of_pos (r : IntRounder) [rh : ValidRounder r] (q : ℚ) (h : 0 < q) :
   0 < coeQ (roundf r q : FloatRep C) := by
@@ -291,10 +290,7 @@ instance (R : Rounding) : ValidRounder (roundFunction R) := by
 def roundRep [R : Rounding] (q : ℚ) : FloatRep C := roundf (roundFunction R) q
 
 lemma round_rep_coe [R : Rounding] (f : FloatRep C) (h : f.validM) :
-  roundRep (coeQ f) = f := by
-  rw [roundRep]
-  apply roundf_coe
-  exact h
+  roundRep (coeQ f) = f := roundf_coe (roundFunction R) f h
 
 lemma round_valid_m [R : Rounding] (q : ℚ) (q_nezero : q ≠ 0) :
   (roundRep q : FloatRep C).validM := roundf_valid (roundFunction R) q q_nezero
@@ -338,9 +334,8 @@ lemma round_min_e (r : IntRounder) [rh : ValidRounder r] {q : ℚ} (h : q ≠ 0)
   linarith
 
 lemma round_min_e' [R : Rounding] (q : ℚ) (h : q ≠ 0) :
-  Int.log 2 |q| ≤ (roundRep q : FloatRep C).e := by
-  rw [roundRep]
-  apply round_min_e (r := roundFunction R) (h := h)
+  Int.log 2 |q| ≤ (roundRep q : FloatRep C).e :=
+  round_min_e (roundFunction R) h
 
 lemma convert_rep_strict_mono (q : ℚ) :
   StrictMono (fun (x : ℚ) => (1 + x / C.prec)*(2 : ℚ)^Int.log 2 |q|) := by
