@@ -112,8 +112,8 @@ theorem sHom_stalk_bijective_at
     have hab' : n • R.germ U x hxU s = m • R.germ U x hxU s :=
       h_left.symm.trans (hab.trans h_right)
     have h_i : n • i_x (R.germ U x hxU s) =
-        m • i_x (R.germ U x hxU s) := by
-      exact (map_zsmul i_x n _).symm.trans
+        m • i_x (R.germ U x hxU s) :=
+      (map_zsmul i_x n _).symm.trans
         ((congrArg i_x hab').trans (map_zsmul i_x m _))
     let genV := (TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x (hUV hxU)
       (TopCat.Sheaf.zeroOutsideInt.generator V)
@@ -398,8 +398,8 @@ theorem closedComplementVanishing
   let CY := ((TopCat.Sheaf.pullback AddCommGrpCat.{u} closedIncl).obj Csh)
   let S := closedImmersionSES (Z := Y) (hZ := hYcl) Csh
   have hSE := closedImmersionSES_shortExact (Z := Y) (hZ := hYcl) Csh
-  have hSX₁_zero : IsZero S.X₁ := by
-    exact sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
+  have hSX₁_zero : IsZero S.X₁ :=
+    sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
       · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
           change IsIso
@@ -491,19 +491,17 @@ theorem subsheaf_zeroOutsideInt_vanishing
   by_cases hR : IsZero (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
   · simpa using sheafH_subsingleton_of_isZero hR m
   · obtain ⟨V', hV'le, hV'ne, j, hj_mono, hj_stalk⟩ :=
-      (by
-        exact subsheaf_contains_zeroOutsideInt (R := R) hRsh i (by
-        intro hR0
-        exact hR (IsZero.of_full_of_faithful_of_isZero
+      subsheaf_contains_zeroOutsideInt (R := R) hRsh i (fun hR0 ↦
+        hR (IsZero.of_full_of_faithful_of_isZero
           (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
-          (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) hR0)))
+          (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) hR0))
     haveI : Mono j := hj_mono
     let jsh : TopCat.Sheaf.zeroOutsideInt V' ⟶
         (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk j
-    haveI : Mono jsh := by
-      exact (Sheaf.Hom.mono_iff_presheaf_mono
+    haveI : Mono jsh :=
+      (Sheaf.Hom.mono_iff_presheaf_mono
         (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) jsh).2
-          (inferInstanceAs (Mono j))
+        (inferInstanceAs (Mono j))
     let C : TopCat.Sheaf AddCommGrpCat.{u} X :=
       cokernel jsh
     have hC : Subsingleton (Sheaf.H C m) := by
@@ -527,10 +525,7 @@ theorem subsheaf_zeroOutsideInt_vanishing
           (G := (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X))
           (f := jsh) (x := x) (hf := (hj_stalk x hxV').2) b)
     exact subsingleton_sheafH_of_shortExact_middle jsh m
-      (zeroOutsideInt_cohomology_vanishing V' hV'ne ih m hm)
-      (by
-        change Subsingleton (Sheaf.H C m)
-        exact hC)
+      (zeroOutsideInt_cohomology_vanishing V' hV'ne ih m hm) hC
 
 /-- **Steps 3C + 4 + LES** (Hartshorne III.2.7): any locally surjective image of
     `zeroOutsideInt V` has vanishing cohomology in degree `m > dim X`. Uses third-term LES with
@@ -605,8 +600,8 @@ theorem irreducible_pos_vanishing
   have hKer : Subsingleton (Sheaf.H S.X₁ n) :=
     directLimit_cohomology_vanishing (K := S.X₁.obj) S.X₁.property n
       (fun {G} (hG : G.IsSheaf) {V}
-        (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G) hf => by
-        exact epiImage_zeroOutsideInt_vanishing_of_locallySurjective
+        (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G) hf =>
+        epiImage_zeroOutsideInt_vanishing_of_locallySurjective
           (V := V) (G := G) hG f hf ih n hn)
   exact subsingleton_sheafH_of_closedImmersion_middle
     (Z := Z) (hZ := hZ_closed) Fsh n

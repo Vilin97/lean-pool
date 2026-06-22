@@ -78,9 +78,8 @@ theorem isFlasque_filtered_colimit
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
   haveI : CreatesColimit F G :=
     createsFilteredColimit F
-  have hPres : PreservesColimit F G :=
+  haveI : PreservesColimit F G :=
     preservesColimit_of_createsColimit_and_hasColimit F G
-  letI : PreservesColimit F G := hPres
   intro U V i
   rw [AddCommGrpCat.epi_iff_surjective]
   intro b
@@ -312,8 +311,7 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
             (((sheafHFilteredColimitSuccEta Y').app j ≫
                 cokernel.π ((sheafHFilteredColimitSuccEta Y').app j)) ≫
               s.ι.app j) = c'.ι.app j ≫ 0
-          rw [cokernel.condition, zero_comp]
-          rw [comp_zero]
+          rw [cokernel.condition, zero_comp, comp_zero]
         exact hzero)
     fac := fun s j ↦ (cancel_epi (cokernel.π ((sheafHFilteredColimitSuccEta Y').app j))).mp (by
       let lifted := sheafH_filtered_colimit_succ_liftedCocone Y' s
@@ -322,8 +320,8 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
             cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ s.ι.app j := by
         simpa [lifted, sheafH_filtered_colimit_succ_liftedCocone, injCocone,
           sheafHFilteredColimitSuccInjCocone] using injColim.fac lifted j
-      have hι : ι' ≫ injColim.desc lifted = 0 := by
-        exact hc'.hom_ext fun k ↦ by
+      have hι : ι' ≫ injColim.desc lifted = 0 :=
+        hc'.hom_ext fun k ↦ by
           have hfac_lifted_k :
               injCocone.ι.app k ≫ injColim.desc lifted =
                 cokernel.π ((sheafHFilteredColimitSuccEta Y').app k) ≫ s.ι.app k := by
@@ -342,8 +340,7 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
               (((sheafHFilteredColimitSuccEta Y').app k ≫
                   cokernel.π ((sheafHFilteredColimitSuccEta Y').app k)) ≫
                 s.ι.app k) = c'.ι.app k ≫ 0
-            rw [cokernel.condition, zero_comp]
-            rw [comp_zero]
+            rw [cokernel.condition, zero_comp, comp_zero]
           exact hzero
       change (cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫
           qCocone.ι.app j) ≫ cokernel.desc ι' (injColim.desc lifted) _ =
@@ -366,8 +363,7 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
               cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j := by
           change injCocone.ι.app j ≫ cokernel.π ι' =
             cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j
-          symm
-          exact hπ j
+          exact (hπ j).symm
         have hfac_lifted' :
             (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted =
               cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ s.ι.app j := by
@@ -380,11 +376,10 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
         have htarget :
             cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫
                 (qCocone.ι.app j ≫ m) =
-              (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted := by
-          exact
-            (congrArg
-              (fun t ↦ cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ t)
-              hmq).trans hfac_lifted'.symm
+              (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted :=
+          (congrArg
+            (fun t ↦ cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ t)
+            hmq).trans hfac_lifted'.symm
         exact htarget) }
 
 omit [IsFiltered J'] in
@@ -525,8 +520,8 @@ noncomputable def sheafHFilteredColimitComparison
     (n : ℕ) (c' : Cocone Y') (j : J') :
     colimit.ι (Y' ⋙ sheafCohomologyFunctor X n) j ≫
         sheafHFilteredColimitComparison Y' n c' =
-      (sheafCohomologyFunctor X n).map (c'.ι.app j) := by
-  exact colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
+      (sheafCohomologyFunctor X n).map (c'.ι.app j) :=
+  colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
 
 /-- Successor-step compatibility for the filtered-colimit comparison map: whenever the
 associated sheaf diagram and its colimit have vanishing injective-replacement cohomology in

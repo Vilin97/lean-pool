@@ -229,8 +229,8 @@ theorem pushforward_closedIncl_stalk_eq_zero
   let F' := (TopCat.Presheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)).obj G
   obtain ⟨U, hxU, sU, rfl⟩ := F'.exists_germ_eq a
   let W : Opens X := U ⊓ ⟨sᶜ, hs.isOpen_compl⟩
-  have hW_map : (Opens.map (TopCat.closedIncl hs)).obj W = ⊥ := by
-    exact TopCat.closedIncl_map_eq_bot_of_le_compl (hs := hs) (U := W) inf_le_right
+  have hW_map : (Opens.map (TopCat.closedIncl hs)).obj W = ⊥ :=
+    TopCat.closedIncl_map_eq_bot_of_le_compl (hs := hs) (U := W) inf_le_right
   haveI : Subsingleton (F'.obj (op W)) := AddCommGrpCat.subsingleton_of_isZero (by
     change IsZero (G.obj (op ((Opens.map (TopCat.closedIncl hs)).obj W)))
     rw [hW_map]
@@ -268,11 +268,10 @@ theorem epi_pushforward_map_closedIncl_of_locallySurjective
   rw [TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks]
   intro x; by_cases hx : (x : X) ∈ s
   · let z : TopCat.of s := ⟨x, hx⟩
-    have hEpiF : Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} z).map f) :=
+    haveI hEpiF : Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} z).map f) :=
       (AddCommGrpCat.epi_iff_surjective _).mpr
         (((TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
             (T := f)).mp hf_loc) z)
-    letI : Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} z).map f) := hEpiF
     have hnat : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
         ((TopCat.closedIncl hs) z)).map
         ((TopCat.Presheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)).map f) ≫
@@ -326,8 +325,8 @@ instance closedIncl_pushforward_preservesEpis
     letI : Epi f := hf
     letI : Balanced (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
       balanced_of_strongEpiCategory
-    have hf_loc : TopCat.Presheaf.IsLocallySurjective f.hom := by
-      exact (TopCat.Sheaf.isLocallySurjective_iff_epi f).mpr inferInstance
+    have hf_loc : TopCat.Presheaf.IsLocallySurjective f.hom :=
+      (TopCat.Sheaf.isLocallySurjective_iff_epi f).mpr inferInstance
     change Epi ((TopCat.Sheaf.pushforward AddCommGrpCat.{u}
       (TopCat.closedIncl hs)).map (ObjectProperty.homMk f.hom))
     exact epi_pushforward_map_closedIncl_of_locallySurjective

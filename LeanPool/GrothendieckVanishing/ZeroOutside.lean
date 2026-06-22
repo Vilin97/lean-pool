@@ -364,8 +364,8 @@ theorem sHomVal_app_generator {X : TopCat.{u}} {U : Opens X}
 
 theorem sHom_app_generator {X : TopCat.{u}} {U : Opens X}
     {F : Sheaf AddCommGrpCat.{u} X} (s : F.presheaf.obj (op U)) :
-    (sHom s).hom.app (op U) (generator U) = s := by
-  exact sHomVal_app_generator F.property s
+    (sHom s).hom.app (op U) (generator U) = s :=
+  sHomVal_app_generator F.property s
 
 theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) :
     (openHom h).hom.app (op V) (generator V) =
@@ -433,11 +433,8 @@ theorem _root_.isZero_zeroOutsideInt_bot (X : TopCat.{u}) :
     IsZero (TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)) := by
   let F := TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)
   change IsZero F
-  have hstalk :
-      ∀ (x : X) (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj F.obj), a = 0 := by
-    intro x a
-    exact stalk_zeroOutsideInt_zero_outside ⊥ x (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a
-  exact sheaf_isZero_of_zero_stalks X F.property hstalk
+  exact sheaf_isZero_of_zero_stalks X F.property (fun x a ↦
+    stalk_zeroOutsideInt_zero_outside ⊥ x (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a)
 
 /-- At a point inside the support open, every stalk element of `zeroOutsideInt V` is an integer
     multiple of the germ of the distinguished generator over `V`. -/
