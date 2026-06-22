@@ -43,9 +43,8 @@ lemma approxCount_pos
     (p : ProbDist α)
     (N : ℕ)
     (a : α) :
-    0 < approxCount p N a := by
-  unfold approxCount
-  exact Nat.succ_pos _
+    0 < approxCount p N a :=
+  Nat.succ_pos _
 
 lemma approxTotal_pos
     {α : Type} [Fintype α]
@@ -67,21 +66,11 @@ def approxProb
     (p : ProbDist α)
     (N : ℕ) : ProbDist α := by
   let T : ℕ := approxTotal p N
-  have hT : 0 < T := by
-    simpa [T] using approxTotal_pos p N
-  refine ⟨fun a => (approxCount p N a : ℝ) / (T : ℝ), ?_⟩
-  constructor
-  · intro a
-    positivity
-  · have hT_ne : (T : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hT)
-    calc
-      (∑ a, (approxCount p N a : ℝ) / (T : ℝ))
-          = (∑ a, (approxCount p N a : ℝ)) / (T : ℝ) := by
-              rw [Finset.sum_div]
-      _ = (T : ℝ) / (T : ℝ) := by
-            simp [T, approxTotal]
-      _ = 1 := by
-            field_simp [hT_ne]
+  have hT : 0 < T := by simpa [T] using approxTotal_pos p N
+  have hT_ne : (T : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hT
+  refine ⟨fun a => (approxCount p N a : ℝ) / (T : ℝ), fun a => by positivity, ?_⟩
+  rw [← Finset.sum_div, show (∑ a, (approxCount p N a : ℝ)) = (T : ℝ) by
+    rw [← Nat.cast_sum]; rfl, div_self hT_ne]
 
 @[simp] lemma approxProb_apply
     {α : Type} [Fintype α]
@@ -116,27 +105,13 @@ lemma approxCount_mul_bounds
     0 ≤ (approxCount p N a : ℝ) - M * p a ∧
       (approxCount p N a : ℝ) - M * p a ≤ 1 := by
   intro M
-  have hp_nonneg : 0 ≤ p a := prob_nonneg p a
-  have hM_nonneg : 0 ≤ M := by
-    dsimp [M]
-    positivity
-  have hfloor_le : (Nat.floor (M * p a) : ℝ) ≤ M * p a := by
-    exact Nat.floor_le (mul_nonneg hM_nonneg hp_nonneg)
-  have hlt : M * p a < (Nat.floor (M * p a) : ℝ) + 1 := by
-    exact Nat.lt_floor_add_one (M * p a)
-  constructor
-  · calc
-      0 ≤ ((Nat.floor (M * p a) : ℝ) + 1) - M * p a := by
-            linarith [hlt]
-      _ = (approxCount p N a : ℝ) - M * p a := by
-            simp [approxCount, M, add_comm]
-  · calc
-      (approxCount p N a : ℝ) - M * p a
-          = ((Nat.floor (M * p a) : ℝ) + 1) - M * p a := by
-              simp [approxCount, M, add_comm]
-      _ ≤ (M * p a + 1) - M * p a := by
-            gcongr
-      _ = 1 := by ring
+  have hM_nonneg : 0 ≤ M := by dsimp [M]; positivity
+  have hfloor_le : (Nat.floor (M * p a) : ℝ) ≤ M * p a :=
+    Nat.floor_le (mul_nonneg hM_nonneg (prob_nonneg p a))
+  have hlt : M * p a < (Nat.floor (M * p a) : ℝ) + 1 := Nat.lt_floor_add_one (M * p a)
+  have hcount : (approxCount p N a : ℝ) = (Nat.floor (M * p a) : ℝ) + 1 := by
+    simp [approxCount, M, add_comm]
+  rw [hcount]; constructor <;> linarith
 
 lemma approxTotal_bounds
     {α : Type} [Fintype α]
@@ -149,34 +124,16 @@ lemma approxTotal_bounds
   have hsumDelta :
       (∑ a, ((approxCount p N a : ℝ) - M * p a))
         = (approxTotal p N : ℝ) - M := by
-    calc
-      (∑ a, ((approxCount p N a : ℝ) - M * p a))
-          = (∑ a, (approxCount p N a : ℝ)) - ∑ a, (M * p a) := by
-              rw [Finset.sum_sub_distrib]
-      _ = (approxTotal p N : ℝ) - (M * ∑ a, p a) := by
-            simp [approxTotal, Finset.mul_sum]
-      _ = (approxTotal p N : ℝ) - M := by
-            rw [prob_sum_eq_one p, mul_one]
-  have hnonneg :
-      0 ≤ ∑ a, ((approxCount p N a : ℝ) - M * p a) := by
-    refine Finset.sum_nonneg ?_
-    intro a _
-    exact (approxCount_mul_bounds p N a).1
+    rw [Finset.sum_sub_distrib, ← Finset.mul_sum, prob_sum_eq_one p, mul_one]
+    simp [approxTotal]
+  have hnonneg : 0 ≤ ∑ a, ((approxCount p N a : ℝ) - M * p a) :=
+    Finset.sum_nonneg fun a _ => (approxCount_mul_bounds p N a).1
   have hupper :
-      (∑ a, ((approxCount p N a : ℝ) - M * p a))
-        ≤ ∑ _a : α, (1 : ℝ) := by
-    refine Finset.sum_le_sum ?_
-    intro a _
-    exact (approxCount_mul_bounds p N a).2
-  constructor
-  · simpa [hsumDelta]
-      using hnonneg
-  · calc
-      (approxTotal p N : ℝ) - M
-          = ∑ a, ((approxCount p N a : ℝ) - M * p a) := by
-              simp [hsumDelta]
-      _ ≤ ∑ _a : α, (1 : ℝ) := hupper
-      _ = Fintype.card α := by simp
+      (∑ a, ((approxCount p N a : ℝ) - M * p a)) ≤ ∑ _a : α, (1 : ℝ) :=
+    Finset.sum_le_sum fun a _ => (approxCount_mul_bounds p N a).2
+  rw [hsumDelta] at hnonneg hupper
+  simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one] at hupper
+  exact ⟨hnonneg, hupper⟩
 
 lemma approxProb_error_bound
     {α : Type} [Fintype α]
@@ -187,57 +144,35 @@ lemma approxProb_error_bound
     |approxProb p N a - p a|
       ≤ ((Fintype.card α : ℝ) + 1) / M := by
   intro M
-  have hM_pos : 0 < M := by
-    dsimp [M]
-    positivity
-  have hM_nonneg : 0 ≤ M := le_of_lt hM_pos
+  have hM_pos : 0 < M := by dsimp [M]; positivity
   let T : ℝ := (approxTotal p N : ℝ)
   have hT_bounds : 0 ≤ T - M ∧ T - M ≤ Fintype.card α := by
     simpa [T, M] using approxTotal_bounds p N
-  have hM_le_T : M ≤ T := by
-    exact sub_nonneg.mp hT_bounds.1
+  have hM_le_T : M ≤ T := sub_nonneg.mp hT_bounds.1
   have hT_pos : 0 < T := lt_of_lt_of_le hM_pos hM_le_T
   have hT_ne : T ≠ 0 := ne_of_gt hT_pos
   have habs_MT : |M - T| ≤ Fintype.card α := by
-    have habs_TM : |T - M| ≤ Fintype.card α := by
-      simpa [abs_of_nonneg hT_bounds.1] using hT_bounds.2
-    simpa [abs_sub_comm] using habs_TM
-  have hdelta :
-      0 ≤ (approxCount p N a : ℝ) - M * p a ∧
-      (approxCount p N a : ℝ) - M * p a ≤ 1 := by
-    simpa [M] using approxCount_mul_bounds p N a
+    rw [abs_sub_comm, abs_of_nonneg hT_bounds.1]; exact hT_bounds.2
   have hdelta_abs : |(approxCount p N a : ℝ) - M * p a| ≤ 1 := by
-    simpa [abs_of_nonneg hdelta.1] using hdelta.2
-  have hp_le_one : p a ≤ 1 := prob_le_one p a
+    have hdelta := approxCount_mul_bounds p N a
+    simp only [M] at hdelta ⊢
+    rw [abs_of_nonneg hdelta.1]; exact hdelta.2
   have hp_abs_le_one : |p a| ≤ 1 := by
-    simpa [abs_of_nonneg (prob_nonneg p a)] using hp_le_one
+    rw [abs_of_nonneg (prob_nonneg p a)]; exact prob_le_one p a
   have hnum :
       |(approxCount p N a : ℝ) - p a * T| ≤ (Fintype.card α : ℝ) + 1 := by
-    have hdecomp :
-        (approxCount p N a : ℝ) - p a * T
-          = ((approxCount p N a : ℝ) - M * p a) + p a * (M - T) := by
-      ring
-    have hmul_abs :
-        |p a * (M - T)| = |p a| * |M - T| := by
+    have hmul_le : |p a * (M - T)| ≤ (Fintype.card α : ℝ) := by
       rw [abs_mul]
-    have hmul_le_one :
-        |p a| * |M - T| ≤ 1 * |M - T| := by
-      exact mul_le_mul_of_nonneg_right hp_abs_le_one (abs_nonneg (M - T))
-    have hMT_le_card :
-        1 * |M - T| ≤ 1 * (Fintype.card α : ℝ) := by
-      exact mul_le_mul_of_nonneg_left habs_MT (by positivity : (0 : ℝ) ≤ 1)
+      calc |p a| * |M - T| ≤ 1 * (Fintype.card α : ℝ) :=
+            mul_le_mul hp_abs_le_one habs_MT (abs_nonneg _) (by norm_num)
+        _ = (Fintype.card α : ℝ) := one_mul _
+    have hdecomp : (approxCount p N a : ℝ) - p a * T
+        = ((approxCount p N a : ℝ) - M * p a) + p a * (M - T) := by ring
     calc
       |(approxCount p N a : ℝ) - p a * T|
-          = |((approxCount p N a : ℝ) - M * p a) + p a * (M - T)| := by
-              rw [hdecomp]
-      _ ≤ |(approxCount p N a : ℝ) - M * p a| + |p a * (M - T)| := by
-            exact abs_add_le _ _
-      _ = |(approxCount p N a : ℝ) - M * p a| + (|p a| * |M - T|) := by
-            rw [hmul_abs]
-      _ ≤ 1 + (|p a| * |M - T|) := by linarith [hdelta_abs]
-      _ ≤ 1 + (1 * |M - T|) := by linarith [hmul_le_one]
-      _ ≤ 1 + (1 * (Fintype.card α : ℝ)) := by linarith [hMT_le_card]
-      _ = (Fintype.card α : ℝ) + 1 := by ring
+          = |((approxCount p N a : ℝ) - M * p a) + p a * (M - T)| := by rw [hdecomp]
+      _ ≤ |(approxCount p N a : ℝ) - M * p a| + |p a * (M - T)| := abs_add_le _ _
+      _ ≤ (Fintype.card α : ℝ) + 1 := by linarith
   have hsub :
       approxProb p N a - p a
         = ((approxCount p N a : ℝ) - p a * T) / T := by
@@ -249,10 +184,8 @@ lemma approxProb_error_bound
         = |((approxCount p N a : ℝ) - p a * T) / T| := by rw [hsub]
     _ = |(approxCount p N a : ℝ) - p a * T| / T := by
           rw [abs_div, abs_of_pos hT_pos]
-    _ ≤ (((Fintype.card α : ℝ) + 1) / T) := by
-          exact (div_le_div_of_nonneg_right hnum (le_of_lt hT_pos))
-    _ ≤ ((Fintype.card α : ℝ) + 1) / M := by
-          exact div_le_div_of_nonneg_left (by positivity) hM_pos hM_le_T
+    _ ≤ (((Fintype.card α : ℝ) + 1) / T) := by gcongr
+    _ ≤ ((Fintype.card α : ℝ) + 1) / M := div_le_div_of_nonneg_left (by positivity) hM_pos hM_le_T
 
 lemma tendsto_approxProb_apply
     {α : Type} [Fintype α]
@@ -261,14 +194,8 @@ lemma tendsto_approxProb_apply
     Tendsto (fun N : ℕ => approxProb p N a) atTop (𝓝 (p a)) := by
   have hbound_tendsto :
       Tendsto (fun N : ℕ => ((Fintype.card α : ℝ) + 1) / (((N + 1 : ℕ) : ℝ))) atTop (𝓝 0) := by
-    have hone :
-        Tendsto (fun N : ℕ => (1 : ℝ) / ((N + 1 : ℕ))) atTop (𝓝 0) := by
-      simpa using
-        (tendsto_one_div_add_atTop_nhds_zero_nat :
-          Tendsto (fun N : ℕ => (1 : ℝ) / (N + 1)) atTop (𝓝 0))
-    have hone' :
-        Tendsto (fun N : ℕ => (1 : ℝ) / ((N : ℝ) + 1)) atTop (𝓝 0) := by
-      simpa [Nat.cast_add] using hone
+    have hone' : Tendsto (fun N : ℕ => (1 : ℝ) / ((N : ℝ) + 1)) atTop (𝓝 0) :=
+      tendsto_one_div_add_atTop_nhds_zero_nat
     have hmul :
         Tendsto
           (fun N : ℕ => ((Fintype.card α : ℝ) + 1) * ((1 : ℝ) / (N + 1)))
@@ -281,11 +208,8 @@ lemma tendsto_approxProb_apply
     refine squeeze_zero (fun N => abs_nonneg _) ?_ hbound_tendsto
     intro N
     simpa using approxProb_error_bound p N a
-  have hsub :
-      Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (0 : ℝ)) := by
-    rw [tendsto_zero_iff_abs_tendsto_zero]
-    change Tendsto (fun N : ℕ => |approxProb p N a - p a|) atTop (𝓝 (0 : ℝ))
-    exact habs_tendsto
+  have hsub : Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (0 : ℝ)) :=
+    tendsto_zero_iff_abs_tendsto_zero _ |>.2 habs_tendsto
   have hsub' :
       Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (p a - p a)) := by
     simpa using hsub

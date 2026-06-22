@@ -48,9 +48,7 @@ theorem entropyNat_unique
       Tendsto (fun N : ℕ => K H * entropyNat (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) :=
     (continuous_const.mul continuous_entropyNat).continuousAt.tendsto.comp (tendsto_approxProb p)
   have hright' : Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) := by
-    convert hright using 1
-    funext N
-    exact hseq N
+    simpa only [hseq] using hright
   simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using tendsto_nhds_unique hleft hright'
 
 /--

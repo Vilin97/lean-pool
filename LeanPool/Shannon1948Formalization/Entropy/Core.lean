@@ -13,13 +13,9 @@ import Mathlib.Logic.Equiv.Fin.Basic
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # Shannon.Entropy.Core
 
@@ -62,9 +58,8 @@ lemma prob_nonneg {α : Type} [Fintype α] (p : ProbDist α) (a : α) : 0 ≤ p 
 lemma prob_sum_eq_one {α : Type} [Fintype α] (p : ProbDist α) : (∑ a, p a) = 1 :=
   p.2.2
 
-lemma prob_le_one {α : Type} [Fintype α] (p : ProbDist α) (a : α) : p a ≤ 1 := by
-  have := Finset.single_le_sum (fun b _ => prob_nonneg p b) (Finset.mem_univ a)
-  linarith [prob_sum_eq_one p, show p a ≤ ∑ b, p b by simpa using this]
+lemma prob_le_one {α : Type} [Fintype α] (p : ProbDist α) (a : α) : p a ≤ 1 :=
+  (prob_sum_eq_one p) ▸ Finset.single_le_sum (fun b _ => prob_nonneg p b) (Finset.mem_univ a)
 
 /-- Uniform distribution on `Fin (n + 1)`. -/
 def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) :=
@@ -85,13 +80,11 @@ def composeProb
     {β : α → Type} [∀ a, Fintype (β a)]
     (p : ProbDist α)
     (q : (a : α) → ProbDist (β a)) :
-    ProbDist (Sigma β) := by
-  classical
-  refine ⟨fun x => p x.1 * q x.1 x.2, ?_⟩
-  constructor
-  · intro x
-    exact mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2)
-  · simp_rw [Fintype.sum_sigma, ← Finset.mul_sum, prob_sum_eq_one (q _), mul_one, prob_sum_eq_one p]
+    ProbDist (Sigma β) :=
+  ⟨fun x => p x.1 * q x.1 x.2,
+    fun x => mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2),
+    by simp_rw [Fintype.sum_sigma, ← Finset.mul_sum, prob_sum_eq_one (q _), mul_one,
+        prob_sum_eq_one p]⟩
 
 /-- Equivalence between two-stage finite outcomes and `Fin (n * m)`. -/
 def sigmaConstFinEquivFinMul (n m : ℕ+) :

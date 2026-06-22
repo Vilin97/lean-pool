@@ -37,9 +37,9 @@ lemma relabel_compose_rational_eq_uniform
       (composeProb p (fun a => uniformPNat ⟨n a, hpos a⟩))
     = uniformPNat ⟨N, hN⟩ := by
   ext x
-  have hN_ne : (N : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hN)
+  have hN_ne : (N : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hN
   have hn_ne : (n (e.symm x).1 : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt (hpos (e.symm x).1))
+    exact_mod_cast Nat.ne_of_gt (hpos (e.symm x).1)
   simp [relabelProb, composeProb, uniformPNat, hp]
   field_simp [hN_ne, hn_ne]
 
@@ -58,11 +58,7 @@ lemma grouping_on_rational_counts
   let q : (a : α) → ProbDist (Fin (n a)) := fun a => uniformPNat ⟨n a, hpos a⟩
   have hgroup := hH.grouping p q
   have hcard : Fintype.card (Sigma (fun a : α => Fin (n a))) = N := by
-    calc
-      Fintype.card (Sigma (fun a : α => Fin (n a)))
-          = ∑ a, Fintype.card (Fin (n a)) := by simp
-      _ = ∑ a, n a := by simp
-      _ = N := hsum
+    simp only [Fintype.card_sigma, Fintype.card_fin]; exact hsum
   let e : Sigma (fun a : α => Fin (n a)) ≃ Fin N := Fintype.equivFinOfCardEq hcard
   have hrelab : H (relabelProb e (composeProb p q)) = H (composeProb p q) :=
     hH.relabelInvariant e (composeProb p q)
@@ -70,14 +66,9 @@ lemma grouping_on_rational_counts
       relabelProb e (composeProb p q) = uniformPNat ⟨N, hN⟩ := by
     simpa [q] using relabel_compose_rational_eq_uniform p n hpos N hN hp e
   have hrelab' : H (uniformPNat ⟨N, hN⟩) = H (composeProb p q) := by
-    rw [← hident]
-    exact hrelab
+    rw [← hident]; exact hrelab
   have hsumA :
-      (∑ a, p a * H (q a))
-        = ∑ a, p a * Apos H ⟨n a, hpos a⟩ := by
-    refine Finset.sum_congr rfl ?_
-    intro a _
-    rfl
+      (∑ a, p a * H (q a)) = ∑ a, p a * Apos H ⟨n a, hpos a⟩ := rfl
   calc
     Apos H ⟨N, hN⟩ = H (composeProb p q) := by
       simpa [Apos] using hrelab'
@@ -105,10 +96,9 @@ lemma entropyNat_of_rational_counts_aux
     Apos_eq_K_mul_log H hH ⟨N, hN⟩
   have hA_n :
       (∑ a, p a * Apos H ⟨n a, hpos a⟩)
-        = ∑ a, p a * (K H * Real.log (n a : ℝ)) := by
-    refine Finset.sum_congr rfl ?_
-    intro a _
-    simpa using congrArg (fun t => p a * t) (Apos_eq_K_mul_log H hH ⟨n a, hpos a⟩)
+        = ∑ a, p a * (K H * Real.log (n a : ℝ)) :=
+    Finset.sum_congr rfl fun a _ => by
+      simpa using congrArg (p a * ·) (Apos_eq_K_mul_log H hH ⟨n a, hpos a⟩)
   linarith [hgroup, hA_N, hA_n]
 
 lemma entropyNat_of_rational_counts
@@ -130,36 +120,16 @@ lemma entropyNat_of_rational_counts
   have hsum_scale :
       (∑ a, p a * (K H * Real.log (n a : ℝ)))
         = K H * (∑ a, p a * Real.log (n a : ℝ)) := by
-    calc
-      (∑ a, p a * (K H * Real.log (n a : ℝ)))
-          = ∑ a, K H * (p a * Real.log (n a : ℝ)) := by
-              refine Finset.sum_congr rfl ?_
-              intro a _
-              ring
-      _ = K H * (∑ a, p a * Real.log (n a : ℝ)) := by
-            rw [Finset.mul_sum]
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun a _ => by ring
   have hlogp :
       (∑ a, p a * Real.log (p a))
         = (∑ a, p a * Real.log (n a : ℝ)) - Real.log (N : ℝ) := by
-    calc
-      (∑ a, p a * Real.log (p a))
-          = ∑ a, p a * (Real.log (n a : ℝ) - Real.log (N : ℝ)) := by
-              refine Finset.sum_congr rfl ?_
-              intro a _
-              rw [hp a]
-              have hn_ne : (n a : ℝ) ≠ 0 := by
-                exact_mod_cast (Nat.ne_of_gt (hpos a))
-              rw [Real.log_div hn_ne hN_ne]
-      _ = ∑ a, (p a * Real.log (n a : ℝ) - p a * Real.log (N : ℝ)) := by
-            refine Finset.sum_congr rfl ?_
-            intro a _
-            ring
-      _ = (∑ a, p a * Real.log (n a : ℝ)) - ∑ a, p a * Real.log (N : ℝ) := by
-            rw [Finset.sum_sub_distrib]
-      _ = (∑ a, p a * Real.log (n a : ℝ)) - (∑ a, p a) * Real.log (N : ℝ) := by
-            rw [Finset.sum_mul]
-      _ = (∑ a, p a * Real.log (n a : ℝ)) - Real.log (N : ℝ) := by
-            rw [prob_sum_eq_one p, one_mul]
+    have hterm : ∀ a, p a * Real.log (p a)
+        = p a * Real.log (n a : ℝ) - p a * Real.log (N : ℝ) := fun a => by
+      rw [hp a, Real.log_div (by exact_mod_cast Nat.ne_of_gt (hpos a)) hN_ne]; ring
+    rw [Finset.sum_congr rfl fun a _ => hterm a, Finset.sum_sub_distrib, ← Finset.sum_mul,
+      prob_sum_eq_one p, one_mul]
   calc
     H p = K H * Real.log (N : ℝ) - ∑ a, p a * (K H * Real.log (n a : ℝ)) := h_main
     _ = K H * Real.log (N : ℝ) - K H * (∑ a, p a * Real.log (n a : ℝ)) := by
@@ -168,12 +138,8 @@ lemma entropyNat_of_rational_counts
     _ = -K H * (∑ a, p a * Real.log (p a)) := by rw [hlogp]
 
 /-- First-stage split used in the `(1/2, 1/3, 1/6)` worked decomposition. -/
-def workedP : ProbDist Bool := by
-  refine ⟨fun _ => (1 : ℝ) / 2, ?_⟩
-  constructor
-  · intro _
-    positivity
-  · simp
+def workedP : ProbDist Bool :=
+  ⟨fun _ => (1 : ℝ) / 2, fun _ => by positivity, by simp⟩
 
 /-- Second-stage alphabets for the worked decomposition:
 `true` has one outcome; `false` has two outcomes. -/
@@ -215,11 +181,8 @@ lemma workedCompose_masses :
     workedCompose ⟨true, (0 : Fin 1)⟩ = (1 : ℝ) / 2 ∧
       workedCompose ⟨false, (0 : Fin 2)⟩ = (1 : ℝ) / 3 ∧
       workedCompose ⟨false, (1 : Fin 2)⟩ = (1 : ℝ) / 6 := by
-  constructor
-  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
-  constructor
-  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
-  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
+  refine ⟨?_, ?_, ?_⟩ <;>
+    norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
 
 /--
 Worked grouping identity corresponding to Shannon's `(1/2, 1/3, 1/6)` narrative:
@@ -230,8 +193,7 @@ theorem worked_grouping_identity
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
     (hH : ShannonEntropyAxioms H) :
     H workedCompose = H workedP + (1 / 2 : ℝ) * H (workedQ false) := by
-  have hqTrue_zero : H (workedQ true) = 0 := by
-    exact Apos_one_zero H hH
+  have hqTrue_zero : H (workedQ true) = 0 := Apos_one_zero H hH
   have hsum :
       (∑ b : Bool, workedP b * H (workedQ b))
         = (1 / 2 : ℝ) * H (workedQ false) := by

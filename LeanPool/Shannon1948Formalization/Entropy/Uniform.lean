@@ -30,10 +30,8 @@ lemma relabel_compose_uniform_eq_uniform_mul (n m : ℕ+) :
     = uniformPNat (n * m) := by
   ext x
   simp [relabelProb, composeProb, uniformPNat, sigmaConstFinEquivFinMul]
-  have hn : (n : ℝ) ≠ 0 := by
-    exact_mod_cast (show (n : ℕ) ≠ 0 from Nat.ne_of_gt n.2)
-  have hm : (m : ℝ) ≠ 0 := by
-    exact_mod_cast (show (m : ℕ) ≠ 0 from Nat.ne_of_gt m.2)
+  have hn : (n : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt n.2
+  have hm : (m : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt m.2
   field_simp [hn, hm]
 
 lemma Apos_mul
@@ -46,20 +44,14 @@ lemma Apos_mul
   have hgroup := hH.grouping p q
   have hsum : (∑ a : Fin n, p a * H (q a)) = H (uniformPNat m) := by
     change (∑ a : Fin n, p a * H (uniformPNat m)) = H (uniformPNat m)
-    calc
-      (∑ a : Fin n, p a * H (uniformPNat m))
-          = (∑ a : Fin n, p a) * H (uniformPNat m) := by
-              rw [Finset.sum_mul]
-      _ = 1 * H (uniformPNat m) := by rw [prob_sum_eq_one p]
-      _ = H (uniformPNat m) := by ring
+    rw [← Finset.sum_mul, prob_sum_eq_one p, one_mul]
   have hrelab :=
     hH.relabelInvariant (sigmaConstFinEquivFinMul n m) (composeProb p q)
   have hident :
       relabelProb (sigmaConstFinEquivFinMul n m) (composeProb p q) = uniformPNat (n * m) := by
     simpa [p, q] using relabel_compose_uniform_eq_uniform_mul n m
   have hrelab' : H (uniformPNat (n * m)) = H (composeProb p q) := by
-    rw [← hident]
-    exact hrelab
+    rw [← hident]; exact hrelab
   calc
     Apos H (n * m) = H (composeProb p q) := by
       simpa [Apos] using hrelab'
@@ -85,14 +77,9 @@ lemma Apos_pow
   | zero =>
       simpa using Apos_one_zero H hH
   | succ k ih =>
-      calc
-        Apos H (n ^ (k + 1)) = Apos H (n ^ k * n) := by simp [pow_succ]
-        _ = Apos H (n ^ k) + Apos H n := Apos_mul H hH (n ^ k) n
-        _ = (k : ℝ) * Apos H n + Apos H n := by simp [ih]
-        _ = (k : ℝ) * Apos H n + (1 : ℝ) * Apos H n := by ring
-        _ = ((k : ℝ) + 1) * Apos H n := by ring
-        _ = (((k + 1 : ℕ) : ℝ) * Apos H n) := by
-              norm_num [Nat.cast_add]
+      have h1 : Apos H (n ^ (k + 1)) = Apos H (n ^ k) + Apos H n := by
+        rw [pow_succ]; exact Apos_mul H hH (n ^ k) n
+      rw [h1, ih, Nat.cast_add, Nat.cast_one]; ring
 
 lemma Apos_nonneg
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
@@ -128,12 +115,8 @@ lemma abs_sub_le_of_mem_interval
     (haU : a ≤ u)
     (hbL : l ≤ b)
     (hbU : b ≤ u) :
-    |a - b| ≤ u - l := by
-  have hright : a - b ≤ u - l := sub_le_sub haU hbL
-  have hleft : -(u - l) ≤ a - b := by
-    have hba : b - a ≤ u - l := sub_le_sub hbU haL
-    linarith
-  exact abs_le.mpr ⟨hleft, hright⟩
+    |a - b| ≤ u - l :=
+  abs_le.mpr ⟨by linarith [sub_le_sub hbU haL], sub_le_sub haU hbL⟩
 
 /-- The canonical positive scale factor from the two-outcome uniform case. -/
 def K
@@ -143,12 +126,8 @@ def K
 lemma K_pos
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
     (hH : ShannonEntropyAxioms H) :
-    0 < K H := by
-  unfold K
-  have hA : 0 < Apos H 2 := Apos_pos_two H hH
-  have hlog : 0 < Real.log 2 := by
-    exact Real.log_pos (by norm_num : (1 : ℝ) < 2)
-  exact div_pos hA hlog
+    0 < K H :=
+  div_pos (Apos_pos_two H hH) (Real.log_pos (by norm_num))
 
 lemma Apos_ratio_logb_close
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
@@ -157,24 +136,20 @@ lemma Apos_ratio_logb_close
     (hs : 1 < s) :
     |Apos H t / Apos H s - Real.logb (s : ℝ) (t : ℝ)| ≤ 1 / (n : ℝ) := by
   let m : ℕ := Nat.log (s : ℕ) ((t : ℕ) ^ (n : ℕ))
-  have htn_ne_zero : ((t : ℕ) ^ (n : ℕ)) ≠ 0 := by
-    exact pow_ne_zero _ (Nat.ne_of_gt t.2)
+  have htn_ne_zero : ((t : ℕ) ^ (n : ℕ)) ≠ 0 := pow_ne_zero _ (Nat.ne_of_gt t.2)
   have hs_nat : 1 < (s : ℕ) := hs
   have hs_real : 1 < (s : ℝ) := by exact_mod_cast hs
   have hpow_le_nat : (s : ℕ) ^ m ≤ (t : ℕ) ^ (n : ℕ) := by
     simpa [m] using Nat.pow_log_le_self (s : ℕ) htn_ne_zero
   have hpow_lt_nat : (t : ℕ) ^ (n : ℕ) < (s : ℕ) ^ (m + 1) := by
     simpa [m] using Nat.lt_pow_succ_log_self hs_nat ((t : ℕ) ^ (n : ℕ))
-  have hpow_le : s ^ m ≤ t ^ (n : ℕ) := by
-    exact_mod_cast hpow_le_nat
-  have hpow_lt : t ^ (n : ℕ) < s ^ (m + 1) := by
-    exact_mod_cast hpow_lt_nat
+  have hpow_le : s ^ m ≤ t ^ (n : ℕ) := by exact_mod_cast hpow_le_nat
+  have hpow_lt : t ^ (n : ℕ) < s ^ (m + 1) := by exact_mod_cast hpow_lt_nat
   have hA_le : Apos H (s ^ m) ≤ Apos H (t ^ (n : ℕ)) :=
     hH.uniformMonotone.monotone hpow_le
   have hA_lt : Apos H (t ^ (n : ℕ)) < Apos H (s ^ (m + 1)) :=
     hH.uniformMonotone hpow_lt
   have hAs_pos : 0 < Apos H s := Apos_pos_of_one_lt H hH hs
-  have hAs_ne : Apos H s ≠ 0 := ne_of_gt hAs_pos
   have hn_pos : 0 < ((n : ℕ) : ℝ) := by exact_mod_cast n.2
   have hn_ne : ((n : ℕ) : ℝ) ≠ 0 := ne_of_gt hn_pos
   let ratioA : ℝ := Apos H t / Apos H s
@@ -231,10 +206,7 @@ lemma Apos_ratio_logb_close
     exact (le_div_iff₀ hn_pos).2 (by simpa [nR, mul_comm, mul_left_comm, mul_assoc] using hmul)
   have hwidth :
       (((m + 1 : ℕ) : ℝ) / nR) - ((m : ℝ) / nR) = 1 / nR := by
-    have hnR_ne : nR ≠ 0 := by
-      unfold nR
-      exact hn_ne
-    field_simp [hnR_ne]
+    field_simp [show nR ≠ 0 from hn_ne]
     norm_num
   have habs :
       |ratioA - ratioL|
@@ -250,8 +222,8 @@ lemma Apos_ratio_eq_logb
     (hs : 1 < s) :
     Apos H t / Apos H s = Real.logb (s : ℝ) (t : ℝ) := by
   by_contra hneq
-  have hpos : 0 < |Apos H t / Apos H s - Real.logb (s : ℝ) (t : ℝ)| := by
-    exact abs_pos.mpr (sub_ne_zero.mpr hneq)
+  have hpos : 0 < |Apos H t / Apos H s - Real.logb (s : ℝ) (t : ℝ)| :=
+    abs_pos.mpr (sub_ne_zero.mpr hneq)
   rcases exists_nat_one_div_lt hpos with ⟨N, hN⟩
   let n : ℕ+ := Nat.succPNat N
   have hbound := Apos_ratio_logb_close H hH (s := s) (t := t) (n := n) hs
@@ -269,19 +241,12 @@ lemma Apos_eq_K_mul_log
   have hratio : Apos H n / Apos H 2 = Real.logb (2 : ℝ) (n : ℝ) :=
     Apos_ratio_eq_logb H hH (s := 2) (t := n) (by decide)
   have hA2_ne : Apos H 2 ≠ 0 := ne_of_gt (Apos_pos_two H hH)
-  have hlog2_ne : Real.log 2 ≠ 0 := by
-    apply Real.log_ne_zero.mpr
-    norm_num
-  have hmain : Apos H n = Real.logb (2 : ℝ) (n : ℝ) * Apos H 2 := by
-    exact (div_eq_iff hA2_ne).1 hratio
+  have hlog2_ne : Real.log 2 ≠ 0 := Real.log_ne_zero.mpr (by norm_num)
   calc
-    Apos H n = Real.logb (2 : ℝ) (n : ℝ) * Apos H 2 := hmain
-    _ = (Real.log (n : ℝ) / Real.log 2) * Apos H 2 := by
-          rw [← Real.log_div_log]
-    _ = (Apos H 2 / Real.log 2) * Real.log (n : ℝ) := by
-          field_simp [hlog2_ne]
-    _ = K H * Real.log (n : ℝ) := by
-          rfl
+    Apos H n = Real.logb (2 : ℝ) (n : ℝ) * Apos H 2 := (div_eq_iff hA2_ne).1 hratio
+    _ = (Real.log (n : ℝ) / Real.log 2) * Apos H 2 := by rw [← Real.log_div_log]
+    _ = (Apos H 2 / Real.log 2) * Real.log (n : ℝ) := by field_simp [hlog2_ne]
+    _ = K H * Real.log (n : ℝ) := rfl
 
 lemma Apos_pow_two_eq_K_log_pow
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
@@ -293,12 +258,8 @@ lemma Apos_pow_two_eq_K_log_pow
     Apos H (2 ^ k) = (k : ℝ) * Apos H 2 := by
       simpa using Apos_pow H hH 2 k
     _ = (Apos H 2 / Real.log 2) * ((k : ℝ) * Real.log 2) := by
-          have hlogne : Real.log 2 ≠ 0 := by
-            apply Real.log_ne_zero.mpr
-            norm_num
-          field_simp [hlogne]
-    _ = (Apos H 2 / Real.log 2) * Real.log ((2 : ℝ) ^ k) := by
-          rw [Real.log_pow]
+          field_simp [show Real.log 2 ≠ 0 from Real.log_ne_zero.mpr (by norm_num)]
+    _ = (Apos H 2 / Real.log 2) * Real.log ((2 : ℝ) ^ k) := by rw [Real.log_pow]
 
 lemma A_monotone
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
@@ -314,8 +275,8 @@ lemma A_monotone
 lemma Apos_monotone
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)
     (hH : ShannonEntropyAxioms H) :
-    Monotone (Apos H) := by
-  exact hH.uniformMonotone.monotone
+    Monotone (Apos H) :=
+  hH.uniformMonotone.monotone
 
 /-- Entropy-form expression with natural logarithm. -/
 def entropyNat
@@ -358,13 +319,11 @@ lemma Apos_eq_K_mul_logb
     (hb : 1 < b)
     (n : ℕ+) :
     Apos H n = (K H * Real.log b) * Real.logb b (n : ℝ) := by
-  have hb1 : b ≠ 1 := ne_of_gt hb
-  have hb_pos : 0 < b := lt_trans (show (0 : ℝ) < 1 by norm_num) hb
-  have hlogb_ne : Real.log b ≠ 0 := Real.log_ne_zero_of_pos_of_ne_one hb_pos hb1
+  have hb_pos : 0 < b := lt_trans (by norm_num) hb
+  have hlogb_ne : Real.log b ≠ 0 := Real.log_ne_zero_of_pos_of_ne_one hb_pos (ne_of_gt hb)
   have hlog :
       Real.log (n : ℝ) = Real.log b * Real.logb b (n : ℝ) := by
-    unfold Real.logb
-    field_simp [hlogb_ne]
+    rw [Real.logb]; field_simp [hlogb_ne]
   calc
     Apos H n = K H * Real.log (n : ℝ) := Apos_eq_K_mul_log H hH n
     _ = K H * (Real.log b * Real.logb b (n : ℝ)) := by rw [hlog]
