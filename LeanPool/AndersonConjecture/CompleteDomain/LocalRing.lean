@@ -204,8 +204,8 @@ lemma mvPowerSeries_fin_isNoetherianRing {n : ℕ} {R : Type*} [CommRing R]
       mvPowerSeriesFinSuccRingEquiv'.symm
 
 lemma mvPowerSeries_fin3_isNoetherianRing :
-    IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := by
-  exact mvPowerSeries_fin_isNoetherianRing
+    IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) :=
+  mvPowerSeries_fin_isNoetherianRing
 
 -- T is Noetherian as a quotient of a Noetherian ring
 instance T_isNoetherianRing : IsNoetherianRing T :=
@@ -452,9 +452,8 @@ lemma T_isPrecomplete : IsPrecomplete (IsLocalRing.maximalIdeal T) T := by
     intro n
     have h := hcauchy (Nat.le_succ n)
     rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
-  have : ∀ n, ∃ δ, δ ∈ MPS ^ n ∧ Ideal.Quotient.mk conjI δ = f n - f (n + 1) := by
-    intro n
-    exact lift_mem _ n (diff_mem n)
+  have : ∀ n, ∃ δ, δ ∈ MPS ^ n ∧ Ideal.Quotient.mk conjI δ = f n - f (n + 1) :=
+    fun n => lift_mem _ n (diff_mem n)
   choose δ hδ_mem hδ_eq using this
   -- Define g by accumulating lifts: g n = g0 - ∑_{i<n} δ i
   let g : ℕ → MvPowerSeries (Fin 3) ℂ := fun n => g0 - ∑ i ∈ Finset.range n, δ i

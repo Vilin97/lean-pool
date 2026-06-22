@@ -48,10 +48,7 @@ private theorem ker_shared_core
     have hQ_strict : Q < P :=
       lt_of_le_of_ne hQ_le_P (fun h => hne (h ▸ le_refl P))
     have hp_Q : (↑p : T) ∈ Q := hQ_le (Ideal.mem_span_singleton_self _)
-    have hQ_ne_bot : Q ≠ ⊥ := by
-      intro h
-      rw [h] at hp_Q
-      exact hp_ne (Ideal.mem_bot.mp hp_Q)
+    have hQ_ne_bot : Q ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_Q))
     have hQ_ht_le : Q.height ≤ 1 := le_trans (Ideal.height_mono hQ_le_P) hP_ht
     have hQ_fin : Q.FiniteHeight := ⟨Or.inr (by
       exact ne_top_of_le_ne_top (by norm_cast) hQ_ht_le)⟩
@@ -137,22 +134,17 @@ private def intersection_close_up_proof_ker_pf₁
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
-  have hP_ne_bot : P ≠ ⊥ := by
-    intro h
-    rw [h] at hp_P
-    exact hp_ne (Ideal.mem_bot.mp hp_P)
+  have hP_ne_bot : P ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_P))
   obtain ⟨hP_ass, hmap_ne⟩ := ker_shared_core R P hP_prime hP_ht p hp hp_P f h_ndvd
   have hP_C : P ∈ C_ext := hC_ext_mem p hp_ne P hP_ass
-  have hy₂_ne_P : Ideal.Quotient.mk P (↑y₂ : T) ≠ 0 := by
-    rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
-    exact hy₂_nP
+  have hy₂_ne_P : Ideal.Quotient.mk P (↑y₂ : T) ≠ 0 :=
+    fun h => hy₂_nP (Ideal.Quotient.eq_zero_iff_mem.mp h)
   -- Push f(x₁) ∈ P to fbar(tbar₁ + ū·ybar₂) = 0 in T/P via the quotient map
-  have heval_P : aeval (t₁ + u * (↑y₂ : T)) f ∈ P := hf_mem
   have heval_zero : (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
       (Ideal.Quotient.mk P t₁ + Ideal.Quotient.mk P u *
         Ideal.Quotient.mk P (↑y₂ : T)) = 0 := by
     have h1 : Ideal.Quotient.mk P (aeval (t₁ + u * (↑y₂ : T)) f) = 0 :=
-      Ideal.Quotient.eq_zero_iff_mem.mpr heval_P
+      Ideal.Quotient.eq_zero_iff_mem.mpr hf_mem
     rw [Polynomial.aeval_def,
       show algebraMap R.carrier T = R.carrier.subtype from rfl,
       Polynomial.hom_eval₂ f R.carrier.subtype (Ideal.Quotient.mk P)
@@ -168,14 +160,8 @@ private def intersection_close_up_proof_ker_pf₁
     Function.invFun_eq (hP_surj v₀)
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
-        (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := by
-    simp only [Set.mem_setOf_eq]
-    exact heval_zero
-  have hf_ne : f ≠ 0 := by
-    intro h
-    apply h_ndvd
-    rw [h]
-    exact dvd_zero _
+        (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := heval_zero
+  have hf_ne : f ≠ 0 := fun h => h_ndvd (h ▸ dvd_zero _)
   have hr₀_D : r₀ ∈ D_ext :=
     hD_ext_invFun f hf_ne P hP_C hP_ne_bot hmap_ne hy₂_ne_P v₀ hv₀_root
   -- u ≡ r₀ mod P, so u ∈ P + {r₀}, contradicting the avoidance hypothesis
@@ -247,22 +233,17 @@ include T in theorem intersection_close_up_ker_pf₂
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
-  have hP_ne_bot : P ≠ ⊥ := by
-    intro h
-    rw [h] at hp_P
-    exact hp_ne (Ideal.mem_bot.mp hp_P)
+  have hP_ne_bot : P ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_P))
   obtain ⟨hP_ass, hmap_ne⟩ := ker_shared_core R P hP_prime hP_ht p hp hp_P f h_ndvd
   have hP_C : P ∈ C_ext := hC_ext_mem p hp_ne P hP_ass
-  have hy₁_ne_P : Ideal.Quotient.mk P (↑y₁ : T) ≠ 0 := by
-    rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
-    exact hy₁_nP
+  have hy₁_ne_P : Ideal.Quotient.mk P (↑y₁ : T) ≠ 0 :=
+    fun h => hy₁_nP (Ideal.Quotient.eq_zero_iff_mem.mp h)
   -- fbar(tbar₂ - ū·ybar₁) = 0 in T/P, so ū is a root of the shifted polynomial
-  have heval_P : aeval (t₂ - u * (↑y₁ : T)) f ∈ P := hf_mem
   have heval_zero : (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
       (Ideal.Quotient.mk P t₂ - Ideal.Quotient.mk P u *
         Ideal.Quotient.mk P (↑y₁ : T)) = 0 := by
     have h1 : Ideal.Quotient.mk P (aeval (t₂ - u * (↑y₁ : T)) f) = 0 :=
-      Ideal.Quotient.eq_zero_iff_mem.mpr heval_P
+      Ideal.Quotient.eq_zero_iff_mem.mpr hf_mem
     rw [Polynomial.aeval_def,
       show algebraMap R.carrier T = R.carrier.subtype from rfl,
       Polynomial.hom_eval₂ f R.carrier.subtype (Ideal.Quotient.mk P)
@@ -278,14 +259,8 @@ include T in theorem intersection_close_up_ker_pf₂
     Function.invFun_eq (hP_surj v₀)
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
-        (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := by
-    simp only [Set.mem_setOf_eq]
-    exact heval_zero
-  have hf_ne : f ≠ 0 := by
-    intro h
-    apply h_ndvd
-    rw [h]
-    exact dvd_zero _
+        (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := heval_zero
+  have hf_ne : f ≠ 0 := fun h => h_ndvd (h ▸ dvd_zero _)
   have hr₀_D : r₀ ∈ D_ext :=
     hD_ext_invFun f hf_ne P hP_C hP_ne_bot hmap_ne hy₁_ne_P v₀ hv₀_root
   have hu_r₀_P : u - r₀ ∈ (P : Set T) := by

@@ -156,10 +156,7 @@ private noncomputable def mk_union_nsub_aux
     suffices q = ⊥ by rw [this, Ideal.height_bot]
                       norm_cast
     by_contra hq_ne
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨⟨αs, hαs_lt⟩, hαs⟩ := hU_mem s
     obtain ⟨⟨αx, hαx_lt⟩, hαx⟩ := hU_mem x
@@ -224,8 +221,8 @@ private noncomputable def mk_union_nsub_aux
           ≤ n * ⨆ (β : {β : ι // β < α}),
               Cardinal.mk ↑((lc.ring β).carrier : Set T) := h1
         _ ≤ n * max Cardinal.aleph0 n := mul_le_mul_right h_sup_le _
-        _ ≤ max Cardinal.aleph0 n * max Cardinal.aleph0 n := by
-            exact mul_le_mul_left (le_max_right _ _) _
+        _ ≤ max Cardinal.aleph0 n * max Cardinal.aleph0 n :=
+            mul_le_mul_left (le_max_right _ _) _
         _ ≤ max (max Cardinal.aleph0 n) (max Cardinal.aleph0 n) :=
             Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
         _ = max Cardinal.aleph0 n := max_self _
@@ -255,8 +252,8 @@ private noncomputable def mk_union_nsub_aux
         ≤ n * ⨆ (β : {β : ι // β < α}),
             Cardinal.mk ↑((lc.ring β).carrier : Set T) := h1
       _ ≤ n * max Cardinal.aleph0 n := mul_le_mul_right h_sup_le _
-      _ ≤ max Cardinal.aleph0 n * max Cardinal.aleph0 n := by
-          exact mul_le_mul_left (le_max_right _ _) _
+      _ ≤ max Cardinal.aleph0 n * max Cardinal.aleph0 n :=
+          mul_le_mul_left (le_max_right _ _) _
       _ ≤ max (max Cardinal.aleph0 n) (max Cardinal.aleph0 n) :=
           Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
       _ = max Cardinal.aleph0 n := max_self _
@@ -728,10 +725,7 @@ private def transfinite_construction_proof
     suffices q = ⊥ by rw [this, Ideal.height_bot]
                       norm_cast
     by_contra hq_ne
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨αs, hαs⟩ := hU_mem s
     obtain ⟨αx, hαx⟩ := hU_mem x

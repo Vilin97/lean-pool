@@ -29,11 +29,7 @@ include T in theorem prime_height_le_one_mem_assoc
     (hPR_ne : P.comap R.carrier.subtype ≠ ⊥) :
     ∃ (r₀ : R.carrier), (r₀ : T) ≠ 0 ∧
       P ∈ associatedPrimes T (T ⧸ span {(r₀ : T)}) := by
-  obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ : ∃ r₀ : R.carrier,
-      r₀ ∈ P.comap R.carrier.subtype ∧ r₀ ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hPR_ne ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
+  obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR_ne
   have hr₀T_ne : (r₀ : T) ≠ 0 := fun h => hr₀_ne (Subtype.val_injective h)
   have hr₀_in_P : (r₀ : T) ∈ P := Ideal.mem_comap.mp hr₀_mem
   have hP_minimal : P ∈ (Ideal.span {(r₀ : T)}).minimalPrimes := by

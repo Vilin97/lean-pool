@@ -39,9 +39,8 @@ lemma prime_algebraMap_of_not_dvd_pow (y p : R₀) (hp : Prime p)
     exact pow_ne_zero n hyne hn
   have hinj := IsLocalization.injective (Localization.Away y)
     (le_nonZeroDivisors_of_noZeroDivisors hpow_ne)
-  have hne : algebraMap R₀ (Localization.Away y) p ≠ 0 := by
-    intro h
-    exact hp.ne_zero (hinj (by rw [h, map_zero]))
+  have hne : algebraMap R₀ (Localization.Away y) p ≠ 0 :=
+    fun h => hp.ne_zero (hinj (by rw [h, map_zero]))
   -- Reduce primality of p in R[y⁻¹] to disjointness of (p) from powers of y
   rw [← Ideal.span_singleton_prime hne]
   rw [show Ideal.span {algebraMap R₀ (Localization.Away y) p} =

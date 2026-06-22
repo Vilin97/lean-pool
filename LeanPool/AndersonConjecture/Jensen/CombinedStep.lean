@@ -87,10 +87,7 @@ private theorem chainUnion_height_bound {ι : Type*} [LinearOrder ι]
   suffices q = ⊥ by rw [this, Ideal.height_bot]
                     norm_cast
   by_contra hq_ne
-  obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : U, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+  obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
   obtain ⟨αs, hαs⟩ := hU_mem s
   obtain ⟨αx, hαx⟩ := hU_mem x
@@ -485,9 +482,8 @@ private def close_up_all_one_pass_aux_proof
   obtain ⟨S, hS_carrier, hS_le⟩ := build_union fchain
     (fun p => le_trans (hGood p).2.1 (max_le (le_max_left ..) R'.card_le))
     hPairs_card_res
-  have hS_mem : ∀ (x : S.carrier), ∃ (α : Pairs), (x : T) ∈ (f α).carrier := by
-    intro x
-    exact fchain.mem_union_iff.mp (hS_carrier ▸ x.2)
+  have hS_mem : ∀ (x : S.carrier), ∃ (α : Pairs), (x : T) ∈ (f α).carrier :=
+    fun x => fchain.mem_union_iff.mp (hS_carrier ▸ x.2)
   -- R' ≤ f(p₀) ≤ S for any base pair p₀
   let p₀ : Pairs := ⟨∅, ⟨0, R'.carrier.zero_mem⟩⟩
   have hR'_le_S : R'.carrier ≤ S.carrier := le_trans (hGood p₀).1.choose (hS_le p₀)
@@ -664,9 +660,8 @@ include T in theorem close_up_all_omega
         max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) :=
       fun n => le_trans (hpass_card_le_R n) (max_le (le_max_left ..) R.card_le)
     obtain ⟨S, hS_carrier, hS_le⟩ := build_union_isNSubring_nat pchain hpass_card_res
-    have hpS_mem' : ∀ (x : S.carrier), ∃ n, (x : T) ∈ (pass n).carrier := by
-      intro x
-      exact pchain.mem_union_iff.mp (hS_carrier ▸ x.2)
+    have hpS_mem' : ∀ (x : S.carrier), ∃ n, (x : T) ∈ (pass n).carrier :=
+      fun x => pchain.mem_union_iff.mp (hS_carrier ▸ x.2)
     refine ⟨S, ?_, ?_⟩
     · -- R = pass(0) ≤ S and primes are preserved through the ω-union
       exact {

@@ -365,10 +365,7 @@ private def build_height_bound_proof
   suffices hq_bot : q = ⊥ by rw [hq_bot, Ideal.height_bot]
                              norm_cast
   by_contra hq_ne
-  have ⟨s, hs_q, hs_ne⟩ : ∃ s : S_sub, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+  have ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   have ⟨x, hx_PS, hx_nq⟩ := Set.exists_of_ssubset hq_lt
   have hs_carrier : (s : T) ∈ S_carrier := hS_sub_eq' ▸ s.2
   obtain ⟨as, bs, has_Rbar, hbs_Rbar, hbs_nM, hsb_eq⟩ := hs_carrier
@@ -736,8 +733,7 @@ private def build_intersection_nsubring_proof
     rw [pow_one]
     rw [Polynomial.aeval_def, eval₂_sub, eval₂_mul, eval₂_C, eval₂_X, eval₂_C]
     have hc' : x₁ * (↑y₁ : T) = (↑c : T) - x₂ * (↑y₂ : T) := by
-      have h := hc_eq
-      rw [h]
+      rw [hc_eq]
       ring
     convert hc'
   have hx₁_Rbar : x₁ ∈ Rbar := ⟨hx₁_A₁, hx₁_A₂⟩
@@ -752,8 +748,7 @@ private def build_intersection_nsubring_proof
       ring
     rw [haeval]
     have hc' : x₂ * (↑y₂ : T) = (↑c : T) - x₁ * (↑y₁ : T) := by
-      have h := hc_eq
-      rw [h]
+      rw [hc_eq]
       ring
     convert hc'
   have hx₂_Rbar : x₂ ∈ Rbar := ⟨hx₂_A₁, hx₂_A₂⟩
@@ -922,9 +917,8 @@ private def build_intersection_nsubring_proof
           _ = (hS_sub_eq ▸ s₁.2 : s₁.val ∈ S_carrier).choose := h₁.2.2.2
           _ = (hS_sub_eq ▸ s₂.2 : s₂.val ∈ S_carrier).choose := ha_eq
           _ = s₂.val * (hS_sub_eq ▸ s₂.2 : s₂.val ∈ S_carrier).choose_spec.choose := h₂.2.2.2.symm
-      have hb_ne : (hS_sub_eq ▸ s₂.2 : s₂.val ∈ S_carrier).choose_spec.choose ≠ (0 : T) := by
-        intro hb0
-        exact h₂.2.2.1 (hb0 ▸ Ideal.zero_mem _)
+      have hb_ne : (hS_sub_eq ▸ s₂.2 : s₂.val ∈ S_carrier).choose_spec.choose ≠ (0 : T) :=
+        fun hb0 => h₂.2.2.1 (hb0 ▸ Ideal.zero_mem _)
       have hsub : (s₁.val - s₂.val) *
           (hS_sub_eq ▸ s₂.2 : s₂.val ∈ S_carrier).choose_spec.choose = 0 := by
         rw [sub_mul, key, sub_self]

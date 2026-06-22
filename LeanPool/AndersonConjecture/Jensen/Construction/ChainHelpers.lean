@@ -193,10 +193,7 @@ theorem chain_union_card_lt
     suffices q = ⊥ by rw [this, Ideal.height_bot]
                       norm_cast
     by_contra hq_ne
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨αs, hαs⟩ := hU_mem s
     obtain ⟨αx, hαx⟩ := hU_mem x

@@ -389,10 +389,7 @@ theorem IsWeaklyQuasiComplete.isAnalyticallyIrreducible
   have hP_disj := Ideal.disjoint_nonZeroDivisors_of_mem_minimalPrimes hPmin
   have hcomap_ne : Ideal.comap f P ≠ ⊥ :=
     (isWeaklyQuasiComplete_iff_primes_meet R).mp hwqc P hPprime hPne
-  obtain ⟨r, hr, hrne⟩ : ∃ r ∈ Ideal.comap f P, r ≠ (0 : R) := by
-    by_contra h
-    push Not at h
-    exact hcomap_ne (eq_bot_iff.mpr (fun x hx => Ideal.mem_bot.mpr (h x hx)))
+  obtain ⟨r, hr, hrne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hcomap_ne
   have hfr_P : f r ∈ P := Ideal.mem_comap.mp hr
   have hr_nzd : r ∈ nonZeroDivisors R := mem_nonZeroDivisors_of_ne_zero hrne
   -- Flatness of R̂ over R makes f(r) SMul-regular, hence a nonzero divisor in R̂
@@ -533,11 +530,7 @@ theorem dim1_qc_iff_wqc
       exact ⟨s, fun x hx => Submodule.mem_sup.mpr
         ⟨0, Submodule.zero_mem _, x, hs hx, zero_add x⟩⟩
     · -- ⨅ A ≠ ⊥, ≠ ⊤: R/I is Artinian (dim 0), so chain stabilizes mod I
-      have hI_ne_bot : ∃ r ∈ I, r ≠ (0 : R) := by
-        by_contra h
-        push Not at h
-        exact hI_bot (eq_bot_iff.mpr (fun x hx => Ideal.mem_bot.mpr (h x hx)))
-      obtain ⟨r, hrI, hrne⟩ := hI_ne_bot
+      obtain ⟨r, hrI, hrne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI_bot
       have hr_nzd : r ∈ nonZeroDivisors R := mem_nonZeroDivisors_of_ne_zero hrne
       have hle_span : Ideal.span {r} ≤ I :=
         Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hrI)

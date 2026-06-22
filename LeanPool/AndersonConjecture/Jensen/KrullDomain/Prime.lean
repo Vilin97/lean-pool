@@ -164,10 +164,7 @@ lemma exists_prime_mem_of_ne_bot {S : Type*} [CommRing S] [IsDomain S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by
-  obtain ⟨a, haQ, ha_ne⟩ : ∃ a ∈ Q, a ≠ (0 : S) := by
-    by_contra h
-    push Not at h
-    exact hQ_ne_bot (le_antisymm (fun x hx => (Submodule.mem_bot _).mpr (h x hx)) bot_le)
+  obtain ⟨a, haQ, ha_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hQ_ne_bot
   have ha_nu : ¬IsUnit a := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q haQ hu)
   suffices ∀ x : S, x ≠ 0 → ¬IsUnit x → x ∈ Q → ∃ q : S, Prime q ∧ q ∈ Q from
     this a ha_ne ha_nu haQ

@@ -623,8 +623,7 @@ lemma quotient_not_analytically_irreducible
     have h1 : algebraMap A Ahat a = 0 := by
       apply φ.injective
       rw [← hb_def, h, map_zero]
-    have h_inj : Function.Injective (algebraMap A Ahat) := by
-      exact AdicCompletion.of_injective _ _
+    have h_inj : Function.Injective (algebraMap A Ahat) := AdicCompletion.of_injective _ _
     exact ha.ne_zero (h_inj (h1.trans (map_zero _).symm))
   -- span{b} ≤ Q with ht(Q)=1; if span{b} were prime then span{b}=Q, contradicting Q not principal
   have hb_not_prime : ¬ (Ideal.span ({b} : Set T)).IsPrime :=
@@ -756,10 +755,9 @@ lemma quotient_not_analytically_irreducible
                Ideal.Quotient.algebraMap_eq]
     rw [Ideal.mem_map_iff_of_surjective _ Ideal.Quotient.mk_surjective]
     have hgn_zero : g_n n ((AdicCompletion.evalₐ M n) s) = 0 := by
-      have := hfn_zero n
       change (g_n n).comp
         ((AdicCompletion.evalₐ M n).toRingHom.comp φ.symm.toRingHom) t = 0
-      exact this
+      exact hfn_zero n
     obtain ⟨x, hx_lift⟩ := Ideal.Quotient.mk_surjective (AdicCompletion.evalₐ M n s)
     rw [← hx_lift, hg_n_mk] at hgn_zero
     rw [Ideal.Quotient.eq_zero_iff_mem, ← hmap_pow,
@@ -820,9 +818,7 @@ theorem exists_prime_bad_quotient
   -- q = Q' ∩ A nonzero by trivial generic formal fiber; height 1 by faithful flatness
   set q : Ideal A := Ideal.comap (algebraMap A Ahat) Q' with hq_def
   have hq_prime : q.IsPrime := Ideal.comap_isPrime (algebraMap A Ahat) Q'
-  have hq_ne : q ≠ ⊥ := by
-    intro hq_bot
-    exact hQ'_ne (htrivial Q' hQ'_prime hq_bot)
+  have hq_ne : q ≠ ⊥ := fun hq_bot => hQ'_ne (htrivial Q' hQ'_prime hq_bot)
   have hq_height : q.height = 1 :=
     contraction_height_one A φ q hq_ne hq_prime rfl
   -- UFD: height-1 prime q = (a) for prime a

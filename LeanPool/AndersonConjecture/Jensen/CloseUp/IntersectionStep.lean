@@ -87,9 +87,7 @@ private def close_up_aux_factor_intersection_proof
       show insert (R.carrier.subtype a) ({R.carrier.subtype q'} : Set T) =
         {(a : T), (q' : T)} from rfl] at h1
     exact h1
-  have hq'_ne : (q' : T) ≠ 0 := by
-    intro h
-    exact hq'.ne_zero (Subtype.val_injective h)
+  have hq'_ne : (q' : T) ≠ 0 := fun h => hq'.ne_zero (Subtype.val_injective h)
   -- Apply intersection_close_up
   obtain ⟨S₁, hAext₁, hle₁, x₁, hrem⟩ :=
     intersection_close_up R a q' c_n hc_n_aq'T hcoprime ha_zero hq'_ne hM_bot hM_not_assoc

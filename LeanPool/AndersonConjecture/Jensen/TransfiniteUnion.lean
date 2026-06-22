@@ -63,8 +63,8 @@ lemma le_union (chain : NSubringChain T ι) (α : ι) :
 
 /-- An element is in the union iff it's in some chain member. -/
 lemma mem_union_iff [Nonempty ι] (chain : NSubringChain T ι) {x : T} :
-    x ∈ chain.unionSubring ↔ ∃ α, x ∈ (chain.ring α).carrier := by
-  exact Subring.mem_iSup_of_directed chain.directed_carriers
+    x ∈ chain.unionSubring ↔ ∃ α, x ∈ (chain.ring α).carrier :=
+  Subring.mem_iSup_of_directed chain.directed_carriers
 
 end NSubringChain
 
@@ -272,10 +272,7 @@ theorem transfinite_union_isNSubring
       rw [hq_bot, Ideal.height_bot]
       norm_cast
     by_contra hq_ne
-    have ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥S, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    have ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     have ⟨x, hx_PS, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨αs, hαs⟩ := hS_union s
     obtain ⟨αx, hαx⟩ := hS_union x

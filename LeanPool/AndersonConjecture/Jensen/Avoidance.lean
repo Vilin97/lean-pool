@@ -208,8 +208,8 @@ lemma buildSeqQInc [IsNoetherianRing T]
     (ea : ∀ P ∈ C, ∀ n, ∃ z ∈ I * IsLocalRing.maximalIdeal T ^ n, z ∉ P)
     (P_of : ℕ → Ideal T) (r_of : ℕ → T) (hP_mem : ∀ n, P_of n ∈ C) (n : ℕ) :
     (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem (n + 1)).2 ≥
-    (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem n).2 + 1 := by
-  exact avoidStep_q_inc I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
+    (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem n).2 + 1 :=
+  avoidStep_q_inc I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
     (r_of n) (ea _ (hP_mem n)) _ _
 
 lemma buildSeqDiff [IsNoetherianRing T]
@@ -220,8 +220,8 @@ lemma buildSeqDiff [IsNoetherianRing T]
     (P_of : ℕ → Ideal T) (r_of : ℕ → T) (hP_mem : ∀ n, P_of n ∈ C) (n : ℕ) :
     (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem (n + 1)).1 -
     (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem n).1 ∈
-    I * IsLocalRing.maximalIdeal T ^ (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem n).2 := by
-  exact avoidStep_diff I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
+    I * IsLocalRing.maximalIdeal T ^ (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem n).2 :=
+  avoidStep_diff I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
     (r_of n) (ea _ (hP_mem n)) _ _
 
 lemma buildSeqAvoids [IsNoetherianRing T]
@@ -231,8 +231,8 @@ lemma buildSeqAvoids [IsNoetherianRing T]
     (ea : ∀ P ∈ C, ∀ n, ∃ z ∈ I * IsLocalRing.maximalIdeal T ^ n, z ∉ P)
     (P_of : ℕ → Ideal T) (r_of : ℕ → T) (hP_mem : ∀ n, P_of n ∈ C) (n : ℕ) :
     (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem (n + 1)).1 ∉
-    (P_of n : Set T) + ({r_of n} : Set T) := by
-  exact avoidStep_avoids I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
+    (P_of n : Set T) + ({r_of n} : Set T) :=
+  avoidStep_avoids I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
     (r_of n) (ea _ (hP_mem n)) _ _
 
 lemma buildSeqSep [IsNoetherianRing T]
@@ -244,8 +244,8 @@ lemma buildSeqSep [IsNoetherianRing T]
     ∀ m ∈ IsLocalRing.maximalIdeal T ^
         (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem (n + 1)).2,
       (buildSeq I hC_prime hC_ne_max ea P_of r_of hP_mem (n + 1)).1 + m ∉
-      (P_of n : Set T) + ({r_of n} : Set T) := by
-  exact avoidStep_sep I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
+      (P_of n : Set T) + ({r_of n} : Set T) :=
+  avoidStep_sep I (P_of n) (hC_prime _ (hP_mem n)) (hC_ne_max _ (hP_mem n))
     (r_of n) (ea _ (hP_mem n)) _ _
 
 /-!

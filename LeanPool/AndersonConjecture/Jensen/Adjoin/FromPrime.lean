@@ -56,11 +56,7 @@ private def adjoin_from_prime_proof
   by_cases hqR : q.comap R.carrier.subtype = ⊥
   swap
   · -- q ∩ R ≠ (0): take S = R
-    have hne : ∃ r : R.carrier, r ∈ q.comap R.carrier.subtype ∧ r ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hqR ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
-    obtain ⟨r, hr_comap, hr_ne⟩ := hne
+    obtain ⟨r, hr_comap, hr_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hqR
     rw [Ideal.mem_comap] at hr_comap
     exact ⟨R, ⟨le_refl _, fun s hs => hs, le_max_right _ _⟩,
       ⟨r, hr_comap, fun h => hr_ne (Subtype.ext h)⟩⟩
@@ -357,11 +353,7 @@ private def adjoin_from_prime_proof
         exact Ideal.mem_comap.mpr (Ideal.Quotient.eq_zero_iff_mem.mp h)
       -- P ∈ C: find nonzero r₀ ∈ P ∩ R, show P is minimal over (r₀)
       have hP_in_C : P ∈ C := by
-        obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ : ∃ r₀ : R.carrier,
-            r₀ ∈ P.comap R.carrier.subtype ∧ r₀ ≠ 0 := by
-          by_contra h
-          push Not at h
-          exact hPR_ne ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
+        obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR_ne
         have hr₀T_ne : (r₀ : T) ≠ 0 := fun h => hr₀_ne (Subtype.val_injective h)
         have hr₀_in_P : (r₀ : T) ∈ P := Ideal.mem_comap.mp hr₀_mem
         -- P minimal over (r₀): ht ≤ 1 prevents strictly smaller primes

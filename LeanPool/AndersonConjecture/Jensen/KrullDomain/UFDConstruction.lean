@@ -130,12 +130,10 @@ include T in theorem build_R_prime_in_S
       t₁ ∈ adjoinLocSetY R x' y' → t₂ ∈ adjoinLocSetY R x' y' →
       t₁ * t₂ ∈ adjoinLocSetY R x' y' :=
     fun x' y' _ _ h₁ h₂ => mem_adjoinLocSetY_mul R x' y' h₁ h₂
-  have hp_ne : (⟨(↑p : T), hR_le p.2⟩ : S_sub) ≠ 0 := by
-    intro h
-    exact hp.ne_zero (R.carrier.subtype_injective (congrArg Subtype.val h))
-  have hp_nu : ¬ IsUnit (⟨(↑p : T), hR_le p.2⟩ : S_sub) := by
-    intro hu
-    exact (IsLocalRing.mem_maximalIdeal _).mp hp_M (hu.map S_sub.subtype)
+  have hp_ne : (⟨(↑p : T), hR_le p.2⟩ : S_sub) ≠ 0 :=
+    fun h => hp.ne_zero (R.carrier.subtype_injective (congrArg Subtype.val h))
+  have hp_nu : ¬ IsUnit (⟨(↑p : T), hR_le p.2⟩ : S_sub) :=
+    fun hu => (IsLocalRing.mem_maximalIdeal _).mp hp_M (hu.map S_sub.subtype)
   refine ⟨hp_ne, hp_nu, ?_⟩
   intro ⟨b, hb_mem⟩ ⟨c, hc_mem⟩ ⟨⟨d, hd_mem⟩, hbcpd⟩
   have hbc_T : b * c = (↑p : T) * d := congrArg Subtype.val hbcpd
@@ -886,9 +884,7 @@ include T in theorem build_primes_preserved
       have hprod_eq : a₁ * b₁ = (r : T) * (a₂ * b₂) := by
         rw [← hcleared]
         ring
-      have hr_ne : (r : T) ≠ 0 := by
-        intro h
-        exact hr.ne_zero (Subtype.ext h)
+      have hr_ne : (r : T) ≠ 0 := fun h => hr.ne_zero (Subtype.ext h)
       suffices h_one_divides :
           (∃ d ∈ adjoinLocSetY R x₁ y₂, a₁ = (r : T) * d) ∨
           (∃ d ∈ adjoinLocSetY R x₁ y₂, b₁ = (r : T) * d) ∨

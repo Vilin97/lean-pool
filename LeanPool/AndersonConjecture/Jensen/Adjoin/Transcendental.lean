@@ -121,10 +121,7 @@ lemma adjoin_height_case_bot
   suffices q = ⊥ by rw [this, Ideal.height_bot]
                     norm_cast
   by_contra hq_ne
-  obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥S_sub, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne (Submodule.eq_bot_iff q |>.mpr fun x hx => h x hx)
+  obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   obtain ⟨x', hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
   have eval_mem' : ∀ f : Polynomial R.carrier, (aeval x f : T) ∈ S_sub := by
     intro f
@@ -258,11 +255,7 @@ lemma adjoin_height_case_ne_bot
     (hPR : P.comap R.carrier.subtype ≠ ⊥) :
     (Ideal.comap S_sub.subtype P).height ≤ ↑(1 : ℕ) := by
   -- Step 1: Extract a prime generator p₀ of P ∩ R
-  obtain ⟨a₀, ha₀_mem, ha₀_ne⟩ : ∃ a₀ : R.carrier,
-      a₀ ∈ P.comap R.carrier.subtype ∧ a₀ ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hPR ((Submodule.eq_bot_iff _).mpr fun y hy => h y hy)
+  obtain ⟨a₀, ha₀_mem, ha₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   obtain ⟨p₀, hp₀_prime_R, hp₀_dvd, hp₀_mem_PR⟩ : ∃ p₀ : R.carrier,
       Prime p₀ ∧ p₀ ∣ a₀ ∧ p₀ ∈ P.comap R.carrier.subtype := by
@@ -355,10 +348,8 @@ lemma adjoin_height_case_ne_bot
       rfl
     have hqa_unit : IsUnit (aeval x qa : T) := IsLocalRing.notMem_maximalIdeal.mp hqa
     obtain ⟨uqa, huqa⟩ := hqa_unit
-    have hb_mem : aeval x pa' * ↑uqa⁻¹ ∈ S_sub := by
-      have : aeval x pa' * ↑uqa⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
-        ⟨pa', qa, hqa, by rw [← huqa, mul_assoc, uqa.inv_mul, mul_one]⟩
-      exact this
+    have hb_mem : aeval x pa' * ↑uqa⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
+      ⟨pa', qa, hqa, by rw [← huqa, mul_assoc, uqa.inv_mul, mul_one]⟩
     refine ⟨⟨aeval x pa' * ↑uqa⁻¹, hb_mem⟩, ?_⟩
     change (a : T) = (p₀ : T) * (aeval x pa' * ↑uqa⁻¹)
     have ha_val : (a : T) = aeval x pa * ↑uqa⁻¹ := by
@@ -376,10 +367,7 @@ lemma adjoin_height_case_ne_bot
   suffices q = ⊥ by rw [this, Ideal.height_bot]
                     norm_cast
   by_contra hq_ne
-  obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥S_sub, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne (Submodule.eq_bot_iff q |>.mpr fun y hy => h y hy)
+  obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   haveI : q.IsPrime := hq_prime
   have hp₀_not_q : p₀_S ∉ q := by
     intro hp₀q
@@ -503,19 +491,16 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
   obtain ⟨g, hfg⟩ := hf_dvd_pa
   have hqa_unit : IsUnit (aeval x qa : T) := IsLocalRing.notMem_maximalIdeal.mp hqa
   obtain ⟨uqa, huqa⟩ := hqa_unit
-  have hg_div_qa_mem : aeval x g * ↑uqa⁻¹ ∈ S_sub := by
-    have : aeval x g * ↑uqa⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
-      ⟨g, qa, hqa, by rw [← huqa, mul_assoc, uqa.inv_mul, mul_one]⟩
-    exact this
+  have hg_div_qa_mem : aeval x g * ↑uqa⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
+    ⟨g, qa, hqa, by rw [← huqa, mul_assoc, uqa.inv_mul, mul_one]⟩
   have ha_eq : (a : T) = aeval x f * (aeval x g * ↑uqa⁻¹) := by
     have : (a : T) * aeval x qa = aeval x f * aeval x g := by rw [heqa, hfg, map_mul]
     calc (a : T) = a * aeval x qa * ↑uqa⁻¹ := by
             rw [← huqa, mul_assoc, uqa.mul_inv, mul_one]
       _ = aeval x f * aeval x g * ↑uqa⁻¹ := by rw [this]
       _ = aeval x f * (aeval x g * ↑uqa⁻¹) := by ring
-  have hf_not_unit : ¬ IsUnit (⟨aeval x f, eval_mem f⟩ : S_sub) := by
-    intro hu
-    exact (IsLocalRing.mem_maximalIdeal _).mp hf_M (hu.map S_sub.subtype)
+  have hf_not_unit : ¬ IsUnit (⟨aeval x f, eval_mem f⟩ : S_sub) :=
+    fun hu => (IsLocalRing.mem_maximalIdeal _).mp hf_M (hu.map S_sub.subtype)
   have hv_unit : IsUnit (⟨aeval x g * ↑uqa⁻¹, hg_div_qa_mem⟩ : S_sub) := by
     have hdvd : (⟨aeval x f, eval_mem f⟩ : S_sub) ∣ a :=
       ⟨⟨_, hg_div_qa_mem⟩, Subtype.ext ha_eq⟩
@@ -527,8 +512,7 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
   obtain ⟨pc, qc, hqc, heqc⟩ : (c : T) ∈ adjoinLocSet R x := hS_eq ▸ c.2
   obtain ⟨pd, qd, hqd, heqd⟩ : (d : T) ∈ adjoinLocSet R x := hS_eq ▸ d.2
   have heq_T : (b : T) * (c : T) = (a : T) * (d : T) := by
-    have h := hd
-    apply_fun (fun x => (x : T)) at h
+    have h := Subtype.ext_iff.mp hd
     simpa using h
   have hinj := transcendental_iff_injective.mp hx_trans
   have poly_eq : pb * pc * qa * qd = pa * pd * qb * qc := by
@@ -548,16 +532,17 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
   have hf_dvd_rhs' : f ∣ (pb * pc) * (qa * qd) := by
     rw [show (pb * pc) * (qa * qd) = pb * pc * qa * qd from by ring]
     exact hf_dvd_rhs
+  have hassoc_fa : Associated (⟨aeval x f, eval_mem f⟩ : S_sub) a :=
+    ⟨hv_unit.unit, by rw [IsUnit.unit_spec]
+                      exact (Subtype.ext ha_eq).symm⟩
   rcases hf_prime.dvd_or_dvd hf_dvd_rhs' with hf_dvd_bc | hf_dvd_qaqd
   · rcases hf_prime.dvd_or_dvd hf_dvd_bc with hf_dvd_pb | hf_dvd_pc
     · left
       obtain ⟨e, he⟩ := hf_dvd_pb
       have hqb_unit : IsUnit (aeval x qb : T) := IsLocalRing.notMem_maximalIdeal.mp hqb
       obtain ⟨uqb, huqb⟩ := hqb_unit
-      have hw_mem : aeval x e * ↑uqb⁻¹ ∈ S_sub := by
-        have : aeval x e * ↑uqb⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
-          ⟨e, qb, hqb, by rw [← huqb, mul_assoc, uqb.inv_mul, mul_one]⟩
-        exact this
+      have hw_mem : aeval x e * ↑uqb⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
+        ⟨e, qb, hqb, by rw [← huqb, mul_assoc, uqb.inv_mul, mul_one]⟩
       have hb_eq : (b : T) = aeval x f * (aeval x e * ↑uqb⁻¹) := by
         calc (b : T) = b * aeval x qb * ↑uqb⁻¹ := by
               rw [← huqb, mul_assoc, uqb.mul_inv, mul_one]
@@ -566,18 +551,13 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
           _ = aeval x f * (aeval x e * ↑uqb⁻¹) := by ring
       have hfx_dvd_b : (⟨aeval x f, eval_mem f⟩ : S_sub) ∣ b :=
         ⟨⟨_, hw_mem⟩, Subtype.ext hb_eq⟩
-      have hassoc_fa : Associated (⟨aeval x f, eval_mem f⟩ : S_sub) a :=
-        ⟨hv_unit.unit, by rw [IsUnit.unit_spec]
-                          exact (Subtype.ext ha_eq).symm⟩
       exact (hassoc_fa.dvd_iff_dvd_left.mp hfx_dvd_b)
     · right
       obtain ⟨e, he⟩ := hf_dvd_pc
       have hqc_unit : IsUnit (aeval x qc : T) := IsLocalRing.notMem_maximalIdeal.mp hqc
       obtain ⟨uqc, huqc⟩ := hqc_unit
-      have hw_mem : aeval x e * ↑uqc⁻¹ ∈ S_sub := by
-        have : aeval x e * ↑uqc⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
-          ⟨e, qc, hqc, by rw [← huqc, mul_assoc, uqc.inv_mul, mul_one]⟩
-        exact this
+      have hw_mem : aeval x e * ↑uqc⁻¹ ∈ (S_sub : Set T) := hS_eq ▸
+        ⟨e, qc, hqc, by rw [← huqc, mul_assoc, uqc.inv_mul, mul_one]⟩
       have hc_eq : (c : T) = aeval x f * (aeval x e * ↑uqc⁻¹) := by
         calc (c : T) = c * aeval x qc * ↑uqc⁻¹ := by
               rw [← huqc, mul_assoc, uqc.mul_inv, mul_one]
@@ -586,9 +566,6 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
           _ = aeval x f * (aeval x e * ↑uqc⁻¹) := by ring
       have hfx_dvd_c : (⟨aeval x f, eval_mem f⟩ : S_sub) ∣ c :=
         ⟨⟨_, hw_mem⟩, Subtype.ext hc_eq⟩
-      have hassoc_fa : Associated (⟨aeval x f, eval_mem f⟩ : S_sub) a :=
-        ⟨hv_unit.unit, by rw [IsUnit.unit_spec]
-                          exact (Subtype.ext ha_eq).symm⟩
       exact (hassoc_fa.dvd_iff_dvd_left.mp hfx_dvd_c)
   · -- f | qa * qd contradicts qa(x)*qd(x) ∉ M since f(x) ∈ M
     exfalso
@@ -631,8 +608,7 @@ private lemma adjoinLoc_prime_of_prime
     have heq_T : aeval x pa * aeval x pb * aeval x qc =
         r.1 * aeval x pc * aeval x qa * aeval x qb := by
       have hab : (a : T) * (b : T) = r.1 * (c : T) := by
-        have h := hc
-        apply_fun (fun x => (x : T)) at h
+        have h := Subtype.ext_iff.mp hc
         simpa using h
       calc aeval x pa * aeval x pb * aeval x qc
           = ((a : T) * aeval x qa) * ((b : T) * aeval x qb) * aeval x qc := by
@@ -675,9 +651,7 @@ private lemma adjoinLoc_prime_of_prime
             rw [← hu, mul_assoc, u.inv_mul, mul_one]
           · rw [← hu, mul_assoc, u.inv_mul, mul_one]
         obtain ⟨c', hc'_mem, hc'_eq⟩ := hc'_mem_set
-        have hc'_S : c' ∈ S_sub := by
-          have : c' ∈ (S_sub : Set T) := hS_eq ▸ hc'_mem
-          exact this
+        have hc'_S : c' ∈ (S_sub : Set T) := hS_eq ▸ hc'_mem
         have ha_eq : (a : T) = r.1 * c' := by
           have hqa_ne : (aeval x qa : T) ≠ 0 := IsUnit.ne_zero hqa_unit
           have h : (a : T) * aeval x qa = r.1 * c' * aeval x qa := by
@@ -703,9 +677,7 @@ private lemma adjoinLoc_prime_of_prime
             rw [← hu, mul_assoc, u.inv_mul, mul_one]
           · rw [← hu, mul_assoc, Units.inv_mul, mul_one]
         obtain ⟨c', hc'_mem, hc'_eq⟩ := hc'_mem_set
-        have hc'_S : c' ∈ S_sub := by
-          have : c' ∈ (S_sub : Set T) := hS_eq ▸ hc'_mem
-          exact this
+        have hc'_S : c' ∈ (S_sub : Set T) := hS_eq ▸ hc'_mem
         have hb_eq : (b : T) = r.1 * c' := by
           have hqb_ne : (aeval x qb : T) ≠ 0 :=
             IsUnit.ne_zero (IsLocalRing.notMem_maximalIdeal.mp hqb)
