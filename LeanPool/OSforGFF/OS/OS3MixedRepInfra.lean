@@ -1071,66 +1071,11 @@ lemma fubini_s_ksp_integrand_stronglyMeasurable (m : ℝ) (f : TestFunctionℂ) 
            ℝ)) *
         Complex.exp (-(x.1.1 : ℂ) * (‖x.1.2‖^2 + m^2)) *
         Complex.exp (-Complex.I * spatialDot x.1.2 (spatialPart x.2 - spatialPart y))) := by
-  -- The integrand is a product of measurable functions
-  -- Variable structure after uncurry: a : ((ℝ × SpatialCoords) × SpaceTime) × SpaceTime
-  -- a.1 = (ℝ × SpatialCoords) × SpaceTime, a.1.1 = (ℝ × SpatialCoords)
-  -- a.1.1.1 = s : ℝ, a.1.1.2 = k_sp : SpatialCoords
-  -- a.1.2 = first SpaceTime (x), a.2 = second SpaceTime (y)
   apply Measurable.stronglyMeasurable
-  -- Let's use refine to handle each piece
-  refine Measurable.mul ?_ ?_
-  · refine Measurable.mul ?_ ?_
-    · refine Measurable.mul ?_ ?_
-      · refine Measurable.mul ?_ ?_
-        · refine Measurable.mul ?_ ?_
-          · -- star (f x.2) where x = a.1 and x.2 = a.1.2 : SpaceTime
-            exact (continuous_star.comp (f.continuous.comp (continuous_snd.comp
-              continuous_fst))).measurable
-          · -- f y where y = a.2
-            exact (f.continuous.comp continuous_snd).measurable
-        · -- √(π/s) where s = a.1.1.1
-          refine Complex.measurable_ofReal.comp ?_
-          exact (measurable_const.div (measurable_fst.comp (measurable_fst.comp
-            measurable_fst))).sqrt
-      · -- exp(-(-(a.1.2.ofLp 0) - a.2.ofLp 0)^2 / (4 * a.1.1.1))
-        refine Complex.measurable_exp.comp ?_
-        -- The goal is: Measurable fun a ↦ -↑((-a.1.2.ofLp 0 - a.2.ofLp 0) ^ 2 / (4 * a.1.1.1))
-        -- This is -(ofReal (...)), so neg then ofReal.comp
-        refine Measurable.neg ?_
-        refine Complex.measurable_ofReal.comp ?_
-        refine Measurable.div ?_ ?_
-        · refine Measurable.pow_const ?_ 2
-          refine Measurable.sub ?_ ?_
-          · refine Measurable.neg ?_
-            exact ((measurable_pi_apply 0).comp (WithLp.measurable_ofLp 2 _)).comp
-              (measurable_snd.comp measurable_fst)
-          · exact ((measurable_pi_apply 0).comp (WithLp.measurable_ofLp 2 _)).comp measurable_snd
-        · exact measurable_const.mul (measurable_fst.comp (measurable_fst.comp measurable_fst))
-    · -- exp(-a.1.1.1 * (‖a.1.1.2‖² + m²))
-      refine Complex.measurable_exp.comp ?_
-      refine Measurable.mul ?_ ?_
-      · refine Measurable.neg ?_
-        exact Complex.measurable_ofReal.comp (measurable_fst.comp (measurable_fst.comp
-          measurable_fst))
-      · refine Measurable.add ?_ ?_
-        · refine Measurable.pow_const ?_ 2
-          exact Complex.measurable_ofReal.comp (measurable_norm.comp (measurable_snd.comp
-            (measurable_fst.comp measurable_fst)))
-        · exact measurable_const
-  · -- exp(-I * spatialDot k_sp (...))
-    refine Complex.measurable_exp.comp ?_
-    refine Measurable.mul ?_ ?_
-    · exact measurable_const
-    · refine Complex.measurable_ofReal.comp ?_
-      -- spatialDot k_sp (spatialPart x.2 - spatialPart y) = inner k_sp (spatialPart x.2 -
-      -- spatialPart y)
-      -- Use spatialDot_eq_inner to rewrite, then use Measurable.inner
-      simp only [spatialDot_eq_inner]
-      refine Measurable.inner (𝕜 := ℝ) ?_ ?_
-      · exact measurable_snd.comp (measurable_fst.comp measurable_fst)
-      · refine Measurable.sub ?_ ?_
-        · exact spatialPart_measurable.comp (measurable_snd.comp measurable_fst)
-        · exact spatialPart_measurable.comp measurable_snd
+  have hf : Measurable f := f.continuous.measurable
+  have hsp : Measurable (spatialPart : SpaceTime → SpatialCoords) := spatialPart_measurable
+  simp only [spatialDot_eq_inner]
+  fun_prop (disch := assumption)
 
 /-! ### Heat Kernel Moment Bounds
 
@@ -1506,18 +1451,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
                     (MeasureTheory.volume.restrict (Set.Ioi 0 ×ˢ Set.Ioi 0)) := by
                   convert h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0) using 2
                 apply MeasureTheory.Integrable.mono h_prod_restr
-                · -- Measurability
-                  apply Measurable.aestronglyMeasurable
-                  apply Measurable.mul
-                  · apply Measurable.mul
-                    · exact measurable_fst
-                    · -- fun a ↦ a.1 + a.2 - a.1 = fun a ↦ a.2
-                      exact (measurable_fst.add measurable_snd).sub measurable_fst
-                  · apply Measurable.exp
-                    apply Measurable.div_const
-                    apply Measurable.neg
-                    apply Measurable.pow_const
-                    exact measurable_add
+                · fun_prop
                 · -- Pointwise bound on Ioi 0 × Ioi 0
                   filter_upwards [MeasureTheory.ae_restrict_mem (measurableSet_Ioi.prod
                     measurableSet_Ioi)] with ⟨x, y⟩ hxy
@@ -1632,13 +1566,7 @@ lemma gaussian_moment_integrableOn_Ioi {b : ℝ} (hb : 0 < b) :
   -- Restrict to Ioi 0 and use that t = |t| for t > 0
   rw [MeasureTheory.IntegrableOn]
   apply MeasureTheory.Integrable.mono (h_int.restrict)
-  · -- Measurability of t ↦ t * exp(-b*t²)
-    have h_meas : Measurable (fun t : ℝ => t * Real.exp (-b * t^2)) := by
-      apply Measurable.mul measurable_id
-      apply Real.measurable_exp.comp
-      have h1 : Measurable (fun t : ℝ => t^2) := measurable_id.pow_const 2
-      exact h1.const_mul (-b)
-    exact h_meas.aestronglyMeasurable
+  · fun_prop
   · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t ht
     simp only [Set.mem_Ioi] at ht
     -- ‖t * exp(-b*t²)‖ = |t * exp(-b*t²)| = t * exp(-b*t²) (since t > 0 and exp > 0)
@@ -1669,15 +1597,7 @@ lemma heat_kernel_inner_integrableOn {s t₁ : ℝ} (hs : 0 < s) (ht₁ : 0 ≤ 
     field_simp
   -- The integrand is dominated by t₂ * exp(-t₂²/(4s)) on Ioi 0
   apply MeasureTheory.Integrable.mono h_dom'
-  · -- Measurability of t₂ ↦ t₂ * exp(-(t₁+t₂)²/(4s))
-    have h_meas : Measurable (fun t₂ : ℝ => t₂ * Real.exp (-(t₁ + t₂)^2 / (4 * s))) := by
-      apply Measurable.mul measurable_id
-      apply Real.measurable_exp.comp
-      apply Measurable.div_const
-      apply Measurable.neg
-      apply Measurable.pow_const
-      exact measurable_const.add measurable_id
-    exact h_meas.aestronglyMeasurable
+  · fun_prop
   · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t₂ ht₂
     simp only [Set.mem_Ioi] at ht₂
     -- ‖t₂ * exp(-(t₁+t₂)²/(4s))‖ = t₂ * exp(-(t₁+t₂)²/(4s)) (nonneg for t₂ > 0)
@@ -1714,15 +1634,7 @@ lemma heat_kernel_moment_integrableOn_quadrant (s : ℝ) (hs : 0 < s) :
     convert h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0) using 2
   -- Dominate by √(π/s) * h_prod_restr
   apply MeasureTheory.Integrable.mono (h_prod_restr.const_mul (Real.sqrt (π/s)))
-  · apply Measurable.aestronglyMeasurable
-    apply Measurable.mul
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · exact measurable_fst
-        · exact measurable_snd
-      · exact measurable_const
-    · exact Real.measurable_exp.comp (Measurable.div_const (Measurable.neg
-        (Measurable.pow_const (measurable_fst.add measurable_snd) 2)) (4 * s))
+  · fun_prop
   · filter_upwards [MeasureTheory.ae_restrict_mem (measurableSet_Ioi.prod measurableSet_Ioi)]
       with ⟨x, y⟩ hxy
     simp only [Set.mem_prod, Set.mem_Ioi] at hxy
@@ -1869,13 +1781,8 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
   have hK_nonneg : ∀ t₁ t₂, 0 ≤ K t₁ t₂ := fun _ _ =>
     mul_nonneg (Real.sqrt_nonneg _) (Real.exp_nonneg _)
   have hK_meas : Measurable (Function.uncurry K) := by
-    apply Measurable.mul
-    · exact measurable_const
-    · apply Real.measurable_exp.comp
-      apply Measurable.div_const
-      apply Measurable.neg
-      apply Measurable.pow_const
-      exact measurable_add
+    simp only [K]
+    fun_prop
   have h_supp_inner : ∀ t₁ : ℝ, ∫ t₂ : ℝ, K t₁ t₂ * G t₁ * G t₂ =
       ∫ t₂ in Set.Ioi 0, K t₁ t₂ * G t₁ * G t₂ := by
     intro t₁
@@ -1917,12 +1824,8 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
         rw [h1]
         exact h_inner.const_mul (C_sp^2 * t₁ * Real.sqrt (π / s))
       apply MeasureTheory.Integrable.mono h_dom
-      · apply Measurable.aestronglyMeasurable
-        apply Measurable.mul
-        · apply Measurable.mul
-          · exact Measurable.of_uncurry_left hK_meas
-          · exact measurable_const
-        · exact hG_meas
+      · have hKt₁ : Measurable (fun t₂ => K t₁ t₂) := Measurable.of_uncurry_left hK_meas
+        fun_prop (disch := assumption)
       · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t₂ ht₂
         simp only [Set.mem_Ioi] at ht₂
         rw [Real.norm_eq_abs,
@@ -1936,10 +1839,8 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
     · have h_inner := heat_kernel_inner_integrableOn hs (le_of_lt ht₁)
       rw [MeasureTheory.IntegrableOn]
       apply MeasureTheory.Integrable.mono (h_inner.const_mul (C_sp^2 * t₁ * Real.sqrt (π / s)))
-      · apply Measurable.aestronglyMeasurable
-        refine Measurable.mul (Measurable.mul ?_ measurable_const) ?_
-        · exact Measurable.of_uncurry_left hK_meas
-        · exact measurable_const_mul C_sp
+      · have hKt₁ : Measurable (fun t₂ => K t₁ t₂) := Measurable.of_uncurry_left hK_meas
+        fun_prop (disch := assumption)
       · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t₂ ht₂
         simp only [Set.mem_Ioi] at ht₂
         simp only [K]
@@ -1973,11 +1874,8 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
       rw [MeasureTheory.IntegrableOn] at h_g_integrableOn ⊢
       apply MeasureTheory.Integrable.mono h_g_integrableOn
       · have h_joint_meas : Measurable (fun p : ℝ × ℝ => K p.1 p.2 * G p.1 * G p.2) := by
-          apply Measurable.mul
-          · apply Measurable.mul
-            · exact hK_meas
-            · exact hG_meas.comp measurable_fst
-          · exact hG_meas.comp measurable_snd
+          have hKp : Measurable (fun p : ℝ × ℝ => K p.1 p.2) := hK_meas
+          fun_prop (disch := assumption)
         exact (h_joint_meas.stronglyMeasurable.integral_prod_right').aestronglyMeasurable
       · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t₁ ht₁
         simp only [Set.mem_Ioi] at ht₁
@@ -2123,13 +2021,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
   -- ∫∫_{(0,∞)²} t₁ * t₂ * K(t₁,t₂) dt₁ dt₂ ≤ 10 * s^{3/2}
   -- The kernel K is measurable
   have hK_meas : Measurable (Function.uncurry K) := by
-    apply Measurable.mul
-    · exact measurable_const
-    · apply Real.measurable_exp.comp
-      apply Measurable.div_const
-      apply Measurable.neg
-      apply Measurable.pow_const
-      exact measurable_add
+    simp only [K]
+    fun_prop
   -- Apply Tonelli factorization theorem (schwartz_tonelli_spacetime)
   -- This gives: ∫∫_{SpaceTime²} ‖f x‖ · ‖f y‖ · K(x₀,y₀) = ∫∫_{ℝ²} K(t₁,t₂) · G(t₁) · G(t₂) dt
   have hK_bdd : ∃ C : ℝ, ∀ t₁ t₂, K t₁ t₂ ≤ C := by
@@ -2215,21 +2108,10 @@ lemma schwartz_heat_product_aestronglymeasurable (f : TestFunctionℂ)
     (x : SpaceTime) (c₁ c₂ : ℝ) (s : ℝ) (_hs : 0 < s) :
     AEStronglyMeasurable (fun a : SpaceTime =>
       ‖f x‖ * ‖f a‖ * c₁ * Real.exp (-(x 0 + a 0)^2 / (4 * s)) * c₂) volume := by
-  have h_fx : AEStronglyMeasurable (fun _ : SpaceTime => ‖f x‖) volume :=
-    aestronglyMeasurable_const
-  have h_fa : AEStronglyMeasurable (fun a : SpaceTime => ‖f a‖) volume := by
-    exact (SchwartzMap.continuous f).aestronglyMeasurable.norm
-  have h_c1 : AEStronglyMeasurable (fun _ : SpaceTime => c₁) volume :=
-    aestronglyMeasurable_const
-  have h_c2 : AEStronglyMeasurable (fun _ : SpaceTime => c₂) volume :=
-    aestronglyMeasurable_const
   have h0 : Continuous (fun a : SpaceTime => a 0) := by
     simpa using (PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) (0 : Fin STDimension))
-  have h_exp : AEStronglyMeasurable
-      (fun a : SpaceTime => Real.exp (-(x 0 + a 0)^2 / (4 * s))) volume :=
-    (Real.continuous_exp.comp
-      (((continuous_const.add h0).pow 2).neg.div_const _)).aestronglyMeasurable
-  exact ((((h_fx.mul h_fa).mul h_c1).mul h_exp).mul h_c2)
+  have hf : Continuous f := f.continuous
+  fun_prop (disch := assumption)
 
 /-- **Iterated integral integrability for Schwartz-bounded functions.**
 
@@ -2254,19 +2136,12 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
   let G : SpaceTime × SpaceTime → ℝ := fun p =>
     ‖f p.1‖ * ‖f p.2‖ * c₁ * Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s)) * c₂
   have hG_meas : AEStronglyMeasurable G (volume.prod volume) := by
-    have h_f1 : Continuous (fun p : SpaceTime × SpaceTime => ‖f p.1‖) :=
-      ((SchwartzMap.continuous f).comp continuous_fst).norm
-    have h_f2 : Continuous (fun p : SpaceTime × SpaceTime => ‖f p.2‖) :=
-      ((SchwartzMap.continuous f).comp continuous_snd).norm
-    have h_exp : Continuous
-        (fun p : SpaceTime × SpaceTime => Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s))) := by
-      have h0 : Continuous (fun p : SpaceTime × SpaceTime => p.1 0 + p.2 0) :=
-        (((PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) 0)).comp continuous_fst).add
-          (((PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) 0)).comp continuous_snd)
-      exact Real.continuous_exp.comp ((h0.pow 2).neg.div_const _)
+    have hf : Continuous f := f.continuous
+    have h0 : Continuous (fun a : SpaceTime => a 0) :=
+      PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) 0
     have hG_cont : Continuous G := by
-      dsimp [G]
-      exact ((((h_f1.mul h_f2).mul continuous_const).mul h_exp).mul continuous_const)
+      simp only [G]
+      fun_prop (disch := assumption)
     exact hG_cont.aestronglyMeasurable
   have hG_int : Integrable G (volume.prod volume) := by
     -- Bound by |c₁ c₂| * ‖f p.1‖ * ‖f p.2‖ using exp ≤ 1.
