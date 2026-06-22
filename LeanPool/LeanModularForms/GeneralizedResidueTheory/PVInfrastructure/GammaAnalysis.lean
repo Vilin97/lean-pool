@@ -50,11 +50,14 @@ private lemma norm_real_smul (x : ℝ) (L : ℂ) :
   haveI : NormSMulClass ℝ ℂ := NormedSpace.toNormSMulClass
   rw [norm_smul, Real.norm_eq_abs]
 
-private lemma norm_add_lower_bound (a b : ℂ) :
-    ‖a + b‖ ≥ ‖a‖ - ‖b‖ := by
-  have h := norm_sub_norm_le a (-b)
-  simp only [sub_neg_eq_add, norm_neg] at h
-  linarith
+/-- The increment norm is within `M` of the linear part `|t - t₀| * ‖L‖`. -/
+private lemma abs_norm_gamma_sub_smul_le {γ : ℝ → ℂ} {t₀ : ℝ} {L : ℂ} {M : ℝ} {t : ℝ}
+    (h_rem : ‖γ t - γ t₀ - (t - t₀) • L‖ ≤ M) :
+    |‖γ t - γ t₀‖ - |t - t₀| * ‖L‖| ≤ M := by
+  have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ := norm_real_smul (t - t₀) L
+  have h := abs_norm_sub_norm_le (γ t - γ t₀) ((t - t₀) • L)
+  rw [h_smul] at h
+  exact le_trans h h_rem
 
 private lemma farSet_isCompact
     (a b t₀ δ : ℝ) (_hab : a < b) (_hδ : 0 < δ) :
@@ -219,31 +222,9 @@ lemma gamma_lower_bound_of_hasDerivAt
     hasDerivAt_remainder_bound hγ_hasderiv
       (‖L‖ / 2) (half_pos hLnorm_pos)
   refine ⟨δ, hδ_pos, fun t ht_pos ht_lt => ?_⟩
-  have h_rem :
-      ‖γ t - γ t₀ - (t - t₀) • L‖ ≤
-        (‖L‖ / 2) * |t - t₀| :=
-    hδ_bound t ht_pos ht_lt
-  have h_decomp :
-      (t - t₀) • L + (γ t - γ t₀ - (t - t₀) • L) =
-        γ t - γ t₀ := by ring
-  have h_tri :
-      ‖γ t - γ t₀‖ ≥
-        ‖(t - t₀) • L‖ -
-          ‖γ t - γ t₀ - (t - t₀) • L‖ := by
-    have h1 :
-        ‖γ t - γ t₀‖ =
-          ‖(t - t₀) • L +
-            (γ t - γ t₀ - (t - t₀) • L)‖ := by congr 1; ring
-    rw [h1]
-    exact norm_add_lower_bound _ _
-  have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ :=
-    norm_real_smul (t - t₀) L
-  calc ‖γ t - γ t₀‖
-      ≥ ‖(t - t₀) • L‖ -
-          ‖γ t - γ t₀ - (t - t₀) • L‖ := h_tri
-    _ ≥ |t - t₀| * ‖L‖ -
-          (‖L‖ / 2) * |t - t₀| := by rw [h_smul]; linarith
-    _ = (‖L‖ / 2) * |t - t₀| := by ring
+  have h := abs_le.mp (abs_norm_gamma_sub_smul_le (hδ_bound t ht_pos ht_lt))
+  have hid : |t - t₀| * ‖L‖ - ‖L‖ / 2 * |t - t₀| = ‖L‖ / 2 * |t - t₀| := by ring
+  linarith [h.1]
 
 /-- Upper bound on ‖γ t - γ t₀‖ from non-zero derivative.
 Uses `hasDerivAt_remainder_bound` + triangle inequality. -/
@@ -257,28 +238,9 @@ lemma gamma_upper_bound_of_hasDerivAt
   obtain ⟨δ, hδ_pos, hδ_bound⟩ :=
     hasDerivAt_remainder_bound hγ_hasderiv ‖L‖ hLnorm_pos
   refine ⟨δ, hδ_pos, fun t ht_pos ht_lt => ?_⟩
-  have h_rem :
-      ‖γ t - γ t₀ - (t - t₀) • L‖ ≤
-        ‖L‖ * |t - t₀| :=
-    hδ_bound t ht_pos ht_lt
-  have h_tri :
-      ‖γ t - γ t₀‖ ≤
-        ‖(t - t₀) • L‖ +
-          ‖γ t - γ t₀ - (t - t₀) • L‖ := by
-    have h1 :
-        ‖γ t - γ t₀‖ =
-          ‖(t - t₀) • L +
-            (γ t - γ t₀ - (t - t₀) • L)‖ := by congr 1; ring
-    rw [h1]
-    exact norm_add_le _ _
-  have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ :=
-    norm_real_smul (t - t₀) L
-  calc ‖γ t - γ t₀‖
-      ≤ ‖(t - t₀) • L‖ +
-          ‖γ t - γ t₀ - (t - t₀) • L‖ := h_tri
-    _ ≤ |t - t₀| * ‖L‖ +
-          ‖L‖ * |t - t₀| := by rw [h_smul]; linarith
-    _ = 2 * ‖L‖ * |t - t₀| := by ring
+  have h := abs_le.mp (abs_norm_gamma_sub_smul_le (hδ_bound t ht_pos ht_lt))
+  have hid : |t - t₀| * ‖L‖ + ‖L‖ * |t - t₀| = 2 * ‖L‖ * |t - t₀| := by ring
+  linarith [h.2]
 
 /-- If γ is continuous on [a,b] and injective at γ(t₀),
 then γ stays bounded away from γ(t₀) outside any

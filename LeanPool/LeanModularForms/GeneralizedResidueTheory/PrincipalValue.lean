@@ -39,13 +39,11 @@ theorem cauchyPrincipalValueIntegrand_bounded
       simpa [Real.norm_eq_abs, abs_norm] using hMγ t ht
     refine ⟨Mf * Mγ + 1, fun t ht => ?_⟩
     unfold cauchyPrincipalValueIntegrand'; split_ifs with h
-    · calc ‖f (γ t) * deriv γ t‖ = ‖f (γ t)‖ * ‖deriv γ t‖ := norm_mul _ _
-        _ ≤ Mf * Mγ := by
-            apply mul_le_mul (hMf' _ ⟨⟨t, ht, rfl⟩, by
-                simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact h.le⟩)
-              (hMγ' t ht) (norm_nonneg _)
-              (le_trans (norm_nonneg _) (hMf' _ ⟨⟨t, ht, rfl⟩, by
-                simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact h.le⟩))
+    · have hγt_in : γ t ∈ γ '' Icc a b \ Metric.ball z₀ ε :=
+        ⟨⟨t, ht, rfl⟩, by simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact h.le⟩
+      calc ‖f (γ t) * deriv γ t‖ = ‖f (γ t)‖ * ‖deriv γ t‖ := norm_mul _ _
+        _ ≤ Mf * Mγ := mul_le_mul (hMf' _ hγt_in) (hMγ' t ht) (norm_nonneg _)
+              (le_trans (norm_nonneg _) (hMf' _ hγt_in))
         _ ≤ Mf * Mγ + 1 := le_add_of_nonneg_right one_pos.le
     · simp only [norm_zero]
       exact add_nonneg (mul_nonneg

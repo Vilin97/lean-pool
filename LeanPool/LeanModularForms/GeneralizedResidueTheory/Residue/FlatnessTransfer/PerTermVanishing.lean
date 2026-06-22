@@ -332,19 +332,32 @@ lemma measurableSet_goodSet_Icc
     (measurableSet_norm_gt_Icc ε
       (γ.toPiecewiseC1Curve.continuous_toFun.sub continuousOn_const))
 
+/-- A point in `Icc γ.a γ.b` that is not in `γ`'s partition lies in the open interval,
+since both endpoints belong to the partition. -/
+private lemma mem_Ioo_of_notMem_partition (γ : PiecewiseC1Immersion) {t : ℝ}
+    (ht_Icc : t ∈ Icc γ.a γ.b) (ht_nP : t ∉ γ.partition) : t ∈ Ioo γ.a γ.b :=
+  ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm fun h =>
+      ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.1)),
+   lt_of_le_of_ne ht_Icc.2 fun h =>
+      ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.2)⟩
+
 /-- The derivative `deriv γ.toFun` is AEStronglyMeasurable on `Icc γ.a γ.b` for
 any `PiecewiseC1Immersion γ`, because it is continuous off the finite partition set. -/
 lemma aesm_deriv_on_Icc (γ : PiecewiseC1Immersion) :
     AEStronglyMeasurable (deriv γ.toFun) (volume.restrict (Icc γ.a γ.b)) :=
   aEStronglyMeasurable_of_continuousOn_off_finite (P := γ.partition) (by
     intro t ⟨ht_Icc, ht_nP⟩
-    have ht_Ioo : t ∈ Ioo γ.a γ.b :=
-      ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm fun h =>
-        ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.1)),
-       lt_of_le_of_ne ht_Icc.2 fun h =>
-        ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.2)⟩
     exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
-      t ht_Ioo ht_nP).continuousWithinAt)
+      t (mem_Ioo_of_notMem_partition γ ht_Icc ht_nP) ht_nP).continuousWithinAt)
+
+/-- `(z-s)^{-m} ∘ γ` is continuous on any set `A ⊆ _ ∩ Icc` on which `γ` avoids `s`. -/
+private lemma continuousOn_zpow_comp_gamma
+    (γ : PiecewiseC1Immersion) (s : ℂ) (m : ℕ) (A : Set ℝ)
+    (hA : A ⊆ Icc γ.a γ.b)
+    (h_avoid : ∀ t ∈ A, γ.toFun t - s ≠ 0) :
+    ContinuousOn (fun t => (fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t)) A :=
+  (ContinuousOn.zpow₀ (continuousOn_id.sub continuousOn_const) (-(m : ℤ))
+    (fun _ hz => Or.inl hz)).comp (γ.toPiecewiseC1Curve.continuous_toFun.mono hA) h_avoid
 
 /-- Helper 2b: `(z-s)^{-m} ∘ γ · γ'` is AEStronglyMeasurable on the "single far" set. -/
 private lemma aesm_zpow_on_singleFar
@@ -353,23 +366,13 @@ private lemma aesm_zpow_on_singleFar
     AEStronglyMeasurable
       (fun t => (fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t)
       (volume.restrict ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b)) := by
-  set f_zpow := fun z => (z - s) ^ (-(m : ℤ)) with hf_zpow_def
   have hSF_meas : MeasurableSet ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b) :=
     measurableSet_norm_gt_Icc ε (γ.toPiecewiseC1Curve.continuous_toFun.sub continuousOn_const)
-  have hf_cont : ContinuousOn (fun t => f_zpow (γ.toFun t))
-      ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b) := by
-    have hf_zpow_cont : ContinuousOn f_zpow {z : ℂ | z - s ≠ 0} :=
-      ContinuousOn.zpow₀ (continuousOn_id.sub continuousOn_const) (-(m : ℤ))
-        (fun z hz => Or.inl hz)
-    have h_maps : Set.MapsTo γ.toFun
-        ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b) {z | z - s ≠ 0} := by
-      intro t ⟨ht_far, _⟩
-      change γ.toFun t - s ≠ 0
-      exact sub_ne_zero.mpr (fun heq => by
-        have : ε < ‖γ.toFun t - s‖ := ht_far
-        rw [heq, sub_self, norm_zero] at this; linarith)
-    exact hf_zpow_cont.comp
-      (γ.toPiecewiseC1Curve.continuous_toFun.mono Set.inter_subset_right) h_maps
+  have hf_cont := continuousOn_zpow_comp_gamma γ s m
+    ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b) Set.inter_subset_right
+    (fun t ⟨ht_far, _⟩ => sub_ne_zero.mpr (fun heq => by
+      have : ε < ‖γ.toFun t - s‖ := ht_far
+      rw [heq, sub_self, norm_zero] at this; linarith))
   exact (hf_cont.aestronglyMeasurable hSF_meas).mul
     ((aesm_deriv_on_Icc γ).mono_measure (Measure.restrict_mono Set.inter_subset_right le_rfl))
 
@@ -431,6 +434,21 @@ lemma ae_forall_ne_of_finite_crossings
 
 /-! ### Sublemma 2: Multi-point CPV of higher-order pole term → 0 -/
 
+/-- Norm bound for `(z-s)^{-m} · γ'` whenever `γ(t)` is at distance `≥ B > 0`
+from `s` and `‖γ'(t)‖ ≤ Mγ'` on `Icc`: the product is `≤ B⁻¹^m · (|Mγ'| + 1)`. -/
+private lemma zpow_deriv_norm_bound_of_dist_ge
+    (γ : PiecewiseC1Immersion) (s : ℂ) (m : ℕ)
+    (Mγ' : ℝ) (hMγ' : ∀ t ∈ Icc γ.a γ.b, ‖deriv γ.toFun t‖ ≤ Mγ')
+    (B : ℝ) (hB : 0 < B) (t : ℝ) (ht : t ∈ Icc γ.a γ.b)
+    (h_far : B ≤ ‖γ.toFun t - s‖) :
+    ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖ ≤
+      B⁻¹ ^ m * (|Mγ'| + 1) := by
+  refine (norm_mul_le _ _).trans (mul_le_mul ?_ ?_ (norm_nonneg _) (by positivity))
+  · simp only []
+    rw [norm_zpow, zpow_neg, zpow_natCast, inv_pow]
+    exact inv_anti₀ (by positivity) (pow_le_pow_left₀ hB.le h_far m)
+  · exact ((hMγ' t ht).trans (le_abs_self _)).trans (le_add_of_nonneg_right one_pos.le)
+
 /-- Norm bound for the zpow integrand: if `‖γ(t) - s‖ > ε` then
 `‖(γ(t)-s)^{-m} · γ'(t)‖ ≤ ε⁻¹^m · (|Mγ'| + 1)`. -/
 private lemma zpow_deriv_norm_bound
@@ -439,21 +457,8 @@ private lemma zpow_deriv_norm_bound
     (ε : ℝ) (hε : 0 < ε) (t : ℝ) (ht : t ∈ Icc γ.a γ.b)
     (h_far : ‖γ.toFun t - s‖ > ε) :
     ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖ ≤
-      ε⁻¹ ^ m * (|Mγ'| + 1) := by
-  calc ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖
-      ≤ ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t)‖ * ‖deriv γ.toFun t‖ :=
-        norm_mul_le _ _
-    _ ≤ ε⁻¹ ^ m * (|Mγ'| + 1) := by
-        apply mul_le_mul
-        · simp only []
-          rw [norm_zpow, zpow_neg, zpow_natCast, inv_pow]
-          exact inv_anti₀ (by positivity)
-            (pow_le_pow_left₀ hε.le h_far.le m)
-        · exact le_trans
-            ((hMγ' t ht).trans (le_abs_self _))
-            (le_add_of_nonneg_right one_pos.le)
-        · exact norm_nonneg _
-        · positivity
+      ε⁻¹ ^ m * (|Mγ'| + 1) :=
+  zpow_deriv_norm_bound_of_dist_ge γ s m Mγ' hMγ' ε hε t ht h_far.le
 
 /-- The single-point cutoff integrand of `(z-s)^{-m} · γ'` is interval integrable. -/
 private lemma single_cutoff_zpow_intervalIntegrable
@@ -486,13 +491,8 @@ private lemma single_cutoff_zpow_intervalIntegrable
           (Or.inl (sub_ne_zero.mpr hz_ne))).continuousWithinAt
       · exact γ.toPiecewiseC1Curve.continuous_toFun
       · intro t ⟨ht_Icc, ht_nP⟩
-        have ht_Ioo : t ∈ Ioo γ.a γ.b := by
-          refine ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm fun h =>
-            ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.1)), ?_⟩
-          exact lt_of_le_of_ne ht_Icc.2 fun h =>
-            ht_nP (h ▸ γ.toPiecewiseC1Curve.endpoints_in_partition.2)
         exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
-          t ht_Ioo ht_nP).continuousWithinAt
+          t (mem_Ioo_of_notMem_partition γ ht_Icc ht_nP) ht_nP).continuousWithinAt
     exact h_aesm_if.congr (by
       filter_upwards [ae_restrict_mem measurableSet_Icc] with t _
       exact (cauchyPrincipalValueIntegrandOn_singleton f_zpow γ.toFun s ε t).symm)
@@ -520,16 +520,10 @@ private lemma multi_cutoff_zpow_intervalIntegrable
     have hGoodSet_meas : MeasurableSet (GoodSet ∩ Icc γ.a γ.b) :=
       measurableSet_goodSet_Icc S0 γ ε
     have hfγ_cont_good : ContinuousOn (fun t => f_zpow (γ.toFun t))
-        (GoodSet ∩ Icc γ.a γ.b) := by
-      have hf_cont : ContinuousOn f_zpow {z : ℂ | z - s ≠ 0} :=
-        ContinuousOn.zpow₀ (continuousOn_id.sub continuousOn_const) (-(m : ℤ))
-          (fun z hz => Or.inl hz)
-      have h_maps : Set.MapsTo γ.toFun (GoodSet ∩ Icc γ.a γ.b) {z | z - s ≠ 0} := by
-        intro t ⟨ht_good, _⟩
-        exact sub_ne_zero.mpr (fun heq => by
-          have := ht_good s hs; rw [heq, sub_self, norm_zero] at this; linarith)
-      exact hf_cont.comp
-        (γ.toPiecewiseC1Curve.continuous_toFun.mono Set.inter_subset_right) h_maps
+        (GoodSet ∩ Icc γ.a γ.b) :=
+      continuousOn_zpow_comp_gamma γ s m (GoodSet ∩ Icc γ.a γ.b) Set.inter_subset_right
+        (fun t ⟨ht_good, _⟩ => sub_ne_zero.mpr (fun heq => by
+          have := ht_good s hs; rw [heq, sub_self, norm_zero] at this; linarith))
     have hγ'_meas := aesm_deriv_on_Icc γ
     have h_prod_meas : AEStronglyMeasurable (fun t => f_zpow (γ.toFun t) * deriv γ.toFun t)
         (volume.restrict (GoodSet ∩ Icc γ.a γ.b)) :=
@@ -591,19 +585,8 @@ private lemma dct_bound_diff_cpv_zpow
         linarith [hε2]
       have ht_Icc : t ∈ Icc γ.a γ.b :=
         Ioc_subset_Icc_self (Set.uIoc_of_le γ.hab.le ▸ ht)
-      calc ‖f_zpow (γ.toFun t) * deriv γ.toFun t‖
-          ≤ ‖f_zpow (γ.toFun t)‖ * ‖deriv γ.toFun t‖ := norm_mul_le _ _
-        _ ≤ (δ_sep / 2)⁻¹ ^ m * (|Mγ'| + 1) := by
-            apply mul_le_mul
-            · change ‖f_zpow (γ.toFun t)‖ ≤ (δ_sep / 2)⁻¹ ^ m
-              simp only [f_zpow]
-              rw [norm_zpow, zpow_neg, zpow_natCast, inv_pow]
-              exact inv_anti₀ (by positivity)
-                (pow_le_pow_left₀ (by linarith) h_far m)
-            · exact le_trans ((hMγ' t ht_Icc).trans (le_abs_self _))
-                (le_add_of_nonneg_right one_pos.le)
-            · exact norm_nonneg _
-            · positivity
+      exact zpow_deriv_norm_bound_of_dist_ge γ s m Mγ' hMγ' (δ_sep / 2)
+        (by linarith) t ht_Icc h_far
     · push Not at h_single_cut; rw [if_neg (not_lt.mpr h_single_cut)]
       norm_num; positivity
   · rw [if_neg h_multi_cut]

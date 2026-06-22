@@ -251,6 +251,12 @@ lemma singular_symmDiff_sup_bound
     Real.norm_eq_abs, one_div]
   exact inv_anti₀ hc_pos ht_lower
 
+/-- From the lower bound `ε₂/(2‖L‖) ≤ |t - t₀|`, the singular factor is `≤ 2‖L‖/ε₂`. -/
+private lemma inv_norm_le_of_half_lower {t₀ : ℝ} {L : ℂ} {ε₂ : ℝ} {t : ℝ}
+    (hL_pos : 0 < ‖L‖) (hε₂_pos : 0 < ε₂) (h_lo : ε₂ / (2 * ‖L‖) ≤ |t - t₀|) :
+    ‖(↑(t - t₀) : ℂ)⁻¹‖ ≤ 2 * ‖L‖ / ε₂ :=
+  le_trans (singular_symmDiff_sup_bound (by positivity) h_lo) (by rw [one_div, inv_div])
+
 /-! ### Helper: measurability, bound, and integrability for the linearized indicator -/
 
 private lemma singular_annulus_f_lin_measurable
@@ -279,10 +285,7 @@ private lemma singular_annulus_f_lin_bound
       calc ε₂ / (2 * ‖L‖)
           < ε₂ / ‖L‖ := div_lt_div_of_pos_left hε₂_pos hL_pos (by linarith)
         _ ≤ |t - t₀| := by rw [div_le_iff₀ hL_pos, mul_comm]; exact le_of_lt hcond.1
-    calc ‖(↑(t - t₀) : ℂ)⁻¹‖
-        ≤ 1 / (ε₂ / (2 * ‖L‖)) :=
-          singular_symmDiff_sup_bound (by positivity) (le_of_lt hlo)
-      _ = 2 * ‖L‖ / ε₂ := by rw [one_div, inv_div]
+    exact inv_norm_le_of_half_lower hL_pos hε₂_pos hlo.le
   · simp only [hcond, ite_false, norm_zero]; positivity
 
 /-- The linearized annular indicator is integrable on any interval. -/
@@ -480,10 +483,7 @@ private lemma singular_annulus_diff_pointwise_bound
         rw [div_lt_iff₀
           (by positivity : (0 : ℝ) < 2 * ‖L‖)]
         linarith [h_upper t ht_pos ht_lt_δ_up])
-    exact le_trans
-      (singular_symmDiff_sup_bound
-        (by positivity) h_lo)
-      (by rw [one_div, inv_div])
+    exact inv_norm_le_of_half_lower hL_pos hε₂_pos h_lo
   · simp only [hγ, hlin, ↓reduceIte,
       zero_sub, norm_neg]
     have h_lo :
@@ -495,10 +495,7 @@ private lemma singular_annulus_diff_pointwise_bound
           _ ≤ |t - t₀| := by
               rw [div_le_iff₀ hL_pos, mul_comm]
               exact le_of_lt hlin.1)
-    exact le_trans
-      (singular_symmDiff_sup_bound
-        (by positivity) h_lo)
-      (by rw [one_div, inv_div])
+    exact inv_norm_le_of_half_lower hL_pos hε₂_pos h_lo
   · simp only [hγ, ↓reduceIte, hlin, sub_self, norm_zero, ge_iff_le]
     exact le_of_lt hbound_pos
 
@@ -555,19 +552,10 @@ private lemma singular_annulus_symmDiff_vol_via_ae
         ε₂ < ‖L‖ * |t - t₀| ∧
         ‖L‖ * |t - t₀| ≤ ε₁}) ≤
     ENNReal.ofReal (Kmeas * ε₁ ^ 2 / ‖L‖ ^ 3) := by
-  calc volume (symmDiff
-        {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < h' t ∧ h' t ≤ ε₁}
-        {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁})
-      ≤ volume (symmDiff
-          {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < h' t ∧ h' t ≤ ε₁}
-          {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁}) +
-        volume (symmDiff
-          {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁}
-          {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁}) :=
-        MeasureTheory.measure_symmDiff_le _ _ _
-    _ ≤ ENNReal.ofReal (Kmeas * ε₁ ^ 2 / ‖L‖ ^ 3) := by
-        rw [symmDiff_ae_version_null hh'_ae, zero_add]
-        exact h_meas ε₁ ε₂ hε₂_pos hε₂_le hε₁_lt_δ_meas
+  refine le_trans (MeasureTheory.measure_symmDiff_le _
+    {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁} _) ?_
+  rw [symmDiff_ae_version_null hh'_ae, zero_add]
+  exact h_meas ε₁ ε₂ hε₂_pos hε₂_le hε₁_lt_δ_meas
 
 lemma singular_annulus_bound_explicit
     {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}

@@ -34,6 +34,42 @@ open scoped Real Interval
 
 noncomputable section
 
+/-- Norm bound for an integral over a left annulus segment `(t₀-b)..(t₀-a)`
+where `‖r‖ ≤ C` holds whenever `0 < |t-t₀| ≤ B` and `b ≤ B`. -/
+private lemma norm_integral_le_const_left {r : ℝ → ℂ} {t₀ a b B C : ℝ}
+    (ha : 0 < a) (hab : a < b) (hbB : b ≤ B)
+    (hB : ∀ t, 0 < |t - t₀| → |t - t₀| ≤ B → ‖r t‖ ≤ C) :
+    ‖∫ t in (t₀ - b)..(t₀ - a), r t‖ ≤ C * (b - a) := by
+  have hb : ∀ t ∈ Set.uIoc (t₀ - b) (t₀ - a), ‖r t‖ ≤ C := fun t ht => by
+    have ⟨h1, h2⟩ :=
+      (Set.uIoc_of_le (by linarith : t₀ - b ≤ t₀ - a) ▸ ht : t ∈ Set.Ioc _ _)
+    refine hB t (abs_pos.mpr (by linarith)) ?_
+    rw [abs_of_neg (by linarith : t - t₀ < 0)]
+    linarith
+  calc ‖∫ t in (t₀ - b)..(t₀ - a), r t‖
+      ≤ C * |(t₀ - a) - (t₀ - b)| :=
+        intervalIntegral.norm_integral_le_of_norm_le_const hb
+    _ = C * (b - a) := by rw [show (t₀ - a) - (t₀ - b) = b - a by ring,
+        abs_of_pos (by linarith)]
+
+/-- Norm bound for an integral over a right annulus segment `(t₀+a)..(t₀+b)`
+where `‖r‖ ≤ C` holds whenever `0 < |t-t₀| ≤ B` and `b ≤ B`. -/
+private lemma norm_integral_le_const_right {r : ℝ → ℂ} {t₀ a b B C : ℝ}
+    (ha : 0 < a) (hab : a < b) (hbB : b ≤ B)
+    (hB : ∀ t, 0 < |t - t₀| → |t - t₀| ≤ B → ‖r t‖ ≤ C) :
+    ‖∫ t in (t₀ + a)..(t₀ + b), r t‖ ≤ C * (b - a) := by
+  have hb : ∀ t ∈ Set.uIoc (t₀ + a) (t₀ + b), ‖r t‖ ≤ C := fun t ht => by
+    have ⟨h1, h2⟩ :=
+      (Set.uIoc_of_le (by linarith : t₀ + a ≤ t₀ + b) ▸ ht : t ∈ Set.Ioc _ _)
+    refine hB t (abs_pos.mpr (by linarith)) ?_
+    rw [abs_of_pos (by linarith : t - t₀ > 0)]
+    linarith
+  calc ‖∫ t in (t₀ + a)..(t₀ + b), r t‖
+      ≤ C * |(t₀ + b) - (t₀ + a)| :=
+        intervalIntegral.norm_integral_le_of_norm_le_const hb
+    _ = C * (b - a) := by rw [show (t₀ + b) - (t₀ + a) = b - a by ring,
+        abs_of_pos (by linarith)]
+
 /-- O(ε) step bound from bounded remainder. -/
 lemma remainder_integral_O_eps {r : ℝ → ℂ} {t₀ ε C : ℝ}
     (hε_pos : 0 < ε) (_hC_pos : 0 < C)
@@ -42,46 +78,11 @@ lemma remainder_integral_O_eps {r : ℝ → ℂ} {t₀ ε C : ℝ}
     ‖∫ t in (t₀ - 2 * ε)..(t₀ - ε), r t‖ +
       ‖∫ t in (t₀ + ε)..(t₀ + 2 * ε), r t‖ ≤
         2 * C * ε := by
-  have h_left :
-      ‖∫ t in (t₀ - 2 * ε)..(t₀ - ε), r t‖ ≤
-        C * ε := by
-    have hb : ∀ t ∈ Set.uIoc (t₀ - 2 * ε) (t₀ - ε),
-        ‖r t‖ ≤ C := fun t ht => by
-      have ⟨h1, h2⟩ :=
-        (Set.uIoc_of_le
-          (by linarith : t₀ - 2 * ε ≤ t₀ - ε) ▸
-            ht : t ∈ Set.Ioc _ _)
-      refine hr_bound t
-        (abs_pos.mpr (by linarith)) ?_
-      rw [abs_of_neg (by linarith : t - t₀ < 0)]
-      linarith
-    calc ‖∫ t in (t₀ - 2 * ε)..(t₀ - ε), r t‖
-        ≤ C * |(t₀ - ε) - (t₀ - 2 * ε)| :=
-          intervalIntegral.norm_integral_le_of_norm_le_const
-            hb
-      _ = C * ε := by
-          rw [show (t₀ - ε) - (t₀ - 2 * ε) = ε
-            by ring, abs_of_pos hε_pos]
-  have h_right :
-      ‖∫ t in (t₀ + ε)..(t₀ + 2 * ε), r t‖ ≤
-        C * ε := by
-    have hb : ∀ t ∈ Set.uIoc (t₀ + ε) (t₀ + 2 * ε),
-        ‖r t‖ ≤ C := fun t ht => by
-      have ⟨h1, h2⟩ :=
-        (Set.uIoc_of_le
-          (by linarith : t₀ + ε ≤ t₀ + 2 * ε) ▸
-            ht : t ∈ Set.Ioc _ _)
-      refine hr_bound t
-        (abs_pos.mpr (by linarith)) ?_
-      rw [abs_of_pos (by linarith : t - t₀ > 0)]
-      linarith
-    calc ‖∫ t in (t₀ + ε)..(t₀ + 2 * ε), r t‖
-        ≤ C * |(t₀ + 2 * ε) - (t₀ + ε)| :=
-          intervalIntegral.norm_integral_le_of_norm_le_const
-            hb
-      _ = C * ε := by
-          rw [show (t₀ + 2 * ε) - (t₀ + ε) = ε
-            by ring, abs_of_pos hε_pos]
+  have h_left := norm_integral_le_const_left (r := r) (t₀ := t₀)
+    (a := ε) (b := 2 * ε) (B := 2 * ε) hε_pos (by linarith) le_rfl hr_bound
+  have h_right := norm_integral_le_const_right (r := r) (t₀ := t₀)
+    (a := ε) (b := 2 * ε) (B := 2 * ε) hε_pos (by linarith) le_rfl hr_bound
+  rw [show 2 * ε - ε = ε by ring] at h_left h_right
   linarith
 
 /-- Symmetric cancellation of 1/(t-t₀). -/
@@ -108,6 +109,27 @@ lemma integral_inv_symm
     rw [intervalIntegral.integral_neg] at h1
     exact h1.symm
   rw [h_reflect, neg_add_cancel]
+
+/-- The base integral `∫ η/u` over `[c₁, c₂]` evaluates to `η log(c₂/c₁)`. -/
+private lemma integral_const_div_eq_log {c₁ c₂ η : ℝ}
+    (hc₁_pos : 0 < c₁) (hc₂_pos : 0 < c₂) :
+    ∫ u in c₁..c₂, η / u = η * Real.log (c₂ / c₁) := by
+  rw [show (fun u => η / u) = (fun u => η * u⁻¹) from by ext u; rw [div_eq_mul_inv],
+    intervalIntegral.integral_const_mul, integral_inv_of_pos hc₁_pos hc₂_pos]
+
+/-- An `Ioo`-pointwise bound upgrades to an a.e.-on-`Ioc` bound,
+since the two intervals differ by a single (null) endpoint. -/
+private lemma norm_le_ae_Ioc_of_Ioo {f g : ℝ → ℝ} {lo hi : ℝ}
+    (h : ∀ t ∈ Set.Ioo lo hi, f t ≤ g t) :
+    ∀ᵐ t, t ∈ Set.Ioc lo hi → f t ≤ g t := by
+  have h_compl : ∀ᵐ t, t ∉ ({hi} : Set ℝ) := by
+    rw [MeasureTheory.ae_iff]
+    convert Real.volume_singleton (a := hi) using 2
+    ext t
+    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, not_not]
+  filter_upwards [h_compl] with t ht_ne ht_mem
+  refine h t ⟨ht_mem.1, lt_of_le_of_ne ht_mem.2 ?_⟩
+  simpa only [Set.mem_singleton_iff] using ht_ne
 
 /-- Remainder annulus bound: O(log ratio). -/
 lemma remainder_annulus_bound {r : ℝ → ℂ}
@@ -138,25 +160,8 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
         ∀ᵐ t, t ∈ Set.Ioc (t₀ - c₂) (t₀ - c₁) →
-          ‖r t‖ ≤ g t := by
-      have h_meas_zero :
-          MeasureTheory.volume {t₀ - c₁} = 0 :=
-        Real.volume_singleton
-      have h_compl :
-          ∀ᵐ t, t ∉ ({t₀ - c₁} : Set ℝ) := by
-        rw [MeasureTheory.ae_iff]
-        convert h_meas_zero using 2
-        ext t
-        simp only [Set.mem_setOf_eq,
-          Set.mem_singleton_iff, not_not]
-      filter_upwards [h_compl] with t ht_ne ht_mem
-      have h_in_open :
-          t ∈ Set.Ioo (t₀ - c₂) (t₀ - c₁) := by
-        simp only [Set.mem_Ioo, Set.mem_Ioc] at ht_mem ⊢
-        refine ⟨ht_mem.1, ?_⟩
-        simp only [Set.mem_singleton_iff] at ht_ne
-        exact lt_of_le_of_ne ht_mem.2 ht_ne
-      exact h_norm_le t h_in_open
+          ‖r t‖ ≤ g t :=
+      norm_le_ae_Ioc_of_Ioo h_norm_le
     have h_g_integrable :
         IntervalIntegrable g MeasureTheory.volume
           (t₀ - c₂) (t₀ - c₁) := by
@@ -182,17 +187,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
             (fun u => η / u) t₀
             (a := t₀ - c₂) (b := t₀ - c₁)
         simp only [sub_sub_cancel] at h; exact h
-      rw [h_subst]
-      have h_inv :
-          ∫ u in c₁..c₂, u⁻¹ =
-            Real.log (c₂ / c₁) :=
-        integral_inv_of_pos hc₁_pos hc₂_pos
-      have h_factor :
-          ∫ u in c₁..c₂, η / u =
-            η * ∫ u in c₁..c₂, u⁻¹ := by
-        rw [← intervalIntegral.integral_const_mul]
-        simp only [div_eq_mul_inv]
-      rw [h_factor, h_inv]
+      rw [h_subst, integral_const_div_eq_log hc₁_pos hc₂_pos]
     rw [h_g_eq] at h_bound; exact h_bound
   have h_right :
       ‖∫ t in (t₀ + c₁)..(t₀ + c₂), r t‖ ≤
@@ -212,25 +207,8 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
         ∀ᵐ t, t ∈ Set.Ioc (t₀ + c₁) (t₀ + c₂) →
-          ‖r t‖ ≤ g t := by
-      have h_meas_zero :
-          MeasureTheory.volume {t₀ + c₂} = 0 :=
-        Real.volume_singleton
-      have h_compl :
-          ∀ᵐ t, t ∉ ({t₀ + c₂} : Set ℝ) := by
-        rw [MeasureTheory.ae_iff]
-        convert h_meas_zero using 2
-        ext t
-        simp only [Set.mem_setOf_eq,
-          Set.mem_singleton_iff, not_not]
-      filter_upwards [h_compl] with t ht_ne ht_mem
-      have h_in_open :
-          t ∈ Set.Ioo (t₀ + c₁) (t₀ + c₂) := by
-        simp only [Set.mem_Ioo, Set.mem_Ioc] at ht_mem ⊢
-        refine ⟨ht_mem.1, ?_⟩
-        simp only [Set.mem_singleton_iff] at ht_ne
-        exact lt_of_le_of_ne ht_mem.2 ht_ne
-      exact h_norm_le t h_in_open
+          ‖r t‖ ≤ g t :=
+      norm_le_ae_Ioc_of_Ioo h_norm_le
     have h_g_integrable :
         IntervalIntegrable g MeasureTheory.volume
           (t₀ + c₁) (t₀ + c₂) := by
@@ -257,17 +235,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
             (a := t₀ + c₁) (b := t₀ + c₂)
         simp only [add_sub_cancel_left] at h
         exact h
-      rw [h_subst]
-      have h_inv :
-          ∫ u in c₁..c₂, u⁻¹ =
-            Real.log (c₂ / c₁) :=
-        integral_inv_of_pos hc₁_pos hc₂_pos
-      have h_factor :
-          ∫ u in c₁..c₂, η / u =
-            η * ∫ u in c₁..c₂, u⁻¹ := by
-        rw [← intervalIntegral.integral_const_mul]
-        simp only [div_eq_mul_inv]
-      rw [h_factor, h_inv]
+      rw [h_subst, integral_const_div_eq_log hc₁_pos hc₂_pos]
     rw [h_g_eq] at h_bound; exact h_bound
   calc ‖∫ t in (t₀ - c₂)..(t₀ - c₁), r t‖ +
       ‖∫ t in (t₀ + c₁)..(t₀ + c₂), r t‖
@@ -788,48 +756,11 @@ lemma pv_dyadic_step_O_eps {r : ℝ → ℂ}
   have hε_n_le_δ₀ : ε_n ≤ δ₀ :=
     div_le_self hδ₀_pos.le
       (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2))
-  have h_left :
-      ‖∫ t in (t₀ - ε_n)..(t₀ - ε_n / 2), r t‖ ≤
-        C * (ε_n / 2) := by
-    have hb :
-        ∀ t ∈ Set.uIoc (t₀ - ε_n) (t₀ - ε_n / 2),
-          ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ - ε_n ≤ t₀ - ε_n / 2 := by linarith
-      have ⟨h1, h2⟩ :=
-        (Set.uIoc_of_le hle ▸
-          ht : t ∈ Set.Ioc _ _)
-      refine hr_bounded t
-        (abs_pos.mpr (by linarith)) ?_
-      rw [abs_of_neg (by linarith : t - t₀ < 0)]
-      linarith
-    calc ‖∫ t in (t₀ - ε_n)..(t₀ - ε_n / 2), r t‖
-        ≤ C * |(t₀ - ε_n / 2) - (t₀ - ε_n)| :=
-          intervalIntegral.norm_integral_le_of_norm_le_const
-            hb
-      _ = C * (ε_n / 2) := by
-          rw [show (t₀ - ε_n / 2) - (t₀ - ε_n) =
-            ε_n / 2 by ring, abs_of_pos hε_n_half_pos]
-  have h_right :
-      ‖∫ t in (t₀ + ε_n / 2)..(t₀ + ε_n), r t‖ ≤
-        C * (ε_n / 2) := by
-    have hb :
-        ∀ t ∈ Set.uIoc (t₀ + ε_n / 2) (t₀ + ε_n),
-          ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ + ε_n / 2 ≤ t₀ + ε_n := by linarith
-      have ⟨h1, h2⟩ :=
-        (Set.uIoc_of_le hle ▸
-          ht : t ∈ Set.Ioc _ _)
-      refine hr_bounded t
-        (abs_pos.mpr (by linarith)) ?_
-      rw [abs_of_pos (by linarith : t - t₀ > 0)]
-      linarith
-    calc ‖∫ t in (t₀ + ε_n / 2)..(t₀ + ε_n), r t‖
-        ≤ C * |(t₀ + ε_n) - (t₀ + ε_n / 2)| :=
-          intervalIntegral.norm_integral_le_of_norm_le_const
-            hb
-      _ = C * (ε_n / 2) := by
-          rw [show (t₀ + ε_n) - (t₀ + ε_n / 2) =
-            ε_n / 2 by ring, abs_of_pos hε_n_half_pos]
+  have h_left := norm_integral_le_const_left (r := r) (t₀ := t₀)
+    (a := ε_n / 2) (b := ε_n) (B := δ₀) hε_n_half_pos (by linarith) hε_n_le_δ₀ hr_bounded
+  have h_right := norm_integral_le_const_right (r := r) (t₀ := t₀)
+    (a := ε_n / 2) (b := ε_n) (B := δ₀) hε_n_half_pos (by linarith) hε_n_le_δ₀ hr_bounded
+  rw [show ε_n - ε_n / 2 = ε_n / 2 by ring] at h_left h_right
   linarith
 
 /-- Dyadic sequence is Cauchy with bounded remainder. -/
