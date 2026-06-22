@@ -43,8 +43,6 @@ lemma epimorphismsClosedUnderComp : is_closed_comp (MorphismProperty.epimorphism
     precomp := by exact epi_comp
     postcomp := by
         intro _ _ _ f hf g hg
-        simp at hf
-        simp at hg
         exact epi_comp g f
 
 /- Every iso is a mono -/
@@ -64,8 +62,6 @@ lemma monomorphismsClosedUnderComp : is_closed_comp (MorphismProperty.monomorphi
     precomp := by exact mono_comp
     postcomp := by
         intro _ _ _ f hf g hg
-        simp at hf
-        simp at hg
         exact mono_comp g f
 
 /- The image of a function of sets -/
@@ -120,9 +116,7 @@ lemma factorization_iso_set_hom' {X Y : Type u} (f : X ⟶ Y) (im : Type u)
   refine ⟨left x, hfact.trans hx, ?_⟩
   intro y' hy
   apply injectiveRight
-  calc
-    right y' = fx := hy
-    _ = right (left x) := (hfact.trans hx).symm
+  exact hy.trans (hfact.trans hx).symm
 
 /- A (unique) way of solving the lifting problem, i.e. a diagonal filler -/
 /-- Imported FactorizationSystems declaration. -/
@@ -149,13 +143,8 @@ lemma factorization_iso_set_hom_comm_left : {X Y : Type u} → (f : X ⟶ Y) →
     leftMapSet f ≫ factorizationIsoSetHom f im left p right q fact = left := by
   intro X Y f im left p right q fact
   apply q.right_cancellation
-  let i := factorizationIsoSetHom f im left p right q fact
-  calc
-    (leftMapSet f ≫ i) ≫ right = leftMapSet f ≫ (i ≫ right) := by simp
-    _ = leftMapSet f ≫ rightMapSet f :=
-      by rw [factorization_iso_set_hom_comm_right f im left p right q fact]
-    _ = f := factorization_set f
-    _ = left ≫ right := by rw [←fact]
+  rw [Category.assoc, factorization_iso_set_hom_comm_right f im left p right q fact,
+    factorization_set f, fact]
 
 /- The inverse of the solution to the lifting problem -/
 /-- Imported FactorizationSystems declaration. -/
@@ -171,9 +160,7 @@ def factorizationIsoSetInv : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) 
     use x
     have hfact : right (left x) = f x := by
       simpa using congrArg (fun h : X ⟶ Y => h x) fact
-    calc
-      f x = right (left x) := hfact.symm
-      _ = right y := by rw [hx]
+    exact hfact.symm.trans (congrArg right hx)
   ⟨right y, existence⟩
 
 /- The commutiativity of the right triangle with the inverse to the diagonal filler -/
@@ -233,13 +220,10 @@ lemma factorization_iso_is_unique_set : {X Y : Type u} → (f : X ⟶ Y) → (im
     (_ : i.hom ≫ right = rightMapSet f) →
     i = (factorizationIsoSet f im left p right q fact).fst := by
   intro X Y f im left p right q fact i comm_left _
-  let hom := factorizationIsoSetHom f im left p right q fact
-  let hom' := i.hom
   apply Iso.ext
   apply (left_map_in_left_class_set f).left_cancellation
-  calc
-    leftMapSet f ≫ hom' = left := comm_left
-    _ = leftMapSet f ≫ hom := by rw [factorization_iso_set_hom_comm_left]
+  exact comm_left.trans
+    (factorization_iso_set_hom_comm_left f im left p right q fact).symm
 
 /- The (Epi,Mono) factorization system on Set -/
 /-- Imported FactorizationSystems declaration. -/
