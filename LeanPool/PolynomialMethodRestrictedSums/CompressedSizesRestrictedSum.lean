@@ -300,28 +300,14 @@ lemma compressedSizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
       | zero => tauto
       | succ j ih =>
         rcases lt_or_eq_of_le ( show i ≤ Fin.castSucc j from Nat.le_of_lt_succ hij ) with h | h
-        · -- By definition of compressedSizes, we have compressedSizes b (j + 1) = min
-          -- (compressedSizes b j - 1) (b (j + 1)).
-          have h_compressed_succ :
-              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
-              b (Fin.succ j)) :=
-            compressedSizes_succ j
-          exact h_compressed_succ.symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
+        · exact (compressedSizes_succ j).symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
               Nat.lt_of_le_of_lt ( Nat.sub_le _ _ ) ( ih _ h ) );
         · subst h
-          -- By definition of `compressedSizes`, we have `compressedSizes b (Fin.succ j) = min
-          -- (compressedSizes b (Fin.castSucc j) - 1) (b (Fin.succ j))`.
-          have h_compressed_succ :
-              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
-              b (Fin.succ j)) :=
-            compressedSizes_succ j
           rcases min_cases ( compressedSizes b ( Fin.castSucc j ) - 1 ) (
               b ( Fin.succ j ) ) with ⟨ left, right ⟩ | ⟨ left, right ⟩
-          · -- By definition of `compressedSizes`, we know that `compressedSizes b (Fin.last k) >
-            -- 0`.
-            rw [h_compressed_succ, left]
+          · rw [compressedSizes_succ j, left]
             exact Nat.sub_lt (compressedSizes_pos h_last_pos _) Nat.one_pos
-          · rw [h_compressed_succ, left]
+          · rw [compressedSizes_succ j, left]
             exact right.trans_le ( Nat.sub_le _ _ )
 
 end AristotleLemmas

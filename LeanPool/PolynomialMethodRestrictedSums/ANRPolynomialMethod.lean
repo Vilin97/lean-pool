@@ -994,13 +994,8 @@ lemma coeff_mul_eq_of_degree_bound
       | inr h_2 => ?_
       -- Since $P - Q$ has a total degree less than $m$, $h * (P - Q)$ has a total degree less than
       -- $h.totalDegree + m$.
-      have h_total_degree : (h * (P - Q)).totalDegree < h.totalDegree + m := by
-        -- The total degree of a product of two polynomials is less than or equal to the sum of
-        -- their total degrees.
-        have h_total_degree_mul : (h * (P - Q)).totalDegree ≤ h.totalDegree +
-            (P - Q).totalDegree := by
-          exact totalDegree_mul h (P - Q)
-        linarith
+      have h_total_degree : (h * (P - Q)).totalDegree < h.totalDegree + m :=
+        lt_of_le_of_lt (totalDegree_mul h (P - Q)) (by linarith)
       -- Since the total degree of $h * (P - Q)$ is less than the sum of $c_i$, the coefficient of
       -- the monomial $c$ in $h * (P - Q)$ must be zero.
       have h_coeff_zero : MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (h * (P - Q)) = 0 :=
@@ -1179,8 +1174,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
                 P.totalDegree < m → MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) P = 0 := by
               intros P hP_deg
               have h_coeff_zero : ∀ (m : (Fin (k + 1)) →₀ ℕ),
-                  m.sum (fun _ n => n) > P.totalDegree → MvPolynomial.coeff m P = 0 := by
-                exact fun m a => coeff_eq_zero_of_totalDegree_lt a
+                  m.sum (fun _ n => n) > P.totalDegree → MvPolynomial.coeff m P = 0 :=
+                fun m a => coeff_eq_zero_of_totalDegree_lt a
               exact h_coeff_zero _ (by
                 simpa [Finsupp.sum_fintype] using by
                   linarith [show h.totalDegree ≥ 0 from Nat.zero_le _])

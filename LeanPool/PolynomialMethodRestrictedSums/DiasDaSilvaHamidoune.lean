@@ -158,10 +158,5 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     simp_all only [Order.add_one_le_iff, Nat.add_eq_zero_iff, one_ne_zero, and_false,
         not_false_eq_true, add_tsub_cancel_right, Nat.add_one_sub_one, ge_iff_le, inf_le_iff,
         forall_const]
-    cases h_theorem with
-    | inl h => ?_
-    | inr h_1 => ?_
-    · exact Or.inl (le_trans h
-        (Finset.card_le_card (restrictedSumSet_subset_distinctSumSet A n)))
-    · exact Or.inr (lt_of_lt_of_le h_1
-        (Finset.card_le_card (restrictedSumSet_subset_distinctSumSet A n)))
+    have hsub := Finset.card_le_card (restrictedSumSet_subset_distinctSumSet A n)
+    exact h_theorem.imp (le_trans · hsub) (lt_of_lt_of_le · hsub)

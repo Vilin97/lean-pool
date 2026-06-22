@@ -107,11 +107,8 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
         · dsimp [m, cs]; aesop --  cs 0 ≤ m
         · --  m < p
           dsimp [m]
-          have : A.card + B.card ≤ p + 1 := h_sum
-          have h1 : A.card + B.card - 2 ≤ p - 1 := by omega
           have h2 : 0 < p := hp.pos
-          have h3 : p - 1 < p := by exact Nat.sub_lt (h2) (Nat.zero_lt_one)
-          exact lt_of_le_of_lt h1 h3
+          omega
       · simp only [X, monomial_pow, monomial_mul]
         rw [coeff_monomial]
         rw [if_pos]
@@ -227,8 +224,7 @@ theorem cauchy_davenport (A B S : Finset (ZMod p)) (hp : p.Prime)
         have step1 :=
             cauchy_davenport_small_sum A B' (sumset A B') Fact.out hA hB'_ne h_new_sum_le rfl
         rw [h_sum_exact] at step1
-        norm_num at step1
-        exact step1
+        simpa using step1
       have h_subset_sum : sumset A B' ⊆ sumset A B := Finset.add_subset_add_left hB'_sub
       apply Nat.le_trans h_lower_bound
       rw [hS]
