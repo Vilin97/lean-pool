@@ -749,58 +749,47 @@ private theorem pv_cutoff_integral_eq_mid (r : ℝ) (hr : 0 < r) (α : ℝ) (n :
     (zpow_integrableOn_δ1 r hr α n δ hδ_pos hδ_lt_1).trans
       (zpow_integrableOn_12 r hr α n) |>.trans
       (zpow_integrableOn_23δ r hr α n δ hδ_pos hδ_lt_1)
+  have hg_zero_left : ∀ t ∈ Set.uIcc (0 : ℝ) δ, g t = 0 := fun t ht => by
+    simp only [g, sub_zero]
+    rw [Set.uIcc_of_le hδ_pos.le] at ht
+    rw [if_neg (not_lt.mpr (h_norm_le_0δ t ht))]
+  have hg_zero_right : ∀ t ∈ Set.uIcc (3 - δ) 3, g t = 0 := fun t ht => by
+    simp only [g, sub_zero]
+    rw [Set.uIcc_of_le (by linarith : 3 - δ ≤ 3)] at ht
+    rw [if_neg (not_lt.mpr (h_norm_le_3δ3 t ht))]
+  have hg_eq_f_mid : ∀ᵐ x ∂volume, x ∈ Ioc δ (3 - δ) → g x = f x := by
+    rw [ae_iff]
+    apply measure_mono_null (t := {3 - δ})
+    · intro x hx
+      simp only [mem_setOf_eq] at hx; push Not at hx
+      obtain ⟨hx_ioc, hx_ne⟩ := hx
+      by_contra hne_3δ
+      simp only [mem_singleton_iff] at hne_3δ
+      have hx_ioo : x ∈ Ioo δ (3 - δ) := ⟨hx_ioc.1, lt_of_le_of_ne hx_ioc.2 hne_3δ⟩
+      exact hx_ne (by simp only [g, sub_zero, f]; rw [if_pos (h_norm_gt_mid x hx_ioo)])
+    · exact Real.volume_singleton
   have h_01 : ∫ t in (0 : ℝ)..δ, g t = 0 :=
-    intervalIntegral.integral_zero_ae (ae_of_all _ (fun t ht => by
-      simp only [g, sub_zero]
-      have ht' := Set.uIoc_subset_uIcc ht
-      rw [Set.uIcc_of_le hδ_pos.le] at ht'
-      rw [if_neg (not_lt.mpr (h_norm_le_0δ t ht'))]))
+    intervalIntegral.integral_zero_ae (ae_of_all _ (fun t ht =>
+      hg_zero_left t (Set.uIoc_subset_uIcc ht)))
   have h_3δ3 : ∫ t in (3 - δ)..3, g t = 0 :=
-    intervalIntegral.integral_zero_ae (ae_of_all _ (fun t ht => by
-      simp only [g, sub_zero]
-      have ht' := Set.uIoc_subset_uIcc ht
-      rw [Set.uIcc_of_le (by linarith : 3 - δ ≤ 3)] at ht'
-      rw [if_neg (not_lt.mpr (h_norm_le_3δ3 t ht'))]))
+    intervalIntegral.integral_zero_ae (ae_of_all _ (fun t ht =>
+      hg_zero_right t (Set.uIoc_subset_uIcc ht)))
   have h_mid : ∫ t in δ..(3 - δ), g t = ∫ t in δ..(3 - δ), f t :=
     intervalIntegral.integral_congr_ae (by
-      rw [Set.uIoc_of_le (by linarith : δ ≤ 3 - δ), ae_iff]
-      apply measure_mono_null (t := {3 - δ})
-      · intro x hx
-        simp only [mem_setOf_eq] at hx; push Not at hx
-        obtain ⟨hx_ioc, hx_ne⟩ := hx
-        by_contra hne_3δ
-        simp only [mem_singleton_iff] at hne_3δ
-        have hx_ioo : x ∈ Ioo δ (3 - δ) := ⟨hx_ioc.1, lt_of_le_of_ne hx_ioc.2 hne_3δ⟩
-        exact hx_ne (by simp only [g, sub_zero, f]; rw [if_pos (h_norm_gt_mid x hx_ioo)])
-      · exact Real.volume_singleton)
+      rw [Set.uIoc_of_le (by linarith : δ ≤ 3 - δ)]; exact hg_eq_f_mid)
+  have hg_eq_f_mid' : g =ᵐ[volume.restrict (Set.uIoc δ (3 - δ))] f := by
+    rw [Set.uIoc_of_le (by linarith : δ ≤ 3 - δ), Filter.EventuallyEq,
+      ae_restrict_iff' measurableSet_Ioc]; exact hg_eq_f_mid
   have hg_0δ : IntervalIntegrable g volume 0 δ :=
-    (intervalIntegrable_const (c := (0 : ℂ))).congr_ae (by
-      filter_upwards [ae_restrict_mem measurableSet_uIoc] with t ht
-      simp only [g, sub_zero]
-      have ht' := Set.uIoc_subset_uIcc ht
-      rw [Set.uIcc_of_le hδ_pos.le] at ht'
-      rw [if_neg (not_lt.mpr (h_norm_le_0δ t ht'))])
+    (intervalIntegrable_const (c := (0 : ℂ))).congr_ae
+      ((ae_restrict_mem measurableSet_uIoc).mono fun t ht =>
+        (hg_zero_left t (Set.uIoc_subset_uIcc ht)).symm)
   have hg_δ3δ : IntervalIntegrable g volume δ (3 - δ) :=
-    hf_int.congr_ae (by
-      rw [Set.uIoc_of_le (by linarith : δ ≤ 3 - δ)]
-      apply Filter.EventuallyEq.symm
-      rw [Filter.EventuallyEq, ae_restrict_iff' measurableSet_Ioc, ae_iff]
-      apply measure_mono_null (t := {3 - δ})
-      · intro x hx
-        simp only [mem_setOf_eq] at hx; push Not at hx
-        obtain ⟨hx_ioc, hx_ne⟩ := hx
-        by_contra hne_3δ
-        simp only [mem_singleton_iff] at hne_3δ
-        have hx_ioo : x ∈ Ioo δ (3 - δ) := ⟨hx_ioc.1, lt_of_le_of_ne hx_ioc.2 hne_3δ⟩
-        exact hx_ne (by simp only [f, g, sub_zero]; rw [if_pos (h_norm_gt_mid x hx_ioo)])
-      · exact Real.volume_singleton)
+    hf_int.congr_ae hg_eq_f_mid'.symm
   have hg_3δ3 : IntervalIntegrable g volume (3 - δ) 3 :=
-    (intervalIntegrable_const (c := (0 : ℂ))).congr_ae (by
-      filter_upwards [ae_restrict_mem measurableSet_uIoc] with t ht
-      simp only [g, sub_zero]
-      have ht' := Set.uIoc_subset_uIcc ht
-      rw [Set.uIcc_of_le (by linarith : 3 - δ ≤ 3)] at ht'
-      rw [if_neg (not_lt.mpr (h_norm_le_3δ3 t ht'))])
+    (intervalIntegrable_const (c := (0 : ℂ))).congr_ae
+      ((ae_restrict_mem measurableSet_uIoc).mono fun t ht =>
+        (hg_zero_right t (Set.uIoc_subset_uIcc ht)).symm)
   rw [show ∫ t in (0 : ℝ)..3,
         (if ‖γ t - 0‖ > ε then (γ t) ^ (-(↑n : ℤ)) * deriv γ t else 0) =
       ∫ t in (0 : ℝ)..3, g t from rfl]

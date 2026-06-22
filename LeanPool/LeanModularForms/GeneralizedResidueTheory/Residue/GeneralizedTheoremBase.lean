@@ -608,19 +608,29 @@ These lemmas establish properties of the "pure residue function"
 `f_res(z) = Σ_{s ∈ S0} c(s) / (z - s)`, which is used to reduce the
 higher-order residue theorem to the simple-pole case. -/
 
+/-- The remainder `∑ s' ∈ S0.erase s, c(s') / (z - s')` is analytic at `s`,
+since each term with `s' ≠ s` is. -/
+private lemma analyticAt_erase_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (s : ℂ) :
+    AnalyticAt ℂ (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s')) s :=
+  (S0.erase s).analyticAt_fun_sum fun _s' hs' =>
+    analyticAt_const.div (analyticAt_id.sub analyticAt_const)
+      (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
+
+/-- The decomposition `∑ s' ∈ S0, c(s')/(z-s') = c(s)/(z-s) + ∑ s' ∈ S0.erase s, …`
+holds near `s` (on a punctured neighborhood). -/
+private lemma sum_div_sub_decomp (S0 : Finset ℂ) (c : ℂ → ℂ) (s : ℂ) (hs : s ∈ S0) :
+    ∀ᶠ z in 𝓝[≠] s, (fun z => ∑ s' ∈ S0, c s' / (z - s')) z =
+      c s / (z - s) + ∑ s' ∈ S0.erase s, c s' / (z - s') := by
+  filter_upwards [self_mem_nhdsWithin] with z _hz
+  exact (Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs).symm
+
 /-- The sum `∑ s ∈ S0, c(s) / (z - s)` has a simple pole at each `s ∈ S0`,
 with coefficient `c(s)` and analytic remainder `∑ s' ∈ S0.erase s, c(s') / (z - s')`. -/
 lemma hasSimplePoleAt_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ)
     (s : ℂ) (hs : s ∈ S0) :
-    HasSimplePoleAt (fun z => ∑ s' ∈ S0, c s' / (z - s')) s := by
-  refine ⟨c s, fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'), ?_, ?_⟩
-  · -- Remainder is analytic at s: each c(s')/(z-s') with s' ≠ s is analytic at s
-    exact (S0.erase s).analyticAt_fun_sum fun s' hs' =>
-      analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-        (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
-  · -- Decomposition: Σ_{S0} = c(s)/(z-s) + Σ_{S0.erase s}
-    filter_upwards [self_mem_nhdsWithin] with z _hz
-    exact (Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs).symm
+    HasSimplePoleAt (fun z => ∑ s' ∈ S0, c s' / (z - s')) s :=
+  ⟨c s, fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'),
+    analyticAt_erase_sum_div_sub S0 c s, sum_div_sub_decomp S0 c s hs⟩
 
 /-- The sum `∑ s ∈ S0, c(s) / (z - s)` is differentiable on `U \ S0`. -/
 lemma differentiableOn_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (U : Set ℂ) :
@@ -635,14 +645,10 @@ lemma differentiableOn_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (U : Set 
 This follows from the HasSimplePoleAt decomposition. -/
 lemma residueSimplePole_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ)
     (s : ℂ) (hs : s ∈ S0) :
-    residueSimplePole (fun z => ∑ s' ∈ S0, c s' / (z - s')) s = c s := by
-  apply residueSimplePole_eq_of_decomposition _ s (c s)
+    residueSimplePole (fun z => ∑ s' ∈ S0, c s' / (z - s')) s = c s :=
+  residueSimplePole_eq_of_decomposition _ s (c s)
     (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'))
-  · exact (S0.erase s).analyticAt_fun_sum fun s' hs' =>
-      analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-        (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
-  · filter_upwards [self_mem_nhdsWithin] with z _hz
-    exact (Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs).symm
+    (analyticAt_erase_sum_div_sub S0 c s) (sum_div_sub_decomp S0 c s hs)
 
 /-- `ContinuousAt` of the remainder `(∑ c(s')/(z-s')) - c(s)/(z-s)` at `s`.
 This is the `hf_ext` condition needed by the simple-pole theorem. -/
@@ -655,9 +661,7 @@ lemma continuousAt_sum_remainder (S0 : Finset ℂ) (c : ℂ → ℂ)
       (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s')) := by
     funext z; rw [← Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs]; ring
   rw [h_rem]
-  exact ((S0.erase s).analyticAt_fun_sum (𝕜 := ℂ) fun s' hs' =>
-    analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-      (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))).continuousAt
+  exact (analyticAt_erase_sum_div_sub S0 c s).continuousAt
 
 /-- CPV(f) = CPV(f_res) when the PV difference `M_f(ε) - M_res(ε)` tends to 0 and
 the PV of f_res exists. This is the limit-arithmetic core of the higher-order reduction. -/

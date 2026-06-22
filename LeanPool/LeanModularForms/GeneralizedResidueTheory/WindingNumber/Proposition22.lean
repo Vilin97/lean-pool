@@ -50,34 +50,32 @@ private lemma HasDerivAt.re' {f : ℝ → ℂ} {f' : ℂ} {x : ℝ} (h : HasDeri
 
 /-! ### Eventually not in partition (shared pattern) -/
 
-/-- The partition minus a point is finite hence closed; its complement is a nhds of `p`. -/
-private lemma eventually_not_in_partition_left
-    (γ : PiecewiseC1Immersion) (p : ℝ) :
-    ∀ᶠ t in 𝓝[<] p, t ∉ γ.toPiecewiseC1Curve.partition := by
+/-- The partition minus a point is finite hence closed; its complement is a nhds of `p`,
+so off the singleton `{p}` the parameter eventually avoids the partition. -/
+private lemma eventually_notMem_partition_of_eventually_ne
+    (γ : PiecewiseC1Immersion) (p : ℝ) {l : Filter ℝ} (hl : l ≤ 𝓝 p)
+    (hne : ∀ᶠ t in l, t ≠ p) :
+    ∀ᶠ t in l, t ∉ γ.toPiecewiseC1Curve.partition := by
   have hcl : IsClosed ((↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)) :=
     (γ.toPiecewiseC1Curve.partition.finite_toSet.subset diff_subset).isClosed
   have hmem : p ∉ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ) := by
     simp only [Set.mem_diff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
       implies_true]
-  have h1 : ∀ᶠ t in 𝓝[<] p, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
-    eventually_nhdsWithin_of_eventually_nhds (hcl.isOpen_compl.mem_nhds hmem)
-  have h2 : ∀ᶠ t in 𝓝[<] p, t < p := eventually_nhdsWithin_of_forall fun t ht => ht
-  exact (h1.and h2).mono fun t ⟨ht_compl, ht_lt⟩ ht_part =>
-    ht_compl ⟨ht_part, ne_of_lt ht_lt⟩
+  have h1 : ∀ᶠ t in l, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
+    hl (hcl.isOpen_compl.mem_nhds hmem)
+  exact (h1.and hne).mono fun t ⟨ht_compl, ht_ne⟩ ht_part => ht_compl ⟨ht_part, ht_ne⟩
+
+private lemma eventually_not_in_partition_left
+    (γ : PiecewiseC1Immersion) (p : ℝ) :
+    ∀ᶠ t in 𝓝[<] p, t ∉ γ.toPiecewiseC1Curve.partition :=
+  eventually_notMem_partition_of_eventually_ne γ p nhdsWithin_le_nhds
+    (eventually_nhdsWithin_of_forall fun _ ht => ne_of_lt ht)
 
 private lemma eventually_not_in_partition_right
     (γ : PiecewiseC1Immersion) (p : ℝ) :
-    ∀ᶠ t in 𝓝[>] p, t ∉ γ.toPiecewiseC1Curve.partition := by
-  have hcl : IsClosed ((↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)) :=
-    (γ.toPiecewiseC1Curve.partition.finite_toSet.subset diff_subset).isClosed
-  have hmem : p ∉ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ) := by
-    simp only [Set.mem_diff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
-      implies_true]
-  have h1 : ∀ᶠ t in 𝓝[>] p, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
-    eventually_nhdsWithin_of_eventually_nhds (hcl.isOpen_compl.mem_nhds hmem)
-  have h2 : ∀ᶠ t in 𝓝[>] p, p < t := eventually_nhdsWithin_of_forall fun t ht => ht
-  exact (h1.and h2).mono fun t ⟨ht_compl, ht_gt⟩ ht_part =>
-    ht_compl ⟨ht_part, ne_of_gt ht_gt⟩
+    ∀ᶠ t in 𝓝[>] p, t ∉ γ.toPiecewiseC1Curve.partition :=
+  eventually_notMem_partition_of_eventually_ne γ p nhdsWithin_le_nhds
+    (eventually_nhdsWithin_of_forall fun _ ht => ne_of_gt ht)
 
 /-! ### Isolation of crossings at smooth points -/
 
@@ -93,6 +91,18 @@ theorem PiecewiseC1Immersion.eventually_ne_at_smooth_crossing
     (γ.deriv_ne_zero t₀ ht₀ hsmooth)
 
 /-! ### Isolation of crossings at partition points -/
+
+/-- If `deriv γ.toFun` tends to a nonzero `L` along a filter `l`, then
+`Re(conj(L) · γ'(t))` is eventually positive along `l`. -/
+private lemma eventually_conj_deriv_re_pos (γ : PiecewiseC1Immersion) {L : ℂ}
+    (hL_ne : L ≠ 0) {l : Filter ℝ} (hL_tendsto : Tendsto (deriv γ.toFun) l (𝓝 L)) :
+    ∀ᶠ t in l, (starRingEnd ℂ L * deriv γ.toFun t).re > 0 := by
+  have hL_sq_pos : (0 : ℝ) < ‖L‖ ^ 2 := by positivity
+  have h_lim_val : (starRingEnd ℂ L * L).re = ‖L‖ ^ 2 := by
+    rw [Complex.conj_mul' L, sq, ← Complex.ofReal_mul, Complex.ofReal_re, sq]
+  refine (Tendsto.eventually ?_ (Ioi_mem_nhds hL_sq_pos))
+  rw [← h_lim_val]
+  exact (continuous_re.tendsto _).comp (hL_tendsto.const_mul (starRingEnd ℂ L))
 
 /-- At a partition point p with a < p, the left-sided derivative limit is nonzero,
 so γ(t) ≠ γ(p) for t sufficiently close to p from the left. -/
@@ -110,18 +120,9 @@ theorem PiecewiseC1Immersion.eventually_ne_left_of_partition
   have h_ev_smooth : ∀ᶠ t in 𝓝[<] p, t ∉ γ.toPiecewiseC1Curve.partition :=
     eventually_not_in_partition_left γ p
   -- (E2): Eventually Re(conj(L) * γ'(t)) > 0
-  have hL_sq_pos : (0 : ℝ) < ‖L‖ ^ 2 := by positivity
-  have h_lim_val : (starRingEnd ℂ L * L).re = ‖L‖ ^ 2 := by
-    have : starRingEnd ℂ L * L = (↑(‖L‖) : ℂ) ^ 2 := Complex.conj_mul' L
-    rw [this, sq, ← Complex.ofReal_mul, Complex.ofReal_re, sq]
   have h_ev_deriv_pos : ∀ᶠ t in 𝓝[<] p,
-      (starRingEnd ℂ L * deriv γ.toFun t).re > 0 := by
-    have : Tendsto (fun t => (starRingEnd ℂ L * deriv γ.toFun t).re)
-        (𝓝[<] p) (𝓝 (‖L‖ ^ 2)) := by
-      rw [← h_lim_val]
-      exact (continuous_re.tendsto _).comp
-        (hL_tendsto.const_mul (starRingEnd ℂ L))
-    exact this.eventually (Ioi_mem_nhds hL_sq_pos)
+      (starRingEnd ℂ L * deriv γ.toFun t).re > 0 :=
+    eventually_conj_deriv_re_pos γ hL_ne hL_tendsto
   -- (E3): Eventually t ∈ [a, b]
   have h_ev_Iab : ∀ᶠ t in 𝓝[<] p, t ∈ Icc γ.a γ.b := by
     have h1 : ∀ᶠ t in 𝓝[<] p, γ.a < t :=
@@ -175,17 +176,9 @@ theorem PiecewiseC1Immersion.eventually_ne_right_of_partition
   have h_ev_smooth : ∀ᶠ t in 𝓝[>] p, t ∉ γ.toPiecewiseC1Curve.partition :=
     eventually_not_in_partition_right γ p
   -- (E2): Eventually derivative positive
-  have hL_sq_pos : (0 : ℝ) < ‖L‖ ^ 2 := by positivity
-  have h_lim_val : (starRingEnd ℂ L * L).re = ‖L‖ ^ 2 := by
-    have : starRingEnd ℂ L * L = (↑(‖L‖) : ℂ) ^ 2 := Complex.conj_mul' L
-    rw [this, sq, ← Complex.ofReal_mul, Complex.ofReal_re, sq]
   have h_ev_deriv_pos : ∀ᶠ t in 𝓝[>] p,
-      (starRingEnd ℂ L * deriv γ.toFun t).re > 0 := by
-    have : Tendsto (fun t => (starRingEnd ℂ L * deriv γ.toFun t).re)
-        (𝓝[>] p) (𝓝 (‖L‖ ^ 2)) := by
-      rw [← h_lim_val]
-      exact (continuous_re.tendsto _).comp (hL_tendsto.const_mul (starRingEnd ℂ L))
-    exact this.eventually (Ioi_mem_nhds hL_sq_pos)
+      (starRingEnd ℂ L * deriv γ.toFun t).re > 0 :=
+    eventually_conj_deriv_re_pos γ hL_ne hL_tendsto
   -- (E3): Eventually t ∈ [a, b]
   have h_ev_Iab : ∀ᶠ t in 𝓝[>] p, t ∈ Icc γ.a γ.b := by
     have h1 : ∀ᶠ t in 𝓝[>] p, t < γ.b :=

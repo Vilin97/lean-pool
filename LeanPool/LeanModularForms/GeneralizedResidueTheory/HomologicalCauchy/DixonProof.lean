@@ -62,6 +62,14 @@ section DixonProof
 
 variable {U : Set ℂ} {f : ℂ → ℂ}
 
+/-- A parameter in `Icc γ.a γ.b` off the partition lies in the open interval
+`Ioo γ.a γ.b`, since the endpoints belong to the partition. -/
+private lemma mem_Ioo_of_notMem_partition (γ : PiecewiseC1Immersion) {t : ℝ}
+    (ht_Icc : t ∈ Icc γ.a γ.b) (ht_npart : t ∉ (↑γ.partition : Set ℝ)) :
+    t ∈ Ioo γ.a γ.b :=
+  ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm fun h => ht_npart (h ▸ γ.endpoints_in_partition.1)),
+   lt_of_le_of_ne ht_Icc.2 fun h => ht_npart (h ▸ γ.endpoints_in_partition.2)⟩
+
 /-- The Dixon kernel is exactly `dslope`: `dixonKernel f z w = dslope f z w`.
 We use `dslope` directly rather than a custom definition. -/
 abbrev dixonKernel (f : ℂ → ℂ) (z w : ℂ) : ℂ := dslope f z w
@@ -112,12 +120,7 @@ private lemma dixonH1_cauchyIntegrand_integrable (hU : IsOpen U)
   apply intervalIntegrable_of_piecewise_continuousOn_bounded
     (P := γ.partition) (M_f * M_inv * M_d) hab
   · intro t ⟨ht_Icc, ht_npart⟩
-    have ht_Ioo : t ∈ Ioo γ.a γ.b := by
-      constructor
-      · by_contra h; push Not at h
-        exact ht_npart (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1)
-      · by_contra h; push Not at h
-        exact ht_npart (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)
+    have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
     apply ContinuousWithinAt.mul
     · apply ContinuousWithinAt.div
       · exact (hf_cont_on t ht_Icc).mono diff_subset
@@ -172,11 +175,7 @@ private lemma dixonH2_integrand_integrable (f : ℂ → ℂ) (γ : PiecewiseC1Im
   apply intervalIntegrable_of_piecewise_continuousOn_bounded
     (P := γ.partition) (M_f * ε⁻¹ * M_d) hab
   · intro t ⟨ht_Icc, ht_npart⟩
-    have ht_Ioo : t ∈ Ioo γ.a γ.b := ⟨by
-      by_contra h; push Not at h
-      exact ht_npart (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1), by
-      by_contra h; push Not at h
-      exact ht_npart (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)⟩
+    have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
     exact ((hfγ_cont t ht_Icc).div
         ((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const)
         (sub_ne_zero.mpr (hball_avoids t ht_Icc)) |>.mono diff_subset).mul
@@ -280,11 +279,7 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
       change ContinuousWithinAt
           (fun t => f (γ.toFun t) * (γ.toFun t - w)⁻¹ ^ 2 * deriv γ.toFun t)
           (Icc γ.a γ.b \ γ.partition) t
-      have ht_Ioo : t ∈ Ioo γ.a γ.b := ⟨by
-        by_contra h; push Not at h
-        exact ht_npart (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1), by
-        by_contra h; push Not at h
-        exact ht_npart (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)⟩
+      have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
       exact ((hfγ_cont t ht_Icc).mul
           (((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const |>.inv₀
             (sub_ne_zero.mpr (hav_w t ht_Icc))).pow 2)
@@ -498,11 +493,7 @@ private theorem dixonH1_F'_aestronglyMeasurable {M_d C_b δ₀ : ℝ}
     exact (intervalIntegrable_of_piecewise_continuousOn_bounded (P := γ.partition)
       (‖(n : ℂ) + 1‖ * (M_n + C_b) * M_d) hab
       (fun t ⟨ht_Icc, ht_np⟩ => by
-        have ht_Ioo : t ∈ Ioo γ.a γ.b := ⟨by
-          by_contra h; push Not at h
-          exact ht_np (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1), by
-          by_contra h; push Not at h
-          exact ht_np (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)⟩
+        have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_np
         exact (continuousWithinAt_const.mul
           ((hdslope_t_cont _ t ht_Icc |>.mono diff_subset).sub
             (hdslope_t_cont _ t ht_Icc |>.mono diff_subset))).mul
@@ -558,11 +549,7 @@ private theorem dixonH1_dslope_intervalIntegrable (hU : IsOpen U) (hf : Differen
   have hdslope_t_cont := dixonH1_dslope_t_cont hU hf γ hγ_in_U
   apply intervalIntegrable_of_piecewise_continuousOn_bounded (P := γ.partition) (C_b * M_d) hab
   · intro t ⟨ht_Icc, ht_np⟩
-    have ht_Ioo : t ∈ Ioo γ.a γ.b := ⟨by
-      by_contra h; push Not at h
-      exact ht_np (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1), by
-      by_contra h; push Not at h
-      exact ht_np (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)⟩
+    have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_np
     exact (hdslope_t_cont x t ht_Icc |>.mono diff_subset).mul
       (γ.deriv_continuous_off_partition t ht_Ioo ht_np).continuousWithinAt
   · intro t ht
@@ -963,12 +950,7 @@ lemma piecewiseC1_image_interior_empty (γ : PiecewiseC1Immersion) :
   · apply lt_of_le_of_lt
     · apply dimH_image_le_of_locally_lipschitzOn
       intro t ⟨ht_Icc, ht_npart⟩
-      have ht_Ioo : t ∈ Ioo γ.a γ.b := by
-        constructor
-        · by_contra h; push Not at h
-          exact ht_npart (le_antisymm h ht_Icc.1 ▸ γ.endpoints_in_partition.1)
-        · by_contra h; push Not at h
-          exact ht_npart (le_antisymm ht_Icc.2 h ▸ γ.endpoints_in_partition.2)
+      have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
       have hevt : ∀ᶠ y in 𝓝 t, HasDerivAt γ.toFun (deriv γ.toFun y) y := by
         filter_upwards [(γ.partition.finite_toSet.isClosed.isOpen_compl.inter
           (isOpen_Ioo (a := γ.a) (b := γ.b))).mem_nhds ⟨ht_npart, ht_Ioo⟩]

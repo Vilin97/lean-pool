@@ -221,6 +221,15 @@ lemma piecewiseC1_deriv_intervalIntegrable (γ : PiecewiseC1Curve)
       exact h1
     exact hM t ht'
 
+/-- If `h` is continuous on `Icc γ.a γ.b` and the derivative is bounded, then
+`t ↦ h t * deriv γ.toFun t` is interval integrable. -/
+private lemma continuousOn_mul_deriv_intervalIntegrable (γ : PiecewiseC1Curve)
+    {h : ℝ → ℂ} (hh_cont : ContinuousOn h (Icc γ.a γ.b))
+    (hγ'_bdd : ∃ M : ℝ, ∀ t ∈ Icc γ.a γ.b, ‖deriv γ.toFun t‖ ≤ M) :
+    IntervalIntegrable (fun t => h t * deriv γ.toFun t) MeasureTheory.volume γ.a γ.b :=
+  (piecewiseC1_deriv_intervalIntegrable γ hγ'_bdd).continuousOn_mul
+    (Set.uIcc_of_le (le_of_lt γ.hab) ▸ hh_cont)
+
 /-- A single singular term is interval integrable when γ avoids s. -/
 lemma singular_term_intervalIntegrable
     (f : ℂ → ℂ) (s : ℂ)
@@ -230,13 +239,9 @@ lemma singular_term_intervalIntegrable
     IntervalIntegrable
       (fun t => residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t)
       MeasureTheory.volume γ.a γ.b := by
-  have h_cont : ContinuousOn (fun t => residueSimplePole f s / (γ.toFun t - s))
-      (Set.uIcc γ.a γ.b) := by
-    rw [Set.uIcc_of_le (le_of_lt γ.hab)]
-    apply ContinuousOn.div continuousOn_const
-    · exact γ.continuous_toFun.sub continuousOn_const
-    · intro t ht; exact sub_ne_zero.mpr (hγ_avoids_s t ht)
-  exact (piecewiseC1_deriv_intervalIntegrable γ hγ'_bdd).continuousOn_mul h_cont
+  exact continuousOn_mul_deriv_intervalIntegrable γ
+    (continuousOn_const.div (γ.continuous_toFun.sub continuousOn_const)
+      fun t ht => sub_ne_zero.mpr (hγ_avoids_s t ht)) hγ'_bdd
 
 /-- The singular sum is interval integrable when curve avoids all poles. -/
 lemma singular_sum_intervalIntegrable
@@ -311,9 +316,7 @@ lemma integral_singular_term_eq_winding_times_coeff
     (h_avoids : ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ s) :
     ∫ t in γ.a..γ.b, c / (γ.toFun t - s) * deriv γ.toFun t =
       2 * Real.pi * I * generalizedWindingNumber' γ.toFun γ.a γ.b s * c := by
-  have h_ne : (2 * Real.pi * I : ℂ) ≠ 0 := by
-    simp only [ne_eq, mul_eq_zero, not_or]
-    exact ⟨⟨by norm_num, by exact_mod_cast Real.pi_ne_zero⟩, Complex.I_ne_zero⟩
+  have h_ne : (2 * Real.pi * I : ℂ) ≠ 0 := Complex.two_pi_I_ne_zero
   have h_integral : ∫ t in γ.a..γ.b, (γ.toFun t - s)⁻¹ * deriv γ.toFun t =
       2 * Real.pi * I * generalizedWindingNumber' γ.toFun γ.a γ.b s := by
     rw [generalizedWindingNumber_eq_classical_away γ s h_avoids]
@@ -460,9 +463,8 @@ private lemma holomorphic_closed_integral_zero
       (γ.smooth_off_partition t (Ioo_subset_Icc_self ht) (fun h => hp ⟨h, ht⟩)).hasDerivAt rfl
   have h_int : IntervalIntegrable (fun t => g (γ.toFun t) * deriv γ.toFun t)
       MeasureTheory.volume γ.a γ.b :=
-    (piecewiseC1_deriv_intervalIntegrable γ hγ'_bdd).continuousOn_mul
-      (Set.uIcc_of_le (le_of_lt γ.hab) ▸
-        hg_diff.continuousOn.comp γ.continuous_toFun (fun t ht => hγ_in_U t ht))
+    continuousOn_mul_deriv_intervalIntegrable γ
+      (hg_diff.continuousOn.comp γ.continuous_toFun (fun t ht => hγ_in_U t ht)) hγ'_bdd
   rw [MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le
     (F ∘ γ.toFun) _ (le_of_lt γ.hab) h_countable h_Fγ_cont h_deriv' h_int,
     Function.comp_apply, Function.comp_apply, hγ_closed, sub_self]
@@ -481,10 +483,9 @@ private lemma singular_sum_eq_winding_residues
     ∑ s ∈ S0, ∫ t in γ.a..γ.b,
       residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t from by
     rw [intervalIntegral.integral_finsetSum]; intro s hs
-    exact (piecewiseC1_deriv_intervalIntegrable γ hγ'_bdd).continuousOn_mul
-      (Set.uIcc_of_le (le_of_lt γ.hab) ▸
-        (continuousOn_const.div (γ.continuous_toFun.sub continuousOn_const)
-          fun t ht => sub_ne_zero.mpr (hγ_avoids s hs t ht)))]
+    exact continuousOn_mul_deriv_intervalIntegrable γ
+      (continuousOn_const.div (γ.continuous_toFun.sub continuousOn_const)
+        fun t ht => sub_ne_zero.mpr (hγ_avoids s hs t ht)) hγ'_bdd]
   exact Finset.sum_congr rfl fun s hs =>
     integral_singular_term_eq_winding_times_coeff γ s
       (residueSimplePole f s) (fun t ht => hγ_avoids s hs t ht)
@@ -526,9 +527,8 @@ theorem integral_eq_sum_residues_of_avoids
   simp_rw [h_expand]
   have h_g_int : IntervalIntegrable (fun t => g (γ.toFun t) * deriv γ.toFun t)
       MeasureTheory.volume γ.a γ.b :=
-    (piecewiseC1_deriv_intervalIntegrable γ hγ'_bdd).continuousOn_mul
-      (Set.uIcc_of_le (le_of_lt γ.hab) ▸
-        hg_diff.continuousOn.comp γ.continuous_toFun (fun t ht => hγ_in_U t ht))
+    continuousOn_mul_deriv_intervalIntegrable γ
+      (hg_diff.continuousOn.comp γ.continuous_toFun (fun t ht => hγ_in_U t ht)) hγ'_bdd
   rw [intervalIntegral.integral_add
       (singular_sum_intervalIntegrable f S0 γ hγ_avoids hγ'_bdd) h_g_int,
     holomorphic_closed_integral_zero U hU hU_convex g hg_diff γ hγ_closed hγ_in_U hγ'_bdd,
@@ -655,12 +655,7 @@ theorem pv_integral_inverse
       2 * Real.pi * I *
         generalizedWindingNumber' γ.toFun γ.a γ.b z₀ := by
   unfold generalizedWindingNumber'
-  have h_ne : (2 * Real.pi * I : ℂ) ≠ 0 := by
-    simp only [ne_eq, mul_eq_zero, not_or]
-    exact ⟨⟨by norm_num,
-      by exact_mod_cast Real.pi_ne_zero⟩,
-      Complex.I_ne_zero⟩
-  field_simp [h_ne]
+  field_simp [Complex.two_pi_I_ne_zero]
 
 /-- Single-point PV formula for simple pole. -/
 theorem pv_integral_simple_pole
