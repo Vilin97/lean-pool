@@ -224,22 +224,9 @@ private lemma theorem2_shannon_identity
       chain_rule'' μ hZ hX, chain_rule'' μ hU hX, chain_rule'' μ hZU hX,
       chain_rule'' μ hZ hY, chain_rule'' μ hU hY, chain_rule'' μ hZU hY,
       chain_rule'' μ hX hZ, chain_rule'' μ hY hZ, chain_rule'' μ hXY hZ]
-  have e_XZU : H[⟨X, fun ω => (Z ω, U ω)⟩; μ] = H[⟨fun ω => (Z ω, U ω), X⟩; μ] :=
-    entropy_comm hX hZU μ
-  have e_YZU : H[⟨Y, fun ω => (Z ω, U ω)⟩; μ] = H[⟨fun ω => (Z ω, U ω), Y⟩; μ] :=
-    entropy_comm hY hZU μ
-  have e_ZXY : H[⟨Z, fun ω => (X ω, Y ω)⟩; μ] = H[⟨fun ω => (X ω, Y ω), Z⟩; μ] :=
-    entropy_comm hZ hXY μ
-  have e_UXY : H[⟨U, fun ω => (X ω, Y ω)⟩; μ] = H[⟨fun ω => (X ω, Y ω), U⟩; μ] :=
-    entropy_comm hU hXY μ
-  have e_XU : H[⟨X, U⟩; μ] = H[⟨U, X⟩; μ] := entropy_comm hX hU μ
-  have e_YU : H[⟨Y, U⟩; μ] = H[⟨U, Y⟩; μ] := entropy_comm hY hU μ
-  have e_XZ : H[⟨X, Z⟩; μ] = H[⟨Z, X⟩; μ] := entropy_comm hX hZ μ
-  have e_YZ : H[⟨Y, Z⟩; μ] = H[⟨Z, Y⟩; μ] := entropy_comm hY hZ μ
-  have e_XYZU : H[⟨fun ω => (X ω, Y ω), fun ω => (Z ω, U ω)⟩; μ]
-      = H[⟨fun ω => (Z ω, U ω), fun ω => (X ω, Y ω)⟩; μ] :=
-    entropy_comm hXY hZU μ
-  linarith [e_XZU, e_YZU, e_ZXY, e_UXY, e_XU, e_YU, e_XZ, e_YZ, e_XYZU]
+  linarith [entropy_comm hX hZU μ, entropy_comm hY hZU μ, entropy_comm hZ hXY μ,
+    entropy_comm hU hXY μ, entropy_comm hX hU μ, entropy_comm hY hU μ,
+    entropy_comm hX hZ μ, entropy_comm hY hZ μ, entropy_comm hXY hZU μ]
 
 /-! ### Auxiliary distributions `ptilde`, `phat`, and the joint PMF -/
 

@@ -94,10 +94,7 @@ lemma mutualInfo_add_three_way_identity
   simp only [mutualInfo_def]
   rw [condMutualInfo_eq hY hZ hX μ,
       chain_rule'' μ hY hX, chain_rule'' μ hZ hX, chain_rule'' μ hYZ hX]
-  have e_XY : H[⟨X, Y⟩; μ] = H[⟨Y, X⟩; μ] := entropy_comm hX hY μ
-  have e_XZ : H[⟨X, Z⟩; μ] = H[⟨Z, X⟩; μ] := entropy_comm hX hZ μ
-  have e_X_YZ : H[⟨X, ⟨Y, Z⟩⟩; μ] = H[⟨⟨Y, Z⟩, X⟩; μ] := entropy_comm hX hYZ μ
-  linarith [e_XY, e_XZ, e_X_YZ]
+  linarith [entropy_comm hX hY μ, entropy_comm hX hZ μ, entropy_comm hX hYZ μ]
 
 /--
 Data processing for PFR's random-variable form of `CondIndepFun`: if `X` and `Y` are

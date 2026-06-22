@@ -469,33 +469,25 @@ private lemma FWitnessℚ_submodular :
         FWitnessℚ β := by
   intro α β
   by_cases hExceptional : PairBonusExceptional α β
-  · rcases hExceptional with h01 | h10 | h012013 | h013012
-    · rcases h01 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0} : Finset (Fin 4)) ∪ {1}) = 4 := by decide
-      have hInter : FWitnessℚ (({0} : Finset (Fin 4)) ∩ {1}) = 0 := by decide
-      have h0 : FWitnessℚ ({0} : Finset (Fin 4)) = 2 := by decide
-      have h1 : FWitnessℚ ({1} : Finset (Fin 4)) = 2 := by decide
-      rw [hUnion, hInter, h0, h1]
+  · rcases hExceptional with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
+    · rw [show FWitnessℚ (({0} : Finset (Fin 4)) ∪ {1}) = 4 from by decide,
+          show FWitnessℚ (({0} : Finset (Fin 4)) ∩ {1}) = 0 from by decide,
+          show FWitnessℚ ({0} : Finset (Fin 4)) = 2 from by decide,
+          show FWitnessℚ ({1} : Finset (Fin 4)) = 2 from by decide]
       norm_num
-    · rcases h10 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({1} : Finset (Fin 4)) ∪ {0}) = 4 := by decide
-      have hInter : FWitnessℚ (({1} : Finset (Fin 4)) ∩ {0}) = 0 := by decide
-      have h1 : FWitnessℚ ({1} : Finset (Fin 4)) = 2 := by decide
-      have h0 : FWitnessℚ ({0} : Finset (Fin 4)) = 2 := by decide
-      rw [hUnion, hInter, h1, h0]
+    · rw [show FWitnessℚ (({1} : Finset (Fin 4)) ∪ {0}) = 4 from by decide,
+          show FWitnessℚ (({1} : Finset (Fin 4)) ∩ {0}) = 0 from by decide,
+          show FWitnessℚ ({1} : Finset (Fin 4)) = 2 from by decide,
+          show FWitnessℚ ({0} : Finset (Fin 4)) = 2 from by decide]
       norm_num
-    · rcases h012013 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∪ {0, 1, 3}) = 4 := by decide
-      have hInter : FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∩ {0, 1, 3}) = 4 := by decide
-      have h012 : FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 := by decide
-      have h013 : FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 := by decide
-      rw [hUnion, hInter, h012, h013]
-    · rcases h013012 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∪ {0, 1, 2}) = 4 := by decide
-      have hInter : FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∩ {0, 1, 2}) = 4 := by decide
-      have h013 : FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 := by decide
-      have h012 : FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 := by decide
-      rw [hUnion, hInter, h013, h012]
+    · rw [show FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∪ {0, 1, 3}) = 4 from by decide,
+          show FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∩ {0, 1, 3}) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 from by decide]
+    · rw [show FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∪ {0, 1, 2}) = 4 from by decide,
+          show FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∩ {0, 1, 2}) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 from by decide]
   · rw [FWitnessℚ_eq_base_add_pair (α ∪ β), FWitnessℚ_eq_base_add_pair (α ∩ β),
       FWitnessℚ_eq_base_add_pair α, FWitnessℚ_eq_base_add_pair β]
     have hBase := baseWitness_submodular α β
