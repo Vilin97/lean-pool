@@ -504,18 +504,6 @@ def semiring {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)] :
     Semiring (BlockDiagonals R k s)
     where
-  -- add := (· + ·)
-  -- add_assoc := add_assoc
-  -- zero := 0
-  -- zero_add := zero_add
-  -- add_zero := add_zero
-  -- nsmul := (· • ·)
-  -- nsmul_zero x := by simp only [zero_nsmul] <;> rfl
-  -- nsmul_succ n x := by
-    -- ext
-    -- simp only [IsBlockDiagonal.coe_nsmul, IsBlockDiagonal.coe_add, Nat.succ_eq_add_one,
-      -- add_smul, one_smul, add_comm]
-  -- add_comm := add_comm
   mul := (· * ·)
   left_distrib x y z := by
     ext
@@ -524,7 +512,7 @@ def semiring {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     ext
     simp only [IsBlockDiagonal.coe_mul, IsBlockDiagonal.coe_add, add_mul]
   zero_mul x := by
-    ext;
+    ext
     simp only [IsBlockDiagonal.coe_mul, IsBlockDiagonal.coe_zero, MulZeroClass.zero_mul]
   mul_zero x := by
     ext
@@ -751,8 +739,6 @@ variable {R k : Type _} [CommSemiring R] [Fintype k] [DecidableEq k] {s : k → 
   [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)]
 
 local notation x " ⊗ₘ " y => TensorProduct.map x y
-
--- local notation "ℍ₂" => PiMat R k s
 
 local notation "ℍ_ " i => Matrix (s i) (s i) R
 

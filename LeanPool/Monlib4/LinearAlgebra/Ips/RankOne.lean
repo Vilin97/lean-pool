@@ -499,19 +499,6 @@ theorem rankOneLm_comp_rankOneLm (x : E₁) (y z : E₂) (w : E) :
     rankOneLm_apply, inner_smul_right, mul_smul, smul_smul]
   rw [smul_smul, mul_comm]
 
--- theorem rankOneLm_apply_rank_one (x : E₁) (y z : E₂) (w v : E) :
---     (rankOneLm x y : _ →ₗ[𝕜] _) ((rankOneLm z w : _ →ₗ[𝕜] _) v) = (⟪y,z⟫_𝕜 * ⟪w,v⟫_𝕜) • x := by
---   rw [← LinearMap.comp_apply, rankOneLm_comp_rankOneLm, LinearMap.smul_apply, rankOneLm_apply,
---     smul_smul]
-
--- theorem rankOneLm_adjoint [FiniteDimensional 𝕜 E₁] [FiniteDimensional 𝕜 E₂] (x : E₁) (y : E₂) :
---     LinearMap.adjoint (rankOneLm x y : _ →ₗ[𝕜] _) = rankOneLm y x :=
---   by
---   simp_rw [rankOneLm, LinearMap.adjoint_eq_toCLM_adjoint,
---     ContinuousLinearMap.coe_inj, ← @rankOne.adjoint 𝕜 _ _ _ _ _ _ _
---       (FiniteDimensional.complete 𝕜 E₁) (FiniteDimensional.complete 𝕜 E₂) x y]
---   rfl
-
 open scoped BigOperators
 
 

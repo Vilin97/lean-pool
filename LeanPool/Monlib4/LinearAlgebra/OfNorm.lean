@@ -221,14 +221,6 @@ theorem isBoundedLinearMap_iff_isContinuousLinearMap {𝕜 E : Type _} [Nontrivi
       fun h => ?_⟩
   exact (⟨h.1.mk' f, h.2⟩ : E →L[𝕜] F).isBoundedLinearMap
 
-private theorem linear_map.is_bounded_linear_map_iff_is_continuous {𝕜 E : Type _}
-    [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
-    [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →ₗ[𝕜] F) :
-    IsBoundedLinearMap 𝕜 f ↔ Continuous f :=
-  by
-  rw [isBoundedLinearMap_iff_isContinuousLinearMap, IsContinuousLinearMap]
-  simp only [and_iff_right_iff_imp, f.isLinear, imp_true_iff]
-
 /-- A function has a linear norm bound. -/
 def WithBound {E : Type _} [NormedAddCommGroup E] {F : Type _} [NormedAddCommGroup F] (f : E → F) :
     Prop :=
@@ -409,9 +401,8 @@ theorem IsBilinearMap.zero_left {𝕜 : Type _} [CommSemiring 𝕜] {E : Type _}
     [AddCommMonoid E] [Module 𝕜 E] {F : Type _} [AddCommMonoid F]
     [Module 𝕜 F] {G : Type _} [AddCommMonoid G] [Module 𝕜 G]
     {f : E → F → G} (h : IsBilinearMap 𝕜 f) (y : F) :
-    f 0 y = 0 := by
-  have hzero : h.toLinearMap 0 = 0 := h.toLinearMap.map_zero
-  exact congrFun (congrArg DFunLike.coe hzero) y
+    f 0 y = 0 :=
+  congrFun (congrArg DFunLike.coe h.toLinearMap.map_zero) y
 
 theorem IsBilinearMap.zero_right {𝕜 : Type _} [CommSemiring 𝕜] {E : Type _}
     [AddCommMonoid E] [Module 𝕜 E] {F : Type _} [AddCommMonoid F]
@@ -513,7 +504,6 @@ theorem inner_lt_one_iff_of_norm_one {𝕜 H : Type _} [RCLike 𝕜] [NormedAddC
   ⟪x, y⟫_𝕜 < 1 ↔ x ≠ y ∧ (re ⟪x, y⟫_𝕜 : 𝕜) = ⟪x, y⟫_𝕜 :=
 by
   simp_rw [lt_iff_le_and_ne, ne_eq, inner_eq_one_iff_of_norm_eq_one hx hy]
-  -- rw [← @inner_eq_one_iff_of_norm_eq_one 𝕜 _ _ _ _ _ _ hx hy]
   refine ⟨fun ⟨h1, h2⟩ => ⟨h2, ?_⟩, fun h => ⟨?_, h.1⟩⟩
   · rw [@le_def 𝕜, one_re, one_im, ← conj_eq_iff_im, conj_eq_iff_re] at h1
     exact h1.2
