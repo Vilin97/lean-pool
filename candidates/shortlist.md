@@ -485,3 +485,79 @@ Classified `include=true` and recorded in [`decisions.jsonl`](decisions.jsonl) /
 - [jlebar/vir](https://github.com/jlebar/vir) — Formally-verified compiler IR (LLVM-like) with dominator analysis and fixed-point termination proofs (Apache-2.0, v4.27.0, 3,690 LOC) — Formally-verified LLVM-like compiler IR: type-safe IDs, instruction validation predicates, dominator analysis, real fixe
 - [nktkt/starlib](https://github.com/nktkt/starlib) — Formally verified SNARKs / Interactive Oracle Reductions (IOR theory, coding theory, FRI/WHIR/Binius/Sumcheck) (Apache-2.0, v4.29.0, 63,412 LOC) — Serious 63k-LOC Lean formalization of SNARKs/Interactive Oracle Reductions + coding theory (FRI/WHIR/Binius/Sumcheck): 1
 - [solpin-manai/sperner-lean](https://github.com/Solpin-manai/sperner-lean) — Sperner's Lemma (combinatorial topology, standard-simplex triangulation parity) (Apache-2.0, v4.27.0-rc1, 3,591 LOC) — Genuine WIP formalization of Sperner's Lemma (combinatorial topology). Active Mathlibb lib ~1015 LOC, real completed pro
+
+## June 22 2026 refresh — new candidates
+
+Curated 2026-06-22 after the 2026-06-07 sweep. Primary window: repositories created or pushed after 2026-06-07, plus paper/social hits that were not already in `manual.txt`. Sources checked: Reservoir refresh, GitHub language/topic/search, public Zulip search, X.com, LinkedIn, and arXiv.
+
+### Analysis / probability / optimization
+
+| Repo | Theorem / topic | License | Lean | LOC | Updated |
+| --- | --- | --- | --- | ---: | --- |
+| [scottnarmstrong/coarsegraining](https://github.com/scottnarmstrong/CoarseGraining) | Coarse-graining theory for elliptic equations after Armstrong-Kuusi; huge homogenization development, README reports no sorry/custom axiom | Apache-2.0 | v4.26.0 | 461,426 | 2026-06-16 |
+| [marcmorningstar/lean4-oseledets](https://github.com/marcmorningstar/lean4-oseledets) | Oseledets multiplicative ergodic theorem: one-sided, two-sided and flow versions with blueprint/docs | Apache-2.0 | v4.30.0-rc2 | 62,749 | 2026-06-21 |
+| [dududuguo/highdimprob](https://github.com/dududuguo/HighDimProb) | High-dimensional probability, concentration, Rademacher variables, covariance and random-matrix APIs | Apache-2.0 | v4.29.1 | 34,983 | 2026-06-21 |
+| [m1ngxu/pl-accelerated-nesterov-lean](https://github.com/M1ngXU/PL-Accelerated-Nesterov-Lean) | Accelerated Nesterov convergence under local Polyak-Lojasiewicz assumptions, with explicit exponential rate | MIT | v4.28.0 | 15,576 | 2026-06-09 |
+| [boonsuan/kaltonroberts](https://github.com/boonsuan/KaltonRoberts) | Kalton-Roberts constant is less than 19.838 | MIT | v4.28.0 | 6,794 | 2026-06-09 |
+| [makoto-yamashita/hsd-interior-point](https://github.com/makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming) | Homogeneous self-dual interior-point method for linear programming | MIT | v4.31.0-rc1 | 4,605 | 2026-06-12 |
+
+### Number theory / combinatorics
+
+| Repo | Theorem / topic | License | Lean | LOC | Updated |
+| --- | --- | --- | --- | ---: | --- |
+| [kim-em/erdos-unit-distance](https://github.com/kim-em/erdos-unit-distance) | Alpöge disproof of the uniform-constant Erdős unit-distance conjecture; companion to a mathlib branch | Apache-2.0 | v4.31.0-rc2 | 3,203 | 2026-06-19 |
+| [kitaken1/erdos346-ratio-limit-lean](https://github.com/KitaKen1/erdos346-ratio-limit-lean) | Erdos #346 ratio-limit interpretation: deletion hypotheses plus a limit force the golden ratio | Apache-2.0 | v4.31.0 | 14,160 | 2026-06-21 |
+| [scottdhughes/erdos137](https://github.com/scottdhughes/erdos137) | Erdos #137: powerful products of consecutive integers, conditional on the Granville-Langevin radical bound | Apache-2.0 | v4.28.0 | 3,532 | 2026-06-16 |
+| [scottdhughes/erdos367](https://github.com/scottdhughes/erdos367) | Erdos #367: powerful parts of consecutive integers, including Pell and Davenport-Zannier cores | Apache-2.0 | v4.28.0 | 1,772 | 2026-06-10 |
+| [no-way-labs/lean-critical-portraits](https://github.com/no-way-labs/lean-critical-portraits) | Count of degree-d critical portraits: `C(d*m,d-1)/d` via a formal cycle lemma and finite portrait model | Apache-2.0 | v4.31.0 | 4,680 | 2026-06-17 |
+| [axiommath/kaprekar4](https://github.com/AxiomMath/kaprekar4) | Four-digit Kaprekar dynamics in odd bases | MIT | v4.28.0 | 2,937 | 2026-06-11 |
+| [axiommath/zeta-h123](https://github.com/AxiomMath/zeta-h123) | Thakur's hypotheses on power sums over `F_q[t]` (arXiv:2606.16239) | MIT | v4.28.0 | 6,310 | 2026-06-16 |
+| [florath/covering-codes-lean](https://github.com/florath/covering-codes-lean) | q-ary covering codes with a proof-carrying database of certified bounds for `K_q(n,r)` | BSD-3-Clause | v4.30.0-rc2 | 284,936 | 2026-06-22 |
+| [t4ccer/misere-games](https://github.com/t4ccer/misere-games) | Misère combinatorial game theory | Apache-2.0 | v4.29.0-rc1 | 17,511 | 2026-06-22 |
+
+### Algebra / geometry / numerics
+
+| Repo | Theorem / topic | License | Lean | LOC | Updated |
+| --- | --- | --- | --- | ---: | --- |
+| [schmittj/prop51-formal](https://github.com/schmittj/prop51-formal) | Chen-Larson Proposition 5.1 coefficient negativity | Apache-2.0 | v4.27.0 | 80,311 | 2026-06-21 |
+| [peterdoyle1717/taut](https://github.com/peterdoyle1717/taut) | Taut fillings, shellability and triangulation results | MIT | n/a | 20,227 | 2026-06-21 |
+| [karlesmarin/connes-kreimer-lean](https://github.com/karlesmarin/connes-kreimer-lean) | Connes-Kreimer/Foissy Hopf algebra of rooted trees and Eulerian idempotent | Apache-2.0 | v4.30.0-rc2 | 2,994 | 2026-06-20 |
+| [karlesmarin/runge-kutta-order-conditions-lean](https://github.com/karlesmarin/runge-kutta-order-conditions-lean) | Certified Butcher/Runge-Kutta order conditions over rooted trees; RK4, Dormand-Prince and Gauss-Legendre certificates | Apache-2.0 | v4.30.0-rc2 | 563 | 2026-06-21 |
+| [math-commons/graphons](https://github.com/math-commons/graphons) | Graphons and dense graph limits: hom densities, cut norm/distance and counting lemma | Apache-2.0 | v4.30.0 | 10,712 | 2026-06-18 |
+| [linzialessandro/fundamentalinequality](https://github.com/linzialessandro/FundamentalInequality) | Fundamental inequality for finite extensions of valued fields | Apache-2.0 | v4.30.0 | 578 | 2026-06-17 |
+
+### CS / logic / quantum
+
+| Repo | Theorem / topic | License | Lean | LOC | Updated |
+| --- | --- | --- | --- | ---: | --- |
+| [catskillsresearch/domain_theory](https://github.com/catskillsresearch/domain_theory) | Dana Scott domain theory via Scott information systems, with accompanying paper | Apache-2.0 | v4.30.0 | 36,520 | 2026-06-22 |
+| [humiliati/sundogcert](https://github.com/humiliati/sundogcert) | Syndrome certificate soundness/lossiness plus 3SAT to decoding reduction correctness | Apache-2.0 | v4.30.0 | 6,372 | 2026-06-16 |
+| [qudeleap/lean-quantumalg](https://github.com/QudeLeap/Lean-QuantumAlg) | Quantum algorithms library: gates, QFT, Grover, QPE, Simon, teleportation and superdense coding | Apache-2.0 | v4.30.0 | 12,305 | 2026-06-18 |
+| [ungatz/stabilizer-bw](https://github.com/ungatz/stabilizer-bw) | Stabilizer fragment of quantum computing as Barnes-Wall lattice arithmetic | Apache-2.0 | v4.29.0 | 25,474 | 2026-06-22 |
+| [velvetmonkey/crdt-lean](https://github.com/velvetmonkey/crdt-lean) | State-based CRDT convergence and concrete instances | MIT | v4.28.0 | 718 | 2026-06-11 |
+| [velvetmonkey/consensus-lean](https://github.com/velvetmonkey/consensus-lean) | Consensus safety, quorum reconfiguration and executable certificate checker | MIT | v4.28.0 | 635 | 2026-06-10 |
+
+### Fit the criteria but unlicensed / unclear license
+
+Substantive and on-topic, but blocked by no explicit permissive license or GitHub's `Other` license classification. Worth a one-line issue asking the author to add Apache-2.0 / MIT / BSD / ISC / 0BSD / Zlib if they want Lean Pool import.
+
+| Repo | Theorem / topic | License | Lean | LOC | Updated |
+| --- | --- | --- | --- | ---: | --- |
+| [jonbannon/spectraltriples](https://github.com/JonBannon/SpectralTriples) | Spectral triples, resolvents and finitely summable triples in noncommutative geometry | *none* | v4.30.0 | 5,314 | 2026-06-22 |
+| [alexeyev/finite-state-transducers-lean](https://github.com/alexeyev/finite-state-transducers-lean) | Finite-state transducers, rational relations and Choffrut delay characterization | Other/no SPDX | v4.30.0 | 10,767 | 2026-06-20 |
+| [alexeyev/lukasiewicz-many-valued-logic-lean](https://github.com/alexeyev/lukasiewicz-many-valued-logic-lean) | MV-algebras and Łukasiewicz / Basic Logic soundness | Other/no SPDX | v4.31.0 | 5,102 | 2026-06-19 |
+| [woett/chatgpt-s-note-on-erdos451](https://github.com/Woett/ChatGPT-s-note-on-Erdos451) | Aristotle formalization for arXiv:2606.19863 on Erdos #451 | *none* | n/a | 4,693 | 2026-06-19 |
+| [woett/chatgpt-s-note-on-gaps-in-multiplicative-sidon-sets](https://github.com/Woett/ChatGPT-s-note-on-gaps-in-multiplicative-Sidon-sets) | Aristotle formalization for arXiv:2606.07428 on multiplicative Sidon sets | *none* | n/a | 2,616 | 2026-06-08 |
+| [mechmath/sparse-product](https://github.com/MechMath/sparse-product) | Algebraic and complexity claims for quasi-linear sparse-polynomial multiplication | *none* | v4.29.0 | 2,183 | 2026-06-12 |
+
+### Other on-topic includes (tracked, not shortlisted)
+
+Classified `include=true` and recorded in [`decisions.jsonl`](decisions.jsonl) / [`manual.txt`](manual.txt), but held back from the picks above because they are active mathlib-bound work, have substantial unfinished surfaces, rely on explicit axioms, or are broad batches without a single import target.
+
+- [cbirkbeck/padic-l-functions](https://github.com/CBirkbeck/padic-L-functions) — p-adic L-functions formalizing Rodrigues Jacinto-Williams notes (Apache-2.0, v4.31.0-rc1, 40,762 LOC) — strong but active mathlib-bound work.
+- [formalfrontier/tauceti](https://github.com/FormalFrontier/TauCeti) — AI-welcome downstream number-theory support library used by the Erdos unit-distance project (Apache-2.0, v4.32.0-rc1, 30,195 LOC) — real infrastructure, but more support-library than standalone theorem target.
+- [lorenzoluccioli/qtlearning](https://github.com/LorenzoLuccioli/qtLearning) — q,t-Narayana and noncrossing-partition formalization for a machine-discovery combinatorics paper (Apache-2.0, v4.28.0, 21,805 LOC) — one central `sorry` remains.
+- [scottdhughes/erdos942](https://github.com/scottdhughes/erdos942) — powerful numbers between consecutive squares (Apache-2.0, v4.30.0, 2,477 LOC) — substantive, but headline bounds rely on documented classical axioms.
+- [alexfleetcommander/lean-proofs](https://github.com/alexfleetcommander/lean-proofs) — economics, social choice, mechanism design, game theory and decision theory batch (Apache-2.0, v4.16.0, 6,121 LOC) — real proofs, but broad batch with no single source-anchored headline.
+- [arij-aziz/selberg-parity-obstruction](https://github.com/Arij-Aziz/Selberg-Parity-Obstruction) — Selberg parity-obstruction formalization (Apache-2.0, v4.28.0, 4,968 LOC) — on-topic but unfinished.
+- [catskillsresearch/avg_case_mls](https://github.com/catskillsresearch/avg_case_mls) — average-case complexity of multilevel syllogistic decision procedures (Apache-2.0, v4.30.0, 3,783 LOC) — on-topic but still has explicit axioms.
