@@ -62,6 +62,14 @@ The generating functional is:
 where dμ is the Gaussian measure on field configurations.
 -/
 
+/-- Young's inequality `c·|x| ≤ c²/(4α) + α·x²` for `α > 0`, used to dominate
+    linear-exponent integrands by Gaussian-square (Fernique) integrands. -/
+private lemma young_ineq (c α : ℝ) (hα : 0 < α) (x : ℝ) :
+    c * |x| ≤ c ^ 2 / (4 * α) + α * x ^ 2 := by
+  rw [show c ^ 2 / (4 * α) + α * x ^ 2 = (c ^ 2 + 4 * α ^ 2 * x ^ 2) / (4 * α) from by field_simp,
+    le_div_iff₀ (by positivity : (0:ℝ) < 4 * α)]
+  nlinarith [sq_nonneg (c - 2 * α * |x|), sq_abs x]
+
 variable (m : ℝ) [Fact (0 < m)]
 
 /-- The complex pairing is continuous in ω.
@@ -204,20 +212,13 @@ lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
   -- Use exponential square integrability (Fernique)
   -- For any α > 0, exp(α x²) is integrable, and exp(-x) ≤ exp(α x² + 1/(4α))
   obtain ⟨α, hα_pos, h_integ⟩ := gaussianFreeField_pairing_expSq_integrable m f
-  -- exp(-x) ≤ exp(α x² + 1/(4α)) by completing the square: -x = -(√α x - 1/(2√α))² + α x² + 1/(4α)
+  -- exp(-x) ≤ exp(1/(4α)) * exp(α x²) since -x ≤ |x| ≤ 1/(4α) + α x² (Young, c = 1)
   have h_bound : ∀ x : ℝ, Real.exp (-x) ≤ Real.exp (1 / (4 * α)) * Real.exp (α * x^2) := fun x => by
     rw [← Real.exp_add]
-    apply Real.exp_le_exp.mpr
-    -- Need: -x ≤ 1/(4α) + α x²
-    -- This is equivalent to: α x² + x + 1/(4α) ≥ 0
-    -- Which is (√α x + 1/(2√α))² ≥ 0
-    have h : α * x^2 + x + 1 / (4 * α) = (Real.sqrt α * x + 1 / (2 * Real.sqrt α))^2 := by
-      have hα_sqrt : Real.sqrt α > 0 := Real.sqrt_pos.mpr hα_pos
-      have hα_ne : Real.sqrt α ≠ 0 := ne_of_gt hα_sqrt
-      field_simp
-      rw [Real.sq_sqrt (le_of_lt hα_pos)]
-      ring
-    linarith [sq_nonneg (Real.sqrt α * x + 1 / (2 * Real.sqrt α))]
+    refine Real.exp_le_exp.mpr ?_
+    have := young_ineq 1 α hα_pos x
+    rw [one_mul] at this
+    linarith [neg_abs_le x, this]
   -- The dominating function g(ω) = exp(1/(4α)) * exp(α (ω f)²) is integrable
   have h_dom_integrable : Integrable
       (fun ω => Real.exp (1 / (4 * α)) * Real.exp (α * (distributionPairingCLM f ω)^2))
@@ -276,21 +277,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   -- Therefore ∫ ‖exp(|x|)‖^p dμ ≤ C * ∫ exp(α x²) dμ < ∞
   -- Young's inequality: for α > 0 and any real r, we have r|x| ≤ r²/(4α) + α x²
   -- This follows from (r/(2√α) - √α|x|)² ≥ 0
-  have h_young : ∀ x : ℝ, p.toReal * |x| ≤ p.toReal^2 / (4 * α) + α * x^2 := fun x => by
-    have hα_ne : α ≠ 0 := ne_of_gt hα_pos
-    have h_sqrt_pos : Real.sqrt α > 0 := Real.sqrt_pos.mpr hα_pos
-    have h_sqrt_sq : Real.sqrt α ^ 2 = α := Real.sq_sqrt (le_of_lt hα_pos)
-    -- Let a = p/(2√α), b = √α|x|. Then (a-b)² ≥ 0 gives a² + b² ≥ 2ab = p|x|
-    have ha : p.toReal / (2 * Real.sqrt α) = p.toReal / 2 / Real.sqrt α := by ring
-    have hb_sq : (Real.sqrt α * |x|)^2 = α * x^2 := by rw [mul_pow, h_sqrt_sq, sq_abs]
-    have ha_sq : (p.toReal / (2 * Real.sqrt α))^2 = p.toReal^2 / (4 * α) := by
-      rw [div_pow, mul_pow, h_sqrt_sq]; ring
-    have hab : 2 * (p.toReal / (2 * Real.sqrt α)) * (Real.sqrt α * |x|) = p.toReal * |x| := by
-      field_simp
-    have h_sq := sq_nonneg (p.toReal / (2 * Real.sqrt α) - Real.sqrt α * |x|)
-    calc p.toReal * |x| = 2 * (p.toReal / (2 * Real.sqrt α)) * (Real.sqrt α * |x|) := hab.symm
-      _ ≤ (p.toReal / (2 * Real.sqrt α))^2 + (Real.sqrt α * |x|)^2 := by nlinarith [h_sq]
-      _ = p.toReal^2 / (4 * α) + α * x^2 := by rw [ha_sq, hb_sq]
+  have h_young : ∀ x : ℝ, p.toReal * |x| ≤ p.toReal^2 / (4 * α) + α * x^2 :=
+    fun x => young_ineq p.toReal α hα_pos x
   -- Exponential bound: exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
   have h_exp_bound : ∀ x : ℝ,
       Real.exp (p.toReal * |x|) ≤ Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * x^2) := fun x =>
@@ -301,39 +289,18 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   let C := Real.exp (p.toReal^2 / (4 * α))
   -- The dominating function C * exp(α x²) is integrable
   have h_dom : Integrable (fun ω => C * Real.exp (α * (ω f)^2)) (muGFF m).toMeasure := by
-    have h_const_mul : Integrable (fun ω => C * Real.exp (α * (distributionPairingCLM f ω)^2))
-      (muGFF m).toMeasure := by
-      exact h_fernique.const_mul C
-    simp only [distributionPairingCLM_apply, distributionPairing] at h_const_mul
-    exact h_const_mul
-  -- For the MemLp construction, we need snorm to be finite
-  -- snorm f p μ = (∫ ‖f‖^p)^(1/p) for p ∈ (0, ∞)
-  -- ‖exp(|x|)‖^p = exp(|x|)^p = exp(p * |x|)
-  -- The key: exp(p|ω f|) ≤ C * exp(α (ω f)²) and RHS is integrable
-  have h_norm_pow_bound : ∀ ω : FieldConfiguration,
-      Real.exp (p.toReal * |ω f|) ≤ C * Real.exp (α * (ω f)^2) := fun ω => by
-    have h1 := h_exp_bound (ω f)
-    exact h1
-  -- Integrability of exp(p|ω f|) follows from domination
+    have h := h_fernique.const_mul C
+    simpa only [distributionPairingCLM_apply, distributionPairing] using h
+  -- Integrability of exp(p|ω f|) follows from domination by C * exp(α (ω f)²)
   have h_exp_p_integrable : Integrable (fun ω => Real.exp (p.toReal * |ω f|)) (muGFF m).toMeasure
     := by
     have h_meas : AEStronglyMeasurable (fun ω => Real.exp (p.toReal * |ω f|)) (muGFF m).toMeasure :=
       (Real.continuous_exp.measurable.comp (measurable_const.mul (continuous_abs.measurable.comp
         (WeakDual.eval_measurable f)))).aestronglyMeasurable
-    -- Use Integrable.mono': if g is integrable and ‖f‖ ≤ g a.e., then f is integrable
     apply h_dom.mono' h_meas
     filter_upwards with ω
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    exact h_norm_pow_bound ω
-  -- Now we construct MemLp using the snorm condition
-  -- For 0 < p < ∞, MemLp f p μ iff AEStronglyMeasurable f μ ∧ snorm f p μ < ⊤
-  -- snorm f p μ = (∫ ‖f‖^p.toReal)^(1/p.toReal) when 0 < p < ⊤
-  -- The key observation: ‖exp(|x|)‖^(p.toReal) = exp(p.toReal * |x|)
-  have h_norm_rpow : ∀ x : ℝ, ‖Real.exp |x|‖ ^ p.toReal = Real.exp (p.toReal * |x|) := fun x => by
-    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    rw [← Real.exp_mul]
-    congr 1
-    ring
+    exact h_exp_bound (ω f)
   -- Convert integrability of exp(p|x|) to eLpNorm bound
   -- Using: eLpNorm f p μ < ∞ ↔ ∫⁻ ‖f‖ₑ^p ∂μ < ∞
   have h_eLpNorm_lt : eLpNorm (fun ω => Real.exp |ω f|) p (muGFF m).toMeasure < ⊤ := by
@@ -448,15 +415,10 @@ theorem gff_integrand_integrable (n : ℕ) (J : Fin n → TestFunctionℂ) (z : 
     Integrable
       (fun ω : FieldConfiguration =>
         Complex.exp (Complex.I * distributionPairingℂReal ω (∑ i, z i • J i)))
-      (muGFF m).toMeasure := by
+      (muGFF m).toMeasure :=
   -- The norm is exp(-(ω f_im)) which is integrable
-  have h_norm := gff_integrand_norm_integrable m (∑ i, z i • J i)
-  -- Use Integrable.of_norm - h_norm is already an Integrable statement
-  -- We need to convert from norm integrable to integrable
-  have h_meas : AEStronglyMeasurable
-      (fun ω => Complex.exp (Complex.I * distributionPairingℂReal ω (∑ i, z i • J i)))
-      (muGFF m).toMeasure := gff_integrand_measurable m n J z
-  exact (integrable_norm_iff h_meas).mp h_norm
+  (integrable_norm_iff (gff_integrand_measurable m n J z)).mp
+    (gff_integrand_norm_integrable m (∑ i, z i • J i))
 
 /-! ## Complex Characteristic Functional
 
@@ -504,15 +466,6 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
   have hF_meas : ∀ t, AEStronglyMeasurable (F t) (muGFF m).toMeasure := fun t =>
     (Complex.continuous_exp.measurable.comp
       (h_a_meas.add (h_b_meas.const_mul t))).aestronglyMeasurable
-  -- Young's inequality helper: c|x| ≤ c²/(4α) + αx²
-  have young : ∀ (c : ℝ) (α : ℝ), 0 < α → ∀ x : ℝ,
-      c * |x| ≤ c ^ 2 / (4 * α) + α * x ^ 2 := by
-    intro c α hα x
-    have h4α_pos : (0 : ℝ) < 4 * α := by positivity
-    rw [show c ^ 2 / (4 * α) + α * x ^ 2
-        = (c ^ 2 + 4 * α ^ 2 * x ^ 2) / (4 * α) from by field_simp]
-    rw [le_div_iff₀ h4α_pos]
-    nlinarith [sq_nonneg (c - 2 * α * |x|), sq_abs x]
   -- Fernique domination: exp(c|ω f_im|) is integrable for any c ≥ 0
   have fernique_dom : ∀ (c : ℝ), 0 ≤ c →
       Integrable (fun ω => Real.exp (c * |ω f_im|)) (muGFF m).toMeasure := by
@@ -529,7 +482,7 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
         |>.aestronglyMeasurable)
     filter_upwards with ω
     simp only [Real.norm_eq_abs, Function.comp_def, abs_of_nonneg (Real.exp_nonneg _)]
-    exact Real.exp_le_exp.mpr (young c α hα_pos (ω f_im))
+    exact Real.exp_le_exp.mpr (young_ineq c α hα_pos (ω f_im))
   -- Step 1: rewrite the goal to use ∫ F t ω dμ via AnalyticOnNhd.congr
   -- The generating functional equals the integral of F
   have h_eq : Set.EqOn
