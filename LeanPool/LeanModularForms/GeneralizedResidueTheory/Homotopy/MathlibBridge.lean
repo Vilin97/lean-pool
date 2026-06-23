@@ -129,8 +129,8 @@ theorem generalizedWindingNumber_circleMap_eq_one_of_mem_ball
     have h_lt : dist w c < R := hw
     rw [Complex.dist_eq] at h_lt
     exact ne_of_lt h_lt
-  rw [generalizedWindingNumber_circleMap_eq_inv_circleIntegral c w R hR hw_ne]
-  rw [circleIntegral.integral_sub_inv_of_mem_ball hw]
+  rw [generalizedWindingNumber_circleMap_eq_inv_circleIntegral c w R hR hw_ne,
+    circleIntegral.integral_sub_inv_of_mem_ball hw]
   have hpi_ne : (2 : ℂ) * Real.pi * I ≠ 0 := by
     simp [ne_eq, mul_eq_zero, Complex.ofReal_eq_zero, Real.pi_ne_zero, I_ne_zero]
   field_simp
@@ -146,8 +146,7 @@ theorem circleMap_contourIntegral_sub_inv_eq_two_pi_I
     ∫ θ in (0 : ℝ)..2 * Real.pi,
       (circleMap c R θ - w)⁻¹ * deriv (circleMap c R) θ =
     2 * Real.pi * I := by
-  have h := contourIntegral_circleMap_eq_circleIntegral (fun z => (z - w)⁻¹) c R
-  rw [h]
+  rw [contourIntegral_circleMap_eq_circleIntegral (fun z => (z - w)⁻¹) c R]
   exact circleIntegral.integral_sub_inv_of_mem_ball hw
 
 end

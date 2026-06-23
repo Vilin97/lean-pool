@@ -159,12 +159,10 @@ theorem cuspfunc_lim_coef {k : ℤ} {F : Type u_1} [inst : FunLike F ℍ ℂ] (n
 
 theorem summable_zero_pow {G : Type*} [NormedField G] (f : ℕ → G) :
     Summable fun m ↦ f m * 0 ^ m := by
-  rw [← summable_nat_add_iff 1]
-  simp
+  simp [← summable_nat_add_iff 1]
 
 lemma tsum_zero_pow (f : ℕ → ℂ) : (∑' m, f m * 0 ^ m) = f 0 := by
-  rw [Summable.tsum_eq_zero_add (summable_zero_pow f)]
-  simp
+  simp [Summable.tsum_eq_zero_add (summable_zero_pow f)]
 
 lemma cuspfunc_Zero [hn : NeZero n] [ModularFormClass F Γ(n) k] : cuspFunction n f 0 =
     (qExpansion n f).coeff 0 := by
@@ -343,9 +341,8 @@ lemma q_exp_unique (c : ℕ → ℂ) (f : ModularForm Γ(n) k) [hn : NeZero n]
     using h6
 
 lemma deriv_mul_eq (f g : ℂ → ℂ) (hf : Differentiable ℂ f) (hg : Differentiable ℂ g) :
-    deriv (f * g) = deriv f * g + f * deriv g := by
-  ext y
-  exact deriv_mul (hf y) (hg y)
+    deriv (f * g) = deriv f * g + f * deriv g :=
+  funext fun y => deriv_mul (hf y) (hg y)
 
 lemma auxasdf (n : ℕ) : (PowerSeries.coeff n) ((qExpansion 1 E₄) * (qExpansion 1 E₆)) =
     ∑ p ∈ Finset.antidiagonal n, (PowerSeries.coeff p.1)
@@ -521,9 +518,9 @@ theorem Complex.I_pow_six : Complex.I ^ 6 = -1 := by
 
 @[simp]
 theorem bernoulli'_five : bernoulli' 5 = 0 := by
-  have : Nat.choose 5 2 = 10 := by decide
   rw [bernoulli'_def]
-  norm_num [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_zero, this]
+  norm_num [Finset.sum_range_succ, Finset.sum_range_succ, Finset.sum_range_zero,
+    show Nat.choose 5 2 = 10 from by decide]
 
 @[simp]
 theorem bernoulli'_six : bernoulli' 6 = 1 / 42 := by
@@ -745,9 +742,7 @@ lemma E6_q_exp_one : (qExpansion 1 E₆).coeff 1 = -504 := by
   simpa only [one_ne_zero, ↓reduceIte, ArithmeticFunction.sigma_one, Nat.cast_one, mul_one] using H
 
 lemma antidiagonal_one : Finset.antidiagonal 1 = {(1,0), (0,1)} := by
-  ext ⟨x,y⟩
-  simp
-  omega
+  decide
 
 lemma E4_pow_q_exp_one : (qExpansion 1 ((E₄).mul ((E₄).mul E₄))).coeff 1 = 3 * 240 := by
   rw [← Nat.cast_one (R := ℝ), qExpansion_mul_coeff, qExpansion_mul_coeff,

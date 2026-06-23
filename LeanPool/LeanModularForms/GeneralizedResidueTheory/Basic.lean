@@ -118,12 +118,10 @@ private theorem aestronglyMeasurable_of_continuousOn_off_finite
   have h_union : Icc a b =
       (Icc a b \ (P : Set ℝ)) ∪ ((P : Set ℝ) ∩ Icc a b) := by ext x; simp [and_comm]; tauto
   rw [h_union, aestronglyMeasurable_union_iff]
-  constructor
-  · exact hf_cont.aestronglyMeasurable
-      (measurableSet_Icc.diff (Finset.measurableSet P))
-  · rw [Measure.restrict_zero_set
+  refine ⟨hf_cont.aestronglyMeasurable (measurableSet_Icc.diff (Finset.measurableSet P)), ?_⟩
+  rw [Measure.restrict_zero_set
       ((Finset.finite_toSet P |>.inter_of_left (Icc a b)).measure_zero _)]
-    exact aestronglyMeasurable_zero_measure f
+  exact aestronglyMeasurable_zero_measure f
 
 /-- A piecewise continuous bounded function is interval integrable. -/
 theorem intervalIntegrable_of_piecewise_continuousOn_bounded
@@ -154,12 +152,10 @@ private theorem exists_min_above_in_finite_union
   have hS_above_finite : S_above.Finite :=
     hS_finite.subset (fun s hs => hs.1)
   have hne : hS_above_finite.toFinset.Nonempty := by
-    rw [Set.Finite.toFinset_nonempty]
-    exact ⟨b, by simp [S_above, S, ht_lt_b]⟩
+    rw [Set.Finite.toFinset_nonempty]; exact ⟨b, by simp [S_above, S, ht_lt_b]⟩
   set s_min := hS_above_finite.toFinset.min' hne
-  have hs_min_in : s_min ∈ S_above := by
-    have := Finset.min'_mem _ hne
-    rwa [Set.Finite.mem_toFinset] at this
+  have hs_min_in : s_min ∈ S_above :=
+    (Set.Finite.mem_toFinset hS_above_finite).mp (Finset.min'_mem _ hne)
   have hs_min_le : ∀ s ∈ S_above, s_min ≤ s :=
     fun s hs => Finset.min'_le _ s
       ((Set.Finite.mem_toFinset hS_above_finite).mpr hs)
@@ -241,11 +237,9 @@ theorem continuousWithinAt_integral_of_dominated_piecewise
     (hF_bound : ∀ x ∈ S, ∀ t ∈ Icc a b, ‖F x t‖ ≤ M)
     (hF_cont : ∀ᵐ t ∂volume.restrict (Icc a b), ContinuousWithinAt (fun x => F x t) S x₀) :
     ContinuousWithinAt (fun x => ∫ t in a..b, F x t) S x₀ := by
-  let bound : ℝ → ℝ := fun _ => M
   have h_uIoc_sub : Set.uIoc a b ⊆ Icc a b := by
-    rw [uIoc_of_le hab]
-    exact Ioc_subset_Icc_self
-  apply intervalIntegral.continuousWithinAt_of_dominated_interval (bound := bound)
+    rw [uIoc_of_le hab]; exact Ioc_subset_Icc_self
+  apply intervalIntegral.continuousWithinAt_of_dominated_interval (bound := fun _ => M)
   · filter_upwards [self_mem_nhdsWithin (s := S)] with x hx
     exact (hF_meas x hx).mono_set h_uIoc_sub
   · filter_upwards [self_mem_nhdsWithin (s := S)] with x hx

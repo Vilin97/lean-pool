@@ -280,8 +280,7 @@ private lemma fwd_pair_mem (g₁ : P.Δ) (g₂ g_D q₀_val : G)
   obtain ⟨n₁, hn₁_eq⟩ := QuotientGroup.mk_out_eq_mul
     ((ConjAct.toConjAct ((g₁ : G)) • P.H).subgroupOf P.H) c
   have hn₁_coe : ((⟦c⟧ : decompQuot P g₁).out : G) = (c : G) * (n₁ : G) := by
-    have := congr_arg (Subtype.val : ↥P.H → G) hn₁_eq
-    simpa [Subgroup.coe_mul] using this
+    simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn₁_eq
   have hn₁_conj : ((g₁ : G))⁻¹ * (n₁ : G) * ((g₁ : G)) ∈ P.H :=
     conj_mem_of_stabilizer ((g₁ : G)) n₁
   apply leftCoset_eq_of_not_disjoint; rw [@not_disjoint_iff]

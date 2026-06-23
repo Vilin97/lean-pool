@@ -102,10 +102,8 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         rw [h1, h2]
         simp only [Complex.real_smul]; push_cast; ring
       rw [h_deriv_eq] at h_combined
-      have h_slope_g := hasDerivAt_iff_tendsto_slope.mp h_combined
-      have h_ioi_subset : Set.Ioi (1 : ℝ) ⊆ {1}ᶜ := fun y hy => ne_of_gt hy
-      have h_slope_right := h_slope_g.mono_left (nhdsWithin_mono (1 : ℝ) h_ioi_subset)
-      refine h_slope_right.congr' ?_
+      refine (hasDerivAt_iff_tendsto_slope.mp h_combined
+        |>.mono_left (nhdsWithin_mono (1 : ℝ) (fun y hy => ne_of_gt hy))).congr' ?_
       filter_upwards [h_mem] with t' ht'
       simp only [slope_def_module]
       congr 1
@@ -156,24 +154,17 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         have h1 : (HHeight : ℂ) - Real.sqrt 3 / 2 = (1 : ℂ) := by
           simp only [HHeight]; push_cast; ring
         rw [h1]; simp
-      have h_rhs_re :
-          Complex.re ((1 - (s:ℂ)) *
-              (-Real.pi * Real.sqrt 3 / 12 +
-                Real.pi / 12 * I) +
-              (s:ℂ) * (-1/2 +
-                  (1 - Real.sqrt 3 / 2) * I)) =
-            (1 - s) * (-Real.pi * Real.sqrt 3 / 12) +
-              s * (-1/2) := by
-        have h_im_s : Complex.im (s:ℂ) = 0 := Complex.ofReal_im s
-        have h_im_1_s : Complex.im (1 - (s:ℂ)) = 0 := by
-          simp only [Complex.sub_im, Complex.one_im, h_im_s, sub_zero]
-        have h_im_coeff : Complex.im ((1 : ℂ) - Real.sqrt 3 / 2) = 0 := by
-          simp only [Complex.sub_im, Complex.one_im, Complex.ofReal_im, sub_zero,
-            Complex.div_ofNat_im, zero_div]
+      have h_rhs_re : Complex.re ((1 - (s:ℂ)) *
+              (-Real.pi * Real.sqrt 3 / 12 + Real.pi / 12 * I) +
+              (s:ℂ) * (-1/2 + (1 - Real.sqrt 3 / 2) * I)) =
+            (1 - s) * (-Real.pi * Real.sqrt 3 / 12) + s * (-1/2) := by
         simp only [Complex.add_re, Complex.mul_re, Complex.sub_re, Complex.ofReal_re,
           Complex.one_re, Complex.div_ofNat_re, Complex.neg_re, Complex.ofReal_im, Complex.I_re,
-          Complex.I_im, h_im_1_s, h_im_coeff, mul_zero, sub_zero, mul_one, Complex.neg_im,
-          Complex.div_ofNat_im, add_zero]
+          Complex.I_im,
+          show Complex.im (1 - (s:ℂ)) = 0 from by simp [Complex.sub_im, Complex.ofReal_im],
+          show Complex.im ((1:ℂ) - Real.sqrt 3 / 2) = 0 from by
+            simp [Complex.sub_im, Complex.ofReal_im, Complex.div_ofNat_im],
+          mul_zero, sub_zero, mul_one, Complex.neg_im, Complex.div_ofNat_im, add_zero]
         ring
       have h_re_eq := congr_arg Complex.re heq
       rw [h_lhs_re, h_rhs_re] at h_re_eq
@@ -224,10 +215,8 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         rw [h1, h2]
         simp only [Complex.real_smul]; push_cast; ring
       rw [h_deriv_eq] at h_combined
-      have h_slope_g := hasDerivAt_iff_tendsto_slope.mp h_combined
-      have h_iio_ss : Set.Iio (3 : ℝ) ⊆ {3}ᶜ := fun y hy => ne_of_lt hy
-      have h_slope_left := h_slope_g.mono_left (nhdsWithin_mono (3 : ℝ) h_iio_ss)
-      refine h_slope_left.congr' ?_
+      refine (hasDerivAt_iff_tendsto_slope.mp h_combined
+        |>.mono_left (nhdsWithin_mono (3 : ℝ) (fun y hy => ne_of_lt hy))).congr' ?_
       filter_upwards [h_mem] with t' ht'
       simp only [slope_def_module]
       congr 1
@@ -239,21 +228,11 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
           ite_false, ite_true]
         dsimp only [g]
         congr 2; congr 1; push_cast; ring
-      have h_at_t' :
-          fdBoundaryToPolygonHomotopy (t', s) =
-            g t' := by
-        have ht'_not_le_1 : ¬(t' ≤ 1) :=
-          not_le.mpr (lt_of_lt_of_le
-              (by norm_num : (1 : ℝ) < 2) (le_of_lt ht'.1))
-        have ht'_not_le_2 : ¬(t' ≤ 2) :=
-          not_le.mpr ht'.1
-        have ht'_le_3 : t' ≤ 3 :=
-          le_of_lt ht'.2
+      have h_at_t' : fdBoundaryToPolygonHomotopy (t', s) = g t' := by
         simp only [fdBoundaryToPolygonHomotopy,
-          ht'_not_le_1, ht'_not_le_2, ite_false,
-          ht'_le_3, ite_true]
-        dsimp only [g]
-        congr 2; congr 1; ring
+          not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) ht'.1), ite_false,
+          not_le.mpr ht'.1, le_of_lt ht'.2, ite_true]
+        dsimp only [g]; congr 2; congr 1; ring
       rw [h_at_t', h_at_3]
     have h_right_val : Tendsto (slope (fun t' => fdBoundaryToPolygonHomotopy (t', s)) 3) (𝓝[>] 3)
         (𝓝 ((HHeight - Real.sqrt 3 / 2) * I)) := by
@@ -265,10 +244,8 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
           (3 : ℝ) :=
         hasDerivAt_straight_seg (-1/2) (Real.sqrt 3 / 2)
           ((HHeight : ℂ) - Real.sqrt 3 / 2) 3 3
-      have h_slope_f4 := hasDerivAt_iff_tendsto_slope.mp h_seg4_deriv
-      have h_ioi_ss : Set.Ioi (3 : ℝ) ⊆ {3}ᶜ := fun y hy => ne_of_gt hy
-      have h_slope_right := h_slope_f4.mono_left (nhdsWithin_mono (3 : ℝ) h_ioi_ss)
-      refine h_slope_right.congr' ?_
+      refine (hasDerivAt_iff_tendsto_slope.mp h_seg4_deriv
+        |>.mono_left (nhdsWithin_mono (3 : ℝ) (fun y hy => ne_of_gt hy))).congr' ?_
       filter_upwards [h_mem] with t' ht'
       simp only [slope_def_module]
       congr 1
@@ -294,15 +271,10 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
       have h_f4_eq_rho : f4 3 = rho := by dsimp only [f4]; simp only [rho, HHeight]; push_cast; ring
       have h_at_3 : fdBoundaryToPolygonHomotopy (3, s) = f4 3 := by rw [h_fbd_eq_rho, h_f4_eq_rho]
       have h_at_t' : fdBoundaryToPolygonHomotopy (t', s) = f4 t' := by
-        have ht'1 : ¬(t' ≤ 1) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (1 : ℝ) < 3)
-            (le_of_lt ht'.1))
-        have ht'2 : ¬(t' ≤ 2) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (2 : ℝ) < 3)
-            (le_of_lt ht'.1))
-        have ht'3 : ¬(t' ≤ 3) := not_le.mpr ht'.1
-        have ht'4 : t' ≤ 4 := le_of_lt ht'.2
-        simp only [fdBoundaryToPolygonHomotopy, ht'1, ht'2, ht'3, ite_false, ht'4, ite_true]
+        simp only [fdBoundaryToPolygonHomotopy,
+          not_le.mpr (lt_trans (by norm_num : (1:ℝ) < 3) ht'.1),
+          not_le.mpr (lt_trans (by norm_num : (2:ℝ) < 3) ht'.1),
+          not_le.mpr ht'.1, ite_false, le_of_lt ht'.2, ite_true]
         dsimp only [f4]
       rw [h_at_t', h_at_3]
     have h_iio_subset : Set.Iio (3 : ℝ) ⊆ {3}ᶜ := fun y hy => ne_of_lt hy
@@ -319,34 +291,17 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         have h1 : (HHeight : ℂ) - Real.sqrt 3 / 2 = (1 : ℂ) := by
           simp only [HHeight]; push_cast; ring
         rw [h1, one_mul]; exact Complex.I_re
-      have h_lhs_re :
-          Complex.re ((1 - (s:ℂ)) *
-              (-Real.pi * Real.sqrt 3 / 12 -
-                Real.pi / 12 * I) +
-              (s:ℂ) * (-1/2 +
-                  (Real.sqrt 3 / 2 - 1) * I)) =
-            (1 - s) * (-Real.pi * Real.sqrt 3 / 12) +
-              s * (-1/2) := by
-        have h_im_s :
-            Complex.im (s:ℂ) = 0 :=
-          Complex.ofReal_im s
-        have h_im_1_s :
-            Complex.im (1 - (s:ℂ)) = 0 := by
-          simp only [Complex.sub_im,
-            Complex.one_im, h_im_s, sub_zero]
-        have h_im_coeff :
-            Complex.im ((Real.sqrt 3 : ℂ) / 2 - 1) = 0 := by
-              simp only [Complex.sub_im, Complex.div_ofNat_im, Complex.ofReal_im,
-                         Complex.one_im, sub_zero, zero_div]
-        simp only [Complex.add_re,
-          Complex.mul_re, Complex.sub_re,
-          Complex.ofReal_re, Complex.one_re,
-          Complex.div_ofNat_re, Complex.neg_re,
-          Complex.ofReal_im, Complex.I_re,
-          Complex.I_im, h_im_1_s,
-          h_im_coeff, mul_zero, sub_zero,
-          mul_one, Complex.neg_im,
-          Complex.div_ofNat_im, add_zero]
+      have h_lhs_re : Complex.re ((1 - (s:ℂ)) *
+              (-Real.pi * Real.sqrt 3 / 12 - Real.pi / 12 * I) +
+              (s:ℂ) * (-1/2 + (Real.sqrt 3 / 2 - 1) * I)) =
+            (1 - s) * (-Real.pi * Real.sqrt 3 / 12) + s * (-1/2) := by
+        simp only [Complex.add_re, Complex.mul_re, Complex.sub_re, Complex.ofReal_re,
+          Complex.one_re, Complex.div_ofNat_re, Complex.neg_re, Complex.ofReal_im,
+          Complex.I_re, Complex.I_im,
+          show Complex.im (1 - (s:ℂ)) = 0 from by simp [Complex.sub_im, Complex.ofReal_im],
+          show Complex.im ((Real.sqrt 3 : ℂ) / 2 - 1) = 0 from by
+            simp [Complex.sub_im, Complex.div_ofNat_im, Complex.ofReal_im],
+          mul_zero, sub_zero, mul_one, Complex.neg_im, Complex.div_ofNat_im, add_zero]
         ring
       have h_re_eq := congr_arg Complex.re heq
       rw [h_lhs_re, h_rhs_re] at h_re_eq
@@ -363,58 +318,30 @@ private lemma not_diffAt_at_four (s : ℝ) (_hs : s ∈ Set.Icc (0 : ℝ) 1) :
       have h_mem : Ioo 3 4 ∈ 𝓝[<] (4 : ℝ) := Ioo_mem_nhdsLT (by norm_num : (3 : ℝ) < 4)
       apply Tendsto.congr' (f₁ := fun _ => (HHeight - Real.sqrt 3 / 2) * I)
       · filter_upwards [h_mem] with t ht
-        have ht1 : ¬(t ≤ 1) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (1 : ℝ) < 3)
-            (le_of_lt ht.1))
-        have ht2 : ¬(t ≤ 2) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (2 : ℝ) < 3)
-            (le_of_lt ht.1))
-        have ht3 : ¬(t ≤ 3) := not_le.mpr ht.1
-        have ht4 : t ≤ 4 := le_of_lt ht.2
-        have h4_1 : ¬(4 : ℝ) ≤ 1 := by norm_num
-        have h4_2 : ¬(4 : ℝ) ≤ 2 := by norm_num
-        have h4_3 : ¬(4 : ℝ) ≤ 3 := by norm_num
-        have h4_4 : (4 : ℝ) ≤ 4 := le_refl 4
-        simp only [slope_def_module,
-          fdBoundaryToPolygonHomotopy,
-          ht1, ht2, ht3, ht4,
-          h4_1, h4_2, h4_3, h4_4,
-          ite_false, ite_true]
+        simp only [slope_def_module, fdBoundaryToPolygonHomotopy,
+          not_le.mpr (lt_trans (by norm_num : (1:ℝ) < 3) ht.1),
+          not_le.mpr (lt_trans (by norm_num : (2:ℝ) < 3) ht.1),
+          not_le.mpr ht.1, le_of_lt ht.2,
+          show ¬(4:ℝ) ≤ 1 from by norm_num, show ¬(4:ℝ) ≤ 2 from by norm_num,
+          show ¬(4:ℝ) ≤ 3 from by norm_num, le_refl (4:ℝ), ite_false, ite_true]
         erw [Complex.real_smul]
         have hne : (↑t : ℂ) - 4 ≠ 0 := by
-          simp only [sub_ne_zero]; norm_cast
-          exact ne_of_lt ht.2
+          simp only [sub_ne_zero]; norm_cast; exact ne_of_lt ht.2
         simp only [Complex.ofReal_inv, Complex.ofReal_sub]
-        field_simp [hne]
-        simp only [HHeight]; push_cast; ring
+        field_simp [hne]; simp only [HHeight]; push_cast; ring
       · exact tendsto_const_nhds
     have h_right_val :
-        Tendsto (slope (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', s))
-            4) (𝓝[>] 4) (𝓝 1) := by
-      have h_mem : Ioo 4 5 ∈ 𝓝[>] (4 : ℝ) :=
-        Ioo_mem_nhdsGT (by norm_num : (4 : ℝ) < 5)
+        Tendsto (slope (fun t' => fdBoundaryToPolygonHomotopy (t', s)) 4) (𝓝[>] 4) (𝓝 1) := by
+      have h_mem : Ioo 4 5 ∈ 𝓝[>] (4 : ℝ) := Ioo_mem_nhdsGT (by norm_num : (4 : ℝ) < 5)
       apply Tendsto.congr' (f₁ := fun _ => (1 : ℂ))
       · filter_upwards [h_mem] with t ht
-        have ht1 : ¬(t ≤ 1) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (1 : ℝ) < 4)
-            (le_of_lt ht.1))
-        have ht2 : ¬(t ≤ 2) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (2 : ℝ) < 4)
-            (le_of_lt ht.1))
-        have ht3 : ¬(t ≤ 3) :=
-          not_le.mpr (lt_of_lt_of_le (by norm_num : (3 : ℝ) < 4)
-            (le_of_lt ht.1))
-        have ht4 : ¬(t ≤ 4) := not_le.mpr ht.1
-        have h4_1 : ¬(4 : ℝ) ≤ 1 := by norm_num
-        have h4_2 : ¬(4 : ℝ) ≤ 2 := by norm_num
-        have h4_3 : ¬(4 : ℝ) ≤ 3 := by norm_num
-        have h4_4 : (4 : ℝ) ≤ 4 := le_refl 4
-        simp only [slope_def_module,
-          fdBoundaryToPolygonHomotopy,
-          ht1, ht2, ht3, ht4,
-          h4_1, h4_2, h4_3, h4_4,
-          ite_false, ite_true]
+        simp only [slope_def_module, fdBoundaryToPolygonHomotopy,
+          not_le.mpr (lt_trans (by norm_num : (1:ℝ) < 4) ht.1),
+          not_le.mpr (lt_trans (by norm_num : (2:ℝ) < 4) ht.1),
+          not_le.mpr (lt_trans (by norm_num : (3:ℝ) < 4) ht.1),
+          not_le.mpr ht.1,
+          show ¬(4:ℝ) ≤ 1 from by norm_num, show ¬(4:ℝ) ≤ 2 from by norm_num,
+          show ¬(4:ℝ) ≤ 3 from by norm_num, le_refl (4:ℝ), ite_false, ite_true]
         erw [Complex.real_smul]
         have hne : (↑t : ℂ) - 4 ≠ 0 := by
           simp only [sub_ne_zero]; norm_cast

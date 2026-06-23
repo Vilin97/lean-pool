@@ -40,10 +40,8 @@ private instance instContinuousSMulRealComplex : ContinuousSMul ℝ ℂ :=
 
 private lemma segment_subset_convex {S : Set ℂ} (hS : Convex ℝ S)
     {c z : ℂ} (hc : c ∈ S) (hz : z ∈ S) :
-    ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S := by
-  intro t ht
-  have heq : c + t • (z - c) = (1 - t) • c + t • z := by module
-  rw [heq]
+    ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S := fun t ht => by
+  rw [show c + t • (z - c) = (1 - t) • c + t • z from by module]
   exact hS hc hz (by linarith [ht.2]) ht.1 (by linarith [ht.1])
 
 private lemma segmentIntegrand_continuousOn {f : ℂ → ℂ} {S : Set ℂ}
@@ -73,56 +71,35 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
   have hu_cont : ContinuousOn u (Set.uIcc 0 1) :=
     continuous_ofReal.continuousOn
   have hv_cont : ContinuousOn v (Set.uIcc 0 1) := by
-    have : v = f ∘ γ := rfl
-    rw [this]
     apply ContinuousOn.comp hf.continuousOn hγ_cont.continuousOn
     intro t ht
-    rw [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1)] at ht
-    exact h_seg t ht
+    exact h_seg t (Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1) ▸ ht)
   have hu_deriv : ∀ x ∈ Set.Ioo (min 0 1) (max 0 1),
       HasDerivAt u (u' x) x := by
     intro x _
     simp only [u, u']
     exact ofRealCLM.hasDerivAt
-  have hγ_deriv : ∀ t : ℝ, HasDerivAt γ (z - c) t := by
-    intro t
-    have h1 : HasDerivAt (fun t : ℝ => (t : ℂ)) 1 t :=
-      ofRealCLM.hasDerivAt
-    have h2 : HasDerivAt (fun t : ℝ => (t : ℂ) • (z - c))
-        ((1 : ℂ) • (z - c)) t := h1.smul_const (z - c)
-    simp only [one_smul] at h2
-    have h3 : HasDerivAt (fun _ : ℝ => c) 0 t :=
-      hasDerivAt_const t c
-    convert h3.add h2 using 1
-    ring
+  have hγ_deriv : ∀ t : ℝ, HasDerivAt γ (z - c) t := fun t => by
+    have h2 : HasDerivAt (fun t : ℝ => (t : ℂ) • (z - c)) (z - c) t := by
+      simpa using ofRealCLM.hasDerivAt.smul_const (z - c)
+    convert (hasDerivAt_const t c).add h2 using 1; ring
   have hv_deriv : ∀ x ∈ Set.Ioo (min 0 1) (max 0 1),
       HasDerivAt v (v' x) x := by
     intro t ht
     simp only [v, v']
-    simp only [min_eq_left, max_eq_right,
-      (by norm_num : (0 : ℝ) ≤ 1)] at ht
-    have ht' : t ∈ Icc (0 : ℝ) 1 := Ioo_subset_Icc_self ht
-    have h_in_S : γ t ∈ S := h_seg t ht'
-    have h_diff_at : DifferentiableAt ℂ f (γ t) :=
-      hf.differentiableAt (hS_open.mem_nhds h_in_S)
-    have h_chain : HasDerivAt (f ∘ γ)
-        ((z - c) • deriv f (γ t)) t :=
-      h_diff_at.hasDerivAt.scomp t (hγ_deriv t)
+    simp only [min_eq_left, max_eq_right, (by norm_num : (0 : ℝ) ≤ 1)] at ht
+    have h_in_S : γ t ∈ S := h_seg t (Ioo_subset_Icc_self ht)
+    have h_chain := (hf.differentiableAt (hS_open.mem_nhds h_in_S)).hasDerivAt.scomp
+      t (hγ_deriv t)
     simp only [smul_eq_mul] at h_chain
-    convert h_chain using 1
-    ring
+    convert h_chain using 1; ring
   have hu'_int : IntervalIntegrable u' MeasureTheory.volume 0 1 :=
     ContinuousOn.intervalIntegrable continuousOn_const
   have hv'_int : IntervalIntegrable v' MeasureTheory.volume 0 1 := by
     apply ContinuousOn.intervalIntegrable
     rw [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1)]
-    apply ContinuousOn.mul _ continuousOn_const
-    have hContDiff : ContDiffOn ℂ 1 f S :=
-      hf.contDiffOn hS_open
-    have hderiv_cont : ContinuousOn (deriv f) S :=
-      hContDiff.continuousOn_deriv_of_isOpen hS_open le_rfl
-    exact hderiv_cont.comp hγ_cont.continuousOn
-      (fun t ht => h_seg t ht)
+    exact ((hf.contDiffOn hS_open).continuousOn_deriv_of_isOpen hS_open le_rfl).mul_const _
+      |>.comp hγ_cont.continuousOn (fun t ht => h_seg t ht)
   have h_parts :=
     intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
       hu_cont hv_cont hu_deriv hv_deriv hu'_int hv'_int
@@ -190,9 +167,7 @@ private lemma hasDerivAt_segmentIntegrand {f : ℂ → ℂ}
     simp only [smul_eq_mul, mul_one] at h1
     convert (hasDerivAt_const z c).add h1 using 1
     ring
-  have hf_at :=
-    (hf.differentiableAt (hS_open.mem_nhds hpt)).hasDerivAt
-  have hcomp := hf_at.comp z hg
+  have hcomp := (hf.differentiableAt (hS_open.mem_nhds hpt)).hasDerivAt.comp z hg
   convert hcomp using 1
   simp only [RCLike.real_smul_eq_coe_mul, mul_comm]
   rfl

@@ -103,11 +103,9 @@ lemma continuousOn_pv_base (f : ℂ → ℂ) (γ : ℝ → ℂ)
     intro s ⟨hs_far, hs_Icc⟩
     exact ⟨mem_image_of_mem γ hs_Icc, by
       simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact le_of_lt hs_far⟩
-  have hfγ_at : ContinuousWithinAt (f ∘ γ)
-      ({t | ε < ‖γ t - z₀‖} ∩ Icc a b) t :=
-    ContinuousWithinAt.comp (hf_cont _ hγt_in)
-      ((hγ_cont t ht_Icc).mono inter_subset_right) h_maps
-  exact hfγ_at.mul ((hγ'_cont t ht_Icc).mono inter_subset_right)
+  exact (ContinuousWithinAt.comp (hf_cont _ hγt_in)
+      ((hγ_cont t ht_Icc).mono inter_subset_right) h_maps).mul
+    ((hγ'_cont t ht_Icc).mono inter_subset_right)
 
 /-- If `f =ᶠ g` along a filter, their `limUnder` values agree. -/
 theorem limUnder_eventually_eq {α : Type*} [TopologicalSpace α] [Nonempty α]
@@ -125,34 +123,20 @@ private theorem aEStronglyMeasurable_pv_integrand
   let S := {t | ε < ‖γ t - z₀‖}
   have hS_meas : MeasurableSet (S ∩ Icc a b) :=
     measurableSet_pv_support γ a b z₀ ε hγ
-  have h_cont : ContinuousOn (fun t => f (γ t) * deriv γ t)
-      (S ∩ Icc a b) :=
-    continuousOn_pv_base f γ a b z₀ ε hf hγ hγ'
-  have h_base_meas : AEStronglyMeasurable
-      (fun t => f (γ t) * deriv γ t)
-      (volume.restrict (S ∩ Icc a b)) :=
-    h_cont.aestronglyMeasurable hS_meas
-  have h_piecewise := AEStronglyMeasurable.piecewise
-    hS_meas h_base_meas
+  refine ((AEStronglyMeasurable.piecewise hS_meas
+    ((continuousOn_pv_base f γ a b z₀ ε hf hγ hγ').aestronglyMeasurable hS_meas)
     (aestronglyMeasurable_const :
       AEStronglyMeasurable (fun _ : ℝ => (0 : ℂ))
-        (volume.restrict (S ∩ Icc a b)ᶜ))
-  have h_eq : (fun t => if ε < ‖γ t - z₀‖
-      then f (γ t) * deriv γ t else 0) =ᵐ[
-        volume.restrict (Icc a b)]
-      (S ∩ Icc a b).piecewise
-        (fun t => f (γ t) * deriv γ t) (fun _ => 0) := by
-    filter_upwards [ae_restrict_mem
-      isClosed_Icc.measurableSet] with t ht
-    simp only [piecewise]
-    by_cases ht_S : t ∈ S
-    · simp only [show t ∈ S ∩ Icc a b from ⟨ht_S, ht⟩,
-        ↓reduceIte, show ε < ‖γ t - z₀‖ from ht_S, ↓reduceIte]
-    · simp only [show t ∉ S ∩ Icc a b from fun h => ht_S h.1,
-        ↓reduceIte, show ¬(ε < ‖γ t - z₀‖) from ht_S,
-        ↓reduceIte]
-  exact (h_piecewise.mono_measure
-    Measure.restrict_le_self).congr h_eq.symm
+        (volume.restrict (S ∩ Icc a b)ᶜ))).mono_measure
+    Measure.restrict_le_self).congr ?_
+  filter_upwards [ae_restrict_mem isClosed_Icc.measurableSet] with t ht
+  simp only [piecewise]
+  by_cases ht_S : t ∈ S
+  · simp only [show t ∈ S ∩ Icc a b from ⟨ht_S, ht⟩,
+      ↓reduceIte, show ε < ‖γ t - z₀‖ from ht_S, ↓reduceIte]
+  · simp only [show t ∉ S ∩ Icc a b from fun h => ht_S h.1,
+      ↓reduceIte, show ¬(ε < ‖γ t - z₀‖) from ht_S,
+      ↓reduceIte]
 
 theorem cauchyPrincipalValueIntegrand_integrable
     (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ)
@@ -165,11 +149,7 @@ theorem cauchyPrincipalValueIntegrand_integrable
       (cauchyPrincipalValueIntegrand' f γ z₀ ε) volume a b := by
   obtain ⟨M, hM⟩ := cauchyPrincipalValueIntegrand_bounded
     f γ a b z₀ ε hε hf_cont hγ_cont hγ'_cont
-  have h_eq : cauchyPrincipalValueIntegrand' f γ z₀ ε =
-      fun t => if ε < ‖γ t - z₀‖ then f (γ t) * deriv γ t
-        else 0 := by ext t; rfl
-  rw [h_eq, intervalIntegrable_iff_integrableOn_Ioc_of_le
-    (le_of_lt hab)]
+  rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (le_of_lt hab)]
   apply IntegrableOn.mono_set
   · apply IntegrableOn.of_bound measure_Icc_lt_top
       (aEStronglyMeasurable_pv_integrand hf_cont hγ_cont
@@ -201,39 +181,24 @@ theorem cauchyPrincipalValue_of_dominated
         (volume.restrict (uIoc a b))) :
     CauchyPrincipalValueExists' f γ a b z₀ := by
   have hab' := le_of_lt hab
-  have h_bound_ae : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ∀ᵐ t ∂volume,
-      t ∈ uIoc a b →
-        ‖cauchyPrincipalValueIntegrand' f γ z₀ ε t‖ ≤ M := by
-    filter_upwards [self_mem_nhdsWithin] with ε hε
-    apply Eventually.of_forall
-    intro t ht
-    exact h_bound ε hε t
-      (Ioc_subset_Icc_self (uIoc_of_le hab' ▸ ht))
-  have h_ae_unr : ∀ᵐ t ∂volume, t ∈ Icc a b →
-      ∃ L, Tendsto
-        (fun ε => cauchyPrincipalValueIntegrand' f γ z₀ ε t)
-        (𝓝[>] 0) (𝓝 L) := by
-    rwa [ae_restrict_iff' isClosed_Icc.measurableSet]
-      at h_ae_limit
+  let g : ℝ → ℂ := fun t => Filter.limUnder (𝓝[>] (0 : ℝ))
+    (fun ε => cauchyPrincipalValueIntegrand' f γ z₀ ε t)
   have h_limit_ae : ∀ᵐ t ∂volume, t ∈ uIoc a b →
       ∃ L, Tendsto
         (fun ε => cauchyPrincipalValueIntegrand' f γ z₀ ε t)
         (𝓝[>] 0) (𝓝 L) := by
-    filter_upwards [h_ae_unr] with t ht ht_mem
+    filter_upwards [(ae_restrict_iff' isClosed_Icc.measurableSet).mp h_ae_limit]
+      with t ht ht_mem
     exact ht (Ioc_subset_Icc_self (uIoc_of_le hab' ▸ ht_mem))
-  let g : ℝ → ℂ := fun t => Filter.limUnder (𝓝[>] (0 : ℝ))
-    (fun ε => cauchyPrincipalValueIntegrand' f γ z₀ ε t)
-  have h_lim_conv : ∀ᵐ t ∂volume, t ∈ uIoc a b →
-      Tendsto
-        (fun ε => cauchyPrincipalValueIntegrand' f γ z₀ ε t)
-        (𝓝[>] 0) (𝓝 (g t)) := by
-    filter_upwards [h_limit_ae] with t ht ht_mem
-    obtain ⟨L, hL⟩ := ht ht_mem
-    rwa [show g t = L from hL.limUnder_eq]
   exact ⟨∫ t in a..b, g t,
-    intervalIntegral.tendsto_integral_filter_of_dominated_convergence
-      (fun _ => M) hF_meas h_bound_ae
-      intervalIntegrable_const h_lim_conv⟩
+    intervalIntegral.tendsto_integral_filter_of_dominated_convergence (fun _ => M) hF_meas
+      (by filter_upwards [self_mem_nhdsWithin] with ε hε
+          exact Eventually.of_forall fun t ht =>
+            h_bound ε hε t (Ioc_subset_Icc_self (uIoc_of_le hab' ▸ ht)))
+      intervalIntegrable_const
+      (by filter_upwards [h_limit_ae] with t ht ht_mem
+          obtain ⟨L, hL⟩ := ht ht_mem
+          rwa [show g t = L from hL.limUnder_eq])⟩
 
 private theorem pv_uniform_bound_of_continuous_aux
     (g : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) (hab : a < b)
@@ -291,10 +256,6 @@ theorem cauchyPrincipalValueExists_of_continuous
             simp only [cauchyPrincipalValueIntegrand',
               hε.2, ite_true]⟩) tendsto_const_nhds⟩
   · filter_upwards [self_mem_nhdsWithin] with ε _
-    have h_eq : cauchyPrincipalValueIntegrand' g γ z₀ ε =
-        fun t => if ε < ‖γ t - z₀‖ then g (γ t) * deriv γ t
-          else 0 := funext fun _ => rfl
-    rw [h_eq]
     exact (aEStronglyMeasurable_pv_integrand
       (hg.mono diff_subset) hγ hγ').mono_measure
       (Measure.restrict_mono
@@ -393,11 +354,10 @@ private theorem pv_piecewise_pointwise
         (𝓝[>] 0) (𝓝 (g (γ.toFun t) * deriv γ.toFun t)) := by
   filter_upwards [h_finite_preimage.countable.ae_notMem _]
       with t ht ht_uIoc
-  have h_ne : γ.toFun t ≠ z₀ := fun heq =>
-    ht ⟨Ioc_subset_Icc_self (uIoc_of_le γ.hab.le ▸ ht_uIoc), heq⟩
   exact tendsto_const_nhds.congr' (by
-    filter_upwards [Ioo_mem_nhdsGT
-      (norm_pos_iff.mpr (sub_ne_zero.mpr h_ne))] with ε hε
+    filter_upwards [Ioo_mem_nhdsGT (norm_pos_iff.mpr (sub_ne_zero.mpr
+      (fun heq => ht ⟨Ioc_subset_Icc_self (uIoc_of_le γ.hab.le ▸ ht_uIoc), heq⟩)))]
+      with ε hε
     simp only [hε.2, ite_true])
 
 private theorem pv_simple_pole_integrand_split

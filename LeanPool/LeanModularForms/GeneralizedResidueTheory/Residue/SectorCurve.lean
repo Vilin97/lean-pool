@@ -90,9 +90,8 @@ theorem sectorCurve_one (r : ℝ) (α : ℝ) :
 /-- The sector curve at t=2 is r * exp(i * alpha) (end of arc). -/
 theorem sectorCurve_two (r : ℝ) (α : ℝ) :
     sectorCurve r α 2 = ↑r * exp (I * ↑α) := by
-  simp only [sectorCurve, show ¬(2 : ℝ) ≤ 1 from by norm_num,
-    show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
-  congr 1; congr 1; push_cast; ring
+  simp only [sectorCurve, show ¬(2 : ℝ) ≤ 1 from by norm_num, show (2 : ℝ) ≤ 2 from le_refl 2,
+    ↓reduceIte]; congr 1; congr 1; push_cast; ring
 
 /-- Segment 1: for t in [0,1], the sector curve is `t * r`. -/
 theorem sectorCurve_seg1 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 0 1) :
@@ -119,33 +118,27 @@ theorem sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 2 3) :
 theorem sectorCurve_continuousOn (r : ℝ) (α : ℝ) :
     ContinuousOn (sectorCurve r α) (Icc 0 3) := by
   have h_union : Icc (0 : ℝ) 3 = Icc 0 1 ∪ Icc 1 2 ∪ Icc 2 3 := by
-    ext x; simp only [mem_Icc, mem_union]; constructor
+    ext x; simp only [mem_Icc, mem_union]
+    constructor
     · intro ⟨h0, h3⟩
       by_cases h1 : x ≤ 1
-      · left; left; exact ⟨h0, h1⟩
-      · push Not at h1
-        by_cases h2 : x ≤ 2
-        · left; right; exact ⟨le_of_lt h1, h2⟩
-        · push Not at h2; right; exact ⟨le_of_lt h2, h3⟩
-    · rintro ((⟨h0, h1⟩ | ⟨h1, h2⟩) | ⟨h2, h3⟩)
-      · exact ⟨h0, le_trans h1 (by norm_num)⟩
-      · exact ⟨le_trans (by norm_num) h1, le_trans h2 (by norm_num)⟩
-      · exact ⟨le_trans (by norm_num) h2, h3⟩
+      · exact Or.inl (Or.inl ⟨h0, h1⟩)
+      · push Not at h1; by_cases h2 : x ≤ 2
+        · exact Or.inl (Or.inr ⟨le_of_lt h1, h2⟩)
+        · push Not at h2; exact Or.inr ⟨le_of_lt h2, h3⟩
+    · rintro ((⟨h0, h1⟩ | ⟨h1, h2⟩) | ⟨h2, h3⟩) <;> exact ⟨by linarith, by linarith⟩
   rw [h_union]
-  have hc1 : ContinuousOn (sectorCurve r α) (Icc 0 1) := by
-    apply ContinuousOn.congr _ (fun t ht => sectorCurve_seg1 r α t ht)
-    exact (continuous_ofReal.comp (continuous_id.mul continuous_const)).continuousOn
-  have hc2 : ContinuousOn (sectorCurve r α) (Icc 1 2) := by
-    apply ContinuousOn.congr _ (fun t ht => sectorCurve_seg2 r α t ht)
-    apply ContinuousOn.mul continuousOn_const
-    exact (Complex.continuous_exp.comp
-      (continuous_const.mul (continuous_ofReal.comp
-        ((continuous_id.sub continuous_const).mul continuous_const)))).continuousOn
-  have hc3 : ContinuousOn (sectorCurve r α) (Icc 2 3) := by
-    apply ContinuousOn.congr _ (fun t ht => sectorCurve_seg3 r α t ht)
-    apply ContinuousOn.mul _ continuousOn_const
-    exact (continuous_ofReal.comp
-      ((continuous_const.sub continuous_id).mul continuous_const)).continuousOn
+  have hc1 : ContinuousOn (sectorCurve r α) (Icc 0 1) :=
+    (continuous_ofReal.comp (continuous_id.mul continuous_const)).continuousOn.congr
+      (fun t ht => sectorCurve_seg1 r α t ht)
+  have hc2 : ContinuousOn (sectorCurve r α) (Icc 1 2) :=
+    (continuousOn_const.mul (Complex.continuous_exp.comp (continuous_const.mul
+      (continuous_ofReal.comp ((continuous_id.sub continuous_const).mul
+        continuous_const)))).continuousOn).congr (fun t ht => sectorCurve_seg2 r α t ht)
+  have hc3 : ContinuousOn (sectorCurve r α) (Icc 2 3) :=
+    ((continuous_ofReal.comp ((continuous_const.sub continuous_id).mul
+      continuous_const)).continuousOn.mul continuousOn_const).congr
+      (fun t ht => sectorCurve_seg3 r α t ht)
   exact ((hc1.union_of_isClosed hc2 isClosed_Icc isClosed_Icc).union_of_isClosed hc3
     (isClosed_Icc.union isClosed_Icc) isClosed_Icc)
 
@@ -307,7 +300,8 @@ theorem log_cancellation (r : ℝ) (hr : 0 < r) (ε : ℝ) (hε : 0 < ε) (hεr 
     rw [← h1, intervalIntegral.integral_ofReal]
   have h2c : ∫ t in (2 : ℝ)..(3 - ε / r), (-(↑((3 - t)⁻¹)) : ℂ) =
       ↑(Real.log (ε / r)) := by
-    have : ∀ t : ℝ, (-(↑((3 - t)⁻¹) : ℂ)) = (↑((-((3 - t)⁻¹)) : ℝ)) := by intro t; push_cast; ring
+    have : ∀ t : ℝ, (-(↑((3 - t)⁻¹) : ℂ)) = (↑((-((3 - t)⁻¹)) : ℝ)) := by
+      intro t; push_cast; ring
     simp_rw [this, intervalIntegral.integral_ofReal, h2]
   rw [h1c, h2c, ← Complex.ofReal_add, neg_add_cancel, Complex.ofReal_zero]
 

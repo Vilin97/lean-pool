@@ -186,11 +186,10 @@ private lemma surj_inductive_step (n : ℕ) (hn12 : 12 ≤ n) (hk_even : Even n)
     simp only [mn, mo, DirectSum.ofPow, DirectSum.ofPow, DirectSum.of_mul_of]
     rw [show (↑n : ℤ) = a • (4 : ℤ) + b • (6 : ℤ) from by
       simp only [Int.nsmul_eq_mul]; linarith, DirectSum.of_eq_same]
-  have hf_eq : f = g + c • mn := by simp only [g, sub_add_cancel]
-  have hf_ds : DirectSum.of _ (↑n : ℤ) f =
-      DirectSum.of _ (↑n : ℤ) g + c • DirectSum.of _ (↑n : ℤ) mn := by
-    rw [hf_eq, map_add, ← DirectSum.of_smul]
-  rw [hf_ds, hmn_eq]
+  rw [show DirectSum.of _ (↑n : ℤ) f =
+      DirectSum.of _ (↑n : ℤ) g + c • DirectSum.of _ (↑n : ℤ) mn from by
+    rw [show f = g + c • mn from by simp only [g, sub_add_cancel], map_add, ← DirectSum.of_smul],
+    hmn_eq]
   obtain ⟨p1, hp1⟩ := hg_in; obtain ⟨p2, hp2⟩ := hmn_in
   exact ⟨p1 + MvPolynomial.C c * p2, by
     rw [map_add, hp1, map_mul, evalE₄E₆_C, hp2,

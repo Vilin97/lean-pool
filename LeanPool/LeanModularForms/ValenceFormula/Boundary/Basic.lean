@@ -33,8 +33,7 @@ noncomputable section
 def heightCutoff : ℝ := Real.sqrt 3 / 2 + 1
 
 lemma one_lt_heightCutoff : 1 < heightCutoff := by
-  unfold heightCutoff
-  linarith [Real.sqrt_pos_of_pos (show (3 : ℝ) > 0 by norm_num)]
+  unfold heightCutoff; linarith [Real.sqrt_pos_of_pos (show (3 : ℝ) > 0 by norm_num)]
 
 lemma sqrt3_div2_lt_heightCutoff :
     Real.sqrt 3 / 2 < heightCutoff := by unfold heightCutoff; linarith

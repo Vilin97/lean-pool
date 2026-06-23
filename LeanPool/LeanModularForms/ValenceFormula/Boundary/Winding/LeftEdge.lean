@@ -58,11 +58,10 @@ private lemma leftEdge_min_dist_from_non_seg4 (H : ℝ) (s : ℂ) (hs_re : s.re 
   set d := min (min (‖s‖ - 1) 1) (H - s.im)
   by_cases h1 : t ≤ 1
   · rw [fdBoundary_H_eq_seg1_H h1]
-    have hre : (fdBoundarySeg1H H t).re = 1/2 := by
-      simp [fdBoundarySeg1H, Complex.add_re, Complex.mul_re,
-        Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
     calc d ≤ 1 := le_trans (min_le_left _ _) (min_le_right _ _)
-      _ ≤ _ := leftEdge_dist_from_rightVertical s hs_re _ hre
+      _ ≤ _ := leftEdge_dist_from_rightVertical s hs_re _
+              (by simp [fdBoundarySeg1H, Complex.add_re, Complex.mul_re,
+                Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im])
   · push Not at h1
     by_cases h3 : t ≤ 3
     · have h_on_arc : ‖fdBoundaryH H t‖ = 1 := by
@@ -168,10 +167,8 @@ private lemma leftEdge_slit_seg4_left (H : ℝ) (s : ℂ) (hs_re : s.re = -1 / 2
   simp only [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
     Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero]
   have : (t - 3) * α < s.im - Real.sqrt 3 / 2 := by
-    calc (t - 3) * α ≤ (t₀ - δ' - 3) * α := by nlinarith
-      _ = (t₀ - 3) * α - δ' * α := by ring
-      _ = (s.im - Real.sqrt 3 / 2) - δ' * α := by rw [ht₀_mul]
-      _ < s.im - Real.sqrt 3 / 2 := by nlinarith
+    nlinarith [mul_le_mul_of_nonneg_right (show t - 3 ≤ t₀ - δ' - 3 from by linarith)
+               (le_of_lt hα_pos), mul_pos hδ' hα_pos, ht₀_mul]
   rw [hα_def] at this; intro h; linarith
 
 private lemma leftEdge_slit_seg4_right (H : ℝ) (s : ℂ) (hs_re : s.re = -1 / 2)
@@ -186,10 +183,8 @@ private lemma leftEdge_slit_seg4_right (H : ℝ) (s : ℂ) (hs_re : s.re = -1 / 
   simp only [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
     Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero]
   have : (t - 3) * α > s.im - Real.sqrt 3 / 2 := by
-    calc (t - 3) * α ≥ (t₀ + δ' - 3) * α := by nlinarith
-      _ = (t₀ - 3) * α + δ' * α := by ring
-      _ = (s.im - Real.sqrt 3 / 2) + δ' * α := by rw [ht₀_mul]
-      _ > s.im - Real.sqrt 3 / 2 := by nlinarith
+    nlinarith [mul_le_mul_of_nonneg_right (show t₀ + δ' - 3 ≤ t - 3 from by linarith)
+               (le_of_lt hα_pos), mul_pos hδ' hα_pos, ht₀_mul]
   rw [hα_def] at this; intro h; linarith
 
 private lemma leftEdge_slit_seg5 (H : ℝ) (s : ℂ) (hs_re : s.re = -1 / 2)
@@ -354,15 +349,11 @@ private lemma leftEdge_h_far (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
       ε < ‖fdBoundaryH H t - s‖ := by
   intro ε hε_pos hε_lt t ht_mem h_abs
   have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-  have hεα_lt_t₀m3 : ε / α < t₀ - 3 := by
-    rw [div_lt_iff₀ hα_pos]; calc ε < threshold := hε_lt
-      _ ≤ (t₀ - 3) * α := hthresh_le_t₀m3α
-  have hεα_lt_4mt₀ : ε / α < 4 - t₀ := by
-    rw [div_lt_iff₀ hα_pos]; calc ε < threshold := hε_lt
-      _ ≤ (4 - t₀) * α := hthresh_le_4mt₀α
-  have hε_lt_d : ε < min (min (‖s‖ - 1) 1) (H - s.im) :=
-    calc ε < threshold := hε_lt
-      _ ≤ _ := hthresh_le_d
+  have hεα_lt_t₀m3 : ε / α < t₀ - 3 :=
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_t₀m3α)
+  have hεα_lt_4mt₀ : ε / α < 4 - t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_4mt₀α)
+  have hε_lt_d : ε < min (min (‖s‖ - 1) 1) (H - s.im) := hε_lt.trans_le hthresh_le_d
   -- Since h_abs : ε/α < |t - t₀|, t is strictly to the left or right of the window
   rw [abs_sub_comm] at h_abs
   rcases lt_or_ge t (t₀ - ε / α) with h_left | h_right
@@ -399,14 +390,10 @@ private lemma leftEdge_h_near (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
   intro ε hε_pos _hε_lt t h_abs
   have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
   have hδ_def : ε / α = ε / α := rfl
-  have hεα_lt_t₀m3 : ε / α < t₀ - 3 := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := ‹_›
-      _ ≤ (t₀ - 3) * α := hthresh_le_t₀m3α
-  have hεα_lt_4mt₀ : ε / α < 4 - t₀ := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := ‹_›
-      _ ≤ (4 - t₀) * α := hthresh_le_4mt₀α
+  have hεα_lt_t₀m3 : ε / α < t₀ - 3 :=
+    (div_lt_iff₀ hα_pos).mpr (_hε_lt.trans_le hthresh_le_t₀m3α)
+  have hεα_lt_4mt₀ : ε / α < 4 - t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (_hε_lt.trans_le hthresh_le_4mt₀α)
   rw [abs_le] at h_abs
   have ht_lower : t₀ - ε / α ≤ t := by linarith [h_abs.1]
   have ht_upper : t ≤ t₀ + ε / α := by linarith [h_abs.2]
@@ -452,17 +439,12 @@ private lemma leftEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
       Complex.log (fdBoundarySeg4H H (t₀ + ε / α) - s) := by
   intro ε hε_pos hε_lt
   set g : ℝ → ℂ := fun t => fdBoundaryH H t - s with hg_def
-  have hα_ne : α ≠ 0 := ne_of_gt hα_pos
   set δ := ε / α with hδ_def
   have hδ_pos : 0 < δ := div_pos hε_pos hα_pos
-  have hεα_lt_t₀m3 : δ < t₀ - 3 := by
-    rw [hδ_def, div_lt_iff₀ hα_pos]
-    calc ε < threshold := hε_lt
-      _ ≤ (t₀ - 3) * α := hthresh_le_t₀m3α
-  have hεα_lt_4mt₀ : δ < 4 - t₀ := by
-    rw [hδ_def, div_lt_iff₀ hα_pos]
-    calc ε < threshold := hε_lt
-      _ ≤ (4 - t₀) * α := hthresh_le_4mt₀α
+  have hεα_lt_t₀m3 : δ < t₀ - 3 :=
+    hδ_def ▸ (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_t₀m3α)
+  have hεα_lt_4mt₀ : δ < 4 - t₀ :=
+    hδ_def ▸ (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_4mt₀α)
   set h₀ : ℝ → ℂ := fun t => fdBoundarySeg1H H t - s
   set h_arc : ℝ → ℂ := fun t => exp (↑(Real.pi * (1 + t) / 6) * I) - s
   set h₃ : ℝ → ℂ := fun t => fdBoundarySeg4H H t - s
@@ -492,13 +474,11 @@ private lemma leftEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
   have hep_1 : h₀ 1 = h_arc 1 := by
     simp only [h₀, h_arc, fdBoundarySeg1H]
     rw [show Real.pi * (1 + 1) / 6 = Real.pi / 3 from by ring,
-        exp_real_angle_I, Real.cos_pi_div_three, Real.sin_pi_div_three]
-    push_cast; ring
+        exp_real_angle_I, Real.cos_pi_div_three, Real.sin_pi_div_three]; push_cast; ring
   have hep_3 : h_arc 3 = h₃ 3 := by
     simp only [h_arc, h₃, fdBoundarySeg4H]
     rw [show Real.pi * (1 + 3) / 6 = 2 * Real.pi / 3 from by ring,
-        exp_real_angle_I, cos_two_pi_div_three, sin_two_pi_div_three]
-    push_cast; ring
+        exp_real_angle_I, cos_two_pi_div_three, sin_two_pi_div_three]; push_cast; ring
   have hep_4 : h₃ 4 = h₅ 4 := by
     simp only [h₃, h₅, fdBoundarySeg4H, fdBoundarySeg5H]; push_cast; ring
   have hderiv_01 : ∀ t ∈ Ioo (0 : ℝ) 1, deriv g t = deriv h₀ t := fun t ⟨_, ht1⟩ =>
@@ -645,13 +625,12 @@ private lemma leftEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
       (𝓝[>] 0) (𝓝 (-(↑Real.pi * I))) := by
   set α := H - Real.sqrt 3 / 2 with hα_def
   have hα_pos : 0 < α := by rw [hα_def]; linarith
-  have hα_ne : α ≠ 0 := ne_of_gt hα_pos
   set t₀ := 3 + (s.im - Real.sqrt 3 / 2) / α with ht₀_def
   have ht₀_Ioo := leftEdge_t₀_mem_Ioo H hH_sqrt s hs_im_lower hs_im
   have ht₀_gt3 : 3 < t₀ := ht₀_Ioo.1
   have ht₀_lt4 : t₀ < 4 := ht₀_Ioo.2
   have ht₀_mul : (t₀ - 3) * α = s.im - Real.sqrt 3 / 2 := by
-    simp only [ht₀_def, add_sub_cancel_left]; exact div_mul_cancel₀ _ hα_ne
+    simp only [ht₀_def, add_sub_cancel_left]; exact div_mul_cancel₀ _ (ne_of_gt hα_pos)
   set d := min (min (‖s‖ - 1) 1) (H - s.im)
   have hd_pos : 0 < d := leftEdge_min_dist_pos s hs_norm hs_im
   -- Choose threshold small enough for all bounds
@@ -660,11 +639,9 @@ private lemma leftEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     (lt_min (mul_pos (by linarith) hα_pos) (mul_pos (by linarith) hα_pos))
   have hthresh_le_d : threshold ≤ d := min_le_left _ _
   have hthresh_le_t₀m3α : threshold ≤ (t₀ - 3) * α :=
-    calc threshold ≤ min ((t₀ - 3) * α) ((4 - t₀) * α) := min_le_right _ _
-      _ ≤ (t₀ - 3) * α := min_le_left _ _
+    (min_le_right _ _).trans (min_le_left _ _)
   have hthresh_le_4mt₀α : threshold ≤ (4 - t₀) * α :=
-    calc threshold ≤ min ((t₀ - 3) * α) ((4 - t₀) * α) := min_le_right _ _
-      _ ≤ (4 - t₀) * α := min_le_right _ _
+    (min_le_right _ _).trans (min_le_right _ _)
   -- Define δ(ε) = ε/α
   have hδ_fn : ∀ ε, 0 < ε → ε < threshold → 0 < ε / α :=
     fun ε hε _ => div_pos hε hα_pos
@@ -672,17 +649,9 @@ private lemma leftEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
       ε / α < min (t₀ - 0) (5 - t₀) := by
     intro ε hε_pos hε_lt
     simp only [sub_zero]
-    apply lt_min
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ min ((t₀ - 3) * α) ((4 - t₀) * α) := min_le_right _ _
-        _ ≤ (t₀ - 3) * α := min_le_left _ _
-        _ < t₀ * α := by nlinarith
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ min ((t₀ - 3) * α) ((4 - t₀) * α) := min_le_right _ _
-        _ ≤ (4 - t₀) * α := min_le_right _ _
-        _ < (5 - t₀) * α := by nlinarith
+    exact lt_min
+      (by rw [div_lt_iff₀ hα_pos]; nlinarith [hε_lt.trans_le hthresh_le_t₀m3α])
+      (by rw [div_lt_iff₀ hα_pos]; nlinarith [hε_lt.trans_le hthresh_le_4mt₀α])
   have hd : ∀ t, deriv (fun u => fdBoundaryH H u - s) t = deriv (fdBoundaryH H) t :=
     fun t => deriv_sub_const (f := fdBoundaryH H) _
   have hftc := fun ε (hε_pos : 0 < ε) (hε_lt : ε < threshold) =>

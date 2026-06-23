@@ -669,15 +669,13 @@ lemma exp_cutoff_integral_eq_ratio
       _ = (γ.toFun σ₂ - z₀) * cexp (-F σ₁) := by rw [hF_mid]
   have h_expF₁ : cexp (-F σ₁) = (γ.toFun γ.a - z₀) / (γ.toFun σ₁ - z₀) := by
     rw [eq_div_iff hne_σ₁, mul_comm]; exact h1
-  rw [← hclosed] at h2
-  rw [h_expF₁] at h2
+  rw [← hclosed, h_expF₁] at h2
   have h_expFb : cexp (-F γ.b) = (γ.toFun σ₂ - z₀) / (γ.toFun σ₁ - z₀) := by
     rw [mul_div_assoc', mul_comm (γ.toFun σ₂ - z₀), mul_div_assoc] at h2
     exact mul_left_cancel₀ hne_a h2
   rw [show ∫ t_1 in γ.a..γ.b, f t_1 = F γ.b from rfl]
   have h_inv : cexp (F γ.b) = (cexp (-F γ.b))⁻¹ := by rw [Complex.exp_neg, inv_inv]
-  rw [h_inv]
-  rw [h_expFb, inv_div]
+  rw [h_inv, h_expFb, inv_div]
 
 /-- If `σ ε ∈ [a,b]` eventually and `‖γ(σ ε) - z₀‖ = ε` eventually, then `σ ε → t₀` as `ε → 0⁺`,
 since `t₀` is the unique zero of `γ - z₀` on `[a,b]` (compactness gives a positive lower bound

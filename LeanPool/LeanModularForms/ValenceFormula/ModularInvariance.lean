@@ -183,7 +183,7 @@ lemma modform_comp_ofComplex_S_identity (z : ℂ) (hz : 0 < z.im) :
       rw [UpperHalfPlane.modular_S_smul]
       change -(1 : ℂ)/z = (-z)⁻¹; field_simp)
   rw [h_eq]
-  have hS : ModularGroup.S ∈ Gamma 1 := by rw [Gamma_one_top]; exact Subgroup.mem_top _
+  have hS : ModularGroup.S ∈ Gamma 1 := Gamma_one_top ▸ Subgroup.mem_top _
   have h := SlashInvariantForm.slash_action_eqn_SL'' f hS z_uhp
   rw [ModularGroup.denom_S] at h; exact h
 
@@ -278,7 +278,7 @@ theorem modularForm_finitely_many_zeros_in_fdBox (hf : f ≠ 0) {M : ℝ} (hM : 
       ((sep_subset _ _).trans subset_closure)
   have hz₀_im : (1 : ℝ)/2 ≤ z₀.im := closure_minimal (fun z hz => le_of_lt hz.2.2.1)
     (isClosed_le continuous_const Complex.continuous_im) hz₀K
-  have hz₀_pos : 0 < z₀.im := by linarith [hz₀_im]
+  have hz₀_pos : 0 < z₀.im := by linarith
   have h_freq : ∃ᶠ y in 𝓝[≠] z₀, modularFormCompOfComplex f y = 0 :=
     (accPt_iff_frequently_nhdsNE.mp hz₀_acc).mono fun y hy => hy.2
   let U := {z : ℂ | 0 < z.im}
@@ -349,8 +349,7 @@ theorem exists_height_cusp_nonvanishing (hf : f ≠ 0) :
   obtain ⟨r, hr_pos, hr_nonvan⟩ := exists_radius_cusp_nonvanishing f hf
   let H₀ := max (heightOfRadius r) (Real.sqrt 3 / 2 + 1)
   refine ⟨H₀, ?_, ?_⟩
-  · calc Real.sqrt 3 / 2 < Real.sqrt 3 / 2 + 1 := by linarith
-      _ ≤ H₀ := le_max_right _ _
+  · exact lt_of_lt_of_le (by linarith) (le_max_right _ _)
   · intro q hq hq_ne
     apply hr_nonvan q _ hq_ne
     apply Metric.closedBall_subset_closedBall _ hq

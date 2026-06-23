@@ -26,11 +26,9 @@ open scoped Interval Real NNReal ENNReal Topology BigOperators Nat
 
 
 theorem upper_ne_int (x : ℍ) (d : ℤ) : (x : ℂ) + d ≠ 0 := by
-  by_contra h
-  rw [add_eq_zero_iff_eq_neg] at h
+  intro h
   have h1 : 0 < (x : ℂ).im := by simpa using im_pos x
-  rw [h] at h1
-  simp at h1
+  simp [add_eq_zero_iff_eq_neg.mp h] at h1
 
 
 theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
@@ -101,12 +99,7 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
 theorem aut_iter_deriv' (d : ℤ) (k : ℕ) :
     EqOn (iteratedDerivWithin k (fun z : ℂ => 1 / (z - d)) {z : ℂ | 0 < z.im})
       (fun t : ℂ => (-1) ^ k * k ! * (1 / (t - d) ^ (k + 1))) {z : ℂ | 0 < z.im} := by
-  intro x hx
-  have h1 : (fun z : ℂ => 1 / (z - d)) = fun z : ℂ => 1 / (z + -d) := by rfl
-  rw [h1]
-  have h2 : x - d = x + -d := by rfl
-  simp_rw [h2]
-  simpa using aut_iter_deriv (-d : ℤ) k hx
+  intro x hx; simp_rw [sub_eq_add_neg]; simpa using aut_iter_deriv (-d : ℤ) k hx
 
 theorem aut_contDiffOn (d : ℤ) (k : ℕ) : ContDiffOn ℂ k (fun z : ℂ => 1 / (z - d))
     {z : ℂ | 0 < z.im} := by
@@ -115,13 +108,7 @@ theorem aut_contDiffOn (d : ℤ) (k : ℕ) : ContDiffOn ℂ k (fun z : ℂ => 1 
   · apply ContDiffOn.sub
     · apply contDiffOn_id
     apply contDiffOn_const
-  intro x hx
-  have := upper_ne_int ⟨x, hx⟩ (-d)
-  norm_cast at *
-  simp only [Int.cast_neg] at *
-  rw [add_neg_eq_zero] at this
-  rw [sub_eq_zero]
-  convert this
+  intro x hx; simpa [sub_eq_add_neg] using upper_ne_int ⟨x, hx⟩ (-d)
 
 
 theorem iter_div_aut_add (d : ℤ) (k : ℕ) :
@@ -147,10 +134,7 @@ theorem iter_div_aut_add (d : ℤ) (k : ℕ) :
     simp only [Int.cast_neg, sub_neg_eq_add, one_div] at h5
     apply h5
     exact hx
-  · refine IsOpen.uniqueDiffOn ?_
-    refine isOpen_lt ?_ ?_
-    · fun_prop
-    · fun_prop
+  · exact IsOpen.uniqueDiffOn (isOpen_lt (by fun_prop) (by fun_prop))
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜] {F : Type*}
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜)
@@ -163,10 +147,5 @@ theorem exp_iter_deriv_within (n m : ℕ) :
            {z : ℂ | 0 < z.im})
       (fun t => (2 * ↑π * Complex.I * m) ^ n * Complex.exp (2 * ↑π * Complex.I * m * t))
       {z : ℂ | 0 < z.im} := by
-  apply EqOn.trans (iteratedDerivWithin_of_isOpen ?_)
-  · rw [EqOn]
-    intro x _
-    apply congr_fun (iteratedDeriv_cexp_const_mul ..)
-  refine isOpen_lt ?_ ?_
-  · fun_prop
-  · fun_prop
+  apply EqOn.trans (iteratedDerivWithin_of_isOpen (isOpen_lt (by fun_prop) (by fun_prop)))
+  exact fun x _ => congr_fun (iteratedDeriv_cexp_const_mul ..) x

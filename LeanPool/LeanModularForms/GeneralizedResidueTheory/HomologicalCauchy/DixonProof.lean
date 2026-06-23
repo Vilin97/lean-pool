@@ -838,8 +838,7 @@ private lemma windingNumber_zero_of_large_norm (γ : PiecewiseC1Immersion) {R M_
   rw [hn_eq]
   have h_norm_wn : ‖generalizedWindingNumber' γ.toFun γ.a γ.b w‖ < 1 :=
     windingNumber_norm_lt_one γ hR hM_d hoff hR_lt (by linarith)
-  rw [hn_eq] at h_norm_wn
-  rw [Complex.norm_intCast] at h_norm_wn
+  rw [hn_eq, Complex.norm_intCast] at h_norm_wn
   have h_abs := abs_lt.mp h_norm_wn
   norm_cast at h_abs ⊢
   omega

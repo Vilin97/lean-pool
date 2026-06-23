@@ -324,8 +324,6 @@ private lemma homotopy_chain_rule_s
     (hf : Differentiable ℂ f) :
     deriv (fun s' => f (H (t, s'))) s =
       deriv f (H (t, s)) * deriv (fun s' => H (t, s')) s := by
-  have : (fun s' => f (H (t, s'))) = f ∘ (fun s' => H (t, s')) := rfl
-  rw [this]
   have := deriv.scomp s (hf (H (t, s))) (homotopy_H_differentiableAt_s H hH t s)
   simp only [smul_eq_mul, mul_comm] at this; exact this
 
@@ -335,8 +333,6 @@ private lemma homotopy_chain_rule_t
     (hf : Differentiable ℂ f) :
     deriv (fun t' => f (H (t', s))) t =
       deriv f (H (t, s)) * deriv (fun t' => H (t', s)) t := by
-  have : (fun t' => f (H (t', s))) = f ∘ (fun t' => H (t', s)) := rfl
-  rw [this]
   have := deriv.scomp t (hf (H (t, s))) (homotopy_H_differentiableAt_t H hH t s)
   simp only [smul_eq_mul, mul_comm] at this; exact this
 
@@ -411,11 +407,8 @@ private lemma homotopy_F'_eq
   have hfH_diff_s' : DifferentiableAt ℝ (fun s'' => f (H (t, s''))) s' :=
     (hf (H (t, s')) |>.restrictScalars ℝ).comp s' (homotopy_H_differentiableAt_s H hH t s')
   have h_chain : deriv (fun s'' => f (H (t, s''))) s' =
-      deriv f (H (t, s')) * deriv (fun s'' => H (t, s'')) s' := by
-    have : (fun s'' => f (H (t, s''))) = f ∘ (fun s'' => H (t, s'')) := rfl
-    rw [this]
-    have := deriv.scomp s' (hf (H (t, s'))) (homotopy_H_differentiableAt_s H hH t s')
-    simp only [smul_eq_mul, mul_comm] at this; exact this
+      deriv f (H (t, s')) * deriv (fun s'' => H (t, s'')) s' :=
+    homotopy_chain_rule_s f H hH t s' hf
   change deriv ((fun s'' => f (H (t, s''))) *
     (fun s'' => deriv (fun t' => H (t', s'')) t)) s' = _
   have h_dm := deriv_mul hfH_diff_s' (homotopy_partialT_differentiableAt_s H hH t s')

@@ -49,19 +49,15 @@ private lemma strict_convex_comb_lb {a b x y L : ℝ} (ha : 0 ≤ a) (hb : 0 ≤
     (hab : a + b = 1) (hx : L < x) (hy : L < y) : L < a * x + b * y := by
   rcases eq_or_lt_of_le ha with rfl | ha'
   · simp only [zero_add] at hab; subst hab; simp only [zero_mul, zero_add, one_mul]; linarith
-  · have h1 : a * L < a * x := mul_lt_mul_of_pos_left hx ha'
-    have h2 : b * L ≤ b * y := mul_le_mul_of_nonneg_left hy.le hb
-    have : a * L + b * L = L := by rw [← add_mul, hab, one_mul]
-    linarith
+  · linarith [mul_lt_mul_of_pos_left hx ha', mul_le_mul_of_nonneg_left hy.le hb,
+      show a * L + b * L = L from by linear_combination L * hab]
 
 private lemma strict_convex_comb_ub {a b x y U : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
     (hab : a + b = 1) (hx : x < U) (hy : y < U) : a * x + b * y < U := by
   rcases eq_or_lt_of_le ha with rfl | ha'
   · simp only [zero_add] at hab; subst hab; simp only [zero_mul, zero_add, one_mul]; linarith
-  · have h1 : a * x < a * U := mul_lt_mul_of_pos_left hx ha'
-    have h2 : b * y ≤ b * U := mul_le_mul_of_nonneg_left hy.le hb
-    have : a * U + b * U = U := by rw [← add_mul, hab, one_mul]
-    linarith
+  · linarith [mul_lt_mul_of_pos_left hx ha', mul_le_mul_of_nonneg_left hy.le hb,
+      show a * U + b * U = U from by linear_combination U * hab]
 
 lemma fdBox_convex (M : ℝ) : Convex ℝ (fdBox M) := by
   intro x hx y hy a b ha hb hab
@@ -162,7 +158,6 @@ theorem hasSimplePoleAt_logDeriv_of_zero_full (s : ℍ) (hs : f s = 0) :
     have h_logDeriv_pow :
         logDeriv (fun w => (w - (s : ℂ)) ^ n) z = ↑↑n / (z - (s : ℂ)) := by
       have hzs : z - (s : ℂ) ≠ 0 := sub_ne_zero.mpr hz_ne_s
-      have hn' : 0 < n := by exact_mod_cast hn_pos
       have h_hd : HasDerivAt (fun w => (w - (s : ℂ)) ^ n) (↑n * (z - (s : ℂ)) ^ (n - 1)) z := by
         convert ((hasDerivAt_id z).sub (hasDerivAt_const z (s : ℂ))).pow n using 1
         simp only [Pi.sub_apply, id_eq, sub_zero, mul_one]
@@ -315,10 +310,8 @@ omit f hf in
 lemma cpvExists_of_off_curve (γ : ℝ → ℂ) (hγ_cont : Continuous γ)
     (a b : ℝ) (s : ℂ) (c : ℂ) (hab : a ≤ b) (h_off : ∀ t ∈ Icc a b, γ t ≠ s) :
     CauchyPrincipalValueExists' (fun z => c / (z - s)) γ a b s := by
-  have h_cont : ContinuousOn (fun t => ‖γ t - s‖) (Icc a b) :=
-    (hγ_cont.continuousOn.sub continuousOn_const).norm
   obtain ⟨t₀, ht₀, ht₀_min⟩ := isCompact_Icc.exists_isMinOn
-    ⟨a, left_mem_Icc.mpr hab⟩ h_cont
+    ⟨a, left_mem_Icc.mpr hab⟩ (hγ_cont.continuousOn.sub continuousOn_const).norm
   have hδ_pos : 0 < ‖γ t₀ - s‖ := norm_pos_iff.mpr (sub_ne_zero.mpr (h_off t₀ ht₀))
   refine ⟨∫ t in a..b, (c / (γ t - s)) * deriv γ t, ?_⟩
   refine Filter.Tendsto.congr' ?_ tendsto_const_nhds
@@ -381,9 +374,8 @@ private lemma logDerivPatched_eventuallyEq_raw_punctured (F : ℂ → ℂ) (S0 :
     (hsp : ∀ s ∈ S0, HasSimplePoleAt F s) (s : ℂ) (_hs : s ∈ S0) :
     logDerivPatched F S0 hsp =ᶠ[𝓝[≠] s] F := by
   rw [Filter.EventuallyEq, eventually_nhdsWithin_iff]
-  have h_open : IsOpen ((↑(S0.erase s) : Set ℂ)ᶜ) := (S0.erase s).finite_toSet.isClosed.isOpen_compl
-  have h_s_mem : s ∈ ((↑(S0.erase s) : Set ℂ)ᶜ) := by simp [Set.mem_compl_iff]
-  filter_upwards [h_open.mem_nhds h_s_mem] with z hz hzne
+  filter_upwards [(S0.erase s).finite_toSet.isClosed.isOpen_compl.mem_nhds
+    (by simp [Set.mem_compl_iff])] with z hz hzne
   exact dif_neg (fun habs => hz (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hzne, habs⟩)))
 
 omit f hf in
@@ -502,9 +494,8 @@ lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Ic
             div_ofNat]
         have h_nsq : normSq (fdBoundarySeg5H H t) ≥ 1 := by
           rw [normSq_apply]
-          have him_ge : (fdBoundarySeg5H H t).im ≥ 1 := by rw [him]; linarith
           nlinarith [mul_self_nonneg (fdBoundarySeg5H H t).re,
-            mul_self_le_mul_self (by linarith : (0 : ℝ) ≤ 1) him_ge]
+            mul_self_le_mul_self (by linarith : (0 : ℝ) ≤ 1) (hH.trans him.ge)]
         exact norm_ge_one_of_normSq_ge_one h_nsq
 
 omit f hf in

@@ -843,9 +843,7 @@ theorem summable_auxil_1 (k : ℕ) (z : ℍ) :
 
 
 lemma sum_range_zero (f : ℤ → ℂ) (n : ℕ) : ∑ m ∈ Finset.range (n+1), f m = f 0 +
-  ∑ m ∈ Finset.range n, f (m+1) := by
-  rw [Finset.sum_range_succ', add_comm]
-  simp
+  ∑ m ∈ Finset.range n, f (m+1) := by rw [Finset.sum_range_succ', add_comm]; simp
 
 
 
@@ -1555,10 +1553,8 @@ lemma a1_summable_norm (e : ℕ+) (z : ℍ) :
 
 /-This is straight from the mod forms repo-/
 theorem a1 (k : ℕ) (e : ℕ+) (z : ℍ) :
-    Summable fun c : ℕ => (e : ℂ) ^ (k - 1) * exp (2 * ↑π * Complex.I * ↑z * e * c) := by
-  apply Summable.mul_left
-  apply Summable.of_norm
-  exact a1_summable_norm e z
+    Summable fun c : ℕ => (e : ℂ) ^ (k - 1) * exp (2 * ↑π * Complex.I * ↑z * e * c) :=
+  (Summable.of_norm (a1_summable_norm e z)).mul_left _
 
 
 /-This is straight from the mod forms repo-/
@@ -1570,8 +1566,7 @@ theorem a4 (k : ℕ) (z : ℍ) :
   intro b
   simp only [comp_apply, uncurry_apply_pair, PNat.mk_coe, mul_eq_mul_left_iff, pow_eq_zero_iff',
     Nat.cast_eq_zero, ne_eq]
-  left
-  ring_nf
+  left; ring_nf
 
 lemma t9 (z : ℍ) : ∑' m : ℕ,
   ( 2 * (-2 * ↑π * Complex.I) ^ 2 / (2 - 1)! *
@@ -1630,7 +1625,6 @@ lemma t9 (z : ℍ) : ∑' m : ℕ,
 
 lemma summable_pnats (f : ℕ → ℂ) : Summable (fun n : ℕ+ => f n) ↔ Summable f := by
   rw [nat_pos_tsum2', summable_nat_add_iff]
-
 lemma auxf (a b c d : ℂ) : a / b - (c / d) = a / b + (c / -d) := by ring
 
 theorem summable_diff_right_a (z : ℍ) (d : ℕ+) :

@@ -383,8 +383,8 @@ private lemma ftc_logDeriv_telescope_rho_plus_one (H : ℝ) (hH : Real.sqrt 3 / 
     rw [fdBoundary_H_at_three_eq_rho]
     simp only [h₁, hρ'_def, ellipticPointRhoPlusOne, ellipticPointRhoPlusOne',
       ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
-    rw [show Real.pi * (1 + 3) / 6 = 2 * Real.pi / 3 from by ring]
-    rw [exp_real_angle_I, cos_two_pi_div_three, sin_two_pi_div_three]
+    rw [show Real.pi * (1 + 3) / 6 = 2 * Real.pi / 3 from by ring,
+        exp_real_angle_I, cos_two_pi_div_three, sin_two_pi_div_three]
     push_cast; ring
   have hg3_2 : g 3 = h₂ 3 := by
     change fdBoundaryH H 3 - ρ' = h₂ 3
@@ -653,8 +653,7 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
       else 0) (𝓝[>] 0) (𝓝 (-(I * ↑Real.pi / 3))) := by
   have hH_gap : 0 < H - Real.sqrt 3 / 2 := by linarith
   have hpi_pos : 0 < Real.pi := Real.pi_pos
-  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
-    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
+  have hsin_pos : 0 < Real.sin (Real.pi / 12) := sin_pi_12_pos
   have h2sin_pos : 0 < 2 * Real.sin (Real.pi / 12) := by positivity
   have hderiv_eq : ∀ t : ℝ, deriv (fun s => fdBoundaryH H s - (ellipticPointRhoPlusOne : ℂ)) t =
       deriv (fdBoundaryH H) t := fun t =>
@@ -690,10 +689,7 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   · -- hδR_small: δ_right ε < 5 - 1 = 4
     intro ε hε_pos hε_lt
     simp only [hδR_def]
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
-    have hε_half_neg : (-1 : ℝ) ≤ ε / 2 := by linarith
-    linarith [δ_right_lt_one_aux hε_half_neg hε_lt_2sin]
+    linarith [δ_right_lt_one_aux (by linarith) (lt_of_lt_of_le hε_lt (min_le_right _ _))]
   · -- h_far_left: ε < ‖γ t - s‖ for t ∈ Ico 0 (1 - δ_left ε)
     intro ε hε_pos hε_lt t ht_mem
     simp only [hδL_def] at ht_mem
@@ -712,13 +708,7 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
       lt_of_lt_of_le hε_lt (min_le_right _ _)
     have hε_half_neg : (-1 : ℝ) ≤ ε / 2 := by linarith
     have hε_half_le : ε / 2 ≤ 1 := by linarith [Real.sin_le_one (Real.pi / 12)]
-    have hε_lt_one : ε < 1 := by
-      have hsin_bound : Real.sin (Real.pi / 12) < 1 / 2 :=
-        calc Real.sin (Real.pi / 12) < Real.sin (Real.pi / 6) :=
-              Real.sin_lt_sin_of_lt_of_le_pi_div_two (by nlinarith [Real.pi_pos])
-                (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
-          _ = 1 / 2 := by rw [Real.sin_pi_div_six]
-      linarith
+    have hε_lt_one : ε < 1 := by linarith [sin_pi_12_lt_half]
     simp only [hδR_def] at ht_mem
     have hδR_pos : 0 < δ_right ε := by
       simp only [hδR_def]
@@ -742,10 +732,8 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   · -- h_near: ‖γ t - s‖ ≤ ε for t ∈ Icc (1 - δ_left ε) (1 + δ_right ε)
     intro ε hε_pos hε_lt t ht_mem
     have hε_lt_gap : ε < H - Real.sqrt 3 / 2 := lt_of_lt_of_le hε_lt (min_le_left _ _)
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
     obtain ⟨hε_half_neg, hε_half_le, hδL_pos, hδL_lt_one, hδR_pos, hδR_lt_one⟩ :=
-      rho'_delta_bounds hH_gap hε_pos hε_lt_gap hε_lt_2sin
+      rho'_delta_bounds hH_gap hε_pos hε_lt_gap (lt_of_lt_of_le hε_lt (min_le_right _ _))
     have hδR_angle : δ_right ε * Real.pi / 12 = Real.arcsin (ε / 2) := by
       simp only [hδR_def]; field_simp
     have h_norm_L : ‖fdBoundaryH H (1 - δ_left ε) - ellipticPointRhoPlusOne‖ = ε := by
@@ -762,10 +750,8 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   · -- h_ftc: FTC gives the two-piece integral equals E ε
     intro ε hε_pos hε_lt
     have hε_lt_gap : ε < H - Real.sqrt 3 / 2 := lt_of_lt_of_le hε_lt (min_le_left _ _)
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
     obtain ⟨_, _, hδL_pos, hδL_lt_one, hδR_pos, hδR_lt_one⟩ :=
-      rho'_delta_bounds hH_gap hε_pos hε_lt_gap hε_lt_2sin
+      rho'_delta_bounds hH_gap hε_pos hε_lt_gap (lt_of_lt_of_le hε_lt (min_le_right _ _))
     obtain ⟨_, _, h_telescope⟩ := ftc_logDeriv_telescope_rho_plus_one H hH hδL_pos hδL_lt_one
       hδR_pos hδR_lt_one
     simp only [hE_def, hδL_def, hδR_def]
@@ -774,10 +760,8 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   · -- hint_left: integrable on [0, 1 - δ_left ε]
     intro ε hε_pos hε_lt
     have hε_lt_gap : ε < H - Real.sqrt 3 / 2 := lt_of_lt_of_le hε_lt (min_le_left _ _)
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
     obtain ⟨_, _, hδL_pos, hδL_lt_one, hδR_pos, hδR_lt_one⟩ :=
-      rho'_delta_bounds hH_gap hε_pos hε_lt_gap hε_lt_2sin
+      rho'_delta_bounds hH_gap hε_pos hε_lt_gap (lt_of_lt_of_le hε_lt (min_le_right _ _))
     obtain ⟨hint_L, _, _⟩ := ftc_logDeriv_telescope_rho_plus_one H hH hδL_pos hδL_lt_one
       hδR_pos hδR_lt_one
     rw [inv_mul_deriv_eq_logDeriv_sub H ellipticPointRhoPlusOne]
@@ -785,10 +769,8 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   · -- hint_right: integrable on [1 + δ_right ε, 5]
     intro ε hε_pos hε_lt
     have hε_lt_gap : ε < H - Real.sqrt 3 / 2 := lt_of_lt_of_le hε_lt (min_le_left _ _)
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
     obtain ⟨_, _, hδL_pos, hδL_lt_one, hδR_pos, hδR_lt_one⟩ :=
-      rho'_delta_bounds hH_gap hε_pos hε_lt_gap hε_lt_2sin
+      rho'_delta_bounds hH_gap hε_pos hε_lt_gap (lt_of_lt_of_le hε_lt (min_le_right _ _))
     obtain ⟨_, hint_R, _⟩ := ftc_logDeriv_telescope_rho_plus_one H hH hδL_pos hδL_lt_one
       hδR_pos hδR_lt_one
     rw [inv_mul_deriv_eq_logDeriv_sub H ellipticPointRhoPlusOne]
@@ -803,10 +785,8 @@ theorem pv_integral_at_rho_plus_one_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     have hε_pos : 0 < ε := hε_mem
     have hε_lt : ε < threshold := lt_of_lt_of_le hε_dist (min_le_left _ _)
     have hε_lt_gap : ε < H - Real.sqrt 3 / 2 := lt_of_lt_of_le hε_lt (min_le_left _ _)
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt (min_le_right _ _)
     obtain ⟨hε_half_neg, hε_half_le, hδL_pos, hδL_lt_one, hδR_pos, hδR_lt_one⟩ :=
-      rho'_delta_bounds hH_gap hε_pos hε_lt_gap hε_lt_2sin
+      rho'_delta_bounds hH_gap hε_pos hε_lt_gap (lt_of_lt_of_le hε_lt (min_le_right _ _))
     have hδR_angle : δ_right ε * Real.pi / 12 = Real.arcsin (ε / 2) := by
       simp only [hδR_def]; field_simp
     have h_norm_L : ‖fdBoundaryH H (1 - δ_left ε) - ellipticPointRhoPlusOne‖ = ε := by

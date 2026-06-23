@@ -73,9 +73,8 @@ private lemma singular_annulus_final_ratio {Kmeas ε₁ ε₂ : ℝ} {L : ℂ}
     show 4 * Kmeas / ‖L‖ ^ 2 * ε₁ = 4 * Kmeas * ε₁ / ‖L‖ ^ 2 from by ring,
     div_le_div_iff₀ (mul_pos (by positivity : (0 : ℝ) < ‖L‖ ^ 3) hε₂_pos)
       (by positivity : (0 : ℝ) < ‖L‖ ^ 2)]
-  have key : ε₁ ^ 2 ≤ ε₁ * (2 * ε₂) := by
-    rw [sq]; exact mul_le_mul_of_nonneg_left h_ratio (le_of_lt hε₁_pos)
-  nlinarith [mul_pos hKmeas_pos (pow_pos hL_pos 3)]
+  nlinarith [mul_pos hKmeas_pos (pow_pos hL_pos 3),
+    show ε₁ ^ 2 ≤ ε₁ * (2 * ε₂) from by rw [sq]; exact mul_le_mul_of_nonneg_left h_ratio hε₁_pos.le]
 
 /-- The symmetric difference of the two localized annulus regions is measurable, given that the
 norm `h'` is strongly measurable. -/
@@ -164,10 +163,9 @@ lemma intervalIntegral_eq_zero_of_ae_eq_zero {a b : ℝ}
     {φ : ℝ → ℂ} (_hI : IntervalIntegrable φ volume a b)
     (h_ae : ∀ᵐ t ∂volume, t ∈ Set.uIoc a b → φ t = 0) :
     ∫ t in a..b, φ t = 0 := by
-  rw [show (∫ t in a..b, φ t) = ∫ t in a..b, (0 : ℂ) from by
-    apply intervalIntegral.integral_congr_ae
-    filter_upwards [h_ae] with t ht ht_mem
-    exact ht ht_mem]
+  rw [show (∫ t in a..b, φ t) = ∫ t in a..b, (0 : ℂ) from
+    intervalIntegral.integral_congr_ae
+      (by filter_upwards [h_ae] with t ht ht_mem; exact ht ht_mem)]
   exact intervalIntegral.integral_zero
 
 /-- Split `∫ a..b f` into five consecutive sub-integrals at four ordered intermediate points. -/
@@ -235,20 +233,15 @@ lemma singular_tAnnLin_cancel (t₀ : ℝ)
     (∫ t in (t₀ + c₁)..(t₀ + c₂),
       (↑(t - t₀) : ℂ)⁻¹) = 0 := by
   intro c₁ c₂
-  exact integral_inv_symm t₀ c₁ c₂
-    (div_pos hε₂_pos hL_pos)
+  exact integral_inv_symm t₀ c₁ c₂ (div_pos hε₂_pos hL_pos)
     (div_pos (lt_of_lt_of_le hε₂_pos hε₂_le) hL_pos)
-    (div_le_div_of_nonneg_right hε₂_le
-      (le_of_lt hL_pos))
+    (div_le_div_of_nonneg_right hε₂_le hL_pos.le)
 
 lemma singular_symmDiff_sup_bound
     {t₀ c : ℝ} (hc_pos : 0 < c)
     {t : ℝ} (ht_lower : c ≤ |t - t₀|) :
     ‖(↑(t - t₀) : ℂ)⁻¹‖ ≤ 1 / c := by
-  have ht_pos : (0 : ℝ) < |t - t₀| :=
-    lt_of_lt_of_le hc_pos ht_lower
-  rw [norm_inv, Complex.norm_real,
-    Real.norm_eq_abs, one_div]
+  rw [norm_inv, Complex.norm_real, Real.norm_eq_abs, one_div]
   exact inv_anti₀ hc_pos ht_lower
 
 /-- From the lower bound `ε₂/(2‖L‖) ≤ |t - t₀|`, the singular factor is `≤ 2‖L‖/ε₂`. -/

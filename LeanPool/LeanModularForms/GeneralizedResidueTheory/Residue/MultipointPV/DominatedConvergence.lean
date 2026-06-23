@@ -259,12 +259,9 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
       _ ≤ ∑ _s ∈ S0, (2 * Mc / δ) :=
           Finset.sum_le_sum (residue_sum_norm_le_singular_bound hδ_pos hMc hδ_sep hs₀ hs₀_near)
       _ = singularBound := by simp only [Finset.sum_const]; ring
-  have h_sb_nonneg : 0 ≤ singularBound := by
-    refine div_nonneg (mul_nonneg (mul_nonneg ?_ ?_) ?_) ?_
-    · linarith
-    · exact Nat.cast_nonneg _
-    · exact le_trans (norm_nonneg _) (hMc s₀ hs₀)
-    · linarith
+  have h_sb_nonneg : 0 ≤ singularBound :=
+    div_nonneg (mul_nonneg (mul_nonneg (by linarith) (Nat.cast_nonneg _))
+      (le_trans (norm_nonneg _) (hMc s₀ hs₀))) (by linarith)
   calc ‖(∑ s ∈ S0, if ‖γ.toFun t - s‖ > ε
           then residueSimplePole f s / (γ.toFun t - s) else 0) * deriv γ.toFun t‖
       ≤ singularBound * Mγ' :=

@@ -75,8 +75,7 @@ private lemma mk_out_coe_eq_mul {g : G} {h : P.H}
     (hn_eq : (⟦h⟧ : P.H ⧸ (ConjAct.toConjAct g • P.H).subgroupOf P.H).out = h * n) :
     ((⟦h⟧ : P.H ⧸ (ConjAct.toConjAct g • P.H).subgroupOf P.H).out : G) =
       (h : G) * (n : G) := by
-  have := congr_arg (Subtype.val : ↥P.H → G) hn_eq
-  simpa [Subgroup.coe_mul] using this
+  simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn_eq
 
 private lemma decompQuot_eq_of_conjAct_rel (g : P.Δ)
     (i₁ i₂ : decompQuot P g)
@@ -268,8 +267,7 @@ private lemma iter_mem_smulOrbit_mulMap (g₂ g₁ : P.Δ) (β : P.Δ)
   obtain ⟨n, hn_eq⟩ := QuotientGroup.mk_out_eq_mul
     ((ConjAct.toConjAct g_D • P.H).subgroupOf P.H) ⟨h₁, hh₁⟩
   have hn_coe : (r.out : G) = h₁ * (n : G) := by
-    have := congr_arg (Subtype.val : ↥P.H → G) hn_eq
-    simpa [Subgroup.coe_mul] using this
+    simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn_eq
   have hn_conj : g_D⁻¹ * (n : G)⁻¹ * g_D ∈ P.H := by
     have hn := n.2
     rw [Subgroup.mem_subgroupOf, Subgroup.mem_pointwise_smul_iff_inv_smul_mem,
@@ -347,8 +345,7 @@ private lemma iter_smulOrbit_mem_mulSupport_smulOrbit
       P.H.mul_mem h_rep_mem k₀.out.2⟩
   have hn'_coe : (k'.out : G) =
       g₂'⁻¹ * (i₀.out : G)⁻¹ * α⁻¹ * β * (k₀.out : G) * (n' : G) := by
-    have := congr_arg (Subtype.val : ↥P.H → G) hn'_eq
-    simpa [Subgroup.coe_mul] using this
+    simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn'_eq
   have hn'_conj : g₁'⁻¹ * (n' : G)⁻¹ * g₁' ∈ P.H :=
     conjAct_inv_mem_of_subgroupOf P g₁' n'
   suffices hsuff :

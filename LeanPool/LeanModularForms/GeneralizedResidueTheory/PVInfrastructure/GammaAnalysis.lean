@@ -45,8 +45,7 @@ private lemma hasDerivAt_remainder_bound
   have h_bound := hs t (hδ_ball (by simp [Metric.mem_ball, Real.dist_eq, ht_lt]))
   simpa only [Real.norm_eq_abs] using h_bound
 
-private lemma norm_real_smul (x : ℝ) (L : ℂ) :
-    ‖x • L‖ = |x| * ‖L‖ := by
+private lemma norm_real_smul (x : ℝ) (L : ℂ) : ‖x • L‖ = |x| * ‖L‖ := by
   haveI : NormSMulClass ℝ ℂ := NormedSpace.toNormSMulClass
   rw [norm_smul, Real.norm_eq_abs]
 
@@ -54,9 +53,8 @@ private lemma norm_real_smul (x : ℝ) (L : ℂ) :
 private lemma abs_norm_gamma_sub_smul_le {γ : ℝ → ℂ} {t₀ : ℝ} {L : ℂ} {M : ℝ} {t : ℝ}
     (h_rem : ‖γ t - γ t₀ - (t - t₀) • L‖ ≤ M) :
     |‖γ t - γ t₀‖ - |t - t₀| * ‖L‖| ≤ M := by
-  have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ := norm_real_smul (t - t₀) L
   have h := abs_norm_sub_norm_le (γ t - γ t₀) ((t - t₀) • L)
-  rw [h_smul] at h
+  rw [norm_real_smul] at h
   exact le_trans h h_rem
 
 private lemma farSet_isCompact
@@ -77,20 +75,13 @@ private lemma norm_sub_pos_on_farSet
   let farSet := {t | t ∈ Set.Icc a b ∧ δ ≤ |t - t₀|}
   have h_compact : IsCompact farSet :=
     farSet_isCompact a b t₀ δ hab hδ
-  have h_cont_norm :
-      ContinuousOn (fun t => ‖γ t - γ t₀‖) (Set.Icc a b) := by
-    apply Continuous.comp_continuousOn continuous_norm
-    exact hγ_cont.sub continuousOn_const
+  have h_cont_norm : ContinuousOn (fun t => ‖γ t - γ t₀‖) (Set.Icc a b) :=
+    (hγ_cont.sub continuousOn_const).norm
   by_cases h_nonempty : farSet.Nonempty
-  · have h_cont_on_far :
-        ContinuousOn (fun t => ‖γ t - γ t₀‖) farSet :=
-      h_cont_norm.mono (fun t ht => ht.1)
-    obtain ⟨t_min', ht_min'_mem, ht_min'_min⟩ :=
-      h_compact.exists_isMinOn h_nonempty h_cont_on_far
-    have h_min_pos : 0 < ‖γ t_min' - γ t₀‖ :=
-      norm_pos_iff.mpr (sub_ne_zero.mpr
-        (h_inj_far t_min' ht_min'_mem.1 ht_min'_mem.2))
-    exact ⟨‖γ t_min' - γ t₀‖, h_min_pos,
+  · obtain ⟨t_min', ht_min'_mem, ht_min'_min⟩ :=
+      h_compact.exists_isMinOn h_nonempty (h_cont_norm.mono (fun t ht => ht.1))
+    exact ⟨‖γ t_min' - γ t₀‖,
+      norm_pos_iff.mpr (sub_ne_zero.mpr (h_inj_far t_min' ht_min'_mem.1 ht_min'_mem.2)),
       fun t ht1 ht2 => ht_min'_min ⟨ht1, ht2⟩⟩
   · exact ⟨1, one_pos, fun t ht1 ht2 => by exfalso; exact h_nonempty ⟨t, ht1, ht2⟩⟩
 
@@ -105,9 +96,8 @@ lemma integrand_times_t_tendsto_one
       (fun t => (↑(t - t₀) : ℂ) *
         (γ t - γ t₀)⁻¹ * deriv γ t)
       (𝓝[≠] t₀) (𝓝 1) := by
-  have h_deriv_eq : deriv γ t₀ = L := hγ_hasderiv.deriv
   have h_deriv_tendsto : Tendsto (deriv γ) (𝓝 t₀) (𝓝 L) :=
-    by rw [← h_deriv_eq]; exact hγ_cont_at
+    hγ_hasderiv.deriv ▸ hγ_cont_at
   have h_ratio_tendsto :
       Tendsto (fun t => (↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹)
         (𝓝[≠] t₀) (𝓝 L⁻¹) := by
@@ -122,31 +112,18 @@ lemma integrand_times_t_tendsto_one
       rw [h_comp]
       apply Tendsto.comp hγ_hasderiv
       apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-      · have h1 : Tendsto (fun t => t - t₀)
-            (𝓝 t₀) (𝓝 (t₀ - t₀)) :=
+      · have h1 : Tendsto (fun t => t - t₀) (𝓝 t₀) (𝓝 (t₀ - t₀)) :=
           tendsto_id.sub_const t₀
         simp only [sub_self] at h1; exact h1.mono_left nhdsWithin_le_nhds
       · filter_upwards [self_mem_nhdsWithin] with t ht
-        simp only [Set.mem_compl_iff,
-          Set.mem_singleton_iff, sub_ne_zero]
-        exact ht
-    have h_smul_eq :
-        ∀ t : ℝ, (t - t₀)⁻¹ • (γ t - γ t₀) =
-          (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹ := by intro t; rw [Algebra.smul_def]; simp [mul_comm]
-    have h_slope' :
-        Tendsto
-          (fun t => (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)
-          (𝓝[≠] t₀) (𝓝 L) := by simp only [← h_smul_eq]; exact h_slope
-    have h_recip :
-        Tendsto
-          (fun t =>
-            ((γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)⁻¹)
-          (𝓝[≠] t₀) (𝓝 L⁻¹) :=
-      h_slope'.inv₀ hL
-    have h_inv_eq : ∀ t : ℝ,
-        ((γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)⁻¹ =
-          (↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ := by
-      intro t
+        simp only [Set.mem_compl_iff, Set.mem_singleton_iff, sub_ne_zero]; exact ht
+    have h_slope' : Tendsto (fun t => (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹) (𝓝[≠] t₀) (𝓝 L) := by
+      simp only [show ∀ t : ℝ, (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹ =
+        (t - t₀)⁻¹ • (γ t - γ t₀) from fun t => by rw [Algebra.smul_def]; simp [mul_comm]]
+      exact h_slope
+    have h_recip := h_slope'.inv₀ hL
+    have h_inv_eq : ∀ t : ℝ, ((γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)⁻¹ =
+        (↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ := fun t => by
       by_cases h : γ t - γ t₀ = 0
       · simp [h]
       · by_cases ht : (t : ℂ) - t₀ = 0
@@ -250,26 +227,17 @@ lemma no_return_of_inj_continuous
     ∃ ρ > 0, ∀ t ∈ Set.Icc a b,
       c ≤ |t - t₀| → ρ ≤ ‖γ t - γ t₀‖ := by
   let S := Set.Icc a b ∩ {t | c ≤ |t - t₀|}
-  have hS_compact : IsCompact S :=
-    isCompact_Icc.inter_right
-      (isClosed_le continuous_const
-        (continuous_abs.comp
-          (continuous_id.sub continuous_const)))
-  have hf_cont :
-      ContinuousOn (fun t => ‖γ t - γ t₀‖) S :=
-    ((hγ_cont.mono Set.inter_subset_left).sub
-      continuousOn_const).norm
-  have hf_pos :
-      ∀ t ∈ S, (0 : ℝ) < ‖γ t - γ t₀‖ := by
-    intro t ⟨ht_Icc, ht_dist⟩
+  have hS_compact : IsCompact S := isCompact_Icc.inter_right
+    (isClosed_le continuous_const (continuous_abs.comp (continuous_id.sub continuous_const)))
+  have hf_cont : ContinuousOn (fun t => ‖γ t - γ t₀‖) S :=
+    ((hγ_cont.mono Set.inter_subset_left).sub continuousOn_const).norm
+  have hf_pos : ∀ t ∈ S, (0 : ℝ) < ‖γ t - γ t₀‖ := fun t ⟨ht_Icc, ht_dist⟩ => by
     rw [norm_pos_iff, sub_ne_zero]
     intro h_eq
     have h_t_eq := h_inj t ht_Icc h_eq
     subst h_t_eq; simp only [Set.mem_setOf_eq, sub_self, abs_zero] at ht_dist; linarith
-  obtain ⟨ρ, hρ_pos, hρ_le⟩ :=
-    hS_compact.exists_forall_le' hf_cont hf_pos
-  exact ⟨ρ, hρ_pos,
-    fun t ht h_dist => hρ_le t ⟨ht, h_dist⟩⟩
+  obtain ⟨ρ, hρ_pos, hρ_le⟩ := hS_compact.exists_forall_le' hf_cont hf_pos
+  exact ⟨ρ, hρ_pos, fun t ht h_dist => hρ_le t ⟨ht, h_dist⟩⟩
 
 /-- From γ-space upper bound to t-space upper bound:
 If ‖γ t - γ t₀‖ ≤ εC and we have the lower bound,
@@ -315,31 +283,16 @@ lemma contAt_deriv_of_contDiffAt_two
     {γ : ℝ → ℂ} {t₀ : ℝ}
     (hγ_C2 : ContDiffAt ℝ 2 γ t₀) :
     ContinuousAt (deriv γ) t₀ := by
-  obtain ⟨u, hu_mem, hγ_on⟩ :=
-    hγ_C2.contDiffOn (m := 2) le_rfl
-      (by norm_cast)
-  obtain ⟨ε, hε_pos, hball_sub⟩ :=
-    Metric.mem_nhds_iff.mp hu_mem
-  have hγ_ball :
-      ContDiffOn ℝ 2 γ (Metric.ball t₀ ε) :=
-    hγ_on.mono hball_sub
-  have h_fderiv_cont :
-      ContinuousOn (fderiv ℝ γ) (Metric.ball t₀ ε) :=
-    hγ_ball.continuousOn_fderiv_of_isOpen
-      Metric.isOpen_ball (by norm_cast)
-  have h_mem_ball : t₀ ∈ Metric.ball t₀ ε :=
-    Metric.mem_ball_self hε_pos
-  have h_cont_at_fderiv :
-      ContinuousAt (fderiv ℝ γ) t₀ :=
-    h_fderiv_cont.continuousAt
-      (Metric.isOpen_ball.mem_nhds h_mem_ball)
-  have h_deriv_eq :
-      deriv γ = (fun t => fderiv ℝ γ t 1) := by
-    ext t
+  obtain ⟨u, hu_mem, hγ_on⟩ := hγ_C2.contDiffOn (m := 2) le_rfl (by norm_cast)
+  obtain ⟨ε, hε_pos, hball_sub⟩ := Metric.mem_nhds_iff.mp hu_mem
+  have h_fderiv_cont : ContinuousOn (fderiv ℝ γ) (Metric.ball t₀ ε) :=
+    (hγ_on.mono hball_sub).continuousOn_fderiv_of_isOpen Metric.isOpen_ball (by norm_cast)
+  have h_cont_at_fderiv : ContinuousAt (fderiv ℝ γ) t₀ :=
+    h_fderiv_cont.continuousAt (Metric.isOpen_ball.mem_nhds (Metric.mem_ball_self hε_pos))
+  have h_deriv_eq : deriv γ = (fun t => fderiv ℝ γ t 1) := funext fun t => by
     by_cases h : DifferentiableAt ℝ γ t
     · rw [fderiv_apply_one_eq_deriv]
-    · simp [deriv_zero_of_not_differentiableAt h,
-        fderiv_zero_of_not_differentiableAt h]
+    · simp [deriv_zero_of_not_differentiableAt h, fderiv_zero_of_not_differentiableAt h]
   rw [h_deriv_eq]
   exact h_cont_at_fderiv.clm_apply continuousAt_const
 

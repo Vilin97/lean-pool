@@ -160,168 +160,77 @@ private lemma deriv_bound_at_two_zero :
   have := Real.pi_le_four; linarith
 
 lemma fdBoundaryToPolygonHomotopy_deriv_bound :
-    ∃ M : ℝ, ∀ t ∈ Icc 0 5,
-      ∀ s ∈ Icc (0 : ℝ) 1,
-        ‖deriv (fun t' =>
-          fdBoundaryToPolygonHomotopy (t', s)) t‖ ≤ M := by
+    ∃ M : ℝ, ∀ t ∈ Icc 0 5, ∀ s ∈ Icc (0 : ℝ) 1,
+        ‖deriv (fun t' => fdBoundaryToPolygonHomotopy (t', s)) t‖ ≤ M := by
   use 5
   intro t ht s hs
-  by_cases hd :
-      DifferentiableAt ℝ (fun t' =>
-          fdBoundaryToPolygonHomotopy (t', s))
-        t
+  by_cases hd : DifferentiableAt ℝ (fun t' => fdBoundaryToPolygonHomotopy (t', s)) t
   · by_cases h1 : t < 1
-    · have heq : (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
-          (fun t' : ℝ => (1/2 : ℂ) +
-              (HHeight - (↑t' : ℂ) * (HHeight -
-                  Real.sqrt 3 / 2)) * I) := by
-        filter_upwards [
-          eventually_lt_nhds h1] with t' ht'
-        simp only [fdBoundaryToPolygonHomotopy,
-          le_of_lt ht', ite_true]
-      rw [heq.deriv_eq]
-      exact norm_deriv_H_seg1_le t s
+    · have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
+          (fun t' : ℝ => (1/2 : ℂ) + (HHeight - (↑t' : ℂ) * (HHeight - Real.sqrt 3 / 2)) * I) := by
+        filter_upwards [eventually_lt_nhds h1] with t' ht'
+        simp only [fdBoundaryToPolygonHomotopy, le_of_lt ht', ite_true]
+      rw [heq.deriv_eq]; exact norm_deriv_H_seg1_le t s
     · by_cases h2 : t < 2
       · by_cases h1' : t = 1
-        · exfalso
-          subst h1'
-          exact
-            fdBoundaryToPolygonHomotopy_not_diffAt_134
-              s hs 1 (Set.mem_insert 1 _) hd
-        · have ht2' : t ∈ Ioo 1 2 :=
-            ⟨lt_of_le_of_ne (not_lt.mp h1) (Ne.symm h1'), h2⟩
-          have heq : (fun t' =>
-                fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
-              (fun t' : ℝ =>
-                let arc_point :=
-                  Complex.exp ((Real.pi / 3 +
-                      (t' - 1) * (Real.pi / 2 -
-                          Real.pi / 3)) *
-                      I)
-                let chord_point :=
-                  chordSegment rho' iPoint (t' - 1)
-                (1 - s) • arc_point +
-                  s • chord_point) := by
-            filter_upwards [
-              eventually_gt_nhds ht2'.1,
-              eventually_lt_nhds ht2'.2]
-              with t' ht1' ht2''
-            simp only
-              [fdBoundaryToPolygonHomotopy]
-            simp only [not_le.mpr ht1',
-              ite_false, le_of_lt ht2'',
-              ite_true]
-          rw [heq.deriv_eq]
-          exact
-            fdBoundaryToPolygonHomotopy_seg2_deriv_bound
-              t ht2' s hs
+        · subst h1'
+          exact absurd hd (fdBoundaryToPolygonHomotopy_not_diffAt_134 s hs 1 (Set.mem_insert 1 _))
+        · have ht2' : t ∈ Ioo 1 2 := ⟨lt_of_le_of_ne (not_lt.mp h1) (Ne.symm h1'), h2⟩
+          have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
+              (fun t' : ℝ => let arc_point := Complex.exp ((Real.pi / 3 +
+                      (t' - 1) * (Real.pi / 2 - Real.pi / 3)) * I)
+                let chord_point := chordSegment rho' iPoint (t' - 1)
+                (1 - s) • arc_point + s • chord_point) := by
+            filter_upwards [eventually_gt_nhds ht2'.1, eventually_lt_nhds ht2'.2] with t' ht1' ht2''
+            simp only [fdBoundaryToPolygonHomotopy, not_le.mpr ht1', ite_false,
+              le_of_lt ht2'', ite_true]
+          rw [heq.deriv_eq]; exact fdBoundaryToPolygonHomotopy_seg2_deriv_bound t ht2' s hs
       · by_cases h3 : t < 3
-        · have ht2_ge : t ≥ 2 := not_lt.mp h2
-          by_cases h2' : t = 2
+        · by_cases h2' : t = 2
           · subst h2'
             by_cases hs0 : s = 0
             · subst hs0; exact deriv_bound_at_two_zero
             · exact absurd hd (not_diffAt_at_two s hs0)
-          · have ht3' : t ∈ Ioo 2 3 :=
-              ⟨lt_of_le_of_ne ht2_ge (Ne.symm h2'), h3⟩
-            have heq : (fun t' =>
-                  fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
-                (fun t' : ℝ =>
-                  let arc_point :=
-                    Complex.exp ((Real.pi / 2 +
-                        (t' - 2) * (2 * Real.pi / 3 -
-                            Real.pi / 2)) *
-                        I)
-                  let chord_point :=
-                    chordSegment iPoint rho (t' - 2)
-                  (1 - s) • arc_point +
-                    s • chord_point) := by
-              filter_upwards [
-                eventually_gt_nhds ht3'.1,
-                eventually_lt_nhds ht3'.2]
+          · have ht3' : t ∈ Ioo 2 3 := ⟨lt_of_le_of_ne (not_lt.mp h2) (Ne.symm h2'), h3⟩
+            have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
+                (fun t' : ℝ => let arc_point := Complex.exp ((Real.pi / 2 +
+                        (t' - 2) * (2 * Real.pi / 3 - Real.pi / 2)) * I)
+                  let chord_point := chordSegment iPoint rho (t' - 2)
+                  (1 - s) • arc_point + s • chord_point) := by
+              filter_upwards [eventually_gt_nhds ht3'.1, eventually_lt_nhds ht3'.2]
                 with t' ht2'' ht3''
-              simp only
-                [fdBoundaryToPolygonHomotopy]
-              simp only [
-                not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2)
-                  ht2''),
-                ite_false,
-                not_le.mpr ht2'',
-                le_of_lt ht3'', ite_true]
-            rw [heq.deriv_eq]
-            exact
-              fdBoundaryToPolygonHomotopy_seg3_deriv_bound
-                t ht3' s hs
+              simp only [fdBoundaryToPolygonHomotopy,
+                not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) ht2''),
+                ite_false, not_le.mpr ht2'', le_of_lt ht3'', ite_true]
+            rw [heq.deriv_eq]; exact fdBoundaryToPolygonHomotopy_seg3_deriv_bound t ht3' s hs
         · by_cases h4 : t < 4
           · by_cases h3' : t = 3
-            · exfalso
-              subst h3'
-              exact
-                fdBoundaryToPolygonHomotopy_not_diffAt_134
-                  s hs 3 (Set.mem_insert_of_mem 1 (Set.mem_insert 3 _)) hd
-            · have ht4' : t ∈ Ioo 3 4 :=
-                ⟨lt_of_le_of_ne (not_lt.mp h3)
-                  (Ne.symm h3'), h4⟩
-              have heq : (fun t' =>
-                    fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
+            · subst h3'
+              exact absurd hd (fdBoundaryToPolygonHomotopy_not_diffAt_134 s hs 3
+                (Set.mem_insert_of_mem 1 (Set.mem_insert 3 _)))
+            · have ht4' : t ∈ Ioo 3 4 := ⟨lt_of_le_of_ne (not_lt.mp h3) (Ne.symm h3'), h4⟩
+              have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
                   (fun t' : ℝ => (-1/2 : ℂ) +
-                      ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-                          ((HHeight : ℂ) -
-                            Real.sqrt 3 / 2)) *
-                        I) := by
-                filter_upwards [
-                  eventually_gt_nhds ht4'.1,
-                  eventually_lt_nhds ht4'.2]
+                    ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
+                      ((HHeight : ℂ) - Real.sqrt 3 / 2)) * I) := by
+                filter_upwards [eventually_gt_nhds ht4'.1, eventually_lt_nhds ht4'.2]
                   with t' ht3' ht4''
-                simp only
-                  [fdBoundaryToPolygonHomotopy]
-                have h1' : ¬(t' ≤ 1) :=
-                  not_le.mpr (by linarith : 1 < t')
-                have h2' : ¬(t' ≤ 2) :=
-                  not_le.mpr (by linarith : 2 < t')
-                have h3'' : ¬(t' ≤ 3) :=
-                  not_le.mpr ht3'
-                have h4''' : t' ≤ 4 :=
-                  le_of_lt ht4''
-                simp only [h1', h2', h3'',
-                  h4''', ite_false, ite_true]
-              rw [heq.deriv_eq]
-              exact norm_deriv_H_seg4_le t s
+                simp only [fdBoundaryToPolygonHomotopy,
+                  not_le.mpr (by linarith : 1 < t'), not_le.mpr (by linarith : 2 < t'),
+                  not_le.mpr ht3', le_of_lt ht4'', ite_false, ite_true]
+              rw [heq.deriv_eq]; exact norm_deriv_H_seg4_le t s
           · by_cases h4' : t = 4
-            · exfalso
-              subst h4'
-              exact
-                fdBoundaryToPolygonHomotopy_not_diffAt_134
-                  s hs 4 (Set.mem_insert_of_mem 1 (Set.mem_insert_of_mem 3
-                    (Set.mem_singleton_iff.mpr rfl))) hd
-            · have ht5' : t > 4 :=
-                lt_of_le_of_ne (not_lt.mp h4)
-                  (Ne.symm h4')
-              have heq : (fun t' =>
-                    fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
-                  (fun t' : ℝ => ((↑t' : ℂ) - 9/2) +
-                      (HHeight : ℂ) * I) := by
-                filter_upwards [
-                  eventually_gt_nhds ht5']
-                  with t' ht4'
-                simp only
-                  [fdBoundaryToPolygonHomotopy]
-                have h1' : ¬(t' ≤ 1) :=
-                  not_le.mpr (by linarith : 1 < t')
-                have h2' : ¬(t' ≤ 2) :=
-                  not_le.mpr (by linarith : 2 < t')
-                have h3' : ¬(t' ≤ 3) :=
-                  not_le.mpr (by linarith : 3 < t')
-                have h4'' : ¬(t' ≤ 4) :=
-                  not_le.mpr ht4'
-                simp only [h1', h2', h3',
-                  h4'', ite_false]
-              rw [heq.deriv_eq]
-              exact norm_deriv_H_seg5_le t s
-  · simp only [
-      deriv_zero_of_not_differentiableAt hd,
-      norm_zero]
-    norm_num
+            · subst h4'
+              exact absurd hd (fdBoundaryToPolygonHomotopy_not_diffAt_134 s hs 4
+                (Set.mem_insert_of_mem 1 (Set.mem_insert_of_mem 3 (Set.mem_singleton_iff.mpr rfl))))
+            · have ht5' : t > 4 := lt_of_le_of_ne (not_lt.mp h4) (Ne.symm h4')
+              have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', s)) =ᶠ[𝓝 t]
+                  (fun t' : ℝ => ((↑t' : ℂ) - 9/2) + (HHeight : ℂ) * I) := by
+                filter_upwards [eventually_gt_nhds ht5'] with t' ht4'
+                simp only [fdBoundaryToPolygonHomotopy,
+                  not_le.mpr (by linarith : 1 < t'), not_le.mpr (by linarith : 2 < t'),
+                  not_le.mpr (by linarith : 3 < t'), not_le.mpr ht4', ite_false]
+              rw [heq.deriv_eq]; exact norm_deriv_H_seg5_le t s
+  · simp only [deriv_zero_of_not_differentiableAt hd, norm_zero]; norm_num
 
 end RectHomotopyProof

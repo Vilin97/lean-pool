@@ -50,22 +50,17 @@ lemma csqrt_deriv (z : ℍ) : deriv (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log 
   · apply DifferentiableAt.const_mul
     refine Complex.differentiableAt_log hzz
 
-lemma csqrt_differentiableAt (z : ℍ) : DifferentiableAt ℂ csqrt z := by
-  unfold csqrt
-  apply DifferentiableAt.cexp
-  apply DifferentiableAt.const_mul
-  apply Complex.differentiableAt_log
-  exact mem_slitPlane_iff.mpr (Or.inr (ne_of_lt z.2).symm)
+lemma csqrt_differentiableAt (z : ℍ) : DifferentiableAt ℂ csqrt z :=
+  (Complex.differentiableAt_log (mem_slitPlane_iff.mpr (Or.inr (ne_of_lt z.2).symm))).const_mul
+    _ |>.cexp
 
 
 lemma csqrt_I : (csqrt (Complex.I)) ^ 24 = 1 := by
   unfold csqrt
   rw [← Complex.exp_nat_mul]
   conv =>
-    enter [1,1]
-    rw [← mul_assoc]
-    rw [show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by
-      field_simp; ring]
+    enter [1, 1]
+    rw [← mul_assoc, show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by field_simp; ring]
   rw [Complex.exp_nat_mul, Complex.exp_log I_ne_zero]
   have : Complex.I ^ 12 = (.I ^ 4) ^ 3 := by rw [← npow_mul]
   simp [this, Complex.I_pow_four]
@@ -74,8 +69,6 @@ lemma csqrt_pow_24 (z : ℂ) (hz : z ≠ 0) : (csqrt z) ^ 24 = z ^ 12 := by
   unfold csqrt
   rw [← Complex.exp_nat_mul]
   conv =>
-    enter [1,1]
-    rw [← mul_assoc]
-    rw [show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by
-      field_simp; ring]
+    enter [1, 1]
+    rw [← mul_assoc, show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by field_simp; ring]
   rw [Complex.exp_nat_mul, Complex.exp_log hz]

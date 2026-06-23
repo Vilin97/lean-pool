@@ -145,8 +145,7 @@ private theorem cpv_exists_at_I_H_eq_one (hH : Real.sqrt 3 / 2 < (1 : ℝ))
       (fdBoundaryH 1) (19/4) 5 I := by
     apply cpv_avoidance _ _ _ _ _ (fdBoundary_H_continuous 1).continuousOn (by norm_num)
     intro t ht h_eq
-    have ht4 : 4 < t := by linarith [ht.1]
-    have := fdBoundary_H_seg5_re' 1 ht4 ht.2
+    have := fdBoundary_H_seg5_re' 1 (lt_of_lt_of_le (by norm_num : (4:ℝ) < 19/4) ht.1) ht.2
     rw [h_eq] at this; simp only [Complex.I_re] at this; linarith [ht.1]
   apply cpv_concat _ _ 0 (19/4) 5 I h_cpv_0_194 h_cpv_194_5
     (by norm_num) (by norm_num)
@@ -246,11 +245,7 @@ private theorem cpv_exists_generic_seg1 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) (s 
       · push Not at ht3
         by_cases ht4 : t ≤ 4
         · rcases eq_or_lt_of_le ht3 with rfl | ht3'
-          · have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-              rw [fdBoundary_H_at_three]
-              exact fdBoundary_at_three.symm
-            rw [hγ3_eq, fdBoundary_at_three] at h_eq
-            exact hs_rho h_eq.symm
+          · rw [fdBoundary_H_at_three] at h_eq; exact hs_rho h_eq.symm
           · have h_re_t := fdBoundary_H_seg4_re' H ht3' ht4
             rw [h_eq] at h_re_t; linarith
         · push Not at ht4
@@ -554,11 +549,7 @@ private theorem cpv_exists_generic_seg4 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) (s 
       · push Not at ht3
         by_cases ht4 : t ≤ 4
         · rcases eq_or_lt_of_le ht3 with rfl | ht3'
-          · have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-              rw [fdBoundary_H_at_three]
-              exact fdBoundary_at_three.symm
-            rw [hγ3_eq, fdBoundary_at_three] at h_eq
-            exact hs_rho h_eq.symm
+          · rw [fdBoundary_H_at_three] at h_eq; exact hs_rho h_eq.symm
           · rw [fdBoundary_H_eq_seg4_H (by linarith : 3 < t) ht4,
                 ← hγt₀, fdBoundary_H_eq_seg4_H (by linarith : 3 < t₀)
                 (le_of_lt ht₀_lt_4)] at h_eq

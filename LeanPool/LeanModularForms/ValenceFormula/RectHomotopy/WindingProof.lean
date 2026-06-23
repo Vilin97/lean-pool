@@ -201,31 +201,20 @@ lemma rc_integral_eq_neg_two_pi_I_ref_p₀ :
       exact h_log_const.congr_of_eventuallyEq hF_eq_log_shift
   have h_int : IntervalIntegrable (fun t => (rc t - refP₀)⁻¹ * deriv rc t) volume 0 5 := by
     rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (by norm_num : (0 : ℝ) ≤ 5)]
-    obtain ⟨M, hM⟩ :=
-      polygonToCircleRadial_deriv_bounded refP₀
-        ref_p₀_norm ref_p₀_re ref_p₀_im
-    have h_bound : ∀ t ∈ Icc (0 : ℝ) 5,
-        ‖(rc t - refP₀)⁻¹ * deriv rc t‖ ≤ M := by
-      intro t ht
-      have h1 : ‖rc t - refP₀‖ = 1 :=
-        fdPolygonRadialCircle_dist refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im t ht
-      rw [norm_mul, norm_inv, h1, inv_one, one_mul]
+    obtain ⟨M, hM⟩ := polygonToCircleRadial_deriv_bounded refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im
+    have h_bound : ∀ t ∈ Icc (0 : ℝ) 5, ‖(rc t - refP₀)⁻¹ * deriv rc t‖ ≤ M := fun t ht => by
+      rw [norm_mul, norm_inv, fdPolygonRadialCircle_dist refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im t ht,
+        inv_one, one_mul]
       exact hM t ht 1 (right_mem_Icc.mpr zero_le_one)
+    have hrc_cont : Continuous rc := by
+      change Continuous (fun t => polygonToCircleRadial refP₀ (t, 1))
+      exact (polygonToCircleRadial_continuous refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im).comp
+        (continuous_id.prodMk continuous_const)
     have h_meas : AEStronglyMeasurable (fun t => (rc t - refP₀)⁻¹ * deriv rc t)
-        (volume.restrict (Ioc 0 5)) := by
-      have hrc_cont : Continuous rc := by
-        change Continuous (fun t => polygonToCircleRadial refP₀ (t, 1))
-        exact (polygonToCircleRadial_continuous refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im).comp
-          (continuous_id.prodMk continuous_const)
-      have h_inv_factor : AEStronglyMeasurable (fun t => (rc t - refP₀)⁻¹)
-          (volume.restrict (Ioc 0 5)) :=
-        (((measurable_inv.comp (hrc_cont.sub continuous_const).measurable
-          ).stronglyMeasurable).aestronglyMeasurable
-          ).restrict
-      have h_deriv_factor : AEStronglyMeasurable (fun t => deriv rc t)
-          (volume.restrict (Ioc 0 5)) :=
-        (aestronglyMeasurable_deriv rc volume).restrict
-      exact h_inv_factor.mul h_deriv_factor
+        (volume.restrict (Ioc 0 5)) :=
+      ((((measurable_inv.comp (hrc_cont.sub continuous_const).measurable
+          ).stronglyMeasurable).aestronglyMeasurable).restrict).mul
+        ((aestronglyMeasurable_deriv rc volume).restrict)
     exact IntegrableOn.of_bound measure_Ioc_lt_top h_meas M
       (by filter_upwards [ae_restrict_mem measurableSet_Ioc] with t ht
           exact h_bound t (Ioc_subset_Icc_self ht))
@@ -245,20 +234,15 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
   let γ_target : ℝ → ℂ := fun t => refP₀ + exp (I * (θ_target t : ℂ))
   have h_target_winding : generalizedWindingNumber' γ_target 0 5 refP₀ = (-1 : ℤ) := by
     have hab : (0 : ℝ) < 5 := by norm_num
-    have hθ_diff : Differentiable ℝ θ_target := by
-      intro t
-      change DifferentiableAt ℝ (fun t => θ₀ - 2 * Real.pi * t / 5) t
-      exact ((differentiableAt_const θ₀).sub
-        ((differentiableAt_const (2 * Real.pi)).mul differentiableAt_id |>.div_const 5))
+    have hθ_diff : Differentiable ℝ θ_target := fun t =>
+      (differentiableAt_const θ₀).sub
+        ((differentiableAt_const (2 * Real.pi)).mul differentiableAt_id |>.div_const 5)
     have hθ_deriv_cont : Continuous (deriv θ_target) := by
       have hd : deriv θ_target = fun _ => -(2 * Real.pi / 5) := by
         ext t
-        have hd : HasDerivAt θ_target (-(2 * Real.pi / 5)) t := by
-          change HasDerivAt (fun t => θ₀ - 2 * Real.pi * t / 5) _ t
-          have := ((hasDerivAt_const t θ₀).sub
-            ((hasDerivAt_id t).const_mul (2 * Real.pi) |>.div_const 5))
-          convert this using 1; ring
-        exact hd.deriv
+        exact ((hasDerivAt_const t θ₀).sub
+          ((hasDerivAt_id t).const_mul (2 * Real.pi) |>.div_const 5) |>.congr_deriv
+            (by ring)).deriv
       rw [hd]; exact continuous_const
     have hθ_change : θ_target 5 - θ_target 0 = 2 * Real.pi * (-1 : ℤ) := by
       change (θ₀ - 2 * Real.pi * 5 / 5) - (θ₀ - 2 * Real.pi * 0 / 5) = _
@@ -301,31 +285,19 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
           refP₀ + exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ))) t =
           exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) * (I * (-(2 * Real.pi / 5) : ℝ)) := by
         have h1 : HasDerivAt (fun t : ℝ => (θ₀ - 2 * Real.pi * t / 5 : ℝ))
-            (-(2 * Real.pi / 5)) t := by
-          have := ((hasDerivAt_const t θ₀).sub
-            ((hasDerivAt_id t).const_mul (2 * Real.pi) |>.div_const 5))
-          convert this using 1; ring
+            (-(2 * Real.pi / 5)) t :=
+          ((hasDerivAt_const t θ₀).sub
+            ((hasDerivAt_id t).const_mul (2 * Real.pi) |>.div_const 5)).congr_deriv (by ring)
         have h2 : HasDerivAt (fun t : ℝ => ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ))
             ((-(2 * Real.pi / 5) : ℝ) : ℂ) t := by
-          have :=
-            Complex.ofRealCLM.hasFDerivAt.comp_hasDerivAt t h1
-          simp only [Complex.ofRealCLM_apply,
-            map_neg] at this
-          convert this using 1
-          simp [Complex.ofReal_div, Complex.ofReal_mul]
-        have h3 : HasDerivAt (fun t : ℝ => I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ))
-            (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ)) t :=
-          h2.const_mul I
-        have h4 : HasDerivAt (fun t : ℝ =>
-              exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
-            (exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) *
-              (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ))) t := (hasDerivAt_exp _).comp t h3
+          have := Complex.ofRealCLM.hasFDerivAt.comp_hasDerivAt t h1
+          simp only [Complex.ofRealCLM_apply, map_neg] at this
+          convert this using 1; simp [Complex.ofReal_div, Complex.ofReal_mul]
         have h5 : HasDerivAt (fun t : ℝ =>
-              refP₀ +
-                exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
-            (exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) *
-              (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ))) t := by
-          have := (hasDerivAt_const t refP₀).add h4
+              refP₀ + exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
+            (exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) * (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ)))
+            t := by
+          have := (hasDerivAt_const t refP₀).add ((hasDerivAt_exp _).comp t (h2.const_mul I))
           simp only [zero_add] at this; exact this
         exact h5.deriv
       rw [h_deriv]

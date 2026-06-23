@@ -148,9 +148,8 @@ theorem one_add_eta_logDeriv_eq (z : ℂ) (i : ℕ) :
 
 lemma tsum_log_deriv_eta_q (z : ℂ) :
   ∑' (i : ℕ), logDeriv (fun x ↦ 1 - etaQ i x) z =
-  ∑' n : ℕ, (2 * ↑π * Complex.I * (n + 1)) * (-etaQ n z) / (1  - etaQ n z) := by
-  refine tsum_congr (fun i => ?_)
-  apply one_add_eta_logDeriv_eq
+  ∑' n : ℕ, (2 * ↑π * Complex.I * (n + 1)) * (-etaQ n z) / (1  - etaQ n z) :=
+  tsum_congr fun i => one_add_eta_logDeriv_eq z i
 
 lemma tsum_log_deriv_eta_q' (z : ℂ) :
   ∑' (i : ℕ), logDeriv (fun x ↦ 1 - etaQ i x) z =
@@ -303,9 +302,8 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
   · apply eta_DifferentiableAt_UpperHalfPlane' z
 
 lemma eta_logderivs' : {z : ℂ | 0 < z.im}.EqOn (logDeriv (η ∘ (fun z : ℂ => -1/z)))
-  (logDeriv ((csqrt) * η)) := by
-  intro z hz
-  exact eta_logDeriv_eql' ⟨z, hz⟩
+  (logDeriv ((csqrt) * η)) :=
+  fun z hz => eta_logDeriv_eql' ⟨z, hz⟩
 
 lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   (z • ((csqrt) * η)) := by
@@ -361,17 +359,14 @@ lemma eta_equality' : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   obtain ⟨z, hz, h⟩ := h
   intro x hx
   have h2 := h hx
-  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by
-    simp only [mem_setOf_eq, Complex.I_im, zero_lt_one]
+  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by simp [Complex.I_im]
   have h3 := h hI
   simp only [comp_apply, div_I, neg_mul, one_mul, neg_neg, Pi.smul_apply, Pi.mul_apply,
     smul_eq_mul] at h3
   conv at h3 =>
     enter [2]
     rw [← mul_assoc]
-  have he : η Complex.I ≠ 0 := by
-    have h:=  dedekindEtaFun'_ne_zero UpperHalfPlane.I
-    convert h
+  have he : η Complex.I ≠ 0 := by convert dedekindEtaFun'_ne_zero UpperHalfPlane.I
   have hcd := (mul_eq_right₀ he).mp (_root_.id (Eq.symm h3))
   rw [mul_eq_one_iff_inv_eq₀ hz] at hcd
   rw [@inv_eq_iff_eq_inv] at hcd

@@ -118,18 +118,14 @@ theorem exists_unique_crossing_neighborhood
 private lemma tendsto_add_nhdsGT (t₀ : ℝ) :
     Tendsto (fun ε : ℝ => t₀ + ε) (𝓝[>] (0 : ℝ)) (𝓝[>] t₀) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · have h : Tendsto (fun ε : ℝ => t₀ + ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
-      simpa using (continuous_const_add t₀).tendsto (0 : ℝ)
-    exact h.mono_left nhdsWithin_le_nhds
+  · simpa using ((continuous_const_add t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
     exact lt_add_of_pos_right t₀ hε
 
 private lemma tendsto_sub_nhdsLT (t₀ : ℝ) :
     Tendsto (fun ε : ℝ => t₀ - ε) (𝓝[>] (0 : ℝ)) (𝓝[<] t₀) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · have h : Tendsto (fun ε : ℝ => t₀ - ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
-      simpa using (continuous_sub_left t₀).tendsto (0 : ℝ)
-    exact h.mono_left nhdsWithin_le_nhds
+  · simpa using ((continuous_sub_left t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
   · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
     exact sub_lt_self t₀ hε
 
@@ -259,9 +255,8 @@ theorem crossing_direction_left_tendsto
     (hL_lim : Tendsto (deriv γ.toFun) (𝓝[<] t₀) (𝓝 L_left)) :
     Tendsto (fun ε => (γ.toFun (t₀ - ε) - s) / ‖γ.toFun (t₀ - ε) - s‖)
       (𝓝[>] 0) (𝓝 (-L_left / ‖L_left‖)) := by
-  have h_dir := direction_of_slope_tendsto _ (-L_left) (neg_ne_zero.mpr hL)
+  simpa [norm_neg] using direction_of_slope_tendsto _ (-L_left) (neg_ne_zero.mpr hL)
     (slope_tendsto_left_of_deriv γ s t₀ ht₀ hcross L_left hL_lim)
-  rwa [norm_neg] at h_dir
 
 /-! ## L3: Boundary term vanishing under angle condition (with flatness rate)
 
@@ -430,9 +425,7 @@ theorem norm_sub_le_tangentDeviation_of_unit (u v : ℂ)
 
 private lemma eq_exp_arg_mul_I_of_norm_one (z : ℂ) (hz : ‖z‖ = 1) :
     z = exp (↑(arg z) * I) := by
-  have := norm_mul_exp_arg_mul_I z
-  rw [hz, ofReal_one, one_mul] at this
-  exact this.symm
+  simpa [hz] using (norm_mul_exp_arg_mul_I z).symm
 
 /-- For unit vectors `z₁, z₂` and integer exponent `k`, if
 `k · (arg z₁ - arg z₂) ∈ 2πℤ`, then `z₁^k = z₂^k`. -/
@@ -599,8 +592,7 @@ lemma re_pos_right_of_slope
       (fun t ht => (hs_diff t ht).differentiableWithinAt)
       hcont.continuousWithinAt hs_mem htend_R)
   have hReLR : 0 < (L_R * starRingEnd ℂ L_R).re := by
-    rw [Complex.mul_conj]; simp only [Complex.ofReal_re]
-    exact Complex.normSq_pos.mpr hL_R_ne
+    simp [Complex.mul_conj, Complex.normSq_pos.mpr hL_R_ne]
   have h_slope : Tendsto (slope γ.toFun t₀) (𝓝[>] t₀) (𝓝 L_R) :=
     (hasDerivWithinAt_iff_tendsto_slope' Set.self_notMem_Ioi).mp hderiv
   refine re_pos_of_slope_sign γ s t₀ hcross L_R _ ?_
@@ -626,9 +618,7 @@ lemma re_pos_left_of_slope
       (fun t ht => (hs_diff t ht).differentiableWithinAt)
       hcont.continuousWithinAt hs_mem htend_L)
   have hReLLneg : (L_L * starRingEnd ℂ (-L_L)).re < 0 := by
-    rw [map_neg, mul_neg, Complex.neg_re, neg_neg_iff_pos, Complex.mul_conj]
-    simp only [Complex.ofReal_re]
-    exact Complex.normSq_pos.mpr hL_L_ne
+    simp [map_neg, mul_neg, Complex.mul_conj, Complex.normSq_pos.mpr hL_L_ne]
   have h_slope : Tendsto (slope γ.toFun t₀) (𝓝[<] t₀) (𝓝 L_L) :=
     (hasDerivWithinAt_iff_tendsto_slope' Set.self_notMem_Iio).mp hderiv
   refine re_pos_of_slope_sign γ s t₀ hcross (-L_L) _ ?_

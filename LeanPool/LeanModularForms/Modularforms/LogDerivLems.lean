@@ -30,10 +30,9 @@ theorem logDeriv_tprod_eq_tsum2 {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ �
     apply symm
     rw [← Summable.hasSum_iff hm, Summable.hasSum_iff_tendsto_nat hm]
     let g := (∏' i : ℕ, f i ·)
-    have h_tlu : TendstoLocallyUniformlyOn (fun n z ↦ ∏ i ∈ Finset.range n, f i z) g atTop s := by
-      have := htend.hasProdLocallyUniformlyOn.tendstoLocallyUniformlyOn_finsetRange
-      exact this.congr (fun n => by
-        intro z _; change ∏ i ∈ Finset.range n, f i z = ∏ i ∈ Finset.range n, f i z; rfl)
+    have h_tlu : TendstoLocallyUniformlyOn (fun n z ↦ ∏ i ∈ Finset.range n, f i z) g atTop s :=
+      htend.hasProdLocallyUniformlyOn.tendstoLocallyUniformlyOn_finsetRange.congr
+        (fun n z _ => rfl)
     have h_diff :
         ∀ᶠ (n : ℕ) in atTop, DifferentiableOn ℂ (fun z => ∏ i ∈ Finset.range n, f i z) s := by
       simp only [eventually_atTop, ge_iff_le]
@@ -75,16 +74,9 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
       simp only [Finset.prod_apply]
     · exact htend
     · simp only [eventually_atTop, ge_iff_le]
-      use 0
-      intro b hb
-      rw [DifferentiableOn]
-      intro z hz
-      apply DifferentiableAt.differentiableWithinAt
-      have hp : ∀ (i : ℕ), i ∈ Finset.range b →  DifferentiableAt ℂ (f i) z := by
-        intro i hi
-        exact (hd i z hz).differentiableAt (IsOpen.mem_nhds hs hz)
-      have := DifferentiableAt.finsetProd hp
-      convert this
+      exact ⟨0, fun b _ z hz =>
+        (DifferentiableAt.finsetProd (fun i _ =>
+          (hd i z hz).differentiableAt (IsOpen.mem_nhds hs hz))).differentiableWithinAt⟩
     · exact hnez
 
 
@@ -139,26 +131,17 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
 
 lemma func_div (a b c d : ℂ → ℂ) (x : ℂ) (hb : b x ≠ 0) (hd : d x ≠ 0) :
      (a / b) x = (c /d) x ↔ (a * d) x = (b * c) x := by
-  simp only [Pi.div_apply, Pi.mul_apply]
-  rw [div_eq_div_iff hb hd]
-  constructor
-  · intro h
-    nth_rw 2 [mul_comm]
-    exact h
-  · intro h
-    nth_rw 2 [mul_comm]
-    exact h
+  simp only [Pi.div_apply, Pi.mul_apply, div_eq_div_iff hb hd]
+  constructor <;> (intro h; nth_rw 2 [mul_comm]; exact h)
 
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 lemma deriv_EqOn_congr {f g : ℂ → ℂ} (s : Set ℂ) (hfg : s.EqOn f g) (hs : IsOpen s) :
-    s.EqOn (deriv f) ( deriv g) := by
-  intro x hx
+    s.EqOn (deriv f) ( deriv g) := fun x hx => by
   rw [← derivWithin_of_isOpen hs hx, ← derivWithin_of_isOpen hs hx]
-  apply derivWithin_congr hfg
-  apply hfg hx
+  exact derivWithin_congr hfg (hfg hx)
 
 
 lemma logDeriv_eqOn_iff2 (f g : ℂ → ℂ) (s : Set ℂ) (hf : DifferentiableOn ℂ f s)

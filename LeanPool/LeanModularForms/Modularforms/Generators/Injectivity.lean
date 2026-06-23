@@ -112,8 +112,7 @@ private lemma no_wt_monomial_of_odd {n : ℕ} (hn : Odd n) (d : Fin 2 →₀ ℕ
   omega
 
 private lemma no_wt_monomial_of_two (d : Fin 2 →₀ ℕ) :
-    Finsupp.weight E₄E₆Weight d ≠ 2 := by
-  have := weight_fin2_cast d; omega
+    Finsupp.weight E₄E₆Weight d ≠ 2 := by have := weight_fin2_cast d; omega
 
 private lemma whomog_eq_zero_of_no_monomials {n : ℕ} (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n)
@@ -186,17 +185,16 @@ private lemma mul_Delta_map_injective {k : ℤ} (f : ModularForm Γ(1) (k - 12))
   ext z
   have hz := congr_fun (congr_arg (fun x => x.toFun) hf) z
   simp only [ModularForm.zero_apply, SlashInvariantForm.toFun_eq_coe,
-    ModularForm.toSlashInvariantForm_coe] at hz
-  rw [mul_Delta_map_eq] at hz
+    ModularForm.toSlashInvariantForm_coe, mul_Delta_map_eq] at hz
   exact (mul_eq_zero.mp hz).resolve_right (Δ_ne_zero z)
 
 private lemma monomial_reduction (a b : ℕ) (ha : 3 ≤ a) :
     (MvPolynomial.X (0 : Fin 2) ^ a * MvPolynomial.X (1 : Fin 2) ^ b : MvPolynomial (Fin 2) ℂ) =
     MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ (b + 2) +
     (1728 : ℂ) • DeltaPoly * (MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ b) := by
-  have : (MvPolynomial.X (0 : Fin 2) : MvPolynomial (Fin 2) ℂ) ^ a =
-    MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X (0 : Fin 2) ^ 3 := by rw [← pow_add]; congr 1; omega
-  rw [this, X0_cubed_eq]
+  rw [show (MvPolynomial.X (0 : Fin 2) : MvPolynomial (Fin 2) ℂ) ^ a =
+      MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X (0 : Fin 2) ^ 3
+    from by rw [← pow_add]; congr 1; omega, X0_cubed_eq]
   ring
 
 private lemma X0_pow_mul_X1_pow_isWeightedHomogeneous (a b n : ℕ) (hab : a * 4 + b * 6 = n) :

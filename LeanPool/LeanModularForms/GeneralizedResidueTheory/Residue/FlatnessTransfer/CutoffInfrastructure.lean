@@ -54,8 +54,8 @@ private lemma direction_rate_from_flatness_right
       0 < ((γ.toFun (σ ε) - s) * starRingEnd ℂ L_R).re :=
     hσ_tendsto.eventually (re_pos_right_of_slope γ s t₀ ht₀ hcross L_R hL_R_ne htend_R)
   rw [Asymptotics.isLittleO_iff]; intro c hc_pos
-  have hcsq : (0 : ℝ) < c / Real.sqrt 2 := div_pos hc_pos (Real.sqrt_pos.mpr two_pos)
-  filter_upwards [(Asymptotics.isLittleO_iff.mp h_flat_eps) hcsq, hσ_norm, h_re_pos] with
+  filter_upwards [(Asymptotics.isLittleO_iff.mp h_flat_eps)
+      (div_pos hc_pos (Real.sqrt_pos.mpr two_pos)), hσ_norm, h_re_pos] with
     ε h_td_bound hε_norm h_re
   set w := γ.toFun (σ ε) - s
   have hw_ne : w ≠ 0 := by intro h; simp [h] at h_re
@@ -71,11 +71,10 @@ private lemma direction_rate_from_flatness_right
       div_mul_div_comm, ← Complex.ofReal_mul, Complex.div_ofReal_re]
     exact div_pos h_re (mul_pos (by rw [hε_norm]; exact hε_pos) hL_pos)
   rw [Real.norm_of_nonneg (norm_nonneg _)]
-  have h_td_bound' : ‖tangentDeviation w L_R‖ ≤ c / Real.sqrt 2 * ε ^ m := by
-    rwa [Real.norm_of_nonneg (norm_nonneg _),
-      Real.norm_of_nonneg (pow_nonneg hε_pos.le _)] at h_td_bound
   exact direction_rate_final_calc m c ε hε_pos hm w L_R u v₀ hu_norm hv₀_norm hR_pos
-    (tangentDeviation_scale_eq w L_R hw_ne' hL_ne) hε_norm h_td_bound'
+    (tangentDeviation_scale_eq w L_R hw_ne' hL_ne) hε_norm
+    (by rwa [Real.norm_of_nonneg (norm_nonneg _),
+        Real.norm_of_nonneg (pow_nonneg hε_pos.le _)] at h_td_bound)
 
 private lemma tangentDeviation_scale_neg_eq
     (w L : ℂ) (_hw_ne : ‖w‖ ≠ 0) (hL_ne : ‖L‖ ≠ 0) :
@@ -125,8 +124,8 @@ private lemma direction_rate_from_flatness_left
       0 < ((γ.toFun (σ ε) - s) * starRingEnd ℂ (-L_L)).re :=
     hσ_tendsto.eventually (re_pos_left_of_slope γ s t₀ ht₀ hcross L_L hL_L_ne htend_L)
   rw [Asymptotics.isLittleO_iff]; intro c hc_pos
-  have hcsq : (0 : ℝ) < c / Real.sqrt 2 := div_pos hc_pos (Real.sqrt_pos.mpr two_pos)
-  filter_upwards [(Asymptotics.isLittleO_iff.mp h_flat_eps) hcsq, hσ_norm, h_re_pos] with
+  filter_upwards [(Asymptotics.isLittleO_iff.mp h_flat_eps)
+      (div_pos hc_pos (Real.sqrt_pos.mpr two_pos)), hσ_norm, h_re_pos] with
     ε h_td_bound hε_norm h_re
   set w := γ.toFun (σ ε) - s
   have hw_ne : w ≠ 0 := by intro h; simp [h] at h_re
@@ -143,11 +142,10 @@ private lemma direction_rate_from_flatness_left
         rw [map_neg], ← Complex.ofReal_mul, Complex.div_ofReal_re]
     exact div_pos h_re (mul_pos (by rw [hε_norm]; exact hε_pos) hL_pos)
   rw [Real.norm_of_nonneg (norm_nonneg _)]
-  have h_td_bound' : ‖tangentDeviation w (-L_L)‖ ≤ c / Real.sqrt 2 * ε ^ m := by
-    rwa [Real.norm_of_nonneg (norm_nonneg _),
-      Real.norm_of_nonneg (pow_nonneg hε_pos.le _)] at h_td_bound
   exact direction_rate_final_calc m c ε hε_pos hm w (-L_L) u v₀ hu_norm hv₀_norm hR_pos
-    (tangentDeviation_scale_neg_eq w L_L hw_ne' hL_ne) hε_norm h_td_bound'
+    (tangentDeviation_scale_neg_eq w L_L hw_ne' hL_ne) hε_norm
+    (by rwa [Real.norm_of_nonneg (norm_nonneg _),
+        Real.norm_of_nonneg (pow_nonneg hε_pos.le _)] at h_td_bound)
 
 private lemma cutoff_integral_split_to_sides
     (γ : PiecewiseC1Immersion) (s : ℂ) (m : ℕ)
@@ -170,16 +168,16 @@ private lemma cutoff_integral_split_to_sides
   set F : ℝ → ℂ := fun t => (γ.toFun t - s) ^ (-(m : ℤ)) * deriv γ.toFun t with hF_def
   have hae_left_raw : ∀ᵐ t ∂(volume.restrict (Ι γ.a σ₁)),
       (if ‖γ.toFun t - s‖ > ε then F t else 0) = F t := by
-    rw [Set.uIoc_of_le hσ₁_ge, ← restrict_Ioo_eq_restrict_Ioc]
-    rw [MeasureTheory.ae_restrict_iff' measurableSet_Ioo]
+    rw [Set.uIoc_of_le hσ₁_ge, ← restrict_Ioo_eq_restrict_Ioc,
+      MeasureTheory.ae_restrict_iff' measurableSet_Ioo]
     exact MeasureTheory.ae_of_all _ fun t ht => by
       simp [show ‖γ.toFun t - s‖ > ε from h_left t ⟨ht.1.le, ht.2⟩]
   have hae_left : (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0)
       =ᶠ[ae (volume.restrict (Ι γ.a σ₁))] F := hae_left_raw
   have hae_right_raw : ∀ᵐ t ∂(volume.restrict (Ι σ₂ γ.b)),
       (if ‖γ.toFun t - s‖ > ε then F t else 0) = F t := by
-    rw [Set.uIoc_of_le hσ₂_le, ← restrict_Ioo_eq_restrict_Ioc]
-    rw [MeasureTheory.ae_restrict_iff' measurableSet_Ioo]
+    rw [Set.uIoc_of_le hσ₂_le, ← restrict_Ioo_eq_restrict_Ioc,
+      MeasureTheory.ae_restrict_iff' measurableSet_Ioo]
     exact MeasureTheory.ae_of_all _ fun t ht => by
       simp [show ‖γ.toFun t - s‖ > ε from h_right t ⟨ht.1, ht.2.le⟩]
   have hae_right : (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0)
@@ -189,25 +187,21 @@ private lemma cutoff_integral_split_to_sides
     intro t ht
     rw [Set.uIcc_of_le hσ₁_lt.le] at ht
     simp [show ¬(‖γ.toFun t - s‖ > ε) from not_lt.mpr (h_middle t ht)]
-  have hint_l := h_int_l.congr_ae hae_left.symm
   have hint_m : IntervalIntegrable
       (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0)
       volume σ₁ σ₂ :=
     (intervalIntegrable_const (c := (0 : ℂ))).congr
       (heq_mid.symm.mono Set.uIoc_subset_uIcc)
-  have hint_r := h_int_r.congr_ae hae_right.symm
   have hsplit : ∫ t in γ.a..γ.b, (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0) t =
       (∫ t in γ.a..σ₁, (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0) t) +
       (∫ t in σ₁..σ₂, (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0) t) +
       (∫ t in σ₂..γ.b, (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0) t) := by
+    have hint_l := h_int_l.congr_ae hae_left.symm
+    have hint_r := h_int_r.congr_ae hae_right.symm
     have h_σ₁_b := intervalIntegral.integral_add_adjacent_intervals hint_m hint_r
     have h_a_b := intervalIntegral.integral_add_adjacent_intervals hint_l (hint_m.trans hint_r)
     rw [← h_σ₁_b] at h_a_b; rw [← h_a_b, add_assoc]
-  rw [hsplit]
-  have h_mid_zero : ∫ t in σ₁..σ₂,
-      (fun t => if ‖γ.toFun t - s‖ > ε then F t else 0) t = 0 := by
-    rw [intervalIntegral.integral_congr heq_mid, intervalIntegral.integral_zero]
-  rw [h_mid_zero, add_zero,
+  rw [hsplit, intervalIntegral.integral_congr heq_mid, intervalIntegral.integral_zero, add_zero,
     intervalIntegral.integral_congr_ae_restrict hae_left,
     intervalIntegral.integral_congr_ae_restrict hae_right]
 
@@ -291,15 +285,13 @@ private lemma exit_time_tendsto_right
     set ε₀ := min ‖γ.toFun t₁ - s‖ δ
     have hε₀_pos : 0 < ε₀ := lt_min hg_t₁ hδ
     filter_upwards [Ioo_mem_nhdsGT hε₀_pos] with ε ⟨hε_pos, hε_lt⟩
-    have hε_Ioo : ε ∈ Ioo 0 δ := ⟨hε_pos, lt_of_lt_of_le hε_lt (min_le_right _ _)⟩
-    obtain ⟨hσ₂_gt, hσ₂_le, hσ₂_norm, hσ₂_mid⟩ := hσ₂_props ε hε_Ioo
+    obtain ⟨hσ₂_gt, hσ₂_le, hσ₂_norm, hσ₂_mid⟩ :=
+      hσ₂_props ε ⟨hε_pos, lt_of_lt_of_le hε_lt (min_le_right _ _)⟩
     rw [dist_eq_norm, Real.norm_eq_abs, abs_of_pos (sub_pos.mpr hσ₂_gt)]
-    have hε_lt_t₁ : ε < ‖γ.toFun t₁ - s‖ := lt_of_lt_of_le hε_lt (min_le_left _ _)
     by_contra h_not_lt
     push Not at h_not_lt
-    have ht₁_le_σ₂ : t₁ ≤ σ₂ ε := by simp only [ht₁_def]; linarith [min_le_left η (r - t₀)]
-    have := hσ₂_mid t₁ ⟨ht₁_gt.le, ht₁_le_σ₂⟩
-    linarith
+    linarith [hσ₂_mid t₁ ⟨ht₁_gt.le, by simp only [ht₁_def]; linarith [min_le_left η (r - t₀)]⟩,
+      lt_of_lt_of_le hε_lt (min_le_left _ _)]
   · filter_upwards [Ioo_mem_nhdsGT hδ] with ε hε
     exact (hσ₂_props ε hε).1
 
@@ -328,15 +320,13 @@ private lemma exit_time_tendsto_left
     set ε₀ := min ‖γ.toFun t₁ - s‖ δ
     have hε₀_pos : 0 < ε₀ := lt_min hg_t₁ hδ
     filter_upwards [Ioo_mem_nhdsGT hε₀_pos] with ε ⟨hε_pos, hε_lt⟩
-    have hε_Ioo : ε ∈ Ioo 0 δ := ⟨hε_pos, lt_of_lt_of_le hε_lt (min_le_right _ _)⟩
-    obtain ⟨hσ₁_lt, hσ₁_ge, hσ₁_norm, hσ₁_mid⟩ := hσ₁_props ε hε_Ioo
+    obtain ⟨hσ₁_lt, hσ₁_ge, hσ₁_norm, hσ₁_mid⟩ :=
+      hσ₁_props ε ⟨hε_pos, lt_of_lt_of_le hε_lt (min_le_right _ _)⟩
     rw [dist_comm, dist_eq_norm, Real.norm_eq_abs, abs_of_pos (sub_pos.mpr hσ₁_lt)]
-    have hε_lt_t₁ : ε < ‖γ.toFun t₁ - s‖ := lt_of_lt_of_le hε_lt (min_le_left _ _)
     by_contra h_not_lt
     push Not at h_not_lt
-    have hσ₁_le_t₁ : σ₁ ε ≤ t₁ := by simp only [ht₁_def]; linarith [min_le_left η (t₀ - l)]
-    have := hσ₁_mid t₁ ⟨hσ₁_le_t₁, ht₁_lt.le⟩
-    linarith
+    linarith [hσ₁_mid t₁ ⟨by simp only [ht₁_def]; linarith [min_le_left η (t₀ - l)],
+        ht₁_lt.le⟩, lt_of_lt_of_le hε_lt (min_le_left _ _)]
   · filter_upwards [Ioo_mem_nhdsGT hδ] with ε hε
     exact (hσ₁_props ε hε).1
 
@@ -391,18 +381,16 @@ private lemma angle_at_crossing_arg_relation
     simp only [Int.cast_zero, zero_mul, add_zero]
     unfold angleAtCrossing
     rw [dif_pos hp]
-    have hL_R_eq := tendsto_nhds_unique htend_R
-      (Classical.choose_spec (γ.right_deriv_limit t₀ hp ht₀.2)).2
-    have hL_L_eq := tendsto_nhds_unique htend_L
-      (Classical.choose_spec (γ.left_deriv_limit t₀ hp ht₀.1)).2
-    rw [hL_R_eq, hL_L_eq]
+    rw [tendsto_nhds_unique htend_R (Classical.choose_spec (γ.right_deriv_limit t₀ hp ht₀.2)).2,
+      tendsto_nhds_unique htend_L (Classical.choose_spec (γ.left_deriv_limit t₀ hp ht₀.1)).2]
   · rw [angleAtCrossing_smooth γ t₀ ht₀ hp]
-    have hL_eq : L_R = L_L := by
-      have hcont := γ.toPiecewiseC1Curve.deriv_continuous_off_partition t₀ ht₀ hp
-      exact (tendsto_nhds_unique htend_R
-        (hcont.tendsto.mono_left nhdsWithin_le_nhds)).trans
+    have hL_eq : L_R = L_L :=
+      (tendsto_nhds_unique htend_R
+        ((γ.toPiecewiseC1Curve.deriv_continuous_off_partition t₀ ht₀ hp).tendsto.mono_left
+          nhdsWithin_le_nhds)).trans
         (tendsto_nhds_unique htend_L
-          (hcont.tendsto.mono_left nhdsWithin_le_nhds)).symm
+          ((γ.toPiecewiseC1Curve.deriv_continuous_off_partition t₀ ht₀ hp).tendsto.mono_left
+            nhdsWithin_le_nhds)).symm
     rw [hL_eq]
     by_cases him : 0 < L_L.im
     · exact ⟨0, by rw [Complex.arg_neg_eq_arg_sub_pi_of_im_pos him]; push_cast; ring⟩

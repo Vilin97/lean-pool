@@ -341,10 +341,8 @@ lemma E_k_q_expansion (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) 
   simp_rw [eisSummand]
   have HE1 := EQ1 k hk hk2 z
   have HE2 := EQ2 k hk z
-  have z2 : (riemannZeta (k)) ≠ 0 := by
-    refine riemannZeta_ne_zero_of_one_lt_re ?_
-    simp
-    omega
+  have z2 : (riemannZeta (k)) ≠ 0 :=
+    riemannZeta_ne_zero_of_one_lt_re (by simp; omega)
   rw [← inv_mul_eq_iff_eq_mul₀ z2 ] at HE2
   simp only [Fin.isValue, one_div, neg_mul, zpow_neg, zpow_natCast] at HE1 HE2 ⊢
   -- Lean 4.29: `rw` fails on binder name `c` vs `x` for gammaSet tsum.

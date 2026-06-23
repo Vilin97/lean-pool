@@ -123,10 +123,7 @@ private lemma norm_le_ae_Ioc_of_Ioo {f g : ℝ → ℝ} {lo hi : ℝ}
     (h : ∀ t ∈ Set.Ioo lo hi, f t ≤ g t) :
     ∀ᵐ t, t ∈ Set.Ioc lo hi → f t ≤ g t := by
   have h_compl : ∀ᵐ t, t ∉ ({hi} : Set ℝ) := by
-    rw [MeasureTheory.ae_iff]
-    convert Real.volume_singleton (a := hi) using 2
-    ext t
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, not_not]
+    simp [MeasureTheory.ae_iff]
   filter_upwards [h_compl] with t ht_ne ht_mem
   refine h t ⟨ht_mem.1, lt_of_le_of_ne ht_mem.2 ?_⟩
   simpa only [Set.mem_singleton_iff] using ht_ne
@@ -373,9 +370,7 @@ lemma summableSubseqAux_pos {γ : ℝ → ℂ}
     positivity
   | succ m ih =>
     simp only [summableSubseqAux_succ]
-    have h_min_pos :
-        0 < min (ε m / 2) (δ (m + 1)) :=
-      lt_min (by linarith) (hδ_pos (m + 1))
+    have h_min_pos : 0 < min (ε m / 2) (δ (m + 1)) := lt_min (by linarith) (hδ_pos (m + 1))
     positivity
 
 lemma summableSubseqAux_halving {γ : ℝ → ℂ}
@@ -396,9 +391,7 @@ lemma summableSubseqAux_halving {γ : ℝ → ℂ}
           hγ_hasderiv hγ_cont_deriv
             (n + 1)).choose) / 2 ≤
         (ε n / 2) / 2 := by
-    apply div_le_div_of_nonneg_right
-      (min_le_left _ _)
-      (by norm_num : (0 : ℝ) ≤ 2)
+    exact div_le_div_of_nonneg_right (min_le_left _ _) (by norm_num : (0 : ℝ) ≤ 2)
   rw [show (ε n / 2) / 2 = ε n / 4 from by ring] at h_min_le
   have hε_pos := summableSubseqAux_pos hL
     hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos n
@@ -434,12 +427,9 @@ lemma summableSubseqAux_lt_delta {γ : ℝ → ℂ}
     have h_min_le :
         min (ε m / 2) (δ (m + 1)) ≤ δ (m + 1) :=
       min_le_right _ _
-    have h_min_pos :
-        0 < min (ε m / 2) (δ (m + 1)) := by
-      refine lt_min ?_ (hδ_pos (m + 1))
-      have := summableSubseqAux_pos hL hγ_hasderiv
-        hγ_cont_deriv δ₀ hδ₀_pos m
-      linarith
+    have h_min_pos : 0 < min (ε m / 2) (δ (m + 1)) :=
+      lt_min (by linarith [summableSubseqAux_pos hL hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos m])
+        (hδ_pos (m + 1))
     linarith
 
 lemma summableSubseqAux_error_bound {γ : ℝ → ℂ}
@@ -507,9 +497,7 @@ lemma summableSubseqAux_le_geometric {γ : ℝ → ℂ}
     have h_halving := summableSubseqAux_halving hL
       hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos m
     calc ε (m + 1) ≤ ε m / 2 := h_halving
-      _ ≤ (ε 0 / 2 ^ m) / 2 := by
-          apply div_le_div_of_nonneg_right ih
-            (by norm_num : (0 : ℝ) ≤ 2)
+      _ ≤ (ε 0 / 2 ^ m) / 2 := div_le_div_of_nonneg_right ih (by norm_num : (0 : ℝ) ≤ 2)
       _ = ε 0 / 2 ^ (m + 1) := by rw [pow_succ]; ring
 
 /-- The summable subsequence tends to 0. -/
@@ -522,12 +510,10 @@ lemma summableSubseqAux_tendsto_zero {γ : ℝ → ℂ}
       hγ_cont_deriv δ₀) atTop (𝓝 0) := by
   let ε := summableSubseqAux hL hγ_hasderiv
     hγ_cont_deriv δ₀
-  have h_squeeze : ∀ n, ε n ≤ ε 0 * (1 / 2) ^ n :=
-    fun n => by
-      have h1 := summableSubseqAux_le_geometric hL
-        hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos n
-      have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
-      linarith
+  have h_squeeze : ∀ n, ε n ≤ ε 0 * (1 / 2) ^ n := fun n => by
+    have h1 := summableSubseqAux_le_geometric hL hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos n
+    have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
+    linarith
   have h_geom_tendsto :
       Tendsto (fun n => ε 0 * (1 / 2 : ℝ) ^ n)
         atTop (𝓝 0) := by

@@ -106,15 +106,9 @@ lemma diagMat_scalar_conj_eq (c : ℕ) (hc : 0 < c) (x : GL (Fin n) ℚ) :
 
 lemma conjAct_scalar_smul_eq (c : ℕ) (hc : 0 < c) :
     ConjAct.toConjAct (diagMat n (fun _ => c)) • (GLPair n).H = (GLPair n).H := by
-  ext x; constructor
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at hx
-    simp only [ConjAct.smul_def, map_inv, ConjAct.ofConjAct_toConjAct, inv_inv] at hx
-    rwa [diagMat_scalar_conj_eq n c hc] at hx
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    simp only [ConjAct.smul_def, map_inv, ConjAct.ofConjAct_toConjAct, inv_inv]
-    rwa [diagMat_scalar_conj_eq n c hc]
+  ext x
+  simp only [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def, map_inv,
+    ConjAct.ofConjAct_toConjAct, inv_inv, diagMat_scalar_conj_eq n c hc]
 
 private lemma conjAct_mem_smul_eq (h : GL (Fin n) ℚ) (hh : h ∈ (GLPair n).H) :
     ConjAct.toConjAct h • (GLPair n).H = (GLPair n).H := by
@@ -140,15 +134,14 @@ lemma HeckeCoset_deg_scalar (c : ℕ) (hc : 0 < c) :
     rw [h_def, hsmul, Subgroup.relIndex_self]; simp
   have hδ_mem : (δ : GL (Fin n) ℚ) ∈
       DoubleCoset.doubleCoset (↑(diagMatDelta n (fun _ => c))) H H := by
-    have h1 : HeckeCoset.toSet D =
-        DoubleCoset.doubleCoset (↑(diagMatDelta n (fun _ => c))) H H := by
-      simp only [D, H, TDiag, HeckeCoset.toSet_mk]
+    have h1 : HeckeCoset.toSet D = DoubleCoset.doubleCoset (↑(diagMatDelta n (fun _ => c))) H H :=
+      by simp only [D, H, TDiag, HeckeCoset.toSet_mk]
     rw [← h1]; exact HeckeCoset.rep_mem D
   rw [DoubleCoset.mem_doubleCoset] at hδ_mem; obtain ⟨h₁, hh₁, h₂, hh₂, hδ_eq⟩ := hδ_mem
   have hδ_simp : (δ : GL (Fin n) ℚ) = (h₁ * h₂) * diagMat n (fun _ => c) := by
     rw [hδ_eq, show (↑(diagMatDelta n (fun _ => c)) : GL (Fin n) ℚ) =
-        diagMat n (fun _ => c) from diagMat_delta_val n (fun _ => c) (fun _ => hc)]
-    rw [mul_assoc, diagMat_scalar_comm n c hc h₂, ← mul_assoc]
+        diagMat n (fun _ => c) from diagMat_delta_val n (fun _ => c) (fun _ => hc),
+      mul_assoc, diagMat_scalar_comm n c hc h₂, ← mul_assoc]
   rw [hδ_simp, map_mul, ← smul_smul, conjAct_scalar_smul_eq n c hc]
   exact conjAct_mem_smul_eq n (h₁ * h₂) (H.mul_mem hh₁ hh₂)
 
@@ -527,14 +520,10 @@ lemma doubleCoset_mul_coprime_mem (a b : Fin n → ℕ)
         (SLnZSubgroup n) (SLnZSubgroup n) := by
   obtain ⟨τ₁, τ₂, hτ, hτ₁, hτ₂⟩ := SLnZ_CRT_decomposition n (∏ i, a i) (∏ i, b i)
     (Finset.prod_pos (fun i _ => ha_pos i)) (Finset.prod_pos (fun i _ => hb_pos i)) hcop τ
-  have hτ₁_cong : ∀ i j, (∏ k, (a k : ℤ)) ∣
-      ((τ₁ : Matrix (Fin n) (Fin n) ℤ) i j - if i = j then 1 else 0) := by
-    intro i j; convert hτ₁ i j using 1; simp
-  obtain ⟨σ₁, hσ₁⟩ := conjugate_congruent_mem_SLnZ n a ha_pos ha τ₁ hτ₁_cong
-  have hτ₂_cong : ∀ i j, (∏ k, (b k : ℤ)) ∣
-      ((τ₂ : Matrix (Fin n) (Fin n) ℤ) i j - if i = j then 1 else 0) := by
-    intro i j; convert hτ₂ i j using 1; simp
-  obtain ⟨σ₂, hσ₂⟩ := inv_conjugate_congruent_mem_SLnZ n b hb_pos hb τ₂ hτ₂_cong
+  obtain ⟨σ₁, hσ₁⟩ := conjugate_congruent_mem_SLnZ n a ha_pos ha τ₁
+    (fun i j => by convert hτ₁ i j using 1; simp)
+  obtain ⟨σ₂, hσ₂⟩ := inv_conjugate_congruent_mem_SLnZ n b hb_pos hb τ₂
+    (fun i j => by convert hτ₂ i j using 1; simp)
   rw [DoubleCoset.mem_doubleCoset]
   refine ⟨(σ₁ : GL (Fin n) ℚ), coe_mem_SLnZ n σ₁,
     (σ₂ : GL (Fin n) ℚ), coe_mem_SLnZ n σ₂, ?_⟩

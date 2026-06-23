@@ -85,16 +85,13 @@ private lemma cpv_residue_side_simplePoles
       HasSimplePoleAt (logDeriv (modularFormCompOfComplex f)) s := by
   intro s hs; rw [Finset.mem_union] at hs
   rcases hs with h_box | h_on
-  · have h_im : 0 < s.im :=
-      fdBox_im_pos ((mem_allZerosInFdBox_iff f hf hM_half).mp
-        (hSbox ▸ h_box)).1
-    exact hasSimplePoleAt_logDeriv_at_point f hf s h_im
-  · have h_im : 0 < s.im := by
+  · exact hasSimplePoleAt_logDeriv_at_point f hf s
+      (fdBox_im_pos ((mem_allZerosInFdBox_iff f hf hM_half).mp (hSbox ▸ h_box)).1)
+  · exact hasSimplePoleAt_logDeriv_at_point f hf s (by
       rw [hS_on] at h_on
       rcases Finset.mem_union.mp h_on with h | h
       · exact sArcOfS_im_pos S s h
-      · exact sVertOfS_im_pos S s h
-    exact hasSimplePoleAt_logDeriv_at_point f hf s h_im
+      · exact sVertOfS_im_pos S s h)
 
 include hf in
 private lemma cpv_residue_side_Fp_diffOn
@@ -115,13 +112,11 @@ private lemma cpv_residue_side_Fp_diffOn
     filter_upwards [S0.finite_toSet.isClosed.isOpen_compl.mem_nhds hz_not_S0]
       with w hw
     exact logDerivPatched_eq_raw_off F S0 hSimplePoles hw
-  have hz_not_zero : modularFormCompOfComplex f z ≠ 0 := by
-    intro h_zero
-    exact hz_not_S0 (hS0 ▸ Finset.mem_union_left S_on
-      (hSbox ▸ (mem_allZerosInFdBox_iff f hf hM_half).mpr ⟨hz.1, h_zero⟩))
   exact (h_ev.differentiableAt_iff.mpr
-    (analyticAt_logDeriv_off_zeros' f z (fdBox_im_pos hz.1)
-      hz_not_zero).differentiableAt).differentiableWithinAt
+    (analyticAt_logDeriv_off_zeros' f z (fdBox_im_pos hz.1) (fun h_zero =>
+      hz_not_S0 (hS0 ▸ Finset.mem_union_left S_on
+        (hSbox ▸ (mem_allZerosInFdBox_iff f hf hM_half).mpr ⟨hz.1, h_zero⟩)))
+      ).differentiableAt).differentiableWithinAt
 
 private lemma cpv_residue_side_cpvExists
     (_S : Finset UpperHalfPlane)
@@ -143,8 +138,7 @@ private lemma cpv_residue_side_cpvExists
       show γ_imm.a = (0 : ℝ) from rfl,
       show γ_imm.b = (5 : ℝ) from rfl, h_res_eq]
   by_cases h_on_curve : ∃ t ∈ Icc (0 : ℝ) 5, γ t = s
-  · exact cpvExists_scale γ 0 5 s _
-      (fdBoundary_H_cpv_exists_of_onCurve H hH_sqrt3 s h_on_curve)
+  · exact cpvExists_scale γ 0 5 s _ (fdBoundary_H_cpv_exists_of_onCurve H hH_sqrt3 s h_on_curve)
   · push Not at h_on_curve
     exact cpvExists_of_off_curve γ (fdBoundary_H_continuous H) 0 5 s _
       (by norm_num) h_on_curve
@@ -174,10 +168,8 @@ private lemma cpv_residue_side_off_curve_min_dist
     intro t ht heq
     obtain ⟨h_box, h_narc⟩ := Finset.mem_sdiff.mp hs
     rw [hS_on] at h_narc
-    exact h_narc (Finset.mem_coe.mp (heq ▸ h_capture_S_on t ht (by
-      rw [heq]
-      rw [hSbox] at h_box
-      exact ((mem_allZerosInFdBox_iff f hf hM_half).mp h_box).2)))
+    exact h_narc (Finset.mem_coe.mp (heq ▸ h_capture_S_on t ht
+      (heq ▸ ((mem_allZerosInFdBox_iff f hf hM_half).mp (hSbox ▸ h_box)).2)))
   have h_cont : ContinuousOn (fun t => ‖γ t - s‖) (Icc 0 5) :=
     ((fdBoundary_H_continuous H).continuousOn.sub continuousOn_const).norm
   obtain ⟨t₀, ht₀, ht₀_min⟩ := isCompact_Icc.exists_isMinOn
@@ -267,12 +259,11 @@ private lemma residue_sum_over_S_on_sdiff_Sbox_zero
       (mem_allZerosInFdBox_iff f hf hM_half).mpr
         ⟨fdBox_of_on_curve S hS hH_sqrt3 hHM hH_ge1 hH_bound s
           (hS_on ▸ hs_on), h_zero⟩)
-  have h_im : 0 < s.im := by
+  rw [residueSimplePole_logDeriv_eq_zero_at_nonzero f s (by
     rw [hS_on] at hs_on
     rcases Finset.mem_union.mp hs_on with h | h
     · exact sArcOfS_im_pos S s h
-    · exact sVertOfS_im_pos S s h
-  rw [residueSimplePole_logDeriv_eq_zero_at_nonzero f s h_im h_nz, mul_zero]
+    · exact sVertOfS_im_pos S s h) h_nz, mul_zero]
 
 include hf in
 private lemma cpv_residue_side_sum_convert

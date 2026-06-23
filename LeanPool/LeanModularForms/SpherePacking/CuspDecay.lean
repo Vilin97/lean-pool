@@ -375,8 +375,8 @@ theorem phi0_isBoundedAtImInfty :
   obtain ⟨K, hK_pos, A₁, hA₁⟩ := A_E_is_O_q
   obtain ⟨r, hr_pos, hDelta_lb⟩ := Delta_lower_bound
   have hq_event : ∀ᶠ z : UpperHalfPlane in UpperHalfPlane.atImInfty,
-      ‖Function.Periodic.qParam 1 (z : ℂ)‖ < r := by
-    exact (tendsto_qParam_atImInfty.eventually
+      ‖Function.Periodic.qParam 1 (z : ℂ)‖ < r :=
+    (tendsto_qParam_atImInfty.eventually
       (Metric.ball_mem_nhds 0 hr_pos)).mono fun z hz => by rwa [dist_zero_right] at hz
   rw [Filter.eventually_atImInfty] at hq_event
   obtain ⟨A₂, hA₂⟩ := hq_event

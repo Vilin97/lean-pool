@@ -36,9 +36,7 @@ private lemma normSq_sub_one_eq_of_re_half (z : ℂ) (hre : z.re = 1 / 2) :
   simp only [normSq_apply, sub_re, one_re, sub_im, one_im, sub_zero, hre]; ring
 
 private lemma eq_of_sq_eq_of_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b)
-    (h : a ^ 2 = b ^ 2) : a = b := by
-  have h1 : (a - b) * (a + b) = 0 := by nlinarith
-  rcases mul_eq_zero.mp h1 with h2 | h2 <;> linarith
+    (h : a ^ 2 = b ^ 2) : a = b := by nlinarith [sq_nonneg (a - b), sq_nonneg (a + b)]
 
 private lemma norm_eq_of_normSq_eq {z w : ℂ}
     (h : Complex.normSq z = Complex.normSq w) : ‖z‖ = ‖w‖ :=
@@ -57,13 +55,11 @@ lemma vAdd_one_coe (p : ℍ) : ((1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) + 1 := by
 
 /-- T-translation shifts real part by 1. -/
 lemma vAdd_one_re (p : ℍ) : ((1 : ℝ) +ᵥ p : ℍ).re = p.re + 1 := by
-  change ((1 : ℝ) +ᵥ p : ℂ).re = p.re + 1
-  rw [vAdd_one_coe]; simp [add_re]
+  change ((1 : ℝ) +ᵥ p : ℂ).re = p.re + 1; rw [vAdd_one_coe]; simp [add_re]
 
 /-- T-translation preserves imaginary part. -/
 lemma vAdd_one_im_eq (p : ℍ) : ((1 : ℝ) +ᵥ p : ℍ).im = p.im := by
-  change ((1 : ℝ) +ᵥ p : ℂ).im = p.im
-  rw [vAdd_one_coe]; simp [add_im]
+  change ((1 : ℝ) +ᵥ p : ℂ).im = p.im; rw [vAdd_one_coe]; simp [add_im]
 
 /-- T⁻¹-translation coercion: `((-1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) - 1`. -/
 lemma vAdd_neg_one_coe (p : ℍ) : ((-1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) - 1 := by
@@ -71,13 +67,11 @@ lemma vAdd_neg_one_coe (p : ℍ) : ((-1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) - 1 := 
 
 /-- T⁻¹-translation shifts real part by -1. -/
 lemma vAdd_neg_one_re (p : ℍ) : ((-1 : ℝ) +ᵥ p : ℍ).re = p.re - 1 := by
-  change ((-1 : ℝ) +ᵥ p : ℂ).re = p.re - 1
-  rw [vAdd_neg_one_coe]; simp [sub_re]
+  change ((-1 : ℝ) +ᵥ p : ℂ).re = p.re - 1; rw [vAdd_neg_one_coe]; simp [sub_re]
 
 /-- T⁻¹-translation preserves imaginary part. -/
 lemma vAdd_neg_one_im_eq (p : ℍ) : ((-1 : ℝ) +ᵥ p : ℍ).im = p.im := by
-  change ((-1 : ℝ) +ᵥ p : ℂ).im = p.im
-  rw [vAdd_neg_one_coe]; simp [sub_im]
+  change ((-1 : ℝ) +ᵥ p : ℂ).im = p.im; rw [vAdd_neg_one_coe]; simp [sub_im]
 
 /-- T-translation preserves norm for left-vertical points (`re = -1/2`). -/
 lemma norm_add_one_eq_of_re_neg_half (z : ℂ) (hre : z.re = -1 / 2) :
@@ -119,32 +113,28 @@ theorem vAdd_neg_one_mem_fd_of_right_vert (p : ℍ) (hp_fd : p ∈ 𝒟) (hre : 
     rw [vAdd_neg_one_coe, sub_re, one_re, hre]; norm_num
 
 /-- `(1 : ℝ) +ᵥ ρ' = ρ'+1` as UpperHalfPlane elements. -/
-theorem vAdd_one_rho_eq_rho_plus_one : (1 : ℝ) +ᵥ ellipticPointRho' = ellipticPointRhoPlusOne' := by
-  apply UpperHalfPlane.ext
-  rw [vAdd_one_coe]
-  exact ellipticPointRho_add_one_eq
+theorem vAdd_one_rho_eq_rho_plus_one :
+    (1 : ℝ) +ᵥ ellipticPointRho' = ellipticPointRhoPlusOne' := by
+  apply UpperHalfPlane.ext; rw [vAdd_one_coe]; exact ellipticPointRho_add_one_eq
 
 /-- `(-1 : ℝ) +ᵥ (ρ'+1) = ρ'` as UpperHalfPlane elements. -/
 theorem vAdd_neg_one_rho_plus_one_eq_rho :
     (-1 : ℝ) +ᵥ ellipticPointRhoPlusOne' = ellipticPointRho' := by
-  apply UpperHalfPlane.ext
-  rw [vAdd_neg_one_coe, sub_eq_iff_eq_add]
+  apply UpperHalfPlane.ext; rw [vAdd_neg_one_coe, sub_eq_iff_eq_add]
   exact ellipticPointRho_add_one_eq.symm
 
 /-- ρ+1 is in the standard fundamental domain 𝒟. -/
-theorem ellipticPointRhoPlusOne_mem_fd : ellipticPointRhoPlusOne' ∈ 𝒟 := by
-  rw [← vAdd_one_rho_eq_rho_plus_one]
-  exact vAdd_one_mem_fd_of_left_vert ellipticPointRho' ellipticPointRho_mem_fd
-    (by simp [ellipticPointRho'])
+theorem ellipticPointRhoPlusOne_mem_fd : ellipticPointRhoPlusOne' ∈ 𝒟 :=
+  vAdd_one_rho_eq_rho_plus_one ▸ vAdd_one_mem_fd_of_left_vert
+    ellipticPointRho' ellipticPointRho_mem_fd (by simp [ellipticPointRho'])
 
 variable {k : ℤ} (f : ModularForm (Gamma 1) k)
 
 /-- `ord(f, ρ+1) = ord(f, ρ)` via the T-translation identity. -/
 theorem ord_rho_plus_one_eq_ord_rho_via_vAdd :
     orderOfVanishingAt' (⇑f) ellipticPointRhoPlusOne' =
-    orderOfVanishingAt' (⇑f) ellipticPointRho' := by
-  rw [← vAdd_one_rho_eq_rho_plus_one]
-  exact ord_add_one_eq f ellipticPointRho'
+    orderOfVanishingAt' (⇑f) ellipticPointRho' :=
+  vAdd_one_rho_eq_rho_plus_one ▸ ord_add_one_eq f ellipticPointRho'
 
 /-- S-action coe: `(S·z : ℂ) = (-z)⁻¹`. -/
 lemma S_smul_coe (p : ℍ) : ((ModularGroup.S • p : ℍ) : ℂ) = (-(p : ℂ))⁻¹ := by
@@ -241,8 +231,7 @@ lemma S_smul_injective : Function.Injective (ModularGroup.S • · : ℍ → ℍ
   Function.HasLeftInverse.injective ⟨(ModularGroup.S • ·), S_smul_S_smul⟩
 
 private lemma ord_ne_zero_of_cast_ne_zero {p : ℍ} {f : ℍ → ℂ}
-    (h : (orderOfVanishingAt' f p : ℂ) ≠ 0) :
-    orderOfVanishingAt' f p ≠ 0 := by exact_mod_cast h
+    (h : (orderOfVanishingAt' f p : ℂ) ≠ 0) : orderOfVanishingAt' f p ≠ 0 := by exact_mod_cast h
 
 /-- Orders on right vertical edge equal orders on left vertical edge. -/
 theorem sum_ord_rightVert_eq_sum_ord_leftVert (S : Finset ℍ)

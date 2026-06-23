@@ -640,20 +640,15 @@ theorem windingNumber_integer_of_closed_avoiding
     generalizedWindingNumber' γ a b z₀ = n := by
   let τ := fun t => γ t - z₀
   have hτ_closed : τ a = τ b := by simp only [τ]; rw [hγ_closed]
-  have hτ_cont : ContinuousOn τ (Icc a b) :=
-    hγ_cont.sub continuousOn_const
-  have hτ_diff : ∀ t ∈ Ioo a b,
-      DifferentiableAt ℝ τ t := fun t ht =>
-    (hγ_diff t ht).sub (differentiableAt_const z₀)
+  have hτ_cont : ContinuousOn τ (Icc a b) := hγ_cont.sub continuousOn_const
+  have hτ_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ τ t :=
+    fun t ht => (hγ_diff t ht).sub (differentiableAt_const z₀)
   have hτ_avoid : ∀ t ∈ Icc a b, τ t ≠ 0 :=
     fun t ht => sub_ne_zero.mpr (hγ_avoid t ht)
-  have hτ'_cont : ContinuousOn (deriv τ) (Icc a b) := by
-    rw [show deriv τ = deriv γ from
-      funext fun t => deriv_sub_const z₀]
-    exact hγ'_cont
+  have hτ'_cont : ContinuousOn (deriv τ) (Icc a b) :=
+    deriv_sub_const_fun z₀ (f := γ) ▸ hγ'_cont
   obtain ⟨n, hn⟩ := integral_closed_curve_eq_two_pi_int
-    τ a b 0 hab hτ_closed hτ_cont hτ_diff hτ_avoid
-    hτ'_cont
+    τ a b 0 hab hτ_closed hτ_cont hτ_diff hτ_avoid hτ'_cont
   use n
   unfold generalizedWindingNumber'
   have h_eq : (fun t => deriv τ t / (τ t - 0)) = (fun t => deriv γ t / (γ t - z₀)) := by

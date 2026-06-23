@@ -309,8 +309,7 @@ theorem integrableOn_of_bounded_aeMeasurable
     hf_meas (max M 0)
   filter_upwards [ae_restrict_mem
     isClosed_Icc.measurableSet] with x hx
-  calc ‖f x‖ ≤ M := hf_bound x hx
-    _ ≤ max M 0 := le_max_left M 0
+  exact (hf_bound x hx).trans (le_max_left M 0)
 
 theorem tendsto_integral_of_dominated' {a b : ℝ} {F : ℝ → ℝ → ℂ} {f : ℝ → ℂ}
     {g : ℝ → ℝ} (hF_meas : ∀ ε > 0,
@@ -374,8 +373,8 @@ lemma disjoint_balls_of_small_epsilon (S0 : Finset ℂ) (ε : ℝ) (_hε : 0 < �
     ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' →
       Disjoint (Metric.ball s ε) (Metric.ball s' ε) := by
   intro s hs s' hs' hne; apply Metric.ball_disjoint_ball
-  have h_sep' := h_sep s hs s' hs' hne
-  have h2 : δ ≤ dist s s' := by rw [dist_eq_norm, norm_sub_rev]; exact h_sep'
+  have h2 : δ ≤ dist s s' := by
+    rw [dist_eq_norm, norm_sub_rev]; exact h_sep s hs s' hs' hne
   linarith
 
 /-! ## Boundedness Lemmas -/
@@ -399,8 +398,6 @@ lemma residue_term_bounded_when_separated {γ : ℝ → ℂ} {s c : ℂ} {a b ε
     (hε : 0 < ε) (h_sep : ∀ t ∈ Icc a b, ε < ‖γ t - s‖) :
     ∀ t ∈ Icc a b, ‖c / (γ t - s)‖ ≤ ‖c‖ / ε := by
   intro t ht
-  have h_ne : γ t - s ≠ 0 := by
-    intro h_eq; have := h_sep t ht; simp only [h_eq, norm_zero] at this; linarith
   rw [norm_div]; exact div_le_div_of_nonneg_left (norm_nonneg c) hε (le_of_lt (h_sep t ht))
 
 /-- The sum of the norms of the simple-pole residues of `f` over a finite set `S`. -/

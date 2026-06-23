@@ -637,12 +637,10 @@ theorem cpv_exists_inv_sub
     (h_cont_deriv_cross : ∀ t ∈ Ioo γ.a γ.b, γ.toFun t = z₀ →
       ∃ a' b', t ∈ Ioo a' b' ∧ Icc a' b' ⊆ Icc γ.a γ.b ∧
         ContinuousOn (deriv γ.toFun) (Icc a' b')) :
-    CauchyPrincipalValueExists' (fun z => (z - z₀)⁻¹) γ.toFun γ.a γ.b z₀ := by
-  have h_fin := finite_crossings γ z₀
-  exact cpv_exists_on_subinterval γ z₀ hγ_meas h_fin.toFinset.card
-    γ.a γ.b γ.hab.le (le_refl _) h_no_endpt h_fin le_rfl
-    (fun t ht hγt => hC2 t ht hγt)
-    (fun t ht hγt => h_cont_deriv_cross t ht hγt)
+    CauchyPrincipalValueExists' (fun z => (z - z₀)⁻¹) γ.toFun γ.a γ.b z₀ :=
+  let h_fin := finite_crossings γ z₀
+  cpv_exists_on_subinterval γ z₀ hγ_meas h_fin.toFinset.card
+    γ.a γ.b γ.hab.le (le_refl _) h_no_endpt h_fin le_rfl hC2 h_cont_deriv_cross
 
 /-- CPV of `(z - z₀)⁻¹` exists along a piecewise C¹ immersion, for the
 common case where the curve is globally C² and measurable.

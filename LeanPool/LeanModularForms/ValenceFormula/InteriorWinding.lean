@@ -342,10 +342,10 @@ theorem gWN_fdBoundary_H_eq_neg_one_of_strictInterior
     simp only [q, add_re, ofReal_re, mul_re, ofReal_im, I_re, I_im]; ring
   have hq_im : q.im = Hmid := by
     simp only [q, add_im, ofReal_im, mul_im, ofReal_re, I_re, I_im]; ring
-  have hq_im_pos : 0 < q.im := by rw [hq_im]; linarith
+  have hq_im_pos : 0 < q.im := hq_im ▸ by linarith
   have hq_norm : ‖q‖ > 1 := by linarith [Complex.abs_im_le_norm q, abs_of_pos hq_im_pos]
-  have hq_re_bound : |q.re| < 1 / 2 := by rw [hq_re]; exact hp_re
-  have hq_im_lt : q.im < heightCutoff := by rw [hq_im]; exact hHmid_lt
+  have hq_re_bound : |q.re| < 1 / 2 := hq_re ▸ hp_re
+  have hq_im_lt : q.im < heightCutoff := hq_im ▸ hHmid_lt
   have hq_wn := gWN_fdBoundary_H_eq_neg_one_of_interior q hq_norm hq_re_bound hq_im_pos
     hq_im_lt hH
   set zPath : ℝ → ℂ := fun s => ↑p.re + ↑((1 - s) * Hmid + s * p.im) * I
@@ -362,13 +362,10 @@ theorem gWN_fdBoundary_H_eq_neg_one_of_strictInterior
         ((continuous_const.add ((continuous_ofReal.comp (by fun_prop :
           Continuous (fun s => (1 - s) * Hmid + s * p.im))).mul continuous_const)).comp
           continuous_snd)
-    · intro t _
-      change fdBoundaryH H t - zPath 0 = fdBoundaryH H t - q
+    · intro t _; change fdBoundaryH H t - zPath 0 = fdBoundaryH H t - q
       congr 1; simp only [zPath, q]; push_cast; ring
-    · intro t _
-      change fdBoundaryH H t - zPath 1 = fdBoundaryH H t - p
-      congr 1; simp only [zPath]; push_cast; ring_nf
-      exact Complex.re_add_im p
+    · intro t _; change fdBoundaryH H t - zPath 1 = fdBoundaryH H t - p
+      congr 1; simp only [zPath]; push_cast; ring_nf; exact Complex.re_add_im p
     · intro s _; simp only [sub_left_inj]; exact fdBoundary_H_closed H
     · intro t ht s hs
       simp only [sub_ne_zero]

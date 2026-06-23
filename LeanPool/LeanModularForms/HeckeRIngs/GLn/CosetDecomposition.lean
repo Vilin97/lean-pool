@@ -55,8 +55,8 @@ private lemma det_upper_tri {k : ℕ} {M : Matrix (Fin k) (Fin k) ℤ}
       exact ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, hi⟩⟩
     set m := S.min' hS
     have hm_ne : σ m ≠ m := (Finset.mem_filter.mp (S.min'_mem hS)).2
-    have hm_min : ∀ j, j < m → σ j = j := by
-      intro j hj; by_contra hjne
+    have hm_min : ∀ j, j < m → σ j = j := fun j hj => by
+      by_contra hjne
       exact not_lt.mpr (Finset.min'_le S j
         (Finset.mem_filter.mpr ⟨Finset.mem_univ j, hjne⟩)) hj
     have hσm_gt : m < σ m := by
@@ -106,18 +106,15 @@ lemma upperTriMat_det (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep
 lemma upperTriMat_det_pos (a : Fin n → ℕ) (hpos : ∀ i, 0 < a i)
     (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
     0 < (upperTriMat n a hdiv B).det := by
-  rw [upperTriMat_det]
-  exact Finset.prod_pos fun i _ => by exact_mod_cast hpos i
+  rw [upperTriMat_det]; exact Finset.prod_pos fun i _ => by exact_mod_cast hpos i
 
 lemma upperTriMat_injective (a : Fin n → ℕ) (hpos : ∀ i, 0 < a i) (hdiv : DivChain n a) :
     Function.Injective (upperTriMat n a hdiv) := by
-  intro B₁ B₂ h
-  funext ⟨⟨i, j⟩, hij⟩
+  intro B₁ B₂ h; funext ⟨⟨i, j⟩, hij⟩
   have h_eq := congr_fun₂ h i j
   simp only [upperTriMat_apply_lt, hij] at h_eq
   have h_ai_pos : (a i : ℤ) ≠ 0 := by exact_mod_cast (hpos i).ne'
-  have := mul_left_cancel₀ h_ai_pos h_eq
-  exact Fin.ext (by exact_mod_cast this)
+  exact Fin.ext (by exact_mod_cast mul_left_cancel₀ h_ai_pos h_eq)
 
 /-- The upper-triangular representative as a `GL_n(ℚ)` element. -/
 noncomputable def upperTriGL (a : Fin n → ℕ) (hpos : ∀ i, 0 < a i)
@@ -247,8 +244,7 @@ private lemma coset_entry_zero_of_lt {a : Fin n → ℕ} {hpos : ∀ i, 0 < a i}
   set q := a j / a i
   have hq_pos : 0 < q := divChain_div_pos n hpos hdiv (le_of_lt hij)
   have h_aj_eq : (a j : ℤ) = (a i : ℤ) * (q : ℤ) := by
-    have h := Nat.div_mul_cancel h_dvd
-    have : (q : ℤ) * (a i : ℤ) = (a j : ℤ) := by exact_mod_cast h
+    have : (q : ℤ) * (a i : ℤ) = (a j : ℤ) := by exact_mod_cast Nat.div_mul_cancel h_dvd
     linarith
   have h_ai_ne : (a i : ℤ) ≠ 0 := by exact_mod_cast (hpos i).ne'
   have h_cancel : σ.val i j * (q : ℤ) =
@@ -322,8 +318,6 @@ theorem upperTriMat_distinct_cosets (a : Fin n → ℕ)
 lemma upperTriRep_card (a : Fin n → ℕ) (hdiv : DivChain n a) :
     Fintype.card (UpperTriRep n a hdiv) =
     ∏ p : { ij : Fin n × Fin n // ij.1 < ij.2 }, (a p.val.2 / a p.val.1) := by
-  unfold UpperTriRep
-  rw [Fintype.card_pi]
-  congr 1; ext p; exact Fintype.card_fin _
+  unfold UpperTriRep; rw [Fintype.card_pi]; congr 1; ext p; exact Fintype.card_fin _
 
 end HeckeRing.GLn

@@ -333,21 +333,17 @@ theorem windingNumber_eq_of_piecewise_homotopic
     rw [Set.uIoc_of_le (hab.le)]
     have h_eq_on_Ioo : Set.EqOn (fun t => H (t, 0)) γ₀ (Ioo a b) :=
       fun t' ht' => hH0 t' (Ioo_subset_Icc_self ht')
-    have h_deriv_eq_on : Set.EqOn (deriv (fun t => H (t, 0))) (deriv γ₀) (Ioo a b) :=
-      h_eq_on_Ioo.deriv isOpen_Ioo
     rw [ae_restrict_iff' measurableSet_Ioc]
     filter_upwards [Ioo_ae_eq_Ioc.mem_iff] with t ht ht_Ioc
-    exact h_deriv_eq_on (ht.mpr ht_Ioc)
+    exact (h_eq_on_Ioo.deriv isOpen_Ioo) (ht.mpr ht_Ioc)
   have hn1_eq : n 1 = generalizedWindingNumber' γ₁ a b z₀ := by
     apply generalizedWindingNumber'_eq_of_eq_on (fun t => H (t, 1)) γ₁ a b z₀ hab hH1
     rw [Set.uIoc_of_le (hab.le)]
     have h_eq_on_Ioo : Set.EqOn (fun t => H (t, 1)) γ₁ (Ioo a b) :=
       fun t' ht' => hH1 t' (Ioo_subset_Icc_self ht')
-    have h_deriv_eq_on : Set.EqOn (deriv (fun t => H (t, 1))) (deriv γ₁) (Ioo a b) :=
-      h_eq_on_Ioo.deriv isOpen_Ioo
     rw [ae_restrict_iff' measurableSet_Ioc]
     filter_upwards [Ioo_ae_eq_Ioc.mem_iff] with t ht ht_Ioc
-    exact h_deriv_eq_on (ht.mpr ht_Ioc)
+    exact (h_eq_on_Ioo.deriv isOpen_Ioo) (ht.mpr ht_Ioc)
   rw [← hn0_eq, ← hn1_eq, heq]
 
 private lemma smooth_winding_pv_eq_integral
@@ -537,8 +533,8 @@ private lemma integral_congr_homotopy_endpoint
     fun t' ht' => hHs t' (Ioo_subset_Icc_self ht')
   simp only [Set.uIoc_of_le hab.le]
   filter_upwards [Ioo_ae_eq_Ioc.mem_iff] with t ht ht_Ioc
-  have ht_Ioo : t ∈ Ioo a b := ht.mpr ht_Ioc
-  rw [hHs t (Ioo_subset_Icc_self ht_Ioo), (h_eq.deriv isOpen_Ioo) ht_Ioo]
+  rw [hHs t (Ioo_subset_Icc_self (ht.mpr ht_Ioc)),
+    (h_eq.deriv isOpen_Ioo) (ht.mpr ht_Ioc)]
 
 /-- Contour integrals of a holomorphic function are equal
 along homotopic curves. -/

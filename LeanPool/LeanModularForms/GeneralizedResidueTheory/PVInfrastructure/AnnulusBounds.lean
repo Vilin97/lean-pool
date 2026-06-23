@@ -299,7 +299,6 @@ lemma near_threshold_implies_r_in_shell
     sq_le_sq' (by linarith) hr_le
   have hK_r2_le : K₀ * r^2 ≤ K₀ * R_max^2 :=
     mul_le_mul_of_nonneg_left hr2_le hK₀_nonneg
-  have hcomm : L_norm * r = r * L_norm := mul_comm _ _
   refine ⟨?_, ?_⟩
   · rw [div_le_iff₀ hL_pos]; linarith
   · rw [le_div_iff₀ hL_pos]; linarith
@@ -407,10 +406,8 @@ private lemma annulus_lower_bound {γ : ℝ → ℂ} {t₀ : ℝ} {L : ℂ} {K�
     rw [h_smul_norm] at h1
     linarith [h_approx]
   have h4 : K₀ * |t - t₀| < ‖L‖ / 2 := by
-    have h4b : K₀ * |t - t₀| < K₀ * (‖L‖ / (2 * K₀)) :=
-      mul_lt_mul_of_pos_left ht_lt_L_over_2K hK₀_pos
-    have h4c : K₀ * (‖L‖ / (2 * K₀)) = ‖L‖ / 2 := by field_simp
-    linarith
+    have : K₀ * (‖L‖ / (2 * K₀)) = ‖L‖ / 2 := by field_simp
+    linarith [mul_lt_mul_of_pos_left ht_lt_L_over_2K hK₀_pos]
   nlinarith [h2, h4, abs_nonneg (t - t₀),
     mul_nonneg (abs_nonneg (t - t₀)) (le_of_lt (by linarith : (0 : ℝ) < ‖L‖ / 2 - K₀ * |t - t₀|))]
 
@@ -447,12 +444,9 @@ lemma annulus_symmDiff_measure_bound
   have hδ₁_le_L_over_4K : δ₁ ≤ ‖L‖ / (4 * K₀) :=
     min_le_right _ _
   have hδ₁_le_L_over_2K :
-      δ₁ ≤ ‖L‖ / (2 * K₀) := by
-    calc δ₁ ≤ ‖L‖ / (4 * K₀) := hδ₁_le_L_over_4K
-      _ ≤ ‖L‖ / (2 * K₀) := by
-          apply div_le_div_of_nonneg_left
-            (le_of_lt hL_norm_pos) (by linarith)
-          linarith
+      δ₁ ≤ ‖L‖ / (2 * K₀) :=
+    hδ₁_le_L_over_4K.trans (div_le_div_of_nonneg_left
+      (le_of_lt hL_norm_pos) (by linarith) (by linarith))
   have h_quad_small :
       ∀ r, r < δ₁ → K₀ * r ≤ ‖L‖ / 4 := by
     intro r hr

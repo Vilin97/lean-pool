@@ -48,10 +48,9 @@ private lemma deriv_fdBoundary_H_arc (H : ℝ) {t : ℝ} (h1 : 1 < t) (h3 : t < 
 private lemma analyticAt_logDeriv_off_zeros (z : ℂ) (hz : 0 < z.im)
     (hfz : modularFormCompOfComplex f z ≠ 0) :
     AnalyticAt ℂ (logDeriv (modularFormCompOfComplex f)) z := by
-  have h_diffOn : DifferentiableOn ℂ (modularFormCompOfComplex f) {z | 0 < z.im} :=
-    UpperHalfPlane.mdifferentiable_iff.mp f.holo'
   have h_analytic : AnalyticAt ℂ (modularFormCompOfComplex f) z :=
-    h_diffOn.analyticAt (UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hz)
+    (UpperHalfPlane.mdifferentiable_iff.mp f.holo').analyticAt
+      (UpperHalfPlane.isOpen_upperHalfPlaneSet.mem_nhds hz)
   exact h_analytic.deriv.fun_div h_analytic hfz
 
 omit hf in
@@ -72,13 +71,10 @@ lemma logDeriv_modform_S_transform (z : ℂ) (hz : 0 < z.im) (hz_ne : z ≠ 0)
     · exact Complex.normSq_pos.mpr (neg_ne_zero.mpr hz_ne)
   have h_diffOn_g : DifferentiableOn ℂ g {w | 0 < w.im} :=
     UpperHalfPlane.mdifferentiable_iff.mp f.holo'
-  have h_diff_g_at_Sz : DifferentiableAt ℂ g (-(1 : ℂ)/z) :=
-    h_diffOn_g.differentiableAt (h_uhp_open.mem_nhds h_neg_inv_im)
-  have h_diff_S_at_z : DifferentiableAt ℂ (fun w => -(1 : ℂ)/w) z :=
-    DifferentiableAt.div (differentiableAt_const _) differentiableAt_id hz_ne
   have h_logDeriv_comp : logDeriv (fun w => g (-(1 : ℂ)/w)) z =
       logDeriv g (-(1 : ℂ)/z) * deriv (fun w => -(1 : ℂ)/w) z :=
-    logDeriv_comp h_diff_g_at_Sz h_diff_S_at_z
+    logDeriv_comp (h_diffOn_g.differentiableAt (h_uhp_open.mem_nhds h_neg_inv_im))
+      (DifferentiableAt.div (differentiableAt_const _) differentiableAt_id hz_ne)
   have h_deriv_S : deriv (fun w => -(1 : ℂ)/w) z = 1 / z ^ 2 := by
     have h1 : HasDerivAt (fun w : ℂ => w⁻¹) (-(z ^ 2)⁻¹) z := hasDerivAt_inv hz_ne
     have h2 : HasDerivAt (fun w : ℂ => -(1 : ℂ) / w) (1 / z ^ 2) z := by
@@ -92,11 +88,10 @@ lemma logDeriv_modform_S_transform (z : ℂ) (hz : 0 < z.im) (hz_ne : z ≠ 0)
   have h_logDeriv_mul : logDeriv (fun w => w ^ k * g w) z =
       logDeriv (· ^ k) z + logDeriv g z :=
     logDeriv_mul z h_zpow_ne hgz h_diff_zpow h_diff_g_at_z
-  have h_logDeriv_zpow : logDeriv (· ^ k : ℂ → ℂ) z = ↑k / z := logDeriv_zpow z k
   have h_logDeriv_eq : logDeriv (fun w => g (-(1 : ℂ)/w)) z =
       logDeriv (fun w => w ^ k * g w) z := by
     simp only [logDeriv_apply]; rw [h_eq_nhd.eq_of_nhds, h_eq_nhd.deriv.eq_of_nhds]
-  rw [h_logDeriv_eq, h_logDeriv_mul, h_logDeriv_zpow] at h_logDeriv_comp
+  rw [h_logDeriv_eq, h_logDeriv_mul, logDeriv_zpow z k] at h_logDeriv_comp
   rw [h_deriv_S] at h_logDeriv_comp
   have h_key : logDeriv g z = logDeriv g (-(1 : ℂ)/z) * (1 / z ^ 2) - ↑k / z := by
     linear_combination h_logDeriv_comp
@@ -254,10 +249,9 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     measurableSet_uIoc.diff hK_meas
   have h_int_compl : MeasureTheory.IntegrableOn F (Set.uIoc (1 : ℝ) 3 \ K) :=
     MeasureTheory.integrableOn_zero.congr_fun h_compl_zero.symm hcompl_meas
-  have h_union : K ∪ (Set.uIoc (1 : ℝ) 3 \ K) = Set.uIoc (1 : ℝ) 3 :=
-    Set.union_diff_cancel (fun t ht => ht.1)
   have h_int_union : MeasureTheory.IntegrableOn F (Set.uIoc (1 : ℝ) 3) := by
-    have := h_int_K.union h_int_compl; rwa [h_union] at this
+    have := h_int_K.union h_int_compl
+    rwa [Set.union_diff_cancel (fun t ht => ht.1)] at this
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (by norm_num : (1 : ℝ) ≤ 3)]
   rwa [Set.uIoc_of_le (by norm_num : (1 : ℝ) ≤ 3)] at h_int_union
 
@@ -421,9 +415,8 @@ lemma arc_non_excluded_measure_tendsto (S : Finset UpperHalfPlane) (H : ℝ) :
         if (∃ s ∈ sArcOfS S, ‖fdBoundaryH H t - (s : ℂ)‖ ≤ ε)
         then (0 : ℝ) else 1)
       (𝓝[>] 0) (𝓝 2) := by
-  have h_int_one : ∫ t in (1 : ℝ)..3, (1 : ℝ) = 2 := by
-    rw [intervalIntegral.integral_const, smul_eq_mul, mul_one]; norm_num
-  rw [show (2 : ℝ) = ∫ t in (1 : ℝ)..3, (1 : ℝ) from h_int_one.symm]
+  rw [show (2 : ℝ) = ∫ t in (1 : ℝ)..3, (1 : ℝ) from by
+    rw [intervalIntegral.integral_const, smul_eq_mul, mul_one]; norm_num]
   apply intervalIntegral.tendsto_integral_filter_of_dominated_convergence (fun _ => (1 : ℝ))
   · apply Filter.Eventually.of_forall; intro ε
     apply Measurable.aestronglyMeasurable
@@ -540,13 +533,11 @@ omit f hf in
 private lemma arc_min_dist_pos_of_svert (H : ℝ) (S : Finset UpperHalfPlane)
     (s : ℂ) (hs_re : s.re = 1 / 2 ∨ s.re = -1 / 2) (hs_not : s ∉ sArcOfS S) :
     ∃ δ > 0, ∀ t ∈ Set.Icc (1 : ℝ) 3, δ ≤ ‖fdBoundaryH H t - s‖ := by
-  have h_ne_s : ∀ t ∈ Set.Icc (1 : ℝ) 3, fdBoundaryH H t ≠ s :=
-    arc_ne_svert H S s hs_re hs_not
-  have h_cont : ContinuousOn (fun t => ‖fdBoundaryH H t - s‖) (Set.Icc 1 3) :=
-    (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const)).continuousOn
   obtain ⟨t₀, ht₀, ht₀_min⟩ := isCompact_Icc.exists_isMinOn
-    (⟨1, le_refl _, by norm_num⟩ : (Set.Icc (1 : ℝ) 3).Nonempty) h_cont
-  exact ⟨‖fdBoundaryH H t₀ - s‖, norm_pos_iff.mpr (sub_ne_zero.mpr (h_ne_s t₀ ht₀)),
+    (⟨1, le_refl _, by norm_num⟩ : (Set.Icc (1 : ℝ) 3).Nonempty)
+    (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const)).continuousOn
+  exact ⟨‖fdBoundaryH H t₀ - s‖,
+    norm_pos_iff.mpr (sub_ne_zero.mpr (arc_ne_svert H S s hs_re hs_not t₀ ht₀)),
     fun t ht => ht₀_min ht⟩
 
 omit f hf in
@@ -627,9 +618,8 @@ theorem tendsto_pvIntegral_arc_bridge (S : Finset UpperHalfPlane)
         pvIntegrand f (fdBoundaryH H) (sArcOfS S ∪ sVertOfS S) ε t)
       (𝓝[>] 0) (𝓝 (-(2 * ↑Real.pi * I * ((k : ℂ) / 12)))) := by
   have h_tend := arc_cpv_contribution_tendsto f S H h_oncurve_arc
-  have h_target_eq : -(2 * ↑Real.pi * I * (↑k : ℂ) / 12) =
-      -(2 * ↑Real.pi * I * ((k : ℂ) / 12)) := by ring
-  rw [h_target_eq] at h_tend
+  rw [show -(2 * ↑Real.pi * I * (↑k : ℂ) / 12) =
+      -(2 * ↑Real.pi * I * ((k : ℂ) / 12)) from by ring] at h_tend
   exact h_tend.congr' ((arc_cpv_eventually_eq_union S H
     (logDeriv (modularFormCompOfComplex f))).mono fun ε h => h.symm)
 

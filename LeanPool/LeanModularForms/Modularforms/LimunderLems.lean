@@ -24,7 +24,6 @@ lemma limUnder_add {α : Type*} [Preorder α] [(atTop : Filter α).NeBot] (f g :
     (hf : CauchySeq f) (hg : CauchySeq g) :
     (limUnder atTop f) + (limUnder atTop g) = limUnder atTop (f + g) := by
   nth_rw 3 [Filter.Tendsto.limUnder_eq]
-  rw [Pi.add_def]
   exact (hf.tendsto_limUnder).add (hg.tendsto_limUnder)
 
 
@@ -39,7 +38,6 @@ lemma limUnder_sub {α : Type*} [Preorder α] [(atTop : Filter α).NeBot] (f g :
     (hf : CauchySeq f) (hg : CauchySeq g) :
     (limUnder atTop f) - (limUnder atTop g) = limUnder atTop (f - g) := by
   nth_rw 3 [Filter.Tendsto.limUnder_eq]
-  rw [Pi.sub_def]
   exact (hf.tendsto_limUnder).sub (hg.tendsto_limUnder)
 
 

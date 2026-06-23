@@ -452,8 +452,7 @@ lemma heckeMultiplicity_one_mul (g₁ d : P.Δ) :
         ((ConjAct.toConjAct (↑g₁ : G) • P.H).subgroupOf P.H)
         ⟨h₀⁻¹ * ↑j'.out, P.H.mul_mem (P.H.inv_mem h₀_mem) j'.out.2⟩
       have hn_coe : (j₀.out : G) = h₀⁻¹ * ↑j'.out * (n : G) := by
-        have := congr_arg (Subtype.val : ↥P.H → G) hn_eq
-        simpa [Subgroup.coe_mul] using this
+        simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn_eq
       have hn_conj : (↑g₁ : G)⁻¹ * (n : G) * ↑g₁ ∈ P.H := by
         have := n.2
         rw [Subgroup.mem_subgroupOf, Subgroup.mem_pointwise_smul_iff_inv_smul_mem,

@@ -469,9 +469,7 @@ lemma fdPolygon_deriv_bounded :
                       show ¬s ≤ 4 from not_le.mpr hs, if_false, fdPolygonSeg5]
                   rw [heq, fdPolygon_deriv_seg5]; simp only [norm_one]; norm_num
                 · exfalso
-                  have ht_le4 : t ≤ 4 := by
-                    by_contra hc; push Not at hc
-                    exact h_five (le_antisymm ht.2 (h_seg5 hc))
+                  have ht_le4 : t ≤ 4 := by grind
                   have ht_ge1 : t ≥ 1 := h_seg1
                   have ht_in : t ∈ ({1, 2, 3, 4} : Finset ℝ) := by
                     simp only [Finset.mem_insert, Finset.mem_singleton]

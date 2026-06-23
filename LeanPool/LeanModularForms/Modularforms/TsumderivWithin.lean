@@ -49,36 +49,22 @@ theorem derivWithin_tsum_fun' {α : Type _} (f : α → ℂ → ℂ) {s : Set �
     · use fun n : Finset α => fun a => ∑ i ∈ n, derivWithin (fun z => f i z) s a
     · rw [tendstoLocallyUniformlyOn_iff_forall_isCompact hs]
       intro K hK1 hK2
-      have HU := hu K hK1 hK2
-      obtain ⟨u, hu1, hu2⟩ := HU
-      apply tendstoUniformlyOn_tsum hu1
-      intro n x hx
-      apply hu2 n ⟨x, hx⟩
+      obtain ⟨u, hu1, hu2⟩ := hu K hK1 hK2
+      exact tendstoUniformlyOn_tsum hu1 (fun n x hx => hu2 n ⟨x, hx⟩)
     filter_upwards
     intro t r hr
-    apply HasDerivAt.fun_sum
-    intro q hq
-    apply HasDerivWithinAt.hasDerivAt
-    · apply DifferentiableWithinAt.hasDerivWithinAt
-      apply (hf2 q ⟨r, hr⟩).differentiableWithinAt
-    exact IsOpen.mem_nhds hs hr
-  apply IsOpen.uniqueDiffWithinAt hs hx
+    exact HasDerivAt.fun_sum (fun q _ => HasDerivWithinAt.hasDerivAt
+      (hf2 q ⟨r, hr⟩).differentiableWithinAt.hasDerivWithinAt (IsOpen.mem_nhds hs hr))
+  exact IsOpen.uniqueDiffWithinAt hs hx
 
 
 theorem der_iter_eq_der_aux2 (k n : ℕ) (r : ℍ') :
   DifferentiableAt ℂ
     (fun z : ℂ =>
       iteratedDerivWithin k (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ' z) ↑r := by
-  have hh :
-      DifferentiableOn ℂ (fun t => (2 * ↑π * Complex.I * n) ^ k *
-      Complex.exp (2 * ↑π * Complex.I * n * t)) ℍ' := by fun_prop
   apply DifferentiableOn.differentiableAt
-  · apply DifferentiableOn.congr hh
-    intro x hx
-    apply exp_iter_deriv_within k n hx
-  refine IsOpen.mem_nhds ?_ ?_
-  · apply isOpen_lt (by fun_prop) (by fun_prop)
-  exact r.2
+  · exact DifferentiableOn.congr (by fun_prop) (fun x hx => exp_iter_deriv_within k n hx)
+  exact IsOpen.mem_nhds (isOpen_lt (by fun_prop) (by fun_prop)) r.2
 
 theorem der_iter_eq_der2 (k n : ℕ) (r : ℍ') :
     deriv (iteratedDerivWithin k (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ') ↑r =
@@ -95,8 +81,8 @@ theorem der_iter_eq_der2 (k n : ℕ) (r : ℍ') :
 theorem der_iter_eq_der2' (k n : ℕ) (r : ℍ') :
     derivWithin (iteratedDerivWithin k (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ')
       ℍ' ↑r =
-      iteratedDerivWithin (k + 1) (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ' ↑r :=
-  by
+      iteratedDerivWithin (k + 1)
+        (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ' ↑r := by
   rw [iteratedDerivWithin_succ]
 
 
@@ -133,9 +119,7 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
         ∀ (n : ℕ) (r : K),
         ‖(derivWithin (iteratedDerivWithin k
           (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ') ℍ' r)‖ ≤ u n := by
-  have : CompactSpace K := by
-    rw [← isCompact_univ_iff]
-    rwa [isCompact_iff_isCompact_univ] at hK2
+  haveI : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
@@ -191,32 +175,18 @@ theorem hasDerivAt_tsum_fun {α : Type _} (f : α → ℂ → ℂ)
           ∃ u : α → ℝ, Summable u ∧ ∀ (n : α) (k : K), ‖(derivWithin (f n) s k)‖ ≤ u n)
     (hf2 : ∀ (n : α) (r : s), DifferentiableAt ℂ (f n) r) :
     HasDerivAt (fun z => ∑' n : α, f n z) (∑' n : α, derivWithin (fun z => f n z) s x) x := by
-  have A :
-    ∀ x : ℂ,
-      x ∈ s →
-        Tendsto (fun t : Finset α => ∑ n ∈ t, (fun z => f n z) x) atTop
-          (𝓝 (∑' n : α, (fun z => f n z) x)) := by
-    intro y hy
-    apply Summable.hasSum
-    simp only
-    apply hf y hy
+  have A : ∀ x : ℂ, x ∈ s → Tendsto (fun t : Finset α => ∑ n ∈ t, (fun z => f n z) x) atTop
+        (𝓝 (∑' n : α, (fun z => f n z) x)) := fun y hy => (hf y hy).hasSum
   apply hasDerivAt_of_tendstoLocallyUniformlyOn hs _ _ A hx
   · use fun n : Finset α => fun a => ∑ i ∈ n, derivWithin (fun z => f i z) s a
   · rw [tendstoLocallyUniformlyOn_iff_forall_isCompact hs]
     intro K hK1 hK2
-    have HU := hu K hK1 hK2
-    obtain ⟨u, hu1, hu2⟩ := HU
-    apply tendstoUniformlyOn_tsum hu1
-    intro n x hx
-    apply hu2 n ⟨x, hx⟩
+    obtain ⟨u, hu1, hu2⟩ := hu K hK1 hK2
+    exact tendstoUniformlyOn_tsum hu1 (fun n x hx => hu2 n ⟨x, hx⟩)
   filter_upwards
   intro t r hr
-  apply HasDerivAt.fun_sum
-  intro q hq
-  apply HasDerivWithinAt.hasDerivAt
-  · apply DifferentiableWithinAt.hasDerivWithinAt
-    apply (hf2 q ⟨r, hr⟩).differentiableWithinAt
-  exact IsOpen.mem_nhds hs hr
+  exact HasDerivAt.fun_sum (fun q _ => HasDerivWithinAt.hasDerivAt
+    (hf2 q ⟨r, hr⟩).differentiableWithinAt.hasDerivWithinAt (IsOpen.mem_nhds hs hr))
 
 
 theorem hasDerivWithinAt_tsum_fun {α : Type _} (f : α → ℂ → ℂ)
@@ -227,8 +197,7 @@ theorem hasDerivWithinAt_tsum_fun {α : Type _} (f : α → ℂ → ℂ)
           ∃ u : α → ℝ, Summable u ∧ ∀ (n : α) (k : K), ‖(derivWithin (f n) s k)‖ ≤ u n)
     (hf2 : ∀ (n : α) (r : s), DifferentiableAt ℂ (f n) r) :
     HasDerivWithinAt (fun z => ∑' n : α, f n z) (∑' n : α, derivWithin (fun z => f n z) s x) s x :=
-      by
-  apply (hasDerivAt_tsum_fun f hs x hx hf hu hf2).hasDerivWithinAt
+  (hasDerivAt_tsum_fun f hs x hx hf hu hf2).hasDerivWithinAt
 
 
 
@@ -238,9 +207,7 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       Summable u ∧
         ∀ (n : ℕ) (r : K),
           (2 * |π| * n) ^ k * ‖(Complex.exp (2 * ↑π * Complex.I * n * r))‖ ≤ u n := by
-  have : CompactSpace K := by
-    rw [← isCompact_univ_iff]
-    rwa [isCompact_iff_isCompact_univ] at hK2
+  haveI : CompactSpace K := isCompact_univ_iff.mp (isCompact_iff_isCompact_univ.mp hK2)
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]

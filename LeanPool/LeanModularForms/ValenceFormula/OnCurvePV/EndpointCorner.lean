@@ -26,7 +26,7 @@ private lemma inv_mul_mul_cancel (a b : ℂ) (hb : b ≠ 0) : (a * b)⁻¹ * b =
 
 /-- From `1 < normSq s` conclude `1 < ‖s‖`. -/
 private lemma one_lt_norm_of_one_lt_normSq {s : ℂ} (h : 1 < Complex.normSq s) : 1 < ‖s‖ :=
-  calc (1 : ℝ) = Real.sqrt 1 := by simp only [Real.sqrt_one]
+  calc (1 : ℝ) = Real.sqrt 1 := Real.sqrt_one.symm
     _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h
     _ = ‖s‖ := rfl
 
@@ -441,12 +441,8 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     have hε_c : ε < c := lt_of_lt_of_le hε_lt (min_le_left _ _)
     have hε_1 : ε < 1 := lt_of_lt_of_le hε_lt (min_le_right _ _)
     have hε₀2_pos : 0 < ε₀ / 2 := by positivity
-    have hε₀2_c : ε₀ / 2 < c := by
-      calc ε₀ / 2 < ε₀ := by linarith
-        _ ≤ c := min_le_left _ _
-    have hε₀2_1 : ε₀ / 2 < 1 := by
-      calc ε₀ / 2 < ε₀ := by linarith
-        _ ≤ 1 := min_le_right _ _
+    have hε₀2_c : ε₀ / 2 < c := by linarith [min_le_left c (1 : ℝ)]
+    have hε₀2_1 : ε₀ / 2 < 1 := by linarith [min_le_right c (1 : ℝ)]
     suffices h_formula : ∀ η, 0 < η → η < c → η < 1 →
         F η = -↑(Real.log c) by
       rw [h_formula ε hε hε_c hε_1, h_formula (ε₀/2) hε₀2_pos hε₀2_c hε₀2_1]

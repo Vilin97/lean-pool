@@ -100,12 +100,8 @@ theorem sortedPartition_head (γ : PiecewiseC1Curve) :
   have hne := sortedPartition_nonempty γ
   have h_a_mem : γ.a ∈ γ.sortedPartition :=
     (mem_sortedPartition γ γ.a).mpr γ.endpoints_in_partition.1
-  have ha_le : γ.a ≤ γ.sortedPartition.head hne :=
-    (sortedPartition_mem_Icc γ _ (List.head_mem hne)).1
-  have h_head_le : γ.sortedPartition.head hne ≤ γ.a := by
-    have := (sortedPartition_sorted γ).rel_head h_a_mem
-    convert this using 2
-  linarith
+  linarith [(sortedPartition_mem_Icc γ _ (List.head_mem hne)).1,
+    (sortedPartition_sorted γ).rel_head h_a_mem]
 
 /-- Helper: in a sorted list, every element is ≤ the last element. -/
 private theorem pairwise_le_getLast : ∀ (l : List ℝ) (_hl : l.Pairwise (· ≤ ·))
@@ -119,11 +115,8 @@ private theorem pairwise_le_getLast : ∀ (l : List ℝ) (_hl : l.Pairwise (· �
       rw [show (hd :: hd2 :: tl2).getLast (List.cons_ne_nil hd (hd2 :: tl2)) =
           (hd2 :: tl2).getLast htl_ne from List.getLast_cons_cons]
       rcases List.mem_cons.mp hmem with rfl | hmem'
-      · have hhd2_mem : hd2 ∈ hd2 :: tl2 := List.mem_cons_self
-        have h1 : elem ≤ hd2 := (List.pairwise_cons.mp hl).1 hd2 hhd2_mem
-        have h2 : hd2 ≤ (hd2 :: tl2).getLast htl_ne :=
-          pairwise_le_getLast _ (List.pairwise_cons.mp hl).2 htl_ne hd2 hhd2_mem
-        linarith
+      · linarith [(List.pairwise_cons.mp hl).1 hd2 List.mem_cons_self,
+          pairwise_le_getLast _ (List.pairwise_cons.mp hl).2 htl_ne hd2 List.mem_cons_self]
       · exact pairwise_le_getLast _ (List.pairwise_cons.mp hl).2 htl_ne elem hmem'
 
 /-- The last element of the sorted partition equals `γ.b`.
@@ -135,12 +128,8 @@ theorem sortedPartition_last (γ : PiecewiseC1Curve) :
   have hne := sortedPartition_nonempty γ
   have h_b_mem : γ.b ∈ γ.sortedPartition :=
     (mem_sortedPartition γ γ.b).mpr γ.endpoints_in_partition.2
-  have h_le_b : γ.sortedPartition.getLast hne ≤ γ.b :=
-    (sortedPartition_mem_Icc γ _ (List.getLast_mem hne)).2
-  have h_b_le : γ.b ≤ γ.sortedPartition.getLast hne := by
-    have := (sortedPartition_sorted γ).rel_getLast h_b_mem
-    convert this using 2
-  linarith
+  linarith [(sortedPartition_mem_Icc γ _ (List.getLast_mem hne)).2,
+    (sortedPartition_sorted γ).rel_getLast h_b_mem]
 
 /-! ### Consecutive pairs cover `[a, b]` -/
 
@@ -191,10 +180,9 @@ private theorem pairwise_consecutive_union :
 /-- The sorted partition has at least two elements (since `a ≠ b` are both in the partition). -/
 theorem sortedPartition_tail_nonempty (γ : PiecewiseC1Curve) :
     γ.sortedPartition.tail ≠ [] := by
-  have hab_ne : γ.a ≠ γ.b := ne_of_lt γ.hab
   have hcard : 1 < γ.partition.card :=
     Finset.one_lt_card.mpr ⟨γ.a, γ.endpoints_in_partition.1, γ.b,
-      γ.endpoints_in_partition.2, hab_ne⟩
+      γ.endpoints_in_partition.2, ne_of_lt γ.hab⟩
   have hlen : 2 ≤ γ.sortedPartition.length := by
     simp only [sortedPartition, Finset.length_sort]
     omega
@@ -227,12 +215,9 @@ private theorem pairwise_zip_tail_le {l : List ℝ} (hl : l.Pairwise (· ≤ ·)
     | nil => simp only [List.tail_cons, List.zip_nil_right, List.not_mem_nil] at hp
     | cons y ys =>
       simp only [List.zip_cons_cons, List.tail_cons, List.mem_cons] at hp
-      cases hp with
-      | inl h =>
-        rw [h]
-        exact (List.pairwise_cons.mp hl).1 y List.mem_cons_self
-      | inr h =>
-        exact ih ((List.pairwise_cons.mp hl).2) h
+      rcases hp with rfl | h
+      · exact (List.pairwise_cons.mp hl).1 y List.mem_cons_self
+      · exact ih ((List.pairwise_cons.mp hl).2) h
 
 /-- For each consecutive pair `(p, q)`, we have `p ≤ q`. -/
 theorem consecutivePairs_le (γ : PiecewiseC1Curve) (p : ℝ × ℝ)

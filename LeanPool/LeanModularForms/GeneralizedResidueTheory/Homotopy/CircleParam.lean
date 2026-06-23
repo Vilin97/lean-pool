@@ -126,11 +126,8 @@ theorem circleParam_winding_eq_one (z₀ : ℂ) (r : ℝ)
       ext t; simp only [h_cond t, ↓reduceIte]
       exact circleParam_integrand_const z₀ r hr a b hab t
     rw [h_simp, intervalIntegral.integral_const]
-    have hba_ne : (b : ℂ) - a ≠ 0 := by
-      simp only [sub_ne_zero, Complex.ofReal_inj, ne_eq]
-      exact ne_of_gt hab
-    erw [Complex.real_smul]; rw [Complex.ofReal_sub]
-    field_simp
+    have hba_ne : (b : ℂ) - a ≠ 0 := sub_ne_zero.mpr (Complex.ofReal_injective.ne (ne_of_gt hab))
+    erw [Complex.real_smul]; rw [Complex.ofReal_sub]; field_simp
   have hlim : Tendsto (fun ε => ∫ t in a..b,
         if ‖circleParam z₀ r a b t - z₀‖ > ε then
           (circleParam z₀ r a b t - z₀)⁻¹ *
@@ -154,12 +151,10 @@ theorem circleParam_winding_eq_one (z₀ : ℂ) (r : ℝ)
           (circleParam z₀ r a b t - z₀)⁻¹ *
             deriv (circleParam z₀ r a b) t
         else 0) := by
-    ext ε; congr 1 with t
-    simp only [sub_zero, deriv_sub_const]
+    ext ε; congr 1 with t; simp only [sub_zero, deriv_sub_const]
   simp only [h_match, hlim.limUnder_eq]
   have hpi_ne : (2 : ℂ) * Real.pi * I ≠ 0 := by
-    simp [ne_eq, mul_eq_zero, Complex.ofReal_eq_zero,
-      Real.pi_ne_zero, I_ne_zero]
+    simp [mul_eq_zero, Complex.ofReal_eq_zero, Real.pi_ne_zero, I_ne_zero]
   field_simp
 
 /-- Clockwise circle parameterization: reversal of `circleParam`.
@@ -177,10 +172,7 @@ lemma circleParamCW_closed (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     (hab : a < b) :
     circleParamCW z₀ r a b a =
       circleParamCW z₀ r a b b := by
-  simp only [circleParamCW]
-  have ha : a + b - a = b := by ring
-  have hb : a + b - b = a := by ring
-  rw [ha, hb]
+  simp only [circleParamCW, show a + b - a = b from by ring, show a + b - b = a from by ring]
   exact (circleParam_closed z₀ r a b hab).symm
 
 lemma circleParamCW_dist (z₀ : ℂ) (r : ℝ) (hr : 0 ≤ r)
@@ -202,8 +194,7 @@ lemma circleParam_differentiable (z₀ : ℂ) (r : ℝ)
       · exact differentiable_const _
       · apply Differentiable.div_const
         apply Differentiable.sub
-        · exact Complex.ofRealCLM.differentiable.comp
-            differentiable_id
+        · exact Complex.ofRealCLM.differentiable.comp differentiable_id
         · exact differentiable_const _
 
 lemma circleParamCW_differentiable (z₀ : ℂ) (r : ℝ)
@@ -224,22 +215,14 @@ lemma circleParamCW_hasDerivAt (z₀ : ℂ) (r : ℝ)
       DifferentiableAt ℝ (circleParam z₀ r a b)
         (a + b - t) :=
     (circleParam_differentiable z₀ r a b).differentiableAt
-  have hg : HasDerivAt
-      (fun t : ℝ => (a + b - t : ℝ)) (-1 : ℝ) t := by
-    have h1 : HasDerivAt (fun _ : ℝ => (a + b : ℝ)) 0 t :=
-      hasDerivAt_const t (a + b)
-    have h2 : HasDerivAt (fun t : ℝ => t) 1 t :=
-      hasDerivAt_id t
-    convert h1.sub h2 using 1; ring
+  have hg : HasDerivAt (fun t : ℝ => (a + b - t : ℝ)) (-1 : ℝ) t := by
+    convert (hasDerivAt_const t (a + b)).sub (hasDerivAt_id t) using 1; ring
   have hf : HasDerivAt (circleParam z₀ r a b)
       (r * (2 * Real.pi * I / (b - a)) *
         exp (2 * Real.pi * I *
           ((↑(a + b - t) - a) / (b - a))))
       (a + b - t) := by
-    have hd :=
-      circleParam_deriv z₀ r a b hab (a + b - t)
-    rw [← hd]
-    exact hdiff.hasDerivAt
+    rw [← circleParam_deriv z₀ r a b hab (a + b - t)]; exact hdiff.hasDerivAt
   have hchain := HasDerivAt.scomp t hf hg
   simp only [neg_one_smul] at hchain
   exact hchain
@@ -299,11 +282,8 @@ theorem circleParamCW_winding_eq_neg_one (z₀ : ℂ)
       ext t; simp only [h_cond t, ↓reduceIte]
       exact circleParamCW_integrand_neg z₀ r hr a b hab t
     rw [h_simp, intervalIntegral.integral_const]
-    have hba_ne : (b : ℂ) - a ≠ 0 := by
-      simp only [sub_ne_zero, Complex.ofReal_inj, ne_eq]
-      exact ne_of_gt hab
-    erw [Complex.real_smul]; rw [Complex.ofReal_sub]
-    field_simp [hba_ne]
+    have hba_ne : (b : ℂ) - a ≠ 0 := sub_ne_zero.mpr (Complex.ofReal_injective.ne (ne_of_gt hab))
+    erw [Complex.real_smul]; rw [Complex.ofReal_sub]; field_simp [hba_ne]
   have hlim : Tendsto (fun ε => ∫ t in a..b,
         if ‖circleParamCW z₀ r a b t - z₀‖ > ε then
           (circleParamCW z₀ r a b t - z₀)⁻¹ *
@@ -328,12 +308,10 @@ theorem circleParamCW_winding_eq_neg_one (z₀ : ℂ)
           (circleParamCW z₀ r a b t - z₀)⁻¹ *
             deriv (circleParamCW z₀ r a b) t
         else 0) := by
-    ext ε; congr 1 with t
-    simp only [sub_zero, deriv_sub_const]
+    ext ε; congr 1 with t; simp only [sub_zero, deriv_sub_const]
   simp only [h_match, hlim.limUnder_eq]
   have hpi_ne : (2 : ℂ) * Real.pi * I ≠ 0 := by
-    simp [ne_eq, mul_eq_zero, Complex.ofReal_eq_zero,
-      Real.pi_ne_zero, I_ne_zero]
+    simp [mul_eq_zero, Complex.ofReal_eq_zero, Real.pi_ne_zero, I_ne_zero]
   field_simp [hpi_ne]
 
 private lemma hasDerivAt_ofReal_comp (θ : ℝ → ℝ) (t : ℝ)

@@ -115,61 +115,29 @@ private lemma deriv_cont_seg1 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_se
     ContinuousOn (fun (q : ℝ × ℝ) =>
         deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1)
       (Ioo p₁ p₂ ×ˢ Icc 0 1) := by
-    have hconst :
-        ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
-          deriv (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) q.1 =
-          -((HHeight : ℂ) -
-            Real.sqrt 3 / 2) * I := by
+    have hconst : ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
+        deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1 =
+        -((HHeight : ℂ) - Real.sqrt 3 / 2) * I := by
       intro q ⟨hq1, _hq2⟩
-      have ht_lt1 : q.1 < 1 :=
-        lt_of_lt_of_le hq1.2 h_seg1
-      have heq : (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
-          (fun t' : ℝ => (1/2 : ℂ) +
-              (HHeight - (↑t' : ℂ) * (HHeight -
-                  Real.sqrt 3 / 2)) * I) := by
-        filter_upwards [
-          eventually_lt_nhds ht_lt1] with t' ht'
-        simp only [fdBoundaryToPolygonHomotopy,
-          le_of_lt ht', ite_true]
+      have ht_lt1 : q.1 < 1 := lt_of_lt_of_le hq1.2 h_seg1
+      have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
+          (fun t' : ℝ => (1/2 : ℂ) + (HHeight - (↑t' : ℂ) * (HHeight - Real.sqrt 3 / 2)) * I) := by
+        filter_upwards [eventually_lt_nhds ht_lt1] with t' ht'
+        simp only [fdBoundaryToPolygonHomotopy, le_of_lt ht', ite_true]
       rw [heq.deriv_eq]
-      have h1 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-            1 q.1 :=
-        Complex.ofRealCLM.hasDerivAt
-      have h2 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ) *
-              ((HHeight : ℂ) -
-                Real.sqrt 3 / 2))
-            ((HHeight : ℂ) -
-              Real.sqrt 3 / 2) q.1 := by
+      have h1 : HasDerivAt (fun t' : ℝ => (↑t' : ℂ)) 1 q.1 := Complex.ofRealCLM.hasDerivAt
+      have h2 : HasDerivAt (fun t' : ℝ => (↑t' : ℂ) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+          ((HHeight : ℂ) - Real.sqrt 3 / 2) q.1 := by
         have := h1.mul_const ((HHeight : ℂ) - Real.sqrt 3 / 2)
         simp only [one_mul] at this; exact this
-      have h3 :
-          HasDerivAt (fun t' : ℝ =>
-              (HHeight : ℂ) - (↑t' : ℂ) * ((HHeight : ℂ) -
-                  Real.sqrt 3 / 2))
-            (-((HHeight : ℂ) -
-              Real.sqrt 3 / 2)) q.1 := by
-        have := (hasDerivAt_const q.1
-            (HHeight : ℂ)).sub h2
-        simp only [zero_sub] at this
-        exact this
-      have h4 :
-          HasDerivAt (fun t' : ℝ =>
-              ((HHeight : ℂ) - (↑t' : ℂ) * ((HHeight : ℂ) -
-                  Real.sqrt 3 / 2)) * I)
-            (-((HHeight : ℂ) -
-              Real.sqrt 3 / 2) * I)
-            q.1 :=
-        h3.mul_const I
-      have h5 := (hasDerivAt_const q.1
-          ((1/2 : ℂ))).add h4
-      simp only [zero_add] at h5
-      convert h5.deriv using 2
-    apply ContinuousOn.congr
-      continuousOn_const hconst
+      have h3 : HasDerivAt (fun t' : ℝ =>
+            (HHeight : ℂ) - (↑t' : ℂ) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+          (-((HHeight : ℂ) - Real.sqrt 3 / 2)) q.1 := by
+        have := (hasDerivAt_const q.1 (HHeight : ℂ)).sub h2
+        simp only [zero_sub] at this; exact this
+      have h5 := (hasDerivAt_const q.1 ((1/2 : ℂ))).add (h3.mul_const I)
+      simp only [zero_add] at h5; convert h5.deriv using 2
+    apply ContinuousOn.congr continuousOn_const hconst
 
 private lemma deriv_cont_seg2 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
     (h_seg2_lo : p₁ ≥ 1) (h_seg2_hi : p₂ ≤ 2) :
@@ -178,31 +146,17 @@ private lemma deriv_cont_seg2 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
       (Ioo p₁ p₂ ×ˢ Icc 0 1) := by
     apply continuousOn_of_forall_continuousAt
     intro q ⟨hq1, hq2⟩
-    have ht_gt1 : q.1 > 1 :=
-      lt_of_le_of_lt h_seg2_lo hq1.1
-    have ht_lt2 : q.1 < 2 :=
-      lt_of_lt_of_le hq1.2 h_seg2_hi
+    have ht_gt1 : q.1 > 1 := lt_of_le_of_lt h_seg2_lo hq1.1
+    have ht_lt2 : q.1 < 2 := lt_of_lt_of_le hq1.2 h_seg2_hi
     have hderiv_eq := seg2_deriv_eq q.2 q.1 ht_gt1 ht_lt2
-    have h_formula_cont :
-        ContinuousAt (fun r : ℝ × ℝ => (1 - r.2) •
-            ((Real.pi / 6) * I *
-              Complex.exp ((Real.pi / 3 +
-                  (r.1 - 1) * (Real.pi / 6)) * I)) +
-          r.2 • (iPoint - rho')) q := by
-      fun_prop
+    have h_formula_cont : ContinuousAt (fun r : ℝ × ℝ => (1 - r.2) •
+            ((Real.pi / 6) * I * Complex.exp ((Real.pi / 3 + (r.1 - 1) * (Real.pi / 6)) * I)) +
+          r.2 • (iPoint - rho')) q := by fun_prop
     apply h_formula_cont.congr
     rw [nhds_prod_eq]
-    have h_mem1 : Ioo p₁ p₂ ∈ 𝓝 q.1 :=
-      Ioo_mem_nhds hq1.1 hq1.2
-    filter_upwards [
-      prod_mem_prod h_mem1 univ_mem]
-      with r hr
-    have hr1 : r.1 ∈ Ioo p₁ p₂ := hr.1
-    have ht_gt1' : r.1 > 1 :=
-      lt_of_le_of_lt h_seg2_lo hr1.1
-    have ht_lt2' : r.1 < 2 :=
-      lt_of_lt_of_le hr1.2 h_seg2_hi
-    exact (seg2_deriv_eq r.2 r.1 ht_gt1' ht_lt2').symm
+    filter_upwards [prod_mem_prod (Ioo_mem_nhds hq1.1 hq1.2) univ_mem] with r hr
+    exact (seg2_deriv_eq r.2 r.1 (lt_of_le_of_lt h_seg2_lo hr.1.1)
+      (lt_of_lt_of_le hr.1.2 h_seg2_hi)).symm
 
 private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
     (h_seg3_lo : p₁ ≥ 2) (h_seg3_hi : p₂ ≤ 3) :
@@ -211,150 +165,68 @@ private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
       (Ioo p₁ p₂ ×ˢ Icc 0 1) := by
     apply continuousOn_of_forall_continuousAt
     intro q ⟨hq1, _hq2⟩
-    have h_formula_cont :
-        ContinuousAt (fun r : ℝ × ℝ => (1 - r.2) •
-            ((Real.pi / 6) * I *
-              Complex.exp ((Real.pi / 2 +
-                  (r.1 - 2) * (Real.pi / 6)) * I)) +
-          r.2 • (rho - iPoint)) q := by
-      fun_prop
+    have h_formula_cont : ContinuousAt (fun r : ℝ × ℝ => (1 - r.2) •
+            ((Real.pi / 6) * I * Complex.exp ((Real.pi / 2 + (r.1 - 2) * (Real.pi / 6)) * I)) +
+          r.2 • (rho - iPoint)) q := by fun_prop
     apply h_formula_cont.congr
     rw [nhds_prod_eq]
-    have h_mem1 : Ioo p₁ p₂ ∈ 𝓝 q.1 :=
-      Ioo_mem_nhds hq1.1 hq1.2
-    filter_upwards [
-      prod_mem_prod h_mem1 univ_mem] with r hr
-    have hr1 : r.1 ∈ Ioo p₁ p₂ := hr.1
-    exact (seg3_deriv_eq r.2 r.1 (lt_of_le_of_lt h_seg3_lo hr1.1)
-      (lt_of_lt_of_le hr1.2 h_seg3_hi)).symm
+    filter_upwards [prod_mem_prod (Ioo_mem_nhds hq1.1 hq1.2) univ_mem] with r hr
+    exact (seg3_deriv_eq r.2 r.1 (lt_of_le_of_lt h_seg3_lo hr.1.1)
+      (lt_of_lt_of_le hr.1.2 h_seg3_hi)).symm
 
 private lemma deriv_cont_seg4 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
     (h_seg4_lo : p₁ ≥ 3) (h_seg4_hi : p₂ ≤ 4) :
     ContinuousOn (fun (q : ℝ × ℝ) =>
         deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1)
       (Ioo p₁ p₂ ×ˢ Icc 0 1) := by
-    have hconst :
-        ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
-          deriv (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) q.1 =
-          (((HHeight : ℂ) -
-            Real.sqrt 3 / 2) * I) := by
+    have hconst : ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
+        deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1 =
+        (((HHeight : ℂ) - Real.sqrt 3 / 2) * I) := by
       intro q ⟨hq1, _hq2⟩
-      have ht_gt3 : q.1 > 3 :=
-        lt_of_le_of_lt h_seg4_lo hq1.1
-      have ht_lt4 : q.1 < 4 :=
-        lt_of_lt_of_le hq1.2 h_seg4_hi
-      have heq : (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
+      have ht_gt3 : q.1 > 3 := lt_of_le_of_lt h_seg4_lo hq1.1
+      have ht_lt4 : q.1 < 4 := lt_of_lt_of_le hq1.2 h_seg4_hi
+      have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
           (fun t' : ℝ => (-1/2 : ℂ) +
               ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-                  ((HHeight : ℂ) -
-                    Real.sqrt 3 / 2)) *
-                I) := by
-        filter_upwards [
-          eventually_gt_nhds ht_gt3,
-          eventually_lt_nhds ht_lt4]
-          with t' ht3' ht4'
-        simp only [fdBoundaryToPolygonHomotopy]
-        have h1' : ¬(t' ≤ 1) :=
-          not_le.mpr (by linarith : 1 < t')
-        have h2' : ¬(t' ≤ 2) :=
-          not_le.mpr (by linarith : 2 < t')
-        have h3' : ¬(t' ≤ 3) :=
-          not_le.mpr ht3'
-        have h4' : t' ≤ 4 :=
-          le_of_lt ht4'
-        simp only [h1', h2', h3', h4',
-          ite_false, ite_true]
+                ((HHeight : ℂ) - Real.sqrt 3 / 2)) * I) := by
+        filter_upwards [eventually_gt_nhds ht_gt3, eventually_lt_nhds ht_lt4] with t' ht3' ht4'
+        simp only [fdBoundaryToPolygonHomotopy,
+          not_le.mpr (by linarith : 1 < t'), not_le.mpr (by linarith : 2 < t'),
+          not_le.mpr ht3', le_of_lt ht4', ite_false, ite_true]
       rw [heq.deriv_eq]
-      have h1 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-            1 q.1 :=
-        Complex.ofRealCLM.hasDerivAt
-      have h2 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ) - 3)
-            1 q.1 :=
-        h1.sub_const 3
-      have h3 :
-          HasDerivAt (fun t' : ℝ =>
-              ((↑t' : ℂ) - 3) * ((HHeight : ℂ) -
-                  Real.sqrt 3 / 2))
-            ((HHeight : ℂ) -
-              Real.sqrt 3 / 2) q.1 := by
+      have h1 : HasDerivAt (fun t' : ℝ => (↑t' : ℂ)) 1 q.1 := Complex.ofRealCLM.hasDerivAt
+      have h2 : HasDerivAt (fun t' : ℝ => (↑t' : ℂ) - 3) 1 q.1 := h1.sub_const 3
+      have h3 : HasDerivAt (fun t' : ℝ => ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+          ((HHeight : ℂ) - Real.sqrt 3 / 2) q.1 := by
         have := h2.mul_const ((HHeight : ℂ) - Real.sqrt 3 / 2)
-        simp only [one_mul] at this
-        exact this
-      have h4 :
-          HasDerivAt (fun t' : ℝ =>
-              (Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-                  ((HHeight : ℂ) -
-                    Real.sqrt 3 / 2))
-            ((HHeight : ℂ) -
-              Real.sqrt 3 / 2) q.1 := by
-        have := (hasDerivAt_const q.1
-            (Real.sqrt 3 / 2 : ℂ)).add h3
-        simp only [zero_add] at this
-        exact this
-      have h5 :
-          HasDerivAt (fun t' : ℝ =>
-              ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-                  ((HHeight : ℂ) -
-                    Real.sqrt 3 / 2)) * I)
-            (((HHeight : ℂ) -
-              Real.sqrt 3 / 2) * I)
-            q.1 :=
-        h4.mul_const I
-      have h6 := (hasDerivAt_const q.1
-          ((-1/2 : ℂ))).add h5
-      simp only [zero_add] at h6
-      exact h6.deriv
-    apply ContinuousOn.congr
-      continuousOn_const hconst
+        simp only [one_mul] at this; exact this
+      have h4 : HasDerivAt (fun t' : ℝ =>
+            (Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+          ((HHeight : ℂ) - Real.sqrt 3 / 2) q.1 := by
+        have := (hasDerivAt_const q.1 (Real.sqrt 3 / 2 : ℂ)).add h3
+        simp only [zero_add] at this; exact this
+      have h6 := (hasDerivAt_const q.1 ((-1/2 : ℂ))).add (h4.mul_const I)
+      simp only [zero_add] at h6; exact h6.deriv
+    apply ContinuousOn.congr continuousOn_const hconst
 
 private lemma deriv_cont_seg5 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_seg5 : p₁ ≥ 4) :
     ContinuousOn (fun (q : ℝ × ℝ) =>
         deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1)
       (Ioo p₁ p₂ ×ˢ Icc 0 1) := by
-    have hconst :
-        ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
-          deriv (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) q.1 =
-          (1 : ℂ) := by
+    have hconst : ∀ q ∈ Ioo p₁ p₂ ×ˢ Icc (0 : ℝ) 1,
+        deriv (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) q.1 = (1 : ℂ) := by
       intro q ⟨hq1, _hq2⟩
-      have ht_gt4 : q.1 > 4 :=
-        lt_of_le_of_lt h_seg5 hq1.1
-      have heq : (fun t' =>
-            fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
-          (fun t' : ℝ => ((↑t' : ℂ) - 9/2) +
-              (HHeight : ℂ) * I) := by
-        filter_upwards [
-          eventually_gt_nhds ht_gt4]
-          with t' ht4'
-        simp only [fdBoundaryToPolygonHomotopy]
-        have h1' : ¬(t' ≤ 1) :=
-          not_le.mpr (by linarith : 1 < t')
-        have h2' : ¬(t' ≤ 2) :=
-          not_le.mpr (by linarith : 2 < t')
-        have h3' : ¬(t' ≤ 3) :=
-          not_le.mpr (by linarith : 3 < t')
-        have h4' : ¬(t' ≤ 4) :=
-          not_le.mpr ht4'
-        simp only [h1', h2', h3', h4',
-          ite_false]
+      have ht_gt4 : q.1 > 4 := lt_of_le_of_lt h_seg5 hq1.1
+      have heq : (fun t' => fdBoundaryToPolygonHomotopy (t', q.2)) =ᶠ[𝓝 q.1]
+          (fun t' : ℝ => ((↑t' : ℂ) - 9/2) + (HHeight : ℂ) * I) := by
+        filter_upwards [eventually_gt_nhds ht_gt4] with t' ht4'
+        simp only [fdBoundaryToPolygonHomotopy,
+          not_le.mpr (by linarith : 1 < t'), not_le.mpr (by linarith : 2 < t'),
+          not_le.mpr (by linarith : 3 < t'), not_le.mpr ht4', ite_false]
       rw [heq.deriv_eq]
-      have h1 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-            1 q.1 :=
-        Complex.ofRealCLM.hasDerivAt
-      have h2 :
-          HasDerivAt (fun t' : ℝ => (↑t' : ℂ) - 9/2)
-            1 q.1 :=
-        h1.sub_const (9/2)
-      have h3 :=
-        h2.add_const ((HHeight : ℂ) * I)
-      convert h3.deriv using 1
-    apply ContinuousOn.congr
-      continuousOn_const hconst
+      convert (Complex.ofRealCLM.hasDerivAt.sub_const (9/2)).add_const ((HHeight : ℂ) * I) |>.deriv
+        using 1
+    apply ContinuousOn.congr continuousOn_const hconst
 
 lemma fdBoundaryToPolygonHomotopy_deriv_continuousOn_pieces (p₁ p₂ : ℝ) (hp₁p₂ : p₁ < p₂)
     (hpiece : ∀ t ∈ Ioo p₁ p₂,

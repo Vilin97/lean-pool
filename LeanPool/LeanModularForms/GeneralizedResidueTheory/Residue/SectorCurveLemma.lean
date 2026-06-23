@@ -711,9 +711,8 @@ private theorem zpow_ftc_vanishes (r : ℝ) (_hr : 0 < r) (α : ℝ) (n : ℕ) (
     have := sectorCurve_seg3 r α (3 - δ) ⟨h3δ_gt_2.le, by linarith⟩
     simp only [show 3 - (3 - δ) = δ from by ring] at this; exact this
   simp only [F, hγ_δ, hγ_3δ, mul_zpow]
-  have hexp_m : (exp (I * ↑α)) ^ m = exp (I * ↑((1 - (↑n : ℤ)) * α)) := by
-    rw [← Complex.exp_int_mul]; congr 1; push_cast [m]; ring
-  rw [hexp_m, h_exp_one, mul_one, sub_self]
+  rw [show (exp (I * ↑α)) ^ m = exp (I * ↑((1 - (↑n : ℤ)) * α)) from by
+    rw [← Complex.exp_int_mul]; congr 1; push_cast [m]; ring, h_exp_one, mul_one, sub_self]
 
 private theorem angle_condition_exp_eq_one (n : ℕ) (hn : 2 ≤ n) (α : ℝ)
     (k : ℤ) (hk : (↑(n - 1) : ℤ) * α = k * (2 * Real.pi)) :
@@ -840,8 +839,7 @@ theorem pv_sector_negative_power (r : ℝ) (hr : 0 < r) (α : ℝ)
   have h_tendsto : Tendsto (fun ε =>
       ∫ t in (0 : ℝ)..3,
         if ‖γ t - 0‖ > ε then (γ t) ^ (-(↑n : ℤ)) * deriv γ t else 0)
-      (𝓝[>] 0) (𝓝 0) :=
-    tendsto_const_nhds.congr' (h_ev.mono fun ε h => h.symm)
+      (𝓝[>] 0) (𝓝 0) := tendsto_const_nhds.congr' (h_ev.mono fun ε h => h.symm)
   exact ⟨⟨0, h_tendsto⟩, h_tendsto.limUnder_eq⟩
 
 /-- The generalized winding number of the sector curve around 0

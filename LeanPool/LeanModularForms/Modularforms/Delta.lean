@@ -198,9 +198,7 @@ theorem log_one_neg_cexp_tendto_zero (k : ℕ) :
   rw [this]
   apply Tendsto.comp (y := 𝓝 1)
   · nth_rw 1 [← Complex.log_one]
-    refine ContinuousAt.tendsto (x := 1) (f := Complex.log) ?_
-    apply continuousAt_clog
-    simp
+    exact ContinuousAt.tendsto (continuousAt_clog (by simp))
   apply Tendsto.comp (y := 𝓝 1)
   · exact (continuous_pow 24).tendsto' ( 1 : ℂ) (1 : ℂ) (by simp)
   · simp_rw [sub_eq_add_neg]
@@ -413,9 +411,7 @@ theorem div_Delta_is_SIF (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k)
 def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k) :
   ModularForm (CongruenceSubgroup.Gamma 1) (k - 12) where
     toFun := f / Delta
-    slash_action_eq' := by
-      intro γ hγ
-      exact div_Delta_is_SIF _ _ γ hγ
+    slash_action_eq' := fun γ hγ => div_Delta_is_SIF _ _ γ hγ
     holo' := by
       rw [mdifferentiable_iff]
       simp only [SlashInvariantForm.coe_mk]
@@ -494,10 +490,8 @@ lemma cexp_aux2 (t : ℝ) (n : ℕ)
     _ = cexp (2 * ↑π * (n + 1) * (Complex.I * Complex.I) * t) := by ring_nf
     _ = rexp (-(2 * π * (n + 1) * t)) := by simp
 
-lemma cexp_aux3 (t : ℝ) (n : ℕ) (ht : 0 < t) : 0 < 1 - rexp (-(2 * π * (n + 1) * t)) := by
-  have _ : rexp (-(2 * π * (n + 1) * t)) < 1 :=
-    exp_lt_one_iff.mpr (by simp only [Left.neg_neg_iff]; positivity)
-  linarith
+lemma cexp_aux3 (t : ℝ) (n : ℕ) (ht : 0 < t) : 0 < 1 - rexp (-(2 * π * (n + 1) * t)) :=
+  sub_pos.mpr (exp_lt_one_iff.mpr (by simp only [Left.neg_neg_iff]; positivity))
 
 lemma cexp_aux4 (t : ℝ) (n : ℕ) : (cexp (-2 * π * (n + 1) * t)).im = 0 := by
   simpa [Complex.ofReal_mul, Complex.ofReal_neg] using exp_ofReal_im (-2 * π * (n + 1) * t)
@@ -515,8 +509,7 @@ lemma Complex.im_finset_prod_eq_zero_of_im_eq_zero {ι : Type*} (s : Finset ι)
     ih (fun i hi => h i (by simp [hi]))]
 
 lemma Complex.im_pow_eq_zero_of_im_eq_zero {z : ℂ} (hz : z.im = 0) (m : ℕ) :
-    (z ^ m).im = 0 := by
-  induction m with
+    (z ^ m).im = 0 := by induction m with
   | zero => simp
   | succ m ih => simp [pow_succ, Complex.mul_im, *]
 
@@ -538,10 +531,8 @@ lemma Delta_imag_axis_real : ResToImagAxis.Real Δ := by
   set g : ℕ → ℂ := fun n => (1 - cexp (2 * π * Complex.I * (n + 1) * (Complex.I * t))) ^ 24
   have hArg (n : ℕ) :
       2 * (π : ℂ) * Complex.I * (n + 1) * (Complex.I * t) = -(2 * (π : ℂ) * (n + 1) * t) := by
-    calc
-      2 * (π : ℂ) * Complex.I * (n + 1) * (Complex.I * t)
-        = 2 * (π : ℂ) * (Complex.I * Complex.I) * (n + 1) * t := by ring
-      _ = -(2 * (π : ℂ) * (n + 1) * t) := by simp
+    have h := Complex.I_sq
+    linear_combination 2 * (π : ℂ) * (↑n + 1) * t * h
   have him_g : ∀ n, (g n).im = 0 := fun n => by
     have : (cexp (-(2 * (π : ℂ) * ((n + 1) : ℂ) * t))).im = 0 := by
       simpa [mul_comm, mul_left_comm, mul_assoc] using (cexp_aux4 t n)

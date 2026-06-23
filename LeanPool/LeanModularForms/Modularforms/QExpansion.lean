@@ -65,7 +65,6 @@ lemma tendsto_nat (a : ℕ → ℂ) (ha : Summable fun n : ℕ ↦ ‖a n‖ * r
 lemma tendsto_int (a : ℤ → ℂ) (ha : Summable fun n : ℤ ↦ ‖a n‖ * rexp (-2 * π * n))
     (ha' : ∀ n, n < 0 → a n = 0) :
     Tendsto (fun z : ℍ ↦ ∑' n, a n * cexp (2 * π * I * z * n)) atImInfty (𝓝 (a 0)) := by
-  -- ∑' (n : ℕ), f ↑n + ∑' (n : ℕ), f (-(↑n + 1))
   have : Tendsto
     (fun z : ℍ ↦ (∑' n : ℕ, (a n * cexp (2 * π * I * z * n)
       + a (-(n + 1 : ℤ)) * cexp (2 * π * I * z * (-(n + 1) : ℤ))))) atImInfty (𝓝 (a 0)) := by
@@ -87,10 +86,8 @@ lemma tendsto_int (a : ℤ → ℂ) (ha : Summable fun n : ℤ ↦ ‖a n‖ * r
     simp
   · apply ha.of_nonneg_of_le (fun _ ↦ by positivity) fun b ↦ ?_
     by_cases hb : 0 ≤ b
-    · have : z.im * -2 * π * b ≤ -2 * π * b := by
-        gcongr
-        simp [hz]
-      gcongr
+    · gcongr
+      simp [hz]
     · norm_num at hb
       simp [ha' _ hb]
 

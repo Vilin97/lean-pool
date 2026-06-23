@@ -52,8 +52,7 @@ lemma repLeftVert_mem_s₀ {p : ℍ} (hp : p ∈ repLeftVert f hf) : p ∈ s₀ 
 lemma repLeftArc_mem_s₀ {p : ℍ} (hp : p ∈ repLeftArc f hf) : p ∈ s₀ f hf :=
   (Finset.mem_filter.mp hp).1
 
-lemma repCanon_mem_s₀ {p : ℍ} (hp : p ∈ repCanon f hf) :
-    p ∈ s₀ f hf := by
+lemma repCanon_mem_s₀ {p : ℍ} (hp : p ∈ repCanon f hf) : p ∈ s₀ f hf := by
   simp only [repCanon, Finset.mem_union] at hp
   obtain (h | h) | h := hp
   · exact repStrict_mem_s₀ f hf h
@@ -192,10 +191,8 @@ theorem exists_repCanon_of_nonEllOrbit :
   obtain ⟨p0, hp0_orb, hp0_fd⟩ := orbit_has_fd_rep q.val
   have hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0 := by rw [← ordOrbit_mk f p0, hp0_orb]; exact hord
   have hp0_s₀ : p0 ∈ s₀ f hf := s₀_complete f hf p0 hp0_fd hp0_ord
-  have hp0_ne_i : p0 ≠ ellipticPointI' :=
-    fun h ↦ by rw [h] at hp0_orb; exact hq_ne_i hp0_orb.symm
-  have hp0_ne_rho : p0 ≠ ellipticPointRho' :=
-    fun h ↦ by rw [h] at hp0_orb; exact hq_ne_rho hp0_orb.symm
+  have hp0_ne_i : p0 ≠ ellipticPointI' := fun h ↦ hq_ne_i (hp0_orb ▸ h ▸ rfl)
+  have hp0_ne_rho : p0 ≠ ellipticPointRho' := fun h ↦ hq_ne_rho (hp0_orb ▸ h ▸ rfl)
   have hp0_ne_rho1 : p0 ≠ ellipticPointRhoPlusOne' := fun h ↦ by
     rw [h] at hp0_orb; exact hq_ne_rho (hp0_orb.symm.trans orb_rho_plus_one_eq_orb_rho)
   rcases (by nlinarith [Complex.normSq_eq_norm_sq (p0 : ℂ),

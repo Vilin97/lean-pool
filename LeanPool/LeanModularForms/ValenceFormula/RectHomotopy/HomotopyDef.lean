@@ -185,44 +185,28 @@ lemma H_match_at_t4 (p : ℝ × ℝ) (hp : p.1 = 4) :
 lemma fdBoundaryToPolygonHomotopy_continuous :
     Continuous fdBoundaryToPolygonHomotopy := by
   have h45 : Continuous (fun p =>
-      if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
-    exact Continuous.if_le H_seg4_continuous
-      H_seg5_continuous continuous_fst continuous_const H_match_at_t4
+      if p.1 ≤ 4 then HSeg4 p else HSeg5 p) :=
+    Continuous.if_le H_seg4_continuous H_seg5_continuous continuous_fst continuous_const
+      H_match_at_t4
   have h345 : Continuous (fun p =>
-      if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg3_continuous h45
-      continuous_fst continuous_const
+      if p.1 ≤ 3 then HSeg3 p else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg3_continuous h45 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 4 from
-      le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4),
-      if_true]
+    simp only [show p.1 ≤ 4 from le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4), if_true]
     exact H_match_at_t3 p hp
   have h2345 : Continuous (fun p =>
-      if p.1 ≤ 2 then HSeg2 p
-      else if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg2_continuous h345
-      continuous_fst continuous_const
+      if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
+      else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg2_continuous h345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 3 from
-      le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3),
-      if_true]
+    simp only [show p.1 ≤ 3 from le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3), if_true]
     exact H_match_at_t2 p hp
   have h12345 : Continuous (fun p =>
-      if p.1 ≤ 1 then HSeg1 p
-      else if p.1 ≤ 2 then HSeg2 p
-      else if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg1_continuous h2345
-      continuous_fst continuous_const
+      if p.1 ≤ 1 then HSeg1 p else if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
+      else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg1_continuous h2345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 2 from
-      le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2),
-      if_true]
+    simp only [show p.1 ≤ 2 from le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2), if_true]
     exact H_match_at_t1 p hp
   convert h12345 using 1
 
@@ -316,15 +300,10 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
 lemma fdBoundaryToPolygonHomotopy_closed (s : ℝ) (_hs : s ∈ Icc 0 1) :
     fdBoundaryToPolygonHomotopy (0, s) =
       fdBoundaryToPolygonHomotopy (5, s) := by
-  simp only [fdBoundaryToPolygonHomotopy]
-  simp only [show (0 : ℝ) ≤ 1 from by norm_num,
-    ↓reduceIte,
-    show ¬(5 : ℝ) ≤ 1 from by norm_num,
-    show ¬(5 : ℝ) ≤ 2 from by norm_num,
-    show ¬(5 : ℝ) ≤ 3 from by norm_num,
-    show ¬(5 : ℝ) ≤ 4 from by norm_num]
-  simp only [HHeight]
-  simp only [Complex.ofReal_zero, zero_mul, sub_zero]
+  simp only [fdBoundaryToPolygonHomotopy, show (0 : ℝ) ≤ 1 from by norm_num, ↓reduceIte,
+    show ¬(5 : ℝ) ≤ 1 from by norm_num, show ¬(5 : ℝ) ≤ 2 from by norm_num,
+    show ¬(5 : ℝ) ≤ 3 from by norm_num, show ¬(5 : ℝ) ≤ 4 from by norm_num,
+    HHeight, Complex.ofReal_zero, zero_mul, sub_zero]
   norm_cast; ring
 
 /-- The counterclockwise circle of radius `ε` centred at `p`. -/
@@ -334,26 +313,18 @@ noncomputable def circleAround (p : ℂ) (ε : ℝ) :
 
 lemma circleAround_closed (p : ℂ) (ε : ℝ) :
     circleAround p ε 0 = circleAround p ε 5 := by
-  simp only [circleAround]
+  simp only [circleAround, Complex.ofReal_zero, mul_zero, zero_div, Complex.ofReal_ofNat]
   congr 1
-  have h0 : 2 * Real.pi * I * (0 : ℂ) / 5 = 0 := by ring
-  have h5 : 2 * Real.pi * I * (5 : ℂ) / 5 =
-      2 * Real.pi * I := by ring
-  simp only [Complex.ofReal_zero, mul_zero, zero_div,
-    Complex.ofReal_ofNat]
-  rw [h5, Complex.exp_zero, Complex.exp_two_pi_mul_I]
+  rw [show 2 * Real.pi * I * (5 : ℂ) / 5 = 2 * Real.pi * I from by ring,
+    Complex.exp_zero, Complex.exp_two_pi_mul_I]
 
 lemma circleAround_continuous (p : ℂ) (ε : ℝ) :
     Continuous (circleAround p ε) := by unfold circleAround; continuity
 
 lemma circleAround_dist (p : ℂ) (ε : ℝ) (hε : 0 ≤ ε) (t : ℝ) : ‖circleAround p ε t - p‖ = ε := by
   simp only [circleAround, add_sub_cancel_left]
-  rw [Complex.norm_mul]
-  have hform :
-      2 * Real.pi * I * (t : ℂ) / 5 =
-        ↑(2 * Real.pi * t / 5) * I := by push_cast; ring
-  rw [hform, Complex.norm_exp_ofReal_mul_I, mul_one,
-    Complex.norm_real]
+  rw [Complex.norm_mul, show 2 * Real.pi * I * (t : ℂ) / 5 = ↑(2 * Real.pi * t / 5) * I from by
+    push_cast; ring, Complex.norm_exp_ofReal_mul_I, mul_one, Complex.norm_real]
   exact abs_of_nonneg hε
 
 /-- The homotopy contracting the boundary polygon onto a small circle around `p`. -/
@@ -390,11 +361,8 @@ theorem winding_number_one_summary (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
     (hp_im : p.im < HHeight) : (∀ t ∈ Icc 0 5, ∀ s ∈ Icc (0 : ℝ) 1,
       fdBoundaryToPolygonHomotopy (t, s) ≠ p) ∧
     Continuous fdBoundaryToPolygonHomotopy ∧ (∀ s ∈ Icc (0 : ℝ) 1,
-      fdBoundaryToPolygonHomotopy (0, s) =
-        fdBoundaryToPolygonHomotopy (5, s)) :=
-  ⟨fdBoundaryToPolygon_homotopy_avoids_interior p
-      hp_norm hp_re hp_im,
-   fdBoundaryToPolygon_homotopy_continuous,
-   fdBoundaryToPolygon_homotopy_closed⟩
+      fdBoundaryToPolygonHomotopy (0, s) = fdBoundaryToPolygonHomotopy (5, s)) :=
+  ⟨fdBoundaryToPolygon_homotopy_avoids_interior p hp_norm hp_re hp_im,
+   fdBoundaryToPolygon_homotopy_continuous, fdBoundaryToPolygon_homotopy_closed⟩
 
 end RectHomotopyProof

@@ -144,22 +144,18 @@ lemma fdBoundaryToPolygonHomotopy_seg3_deriv_bound (t : ℝ) (_ht : t ∈ Ioo 2 
         s • chord_point) t‖ ≤ 5 :=
   norm_deriv_H_seg3_le t s hs
 
+private lemma HHeight_sub_sqrt3_div2 : (HHeight : ℂ) - Real.sqrt 3 / 2 = 1 := by
+  simp only [HHeight]; push_cast; ring
+
 /-- Segment 1 derivative bound. -/
 lemma norm_deriv_H_seg1_le (t : ℝ) (_s : ℝ) :
     ‖deriv (fun t' : ℝ => (1/2 : ℂ) +
         (HHeight - (↑t' : ℂ) * (HHeight - Real.sqrt 3 / 2)) *
           I) t‖ ≤ 5 := by
-  have h_height : (HHeight : ℂ) - Real.sqrt 3 / 2 =
-        1 := by
-    simp only [HHeight]
-    push_cast
-    ring
   have h_deriv : HasDerivAt (fun t' : ℝ =>
         (1/2 : ℂ) + ((HHeight : ℂ) - (↑t' : ℂ) *
-            ((HHeight : ℂ) -
-              Real.sqrt 3 / 2)) * I)
-      (-((HHeight : ℂ) -
-        Real.sqrt 3 / 2) * I) t := by
+            ((HHeight : ℂ) - Real.sqrt 3 / 2)) * I)
+      (-((HHeight : ℂ) - Real.sqrt 3 / 2) * I) t := by
     have h2 : HasDerivAt (fun t' : ℝ =>
           (↑t' : ℂ) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
         ((HHeight : ℂ) - Real.sqrt 3 / 2) t := by
@@ -167,29 +163,18 @@ lemma norm_deriv_H_seg1_le (t : ℝ) (_s : ℝ) :
     have h4 := (((hasDerivAt_const t (HHeight : ℂ)).sub h2).mul_const I)
     have := (hasDerivAt_const t ((1/2 : ℂ))).add h4
     simp only [zero_add, zero_sub] at this; exact this
-  rw [h_deriv.deriv, h_height]
-  simp only [neg_one_mul, norm_neg,
-    Complex.norm_I]
-  norm_num
+  rw [h_deriv.deriv, HHeight_sub_sqrt3_div2]
+  simp only [neg_one_mul, norm_neg, Complex.norm_I]; norm_num
 
 /-- Segment 4 derivative bound. -/
 lemma norm_deriv_H_seg4_le (t : ℝ) (_s : ℝ) :
     ‖deriv (fun t' : ℝ => (-1/2 : ℂ) +
         ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-            ((HHeight : ℂ) -
-              Real.sqrt 3 / 2)) * I)
-      t‖ ≤ 5 := by
-  have h_height : (HHeight : ℂ) - Real.sqrt 3 / 2 =
-        1 := by
-    simp only [HHeight]
-    push_cast
-    ring
+            ((HHeight : ℂ) - Real.sqrt 3 / 2)) * I) t‖ ≤ 5 := by
   have h_deriv : HasDerivAt (fun t' : ℝ =>
         (-1/2 : ℂ) + ((Real.sqrt 3 / 2 : ℂ) +
-            ((↑t' : ℂ) - 3) * ((HHeight : ℂ) -
-                Real.sqrt 3 / 2)) * I)
-      (((HHeight : ℂ) -
-        Real.sqrt 3 / 2) * I) t := by
+            ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2)) * I)
+      (((HHeight : ℂ) - Real.sqrt 3 / 2) * I) t := by
     have h3 : HasDerivAt (fun t' : ℝ =>
           ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
         ((HHeight : ℂ) - Real.sqrt 3 / 2) t := by
@@ -198,9 +183,8 @@ lemma norm_deriv_H_seg4_le (t : ℝ) (_s : ℝ) :
     have h5 := (((hasDerivAt_const t (Real.sqrt 3 / 2 : ℂ)).add h3).mul_const I)
     have := (hasDerivAt_const t ((-1/2 : ℂ))).add h5
     simp only [zero_add] at this; exact this
-  rw [h_deriv.deriv, h_height]
-  simp only [one_mul, Complex.norm_I]
-  norm_num
+  rw [h_deriv.deriv, HHeight_sub_sqrt3_div2]
+  simp only [one_mul, Complex.norm_I]; norm_num
 
 /-- Segment 5 derivative bound. -/
 lemma norm_deriv_H_seg5_le (t : ℝ) (_s : ℝ) :

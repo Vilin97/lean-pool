@@ -63,9 +63,8 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
   use limit_dyadic
   rw [Metric.tendsto_nhdsWithin_nhds]
   intro η hη_pos
-  have h_half_pos : 0 < η / 2 := by linarith
   rw [Metric.tendsto_atTop] at h_limit_tendsto
-  obtain ⟨N₁, hN₁⟩ := h_limit_tendsto (η / 2) h_half_pos
+  obtain ⟨N₁, hN₁⟩ := h_limit_tendsto (η / 2) (by linarith)
   have h_pow_unbounded : ∃ N₂ : ℕ, K * δ / 2 ^ N₂ < η / 4 := by
     have : Tendsto (fun n : ℕ => K * δ / 2 ^ n) atTop (𝓝 0) := by
       have h_tendsto_pow : Tendsto (fun n : ℕ => (2 : ℝ) ^ n) atTop atTop :=
@@ -97,13 +96,10 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
         (div_le_self hδ_pos.le (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2)))
       obtain ⟨M, hM_lower, hM_upper⟩ := exists_dyadic_bracket hδ_pos hε_pos' hε_le_δ
       have hM_ge_N : M ≥ N := by
-        by_contra h_lt
-        push Not at h_lt
-        have hM1_le_N : M + 1 ≤ N := h_lt
-        have h_pow_le : (2 : ℝ) ^ (M + 1) ≤ 2 ^ N :=
-          pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hM1_le_N
+        by_contra h_lt; push Not at h_lt
         have h_div_ge : δ / 2 ^ (M + 1) ≥ δ / 2 ^ N :=
-          div_le_div_of_nonneg_left hδ_pos.le (by positivity) h_pow_le
+          div_le_div_of_nonneg_left hδ_pos.le (by positivity)
+            (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) h_lt)
         linarith
       have h_first_piece : ‖I ε - I (δ / 2 ^ M)‖ ≤ K * δ / 2 ^ M := by
         have h_ratio_M : δ / 2 ^ M ≤ 2 * ε := by
@@ -159,9 +155,8 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
 lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set ℝ}
     (ε : ℝ) (hf : ContinuousOn f s) (hs : MeasurableSet s) :
     MeasurableSet ({t | ε < ‖f t‖} ∩ s) := by
-  have h_norm_cont : ContinuousOn (fun t => ‖f t‖) s := hf.norm
   have h_open_sub : IsOpen ((s.restrict (fun t => ‖f t‖)) ⁻¹' Ioi ε) :=
-    isOpen_Ioi.preimage h_norm_cont.restrict
+    isOpen_Ioi.preimage hf.norm.restrict
   rw [isOpen_induced_iff] at h_open_sub
   obtain ⟨U, hU_open, hU_eq⟩ := h_open_sub
   have h_eq : {t | ε < ‖f t‖} ∩ s = U ∩ s := by
@@ -296,10 +291,8 @@ lemma cpv_avoidance (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ
     (h_cont : ContinuousOn γ (Set.Icc a b)) (hab : a ≤ b)
     (h_avoid : ∀ t ∈ Set.Icc a b, γ t ≠ z₀) :
     CauchyPrincipalValueExists' f γ a b z₀ := by
-  have h_cont_norm : ContinuousOn (fun t => ‖γ t - z₀‖) (Set.Icc a b) :=
-    (h_cont.sub continuousOn_const).norm
   obtain ⟨t₀, ht₀, ht₀_min⟩ := isCompact_Icc.exists_isMinOn
-    ⟨a, Set.left_mem_Icc.mpr hab⟩ h_cont_norm
+    ⟨a, Set.left_mem_Icc.mpr hab⟩ (h_cont.sub continuousOn_const).norm
   have hδ : 0 < ‖γ t₀ - z₀‖ :=
     norm_pos_iff.mpr (sub_ne_zero.mpr (h_avoid t₀ ht₀))
   set C := ∫ t in a..b, f (γ t) * deriv γ t
@@ -320,8 +313,7 @@ lemma cpv_concat (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b c : ℝ) (z₀ : ℂ)
     (h_int : ∀ ε > 0, IntervalIntegrable
         (fun t => if ε < ‖γ t - z₀‖ then f (γ t) * deriv γ t else 0) volume a c) :
     CauchyPrincipalValueExists' f γ a c z₀ := by
-  obtain ⟨L₁, hL₁⟩ := h_ab
-  obtain ⟨L₂, hL₂⟩ := h_bc
+  obtain ⟨L₁, hL₁⟩ := h_ab; obtain ⟨L₂, hL₂⟩ := h_bc
   refine ⟨L₁ + L₂, ?_⟩
   apply Tendsto.congr' _ (hL₁.add hL₂)
   rw [Filter.EventuallyEq]

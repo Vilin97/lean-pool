@@ -77,9 +77,7 @@ private lemma unitArc_log_ratio_tendsto (s : ℂ)
         (-(exp (↑(Real.pi * (1 + (t₀ + δ)) / 6) * I) - s))) := by
     apply h_ev.mono
     intro δ ⟨hδ_pos, hδ_small⟩
-    rw [_h_s_arc]
-    congr 1
-    exact (unitArc_ratio_eq t₀ δ hδ_pos hδ_small).symm
+    rw [_h_s_arc]; congr 1; exact (unitArc_ratio_eq t₀ δ hδ_pos hδ_small).symm
   exact h_log_exp.congr' h_agree
 
 private lemma unitArc_log_diff_tendsto (s : ℂ)
@@ -150,12 +148,10 @@ private lemma unitArc_norm_strict_mono (s : ℂ) (H : ℝ) (t₀ : ℝ)
     rw [div_le_iff₀ (by norm_num : (0 : ℝ) < 6)]
     nlinarith [Real.pi_pos, _ht₀_Ioo.2]
   have hφ_lt : Real.pi * δ₁ / 6 < Real.pi * δ₂ / 6 := by nlinarith [Real.pi_pos]
-  have hcos_lt : Real.cos (Real.pi * δ₂ / 6) < Real.cos (Real.pi * δ₁ / 6) :=
-    Real.cos_lt_cos_of_nonneg_of_le_pi hφ₁_nn hφ₂_le_pi hφ_lt
-  have hns_lt : Complex.normSq (fdBoundaryH H (t₀ + δ₁) - s) <
-      Complex.normSq (fdBoundaryH H (t₀ + δ₂) - s) := by rw [hns₁, hns₂]; linarith
   rw [Complex.norm_def, Complex.norm_def]
-  exact Real.sqrt_lt_sqrt (Complex.normSq_nonneg _) hns_lt
+  apply Real.sqrt_lt_sqrt (Complex.normSq_nonneg _)
+  rw [hns₁, hns₂]
+  linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hφ₁_nn hφ₂_le_pi hφ_lt]
 
 private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
     (ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3) (h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I))
@@ -165,8 +161,6 @@ private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
   rw [show t₁ = t₀ + (t₁ - t₀) from by ring, show t₂ = t₀ + (t₂ - t₀) from by ring]
   have hns₁ := unitArc_normSq_at_offset s H t₀ (t₁ - t₀) h_s_arc (by linarith) (by linarith)
   have hns₂ := unitArc_normSq_at_offset s H t₀ (t₂ - t₀) h_s_arc (by linarith) (by linarith)
-  have hcos₁ := cos_pi_mul_div_six_abs (t₁ - t₀)
-  have hcos₂ := cos_pi_mul_div_six_abs (t₂ - t₀)
   have h_abs_bound : |t₂ - t₀| < 2 := by
     rw [abs_lt]; constructor <;> linarith [ht₀_Ioo.1, ht₀_Ioo.2]
   have hφ₁_nn : 0 ≤ Real.pi * |t₁ - t₀| / 6 := by positivity
@@ -174,7 +168,7 @@ private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
   have hφ_lt : Real.pi * |t₁ - t₀| / 6 < Real.pi * |t₂ - t₀| / 6 := by nlinarith [Real.pi_pos]
   rw [Complex.norm_def, Complex.norm_def]
   apply Real.sqrt_lt_sqrt (Complex.normSq_nonneg _)
-  rw [hns₁, hns₂, hcos₁, hcos₂]
+  rw [hns₁, hns₂, cos_pi_mul_div_six_abs (t₁ - t₀), cos_pi_mul_div_six_abs (t₂ - t₀)]
   linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hφ₁_nn hφ₂_le_pi hφ_lt]
 
 /-! ### Helper 1: Arc outside points have norm > ε -/

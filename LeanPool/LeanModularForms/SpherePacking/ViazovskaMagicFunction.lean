@@ -400,8 +400,8 @@ theorem truncated_contour_equivalence (r : ℝ) (δ : ℝ) (hδ : 0 < δ) :
     let F := viazovskaIntegrandLeft r
     (∫ t in (0 : ℝ)..1, F (a + t • (b - a)) * (b - a)) =
     (∫ t in (0 : ℝ)..1, F (a + t • (c - a)) * (c - a)) +
-    (∫ t in (0 : ℝ)..1, F (c + t • (b - c)) * (b - c)) := by
-  exact segment_integral_add_of_holomorphic
+    (∫ t in (0 : ℝ)..1, F (c + t • (b - c)) * (b - c)) :=
+  segment_integral_add_of_holomorphic
     isOpen_upperHalfPlaneSet convex_upperHalfPlaneSet
     (viazovska_integrand_left_differentiableOn r)
     (neg_one_add_delta_I_mem_uhp hδ) I_mem_uhp neg_one_add_I_mem_uhp
@@ -722,10 +722,9 @@ We work with the primitive directly to avoid dominated convergence. -/
 whose existence follows from `holomorphic_convex_primitive`. -/
 theorem exists_primitive_viazovska_integrand_left (r : ℝ) :
     ∃ G : ℂ → ℂ, ∀ z ∈ {z : ℂ | 0 < z.im},
-      HasDerivAt G (viazovskaIntegrandLeft r z) z := by
-  obtain ⟨G, hG⟩ := holomorphic_convex_primitive convex_upperHalfPlaneSet
+      HasDerivAt G (viazovskaIntegrandLeft r z) z :=
+  holomorphic_convex_primitive convex_upperHalfPlaneSet
     isOpen_upperHalfPlaneSet ⟨I, I_mem_uhp⟩ (viazovska_integrand_left_differentiableOn r)
-  exact ⟨G, hG⟩
 
 /-- The truncated diagonal integral from `-1 + δI` to `I` equals `G(I) - G(-1+δI)`
 for the primitive `G` of the integrand. -/

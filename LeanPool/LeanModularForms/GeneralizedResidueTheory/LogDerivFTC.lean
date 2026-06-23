@@ -60,12 +60,9 @@ theorem intervalIntegrable_logDeriv_of_slitPlane {f : ℝ → ℂ} {a b : ℝ} (
     (hf_cont : ContinuousOn f (Icc a b))
     (hf_deriv_cont : ContinuousOn (deriv f) (Icc a b))
     (hf_slit : ∀ t ∈ Icc a b, f t ∈ Complex.slitPlane) :
-    IntervalIntegrable (fun t => deriv f t / f t) volume a b := by
-  have hf_ne : ∀ t ∈ Icc a b, f t ≠ 0 :=
-    fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)
-  have hdiv_cont : ContinuousOn (fun t => deriv f t / f t) (Icc a b) :=
-    hf_deriv_cont.div hf_cont hf_ne
-  exact (hdiv_cont.mono (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
+    IntervalIntegrable (fun t => deriv f t / f t) volume a b :=
+  ((hf_deriv_cont.div hf_cont fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)).mono
+    (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
 
 /-- Fundamental theorem of calculus for log-derivative integrals:
 If f : ℝ → ℂ is differentiable on (a,b) with derivative continuous on [a,b],
@@ -76,15 +73,11 @@ theorem integral_logDeriv_eq_log_sub {f : ℝ → ℂ} {a b : ℝ} (hab : a ≤ 
     (hf_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ f t)
     (hf_deriv_cont : ContinuousOn (deriv f) (Icc a b))
     (hf_slit : ∀ t ∈ Icc a b, f t ∈ Complex.slitPlane) :
-    ∫ t in a..b, deriv f t / f t = Complex.log (f b) - Complex.log (f a) := by
-  have hf_ne : ∀ t ∈ Icc a b, f t ≠ 0 :=
-    fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)
-  have hint : IntervalIntegrable (fun t => deriv f t / f t) volume a b :=
-    intervalIntegrable_logDeriv_of_slitPlane hab hf_cont hf_deriv_cont hf_slit
-  exact intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
+    ∫ t in a..b, deriv f t / f t = Complex.log (f b) - Complex.log (f a) :=
+  intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
     (ContinuousOn.clog hf_cont hf_slit)
     (fun t ht => (hf_diff t ht).hasDerivAt.clog_real (hf_slit t (Ioo_subset_Icc_self ht)))
-    hint
+    (intervalIntegrable_logDeriv_of_slitPlane hab hf_cont hf_deriv_cont hf_slit)
 
 /-!
 ### Combined integrability + FTC for a.e.-equal pairs of curves

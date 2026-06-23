@@ -272,4 +272,23 @@ lemma eventuallyEq_of_Ioi {g h : ℝ → ℂ} {a : ℝ}
     (hg_eq : ∀ t, a < t → g t = h t) (t : ℝ) (ht : a < t) : g =ᶠ[𝓝 t] h :=
   Filter.eventually_of_mem (Ioi_mem_nhds ht) (fun s hs => hg_eq s hs)
 
+/-- `sin(π/12) < 1/2`, used to bound ε from 2·sin(π/12) bounds. -/
+lemma sin_pi_12_lt_half : Real.sin (Real.pi / 12) < 1 / 2 :=
+  calc Real.sin (Real.pi / 12) < Real.sin (Real.pi / 6) :=
+        Real.sin_lt_sin_of_lt_of_le_pi_div_two (by nlinarith [Real.pi_pos])
+          (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
+    _ = 1 / 2 := Real.sin_pi_div_six
+
+/-- `sin(π/12) > 0`. -/
+lemma sin_pi_12_pos : 0 < Real.sin (Real.pi / 12) :=
+  ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
+
+/-- `arcsin(ε/2) < π/12` whenever `0 < ε < 2·sin(π/12)`. -/
+lemma arcsin_eps_div_two_lt_pi_12 {ε : ℝ} (hε_pos : 0 < ε)
+    (hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12)) :
+    Real.arcsin (ε / 2) < Real.pi / 12 :=
+  calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
+        Real.arcsin_lt_arcsin (by linarith) (by linarith) (Real.sin_le_one _)
+    _ = Real.pi / 12 := Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
+
 end

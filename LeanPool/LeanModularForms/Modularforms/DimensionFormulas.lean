@@ -299,19 +299,7 @@ lemma weight_two_zero (f : ModularForm (CongruenceSubgroup.Gamma 1) 2) : f = 0 :
 /- cant be a cuspform from the above, so let a be its constant term, then f^2 = a^2 E₄ and
 f^3 = a^3 E₆, but now this would mean that Δ = 0 or a = 0, which is a contradiction. -/
   by_cases hf : IsCuspForm (CongruenceSubgroup.Gamma 1) 2 f
-  --have hfc := IsCuspFormToCuspForm _ _ f hf
-  · have hfc2:= CuspForm_to_ModularForm_coe _ _ f hf
-    ext z
-    simp only [ModularForm.zero_apply] at *
-    have hy := congr_arg (fun x ↦ x.1) hfc2
-    have hz := congr_fun hy z
-    simp only [SlashInvariantForm.toFun_eq_coe, CuspForm.toSlashInvariantForm_coe,
-      toSlashInvariantForm_coe] at hz
-    rw [← hz]
-    have := rank_zero_iff_forall_zero.mp (cuspform_weight_lt_12_zero 2 (by norm_num))
-      (IsCuspFormToCuspForm Γ(1) 2 f hf)
-    rw [this]
-    simp only [CuspForm.zero_apply]
+  · exact IsCuspForm_weight_lt_eq_zero 2 (by norm_num) f hf
   · have hc1 : (qExpansion 1 f).coeff 0 ≠ 0 := by
       intro h
       rw [← IsCuspForm_iff_coeffZero_eq_zero] at h
@@ -443,10 +431,8 @@ lemma dim_modforms_eq_one_add_dim_cuspforms (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk
     simp [PowerSeries.coeff_zero_eq_constantCoeff, map_sub, smul_eq_mul, Ek_q_exp_zero k hk hk2,
       c]
 
-theorem dim_weight_two : Module.rank ℂ (ModularForm Γ(1) ↑2) = 0 := by
-  rw [@rank_zero_iff_forall_zero]
-  intro f
-  apply weight_two_zero f
+theorem dim_weight_two : Module.rank ℂ (ModularForm Γ(1) ↑2) = 0 :=
+  rank_zero_iff_forall_zero.mpr weight_two_zero
 
 lemma floor_lem1 (k a : ℚ) (ha : 0 < a) (hak : a ≤ k) :
     1 + Nat.floor ((k - a) / a) = Nat.floor (k / a) := by
@@ -530,5 +516,5 @@ lemma dim_modforms_lvl_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
 
 lemma ModularForm.dimension_level_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     Module.rank ℂ (ModularForm (CongruenceSubgroup.Gamma 1) (k)) = if 12 ∣ ((k) : ℤ) - 2 then
-    Nat.floor ((k : ℚ)/ 12) else Nat.floor ((k : ℚ) / 12) + 1 := by
-  apply dim_modforms_lvl_one k hk hk2
+    Nat.floor ((k : ℚ)/ 12) else Nat.floor ((k : ℚ) / 12) + 1 :=
+  dim_modforms_lvl_one k hk hk2

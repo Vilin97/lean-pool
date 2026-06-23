@@ -139,22 +139,16 @@ lemma D_eq_serre_D_add (k : ℂ) (f : ℍ → ℂ) (z : ℍ) :
 
 @[simp]
 theorem ramanujan_E₂ : D E₂ = 12⁻¹ * (E₂ * E₂ - E₄.toFun) := by
-  ext z
-  rw [D_eq_serre_D_add 1 E₂ z]
+  ext z; rw [D_eq_serre_D_add 1 E₂ z]
   simp only [congrFun ramanujan_E₂' z, Pi.mul_apply, Pi.sub_apply,
-    show (-12⁻¹ : ℍ → ℂ) z = -12⁻¹ from rfl, show (12⁻¹ : ℍ → ℂ) z = 12⁻¹ from rfl]
-  ring
+    show (-12⁻¹ : ℍ → ℂ) z = -12⁻¹ from rfl, show (12⁻¹ : ℍ → ℂ) z = 12⁻¹ from rfl]; ring
 
 theorem ramanujan_E₄ : D E₄.toFun = 3⁻¹ * (E₂ * E₄.toFun - E₆.toFun) := by
-  ext z
-  rw [D_eq_serre_D_add 4 E₄.toFun z]
+  ext z; rw [D_eq_serre_D_add 4 E₄.toFun z]
   simp only [congrFun ramanujan_E₄' z, Pi.mul_apply, Pi.sub_apply,
-    show (-3⁻¹ : ℍ → ℂ) z = -3⁻¹ from rfl, show (3⁻¹ : ℍ → ℂ) z = 3⁻¹ from rfl]
-  ring
+    show (-3⁻¹ : ℍ → ℂ) z = -3⁻¹ from rfl, show (3⁻¹ : ℍ → ℂ) z = 3⁻¹ from rfl]; ring
 
 theorem ramanujan_E₆ : D E₆.toFun = 2⁻¹ * (E₂ * E₆.toFun - E₄.toFun * E₄.toFun) := by
-  ext z
-  rw [D_eq_serre_D_add 6 E₆.toFun z]
+  ext z; rw [D_eq_serre_D_add 6 E₆.toFun z]
   simp only [congrFun ramanujan_E₆' z, Pi.mul_apply, Pi.sub_apply,
-    show (-2⁻¹ : ℍ → ℂ) z = -2⁻¹ from rfl, show (2⁻¹ : ℍ → ℂ) z = 2⁻¹ from rfl]
-  ring
+    show (-2⁻¹ : ℍ → ℂ) z = -2⁻¹ from rfl, show (2⁻¹ : ℍ → ℂ) z = 2⁻¹ from rfl]; ring

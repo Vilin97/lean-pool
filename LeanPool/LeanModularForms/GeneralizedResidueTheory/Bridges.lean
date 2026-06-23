@@ -45,12 +45,8 @@ def toPath (γ : PiecewiseC1Curve) : Path (γ.toFun γ.a) (γ.toFun γ.b) where
   toFun t := γ.toFun (γ.rescale t)
   continuous_toFun :=
     γ.continuous_toFun.comp_continuous γ.rescale_continuous (fun t => γ.rescale_mem_Icc t)
-  source' := by
-    change γ.toFun (γ.rescale ⟨0, left_mem_Icc.mpr zero_le_one⟩) = γ.toFun γ.a
-    rw [γ.rescale_zero]
-  target' := by
-    change γ.toFun (γ.rescale ⟨1, right_mem_Icc.mpr zero_le_one⟩) = γ.toFun γ.b
-    rw [γ.rescale_one]
+  source' := congrArg γ.toFun γ.rescale_zero
+  target' := congrArg γ.toFun γ.rescale_one
 
 /-- Convert a `PiecewiseC1Curve` to a `ContinuousMap` from the unit interval to `ℂ`. -/
 def toContinuousMap (γ : PiecewiseC1Curve) : C(I, ℂ) :=

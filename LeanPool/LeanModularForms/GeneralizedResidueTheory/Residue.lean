@@ -215,11 +215,7 @@ lemma piecewiseC1_deriv_intervalIntegrable (γ : PiecewiseC1Curve)
   · rw [MeasureTheory.ae_restrict_iff' measurableSet_uIoc]
     apply Filter.Eventually.of_forall
     intro t ht
-    have ht' : t ∈ Icc γ.a γ.b := by
-      have h1 : t ∈ Set.uIcc γ.a γ.b := uIoc_subset_uIcc ht
-      rw [Set.uIcc_of_le (le_of_lt γ.hab)] at h1
-      exact h1
-    exact hM t ht'
+    exact hM t (Set.uIcc_of_le (le_of_lt γ.hab) ▸ uIoc_subset_uIcc ht)
 
 /-- If `h` is continuous on `Icc γ.a γ.b` and the derivative is bounded, then
 `t ↦ h t * deriv γ.toFun t` is interval integrable. -/
@@ -238,8 +234,8 @@ lemma singular_term_intervalIntegrable
     (hγ'_bdd : ∃ M : ℝ, ∀ t ∈ Icc γ.a γ.b, ‖deriv γ.toFun t‖ ≤ M) :
     IntervalIntegrable
       (fun t => residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t)
-      MeasureTheory.volume γ.a γ.b := by
-  exact continuousOn_mul_deriv_intervalIntegrable γ
+      MeasureTheory.volume γ.a γ.b :=
+  continuousOn_mul_deriv_intervalIntegrable γ
     (continuousOn_const.div (γ.continuous_toFun.sub continuousOn_const)
       fun t ht => sub_ne_zero.mpr (hγ_avoids_s t ht)) hγ'_bdd
 
@@ -258,20 +254,9 @@ lemma singular_sum_intervalIntegrable
     exact intervalIntegrable_const
   | insert s S hs_nin ih =>
     simp only [Finset.sum_insert hs_nin]
-    have h_s_int : IntervalIntegrable
-        (fun t => residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t)
-        MeasureTheory.volume γ.a γ.b := by
-      apply singular_term_intervalIntegrable f s γ
-      · intro t ht
-        exact hγ_avoids s (Finset.mem_insert_self s S) t ht
-      · exact hγ'_bdd
-    have h_S_int : IntervalIntegrable
-        (fun t => ∑ s ∈ S, residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t)
-        MeasureTheory.volume γ.a γ.b := by
-      apply ih
-      intro s' hs' t ht
-      exact hγ_avoids s' (Finset.mem_insert_of_mem hs') t ht
-    exact h_s_int.add h_S_int
+    exact (singular_term_intervalIntegrable f s γ
+        (fun t ht => hγ_avoids s (Finset.mem_insert_self s S) t ht) hγ'_bdd).add
+      (ih fun s' hs' t ht => hγ_avoids s' (Finset.mem_insert_of_mem hs') t ht)
 
 /-- For simple poles, the residue equals the Laurent coefficient. -/
 theorem residue_simple_pole_eq_laurent
@@ -281,34 +266,16 @@ theorem residue_simple_pole_eq_laurent
     residueSimplePole f z₀ = c := by
   unfold residueSimplePole
   have h_eq : (fun z => c + (z - z₀) * g z) =ᶠ[𝓝[≠] z₀] fun z => (z - z₀) * f z := by
-    have h_mem : ∀ᶠ z in 𝓝[≠] z₀, z ≠ z₀ := by
-      rw [eventually_nhdsWithin_iff]
-      filter_upwards with z hz
-      simp only [mem_compl_iff, mem_singleton_iff] at hz
-      exact hz
-    filter_upwards [hf, h_mem] with z hz hz_ne
-    rw [hz]
-    have h_ne : z - z₀ ≠ 0 := sub_ne_zero.mpr hz_ne
-    field_simp [h_ne]
+    filter_upwards [hf, self_mem_nhdsWithin] with z hz hz_ne
+    rw [hz]; field_simp [sub_ne_zero.mpr hz_ne]
   have h_tendsto : Tendsto (fun z => c + (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 c) := by
-    have h_sub : Tendsto (fun z => z - z₀) (𝓝[≠] z₀) (𝓝 0) := by
-      have : Tendsto (fun z => z - z₀) (𝓝 z₀) (𝓝 0) := by
-        have h_eq' : (0 : ℂ) = z₀ - z₀ := by ring
-        rw [h_eq']
-        exact tendsto_id.sub tendsto_const_nhds
-      exact this.mono_left nhdsWithin_le_nhds
-    have h_g : Tendsto g (𝓝[≠] z₀) (𝓝 (g z₀)) :=
-      hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
+    have h_sub : Tendsto (fun z => z - z₀) (𝓝[≠] z₀) (𝓝 0) :=
+      ((show (0 : ℂ) = z₀ - z₀ by ring) ▸ tendsto_id.sub tendsto_const_nhds).mono_left
+        nhdsWithin_le_nhds
     have h_prod : Tendsto (fun z => (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 0) := by
-      have := h_sub.mul h_g
-      simp only [zero_mul] at this
-      exact this
-    have h_const : Tendsto (fun _ : ℂ => c) (𝓝[≠] z₀) (𝓝 c) := tendsto_const_nhds
-    convert h_const.add h_prod using 1
-    simp only [add_zero]
-  have h_tendsto' : Tendsto (fun z => (z - z₀) * f z) (𝓝[≠] z₀) (𝓝 c) :=
-    h_tendsto.congr' h_eq
-  exact h_tendsto'.limUnder_eq
+      simpa using h_sub.mul (hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds)
+    simpa only [add_zero] using (tendsto_const_nhds (x := c)).add h_prod
+  exact (h_tendsto.congr' h_eq).limUnder_eq
 
 /-- The integral of a singular term equals the winding number times the coefficient. -/
 lemma integral_singular_term_eq_winding_times_coeff

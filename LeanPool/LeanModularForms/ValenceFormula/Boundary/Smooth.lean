@@ -172,8 +172,7 @@ private lemma hasDerivAt_seg5_fun (H : ℝ) (t : ℝ) :
     HasDerivAt (fun s : ℝ => (↑s - 9/2 : ℂ) + ↑H * I) (1 : ℂ) t := by
   refine ((((hasDerivAt_id t).ofReal_comp).sub (hasDerivAt_const t (9/2 : ℂ))).add
     (hasDerivAt_const t (↑H * I : ℂ))).congr_deriv ?_
-  simp only [ofReal_one]
-  ring
+  simp only [ofReal_one]; ring
 
 lemma fdBoundary_H_hasDerivAt_seg5' (H : ℝ) (t : ℝ)
     (ht : t ∈ Ioo (4 : ℝ) 5) :
@@ -281,10 +280,9 @@ private lemma arc_tendsto_left {H : ℝ} (p : ℝ) (h1p : 1 < p) (hp3 : p ≤ 3)
   set F := fun s : ℝ => exp ((↑Real.pi * (↑s + 1) / 6) * I) * (↑Real.pi / 6 * I) with hF_def
   apply arc_deriv_continuous.continuousAt.tendsto.mono_left nhdsWithin_le_nhds |>.congr'
   filter_upwards [Ioo_mem_nhdsLT h1p] with s hs
-  have hs1 : 1 < s := hs.1
-  have hs3 : s < 3 := lt_of_lt_of_le hs.2 hp3
-  have heq := fdBoundary_H_eq_arc_near (H := H) hs1 hs3
-  exact ((Filter.EventuallyEq.deriv_eq heq).trans (arc_hasDerivAt s).deriv).symm
+  exact ((Filter.EventuallyEq.deriv_eq
+    (fdBoundary_H_eq_arc_near (H := H) hs.1 (lt_of_lt_of_le hs.2 hp3))).trans
+    (arc_hasDerivAt s).deriv).symm
 
 private lemma arc_tendsto_right {H : ℝ} (p : ℝ) (hp1 : 1 ≤ p) (hp3 : p < 3) :
     Tendsto (deriv (fdBoundaryH H)) (𝓝[>] p) (𝓝 (exp ((↑Real.pi * (↑p + 1) / 6) * I) *
@@ -292,10 +290,9 @@ private lemma arc_tendsto_right {H : ℝ} (p : ℝ) (hp1 : 1 ≤ p) (hp3 : p < 3
   set F := fun s : ℝ => exp ((↑Real.pi * (↑s + 1) / 6) * I) * (↑Real.pi / 6 * I) with hF_def
   apply arc_deriv_continuous.continuousAt.tendsto.mono_left nhdsWithin_le_nhds |>.congr'
   filter_upwards [Ioo_mem_nhdsGT hp3] with s hs
-  have hs1 : 1 < s := lt_of_le_of_lt hp1 hs.1
-  have hs3 : s < 3 := hs.2
-  have heq := fdBoundary_H_eq_arc_near (H := H) hs1 hs3
-  exact ((Filter.EventuallyEq.deriv_eq heq).trans (arc_hasDerivAt s).deriv).symm
+  exact ((Filter.EventuallyEq.deriv_eq
+    (fdBoundary_H_eq_arc_near (H := H) (lt_of_le_of_lt hp1 hs.1) hs.2)).trans
+    (arc_hasDerivAt s).deriv).symm
 
 lemma fdBoundary_H_left_deriv_limit (H : ℝ)
     (hH : Real.sqrt 3 / 2 < H)
@@ -396,18 +393,14 @@ private lemma seg4_eventuallyEq_left_4 (H : ℝ) :
     fdBoundarySeg4H H =ᶠ[𝓝[≤] 4] fdBoundaryH H :=
   eventuallyEq_nhdsLE_of_Ioo 3 5 (by norm_num) (by norm_num) fun s hs => by
     rcases eq_or_lt_of_le (show s ≤ 4 from hs.2) with rfl | h
-    · simp only [fdBoundarySeg4H, fdBoundary_H_at_four]
-      push_cast
-      ring
+    · simp only [fdBoundarySeg4H, fdBoundary_H_at_four]; push_cast; ring
     · exact (fdBoundary_H_eq_seg4_H (by linarith [hs.1.1]) (le_of_lt h)).symm
 
 private lemma seg5_eventuallyEq_right_4 (H : ℝ) :
     fdBoundarySeg5H H =ᶠ[𝓝[≥] 4] fdBoundaryH H :=
   eventuallyEq_nhdsGE_of_Ioo 3 5 (by norm_num) (by norm_num) fun s hs => by
     rcases eq_or_lt_of_le (show (4 : ℝ) ≤ s from hs.2) with rfl | h
-    · simp only [fdBoundarySeg5H, fdBoundary_H_at_four]
-      push_cast
-      ring
+    · simp only [fdBoundarySeg5H, fdBoundary_H_at_four]; push_cast; ring
     · exact (fdBoundary_H_eq_seg5_H h).symm
 
 lemma fdBoundary_H_not_differentiableAt_4 {H : ℝ} (hH : Real.sqrt 3 / 2 < H) :
@@ -437,9 +430,7 @@ private lemma arc_eventuallyEq_left_3 (H : ℝ) :
         (fdBoundary_H_at_three H).trans fdBoundary_at_three.symm]
       simp only [fdBoundary, show ¬(3 : ℝ) ≤ 1 from by norm_num, ↓reduceIte,
         show ¬(3 : ℝ) ≤ 2 from by norm_num, show (3 : ℝ) ≤ 3 from le_rfl]
-      congr 1
-      push_cast
-      ring
+      congr 1; push_cast; ring
     · exact (fdBoundary_H_eq_arc_near (by linarith [hs.1.1]) hs3').symm.eq_of_nhds
 
 private lemma seg4_eventuallyEq_right_3 (H : ℝ) :
@@ -450,8 +441,7 @@ private lemma seg4_eventuallyEq_right_3 (H : ℝ) :
         (fdBoundary_H_at_three H).trans fdBoundary_at_three.symm, fdBoundary_at_three]
       simp only [fdBoundarySeg4H, ellipticPointRho, ellipticPointRho',
         UpperHalfPlane.coe_mk]
-      push_cast
-      ring
+      push_cast; ring
     · exact (fdBoundary_H_eq_seg4_H h (by linarith [hs.1.2])).symm
 
 lemma fdBoundary_H_not_differentiableAt_3 {H : ℝ} (_hH : Real.sqrt 3 / 2 < H) :
@@ -510,8 +500,7 @@ private lemma arc_eventuallyEq_right_1 (H : ℝ) :
     · simp only [fdBoundaryH, show (1 : ℝ) ≤ 1 from le_rfl, ite_true]
       rw [show (↑Real.pi * (↑(1 : ℝ) + 1) / 6) * I = ↑(Real.pi / 3 : ℝ) * I from by push_cast; ring,
         exp_mul_I, ← ofReal_cos, ← ofReal_sin, Real.cos_pi_div_three, Real.sin_pi_div_three]
-      push_cast
-      ring
+      push_cast; ring
     · exact (fdBoundary_H_eq_arc_near hs1 (by linarith [hs.1.2])).symm.eq_of_nhds
 
 lemma fdBoundary_H_not_differentiableAt_1 {H : ℝ} (_hH : Real.sqrt 3 / 2 < H) :
@@ -745,11 +734,10 @@ lemma fdBoundary_H_deriv_continuousOn_Ioo_13 (H : ℝ) :
 lemma fdBoundary_H_deriv_continuousOn_Ioo_34 (H : ℝ) :
     ContinuousOn (deriv (fdBoundaryH H)) (Ioo 3 4) := by
   intro t ht
-  have h3 : 3 < t := ht.1
-  have h4 : t < 4 := ht.2
-  exact (fdBoundary_H_deriv_continuousAt_off_fullPartition H t ⟨by linarith, by linarith⟩
-    (notMem_fullPartition_of_lt (by linarith) (by linarith) (by linarith) (by linarith)
-      (by linarith) (by linarith))).continuousWithinAt
+  exact (fdBoundary_H_deriv_continuousAt_off_fullPartition H t
+      ⟨by linarith [ht.1], by linarith [ht.2]⟩
+    (notMem_fullPartition_of_lt (by linarith [ht.1]) (by linarith [ht.1]) (by linarith [ht.1])
+      (by linarith [ht.1]) (by linarith [ht.2]) (by linarith [ht.2]))).continuousWithinAt
 
 lemma fdBoundary_H_deriv_continuousOn_Ioo_45 (H : ℝ) :
     ContinuousOn (deriv (fdBoundaryH H)) (Ioo 4 5) := by

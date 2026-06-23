@@ -108,15 +108,15 @@ private theorem G_eval_eq_f (p : ℍ) :
 theorem orderOfVanishingAt'_eq_zero_of_ne_zero' (p : ℍ) (hp : f p ≠ 0) :
     orderOfVanishingAt' f p = 0 := by
   unfold orderOfVanishingAt'
-  have h_nf : MeromorphicNFAt _ (p : ℂ) := AnalyticAt.meromorphicNFAt (G_analyticAt f p)
-  have hGp : (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (p : ℂ) ≠ 0 := by
-    rw [G_eval_eq_f]; exact hp
+  have h_nf : MeromorphicNFAt _ (p : ℂ) := (G_analyticAt f p).meromorphicNFAt
+  have hGp : (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (p : ℂ) ≠ 0 :=
+    G_eval_eq_f f p ▸ hp
   rw [h_nf.meromorphicOrderAt_eq_zero_iff.mpr hGp]; rfl
 
 /-- `orderOfVanishingAt' f p ≠ 0` implies `f p = 0`. -/
 theorem eq_zero_of_orderOfVanishingAt'_ne_zero' (p : ℍ)
-    (hp : orderOfVanishingAt' (⇑f) p ≠ 0) : f p = 0 := by
-  by_contra h; exact hp (orderOfVanishingAt'_eq_zero_of_ne_zero' f p h)
+    (hp : orderOfVanishingAt' (⇑f) p ≠ 0) : f p = 0 :=
+  by_contra fun h => hp (orderOfVanishingAt'_eq_zero_of_ne_zero' f p h)
 
 /-- `f ≠ 0` and `f p = 0` implies `orderOfVanishingAt' f p ≠ 0`. -/
 theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f p = 0) :
@@ -145,8 +145,7 @@ theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f 
 
 private theorem modularFormCompOfComplex_eq' (p : ℍ) :
     modularFormCompOfComplex f (p : ℂ) = f p := by
-  simp only [modularFormCompOfComplex, Function.comp_apply]
-  congr 1; rw [UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
+  simp [modularFormCompOfComplex, UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
 
 theorem fd_im_gt_half (p : ℍ) (hp : p ∈ 𝒟) : (1 : ℝ)/2 < (p : ℂ).im := by
   by_contra h_le; push Not at h_le
@@ -247,12 +246,9 @@ theorem s₀_complete (hf : f ≠ 0) :
 theorem orb_rho_plus_one_eq_orb_rho :
     orb ellipticPointRhoPlusOne' = (orho : Orbit) := by
   change Quotient.mk'' ellipticPointRhoPlusOne' = Quotient.mk'' ellipticPointRho'
-  rw [Quotient.eq'']
-  rw [MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
+  rw [Quotient.eq'', MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
   exact ⟨ModularGroup.T, by
-    rw [UpperHalfPlane.modular_T_smul]
-    ext
-    simp [ellipticPointRho', ellipticPointRhoPlusOne', UpperHalfPlane.coe_vadd]
-    ring⟩
+    rw [UpperHalfPlane.modular_T_smul]; ext
+    simp [ellipticPointRho', ellipticPointRhoPlusOne', UpperHalfPlane.coe_vadd]; ring⟩
 
 end

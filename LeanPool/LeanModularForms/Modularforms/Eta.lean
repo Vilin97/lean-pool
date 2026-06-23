@@ -99,9 +99,7 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
       (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := (z : ℂ)) z.2)
 
 lemma eta_logderivs : {z : ℂ | 0 < z.im}.EqOn (logDeriv (η ∘ (fun z : ℂ => -1/z)))
-  (logDeriv ((csqrt) * η)) := by
-  intro z hz
-  exact eta_logDeriv_eql ⟨z, hz⟩
+  (logDeriv ((csqrt) * η)) := fun z hz => eta_logDeriv_eql ⟨z, hz⟩
 
 lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   (z • ((csqrt) * η)) := by
@@ -111,8 +109,7 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
   · apply DifferentiableOn.comp
     pick_goal 4
     · use ({z : ℂ | 0 < z.im})
-    · rw [DifferentiableOn]
-      intro x hx
+    · intro x hx
       apply DifferentiableAt.differentiableWithinAt
       simpa [ModularForm.eta] using
         (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := x) hx)
@@ -132,15 +129,11 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
       simp only [inv_neg, neg_im, inv_im, Left.neg_pos_iff] at *
       exact this
   · apply DifferentiableOn.mul
-    · simp only [DifferentiableOn, mem_setOf_eq]
-      intro x hx
-      apply (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
-    simp only [DifferentiableOn, mem_setOf_eq]
-    intro x hx
-    have hηx : DifferentiableAt ℂ η x := by
+    · intro x hx; exact (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
+    · intro x hx
+      apply DifferentiableAt.differentiableWithinAt
       simpa [ModularForm.eta] using
         (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := x) hx)
-    exact hηx.differentiableWithinAt
   · exact isOpen_lt continuous_const Complex.continuous_im
   · apply Convex.isPreconnected
     exact convex_halfSpace_im_gt 0
@@ -161,8 +154,7 @@ lemma eta_equality : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   obtain ⟨z, hz, h⟩ := h
   intro x hx
   have h2 := h hx
-  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by
-    simp only [mem_setOf_eq, Complex.I_im, zero_lt_one]
+  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by simp [Complex.I_im]
   have h3 := h hI
   simp only [comp_apply, div_I, neg_mul, one_mul, neg_neg, Pi.smul_apply, Pi.mul_apply,
     smul_eq_mul] at h3

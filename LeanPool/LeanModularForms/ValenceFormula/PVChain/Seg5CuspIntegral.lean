@@ -447,9 +447,7 @@ theorem seg5_logDeriv_integral_value_bridge {H : ℝ} (hH : Real.sqrt 3 / 2 < H)
       logDeriv (modularFormCompOfComplex f) (fdBoundaryH H t) *
         deriv (fdBoundaryH H) t =
       2 * ↑Real.pi * I * (orderAtCusp' f : ℂ) := by
-  have hH_pos : 0 < H := by
-    calc (0 : ℝ) < Real.sqrt 3 / 2 := by positivity
-      _ < H := hH
+  have hH_pos : 0 < H := lt_trans (by positivity) hH
   have h_eq_ae : ∀ᵐ t ∂MeasureTheory.volume,
       t ∈ Set.uIoc 4 5 →
         logDeriv (modularFormCompOfComplex f) (fdBoundaryH H t) *
@@ -463,8 +461,8 @@ theorem seg5_logDeriv_integral_value_bridge {H : ℝ} (hH : Real.sqrt 3 / 2 < H)
         logDeriv (modularFormCompOfComplex f) (fdBoundaryH H t) *
           deriv (fdBoundaryH H) t
       = ∫ t in (4 : ℝ)..5,
-        logDeriv (modularFormCompOfComplex f) (fdBoundarySeg5H H t) := by
-        exact intervalIntegral.integral_congr_ae h_eq_ae
+        logDeriv (modularFormCompOfComplex f) (fdBoundarySeg5H H t) :=
+        intervalIntegral.integral_congr_ae h_eq_ae
     _ = 2 * ↑Real.pi * I * (orderAtCusp' f : ℂ) :=
         seg5_logDeriv_integral_eq_H f hf hH_pos hcusp_nonvan
 

@@ -151,10 +151,8 @@ theorem oncurve_seg4_capture
   have h4s : (4 : ℝ) - s = t := by rw [hs_def]; ring
   have h_seg_eq : z = fdBoundarySeg1H H s - 1 := by
     rw [hz_seg, ← h4s]; exact seg4_eq_seg1_minus_one_H H s hs_Icc
-  have h_periodic : Function.Periodic (modularFormCompOfComplex f) (1 : ℂ) := by
-    have := SlashInvariantFormClass.periodic_comp_ofComplex f
-      (by simp : (1 : ℝ) ∈ (Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) Γ(1)).strictPeriods)
-    simpa only [Complex.ofReal_one] using this
+  have h_periodic : Function.Periodic (modularFormCompOfComplex f) (1 : ℂ) :=
+    SlashInvariantFormClass.periodic_comp_ofComplex f (by simp)
   have h_z_plus_1 : z + 1 = fdBoundarySeg1H H s := by rw [h_seg_eq]; ring
   have h_zero_seg1 : modularFormCompOfComplex f (fdBoundarySeg1H H s) = 0 := by
     rw [← h_z_plus_1]; exact (h_periodic z).symm ▸ h_zero

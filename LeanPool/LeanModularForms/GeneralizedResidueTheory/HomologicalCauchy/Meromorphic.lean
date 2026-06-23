@@ -74,12 +74,9 @@ private lemma contourIntegral_eq_of_agree_on_curve (f g : ℂ → ℂ)
     (γ : PiecewiseC1Immersion)
     (h_agree : ∀ t ∈ Icc γ.a γ.b, f (γ.toFun t) = g (γ.toFun t)) :
     ∫ t in γ.a..γ.b, f (γ.toFun t) * deriv γ.toFun t =
-    ∫ t in γ.a..γ.b, g (γ.toFun t) * deriv γ.toFun t := by
-  apply intervalIntegral.integral_congr
-  intro t ht
-  rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht
-  dsimp only
-  rw [h_agree t ht]
+    ∫ t in γ.a..γ.b, g (γ.toFun t) * deriv γ.toFun t :=
+  intervalIntegral.integral_congr fun t ht => by
+    rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht; exact congr_arg (· * _) (h_agree t ht)
 
 private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s : ℂ)
     (hf : MeromorphicAt f s) (U : Set ℂ) (hf_diff : DifferentiableOn ℂ f (U \ {s}))
@@ -95,11 +92,7 @@ private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s
   set pp := GeneralizedResidueTheory.meromorphicPrincipalPart f s
   have hab := le_of_lt γ.hab
   have hγ_bdd := piecewiseC1Immersion_deriv_bounded γ
-  have h_decomp : ∀ t ∈ Set.uIcc γ.a γ.b,
-      f (γ.toFun t) * deriv γ.toFun t =
-      pp (γ.toFun t) * deriv γ.toFun t +
-        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by intro t _; ring
-  rw [intervalIntegral.integral_congr h_decomp]
+  rw [intervalIntegral.integral_congr (fun t _ => by ring)]
   have h_pp_int : IntervalIntegrable
       (fun t => pp (γ.toFun t) * deriv γ.toFun t) volume γ.a γ.b :=
     (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ_bdd).continuousOn_mul
@@ -271,27 +264,24 @@ private theorem remainder_integrable (S : Finset ℂ) (f : ℂ → ℂ) (U : Set
     (hγ_avoids : ∀ s ∈ S, ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ s) :
     IntervalIntegrable (fun t => (f (γ.toFun t) -
       ∑ s ∈ S, GeneralizedResidueTheory.meromorphicPrincipalPart f s (γ.toFun t)) *
-      deriv γ.toFun t) volume γ.a γ.b := by
-  have hab := le_of_lt γ.hab
-  have hγ_bdd := piecewiseC1Immersion_deriv_bounded γ
-  have h_g_diff_off := diff_sub_principalParts_differentiableOn S f U hf_mero hf_diff
-  have h_image_off := image_subset_diff_of_avoids S U γ h_null hγ_avoids
-  exact (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ_bdd).continuousOn_mul
-    (Set.uIcc_of_le hab ▸ h_g_diff_off.continuousOn.comp
-      γ.toPiecewiseC1Curve.continuous_toFun (fun t ht => h_image_off ⟨t, ht, rfl⟩))
+      deriv γ.toFun t) volume γ.a γ.b :=
+  (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve
+      (piecewiseC1Immersion_deriv_bounded γ)).continuousOn_mul
+    (Set.uIcc_of_le (le_of_lt γ.hab) ▸
+      (diff_sub_principalParts_differentiableOn S f U hf_mero hf_diff).continuousOn.comp
+        γ.toPiecewiseC1Curve.continuous_toFun
+        (fun t ht => image_subset_diff_of_avoids S U γ h_null hγ_avoids ⟨t, ht, rfl⟩))
 
 private theorem principalParts_integrable (S : Finset ℂ) (f : ℂ → ℂ)
     (hf_mero : ∀ s ∈ S, MeromorphicAt f s) (γ : PiecewiseC1Immersion)
     (hγ_avoids : ∀ s ∈ S, ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ s) :
     IntervalIntegrable (fun t => (∑ s ∈ S,
       GeneralizedResidueTheory.meromorphicPrincipalPart f s (γ.toFun t)) *
-      deriv γ.toFun t) volume γ.a γ.b := by
-  have hab := le_of_lt γ.hab
-  have hγ_bdd := piecewiseC1Immersion_deriv_bounded γ
-  exact (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ_bdd).continuousOn_mul
-    (Set.uIcc_of_le hab ▸ by
-      apply continuousOn_finsetSum; intro s hs
-      exact (GeneralizedResidueTheory.meromorphicPrincipalPart_differentiableOn f s
+      deriv γ.toFun t) volume γ.a γ.b :=
+  (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve
+      (piecewiseC1Immersion_deriv_bounded γ)).continuousOn_mul
+    (Set.uIcc_of_le (le_of_lt γ.hab) ▸ continuousOn_finsetSum fun s hs =>
+      (GeneralizedResidueTheory.meromorphicPrincipalPart_differentiableOn f s
         (hf_mero s hs)).continuousOn.comp γ.toPiecewiseC1Curve.continuous_toFun
         (fun t ht => Set.mem_compl_singleton_iff.mpr (hγ_avoids s hs t ht)))
 
@@ -301,11 +291,10 @@ private theorem contourIntegral_correction_eq (S : Finset ℂ) (g g_corr : ℂ �
     (h_agree : ∀ z ∈ U \ (S : Set ℂ), g_corr z = g z) :
     ∀ t ∈ Set.uIcc γ.a γ.b,
       g (γ.toFun t) * deriv γ.toFun t =
-      g_corr (γ.toFun t) * deriv γ.toFun t := by
-  intro t ht
-  rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht
-  rw [h_agree _ (image_subset_diff_of_avoids S U γ h_null hγ_avoids
-    ⟨t, ht, rfl⟩)]
+      g_corr (γ.toFun t) * deriv γ.toFun t :=
+  fun t ht => by
+    rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht
+    rw [h_agree _ (image_subset_diff_of_avoids S U γ h_null hγ_avoids ⟨t, ht, rfl⟩)]
 
 /-- Finset version: induction on |S| using the single-pole version. -/
 theorem contourIntegral_eq_zero_of_meromorphic_residue_zero_finset_nh (S : Finset ℂ)
