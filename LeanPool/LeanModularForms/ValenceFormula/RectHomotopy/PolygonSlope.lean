@@ -117,6 +117,9 @@ lemma slope_fdPolygon_seg5 (s t : ℝ) (hs : s > 4) (ht : t > 4) (hst : s ≠ t)
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 
+private lemma HHeight_sub_sqrt3_half : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
+  simp only [HHeight]; push_cast; ring
+
 lemma fdPolygon_deriv_ne_at_t1 : (-I : ℂ) ≠ (iPoint - rho') := by
   simp only [rho', iPoint]
   intro heq
@@ -393,9 +396,8 @@ lemma fdPolygon_deriv_bounded :
         filter_upwards [eventually_lt_nhds h_seg1] with s hs
         simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
       rw [heq, fdPolygon_deriv_seg1]; simp only
-      rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one]
-      have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by simp only [HHeight]; push_cast; ring
-      rw [heq2, norm_one]; norm_num
+      rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
+        HHeight_sub_sqrt3_half, norm_one]; norm_num
     · push Not at h_seg1
       by_cases h_seg2 : t < 2 ∧ t > 1
       · have heq : deriv fdPolygon t = deriv fdPolygonSeg2 t := by
@@ -433,10 +435,8 @@ lemma fdPolygon_deriv_bounded :
                 show ¬s ≤ 3 from not_le.mpr hs1, show s ≤ 4 from le_of_lt hs2,
                 if_true, if_false, fdPolygonSeg4]
             rw [heq, fdPolygon_deriv_seg4]; simp only
-            rw [Complex.norm_mul, Complex.norm_I, mul_one]
-            have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-              simp only [HHeight]; push_cast; ring
-            rw [heq2, norm_one]; norm_num
+            rw [Complex.norm_mul, Complex.norm_I, mul_one,
+              HHeight_sub_sqrt3_half, norm_one]; norm_num
           · push Not at h_seg4
             by_cases h_seg5 : t > 4 ∧ t < 5
             · have heq : deriv fdPolygon t = deriv fdPolygonSeg5 t := by
@@ -456,10 +456,8 @@ lemma fdPolygon_deriv_bounded :
                   filter_upwards [Iio_mem_nhds (by norm_num : (0 : ℝ) < 1)] with s hs
                   simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
                 rw [heq, fdPolygon_deriv_seg1]; simp only
-                rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one]
-                have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-                  simp only [HHeight]; push_cast; ring
-                rw [heq2, norm_one]; norm_num
+                rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
+                  HHeight_sub_sqrt3_half, norm_one]; norm_num
               · by_cases h_five : t = 5
                 · have heq : deriv fdPolygon t = deriv fdPolygonSeg5 t := by
                     apply Filter.EventuallyEq.deriv_eq; rw [h_five]

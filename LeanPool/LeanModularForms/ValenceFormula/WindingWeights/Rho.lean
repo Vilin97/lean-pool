@@ -85,8 +85,8 @@ private lemma rho_diff_norm (δ : ℝ) (hδ : 0 ≤ Real.sin (δ * Real.pi / 12)
 theorem fdBoundary_H_sub_rho_seg0_re (H : ℝ) {t : ℝ} (ht : t ≤ 1) :
     (fdBoundaryH H t - ellipticPointRho).re = 1 := by
   rw [fdBoundary_H_seg0 H ht]
-  simp only [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
-  simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.neg_re,
+  simp only [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk,
+    Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.neg_re,
     Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.one_re,
     Complex.sub_im, Complex.mul_im,
     Complex.div_ofNat_re, Complex.div_ofNat_im]

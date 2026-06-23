@@ -126,10 +126,7 @@ private lemma not_diffAt_at_two (s : ℝ) (hs0 : s ≠ 0) :
       Complex.one_im]
   have h_im_eq := congr_arg Complex.im h_pts_eq
   rw [h_im_left, h_im_right] at h_im_eq
-  have h_sqrt3_eq : Real.sqrt 3 = 2 := by linarith
-  have h_sq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)
-  rw [h_sqrt3_eq] at h_sq
-  norm_num at h_sq
+  nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0), Real.sqrt_nonneg 3]
 
 /-- The derivative-norm bound at the corner `t = 2`, `s = 0` (the homotopy is smooth there). -/
 private lemma deriv_bound_at_two_zero :

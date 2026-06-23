@@ -160,39 +160,13 @@ lemma norm_deriv_H_seg1_le (t : ℝ) (_s : ℝ) :
               Real.sqrt 3 / 2)) * I)
       (-((HHeight : ℂ) -
         Real.sqrt 3 / 2) * I) t := by
-    have h1 :
-        HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-          1 t :=
-      Complex.ofRealCLM.hasDerivAt
     have h2 : HasDerivAt (fun t' : ℝ =>
-          (↑t' : ℂ) * ((HHeight : ℂ) -
-              Real.sqrt 3 / 2))
-        ((HHeight : ℂ) -
-          Real.sqrt 3 / 2) t := by
-      have :=
-        h1.mul_const ((HHeight : ℂ) -
-            Real.sqrt 3 / 2)
-      simp only [one_mul] at this
-      exact this
-    have h3 : HasDerivAt (fun t' : ℝ =>
-          (HHeight : ℂ) - (↑t' : ℂ) * ((HHeight : ℂ) -
-              Real.sqrt 3 / 2))
-        (-((HHeight : ℂ) -
-          Real.sqrt 3 / 2)) t := by
-      have := (hasDerivAt_const t
-          (HHeight : ℂ)).sub h2
-      simp only [zero_sub] at this
-      exact this
-    have h4 : HasDerivAt (fun t' : ℝ =>
-          ((HHeight : ℂ) - (↑t' : ℂ) * ((HHeight : ℂ) -
-              Real.sqrt 3 / 2)) * I)
-        (-((HHeight : ℂ) -
-          Real.sqrt 3 / 2) * I) t :=
-      h3.mul_const I
-    have := (hasDerivAt_const t ((1/2 : ℂ))).add
-        h4
-    simp only [zero_add] at this
-    exact this
+          (↑t' : ℂ) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+        ((HHeight : ℂ) - Real.sqrt 3 / 2) t := by
+      simpa using Complex.ofRealCLM.hasDerivAt.mul_const ((HHeight : ℂ) - Real.sqrt 3 / 2)
+    have h4 := (((hasDerivAt_const t (HHeight : ℂ)).sub h2).mul_const I)
+    have := (hasDerivAt_const t ((1/2 : ℂ))).add h4
+    simp only [zero_add, zero_sub] at this; exact this
   rw [h_deriv.deriv, h_height]
   simp only [neg_one_mul, norm_neg,
     Complex.norm_I]
@@ -216,45 +190,14 @@ lemma norm_deriv_H_seg4_le (t : ℝ) (_s : ℝ) :
                 Real.sqrt 3 / 2)) * I)
       (((HHeight : ℂ) -
         Real.sqrt 3 / 2) * I) t := by
-    have h1 :
-        HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-          1 t :=
-      Complex.ofRealCLM.hasDerivAt
-    have h2 :
-        HasDerivAt (fun t' : ℝ => (↑t' : ℂ) - 3)
-          1 t :=
-      h1.sub_const 3
     have h3 : HasDerivAt (fun t' : ℝ =>
-          ((↑t' : ℂ) - 3) * ((HHeight : ℂ) -
-              Real.sqrt 3 / 2))
-        ((HHeight : ℂ) -
-          Real.sqrt 3 / 2) t := by
-      have :=
-        h2.mul_const ((HHeight : ℂ) -
-            Real.sqrt 3 / 2)
-      simp only [one_mul] at this
-      exact this
-    have h4 : HasDerivAt (fun t' : ℝ =>
-          (Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-              ((HHeight : ℂ) -
-                Real.sqrt 3 / 2))
-        ((HHeight : ℂ) -
-          Real.sqrt 3 / 2) t := by
-      have := (hasDerivAt_const t
-          (Real.sqrt 3 / 2 : ℂ)).add h3
-      simp only [zero_add] at this
-      exact this
-    have h5 : HasDerivAt (fun t' : ℝ =>
-          ((Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) *
-              ((HHeight : ℂ) -
-                Real.sqrt 3 / 2)) * I)
-        (((HHeight : ℂ) -
-          Real.sqrt 3 / 2) * I) t :=
-      h4.mul_const I
-    have := (hasDerivAt_const t ((-1/2 : ℂ))).add
-        h5
-    simp only [zero_add] at this
-    exact this
+          ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
+        ((HHeight : ℂ) - Real.sqrt 3 / 2) t := by
+      simpa using (Complex.ofRealCLM.hasDerivAt.sub_const 3).mul_const
+        ((HHeight : ℂ) - Real.sqrt 3 / 2)
+    have h5 := (((hasDerivAt_const t (Real.sqrt 3 / 2 : ℂ)).add h3).mul_const I)
+    have := (hasDerivAt_const t ((-1/2 : ℂ))).add h5
+    simp only [zero_add] at this; exact this
   rw [h_deriv.deriv, h_height]
   simp only [one_mul, Complex.norm_I]
   norm_num
@@ -264,17 +207,8 @@ lemma norm_deriv_H_seg5_le (t : ℝ) (_s : ℝ) :
     ‖deriv (fun t' : ℝ => ((↑t' : ℂ) - 9/2) +
         (HHeight : ℂ) * I) t‖ ≤ 5 := by
   have h_deriv : HasDerivAt (fun t' : ℝ =>
-        ((↑t' : ℂ) - 9/2) + (HHeight : ℂ) * I) 1 t := by
-    have h1 :
-        HasDerivAt (fun t' : ℝ => (↑t' : ℂ))
-          1 t :=
-      Complex.ofRealCLM.hasDerivAt
-    have h2 :
-        HasDerivAt (fun t' : ℝ =>
-            (↑t' : ℂ) - 9/2) 1 t :=
-      h1.sub_const (9/2)
-    have := h2.add_const ((HHeight : ℂ) * I)
-    convert this using 1
+        ((↑t' : ℂ) - 9/2) + (HHeight : ℂ) * I) 1 t :=
+    (Complex.ofRealCLM.hasDerivAt.sub_const (9/2)).add_const ((HHeight : ℂ) * I)
   rw [h_deriv.deriv]
   norm_num
 

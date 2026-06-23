@@ -66,9 +66,7 @@ lemma divChain_T_gen (k : Fin n) :
   intro i hi
   simp only [T_gen_diag_val]
   by_cases h1 : i < n - 1 - (k : ℕ)
-  · by_cases h2 : i + 1 < n - 1 - (k : ℕ)
-    · simp [h1, h2]
-    · simp [h1, h2]
+  · by_cases h2 : i + 1 < n - 1 - (k : ℕ) <;> simp [h1, h2]
   · have h2 : ¬ (i + 1 < n - 1 - (k : ℕ)) := by omega
     simp [h1, h2]
 
@@ -89,11 +87,7 @@ lemma T_gen_exp_monotone (k : Fin n) :
     Monotone (fun i : Fin n => if (i : ℕ) < n - 1 - (k : ℕ) then 0 else 1) := by
   intro i j hij
   simp only
-  split_ifs with h1 h2 h2
-  · exact le_rfl
-  · exact Nat.zero_le _
-  · omega
-  · exact le_rfl
+  split_ifs with h1 h2 h2 <;> omega
 
 include hp
 /-- The k-th generator of RP: `T(1,...,1,p,...,p)` with `k+1` entries of `p`. -/

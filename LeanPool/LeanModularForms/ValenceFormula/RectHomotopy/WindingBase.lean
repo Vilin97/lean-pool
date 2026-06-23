@@ -485,18 +485,18 @@ lemma w_im_pos_near_tL_right :
 /-- Tendsto arg(w(t)) from the left of tL to -π. -/
 lemma tendsto_arg_w_left :
     Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-      (𝓝[Iio (tL refP₀)] (tL refP₀)) (𝓝 (-Real.pi)) := by
-  exact (Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
+      (𝓝[Iio (tL refP₀)] (tL refP₀)) (𝓝 (-Real.pi)) :=
+  (Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
     w_tL_re_neg w_tL_im_zero).comp (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       continuous_w.continuousAt.continuousWithinAt w_im_neg_near_tL_left)
 
 /-- Tendsto arg(w(t)) from the right of tL to π. -/
 lemma tendsto_arg_w_right :
     Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-      (𝓝[Ioi (tL refP₀)] (tL refP₀)) (𝓝 Real.pi) := by
-  exact (Complex.tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
+      (𝓝[Ioi (tL refP₀)] (tL refP₀)) (𝓝 Real.pi) :=
+  (Complex.tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
     w_tL_re_neg w_tL_im_zero).comp (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       continuous_w.continuousAt.continuousWithinAt
-      (w_im_pos_near_tL_right.mono (fun t ht => le_of_lt ht)))
+      (w_im_pos_near_tL_right.mono (fun _t ht => le_of_lt ht)))
 
 end RectHomotopyProof

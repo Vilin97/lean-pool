@@ -267,9 +267,7 @@ lemma seg4_vec_at_tL (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2) 
 lemma arg_at_tL_eq_pi (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2) (hp_im_pos : 0 < p.im)
     (hp_im : p.im < HHeight) :
     Complex.arg (fdPolygon (tL p) - p) = Real.pi := by
-  have hvec := seg4_vec_at_tL p hp_norm hp_re hp_im_pos hp_im
-  rw [Complex.arg_eq_pi_iff]
-  exact ⟨hvec.1, hvec.2⟩
+  exact Complex.arg_eq_pi_iff.mpr (seg4_vec_at_tL p hp_norm hp_re hp_im_pos hp_im)
 
 /-- Before tL on seg4: arg < 0. -/
 lemma arg_seg4_before (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2) (hp_im_pos : 0 < p.im)
@@ -391,10 +389,8 @@ lemma fdPolygonRadialCircle_wrapCount (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re :
 /-- circleParamCW also makes exactly one clockwise loop. -/
 lemma circleParamCW_wrapCount :
     circleParamCWAngle 0 = 2 * Real.pi ∧
-      circleParamCWAngle 5 = 0 := by
-  constructor
-  · simp only [circleParamCWAngle]; norm_num
-  · simp only [circleParamCWAngle]; norm_num
+      circleParamCWAngle 5 = 0 :=
+  ⟨by simp only [circleParamCWAngle]; norm_num, by simp only [circleParamCWAngle]; norm_num⟩
 
 /-- Reference Y-coordinate on imaginary axis. -/
 noncomputable def refY₀ : ℝ := (1 + HHeight) / 2

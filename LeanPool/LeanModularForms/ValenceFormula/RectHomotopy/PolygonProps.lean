@@ -31,18 +31,16 @@ lemma fdPolygon_at_t2 : fdPolygon 2 = iPoint := by
   simp only [fdPolygon,
     show ¬(2 : ℝ) ≤ 1 from by norm_num,
     show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
-  simp only [chordSegment, iPoint]
-  simp only [show (2 : ℝ) - 1 = 1 by ring]
-  simp only [sub_self]; simp
+  simp only [chordSegment, iPoint, show (2 : ℝ) - 1 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_at_t3 : fdPolygon 3 = rho := by
   simp only [fdPolygon,
     show ¬(3 : ℝ) ≤ 1 from by norm_num,
     show ¬(3 : ℝ) ≤ 2 from by norm_num,
     show (3 : ℝ) ≤ 3 from le_refl 3, ↓reduceIte]
-  simp only [chordSegment, rho]
-  simp only [show (3 : ℝ) - 2 = 1 by ring]
-  simp only [sub_self]; simp
+  simp only [chordSegment, rho, show (3 : ℝ) - 2 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_at_t4 :
     fdPolygon 4 = -1/2 + HHeight * I := by
@@ -90,23 +88,21 @@ lemma fdPolygon_seg5_continuous :
 lemma fdPolygon_match_t1 :
     fdPolygonSeg1 1 = fdPolygonSeg2 1 := by
   simp only [fdPolygonSeg1, fdPolygonSeg2,
-    chordSegment, HHeight, rho']
-  simp only [sub_self]; simp
+    chordSegment, HHeight, rho', sub_self]
+  simp
 
 lemma fdPolygon_match_t2 :
     fdPolygonSeg2 2 = fdPolygonSeg3 2 := by
   simp only [fdPolygonSeg2, fdPolygonSeg3,
-    chordSegment, iPoint]
-  simp only [show (2 : ℝ) - 1 = 1 by ring,
-    show (2 : ℝ) - 2 = 0 by ring]
-  simp only [sub_self]; simp
+    chordSegment, iPoint, show (2 : ℝ) - 1 = 1 by ring,
+    show (2 : ℝ) - 2 = 0 by ring, sub_self]
+  simp
 
 lemma fdPolygon_match_t3 :
     fdPolygonSeg3 3 = fdPolygonSeg4 3 := by
   simp only [fdPolygonSeg3, fdPolygonSeg4,
-    chordSegment, rho, HHeight]
-  simp only [show (3 : ℝ) - 2 = 1 by ring]
-  simp only [sub_self]; simp
+    chordSegment, rho, HHeight, show (3 : ℝ) - 2 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_match_t4 :
     fdPolygonSeg4 4 = fdPolygonSeg5 4 := by
@@ -225,29 +221,19 @@ lemma Complex.deriv_ofReal' :
 lemma deriv_affine_mul (a b : ℂ) :
     deriv (fun t : ℝ => a + ↑t * b) = fun _ => b := by
   ext t
-  have h_id : HasDerivAt (fun t : ℝ => (↑t : ℂ)) 1 t :=
-    Complex.ofRealCLM.hasDerivAt
-  have h_mul : HasDerivAt (fun t : ℝ => (↑t : ℂ) * b) (1 * b) t := h_id.mul_const b
   have h_add : HasDerivAt (fun t : ℝ => a + ↑t * b) (0 + 1 * b) t :=
-    (hasDerivAt_const t a).add h_mul
-  simp only [zero_add, one_mul] at h_add
-  exact h_add.deriv
+    (hasDerivAt_const t a).add (Complex.ofRealCLM.hasDerivAt.mul_const b)
+  simpa using h_add.deriv
 
 lemma deriv_affine_shifted_mul (a b : ℂ) (c : ℝ) :
     deriv (fun t : ℝ => a + (↑t - ↑c) * b) =
       fun _ => b := by
   ext t
-  have h_id : HasDerivAt (fun t : ℝ => (↑t : ℂ)) 1 t :=
-    Complex.ofRealCLM.hasDerivAt
   have h_sub : HasDerivAt (fun t : ℝ => (↑t : ℂ) - ↑c) (1 - 0) t :=
-    h_id.sub (hasDerivAt_const t (↑c : ℂ))
-  simp only [sub_zero] at h_sub
-  have h_mul : HasDerivAt (fun t : ℝ => ((↑t : ℂ) - ↑c) * b)
-      (1 * b) t := h_sub.mul_const b
+    Complex.ofRealCLM.hasDerivAt.sub (hasDerivAt_const t (↑c : ℂ))
   have h_add : HasDerivAt (fun t : ℝ => a + (↑t - ↑c) * b) (0 + 1 * b) t :=
-    (hasDerivAt_const t a).add h_mul
-  simp only [zero_add, one_mul] at h_add
-  exact h_add.deriv
+    (hasDerivAt_const t a).add (by simpa using h_sub.mul_const b)
+  simpa using h_add.deriv
 
 lemma fdPolygon_deriv_seg1 :
     deriv fdPolygonSeg1 =

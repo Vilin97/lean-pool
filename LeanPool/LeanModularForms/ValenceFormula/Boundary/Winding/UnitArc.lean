@@ -108,6 +108,12 @@ private lemma unitArc_log_diff_tendsto (s : ℂ)
     exact (log_div_of_re_pos h_re_a h_re_b).symm
   exact h_ratio.congr' (h_ev_agree.mono fun _ h => h.symm)
 
+private lemma cos_pi_mul_div_six_abs (x : ℝ) :
+    Real.cos (Real.pi * x / 6) = Real.cos (Real.pi * |x| / 6) := by
+  rcases le_or_gt x 0 with h | h
+  · rw [abs_of_nonpos h, show Real.pi * x / 6 = -(Real.pi * (-x) / 6) from by ring, Real.cos_neg]
+  · rw [abs_of_pos h]
+
 private lemma normSq_exp_sub (α β : ℝ) :
     Complex.normSq (exp (↑α * I) - exp (↑β * I)) = 2 - 2 * Real.cos (α - β) := by
   rw [Complex.normSq_apply]
@@ -159,20 +165,8 @@ private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
   rw [show t₁ = t₀ + (t₁ - t₀) from by ring, show t₂ = t₀ + (t₂ - t₀) from by ring]
   have hns₁ := unitArc_normSq_at_offset s H t₀ (t₁ - t₀) h_s_arc (by linarith) (by linarith)
   have hns₂ := unitArc_normSq_at_offset s H t₀ (t₂ - t₀) h_s_arc (by linarith) (by linarith)
-  have hcos₁ : Real.cos (Real.pi * (t₁ - t₀) / 6) =
-      Real.cos (Real.pi * |t₁ - t₀| / 6) := by
-    rcases le_or_gt (t₁ - t₀) 0 with h | h
-    · rw [abs_of_nonpos h,
-        show Real.pi * (t₁ - t₀) / 6 = -(Real.pi * (-(t₁ - t₀)) / 6) from by ring,
-        Real.cos_neg]
-    · rw [abs_of_pos h]
-  have hcos₂ : Real.cos (Real.pi * (t₂ - t₀) / 6) =
-      Real.cos (Real.pi * |t₂ - t₀| / 6) := by
-    rcases le_or_gt (t₂ - t₀) 0 with h | h
-    · rw [abs_of_nonpos h,
-        show Real.pi * (t₂ - t₀) / 6 = -(Real.pi * (-(t₂ - t₀)) / 6) from by ring,
-        Real.cos_neg]
-    · rw [abs_of_pos h]
+  have hcos₁ := cos_pi_mul_div_six_abs (t₁ - t₀)
+  have hcos₂ := cos_pi_mul_div_six_abs (t₂ - t₀)
   have h_abs_bound : |t₂ - t₀| < 2 := by
     rw [abs_lt]; constructor <;> linarith [ht₀_Ioo.1, ht₀_Ioo.2]
   have hφ₁_nn : 0 ≤ Real.pi * |t₁ - t₀| / 6 := by positivity

@@ -186,9 +186,8 @@ lemma fdBoundaryToPolygonHomotopy_continuous :
     Continuous fdBoundaryToPolygonHomotopy := by
   have h45 : Continuous (fun p =>
       if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
-    apply Continuous.if_le H_seg4_continuous
-      H_seg5_continuous continuous_fst continuous_const
-    intro p hp; exact H_match_at_t4 p hp
+    exact Continuous.if_le H_seg4_continuous
+      H_seg5_continuous continuous_fst continuous_const H_match_at_t4
   have h345 : Continuous (fun p =>
       if p.1 ≤ 3 then HSeg3 p
       else if p.1 ≤ 4 then HSeg4 p
@@ -232,8 +231,8 @@ lemma fdBoundaryToPolygonHomotopy_at_zero (t : ℝ) (_ht : t ∈ Icc 0 5) :
   simp only [fdBoundaryToPolygonHomotopy, fdBoundary]
   split_ifs with h1 h2 h3 h4
   · rfl
-  · simp only [sub_zero]; simp
-  · simp only [sub_zero]; simp
+  · simp
+  · simp
   · rfl
   · rfl
 
@@ -242,8 +241,8 @@ lemma fdBoundaryToPolygonHomotopy_at_one (t : ℝ) (_ht : t ∈ Icc 0 5) :
   simp only [fdBoundaryToPolygonHomotopy, fdPolygon]
   split_ifs with h1 h2 h3 h4
   · rfl
-  · simp only [sub_self]; simp
-  · simp only [sub_self]; simp
+  · simp
+  · simp
   · rfl
   · rfl
 

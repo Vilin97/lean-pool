@@ -142,17 +142,13 @@ private lemma heightSens_continuous : Continuous heightSens := by
 private lemma fdBoundary_H_decomp (H₀ H' : ℝ) (t : ℝ) :
     fdBoundaryH H' t = fdBoundaryH H₀ t + ↑(H' - H₀) * heightSens t := by
   unfold fdBoundaryH heightSens
-  by_cases h1 : t ≤ 1
-  · simp only [h1, ↓reduceIte]; push_cast; ring
-  · push Not at h1; by_cases h2 : t ≤ 2
-    · simp only [not_le.mpr h1, h2, ↓reduceIte, show t ≤ 3 from by linarith]; ring
-    · push Not at h2; by_cases h3 : t ≤ 3
-      · simp only [not_le.mpr h1, not_le.mpr h2, h3, ↓reduceIte]; ring
-      · push Not at h3; by_cases h4 : t ≤ 4
-        · simp only [not_le.mpr h1, not_le.mpr h2, not_le.mpr h3, h4, ↓reduceIte]
-          push_cast; ring
-        · simp only [not_le.mpr h1, not_le.mpr h2, not_le.mpr h3, h4, ↓reduceIte]
-          push_cast; ring
+  by_cases h2 : t ≤ 2
+  · by_cases h1 : t ≤ 1 <;>
+      simp only [h1, h2, ↓reduceIte, show t ≤ 3 from by linarith] <;> push_cast <;> ring
+  · push Not at h2
+    have h1 : ¬ t ≤ 1 := by linarith
+    by_cases h3 : t ≤ 3 <;> by_cases h4 : t ≤ 4 <;>
+      simp only [show ¬ t ≤ 2 from by linarith, h1, h3, h4, ↓reduceIte] <;> push_cast <;> ring
 
 private lemma fdHomot_continuous (H₀ H₁ : ℝ) :
     Continuous (fun (q : ℝ × ℝ) => fdBoundaryH (H₀ + q.2 * (H₁ - H₀)) q.1) := by

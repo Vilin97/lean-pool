@@ -58,8 +58,7 @@ lemma divChain_ppow (p : ℕ) (e : Fin n → ℕ) (hmono : Monotone e) :
     DivChain n (ppowDiag n p e) := by
   intro i hi
   simp only [ppowDiag]
-  exact Nat.pow_dvd_pow p (hmono (show (⟨i, by omega⟩ : Fin n) ≤ ⟨i + 1, hi⟩ by
-    exact Fin.mk_le_mk.mpr (by omega)))
+  exact Nat.pow_dvd_pow p (hmono (Fin.mk_le_mk.mpr (by omega)))
 
 /-- Extract the p-component of each entry in a positive diagonal. -/
 def pComponent (p : ℕ) (a : Fin n → ℕ) : Fin n → ℕ :=

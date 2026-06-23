@@ -85,8 +85,7 @@ lemma cpv_exists_on_smooth_subinterval (H : ℝ) (_hH : Real.sqrt 3 / 2 < H)
   have hγ_meas : Measurable (fdBoundaryH H) := (fdBoundary_H_continuous H).measurable
   have hγ_cont : ContinuousOn (fdBoundaryH H) (Set.Icc a' b') :=
     (fdBoundary_H_continuous H).continuousOn
-  obtain ⟨limit, h_limit⟩ := pv_limit_via_dyadic hat₀ hL_ne hγ_C2
-    (show deriv (fdBoundaryH H) t₀ = deriv (fdBoundaryH H) t₀ from rfl)
+  obtain ⟨limit, h_limit⟩ := pv_limit_via_dyadic hat₀ hL_ne hγ_C2 rfl
     hγ_cont_deriv hγ_meas hγ_cont h_inj
   exact ⟨limit, h_limit.congr (fun ε => intervalIntegral.integral_congr
     (fun t _ => by rw [hs]))⟩

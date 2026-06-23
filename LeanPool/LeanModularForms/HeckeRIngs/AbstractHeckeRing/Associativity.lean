@@ -633,24 +633,19 @@ noncomputable instance instIsScalarTower :
     rw [show x • y = y * x from rfl]
     induction x using Finsupp.induction_linear with
     | zero =>
-      have h1 : y * (0 : 𝕋 P ℤ) = 0 :=
-        @mul_zero _ (instNonUnitalNonAssocSemiring P).toMulZeroClass y
-      rw [h1, zero_smul_HeckeModule, zero_smul_HeckeModule]
+      rw [@mul_zero _ (instNonUnitalNonAssocSemiring P).toMulZeroClass y,
+        zero_smul_HeckeModule, zero_smul_HeckeModule]
     | add x₁ x₂ ih₁ ih₂ =>
-      have h1 : y * (x₁ + x₂) = y * x₁ + y * x₂ :=
-        (instNonUnitalNonAssocSemiring P).left_distrib y x₁ x₂
-      rw [h1, smul_add_left, ih₁, ih₂, ← smul_add_left]
+      rw [(instNonUnitalNonAssocSemiring P).left_distrib y x₁ x₂,
+        smul_add_left, ih₁, ih₂, ← smul_add_left]
     | single D₁ a₁ =>
       induction y using Finsupp.induction_linear with
       | zero =>
-        have h1 : (0 : 𝕋 P ℤ) * Finsupp.single D₁ a₁ = 0 :=
-          @zero_mul _ (instNonUnitalNonAssocSemiring P).toMulZeroClass _
-        rw [h1, zero_smul_HeckeModule, smul_zero_HeckeModule]
+        rw [@zero_mul _ (instNonUnitalNonAssocSemiring P).toMulZeroClass _,
+          zero_smul_HeckeModule, smul_zero_HeckeModule]
       | add y₁ y₂ ih₁ ih₂ =>
-        have h1 : (y₁ + y₂) * Finsupp.single D₁ a₁
-            = y₁ * Finsupp.single D₁ a₁ + y₂ * Finsupp.single D₁ a₁ :=
-          (instNonUnitalNonAssocSemiring P).right_distrib y₁ y₂ _
-        rw [h1, smul_add_left, ih₁, ih₂, smul_add_left, smul_add_right]
+        rw [(instNonUnitalNonAssocSemiring P).right_distrib y₁ y₂ (Finsupp.single D₁ a₁),
+          smul_add_left, ih₁, ih₂, smul_add_left, smul_add_right]
       | single D₂ a₂ =>
         induction z using Finsupp.induction_linear with
         | zero => simp only [smul_zero_HeckeModule]

@@ -270,13 +270,12 @@ lemma fdBoundary_H_im_le_H {H : ℝ} (hH : 1 ≤ H) :
   · push Not at h1
     by_cases h2 : t ≤ 2
     · rw [fdBoundary_H_eq_seg2_H H h1 h2, fdBoundarySeg2H, seg2_im]
-      calc Real.sin _ ≤ 1 := Real.sin_le_one _
-        _ ≤ H := hH
+      linarith [Real.sin_le_one (Real.pi / 3 + (t - 1) * (Real.pi / 2 - Real.pi / 3))]
     · push Not at h2
       by_cases h3 : t ≤ 3
       · rw [fdBoundary_H_eq_seg3_H H h2 h3, fdBoundarySeg3H, seg3_im]
-        calc Real.sin _ ≤ 1 := Real.sin_le_one _
-          _ ≤ H := hH
+        linarith [Real.sin_le_one
+          (Real.pi / 2 + (t - 2) * (2 * Real.pi / 3 - Real.pi / 2))]
       · push Not at h3
         by_cases h4 : t ≤ 4
         · rw [fdBoundary_H_eq_seg4_H h3 h4, seg4_H_im]; nlinarith

@@ -45,8 +45,8 @@ lemma GL_transposeEquiv_involutive (g : GL (Fin n) ℚ) :
 lemma SLnZ_to_GLnQ_transpose (σ : SpecialLinearGroup (Fin n) ℤ) :
     (GLTransposeEquiv n (σ : GL (Fin n) ℚ)).unop = (σ.transpose : GL (Fin n) ℚ) := by
   apply Units.ext; ext i j
-  simp only [GL_transposeEquiv_val, mapGL_coe_matrix, algebraMap_int_eq]
-  simp [SpecialLinearGroup.coe_transpose]
+  simp [GL_transposeEquiv_val, mapGL_coe_matrix, algebraMap_int_eq,
+    SpecialLinearGroup.coe_transpose]
 
 lemma GL_transpose_mem_SLnZ {g : GL (Fin n) ℚ} (hg : g ∈ SLnZSubgroup n) :
     (GLTransposeEquiv n g).unop ∈ SLnZSubgroup n := by
@@ -90,9 +90,8 @@ lemma GL_pair_onHeckeCoset_eq (D : HeckeCoset (GLPair n)) :
   simp only [TDiag, AntiInvolution.onHeckeCoset_mk]
   rw [HeckeCoset.eq_iff]
   simp only [AntiInvolution.bar, GLPairAntiInvolution, diagMat_delta_val n a ha]
-  have : (GLTransposeEquiv n).toMonoidHom (diagMat n a) =
-      GLTransposeEquiv n (diagMat n a) := rfl
-  rw [this, diagMat_GL_transpose_eq n a ha]
+  rw [show (GLTransposeEquiv n).toMonoidHom (diagMat n a) =
+      GLTransposeEquiv n (diagMat n a) from rfl, diagMat_GL_transpose_eq n a ha]
 
 /-- **Shimura Proposition 3.8 for GL_n**: the Hecke algebra is commutative. -/
 noncomputable instance instCommRingHeckeAlgebra : CommRing (HeckeAlgebra n) :=

@@ -46,16 +46,11 @@ lemma polygonToCircleRadial_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
   have hdir_ne : fdPolygon t - p ≠ 0 := sub_ne_zero.mpr hz_ne
   have hnorm_pos : ‖fdPolygon t - p‖ > 0 := norm_pos_iff.mpr hdir_ne
   have hcoeff : (1 - s) * ‖fdPolygon t - p‖ + s > 0 := by
-    have hs0 : 0 ≤ s := hs.1
-    have hs1 : s ≤ 1 := hs.2
-    have h1s : 0 ≤ 1 - s := by linarith
-    by_cases hs_pos : s > 0
-    · have h1 : (1 - s) * ‖fdPolygon t - p‖ ≥ 0 := mul_nonneg h1s (le_of_lt hnorm_pos)
-      linarith
-    · push Not at hs_pos
-      have hs_zero : s = 0 := le_antisymm hs_pos hs0
-      simp only [hs_zero, sub_zero, one_mul, add_zero]
-      exact hnorm_pos
+    have h1 : (1 - s) * ‖fdPolygon t - p‖ ≥ 0 :=
+      mul_nonneg (by linarith [hs.2]) (le_of_lt hnorm_pos)
+    rcases eq_or_lt_of_le hs.1 with hs0 | hs0
+    · simp only [← hs0, sub_zero, one_mul, add_zero]; exact hnorm_pos
+    · linarith
   intro heq
   rw [add_eq_left] at heq
   have hsmul_zero : ((1 - s) * ‖fdPolygon t - p‖ + s) •

@@ -67,8 +67,7 @@ lemma i_point_norm : ‖iPoint‖ = 1 := by simp only [iPoint, Complex.norm_I]
 
 lemma outside_closed_unit_ball (z : ℂ) (hz : ‖z‖ > 1) :
     z ∉ closedBall (0 : ℂ) 1 := by
-  simp only [mem_closedBall, dist_zero_right, not_le]
-  exact hz
+  simpa only [mem_closedBall, dist_zero_right, not_le] using hz
 
 /-- The chord (straight line segment) from z₁ to z₂. -/
 def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
@@ -76,13 +75,8 @@ def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
 
 lemma chordSegment_in_convex {z₁ z₂ : ℂ} {S : Set ℂ} (hS : Convex ℝ S) (hz₁ : z₁ ∈ S) (hz₂ : z₂ ∈ S)
     (t : ℝ) (ht : t ∈ Icc 0 1) :
-    chordSegment z₁ z₂ t ∈ S := by
-  simp only [chordSegment]
-  have ht0 : 0 ≤ t := ht.1
-  have ht1 : t ≤ 1 := ht.2
-  have h1 : 0 ≤ 1 - t := by linarith
-  have h2 : 1 - t + t = 1 := by ring
-  exact hS hz₁ hz₂ h1 ht0 h2
+    chordSegment z₁ z₂ t ∈ S :=
+  hS hz₁ hz₂ (by linarith [ht.2]) ht.1 (by ring)
 
 lemma convex_closedBall_zero_one :
     Convex ℝ (closedBall (0 : ℂ) 1) :=
@@ -140,17 +134,13 @@ def arc2 (t : ℝ) : ℂ :=
   Complex.exp (I * (θI + t * (θRho - θI)))
 
 lemma arc1_on_unit_circle (t : ℝ) : ‖arc1 t‖ = 1 := by
-  simp only [arc1]
-  have h : I * (↑θRho' + ↑t * (↑θI - ↑θRho')) =
-      I * ↑(θRho' + t * (θI - θRho')) := by simp only [ofReal_add, ofReal_mul, ofReal_sub]
-  rw [h, mul_comm]
+  rw [arc1, show I * (↑θRho' + ↑t * (↑θI - ↑θRho')) =
+      ↑(θRho' + t * (θI - θRho')) * I by push_cast; ring]
   exact Complex.norm_exp_ofReal_mul_I _
 
 lemma arc2_on_unit_circle (t : ℝ) : ‖arc2 t‖ = 1 := by
-  simp only [arc2]
-  have h : I * (↑θI + ↑t * (↑θRho - ↑θI)) =
-      I * ↑(θI + t * (θRho - θI)) := by simp only [ofReal_add, ofReal_mul, ofReal_sub]
-  rw [h, mul_comm]
+  rw [arc2, show I * (↑θI + ↑t * (↑θRho - ↑θI)) =
+      ↑(θI + t * (θRho - θI)) * I by push_cast; ring]
   exact Complex.norm_exp_ofReal_mul_I _
 
 lemma arc1_in_closed_unit_ball (t : ℝ) (_ : t ∈ Icc 0 1) :
@@ -329,9 +319,7 @@ lemma norm_ge_abs_im (z : ℂ) : ‖z‖ ≥ |z.im| :=
 
 lemma H_height_gt_one : HHeight > 1 := by
   unfold HHeight
-  have : Real.sqrt 3 > 0 :=
-    Real.sqrt_pos.mpr (by norm_num : (3 : ℝ) > 0)
-  linarith
+  linarith [Real.sqrt_pos.mpr (by norm_num : (3 : ℝ) > 0)]
 
 end RectHomotopyProof
 

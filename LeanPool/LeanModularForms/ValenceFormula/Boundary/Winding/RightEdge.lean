@@ -33,9 +33,7 @@ lemma rightEdge_t₀_mem_Ioo (H : ℝ) (_hH : heightCutoff ≤ H) (s : ℂ)
   have hH_sqrt : Real.sqrt 3 / 2 < H := by
     have : heightCutoff = Real.sqrt 3 / 2 + 1 := rfl; linarith
   have hα_pos : 0 < H - Real.sqrt 3 / 2 := by linarith
-  constructor
-  · exact div_pos (by linarith) hα_pos
-  · rw [div_lt_one hα_pos]; linarith
+  exact ⟨div_pos (by linarith) hα_pos, by rw [div_lt_one hα_pos]; linarith⟩
 
 /-- `fdBoundaryH H` passes through `s` at parameter `t₀`. -/
 lemma rightEdge_fdBoundary_eq (H : ℝ) (s : ℂ)
@@ -187,10 +185,9 @@ lemma log_div_of_re_pos {a b : ℂ} (ha : 0 < a.re) (hb : 0 < b.re) :
   have hb_abs_arg : |b.arg| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hb)
   have hbi_abs_arg : |b⁻¹.arg| < Real.pi / 2 := by rw [hb_inv_arg, abs_neg]; exact hb_abs_arg
-  have h_sum : a.arg + b⁻¹.arg ∈ Set.Ioc (-Real.pi) Real.pi := by
-    constructor
-    · linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]
-    · linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]
+  have h_sum : a.arg + b⁻¹.arg ∈ Set.Ioc (-Real.pi) Real.pi :=
+    ⟨by linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg],
+      by linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]⟩
   rw [Complex.log_mul ha_ne hb_inv_ne h_sum, Complex.log_inv b hb_arg_ne_pi]
   ring
 

@@ -189,32 +189,7 @@ private lemma deriv_cont_seg2 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
               Complex.exp ((Real.pi / 3 +
                   (r.1 - 1) * (Real.pi / 6)) * I)) +
           r.2 • (iPoint - rho')) q := by
-      apply ContinuousAt.add
-      · apply ContinuousAt.smul
-        · exact (continuous_const.sub
-            continuous_snd).continuousAt
-        · apply ContinuousAt.mul
-          · apply ContinuousAt.mul
-            · exact continuousAt_const
-            · exact continuousAt_const
-          · apply Complex.continuous_exp.continuousAt.comp
-            apply ContinuousAt.mul
-            · apply ContinuousAt.add
-              · exact continuousAt_const
-              · apply ContinuousAt.mul
-                · have h1 : Continuous (fun r : ℝ × ℝ =>
-                        (r.1 : ℂ)) :=
-                    Complex.continuous_ofReal.comp
-                      continuous_fst
-                  have h2 : Continuous (fun _ : ℝ × ℝ =>
-                        (1 : ℂ)) :=
-                    continuous_const
-                  exact (h1.sub h2).continuousAt
-                · exact continuousAt_const
-            · exact continuousAt_const
-      · apply ContinuousAt.smul
-        · exact continuous_snd.continuousAt
-        · exact continuousAt_const
+      fun_prop
     apply h_formula_cont.congr
     rw [nhds_prod_eq]
     have h_mem1 : Ioo p₁ p₂ ∈ 𝓝 q.1 :=
@@ -242,32 +217,7 @@ private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
               Complex.exp ((Real.pi / 2 +
                   (r.1 - 2) * (Real.pi / 6)) * I)) +
           r.2 • (rho - iPoint)) q := by
-      apply ContinuousAt.add
-      · apply ContinuousAt.smul
-        · exact (continuous_const.sub
-            continuous_snd).continuousAt
-        · apply ContinuousAt.mul
-          · apply ContinuousAt.mul
-            · exact continuousAt_const
-            · exact continuousAt_const
-          · apply Complex.continuous_exp.continuousAt.comp
-            apply ContinuousAt.mul
-            · apply ContinuousAt.add
-              · exact continuousAt_const
-              · apply ContinuousAt.mul
-                · have h1 : Continuous (fun r : ℝ × ℝ =>
-                        (r.1 : ℂ)) :=
-                    Complex.continuous_ofReal.comp
-                      continuous_fst
-                  have h2 : Continuous (fun _ : ℝ × ℝ =>
-                        (2 : ℂ)) :=
-                    continuous_const
-                  exact (h1.sub h2).continuousAt
-                · exact continuousAt_const
-            · exact continuousAt_const
-      · apply ContinuousAt.smul
-        · exact continuous_snd.continuousAt
-        · exact continuousAt_const
+      fun_prop
     apply h_formula_cont.congr
     rw [nhds_prod_eq]
     have h_mem1 : Ioo p₁ p₂ ∈ 𝓝 q.1 :=

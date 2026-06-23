@@ -154,71 +154,38 @@ omit f hf in
 lemma sVertOfS_re (S : Finset UpperHalfPlane) :
     ∀ s ∈ sVertOfS S, s.re = 1/2 ∨ s.re = -1/2 := by
   intro s hs
-  unfold sVertOfS at hs
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        left; exact (Finset.mem_filter.mp hp).2.1
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        right; simp only [Complex.sub_re, (Finset.mem_filter.mp hp).2.1]
-        norm_num
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      right; exact (Finset.mem_filter.mp hp).2.1
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    left; simp only [Complex.add_re, (Finset.mem_filter.mp hp).2.1]
-    norm_num
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
+  · exact Or.inl (Finset.mem_filter.mp hp).2.1
+  · right; simp only [Complex.sub_re, (Finset.mem_filter.mp hp).2.1]; norm_num
+  · exact Or.inr (Finset.mem_filter.mp hp).2.1
+  · left; simp only [Complex.add_re, (Finset.mem_filter.mp hp).2.1]; norm_num
 
 omit f hf in
 lemma sVertOfS_pair_left (S : Finset UpperHalfPlane) :
     ∀ s ∈ sVertOfS S, s.re = 1/2 → s - 1 ∈ sVertOfS S := by
   intro s hs hre
-  unfold sVertOfS at hs ⊢
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        apply Finset.mem_union.mpr; left
-        apply Finset.mem_union.mpr; left
-        apply Finset.mem_union.mpr; right
-        exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        exfalso; obtain ⟨_, hp_re, _⟩ := Finset.mem_filter.mp hp
-        simp only [Complex.sub_re] at hre
-        rw [hp_re] at hre; norm_num at hre
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      exfalso; obtain ⟨_, hp_re, _⟩ := Finset.mem_filter.mp hp
-      linarith
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    rw [show (↑p : ℂ) + 1 - 1 = (↑p : ℂ) from by ring]
-    apply Finset.mem_union.mpr; left
-    apply Finset.mem_union.mpr; right
-    exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs ⊢
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
+  · exact Or.inl (Or.inl (Or.inr ⟨p, hp, rfl⟩))
+  · exfalso; simp only [Complex.sub_re] at hre
+    rw [(Finset.mem_filter.mp hp).2.1] at hre; norm_num at hre
+  · exfalso; linarith [(Finset.mem_filter.mp hp).2.1, hre]
+  · rw [show (↑p : ℂ) + 1 - 1 = (↑p : ℂ) from by ring]
+    exact Or.inl (Or.inr ⟨p, hp, rfl⟩)
 
 omit f hf in
 lemma sVertOfS_pair_right (S : Finset UpperHalfPlane) :
     ∀ s ∈ sVertOfS S, s.re = -1/2 → s + 1 ∈ sVertOfS S := by
   intro s hs hre
-  unfold sVertOfS at hs ⊢
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        exfalso; obtain ⟨_, hp_re, _⟩ := Finset.mem_filter.mp hp
-        linarith
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        rw [show (↑p : ℂ) - 1 + 1 = (↑p : ℂ) from by ring]
-        apply Finset.mem_union.mpr; left
-        apply Finset.mem_union.mpr; left
-        apply Finset.mem_union.mpr; left
-        exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      apply Finset.mem_union.mpr; right
-      exact Finset.mem_image.mpr ⟨p, hp, rfl⟩
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    exfalso; obtain ⟨_, hp_re, _⟩ := Finset.mem_filter.mp hp
-    simp only [Complex.add_re] at hre
-    rw [hp_re] at hre; norm_num at hre
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs ⊢
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
+  · exfalso; linarith [(Finset.mem_filter.mp hp).2.1, hre]
+  · rw [show (↑p : ℂ) - 1 + 1 = (↑p : ℂ) from by ring]
+    exact Or.inl (Or.inl (Or.inl ⟨p, hp, rfl⟩))
+  · exact Or.inr ⟨p, hp, rfl⟩
+  · exfalso; simp only [Complex.add_re] at hre
+    rw [(Finset.mem_filter.mp hp).2.1] at hre; norm_num at hre
 
 omit hf in
 /-- `modularFormCompOfComplex f` is periodic with period 1. -/
@@ -252,20 +219,9 @@ omit f hf in
 lemma sVertOfS_im_lt_height_bound (S : Finset UpperHalfPlane) (s : ℂ)
     (hs : s ∈ sVertOfS S) (h_bound : ∀ p ∈ S, (p : ℂ).im < H₁) :
     s.im < H₁ := by
-  unfold sVertOfS at hs
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        exact h_bound p (Finset.mem_of_mem_filter p hp)
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        simp only [Complex.sub_im, Complex.one_im, sub_zero]
-        exact h_bound p (Finset.mem_of_mem_filter p hp)
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      exact h_bound p (Finset.mem_of_mem_filter p hp)
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    simp only [Complex.add_im, Complex.one_im, add_zero]
-    exact h_bound p (Finset.mem_of_mem_filter p hp)
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs <;>
+    simpa using h_bound p (Finset.mem_of_mem_filter p hp)
 
 include hf in
 /-- Zeros in `S` are complete: every zero of `f` in `𝒟` is in `S.filter zeros`. -/
@@ -308,34 +264,18 @@ lemma sArcOfS_im_pos (S : Finset UpperHalfPlane) (s : ℂ) (hs : s ∈ sArcOfS S
 omit f hf in
 /-- All elements of `sVertOfS S` have positive imaginary part. -/
 lemma sVertOfS_im_pos (S : Finset UpperHalfPlane) (s : ℂ) (hs : s ∈ sVertOfS S) : 0 < s.im := by
-  unfold sVertOfS at hs
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hA; exact p.2
-      · obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hB
-        simp only [Complex.sub_im, Complex.one_im, sub_zero]; exact p.2
-    · obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hC; exact p.2
-  · obtain ⟨p, _, rfl⟩ := Finset.mem_image.mp hD
-    simp only [Complex.add_im, Complex.one_im, add_zero]; exact p.2
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
+  obtain ((⟨p, _, rfl⟩ | ⟨p, _, rfl⟩) | ⟨p, _, rfl⟩) | ⟨p, _, rfl⟩ := hs <;> simpa using p.2
 
 omit f hf in
 private lemma sVertOfS_re_bound (S : Finset UpperHalfPlane) (s : ℂ)
     (hs : s ∈ sVertOfS S) : |s.re| ≤ 1/2 := by
-  unfold sVertOfS at hs
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        rw [(Finset.mem_filter.mp hp).2.1]; norm_num
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        simp only [Complex.sub_re, Complex.one_re]
-        rw [(Finset.mem_filter.mp hp).2.1]; norm_num
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      rw [(Finset.mem_filter.mp hp).2.1]; norm_num
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    simp only [Complex.add_re, Complex.one_re]
-    rw [(Finset.mem_filter.mp hp).2.1]; norm_num
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
+  · rw [(Finset.mem_filter.mp hp).2.1]; norm_num
+  · simp only [Complex.sub_re, Complex.one_re]; rw [(Finset.mem_filter.mp hp).2.1]; norm_num
+  · rw [(Finset.mem_filter.mp hp).2.1]; norm_num
+  · simp only [Complex.add_re, Complex.one_re]; rw [(Finset.mem_filter.mp hp).2.1]; norm_num
 
 omit f hf in
 private lemma im_gt_sqrt3_half_of_re_half_and_norm_gt_one (p : ℍ)
@@ -358,23 +298,15 @@ private lemma im_gt_sqrt3_half_of_re_half_and_norm_gt_one (p : ℍ)
 omit f hf in
 private lemma sVertOfS_im_gt_sqrt3_half (S : Finset UpperHalfPlane) (s : ℂ)
     (hs : s ∈ sVertOfS S) : s.im > Real.sqrt 3 / 2 := by
-  unfold sVertOfS at hs
-  rcases Finset.mem_union.mp hs with h | hD
-  · rcases Finset.mem_union.mp h with h | hC
-    · rcases Finset.mem_union.mp h with hA | hB
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hA
-        exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
-          (Or.inl (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
-      · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hB
-        simp only [Complex.sub_im, Complex.one_im, sub_zero]
-        exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
-          (Or.inl (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
-    · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hC
-      exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
-        (Or.inr (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
-  · obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hD
-    simp only [Complex.add_im, Complex.one_im, add_zero]
-    exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
+  simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
+  obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
+  · exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
+      (Or.inl (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
+  · simpa using im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
+      (Or.inl (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
+  · exact im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
+      (Or.inr (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
+  · simpa using im_gt_sqrt3_half_of_re_half_and_norm_gt_one p
       (Or.inr (Finset.mem_filter.mp hp).2.1) (Finset.mem_filter.mp hp).2.2
 
 omit f hf in

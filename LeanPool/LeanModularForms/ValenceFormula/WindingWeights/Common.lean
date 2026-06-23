@@ -30,16 +30,14 @@ noncomputable section
 
 theorem fdBoundary_H_at_one_eq_rho_plus_one (H : ℝ) :
     fdBoundaryH H 1 = ellipticPointRhoPlusOne := by
-  simp only [fdBoundaryH]
-  simp only [show (1 : ℝ) ≤ 1 from le_refl 1, ↓reduceIte]
-  simp only [ellipticPointRhoPlusOne, ellipticPointRhoPlusOne', UpperHalfPlane.coe_mk]
-  simp only [Complex.ofReal_one, one_mul]
+  simp only [fdBoundaryH, show (1 : ℝ) ≤ 1 from le_refl 1, ↓reduceIte,
+    ellipticPointRhoPlusOne, ellipticPointRhoPlusOne', UpperHalfPlane.coe_mk,
+    Complex.ofReal_one, one_mul]
   ring
 
 theorem fdBoundary_H_at_two_eq_I (H : ℝ) :
     fdBoundaryH H 2 = I := by
-  simp only [fdBoundaryH]
-  simp only [show ¬((2 : ℝ) ≤ 1) from by norm_num,
+  simp only [fdBoundaryH, show ¬((2 : ℝ) ≤ 1) from by norm_num,
              show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
   rw [show (↑(Real.pi : ℝ) / 3 + (↑(2 : ℝ) - 1) * (↑(Real.pi : ℝ) / 2 - ↑(Real.pi : ℝ) / 3)) * I =
     ↑(Real.pi / 2) * I from by push_cast; ring,
@@ -48,8 +46,7 @@ theorem fdBoundary_H_at_two_eq_I (H : ℝ) :
 
 theorem fdBoundary_H_at_three_eq_rho (H : ℝ) :
     fdBoundaryH H 3 = ellipticPointRho := by
-  simp only [fdBoundaryH]
-  simp only [show ¬((3 : ℝ) ≤ 1) from by norm_num,
+  simp only [fdBoundaryH, show ¬((3 : ℝ) ≤ 1) from by norm_num,
              show ¬((3 : ℝ) ≤ 2) from by norm_num,
              show (3 : ℝ) ≤ 3 from le_refl 3, ↓reduceIte]
   rw [show (↑(Real.pi : ℝ) / 2

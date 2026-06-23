@@ -53,15 +53,6 @@ theorem deg_T_diag_scalar (c : ℕ) (hc : 0 < c) :
 
 /-! ### Identity 7: Degree of T(m) -/
 
-/-- `deg` of a `TAd` equals the `HeckeCosetDeg` of its underlying double coset. -/
-private lemma deg_T_ad (a d : ℕ) (ha : 0 < a) (hd : 0 < d) (h : a ∣ d) :
-    deg (GLPair 2) (TAd a d) =
-    HeckeCosetDeg (GLPair 2) (TDiag (![a, d])) := by
-  rw [T_ad_of_pos a d ha hd h]
-  change deg (GLPair 2) (Finsupp.single (TDiag _) 1) = _
-  rw [deg_T_single]
-  simp
-
 /-- `deg` of `TAd` when conditions hold. -/
 private lemma deg_T_ad_of_pos' (a d : ℕ) (ha : 0 < a) (hd : 0 < d) (hdvd : a ∣ d) :
     deg (GLPair 2) (TAd a d) =
@@ -96,11 +87,10 @@ private lemma deg_ppow_term_eq' (i k : ℕ) (h2i : 2 * i = k) :
     deg_T_ad_of_pos' (p ^ i) (p ^ i) (pow_pos hp.pos i)
       (pow_pos hp.pos i) (dvd_refl _)]
   set c := p ^ i with hc_def
-  have hc : 0 < c := pow_pos hp.pos i
   rw [show TDiag (![c, c]) =
       TDiag (fun _ => c) from by
     congr 1; exact funext fun j => by fin_cases j <;> rfl]
-  exact deg_T_diag_scalar c hc
+  exact deg_T_diag_scalar c (pow_pos hp.pos i)
 
 include hp in
 /-- For i in the shifted tail, degree of the (k+2)-expansion term equals the k-expansion term.
@@ -161,11 +151,10 @@ private lemma deg_T_sum_one : deg (GLPair 2) (TSum 1) = 1 := by
   simp only [Nat.divisors_one, Finset.sum_singleton, Nat.div_self one_pos]
   rw [deg_T_ad_of_pos' 1 1 one_pos one_pos (dvd_refl 1)]
   set c : ℕ := 1 with hc_def
-  have hc : 0 < c := Nat.one_pos
   rw [show TDiag (![c, c]) =
       TDiag (fun _ => c) from by
     congr 1; exact funext fun j => by fin_cases j <;> rfl]
-  exact deg_T_diag_scalar c hc
+  exact deg_T_diag_scalar c Nat.one_pos
 
 /-- Theorem 3.24(7): `deg(T(m)) = σ₁(m)`.
     By prime factorization + coprime multiplicativity + prime-power case. -/

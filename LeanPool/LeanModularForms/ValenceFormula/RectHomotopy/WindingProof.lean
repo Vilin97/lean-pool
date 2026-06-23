@@ -137,8 +137,8 @@ lemma rc_integral_eq_neg_two_pi_I_ref_p₀ :
       change DifferentiableAt ℝ (fun t' => polygonToCircleRadial refP₀ (t', 1)) t
       exact polygonToCircleRadial_differentiable_off_partition refP₀ ref_p₀_norm ref_p₀_re
         ref_p₀_im t ht ht_not_P 1 ⟨by norm_num, le_refl 1⟩
-    have hrc_hasderiv : HasDerivAt (fun t' => rc t' - refP₀) (deriv rc t) t := by
-      exact hrc_diff.hasDerivAt.sub_const refP₀
+    have hrc_hasderiv : HasDerivAt (fun t' => rc t' - refP₀) (deriv rc t) t :=
+      hrc_diff.hasDerivAt.sub_const refP₀
     have ht_Icc : t ∈ Icc (0 : ℝ) 5 := Ioo_subset_Icc_self ht
     have h_slit : rc t - refP₀ ∈ Complex.slitPlane :=
       rc_sub_ref_p₀_mem_slitPlane t ht_Icc htL

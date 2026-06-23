@@ -40,8 +40,7 @@ private lemma arc_chord_re_neg (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
     simp only [sub_zero, one_mul, zero_mul, add_zero]
     nlinarith [hpi, hsqrt3_pos]
   · have hs_pos : s > 0 := lt_of_le_of_ne hs.1 (Ne.symm hs0)
-    have hprod_pos : Real.pi * Real.sqrt 3 > 0 := mul_pos hpi hsqrt3_pos
-    nlinarith [hs.1, hs.2, hs_pos, hprod_pos]
+    nlinarith [hs.1, hs.2, hs_pos, mul_pos hpi hsqrt3_pos]
 
 /-- The homotopy is not differentiable at `t = 1` (left/right derivatives differ). -/
 private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :

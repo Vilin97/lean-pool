@@ -76,11 +76,9 @@ private lemma SLnZ_det_one_real (σ : (GLPair 2).H) :
 
 private lemma cosetRep_delta_det_pos (σ : (GLPair 2).H) (g : (GLPair 2).Δ) :
     0 < (glMap ((σ : GL (Fin 2) ℚ) * (g : GL (Fin 2) ℚ))).det.val := by
-  have hmul : (glMap ((σ : GL (Fin 2) ℚ) * ↑g)).det =
-      (glMap ↑σ).det * (glMap ↑g).det := by rw [map_mul, map_mul]
   rw [show (glMap ((σ : GL (Fin 2) ℚ) * ↑g)).det.val =
-    ((glMap ↑σ).det * (glMap ↑g).det).val from congrArg Units.val hmul,
-    Units.val_mul]
+    ((glMap ↑σ).det * (glMap ↑g).det).val from
+      congrArg Units.val (by rw [map_mul, map_mul]), Units.val_mul]
   exact mul_pos (by rw [SLnZ_det_one_real]; exact one_pos) (delta_det_pos_real g)
 
 private lemma sigma_eq_refl_of_pos_det {g : GL (Fin 2) ℝ} (hg : 0 < g.det.val) :

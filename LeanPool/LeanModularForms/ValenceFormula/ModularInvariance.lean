@@ -164,9 +164,7 @@ lemma ord_rho_plus_one_eq_ord_rho :
     UpperHalfPlane.ext (by
       change (((1 : ℝ) : ℂ) + ↑ellipticPointRho') = ↑ellipticPointRhoPlusOne'
       simp only [ellipticPointRho', ellipticPointRhoPlusOne']
-      change (1 : ℂ) + (-1 / 2 + ↑(Real.sqrt 3) / 2 * I) =
-        1 / 2 + ↑(Real.sqrt 3) / 2 * I
-      ring)
+      push_cast; ring)
   rw [← h]; exact ord_add_one_eq f ellipticPointRho'
 
 /-- S-identity for modular forms: `f(-1/z) = z^k · f(z)`. -/
