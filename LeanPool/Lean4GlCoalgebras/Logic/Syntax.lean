@@ -118,13 +118,8 @@ def isBox : Formula → Bool
 lemma neg_eq {φ ψ : Formula} : (~φ) = (~ψ) → φ = ψ := by
   intro mpp
   cases φ <;> cases ψ <;> simp [Formula.neg] at mpp <;> try grind
-  case and.and | or.or =>
-    have := neg_eq mpp.1
-    have := neg_eq mpp.2
-    grind
-  case box.box | diamond.diamond =>
-    have := neg_eq mpp
-    grind
+  case and.and | or.or => grind [neg_eq mpp.1, neg_eq mpp.2]
+  case box.box | diamond.diamond => grind [neg_eq mpp]
 
 /-- Negation is involutive. -/
 @[simp]
