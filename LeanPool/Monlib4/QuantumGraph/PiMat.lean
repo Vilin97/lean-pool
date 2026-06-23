@@ -79,9 +79,7 @@ noncomputable def PiMat.transposeStarAlgEquiv
     simp only [Pi.mul_apply, Matrix.transpose_mul]
     rfl
   map_add' _ _ := rfl
-  map_smul' _ _ := by
-    -- simp only [MulOpposite.op_inj, Matrix.transpose_smul]
-    rfl
+  map_smul' _ _ := rfl
   map_star' _ := rfl
 
 /-- Matrix algebra as endomorphisms of Euclidean space, as a star-algebra equivalence. -/
@@ -320,14 +318,6 @@ rfl
 
 attribute [local instance] Algebra.ofIsScalarTowerSmulCommClass
 
--- noncomputable instance MulOppositeCoalgebra {A : Type*} [Semiring A] [Algebra ℂ A]
---   [Coalgebra ℂ A] :
---     Coalgebra ℂ Aᵐᵒᵖ where
---   coassoc := sorry
---   rTensor_counit_comp_comul := sorry
---   lTensor_counit_comp_comul := sorry
-
--- remove this...
 noncomputable instance TensorProduct.instCoalgebraStruct'
   {R S A B : Type*} [CommSemiring R] [CommSemiring S] [AddCommMonoid A] [AddCommMonoid B]
     [Algebra R S] [Module R A] [Module S A] [Module R B] [CoalgebraStruct R B]
@@ -346,12 +336,6 @@ lemma TensorProduct.instCoalgebraStruct'_counit
     AlgebraTensorModule.rid R S S ∘ₗ
       AlgebraTensorModule.map CoalgebraStruct.counit CoalgebraStruct.counit :=
 rfl
-
--- attribute [local instance] TensorProduct.instCoalgebraStruct'
-
--- instance :
---   Coalgebra ℂ (PiMat ℂ ι p ⊗[ℂ] (PiMat ℂ ι p)ᵐᵒᵖ) :=
--- Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A := PiMat ℂ ι p ⊗[ℂ] (PiMat ℂ ι p)ᵐᵒᵖ)
 
 theorem QuantumGraph.dimOfPiMatSubmodule_eq_trace_counit :
   withPiQuantum[φ]
@@ -375,21 +359,14 @@ by
   congr 1
   ext; simp
 
--- set_option maxHeartbeats 500000 in
 theorem Coalgebra.counit_self_tensor_mulOpposite_eq_bra_one
   {A : Type*} [NormedAddCommGroupOfRing A]
   [InnerProductSpace ℂ A] [SMulCommClass ℂ A A] [IsScalarTower ℂ A A] [FiniteDimensional ℂ A] :
   Coalgebra.counit (R := ℂ) (A := A ⊗[ℂ] Aᵐᵒᵖ)
     = (bra ℂ (1 : A ⊗[ℂ] Aᵐᵒᵖ)).toLinearMap :=
 by
-  -- letI : FiniteDimensional ℂ (A ⊗[ℂ] Aᵐᵒᵖ) := by infer_instance
-  -- -- letI
-  -- letI := TensorProduct.instNormedAddCommGroupOfRing (R:= ℂ) (A := A) (B := Aᵐᵒᵖ)
-  -- exact @Coalgebra.counit_eq_bra_one ℂ (A ⊗[ℂ] Aᵐᵒᵖ)
-  --   _ _ _ _ _ _
   apply TensorProduct.ext'
   intro x y
-  -- rw [TensorProduct.counit_def]
   simp only [TensorProduct.instCoalgebraStruct'_counit, LinearMap.coe_comp, Function.comp_apply,
     Algebra.TensorProduct.one_def,
     ContinuousLinearMap.coe_coe, innerSL_apply_apply, TensorProduct.inner_tmul,
@@ -401,22 +378,6 @@ by
 lemma QuantumGraph.NumOfEdges_apply {A : Type*} [starAlgebra A] [QuantumSet A]
   (f : A →ₗ[ℂ] A) : NumOfEdges f = inner ℂ 1 (f 1) :=
 rfl
-
--- instance {A : Type*} [NormedAddCommGroupOfRing A] :
---   NormedAddCommGroupOfRing Aᵐᵒᵖ where
--- noncomputable instance {A : Type*} [NormedAddCommGroup A]
---   [InnerProductSpace ℂ A] : InnerProductSpace ℂ Aᵐᵒᵖ where
---   norm_sq_eq_re_inner _ := by
---     simp [MulOpposite.inner_eq, norm_eq_sqrt_re_inner (𝕜 := ℂ)]
---     rw [← RCLike.re_eq_complex_re]
---     exact Real.sq_sqrt (inner_self_nonneg)
---   conj_inner_symm _ _ := inner_conj_symm _ _
---   add_left _ _ _ := inner_add_left _ _ _
---   smul_left x y _ := inner_smul_left _ _ _
--- noncomputable instance {A : Type*} [NormedAddCommGroupOfRing A] [InnerProductSpace ℂ A]
---   [SMulCommClass ℂ A A] [IsScalarTower ℂ A A]
---   [FiniteDimensional ℂ A] :
---   NormedAddCommGroupOfRing (A ⊗[ℂ] Aᵐᵒᵖ) where
 
 omit [DecidableEq ι] in
 private lemma Coalgebra.counit_piMat_eq_moduleDual_pi :
@@ -469,10 +430,6 @@ by
     NumOfEdges_apply, oneInner_map_one_eq_oneInner_Psi_map _ 0 (1/2)]
   simp only [Coalgebra.counit_self_tensor_mulOpposite_eq_bra_one_piMat]
   rfl
-
-  -- rw [Coalgebra.counit_eq_bra_one]
-  -- rw [Coalgebra.counit_self_tensor_mulOpposite_eq_bra_one]
-  -- rfl
 
 theorem QuantumGraph.dimOfPiMatSubmodule_eq_rank_top_iff :
   withPiQuantum[φ]
@@ -829,11 +786,6 @@ by
   simpa [smul_eq_mul, mul_comm] using
     Module.Basis.tensorProduct_repr_tmul_apply b c m n i.1 i.2
 
--- theorem PiLp.ext_iff {p : ENNReal} {ι : Type*} {α : ι → Type*} {x : PiLp p α}
---   {y : PiLp p α} :
---   x = y ↔ (∀ (i : ι), x i = y i) :=
--- by simp [← funext_iff]
-
 theorem EuclideanSpace.prodChoose_spec {n m : Type*} [Fintype n] [DecidableEq n]
   [Fintype m] [DecidableEq m] (x : EuclideanSpace ℂ (n × m)) :
   x = ∑ s : n × m, euclideanSpaceTensor' (R:=ℂ)
@@ -916,7 +868,6 @@ theorem QuantumGraph.Real.PiMat_eq :
             (((hA.PiMatOrthonormalBasis i j : hA.PiMatSubmodule i) :
               EuclideanSpace ℂ (p i.1 × p i.2)))
         A = ∑ i : ι × ι, ∑ j, ∑ s : (p i.1 × p i.2), ∑ l : (p i.1 × p i.2),
-          --  in S i j, ∑ p in S i j,
           rankOne ℂ (Matrix.includeBlock
             (Matrix.vecMulVec (S i j s).1 (star (S i j l).1)))
             (modAut (- (1 / 2)) (Matrix.includeBlock
