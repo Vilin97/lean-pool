@@ -109,8 +109,7 @@ theorem sectorCurve_seg2 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 1 2) :
 theorem sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 2 3) :
     sectorCurve r α t = ↑((3 - t) * r) * exp (I * ↑α) := by
   rcases eq_or_lt_of_le ht.1 with rfl | h2
-  · -- t = 2: second branch applies (2 ≤ 2), result matches by computation
-    simp only [sectorCurve, show ¬(2 : ℝ) ≤ 1 from by norm_num,
+  · simp only [sectorCurve, show ¬(2 : ℝ) ≤ 1 from by norm_num,
       show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
     push_cast; ring_nf
   · simp only [sectorCurve, if_neg (not_le.mpr (lt_trans one_lt_two h2)),
@@ -173,12 +172,8 @@ theorem deriv_sectorCurve_seg1 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 0 
     filter_upwards [h_nhds] with s hs
     simp only [sectorCurve, if_pos (le_of_lt (mem_Iio.mp hs))]
   rw [Filter.EventuallyEq.deriv_eq h_eq]
-  have : HasDerivAt (fun s => (↑(s * r) : ℂ)) (↑r) t := by
-    have h1 : HasDerivAt (fun s => s * r) r t := by
-      have := (hasDerivAt_id t).mul_const r
-      simpa using this
-    exact h1.ofReal_comp
-  exact this.deriv
+  have h1 : HasDerivAt (fun s => s * r) r t := by simpa using (hasDerivAt_id t).mul_const r
+  exact h1.ofReal_comp.deriv
 
 /-- Derivative on segment 2 (t in (1,2)):
   `deriv (sectorCurve r alpha) t = r * (I * alpha) * exp(I * (t-1) * alpha)`. -/
@@ -192,8 +187,7 @@ theorem deriv_sectorCurve_seg2 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 1 
   rw [Filter.EventuallyEq.deriv_eq h_eq]
   have h_inner : HasDerivAt (fun s => (↑((s - 1) * α) : ℂ)) (↑α) t := by
     have h1 : HasDerivAt (fun s => (s - 1) * α) α t := by
-      have := ((hasDerivAt_id t).sub_const 1).mul_const α
-      simpa using this
+      simpa using ((hasDerivAt_id t).sub_const 1).mul_const α
     exact h1.ofReal_comp
   have h_exp : HasDerivAt (fun s => exp (I * ↑((s - 1) * α)))
       (I * ↑α * exp (I * ↑((t - 1) * α))) t := by
@@ -658,13 +652,8 @@ theorem pv_sector_dz_over_z (r : ℝ) (hr : 0 < r) (α : ℝ)
           else 0)
       (𝓝[>] 0) (𝓝 (I * ↑α)) :=
     tendsto_const_nhds.congr' (h_ev.mono (fun ε h => h.symm))
-  constructor
-  · -- The PV exists
-    exact ⟨I * ↑α, h_tendsto⟩
-  · -- The PV value is I * α
-    have : cauchyPrincipalValue' (fun z => z⁻¹) (sectorCurve r α) 0 3 0 = I * ↑α := by
-      unfold cauchyPrincipalValue'
-      exact h_tendsto.limUnder_eq
-    exact this
+  refine ⟨⟨I * ↑α, h_tendsto⟩, ?_⟩
+  unfold cauchyPrincipalValue'
+  exact h_tendsto.limUnder_eq
 
 end

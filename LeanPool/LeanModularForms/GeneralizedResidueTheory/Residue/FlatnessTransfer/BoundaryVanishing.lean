@@ -39,8 +39,7 @@ theorem hasDerivAt_zpow_comp_sub
       (↑n * (γ t - s) ^ (n - 1) * L) t := by
   have h_comp := (hasDerivAt_zpow n (γ t - s) (Or.inl (sub_ne_zero.mpr hne))).comp t
     (hγ.sub_const s)
-  refine h_comp.congr_deriv ?_
-  ring
+  exact h_comp.congr_deriv (by ring)
 
 /-- ContinuousOn for `t ↦ (γ(t) - s)^n` on a set where `γ(t) ≠ s`. -/
 theorem continuousOn_zpow_comp_sub

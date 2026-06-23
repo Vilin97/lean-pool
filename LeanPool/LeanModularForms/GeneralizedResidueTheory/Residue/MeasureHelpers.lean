@@ -94,8 +94,7 @@ theorem preimage_singleton_measure_zero_of_deriv_ne_zero
     by_contra h_lt
     push Not at h_lt
     have h_in_ball : dist t t₀ < ε := by simp only [Real.dist_eq]; exact h_lt
-    have h_ne' : t ∈ ({t₀} : Set ℝ)ᶜ := by simp [ht_ne]
-    exact h_ball h_in_ball h_ne' ht_eq
+    exact h_ball h_in_ball (by simp [ht_ne]) ht_eq
   have h_countable : S.Countable := by
     have h_eq : S = (S ∩ ↑P) ∪ (S \ ↑P) :=
       (Set.inter_union_diff S ↑P).symm

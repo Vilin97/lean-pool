@@ -169,11 +169,10 @@ private theorem circleIntegral_laurent_sum (s : ℂ) (r : ℝ) (hr_pos : 0 < r)
     rw [intervalIntegral.integral_finsetSum]
     intro i _
     exact (h_ci_term i).out
-  rw [h_push]
-  rw [show (∑ k : Fin N, (∮ z in C(s, r), a k / (z - s) ^ (k.val + 1))) =
+  rw [h_push, show (∑ k : Fin N, (∮ z in C(s, r), a k / (z - s) ^ (k.val + 1))) =
       ∑ k : Fin N, if k.val = 0 then a k * (2 * ↑Real.pi * I) else 0
-    from Finset.sum_congr rfl (fun k _ => circleIntegral_laurent_term s r hr_pos (a k) k.val)]
-  rw [Finset.sum_ite, Finset.sum_const_zero, add_zero]
+    from Finset.sum_congr rfl (fun k _ => circleIntegral_laurent_term s r hr_pos (a k) k.val),
+    Finset.sum_ite, Finset.sum_const_zero, add_zero]
   have h_filter : Finset.filter (fun k : Fin N => k.val = 0) Finset.univ = {⟨0, hN⟩} := by
     ext ⟨j, hj⟩
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
@@ -444,8 +443,7 @@ private lemma zpow_deriv_norm_bound_of_dist_ge
     ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖ ≤
       B⁻¹ ^ m * (|Mγ'| + 1) := by
   refine (norm_mul_le _ _).trans (mul_le_mul ?_ ?_ (norm_nonneg _) (by positivity))
-  · simp only []
-    rw [norm_zpow, zpow_neg, zpow_natCast, inv_pow]
+  · rw [norm_zpow, zpow_neg, zpow_natCast, inv_pow]
     exact inv_anti₀ (by positivity) (pow_le_pow_left₀ hB.le h_far m)
   · exact ((hMγ' t ht).trans (le_abs_self _)).trans (le_add_of_nonneg_right one_pos.le)
 
@@ -579,9 +577,8 @@ private lemma dct_bound_diff_cpv_zpow
         hδ_sep_le s' (Finset.mem_erase.mpr ⟨hs'_ne, hs'⟩)
       have h_far : ‖γ.toFun t - s‖ ≥ δ_sep / 2 := by
         have h1 : ‖s - s'‖ ≤ ‖γ.toFun t - s‖ + ‖γ.toFun t - s'‖ := by
-          calc ‖s - s'‖ = ‖(s - γ.toFun t) + (γ.toFun t - s')‖ := by ring_nf
-            _ ≤ ‖s - γ.toFun t‖ + ‖γ.toFun t - s'‖ := norm_add_le _ _
-            _ = ‖γ.toFun t - s‖ + ‖γ.toFun t - s'‖ := by rw [norm_sub_rev]
+          rw [norm_sub_rev (γ.toFun t) s]
+          exact norm_sub_le_norm_sub_add_norm_sub s (γ.toFun t) s'
         linarith [hε2]
       have ht_Icc : t ∈ Icc γ.a γ.b :=
         Ioc_subset_Icc_self (Set.uIoc_of_le γ.hab.le ▸ ht)

@@ -255,8 +255,8 @@ private theorem cauchyPV_g_aestronglyMeasurable (r : ℝ) (α : ℝ)
       deriv (sectorCurve r α) t) volume 0 3) :
     AEStronglyMeasurable
       (cauchyPrincipalValueIntegrand' g (sectorCurve r α) 0 ε)
-      (volume.restrict (Ioc 0 3)) := by
-  exact (h_int_g.aestronglyMeasurable.indicator
+      (volume.restrict (Ioc 0 3)) :=
+  (h_int_g.aestronglyMeasurable.indicator
     (measurableSet_pv_support (sectorCurve r α) 0 3 0 ε
       (sectorCurve_continuousOn r α))).congr (by
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with t ht
@@ -308,8 +308,8 @@ private theorem cauchyPV_g_intervalIntegrable (r : ℝ) (hr : 0 < r) (α : ℝ)
 private theorem cauchyPV_inv_integrableOn_0δ (r : ℝ) (hr : 0 < r) (α : ℝ)
     (ε : ℝ) (hε_pos : 0 < ε) (hε_lt_r : ε < r) :
     IntervalIntegrable (cauchyPrincipalValueIntegrand' (fun z => z⁻¹)
-      (sectorCurve r α) 0 ε) volume 0 (ε / r) := by
-  exact (intervalIntegrable_const (c := (0 : ℂ))).congr (fun t ht => by
+      (sectorCurve r α) 0 ε) volume 0 (ε / r) :=
+  (intervalIntegrable_const (c := (0 : ℂ))).congr (fun t ht => by
     rw [Set.uIoc_of_le (div_pos hε_pos hr).le] at ht
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
     rw [if_neg (not_lt.mpr _)]
@@ -321,8 +321,8 @@ private theorem cauchyPV_inv_integrableOn_0δ (r : ℝ) (hr : 0 < r) (α : ℝ)
 private theorem cauchyPV_inv_integrableOn_3δ3 (r : ℝ) (hr : 0 < r) (α : ℝ)
     (ε : ℝ) (hε_pos : 0 < ε) (hε_lt_r : ε < r) :
     IntervalIntegrable (cauchyPrincipalValueIntegrand' (fun z => z⁻¹)
-      (sectorCurve r α) 0 ε) volume (3 - ε / r) 3 := by
-  exact (intervalIntegrable_const (c := (0 : ℂ))).congr (fun t ht => by
+      (sectorCurve r α) 0 ε) volume (3 - ε / r) 3 :=
+  (intervalIntegrable_const (c := (0 : ℂ))).congr (fun t ht => by
     have hεr_pos : ε / r > 0 := div_pos hε_pos hr
     have hεr_lt_one : ε / r < 1 := (div_lt_one hr).mpr hε_lt_r
     rw [Set.uIoc_of_le (by linarith : 3 - ε / r ≤ 3)] at ht
@@ -520,8 +520,7 @@ theorem cauchyPV_sectorCurve_simplePole (r : ℝ) (hr : 0 < r) (α : ℝ)
     rw [show I * ↑α * c = c * (I * ↑α) + 0 from by ring]
     exact ((hL_inv.const_mul c).add (cauchyPV_g_tendsto_zero r hr α g hg)).congr'
       ((cauchyPV_simplePole_integral_split r hr α c g hg).mono (fun _ h => h.symm))
-  refine ⟨⟨_, h_tendsto⟩, ?_⟩
-  exact h_tendsto.limUnder_eq
+  exact ⟨⟨_, h_tendsto⟩, h_tendsto.limUnder_eq⟩
 
 /-- Variant of Lemma 3.1: for an arbitrary `f` equal to `c/z + g` at nonzero points,
 with `g` analytic on a ball containing the sector, the PV equals `I * α * c`. -/

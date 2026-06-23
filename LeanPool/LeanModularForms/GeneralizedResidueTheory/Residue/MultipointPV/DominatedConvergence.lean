@@ -239,7 +239,6 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
   simp only [cauchyPrincipalValueIntegrandOn]
   rw [if_pos ⟨s₀, hs₀, hs₀_near⟩]; simp only [zero_sub, norm_neg]
   have h_γ'_bound : ‖deriv γ.toFun t‖ ≤ Mγ' := hMγ' t ht
-  -- Factor out deriv from sum
   have h_factor :
       ∑ s ∈ S0, (if ‖γ.toFun t - s‖ > ε
         then residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t else 0) =
@@ -251,7 +250,6 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
     · simp only [h, ↓reduceIte, zero_mul]
   rw [h_factor]
   let singularBound := 2 * (S0.card : ℝ) * Mc / δ
-  -- Bound the sum of residue quotients
   have h_sum_bound : ‖∑ s ∈ S0, if ‖γ.toFun t - s‖ > ε
       then residueSimplePole f s / (γ.toFun t - s) else 0‖ ≤ singularBound := by
     calc ‖∑ s ∈ S0, if ‖γ.toFun t - s‖ > ε
@@ -428,14 +426,11 @@ private lemma A_eq_integral_A_int (S0 : Finset ℂ) (f g_reg : ℂ → ℂ) (γ 
     then (residueSimplePole f s / (γ.toFun t - s)) * deriv γ.toFun t else 0
   have hM_int := pvIntegrand_intervalIntegrable_of_nonempty S0 f g_reg γ hS0_ne hg_decomp
     hg_cont hε
-  -- Integrability of each residue term
   have hS_int : ∀ s ∈ S0, IntervalIntegrable (S_int_fun s) volume γ.a γ.b := by
     intro s _hs; exact intervalIntegrable_residueTerm hε
-  -- Sum of integrals = integral of sum
   have h_sum_eq : ∑ s ∈ S0, ∫ t in γ.a..γ.b, S_int_fun s t =
       ∫ t in γ.a..γ.b, ∑ s ∈ S0, S_int_fun s t :=
     (intervalIntegral.integral_finsetSum hS_int).symm
-  -- Integrability of sum
   have hSum_int : IntervalIntegrable (fun t => ∑ s ∈ S0, S_int_fun s t)
       volume γ.a γ.b := by
     have : ∀ (S : Finset ℂ), (∀ s ∈ S, IntervalIntegrable (S_int_fun s) volume γ.a γ.b) →
@@ -495,25 +490,21 @@ lemma dominated_convergence_multipoint_helper
           then (residueSimplePole f s / (γ.toFun t - s)) * deriv γ.toFun t else 0
     let f_lim : ℝ → ℂ := fun t => g_reg (γ.toFun t) * deriv γ.toFun t
     have hG_eq : G = ∫ t in γ.a..γ.b, f_lim t := rfl
-    -- Rewrite S' using detach
     have h_S'_eq : ∀ ε, S' ε = ∑ s ∈ S0, ∫ t in γ.a..γ.b,
         if ‖γ.toFun t - s‖ > ε then (residueSimplePole f s / (γ.toFun t - s)) *
           deriv γ.toFun t else 0 := by
       intro ε; simp only [S']; rw [Finset.sum_attach S0 (fun s => ∫ t in γ.a..γ.b,
         if ‖γ.toFun t - s‖ > ε then (residueSimplePole f s / (γ.toFun t - s)) *
           deriv γ.toFun t else 0)]
-    -- A ε = ∫ A_int ε t
     have h_A_eq_int : ∀ ε > 0, A ε = ∫ t in γ.a..γ.b, A_int ε t := by
       intro ε hε; simp only [A, M, h_S'_eq, A_int]
       exact A_eq_integral_A_int S0 f g_reg γ hS0_empty _hg_decomp _hg_cont ε hε
-    -- Obtain bound constants
     have hγ_cont := γ.toPiecewiseC1Curve.continuous_toFun
     obtain ⟨Mg, hMg⟩ := continuousOn_image_bounded hγ_cont _hg_cont
     obtain ⟨Mγ', hMγ'⟩ := piecewiseC1Immersion_deriv_bounded γ
     have hS0_nonempty : S0.Nonempty := Finset.nonempty_iff_ne_empty.mpr hS0_empty
     obtain ⟨Mc, hMc⟩ := residueSimplePole_norm_bound S0 f hS0_nonempty
     obtain ⟨δ, hδ_pos, hδ_sep⟩ := hS0_sep
-    -- Apply dominated convergence
     rw [hG_eq]; apply Filter.Tendsto.congr'
     · filter_upwards [self_mem_nhdsWithin] with ε hε; exact (h_A_eq_int ε hε).symm
     · exact tendsto_integral_of_dominated'
@@ -619,20 +610,11 @@ lemma multipointPV_eq_sum_of_integral_zero
             residueSimplePole f s / (z - s))
           γ.toFun γ.a γ.b s := by
   obtain ⟨L, hL⟩ := _hPV_exists
-  have h_pv_eq_L :
-      cauchyPrincipalValueOn S0 f γ.toFun
-        γ.a γ.b = L :=
-    hL.limUnder_eq
-  have h_G_zero :
-      ∫ t in γ.a..γ.b,
-        _g_reg (γ.toFun t) *
-          deriv γ.toFun t = 0 :=
-    _hg_zero
   have h_A_tendsto :=
     multipointPV_diff_tendsto S0 f γ
       _h_crossing_null _g_reg _hg_decomp _hg_cont
       _hS0_sep
-  simp only [h_G_zero] at h_A_tendsto
+  simp only [_hg_zero] at h_A_tendsto
   let S'_attach := fun ε =>
     ∑ s ∈ S0.attach,
       ∫ t in γ.a..γ.b,
@@ -647,46 +629,25 @@ lemma multipointPV_eq_sum_of_integral_zero
         then (residueSimplePole f s /
           (γ.toFun t - s)) * deriv γ.toFun t
         else 0
-  have h_S'_eq : S' = S'_attach := by
-    ext ε
-    simp only [S', S'_attach]
-    rw [Finset.sum_attach S0
-      (fun s => ∫ t in γ.a..γ.b,
-        if ‖γ.toFun t - s‖ > ε
-        then (residueSimplePole f s /
-          (γ.toFun t - s)) * deriv γ.toFun t
-        else 0)]
   let Mf := fun ε =>
     ∫ t in γ.a..γ.b,
       cauchyPrincipalValueIntegrandOn S0 f
         γ.toFun ε t
-  let Af := fun ε => Mf ε - S'_attach ε
-  have h_S'_attach_tendsto :
-      Tendsto S'_attach (𝓝[>] 0) (𝓝 L) := by
-    have h_eq : S'_attach =
-        fun ε => Mf ε - Af ε := by
+  have h_S'_tendsto : Tendsto S' (𝓝[>] 0) (𝓝 L) := by
+    have h_S'_eq : S' = fun ε => Mf ε - (Mf ε - S'_attach ε) := by
       ext ε
-      simp only [Mf, Af, S'_attach]
+      simp only [S', S'_attach, Mf]
+      rw [Finset.sum_attach S0
+        (fun s => ∫ t in γ.a..γ.b,
+          if ‖γ.toFun t - s‖ > ε
+          then (residueSimplePole f s /
+            (γ.toFun t - s)) * deriv γ.toFun t
+          else 0)]
       ring
-    have h_sub :
-        Tendsto (fun ε => Mf ε - Af ε) (𝓝[>] 0)
-          (𝓝 (L - 0)) :=
-      hL.sub h_A_tendsto
-    simp only [sub_zero] at h_sub
-    rw [h_eq]
-    exact h_sub
-  have h_S'_tendsto :
-      Tendsto S' (𝓝[>] 0) (𝓝 L) := by
     rw [h_S'_eq]
-    exact h_S'_attach_tendsto
-  have h_L_eq_sum :
-      L = ∑ s ∈ S0,
-        cauchyPrincipalValue'
-          (fun z =>
-            residueSimplePole f s / (z - s))
-          γ.toFun γ.a γ.b s :=
-    tendsto_nhds_unique h_S'_tendsto
-      _hPV_each_tendsto
-  rw [h_pv_eq_L, h_L_eq_sum]
+    simpa using hL.sub h_A_tendsto
+  have h_pv_eq_L : cauchyPrincipalValueOn S0 f γ.toFun γ.a γ.b = L := hL.limUnder_eq
+  rw [h_pv_eq_L]
+  exact tendsto_nhds_unique h_S'_tendsto _hPV_each_tendsto
 
 end

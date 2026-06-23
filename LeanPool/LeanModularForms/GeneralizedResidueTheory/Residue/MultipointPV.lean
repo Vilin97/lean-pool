@@ -32,6 +32,23 @@ open scoped Real Interval
 
 noncomputable section
 
+/-- The derivative of a piecewise C¹ immersion is continuous off its partition. -/
+private lemma piecewiseC1Immersion_continuousOn_deriv_off_partition (γ : PiecewiseC1Immersion) :
+    ContinuousOn (deriv γ.toFun) (Icc γ.a γ.b \ γ.partition) := by
+  intro t ⟨ht_Icc, ht_notP⟩
+  by_cases ht_Ioo : t ∈ Ioo γ.a γ.b
+  · exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
+        t ht_Ioo ht_notP).continuousWithinAt
+  · have ha_in_P := γ.toPiecewiseC1Curve.endpoints_in_partition.1
+    have hb_in_P := γ.toPiecewiseC1Curve.endpoints_in_partition.2
+    have ht_endpoint : t = γ.a ∨ t = γ.b := by
+      simp only [Set.mem_Ioo, not_and, not_lt] at ht_Ioo
+      rcases ht_Icc.1.lt_or_eq with h | h
+      · right; exact le_antisymm ht_Icc.2 (ht_Ioo h)
+      · left; exact h.symm
+    rcases ht_endpoint with rfl | rfl
+    <;> exact (ht_notP (by assumption)).elim
+
 /-! ## Measurability Infrastructure -/
 
 private lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set ℝ} (ε : ℝ)
@@ -449,30 +466,9 @@ lemma intervalIntegrable_cauchyPrincipalValueIntegrandOn {S0 : Finset ℂ} {f : 
       AEStronglyMeasurable
         (cauchyPrincipalValueIntegrandOn S0 f
           γ.toFun ε)
-        (volume.restrict (Icc γ.a γ.b)) := by
-    have hγ'_off_P :
-        ContinuousOn (deriv γ.toFun)
-          (Icc γ.a γ.b \ γ.partition) := by
-      intro t ⟨ht_Icc, ht_notP⟩
-      by_cases ht_Ioo : t ∈ Ioo γ.a γ.b
-      · exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
-            t ht_Ioo ht_notP).continuousWithinAt
-      · have ha_in_P :=
-          γ.toPiecewiseC1Curve.endpoints_in_partition.1
-        have hb_in_P :=
-          γ.toPiecewiseC1Curve.endpoints_in_partition.2
-        have ht_endpoint : t = γ.a ∨ t = γ.b := by
-          simp only [Set.mem_Ioo, not_and,
-            not_lt] at ht_Ioo
-          rcases ht_Icc.1.lt_or_eq with h | h
-          · right
-            exact le_antisymm ht_Icc.2 (ht_Ioo h)
-          · left; exact h.symm
-        rcases ht_endpoint with rfl | rfl
-        · exact (ht_notP ha_in_P).elim
-        · exact (ht_notP hb_in_P).elim
-    exact aEStronglyMeasurable_pv_integrand_multipoint
-      S0 hf_cont hγ_cont hγ'_off_P
+        (volume.restrict (Icc γ.a γ.b)) :=
+    aEStronglyMeasurable_pv_integrand_multipoint
+      S0 hf_cont hγ_cont (piecewiseC1Immersion_continuousOn_deriv_off_partition γ)
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le
     (le_of_lt γ.hab)]
   apply IntegrableOn.mono_set
@@ -520,26 +516,6 @@ lemma intervalIntegrable_residueTerm
     · simp only [norm_zero, M]; positivity
   have hγ_cont :=
     γ.toPiecewiseC1Curve.continuous_toFun
-  have hγ'_off_P :
-      ContinuousOn (deriv γ.toFun)
-        (Icc γ.a γ.b \ γ.partition) := by
-    intro t ⟨ht_Icc, ht_notP⟩
-    by_cases ht_Ioo : t ∈ Ioo γ.a γ.b
-    · exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
-          t ht_Ioo ht_notP).continuousWithinAt
-    · have ha_in_P :=
-        γ.toPiecewiseC1Curve.endpoints_in_partition.1
-      have hb_in_P :=
-        γ.toPiecewiseC1Curve.endpoints_in_partition.2
-      have ht_endpoint : t = γ.a ∨ t = γ.b := by
-        simp only [Set.mem_Ioo, not_and,
-          not_lt] at ht_Ioo
-        rcases ht_Icc.1.lt_or_eq with h | h
-        · right
-          exact le_antisymm ht_Icc.2 (ht_Ioo h)
-        · left; exact h.symm
-      rcases ht_endpoint with rfl | rfl
-      <;> exact (ht_notP (by assumption)).elim
   have h_meas :
       AEStronglyMeasurable
         (fun t => if ‖γ.toFun t - s‖ > ε
@@ -548,7 +524,7 @@ lemma intervalIntegrable_residueTerm
           else 0)
         (volume.restrict (Icc γ.a γ.b)) :=
     aEStronglyMeasurable_pv_integrand_residue
-      hε hγ_cont hγ'_off_P
+      hε hγ_cont (piecewiseC1Immersion_continuousOn_deriv_off_partition γ)
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le
     (le_of_lt γ.hab)]
   apply IntegrableOn.mono_set

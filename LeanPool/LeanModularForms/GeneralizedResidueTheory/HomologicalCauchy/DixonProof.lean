@@ -44,20 +44,6 @@ open Complex Set Filter Topology MeasureTheory intervalIntegral
 
 noncomputable section
 
-/-! ## Dixon's Proof of the Homological Cauchy Theorem
-
-The Dixon kernel `g(z, w) = (f(z) - f(w))/(z - w)` (extended to `f'(w)` at `z = w`)
-is exactly mathlib's `dslope f z w`. We use this identification throughout.
-
-Key mathlib facts:
-- `dslope_same f z = deriv f z`
-- `dslope_of_ne f h z = (f z - f c)/(z - c)` for `z ≠ c`
-- `continuousOn_dslope`: for fixed `c`, `z ↦ dslope f c z` is continuous
-  iff `f` is continuous and differentiable at `c`
-- `Complex.differentiableOn_dslope`: for fixed `c`,
-  `z ↦ dslope f c z` is differentiable iff `f` is differentiable
--/
-
 section DixonProof
 
 variable {U : Set ℂ} {f : ℂ → ℂ}
@@ -915,9 +901,8 @@ theorem dixonFunction_tendsto_zero (hU : IsOpen U) (hf : DifferentiableOn ℂ f 
 /-- h ≡ 0 by Liouville's theorem. -/
 theorem dixonFunction_eq_zero (hU : IsOpen U) (hf : DifferentiableOn ℂ f U)
     (γ : PiecewiseC1Immersion) (h_null : IsNullHomologous γ U) :
-    ∀ w, dixonFunction f U γ w = 0 := by
-  intro w
-  exact Differentiable.apply_eq_of_tendsto_cocompact
+    ∀ w, dixonFunction f U γ w = 0 := fun w =>
+  Differentiable.apply_eq_of_tendsto_cocompact
     (dixonFunction_differentiable hU hf γ h_null) w
     (dixonFunction_tendsto_zero hU hf γ h_null)
 
@@ -996,8 +981,7 @@ theorem contourIntegral_eq_zero_of_nullHomologous (hU : IsOpen U) (hf : Differen
     simp only [hF_def, mul_div_assoc, div_self hne, mul_one]
   rw [intervalIntegral.integral_congr h_eq]
   have hCIF := cauchyIntegralFormula_nullHomologous hU hF_diff γ h_null w₀ hw₀U hw₀_avoids
-  rw [show F w₀ = 0 from by simp only [hF_def, sub_self, mul_zero], mul_zero] at hCIF
-  exact hCIF
+  rwa [show F w₀ = 0 from by simp only [hF_def, sub_self, mul_zero], mul_zero] at hCIF
 
 end DixonProof
 

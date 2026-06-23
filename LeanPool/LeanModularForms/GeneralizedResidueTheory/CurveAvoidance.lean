@@ -63,9 +63,7 @@ then the curve avoids z₀. -/
 theorem curveAvoids_of_im_lt {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ}
     (h : ∀ t ∈ Icc a b, z₀.im < (γ t).im) : CurveAvoids γ a b z₀ := by
   intro t ht heq
-  have := h t ht
-  rw [heq] at this
-  exact lt_irrefl _ this
+  exact absurd (heq ▸ h t ht) (lt_irrefl _)
 
 /-- If every point on the curve has real part different from z₀.re,
 then the curve avoids z₀. -/

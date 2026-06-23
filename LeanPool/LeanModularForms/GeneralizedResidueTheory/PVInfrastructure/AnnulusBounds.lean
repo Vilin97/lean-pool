@@ -140,12 +140,10 @@ lemma remainder_integral_bound_on_annulus
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   have hab : a < b :=
     (Set.mem_Ioo.mp hat₀).1.trans_le (le_of_lt (Set.mem_Ioo.mp hat₀).2)
-  -- Localize h_lower for annulus_t_measure_bound
   have h_loc_δ₁ : ∀ t ∈ Set.Icc a b,
       ‖γ t - γ t₀‖ ≤ ε₁ → |t - t₀| < min δ₁ δ₁ := by
     intro s hs hγs; simp only [min_self]
     exact lt_of_lt_of_le (h_localize s hs hγs) (min_le_right _ _)
-  -- Set up the indicator domination
   set R := 2 * ε₁ / ‖L‖
   have hR_pos : 0 < R := by positivity
   set Icontain := Set.Icc (t₀ - R) (t₀ + R)
@@ -524,8 +522,8 @@ lemma annulus_symmDiff_measure_bound
       · exact h_localize_tAnnLin t ht_tAnn
     have ht_lt_δ₀ : |t - t₀| < δ₀ :=
       lt_of_lt_of_le ht_localized (min_le_left _ _)
-    have h_gx_bound : |g t - x t| ≤ e t := by
-      convert norm_linear_approx_bound h_quad ht_lt_δ₀ using 2
+    have h_gx_bound : |g t - x t| ≤ e t :=
+      norm_linear_approx_bound h_quad ht_lt_δ₀
     have ht_Icc : t ∈ Set.Icc a b := by
       rcases hxor with
         ⟨⟨ht_Icc, _, _, _⟩, _⟩ |

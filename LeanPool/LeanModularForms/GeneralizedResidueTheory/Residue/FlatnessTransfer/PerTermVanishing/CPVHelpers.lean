@@ -168,9 +168,7 @@ lemma cpvIntegrandOn_finset_sum {ι : Type*} (S0 : Finset ℂ) (T : Finset ι)
     cauchyPrincipalValueIntegrandOn S0 (fun z => ∑ i ∈ T, f i z) γ ε t =
     ∑ i ∈ T, cauchyPrincipalValueIntegrandOn S0 (f i) γ ε t := by
   simp only [cauchyPrincipalValueIntegrandOn]
-  split_ifs with h
-  · simp only [Finset.sum_const_zero]
-  · simp only [Finset.sum_mul]
+  split_ifs <;> simp only [Finset.sum_const_zero, Finset.sum_mul]
 
 /-- Integrability of CPV integrand for functions continuous on U \ S0.
 For any g continuous on U \ S0 with γ mapping into U, the multi-point CPV
@@ -514,8 +512,7 @@ private theorem cpv_tendsto_zero_of_add_decomposition
     intro ε t; rw [hg_eq_fun]; exact cpvIntegrandOn_add S0 g_reg g_pol γ.toFun ε t
   have h_reg_tendsto := tendsto_cpv_of_continuousOn_zero_integral S0 g_reg γ
     hg_reg_cont hg_reg_int_zero
-  have h_zero_eq : (0 : ℂ) = 0 + 0 := (add_zero 0).symm
-  rw [h_zero_eq]
+  rw [show (0 : ℂ) = 0 + 0 from (add_zero 0).symm]
   apply Filter.Tendsto.congr' _ (h_reg_tendsto.add hg_pol_tendsto)
   filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
   rw [show (fun t => cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) =

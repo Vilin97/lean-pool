@@ -155,9 +155,7 @@ lemma pv_step_bound_ratio_two_uniform
   obtain ⟨δ_up, hδ_up_pos, h_upper⟩ :=
     gamma_upper_bound_of_hasDerivAt hL hγ_hasderiv
   let δ₁ := min δ_lo δ_up
-  have hδ₁_pos : 0 < δ₁ := by
-    simp only [δ₁]
-    exact lt_min hδ_lo_pos hδ_up_pos
+  have hδ₁_pos : 0 < δ₁ := lt_min hδ_lo_pos hδ_up_pos
   have hδ₀δ₁_pos : 0 < min δ₀ δ₁ :=
     lt_min hδ₀_pos hδ₁_pos
   obtain ⟨ρ, hρ_pos, h_far_bound⟩ :=

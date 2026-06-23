@@ -165,15 +165,6 @@ lemma ftc_piecewise_contour_induction {F : ℂ → ℂ} {f : ℂ → ℂ}
           ih a'' b'' hc' hab'' hsub'' haP'' hbP'')
         hcard ha'b' hsub ha'P hb'P hc_filt.1 hc_filt.2.1 hc_filt.2.2
 
-/- The contour integral of a derivative of a composition F circ gamma over a
-piecewise C^1 curve equals F(gamma(b)) - F(gamma(a)), when F is holomorphic
-on a set containing the image of gamma.
-
-Proof strategy: split the integral along partition points and apply the
-standard FTC (`integral_eq_sub_of_hasDerivAt_of_le`) on each smooth subinterval.
-On each subinterval [p_i, p_{i+1}], gamma is C^1 hence differentiable, so
-F circ gamma has derivative f(gamma(t)) * gamma'(t) by the chain rule, and
-the sum telescopes to F(gamma(b)) - F(gamma(a)). -/
 /-- Fundamental theorem of calculus for piecewise C¹ contours: if `F` is a
 primitive of `f` on `U` (i.e. `HasDerivAt F (f z) z` for every `z ∈ U`) and
 `γ` is a piecewise C¹ curve lying in `U`, then
@@ -230,14 +221,11 @@ theorem integrand_intervalIntegrable_of_avoids (γ : PiecewiseC1Immersion)
         ht_not_part).continuousWithinAt
   · intro t ht
     have h1 : ‖(γ.toFun t - z)⁻¹‖ ≤ M_inv := by
-      have := hM_inv t ht
-      simp only [Real.norm_eq_abs, abs_norm] at this
-      exact this
+      simpa only [Real.norm_eq_abs, abs_norm] using hM_inv t ht
     calc ‖(γ.toFun t - z)⁻¹ * deriv γ.toFun t‖
         = ‖(γ.toFun t - z)⁻¹‖ * ‖deriv γ.toFun t‖ := norm_mul _ _
-      _ ≤ M_inv * M_d := by
-          exact mul_le_mul h1 (hM_d t ht) (norm_nonneg _)
-            (le_trans (norm_nonneg _) h1)
+      _ ≤ M_inv * M_d :=
+          mul_le_mul h1 (hM_d t ht) (norm_nonneg _) (le_trans (norm_nonneg _) h1)
 
 /-- Every closed curve in a convex open set is null-homologous.
 

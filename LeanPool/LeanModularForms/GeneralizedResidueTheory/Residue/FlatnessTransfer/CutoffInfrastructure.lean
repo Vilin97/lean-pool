@@ -261,10 +261,9 @@ private lemma cutoff_zpow_integral_eq_boundary
     E hE_count (Set.inter_subset_right) (fun t ht hne =>
       hγ_diff t ⟨(hσ₁_ge.trans hσ₁_lt.le).trans ht.1.le, ht.2.le⟩ hne) h_int_r
   rw [hftc_l, hftc_r, hγ_closed]
-  have hint_eq : (-(m : ℤ) + 1 : ℤ) = 1 - (m : ℤ) := by omega
-  simp only [hint_eq]
-  have hcast : (↑(1 - (m : ℤ)) : ℂ) = 1 - ↑↑m := by push_cast; ring
-  simp only [hcast, Int.cast_natCast]; ring
+  simp only [show (-(m : ℤ) + 1 : ℤ) = 1 - (m : ℤ) from by omega,
+    show (↑(1 - (m : ℤ)) : ℂ) = 1 - ↑↑m from by push_cast; ring, Int.cast_natCast]
+  ring
 
 private lemma exit_time_tendsto_right
     (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ)

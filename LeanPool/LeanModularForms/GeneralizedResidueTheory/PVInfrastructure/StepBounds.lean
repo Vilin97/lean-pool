@@ -636,17 +636,11 @@ lemma cutoff_diff_eq_annulus_integral
   congr 1; ext t
   by_cases h1 : ε₁ < ‖γ t - γ t₀‖
   · by_cases h2 : ε₂ < ‖γ t - γ t₀‖
-    · simp only [h1, h2, ↓reduceIte, sub_self,
-        not_le.mpr h2, and_false]
-    · simp only [h1, h2, ↓reduceIte, sub_zero,
-        not_lt.mp h2, and_self]
+    · simp only [h1, h2, ↓reduceIte, sub_self, not_le.mpr h2, and_false]
+    · simp only [h1, h2, ↓reduceIte, sub_zero, not_lt.mp h2, and_self]
   · by_cases h2 : ε₂ < ‖γ t - γ t₀‖
-    · exact absurd
-        (lt_of_le_of_lt (not_lt.mp h1)
-          (lt_of_le_of_lt h_le h2))
-        (lt_irrefl _)
-    · simp only [h1, h2, ↓reduceIte, sub_self,
-        false_and]
+    · exact absurd (lt_of_le_of_lt (not_lt.mp h1) (lt_of_le_of_lt h_le h2)) (lt_irrefl _)
+    · simp only [h1, h2, ↓reduceIte, sub_self, false_and]
 
 /-- Singular part cancellation via odd symmetry. -/
 lemma pv_singular_cancels
@@ -772,14 +766,8 @@ lemma cauchySeq_pv_dyadic {I : ℝ → ℂ} {δ₀ C : ℝ}
     CauchySeq (fun n => I (δ₀ / 2 ^ n)) := by
   refine cauchySeq_of_le_geometric (1 / 2) (C * δ₀)
     (by norm_num) (fun n => ?_)
-  rw [dist_comm]
-  have h1 : dist (I (δ₀ / 2 ^ (n + 1)))
-      (I (δ₀ / 2 ^ n)) =
-      ‖I (δ₀ / 2 ^ (n + 1)) -
-        I (δ₀ / 2 ^ n)‖ := dist_eq_norm _ _
-  rw [h1]
-  calc ‖I (δ₀ / 2 ^ (n + 1)) -
-      I (δ₀ / 2 ^ n)‖
+  rw [dist_comm, dist_eq_norm]
+  calc ‖I (δ₀ / 2 ^ (n + 1)) - I (δ₀ / 2 ^ n)‖
       ≤ C * δ₀ / 2 ^ n := h_step n
     _ = C * δ₀ * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
 
@@ -795,16 +783,8 @@ lemma t_bound_from_gamma_annulus
     (hγ_bound : ‖γ t - γ t₀‖ ≤ ε) :
     |t - t₀| ≤ 2 * ε / ‖L‖ := by
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
-  calc |t - t₀|
-      = 2 * ((‖L‖ / 2) * |t - t₀|) / ‖L‖ := by field_simp
-    _ ≤ 2 * ‖γ t - γ t₀‖ / ‖L‖ := by
-        apply div_le_div_of_nonneg_right
-        · linarith [h_lower t ht_pos ht_lt]
-        · exact hL_norm_pos.le
-    _ ≤ 2 * ε / ‖L‖ := by
-        apply div_le_div_of_nonneg_right
-        · linarith
-        · exact hL_norm_pos.le
+  rw [le_div_iff₀ hL_norm_pos]
+  nlinarith [h_lower t ht_pos ht_lt, hγ_bound]
 
 /-- Integrand bound on γ-annulus. -/
 lemma integrand_bound_on_annulus
@@ -819,13 +799,9 @@ lemma integrand_bound_on_annulus
       |t - t₀|⁻¹ + C := by
   have h_inv_norm : ‖(↑(t - t₀) : ℂ)⁻¹‖ =
       |t - t₀|⁻¹ := by rw [norm_inv, Complex.norm_real, Real.norm_eq_abs]
-  calc ‖(γ t - γ t₀)⁻¹ * deriv γ t‖
-      ≤ ‖(γ t - γ t₀)⁻¹ * deriv γ t -
-          (↑(t - t₀))⁻¹‖ +
-        ‖(↑(t - t₀) : ℂ)⁻¹‖ := by
-          linarith [norm_sub_norm_le ((γ t - γ t₀)⁻¹ * deriv γ t) (↑(t - t₀))⁻¹]
-    _ ≤ C + |t - t₀|⁻¹ := by rw [h_inv_norm]; linarith [hr_bounded t ht_pos ht_lt]
-    _ = |t - t₀|⁻¹ + C := by ring
+  have h := norm_sub_norm_le ((γ t - γ t₀)⁻¹ * deriv γ t) (↑(t - t₀))⁻¹
+  rw [h_inv_norm] at h
+  linarith [hr_bounded t ht_pos ht_lt]
 
 /-- Annulus localization: γ-annulus points are local. -/
 lemma annulus_implies_t_local

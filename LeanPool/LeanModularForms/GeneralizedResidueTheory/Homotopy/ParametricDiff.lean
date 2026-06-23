@@ -515,7 +515,6 @@ private lemma hasDerivAt_homotopy_param
             deriv (fun s'' => H (t', s'')) s) t) s := by
   let F : ℝ → ℝ → ℂ := fun s' t =>
     f (H (t, s')) * deriv (fun t' => H (t', s')) t
-  -- Integral equality via Schwarz
   have h_integral_eq :
       ∫ t in a..b, deriv (fun s' => F s' t) s =
       ∫ t in a..b, deriv (fun t' =>
@@ -528,7 +527,6 @@ private lemma hasDerivAt_homotopy_param
       exact homotopy_schwarz_product_rule f H hH_smooth t s
         (hf_diff t (by rw [htb]; exact ⟨le_of_lt hab, le_refl b⟩) s hs) hf_differentiable
     · exact h_schwarz t ⟨ht.1, lt_of_le_of_ne ht.2 htb⟩
-  -- Measurability + integrability
   have hF_meas : ∀ᶠ s' in 𝓝 s,
       AEStronglyMeasurable (F s') (volume.restrict (Ι a b)) := by
     filter_upwards [Filter.univ_mem] with s' _
@@ -539,7 +537,6 @@ private lemma hasDerivAt_homotopy_param
       (fun t => deriv (fun s' => F s' t) s) (volume.restrict (Ι a b)) :=
     ((homotopy_F'_continuous f H hH_smooth hfH_cont hf_differentiable).comp
       (continuous_id.prodMk continuous_const)).aestronglyMeasurable
-  -- Uniform bound + pointwise HasDerivAt
   obtain ⟨ε, M, _, h_bound, h_bound_int, h_ball_mem⟩ :=
     homotopy_uniform_bound f H a b s hab hH_smooth hfH_cont hf_differentiable
   have h_diff : ∀ᵐ t ∂volume, t ∈ Ι a b →
@@ -549,7 +546,6 @@ private lemma hasDerivAt_homotopy_param
     exact ((homotopy_fH_differentiableAt_s f H hH_smooth t s'
       (hf_differentiable (H (t, s')))).mul
       (homotopy_partialT_differentiableAt_s H hH_smooth t s')).hasDerivAt
-  -- Apply Leibniz
   rw [← h_integral_eq]
   exact (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
     h_ball_mem hF_meas hF_int hF'_meas h_bound h_bound_int h_diff).2
@@ -578,7 +574,6 @@ private lemma homotopy_J_deriv_continuousOn
       deriv (fun t' => deriv (fun s'' => H (t', s'')) s) t) :=
     (h_partialS.comp (contDiff_id.prodMk contDiff_const) : ContDiff ℝ 1 _).continuous_deriv le_rfl
   have h_fH_cont : Continuous (fun t => f (H (t, s))) := hfH_cont.comp h_embed
-  -- Product rule gives closed form
   have h_deriv_eq : ∀ t ∈ Icc a b,
       deriv (fun t' => f (H (t', s)) * deriv (fun s'' => H (t', s'')) s) t =
         deriv (fun t' => f (H (t', s))) t * deriv (fun s'' => H (t, s'')) s +
@@ -586,7 +581,6 @@ private lemma homotopy_J_deriv_continuousOn
     intro t ht
     exact deriv_mul (homotopy_fH_differentiableAt_t f H hH t s (hf_diff t ht s hs))
       (homotopy_partialS_differentiableAt_t H hH t s)
-  -- Show the closed form is continuous
   suffices h_rhs_cont : ContinuousOn (fun t =>
       deriv (fun t' => f (H (t', s))) t * deriv (fun s'' => H (t, s'')) s +
       f (H (t, s)) * deriv (fun t' => deriv (fun s'' => H (t', s'')) s) t)
@@ -594,7 +588,6 @@ private lemma homotopy_J_deriv_continuousOn
     exact h_rhs_cont.congr (fun t ht => h_deriv_eq t ht)
   apply ContinuousOn.add
   · apply ContinuousOn.mul _ h_partial_cont.continuousOn
-    -- Use chain rule to rewrite
     have h_chain : ∀ t ∈ Icc a b,
         deriv (fun t' => f (H (t', s))) t =
           deriv f (H (t, s)) * deriv (fun t' => H (t', s)) t := by
@@ -628,16 +621,13 @@ theorem hasDerivAt_homotopy_integral_zero
   let J : ℝ → ℝ → ℂ := fun t s' =>
     f (H (t, s')) * deriv (fun s'' => H (t, s'')) s'
   have h_boundary : J b s - J a s = 0 := by simp only [J, hderiv_a, hderiv_b, mul_zero, sub_zero]
-  -- Main derivation: derivative = J(b,s) - J(a,s) = 0
   have h_deriv : HasDerivAt (fun s' => ∫ t in a..b,
       f (H (t, s')) * deriv (fun t' => H (t', s')) t) (J b s - J a s) s := by
-    -- J is differentiable in t
     have hJ_diff_t : ∀ t ∈ Icc a b,
         DifferentiableAt ℝ (fun t' => J t' s) t := by
       intro t ht; simp only [J]
       exact (homotopy_fH_differentiableAt_t f H hH_smooth t s (hf_diff t ht s hs)).mul
         (homotopy_partialS_differentiableAt_t H hH_smooth t s)
-    -- FTC: integral of deriv J = J(b) - J(a)
     have h_ftc : ∫ t in a..b, deriv (fun t' => J t' s) t = J b s - J a s := by
       apply intervalIntegral.integral_eq_sub_of_hasDerivAt
       · intro t ht
@@ -645,14 +635,12 @@ theorem hasDerivAt_homotopy_integral_zero
           ⟨le_refl a, le_of_lt hab⟩ ⟨le_of_lt hab, le_refl b⟩ ht)).hasDerivAt
       · exact ContinuousOn.intervalIntegrable_of_Icc (le_of_lt hab)
           (homotopy_J_deriv_continuousOn f H a b s hH_smooth hfH_cont hf_diff hs hf_differentiable)
-    -- Schwarz: s-deriv of F = t-deriv of J
     have h_schwarz : ∀ t ∈ Ioo a b,
         deriv (fun s' => f (H (t, s')) * deriv (fun t' => H (t', s')) t) s =
           deriv (fun t' => J t' s) t := by
       intro t ht; simp only [J]
       exact homotopy_schwarz_product_rule f H hH_smooth t s
         (hf_diff t (Ioo_subset_Icc_self ht) s hs) hf_differentiable
-    -- Apply hasDerivAt_homotopy_param and FTC
     rw [← h_ftc]
     exact hasDerivAt_homotopy_param f H a b s hab hH_smooth hf_diff hfH_cont hs
       hf_differentiable (fun t ht => h_schwarz t ht)

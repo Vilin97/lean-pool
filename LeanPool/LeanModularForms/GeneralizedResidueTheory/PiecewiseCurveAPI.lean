@@ -158,9 +158,7 @@ private theorem pairwise_consecutive_union :
   | cons x xs ih =>
     intro hsorted hne htail_ne lo hi hhead hlast
     simp only [List.tail_cons] at htail_ne
-    have hxlo : x = lo := by
-      have : (x :: xs).head hne = x := List.head_cons
-      rw [this] at hhead; exact hhead
+    have hxlo : x = lo := hhead
     subst hxlo
     cases xs with
     | nil => exact absurd rfl htail_ne

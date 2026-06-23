@@ -247,9 +247,9 @@ private theorem pv_uniform_bound_of_continuous_aux
   obtain ⟨Mγ', hMγ'⟩ :=
     isCompact_Icc.exists_bound_of_continuousOn hγ'.norm
   have hMg' : ∀ z ∈ γ '' Icc a b, ‖g z‖ ≤ Mg := fun z hz => by
-    have := hMg z hz; simp only [Real.norm_eq_abs, abs_norm] at this; exact this
+    simpa only [Real.norm_eq_abs, abs_norm] using hMg z hz
   have hMγ'' : ∀ t ∈ Icc a b, ‖deriv γ t‖ ≤ Mγ' := fun t ht => by
-    have := hMγ' t ht; simp only [Real.norm_eq_abs, abs_norm] at this; exact this
+    simpa only [Real.norm_eq_abs, abs_norm] using hMγ' t ht
   have hMg_nn : (0 : ℝ) ≤ Mg :=
     le_trans (norm_nonneg _) (hMg' _ ⟨a, left_mem_Icc.mpr hab.le, rfl⟩)
   have hMγ_nn : (0 : ℝ) ≤ Mγ' :=

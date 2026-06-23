@@ -129,9 +129,7 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
   simp only [u, v, u', v'] at h_parts
   simp only [ofReal_one, ofReal_zero, one_mul, zero_mul,
     sub_zero] at h_parts
-  have hv1 : f (c + (1 : ℝ) • (z - c)) = f z := by simp
-  rw [hv1] at h_parts
-  exact h_parts
+  rwa [show f (c + (1 : ℝ) • (z - c)) = f z by simp] at h_parts
 
 private lemma continuous_segmentMap (c w : ℂ) :
     Continuous (fun t : ℝ => c + t • (w - c)) :=

@@ -160,6 +160,36 @@ Every piecewise C^1 immersion is flat of order 1 at every point. This is
 because the derivative approximation gamma(t) - gamma(t_0) ~ gamma'(t_0)(t - t_0) ensures
 the curve direction is asymptotically aligned with the tangent. -/
 
+/-- Shared core of the order-1 flatness lemmas: on any filter `l` where the
+first-order Taylor remainder `r t = γ t - γ t₀ - (t - t₀) • L` is `o(t - t₀)`,
+the tangent deviation of `γ t - γ t₀` from `L` is `o(γ t - γ t₀)`. -/
+private theorem tangentDeviation_isLittleO_of_remainder
+    (γ : ℝ → ℂ) (t₀ : ℝ) (L : ℂ) (hL : L ≠ 0) (l : Filter ℝ)
+    (hr : (fun t => γ t - γ t₀ - (t - t₀) • L) =o[l] fun t => t - t₀) :
+    (fun t => tangentDeviation (γ t - γ t₀) L) =o[l] fun t => γ t - γ t₀ := by
+  set r := fun t => γ t - γ t₀ - (t - t₀) • L with hr_def
+  have h_eq : ∀ t, tangentDeviation (γ t - γ t₀) L = tangentDeviation (r t) L := by
+    intro t
+    rw [show γ t - γ t₀ = (t - t₀) • L + r t from by simp [hr_def],
+      tangentDeviation_add, tangentDeviation_real_smul_self _ _ hL, zero_add]
+  have hO : (fun t => tangentDeviation (r t) L) =O[l] r :=
+    Asymptotics.isBigO_iff.mpr
+      ⟨2, Eventually.of_forall fun t => norm_tangentDeviation_le _ _ hL⟩
+  have ho1 := hO.trans_isLittleO hr
+  have hO2 : (fun t => t - t₀) =O[l] (fun t => γ t - γ t₀) := by
+    have hL_pos : (0 : ℝ) < ‖L‖ := norm_pos_iff.mpr hL
+    rw [Asymptotics.isBigO_iff]
+    refine ⟨2 / ‖L‖, ?_⟩
+    filter_upwards [hr.def (by positivity : (0 : ℝ) < ‖L‖ / 2)] with t ht
+    have h1 : ‖t - t₀‖ * ‖L‖ = ‖(t - t₀) • L‖ := (norm_smul _ _).symm
+    have h2 : ‖(t - t₀) • L‖ ≤ ‖γ t - γ t₀‖ + ‖r t‖ := by
+      have : (t - t₀) • L = (γ t - γ t₀) - r t := by simp [hr_def]
+      rw [this]; exact norm_sub_le _ _
+    rw [div_mul_eq_mul_div, le_div_iff₀ hL_pos]
+    have hr_eq : ‖r t‖ ≤ ‖L‖ / 2 * ‖t - t₀‖ := ht
+    nlinarith [norm_nonneg (γ t - γ t₀)]
+  exact (ho1.trans_isBigO hO2).congr_left fun t => (h_eq t).symm
+
 /-- Key lemma: if gamma has derivative L at t_0, then the tangent deviation of
 `gamma(t) - gamma(t_0)` from L is o(||gamma(t) - gamma(t_0)||) as t -> t_0. This is the
 essential content of flatness of order 1.
@@ -175,29 +205,8 @@ theorem tangentDeviation_isLittleO_of_hasDerivAt
       (fun t => ‖γ t - γ t₀‖ ^ 1) := by
   simp only [pow_one]
   rw [Asymptotics.isLittleO_norm_norm]
-  set r := fun t => γ t - γ t₀ - (t - t₀) • L with hr_def
-  have hr := hasDerivAt_iff_isLittleO.mp hγ
-  have h_eq : ∀ t, tangentDeviation (γ t - γ t₀) L = tangentDeviation (r t) L := by
-    intro t
-    rw [show γ t - γ t₀ = (t - t₀) • L + r t from by simp [hr_def],
-      tangentDeviation_add, tangentDeviation_real_smul_self _ _ hL, zero_add]
-  have hO : (fun t => tangentDeviation (r t) L) =O[𝓝 t₀] r :=
-    Asymptotics.isBigO_iff.mpr
-      ⟨2, Eventually.of_forall fun t => norm_tangentDeviation_le _ _ hL⟩
-  have ho1 := hO.trans_isLittleO hr
-  have hO2 : (fun t => t - t₀) =O[𝓝 t₀] (fun t => γ t - γ t₀) := by
-    have hL_pos : (0 : ℝ) < ‖L‖ := norm_pos_iff.mpr hL
-    rw [Asymptotics.isBigO_iff]
-    refine ⟨2 / ‖L‖, ?_⟩
-    filter_upwards [hr.def (by positivity : (0 : ℝ) < ‖L‖ / 2)] with t ht
-    have h1 : ‖t - t₀‖ * ‖L‖ = ‖(t - t₀) • L‖ := (norm_smul _ _).symm
-    have h2 : ‖(t - t₀) • L‖ ≤ ‖γ t - γ t₀‖ + ‖r t‖ := by
-      have : (t - t₀) • L = (γ t - γ t₀) - r t := by simp [hr_def]
-      rw [this]; exact norm_sub_le _ _
-    rw [div_mul_eq_mul_div, le_div_iff₀ hL_pos]
-    have hr_eq : ‖r t‖ ≤ ‖L‖ / 2 * ‖t - t₀‖ := ht
-    nlinarith [norm_nonneg (γ t - γ t₀)]
-  exact (ho1.trans_isBigO hO2).congr_left fun t => (h_eq t).symm
+  exact tangentDeviation_isLittleO_of_remainder γ t₀ L hL _
+    (hasDerivAt_iff_isLittleO.mp hγ)
 
 /-- Tangent deviation from right derivative limit is o(||gamma(t) - gamma(t_0)||) as t -> t_0+.
 This is the right-sided version needed for flatness of order 1. -/
@@ -216,29 +225,8 @@ theorem tangentDeviation_isLittleO_right
       (hasDerivWithinAt_Ici_of_tendsto_deriv
         (fun t ht => (hs_diff t ht).differentiableWithinAt)
         hγ_cont.continuousWithinAt hs_mem hγ_right)
-  set r := fun t => γ t - γ t₀ - (t - t₀) • L with hr_def
-  have hr := hasDerivWithinAt_iff_isLittleO.mp hderiv
-  have h_eq : ∀ t, tangentDeviation (γ t - γ t₀) L = tangentDeviation (r t) L := by
-    intro t
-    rw [show γ t - γ t₀ = (t - t₀) • L + r t from by simp [hr_def],
-      tangentDeviation_add, tangentDeviation_real_smul_self _ _ hL, zero_add]
-  have hO : (fun t => tangentDeviation (r t) L) =O[𝓝[>] t₀] r :=
-    Asymptotics.isBigO_iff.mpr
-      ⟨2, Eventually.of_forall fun t => norm_tangentDeviation_le _ _ hL⟩
-  have ho1 := hO.trans_isLittleO hr
-  have hO2 : (fun t => t - t₀) =O[𝓝[>] t₀] (fun t => γ t - γ t₀) := by
-    have hL_pos : (0 : ℝ) < ‖L‖ := norm_pos_iff.mpr hL
-    rw [Asymptotics.isBigO_iff]
-    refine ⟨2 / ‖L‖, ?_⟩
-    filter_upwards [hr.def (by positivity : (0 : ℝ) < ‖L‖ / 2)] with t ht
-    have h1 : ‖t - t₀‖ * ‖L‖ = ‖(t - t₀) • L‖ := (norm_smul _ _).symm
-    have h2 : ‖(t - t₀) • L‖ ≤ ‖γ t - γ t₀‖ + ‖r t‖ := by
-      have : (t - t₀) • L = (γ t - γ t₀) - r t := by simp [hr_def]
-      rw [this]; exact norm_sub_le _ _
-    rw [div_mul_eq_mul_div, le_div_iff₀ hL_pos]
-    have hr_eq : ‖r t‖ ≤ ‖L‖ / 2 * ‖t - t₀‖ := ht
-    nlinarith [norm_nonneg (γ t - γ t₀)]
-  exact (ho1.trans_isBigO hO2).congr_left fun t => (h_eq t).symm
+  exact tangentDeviation_isLittleO_of_remainder γ t₀ L hL _
+    (hasDerivWithinAt_iff_isLittleO.mp hderiv)
 
 /-- Tangent deviation from left derivative limit is o(||gamma(t) - gamma(t_0)||) as t -> t_0-.
 This is the left-sided version needed for flatness of order 1. -/
@@ -257,29 +245,8 @@ theorem tangentDeviation_isLittleO_left
       (hasDerivWithinAt_Iic_of_tendsto_deriv
         (fun t ht => (hs_diff t ht).differentiableWithinAt)
         hγ_cont.continuousWithinAt hs_mem hγ_left)
-  set r := fun t => γ t - γ t₀ - (t - t₀) • L with hr_def
-  have hr := hasDerivWithinAt_iff_isLittleO.mp hderiv
-  have h_eq : ∀ t, tangentDeviation (γ t - γ t₀) L = tangentDeviation (r t) L := by
-    intro t
-    rw [show γ t - γ t₀ = (t - t₀) • L + r t from by simp [hr_def],
-      tangentDeviation_add, tangentDeviation_real_smul_self _ _ hL, zero_add]
-  have hO : (fun t => tangentDeviation (r t) L) =O[𝓝[<] t₀] r :=
-    Asymptotics.isBigO_iff.mpr
-      ⟨2, Eventually.of_forall fun t => norm_tangentDeviation_le _ _ hL⟩
-  have ho1 := hO.trans_isLittleO hr
-  have hO2 : (fun t => t - t₀) =O[𝓝[<] t₀] (fun t => γ t - γ t₀) := by
-    have hL_pos : (0 : ℝ) < ‖L‖ := norm_pos_iff.mpr hL
-    rw [Asymptotics.isBigO_iff]
-    refine ⟨2 / ‖L‖, ?_⟩
-    filter_upwards [hr.def (by positivity : (0 : ℝ) < ‖L‖ / 2)] with t ht
-    have h1 : ‖t - t₀‖ * ‖L‖ = ‖(t - t₀) • L‖ := (norm_smul _ _).symm
-    have h2 : ‖(t - t₀) • L‖ ≤ ‖γ t - γ t₀‖ + ‖r t‖ := by
-      have : (t - t₀) • L = (γ t - γ t₀) - r t := by simp [hr_def]
-      rw [this]; exact norm_sub_le _ _
-    rw [div_mul_eq_mul_div, le_div_iff₀ hL_pos]
-    have hr_eq : ‖r t‖ ≤ ‖L‖ / 2 * ‖t - t₀‖ := ht
-    nlinarith [norm_nonneg (γ t - γ t₀)]
-  exact (ho1.trans_isBigO hO2).congr_left fun t => (h_eq t).symm
+  exact tangentDeviation_isLittleO_of_remainder γ t₀ L hL _
+    (hasDerivWithinAt_iff_isLittleO.mp hderiv)
 
 /-- Every piecewise C^1 immersion is flat of order 1 at any interior point.
 This is because the first-order Taylor approximation gamma(t) - gamma(t_0) ~ L*(t-t_0)

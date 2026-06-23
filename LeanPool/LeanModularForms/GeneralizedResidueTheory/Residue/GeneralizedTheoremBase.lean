@@ -530,12 +530,12 @@ theorem residueSimplePole_eq_of_decomposition (f : ℂ → ℂ) (z₀ c : ℂ) (
   have h_g : Tendsto g (𝓝[≠] z₀) (𝓝 (g z₀)) :=
     hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
   have h_prod : Tendsto (fun z => (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 0) := by
-    have := h_sub.mul h_g; simp only [zero_mul] at this; exact this
+    simpa only [zero_mul] using h_sub.mul h_g
   have h_ev : ∀ᶠ z in 𝓝[≠] z₀, (z - z₀) * f z = c + (z - z₀) * g z := by
     filter_upwards [hf_eq, self_mem_nhdsWithin] with z hz hne
     rw [hz, mul_add, mul_div_cancel₀ _ (sub_ne_zero.mpr hne)]
   have h_tend : Tendsto (fun z => c + (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 c) := by
-    have := (tendsto_const_nhds (x := c)).add h_prod; rwa [add_zero] at this
+    simpa only [add_zero] using (tendsto_const_nhds (x := c)).add h_prod
   exact h_tend.congr' (h_ev.mono fun _ hz => hz.symm)
 
 /-- The contour integral `(2πi)⁻¹ ∮_{|z-z₀|=r} f(z)dz = c` for small `r`,

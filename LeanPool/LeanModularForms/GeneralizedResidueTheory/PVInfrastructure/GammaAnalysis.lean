@@ -63,10 +63,8 @@ private lemma farSet_isCompact
     (a b t₀ δ : ℝ) (_hab : a < b) (_hδ : 0 < δ) :
     IsCompact {t | t ∈ Set.Icc a b ∧ δ ≤ |t - t₀|} := by
   apply IsCompact.inter_right isCompact_Icc
-  have : IsClosed {t : ℝ | δ ≤ |t - t₀|} :=
-    isClosed_le continuous_const
-      (continuous_abs.comp (continuous_sub_right t₀))
-  exact this
+  exact isClosed_le continuous_const
+    (continuous_abs.comp (continuous_sub_right t₀))
 
 private lemma norm_sub_pos_on_farSet
     (γ : ℝ → ℂ) (a b t₀ δ : ℝ)
@@ -223,8 +221,7 @@ lemma gamma_lower_bound_of_hasDerivAt
       (‖L‖ / 2) (half_pos hLnorm_pos)
   refine ⟨δ, hδ_pos, fun t ht_pos ht_lt => ?_⟩
   have h := abs_le.mp (abs_norm_gamma_sub_smul_le (hδ_bound t ht_pos ht_lt))
-  have hid : |t - t₀| * ‖L‖ - ‖L‖ / 2 * |t - t₀| = ‖L‖ / 2 * |t - t₀| := by ring
-  linarith [h.1]
+  nlinarith [h.1]
 
 /-- Upper bound on ‖γ t - γ t₀‖ from non-zero derivative.
 Uses `hasDerivAt_remainder_bound` + triangle inequality. -/
@@ -239,8 +236,7 @@ lemma gamma_upper_bound_of_hasDerivAt
     hasDerivAt_remainder_bound hγ_hasderiv ‖L‖ hLnorm_pos
   refine ⟨δ, hδ_pos, fun t ht_pos ht_lt => ?_⟩
   have h := abs_le.mp (abs_norm_gamma_sub_smul_le (hδ_bound t ht_pos ht_lt))
-  have hid : |t - t₀| * ‖L‖ + ‖L‖ * |t - t₀| = 2 * ‖L‖ * |t - t₀| := by ring
-  linarith [h.2]
+  nlinarith [h.2]
 
 /-- If γ is continuous on [a,b] and injective at γ(t₀),
 then γ stays bounded away from γ(t₀) outside any

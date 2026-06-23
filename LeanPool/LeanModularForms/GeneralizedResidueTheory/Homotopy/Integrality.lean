@@ -121,14 +121,11 @@ theorem ClosedCurvesHomotopicAvoiding.toPiecewise
     PiecewiseCurvesHomotopicAvoiding γ₀ γ₁ a b z₀ ∅ := by
   obtain ⟨H, hcont, hH0, hH1, hclosed, havoid, hdiff, hderiv_cont⟩ := h
   refine ⟨H, hcont, hH0, hH1, hclosed, havoid, ?_, ?_, ?_⟩
-  · -- Differentiability: P = ∅, so the hypothesis t ∉ P is always vacuously true
-    intro t ht _ht_not_in_empty s hs
+  · intro t ht _ht_not_in_empty s hs
     exact hdiff t ht s hs
-  · -- Continuous deriv on sub-intervals: global continuity restricts to any subset
-    intro p₁ p₂ _hp _hvac _hI
+  · intro p₁ p₂ _hp _hvac _hI
     exact hderiv_cont.continuousOn.mono (Set.subset_univ _)
-  · -- Bound on deriv: compactness of Icc a b × Icc 0 1 + continuity gives a uniform bound
-    have hK : IsCompact (Set.Icc a b ×ˢ Set.Icc (0 : ℝ) 1) :=
+  · have hK : IsCompact (Set.Icc a b ×ˢ Set.Icc (0 : ℝ) 1) :=
       isCompact_Icc.prod isCompact_Icc
     have hf_cont : Continuous (fun p : ℝ × ℝ => ‖deriv (fun t' => H (t', p.2)) p.1‖) :=
       hderiv_cont.norm
@@ -191,6 +188,27 @@ private lemma bound_away_from_z₀
         ≤ dist z₀ (γ t) := Metric.infDist_le_dist_of_mem (mem_image_of_mem γ ht)
       _ = ‖γ t - z₀‖ := by rw [Complex.dist_eq, norm_sub_rev]⟩
 
+/-- Shared partition-avoiding sub-interval `(p₁, p₂)` around an interior point `t ∉ P`. -/
+private lemma exists_partition_free_subinterval
+    {a b : ℝ} {P : Finset ℝ} {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
+    ∃ p₁ p₂ : ℝ, p₁ < p₂ ∧ (∀ s ∈ Ioo p₁ p₂, s ∉ P) ∧
+      Ioo p₁ p₂ ⊆ Ioo a b ∧ t ∈ Ioo p₁ p₂ := by
+  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
+  refine ⟨max a (t - ε / 2), min b (t + ε / 2), ?_, ?_, ?_, ?_⟩
+  · simp only [lt_min_iff, max_lt_iff]
+    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
+           ⟨by linarith [ht.1, hε], by linarith⟩⟩
+  · intro s hs
+    apply hε_avoid s
+    simp only [mem_Ioo] at hs
+    exact ⟨by linarith [le_max_right a (t - ε / 2), hs.1],
+           by linarith [min_le_right b (t + ε / 2), hs.2]⟩
+  · intro x hx
+    simp only [mem_Ioo] at hx ⊢
+    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1, lt_of_lt_of_le hx.2 (min_le_left b _)⟩
+  · simp only [mem_Ioo, lt_min_iff, max_lt_iff]
+    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+
 private lemma logDeriv_integrand_bound
     {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {M δ : ℝ}
     (hδ : 0 < δ)
@@ -215,23 +233,8 @@ private lemma logDeriv_continuousOn_off_finset
   have ht_Ioo : t ∈ Ioo a b :=
     ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm ht_notP'.2.1),
      lt_of_le_of_ne ht_Icc.2 ht_notP'.2.2⟩
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP'.1
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht_Ioo.1 ht_Ioo.2, by linarith [ht_Ioo.2, hε]⟩,
-           ⟨by linarith [ht_Ioo.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2), hs.1],
-           by linarith [min_le_right b (t + ε / 2), hs.2]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1, lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht_Ioo.1, by linarith [hε]⟩, ⟨ht_Ioo.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht_Ioo ht_notP'.1
   exact ContinuousWithinAt.div
     ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousAt
       (Ioo_mem_nhds ht_in.1 ht_in.2)).continuousWithinAt
@@ -248,24 +251,8 @@ private lemma logDeriv_continuousAt_off_finset
     (hγ_avoids : ∀ t ∈ Icc a b, γ t ≠ z₀)
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     ContinuousAt (fun t => deriv γ t / (γ t - z₀)) t := by
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
-           ⟨by linarith [ht.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2)],
-           by linarith [min_le_right b (t + ε / 2)]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1,
-           lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht ht_notP
   exact ContinuousAt.div
     ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousAt
       (Ioo_mem_nhds ht_in.1 ht_in.2))
@@ -281,31 +268,14 @@ private lemma logDeriv_stronglyMeasurableAtFilter_off_finset
     (hγ_avoids : ∀ t ∈ Icc a b, γ t ≠ z₀)
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     StronglyMeasurableAtFilter (fun t => deriv γ t / (γ t - z₀)) (𝓝 t) volume := by
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
-           ⟨by linarith [ht.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2)],
-           by linarith [min_le_right b (t + ε / 2)]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1,
-           lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht ht_notP
   have h_cont_on : ContinuousOn (fun t => deriv γ t / (γ t - z₀)) (Ioo p₁ p₂) := by
     intro x hx
     exact ContinuousWithinAt.div
       ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousWithinAt hx)
       (((hγ_cont.sub continuousOn_const).continuousWithinAt
-        (Ioo_subset_Icc_self (h_sub hx))).mono
-        ((Ioo_subset_Ioo (le_max_left _ _) (min_le_left _ _)).trans Ioo_subset_Icc_self))
+        (Ioo_subset_Icc_self (h_sub hx))).mono (h_sub.trans Ioo_subset_Icc_self))
       (sub_ne_zero.mpr (hγ_avoids _ (Ioo_subset_Icc_self (h_sub hx))))
   exact ContinuousAt.stronglyMeasurableAtFilter isOpen_Ioo
     (fun x hx => h_cont_on.continuousAt (Ioo_mem_nhds hx.1 hx.2)) t ht_in

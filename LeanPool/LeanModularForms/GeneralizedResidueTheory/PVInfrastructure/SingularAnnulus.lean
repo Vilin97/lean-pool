@@ -411,7 +411,6 @@ private lemma singular_annulus_lin_integral_zero
   have hc₂_lt_dist : c₂ < min (t₀ - a) (b - t₀) := by
     rw [show c₂ = ε₁ / ‖L‖ from rfl, div_lt_iff₀ hL_pos]
     linarith [mul_comm ‖L‖ (min (t₀ - a) (b - t₀))]
-  -- Set up the indicator and its integrability
   set φ : ℝ → ℂ := fun t =>
     if ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁
     then (↑(t - t₀) : ℂ)⁻¹ else 0
@@ -423,7 +422,6 @@ private lemma singular_annulus_lin_integral_zero
     fun t hnt => if_neg (mt (h_cond_iff t).mp hnt)
   have hφ_val : ∀ t, c₁ < |t - t₀| ∧ |t - t₀| ≤ c₂ → φ t = (↑(t - t₀) : ℂ)⁻¹ :=
     fun t ht => if_pos ((h_cond_iff t).mpr ht)
-  -- Split, zero out 3 pieces, identify 2 wings, then cancel
   have ha_lt_mc₂ : a < t₀ - c₂ := by linarith [lt_of_lt_of_le hc₂_lt_dist (min_le_left _ _)]
   have hpc₂_lt_b : t₀ + c₂ < b := by linarith [lt_of_lt_of_le hc₂_lt_dist (min_le_right _ _)]
   have h_split := integral_split_five
@@ -573,7 +571,6 @@ lemma singular_annulus_bound_explicit
         ‖γ t - γ t₀‖ ≤ ε₁
       then (↑(t - t₀) : ℂ)⁻¹ else 0‖ ≤
       Csing * ε₁ := by
-  -- Step 1: Set up constants from prerequisites
   have hL_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   obtain ⟨Kmeas, hKmeas_pos, δ₀', hδ₀'_pos,
       δ_meas, hδ_meas_pos, h_meas⟩ :=
@@ -624,7 +621,6 @@ lemma singular_annulus_bound_explicit
     push Not at h_not_lt
     have h_far := h_far_bound t ht h_not_lt
     linarith
-  -- Step 2: The linearized integral vanishes (extracted helper)
   have hJ_lin_zero :
       (∫ t in a..b,
         if ε₂ < ‖L‖ * |t - t₀| ∧
@@ -632,7 +628,6 @@ lemma singular_annulus_bound_explicit
         then (↑(t - t₀) : ℂ)⁻¹ else 0) = 0 :=
     singular_annulus_lin_integral_zero hL_pos
       hε₁_pos hε₂_pos hε₂_le hε₁_lt_Ldist hat₀
-  -- Step 3: Set up difference integrand with extracted helpers
   set f_γ : ℝ → ℂ := fun t =>
     if ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
     then (↑(t - t₀) : ℂ)⁻¹ else 0 with hf_γ_def
@@ -660,7 +655,6 @@ lemma singular_annulus_bound_explicit
     intervalIntegrable_of_aesm_bound hab.le hf_lin_meas.aestronglyMeasurable.restrict
       (Filter.Eventually.of_forall (fun x => hf_lin_bound x))
   have hf_γ_eq : ∀ t, f_γ t = d t + f_lin t := fun t => by simp only [hd_def]; ring
-  -- AE measurable version of the gamma norm
   have h_norm_cont :
       ContinuousOn (fun t => ‖γ t - γ t₀‖)
         (Set.Icc a b) :=
@@ -702,12 +696,10 @@ lemma singular_annulus_bound_explicit
       ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
         (Filter.Eventually.of_forall
           (fun t ht => hd_bound_on_Icc t (Set.Ioc_subset_Icc_self ht))))
-  -- Decompose integral and reduce to Ioc integral of d'
   rw [show (∫ t in a..b, f_γ t) = (∫ t in a..b, d t) + (∫ t in a..b, f_lin t) from by
       rw [← intervalIntegral.integral_add hd_int hf_lin_int]
       exact intervalIntegral.integral_congr (fun t _ => hf_γ_eq t),
     hJ_lin_zero, add_zero, intervalIntegral.integral_of_le hab.le]
-  -- Step 4: Symmetric difference and measurability setup
   set γAnn' := {t : ℝ | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧
     ε₂ < h' t ∧ h' t ≤ ε₁}
   set tAnnLin_loc := {t : ℝ | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧
@@ -726,7 +718,6 @@ lemma singular_annulus_bound_explicit
       with t h_eq ht_Ioc
     exact h_eq (Set.Ioc_subset_Icc_self ht_Ioc)
   rw [h_int_eq]
-  -- Step 5: Indicator bound and final calc
   set g_comp : ℝ → ℝ := S'.indicator (fun _ => bound) with hg_comp_def
   have hS'_finite : volume S' < ⊤ := by
     calc volume S' ≤ volume (Set.Icc a b) := by

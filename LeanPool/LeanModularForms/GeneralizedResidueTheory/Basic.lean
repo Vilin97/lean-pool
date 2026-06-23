@@ -167,7 +167,6 @@ private theorem exists_min_above_in_finite_union
     hs_min_le b ⟨Set.mem_union_left _ rfl, ht_lt_b⟩,
     fun x hx hxS => by linarith [hs_min_le x ⟨hxS, hx.1⟩, hx.2]⟩
 
--- FIXME: [STRUCTURE] 33 lines
 private theorem eq_on_Ioo_of_deriv_zero
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {f : ℝ → E} {a b t s_min : ℝ}
@@ -199,7 +198,6 @@ private theorem eq_on_Ioo_of_deriv_zero
     tendsto_const_nhds
   intro x hx; rw [h_ft]; exact h_eq_mid x hx
 
--- FIXME: [STRUCTURE] 34 lines
 /-- If f is continuous on [a,b], differentiable on (a,b)\P with f'=0 there,
 then f has zero right derivative at every point of [a,b). -/
 theorem hasDerivWithinAt_zero_of_deriv_zero_off_finite
