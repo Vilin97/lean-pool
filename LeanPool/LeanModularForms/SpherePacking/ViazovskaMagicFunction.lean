@@ -233,7 +233,7 @@ theorem neg_inv_add_one_im_pos {z : ℂ} (hz : 0 < z.im) : 0 < (-1 / (z + 1)).im
   have hne : z + 1 ≠ 0 := by intro h; have := (Complex.ext_iff.mp h).2; simp at this; linarith
   rw [neg_div, Complex.neg_im, Complex.div_im]
   rw [Complex.one_im, Complex.one_re, zero_mul, zero_div, one_mul, zero_sub, neg_neg]
-  exact div_pos (by simp [Complex.add_im]; linarith) (Complex.normSq_pos.mpr hne)
+  exact div_pos (by simpa using hz) (Complex.normSq_pos.mpr hne)
 
 /-- The integrand `viazovskaIntegrandLeft r` is holomorphic on the upper half-plane.
 This follows from holomorphicity of `φ₀''` and the algebraic factors. -/
@@ -372,16 +372,13 @@ so path independence (from `holomorphic_convex_primitive`) applies. -/
 /-- The point `-1 + δI` lies in the upper half-plane for `δ > 0`. -/
 theorem neg_one_add_delta_I_mem_uhp {δ : ℝ} (hδ : 0 < δ) :
     (-1 + ↑δ * I : ℂ) ∈ {z : ℂ | 0 < z.im} := by
-  change 0 < (-1 + ↑δ * I : ℂ).im
-  simp [Complex.add_im, Complex.mul_im, Complex.I_re, Complex.I_im,
-        Complex.ofReal_re, Complex.ofReal_im]; linarith
+  simpa using hδ
 
 /-- The point `-1 + I` lies in the upper half-plane. -/
-theorem neg_one_add_I_mem_uhp : (-1 + I : ℂ) ∈ {z : ℂ | 0 < z.im} := by
-  change 0 < (-1 + I : ℂ).im; simp [Complex.add_im, Complex.I_im]
+theorem neg_one_add_I_mem_uhp : (-1 + I : ℂ) ∈ {z : ℂ | 0 < z.im} := by simp
 
 /-- The point `I` lies in the upper half-plane. -/
-theorem I_mem_uhp : (I : ℂ) ∈ {z : ℂ | 0 < z.im} := by change 0 < (I : ℂ).im; simp [Complex.I_im]
+theorem I_mem_uhp : (I : ℂ) ∈ {z : ℂ | 0 < z.im} := by simp
 
 /-- Truncated contour equivalence: for `δ > 0`, the diagonal segment integral from
 `-1 + δI` to `I` equals the vertical from `-1 + δI` to `-1 + I` plus the
@@ -429,17 +426,11 @@ private theorem integrand_at_zero_vert (r : ℝ) :
 
 /-- The diagonal contour point has positive imaginary part for `t > 0`. -/
 private theorem contour_neg1_to_i_im_pos {t : ℝ} (ht : 0 < t) :
-    0 < (contourNeg1ToI t).im := by
-  simp [contourNeg1ToI, Complex.add_im, Complex.mul_im,
-    Complex.I_im, Complex.I_re, Complex.ofReal_im, Complex.ofReal_re]
-  linarith
+    0 < (contourNeg1ToI t).im := by simpa [contourNeg1ToI] using ht
 
 /-- The vertical contour point has positive imaginary part for `t > 0`. -/
 private theorem vertical_contour_im_pos {t : ℝ} (ht : 0 < t) :
-    0 < (-1 + I * (↑t : ℂ)).im := by
-  simp [Complex.add_im, Complex.mul_im, Complex.I_im,
-    Complex.I_re, Complex.ofReal_im, Complex.ofReal_re]
-  linarith
+    0 < (-1 + I * (↑t : ℂ)).im := by simpa using ht
 
 /-! ### Step 5: Cusp decay and integrand boundary behavior
 
@@ -488,8 +479,7 @@ private theorem im_neg_inv_diag {t : ℝ} (ht : 0 < t) :
 private theorem im_neg_inv_vert {t : ℝ} (_ht : 0 < t) :
     (-1 / ((-1 : ℂ) + I * ↑t + 1)).im = 1 / t := by
   rw [vert_contour_add_one, neg_div, Complex.neg_im, Complex.div_im]
-  simp [Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im,
-    Complex.ofReal_re, Complex.ofReal_im, Complex.one_re, Complex.one_im]
+  simp
 
 /-- Norm bound for `(z+1)^2` along the diagonal: `‖((1+I)t)^2‖ ≤ 2t^2`. -/
 private theorem norm_sq_diag {t : ℝ} (ht : 0 < t) :

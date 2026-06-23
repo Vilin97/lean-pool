@@ -38,11 +38,6 @@ version. -/
 theorem ModularForm.slash_neg_one' {k : ℤ} (f : ℍ → ℂ) (hk : Even k) :
     f ∣[k] (-1 : SL(2, ℤ)) = f ∣[k] (1 : SL(2, ℤ)) := by
   ext x
-  have : ((-1 : SL(2, ℤ)) : (GL (Fin 2) ℝ)) • x = x := by
-     simp only [Matrix.SpecialLinearGroup.coe_int_neg, map_one]
-     ext
-     rw [UpperHalfPlane.coe_smul ]
-     simp [σ, num, denom]
   simp [SL_slash_def, denom, hk.neg_one_zpow]
 
 /-- See `ModularForm.slash_neg'` for the version where `g` is a SL(2, ℤ) matrix. -/
