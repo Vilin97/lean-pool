@@ -804,11 +804,8 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
           Prod.ext_iff, Prod.fst_one, Prod.snd_one, Prod.fst_zero,
           Prod.snd_zero, h82, Hem, true_and, true_or]
 
-theorem Fin.fintwo_of_neZero {i : Fin 2} (hi : i ≠ 0) : i = 1 := by
-  revert i
-  rw [Fin.forall_fin_two]
-  simp only [Fin.isValue, ne_eq, not_true_eq_false, _root_.zero_ne_one, imp_self,
-    one_ne_zero, not_false_eq_true, and_self]
+theorem Fin.fintwo_of_neZero {i : Fin 2} (hi : i ≠ 0) : i = 1 :=
+  Fin.eq_one_of_ne_zero i hi
 
 /-- Split a nonempty finite dependent product of matrix algebras into its head and tail. -/
 def matrixPiFinAlgEquivPiFinTwo {𝕜 : Type*} [CommSemiring 𝕜]

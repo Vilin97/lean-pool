@@ -138,13 +138,7 @@ omit [Fintype k] [DecidableEq k] [(i : k) → DecidableEq (s i)] in
 private theorem pi.forall_left_mul (x y : PiMat ℂ k s) :
     (∀ a, a * x = a * y) ↔ x = y := by
   classical
-  constructor
-  · intro h
-    specialize h 1
-    simp_rw [one_mul] at h
-    exact h
-  · rintro rfl a
-    rfl
+  exact ⟨fun h => by simpa using h 1, fun h _ => by rw [h]⟩
 
 theorem Module.Dual.pi.apply'' (ψ : ∀ i, Matrix (s i) (s i) ℂ →ₗ[ℂ] ℂ)
     (x : PiMat ℂ k s) :
@@ -425,7 +419,7 @@ theorem starAlgEquiv_is_isometry_tFAE [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
     StarAlgEquiv.toLinearMap_apply, mul_inv_eq_iff_eq_mul_of_invertible,
     φ.apply, StarAlgEquiv.symm_apply_eq, _root_.map_mul,
     StarAlgEquiv.apply_symm_apply, ← forall_left_hMul φ.matrix, @eq_comm _ φ.matrix]
-  tfae_have 1 ↔ 2 := by rw [iff_self]; trivial
+  tfae_have 1 ↔ 2 := Iff.rfl
   tfae_have 1 → 3 := by
     intro i x
     nth_rw 1 [← i]
