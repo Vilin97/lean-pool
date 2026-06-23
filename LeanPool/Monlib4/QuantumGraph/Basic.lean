@@ -21,7 +21,6 @@ import LeanPool.Monlib4.LinearAlgebra.QuantumSet.Subset
 
 Imported Lean Pool material for `LeanPool.Monlib4.QuantumGraph.Basic`.
 -/
--- import LeanPool.Monlib4.LinearAlgebra.QuantumSet.TensorProduct
 
 local notation x " ⊗ₘ " y => TensorProduct.map x y
 
@@ -1189,12 +1188,3 @@ noncomputable def QuantumGraph.NumOfEdges {A : Type*} [starAlgebra A] [QuantumSe
   map_smul' _ _ := by simp only [LinearMap.smul_apply, inner_smul_right]; rfl
 
 end
-
--- class QuantumGraphHom {A B : Type*} [NormedAddCommGroupOfRing A]
---   [NormedAddCommGroupOfRing B] [hA : QuantumSet A] [hB : QuantumSet B]
---   {x : A →ₗ[ℂ] A} (hx : QuantumGraph A x)
---   {y : B →ₗ[ℂ] B} (hy : QuantumGraph B y)
---     extends A →⋆ₐ[ℂ] B where
---   isGraphHom :
---     y •ₛ (toStarAlgHom.toLinearMap ∘ₗ x ∘ₗ (LinearMap.adjoint toStarAlgHom.toLinearMap))
---       = toStarAlgHom.toLinearMap ∘ₗ x ∘ₗ (LinearMap.adjoint toStarAlgHom.toLinearMap)

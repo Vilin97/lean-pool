@@ -210,9 +210,8 @@ lemma ker_to_clm
   [Semiring R₂] [AddCommMonoid M] [AddCommMonoid M₂]
   [TopologicalSpace M] [TopologicalSpace M₂]
   [Module R M] [Module R₂ M₂] {τ₁₂ : R →+* R₂} (f : M →SL[τ₁₂] M₂) :
-    ∀ x, x ∈ LinearMap.ker (ContinuousLinearMap.toLinearMap f) ↔ f x = 0 := by
-  intro x
-  rfl
+    ∀ x, x ∈ LinearMap.ker (ContinuousLinearMap.toLinearMap f) ↔ f x = 0 :=
+  fun _ => Iff.rfl
 
 
 lemma subtype_compL_ker [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
@@ -561,13 +560,13 @@ theorem orthogonal_projection_is_le_iff_commutes [InnerProductSpace ℂ E]
 
 theorem orthogonalProjection.is_le_iff_subset [InnerProductSpace ℂ E] {U V : Submodule ℂ E}
     [CompleteSpace E]
-    [CompleteSpace U] [CompleteSpace V] : ↥P U ≤ ↥P V ↔ U ≤ V := by
-  exact Submodule.starProjection_le_starProjection_iff
+    [CompleteSpace U] [CompleteSpace V] : ↥P U ≤ ↥P V ↔ U ≤ V :=
+  Submodule.starProjection_le_starProjection_iff
 
 theorem Submodule.map_to_linearMap [Module 𝕜 E] {p : E →L[𝕜] E} {U : Submodule 𝕜 E}
     {x : E} :
-    x ∈ Submodule.map (p : E →ₗ[𝕜] E) U ↔ ∃ y ∈ U, p y = x := by
-  rfl
+    x ∈ Submodule.map (p : E →ₗ[𝕜] E) U ↔ ∃ y ∈ U, p y = x :=
+  Iff.rfl
 
 /-- given self-adjoint idempotent operators `p,q` we have,
   `p(E) ⊆ q(E)` iff `q - p` is an idempotent operator -/
@@ -812,8 +811,7 @@ theorem orthogonal_projection_iff' [InnerProductSpace 𝕜 E] [FiniteDimensional
 theorem orthogonalProjection.isMinimalProjection_to_clm [InnerProductSpace 𝕜 E]
     [FiniteDimensional 𝕜 E] [CompleteSpace E] (U : Submodule 𝕜 E) :
     (↥P U).IsMinimalProjection U ↔ orthogonalProjection.IsMinimalProjection U :=
-  by
-  exact ⟨fun h => h.2.1,
+  ⟨fun h => h.2.1,
     fun h => ⟨orthogonalProjection_isSelfAdjoint U, h, starProjection_isProj U⟩⟩
 
 theorem Submodule.isOrtho_iff_inner_eq' {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
@@ -850,8 +848,7 @@ theorem Submodule.is_pairwise_orthogonal_iff_orthogonal_projection_comp_eq_zero
 --
 theorem orthogonalProjection.orthogonal_complement_eq [InnerProductSpace 𝕜 E]
     (U : Submodule 𝕜 E) [HasOrthogonalProjection U] : ↥P Uᗮ = 1 - ↥P U :=
-  by
-  exact Submodule.starProjection_orthogonal' U
+  Submodule.starProjection_orthogonal' U
 
 example [InnerProductSpace ℂ E] {U W : Submodule ℂ E} [CompleteSpace E] [CompleteSpace U]
   [CompleteSpace W] :

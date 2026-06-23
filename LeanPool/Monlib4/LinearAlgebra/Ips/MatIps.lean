@@ -101,9 +101,8 @@ theorem inner_pi_eq_sum [∀ i, (ψ i).IsFaithfulPosMap] (x y : PiMat ℂ k s) :
 theorem blockDiagonal'_includeBlock_trace' {R k : Type _} [CommSemiring R] [Fintype k]
     [DecidableEq k] {s : k → Type _} [∀ i, Fintype (s i)]
     (j : k) (x : Matrix (s j) (s j) R) :
-    (blockDiagonal' (includeBlock x)).trace = x.trace :=
-    by
-    classical
+    (blockDiagonal' (includeBlock x)).trace = x.trace := by
+  classical
   calc
     (blockDiagonal' (includeBlock x)).trace
       = ∑ i, (includeBlock x i).trace :=
@@ -612,7 +611,6 @@ protected theorem toMatrixLinEquiv_symm_apply (hφ : φ.IsFaithfulPosMap) (hψ :
 
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
 protected theorem toMatrix_symm_apply (hφ : φ.IsFaithfulPosMap)
     (x : Matrix (n × n) (n × n) ℂ) :
      withMatrixInner[φ]
@@ -625,7 +623,6 @@ end Module.Dual.IsFaithfulPosMap
 
 local notation "|" x "⟩⟨" y "|" => @rankOne ℂ _ _ _ _ _ _ _ x y
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
 theorem Module.Dual.eq_rankOne_of_faithful_pos_map (hφ : φ.IsFaithfulPosMap)
   (hψ : ψ.IsFaithfulPosMap)
   (x : Matrix n n ℂ →ₗ[ℂ] Matrix n₂ n₂ ℂ) :
@@ -655,8 +652,6 @@ theorem LinearMap.sum_single_comp_proj {R : Type _} {ι : Type _} [Fintype ι] [
 
 omit [(i : k) → Fintype (s i)] [(i : k₂) → Fintype (s₂ i)]
   [(i : k) → DecidableEq (s i)] [(i : k₂) → DecidableEq (s₂ i)] in
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r p) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (r p) -/
 theorem LinearMap.lrsum_eq_single_proj_lrcomp
     (f : (PiMat ℂ k s) →ₗ[ℂ] PiMat ℂ k₂ s₂) :
     ∑ r, ∑ p,
@@ -1052,7 +1047,7 @@ theorem inner_single_single [hφ : φ.IsFaithfulPosMap] (i j k l : n) :
     if_true, Finset.sum_ite_eq]
   simp_rw [@eq_comm _ (k : n) (i : n)]
 
---   $$m^*(x) = \sum_{i,j,k,l} x_{il}Q^{-1}_{kj}(e_{ij} \otimes_t e_{kl})$$ -/
+/-- `m^*(x) = ∑_{i,j,k,l} x_{il} Q⁻¹_{kj} (e_{ij} ⊗ₜ e_{kl})`. -/
 theorem LinearMap.mul'_adjoint [hφ : φ.IsFaithfulPosMap] (x : Matrix n n ℂ) :
     withMatrixInner[φ]
     (LinearMap.adjoint (LinearMap.mul' ℂ ℍ) x =
@@ -1389,7 +1384,6 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff [hψ : ∀ i, (ψ i).
     includeBlock_apply, Finset.sum_dite_eq', Finset.mem_univ, if_true,
     LinearMap.smul_apply, Module.End.one_apply, Pi.smul_apply]
   simp only [eq_mp_eq_cast, cast_eq, ← Pi.smul_apply]
-  -- simp_rw [← @Function.funext_iff k]
   constructor
   · intro h
     specialize h (1 : PiMat ℂ k s)
