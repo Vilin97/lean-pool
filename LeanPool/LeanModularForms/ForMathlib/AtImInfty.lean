@@ -7,16 +7,7 @@ Authors: Chris Birkbeck
 import Mathlib.Analysis.Normed.Group.Tannery
 import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
 
-/-
-
-s
-
-
-Probably put this at Analysis/Complex/UpperHalfPlane/FunctionsBoundedAtInfty.lean
-
-
-
--/
+/- Probably put this at Analysis/Complex/UpperHalfPlane/FunctionsBoundedAtInfty.lean -/
 
 /-! # AtImInfty -/
 

@@ -91,8 +91,7 @@ lemma monomial_weight_exists (k : ℕ) (hk : 4 ≤ k) (hkeven : Even k) :
 /-- The 0th q-expansion coefficient of E_k raised to the n-th power equals 1. -/
 lemma Ek_q_exp_zero_pow (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (n : ℕ) :
     (qExpansion 1 (E k hk)).coeff 0 ^ n = 1 := by
-  rw [Ek_q_exp_zero k hk hk2]
-  exact one_pow n
+  simp [Ek_q_exp_zero k hk hk2]
 
 /-! ## Delta in the range of evalE₄E₆ -/
 

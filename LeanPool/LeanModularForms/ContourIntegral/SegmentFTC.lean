@@ -107,9 +107,7 @@ theorem ftc_telescope_transfer {g h : ℝ → ℂ} {a b : ℝ}
     (h_ga : g a = h a) (h_gb : g b = h b) :
     IntervalIntegrable (fun t => deriv g t / g t) volume a b ∧
     ∫ t in a..b, deriv g t / g t = Complex.log (g b) - Complex.log (g a) := by
-  have h_int : IntervalIntegrable (fun t => deriv g t / g t) volume a b :=
-    ftc_telescope_integrability hint_h h_ae
-  refine ⟨h_int, ?_⟩
+  refine ⟨ftc_telescope_integrability hint_h h_ae, ?_⟩
   rw [intervalIntegral.integral_congr_ae (h_ae.mono (fun t ht hm => ht hm)),
       h_ftc, h_ga, h_gb]
 
@@ -131,13 +129,11 @@ theorem ftc_telescope_piecewise_two {g h₁ h₂ : ℝ → ℂ} {a p b : ℝ}
     ∫ t in a..b, deriv g t / g t = Complex.log (g b) - Complex.log (g a) := by
   have hint_g₁ := ftc_telescope_integrability hint₁ h_ae₁
   have hint_g₂ := ftc_telescope_integrability hint₂ h_ae₂
-  have h_eq₁ : ∫ t in a..p, deriv g t / g t = Complex.log (g p) - Complex.log (g a) := by
-    rw [intervalIntegral.integral_congr_ae (h_ae₁.mono (fun t ht hm => ht hm)),
-        h_ftc₁, h_ga, h_gp_left]
-  have h_eq₂ : ∫ t in p..b, deriv g t / g t = Complex.log (g b) - Complex.log (g p) := by
-    rw [intervalIntegral.integral_congr_ae (h_ae₂.mono (fun t ht hm => ht hm)),
-        h_ftc₂, h_gp_right, h_gb]
-  exact ⟨hint_g₁.trans hint_g₂, ftc_telescope_two hap hpb hint_g₁ hint_g₂ h_eq₁ h_eq₂⟩
+  exact ⟨hint_g₁.trans hint_g₂, ftc_telescope_two hap hpb hint_g₁ hint_g₂
+    (by rw [intervalIntegral.integral_congr_ae (h_ae₁.mono (fun t ht hm => ht hm)),
+        h_ftc₁, h_ga, h_gp_left])
+    (by rw [intervalIntegral.integral_congr_ae (h_ae₂.mono (fun t ht hm => ht hm)),
+        h_ftc₂, h_gp_right, h_gb])⟩
 
 /-- Piecewise FTC telescope with three local functions (two interior breakpoints). -/
 theorem ftc_telescope_piecewise_three {g h₁ h₂ h₃ : ℝ → ℂ} {a p q b : ℝ}
@@ -157,17 +153,14 @@ theorem ftc_telescope_piecewise_three {g h₁ h₂ h₃ : ℝ → ℂ} {a p q b 
   have hint_g₁ := ftc_telescope_integrability hint₁ h_ae₁
   have hint_g₂ := ftc_telescope_integrability hint₂ h_ae₂
   have hint_g₃ := ftc_telescope_integrability hint₃ h_ae₃
-  have h_eq₁ : ∫ t in a..p, deriv g t / g t = Complex.log (g p) - Complex.log (g a) := by
-    rw [intervalIntegral.integral_congr_ae (h_ae₁.mono (fun t ht hm => ht hm)),
-        h_ftc₁, h_ga, h_gp]
-  have h_eq₂ : ∫ t in p..q, deriv g t / g t = Complex.log (g q) - Complex.log (g p) := by
-    rw [intervalIntegral.integral_congr_ae (h_ae₂.mono (fun t ht hm => ht hm)),
-        h_ftc₂, h_gp', h_gq]
-  have h_eq₃ : ∫ t in q..b, deriv g t / g t = Complex.log (g b) - Complex.log (g q) := by
-    rw [intervalIntegral.integral_congr_ae (h_ae₃.mono (fun t ht hm => ht hm)),
-        h_ftc₃, h_gq', h_gb]
   exact ⟨(hint_g₁.trans hint_g₂).trans hint_g₃,
-         ftc_telescope_three hint_g₁ hint_g₂ hint_g₃ h_eq₁ h_eq₂ h_eq₃⟩
+    ftc_telescope_three hint_g₁ hint_g₂ hint_g₃
+      (by rw [intervalIntegral.integral_congr_ae (h_ae₁.mono (fun t ht hm => ht hm)),
+          h_ftc₁, h_ga, h_gp])
+      (by rw [intervalIntegral.integral_congr_ae (h_ae₂.mono (fun t ht hm => ht hm)),
+          h_ftc₂, h_gp', h_gq])
+      (by rw [intervalIntegral.integral_congr_ae (h_ae₃.mono (fun t ht hm => ht hm)),
+          h_ftc₃, h_gq', h_gb])⟩
 
 /-- For a closed curve with a crossing gap, the FTC telescopes across five piecewise
 segments `[a, p₁], [p₁, p₂], [p₂, tₗ]` (left of gap) and `[tᵣ, p₃], [p₃, b]`
@@ -220,10 +213,6 @@ theorem ftc_telescope_closed_split_five
   have h_eq₅ : ∫ t in p₃..b, deriv g t / g t = Complex.log (g b) - Complex.log (g p₃) := by
     rw [intervalIntegral.integral_congr_ae (h_ae₅.mono (fun t ht hm => ht hm)),
         h_ftc₅, h_gp₃', h_gb]
-  have hint_left : IntervalIntegrable (fun t => deriv g t / g t) volume a tₗ :=
-    (hint_g₁.trans hint_g₂).trans hint_g₃
-  have hint_right : IntervalIntegrable (fun t => deriv g t / g t) volume tᵣ b :=
-    hint_g₄.trans hint_g₅
   have h_left_sum : ∫ t in a..tₗ, deriv g t / g t =
       Complex.log (g tₗ) - Complex.log (g a) := by
     rw [← intervalIntegral.integral_add_adjacent_intervals
@@ -234,7 +223,7 @@ theorem ftc_telescope_closed_split_five
       Complex.log (g b) - Complex.log (g tᵣ) := by
     rw [← intervalIntegral.integral_add_adjacent_intervals hint_g₄ hint_g₅,
         h_eq₄, h_eq₅]; ring
-  have h_closed_g : g a = g b := by rw [h_ga, h_gb, h_closed]
-  exact ⟨hint_left, hint_right, by rw [h_left_sum, h_right_sum, ← h_closed_g]; ring⟩
+  refine ⟨(hint_g₁.trans hint_g₂).trans hint_g₃, hint_g₄.trans hint_g₅, ?_⟩
+  rw [h_left_sum, h_right_sum, (show g a = g b by rw [h_ga, h_gb, h_closed])]; ring
 
 end ContourIntegral

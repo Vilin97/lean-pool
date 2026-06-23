@@ -58,15 +58,13 @@ def gammaSetNMap (N : ℕ) (v : gammaSetN N) : gammaSet 1 1 0 := by
 lemma gammaSet_top_mem (v : Fin 2 → ℤ) : v ∈ gammaSet 1 1 0 ↔ IsCoprime (v 0) (v 1) := by
   rw [gammaSet]
   simp only [Fin.isValue, mem_setOf_eq, ←Int.isCoprime_iff_gcd_eq_one, and_iff_right_iff_imp]
-  intro h
-  exact Subsingleton.eq_zero (Int.cast ∘ v)
+  exact fun _ => Subsingleton.eq_zero (Int.cast ∘ v)
 
 lemma gammaSetN_map_eq (N : ℕ) (v : gammaSetN N) : v.1 = N • gammaSetNMap N v := by
   have hv2 := v.2
   simp only [gammaSetN, singleton_smul] at hv2
   rw [@mem_smul_set] at hv2
-  have h1 := hv2.choose_spec.2
-  exact h1.symm
+  exact hv2.choose_spec.2.symm
 
 /-- The equivalence between `gammaSetN N` and the primitive gamma-set for `N ≠ 0`. -/
 def gammaSetNEquiv (N : ℕ) (hN : N ≠ 0) : gammaSetN N ≃ gammaSet 1 1 0 where
@@ -220,7 +218,7 @@ lemma EQ0 (k : ℕ) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
   rw [← (piFinTwoEquiv fun _ => ℤ).tsum_eq]
   apply tsum_congr
   intro x
-  simp
+  rfl
 
 lemma EQ1 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
     1 / (x 0 * (z : ℂ) + x 1) ^ ↑k = 2 * riemannZeta ↑k +

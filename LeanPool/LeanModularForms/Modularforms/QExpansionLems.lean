@@ -142,7 +142,7 @@ lemma IteratedDeriv_smul (a : ℂ) (f : ℂ → ℂ) (m : ℕ) :
   | succ m hm =>
     rw [iteratedDeriv_succ, iteratedDeriv_succ, hm]
     ext x
-    rw [@Pi.smul_def]
+    rw [Pi.smul_def]
     exact deriv_const_smul_field a ..
 
 
@@ -161,9 +161,7 @@ lemma cuspFunction_congr_funLike
     {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] (n : ℕ) (f : α) (g : β) (h : ⇑f = ⇑g) :
     cuspFunction n f = cuspFunction n g := by
   ext z
-  by_cases hz : z = 0
-  · simp [cuspFunction, Periodic.cuspFunction, h]
-  · simp [cuspFunction, Periodic.cuspFunction, h, hz]
+  by_cases hz : z = 0 <;> simp [cuspFunction, Periodic.cuspFunction, h, hz]
 
 lemma qExpansion_ext2 {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] (f : α) (g : β) (h : ⇑f = ⇑g) :
     qExpansion 1 f = qExpansion 1 g := by
@@ -173,9 +171,7 @@ lemma qExpansion_ext2 {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] 
 
 --generalize this away from ℂ
 lemma IteratedDeriv_zero_fun (n : ℕ) (z : ℂ) : iteratedDeriv n (fun _ : ℂ => (0 : ℂ)) z = 0 := by
-  induction n with
-  | zero => simp
-  | succ n hn => simp
+  induction n <;> simp
 
 lemma iteratedDeriv_const_eq_zero (m : ℕ) (hm : 0 < m) (c : ℂ) :
     iteratedDeriv m (fun _ : ℂ => c) = fun _ : ℂ => 0 := by

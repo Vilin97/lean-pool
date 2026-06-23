@@ -24,8 +24,7 @@ open scoped Interval Real NNReal ENNReal Topology BigOperators Nat
 
 lemma Icc_succ (n : ℕ) : Finset.Icc (-(n + 1) : ℤ) (n + 1) = Finset.Icc (-n : ℤ) n ∪
   {(-(n+1) : ℤ), (n + 1 : ℤ)} := by
-  refine Finset.ext_iff.mpr ?_
-  intro a
+  ext a
   simp only [neg_add_rev, Int.reduceNeg, Finset.mem_Icc, add_neg_le_iff_le_add, Finset.union_insert,
     Finset.mem_insert, Finset.mem_union, Finset.mem_singleton]
   omega
@@ -76,12 +75,7 @@ lemma verga2 : Tendsto (fun N : ℕ => Finset.Icc (-N : ℤ) N) atTop atTop :=
   (fun x ↦ ⟨x.natAbs, by simp [le_abs, neg_le]⟩)
 
 lemma int_add_abs_self_nonneg (n : ℤ) : 0 ≤ n + |n| := by
-  by_cases h : 0 ≤ n
-  · apply add_nonneg h
-    exact abs_nonneg n
-  simp only [not_le] at *
-  rw [abs_of_neg h]
-  simp
+  rcases abs_cases n with ⟨h, _⟩ | ⟨h, _⟩ <;> omega
 
 lemma verga : Tendsto (fun N : ℕ => Finset.Ico (-N : ℤ) N) atTop atTop := by
   apply tendsto_atTop_finset_of_monotone (fun _ _ _ ↦ Finset.Ico_subset_Ico (by omega) (by gcongr))

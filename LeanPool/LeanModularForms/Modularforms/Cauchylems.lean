@@ -217,9 +217,7 @@ theorem extracted_5 (z : ℍ) (b : ℤ) :
   simp
   congr
 
-lemma CauchySeq.congr (f g : ℕ → ℂ) (hf : f = g) (hh : CauchySeq g) : CauchySeq f := by
-  rw [hf]
-  exact hh
+lemma CauchySeq.congr (f g : ℕ → ℂ) (hf : f = g) (hh : CauchySeq g) : CauchySeq f := hf ▸ hh
 
 lemma cauchy_seq_mul_const (f : ℕ → ℂ) (c : ℂ) (hc : c ≠ 0) :
   CauchySeq f → CauchySeq (c • f) := by
@@ -227,7 +225,6 @@ lemma cauchy_seq_mul_const (f : ℕ → ℂ) (c : ℂ) (hc : c ≠ 0) :
   rw [Metric.cauchySeq_iff' ] at *
   simp only [ne_eq, gt_iff_lt, ge_iff_le, Pi.smul_apply, smul_eq_mul] at *
   intro ε hε
-  have hcc : 0 < ‖c‖ := by simp [ne_eq, hc, not_false_eq_true]
   have hC : 0 < ‖c‖ := by simp [ne_eq, hc, not_false_eq_true]
   have H := hf (ε / ‖c‖) (by rw [lt_div_iff₀' hC]; simp [hε] )
   obtain ⟨N, hN⟩ := H
