@@ -84,8 +84,7 @@ theorem polynomial_times_gaussian_le_gaussian
       _ = x ^ ((k : ℝ)) := by
         congr 2
         ring
-  have hgtendsto : Tendsto g Filter.atTop (𝓝 0) := by
-    simpa [g, add_mul] using hexp.add hpoly
+  have hgtendsto : Tendsto g Filter.atTop (𝓝 0) := by simpa [g, add_mul] using hexp.add hpoly
   have hsmall : ∀ᶠ x : ℝ in Filter.atTop, g x < 1 := (tendsto_order.1 hgtendsto).2 1 zero_lt_one
   rcases Filter.eventually_atTop.1 hsmall with ⟨R, hR⟩
   have hcont : Continuous g := by

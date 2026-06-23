@@ -336,8 +336,7 @@ theorem highFrequencyThreshold
     omega
   have h40base : 40 * d * (2 * M + 1) * (2 * R + 1) ≤ x * x := by
     have hstep1 :
-        40 * d * (2 * M + 1) * (2 * R + 1) ≤ 40 * d * (2 * M + 1) * (3 * x) := by
-      gcongr
+        40 * d * (2 * M + 1) * (2 * R + 1) ≤ 40 * d * (2 * M + 1) * (3 * x) := by gcongr
     have hstep2 : 40 * d * (2 * M + 1) * (3 * x) = (120 * d * (2 * M + 1)) * x := by ring
     have hstep3 : (120 * d * (2 * M + 1)) * x ≤ x * x := by exact Nat.mul_le_mul_right x hx_ge
     calc

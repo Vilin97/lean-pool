@@ -670,8 +670,7 @@ theorem localizationIncludingZero
     · subst hn
       have hexact :
           max (|((j : ℕ) : ℝ) - Real.sqrt ((0 : ℕ) : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 =
-            posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) := by
-        simp [Real.sqrt_zero, posPart]
+            posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) := by simp [Real.sqrt_zero, posPart]
       rw [annulusMass_oneDimPhi_eq_annulusIntegralSq]
       have hphi0 :
           HermitekLEAN.annulusIntegralSq (HermitekLEAN.Phi k 0) j ≤
@@ -768,8 +767,7 @@ theorem scaledPositiveFrequencyCircleEstimate
       positiveFrequencyCircleEstimate E (fun n => a⁻¹ * b n) hpos hQ
     have hbaseQ :
         circleL2NormSq Q ≤
-          144 * E.card * circleL2NormSq (fun t => rho 1 (Q t)) := by
-      simpa [Q] using hbase
+          144 * E.card * circleL2NormSq (fun t => rho 1 (Q t)) := by simpa [Q] using hbase
     have hmulP : (fun t => a * Q t) = positiveFrequencyPolynomial E b := by
       funext t
       simp only [Q, positiveFrequencyPolynomial, Finset.mul_sum]
@@ -875,22 +873,19 @@ private lemma oneVariableAngularFactorization_termwise
             Complex.exp (-(Complex.I * (t : ℂ))) ^ (k - j)) *
           ((Nat.choose k j : ℂ) *
             ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
-              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by
-          ring
+              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by ring
     _ =
       (↑r : ℂ) ^ (n + k - j * 2) *
         (Complex.exp (Complex.I * (↑t * (↑n - ↑k))) *
           ((Nat.choose k j : ℂ) *
             ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
-              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by
-          rw [hrpow, hphase]
+              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by rw [hrpow, hphase]
     _ =
       Complex.exp (Complex.I * (↑t * (↑n - ↑k))) *
         ((Nat.choose k j : ℂ) *
           ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
             ((-1 : ℂ) ^ j * ((↑r : ℂ) ^ (n + k - j * 2) * ((↑√↑k.factorial)⁻¹ *
-                (↑√↑n.factorial)⁻¹))))) := by
-          ring
+                (↑√↑n.factorial)⁻¹))))) := by ring
 
 theorem oneVariableAngularFactorization
     (k n : ℕ) :

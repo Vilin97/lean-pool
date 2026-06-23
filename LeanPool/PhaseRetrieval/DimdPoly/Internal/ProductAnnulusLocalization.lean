@@ -213,8 +213,7 @@ private theorem phi1D_eq_oneDimPhi_wip
                 (Nat.factorial (n - j) : ℂ) := by ring
         _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
-              (Nat.factorial (n - j) : ℂ) := by
-            field_simp [hfac_ne]
+              (Nat.factorial (n - j) : ℂ) := by field_simp [hfac_ne]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       congrArg
         (fun x : ℂ =>
@@ -374,8 +373,7 @@ private theorem truncate_ofPkappa_apply_wip
     truncateFinset E (ofPkappa kappa H) alpha = if alpha ∈ E then H alpha else 0 := by
   have hsum :
       truncateFinset E (ofPkappa kappa H) alpha =
-        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by
-    rfl
+        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by rfl
   rw [hsum]
   by_cases h : alpha ∈ E <;> simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
 
@@ -460,8 +458,7 @@ private theorem annulusMass_add_le_two_wip
                   simpa [evalPkappa_add_apply_wip kappa F G z] using
                     norm_add_le (evalPkappa kappa F z) (evalPkappa kappa G z)
                 have hsq_nonneg :
-                    0 ≤ (‖evalPkappa kappa F z‖ - ‖evalPkappa kappa G z‖) ^ 2 := by
-                  positivity
+                    0 ≤ (‖evalPkappa kappa F z‖ - ‖evalPkappa kappa G z‖) ^ 2 := by positivity
                 have hsq :
                     ‖evalPkappa kappa (F + G) z‖ ^ 2 ≤
                       2 * ‖evalPkappa kappa F z‖ ^ 2 + 2 * ‖evalPkappa kappa G z‖ ^ 2 := by

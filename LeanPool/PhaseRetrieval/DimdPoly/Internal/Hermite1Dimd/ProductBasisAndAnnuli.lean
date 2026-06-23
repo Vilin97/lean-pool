@@ -355,8 +355,7 @@ theorem coefficientAtZero
 /-- Orthogonality to `ν_κ` is equivalent to vanishing zero coefficient. -/
 theorem orthogonalToNu_iff_coeff_zero
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
-    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by
-  simp [coefficientAtZero (κ := κ) (G := G)]
+    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by simp [coefficientAtZero (κ := κ) (G := G)]
 
 private lemma circle_pow_factor
     (ω : _root_.Circle) {j k p : ℕ} (hjk : j ≤ k) (hjp : j ≤ p) :
@@ -416,13 +415,11 @@ private lemma oneDimPhi_phaseLaw
   have hleft :
       oneDimPhi k n ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa using hradial ‖z‖ (t + z.arg)
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa using hradial ‖z‖ (t + z.arg)
   have hright :
       oneDimPhi k n z =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * z.arg)) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa [hz] using hradial ‖z‖ z.arg
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa [hz] using hradial ‖z‖ z.arg
   have hexp :
       Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * t)) *
@@ -503,8 +500,7 @@ theorem partitionOfGaussianNorm
     · exact_mod_cast Nat.lt_floor_add_one ‖z q‖
   have hfi :
       IntegrableOn (fun z : CSpace d => ‖F z‖ ^ 2)
-        (⋃ j : MultiIndex d, productAnnulus j) (gaussianMeasure d) := by
-    simpa [hcover] using hF
+        (⋃ j : MultiIndex d, productAnnulus j) (gaussianMeasure d) := by simpa [hcover] using hF
   calc
     gaussianL2NormSq F
         = ∫ z in ⋃ j : MultiIndex d, productAnnulus j, ‖F z‖ ^ 2 ∂ gaussianMeasure d := by
@@ -979,8 +975,7 @@ theorem annulusRotationAveraging
               have hzero' :
                   ∫⁻ t : Hermite1DimdLEAN.Circle,
                       G (fun q => ((AddCircle.toCircle t : _root_.Circle) : ℂ) * z q)
-                    ∂ AddCircle.haarAddCircle = 0 := by
-                simpa [fourier_one] using hzero
+                    ∂ AddCircle.haarAddCircle = 0 := by simpa [fourier_one] using hzero
               simpa [hz, fourier_one] using hzero'.symm
     _ = ∫⁻ t : Hermite1DimdLEAN.Circle,
           ∫⁻ z : CSpace d,

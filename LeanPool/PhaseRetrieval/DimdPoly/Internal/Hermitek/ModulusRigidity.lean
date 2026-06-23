@@ -340,8 +340,7 @@ private theorem pair_coeff_normalized_tendsto
     by_cases htop : p = topPair
     · subst htop
       have hif :
-          (if (d : ℤ) - (n.1 : ℤ) = (d : ℤ) - (n : ℤ) then (1 : ℂ) else 0) = 1 := by
-        simp
+          (if (d : ℤ) - (n.1 : ℤ) = (d : ℤ) - (n : ℤ) then (1 : ℂ) else 0) = 1 := by simp
       have hEq :
           (fun r : ℝ =>
             a ⟨d, Nat.lt_succ_self d⟩ * star (a n) *
@@ -538,8 +537,7 @@ theorem growth_forces_finite :
         _ ≤ Cmax * r ^ d := by gcongr
     have hconst :
         (∑ i : Fin (d + 1), ‖a i‖ * Cmax) * r ^ d =
-          (∑ i : Fin (d + 1), ‖a i‖) * Cmax * r ^ d := by
-      rw [← Finset.sum_mul]
+          (∑ i : Fin (d + 1), ‖a i‖) * Cmax * r ^ d := by rw [← Finset.sum_mul]
     have hpoly_bound :
         ∀ t : Circle, ‖finiteCirclePoly k r a t‖ ≤ (∑ i : Fin (d + 1), ‖a i‖ * Cmax) * r ^ d := by
       intro t
@@ -605,8 +603,7 @@ private theorem finiteSeries_mul_star_expand {D : ℕ} (c : Fin D → ℂ) (t : 
       ∑ p : Fin D × Fin D,
         c p.1 * star (c p.2) * fourier ((p.1.1 : ℤ) - (p.2.1 : ℤ)) t := by
   have hstar : star (∑ n : Fin D, c n * fourier (n : ℤ) t) =
-      ∑ n : Fin D, star (c n * fourier (n : ℤ) t) := by
-    simp
+      ∑ n : Fin D, star (c n * fourier (n : ℤ) t) := by simp
   have hconj : ∀ (x : Fin D) (t : Circle),
       (starRingEnd ℂ) ↑(AddCircle.toCircle ((x : ℕ) • t)) =
         ↑(AddCircle.toCircle (-((x : ℕ) • t))) := by
@@ -894,8 +891,7 @@ private theorem star_finiteCirclePoly_sum
   rw [finiteCirclePoly_sum (k := k) (a := a) (r := r) hr t]
   have hstar :
       star (∑ i : Fin (d + 1), a i * (qkn k i.1 r : ℂ) * fourier (i.1 : ℤ) t) =
-        ∑ i : Fin (d + 1), star (a i * (qkn k i.1 r : ℂ) * fourier (i.1 : ℤ) t) := by
-    simp
+        ∑ i : Fin (d + 1), star (a i * (qkn k i.1 r : ℂ) * fourier (i.1 : ℤ) t) := by simp
   rw [hstar]
   refine Finset.sum_congr rfl ?_
   intro i hi
@@ -1120,8 +1116,7 @@ private theorem fourierCoeff_star_circleSeries_mul_star_finiteCirclePoly_nat
     _ = ∑ i : Fin (d + 1),
           star
             (star (a i) * (qkn k i.1 r : ℂ) *
-              fourierCoeff (circleSeries k (hermiteCoeff k G) r) ((-(ell : ℤ)) + i.1)) := by
-          simp
+              fourierCoeff (circleSeries k (hermiteCoeff k G) r) ((-(ell : ℤ)) + i.1)) := by simp
     _ = ∑ i : Fin (d + 1),
           if h : ell ≤ i.1 then
             star (hermiteCoeff k G (i.1 - ell)) * a i *
@@ -1490,8 +1485,7 @@ private theorem finite_positive_mode_main_tendsto
         exact tendsto_const_nhds
   have htop :
       (∑ i : Fin (d + 1), if i.1 = n.1 then star (a i) * b ⟨d, Nat.lt_succ_self d⟩ else 0) =
-        star (a n) * b ⟨d, Nat.lt_succ_self d⟩ := by
-    rw [sum_ite_index_eq n.2]
+        star (a n) * b ⟨d, Nat.lt_succ_self d⟩ := by rw [sum_ite_index_eq n.2]
   exact htop ▸ hsum
 
 private def finitePositiveModeErrorSum
@@ -1553,8 +1547,7 @@ private theorem finite_positive_mode_error_tendsto
       · simp [hi_eq, hi_ge]
   have htop :
       (∑ i : Fin (d + 1), if i.1 = d then star (b n) * a i else 0) =
-        star (b n) * a ⟨d, Nat.lt_succ_self d⟩ := by
-    rw [sum_ite_index_eq (Nat.lt_succ_self d)]
+        star (b n) * a ⟨d, Nat.lt_succ_self d⟩ := by rw [sum_ite_index_eq (Nat.lt_succ_self d)]
   exact htop ▸ hsum
 
 private theorem finite_positive_mode_main_raw
@@ -1671,8 +1664,7 @@ private theorem finite_positive_mode_relation
           if h : d - n.1 ≤ i.1 then
             star (hermiteCoeff k (finiteHermiteSum k b) (i.1 - (d - n.1))) * a i *
               ((qkn k i.1 r : ℂ) * (qkn k (i.1 - (d - n.1)) r : ℂ))
-          else 0) = 0 := by
-      simpa [ell] using hraw
+          else 0) = 0 := by simpa [ell] using hraw
     rw [finite_positive_mode_main_raw (k := k) (d := d) (a := a) (b := b) n (r := r),
       finite_positive_mode_error_raw (k := k) (d := d) (a := a) (b := b) n (r := r)] at hraw0
     have hEq : ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) * F r = 0 := by

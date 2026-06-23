@@ -86,11 +86,9 @@ private lemma compare_pointwise_ae
   let Hh : MeasureTheory.Lp ℂ 2 μ := ι h
   have hA :
       (ι (h - (a : ℂ) • f0 + f0) : MeasureTheory.Lp ℂ 2 μ) =
-        Hh - (a : ℂ) • F + F := by
-    rw [map_add, map_sub, ι.map_smul]
+        Hh - (a : ℂ) • F + F := by rw [map_add, map_sub, ι.map_smul]
   have hB :
-      (ι (h + f0) : MeasureTheory.Lp ℂ 2 μ) = Hh + F := by
-    rw [map_add]
+      (ι (h + f0) : MeasureTheory.Lp ℂ 2 μ) = Hh + F := by rw [map_add]
   have hAae :
       ((ι (h - (a : ℂ) • f0 + f0) : MeasureTheory.Lp ℂ 2 μ) : Ω → ℂ)
         =ᵐ[μ] fun x => Hh x - (a : ℂ) * F x + F x := by

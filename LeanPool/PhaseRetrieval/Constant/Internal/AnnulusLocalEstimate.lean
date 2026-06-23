@@ -223,8 +223,7 @@ private lemma activeFreqSet_card_le {D : ℕ} (_hD : 1 ≤ D) {j : ℕ} (hj : j 
       rw [hmax]
       -- (min(Λ,j+5)+1)^2 - (j-5)^2 ≤ (j+6)^2 - (j-5)^2 = 11*(2j+1) ≤ 17985
       have h_ub : min (maxBlockIndex D) (j + 5) + 1 ≤ j + 6 := by omega
-      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by
-        nlinarith
+      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by nlinarith
       suffices (j + 6) ^ 2 - (j - 5) ^ 2 ≤ 17985 by omega
       suffices (j + 6) ^ 2 = (j - 5) ^ 2 + 11 * (2 * j + 1) by omega
       nlinarith [sq_nonneg (j - 5), Nat.sub_add_cancel (show 5 ≤ j by omega)]
@@ -232,8 +231,7 @@ private lemma activeFreqSet_card_le {D : ℕ} (_hD : 1 ≤ D) {j : ℕ} (hj : j 
       have hmax : max 1 (j - 5) = 1 := by omega
       rw [hmax]
       have h_ub : min (maxBlockIndex D) (j + 5) + 1 ≤ j + 6 := by omega
-      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by
-        nlinarith
+      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by nlinarith
       have h_jsm : (j + 6) ^ 2 ≤ 11 ^ 2 := by nlinarith
       omega
   · -- Empty range

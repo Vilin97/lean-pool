@@ -72,8 +72,7 @@ private lemma hasDerivAt_phiFunc (n : ℕ) {r : ℝ} (hr : 0 < r) :
     HasDerivAt (phiFunc n) ((2 * ↑n + 1) / r - 2 * r) r := by
   unfold phiFunc
   have h1 := (Real.hasDerivAt_log (ne_of_gt hr)).const_mul (2 * ↑n + 1 : ℝ)
-  have h2 : HasDerivAt (fun r => r ^ 2) (2 * r) r := by
-    simpa using hasDerivAt_pow 2 r
+  have h2 : HasDerivAt (fun r => r ^ 2) (2 * r) r := by simpa using hasDerivAt_pow 2 r
   convert h1.sub h2 using 1
 
 /-! ## Theorem 2.7: Concavity of φ_n
@@ -301,8 +300,7 @@ private lemma pointwise_bound {n : ℕ} (hn : 1 ≤ n) {r : ℝ}
             (by linarith [phiFunc_quad_bound hn hr_pos,
                 distToInterval_sq_le_sq (rStar n) r j hrj hrj1])
       _ = Real.exp (phiFunc n (rStar n)) *
-          Real.exp (-(distToInterval (rStar n) j ^ 2)) := by
-          rw [sub_eq_add_neg, Real.exp_add]
+          Real.exp (-(distToInterval (rStar n) j ^ 2)) := by rw [sub_eq_add_neg, Real.exp_add]
       _ ≤ (Real.exp (1 / 4) * ↑n.factorial / 2) *
           Real.exp (-(distToInterval (rStar n) j ^ 2)) :=
           mul_le_mul_of_nonneg_right (exp_phi_le_factorial hn)

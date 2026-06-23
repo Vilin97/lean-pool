@@ -385,8 +385,7 @@ theorem realHermiteGenerating_ambiguity_integral_raw
                 (-((((t - x / 2 : ℝ) : ℂ) ^ 2) / 2) +
                   (Real.sqrt 2 : ℂ) * ((t - x / 2 : ℝ) : ℂ) * v -
                   v ^ 2 / 2) *
-              Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ)))) := by
-            ring
+              Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ)))) := by ring
       _ = (a * a) *
             Complex.exp
               ((-((((t + x / 2 : ℝ) : ℂ) ^ 2) / 2) +
@@ -707,8 +706,7 @@ private lemma norm_modulation_phase (ω t : ℝ) :
         ((inner ℝ ω t : ℝ) : ℂ))‖ = 1 := by
   rw [Complex.norm_exp]
   have hre :
-      (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ω t : ℝ) : ℂ)).re = 0 := by
-    simp [Complex.mul_re]
+      (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ω t : ℝ) : ℂ)).re = 0 := by simp [Complex.mul_re]
   rw [hre, Real.exp_zero]
 
 private lemma shifted_generating_exponent_bound
@@ -1108,8 +1106,7 @@ private theorem shifted_generating_left_right_deriv_bound_of_mem_ball
           (((Real.sqrt 2 : ℂ) * ((t + (1 / 2 : ℝ) * x : ℝ) : ℂ) - z) *
             realHermiteGenerating (t + (1 / 2 : ℝ) * x) z)) *
           Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
-            ((inner ℝ ω t : ℝ) : ℂ))‖ := by
-        rw [norm_mul]
+            ((inner ℝ ω t : ℝ) : ℂ))‖ := by rw [norm_mul]
     _ ≤ (Real.sqrt 2 * |t| + Real.sqrt 2 * (|x| / 2)) *
         shiftedGeneratingRightDerivBound 0 0 (-x) 1 t :=
         mul_le_mul hfac hbase (norm_nonneg _)
@@ -1399,8 +1396,7 @@ private theorem integral_shifted_generating_right_deriv_eq_closed
                 realHermiteGenerating (t - (1 / 2 : ℝ) * x) w0)) *
             Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
               ((inner ℝ ω t : ℝ) : ℂ)))
-        w0 := by
-    simpa [inner, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hball
+        w0 := by simpa [inner, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hball
   exact hball'.unique hclosed
 
 theorem hasDerivAt_integral_shifted_generating_mul_modulated_left_closed
@@ -1683,8 +1679,7 @@ noncomputable def realHermite1D (n : ℕ) (t : ℝ) : ℂ :=
     iteratedDeriv n (realHermiteGenerating t) 0
 
 theorem realHermite1D_zero (t : ℝ) :
-    realHermite1D 0 t = realHermiteGenerating t 0 := by
-  simp [realHermite1D]
+    realHermite1D 0 t = realHermiteGenerating t 0 := by simp [realHermite1D]
 
 theorem realHermite1D_one (t : ℝ) :
     realHermite1D 1 t = (Real.sqrt 2 : ℂ) * (t : ℂ) * realHermiteGenerating t 0 := by
@@ -2286,8 +2281,7 @@ theorem realHermiteGenerating_iteratedDeriv_zero_expansion
         ring
       _ = (↑(Real.pi ^ (-(1 / 4 : ℝ))) *
             Complex.exp (-(↑t ^ 2 / 2))) *
-          (Complex.exp (b * u) * Complex.exp (-(u ^ (2 : ℕ)) / 2)) := by
-        ring
+          (Complex.exp (b * u) * Complex.exp (-(u ^ (2 : ℕ)) / 2)) := by ring
   calc
     iteratedDeriv n (realHermiteGenerating t) 0 =
         a * ∑ k ∈ Finset.range (n + 1),
@@ -2472,8 +2466,7 @@ private lemma scaled_gamma_moment_eq_standard (r : ℕ) :
             (Real.sqrt Real.pi : ℂ)) =
           (((2 * s - 1 : ℕ)‼ : ℕ) : ℂ) *
             ((realHermiteCoeffScale * realHermiteCoeffScale) *
-              (Real.sqrt Real.pi : ℂ)) := by
-            ring
+              (Real.sqrt Real.pi : ℂ)) := by ring
       _ = (((2 * s - 1 : ℕ)‼ : ℕ) : ℂ) := by
             rw [realHermiteCoeffScale_sq_mul_sqrt_pi]
             ring
@@ -2613,8 +2606,7 @@ private lemma derivative_hermite_int (n : ℕ) :
 
 private lemma derivative_hermite_succ_int (n : ℕ) :
     Polynomial.derivative (Polynomial.hermite (n + 1)) =
-      ((n + 1 : ℕ) : ℤ) • Polynomial.hermite n := by
-  simpa using derivative_hermite_int (n + 1)
+      ((n + 1 : ℕ) : ℤ) • Polynomial.hermite n := by simpa using derivative_hermite_int (n + 1)
 
 private noncomputable def hermiteStandardInner (n m : ℕ) : ℂ :=
   gaussianMomentFunctional (Polynomial.hermite n * Polynomial.hermite m)
@@ -2792,13 +2784,11 @@ private lemma hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv
           ((Polynomial.hermite n).coeff k : ℂ) := rfl
     _ = (Nat.choose n k : ℂ) * (Real.sqrt 2 : ℂ) ^ k *
           iteratedDeriv (n - k)
-            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0 := by
-        rw [hcancel.symm]
+            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0 := by rw [hcancel.symm]
     _ = (Real.sqrt 2 : ℂ) ^ k *
         ((Nat.choose n k : ℂ) *
           iteratedDeriv (n - k)
-            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0) := by
-        ring
+            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0) := by ring
 
 private theorem hermite_eval₂_eq_iteratedDeriv_cexp_generating
     (n : ℕ) (z : ℂ) :
@@ -4166,8 +4156,7 @@ private theorem stftModelPhase_norm {d : Nat} (kappa : MultiIndex d)
   rw [norm_mul]
   have hpow :
       ‖((-1 : ℂ) ^
-          ((Finset.univ : Finset (Fin d)).sum fun q => kappa q))‖ = 1 := by
-    simp
+          ((Finset.univ : Finset (Fin d)).sum fun q => kappa q))‖ = 1 := by simp
   have hexp :
       ‖Complex.exp (-(Real.pi : ℂ) * Complex.I *
           ((inner ℝ ξ.1 ξ.2 : ℝ) : ℂ))‖ = 1 := by
@@ -4565,12 +4554,10 @@ private theorem oneDWindowAmbiguityMonomialKernel_one_one_eq_shifted_moment_inte
           ((t - (1 / 2 : ℝ) * x : ℝ) : ℂ)) *
         (Complex.exp (-((((t + (1 / 2 : ℝ) * x : ℝ) : ℂ) ^ 2) / 2)) *
           Complex.exp (-((((t - (1 / 2 : ℝ) * x : ℝ) : ℂ) ^ 2) / 2))) *
-        Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ))) := by
-        ring
+        Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ))) := by ring
     _ = (((t : ℂ) ^ 2 - (x : ℂ) ^ 2 / 4) *
         Complex.exp (-((t : ℂ) ^ 2 + (x : ℂ) ^ 2 / 4)) *
-          Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ)))) := by
-        rw [hpoly, hexp]
+          Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((ω : ℂ) * (t : ℂ)))) := by rw [hpoly, hexp]
 
 private noncomputable def oneDWindowAmbiguityShiftedModulatedGaussian
     (x ω t : ℝ) : ℂ :=
@@ -4836,8 +4823,7 @@ private theorem iteratedDeriv_six_cexp_sq_div_four (z : ℂ) :
 private theorem gaussian_half_moment_zero (z : ℂ) :
     (∫ t : ℝ, Complex.exp (z * (t : ℂ))
         ∂(ProbabilityTheory.gaussianReal 0 (1 / 2 : NNReal))) =
-      Complex.exp (z ^ 2 / 4) := by
-  simpa using gaussian_half_moment_eq_iteratedDeriv 0 z
+      Complex.exp (z ^ 2 / 4) := by simpa using gaussian_half_moment_eq_iteratedDeriv 0 z
 
 private theorem gaussian_half_moment_two (z : ℂ) :
     (∫ t : ℝ, (t : ℂ) ^ 2 * Complex.exp (z * (t : ℂ))
@@ -5128,8 +5114,7 @@ private theorem shifted_mgf_generating_eq_kernel
                 (Real.sqrt 2 : ℂ)) * u -
               star (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
                 (Real.sqrt 2 : ℂ)) * w) *
-        (Complex.exp (-((x : ℂ) ^ 2 / 4)) * Complex.exp (lam ^ 2 / 4)) := by
-        ring
+        (Complex.exp (-((x : ℂ) ^ 2 / 4)) * Complex.exp (lam ^ 2 / 4)) := by ring
     _ = _ := by
         rw [show lam = -(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ) by simp [lam]]
         rw [gaussian_half_exp_factor_eq_closed_exp]
@@ -5245,8 +5230,7 @@ private theorem iteratedDeriv_linear_exp_mul_shifted_square_at_zero
       _ = (Real.sqrt 2 : ℂ) ^ k *
           ((Nat.choose k i : ℂ) * ((x : ℂ) / 2) ^ (k - i) *
             iteratedDeriv i (fun z : ℂ => Complex.exp (z ^ 2 / 4))
-              (lam + (Real.sqrt 2 : ℂ) * w)) := by
-        simp [D, X]
+              (lam + (Real.sqrt 2 : ℂ) * w)) := by simp [D, X]
   · fun_prop
   · fun_prop
 
@@ -5388,8 +5372,7 @@ private theorem iteratedDeriv_neg_linear_exp_mul_shifted_iterated_at_zero
       _ = (Real.sqrt 2 : ℂ) ^ l * ((Nat.choose l j : ℂ) * X * D) := by rw [← pow_add, hpow]
       _ = (Real.sqrt 2 : ℂ) ^ l *
           ((Nat.choose l j : ℂ) * (-(x : ℂ) / 2) ^ (l - j) *
-            iteratedDeriv (i + j) (fun z : ℂ => Complex.exp (z ^ 2 / 4)) lam) := by
-        simp [D, X]
+            iteratedDeriv (i + j) (fun z : ℂ => Complex.exp (z ^ 2 / 4)) lam) := by simp [D, X]
   · have hiter : ContDiffAt ℂ l
         (fun w : ℂ => iteratedDeriv i (fun z : ℂ => Complex.exp (z ^ 2 / 4))
           (lam + (Real.sqrt 2 : ℂ) * w)) 0 := by
@@ -5663,8 +5646,7 @@ private theorem scaled_moment_sum_eq_shifted_mgf_unscaled_sum
       (((Real.pi ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ)⁻¹ *
           (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ) *
             ((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ))) *
-        (Complex.exp (-((x : ℂ) ^ 2 / 4)) * (A * B * S)) := by
-        ring
+        (Complex.exp (-((x : ℂ) ^ 2 / 4)) * (A * B * S)) := by ring
     _ = Complex.exp (-((x : ℂ) ^ 2 / 4)) * (A * B * S) := by
         rw [hscale]
         ring
@@ -5677,8 +5659,7 @@ private theorem scaled_moment_sum_eq_shifted_mgf_unscaled_sum
             (Nat.choose k i : ℂ) * (Nat.choose l j : ℂ) *
               ((x : ℂ) / 2) ^ (k - i) * (-(x : ℂ) / 2) ^ (l - j) *
                 iteratedDeriv (i + j) (fun z : ℂ => Complex.exp (z ^ 2 / 4))
-                  (-(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)))) := by
-        simp [A, B, S]
+                  (-(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)))) := by simp [A, B, S]
 
 private theorem shifted_mgf_coefficient_eq_kernel_coefficient
     (n m : ℕ) (x ω : ℝ) :
@@ -6494,8 +6475,7 @@ private theorem iteratedDeriv_generating_cross_ambiguity_integral_moment_sum
             iteratedDeriv n (realHermiteGenerating (t + (1 / 2 : ℝ) * x)) 0 *
               iteratedDeriv m (realHermiteGenerating (t - (1 / 2 : ℝ) * x)) 0 *
                 Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
-                  ((inner ℝ ω t : ℝ) : ℂ)))) := by
-          rw [← mul_assoc, inv_mul_cancel₀ hcπ, one_mul]
+                  ((inner ℝ ω t : ℝ) : ℂ)))) := by rw [← mul_assoc, inv_mul_cancel₀ hcπ, one_mul]
     _ = cπ⁻¹ *
         (∑ k ∈ Finset.range (n + 1), ∑ l ∈ Finset.range (m + 1),
           (realHermiteGeneratingExpansionCoeff n k *
@@ -6506,8 +6486,7 @@ private theorem iteratedDeriv_generating_cross_ambiguity_integral_moment_sum
                   ((x : ℂ) / 2) ^ (k - i) * (-(x : ℂ) / 2) ^ (l - j) *
                     iteratedDeriv (i + j)
                       (fun z : ℂ => Complex.exp (z ^ 2 / 4))
-                      (-(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ))))) := by
-          rw [h]
+                      (-(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ))))) := by rw [h]
 
 private theorem iteratedDeriv_generating_cross_ambiguity_moment_sum_eq_kernel_coefficient
     (n m : ℕ) (x ω : ℝ) :
@@ -6744,8 +6723,7 @@ private theorem stft_model_modulus_of_global_phase_formula
     ‖theta ξ * (((WKappa ξ : ℝ) : ℂ) *
         toFun kappa U (TKappa ξ))‖ =
         ‖theta ξ‖ * ‖((WKappa ξ : ℝ) : ℂ)‖ *
-          ‖toFun kappa U (TKappa ξ)‖ := by
-          rw [norm_mul, norm_mul, mul_assoc]
+          ‖toFun kappa U (TKappa ξ)‖ := by rw [norm_mul, norm_mul, mul_assoc]
     _ = WKappa ξ * ‖toFun kappa U (TKappa ξ)‖ := by
           rw [htheta ξ]
           simp [hW_nonneg]
@@ -8149,8 +8127,7 @@ private theorem fourier_l1_l2_eq_zero_ae
   let H : Lp ℂ 2 (volume : Measure V) := hh2.toLp h
   have hH_coe :
       ((H : Lp ℂ 2 (volume : Measure V)) : V -> ℂ)
-        =ᵐ[(volume : Measure V)] h := by
-    simpa [H] using hh2.coeFn_toLp
+        =ᵐ[(volume : Measure V)] h := by simpa [H] using hh2.coeFn_toLp
   have hdist_fourier_zero :
       ((𝓕 H : Lp ℂ 2 (volume : Measure V)) : 𝓢'(V, ℂ)) = 0 := by
     calc
@@ -8221,8 +8198,7 @@ private lemma rankOneKernel_memLp_two
           (fun p : RealVec d × RealVec d =>
             (‖f p.1‖ ^ 2) * (‖g p.2‖ ^ 2))
           ((volume : Measure (RealVec d)).prod
-            (volume : Measure (RealVec d))) := by
-      simpa using Integrable.mul_prod hf2 hg2
+            (volume : Measure (RealVec d))) := by simpa using Integrable.mul_prod hf2 hg2
     convert hprod using 1 with p
     simp [mul_pow]
   have hmeas :
@@ -8555,8 +8531,7 @@ theorem equalAmbiguity_to_rankOneKernel_ae
   have hf_ae : f0 =ᵐ[μ] fRep := by simpa [f0, μ] using l2rep_ae_eq_coe hf_rep
   have hg_ae : g0 =ᵐ[μ] gRep := by simpa [g0, μ] using l2rep_ae_eq_coe hg_rep
   have hendpoint_prod :
-      endpointDiff =ᵐ[μ.prod μ] fun _ => (0 : ℂ) := by
-    simpa using hendpoint_zero
+      endpointDiff =ᵐ[μ.prod μ] fun _ => (0 : ℂ) := by simpa using hendpoint_zero
   have hf_fst :
       (fun p : PhaseSpace d => f0 p.1)
         =ᵐ[μ.prod μ] fun p => fRep p.1 :=
@@ -8711,8 +8686,7 @@ theorem rankOneKernel_ae_to_unimodular_phase
       mul_ne_zero hu1_ne (star_ne_zero.mpr hv1_ne)
     have hunit_mul : w * star w = 1 := by
       have hc : (w * star w) * (fRep u1 * star (fRep v1)) =
-          1 * (fRep u1 * star (fRep v1)) := by
-        simpa [one_mul] using hscale_u1v1.symm
+          1 * (fRep u1 * star (fRep v1)) := by simpa [one_mul] using hscale_u1v1.symm
       exact mul_right_cancel₀ hF_ne hc
     exact ⟨w, norm_eq_one_of_mul_star_eq_one hunit_mul, hL2⟩
 
@@ -8846,8 +8820,7 @@ private theorem pkappa_eq_zero_of_eval_zero_wip
     F = 0 := by
   have hmass := evalPkappa_total_mass hd kappa F
   have hintegral_zero :
-      (∫ z, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = 0 := by
-    simp [hF_eval]
+      (∫ z, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = 0 := by simp [hF_eval]
   have hnorm_sq : ‖F‖ ^ 2 = 0 := by linarith
   exact pkappa_eq_zero_of_norm_sq_eq_zero_wip hnorm_sq
 

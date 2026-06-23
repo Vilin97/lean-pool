@@ -414,8 +414,7 @@ theorem carrierArc_mk_image_Ioc_integral_eq_scaled
     (f := S.indicator f)
   have hpre' :
       (∫ t in F, S.indicator f (QuotientAddGroup.mk t : Circle)) =
-        ∫ x : Circle, S.indicator f x := by
-    simpa [F] using hpre
+        ∫ x : Circle, S.indicator f x := by simpa [F] using hpre
   have hfund_to_A :
       (∫ t in F, S.indicator f (QuotientAddGroup.mk t : Circle)) =
         ∫ t in A, f (QuotientAddGroup.mk t : Circle) := by
@@ -458,8 +457,7 @@ theorem carrierArc_mk_image_Ioc_integral_eq_scaled
         = ∫ x in S, f x ∂ μCircle := by rfl
     _ = (2 * Real.pi)⁻¹ * ∫ x : Circle, S.indicator f x := by simpa [smul_eq_mul] using hhaar
     _ = (2 * Real.pi)⁻¹ *
-        (∫ t in F, S.indicator f (QuotientAddGroup.mk t : Circle)) := by
-      rw [hpre']
+        (∫ t in F, S.indicator f (QuotientAddGroup.mk t : Circle)) := by rw [hpre']
     _ = (2 * Real.pi)⁻¹ * ∫ t in A, f (QuotientAddGroup.mk t : Circle) := by rw [hfund_to_A]
     _ = (2 * Real.pi)⁻¹ *
         ∫ t in Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right),
@@ -496,8 +494,7 @@ theorem circleChar_zero (x : Circle) : circleChar 0 x = 1 := by simp [circleChar
 theorem circleChar_one (x : Circle) : circleChar 1 x = zeta x := by simp [circleChar]
 
 theorem circleChar_add (m n : Nat) (x : Circle) :
-    circleChar (m + n) x = circleChar m x * circleChar n x := by
-  simp [circleChar, pow_add]
+    circleChar (m + n) x = circleChar m x * circleChar n x := by simp [circleChar, pow_add]
 
 theorem circleChar_mk (n : Nat) (theta : ℝ) :
     circleChar n (QuotientAddGroup.mk theta : Circle) =
@@ -1258,12 +1255,10 @@ theorem translateL2_neg_coeFn {d : Nat} (a : RealVec d) (f : L2Real d) :
   simpa [sub_eq_add_neg] using translateL2_coeFn (-a) f
 
 theorem norm_translateL2 {d : Nat} (a : RealVec d) (f : L2Real d) :
-    ‖translateL2 a f‖ = ‖f‖ := by
-  simp [translateL2]
+    ‖translateL2 a f‖ = ‖f‖ := by simp [translateL2]
 
 theorem dist_translateL2 {d : Nat} (a : RealVec d) (f g : L2Real d) :
-    dist (translateL2 a f) (translateL2 a g) = dist f g := by
-  simp [translateL2]
+    dist (translateL2 a f) (translateL2 a g) = dist f g := by simp [translateL2]
 
 theorem continuous_translateL2_apply {d : Nat} (f : L2Real d) :
     Continuous fun a : RealVec d => translateL2 a f := by
@@ -1280,8 +1275,7 @@ theorem modulationPhase_norm {d : Nat} (ω t : RealVec d) :
   unfold modulationPhase
   rw [Complex.norm_exp]
   have hre :
-      (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ω t : ℝ) : ℂ)).re = 0 := by
-    simp [Complex.mul_re]
+      (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ω t : ℝ) : ℂ)).re = 0 := by simp [Complex.mul_re]
   rw [hre, Real.exp_zero]
 
 private theorem modulationPhase_add {d : Nat} (ω a b : RealVec d) :
@@ -1355,8 +1349,7 @@ theorem fourier_translate_realVec {d : Nat} (a : RealVec d) (f : RealVec d -> �
     mul_left_comm, mul_comm] using hω
 
 private theorem sub_const_hasTemperateGrowth {d : Nat} (a : RealVec d) :
-    (fun x : RealVec d => x - a).HasTemperateGrowth := by
-  fun_prop
+    (fun x : RealVec d => x - a).HasTemperateGrowth := by fun_prop
 
 private theorem sub_const_antilipschitz {d : Nat} (a : RealVec d) :
     AntilipschitzWith 1 (fun x : RealVec d => x - a) := by
@@ -1373,8 +1366,7 @@ noncomputable def schwartzCompSubConstCLM {d : Nat} (a : RealVec d) :
 
 @[simp] theorem schwartzCompSubConstCLM_apply {d : Nat} (a : RealVec d)
     (f : SchwartzMap (RealVec d) ℂ) :
-    schwartzCompSubConstCLM a f = f ∘ fun x : RealVec d => x - a := by
-  rfl
+    schwartzCompSubConstCLM a f = f ∘ fun x : RealVec d => x - a := by rfl
 
 theorem fourier_schwartzCompSubConstCLM_realVec {d : Nat}
     (f : SchwartzMap (RealVec d) ℂ) (a : RealVec d) :
@@ -1392,8 +1384,7 @@ private def stftWindowSchwartz {d : Nat} (x : RealVec d)
 
 @[simp] private theorem stftWindowSchwartz_apply {d : Nat}
     (x t : RealVec d) (h : SchwartzMap (RealVec d) ℂ) :
-    stftWindowSchwartz x h t = star (h (t - x)) := by
-  simp [stftWindowSchwartz]
+    stftWindowSchwartz x h t = star (h (t - x)) := by simp [stftWindowSchwartz]
 
 private def stftSliceSchwartz {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x : RealVec d) : SchwartzMap (RealVec d) ℂ :=
@@ -1402,8 +1393,7 @@ private def stftSliceSchwartz {d : Nat}
 
 @[simp] private theorem stftSliceSchwartz_apply {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x t : RealVec d) :
-    stftSliceSchwartz h f x t = f t * star (h (t - x)) := by
-  simp [stftSliceSchwartz]
+    stftSliceSchwartz h f x t = f t * star (h (t - x)) := by simp [stftSliceSchwartz]
 
 private theorem stftRep_schwartz_eq_fourier_apply {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x ω : RealVec d) :
@@ -1700,8 +1690,7 @@ private theorem autocorr_kernel_integrable_schwartz_realVec {d : Nat}
       mul_left_comm, mul_comm, μ] using
       (window_autocorr_integrable_schwartz_realVec h t x).const_mul (A t)
   have hmeas : AEStronglyMeasurable (fun p : RealVec d × RealVec d => A p.1 * B p)
-      (μ.prod μ) := by
-    fun_prop
+      (μ.prod μ) := by fun_prop
   refine (MeasureTheory.integrable_prod_iff hmeas).2 ?_
   constructor
   · exact hB
@@ -2336,8 +2325,7 @@ private theorem norm_stftRep_sub_le {d : Nat}
     ‖f₁ - f₂‖ * ‖h₁‖ + ‖f₂‖ * ‖h₁ - h₂‖
   have hsplit :
       P f₁ (T h₁) - P f₂ (T h₂) =
-        P (f₁ - f₂) (T h₁) + P f₂ (T h₁ - T h₂) := by
-    simp [P]
+        P (f₁ - f₂) (T h₁) + P f₂ (T h₁ - T h₂) := by simp [P]
   calc
     ‖P f₁ (T h₁) - P f₂ (T h₂)‖
         = ‖P (f₁ - f₂) (T h₁) + P f₂ (T h₁ - T h₂)‖ := by rw [hsplit]
@@ -2395,8 +2383,7 @@ private theorem stftRep_sq_integrable_schwartz_realVec {d : Nat}
     simpa [F, hLp, fLp, μ] using integrable_stftRep_sq_slice_schwartz_realVec h f x
   · have hkernel : Integrable
         (fun p : RealVec d × RealVec d => ‖f p.1‖ ^ 2 * ‖h (p.1 - p.2)‖ ^ 2)
-        (μ.prod μ) := by
-      simpa [μ] using integrable_stft_kernel_schwartz_realVec h f
+        (μ.prod μ) := by simpa [μ] using integrable_stft_kernel_schwartz_realVec h f
     have h_outer :
         (fun x : RealVec d => ∫ ω : RealVec d, ‖F (x, ω)‖ ∂μ) =
           fun x : RealVec d => ∫ t : RealVec d, ‖f t‖ ^ 2 * ‖h (t - x)‖ ^ 2 ∂μ := by
@@ -2704,8 +2691,7 @@ private theorem eLpNorm_stftRep_le {d : Nat} (h f : L2Real d) :
     _ ≤ atTop.liminf (fun n : Nat => MeasureTheory.eLpNorm (Fₙ n) 2 μP) := hliminf
     _ = ENNReal.ofReal
           (MeasureTheory.lpNorm (f : RealVec d -> ℂ) 2 μ *
-            MeasureTheory.lpNorm (h : RealVec d -> ℂ) 2 μ) := by
-          rw [hnorms.liminf_eq]
+            MeasureTheory.lpNorm (h : RealVec d -> ℂ) 2 μ) := by rw [hnorms.liminf_eq]
 
 private theorem stftRep_sq_integrable {d : Nat} (h f : L2Real d) :
     Integrable (fun p : PhaseSpace d => ‖stftRep h f p‖ ^ 2)
@@ -2758,8 +2744,7 @@ private theorem lpNorm_stftRep_le_lpNorm {d : Nat} (h f : L2Real d) :
 private theorem lpNorm_stftRep_le {d : Nat} (h f : L2Real d) :
     MeasureTheory.lpNorm (stftRep h f) 2
         (MeasureTheory.volume : MeasureTheory.Measure (PhaseSpace d)) ≤
-      ‖f‖ * ‖h‖ := by
-  simpa [lpNorm_coeFn_L2Real_eq_norm] using lpNorm_stftRep_le_lpNorm h f
+      ‖f‖ * ‖h‖ := by simpa [lpNorm_coeFn_L2Real_eq_norm] using lpNorm_stftRep_le_lpNorm h f
 
 private theorem translateL2_sub {d : Nat} (a : RealVec d) (f g : L2Real d) :
     translateL2 a (f - g) = translateL2 a f - translateL2 a g := by
@@ -2960,8 +2945,7 @@ private theorem lpNorm_stftRep_sq_sub_tendsto_zero {d : Nat}
       Tendsto
         (fun n : Nat =>
           Cₙ n * MeasureTheory.lpNorm (fun ξ : PhaseSpace d => Fₙ n ξ - F ξ) 2 μP)
-        atTop (nhds 0) := by
-    simpa using hC_tendsto.mul hdiff
+        atTop (nhds 0) := by simpa using hC_tendsto.mul hdiff
   refine squeeze_zero (fun _ => MeasureTheory.lpNorm_nonneg) ?_ hCtendsto
   intro n
   have hmemFn : MeasureTheory.MemLp (Fₙ n) 2 μP := by
@@ -3049,11 +3033,9 @@ private theorem norm_ambiguityRep_sub_le {d : Nat}
     calc
       ‖T₂ g₁ - T₂ g₂‖ = dist (T₂ g₁) (T₂ g₂) := by rw [dist_eq_norm]
       _ = dist (star (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₁))
-            (star (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₂)) := by
-        simp [T₂, dist_modulateL2]
+            (star (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₂)) := by simp [T₂, dist_modulateL2]
       _ = dist (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₁)
-            (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₂) := by
-        rw [dist_star_L2]
+            (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g₂) := by rw [dist_star_L2]
       _ = dist g₁ g₂ := by rw [dist_translateL2]
       _ = ‖g₁ - g₂‖ := by rw [dist_eq_norm]
   rw [ambiguityRep_eq_lpPairing f₁ g₁ ξ, ambiguityRep_eq_lpPairing f₂ g₂ ξ]
@@ -3061,8 +3043,7 @@ private theorem norm_ambiguityRep_sub_le {d : Nat}
     ‖f₁ - f₂‖ * ‖g₁‖ + ‖f₂‖ * ‖g₁ - g₂‖
   have hsplit :
       P (T₁ f₁) (T₂ g₁) - P (T₁ f₂) (T₂ g₂) =
-        P (T₁ f₁ - T₁ f₂) (T₂ g₁) + P (T₁ f₂) (T₂ g₁ - T₂ g₂) := by
-    simp [P]
+        P (T₁ f₁ - T₁ f₂) (T₂ g₁) + P (T₁ f₂) (T₂ g₁ - T₂ g₂) := by simp [P]
   calc
     ‖P (T₁ f₁) (T₂ g₁) - P (T₁ f₂) (T₂ g₂)‖
         = ‖P (T₁ f₁ - T₁ f₂) (T₂ g₁) + P (T₁ f₂) (T₂ g₁ - T₂ g₂)‖ := by rw [hsplit]
@@ -3207,8 +3188,7 @@ private lemma moyal_kernel_iterated_eq {d : Nat}
           rw [integral_signal_autocorr_phase_schwartz_realVec f x ω]
     _ = ambiguityRep (f.toLp 2 MeasureTheory.volume)
           (f.toLp 2 MeasureTheory.volume) (x, ω) *
-          star (ambiguityRep hLp hLp (x, ω)) := by
-          ring
+          star (ambiguityRep hLp hLp (x, ω)) := by ring
 
 /-- Middle of the Moyal calc: collapse the inner `η`-integral of the squared STFT
 times the modulation phases into the slice autocorrelation, and rewrite the slices
@@ -3337,8 +3317,7 @@ private theorem symplecticFourier_stft_sq_schwartz_realVec {d : Nat}
           (fun p : RealVec d × RealVec d =>
             (star (f p.1) * f (p.1 + x)) *
               (h (p.1 - p.2) * star (h (p.1 + x - p.2))))
-          (μ.prod μ) := by
-      simpa [μ] using autocorr_kernel_integrable_schwartz_realVec f h x
+          (μ.prod μ) := by simpa [μ] using autocorr_kernel_integrable_schwartz_realVec f h x
     simpa [G, mul_assoc] using hbase.mul_bdd hmod_meas hmod_bound
   have hK : Integrable (Function.uncurry K) (μ.prod μ) := by
     refine hG.swap.congr ?_

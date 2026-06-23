@@ -157,8 +157,7 @@ private lemma cauchy_schwarz_interval {a b : ℝ} (hab : a ≤ b) {g : ℝ → �
     (hg_int.const_mul _).add intervalIntegrable_const
   have hexpand : ∫ t in a..b, (g t - c) ^ 2 =
       (∫ t in a..b, g t ^ 2) + (∫ t in a..b, (-2 * c * g t + c ^ 2)) := by
-    have : (fun t => (g t - c) ^ 2) = (fun t => g t ^ 2 + (-2 * c * g t + c ^ 2)) := by
-      ext t; ring
+    have : (fun t => (g t - c) ^ 2) = (fun t => g t ^ 2 + (-2 * c * g t + c ^ 2)) := by ext t; ring
     rw [this, intervalIntegral.integral_add hg2_int hgc_sub_int]
   -- Compute ∫(-2cg + c²) = -2c·S + c²(b-a) = -2c²(b-a) + c²(b-a) = -c²(b-a)
   have hint_linear : ∫ t in a..b, (-2 * c * g t + c ^ 2) = -c ^ 2 * (b - a) := by

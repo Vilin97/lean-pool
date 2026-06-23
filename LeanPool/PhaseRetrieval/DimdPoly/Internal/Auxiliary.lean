@@ -202,8 +202,7 @@ private theorem phase_stability_coefficients_of_ne_zero
     simpa [Fn, Qn] using explicitModulusDefect_smul_of_nonneg hd κ a (le_of_lt ha_pos) F Q
   have hscaled :
       a * explicitPkappaNorm (phase • Q - F) ≤
-        C_F * (a * modulusDefect κ F Q) := by
-    simpa [hleft_scale, hdef_scale] using hbound'
+        C_F * (a * modulusDefect κ F Q) := by simpa [hleft_scale, hdef_scale] using hbound'
   have hscaled' :
       a * explicitPkappaNorm (phase • Q - F) ≤
         a * (C_F * modulusDefect κ F Q) := by
@@ -541,8 +540,7 @@ private theorem explicitClosure_subset_explicitSequentialClosure
   have hsqrt_tendsto :
       Filter.Tendsto
         (fun n => Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q))
-        Filter.atTop (nhds (0 : ℝ)) := by
-    simpa [hsqrt] using hdist
+        Filter.atTop (nhds (0 : ℝ)) := by simpa [hsqrt] using hdist
   have hsq :
       (fun n => explicitGaussianL2DistanceSq (Qn n) Q) =
         fun n => (Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)) ^ 2 :=
@@ -657,8 +655,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       rw [hscale] at htri
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by
-        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
       rw [hδ_eq] at htri
       rw [show (fun z => P z - θ * Qn n z + θ * (Qn n z - Q z)) =
           (fun z => P z - θ * Qn n z) + fun z => θ * (Qn n z - Q z) from rfl]
@@ -718,12 +715,10 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
                 have h := abs_norm_sub_norm_le (Q z) (Qn n z)
                 simpa [Real.norm_eq_abs, norm_sub_rev] using h
           _ = MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2
-                (explicitGamma d) := by
-                rw [MeasureTheory.lpNorm_norm hQnQ_mem.1]
+                (explicitGamma d) := by rw [MeasureTheory.lpNorm_norm hQnQ_mem.1]
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by
-        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
       rw [hδ_eq] at hsecond
       exact htri.trans (add_le_add_right hsecond _)
     have hsqrt_total :

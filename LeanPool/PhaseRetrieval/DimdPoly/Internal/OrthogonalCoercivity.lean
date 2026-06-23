@@ -163,8 +163,7 @@ private theorem phi1D_eq_oneDimPhi_wip
                 (Nat.factorial (n - j) : ℂ) := by ring
         _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
-              (Nat.factorial (n - j) : ℂ) := by
-            field_simp [hfac_ne]
+              (Nat.factorial (n - j) : ℂ) := by field_simp [hfac_ne]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       congrArg
         (fun x : ℂ =>
@@ -292,8 +291,7 @@ private lemma integrable_evalPkappa_cross_wip
     intro alpha halpha
     have hconjsum :
         (starRingEnd ℂ) (∑ beta ∈ G.support, G beta * Phi kappa beta z) =
-          ∑ beta ∈ G.support, (starRingEnd ℂ) (G beta * Phi kappa beta z) := by
-      simp
+          ∑ beta ∈ G.support, (starRingEnd ℂ) (G beta * Phi kappa beta z) := by simp
     rw [hconjsum, Finset.mul_sum]
     refine Finset.sum_congr rfl ?_
     intro beta hbeta
@@ -491,8 +489,7 @@ private theorem norm_le_defect_add_two_wip
     calc
       MeasureTheory.lpNorm (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖) 2 (gammaD d)
           = MeasureTheory.lpNorm
-              ((2 : ℝ) • fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by
-              rfl
+              ((2 : ℝ) • fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by rfl
       _ = ‖(2 : ℝ)‖ *
             MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by
             rw [MeasureTheory.lpNorm_const_smul]

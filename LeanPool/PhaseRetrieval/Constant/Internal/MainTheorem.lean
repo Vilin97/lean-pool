@@ -188,8 +188,7 @@ private lemma polyEvalCircle_eq_polyEval {D : ℕ} (a : Fin D → ℂ)
 
 /-- `polyEval = localPoly + remainderPoly` by definition. -/
 private lemma polyEval_decompose {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (z : ℂ) :
-    polyEval a z = localPoly a M j z + remainderPoly a M j z := by
-  simp [remainderPoly]
+    polyEval a z = localPoly a M j z + remainderPoly a M j z := by simp [remainderPoly]
 
 /-! ## Continuity and integrability helpers -/
 
@@ -769,10 +768,8 @@ private lemma pre_absorption {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) :
   have h_eps_bound : C * ε' * fockNormSq a < δ / 4 := by
     have hfock1 : (0 : ℝ) < fockNormSq a + 1 := by linarith
     calc C * ε' * fockNormSq a
-        ≤ C * (δ / (4 * C * (fockNormSq a + 1))) * fockNormSq a := by
-          gcongr; exact min_le_left _ _
-      _ < C * (δ / (4 * C * (fockNormSq a + 1))) * (fockNormSq a + 1) := by
-          gcongr; linarith
+        ≤ C * (δ / (4 * C * (fockNormSq a + 1))) * fockNormSq a := by gcongr; exact min_le_left _ _
+      _ < C * (δ / (4 * C * (fockNormSq a + 1))) * (fockNormSq a + 1) := by gcongr; linarith
       _ = δ / 4 := by field_simp
   -- Chain: fockNormSq < 4B²R + C*(eta_J + ε')*F + δ/2
   have h_chain : fockNormSq a < 4 * 1620 ^ 2 * rhoFockNormSq a +
@@ -780,8 +777,7 @@ private lemma pre_absorption {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) :
     have : S_fock ≤ 4 * 1620 ^ 2 * rhoFockNormSq a +
         C * ((etaCoeff 5 J + ε') * fockNormSq a) := by
       calc S_fock ≤ 4 * 1620 ^ 2 * S_rho + C * S_leak := h2
-        _ ≤ 4 * 1620 ^ 2 * rhoFockNormSq a + C * ((etaCoeff 5 J + ε') * fockNormSq a) := by
-          gcongr
+        _ ≤ 4 * 1620 ^ 2 * rhoFockNormSq a + C * ((etaCoeff 5 J + ε') * fockNormSq a) := by gcongr
     nlinarith
   -- Universal eta bound: C*eta_J < 1/4 (much tighter than < 1/2)
   have h_C_eta_tight : C * etaCoeff 5 J < 1 / 4 :=

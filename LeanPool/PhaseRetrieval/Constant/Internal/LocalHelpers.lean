@@ -208,8 +208,7 @@ theorem LocalFockSPR_of_small_norm_exists_phase
     apply integral_congr_ae
     filter_upwards with z
     have hone :
-        (1 : ℂ) + q.eval z = conj lam0 * ((1 : ℂ) + p.eval z) := by
-      simp [q, mul_add, add_comm]
+        (1 : ℂ) + q.eval z = conj lam0 * ((1 : ℂ) + p.eval z) := by simp [q, mul_add, add_comm]
     rw [hone, norm_mul, Complex.norm_conj, hlam0, one_mul]
   refine ⟨conj lam0, by simpa [Complex.norm_conj] using hlam0, ?_⟩
   calc

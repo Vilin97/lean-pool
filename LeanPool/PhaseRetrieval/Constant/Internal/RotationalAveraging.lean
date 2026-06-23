@@ -55,8 +55,7 @@ private lemma norm_one_add_ge_one {r : ℝ} (hr : 0 ≤ r) {θ : ℝ}
 
 /-- When `‖1 + w‖ ≥ 1`, `rho(w) = ‖1 + w‖ − 1`. -/
 private lemma rho_eq_norm_sub {w : ℂ} (hw : ‖(1 : ℂ) + w‖ ≥ 1) :
-    rho w = ‖(1 : ℂ) + w‖ - 1 := by
-  simp only [rho]; rw [abs_of_nonneg]; linarith
+    rho w = ‖(1 : ℂ) + w‖ - 1 := by simp only [rho]; rw [abs_of_nonneg]; linarith
 
 /-- `‖r * exp(iθ)‖ = r` for `r ≥ 0`. -/
 private lemma norm_r_exp (r θ : ℝ) (hr : 0 ≤ r) :
@@ -192,8 +191,7 @@ theorem rotational_averaging_bound {r : ℝ} (hr : 0 ≤ r) :
   -- Combine with T⁻¹ factor
   rw [smul_eq_mul]
   calc r ^ 2 / 8
-      = T⁻¹ * (r ^ 2 / 2 * (Real.pi / 2)) := by
-        unfold T; field_simp; ring
+      = T⁻¹ * (r ^ 2 / 2 * (Real.pi / 2)) := by unfold T; field_simp; ring
     _ ≤ T⁻¹ * ∫ θ in Set.Ioc (-Real.pi) Real.pi, f θ := by
         apply mul_le_mul_of_nonneg_left (le_trans h_Icc_bound h_mono)
         exact inv_nonneg.mpr (le_of_lt T_pos)

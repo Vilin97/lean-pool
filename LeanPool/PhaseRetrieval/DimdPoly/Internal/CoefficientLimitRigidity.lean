@@ -151,8 +151,7 @@ private theorem phi1D_eq_oneDimPhi_wip
                 (Nat.factorial (n - j) : ℂ) := by ring
         _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
-              (Nat.factorial (n - j) : ℂ) := by
-            field_simp [hfac_ne]
+              (Nat.factorial (n - j) : ℂ) := by field_simp [hfac_ne]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       congrArg
         (fun x : ℂ =>
@@ -331,8 +330,7 @@ private theorem truncateFinset_apply_wip
     truncateFinset E U alpha = if alpha ∈ E then coeffSkappa U alpha else 0 := by
   have hsum :
       truncateFinset E U alpha =
-        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa U beta)) alpha := by
-    rfl
+        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa U beta)) alpha := by rfl
   rw [hsum]
   by_cases h : alpha ∈ E
   · simp [h, Finsupp.single_apply]
@@ -535,15 +533,13 @@ private theorem evalPkappa_norm_le_kernel_sqrt_wip
   calc
     ‖evalPkappa kappa H z‖
         = ‖Finset.sum H.support
-            (fun alpha => coeffPkappa H alpha * Phi kappa alpha z)‖ := by
-          rfl
+            (fun alpha => coeffPkappa H alpha * Phi kappa alpha z)‖ := by rfl
     _ <= Real.sqrt (Finset.sum H.support
           (fun alpha => ‖coeffPkappa H alpha‖ ^ 2)) *
         Real.sqrt (Finset.sum H.support
           (fun alpha => ‖Phi kappa alpha z‖ ^ 2)) := hfinite
     _ = Real.sqrt (Finset.sum H.support
-          (fun alpha => ‖Phi kappa alpha z‖ ^ 2)) := by
-          rw [hcoeff_sqrt, one_mul]
+          (fun alpha => ‖Phi kappa alpha z‖ ^ 2)) := by rw [hcoeff_sqrt, one_mul]
     _ <= Real.sqrt (∑' alpha : Idx d, ‖Phi kappa alpha z‖ ^ 2) := hsqrt_le
 
 private theorem finite_coeff_sum_le_norm_sq_wip
@@ -707,12 +703,10 @@ private theorem norm_tsum_subtype_compl_le_of_finset_bound_wip
     exact beta.2 hE
   have hsum :
       Finset.sum T (fun alpha : {alpha // alpha ∉ (E : Set ι)} => f alpha) =
-        Finset.sum T' f := by
-    simp [T']
+        Finset.sum T' f := by simp [T']
   have hnorm :
       ‖Finset.sum T (fun alpha : {alpha // alpha ∉ (E : Set ι)} => f alpha)‖ =
-        ‖Finset.sum T' f‖ := by
-    rw [hsum]
+        ‖Finset.sum T' f‖ := by rw [hsum]
   exact hnorm.trans_le (hC T' hdis)
 
 private theorem evalPkappa_tendsto_toFun_of_coeff_tendsto_wip
@@ -782,8 +776,7 @@ private theorem evalPkappa_tendsto_toFun_of_coeff_tendsto_wip
       ‖Finset.sum E
         (fun alpha =>
           (coeffPkappa (H m) alpha - coeffSkappa U alpha) * Phi kappa alpha z)‖ <
-        eps / 3 := by
-    simpa [dist_eq_norm] using hM m hm
+        eps / 3 := by simpa [dist_eq_norm] using hM m hm
   have hsum_norm :=
     norm_add_le
       (Finset.sum E
@@ -928,8 +921,7 @@ private theorem truncateFinset_ofPkappa_apply_wip
     truncateFinset E (ofPkappa kappa H) alpha = if alpha ∈ E then H alpha else 0 := by
   have hsum :
       truncateFinset E (ofPkappa kappa H) alpha =
-        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by
-    rfl
+        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by rfl
   rw [hsum]
   by_cases h : alpha ∈ E
   · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
@@ -1078,8 +1070,7 @@ private theorem truncateFinset_support_subset_wip
   have hzero : truncateFinset K G alpha = 0 := by
     have hsum :
         truncateFinset K G alpha =
-          (∑ beta ∈ K, Finsupp.single beta (coeffSkappa G beta)) alpha := by
-      rfl
+          (∑ beta ∈ K, Finsupp.single beta (coeffSkappa G beta)) alpha := by rfl
     rw [hsum]
     simp [hnot, Finsupp.single_apply]
   exact (Finsupp.mem_support_iff.mp halpha) hzero
@@ -1121,8 +1112,7 @@ private theorem coefficient_mass_le_truncate_norm_sq_wip
 
 private theorem coefficient_tailMass_nonneg_wip
     {d : Nat} {kappa : MultiIndex d} (K : Finset (Idx d)) (H : Pkappa d kappa) :
-    0 <= Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by
-  positivity
+    0 <= Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by positivity
 
 private theorem norm_sq_eq_truncate_add_tail_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -1532,8 +1522,7 @@ private theorem scalar_multiple_eq_zero_of_orthogonalToSkappa_wip
     norm_num
     exact_mod_cast hnorm_sq.symm.trans hF_sq
   have hzero : c * ((Finset.sum F.support
-      (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) : ℝ) : ℂ) = 0 := by
-    rw [← hinner, horth]
+      (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) : ℝ) : ℂ) = 0 := by rw [← hinner, horth]
   simpa [hsum_one] using hzero
 
 private theorem coeff_zero_of_scalar_multiple_orthogonalToSkappa_wip
@@ -1585,13 +1574,11 @@ private theorem scalar_multiple_eq_zero_of_orthogonalToPk_wip
     have hnorm_sq := norm_sq_eq_sum_coeff_wip F
     have hF_sq : ‖F‖ ^ 2 = 1 := by nlinarith [hF_norm]
     have hsum_real :
-        Finset.sum F.support (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) = 1 := by
-      nlinarith
+        Finset.sum F.support (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) = 1 := by nlinarith
     exact_mod_cast hsum_real
   have hzero :
       c * ((Finset.sum F.support
-        (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) : ℝ) : ℂ) = 0 := by
-    rw [← hinner, horth]
+        (fun alpha => ‖coeffPkappa F alpha‖ ^ 2) : ℝ) : ℂ) = 0 := by rw [← hinner, horth]
   simpa [hsum_one] using hzero
 
 private theorem eq_zero_of_scalar_multiple_orthogonalToPk_wip
@@ -1759,8 +1746,7 @@ private theorem finite_head_mass_contradiction_of_coeff_zero_wip
     (hzero : ∀ alpha, coeffSkappa U alpha = 0) :
     False := by
   have hsum_zero :
-      Finset.sum K (fun alpha => ‖coeffSkappa U alpha‖ ^ 2) = 0 := by
-    simp [hzero]
+      Finset.sum K (fun alpha => ‖coeffSkappa U alpha‖ ^ 2) = 0 := by simp [hzero]
   nlinarith
 
 private theorem bad_sequence_of_no_finite_head_lower_bound_wip
@@ -2155,8 +2141,7 @@ private lemma norm_sq_add_real_smul_wip (a w : ℂ) (t : ℝ) :
     ring
   have hre' :
       (a * (starRingEnd ℂ) ((t : ℂ) * w)).re =
-        t * Complex.re (w * star a) := by
-    simpa using hre
+        t * Complex.re (w * star a) := by simpa using hre
   rw [hre']
   ring
 
@@ -2175,16 +2160,14 @@ private lemma defectFunction_div_eq_abs_linearization_wip
     have hprod :
         (‖a + (t : ℂ) * w‖ - ‖a‖) *
             (‖a + (t : ℂ) * w‖ + ‖a‖) =
-          2 * t * Complex.re (w * star a) + t ^ 2 * ‖w‖ ^ 2 := by
-      nlinarith
+          2 * t * Complex.re (w * star a) + t ^ 2 * ‖w‖ ^ 2 := by nlinarith
     exact congrArg abs hprod
   have ht0 : t ≠ 0 := ne_of_gt ht
   calc
     |‖a + (t : ℂ) * w‖ - ‖a‖| / t *
         (‖a + (t : ℂ) * w‖ + ‖a‖)
         = (|‖a + (t : ℂ) * w‖ - ‖a‖| *
-            (‖a + (t : ℂ) * w‖ + ‖a‖)) / t := by
-            field_simp [ht0]
+            (‖a + (t : ℂ) * w‖ + ‖a‖)) / t := by field_simp [ht0]
     _ = |2 * t * Complex.re (w * star a) + t ^ 2 * ‖w‖ ^ 2| / t := by rw [hmul]
     _ = |t * (2 * Complex.re (w * star a) + t * ‖w‖ ^ 2)| / t := by
           congr 1
@@ -2304,8 +2287,7 @@ private theorem evalPkappa_lpNorm_eq_norm_coeff_wip
           exact gaussianL2Norm_eq_lpNorm_coeff_wip (evalPkappa kappa F)
             (memLp_two_evalPkappa_coeff_wip hd kappa F).1
     _ = Real.sqrt
-          (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) := by
-          rw [hpow]
+          (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) := by rw [hpow]
     _ = ‖F‖ := by
           rw [evalPkappa_total_mass hd kappa F, Real.sqrt_sq_eq_abs]
           exact abs_of_nonneg (Real.sqrt_nonneg _)
@@ -2407,8 +2389,7 @@ private lemma defectFunction_le_add_eval_norm_wip
       ‖evalPkappa kappa (F + G) z‖ -
           ‖evalPkappa kappa (F + (G + R)) z‖ =
         ‖evalPkappa kappa (F + G) z‖ -
-          ‖evalPkappa kappa (F + G) z + evalPkappa kappa R z‖ := by
-    rw [hadd_eval]
+          ‖evalPkappa kappa (F + G) z + evalPkappa kappa R z‖ := by rw [hadd_eval]
   have hnormdiff :
       |‖evalPkappa kappa (F + G) z‖ -
           ‖evalPkappa kappa (F + (G + R)) z‖| <=
@@ -2455,8 +2436,7 @@ private theorem defect_le_defect_add_norm_wip
             simp [Real.norm_eq_abs, abs_of_nonneg hnonneg]
       _ <=
           (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-            fun z : Cd d => ‖evalPkappa kappa R z‖) z := by
-            simpa [Pi.add_apply] using hpoint
+            fun z : Cd d => ‖evalPkappa kappa R z‖) z := by simpa [Pi.add_apply] using hpoint
   have htri :
       MeasureTheory.lpNorm
           (defectFunctionPkappa_coeff_wip kappa F (G + R) +
@@ -2843,8 +2823,7 @@ private theorem lowAnnulusEval_lpNorm_eq_sqrt_mass_wip
             (lowAnnulusEval_wip kappa J F)
             (aestronglyMeasurable_lowAnnulusEval_wip kappa J F)
     _ = Real.sqrt
-          (∫ z : Cd d, ‖lowAnnulusEval_wip kappa J F z‖ ^ 2 ∂ gammaD d) := by
-          rw [hpow]
+          (∫ z : Cd d, ‖lowAnnulusEval_wip kappa J F z‖ ^ 2 ∂ gammaD d) := by rw [hpow]
     _ = Real.sqrt (lowAnnulusMass J (ofPkappa kappa F)) := by
           rw [lowAnnulusEval_integral_eq_lowAnnulusMass_wip hd kappa J F]
 
@@ -3060,8 +3039,7 @@ private theorem sqrt_lowAnnulusMass_add_le_wip
           rw [lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J (F + G)]
     _ = MeasureTheory.lpNorm
           (lowAnnulusEval_wip kappa J F + lowAnnulusEval_wip kappa J G)
-          2 (gammaD d) := by
-          rw [lowAnnulusEval_add_wip]
+          2 (gammaD d) := by rw [lowAnnulusEval_add_wip]
     _ <=
       MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J F) 2 (gammaD d) +
         MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J G) 2 (gammaD d) := htri
@@ -3142,8 +3120,7 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
     calc
       Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar))
           <= Real.sqrt (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M) *
-              ‖Hfar‖ := by
-            simpa [E, Hnear, Hfar] using hfar_low
+              ‖Hfar‖ := by simpa [E, Hnear, Hfar] using hfar_low
       _ <= (tau / 16) * 1 := by
             have htau_div_nonneg : 0 <= tau / 16 := by positivity
             exact mul_le_mul hsqrt_leak_le hfar_norm_le_one
@@ -3168,8 +3145,7 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
     le_trans (sqrt_lowAnnulusMass_le_norm_wip hd kappa J Hnear) hnear_norm_le
   have hlow_upper :
       Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) <=
-        Real.sqrt (1 - tau) + tau / 16 := by
-    nlinarith
+        Real.sqrt (1 - tau) + tau / 16 := by nlinarith
   have hgap :=
     sqrt_gap_for_tail_contradiction_wip htau_pos htau_le_one
   nlinarith
@@ -3249,8 +3225,7 @@ private theorem finite_head_bad_limit_defect_tendsto_zero_wip
   · intro m
     have hφ_ge : m <= φ m := hφ_strict.id_le m
     have hden :
-        (((m + 1 : Nat) : ℝ)) <= (((φ m + 1 : Nat) : ℝ)) := by
-      exact_mod_cast Nat.succ_le_succ hφ_ge
+        (((m + 1 : Nat) : ℝ)) <= (((φ m + 1 : Nat) : ℝ)) := by exact_mod_cast Nat.succ_le_succ hφ_ge
     have hrecip :
         (1 / (((φ m + 1 : Nat) : ℝ))) <=
           (1 / (((m + 1 : Nat) : ℝ))) := one_div_le_one_div_of_le (by positivity) hden
@@ -3412,8 +3387,7 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
         (ht_pos (φ m)).ne'] using hdiv
     have hφ_ge : m <= φ m := hφ_strict.id_le m
     have hden :
-        (((m + 1 : Nat) : ℝ)) <= (((φ m + 1 : Nat) : ℝ)) := by
-      exact_mod_cast Nat.succ_le_succ hφ_ge
+        (((m + 1 : Nat) : ℝ)) <= (((φ m + 1 : Nat) : ℝ)) := by exact_mod_cast Nat.succ_le_succ hφ_ge
     have hfinal :
         defect F (t (φ m) • H (φ m)) / t (φ m) <=
           1 / (((m + 1 : Nat) : ℝ)) := (le_of_lt hratio).trans
@@ -3564,8 +3538,7 @@ private theorem finite_head_bad_limit_real_part_ae_wip
               gcongr
               exact norm_add_le _ _
         _ = 2 * ‖evalPkappa kappa F z‖ +
-              ‖(t (φ (ψ m)) : ℂ) * evalPkappa kappa (H (φ (ψ m))) z‖ := by
-              ring_nf
+              ‖(t (φ (ψ m)) : ℂ) * evalPkappa kappa (H (φ (ψ m))) z‖ := by ring_nf
         _ = 2 * ‖evalPkappa kappa F z‖ +
               t (φ (ψ m)) * ‖evalPkappa kappa (H (φ (ψ m))) z‖ := by
               rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg htm_nonneg]
@@ -3582,8 +3555,7 @@ private theorem finite_head_bad_limit_real_part_ae_wip
             (defectFunctionPkappa_coeff_wip kappa F
                 (t (φ (ψ m)) • H (φ (ψ m))) z / t (φ (ψ m))) *
               (2 * ‖evalPkappa kappa F z‖ + 4 * Cz))
-          Filter.atTop (nhds 0) := by
-      simpa using hzquot.mul tendsto_const_nhds
+          Filter.atTop (nhds 0) := by simpa using hzquot.mul tendsto_const_nhds
     have habs :
         Filter.Tendsto
           (fun m =>
@@ -3766,8 +3738,7 @@ private theorem coeff_skappaAffinePkappa_wip
     {d : Nat} (kappa : MultiIndex d)
     (F : Pkappa d kappa) (U : Skappa d kappa) (a b : ℂ) (alpha : Idx d) :
     coeffSkappa (skappaAffinePkappa_wip kappa F U a b) alpha =
-      a * coeffPkappa F alpha + b * coeffSkappa U alpha := by
-  rfl
+      a * coeffPkappa F alpha + b * coeffSkappa U alpha := by rfl
 
 private theorem toFun_skappaAffinePkappa_wip
     {d : Nat} (kappa : MultiIndex d)
@@ -3802,8 +3773,7 @@ private theorem toFun_skappaAffinePkappa_wip
           b * (∑' alpha : Idx d, coeffSkappa U alpha * Phi kappa alpha z) := by
           rw [hFsum.tsum_mul_left, hUsum.tsum_mul_left]
     _ = a * evalPkappa kappa F z + b * (∑' alpha : Idx d,
-          coeffSkappa U alpha * Phi kappa alpha z) := by
-          rw [evalPkappa_eq_tsum_coeff_wip kappa F z]
+          coeffSkappa U alpha * Phi kappa alpha z) := by rw [evalPkappa_eq_tsum_coeff_wip kappa F z]
 
 private theorem skappa_exact_modulus_affine_relation_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -3882,13 +3852,11 @@ private theorem skappa_real_part_scalar_relation_wip
       have hminus := norm_sq_add_real_smul_wip f u (-1)
       have hplus' :
           ‖f + u‖ ^ 2 =
-            ‖f‖ ^ 2 + 1 ^ 2 * ‖u‖ ^ 2 + 2 * 1 * Complex.re (u * star f) := by
-        simpa using hplus
+            ‖f‖ ^ 2 + 1 ^ 2 * ‖u‖ ^ 2 + 2 * 1 * Complex.re (u * star f) := by simpa using hplus
       have hminus' :
           ‖f + (-1 : ℂ) * u‖ ^ 2 =
             ‖f‖ ^ 2 + (-1 : ℝ) ^ 2 * ‖u‖ ^ 2 +
-              2 * (-1 : ℝ) * Complex.re (u * star f) := by
-        simpa using hminus
+              2 * (-1 : ℝ) * Complex.re (u * star f) := by simpa using hminus
       have hz' : Complex.re (u * star f) = 0 := by simpa [f, u] using hz
       nlinarith
     have hnorm : ‖f + u‖ = ‖f + (-1 : ℂ) * u‖ := by
@@ -3908,8 +3876,7 @@ private theorem skappa_real_part_scalar_relation_wip
     ext alpha
     have h :
         coeffPkappa F alpha + coeffSkappa U alpha =
-          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by
-      simpa using hrel alpha
+          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by simpa using hrel alpha
     rw [hw_neg] at h
     have htwo :
         (2 : ℂ) * coeffPkappa F alpha = 0 := by
@@ -3918,8 +3885,7 @@ private theorem skappa_real_part_scalar_relation_wip
             =
               (coeffPkappa F alpha + coeffSkappa U alpha) -
                 ((-1 : ℂ) *
-                  (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha)) := by
-                ring
+                  (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha)) := by ring
         _ = 0 := by rw [h]; ring
     exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
   · have hw_add_ne : (1 : ℂ) + w ≠ 0 := by
@@ -3932,8 +3898,7 @@ private theorem skappa_real_part_scalar_relation_wip
     intro alpha
     have h :
         coeffPkappa F alpha + coeffSkappa U alpha =
-          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by
-      simpa using hrel alpha
+          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by simpa using hrel alpha
     have hlin :
         ((1 : ℂ) + w) * coeffSkappa U alpha =
           (w - 1) * coeffPkappa F alpha := by
@@ -3998,13 +3963,11 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
       have hminus := norm_sq_add_real_smul_wip f u (-1)
       have hplus' :
           ‖f + u‖ ^ 2 =
-            ‖f‖ ^ 2 + 1 ^ 2 * ‖u‖ ^ 2 + 2 * 1 * Complex.re (u * star f) := by
-        simpa using hplus
+            ‖f‖ ^ 2 + 1 ^ 2 * ‖u‖ ^ 2 + 2 * 1 * Complex.re (u * star f) := by simpa using hplus
       have hminus' :
           ‖f + (-1 : ℂ) * u‖ ^ 2 =
             ‖f‖ ^ 2 + (-1 : ℝ) ^ 2 * ‖u‖ ^ 2 +
-              2 * (-1 : ℝ) * Complex.re (u * star f) := by
-        simpa using hminus
+              2 * (-1 : ℝ) * Complex.re (u * star f) := by simpa using hminus
       have hz' : Complex.re (u * star f) = 0 := by simpa [f, u] using hz
       nlinarith
     have hnorm : ‖f + u‖ = ‖f + (-1 : ℂ) * u‖ := by
@@ -4024,8 +3987,7 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
     ext alpha
     have h :
         coeffPkappa F alpha + coeffSkappa U alpha =
-          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by
-      simpa using hrel alpha
+          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by simpa using hrel alpha
     rw [hw_neg] at h
     have htwo :
         (2 : ℂ) * coeffPkappa F alpha = 0 := by
@@ -4034,8 +3996,7 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
             =
               (coeffPkappa F alpha + coeffSkappa U alpha) -
                 ((-1 : ℂ) *
-                  (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha)) := by
-                ring
+                  (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha)) := by ring
         _ = 0 := by rw [h]; ring
     exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
   · have hw_add_ne : (1 : ℂ) + w ≠ 0 := by
@@ -4048,8 +4009,7 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
     intro alpha
     have h :
         coeffPkappa F alpha + coeffSkappa U alpha =
-          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by
-      simpa using hrel alpha
+          w * (coeffPkappa F alpha + (-1 : ℂ) * coeffSkappa U alpha) := by simpa using hrel alpha
     have hlin :
         ((1 : ℂ) + w) * coeffSkappa U alpha =
           (w - 1) * coeffPkappa F alpha := by
@@ -4399,8 +4359,7 @@ private lemma evalPkappa_pointwise_bound_coeff_wip
     ‖evalPkappa kappa G z‖ = ‖evalPkappa kappa (F + G) z - evalPkappa kappa F z‖ := by rw [hsub]
     _ ≤ ‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖ := norm_sub_le _ _
     _ ≤ defectFunctionPkappa_coeff_wip kappa F G z +
-          ‖evalPkappa kappa F z‖ + ‖evalPkappa kappa F z‖ := by
-          linarith
+          ‖evalPkappa kappa F z‖ + ‖evalPkappa kappa F z‖ := by linarith
     _ = defectFunctionPkappa_coeff_wip kappa F G z + 2 * ‖evalPkappa kappa F z‖ := by ring
 
 private theorem norm_le_defect_add_two_coeff_wip
@@ -4446,8 +4405,7 @@ private theorem norm_le_defect_add_two_coeff_wip
       MeasureTheory.lpNorm (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖)
           2 (gammaD d)
           = MeasureTheory.lpNorm
-              ((2 : ℝ) • fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by
-              rfl
+              ((2 : ℝ) • fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by rfl
       _ = ‖(2 : ℝ)‖ *
             MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa F z‖) 2
               (gammaD d) := by

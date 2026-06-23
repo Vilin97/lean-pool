@@ -31,8 +31,7 @@ def centeredPolynomial (p : Polynomial ℂ) : Polynomial ℂ :=
 
 /-- The centered polynomial has zero constant term. -/
 theorem centeredPolynomial_eval_zero (p : Polynomial ℂ) :
-    (centeredPolynomial p).eval 0 = 0 := by
-  simp [centeredPolynomial]
+    (centeredPolynomial p).eval 0 = 0 := by simp [centeredPolynomial]
 
 /-- The paper-friendly orthogonal reduction step: split off the constant term. -/
 theorem orthogonalReduction (p : Polynomial ℂ) :

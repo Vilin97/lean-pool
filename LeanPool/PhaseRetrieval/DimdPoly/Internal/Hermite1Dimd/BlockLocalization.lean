@@ -394,8 +394,7 @@ private lemma productBasis_annulusFactorization
               simp [hz, hprod]
     _ = ∏ q : Fin d,
           gaussianInner (d := 1) (fun z : CSpace 1 => F q (z 0)) (fun z : CSpace 1 => F q (z 0))
-              := by
-            simpa using htensor.2
+              := by simpa using htensor.2
     _ = ∏ q : Fin d, (((annulusMass (d := 1) (fun _ => j q) (oneDimLift (oneDimPhi (κ q) (α q))) :
         ℝ)) : ℂ) := by
           refine Finset.prod_congr rfl ?_
@@ -915,8 +914,7 @@ private lemma tailIndicator_tendsto_zero
   have h2 :
       (∑ i ∈ Finset.range (M + 1), u i) +
           (∑' k : ℕ, u (k + (M + 1))) =
-        ∑' i : ℕ, u i := by
-    simpa using hu.sum_add_tsum_nat_add (M + 1)
+        ∑' i : ℕ, u i := by simpa using hu.sum_add_tsum_nat_add (M + 1)
   have hEq : (∑' r : ℕ, if M < r then u r else 0) = ∑' k : ℕ, u (k + (M + 1)) := by
     linarith [h1, h2]
   simpa [Nat.succ_le_iff] using hEq.symm
@@ -972,8 +970,7 @@ private lemma shellExp_global_majorant
         have hsquare_half : ((r : ℝ) / 2) ^ 2 ≤ ((r : ℝ) - B) ^ 2 := by nlinarith
         nlinarith [hsquare_half]
     have hlog :
-        -(c) * max ((r : ℝ) - B) 0 ^ 2 ≤ c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 := by
-      nlinarith [hsq, hc]
+        -(c) * max ((r : ℝ) - B) 0 ^ 2 ≤ c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 := by nlinarith [hsq, hc]
     calc
       Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
         ≤ Real.exp (c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2) := Real.exp_le_exp.mpr hlog
@@ -1187,8 +1184,7 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                 if M < blockDistance j ℓ then
                   C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
                     hermiteNormSq κ (blockPart ℓ G)
-                else 0)) := by
-            rw [Finset.sum_comm]
+                else 0)) := by rw [Finset.sum_comm]
     _ ≤ Finset.sum (G.support.image blockIndexMulti)
           (fun ℓ => localizationLeakageCoefficient C c B d M * hermiteNormSq κ (blockPart ℓ G)) :=
               by

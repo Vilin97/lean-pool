@@ -93,8 +93,7 @@ theorem exact_truncate_coeff_energy
     intro alpha
     have hsum :
         truncateFinset E F alpha =
-          (∑ beta ∈ E, Finsupp.single beta (coeffSkappa F beta)) alpha := by
-      rfl
+          (∑ beta ∈ E, Finsupp.single beta (coeffSkappa F beta)) alpha := by rfl
     rw [hsum]
     by_cases h : alpha ∈ E
     · simp [h, Finsupp.single_apply]
@@ -144,8 +143,7 @@ private theorem phi1D_eq_oneDimPhi
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) * (Nat.factorial (n - j) : ℂ) := by ring
         _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
-              (Nat.factorial (n - j) : ℂ) := by
-            field_simp [hfac_ne]
+              (Nat.factorial (n - j) : ℂ) := by field_simp [hfac_ne]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       congrArg
         (fun x : ℂ => ((-1 : ℂ) ^ j) * x * (Nat.choose k j : ℂ) * z ^ (n - j) * (star z) ^ (k - j))
@@ -183,13 +181,11 @@ private lemma oneDimPhi_phaseLaw
   have hleft :
       Hermite1DimdLEAN.oneDimPhi k n ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa using hradial ‖z‖ (t + z.arg)
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa using hradial ‖z‖ (t + z.arg)
   have hright :
       Hermite1DimdLEAN.oneDimPhi k n z =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * z.arg)) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa [hz] using hradial ‖z‖ z.arg
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa [hz] using hradial ‖z‖ z.arg
   have hexp :
       Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * t)) *
@@ -201,8 +197,7 @@ private lemma oneDimPhi_phaseLaw
   calc
     Hermite1DimdLEAN.oneDimPhi k n (Complex.exp (Complex.I * t) * z) =
         Hermite1DimdLEAN.oneDimPhi k n
-          ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
-          rw [hrot]
+          ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by rw [hrot]
     _ = Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) *
           radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := hleft
     _ = Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * t)) *
@@ -304,8 +299,7 @@ theorem evalPkappa_rotateCoord_circle_phase_sum
       = F alpha *
           ((fourier ((kappa q0 : Nat) : Int) x : ℂ) *
             Phi kappa alpha
-              (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by
-          ring_nf
+              (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by ring_nf
     _ = F alpha * ((fourier ((alpha q0 : Nat) : Int) x : ℂ) * Phi kappa alpha z) := by rw [hphase]
     _ = F alpha * Phi kappa alpha z * circleChar (alpha q0) x := by
           rw [hchar]
@@ -535,11 +529,9 @@ theorem toFun_rotateCoord_circle_phase_tsum
         = coeffSkappa U alpha *
             ((fourier ((kappa q0 : Nat) : Int) x : ℂ) *
               Phi kappa alpha
-                (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by
-            ring
+                (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by ring
       _ = coeffSkappa U alpha *
-            ((fourier ((alpha q0 : Nat) : Int) x : ℂ) * Phi kappa alpha z) := by
-            rw [hphase]
+            ((fourier ((alpha q0 : Nat) : Int) x : ℂ) * Phi kappa alpha z) := by rw [hphase]
       _ = coeffSkappa U alpha * Phi kappa alpha z * circleChar (alpha q0) x := by
             rw [hchar]
             ring
@@ -831,8 +823,7 @@ theorem evalPkappaL2_truncateFinset
   | insert alpha E hnot hE =>
       have hE' :
           evalPkappaL2 kappa (∑ beta ∈ E, Finsupp.single beta (coeffSkappa U beta)) =
-            ∑ beta ∈ E, coeffSkappa U beta • PhiL2 kappa beta := by
-        simpa [truncateFinset] using hE
+            ∑ beta ∈ E, coeffSkappa U beta • PhiL2 kappa beta := by simpa [truncateFinset] using hE
       simp [truncateFinset, Finset.sum_insert hnot, evalPkappaL2_add hd kappa,
         evalPkappaL2_single hd kappa, hE']
 
@@ -923,8 +914,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
         ((n + m + 1 : ℝ) ^ m) ≤
           (m + 1 : ℝ) ^ m * (((n + m).descFactorial m : ℕ) : ℝ) := by
       have hdesc :
-          ((n + 1 : ℝ) ^ m) ≤ (((n + m).descFactorial m : ℕ) : ℝ) := by
-        exact_mod_cast hdesc_nat
+          ((n + 1 : ℝ) ^ m) ≤ (((n + m).descFactorial m : ℕ) : ℝ) := by exact_mod_cast hdesc_nat
       calc
         ((n + m + 1 : ℝ) ^ m) ≤ (((m + 1 : ℝ) * (n + 1)) ^ m) := by
           gcongr
@@ -951,8 +941,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
     calc
       f (n + m) =
           ((n + m + 1 : ℝ) ^ m) * x ^ (n + m) /
-            (Nat.factorial (n + m) : ℝ) := by
-            simp [f]
+            (Nat.factorial (n + m) : ℝ) := by simp [f]
       _ ≤ (((m + 1 : ℝ) ^ m) * (((n + m).descFactorial m : ℕ) : ℝ) *
               x ^ (n + m)) / (Nat.factorial (n + m) : ℝ) := by
             have hpowx :
@@ -1010,8 +999,7 @@ private lemma summable_phiMajorant_sq
   refine Summable.of_nonneg_of_le (fun n => sq_nonneg (phiMajorant k n R)) ?_ hmajorant
   intro n
   have hsqrt_ne :
-      Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ)) ≠ 0 := by
-    positivity
+      Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ)) ≠ 0 := by positivity
   have : phiMajorant k n R ^ 2 =
       C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) / (Nat.factorial n : ℝ)) := by
     dsimp [phiMajorant, C]
@@ -1062,8 +1050,7 @@ private lemma phi1D_norm_le_majorant
     exact Finset.sum_le_sum (fun j hj => hterm_bound j hj)
   have hsum_factor :
       Finset.sum S (fun j => (Nat.choose k j : ℝ) * common) =
-        (Finset.sum S (fun j => (Nat.choose k j : ℝ))) * common := by
-    rw [Finset.sum_mul]
+        (Finset.sum S (fun j => (Nat.choose k j : ℝ))) * common := by rw [Finset.sum_mul]
   have hfront_nonneg :
       0 ≤ ‖((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℂ)‖ :=
     norm_nonneg _
@@ -1082,11 +1069,9 @@ private lemma phi1D_norm_le_majorant
             Finset.sum S (fun j => (Nat.choose k j : ℝ) * common) := by
           exact mul_le_mul_of_nonneg_left hsum_bound hfront_nonneg
     _ = ((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℝ) *
-            Finset.sum S (fun j => (Nat.choose k j : ℝ) * common) := by
-          rw [hfront]
+            Finset.sum S (fun j => (Nat.choose k j : ℝ) * common) := by rw [hfront]
     _ = ((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℝ) *
-            ((Finset.sum S (fun j => (Nat.choose k j : ℝ))) * common) := by
-          rw [hsum_factor]
+            ((Finset.sum S (fun j => (Nat.choose k j : ℝ))) * common) := by rw [hsum_factor]
     _ ≤ ((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℝ) *
             (((2 : ℝ) ^ k) * common) := by
           gcongr
@@ -1269,8 +1254,7 @@ theorem l2_tsum_represents_toFun
   have hL2 :
       Filter.Tendsto (fun J : MultiIndex d =>
           evalPkappaL2 kappa (truncateFinset (box J) U))
-        Filter.atTop (nhds S) := by
-    simpa [S] using evalPkappaL2_box_tendsto_tsum hd kappa U
+        Filter.atTop (nhds S) := by simpa [S] using evalPkappaL2_box_tendsto_tsum hd kappa U
   have hInMeasure := MeasureTheory.tendstoInMeasure_of_tendsto_Lp hL2
   obtain ⟨ns, hns, hns_ae⟩ := hInMeasure.exists_seq_tendsto_ae'
   have hpartial_ae :
@@ -1350,8 +1334,7 @@ theorem toL2_eq_boxLimit
   have hL2 :
       Filter.Tendsto (fun J : MultiIndex d =>
           evalPkappaL2 kappa (truncateFinset (box J) U))
-        Filter.atTop (nhds S) := by
-    simpa [S] using evalPkappaL2_box_tendsto_tsum hd kappa U
+        Filter.atTop (nhds S) := by simpa [S] using evalPkappaL2_box_tendsto_tsum hd kappa U
   have hrepS : IsTensorL2Rep S (toFun kappa U) := by
     simpa [S] using l2_tsum_represents_toFun hd kappa U
   rcases hrepS with ⟨hmem, htoLp⟩

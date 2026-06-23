@@ -183,8 +183,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
         calc ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖fourier ((k.val + 1 : ℕ) : ℤ) t‖
             ≤ ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖(fourier ((k.val + 1 : ℕ) : ℤ) : C(AddCircle T, ℂ))‖ :=
               mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
-          _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by
-              rw [fourier_norm]; ring
+          _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by rw [fourier_norm]; ring
           _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
 
 /-- ‖polyEvalCircle a r t‖² ≤ D * ∑ ‖a_k‖² * r^{2(k+1)}, a convenient bound.
@@ -293,8 +292,7 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
             Real.exp (-r ^ 2))‖ =
           ∫ θ in Set.Icc (-Real.pi) Real.pi,
           ‖r * (‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2 *
-            Real.exp (-r ^ 2))‖ := by
-        intro r; exact (integral_Icc_eq_integral_Ioo).symm
+            Real.exp (-r ^ 2))‖ := by intro r; exact (integral_Icc_eq_integral_Ioo).symm
       simp_rw [hIoo_eq_Icc]
       exact hcont_int.aestronglyMeasurable.mono_measure Measure.restrict_le_self
     · -- Pointwise norm bound
@@ -424,8 +422,7 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
               -- With a = r^(D-1): (1+r^(D-1))²*C² ≤ 2*(1+(r^(D-1))²)*C² = 2*(1+r^(2*(D-1)))*C²
               have hrd := pow_nonneg hr_nn (D - 1)
               have hsq2 : ((1 + r ^ (D - 1)) * C) ^ 2 ≤
-                  2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2 := by
-                nlinarith [sq_nonneg (1 - r ^ (D - 1))]
+                  2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2 := by nlinarith [sq_nonneg (1 - r ^ (D - 1))]
               -- r^3 * 2 * (1 + (r^(D-1))²) * C² ≤ 4 * (r^3 + r^3*(r^(D-1))²) * C²
               -- r^3 * (r^(D-1))² = r^(2D+1)
               have hpow_eq : r ^ 3 * (r ^ (D - 1)) ^ 2 = r * r ^ (D * 2) := by
@@ -708,8 +705,7 @@ private lemma radial_gaussian_integral (n : ℕ) :
 -- Helper: ‖polyEval a z‖ = ‖polyEvalCircle a r (mk θ)‖ when z = polarCoord.symm(r, θ)
 private lemma norm_polyEval_eq_norm_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (θ : ℝ) :
     ‖polyEval a (Complex.polarCoord.symm (r, θ))‖ =
-    ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by
-  rw [polyEval_polarCoord_eq]
+    ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by rw [polyEval_polarCoord_eq]
 
 -- The polar form of the Gaussian integral for ‖U‖²
 private lemma fockNorm_polar {D : ℕ} (a : Fin D → ℂ) :

@@ -172,8 +172,7 @@ private theorem localOrbit_eq_positiveFrequencyPolynomial
             rw [productBasisPhaseLawCircle]
             have hadd :
                 ((totalDegree κ : ℤ) + ((totalDegree α : ℤ) - (totalDegree κ : ℤ))) =
-                  (totalDegree α : ℤ) := by
-              omega
+                  (totalDegree α : ℤ) := by omega
             calc
               (fourier (totalDegree κ : ℤ) t : ℂ) *
                   ((localPart j M G).coeff α *
@@ -295,8 +294,7 @@ private lemma localOrbit_norm_sq
     (G : FiniteHermiteSum d) (z : CSpace d) (t : Circle) :
     ‖evalHermiteSum κ (localPart j M G)
         (fun q => (fourier (1 : ℤ) t : ℂ) * z q)‖ ^ 2 =
-      ‖localOrbit κ j M G z t‖ ^ 2 := by
-  simp [localOrbit, mul_comm]
+      ‖localOrbit κ j M G z t‖ ^ 2 := by simp [localOrbit, mul_comm]
 
 /-- The defect term is invariant under the same unit-phase correction. -/
 private lemma localOrbit_defect_sq
@@ -311,8 +309,7 @@ private lemma localOrbit_defect_sq
     productBasisPhaseLawCircle (κ := κ) (α := (0 : MultiIndex d)) t z
   have hphase' :
       nuKappa κ (fun q => (fourier (1 : ℤ) t : ℂ) * z q) =
-        (fourier (-(totalDegree κ : ℤ)) t : ℂ) * nuKappa κ z := by
-    simpa [nuKappa, h0] using hphase
+        (fourier (-(totalDegree κ : ℤ)) t : ℂ) * nuKappa κ z := by simpa [nuKappa, h0] using hphase
   have hu : ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 := by simp
   have hphaseρ :=
     rho_unit_mul
@@ -352,8 +349,7 @@ private lemma integrable_localOrbit_mass
     (G : FiniteHermiteSum d) (z : CSpace d) :
     Integrable (fun t : Circle => ‖localOrbit κ j M G z t‖ ^ 2) AddCircle.haarAddCircle := by
   have hrot : Continuous (fun t : Circle => fun q : Fin d =>
-      (fourier (1 : ℤ) t : ℂ) * z q) := by
-    continuity
+      (fourier (1 : ℤ) t : ℂ) * z q) := by continuity
   have hcont : Continuous (fun t : Circle => ‖localOrbit κ j M G z t‖ ^ 2) := by
     unfold localOrbit
     simpa [pow_two] using
@@ -371,8 +367,7 @@ private lemma integrable_localOrbit_defect
     Integrable (fun t : Circle => rho (nuKappa κ z) (localOrbit κ j M G z t) ^ 2)
       AddCircle.haarAddCircle := by
   have hrot : Continuous (fun t : Circle => fun q : Fin d =>
-      (fourier (1 : ℤ) t : ℂ) * z q) := by
-    continuity
+      (fourier (1 : ℤ) t : ℂ) * z q) := by continuity
   have hloc : Continuous (fun t : Circle => localOrbit κ j M G z t) := by
     unfold localOrbit
     exact ((fourier (totalDegree κ : ℤ)).continuous.mul
