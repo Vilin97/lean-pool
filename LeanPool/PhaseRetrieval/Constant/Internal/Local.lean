@@ -52,9 +52,8 @@ theorem LocalFockSPR_constants :
           ∃ w : ℂ, ‖w‖ = 1 ∧
             ∫ z : ℂ, ‖w * (1 + p.eval z) - 1‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
               M ^ 2 * ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-  refine ⟨(1 / 4601 : ℝ), (23003 : ℝ), rfl, rfl, ?_⟩
-  intro p hsmall
-  exact LocalFockSPR_of_small_norm_exists_phase p hsmall
+  exact ⟨(1 / 4601 : ℝ), (23003 : ℝ), rfl, rfl,
+    fun p hsmall => LocalFockSPR_of_small_norm_exists_phase p hsmall⟩
 
 theorem LocalFockSPR_exists_phase
     (p : Polynomial ℂ)
@@ -64,7 +63,7 @@ theorem LocalFockSPR_exists_phase
     ∃ w : ℂ, ‖w‖ = 1 ∧
       ∫ z : ℂ, ‖w * ((1 : ℂ) + p.eval z) - 1‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
         23003 ^ 2 *
-          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-  exact LocalFockSPR_of_small_norm_exists_phase p hsmall
+          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) :=
+  LocalFockSPR_of_small_norm_exists_phase p hsmall
 
 end FockSPR

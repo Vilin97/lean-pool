@@ -43,12 +43,10 @@ private lemma final_constant_check : 8 * 1620 ^ 2 ≤ 4600 ^ 2 := by norm_num
 /-! ## Helper lemmas -/
 
 private lemma fockNormSq_nonneg {D : ℕ} (a : Fin D → ℂ) : 0 ≤ fockNormSq a := by
-  unfold fockNormSq; apply Finset.sum_nonneg; intro k _
-  exact mul_nonneg (sq_nonneg _) (by exact_mod_cast Nat.zero_le _)
+  unfold fockNormSq; positivity
 
 private lemma rhoFockNormSq_nonneg {D : ℕ} (a : Fin D → ℂ) : 0 ≤ rhoFockNormSq a := by
-  unfold rhoFockNormSq; apply mul_nonneg; · positivity
-  · exact integral_nonneg (fun z => mul_nonneg (sq_nonneg _) (le_of_lt (Real.exp_pos _)))
+  unfold rhoFockNormSq; positivity
 
 /-! ## Auxiliary lemmas for polar decomposition -/
 
@@ -667,25 +665,8 @@ private lemma annular_circle_bound {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) 
 
 /-! ## Pre-absorption inequality
 
-The proof uses `le_of_forall_pos_lt_add` and avoids J-dependent leakage bounds.
-For each δ > 0:
-1. Get ε from `total_leakage_bound` with ε' = δ/(4*(fockNormSq+1))
-2. Get bound from `total_leakage_bound`
-3. Get J₀ from `fockNormSq_sup_annular` with δ/2
-4. Use J = max J₀ bound, so J ≥ bound and S_fock(J) ≥ S_fock(J₀) > fockNormSq - δ/2
-5. Apply `total_leakage_bound` at J to get S_leak ≤ (etaCoeff 5 J + ε') * fockNormSq
-6. etaCoeff 5 J ≤ etaCoeff 5 100 (since J ≥ bound ≥ 100... no, not necessarily)
-   Actually etaCoeff is monotone, so etaCoeff 5 J ≥ etaCoeff 5 100 for J ≥ 100.
-   But we only need etaCoeff 5 J < 4/10^11 + ε' approximately.
-   The key: C * (etaCoeff 5 J + ε') * fockNormSq ≤ C * etaCoeff 5 100 * fockNormSq + extra
-   where extra → 0 with δ. Since etaCoeff 5 J ≤ etaCoeff 5 100 for J ≤ 100
-   and etaCoeff 5 J ≤ etaCoeff 5 100 + 6*exp(-10201) for all J.
-   The 6*exp(-10201) * C * fockNormSq term is J-independent but tiny.
-   We can bound it by δ/4 by choosing δ appropriately... no, δ is given.
-
-   THE FIX: Instead of etaCoeff 5 100, use the bound for ALL J.
-   Change the statement to use a universal leakage coefficient.
--/
+Proved via `le_of_forall_pos_lt_add` with a universal leakage coefficient
+(`etaCoeff_5_universal`), avoiding `J`-dependent leakage bounds. -/
 
 -- Universal bound: ∑_{m=5}^J exp(-m²) ≤ ∑_{m=5}^100 exp(-m²) for J ≤ 100,
 -- and the tail for J > 100 is bounded by a geometric series.
