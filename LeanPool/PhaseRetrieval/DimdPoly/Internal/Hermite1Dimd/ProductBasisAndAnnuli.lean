@@ -197,12 +197,9 @@ private lemma sum_indicator_productAnnulus_le
   · rcases hs with ⟨j0, hj0s, hj0z⟩
     have hsum :
         ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : CSpace d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : CSpace d => a) z := by
-      exact Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := by
-          intro hjz
-          have heq := productAnnulus_eq_of_mem hjz hj0z
-          exact hjne heq
+          Set.indicator (productAnnulus j0) (fun _ : CSpace d => a) z :=
+      Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
+        have hjz : z ∉ productAnnulus j := fun hjz => hjne (productAnnulus_eq_of_mem hjz hj0z)
         simp [Set.indicator, hjz])
     rw [hsum]
     simp [Set.indicator, hj0z]
@@ -397,13 +394,8 @@ private lemma Phi_rotation_equivariant
     linear_combination
       (1 / ↑(Real.sqrt (↑k.factorial * ↑p.factorial))) * hsum
   intro j hj
-  have hjk : j ≤ k := by
-    simp [Finset.mem_range] at hj
-    omega
-  have hjp : j ≤ p := by
-    simp [Finset.mem_range] at hj
-    omega
-  have key := circle_pow_factor ω hjk hjp
+  simp only [Finset.mem_range, Nat.lt_succ_iff, le_min_iff] at hj
+  have key := circle_pow_factor ω hj.1 hj.2
   linear_combination
     ((-1 : ℂ) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
       z ^ (p - j) * star z ^ (k - j)) * key

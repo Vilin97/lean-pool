@@ -78,7 +78,9 @@ theorem projFinset_idempotent
     projFinset E (projFinset E F) = projFinset E F := by
   let _ := hd
   ext alpha
-  by_cases h : alpha ∈ E <;> simp [projFinset, h]
+  by_cases h : alpha ∈ E
+  · simp [projFinset, h]
+  · simp [projFinset, h]
 
 theorem exact_truncate_coeff_energy
     {d : Nat} (hd : 0 < d) {kappa : MultiIndex d}
@@ -94,7 +96,9 @@ theorem exact_truncate_coeff_energy
           (∑ beta ∈ E, Finsupp.single beta (coeffSkappa F beta)) alpha := by
       rfl
     rw [hsum]
-    by_cases h : alpha ∈ E <;> simp [h, Finsupp.single_apply]
+    by_cases h : alpha ∈ E
+    · simp [h, Finsupp.single_apply]
+    · simp [h, Finsupp.single_apply]
   have hsupp : (truncateFinset E F).support ⊆ E := by
     intro alpha halpha
     by_contra hnot
@@ -150,7 +154,10 @@ private theorem phi1D_eq_oneDimPhi
 private theorem Phi_eq_PhiKappaAlpha
     {d : Nat} (kappa alpha : MultiIndex d) (z : Cd d) :
     Phi kappa alpha z = Hermite1DimdLEAN.PhiKappaAlpha kappa alpha z := by
-  simp [Phi, Hermite1DimdLEAN.PhiKappaAlpha, phi1D_eq_oneDimPhi]
+  unfold Phi Hermite1DimdLEAN.PhiKappaAlpha
+  refine Finset.prod_congr rfl ?_
+  intro q hq
+  exact phi1D_eq_oneDimPhi (kappa q) (alpha q) (z q)
 
 private lemma oneDimPhi_phaseLaw
     (k n : Nat) (t : ℝ) (z : ℂ) :
@@ -319,8 +326,8 @@ theorem evalPkappa_total_mass
   let _ := hd
   have hparseval :
       Hermite1DimdLEAN.hermiteNormSq kappa ⟨F⟩ =
-        Finset.sum F.support (fun alpha => ‖F alpha‖ ^ 2) := by
-    exact Hermite1DimdLEAN.finiteParseval kappa ⟨F⟩
+        Finset.sum F.support (fun alpha => ‖F alpha‖ ^ 2) :=
+    Hermite1DimdLEAN.finiteParseval kappa ⟨F⟩
   have hparseval' :
       (∫ z, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) =
         Finset.sum F.support (fun alpha => ‖F alpha‖ ^ 2) := by
@@ -442,9 +449,8 @@ theorem summable_sq_Phi_eval
     exact Finset.le_sup (s := E) (f := fun beta : Idx d => beta q) halpha
   have hsum_E_le_B :
       Finset.sum E (fun alpha : Idx d => ‖Phi kappa alpha z‖ ^ 2) <=
-        Finset.sum B (fun alpha : Idx d => ‖Phi kappa alpha z‖ ^ 2) := by
-    exact Finset.sum_le_sum_of_subset_of_nonneg hE_subset
-      (by intro alpha hB hnot; exact sq_nonneg _)
+        Finset.sum B (fun alpha : Idx d => ‖Phi kappa alpha z‖ ^ 2) :=
+    Finset.sum_le_sum_of_subset_of_nonneg hE_subset (fun alpha _ _ => sq_nonneg _)
   have hbox_eq :
       Finset.sum B (fun alpha : Idx d => ‖Phi kappa alpha z‖ ^ 2) =
         Finset.prod Finset.univ
@@ -464,15 +470,11 @@ theorem summable_sq_Phi_eval
               (fun n : Nat => ‖phi1D (kappa q) n (z q)‖ ^ 2)) <=
         Finset.prod Finset.univ
           (fun q : Fin d =>
-            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) := by
-    exact Finset.prod_le_prod
-      (by
-        intro q hq
-        exact Finset.sum_nonneg fun n hn => sq_nonneg _)
-      (by
-        intro q hq
-        exact (summable_sq_phi1D_eval (kappa q) (z q)).sum_le_tsum
-          (Finset.range (J q + 1)) (fun n hn => sq_nonneg _))
+            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) :=
+    Finset.prod_le_prod
+      (fun q _ => Finset.sum_nonneg fun n _ => sq_nonneg _)
+      (fun q _ => (summable_sq_phi1D_eval (kappa q) (z q)).sum_le_tsum
+          (Finset.range (J q + 1)) (fun n _ => sq_nonneg _))
   exact le_trans hsum_E_le_B (by rw [hbox_eq]; exact hprod_le)
 
 theorem summable_skappa_eval_mul_of_phi_sq
@@ -687,9 +689,11 @@ theorem integrable_evalPkappa_sq
 theorem memLp_two_evalPkappa
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     MeasureTheory.MemLp (evalPkappa kappa F) 2 (gammaD d) := by
+  have hmeas :
+      MeasureTheory.AEStronglyMeasurable (evalPkappa kappa F) (gammaD d) :=
+    (continuous_evalPkappa kappa F).stronglyMeasurable.aestronglyMeasurable
   exact
-    (MeasureTheory.memLp_two_iff_integrable_sq_norm
-      (continuous_evalPkappa kappa F).stronglyMeasurable.aestronglyMeasurable).2
+    (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2
       (integrable_evalPkappa_sq hd kappa F)
 
 theorem evalPkappaL2_eq_toLp
@@ -1011,13 +1015,12 @@ private lemma summable_phiMajorant_sq
   have hsqrt_ne :
       Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ)) ≠ 0 := by
     positivity
-  calc
-    phiMajorant k n R ^ 2 ≤ phiMajorant k n R ^ 2 := le_rfl
-    _ = C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) /
-          (Nat.factorial n : ℝ)) := by
-        dsimp [phiMajorant, C]
-        field_simp [hsqrt_ne]
-        rw [Real.sq_sqrt (by positivity)]
+  have : phiMajorant k n R ^ 2 =
+      C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) / (Nat.factorial n : ℝ)) := by
+    dsimp [phiMajorant, C]
+    field_simp [hsqrt_ne]
+    rw [Real.sq_sqrt (by positivity)]
+  exact this.le
 
 private lemma phi1D_norm_le_majorant
     {k n : ℕ} {R : ℝ} (hR : 1 ≤ R) {z : ℂ} (hz : ‖z‖ ≤ R) :
@@ -1041,14 +1044,10 @@ private lemma phi1D_norm_le_majorant
       simp [S] at hj
       omega
     have hratio := factorial_ratio_le_pow_succ hjn hjk
-    have hz1 : ‖z‖ ^ (n - j) ≤ R ^ n := by
-      calc
-        ‖z‖ ^ (n - j) ≤ R ^ (n - j) := pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ n := pow_le_pow_right₀ hR (Nat.sub_le _ _)
-    have hz2 : ‖z‖ ^ (k - j) ≤ R ^ k := by
-      calc
-        ‖z‖ ^ (k - j) ≤ R ^ (k - j) := pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ k := pow_le_pow_right₀ hR (Nat.sub_le _ _)
+    have hz1 : ‖z‖ ^ (n - j) ≤ R ^ n :=
+      le_trans (pow_le_pow_left₀ (norm_nonneg _) hz _) (pow_le_pow_right₀ hR (Nat.sub_le _ _))
+    have hz2 : ‖z‖ ^ (k - j) ≤ R ^ k :=
+      le_trans (pow_le_pow_left₀ (norm_nonneg _) hz _) (pow_le_pow_right₀ hR (Nat.sub_le _ _))
     calc
       ‖term j‖ =
           (Nat.choose k j : ℝ) *
@@ -1153,15 +1152,11 @@ private lemma phiMajorant_multi_sq_summable
             Finset.sum (Finset.range (J q + 1))
               (fun n : Nat => phiMajorant (kappa q) n R ^ 2)) ≤
         Finset.prod Finset.univ
-          (fun q : Fin d => ∑' n : Nat, phiMajorant (kappa q) n R ^ 2) := by
-    exact Finset.prod_le_prod
-      (by
-        intro q hq
-        exact Finset.sum_nonneg fun n hn => sq_nonneg _)
-      (by
-        intro q hq
-        exact (summable_phiMajorant_sq (kappa q) hR).sum_le_tsum
-          (Finset.range (J q + 1)) (fun n hn => sq_nonneg _))
+          (fun q : Fin d => ∑' n : Nat, phiMajorant (kappa q) n R ^ 2) :=
+    Finset.prod_le_prod
+      (fun q _ => Finset.sum_nonneg fun n _ => sq_nonneg _)
+      (fun q _ => (summable_phiMajorant_sq (kappa q) hR).sum_le_tsum
+          (Finset.range (J q + 1)) (fun n _ => sq_nonneg _))
   exact le_trans hsum_E_le_B (by rw [hbox_eq]; exact hprod_le)
 
 private theorem uniformCauchySeqOn_of_summable_bound
@@ -1265,12 +1260,8 @@ private lemma partialSum_uniformCauchy_on_compact
     exact Finset.prod_le_prod
       (by intro q _; exact norm_nonneg _)
       (by intro q _; exact phi1D_norm_le_majorant hR (hcoord z hzK q))
-  calc
-    ‖coeffSkappa U alpha * Phi kappa alpha z‖ =
-        ‖coeffSkappa U alpha‖ * ‖Phi kappa alpha z‖ := by
-      rw [norm_mul]
-    _ ≤ ‖coeffSkappa U alpha‖ * Bprod alpha := by
-      exact mul_le_mul_of_nonneg_left hPhi (norm_nonneg _)
+  rw [norm_mul]
+  exact mul_le_mul_of_nonneg_left hPhi (norm_nonneg _)
 
 theorem l2_tsum_represents_toFun
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa) :
@@ -1393,8 +1384,8 @@ theorem toFun_as_L2_eq_boxLimit
 
 theorem toFun_represents_toL2
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa) :
-    IsTensorL2Rep (toL2 kappa U) (toFun kappa U) := by
-  exact toFun_as_L2_eq_boxLimit hd kappa U
+    IsTensorL2Rep (toL2 kappa U) (toFun kappa U) :=
+  toFun_as_L2_eq_boxLimit hd kappa U
 
 theorem coeff_recovery
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa)
@@ -1447,8 +1438,9 @@ theorem toL2_eq_of_toFun_eq
     (h : ∀ z, toFun kappa U z = toFun kappa V z) :
     toL2 kappa U = toL2 kappa V := by
   let _ := hd
+  have hfun : toFun kappa U = toFun kappa V := funext h
   unfold toL2
-  rw [funext h]
+  rw [hfun]
 
 theorem skappa_ext_of_coeff_eq
     {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
@@ -1458,13 +1450,13 @@ theorem skappa_ext_of_coeff_eq
   cases V
   simp only [coeffSkappa] at hcoeff
   congr
-  exact funext hcoeff
+  funext alpha
+  exact hcoeff alpha
 
 theorem continuous_toFun
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa) :
-    Continuous (toFun kappa U) := by
-  exact continuous_limit_of_locallyUniform_boxPartialSums hd kappa U
-    (toFun_eq_boxLimit hd kappa U)
+    Continuous (toFun kappa U) :=
+  continuous_limit_of_locallyUniform_boxPartialSums hd kappa U (toFun_eq_boxLimit hd kappa U)
 
 theorem toFun_smul_complex
     {d : Nat} (kappa : MultiIndex d) (w : ℂ) (U : Skappa d kappa) :
@@ -1472,12 +1464,8 @@ theorem toFun_smul_complex
   funext z
   calc
     (∑' alpha : Idx d, (w • U).coeff alpha * Phi kappa alpha z) =
-        ∑' alpha : Idx d, w * (U.coeff alpha * Phi kappa alpha z) := by
-          apply tsum_congr
-          intro alpha
-          change (w * U.coeff alpha) * Phi kappa alpha z =
-            w * (U.coeff alpha * Phi kappa alpha z)
-          rw [mul_assoc]
+        ∑' alpha : Idx d, w * (U.coeff alpha * Phi kappa alpha z) :=
+          tsum_congr fun alpha => mul_assoc w (U.coeff alpha) (Phi kappa alpha z)
     _ = w * ∑' alpha : Idx d, U.coeff alpha * Phi kappa alpha z := by rw [tsum_mul_left]
 
 theorem skappa_ext_of_toFun_eq
@@ -1487,8 +1475,7 @@ theorem skappa_ext_of_toFun_eq
   apply skappa_ext_of_coeff_eq
   intro beta
   calc
-    coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := by
-      exact coeff_recovery hd kappa U beta
+    coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := coeff_recovery hd kappa U beta
     _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa V) := by rw [toL2_eq_of_toFun_eq hd h]
     _ = coeffSkappa V beta := (coeff_recovery hd kappa V beta).symm
 

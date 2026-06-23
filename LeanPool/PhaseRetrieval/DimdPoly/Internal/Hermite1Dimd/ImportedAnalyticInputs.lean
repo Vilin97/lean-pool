@@ -109,23 +109,19 @@ private lemma rho_mul_right (a u : ℂ) :
 private lemma measurableSet_oneDimAnnulus
     (j : ℕ) :
     MeasurableSet (productAnnulus (d := 1) (fun _ => j)) := by
-  have hge :
-      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := by
-    exact measurableSet_le measurable_const
-      (measurable_norm.comp (continuous_apply 0).measurable)
-  have hlt :
-      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt
-      (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
+  have hge : MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} :=
+    measurableSet_le measurable_const (measurable_norm.comp (continuous_apply 0).measurable)
+  have hlt : MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} :=
+    measurableSet_lt (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
   simpa [productAnnulus, Set.setOf_forall, Set.setOf_and] using hge.inter hlt
 
 private lemma measurableSet_complex_annulus
     (j : ℕ) :
     MeasurableSet (HermiteLEAN.annulus j) := by
-  have hge : MeasurableSet {z : ℂ | (j : ℝ) ≤ ‖z‖} := by
-    exact measurableSet_le measurable_const measurable_norm
-  have hlt : MeasurableSet {z : ℂ | ‖z‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt measurable_norm measurable_const
+  have hge : MeasurableSet {z : ℂ | (j : ℝ) ≤ ‖z‖} :=
+    measurableSet_le measurable_const measurable_norm
+  have hlt : MeasurableSet {z : ℂ | ‖z‖ < (j : ℝ) + 1} :=
+    measurableSet_lt measurable_norm measurable_const
   simpa [HermiteLEAN.annulus, Set.setOf_and] using hge.inter hlt
 
 private lemma integrable_oneDimPhi_cross_gaussian
@@ -832,8 +828,8 @@ theorem scaledHighFrequencyBandEstimate
       circleL2NormSq_real_const_mul ‖a‖ (fun t => rho 1 (Q t))
     calc
       ‖a‖ ^ 2 * circleL2NormSq Q ≤
-          32 * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) := by
-            exact mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖) |>.trans_eq (by ring)
+          32 * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) :=
+            mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖) |>.trans_eq (by ring)
       _ = 32 * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by rw [hconstR]
       _ = 32 * circleL2NormSq (fun t => rho a (a * Q t)) := by rw [hmulR]
 

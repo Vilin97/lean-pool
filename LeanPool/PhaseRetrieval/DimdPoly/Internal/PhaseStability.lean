@@ -129,10 +129,9 @@ theorem evalPkappa_lpNorm_eq_norm
     lpNorm (evalPkappa kappa F) 2 (gammaD d) = ‖F‖ := by
   calc
     lpNorm (evalPkappa kappa F) 2 (gammaD d)
-        = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) := by
-          symm
-          exact gaussianL2Norm_eq_lpNorm (evalPkappa kappa F)
-            (memLp_two_evalPkappa hd kappa F).1
+        = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) :=
+          (gaussianL2Norm_eq_lpNorm (evalPkappa kappa F)
+            (memLp_two_evalPkappa hd kappa F).1).symm
     _ = ‖F‖ := by
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
@@ -193,8 +192,7 @@ private theorem defect_lpNorm_eq
   have hmeas :
       AEStronglyMeasurable
         (fun z : Cd d => ‖evalPkappa kappa (F + G) z‖ - ‖evalPkappa kappa F z‖)
-        (gammaD d) := by
-    exact
+        (gammaD d) :=
       (((continuous_evalPkappa kappa (F + G)).norm).sub
         ((continuous_evalPkappa kappa F).norm)).stronglyMeasurable.aestronglyMeasurable
   simpa [defect, Real.norm_eq_abs, sq_abs] using
@@ -241,8 +239,8 @@ private theorem phase_alignment
     dsimp [g, a]
     rw [inner_sub_right, inner_smul_right, hf0_inner]
     simp
-  have hg_right : inner ℂ g f0 = 0 := by
-    exact (inner_eq_zero_symm (𝕜 := ℂ) (x := g) (y := f0)).2 hg_left
+  have hg_right : inner ℂ g f0 = 0 :=
+    (inner_eq_zero_symm (𝕜 := ℂ) (x := g) (y := f0)).2 hg_left
   have hu_decomp : u = a • f0 + g := by
     dsimp [g]
     abel_nf

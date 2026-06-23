@@ -1068,21 +1068,11 @@ private lemma circleSeries_neg_fourierCoeff_eq_zero
           circleSeries_fourierCoeff_hermiteCoeff (k := k) (G := G) hG (r := r) hr n
   have hnat_eq :
       ∑' n : ℕ, s n = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
-    have hqabs : ∀ n : ℕ, |qkn k n r| ^ 2 = qkn k n r ^ 2 := by
-      intro n
-      simp
     calc
-      ∑' n : ℕ, s n = ∑' n : ℕ, ‖hermiteCoeff k G n * (qkn k n r : ℂ)‖ ^ 2 := by simp [s, hcoeff]
-      _ = ∑' n : ℕ, (|qkn k n r| * ‖hermiteCoeff k G n‖) ^ 2 := by
+      ∑' n : ℕ, s n = ∑' n : ℕ, ‖hermiteCoeff k G n‖ ^ 2 * qkn k n r ^ 2 := by
         congr with n
-        simp [mul_comm]
-      _ = ∑' n : ℕ, ‖hermiteCoeff k G n‖ ^ 2 * qkn k n r ^ 2 := by
-        congr with n
-        calc
-          (|qkn k n r| * ‖hermiteCoeff k G n‖) ^ 2 =
-              |qkn k n r| ^ 2 * ‖hermiteCoeff k G n‖ ^ 2 := by ring
-          _ = qkn k n r ^ 2 * ‖hermiteCoeff k G n‖ ^ 2 := by rw [hqabs]
-          _ = ‖hermiteCoeff k G n‖ ^ 2 * qkn k n r ^ 2 := by ring
+        simp only [s, hcoeff, norm_mul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs,
+          mul_comm]
       _ = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
         simpa [circleL2Sq] using
           (circleSeries_l2_identity_hermiteCoeff (k := k) (G := G) hG (r := r) hr).symm
@@ -1091,17 +1081,12 @@ private lemma circleSeries_neg_fourierCoeff_eq_zero
     simpa [add_comm, add_left_comm, add_assoc] using
       (tsum_of_nat_of_neg_add_one (f := s) hsummable_nat hsummable_neg)
   have hneg_sum_zero : ∑' n : ℕ, s (-(n + 1 : ℤ)) = 0 := by linarith [hparseval, hnat_eq, hsplit]
-  have htermle : s (-(m + 1 : ℤ)) ≤ ∑' n : ℕ, s (-(n + 1 : ℤ)) := by
-    exact hsummable_neg.le_tsum m (by
-      intro n hn
+  have htermle : s (-(m + 1 : ℤ)) ≤ ∑' n : ℕ, s (-(n + 1 : ℤ)) :=
+    hsummable_neg.le_tsum m fun n _ => by
       dsimp [s]
-      positivity)
-  have hsq : s (-(m + 1 : ℤ)) = 0 := by
-    have hle : s (-(m + 1 : ℤ)) ≤ 0 := by
-      calc
-        s (-(m + 1 : ℤ)) ≤ ∑' n : ℕ, s (-(n + 1 : ℤ)) := htermle
-        _ = 0 := hneg_sum_zero
-    exact le_antisymm hle (by positivity)
+      positivity
+  have hsq : s (-(m + 1 : ℤ)) = 0 :=
+    le_antisymm (hneg_sum_zero ▸ htermle) (by positivity)
   have hsqLp : fourierCoeff fLp (-(m + 1 : ℤ)) = 0 := by
     have hsq' : ‖fourierCoeff fLp (-(m + 1 : ℤ))‖ ^ 2 = 0 := by simpa [s] using hsq
     exact norm_eq_zero.mp (sq_eq_zero_iff.mp hsq')

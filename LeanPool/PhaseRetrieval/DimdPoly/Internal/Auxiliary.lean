@@ -545,9 +545,8 @@ private theorem explicitClosure_subset_explicitSequentialClosure
     simpa [hsqrt] using hdist
   have hsq :
       (fun n => explicitGaussianL2DistanceSq (Qn n) Q) =
-        fun n => (Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)) ^ 2 := by
-    funext n
-    rw [Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg (Qn n) Q)]
+        fun n => (Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)) ^ 2 :=
+    funext fun n => (Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg (Qn n) Q)).symm
   rw [hsq]
   simpa using hsqrt_tendsto.pow 2
 
@@ -735,11 +734,10 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
             ≤ Real.sqrt (explicitGaussianL2DistanceSq P (fun z => θ * Qn n z)) +
                 δ n :=
               hphase_tri
-        _ ≤ C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) + δ n := by
-              exact add_le_add hfinite_sqrt le_rfl
-        _ ≤ C_P * (Real.sqrt M + δ n) + δ n := by
-              exact add_le_add
-                (mul_le_mul_of_nonneg_left hmod_tri (le_of_lt hC_P_pos)) le_rfl
+        _ ≤ C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) + δ n :=
+              add_le_add hfinite_sqrt le_rfl
+        _ ≤ C_P * (Real.sqrt M + δ n) + δ n :=
+              add_le_add (mul_le_mul_of_nonneg_left hmod_tri (le_of_lt hC_P_pos)) le_rfl
     have hphase_inf :
         explicitPhaseOptimizedDistanceSq P Q ≤
           explicitGaussianL2DistanceSq P (fun z => θ * Q z) := by

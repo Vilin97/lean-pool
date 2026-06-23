@@ -210,20 +210,14 @@ private lemma remainderPart_annulus_blockwise_bound
         unfold annulusMass
         positivity
       have hzero :
-          annulusMass j (evalHermiteSum κ (blockPart ℓ (remainderPart j M G))) = 0 := by
-        exact le_antisymm hle0 hnonneg
+          annulusMass j (evalHermiteSum κ (blockPart ℓ (remainderPart j M G))) = 0 :=
+        le_antisymm hle0 hnonneg
       have hright_nonneg :
           0 ≤ C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
             hermiteNormSq κ (blockPart ℓ G) := by
-        have hexp_nonneg :
-            0 ≤ Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
-          positivity
         have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) :=
           hermiteNormSq_nonneg κ (blockPart ℓ G)
-        have hmul_nonneg :
-            0 ≤ C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
-          exact mul_nonneg hC hexp_nonneg
-        exact mul_nonneg hmul_nonneg hnorm_nonneg
+        positivity
       simp [hfar, hzero])
 
 /-- Explicit local and far support sets relative to an annulus and width. -/
@@ -469,14 +463,10 @@ private lemma block_decay_compare_coord
         ≤ |((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| + 1 := by
     rw [hdist_eq]
     linarith
-  have hmain :
-      ((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)
-        ≤ |((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| - ((κ q + 4 : ℕ) : ℝ) := by
-    have hk : (((κ q + 5 : ℕ) : ℝ)) = (((κ q + 4 : ℕ) : ℝ)) + 1 := by
-      push_cast
-      ring
-    linarith
-  exact max_le_max hmain le_rfl
+  have hk : (((κ q + 5 : ℕ) : ℝ)) = (((κ q + 4 : ℕ) : ℝ)) + 1 := by
+    push_cast
+    ring
+  exact max_le_max (by linarith) le_rfl
 
 private lemma sup_coord_exists
     {d : ℕ} (hd : d ≠ 0) (j ℓ : MultiIndex d) :
@@ -996,8 +986,8 @@ private lemma shellExp_global_majorant
   calc
     (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
       ≤ ((3 : ℝ) ^ d * (1 + (r : ℝ) ^ d)) *
-          (Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2)) := by
-            exact mul_le_mul hshell hexp (by positivity) (by positivity)
+          (Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2)) :=
+            mul_le_mul hshell hexp (by positivity) (by positivity)
     _ = ((3 : ℝ) ^ d * Real.exp (c * B ^ 2)) *
           (1 + (r : ℝ) ^ d) * Real.exp (-(c / 8) * (r : ℝ) ^ 2) := by ring
 
@@ -1050,8 +1040,7 @@ private lemma localizationLeakageCoefficient_tendsto_zero
         C * (if M + 1 ≤ r then
           (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
         else 0) := by
-    apply tsum_congr
-    intro r
+    refine tsum_congr fun r => ?_
     by_cases hr : M + 1 ≤ r <;> simp [hr]
   rw [hterm, tsum_mul_left]
 
@@ -1161,8 +1150,8 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
               if M < blockDistance j ℓ then
                 C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
                   hermiteNormSq κ (blockPart ℓ G)
-              else 0) := by
-                exact remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G
+              else 0) :=
+                remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G
       _ ≤ Finset.sum (G.support.image blockIndexMulti)
             (fun ℓ =>
               if M < blockDistance j ℓ then

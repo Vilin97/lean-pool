@@ -336,8 +336,10 @@ private theorem memLp_two_evalPkappa_wip
     (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     MeasureTheory.MemLp (evalPkappa kappa F) 2 (gammaD d) := by
   let _ := hd
-  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm
-    (continuous_evalPkappa_wip kappa F).stronglyMeasurable.aestronglyMeasurable).2 ?_
+  have hmeas :
+      AEStronglyMeasurable (evalPkappa kappa F) (gammaD d) :=
+    (continuous_evalPkappa_wip kappa F).stronglyMeasurable.aestronglyMeasurable
+  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2 ?_
   simpa [pow_two, norm_mul] using (integrable_evalPkappa_cross_wip kappa F F).norm
 
 private theorem evalPkappa_lpNorm_eq_norm_wip
@@ -345,10 +347,9 @@ private theorem evalPkappa_lpNorm_eq_norm_wip
     MeasureTheory.lpNorm (evalPkappa kappa F) 2 (gammaD d) = ‖F‖ := by
   calc
     MeasureTheory.lpNorm (evalPkappa kappa F) 2 (gammaD d)
-      = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) := by
-          symm
-          exact gaussianL2Norm_eq_lpNorm_wip (evalPkappa kappa F)
-            (memLp_two_evalPkappa_wip hd kappa F).1
+      = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) :=
+          (gaussianL2Norm_eq_lpNorm_wip (evalPkappa kappa F)
+            (memLp_two_evalPkappa_wip hd kappa F).1).symm
     _ = ‖F‖ := by
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
@@ -375,8 +376,10 @@ private theorem memLp_two_defectFunctionPkappa_wip
     (hd : 0 < d) (kappa : MultiIndex d) (F G : Pkappa d kappa) :
     MeasureTheory.MemLp (defectFunctionPkappa_wip kappa F G) 2 (gammaD d) := by
   let _ := hd
-  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm
-    (continuous_defectFunctionPkappa_wip kappa F G).stronglyMeasurable.aestronglyMeasurable).2 ?_
+  have hmeas :
+      AEStronglyMeasurable (defectFunctionPkappa_wip kappa F G) (gammaD d) :=
+    (continuous_defectFunctionPkappa_wip kappa F G).stronglyMeasurable.aestronglyMeasurable
+  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2 ?_
   have hplus_int :
       Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa (F + G) z‖ ^ 2) (gammaD d) := by
     simpa [pow_two, norm_mul] using
@@ -501,9 +504,8 @@ private theorem norm_le_defect_add_two_wip
       _ = 2 * ‖F‖ := by rw [evalPkappa_lpNorm_eq_norm_wip hd kappa F]
       _ = 2 := by simp [hF_norm]
   calc
-    ‖G‖ = MeasureTheory.lpNorm (evalPkappa kappa G) 2 (gammaD d) := by
-          symm
-          exact evalPkappa_lpNorm_eq_norm_wip hd kappa G
+    ‖G‖ = MeasureTheory.lpNorm (evalPkappa kappa G) 2 (gammaD d) :=
+          (evalPkappa_lpNorm_eq_norm_wip hd kappa G).symm
     _ ≤ MeasureTheory.lpNorm
           (defectFunctionPkappa_wip kappa F G + fun z : Cd d => 2 * ‖evalPkappa kappa F z‖)
           2 (gammaD d) := hmono
@@ -595,8 +597,8 @@ theorem orthogonal_coercivity
         calc
           ‖G‖ = t := rfl
           _ ≤ delta⁻¹ * defectPk kappa F G := ht_le_delta
-          _ ≤ C_F_perp * defectPk kappa F G := by
-            exact mul_le_mul_of_nonneg_right hdelta_inv_le (defect_nonneg_wip hd F G)
+          _ ≤ C_F_perp * defectPk kappa F G :=
+            mul_le_mul_of_nonneg_right hdelta_inv_le (defect_nonneg_wip hd F G)
     · have hge4 : 4 ≤ t := le_of_not_gt hlt4
       have htwo_defect : t ≤ 2 * defectPk kappa F G := by
         have hdefect_nonneg : 0 ≤ defectPk kappa F G := defect_nonneg_wip hd F G
@@ -607,8 +609,8 @@ theorem orthogonal_coercivity
       calc
         ‖G‖ = t := rfl
         _ ≤ 2 * defectPk kappa F G := htwo_defect
-        _ ≤ C_F_perp * defectPk kappa F G := by
-          exact mul_le_mul_of_nonneg_right htwo_le_C (defect_nonneg_wip hd F G)
+        _ ≤ C_F_perp * defectPk kappa F G :=
+          mul_le_mul_of_nonneg_right htwo_le_C (defect_nonneg_wip hd F G)
 
 end
 

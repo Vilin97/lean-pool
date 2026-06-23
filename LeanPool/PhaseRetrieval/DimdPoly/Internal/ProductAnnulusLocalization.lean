@@ -94,14 +94,10 @@ private lemma measurableSet_productAnnulus_wip
         (⋂ q : Fin d, {z : Cd d | (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1}) := by
     refine MeasurableSet.iInter (ι := Fin d) ?_
     intro q
-    have hge :
-        MeasurableSet {z : Cd d | (j q : ℝ) ≤ ‖z q‖} := by
-      exact measurableSet_le measurable_const
-        (measurable_norm.comp (continuous_apply q).measurable)
-    have hlt :
-        MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
-        (measurable_norm.comp (continuous_apply q).measurable) measurable_const
+    have hge : MeasurableSet {z : Cd d | (j q : ℝ) ≤ ‖z q‖} :=
+      measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
+    have hlt : MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} :=
+      measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
     simpa [Set.setOf_and] using hge.inter hlt
   simpa [productAnnulus, Set.setOf_forall] using h
 
@@ -112,15 +108,9 @@ private lemma productAnnulus_eq_of_mem_wip
   funext q
   rcases hj q with ⟨hj_lower, hj_upper⟩
   rcases hℓ q with ⟨hℓ_lower, hℓ_upper⟩
-  refine le_antisymm ?_ ?_
-  · by_contra hlt
-    have hlt' : ℓ q + 1 ≤ j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((ℓ q : Nat) : ℝ) + 1 ≤ j q := by exact_mod_cast hlt'
-    linarith
-  · by_contra hlt
-    have hlt' : j q + 1 ≤ ℓ q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : Nat) : ℝ) + 1 ≤ ℓ q := by exact_mod_cast hlt'
-    linarith
+  have h1 : j q < ℓ q + 1 := by exact_mod_cast lt_of_le_of_lt hj_lower hℓ_upper
+  have h2 : ℓ q < j q + 1 := by exact_mod_cast lt_of_le_of_lt hℓ_lower hj_upper
+  omega
 
 private lemma sum_indicator_productAnnulus_le_wip
     {d : Nat} (s : Finset (Idx d)) (z : Cd d) (a : ℝ)
@@ -131,12 +121,9 @@ private lemma sum_indicator_productAnnulus_le_wip
   · rcases hs with ⟨j0, hj0s, hj0z⟩
     have hsum :
         ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : Cd d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : Cd d => a) z := by
-      exact Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := by
-          intro hjz
-          have heq := productAnnulus_eq_of_mem_wip hjz hj0z
-          exact hjne heq
+          Set.indicator (productAnnulus j0) (fun _ : Cd d => a) z :=
+      Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
+        have hjz : z ∉ productAnnulus j := fun hjz => hjne (productAnnulus_eq_of_mem_wip hjz hj0z)
         simp [Set.indicator, hjz])
     rw [hsum]
     simp [Set.indicator, hj0z]
@@ -237,7 +224,10 @@ private theorem phi1D_eq_oneDimPhi_wip
 private theorem Phi_eq_PhiKappaAlpha_wip
     {d : Nat} (kappa alpha : MultiIndex d) (z : Cd d) :
     Phi kappa alpha z = Hermite1DimdLEAN.PhiKappaAlpha kappa alpha z := by
-  simp [Phi, Hermite1DimdLEAN.PhiKappaAlpha, phi1D_eq_oneDimPhi_wip]
+  unfold Phi Hermite1DimdLEAN.PhiKappaAlpha
+  refine Finset.prod_congr rfl ?_
+  intro q hq
+  exact phi1D_eq_oneDimPhi_wip (kappa q) (alpha q) (z q)
 
 private theorem evalPkappa_eq_evalHermiteSum_wip
     {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) :
@@ -598,8 +588,8 @@ theorem lowAnnulusProjection
     Hermite1DimdLEAN.finitePartialLeakage (κ := kappa)
   have hsmall_event :
       ∀ᶠ M : ℕ in Filter.atTop,
-        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M < 1 / 16 := by
-    exact htail.eventually (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1 / 16))
+        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M < 1 / 16 :=
+    htail.eventually (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1 / 16))
   rw [Filter.eventually_atTop] at hsmall_event
   obtain ⟨M, hM⟩ := hsmall_event
   let E : Finset (Idx d) := nearLowCoeffSet_wip (d := d) J M
@@ -658,8 +648,8 @@ theorem lowAnnulusProjection
     unfold Hermite1DimdLEAN.localizationLeakageCoefficient
     positivity
   have hloc_small :
-      Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M ≤ rho := by
-    exact le_of_lt (by simpa [rho] using hM M le_rfl)
+      Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M ≤ rho :=
+    le_of_lt (by simpa [rho] using hM M le_rfl)
   have hfar_low :
       lowAnnulusMass J (ofPkappa kappa Hfar) ≤ rho := by
     calc
@@ -674,8 +664,8 @@ theorem lowAnnulusProjection
               calc
                 annulusMass j (ofPkappa kappa Hfar)
                     = Hermite1DimdLEAN.annulusMass j
-                        (Hermite1DimdLEAN.evalHermiteSum kappa ⟨Hfar⟩) := by
-                            exact annulusMass_ofPkappa_eq_annulusMass_wip hd kappa j Hfar
+                        (Hermite1DimdLEAN.evalHermiteSum kappa ⟨Hfar⟩) :=
+                            annulusMass_ofPkappa_eq_annulusMass_wip hd kappa j Hfar
                 _ = Hermite1DimdLEAN.annulusMass j
                       (Hermite1DimdLEAN.evalHermiteSum kappa
                         (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by rw [hfar_self j hj]

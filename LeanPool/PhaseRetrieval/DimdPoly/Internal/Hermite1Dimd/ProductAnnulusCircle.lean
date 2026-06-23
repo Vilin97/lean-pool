@@ -202,8 +202,8 @@ private theorem localOrbit_hasPositiveFrequencySupport
         (fourier (totalDegree κ : ℤ) t : ℂ) *
           evalHermiteSum κ (localPart j M G)
             (fun q => (fourier (1 : ℤ) t : ℂ) * z q))
-      (localDegreeSet j M G) := by
-  exact ⟨orbitCoeff κ j M G z, localOrbit_eq_positiveFrequencyPolynomial (κ := κ)
+      (localDegreeSet j M G) :=
+  ⟨orbitCoeff κ j M G z, localOrbit_eq_positiveFrequencyPolynomial (κ := κ)
     (j := j) (M := M) (G := G) z⟩
 
 /-- Support packaging for the high-frequency band input after zero-padding. -/
@@ -239,14 +239,10 @@ private lemma measurableSet_productAnnulus
     refine MeasurableSet.iInter (f := fun q : Fin d =>
       {z : CSpace d | (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1}) ?_
     intro q
-    have hge :
-        MeasurableSet {z : CSpace d | (j q : ℝ) ≤ ‖z q‖} := by
-      exact measurableSet_le measurable_const
-        (measurable_norm.comp (continuous_apply q).measurable)
-    have hlt :
-        MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
-        (measurable_norm.comp (continuous_apply q).measurable) measurable_const
+    have hge : MeasurableSet {z : CSpace d | (j q : ℝ) ≤ ‖z q‖} :=
+      measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
+    have hlt : MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} :=
+      measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
     simpa [Set.setOf_and] using hge.inter hlt
   simpa [productAnnulus, Set.setOf_forall] using h
 
@@ -603,8 +599,8 @@ private lemma defectAnnulusMass_localOrbit_lintegral
       Integrable
         ((productAnnulus j).indicator
           (fun z : CSpace d => rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2))
-        (gaussianMeasure d) := by
-    exact hmass_int.mono hdef_meas hdef_le_mass
+        (gaussianMeasure d) :=
+    hmass_int.mono hdef_meas hdef_le_mass
   have hdef0 :
       ENNReal.ofReal (defectAnnulusMass κ j (evalHermiteSum κ (localPart j M G))) =
         ∫⁻ z : CSpace d,
@@ -700,8 +696,8 @@ private lemma highAnnulus_productAnnulusConstant_bound
     32 ≤ productAnnulusConstantSq d M := by
   have hd_pos : 0 < d := Nat.succ_le_iff.mp hd
   have hodd_pos : 0 < 2 * M + 1 := by omega
-  have hprod_pos : 0 < 120 * d * (2 * M + 1) := by
-    exact Nat.mul_pos (Nat.mul_pos (by decide) hd_pos) hodd_pos
+  have hprod_pos : 0 < 120 * d * (2 * M + 1) :=
+    Nat.mul_pos (Nat.mul_pos (by decide) hd_pos) hodd_pos
   have hprod_le : 1 ≤ 120 * d * (2 * M + 1) := Nat.succ_le_iff.mpr hprod_pos
   have hdeg_nat : 1 ≤ degreeThreshold d M + M := by
     unfold degreeThreshold
