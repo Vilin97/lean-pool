@@ -29,27 +29,21 @@ private theorem lowAnnulusMass_nonneg_wip
   refine Finset.sum_nonneg ?_
   intro j hj
   exact MeasureTheory.integral_nonneg fun z => by
-    by_cases hz : z ∈ productAnnulus j
-    · simp [Set.indicator, hz]
-    · simp [Set.indicator, hz]
+    by_cases hz : z ∈ productAnnulus j <;> simp [Set.indicator, hz]
 
 private theorem annulusMass_nonneg_annulus
     {d : Nat} {kappa : MultiIndex d} (j : Idx d) (F : Skappa d kappa) :
     0 <= annulusMass j F := by
   unfold annulusMass
   exact MeasureTheory.integral_nonneg fun z => by
-    by_cases hz : z ∈ productAnnulus j
-    · simp [Set.indicator, hz]
-    · simp [Set.indicator, hz]
+    by_cases hz : z ∈ productAnnulus j <;> simp [Set.indicator, hz]
 
 private theorem highAnnulusMass_le_norm_sq_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     (J : Nat) (H : Pkappa d kappa) :
     highAnnulusMass J (ofPkappa kappa H) <= ‖H‖ ^ 2 := by
-  have hpart := annulusMassPartition hd kappa J H
-  have hlow : 0 <= lowAnnulusMass J (ofPkappa kappa H) :=
-    lowAnnulusMass_nonneg_wip J (ofPkappa kappa H)
-  linarith
+  linarith [annulusMassPartition hd kappa J H,
+    lowAnnulusMass_nonneg_wip J (ofPkappa kappa H)]
 
 private theorem defect_nonneg_annulus
     {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) :
@@ -379,8 +373,7 @@ private theorem annulusBandStart_le_top
     {d : Nat} (j : Idx d) (q : Fin d) (M : Nat) :
     annulusBandStart j q M ≤ (j q + M + 1) ^ 2 := by
   unfold annulusBandStart
-  have hbase : max (j q) M - M ≤ j q + M + 1 := by omega
-  exact Nat.pow_le_pow_left hbase 2
+  exact Nat.pow_le_pow_left (by omega) 2
 
 private theorem annulusBandStart_add_length
     {d : Nat} (j : Idx d) (q : Fin d) (M : Nat) :
@@ -775,8 +768,7 @@ private theorem local_remainder_eval_sub
     (G : Pkappa d kappa) (z : Cd d) :
     evalPkappa kappa (localPartPkappa j M G) z - evalPkappa kappa G z =
       -evalPkappa kappa (remainderPartPkappa j M G) z := by
-  have h := localPart_add_remainderPart_evalPkappa (j := j) (M := M) (G := G) z
-  rw [← h]
+  rw [← localPart_add_remainderPart_evalPkappa (j := j) (M := M) (G := G) z]
   ring
 
 private theorem annulus_mass_split_pointwise
