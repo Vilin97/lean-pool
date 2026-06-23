@@ -85,10 +85,10 @@ private lemma doubleCoset_eq_of_mem' (g δ : GL (Fin 2) ℚ)
 /-- For p prime, T(p) = TAd(1,p). -/
 lemma T_sum_prime : TSum ⟨p, hp.pos⟩ = TAd 1 p := by
   change ∑ a ∈ p.divisors, TAd a (p / a) = _
-  rw [hp.sum_divisors, Nat.div_self hp.pos, Nat.div_one,
-    T_ad_eq_zero (by push Not; exact fun _ _ hdvd =>
-      hp.one_lt.not_ge (Nat.le_of_dvd Nat.one_pos hdvd)),
-    zero_add]
+  rw [hp.sum_divisors, Nat.div_self hp.pos, Nat.div_one]
+  have h1 : TAd p 1 = 0 := T_ad_eq_zero (by
+    push Not; exact fun _ _ hdvd => hp.one_lt.not_ge (Nat.le_of_dvd Nat.one_pos hdvd))
+  rw [h1, zero_add]
 
 private lemma diagMul_scalar_comm (b : Fin 2 → ℕ) (c : ℕ) :
     b * (fun _ => c) = (fun _ => c) * b :=
@@ -214,8 +214,8 @@ private lemma heckeMultiplicity_right_scalar_eq_one (b : Fin 2 → ℕ)
   subst hDb; subst hDc; subst hDbc
   have h_card :
       Fintype.card (decompQuot (GLPair 2) (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))) = 1 := by
-    have := HeckeCoset_deg_scalar 2 c hc; simp only [HeckeRing.HeckeCosetDeg] at this
-    exact_mod_cast this
+    have := HeckeCoset_deg_scalar 2 c hc
+    simp only [HeckeRing.HeckeCosetDeg] at this; exact_mod_cast this
   haveI : Subsingleton (decompQuot (GLPair 2) (HeckeCoset.rep (TDiag (fun _ : Fin 2 => c)))) :=
     Fintype.card_le_one_iff_subsingleton.mp (le_of_eq h_card)
   have h_le : HeckeRing.heckeMultiplicity (GLPair 2) (HeckeCoset.rep (TDiag b))
@@ -235,17 +235,22 @@ private lemma heckeMultiplicity_right_scalar_eq_one (b : Fin 2 → ℕ)
           ((GLPair 2).H : Set _) = ((GLPair 2).H : Set _) * {δ_c} := by
         rw [← Set.singleton_mul_singleton, mul_assoc, scalar_coset_rep_normalizes c hc,
           ← mul_assoc, Subgroup.singleton_mul_subgroup (SetLike.coe_mem j₁.out)]
-      have hstep : ∀ i : decompQuot (GLPair 2) (HeckeCoset.rep (TDiag b)),
-          ({(i.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
-          {(j₁.out : GL (Fin 2) ℚ) * δ_c} * ((GLPair 2).H : Set _) =
-          ({(i.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
-            (((GLPair 2).H : Set _) * {δ_c}) := fun i => by rw [mul_assoc, h_coset]
       have h12' :
           ({(i₁.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
             (((GLPair 2).H : Set _) * {δ_c}) =
           ({(i₂.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
             (((GLPair 2).H : Set _) * {δ_c}) := by
-        rw [← hstep i₁, ← hstep i₂]; exact h₁.trans h₂.symm
+        have lhs_eq :
+            ({(i₁.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
+            {(j₁.out : GL (Fin 2) ℚ) * δ_c} * ((GLPair 2).H : Set _) =
+            ({(i₁.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
+              (((GLPair 2).H : Set _) * {δ_c}) := by rw [mul_assoc, h_coset]
+        have rhs_eq :
+            ({(i₂.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
+            {(j₁.out : GL (Fin 2) ℚ) * δ_c} * ((GLPair 2).H : Set _) =
+            ({(i₂.out : GL (Fin 2) ℚ) * (HeckeCoset.rep (TDiag b) : GL (Fin 2) ℚ)} : Set _) *
+              (((GLPair 2).H : Set _) * {δ_c}) := by rw [mul_assoc, h_coset]
+        rw [← lhs_eq, ← rhs_eq]; exact h₁.trans h₂.symm
       rw [← mul_assoc, ← mul_assoc] at h12'
       exact HeckeRing.mul_singleton_right_cancel δ_c _ _ h12'
     subst hi; rfl
@@ -295,8 +300,9 @@ include hp in
 /-- `T(p,p)^i = TElem(p^i, p^i)`: the `i`-th power of the scalar double coset. -/
 lemma T_pp_pow (i : ℕ) : TPp p ^ i = TElem (fun _ : Fin 2 => p ^ i) := by
   induction i with
-  | zero => simp only [pow_zero]
-             exact ((T_elem_congr_diag 2 (funext fun _ => by simp)).trans T_elem_ones_eq).symm
+  | zero =>
+    simp only [pow_zero]; symm
+    exact (T_elem_congr_diag 2 (funext fun _ => by simp)).trans T_elem_ones_eq
   | succ i ih =>
     rw [pow_succ', ih, T_pp_of_pos p hp, T_diag_scalar_mul 2 p hp.pos (fun _ => p ^ i)
       (fun _ => pow_pos hp.pos i) (divChain_const 2 _)]
