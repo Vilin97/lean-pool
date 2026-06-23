@@ -77,7 +77,7 @@ section «lp_section_2»
 
 lemma div_exists_unique (a b : V) :
     ∃! u, (0 < b → b * u ≤ a ∧ a < b * (u + 1)) ∧ (b = 0 → u = 0) := by
-  have : 0 ≤ b := by exact zero_le b
+  have : 0 ≤ b := zero_le b
   rcases this with (rfl | pos) <;> simp [*]
   · simpa [pos_iff_ne_zero.mp pos] using div_exists_unique_pos a pos
 
@@ -158,7 +158,7 @@ lemma div_mul (a b c : V) : a / (b * c) = a / b / c := by
                 lt_mul_div_succ (a / b) hc))
 
 @[simp] lemma mul_div_le (a b : V) : b * (a / b) ≤ a := by
-  have : 0 ≤ b := by exact zero_le b
+  have : 0 ≤ b := zero_le b
   rcases this with (rfl | pos) <;> simp [*]
   rcases eq_mul_div_add_of_pos a pos with ⟨v, _, e⟩
   simpa [← e] using show b * (a / b) ≤ b * (a / b) + v from le_self_add
@@ -783,8 +783,6 @@ theorem fin4 {n} : (2 : Fin (n + 3)).succ = 3 := rfl
 @[simp] theorem _root_.LO.Arith.Fin.succ_zero_eq_one'' {n} : (0 : Fin (n + 1)).succ = 1 := rfl
 
 @[simp] theorem _root_.LO.Arith.Fin.succ_two_eq_three {n} : (2 : Fin (n + 3)).succ = 3 := fin4
-
-example (v : Fin 4 → ℕ) : v (2 : Fin 3).succ = v 3 := by { simp [] }
 
 theorem ss (v : Fin 4 → ℕ) : v (Fin.succ (0 :
     Fin (Nat.succ 1))).succ = v 2 := by
