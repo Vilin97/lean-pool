@@ -50,9 +50,7 @@ def PositiveTimeTestFunctions.submodule : Submodule ℝ TestFunction where
     suffices h : tsupport (0 : TestFunction) = ∅ by rw [h]; apply Set.empty_subset
     rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
-  smul_mem' := by
-    intro c f hf
-    refine (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
+  smul_mem' c f hf := (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
 
 /-- Type of real-valued test functions supported in the positive time region -/
 abbrev PositiveTimeTestFunction : Type := PositiveTimeTestFunctions.submodule
@@ -80,9 +78,7 @@ def PositiveTimeTestFunctionsℂ.submodule : Submodule ℂ TestFunctionℂ where
     suffices h : tsupport (0 : TestFunctionℂ) = ∅ by rw [h]; apply Set.empty_subset
     rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
-  smul_mem' := by
-    intro c f hf
-    refine (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
+  smul_mem' c f hf := (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
 
 /-- Type of complex-valued test functions supported in the positive time region -/
 abbrev PositiveTimeTestFunctionℂ : Type := PositiveTimeTestFunctionsℂ.submodule

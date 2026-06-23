@@ -208,7 +208,6 @@ This is the inverse law of a group action.-/
 /-! ### Lebesgue measure is invariant under every Euclidean motion --------- -/
 
 open MeasureTheory
-open MeasureTheory
 
 /-- For every rigid motion `g : E`, the push‑forward of Lebesgue measure `μ`
     by the map `x ↦ g • x` is again `μ`.  Equivalently, `act g` is

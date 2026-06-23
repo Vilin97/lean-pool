@@ -164,12 +164,9 @@ lemma contDiff_schwartz_parametric_integral
   have Φ_t_raw_integrable : ∀ (y : H), Integrable (fun t => Φ_t t y) volume := by
     intro y
     obtain ⟨C, hC_pos, hC⟩ := h_bound 0
-    have hC' : ∀ y t, ‖Φ_t t y‖ ≤ C * ‖g t‖ := by
-      intro y t
-      have h := hC y t
-      simp only [iteratedFDeriv_zero_eq_comp, Function.comp_def,
-        LinearIsometryEquiv.norm_map] at h
-      exact h
+    have hC' : ∀ y t, ‖Φ_t t y‖ ≤ C * ‖g t‖ := fun y t => by
+      simpa only [iteratedFDeriv_zero_eq_comp, Function.comp_def,
+        LinearIsometryEquiv.norm_map] using hC y t
     exact (g_integrable.norm.const_mul C).mono
       (by -- measurability of Φ_t · y
         have h := Φ_t_meas 0 y

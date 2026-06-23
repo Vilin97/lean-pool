@@ -69,8 +69,7 @@ def timeShift (s : ℝ) (u : SpaceTime) : SpaceTime :=
 @[simp]
 lemma timeShift_time (s : ℝ) (u : SpaceTime) :
     getTime (timeShift s u) = getTime u + s := by
-  simp only [getTime, timeIndex, timeShift]
-  rfl
+  simp [getTime, timeIndex, timeShift]
 
 @[simp]
 lemma timeShift_spatial (s : ℝ) (u : SpaceTime) (i : Fin STDimension) (hi : i.val ≠ 0) :

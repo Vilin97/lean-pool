@@ -100,24 +100,17 @@ def timeReflectionIsometry : Matrix.orthogonalGroup (Fin STDimension) ℝ :=
 /-- The `timeReflectionLinear` declaration. -/
 def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
 { toFun := timeReflection
-  map_add' := by
-    intro x y
-    apply PiLp.ext
-    intro i
+  map_add' x y := by
+    refine PiLp.ext fun i => ?_
     simp only [timeReflection, WithLp.equiv_symm_apply]
-    by_cases h : i = 0
-    · subst h
-      simp [Function.update_self]
-      ring
+    rcases eq_or_ne i 0 with h | h
+    · subst h; simp [Function.update_self]; ring
     · simp [Function.update_of_ne h]
-  map_smul' := by
-    intro c x
-    apply PiLp.ext
-    intro i
+  map_smul' c x := by
+    refine PiLp.ext fun i => ?_
     simp only [timeReflection, RingHom.id_apply, WithLp.equiv_symm_apply]
-    by_cases h : i = 0
-    · subst h
-      simp [Function.update_self]
+    rcases eq_or_ne i 0 with h | h
+    · subst h; simp [Function.update_self]
     · simp [Function.update_of_ne h] }
 
 /-- The `timeReflectionCLM` declaration. -/
@@ -134,19 +127,15 @@ lemma timeReflection_inner_map (x y : SpaceTime) :
   congr 1
   ext i
   simp only [timeReflection]
-  by_cases h : i = 0
-  · rw [h]; simp
-  · simp [h]
+  rcases eq_or_ne i 0 with h | h <;> simp [h]
 
 /-- Time reflection as a linear isometry equivalence -/
 @[simp] lemma timeReflection_involutive (x : SpaceTime) :
     timeReflection (timeReflection x) = x := by
-  apply PiLp.ext
-  intro i
+  refine PiLp.ext fun i => ?_
   simp only [timeReflection, WithLp.equiv_symm_apply]
-  by_cases h : i = 0
-  · subst h
-    simp [Function.update_self]
+  rcases eq_or_ne i 0 with h | h
+  · subst h; simp [Function.update_self]
   · simp [Function.update_of_ne h]
 
 /-- The `timeReflectionLE` declaration. -/
