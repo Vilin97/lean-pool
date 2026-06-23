@@ -34,8 +34,7 @@ private theorem hermiteSeries_single (k n : ℕ) :
     simp [hb]
 
 private theorem qkn_zero (k : ℕ) {r : ℝ} (hr : 0 < r) : qkn k 0 r = 1 := by
-  rw [qkn_explicit hr]
-  simp
+  simp [qkn_explicit hr]
 
 private theorem qkn_descFactorial_form
     (k n : ℕ) {r : ℝ}

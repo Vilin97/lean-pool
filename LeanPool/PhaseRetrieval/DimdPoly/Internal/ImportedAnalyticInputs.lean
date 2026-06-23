@@ -666,7 +666,6 @@ private theorem carrierArc_interval_rho_sq_lower
         (FockSPR.rho (circleChar N (QuotientAddGroup.mk t : Circle) * q)) ^ 2 := by
   have hN_pos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
   have hN_ne : (N : ℝ) ≠ 0 := ne_of_gt hN_pos
-  have hrot := rotational_averaging_bound_complex q
   rw [carrierArc_interval_rho_sq_eq_full_circle k q]
   calc
     arcLength (carrierArc N k) * ‖q‖ ^ 2 / 8
@@ -678,7 +677,7 @@ private theorem carrierArc_interval_rho_sq_lower
           ∫ y : Circle, (FockSPR.rho ((fourier (1 : ℤ) y : ℂ) * q)) ^ 2
             ∂AddCircle.haarAddCircle) := by
       refine mul_le_mul_of_nonneg_left ?_ (le_of_lt (inv_pos.mpr hN_pos))
-      exact mul_le_mul_of_nonneg_left hrot.le (by positivity)
+      exact mul_le_mul_of_nonneg_left (rotational_averaging_bound_complex q).le (by positivity)
 
 private lemma constant_center_defect_eq_norm_sq_rho
     {c u z : ℂ} (hc : c ≠ 0) :
@@ -696,13 +695,12 @@ private theorem carrierArc_setIntegral_constant_center_lower
       ∫ t in Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right),
         (‖c + circleChar N (QuotientAddGroup.mk t : Circle) * u‖ - ‖c‖) ^ 2 := by
   set q : ℂ := u / c
-  have h_interval := carrierArc_interval_rho_sq_lower k q
   have h_interval' :
       arcLength (carrierArc N k) * ‖q‖ ^ 2 / 8 <=
         ∫ t in Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right),
           (FockSPR.rho (circleChar N (QuotientAddGroup.mk t : Circle) * q)) ^ 2 := by
     rw [← intervalIntegral.integral_of_le (le_of_lt (carrierArc_left_lt_right k))]
-    exact h_interval
+    exact carrierArc_interval_rho_sq_lower k q
   have hconst :
       ∫ t in Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right),
           ‖c‖ ^ 2 *
@@ -1998,9 +1996,8 @@ private theorem tendsto_lintegral_filter_of_dominated_convergence_ae
     Tendsto (fun n => ∫⁻ a, F n a ∂μ) l (𝓝 <| ∫⁻ a, f a ∂μ) := by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
-  have hxl := tendsto_atTop'.mp xl
   have h := inter_mem hF_meas h_bound
-  replace h := hxl _ h
+  replace h := (tendsto_atTop'.mp xl) _ h
   rcases h with ⟨k, h⟩
   rw [← tendsto_add_atTop_iff_nat k]
   refine tendsto_lintegral_of_dominated_convergence' bound ?_ ?_ h_fin ?_
@@ -2479,8 +2476,7 @@ private theorem integral_stftRep_sq_schwartz_realVec {d : Nat}
   let fLp : L2Real d := f.toLp 2 μ
   let K : RealVec d → RealVec d → ℝ := fun x t => ‖f t‖ ^ 2 * ‖h (t - x)‖ ^ 2
   have hK : Integrable (Function.uncurry K) (μ.prod μ) := by
-    have hswap := (integrable_stft_kernel_schwartz_realVec h f).swap
-    refine hswap.congr ?_
+    refine ((integrable_stft_kernel_schwartz_realVec h f).swap).congr ?_
     filter_upwards with p
     simp [K, Function.uncurry, Function.comp_apply, Prod.fst_swap, Prod.snd_swap, mul_comm]
   calc
