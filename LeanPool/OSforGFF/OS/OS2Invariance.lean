@@ -56,8 +56,7 @@ lemma euclidean_pullback_act (g : E) (y : SpaceTime) :
 /-- The forward composition: act g (euclideanPullback g x) = x. -/
 lemma act_euclidean_pullback (g : E) (x : SpaceTime) :
     act g (euclideanPullback g x) = x := by
-  simp only [euclidean_pullback_eq_inv_act]
-  simpa using act_inv_general (g := g⁻¹) x
+  simpa [euclidean_pullback_eq_inv_act] using act_inv_general (g := g⁻¹) x
 
 /-! ## Change of variables for the bilinear form -/
 

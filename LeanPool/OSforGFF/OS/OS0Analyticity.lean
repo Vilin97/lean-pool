@@ -550,14 +550,12 @@ C_ℂ(∑ᵢ zᵢ Jᵢ, ∑ⱼ zⱼ Jⱼ) = ∑ᵢ ∑ⱼ zᵢ zⱼ C_ℂ(Jᵢ, 
 /-- C_ℂ(f, 0) = 0, derived from smul_right with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_right (f : TestFunctionℂ) :
     freeCovarianceℂBilinear m f 0 = 0 := by
-  simpa only [zero_smul, zero_mul] using
-    freeCovarianceℂ_bilinear_smul_right m (0 : ℂ) f (0 : TestFunctionℂ)
+  simpa using freeCovarianceℂ_bilinear_smul_right m (0 : ℂ) f (0 : TestFunctionℂ)
 
 /-- C_ℂ(0, g) = 0, derived from smul_left with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_left (g : TestFunctionℂ) :
     freeCovarianceℂBilinear m 0 g = 0 := by
-  simpa only [zero_smul, zero_mul] using
-    freeCovarianceℂ_bilinear_smul_left m (0 : ℂ) (0 : TestFunctionℂ) g
+  simpa using freeCovarianceℂ_bilinear_smul_left m (0 : ℂ) (0 : TestFunctionℂ) g
 
 /-- Right linearity over finite sums for the complexified covariance. -/
 private lemma freeCovarianceℂ_sum_right (f : TestFunctionℂ)
