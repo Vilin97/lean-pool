@@ -38,14 +38,12 @@ def sub (a b : V) : V := Classical.choose! (sub_existsUnique a b)
 
 instance instSubV : Sub V := ⟨sub⟩
 
-lemma sub_spec_of_ge (h : a ≥ b) :
-    a = b + (a - b) :=
+lemma sub_spec_of_ge (h : a ≥ b) : a = b + (a - b) :=
   (Classical.choose!_spec (sub_existsUnique a b)).1 h
 
 lemma sub_spec_of_lt (h : a < b) : a - b = 0 := (Classical.choose!_spec (sub_existsUnique a b)).2 h
 
-lemma sub_eq_iff :
-    c = a - b ↔ ((a ≥ b → a = b + c) ∧ (a < b → c = 0)) :=
+lemma sub_eq_iff : c = a - b ↔ ((a ≥ b → a = b + c) ∧ (a < b → c = 0)) :=
   Classical.choose!_eq_iff (sub_existsUnique a b)
 
 @[simp 1100] lemma sub_le_self (a b : V) : a - b ≤ a := by
@@ -141,8 +139,7 @@ lemma pred_lt_self_of_pos (h : 0 < a) : a - 1 < a := by
   · simp_all
   · simp
 
-lemma tsub_lt_iff_left (h : b ≤ a) :
-    a - b < c ↔ a < c + b :=
+lemma tsub_lt_iff_left (h : b ≤ a) : a - b < c ↔ a < c + b :=
   AddLECancellable.tsub_lt_iff_right (add_le_cancel b) h
 
 lemma sub_mul (h : b ≤ a) : (a - b) * c = a * c - b * c := by
@@ -229,8 +226,7 @@ lemma dvd_antisymm : a ∣ b → b ∣ a → a = b := by
     · simp [show a = 0 from by simpa using hy]
     · exact le_antisymm (le_of_dvd lty hx) (le_of_dvd ltx hy)
 
-lemma dvd_one_iff :
-    a ∣ 1 ↔ a = 1 :=
+lemma dvd_one_iff : a ∣ 1 ↔ a = 1 :=
   ⟨by { intro hx; exact dvd_antisymm hx (by simp) }, by rintro rfl; simp⟩
 
 theorem units_eq_one (u : Vˣ) : u = 1 := Units.ext <| dvd_one_iff.mp ⟨u.inv, u.val_inv.symm⟩

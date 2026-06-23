@@ -84,12 +84,10 @@ lemma div_exists_unique (a b : V) :
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped instance instDivV : Div V := ⟨fun a b ↦ Classical.choose! (div_exists_unique a b)⟩
 
-lemma mul_div_le_pos (a : V) (h : 0 < b) :
-    b * (a / b) ≤ a :=
+lemma mul_div_le_pos (a : V) (h : 0 < b) : b * (a / b) ≤ a :=
   ((Classical.choose!_spec (div_exists_unique a b)).1 h).1
 
-lemma lt_mul_div_succ (a : V) (h : 0 < b) :
-    a < b * (a / b + 1) :=
+lemma lt_mul_div_succ (a : V) (h : 0 < b) : a < b * (a / b + 1) :=
   ((Classical.choose!_spec (div_exists_unique a b)).1 h).2
 
 lemma eq_mul_div_add_of_pos (a : V) {b} (hb : 0 < b) : ∃ r < b, a = b * (a / b) + r := by
@@ -104,8 +102,7 @@ lemma eq_mul_div_add_of_pos (a : V) {b} (hb : 0 < b) : ∃ r < b, a = b * (a / b
           _ = a               := e.symm
     simp at this, e⟩
 
-@[simp] lemma div_spec_zero (a : V) :
-    a / 0 = 0 :=
+@[simp] lemma div_spec_zero (a : V) : a / 0 = 0 :=
   (Classical.choose!_spec (div_exists_unique a 0)).2 (by simp)
 
 lemma div_graph {a b c : V} :
@@ -114,8 +111,7 @@ lemma div_graph {a b c : V} :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.divDef : Sg0.Semisentence 3 :=
-  .mkSigma “c a b. (0 < b → b * c ≤ a ∧ a < b * (c + 1)) ∧ (b = 0 → c =
-    0)” (by simp[])
+  .mkSigma “c a b. (0 < b → b * c ≤ a ∧ a < b * (c + 1)) ∧ (b = 0 → c = 0)” (by simp[])
 
 lemma div_defined : Sg0-Function₂ ((· / ·) : V → V → V) via divDef := by
   intro v; simp[div_graph, divDef]
@@ -265,8 +261,7 @@ lemma div_cancel_left {c} (pos : 0 < c) (a b : V) :
 lemma div_cancel_right {c} (pos : 0 < c) (a b : V) :
     (a * c) / (b * c) = a / b := by simp [mul_comm _ c, div_cancel_left pos]
 
-@[simp] lemma two_mul_add_one_div_two (a : V) :
-    (2 * a + 1) / 2 = a := by simp [div_mul_add_self']
+@[simp] lemma two_mul_add_one_div_two (a : V) : (2 * a + 1) / 2 = a := by simp [div_mul_add_self']
 
 end «lp_section_2»
 
@@ -441,16 +436,13 @@ def sqrt (a : V) : V := Classical.choose! (sqrt_exists_unique a)
 /-- Imported declaration from the Incompleteness formalization. -/
 prefix:75 "√" => sqrt
 
-@[simp] lemma sqrt_spec_le (a : V) :
-    √a * √a ≤ a :=
+@[simp] lemma sqrt_spec_le (a : V) : √a * √a ≤ a :=
   (Classical.choose!_spec (sqrt_exists_unique a)).1
 
-@[simp] lemma sqrt_spec_lt (a : V) :
-    a < (√a + 1) * (√a + 1) :=
+@[simp] lemma sqrt_spec_lt (a : V) : a < (√a + 1) * (√a + 1) :=
   (Classical.choose!_spec (sqrt_exists_unique a)).2
 
-lemma sqrt_graph {a b : V} :
-    b = √a ↔ b * b ≤ a ∧ a < (b + 1) * (b + 1) :=
+lemma sqrt_graph {a b : V} : b = √a ↔ b * b ≤ a ∧ a < (b + 1) * (b + 1) :=
   Classical.choose!_eq_iff _
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -465,8 +457,7 @@ lemma sqrt_defined : Sg0-Function₁ (fun a : V ↦ √a) via sqrtDef := by
 
 instance sqrt_definable : Sg0-Function₁ ((√·) : V → V) := sqrt_defined.to_definable
 
-lemma eq_sqrt (x a : V) :
-    x * x ≤ a ∧ a < (x + 1) * (x + 1) → x = √a :=
+lemma eq_sqrt (x a : V) : x * x ≤ a ∧ a < (x + 1) * (x + 1) → x = √a :=
   Classical.choose_uniq (sqrt_exists_unique a)
 
 lemma sqrt_eq_of_le_of_lt {x a : V} (le : x * x ≤ a) (lt : a < (x + 1) * (x + 1)) : √a = x :=
@@ -608,8 +599,7 @@ prefix: 80 "π₂" => pi₂
     simp only [not_lt.mpr this, ↓reduceIte]
     have :√a ≤ a - √a * √a := by simpa using h
     calc
-      √a * √a + √a + (a - √a * √a - √a) =
-          √a * √a + (√a + (a - √a * √a - √a)) := by rw [add_assoc]
+      √a * √a + √a + (a - √a * √a - √a) = √a * √a + (√a + (a - √a * √a - √a)) := by rw [add_assoc]
       _ = √a * √a + (a - √a * √a) := by rw [add_tsub_cancel_of_le this]
       _                                 = a                       := add_tsub_self_of_le (by simp)
 
@@ -621,8 +611,7 @@ prefix: 80 "π₂" => pi₂
       exact le_trans (le_of_lt h) (by simp only [le_two_mul_left]))
     simp [unpair, this, show ¬b ≤ a from by simpa using h]
   · have : √(a * a + (a + b)) = a :=
-      sqrt_eq_of_le_of_le (by simp ) (by simp [two_mul,
-        show b ≤ a from by simpa using h])
+      sqrt_eq_of_le_of_le (by simp ) (by simp [two_mul, show b ≤ a from by simpa using h])
     simp [unpair, this, add_assoc]
 
 @[simp] lemma pi₁_pair (a b : V) : π₁ ⟪a, b⟫ = a := by simp [pi₁]
@@ -630,8 +619,7 @@ prefix: 80 "π₂" => pi₂
 @[simp] lemma pi₂_pair (a b : V) : π₂ ⟪a, b⟫ = b := by simp [pi₂]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pairEquiv :
-    V × V ≃ V :=
+def pairEquiv : V × V ≃ V :=
   ⟨Function.uncurry pair, unpair, fun ⟨a, b⟩ => unpair_pair a b, pair_unpair⟩
 
 @[simp] lemma pi₁_le_self (a : V) : π₁ a ≤ a := by simp [pi₁, unpair]; split_ifs <;> simp
@@ -773,8 +761,7 @@ def _root_.LO.FirstOrder.Arith.pair₅Def : Sg0.Semisentence 6 :=
 def _root_.LO.FirstOrder.Arith.pair₆Def : Sg0.Semisentence 7 :=
   .mkSigma “p a b c d e f. ∃ bcdef <⁺ p, !pair₅Def bcdef b c d e f ∧ !pairDef p a bcdef” (by simp)
 
-theorem fegergreg (v : Fin 4 → ℕ) : v (0 :
-    Fin (Nat.succ 1)).succ.succ = v 2 := by
+theorem fegergreg (v : Fin 4 → ℕ) : v (0 : Fin (Nat.succ 1)).succ.succ = v 2 := by
   { simp only [Nat.succ_eq_add_one,
   Nat.reduceAdd, Fin.isValue, Fin.succ_zero_eq_one, Fin.succ_one_eq_two] }
 
@@ -784,8 +771,7 @@ theorem fin4 {n} : (2 : Fin (n + 3)).succ = 3 := rfl
 
 @[simp] theorem _root_.LO.Arith.Fin.succ_two_eq_three {n} : (2 : Fin (n + 3)).succ = 3 := fin4
 
-theorem ss (v : Fin 4 → ℕ) : v (Fin.succ (0 :
-    Fin (Nat.succ 1))).succ = v 2 := by
+theorem ss (v : Fin 4 → ℕ) : v (Fin.succ (0 : Fin (Nat.succ 1))).succ = v 2 := by
   { simp [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, Fin.succ_zero_eq_one,
     Fin.succ_one_eq_two] }
 
@@ -956,8 +942,7 @@ lemma nat_cast_pair (n m : ℕ) : (⟪n, m⟫ : ℕ) = ⟪(↑n : V), (↑m : V)
 
 lemma nat_pair_eq (m n : ℕ) : ⟪n, m⟫ = Nat.pair n m := by simp [Arith.pair, Nat.pair]
 
-lemma pair_coe_eq_coe_pair (m n : ℕ) :  ⟪n, m⟫ = (Nat.pair n m :
-    V) := by simp [nat_pair_eq]
+lemma pair_coe_eq_coe_pair (m n : ℕ) :  ⟪n, m⟫ = (Nat.pair n m : V) := by simp [nat_pair_eq]
 
 end «lp_nc_section_1»
 

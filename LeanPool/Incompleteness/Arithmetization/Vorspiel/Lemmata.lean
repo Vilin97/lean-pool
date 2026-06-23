@@ -189,34 +189,28 @@ lemma two_pos : (0 : M) < 2 := by exact _root_.two_pos
   rw [sq, sq]
   exact (mul_self_lt_mul_self_iff (zero_le a) (zero_le b)).symm
 
-lemma le_mul_of_pos_right (h : 0 < b) :
-    a ≤ a * b :=
+lemma le_mul_of_pos_right (h : 0 < b) : a ≤ a * b :=
   le_mul_of_one_le_right (by simp) (pos_iff_one_le.mp h)
 
-lemma le_mul_of_pos_left (h : 0 < b) :
-    a ≤ b * a :=
+lemma le_mul_of_pos_left (h : 0 < b) : a ≤ b * a :=
   le_mul_of_one_le_left (by simp) (pos_iff_one_le.mp h)
 
 @[simp] lemma le_two_mul_left : a ≤ 2 * a := le_mul_of_pos_left (by simp)
 
-lemma lt_mul_of_pos_of_one_lt_right (pos : 0 < a) (h : 1 < b) :
-    a < a * b :=
+lemma lt_mul_of_pos_of_one_lt_right (pos : 0 < a) (h : 1 < b) : a < a * b :=
   _root_.lt_mul_of_one_lt_right pos h
 
-lemma lt_mul_of_pos_of_one_lt_left (pos : 0 < a) (h : 1 < b) :
-    a < b * a :=
+lemma lt_mul_of_pos_of_one_lt_left (pos : 0 < a) (h : 1 < b) : a < b * a :=
   _root_.lt_mul_of_one_lt_left pos h
 
 lemma mul_le_mul_left (h : b ≤ c) : a * b ≤ a * c := mul_le_mul_of_nonneg_left h (by simp)
 
 lemma mul_le_mul_right (h : b ≤ c) : b * a ≤ c * a := mul_le_mul_of_nonneg_right h (by simp)
 
-theorem lt_of_mul_lt_mul_left (h : a * b < a * c) :
-    b < c :=
+theorem lt_of_mul_lt_mul_left (h : a * b < a * c) : b < c :=
   lt_of_mul_lt_mul_of_nonneg_left h (by simp)
 
-theorem lt_of_mul_lt_mul_right (h : b * a < c * a) :
-    b < c :=
+theorem lt_of_mul_lt_mul_right (h : b * a < c * a) : b < c :=
   lt_of_mul_lt_mul_of_nonneg_right h (by simp)
 
 lemma pow_three (x : M) : x^3 = x * x * x := by rw [← two_add_one_eq_three, pow_add, sq]; simp

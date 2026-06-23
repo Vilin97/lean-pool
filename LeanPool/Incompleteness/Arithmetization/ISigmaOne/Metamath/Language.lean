@@ -53,12 +53,10 @@ lemma _root_.LO.Arith.Language.Defined.eval_func (v) :
 lemma _root_.LO.Arith.Language.Defined.eval_rel_iff (v) :
     Semiformula.Evalbm V v pL.rel.val ↔ L.Rel (v 0) (v 1) := Defined.rel.df.iff v
 
-instance _root_.LO.Arith.Language.Defined.func_definable :
-    Sg0-Relation L.Func :=
+instance _root_.LO.Arith.Language.Defined.func_definable : Sg0-Relation L.Func :=
   Defined.func.to_definable
 
-instance _root_.LO.Arith.Language.Defined.rel_definable :
-    Sg0-Relation L.Rel :=
+instance _root_.LO.Arith.Language.Defined.rel_definable : Sg0-Relation L.Rel :=
   Defined.rel.to_definable
 
 @[simp, definability] instance _root_.LO.Arith.Language.Defined.func_definable' (ℌ) :
@@ -79,12 +77,10 @@ variable {L₀ : Language} [L₀.ORing]
 
 variable {L : Language} [(k : ℕ) → Encodable (L.Func k)] [(k : ℕ) → Encodable (L.Rel k)]
 
-instance (k) :
-    Semiterm.Operator.GoedelNumber L₀ (L.Func k) :=
+instance (k) : Semiterm.Operator.GoedelNumber L₀ (L.Func k) :=
   ⟨fun f ↦ Semiterm.Operator.numeral L₀ (Encodable.encode f)⟩
 
-instance (k) :
-    Semiterm.Operator.GoedelNumber L₀ (L.Rel k) :=
+instance (k) : Semiterm.Operator.GoedelNumber L₀ (L.Rel k) :=
   ⟨fun r ↦ Semiterm.Operator.numeral L₀ (Encodable.encode r)⟩
 
 variable (L)

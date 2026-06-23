@@ -32,16 +32,13 @@ end Matrix
 
 namespace Set
 
-@[simp 1100] lemma subset_union_three₁ (s t u : Set α) :
-    s ⊆ s ∪ t ∪ u :=
+@[simp 1100] lemma subset_union_three₁ (s t u : Set α) : s ⊆ s ∪ t ∪ u :=
   Set.subset_union_of_subset_left (by simp) _
 
-@[simp] lemma subset_union_three₂ (s t u : Set α) :
-    t ⊆ s ∪ t ∪ u :=
+@[simp] lemma subset_union_three₂ (s t u : Set α) : t ⊆ s ∪ t ∪ u :=
   Set.subset_union_of_subset_left (by simp) _
 
-@[simp 1100] lemma subset_union_three₃ (s t u : Set α) :
-    u ⊆ s ∪ t ∪ u :=
+@[simp 1100] lemma subset_union_three₃ (s t u : Set α) : u ⊆ s ∪ t ∪ u :=
   Set.subset_union_of_subset_right (by rfl) _
 
 end Set

@@ -122,28 +122,23 @@ abbrev BoldfacePred (P : V → Prop) : Prop := ℌ.Boldface (k := 1) (fun v ↦ 
 abbrev BoldfaceRel (P : V → V → Prop) : Prop := ℌ.Boldface (k := 2) (fun v ↦ P (v 0) (v 1))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceRel₃ (P : V → V → V → Prop) :
-    Prop :=
+abbrev BoldfaceRel₃ (P : V → V → V → Prop) : Prop :=
   ℌ.Boldface (k := 3) (fun v ↦ P (v 0) (v 1) (v 2))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceRel₄ (P : V → V → V → V → Prop) :
-    Prop :=
+abbrev BoldfaceRel₄ (P : V → V → V → V → Prop) : Prop :=
   ℌ.Boldface (k := 4) (fun v ↦ P (v 0) (v 1) (v 2) (v 3))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceRel₅ (P : V → V → V → V → V → Prop) :
-    Prop :=
+abbrev BoldfaceRel₅ (P : V → V → V → V → V → Prop) : Prop :=
   ℌ.Boldface (k := 5) (fun v ↦ P (v 0) (v 1) (v 2) (v 3) (v 4))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceRel₆ (P : V → V → V → V → V → V → Prop) :
-    Prop :=
+abbrev BoldfaceRel₆ (P : V → V → V → V → V → V → Prop) : Prop :=
   ℌ.Boldface (k := 6) (fun v ↦ P (v 0) (v 1) (v 2) (v 3) (v 4) (v 5))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceFunction (f : (Fin k → V) → V) :
-    Prop :=
+abbrev BoldfaceFunction (f : (Fin k → V) → V) : Prop :=
   ℌ.Boldface (k := k + 1) (fun v ↦ v 0 = f (v ·.succ))
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -153,23 +148,19 @@ abbrev BoldfaceFunction₀ (c : V) : Prop := ℌ.BoldfaceFunction (k := 0) (fun 
 abbrev BoldfaceFunction₁ (f : V → V) : Prop := ℌ.BoldfaceFunction (k := 1) (fun v ↦ f (v 0))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceFunction₂ (f : V → V → V) :
-    Prop :=
+abbrev BoldfaceFunction₂ (f : V → V → V) : Prop :=
   ℌ.BoldfaceFunction (k := 2) (fun v ↦ f (v 0) (v 1))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceFunction₃ (f : V → V → V → V) :
-    Prop :=
+abbrev BoldfaceFunction₃ (f : V → V → V → V) : Prop :=
   ℌ.BoldfaceFunction (k := 3) (fun v ↦ f (v 0) (v 1) (v 2))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceFunction₄ (f : V → V → V → V → V) :
-    Prop :=
+abbrev BoldfaceFunction₄ (f : V → V → V → V → V) : Prop :=
   ℌ.BoldfaceFunction (k := 4) (fun v ↦ f (v 0) (v 1) (v 2) (v 3))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev BoldfaceFunction₅ (f : V → V → V → V → V → V) :
-    Prop :=
+abbrev BoldfaceFunction₅ (f : V → V → V → V → V → V) : Prop :=
   ℌ.BoldfaceFunction (k := 5) (fun v ↦ f (v 0) (v 1) (v 2) (v 3) (v 4))
 
 variable {ℌ}
@@ -510,8 +501,7 @@ lemma of_zero (h : Γ'-[0].Boldface P) : ℌ.Boldface P := by
 lemma of_deltaOne (h : Dlt1.Boldface P) {Γ m} : Γ-[m + 1].Boldface P := by
   rcases h with ⟨⟨φ, hp⟩⟩; exact hp.to_definable_deltaOne
 
-instance [Sg0.Boldface P] (ℌ : HierarchySymbol) :
-    ℌ.Boldface P :=
+instance [Sg0.Boldface P] (ℌ : HierarchySymbol) : ℌ.Boldface P :=
   Boldface.of_zero (Γ' := Sg) (ℌ := ℌ) inferInstance
 
 lemma retraction (h : ℌ.Boldface P) {n} (f : Fin k → Fin n) :
