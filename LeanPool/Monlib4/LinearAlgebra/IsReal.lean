@@ -29,9 +29,7 @@ def LinearMap.IsReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
 @[simp]
 theorem starHomClass.linearMap_isReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
     [Star M₁] [Star M₂] [StarHomClass F M₁ M₂] (φ : F) :
-    LinearMap.IsReal φ := by
-  intro
-  simp only [map_star]
+    LinearMap.IsReal φ := fun _ => map_star _ _
 
 section Sec
 

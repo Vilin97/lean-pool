@@ -550,22 +550,14 @@ by
         letI : NormedSpace ℂ (PiMat ℂ k s) :=
           InnerProductSpace.Core.toNormedSpace
         exact NormedSpace.norm_smul_le c x
-      norm_sq_eq_inner := by
-        intro x
-        exact norm_sq_eq_re_inner (𝕜 := ℂ) x
+      norm_sq_eq_inner := norm_sq_eq_re_inner (𝕜 := ℂ)
       dist_eq := by
         intro x y
         simpa [sub_eq_add_neg, add_comm] using
           (Module.Dual.PiNormedAddCommGroup (φ := ψ)).dist_eq x y
-      conj_symm := by
-        intro x y
-        exact inner_conj_symm x y
-      add_left := by
-        intro x y z
-        exact inner_add_left x y z
-      smul_left := by
-        intro x y r
-        exact inner_smul_left x y r }
+      conj_symm := inner_conj_symm
+      add_left := inner_add_left
+      smul_left := inner_smul_left }
 
 @[reducible, instance]
 noncomputable instance Module.Dual.pi.IsFaithfulPosMap.quantumSet
@@ -722,8 +714,7 @@ def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n �
   exact show QuantumSetDeltaForm (Matrix n n ℂ) from
     { delta := φ.matrix⁻¹.trace
       delta_pos := Qam.Nontracial.delta_pos
-      mul_comp_comul_eq := by
-        exact LinearMap.mul'_comp_mul'_adjoint_of_delta_form (φ := φ) }
+      mul_comp_comul_eq := LinearMap.mul'_comp_mul'_adjoint_of_delta_form (φ := φ) }
 
 /-- The delta-form quantum-set structure for a finite product of matrix algebras. -/
 @[reducible]
@@ -748,3 +739,4 @@ noncomputable def PiMat.quantumSetDeltaForm [Nonempty k] [∀ i, Nontrivial (s i
           LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s)) = d • 1
         exact (LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff
           (k := k) (s := s) (ψ := φ) d).mpr hφ₂.out }
+

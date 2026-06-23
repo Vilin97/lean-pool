@@ -206,8 +206,7 @@ theorem _root_.Matrix.PosDef.rpow_ne_zero [Nonempty n] {Q : Matrix n n ℂ}
 
 lemma _root_.Matrix.IsHermitian.rpow_cast {Q : Matrix n n 𝕜} (hQ : Q.IsHermitian) (r : ℝ)
     {S : Matrix n n 𝕜} (hQS : Q = S) :
-    hQ.rpow r = (by rw [← hQS]; exact hQ : IsHermitian S).rpow r := by
-  aesop
+    hQ.rpow r = (by rw [← hQS]; exact hQ : IsHermitian S).rpow r := by aesop
 
 lemma _root_.Matrix.PosDef.rpow_cast {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℝ)
     {S : Matrix n n 𝕜} (hQS : Q = S) :

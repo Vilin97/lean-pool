@@ -28,8 +28,8 @@ Hermitian-preservation lemmas.
 open scoped ComplexOrder
 
 lemma RCLike.neg_ofReal {𝕜 : Type*} [RCLike 𝕜] (a : ℝ) :
-    (a : 𝕜) < 0 ↔ a < 0 := by
-  exact RCLike.ofReal_lt_zero
+    (a : 𝕜) < 0 ↔ a < 0 :=
+  RCLike.ofReal_lt_zero
 
 instance Pi.coe {k : Type _} {s r : k → Type _} [∀ i, CoeTC (s i) (r i)] :
     CoeTC (Π i, s i) (Π i, r i) :=
@@ -67,7 +67,7 @@ theorem innerAutStarAlg_apply {K R : Type _} [Semiring R] [StarMul R]
 
 theorem innerAutStarAlg_apply' {K R : Type _} [Semiring R] [StarMul R]
     [SMul K R] [IsScalarTower K R R] [SMulCommClass K R R] (U : unitary R) (x : R) :
-    innerAutStarAlg K U x = U * x * (U⁻¹ : unitary R) := by
+    innerAutStarAlg K U x = U * x * (U⁻¹ : unitary R) :=
   rfl
 
 theorem innerAutStarAlg_apply'' {K R : Type _} [Semiring R] [StarMul R]
@@ -82,7 +82,7 @@ theorem innerAutStarAlg_symm_apply {K R : Type _} [Semiring R] [StarMul R]
 
 theorem innerAutStarAlg_symm_apply' {K R : Type _} [Semiring R] [StarMul R]
     [SMul K R] [IsScalarTower K R R] [SMulCommClass K R R] (U : unitary R) (x : R) :
-    (innerAutStarAlg K U).symm x = (U⁻¹ : unitary R) * x * U := by
+    (innerAutStarAlg K U).symm x = (U⁻¹ : unitary R) * x * U :=
   rfl
 
 theorem innerAutStarAlg_symm_apply'' {K R : Type _} [Semiring R] [StarMul R]

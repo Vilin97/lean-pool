@@ -352,11 +352,7 @@ instance instPartialOrderLinearMapIdLeanPool {𝕜 E : Type _} [RCLike 𝕜] [No
   lt_iff_le_not_ge := fun _ _ => Iff.rfl
   le_refl := fun a => by
     simp_rw [sub_self]
-    constructor
-    · intro u v
-      simp_rw [LinearMap.zero_apply, inner_zero_left, inner_zero_right]
-    · intro x
-      simp_rw [LinearMap.zero_apply, inner_zero_right, le_refl]
+    exact ⟨fun u v => by simp, fun x => by simp⟩
   le_trans := by
     intro a b c hab hbc
     rw [← add_zero (c : E →ₗ[𝕜] E), ← sub_self ↑b, ← add_sub_assoc, add_sub_right_comm,

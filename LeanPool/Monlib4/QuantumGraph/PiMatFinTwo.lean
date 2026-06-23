@@ -801,27 +801,7 @@ by
     rw [hadj]
     exact (nonUnitalAlgHom_comp_mul
       (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)).symm
-  calc
-    ((LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        TensorProduct.map
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)) ∘ₗ
-        Coalgebra.comul =
-      (LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        (TensorProduct.map
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i) ∘ₗ
-            Coalgebra.comul) := by
-        rw [LinearMap.comp_assoc]
-    _ =
-      (LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        (Coalgebra.comul ∘ₗ
-          LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i) := by
-        rw [hcomul]
-    _ =
-      ((LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ Coalgebra.comul) ∘ₗ
-        LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i := by
-        rw [← LinearMap.comp_assoc]
+  rw [LinearMap.comp_assoc, hcomul, ← LinearMap.comp_assoc]
 
 lemma schurMul_comp_proj_adjoint
   {B : Type*} [starAlgebra B] [QuantumSet B]
@@ -868,27 +848,7 @@ by
     simp only [hadjPi]
     rw [← AlgHom.proj_toLinearMap]
     exact TensorProduct.mapMul'_commute_iff.mpr fun x => congrFun rfl
-  calc
-    ((LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        TensorProduct.map
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))) ∘ₗ
-        Coalgebra.comul =
-      (LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        (TensorProduct.map
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i))
-          (LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)) ∘ₗ
-            Coalgebra.comul) := by
-        rw [LinearMap.comp_assoc]
-    _ =
-      (LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        (Coalgebra.comul ∘ₗ
-          LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)) := by
-        rw [hcomul]
-    _ =
-      ((LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ Coalgebra.comul) ∘ₗ
-        LinearMapClass.linearMap (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i) := by
-        rw [← LinearMap.comp_assoc]
+  rw [LinearMap.comp_assoc, hcomul, ← LinearMap.comp_assoc]
 
 theorem QuantumGraph.isReal_iff_conj_proj_adjoint_isReal
   : withPiBlockCoalgebraQuantum[φ]
@@ -1021,21 +981,8 @@ by
         NonUnitalAlgHom.single_apply, Pi.single_eq_of_ne hij]
     · simp [LinearMap.comp_apply, TensorProduct.map_tmul, LinearMap.mul'_apply,
         NonUnitalAlgHom.single_apply, Pi.single_eq_of_ne hki]
-  calc
-    ((LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        TensorProduct.map
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) j)) ∘ₗ
-        Coalgebra.comul =
-      (LinearMap.mul' ℂ B ∘ₗ TensorProduct.map f g) ∘ₗ
-        (TensorProduct.map
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)
-          (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) j) ∘ₗ
-            Coalgebra.comul) := by
-        rw [LinearMap.comp_assoc]
-    _ = 0 := by
-        rw [hcomul]
-        simp
+  rw [LinearMap.comp_assoc, hcomul]
+  simp
 
 theorem piMat_isRealQuantumGraph_iff_forall_conj_adjoint_proj_comp_proj
   : withPiBlockCoalgebraQuantum[φ]

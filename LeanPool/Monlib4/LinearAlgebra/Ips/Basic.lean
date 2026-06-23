@@ -142,8 +142,7 @@ theorem LinearMap.adjoint_one' {K E : Type _} [RCLike K] [NormedAddCommGroup E]
 variable {𝕜 : Type*} [RCLike 𝕜]
 open scoped ComplexOrder
 lemma inner_self_nonneg' {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {x : E} :
-    0 ≤ ⟪x, x⟫_𝕜 := by
-  simp_rw [@RCLike.nonneg_def 𝕜, inner_self_nonneg, true_and, inner_self_im]
+    0 ≤ ⟪x, x⟫_𝕜 := by simp_rw [@RCLike.nonneg_def 𝕜, inner_self_nonneg, true_and, inner_self_im]
 
 lemma inner_self_nonpos' {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {x : E} :
     ⟪x, x⟫_𝕜 ≤ 0 ↔ x = 0 := by

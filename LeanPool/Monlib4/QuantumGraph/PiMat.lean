@@ -88,8 +88,7 @@ noncomputable abbrev Matrix.toEuclideanStarAlgEquiv
     (Matrix n n ℂ) ≃⋆ₐ[ℂ] (EuclideanSpace ℂ n →ₗ[ℂ] EuclideanSpace ℂ n) :=
   StarAlgEquiv.ofAlgEquiv
     (AlgEquiv.ofLinearEquiv (Matrix.toEuclideanLin)
-      (by
-        exact Matrix.toLpLin_one (p := (2 : ENNReal)))
+      (Matrix.toLpLin_one (p := (2 : ENNReal)))
       (fun x y => by
         simp only [Matrix.toLpLin_eq_toLin,
           Matrix.toLin_mul (PiLp.basisFun 2 ℂ n) (PiLp.basisFun 2 ℂ n)]

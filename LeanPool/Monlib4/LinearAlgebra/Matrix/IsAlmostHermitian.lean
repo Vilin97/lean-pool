@@ -8,19 +8,6 @@ import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Hermitian
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.GCongr
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.SplitIfs
-import Mathlib.Tactic.Zify
-import Mathlib.Tactic.Lift
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Measurability
-import Mathlib.Tactic.Abel
 import LeanPool.Monlib4.LinearAlgebra.Matrix.Basic
 import LeanPool.Monlib4.LinearAlgebra.Matrix.Conj
 
@@ -71,8 +58,6 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
         exact h
       · rw [H, norm_zero, zero_pow (two_ne_zero), eq_comm, sq_eq_zero_iff, norm_eq_zero] at h
         exact h
-    -- have this1 : ∀ i j : n, x i j = 0 ↔ xᴴ i j = 0 := by
-    --   simp_rw [conjTranspose_apply, star_eq_zero, this, forall₂_true_iff]
     by_cases h' : x = 0
     · rw [h']
       use 0; use 0
