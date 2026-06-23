@@ -40,20 +40,13 @@ def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
     -- Continuity from the decay bound at k = 0:
     -- |cₙ(f)| ≤ C · sup-seminorm(f)
     obtain ⟨C, q, hC, hbound⟩ := hermiteCoeff1D_decay (0 : ℝ)
-    -- At k=0: |cₙ(f)| * 1 ≤ C * sup-seminorm(f)
-    have h0 : ∀ f, |hermiteCoeff1D n f| ≤
-        C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-      intro f
-      have := hbound f n
-      simp only [rpow_zero, mul_one] at this
-      exact this
-    -- Use norm from the decay bound
+    -- Use norm from the decay bound (at k=0: |cₙ(f)| * 1 ≤ C * sup-seminorm(f))
     have key : ∀ f, ‖hermiteCoeff1D n f‖ ≤
         C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
       intro f
-      calc ‖hermiteCoeff1D n f‖
-          = |hermiteCoeff1D n f| := Real.norm_eq_abs _
-        _ ≤ C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := h0 f
+      have h := hbound f n
+      simp only [rpow_zero, mul_one] at h
+      rwa [Real.norm_eq_abs]
     -- Apply continuous_of_isBounded
     -- The linear map is: {toFun := hermiteCoeff1D n, ...}
     -- and we show it's bounded by Schwartz seminorms

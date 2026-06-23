@@ -433,7 +433,7 @@ private lemma cauchy_schwarz_integral (f g : ℝ → ℝ) (hf : Integrable (fun 
     have hCsq : C ^ 2 ≤ A * B := by
       have h1 : C ^ 2 / B ≤ A := by linarith
       calc C ^ 2 = C ^ 2 / B * B := by field_simp
-        _ ≤ A * B := by exact mul_le_mul_of_nonneg_right h1 hB_pos.le
+        _ ≤ A * B := mul_le_mul_of_nonneg_right h1 hB_pos.le
     -- |C| = √(C²) ≤ √(AB) = √A · √B
     calc |C| = Real.sqrt (C ^ 2) := by rw [Real.sqrt_sq_eq_abs]
       _ ≤ Real.sqrt (A * B) := Real.sqrt_le_sqrt hCsq

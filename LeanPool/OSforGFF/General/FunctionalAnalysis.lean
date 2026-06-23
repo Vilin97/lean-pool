@@ -412,7 +412,7 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
       exact h_bound x hx
     have h_const : IntegrableOn (fun _ => M) (K \ Metric.ball 0 δ) volume :=
       MeasureTheory.integrableOn_const (μ := volume) (s := K \ Metric.ball 0 δ)
-        (by exact ne_top_of_lt h_finite)
+        (ne_top_of_lt h_finite)
     have h_ae : ∀ᵐ x ∂(volume.restrict (K \ Metric.ball 0 δ)), ‖f x‖ ≤ M := by
       rw [ae_restrict_iff' (hK.diff Metric.isOpen_ball).measurableSet]
       exact ae_of_all _ hM_bound

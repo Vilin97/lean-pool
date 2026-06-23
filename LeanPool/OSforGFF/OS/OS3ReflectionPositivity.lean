@@ -851,8 +851,7 @@ private lemma gff_complexZ_entry_factor (fi fj : TestFunctionℂ) :
     and `compTimeReflection` is a continuous linear map.
 -/
 private lemma star_apply (f : TestFunctionℂ) (x : SpaceTime) :
-    (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := by
-  rfl
+    (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := rfl
 
 private lemma star_sum_antilinear {n : ℕ} (v : Fin n → ℂ) (g : Fin n → TestFunctionℂ) :
     star (∑ j, starRingEnd ℂ (v j) • g j) = ∑ j, v j • star (g j) := by

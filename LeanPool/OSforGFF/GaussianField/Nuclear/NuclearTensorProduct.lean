@@ -210,11 +210,8 @@ private theorem cauchySeq_seminorm_bound
     apply Filter.mem_comap.mpr
     refine ⟨{x | rapidDecaySeminorm k x < ε}, ?_, ?_⟩
     · -- {x | seminorm k x < ε} ∈ nhds 0
-      have h0 : rapidDecaySeminorm k 0 = 0 := map_zero _
-      have : {x | rapidDecaySeminorm k x < ε} ∈ nhds (0 : RapidDecaySeq) :=
-        (rapidDecay_withSeminorms.continuous_seminorm k).continuousAt.preimage_mem_nhds
-          (by rw [h0]; exact Iio_mem_nhds hε)
-      exact this
+      exact (rapidDecay_withSeminorms.continuous_seminorm k).continuousAt.preimage_mem_nhds
+        (by rw [show rapidDecaySeminorm k 0 = 0 from map_zero _]; exact Iio_mem_nhds hε)
     · intro ⟨a, b⟩ (hx : rapidDecaySeminorm k (b - a) < ε)
       change rapidDecaySeminorm k (a - b) < ε
       rwa [show a - b = -(b - a) from (neg_sub b a).symm, map_neg_eq_map]

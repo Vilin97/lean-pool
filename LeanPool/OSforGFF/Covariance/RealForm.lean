@@ -421,8 +421,7 @@ lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
   classical
   set g := SchwartzMap.fourierTransformCLM ℂ (toComplex f) with hg
   set A := (SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)) g with hA
-  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := by
-    rfl
+  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := rfl
   have h_mul := momentumWeightSqrt_mathlib_mul_CLM_spec (m := m) A
   have h_mul' : embeddingMapCLM m f =ᵐ[volume]
       fun k => (momentumWeightSqrtMathlib m k : ℂ) * A k := by

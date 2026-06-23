@@ -370,8 +370,8 @@ lemma posDef_entrywiseExp_hadamardSeries_of_posDef
       have hquad : x ⬝ᵥ (hadamardOne (ι:=ι)).mulVec x = (∑ i, x i) * (∑ i, x i) := by
         simp [hmv, dotProduct, Finset.sum_mul]
       -- Reduce to a square ≥ 0
-      have : 0 ≤ (∑ i, x i) ^ 2 := by exact sq_nonneg _
-      simpa [f, hadamardPow, Nat.factorial_zero, one_div, hquad, pow_two, inv_one] using this
+      simpa [f, hadamardPow, Nat.factorial_zero, one_div, hquad, pow_two, inv_one] using
+        sq_nonneg (∑ i, x i)
     · -- n ≥ 1: use PosSemidef from PosDef
       have hn1 : 1 ≤ n := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hn)
       have hPD : (hadamardPow (ι:=ι) R n).PosDef :=

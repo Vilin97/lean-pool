@@ -118,11 +118,8 @@ lemma gff_generating_sum_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunct
 
 /-- The inverse of the identity linear isometry is itself. -/
 lemma LinearIsometry_inv_one : LinearIsometry.inv (1 : O4) = 1 := by
-  -- Use comp_inv: R.comp (inv R) = 1
-  -- For R = 1: 1.comp (inv 1) = 1, so inv 1 = 1 (since 1.comp x = x)
   have h := LinearIsometry.comp_inv (1 : O4)
-  simp only [LinearIsometry.one_comp] at h
-  exact h
+  simpa only [LinearIsometry.one_comp] using h
 
 /-! ## Translation Invariance from OS2 -/
 
@@ -281,11 +278,7 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
       = ‖Z fC * Z gC * (Complex.exp (-S₂ fC T_a_gC) - 1)‖ := by rw [h_diff]
     _ = ‖Z fC‖ * ‖Z gC‖ * ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by rw [norm_mul, norm_mul]
     _ ≤ 1 * 1 * ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by
-        apply mul_le_mul
-        · exact mul_le_mul h_Zf_le h_Zg_le (norm_nonneg _) (by linarith)
-        · exact le_refl _
-        · exact norm_nonneg _
-        · exact mul_self_nonneg 1
+        gcongr
     _ = ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by ring
     _ ≤ 2 * ‖-S₂ fC T_a_gC‖ := Complex.norm_exp_sub_one_le h_S2_small
     _ = 2 * |SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)| := by

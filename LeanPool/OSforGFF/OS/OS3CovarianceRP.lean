@@ -372,10 +372,7 @@ theorem freeCovariance_reflection_positive_direct (f : TestFunctionℂ)
   rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   apply mul_nonneg
   · -- (1/(2(2π)^{d-1})) ≥ 0
-    apply one_div_nonneg.mpr
-    apply mul_nonneg (by norm_num : (0 : ℝ) ≤ 2)
-    apply pow_nonneg
-    apply mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) Real.pi_pos.le
+    positivity
   · -- Re(∫ ↑(real_val)) = ∫ real_val ≥ 0
     have h_integral_real : (∫ k_sp : SpatialCoords,
         ((1 / Real.sqrt (‖k_sp‖ ^ 2 + m ^ 2) *

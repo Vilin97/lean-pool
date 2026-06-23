@@ -349,8 +349,8 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
           p.1 - p.2.1⟫_ℝ) :=
           Measurable.inner measurable_snd.snd (measurable_fst.sub measurable_snd.fst)
         have h_phase_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime =>
-            -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) := by
-          exact (measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas))
+            -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) :=
+          measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas)
         exact Complex.continuous_exp.aestronglyMeasurable.comp_measurable h_phase_meas
     · have hcont : Continuous (fun y => starRingEnd ℂ (f y)) := f.continuous.star
       exact hcont.aestronglyMeasurable.comp_measurable measurable_snd.fst

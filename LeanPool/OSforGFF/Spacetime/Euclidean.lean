@@ -147,23 +147,12 @@ instance : Group E where
   inv := Inv.inv
   -- associativity
   mul_assoc a b c := by
-    apply E.ext
-    · simp [mul_R, LinearIsometry.comp_assoc]
-    · simp [mul_t, add_comm, add_left_comm]
+    apply E.ext <;> simp [mul_R, mul_t, LinearIsometry.comp_assoc, add_comm, add_left_comm]
   -- left and right identity
-  one_mul a := by
-    apply E.ext
-    · simp [mul_R, LinearIsometry.one_comp]
-    · simp [mul_t, one_t]
-  mul_one a := by
-    apply E.ext
-    · simp [mul_R, LinearIsometry.comp_one]
-    · simp [mul_t, one_t]
+  one_mul a := by apply E.ext <;> simp [mul_R, mul_t, LinearIsometry.one_comp, one_t]
+  mul_one a := by apply E.ext <;> simp [mul_R, mul_t, LinearIsometry.comp_one, one_t]
   inv_mul_cancel a := by
-    -- prove  a⁻¹ * a = 1
-    apply E.ext
-    · simp [mul_R, inv_R, one_R, LinearIsometry.inv_comp]
-    · simp [mul_t, inv_t, one_t]
+    apply E.ext <;> simp [mul_R, mul_t, inv_R, inv_t, one_R, one_t, LinearIsometry.inv_comp]
 
 /-theorem ---------------------------------------------
 

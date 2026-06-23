@@ -218,14 +218,13 @@ private noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] Rapi
 /-- T2Space instance for Schwartz maps.
 Derived from T1Space via topological group structure.
 -/
-noncomputable instance schwartzMapT2Space : T2Space (SchwartzMap ℝ ℝ) := by
+noncomputable instance schwartzMapT2Space : T2Space (SchwartzMap ℝ ℝ) :=
+  -- If f ≠ 0, then seminorm(0,0) is nonzero since ‖f x‖ ≤ seminorm(0,0)(f)
   haveI : T1Space (SchwartzMap ℝ ℝ) :=
     WithSeminorms.T1_of_separating (schwartz_withSeminorms ℝ ℝ ℝ) fun f hf =>
-      by
-        -- If f ≠ 0, then seminorm(0,0) is nonzero since ‖f x‖ ≤ seminorm(0,0)(f)
-        exact ⟨⟨0, 0⟩, fun h => hf (SchwartzMap.ext fun x =>
-          norm_le_zero_iff.mp ((SchwartzMap.norm_le_seminorm ℝ f x).trans (le_of_eq h)))⟩
-  exact inferInstance
+      ⟨⟨0, 0⟩, fun h => hf (SchwartzMap.ext fun x =>
+        norm_le_zero_iff.mp ((SchwartzMap.norm_le_seminorm ℝ f x).trans (le_of_eq h)))⟩
+  inferInstance
 
 /-! ### Constructing the Schwartz limit of `∑ aₙ ψₙ`
 
