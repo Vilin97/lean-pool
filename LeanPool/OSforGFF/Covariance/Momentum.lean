@@ -126,8 +126,7 @@ def freePropagatorMomentum (m : ℝ) (k : SpaceTime) : ℝ :=
 /-- The free propagator is an even function: it depends only on ‖k‖. -/
 lemma freePropagator_even (m : ℝ) (k : SpaceTime) :
     freePropagatorMomentum m (-k) = freePropagatorMomentum m k := by
-  unfold freePropagatorMomentum
-  simp only [norm_neg]
+  simp [freePropagatorMomentum]
 
 /-- The propagator in "Mathlib momentum coordinates".
     When using Mathlib's Fourier transform convention, the propagator acquires (2π)² factors.
@@ -218,10 +217,8 @@ lemma integral_exp_neg_mul_Ioi_eq_inv (a : ℝ) (ha : 0 < a) :
 theorem schwinger_representation (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     ∫ t in Set.Ioi 0, schwingerIntegrand t m k = 1 / (‖k‖^2 + m^2) := by
   unfold schwingerIntegrand
-  have ha : 0 < ‖k‖^2 + m^2 := by positivity
-  have h : ∀ t : ℝ, -t * (‖k‖^2 + m^2) = -(‖k‖^2 + m^2) * t := fun t => by ring
-  simp_rw [h]
-  exact integral_exp_neg_mul_Ioi_eq_inv (‖k‖^2 + m^2) ha
+  simp_rw [show ∀ t : ℝ, -t * (‖k‖^2 + m^2) = -(‖k‖^2 + m^2) * t from fun t => by ring]
+  exact integral_exp_neg_mul_Ioi_eq_inv (‖k‖^2 + m^2) (by positivity)
 
 /-- The combined Gaussian factor for the Schwinger-regulated integral.
     This combines the propagator Schwinger factor with the UV regulator.

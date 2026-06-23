@@ -113,8 +113,8 @@ instance instMeasurableSpaceLpComplexTwoLeanPool (μ : Measure α) : MeasurableS
 instance instBorelSpaceLpComplexTwoLeanPool (μ : Measure α) : BorelSpace (Lp ℂ 2 μ) := ⟨rfl⟩
 
 -- Check if Complex.ofRealCLM is an isometry
-lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) := by
-  convert Complex.ofRealLI.isometry
+lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) :=
+  Complex.ofRealLI.isometry
 
 /-- The lift `φ ↦ ofRealCLM.compLp φ` to `Lp` is continuous. -/
 lemma Complex.ofRealCLM_continuous_compLp {α : Type*} [MeasurableSpace α] {μ : Measure α} :
@@ -817,8 +817,7 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     intro k hk
     -- Use the bound for each term
     -- We need to know ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖
-    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := by
-       rw [norm_iteratedFDeriv_zero]
+    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := norm_iteratedFDeriv_zero
     -- Rearrange to match hC
     have h_rearrange : ‖f x‖ * ((N.choose k : ℝ) * ‖x‖^k) = (N.choose k : ℝ) * (‖x‖^k *
       ‖iteratedFDeriv ℝ 0 f x‖) := by

@@ -1218,9 +1218,8 @@ private lemma kernel_concentration_bound
       let c_list : Fin n → ℕ →₀ ℚ := fun j => f (good.equivFin.symm j)
       have h_c_supp : ∀ j, (c_list j).support ⊆ Finset.range N := by
         intro j
-        have := (good.equivFin.symm j).2
-        simp only [good, Finset.mem_filter, Finset.mem_univ, true_and] at this
-        exact this
+        simpa only [good, Finset.mem_filter, Finset.mem_univ, true_and]
+          using (good.equivFin.symm j).2
       -- {∃ i ∈ good, ω(z(f i)) ≠ 0} = {∃ j : Fin n, ω(z(c_list j)) ≠ 0}
       have h_set_eq : {ω : E → ℝ | ∃ i ∈ good, ω (z (f i)) ≠ 0} =
           {ω | ∃ j : Fin n, ω (z (c_list j)) ≠ 0} := by
@@ -1718,9 +1717,7 @@ theorem nuclear_cylindrical_concentration
   set m := m₀ + 1
   -- Step 3: HS constant for embedding p m₀ → p m
   obtain ⟨h_le_m, C_HS, h_HS_bound⟩ := hp_hs m₀
-  have hC_HS : 0 ≤ C_HS := by
-    have := h_HS_bound 0 Fin.elim0 (fun i => Fin.elim0 i)
-    exact this
+  have hC_HS : 0 ≤ C_HS := h_HS_bound 0 Fin.elim0 (fun i => Fin.elim0 i)
   -- Step 4: Quadratic bound on kernel elements
   have h_kernel_quad : ∀ x : E, (p m) x = 0 → ∀ t : ℝ,
       1 - (Φ (t • x)).re ≤ ε / 8 := by

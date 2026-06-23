@@ -62,26 +62,10 @@ lemma freeCovarianceFormR_bilinear_expand (f g : TestFunction) (t s : ℝ) :
     freeCovarianceFormR m (t • f + s • g) (t • f + s • g) =
       t^2 * freeCovarianceFormR m f f + 2 * t * s * freeCovarianceFormR m f g +
       s^2 * freeCovarianceFormR m g g := by
-  -- Expand using add_left/right and smul_left/right
-  calc freeCovarianceFormR m (t • f + s • g) (t • f + s • g)
-    _ = freeCovarianceFormR m (t • f) (t • f + s • g) +
-        freeCovarianceFormR m (s • g) (t • f + s • g) := by
-          rw [freeCovarianceFormR_add_left]
-    _ = freeCovarianceFormR m (t • f) (t • f) + freeCovarianceFormR m (t • f) (s • g) +
-        (freeCovarianceFormR m (s • g) (t • f) + freeCovarianceFormR m (s • g) (s • g)) := by
-          rw [freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    _ = t * freeCovarianceFormR m f (t • f) + t * freeCovarianceFormR m f (s • g) +
-        (s * freeCovarianceFormR m g (t • f) + s * freeCovarianceFormR m g (s • g)) := by
-          simp only [freeCovarianceFormR_smul_left]
-    _ = t * (t * freeCovarianceFormR m f f) + t * (s * freeCovarianceFormR m f g) +
-        (s * (t * freeCovarianceFormR m g f) + s * (s * freeCovarianceFormR m g g)) := by
-          simp only [freeCovarianceFormR_smul_right]
-    _ = t^2 * freeCovarianceFormR m f f + 2 * t * s * freeCovarianceFormR m f g +
-        s^2 * freeCovarianceFormR m g g := by
-          -- Use symmetry: Q(g,f) = Q(f,g)
-          have hsym : freeCovarianceFormR m g f = freeCovarianceFormR m f g :=
-            freeCovarianceFormR_symm m g f
-          rw [hsym]; ring
+  simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+    freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
+    freeCovarianceFormR_symm m g f]
+  ring
 
 /-- The Gaussian CF formula for two test functions. -/
 lemma gff_cf_two_testfunctions (f g : TestFunction) (t s : ℝ) :
@@ -390,18 +374,16 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   -- Expand Q(f+g, f+g)
   have h_expand_plus : freeCovarianceFormR m (f + g) (f + g) =
       freeCovarianceFormR m f f + 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
-    rw [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    rw [freeCovarianceFormR_symm m g f]
+    simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+      freeCovarianceFormR_symm m g f]
     ring
   -- Expand Q(f-g, f-g)
   have h_expand_minus : freeCovarianceFormR m (f - g) (f - g) =
       freeCovarianceFormR m f f - 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
     rw [h_sub]
-    rw [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    rw [freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
-      freeCovarianceFormR_smul_left,
-        freeCovarianceFormR_smul_right]
-    rw [freeCovarianceFormR_symm m g f]
+    simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+      freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
+      freeCovarianceFormR_symm m g f]
     ring
   rw [h_expand_plus, h_expand_minus]
   ring

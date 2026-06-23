@@ -51,8 +51,9 @@ private lemma distributionPairingCLM_measurable (φ : TestFunction) :
 
 private lemma freeCovarianceFormR_neg_neg (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     freeCovarianceFormR m (-f) (-f) = freeCovarianceFormR m f f := by
-  have h1 : -f = (-1 : ℝ) • f := (neg_one_smul ℝ f).symm
-  rw [h1, freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right]; ring
+  rw [show -f = (-1 : ℝ) • f from (neg_one_smul ℝ f).symm,
+    freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right]
+  ring
 
 /-! ## Gaussian Measures on Field Configurations
 -/
@@ -386,14 +387,10 @@ theorem gaussianFreeField_free_centered (m : ℝ) [Fact (0 < m)] :
   have h_complex_zero : ∫ ω, (ω φ : ℂ) ∂(gaussianFreeFieldFree m).toMeasure = 0 :=
     MinlosAnalytic.moment_zero_from_realCF
       (freeCovarianceForm m) (gaussianFreeFieldFree m) h_realCF φ hInt
-  -- Step 4: Convert from complex to real integral
-  -- The integral ∫ (ω φ : ℂ) = ofReal(∫ ω φ) by integral_ofReal
-  -- So if ∫ (ω φ : ℂ) = 0, then ∫ ω φ = 0
-  have h_ofReal :
-      ∫ ω, (ω φ : ℂ) ∂(gaussianFreeFieldFree m).toMeasure =
-        Complex.ofReal (∫ ω, ω φ ∂(gaussianFreeFieldFree m).toMeasure) := by
-    exact integral_ofReal
-  rw [h_ofReal] at h_complex_zero
+  -- Step 4: Convert from complex to real integral via integral_ofReal
+  rw [show (∫ ω, (ω φ : ℂ) ∂(gaussianFreeFieldFree m).toMeasure) =
+      Complex.ofReal (∫ ω, ω φ ∂(gaussianFreeFieldFree m).toMeasure) from integral_ofReal]
+    at h_complex_zero
   exact Complex.ofReal_eq_zero.mp h_complex_zero
 
 /-- **Fernique's Theorem for GFF (exponential form)**: For every real test function `φ`,

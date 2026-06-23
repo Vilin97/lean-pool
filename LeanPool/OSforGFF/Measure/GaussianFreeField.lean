@@ -89,10 +89,6 @@ def gjCovBilin (dμ_config : ProbabilityMeasure FieldConfiguration)
         exact (h_bilinear a x 0 y).1)
     (by intro x y y'  -- additivity in the 2nd arg
         have h := (h_bilinear 1 x y y').2.2.2
-        -- h: SchwingerFunctionℂ₂ dμ_config x (y' + y) = SchwingerFunctionℂ₂ dμ_config x y' +
-        -- SchwingerFunctionℂ₂ dμ_config x y
-        -- We need: SchwingerFunctionℂ₂ dμ_config x (y + y') = SchwingerFunctionℂ₂ dμ_config x y +
-        -- SchwingerFunctionℂ₂ dμ_config x y'
         simp only [add_comm y' y, add_comm (SchwingerFunctionℂ₂ dμ_config x y') _] at h
         exact h)
     (by intro a x y   -- homogeneity in the 2nd arg
