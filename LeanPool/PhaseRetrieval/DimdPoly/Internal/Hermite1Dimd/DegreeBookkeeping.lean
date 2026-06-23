@@ -139,11 +139,8 @@ theorem degreeIntervalOrder
     degreeIntervalLower j M ≤ degreeIntervalUpper j M := by
   dsimp [degreeIntervalLower, degreeIntervalUpper]
   refine Finset.sum_le_sum fun q _ => ?_
-  have hmax : max (j q) M - M ≤ j q := by
-    by_cases hjM : j q ≤ M
-    · simp [max_eq_right hjM]
-    · simp [max_eq_left (le_of_lt (lt_of_not_ge hjM))]
-  have hsquare : (max (j q) M - M) ^ 2 ≤ (j q) ^ 2 := Nat.pow_le_pow_left hmax 2
+  have hsquare : (max (j q) M - M) ^ 2 ≤ (j q) ^ 2 :=
+    Nat.pow_le_pow_left (by omega) 2
   have hmono : (j q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
   have hstep : (j q) ^ 2 + 1 ≤ (j q + 1) ^ 2 := by ring_nf; omega
   omega
@@ -437,9 +434,7 @@ theorem zeroFrequencyAbsent
       dsimp [totalDegree]
       exact Finset.single_le_sum (fun _ _ => Nat.zero_le _) (by simp)
     omega
-  have hαzero : α = 0 := by
-    funext q
-    exact hcoord0 q
+  have hαzero : α = 0 := funext hcoord0
   have hαsupp : α ∈ G.support := (Finset.mem_filter.mp hαloc).1
   exact hzero_support (hαzero ▸ hαsupp)
 
