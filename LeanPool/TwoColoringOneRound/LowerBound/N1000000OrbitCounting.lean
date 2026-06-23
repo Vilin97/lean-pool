@@ -45,14 +45,11 @@ noncomputable instance : Fintype AvailFrom3 := by infer_instance
 private lemma card_outside : Fintype.card AvailFrom3 = n - 3 := by
   simpa using (card_availFrom (s := 3))
 
-private lemma base_i0 : (baseVertex.1 ⟨0, by decide⟩ : SymN) = ⟨0, by decide⟩ := by
-  rfl
+private lemma base_i0 : (baseVertex.1 ⟨0, by decide⟩ : SymN) = ⟨0, by decide⟩ := by rfl
 
-private lemma base_i1 : (baseVertex.1 ⟨1, by decide⟩ : SymN) = ⟨1, by decide⟩ := by
-  rfl
+private lemma base_i1 : (baseVertex.1 ⟨1, by decide⟩ : SymN) = ⟨1, by decide⟩ := by rfl
 
-private lemma base_i2 : (baseVertex.1 ⟨2, by decide⟩ : SymN) = ⟨2, by decide⟩ := by
-  rfl
+private lemma base_i2 : (baseVertex.1 ⟨2, by decide⟩ : SymN) = ⟨2, by decide⟩ := by rfl
 
 private lemma ge_three_of_ne_base (x : SymN)
     (h0 : x ≠ (baseVertex.1 ⟨0, by decide⟩))
@@ -143,8 +140,7 @@ theorem baseOrbit_freeCoord_outside {k : DirIdx} (u : BaseOrbit k) (j : FreeCol 
         (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1.1) =
           decide (baseVertex.1 i = u.1.1 j.1) := by
       exact dirMask_testBit (u := baseVertex) (v := u.1) (i := i) (j := j.1)
-    have hDecFalse : decide (baseVertex.1 i = u.1.1 j.1) = false := by
-      simpa [hb] using hdFalse
+    have hDecFalse : decide (baseVertex.1 i = u.1.1 j.1) = false := by simpa [hb] using hdFalse
     have : ¬ baseVertex.1 i = u.1.1 j.1 := of_decide_eq_false hDecFalse
     simpa [eq_comm] using this
   exact
@@ -159,8 +155,7 @@ private def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ Avail
       exact congrArg Subtype.val hEq
     exact Subtype.ext (u.1.2 this)⟩
 
-private theorem base_val_lt_three (i : Fin 3) : (baseVertex.1 i).1 < 3 := by
-  fin_cases i <;> decide
+private theorem base_val_lt_three (i : Fin 3) : (baseVertex.1 i).1 < 3 := by fin_cases i <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def decodeTuple (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : Tuple 3 n :=
@@ -192,8 +187,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
       decodeTuple_of_colMatch_none (k := k) (g := g) (j := j₁) h₁
     have hDec₂ : decodeTuple (k := k) g j₂ = (g ⟨j₂, h₂⟩).1 :=
       decodeTuple_of_colMatch_none (k := k) (g := g) (j := j₂) h₂
-    have : (g ⟨j₁, h₁⟩).1 = (g ⟨j₂, h₂⟩).1 := by
-      simpa [hDec₁, hDec₂] using hEq
+    have : (g ⟨j₁, h₁⟩).1 = (g ⟨j₂, h₂⟩).1 := by simpa [hDec₁, hDec₂] using hEq
     have hg : (g ⟨j₁, h₁⟩) = (g ⟨j₂, h₂⟩) := by
       apply Subtype.ext
       exact this
@@ -205,8 +199,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
       decodeTuple_of_colMatch_none (k := k) (g := g) (j := j₁) h₁
     have hDec₂ : decodeTuple (k := k) g j₂ = baseVertex.1 i₂ :=
       decodeTuple_of_colMatch_some (k := k) (g := g) (j := j₂) (i := i₂) hi₂
-    have hval : (g ⟨j₁, h₁⟩).1 = baseVertex.1 i₂ := by
-      simpa [hDec₁, hDec₂] using hEq
+    have hval : (g ⟨j₁, h₁⟩).1 = baseVertex.1 i₂ := by simpa [hDec₁, hDec₂] using hEq
     have hge : 3 ≤ (g ⟨j₁, h₁⟩).1.1 := (g ⟨j₁, h₁⟩).2
     have hlt : (baseVertex.1 i₂).1 < 3 := base_val_lt_three (i := i₂)
     exact (Nat.not_lt_of_ge hge (by simpa [hval] using hlt)).elim
@@ -216,8 +209,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
       decodeTuple_of_colMatch_some (k := k) (g := g) (j := j₁) (i := i₁) hi₁
     have hDec₂ : decodeTuple (k := k) g j₂ = (g ⟨j₂, h₂⟩).1 :=
       decodeTuple_of_colMatch_none (k := k) (g := g) (j := j₂) h₂
-    have hval : baseVertex.1 i₁ = (g ⟨j₂, h₂⟩).1 := by
-      simpa [hDec₁, hDec₂] using hEq
+    have hval : baseVertex.1 i₁ = (g ⟨j₂, h₂⟩).1 := by simpa [hDec₁, hDec₂] using hEq
     have hge : 3 ≤ (g ⟨j₂, h₂⟩).1.1 := (g ⟨j₂, h₂⟩).2
     have hlt : (baseVertex.1 i₁).1 < 3 := base_val_lt_three (i := i₁)
     exact (Nat.not_lt_of_ge hge (by simpa [hval] using hlt)).elim
@@ -228,8 +220,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
       decodeTuple_of_colMatch_some (k := k) (g := g) (j := j₁) (i := i₁) hi₁
     have hDec₂ : decodeTuple (k := k) g j₂ = baseVertex.1 i₂ :=
       decodeTuple_of_colMatch_some (k := k) (g := g) (j := j₂) (i := i₂) hi₂
-    have : baseVertex.1 i₁ = baseVertex.1 i₂ := by
-      simpa [hDec₁, hDec₂] using hEq
+    have : baseVertex.1 i₁ = baseVertex.1 i₂ := by simpa [hDec₁, hDec₂] using hEq
     have : i₁ = i₂ := baseVertex.2 this
     have : j₁ = j₂ :=
       colMatch_unique (k := k) (j₁ := j₁) (j₂ := j₂) (i := i₁) hi₁ (by simpa [this] using hi₂)
@@ -252,8 +243,7 @@ private lemma decide_base_eq_decodeVertex_eq_decide_colMatch (k : DirIdx)
         have h1 : decodeTuple (k := k) g j = (g ⟨j, hc⟩).1 :=
           decodeTuple_of_colMatch_none (k := k) (g := g) (j := j) hc
         simpa [h0] using h1
-      have hge : 3 ≤ ((decodeVertex (k := k) g).1 j).1 := by
-        simpa [hv] using (g ⟨j, hc⟩).2
+      have hge : 3 ≤ ((decodeVertex (k := k) g).1 j).1 := by simpa [hv] using (g ⟨j, hc⟩).2
       have hlt : (baseVertex.1 i).1 < 3 := base_val_lt_three (i := i)
       have hne : baseVertex.1 i ≠ (decodeVertex (k := k) g).1 j := by
         intro hEqSym
@@ -327,10 +317,8 @@ theorem base_eq_of_colMatch {k : DirIdx} (u : BaseOrbit k) {j i : Fin 3}
   have hm :
       (maskAt k).testBit (i.1 * 3 + j.1) = decide (colMatch (maskAt k) j = some i) := by
     exact maskAt_testBit_eq_decide_colMatch (d := k) (i := i) (j := j)
-  have hm' : (maskAt k).testBit (i.1 * 3 + j.1) = true := by
-    simp [hm, h]
-  have hd' : (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1) = true := by
-    simpa [u.2] using hm'
+  have hm' : (maskAt k).testBit (i.1 * 3 + j.1) = true := by simp [hm, h]
+  have hd' : (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1) = true := by simpa [u.2] using hm'
   have hb :
       (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1) = decide (baseVertex.1 i = u.1.1 j) := by
     exact dirMask_testBit (u := baseVertex) (v := u.1) (i := i) (j := j)
@@ -414,10 +402,8 @@ theorem baseOrbit_card (k : DirIdx) : Fintype.card (BaseOrbit k) = baseTypeCount
     Fintype.card (BaseOrbit k)
         = Fintype.card (FreeCol k ↪ AvailFrom3) := hEquiv
     _ = (Fintype.card AvailFrom3).descFactorial (Fintype.card (FreeCol k)) := hEmb
-    _ = (n - 3).descFactorial (freeCols (maskAt k)) := by
-          simp [card_outside, card_freeCol]
-    _ = baseTypeCount k := by
-          simp [baseTypeCount]
+    _ = (n - 3).descFactorial (freeCols (maskAt k)) := by simp [card_outside, card_freeCol]
+    _ = baseTypeCount k := by simp [baseTypeCount]
 
 end N1000000OrbitCounting
 

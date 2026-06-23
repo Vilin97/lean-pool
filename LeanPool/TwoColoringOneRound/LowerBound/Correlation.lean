@@ -30,10 +30,8 @@ instance (n : Nat) : MulAction (G n) (Vertex n) where
     ⟨fun i => σ (v.1 i), by
       intro i j hij
       exact v.2 (σ.injective hij)⟩
-  one_smul v := by
-    exact Subtype.ext rfl
-  mul_smul σ τ v := by
-    exact Subtype.ext rfl
+  one_smul v := by exact Subtype.ext rfl
+  mul_smul σ τ v := by exact Subtype.ext rfl
 
 @[simp] lemma vertex_smul_apply {n : Nat} (σ : G n) (v : Vertex n) (i : Fin 3) :
     (σ • v).1 i = σ (v.1 i) := rfl
@@ -43,10 +41,8 @@ instance (n : Nat) : MulAction (G n) (Edge n) where
     ⟨fun i => σ (e.1 i), by
       intro i j hij
       exact e.2 (σ.injective hij)⟩
-  one_smul e := by
-    exact Subtype.ext rfl
-  mul_smul σ τ e := by
-    exact Subtype.ext rfl
+  one_smul e := by exact Subtype.ext rfl
+  mul_smul σ τ e := by exact Subtype.ext rfl
 
 @[simp] lemma edge_smul_apply {n : Nat} (σ : G n) (e : Edge n) (i : Fin 4) :
     (σ • e).1 i = σ (e.1 i) := rfl
@@ -55,8 +51,7 @@ instance (n : Nat) : MulAction (G n) (Edge n) where
 def spin (b : Bool) : Q :=
   if b then (-1 : Q) else (1 : Q)
 
-lemma spin_mul_self (b : Bool) : spin b * spin b = 1 := by
-  cases b <;> simp [spin]
+lemma spin_mul_self (b : Bool) : spin b * spin b = 1 := by cases b <;> simp [spin]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def corr {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
@@ -105,8 +100,7 @@ lemma corrAvg_le_one {n : Nat} (f : Coloring n) (u v : Vertex n) : corrAvg f u v
       s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤
         (Fintype.card (G n) : Q) := by
     have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
-      have : s.card = Fintype.card (G n) := by
-        simp [s]
+      have : s.card = Fintype.card (G n) := by simp [s]
       exact_mod_cast this
     have : s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤ (s.card : Q) := by
       simpa [nsmul_one] using hsum
@@ -128,8 +122,7 @@ lemma neg_one_le_corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) :
       (-1 : Q) * (Fintype.card (G n) : Q) ≤
         s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) := by
     have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
-      have : s.card = Fintype.card (G n) := by
-        simp [s]
+      have : s.card = Fintype.card (G n) := by simp [s]
       exact_mod_cast this
     have :
         (-1 : Q) * (s.card : Q) ≤

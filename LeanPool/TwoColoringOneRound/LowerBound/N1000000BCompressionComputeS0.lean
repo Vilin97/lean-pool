@@ -106,15 +106,12 @@ theorem compBasis_id_matches_S0 :
       simp [Rat.num_div_den q0]
     calc
       q0 * ((s' : Q) / (D' : Q))
-          = ((q0.num : Q) / (q0.den : Q)) * ((s' : Q) / (D' : Q)) := by
-              simpa using hToQ0.symm
-      _ = (((q0.num * s' : Int) : Q) / (q0.den * D' : Q)) := by
-            simpa using hFrac
+          = ((q0.num : Q) / (q0.den : Q)) * ((s' : Q) / (D' : Q)) := by simpa using hToQ0.symm
+      _ = (((q0.num * s' : Int) : Q) / (q0.den * D' : Q)) := by simpa using hFrac
       _ = (((blockScales[r.1]! : Q).num * s' : Int) : Q) /
             ((blockScales[r.1]! : Q).den * D' : Q) := by
             rfl
-  have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by
-    simpa using hsRed.symm
+  have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by simpa using hsRed.symm
   have hEqFracScaled :
       ((compBasisIntEntry (r := r) (d := idDirIdx) p q : Int) : Q) /
             ((basisDen r : Q) * (basisDen r : Q))
@@ -126,10 +123,8 @@ theorem compBasis_id_matches_S0 :
           =
           (((blockScales[r.1]! : Q).num * s' : Int) : Q) / ((blockScales[r.1]! : Q).den * D' : Q) :=
             hEqFrac
-      _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by
-            simpa using hScale.symm
-      _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by
-            simp [hsRed']
+      _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by simpa using hScale.symm
+      _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by simp [hsRed']
   -- Finish by rewriting `compBasis` and `S0` entrywise into their fraction forms.
   simpa [compBasis_entry_eq_div, N1000000WeakDuality.S0, N1000000WeakDuality.S0Num,
     N1000000Z.toMat3Scaled, N1000000Z.matGet, s, Matrix.smul_apply, mul_assoc, mul_left_comm,

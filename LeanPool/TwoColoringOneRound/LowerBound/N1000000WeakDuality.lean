@@ -107,10 +107,8 @@ def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
   (∀ k : Mu, aDot k x ≤ (1 : Q)) ∧ ∀ r : Block, (S x r).PosSemidef
 
 theorem muVal_nonneg (k : Mu) : 0 ≤ muVal k := by
-  have hDpos : 0 < (D : Q) := by
-    exact_mod_cast (show 0 < D by decide)
-  have hnum : 0 ≤ muNumD k := by
-    fin_cases k <;> decide
+  have hDpos : 0 < (D : Q) := by exact_mod_cast (show 0 < D by decide)
+  have hnum : 0 ≤ muNumD k := by fin_cases k <;> decide
   simpa [muVal, div_eq_mul_inv] using
     mul_nonneg (show (0 : Q) ≤ muNumD k by exact_mod_cast hnum) (inv_nonneg.2 (le_of_lt hDpos))
 
@@ -137,8 +135,7 @@ private theorem muCoeff_eq_num (i : Var) :
     muCoeff i = ((muCoeffNumD i : Q) / (D : Q)) := by
   classical
   -- Everything has denominator `D`.
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   -- Expand both sides and factor out `1/D`.
   simp [muCoeff,
     muCoeffNumD,
@@ -200,8 +197,7 @@ private theorem zSum0_eq_num :
 private def psdSumD2 : Int :=
   ∑ r : Block, innerD2 (S0Blocks.getD r.1 #[]) (ZBlocks.getD r.1 #[])
 
-private theorem zSum0NumD2_eq_psdSumD2 : zSum0NumD2 = psdSumD2 := by
-  decide
+private theorem zSum0NumD2_eq_psdSumD2 : zSum0NumD2 = psdSumD2 := by decide
 
 private theorem psdSumD2_eq_psdSumD2_cert :
     psdSumD2 =
@@ -225,14 +221,12 @@ private theorem muSum_eq_num :
 private def muSumD_fold : Int :=
   muSupport.foldl (fun acc t => acc + t.2.2) 0
 
-private theorem muSumNumD_eq_muSumD_fold : muSumNumD = muSumD_fold := by
-  decide
+private theorem muSumNumD_eq_muSumD_fold : muSumNumD = muSumD_fold := by decide
 
 private theorem dualObjective_eq_expression :
     dualObjective = -muSum - zSum0 := by
   classical
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   -- Unfold and clear denominators; the remaining goal is exactly the definition of
   -- `dualObjectiveComputedD2`.
   unfold dualObjective
@@ -253,8 +247,7 @@ private theorem stationarity (i : Var) :
   -- Integer stationarity is checked coordinatewise; convert and rewrite the coefficients.
   have hInt : stationarityLHSD2 i.1 = -(c i.1) * ((D : Int) * (D : Int)) := by
     fin_cases i <;> decide
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   have hD2ne : ((D : Q) * (D : Q)) ≠ 0 := by simp [hDne]
   have hQ :
       ((linNumD i.1 : Q) * (D : Q) - (psdNumD2 i.1 : Q)) =
@@ -286,8 +279,7 @@ private theorem stationarity (i : Var) :
             -- Reassociate so that `hDiv` rewrites the parenthesized difference.
             have := congrArg (fun t : Q => (if i.1 = edgeVar then (1 : Q) else 0) + t) hDiv
             simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using this
-    _ = 0 := by
-            by_cases h : i.1 = edgeVar <;> simp [h]
+    _ = 0 := by by_cases h : i.1 = edgeVar <;> simp [h]
 
 theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     dualObjective ≤ xEdge x := by
@@ -340,8 +332,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
               refine Finset.sum_congr rfl ?_
               intro i _
               ring
-      _ = ∑ k : Mu, muVal k * aDot k x := by
-              simp [aDot]
+      _ = ∑ k : Mu, muVal k * aDot k x := by simp [aDot]
   -- Commute the finite sums for the Z term.
   have hZComm :
       (∑ i : Var, x i * zCoeff i) = ∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i) := by
@@ -439,8 +430,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
   -- Use `hxEdge` to rewrite `xEdge x` and apply the two bounds.
   have : xEdge x ≥ -muSum - zSum0 := by
     -- Rewrite `muSum` and `zSum0` as sums to match the inequalities.
-    have h1 : - (∑ k : Mu, (muVal k) * aDot k x) ≥ -muSum := by
-      simpa [muSum] using hMuIneq
+    have h1 : - (∑ k : Mu, (muVal k) * aDot k x) ≥ -muSum := by simpa [muSum] using hMuIneq
     have h2 :
         (∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i)) ≥ -zSum0 := by
       simpa [zSum0] using hPsdIneq

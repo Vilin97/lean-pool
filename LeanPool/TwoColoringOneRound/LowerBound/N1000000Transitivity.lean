@@ -123,8 +123,7 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
     ⟨fun j => ⟨z.1.1 j.1, baseOrbit_freeCoord_outside (u := z) j⟩, by
       intro a b hab
       apply Subtype.ext
-      have : z.1.1 a.1 = z.1.1 b.1 := by
-        simpa using congrArg Subtype.val hab
+      have : z.1.1 a.1 = z.1.1 b.1 := by simpa using congrArg Subtype.val hab
       exact z.1.2 this⟩
   let cutoff : SymN := ⟨3, by decide⟩
   let baseSet : Set SymN := Set.Iio cutoff
@@ -135,8 +134,7 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
             exact not_lt.2 x.2⟩
         invFun := fun x => ⟨x.1, by
             have hx : x.1 ∉ baseSet := x.2
-            have hx' : ¬ x.1 < cutoff := by
-              simpa [baseSet] using hx
+            have hx' : ¬ x.1 < cutoff := by simpa [baseSet] using hx
             exact show (3 : Nat) ≤ x.1 from not_lt.1 hx'⟩
         left_inv := by intro x; rfl
         right_inv := by intro x; rfl }
@@ -219,10 +217,8 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
       _ = dirMask baseVertex w' := by simpa using hw'.symm
   -- Choose the orbit index `k` for the common mask.
   let k : DirIdx := dirIdxOfDirMask baseVertex w
-  have hk : dirMask baseVertex w = maskAt k := by
-    simp [k, maskAt_dirIdxOfDirMask]
-  have hk' : dirMask baseVertex w' = maskAt k := by
-    simpa [hbase] using hk
+  have hk : dirMask baseVertex w = maskAt k := by simp [k, maskAt_dirIdxOfDirMask]
+  have hk' : dirMask baseVertex w' = maskAt k := by simpa [hbase] using hk
   let wOrb : BaseOrbit k := ⟨w, hk⟩
   let w'Orb : BaseOrbit k := ⟨w', hk'⟩
   rcases exists_perm_fixing_base_of_baseOrbit k wOrb w'Orb with ⟨τ, hτbase, hτw⟩
@@ -236,8 +232,7 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
       _ = σ2.symm • baseVertex := by simp [hτbase]
       _ = u' := by rw [← hσ2]; exact inv_smul_smul σ2 u'
   · -- on `v`
-    have hτw' : τ • w = w' := by
-      simpa [wOrb, w'Orb, w, w'] using hτw
+    have hτw' : τ • w = w' := by simpa [wOrb, w'Orb, w, w'] using hτw
     calc
       σ • v = (σ2.symm * τ * σ1) • v := rfl
       _ = σ2.symm • (τ • (σ1 • v)) := by simp [mul_smul]

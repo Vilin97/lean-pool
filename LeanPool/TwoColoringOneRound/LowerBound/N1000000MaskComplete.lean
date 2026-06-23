@@ -158,8 +158,7 @@ theorem mem_masks_toFinset_of_isPartialPermMask {m : Mask} (hm : m < (1 <<< 9))
   · exact mem_masks_block14 (le_of_not_gt h13) h14 hperm
   exact mem_masks_block15 (le_of_not_gt h14) hm' hperm
 
-theorem maskAt_injective : Function.Injective (maskAt : DirIdx → Mask) := by
-  decide
+theorem maskAt_injective : Function.Injective (maskAt : DirIdx → Mask) := by decide
 
 theorem exists_dirIdx_of_isPartialPermMask {m : Mask} (hm : m < (1 <<< 9))
     (hperm : IsPartialPermMask m) : ∃ d : DirIdx, maskAt d = m := by
@@ -167,18 +166,14 @@ theorem exists_dirIdx_of_isPartialPermMask {m : Mask} (hm : m < (1 <<< 9))
   -- Convert membership in `toFinset` back to membership in the list.
   have hmemFinset : m ∈ (masks.toList.toFinset : Finset Mask) :=
     mem_masks_toFinset_of_isPartialPermMask (m := m) hm hperm
-  have hmemList : m ∈ masks.toList := by
-    simpa [List.mem_toFinset] using hmemFinset
+  have hmemList : m ∈ masks.toList := by simpa [List.mem_toFinset] using hmemFinset
   -- Extract an index `i` with `masks.toList[i] = m`.
   rcases (List.mem_iff_get).1 hmemList with ⟨i, hi⟩
-  have hiLt : i.1 < masks.size := by
-    exact i.2
-  have hList : masks.toList[i.1] = m := by
-    simpa [List.get_eq_getElem] using hi
+  have hiLt : i.1 < masks.size := by exact i.2
+  have hList : masks.toList[i.1] = m := by simpa [List.get_eq_getElem] using hi
   have hToList : masks.toList[i.1] = masks[i.1] :=
     Array.getElem_toList (xs := masks) (i := i.1) hiLt
-  have hArr : masks[i.1] = m := by
-    exact hToList.symm.trans hList
+  have hArr : masks[i.1] = m := by exact hToList.symm.trans hList
   refine ⟨⟨i.1, hiLt⟩, ?_⟩
   simpa [maskAt, hiLt] using hArr
 

@@ -123,8 +123,7 @@ theorem corrAvgMatrix_eq_sum_coeff_A (f : Coloring n) :
   let d0 : DirIdx := dirIdxOfDirMask (u := v) (v := u)
   have hd0 : dirMask v u = N1000000StructureConstants.maskAt d0 := by
     simpa [d0] using (maskAt_dirIdxOfDirMask (u := v) (v := u)).symm
-  have hA0 : A d0 u v = 1 := by
-    simp [N1000000OrbitalBasis.A, hd0]
+  have hA0 : A d0 u v = 1 := by simp [N1000000OrbitalBasis.A, hd0]
   have hAne : ∀ d : DirIdx, d ≠ d0 → A d u v = 0 := by
     intro d hd
     by_cases hEq : dirMask v u = N1000000StructureConstants.maskAt d
@@ -145,8 +144,7 @@ theorem corrAvgMatrix_eq_sum_coeff_A (f : Coloring n) :
       · intro d hdMem hdNe
         -- `A d u v = 0` for `d ≠ d0`
         calc
-          (coeff (f := f) d) * (A d u v) = (coeff (f := f) d) * 0 := by
-              rw [hAne d hdNe]
+          (coeff (f := f) d) * (A d u v) = (coeff (f := f) d) * 0 := by rw [hAne d hdNe]
           _ = 0 := by simp
       · intro hdNotMem
         exact False.elim (hdNotMem (Finset.mem_univ d0))
@@ -208,8 +206,7 @@ theorem corrAvgMatrix_eq_sum_coeff_A (f : Coloring n) :
     _ = ∑ d : DirIdx,
       (if dirMask v u = N1000000StructureConstants.maskAt d then (coeff (f := f) d) else 0) := by
           simpa using hSumIf.symm
-    _ = (∑ d : DirIdx, (coeff (f := f) d) • A d) u v := by
-          simp [hRhs]
+    _ = (∑ d : DirIdx, (coeff (f := f) d) • A d) u v := by simp [hRhs]
 
 end N1000000CorrAvgMatrixDecompose
 

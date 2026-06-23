@@ -137,10 +137,8 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
   classical
   ext a
   have hbt : (b : ℝ) < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
-  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-    simp [Set.mem_Icc, not_le_of_gt hb]
-  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by
-    simp [Set.mem_Ici, not_le_of_gt hbt]
+  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by simp [Set.mem_Icc, not_le_of_gt hb]
+  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hbt]
   have hz0 :
       z0 a b =
         if (t : ℝ) ≤ a then 0 else if (a : ℝ) ≤ b then (t : ℝ) else (b : ℝ) := by
@@ -186,8 +184,7 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
           · have : (c : ℝ) < b := by simpa [hta, hab] using hc
             exact hcb (show c < b from this)
         · intro hab
-          have hta : ¬ (t : ℝ) ≤ a := by
-            exact not_le_of_gt (lt_of_le_of_lt hab hbt)
+          have hta : ¬ (t : ℝ) ≤ a := by exact not_le_of_gt (lt_of_le_of_lt hab hbt)
           have hab' : (a : ℝ) ≤ b := hab
           simpa [hta, hab'] using hctR
       exact (hL.trans hR.symm)
@@ -355,8 +352,7 @@ lemma p_eq_lintegral_innerBC :
     have h :=
       (MeasureTheory.lmarginal_union (μ := μ4) (s := ({1, 2} : Finset (Fin 4)))
         (t := ({0, 3} : Finset (Fin 4))) pInd measurable_pInd (by decide))
-    have huniv : ({1, 2} ∪ {0, 3} : Finset (Fin 4)) = Finset.univ := by
-      decide
+    have huniv : ({1, 2} ∪ {0, 3} : Finset (Fin 4)) = Finset.univ := by decide
     simpa [huniv] using h
   have hsplit_x0 : (∫⋯∫⁻_(Finset.univ : Finset (Fin 4)), pInd ∂μ4) x0 =
         (∫⋯∫⁻_({1, 2} : Finset (Fin 4)),
@@ -375,8 +371,7 @@ lemma p_eq_lintegral_innerBC :
     have h :=
       (MeasureTheory.lmarginal_union (μ := μ4) (s := ({1} : Finset (Fin 4)))
         (t := ({2} : Finset (Fin 4))) f03 hf03 (by decide))
-    have hunion : (({1} : Finset (Fin 4)) ∪ {2}) = ({1, 2} : Finset (Fin 4)) := by
-      decide
+    have hunion : (({1} : Finset (Fin 4)) ∪ {2}) = ({1, 2} : Finset (Fin 4)) := by decide
     simpa [hunion] using h
   have hsplit12_x0 :
       (∫⋯∫⁻_({1, 2} : Finset (Fin 4)), f03 ∂μ4) x0 =

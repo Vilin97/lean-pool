@@ -200,8 +200,7 @@ noncomputable def cyclePairToEdgeExtraK : CyclePairs → EdgeExtraK
         have hIdx : idx4 k i = remIndex k := by
           apply t.injective
           -- `edgeEmb e i = r` expands to `t (idx4 k i) = t (remIndex k)`.
-          have : t (idx4 k i) = t (remIndex k) := by
-            simpa [e, edgeAt, edgeEmb, r] using hi
+          have : t (idx4 k i) = t (remIndex k) := by simpa [e, edgeAt, edgeEmb, r] using hi
           exact this
         exact idx4_ne_remIndex k i hIdx
       ⟨(e, (r, k)), hr⟩
@@ -394,8 +393,7 @@ private lemma monoCount_ge_605 (f : Coloring9) : 605 ≤ monoCount f := by
     exact this.trans (by decide : (9 : Nat).descFactorial 5 = 15120)
   have hPairs : Fintype.card (CycleMonoPairs f) = 25 * monoCount f :=
     card_cycleMonoPairs_eq (f := f)
-  have : 15120 ≤ 25 * monoCount f := by
-    simpa [hEmb5, hPairs] using hcard
+  have : 15120 ≤ 25 * monoCount f := by simpa [hEmb5, hPairs] using hcard
   nlinarith
 
 /-!
@@ -468,14 +466,12 @@ private lemma monoCount_zmod2_eq_edgeCount_zmod2 (f : Coloring9) :
     classical
     let p : Edge n → Prop := Edge.monochromatic f
     let s : Finset (Edge n) := (Finset.univ : Finset (Edge n)).filter p
-    have hNat : s.card = s.sum (fun _ => (1 : Nat)) := by
-      exact Finset.card_eq_sum_ones (s := s)
+    have hNat : s.card = s.sum (fun _ => (1 : Nat)) := by exact Finset.card_eq_sum_ones (s := s)
     have hCast : (s.card : ZMod 2) = s.sum (fun _ => (1 : ZMod 2)) := by
       convert congrArg (fun m : Nat => (m : ZMod 2)) hNat using 1
       · simp
     -- rewrite `monoCount` in terms of `s`
-    have hs : monoCount f = s.card := by
-      simp [monoCount, monoEdges, s, p]
+    have hs : monoCount f = s.card := by simp [monoCount, monoEdges, s, p]
     -- rewrite the sum over the filter
     have hsum :
         (s.sum (fun _ => (1 : ZMod 2)))
@@ -548,12 +544,9 @@ private lemma monoCount_ge_606 (f : Coloring9) : 606 ≤ monoCount f := by
   exact (by decide : ¬ Even 605) this
 
 theorem monoFraction_ge_101_504 (f : Coloring9) : (101 : ℚ) / 504 ≤ monoFraction f := by
-  have h606 : (606 : ℚ) ≤ (monoCount f : ℚ) := by
-    exact_mod_cast monoCount_ge_606 (f := f)
-  have hE : (edgeCount n : ℚ) = 3024 := by
-    exact_mod_cast edgeCount_9
-  have hEpos : (0 : ℚ) ≤ (edgeCount n : ℚ) := by
-    exact_mod_cast (Nat.zero_le (edgeCount n))
+  have h606 : (606 : ℚ) ≤ (monoCount f : ℚ) := by exact_mod_cast monoCount_ge_606 (f := f)
+  have hE : (edgeCount n : ℚ) = 3024 := by exact_mod_cast edgeCount_9
+  have hEpos : (0 : ℚ) ≤ (edgeCount n : ℚ) := by exact_mod_cast (Nat.zero_le (edgeCount n))
   have hdiv : (606 : ℚ) / (edgeCount n : ℚ) ≤ monoFraction f := by
     simpa [monoFraction] using (div_le_div_of_nonneg_right h606 hEpos)
   have hred : (606 : ℚ) / (edgeCount n : ℚ) = (101 : ℚ) / 504 := by

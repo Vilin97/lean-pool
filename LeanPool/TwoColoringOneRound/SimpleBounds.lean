@@ -93,8 +93,7 @@ lemma side_measure (b : Color) : (volume : Measure Rand) (side b) = (1 / 2 : ENN
   · have hhalf : (1 - (half : ℝ)) = (1 / 2 : ℝ) := by
       norm_num [half]
     calc
-      (volume : Measure Rand) (side (1 : Color)) = ENNReal.ofReal (1 - (half : ℝ)) := by
-        simp [side]
+      (volume : Measure Rand) (side (1 : Color)) = ENNReal.ofReal (1 - (half : ℝ)) := by simp [side]
       _ = ENNReal.ofReal (1 / 2 : ℝ) := by simp [hhalf]
       _ = (1 / 2 : ENNReal) := by simp
 
@@ -265,8 +264,7 @@ theorem p_simpleUpperAlg : ClassicalAlgorithm.p simpleUpperAlg = (1 / 4 : ENNRea
             symm
             simpa [goodSet] using
               (Finset.sum_filter (s := all) (p := good) (f := fun _ => (1 / 16 : ENNReal)))
-      _ = (goodSet.card : ENNReal) * (1 / 16 : ENNReal) := by
-            simp [Finset.sum_const, nsmul_eq_mul]
+      _ = (goodSet.card : ENNReal) * (1 / 16 : ENNReal) := by simp [Finset.sum_const, nsmul_eq_mul]
   have hcard : goodSet.card = 4 := by decide
   calc
     ClassicalAlgorithm.p simpleUpperAlg
@@ -359,8 +357,7 @@ lemma edgeEvent_one_measure_eq_p (alg : ClassicalAlgorithm) :
       edgeEvent alg 1 =
         (fun x : Samples 5 => (e x).2) ⁻¹' ClassicalAlgorithm.pEvent alg := by
     ext x
-    have hs : iLast.succAbove = Fin.castSucc := by
-      simpa [iLast] using (Fin.succAbove_last (n := 4))
+    have hs : iLast.succAbove = Fin.castSucc := by simpa [iLast] using (Fin.succAbove_last (n := 4))
     -- `(e x).2` is `removeNth` at the last coordinate.
     simp [edgeEvent, nodeColor, ClassicalAlgorithm.pEvent, e, Fin.removeNth_apply, hs]
   calc
@@ -396,8 +393,7 @@ lemma edgeEvent_measure_eq_edgeEvent_one (alg : ClassicalAlgorithm) (i : Fin 5) 
         simp [sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
       simp [nodeColor, hφ, hsub₁, hadd₁]
     have hk1 : (1 : Fin 5) - k = i := by simp [k]
-    have hk2 : (2 : Fin 5) - k = i + 1 := by
-      fin_cases i <;> decide
+    have hk2 : (2 : Fin 5) - k = i + 1 := by fin_cases i <;> decide
     simp [edgeEvent, hnode, hk1, hk2]
   have hnull : NullMeasurableSet (edgeEvent alg 1) (volume : Measure (Samples 5)) :=
     (measurableSet_edgeEvent alg 1).nullMeasurableSet

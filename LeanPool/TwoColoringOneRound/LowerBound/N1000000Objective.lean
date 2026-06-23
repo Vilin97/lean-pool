@@ -268,10 +268,8 @@ private lemma avg_corrEmb_eq_avg_corrEdge (f : Coloring n) :
     exact_mod_cast this
   calc
     (∑ x : Emb4, corrEmb f x) / (Fintype.card Emb4 : Q)
-        = (∑ e : Edge n, corrEdge f e) / (Fintype.card Emb4 : Q) := by
-            rw [hsum]
-    _ = (∑ e : Edge n, corrEdge f e) / (edgeCount n : Q) := by
-            rw [hcard]
+        = (∑ e : Edge n, corrEdge f e) / (Fintype.card Emb4 : Q) := by rw [hsum]
+    _ = (∑ e : Edge n, corrEdge f e) / (edgeCount n : Q) := by rw [hcard]
 
 theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
     xEdge (xFromColoring f) = edgeCorrelation f := by
@@ -298,8 +296,7 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
     simpa [hxEdge] using h0.trans h1
   -- Express the `corrAvg` as a group average, then convert it to an edge average.
   let b : Emb4 := ⟨edgeRep.1, edgeRep.2⟩
-  have hb : edgeOfEmb b = edgeRep := by
-    exact Subtype.ext rfl
+  have hb : edgeOfEmb b = edgeRep := by exact Subtype.ext rfl
   have hAvgGroup :
       corrAvg f (Edge.src edgeRep) (Edge.dst edgeRep)
         = (∑ σ : G, corrEmb f (σ • b)) / (Fintype.card G : Q) := by
@@ -311,14 +308,12 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
       classical
       refine Finset.sum_congr rfl ?_
       intro σ _hσ
-      have h1 : edgeOfEmb (σ • b) = σ • edgeRep := by
-        exact Subtype.ext rfl
+      have h1 : edgeOfEmb (σ • b) = σ • edgeRep := by exact Subtype.ext rfl
       calc
         corr f (σ • Edge.src edgeRep) (σ • Edge.dst edgeRep)
             = corrEdge f (σ • edgeRep) := by
                 simpa using (corrEdge_smul (f := f) (σ := σ) (e := edgeRep)).symm
-        _ = corrEmb f (σ • b) := by
-                simp [corrEmb, h1]
+        _ = corrEmb f (σ • b) := by simp [corrEmb, h1]
     -- Rewrite the numerator using `hnum`.
     simp [hnum]
   have hAvgAll :

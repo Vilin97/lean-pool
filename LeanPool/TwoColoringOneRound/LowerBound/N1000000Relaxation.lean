@@ -51,8 +51,7 @@ def symOfNat (k : Nat) : SymN :=
 lemma symOfNat_injective_of_lt {a b : Nat} (ha : a < n) (hb : b < n) :
     symOfNat a = symOfNat b → a = b := by
   intro hab
-  have hval : a % n = b % n := by
-    simpa [symOfNat] using congrArg Fin.val hab
+  have hval : a % n = b % n := by simpa [symOfNat] using congrArg Fin.val hab
   rwa [Nat.mod_eq_of_lt ha, Nat.mod_eq_of_lt hb] at hval
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -138,11 +137,9 @@ theorem varRepUAt_labelsDistinct (i : Var) : LabelsDistinct (varRepUAt i) := by
 theorem varRepVAt_labelsDistinct (i : Var) : LabelsDistinct (varRepVAt i) := by
   fin_cases i <;> decide
 
-theorem varRepUAt_labelsInRange (i : Var) : LabelsInRange (varRepUAt i) := by
-  fin_cases i <;> decide
+theorem varRepUAt_labelsInRange (i : Var) : LabelsInRange (varRepUAt i) := by fin_cases i <;> decide
 
-theorem varRepVAt_labelsInRange (i : Var) : LabelsInRange (varRepVAt i) := by
-  fin_cases i <;> decide
+theorem varRepVAt_labelsInRange (i : Var) : LabelsInRange (varRepVAt i) := by fin_cases i <;> decide
 
 theorem varRepUAt_injective : ∀ i : Var, Function.Injective (tupleOfLabels (varRepUAt i)) := by
   intro i

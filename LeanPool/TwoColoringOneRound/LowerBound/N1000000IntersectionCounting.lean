@@ -70,8 +70,7 @@ private lemma freeSyms_disjoint_baseSet {k : DirIdx} (u : BaseOrbit k) :
   intro x hxFree hxBase
   -- If `x ∈ baseSet`, then `x.1 < 3`.
   have hxlt : x.1 < 3 := by
-    have : x = s0 ∨ x = s1 ∨ x = s2 := by
-      simpa [baseSet] using hxBase
+    have : x = s0 ∨ x = s1 ∨ x = s2 := by simpa [baseSet] using hxBase
     rcases this with rfl | rfl | rfl <;> decide
   -- But `x ∈ freeSyms` comes from some free column, hence `x.1 ≥ 3`.
   rcases Finset.mem_image.1 hxFree with ⟨j, _hjUniv, rfl⟩
@@ -90,8 +89,7 @@ private lemma card_freeSyms {k : DirIdx} (u : BaseOrbit k) :
 private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
     (baseSet ∪ freeSyms (k := k) u).card = 3 + freeCols (maskAt k) := by
   classical
-  have hbase : baseSet.card = 3 := by
-    simp [baseSet]
+  have hbase : baseSet.card = 3 := by simp [baseSet]
   have hdisj : Disjoint baseSet (freeSyms (k := k) u) := by
     simpa [disjoint_comm] using (freeSyms_disjoint_baseSet (k := k) u)
   have hfreeCard : (freeSyms (k := k) u).card = freeCols (maskAt k) := by
@@ -177,8 +175,7 @@ private lemma eq_of_dirMask_rowMatch {u v : V} {d : DirIdx} (h : dirMask u v = m
 private lemma ne_of_dirMask_rowMatch_none {u v : V} {d : DirIdx} (h : dirMask u v = maskAt d)
     {i : Fin 3} (hrow : rowMatch (maskAt d) i = none) : ∀ j : Fin 3, u.1 i ≠ v.1 j := by
   intro j
-  have : decide (u.1 i = v.1 j) = false := by
-    simp [decide_eq_decide_of_dirMask h i j, hrow]
+  have : decide (u.1 i = v.1 j) = false := by simp [decide_eq_decide_of_dirMask h i j, hrow]
   exact decide_eq_false_iff_not.1 this
 
 private lemma u_coord_mem_usedSet {k : DirIdx} (u : BaseOrbit k) (j : Fin 3) :
@@ -281,8 +278,7 @@ private lemma consistent_of_inter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) 
               have hvbase : w.1.1 j = baseVertex.1 i := by simp [hvu, hubase]
               have hwge : 3 ≤ (w.1.1 j).1 := by
                 exact baseOrbit_freeCoord_outside (u := ⟨w.1, hbase⟩) ⟨j, hcol⟩
-              have hlt : (baseVertex.1 i).1 < 3 := by
-                fin_cases i <;> decide
+              have hlt : (baseVertex.1 i).1 < 3 := by fin_cases i <;> decide
               have : (w.1.1 j).1 < 3 := by simpa [hvbase] using hlt
               exact (Nat.not_lt_of_ge hwge this).elim
   -- Combine the three coordinate facts into `consistent = true`.
@@ -329,8 +325,7 @@ noncomputable def encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) (w :
   · intro j₁ j₂ hEq
     apply Subtype.ext
     -- Equality in `AvailFor u` implies equality in `SymN`.
-    have hVal : w.1.1 j₁.1 = w.1.1 j₂.1 := by
-      simpa using congrArg Subtype.val hEq
+    have hVal : w.1.1 j₁.1 = w.1.1 j₂.1 := by simpa using congrArg Subtype.val hEq
     exact w.1.2 hVal
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -411,8 +406,7 @@ private theorem gOfEmbeddingVal_injective {k : DirIdx} (u : BaseOrbit k) (a d : 
     have h₂ :=
       gOfEmbeddingVal_val_of_rowMatch_some (u := u) (a := a) (d := d)
         (hcons := hcons) (e := e) (j := j₂) (l := l) hrow₂
-    have : (e ⟨j₁.1, ⟨j₁.2, hrow₁⟩⟩).1 = u.1.1 l := by
-      simpa [h₁, h₂] using hjVal
+    have : (e ⟨j₁.1, ⟨j₁.2, hrow₁⟩⟩).1 = u.1.1 l := by simpa [h₁, h₂] using hjVal
     exact (availFor_ne_u_coord (k := k) u (e ⟨j₁.1, ⟨j₁.2, hrow₁⟩⟩) l) this
   · rename_i l
     exfalso
@@ -422,8 +416,7 @@ private theorem gOfEmbeddingVal_injective {k : DirIdx} (u : BaseOrbit k) (a d : 
     have h₂ :=
       gOfEmbeddingVal_val_of_rowMatch_none (u := u) (a := a) (d := d)
         (hcons := hcons) (e := e) (j := j₂) hrow₂
-    have : (e ⟨j₂.1, ⟨j₂.2, hrow₂⟩⟩).1 = u.1.1 l := by
-      simpa [h₁, h₂, eq_comm] using hjVal
+    have : (e ⟨j₂.1, ⟨j₂.2, hrow₂⟩⟩).1 = u.1.1 l := by simpa [h₁, h₂, eq_comm] using hjVal
     exact (availFor_ne_u_coord (k := k) u (e ⟨j₂.1, ⟨j₂.2, hrow₂⟩⟩) l) this
   · rename_i l₁ l₂
     have h₁ :=

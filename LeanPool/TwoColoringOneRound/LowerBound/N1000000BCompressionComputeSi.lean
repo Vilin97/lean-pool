@@ -46,10 +46,8 @@ private lemma rat_scale_mul_reduced_eq (q0 : Q) (s' : Int) (D' : Nat) :
     simp [Rat.num_div_den q0]
   calc
     q0 * ((s' : Q) / (D' : Q)) =
-        ((q0.num : Q) / (q0.den : Q)) * ((s' : Q) / (D' : Q)) := by
-          simpa using hToQ0.symm
-    _ = (((q0.num * s' : Int) : Q) / (q0.den * D' : Q)) := by
-          simpa using hFrac
+        ((q0.num : Q) / (q0.den : Q)) * ((s' : Q) / (D' : Q)) := by simpa using hToQ0.symm
+    _ = (((q0.num * s' : Int) : Q) / (q0.den * D' : Q)) := by simpa using hFrac
 
 -- This is the Si-analogue of `compBasis_id_matches_S0`, proved entrywise by reducing to
 -- finitely-many integer identities (precomputed in `N1000000BCompressionComputeSiInt`).
@@ -75,8 +73,7 @@ theorem compBasisSymm_var_matches_Si :
   have hsRed : (s : Q) / (D : Q) = (s' : Q) / (D' : Q) := by
     calc
       (s : Q) / (D : Q) = (s : Q) / (g : Q) / (D' : Q) := hsRed0
-      _ = (s' : Q) / (D' : Q) := by
-            simp [hs_cast]
+      _ = (s' : Q) / (D' : Q) := by simp [hs_cast]
   have hden1 : ((basisDen r : Q) * (basisDen r : Q)) ≠ 0 := by
     have : (basisDen r : Q) ≠ 0 := basisDenQ_ne_zero r
     exact mul_ne_zero this this
@@ -117,8 +114,7 @@ theorem compBasisSymm_var_matches_Si :
             ((blockScales[r.1]! : Q).den * D' : Q) := by
       simpa using
         (rat_scale_mul_reduced_eq (q0 := blockScales[r.1]!) (s' := s') (D' := D'))
-    have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by
-      simpa using hsRed.symm
+    have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by simpa using hsRed.symm
     have hEqFracScaled :
         ((compBasisIntEntry (r := r) (d := varOrbit i) p q : Int) : Q) /
               ((basisDen r : Q) * (basisDen r : Q))
@@ -131,10 +127,8 @@ theorem compBasisSymm_var_matches_Si :
             (((blockScales[r.1]! : Q).num * s' : Int) : Q) /
               ((blockScales[r.1]! : Q).den * D' : Q) :=
               hEqFrac
-        _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by
-              simpa using hScale.symm
-        _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by
-              simp [hsRed']
+        _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by simpa using hScale.symm
+        _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by simp [hsRed']
     -- Convert the `Si` entry into the explicit quotient `s / D` and finish entrywise.
     have hSiEntry :
         (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) =
@@ -150,8 +144,7 @@ theorem compBasisSymm_var_matches_Si :
             ((basisDen r : Q) * (basisDen r : Q)) := by
             simpa using (compBasis_entry_eq_div (r := r) (d := varOrbit i) (p := p) (q := q))
       _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := hEqFracScaled
-      _ = ((blockScales[r.1]! : Q) • N1000000WeakDuality.Si r i) p q := by
-            simpa using hSiEntry
+      _ = ((blockScales[r.1]! : Q) • N1000000WeakDuality.Si r i) p q := by simpa using hSiEntry
   · have hInt :
         (compBasisIntEntry (r := r) (d := varOrbit i) p q +
               compBasisIntEntry (r := r) (d := invDir (varOrbit i)) p q) *
@@ -180,8 +173,7 @@ theorem compBasisSymm_var_matches_Si :
             ((blockScales[r.1]! : Q).den * D' : Q) := by
       simpa using
         (rat_scale_mul_reduced_eq (q0 := blockScales[r.1]!) (s' := s') (D' := D'))
-    have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by
-      simpa using hsRed.symm
+    have hsRed' : (s' : Q) / (D' : Q) = (s : Q) / (D : Q) := by simpa using hsRed.symm
     have hEqFracScaled :
         (((compBasisIntEntry (r := r) (d := varOrbit i) p q +
                   compBasisIntEntry (r := r) (d := invDir (varOrbit i)) p q) : Int) : Q) /
@@ -196,10 +188,8 @@ theorem compBasisSymm_var_matches_Si :
             (((blockScales[r.1]! : Q).num * s' : Int) : Q) /
               ((blockScales[r.1]! : Q).den * D' : Q) :=
               hEqFrac
-        _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by
-              simpa using hScale.symm
-        _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by
-              simp [hsRed']
+        _ = (blockScales[r.1]! : Q) * ((s' : Q) / (D' : Q)) := by simpa using hScale.symm
+        _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := by simp [hsRed']
     have hSiEntry :
         (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) =
           ((blockScales[r.1]! : Q) • N1000000WeakDuality.Si r i) p q := by
@@ -211,8 +201,7 @@ theorem compBasisSymm_var_matches_Si :
                 dsimp [compBasisSymm]
                 rw [if_neg hFix]
                 rfl
-      _ = compBasis r (varOrbit i) p q + compBasis r (invDir (varOrbit i)) p q := by
-            rfl
+      _ = compBasis r (varOrbit i) p q + compBasis r (invDir (varOrbit i)) p q := by rfl
       _ = ((compBasisIntEntry (r := r) (d := varOrbit i) p q : Int) : Q) /
               ((basisDen r : Q) * (basisDen r : Q))
             +
@@ -243,8 +232,7 @@ theorem compBasisSymm_var_matches_Si :
             -- Now rewrite the numerator as a cast of an `Int` sum.
             simpa [Int.cast_add, add_assoc, add_comm, add_left_comm] using this
       _ = (blockScales[r.1]! : Q) * ((s : Q) / (D : Q)) := hEqFracScaled
-      _ = ((blockScales[r.1]! : Q) • N1000000WeakDuality.Si r i) p q := by
-            simpa using hSiEntry
+      _ = ((blockScales[r.1]! : Q) • N1000000WeakDuality.Si r i) p q := by simpa using hSiEntry
 
 end N1000000BCompressionCompute
 

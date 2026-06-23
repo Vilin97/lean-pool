@@ -46,21 +46,17 @@ abbrev Big5 : Type := Set.Ici two5
 def round5 (a : Sym 5) : Bool :=
   decide (two5 ≤ a)
 
-@[simp] lemma round5_eq_true {a : Sym 5} : round5 a = true ↔ two5 ≤ a := by
-  simp [round5]
+@[simp] lemma round5_eq_true {a : Sym 5} : round5 a = true ↔ two5 ≤ a := by simp [round5]
 
-@[simp] lemma round5_eq_false {a : Sym 5} : round5 a = false ↔ a < two5 := by
-  simp [round5, not_le]
+@[simp] lemma round5_eq_false {a : Sym 5} : round5 a = false ↔ a < two5 := by simp [round5, not_le]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev f5 : Coloring 5 :=
   fun v => g (round5 (Vertex.a v)) (round5 (Vertex.b v)) (round5 (Vertex.c v))
 
-lemma card_Small5 : Fintype.card Small5 = 2 := by
-  norm_num [Small5, two5]
+lemma card_Small5 : Fintype.card Small5 = 2 := by norm_num [Small5, two5]
 
-lemma card_Big5 : Fintype.card Big5 = 3 := by
-  norm_num [Big5, two5]
+lemma card_Big5 : Fintype.card Big5 = 3 := by norm_num [Big5, two5]
 
 private lemma not_all_small (e : Edge 5) : ¬ (∀ i : Fin 4, e.1 i < two5) := by
   classical
@@ -164,8 +160,7 @@ theorem edgeCount_5 : edgeCount 5 = 120 := by
           left_inv := by intro e; apply Subtype.ext; funext i; rfl
           right_inv := by intro x; ext i; rfl }
     simpa [edgeCount] using this
-  have : edgeCount 5 = (5 : Nat).descFactorial 4 := by
-    simp [hcongr, Sym, Fintype.card_embedding_eq]
+  have : edgeCount 5 = (5 : Nat).descFactorial 4 := by simp [hcongr, Sym, Fintype.card_embedding_eq]
   simpa using this.trans (by decide : (5 : Nat).descFactorial 4 = 120)
 
 theorem monoCount_f5 : monoCount f5 = 24 := by

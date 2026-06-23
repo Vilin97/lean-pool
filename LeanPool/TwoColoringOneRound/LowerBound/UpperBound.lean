@@ -79,8 +79,7 @@ abbrev Small9 : Type := Set.Iio two9
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev Big9 : Type := Set.Ici two9
 
-lemma card_Small9 : Fintype.card Small9 = 4 := by
-  simp [Small9, two9]
+lemma card_Small9 : Fintype.card Small9 = 4 := by simp [Small9, two9]
 
 lemma card_Big9 : Fintype.card Big9 = 5 := by
   -- `simp` reduces the card to `n - 4`, then `decide` finishes.
@@ -90,11 +89,9 @@ lemma card_Big9 : Fintype.card Big9 = 5 := by
 def round9 (a : Sym9) : Bool :=
   decide (two9 ≤ a)
 
-@[simp] lemma round9_eq_true {a : Sym9} : round9 a = true ↔ two9 ≤ a := by
-  simp [round9]
+@[simp] lemma round9_eq_true {a : Sym9} : round9 a = true ↔ two9 ≤ a := by simp [round9]
 
-@[simp] lemma round9_eq_false {a : Sym9} : round9 a = false ↔ a < two9 := by
-  simp [round9, not_le]
+@[simp] lemma round9_eq_false {a : Sym9} : round9 a = false ↔ a < two9 := by simp [round9, not_le]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev f9 : Coloring9 :=
@@ -153,8 +150,7 @@ private lemma edgeCount_9 : edgeCount n = 3024 := by
           invFun := fun x => ⟨x, x.injective⟩
           left_inv := by intro e; apply Subtype.ext; funext i; rfl
           right_inv := by intro x; ext i; rfl }
-    have hcongr : edgeCount n = Fintype.card (Fin 4 ↪ Sym n) := by
-      simpa [edgeCount] using this
+    have hcongr : edgeCount n = Fintype.card (Fin 4 ↪ Sym n) := by simpa [edgeCount] using this
     simp [hcongr, Sym, n, Fintype.card_embedding_eq]
   exact this.trans (by decide : (9 : Nat).descFactorial 4 = 3024)
 
@@ -186,13 +182,11 @@ theorem monoFraction_f9_le_13_63 : monoFraction f9 ≤ (13 : ℚ) / 63 := by
           + (Fintype.card Edge1111 + (Fintype.card Edge1001 + Fintype.card Edge0110)) := by
       simpa [hmonoPatterns] using hUnion
     simpa [card_edge0000, card_edge1111, card_edge1001, card_edge0110, Nat.add_assoc] using this
-  have hcount : (monoCount f9 : ℚ) ≤ (624 : ℚ) := by
-    exact_mod_cast hmonoNat
+  have hcount : (monoCount f9 : ℚ) ≤ (624 : ℚ) := by exact_mod_cast hmonoNat
   have hE : (edgeCount n : ℚ) = 3024 := by exact_mod_cast edgeCount_9
   -- Divide both sides by `edgeCount`.
   have hdiv : monoFraction f9 ≤ (624 : ℚ) / (edgeCount n : ℚ) := by
-    have hEpos : (0 : ℚ) ≤ (edgeCount n : ℚ) := by
-      exact_mod_cast (Nat.zero_le (edgeCount n))
+    have hEpos : (0 : ℚ) ≤ (edgeCount n : ℚ) := by exact_mod_cast (Nat.zero_le (edgeCount n))
     simpa [monoFraction] using (div_le_div_of_nonneg_right hcount hEpos)
   have hred : (624 : ℚ) / (edgeCount n : ℚ) = (13 : ℚ) / 63 := by
     simp [hE, show (624 : ℚ) / 3024 = (13 : ℚ) / 63 by norm_num]
@@ -395,11 +389,9 @@ private lemma bound_le_quarter_of_even (m : Nat) (hm : 3 ≤ m) :
   have hm1 : 1 ≤ m := le_trans (by decide : 1 ≤ 3) hm
   have hm2 : 2 ≤ m := le_trans (by decide : 2 ≤ 3) hm
   have h2m1 : 1 ≤ 2 * m := by
-    have : 2 ≤ 2 * m := by
-      simpa [two_mul] using Nat.mul_le_mul_left 2 hm1
+    have : 2 ≤ 2 * m := by simpa [two_mul] using Nat.mul_le_mul_left 2 hm1
     exact le_trans (by decide : 1 ≤ 2) this
-  have h2m2 : 2 ≤ 2 * m := by
-    simpa [two_mul] using Nat.mul_le_mul_left 2 hm1
+  have h2m2 : 2 ≤ 2 * m := by simpa [two_mul] using Nat.mul_le_mul_left 2 hm1
   have h2m3 : 3 ≤ 2 * m := by
     have : 6 ≤ 2 * m := by simpa [two_mul] using Nat.mul_le_mul_left 2 hm
     exact le_trans (by decide : 3 ≤ 6) this
@@ -562,8 +554,7 @@ theorem monoFraction_f_le_one_quarter : monoFraction (f (n := n) hn) ≤ (1 : �
         have hCard :
             Fintype.card (Big (n := 2 * m + 1) hn) = (2 * m + 1) - (2 * m + 1) / 2 := by
           simp [Big, two]
-        have hRewrite : 2 * m + 1 = m + (m + 1) := by
-          simpa [two_mul] using (Nat.add_assoc m m 1)
+        have hRewrite : 2 * m + 1 = m + (m + 1) := by simpa [two_mul] using (Nat.add_assoc m m 1)
         calc
           Fintype.card (Big (n := 2 * m + 1) hn) = (2 * m + 1) - (2 * m + 1) / 2 := hCard
           _ = (2 * m + 1) - m := by simp [hDiv]

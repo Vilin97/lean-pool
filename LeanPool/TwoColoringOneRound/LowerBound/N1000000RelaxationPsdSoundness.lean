@@ -48,8 +48,7 @@ def CompressionHypScaled : Prop :=
 
 private lemma posSemidef_of_pos_smul {M : Matrix (Fin 3) (Fin 3) Q} {a : Q}
     (ha : 0 < a) (h : (a • M).PosSemidef) : M.PosSemidef := by
-  have ha' : 0 ≤ (1 / a : Q) := by
-    exact div_nonneg (show (0 : Q) ≤ 1 by norm_num) (le_of_lt ha)
+  have ha' : 0 ≤ (1 / a : Q) := by exact div_nonneg (show (0 : Q) ≤ 1 by norm_num) (le_of_lt ha)
   have := Matrix.PosSemidef.smul (x := (a • M)) h (a := (1 / a : Q)) ha'
   simpa [smul_smul, div_eq_mul_inv, mul_assoc, inv_mul_cancel₀ (ne_of_gt ha), one_smul] using this
 
@@ -65,8 +64,7 @@ theorem psd_of_compressionHypScaled (h : CompressionHypScaled) :
     Matrix.PosSemidef.conjTranspose_mul_mul_same (A := (corrAvgMatrix (f := f))) hX (B := (B r))
   have hs : ((blockScales[r.1]! : Q) • S (xFromColoring f) r).PosSemidef := by
     simpa [hB f r] using hCong
-  have hscale : 0 < (blockScales[r.1]! : Q) := by
-    fin_cases r <;> decide
+  have hscale : 0 < (blockScales[r.1]! : Q) := by fin_cases r <;> decide
   exact posSemidef_of_pos_smul (ha := hscale) hs
 
 end N1000000RelaxationPsdSoundness

@@ -164,8 +164,7 @@ theorem varRepVertexU_eq_baseVertex (i : Var) : varRepVertexU i = baseVertex := 
   apply Subtype.ext
   funext j
   -- `varRepUAt i` is always `(0,1,2)`.
-  have hU : varRepUAt i = (0, 1, 2) := by
-    fin_cases i <;> decide
+  have hU : varRepUAt i = (0, 1, 2) := by fin_cases i <;> decide
   -- Reduce to the three coordinates and use `Nat.mod_eq_of_lt`.
   have h0 : (0 : Nat) % n = 0 := Nat.mod_eq_of_lt (by decide : (0 : Nat) < n)
   have h1 : (1 : Nat) % n = 1 := Nat.mod_eq_of_lt (by decide : (1 : Nat) < n)
@@ -319,8 +318,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
   -- Now compare with the symmetric decomposition.
   by_cases hId : d0 = idDirIdx
   · -- Diagonal directed type: only `A idDirIdx` contributes, and `coeff idDirIdx = 1`.
-    have hAid : A idDirIdx u v = 1 := by
-      simp [A, hd0, hId]
+    have hAid : A idDirIdx u v = 1 := by simp [A, hd0, hId]
     have hASymmZero : ∀ i : Var, ASymm (varOrbit i) u v = 0 := by
       intro i
       -- `d0 = idDirIdx` cannot lie in a variable orbit (by the lookup table).
@@ -385,8 +383,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
       change ((Finset.univ : Finset Var).sum g) u v = 0
       rw [Matrix.sum_apply]
       simp [Matrix.smul_apply, hASymmZero]
-    have hCoeff : coeff (f := f) d0 = (1 : Q) := by
-      simpa [hId] using coeff_idDirIdx_eq_one (f := f)
+    have hCoeff : coeff (f := f) d0 = (1 : Q) := by simpa [hId] using coeff_idDirIdx_eq_one (f := f)
     have hLHS1 : corrAvgMatrix (f := f) u v = (1 : Q) := by
       calc
         corrAvgMatrix (f := f) u v = coeff (f := f) d0 := hLHS
@@ -486,8 +483,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
       · simpa [h0] using (coeff_varOrbit_eq_xFromColoring (f := f) (i := i0))
       · have hInv := coeff_invDir (f := f) (d := varOrbit i0)
         -- `coeff (invDir rep) = coeff rep`.
-        have : coeff (f := f) d0 = coeff (f := f) (varOrbit i0) := by
-          simpa [h0] using hInv.symm
+        have : coeff (f := f) d0 = coeff (f := f) (varOrbit i0) := by simpa [h0] using hInv.symm
         simpa [this] using (coeff_varOrbit_eq_xFromColoring (f := f) (i := i0))
     -- Finish.
     have hLHS' : corrAvgMatrix (f := f) u v = xFromColoring f i0 := by

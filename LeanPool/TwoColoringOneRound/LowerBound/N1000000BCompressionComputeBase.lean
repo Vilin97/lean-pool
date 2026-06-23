@@ -53,8 +53,7 @@ abbrev qOfNat (m : Nat) : Q := (m : Q)
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev iOfNat (m : Nat) : Int := Int.ofNat m
 
-private theorem tTr_lt (d : DirIdx) : tTr[d.1]! < masks.size := by
-  fin_cases d <;> decide
+private theorem tTr_lt (d : DirIdx) : tTr[d.1]! < masks.size := by fin_cases d <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def invDir (d : DirIdx) : DirIdx :=
@@ -82,11 +81,9 @@ def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
       (Finset.univ.sum fun a : DirIdx =>
         qOfNat (baseTypeCount k) * qOfNat (N k a d) * bVal r p k * bVal r q a))
 
-private theorem D_pos : 0 < N1000000Data.D := by
-  decide
+private theorem D_pos : 0 < N1000000Data.D := by decide
 
-private theorem DQ_ne_zero : (N1000000Data.D : Q) ≠ 0 := by
-  exact_mod_cast (Nat.ne_of_gt D_pos)
+private theorem DQ_ne_zero : (N1000000Data.D : Q) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt D_pos)
 
 theorem div_by_D_eq_div_by_div_gcd (s : Int) :
     let g : Nat := Nat.gcd s.natAbs D
@@ -96,20 +93,16 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
   have hgpos : 0 < g := Nat.gcd_pos_of_pos_right _ D_pos
   have hg_le : g ≤ D := Nat.le_of_dvd D_pos (Nat.gcd_dvd_right s.natAbs D)
   have hDdiv_pos : 0 < D / g := Nat.div_pos hg_le hgpos
-  have hD0 : (Int.ofNat D) ≠ 0 := by
-    exact (Int.ofNat_ne_zero).2 (Nat.ne_of_gt D_pos)
-  have hDdiv0 : (Int.ofNat (D / g)) ≠ 0 := by
-    exact (Int.ofNat_ne_zero).2 (Nat.ne_of_gt hDdiv_pos)
-  have hs_dvd : (g : Int) ∣ s := by
-    exact (Int.natCast_dvd (n := s)).2 (Nat.gcd_dvd_left s.natAbs D)
+  have hD0 : (Int.ofNat D) ≠ 0 := by exact (Int.ofNat_ne_zero).2 (Nat.ne_of_gt D_pos)
+  have hDdiv0 : (Int.ofNat (D / g)) ≠ 0 := by exact (Int.ofNat_ne_zero).2 (Nat.ne_of_gt hDdiv_pos)
+  have hs_dvd : (g : Int) ∣ s := by exact (Int.natCast_dvd (n := s)).2 (Nat.gcd_dvd_left s.natAbs D)
   have hD_dvd : g ∣ D := Nat.gcd_dvd_right s.natAbs D
   -- Rewrite both sides into `Rat.divInt` form and use the exact `divInt_eq_divInt_iff` criterion.
   have hRat :
       Rat.divInt s (Int.ofNat D) = Rat.divInt (s / (g : Int)) (Int.ofNat (D / g)) := by
     -- Cross-multiply in `ℤ` via `divInt_eq_divInt_iff`.
     apply (Rat.divInt_eq_divInt_iff hD0 hDdiv0).2
-    have hs_mul : (s / (g : Int)) * (g : Int) = s := by
-      simpa using (Int.ediv_mul_cancel hs_dvd)
+    have hs_mul : (s / (g : Int)) * (g : Int) = s := by simpa using (Int.ediv_mul_cancel hs_dvd)
     have hD_mul : (D / g) * g = D := Nat.div_mul_cancel hD_dvd
     -- Target: `s * (D/g) = (s/g) * D`.
     -- Rewrite `s` as `(s/g) * g` and `D` as `(D/g) * g`.
@@ -118,8 +111,7 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
           = ((s / (g : Int)) * (g : Int)) * Int.ofNat (D / g) := by
               -- rewrite `s` using `hs_mul` (reverse direction)
               simpa using congrArg (fun t => t * Int.ofNat (D / g)) (Eq.symm hs_mul)
-      _ = (s / (g : Int)) * ((g : Int) * Int.ofNat (D / g)) := by
-            simp [mul_assoc]
+      _ = (s / (g : Int)) * ((g : Int) * Int.ofNat (D / g)) := by simp [mul_assoc]
       _ = (s / (g : Int)) * Int.ofNat D := by
             -- `g * (D/g) = D` in `ℤ` (proved by casting the exact `Nat` identity).
             have hNat : (D / g) * g = D := hD_mul
@@ -149,8 +141,7 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
         have hQ1 :
             (((D : Int) / (g : Int) : Int) : Q) = (((D / g : Nat) : Int) : Q) :=
           congrArg (fun z : Int => (z : Q)) hZ
-        have hQ2 : (((D / g : Nat) : Int) : Q) = ((D / g : Nat) : Q) := by
-          rfl
+        have hQ2 : (((D / g : Nat) : Int) : Q) = ((D / g : Nat) : Q) := by rfl
         exact hQ1.trans hQ2
       simp [hs_cast, hD_cast]
 
@@ -160,8 +151,7 @@ def compBasisIntEntry (r : Block) (d : DirIdx) (p q : Fin 3) : Int :=
     (Finset.univ : Finset DirIdx).sum fun a =>
       (iOfNat (baseTypeCount k)) * (iOfNat (N k a d)) * (bValNum r p k) * (bValNum r q a)
 
-private theorem basisDen_pos (r : Block) : 0 < basisDen r := by
-  fin_cases r <;> decide
+private theorem basisDen_pos (r : Block) : 0 < basisDen r := by fin_cases r <;> decide
 
 theorem basisDenQ_ne_zero (r : Block) : (basisDen r : Q) ≠ 0 := by
   exact_mod_cast (Nat.ne_of_gt (basisDen_pos r))
@@ -171,8 +161,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
       ((compBasisIntEntry r d p q : Int) : Q) / ((basisDen r : Q) * (basisDen r : Q)) := by
   classical
   set den : Q := (basisDen r : Q)
-  have hden : den ≠ 0 := by
-    simpa [den] using (basisDenQ_ne_zero r)
+  have hden : den ≠ 0 := by simpa [den] using (basisDenQ_ne_zero r)
   have hden2 : den * den ≠ 0 := mul_ne_zero hden hden
   let num (k a : DirIdx) : Int :=
     iOfNat (baseTypeCount k) * iOfNat (N k a d) * bValNum r p k * bValNum r q a
@@ -196,8 +185,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
           x * (↑(basisDen r) * (↑(basisDen r))⁻¹) := by
       dsimp [x]
       ac_rfl
-    have hx' : x * (↑(basisDen r) * (↑(basisDen r))⁻¹) = x := by
-      simp [hb]
+    have hx' : x * (↑(basisDen r) * (↑(basisDen r))⁻¹) = x := by simp [hb]
     simpa [x, div_eq_mul_inv] using hx.trans hx'
   have hsum :
       (Finset.univ.sum fun k : DirIdx =>

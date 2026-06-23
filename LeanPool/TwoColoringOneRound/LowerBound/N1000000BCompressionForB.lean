@@ -352,8 +352,7 @@ theorem compressionHypScaledForB :
         (B r)ᴴ * (corrAvgMatrix (f := f)) * (B r)
             = (B r)ᴴ *
                 (A idDirIdx + ∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) *
-                (B r) := by
-                  simp [hDecomp]
+                (B r) := by simp [hDecomp]
       _ =
           (B r)ᴴ * (A idDirIdx) * (B r)
             + (B r)ᴴ * (∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) * (B r) := by
@@ -421,8 +420,7 @@ theorem compressionHypScaledForB :
             simp [smul_smul, mul_comm]
           -- Expand `S` and push scalars through the sum.
           simp [N1000000WeakDuality.S, smul_add, Finset.smul_sum, hComm]
-    _ = (B r)ᴴ * (corrAvgMatrix (f := f)) * (B r) := by
-          simpa using hCompressed.symm
+    _ = (B r)ᴴ * (corrAvgMatrix (f := f)) * (B r) := by simpa using hCompressed.symm
 
 theorem compressionHypScaled :
     N1000000RelaxationPsdSoundness.CompressionHypScaled :=

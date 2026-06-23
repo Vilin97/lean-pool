@@ -275,8 +275,7 @@ private lemma lintegral_b_below_t1_gTB_value :
           ENNReal.ofReal (21 / 128 : ℝ) := by
     have h :=
       (setLIntegral_ofReal_sub_id_Iio (r := t) (b := t1) (hbr := ht1))
-    have hr : ((t : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (21 / 128 : ℝ) := by
-      norm_num [t1, t]
+    have hr : ((t : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (21 / 128 : ℝ) := by norm_num [t1, t]
     simpa [hr] using h
   simp_rw [mu_Ico_eq]
   rw [lintegral_affine_mul_length gTB_eq_affine, hmul_int, hsub_int,
@@ -482,10 +481,8 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
 private lemma lintegral_gT2B_rect_t1_t2_value :
     (∫⁻ b in Set.Ico t1 t2, gT2B b * μ (Set.Ico b t2) ∂μ) =
       ENNReal.ofReal (19025 / 3145728 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by
-    norm_num
-  have hb0 : 0 ≤ (15 / 32 : ℝ) := by
-    norm_num
+  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
+  have hb0 : 0 ≤ (15 / 32 : ℝ) := by norm_num
   have hpoly1 :
       (∫⁻ x in Set.Ico t1 t2, ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) ∂μ) =
         ENNReal.ofReal (1025 / 196608 : ℝ) := by
@@ -522,8 +519,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
 := by
   -- Use the indicator trick and the `Iio` triangle swap.
   let f : Rand → ℝ≥0∞ := (Set.Ici t1).indicator gCt2
-  have hf : Measurable f := by
-    simpa [f] using measurable_gCt2.indicator (by simp)
+  have hf : Measurable f := by simpa [f] using measurable_gCt2.indicator (by simp)
   have htriIio := lintegral_triangle_Iio (B := t2) (f := f) hf
   -- Reduce the `b`-domain from `Iio t2` to `Ico t1 t2` by splitting at `t1`.
   have ht1meas : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
@@ -545,8 +541,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
       have hEq0 : Set.EqOn f 0 (Set.Iio b : Set Rand) := by
         intro c hc
         have hct1 : (c : ℝ) < t1 := lt_trans hc hb
-        have : c ∉ Set.Ici t1 := by
-          simpa [Set.mem_Ici] using (not_le_of_gt hct1)
+        have : c ∉ Set.Ici t1 := by simpa [Set.mem_Ici] using (not_le_of_gt hct1)
         simp [f, this]
       simpa using (MeasureTheory.setLIntegral_eq_zero (μ := μ) hsIb hEq0)
     simpa using (MeasureTheory.setLIntegral_eq_zero (μ := μ) hs' hEq)
@@ -644,10 +639,8 @@ private lemma lintegral_t1_t2_main_value :
       ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) := by
   have hConstC : (∫⁻ c in Set.Iio t1, gCt c ∂μ) = ENNReal.ofReal (81 / 512 : ℝ) := by
     simpa using lintegral_gCt_Iio_t1
-  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by
-    norm_num [μ, t1, t2]
-  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by
-    norm_num [μ, t2, t]
+  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by norm_num [μ, t1, t2]
+  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by norm_num [μ, t2, t]
   -- Split off the rectangle term; the rest is constant.
   have hconst :
       (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =

@@ -45,10 +45,8 @@ lemma aSlice_eq_of_t2_le_b_lt_t {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t) :
   classical
   ext a
   have hbIcc : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨le_trans t1_le_t2 hb1, hb2.le⟩
-  have hbIio2 : ¬ ((b : ℝ) ∈ Set.Iio (t2 : ℝ)) := by
-    simp [Set.mem_Iio, hb1]
-  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by
-    simp [Set.mem_Ici, not_le_of_gt hb2]
+  have hbIio2 : ¬ ((b : ℝ) ∈ Set.Iio (t2 : ℝ)) := by simp [Set.mem_Iio, hb1]
+  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hb2]
   have hz0 :
       z0 a b =
         if (a : ℝ) < t2 then (t : ℝ) else if (a : ℝ) ≤ t then (t2 : ℝ) else 0 := by
@@ -65,14 +63,12 @@ lemma aSlice_eq_of_t2_le_b_lt_t {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t) :
     · have ha2' : t2 ≤ (a : ℝ) := le_of_not_gt ha2
       by_cases hat : (a : ℝ) ≤ t
       · have haIcc : (a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨le_trans t1_le_t2 ha2', hat⟩
-        have haIio : ¬ ((a : ℝ) ∈ Set.Iio (t2 : ℝ)) := by
-          simp [Set.mem_Iio, ha2]
+        have haIio : ¬ ((a : ℝ) ∈ Set.Iio (t2 : ℝ)) := by simp [Set.mem_Iio, ha2]
         simp [z0, haIcc, hbIcc, hbIio2, ha2, haIio, hat]
       · have ht' : (t : ℝ) < a := lt_of_not_ge hat
         have haIcc : ¬ ((a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
           simp [Set.mem_Icc, (not_le_of_gt ht')]
-        have haIci : (a : ℝ) ∈ Set.Ici (t : ℝ) := by
-          simp [Set.mem_Ici, ht'.le]
+        have haIci : (a : ℝ) ∈ Set.Ici (t : ℝ) := by simp [Set.mem_Ici, ht'.le]
         simp [z0, zBase, haIcc, hbIcc, hbIci, ha2, haIci, hat]
   by_cases hc : c < t2
   · have hcR : (c : ℝ) < t2 := hc
@@ -143,12 +139,9 @@ lemma aSlice_eq_of_t_lt_b {b c : Rand} (hb : t < b) :
     aSlice b c = if c < t then Set.univ else if (c : ℝ) < 1 then Set.Iio t else ∅ := by
   classical
   ext a
-  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-    simp [Set.mem_Icc, not_le_of_gt hb]
-  have hbIci : (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-    simp [Set.mem_Ici, hb.le]
-  have hz0 : z0 a b = if (a : ℝ) < t then 1 else (t : ℝ) := by
-    simp [z0, zBase, hbIcc, hbIci]
+  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by simp [Set.mem_Icc, not_le_of_gt hb]
+  have hbIci : (b : ℝ) ∈ Set.Ici (t : ℝ) := by simp [Set.mem_Ici, hb.le]
+  have hz0 : z0 a b = if (a : ℝ) < t then 1 else (t : ℝ) := by simp [z0, zBase, hbIcc, hbIci]
   by_cases hct : c < t
   · have hR : a ∈ (if c < t then Set.univ else if (c : ℝ) < 1 then Set.Iio t else ∅) ↔ True := by
       simp [hct]
@@ -200,8 +193,7 @@ private lemma z0_eq_of_t1_le_b_lt_t2 {a b : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2
   have hbt : (b : ℝ) < t := lt_trans hb2 t2_lt_t
   have hbIcc : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨hb1, hbt.le⟩
   have hbIio2 : (b : ℝ) ∈ Set.Iio (t2 : ℝ) := hb2
-  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by
-    simp [Set.mem_Ici, not_le_of_gt hbt]
+  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hbt]
   by_cases ha1 : (a : ℝ) < t1
   · have haIcc : ¬ ((a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
       simp [Set.mem_Icc, (not_le_of_gt ha1)]
@@ -215,27 +207,21 @@ private lemma z0_eq_of_t1_le_b_lt_t2 {a b : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2
     by_cases hab : (a : ℝ) ≤ b
     · have hat2 : (a : ℝ) < t2 := lt_of_le_of_lt hab hb2
       have haIcc : (a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨ha1', le_trans hab hbt.le⟩
-      have haIci2 : ¬ ((a : ℝ) ∈ Set.Ici (t2 : ℝ)) := by
-        simp [Set.mem_Ici, not_le_of_gt hat2]
+      have haIci2 : ¬ ((a : ℝ) ∈ Set.Ici (t2 : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hat2]
       simp [z0, haIcc, hbIcc, hbIio2, ha1, hab, haIci2]
     · by_cases hat2 : (a : ℝ) < t2
       · have haIcc : (a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨ha1', le_trans hat2.le t2_le_t⟩
-        have haIci2 : ¬ ((a : ℝ) ∈ Set.Ici (t2 : ℝ)) := by
-          simp [Set.mem_Ici, not_le_of_gt hat2]
+        have haIci2 : ¬ ((a : ℝ) ∈ Set.Ici (t2 : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hat2]
         simp [z0, haIcc, hbIcc, hbIio2, ha1, hab, hat2, haIci2]
       · have hat2' : t2 ≤ (a : ℝ) := le_of_not_gt hat2
         by_cases hat : (a : ℝ) ≤ t
         · have haIcc : (a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := ⟨le_trans t1_le_t2 hat2', hat⟩
-          have haIio2 : ¬ ((a : ℝ) ∈ Set.Iio (t2 : ℝ)) := by
-            simp [Set.mem_Iio, hat2]
-          have haIci2 : (a : ℝ) ∈ Set.Ici (t2 : ℝ) := by
-            simp [Set.mem_Ici, hat2']
+          have haIio2 : ¬ ((a : ℝ) ∈ Set.Iio (t2 : ℝ)) := by simp [Set.mem_Iio, hat2]
+          have haIci2 : (a : ℝ) ∈ Set.Ici (t2 : ℝ) := by simp [Set.mem_Ici, hat2']
           simp [z0, haIcc, hbIcc, hbIio2, ha1, hab, hat2, hat, haIci2]
         · have ht' : (t : ℝ) < a := lt_of_not_ge hat
-          have haIcc : ¬ ((a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-            simp [Set.mem_Icc, hat]
-          have haIci : (a : ℝ) ∈ Set.Ici (t : ℝ) := by
-            simp [Set.mem_Ici, ht'.le]
+          have haIcc : ¬ ((a : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by simp [Set.mem_Icc, hat]
+          have haIci : (a : ℝ) ∈ Set.Ici (t : ℝ) := by simp [Set.mem_Ici, ht'.le]
           simp [z0, zBase, haIcc, hbIcc, hbIci, ha1, hab, hat2, hat, haIci]
 
 private lemma mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t1 {a b c : Rand}

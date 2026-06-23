@@ -78,8 +78,7 @@ private theorem cleared_entry_identity (r : Block) (i j : Fin 3) :
     (ZNum r i j) * den3Int r = (D : Int) * (rhsInt r i j) := by
   fin_cases r <;> fin_cases i <;> fin_cases j <;> decide
 
-private theorem den_pos (r : Block) : 0 < den r := by
-  fin_cases r <;> decide
+private theorem den_pos (r : Block) : 0 < den r := by fin_cases r <;> decide
 
 private theorem denQ_ne_zero (r : Block) : (den r : Q) ≠ 0 := by
   exact_mod_cast (show den r ≠ 0 by exact Nat.ne_of_gt (den_pos r))
@@ -147,18 +146,14 @@ private lemma LDL_entry (r : Block) (i j : Fin 3) :
     _ = (invDen * invDen * invDen) * (rhsInt r i j : Q) := by
           -- Avoid cancellation (`simp` would turn this into a disjunction `... ∨ invDen = 0`).
           simpa using congrArg (fun t => (invDen * invDen * invDen) * t) hsumNum
-    _ = (rhsInt r i j : Q) * (invDen * invDen * invDen) := by
-          ac_rfl
-    _ = (rhsInt r i j : Q) * ((den r : Q) * (den r : Q) * (den r : Q))⁻¹ := by
-          simp [hdenProd]
-    _ = (rhsInt r i j : Q) / ((den r : Q) * (den r : Q) * (den r : Q)) := by
-          simp [div_eq_mul_inv]
+    _ = (rhsInt r i j : Q) * (invDen * invDen * invDen) := by ac_rfl
+    _ = (rhsInt r i j : Q) * ((den r : Q) * (den r : Q) * (den r : Q))⁻¹ := by simp [hdenProd]
+    _ = (rhsInt r i j : Q) / ((den r : Q) * (den r : Q) * (den r : Q)) := by simp [div_eq_mul_inv]
 
 theorem Z_eq_LDL (r : Block) :
     Z r = (L r) * Matrix.diagonal (Dvec r) * (Matrix.transpose (L r)) := by
   classical
-  have hDpos : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDpos : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   have hdenpos : ((den r : Q) * (den r : Q) * (den r : Q)) ≠ 0 := denQ3_ne_zero r
   ext i j
   have hInt := cleared_entry_identity r i j
@@ -178,18 +173,15 @@ theorem Z_eq_LDL (r : Block) :
   -- Compare the `Z` entry and the LDL entry via the explicit entry formulas.
   calc
     Z r i j
-        = (ZNum r i j : Q) / (D : Q) := by
-            simp [Z, toMat3Scaled, ZNum]
+        = (ZNum r i j : Q) / (D : Q) := by simp [Z, toMat3Scaled, ZNum]
     _ = (rhsInt r i j : Q) / ((den r : Q) * (den r : Q) * (den r : Q)) := hEntry
     _ = ((L r) * Matrix.diagonal (Dvec r) * (Matrix.transpose (L r))) i j := by
             simpa using (LDL_entry (r := r) (i := i) (j := j)).symm
 
 theorem Dvec_nonneg (r : Block) : ∀ i : Fin 3, 0 ≤ Dvec r i := by
   intro i
-  have hnum : 0 ≤ (DNum r).getD i.1 0 := by
-    fin_cases r <;> fin_cases i <;> decide
-  have hden : 0 < (den r : Q) := by
-    exact_mod_cast (den_pos r)
+  have hnum : 0 ≤ (DNum r).getD i.1 0 := by fin_cases r <;> fin_cases i <;> decide
+  have hden : 0 < (den r : Q) := by exact_mod_cast (den_pos r)
   -- Division by a positive scalar preserves nonnegativity.
   simpa [Dvec, toVec3Scaled, div_eq_mul_inv] using
     mul_nonneg (show (0 : Q) ≤ (DNum r).getD i.1 0 by exact_mod_cast hnum)
