@@ -400,7 +400,6 @@ def construction : Fixpoint.Construction V (blueprint pL) where
   Φ := fun _ ↦ Phi L
   defined := ⟨
     by  intro v
-        -- simp [blueprint, HierarchySymbol.Semiformula.val_sigma, L.isUTermVec_defined.proper.iff']
         simp only [Nat.succ_eq_add_one, Nat.reduceAdd, blueprint, Fin.isValue,
           HierarchySymbol.Semiformula.val_sigma, HierarchySymbol.Semiformula.sigma_mkDelta,
           HierarchySymbol.Semiformula.val_mkSigma, LogicalConnective.HomClass.map_or,
@@ -413,8 +412,6 @@ def construction : Fixpoint.Construction V (blueprint pL) where
           HierarchySymbol.Semiformula.val_mkPi, L.isUTermVec_defined.proper.iff']
         ,
     by  intro v
-        -- simpa [blueprint, Language.Defined.eval_rel_iff (L := L), L.isUTermVec_defined.df.iff,
-        --  HierarchySymbol.Semiformula.val_sigma, formulaAux] using phi_iff L _ _
         simpa only [Fin.isValue, Nat.succ_eq_add_one, Nat.reduceAdd, blueprint,
           HierarchySymbol.Semiformula.val_sigma, formulaAux,
           HierarchySymbol.Semiformula.val_mkSigma, LogicalConnective.HomClass.map_or,
@@ -845,20 +842,6 @@ def construction : Fixpoint.Construction V (β.blueprint) where
   Φ := fun _ ↦ c.Phi
   defined :=
   ⟨by intro v
-      /-
-      simp? [HierarchySymbol.Semiformula.val_sigma, Blueprint.blueprint,
-        L.isUFormula_defined.df.iff, L.isUFormula_defined.proper.iff',
-        c.rel_defined.iff, c.rel_defined.graph_delta.proper.iff',
-        c.nrel_defined.iff, c.nrel_defined.graph_delta.proper.iff',
-        c.verum_defined.iff, c.verum_defined.graph_delta.proper.iff',
-        c.falsum_defined.iff, c.falsum_defined.graph_delta.proper.iff',
-        c.and_defined.iff, c.and_defined.graph_delta.proper.iff',
-        c.or_defined.iff, c.or_defined.graph_delta.proper.iff',
-        c.all_defined.iff, c.all_defined.graph_delta.proper.iff',
-        c.ex_defined.iff, c.ex_defined.graph_delta.proper.iff',
-        c.allChanges_defined.iff, c.allChanges_defined.graph_delta.proper.iff',
-        c.exChanges_defined.iff, c.exChanges_defined.graph_delta.proper.iff']
-      -/
       simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Blueprint.blueprint, Fin.isValue,
         HierarchySymbol.Semiformula.val_sigma, HierarchySymbol.Semiformula.sigma_mkDelta,
         HierarchySymbol.Semiformula.val_mkSigma, Semiformula.eval_bexLTSucc', Semiterm.val_bvar,
@@ -883,20 +866,6 @@ def construction : Fixpoint.Construction V (β.blueprint) where
         LogicalConnective.HomClass.map_imply, LogicalConnective.Prop.arrow_eq, forall_eq,
         c.all_defined.graph_delta.proper.iff', c.ex_defined.graph_delta.proper.iff'],
     by  intro v
-        /-
-        simpa? [HierarchySymbol.Semiformula.val_sigma, Blueprint.blueprint,
-          L.isUFormula_defined.df.iff,
-          c.rel_defined.iff,
-          c.nrel_defined.iff,
-          c.verum_defined.iff,
-          c.falsum_defined.iff,
-          c.and_defined.iff,
-          c.or_defined.iff,
-          c.all_defined.iff,
-          c.ex_defined.iff,
-          c.allChanges_defined.iff,
-          c.exChanges_defined.iff] using c.phi_iff _ _
-        -/
         simpa only [Fin.isValue, Nat.succ_eq_add_one, Nat.reduceAdd, Blueprint.blueprint,
           HierarchySymbol.Semiformula.val_sigma, HierarchySymbol.Semiformula.val_mkDelta,
           HierarchySymbol.Semiformula.val_mkSigma, Semiformula.eval_bexLTSucc', Semiterm.val_bvar,
