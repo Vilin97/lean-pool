@@ -106,9 +106,8 @@ lemma serre_DE₂_slash_invariant (γ : SL(2, ℤ)) :
   rw [hE₂slash_fun]
   simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
   have hD_lin : D (E₂ - α • D₂ γ) z = D E₂ z - α * D (D₂ γ) z := by
-    have hαD₂ := (MDifferentiable_D₂ γ).const_smul α
-    simp only [D_sub E₂ _ E₂_holo' hαD₂, D_smul α _ (MDifferentiable_D₂ γ),
-               Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+    simp only [D_sub E₂ _ E₂_holo' ((MDifferentiable_D₂ γ).const_smul α),
+               D_smul α _ (MDifferentiable_D₂ γ), Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
   simp only [serreD, Pi.sub_apply, Pi.mul_apply, Pi.smul_apply, smul_eq_mul]
   rw [hD_lin, D_D₂ γ z]
   have hα_val : α = 3 / π^2 := by simp only [hα_def, riemannZeta_two]; field_simp; ring

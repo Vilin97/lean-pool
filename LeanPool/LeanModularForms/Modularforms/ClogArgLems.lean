@@ -61,7 +61,7 @@ lemma arg_pow_aux (n : ℕ) (x : ℂ) (hx : x ≠ 0) (hna : |arg x| < π / n) :
 
 lemma one_add_abs_half_ne_zero {x : ℂ} (hb : ‖x‖ < 1 / 2) : 1 + x ≠ 0 := by
   by_contra h
-  rw [@add_eq_zero_iff_neg_eq] at h
+  rw [add_eq_zero_iff_neg_eq] at h
   rw [← h] at hb
   simp at hb
   linarith

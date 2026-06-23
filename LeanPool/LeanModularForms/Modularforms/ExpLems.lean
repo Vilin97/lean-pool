@@ -38,9 +38,7 @@ theorem exp_upperHalfPlane_lt_one_nat (z : ℍ) (n : ℕ) :
 lemma exp_periodo (z : ℍ) (n : ℕ) :
   cexp (2 * ↑π * Complex.I * ↑↑n * (1 + ↑z)) = cexp (2 * ↑π * Complex.I * ↑↑n * ↑z) := by
   rw [mul_add]
-  have := exp_periodic.nat_mul n
-  rw [Periodic] at this
-  have ht := this (2 * π * Complex.I * n * z)
+  have ht := (exp_periodic.nat_mul n) (2 * π * Complex.I * n * z)
   rw [← ht]
   congr 1
   ring

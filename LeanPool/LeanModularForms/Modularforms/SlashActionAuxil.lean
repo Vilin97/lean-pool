@@ -119,12 +119,12 @@ lemma Γ2_c_eq_zero (A : Γ 2) (h : A.1 1 0 = 0) : A ∈ Subgroup.closure {α, �
   by_cases ha : (A.val.val 0 0) = 1 ∨ (A.val.val 0 0) = -1
   · obtain ⟨val, property⟩ := A
     simp_all only [Fin.isValue, Int.reduceNeg]
+    obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
+      simp only [Gamma_mem] at property
+      erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
+      exact property.2.1
     cases ha with
     | inl h_1 =>
-      obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
-        simp only [Gamma_mem] at property
-        erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
-        exact property.2.1
       have h11 : val.val 1 1 = 1 := by have := val.2; rw [Matrix.det_fin_two] at this; simp_all
       have h_alpha_k : val = α ^ k := by
         refine Subtype.ext ?_
@@ -132,10 +132,6 @@ lemma Γ2_c_eq_zero (A : Γ 2) (h : A.1 1 0 = 0) : A ∈ Subgroup.closure {α, �
         ext i j; fin_cases i <;> fin_cases j <;> simp_all
       exact h_alpha_k.symm ▸ Subgroup.zpow_mem _ (Subgroup.subset_closure (Set.mem_insert _ _)) _
     | inr h_2 =>
-      obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
-        simp only [Gamma_mem] at property
-        erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
-        exact property.2.1
       have h11 : val.val 1 1 = -1 := by have := val.2; rw [Matrix.det_fin_two] at this; grind
       have h_val : val = negI * α^(-k) := by
         refine Subtype.ext ?_

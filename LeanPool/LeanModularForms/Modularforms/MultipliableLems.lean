@@ -23,13 +23,12 @@ open ArithmeticFunction
 
 /-this is being PRd-/
 lemma Complex.summable_nat_multipliable_one_add (f : ℕ → ℂ) (hf : Summable f) :
-    Multipliable (fun n : ℕ => 1 + f n) := by
-  apply Complex.multipliable_of_summable_log
-  apply Complex.summable_log_one_add_of_summable hf
+    Multipliable (fun n : ℕ => 1 + f n) :=
+  Complex.multipliable_of_summable_log (Complex.summable_log_one_add_of_summable hf)
 
 
 theorem term_ne_zero (z : ℍ) (n : ℕ) : 1 -cexp (2 * ↑π * Complex.I * (↑n + 1) * ↑z) ≠ 0 := by
-  rw [@sub_ne_zero]
+  rw [sub_ne_zero]
   intro h
   have := exp_upperHalfPlane_lt_one_nat z n
   rw [← h] at this
@@ -40,9 +39,7 @@ theorem ball_pow_ne_1 (x : ℂ) (hx : x ∈ ball 0 1) (n : ℕ) : 1 + (fun n ↦
   rw [← sub_eq_add_neg, sub_ne_zero]
   have hxn : ‖(x ^ (n + 1))‖ < 1 := by
     simp only [norm_pow]
-    refine pow_lt_one₀ ?_ hx ?_
-    · exact norm_nonneg x
-    omega
+    exact pow_lt_one₀ (norm_nonneg x) hx (by omega)
   intro h
   rw [← h] at hxn
   simp only [norm_one, lt_self_iff_false] at hxn
@@ -102,21 +99,16 @@ lemma tprod_ne_zero (x : ℍ) (f : ℕ → ℍ → ℂ) (hf : ∀ i x, 1 + f i x
 lemma Multipliable_pow {ι : Type*} (f : ι → ℂ) (hf : Multipliable f) (n : ℕ) :
      Multipliable (fun i => f i ^ n) := by
   induction n with
-  | zero =>
-    simp
+  | zero => simp
   | succ n hn =>
-    conv =>
-      enter [1]
-      intro u
-      rw [pow_succ]
-    apply Multipliable.mul hn hf
+    simp only [pow_succ]
+    exact hn.mul hf
 
 
 
 lemma MultipliableDeltaProductExpansion_pnat (z : ℍ) :
-  Multipliable (fun (n : ℕ+) => (1 - cexp (2 * π * Complex.I * n * z))^24) := by
-  apply Multipliable_pow
-  apply MultipliableEtaProductExpansion_pnat z
+  Multipliable (fun (n : ℕ+) => (1 - cexp (2 * π * Complex.I * n * z))^24) :=
+  Multipliable_pow _ (MultipliableEtaProductExpansion_pnat z) 24
 
 
 lemma tprod_pow (f : ℕ → ℂ) (hf : Multipliable f) (n : ℕ) : (∏' (i : ℕ), f i) ^ n = ∏' (i : ℕ),
@@ -124,10 +116,8 @@ lemma tprod_pow (f : ℕ → ℂ) (hf : Multipliable f) (n : ℕ) : (∏' (i : �
   induction n with
   | zero => simp
   | succ n hn =>
-    rw [pow_succ, hn, ← Multipliable.tprod_mul]
-    · congr
-    · apply Multipliable_pow f hf n
-    exact hf
+    rw [pow_succ, hn, ← Multipliable.tprod_mul (Multipliable_pow f hf n) hf]
+    congr
 
 
 
@@ -137,11 +127,7 @@ theorem hasProd_le_nonneg (f g : ι → ℝ) (h : ∀ i, f i ≤ g i) (h0 : ∀ 
   (hf : HasProd f a₁) (hg : HasProd g a₂) : a₁ ≤ a₂ := by
   apply le_of_tendsto_of_tendsto' hf hg
   intro s
-  apply Finset.prod_le_prod
-  intros i hi
-  · exact h0 i
-  intros i hi
-  exact h i
+  exact Finset.prod_le_prod (fun i _ => h0 i) (fun i _ => h i)
 
 theorem HasProd.le_one_nonneg (g : ℕ → ℝ) (h : ∀ i, g i ≤ 1) (h0 : ∀ i, 0 ≤ g i)
     (ha : HasProd g a) : a ≤ 1 := by
@@ -149,5 +135,5 @@ theorem HasProd.le_one_nonneg (g : ℕ → ℝ) (h : ∀ i, g i ≤ 1) (h0 : ∀
 
 theorem one_le_tprod_nonneg (g : ℕ → ℝ) (h : ∀ i, g i ≤ 1) (h0 : ∀ i, 0 ≤ g i) : ∏' i, g i ≤ 1 := by
   by_cases hg : Multipliable g
-  · apply hg.hasProd.le_one_nonneg g h h0
+  · exact hg.hasProd.le_one_nonneg g h h0
   · rw [tprod_eq_one_of_not_multipliable hg]

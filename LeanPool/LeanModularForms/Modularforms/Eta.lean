@@ -87,9 +87,7 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
         congr 1
         · have hzne := ne_zero z
           have hI : Complex.I ≠ 0 := I_ne_zero
-          have hpi : (π : ℂ) ≠ 0 := by
-            simp only [ne_eq, ofReal_eq_zero]
-            exact Real.pi_ne_zero
+          have hpi : (π : ℂ) ≠ 0 := by simp [Real.pi_ne_zero]
           field_simp
           ring
         rw [mul_comm]
@@ -173,8 +171,7 @@ lemma eta_equality : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
     rw [← mul_assoc]
   have he : η Complex.I ≠ 0 := by
     simpa [ModularForm.eta] using (ModularForm.eta_ne_zero (z := (Complex.I : ℂ)) (by simp))
-  have hcd := (mul_eq_right₀ he).mp (_root_.id (Eq.symm h3))
-  rw [mul_eq_one_iff_inv_eq₀ hz] at hcd
-  rw [@inv_eq_iff_eq_inv] at hcd
+  have hcd := (mul_eq_right₀ he).mp h3.symm
+  rw [mul_eq_one_iff_inv_eq₀ hz, inv_eq_iff_eq_inv] at hcd
   rw [hcd] at h2
   exact h2

@@ -310,16 +310,26 @@ theorem segment_integral_add_of_holomorphic {f : ℂ → ℂ} {S : Set ℂ}
 
 /-! ### Contour parameterization lemmas -/
 
+/-- The derivative of the diagonal contour map. -/
+private theorem hasDerivAt_contour_neg1_to_i (t : ℝ) :
+    HasDerivAt (fun s : ℝ => contourNeg1ToI s) (1 + I : ℂ) t := by
+  simp only [contourNeg1ToI]
+  have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (1 + I : ℂ)
+  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
+    mul_one] at h1
+  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
+
+/-- The derivative of the vertical contour map. -/
+private theorem hasDerivAt_vert_contour (t : ℝ) :
+    HasDerivAt (fun s : ℝ => (-1 : ℂ) + I * ↑s) (I : ℂ) t := by
+  have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (I : ℂ)
+  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
+    mul_one] at h1
+  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
+
 /-- The derivative of `contourNeg1ToI` is the constant `1 + I`. -/
-theorem deriv_contour_neg1_to_i (t : ℝ) : deriv contourNeg1ToI t = 1 + I := by
-  have h1 : HasDerivAt (fun s : ℝ => (-1 : ℂ) + (1 + I) * ↑s) (1 + I) t := by
-    have h := (ofRealCLM.hasDerivAt (x := t)).const_mul (1 + I : ℂ)
-    have hv : (1 + I) * ofRealCLM (1 : ℝ) = 1 + I := by simp [ofRealCLM, Complex.ofReal_one]
-    rw [hv] at h
-    exact (hasDerivAt_const t (-1 : ℂ)).add h |>.congr_deriv (by ring)
-  have h2 : (fun s : ℝ => (-1 : ℂ) + (1 + I) * ↑s) = contourNeg1ToI := by
-    ext s; simp [contourNeg1ToI]
-  rw [h2] at h1; exact h1.deriv
+theorem deriv_contour_neg1_to_i (t : ℝ) : deriv contourNeg1ToI t = 1 + I :=
+  (hasDerivAt_contour_neg1_to_i t).deriv
 
 /-- `I12` expressed as a segment integral from `-1` to `I`. -/
 theorem I12_eq_segment_integral (r : ℝ) :
@@ -371,8 +381,7 @@ so path independence (from `holomorphic_convex_primitive`) applies. -/
 
 /-- The point `-1 + δI` lies in the upper half-plane for `δ > 0`. -/
 theorem neg_one_add_delta_I_mem_uhp {δ : ℝ} (hδ : 0 < δ) :
-    (-1 + ↑δ * I : ℂ) ∈ {z : ℂ | 0 < z.im} := by
-  simpa using hδ
+    (-1 + ↑δ * I : ℂ) ∈ {z : ℂ | 0 < z.im} := by simpa using hδ
 
 /-- The point `-1 + I` lies in the upper half-plane. -/
 theorem neg_one_add_I_mem_uhp : (-1 + I : ℂ) ∈ {z : ℂ | 0 < z.im} := by simp
@@ -805,23 +814,6 @@ The proof of `I12_eq_rectangular` decomposes into:
 2. An algebraic identity expressing the difference as three small terms
 3. Each of those three terms tending to zero as delta -> 0+
 4. Tendsto uniqueness to conclude -/
-
-/-- The derivative of the diagonal contour map. -/
-private theorem hasDerivAt_contour_neg1_to_i (t : ℝ) :
-    HasDerivAt (fun s : ℝ => contourNeg1ToI s) (1 + I : ℂ) t := by
-  simp only [contourNeg1ToI]
-  have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (1 + I : ℂ)
-  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
-    mul_one] at h1
-  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
-
-/-- The derivative of the vertical contour map. -/
-private theorem hasDerivAt_vert_contour (t : ℝ) :
-    HasDerivAt (fun s : ℝ => (-1 : ℂ) + I * ↑s) (I : ℂ) t := by
-  have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (I : ℂ)
-  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
-    mul_one] at h1
-  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
 
 /-- FTC for the tail diagonal integral: for delta in (0, 1], the integral from
 delta to 1 of the diagonal integrand equals G(I) - G(contour(delta)). -/

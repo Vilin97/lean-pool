@@ -24,28 +24,23 @@ lemma limUnder_add {α : Type*} [Preorder α] [(atTop : Filter α).NeBot] (f g :
     (hf : CauchySeq f) (hg : CauchySeq g) :
     (limUnder atTop f) + (limUnder atTop g) = limUnder atTop (f + g) := by
   nth_rw 3 [Filter.Tendsto.limUnder_eq]
-  rw [@Pi.add_def]
-  apply Filter.Tendsto.add
-  · refine CauchySeq.tendsto_limUnder hf
-  refine CauchySeq.tendsto_limUnder hg
+  rw [Pi.add_def]
+  exact (hf.tendsto_limUnder).add (hg.tendsto_limUnder)
 
 
 lemma limUnder_mul_const {α : Type*} [Preorder α] [(atTop : Filter α).NeBot] (f : α → ℂ)
     (hf : CauchySeq f) (c : ℂ) :
     c * (limUnder atTop f)= limUnder atTop (c • f) := by
   nth_rw 2 [Filter.Tendsto.limUnder_eq]
-  apply Filter.Tendsto.const_mul
-  refine CauchySeq.tendsto_limUnder hf
+  exact (hf.tendsto_limUnder).const_mul c
 
 
 lemma limUnder_sub {α : Type*} [Preorder α] [(atTop : Filter α).NeBot] (f g : α → ℂ)
     (hf : CauchySeq f) (hg : CauchySeq g) :
     (limUnder atTop f) - (limUnder atTop g) = limUnder atTop (f - g) := by
   nth_rw 3 [Filter.Tendsto.limUnder_eq]
-  rw [@Pi.sub_def]
-  apply Filter.Tendsto.sub
-  · refine CauchySeq.tendsto_limUnder hf
-  refine CauchySeq.tendsto_limUnder hg
+  rw [Pi.sub_def]
+  exact (hf.tendsto_limUnder).sub (hg.tendsto_limUnder)
 
 
 lemma limUnder_congr_eventually (f g : ℕ → ℂ) (h : ∀ᶠ n in atTop, f n = g n)

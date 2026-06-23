@@ -62,7 +62,6 @@ lemma G2_q_exp (z : ℍ) : G₂ z = (2 * riemannZeta 2) - 8 * π ^ 2 *
           apply tsum_congr
           intro n
           rw [← Complex.exp_nat_mul]
-          congr 1
           ring_nf
 
 lemma G2_periodic : (G₂ ∣[(2 : ℤ)] ModularGroup.T) = G₂ := by
@@ -110,6 +109,13 @@ lemma E₂_S_transform (z : ℍ) :
   -- `only` is required here; without it simp rewrites the congrArg term structure
   simpa only [mul_assoc, inv_mul_cancel₀ hz2, mul_one] using congrArg (· * ((z : ℂ) * (z : ℂ))) h
 
+private lemma cexp_succ_eq_pow (z : ℍ) (n : ℕ) :
+    cexp (2 * π * Complex.I * (n + 1) * z) = cexp (2 * π * Complex.I * z) ^ (n + 1) := by
+  rw [← Complex.exp_nat_mul]
+  congr 1
+  push_cast
+  ring
+
 lemma tsum_eq_tsum_sigma (z : ℍ) : ∑' n : ℕ, (n + 1) *
     cexp (2 * π * Complex.I * (n + 1) * z) / (1 - cexp (2 * π * Complex.I * (n + 1) * z)) =
     ∑' n : ℕ, sigma 1 (n + 1) * cexp (2 * π * Complex.I * (n + 1) * z) := by
@@ -129,26 +135,12 @@ lemma tsum_eq_tsum_sigma (z : ℍ) : ∑' n : ℕ, (n + 1) *
       = ∑' n : ℕ, f (n + 1) := by
           apply tsum_congr
           intro n
-          have hpow : cexp (2 * π * Complex.I * (n + 1) * z) = q ^ (n + 1) := by
-            dsimp [q]
-            rw [← Complex.exp_nat_mul]
-            congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by norm_num [Nat.cast_add]
-            rw [hn]
-            ring
-          simp [f, pow_one, hpow]
+          simp [f, pow_one, cexp_succ_eq_pow z n, q]
     _ = ∑' n : ℕ, g (n + 1) := h
     _ = ∑' n : ℕ, sigma 1 (n + 1) * cexp (2 * π * Complex.I * (n + 1) * z) := by
           apply tsum_congr
           intro n
-          have hpow : cexp (2 * π * Complex.I * (n + 1) * z) = q ^ (n + 1) := by
-            dsimp [q]
-            rw [← Complex.exp_nat_mul]
-            congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by norm_num [Nat.cast_add]
-            rw [hn]
-            ring
-          simp [g, hpow]
+          simp [g, cexp_succ_eq_pow z n, q]
 
 lemma E₂_eq (z : UpperHalfPlane) : E₂ z =
     1 - 24 * ∑' n : ℕ+, ↑n * cexp (2 * π * Complex.I * n * z) /
@@ -180,6 +172,5 @@ lemma E₂_eq (z : UpperHalfPlane) : E₂ z =
               have hpow : cexp (2 * π * Complex.I * n * z) =
                   cexp (2 * π * Complex.I * z) ^ (n : ℕ) := by
                 rw [← Complex.exp_nat_mul]
-                congr 1
-                ring
+                ring_nf
               simp [pow_one, hpow]

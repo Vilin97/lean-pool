@@ -44,10 +44,9 @@ theorem qParam_lt_one (z : ℍ) (r : ℝ) (hr : 0 < r) : ‖𝕢 r z‖ < 1 := b
 lemma one_sub_qParam_ne_zero (r : ℝ) (hr : 0 < r) (z : ℍ) : 1 - 𝕢 r z ≠ 0 := by
   rw [sub_ne_zero]
   intro h
-  have := qParam_lt_one z r
+  have := qParam_lt_one z r hr
   rw [← h] at this
-  simp [lt_self_iff_false] at *
-  linarith
+  simp at this
 
 lemma one_add_eta_q_ne_zero (n : ℕ) (z : ℍ) : 1 - etaQ n z ≠ 0 := by
   rw [eta_q_eq_exp, sub_ne_zero]
@@ -121,12 +120,6 @@ theorem etaProdTerm_ne_zero (z : ℍ) : ηₚ z ≠ 0 := by
 lemma dedekindEtaFun'_ne_zero (z : ℍ) : η z ≠ 0 := by
   simpa [dedekindEtaFun', Periodic.qParam] using etaProdTerm_ne_zero z
 
-/-
-lemma differentiable_eta_q (n : ℕ) : Differentiable ℂ (etaQ n) := by
-  rw [show etaQ n = fun x => -exp (2 * π * Complex.I * x) ^ (n + 1) by
-      ext z; exact eta_q_eq_pow n z]
-  fun_prop -/
-
 lemma logDeriv_one_sub_cexp (r : ℂ) : logDeriv (fun z ↦ 1 - r * cexp z) =
     fun z ↦ -r * cexp z / (1 - r * cexp ( z)) := by
   ext z
@@ -176,13 +169,7 @@ lemma logDeriv_q' (n : ℝ) (z : ℂ) : logDeriv (𝕢 n) z = 2 * ↑π * Comple
   simp only [logDeriv_exp, Pi.one_apply, deriv_id'', mul_one, one_mul]
 
 lemma logDeriv_z_term' (z : ℍ) : logDeriv (𝕢 24) ↑z  =  2 * ↑π * Complex.I / 24 := by
-  have : (𝕢 24) = (fun z ↦ cexp (z)) ∘ (fun z => (2 * ↑π * Complex.I / 24) * z)  := by
-    ext y
-    simp only [Periodic.qParam, ofReal_ofNat, comp_apply]
-    ring_nf
-  rw [this, logDeriv_comp, deriv_const_mul]
-  · simp only [logDeriv_exp, Pi.one_apply, deriv_id'', mul_one, one_mul]
-  all_goals {fun_prop}
+  simpa using logDeriv_q' 24 ↑z
 
 theorem etaProdTerm_differentiableAt (z : ℍ) : DifferentiableAt ℂ ηₚ ↑z := by
   have hD := hasProdLocallyUniformlyOn_eta.tendstoLocallyUniformlyOn_finsetRange.differentiableOn ?_

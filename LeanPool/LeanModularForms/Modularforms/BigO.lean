@@ -62,7 +62,6 @@ lemma linear_bigO (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻
   constructor
   · use min (-1) m
     intro n hn
-    --have := EisensteinSeries.summand_bound z (k := 1) (by norm_num) ![n, m]
     rw [mul_comm]
     gcongr
     · simp [(r_pos z).le]
@@ -108,9 +107,8 @@ lemma Asymptotics.IsBigO.of_neg {α β : Type*} [Norm α] [Norm β] {f : ℤ →
   refine Injective.tendsto_cofinite (Equiv.injective (Equiv.neg ℤ))
 
 lemma linear_bigO_nat (m : ℤ) (z : ℍ) : (fun (n : ℕ) => ((m : ℂ) * z + n)⁻¹) =O[cofinite]
-    fun n => (|(n : ℝ)|⁻¹) := by
-  have := linear_bigO (m : ℤ) z
-  apply this.zify
+    fun n => (|(n : ℝ)|⁻¹) :=
+  (linear_bigO (m : ℤ) z).zify
 
 lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)⁻¹) =O[cofinite]
     fun n => (|(n : ℝ)|⁻¹) := by
@@ -146,7 +144,6 @@ lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)�
   constructor
   · use min (-1) m
     intro n hn
-    --have := EisensteinSeries.summand_bound z (k := 1) (by norm_num) ![n, m]
     rw [mul_comm]
     gcongr
     · simp [(r_pos z).le]

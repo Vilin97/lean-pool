@@ -55,41 +55,31 @@ theorem tendsto_qParam_atImInfty :
   exact Filter.Tendsto.congr
     (fun z => by simp only [Function.Periodic.qParam]; congr 1; push_cast; ring) h2
 
+/-- A level-one modular form with constant q-expansion term `1` tends to `1`
+at the cusp. -/
+private theorem tendsto_one_atImInfty_of_cuspFunction_zero
+    {k : ℤ} (f : ModularForm (CongruenceSubgroup.Gamma 1) k)
+    (hval : UpperHalfPlane.cuspFunction 1 f 0 = 1) :
+    Tendsto f UpperHalfPlane.atImInfty (nhds 1) := by
+  have hcont : ContinuousAt (UpperHalfPlane.cuspFunction 1 f) 0 :=
+    (ModularFormClass.analyticAt_cuspFunction_zero f one_pos (by simp)).continuousAt
+  rw [show (1 : ℂ) = UpperHalfPlane.cuspFunction 1 f 0 from hval.symm]
+  exact (hcont.tendsto.comp tendsto_qParam_atImInfty).congr
+    (fun z => (SlashInvariantFormClass.eq_cuspFunction f z (by simp) one_ne_zero))
+
 /-- `E4(z) -> 1` as `Im(z) -> infinity`, from the q-expansion constant term. -/
 theorem E₄_tendsto_one_atImInfty_SP :
-    Tendsto E₄ UpperHalfPlane.atImInfty (nhds 1) := by
-  have heq : ∀ z : UpperHalfPlane, E₄ z = UpperHalfPlane.cuspFunction 1 E₄
-      (Function.Periodic.qParam 1 (z : ℂ)) :=
-    fun z => (SlashInvariantFormClass.eq_cuspFunction E₄ z
-      (by simp) one_ne_zero).symm
-  have hcont : ContinuousAt (UpperHalfPlane.cuspFunction 1 E₄) 0 :=
-    (ModularFormClass.analyticAt_cuspFunction_zero E₄ one_pos (by simp)).continuousAt
-  have hval : UpperHalfPlane.cuspFunction 1 E₄ 0 = 1 := by
+    Tendsto E₄ UpperHalfPlane.atImInfty (nhds 1) :=
+  tendsto_one_atImInfty_of_cuspFunction_zero E₄ <| by
     have h := cuspfunc_Zero (n := 1) (f := E₄); simp only [Nat.cast_one] at h
     rw [h]; exact E4_q_exp_zero
-  have hq : Tendsto (fun (z : UpperHalfPlane) =>
-      Function.Periodic.qParam 1 (z : ℂ))
-      UpperHalfPlane.atImInfty (nhds 0) := tendsto_qParam_atImInfty
-  rw [show (1 : ℂ) = UpperHalfPlane.cuspFunction 1 E₄ 0 from hval.symm]
-  exact (hcont.tendsto.comp hq).congr (fun z => (heq z).symm)
 
 /-- `E6(z) -> 1` as `Im(z) -> infinity`, from the q-expansion constant term. -/
 theorem E₆_tendsto_one_atImInfty_SP :
-    Tendsto E₆ UpperHalfPlane.atImInfty (nhds 1) := by
-  have heq : ∀ z : UpperHalfPlane, E₆ z = UpperHalfPlane.cuspFunction 1 E₆
-      (Function.Periodic.qParam 1 (z : ℂ)) :=
-    fun z => (SlashInvariantFormClass.eq_cuspFunction E₆ z
-      (by simp) one_ne_zero).symm
-  have hcont : ContinuousAt (UpperHalfPlane.cuspFunction 1 E₆) 0 :=
-    (ModularFormClass.analyticAt_cuspFunction_zero E₆ one_pos (by simp)).continuousAt
-  have hval : UpperHalfPlane.cuspFunction 1 E₆ 0 = 1 := by
+    Tendsto E₆ UpperHalfPlane.atImInfty (nhds 1) :=
+  tendsto_one_atImInfty_of_cuspFunction_zero E₆ <| by
     have h := cuspfunc_Zero (n := 1) (f := E₆); simp only [Nat.cast_one] at h
     rw [h]; exact E6_q_exp_zero
-  have hq : Tendsto (fun (z : UpperHalfPlane) =>
-      Function.Periodic.qParam 1 (z : ℂ))
-      UpperHalfPlane.atImInfty (nhds 0) := tendsto_qParam_atImInfty
-  rw [show (1 : ℂ) = UpperHalfPlane.cuspFunction 1 E₆ 0 from hval.symm]
-  exact (hcont.tendsto.comp hq).congr (fun z => (heq z).symm)
 
 /-! ## CuspFunction of Delta: analytic properties at q = 0
 
@@ -260,31 +250,33 @@ private lemma cuspFunction_sub_one_isBigO {f : ModularForm (CongruenceSubgroup.G
     (by simp)).differentiableAt.hasFDerivAt.isBigO_sub
   simpa only [hval, sub_zero, Function.id_def] using hbig
 
+/-- For a level-one modular form with constant q-term `1`, `‖f z - 1‖ ≤ C * ‖q(z)‖`
+eventually, for some `C > 0`. -/
+private lemma form_sub_one_eventually_le {k : ℤ}
+    (f : ModularForm (CongruenceSubgroup.Gamma 1) k)
+    (hval : UpperHalfPlane.cuspFunction 1 f 0 = 1) : ∃ C > 0,
+    ∀ᶠ z : UpperHalfPlane in UpperHalfPlane.atImInfty,
+    ‖f z - 1‖ ≤ C * ‖Function.Periodic.qParam 1 (z : ℂ)‖ := by
+  obtain ⟨C, hC, hbound⟩ := (cuspFunction_sub_one_isBigO hval).exists_pos
+  exact ⟨C, hC, (tendsto_qParam_atImInfty.eventually
+    (hbound.bound.mono (fun q hq => by simpa [id] using hq))).mono fun z hz => by
+      rwa [(SlashInvariantFormClass.eq_cuspFunction f z (by simp) one_ne_zero).symm]⟩
+
 /-- `‖E₄ z - 1‖ ≤ C * ‖q(z)‖` eventually, for some `C > 0`. -/
 private lemma E4_sub_one_eventually_le : ∃ C > 0,
     ∀ᶠ z : UpperHalfPlane in UpperHalfPlane.atImInfty,
-    ‖E₄ z - 1‖ ≤ C * ‖Function.Periodic.qParam 1 (z : ℂ)‖ := by
-  obtain ⟨C, hC, hbound⟩ := (cuspFunction_sub_one_isBigO (by
+    ‖E₄ z - 1‖ ≤ C * ‖Function.Periodic.qParam 1 (z : ℂ)‖ :=
+  form_sub_one_eventually_le E₄ <| by
     have h := cuspfunc_Zero (n := 1) (f := E₄); simp only [Nat.cast_one] at h
-    rw [h]; exact E4_q_exp_zero)).exists_pos
-  exact ⟨C, hC, (tendsto_qParam_atImInfty.eventually
-    (hbound.bound.mono (fun q hq => by simpa [id] using hq))).mono fun z hz => by
-      have := (SlashInvariantFormClass.eq_cuspFunction E₄ z
-        (by simp) one_ne_zero).symm
-      rwa [this]⟩
+    rw [h]; exact E4_q_exp_zero
 
 /-- `‖E₆ z - 1‖ ≤ C * ‖q(z)‖` eventually, for some `C > 0`. -/
 private lemma E6_sub_one_eventually_le : ∃ C > 0,
     ∀ᶠ z : UpperHalfPlane in UpperHalfPlane.atImInfty,
-    ‖E₆ z - 1‖ ≤ C * ‖Function.Periodic.qParam 1 (z : ℂ)‖ := by
-  obtain ⟨C, hC, hbound⟩ := (cuspFunction_sub_one_isBigO (by
+    ‖E₆ z - 1‖ ≤ C * ‖Function.Periodic.qParam 1 (z : ℂ)‖ :=
+  form_sub_one_eventually_le E₆ <| by
     have h := cuspfunc_Zero (n := 1) (f := E₆); simp only [Nat.cast_one] at h
-    rw [h]; exact E6_q_exp_zero)).exists_pos
-  exact ⟨C, hC, (tendsto_qParam_atImInfty.eventually
-    (hbound.bound.mono (fun q hq => by simpa [id] using hq))).mono fun z hz => by
-      have := (SlashInvariantFormClass.eq_cuspFunction E₆ z
-        (by simp) one_ne_zero).symm
-      rwa [this]⟩
+    rw [h]; exact E6_q_exp_zero
 
 /-- `‖E₂ z - 1‖ ≤ 192 * ‖q(z)‖` eventually (from the Eisenstein series bound). -/
 private lemma E2_sub_one_eventually_le :

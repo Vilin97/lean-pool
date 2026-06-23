@@ -30,14 +30,12 @@ version. -/
 theorem ModularForm.slash_neg_one {k : ℤ} (f : ℍ → ℂ) (hk : Even k) :
     f ∣[k] (-1 : (GL (Fin 2) ℝ)) =
     f ∣[k] (1 : (GL (Fin 2) ℝ)) := by
-  ext x
   simp [slash_def, denom, hk.neg_one_zpow, Matrix.det_neg, σ]
 
 /-- Slash action under -I₂ as a SL(2, ℤ) matrix. See `ModularForm.slash_neg_one` for the GL(n, ℝ)⁺
 version. -/
 theorem ModularForm.slash_neg_one' {k : ℤ} (f : ℍ → ℂ) (hk : Even k) :
     f ∣[k] (-1 : SL(2, ℤ)) = f ∣[k] (1 : SL(2, ℤ)) := by
-  ext x
   simp [SL_slash_def, denom, hk.neg_one_zpow]
 
 /-- See `ModularForm.slash_neg'` for the version where `g` is a SL(2, ℤ) matrix. -/

@@ -139,16 +139,13 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
 
 lemma func_div (a b c d : ℂ → ℂ) (x : ℂ) (hb : b x ≠ 0) (hd : d x ≠ 0) :
      (a / b) x = (c /d) x ↔ (a * d) x = (b * c) x := by
+  simp only [Pi.div_apply, Pi.mul_apply]
+  rw [div_eq_div_iff hb hd]
   constructor
   · intro h
-    simp only [ne_eq, Pi.div_apply, Pi.mul_apply] at *
-    rw [div_eq_div_iff hb hd] at h
     nth_rw 2 [mul_comm]
     exact h
   · intro h
-    simp only [Pi.div_apply]
-    rw [div_eq_div_iff hb hd]
-    simp only [Pi.mul_apply] at h
     nth_rw 2 [mul_comm]
     exact h
 

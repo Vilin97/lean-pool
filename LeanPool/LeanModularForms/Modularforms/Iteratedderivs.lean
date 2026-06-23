@@ -28,7 +28,7 @@ open scoped Interval Real NNReal ENNReal Topology BigOperators Nat
 theorem upper_ne_int (x : ℍ) (d : ℤ) : (x : ℂ) + d ≠ 0 := by
   by_contra h
   rw [add_eq_zero_iff_eq_neg] at h
-  have h1 : 0 < (x : ℂ).im := by simp only [coe_im]; exact im_pos x
+  have h1 : 0 < (x : ℂ).im := by simpa using im_pos x
   rw [h] at h1
   simp at h1
 
@@ -50,11 +50,9 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
              (-1) ^ (↑k + 1) * ((↑k + 1) * ↑k !) * ((x + ↑d) ^ (↑k + 1 + 1))⁻¹ := by
       rw [DifferentiableAt.derivWithin]
       · simp only [deriv_const_mul_field']
-        have h0 : (fun z : ℂ => ((z + d) ^ (k + 1))⁻¹) = (fun z : ℂ => (z + d) ^ (k + 1))⁻¹ := by
-          rfl
-        rw [h0]
-        have h1 : (fun z : ℂ => ((z + d) ^ (k + 1))) = (fun z : ℂ => (z + d)) ^ (k + 1) := by rfl
-        rw [h1, deriv_inv'', deriv_pow, deriv_add_const', deriv_id'']
+        rw [show (fun z : ℂ => ((z + d) ^ (k + 1))⁻¹) = (fun z : ℂ => (z + d) ^ (k + 1))⁻¹ from rfl,
+          show (fun z : ℂ => ((z + d) ^ (k + 1))) = (fun z : ℂ => (z + d)) ^ (k + 1) from rfl,
+          deriv_inv'', deriv_pow, deriv_add_const', deriv_id'']
         · simp only [Nat.cast_add, Nat.cast_one, add_tsub_cancel_right, mul_one]
           rw [pow_add]
           simp only [pow_one, Pi.mul_apply, Pi.pow_apply]

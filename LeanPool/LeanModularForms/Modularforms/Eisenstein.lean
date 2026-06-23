@@ -35,6 +35,7 @@ lemma exists_smul_eq_of_rank_one {M : Type*} [AddCommGroup M] [Module ℂ M]
     (Module.rank_eq_one_iff_finrank_eq_one.mp hrank) f
   exact ⟨c, hc.symm⟩
 
+
 /-- Symmetric version: `c • e = f` instead of `f = c • e`. -/
 lemma exists_smul_eq_of_rank_one' {M : Type*} [AddCommGroup M] [Module ℂ M]
     (hrank : Module.rank ℂ M = 1) {e : M} (he : e ≠ 0) (f : M) : ∃ c : ℂ, c • e = f :=
@@ -156,18 +157,14 @@ theorem cuspfunc_lim_coef {k : ℤ} {F : Type u_1} [inst : FunLike F ℍ ℂ] (n
     exact NeZero.ne n
   · exact hq1
 
-theorem summable_zero_pow {G : Type*} [NormedField G] (f : ℕ → G) : Summable fun m ↦ f m * 0 ^ m :=
-  by
+theorem summable_zero_pow {G : Type*} [NormedField G] (f : ℕ → G) :
+    Summable fun m ↦ f m * 0 ^ m := by
   rw [← summable_nat_add_iff 1]
-  simp only [ne_eq, AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false, not_false_eq_true,
-    zero_pow, mul_zero]
-  apply summable_zero
+  simp
 
 lemma tsum_zero_pow (f : ℕ → ℂ) : (∑' m, f m * 0 ^ m) = f 0 := by
-  rw [Summable.tsum_eq_zero_add]
-  · simp only [pow_zero, mul_one, ne_eq, AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false,
-      not_false_eq_true, zero_pow, mul_zero, tsum_zero, add_zero]
-  apply summable_zero_pow
+  rw [Summable.tsum_eq_zero_add (summable_zero_pow f)]
+  simp
 
 lemma cuspfunc_Zero [hn : NeZero n] [ModularFormClass F Γ(n) k] : cuspFunction n f 0 =
     (qExpansion n f).coeff 0 := by
@@ -185,10 +182,7 @@ lemma cuspfunc_Zero [hn : NeZero n] [ModularFormClass F Γ(n) k] : cuspFunction 
   rw [Summable.hasSum_iff] at this
   · rw [tsum_zero_pow] at this
     apply this.symm
-  rw [← summable_nat_add_iff 1]
-  simp only [ne_eq, AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false, not_false_eq_true,
-    zero_pow, mul_zero]
-  apply summable_zero
+  exact summable_zero_pow _
 
 lemma modfom_q_exp_cuspfunc (c : ℕ → ℂ) (f : F) [ModularFormClass F Γ(n) k] [NeZero n]
     (hf : ∀ τ : ℍ, HasSum (fun m : ℕ ↦ (c m) • 𝕢 n τ ^ m) (f τ)) : ∀ q : ℂ, ‖q‖ < 1 →
@@ -245,18 +239,14 @@ lemma modfom_q_exp_cuspfunc (c : ℕ → ℂ) (f : F) [ModularFormClass F Γ(n) 
     simp only [smul_eq_mul]
     rw [Summable.hasSum_iff]
     · apply tsum_zero_pow
-    rw [← summable_nat_add_iff 1]
-    simp only [ne_eq, AddLeftCancelMonoid.add_eq_zero, one_ne_zero, and_false, not_false_eq_true,
-    zero_pow, mul_zero]
-    apply summable_zero
+    exact summable_zero_pow _
 
 
 lemma qParam_surj_onto_ball (r : ℝ) (hr : 0 < r) (hr2 : r < 1) [NeZero n] : ∃ (z : ℍ), ‖𝕢 n z‖ = r
     := by
   use ⟨(Periodic.invQParam n r), ?_⟩
   · have hq := Function.Periodic.qParam_right_inv (h := n) (q := r) ?_ ?_
-    · simp?
-      rw [hq]
+    · rw [hq]
       simp [hr.le]
     · exact Ne.symm (NeZero.ne' _)
     simp only [ne_eq, ofReal_eq_zero]
@@ -484,9 +474,7 @@ lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansio
   have h := q_exp_unique 1 c (E k hk) (fun z => Ek_hasSum k hk hk2 z)
   have hc := congr_fun h 0
   rw [Nat.cast_one] at hc
-  rw [← hc]
-  simp [c]
-
+  simp [← hc, c]
 
 lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     (fun m => (qExpansion 1 (E k hk)).coeff m) =
@@ -499,7 +487,7 @@ lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
 
 lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
     fun m => if m = 0 then 1 else (240 : ℂ) * (σ 3 m) := by
-  have HH := Ek_q_exp 4 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+  have HH := Ek_q_exp 4 (by norm_num) (Nat.even_iff.mpr rfl)
   rw [E4_eq]
   simp only [Nat.cast_ofNat, one_div, neg_mul, Nat.add_one_sub_one] at *
   rw [HH]
@@ -526,7 +514,6 @@ lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
 
 lemma E4_q_exp_zero : (qExpansion 1 E₄).coeff 0 = 1 := by simpa using congr_fun E4_q_exp 0
 
-
 @[simp]
 theorem Complex.I_pow_six : Complex.I ^ 6 = -1 := by
   rw [(by norm_num : 6 = 2 * 3), pow_mul, I_sq]
@@ -547,7 +534,7 @@ theorem bernoulli'_six : bernoulli' 6 = 1 / 42 := by
 
 lemma E6_q_exp : (fun m => (qExpansion 1 E₆).coeff m) =
     fun m => if m = 0 then 1 else -(504 : ℂ) * (σ 5 m) := by
-  have HH := Ek_q_exp 6 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+  have HH := Ek_q_exp 6 (by norm_num) (Nat.even_iff.mpr rfl)
   rw [E6_eq]
   simp only [Nat.cast_ofNat, one_div, neg_mul, Nat.add_one_sub_one] at *
   rw [HH]
@@ -642,8 +629,7 @@ lemma Delta_cuspFuntion_eq : Set.EqOn (cuspFunction 1 Delta)
       · rw [ofComplex_apply_of_im_pos hz]
         rw [Delta_apply, Δ]
         have hq := Function.Periodic.qParam_right_inv (h := 1) ?_ (q := y) hyn0
-        · simp?
-          have : cexp (2 * ↑π * Complex.I * Periodic.invQParam 1 y) = y := by
+        · have : cexp (2 * ↑π * Complex.I * Periodic.invQParam 1 y) = y := by
             nth_rw 2 [← hq]
             congr 1
             simp
@@ -665,10 +651,8 @@ lemma Delta_cuspFuntion_eq : Set.EqOn (cuspFunction 1 Delta)
       · exact hyn0
     exact hyn0
 
-lemma Delta_ne_zero : Delta ≠ 0 := by
-  have := Δ_ne_zero UpperHalfPlane.I
-  rw [@DFunLike.ne_iff]
-  refine ⟨UpperHalfPlane.I, this⟩
+lemma Delta_ne_zero : Delta ≠ 0 :=
+  DFunLike.ne_iff.mpr ⟨UpperHalfPlane.I, Δ_ne_zero UpperHalfPlane.I⟩
 
 lemma asdf : TendstoLocallyUniformlyOn
     (fun n : ℕ ↦ fun y : ℂ => ∏ x ∈ Finset.range n, (1 - y ^ (x + 1)))
@@ -753,16 +737,12 @@ variable {α β γ : Type*}
 variable [CommMonoid α] [TopologicalSpace α] [UniformSpace α]
 
 lemma E4_q_exp_one : (qExpansion 1 E₄).coeff 1 = 240 := by
-  have := E4_q_exp
-  have H := congr_fun this 1
-  simp only [one_ne_zero, ↓reduceIte, ArithmeticFunction.sigma_one, Nat.cast_one, mul_one] at H
-  rw [H]
+  have H := congr_fun E4_q_exp 1
+  simpa only [one_ne_zero, ↓reduceIte, ArithmeticFunction.sigma_one, Nat.cast_one, mul_one] using H
 
 lemma E6_q_exp_one : (qExpansion 1 E₆).coeff 1 = -504 := by
-  have := E6_q_exp
-  have H := congr_fun this 1
-  simp only [one_ne_zero, ↓reduceIte, ArithmeticFunction.sigma_one, Nat.cast_one, mul_one] at H
-  rw [H]
+  have H := congr_fun E6_q_exp 1
+  simpa only [one_ne_zero, ↓reduceIte, ArithmeticFunction.sigma_one, Nat.cast_one, mul_one] using H
 
 lemma antidiagonal_one : Finset.antidiagonal 1 = {(1,0), (0,1)} := by
   ext ⟨x,y⟩
@@ -794,9 +774,9 @@ lemma Ek_ne_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : E k hk ≠ 0 
   exact zero_ne_one this
 
 /-This is in the mod forms repo-/
-lemma E4_ne_zero : E₄ ≠ 0 := by apply Ek_ne_zero 4 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+lemma E4_ne_zero : E₄ ≠ 0 := Ek_ne_zero 4 (by norm_num) (Nat.even_iff.mpr rfl)
 
-lemma E6_ne_zero : E₆ ≠ 0 := by apply Ek_ne_zero 6 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+lemma E6_ne_zero : E₆ ≠ 0 := Ek_ne_zero 6 (by norm_num) (Nat.even_iff.mpr rfl)
 
 lemma modularForm_normalise (f : ModularForm Γ(1) k) (hf : ¬ IsCuspForm Γ(1) k f) :
     (qExpansion 1 (((qExpansion 1 f).coeff 0)⁻¹ • f)).coeff 0 = 1 := by

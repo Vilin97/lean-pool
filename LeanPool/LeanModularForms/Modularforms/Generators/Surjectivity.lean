@@ -154,9 +154,7 @@ private lemma surj_inductive_step (n : ℕ) (hn12 : 12 ≤ n) (hk_even : Even n)
   have hmn_coeff : (qExpansion 1 mn).coeff 0 = 1 := monomial_coeff_zero_eq_one n a b hab
   have hg_cusp : IsCuspForm Γ(1) ↑n (f - c • mn) := by
     rw [IsCuspForm_iff_coeffZero_eq_zero]
-    have hsp : (1 : ℝ) ∈ Γ(1).strictPeriods := by
-      simp only [CongruenceSubgroup.strictPeriods_Gamma, Nat.cast_one,
-        AddSubgroup.mem_zmultiples]
+    have hsp : (1 : ℝ) ∈ Γ(1).strictPeriods := by simp
     set Q := qExpansionAddHom (by norm_num : (0 : ℝ) < 1) hsp (↑n)
     have hQ_smul : Q (c • mn) = c • Q mn :=
       ModularForm.qExpansion_smul (by norm_num : (0 : ℝ) < 1) hsp c mn

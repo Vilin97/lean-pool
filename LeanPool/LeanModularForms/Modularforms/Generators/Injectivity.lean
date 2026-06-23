@@ -56,15 +56,17 @@ private lemma evalE₄E₆_monomial_grade (d : Fin 2 →₀ ℕ) (c : ℂ) (k : 
   rw [map_mul, evalE₄E₆_C, Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul,
     DirectSum.smul_apply, evalE₄E₆_mono_grade (d 0) (d 1) k hk, smul_zero]
 
+private lemma weight_eq_4a_6b (d : Fin 2 →₀ ℕ) :
+    Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by
+  change (Finsupp.linearCombination ℕ E₄E₆Weight).toAddMonoidHom d = d 0 * 4 + d 1 * 6
+  simp only [LinearMap.toAddMonoidHom_coe, Finsupp.linearCombination_apply]
+  rw [d.sum_fintype (fun i a => a • E₄E₆Weight i) (fun i => by simp only [zero_smul])]
+  simp only [Fin.sum_univ_two, E₄E₆Weight, Matrix.cons_val_zero, Matrix.cons_val_one,
+    mul_comm, smul_eq_mul]
+
 private lemma weight_fin2_cast (d : Fin 2 →₀ ℕ) :
     (Finsupp.weight E₄E₆Weight d : ℤ) = ↑(d 0) * 4 + ↑(d 1) * 6 := by
-  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by
-    change (Finsupp.linearCombination ℕ E₄E₆Weight).toAddMonoidHom d = d 0 * 4 + d 1 * 6
-    simp only [LinearMap.toAddMonoidHom_coe, Finsupp.linearCombination_apply]
-    rw [d.sum_fintype (fun i a => a • E₄E₆Weight i) (fun i => by simp only [zero_smul])]
-    simp only [Fin.sum_univ_two, E₄E₆Weight, Matrix.cons_val_zero, Matrix.cons_val_one,
-      mul_comm, smul_eq_mul]
-  rw [this]; push_cast; ring
+  rw [weight_eq_4a_6b]; push_cast; ring
 
 private lemma evalE₄E₆_whc_grade (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n) (k : ℤ) (hk : k ≠ ↑n) :
@@ -105,17 +107,13 @@ private lemma evalE₄E₆_component_eq (p : MvPolynomial (Fin 2) ℂ) (n : ℕ)
 
 private lemma no_wt_monomial_of_odd {n : ℕ} (hn : Odd n) (d : Fin 2 →₀ ℕ) :
     Finsupp.weight E₄E₆Weight d ≠ n := by
-  intro h
-  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by have := weight_fin2_cast d; omega
-  rw [this] at h
-  have hev : Even n := ⟨d 0 * 2 + d 1 * 3, by omega⟩
-  simp only [Nat.even_iff, Nat.odd_iff] at hev hn; omega
+  have := weight_fin2_cast d
+  rw [Nat.odd_iff] at hn
+  omega
 
 private lemma no_wt_monomial_of_two (d : Fin 2 →₀ ℕ) :
     Finsupp.weight E₄E₆Weight d ≠ 2 := by
-  intro h
-  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by have := weight_fin2_cast d; omega
-  rw [this] at h; omega
+  have := weight_fin2_cast d; omega
 
 private lemma whomog_eq_zero_of_no_monomials {n : ℕ} (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n)
@@ -125,17 +123,9 @@ private lemma whomog_eq_zero_of_no_monomials {n : ℕ} (p : MvPolynomial (Fin 2)
   obtain ⟨d, hd⟩ := Finset.nonempty_of_ne_empty h
   exact hno d (hp (MvPolynomial.mem_support_iff.mp hd))
 
-private lemma weight_eq_4a_6b (d : Fin 2 →₀ ℕ) :
-    Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by
-  change (Finsupp.linearCombination ℕ E₄E₆Weight).toAddMonoidHom d = d 0 * 4 + d 1 * 6
-  simp only [LinearMap.toAddMonoidHom_coe, Finsupp.linearCombination_apply]
-  rw [d.sum_fintype (fun i a => a • E₄E₆Weight i) (fun i => by simp only [zero_smul])]
-  simp only [Fin.sum_univ_two, E₄E₆Weight, Matrix.cons_val_zero, Matrix.cons_val_one,
-    mul_comm, smul_eq_mul]
-
 private lemma finsupp_of_fin2 (a b : ℕ) :
-    ∃ d : Fin 2 →₀ ℕ, d 0 = a ∧ d 1 = b := by
-  exact ⟨Finsupp.equivFunOnFinite.invFun ![a, b], by dsimp, by dsimp⟩
+    ∃ d : Fin 2 →₀ ℕ, d 0 = a ∧ d 1 = b :=
+  ⟨Finsupp.equivFunOnFinite.invFun ![a, b], by dsimp, by dsimp⟩
 
 private lemma whomog_unique_monomial {n : ℕ} (p : MvPolynomial (Fin 2) ℂ)
     (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n)
@@ -410,8 +400,8 @@ private lemma whomog_poly_Delta_decomp {n : ℕ} (hn12 : 12 ≤ n)
 
 private lemma unique_small_weight_soln {a₁ b₁ a₂ b₂ : ℕ}
     (ha₁ : a₁ < 3) (ha₂ : a₂ < 3)
-    (h : a₁ * 4 + b₁ * 6 = a₂ * 4 + b₂ * 6) : a₁ = a₂ ∧ b₁ = b₂ := by
-  exact ⟨by interval_cases a₁ <;> interval_cases a₂ <;> omega, by omega⟩
+    (h : a₁ * 4 + b₁ * 6 = a₂ * 4 + b₂ * 6) : a₁ = a₂ ∧ b₁ = b₂ :=
+  ⟨by interval_cases a₁ <;> interval_cases a₂ <;> omega, by omega⟩
 
 private lemma reduced_poly_is_scalar {n : ℕ} (_hn12 : 12 ≤ n)
     (r : MvPolynomial (Fin 2) ℂ)

@@ -71,12 +71,7 @@ theorem der_iter_eq_der_aux2 (k n : ℕ) (r : ℍ') :
       iteratedDerivWithin k (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ' z) ↑r := by
   have hh :
       DifferentiableOn ℂ (fun t => (2 * ↑π * Complex.I * n) ^ k *
-      Complex.exp (2 * ↑π * Complex.I * n * t)) ℍ' := by
-    apply Differentiable.differentiableOn;
-    apply Differentiable.const_mul
-    apply Differentiable.cexp
-    apply Differentiable.const_mul
-    apply differentiable_id
+      Complex.exp (2 * ↑π * Complex.I * n * t)) ℍ' := by fun_prop
   apply DifferentiableOn.differentiableAt
   · apply DifferentiableOn.congr hh
     intro x hx
@@ -109,6 +104,28 @@ theorem der_iter_eq_der2' (k n : ℕ) (r : ℍ') :
 noncomputable def ctsExpTwoPiN (K : Set ℂ) : ContinuousMap K ℂ where
   toFun := fun r : K => Complex.exp (2 * ↑π * Complex.I * r)
 
+private lemma summable_two_pi_pow_geometric (r : ℝ) (hr : ‖r‖ < 1) (K : ℕ) :
+    Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ K * r ^ n)‖ := by
+  have heq : ∀ (n : ℕ), ((2 * ↑π) ^ K) * ‖((n) ^ K * (r ^ n))‖ =
+      ‖((2 * ↑π * Complex.I * n) ^ K * r ^ n)‖ := by
+    intro n
+    norm_cast
+    simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
+      ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
+      mul_one, norm_natCast]
+    norm_cast
+    simp only [Nat.cast_pow]
+    have hh : |π| = π := by simp [Real.pi_pos.le]
+    rw [hh]
+    ring
+  apply Summable.congr _ heq
+  rw [summable_mul_left_iff]
+  · exact summable_norm_pow_mul_geometric_of_norm_lt_one K hr
+  norm_cast
+  apply pow_ne_zero
+  apply mul_ne_zero
+  · linarith [Real.pi_pos]
+  apply Real.pi_ne_zero
 
 theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact K) (k : ℕ) :
     ∃ u : ℕ → ℝ,
@@ -127,29 +144,8 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       apply exp_upperHalfPlane_lt_one ⟨x.1, hK1 x.2⟩
     linarith
   have hr2 : 0 ≤ r := by apply norm_nonneg _
-  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖ := by
-    have : ∀ (n : ℕ), ((2 * ↑π)^(k+1))* ‖((n) ^ (k + 1) * (r ^ n))‖ =
-      ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖ := by
-        intro n
-        norm_cast
-        simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
-          ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
-          mul_one, norm_natCast]
-        norm_cast
-        simp only [Nat.cast_pow]
-        have hh : |π| = π := by simp [Real.pi_pos.le]
-        rw [hh]
-        ring
-    apply Summable.congr _ this
-    rw [summable_mul_left_iff]
-    · apply summable_norm_pow_mul_geometric_of_norm_lt_one
-      convert hr
-      rw [norm_norm]
-    norm_cast
-    apply pow_ne_zero
-    apply mul_ne_zero
-    · linarith
-    apply Real.pi_ne_zero
+  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖ :=
+    summable_two_pi_pow_geometric r (by rwa [Real.norm_of_nonneg hr2]) (k + 1)
   · use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖, hu
     intro n t
     have go := der_iter_eq_der2' k n ⟨t.1, hK1 t.2⟩
@@ -253,29 +249,8 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       apply exp_upperHalfPlane_lt_one ⟨x.1, hK1 x.2⟩
     linarith
   have hr2 : 0 ≤ r := by apply norm_nonneg _
-  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖ := by
-    have : ∀ (n : ℕ), ((2 * ↑π)^(k))* ‖((n) ^ (k) * (r ^ n))‖ =
-      ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖ := by
-        intro n
-        norm_cast
-        simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
-          ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
-          mul_one, norm_natCast]
-        norm_cast
-        simp only [Nat.cast_pow]
-        have hh : |π| = π := by simp [Real.pi_pos.le]
-        rw [hh]
-        ring
-    apply Summable.congr _ this
-    rw [summable_mul_left_iff]
-    · apply summable_norm_pow_mul_geometric_of_norm_lt_one
-      convert hr
-      rw [norm_norm]
-    norm_cast
-    apply pow_ne_zero
-    apply mul_ne_zero
-    · linarith
-    apply Real.pi_ne_zero
+  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖ :=
+    summable_two_pi_pow_geometric r (by rwa [Real.norm_of_nonneg hr2]) k
   use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖, hu
   intro n t
   simp only [Complex.norm_mul, norm_pow, norm_ofNat, norm_real, Real.norm_eq_abs, norm_I, mul_one,

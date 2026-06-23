@@ -40,7 +40,6 @@ open ArithmeticFunction
 private lemma neg_eq_comp_negEquiv {α : Type*} (f : ℤ → α) :
     (fun d => f (-d)) = (fun d => f d) ∘ negEquiv.toFun := by
   funext
-  simp
   rfl
 
 theorem int_sum_neg {α : Type*} [AddCommMonoid α] [TopologicalSpace α] [T2Space α] (f : ℤ → α) :
@@ -336,16 +335,9 @@ lemma sum_int_pnat3 (z : ℍ) (d : ℤ) :
   · apply summable_diff
 
 lemma pow_max (x y : ℕ) : (max x y)^2 = max (x^2) (y ^ 2) := by
-  by_cases h: max x y = x
-  · rw [h]
-    simp at *
-    nlinarith
-  have hh : max x y = y := by
-    simp only [sup_eq_left, not_le, sup_eq_right] at *
-    apply h.le
-  rw [hh]
-  simp at *
-  nlinarith
+  rcases le_total x y with h | h
+  · rw [max_eq_right h, max_eq_right (Nat.pow_le_pow_left h 2)]
+  · rw [max_eq_left h, max_eq_left (Nat.pow_le_pow_left h 2)]
 
 theorem extracted_abs_norm_summable (z : ℍ) (i : ℤ) :
   Summable fun m ↦ 1 / (r z ^ 2 * 2⁻¹ * ‖![m, i]‖ ^ 2) := by
