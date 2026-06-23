@@ -1372,8 +1372,7 @@ theorem continuous_Phi (k n : ℕ) : Continuous (Phi k n) := by
   have hterm : Continuous (fun z : ℂ =>
       (((-1 : ℂ) ^ j) * (Nat.choose k j : ℂ) *
           ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ))) *
-        (z ^ (n - j) * (star z) ^ (k - j))) := by
-    exact continuous_const.mul hpow
+        (z ^ (n - j) * (star z) ^ (k - j))) := continuous_const.mul hpow
   simpa [mul_assoc] using hterm
 
 /-- Finite Hermite sums are continuous. -/
@@ -2293,8 +2292,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg (m : ℕ) {x : ℝ} 
               have hpowx :
                   ((n + m + 1 : ℝ) ^ m) * x ^ (n + m) ≤
                     ((m + 1 : ℝ) ^ m * (((n + m).descFactorial m : ℕ) : ℝ)) *
-                      x ^ (n + m) := by
-                exact mul_le_mul_of_nonneg_right hpow_real (pow_nonneg hx _)
+                      x ^ (n + m) := mul_le_mul_of_nonneg_right hpow_real (pow_nonneg hx _)
               have hfacpos : 0 < (Nat.factorial (n + m) : ℝ) := by positivity
               rw [div_le_iff₀ hfacpos]
               calc
@@ -2977,8 +2975,7 @@ private lemma summable_sq_Phi_eval (k : ℕ) (z : ℂ) :
     simp [pow_mul, Nat.mul_comm]
   have hmajorant :
       Summable (fun n : ℕ => C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) / (Nat.factorial n : ℝ)))
-          := by
-    exact hbase.mul_left C
+          := hbase.mul_left C
   refine Summable.of_nonneg_of_le (fun n => sq_nonneg _) ?_ hmajorant
   intro n
   have hphi := phi_norm_le_majorant (k := k) (n := n) (R := R) hR hzR
@@ -3023,8 +3020,7 @@ private lemma summable_sq_qkn (k : ℕ) {r : ℝ} (hr : 0 < r) :
       show ‖circleLeadingFactor k r‖ ^ 2 = c by rfl]
     ring_nf
   have hsPhi := summable_sq_Phi_eval k (circlePoint r t0)
-  have hsScaled : Summable (fun n => c⁻¹ * (‖Phi k n (circlePoint r t0)‖ ^ 2)) := by
-    exact hsPhi.mul_left c⁻¹
+  have hsScaled : Summable (fun n => c⁻¹ * (‖Phi k n (circlePoint r t0)‖ ^ 2)) := hsPhi.mul_left c⁻¹
   refine hsScaled.congr ?_
   intro n
   calc
@@ -3092,8 +3088,7 @@ theorem point_eval_bounded :
             dsimp [C]
             unfold weightedNorm HermiteLEAN.weightedNorm
             rw [mul_comm]
-  have hu_summable : Summable u := by
-    exact summable_of_sum_range_le (fun n => norm_nonneg _) hu_range
+  have hu_summable : Summable u := summable_of_sum_range_le (fun n => norm_nonneg _) hu_range
   have hnorm_series : Summable (fun n : ℕ => ‖hermiteCoeff k G n * Phi k n z‖) := by
     simpa [u] using hu_summable
   have htsum : (∑' n : ℕ, hermiteCoeff k G n * Phi k n z) = G z := by
@@ -3105,8 +3100,7 @@ theorem point_eval_bounded :
         ‖∑' n : ℕ, hermiteCoeff k G n * Phi k n z‖
             ≤ ∑' n : ℕ, ‖hermiteCoeff k G n * Phi k n z‖ := norm_tsum_le_tsum_norm hnorm_series
         _ = ∑' n : ℕ, u n := by simp [u]
-    _ ≤ C * weightedNorm G := by
-      exact Real.tsum_le_of_sum_range_le (fun n => norm_nonneg _) hu_range
+    _ ≤ C * weightedNorm G := Real.tsum_le_of_sum_range_le (fun n => norm_nonneg _) hu_range
 
 private lemma summable_circleCoeff_norm {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k) {r : ℝ}
     (hr : 0 < r) :
@@ -3246,8 +3240,7 @@ private theorem circleSeries_l2_identity_canonical :
       calc
         ‖∑ n : Fin (J + 1), hermiteCoeff k G n.1 * (qkn k n.1 r : ℂ) * fourier (n.1 : ℤ) t‖
             ≤ ∑ n : Fin (J + 1), ‖hermiteCoeff k G n.1 * (qkn k n.1 r : ℂ) * fourier (n.1 : ℤ) t‖
-                := by
-              exact norm_sum_le _ _
+                := norm_sum_le _ _
         _ = ∑ n : Fin (J + 1), ‖c n.1‖ := by
               refine Finset.sum_congr rfl ?_
               intro n hn
@@ -4002,8 +3995,7 @@ theorem truncCirclePoly_tendsto_circleSeries :
         _ = c * circleSeries k (hermiteCoeff k HJ) r t := by simpa [HJ, c] using hHcircle
     have hcancel :
         circleSeries k (hermiteCoeff k G) r t - truncCirclePoly k r J G t =
-          circleSeries k (hermiteCoeff k HJ) r t := by
-      exact mul_left_cancel₀ hc_ne hmain
+          circleSeries k (hermiteCoeff k HJ) r t := mul_left_cancel₀ hc_ne hmain
     calc
       truncCirclePoly k r J G t - circleSeries k (hermiteCoeff k G) r t
           = -(circleSeries k (hermiteCoeff k G) r t - truncCirclePoly k r J G t) := by ring
@@ -4587,8 +4579,7 @@ private theorem integrable_weightedCross_of_memLp
       filter_upwards [hG.coeFn_toLp, hF.coeFn_toLp] with z hzG hzF
       rw [hzG, hzF]
     have hint' :
-        Integrable (fun z : ℂ => inner ℂ (gaussianScale G z) (gaussianScale F z)) := by
-      exact hint.congr hEq
+        Integrable (fun z : ℂ => inner ℂ (gaussianScale G z) (gaussianScale F z)) := hint.congr hEq
     convert hint' using 1
     ext z
     rw [RCLike.inner_apply']
@@ -4962,8 +4953,7 @@ private lemma hermiteSeries_weightedInner_eq {k : ℕ} (h : ℕ → ℂ)
   have htail := tendsto_sum_nat_add (fun m => ‖h m‖ ^ 2)
   rw [Metric.tendsto_atTop] at htail
   by_contra hneq
-  have hdist_pos : 0 < ‖weightedInner G (Phi k n) - h n‖ := by
-    exact norm_pos_iff.mpr (sub_ne_zero.mpr hneq)
+  have hdist_pos : 0 < ‖weightedInner G (Phi k n) - h n‖ := norm_pos_iff.mpr (sub_ne_zero.mpr hneq)
   obtain ⟨J0, hJ0⟩ := htail ((‖weightedInner G (Phi k n) - h n‖ / 2) ^ 2) (by positivity)
   let J := max J0 n
   have hJ_ge : J0 ≤ J := le_max_left _ _
@@ -5005,16 +4995,14 @@ private lemma hermiteSeries_weightedInner_eq {k : ℕ} (h : ℕ → ℂ)
     have hsq :
         ‖G z - SJ z‖ ^ 2 ≤ 2 * (‖G z‖ ^ 2 + ‖SJ z‖ ^ 2) := by
       have hsubsq :
-          ‖G z - SJ z‖ ^ 2 ≤ (‖G z‖ + ‖SJ z‖) ^ 2 := by
-        exact pow_le_pow_left₀ (norm_nonneg _) hsub 2
+          ‖G z - SJ z‖ ^ 2 ≤ (‖G z‖ + ‖SJ z‖) ^ 2 := pow_le_pow_left₀ (norm_nonneg _) hsub 2
       have hab :
           (‖G z‖ + ‖SJ z‖) ^ 2 ≤ 2 * (‖G z‖ ^ 2 + ‖SJ z‖ ^ 2) := by
         nlinarith [sq_nonneg (‖G z‖ - ‖SJ z‖)]
       exact le_trans hsubsq hab
     have hmul :
         ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) ≤
-          (2 * (‖G z‖ ^ 2 + ‖SJ z‖ ^ 2)) * rexp (-‖z‖ ^ 2) := by
-      exact mul_le_mul_of_nonneg_right hsq hexp
+          (2 * (‖G z‖ ^ 2 + ‖SJ z‖ ^ 2)) * rexp (-‖z‖ ^ 2) := mul_le_mul_of_nonneg_right hsq hexp
     have hnonneg :
         0 ≤ ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by positivity
     rw [Real.norm_of_nonneg hnonneg]
@@ -5084,8 +5072,7 @@ private lemma hermiteSeries_weightedInner_eq {k : ℕ} (h : ℕ → ℂ)
         (hGint := hPhi_int)
     have hDiff_small_sq :
         weightedNormSq (fun z : ℂ => G z - SJ z) <
-          (‖weightedInner G (Phi k n) - h n‖ / 2) ^ 2 := by
-      exact lt_of_le_of_lt hDiff_sq_le htail_small
+          (‖weightedInner G (Phi k n) - h n‖ / 2) ^ 2 := lt_of_le_of_lt hDiff_sq_le htail_small
     have hDiff_small :
         weightedNorm (fun z : ℂ => G z - SJ z) <
           ‖weightedInner G (Phi k n) - h n‖ / 2 := by

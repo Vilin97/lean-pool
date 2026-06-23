@@ -196,8 +196,7 @@ private theorem coordGapEqInt
   have h1 : 1 ≤ (n + M + 1) ^ 2 := by exact Nat.succ_le_of_lt (Nat.pow_pos (by omega))
   have h2 : (n - M) ^ 2 ≤ (n + M + 1) ^ 2 - 1 := by
     have hklt : n - M < n + M + 1 := by omega
-    have hsq : (n - M) ^ 2 < (n + M + 1) ^ 2 := by
-      exact Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
+    have hsq : (n - M) ^ 2 < (n + M + 1) ^ 2 := Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
     omega
   rw [Nat.cast_add, Int.ofNat_sub h2, Int.ofNat_sub h1]
   push_cast
@@ -246,8 +245,7 @@ private theorem degreeWidth_eq_gap_sum
     · have hMx : M ≤ j x := by omega
       rw [max_eq_left hMx]
       have hklt : j x - M < j x + M + 1 := by omega
-      have hsq : (j x - M) ^ 2 < (j x + M + 1) ^ 2 := by
-        exact Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
+      have hsq : (j x - M) ^ 2 < (j x + M + 1) ^ 2 := Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
       omega
   have hdistrib :
       (∑ q : Fin d, (((j q + M + 1) ^ 2 - 1) - (max (j q) M - M) ^ 2)) =
@@ -321,8 +319,7 @@ theorem highFrequencyThreshold
     unfold degreeThreshold
     have hdpos : 0 < d := by omega
     have hodd : 0 < 2 * M + 1 := by omega
-    have hprod : 0 < 120 * d * (2 * M + 1) := by
-      exact Nat.mul_pos (Nat.mul_pos (by decide) hdpos) hodd
+    have hprod : 0 < 120 * d * (2 * M + 1) := Nat.mul_pos (Nat.mul_pos (by decide) hdpos) hodd
     omega
   have hhigh' : M + 1 ≤ annulusRadius j := le_trans hM1 hj
   have hhigh : M + 1 ≤ R := by simpa [R] using hhigh'

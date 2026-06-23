@@ -586,8 +586,7 @@ private lemma defectAnnulusMass_localOrbit_lintegral
           (rhoPointwise (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) 0)
       have hsq :
           rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2 ≤
-            ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2 := by
-        exact sq_le_sq'
+            ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2 := sq_le_sq'
           (by
             have hnonneg : 0 ≤ rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) :=
               abs_nonneg _

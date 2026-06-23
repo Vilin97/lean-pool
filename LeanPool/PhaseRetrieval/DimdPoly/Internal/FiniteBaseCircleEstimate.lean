@@ -132,8 +132,7 @@ private theorem norm_lowPoly_sub_le_chord {D : Nat}
         ring
 
 private theorem lowPoly_slope_nonneg {D : Nat} (q : Fin (D + 1) -> ℂ) :
-    0 <= ∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ) := by
-  exact Finset.sum_nonneg fun n hn =>
+    0 <= ∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ) := Finset.sum_nonneg fun n hn =>
     mul_nonneg (norm_nonneg (q n)) (by exact_mod_cast Nat.zero_le n.1)
 
 private theorem norm_slowBandPoly_sub_le_chord {L : Nat}
@@ -168,8 +167,7 @@ private theorem norm_slowBandPoly_sub_le_chord {L : Nat}
         ring
 
 private theorem slowBandPoly_slope_nonneg {L : Nat} (p : Fin L -> ℂ) :
-    0 <= ∑ m : Fin L, ‖p m‖ * (m.1 : ℝ) := by
-  exact Finset.sum_nonneg fun m hm =>
+    0 <= ∑ m : Fin L, ‖p m‖ * (m.1 : ℝ) := Finset.sum_nonneg fun m hm =>
     mul_nonneg (norm_nonneg (p m)) (by exact_mod_cast Nat.zero_le m.1)
 
 private theorem bandPoly_eq_fourier_sum
@@ -998,8 +996,7 @@ private theorem defect_setIntegral_const_center_compare_band
         ∫ x in s, (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle
       <=
         ∫ x in s,
-          (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2 ∂ μCircle := by
-  exact defect_setIntegral_const_center_compare
+          (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2 ∂ μCircle := defect_setIntegral_const_center_compare
     s hs Q (bandPoly N p) hQ (continuous_bandPoly N p)
     hc htheta_nonneg htheta_le hfactor
 
@@ -1219,8 +1216,7 @@ private theorem complex_multiset_prod_norm_le_perturbed
         _ <=
             ((1 + eps) * ‖a ζ‖) *
               ((1 + eps) ^ s.card *
-                (s.map fun ζ => ‖a ζ‖).prod) := by
-          exact mul_le_mul hbζ ih' hprod_nonneg hcoef_nonneg
+                (s.map fun ζ => ‖a ζ‖).prod) := mul_le_mul hbζ ih' hprod_nonneg hcoef_nonneg
         _ =
             (1 + eps) ^ (ζ ::ₘ s).card *
               (((ζ ::ₘ s).map fun ζ => ‖a ζ‖).prod) := by
@@ -1316,8 +1312,7 @@ private theorem lowPoly_relative_oscillation_of_root_factor_bound
   have hprod :
       ‖(roots.map b).prod - (roots.map a).prod‖ <=
         ((1 + eps) ^ roots.card - 1) *
-          (roots.map fun ζ => ‖a ζ‖).prod := by
-    exact complex_multiset_prod_sub_norm_le_perturbed
+          (roots.map fun ζ => ‖a ζ‖).prod := complex_multiset_prod_sub_norm_le_perturbed
       roots a b heps (by simpa [roots, a, b] using hroot)
   have hprod_nonneg :
       0 <= (roots.map fun ζ => ‖a ζ‖).prod := by
@@ -1438,8 +1433,7 @@ private theorem lowPoly_norm_ge_of_roots_dist_ge {D : Nat}
   rw [norm_lowPoly_eq_leadingCoeff_mul_roots q x]
   have hprod :
       ((polyOfCoeff q).roots.map fun _ : ℂ => delta).prod <=
-        ((polyOfCoeff q).roots.map fun ζ => ‖zeta x - ζ‖).prod := by
-    exact Multiset.prod_map_le_prod_map₀
+        ((polyOfCoeff q).roots.map fun ζ => ‖zeta x - ζ‖).prod := Multiset.prod_map_le_prod_map₀
       (s := (polyOfCoeff q).roots)
       (f := fun _ : ℂ => delta)
       (g := fun ζ => ‖zeta x - ζ‖)
@@ -1649,8 +1643,7 @@ private theorem carrierArc_right_le_period_wip {N : Nat} (k : Fin N) :
   have hT_nonneg : 0 <= (2 * Real.pi : ℝ) := by positivity
   calc
     (2 * Real.pi) * ((k.1 + 1 : Nat) : ℝ) / (N : ℝ)
-        <= (2 * Real.pi) * (N : ℝ) / (N : ℝ) := by
-      exact div_le_div_of_nonneg_right
+        <= (2 * Real.pi) * (N : ℝ) / (N : ℝ) := div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_left hle hT_nonneg) (le_of_lt hNpos)
     _ = 2 * Real.pi := by field_simp [ne_of_gt hNpos]
 
@@ -2073,8 +2066,7 @@ private theorem badCarrierForRoot_union_subset_closedBall_of_center
     have hdist := circle_dist_le_pi_div_two_mul_chord x x0
     calc
       dist x x0 <= (Real.pi / 2) * ‖zeta x - zeta x0‖ := hdist
-      _ <= (Real.pi / 2) * (2 * delta) := by
-            exact mul_le_mul_of_nonneg_left hchord_le (by positivity)
+      _ <= (Real.pi / 2) * (2 * delta) := mul_le_mul_of_nonneg_left hchord_le (by positivity)
       _ = Real.pi * delta := by ring
   have hdist_y_x : dist y x <= arcLength (carrierArc N k) :=
     carrierArc_dist_le_length k y hy_arc x hx_arc
@@ -2515,8 +2507,7 @@ private theorem carrierIocImage_setIntegral_biUnion_finset_wip
           simpa [← hak] using hk)
       have hnull_union :
           MeasureTheory.NullMeasurableSet
-            (⋃ k ∈ K, carrierIocImage k) μCircle := by
-        exact K.nullMeasurableSet_biUnion
+            (⋃ k ∈ K, carrierIocImage k) μCircle := K.nullMeasurableSet_biUnion
           (fun k hk => carrierIocImage_nullMeasurable_wip k)
       have hfa : MeasureTheory.IntegrableOn f (carrierIocImage a) μCircle :=
         hf a (Finset.mem_insert_self a K)
@@ -2629,8 +2620,7 @@ private theorem carrierIocImage_card_le_of_closedBall_ratio_le
     (hsub : (⋃ k ∈ K, carrierIocImage k) ⊆ Metric.closedBall x0 R)
     (hratio : min (2 * Real.pi) (2 * R) / (2 * Real.pi) <=
       (M : ℝ) * (N : ℝ)⁻¹) :
-    K.card <= M := by
-  exact nat_card_le_of_real_invNat_le hN
+    K.card <= M := nat_card_le_of_real_invNat_le hN
     ((carrierIocImage_card_invNat_le_closedBall_ratio K hR hsub).trans hratio)
 
 private theorem badCarrierIndicesForRoot_card_le_of_delta_eq
@@ -2830,8 +2820,7 @@ private theorem carrierAverage_sub_mean_integral_zero
   have hconst :
       MeasureTheory.Integrable
         (fun _x : Circle => carrierAverage (N := N) k f)
-        (μCircle.restrict s) := by
-    exact MeasureTheory.integrable_const _
+        (μCircle.restrict s) := MeasureTheory.integrable_const _
   rw [MeasureTheory.integral_sub hf.restrict hconst, MeasureTheory.integral_const]
   simp only [hmu, carrierAverage, s]
   change (∫ x in arcSet (carrierArc N k), f x ∂ μCircle) -
@@ -2860,8 +2849,7 @@ private theorem setIntegral_bias_variance_of_mean_zero
         ∫ x in s, ‖f x - c‖ ^ 2 ∂ μ := by
   haveI : MeasureTheory.IsFiniteMeasure (μ.restrict s) :=
     MeasureTheory.isFiniteMeasureRestrict μ s
-  have hconst : MeasureTheory.Integrable (fun _x : α => c) μ := by
-    exact MeasureTheory.integrable_const _
+  have hconst : MeasureTheory.Integrable (fun _x : α => c) μ := MeasureTheory.integrable_const _
   have hgc : MeasureTheory.Integrable (fun x => f x - c) μ :=
     hf.sub hconst
   have hcross :
@@ -2889,8 +2877,7 @@ private theorem setIntegral_bias_variance_of_mean_zero
   have hsplit :
       ∫ x in s, (‖f x‖ ^ 2 - ‖f x - c‖ ^ 2) ∂ μ =
         (∫ x in s, ‖f x‖ ^ 2 ∂ μ) -
-          ∫ x in s, ‖f x - c‖ ^ 2 ∂ μ := by
-    exact MeasureTheory.integral_sub hfsq.restrict hgc_sq.restrict
+          ∫ x in s, ‖f x - c‖ ^ 2 ∂ μ := MeasureTheory.integral_sub hfsq.restrict hgc_sq.restrict
   have hicross :
       MeasureTheory.Integrable
         (fun x => @inner ℝ ℂ _ c (f x - c)) μ := by
@@ -3757,8 +3744,7 @@ private theorem goodCarrier_average_mass_le_actual_defect_plus_errors
   have havg :
       arcLength (carrierArc N k) *
           ‖carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 <=
-        2 * Crot * A + 2 * Crot * V := by
-    exact carrierAverage_mass_le_defect_plus_variance (N := N) k p hc
+        2 * Crot * A + 2 * Crot * V := carrierAverage_mass_le_defect_plus_variance (N := N) k p hc
   have hcompare :
       (1 / 2) * A - E <= Dint := by
     simpa [A, Dint, E, c] using
@@ -4145,8 +4131,7 @@ private theorem parseval_fin_fourier {L : Nat} (c : Fin L -> ℂ) :
                   (@inner ℂ ℂ _
                     ((↑↑PLp : Circle -> ℂ) t)
                     ((↑↑PLp : Circle -> ℂ) t))
-                  ∂ AddCircle.haarAddCircle := by
-                exact (ContinuousLinearMap.integral_comp_comm _ hint).symm
+                  ∂ AddCircle.haarAddCircle := (ContinuousLinearMap.integral_comp_comm _ hint).symm
             _ = _ := by
                 congr 1
                 ext t
@@ -4290,8 +4275,7 @@ private theorem sum_carrierAverage_variance_le_global
         ∫ x in arcSet (carrierArc N k),
           ‖slowBandPoly p x -
             carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 ∂ μCircle) <=
-        ∑ k : Fin N, (1 / (2 * Real.pi)) * (c * I k) := by
-    exact Finset.sum_le_sum (fun k hk => hlocal k)
+        ∑ k : Fin N, (1 / (2 * Real.pi)) * (c * I k) := Finset.sum_le_sum (fun k hk => hlocal k)
   have hsum_eq :
       (∑ k : Fin N, (1 / (2 * Real.pi)) * (c * I k)) =
         c * ((1 / (2 * Real.pi)) * ∑ k : Fin N, I k) := by
@@ -4869,8 +4853,7 @@ private theorem sum_badCarrier_average_mass_le_card_L_l2
           ‖carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 <=
       ((badCarrierIndices N (polyOfCoeff q).roots delta).card : ℝ) *
         (((2 * Real.pi) / (N : ℝ)) *
-          ((L : ℝ) * circleL2Sq (bandPoly N p))) := by
-  exact sum_carrier_average_mass_le_card_L_l2
+          ((L : ℝ) * circleL2Sq (bandPoly N p))) := sum_carrier_average_mass_le_card_L_l2
     (badCarrierIndices N (polyOfCoeff q).roots delta) p
 
 private theorem goodCarrier_base_mass_le_actual_defect_plus_l2_measure_errors_of_arcLength_slope
@@ -5844,8 +5827,7 @@ private theorem sum_badCarrier_base_mass_le_card_L_l2
           ‖slowBandPoly p (carrierBase k)‖ ^ 2 <=
       ((badCarrierIndices N (polyOfCoeff q).roots delta).card : ℝ) *
         (((2 * Real.pi) / (N : ℝ)) *
-          ((L : ℝ) * circleL2Sq (bandPoly N p))) := by
-  exact sum_carrier_base_mass_le_card_L_l2
+          ((L : ℝ) * circleL2Sq (bandPoly N p))) := sum_carrier_base_mass_le_card_L_l2
     (badCarrierIndices N (polyOfCoeff q).roots delta) p
 
 private theorem sum_univ_eq_sdiff_add
@@ -5864,8 +5846,7 @@ private theorem sum_univ_eq_sdiff_add
   have hfirst : ∑ x : α, f x = ∑ x ∈ good ∪ bad, f x := by rw [hunion]
   have hsecond :
       ∑ x ∈ good ∪ bad, f x =
-        ∑ x ∈ good, f x + ∑ x ∈ bad, f x := by
-    exact Finset.sum_union hdisj
+        ∑ x ∈ good, f x + ∑ x ∈ bad, f x := Finset.sum_union hdisj
   calc
     ∑ x : α, f x = ∑ x ∈ good ∪ bad, f x := hfirst
     _ = ∑ x ∈ good, f x + ∑ x ∈ bad, f x := hsecond
@@ -6719,8 +6700,7 @@ theorem finite_base_circle_estimate
         exact div_pos (mul_pos (by norm_num) hB_pos_real) hN_pos_real
       have hbad_card :
           (badCarrierIndices N (polyOfCoeff q).roots delta).card <=
-            circleBadConst D * B := by
-        exact badCarrierIndices_card_le_of_delta_eq
+            circleBadConst D * B := badCarrierIndices_card_le_of_delta_eq
           (D := D) (N := N) (B := B)
           (roots := (polyOfCoeff q).roots) (delta := delta)
           hroots_le hN_pos_nat hB_pos rfl

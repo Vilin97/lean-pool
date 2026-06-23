@@ -732,13 +732,11 @@ private lemma shifted_generating_exponent_bound
     nlinarith [sq_nonneg x]
   have hlin_plus :
       Real.sqrt 2 * |t + (1 / 2 : ℝ) * x| * uK ≤
-        Real.sqrt 2 * (|t| + |x| / 2) * uK := by
-    exact mul_le_mul_of_nonneg_right
+        Real.sqrt 2 * (|t| + |x| / 2) * uK := mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left hplus hsqrt_nonneg) huK
   have hlin_minus :
       Real.sqrt 2 * |t - (1 / 2 : ℝ) * x| * zK ≤
-        Real.sqrt 2 * (|t| + |x| / 2) * zK := by
-    exact mul_le_mul_of_nonneg_right
+        Real.sqrt 2 * (|t| + |x| / 2) * zK := mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_left hminus hsqrt_nonneg) hzK
   nlinarith [hquad, hlin_plus, hlin_minus]
 
@@ -816,8 +814,7 @@ private theorem shifted_generating_mul_modulated_bound_of_mem_ball
               Real.sqrt 2 * |t + (1 / 2 : ℝ) * x| * U + U ^ 2 / 2) +
             (-((t - (1 / 2 : ℝ) * x) ^ 2) / 2 +
               Real.sqrt 2 * |t - (1 / 2 : ℝ) * x| * K + K ^ 2 / 2)) ≤
-          Real.exp (-(t ^ 2) + A * |t| + B) := by
-      exact Real.exp_le_exp.2 (by
+          Real.exp (-(t ^ 2) + A * |t| + B) := Real.exp_le_exp.2 (by
         simpa [A, B, mul_assoc, mul_left_comm, mul_comm] using hexponent)
     calc
       (Real.pi ^ (-(1 / 4 : ℝ)) *
@@ -991,8 +988,7 @@ private theorem shifted_generating_right_deriv_bound_of_mem_ball
               Real.sqrt 2 * |t + (1 / 2 : ℝ) * x| * U + U ^ 2 / 2) +
             (-((t - (1 / 2 : ℝ) * x) ^ 2) / 2 +
               Real.sqrt 2 * |t - (1 / 2 : ℝ) * x| * K + K ^ 2 / 2)) ≤
-          Real.exp (-(t ^ 2) + A * |t| + B) := by
-      exact Real.exp_le_exp.2 (by
+          Real.exp (-(t ^ 2) + A * |t| + B) := Real.exp_le_exp.2 (by
         simpa [A, B, mul_assoc, mul_left_comm, mul_comm] using hexponent)
     calc
       (Real.pi ^ (-(1 / 4 : ℝ)) *
@@ -1273,8 +1269,7 @@ private theorem hasDerivAt_integral_shifted_generating_mul_modulated_right_ball
           realHermiteGenerating (t - (1 / 2 : ℝ) * x) w0) *
             Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
               ((inner ℝ omega t : ℝ) : ℂ)))
-      (volume : Measure ℝ) := by
-    exact Continuous.aestronglyMeasurable (by
+      (volume : Measure ℝ) := Continuous.aestronglyMeasurable (by
       unfold realHermiteGenerating
       fun_prop)
   have hF_int_bound : ∀ᵐ (t : ℝ) ∂(volume : Measure ℝ),
@@ -1301,8 +1296,7 @@ private theorem hasDerivAt_integral_shifted_generating_mul_modulated_right_ball
               realHermiteGenerating (t - (1 / 2 : ℝ) * x) w0)) *
           Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
             ((inner ℝ omega t : ℝ) : ℂ)))
-      (volume : Measure ℝ) := by
-    exact Continuous.aestronglyMeasurable (by
+      (volume : Measure ℝ) := Continuous.aestronglyMeasurable (by
       unfold realHermiteGenerating
       fun_prop)
   have h_bound : ∀ᵐ (t : ℝ) ∂(volume : Measure ℝ), ∀ z : ℂ,
@@ -3514,8 +3508,7 @@ theorem realHermiteGenerating_iteratedDeriv_inner_of_no_conj_interchange
           (fun w : ℂ =>
             iteratedDeriv n
               (fun u : ℂ =>
-                ∫ t : ℝ, realHermiteGenerating t u * realHermiteGenerating t w) 0) 0 := by
-          exact hinterchange
+                ∫ t : ℝ, realHermiteGenerating t u * realHermiteGenerating t w) 0) 0 := hinterchange
     _ = iteratedDeriv m
           (fun w : ℂ => iteratedDeriv n (fun u : ℂ => Complex.exp (u * w)) 0) 0 := by
           congr 1
@@ -3955,8 +3948,7 @@ theorem bKappa_injective_of_realHermite_orthonormal
       bKappa_coeff_recovery_of_realHermite_orthonormal kappa horth U alpha)
 
 theorem bKappa_injective {d : Nat} (kappa : MultiIndex d) :
-    Function.Injective (bKappa kappa) := by
-  exact bKappa_injective_of_realHermite_orthonormal kappa
+    Function.Injective (bKappa kappa) := bKappa_injective_of_realHermite_orthonormal kappa
     (realHermiteTensorL2_orthonormal (d := d))
 
 theorem bKappaRep_isL2Rep
@@ -6733,8 +6725,7 @@ private theorem stft_model_global_phase
         ∀ (U : Skappa d kappa) (ξ : PhaseSpace d),
           stftRep (varphiKappa kappa) (bKappa kappa U) ξ =
             theta ξ * (((WKappa ξ : ℝ) : ℂ) *
-              toFun kappa U (TKappa ξ)) := by
-  exact stft_model_global_phase_of_basis_formula kappa
+              toFun kappa U (TKappa ξ)) := stft_model_global_phase_of_basis_formula kappa
     (fun alpha ξ => stft_model_basis_formula hd kappa alpha ξ)
 
 private theorem stft_model_modulus_of_global_phase_formula
@@ -7099,8 +7090,7 @@ private theorem oneDWindowAmbiguityOneOneShiftedMoment_eq_closed
         (phi t * realHermiteGenerating (t - (1 / 2 : ℝ) * (-x)) 0) *
           Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
             ((inner ℝ ω t : ℝ) : ℂ)))
-      (volume : Measure ℝ) := by
-    exact Continuous.aestronglyMeasurable (by
+      (volume : Measure ℝ) := Continuous.aestronglyMeasurable (by
       simp only [phi]
       unfold realHermiteGenerating
       fun_prop)
@@ -7129,8 +7119,7 @@ private theorem oneDWindowAmbiguityOneOneShiftedMoment_eq_closed
               realHermiteGenerating (t - (1 / 2 : ℝ) * (-x)) 0)) *
           Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
             ((inner ℝ ω t : ℝ) : ℂ)))
-      (volume : Measure ℝ) := by
-    exact Continuous.aestronglyMeasurable (by
+      (volume : Measure ℝ) := Continuous.aestronglyMeasurable (by
       simp only [phi]
       unfold realHermiteGenerating
       fun_prop)
@@ -8363,15 +8352,13 @@ private lemma memLp_two_prod_right_ae
   have hF_prod : MemLp F 2 (μ.prod μ) := by simpa [μ, MeasureTheory.Measure.volume_eq_prod] using hF
   have hmeas_sec :
       ∀ᵐ x ∂μ,
-        AEStronglyMeasurable (fun t : RealVec d => F (x, t)) μ := by
-    exact hF_prod.1.prodMk_left
+        AEStronglyMeasurable (fun t : RealVec d => F (x, t)) μ := hF_prod.1.prodMk_left
   have hint_global :
       Integrable (fun p : PhaseSpace d => ‖F p‖ ^ 2) (μ.prod μ) := by
     simpa using hF_prod.integrable_norm_pow (by norm_num : (2 : ℕ) ≠ 0)
   have hint_sec :
       ∀ᵐ x ∂μ,
-        Integrable (fun t : RealVec d => ‖F (x, t)‖ ^ 2) μ := by
-    exact hint_global.prod_right_ae
+        Integrable (fun t : RealVec d => ‖F (x, t)‖ ^ 2) μ := hint_global.prod_right_ae
   filter_upwards [hmeas_sec, hint_sec] with x hx_meas hx_int
   exact
     (integrable_norm_rpow_iff
@@ -8922,8 +8909,7 @@ private theorem skappa_eq_zero_of_toFun_zero_exact_wip
       rw [hU z, toFun_zero_exact_wip kappa]
       rfl)
   calc
-    coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := by
-      exact coeff_recovery hd kappa U beta
+    coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := coeff_recovery hd kappa U beta
     _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa (0 : Skappa d kappa)) := by rw [hL2]
     _ = coeffSkappa (0 : Skappa d kappa) beta := by
       exact (coeff_recovery hd kappa (0 : Skappa d kappa) beta).symm
@@ -9126,8 +9112,7 @@ theorem exact_modulus_recovery_skappa
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     {U V : Skappa d kappa}
     (hmod : ∀ z, ‖toFun kappa U z‖ = ‖toFun kappa V z‖) :
-    ∃ w : ℂ, ‖w‖ = 1 ∧ V = w • U := by
-  exact exact_modulus_recovery_skappa_ae hd kappa (by
+    ∃ w : ℂ, ‖w‖ = 1 ∧ V = w • U := exact_modulus_recovery_skappa_ae hd kappa (by
     filter_upwards with z
     exact hmod z)
 

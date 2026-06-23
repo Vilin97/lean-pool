@@ -969,17 +969,14 @@ theorem symplecticFourierRep_sub_le_lpNorm_one {d : Nat}
     Complex.exp
       ((2 * Real.pi : ℂ) * Complex.I *
         (((inner ℝ η.2 ξ.1 : ℝ) - (inner ℝ η.1 ξ.2 : ℝ) : ℝ) : ℂ))
-  have hφ_meas : AEStronglyMeasurable φ μ := by
-    exact (by fun_prop : Measurable φ).aestronglyMeasurable
+  have hφ_meas : AEStronglyMeasurable φ μ := (by fun_prop : Measurable φ).aestronglyMeasurable
   have hφ_bound : ∀ᵐ η : PhaseSpace d ∂μ, ‖φ η‖ ≤ (1 : ℝ) := by
     filter_upwards [Filter.Eventually.of_forall
       (fun η : PhaseSpace d => symplecticFourierPhase_norm η ξ)] with η hη
     exact le_of_eq hη
   have hdiff : Integrable (fun η : PhaseSpace d => G₁ η - G₂ η) μ := by exact h1.sub h2
-  have h1φ : Integrable (fun η : PhaseSpace d => G₁ η * φ η) μ := by
-    exact h1.mul_bdd hφ_meas hφ_bound
-  have h2φ : Integrable (fun η : PhaseSpace d => G₂ η * φ η) μ := by
-    exact h2.mul_bdd hφ_meas hφ_bound
+  have h1φ : Integrable (fun η : PhaseSpace d => G₁ η * φ η) μ := h1.mul_bdd hφ_meas hφ_bound
+  have h2φ : Integrable (fun η : PhaseSpace d => G₂ η * φ η) μ := h2.mul_bdd hφ_meas hφ_bound
   calc
     ‖symplecticFourierRep G₁ ξ - symplecticFourierRep G₂ ξ‖
         = ‖∫ η : PhaseSpace d, (G₁ η - G₂ η) * φ η ∂μ‖ := by
@@ -1808,8 +1805,7 @@ private theorem ambiguityRep_neg_neg_schwartz_realVec {d : Nat}
                     filter_upwards with t
                     simp [star_mul, star_modulationPhase, mul_comm]
               _ = star (∫ t : RealVec d, f (t + a) * star (f (t - a)) *
-                    modulationPhase ω t) := by
-                    exact integral_conj
+                    modulationPhase ω t) := integral_conj
     _ = star (∫ t : RealVec d,
         (f.toLp 2 μ : RealVec d -> ℂ) (t + (1 / 2 : ℝ) • x) *
           star ((f.toLp 2 μ : RealVec d -> ℂ) (t - (1 / 2 : ℝ) • x)) *
@@ -1972,8 +1968,7 @@ noncomputable def modulateL2 {d : Nat} (ω : RealVec d) (f : L2Real d) : L2Real 
 theorem modulateL2_coeFn {d : Nat} (ω : RealVec d) (f : L2Real d) :
     ((modulateL2 ω f : L2Real d) : RealVec d -> ℂ)
       =ᵐ[(MeasureTheory.volume : MeasureTheory.Measure (RealVec d))]
-        fun t => modulationPhase ω t * (f : RealVec d -> ℂ) t := by
-  exact (modulateL2_mem ω f).coeFn_toLp
+        fun t => modulationPhase ω t * (f : RealVec d -> ℂ) t := (modulateL2_mem ω f).coeFn_toLp
 
 theorem norm_modulateL2 {d : Nat} (ω : RealVec d) (f : L2Real d) :
     ‖modulateL2 ω f‖ = ‖f‖ := by
@@ -2070,8 +2065,7 @@ private theorem modulation_eLpNorm_tendsto_zero {d : Nat} (f : L2Real d) (ω0 : 
         exact ENNReal.rpow_le_rpow henorm (by norm_num)
     · have hmul_mem : MeasureTheory.MemLp
           (fun t : RealVec d => (2 : ℂ) * (f : RealVec d -> ℂ) t)
-          2 (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
-        exact hf.const_mul (2 : ℂ)
+          2 (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := hf.const_mul (2 : ℂ)
       exact (MeasureTheory.lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top
         (p := (2 : ℝ≥0∞))
         (μ := (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)))
@@ -2261,8 +2255,7 @@ private theorem lpPairing_mul_norm_le {d : Nat} (f g : L2Real d) :
   have hHae : H =ᵐ[μ] fun x => B (f x) (g x) := by exact ContinuousLinearMap.coeFn_holder B f g
   have hnorm_int : ‖∫ x, B (f x) (g x) ∂μ‖ ≤ ‖H‖ := by
     calc
-      ‖∫ x, B (f x) (g x) ∂μ‖ = ‖∫ x, H x ∂μ‖ := by
-        exact congrArg norm (integral_congr_ae hHae.symm)
+      ‖∫ x, B (f x) (g x) ∂μ‖ = ‖∫ x, H x ∂μ‖ := congrArg norm (integral_congr_ae hHae.symm)
       _ ≤ ∫ x, ‖H x‖ ∂μ := norm_integral_le_integral_norm _
       _ = ‖H‖ := by rw [MeasureTheory.L1.norm_eq_integral_norm]
   have hholder : ‖H‖ ≤ ‖B‖ * ‖f‖ * ‖g‖ := by
@@ -2366,14 +2359,12 @@ theorem continuous_stftRep
     funext ξ
     exact stftRep_eq_lpPairing h f ξ]
   have htrans : Continuous fun ξ : PhaseSpace d =>
-      translateL2 (-ξ.1) h := by
-    exact (continuous_translateL2_apply h).comp (by fun_prop)
+      translateL2 (-ξ.1) h := (continuous_translateL2_apply h).comp (by fun_prop)
   have hstar : Continuous fun ξ : PhaseSpace d =>
       star (translateL2 (-ξ.1) h) :=
     continuous_star_L2.comp htrans
   have hsecond : Continuous fun ξ : PhaseSpace d =>
-      modulateL2 ξ.2 (star (translateL2 (-ξ.1) h)) := by
-    exact continuous_modulateL2 continuous_snd hstar
+      modulateL2 ξ.2 (star (translateL2 (-ξ.1) h)) := continuous_modulateL2 continuous_snd hstar
   let pairing :=
     ((ContinuousLinearMap.mul ℂ ℂ).lpPairing
       (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) 2 2)
@@ -2456,8 +2447,7 @@ private theorem integral_norm_sq_schwartz_eq_lpNorm_sq_realVec {d : Nat}
     filter_upwards with x
     norm_num
   rw [hpow]
-  have hint_nonneg : 0 ≤ ∫ x : RealVec d, ‖f x‖ ^ 2 ∂μ := by
-    exact integral_nonneg fun _ => by positivity
+  have hint_nonneg : 0 ≤ ∫ x : RealVec d, ‖f x‖ ^ 2 ∂μ := integral_nonneg fun _ => by positivity
   rw [← Real.sqrt_eq_rpow]
   exact (Real.sq_sqrt hint_nonneg).symm
 
@@ -3468,11 +3458,9 @@ theorem continuous_ambiguityRep
     funext ξ
     exact ambiguityRep_eq_lpPairing f g ξ]
   have hfirst : Continuous fun ξ : PhaseSpace d =>
-      translateL2 ((1 / 2 : ℝ) • ξ.1) f := by
-    exact (continuous_translateL2_apply f).comp (by fun_prop)
+      translateL2 ((1 / 2 : ℝ) • ξ.1) f := (continuous_translateL2_apply f).comp (by fun_prop)
   have htrans : Continuous fun ξ : PhaseSpace d =>
-      translateL2 (-((1 / 2 : ℝ) • ξ.1)) g := by
-    exact (continuous_translateL2_apply g).comp (by fun_prop)
+      translateL2 (-((1 / 2 : ℝ) • ξ.1)) g := (continuous_translateL2_apply g).comp (by fun_prop)
   have hstar : Continuous fun ξ : PhaseSpace d =>
       star (translateL2 (-((1 / 2 : ℝ) • ξ.1)) g) :=
     continuous_star_L2.comp htrans

@@ -509,8 +509,7 @@ private lemma integrableOn_annulus_polar_finiteHermiteSum
             (‖finiteHermiteSum k a (circlePoint p.1 ((QuotientAddGroup.mk p.2 : Circle)))‖ ^ 2 *
               Real.exp (-p.1 ^ 2)))
         (Set.Icc (j : ℝ) (((j + 1 : ℕ) : ℝ)) ×ˢ Set.Icc (-Real.pi) Real.pi)
-        (volume.prod volume) := by
-    exact hcont.continuousOn.integrableOn_compact hcompact
+        (volume.prod volume) := hcont.continuousOn.integrableOn_compact hcompact
   refine hbase.mono_set ?_
   exact Set.prod_mono Set.Ico_subset_Icc_self Set.Ioo_subset_Icc_self
 
@@ -794,8 +793,7 @@ private lemma intervalIntegrable_basisRadialTerm
     simp only [Function.comp_apply, Pi.mul_apply, id_eq]
     ring
   have hgi :
-      IntervalIntegrable g volume (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
-    exact Continuous.intervalIntegrable
+      IntervalIntegrable g volume (j : ℝ) (((j + 1 : ℕ) : ℝ)) := Continuous.intervalIntegrable
       (μ := volume) hg (j : ℝ) (((j + 1 : ℕ) : ℝ))
   refine hgi.congr_ae ?_
   change
@@ -828,8 +826,7 @@ private lemma sqrt_sub_le_sub_of_one_le
     Real.sqrt a - Real.sqrt b ≤ a - b := by
   have hb_nonneg : 0 ≤ b := by linarith
   have ha_nonneg : 0 ≤ a := le_trans hb_nonneg hba
-  have hdiff_nonneg : 0 ≤ Real.sqrt a - Real.sqrt b := by
-    exact sub_nonneg.mpr (Real.sqrt_le_sqrt hba)
+  have hdiff_nonneg : 0 ≤ Real.sqrt a - Real.sqrt b := sub_nonneg.mpr (Real.sqrt_le_sqrt hba)
   have hden : 1 ≤ Real.sqrt a + Real.sqrt b := by
     have hb_sqrt : 1 ≤ Real.sqrt b := by
       rw [Real.one_le_sqrt]
@@ -2231,8 +2228,7 @@ private lemma radial_density_large_step (k n : ℕ) (hkn_strict : k < n) (r : �
           := by
               field_simp [show (Nat.factorial k : ℝ) ≠ 0 by positivity,
                 show (Nat.factorial n : ℝ) ≠ 0 by positivity]
-      _ ≤ 1 * (1 / (Nat.factorial α : ℝ)) := by
-            exact mul_le_mul hk_inv_le_one hmk hmk_nonneg (by positivity)
+      _ ≤ 1 * (1 / (Nat.factorial α : ℝ)) := mul_le_mul hk_inv_le_one hmk hmk_nonneg (by positivity)
       _ = 1 / (Nat.factorial α : ℝ) := by ring
   calc
     1 / (↑k.factorial * ↑n.factorial) * Polynomial.eval (r ^ 2) (Pkn k n) ^ 2 *
@@ -2437,8 +2433,7 @@ private lemma radial_density_eq_step (k : ℕ) (r : ℝ) (hr : 0 ≤ r) (hr_pos 
             exact mul_le_mul_of_nonneg_left (hCp_bound (r - 1)) hcoef_nonneg
     _ = Ak ^ 2 * Real.exp 1 * Cp * Real.exp (-(r - 1) ^ 2 / 4) := by ring
     _ ≤ (Ak ^ 2 * C0 * Real.exp 2 * Cp + Ak ^ 2 * Real.exp 1 * Cp + Cp * Real.exp 1) *
-          Real.exp (-(r - 1) ^ 2 / 4) := by
-            exact mul_le_mul_of_nonneg_right hconst_le (by positivity)
+          Real.exp (-(r - 1) ^ 2 / 4) := mul_le_mul_of_nonneg_right hconst_le (by positivity)
     _ = (Ak ^ 2 * C0 * Real.exp 2 * Cp + Ak ^ 2 * Real.exp 1 * Cp + Cp * Real.exp 1) *
           Real.exp (-(r - Real.sqrt (k - k + 1 : ℝ)) ^ 2 / 4) := by simp [Real.sqrt_one]
 
@@ -2750,8 +2745,7 @@ theorem single_basis_localization :
   have hint : IntervalIntegrable
       (fun r => r * Real.exp (-r ^ 2) *
         ((((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2) * |qkn k n r| ^ 2))
-      volume (j : ℝ) ((j + 1 : ℕ) : ℝ) := by
-    exact intervalIntegrable_basisRadialTerm k n j
+      volume (j : ℝ) ((j + 1 : ℕ) : ℝ) := intervalIntegrable_basisRadialTerm k n j
   -- Bound the integral pointwise: replace integrand by the shell-level Gaussian.
   have hbound_int :
       ∫ r in (j : ℝ)..((j + 1 : ℕ) : ℝ),

@@ -268,12 +268,10 @@ private lemma measurableSet_oneDimAnnulus
     (j : ℕ) :
     MeasurableSet (productAnnulus (d := 1) (fun _ => j)) := by
   have hge :
-      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := by
-    exact measurableSet_le measurable_const
+      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := measurableSet_le measurable_const
       (measurable_norm.comp (continuous_apply 0).measurable)
   have hlt :
-      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt
+      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := measurableSet_lt
       (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
   simpa [productAnnulus, Set.setOf_forall, Set.setOf_and] using hge.inter hlt
 

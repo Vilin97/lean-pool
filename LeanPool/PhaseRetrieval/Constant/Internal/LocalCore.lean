@@ -678,8 +678,7 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
   have hnorm :
       Integrable (fun p : ℝ × ℝ =>
         p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_norm a
+          Real.exp (-p.1 ^ 2))) μ := integrableOn_polar_norm a
   set g : ℝ × ℝ → ℝ := fun p =>
     2 * (p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) +
       2 * (p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
@@ -706,8 +705,7 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
         simpa [q] using norm_add_sq_le c q
       have hmul :
           p.1 * (‖c + q‖ ^ 2 * Real.exp (-p.1 ^ 2))
-            ≤ p.1 * ((2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := by
-        exact mul_le_mul_of_nonneg_left
+            ≤ p.1 * ((2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := mul_le_mul_of_nonneg_left
           (mul_le_mul_of_nonneg_right hbase (le_of_lt (Real.exp_pos _)))
           (le_of_lt hr)
       calc
@@ -914,8 +912,7 @@ lemma gaussian_integral_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (c : �
   have hfirst_int : Integrable first (volume.restrict (Set.Ioi 0)) := by
     unfold first
     have : IntegrableOn (fun r : ℝ => (T * ‖c‖ ^ 2) * (r ^ 1 * Real.exp (-r ^ 2)))
-        (Set.Ioi 0) volume := by
-      exact (integrable_pow_mul_exp_neg_sq 1).integrableOn.const_mul (T * ‖c‖ ^ 2)
+        (Set.Ioi 0) volume := (integrable_pow_mul_exp_neg_sq 1).integrableOn.const_mul (T * ‖c‖ ^ 2)
     simpa [IntegrableOn, mul_assoc, mul_left_comm, mul_comm, pow_one] using this
   have hsum : whole = first + second := by
     funext r
@@ -1448,8 +1445,7 @@ private lemma local_fock_closing_arith
         q2 ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := by
           calc
             q2 ≤ (4600 : ℝ) ^ 2 * rq2 := by simpa using hq_basic
-            _ ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := by
-              exact mul_le_mul_of_nonneg_left hrq2_le (by positivity)
+            _ ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := mul_le_mul_of_nonneg_left hrq2_le (by positivity)
         _ = (4600 * (|u| + m)) ^ 2 := by ring
     exact le_of_sq_le_sq hq2_le h_rhs_nonneg
   have hx_le_uy : x ≤ |u| + y := by
@@ -1606,8 +1602,7 @@ theorem LocalFockSPR_of_small_norm
   have hR_l1_sq :
       (∫ z, R z ∂gaussianMeasure) ^ 2 ≤ m2 := by
     simpa [hm_mu] using gaussian_l1_sq_le hR_meas hR2_int
-  have hN_l1_nonneg : 0 ≤ ∫ z, N z ∂gaussianMeasure := by
-    exact integral_nonneg (fun z => norm_nonneg _)
+  have hN_l1_nonneg : 0 ≤ ∫ z, N z ∂gaussianMeasure := integral_nonneg (fun z => norm_nonneg _)
   have hR_l1_nonneg : 0 ≤ ∫ z, R z ∂gaussianMeasure := by
     exact integral_nonneg (fun z => by unfold R; exact abs_nonneg _)
   have hx_nonneg : 0 ≤ x := Real.sqrt_nonneg _

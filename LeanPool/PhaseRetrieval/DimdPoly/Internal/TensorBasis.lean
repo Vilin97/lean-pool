@@ -673,8 +673,7 @@ theorem integrable_evalPkappa_sq
         have hnorm_pos : 0 < ‖F alpha‖ := norm_pos_iff.mpr hne
         nlinarith
       have hle :
-          ‖F alpha‖ ^ 2 <= Finset.sum F.support (fun beta => ‖F beta‖ ^ 2) := by
-        exact Finset.single_le_sum
+          ‖F alpha‖ ^ 2 <= Finset.sum F.support (fun beta => ‖F beta‖ ^ 2) := Finset.single_le_sum
           (f := fun beta : Idx d => ‖F beta‖ ^ 2) (s := F.support) (a := alpha)
           (fun beta _ => by positivity) hmem
       have hsum_pos : 0 < Finset.sum F.support (fun beta => ‖F beta‖ ^ 2) :=
@@ -959,8 +958,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
             have hpowx :
                 ((n + m + 1 : ℝ) ^ m) * x ^ (n + m) ≤
                   ((m + 1 : ℝ) ^ m * (((n + m).descFactorial m : ℕ) : ℝ)) *
-                    x ^ (n + m) := by
-              exact mul_le_mul_of_nonneg_right hpow_real (pow_nonneg hx _)
+                    x ^ (n + m) := mul_le_mul_of_nonneg_right hpow_real (pow_nonneg hx _)
             have hfacpos : 0 < (Nat.factorial (n + m) : ℝ) := by positivity
             rw [div_le_iff₀ hfacpos]
             calc
@@ -1008,8 +1006,7 @@ private lemma summable_phiMajorant_sq
   have hmajorant :
       Summable
         (fun n : ℕ =>
-          C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) / (Nat.factorial n : ℝ))) := by
-    exact hbase.mul_left C
+          C * ((((n + 1 : ℝ) ^ k) ^ 2 * (R ^ n) ^ 2) / (Nat.factorial n : ℝ))) := hbase.mul_left C
   refine Summable.of_nonneg_of_le (fun n => sq_nonneg (phiMajorant k n R)) ?_ hmajorant
   intro n
   have hsqrt_ne :
@@ -1079,8 +1076,7 @@ private lemma phi1D_norm_le_majorant
     ‖((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℂ) *
         Finset.sum S term‖
         ≤ ‖((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℂ)‖ *
-            Finset.sum S (fun j => ‖term j‖) := by
-          exact le_trans (norm_mul_le _ _) <|
+            Finset.sum S (fun j => ‖term j‖) := le_trans (norm_mul_le _ _) <|
             mul_le_mul_of_nonneg_left hsum_norm (norm_nonneg _)
     _ ≤ ‖((1 / Real.sqrt ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) : ℂ)‖ *
             Finset.sum S (fun j => (Nat.choose k j : ℝ) * common) := by

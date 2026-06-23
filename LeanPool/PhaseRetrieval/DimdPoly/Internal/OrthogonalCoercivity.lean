@@ -462,8 +462,7 @@ private theorem norm_le_defect_add_two_wip
   have hsum_mem :
       MeasureTheory.MemLp
         (defectFunctionPkappa_wip kappa F G + fun z : Cd d => 2 * ‖evalPkappa kappa F z‖)
-        2 (gammaD d) := by
-    exact hdef_mem.add htwoF_mem
+        2 (gammaD d) := hdef_mem.add htwoF_mem
   have hmono :
       MeasureTheory.lpNorm (evalPkappa kappa G) 2 (gammaD d) ≤
         MeasureTheory.lpNorm

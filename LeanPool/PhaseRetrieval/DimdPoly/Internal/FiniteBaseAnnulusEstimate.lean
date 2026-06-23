@@ -47,8 +47,7 @@ private theorem highAnnulusMass_le_norm_sq_wip
 
 private theorem defect_nonneg_annulus
     {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) :
-    0 <= defect F G := by
-  exact Real.sqrt_nonneg _
+    0 <= defect F G := Real.sqrt_nonneg _
 
 private theorem toFun_ofPkappa_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -386,8 +385,7 @@ private theorem annulusBandLength_pos
 
 private theorem norm_nonneg_pkappa_annulus
     {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) :
-    0 ≤ ‖F‖ := by
-  exact Real.sqrt_nonneg _
+    0 ≤ ‖F‖ := Real.sqrt_nonneg _
 
 private theorem norm_ne_zero_of_ne_zero_pkappa_annulus
     {d : Nat} {kappa : MultiIndex d}
@@ -482,7 +480,7 @@ private theorem coordFiber_mass_lintegral_annulus
   rw [circleL2Sq]
   exact (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
     (integrable_coordFiber_evalPkappa_sq_annulus (kappa := kappa) (q0 := q0) H z)
-    (ae_of_all _ (fun x => sq_nonneg _))).symm
+    (ae_of_all _ (fun _ => sq_nonneg _))).symm
 
 private theorem annulusMass_eq_coordFiber_average_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -819,13 +817,11 @@ private theorem annulus_mass_split
   have hIntLocal :
       Integrable
         (fun z : Cd d => ‖evalPkappa kappa (localPartPkappa j M G) z‖ ^ 2)
-        (gammaD d) := by
-    exact integrable_evalPkappa_sq_annulus hd kappa (localPartPkappa j M G)
+        (gammaD d) := integrable_evalPkappa_sq_annulus hd kappa (localPartPkappa j M G)
   have hIntRem :
       Integrable
         (fun z : Cd d => ‖evalPkappa kappa (remainderPartPkappa j M G) z‖ ^ 2)
-        (gammaD d) := by
-    exact integrable_evalPkappa_sq_annulus hd kappa (remainderPartPkappa j M G)
+        (gammaD d) := integrable_evalPkappa_sq_annulus hd kappa (remainderPartPkappa j M G)
   calc
     annulusMass j (ofPkappa kappa G)
         = ∫ z : Cd d,
@@ -984,10 +980,9 @@ private theorem coordFiber_baseDefect_lintegral_annulus
                 (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))‖ -
             ‖evalPkappa kappa F
                 (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))‖) ^ 2
-          ∂ AddCircle.haarAddCircle) := by
-  exact (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
+          ∂ AddCircle.haarAddCircle) := (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
     (integrable_coordFiber_baseDefectSq_annulus (kappa := kappa) (q0 := q0) F H z)
-    (ae_of_all _ (fun x => sq_nonneg _))).symm
+    (ae_of_all _ (fun _ => sq_nonneg _))).symm
 
 private theorem baseDefectAnnulusMass_eq_coordFiber_average_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -1035,8 +1030,7 @@ private theorem baseDefectAnnulusMass_eq_coordFiber_average_annulus
   have hFdef :
       Measurable (fun z : Cd d => ENNReal.ofReal
         ((‖evalPkappa kappa F z + evalPkappa kappa H z‖ -
-          ‖evalPkappa kappa F z‖) ^ 2)) := by
-    exact ENNReal.measurable_ofReal.comp
+          ‖evalPkappa kappa F z‖) ^ 2)) := ENNReal.measurable_ofReal.comp
       ((((continuous_evalPkappa_annulus kappa F).add
         (continuous_evalPkappa_annulus kappa H)).norm.sub
           (continuous_evalPkappa_annulus kappa F).norm).pow 2).measurable
@@ -1128,8 +1122,7 @@ private theorem local_defect_annulus_bound
             (fun w =>
               (‖evalPkappa kappa F w + evalPkappa kappa G w‖ -
                 ‖evalPkappa kappa F w‖) ^ 2) z)
-        (gammaD d) := by
-    exact ((integrable_baseDefectSq_annulus hd kappa F G).indicator hmeas).const_mul 2
+        (gammaD d) := ((integrable_baseDefectSq_annulus hd kappa F G).indicator hmeas).const_mul 2
   have hrightMass :
       Integrable
         (fun z : Cd d =>
@@ -1956,8 +1949,7 @@ private theorem high_localPart_annulus_estimate_annulus
                         (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))‖ -
                     ‖evalPkappa kappa F
                         (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))‖) ^ 2
-                  ∂ AddCircle.haarAddCircle) := by
-              exact ENNReal.ofReal_le_ofReal (hpoint z)
+                  ∂ AddCircle.haarAddCircle) := ENNReal.ofReal_le_ofReal (hpoint z)
           _ =
             ENNReal.ofReal C *
               ENNReal.ofReal
@@ -2144,8 +2136,7 @@ private theorem annulusMass_tsum_eq_norm_sq_annulus
 private theorem summable_annulusMass_ofPkappa_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     (G : Pkappa d kappa) :
-    Summable (fun j : Idx d => annulusMass j (ofPkappa kappa G)) := by
-  exact summable_of_sum_le
+    Summable (fun j : Idx d => annulusMass j (ofPkappa kappa G)) := summable_of_sum_le
     (fun j => annulusMass_nonneg_annulus j (ofPkappa kappa G))
     (fun s => by simpa using finite_sum_annulusMass_le_annulus hd kappa G s)
 
@@ -2245,8 +2236,7 @@ private theorem finitePartialLeakage_remainderPartPkappa_annulus
             (Hermite1DimdLEAN.evalHermiteSum kappa
               (Hermite1DimdLEAN.remainderPart j M ⟨G⟩)) := hleft
     _ ≤ Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
-          Hermite1DimdLEAN.hermiteNormSq kappa ⟨G⟩ := by
-        exact hpartial s M ⟨G⟩
+          Hermite1DimdLEAN.hermiteNormSq kappa ⟨G⟩ := hpartial s M ⟨G⟩
     _ = Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M * ‖G‖ ^ 2 := by
         rw [hermiteNormSq_ofPkappa_eq_norm_sq_annulus]
 

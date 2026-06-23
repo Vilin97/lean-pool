@@ -293,8 +293,7 @@ private theorem summable_sq_Phi_eval_wip
               (fun n : Nat => ‖phi1D (kappa q) n (z q)‖ ^ 2)) <=
         Finset.prod Finset.univ
           (fun q : Fin d =>
-            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) := by
-    exact Finset.prod_le_prod
+            ∑' n : Nat, ‖phi1D (kappa q) n (z q)‖ ^ 2) := Finset.prod_le_prod
       (by
         intro q hq
         exact Finset.sum_nonneg fun n hn => sq_nonneg _)
@@ -398,8 +397,7 @@ private theorem evalPkappa_sub_toFun_eq_tsum_diff_wip
         (coeffPkappa H alpha - coeffSkappa U alpha) * Phi kappa alpha z) =
         ∑' alpha : Idx d,
           (coeffPkappa H alpha * Phi kappa alpha z -
-            coeffSkappa U alpha * Phi kappa alpha z) := by
-    exact tsum_congr fun alpha => by ring
+            coeffSkappa U alpha * Phi kappa alpha z) := tsum_congr fun alpha => by ring
   rw [hdiff_eq, hsub]
 
 private theorem evalPkappa_add_apply_wip
@@ -2059,8 +2057,7 @@ private theorem positiveGauge_limit_affine_wip
 private theorem defect_nonneg_wip
     {d : Nat} {kappa : MultiIndex d}
     (F G : Pkappa d kappa) :
-    0 <= defect F G := by
-  exact Real.sqrt_nonneg _
+    0 <= defect F G := Real.sqrt_nonneg _
 
 private lemma continuous_Phi_coeff_wip
     {d : Nat} (kappa alpha : MultiIndex d) :
@@ -2469,8 +2466,7 @@ private theorem defect_le_defect_add_norm_wip
       MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F (G + R)) 2
           (gammaD d) +
         MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa R z‖) 2
-          (gammaD d) := by
-    exact MeasureTheory.lpNorm_add_le hdefGR_mem
+          (gammaD d) := MeasureTheory.lpNorm_add_le hdefGR_mem
       (g := fun z : Cd d => ‖evalPkappa kappa R z‖) (by norm_num)
   have hnorm_eval :
       MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa R z‖) 2 (gammaD d) =
@@ -2604,12 +2600,10 @@ private lemma measurableSet_productAnnulus_coeff_wip
     refine MeasurableSet.iInter (ι := Fin d) ?_
     intro q
     have hge :
-        MeasurableSet {z : Cd d | (j q : ℝ) <= ‖z q‖} := by
-      exact measurableSet_le measurable_const
+        MeasurableSet {z : Cd d | (j q : ℝ) <= ‖z q‖} := measurableSet_le measurable_const
         (measurable_norm.comp (continuous_apply q).measurable)
     have hlt :
-        MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
+        MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} := measurableSet_lt
         (measurable_norm.comp (continuous_apply q).measurable) measurable_const
     simpa [Set.setOf_and] using hge.inter hlt
   simpa [productAnnulus, Set.setOf_forall] using h
@@ -2698,8 +2692,7 @@ private theorem aestronglyMeasurable_lowAnnulusEval_wip
         ((∑ j ∈ lowAnnuli d J,
           Set.indicator (productAnnulus j)
             (fun w : Cd d => evalPkappa kappa F w)) : Cd d -> ℂ)
-        (gammaD d) := by
-    exact Finset.aestronglyMeasurable_sum
+        (gammaD d) := Finset.aestronglyMeasurable_sum
       (μ := gammaD d)
       (M := ℂ)
       (f := fun j : Idx d =>
@@ -3260,8 +3253,7 @@ private theorem finite_head_bad_limit_defect_tendsto_zero_wip
       exact_mod_cast Nat.succ_le_succ hφ_ge
     have hrecip :
         (1 / (((φ m + 1 : Nat) : ℝ))) <=
-          (1 / (((m + 1 : Nat) : ℝ))) := by
-      exact one_div_le_one_div_of_le (by positivity) hden
+          (1 / (((m + 1 : Nat) : ℝ))) := one_div_le_one_div_of_le (by positivity) hden
     have hupper :
         (1 / (((φ m + 1 : Nat) : ℝ))) * t (φ m) <=
           4 * (1 / (((m + 1 : Nat) : ℝ))) := by
@@ -3269,8 +3261,7 @@ private theorem finite_head_bad_limit_defect_tendsto_zero_wip
         (1 / (((φ m + 1 : Nat) : ℝ))) * t (φ m)
             <= (1 / (((φ m + 1 : Nat) : ℝ))) * 4 := by
               exact mul_le_mul_of_nonneg_left (ht_le (φ m)) (by positivity)
-        _ <= (1 / (((m + 1 : Nat) : ℝ))) * 4 := by
-              exact mul_le_mul_of_nonneg_right hrecip (by norm_num)
+        _ <= (1 / (((m + 1 : Nat) : ℝ))) * 4 := mul_le_mul_of_nonneg_right hrecip (by norm_num)
         _ = 4 * (1 / (((m + 1 : Nat) : ℝ))) := by ring
     exact le_trans (le_of_lt (hdef (φ m))) hupper
   · have hbase :
@@ -3425,8 +3416,7 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
       exact_mod_cast Nat.succ_le_succ hφ_ge
     have hfinal :
         defect F (t (φ m) • H (φ m)) / t (φ m) <=
-          1 / (((m + 1 : Nat) : ℝ)) := by
-      exact (le_of_lt hratio).trans
+          1 / (((m + 1 : Nat) : ℝ)) := (le_of_lt hratio).trans
         (one_div_le_one_div_of_le (by positivity) hden)
     simpa [Real.norm_eq_abs, abs_of_pos (ht_pos (φ m)), div_eq_mul_inv,
       mul_assoc, mul_left_comm, mul_comm] using hfinal
@@ -3799,8 +3789,7 @@ private theorem toFun_skappaAffinePkappa_wip
         coeffSkappa (skappaAffinePkappa_wip kappa F U a b) alpha * Phi kappa alpha z
         = (∑' alpha : Idx d,
             (a * (coeffPkappa F alpha * Phi kappa alpha z) +
-              b * (coeffSkappa U alpha * Phi kappa alpha z))) := by
-          exact tsum_congr fun alpha => by
+              b * (coeffSkappa U alpha * Phi kappa alpha z))) := tsum_congr fun alpha => by
             change
               (a * coeffPkappa F alpha + b * coeffSkappa U alpha) *
                   Phi kappa alpha z =
@@ -3808,8 +3797,7 @@ private theorem toFun_skappaAffinePkappa_wip
                   b * (coeffSkappa U alpha * Phi kappa alpha z)
             ring
     _ = (∑' alpha : Idx d, a * (coeffPkappa F alpha * Phi kappa alpha z)) +
-          ∑' alpha : Idx d, b * (coeffSkappa U alpha * Phi kappa alpha z) := by
-          exact hFsum'.tsum_add hUsum'
+          ∑' alpha : Idx d, b * (coeffSkappa U alpha * Phi kappa alpha z) := hFsum'.tsum_add hUsum'
     _ = a * (∑' alpha : Idx d, coeffPkappa F alpha * Phi kappa alpha z) +
           b * (∑' alpha : Idx d, coeffSkappa U alpha * Phi kappa alpha z) := by
           rw [hFsum.tsum_mul_left, hUsum.tsum_mul_left]
@@ -4426,8 +4414,7 @@ private theorem norm_le_defect_add_two_coeff_wip
   have hsum_mem :
       MeasureTheory.MemLp
         (defectFunctionPkappa_coeff_wip kappa F G + fun z : Cd d => 2 * ‖evalPkappa kappa F z‖)
-        2 (gammaD d) := by
-    exact hdef_mem.add htwoF_mem
+        2 (gammaD d) := hdef_mem.add htwoF_mem
   have hmono :
       MeasureTheory.lpNorm (evalPkappa kappa G) 2 (gammaD d) ≤
         MeasureTheory.lpNorm
@@ -4444,8 +4431,7 @@ private theorem norm_le_defect_add_two_coeff_wip
           2 (gammaD d)
         ≤ MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F G) 2 (gammaD d) +
             MeasureTheory.lpNorm (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖) 2
-              (gammaD d) := by
-    exact MeasureTheory.lpNorm_add_le hdef_mem
+              (gammaD d) := MeasureTheory.lpNorm_add_le hdef_mem
       (g := fun z : Cd d => 2 * ‖evalPkappa kappa F z‖) (by norm_num)
   have hnormEq :
       MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) =
@@ -4759,8 +4745,7 @@ theorem positiveGauge_coercivity
         calc
           ‖G‖ = t := rfl
           _ ≤ delta⁻¹ * defect F G := ht_le_delta
-          _ ≤ C_F * defect F G := by
-            exact mul_le_mul_of_nonneg_right hdelta_inv_le (Real.sqrt_nonneg _)
+          _ ≤ C_F * defect F G := mul_le_mul_of_nonneg_right hdelta_inv_le (Real.sqrt_nonneg _)
     · have hge4 : 4 ≤ t := le_of_not_gt hlt4
       have htwo_defect : t ≤ 2 * defect F G := by
         have hdefect_nonneg : 0 ≤ defect F G := Real.sqrt_nonneg _
