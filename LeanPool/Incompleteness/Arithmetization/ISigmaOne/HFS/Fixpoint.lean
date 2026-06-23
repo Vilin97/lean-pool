@@ -104,7 +104,8 @@ def succ (s ih : V) : V := Classical.choose! (c.succ_existsUnique v s ih)
 
 variable {v}
 
-lemma mem_succ_iff {v s ih} : x ∈ c.succ v s ih ↔ x ≤ s ∧ c.Φ v {z | z ∈ ih} x :=
+lemma mem_succ_iff {v s ih} :
+    x ∈ c.succ v s ih ↔ x ≤ s ∧ c.Φ v {z | z ∈ ih} x :=
       Classical.choose!_spec (c.succ_existsUnique v s ih) x
 
 private lemma succ_graph {u v s ih} :
@@ -274,7 +275,7 @@ theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
   ⟨by intro h
       rcases c.fixpoint_iff_succ.mp h with ⟨u, hu⟩
       have : c.Φ v {z | z ∈ c.limSeq v u} x := (c.mem_limSeq_succ_iff.mp hu).2
-      exact c.monotone (fun z hx ↦ ⟨u, hx⟩) this,
+      exact c.monotone (fun z hx ↦ by exact ⟨u, hx⟩) this,
    by intro hx
       rcases Finite.finite hx with ⟨m, hm⟩
       simp only [Set.mem_setOf_eq] at hm
