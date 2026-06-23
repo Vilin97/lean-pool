@@ -77,29 +77,19 @@ private lemma continuous_evalPkappa_annulus
     {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) :
     Continuous (evalPkappa kappa F) := by
   unfold evalPkappa
-  refine continuous_finsetSum _ ?_
-  intro alpha halpha
-  exact continuous_const.mul (continuous_Phi_annulus kappa alpha)
+  exact continuous_finsetSum _ fun alpha _ =>
+    continuous_const.mul (continuous_Phi_annulus kappa alpha)
 
 private lemma measurableSet_productAnnulus_annulus
     {d : Nat} (j : Idx d) :
     MeasurableSet (productAnnulus j) := by
-  have h :
-      MeasurableSet
-        (⋂ q : Fin d,
-          {z : Cd d | (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1}) := by
-    refine MeasurableSet.iInter (ι := Fin d) ?_
-    intro q
-    have hge :
-        MeasurableSet {z : Cd d | (j q : ℝ) ≤ ‖z q‖} := by
-      exact measurableSet_le measurable_const
-        (measurable_norm.comp (continuous_apply q).measurable)
-    have hlt :
-        MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
-        (measurable_norm.comp (continuous_apply q).measurable) measurable_const
-    simpa [Set.setOf_and] using hge.inter hlt
-  simpa [productAnnulus, Set.setOf_forall] using h
+  unfold productAnnulus
+  rw [Set.setOf_forall]
+  refine MeasurableSet.iInter fun q => ?_
+  exact (measurableSet_le measurable_const
+      (measurable_norm.comp (continuous_apply q).measurable)).inter
+    (measurableSet_lt
+      (measurable_norm.comp (continuous_apply q).measurable) measurable_const)
 
 private def mulCircleLIE_annulus (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ := by
   refine LinearIsometryEquiv.mk
@@ -2148,9 +2138,8 @@ private theorem annulusMass_tsum_eq_norm_sq_annulus
           Hermite1DimdLEAN.annulusMass j
             (Hermite1DimdLEAN.evalHermiteSum kappa ⟨G⟩) := hpart
     _ = ∑' j : Idx d, annulusMass j (ofPkappa kappa G) := by
-          refine tsum_congr ?_
-          intro j
-          exact (annulusMass_ofPkappa_eq_hermite_annulusMass hd kappa j G).symm
+          exact tsum_congr fun j =>
+            (annulusMass_ofPkappa_eq_hermite_annulusMass hd kappa j G).symm
 
 private theorem summable_annulusMass_ofPkappa_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
