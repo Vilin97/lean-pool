@@ -133,6 +133,22 @@ lemma outerShadow_points_in_shadow :
   fin_cases i <;>
     simp [matrix_simps, cube, projXy, outerShadowPointsDenorm, mul_two] <;> norm_num
 
+private lemma weighted_pair_in_shadow (i j : Fin 8) :
+    ((3:ℝ)/4) • (1/√6) • outerShadowPointsDenorm i +
+      ((1:ℝ)/4) • (1/√6) • outerShadowPointsDenorm j ∈ convexHull ℝ outerShadow := by
+  rw [mem_convexHull_iff_exists_fintype]
+  use Fin 2, inferInstance
+  use ![3/4, 1/4],
+    ![(1/√6) • outerShadowPointsDenorm i, (1/√6) • outerShadowPointsDenorm j]
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro k; fin_cases k <;>
+    · simp only [Fin.mk_one, Fin.zero_eta, cons_val_one, cons_val_zero]
+      positivity
+  · simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]; norm_num
+  · intro k; fin_cases k <;> apply outerShadow_points_in_shadow
+  · simp only [Fin.sum_univ_two]
+    rfl
+
 ---------------------------------------------------------------------------------
 -- ++
 
@@ -141,22 +157,8 @@ noncomputable
 def rpp := ((3:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 1 +
            ((1:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 5
 
-theorem rpp_in_shadow : rpp ∈ convexHull ℝ outerShadow := by
- rw [mem_convexHull_iff_exists_fintype]
- let coeffs : Fin 2 → ℝ := ![3/4, 1/4]
- let points := ![
-   (1/√6) • outerShadowPointsDenorm 1,
-   (1/√6) • outerShadowPointsDenorm 5]
- use Fin 2, inferInstance
- use coeffs, points
- refine ⟨?_, ?_, ?_, ?_⟩
- · intro i; fin_cases i <;>
-   · simp only [Fin.mk_one, Fin.zero_eta, cons_val_one, cons_val_zero, coeffs]
-     positivity
- · simp only [ Fin.sum_univ_two, cons_val_zero, cons_val_one, coeffs]; norm_num
- · intro i; fin_cases i <;> apply outerShadow_points_in_shadow
- · simp only [Fin.sum_univ_two]
-   rfl
+theorem rpp_in_shadow : rpp ∈ convexHull ℝ outerShadow :=
+  weighted_pair_in_shadow 1 5
 
 theorem rpp_contains_cube : 1 < rpp 0 ∧ 1 < rpp 1 := by
   dsimp only [rpp, outerShadowPointsDenorm, Matrix.cons_val,
@@ -187,22 +189,8 @@ noncomputable
 def rpn := ((3:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 2 +
            ((1:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 3
 
-theorem rpn_in_shadow : rpn ∈ convexHull ℝ outerShadow := by
- rw [mem_convexHull_iff_exists_fintype]
- let coeffs : Fin 2 → ℝ := ![3/4, 1/4]
- let points := ![
-   (1/√6) • outerShadowPointsDenorm 2,
-   (1/√6) • outerShadowPointsDenorm 3]
- use Fin 2, inferInstance
- use coeffs, points
- refine ⟨?_, ?_, ?_, ?_⟩
- · intro i; fin_cases i <;>
-   · simp only [Fin.mk_one, Fin.zero_eta, cons_val_one, cons_val_zero, coeffs]
-     positivity
- · simp only [ Fin.sum_univ_two, cons_val_zero, cons_val_one, coeffs]; norm_num
- · intro i; fin_cases i <;> apply outerShadow_points_in_shadow
- · simp only [Fin.sum_univ_two]
-   rfl
+theorem rpn_in_shadow : rpn ∈ convexHull ℝ outerShadow :=
+  weighted_pair_in_shadow 2 3
 
 ---------------------------------------------------------------------------------
 -- -+
@@ -212,22 +200,8 @@ noncomputable
 def rnp := ((3:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 4 +
            ((1:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 5
 
-theorem rnp_in_shadow : rnp ∈ convexHull ℝ outerShadow := by
- rw [mem_convexHull_iff_exists_fintype]
- let coeffs : Fin 2 → ℝ := ![3/4, 1/4]
- let points := ![
-   (1/√6) • outerShadowPointsDenorm 4,
-   (1/√6) • outerShadowPointsDenorm 5]
- use Fin 2, inferInstance
- use coeffs, points
- refine ⟨?_, ?_, ?_, ?_⟩
- · intro i; fin_cases i <;>
-   · simp only [Fin.mk_one, Fin.zero_eta, cons_val_one, cons_val_zero, coeffs]
-     positivity
- · simp only [ Fin.sum_univ_two, cons_val_zero, cons_val_one, coeffs]; norm_num
- · intro i; fin_cases i <;> apply outerShadow_points_in_shadow
- · simp only [Fin.sum_univ_two]
-   rfl
+theorem rnp_in_shadow : rnp ∈ convexHull ℝ outerShadow :=
+  weighted_pair_in_shadow 4 5
 
 ---------------------------------------------------------------------------------
 -- --
@@ -237,22 +211,8 @@ noncomputable
 def rnn := ((3:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 7 +
            ((1:ℝ)/4) • (1/√6) • outerShadowPointsDenorm 3
 
-theorem rnn_in_shadow : rnn ∈ convexHull ℝ outerShadow := by
- rw [mem_convexHull_iff_exists_fintype]
- let coeffs : Fin 2 → ℝ := ![3/4, 1/4]
- let points := ![
-   (1/√6) • outerShadowPointsDenorm 7,
-   (1/√6) • outerShadowPointsDenorm 3]
- use Fin 2, inferInstance
- use coeffs, points
- refine ⟨?_, ?_, ?_, ?_⟩
- · intro i; fin_cases i <;>
-   · simp only [Fin.mk_one, Fin.zero_eta, cons_val_one, cons_val_zero, coeffs]
-     positivity
- · simp only [ Fin.sum_univ_two, cons_val_zero, cons_val_one, coeffs]; norm_num
- · intro i; fin_cases i <;> apply outerShadow_points_in_shadow
- · simp only [Fin.sum_univ_two]
-   rfl
+theorem rnn_in_shadow : rnn ∈ convexHull ℝ outerShadow :=
+  weighted_pair_in_shadow 7 3
 
 theorem rnn_contains_cube : -1 > rnn 0 ∧ -1 > rnn 1 := by
   dsimp only [rnn, outerShadowPointsDenorm, Matrix.cons_val,
@@ -463,6 +423,10 @@ lemma mediant_sub_outer : closedMediant ⊆ convexHull ℝ outerShadow := by
   apply (Convex.convexHull_subset_iff this).mpr
   exact mediant_sub_hull_outer
 
+private lemma interior_mediant_sub_outer :
+    interior closedMediant ⊆ interior (convexHull ℝ outerShadow) :=
+  interior_mono mediant_sub_outer
+
 theorem rupert : IsRupert cube := by
   rw [rupert_iff_rupert']
   use 1, Submonoid.one_mem SO3, 0, outerRot, outerRot_so3
@@ -470,8 +434,7 @@ theorem rupert : IsRupert cube := by
   let ⟨w, p⟩ := hx
   simp only [zero_add] at p
   fin_cases w
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -482,8 +445,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube.1]
     · simp [rnn_contains_cube2.2]
     · simp [rpp_contains_cube.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -494,8 +456,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube.1]
     · simp [rnn_contains_cube.2]
     · simp [rpp_contains_cube2.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -506,8 +467,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube2.1]
     · simp [rnn_contains_cube.2]
     · simp [rpp_contains_cube2.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -517,8 +477,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube2.1]
     · simp [rnn_contains_cube2.2]
     · simp [rpp_contains_cube.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -529,8 +488,7 @@ theorem rupert : IsRupert cube := by
     · simp [rnn_contains_cube2.2]
     · simp [rpp_contains_cube.2]
 -- second half of points, same as the first:
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -540,8 +498,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube.1]
     · simp [rnn_contains_cube.2]
     · simp [rpp_contains_cube2.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]
@@ -551,8 +508,7 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube2.1]
     · simp [rnn_contains_cube.2]
     · simp [rpp_contains_cube2.2]
-  · apply (show interior closedMediant ⊆ interior (convexHull ℝ outerShadow) by
-                 apply interior_mono; exact mediant_sub_outer)
+  · apply interior_mediant_sub_outer
     rw [closedMediant, openRectangle_is_interior]
     use extract x
     simp only [projXy, cube, ← p]

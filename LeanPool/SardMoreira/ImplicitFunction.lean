@@ -95,7 +95,6 @@ theorem implicitToOpenPartialHomeomorphOfComplementedKerRange_apply_fst {f : E â
     {a : E} (hf : HasStrictFDerivAt f f' a) (hker : f'.ker.ClosedComplemented)
     (hrange : f'.range.ClosedComplemented) (x : E) :
     (implicitToOpenPartialHomeomorphOfComplementedKerRange f f' hf hker hrange x).fst =
-      hrange.choose (f x) := by
-  simp [implicitToOpenPartialHomeomorphOfComplementedKerRange_apply]
+      hrange.choose (f x) := by simp [implicitToOpenPartialHomeomorphOfComplementedKerRange_apply]
 
 end HasStrictFDerivAt

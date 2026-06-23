@@ -68,8 +68,8 @@ theorem summable_pentagonalRhs_powerSeries
   apply lt_of_lt_of_le (lt_add_of_nonneg_of_lt (by simp) ?_) (PowerSeries.le_order_mul _ _)
   apply lt_of_lt_of_le ?_ (PowerSeries.min_order_le_order_add _ _)
   simp_rw [order_neg, order_X_pow]
-  rw [min_eq_left (by gcongr <;> simp)]
-  rw [Nat.cast_lt, ← Nat.add_one_le_iff, Nat.le_div_iff_mul_le (by simp)]
+  rw [min_eq_left (by gcongr <;> simp), Nat.cast_lt, ← Nat.add_one_le_iff,
+    Nat.le_div_iff_mul_le (by simp)]
   exact Nat.mul_le_mul hk (by linarith)
 
 /-- **Pentagonal number theorem** for formal power series, summation over natural numbers.
@@ -106,8 +106,8 @@ theorem summable_pentagonalRhs_intNeg_powerSeries
   rw [ENat.tendsto_nhds_top_iff_natCast_lt]
   refine fun n ↦ eventually_atTop.mpr ⟨n, fun k hk ↦ ?_⟩
   refine lt_of_lt_of_le (lt_add_of_nonneg_of_lt (by simp) ?_) (PowerSeries.le_order_mul _ _)
-  rw [order_X_pow, Nat.cast_lt, Int.lt_toNat, ← Int.add_one_le_iff]
-  rw [Int.le_ediv_iff_mul_le (by simp)]
+  rw [order_X_pow, Nat.cast_lt, Int.lt_toNat, ← Int.add_one_le_iff,
+    Int.le_ediv_iff_mul_le (by simp)]
   nlinarith
 
 /-- **Pentagonal number theorem** for formal power series, summation over integers, opposite order.

@@ -91,6 +91,15 @@ namespace Formula
 
 variable {L : Language} {M : Type*} [L.Structure M] {a b} {n1 n2 n3 n4}
 
+/-- Discharge a `realize_*` lemma whose displayed form is a `relabelEquiv`.
+The `target` is the `Formula.*` reshaping definition being unfolded. -/
+macro "realizeViaRelabel " target:ident : tactic =>
+  `(tactic| (
+    unfold Formula.Realize $target
+    rw [realize_relabelEquiv]
+    dsimp only [Equiv.coe_fn_mk]
+    exact Eq.to_iff rfl))
+
 @[delta0_simps]
 lemma realize_flip (phi : L.Formula (a ⊕ b)) {v : (b ⊕ a) -> M}
   : phi.flip.Realize v
@@ -98,11 +107,7 @@ lemma realize_flip (phi : L.Formula (a ⊕ b)) {v : (b ⊕ a) -> M}
     phi.Realize (v ∘ Sum.swap)
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.flip
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.flip
 
 @[delta0_simps]
 lemma realize_rotate_21 (phi : L.Formula (Vars2 n1 n2)) {v : _ -> M}
@@ -113,11 +118,7 @@ lemma realize_rotate_21 (phi : L.Formula (Vars2 n1 n2)) {v : _ -> M}
       | .fv2 => .fv1))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.rotate21
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.rotate21
 
 @[delta0_simps]
 lemma realize_rotate_213 (phi : L.Formula (Vars3 n1 n2 n3)) {v : _ -> M}
@@ -129,11 +130,7 @@ lemma realize_rotate_213 (phi : L.Formula (Vars3 n1 n2 n3)) {v : _ -> M}
       | .fv3 => .fv3))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.rotate213
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.rotate213
 
 @[delta0_simps]
 lemma realize_mkInl (phi : L.Formula a) {v : (a ⊕ Empty) -> M}
@@ -142,11 +139,7 @@ lemma realize_mkInl (phi : L.Formula a) {v : (a ⊕ Empty) -> M}
     phi.Realize (v ∘ Sum.inl)
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.mkInl
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.mkInl
 
 @[delta0_simps]
 lemma realize_display1 (phi : L.Formula (Vars1 n1)) {v : ((Vars1 n1) ⊕ Empty) -> M}
@@ -155,11 +148,7 @@ lemma realize_display1 (phi : L.Formula (Vars1 n1)) {v : ((Vars1 n1) ⊕ Empty) 
     phi.Realize (v ∘ .inl)
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.display1
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.display1
 
 @[delta0_simps]
 lemma realize_display2 (phi : L.Formula (Vars2 n1 n2))
@@ -171,11 +160,7 @@ lemma realize_display2 (phi : L.Formula (Vars2 n1 n2))
       | .fv2 => .inr .fv1))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.display2
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.display2
 
 @[delta0_simps]
 lemma realize_display3 (phi : L.Formula (Vars3 n1 n2 n3))
@@ -188,11 +173,7 @@ lemma realize_display3 (phi : L.Formula (Vars3 n1 n2 n3))
       | .fv3 => .inr .fv2))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.display3
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.display3
 
 @[delta0_simps]
 lemma realize_display4 (phi : L.Formula (Vars4 n1 n2 n3 n4))
@@ -206,11 +187,7 @@ lemma realize_display4 (phi : L.Formula (Vars4 n1 n2 n3 n4))
       | .fv4 => .inr .fv3))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.display4
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.display4
 
 
 @[delta0_simps]
@@ -224,11 +201,7 @@ lemma realize_display_swapleft (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
       | .inr .fv2 => .inr .fv1))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.displaySwapleft
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.displaySwapleft
 
 @[delta0_simps]
 lemma realize_display_swapleft' (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
@@ -241,11 +214,7 @@ lemma realize_display_swapleft' (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
       | .inr .fv2 => .inr .fv1))
   :=
 by
-  unfold Formula.Realize
-  unfold Formula.displaySwapleft'
-  rw [realize_relabelEquiv]
-  dsimp only [Equiv.coe_fn_mk]
-  exact Eq.to_iff rfl
+  realizeViaRelabel Formula.displaySwapleft'
 
 
 /-- `peel_iAlls' k` rewrites `(iAlls' φ).Realize` by peeling exactly

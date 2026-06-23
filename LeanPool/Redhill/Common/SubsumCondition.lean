@@ -57,8 +57,7 @@ lemma SSC.ne_zero (ha : SSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 := by
     exact Nat.zero_lt_sub_of_lt hn
   · rwa [sum_singleton]
 
-lemma StrongSSC.ne_zero (ha : StrongSSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 :=
-  ha.SSC.ne_zero hn
+lemma StrongSSC.ne_zero (ha : StrongSSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 := ha.SSC.ne_zero hn
 
 lemma StrongSSC.perm (h : StrongSSC a) (e : Equiv.Perm (Fin n)) : StrongSSC (a ∘ e) := fun b hs ↦ by
   have : b = (b ∘ e.symm) ∘ e := by simp [Function.comp_assoc]

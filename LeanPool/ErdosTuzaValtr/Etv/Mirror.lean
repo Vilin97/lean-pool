@@ -18,8 +18,7 @@ open OrderDual
 variable {α : Type _} [LinearOrder α] {C : Config α}
 
 theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
-    C.Mirror.HasLaced n S.Mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q :=
-  by
+    C.Mirror.HasLaced n S.Mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q := by
   constructor
   · intro h; rcases h with ⟨b, a, cqm, cm, cpm, hcqm, hcm, hcpm, h⟩
     rw [← @List.ofMirrorMirror _ cpm] at hcpm h
@@ -48,8 +47,7 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
 
 theorem Mirror.hasInterweavedLaced {n : ℕ} {S : Finset α} (p q r s : α) :
     C.Mirror.HasInterweavedLaced n S.Mirror (toDual s) (toDual r) (toDual q) (toDual p) ↔
-      C.HasInterweavedLaced n S p q r s :=
-  by
+      C.HasInterweavedLaced n S p q r s := by
   simp [Config.HasInterweavedLaced, Mirror.hasLaced]
   tauto
 

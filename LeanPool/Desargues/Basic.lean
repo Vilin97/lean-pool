@@ -33,10 +33,7 @@ theorem rel_sym_acb
   obtain rfl | bc_neq := eq_or_ne b c
   · -- b = c, meaning abc and acb becomes abb
     exact abc_col
-  · apply l2 a c b c
-    · exact abc_col
-    · apply l1 c b
-    · exact bc_neq
+  · exact l2 a c b c abc_col (l1 c b) bc_neq
 
 theorem rel_sym_cab
   (a b c : G)
@@ -45,11 +42,8 @@ theorem rel_sym_cab
   (abc_col : ell a b c) :
     ell c a b := by
   obtain rfl | bc_neq := eq_or_ne b c
-  · apply l1 b a
-  · apply l2 c a b c
-    · apply l1 c b
-    · exact abc_col
-    · exact bc_neq
+  · exact l1 b a
+  · exact l2 c a b c (l1 c b) abc_col bc_neq
 
 -- Now we can easily generate the other three.
 theorem rel_sym_bca
@@ -57,30 +51,21 @@ theorem rel_sym_bca
   (l1 : ∀ a b, ell a b a)
   (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
-    ell b c a := by
-  apply rel_sym_cab c a b l1 l2
-  apply rel_sym_cab a b c l1 l2
-  exact abc_col
+    ell b c a := rel_sym_cab c a b l1 l2 (rel_sym_cab a b c l1 l2 abc_col)
 
 theorem rel_sym_bac
   (a b c : G)
   (l1 : ∀ a b, ell a b a)
   (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
-    ell b a c := by
-  apply rel_sym_cab a c b l1 l2
-  apply rel_sym_acb a b c l1 l2
-  exact abc_col
+    ell b a c := rel_sym_cab a c b l1 l2 (rel_sym_acb a b c l1 l2 abc_col)
 
 theorem rel_sym_cba
   (a b c : G)
   (l1 : ∀ a b, ell a b a)
   (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
-    ell c b a := by
-  apply rel_sym_cab b a c l1 l2
-  apply rel_sym_bac a b c l1 l2
-  exact abc_col
+    ell c b a := rel_sym_cab b a c l1 l2 (rel_sym_bac a b c l1 l2 abc_col)
 
 theorem l1_l2_eq_imp_l3
   (a b c d p : G)
@@ -91,103 +76,28 @@ theorem l1_l2_eq_imp_l3
   (pab_col : ell p a b)
   (pcd_col : ell p c d) :
     ∃ q, ell q a c ∧ ell q b d := by
-  rcases abcdp_deq
-  case inl ab_eq =>
-    rw [ab_eq]
-    use b
-    constructor
-    case h.left =>
-      apply rel_sym_cab b c b l1 l2 (l1 b c)
-    case h.right =>
-      apply rel_sym_cab b d b l1 l2 (l1 b d)
-  case inr rest =>
-    rcases rest
-    case inl ac_eq =>
-      rw [ac_eq]
-      use b
-      constructor
-      case h.left =>
-        apply rel_sym_bca c b c l1 l2 (l1 c b)
-      case h.right =>
-        apply rel_sym_cab b d b l1 l2 (l1 b d)
-    case inr rest =>
-      rcases rest
-      case inl ad_eq =>
-        rw [ad_eq]
-        use d
-        constructor
-        case h.left =>
-          apply rel_sym_cab d c d l1 l2 (l1 d c)
-        case h.right =>
-          apply l1 d b
-      case inr rest =>
-        rcases rest
-        case inl ap_eq =>
-          rw [ap_eq]
-          use d
-          constructor
-          case h.left =>
-            apply rel_sym_cab p c d l1 l2 pcd_col
-          case h.right =>
-            apply l1 d b
-        case inr rest =>
-          rcases rest
-          case inl bc_eq =>
-            rw [bc_eq]
-            use c
-            constructor
-            case h.left =>
-              apply l1 c a
-            case h.right =>
-              apply rel_sym_cab c d c l1 l2 (l1 c d)
-          case inr rest =>
-          rcases rest
-          case inl bd_eq =>
-            rw [bd_eq]
-            use c
-            constructor
-            case h.left =>
-              apply l1 c a
-            case h.right =>
-              apply rel_sym_bca d c d l1 l2 (l1 d c)
-          case inr rest =>
-            rcases rest
-            case inl bp_eq =>
-              rw [bp_eq]
-              use c
-              constructor
-              case h.left =>
-                apply l1 c a
-              case h.right =>
-                apply rel_sym_bac p c d l1 l2 pcd_col
-            case inr rest =>
-              rcases rest
-              case inl cd_eq =>
-                rw [cd_eq]
-                use d
-                constructor
-                case h.left =>
-                  apply l1 d a
-                case h.right =>
-                  apply l1 d b
-              case inr rest =>
-                rcases rest
-                case inl cp_eq =>
-                  rw [cp_eq]
-                  use b
-                  constructor
-                  case h.left =>
-                    apply rel_sym_cba p a b l1 l2 pab_col
-                  case h.right =>
-                    apply rel_sym_cab b d b l1 l2 (l1 b d)
-                case inr dp_eq =>
-                  rw [dp_eq]
-                  use a
-                  constructor
-                  case h.left =>
-                    apply rel_sym_cab a c a l1 l2 (l1 a c)
-                  case h.right =>
-                    apply rel_sym_bca p a b l1 l2 pab_col
+  rcases abcdp_deq with
+    ab_eq | ac_eq | ad_eq | ap_eq | bc_eq | bd_eq | bp_eq | cd_eq | cp_eq | dp_eq
+  · rw [ab_eq]
+    exact ⟨b, rel_sym_cab b c b l1 l2 (l1 b c), rel_sym_cab b d b l1 l2 (l1 b d)⟩
+  · rw [ac_eq]
+    exact ⟨b, rel_sym_bca c b c l1 l2 (l1 c b), rel_sym_cab b d b l1 l2 (l1 b d)⟩
+  · rw [ad_eq]
+    exact ⟨d, rel_sym_cab d c d l1 l2 (l1 d c), l1 d b⟩
+  · rw [ap_eq]
+    exact ⟨d, rel_sym_cab p c d l1 l2 pcd_col, l1 d b⟩
+  · rw [bc_eq]
+    exact ⟨c, l1 c a, rel_sym_cab c d c l1 l2 (l1 c d)⟩
+  · rw [bd_eq]
+    exact ⟨c, l1 c a, rel_sym_bca d c d l1 l2 (l1 d c)⟩
+  · rw [bp_eq]
+    exact ⟨c, l1 c a, rel_sym_bac p c d l1 l2 pcd_col⟩
+  · rw [cd_eq]
+    exact ⟨d, l1 d a, l1 d b⟩
+  · rw [cp_eq]
+    exact ⟨b, rel_sym_cba p a b l1 l2 pab_col, rel_sym_cab b d b l1 l2 (l1 b d)⟩
+  · rw [dp_eq]
+    exact ⟨a, rel_sym_cab a c a l1 l2 (l1 a c), rel_sym_bca p a b l1 l2 pab_col⟩
 
 /-- A projective geometry is a set `G` together with a ternary collinearity
 relation `ell ⊆ G × G × G` satisfying the axioms `L₁`, `L₂` and `L₃`. (p. 26) -/
@@ -217,24 +127,13 @@ theorem ncol_imp_neq
   (a b c : G)
   (abc_ncol : ¬ ell a b c) :
     a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-  constructor
-  case left =>
-    intro ab_eq
-    rw [ab_eq] at abc_ncol
-    apply abc_ncol
-    apply rel_sym_cab b c b PG.l1 PG.l2 (PG.l1 b c)
-  case right =>
-    constructor
-    case left =>
-      intro ac_eq
-      rw [ac_eq] at abc_ncol
-      apply abc_ncol
-      apply PG.l1 c b
-    case right =>
-      intro bc_eq
-      rw [bc_eq] at abc_ncol
-      apply abc_ncol
-      apply rel_sym_bca c a c PG.l1 PG.l2 (PG.l1 c a)
+  refine ⟨fun ab_eq => ?_, fun ac_eq => ?_, fun bc_eq => ?_⟩
+  · rw [ab_eq] at abc_ncol
+    exact abc_ncol (rel_sym_cab b c b PG.l1 PG.l2 (PG.l1 b c))
+  · rw [ac_eq] at abc_ncol
+    exact abc_ncol (PG.l1 c b)
+  · rw [bc_eq] at abc_ncol
+    exact abc_ncol (rel_sym_bca c a c PG.l1 PG.l2 (PG.l1 c a))
 
 variable [DecidableEq G]
 
@@ -304,20 +203,10 @@ theorem p_3
         apply PG.l1 b d
     rw [inter_empty] at b_in_inter
     exact b_in_inter
-  · have abp_col :
-        ell a b p := by
-      apply star_imp_ell a b p a_in_bp
-    have pcd_col :
-        ell p c d := by
-      apply star_imp_ell p c d p_in_cd
-    have abc_neq :
-        a ≠ b ∧ a ≠ c ∧ b ≠ c := by
-      apply ncol_imp_neq (ell := ell) a b c
-      exact abc_col
-    have ab_neq :
-        a ≠ b := by
-      cases abc_neq with
-      | intro left _ => exact left
+  · have abp_col : ell a b p := star_imp_ell a b p a_in_bp
+    have pcd_col : ell p c d := star_imp_ell p c d p_in_cd
+    have abc_neq : a ≠ b ∧ a ≠ c ∧ b ≠ c := ncol_imp_neq (ell := ell) a b c abc_col
+    have ab_neq : a ≠ b := abc_neq.1
     have bp_neq :
         b ≠ p := by
       intro bp_eq
@@ -370,9 +259,7 @@ theorem p_4
   (a_in_bc : a ∈ star ell b c)
   (ab_neq : a ≠ b) :
     c ∈ star ell a b := by
-  have inter_nempty :
-      star ell a b ∩ star ell c c ≠ ∅ := by
-    apply p_3 a c b c a (p_2 a c) a_in_bc ab_neq
+  have inter_nempty : star ell a b ∩ star ell c c ≠ ∅ := p_3 a c b c a (p_2 a c) a_in_bc ab_neq
   unfold star at inter_nempty
   simp only [↓reduceIte, setOf_eq_eq_singleton, ne_eq, inter_singleton_eq_empty, mem_setOf_eq,
     not_not] at inter_nempty
@@ -392,9 +279,7 @@ theorem p_5
     · simp only [star, ↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff] at a_in_bc
       contradiction
     · -- In particular, one has c ∈ a ⋆ b by P₄.
-      have c_in_ab :
-          c ∈ star ell a b := by
-        apply p_4 a b c a_in_bc ab_neq
+      have c_in_ab : c ∈ star ell a b := p_4 a b c a_in_bc ab_neq
       -- We may assume that p ≠ a and p ≠ c.
       obtain rfl | pa_neq := eq_or_ne p a
       · unfold star at c_in_ab
@@ -414,21 +299,17 @@ theorem p_5
           · rename_i bp_eq
             exact id bp_eq.symm
           · apply rel_sym_bca p b p PG.l1 PG.l2 (PG.l1 p b)
-        · have b_in_pa :
-              b ∈ star ell p a := by
-            apply p_4 p a b p_in_ab pa_neq
-          have inter_nempty :
-              star ell c p ∩ star ell a a ≠ ∅ := by
-            apply p_3 c a p a b c_in_ab b_in_pa (id (Ne.symm pc_neq))
+        · have b_in_pa : b ∈ star ell p a := p_4 p a b p_in_ab pa_neq
+          have inter_nempty : star ell c p ∩ star ell a a ≠ ∅ :=
+            p_3 c a p a b c_in_ab b_in_pa (id (Ne.symm pc_neq))
           have a_in_cp :
               a ∈ star ell c p := by
             unfold star at inter_nempty
             simp only [↓reduceIte, setOf_eq_eq_singleton, ne_eq, inter_singleton_eq_empty,
               mem_setOf_eq, not_not] at inter_nempty
             apply inter_nempty
-          have inter_nempty :
-              star ell b c ∩ star ell p p ≠ ∅ := by
-            apply p_3 b p c p a b_in_pa a_in_cp bc_neq
+          have inter_nempty : star ell b c ∩ star ell p p ≠ ∅ :=
+            p_3 b p c p a b_in_pa a_in_cp bc_neq
           unfold star at inter_nempty
           simp only [↓reduceIte, setOf_eq_eq_singleton, ne_eq, inter_singleton_eq_empty,
             mem_setOf_eq, not_not] at inter_nempty
@@ -480,9 +361,7 @@ theorem p_9
       rw [p_6 b d] at c_in_bd
       apply p_5 c d b c_in_bd
     apply cd_subseteq_bd at p_in_cd
-    have pb_subseteq_bd :
-        star ell p b ⊆ star ell b d := by
-      apply p_5 p b d p_in_cd
+    have pb_subseteq_bd : star ell p b ⊆ star ell b d := p_5 p b d p_in_cd
     rw [p_6 b p] at a_in_bp
     apply pb_subseteq_bd at a_in_bp
     -- Thus one can choose q = a.
@@ -513,12 +392,8 @@ theorem p_9
           ∃ q, q ∈ star ell a c ∩ star ell b d := by
         let inter := star ell a c ∩ star ell b d
         rw [<- nonempty_def]
-        have disj :
-            inter = ∅ ∨ Set.Nonempty inter :=
-          by apply eq_empty_or_nonempty inter
-        have inter_nempty :
-            inter ≠ ∅ := by
-          apply p_3 a b c d p a_in_bp p_in_cd ab_eq
+        have disj : inter = ∅ ∨ Set.Nonempty inter := eq_empty_or_nonempty inter
+        have inter_nempty : inter ≠ ∅ := p_3 a b c d p a_in_bp p_in_cd ab_eq
         rcases disj
         case inl _ => contradiction
         case inr nempty => exact nempty
@@ -535,11 +410,8 @@ theorem p_9
               exact id cq_eq.symm
             case h.right.inl.isFalse _ =>
               apply rel_sym_bca q c q PG.l1 PG.l2 (PG.l1 q c)
-          · have c_in_qa :
-                c ∈ star ell q a := by
-              apply p_4 q a c q_in_ac qa_neq
-            have cq_neq :
-                c ≠ q := by
+          · have c_in_qa : c ∈ star ell q a := p_4 q a c q_in_ac qa_neq
+            have cq_neq : c ≠ q := by
               intro cq_eq
               rw [cq_eq] at c_in_bd
               exact c_in_bd q_in_bd
@@ -573,12 +445,8 @@ theorem star_nempty_and_neq_imp_sing
     have xy_neq_neq :
         ¬ x ≠ y := by
       intro xy_neq
-      have xy_eq_ab :
-          star ell x y = star ell a b := by
-        apply p_8 x y a b x_in_ab y_in_ab xy_neq
-      have xy_eq_cd :
-          star ell x y = star ell c d := by
-        apply p_8 x y c d x_in_cd y_in_cd xy_neq
+      have xy_eq_ab : star ell x y = star ell a b := p_8 x y a b x_in_ab y_in_ab xy_neq
+      have xy_eq_cd : star ell x y = star ell c d := p_8 x y c d x_in_cd y_in_cd xy_neq
       rw [xy_eq_ab] at xy_eq_cd
       apply neq
       exact xy_eq_cd
@@ -670,29 +538,22 @@ theorem nin_arm :
   have inter_eq_a := by apply abc_inter_sing a b c CPQ.abc_ncol
   intro z_in_ac
   let zp := z.property
-  have z_in_inter :
-      z.val ∈ star ell a b ∩ star ell a c := by
-    exact mem_inter zp z_in_ac
+  have z_in_inter : z.val ∈ star ell a b ∩ star ell a c := mem_inter zp z_in_ac
   rw [inter_eq_a] at z_in_inter
   exact id (Ne.symm CPQ.az_neq) z_in_inter
 
 theorem nin_wall :
     z.val ∉ star ell c b := by
-  have bca_ncol :
-      ¬ell b c a := by
+  have bca_ncol : ¬ell b c a := by
     intro bca_col
-    have abc_col :
-        ell a b c := by
-      relSym
+    have abc_col : ell a b c := by relSym
     exact CPQ.abc_ncol abc_col
   have inter_eq_b := by apply abc_inter_sing b c a bca_ncol
   intro z_in_cb
   rw [p_6 c b] at z_in_cb
   rw [<- p_6 a b] at inter_eq_b
   let zp := z.property
-  have z_in_inter :
-      z.val ∈ star ell b c ∩ star ell a b := by
-    exact mem_inter z_in_cb zp
+  have z_in_inter : z.val ∈ star ell b c ∩ star ell a b := mem_inter z_in_cb zp
   rw [inter_eq_b] at z_in_inter
   exact id (Ne.symm CPQ.bz_neq) z_in_inter
 
@@ -718,13 +579,10 @@ theorem shadow_exists :
 
 theorem cen_proj_sing :
     ∃ y, centralProjection a b c z x = {y} := by
-  have z_nin_ac :
-      z.val ∉ star ell a c := by apply nin_arm
-  have z_nin_cb :
-      z.val ∉ star ell c b := by apply nin_wall
+  have z_nin_ac : z.val ∉ star ell a c := by apply nin_arm
+  have z_nin_cb : z.val ∉ star ell c b := by apply nin_wall
   -- (x ⋆ z) ∩ (b ⋆ c) ≠ ∅ by P₃
-  have nempty :
-      star ell x.val z ∩ star ell c b ≠ ∅ := by apply shadow_exists
+  have nempty : star ell x.val z ∩ star ell c b ≠ ∅ := by apply shadow_exists
   unfold centralProjection
   rw [p_6 b c]
   have xz_neq_cb :
@@ -754,8 +612,7 @@ noncomputable def cenProjMap :
 
 theorem cen_proj_map_property :
     cenProjMap a b c z x ∈ Subtype.val ⁻¹' star ell x z := by
-  have cpm_property := by
-    apply Exists.choose_spec (cen_proj_sing a b c z x)
+  have cpm_property := Exists.choose_spec (cen_proj_sing a b c z x)
   unfold cenProjMap
   rw [<- singleton_subset_iff]
   rw [<- cpm_property]
@@ -782,8 +639,7 @@ theorem shadow_center_neq :
     (cenProjMap a b c z x).val ≠ z.val := by
   set y := cenProjMap a b c z x
   intro yz_eq
-  have leg_wall_inter :
-      star ell b a ∩ star ell b c = {b} := by
+  have leg_wall_inter : star ell b a ∩ star ell b c = {b} := by
     apply abc_inter_sing b a c
     intro bac_col
     apply CPQ.abc_ncol
@@ -850,8 +706,7 @@ theorem a_in_ac
 
 theorem c_in_ac
   {a c : G} :
-    c ∈ star ell a c := by
-  exact p_2 c a
+    c ∈ star ell a c := p_2 c a
 
 theorem φa_eq_b :
     φ ⟨a, a_in_ac⟩ = b := by
@@ -862,8 +717,7 @@ theorem φa_eq_b :
     relSym
   rw [p_6 b a] at b_inter
   have φa_in_ab := by apply shadow_in_light a b c z ⟨a, a_in_ac⟩
-  have az_eq_ab := by
-    apply p_8 (ell := ell) a z a b (by rw [p_6]; exact p_2 a b) z.property CPQ.az_neq
+  have az_eq_ab := p_8 (ell := ell) a z a b (by rw [p_6]; exact p_2 a b) z.property CPQ.az_neq
   rw [az_eq_ab] at φa_in_ab
   have φa_in_bc := (φ ⟨a, a_in_ac⟩).property
   have φa_in_inter : (φ ⟨a, a_in_ac⟩).val ∈ star ell a b ∩ star ell b c := by

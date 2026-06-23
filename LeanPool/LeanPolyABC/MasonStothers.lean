@@ -46,8 +46,7 @@ theorem dvd_derivative_iff {a : k[X]} : a ∣ derivative a ↔ derivative a = 0 
     by_contra deriv_nz
     have deriv_lt := degree_derivative_lt a_nz
     have le_deriv := Polynomial.degree_le_of_dvd h deriv_nz
-    have lt_self := le_deriv.trans_lt deriv_lt
-    simp only [lt_self_iff_false] at lt_self
+    exact absurd (le_deriv.trans_lt deriv_lt) (lt_irrefl _)
   · intro h; rw [h]; simp
 
 namespace IsCoprime
@@ -60,15 +59,12 @@ theorem wronskian_eq_zero_iff {a b : k[X]} (hc : IsCoprime a b) :
     rw [wronskian, sub_eq_iff_eq_add, zero_add] at hw
     constructor
     · rw [← dvd_derivative_iff]
-      apply hc.dvd_of_dvd_mul_right
-      rw [← hw]; exact dvd_mul_right _ _
+      exact hc.dvd_of_dvd_mul_right (hw ▸ dvd_mul_right _ _)
     · rw [← dvd_derivative_iff]
-      apply hc.symm.dvd_of_dvd_mul_left
-      rw [hw]; exact dvd_mul_left _ _
-  · intro hdab
-    obtain ⟨hda, hdb⟩ := hdab
-    rw [wronskian]
-    rw [hda, hdb]; simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul, sub_self]
+      exact hc.symm.dvd_of_dvd_mul_left (hw ▸ dvd_mul_left _ _)
+  · rintro ⟨hda, hdb⟩
+    rw [wronskian, hda, hdb]
+    simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul, sub_self]
 
 end IsCoprime
 
@@ -94,8 +90,7 @@ namespace IsCoprime
 
 protected theorem divRadical {a b : k[X]} (h : IsCoprime a b) :
     IsCoprime (Polynomial.divRadical a) (Polynomial.divRadical b) := by
-  rw [← Polynomial.hMul_radical_divRadical a] at h
-  rw [← Polynomial.hMul_radical_divRadical b] at h
+  rw [← Polynomial.hMul_radical_divRadical a, ← Polynomial.hMul_radical_divRadical b] at h
   exact h.of_mul_left_right.of_mul_right_right
 
 end IsCoprime
@@ -159,7 +154,7 @@ theorem abc {a b c : k[X]}
   have wca : w = wronskian c a := by
     rw [rot3_add] at hsum
     have h := wronskian_eq_of_sum_zero hsum
-    rw [← wbc] at h; exact h
+    rwa [← wbc] at h
   have abc_dr_dvd_w : Polynomial.divRadical (a * b * c) ∣ w := by
     have adr_dvd_w := Polynomial.divRadical_dvd_wronskian_left a b
     have bdr_dvd_w := Polynomial.divRadical_dvd_wronskian_right a b
@@ -173,8 +168,7 @@ theorem abc {a b c : k[X]}
     have abdr_dvd_w := cop_ab_dr.mul_dvd adr_dvd_w bdr_dvd_w
     have abcdr_dvd_w := cop_abc_dr.mul_dvd abdr_dvd_w cdr_dvd_w
     convert abcdr_dvd_w using 1
-    rw [← Polynomial.divRadical_hMul hab]
-    rw [← Polynomial.divRadical_hMul _]
+    rw [← Polynomial.divRadical_hMul hab, ← Polynomial.divRadical_hMul _]
     exact hca.symm.mul_left hbc
   by_cases hw : w = 0
   · left
@@ -257,15 +251,13 @@ theorem abc'_char0 [CharZero k]
     · left
       rw [eq_a', eq_b', eq_c']
       (repeat rw [Polynomial.natDegree_mul _ _]) <;> try assumption
-      simp only [hd', zero_add]
-      exact heq
+      simpa only [hd', zero_add] using heq
     · right
       simp only [Polynomial.natDegree_eq_zero] at heq
       rcases heq with ⟨⟨ca', eq_ca'⟩, ⟨cb', eq_cb'⟩, ⟨cc', eq_cc'⟩⟩
       rw [eq_comm] at eq_ca' eq_cb' eq_cc'
-      rw [eq_a', eq_b', eq_c']
-      rw [natDegree_mul hd ha', natDegree_mul hd hb', natDegree_mul hd hc']
-      rw [← Nat.max₃_add_distrib_left _ _ _ _]
+      rw [eq_a', eq_b', eq_c', natDegree_mul hd ha', natDegree_mul hd hb', natDegree_mul hd hc',
+        ← Nat.max₃_add_distrib_left _ _ _ _]
       simp_rw [eq_ca', eq_cb', eq_cc', C_ne_zero] at ha' hb' hc' ⊢
       simp only [Nat.max₃, natDegree_C, max_self, add_zero]
       rw [add_comm _ 1, add_le_add_iff_right]
@@ -281,8 +273,8 @@ theorem abc'_char0 [CharZero k]
     rw [← Nat.max₃_add_distrib_right _ _ _ _]
     rw [add_right_comm, ← add_assoc, Nat.add_le_add_iff_right]
     have habc := hca.symm.mul_left hbc
-    rw [radical_hMul habc, natDegree_mul (radical_ne_zero _) (radical_ne_zero _)] at hineq
-    rw [radical_hMul hab, natDegree_mul (radical_ne_zero _) (radical_ne_zero _)] at hineq
+    rw [radical_hMul habc, natDegree_mul (radical_ne_zero _) (radical_ne_zero _),
+      radical_hMul hab, natDegree_mul (radical_ne_zero _) (radical_ne_zero _)] at hineq
     apply le_trans hineq
     apply add_le_add_three <;> apply natDegree_le_of_dvd
     · exact radical_dvd_radical_self_mul hd

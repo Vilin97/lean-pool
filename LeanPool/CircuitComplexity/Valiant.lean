@@ -68,13 +68,11 @@ theorem depth_reduction
       obtain ⟨i, _, hie⟩ := Finset.mem_biUnion.mp he
       exact (Finset.mem_filter.mp hie).1
     · calc k * (I.biUnion fun i => levelEdges G k i).card
-          ≤ k * ∑ i ∈ I, (levelEdges G k i).card :=
-            Nat.mul_le_mul_left k Finset.card_biUnion_le
+          ≤ k * ∑ i ∈ I, (levelEdges G k i).card := Nat.mul_le_mul_left k Finset.card_biUnion_le
         _ ≤ r * G.edgeFinset.card := hIsum
     · have hbound := depth_deleteEdges_levelEdges_le G hac hd I hIsub
       rw [hIcard] at hbound
-      have hpow : (2 : ℕ) ^ k / 2 ^ r = 2 ^ (k - r) :=
-        Nat.pow_div hrk (by decide)
+      have hpow : (2 : ℕ) ^ k / 2 ^ r = 2 ^ (k - r) := Nat.pow_div hrk (by decide)
       rw [hpow]
       exact hbound
   · refine ⟨∅, Finset.empty_subset _, by simp, ?_⟩

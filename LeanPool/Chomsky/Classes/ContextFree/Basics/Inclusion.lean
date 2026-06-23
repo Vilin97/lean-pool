@@ -22,8 +22,7 @@ def CFG.toGeneral (g : CFG T) : Grammar T :=
     (g.rules.map (fun r : g.nt × List (Symbol T g.nt) => Grule.mk [] r.fst [] r.snd))
 
 private lemma CFG.tran_iff_toGeneral_tran (g : CFG T) (w₁ w₂ : List (Symbol T g.nt)) :
-  g.Transforms w₁ w₂ ↔ g.toGeneral.Transforms w₁ w₂ :=
-by
+  g.Transforms w₁ w₂ ↔ g.toGeneral.Transforms w₁ w₂ := by
   have key : g.toGeneral.Transforms w₁ w₂ ↔
       ∃ rr : Grule T g.nt, rr ∈ g.toGeneral.rules ∧ ∃ uu vv,
         w₁ = uu ++ rr.inputL ++ [Symbol.nonterminal rr.inputN] ++ rr.inputR ++ vv ∧
@@ -40,8 +39,7 @@ by
     · rw [aft, ← hrr₀]
 
 private lemma CFG.deri_iff_toGeneral_deri (g : CFG T) (w₁ w₂ : List (Symbol T g.nt)) :
-  g.Derives w₁ w₂ ↔ g.toGeneral.Derives w₁ w₂ :=
-by
+  g.Derives w₁ w₂ ↔ g.toGeneral.Derives w₁ w₂ := by
   constructor <;> intro hgww
   · induction hgww with
     | refl => apply gr_deri_self
@@ -55,15 +53,13 @@ by
       rwa [←CFG.tran_iff_toGeneral_tran] at hg
 
 lemma CFG.language_eq_toGeneral_language (g : CFG T) :
-  g.language = g.toGeneral.language :=
-by
+  g.language = g.toGeneral.language := by
   rw [Language.ext_iff]
   intro
   apply g.deri_iff_toGeneral_deri
 
 theorem CF_subclass_GG (L : Language T) :
-  Language.IsCF L → Language.IsGG L :=
-by
+  Language.IsCF L → Language.IsGG L := by
   rintro ⟨g, rfl⟩
   exact ⟨g.toGeneral, g.language_eq_toGeneral_language.symm⟩
 

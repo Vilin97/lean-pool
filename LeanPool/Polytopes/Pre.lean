@@ -43,8 +43,7 @@ lemma Set.mem_translation {α : Type} [AddGroup α] {S : Set α} (x s : α) :
   constructor
   · -- 1.
     rintro ⟨y, hy, rfl⟩
-    rw [add_sub_cancel_right]
-    exact hy
+    rwa [add_sub_cancel_right]
   · -- 2.
     intro h
     exact ⟨s - x, h, by rw [sub_add_cancel]⟩
@@ -58,8 +57,7 @@ lemma Set.sub_eq_neg_add {α : Type} [AddGroup α] (S : Set α) (x : α) :
   simp only [sub_singleton, mem_image, add_singleton, image_add_right, neg_neg, mem_preimage]
   refine ⟨ ?_, fun h => ⟨y + x, h, by rw [add_sub_cancel_right]⟩ ⟩
   rintro ⟨z, hz, rfl⟩
-  rw [sub_add_cancel]
-  exact hz
+  rwa [sub_add_cancel]
 
 lemma Set.neg_add_cancel_right' {α : Type} [AddGroup α] {S : Set α} (x : α) :
   S - {x} + {x} = S := by

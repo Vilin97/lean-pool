@@ -39,20 +39,16 @@ theorem toIsSetSemiring (hC : IsSetField C) : IsSetSemiring C :=
   hC.toIsSetRing.isSetSemiring
 
 theorem iUnion_le_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
-    (⋃ i ≤ n, s i) ∈ C :=
-  hC.toIsSetRing.iUnion_le_mem hs n
+    (⋃ i ≤ n, s i) ∈ C := hC.toIsSetRing.iUnion_le_mem hs n
 
 theorem iInter_le_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
-    (⋂ i ≤ n, s i) ∈ C :=
-  hC.toIsSetRing.iInter_le_mem hs n
+    (⋂ i ≤ n, s i) ∈ C := hC.toIsSetRing.iInter_le_mem hs n
 
 theorem partialSups_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
-    partialSups s n ∈ C :=
-  hC.toIsSetRing.partialSups_mem hs n
+    partialSups s n ∈ C := hC.toIsSetRing.partialSups_mem hs n
 
 theorem disjointed_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
-    disjointed s n ∈ C :=
-  hC.toIsSetRing.disjointed_mem hs n
+    disjointed s n ∈ C := hC.toIsSetRing.disjointed_mem hs n
 
 end IsSetField
 

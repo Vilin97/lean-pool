@@ -134,8 +134,7 @@ theorem plfp_unfold [Lean.Order.CompleteLattice α] {f : α → α} (hm : monoto
   plfp f (hm := hm) r = f (uplfp f (hm := hm) r) := by
   rw [plfp]
   delta lfp_monotone
-  have h := plfp_arg_mon hm r
-  rw [lfp_fix h]
+  rw [lfp_fix (plfp_arg_mon hm r)]
   congr
 
 theorem uplfp_goal [Lean.Order.CompleteLattice α] {f : α → α} (hm : monotone f) :

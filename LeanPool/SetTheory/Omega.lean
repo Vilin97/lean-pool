@@ -83,11 +83,9 @@ instance instOfNatM {n} : OfNat M n where
 
 lemma ofNat_eq_natCast (n : ℕ) : (OfNat.ofNat n : M) = n := rfl
 
-lemma natCast_zero : (0 : M) = ∅ := by
-  simp [toZFSet_simps, ofNat_eq_natCast]
+lemma natCast_zero : (0 : M) = ∅ := by simp [toZFSet_simps, ofNat_eq_natCast]
 
-lemma natCast_succ {n : ℕ} : ((n + 1 : ℕ) : M) = succ (n : M) := by
-  simp [toZFSet_simps]
+lemma natCast_succ {n : ℕ} : ((n + 1 : ℕ) : M) = succ (n : M) := by simp [toZFSet_simps]
 
 lemma toZFSet_nat_mem_ωₛ {n : ℕ} : Ordinal.toZFSet n ∈ ωₛ := by
   simpa only [ωₛ] using toZFSet_mem_toZFSet_iff.mpr <| natCast_lt_omega0 _

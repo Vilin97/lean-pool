@@ -70,8 +70,7 @@ def b5 (e : Model R) : R := e.a1 * e.a4 - 2 * e.a2 * e.a3
 /-- The `b₇` invariant of a Weierstrass model (from Connell). -/
 def b7 (e : Model R) : R := e.a1 * (e.a3 ^ 2 - 12 * e.a6) + 8 * e.a3 * e.a4
 
-lemma b8_identity (e : Model R) : 4*e.b8 = e.b2*e.b6 - e.b4 ^ 2 :=
-by
+lemma b8_identity (e : Model R) : 4*e.b8 = e.b2*e.b6 - e.b4 ^ 2 := by
   simp only [b2, b4, b6, b8]
   ring
 
@@ -85,8 +84,7 @@ def c6 (e : Model R) : R := -e.b2 ^ 3 + 36*e.b2*e.b4 - 216*e.b6
 def discr (e : Model R) : R :=
   -e.b2 * e.b2 * e.b8 - 8 * e.b4 ^ 3 - 27 * e.b6 * e.b6 + 9 * e.b2 * e.b4 * e.b6
 
-lemma discr_identity (e : Model R) : 1728 * e.discr = e.c4 ^ 3 - e.c6 ^ 2 :=
-by
+lemma discr_identity (e : Model R) : 1728 * e.discr = e.c4 ^ 3 - e.c6 ^ 2 := by
   simp only [c4, c6, discr, mul_sub, mul_add]
   rw [(by ring : 1728 * (-e.b2 * e.b2 * e.b8) = -432 * e.b2 * e.b2 * (4 * e.b8))]
   rw [b8_identity]
@@ -166,39 +164,33 @@ lemma rst_b2 (r s t : R) (e : Model R) : (rstIso r s t e).b2 = e.b2 + 12*r := by
   ring
 
 lemma rst_b4 (r s t : R) (e : Model R) :
-  (rstIso r s t e).b4 = e.b4 + r * (e.b2 + 6 * r) :=
-by
+  (rstIso r s t e).b4 = e.b4 + r * (e.b2 + 6 * r) := by
   simp only [rstIso, b2, b4]
   ring
 
 lemma rst_b6 (r s t : R) (e : Model R) :
-  (rstIso r s t e).b6 = e.b6 + 2*r*e.b4 + r*r*e.b2 + 4*r*r*r :=
-by
+  (rstIso r s t e).b6 = e.b6 + 2*r*e.b4 + r*r*e.b2 + 4*r*r*r := by
   simp only [rstIso, b2, b4, b6]
   ring
 
 lemma rst_b8 (r s t : R) (e : Model R) :
-  (rstIso r s t e).b8 = e.b8 + 3*r*e.b6 + 3*r*r*e.b4 + r*r*r*e.b2 + 3*r*r*r*r :=
-by
+  (rstIso r s t e).b8 = e.b8 + 3*r*e.b6 + 3*r*r*e.b4 + r*r*r*e.b2 + 3*r*r*r*r := by
   simp only [rstIso, b2, b4, b6, b8]
   ring
 
 @[simp]
 lemma rst_c4 (r s t : R) (e : Model R) :
-  (rstIso r s t e).c4 = e.c4 :=
-by
+  (rstIso r s t e).c4 = e.c4 := by
   simp only [rstIso, b2, b4, c4]
   ring
 
 @[simp]
 lemma rst_c6 (r s t : R) (e : Model R) :
-  (rstIso r s t e).c6 = e.c6 :=
-by
+  (rstIso r s t e).c6 = e.c6 := by
   simp only [rstIso, b2, b4, b6, c6]
   ring
 
-lemma rst_discr (r s t : R) (e : Model R) : (rstIso r s t e).discr = e.discr :=
-by
+lemma rst_discr (r s t : R) (e : Model R) : (rstIso r s t e).discr = e.discr := by
   simp only [discr, rst_b2, rst_b4, rst_b6, rst_b8]
   simp only [mul_add]
   rw [(by ring :
@@ -244,18 +236,15 @@ def dweierstrassDy (e : Model R) (P : R × R) : R :=
 
 @[simp]
 lemma weierstrass_map (e : Model R) (P : R × R) : weierstrass (e.map f) (P.map f f) =
-  f (weierstrass e P) :=
-by simp [weierstrass]
+  f (weierstrass e P) := by simp [weierstrass]
 
 @[simp]
 lemma dweierstrassDx_map (e : Model R) (P : R × R) : dweierstrassDx (e.map f) (P.map f f) =
-  f (dweierstrassDx e P) :=
-by simp [dweierstrassDx, map_ofNat]
+  f (dweierstrassDx e P) := by simp [dweierstrassDx, map_ofNat]
 
 @[simp]
 lemma dweierstrassDy_map (e : Model R) (P : R × R) : dweierstrassDy (e.map f) (P.map f f) =
-  f (dweierstrassDy e P) :=
-by simp [dweierstrassDy, map_ofNat]
+  f (dweierstrassDy e P) := by simp [dweierstrassDy, map_ofNat]
 
 /--
 The discriminant equals (minus) the standard order-`a6` generator of the elimination ideal
@@ -268,8 +257,7 @@ lemma discr_eq_neg_singular (e : Model R) : e.discr = -(
     - 36*e.a1*e.a2*e.a3^3 - 16*e.a1*e.a2^2*e.a3*e.a4 + 30*e.a1^2*e.a3^2*e.a4 - 8*e.a1^2*e.a2*e.a4^2
     + 48*e.a1^2*e.a2^2*e.a6 - 36*e.a1^3*e.a3*e.a6 + 27*e.a3^4 - 72*e.a2*e.a3^2*e.a4
     - 16*e.a2^2*e.a4^2 + 96*e.a1*e.a3*e.a4^2 + 64*e.a2^3*e.a6 - 144*e.a1*e.a2*e.a3*e.a6
-    - 72*e.a1^2*e.a4*e.a6 + 64*e.a4^3 + 216*e.a3^2*e.a6 - 288*e.a2*e.a4*e.a6 + 432*e.a6^2) :=
-by
+    - 72*e.a1^2*e.a4*e.a6 + 64*e.a4^3 + 216*e.a3^2*e.a6 - 288*e.a2*e.a4*e.a6 + 432*e.a6^2) := by
   simp only [discr, b2, b4, b6, b8]
   ring
 
@@ -300,8 +288,7 @@ lemma discr_in_jacobian_ideal (e : Model R) (P : R × R) : e.discr =
       +168*e.a1*e.a2*e.a3
   -(432*e.a6 +e.a1^6 +288*P.2*e.a3 +252*e.a3^2 +12*e.a1^4*e.a2 +48*e.a1^2*e.a2^2 +96*P.1*e.a2^2
       +64*e.a2^3))*(weierstrass e P))
- :=
-by
+ := by
   rw [discr_eq_neg_singular]
   simp only [weierstrass, dweierstrassDx, dweierstrassDy]
   ring
@@ -313,34 +300,28 @@ def varChange (r s t : R) (P' : R × R) : R × R :=
 
 @[simp]
 lemma varChange_comp (r s t : R) (r' s' t' : R) (P : R × R) :
-  varChange r s t (varChange r' s' t' P) = varChange (r + r') (s + s') (t + t' + s * r') P :=
-by
+  varChange r s t (varChange r' s' t' P) = varChange (r + r') (s + s') (t + t' + s * r') P := by
   simp only [varChange, Prod.mk.injEq]
-  apply And.intro <;>
-  ring
+  apply And.intro <;> ring
 
 @[simp]
-lemma varChange_zero (P : R × R) : varChange (0 : R) 0 0 P = P :=
-by simp [varChange]
+lemma varChange_zero (P : R × R) : varChange (0 : R) 0 0 P = P := by simp [varChange]
 
 -- TODO probably these proofs should be more conceptual
 
 theorem weierstrass_iso_eq_varChange (e : Model R) (P : R × R) :
-  weierstrass (rstIso r s t e) P = weierstrass e (varChange r s t P) :=
-by
+  weierstrass (rstIso r s t e) P = weierstrass e (varChange r s t P) := by
   simp only [weierstrass, rstIso, varChange]
   ring
 
 theorem dweierstrassDx_iso_eq_varChange (e : Model R) (P : R × R) :
   dweierstrassDx (rstIso r s t e) P =
-  dweierstrassDx e (varChange r s t P) + s * dweierstrassDy e (varChange r s t P) :=
-by
+  dweierstrassDx e (varChange r s t P) + s * dweierstrassDy e (varChange r s t P) := by
   simp only [dweierstrassDx, dweierstrassDy, rstIso, varChange]
   ring
 
 theorem dweierstrassDy_iso_eq_varChange (e : Model R) (P : R × R) :
-  dweierstrassDy (rstIso r s t e) P = dweierstrassDy e (varChange r s t P) :=
-by
+  dweierstrassDy (rstIso r s t e) P = dweierstrassDy e (varChange r s t P) := by
   simp only [dweierstrassDy, rstIso, varChange]
   ring
 
@@ -425,8 +406,7 @@ by simp only [rstIso, Model.rstIso, mul_zero,
   add_zero, mul_assoc, ←pow_two t, zero_mul, mul_add, sub_sub]
 
 lemma st_of_b8 (e : ValidModel R) (s t : R) : (rstIso 0 s t e).b8 = e.b8 := by
-  rw [rstIso, Model.rst_b8]
-  simp only [mul_zero, add_zero, zero_mul]
+  simp only [rstIso, Model.rst_b8, mul_zero, add_zero, zero_mul]
 
 /-- The change of coordinates `(1, r, s, t)` applied to the valid model `e`, with
 the triple `rst = (r, s, t)` packaged as a single argument. -/
@@ -449,8 +429,7 @@ def isSingularPoint (e : Model K) (P : K × K) : Prop :=
 weierstrass e P = 0 ∧ dweierstrassDx e P = 0 ∧ dweierstrassDy e P = 0
 
 lemma discr_eq_zero_of_singular (e : Model K) {P} (h : isSingularPoint e P) :
-  e.discr = 0 :=
-by
+  e.discr = 0 := by
   rcases h with ⟨h₁, h₂, h₃⟩
   rw [discr_in_jacobian_ideal, h₁, h₂, h₃, mul_zero,
     mul_zero, mul_zero, add_zero, add_zero, neg_eq_zero]
@@ -458,8 +437,7 @@ by
 variable [IsDomain K]
 
 lemma c4_zero_iff_a1_zero_of_char_two (e : Model K) (h : ringChar K = 2) :
-  e.c4 = 0 ↔ e.a1 = 0 :=
-by
+  e.c4 = 0 ↔ e.a1 = 0 := by
   have hchar' : (ringChar K : K) = 2 := by simp [h]
   have hchar'' : (2 : K) = 0 := by simp [← hchar']
   -- TODO use the nicer mod strategy from cubic roots here or a tactic
@@ -470,8 +448,7 @@ by
   norm_num
 
 lemma c4_zero_iff_b2_zero_of_char_three (e : Model K) (h : ringChar K = 3) :
-  e.c4 = 0 ↔ e.b2 = 0 :=
-by
+  e.c4 = 0 ↔ e.b2 = 0 := by
   have hchar' : (ringChar K : K) = 3 := by simp [h]
   have hchar'' : (3 : K) = 0 := by simp [← hchar']
   rw [c4, show (24 : K) = 3 * 8 by norm_num, hchar'']
@@ -482,8 +459,7 @@ by
 -- TODO is this actually an iff
 lemma a3_zero_of_a1_zero_of_disc_zero_of_char_two
   (e : Model K) (h : ringChar K = 2) (hdisc : e.discr = 0) (ha1 : e.a1 = 0) :
-  e.a3 = 0 :=
-by
+  e.a3 = 0 := by
   have hchar' : (ringChar K : K) = 2 := by simp [h]
   have hchar'' : (2 : K) = 0 := by simp [← hchar']
   rw [discr, b2, b4, b6, b8, ha1,
@@ -498,8 +474,7 @@ by
 -- TODO is this actually an iff discr
 lemma b4_zero_of_b2_zero_of_disc_zero_of_char_three
   (e : Model K) (h : ringChar K = 3) (hdisc : e.discr = 0) (hb2 : e.b2 = 0) :
-  e.b4 = 0 :=
-by
+  e.b4 = 0 := by
   have hchar' : (ringChar K : K) = 3 := by simp [h]
   have hchar'' : (3 : K) = 0 := by simp [← hchar']
   rw [discr, hb2,
@@ -530,8 +505,7 @@ def singularPoint [PerfectRing K] (e : Model K) : K × K :=
 
 
 lemma ringChar_eq_of_Prime [Nat.AtLeastTwo n] (hn : @OfNat.ofNat K n _ = 0) (hnp : Nat.Prime n) :
-  ringChar K = n :=
-by
+  ringChar K = n := by
   rw [← Nat.cast_ofNat, ringChar.spec] at hn
   cases (Nat.dvd_prime hnp).mp hn with
   | inl h =>
@@ -553,8 +527,7 @@ by
 -- TODO maybe rewrite to take an explicit point
 
 lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr = 0) :
-  isSingularPoint e (singularPoint e) :=
-by
+  isSingularPoint e (singularPoint e) := by
   rw [singularPoint]
   split_ifs with hc4
   · have hc6 : c6 e = 0 := by
@@ -772,16 +745,14 @@ def moveSingularPointToOriginIso [PerfectRing K] (e : Model K) : Model K :=
 rstTriple e (moveSingularPointToOriginTriple e)
 
 lemma move_singularPoint (e : Model K) (r t : K) {P : K × K} (h : isSingularPoint e P) :
-  isSingularPoint (rstIso r 0 t e) (varChange (-r) 0 (-t) P) :=
-by
+  isSingularPoint (rstIso r 0 t e) (varChange (-r) 0 (-t) P) := by
   rw [isSingularPoint, weierstrass_iso_eq_varChange,
     dweierstrassDx_iso_eq_varChange, zero_mul, add_zero,
     dweierstrassDy_iso_eq_varChange, varChange_comp]
   simpa
 
 lemma move_singularPoint_to_origin [PerfectRing K] (e : Model K) (h : e.discr = 0) :
-  isSingularPoint (moveSingularPointToOriginIso e) (0, 0) :=
-by
+  isSingularPoint (moveSingularPointToOriginIso e) (0, 0) := by
   rw [moveSingularPointToOriginIso, rstTriple, moveSingularPointToOriginTriple]
   convert move_singularPoint e (singularPoint e).fst (singularPoint e).snd
     (isSingularPoint_singularPoint e h) using 2 <;> -- TODO convert does too much here
@@ -789,11 +760,9 @@ by
 
 lemma move_singularPoint_to_origin' [PerfectRing K] (e : Model K) :
   (∃ P, isSingularPoint e P) →
-    isSingularPoint (moveSingularPointToOriginIso e) (0, 0) :=
-by
+    isSingularPoint (moveSingularPointToOriginIso e) (0, 0) := by
   rintro ⟨P, hP⟩
-  have hd := discr_eq_zero_of_singular e hP
-  exact move_singularPoint_to_origin e hd
+  exact move_singularPoint_to_origin e (discr_eq_zero_of_singular e hP)
 
 end Field
 

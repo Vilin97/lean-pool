@@ -49,14 +49,14 @@ def polyOfNonzeroSubsetSums {S : Type*} [CommRing S] [DecidableEq S] (s : Multis
 /-- The polynomial whose roots are `{ ∑_{x ∈ t} x ≠ 0 | t ⊆ s }` for a given multiset `s`
 is monic. -/
 lemma polyOfNonzeroSubsetSums_monic {S : Type*} [CommRing S] [DecidableEq S] (s : Multiset S) :
-    (polyOfNonzeroSubsetSums s).Monic := by
-  exact Polynomial.monic_multisetProd_X_sub_C (nonzeroSubsetSums s)
+    (polyOfNonzeroSubsetSums s).Monic :=
+  Polynomial.monic_multisetProd_X_sub_C (nonzeroSubsetSums s)
 
 /-- If `{ ∑_{x ∈ t} x ≠ 0 | t ⊆ s }` is indexed by `a : Fin n → S`, then every `a i` is nonzero. -/
 lemma ne_zero_of_nonzeroSubsetSums_eq_valuesFin
     {S : Type*} [AddCommMonoid S] [DecidableEq S] {s : Multiset S} {n : ℕ} {a : Fin n → S}
-    (ha : nonzeroSubsetSums s = valuesFin a) (i : Fin n) : a i ≠ 0 := by
-  exact ne_zero_of_mem_nonzeroSubsetSums (s := s) <| by
+    (ha : nonzeroSubsetSums s = valuesFin a) (i : Fin n) : a i ≠ 0 :=
+  ne_zero_of_mem_nonzeroSubsetSums (s := s) <| by
     simpa [ha] using (show a i ∈ valuesFin a by simp [valuesFin])
 
 /-- The `r`-th elementary symmetric polynomial in `{ ∑_{i ∈ I} Xᵢ | I ⊆ {0, …, n-1} }`. -/
@@ -188,27 +188,24 @@ lemma polyOfNonzeroSubsetSums_as_poly
     {R S : Type*} [CommRing R] [Field S] [Algebra R S] [IsAlgClosed S] [DecidableEq S]
     {n : ℕ} (B : R[X]) (a : Fin n → S) (hmonic : B.Monic) (hroots : B.aroots S = valuesFin a) :
       ∃ P : R[X], P.map (algebraMap R S) = polyOfNonzeroSubsetSums (valuesFin a) := by
-  obtain ⟨P, hP⟩ : ∃ P : R[X],
-      P.map (algebraMap R S) = polyOfNonzeroSubsetSums (valuesFin a) := by
-    rw [← Polynomial.mem_lifts, Polynomial.lifts_iff_coeff_lifts]
-    intro k
-    by_cases hk : k + (subsetSums (valuesFin a)).count 0 ≤ (subsetSums (valuesFin a)).card
-    · obtain ⟨Q, hQ⟩ := coeff_polyOfNonzeroSubsetSums_as_coeff_poly B a hmonic hroots hk
-      refine ⟨MvPolynomial.aeval (σ := Fin n) (R := ℤ) (S₁ := R)
-        (fun i : Fin n => (-1) ^ (i.1 + 1) * B.coeff (n - (i.1 + 1))) Q, ?_⟩
-      simpa [eq_comm] using hQ
-    · refine ⟨0, ?_⟩
-      simp only [_root_.map_zero]
-      symm
-      apply Polynomial.coeff_eq_zero_of_natDegree_lt
-      rw [polyOfNonzeroSubsetSums, polyOfMultiset, natDegree_multiset_prod_X_sub_C_eq_card,
-        nonzeroSubsetSums]
-      nth_rw 2 [← Multiset.filter_add_not (p := fun x : S => x = 0)
-        (subsetSums (valuesFin a))] at hk
-      rw [Multiset.count_eq_card_filter_eq, Multiset.card_add] at hk
-      simp [eq_comm] at hk ⊢
-      omega
-  exact ⟨P, hP⟩
+  rw [← Polynomial.mem_lifts, Polynomial.lifts_iff_coeff_lifts]
+  intro k
+  by_cases hk : k + (subsetSums (valuesFin a)).count 0 ≤ (subsetSums (valuesFin a)).card
+  · obtain ⟨Q, hQ⟩ := coeff_polyOfNonzeroSubsetSums_as_coeff_poly B a hmonic hroots hk
+    refine ⟨MvPolynomial.aeval (σ := Fin n) (R := ℤ) (S₁ := R)
+      (fun i : Fin n => (-1) ^ (i.1 + 1) * B.coeff (n - (i.1 + 1))) Q, ?_⟩
+    simpa [eq_comm] using hQ
+  · refine ⟨0, ?_⟩
+    simp only [_root_.map_zero]
+    symm
+    apply Polynomial.coeff_eq_zero_of_natDegree_lt
+    rw [polyOfNonzeroSubsetSums, polyOfMultiset, natDegree_multiset_prod_X_sub_C_eq_card,
+      nonzeroSubsetSums]
+    nth_rw 2 [← Multiset.filter_add_not (p := fun x : S => x = 0)
+      (subsetSums (valuesFin a))] at hk
+    rw [Multiset.count_eq_card_filter_eq, Multiset.card_add] at hk
+    simp [eq_comm] at hk ⊢
+    omega
 
 /-- Clearing denominators for a polynomial over `ℚ`: every rational polynomial
 is a nonzero integer multiple of the image of some polynomial over `ℤ`. -/
@@ -298,8 +295,8 @@ lemma monicRescaleOf_scaleRoots
     (T : ℤ[X]) (T' : ℚ[X]) (d : ℕ) (c : ℤ)
     (hmonic : T'.Monic) (hd : T'.natDegree = d)
     (hT : T.map (algebraMap ℤ ℚ) = C (c : ℚ) * T') :
-    (monicRescaleOf T d c).map (algebraMap ℤ ℚ) = T'.scaleRoots (c : ℚ) := by
-  exact Polynomial.ext fun k => coeff_monicRescaleOf_scaleRoots T T' d c hmonic hd hT k
+    (monicRescaleOf T d c).map (algebraMap ℤ ℚ) = T'.scaleRoots (c : ℚ) :=
+  Polynomial.ext fun k => coeff_monicRescaleOf_scaleRoots T T' d c hmonic hd hT k
 
 /-- If `T = c T'` with `T'` monic of degree `d` and roots `a₀, …, a_{d-1}`,
 then `Xᵈ + ∑ₖ₌₀ᵈ⁻¹ cᵈ⁻¹⁻ᵏ Tₖ Xᵏ` is the monic polynomial whose roots are `c a₀, …, c a_{d-1}`. -/
@@ -421,9 +418,8 @@ lemma aeval_zero_ne_zero_of_T
     (hc : c ≠ 0) (hT : T.map (Int.castRingHom ℚ) = c • T')
     (hT' : T'.map (algebraMap ℚ ℂ) = polyOfNonzeroSubsetSums (valuesFin r))
     (ha : nonzeroSubsetSums (valuesFin r) = valuesFin a) :
-    aeval (0 : ℂ) T ≠ 0 := by
-  exact RescaledOf_nonZero_at_Zero T T' c hc
-    (by
-      rw [← smul_eq_C_mul]
-      exact hT)
+    aeval (0 : ℂ) T ≠ 0 :=
+  RescaledOf_nonZero_at_Zero T T' c hc
+    (by rw [← smul_eq_C_mul]
+        exact hT)
     (aeval_zero_ne_zero_of_T' T' d n r a hT' ha)

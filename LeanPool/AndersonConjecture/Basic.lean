@@ -100,15 +100,6 @@ theorem IsQuasiComplete.quotient_isWeaklyQuasiComplete
         Ideal.Quotient.mk_surjective (B n)).le
   have hpow_le :
       Ideal.map mk (IsLocalRing.maximalIdeal R ^ k) ≤
-        (IsLocalRing.maximalIdeal (R ⧸ I)) ^ k := by
-    rw [Ideal.map_pow mk (IsLocalRing.maximalIdeal R) k]
-    exact Ideal.pow_right_mono hmap_M k
-  calc Ideal.map mk (⨅ n, A n) ⊔
-        Ideal.map mk (IsLocalRing.maximalIdeal R ^ k)
-      _ ≤ (⨅ n, B n) ⊔
         (IsLocalRing.maximalIdeal (R ⧸ I)) ^ k :=
-          sup_le_sup hinf_le hpow_le
-      _ = ⊥ ⊔ (IsLocalRing.maximalIdeal (R ⧸ I)) ^ k := by
-          rw [hBint]
-      _ = (IsLocalRing.maximalIdeal (R ⧸ I)) ^ k :=
-          bot_sup_eq _
+    (Ideal.map_pow mk (IsLocalRing.maximalIdeal R) k).le.trans (Ideal.pow_right_mono hmap_M k)
+  exact le_trans (sup_le_sup hinf_le hpow_le) (by rw [hBint, bot_sup_eq])

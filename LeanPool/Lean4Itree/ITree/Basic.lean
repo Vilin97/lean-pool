@@ -119,16 +119,14 @@ def trigger {α : Type u1} (e : ε α) : ITree ε α :=
 /- Injectivity of the constructors -/
 theorem ret_inj {x y} (h : @ret ε ρ x = ret y) : x = y := by
   simp only [ret, ret'] at h
-  have := (Sigma.mk.inj (PFunctor.M.mk_inj h)).left
-  exact shape.ret.inj this
+  exact shape.ret.inj (Sigma.mk.inj (PFunctor.M.mk_inj h)).left
 
 theorem vis_inj_α {ε α1 α2 ρ}
   {k1 : KTree ε α1 ρ} {k2 : KTree ε α2 ρ}
   {e1 : ε α1} {e2 : ε α2}
   (h : vis e1 k1 = vis e2 k2) : α1 = α2 := by
   simp only [vis, vis'] at h
-  have := (Sigma.mk.inj (PFunctor.M.mk_inj h)).left
-  exact (shape.vis.inj this).left
+  exact (shape.vis.inj (Sigma.mk.inj (PFunctor.M.mk_inj h)).left).left
 
 theorem vis_inj {ε α ρ}
   {e1 e2 : ε α} {k1 k2 : KTree ε α ρ}
@@ -143,8 +141,7 @@ theorem vis_inj {ε α ρ}
 
 theorem tau_inj {ε ρ} {t1 t2 : ITree ε ρ} (h : tau t1 = tau t2) : t1 = t2 := by
   simp only [tau, tau'] at h
-  have := eq_of_heq (Sigma.mk.inj (PFunctor.M.mk_inj h)).right
-  exact fin1Const_inj this
+  exact fin1Const_inj (eq_of_heq (Sigma.mk.inj (PFunctor.M.mk_inj h)).right)
 
 /-- Custom dependent match function for ITrees -/
 def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)

@@ -70,8 +70,7 @@ private lemma diff_norm_le {h : ℝ} (hh : 0 < h) {f f' : ℝ → ℂ}
       _ ≤ ∫ t in (0 : ℝ)..h, ‖f' t‖ :=
           integral_mono_interval hy.1 hyx hx.2 hf'_nn hf'_norm_int
   · -- Case x < y: ‖∫_y^x f'‖ = ‖-∫_x^y f'‖ = ‖∫_x^y f'‖ ≤ ∫_x^y ‖f'‖ ≤ ∫_0^h ‖f'‖
-    rw [integral_symm]
-    rw [norm_neg]
+    rw [integral_symm, norm_neg]
     calc ‖∫ t in x..y, f' t‖
         ≤ ∫ t in x..y, ‖f' t‖ := norm_integral_le_integral_norm hyx.le
       _ ≤ ∫ t in (0 : ℝ)..h, ‖f' t‖ :=
@@ -126,8 +125,7 @@ private lemma pointwise_bound {h : ℝ} (hh : 0 < h) {f f' : ℝ → ℂ}
           · exact hbd
       _ = h * M := by rw [intervalIntegral.integral_const, sub_zero, smul_eq_mul]
   calc 1 / h * ‖∫ y in (0 : ℝ)..h, (f x - f y)‖
-      ≤ 1 / h * (h * M) := by
-        exact mul_le_mul_of_nonneg_left h_norm_bound (by positivity)
+      ≤ 1 / h * (h * M) := by exact mul_le_mul_of_nonneg_left h_norm_bound (by positivity)
     _ = M := by field_simp
 
 -- to_mathlib: Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
@@ -176,8 +174,7 @@ private lemma cauchy_schwarz_interval {a b : ℝ} (hab : a ≤ b) {g : ℝ → �
   -- And S² = c²·(b-a)², so S² ≤ (b-a)·∫g²
   calc S ^ 2 = (c * (b - a)) ^ 2 := by rw [hcba]
     _ = c ^ 2 * (b - a) * (b - a) := by ring
-    _ ≤ (∫ t in a..b, g t ^ 2) * (b - a) := by
-        exact mul_le_mul_of_nonneg_right h_ineq hba_pos.le
+    _ ≤ (∫ t in a..b, g t ^ 2) * (b - a) := by exact mul_le_mul_of_nonneg_right h_ineq hba_pos.le
     _ = (b - a) * ∫ t in a..b, g t ^ 2 := by ring
 
 /-! ## M1: Poincaré inequality on intervals (weak version) -/
@@ -208,8 +205,7 @@ theorem poincare_interval {h : ℝ} (hh : 0 < h) {f f' : ℝ → ℂ}
       · exact ((hf_cont.sub continuousOn_const).norm.pow 2).intervalIntegrable_of_Icc hh.le
       · exact intervalIntegrable_const
       · exact hpw
-    rw [intervalIntegral.integral_const, sub_zero, smul_eq_mul] at h1
-    exact h1
+    rwa [intervalIntegral.integral_const, sub_zero, smul_eq_mul] at h1
   -- Step 3: CS: M² ≤ h * ∫₀ʰ ‖f' t‖² dt
   have hCS : M ^ 2 ≤ h * ∫ t in (0 : ℝ)..h, ‖f' t‖ ^ 2 := by
     have := cauchy_schwarz_interval hh.le hf'_cont.norm

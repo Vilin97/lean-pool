@@ -57,15 +57,13 @@ noncomputable def _root_.Matrix.IsAlmostHermitian.matrix {n : Type _} {x : Matri
     (hx : x.IsAlmostHermitian) : Matrix n n 𝕜 := hx.scalarMatrix.2
 
 theorem _root_.Matrix.IsAlmostHermitian.eq_smul_matrix {n : Type _} {x : Matrix n n 𝕜}
-    (hx : x.IsAlmostHermitian) : x = hx.scalar • hx.matrix :=
-  by
+    (hx : x.IsAlmostHermitian) : x = hx.scalar • hx.matrix := by
   rw [IsAlmostHermitian.scalar, IsAlmostHermitian.matrix, IsAlmostHermitian.scalarMatrix]
   generalize_proofs
   simp_all
 
 theorem _root_.Matrix.IsAlmostHermitian.matrix_isHermitian {n : Type _} {x : Matrix n n 𝕜}
-    (hx : x.IsAlmostHermitian) : hx.matrix.IsHermitian :=
-  by
+    (hx : x.IsAlmostHermitian) : hx.matrix.IsHermitian := by
   rw [IsAlmostHermitian.matrix, IsAlmostHermitian.scalarMatrix]
   generalize_proofs
   simp_all
@@ -88,8 +86,7 @@ noncomputable def _root_.Matrix.IsHermitian.spectra {A : Matrix n n 𝕜}
   Finset.univ.val.map fun i => hA.eigenvalues i
 
 theorem _root_.Matrix.IsHermitian.spectra_coe {A : Matrix n n 𝕜} (hA : A.IsHermitian) :
-    (hA.spectra : Multiset 𝕜) = Finset.univ.val.map fun i => hA.eigenvalues i :=
-  by
+    (hA.spectra : Multiset 𝕜) = Finset.univ.val.map fun i => hA.eigenvalues i := by
   simp only [Multiset.map_map, IsHermitian.spectra]
 
 open scoped BigOperators
@@ -97,8 +94,7 @@ open scoped BigOperators
 theorem _root_.Matrix.IsHermitian.mem_coe_spectra_diagonal {A : n → 𝕜}
     (hA : (diagonal A).IsHermitian)
     (x : 𝕜) :
-    x ∈ (hA.spectra : Multiset 𝕜) ↔ ∃ i : n, A i = x :=
-  by
+    x ∈ (hA.spectra : Multiset 𝕜) ↔ ∃ i : n, A i = x := by
   rw [IsHermitian.spectra_coe]
   simp only [Multiset.mem_map, Finset.mem_univ_val, true_and, exists_exists_eq_and]
   have hset : RCLike.ofReal '' Set.range hA.eigenvalues = Set.range A := by
@@ -107,8 +103,7 @@ theorem _root_.Matrix.IsHermitian.mem_coe_spectra_diagonal {A : n → 𝕜}
 
 theorem _root_.Matrix.IsHermitian.spectra_set_eq_spectrum {A : Matrix n n 𝕜}
     (hA : A.IsHermitian) :
-    {x : 𝕜 | x ∈ (hA.spectra : Multiset 𝕜)} = _root_.spectrum 𝕜 (toLin' A) :=
-  by
+    {x : 𝕜 | x ∈ (hA.spectra : Multiset 𝕜)} = _root_.spectrum 𝕜 (toLin' A) := by
   ext x
   rw [IsHermitian.spectra_coe]
   simp only [Set.mem_setOf, Multiset.mem_map, Finset.mem_univ_val, true_and, exists_exists_eq_and]
@@ -122,16 +117,14 @@ theorem _root_.Matrix.IsHermitian.of_innerAut {A : Matrix n n 𝕜} (hA : A.IsHe
 
 omit [Fintype n] [DecidableEq n] in
 theorem isAlmostHermitian_iff_smul {A : Matrix n n 𝕜} :
-    A.IsAlmostHermitian ↔ ∀ α : 𝕜, (α • A).IsAlmostHermitian :=
-  by
+    A.IsAlmostHermitian ↔ ∀ α : 𝕜, (α • A).IsAlmostHermitian := by
   constructor
   · rintro ⟨β, y, rfl, hy⟩ α
     rw [smul_smul]
     exact ⟨α * β, y, rfl, hy⟩
   · intro h
     specialize h 1
-    rw [one_smul] at h
-    exact h
+    rwa [one_smul] at h
 
 omit [Fintype n] [DecidableEq n] in
 theorem _root_.Matrix.IsAlmostHermitian.smul {A : Matrix n n 𝕜} (hA : A.IsAlmostHermitian)
@@ -140,15 +133,13 @@ theorem _root_.Matrix.IsAlmostHermitian.smul {A : Matrix n n 𝕜} (hA : A.IsAlm
   isAlmostHermitian_iff_smul.mp hA _
 
 theorem _root_.Matrix.IsAlmostHermitian.of_innerAut {A : Matrix n n 𝕜} (hA : A.IsAlmostHermitian)
-    (U : unitaryGroup n 𝕜) : (innerAut U A).IsAlmostHermitian :=
-  by
+    (U : unitaryGroup n 𝕜) : (innerAut U A).IsAlmostHermitian := by
   obtain ⟨α, y, rfl, hy⟩ := hA
   refine ⟨α, innerAut U y, ?_, hy.of_innerAut _⟩
   simp_rw [_root_.map_smul]
 
 theorem isAlmostHermitian_iff_of_innerAut {A : Matrix n n 𝕜} (U : unitaryGroup n 𝕜) :
-    A.IsAlmostHermitian ↔ (innerAut U A).IsAlmostHermitian :=
-  by
+    A.IsAlmostHermitian ↔ (innerAut U A).IsAlmostHermitian := by
   refine ⟨fun h => h.of_innerAut _, ?_⟩
   rintro ⟨α, y, h, hy⟩
   rw [eq_comm, innerAut_eq_iff] at h

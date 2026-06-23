@@ -50,9 +50,7 @@ In particular, any explicit construction gives an upper bound on `pStar`.
 theorem pStar_le_of_exists_le {c : ENNReal} (hc : ∃ alg : ClassicalAlgorithm, alg.p ≤ c) :
     ClassicalAlgorithm.pStar ≤ c := by
   rcases hc with ⟨alg, halg⟩
-  have hpStar_le : ClassicalAlgorithm.pStar ≤ alg.p := by
-    exact sInf_le ⟨alg, rfl⟩
-  exact hpStar_le.trans halg
+  exact (sInf_le (Set.mem_range_self alg)).trans halg
 
 end ClassicalAlgorithm
 
@@ -64,21 +62,17 @@ The bridge step is `Distributed2Coloring.p_ge_23879` from `Distributed2Coloring/
 
 /-- Every one-round algorithm has monochromatic-edge probability at least `0.23879`. -/
 theorem pStar_ge_23879 :
-    ENNReal.ofReal (23879 / 100000 : ℝ) ≤ ClassicalAlgorithm.pStar := by
-  exact
-    ClassicalAlgorithm.le_pStar_of_forall_le (fun alg => Distributed2Coloring.p_ge_23879 alg)
+    ENNReal.ofReal (23879 / 100000 : ℝ) ≤ ClassicalAlgorithm.pStar :=
+  ClassicalAlgorithm.le_pStar_of_forall_le (fun alg => Distributed2Coloring.p_ge_23879 alg)
 
 /-- An explicit one-round algorithm achieves monochromatic-edge probability at most `0.24118`. -/
 theorem pStar_le_24118 :
-    ClassicalAlgorithm.pStar ≤ ENNReal.ofReal (24118 / 100000 : ℝ) := by
-  exact
-    ClassicalAlgorithm.pStar_le_of_exists_le Distributed2Coloring.exists_algorithm_p_le_24118
+    ClassicalAlgorithm.pStar ≤ ENNReal.ofReal (24118 / 100000 : ℝ) :=
+  ClassicalAlgorithm.pStar_le_of_exists_le Distributed2Coloring.exists_algorithm_p_le_24118
 
 theorem pStar_lt_24118 :
     ClassicalAlgorithm.pStar < ENNReal.ofReal (24118 / 100000 : ℝ) := by
   rcases UpperBound.Recursive3Param.exists_algorithm_p_lt with ⟨alg, hlt⟩
-  have hpStar_le : ClassicalAlgorithm.pStar ≤ ClassicalAlgorithm.p alg := by
-    exact sInf_le ⟨alg, rfl⟩
-  exact lt_of_le_of_lt hpStar_le hlt
+  exact lt_of_le_of_lt (sInf_le (Set.mem_range_self alg)) hlt
 
 end Distributed2Coloring

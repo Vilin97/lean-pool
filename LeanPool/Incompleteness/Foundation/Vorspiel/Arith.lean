@@ -33,20 +33,16 @@ def isLeNat (n m : ℕ) : ℕ := if n ≤ m then 1 else 0
 def isDvdNat (n m : ℕ) : ℕ := if n ∣ m then 1 else 0
 
 @[simp] lemma isEqNat_pos_iff :
-    0 < isEqNat n m ↔ n = m := by
-  simp[isEqNat]; by_cases n = m <;> simp[*]
+    0 < isEqNat n m ↔ n = m := by simp[isEqNat]; by_cases n = m <;> simp[*]
 
 @[simp] lemma isLtNat_pos_iff :
-    0 < isLtNat n m ↔ n < m := by
-  simp[isLtNat]; by_cases n < m <;> simp[*]
+    0 < isLtNat n m ↔ n < m := by simp[isLtNat]; by_cases n < m <;> simp[*]
 
 @[simp] lemma isLeNat_pos_iff :
-    0 < isLeNat n m ↔ n ≤ m := by
-  simp[isLeNat]; by_cases n ≤ m <;> simp[*]
+    0 < isLeNat n m ↔ n ≤ m := by simp[isLeNat]; by_cases n ≤ m <;> simp[*]
 
 @[simp] lemma isDvdNat_pos_iff :
-    0 < isDvdNat n m ↔ n ∣ m := by
-  simp[isDvdNat]; by_cases n ∣ m <;> simp[*]
+    0 < isDvdNat n m ↔ n ∣ m := by simp[isDvdNat]; by_cases n ∣ m <;> simp[*]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def inv (n : ℕ) : ℕ := isEqNat n 0
@@ -71,22 +67,18 @@ def and (n m : ℕ) : ℕ := isLtNat 0 (n * m)
 def or (n m : ℕ) : ℕ := isLtNat 0 (n + m)
 
 lemma and_eq (n m : ℕ) :
-    and n m = if 0 < n ∧ 0 < m then 1 else 0 := by
-  simp [mul_pos_iff, and, isLtNat]
+    and n m = if 0 < n ∧ 0 < m then 1 else 0 := by simp [mul_pos_iff, and, isLtNat]
 
 lemma and_eq_one (n m : ℕ) :
-    and n m = 1 ↔ 0 < n ∧ 0 < m := by
-  simp[and_eq, imp_false, Nat.pos_iff_ne_zero]
+    and n m = 1 ↔ 0 < n ∧ 0 < m := by simp[and_eq, imp_false, Nat.pos_iff_ne_zero]
 
 lemma or_eq (n m : ℕ) : or n m = if 0 < n ∨ 0 < m then 1 else 0 := by simp[or, isLtNat]
 
 @[simp] lemma and_pos_iff (n m : ℕ) :
-    0 < and n m ↔ 0 < n ∧ 0 < m := by
-  simp[and_eq]; by_cases 0 < n ∧ 0 < m <;> simp[*]
+    0 < and n m ↔ 0 < n ∧ 0 < m := by simp[and_eq]; by_cases 0 < n ∧ 0 < m <;> simp[*]
 
 @[simp] lemma or_pos_iff (n m : ℕ) :
-    0 < or n m ↔ 0 < n ∨ 0 < m := by
-  simp[or_eq]; by_cases 0 < n ∨ 0 < m <;> simp[*]
+    0 < or n m ↔ 0 < n ∨ 0 < m := by simp[or_eq]; by_cases 0 < n ∨ 0 < m <;> simp[*]
 
 @[simp] lemma inv_pos_iff (n : ℕ) : 0 < inv n ↔ ¬0 < n := by simp[inv]
 
@@ -179,10 +171,8 @@ lemma to_partrec' {n} {f : List.Vector ℕ n →. ℕ} (hf : ArithPart₁ f) : P
         (_root_.Primrec.const 1)
         (_root_.Primrec.const 0)
     exact Partrec'.of_part this.to_comp.partrec
-  case comp m n f g _ _ hf hg =>
-    exact Partrec'.comp g hf hg
-  case rfind f _ hf =>
-    exact Partrec'.rfind hf
+  case comp m n f g _ _ hf hg => exact Partrec'.comp g hf hg
+  case rfind f _ hf => exact Partrec'.rfind hf
 
 lemma of_eq {n} {f g : List.Vector ℕ n →. ℕ} (hf : ArithPart₁ f) (H : ∀ i, f i = g i) :
     ArithPart₁ g :=
@@ -485,8 +475,7 @@ lemma dvd (i j : Fin n) : Arith₁ (fun v => isDvdNat (v.get i) (v.get j)) := by
 
 lemma rem (i j : Fin n) : Arith₁ (fun v => v.get i % v.get j) := by
   let F : List.Vector ℕ (n + 1) → ℕ := fun v => isDvdNat (v.get j.succ) (v.get i.succ - v.head)
-  have : Arith₁ F :=
-    (dvd 0 1).comp₂ _ (proj j.succ) ((sub 0 1).comp₂ _ (proj i.succ) head)
+  have : Arith₁ F := (dvd 0 1).comp₂ _ (proj j.succ) ((sub 0 1).comp₂ _ (proj i.succ) head)
   exact (ArithPart₁.rfindPos this).of_eq <| by
     intro v
     simp only [get_cons_succ, head_cons, isDvdNat_pos_iff, PFun.coe_val, eq_some_iff,
@@ -555,8 +544,7 @@ lemma ball {φ : List.Vector ℕ n → ℕ → ℕ} (hp : @Arith₁ (n + 1) (fun
       rcases this with ⟨x, hx, hpx, hlx⟩
       exact ⟨x, ⟨by symm; simp[hpx], by intro m hm; symm; simp[hlx m hm, lt_trans hm hx]⟩, by
         have hne : x ≠ v.get i := ne_of_lt hx
-        have : isEqNat x (v.get i) = 0 := by
-          simp only [isEqNat, hne, ↓reduceIte]
+        have : isEqNat x (v.get i) = 0 := by simp only [isEqNat, hne, ↓reduceIte]
         rw [this]
         symm
         exact ball_eq_zero_iff.mpr ⟨x, hx, hpx⟩⟩

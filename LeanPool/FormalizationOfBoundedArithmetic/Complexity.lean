@@ -284,9 +284,7 @@ by
   · intro h
     cases h with
     | imp p q =>
-      constructor
-      · exact p
-      · exact q
+      exact ⟨p, q⟩
     | of_isQF q =>
       rw [IsQF.imp.mpr] at q
       constructor <;>
@@ -298,9 +296,7 @@ by
       | of_isAtomic h' =>
         cases h' with
   · intro h
-    apply IsDelta0.imp
-    · exact h.left
-    · exact h.right
+    exact IsDelta0.imp h.left h.right
 
 end of_open
 
@@ -313,9 +309,7 @@ by
   · intro h'
     cases h' with
     | imp p q =>
-      constructor
-      · exact p
-      · exact q
+      exact ⟨p, q⟩
     | of_isQF q =>
       rw [IsQF.imp.mpr] at q
       constructor <;>
@@ -325,9 +319,7 @@ by
     | bdEx phi t =>
       simp only [Bot.bot, ne_eq, not_true_eq_false] at h
   · intro h
-    apply IsDelta0.imp
-    · exact h.left
-    · exact h.right
+    exact IsDelta0.imp h.left h.right
 
 end of_notfalsum
 
@@ -347,13 +339,7 @@ theorem not {a n} {phi : L.BoundedFormula a n} (h : phi.IsOpen)
 by
   unfold BoundedFormula.not
   rw [of_open.imp h]
-  constructor
-  · intro h
-    exact h.left
-  · intro h
-    constructor
-    · exact h
-    · exact IsDelta0.bot
+  exact ⟨fun h => h.left, fun h => ⟨h, IsDelta0.bot⟩⟩
 
 end of_open
 
@@ -387,8 +373,7 @@ theorem gSumCongr
   (g : a ≃ b)
   (h : phi.IsDelta0)
   : ((relabelEquiv (g.sumCongr (_root_.Equiv.refl c))) phi).IsDelta0 :=
-by
-  exact relabelEquiv.mpAux (g.sumCongr (_root_.Equiv.refl c)) h
+  relabelEquiv.mpAux (g.sumCongr (_root_.Equiv.refl c)) h
 
 
 @[delta0_simps]
@@ -396,8 +381,7 @@ theorem mp {a b} {phi : peano.Formula a}
   (g : a ≃ b)
   (h : phi.IsDelta0)
   : (phi.relabelEquiv g).IsDelta0 :=
-by
-  exact relabelEquiv.mpAux g h
+  relabelEquiv.mpAux g h
 
 
 @[delta0_simps]
@@ -542,8 +526,11 @@ end relabelEquiv
 @[delta0_simps]
 theorem relabelEquiv {a b} {g : a ≃ b} (phi : zambella.Formula a) :
   (phi.relabelEquiv g).IsSigma0B <-> phi.IsSigma0B :=
-by
-  exact ⟨relabelEquiv.mprAux g, relabelEquiv.mpAux g⟩
+  ⟨relabelEquiv.mprAux g, relabelEquiv.mpAux g⟩
+
+/-- Discharge a `Sigma0B` closure lemma for a `Formula.*` reshaping. -/
+macro "sigma0bViaRelabel " target:ident : tactic =>
+  `(tactic| (unfold $target; apply relabelEquiv))
 
 @[delta0_simps]
 nonrec theorem display1 {n1 : FvName}
@@ -551,8 +538,7 @@ nonrec theorem display1 {n1 : FvName}
   :
   phi.display1.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display1
-  apply relabelEquiv
+  sigma0bViaRelabel display1
 
 @[delta0_simps]
 nonrec theorem display2 {n1 n2 : FvName}
@@ -560,8 +546,7 @@ nonrec theorem display2 {n1 n2 : FvName}
   :
   phi.display2.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display2
-  apply relabelEquiv
+  sigma0bViaRelabel display2
 
 @[delta0_simps]
 nonrec theorem display3 {n1 n2 n3 : FvName}
@@ -569,8 +554,7 @@ nonrec theorem display3 {n1 n2 n3 : FvName}
   :
   phi.display3.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display3
-  apply relabelEquiv
+  sigma0bViaRelabel display3
 
 @[delta0_simps]
 nonrec theorem display4 {n1 n2 n3 n4 : FvName}
@@ -578,8 +562,7 @@ nonrec theorem display4 {n1 n2 n3 n4 : FvName}
   :
   phi.display4.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display4
-  apply relabelEquiv
+  sigma0bViaRelabel display4
 
 @[delta0_simps]
 nonrec theorem displaySwapleft {n1 n2 n3 : FvName}
@@ -587,8 +570,7 @@ nonrec theorem displaySwapleft {n1 n2 n3 : FvName}
   :
   phi.displaySwapleft.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold displaySwapleft
-  apply relabelEquiv
+  sigma0bViaRelabel displaySwapleft
 
 @[delta0_simps]
 nonrec theorem displaySwapleft' {n1 n2 n3 : FvName}
@@ -596,8 +578,7 @@ nonrec theorem displaySwapleft' {n1 n2 n3 : FvName}
   :
   phi.displaySwapleft'.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold displaySwapleft'
-  apply relabelEquiv
+  sigma0bViaRelabel displaySwapleft'
 
 @[delta0_simps]
 nonrec theorem rotate21 {n1 n2 : FvName}
@@ -605,8 +586,7 @@ nonrec theorem rotate21 {n1 n2 : FvName}
   :
   phi.rotate21.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate21
-  apply relabelEquiv
+  sigma0bViaRelabel rotate21
 
 @[delta0_simps]
 nonrec theorem rotate213 {n1 n2 n3 : FvName}
@@ -614,8 +594,7 @@ nonrec theorem rotate213 {n1 n2 n3 : FvName}
   :
   phi.rotate213.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate213
-  apply relabelEquiv
+  sigma0bViaRelabel rotate213
 
 @[delta0_simps]
 nonrec theorem rotate231 {n1 n2 n3 : FvName}
@@ -623,8 +602,7 @@ nonrec theorem rotate231 {n1 n2 n3 : FvName}
   :
   phi.rotate231.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate231
-  apply relabelEquiv
+  sigma0bViaRelabel rotate231
 
 @[delta0_simps]
 nonrec theorem flip {a b}
@@ -632,8 +610,7 @@ nonrec theorem flip {a b}
   :
   phi.flip.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold Formula.flip
-  apply relabelEquiv
+  sigma0bViaRelabel Formula.flip
 
 end Sigma0B
 

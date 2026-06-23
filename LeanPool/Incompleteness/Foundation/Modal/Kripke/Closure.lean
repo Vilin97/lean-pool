@@ -34,8 +34,7 @@ namespace RelReflTransGen
 
 @[simp] lemma single (hxy : x ≺ y) : x ≺^* y := ReflTransGen.single hxy
 
-@[simp] lemma reflexive : Std.Refl F.RelReflTransGen :=
-  ⟨fun _ => ReflTransGen.refl⟩
+@[simp] lemma reflexive : Std.Refl F.RelReflTransGen := ⟨fun _ => ReflTransGen.refl⟩
 
 @[simp] lemma refl {x : F.World} : x ≺^* x := reflexive.refl x
 
@@ -62,8 +61,7 @@ lemma single (hxy : x ≺ y) : F^*.Rel x y := ReflTransGen.single hxy
 
 lemma rel_reflexive : Std.Refl (F^*.Rel) := ⟨fun _ => ReflTransGen.refl⟩
 
-lemma rel_transitive : IsTrans (F^*) (F^*.Rel) :=
-  ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
+lemma rel_transitive : IsTrans (F^*) (F^*.Rel) := ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
 
 lemma rel_symmetric : Symmetric F.Rel → Symmetric (F^*) := ReflTransGen.symmetric
 
@@ -88,8 +86,7 @@ namespace RelTransGen
 @[simp] lemma single (hxy : x ≺ y) : x ≺^+ y := TransGen.single hxy
 
 @[simp]
-lemma transitive : IsTrans F.World F.RelTransGen :=
-  ⟨fun _ _ _ => TransGen.trans⟩
+lemma transitive : IsTrans F.World F.RelTransGen := ⟨fun _ _ _ => TransGen.trans⟩
 
 @[simp]
 lemma symmetric (hSymm : Symmetric F.Rel) : Symmetric F.RelTransGen := by
@@ -114,8 +111,7 @@ namespace TransitiveClosure
 
 lemma single (hxy : x ≺ y) : F^+.Rel x y := TransGen.single hxy
 
-lemma rel_transitive : IsTrans (F^+) (F^+.Rel) :=
-  ⟨fun _ _ _ => TransGen.trans⟩
+lemma rel_transitive : IsTrans (F^+) (F^+.Rel) := ⟨fun _ _ _ => TransGen.trans⟩
 
 lemma rel_symmetric (hSymm : Symmetric F.Rel) : Symmetric (F^+) := by simp_all
 
@@ -157,8 +153,7 @@ namespace Frame
 namespace RelIrreflGen
 
 @[simp] lemma rel_irreflexive :
-    Std.Irrefl F.RelIrreflGen := by
-  exact ⟨fun x h => h.1 rfl⟩
+    Std.Irrefl F.RelIrreflGen := by exact ⟨fun x h => h.1 rfl⟩
 
 end RelIrreflGen
 end Frame
@@ -175,8 +170,7 @@ namespace Frame
 namespace IrreflexiveClosure
 
 lemma rel_irreflexive :
-    Std.Irrefl (F^≠.Rel) := by
-  exact ⟨fun x h => h.1 rfl⟩
+    Std.Irrefl (F^≠.Rel) := by exact ⟨fun x h => h.1 rfl⟩
 
 end IrreflexiveClosure
 end Frame

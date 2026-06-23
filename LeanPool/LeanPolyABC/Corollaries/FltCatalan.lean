@@ -117,20 +117,16 @@ theorem flt_catalan_deriv
   · rw [Nat.add_one_le_iff] at ineq
     exfalso; apply Nat.not_lt_of_le _ ineq
     -- work on lhs
-    rw [radical_hMul habcp, radical_hMul habp]
-    rw [radical_mul_unit_left (Ne.isUnit_C hu),
-        radical_mul_unit_left (Ne.isUnit_C hv),
-        radical_mul_unit_left (Ne.isUnit_C hw)]
-    rw [radical_pow a hp, radical_pow b hq, radical_pow c hr]
-    rw [← radical_hMul hab, ← radical_hMul (hca.symm.mul_left hbc)]
+    rw [radical_hMul habcp, radical_hMul habp, radical_mul_unit_left (Ne.isUnit_C hu),
+        radical_mul_unit_left (Ne.isUnit_C hv), radical_mul_unit_left (Ne.isUnit_C hw),
+        radical_pow a hp, radical_pow b hq, radical_pow c hr, ← radical_hMul hab,
+        ← radical_hMul (hca.symm.mul_left hbc)]
     apply le_trans <| radical_natDegree_le _
-    rw [natDegree_mul (mul_ne_zero ha hb) hc]
-    rw [natDegree_mul ha hb]
+    rw [natDegree_mul (mul_ne_zero ha hb) hc, natDegree_mul ha hb]
     -- work on rhs
     rw [mul_ne_zero_iff] at hap hbp hcp
-    rw [natDegree_mul hap.left hap.right]
-    rw [natDegree_mul hbp.left hbp.right]
-    rw [natDegree_mul hcp.left hcp.right]
+    rw [natDegree_mul hap.left hap.right, natDegree_mul hbp.left hbp.right,
+      natDegree_mul hcp.left hcp.right]
     simp only [natDegree_C, natDegree_pow, zero_add]
     have hpqr : 0 < p * q * r := Nat.mul_le_mul (Nat.mul_le_mul hp hq) hr
     apply Nat.le_of_mul_le_mul_left _ hpqr
@@ -257,8 +253,7 @@ theorem flt
   simp_rw [hneg_one, hone] at heq
   apply Polynomial.flt_catalan hn' hn' hn' _
     chn chn chn ha hb hc hab one_ne_zero one_ne_zero (neg_ne_zero.mpr one_ne_zero) heq
-  have eq_lhs : n * n + n * n + n * n = 3 * n * n := by ring_nf
-  rw [eq_lhs]; rw [mul_assoc, mul_assoc]
+  rw [show n * n + n * n + n * n = 3 * n * n by ring_nf, mul_assoc, mul_assoc]
   exact Nat.mul_le_mul_right (n * n) hn
 
 end Polynomial

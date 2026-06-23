@@ -32,8 +32,7 @@ open scoped InnerProductSpace
 theorem oneInner_map_one_eq_oneInner_Psi_map
   {A B : Type*} [starAlgebra B] [starAlgebra A] [hA : QuantumSet A] [hB : QuantumSet B]
   (f : A →ₗ[ℂ] B) (r t : ℝ) :
-    ⟪1, f 1⟫_ℂ = ⟪1, QuantumSet.Psi r t f⟫_ℂ :=
-by
+    ⟪1, f 1⟫_ℂ = ⟪1, QuantumSet.Psi r t f⟫_ℂ := by
   obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
   simp_rw [map_sum, LinearMap.sum_apply, inner_sum]
   congr
@@ -49,8 +48,7 @@ by
 lemma oneInner_map_one_eq_oneInner_PhiMap_map_one
   {A B : Type*} [starAlgebra B] [starAlgebra A] [hA : QuantumSet A] [hB : QuantumSet B]
   (f : A →ₗ[ℂ] B) :
-  ⟪1, f 1⟫_ℂ = ⟪1, ((PhiMap f : (TensorProduct ℂ A B →ₗ[ℂ] TensorProduct ℂ A B)) 1)⟫_ℂ :=
-by
+  ⟪1, f 1⟫_ℂ = ⟪1, ((PhiMap f : (TensorProduct ℂ A B →ₗ[ℂ] TensorProduct ℂ A B)) 1)⟫_ℂ := by
   obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
   simp_rw [map_sum, LinearMap.IsBimoduleMap.sum_coe,
     LinearMap.sum_apply, inner_sum]

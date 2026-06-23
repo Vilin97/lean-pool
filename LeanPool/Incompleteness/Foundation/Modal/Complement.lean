@@ -28,8 +28,7 @@ namespace complement
 
 variable {φ ψ : Formula α}
 
-@[simp] lemma neg_def : -(∼φ) = φ := by
-  induction φ using Formula.rec' <;> simp_all [complement]
+@[simp] lemma neg_def : -(∼φ) = φ := by induction φ using Formula.rec' <;> simp_all [complement]
 
 @[simp] lemma bot_def : -(⊥ : Formula α) = ∼(⊥) := by simp only [complement]
 

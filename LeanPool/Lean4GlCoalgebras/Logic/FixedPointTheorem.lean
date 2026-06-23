@@ -18,23 +18,15 @@ lemma semantic_substitution_lemma {α : Type} (M : Model α) (u : α) (n : ℕ) 
   evaluate ⟨M, u⟩ (⊡ (φ ⟷ ψ)) → evaluate ⟨M, u⟩ ((single n φ χ) ⟷ (single n ψ χ)) := by
     intro mp
     induction χ generalizing u
-    case bottom => simp [single]
-    case top => simp [single]
+    case bottom | top => simp [single]
     case atom k =>
       by_cases eq : k = n
       · simp_all [single]
       · simp [single, eq]
         grind
     case negAtom k =>
-      by_cases eq : k = n
-      · simp_all [single]
-        grind
-      · simp_all [single]
-        grind
-    case and ih1 ih2 =>
-      simp_all [single]
-      grind
-    case or ih1 ih2 =>
+      by_cases eq : k = n <;> simp_all [single] <;> grind
+    case and ih1 ih2 | or ih1 ih2 =>
       simp_all [single]
       grind
     case box χ ih1 =>
@@ -165,11 +157,9 @@ lemma FPT_diamond_helper (φ : Formula) (n : Nat)
 lemma evaluate_box_dot_iff (φ : Formula) : ⊨ ⊡ (φ ⟷ φ) := by
   simp only [Formula.isValid, evaluate_and, evaluate_imp]
   intro α M u
-  constructor
-  · simp
-  · intro w u_w
-    simp only [evaluate_and, evaluate_imp]
-    simp
+  refine ⟨by simp, fun w u_w ↦ ?_⟩
+  simp only [evaluate_and, evaluate_imp]
+  simp
 
 /-- □ φ case of the fixed point theorem. -/
 theorem FPT_box (φ : Formula) (n : Nat) :

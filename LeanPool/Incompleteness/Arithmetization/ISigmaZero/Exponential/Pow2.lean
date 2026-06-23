@@ -48,8 +48,7 @@ lemma _root_.LO.Arith.Pow2.dvd {a : V} (h : Pow2 a) {r} (hr : r ≤ a) :
   · simp
   · simp at hhr⟩
 
-@[simp] lemma not_pow2_zero : ¬Pow2 (0 : V) := by
-  intro h; have := h.pos; simp at this
+@[simp] lemma not_pow2_zero : ¬Pow2 (0 : V) := by intro h; have := h.pos; simp at this
 
 lemma _root_.LO.Arith.Pow2.two_dvd {a : V} (h : Pow2 a) (lt : 1 < a) :
     2 ∣ a :=
@@ -141,8 +140,7 @@ instance lenbit_definable : Sg0-Relation (LenBit : V → V → Prop) := lenbit_d
 lemma _root_.LO.Arith.LenBit.le {i a : V} (h : LenBit i a) : i ≤ a := by
   by_contra A; simp [LenBit, show a < i from by simpa using A] at h
 
-lemma not_lenbit_of_lt {i a : V} (h : a < i) : ¬LenBit i a := by
-  intro A; exact not_le.mpr h A.le
+lemma not_lenbit_of_lt {i a : V} (h : a < i) : ¬LenBit i a := by intro A; exact not_le.mpr h A.le
 
 @[simp] lemma _root_.LO.Arith.LenBit.zero (a : V) : ¬LenBit 0 a := by simp [LenBit]
 
@@ -162,8 +160,7 @@ lemma not_lenbit_iff_rem {i a : V} : ¬LenBit i a ↔ (a / i) % 2 = 0 := by
   simp [LenBit, ←mod_eq_zero_iff_dvd]
 
 @[simp] lemma _root_.LO.Arith.LenBit.self {a : V} (pos : 0 < a) :
-    LenBit a a := by
-  simp [LenBit.iff_rem, pos]
+    LenBit a a := by simp [LenBit.iff_rem, pos]
 
 lemma _root_.LO.Arith.LenBit.mod {i a k : V} (h : 2 * i ∣ k) : LenBit i (a % k) ↔ LenBit i a := by
   have : 0 ≤ i := zero_le i
@@ -231,8 +228,7 @@ namespace Pow2
 lemma mul {a b : V} (ha : Pow2 a) (hb : Pow2 b) : Pow2 (a * b) := by
   wlog hab : a ≤ b
   · simpa [mul_comm] using this hb ha (lt_of_not_ge hab).le
-  suffices ∀ b : V, ∀ a ≤ b, Pow2 a → Pow2 b → Pow2 (a * b) by
-    exact this b a hab ha hb
+  suffices ∀ b : V, ∀ a ≤ b, Pow2 a → Pow2 b → Pow2 (a * b) by exact this b a hab ha hb
   intro b
   induction b using order_induction_sigma0
   · definability
@@ -256,11 +252,9 @@ lemma mul {a b : V} (ha : Pow2 a) (hb : Pow2 b) : Pow2 (a * b) := by
 @[simp] lemma mul_iff {a b : V} : Pow2 (a * b) ↔ Pow2 a ∧ Pow2 b :=
   ⟨fun h ↦ ⟨h.of_dvd (by simp), h.of_dvd (by simp)⟩, by rintro ⟨ha, hb⟩; exact ha.mul hb⟩
 
-@[simp] lemma sq_iff {a : V} : Pow2 (a ^ 2) ↔ Pow2 a := by
-  simp [_root_.sq]
+@[simp] lemma sq_iff {a : V} : Pow2 (a ^ 2) ↔ Pow2 a := by simp [_root_.sq]
 
-lemma sq {a : V} : Pow2 a → Pow2 (a ^ 2) := by
-  simp [_root_.sq]
+lemma sq {a : V} : Pow2 a → Pow2 (a ^ 2) := by simp [_root_.sq]
 
 lemma dvd_of_le {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b → a ∣ b := by
   suffices  ∀ b : V, ∀ a ≤ b, Pow2 a → Pow2 b → a ∣ b by
@@ -283,8 +277,7 @@ lemma dvd_of_le {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b → a ∣ b := b
 lemma le_iff_dvd {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b ↔ a ∣ b :=
   ⟨Pow2.dvd_of_le ha hb, le_of_dvd hb.pos⟩
 
-lemma two_le {a : V} (pa : Pow2 a) (ne1 : a ≠ 1) : 2 ≤ a :=
-  le_of_dvd pa.pos (pa.two_dvd' ne1)
+lemma two_le {a : V} (pa : Pow2 a) (ne1 : a ≠ 1) : 2 ≤ a := le_of_dvd pa.pos (pa.two_dvd' ne1)
 
 lemma le_iff_lt_two {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b ↔ a < 2 * b := by
   constructor
@@ -326,8 +319,7 @@ lemma sq_or_dsq {a : V} (pa : Pow2 a) : ∃ b, a = b ^ 2 ∨ a = 2 * b ^ 2 := by
         exact le_trans (by simp) le_two_mul_left,
         by left; simp [_root_.sq, mul_assoc, mul_left_comm]⟩
 
-lemma sqrt {a : V} (h : Pow2 a) (hsq : (√a) ^ 2 = a) : Pow2 (√a) := by
-  rw [←hsq] at h; simpa using h
+lemma sqrt {a : V} (h : Pow2 a) (hsq : (√a) ^ 2 = a) : Pow2 (√a) := by rw [←hsq] at h; simpa using h
 
 @[simp] lemma not_three : ¬Pow2 (3 : V) := by
   intro h
@@ -400,8 +392,7 @@ lemma not_lenbit_iff_add_mul {i a : V} (hi : Pow2 i) :
     have : a = ((a / i) / 2) * (2 * i) + (a % i) := calc
       a = i * (a / i) + (a % i)              := Eq.symm <| div_add_mod a i
       _ = i * (2 * ((a / i) / 2)) + (a % i) := by simp [this]
-      _ = ((a / i) / 2) * (2 * i) + (a % i) := by
-        simp [←mul_assoc, mul_comm i 2, mul_comm (2 * i)]
+      _ = ((a / i) / 2) * (2 * i) + (a % i) := by simp [←mul_assoc, mul_comm i 2, mul_comm (2 * i)]
     exact ⟨(a / i) / 2, a % i, by simp [hi.pos], this⟩
   · rintro ⟨k, r, h, rfl⟩
     simp [not_lenbit_iff_rem, ←mul_assoc, div_mul_add_self, hi.pos, h]

@@ -354,11 +354,11 @@ theorem no_Color_lines
     ∃ c : Color, ∀ P ∈ closedHull L, coloring v P ≠ c := by
   by_contra h
   push Not at h
-  have hr : ∃ z ∈ closedHull L , coloring v z = Color.Red := by
+  have hr : ∃ z ∈ closedHull L , coloring v z = Color.Red:= by
     apply h
-  have hb : ∃ x ∈ closedHull L , coloring v x = Color.Blue := by
+  have hb : ∃ x ∈ closedHull L , coloring v x = Color.Blue:= by
     apply h
-  have hg : ∃ y ∈ closedHull L , coloring v y = Color.Green := by
+  have hg : ∃ y ∈ closedHull L , coloring v y = Color.Green:= by
     apply h
   rcases hr with ⟨z, hz, hzr⟩
   rcases hb with ⟨x, hx, hxb⟩
@@ -400,10 +400,7 @@ lemma blue11 : coloring v !₂[1,1] = Color.Blue := by
 -- need the fact that v(1/2) > 1).
 
 lemma get_color_of_rainbowTriangle (T : Fin 3 → ℝ²) (rt : rainbowTriangle v T) (c : Color) :
-  ∃ i : Fin 3, coloring v (T i) = c := by
-  have h := rt c
-  obtain ⟨i, hi⟩ := h
-  exact ⟨i, hi⟩
+  ∃ i : Fin 3, coloring v (T i) = c := rt c
 
 theorem bounded_det_coord_free (T : Triangle) (rt : rainbowTriangle v T) :
 v (det T) ≥ 1 := by
@@ -417,21 +414,17 @@ v (det T) ≥ 1 := by
   rcases hb with ⟨x, hx⟩
   rcases hg with ⟨y, hy⟩
   have hxy : x ≠ y := by
-    intro h
-    subst h
+    rintro rfl
     simp_all only [reduceCtorEq]
   have hxz : x ≠ z := by
-    intro h
-    subst h
+    rintro rfl
     simp_all only [reduceCtorEq]
   have hyz : y ≠ z := by
-    intro h
-    subst h
+    rintro rfl
     simp_all only [reduceCtorEq]
-  have hT : ∃ b, σ b = (fun | 0 =>  x | 1 =>  y | 2 => z) := by
-    apply fun_in_bijections hxy hxz hyz
+  have hT : ∃ b, σ b = (fun | 0 =>  x | 1 =>  y | 2 => z) := fun_in_bijections hxy hxz hyz
   rcases hT with ⟨b, hb⟩
-  have h1 : det T = bSign b * det (T ∘ σ b) := by
+  have h1 : det T = bSign b * det (T ∘ σ b):= by
     apply det_perm
   have h2 : det (T ∘ σ b) =
       T x 0 * T y 1 + T x 1 * T z 0 + T y 0 * T z 1 - T y 1 * T z 0 - T x 1 * T y 0
@@ -465,51 +458,31 @@ theorem no_odd_rainbowTriangle
   by_contra h₀
   have h : |det T| = 2 / n := by
     convert congrArg (HMul.hMul 2) h₀ using 1 <;> field_simp
-  have bound : v (det T) ≥ 1 := by
-    apply bounded_det_coord_free v T rt
+  have bound : v (det T) ≥ 1 := bounded_det_coord_free v T rt
   have val_inv: v (det T ) = v (|det T|) := by
-    by_cases
-    h : det T ≥ 0
+    rcases le_or_gt 0 (det T) with h | h
     · simp [abs_of_nonneg h]
-    · push Not at h
-      simp [abs_of_neg h]
+    · simp [abs_of_neg h]
   have v1 : v (det T) = v (2 / n) := by
     rw [val_inv, h]
   have v2: v (2 / n) = v (1/2)⁻¹ * v (1/ n) := by
     rw [v.map_div]
     have v3: v 2 = (v (1/2))⁻¹ := by
-      rw [← v.map_inv]
-      have obv: (2:ℝ)⁻¹ = 1/2 := by
-        rw [div_eq_mul_inv]
-        rw [one_mul]
-      rw [← obv]
-      rw [inv_inv]
+      rw [← v.map_inv, ← (by norm_num : (2:ℝ)⁻¹ = 1/2), inv_inv]
     rw [v3]
     simp only [one_div, map_inv₀, inv_inv]
-    rw [← v.map_div]
-    rw [← v.map_inv]
-    rw [← v.map_mul]
+    rw [← v.map_div, ← v.map_inv, ← v.map_mul]
     ring_nf
-  have v4: v (1/ n) = 1 := by
-    apply vodd
-    apply hodd
+  have v4: v (1/ n) = 1 := vodd n hodd
   rw [v4] at v2
   have bound2: v (2 / n) < 1 := by
-    rw [v2]
-    rw [mul_one, ← inv_lt_inv₀]
-    · rw [v.map_inv]
-      rw [inv_inv]
-      rw [inv_one]
+    rw [v2, mul_one, ← inv_lt_inv₀]
+    · rw [v.map_inv, inv_inv, inv_one]
       exact vhalf
     · aesop
     · rw [← inv_pos, v.map_inv, inv_inv]
-      have obv': (0 : Γ₀) < 1 := by
-        simp
-      rw [gt_iff_lt] at vhalf
-      exact lt_trans obv' vhalf
-  have bound3: v (det T) < 1 := by
-    rw [v1]
-    apply bound2
+      exact lt_trans (by simp) vhalf
+  have bound3: v (det T) < 1 := v1 ▸ bound2
   exact bound3.not_ge bound
 
 end Monsky

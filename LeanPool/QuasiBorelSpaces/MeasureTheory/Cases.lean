@@ -44,9 +44,8 @@ lemma measurable_decide
   classical
   have : inst = fun x ↦ Classical.dec (p x) := by subsingleton
   subst this
-  apply measurable_cases (f := fun p _ ↦ decide p)
-  · exact hp
-  · simp only [measurable_const, implies_true]
+  apply measurable_cases (f := fun p _ ↦ decide p) hp
+  simp only [measurable_const, implies_true]
 
 @[fun_prop]
 lemma measurable_dite

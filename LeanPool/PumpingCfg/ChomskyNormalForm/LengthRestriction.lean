@@ -169,8 +169,7 @@ lemma embedSymbol_terminal {t : T} :
 abbrev embedString (u : List (Symbol T g.NT)) : List (Symbol T g.NT') := u.map embedSymbol
 
 lemma embedString_nonterminal {n : g.NT} :
-    embedString [Symbol.nonterminal n] = [Symbol.nonterminal (Sum.inl n)] :=
-  rfl
+    embedString [Symbol.nonterminal n] = [Symbol.nonterminal (Sum.inl n)] := rfl
 
 lemma embedString_terminals {u : List T} :
     embedString (u.map Symbol.terminal) = u.map (@Symbol.terminal T g.NT') := by

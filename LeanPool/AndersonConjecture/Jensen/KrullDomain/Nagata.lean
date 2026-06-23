@@ -103,14 +103,10 @@ theorem nagata_criterion [WfDvdMonoid R₀]
     have hQ_ne_bot : Ideal.map (algebraMap R₀ (Localization.Away p)) P ≠ ⊥ := by
       intro h
       have hinj := nagata_algebraMap_injective p hp
-      apply hPbot
-      rw [eq_bot_iff]
-      intro x hx
-      rw [Ideal.mem_bot]
+      refine hPbot (eq_bot_iff.mpr fun x hx => Ideal.mem_bot.mpr ?_)
       have : algebraMap R₀ (Localization.Away p) x ∈ Ideal.map (algebraMap R₀ _) P :=
         Ideal.mem_map_of_mem _ hx
-      rw [h] at this
-      rw [Ideal.mem_bot] at this
+      rw [h, Ideal.mem_bot] at this
       exact hinj (by rw [this, map_zero])
     have : IsDomain (Localization.Away p) :=
       IsLocalization.isDomain_localization (nagata_powers_le_nonZeroDivisors p hp)
@@ -122,15 +118,13 @@ theorem nagata_criterion [WfDvdMonoid R₀]
       rw [← hq'_eq]
       exact Q.mul_mem_right _ hq'Q
     have hr_in_P : r ∈ P := by
-      have := IsLocalization.under_map_of_isPrime_disjoint
-        (Submonoid.powers p) (Localization.Away p) hPprime hdisj
-      rw [← this]
+      rw [← IsLocalization.under_map_of_isPrime_disjoint
+        (Submonoid.powers p) (Localization.Away p) hPprime hdisj]
       exact Ideal.mem_comap.mpr hr_in_Q
     have hr_ne : r ≠ 0 := by
       intro h
       rw [h, map_zero] at hq'_eq
-      have := mul_eq_zero.mp hq'_eq
-      rcases this with h1 | h1
+      rcases mul_eq_zero.mp hq'_eq with h1 | h1
       · exact hq'_prime.ne_zero h1
       · exact (IsUnit.pow _ (IsLocalization.Away.algebraMap_isUnit (R := R₀)
           (S := Localization.Away p) p)).ne_zero h1
@@ -143,9 +137,6 @@ theorem nagata_criterion [WfDvdMonoid R₀]
     have hr'_ne : r' ≠ 0 := right_ne_zero_of_mul (hr_eq ▸ hr_ne)
     -- r' is associated to q' in R[p⁻¹], so r' is prime there; lift to R via prime_of_image_prime
     have hr'_prime_loc : Prime (algebraMap R₀ (Localization.Away p) r') := by
-      have h1 : algebraMap R₀ (Localization.Away p) r =
-          algebraMap R₀ _ (p ^ k) * algebraMap R₀ _ r' := by
-        rw [hr_eq, map_mul]
       have hpk_unit : IsUnit (algebraMap R₀ (Localization.Away p) (p ^ k)) := by
         rw [map_pow]
         exact IsUnit.pow _ (IsLocalization.Away.algebraMap_isUnit p)

@@ -473,8 +473,7 @@ end «lp_section_7»
     (L.termBShiftVec k ts).[i] = L.termBShift ts.[i] :=
   (construction L).nth_resultVec _ hts hi
 
-@[simp] lemma termBShiftVec_nil : L.termBShiftVec 0 0 = 0 :=
-  (construction L).resultVec_nil ![]
+@[simp] lemma termBShiftVec_nil : L.termBShiftVec 0 0 = 0 := (construction L).resultVec_nil ![]
 
 lemma termBShiftVec_cons {k t ts : V} (ht : L.IsUTerm t) (hts : L.IsUTermVec k ts) :
     L.termBShiftVec (k + 1) (t ∷ ts) = L.termBShift t ∷ L.termBShiftVec k ts :=
@@ -613,8 +612,7 @@ lemma bShift_substs {n m w t} (ht : L.IsSemiterm n t) (hw : L.IsSemitermVec n m 
 lemma substs_qVec_bShift {n t m w} (ht : L.IsSemiterm n t) (hw : L.IsSemitermVec n m w) :
     L.termSubst (L.qVec w) (L.termBShift t) = L.termBShift (L.termSubst w t) := by
   rcases hw.lh
-  rw [Language.qVec]
-  rw [substs_cons_bShift ht, bShift_substs ht hw]
+  rw [Language.qVec, substs_cons_bShift ht, bShift_substs ht hw]
 
 lemma termSubstVec_qVec_qVec {l n m : V} (hv : L.IsSemitermVec l n v) (hw : L.IsSemitermVec n m w) :
     L.termSubstVec (l + 1) (L.qVec w) (L.qVec v) = L.qVec (L.termSubstVec l w v) := by
@@ -664,8 +662,7 @@ def _root_.LO.Arith.Language.IsTermFVFree (n t : V) : Prop := L.IsSemiterm n t �
 variable {L}
 
 @[simp] lemma _root_.LO.Arith.Language.IsTermFVFree.bvar (x : V) :
-    L.IsTermFVFree n ^#x ↔ x < n := by
-  simp [Language.IsTermFVFree]
+    L.IsTermFVFree n ^#x ↔ x < n := by simp [Language.IsTermFVFree]
 
 @[simp] lemma _root_.LO.Arith.Language.IsTermFVFree.fvar (x : V) : ¬L.IsTermFVFree n ^&x := by
   simp [Language.IsTermFVFree]
@@ -775,8 +772,7 @@ def numeralAux (x : V) : V := construction.result ![] x
 @[simp] lemma numeralAux_zero : numeralAux (0 : V) = qqOne := by simp [numeralAux, construction]
 
 @[simp] lemma numeralAux_succ (x : V) :
-    numeralAux (x + 1) = numeralAux x ^+ qqOne := by
-  simp [numeralAux, construction]
+    numeralAux (x + 1) = numeralAux x ^+ qqOne := by simp [numeralAux, construction]
 
 section «lp_section_10»
 
@@ -822,8 +818,7 @@ def numeral (x : V) : V := if x = 0 then qqZero else numeralAux (x - 1)
 @[simp] lemma numeral_one : numeral (1 : V) = qqOne := by simp [numeral]
 
 @[simp] lemma numeral_add_two : numeral (n + 1 + 1 :
-    V) = numeral (n + 1) ^+ qqOne := by
-  simp [numeral]
+    V) = numeral (n + 1) ^+ qqOne := by simp [numeral]
 
 lemma numeral_succ_pos (pos : 0 < n) : numeral (n + 1 : V) = numeral n ^+ qqOne := by
   rcases zero_or_succ n with (rfl | ⟨n, rfl⟩)

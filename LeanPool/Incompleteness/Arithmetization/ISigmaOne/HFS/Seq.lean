@@ -193,8 +193,7 @@ def _root_.LO.FirstOrder.Arith.znthDef : Sg0.Semisentence 3 := .mkSigma
 
 private lemma znth_graph {x s i : V} :
     x = znth s i ↔ ∃ l ≤ 2 * s, l = lh s ∧ (Seq s ∧ i < l → ⟪i, x⟫ ∈ s) ∧ (¬(Seq s ∧
-        i < l) → x = 0) := by
-  simp [znth, Classical.choose!_eq_iff]
+        i < l) → x = 0) := by simp [znth, Classical.choose!_eq_iff]
 
 lemma znth_defined : Sg0-Function₂ (znth : V → V → V) via znthDef := by
   intro v;

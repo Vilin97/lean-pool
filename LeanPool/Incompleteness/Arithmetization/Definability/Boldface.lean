@@ -70,8 +70,7 @@ class Boldface {k} (P : (Fin k → V) → Prop) : Prop where
   definable : ∃ φ : ℌ.Semiformula V k, DefinedWithParam P φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev DefinedPred (P : V → Prop) (φ : ℌ.Semisentence 1) : Prop :=
-  Defined (fun v ↦ P (v 0)) φ
+abbrev DefinedPred (P : V → Prop) (φ : ℌ.Semisentence 1) : Prop := Defined (fun v ↦ P (v 0)) φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev DefinedRel (R : V → V → Prop) (φ : ℌ.Semisentence 2) : Prop :=
@@ -94,8 +93,7 @@ abbrev DefinedFunction {k} (f : (Fin k → V) → V) (φ : ℌ.Semisentence (k +
 variable (ℌ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev DefinedFunction₀ (c : V) (φ : ℌ.Semisentence 1) : Prop :=
-  DefinedFunction (fun _ => c) φ
+abbrev DefinedFunction₀ (c : V) (φ : ℌ.Semisentence 1) : Prop := DefinedFunction (fun _ => c) φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev DefinedFunction₁ (f : V → V) (φ : ℌ.Semisentence 2) : Prop :=
@@ -268,8 +266,7 @@ lemma emb {R : (Fin k → V) → Prop} {φ : ℌ.Semisentence k} (h : Defined R 
 
 lemma of_iff {P Q : (Fin k → V) → Prop} (h : ∀ x, P x ↔ Q x) {φ : ℌ.Semisentence k} (H :
     Defined Q φ) :
-    Defined P φ := by
-  rwa [show P = Q from by funext v; simp [h]]
+    Defined P φ := by rwa [show P = Q from by funext v; simp [h]]
 
 lemma to_definable (φ : ℌ.Semisentence k) (hP : Defined P φ) : ℌ.Boldface P := ⟨φ.rew Rew.emb, by
   match ℌ with
@@ -487,8 +484,7 @@ lemma mkPolarity {P : (Fin k → V) → Prop} {Γ : Polarity}
 lemma of_iff (H : ℌ.Boldface Q) (h : ∀ x, P x ↔ Q x) : ℌ.Boldface P := by
   rwa [show P = Q from by funext v; simp [h]]
 
-lemma of_oRing (h : ℌ.Boldface P) : ℌ.Boldface P := by
-  rcases h with ⟨φ, hP⟩; exact ⟨φ.emb, hP.emb⟩
+lemma of_oRing (h : ℌ.Boldface P) : ℌ.Boldface P := by rcases h with ⟨φ, hP⟩; exact ⟨φ.emb, hP.emb⟩
 
 lemma of_delta (h : Dlt-[m].Boldface P) : Γ-[m].Boldface P := by
   rcases h with ⟨φ, h⟩
@@ -863,8 +859,7 @@ lemma of_sigmaOne {k} {f : (Fin k → V) → V}
     Sg) ⟨.mkSigma “x. x = !!(Rew.bShift t)” (by simp), by intro v; simp [Semiterm.val_bShift']⟩
 
 lemma of_eq {f : (Fin k → V) → V} (g) (h : ∀ v, f v = g v) (H : ℌ.BoldfaceFunction f) :
-    ℌ.BoldfaceFunction g := by
-  rwa [show g = f from by funext v; simp [h]]
+    ℌ.BoldfaceFunction g := by rwa [show g = f from by funext v; simp [h]]
 
 lemma retraction {n k} {f : (Fin k → V) → V} (hf : ℌ.BoldfaceFunction f) (e : Fin k → Fin n) :
     ℌ.BoldfaceFunction fun v ↦ f (fun i ↦ v (e i)) := by

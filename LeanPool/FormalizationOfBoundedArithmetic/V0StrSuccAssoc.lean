@@ -136,6 +136,10 @@ lemma exists_lowest_order_one {X : str} : (0 : num) < len X -> ∃ m : num, Lowe
     exact hmin.1
   · exact hmin.2
 
+/-- The discrete-successor step: `a < b` upgrades to `a + 1 ≤ b`. -/
+lemma succ_le_of_lt {a b : num} (h : a < b) : a + (1 : num) ≤ b := by
+  rw [B11]
+  exact (add_lt_add_iff_right (1 : num)).mpr h
 
 lemma succ_bit_eq {X : str} {m : num} : LowestOrderZero X m -> m ∈ succ X := by
   intro h
@@ -361,7 +365,6 @@ lemma carry_succ_of_all_lt_mem_add_of_lowest_zero_lt :
   · exact Or.inl h_jX
   · exact Or.inr ((succ_bit_gt hm j h_m_lt_j).2 h_jY)
 
-
 lemma prefix_zero_contradiction_of_not_carry_of_all_lt_mem :
     ∀ {X Y : str} {i : num},
       i < len X + len Y ->
@@ -495,16 +498,12 @@ lemma not_carry_succ_of_prefix_zero_of_not_carry_of_lowest_zero_lt :
   rw [ax_add]
   constructor
   · rcases lt_trichotomy contr m with h_contr_lt_m | h_contr_eq_m | h_m_lt_contr
-    · exact lt_of_lt_of_le (L1 (hm.2.2 contr h_contr_lt_m)) (by
-        rw [_root_.add_comm]
-        exact B8)
+    · exact lt_add_left_of_mem_right (hm.2.2 contr h_contr_lt_m)
     · rw [h_contr_eq_m]
-      exact lt_of_lt_of_le (L1 h_m_X) (show len X ≤ len X + len Y from B8)
+      exact lt_add_right_of_mem_left h_m_X
     · rcases h_or_after_m contr h_m_lt_contr h_contr_lt with h_contr_X | h_contr_Y
-      · exact lt_of_lt_of_le (L1 h_contr_X) (show len X ≤ len X + len Y from B8)
-      · exact lt_of_lt_of_le (L1 h_contr_Y) (by
-          rw [_root_.add_comm]
-          exact B8)
+      · exact lt_add_right_of_mem_left h_contr_X
+      · exact lt_add_left_of_mem_right h_contr_Y
   · rcases lt_trichotomy contr m with h_contr_lt_m | h_contr_eq_m | h_m_lt_contr
     · rw [xor3_split]
       right
@@ -558,10 +557,7 @@ lemma not_mem_add_succ_of_not_mem_add_of_prefix_zero :
           right
           right
           exact ⟨h1.1, h_yY, hC⟩
-      have h_y_lt_old : y < len X + len Y := by
-        exact lt_of_lt_of_le (L1 h_yY) (by
-          rw [_root_.add_comm]
-          exact B8)
+      have h_y_lt_old : y < len X + len Y := lt_add_left_of_mem_right h_yY
       exact prefix_zero_contradiction_of_not_carry_of_all_lt_mem h_y_lt_old h_prefix_zero h_notC
         (fun j h_j_lt ↦ hm.2.2 j (lt_trans h_j_lt h_y_lt_m))
     · exact (succ_bit_lt hm y h_y_lt_m) h2.2.1
@@ -586,9 +582,7 @@ lemma not_mem_add_succ_of_not_mem_add_of_prefix_zero :
       apply h_j_notAdd
       rw [ax_add]
       constructor
-      · exact lt_of_lt_of_le (L1 h_jY) (by
-          rw [_root_.add_comm]
-          exact B8)
+      · exact lt_add_left_of_mem_right h_jY
       · rw [xor3_split]
         right
         left
@@ -606,9 +600,7 @@ lemma not_mem_add_succ_of_not_mem_add_of_prefix_zero :
           apply h_notAdd
           rw [ax_add]
           constructor
-          · exact lt_of_lt_of_le (L1 h_yY) (by
-              rw [_root_.add_comm]
-              exact B8)
+          · exact lt_add_left_of_mem_right h_yY
           · rw [xor3_split]
             right
             left
@@ -620,9 +612,7 @@ lemma not_mem_add_succ_of_not_mem_add_of_prefix_zero :
           apply h_notAdd
           rw [ax_add]
           constructor
-          · exact lt_of_lt_of_le (L1 h_yY) (by
-              rw [_root_.add_comm]
-              exact B8)
+          · exact lt_add_left_of_mem_right h_yY
           · rw [xor3_split]
             right
             right
@@ -639,7 +629,7 @@ lemma not_mem_add_succ_of_not_mem_add_of_prefix_zero :
           apply h_notAdd
           rw [ax_add]
           constructor
-          · exact lt_of_lt_of_le (L1 h1.1) (show len X ≤ len X + len Y from B8)
+          · exact lt_add_right_of_mem_left h1.1
           · rw [xor3_split]
             left
             exact ⟨h1.1, h_yY, h_notC⟩
@@ -740,7 +730,6 @@ lemma not_mem_add_succ_of_mem_add_of_prefix_one :
   · exact h_notCarry_old h3.2.2
   · exact h_notCarry_old h4.2.2
 
-
 lemma add_succ_of_succ_add_zero :
     ∀ {X Y : str} {y : num}, y = 0 -> y ∈ succ (X + Y) -> y ∈ X + succ Y := by
   intro X Y y h hy
@@ -788,7 +777,6 @@ lemma add_succ_of_succ_add_zero :
           simp only [not_xor] at h_not_xor
           rw [h_not_xor]
           exact hY0
-
 
 lemma add_succ_of_succ_add_of_mem_add :
     ∀ {X Y : str} {y pred_y : num},
@@ -884,7 +872,6 @@ lemma add_succ_of_succ_add_of_mem_add :
       right
       exact ⟨h_X, h_SY, h_Carry_new⟩
 
-
 lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) -> y ∈ X + succ Y := by
   intro X Y y hy
   by_cases y = 0
@@ -911,10 +898,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
         apply h_y_notin_add
         rw [ax_add]
         constructor
-        · exact lt_of_lt_of_le (L1 h_yY) (by
-            simp only [le_add_iff_nonneg_left, zero_le]
-            -- simpa [_root_.add_comm] using (show len Y ≤ len Y + len X from B8)
-          )
+        · exact lt_add_left_of_mem_right h_yY
         · rw [xor3_split]
           right
           left
@@ -924,7 +908,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
         not_carry_succ_of_lowest_zero_ge hm (le_of_lt h_y_lt_m)
       rw [ax_add]
       constructor
-      · exact lt_of_lt_of_le (L1 h_X) (show len X ≤ len X + len (succ Y) from B8)
+      · exact lt_add_right_of_mem_left h_X
       · rw [xor3_split]
         left
         exact ⟨h_X, h_notSY, h_notCarry_new⟩
@@ -936,7 +920,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
         apply h_y_notin_add
         rw [ax_add]
         constructor
-        · exact lt_of_lt_of_le (L1 h_yX) (show len X ≤ len X + len Y from B8)
+        · exact lt_add_right_of_mem_left h_yX
         · rw [xor3_split]
           left
           exact ⟨h_yX, h_notY, h_notC⟩
@@ -946,10 +930,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
         simpa [h_y_eq_m] using (not_carry_succ_of_lowest_zero_ge hm le_rfl)
       rw [ax_add]
       constructor
-      · exact lt_of_lt_of_le (L1 h_SY) (by
-          simp only [le_add_iff_nonneg_left, zero_le]
-          -- simpa [_root_.add_comm] using (show len (succ Y) ≤ len (succ Y) + len X from B8)
-          )
+      · exact lt_add_left_of_mem_right h_SY
       · rw [xor3_split]
         right
         left
@@ -1014,10 +995,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
           apply h_y_notin_add
           rw [ax_add]
           constructor
-          · exact lt_of_lt_of_le (L1 h_yY) (by
-              simp only [le_add_iff_nonneg_left, zero_le]
-              -- simpa [_root_.add_comm] using (show len Y ≤ len Y + len X from B8)
-              )
+          · exact lt_add_left_of_mem_right h_yY
           · rw [xor3_split]
             right
             left
@@ -1036,7 +1014,7 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
           apply h_y_notin_add
           rw [ax_add]
           constructor
-          · exact lt_of_lt_of_le (L1 h_X) (show len X ≤ len X + len Y from B8)
+          · exact lt_add_right_of_mem_left h_X
           · rw [xor3_split]
             left
             exact ⟨h_X, h_yY, h_notC⟩
@@ -1051,10 +1029,6 @@ lemma add_succ_of_succ_add : ∀ {X Y : str}, ∀ {y : num}, y ∈ succ (X + Y) 
           right
           left
           exact ⟨h_notX, h_notSY, h_Carry_new⟩
-
-
-
-
 
 lemma succ_len_eq : ∀ {X Y : str}, len (X + succ Y) = (len (succ (X + Y)) : num) := by
   intro X Y
@@ -1104,16 +1078,10 @@ lemma succ_len_eq : ∀ {X Y : str}, len (X + succ Y) = (len (succ (X + Y)) : nu
         constructor
         · exact len_not_in
         · exact h_top_iff.mp h_top
-    have h_new_eq : len (X + succ Y) = len (X + Y) + (1 : num) := by
-      apply _root_.le_antisymm
-      · exact h_new_le
-      · rw [B11]
-        exact (add_lt_add_iff_right (1 : num)).mpr (L1 h_top)
-    have h_succ_eq : len (succ (X + Y)) = len (X + Y) + (1 : num) := by
-      apply _root_.le_antisymm
-      · exact len_succ_le_succ
-      · rw [B11]
-        exact (add_lt_add_iff_right (1 : num)).mpr (L1 h_top_succ)
+    have h_new_eq : len (X + succ Y) = len (X + Y) + (1 : num) :=
+      _root_.le_antisymm h_new_le (succ_le_of_lt (L1 h_top))
+    have h_succ_eq : len (succ (X + Y)) = len (X + Y) + (1 : num) :=
+      _root_.le_antisymm len_succ_le_succ (succ_le_of_lt (L1 h_top_succ))
     rw [h_new_eq, h_succ_eq]
   · have h_not_top_succ : len (X + Y) ∉ succ (X + Y) := by
       intro h_top_succ
@@ -1122,11 +1090,8 @@ lemma succ_len_eq : ∀ {X Y : str}, len (X + succ Y) = (len (succ (X + Y)) : nu
       have h_succ_le_old : len (succ (X + Y)) ≤ (len (X + Y) : num) := by
         by_contra h
         have h_lt : len (X + Y) < len (succ (X + Y)) := lt_of_not_ge h
-        have h_ge : len (X + Y) + (1 : num) ≤ len (succ (X + Y)) := by
-          rw [B11]
-          exact (add_lt_add_iff_right (1 : num)).mpr h_lt
         have h_eq : len (succ (X + Y)) = len (X + Y) + (1 : num) :=
-          _root_.le_antisymm len_succ_le_succ h_ge
+          _root_.le_antisymm len_succ_le_succ (succ_le_of_lt h_lt)
         apply h_not_top_succ
         apply L2
         exact h_eq.symm
@@ -1138,16 +1103,13 @@ lemma succ_len_eq : ∀ {X Y : str}, len (X + succ Y) = (len (succ (X + Y)) : nu
       have h_new_le_old : len (X + succ Y) ≤ (len (X + Y) : num) := by
         by_contra h
         have h_lt : len (X + Y) < len (X + succ Y) := lt_of_not_ge h
-        have h_ge : len (X + Y) + (1 : num) ≤ len (X + succ Y) := by
-          rw [B11]
-          exact (add_lt_add_iff_right (1 : num)).mpr h_lt
-        have h_eq : len (X + succ Y) = len (X + Y) + (1 : num) := _root_.le_antisymm h_new_le h_ge
+        have h_eq : len (X + succ Y) = len (X + Y) + (1 : num) :=
+          _root_.le_antisymm h_new_le (succ_le_of_lt h_lt)
         apply h_top
         apply L2
         exact h_eq.symm
       exact _root_.le_antisymm h_new_le_old h_old_le_new
     rw [h_new_eq, h_succ_eq]
-
 
 lemma succ_add_of_add_succ : ∀ {X Y : str}, ∀ {y : num}, y ∈ X + succ Y -> y ∈ succ (X + Y) := by
   intro X Y y hy

@@ -68,8 +68,7 @@ variable {K L : Type*} [Field K] [Field L] [Algebra K L] {E : IntermediateField 
 
 theorem AlgEquiv.liftNormal_intermediateField_commutes [Normal K L] {E F : IntermediateField K L}
     (σ : E ≃ₐ[K] F) (x : E) : (AlgEquiv.liftNormal σ L) x = σ x := by
-  have h : x.1 = algebraMap E L x := rfl
-  rw [h, liftNormal_commutes]
+  rw [show x.1 = algebraMap E L x from rfl, liftNormal_commutes]
   rfl
 
 /-- If `H` is a normal Subgroup of `Gal(L/K)`, then `Gal(fixedField H/K)` is isomorphic to
@@ -549,16 +548,14 @@ theorem GalRingHom_inv_mul_cancel (σ : L ≃ₐ[K] L) : (GalRingHom σ⁻¹).co
 
 theorem GalRingHom_inv_mul_cancel_mem (σ : L ≃ₐ[K] L) (x : 𝓞 L) :
     GalRingHom σ⁻¹ (GalRingHom σ x) = x := by
-  calc _ = (GalRingHom σ⁻¹).comp (GalRingHom σ) x := rfl
-    _ = _ := by rw [GalRingHom_inv_mul_cancel, RingHom.id_apply]
+  rw [← RingHom.comp_apply, GalRingHom_inv_mul_cancel, RingHom.id_apply]
 
 theorem GalRingHom_mul_inv_cancel (σ : L ≃ₐ[K] L) : (GalRingHom σ).comp (GalRingHom σ⁻¹)
   = RingHom.id (𝓞 L) := by rw [GalRingHom_mul, mul_inv_cancel, GalRingHom_one]
 
 theorem GalRingHom_mul_inv_cancel_mem (σ : L ≃ₐ[K] L) (x : 𝓞 L) :
     GalRingHom σ (GalRingHom σ⁻¹ x) = x := by
-  calc _ = (GalRingHom σ).comp (GalRingHom σ⁻¹) x := rfl
-    _ = _ := by rw [GalRingHom_mul_inv_cancel, RingHom.id_apply]
+  rw [← RingHom.comp_apply, GalRingHom_mul_inv_cancel, RingHom.id_apply]
 
 /-- The `GalRingHom σ` will send a maximal ideal to a maximal ideal. -/
 instance GalRingHom_map_isMaximal (σ : L ≃ₐ[K] L) : IsMaximal (map (GalRingHom σ) P) :=
@@ -661,8 +658,8 @@ theorem ramificationIdx_eq_of_isGalois (Q : Ideal (𝓞 L)) [hqm : Q.IsMaximal] 
     (ne_bot_ofIsMaximal P), ramificationIdx_eq_normalizedFactors_count (map_isMaximal_ne_bot p L)
     (IsMaximal.isPrime hqm) (ne_bot_ofIsMaximal Q), ← hs]
   nth_rw 2 [← Ideal_map_invariant_under_GalRingHom p σ]
-  rw [normalizedFactors_map_GalRingHom_commutes (map_isMaximal_ne_bot p L) σ]
-  rw [Multiset.count_map_eq_count' _ _ (GalRingHom_IdealMap_injective σ) _]
+  rw [normalizedFactors_map_GalRingHom_commutes (map_isMaximal_ne_bot p L) σ,
+    Multiset.count_map_eq_count' _ _ (GalRingHom_IdealMap_injective σ) _]
 
 theorem ramificationIdx_eq_of_isGalois' [IsGalois K L] {P : Ideal (𝓞 L)} [P.IsMaximal]
     {Q : Ideal (𝓞 L)} [hqm : Q.IsMaximal] (h : IdealBelow K P = IdealBelow K Q) :
@@ -741,8 +738,8 @@ theorem ramificationIdx_mul_inertiaDegOfIsGalois (L : Type*) [Field L] [NumberFi
     [Algebra K L] [IsGalois K L] :
     Finset.card (primesOver p L) * (ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L) =
     Module.finrank K L := by
-  rw [← smul_eq_mul, ← Finset.sum_const]
-  rw [← sum_ramification_inertia (R := 𝓞 K) (S := 𝓞 L) (K := K) (L := L) (ne_bot_ofIsMaximal p)]
+  rw [← smul_eq_mul, ← Finset.sum_const,
+    ← sum_ramification_inertia (R := 𝓞 K) (S := 𝓞 L) (K := K) (L := L) (ne_bot_ofIsMaximal p)]
   apply Finset.sum_congr rfl
   intro P hp
   letI := ((primesOver_mem p P).mp hp).1
@@ -812,8 +809,8 @@ theorem DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg [IsGalois K L]
   have : Fintype (orbit (L ≃ₐ[K] L) (primesOverMk p P)) :=
     Set.fintypeRange fun m ↦ m • primesOverMk p P
   rw [ramificationIdx_mul_inertiaDegOfIsGalois, ← IsGalois.card_aut_eq_finrank,
-    Nat.card_eq_fintype_card, DecompositionGroup]
-  rw [← MulAction.card_orbit_mul_card_stabilizer_eq_card_group (L ≃ₐ[K] L) (primesOverMk p P)]
+    Nat.card_eq_fintype_card, DecompositionGroup,
+    ← MulAction.card_orbit_mul_card_stabilizer_eq_card_group (L ≃ₐ[K] L) (primesOverMk p P)]
   congr 1
   · rw [Fintype.card_of_finset' (@Finset.univ (primesOver p L) _), Finset.card_univ]
     · exact (Fintype.card_coe (primesOver p L)).symm
@@ -829,8 +826,7 @@ theorem Extension_degree_over_DecompositionField_eq_ramificationIdx_mul_inertiaD
     [IsGalois K L] : finrank (DecompositionField p P) L =
     ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L := by
   rw [DecompositionField, finrank_fixedField_eq_card (DecompositionGroup p P),
-    Nat.card_eq_fintype_card]
-  rw [DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg p P]
+    Nat.card_eq_fintype_card, DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg p P]
 
 /-- `P` is the unique ideal lying over `DecompositionIdeal p P`. -/
 theorem isMaximal_lies_over_DecompositionIdeal_unique (Q : Ideal (𝓞 L)) [Q.IsMaximal]
@@ -1019,8 +1015,7 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
     refine minpoly.eq_of_irreducible_of_monic
       ((Monic.irreducible_iff_irreducible_map_fraction_map (minpoly.monic hai)).mp
         (minpoly.irreducible hai)) ?_ (Monic.map (algebraMap (𝓞 K) K) (minpoly.monic hai))
-    have h : a.1 = algebraMap (𝓞 L) L a := rfl
-    rw [h]
+    rw [show a.1 = algebraMap (𝓞 L) L a from rfl]
     simp only [aeval_map_algebraMap, aeval_algebraMap_eq_zero_iff, minpoly.aeval, f]
   have h : fl.roots.map ϕP = (fl.map ϕP).roots := by
     have h := (hn.splits a.1).natDegree_eq_card_roots.symm
@@ -1049,8 +1044,8 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
       congr
       apply Subtype.val_inj.mp
       have ha : τ a.1 = τ (AdjoinSimple.gen K a.1).1 := rfl
-      rw [← PowerBasis.lift_gen (IntermediateField.adjoin.powerBasis (hn.isIntegral a.1)) b.1 h]
-      rw [GalAlgEquiv_apply, ha, AlgEquiv.liftNormal_intermediateField_commutes]
+      rw [← PowerBasis.lift_gen (IntermediateField.adjoin.powerBasis (hn.isIntegral a.1)) b.1 h,
+        GalAlgEquiv_apply, ha, AlgEquiv.liftNormal_intermediateField_commutes]
       rfl
     _ = _ := by
       change (e.liftEquiv σ.toAlgHom).1 = σ (ϕP a)
@@ -1145,23 +1140,21 @@ theorem finrank_eq_ramificationIdx_mul_inertiaDeg (P : Ideal (𝓞 L))
     [P.IsMaximal] [P unique_lies_over p] : finrank K L =
     ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L := by
   have h := (ramificationIdx_mul_inertiaDegOfIsGalois p L).symm
-  rw [unique_primesOver_card_eq_one p P, one_mul] at h
-  exact h
+  rwa [unique_primesOver_card_eq_one p P, one_mul] at h
 
 /-- The extension degree `[InertiaField' p P : K]` is equal to the inertia degree of `p` in `L`. -/
 theorem finrank_bot_InertiaField_eq_inertiaDeg_of_unique :
     finrank K (InertiaField' K P) = inertiaDegOfIsGalois p L := by
   letI := InertiaField_isGalois_of_unique p P
-  rw [← inertiaDeg_eq_inertiaDegOfIsGalois p P, inertiaDeg, ← card_aut_eq_finrank]
-  rw [Nat.card_congr (InertiaFieldAutEquivResidueFieldAut p P).toEquiv]
-  rw [card_aut_eq_finrank, dif_pos hp.liesOver_eq.symm]
+  rw [← inertiaDeg_eq_inertiaDegOfIsGalois p P, inertiaDeg, ← card_aut_eq_finrank,
+    Nat.card_congr (InertiaFieldAutEquivResidueFieldAut p P).toEquiv,
+    card_aut_eq_finrank, dif_pos hp.liesOver_eq.symm]
 
 /-- The extension degree `[L : InertiaField' p P]` is equal to the
 ramification index of `p` in `L`. -/
 theorem finrank_InertiaField_top_eq_ramificationIdx_of_unique :
     finrank (InertiaField' K P) L = ramificationIdxOfIsGalois p L := by
-  have h : finrank K (InertiaField' K P) ≠ 0 := ne_of_gt finrank_pos
-  apply mul_left_cancel₀ h
+  apply mul_left_cancel₀ (a := finrank K (InertiaField' K P)) (ne_of_gt finrank_pos)
   rw [finrank_mul_finrank K (InertiaField' K P) L, finrank_eq_ramificationIdx_mul_inertiaDeg p P,
     finrank_bot_InertiaField_eq_inertiaDeg_of_unique p P, mul_comm]
 
@@ -1186,8 +1179,8 @@ theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : 
     inertiaDegOfIsGalois (InertiaIdeal' K P) L = 1 := by
   letI := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
   letI := InertiaGroup_Normal (InertiaIdeal' K P) P
-  rw [← inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P, inertiaDeg, dif_pos rfl]
-  rw [← card_aut_eq_finrank, ← Nat.card_congr <| MulEquiv.toEquiv <|
+  rw [← inertiaDeg_eq_inertiaDegOfIsGalois (InertiaIdeal' K P) P, inertiaDeg, dif_pos rfl,
+    ← card_aut_eq_finrank, ← Nat.card_congr <| MulEquiv.toEquiv <|
     autQuoutientInertiaGroupEquivResidueFieldAut (InertiaIdeal' K P) P,
     Nat.card_eq_fintype_card]
   have hm := Subgroup.card_eq_card_quotient_mul_card_subgroup (InertiaGroup (InertiaField' K P) P)
@@ -1199,9 +1192,9 @@ theorem inertiaDeg_over_InertiaIdeal_eq_one_of_unique (p : Ideal (𝓞 K)) (P : 
 theorem ramificationIdx_over_InertiaIdeal_eq_ramificationIdx_of_unique :
     ramificationIdxOfIsGalois (InertiaIdeal' K P) L = ramificationIdxOfIsGalois p L := by
   letI := ideal_unique_lies_over_tower_top p (InertiaIdeal' K P) P
-  rw [← finrank_InertiaField_top_eq_ramificationIdx_of_unique p P]
-  rw [finrank_eq_ramificationIdx_mul_inertiaDeg (InertiaIdeal' K P) P]
-  rw [inertiaDeg_over_InertiaIdeal_eq_one_of_unique p P, mul_one]
+  rw [← finrank_InertiaField_top_eq_ramificationIdx_of_unique p P,
+    finrank_eq_ramificationIdx_mul_inertiaDeg (InertiaIdeal' K P) P,
+    inertiaDeg_over_InertiaIdeal_eq_one_of_unique p P, mul_one]
 
 theorem ramificationIdx_below_InertiaIdeal_eq_one_of_unique :
     ramificationIdxOfIsGalois p (InertiaField' K P) = 1 := by
@@ -1297,9 +1290,9 @@ theorem finrank_InertiaField_top_eq_ramificationIdx [IsGalois K L] :
 open Classical in
 theorem InertiaGroup_card_eq_ramificationIdx [IsGalois K L] :
     Fintype.card (InertiaGroup K P) = ramificationIdxOfIsGalois p L := by
-  rw [← ramificationIdx_of_DecompositionIdeal p P]
-  rw [Fintype.card_of_bijective (InertiaGroupEquiv p P).symm.bijective]
-  rw [InertiaGroup_card_eq_ramificationIdx_of_unique (DecompositionIdeal p P) P]
+  rw [← ramificationIdx_of_DecompositionIdeal p P,
+    Fintype.card_of_bijective (InertiaGroupEquiv p P).symm.bijective,
+    InertiaGroup_card_eq_ramificationIdx_of_unique (DecompositionIdeal p P) P]
 
 theorem inertiaDeg_over_InertiaIdeal_eq_one [IsGalois K L] :
     inertiaDegOfIsGalois (InertiaIdeal p P) L = 1 :=

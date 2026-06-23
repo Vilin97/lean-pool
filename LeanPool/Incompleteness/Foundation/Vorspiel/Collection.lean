@@ -78,8 +78,7 @@ lemma subset_antisymm {a b : α} (ha : a ⊆ b) (hb : b ⊆ a) : set a = set b :
 @[simp 1100] lemma mem_cons (a : α) (x : β) : x ∈ cons x a := by simp [mem_cons_iff]
 
 @[simp] lemma subset_cons (a : α) (x : β) :
-    a ⊆ cons x a := by
-  simp [subset_iff, mem_cons_iff]; tauto
+    a ⊆ cons x a := by simp [subset_iff, mem_cons_iff]; tauto
 
 @[simp] lemma set_empty : set (∅ : α) = ∅ := by ext; simp [set]
 
@@ -115,16 +114,13 @@ noncomputable def _root_.Finset.toCollection : Finset β → α := fun s ↦ s.t
   induction l <;> simp [List.toCollection, *]
 
 @[simp] lemma mem_finset_toCollection {x : β} {s : Finset β} : x ∈ (s.toCollection :
-    α) ↔ x ∈ s := by
-  simp [Finset.toCollection]
+    α) ↔ x ∈ s := by simp [Finset.toCollection]
 
 @[simp] lemma list_toCollection_finite (l : List β) : Finite (l.toCollection :
-    α) := by
-  simp [Finite, set]
+    α) := by simp [Finite, set]
 
 @[simp] lemma finset_toCollection_finite (s : Finset β) : Finite (s.toCollection :
-    α) := by
-  simp [Finite, set]
+    α) := by simp [Finite, set]
 
 end Collection
 
@@ -137,7 +133,6 @@ lemma cons_eq (a : α) (s : Set α) : cons a s = insert a s := rfl
 @[simp] lemma collection_set (s : Set α) : Collection.set s = s := rfl
 
 @[simp] lemma collection_finite_iff (s : Set α) :
-    Collection.Finite s ↔ s.Finite := by
-  simp [Collection.Finite]
+    Collection.Finite s ↔ s.Finite := by simp [Collection.Finite]
 
 end Set

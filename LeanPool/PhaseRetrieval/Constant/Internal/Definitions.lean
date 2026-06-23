@@ -146,8 +146,7 @@ private lemma integral_addCircle_volume_eq_smul_haar
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : AddCircle T → E) :
     ∫ t : AddCircle T, f t = T • ∫ t : AddCircle T, f t ∂AddCircle.haarAddCircle := by
-  rw [AddCircle.volume_eq_smul_haarAddCircle]
-  rw [integral_smul_measure]
+  rw [AddCircle.volume_eq_smul_haarAddCircle, integral_smul_measure]
   simp [ENNReal.toReal_ofReal T_pos.le]
 
 /-- Integral of periodic function over `Ioo(-π, π)` equals integral over `AddCircle T`. -/
@@ -186,8 +185,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
               mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
           _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by
               rw [fourier_norm]; ring
-          _ = ‖a k‖ * |r| ^ (k.val + 1) := by
-              rw [Real.norm_eq_abs]
+          _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
 
 /-- ‖polyEvalCircle a r t‖² ≤ D * ∑ ‖a_k‖² * r^{2(k+1)}, a convenient bound.
     Actually, we prove the simpler bound: ≤ (∑ ‖a_k‖ * |r|^{k+1})² . -/
@@ -440,10 +438,8 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
                   ≤ r ^ 3 * (2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2) := by
                     exact mul_le_mul_of_nonneg_left
                       (le_trans hsq hsq2) (pow_nonneg hr_nn 3)
-                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by
-                    ring
-                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by
-                    rw [hpow_eq]
+                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by ring
+                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by rw [hpow_eq]
                 _ ≤ r * r ^ (D * 2) * C ^ 2 * 4 + r ^ 3 * C ^ 2 * 4 := by
                     nlinarith [pow_nonneg hr_nn 3,
                       mul_nonneg hr_nn (pow_nonneg hr_nn (D * 2)),
@@ -702,8 +698,7 @@ private lemma radial_gaussian_integral (n : ℕ) :
     · congr 1; congr 1
       rw [← rpow_natCast r 2]
       norm_num
-  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
-  rw [integral_rpow_mul_exp_neg_rpow hp hq]
+  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq, integral_rpow_mul_exp_neg_rpow hp hq]
   -- Now we have: 2 * (1/2 * Γ((2n+2)/2)) = n!
   -- (2n+2)/2 = n+1, and Γ(n+1) = n!
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring
@@ -793,8 +788,7 @@ theorem fockNorm_eq_gaussian_integral {D : ℕ} (a : Fin D → ℂ) :
     rw [Finset.mul_sum]
     congr 1
     ext k
-    have : (r ^ 2) ^ (k.val + 1) = r ^ (2 * (k.val + 1)) := by
-      rw [← pow_mul]
+    have : (r ^ 2) ^ (k.val + 1) = r ^ (2 * (k.val + 1)) := by rw [← pow_mul]
     rw [this]
     ring
   simp_rw [integrand_eq]

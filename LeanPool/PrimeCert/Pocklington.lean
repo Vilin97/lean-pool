@@ -160,12 +160,10 @@ theorem pocklington_certifyKR (N root F₁ : ℕ)
   exact pocklington_certify N F₁ h2n hf₁ hf₁' root psp primitive
 
 @[simp] theorem PocklingtonPred.zero {N root : ℕ} :
-    PocklingtonPred N root 0 := by
-  simp [PocklingtonPred]
+    PocklingtonPred N root 0 := by simp [PocklingtonPred]
 
 @[simp] theorem PocklingtonPred.one {N root : ℕ} :
-    PocklingtonPred N root 1 := by
-  simp [PocklingtonPred]
+    PocklingtonPred N root 1 := by simp [PocklingtonPred]
 
 theorem PocklingtonPred.step_pow {N root F₂ p e : ℕ} (hp : p.Prime)
     (ih : PocklingtonPred N root F₂)

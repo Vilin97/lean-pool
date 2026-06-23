@@ -54,11 +54,8 @@ lemma isCover_iff (X : Set ℝ²) (S : Set Triangle)
   simp only [isDisjointCover, isCover, isDisjointPolygonSet, ne_eq, covers, disjointSet,
     and_congr_right_iff]
   intro _
-  constructor
-  · intro h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq
-    exact h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq
-  · intro h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq
-    exact h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq
+  exact ⟨fun h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq ↦ h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq,
+    fun h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq ↦ h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq⟩
 
 lemma disjoint_aux {α β : Type} (S₁ S₂ : Set α) (f : α → Set β) (h₁ : disjointSet S₁ f)
     (h₂ : disjointSet S₂ f)

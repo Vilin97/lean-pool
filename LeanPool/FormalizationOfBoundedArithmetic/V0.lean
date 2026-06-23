@@ -231,8 +231,7 @@ instance : IsOrderedAddMonoid num where
 
 theorem xmin_comp (X : str) :
     ∃ Y : str, (len Y : num) ≤ len X ∧ ∀ z < len X, z ∈ Y ↔ ∀ y ≤ z, y ∉ X :=
-by
-  exact M.xmin_comp_ax X
+  M.xmin_comp_ax X
 
 lemma ex_elt_of_len_pos :
     ∀ {X : str}, (0 : num) < (len X) -> ∃ x, x ∈ X ∧ x + 1 = len X := by
@@ -714,17 +713,22 @@ lemma len_pos_of_exists : ∀ {i : num} {X : str}, i ∈ X -> len X > (0 : num) 
   intro i X iX
   exact lt_of_le_of_lt zero_le (L1 iX)
 
+/-- A position belonging to `X` lies below `len X + b` for any bound `b`. -/
+lemma lt_add_right_of_mem_left {X : str} {b : num} {i : num} (h : i ∈ X) :
+    i < len X + b :=
+  lt_of_lt_of_le (L1 h) B8
 
-
+/-- A position belonging to `Y` lies below `a + len Y` for any bound `a`. -/
+lemma lt_add_left_of_mem_right {Y : str} {a : num} {i : num} (h : i ∈ Y) :
+    i < a + len Y := by
+  rw [_root_.add_comm]
+  exact lt_of_lt_of_le (L1 h) B8
 
 lemma xor3_split {P Q R : Prop} :
     Xor (Xor P Q) R <->
       (P ∧ ¬Q ∧ ¬R) ∨ (¬ P ∧ Q ∧ ¬ R) ∨ (¬ P ∧ ¬ Q ∧ R) ∨ (P ∧ Q ∧ R) := by
   unfold Xor
   tauto
-
-
-
 
 
 

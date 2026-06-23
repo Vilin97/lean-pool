@@ -47,10 +47,8 @@ lemma abelian_or_basis (h : finrank K L = 2) :
       let αβ := S_b.repr ⁅ x , y ⁆
       exists (αβ 0),(αβ 1)
       rw [Finsupp.linearCombination_apply] at c
-      rw [← c]
-      rw [Finsupp.sum_fintype]
-      · rw [Fin.sum_univ_two]
-        rw [S_b0, S_b1]
+      rw [← c, Finsupp.sum_fintype]
+      · rw [Fin.sum_univ_two, S_b0, S_b1]
       · simp
     have ⟨ X , Y, pf1, pf2⟩ : ∃ X Y : L, ⁅X , Y⁆ = Y ∧ Y ≠ 0 := by
       by_cases hα : (α = 0)
@@ -62,46 +60,30 @@ lemma abelian_or_basis (h : finrank K L = 2) :
           simp at pf
           assumption
         constructor
-        · calc ⁅(1 / β) • x, y⁆ = (1 / β) • ⁅x, y⁆  := by
-                simp
-              _ = ((1 / β) * β) • y := by
-                rw [pf, hα]; simp [← smul_assoc]
-              _ = y := by
-                rw [one_div_mul_cancel β_ne_zero]; simp
+        · calc ⁅(1 / β) • x, y⁆ = (1 / β) • ⁅x, y⁆  := by simp
+              _ = ((1 / β) * β) • y := by rw [pf, hα]; simp [← smul_assoc]
+              _ = y := by rw [one_div_mul_cancel β_ne_zero]; simp
         · rw [hα] at pf
           simp only [zero_smul, zero_add] at pf
           rw [pf] at hxy
           exact right_ne_zero_of_smul hxy
       · exists -(1 / α) • y, x + (β / α) • y
         constructor
-        · calc ⁅-(1 / α) • y, x + (β / α) • y⁆ = (-(1 / α)) • (-1 : K) • ⁅x, y⁆ := by
-                simp
-              _ = ((-(1 / α)) * (-1)) • ⁅x, y⁆ := by
-                rw [← mul_smul]
-              _ = (1 / α) • ⁅x, y⁆ := by
-                simp
-              _ = (1 / α) • (α • x + β • y) := by
-                rw [pf]
-              _ = ((1 / α) • α • x + (1 / α) • β • y) := by
-                simp
-              _ = (((1 / α) * α) • x + (1 / α) • β • y) := by
-                rw [mul_smul]
-              _ = x + (1 / α) • β • y := by
-                rw [one_div_mul_cancel hα];simp
-              _ = x + α⁻¹ • β • y := by
-                rw [@one_div]
-              _ = x + (α⁻¹ * β) • y := by
-                rw [← mul_smul]
-              _ = x + (β / α) • y := by
-                rw [@inv_mul_eq_div]
+        · calc ⁅-(1 / α) • y, x + (β / α) • y⁆ = (-(1 / α)) • (-1 : K) • ⁅x, y⁆ := by simp
+              _ = ((-(1 / α)) * (-1)) • ⁅x, y⁆ := by rw [← mul_smul]
+              _ = (1 / α) • ⁅x, y⁆ := by simp
+              _ = (1 / α) • (α • x + β • y) := by rw [pf]
+              _ = ((1 / α) • α • x + (1 / α) • β • y) := by simp
+              _ = (((1 / α) * α) • x + (1 / α) • β • y) := by rw [mul_smul]
+              _ = x + (1 / α) • β • y := by rw [one_div_mul_cancel hα];simp
+              _ = x + α⁻¹ • β • y := by rw [@one_div]
+              _ = x + (α⁻¹ * β) • y := by rw [← mul_smul]
+              _ = x + (β / α) • y := by rw [@inv_mul_eq_div]
         · intro Heq
           apply hxy
-          calc ⁅x, y⁆ = ⁅x, y⁆ + ((β / α) • ⁅y, y⁆) := by
-                simp
-              _ = ⁅x +(β / α) • y, y⁆ := by
-                simp
-              _ = 0 := by
-                rw [Heq]; simp
+          calc ⁅x, y⁆ = ⁅x, y⁆ + ((β / α) • ⁅y, y⁆) := by simp
+              _ = ⁅x +(β / α) • y, y⁆ := by simp
+              _ = 0 := by rw [Heq]; simp
     rw [← pf1] at pf2
     have ⟨ B, u ⟩ := basis_of_bracket_ne_zero h X Y pf2
     use B
@@ -205,8 +187,7 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
         rw [Basis.repr_fin_two B x,Basis.repr_fin_two B n] at hxn
         simp only [lie_add, lie_smul, add_lie, smul_lie, lie_self, smul_zero, zero_add,
           add_zero] at hxn
-        rw [<- lie_skew] at hxn
-        rw [pfB] at hxn
+        rw [<- lie_skew, pfB] at hxn
         have u : y = ((-1: K) • B.repr n 0 • (B.repr x) 1 + (B.repr n) 1 • (B.repr x) 0) • B 1 := by
           rw [← hxn]
           simp only [smul_neg, smul_eq_mul, neg_mul, one_mul]
@@ -227,8 +208,7 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
         rw [pfB]
      have : (commutator K L).toSubmodule = span K {x : L | ∃ (y : L) (z : L), ⁅y,
        z⁆ = x} := commutator_eq_span
-     rw [hh] at this
-     rw [h1] at this
+     rw [hh, h1] at this
      have dimcomm : finrank K (commutator K L).toSubmodule = 1 := by
       rw [this]
       refine finrank_span_singleton ?hv

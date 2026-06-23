@@ -233,12 +233,9 @@ instance qq : M ⊧ₘ* 𝐑₀ := modelsTheory_iff.mpr <| by
   case equal h =>
     have : M ⊧ₘ* (𝐄𝐐 : Theory ℒₒᵣ) := inferInstance
     exact modelsTheory_iff.mp this h
-  case Ω₁ n m =>
-    simp [models_iff, numeral_eq_natCast]
-  case Ω₂ n m =>
-    simp [models_iff, numeral_eq_natCast]
-  case Ω₃ n m h =>
-    simp [models_iff, numeral_eq_natCast, h]
+  case Ω₁ n m => simp [models_iff, numeral_eq_natCast]
+  case Ω₂ n m => simp [models_iff, numeral_eq_natCast]
+  case Ω₃ n m h => simp [models_iff, numeral_eq_natCast, h]
   case Ω₄ n =>
       simp only [Nat.reduceAdd, Fin.isValue, models_iff, Semiformula.eval_all,
         Nat.succ_eq_add_one, LogicalConnective.HomClass.map_iff, Semiformula.eval_operator₂,

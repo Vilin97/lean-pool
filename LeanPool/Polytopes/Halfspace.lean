@@ -195,9 +195,8 @@ lemma halfspaceTranslation.injective (x : E) :
   intro y
   rw [SetLike.ext_iff] at h
   specialize h (y + x)
-  rw [← SetLike.mem_coe, ← SetLike.mem_coe, mem_halfspaceTranslation, mem_halfspaceTranslation,
+  rwa [← SetLike.mem_coe, ← SetLike.mem_coe, mem_halfspaceTranslation, mem_halfspaceTranslation,
     add_sub_cancel_right] at h
-  exact h
 
 lemma frontierHalfspace_Hyperplane {Hi_ : Halfspace E} :
   frontier Hi_ = {x : E | Hi_.f.1 x = Hi_.α } := by

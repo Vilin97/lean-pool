@@ -13,8 +13,7 @@ import LeanPool.Monlib4.LinearAlgebra.End
 
 
 theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E]
-    [FiniteDimensional K E] (x y : E →ₗ[K] E) : IsUnit (x ∘ₗ y) ↔ IsUnit (y ∘ₗ x) :=
-  by
+    [FiniteDimensional K E] (x y : E →ₗ[K] E) : IsUnit (x ∘ₗ y) ↔ IsUnit (y ∘ₗ x) := by
   simp_rw [← Module.End.mul_eq_comp]
   constructor
   all_goals
@@ -51,8 +50,7 @@ theorem isUnit_neg {α : Type _} [Monoid α] [HasDistribNeg α] (x : α) : IsUni
     exact ⟨-z, hz1, hz2⟩
 
 theorem spectrum.comm {K E : Type _} [Field K] [AddCommGroup E] [Module K E] [FiniteDimensional K E]
-    (x y : E →ₗ[K] E) : spectrum K (x ∘ₗ y) = spectrum K (y ∘ₗ x) :=
-  by
+    (x y : E →ₗ[K] E) : spectrum K (x ∘ₗ y) = spectrum K (y ∘ₗ x) := by
   ext1 u
   by_cases Hu : u = 0
   · simp_rw [spectrum.mem_iff, Hu, Algebra.algebraMap_eq_smul_one, zero_smul, zero_sub, isUnit_neg,

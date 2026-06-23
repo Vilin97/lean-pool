@@ -154,9 +154,7 @@ lemma card_toPrimitiveSet_of_room {σ : Finset T} {C : Finset I} (hRoom : IST.is
     (toPrimitiveSet (I := I) σ C).card = Fintype.card I := by
   rw [card_toPrimitiveSet, ← hRoom.2, Finset.card_sdiff_of_subset (Finset.subset_univ C),
     Finset.card_univ]
-  have hCle : C.card ≤ Fintype.card I := by
-    rw [← Finset.card_univ]
-    exact Finset.card_le_card (Finset.subset_univ C)
+  have hCle : C.card ≤ Fintype.card I := Finset.card_le_univ C
   omega
 
 omit [Inhabited T] [Fintype T] in
@@ -164,9 +162,7 @@ lemma card_toAlmostPrimitive_of_door {τ : Finset T} {D : Finset I} (hDoor : IST
     (toAlmostPrimitive (I := I) τ D).card + 1 = Fintype.card I := by
   rw [toAlmostPrimitive, card_toPrimitiveSet,
     Finset.card_sdiff_of_subset (Finset.subset_univ D), Finset.card_univ]
-  have hDle : D.card ≤ Fintype.card I := by
-    rw [← Finset.card_univ]
-    exact Finset.card_le_card (Finset.subset_univ D)
+  have hDle : D.card ≤ Fintype.card I := Finset.card_le_univ D
   omega
 
 omit [Inhabited T] [Fintype T] IST in
@@ -231,18 +227,14 @@ lemma primitive_to_room {X : Finset (ExtendedGoods T I)} (h : isPrimitive (IST :
   have hCcard : C.card = σ.card := by
     rw [hXcard, Finset.card_sdiff_of_subset (Finset.subset_univ C),
       Finset.card_univ] at hCard
-    have hCle : C.card ≤ Fintype.card I := by
-      rw [← Finset.card_univ]
-      exact Finset.card_le_card (Finset.subset_univ C)
+    have hCle : C.card ≤ Fintype.card I := Finset.card_le_univ C
     omega
   exact ⟨hDom, hCcard⟩
 
 /-- A room gives a primitive set in the paper's native sense. -/
 lemma room_to_primitive {σ : Finset T} {C : Finset I} (h : IST.isRoom σ C) :
-    isPrimitive (IST := IST) (toPrimitiveSet (I := I) σ C) := by
-  constructor
-  · exact card_toPrimitiveSet_of_room h
-  · simpa using h.1
+    isPrimitive (IST := IST) (toPrimitiveSet (I := I) σ C) :=
+  ⟨card_toPrimitiveSet_of_room h, by simpa using h.1⟩
 
 /--
 For sets written in room coordinates, being primitive is exactly being a room.
@@ -260,8 +252,8 @@ omit [Inhabited T] in
 lemma primitive_eq_toPrimitive_from_parts {X : Finset (ExtendedGoods T I)}
     (_h : isPrimitive (IST := IST) X) :
     X = toPrimitiveSet (I := I)
-      (fromGoods (T := T) (I := I) X) (fromMissing (T := T) (I := I) X) := by
-  exact eq_toPrimitive_from_parts X
+      (fromGoods (T := T) (I := I) X) (fromMissing (T := T) (I := I) X) :=
+  eq_toPrimitive_from_parts X
 
 /-- A room recovered from a primitive set is again primitive. -/
 lemma primitive_from_parts {X : Finset (ExtendedGoods T I)}
@@ -274,11 +266,8 @@ lemma primitive_from_parts {X : Finset (ExtendedGoods T I)}
 lemma primitive_to_nativePrimitive {X : Finset (ExtendedGoods T I)}
     (h : isRoomPrimitive (IST := IST) X) :
     isPrimitiveNative (IST := IST) X := by
-  constructor
-  · rcases h with ⟨σ, C, hRoom, rfl⟩
-    exact card_toPrimitiveSet_of_room hRoom
-  · rcases h with ⟨σ, C, hRoom, rfl⟩
-    simpa using hRoom.1
+  rcases h with ⟨σ, C, hRoom, rfl⟩
+  exact ⟨card_toPrimitiveSet_of_room hRoom, by simpa using hRoom.1⟩
 
 omit [Inhabited T] in
 lemma nativePrimitive_to_primitive {X : Finset (ExtendedGoods T I)}
@@ -292,9 +281,7 @@ lemma nativePrimitive_to_primitive {X : Finset (ExtendedGoods T I)}
   have hCcard : C.card = σ.card := by
     rw [hXcard, Finset.card_sdiff_of_subset (Finset.subset_univ C),
       Finset.card_univ] at hCard
-    have hCle : C.card ≤ Fintype.card I := by
-      rw [← Finset.card_univ]
-      exact Finset.card_le_card (Finset.subset_univ C)
+    have hCle : C.card ≤ Fintype.card I := Finset.card_le_univ C
     omega
   have hRoom : IST.isRoom σ C := ⟨hDom, hCcard⟩
   rw [eq_toPrimitive_from_parts (T := T) (I := I) X]
@@ -452,9 +439,7 @@ lemma nativeAlmostPrimitive_to_almostPrimitive {Y : Finset (ExtendedGoods T I)}
         rw [hYeq, toAlmostPrimitive, card_toPrimitiveSet]
       rw [hYcard, Finset.card_sdiff_of_subset (Finset.subset_univ D),
         Finset.card_univ] at hcard
-      have hDle : D.card ≤ Fintype.card I := by
-        rw [← Finset.card_univ]
-        exact Finset.card_le_card (Finset.subset_univ D)
+      have hDle : D.card ≤ Fintype.card I := Finset.card_le_univ D
       omega
   have hsubParts : toAlmostPrimitive (I := I) τ D ⊆ toPrimitiveSet (I := I) σ C := by
     rw [← hYeq]
@@ -502,12 +487,8 @@ theorem internal_almostPrimitive_two_incident_primitives {Y : Finset (ExtendedGo
   let X₂ := toPrimitiveSet (I := I) σ₂ C₂
   refine ⟨X₁, X₂, ?_, room_to_primitive hRoom₁, room_to_primitive hRoom₂, ?_, ?_⟩
   · intro hEq
-    have hσ : σ₁ = σ₂ := by
-      have := congrArg (fromGoods (T := T) (I := I)) hEq
-      simpa [X₁, X₂] using this
-    have hC : C₁ = C₂ := by
-      have := congrArg (fromMissing (T := T) (I := I)) hEq
-      simpa [X₁, X₂] using this
+    have hσ : σ₁ = σ₂ := by simpa [X₁, X₂] using congrArg (fromGoods (T := T) (I := I)) hEq
+    have hC : C₁ = C₂ := by simpa [X₁, X₂] using congrArg (fromMissing (T := T) (I := I)) hEq
     exact hNe (by simp [hσ, hC])
   · rw [almostPrimitive_eq_toAlmost_from_parts hY]
     exact doorof_toAlmost_subset_toPrimitive hDoor₁
@@ -534,12 +515,8 @@ theorem internal_almostPrimitive_exactly_two_incident_primitives
   let X₂ := toPrimitiveSet (I := I) σ₂ C₂
   refine ⟨X₁, X₂, ?_, room_to_primitive hRoom₁, room_to_primitive hRoom₂, ?_, ?_, ?_⟩
   · intro hEq
-    have hσ : σ₁ = σ₂ := by
-      have := congrArg (fromGoods (T := T) (I := I)) hEq
-      simpa [X₁, X₂] using this
-    have hC : C₁ = C₂ := by
-      have := congrArg (fromMissing (T := T) (I := I)) hEq
-      simpa [X₁, X₂] using this
+    have hσ : σ₁ = σ₂ := by simpa [X₁, X₂] using congrArg (fromGoods (T := T) (I := I)) hEq
+    have hC : C₁ = C₂ := by simpa [X₁, X₂] using congrArg (fromMissing (T := T) (I := I)) hEq
     exact hNe (by simp [hσ, hC])
   · rw [almostPrimitive_eq_toAlmost_from_parts hY]
     exact doorof_toAlmost_subset_toPrimitive hDoor₁
@@ -954,12 +931,8 @@ lemma common_door_gives_replacementStep
   refine ⟨room_to_primitive hRoom₁, room_to_primitive hRoom₂, ?_,
     toAlmostPrimitive (I := I) τ D, door_to_almostPrimitive hDoor₁, ?_, ?_⟩
   · intro hEq
-    have hσ : σ₁ = σ₂ := by
-      have := congrArg (fromGoods (T := T) (I := I)) hEq
-      simpa using this
-    have hC : C₁ = C₂ := by
-      have := congrArg (fromMissing (T := T) (I := I)) hEq
-      simpa using this
+    have hσ : σ₁ = σ₂ := by simpa using congrArg (fromGoods (T := T) (I := I)) hEq
+    have hC : C₁ = C₂ := by simpa using congrArg (fromMissing (T := T) (I := I)) hEq
     exact hNe (by simp [hσ, hC])
   · exact doorof_toAlmost_subset_toPrimitive hDoor₁
   · exact doorof_toAlmost_subset_toPrimitive hDoor₂
@@ -1668,10 +1641,7 @@ lemma orderUtility_order_iff (i : I) (x y : T) :
         rw [Finset.mem_filter] at hz ⊢
         exact ⟨hz.1, le_trans hz.2 (le_of_lt hxy)⟩
       · intro hEq
-        have hy_mem_y : y ∈ Finset.univ.filter (fun z : T => z ≤ y) := by
-          simp
-        have hy_mem_x : y ∈ Finset.univ.filter (fun z : T => z ≤ x) := by
-          exact hEq hy_mem_y
+        have hy_mem_x : y ∈ Finset.univ.filter (fun z : T => z ≤ x) := hEq (by simp)
         rw [Finset.mem_filter] at hy_mem_x
         exact not_le_of_gt hxy hy_mem_x.2
     have hCard : (Finset.univ.filter (fun z : T => z ≤ x)).card <
@@ -1690,12 +1660,7 @@ lemma orderUtility_order_iff (i : I) (x y : T) :
     have hCard : (Finset.univ.filter (fun z : T => z ≤ y)).card ≤
         (Finset.univ.filter (fun z : T => z ≤ x)).card :=
       Finset.card_le_card hSubset
-    have hNot : ¬
-        (((Finset.univ.filter (fun z : T => z ≤ x)).card : ℝ) + 1 <
-          ((Finset.univ.filter (fun z : T => z ≤ y)).card : ℝ) + 1) := by
-      apply not_lt.mpr
-      exact_mod_cast Nat.succ_le_succ hCard
-    exact hNot hlt
+    exact absurd hlt (not_lt.mpr (by exact_mod_cast Nat.succ_le_succ hCard))
 
 omit [Inhabited T] [Fintype I] [DecidableEq T] [DecidableEq I] in
 lemma orderUtility_realization :
@@ -1934,9 +1899,8 @@ lemma orderUtility_lt_uniformSlackHeight (i : I) (x : T) :
     orderUtility (IST := IST) i x < uniformSlackHeight (T := T) (I := I) i := by
   unfold orderUtility uniformSlackHeight orderLowerSet
   simp only [Function.const_apply]
-  have hCard : (Finset.univ.filter (fun y : T => (IST i).le y x)).card ≤ Fintype.card T := by
-    rw [← Finset.card_univ]
-    exact Finset.card_le_card (Finset.filter_subset _ _)
+  have hCard : (Finset.univ.filter (fun y : T => (IST i).le y x)).card ≤ Fintype.card T :=
+    Finset.card_le_univ _
   have hNat :
       (Finset.univ.filter (fun y : T => (IST i).le y x)).card + 1 <
         Fintype.card T + 2 := by
@@ -2133,16 +2097,9 @@ theorem coordinateValuesDefineLinearOrders_of_realization
   have hf : Function.Injective f :=
     extendedCoordinatePoint_coordinate_injective (IST := IST) hu hM hM_inj i
   exact
-    { trichotomous := by
-        intro a b hab hba
-        apply hf
-        exact le_antisymm (le_of_not_gt hba) (le_of_not_gt hab)
-      irrefl := by
-        intro a
-        exact lt_irrefl (f a)
-      trans := by
-        intro a b c hab hbc
-        exact lt_trans hab hbc }
+    { trichotomous := fun a b hab hba => hf (le_antisymm (le_of_not_gt hba) (le_of_not_gt hab))
+      irrefl := fun a => lt_irrefl (f a)
+      trans := fun a b c hab hbc => lt_trans hab hbc }
 
 omit [DecidableEq T] [Fintype T] [Fintype I] in
 /--

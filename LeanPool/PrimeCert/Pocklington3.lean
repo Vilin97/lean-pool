@@ -316,8 +316,7 @@ theorem pocklington3_certKR (N root m e : ℕ) (F' : List PrimePow) (mode : Pock
   simp only [Nat.div_eq_div, powModTR_eq, Nat.pred_eq_sub_one, Nat.mod_eq_mod, Nat.succ_eq_add_one,
     Nat.mul_eq, Nat.pow_eq, Nat.add_eq, Bool.and_eq_true, Nat.blt_eq, Nat.beq_eq] at cert
   obtain ⟨⟨⟨⟨⟨⟨⟨primitive, e_pos⟩, cert⟩, hnf⟩, odd_R⟩, psp⟩, divisors⟩, bound⟩ := cert
-  have R_def : F * R + 1 = N := by
-    rw [← Nat.div_add_mod N F, hnf]; rfl
+  have R_def : F * R + 1 = N := by rw [← Nat.div_add_mod N F, hnf]; rfl
   have even_F : Even F :=
     (Nat.even_pow.mpr ⟨even_two, e_pos.ne'⟩).mul_left _
   have odd_N : Odd N := by
@@ -347,8 +346,7 @@ theorem pocklington3_certKR (N root m e : ℕ) (F' : List PrimePow) (mode : Pock
     exact dvd_mul_of_dvd_left (dvd_trans pp.prime_dvd_toNat <| List.dvd_prod <|
       List.mem_map_of_mem h) _
   have h_two_F : two_F = 2 * F := mul_comm F 2
-  have hrs : 2 * F * s + r = R := by
-    rw [← Nat.div_add_mod R (2 * F), ← h_two_F]; rfl
+  have hrs : 2 * F * s + r = R := by rw [← Nat.div_add_mod R (2 * F), ← h_two_F]; rfl
   refine pocklington3_test N F R m r s R_def (mul_comm 2 F ▸ rfl) (mul_comm 2 F ▸ rfl)
     (by lia) odd_N (Nat.odd_iff.mpr odd_R) ?_ ?_ ?_ ?_
   · simp only [List.rec_and, Nat.beq_eq, powMod] at primitive

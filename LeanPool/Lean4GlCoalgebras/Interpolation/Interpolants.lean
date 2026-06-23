@@ -940,8 +940,7 @@ theorem interpolant_strong_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
        ∧ (∀ y : 𝕏.X,
           encodeVar y ∈ (partial_ (interpolantStrong Y_sub) (at n)).vocab →
             (Relation.ReflTransGen (edge 𝕏.α))
-              (unencodeVar n (encodeVar_helper₁ n.2)) y)
-       := by
+              (unencodeVar n (encodeVar_helper₁ n.2)) y) := by
   unfold interpolantStrong
   intro ⟨n, n_in⟩
   by_cases em_con : Y = ∅
@@ -1147,8 +1146,7 @@ theorem interpolant_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
   ∨ (interpolant 𝕏 (at (encodeVar x)) ≅ interpolant 𝕏 (equation x)))
   ∧ (interpolant 𝕏 (at (encodeVar x))).vocab ⊆
     ((SplitSequent.left (f (r 𝕏.α x))).vocab ∩
-      (SplitSequent.right (f (r 𝕏.α x))).vocab)
- := by
+      (SplitSequent.right (f (r 𝕏.α x))).vocab) := by
   unfold interpolant
   have h : ∀ y : 𝕏.X, encodeVar y ∈ Finset.image encodeVar fin_X.elems := by
     intro y

@@ -56,20 +56,15 @@ lemma tup_castAdd {i : Fin n} :
     tup n F x (i.castAdd 5) = primeChain (max 8 (F.sup id)) i.1 := by
   simp [tup]
 
-@[simp] lemma tup_natAdd_zero : tup n F x (natAdd n 0) = (VW n F).v := by
-  simp [tup]
+@[simp] lemma tup_natAdd_zero : tup n F x (natAdd n 0) = (VW n F).v := by simp [tup]
 
-@[simp] lemma tup_natAdd_one : tup n F x (natAdd n 1) = -(VW n F).w := by
-  simp [tup]
+@[simp] lemma tup_natAdd_one : tup n F x (natAdd n 1) = -(VW n F).w := by simp [tup]
 
-@[simp] lemma tup_natAdd_two : tup n F x (natAdd n 2) = (x - 1) ^ 5 := by
-  simp [tup]
+@[simp] lemma tup_natAdd_two : tup n F x (natAdd n 2) = (x - 1) ^ 5 := by simp [tup]
 
-@[simp] lemma tup_natAdd_three : tup n F x (natAdd n 3) = 10 * (x ^ 2 + 1) ^ 2 := by
-  simp [tup]
+@[simp] lemma tup_natAdd_three : tup n F x (natAdd n 3) = 10 * (x ^ 2 + 1) ^ 2 := by simp [tup]
 
-@[simp] lemma tup_natAdd_four : tup n F x (natAdd n 4) = -(x + 1) ^ 5 := by
-  simp [tup]
+@[simp] lemma tup_natAdd_four : tup n F x (natAdd n 4) = -(x + 1) ^ 5 := by simp [tup]
 
 lemma sum_tup : ∑ i, tup n F x i = 0 := by
   simp only [tup, sum_univ_add, addCases_left, addCases_right, sum_univ_five,
@@ -96,16 +91,14 @@ lemma U_lt_V : U n F < (VW n F).v :=
     _ ≤ max (U n F) (F.sup id) := le_max_left ..
     _ < _ := (VW n F).m_lt_v
 
-lemma U_lt_W : U n F < (VW n F).w := by
-  grind [U_lt_V, (VW n F).eq_add]
+lemma U_lt_W : U n F < (VW n F).w := by grind [U_lt_V, (VW n F).eq_add]
 
 lemma V_lower_bound : 9 ≤ (VW n F).v :=
   calc
     _ ≤ max (U n F) (F.sup id) := by grind [U]
     _ < _ := (VW n F).m_lt_v
 
-lemma W_lower_bound : 17 ≤ (VW n F).w := by
-  grind [U, (VW n F).eq_add, V_lower_bound]
+lemma W_lower_bound : 17 ≤ (VW n F).w := by grind [U, (VW n F).eq_add, V_lower_bound]
 
 lemma Y_lower_bound : 1530 ≤ Y n F := by
   rw [show 1530 = 10 * 1 * 1 * 9 * 17 by rfl, Y]

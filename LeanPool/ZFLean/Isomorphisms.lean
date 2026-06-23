@@ -20,14 +20,13 @@ theorem isIso_refl (A : ZFSet) : A ≅ᶻ A :=
   ⟨A.Id, Id.IsFunc, Id.IsBijective⟩
 instance : Std.Refl ZFSet.isIso where
   refl := isIso_refl
+theorem isIso_trans (x y z : ZFSet) (x_iso_y : x ≅ᶻ y) (y_iso_z : y ≅ᶻ z) : x ≅ᶻ z := by
+  obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
+  obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
+  exists ZFSet.composition bij' bij x y z, ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
+  exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
 instance : Trans ZFSet.isIso ZFSet.isIso ZFSet.isIso where
-  trans := by
-    intro x y z x_iso_y y_iso_z
-    obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
-    obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
-    set bij'' := ZFSet.composition bij' bij x y z
-    exists bij'', ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
-    exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
+  trans := isIso_trans _ _ _
 theorem isIso_symm : Symmetric ZFSet.isIso := by
   intro x y iso
   obtain ⟨bij, is_func, is_bij⟩ := iso
@@ -36,12 +35,6 @@ theorem isIso_symm : Symmetric ZFSet.isIso := by
   exact inv_bijective_of_bijective is_bij
 instance : Std.Symm (α := ZFSet) isIso where
   symm := isIso_symm
-theorem isIso_trans (x y z : ZFSet) (x_iso_y : x ≅ᶻ y) (y_iso_z : y ≅ᶻ z) : x ≅ᶻ z := by
-  obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
-  obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
-  set bij'' := ZFSet.composition bij' bij x y z
-  exists bij'', ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
-  exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
 instance : IsTrans ZFSet isIso where
   trans := isIso_trans
 theorem isIso_equiv : Equivalence ZFSet.isIso where
@@ -127,17 +120,13 @@ theorem bijective_of_injective_on_subset {A B : ZFSet}
       obtain ⟨-, x, x_mem_Cn, x_y_u⟩ := y_mem_Cn
       use x, C_sub x_mem_Cn
       rw [lambda_spec]
-      and_intros
-      · exact C_sub x_mem_Cn
-      · exact yB
-      · rw [dite_cond_eq_true <| eq_true ⟨n, x_mem_Cn⟩,
-          fapply.of_pair (is_func_is_pfunc hu) x_y_u]
+      refine ⟨C_sub x_mem_Cn, yB, ?_⟩
+      rw [dite_cond_eq_true <| eq_true ⟨n, x_mem_Cn⟩,
+        fapply.of_pair (is_func_is_pfunc hu) x_y_u]
     · use y, B_sub yB
       rw [lambda_spec]
-      and_intros
-      · exact B_sub yB
-      · exact yB
-      · rw [dite_cond_eq_false <| eq_false y_mem_C]
+      refine ⟨B_sub yB, yB, ?_⟩
+      rw [dite_cond_eq_false <| eq_false y_mem_C]
   use v, hv, v_inj, v_surj
 /--
 Cantor–Bernstein theorem: if there are injective functions
@@ -350,20 +339,17 @@ theorem isIso_powerset {A B : ZFSet} (h : A ≅ᶻ B) : A.powerset ≅ᶻ B.powe
         rw [mem_Image] at hz
         exact hz.1
       · rw [lambda_spec]
-        and_intros
-        · exact hX
-        · rw [mem_powerset]
-          intro y hy
-          rw [mem_Image] at hy
-          exact hy.1
-        · rfl
+        refine ⟨hX, ?_, rfl⟩
+        rw [mem_powerset]
+        intro y hy
+        rw [mem_Image] at hy
+        exact hy.1
       · rw [lambda_spec]
-        and_intros
+        refine ⟨?_, hX, ?_⟩
         · rw [mem_powerset]
           intro y hy
           rw [mem_Image] at hy
           exact hy.1
-        · exact hX
         · rw [inv_Image_of_bijective bij (mem_powerset.mp hX)]
   have right_inv : F ∘ᶻ F' = 𝟙B.powerset := by
     ext1 X
@@ -390,20 +376,17 @@ theorem isIso_powerset {A B : ZFSet} (h : A ≅ᶻ B) : A.powerset ≅ᶻ B.powe
         rw [mem_Image] at hz
         exact hz.1
       · rw [lambda_spec]
-        and_intros
-        · exact hX
-        · rw [mem_powerset]
-          intro y hy
-          rw [mem_Image] at hy
-          exact hy.1
-        · rfl
+        refine ⟨hX, ?_, rfl⟩
+        rw [mem_powerset]
+        intro y hy
+        rw [mem_Image] at hy
+        exact hy.1
       · rw [lambda_spec]
-        and_intros
+        refine ⟨?_, hX, ?_⟩
         · rw [mem_powerset]
           intro y hy
           rw [mem_Image] at hy
           exact hy.1
-        · exact hX
         · rw [Image_inv_of_bijective bij (mem_powerset.mp hX)]
   apply isIso_of_two_sided_inverse left_inv right_inv
 theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.funs B ≅ᶻ C.funs D := by
@@ -443,11 +426,7 @@ theorem isIso_of_funs {A B C D : ZFSet} (h : A ≅ᶻ C) (h' : B ≅ᶻ D) : A.f
         sInter_singleton]
       apply fapply_mem_range
     · rw [lambda_spec]
-      and_intros
-      · rw [mem_funs]
-        exact hg
-      · rw [mem_funs]
-        exact hf
+      refine ⟨mem_funs.mpr hg, mem_funs.mpr hf, ?_⟩
       · rw [dite_cond_eq_true (eq_true hg.1), lambda_eta hf, lambda_ext_iff]
         · intro c hc
           rw [dite_cond_eq_true (eq_true hc)]
@@ -695,9 +674,7 @@ theorem isIso_powerset_char_pred {A : ZFSet} : A.powerset ≅ᶻ A.funs 𝔹 := 
       and_intros
       · exact fX_mem_funs
       · rw [lambda_spec]
-        and_intros
-        · exact fX_mem_funs
-        · rwa [mem_powerset]
+        refine ⟨fX_mem_funs, by rwa [mem_powerset], ?_⟩
         · ext1 z
           rw [mem_sep, mem_sep, pair_mem_prod, π₁_pair, π₂_pair, iff_true_right rfl]
           constructor
@@ -719,11 +696,9 @@ theorem isIso_powerset_char_pred {A : ZFSet} : A.powerset ≅ᶻ A.funs 𝔹 := 
         exact hy.2.2
       · beta_reduce
         rw [lambda_spec]
-        and_intros
-        · exact fX_mem
-        · rw [mem_powerset]
-          exact sep_subset_self
-        · rfl
+        refine ⟨fX_mem, ?_, rfl⟩
+        rw [mem_powerset]
+        exact sep_subset_self
 
 open Classical in
 /-- Imported ZFLean declaration. -/
@@ -749,10 +724,8 @@ theorem currify_is_func {A B C : ZFSet} (f : ZFSet)
     use z
     and_intros <;> beta_reduce
     · rw [lambda_spec]
-      and_intros
-      · exact hy
-      · exact hf.1 hz |> pair_mem_prod.mp |>.2
-      · rw [dite_cond_eq_true (eq_true hy), fapply.of_pair (is_func_is_pfunc hf) hz]
+      refine ⟨hy, hf.1 hz |> pair_mem_prod.mp |>.2, ?_⟩
+      rw [dite_cond_eq_true (eq_true hy), fapply.of_pair (is_func_is_pfunc hf) hz]
     · intro w hw
       rw [lambda_spec, dite_cond_eq_true (eq_true hy)] at hw
       rw [hw.2.2]

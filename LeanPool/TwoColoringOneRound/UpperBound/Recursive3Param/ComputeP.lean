@@ -84,14 +84,7 @@ lemma dSlice_eq (x : Samples 4) :
           (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2)) else Set.Ici (z0I (x 1) (x 2))) ↔
           d < z0I (x 1) (x 2) := by
       simp [hc']
-    calc
-      d ∈ dSlice x ↔ (d : ℝ) < z0 (x 1) (x 2) := hL
-      _ ↔ d < z0I (x 1) (x 2) := by rfl
-      _ ↔
-          d ∈
-            (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2))
-              else Set.Ici (z0I (x 1) (x 2))) :=
-        hR.symm
+    exact hL.trans hR.symm
   · have hc' : ¬ x 2 < z0I (x 0) (x 1) := by
       exact_mod_cast hc
     have hL : d ∈ dSlice x ↔ z0 (x 1) (x 2) ≤ (d : ℝ) := by
@@ -101,14 +94,7 @@ lemma dSlice_eq (x : Samples 4) :
           (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2)) else Set.Ici (z0I (x 1) (x 2))) ↔
           z0I (x 1) (x 2) ≤ d := by
       simp [hc']
-    calc
-      d ∈ dSlice x ↔ z0 (x 1) (x 2) ≤ (d : ℝ) := hL
-      _ ↔ z0I (x 1) (x 2) ≤ d := by rfl
-      _ ↔
-          d ∈
-            (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2))
-              else Set.Ici (z0I (x 1) (x 2))) :=
-        hR.symm
+    exact hL.trans hR.symm
 
 lemma lmarginal_D (x : Samples 4) :
     (∫⋯∫⁻_{(3 : Fin 4)}, pInd ∂μ4) x =
@@ -222,22 +208,18 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
         · intro hc
           have : (c : ℝ) < t := lt_of_lt_of_le hc hz0_le
           exact hct (show c < t from this)
-        · intro hf
-          exact False.elim hf
+        · exact fun hf => hf.elim
       exact (hL.trans hR.symm)
 
 lemma measurableSet_aSlice (b c : Rand) : MeasurableSet (aSlice b c) := by
   classical
   have mz0 : Measurable fun ab : Rand × Rand => z0 ab.1 ab.2 := measurable_z0
   have mPair : Measurable fun a : Rand => ((c : ℝ), z0 a b) := by
-    have mc : Measurable fun _a : Rand => (c : ℝ) := measurable_const
-    have mb : Measurable fun a : Rand => (a, b) := measurable_id.prodMk measurable_const
-    have mz : Measurable fun a : Rand => z0 a b := by
-      change Measurable (fun a : Rand => (fun ab : Rand × Rand => z0 ab.1 ab.2) (a, b))
-      exact mz0.comp mb
-    exact mc.prodMk mz
-  have hopen : IsOpen {p : ℝ × ℝ | p.1 < p.2} := isOpen_lt continuous_fst continuous_snd
-  have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) := hopen.measurableSet
+    have mz : Measurable fun a : Rand => z0 a b :=
+      mz0.comp (measurable_id.prodMk measurable_const)
+    exact measurable_const.prodMk mz
+  have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) :=
+    (isOpen_lt continuous_fst continuous_snd).measurableSet
   -- `c < z0I a b` is definitional equal to `(c : ℝ) < z0 a b`.
   have :
       aSlice b c =

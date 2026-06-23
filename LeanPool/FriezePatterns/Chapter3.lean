@@ -341,8 +341,8 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
     ring
   have non_zero : ∀ i m, 1 ≤ i ∧ i ≤ n → friezeF g (i,m) ≠ 0 :=
     fun i m ⟨hi₁, hi₂⟩ => by linarith [positive i m hi₁ hi₂]
-  have : nzPattern_n ℚ (friezeF g) n := by
-    exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, non_zero}
+  have : nzPattern_n ℚ (friezeF g) n :=
+    {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, non_zero}
   have integral: ∀ i, ∀ m, (friezeF g (i,m)).den = 1 := by
     have key : ∀ m, (friezeF g (2, m)).den = 1 := by
       intro m
@@ -368,12 +368,10 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
           exact this
         rcases div with ⟨k, hk⟩
         simp only [zero_add] at key
-        have hne : friezeF g (m+1, 0) ≠ 0 := by
-          linarith [positive (m+1) 0 (by omega) (by omega)]
+        have hne : friezeF g (m+1, 0) ≠ 0 := by linarith [positive (m+1) 0 (by omega) (by omega)]
         have hfrac : friezeF g (2,m) = k := by
           have hkey : friezeF g (2, m) * friezeF g (m + 1, 0) =
-              friezeF g (m, 0) + friezeF g (m + 2, 0) := by
-            linarith [key]
+              friezeF g (m, 0) + friezeF g (m + 2, 0) := by linarith [key]
           have : friezeF g (2, m) * friezeF g (m + 1, 0) = ↑k * friezeF g (m + 1, 0) := by
             rw [hkey, hk]; ring
           exact mul_right_cancel₀ hne this

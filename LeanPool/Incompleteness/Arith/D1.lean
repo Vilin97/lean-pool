@@ -48,8 +48,7 @@ variable {V}
 omit [L.DecidableEq] in
 @[simp] lemma _root_.LO.FirstOrder.Derivation2.Sequent.codeIn_empty
     : (⌜(∅ : Finset (SyntacticFormula L))⌝ :
-    V) = ∅ := by
-  simp [Sequent.codeIn_def, emptyset_def]
+    V) = ∅ := by simp [Sequent.codeIn_def, emptyset_def]
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff
     {Γ : Finset (SyntacticFormula L)} {φ} : ⌜φ⌝ ∈ (⌜Γ⌝ :
@@ -149,8 +148,7 @@ lemma quote_derivation_def
   rfl
 
 @[simp] lemma fstidx_quote
-    {Γ : Finset (SyntacticFormula L)} (d : T ⊢₂ Γ) : fstIdx (⌜d⌝ : V) = ⌜Γ⌝ :=
-  by
+    {Γ : Finset (SyntacticFormula L)} (d : T ⊢₂ Γ) : fstIdx (⌜d⌝ : V) = ⌜Γ⌝ := by
   induction d <;> simp [quote_derivation_def, codeIn]
 
 end Derivation2

@@ -119,16 +119,13 @@ lemma subset_iff : Γ ⊆ Δ ↔ Γ.val ⊆ Δ.val := iff_of_eq rfl
 @[simp] lemma not_mem_empty (p : L.Formula) : p ∉ (∅ : L.Sequent) := by simp [mem_iff]
 
 @[simp] lemma mem_singleton_iff : p ∈ ({q} :
-    L.Sequent) ↔ p = q := by
-  simp [mem_iff, Language.Semiformula.val_inj]
+    L.Sequent) ↔ p = q := by simp [mem_iff, Language.Semiformula.val_inj]
 
 @[simp] lemma mem_insert_iff :
-    p ∈ insert q Γ ↔ p = q ∨ p ∈ Γ := by
-  simp [mem_iff, Language.Semiformula.val_inj]
+    p ∈ insert q Γ ↔ p = q ∨ p ∈ Γ := by simp [mem_iff, Language.Semiformula.val_inj]
 
 @[simp] lemma mem_union_iff :
-    p ∈ Γ ∪ Δ ↔ p ∈ Γ ∨ p ∈ Δ := by
-  simp [mem_iff]
+    p ∈ Γ ∪ Δ ↔ p ∈ Γ ∨ p ∈ Δ := by simp [mem_iff]
 
 @[ext] lemma ext (h : ∀ x, x ∈ Γ ↔ x ∈ Δ) : Γ = Δ := by
   rcases Γ with ⟨Γ, hΓ⟩; rcases Δ with ⟨Δ, hΔ⟩; simp only [mk.injEq]
@@ -362,8 +359,7 @@ def byAxm {p : L.Formula} (h : p ∈' T.thy) : T ⊢ p := TDerivation.byAxm p h 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ofSubset (h : T ⊆ U) {p : L.Formula} : T ⊢ p → U ⊢ p := TDerivation.ofSubset h
 
-lemma of_subset (h : T ⊆ U) {p : L.Formula} : T ⊢! p → U ⊢! p := by
-  rintro ⟨b⟩; exact ⟨ofSubset h b⟩
+lemma of_subset (h : T ⊆ U) {p : L.Formula} : T ⊢! p → U ⊢! p := by rintro ⟨b⟩; exact ⟨ofSubset h b⟩
 
 instance : Entailment.ModusPonens T := ⟨modusPonens⟩
 
@@ -540,8 +536,7 @@ lemma conj_shift (Γ : List L.Formula) : (⋀Γ).shift = ⋀(Γ.map .shift) := b
     induction Γ using List.induction_with_singleton
     case hnil => simp
     case hsingle => simp [List.conj₂]
-    case hcons p ps hps ih =>
-      simp [hps, ih]
+    case hcons p ps hps ih => simp [hps, ih]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def generalize {Γ} {p : L.Semiformula (0 + 1)} (d : Γ.map .shift ⊢[T] p.free) : Γ ⊢[T] p.all := by

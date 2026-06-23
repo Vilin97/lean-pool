@@ -63,8 +63,7 @@ lemma truthlemma_lemma1
   {X : ComplementClosedConsistentFinset Hilbert.GL φ.subformulas} (hq : □ψ ∈ φ.subformulas)
   : ((X.1.prebox ∪ X.1.prebox.modalBox) ∪ {□ψ, -ψ}) ⊆ φ.subformulas⁻ := by
   intro χ hr;
-  replace hr : χ = □ψ ∨ χ = -ψ ∨ □χ ∈ X ∨ (∃ a, □a ∈ X ∧ □a = χ) := by
-    simp at hr; tauto;
+  replace hr : χ = □ψ ∨ χ = -ψ ∨ □χ ∈ X ∨ (∃ a, □a ∈ X ∧ □a = χ) := by simp at hr; tauto;
   rcases hr with (rfl | rfl | hp | ⟨χ, hr, rfl⟩);
   · apply Finset.mem_union.mpr;
     tauto;

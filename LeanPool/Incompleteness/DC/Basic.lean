@@ -431,8 +431,7 @@ local notation "ρ" => 𝔅.rosser
 variable [Diagonalization T₀] [𝔅.Rosser]
 
 omit [𝔅.Rosser] in
-lemma _root_.LO.FirstOrder.DerivabilityCondition.rosser_spec : T₀ ⊢!. ρ <=> ∼(𝔅 ρ) :=
-  goedel_spec
+lemma _root_.LO.FirstOrder.DerivabilityCondition.rosser_spec : T₀ ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_spec
 
 omit [𝔅.Rosser] in
 private lemma rosser_specAux₁ [T₀ wkn T] : T ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_specAux₁
@@ -446,8 +445,7 @@ variable [L.DecidableEq] [Diagonalization T₀] [T₀ wkn T] [Entailment.Consist
 local notation "ρ" => 𝔅.rosser
 
 omit [L.DecidableEq] [𝔅.Rosser] in
-lemma _root_.LO.FirstOrder.DerivabilityCondition.unprovable_rosser : T ⊬. ρ :=
-  unprovable_goedel
+lemma _root_.LO.FirstOrder.DerivabilityCondition.unprovable_rosser : T ⊬. ρ := unprovable_goedel
 
 omit [L.DecidableEq] in
 theorem _root_.LO.FirstOrder.DerivabilityCondition.unrefutable_rosser : T ⊬. ∼ρ := by

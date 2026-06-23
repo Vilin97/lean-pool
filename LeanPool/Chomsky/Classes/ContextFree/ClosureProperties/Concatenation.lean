@@ -47,8 +47,7 @@ private def bigCFG (g₁ g₂ : CFG T) : CFG T :=
       g₂.terminalsRules₂ g₁.nt)))
 
 private lemma bigCFG_language_eq_bigGrammar_language (g₁ g₂ : CFG T) :
-  (bigCFG g₁ g₂).language = (bigGrammar g₁.toGeneral g₂.toGeneral).language :=
-by
+  (bigCFG g₁ g₂).language = (bigGrammar g₁.toGeneral g₂.toGeneral).language := by
   rw [CFG.language_eq_toGeneral_language]
   apply congr_arg
   dsimp only [bigCFG, bigGrammar, CFG.toGeneral, List.map_cons]
@@ -62,8 +61,7 @@ by
 
 /-- The class of context-free languages is closed under concatenation. -/
 theorem CF_of_CF_c_CF (L₁ : Language T) (L₂ : Language T) :
-  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ * L₂) :=
-by
+  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ * L₂) := by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   rw [g₁.language_eq_toGeneral_language]
   rw [g₂.language_eq_toGeneral_language]

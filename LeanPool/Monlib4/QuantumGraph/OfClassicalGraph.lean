@@ -28,8 +28,7 @@ theorem EuclideanSpace.comul_eq {n : Type*} [Fintype n] [DecidableEq n] (x : PiQ
   :
   let e : ∀ _ : n, (PiQ (fun _ : n => ℂ)) := fun i => PiLp.single 2 i (1 : ℂ)
   (Coalgebra.comul : PiQ (fun _ : n => ℂ) →ₗ[ℂ] _) x
-    = ∑ i, x i • (e i ⊗ₜ[ℂ] e i) :=
-by
+    = ∑ i, x i • (e i ⊗ₜ[ℂ] e i) := by
   intro e
   have : ∀ y i, ⟪e i, y⟫_ℂ = y i := fun y i => by
     simpa [e] using (EuclideanSpace.basisFun_inner (𝕜 := ℂ) (ι := n) y i)
@@ -44,8 +43,7 @@ open scoped Matrix
 /-- a finite simple graph is a quantum graph -/
 theorem SimpleGraph.toQuantumGraph {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
-  QuantumGraph _ (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) :=
-by
+  QuantumGraph _ (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) := by
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   let e : ∀ _ : V, EuclideanSpace ℂ V := fun i => PiLp.single 2 i (1 : ℂ)
   have he : ∀ i, e i = PiLp.single 2 i (1 : ℂ) := fun _ => rfl
@@ -68,23 +66,20 @@ theorem quantumGraph_numOfEdges_of_classical
   {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   QuantumGraph.NumOfEdges (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G))
-    = ∑ i, ∑ j, SimpleGraph.adjMatrix ℂ G i j :=
-by
+    = ∑ i, ∑ j, SimpleGraph.adjMatrix ℂ G i j := by
   have hOne : ∀ i : V, (1 : EuclideanSpace ℂ V) i = (1 : ℂ) := fun i => rfl
   simp [QuantumGraph.NumOfEdges, Matrix.mulVec, dotProduct, PiLp.inner_apply, hOne]
 
 theorem SimpleGraph.conjTranspose_adjMatrix {V α : Type*} (G : SimpleGraph V)
   [DecidableRel G.Adj] [NonAssocSemiring α] [StarRing α] :
-  (SimpleGraph.adjMatrix α G)ᴴ = SimpleGraph.adjMatrix α G :=
-by
+  (SimpleGraph.adjMatrix α G)ᴴ = SimpleGraph.adjMatrix α G := by
   ext
   simp [star_ite, star_one, star_zero, adj_comm]
 
 theorem SimpleGraph.adjMatrix_toEuclideanLin_isReal
   {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
-  LinearMap.IsReal (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) :=
-by
+  LinearMap.IsReal (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) := by
   intro
   ext
   simp [Matrix.mulVec, dotProduct, SimpleGraph.adjMatrix, Matrix.of_apply]
@@ -93,8 +88,7 @@ theorem SimpleGraph.adjMatrix_toEuclideanLin_symmMap
   {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   symmMap ℂ _ _ (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G))
-    = Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G) :=
-by
+    = Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G) := by
   simp only [symmMap_apply,
     LinearMap.real_of_isReal (SimpleGraph.adjMatrix_toEuclideanLin_isReal G),
     ← Matrix.toEuclideanLin_conjTranspose_eq_adjoint,
@@ -103,8 +97,7 @@ by
 theorem SimpleGraph.adjMatrix_irreflexive
   {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V) :
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
-  (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) •ₛ 1 = 0 :=
-by
+  (Matrix.toEuclideanLin (SimpleGraph.adjMatrix ℂ G)) •ₛ 1 = 0 := by
   letI : DecidableRel G.Adj := Classical.decRel G.Adj
   ext1 x
   simp only [schurMul_apply_apply, LinearMap.comp_apply]

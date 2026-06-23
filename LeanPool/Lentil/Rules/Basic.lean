@@ -71,9 +71,7 @@ theorem dual_lemma (p q : pred σ) : ¬ p =tla= ¬ q → (p) =tla= (q) := by
   unfold tlaNot; intro h; funext e; have := congrFun h e; aesop
 
 theorem pred_eq_iff_iff (p q : pred σ) : (p) =tla= (q) ↔ (p) |-tla- (q) ∧ (q) |-tla- (p) := by
-  tlaUnfoldSimp; constructor
-  · aesop
-  · intro h; funext e; aesop
+  tlaUnfoldSimp; exact ⟨by aesop, by intro h; funext e; aesop⟩
 
 section structural
 
@@ -130,9 +128,7 @@ theorem later_true :
   ((lhs)) =tla= (⊤) := by funext e; tlaUnfoldSimp'
 
 theorem always_intro : (|-tla- (p)) = (|-tla- (□ p)) := by
-  tlaUnfoldSimp; constructor
-  · aesop
-  · intro h; exact (fun e => h e 0)
+  tlaUnfoldSimp; exact ⟨by aesop, fun h e => h e 0⟩
 
 theorem later_always_comm : (◯ □ p) =tla= (□ ◯ p) := by
   funext e; tlaUnfoldSimp

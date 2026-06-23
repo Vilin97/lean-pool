@@ -18,12 +18,10 @@ open FirstOrder.Theory
 variable {C C' : Semiformula ℒₒᵣ ℕ 1 → Prop}
 
 lemma mem_indScheme_of_mem {φ : Semiformula ℒₒᵣ ℕ 1} (hp : C φ) :
-    succInd φ ∈ indScheme ℒₒᵣ C := by
-  exact ⟨φ, hp, rfl⟩
+    succInd φ ∈ indScheme ℒₒᵣ C := by exact ⟨φ, hp, rfl⟩
 
 lemma mem_iOpen_of_qfree {φ : Semiformula ℒₒᵣ ℕ 1} (hp : φ.Open) :
-    succInd φ ∈ indScheme ℒₒᵣ Semiformula.Open := by
-  exact ⟨φ, hp, rfl⟩
+    succInd φ ∈ indScheme ℒₒᵣ Semiformula.Open := by exact ⟨φ, hp, rfl⟩
 
 lemma indScheme_subset (h : ∀ {φ : Semiformula ℒₒᵣ ℕ 1}, C φ → C' φ) :
     indScheme ℒₒᵣ C ⊆ indScheme ℒₒᵣ C' := by

@@ -115,8 +115,7 @@ theorem sqrtTwoAddSeriesN_bounds (n k : ℕ) (hk : 3 ≤ k) :
     exact IsComputable.prop
   have hu : 2 + Real.sqrtTwoAddSeries 0 n ≤ (2 + x).snd := by
     change _ ≤ ((2 + _ : ℚ) : ℝ)
-    rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
-    rw [← ge_iff_le]
+    rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left, ← ge_iff_le]
     convert ComputableℝSeq.hub _ _
     symm
     exact IsComputable.prop

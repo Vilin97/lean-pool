@@ -61,42 +61,24 @@ theorem dirMask_isPartialPermMask (u v : V) : IsPartialPermMask (dirMask u v) :=
     -- At most one `j` satisfies `u_i = v_j`.
     refine (Finset.card_le_one.2 ?_)
     intro j₁ hj₁ j₂ hj₂
-    have hbit₁ : (dirMask u v).testBit (i.1 * 3 + j₁.1) = true := by
-      exact (Finset.mem_filter.1 hj₁).2
-    have hbit₂ : (dirMask u v).testBit (i.1 * 3 + j₂.1) = true := by
-      exact (Finset.mem_filter.1 hj₂).2
-    have hdec₁ : decide (u.1 i = v.1 j₁) = true := by
-      -- rewrite the bit using `dirMask_testBit`
-      exact (dirMask_testBit (u := u) (v := v) (i := i) (j := j₁)).symm.trans hbit₁
-    have hdec₂ : decide (u.1 i = v.1 j₂) = true := by
-      exact (dirMask_testBit (u := u) (v := v) (i := i) (j := j₂)).symm.trans hbit₂
-    have h₁ : u.1 i = v.1 j₁ := of_decide_eq_true hdec₁
-    have h₂ : u.1 i = v.1 j₂ := of_decide_eq_true hdec₂
-    -- Injectivity of `v` forces `j₁ = j₂`.
-    have : v.1 j₁ = v.1 j₂ := by
-      calc
-        v.1 j₁ = u.1 i := by simpa using h₁.symm
-        _ = v.1 j₂ := by simpa using h₂
-    exact v.2 this
+    have h₁ : u.1 i = v.1 j₁ := of_decide_eq_true <|
+      (dirMask_testBit (u := u) (v := v) (i := i) (j := j₁)).symm.trans
+        (Finset.mem_filter.1 hj₁).2
+    have h₂ : u.1 i = v.1 j₂ := of_decide_eq_true <|
+      (dirMask_testBit (u := u) (v := v) (i := i) (j := j₂)).symm.trans
+        (Finset.mem_filter.1 hj₂).2
+    exact v.2 (h₁.symm.trans h₂)
   · intro j
     -- At most one `i` satisfies `u_i = v_j`.
     refine (Finset.card_le_one.2 ?_)
     intro i₁ hi₁ i₂ hi₂
-    have hbit₁ : (dirMask u v).testBit (i₁.1 * 3 + j.1) = true := by
-      exact (Finset.mem_filter.1 hi₁).2
-    have hbit₂ : (dirMask u v).testBit (i₂.1 * 3 + j.1) = true := by
-      exact (Finset.mem_filter.1 hi₂).2
-    have hdec₁ : decide (u.1 i₁ = v.1 j) = true := by
-      exact (dirMask_testBit (u := u) (v := v) (i := i₁) (j := j)).symm.trans hbit₁
-    have hdec₂ : decide (u.1 i₂ = v.1 j) = true := by
-      exact (dirMask_testBit (u := u) (v := v) (i := i₂) (j := j)).symm.trans hbit₂
-    have h₁ : u.1 i₁ = v.1 j := of_decide_eq_true hdec₁
-    have h₂ : u.1 i₂ = v.1 j := of_decide_eq_true hdec₂
-    have : u.1 i₁ = u.1 i₂ := by
-      calc
-        u.1 i₁ = v.1 j := h₁
-        _ = u.1 i₂ := by simpa using h₂.symm
-    exact u.2 this
+    have h₁ : u.1 i₁ = v.1 j := of_decide_eq_true <|
+      (dirMask_testBit (u := u) (v := v) (i := i₁) (j := j)).symm.trans
+        (Finset.mem_filter.1 hi₁).2
+    have h₂ : u.1 i₂ = v.1 j := of_decide_eq_true <|
+      (dirMask_testBit (u := u) (v := v) (i := i₂) (j := j)).symm.trans
+        (Finset.mem_filter.1 hi₂).2
+    exact u.2 (h₁.trans h₂.symm)
 
 theorem exists_dirIdx_of_dirMask (u v : V) : ∃ d : DirIdx, maskAt d = dirMask u v := by
   have hm : dirMask u v < (1 <<< 9) := by
@@ -201,10 +183,8 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
           have := congrArg
             (fun t : Fin m ↪ SubMulAction.ofFixingSubgroup G baseSet => t i) hτ
           simpa [x, y, e, i, jf, Function.Embedding.trans_apply] using this
-        have : τ • w.1.1 j = w'.1.1 j := by
-          exact congrArg Subtype.val hτ_apply
         change τ • w.1.1 j = w'.1.1 j
-        exact this
+        exact congrArg Subtype.val hτ_apply
     | some i =>
         have hi : colMatch (maskAt k) j = some i := by simp [hcol]
         have hw : w.1.1 j = baseVertex.1 i := base_eq_of_colMatch (u := w) (j := j) (i := i) hi
@@ -229,11 +209,9 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
   let w : V := σ1 • v
   let w' : V := σ2 • v'
   have hw : dirMask baseVertex w = dirMask u v := by
-    have : dirMask (σ1 • u) (σ1 • v) = dirMask u v := dirMask_smul (σ := σ1) (u := u) (v := v)
-    simpa [w, hσ1] using this
+    simpa [w, hσ1] using dirMask_smul (σ := σ1) (u := u) (v := v)
   have hw' : dirMask baseVertex w' = dirMask u' v' := by
-    have : dirMask (σ2 • u') (σ2 • v') = dirMask u' v' := dirMask_smul (σ := σ2) (u := u') (v := v')
-    simpa [w', hσ2] using this
+    simpa [w', hσ2] using dirMask_smul (σ := σ2) (u := u') (v := v')
   have hbase : dirMask baseVertex w = dirMask baseVertex w' := by
     calc
       dirMask baseVertex w = dirMask u v := hw
@@ -256,14 +234,7 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
       _ = σ2.symm • (τ • (σ1 • u)) := by simp [mul_smul]
       _ = σ2.symm • (τ • baseVertex) := by simp [hσ1]
       _ = σ2.symm • baseVertex := by simp [hτbase]
-      _ = u' := by
-        have : σ2 • u' = baseVertex := hσ2
-        -- act by `σ2.symm` on both sides
-        have : u' = σ2.symm • baseVertex := by
-          rw [← this]
-          symm
-          exact inv_smul_smul σ2 u'
-        simpa using this.symm
+      _ = u' := by rw [← hσ2]; exact inv_smul_smul σ2 u'
   · -- on `v`
     have hτw' : τ • w = w' := by
       simpa [wOrb, w'Orb, w, w'] using hτw
@@ -280,8 +251,7 @@ theorem corrAvg_eq_of_dirMask_eq (f : Coloring n) {u v u' v' : V}
     (h : dirMask u v = dirMask u' v') : corrAvg f u v = corrAvg f u' v' := by
   classical
   rcases exists_perm_of_dirMask_eq (u := u) (v := v) (u' := u') (v' := v') h with ⟨σ, hu, hv⟩
-  have hInv := (corrAvg_smul (f := f) (τ := σ) (u := u) (v := v))
-  simpa [hu, hv] using hInv.symm
+  simpa [hu, hv] using (corrAvg_smul (f := f) (τ := σ) (u := u) (v := v)).symm
 
 end N1000000Transitivity
 
