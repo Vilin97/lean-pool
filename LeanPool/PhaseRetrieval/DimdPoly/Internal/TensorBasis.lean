@@ -78,9 +78,7 @@ theorem projFinset_idempotent
     projFinset E (projFinset E F) = projFinset E F := by
   let _ := hd
   ext alpha
-  by_cases h : alpha ∈ E
-  · simp [projFinset, h]
-  · simp [projFinset, h]
+  by_cases h : alpha ∈ E <;> simp [projFinset, h]
 
 theorem exact_truncate_coeff_energy
     {d : Nat} (hd : 0 < d) {kappa : MultiIndex d}
@@ -154,10 +152,7 @@ private theorem phi1D_eq_oneDimPhi
 private theorem Phi_eq_PhiKappaAlpha
     {d : Nat} (kappa alpha : MultiIndex d) (z : Cd d) :
     Phi kappa alpha z = Hermite1DimdLEAN.PhiKappaAlpha kappa alpha z := by
-  unfold Phi Hermite1DimdLEAN.PhiKappaAlpha
-  refine Finset.prod_congr rfl ?_
-  intro q hq
-  exact phi1D_eq_oneDimPhi (kappa q) (alpha q) (z q)
+  simp [Phi, Hermite1DimdLEAN.PhiKappaAlpha, phi1D_eq_oneDimPhi]
 
 private lemma oneDimPhi_phaseLaw
     (k n : Nat) (t : ℝ) (z : ℂ) :
@@ -694,11 +689,9 @@ theorem integrable_evalPkappa_sq
 theorem memLp_two_evalPkappa
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     MeasureTheory.MemLp (evalPkappa kappa F) 2 (gammaD d) := by
-  have hmeas :
-      MeasureTheory.AEStronglyMeasurable (evalPkappa kappa F) (gammaD d) :=
-    (continuous_evalPkappa kappa F).stronglyMeasurable.aestronglyMeasurable
   exact
-    (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2
+    (MeasureTheory.memLp_two_iff_integrable_sq_norm
+      (continuous_evalPkappa kappa F).stronglyMeasurable.aestronglyMeasurable).2
       (integrable_evalPkappa_sq hd kappa F)
 
 theorem evalPkappaL2_eq_toLp
@@ -1052,12 +1045,12 @@ private lemma phi1D_norm_le_majorant
     have hratio := factorial_ratio_le_pow_succ hjn hjk
     have hz1 : ‖z‖ ^ (n - j) ≤ R ^ n := by
       calc
-        ‖z‖ ^ (n - j) ≤ R ^ (n - j) := by exact pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ n := by exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
+        ‖z‖ ^ (n - j) ≤ R ^ (n - j) := pow_le_pow_left₀ (norm_nonneg _) hz _
+        _ ≤ R ^ n := pow_le_pow_right₀ hR (Nat.sub_le _ _)
     have hz2 : ‖z‖ ^ (k - j) ≤ R ^ k := by
       calc
-        ‖z‖ ^ (k - j) ≤ R ^ (k - j) := by exact pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ k := by exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
+        ‖z‖ ^ (k - j) ≤ R ^ (k - j) := pow_le_pow_left₀ (norm_nonneg _) hz _
+        _ ≤ R ^ k := pow_le_pow_right₀ hR (Nat.sub_le _ _)
     calc
       ‖term j‖ =
           (Nat.choose k j : ℝ) *
@@ -1456,9 +1449,8 @@ theorem toL2_eq_of_toFun_eq
     (h : ∀ z, toFun kappa U z = toFun kappa V z) :
     toL2 kappa U = toL2 kappa V := by
   let _ := hd
-  have hfun : toFun kappa U = toFun kappa V := funext h
   unfold toL2
-  rw [hfun]
+  rw [funext h]
 
 theorem skappa_ext_of_coeff_eq
     {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
@@ -1468,8 +1460,7 @@ theorem skappa_ext_of_coeff_eq
   cases V
   simp only [coeffSkappa] at hcoeff
   congr
-  funext alpha
-  exact hcoeff alpha
+  exact funext hcoeff
 
 theorem continuous_toFun
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa) :
@@ -1501,6 +1492,6 @@ theorem skappa_ext_of_toFun_eq
     coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := by
       exact coeff_recovery hd kappa U beta
     _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa V) := by rw [toL2_eq_of_toFun_eq hd h]
-    _ = coeffSkappa V beta := by exact (coeff_recovery hd kappa V beta).symm
+    _ = coeffSkappa V beta := (coeff_recovery hd kappa V beta).symm
 
 end DimdPolyLEAN
