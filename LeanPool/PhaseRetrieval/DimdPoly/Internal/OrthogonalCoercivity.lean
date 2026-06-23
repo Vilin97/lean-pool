@@ -336,10 +336,8 @@ private theorem memLp_two_evalPkappa_wip
     (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     MeasureTheory.MemLp (evalPkappa kappa F) 2 (gammaD d) := by
   let _ := hd
-  have hmeas :
-      AEStronglyMeasurable (evalPkappa kappa F) (gammaD d) :=
-    (continuous_evalPkappa_wip kappa F).stronglyMeasurable.aestronglyMeasurable
-  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2 ?_
+  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm
+    (continuous_evalPkappa_wip kappa F).stronglyMeasurable.aestronglyMeasurable).2 ?_
   simpa [pow_two, norm_mul] using (integrable_evalPkappa_cross_wip kappa F F).norm
 
 private theorem evalPkappa_lpNorm_eq_norm_wip
@@ -377,10 +375,8 @@ private theorem memLp_two_defectFunctionPkappa_wip
     (hd : 0 < d) (kappa : MultiIndex d) (F G : Pkappa d kappa) :
     MeasureTheory.MemLp (defectFunctionPkappa_wip kappa F G) 2 (gammaD d) := by
   let _ := hd
-  have hmeas :
-      AEStronglyMeasurable (defectFunctionPkappa_wip kappa F G) (gammaD d) :=
-    (continuous_defectFunctionPkappa_wip kappa F G).stronglyMeasurable.aestronglyMeasurable
-  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm hmeas).2 ?_
+  refine (MeasureTheory.memLp_two_iff_integrable_sq_norm
+    (continuous_defectFunctionPkappa_wip kappa F G).stronglyMeasurable.aestronglyMeasurable).2 ?_
   have hplus_int :
       Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa (F + G) z‖ ^ 2) (gammaD d) := by
     simpa [pow_two, norm_mul] using
@@ -540,8 +536,8 @@ theorem orthogonal_coercivity
     exact mul_nonneg (le_of_lt hC_F_perp_pos) (defect_nonneg_wip hd F 0)
   · let t : ℝ := ‖G‖
     let H : Pk := (((t : ℂ)⁻¹) : ℂ) • G
-    have ht_ne : t ≠ 0 := by exact norm_ne_zero_of_ne_zero_pkappa_wip hd hG
-    have ht_pos : 0 < t := by exact lt_of_le_of_ne (norm_nonneg_pkappa_wip hd G) ht_ne.symm
+    have ht_ne : t ≠ 0 := norm_ne_zero_of_ne_zero_pkappa_wip hd hG
+    have ht_pos : 0 < t := lt_of_le_of_ne (norm_nonneg_pkappa_wip hd G) ht_ne.symm
     have hH_orth : OrthogonalToPk kappa F H := by
       simpa [OrthogonalToPk, H] using
         orthogonalToPk_smul_right_wip hd F G (((t : ℂ)⁻¹) : ℂ) horth

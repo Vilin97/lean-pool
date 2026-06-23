@@ -237,10 +237,7 @@ private theorem phi1D_eq_oneDimPhi_wip
 private theorem Phi_eq_PhiKappaAlpha_wip
     {d : Nat} (kappa alpha : MultiIndex d) (z : Cd d) :
     Phi kappa alpha z = Hermite1DimdLEAN.PhiKappaAlpha kappa alpha z := by
-  unfold Phi Hermite1DimdLEAN.PhiKappaAlpha
-  refine Finset.prod_congr rfl ?_
-  intro q hq
-  exact phi1D_eq_oneDimPhi_wip (kappa q) (alpha q) (z q)
+  simp [Phi, Hermite1DimdLEAN.PhiKappaAlpha, phi1D_eq_oneDimPhi_wip]
 
 private theorem evalPkappa_eq_evalHermiteSum_wip
     {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) :
@@ -390,17 +387,13 @@ private theorem truncate_ofPkappa_apply_wip
         (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by
     rfl
   rw [hsum]
-  by_cases h : alpha ∈ E
-  · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
-  · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
+  by_cases h : alpha ∈ E <;> simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
 
 private theorem farPart_apply_wip
     {d : Nat} (kappa : MultiIndex d) (E : Finset (Idx d))
     (H : Pkappa d kappa) (alpha : Idx d) :
     (H - truncateFinset E (ofPkappa kappa H)) alpha = if alpha ∈ E then 0 else H alpha := by
-  by_cases h : alpha ∈ E
-  · simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
-  · simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
+  by_cases h : alpha ∈ E <;> simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
 
 private theorem norm_sq_eq_sum_wip
     {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) :

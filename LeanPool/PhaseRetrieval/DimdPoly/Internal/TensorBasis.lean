@@ -94,9 +94,7 @@ theorem exact_truncate_coeff_energy
           (∑ beta ∈ E, Finsupp.single beta (coeffSkappa F beta)) alpha := by
       rfl
     rw [hsum]
-    by_cases h : alpha ∈ E
-    · simp [h, Finsupp.single_apply]
-    · simp [h, Finsupp.single_apply]
+    by_cases h : alpha ∈ E <;> simp [h, Finsupp.single_apply]
   have hsupp : (truncateFinset E F).support ⊆ E := by
     intro alpha halpha
     by_contra hnot

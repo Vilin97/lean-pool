@@ -1052,9 +1052,7 @@ private lemma localizationLeakageCoefficient_tendsto_zero
         else 0) := by
     apply tsum_congr
     intro r
-    by_cases hr : M + 1 ≤ r
-    · simp [hr]
-    · simp [hr]
+    by_cases hr : M + 1 ≤ r <;> simp [hr]
   rw [hterm, tsum_mul_left]
 
 private lemma shell_sum_localizationLeakageCoefficient_bound
