@@ -23,8 +23,7 @@ open Relation
 section «lp_section_1»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.Frame.RelReflTransGen :
-    _root_.Rel F.World F.World :=
+abbrev _root_.LO.Modal.Kripke.Frame.RelReflTransGen : _root_.Rel F.World F.World :=
   ReflTransGen (· ≺ ·)
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:45 " ≺^* " => Frame.RelReflTransGen
@@ -74,8 +73,7 @@ end «lp_section_1»
 section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.Frame.RelTransGen {F : Frame} :
-    _root_.Rel F.World F.World :=
+abbrev _root_.LO.Modal.Kripke.Frame.RelTransGen {F : Frame} : _root_.Rel F.World F.World :=
   TransGen (· ≺ ·)
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:45 " ≺^+ " => Frame.RelTransGen
@@ -124,8 +122,7 @@ end «lp_section_2»
 section «lp_section_3»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev _root_.LO.Modal.Kripke.Frame.RelReflGen :
-    _root_.Rel F.World F.World :=
+protected abbrev _root_.LO.Modal.Kripke.Frame.RelReflGen : _root_.Rel F.World F.World :=
   ReflGen (· ≺ ·)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped infix:45 " ≺^= " => Frame.RelReflGen
@@ -143,8 +140,7 @@ end «lp_section_3»
 section «lp_section_4»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev _root_.LO.Modal.Kripke.Frame.RelIrreflGen :
-    _root_.Rel F.World F.World :=
+protected abbrev _root_.LO.Modal.Kripke.Frame.RelIrreflGen : _root_.Rel F.World F.World :=
   IrreflGen (· ≺ ·)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped infix:45 " ≺^≠ " => Frame.RelIrreflGen
@@ -152,8 +148,7 @@ scoped infix:45 " ≺^≠ " => Frame.RelIrreflGen
 namespace Frame
 namespace RelIrreflGen
 
-@[simp] lemma rel_irreflexive :
-    Std.Irrefl F.RelIrreflGen := by exact ⟨fun x h => h.1 rfl⟩
+@[simp] lemma rel_irreflexive : Std.Irrefl F.RelIrreflGen := by exact ⟨fun x h => h.1 rfl⟩
 
 end RelIrreflGen
 end Frame
@@ -169,8 +164,7 @@ postfix:95 "^≠" => Frame.IrreflexiveClosure
 namespace Frame
 namespace IrreflexiveClosure
 
-lemma rel_irreflexive :
-    Std.Irrefl (F^≠.Rel) := by exact ⟨fun x h => h.1 rfl⟩
+lemma rel_irreflexive : Std.Irrefl (F^≠.Rel) := by exact ⟨fun x h => h.1 rfl⟩
 
 end IrreflexiveClosure
 end Frame

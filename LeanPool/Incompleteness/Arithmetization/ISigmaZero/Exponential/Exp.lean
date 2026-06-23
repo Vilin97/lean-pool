@@ -314,8 +314,6 @@ lemma le_sq_ext_of_seq₀_of_seqₛ {y X Y : V} (h₀ : Exponential.Seq₀ X Y) 
         have : √i ≤ ext i Y := le_trans (le_mul_of_pos_left <| by simp) this
         simpa [ppi.sq_sqrt_eq ne2] using sq_le_sq.mpr this
 
-example {a b c : ℕ} : a * (b * c) = b * (a * c) := by exact Nat.mul_left_comm a b c
-
 lemma two_mul_ext_le_of_seq₀_of_seqₛ {y X Y : V} (h₀ : Exponential.Seq₀ X Y) (hₛ :
     Exponential.Seqₛ y X Y)
     {i} (ne2 : i ≠ 2) (hi : i ≤ y ^ 2) (ppi : PPow2 i) : 2 * ext i Y ≤ i := by

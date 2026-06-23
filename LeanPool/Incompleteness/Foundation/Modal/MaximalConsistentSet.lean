@@ -56,8 +56,7 @@ lemma union_consistent : Consistent 𝓢 (T₁ ∪ T₂) → (Consistent 𝓢 T�
 variable [Entailment.Classical 𝓢]
 
 lemma emptyset_consistent [H_consis : Entailment.Consistent 𝓢] :
-    Consistent 𝓢 ∅ := by
-  classical
+    Consistent 𝓢 ∅ := by classical
   obtain ⟨f, hf⟩ := H_consis.exists_unprovable;
   apply def_consistent.mpr;
   intro Γ hΓ; by_contra hC;
@@ -68,27 +67,22 @@ lemma emptyset_consistent [H_consis : Entailment.Consistent 𝓢] :
 variable [DecidableEq α]
 
 omit [DecidableEq α] in
-lemma not_mem_of_mem_neg (T_consis : Consistent 𝓢 T) (h : ∼φ ∈ T) : φ ∉ T := by
-  classical
+lemma not_mem_of_mem_neg (T_consis : Consistent 𝓢 T) (h : ∼φ ∈ T) : φ ∉ T := by classical
   by_contra hC;
   have : [φ, ∼φ] ⊬[𝓢] ⊥ := (def_consistent.mp T_consis) [φ, ∼φ] (by simp_all);
-  have : [φ, ∼φ] ⊢[𝓢]! ⊥ :=
-    Entailment.botOfMemEither! (φ := φ) (Γ := [φ, ∼φ]) (by simp) (by simp);
+  have : [φ, ∼φ] ⊢[𝓢]! ⊥ := Entailment.botOfMemEither! (φ := φ) (Γ := [φ, ∼φ]) (by simp) (by simp);
   contradiction;
 
 omit [DecidableEq α] in
-lemma not_mem_neg_of_mem (T_consis : Consistent 𝓢 T) (h : φ ∈ T) : ∼φ ∉ T := by
-  classical
+lemma not_mem_neg_of_mem (T_consis : Consistent 𝓢 T) (h : φ ∈ T) : ∼φ ∉ T := by classical
   by_contra hC;
   have : [φ, ∼φ] ⊬[𝓢] ⊥ := (def_consistent.mp T_consis) [φ, ∼φ] (by simp_all);
-  have : [φ, ∼φ] ⊢[𝓢]! ⊥ :=
-    Entailment.botOfMemEither! (φ := φ) (Γ := [φ, ∼φ]) (by simp) (by simp);
+  have : [φ, ∼φ] ⊢[𝓢]! ⊥ := Entailment.botOfMemEither! (φ := φ) (Γ := [φ, ∼φ]) (by simp) (by simp);
   contradiction;
 
 omit [DecidableEq α] in
 lemma iff_insert_consistent : Consistent 𝓢 (insert φ T) ↔ ∀ {Γ :
-    List (Formula α)}, (∀ ψ ∈ Γ, ψ ∈ T) → 𝓢 ⊬ φ ⋏ ⋀Γ ==> ⊥ := by
-      classical
+    List (Formula α)}, (∀ ψ ∈ Γ, ψ ∈ T) → 𝓢 ⊬ φ ⋏ ⋀Γ ==> ⊥ := by classical
   constructor;
   · intro h Γ hΓ;
     by_contra hC;
@@ -122,8 +116,7 @@ lemma iff_insert_consistent : Consistent 𝓢 (insert φ T) ↔ ∀ {Γ :
 
 omit [DecidableEq α] in
 lemma iff_insert_inconsistent :
-    Inconsistent 𝓢 (insert φ T) ↔ ∃ Γ, (∀ φ ∈ Γ, φ ∈ T) ∧ 𝓢 ⊢! φ ⋏ ⋀Γ ==> ⊥ := by
-      classical
+    Inconsistent 𝓢 (insert φ T) ↔ ∃ Γ, (∀ φ ∈ Γ, φ ∈ T) ∧ 𝓢 ⊢! φ ⋏ ⋀Γ ==> ⊥ := by classical
   unfold Inconsistent;
   apply not_iff_not.mp;
   push Not;
@@ -152,13 +145,11 @@ lemma provable_iff_insert_neg_not_consistent : Inconsistent 𝓢 (insert (∼φ)
       exact negEquiv'!.mp <| dni'! hΓ₂;
 
 omit [DecidableEq α] in
-lemma unprovable_iff_insert_neg_consistent : Consistent 𝓢 (insert (∼φ) T) ↔ T *⊬[𝓢] φ:= by
-  classical
+lemma unprovable_iff_insert_neg_consistent : Consistent 𝓢 (insert (∼φ) T) ↔ T *⊬[𝓢] φ:= by classical
   simpa [not_not] using provable_iff_insert_neg_not_consistent.not;
 
 omit [DecidableEq α] in
-lemma unprovable_iff_singleton_neg_consistent : Consistent 𝓢 {∼φ} ↔ 𝓢 ⊬ φ:= by
-  classical
+lemma unprovable_iff_singleton_neg_consistent : Consistent 𝓢 {∼φ} ↔ 𝓢 ⊬ φ:= by classical
   have e : insert (∼φ) ∅ = ({∼φ} : FormulaSet α) := by aesop;
   have h₂ : Consistent 𝓢 (insert (∼φ) ∅) ↔ ∅ *⊬[𝓢] φ := unprovable_iff_insert_neg_consistent;
   rw [e] at h₂;
@@ -193,8 +184,7 @@ lemma neg_unprovable_iff_insert_consistent : Consistent 𝓢 (insert (φ) T) ↔
   simpa [not_not] using neg_provable_iff_insert_not_consistent.not;
 
 omit [DecidableEq α] in
-lemma unprovable_iff_singleton_consistent : Consistent 𝓢 {φ} ↔ 𝓢 ⊬ ∼φ := by
-  classical
+lemma unprovable_iff_singleton_consistent : Consistent 𝓢 {φ} ↔ 𝓢 ⊬ ∼φ := by classical
   have e : insert (φ) ∅ = ({φ} : FormulaSet α) := by aesop;
   have h₂ := neg_unprovable_iff_insert_consistent (𝓢 := 𝓢) (T := ∅) (φ := φ);
   rw [e] at h₂;
@@ -202,16 +192,14 @@ lemma unprovable_iff_singleton_consistent : Consistent 𝓢 {φ} ↔ 𝓢 ⊬ �
   exact Context.provable_iff_provable.not;
 
 omit [DecidableEq α] in
-lemma unprovable_either (T_consis : Consistent 𝓢 T) : ¬(T *⊢[𝓢]! φ ∧ T *⊢[𝓢]! ∼φ) := by
-  classical
+lemma unprovable_either (T_consis : Consistent 𝓢 T) : ¬(T *⊢[𝓢]! φ ∧ T *⊢[𝓢]! ∼φ) := by classical
   by_contra hC;
   have ⟨hC₁, hC₂⟩ := hC;
   have := negMdp! hC₂ hC₁;
   contradiction;
 
 omit [DecidableEq α] in
-lemma not_mem_falsum_of_consistent (T_consis : Consistent 𝓢 T) : ⊥ ∉ T := by
-  classical
+lemma not_mem_falsum_of_consistent (T_consis : Consistent 𝓢 T) : ⊥ ∉ T := by classical
   by_contra hC;
   have : 𝓢 ⊬ ⊥ ==> ⊥ := (def_consistent.mp T_consis) [⊥] (by simpa);
   have : 𝓢 ⊢! ⊥ ==> ⊥ := efq!;
@@ -220,8 +208,7 @@ lemma not_mem_falsum_of_consistent (T_consis : Consistent 𝓢 T) : ⊥ ∉ T :=
 omit [DecidableEq α] in
 lemma not_singleton_consistent [Entailment.Necessitation 𝓢] (T_consis : Consistent 𝓢 T) (h :
     ∼□φ ∈ T) :
-    Consistent 𝓢 {∼φ} := by
-      classical
+    Consistent 𝓢 {∼φ} := by classical
   apply def_consistent.mpr;
   intro Γ hΓ;
   simp only [Set.mem_singleton_iff] at hΓ;
@@ -233,8 +220,7 @@ lemma not_singleton_consistent [Entailment.Necessitation 𝓢] (T_consis : Consi
 
 omit [DecidableEq α] in
 lemma either_consistent (T_consis : Consistent 𝓢 T) (φ) :
-    Consistent 𝓢 (insert φ T) ∨ Consistent 𝓢 (insert (∼φ) T) := by
-      classical
+    Consistent 𝓢 (insert φ T) ∨ Consistent 𝓢 (insert (∼φ) T) := by classical
   by_contra hC;
   push Not at hC;
   obtain ⟨hC₁, hC₂⟩ := hC
@@ -257,8 +243,7 @@ omit [DecidableEq α] in
 open Classical in
 lemma intro_union_consistent
   (h : ∀ {Γ₁ Γ₂ : List (Formula α)}, (∀ φ ∈ Γ₁, φ ∈ T₁) ∧ (∀ φ ∈ Γ₂, φ ∈ T₂) → 𝓢 ⊬ ⋀Γ₁ ⋏ ⋀Γ₂ ==> ⊥)
-  : Consistent 𝓢 (T₁ ∪ T₂) := by
-    classical
+  : Consistent 𝓢 (T₁ ∪ T₂) := by classical
   apply def_consistent.mpr;
   intro Δ hΔ;
   let Δ₁ := (Δ.filter (· ∈ T₁));
@@ -282,8 +267,7 @@ open Classical in
 lemma intro_triunion_consistent
   (h : ∀ {Γ₁ Γ₂ Γ₃ : List (Formula α)}, (∀ φ ∈ Γ₁, φ ∈ T₁) ∧ (∀ φ ∈ Γ₂, φ ∈ T₂) ∧
     (∀ φ ∈ Γ₃, φ ∈ T₃) → 𝓢 ⊬ ⋀Γ₁ ⋏ ⋀Γ₂ ⋏ ⋀Γ₃ ==> ⊥)
-  : Consistent 𝓢 (T₁ ∪ T₂ ∪ T₃) := by
-    classical
+  : Consistent 𝓢 (T₁ ∪ T₂ ∪ T₃) := by classical
   apply intro_union_consistent;
   rintro Γ₁₂ Γ₃ ⟨h₁₂, h₃⟩;
   simp only [Set.mem_union] at h₁₂;
@@ -314,8 +298,7 @@ lemma intro_triunion_consistent
 omit [DecidableEq α] in
 omit [Entailment.Classical 𝓢] in
 lemma exists_consistent_maximal_of_consistent (T_consis : Consistent 𝓢 T)
-  : ∃ Z, Consistent 𝓢 Z ∧ T ⊆ Z ∧ ∀ U, U *⊬[𝓢] ⊥ → Z ⊆ U → U = Z := by
-    classical
+  : ∃ Z, Consistent 𝓢 Z ∧ T ⊆ Z ∧ ∀ U, U *⊬[𝓢] ⊥ → Z ⊆ U → U = Z := by classical
   obtain ⟨Z, h₁, ⟨h₂, h₃⟩⟩ := zorn_subset_nonempty { T : FormulaSet α | Consistent 𝓢 T} (by
     intro c hc chain hnc;
     existsi (⋃₀ c);
@@ -384,8 +367,7 @@ variable [DecidableEq α]
 
 omit [DecidableEq α] in
 lemma exists_of_consistent (consisT : Consistent 𝓢 T) : ∃ Ω :
-    MaximalConsistentSet 𝓢, (T ⊆ Ω.1) := by
-      classical
+    MaximalConsistentSet 𝓢, (T ⊆ Ω.1) := by classical
   have ⟨Ω, hΩ₁, hΩ₂, hΩ₃⟩ := FormulaSet.lindenbaum consisT;
   use ⟨Ω, ?_, ?_⟩;
   · assumption;
@@ -407,8 +389,7 @@ instance [Entailment.Consistent 𝓢] :
   ⟨lindenbaum emptyset_consistent |>.choose⟩
 
 omit [DecidableEq α] in
-lemma either_mem (Ω : MaximalConsistentSet 𝓢) (φ) : φ ∈ Ω ∨ ∼φ ∈ Ω := by
-  classical
+lemma either_mem (Ω : MaximalConsistentSet 𝓢) (φ) : φ ∈ Ω ∨ ∼φ ∈ Ω := by classical
   by_contra hC;
   push Not at hC;
   rcases either_consistent (𝓢 := 𝓢) (Ω.consistent) φ;
@@ -416,8 +397,7 @@ lemma either_mem (Ω : MaximalConsistentSet 𝓢) (φ) : φ ∈ Ω ∨ ∼φ ∈
   · have := Ω.maximal (Set.ssubset_insert hC.2); contradiction;
 
 omit [DecidableEq α] in
-lemma membership_iff : (φ ∈ Ω) ↔ (Ω.1 *⊢[𝓢]! φ) := by
-  classical
+lemma membership_iff : (φ ∈ Ω) ↔ (Ω.1 *⊢[𝓢]! φ) := by classical
   constructor;
   · intro h; exact Context.by_axm! h;
   · intro hp;
@@ -430,21 +410,18 @@ lemma membership_iff : (φ ∈ Ω) ↔ (Ω.1 *⊢[𝓢]! φ) := by
 
 omit [DecidableEq α] in
 @[simp]
-lemma not_mem_falsum : ⊥ ∉ Ω := by
-  classical
+lemma not_mem_falsum : ⊥ ∉ Ω := by classical
   exact not_mem_falsum_of_consistent Ω.consistent
 
 omit [DecidableEq α] in
 @[simp]
-lemma mem_verum : ⊤ ∈ Ω := by
-  classical
+lemma mem_verum : ⊤ ∈ Ω := by classical
   apply membership_iff.mpr
   apply verum!
 
 omit [DecidableEq α] in
 @[simp]
-lemma iff_mem_neg : (∼φ ∈ Ω) ↔ (φ ∉ Ω) := by
-  classical
+lemma iff_mem_neg : (∼φ ∈ Ω) ↔ (φ ∉ Ω) := by classical
   constructor;
   · intro hnp;
     by_contra hp;
@@ -466,14 +443,12 @@ lemma iff_mem_neg : (∼φ ∈ Ω) ↔ (φ ∉ Ω) := by
 
 omit [DecidableEq α] in
 @[simp 1100]
-lemma iff_mem_negneg : (∼∼φ ∈ Ω) ↔ (φ ∈ Ω) := by
-  classical
+lemma iff_mem_negneg : (∼∼φ ∈ Ω) ↔ (φ ∈ Ω) := by classical
   simp
 
 omit [DecidableEq α] in
 @[simp]
-lemma iff_mem_imp : ((φ ==> ψ) ∈ Ω) ↔ (φ ∈ Ω) → (ψ ∈ Ω) := by
-  classical
+lemma iff_mem_imp : ((φ ==> ψ) ∈ Ω) ↔ (φ ∈ Ω) → (ψ ∈ Ω) := by classical
   constructor;
   · intro hpq hp;
     replace dpq := membership_iff.mp hpq;
@@ -491,14 +466,12 @@ lemma iff_mem_imp : ((φ ==> ψ) ∈ Ω) ↔ (φ ∈ Ω) → (ψ ∈ Ω) := by
       exact imply₁! ⨀ (membership_iff.mp h)
 
 omit [DecidableEq α] in
-lemma mdp (hφψ : φ ==> ψ ∈ Ω) (hψ : φ ∈ Ω) : ψ ∈ Ω := by
-  classical
+lemma mdp (hφψ : φ ==> ψ ∈ Ω) (hψ : φ ∈ Ω) : ψ ∈ Ω := by classical
   exact iff_mem_imp.mp hφψ hψ
 
 omit [DecidableEq α] in
 @[simp]
-lemma iff_mem_and : ((φ ⋏ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∧ (ψ ∈ Ω) := by
-  classical
+lemma iff_mem_and : ((φ ⋏ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∧ (ψ ∈ Ω) := by classical
   constructor;
   · intro hpq;
     replace hpq := membership_iff.mp hpq;
@@ -511,8 +484,7 @@ lemma iff_mem_and : ((φ ⋏ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∧ (ψ ∈ Ω) := by
 
 omit [DecidableEq α] in
 @[simp]
-lemma iff_mem_or : ((φ ⋎ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∨ (ψ ∈ Ω) := by
-  classical
+lemma iff_mem_or : ((φ ⋎ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∨ (ψ ∈ Ω) := by classical
   constructor;
   · intro hpq;
     replace hpq := membership_iff.mp hpq;
@@ -531,8 +503,7 @@ lemma iff_mem_or : ((φ ⋎ ψ) ∈ Ω) ↔ (φ ∈ Ω) ∨ (ψ ∈ Ω) := by
       exact or₂'! (membership_iff.mp hq);
 
 omit [DecidableEq α] in
-lemma iff_congr : (Ω.1 *⊢[𝓢]! (φ <=> ψ)) → ((φ ∈ Ω) ↔ (ψ ∈ Ω)) := by
-  classical
+lemma iff_congr : (Ω.1 *⊢[𝓢]! (φ <=> ψ)) → ((φ ∈ Ω) ↔ (ψ ∈ Ω)) := by classical
   intro hpq;
   constructor;
   · intro hp; exact iff_mem_imp.mp (membership_iff.mpr <| and₁'! hpq) hp;
@@ -540,8 +511,7 @@ lemma iff_congr : (Ω.1 *⊢[𝓢]! (φ <=> ψ)) → ((φ ∈ Ω) ↔ (ψ ∈ Ω
 
 
 omit [DecidableEq α] in
-lemma intro_equality {h : ∀ φ, φ ∈ Ω₁.1 → φ ∈ Ω₂.1} : Ω₁ = Ω₂ := by
-  classical
+lemma intro_equality {h : ∀ φ, φ ∈ Ω₁.1 → φ ∈ Ω₂.1} : Ω₁ = Ω₂ := by classical
   exact equality_def.mpr <| Set.eq_of_subset_of_subset
     (by intro φ hp; exact h φ hp)
     (by
@@ -554,8 +524,7 @@ lemma intro_equality {h : ∀ φ, φ ∈ Ω₁.1 → φ ∈ Ω₂.1} : Ω₁ = �
     )
 
 omit [DecidableEq α] in
-lemma neg_imp (h : ψ ∈ Ω₂ → φ ∈ Ω₁) : (∼φ ∈ Ω₁) → (∼ψ ∈ Ω₂) := by
-  classical
+lemma neg_imp (h : ψ ∈ Ω₂ → φ ∈ Ω₁) : (∼φ ∈ Ω₁) → (∼ψ ∈ Ω₂) := by classical
   contrapose;
   intro nhnψ hnφ;
   have : φ ∈ Ω₁ := h <| iff_mem_negneg.mp <| iff_mem_neg.mpr nhnψ;
@@ -563,14 +532,12 @@ lemma neg_imp (h : ψ ∈ Ω₂ → φ ∈ Ω₁) : (∼φ ∈ Ω₁) → (∼ψ
   simpa;
 
 omit [DecidableEq α] in
-lemma neg_iff (h : φ ∈ Ω₁ ↔ ψ ∈ Ω₂) : (∼φ ∈ Ω₁) ↔ (∼ψ ∈ Ω₂) := by
-  classical
+lemma neg_iff (h : φ ∈ Ω₁ ↔ ψ ∈ Ω₂) : (∼φ ∈ Ω₁) ↔ (∼ψ ∈ Ω₂) := by classical
   exact ⟨neg_imp <| h.mpr, neg_imp <| h.mp⟩
 
 omit [DecidableEq α] in
 lemma iff_mem_conj :
-    (⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, φ ∈ Ω) := by
-      classical
+    (⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, φ ∈ Ω) := by classical
   simp [membership_iff, iff_provable_list_conj];
 
 end «lp_section_classical»
@@ -581,8 +548,7 @@ variable [Entailment.K 𝓢]
 
 omit [DecidableEq α] in
 lemma iff_mem_multibox : (□^[n]φ ∈ Ω) ↔ (∀ {Ω' :
-    MaximalConsistentSet 𝓢}, (□''⁻¹^[n]Ω.1 ⊆ Ω'.1) → (φ ∈ Ω')) := by
-      classical
+    MaximalConsistentSet 𝓢}, (□''⁻¹^[n]Ω.1 ⊆ Ω'.1) → (φ ∈ Ω')) := by classical
   constructor;
   · intro hp Ω' hΩ'; apply hΩ'; simpa;
   · contrapose;
@@ -620,8 +586,7 @@ lemma iff_mem_box : (□φ ∈ Ω) ↔ (∀ {Ω' :
 
 
 omit [DecidableEq α] in
-lemma multibox_dn_iff : (□^[n](∼∼φ) ∈ Ω) ↔ (□^[n]φ ∈ Ω) := by
-  classical
+lemma multibox_dn_iff : (□^[n](∼∼φ) ∈ Ω) ↔ (□^[n]φ ∈ Ω) := by classical
   simp only [iff_mem_multibox];
   constructor;
   · intro h Ω hΩ;
@@ -630,14 +595,12 @@ lemma multibox_dn_iff : (□^[n](∼∼φ) ∈ Ω) ↔ (□^[n]φ ∈ Ω) := by
     exact iff_mem_negneg.mpr <| h hΩ;
 
 omit [DecidableEq α] in
-lemma box_dn_iff : (□(∼∼φ) ∈ Ω) ↔ (□φ ∈ Ω) := by
-  classical
+lemma box_dn_iff : (□(∼∼φ) ∈ Ω) ↔ (□φ ∈ Ω) := by classical
   exact multibox_dn_iff (n := 1)
 
 
 omit [DecidableEq α] in
-lemma mem_multibox_dual : □^[n]φ ∈ Ω ↔ ∼(◇^[n](∼φ)) ∈ Ω := by
-  classical
+lemma mem_multibox_dual : □^[n]φ ∈ Ω ↔ ∼(◇^[n](∼φ)) ∈ Ω := by classical
   simp only [membership_iff];
   constructor;
   · intro h;
@@ -650,13 +613,11 @@ lemma mem_multibox_dual : □^[n]φ ∈ Ω ↔ ∼(◇^[n](∼φ)) ∈ Ω := by
       imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multibox_duality!)⟩;
 
 omit [DecidableEq α] in
-lemma mem_box_dual : □φ ∈ Ω ↔ (∼(◇(∼φ)) ∈ Ω) := by
-  classical
+lemma mem_box_dual : □φ ∈ Ω ↔ (∼(◇(∼φ)) ∈ Ω) := by classical
   exact mem_multibox_dual (n := 1)
 
 omit [DecidableEq α] in
-lemma mem_multidia_dual : ◇^[n]φ ∈ Ω ↔ ∼(□^[n](∼φ)) ∈ Ω := by
-  classical
+lemma mem_multidia_dual : ◇^[n]φ ∈ Ω ↔ ∼(□^[n](∼φ)) ∈ Ω := by classical
   simp only [membership_iff];
   constructor;
   · intro h;
@@ -668,14 +629,12 @@ lemma mem_multidia_dual : ◇^[n]φ ∈ Ω ↔ ∼(□^[n](∼φ)) ∈ Ω := by
     exact Context.provable_iff.mpr ⟨Γ, hΓ₁, FiniteContext.provable_iff.mpr <|
       imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multidia_duality!)⟩;
 omit [DecidableEq α] in
-lemma mem_dia_dual : ◇φ ∈ Ω ↔ (∼(□(∼φ)) ∈ Ω) := by
-  classical
+lemma mem_dia_dual : ◇φ ∈ Ω ↔ (∼(□(∼φ)) ∈ Ω) := by classical
   exact mem_multidia_dual (n := 1)
 
 omit [DecidableEq α] in
 lemma iff_mem_multidia : (◇^[n]φ ∈ Ω) ↔ (∃ Ω' :
-    MaximalConsistentSet 𝓢, (□''⁻¹^[n]Ω.1 ⊆ Ω'.1) ∧ (φ ∈ Ω'.1)) := by
-      classical
+    MaximalConsistentSet 𝓢, (□''⁻¹^[n]Ω.1 ⊆ Ω'.1) ∧ (φ ∈ Ω'.1)) := by classical
   constructor;
   · intro h;
     have := mem_multidia_dual.mp h;
@@ -703,8 +662,7 @@ lemma iff_mem_dia : (◇φ ∈ Ω) ↔ (∃ Ω' :
 
 omit [DecidableEq α] in
 lemma multibox_multidia : (∀ {φ : Formula α}, (□^[n]φ ∈ Ω₁.1 → φ ∈ Ω₂.1)) ↔ (∀ {φ :
-    Formula α}, (φ ∈ Ω₂.1 → ◇^[n]φ ∈ Ω₁.1)) := by
-      classical
+    Formula α}, (φ ∈ Ω₂.1 → ◇^[n]φ ∈ Ω₁.1)) := by classical
   constructor;
   · intro h φ;
     contrapose;
@@ -726,8 +684,7 @@ lemma multibox_multidia : (∀ {φ : Formula α}, (□^[n]φ ∈ Ω₁.1 → φ 
 variable {Γ : List (Formula α)}
 
 omit [DecidableEq α] in
-lemma iff_mem_multibox_conj : (□^[n]⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □^[n]φ ∈ Ω) := by
-  classical
+lemma iff_mem_multibox_conj : (□^[n]⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □^[n]φ ∈ Ω) := by classical
   simp only [iff_mem_multibox, iff_mem_conj];
   constructor;
   · intro h φ hφ Ω' hΩ';
@@ -737,8 +694,7 @@ lemma iff_mem_multibox_conj : (□^[n]⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □^[n]�
     tauto;
 
 omit [DecidableEq α] in
-lemma iff_mem_box_conj : (□⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □φ ∈ Ω) := by
-  classical
+lemma iff_mem_box_conj : (□⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □φ ∈ Ω) := by classical
   exact iff_mem_multibox_conj (n := 1)
 
 end «lp_section_1»

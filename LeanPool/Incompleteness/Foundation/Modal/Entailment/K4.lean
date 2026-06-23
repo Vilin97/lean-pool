@@ -18,8 +18,7 @@ variable {S F : Type*} [BasicModalLogicalConnective F] [DecidableEq F] [Entailme
 variable {𝓢 : S} [Entailment.K4 𝓢]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyBoxBoxdotBox : 𝓢 ⊢  □⊡φ ==> □φ :=
-  impTrans'' distributeBoxAnd and₁
+def implyBoxBoxdotBox : 𝓢 ⊢  □⊡φ ==> □φ := impTrans'' distributeBoxAnd and₁
 omit [DecidableEq F] in
 @[simp] lemma imply_boxboxdot_box : 𝓢 ⊢! □⊡φ ==> □φ := by
   classical
@@ -42,8 +41,7 @@ lemma «implyBoxBoxBoxdot'!» (h : 𝓢 ⊢! □φ) : 𝓢 ⊢! □⊡φ := by
   exact ⟨implyBoxBoxBoxdot' h.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffBoxBoxBoxdot : 𝓢 ⊢ □φ <=> □⊡φ :=
-  iffIntro implyBoxBoxBoxdot implyBoxBoxdotBox
+def iffBoxBoxBoxdot : 𝓢 ⊢ □φ <=> □⊡φ := iffIntro implyBoxBoxBoxdot implyBoxBoxdotBox
 omit [DecidableEq F] in
 @[simp] lemma «iff_box_boxboxdot!» : 𝓢 ⊢! □φ <=> □⊡φ := by
   classical

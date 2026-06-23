@@ -269,9 +269,8 @@ variable (L)
 lemma _root_.LO.Arith.Language.termShift_defined :
     Sg1-Function₁ L.termShift via pL.termShiftDef := by
   intro v
-  have h := (construction L).result_defined v
-  simp only [LDef.termShiftDef, Language.termShift, Matrix.empty_eq] at h ⊢
-  exact h
+  simpa only [LDef.termShiftDef, Language.termShift, Matrix.empty_eq] using
+    (construction L).result_defined v
 
 instance _root_.LO.Arith.Language.termShift_definable :
     Sg1-Function₁ L.termShift :=
@@ -284,9 +283,8 @@ instance _root_.LO.Arith.Language.termShift_definable' :
 lemma _root_.LO.Arith.Language.termShiftVec_defined :
     Sg1-Function₂ L.termShiftVec via pL.termShiftVecDef := by
   intro v
-  have h := (construction L).resultVec_defined v
-  simp only [LDef.termShiftVecDef, Language.termShiftVec, Matrix.empty_eq] at h ⊢
-  exact h
+  simpa only [LDef.termShiftVecDef, Language.termShiftVec, Matrix.empty_eq] using
+    (construction L).resultVec_defined v
 
 instance _root_.LO.Arith.Language.termShiftVec_definable :
     Sg1-Function₂ L.termShiftVec :=

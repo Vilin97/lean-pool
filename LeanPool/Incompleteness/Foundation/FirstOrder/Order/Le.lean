@@ -29,8 +29,7 @@ variable {T : Theory L} [𝐄𝐐 wkn T]
 
 omit [𝐄𝐐 wkn T] in
 /-- Imported declaration from the Incompleteness formalization. -/
-lemma leIffEqOrLt : T ⊢! “∀ x y, x ≤ y ↔ x = y ∨ x < y” :=
-  complete
+lemma leIffEqOrLt : T ⊢! “∀ x y, x ≤ y ↔ x = y ∨ x < y” := complete
     (consequence_iff.mpr <| fun _ _ _ _ =>
       by simp[models_def, Semiformula.Operator.LE.def_of_Eq_of_LT])
 

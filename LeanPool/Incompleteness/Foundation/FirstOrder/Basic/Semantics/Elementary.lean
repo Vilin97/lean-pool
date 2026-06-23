@@ -259,8 +259,7 @@ lemma refl (M) [Nonempty M] [Structure L M] : M ≡ₑ[L] M := fun σ => by rfl
 lemma symm : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₁) := fun h σ => (h σ).symm
 
 @[trans]
-lemma trans :
-    (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₃) → (M₁ ≡ₑ[L] M₃) :=
+lemma trans : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₃) → (M₁ ≡ₑ[L] M₃) :=
   fun h₁ h₂ σ => Iff.trans (h₁ σ) (h₂ σ)
 
 lemma models (h : M₁ ≡ₑ[L] M₂) :

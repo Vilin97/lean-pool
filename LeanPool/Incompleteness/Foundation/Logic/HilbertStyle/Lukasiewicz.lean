@@ -125,8 +125,7 @@ def impTrans'₁ (bpq : 𝓢 ⊢ φ ==> ψ) : 𝓢 ⊢ (ψ ==> χ) ==> (φ ==> �
 def impTrans'₂ (bqr : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ (φ ==> ψ) ==> (φ ==> χ) := imply₂ ⨀ (imply₁' bqr)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def impTrans₂ :
-    𝓢 ⊢ (ψ ==> χ) ==> (φ ==> ψ) ==> (φ ==> χ) :=
+def impTrans₂ : 𝓢 ⊢ (ψ ==> χ) ==> (φ ==> ψ) ==> (φ ==> χ) :=
   impTrans'' (impSwap (imply₁' (impId (ψ ==> χ)))) mdp₂In₁
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -162,21 +161,18 @@ def andElim₂ : 𝓢 ⊢ φ ⋏ ψ ==> ψ := by
   have : 𝓢 ⊢ ∼ψ ==> φ ==> ∼ψ := imply₁ (φ := ∼ψ) (ψ := φ);
   have : 𝓢 ⊢ ∼(φ ==> ∼ψ) ==> ∼∼ψ := contraIntro' this;
   exact impTrans'' this dne;
-instance :
-    HasAxiomAndElim 𝓢 :=
+instance : HasAxiomAndElim 𝓢 :=
   ⟨fun φ ψ => Lukasiewicz.andElim₁ (φ := φ) (ψ := ψ),
     fun φ ψ => Lukasiewicz.andElim₂ (φ := φ) (ψ := ψ)⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andImplyLeft :
-    𝓢 ⊢ (φ₁ ==> ψ) ==> φ₁ ⋏ φ₂ ==> ψ :=
+def andImplyLeft : 𝓢 ⊢ (φ₁ ==> ψ) ==> φ₁ ⋏ φ₂ ==> ψ :=
   (impSwap <| imply₁' (impId _)) ⨀₂ (imply₁' andElim₁)
 /-- Imported declaration from the Incompleteness formalization. -/
 def andImplyLeft' (h : 𝓢 ⊢ (φ₁ ==> ψ)) : 𝓢 ⊢ φ₁ ⋏ φ₂ ==> ψ := andImplyLeft ⨀ h
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andImplyRight :
-    𝓢 ⊢ (φ₂ ==> ψ) ==> φ₁ ⋏ φ₂ ==> ψ :=
+def andImplyRight : 𝓢 ⊢ (φ₂ ==> ψ) ==> φ₁ ⋏ φ₂ ==> ψ :=
   (impSwap <| imply₁' (impId _)) ⨀₂ (imply₁' andElim₂)
 /-- Imported declaration from the Incompleteness formalization. -/
 def andImplyRight' (h : 𝓢 ⊢ (φ₂ ==> ψ)) : 𝓢 ⊢ φ₁ ⋏ φ₂ ==> ψ := andImplyRight ⨀ h
@@ -211,8 +207,7 @@ def orInst₂ : 𝓢 ⊢ ψ ==> φ ⋎ ψ := by
   simp only [LukasiewiczAbbrev.or, LukasiewiczAbbrev.neg];
   exact imply₁;
 
-instance :
-    HasAxiomOrInst 𝓢 :=
+instance : HasAxiomOrInst 𝓢 :=
   ⟨fun φ ψ => Lukasiewicz.orInst₁ (φ := φ) (ψ := ψ),
     fun φ ψ => Lukasiewicz.orInst₂ (φ := φ) (ψ := ψ)⟩
 

@@ -580,8 +580,7 @@ def lMapAux (Φ : L₁ →ᵥ L₂) : ∀ {n}, Semiformula L₁ ξ n → Semifor
   | _, ∀' φ     => ∀' lMapAux Φ φ
   | _, ∃' φ     => ∃' lMapAux Φ φ
 
-lemma lMapAux_neg {n} (φ : Semiformula L₁ ξ n) :
-    (∼φ).lMapAux Φ = ∼φ.lMapAux Φ :=
+lemma lMapAux_neg {n} (φ : Semiformula L₁ ξ n) : (∼φ).lMapAux Φ = ∼φ.lMapAux Φ :=
   by induction φ using Semiformula.rec' <;> simp[*, lMapAux]
 
 /-- Imported declaration from the Incompleteness formalization. -/

@@ -26,8 +26,7 @@ open FormulaSet.SubformulaClosed
 section «lp_section_1»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def filterEquiv (M : Kripke.Model) (T : FormulaSet ℕ) (x y : M.World) := ∀ φ, (_ :
-    φ ∈ T := by
+def filterEquiv (M : Kripke.Model) (T : FormulaSet ℕ) (x y : M.World) := ∀ φ, (_ : φ ∈ T := by
   trivial) → x ⊧ φ ↔ y ⊧ φ
 
 variable (M : Kripke.Model) (T : FormulaSet ℕ) [T.SubformulaClosed]
@@ -159,20 +158,17 @@ abbrev coarsestFilterationModel (M : Model) (T : FormulaSet ℕ) [T.SubformulaCl
   Val := standardFilterationValuation M T
 
 instance _root_.LO.Modal.Kripke.coarsestFilterationModel.filterOf {M} {T :
-    FormulaSet ℕ} [T.SubformulaClosed] :
-    FilterOf (coarsestFilterationModel M T) M T where
+    FormulaSet ℕ} [T.SubformulaClosed] : FilterOf (coarsestFilterationModel M T) M T where
   def_box := by tauto
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev finestFilterationFrame (M : Model) (T : FormulaSet ℕ) :
-    Kripke.Frame where
+abbrev finestFilterationFrame (M : Model) (T : FormulaSet ℕ) : Kripke.Frame where
   World := FilterEqvQuotient M T
   Rel Qx Qy := ∃ x y, Qx = ⟦x⟧ ∧ Qy = ⟦y⟧ ∧ x ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev finestFilterationModel (M : Model) (T : FormulaSet ℕ) :
-    Kripke.Model where
+abbrev finestFilterationModel (M : Model) (T : FormulaSet ℕ) : Kripke.Model where
   toFrame := finestFilterationFrame M T
   Val := standardFilterationValuation M T
 
@@ -198,8 +194,7 @@ end finestFilterationModel
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev finestFilterationTransitiveClosureModel (M : Model) (T : FormulaSet ℕ) :
-    Kripke.Model where
+abbrev finestFilterationTransitiveClosureModel (M : Model) (T : FormulaSet ℕ) : Kripke.Model where
   toFrame := (finestFilterationFrame M T)^+
   Val := standardFilterationValuation M T
 
@@ -236,8 +231,7 @@ theorem filterOf (M_trans : IsTrans M.World M.Rel) :
         exact hpx _ (M_trans.trans _ _ _ rxy ryv);
 
 omit [T.SubformulaClosed] in
-lemma transitive :
-    IsTrans (finestFilterationTransitiveClosureModel M T).World
+lemma transitive : IsTrans (finestFilterationTransitiveClosureModel M T).World
       (finestFilterationTransitiveClosureModel M T).Rel :=
   Frame.TransitiveClosure.rel_transitive
 
@@ -247,8 +241,7 @@ lemma symmetric_of_symmetric (M_symm : Symmetric M.Rel) :
   Frame.TransitiveClosure.rel_symmetric <| finestFilterationModel.symmetric_of_symmetric M_symm
 
 lemma reflexive_of_transitive_reflexive (M_trans : IsTrans M.World M.Rel) (M_refl :
-    Std.Refl M.Rel) :
-    Std.Refl (finestFilterationTransitiveClosureModel M T).Rel := by
+    Std.Refl M.Rel) : Std.Refl (finestFilterationTransitiveClosureModel M T).Rel := by
   exact reflexive_filterOf_of_reflexive (filterOf M_trans) M_refl;
 
 end finestFilterationTransitiveClosureModel

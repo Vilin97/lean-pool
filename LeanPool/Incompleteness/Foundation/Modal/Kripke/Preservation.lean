@@ -31,8 +31,7 @@ structure _root_.LO.Modal.Kripke.Model.Bisimulation (M₁ M₂ : Kripke.Model) w
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " ⇄ " => Model.Bisimulation
 
-instance :
-    CoeFun (Model.Bisimulation M₁ M₂) (fun _ => M₁.World → M₂.World → Prop) :=
+instance : CoeFun (Model.Bisimulation M₁ M₂) (fun _ => M₁.World → M₂.World → Prop) :=
   ⟨fun bi => bi.toRel⟩
 
 end «lp_section_1»
@@ -78,8 +77,7 @@ structure _root_.LO.Modal.Kripke.Frame.PseudoEpimorphism (F₁ F₂ : Kripke.Fra
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " →ₚ " => Frame.PseudoEpimorphism
 
-instance :
-    CoeFun (Frame.PseudoEpimorphism F₁ F₂) (fun _ => F₁.World → F₂.World) :=
+instance : CoeFun (Frame.PseudoEpimorphism F₁ F₂) (fun _ => F₁.World → F₂.World) :=
   ⟨fun f => f.toFun⟩
 
 namespace Frame
@@ -132,8 +130,7 @@ structure _root_.LO.Modal.Kripke.Model.PseudoEpimorphism (M₁ M₂ :
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " →ₚ " => Model.PseudoEpimorphism
 
-instance :
-    CoeFun (Model.PseudoEpimorphism M₁ M₂) (fun _ => M₁.World → M₂.World) :=
+instance : CoeFun (Model.PseudoEpimorphism M₁ M₂) (fun _ => M₁.World → M₂.World) :=
   ⟨fun f => f.toFun⟩
 
 namespace Model
@@ -157,8 +154,7 @@ def ofAtomic (f : M₁.toFrame →ₚ M₂.toFrame) (atomic : ∀ {w a}, (M₁ w
   atomic := atomic
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def comp (f : M₁ →ₚ M₂) (g : M₂ →ₚ M₃) :
-    M₁ →ₚ M₃ :=
+def comp (f : M₁ →ₚ M₂) (g : M₂ →ₚ M₃) : M₁ →ₚ M₃ :=
   ofAtomic (f.toPseudoEpimorphism.comp (g.toPseudoEpimorphism)) <| by
   intro x φ;
   exact ⟨fun h => g.atomic.mp <| f.atomic.mp h, fun h => f.atomic.mpr <| g.atomic.mpr h⟩;
@@ -190,8 +186,7 @@ end Model
 variable {F₁ F₂ : Kripke.Frame} {M₁ M₂ : Kripke.Model}
 
 lemma validOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjective :
-    Function.Surjective f) :
-    F₁ ⊧ φ → F₂ ⊧ φ := by
+    Function.Surjective f) : F₁ ⊧ φ → F₂ ⊧ φ := by
   contrapose;
   intro h;
   obtain ⟨V₂, w₂, h⟩ := ValidOnFrame.exists_valuation_world_of_not h;
@@ -207,8 +202,7 @@ lemma validOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjec
   } w₁ |>.not.mpr h;
 
 lemma theory_ValidOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjective :
-    Function.Surjective f) :
-    F₁ ⊧* T → F₂ ⊧* T := by
+    Function.Surjective f) : F₁ ⊧* T → F₂ ⊧* T := by
   simp only [Semantics.realizeSet_iff];
   intro h φ hp;
   exact validOnFrame_of_surjective_pseudoMorphism f f_surjective (h hp);
@@ -249,8 +243,7 @@ namespace PointGenerated
 
 variable {F : Kripke.Frame} {r : F.World}
 
-lemma rel_transitive (F_trans : IsTrans F.World F.Rel) :
-    IsTrans (F↾r).World (F↾r).Rel := by
+lemma rel_transitive (F_trans : IsTrans F.World F.Rel) : IsTrans (F↾r).World (F↾r).Rel := by
   exact ⟨fun _ _ _ hxy hyz => F_trans.trans _ _ _ hxy hyz⟩
 
 lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel :=

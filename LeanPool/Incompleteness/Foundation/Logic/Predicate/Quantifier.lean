@@ -216,8 +216,7 @@ section «lp_section_4»
 variable {α : ℕ → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) :
-    α n :=
+def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) : α n :=
   ∀' (φ ==> ψ)
 
 /-- Imported declaration from the Incompleteness formalization. -/

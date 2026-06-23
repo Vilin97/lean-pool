@@ -18,19 +18,16 @@ open Formula.Kripke
 namespace Kripke
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev TransitiveConverseWellFoundedFrameClass :
-    FrameClass :=
+abbrev TransitiveConverseWellFoundedFrameClass : FrameClass :=
   { F | IsTrans F.World F.Rel ∧ ConverseWellFounded F.Rel }
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev TransitiveIrreflexiveFiniteFrameClass :
-    FiniteFrameClass :=
+abbrev TransitiveIrreflexiveFiniteFrameClass : FiniteFrameClass :=
   { F | IsTrans F.World F.Rel ∧ Std.Irrefl F.Rel }
 
 variable {F : Frame}
 
 lemma validate_L_of_trans_and_cwf (hTrans : IsTrans F.World F.Rel) (hCWF :
-    ConverseWellFounded F.Rel) :
-    F ⊧ (Axioms.L (.atom 0)) := by
+    ConverseWellFounded F.Rel) : F ⊧ (Axioms.L (.atom 0)) := by
   rintro V w;
   apply Satisfies.imp_def.mpr;
   contrapose;

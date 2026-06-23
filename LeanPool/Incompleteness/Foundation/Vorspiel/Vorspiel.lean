@@ -63,8 +63,7 @@ def toFin (n : ℕ) : ℕ → Option (Fin n) := fun x => if hx : x < n then some
 
 end Nat
 
-lemma eq_finZeroElim {α : Sort u} (x : Fin 0 → α) :
-    x = finZeroElim :=
+lemma eq_finZeroElim {α : Sort u} (x : Fin 0 → α) : x = finZeroElim :=
   funext (by rintro ⟨_, _⟩; contradiction)
 
 namespace Matrix
@@ -92,8 +91,7 @@ def vecConsLast {n : ℕ} (t : Fin n → α) (h : α) : Fin n.succ → α :=
 
 @[simp] lemma cons_app_two {n : ℕ} (a : α) (s : Fin n.succ.succ → α) : (a :> s) 2 = s 1 := rfl
 
-@[simp] lemma cons_app_three {n : ℕ} (a : α) (s : Fin n.succ.succ.succ → α) :
-    (a :> s) 3 = s 2 :=
+@[simp] lemma cons_app_three {n : ℕ} (a : α) (s : Fin n.succ.succ.succ → α) : (a :> s) 3 = s 2 :=
   rfl
 
 section «lp_section_2»
@@ -267,8 +265,7 @@ lemma getM_pure [LawfulMonad m] {n} {β : Fin n → Type u} (v : (i : Fin n) →
     getM (fun i => (some (v i) : Option (β i))) = some v := getM_pure v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def appendr {n m} (v : Fin n → α) (w : Fin m → α) :
-    Fin (m + n) → α :=
+def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
   Matrix.vecAppend (add_comm m n) v w
 
 @[simp] lemma appendr_nil {m} (w : Fin m → α) : appendr ![] w = w := by funext i; simp [appendr]
@@ -633,11 +630,9 @@ lemma eq_remove_cons {l : List α} :
 
 @[simp]
 lemma remove_singleton_of_ne {φ ψ : α} (h : φ ≠ ψ) :
-    [φ].remove ψ = [φ] := by
-  simp_all [List.remove];
+    [φ].remove ψ = [φ] := by simp_all [List.remove]
 
-lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by
-  simp [List.remove]
+lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by simp [List.remove]
 
 lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l :=
   (mem_remove_iff.mp h).1

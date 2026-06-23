@@ -129,8 +129,7 @@ def and' {φ ψ : F} (h : φ ⋏ ψ ∈ Γ) (dp : 𝓚 ⟹ φ :: Γ) (dq : 𝓚 
   wk (and dp dq) (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def or' {φ ψ : F} (h : φ ⋎ ψ ∈ Γ) (dpq : 𝓚 ⟹ φ :: ψ :: Γ) : 𝓚 ⟹ Γ :=
-  wk (or dpq) (by simp [h])
+def or' {φ ψ : F} (h : φ ⋎ ψ ∈ Γ) (dpq : 𝓚 ⟹ φ :: ψ :: Γ) : 𝓚 ⟹ Γ := wk (or dpq) (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def wkTail (d : 𝓚 ⟹ Γ) : 𝓚 ⟹ φ :: Γ := wk d (by simp)

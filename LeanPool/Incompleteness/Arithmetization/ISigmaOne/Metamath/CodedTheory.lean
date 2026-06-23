@@ -79,8 +79,7 @@ variable (T V)
 def codeIn : (L.codeIn V).Theory where
   set := T.tDef.ch.val.curve
 
-@[simp] lemma properOn :
-    T.tDef.ch.ProperOn V :=
+@[simp] lemma properOn : T.tDef.ch.ProperOn V :=
   (LO.FirstOrder.Theory.Delta1Definable.isDelta1 (T := T)).properOn V
 
 variable {T V}
@@ -179,8 +178,7 @@ def ofList (l : List (SyntacticFormula L)) : Delta1Definable {φ | φ ∈ l} :=
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
 noncomputable
-def ofFinite (T : Theory L) (h : Set.Finite T) :
-    T.Delta1Definable :=
+def ofFinite (T : Theory L) (h : Set.Finite T) : T.Delta1Definable :=
   (ofList h.toFinset.toList).ofEq (by ext; simp)
 
 end Delta1Definable

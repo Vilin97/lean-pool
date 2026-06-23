@@ -64,8 +64,7 @@ lemma «imply₁'!» [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (d : 𝓢 ⊢! �
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[deprecated imply₁' (since := "2026-05-27")]
-def dhyp [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (ψ : F) (b : 𝓢 ⊢ φ) :
-    𝓢 ⊢ ψ ==> φ := imply₁' b
+def dhyp [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (ψ : F) (b : 𝓢 ⊢ φ) : 𝓢 ⊢ ψ ==> φ := imply₁' b
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -74,21 +73,17 @@ class HasAxiomImply₂ (𝓢 : S) where
   imply₂ (φ ψ χ : F) : 𝓢 ⊢ Axioms.Imply₂ φ ψ χ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def imply₂ [HasAxiomImply₂ 𝓢] :
-    𝓢 ⊢ (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
+def imply₂ [HasAxiomImply₂ 𝓢] : 𝓢 ⊢ (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
   HasAxiomImply₂.imply₂ _ _ _
-@[simp] lemma «imply₂!» [HasAxiomImply₂ 𝓢] :
-    𝓢 ⊢! (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
+@[simp] lemma «imply₂!» [HasAxiomImply₂ 𝓢] : 𝓢 ⊢! (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
   ⟨imply₂⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def imply₂' [ModusPonens 𝓢] [HasAxiomImply₂ 𝓢] (d₁ : 𝓢 ⊢ φ ==> ψ ==> χ) (d₂ : 𝓢 ⊢ φ ==> ψ) (d₃ :
-    𝓢 ⊢ φ) :
-    𝓢 ⊢ χ :=
+    𝓢 ⊢ φ) : 𝓢 ⊢ χ :=
   imply₂ ⨀ d₁ ⨀ d₂ ⨀ d₃
 lemma «imply₂'!»
-    [ModusPonens 𝓢] [HasAxiomImply₂ 𝓢] (d₁ : 𝓢 ⊢! φ ==> ψ ==> χ) (d₂ : 𝓢 ⊢! φ ==> ψ) (d₃ :
-    𝓢 ⊢! φ) :
+    [ModusPonens 𝓢] [HasAxiomImply₂ 𝓢] (d₁ : 𝓢 ⊢! φ ==> ψ ==> χ) (d₂ : 𝓢 ⊢! φ ==> ψ) (d₃ : 𝓢 ⊢! φ) :
     𝓢 ⊢! χ :=
   ⟨imply₂' d₁.some d₂.some d₃.some⟩
 
@@ -137,8 +132,7 @@ def and₃' [ModusPonens 𝓢] [HasAxiomAndInst 𝓢] (d₁ : 𝓢 ⊢ φ) (d₂
   and₃ ⨀ d₁ ⨀ d₂
 alias andIntro := and₃'
 
-lemma «and₃'!»  [ModusPonens 𝓢] [HasAxiomAndInst 𝓢] (d₁ : 𝓢 ⊢! φ) (d₂ : 𝓢 ⊢! ψ) :
-    𝓢 ⊢! φ ⋏ ψ :=
+lemma «and₃'!»  [ModusPonens 𝓢] [HasAxiomAndInst 𝓢] (d₁ : 𝓢 ⊢! φ) (d₂ : 𝓢 ⊢! ψ) : 𝓢 ⊢! φ ⋏ ψ :=
   ⟨and₃' d₁.some d₂.some⟩
 alias and_intro! := and₃'!
 
@@ -173,8 +167,7 @@ class HasAxiomOrElim (𝓢 : S) where
   or₃ (φ ψ χ : F) : 𝓢 ⊢ Axioms.OrElim φ ψ χ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def or₃ [HasAxiomOrElim 𝓢] :
-    𝓢 ⊢ (φ ==> χ) ==> (ψ ==> χ) ==> (φ ⋎ ψ) ==> χ :=
+def or₃ [HasAxiomOrElim 𝓢] : 𝓢 ⊢ (φ ==> χ) ==> (ψ ==> χ) ==> (φ ⋎ ψ) ==> χ :=
   HasAxiomOrElim.or₃ _ _ _
 @[simp] lemma «or₃!» [HasAxiomOrElim 𝓢] : 𝓢 ⊢! (φ ==> χ) ==> (ψ ==> χ) ==> (φ ⋎ ψ) ==> χ := ⟨or₃⟩
 
@@ -188,14 +181,12 @@ lemma «or₃''!» [HasAxiomOrElim 𝓢] [ModusPonens 𝓢] (d₁ : 𝓢 ⊢! φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def or₃''' [HasAxiomOrElim 𝓢] [ModusPonens 𝓢] (d₁ : 𝓢 ⊢ φ ==> χ) (d₂ : 𝓢 ⊢ ψ ==> χ) (d₃ :
-    𝓢 ⊢ φ ⋎ ψ) :
-    𝓢 ⊢ χ :=
+    𝓢 ⊢ φ ⋎ ψ) : 𝓢 ⊢ χ :=
   or₃ ⨀ d₁ ⨀ d₂ ⨀ d₃
 alias orCases := or₃'''
 
 lemma «or₃'''!» [HasAxiomOrElim 𝓢] [ModusPonens 𝓢] (d₁ : 𝓢 ⊢! φ ==> χ) (d₂ : 𝓢 ⊢! ψ ==> χ) (d₃ :
-    𝓢 ⊢! φ ⋎ ψ) :
-    𝓢 ⊢! χ :=
+    𝓢 ⊢! φ ⋎ ψ) : 𝓢 ⊢! χ :=
   ⟨or₃''' d₁.some d₂.some d₃.some⟩
 alias or_cases! := or₃'''!
 
@@ -286,12 +277,9 @@ class HasAxiomElimContra (𝓢 : S) where
   elimContra (φ ψ : F) : 𝓢 ⊢ Axioms.ElimContra φ ψ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def elimContra [HasAxiomElimContra 𝓢] :
-    𝓢 ⊢ ((∼ψ) ==> (∼φ)) ==> (φ ==> ψ) :=
+def elimContra [HasAxiomElimContra 𝓢] : 𝓢 ⊢ ((∼ψ) ==> (∼φ)) ==> (φ ==> ψ) :=
   HasAxiomElimContra.elimContra _ _
-@[simp] lemma «elimContra!» [HasAxiomElimContra 𝓢] :
-    𝓢 ⊢! (∼ψ ==> ∼φ) ==> (φ ==> ψ)  :=
-  ⟨elimContra⟩
+@[simp] lemma «elimContra!» [HasAxiomElimContra 𝓢] : 𝓢 ⊢! (∼ψ ==> ∼φ) ==> (φ ==> ψ)  := ⟨elimContra⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 protected class Minimal (𝓢 : S) extends
@@ -321,21 +309,17 @@ def _root_.LO.Entailment.negEquiv'.mp [HasAxiomAndElim 𝓢] [NegationEquiv 𝓢
 def _root_.LO.Entailment.negEquiv'.mpr [HasAxiomAndElim 𝓢] [NegationEquiv 𝓢] :
     𝓢 ⊢ φ ==> ⊥ → 𝓢 ⊢ ∼φ :=
   fun h => (and₂' negEquiv) ⨀ h
-lemma «negEquiv'!» [HasAxiomAndElim 𝓢] [NegationEquiv 𝓢] :
-    𝓢 ⊢! ∼φ ↔ 𝓢 ⊢! φ ==> ⊥ :=
+lemma «negEquiv'!» [HasAxiomAndElim 𝓢] [NegationEquiv 𝓢] : 𝓢 ⊢! ∼φ ↔ 𝓢 ⊢! φ ==> ⊥ :=
   ⟨fun ⟨h⟩ => ⟨negEquiv'.mp h⟩, fun ⟨h⟩ => ⟨negEquiv'.mpr h⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffIntro [HasAxiomAndInst 𝓢] (b₁ : 𝓢 ⊢ φ ==> ψ) (b₂ : 𝓢 ⊢ ψ ==> φ) :
-    𝓢 ⊢ φ <=> ψ :=
+def iffIntro [HasAxiomAndInst 𝓢] (b₁ : 𝓢 ⊢ φ ==> ψ) (b₂ : 𝓢 ⊢ ψ ==> φ) : 𝓢 ⊢ φ <=> ψ :=
   andIntro b₁ b₂
 /-- Imported declaration from the Incompleteness formalization. -/
-lemma «iff_intro!» [HasAxiomAndInst 𝓢] (h₁ : 𝓢 ⊢! φ ==> ψ) (h₂ : 𝓢 ⊢! ψ ==> φ) :
-    𝓢 ⊢! φ <=> ψ :=
+lemma «iff_intro!» [HasAxiomAndInst 𝓢] (h₁ : 𝓢 ⊢! φ ==> ψ) (h₂ : 𝓢 ⊢! ψ ==> φ) : 𝓢 ⊢! φ <=> ψ :=
   ⟨andIntro h₁.some h₂.some⟩
 
-lemma and_intro_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] :
-    𝓢 ⊢! φ ⋏ ψ ↔ 𝓢 ⊢! φ ∧ 𝓢 ⊢! ψ :=
+lemma and_intro_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] : 𝓢 ⊢! φ ⋏ ψ ↔ 𝓢 ⊢! φ ∧ 𝓢 ⊢! ψ :=
   ⟨fun h ↦ ⟨and_left! h, and_right! h⟩, fun h ↦ and_intro! h.1 h.2⟩
 
 lemma iff_intro_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] :
@@ -347,19 +331,16 @@ lemma provable_iff_of_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] (h : �
   ⟨fun hp ↦ and_left! h ⨀ hp, fun hq ↦ and_right! h ⨀ hq⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def impId [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ : F) :
-    𝓢 ⊢ φ ==> φ :=
+def impId [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ : F) : 𝓢 ⊢ φ ==> φ :=
   imply₂ (φ := φ) (ψ := (φ ==> φ)) (χ := φ) ⨀ imply₁ ⨀ imply₁
 /-- Imported declaration from the Incompleteness formalization. -/
 @[simp] lemma «imp_id!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] : 𝓢 ⊢! φ ==> φ := ⟨impId φ⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffId [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ : F) :
-    𝓢 ⊢ φ <=> φ :=
+def iffId [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ : F) : 𝓢 ⊢ φ <=> φ :=
   and₃' (impId φ) (impId φ)
 /-- Imported declaration from the Incompleteness formalization. -/
-@[simp] lemma «iff_id!» [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] :
-    𝓢 ⊢! φ <=> φ :=
+@[simp] lemma «iff_id!» [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] : 𝓢 ⊢! φ <=> φ :=
   ⟨iffId φ⟩
 
 instance [NegAbbrev F] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [HasAxiomAndInst 𝓢] :
@@ -371,20 +352,16 @@ instance [NegAbbrev F] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [HasAxiom
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def notbot [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [NegationEquiv 𝓢] [HasAxiomAndElim 𝓢] :
-    𝓢 ⊢ ∼⊥ :=
+def notbot [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [NegationEquiv 𝓢] [HasAxiomAndElim 𝓢] : 𝓢 ⊢ ∼⊥ :=
   negEquiv'.mpr (impId ⊥)
 @[simp] lemma «notbot!»
-    [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [NegationEquiv 𝓢] [HasAxiomAndElim 𝓢] :
-    𝓢 ⊢! ∼⊥ :=
+    [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [NegationEquiv 𝓢] [HasAxiomAndElim 𝓢] : 𝓢 ⊢! ∼⊥ :=
   ⟨notbot⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def mdp₁ [HasAxiomImply₂ 𝓢] (bqr : 𝓢 ⊢ φ ==> ψ ==> χ) (bq : 𝓢 ⊢ φ ==> ψ) :
-    𝓢 ⊢ φ ==> χ :=
+def mdp₁ [HasAxiomImply₂ 𝓢] (bqr : 𝓢 ⊢ φ ==> ψ ==> χ) (bq : 𝓢 ⊢ φ ==> ψ) : 𝓢 ⊢ φ ==> χ :=
   imply₂ ⨀ bqr ⨀ bq
-lemma «mdp₁!» [HasAxiomImply₂ 𝓢] (hqr : 𝓢 ⊢! φ ==> ψ ==> χ) (hq : 𝓢 ⊢! φ ==> ψ) :
-    𝓢 ⊢! φ ==> χ :=
+lemma «mdp₁!» [HasAxiomImply₂ 𝓢] (hqr : 𝓢 ⊢! φ ==> ψ ==> χ) (hq : 𝓢 ⊢! φ ==> ψ) : 𝓢 ⊢! φ ==> χ :=
   ⟨mdp₁ hqr.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -394,12 +371,10 @@ infixl:90 "⨀₁" => mdp₁!
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def mdp₂ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bqr : 𝓢 ⊢ φ ==> ψ ==> χ ==> s) (bq :
-    𝓢 ⊢ φ ==> ψ ==> χ) :
-    𝓢 ⊢ φ ==> ψ ==> s :=
+    𝓢 ⊢ φ ==> ψ ==> χ) : 𝓢 ⊢ φ ==> ψ ==> s :=
   imply₁' (imply₂) ⨀₁ bqr ⨀₁ bq
 lemma «mdp₂!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hqr : 𝓢 ⊢! φ ==> ψ ==> χ ==> s) (hq :
-    𝓢 ⊢! φ ==> ψ ==> χ) :
-    𝓢 ⊢! φ ==> ψ ==> s :=
+    𝓢 ⊢! φ ==> ψ ==> χ) : 𝓢 ⊢! φ ==> ψ ==> s :=
   ⟨mdp₂ hqr.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -409,12 +384,10 @@ infixl:90 "⨀₂" => mdp₂!
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def mdp₃ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bqr : 𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> t) (bq :
-    𝓢 ⊢ φ ==> ψ ==> χ ==> s) :
-    𝓢 ⊢ φ ==> ψ ==> χ ==> t :=
+    𝓢 ⊢ φ ==> ψ ==> χ ==> s) : 𝓢 ⊢ φ ==> ψ ==> χ ==> t :=
   (imply₁' <| imply₁' <| imply₂) ⨀₂ bqr ⨀₂ bq
 lemma «mdp₃!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hqr : 𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> t) (hq :
-    𝓢 ⊢! φ ==> ψ ==> χ ==> s) :
-    𝓢 ⊢! φ ==> ψ ==> χ ==> t :=
+    𝓢 ⊢! φ ==> ψ ==> χ ==> s) : 𝓢 ⊢! φ ==> ψ ==> χ ==> t :=
   ⟨mdp₃ hqr.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -424,13 +397,11 @@ infixl:90 "⨀₃" => mdp₃!
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def mdp₄ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bqr : 𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> t ==> u) (bq :
-    𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> t) :
-    𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> u :=
+    𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> t) : 𝓢 ⊢ φ ==> ψ ==> χ ==> s ==> u :=
   (imply₁' <| imply₁' <| imply₁' <| imply₂) ⨀₃ bqr ⨀₃ bq
 lemma «mdp₄!»
     [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hqr : 𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> t ==> u) (hq :
-    𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> t) :
-    𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> u :=
+    𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> t) : 𝓢 ⊢! φ ==> ψ ==> χ ==> s ==> u :=
   ⟨mdp₄ hqr.some hq.some⟩
 /-- Imported declaration from the Incompleteness formalization. -/
 infixl:90 "⨀₄" => mdp₄
@@ -442,8 +413,7 @@ def impTrans'' [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bpq : 𝓢 ⊢ �
     𝓢 ⊢ φ ==> χ :=
   imply₂ ⨀ imply₁' bqr ⨀ bpq
 lemma «imp_trans''!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hpq : 𝓢 ⊢! φ ==> ψ) (hqr :
-    𝓢 ⊢! ψ ==> χ) :
-    𝓢 ⊢! φ ==> χ :=
+    𝓢 ⊢! ψ ==> χ) : 𝓢 ⊢! φ ==> χ :=
   ⟨impTrans'' hpq.some hqr.some⟩
 
 lemma «unprovable_imp_trans''!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hpq : 𝓢 ⊢! φ ==> ψ) :
@@ -454,26 +424,22 @@ lemma «unprovable_imp_trans''!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢
 /-- Imported declaration from the Incompleteness formalization. -/
 def iffTrans''
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢]
-    (h₁ : 𝓢 ⊢ φ <=> ψ) (h₂ : 𝓢 ⊢ ψ <=> χ) :
-    𝓢 ⊢ φ <=> χ :=
+    (h₁ : 𝓢 ⊢ φ <=> ψ) (h₂ : 𝓢 ⊢ ψ <=> χ) : 𝓢 ⊢ φ <=> χ :=
   iffIntro (impTrans'' (and₁' h₁) (and₁' h₂)) (impTrans'' (and₂' h₂) (and₂' h₁))
 lemma «iff_trans''!»
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢]
-    (h₁ : 𝓢 ⊢! φ <=> ψ) (h₂ : 𝓢 ⊢! ψ <=> χ) :
-    𝓢 ⊢! φ <=> χ :=
+    (h₁ : 𝓢 ⊢! φ <=> ψ) (h₂ : 𝓢 ⊢! ψ <=> χ) : 𝓢 ⊢! φ <=> χ :=
   ⟨iffTrans'' h₁.some h₂.some⟩
 
 lemma «unprovable_iff!»
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (H :
-    𝓢 ⊢! φ <=> ψ) :
-    𝓢 ⊬ φ ↔ 𝓢 ⊬ ψ := by
+    𝓢 ⊢! φ <=> ψ) : 𝓢 ⊬ φ ↔ 𝓢 ⊬ ψ := by
   constructor;
   · intro hp hq; have := and₂'! H ⨀ hq; contradiction;
   · intro hq hp; have := and₁'! H ⨀ hp; contradiction;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def imply₁₁ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) :
-    𝓢 ⊢ φ ==> ψ ==> χ ==> φ :=
+def imply₁₁ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) : 𝓢 ⊢ φ ==> ψ ==> χ ==> φ :=
   impTrans'' imply₁ imply₁
 @[simp] lemma «imply₁₁!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) :
     𝓢 ⊢! φ ==> ψ ==> χ ==> φ :=
@@ -481,20 +447,17 @@ def imply₁₁ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def implyAnd [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bq : 𝓢 ⊢ φ ==> ψ) (br :
-    𝓢 ⊢ φ ==> χ) :
-    𝓢 ⊢ φ ==> ψ ⋏ χ :=
+    𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ==> ψ ⋏ χ :=
   imply₁' and₃ ⨀₁ bq ⨀₁ br
 lemma «imply_and!»
     [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (hq : 𝓢 ⊢! φ ==> ψ) (hr :
-    𝓢 ⊢! φ ==> χ) :
-    𝓢 ⊢! φ ==> ψ ⋏ χ :=
+    𝓢 ⊢! φ ==> χ) : 𝓢 ⊢! φ ==> ψ ⋏ χ :=
   ⟨implyAnd hq.some hr.some⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def andComm [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ :
-    F) :
-    𝓢 ⊢ φ ⋏ ψ ==> ψ ⋏ φ :=
+    F) : 𝓢 ⊢ φ ⋏ ψ ==> ψ ⋏ φ :=
   implyAnd and₂ and₁
 lemma «and_comm!» [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] :
     𝓢 ⊢! φ ⋏ ψ ==> ψ ⋏ φ :=
@@ -502,20 +465,17 @@ lemma «and_comm!» [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def andComm' [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (h :
-    𝓢 ⊢ φ ⋏ ψ) :
-    𝓢 ⊢ ψ ⋏ φ :=
+    𝓢 ⊢ φ ⋏ ψ) : 𝓢 ⊢ ψ ⋏ φ :=
   andComm _ _ ⨀ h
 lemma «and_comm'!»
-    [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (h :
-    𝓢 ⊢! φ ⋏ ψ) :
+    [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (h : 𝓢 ⊢! φ ⋏ ψ) :
     𝓢 ⊢! ψ ⋏ φ :=
   ⟨andComm' h.some⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def iffComm [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ :
-    F) :
-    𝓢 ⊢ (φ <=> ψ) ==> (ψ <=> φ) :=
+    F) : 𝓢 ⊢ (φ <=> ψ) ==> (ψ <=> φ) :=
   andComm _ _
 lemma «iff_comm!»  [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] :
     𝓢 ⊢! (φ <=> ψ) ==> (ψ <=> φ) :=
@@ -523,20 +483,17 @@ lemma «iff_comm!»  [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImpl
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def iffComm' [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (h :
-    𝓢 ⊢ φ <=> ψ) :
-    𝓢 ⊢ ψ <=> φ :=
+    𝓢 ⊢ φ <=> ψ) : 𝓢 ⊢ ψ <=> φ :=
   iffComm _ _ ⨀ h
 lemma «iff_comm'!»
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (h :
-    𝓢 ⊢! φ <=> ψ) :
-    𝓢 ⊢! ψ <=> φ :=
+    𝓢 ⊢! φ <=> ψ) : 𝓢 ⊢! ψ <=> φ :=
   ⟨iffComm' h.some⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def andImplyIffImplyImply
-    [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ :
-    F) :
+    [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) :
     𝓢 ⊢ (φ ⋏ ψ ==> χ) <=> (φ ==> ψ ==> χ) := by
   let b₁ : 𝓢 ⊢ (φ ⋏ ψ ==> χ) ==> φ ==> ψ ==> χ :=
     imply₁₁ (φ ⋏ ψ ==> χ) φ ψ ⨀₃ imply₁' (ψ := φ ⋏ ψ ==> χ) and₃
@@ -551,14 +508,12 @@ lemma «and_imply_iff_imply_imply!»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.Entailment.andImplyIffImplyImply'.mp
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (d :
-    𝓢 ⊢ φ ⋏ ψ ==> χ) :
-    𝓢 ⊢ φ ==> ψ ==> χ :=
+    𝓢 ⊢ φ ⋏ ψ ==> χ) : 𝓢 ⊢ φ ==> ψ ==> χ :=
   (and₁' <| andImplyIffImplyImply φ ψ χ) ⨀ d
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.Entailment.andImplyIffImplyImply'.mpr
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (d :
-    𝓢 ⊢ φ ==> ψ ==> χ) :
-    𝓢 ⊢ φ ⋏ ψ ==> χ :=
+    𝓢 ⊢ φ ==> ψ ==> χ) : 𝓢 ⊢ φ ⋏ ψ ==> χ :=
   (and₂' <| andImplyIffImplyImply φ ψ χ) ⨀ d
 
 lemma «and_imply_iff_imply_imply'!»
@@ -568,14 +523,12 @@ lemma «and_imply_iff_imply_imply'!»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def implyLeftVerum [HasAxiomVerum 𝓢] [HasAxiomImply₁ 𝓢] : 𝓢 ⊢ φ ==> ⊤ := imply₁' verum
-@[simp] lemma «implyLeftVerum!» [HasAxiomImply₁ 𝓢] [HasAxiomVerum 𝓢] :
-    𝓢 ⊢! φ ==> ⊤ :=
+@[simp] lemma «implyLeftVerum!» [HasAxiomImply₁ 𝓢] [HasAxiomVerum 𝓢] : 𝓢 ⊢! φ ==> ⊤ :=
   ⟨implyLeftVerum⟩
 
 
 
-instance [(𝓢 : S) → ModusPonens 𝓢] [(𝓢 : S) → HasAxiomEFQ 𝓢] :
-    DeductiveExplosion S :=
+instance [(𝓢 : S) → ModusPonens 𝓢] [(𝓢 : S) → HasAxiomEFQ 𝓢] : DeductiveExplosion S :=
   ⟨fun b _ ↦ efq ⨀ b⟩
 
 
@@ -627,8 +580,7 @@ def implyConj (φ : F) (Γ : List F) (b : (ψ : F) → ψ ∈ Γ → 𝓢 ⊢ φ
   | ψ :: Γ => implyAnd (b ψ (by simp)) (implyConj φ Γ (fun ψ hq ↦ b ψ (by simp [hq])))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def conjImplyConj (h : Δ ⊆ Γ) :
-    𝓢 ⊢ Γ.conj ==> Δ.conj :=
+def conjImplyConj (h : Δ ⊆ Γ) : 𝓢 ⊢ Γ.conj ==> Δ.conj :=
   implyConj _ _ (fun _ hq ↦ generalConj (h hq))
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -650,8 +602,7 @@ def conjIntro' (Γ : List F) (b : (φ : F) → φ ∈ Γ → 𝓢 ⊢ φ) : 𝓢
     simp only [ne_eq, reduceCtorEq, not_false_eq_true, List.conj₂_cons_nonempty];
     exact andIntro (b ψ (by simp)) (conjIntro' _ (by aesop))
 omit [DecidableEq F] in
-lemma «conj_intro'!» (b : (φ : F) → φ ∈ Γ → 𝓢 ⊢! φ) :
-    𝓢 ⊢! ⋀Γ :=
+lemma «conj_intro'!» (b : (φ : F) → φ ∈ Γ → 𝓢 ⊢! φ) : 𝓢 ⊢! ⋀Γ :=
   ⟨conjIntro' Γ (fun φ hp => (b φ hp).some)⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -663,8 +614,7 @@ def implyConj' (φ : F) (Γ : List F) (b : (ψ : F) → ψ ∈ Γ → 𝓢 ⊢ �
     simp only [ne_eq, reduceCtorEq, not_false_eq_true, List.conj₂_cons_nonempty];
     apply implyAnd (b ψ (by simp)) (implyConj' φ _ (fun ψ hq ↦ b ψ (by simp [hq])));
 omit [DecidableEq F] in
-lemma «imply_conj'!» (φ : F) (Γ : List F) (b : (ψ : F) → ψ ∈ Γ → 𝓢 ⊢! φ ==> ψ) :
-    𝓢 ⊢! φ ==> ⋀Γ :=
+lemma «imply_conj'!» (φ : F) (Γ : List F) (b : (ψ : F) → ψ ∈ Γ → 𝓢 ⊢! φ ==> ψ) : 𝓢 ⊢! φ ==> ⋀Γ :=
   ⟨implyConj' φ Γ (fun ψ hq => (b ψ hq).some)⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -681,8 +631,7 @@ variable {G T : Type*} [Entailment G T] [LogicalConnective G] {𝓣 : T}
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
 def _root_.LO.Entailment.Minimal.ofEquiv
-    (𝓢 : S) [Entailment.Minimal 𝓢] (𝓣 : T) (f : G →ˡᶜ F) (e : (φ :
-    G) → 𝓢 ⊢ f φ ≃ 𝓣 ⊢ φ) :
+    (𝓢 : S) [Entailment.Minimal 𝓢] (𝓣 : T) (f : G →ˡᶜ F) (e : (φ : G) → 𝓢 ⊢ f φ ≃ 𝓣 ⊢ φ) :
     Entailment.Minimal 𝓣 where
   mdp {φ ψ dpq dp} := (e ψ) (
     let d : 𝓢 ⊢ f φ ==> f ψ := by simpa using (e (φ ==> ψ)).symm dpq
@@ -701,8 +650,7 @@ def _root_.LO.Entailment.Minimal.ofEquiv
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
 def _root_.LO.Entailment.Classical.ofEquiv
-    (𝓢 : S) [Entailment.Classical 𝓢] (𝓣 : T) (f : G →ˡᶜ F) (e : (φ :
-    G) → 𝓢 ⊢ f φ ≃ 𝓣 ⊢ φ) :
+    (𝓢 : S) [Entailment.Classical 𝓢] (𝓣 : T) (f : G →ˡᶜ F) (e : (φ : G) → 𝓢 ⊢ f φ ≃ 𝓣 ⊢ φ) :
     Entailment.Classical 𝓣 where
   mdp {φ ψ dpq dp} := (e ψ) (
     let d : 𝓢 ⊢ f φ ==> f ψ := by simpa using (e (φ ==> ψ)).symm dpq

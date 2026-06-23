@@ -34,8 +34,7 @@ def equiv (L : Language) (M : Type*) : M ≃ Model L M where
 
 instance : Structure L (Model L M) := Structure.ofEquiv (equiv L M)
 
-instance [h : Nonempty M] : Nonempty (Model L M) := by
-  rcases h with ⟨x⟩; exact ⟨equiv L M x⟩
+instance [h : Nonempty M] : Nonempty (Model L M) := by rcases h with ⟨x⟩; exact ⟨equiv L M x⟩
 
 lemma elementaryEquiv (L : Language) (M : Type*) [Nonempty M] [Structure L M] : M ≡ₑ[L] Model L M :=
   ElementaryEquiv.ofEquiv _
@@ -52,26 +51,22 @@ instance [Operator.One L] : One (Model L M) := ⟨(@Operator.One.one L _).val ![
 
 instance [Operator.One L] : Structure.One L (Model L M) := ⟨rfl⟩
 
-instance [Operator.Add L] : Add (Model L M) :=
-  ⟨fun x y => (@Operator.Add.add L _).val ![x, y]⟩
+instance [Operator.Add L] : Add (Model L M) := ⟨fun x y => (@Operator.Add.add L _).val ![x, y]⟩
 
 instance [Operator.Add L] : Structure.Add L (Model L M) := ⟨fun _ _ => rfl⟩
 
-instance [Operator.Mul L] : Mul (Model L M) :=
-  ⟨fun x y => (@Operator.Mul.mul L _).val ![x, y]⟩
+instance [Operator.Mul L] : Mul (Model L M) := ⟨fun x y => (@Operator.Mul.mul L _).val ![x, y]⟩
 
 instance [Operator.Mul L] : Structure.Mul L (Model L M) := ⟨fun _ _ => rfl⟩
 
-instance [Operator.Exp L] : Exp (Model L M) :=
-  ⟨fun x => (@Operator.Exp.exp L _).val ![x]⟩
+instance [Operator.Exp L] : Exp (Model L M) := ⟨fun x => (@Operator.Exp.exp L _).val ![x]⟩
 
 instance [Operator.Exp L] : Structure.Exp L (Model L M) := ⟨fun _ => rfl⟩
 
 instance [Operator.Eq L] [Structure.Eq L M] : Structure.Eq L (Model L M) :=
   ⟨fun x y => by simp [operator_val_ofEquiv_iff]⟩
 
-instance [Operator.LT L] : LT (Model L M) :=
-  ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
+instance [Operator.LT L] : LT (Model L M) := ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
 
 instance [Operator.LT L] : Structure.LT L (Model L M) := ⟨fun _ _ => iff_of_eq rfl⟩
 

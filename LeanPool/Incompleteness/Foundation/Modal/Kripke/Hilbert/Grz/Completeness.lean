@@ -18,8 +18,7 @@ variable {α : Type u} [DecidableEq α]
 variable {φ ψ : Formula ℕ}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable abbrev subformulasGrz (φ :
-    Formula α) :=
+noncomputable abbrev subformulasGrz (φ : Formula α) :=
   φ.subformulas ∪ (φ.subformulas.prebox.image (fun ψ => □(ψ ==> □ψ)))
 
 namespace subformulasGrz

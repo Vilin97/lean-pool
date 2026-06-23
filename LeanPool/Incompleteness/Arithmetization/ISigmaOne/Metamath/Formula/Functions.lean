@@ -77,8 +77,7 @@ variable {L}
 section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Arith.LDef.negDef (pL : LDef) :
-    Sg1.Semisentence 2 :=
+def _root_.LO.FirstOrder.Arith.LDef.negDef (pL : LDef) : Sg1.Semisentence 2 :=
   (blueprint pL).result.rew (Rew.substs ![#0, ‘0’, #1])
 
 variable (L)
@@ -225,8 +224,7 @@ lemma _root_.LO.Arith.Language.imp_defined : Sg1-Function₂ L.imp via pL.impDef
 
 instance _root_.LO.Arith.Language.imp_definable : Sg1-Function₂ L.imp := L.imp_defined.to_definable
 
-instance _root_.LO.Arith.Language.imp_definable' :
-    Γ-[m + 1]-Function₂ L.imp :=
+instance _root_.LO.Arith.Language.imp_definable' : Γ-[m + 1]-Function₂ L.imp :=
   L.imp_definable.of_sigmaOne
 
 end «lp_section_4»
@@ -264,8 +262,7 @@ lemma _root_.LO.Arith.Language.iff_defined : Sg1-Function₂ L.iff via pL.qqIffD
 
 instance _root_.LO.Arith.Language.iff_definable : Sg1-Function₂ L.iff := L.iff_defined.to_definable
 
-instance _root_.LO.Arith.Language.iff_definable' :
-    Γ-[m + 1]-Function₂ L.iff :=
+instance _root_.LO.Arith.Language.iff_definable' : Γ-[m + 1]-Function₂ L.iff :=
   L.iff_definable.of_sigmaOne
 
 end «lp_section_6»
@@ -328,8 +325,7 @@ variable {L}
 section «lp_section_8»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Arith.LDef.shiftDef (pL : LDef) :
-    Sg1.Semisentence 2 :=
+def _root_.LO.FirstOrder.Arith.LDef.shiftDef (pL : LDef) : Sg1.Semisentence 2 :=
   (blueprint pL).result.rew (Rew.substs ![#0, ‘0’, #1])
 
 variable (L)
@@ -339,12 +335,10 @@ lemma _root_.LO.Arith.Language.shift_defined : Sg1-Function₁ L.shift via pL.sh
   simpa [LDef.shiftDef, Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
     (construction L).result_defined ![v 0, 0, v 1]
 
-instance _root_.LO.Arith.Language.shift_definable :
-    Sg1-Function₁ L.shift :=
+instance _root_.LO.Arith.Language.shift_definable : Sg1-Function₁ L.shift :=
   L.shift_defined.to_definable
 
-instance _root_.LO.Arith.language.shift_definable' :
-    Γ-[m + 1]-Function₁ L.shift :=
+instance _root_.LO.Arith.language.shift_definable' : Γ-[m + 1]-Function₁ L.shift :=
   L.shift_definable.of_sigmaOne
 
 end «lp_section_8»
@@ -453,12 +447,10 @@ def _root_.LO.FirstOrder.Arith.LDef.qVecDef (pL : LDef) : Sg1.Semisentence 2 := 
 lemma _root_.LO.Arith.Language.qVec_defined : Sg1-Function₁ L.qVec via pL.qVecDef := by
   intro v; simp [LDef.qVecDef, L.termBShiftVec_defined.df.iff]; rfl
 
-instance _root_.LO.Arith.Language.qVec_definable :
-    Sg1-Function₁ L.qVec :=
+instance _root_.LO.Arith.Language.qVec_definable : Sg1-Function₁ L.qVec :=
   L.qVec_defined.to_definable
 
-instance _root_.LO.Arith.Language.qVec_definable' :
-    Γ-[m + 1]-Function₁ L.qVec :=
+instance _root_.LO.Arith.Language.qVec_definable' : Γ-[m + 1]-Function₁ L.qVec :=
   L.qVec_definable.of_sigmaOne
 
 end «lp_section_10»
@@ -519,22 +511,18 @@ variable {L}
 section «lp_section_11»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Arith.LDef.substsDef (pL : LDef) :
-    Sg1.Semisentence 3 :=
+def _root_.LO.FirstOrder.Arith.LDef.substsDef (pL : LDef) : Sg1.Semisentence 3 :=
   (blueprint pL).result
 
 variable (L)
 
-lemma _root_.LO.Arith.Language.substs_defined :
-    Sg1-Function₂ L.substs via pL.substsDef :=
+lemma _root_.LO.Arith.Language.substs_defined : Sg1-Function₂ L.substs via pL.substsDef :=
   (construction L).result_defined
 
-instance _root_.LO.Arith.Language.substs_definable :
-    Sg1-Function₂ L.substs :=
+instance _root_.LO.Arith.Language.substs_definable : Sg1-Function₂ L.substs :=
   L.substs_defined.to_definable
 
-instance _root_.LO.Arith.Language.substs_definable' :
-    Γ-[m + 1]-Function₂ L.substs :=
+instance _root_.LO.Arith.Language.substs_definable' : Γ-[m + 1]-Function₂ L.substs :=
   L.substs_definable.of_sigmaOne
 
 end «lp_section_11»
@@ -890,8 +878,7 @@ variable (L)
 lemma _root_.LO.Arith.Language.substs₁_defined : Sg1-Function₂ L.substs₁ via pL.substs₁Def := by
   intro v; simp [LDef.substs₁Def, L.substs_defined.df.iff]; rfl
 
-instance _root_.LO.Arith.Language.substs₁_definable :
-    Sg1-Function₂ L.substs₁ :=
+instance _root_.LO.Arith.Language.substs₁_definable : Sg1-Function₂ L.substs₁ :=
   L.substs₁_defined.to_definable
 
 instance : Γ-[m + 1]-Function₂ L.substs₁ := L.substs₁_definable.of_sigmaOne
@@ -925,12 +912,10 @@ variable (L)
 lemma _root_.LO.Arith.Language.free_defined : Sg1-Function₁ L.free via pL.freeDef := by
   intro v; simp [LDef.freeDef, L.shift_defined.df.iff, L.substs₁_defined.df.iff, Language.free]
 
-instance _root_.LO.Arith.Language.free_definable :
-    Sg1-Function₁ L.free :=
+instance _root_.LO.Arith.Language.free_definable : Sg1-Function₁ L.free :=
   L.free_defined.to_definable
 
-instance _root_.LO.Arith.Language.free_definable' :
-    Γ-[m + 1]-Function₁ L.free :=
+instance _root_.LO.Arith.Language.free_definable' : Γ-[m + 1]-Function₁ L.free :=
   L.free_definable.of_sigmaOne
 
 end «lp_section_15»
@@ -1036,20 +1021,16 @@ instance (Γ m) : Γ-[m + 1]-Function₂ (qqLT : V → V → V) := .of_sigmaOne 
 
 instance (Γ m) : Γ-[m + 1]-Function₂ (qqNLT : V → V → V) := .of_sigmaOne qqNLT_defined.to_definable
 
-@[simp] lemma eval_qqEQDef (v) :
-    Semiformula.Evalbm V v qqEQDef.val ↔ v 0 = v 1 ^= v 2 :=
+@[simp] lemma eval_qqEQDef (v) : Semiformula.Evalbm V v qqEQDef.val ↔ v 0 = v 1 ^= v 2 :=
   qqEQ_defined.df.iff v
 
-@[simp] lemma eval_qqNEQDef (v) :
-    Semiformula.Evalbm V v qqNEQDef.val ↔ v 0 = v 1 ^≠ v 2 :=
+@[simp] lemma eval_qqNEQDef (v) : Semiformula.Evalbm V v qqNEQDef.val ↔ v 0 = v 1 ^≠ v 2 :=
   qqNEQ_defined.df.iff v
 
-@[simp] lemma eval_qqLTDef (v) :
-    Semiformula.Evalbm V v qqLTDef.val ↔ v 0 = v 1 ^< v 2 :=
+@[simp] lemma eval_qqLTDef (v) : Semiformula.Evalbm V v qqLTDef.val ↔ v 0 = v 1 ^< v 2 :=
   qqLT_defined.df.iff v
 
-@[simp] lemma eval_qqNLTDef (v) :
-    Semiformula.Evalbm V v qqNLTDef.val ↔ v 0 = v 1 ^</ v 2 :=
+@[simp] lemma eval_qqNLTDef (v) : Semiformula.Evalbm V v qqNLTDef.val ↔ v 0 = v 1 ^</ v 2 :=
   qqNLT_defined.df.iff v
 
 lemma neg_eq {t u : V} (ht : ⌜ℒₒᵣ⌝.IsUTerm t) (hu : ⌜ℒₒᵣ⌝.IsUTerm u) :

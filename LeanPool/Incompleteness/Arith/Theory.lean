@@ -63,8 +63,7 @@ namespace Arith
 
 open LO.Arith
 
-noncomputable instance _root_.LO.FirstOrder.Arith.CobhamR0'.subtheoryOfCobhamR0 :
-    𝐑₀' wkn 𝐑₀ :=
+noncomputable instance _root_.LO.FirstOrder.Arith.CobhamR0'.subtheoryOfCobhamR0 : 𝐑₀' wkn 𝐑₀ :=
   Entailment.WeakerThan.ofAxm! <| by
   intro φ hp
   rcases hp
@@ -111,16 +110,14 @@ variable {L : Language} [(k : ℕ) → Encodable (L.Func k)] [(k : ℕ) →
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def singleton (φ : SyntacticFormula L) :
-    Theory.Delta1Definable {φ} where
+def singleton (φ : SyntacticFormula L) : Theory.Delta1Definable {φ} where
   ch := .ofZero (.mkSigma “x. x = ↑⌜φ⌝” (by simp)) _
   mem_iff {ψ} := by simp
   isDelta1 :=
     Arith.HierarchySymbol.Semiformula.ProvablyProperOn.ofProperOn.{0} _ fun V _ _ ↦ by simp
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[simp] lemma singleton_toTDef_ch_val (φ : FirstOrder.SyntacticFormula L) :
-    letI := singleton φ
+@[simp] lemma singleton_toTDef_ch_val (φ : FirstOrder.SyntacticFormula L) : letI := singleton φ
     (Theory.Delta1Definable.toTDef {φ}).ch.val = “x. x = ↑⌜φ⌝” := rfl
 
 end «lp_section_2»
@@ -132,14 +129,12 @@ namespace CobhamR0'
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def eqRefl : FirstOrder.Theory.Delta1Definable {(“∀ x, x = x” :
-    SyntacticFormula ℒₒᵣ)} :=
+def eqRefl : FirstOrder.Theory.Delta1Definable {(“∀ x, x = x” : SyntacticFormula ℒₒᵣ)} :=
   singleton _
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def replace :
-    FirstOrder.Theory.Delta1Definable {“∀ x y, x =
+def replace : FirstOrder.Theory.Delta1Definable {“∀ x y, x =
       y → !φ x → !φ y” | φ : SyntacticSemiformula ℒₒᵣ 1} where
   ch := .mkDelta
     (.mkSigma
@@ -240,8 +235,7 @@ def replace :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₁ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m =
+def Ω₁ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m =
       ↑(n + m)”} where
   ch := .mkDelta
     (.mkSigma “p.
@@ -315,8 +309,7 @@ private lemma Ω₁_set_mem_iff {φ : SyntacticFormula ℒₒᵣ} :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₂ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n * ↑m =
+def Ω₂ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n * ↑m =
       ↑(n * m)”} where
   ch := .mkDelta
     (.mkSigma “p.
@@ -386,8 +379,7 @@ def Ω₂ :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₃ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, n ≠ m ∧ φ =
+def Ω₃ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, n ≠ m ∧ φ =
       “↑n ≠ ↑m”} where
   ch := .mkDelta
     (.mkSigma “p. ∃ n < p, ∃ m < p, n ≠ m ∧
@@ -443,8 +435,7 @@ private lemma quote_disjLt_eq (n : ℕ) :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₄ :
-    FirstOrder.Theory.Delta1Definable {(“∀ x, x < ↑n ↔
+def Ω₄ : FirstOrder.Theory.Delta1Definable {(“∀ x, x < ↑n ↔
       ⋁ i < n, x = ↑i” : SyntacticFormula ℒₒᵣ) | n} where
   ch := .mkDelta
     (.mkSigma “p. ∃ n < p,
@@ -535,8 +526,7 @@ end Theory
 
 open Theory.CobhamR0'
 
-instance _root_.LO.Arith.Formalized.Theory.CobhamR0'Delta1Definable :
-    𝐑₀'.Delta1Definable :=
+instance _root_.LO.Arith.Formalized.Theory.CobhamR0'Delta1Definable : 𝐑₀'.Delta1Definable :=
   (eqRefl.add <| replace.add <| Ω₁.add <| Ω₂.add <| Ω₃.add Ω₄).ofEq <| by
     ext φ; constructor
     · rintro (hφ | hφ | hφ | hφ | hφ | hφ)
@@ -572,8 +562,7 @@ namespace CobhamR0'
 private lemma cobhamR0'_proof_block_boundary : True := by trivial
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Formalized.Theory.CobhamR0'.eqRefl.proof :
-    ⌜𝐑₀'⌝[V] ⊢ (#'0 =' #'0).all :=
+def _root_.LO.Arith.Formalized.Theory.CobhamR0'.eqRefl.proof : ⌜𝐑₀'⌝[V] ⊢ (#'0 =' #'0).all :=
   Language.Theory.TProof.byAxm <| by
   apply FirstOrder.Semiformula.curve_mem_left
   unfold eqRefl
@@ -722,8 +711,7 @@ end CobhamR0'
 end Theory
 
 instance _root_.LO.Arith.Formalized.Theory.addCobhamR0'Delta1Definable (T : Theory ℒₒᵣ) [d :
-    T.Delta1Definable] :
-    (T + 𝐑₀').Delta1Definable :=
+    T.Delta1Definable] : (T + 𝐑₀').Delta1Definable :=
   d.add Theory.CobhamR0'Delta1Definable
 section «lp_section_3»
 
@@ -736,8 +724,7 @@ variable {T}
 
 @[simp] lemma R₀'_subset_AddR₀ : ⌜𝐑₀'⌝[V] ⊆ T.AddR₀TTheory := Set.subset_union_right
 
-@[simp] lemma theory_subset_AddR₀ :
-    T.tCodeIn V ⊆ T.AddR₀TTheory :=
+@[simp] lemma theory_subset_AddR₀ : T.tCodeIn V ⊆ T.AddR₀TTheory :=
   FirstOrder.Theory.Delta1Definable.add_subset_left _ _
 
 instance : R₀Theory (T.AddR₀TTheory (V := V)) where
@@ -781,13 +768,11 @@ lemma provableₐ_defined : Sg1-Predicate (T.Provableₐ : V → Prop) via T.pro
 @[simp] lemma eval_provableₐ (v) :
     Semiformula.Evalbm V v T.provableₐ.val ↔ T.Provableₐ (v 0) := (provableₐ_defined T).df.iff v
 
-instance provableₐ_definable : Sg1-Predicate (T.Provableₐ :
-    V → Prop) :=
+instance provableₐ_definable : Sg1-Predicate (T.Provableₐ : V → Prop) :=
   (provableₐ_defined T).to_definable
 
 /-- instance for definability tactic -/
-instance provableₐ_definable' : Sg-[0 + 1]-Predicate (T.Provableₐ :
-    V → Prop) :=
+instance provableₐ_definable' : Sg-[0 + 1]-Predicate (T.Provableₐ : V → Prop) :=
   provableₐ_definable T
 
 end «lp_section_5»

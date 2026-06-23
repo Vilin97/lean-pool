@@ -18,12 +18,10 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveFrameClass : FrameClass :=
   { F | Std.Refl F ∧ IsTrans F.World F.Rel }
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveFiniteFrameClass :
-    FiniteFrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveFiniteFrameClass : FiniteFrameClass :=
   { F | Std.Refl F.Rel ∧ IsTrans F.World F.Rel }
 
 instance : ReflexiveTransitiveFrameClass.DefinedBy Hilbert.S4.axioms := by

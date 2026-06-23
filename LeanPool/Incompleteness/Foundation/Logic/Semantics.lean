@@ -89,8 +89,7 @@ variable [Tarski M]
 
 variable {𝓜 : M}
 
-@[simp] lemma realize_iff {φ ψ : F} :
-    𝓜 ⊧ φ <=> ψ ↔ ((𝓜 ⊧ φ) ↔ (𝓜 ⊧ ψ)) := by
+@[simp] lemma realize_iff {φ ψ : F} : 𝓜 ⊧ φ <=> ψ ↔ ((𝓜 ⊧ φ) ↔ (𝓜 ⊧ ψ)) := by
   simp [LogicalConnective.iff, iff_iff_implies_and_implies]
 
 @[simp] lemma realize_list_conj {l : List F} :
@@ -136,8 +135,7 @@ class Meaningful (𝓜 : M) : Prop where
 
 instance [LogicalConnective F] [Semantics.Bot M] (𝓜 : M) : Meaningful 𝓜 := ⟨⟨⊥, by simp⟩⟩
 
-lemma meaningful_iff {𝓜 : M} : Meaningful 𝓜 ↔ ∃ f, ¬𝓜 ⊧ f :=
-  ⟨by rintro ⟨h⟩; exact h, fun h ↦ ⟨h⟩⟩
+lemma meaningful_iff {𝓜 : M} : Meaningful 𝓜 ↔ ∃ f, ¬𝓜 ⊧ f := ⟨by rintro ⟨h⟩; exact h, fun h ↦ ⟨h⟩⟩
 
 lemma not_meaningful_iff (𝓜 : M) : ¬Meaningful 𝓜 ↔ ∀ f, 𝓜 ⊧ f := by simp [meaningful_iff]
 
@@ -148,8 +146,7 @@ lemma not_satisfiable_finset [LogicalConnective F] [Tarski M] [DecidableEq F] (t
     ¬Satisfiable M (t : Set F) ↔ Valid M (t.image (∼·)).disj := by
   simp [Satisfiable, realizeSet_iff, Valid]
 
-lemma satisfiableSet_iff_models_nonempty {T : Set F} :
-    Satisfiable M T ↔ (models M T).Nonempty :=
+lemma satisfiableSet_iff_models_nonempty {T : Set F} : Satisfiable M T ↔ (models M T).Nonempty :=
   ⟨by rintro ⟨𝓜, h𝓜⟩; exact ⟨𝓜, h𝓜⟩, by rintro ⟨𝓜, h𝓜⟩; exact ⟨𝓜, h𝓜⟩⟩
 
 namespace RealizeSet
@@ -166,8 +163,7 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 
 @[simp] lemma empty (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 
-@[simp] lemma singleton_iff {f : F} {𝓜 : M} :
-    𝓜 ⊧* {f} ↔ 𝓜 ⊧ f := by simp [realizeSet_iff]
+@[simp] lemma singleton_iff {f : F} {𝓜 : M} : 𝓜 ⊧* {f} ↔ 𝓜 ⊧ f := by simp [realizeSet_iff]
 
 @[simp] lemma insert_iff {T : Set F} {f : F} {𝓜 : M} :
     𝓜 ⊧* insert f T ↔ 𝓜 ⊧ f ∧ 𝓜 ⊧* T := by simp [realizeSet_iff]
@@ -209,8 +205,7 @@ variable {M}
 
 lemma set_models_iff {s : Set M} : s ⊧ f ↔ ∀ 𝓜 ∈ s, 𝓜 ⊧ f := iff_of_eq rfl
 
-instance [LogicalConnective F] [Semantics.Top M] :
-    Semantics.Top (Set M) :=
+instance [LogicalConnective F] [Semantics.Top M] : Semantics.Top (Set M) :=
   ⟨fun s ↦ by simp [set_models_iff]⟩
 
 lemma set_meaningful_iff_nonempty [LogicalConnective F] [∀ 𝓜 : M, Meaningful 𝓜] {s : Set M} :

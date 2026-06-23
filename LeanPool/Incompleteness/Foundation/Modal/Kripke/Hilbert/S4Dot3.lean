@@ -17,8 +17,7 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass : FrameClass :=
   { F | Std.Refl F ∧ IsTrans F.World F.Rel ∧ Connected F }
 
 instance _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass.DefinedByS4Dot3Axioms

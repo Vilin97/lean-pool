@@ -470,8 +470,7 @@ def substSigma (φ : Sg-[m + 1].Semiformula ξ 1) (F : Sg-[m + 1].Semiformula ξ
 @[simp] lemma val_negSigma {m} (φ : Sg-[m].Semiformula ξ n) :
     φ.negSigma.val = ∼φ.val := by simp [negSigma]
 
-@[simp] lemma val_negPi {m} (φ : Pg-[m].Semiformula ξ n) :
-    φ.negPi.val = ∼φ.val := by simp [negPi]
+@[simp] lemma val_negPi {m} (φ : Pg-[m].Semiformula ξ n) : φ.negPi.val = ∼φ.val := by simp [negPi]
 
 lemma val_negDelta {m} (φ : Dlt-[m].Semiformula ξ n) :
     (∼φ).val = ∼φ.pi.val := by simp [Tilde.tilde, negDelta]

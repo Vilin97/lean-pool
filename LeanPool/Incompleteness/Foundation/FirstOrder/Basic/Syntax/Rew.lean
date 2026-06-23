@@ -58,8 +58,7 @@ def rewAux ⦃n₁ n₂ : ℕ⦄ (ω : Rew L ξ₁ n₁ ξ₂ n₂) : Semiformul
   | ∀' φ     => ∀' rewAux ω.q φ
   | ∃' φ     => ∃' rewAux ω.q φ
 
-lemma rewAux_neg (ω : Rew L ξ₁ n₁ ξ₂ n₂) (φ : Semiformula L ξ₁ n₁) :
-    rewAux ω (∼φ) = ∼rewAux ω φ :=
+lemma rewAux_neg (ω : Rew L ξ₁ n₁ ξ₂ n₂) (φ : Semiformula L ξ₁ n₁) : rewAux ω (∼φ) = ∼rewAux ω φ :=
   by induction φ using Semiformula.rec' generalizing n₂ <;> simp [*, rewAux]
 
 lemma ext_rewAux' {ω₁ ω₂ : Rew L ξ₁ n₁ ξ₂ n₂} (h : ω₁ = ω₂) (φ : Semiformula L ξ₁ n₁) :

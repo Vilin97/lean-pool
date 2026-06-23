@@ -58,8 +58,7 @@ instance [defs : C.DefinedBy H.axioms] : C.DefinedBy H.axiomInstances := ⟨by
     simp;
 ⟩
 
-instance [C.DefinedBy H.axioms] :
-    Sound H C :=
+instance [C.DefinedBy H.axioms] : Sound H C :=
   ⟨fun {_} => soundness_of_FrameClass_definedBy_axiomInstances⟩
 
 lemma consistent_of_FrameClass_aux [nonempty : C.IsNonempty] [sound : Sound H C] : H ⊬ ⊥ := by

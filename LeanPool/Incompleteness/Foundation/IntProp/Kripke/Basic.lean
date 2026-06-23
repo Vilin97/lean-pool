@@ -96,8 +96,7 @@ def Satisfies (M : Kripke.Model) (w : M.World) : Formula ℕ → Prop
 
 namespace Satisfies
 
-instance semantics (M : Kripke.Model) :
-    Semantics (Formula ℕ) (M.World) :=
+instance semantics (M : Kripke.Model) : Semantics (Formula ℕ) (M.World) :=
   ⟨fun w ↦ Formula.Kripke.Satisfies M w⟩
 
 variable {M : Kripke.Model} {w w' : M.World} {a : ℕ} {φ ψ χ : Formula ℕ}
@@ -365,32 +364,26 @@ protected lemma orInst₁ : F ⊧ φ ==> φ ⋎ ψ := fun _ => ValidOnModel.orIn
 
 protected lemma orInst₂ : F ⊧ ψ ==> φ ⋎ ψ := fun _ => ValidOnModel.orInst₂
 
-protected lemma orElim :
-    F ⊧ (φ ==> χ) ==> (ψ ==> χ) ==> (φ ⋎ ψ ==> χ) :=
+protected lemma orElim : F ⊧ (φ ==> χ) ==> (ψ ==> χ) ==> (φ ⋎ ψ ==> χ) :=
   fun _ => ValidOnModel.orElim
 
 protected lemma imply₁ : F ⊧ φ ==> ψ ==> φ := fun _ => ValidOnModel.imply₁
 
-protected lemma imply₂ :
-    F ⊧ (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
+protected lemma imply₂ : F ⊧ (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> φ ==> χ :=
   fun _ => ValidOnModel.imply₂
 
-protected lemma mdp (hpq : F ⊧ φ ==> ψ) (hp : F ⊧ φ) :
-    F ⊧ ψ :=
+protected lemma mdp (hpq : F ⊧ φ ==> ψ) (hp : F ⊧ φ) : F ⊧ ψ :=
   fun V x => ValidOnModel.mdp (hpq V) (hp V) x
 
 protected lemma efq : F ⊧ Axioms.EFQ φ := fun _ => ValidOnModel.efq
 
-protected lemma lem (F_symm : Symmetric F.Rel) :
-    F ⊧ Axioms.LEM φ :=
+protected lemma lem (F_symm : Symmetric F.Rel) : F ⊧ Axioms.LEM φ :=
   fun _ => ValidOnModel.lem F_symm
 
-protected lemma dum (F_conn : Connected F.Rel) :
-    F ⊧ Axioms.Dummett φ ψ :=
+protected lemma dum (F_conn : Connected F.Rel) : F ⊧ Axioms.Dummett φ ψ :=
   fun _ => ValidOnModel.dum F_conn
 
-protected lemma wlem (F_conf : Confluent F.Rel) :
-    F ⊧ Axioms.WeakLEM φ :=
+protected lemma wlem (F_conf : Confluent F.Rel) : F ⊧ Axioms.WeakLEM φ :=
   fun _ => ValidOnModel.wlem F_conf
 
 end ValidOnFrame

@@ -189,8 +189,7 @@ instance : Entailment.KB (Hilbert.KB) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KDB :
-    Hilbert ℕ :=
+protected abbrev KDB : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.D (.atom 0), Axioms.B (.atom 0)}⟩
 instance : (Hilbert.KDB).HasK where p := 0; q := 1;
 instance : (Hilbert.KDB).HasD where p := 0
@@ -199,8 +198,7 @@ instance : Entailment.KDB (Hilbert.KDB) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KTB :
-    Hilbert ℕ :=
+protected abbrev KTB : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.B (.atom 0)}⟩
 instance : (Hilbert.KTB).HasK where p := 0; q := 1;
 instance : (Hilbert.KTB).HasT where p := 0
@@ -216,8 +214,7 @@ instance : Entailment.K4 (Hilbert.K4) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KT4B :
-    Hilbert ℕ :=
+protected abbrev KT4B : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Four (.atom 0), Axioms.B (.atom 0)}⟩
 instance : (Hilbert.KT4B).HasK where p := 0; q := 1;
 instance : (Hilbert.KT4B).HasT where p := 0
@@ -225,8 +222,7 @@ instance : (Hilbert.KT4B).HasFour where p := 0
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev K45 :
-    Hilbert ℕ :=
+protected abbrev K45 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.Four (.atom 0), Axioms.Five (.atom 0)}⟩
 instance : (Hilbert.K45).HasK where p := 0; q := 1;
 instance : (Hilbert.K45).HasFour where p := 0
@@ -235,8 +231,7 @@ instance : Entailment.K45 (Hilbert.K45) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KD4 :
-    Hilbert ℕ :=
+protected abbrev KD4 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.D (.atom 0), Axioms.Four (.atom 0)}⟩
 instance : (Hilbert.KD4).HasK where p := 0; q := 1;
 instance : (Hilbert.KD4).HasD where p := 0
@@ -245,8 +240,7 @@ instance : Entailment.KD4 (Hilbert.KD4) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KD5 :
-    Hilbert ℕ :=
+protected abbrev KD5 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.D (.atom 0), Axioms.Five (.atom 0)}⟩
 instance : (Hilbert.KD5).HasK where p := 0; q := 1;
 instance : (Hilbert.KD5).HasD where p := 0
@@ -255,8 +249,7 @@ instance : Entailment.KD5 (Hilbert.KD5) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KD45 :
-    Hilbert ℕ :=
+protected abbrev KD45 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.D (.atom 0), Axioms.Four (.atom 0), Axioms.Five (.atom 0)}⟩
 instance : (Hilbert.KD45).HasK where p := 0; q := 1;
 instance : (Hilbert.KD45).HasD where p := 0
@@ -266,8 +259,7 @@ instance : Entailment.KD45 (Hilbert.KD45) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KB4 :
-    Hilbert ℕ :=
+protected abbrev KB4 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.B (.atom 0), Axioms.Four (.atom 0)}⟩
 instance : (Hilbert.KB4).HasK where p := 0; q := 1;
 instance : (Hilbert.KB4).HasB where p := 0
@@ -276,8 +268,7 @@ instance : Entailment.KB4 (Hilbert.KB4) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev KB5 :
-    Hilbert ℕ :=
+protected abbrev KB5 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.B (.atom 0), Axioms.Five (.atom 0)}⟩
 instance : (Hilbert.KB5).HasK where p := 0; q := 1;
 instance : (Hilbert.KB5).HasB where p := 0
@@ -286,8 +277,7 @@ instance : Entailment.KB5 (Hilbert.KB5) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev S4 :
-    Hilbert ℕ :=
+protected abbrev S4 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Four (.atom 0)}⟩
 instance : (Hilbert.S4).HasK where p := 0; q := 1;
 instance : (Hilbert.S4).HasT where p := 0
@@ -297,8 +287,7 @@ instance : Entailment.S4 (Hilbert.S4) where
 lemma K4_weakerThan_S4 : Hilbert.K4 wkn Hilbert.S4 := weakerThan_of_dominate_axioms <| by simp;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev S4Dot2 :
-    Hilbert ℕ :=
+protected abbrev S4Dot2 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Four (.atom 0), Axioms.Dot2 (.atom 0)}⟩
 instance : (Hilbert.S4Dot2).HasK where p := 0; q := 1;
 instance : (Hilbert.S4Dot2).HasT where p := 0
@@ -308,8 +297,7 @@ instance : Entailment.S4Dot2 (Hilbert.S4Dot2) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev S4Dot3 :
-    Hilbert ℕ :=
+protected abbrev S4Dot3 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Four (.atom 0),
     Axioms.Dot3 (.atom 0) (.atom 1)}⟩
 instance : (Hilbert.S4Dot3).HasK where p := 0; q := 1;
@@ -327,8 +315,7 @@ instance : Entailment.K5 (Hilbert.K5) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev S5 :
-    Hilbert ℕ :=
+protected abbrev S5 : Hilbert ℕ :=
   ⟨{Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Five (.atom 0)}⟩
 instance : (Hilbert.S5).HasK where p := 0; q := 1;
 instance : (Hilbert.S5).HasT where p := 0
@@ -364,8 +351,7 @@ instance : Entailment.Ver (Hilbert.Ver) where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected abbrev Triv :
-    Hilbert ℕ :=
+protected abbrev Triv : Hilbert ℕ :=
   ⟨{ Axioms.K (.atom 0) (.atom 1), Axioms.T (.atom 0), Axioms.Tc (.atom 0)}⟩
 instance : (Hilbert.Triv).HasK where p := 0; q := 1;
 instance : (Hilbert.Triv).HasT where p := 0

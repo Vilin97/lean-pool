@@ -154,8 +154,7 @@ lemma multidia_def : x ⊧ ◇^[n]φ ↔ ∃ y, x ≺^[n] y ∧ y ⊧ φ := by
 lemma trans (hpq : x ⊧ φ ==> ψ) (hqr : x ⊧ ψ ==> χ) : x ⊧ φ ==> χ :=
   Satisfies.imp_def.mpr fun hφ => Satisfies.imp_def.mp hqr (Satisfies.imp_def.mp hpq hφ)
 
-lemma mdp (hpq : x ⊧ φ ==> ψ) (hp : x ⊧ φ) : x ⊧ ψ :=
-  Satisfies.imp_def.mp hpq hp
+lemma mdp (hpq : x ⊧ φ ==> ψ) (hp : x ⊧ φ) : x ⊧ ψ := Satisfies.imp_def.mp hpq hp
 
 lemma diaDual : x ⊧ ◇φ ↔ x ⊧ ∼□(∼φ) := by simp [Satisfies];
 

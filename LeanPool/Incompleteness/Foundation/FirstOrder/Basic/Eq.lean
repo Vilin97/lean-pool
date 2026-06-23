@@ -367,8 +367,7 @@ noncomputable instance [Operator.Mul L] : Mul (ModelOfSatEq sat) :=
 
 instance [Operator.Mul L] : Structure.Mul L (ModelOfSatEq sat) := ⟨fun _ _ => rfl⟩
 
-instance [Operator.LT L] : LT (ModelOfSatEq sat) :=
-  ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
+instance [Operator.LT L] : LT (ModelOfSatEq sat) := ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
 
 instance [Operator.LT L] : Structure.LT L (ModelOfSatEq sat) := ⟨fun _ _ => iff_of_eq rfl⟩
 
