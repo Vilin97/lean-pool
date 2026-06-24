@@ -42,7 +42,7 @@ theorem BL_SUBSET : ∀ (code : Code) (P Q : Assertion) (l: UInt64) (L_w L_b L :
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
   exists s'
   refine ⟨weak_with_less_BL_weakens _ _ _ _ _ _ H1, H2, ?_⟩
-  exact Set.notMem_subset Set.diff_subset H3
+  exact Set.notMem_subset Set.sdiff_subset H3
 
 /--
 Allows to weaken the Hoare triple

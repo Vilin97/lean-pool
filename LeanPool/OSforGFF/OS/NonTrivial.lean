@@ -212,7 +212,7 @@ theorem gaussianFreeField_not_dirac (m : ℝ) [Fact (0 < m)] :
       φ.one_of_mem_closedBall (Metric.mem_closedBall_self φ.rIn_pos.le)
     have h2 : (φ.hasCompactSupport.toSchwartzMap φ.contDiff) (0 : SpaceTime) =
               φ (0 : SpaceTime) := rfl
-    rw [h] at h2; simp only [SchwartzMap.zero_apply, h1] at h2; exact one_ne_zero h2.symm
+    rw [h] at h2; simp only [zero_apply, h1] at h2; exact one_ne_zero h2.symm
   exact ⟨f, hf, gaussianFreeField_variance_pos m f hf⟩
 
 /-! ## UV divergence: pointwise covariance diverges at coincident points

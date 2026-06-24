@@ -27,7 +27,7 @@ variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain
 /- In a domain, a height-≤-1 ideal `J` containing a nonzero prime ideal
 `span{p}` coincides with it: a strict inclusion would force `span{p}` to have
 height `0`, contradicting `⊥ < span{p}`. -/
-private def span_singleton_eq_of_height_le_one {A : Type*} [CommRing A]
+private theorem span_singleton_eq_of_height_le_one {A : Type*} [CommRing A]
     [IsDomain A] (J : Ideal A) [J.IsPrime] (hJ_ht : J.height ≤ 1) {p : A} (hp_ne : p ≠ 0)
     [(Ideal.span {p}).IsPrime] (hspan_le : Ideal.span {p} ≤ J) :
     Ideal.span {p} = J := by

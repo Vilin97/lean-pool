@@ -135,7 +135,7 @@ private lemma Iio_inter_Iio_eq {a b : Rand} (hab : a ≤ b) :
 private lemma Iio_diff_Iio_eq {a b : Rand} (_hab : a ≤ b) :
     (Set.Iio b \ Set.Iio a : Set Rand) = Set.Ico a b := by
   ext c
-  simp only [Set.mem_diff, Set.mem_Iio, Set.mem_Ico, not_lt]
+  simp only [Set.mem_sdiff, Set.mem_Iio, Set.mem_Ico, not_lt]
   exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
 
 /-- `Ico a b ∩ Iio c = Ico a c` for `c ≤ b`. -/
@@ -149,7 +149,7 @@ private lemma Ico_inter_Iio_eq {a b c : Rand} (hcb : c ≤ b) :
 private lemma Ico_diff_Iio_eq {a b c : Rand} (hac : a ≤ c) :
     (Set.Ico a b \ Set.Iio c : Set Rand) = Set.Ico c b := by
   ext x
-  simp only [Set.mem_diff, Set.mem_Ico, Set.mem_Iio, not_lt]
+  simp only [Set.mem_sdiff, Set.mem_Ico, Set.mem_Iio, not_lt]
   exact ⟨fun h => ⟨h.2, h.1.2⟩, fun h => ⟨⟨le_trans hac h.1, h.2⟩, h.1⟩⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/

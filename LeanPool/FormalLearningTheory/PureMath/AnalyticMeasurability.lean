@@ -103,7 +103,7 @@ theorem analyticSet_nullMeasurableSet
       measureReal_sdiff (fun x hx => hst (hKs hx)) hKc.isClosed.measurableSet
     have ht_real : μ.real t = μ.real s := by simp only [Measure.real]; rw [ht_eq]
     have hle : μ.real (t \ s) ≤ μ.real (t \ K) :=
-      measureReal_mono (Set.diff_subset_diff_right hKs)
+      measureReal_mono (Set.sdiff_subset_sdiff_right hKs)
     -- Combine with hKapprox (μ.real s < μ.real K + μ.real(t \ s)/2) for the contradiction.
     linarith
   have h_ae : s =ᵐ[μ] t := by

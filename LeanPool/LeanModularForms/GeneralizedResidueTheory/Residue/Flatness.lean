@@ -247,7 +247,7 @@ theorem isFlatOfOrder_one (γ : PiecewiseC1Immersion) (t₀ : ℝ)
   have hcont : ContinuousAt γ.toFun t₀ :=
     γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
   have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-    (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
+    (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
   have hdiff_right : ∀ᶠ t in 𝓝[>] t₀, DifferentiableAt ℝ γ.toFun t := by
     filter_upwards [
       nhdsWithin_le_nhds (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
