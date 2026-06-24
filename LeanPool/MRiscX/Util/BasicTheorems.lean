@@ -165,8 +165,7 @@ instance instPreorderUInt64LeanPool : Preorder UInt64 where
     intros a b
     constructor
     · intro h
-      simp only [UInt64.not_le]
-      exact ⟨UInt64.le_of_lt h, h⟩
+      simpa only [UInt64.not_le] using ⟨UInt64.le_of_lt h, h⟩
     · simp
 
 

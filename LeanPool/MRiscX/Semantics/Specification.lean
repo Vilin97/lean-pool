@@ -384,8 +384,7 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
     MState.getRegisterAt_def] at h_cond
   simp only [MState.currInstruction_unfold] at h_curr
   have h_cond_false: (TMap.get state.registers reg2 < TMap.get state.registers reg1) ↔ false := by
-    simp only [Bool.false_eq_true, iff_false, UInt64.not_lt]
-    exact h_cond
+    simpa only [Bool.false_eq_true, iff_false, UInt64.not_lt] using h_cond
   exists state.runOneStep
   unfold weak
   apply And.intro
