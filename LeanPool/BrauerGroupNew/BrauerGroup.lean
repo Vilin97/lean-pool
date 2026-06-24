@@ -289,8 +289,7 @@ def dimOneIso (R : Type*) [Ring R] [Algebra K R] : (Matrix (Fin 1) (Fin 1) R) �
     Matrix.diagonal_apply_eq]
   right_inv r := by simp only [Fin.isValue, Matrix.diagonal_apply_eq]
   map_mul' m n := by
-    simp only [Fin.isValue, Matrix.mul_apply]
-    exact Fin.sum_univ_one fun i ↦ m 0 i * n i 0
+    simpa only [Fin.isValue, Matrix.mul_apply] using Fin.sum_univ_one fun i ↦ m 0 i * n i 0
   map_add' m n := by simp only [Fin.isValue, Matrix.add_apply]
   commutes' r := by
     simp only [Fin.isValue, Algebra.algebraMap_eq_smul_one']
