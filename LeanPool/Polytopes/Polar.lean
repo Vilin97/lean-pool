@@ -21,8 +21,7 @@ noncomputable def pointDualLin (p : {p : E // p ≠ 0}) :
   have : norm ((InnerProductSpace.toDual ℝ E) ↑p) = norm p.1 := by simp
   rw [← this]
   refine norm_smul_inv_norm ?_
-  simp only [ne_eq, AddEquivClass.map_eq_zero_iff]
-  exact p.2
+  simpa only [ne_eq, AddEquivClass.map_eq_zero_iff] using p.2
   ) ⟩
 
 /-- Given a nonzero vector `p`, the halfspace `{x | inner p x ≤ 1}`. -/

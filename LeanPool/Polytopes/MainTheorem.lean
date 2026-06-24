@@ -105,8 +105,7 @@ lemma hxSegBallInterSeg : ∀ (x1 x2 : E) (ε : ℝ),
       · apply key
         rwa [abs_of_neg ht1, neg_neg]
       · apply key
-        rw [abs_of_pos ht2]
-        exact hmin'
+        rwa [abs_of_pos ht2]
   · -- 2. the smaller segment is not a singleton
     rintro ⟨_, h2⟩
     have hvne : v ≠ 0 := sub_ne_zero_of_ne (Ne.symm hx12)
