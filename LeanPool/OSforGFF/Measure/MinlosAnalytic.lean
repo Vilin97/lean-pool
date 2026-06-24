@@ -148,9 +148,8 @@ lemma integral_neg_invariance
     simp only [distributionPairing] at hCF_equal h_realCF
     exact minlos_gaussian_uniqueness h_cf_cont C.gaussian_cf_pd h_cf_norm
       (fun g => (hCF_equal g).trans (h_realCF g)) h_realCF
-  have hμeq : μneg = μ.toMeasure := by
-    have h := congrArg ProbabilityMeasure.toMeasure hμeq_prob
-    exact h
+  have hμeq : μneg = μ.toMeasure :=
+    congrArg ProbabilityMeasure.toMeasure hμeq_prob
   -- Step 4: Use the equality of measures to get the integral identity
   have hf_aestrongly_measurable : AEStronglyMeasurable f μneg := by
     rw [hμeq]

@@ -64,14 +64,11 @@ private theorem shatters_restrict {X : Type u} [DecidableEq X] {C : ConceptClass
     if h : y ∈ S.erase x then f ⟨y, h⟩ else b
   obtain ⟨c, hcC, hc⟩ := hshat f'
   have hcx : c x = b := by
-    have := hc ⟨x, hx⟩
-    simp only [f', Finset.mem_erase, ne_eq, not_true_eq_false, false_and, dite_false] at this
-    exact this
+    simpa only [f', Finset.mem_erase, ne_eq, not_true_eq_false, false_and, dite_false]
+      using hc ⟨x, hx⟩
   refine ⟨c, ⟨hcC, hcx⟩, fun ⟨y, hy⟩ => ?_⟩
   have hy_S : y ∈ S := Finset.mem_of_mem_erase hy
-  have := hc ⟨y, hy_S⟩
-  simp only [f', hy, dite_true] at this
-  exact this
+  simpa only [f', hy, dite_true] using hc ⟨y, hy_S⟩
 
 /-- Adversary argument directly from shattering (universe-polymorphic).
     Given a shattered set S and any online learner L starting from state s,
@@ -210,9 +207,7 @@ private lemma measurableSet_goodBlock_A
     intro xs; ext x; rfl
   have h_meas_fn : Measurable (fun xs : Fin n → X =>
       D { x | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }) := by
-    have := measurable_measure_prodMk_left (ν := D) h_disagree
-    simp only [h_sec_eq] at this
-    exact this
+    simpa only [h_sec_eq] using measurable_measure_prodMk_left (ν := D) h_disagree
   exact h_meas_fn measurableSet_Iic
 
 /-- goodBlockEvent is measurable for each block index j. -/

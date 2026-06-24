@@ -154,8 +154,8 @@ All results assume m > 0 (positive mass) which is required for integrability.
 theorem freeCovarianceℂ_bilinear_integrable
     (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     Integrable (fun p : SpaceTime × SpaceTime =>
-      (f p.1) * (freeCovariance m p.1 p.2) * (g p.2)) volume := by
-  exact freeCovarianceℂ_bilinear_integrable' m f g
+      (f p.1) * (freeCovariance m p.1 p.2) * (g p.2)) volume :=
+  freeCovarianceℂ_bilinear_integrable' m f g
 
 /-- Integrability of the covariance kernel evaluated on a time-reflected test function.
     This follows directly from `freeCovarianceℂ_bilinear_integrable` since `compTimeReflection`

@@ -100,8 +100,7 @@ lemma exists_CLF_le_seminorm
     -- g(f) = q(f)
     have hg_f : g f = q f := by
       have h := hg_ext ⟨f, Submodule.mem_span_singleton.mpr ⟨1, one_smul _ _⟩⟩
-      simp only [f₀, LinearPMap.mkSpanSingleton'_apply_self] at h
-      exact h
+      simpa only [f₀, LinearPMap.mkSpanSingleton'_apply_self] using h
     -- |g(x)| ≤ q(x) from g(x) ≤ q(x) and g(-x) ≤ q(-x) = q(x)
     have hg_abs : ∀ x, |g x| ≤ q x := by
       intro x; rw [abs_le]

@@ -1051,8 +1051,7 @@ theorem hermiteFunction_sup_bound :
   have hderiv : ∀ t ∈ Set.Iic a, HasDerivAt f (f' t) t := by
     intro t _
     have := hasDerivAt_hermiteFunction_sq n t
-    simp only [hf'_def, mul_assoc] at this ⊢
-    exact this
+    simpa only [hf'_def, mul_assoc] using this
   have hf'_int : IntegrableOn f' (Set.Iic a) volume :=
     ((integrable_hermiteFunction_mul_deriv n).const_mul 2).integrableOn
   have htend : Filter.Tendsto f Filter.atBot (nhds 0) :=

@@ -274,8 +274,7 @@ private lemma iInter_closure_image_cyl_eq
       have hdist_bound := hg_dist (φ n)
       have hsmall : (1 : ℝ) / (↑(φ n) + 1) < ε := by
         have h := hM n hn
-        rw [Real.dist_0_eq_abs, abs_of_nonneg (by positivity)] at h
-        exact h
+        rwa [Real.dist_0_eq_abs, abs_of_nonneg (by positivity)] at h
       exact lt_trans hdist_bound hsmall
     -- By uniqueness of limits in T2: f(g_star) = y
     have : f g_star = y := tendsto_nhds_unique hf_conv hfy

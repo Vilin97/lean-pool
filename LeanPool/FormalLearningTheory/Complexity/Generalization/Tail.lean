@@ -149,9 +149,7 @@ theorem nfl_per_sample_shattered {X : Type u} {C : ConceptClass X Bool}
   refine ⟨c, hcC, ?_, ?_⟩
   · -- c agrees with h on sample points that are in T
     intro i hi
-    have hcfi : c (xs i) = f ⟨xs i, hi⟩ := hcf ⟨xs i, hi⟩
-    simp only [f, Set.mem_range_self, ↓reduceIte] at hcfi
-    exact hcfi
+    simpa only [f, Set.mem_range_self, ↓reduceIte] using hcf ⟨xs i, hi⟩
   · -- c disagrees with h on all unseen points of T
     -- So the disagreement count ≥ |T \ range(xs)| ≥ T.card - m > T.card/2
     -- First: every unseen point in T has c x ≠ h x

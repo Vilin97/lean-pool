@@ -95,8 +95,7 @@ theorem dual_shatters_imp_original_shatters {d : ℕ}
       have hj := hx j s
       have hk := hx k s
       rw [hjk] at hj
-      rw [hj] at hk
-      exact hk
+      rwa [hj] at hk
     let b0 : Fin (d + 1) → Bool := fun i => i == j
     have hlabel_j_b0 : label j (embed b0) = true := by
       simp only [label]

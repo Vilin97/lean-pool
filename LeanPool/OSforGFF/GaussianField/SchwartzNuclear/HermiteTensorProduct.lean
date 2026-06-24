@@ -645,8 +645,7 @@ private lemma multiIndex_abs_succ_symm (d : ℕ) (n : ℕ) :
   have h := multiIndex_abs_succ d
     ((Fin.succFunEquiv ℕ (d + 1)).symm
       ((multiIndexEquiv d).symm (Nat.unpair n).1, (Nat.unpair n).2))
-  simp only [Equiv.apply_symm_apply] at h
-  exact h
+  simpa only [Equiv.apply_symm_apply] using h
 
 /-- The multi-index enumeration has polynomial growth.
 Stated for `MultiIndex (d + 1)` since `multiIndexEquiv d : MultiIndex (d + 1) ≃ ℕ`.

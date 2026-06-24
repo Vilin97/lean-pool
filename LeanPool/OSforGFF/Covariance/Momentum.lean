@@ -1933,8 +1933,8 @@ theorem freeCovarianceℂ_bilinear_integrable' (m : ℝ) [Fact (0 < m)] (f g : T
     ext p
     rw [h_transl_inv p.1 p.2]
   rw [h_eq]
-  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume := by
-    exact Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
+  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume :=
+    Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
   exact schwartz_bilinear_integrable_of_translationInvariant_L1
     (fun z => (freeCovarianceKernel m z : ℂ)) hK_int f g
 

@@ -1343,8 +1343,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
       (fun i _ => (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
     -- h_eq : iteratedFDeriv ℝ l (∑ j ∈ s, g j ·) = ∑ j ∈ s, iteratedFDeriv ℝ l (g j)
     have := congr_fun h_eq x
-    simp only [Finset.sum_apply] at this
-    exact this
+    simpa only [Finset.sum_apply] using this
   -- Step 4: iteratedFDeriv of r = ∑'_{i∉s} iteratedFDeriv(gₙ)
   have h_iFD_r : iteratedFDeriv ℝ l (⇑r) x =
       ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (g ↑i) x := by

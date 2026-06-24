@@ -294,8 +294,7 @@ theorem vcdim_finite_imp_proper_finite_support_learner
         -- hcons_i : h_out (Z.equivFin.symm i : X) = c (Z.equivFin.symm i : X)
         -- Z.equivFin.symm i = y_sub = ⟨(hs t : X), ht_in_Z⟩
         have h_symm : Z.equivFin.symm i = y_sub := Z.equivFin.symm_apply_apply y_sub
-        rw [h_symm] at hcons_i
-        exact hcons_i
+        rwa [h_symm] at hcons_i
       -- Now combine: |true - 0| ≤ 1 / 3, and true is nonneg, so true ≤ 1 / 3
       rw [h_emp_zero, sub_zero] at hclose
       calc boolTestExpectation q disagree

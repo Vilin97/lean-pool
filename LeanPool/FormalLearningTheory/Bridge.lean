@@ -653,9 +653,7 @@ theorem compression_bounds_vcdim (X : Type u)
     refine ⟨c, hcC, ?_⟩
     intro ⟨x, hx⟩
     have hxS : x ∈ S := hT_sub hx
-    have := hcg ⟨x, hxS⟩
-    simp only [g, hx, dite_true] at this
-    exact this
+    simpa only [g, hx, dite_true] using hcg ⟨x, hxS⟩
   set n := T.card with hn_def
   have hn_eq : n = N := hT_card
   -- Enumerate T injectively
@@ -673,8 +671,7 @@ theorem compression_bounds_vcdim (X : Type u)
     refine ⟨c, hcC, fun i => ?_⟩
     have := hcf' (eqv i)
     simp only [f', pts] at this ⊢
-    rw [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
-    exact this
+    rwa [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
   -- compress ∘ mkSample is injective
   have h_inj : Function.Injective (cs.compress ∘ mkSample) := by
     intro f g hfg

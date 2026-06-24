@@ -403,8 +403,7 @@ private lemma schwartz_timeTranslation_mvt_bound
             use (SchwartzMap.seminorm ℝ 0 (n + 1)) f
             rintro _ ⟨⟨s, _⟩, rfl⟩
             have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
-            simp only [pow_zero, one_mul] at this
-            exact this
+            simpa only [pow_zero, one_mul] using this
           haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
           have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
             simp only [Real.sSup_empty]

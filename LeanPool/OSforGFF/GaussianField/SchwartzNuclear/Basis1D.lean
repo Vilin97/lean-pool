@@ -85,8 +85,7 @@ theorem schwartz_hermite_expansion_CLF
   have key : ∀ x : ℝ, @inner ℝ ℝ _ 1 x = x := fun x => by
     rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real]
     simp
-  simp only [key] at h
-  exact h
+  simpa only [key] using h
 
 /-! ## Seminorm Bounds
 

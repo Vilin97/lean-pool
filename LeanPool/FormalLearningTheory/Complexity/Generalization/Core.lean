@@ -411,8 +411,7 @@ theorem erm_consistent_realizable (X : Type u) [MeasurableSpace X] [DecidableEq 
   obtain ⟨hch_mem, hch_min⟩ := hexists.choose_spec
   have hch_le : EmpiricalError X Bool hexists.choose S' loss ≤ 0 := by
     have := hch_min c (hreal hcC)
-    rw [hc_emp_zero] at this
-    exact this
+    rwa [hc_emp_zero] at this
   -- Step 6: EmpError(h₀) = 0 (since 0 ≤ EmpError ≤ 0)
   have hch_zero : EmpiricalError X Bool hexists.choose S' loss = 0 :=
     le_antisymm hch_le (hEmp_nonneg _)
@@ -1895,9 +1894,7 @@ private lemma shatters_subset {X : Type u} {C : ConceptClass X Bool}
   refine ⟨c, hcC, ?_⟩
   intro ⟨x, hx⟩
   have hxS : x ∈ S := hST hx
-  have := hcg ⟨x, hxS⟩
-  simp only [g, hx, dite_true] at this
-  exact this
+  simpa only [g, hx, dite_true] using hcg ⟨x, hxS⟩
 
 /-- Exponential beats polynomial at n = 2(k+1)²: (k+1) * (4(k+1)²)^k < 2^(2(k+1)²).
     Core combinatorial inequality for the compression → finite VCDim proof.
@@ -1992,8 +1989,7 @@ theorem compression_imp_vcdim_finite (X : Type u)
     refine ⟨c, hcC, fun i => ?_⟩
     have := hcf' (eqv i)
     simp only [f', pts] at this ⊢
-    rw [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
-    exact this
+    rwa [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
   -- compress ∘ mkSample is injective (core pigeonhole step)
   -- Shatters gives C-realizability for each labeling, firing correctness
   have h_inj : Function.Injective (cs.compress ∘ mkSample) := by

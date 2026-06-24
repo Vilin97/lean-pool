@@ -357,13 +357,11 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   have h_sq_fg : ∫ ω, (ω (f + g))^2 ∂(gaussianFreeFieldFree m).toMeasure =
       freeCovarianceFormR m (f + g) (f + g) := by
     have := gff_second_moment_eq_covariance m (f + g)
-    simp only [distributionPairingCLM_apply, distributionPairing] at this
-    exact this
+    simpa only [distributionPairingCLM_apply, distributionPairing] using this
   have h_sq_f_g : ∫ ω, (ω (f - g))^2 ∂(gaussianFreeFieldFree m).toMeasure =
       freeCovarianceFormR m (f - g) (f - g) := by
     have := gff_second_moment_eq_covariance m (f - g)
-    simp only [distributionPairingCLM_apply, distributionPairing] at this
-    exact this
+    simpa only [distributionPairingCLM_apply, distributionPairing] using this
   have h_int_plus : Integrable (fun ω : FieldConfiguration => (ω (f + g)) ^ 2)
       (gaussianFreeFieldFree m).toMeasure := by
     simpa only [distributionPairingCLM_apply, distributionPairing] using

@@ -180,8 +180,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
       rw [h_rewrite, h_left]
   -- Step 2: Use linearity of time reflection
   have h_step2 : ∑ i, c i • QFT.compTimeReflectionReal (f i).val =
-    QFT.compTimeReflectionReal (∑ i, c i • (f i).val) := by
-    exact (compTimeReflectionReal_linear_combination (fun i => (f i).val) c).symm
+    QFT.compTimeReflectionReal (∑ i, c i • (f i).val) :=
+    (compTimeReflectionReal_linear_combination (fun i => (f i).val) c).symm
   -- Step 3: The sum of positive-time functions is positive-time
   obtain ⟨g, hg⟩ := PositiveTimeTestFunction.sum_smul_mem f c
   -- Step 4: Combine and apply reflection positivity

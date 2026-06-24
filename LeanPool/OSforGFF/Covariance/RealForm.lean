@@ -762,8 +762,8 @@ lemma freeCovarianceFormR_reflection_cross
   calc
     freeCovarianceFormR m (QFT.compTimeReflectionReal f) g
         = freeCovarianceFormR m f (QFT.compTimeReflectionReal g) := h_step
-    _ = freeCovarianceFormR m (QFT.compTimeReflectionReal g) f := by
-        exact freeCovarianceFormR_symm m f (compTimeReflectionReal g)
+    _ = freeCovarianceFormR m (QFT.compTimeReflectionReal g) f :=
+        freeCovarianceFormR_symm m f (compTimeReflectionReal g)
 
 /-- Left linearity of freeCovarianceFormR for any fixed right argument. -/
 lemma freeCovarianceFormR_left_linear_any_right

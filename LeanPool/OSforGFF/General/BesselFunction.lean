@@ -120,8 +120,7 @@ private lemma besselK1_integrand_integrableOn_Ioi (z : ℝ) (hz : 0 < z) :
     simp only [neg_mul, one_mul]; linarith
   filter_upwards [h_eventually_le] with t ht
   rw [Real.norm_of_nonneg (besselK1_integrand_nonneg z t), Real.norm_of_nonneg (exp_nonneg _)]
-  simp only [one_mul]
-  exact ht
+  simpa only [one_mul] using ht
 
 /-- The integrand is integrable on `[1, ∞)` for `z > 0`. -/
 private lemma besselK1_integrand_integrableOn_Ici_one (z : ℝ) (hz : 0 < z) :
@@ -177,8 +176,7 @@ private lemma besselK1_integrand_tail_integral_le (z : ℝ) (hz : 0 < z) :
         Filter.tendsto_neg_atTop_atBot.comp h3
       convert h4 using 1; ext t; ring
     have h4 := h1.const_mul (-2 / z)
-    simp only [mul_zero] at h4
-    exact h4
+    simpa only [mul_zero] using h4
   have hg_int : IntegrableOn g (Ioi 1) :=
     integrableOn_Ioi_deriv_of_nonneg hF_cont (fun x _ => hF_deriv x)
       (fun x _ => hg_nonneg x) hF_tendsto
@@ -730,8 +728,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
       hg_int.comp_neg
     -- Use cosh(-u) = cosh(u)
     have h2 : IntegrableOn (fun u => exp (-u) * exp (-z * cosh u)) (-(Ioi (0 : ℝ))) := by
-      simp only [cosh_neg] at h1
-      exact h1
+      simpa only [cosh_neg] using h1
     -- -(Ioi 0) = Iio 0
     have hIio_eq : -(Ioi (0 : ℝ)) = Iio 0 := by
       ext x; simp only [Set.mem_neg, Set.mem_Ioi, Set.mem_Iio]; constructor <;> intro h <;> linarith
