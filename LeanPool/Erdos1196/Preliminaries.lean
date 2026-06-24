@@ -285,8 +285,7 @@ private lemma abs_log_natPred_sub_log_le_log_two {y : ℕ} (hy : 2 ≤ y) :
     have hlog_le : Real.log (y : ℝ) - Real.log ((y - 1 : ℕ) : ℝ) ≤ Real.log 2 := by
       rwa [Real.log_div (show (y : ℝ) ≠ 0 by positivity)
         (show (((y - 1 : ℕ) : ℝ) ≠ 0) by positivity), sub_eq_add_neg] at hlog_ratio
-    rw [abs_of_nonpos (sub_nonpos.mpr (Real.log_le_log hpred_pos hy_le)), neg_sub]
-    exact hlog_le
+    rwa [abs_of_nonpos (sub_nonpos.mpr (Real.log_le_log hpred_pos hy_le)), neg_sub]
 
 /-- The predecessor cutoff carries the same uniform Mertens error up to `log 2`. -/
 private lemma abs_mertensPartialSum_pred_sub_log_le {C : ℝ}

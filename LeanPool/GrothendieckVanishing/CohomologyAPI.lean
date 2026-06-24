@@ -190,8 +190,7 @@ private lemma extClass_naturality {S₁ S₂ : ShortComplex C'} (hS₁ : S₁.Sh
       have := ha₁
       simp only [ShortComplex.ShortExact.singleTriangle_mor₁] at this
       exact (DerivedCategory.singleFunctor C' 0).map_injective <| by
-        rw [Functor.map_comp, Functor.map_comp]
-        exact this
+        rwa [Functor.map_comp, Functor.map_comp]
     haveI : Mono S₂.f := hS₂.mono_f
     exact (cancel_mono S₂.f).mp (by rw [← φ.comm₁₂.symm, h])
   rw [ha'] at ha₃
@@ -259,8 +258,7 @@ theorem sheafH_succ_map_exists_preimage_of_subsingleton_middle {X : TopCat.{u}}
     ∃ y : Sheaf.H S.X₃ n, ConcreteCategory.hom (sheafHSuccMap hS n) y = x := by
   obtain ⟨y, hy⟩ := Ext.covariant_sequence_exact₁ _ hS x (@Subsingleton.elim _ h₂H _ _) rfl
   refine ⟨y, ?_⟩
-  rw [sheafH_succ_map_apply]
-  exact hy
+  rwa [sheafH_succ_map_apply]
 
 theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)

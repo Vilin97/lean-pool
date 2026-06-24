@@ -490,8 +490,7 @@ theorem _root_.zsmul_generator_injective
           = n • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) :=
             map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) n _
       _ = m • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) := by
-            rw [hgen_eq]
-            exact h
+            rwa [hgen_eq]
       _ = (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (m • P.germ V x hx gen_P) :=
             (map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) m _).symm
   obtain ⟨W, hxW, iU, iV, hEq⟩ := P.germ_eq x hx hx _ _ h'
