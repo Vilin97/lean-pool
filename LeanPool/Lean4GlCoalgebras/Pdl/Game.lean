@@ -153,8 +153,7 @@ theorem good_or_other {g : Game} (p : g.Pos) : good (g.turn p) p ∨ good (other
     apply Or.inl
     unfold good
     apply Or.inl
-    simp only [exists_prop, true_and]
-    exact E
+    simpa only [exists_prop, true_and] using E
   case neg A =>
     apply Or.inr
     unfold good
