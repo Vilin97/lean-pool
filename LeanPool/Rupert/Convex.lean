@@ -109,8 +109,7 @@ lemma mem_interior_hull {n : ℕ} {X : Set (E n)} {ε₀ ε₁ : ℝ}
     (h : p ∈ convexHull ℝ ((fun v : E n ↦ (1 - ε₁) • v) '' X)) :
     p ∈ interior (convexHull ℝ X) := by
   apply subset_interior_hull hε₀ hε₁ h0
-  rw [← Set.image_smul]
-  exact h
+  rwa [← Set.image_smul]
 
 lemma ball_in_hull_of_corners_in_hull {X : Set (E 2)} {ε : ℝ} (hε : ε ∈ Set.Ioo 0 1)
     (h₀ : !₂[ε, ε] ∈ convexHull ℝ X)

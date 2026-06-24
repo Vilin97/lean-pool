@@ -295,8 +295,7 @@ lemma eq_gcd_mul_of_dvd_of_coprime {k d m : ℕ} (hkd : k ∣ d) (hmd : Coprime 
   rcases hkd with ⟨r, hr⟩
   have hrdvd : r ∣ d := by
     use k
-    rw [mul_comm]
-    exact hr
+    rwa [mul_comm]
   apply symm; rw [hr, Nat.gcd_mul_left, mul_eq_left₀ hk, Nat.gcd_comm]
   apply Coprime.coprime_dvd_right hrdvd hmd
 

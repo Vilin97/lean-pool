@@ -94,8 +94,7 @@ protected theorem Config.Cup.extend_right {l : List α} (l_cup : C.Cup l) {a b :
       | nil =>
         rw [List.getLast?_singleton, Option.mem_some_iff] at a_last_l
         subst a_last_l
-        rw [List.singleton_append, Cup.pair]
-        exact hab
+        rwa [List.singleton_append, Cup.pair]
       | cons q l =>
         exact absurd (by simp [List.length_cons] : 2 ≤ (p :: q :: l).length) hl
 

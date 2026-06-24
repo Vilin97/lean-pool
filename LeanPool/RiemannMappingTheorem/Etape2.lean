@@ -88,8 +88,7 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
       rw [g_0_eq_0]
       exact g_maps.mono_right ball_subset_closedBall
     have hdiv : ‖dslope g 0 0‖ = 1 / 1 := by
-      rw [dslope_same, div_one]
-      exact h
+      rwa [dslope_same, div_one]
     have h1 : Set.EqOn g (fun z => g 0 + (z - 0) • dslope g 0 0) (Metric.ball 0 1) :=
       affine_of_mapsTo_ball_of_norm_dslope_eq_div g_diff h2 (mem_ball_self zero_lt_one) hdiv
     have g_lin : EqOn g (fun (z : ℂ) => z • deriv g 0) (ball 0 1) := by

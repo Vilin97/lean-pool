@@ -328,8 +328,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             simp only [snoc_last]
             have h3 : k = Fin.last _n := by
               apply Fin.eq_of_val_eq
-              simp only [Fin.val_last]
-              exact h_k__n
+              simpa only [Fin.val_last] using h_k__n
             rw [h3]
             simp
           · omega

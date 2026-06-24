@@ -56,8 +56,7 @@ lemma only_nonterminals {u : List (Symbol T N)}
     · simp at hu
     · rename_i n
       use n :: u'
-      simp only [List.map_cons, List.cons.injEq, true_and]
-      exact hu'
+      simpa only [List.map_cons, List.cons.injEq, true_and] using hu'
 
 lemma Wellformed.mem_nonterminal {r : ContextFreeRule T N} (hr : r.Wellformed)
     (i : Fin r.output.length) (h2 : 2 ≤ r.output.length) :

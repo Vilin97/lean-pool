@@ -299,8 +299,7 @@ theorem differentiableAt_inv_special' (c x y z : ℝ) (n : ℕ) (hc : c ≠ 0)
         constructor <;> linarith
     linarith
   · apply pow_pos
-    simp only [abs_pos]
-    exact hd'
+    simpa only [abs_pos] using hd'
 
 lemma n_derivative' {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 0 1) (hz : z ∈ Set.Ioo 0 1) :
     (deriv^[n] fun y ↦ 1 / (1 - (1 - x * y) * z)) =
