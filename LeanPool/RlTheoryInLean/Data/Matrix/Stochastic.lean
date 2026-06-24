@@ -287,25 +287,18 @@ theorem smat_minorizable_with_large_pow
   have : (Finset.univ (α := S × S)).Nonempty := by simp
   let δij := fun ij : S × S => (P ^ n₁) ij.1 ij.2
   let δ := inf' (Finset.univ (α := S × S)) this δij
-  have hδinf : ∀ ij, δ ≤ δij ij := by
-    intro ij
-    have : ij ∈ Finset.univ (α := S × S) := by simp
-    have := inf'_le (f := δij) this
-    exact this
+  have hδinf : ∀ ij, δ ≤ δij ij := fun ij => inf'_le (f := δij) (by simp)
   have hδrange : 0 < δ ∧ δ ≤ 1 := by
     obtain ⟨ij, hij, hijinf⟩ := exists_mem_eq_inf' this δij
     have hδdef : δ = δij ij := by unfold δ; simp [hijinf]
     have := hnij ij
-    constructor
-    case left => linarith
-    case right =>
-      obtain ⟨nonneg, rowsum⟩ := RowStochastic.stochastic (P := P ^ n₁) (ij.1)
-      rw [hδdef, ←rowsum, ←sum_erase_add (a := ij.2) (h := by simp)]
-      unfold δij
-      apply sub_nonneg.mp
-      rw [add_sub_cancel_right]
-      apply sum_nonneg
-      · intro j hj; exact nonneg j
+    refine ⟨by linarith, ?_⟩
+    obtain ⟨nonneg, rowsum⟩ := RowStochastic.stochastic (P := P ^ n₁) (ij.1)
+    rw [hδdef, ←rowsum, ←sum_erase_add (a := ij.2) (h := by simp)]
+    unfold δij
+    apply sub_nonneg.mp
+    rw [add_sub_cancel_right]
+    exact sum_nonneg fun j _ => nonneg j
   let δ' := δ * 1 / 2 * 1 / Fintype.card S
   refine ⟨n₁, ?hNpos, ?hN⟩
   case hNpos => unfold n₁; simp
@@ -320,26 +313,20 @@ theorem smat_minorizable_with_large_pow
     case hν =>
       constructor
       case nonneg => intro s; simp [ν]
-      case rowsum =>
-      simp [ν, Finset.sum_const, Finset.card_univ]
+      case rowsum => simp [ν, Finset.sum_const, Finset.card_univ]
     case hP =>
       intro i j
       have hδle : δ ≤ (P ^ n₁) i j := hδinf (i, j)
-      have hcard : (0 : ℝ) < Fintype.card S := by
-        have : 0 < Fintype.card S := Fintype.card_pos_iff.mpr inferInstance
-        exact_mod_cast this
-      have hνj : ν j = 1 / Fintype.card S := rfl
+      have hcard1 : (1 : ℝ) ≤ Fintype.card S := by
+        exact_mod_cast Nat.one_le_iff_ne_zero.mpr Fintype.card_ne_zero
       have hcoll : δ' * Fintype.card S * ν j = δ' := by
-        rw [hνj]
+        rw [show ν j = 1 / Fintype.card S from rfl]
         field_simp
       have hδ'le : δ' ≤ δ := by
         have hδ0 : 0 ≤ δ := hδrange.1.le
-        have hcard1 : (1 : ℝ) ≤ Fintype.card S := by
-          exact_mod_cast Nat.one_le_iff_ne_zero.mpr Fintype.card_ne_zero
-        have h1 : δ * 1 / 2 * 1 / Fintype.card S ≤ δ * 1 / 2 * 1 := by
-          apply div_le_self (by positivity) hcard1
-        have h2 : δ * 1 / 2 * 1 ≤ δ := by nlinarith
-        exact h1.trans h2
+        have h1 : δ * 1 / 2 * 1 / Fintype.card S ≤ δ * 1 / 2 * 1 :=
+          div_le_self (by positivity) hcard1
+        nlinarith [hδ0]
       rw [ge_iff_le, hcoll]
       linarith
 
