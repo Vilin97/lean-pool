@@ -100,8 +100,7 @@ lemma isHom_eval : IsHom (fun p : (A →𝒒 B) × A => p.1 p.2) := by
   simp only [Prod.isHom_iff, isHom_def, and_imp]
   intro φ hφ₁ hφ₂
   apply @hφ₁ fun r ↦ (r, (φ r).2)
-  simp only [Prod.isHom_iff, isHom_id', true_and]
-  exact hφ₂
+  simpa only [Prod.isHom_iff, isHom_id', true_and] using hφ₂
 
 @[fun_prop]
 lemma isHom_eval'
