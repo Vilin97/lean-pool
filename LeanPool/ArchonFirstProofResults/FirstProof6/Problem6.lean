@@ -88,11 +88,8 @@ lemma spectral_sqrt_exists
   have hev_nn : ∀ i, 0 ≤ ev i := hL_psd.eigenvalues_nonneg
   set sqrtEv : V → ℝ := fun i => Real.sqrt (ev i) with hsqrtEv_def
   set Lhalf := (U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ) with hLhalf_def
-  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hL_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    rw [hL_def]; exact hspec
+  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) :=
+    hL_def ▸ realSpectralDecomp hL_herm
   refine ⟨Lhalf, ?_, ?_⟩
   · -- Lhalf is Hermitian
     rw [hLhalf_def]; exact unitary_diag_conj_isHermitian U sqrtEv
@@ -124,11 +121,7 @@ lemma hermitian_pseudo_inverse_exists
   set ev := hM.eigenvalues with hev_def
   have hUstarU : (star U : Matrix V V ℝ) * U = 1 :=
     Unitary.coe_star_mul_self hM.eigenvectorUnitary
-  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hM.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    exact hspec
+  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) := realSpectralDecomp hM
   -- Pseudo-inverse eigenvalues: invert nonzero, keep zero
   set pinvEv : V → ℝ := fun i => if ev i = 0 then 0 else (ev i)⁻¹ with hpinvEv_def
   refine ⟨U * diagonal pinvEv * (star U : Matrix V V ℝ), ?_, ?_, ?_, ?_, ?_⟩
