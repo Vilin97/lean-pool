@@ -152,8 +152,7 @@ private lemma orbitProdStabilizerEquivGroup_smul_fst
   -- Convert to the orbit element via `orbitEquivQuotientStabilizer`.
   have hx_orbit : (MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) = x := by
     have hx := (MulAction.orbitEquivQuotientStabilizer G b).left_inv x
-    rw [hmk]
-    exact hx
+    rwa [hmk]
   have hx_val :
       ((MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) : Emb4) = x := by
     exact congrArg Subtype.val hx_orbit
