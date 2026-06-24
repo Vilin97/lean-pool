@@ -785,8 +785,7 @@ theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
           rw [Real.rpow_neg (le_of_lt hs_pos)]
           congr 2
           exact Real.rpow_natCast s 2
-        rw [heq]
-        exact hderiv
+        rwa [heq]
       exact h.hasDerivWithinAt)
     (fun x hx y _ hxy => inv_anti₀ hx hxy)
   -- Step 4: Rewrite using h_img and apply the iff

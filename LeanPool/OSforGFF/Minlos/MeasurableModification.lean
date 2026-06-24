@@ -800,10 +800,9 @@ theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
         exact Fintype.sum_equiv c.support.equivFin.symm _ _ (fun _ => rfl)
       rw [h2, Finsupp.sum]
     rw [h_sum_x, h_normalized] at h
-    rw [show (fun ω' => exp (I * ↑(t * X ω'))) =
+    rwa [show (fun ω' => exp (I * ↑(t * X ω'))) =
       (fun ω' => exp (I * ↑(∑ i : Fin (k + 1), s' i * ω' (x' i)))) from by
       funext ω'; congr 2; exact_mod_cast (h_sum_ω ω').symm]
-    exact h
   -- Apply ae_eq_zero_of_charfun_eq_one
   have := ae_eq_zero_of_charfun_eq_one hX_meas hX_cf
   filter_upwards [this] with ω hω
