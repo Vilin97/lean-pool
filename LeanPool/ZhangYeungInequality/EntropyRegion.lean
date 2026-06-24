@@ -170,10 +170,9 @@ theorem entropyFnN_restrictFirstFour
     simpa using hValueEq
   have h_meas : Measurable (fun ω : Ω => fun j : α.map e => X j.1 ω) :=
     measurable_pi_lambda _ (fun j => hX j.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
   change H[(fun ω : Ω => fun j : α.map e => X j.1 ω); μ] =
     H[(fun ω : Ω => fun i : α => X (e i.1) ω); μ]
-  simpa [π, Function.comp_def] using h_ent.symm
+  simpa [π, Function.comp_def] using (entropy_comp_of_injective μ h_meas π hπ).symm
 
 /-- Entropic points remain entropic after restriction to the first four coordinates. -/
 theorem restrictFirstFour_mem_entropyRegionN
