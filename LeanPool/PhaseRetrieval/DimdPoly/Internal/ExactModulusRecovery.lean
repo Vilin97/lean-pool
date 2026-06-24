@@ -2744,44 +2744,6 @@ private lemma realHermiteGeneratingExpansionCoeff_eq_scale_coeff
   simpa [realHermiteCoeffScale]
     using realHermiteGeneratingExpansionCoeff_eq_scaled_hermite_coeff n k
 
-private lemma hermite_eval₂_eq_coeff_sum
-    (n : ℕ) (z : ℂ) :
-    Polynomial.eval₂ (Int.castRingHom ℂ) z (Polynomial.hermite n) =
-      ∑ k ∈ Finset.range (n + 1),
-        ((Polynomial.hermite n).coeff k : ℂ) * z ^ k := by
-  rw [Polynomial.eval₂_eq_sum_range' (n := n + 1)]
-  · apply Finset.sum_congr rfl
-    intro k hk
-    simp [mul_comm]
-  · simp [Polynomial.natDegree_hermite]
-
-private lemma hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv
-    (n k : ℕ) :
-    ((Polynomial.hermite n).coeff k : ℂ) =
-      (Nat.choose n k : ℂ) *
-        iteratedDeriv (n - k)
-          (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0 := by
-  have h := realHermiteGeneratingExpansionCoeff_eq_scaled_hermite_coeff n k
-  have hscale_ne :
-      (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ) ≠ 0) := by
-    exact_mod_cast (Real.rpow_pos_of_pos Real.pi_pos (-(1 / 4 : ℝ))).ne'
-  have hsqrt_ne : (Real.sqrt 2 : ℂ) ^ k ≠ 0 := pow_ne_zero k sqrtTwoC_ne
-  unfold realHermiteGeneratingExpansionCoeff at h
-  have hcancel := mul_left_cancel₀ hscale_ne h
-  apply (mul_left_cancel₀ hsqrt_ne)
-  calc
-    (Real.sqrt 2 : ℂ) ^ k *
-        ((Polynomial.hermite n).coeff k : ℂ) =
-        ((Real.sqrt 2 : ℂ) ^ k) *
-          ((Polynomial.hermite n).coeff k : ℂ) := rfl
-    _ = (Nat.choose n k : ℂ) * (Real.sqrt 2 : ℂ) ^ k *
-          iteratedDeriv (n - k)
-            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0 := by rw [hcancel.symm]
-    _ = (Real.sqrt 2 : ℂ) ^ k *
-        ((Nat.choose n k : ℂ) *
-          iteratedDeriv (n - k)
-            (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0) := by ring
-
 theorem realHermiteGenerating_iteratedDeriv_zero_expansion_monomial
     (n : ℕ) (t : ℝ) :
     iteratedDeriv n (realHermiteGenerating t) 0 =
