@@ -6183,76 +6183,6 @@ private theorem iteratedDeriv_generating_cross_ambiguity_integrand_finite_expans
   simp [oneDWindowAmbiguityMonomialKernel, star_complex_monomial_gaussian]
   ring
 
-private theorem cross_ambiguity_monomial_kernel_sum_eq_hermite_eval₂
-    (n m : ℕ) (x ω t : ℝ) :
-    (∑ k ∈ Finset.range (n + 1), ∑ l ∈ Finset.range (m + 1),
-        (realHermiteGeneratingExpansionCoeff n k *
-            realHermiteGeneratingExpansionCoeff m l) *
-          oneDWindowAmbiguityMonomialKernel k l x ω t) =
-      (realHermiteCoeffScale * realHermiteCoeffScale) *
-        (Polynomial.eval₂ (Int.castRingHom ℂ)
-            ((Real.sqrt 2 : ℂ) * ((t + (1 / 2 : ℝ) * x : ℝ) : ℂ))
-            (Polynomial.hermite n) *
-          Polynomial.eval₂ (Int.castRingHom ℂ)
-            ((Real.sqrt 2 : ℂ) * ((t - (1 / 2 : ℝ) * x : ℝ) : ℂ))
-            (Polynomial.hermite m)) *
-          oneDWindowAmbiguityShiftedModulatedGaussian x ω t := by
-  let yplus : ℂ := ((t + (1 / 2 : ℝ) * x : ℝ) : ℂ)
-  let yminus : ℂ := ((t - (1 / 2 : ℝ) * x : ℝ) : ℂ)
-  let G : ℂ := oneDWindowAmbiguityShiftedModulatedGaussian x ω t
-  have hsum :
-      (∑ k ∈ Finset.range (n + 1), ∑ l ∈ Finset.range (m + 1),
-          (realHermiteGeneratingExpansionCoeff n k *
-              realHermiteGeneratingExpansionCoeff m l) *
-            oneDWindowAmbiguityMonomialKernel k l x ω t) =
-        (∑ k ∈ Finset.range (n + 1),
-            realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-          (∑ l ∈ Finset.range (m + 1),
-            realHermiteGeneratingExpansionCoeff m l * yminus ^ l) *
-            G := by
-    rw [show
-        (∑ k ∈ Finset.range (n + 1),
-            realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-          (∑ l ∈ Finset.range (m + 1),
-            realHermiteGeneratingExpansionCoeff m l * yminus ^ l) * G =
-        ∑ k ∈ Finset.range (n + 1), ∑ l ∈ Finset.range (m + 1),
-          ((realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-            (realHermiteGeneratingExpansionCoeff m l * yminus ^ l)) * G by
-      rw [show
-          (∑ k ∈ Finset.range (n + 1),
-              realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-            (∑ l ∈ Finset.range (m + 1),
-              realHermiteGeneratingExpansionCoeff m l * yminus ^ l) * G =
-          (∑ k ∈ Finset.range (n + 1),
-              realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-            ((∑ l ∈ Finset.range (m + 1),
-              realHermiteGeneratingExpansionCoeff m l * yminus ^ l) * G) by
-        ring]
-      rw [Finset.sum_mul]
-      apply Finset.sum_congr rfl
-      intro k hk
-      rw [show
-          (realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-              ((∑ l ∈ Finset.range (m + 1),
-                realHermiteGeneratingExpansionCoeff m l * yminus ^ l) * G) =
-            ((realHermiteGeneratingExpansionCoeff n k * yplus ^ k) *
-              (∑ l ∈ Finset.range (m + 1),
-                realHermiteGeneratingExpansionCoeff m l * yminus ^ l)) * G by
-        ring]
-      rw [Finset.mul_sum]
-      rw [Finset.sum_mul]]
-    apply Finset.sum_congr rfl
-    intro k hk
-    apply Finset.sum_congr rfl
-    intro l hl
-    rw [oneDWindowAmbiguityMonomialKernel_eq_shifted_monomial]
-    simp only [yplus, yminus, G]
-    ring
-  rw [hsum]
-  rw [realHermiteGeneratingExpansionCoeff_sum_eq_hermite_eval₂,
-    realHermiteGeneratingExpansionCoeff_sum_eq_hermite_eval₂]
-  ring
-
 private theorem iteratedDeriv_generating_cross_ambiguity_normalized_integral_finite_sum
     (n m : ℕ) (x ω : ℝ) :
     (∫ t : ℝ,
@@ -6690,23 +6620,6 @@ private theorem oneDWindowAmbiguityFactor_two_finite_expansion_integral
                   realHermiteGeneratingExpansionCoeff 2 l)) *
             oneDWindowAmbiguityMonomialKernel k l x ω t := by
   simpa using oneDWindowAmbiguityFactor_finite_expansion_integral 2 x ω
-
-private theorem oneDWindowAmbiguityFactor_zero_eq_normalized_monomial_kernel_integral
-    (x ω : ℝ) :
-    oneDWindowAmbiguityFactor 0 x ω =
-      ∫ t : ℝ,
-        (((Real.pi ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) *
-          oneDWindowAmbiguityMonomialKernel 0 0 x ω t) := by
-  rw [oneDWindowAmbiguityFactor_finite_expansion_integral]
-  simp only [zero_add, Finset.range_one, realHermite1DExpansionScale, Nat.factorial_zero,
-    Nat.cast_one, Real.sqrt_one, Complex.ofReal_one, ne_eq, one_ne_zero, not_false_eq_true,
-    div_self, realHermiteGeneratingExpansionCoeff, one_div, zero_tsub, iteratedDeriv_zero,
-    OfNat.ofNat_ne_zero, zero_pow, neg_zero, zero_div, Complex.exp_zero, mul_one, one_mul,
-    star_mul', RCLike.star_def, Complex.conj_ofReal, star_natCast, star_pow, Finset.sum_singleton,
-    Nat.choose_self, pow_zero]
-  apply MeasureTheory.integral_congr_ae
-  filter_upwards with t
-  rw [realHermiteGenerating_pi_quarter_mul_self]
 
 private theorem oneDWindowAmbiguityFactor_one_eq_normalized_monomial_kernel_integral
     (x ω : ℝ) :

@@ -189,30 +189,6 @@ private lemma productAnnulus_eq_of_mem
   have h2 : ℓ q < j q + 1 := by exact_mod_cast lt_of_le_of_lt hℓ_lower hj_upper
   omega
 
-private lemma sum_indicator_productAnnulus_le
-    {d : ℕ} (s : Finset (MultiIndex d)) (z : CSpace d) (a : ℝ)
-    (ha : 0 ≤ a) :
-    ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : CSpace d => a) z ≤ a := by
-  classical
-  by_cases hs : ∃ j ∈ s, z ∈ productAnnulus j
-  · rcases hs with ⟨j0, hj0s, hj0z⟩
-    have hsum :
-        ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : CSpace d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : CSpace d => a) z :=
-      Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := fun hjz => hjne (productAnnulus_eq_of_mem hjz hj0z)
-        simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hjs
-      by_contra hjz
-      exact hs ⟨j, hjs, hjz⟩
-    rw [Finset.sum_eq_zero]
-    · linarith
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
-
 private lemma integrable_evalHermiteSum_cross
     {d : ℕ} (κ : MultiIndex d) (G H : FiniteHermiteSum d) :
     Integrable
@@ -357,25 +333,6 @@ theorem coefficientAtZero
 theorem orthogonalToNu_iff_coeff_zero
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
     hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by simp [coefficientAtZero (κ := κ) (G := G)]
-
-private lemma circle_pow_factor
-    (ω : _root_.Circle) {j k p : ℕ} (hjk : j ≤ k) (hjp : j ≤ p) :
-    (ω : ℂ) ^ (p - j) * star (ω : ℂ) ^ (k - j) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k := by
-  have hωconj : (ω : ℂ) * star (ω : ℂ) = 1 := by
-    rw [star_def]
-    rw [show (starRingEnd ℂ) (ω : ℂ) = ↑(ω⁻¹ : _root_.Circle) from
-      (_root_.Circle.coe_inv_eq_conj ω).symm]
-    rw [← _root_.Circle.coe_mul, mul_inv_cancel, _root_.Circle.coe_one]
-  have key : ((ω : ℂ) * star (ω : ℂ)) ^ j = 1 := by
-    rw [hωconj]
-    simp
-  rw [mul_pow] at key
-  conv_rhs => rw [← Nat.sub_add_cancel hjp, ← Nat.sub_add_cancel hjk, pow_add, pow_add]
-  rw [show (ω : ℂ) ^ (p - j) * (ω : ℂ) ^ j * (star (ω : ℂ) ^ (k - j) * star (ω : ℂ) ^ j) =
-      (ω : ℂ) ^ (p - j) * star (ω : ℂ) ^ (k - j) * ((ω : ℂ) ^ j * star (ω : ℂ) ^ j) by
-    ring]
-  rw [key, mul_one]
 
 private lemma oneDimPhi_phaseLaw
     (k n : ℕ) (t : ℝ) (z : ℂ) :

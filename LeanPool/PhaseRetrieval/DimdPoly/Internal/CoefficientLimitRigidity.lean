@@ -52,17 +52,6 @@ private theorem toFun_ofPkappa_wip
   intro alpha halpha
   simp [coeffSkappa, ofPkappa]
 
-private theorem skappa_ext_coeff_wip
-    {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
-    (hcoeff : ∀ alpha, coeffSkappa U alpha = coeffSkappa V alpha) :
-    U = V := by
-  cases U
-  cases V
-  simp only [coeffSkappa] at hcoeff
-  congr
-  funext alpha
-  exact hcoeff alpha
-
 private theorem summable_skappa_eval_mul_of_phi_sq_wip
     {d : Nat} (kappa : MultiIndex d) (U : Skappa d kappa) (z : Cd d)
     (hPhi : Summable (fun alpha : Idx d => ‖Phi kappa alpha z‖ ^ 2)) :
@@ -335,20 +324,6 @@ private theorem evalPkappa_smul_real_wip
     change ((t : ℂ) * H alpha) * Phi kappa alpha z =
       (t : ℂ) * (H alpha * Phi kappa alpha z)
     ring
-
-private theorem evalPkappa_smul_complex_wip
-    {d : Nat} (kappa : MultiIndex d) (c : ℂ) (H : Pkappa d kappa) :
-    evalPkappa kappa (c • H) = fun z => c * evalPkappa kappa H z := by
-  ext z
-  by_cases hc : c = 0
-  · subst c
-    simp [evalPkappa]
-  · unfold evalPkappa
-    rw [Finsupp.sum, Finsupp.sum, Finsupp.support_smul_eq hc, Finset.mul_sum]
-    refine Finset.sum_congr rfl ?_
-    intro alpha halpha
-    rw [Finsupp.smul_apply]
-    simp [mul_left_comm, mul_comm]
 
 private theorem annulusMass_ofPkappa_eq_hermite_annulusMass_coeff_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -901,24 +876,10 @@ private theorem skappaInnerAgainstPk_tendsto_wip
   intro alpha halpha
   exact (hcoeff alpha).mul tendsto_const_nhds
 
-private theorem pkappaInner_truncate_left_of_support_subset_wip
-    {d : Nat} (kappa : MultiIndex d) {K : Finset (Idx d)}
-    {F H : Pkappa d kappa} (hsub : F.support ⊆ K) :
-    pkappaInner (truncateFinset K (ofPkappa kappa H)) F = pkappaInner H F := by
-  rw [pkappaInner_eq_sum_right_support_wip, pkappaInner_eq_sum_right_support_wip]
-  refine Finset.sum_congr rfl ?_
-  intro alpha hF
-  have hK : alpha ∈ K := hsub hF
-  simp [truncateFinset_ofPkappa_apply_wip kappa K H alpha, hK]
-
 private def coefficientControlSet_wip
     {d : Nat} {kappa : MultiIndex d} (E : Finset (Idx d)) (F : Pkappa d kappa) :
     Finset (Idx d) :=
   E ∪ F.support
-
-private theorem coefficient_tailMass_nonneg_wip
-    {d : Nat} {kappa : MultiIndex d} (K : Finset (Idx d)) (H : Pkappa d kappa) :
-    0 <= Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by positivity
 
 private theorem norm_sq_eq_truncate_add_tail_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -1142,35 +1103,6 @@ private theorem norm_smul_pkappa_complex_wip
       simp [Finsupp.smul_apply, mul_pow]
     rw [hsum, Real.sqrt_mul (sq_nonneg ‖c‖), Real.sqrt_sq_eq_abs]
     simp [abs_of_nonneg (norm_nonneg _)]
-
-private theorem norm_smul_pkappa_real_of_nonneg_wip
-    {d : Nat} {kappa : MultiIndex d} (t : ℝ) (F : Pkappa d kappa)
-    (ht : 0 <= t) :
-    ‖t • F‖ = t * ‖F‖ := by
-  change ‖((t : ℂ) • F)‖ = t * ‖F‖
-  rw [norm_smul_pkappa_complex_wip]
-  simp [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg ht]
-
-private theorem orthogonalToPk_smul_right_complex_wip
-    {d : Nat} {kappa : MultiIndex d}
-    (F G : Pkappa d kappa) (c : ℂ) :
-    orthogonalToPk F G ->
-      orthogonalToPk F (c • G) := by
-  classical
-  intro horth
-  dsimp [orthogonalToPk, pkappaInner] at horth ⊢
-  by_cases hc : c = 0
-  · simp [hc]
-  · simp only [Finsupp.sum, Finsupp.smul_apply] at horth ⊢
-    rw [Finsupp.support_smul_eq hc]
-    calc
-      Finset.sum G.support (fun alpha => c * G alpha * star (F alpha))
-          = c * Finset.sum G.support (fun alpha => G alpha * star (F alpha)) := by
-            rw [Finset.mul_sum]
-            refine Finset.sum_congr rfl ?_
-            intro alpha halpha
-            ring
-      _ = 0 := by simp [horth]
 
 private def orthogonalToSkappa_wip
     {d : Nat} {kappa : MultiIndex d}
@@ -2061,21 +1993,6 @@ private theorem defect_le_defect_add_norm_wip
           rw [← defect_lpNorm_eq_coeff_wip hd kappa F (G + R), hnorm_eval,
             evalPkappa_lpNorm_eq_norm_coeff_wip hd kappa R]
 
-private theorem defect_add_le_defect_plus_norm_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (F G R : Pkappa d kappa) :
-    defect F (G + R) <= defect F G + ‖R‖ := by
-  have h :=
-    defect_le_defect_add_norm_wip hd kappa F (G + R) (-R)
-  have hadd : G + R + -R = G := by
-    ext alpha
-    simp [add_assoc]
-  have hnorm : ‖(-R : Pkappa d kappa)‖ = ‖R‖ := by
-    change Real.sqrt (Finset.sum (-R).support (fun alpha => ‖(-R) alpha‖ ^ 2)) =
-      Real.sqrt (Finset.sum R.support (fun alpha => ‖R alpha‖ ^ 2))
-    simp
-  simpa [hadd, hnorm] using h
-
 private lemma measurableSet_productAnnulus_coeff_wip
     {d : Nat} (j : Idx d) :
     MeasurableSet (productAnnulus j) := by
@@ -2535,114 +2452,6 @@ private theorem sqrt_lowAnnulusMass_add_le_wip
         Real.sqrt (lowAnnulusMass J (ofPkappa kappa G)) := by
           rw [lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J F,
             lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J G]
-
-private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (J M : Nat) {C c B tau : ℝ}
-    (hpartial : ∀ (s : Finset (Idx d)) (M : Nat)
-      (G : Hermite1DimdLEAN.FiniteHermiteSum d),
-      ∑ j ∈ s,
-        Hermite1DimdLEAN.annulusMass j
-          (Hermite1DimdLEAN.evalHermiteSum kappa
-            (Hermite1DimdLEAN.remainderPart j M G)) <=
-        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
-          Hermite1DimdLEAN.hermiteNormSq kappa G)
-    (hloc_nonneg : 0 <= Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M)
-    (hleak : Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M <= tau ^ 2 / 256)
-    (htau_pos : 0 < tau) (htau_le_one : tau <= 1)
-    {H : Pkappa d kappa}
-    (hH_norm : ‖H‖ = 1)
-    (hhigh : highAnnulusMass J (ofPkappa kappa H) <= tau / 16) :
-    Finset.sum (H.support \ nearLowCoeffSet_wip (d := d) J M)
-        (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) < tau := by
-  classical
-  let E : Finset (Idx d) := nearLowCoeffSet_wip (d := d) J M
-  let Hnear : Pkappa d kappa := truncateFinset E (ofPkappa kappa H)
-  let Hfar : Pkappa d kappa := H - Hnear
-  let tail : ℝ := Finset.sum (H.support \ E) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2)
-  have htail_nonneg : 0 <= tail := by
-    dsimp [tail]
-    positivity
-  have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith [hH_norm]
-  have htail_le_one : tail <= 1 := by
-    have hle := tail_mass_le_norm_sq_wip hd kappa E H
-    have hle' : tail <= ‖H‖ ^ 2 := by simpa [tail] using hle
-    nlinarith
-  by_contra hnot
-  have htail_ge : tau <= tail := le_of_not_gt hnot
-  have hHfar_sq : ‖Hfar‖ ^ 2 = tail := by
-    simpa [Hfar, Hnear, E, tail] using farPart_norm_sq_eq_tailMass_wip kappa E H
-  have hnear_sq_eq : ‖Hnear‖ ^ 2 = 1 - tail := by
-    have h := truncate_norm_sq_eq_one_sub_tail_of_norm_one_wip hd kappa E hH_norm
-    simpa [Hnear, E, tail] using h
-  have hnear_sq_le : ‖Hnear‖ ^ 2 <= 1 - tau := by nlinarith
-  have hnear_norm_le : ‖Hnear‖ <= Real.sqrt (1 - tau) := by
-    calc
-      ‖Hnear‖ = Real.sqrt (‖Hnear‖ ^ 2) := by
-        rw [Real.sqrt_sq_eq_abs]
-        exact (abs_of_nonneg (norm_nonneg_pkappa_coeff_wip Hnear)).symm
-      _ <= Real.sqrt (1 - tau) := Real.sqrt_le_sqrt hnear_sq_le
-  have hHfar_sq_le_one : ‖Hfar‖ ^ 2 <= 1 := by nlinarith
-  have hfar_norm_le_one : ‖Hfar‖ <= 1 := by
-    calc
-      ‖Hfar‖ = Real.sqrt (‖Hfar‖ ^ 2) := by
-        rw [Real.sqrt_sq_eq_abs]
-        exact (abs_of_nonneg (norm_nonneg_pkappa_coeff_wip Hfar)).symm
-      _ <= Real.sqrt 1 := Real.sqrt_le_sqrt hHfar_sq_le_one
-      _ = 1 := by norm_num
-  have hsqrt_leak_le : Real.sqrt
-      (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M) <= tau / 16 := by
-    calc
-      Real.sqrt (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M)
-          <= Real.sqrt (tau ^ 2 / 256) := Real.sqrt_le_sqrt hleak
-      _ = tau / 16 := by
-          have hsq : tau ^ 2 / 256 = (tau / 16) ^ 2 := by ring
-          have htau_div_nonneg : 0 <= tau / 16 := by positivity
-          rw [hsq, Real.sqrt_sq_eq_abs]
-          exact abs_of_nonneg htau_div_nonneg
-  have hfar_low_small :
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar)) <= tau / 16 := by
-    have hfar_low :=
-      sqrt_lowAnnulusMass_farPart_le_sqrt_leakage_norm_of_witness_wip
-        hd kappa J M hpartial hloc_nonneg H
-    calc
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar))
-          <= Real.sqrt (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M) *
-              ‖Hfar‖ := by simpa [E, Hnear, Hfar] using hfar_low
-      _ <= (tau / 16) * 1 := by
-            have htau_div_nonneg : 0 <= tau / 16 := by positivity
-            exact mul_le_mul hsqrt_leak_le hfar_norm_le_one
-              (norm_nonneg_pkappa_coeff_wip Hfar) htau_div_nonneg
-      _ = tau / 16 := by ring
-  have hlow_lower : 1 - tau / 16 <= lowAnnulusMass J (ofPkappa kappa H) := by
-    have hpartition := annulusMassPartition hd kappa J H
-    nlinarith
-  have hlow_sqrt_lower :
-      Real.sqrt (1 - tau / 16) <=
-        Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) :=
-    Real.sqrt_le_sqrt hlow_lower
-  have hdecomp : Hnear + Hfar = H := by simp [Hnear, Hfar, E, truncate_add_farPart_eq_wip kappa E H]
-  have htri :
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) <=
-        Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hnear)) +
-          Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar)) := by
-    have htri0 := sqrt_lowAnnulusMass_add_le_wip hd kappa J Hnear Hfar
-    simpa [hdecomp] using htri0
-  have hnear_low :
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hnear)) <= Real.sqrt (1 - tau) :=
-    le_trans (sqrt_lowAnnulusMass_le_norm_wip hd kappa J Hnear) hnear_norm_le
-  have hlow_upper :
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) <=
-        Real.sqrt (1 - tau) + tau / 16 := by nlinarith
-  have hgap :=
-    sqrt_gap_for_tail_contradiction_wip htau_pos htau_le_one
-  nlinarith
-
-private theorem localizationLeakageCoefficient_nonneg_wip
-    {C c B : ℝ} {d M : Nat} (hC : 0 <= C) :
-    0 <= Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M := by
-  unfold Hermite1DimdLEAN.localizationLeakageCoefficient
-  positivity
 
 private theorem finite_head_bad_limit_eval_tendsto_wip
     {d : Nat} {kappa : MultiIndex d}
