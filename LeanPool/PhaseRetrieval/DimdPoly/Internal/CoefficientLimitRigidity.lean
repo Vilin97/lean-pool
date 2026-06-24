@@ -120,14 +120,6 @@ private theorem phi1D_eq_oneDimPhi_wip
             z ^ (n - j) * (star z) ^ (k - j))
         hfactor
 
-private theorem Phi_eq_PhiKappaAlpha_wip
-    {d : Nat} (kappa alpha : MultiIndex d) (z : Cd d) :
-    Phi kappa alpha z = Hermite1DimdLEAN.PhiKappaAlpha kappa alpha z := by
-  unfold Phi Hermite1DimdLEAN.PhiKappaAlpha
-  refine Finset.prod_congr rfl ?_
-  intro q hq
-  exact phi1D_eq_oneDimPhi_wip (kappa q) (alpha q) (z q)
-
 private theorem summable_sq_hermite_phi_eval_wip
     (k : Nat) (z : ℂ) :
     Summable (fun n : Nat => ‖HermitekLEAN.Phi k n z‖ ^ 2) := by
@@ -811,25 +803,9 @@ private def coefficientControlSet_wip
     Finset (Idx d) :=
   E ∪ F.support
 
-private theorem mem_squareBlock_finset_iff_blockIndex_eq_coeff_wip
-    (ℓ n : Nat) :
-    n ∈ HermiteLEAN.squareBlock ℓ ↔ HermiteLEAN.blockIndex n = ℓ := by
-  rw [HermiteLEAN.squareBlock, Finset.mem_Ico]
-  constructor
-  · intro h
-    exact ((Nat.eq_sqrt).2 (by simpa [Nat.pow_two] using h)).symm
-  · intro h
-    simpa [Nat.pow_two] using (Nat.eq_sqrt).1 h.symm
-
-private def coeffBlockFinset_wip {d : Nat} (ℓ : Idx d) : Finset (Idx d) :=
-  Fintype.piFinset fun q : Fin d => HermiteLEAN.squareBlock (ℓ q)
-
 private def nearBlocks_wip {d : Nat} (j : Idx d) (M : Nat) : Finset (Idx d) :=
   (Fintype.piFinset fun q : Fin d => Finset.range (j q + M + 1)).filter fun ℓ =>
     Hermite1DimdLEAN.blockDistance j ℓ <= M
-
-private def nearLowBlocks_wip {d : Nat} (J M : Nat) : Finset (Idx d) :=
-  (lowAnnuli d J).biUnion fun j => nearBlocks_wip j M
 
 private theorem norm_smul_pkappa_complex_wip
     {d : Nat} {kappa : MultiIndex d} (c : ℂ) (F : Pkappa d kappa) :
@@ -1641,30 +1617,6 @@ private theorem defect_lpNorm_eq_coeff_wip
   simpa [defect, defectFunctionPkappa_coeff_wip, Real.norm_eq_abs, sq_abs] using
     gaussianL2Norm_eq_lpNorm_coeff_wip (defectFunctionPkappa_coeff_wip kappa F G)
       (memLp_two_defectFunctionPkappa_coeff_wip hd kappa F G).1
-
-private lemma productAnnulus_eq_of_mem_coeff_wip
-    {d : Nat} {j l : Idx d} {z : Cd d}
-    (hj : z ∈ productAnnulus j) (hl : z ∈ productAnnulus l) :
-    j = l := by
-  funext q
-  rcases hj q with ⟨hj_lower, hj_upper⟩
-  rcases hl q with ⟨hl_lower, hl_upper⟩
-  refine le_antisymm ?_ ?_
-  · by_contra hlt
-    have hlt' : l q + 1 <= j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((l q : Nat) : ℝ) + 1 <= j q := by exact_mod_cast hlt'
-    linarith
-  · by_contra hlt
-    have hlt' : j q + 1 <= l q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : Nat) : ℝ) + 1 <= l q := by exact_mod_cast hlt'
-    linarith
-
-private def lowAnnulusEval_wip
-    {d : Nat} (kappa : MultiIndex d) (J : Nat) (F : Pkappa d kappa) :
-    Cd d -> ℂ :=
-  fun z =>
-    ∑ j ∈ lowAnnuli d J,
-      Set.indicator (productAnnulus j) (fun w : Cd d => evalPkappa kappa F w) z
 
 private theorem finite_head_bad_limit_eval_tendsto_wip
     {d : Nat} {kappa : MultiIndex d}
