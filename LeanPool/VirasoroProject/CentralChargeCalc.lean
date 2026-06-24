@@ -200,8 +200,8 @@ lemma zMonomialF_five_eq (R : Type*) [Field R] [CharZero R] (n : ℤ) :
 lemma zMonomialF_apply_eq_zero_of_of_nonneg_lt (R : Type*) [Field R] [CharZero R]
     (d : ℕ) {n : ℕ} (n_lt : n < d) :
     zMonomialF R d n = 0 := by
-  simp only [zMonomialF_eq R d, Int.cast_natCast, div_eq_zero_iff, Nat.cast_eq_zero]
-  exact Or.inl <| prod_eq_zero_iff.mpr ⟨n, ⟨mem_range.mpr n_lt, by simp⟩⟩
+  simpa only [zMonomialF_eq R d, Int.cast_natCast, div_eq_zero_iff, Nat.cast_eq_zero]
+    using Or.inl <| prod_eq_zero_iff.mpr ⟨n, ⟨mem_range.mpr n_lt, by simp⟩⟩
 
 lemma bosonic_sugawara_cc_calc (R : Type*) [Field R] [CharZero R] (n : ℤ) :
     zPrimitive (fun l ↦ (l : R) * (n - l)) n = (n^3 - n) / 6 := by
