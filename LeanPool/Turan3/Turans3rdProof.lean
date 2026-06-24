@@ -2145,8 +2145,7 @@ lemma Enhanced_unaffected (W : FunToMax G) (h_con : W.w (W.argmin G) < W.w (W.ar
     have wM_eq_c : W.w M = c := by rw [← hL, hv.2]
     rw[wM_eq_c]
     have eqMax : W.maxWeight = c := by
-      rw [← FunToMax.argmax_weight G W]
-      exact wM_eq_c
+      rwa [← FunToMax.argmax_weight G W]
     have zero_eps : theEps G W = 0 := by
       dsimp [theEps]
       rw [eqMax, hc]
@@ -2158,8 +2157,7 @@ lemma Enhanced_unaffected (W : FunToMax G) (h_con : W.w (W.argmin G) < W.w (W.ar
     dsimp [m]
     rw [FunToMax.argmin_weight]
     apply FunToMax.min_lt_avg
-    rw [← FunToMax.argmin_weight, ← FunToMax.argmax_weight]
-    exact h_con
+    rwa [← FunToMax.argmin_weight, ← FunToMax.argmax_weight]
   · exact hv.2
 
 omit [DecidableRel G.Adj] in
@@ -2206,8 +2204,7 @@ lemma Enhanced_inc_uniform_count (W : FunToMax G) (h_con : W.w (W.argmin G) < W.
       apply ne_of_gt
       rw [FunToMax.argmax_weight]
       apply FunToMax.avg_lt_max G W
-      rw [← FunToMax.argmin_weight, ← FunToMax.argmax_weight]
-      exact h_con
+      rwa [← FunToMax.argmin_weight, ← FunToMax.argmax_weight]
   exact card_lt_card h_ssub
 
 omit [DecidableEq α] in
@@ -2547,11 +2544,9 @@ theorem finale_bound {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMa
       rw [inv_le_one₀]
       · dsimp [inner]
         simp only [Nat.one_le_cast]
-        rw [Nat.succ_le_iff]
-        exact hk_pos
+        rwa [Nat.succ_le_iff]
       · dsimp [inner]
-        simp only [Nat.cast_pos]
-        exact hk_pos
+        simpa only [Nat.cast_pos] using hk_pos
   rw [NNReal.coe_inj] at h_lhs'
   dsimp [inner] at h_lhs'
   rw [div_pow, one_pow]
@@ -2578,22 +2573,19 @@ theorem finale_bound {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMa
             · dsimp [inner]
               rw [le_tsub_iff_left]
               · rw [show (1 : NNReal) + 1 = 2 by norm_num]
-                simp only [Nat.ofNat_le_cast]
-                exact h0
+                simpa only [Nat.ofNat_le_cast] using h0
               · simp only [Nat.one_le_cast]
                 rw [Nat.succ_le_iff]
                 exact lt_trans hk_pos tec
             · rw [tsub_pos_iff_lt]
               simp only [Nat.one_lt_cast, inner]
-              rw [← Nat.succ_le_iff]
-              exact h0
+              rwa [← Nat.succ_le_iff]
         · simp only [Nat.one_le_cast, inner]
           rw [Nat.succ_le_iff]
           exact lt_trans hk_pos tec
       · rw [le_tsub_iff_left]
         · rw [show (1 : NNReal) + 1 = 2 by norm_num]
-          simp only [Nat.ofNat_le_cast, inner]
-          exact h0
+          simpa only [Nat.ofNat_le_cast, inner] using h0
         · simp only [Nat.one_le_cast, inner]
           rw [Nat.succ_le_iff]
           exact lt_trans hk_pos tec
@@ -2624,20 +2616,17 @@ theorem finale_bound {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) (W : FunToMa
       rw [inv_le_one₀]
       · rw [le_tsub_iff_left]
         · rw [show (1 : NNReal) + 1 = 2 by norm_num]
-          simp only [Nat.ofNat_le_cast]
-          exact h0
+          simpa only [Nat.ofNat_le_cast] using h0
         · simp only [Nat.one_le_cast]
           rw [Nat.succ_le_iff]
           exact lt_trans hk_pos tec
       · rw [tsub_pos_iff_lt]
         simp only [Nat.one_lt_cast]
-        rw [← Nat.succ_le_iff]
-        exact h0
+        rwa [← Nat.succ_le_iff]
   · simp only [one_div]
     rw [inv_le_one₀]
     · simp only [Nat.one_le_cast]
-      rw [Nat.succ_le_iff]
-      exact hk_pos
+      rwa [Nat.succ_le_iff]
     · simp only [Nat.cast_pos]
       exact hk_pos
 
