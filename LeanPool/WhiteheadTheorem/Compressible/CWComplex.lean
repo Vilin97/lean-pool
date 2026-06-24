@@ -412,8 +412,8 @@ theorem relCWComplex_of_diskBoundaryIncl
       simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
         NatTrans.ofSequence_app]
       ext x
-      simpa only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk] using
-        (H n).map_zero_left x
+      simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
+      exact (H n).map_zero_left x
     · -- refine_3: H' ≫ eval₁ = L ≫ j
       apply Limits.colimit.hom_ext
       intro n

@@ -333,8 +333,8 @@ noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
     rw [Metric.mem_sphere, PiLp.dist_eq_iSup]
     apply le_antisymm
     · refine Real.iSup_le ?_ (by norm_num : (0 : ℝ) ≤ (1 : ℝ))
-      simpa only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs] using
-        fun i ↦ abs_le.mpr (x i).property
+      simp only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs]
+      exact fun i ↦ abs_le.mpr (x i).property
     · apply Real.le_iSup_of_exists_ge_of_finite_domain
       obtain ⟨i, hi | hi⟩ := hx
       all_goals
