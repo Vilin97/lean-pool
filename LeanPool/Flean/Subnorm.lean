@@ -101,8 +101,7 @@ lemma subnormal_round_coe (r : IntRounder) [rh : ValidRounder r]
     replace t1 := t1 t2
     rw [subnormal_to_q_neg, neg_subnormal_round] at t1
     · apply neg_subnorm_involutive.injective t1
-    rw [subnormal_to_q_nonzero]
-    exact h
+    rwa [subnormal_to_q_nonzero]
   rcases s with ⟨b, m⟩
   dsimp at h'
   rw [h'] at h ⊢
@@ -326,8 +325,7 @@ lemma subnormal_up_minus_down (q : ℚ) :
       one_mul, sub_neg_eq_add, neg_add_le_iff_le_add, ge_iff_le]
     simp only [h', decide_false, Bool.false_eq_true, ↓reduceIte, abs_neg, zpow_neg, Nat.cast_natAbs,
       Int.cast_abs, one_mul, tsub_le_iff_right] at this
-    rw [add_comm]
-    exact this
+    rwa [add_comm]
   have h' : ¬(q < 0) := by linarith
   simp only [h', decide_false, Bool.false_eq_true, ↓reduceIte, zpow_neg, one_mul, tsub_le_iff_right,
     ge_iff_le]

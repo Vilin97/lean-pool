@@ -580,8 +580,7 @@ lemma float_error_old [R : Rounding] (q : ℚ) (h : (toFloatDown (C := C) q).IsF
     · rw [abs_sub_comm, abs_of_nonneg]
       · rw [sub_le_sub_iff_right]
         apply le_float_up (C := C)
-        rw [toFloatUp]
-        exact h'
+        rwa [toFloatUp]
       rw [sub_nonneg]
       apply float_down_le (C := C) (h := h)
     rw [abs_of_nonneg]

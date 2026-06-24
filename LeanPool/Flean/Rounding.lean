@@ -129,8 +129,7 @@ lemma round0_neg :
 
 lemma round_down_neg (q : ℚ) (h : q ≠ 0) :
   roundDown (-q) = FloatRep.neg (roundDown q : FloatRep C) := by
-  rw [roundDown, <-round0_neg, roundf_neg, round0_neg]
-  exact h
+  rwa [roundDown, <-round0_neg, roundf_neg, round0_neg]
 
 lemma round_down_coe (f : FloatRep C) (h : f.validM) :
   roundDown (coeQ f) = f := roundf_coe round0 f h

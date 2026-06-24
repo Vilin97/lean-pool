@@ -52,8 +52,7 @@ lemma log_zero_to_one_lt (x : ℚ) (e : ℤ) (h : 0 < x) (h' : x < 1) :
   rw [<-Int.lt_zpow_iff_log_lt (by norm_num)]
   · rw [abs_of_nonneg (by positivity)]
     simp only [Nat.cast_ofNat]
-    rw [mul_lt_iff_lt_one_left (by positivity)]
-    exact h'
+    rwa [mul_lt_iff_lt_one_left (by positivity)]
   positivity
 
 lemma mantissa_ge_one {m : ℕ} : 1 ≤ ((m : ℚ) / C.prec + 1) := by

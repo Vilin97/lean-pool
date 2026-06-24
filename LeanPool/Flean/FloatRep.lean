@@ -212,8 +212,7 @@ lemma normal_range' (m : ℕ) (e : ℤ) (vm : m < C.prec) (ve2 : e ≤ C.emax) :
       norm_cast
     linarith [vm]
   rw [abs_of_nonneg (by positivity)]
-  rw [zpow_le_zpow_iff_right₀ (by norm_num)]
-  exact ve2
+  rwa [zpow_le_zpow_iff_right₀ (by norm_num)]
 
 /-- The largest finite rational representable in the format `C`. -/
 def maxFloatQ (C : FloatCfg) : ℚ := (2 - (1 : ℚ) / C.prec) * 2^C.emax
@@ -292,8 +291,7 @@ lemma floatrep_le_pos_coe_q (f1 f2 : FloatRep C) (vm1 : f1.m ≤ C.prec) :
           apply le_of_lt
           exact mantissa_lt_two this
       _ ≤ 2^e' := by
-        rw [mul_comm, <-zpow_add_one₀ (by norm_num), zpow_le_zpow_iff_right₀ (by norm_num)]
-        exact h
+        rwa [mul_comm, <-zpow_add_one₀ (by norm_num), zpow_le_zpow_iff_right₀ (by norm_num)]
       _ ≤ ((m' : ℚ) / C.prec + 1) * 2^e' := by
         rw [le_mul_iff_one_le_left (by positivity)]
         exact mantissa_ge_one
