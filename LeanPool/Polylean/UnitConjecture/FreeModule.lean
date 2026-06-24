@@ -145,8 +145,7 @@ theorem nonzero_coord_in_support (s : FormalSum R X) :
           contradiction
         exact decide_eq_false eqn'
       rw [p']
-      simp only [decide_eq_true_eq]
-      exact step
+      simpa only [decide_eq_true_eq] using step
 
 /-!
 ### Equality of coordinates on a list
@@ -999,8 +998,7 @@ theorem equiv_of_equal_coeffs (s₁ s₂ : FormalSum R X)
           if p₁ : 0 = a₁ then by
             have cf₂ : s₂.coords x₀ = a₀ := by
               rw [← hyp]
-              simp only [coords, monomCoeff, BEq.rfl, add_eq_left]
-              exact Eq.symm p₁
+              simpa only [coords, monomCoeff, BEq.rfl, add_eq_left] using Eq.symm p₁
             let ⟨ys, eqn, _⟩ :=
               nonzero_coeff_has_complement x₀ s₂
                 (by
@@ -1205,8 +1203,7 @@ theorem supp_below_max (norm : X → Nat) (crds : X → R) (s : List X) :
         apply snd_le_max
       else
         by
-        simp only [c, ↓reduceIte, ge_iff_le]
-        exact l
+        simpa only [c, ↓reduceIte, ge_iff_le] using l
 
 omit [DecidableEq X] in
 theorem supp_zero_of_max_zero (norm : X → Nat) (crds : X → R) (s : List X) :

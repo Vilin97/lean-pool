@@ -103,8 +103,7 @@ do
           have ysize : ys.size = m := by rw [Array.size_pop, h]
                                          rfl
           have h0 : fst.size + snd.size < w.size := by
-            simp only [h, ← ysize]
-            exact Nat.lt_trans h0 (Nat.lt_succ_self _)
+            simpa only [h, ← ysize] using Nat.lt_trans h0 (Nat.lt_succ_self _)
           have _ : snd.size < w.size := Nat.lt_of_le_of_lt (Nat.le_add_left _ _) h0
           have _ : fst.size < w.size := Nat.lt_of_le_of_lt (Nat.le_add_right _ _) h0
           return (← length fst) + (← length snd)
