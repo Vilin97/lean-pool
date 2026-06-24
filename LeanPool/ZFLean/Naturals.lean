@@ -456,8 +456,7 @@ theorem le_total {x y : ZFNat} : x ≤ y ∨ y ≤ x := by
           exact h
       · subst_eqs; right; exact le_succ
       · right
-        simp only [lt_le_iff]
-        exact lt_trans (lt_trans h lt_succ) lt_succ
+        simpa only [lt_le_iff] using lt_trans (lt_trans h lt_succ) lt_succ
       · subst_eqs
         right
         exact le_succ
