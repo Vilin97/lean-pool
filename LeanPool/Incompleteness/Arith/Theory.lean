@@ -655,10 +655,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₂.proof (n m : V) :
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₃.proof {n m : V} (ne : n ≠ m) :
     ⌜𝐑₀'⌝[V] ⊢ ↑n ≠' ↑m :=
   Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 4 apply FirstOrder.Semiformula.curve_mem_right
   apply FirstOrder.Semiformula.curve_mem_left
   unfold Ω₃
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,
@@ -679,11 +676,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₃.proof {n m : V} (ne : n �
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₄.proof (n :
     V) : ⌜𝐑₀'⌝[V] ⊢ (#'0 <' ↑n <=> (tSubstItr (#'0).sing (#'1 =' #'0) n).disj).all :=
   Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 5 apply FirstOrder.Semiformula.curve_mem_right
   unfold Ω₄
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,
     Fin.isValue, HierarchySymbol.Semiformula.sigma_mkDelta,
