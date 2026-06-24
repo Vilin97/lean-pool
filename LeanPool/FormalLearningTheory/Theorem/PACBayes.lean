@@ -272,11 +272,8 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
             (fun h _ => le_of_lt (mul_pos (hP_pos h) hδ)),
             ← Finset.sum_mul, P.prob_sum_one, one_mul]
   have h_result := prob_ge_one_sub_compl' μ Good (ENNReal.ofReal δ) h_compl_bound
-  rw [ge_iff_le] at h_result ⊢
-  calc ENNReal.ofReal (1 - δ) = 1 - ENNReal.ofReal δ := by
-        rw [← ENNReal.ofReal_one]
-        exact ENNReal.ofReal_sub 1 hδ.le
-    _ ≤ μ Good := h_result
+  rw [ge_iff_le, ENNReal.ofReal_sub _ hδ.le, ENNReal.ofReal_one]
+  rwa [ge_iff_le] at h_result
 
 -- ============================================================================
 -- Phase 4: The PAC-Bayes bound (Jensen)
