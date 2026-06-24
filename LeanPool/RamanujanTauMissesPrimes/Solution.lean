@@ -184,8 +184,7 @@ lemma per_k_odd_prime_ncard_le (R : RamanujanTau) (k : ℕ) (X : ℝ) (hX : 0 < 
 lemma even_prime_subset_singleton (R : RamanujanTau) (X : ℝ) :
     {ℓ : ℕ | Nat.Prime ℓ ∧ ℓ = 2 ∧ (ℓ : ℝ) ≤ X ∧
       ∃ p : ℕ+, (p : ℕ).Prime ∧ ∃ k : ℕ, 3 ≤ k ∧
-        (R.τ (p ^ (2 * k))).natAbs = ℓ} ⊆ {2} := by
-  grind
+        (R.τ (p ^ (2 * k))).natAbs = ℓ} ⊆ {2} := by grind
 
 lemma even_prime_ncard_le (R : RamanujanTau) (X : ℝ) (_hX : 0 < X) :
     {ℓ : ℕ | Nat.Prime ℓ ∧ ℓ = 2 ∧ (ℓ : ℝ) ≤ X ∧
@@ -341,8 +340,7 @@ theorem target_ncard_le_sum (R : RamanujanTau) (X : ℝ) (hX : 0 < X)
           (R.τ (p ^ (2 * k))).natAbs = ℓ}.ncard : ℝ) +
       ({ℓ : ℕ | Nat.Prime ℓ ∧ ℓ ≠ 2 ∧ (ℓ : ℝ) ≤ X ∧
         ∃ p : ℕ+, (p : ℕ).Prime ∧ ∃ k : ℕ, 3 ≤ k ∧
-          (R.τ (p ^ (2 * k))).natAbs = ℓ}.ncard : ℝ) := by
-        exact_mod_cast hsplit
+          (R.τ (p ^ (2 * k))).natAbs = ℓ}.ncard : ℝ) := by exact_mod_cast hsplit
     _ ≤ 1 + ∑ k ∈ Finset.Icc 3 K,
         ((oddPrimesSigned ∩ X2k R k ∩ {z : ℤ | (|z| : ℝ) ≤ X}).ncard : ℝ) := by
         have h1 : ({ℓ : ℕ | Nat.Prime ℓ ∧ ℓ = 2 ∧ (ℓ : ℝ) ≤ X ∧
@@ -495,12 +493,9 @@ lemma log_div_mul_eq (X : ℝ) (hX : 0 < X) :
   calc
     Real.log X / (2 * Real.log 2) * X ^ ((1 : ℝ) / 2)
         = (Real.log X / (2 * Real.log 2)) * X ^ ((1 : ℝ) / 2) := by ring
-    _ = (Real.log X * (1 / (2 * Real.log 2))) * X ^ ((1 : ℝ) / 2) := by
-      field_simp [h2]
-    _ = (1 / (2 * Real.log 2)) * (Real.log X * X ^ ((1 : ℝ) / 2)) := by
-      ring_nf
-    _ = (1 / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by
-      ring_nf
+    _ = (Real.log X * (1 / (2 * Real.log 2))) * X ^ ((1 : ℝ) / 2) := by field_simp [h2]
+    _ = (1 / (2 * Real.log 2)) * (Real.log X * X ^ ((1 : ℝ) / 2)) := by ring_nf
+    _ = (1 / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by ring_nf
     _ = 1 / (2 * Real.log 2) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by ring
 
 lemma final_arithmetic_bound (A : ℝ) (hA : 0 < A) :
@@ -517,8 +512,7 @@ lemma final_arithmetic_bound (A : ℝ) (hA : 0 < A) :
     1 + A * (1 / (2 * Real.log 2) * (X ^ ((1 : ℝ) / 2) * Real.log X))
         = 1 + (A / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by ring_nf
     _ ≤ (X ^ ((1 : ℝ) / 2) * Real.log X) +
-        (A / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by
-          linarith
+        (A / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by linarith
     _ = (1 + A / (2 * Real.log 2)) * (X ^ ((1 : ℝ) / 2) * Real.log X) := by ring
 
 lemma k_ge3_contribution (R : RamanujanTau) (h54 : Proposition54 R) :
@@ -986,8 +980,7 @@ lemma E2_ysq_le_x11_add_X_int_step (X : ℝ) (p : ℕ+ × ℤ)
 
 lemma E2_ysq_le_x11_add_X_helper (X : ℝ) (p : ℕ+ × ℤ)
     (h3 : (|(↑p.1 : ℤ) ^ 11 - p.2 ^ 2| : ℝ) ≤ X) :
-    (p.2 : ℝ) ^ 2 ≤ ((p.1 : ℕ) : ℝ) ^ 11 + X := by
-  linarith [E2_ysq_le_x11_add_X_int_step X p h3]
+    (p.2 : ℝ) ^ 2 ≤ ((p.1 : ℕ) : ℝ) ^ 11 + X := by linarith [E2_ysq_le_x11_add_X_int_step X p h3]
 
 lemma E2_ysq_le_x11_add_X (X : ℝ) (p : ℕ+ × ℤ) (hp : p ∈ E2Set X) :
     (p.2 : ℝ) ^ 2 ≤ ((p.1 : ℕ) : ℝ) ^ 11 + X := E2_ysq_le_x11_add_X_helper X p hp.2.2
@@ -1126,8 +1119,7 @@ lemma coprime_of_coprime_sub (a c : ℕ) (hac : Nat.Coprime a c) (hle : a ≤ c)
     Nat.Coprime a (c - a) :=
   ((Nat.coprime_sub_self_left hle).mpr (hac.symm)).symm
 
-lemma mul_div_cancel_of_dvd (g M : ℕ) (h : g ∣ M) : g * (M / g) = M := by
-  rw [Nat.mul_div_cancel' h]
+lemma mul_div_cancel_of_dvd (g M : ℕ) (h : g ∣ M) : g * (M / g) = M := by rw [Nat.mul_div_cancel' h]
 
 lemma mul_sub_div_eq (g M N : ℕ) (hgM : g ∣ M) (hgN : g ∣ N) (_hle : M ≤ N) :
     g * (N / g - M / g) = N - M := by
@@ -1287,8 +1279,7 @@ lemma assemble_abc_bound_chain
     _ ≤ (g : ℝ) * (K * ((y_abs : ℝ) * (d : ℝ) * (x : ℝ)) ^ ((3 : ℝ) / 2)) := by
         exact mul_le_mul_of_nonneg_left
           (mul_le_mul_of_nonneg_left h_rad_mono (le_of_lt hK)) (Nat.cast_nonneg g)
-    _ = (g : ℝ) * (K * ((d : ℝ) * (x : ℝ) * (y_abs : ℝ)) ^ ((3 : ℝ) / 2)) := by
-        grind
+    _ = (g : ℝ) * (K * ((d : ℝ) * (x : ℝ) * (y_abs : ℝ)) ^ ((3 : ℝ) / 2)) := by grind
     _ ≤ (d : ℝ) * (K * ((d : ℝ) * (x : ℝ) * (y_abs : ℝ)) ^ ((3 : ℝ) / 2)) := h_gd_mono
     _ = (d : ℝ) * K * ((d : ℝ) * (x : ℝ) * (y_abs : ℝ)) ^ ((3 : ℝ) / 2) := by ring
 
@@ -1355,8 +1346,7 @@ lemma abc_gcd_bound_nat
 lemma int_eq_from_diff
     (x : ℕ) (y : ℤ) (d : ℕ)
     (hd_eq : (d : ℤ) = (x : ℤ) ^ 11 - y ^ 2) :
-    y ^ 2 + (d : ℤ) = (x : ℤ) ^ 11 := by
-  grind
+    y ^ 2 + (d : ℤ) = (x : ℤ) ^ 11 := by grind
 
 lemma nat_eq_from_int_eq
     (x : ℕ) (y : ℤ) (d : ℕ)
@@ -1574,14 +1564,12 @@ lemma E2_abc_case_A_d_eq
     (x : ℕ) (y : ℤ)
     (d : ℕ) (hd_eq : (d : ℤ) = |((x : ℤ) ^ 11 - y ^ 2)|)
     (hge : y ^ 2 ≤ (x : ℤ) ^ 11) :
-    (d : ℤ) = (x : ℤ) ^ 11 - y ^ 2 := by
-  rw [hd_eq, abs_of_nonneg (sub_nonneg.mpr hge)]
+    (d : ℤ) = (x : ℤ) ^ 11 - y ^ 2 := by rw [hd_eq, abs_of_nonneg (sub_nonneg.mpr hge)]
 
 lemma E2_abc_case_A_cast_le
     (x : ℕ) (y : ℤ)
     (hge : y ^ 2 ≤ (x : ℤ) ^ 11) :
-    (y : ℝ) ^ 2 ≤ (x : ℝ) ^ 11 := by
-  exact_mod_cast hge
+    (y : ℝ) ^ 2 ≤ (x : ℝ) ^ 11 := by exact_mod_cast hge
 
 lemma E2_abc_case_A (K : ℝ) (_hK : 0 < K)
     (x : ℕ) (_hx : 0 < x)
@@ -1608,8 +1596,7 @@ lemma d_eq_ysq_sub_x11 (x : ℕ) (y : ℤ) (d : ℕ)
 
 lemma x11_le_y2_real (x : ℕ) (y : ℤ)
     (hlt : (x : ℤ) ^ 11 < y ^ 2) :
-    ((x : ℤ) : ℝ) ^ 11 ≤ ((y : ℤ) : ℝ) ^ 2 := by
-  exact_mod_cast hlt.le
+    ((x : ℤ) : ℝ) ^ 11 ≤ ((y : ℤ) : ℝ) ^ 2 := by exact_mod_cast hlt.le
 
 lemma E2_abc_case_B (K : ℝ) (_hK : 0 < K)
     (x : ℕ) (_hx : 0 < x)
@@ -1765,8 +1752,7 @@ lemma substitute_y_combine_x (K : ℝ) (hK : 0 < K)
 lemma rpow_div_le_of_rpow_le (x : ℝ) (hx_pos : 0 < x)
     (a b : ℝ) (B : ℝ)
     (h : x ^ a ≤ B * x ^ b) :
-    x ^ a / x ^ b ≤ B := by
-  rwa [div_le_iff₀ (Real.rpow_pos_of_pos hx_pos b)]
+    x ^ a / x ^ b ≤ B := by rwa [div_le_iff₀ (Real.rpow_pos_of_pos hx_pos b)]
 
 lemma rpow_sub_eq_div (x : ℝ) (hx_pos : 0 < x) (a b : ℝ) :
     x ^ (a - b) = x ^ a / x ^ b := Real.rpow_sub hx_pos a b
@@ -1852,8 +1838,7 @@ lemma raise_to_fourth (K : ℝ) (hK : 0 < K)
 lemma d_pow_le_X_pow (K : ℝ) (hK : 0 < K)
     (X : ℝ) (_hX : 0 < X)
     (d : ℝ) (hd_pos : 0 < d) (hd_le : d ≤ X) :
-    8 * K ^ 4 * d ^ 10 ≤ 8 * K ^ 4 * X ^ 10 := by
-  gcongr
+    8 * K ^ 4 * d ^ 10 ≤ 8 * K ^ 4 * X ^ 10 := by gcongr
 
 lemma E2_case1_bound (K : ℝ) (hK : 0 < K)
     (X : ℝ) (hX : 0 < X)
@@ -2099,8 +2084,7 @@ lemma witness_in_E2_set (R : RamanujanTau) (X : ℝ) (p : ℕ+)
     (hp : (p : ℕ).Prime) (hpX : (p : ℝ) > X ^ ((2 : ℝ) / 11))
     (ℓ : ℕ) (hℓ : Nat.Prime ℓ) (hℓX : (ℓ : ℝ) ≤ X)
     (hτ : (R.τ (p ^ 2)).natAbs = ℓ) :
-    (p, R.τ p) ∈ E2Set X := by
-  refine ⟨hpX, E2_cond2 R p hp ℓ hℓ hτ, E2_cond3 R X p hp ℓ hℓX hτ⟩
+    (p, R.τ p) ∈ E2Set X := by refine ⟨hpX, E2_cond2 R p hp ℓ hℓ hτ, E2_cond3 R X p hp ℓ hℓX hτ⟩
 
 open Classical in
 /-- A choice of prime `p` exhibiting `ℓ` as `|τ (p ^ 2)|` with `p > X ^ (2/11)`, when one
@@ -2375,8 +2359,7 @@ lemma small_primes_k2_bound (R : RamanujanTau) :
   calc ({ℓ : ℕ | Nat.Prime ℓ ∧ (ℓ : ℝ) ≤ X ∧
       ∃ p : ℕ+, (p : ℕ).Prime ∧ (p : ℝ) ≤ X ^ ((1 : ℝ) / 11) ∧
         (R.τ (p ^ 4)).natAbs = ℓ}.ncard : ℝ)
-      ≤ (⌊X ^ ((1 : ℝ) / 11)⌋₊ : ℝ) := by
-        exact_mod_cast le_trans h1 (le_trans h2 h3)
+      ≤ (⌊X ^ ((1 : ℝ) / 11)⌋₊ : ℝ) := by exact_mod_cast le_trans h1 (le_trans h2 h3)
     _ ≤ X ^ ((1 : ℝ) / 11) := h4
 
 private theorem tau_cube_formula (R : RamanujanTau) (p : ℕ+) (hp : (p : ℕ).Prime) :
@@ -2822,8 +2805,7 @@ lemma E4_fiber_empty_of_le (X : ℝ) (x : ℕ+)
   exact hx hu.1
 
 lemma denom_pos_E4 (ε : ℝ) (hε : 0 < ε) (hε_bound : ε ≤ 1 / 24) :
-    0 < 10 - 12 * ε := by
-  linarith
+    0 < 10 - 12 * ε := by linarith
 
 private lemma cleared_ineq_E4 (η ε : ℝ) (hη : 0 < η) (hε : 0 < ε)
     (hε_η : ε ≤ η) (hε_bound : ε ≤ 1 / 24) :
@@ -2935,8 +2917,7 @@ lemma nat_pow_eq_rpow (x : ℕ+) :
 lemma rhs_rearrange (K : ℝ) (ε : ℝ) (x : ℕ+) (X : ℝ) :
     K * Real.sqrt 2 ^ (1 + ε) *
       (x : ℝ) ^ ((13 / 2 : ℝ) * (1 + ε)) * X ^ (2 + ε) =
-    (x : ℝ) ^ ((13 / 2 : ℝ) * (1 + ε)) * (K * Real.sqrt 2 ^ (1 + ε) * X ^ (2 + ε)) := by
-  ring
+    (x : ℝ) ^ ((13 / 2 : ℝ) * (1 + ε)) * (K * Real.sqrt 2 ^ (1 + ε) * X ^ (2 + ε)) := by ring
 
 lemma rewrite_hypothesis (K : ℝ) (_hK : 0 < K)
     (ε : ℝ) (hε : 0 < ε) (hε' : ε < 9 / 13)
@@ -3033,8 +3014,7 @@ lemma four_X_le_four_x22 (x : ℕ+) (X : ℝ) (hX : 1 < X)
 lemma u_sq_lt_nine_x22 (x : ℕ+) (u : ℤ) (X : ℝ)
     (hu_sq : (u : ℝ) ^ 2 ≤ 5 * (x : ℝ) ^ 22 + 4 * X)
     (h4X : 4 * X < 4 * (x : ℝ) ^ 22) :
-    (u : ℝ) ^ 2 < 9 * (x : ℝ) ^ 22 := by
-  linarith
+    (u : ℝ) ^ 2 < 9 * (x : ℝ) ^ 22 := by linarith
 
 lemma natAbs_le_of_sq_lt (x : ℕ+) (u : ℤ)
     (hu_sq : (u : ℝ) ^ 2 < 9 * (x : ℝ) ^ 22) :
@@ -3263,17 +3243,14 @@ lemma gcd_le_D (x : ℕ+) (u : ℤ)
 
 lemma int_ineq_from_sub_pos (x : ℕ+) (u : ℤ)
     (hD_pos : u ^ 2 - 5 * (↑(x : ℕ) : ℤ) ^ 22 > 0) :
-    5 * (↑(x : ℕ) : ℤ) ^ 22 < u ^ 2 := by
-  linarith
+    5 * (↑(x : ℕ) : ℤ) ^ 22 < u ^ 2 := by linarith
 
 lemma cast_int_ineq_to_real (x : ℕ+) (u : ℤ)
     (h : 5 * (↑(x : ℕ) : ℤ) ^ 22 < u ^ 2) :
-    5 * (x : ℝ) ^ 22 < (u : ℝ) ^ 2 := by
-  exact_mod_cast h
+    5 * (x : ℝ) ^ 22 < (u : ℝ) ^ 2 := by exact_mod_cast h
 
 lemma natAbs_sq_real (u : ℤ) :
-    (u.natAbs : ℝ) ^ 2 = (u : ℝ) ^ 2 := by
-  simp [Nat.cast_natAbs, sq_abs]
+    (u.natAbs : ℝ) ^ 2 = (u : ℝ) ^ 2 := by simp [Nat.cast_natAbs, sq_abs]
 
 lemma five_x22_lt_U_sq (x : ℕ+) (u : ℤ)
     (hD_pos : u ^ 2 - 5 * (↑(x : ℕ) : ℤ) ^ 22 > 0) :
@@ -3464,8 +3441,7 @@ lemma product_bound_E4 (x : ℕ+) (u : ℤ) (D : ℝ)
     (hu_bound : (Int.natAbs u : ℝ) ≤ 3 * (x : ℝ) ^ 11) :
     5 * (x : ℝ) * (Int.natAbs u : ℝ) * D ≤ 15 * (x : ℝ) ^ 12 * D := by
   calc
-    5 * (x : ℝ) * (Int.natAbs u : ℝ) * D ≤ 5 * (x : ℝ) * (3 * (x : ℝ) ^ 11) * D := by
-      gcongr
+    5 * (x : ℝ) * (Int.natAbs u : ℝ) * D ≤ 5 * (x : ℝ) * (3 * (x : ℝ) ^ 11) * D := by gcongr
     _ = 15 * (x : ℝ) ^ 12 * D := by ring
 
 lemma product_nonneg_E4 (x : ℕ+) (u : ℤ) (D : ℝ)
@@ -3994,8 +3970,7 @@ lemma reduction_lemma_core (R : RamanujanTau) (habc : ABC) (h54 : Proposition54 
     X ^ ((13 : ℝ) / 22) + X ^ ((6 : ℝ) / 11) +
     (E2 X : ℝ) + (E4 X : ℝ)
   have hS_bound : (S R X : ℝ) ≤ 2 * X ^ ((13 : ℝ) / 22) + (E2 X : ℝ) + (E4 X : ℝ) +
-      X ^ ((6 : ℝ) / 11) + C₃ * (X ^ ((1 : ℝ) / 2) * Real.log X) := by
-    linarith
+      X ^ ((6 : ℝ) / 11) + C₃ * (X ^ ((1 : ℝ) / 2) * Real.log X) := by linarith
   have hT_def : T = X ^ ((1 : ℝ) / 2) * Real.log X + X ^ ((13 : ℝ) / 22) +
     X ^ ((6 : ℝ) / 11) + (E2 X : ℝ) + (E4 X : ℝ) := rfl
   nlinarith [mul_nonneg (le_of_lt hC₃) hmul_nn,
@@ -4030,15 +4005,13 @@ lemma E2_caseA_mem (X : ℝ) (x : ℕ+) (y : ℤ)
     (h_abs_le : (|(↑↑x : ℤ) ^ 11 - y ^ 2| : ℝ) ≤ X)
     (h_sign : y ^ 2 ≤ (↑↑x : ℤ) ^ 11 - 1) :
     y ∈ ({y : ℤ | y ^ 2 ≤ (↑↑x : ℤ) ^ 11 - 1 ∧
-        (((↑↑x : ℤ) ^ 11 - y ^ 2 : ℤ) : ℝ) ≤ X}) := by
-  grind
+        (((↑↑x : ℤ) ^ 11 - y ^ 2 : ℤ) : ℝ) ≤ X}) := by grind
 
 lemma E2_caseB_mem (X : ℝ) (x : ℕ+) (y : ℤ)
     (h_abs_le : (|(↑↑x : ℤ) ^ 11 - y ^ 2| : ℝ) ≤ X)
     (h_sign : (↑↑x : ℤ) ^ 11 + 1 ≤ y ^ 2) :
     y ∈ ({y : ℤ | (↑↑x : ℤ) ^ 11 + 1 ≤ y ^ 2 ∧
-        ((y ^ 2 - (↑↑x : ℤ) ^ 11 : ℤ) : ℝ) ≤ X}) := by
-  grind
+        ((y ^ 2 - (↑↑x : ℤ) ^ 11 : ℤ) : ℝ) ≤ X}) := by grind
 
 lemma E2_fiber_subset_union (X : ℝ) (_hX : 2 < X) (x : ℕ+)
     (_hx : (x : ℝ) > X ^ ((2 : ℝ) / 11)) :
@@ -4218,8 +4191,7 @@ lemma ncard_le_two_of_natAbs_image_le_one (S : Set ℤ) (hfin : S.Finite)
     exact this
 
 lemma natAbs_cast_sq_eq (y : ℤ) :
-    ((Int.natAbs y : ℤ) : ℝ) ^ 2 = ((y ^ 2 : ℤ) : ℝ) := by
-  exact_mod_cast Int.natAbs_sq y
+    ((Int.natAbs y : ℤ) : ℝ) ^ 2 = ((y ^ 2 : ℤ) : ℝ) := by exact_mod_cast Int.natAbs_sq y
 
 lemma natAbs_sq_le_cast_real (x : ℕ+) (y : ℤ)
     (hy_sq : y ^ 2 ≤ (↑↑x : ℤ) ^ 11 - 1) :
@@ -4235,8 +4207,7 @@ lemma upper_bound_from_sq_le (x : ℕ+) (y : ℤ) (X : ℝ) (hX : 2 < X)
   exact natAbs_sq_le_cast_real x y hy_sq
 
 lemma natAbs_cast_sq_eq' (y : ℤ) :
-    ((Int.natAbs y : ℤ) : ℝ) ^ 2 = ((y : ℤ) : ℝ) ^ 2 := by
-  exact_mod_cast Int.natAbs_sq y
+    ((Int.natAbs y : ℤ) : ℝ) ^ 2 = ((y : ℤ) : ℝ) ^ 2 := by exact_mod_cast Int.natAbs_sq y
 
 lemma rearrange_diff_le (x : ℕ+) (y : ℤ) (X : ℝ)
     (hy_diff : (((↑↑x : ℤ) ^ 11 - y ^ 2 : ℤ) : ℝ) ≤ X) :
@@ -4346,8 +4317,7 @@ lemma sqrt_x11_add_one_gt_X (X : ℝ) (_hX_pos : 0 < X) (x_pow : ℝ)
 
 lemma sq_lt_xpow_add_X (X : ℝ) (_hX_pos : 0 < X) (x_pow : ℝ)
     (hx_pow : x_pow > X ^ 2) :
-    X ^ 2 < x_pow + X := by
-  grind
+    X ^ 2 < x_pow + X := by grind
 
 lemma sqrt_x11_add_X_gt_X (X : ℝ) (hX_pos : 0 < X) (x_pow : ℝ)
     (hx_pow : x_pow > X ^ 2) :
@@ -4523,8 +4493,7 @@ lemma cleared_ineq (η ε : ℝ) (hη : 0 < η)
     mul_nonneg hε1.le hη.le, mul_nonneg hε1.le (sub_nonneg.mpr hε2),
     mul_nonneg hε1.le (sub_nonneg.mpr hε3)]
 
-lemma X_lt_X_sq (X : ℝ) (hX : 1 < X) : X < X ^ (2 : ℕ) := by
-  nlinarith [sq_nonneg (X - 1)]
+lemma X_lt_X_sq (X : ℝ) (hX : 1 < X) : X < X ^ (2 : ℕ) := by nlinarith [sq_nonneg (X - 1)]
 
 lemma x11_pow_gt_X (x : ℕ+) (X : ℝ) (hX : 1 < X)
     (hx_lower : (x : ℝ) > X ^ ((2 : ℝ) / 11)) :
