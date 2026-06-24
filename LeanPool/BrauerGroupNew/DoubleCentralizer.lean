@@ -123,8 +123,7 @@ lemma centralizer_tensor_le_inf_centralizer :
   rw [← Subalgebra.centralizer_sup]
   intro y hy
   apply hx
-  rw [Algebra.TensorProduct.map_range]
-  exact hy
+  rwa [Algebra.TensorProduct.map_range]
 
 include 𝒜 𝒜' in
 lemma centralizer_tensor_centralizer :
@@ -167,8 +166,7 @@ lemma centralizer_tensor_centralizer :
         (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B : Set A)).subtype
         (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B' : Set A')).subtype) by
       exact this
-    rw [← this]
-    exact hx
+    rwa [← this]
   · rintro _ ⟨x, rfl⟩
     induction x using TensorProduct.induction_on with
     | zero => exact Subalgebra.zero_mem _
