@@ -367,8 +367,7 @@ theorem primesOver_mem :
     have hd := dvd_iff_le.mpr (map_le_of_le_comap (le_of_eq hp.liesOver_eq))
     have hir := irreducible_iff_prime.mpr ((prime_iff_isMaximal P).mpr hpm)
     rcases exists_mem_factors_of_dvd (map_isMaximal_ne_bot p L) hir hd with ⟨_, hq, he⟩
-    classical rw [Multiset.mem_toFinset, associated_iff_eq.mp he]
-    exact hq
+    classical rwa [Multiset.mem_toFinset, associated_iff_eq.mp he]
 
 instance primesOver_instIsMaximal (Q : primesOver p L) : IsMaximal Q.1 :=
   ((primesOver_mem p Q.1).mp Q.2).1
