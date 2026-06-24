@@ -366,8 +366,7 @@ theorem S_LOOP {α : Type} [Preorder α] [WellFoundedLT α] :
               simp only [Set.mem_union] at hsafe
               push Not at hsafe
               rcases hsafe with ⟨⟨-, hnotLw⟩, hnotLb⟩
-              simp only [Set.mem_union, not_or]
-              exact ⟨hnotLw, hnotLb⟩
+              simpa only [Set.mem_union, not_or] using ⟨hnotLw, hnotLb⟩
           | inr heq =>
               simp only [Set.mem_union, not_or]
               rw [heq, hrun, hpc']

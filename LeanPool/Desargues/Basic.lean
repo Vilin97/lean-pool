@@ -266,8 +266,7 @@ theorem p_5
   intro p p_in_ab
   obtain rfl | ab_neq := eq_or_ne a b
   · simp only [star, ↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff] at p_in_ab
-    rw [p_in_ab]
-    exact a_in_bc
+    rwa [p_in_ab]
   · obtain rfl | bc_neq := eq_or_ne b c
     · simp only [star, ↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff] at a_in_bc
       contradiction
@@ -284,7 +283,6 @@ theorem p_5
           split
           · contradiction
           · relSym
-            -- apply rel_sym_bca p b c PG.l1 PG.l2 c_in_ab
       · obtain rfl | pc_neq := eq_or_ne p c
         · unfold star
           simp only [mem_setOf_eq]

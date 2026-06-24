@@ -203,11 +203,11 @@ lemma toGL_toSubmodule {M : Submodule R (ι → K)} [IsLattice M] (b : Basis ι 
         simp at hi
     · simp
     · intro y z _ _ hym hzm
-      simp only [Subtype.val_comp_add, Matrix.mulVec_add]
-      exact Submodule.add_mem _ hym hzm
+      simpa only [Subtype.val_comp_add, Matrix.mulVec_add] using
+        Submodule.add_mem _ hym hzm
     · intro a y _ hym
-      simp only [Subtype.val_comp_smul, Matrix.mulVec_smul]
-      exact Submodule.smul_mem _ a hym
+      simpa only [Subtype.val_comp_smul, Matrix.mulVec_smul] using
+        Submodule.smul_mem _ a hym
   · intro hx
     rw [Basis.mem_submodule_iff' b] at hx
     obtain ⟨c, rfl⟩ := hx

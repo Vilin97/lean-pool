@@ -487,5 +487,4 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
           ∑ i, #(A i) - (k + 2).choose 2 = ∑ i, (#(A i) - 1) - (k + 1).choose 2 := by
         rw [h_sum_succ, h_choose_succ]
         omega
-      rw [h_lhs_eq]
-      exact h_theorem
+      rwa [h_lhs_eq]

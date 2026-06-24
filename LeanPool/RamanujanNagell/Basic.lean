@@ -417,9 +417,8 @@ lemma odd_case_mod_seven_constraint :
       have hm_ge : n - 2 ≥ 3 := by omega
       have h_theta := main_m_condition x (n - 2) hm_odd hm_ge h_div
       have h_mod := expand_by_binomial (n - 2) hm_ge h_theta
-      rw [show n - 3 = (n - 2) - 1 from by omega]
-      rw [show ((n : ℤ) - 2) = ((n - 2 : ℕ) : ℤ) from by omega]
-      exact h_mod
+      rwa [show n - 3 = (n - 2) - 1 from by omega,
+        show ((n : ℤ) - 2) = ((n - 2 : ℕ) : ℤ) from by omega]
 
 private lemma two_pow_six_pow_emod_seven (q : ℕ) : ((2 : ℤ) ^ 6) ^ q % 7 = 1 := by
   induction q with
@@ -1020,8 +1019,6 @@ lemma helper_2
   ∨ (x, n) = (181, 15) ∨ (x, n) = (-181, 15) := by
     rcases (sq_eq_sq_iff_eq_or_eq_neg.mp h₁ : x = 1 ∨ x = -1) with h | h <;>
       subst h h₂ <;> tauto
-
-lemma omg {n : ℕ} (n_ge_4 : n ≥ (4 : ℕ)) (n_ne_4 : n ≠ (4 : ℕ)) : n ≥ 5 := by omega
 
 lemma helper_3
   {x : ℤ} {n : ℕ} (h₁ : x ^ 2 = 25) (h₂ : n = 5) :

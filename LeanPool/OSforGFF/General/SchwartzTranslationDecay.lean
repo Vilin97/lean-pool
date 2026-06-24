@@ -110,8 +110,7 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
       simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hz
       simp only [kernelTail, dist_zero_right]
       have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
-        simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
-        exact hz
+        simpa only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] using hz
       rw [indicator_of_mem hmem, mul_one]
       have hbound := hK_decay z hz.le
       have : |K z| ≤ 0 := le_trans hbound (div_nonpos_of_nonpos_of_nonneg hC (Real.rpow_nonneg
@@ -858,20 +857,17 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
           by_cases hz_outside : ‖x - y₀‖ > R₀
           · apply ContinuousAt.mul
             · have h_mem : x - y₀ ∈ (closedBall (0 : E) R₀)ᶜ := by
-                simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
-                exact hz_outside
+                simpa only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] using hz_outside
               exact hK_cont.continuousAt ((isOpen_compl_iff.mpr isClosed_closedBall).mem_nhds
                 h_mem)
             · apply ContinuousOn.continuousAt_indicator continuousOn_const
               rw [frontier_compl, frontier_closedBall (0 : E) hR₀.ne']
-              simp only [mem_sphere_zero_iff_norm]
-              exact hxy_not_sphere
+              simpa only [mem_sphere_zero_iff_norm] using hxy_not_sphere
           · push Not at hz_outside
             have hz_inside : ‖x - y₀‖ < R₀ := lt_of_le_of_ne hz_outside hxy_not_sphere
             have h_mem_interior : x - y₀ ∈ interior (closedBall (0 : E) R₀) := by
               rw [interior_closedBall _ hR₀.ne']
-              simp only [mem_ball, dist_zero_right]
-              exact hz_inside
+              simpa only [mem_ball, dist_zero_right] using hz_inside
             have h_eq : (fun z => K z * (closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ)) z)
               =ᶠ[nhds (x - y₀)] (fun _ => 0) := by
               have h_open : IsOpen (interior (closedBall (0 : E) R₀)) := isOpen_interior

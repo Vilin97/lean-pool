@@ -81,8 +81,8 @@ lemma injOn_sdiff (s : Finset α) (f : α → β) (h : s.card = (Finset.image f 
             _ ≤ (image f (s \ {a, b, c})).card + (image f {a, b, c}).card :=
               Finset.card_union_le _ _
             _ = (image f (s \ {a, b, c})).card + 1 := by
-              simp only [image_insert, image_singleton, Nat.add_left_cancel_iff, card_eq_one]
-              exact ⟨f a, by simp [←h1, fcfa]⟩
+              simpa only [image_insert, image_singleton, Nat.add_left_cancel_iff, card_eq_one]
+                using ⟨f a, by simp [←h1, fcfa]⟩
             _ ≤ (s \ {a, b, c}).card + 1 := by
               simp [Finset.card_image_le]
             _ = s.card - 3 + 1 := by
@@ -99,8 +99,8 @@ lemma injOn_sdiff (s : Finset α) (f : α → β) (h : s.card = (Finset.image f 
         · obtain ⟨c, csdiff, fcx⟩ := Finset.mem_image.1 h1'
           obtain ⟨cs, cneab⟩ := Finset.mem_sdiff.1 csdiff
           simp only [mem_insert, mem_singleton, not_or] at cneab
-          simp only [mem_sdiff, mem_image, mem_singleton]
-          exact ⟨⟨c, cs, fcx⟩, by simp only [← fcx]; exact aux1 c cs cneab.1 cneab.2⟩
+          simpa only [mem_sdiff, mem_image, mem_singleton]
+            using ⟨⟨c, cs, fcx⟩, by simp only [← fcx]; exact aux1 c cs cneab.1 cneab.2⟩
         · simp only [mem_sdiff, mem_image, mem_singleton] at h1'
           obtain ⟨c, cs, fcx⟩ := h1'.1
           simp only [← fcx, mem_image, mem_sdiff, mem_insert, mem_singleton, not_or]

@@ -79,8 +79,7 @@ theorem associated_pow_pow_coprime_iff {a b : k[X]} {m n : ℕ} (ha : a ≠ 0) (
   suffices goal : ∃ C, A = C ^ n ∧ B = C ^ m by
     rcases goal with ⟨C, hC⟩
     refine ⟨C.out, ?_, ?_⟩
-    · rw [← Associates.mk_ne_zero, Associates.mk_out, ← pow_ne_zero_iff hn, ← hC.1]
-      exact hA
+    · rwa [← Associates.mk_ne_zero, Associates.mk_out, ← pow_ne_zero_iff hn, ← hC.1]
     · simp only [Associates.mk_out]; exact hC
   have subgoal : ∃ C, A = C ^ n := by
     apply Associates.is_pow_of_dvd_count hA

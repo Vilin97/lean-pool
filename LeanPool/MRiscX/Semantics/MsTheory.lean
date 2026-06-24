@@ -477,8 +477,8 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
       have h_pc_not_b' : (s.runNSteps m).pc ∉ L_b := h_run1 ▸ h_pc_not_b
       have h_safe1_m: (s.runNSteps n'').pc ∉ L_w' ∪ L_b := by
         rw [heq, Set.mem_union]
-        simp only [not_or]
-        exact ⟨Set.notMem_subset h_Lw'SubL_b h_pc_not_b', h_pc_not_b'⟩
+        simpa only [not_or]
+          using ⟨Set.notMem_subset h_Lw'SubL_b h_pc_not_b', h_pc_not_b'⟩
       intros h_in
       exact h_safe1_m (Set.mem_of_mem_inter_left h_in)
   · push Not at h

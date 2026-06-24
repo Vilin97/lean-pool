@@ -556,8 +556,8 @@ theorem GiPathStructure_of_degreeCharacterization {c : T → I} {i : I}
   · rcases hdegStmt.1 v hv with hOne | hTwo <;> omega
   · have hNoNeighbors : GiNeighbors (IST := IST) c i v = ∅ := by
       ext w
-      simp only [Finset.notMem_empty, iff_false]
-      exact fun hw => hv (GiEdge.left_vertex ((mem_GiNeighbors).1 hw))
+      simpa only [Finset.notMem_empty, iff_false]
+        using fun hw => hv (GiEdge.left_vertex ((mem_GiNeighbors).1 hw))
     rw [GiDegree, hNoNeighbors]
     simp
 
@@ -753,8 +753,7 @@ theorem component_cycle_of_maximal_path_closes
       · exact p.end_mem_support
       · exact hx
     · intro hx
-      simp only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_setOf_eq]
-      exact Or.inr hx
+      simpa only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_setOf_eq] using Or.inr hx
 
 /-- A path whose support is exactly a component represents that component as a path. -/
 theorem component_path_of_support_eq_component

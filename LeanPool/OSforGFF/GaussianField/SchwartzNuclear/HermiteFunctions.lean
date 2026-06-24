@@ -1015,13 +1015,6 @@ private lemma schwartz_tendsto_atBot (φ : SchwartzMap ℝ ℝ) :
   rw [cocompact_eq_atBot_atTop] at hza
   exact hza.mono_left le_sup_left
 
-/-- A Schwartz function on ℝ tends to 0 at atTop. -/
-private lemma schwartz_tendsto_atTop (φ : SchwartzMap ℝ ℝ) :
-    Filter.Tendsto (fun x => φ x) Filter.atTop (nhds 0) := by
-  have hza := ZeroAtInftyContinuousMapClass.zero_at_infty φ
-  rw [cocompact_eq_atBot_atTop] at hza
-  exact hza.mono_left le_sup_right
-
 /-- ψₙ(x)² → 0 as x → -∞. -/
 private lemma hermiteFunction_sq_tendsto_atBot (n : ℕ) :
     Filter.Tendsto (fun x => hermiteFunction n x * hermiteFunction n x)

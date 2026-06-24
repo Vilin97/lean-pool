@@ -218,14 +218,13 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rcases deg2 with lt | eq
     · rw[Polynomial.natDegree_mul]
       · nth_rewrite 2 [← tsub_add_cancel_of_le leq]
-        simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_lt_add_iff_left]
-        exact lt
+        simpa only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_lt_add_iff_left] using lt
       · simp
       · exact erase_neq_zero
     · rw[Polynomial.natDegree_mul]
       · rw[eq]
-        simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_zero, tsub_lt_self_iff]
-        exact ⟨Nat.zero_lt_of_ne_zero zero_lt_m, Nat.zero_lt_of_ne_zero zero_lt_n⟩
+        simpa only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_zero, tsub_lt_self_iff]
+          using ⟨Nat.zero_lt_of_ne_zero zero_lt_m, Nat.zero_lt_of_ne_zero zero_lt_n⟩
       · simp
       · exact erase_neq_zero
   have this10 : ((1 - 2 * v₀):B) * α^m = 2 * (aeval α) (monomial (m-n) 1 * q1.erase n) := by
@@ -280,8 +279,8 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     · exact deg3
     · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]
       rw[← m_eq_degree_p]
-      simp only [coeff_natDegree, leadingCoeff_eq_zero]
-      exact ne_zero_of_natDegree_gt (m_eq_degree_p ▸ Nat.zero_lt_of_ne_zero zero_lt_m)
+      simpa only [coeff_natDegree, leadingCoeff_eq_zero]
+        using ne_zero_of_natDegree_gt (m_eq_degree_p ▸ Nat.zero_lt_of_ne_zero zero_lt_m)
   have deg6 : m' < m := by
     rw[← Nat.le_sub_one_iff_lt (Nat.zero_lt_of_ne_zero zero_lt_m)]
     rw[← Nat.le_sub_one_iff_lt (Nat.zero_lt_of_ne_zero zero_lt_m)] at deg5
@@ -392,8 +391,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     omega
   · have leq2 : m ≤ n := Nat.le_of_not_ge leq
     have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
-      simp only [inv_inv]
-      exact _root_.id (And.symm H)
+      simpa only [inv_inv] using _root_.id (And.symm H)
     have p_eval2 : (aeval α⁻¹⁻¹) p = 1/2 := by
       simp only [inv_inv, one_div]
       rw[← one_div]
@@ -583,8 +581,8 @@ lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v
         simp only [zero_add, Nat.cast_one, mul_one]
         apply vhalf'
       · apply kind at kpos'
-        simp only [Nat.cast_add, Nat.cast_one, mul_add, mul_one]
-        exact lt_of_le_of_lt (Valuation.map_add v _ _) (max_lt kpos' vhalf')
+        simpa only [Nat.cast_add, Nat.cast_one, mul_add, mul_one]
+          using lt_of_le_of_lt (Valuation.map_add v _ _) (max_lt kpos' vhalf')
   have vind' : ∀ k : ℕ, k ≠ 0 →  v (2*k + 1) = 1 := by
     intro n hn
     have this : 2*n ≠ 1 := by norm_num

@@ -72,8 +72,7 @@ lemma Fin.rev_antitone (n : ℕ) : Antitone (Fin.rev (n := n)) := by match n wit
   | n + 1 =>
       apply Fin.antitone_iff_succ_le.mpr
       intro i
-      simp only [Fin.rev_le_rev]
-      exact Fin.le_of_lt i.castSucc_lt_succ
+      simpa only [Fin.rev_le_rev] using Fin.le_of_lt i.castSucc_lt_succ
 
 namespace Finset
 

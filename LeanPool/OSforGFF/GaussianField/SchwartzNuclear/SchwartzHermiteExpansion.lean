@@ -445,12 +445,11 @@ private lemma abs_hermiteCoeff1D_le_sqrt_integral_sq (n : ℕ) (f : SchwartzMap 
   unfold hermiteCoeff1D
   have hint : Integrable (fun x => f x * hermiteFunction n x) :=
     (f.memLp 2 volume).integrable_mul (hermiteFunction_memLp n)
-  have hf2 : Integrable (fun x => f x ^ 2) := by
-    have h := (f.memLp 2 volume).integrable_mul (f.memLp 2 volume)
-    exact h.congr (by filter_upwards with x; change f x * f x = f x ^ 2; ring)
+  have hf2 : Integrable (fun x => f x ^ 2) :=
+    ((f.memLp 2 volume).integrable_mul (f.memLp 2 volume)).congr
+      (by filter_upwards with x; change f x * f x = f x ^ 2; ring)
   have hψ2 : Integrable (fun x => hermiteFunction n x ^ 2) := by
-    have h := (hermiteFunction_memLp n).integrable_mul (hermiteFunction_memLp n)
-    exact h.congr (by
+    exact ((hermiteFunction_memLp n).integrable_mul (hermiteFunction_memLp n)).congr (by
       filter_upwards with x
       change hermiteFunction n x * hermiteFunction n x = hermiteFunction n x ^ 2
       ring)

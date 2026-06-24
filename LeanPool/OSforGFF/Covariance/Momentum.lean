@@ -471,8 +471,7 @@ lemma freeCovarianceBessel_pos (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x
     0 < freeCovarianceBessel m x y := by
   unfold freeCovarianceBessel
   have hr : ‖x - y‖ ≠ 0 := by
-    simp only [ne_eq, norm_eq_zero, sub_eq_zero]
-    exact hxy
+    simpa only [ne_eq, norm_eq_zero, sub_eq_zero] using hxy
   simp only [hr, ↓reduceIte]
   apply mul_pos
   · apply div_pos hm
@@ -1098,13 +1097,11 @@ lemma covarianceSchwingerRegulated_tendsto (m : ℝ) (hm : 0 < m) (r : ℝ) (hr 
       exact (measurable_id.neg.mul measurable_const).exp
     · apply Measurable.mul
       · -- (4π(α+t))^{-d/2} is measurable in t (using MeasurablePow ℝ ℝ)
-        have h1 : Measurable (fun t : ℝ => 4 * Real.pi * (α + t)) :=
-          measurable_const.mul (measurable_const.add measurable_id)
-        exact h1.pow_const (-(STDimension : ℝ) / 2)
+        exact (measurable_const.mul (measurable_const.add measurable_id)).pow_const
+          (-(STDimension : ℝ) / 2)
       · -- exp(-r²/(4(α+t))) is measurable in t
-        have h2 : Measurable (fun t : ℝ => -r^2 / (4 * (α + t))) :=
-          measurable_const.div (measurable_const.mul (measurable_const.add measurable_id))
-        exact h2.exp
+        exact (measurable_const.div
+          (measurable_const.mul (measurable_const.add measurable_id))).exp
   -- 2. Bound: ‖F α t‖ ≤ bound t for α > 0 and a.e. t > 0
   · filter_upwards [self_mem_nhdsWithin] with α hα
     have hαpos : 0 < α := Set.mem_Ioi.mp hα
@@ -1690,8 +1687,7 @@ lemma freeCovarianceKernel_integrable (m : ℝ) (hm : 0 < m) :
     have hr_ne : r ≠ 0 := ne_of_gt hr
     field_simp
   rw [integrableOn_congr_fun h_intgd measurableSet_Ioi]
-  have h_radial := radial_besselK1_integrable m hm
-  exact h_radial.const_mul (m / (4 * Real.pi^2))
+  exact (radial_besselK1_integrable m hm).const_mul (m / (4 * Real.pi^2))
 
 /-- **Polynomial decay bound for the free covariance kernel.**
 

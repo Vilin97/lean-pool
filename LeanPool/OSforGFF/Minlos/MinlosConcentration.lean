@@ -80,9 +80,8 @@ lemma ae_eq_zero_of_charfun_eq_one {Ω : Type*} [MeasurableSpace Ω]
   -- Step 2: Deduce X = 0 a.e.
   have h_ae : ∀ᵐ y ∂(ν.map X), y = 0 := by
     rw [h_eq]; exact ae_dirac_iff (measurableSet_singleton 0) |>.mpr rfl
-  rw [show (∀ᵐ ω ∂ν, X ω = 0) ↔ ∀ᵐ y ∂(ν.map X), y = 0 from
+  rwa [show (∀ᵐ ω ∂ν, X ω = 0) ↔ ∀ᵐ y ∂(ν.map X), y = 0 from
     (ae_map_iff hX.aemeasurable (measurableSet_singleton 0)).symm]
-  exact h_ae
 
 variable {E : Type*} [AddCommGroup E] [Module ℝ E]
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -300,10 +299,9 @@ lemma linear_combination_ae
           -(t * ∑ j, β j * ω' (e j)) from by
         rw [Finset.mul_sum, ← Finset.sum_neg_distrib]; congr 1; ext j; ring]
     rw [h_sum_x, h_normalized] at h
-    rw [show (fun ω' => exp (I * ↑(t * X ω'))) =
+    rwa [show (fun ω' => exp (I * ↑(t * X ω'))) =
       (fun ω' => exp (I * ↑(∑ i : Fin (k + 1), s' i * ω' (x' i)))) from by
       funext ω'; congr 2; exact_mod_cast (h_sum_ω ω').symm]
-    exact h
   have := ae_eq_zero_of_charfun_eq_one hX_meas hX_cf
   filter_upwards [this] with ω hω
   linarith [show X ω = 0 from hω]
@@ -898,8 +896,7 @@ private lemma joint_kernel_bound_finite
           apply mul_le_mul_of_nonneg_left _ hCinv_nn
           apply integral_mono
           · have h1 := gaussDensity_mul_charFun_re_integrable' μ' _ (fun _ => rfl) σ hσ
-            have h2 := gaussDensity_integrable' (V := V) σ hσ
-            exact h2.sub h1 |>.congr
+            exact (gaussDensity_integrable' (V := V) σ hσ).sub h1 |>.congr
               (Filter.Eventually.of_forall fun x => by simp [Pi.sub_apply]; ring)
           · exact (gaussDensity_integrable' (V := V) σ hσ).mul_const ε_q
           · intro x

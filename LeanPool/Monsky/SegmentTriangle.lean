@@ -208,8 +208,7 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
   constructor
   · exact hαx₁
   · simp only [Fin.sum_univ_two, Fin.isValue, hL₁₀, smul_add, hL₁₁, ← add_assoc, add_comm] at hx
-    simp only [Fin.isValue, Fin.sum_univ_two, add_smul, mul_smul, ← add_assoc, x₁]
-    exact hx
+    simpa only [Fin.isValue, Fin.sum_univ_two, add_smul, mul_smul, ← add_assoc, x₁] using hx
 
 lemma open_segment_sub' {L₁ L₂ : Segment} (hsub : closedHull L₁ ⊆ closedHull L₂)
     (hL₁ : L₁ 0 ≠ L₁ 1) : openHull L₁ ⊆ openHull L₂ :=
@@ -546,8 +545,8 @@ lemma Tco_sum_self {T : Triangle} (hdet : det T ≠ 0) (x : ℝ²) :
     ∑ i, (Tco T x i) • (T i) = x := by
   apply smul_cancel hdet
   simp only [Tco, Fin.sum_univ_three, Fin.isValue, smul_add, smul_smul, mul_div_cancel₀ _ hdet]
-  simp only [signSeg, det, Fin.isValue, Tside]
-  exact PiLp.ext (fun i ↦ by fin_cases i <;> (simp; ring))
+  simpa only [signSeg, det, Fin.isValue, Tside]
+    using PiLp.ext (fun i ↦ by fin_cases i <;> (simp; ring))
 
 lemma closed_triangle_iff {T : Triangle} (hdet : det T ≠ 0) {x : ℝ²} :
     x ∈ closedHull T ↔ ∀ i, 0 ≤ Tco T x i := by
@@ -1206,8 +1205,8 @@ closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v} := by
   · rw [hzw]
     have hzwconst : closedHull (toSegment w w) = {w} := by apply closedHull_constant; linarith
     rw [hzwconst]
-    simp only [Set.singleton_subset_iff, Set.mem_sdiff, Set.mem_singleton_iff]
-    exact ⟨by tauto_set, hvw.symm⟩
+    simpa only [Set.singleton_subset_iff, Set.mem_sdiff, Set.mem_singleton_iff]
+      using ⟨by tauto_set, hvw.symm⟩
   · have hzcl : z ∈ closedHull (toSegment v w) := by
       tauto_set
     have hzwcl : closedHull (toSegment z w) ⊆ closedHull (toSegment v w) := by
@@ -1903,11 +1902,11 @@ lemma real_number_bound_aux {n : ℕ} {f g : Fin n → ℝ}
     rw [hn] at contra
     exact Fin.elim0 contra
   · have hN : (image (fun i ↦ |g i|) univ).Nonempty := by
-      simp only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
-      exact Nat.zero_lt_of_ne_zero hn
+      simpa only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
+        using Nat.zero_lt_of_ne_zero hn
     have hN₂ : (image (fun i ↦ f i) univ).Nonempty := by
-      simp only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
-      exact Nat.zero_lt_of_ne_zero hn
+      simpa only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
+        using Nat.zero_lt_of_ne_zero hn
     let M := Finset.max' (Finset.image (fun i ↦ |g i|)  (univ : Finset (Fin n))) hN
     let M₂ := Finset.min' (Finset.image (fun i ↦ f i)  (univ : Finset (Fin n))) hN₂
     have Mrw : M =  Finset.max' (Finset.image (fun i ↦ |g i|)  (univ : Finset (Fin n))) hN := rfl

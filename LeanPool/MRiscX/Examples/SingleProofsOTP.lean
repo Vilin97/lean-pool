@@ -352,8 +352,7 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
         · rw [←h_x3]
           exact h_x3LtL
         · rw [←h_x3]
-          simp only [gt_iff_lt]
-          exact h_cond
+          simpa only [gt_iff_lt] using h_cond
       · repeat (constructor <;> try assumption)
 
 theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
@@ -406,8 +405,7 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
         · rw [←h_x3]
           exact h_x3LtL
         · rw [←h_x3]
-          simp only [gt_iff_lt]
-          exact h_cond
+          simpa only [gt_iff_lt] using h_cond
       · repeat (constructor <;> try assumption)
 
 

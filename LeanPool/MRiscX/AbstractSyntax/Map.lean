@@ -183,8 +183,7 @@ theorem t_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   simp at HNeq
   show (if k' == k then v else t.get k') = t.get k'
   rw [if_neg]
-  simp only [beq_iff_eq]
-  exact fun h => HNeq h.symm
+  simpa only [beq_iff_eq] using fun h => HNeq h.symm
 
 /--
 This theorem states, when a given map [p] which contains the key [k]
@@ -214,5 +213,4 @@ theorem p_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   simp at HNeq
   show (if k' == k then some v else p.get k') = p.get k'
   rw [if_neg]
-  simp only [beq_iff_eq]
-  exact fun h => HNeq h.symm
+  simpa only [beq_iff_eq] using fun h => HNeq h.symm

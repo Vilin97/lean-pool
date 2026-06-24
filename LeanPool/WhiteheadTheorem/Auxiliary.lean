@@ -105,8 +105,7 @@ lemma Real.exists_eq_of_iSup_eq_of_finite_domain {ι : Type*} {f : ι → ℝ} {
   have iSup_lt_iff : ⨆ i ∈ (Set.univ : Set ι), f i < a ↔ ∀ i ∈ Set.univ, f i < a := by
     apply Set.Finite.ciSup_lt_iff Set.finite_univ
     rw [Real.sSup_empty]   -- The supremum `sSup ∅` is defined to be 0 for `ℝ`
-    simp only [Set.mem_univ, true_and]
-    exact hfz
+    simpa only [Set.mem_univ, true_and] using hfz
   have lt_iSup_iff : a < ⨆ i, f i ↔ ∃ i, a < f i :=
     lt_ciSup_iff (range_bddAbove_of_finite_domain f)
   by_contra nex; simp only [not_exists] at nex

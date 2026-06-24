@@ -69,8 +69,7 @@ lemma hasDerivAt_inv_log_sq_mul {c t : ℝ} (hc : 0 < c) (hct : 1 < c * t) :
       = -(2 / (t * Real.log (c * t) ^ 3)) := by
     push_cast
     field_simp
-  rw [← hval]
-  exact h
+  rwa [← hval]
 
 /-- The logarithmic kernel `1 / (t log(ct)^2)` is integrable on every admissible tail, and its
 integral is exactly `1 / log(cy)`. -/

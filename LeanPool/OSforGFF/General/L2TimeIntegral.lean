@@ -227,9 +227,8 @@ theorem L2_time_average_bound (μ : Measure Ω) [SFinite μ]
   5. setIntegral_L2_bound: apply uniform bound
   -/
   -- Setup integrability for integral_mono
-  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ := by
-    have h_margin := h_prod_int.integral_prod_right
-    exact h_margin.const_mul (1/T)
+  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ :=
+    h_prod_int.integral_prod_right.const_mul (1/T)
   -- From product integrability, get a.e. slice integrability
   have h_sq_meas : AEStronglyMeasurable (fun p : ℝ × Ω => ‖A p.1 p.2‖^2)
       ((volume.restrict (Icc 0 T)).prod μ) := h_joint_meas.norm.pow 2
@@ -367,9 +366,8 @@ theorem time_average_memLp_two (μ : Measure Ω) [SFinite μ]
       ((volume.restrict (Icc 0 T)).prod μ) :=
     (memLp_two_iff_integrable_sq_norm h_joint_meas).mp h_prod
   -- 2. The RHS bound (1/T) * ∫ ‖A_s ω‖² is integrable (marginal of product)
-  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ := by
-    have h_margin := h_prod_int.integral_prod_right
-    exact h_margin.const_mul (1/T)
+  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ :=
+    h_prod_int.integral_prod_right.const_mul (1/T)
   -- 3. Use Integrable.mono with the pointwise bound
   have h_meas_sq : AEStronglyMeasurable (fun ω => ‖(1/T : ℂ) * ∫ (s : ℝ) in Icc 0 T, A s ω‖^2) μ :=
     h_avg_meas.norm.pow 2

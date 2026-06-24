@@ -247,8 +247,8 @@ lemma neg_pow_not_mem_subring (n : ℕ) (hn : n > 0) : ϖ.val ^ (- n : ℤ) ∉ 
       simp only [gt_iff_lt, zpow_neg, zpow_natCast] at ih
       by_cases hnz : n = 0
       · subst hnz
-        simp only [pow_zero, inv_one, mul_one]
-        exact inv_irreducible_not_mem_subring ϖ hϖ
+        simpa only [pow_zero, inv_one, mul_one] using
+          inv_irreducible_not_mem_subring ϖ hϖ
       · have : (ϖ.val ^ n)⁻¹ ∉ R := by
           apply ih
           exact Nat.zero_lt_of_ne_zero hnz
@@ -266,8 +266,7 @@ lemma irreducible_zpow_mem_subring_iff (n : ℤ) : ϖ.val ^ n ∈ R ↔ n ≥ 0 
   · intro h
     contrapose! h
     have hn : - n ≥ 0 := by
-      simp only [ge_iff_le, Left.nonneg_neg_iff]
-      exact Int.le_of_lt h
+      simpa only [ge_iff_le, Left.nonneg_neg_iff] using Int.le_of_lt h
     convert_to (ϖ.val ^ (- (- n).toNat : ℤ)) ∉ R
     · rw [Int.toNat_of_nonneg hn]
       simp

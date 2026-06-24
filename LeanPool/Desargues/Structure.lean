@@ -142,8 +142,7 @@ instance
     case neg =>
       have xy_ab_eq :=
         by apply p_8 (ell := ell) x y a b x_in_ab y_in_ab xy_neq
-      rw [<- xy_ab_eq]
-      exact z_in_xy
+      rwa [<- xy_ab_eq]
     case pos =>
       rw [xy_neq] at z_in_xy
       simp only [Basic.star, ↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff] at z_in_xy

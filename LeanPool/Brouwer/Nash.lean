@@ -543,8 +543,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
           by_cases h :  ∀ s : G.SS i, mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ ≤ 0
           · specialize h t
             simp only [tsub_le_iff_right, zero_add] at h
-            simp only [tsub_le_iff_right, zero_add]
-            exact h
+            simpa only [tsub_le_iff_right, zero_add] using h
           · exfalso
             simp only [tsub_le_iff_right, zero_add, not_forall, not_le] at h
             obtain ⟨s, hs⟩:= h

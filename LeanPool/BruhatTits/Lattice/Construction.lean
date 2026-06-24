@@ -440,11 +440,9 @@ lemma smulGL_toSubmodule (g : GL ι K) (b : Basis ι K (ι → K)) :
       simp [LinearMap.GeneralLinearGroup.toLinearEquiv, Matrix.mulVecLin]
     · simp
     · intro x y _ _ hx hy
-      simp only [Matrix.mulVec_add]
-      exact Submodule.add_mem _ hx hy
+      simpa only [Matrix.mulVec_add] using Submodule.add_mem _ hx hy
     · intro a x _ hx
-      simp only [Matrix.mulVec_smul]
-      exact Submodule.smul_mem _ a hx
+      simpa only [Matrix.mulVec_smul] using Submodule.smul_mem _ a hx
 
 lemma smulGL_toLattice (g : GL (Fin 2) K) (b : Basis (Fin 2) K (Fin 2 → K)) :
     (g • b).toLattice (R := R) = g • b.toLattice (R := R) := by

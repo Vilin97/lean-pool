@@ -1501,8 +1501,7 @@ theorem scarfAlgorithmTrace_exists [Inhabited I] (c : T → I) (i : I) :
     reachableComponentGraph G outside
   let outsideSub : {v : GiCell T I // G.Reachable outside v} := ⟨outside, ⟨SimpleGraph.Walk.nil⟩⟩
   have hOutsideDoor : IST.isOutsideDoor outside.1 outside.2 := by
-    simp only [associatedCell_slackBoundary, outside]
-    exact IST.outsidedoor_singleton i
+    simpa only [associatedCell_slackBoundary, outside] using IST.outsidedoor_singleton i
   have hOutsideTyped : IST.isTypedNC c i outside.1 outside.2 := by
     have hDoorVertex := slackBoundary_GiDoorVertex (IST := IST) c i
     simpa [outside] using hDoorVertex.2

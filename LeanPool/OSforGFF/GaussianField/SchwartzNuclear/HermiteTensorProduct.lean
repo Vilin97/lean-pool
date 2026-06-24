@@ -2397,10 +2397,9 @@ noncomputable def schwartzRapidDecayEquivNd (d' : ℕ) :
     (toRapidDecayNdCLM (d' + 1))
     (fromRapidDecayNdCLM (d' + 1))
     -- Left inverse: from(to(f)) = f
-    (fun f => by
-      have h_f := schwartz_hermite_completeness_nd d' f
-      have h_recon := rapidDecay_hermite_hasSumNd d' (toRapidDecayNdLM d' f)
-      exact h_recon.unique h_f)
+    (fun f =>
+      (rapidDecay_hermite_hasSumNd d' (toRapidDecayNdLM d' f)).unique
+        (schwartz_hermite_completeness_nd d' f))
     -- Right inverse: to(from(a)) = a
     (fun a => by
       apply RapidDecaySeq.ext; intro n

@@ -272,11 +272,9 @@ by_cases hAC : A = C
       exact lin_dep_abb A.rep D.rep
   · -- General position: lines AC and BD meet in a common point Q.
     have ac_indep : LinearIndependent K ![A.rep, C.rep] := by
-      rw [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
-      exact hAC
+      rwa [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
     have bd_indep : LinearIndependent K ![B.rep, D.rep] := by
-      rw [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
-      exact hBD
+      rwa [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
     have inter_ne :
         span K ({A.rep, C.rep} : Set V) ⊓ span K ({B.rep, D.rep} : Set V) ≠ ⊥ :=
       l3_inter_ne_bot A.rep B.rep C.rep D.rep P.rep PABcol PCDcol P.rep_nonzero

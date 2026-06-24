@@ -176,8 +176,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
         simp [this]
       have : g 0 = 1 := by
         unfold g
-        simp only [isValue, insertNth_zero_right, Pi.single_zero]
-        exact hf1
+        simpa only [isValue, insertNth_zero_right, Pi.single_zero] using hf1
       have : BooleanValued g := BooleanValued.mk
         (by intro x; exact hbv.one_or_neg_one (Fin.insertNth i₀ 0 x))
       have := hi (f := g) (Nat.succ_pos n) hgeq' (by assumption)

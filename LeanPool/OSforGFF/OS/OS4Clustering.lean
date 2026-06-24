@@ -384,8 +384,7 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
         have h_schwinger : SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)
             = freeCovarianceFormR m f (g.translate a) := by
           rw [h_schwinger1]
-          simp only [distributionPairing]
-          exact h_schwinger2
+          simpa only [distributionPairing] using h_schwinger2
         -- Step 6c: freeCovarianceFormR uses freeCovariance = freeCovarianceKernel (x - y)
         -- freeCovarianceFormR m f h = ∫∫ f(x) freeCovariance(x,y) h(y) dx dy
         -- and (g.translate a)(y) = g(y - a)

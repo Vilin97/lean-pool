@@ -378,8 +378,7 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
         · apply h i
           simp only [MState.getRegisterAt_def]
           rw [h_reg_3]
-          simp only [UInt64.sub_zero]
-          exact h_i
+          simpa only [UInt64.sub_zero] using h_i
         · simp only [MState.get_label_from_code, MState.getRegisterAt_def, Bool.not_eq_true]
           refine ⟨?_, ?_⟩
           · rw [h_code']

@@ -209,8 +209,7 @@ lemma theorem_1_base_case {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F))
   haveI : Finite S := hS
   haveI : Fintype S := Fintype.ofFinite S
   have hcard_subtype : Nat.card S = n + 1 := by
-    rw [← Set.ncard_univ S, Set.ncard_coe]
-    exact h_card
+    rwa [← Set.ncard_univ S, Set.ncard_coe]
   let eS : S ≃ Fin (n + 1) := Finite.equivFinOfCardEq hcard_subtype
   let f : Fin (n + 1) → X → F := fun i => (eS.symm i).1
   have hf_range : Set.range f = S := by

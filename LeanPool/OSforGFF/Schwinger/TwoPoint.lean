@@ -219,8 +219,7 @@ theorem schwingerTwoPointFunction_eq_kernel
     -- original(n+1) = if (n+1)=0 then 0 else SmearedTwo (standardBumpSequence (n+1))
     --              = SmearedTwo (standardBumpSequence (n+1))  [since n+1 ≠ 0]
     --              = SmearedTwo (φ n)
-    simp only [Nat.succ_ne_zero, dite_false]
-    exact h_smeared
+    simpa only [Nat.succ_ne_zero, dite_false] using h_smeared
   -- In Hausdorff spaces, limUnder equals the limit when it exists
   exact Filter.Tendsto.limUnder_eq h_tendsto
 

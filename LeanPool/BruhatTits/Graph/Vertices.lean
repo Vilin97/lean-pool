@@ -58,8 +58,7 @@ lemma inv_mk (L M : BruhatTits.Lattice R) :
 
 lemma inv_symm (L M : Vertices R) : inv L M = inv M L := by
   refine Quotient.inductionOn₂' L M (fun L M ↦ ?_)
-  simp only [inv_mk]
-  exact dist_symm L M
+  simpa only [inv_mk] using dist_symm L M
 
 lemma inv_self (L : Vertices R) : inv L L = 0 := by
   refine Quotient.inductionOn' L (fun L ↦ ?_)

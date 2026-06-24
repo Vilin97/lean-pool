@@ -259,8 +259,7 @@ lemma Halfspace.val_eq (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace p
   apply subset_antisymm <;> intro x <;> rw [Set.mem_inter_iff, Set.mem_image]
   · rintro ⟨ hxH_', hxp ⟩
     refine ⟨ ⟨ x, hxp ⟩, ?_, rfl ⟩
-    rw [Halfspace_mem, ← (this ⟨ x, hxp ⟩), ← Halfspace.val_C p H_']
-    exact hxH_'
+    rwa [Halfspace_mem, ← (this ⟨ x, hxp ⟩), ← Halfspace.val_C p H_']
   · rintro ⟨ ⟨ x', hx'p ⟩, hx'H_', rfl ⟩
     refine ⟨ ?_, hx'p ⟩
     rw [Halfspace_mem, ← (this ⟨ x', hx'p ⟩), ← Halfspace.val_C p H_'] at hx'H_'
@@ -274,8 +273,7 @@ lemma Halfspace.val_eq' (p : Subspace ℝ E) [CompleteSpace p] : ∀ (H_' : Half
   apply subset_antisymm <;> intro x <;> rw [Set.mem_inter_iff, Set.mem_image]
   · rintro ⟨ hxH_', hxp ⟩
     refine ⟨ ⟨ x, hxp ⟩, ?_, rfl ⟩
-    rw [Halfspace_mem, ← (this ⟨ x, hxp ⟩), ← Halfspace.val_C p H_']
-    exact hxH_'
+    rwa [Halfspace_mem, ← (this ⟨ x, hxp ⟩), ← Halfspace.val_C p H_']
   · rintro ⟨ ⟨ x', hx'p ⟩, hx'H_', rfl ⟩
     refine ⟨ ?_, hx'p ⟩
     rw [Halfspace_mem, ← (this ⟨ x', hx'p ⟩), ← Halfspace.val_C p H_'] at hx'H_'
