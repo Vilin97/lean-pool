@@ -347,8 +347,7 @@ instance [NegAbbrev F] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] [HasAxiom
     Entailment.NegationEquiv 𝓢 where
   negEquiv := by
     intro φ
-    simp only [Axioms.NegEquiv, NegAbbrev.neg]
-    exact iffId _
+    simpa only [Axioms.NegEquiv, NegAbbrev.neg] using iffId _
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

@@ -109,8 +109,7 @@ omit [∀ k, DecidableEq (L.Rel k)] in
 lemma langFunc_rel_ss {k} (r : L.Rel k) (v : Fin k → Semiterm L μ n) (i) :
     (v i).lang ⊆ (rel r v).langFunc := by
   intro x h
-  simp only [langFunc, Finset.mem_biUnion, Finset.mem_univ, true_and]
-  exact ⟨i, h⟩
+  simpa only [langFunc, Finset.mem_biUnion, Finset.mem_univ, true_and] using ⟨i, h⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop) : ∀ {n} (φ :

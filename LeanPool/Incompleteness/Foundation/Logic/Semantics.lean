@@ -271,8 +271,7 @@ lemma finset_mem {T : ℕ → Set F}
     have : ∃ s', f ∈ T s' := by simpa using (Set.insert_subset_iff.mp hu).1
     rcases this with ⟨s', hs'⟩
     exact ⟨max s s', by
-      simp only [Finset.coe_insert]
-      exact Set.insert_subset
+      simpa only [Finset.coe_insert] using Set.insert_subset
         (subset_of_le H (Nat.le_max_right s s') hs')
         (subset_trans hs (subset_of_le H <| Nat.le_max_left s s'))⟩
 

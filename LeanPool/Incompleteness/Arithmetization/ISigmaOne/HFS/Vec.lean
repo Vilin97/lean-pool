@@ -640,8 +640,7 @@ lemma nth_lt_len {v i : V} (hl : len v ≤ i) : v.[i] = 0 := by
   case nil => simp
   case cons x v ih =>
     simp only [len_cons]
-    simp only [cons, add_le_add_iff_right]
-    exact le_trans ih (le_pair_right x v)
+    simpa only [cons, add_le_add_iff_right] using le_trans ih (le_pair_right x v)
 
 end «lp_section_8»
 

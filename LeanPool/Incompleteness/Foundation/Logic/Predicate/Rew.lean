@@ -441,8 +441,7 @@ variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
       exact ⟨fun _ ↦ Nat.succ_pos _, fun _ ↦ trivial⟩
   · simp only [q_fvar, bShift_positive, Semiterm.Positive.fvar]
   · rename_i v ih
-    simp only [Rew.func, Semiterm.Positive.func]
-    exact forall_congr' ih
+    simpa only [Rew.func, Semiterm.Positive.func] using forall_congr' ih
 
 @[simp] lemma qpow_id {k} : (Rew.id : Rew L ξ n ξ n).qpow k = Rew.id := by induction k <;> simp[*]
 

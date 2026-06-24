@@ -404,8 +404,7 @@ lemma semanticMainLemma_val (nwf : ¬WellFounded (SearchTree.Lt T Γ)) :
       rcases this with ⟨u, hu⟩
       have : ¬Eval (Model.structure T Γ) ![u] Semiterm.fvar φ := by
         simpa[eval_substs, Matrix.constant_eq_singleton] using semanticMainLemma_val nwf (φ/[u]) hu
-      simp only [eval_all, Nat.succ_eq_add_one, Nat.reduceAdd, not_forall]
-      exact ⟨u, this⟩
+      simpa only [eval_all, Nat.succ_eq_add_one, Nat.reduceAdd, not_forall] using ⟨u, this⟩
   | ∃' φ,     h => by
       simp only [eval_ex, Nat.succ_eq_add_one, Nat.reduceAdd, not_exists]
       intro u

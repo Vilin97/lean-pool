@@ -117,8 +117,7 @@ lemma setShift_quote [DefinableLanguage L] (Γ : Finset (SyntacticFormula L)) :
   · rintro ⟨x, hx, rfl⟩
     rcases Sequent.mem_codeIn hx with ⟨p, _, rfl⟩
     rw [←quote_shift, Sequent.mem_codeIn_iff]
-    simp only [Finset.mem_image]
-    exact ⟨p, by simpa [Sequent.mem_codeIn_iff] using hx, rfl⟩
+    simpa only [Finset.mem_image] using ⟨p, by simpa [Sequent.mem_codeIn_iff] using hx, rfl⟩
   · intro hx
     rcases Sequent.mem_codeIn hx with ⟨p', hp', rfl⟩
     rcases by simpa using hp' with ⟨p, hp, rfl⟩

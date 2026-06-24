@@ -487,8 +487,7 @@ def vecToSeq : {n : ℕ} → (Fin n → V) → V
   induction n with
   | zero => simp [vecToSeq]
   | succ n ih =>
-    simp only [vecToSeq]
-    exact (ih _).seqCons _
+    simpa only [vecToSeq] using (ih _).seqCons _
 
 @[simp] lemma lh_vecToSeq {n} (v : Fin n → V) : lh (vecToSeq v) = n := by
   induction n with

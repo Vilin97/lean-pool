@@ -112,8 +112,7 @@ lemma qqConj_semiformula {n ps : V} :
   · definability
   case nil => simp [qqVerum]
   case cons p ps ih =>
-    simp only [len_cons, qqConj_cons, succ_le_iff_lt]
-    exact lt_of_le_of_lt ih (by simp)
+    simpa only [len_cons, qqConj_cons, succ_le_iff_lt] using lt_of_le_of_lt ih (by simp)
 
 end «lp_section_1»
 
