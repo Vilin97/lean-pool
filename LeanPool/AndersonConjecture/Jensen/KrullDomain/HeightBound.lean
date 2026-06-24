@@ -322,11 +322,39 @@ private def build_height_bound_proof
     {t : T | ∃ (a : T) (b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
       b ∉ IsLocalRing.maximalIdeal T ∧ t * b = a}
   have hS_sub_eq' : (S_sub : Set T) = S_carrier := hS_sub_eq
-  have hRbar_one : (1 : T) ∈ Rbar := one_mem_intersectionSet R x₁ x₂ y₁ y₂
-  have hRbar_add : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ + t₂ ∈ Rbar :=
-    fun _ _ h₁ h₂ => add_mem_intersectionSet R x₁ x₂ y₁ y₂ h₁ h₂
+  have hRbar_one : (1 : T) ∈ Rbar :=
+    ⟨⟨C 1, 0, by simp⟩, ⟨C 1, 0, by simp⟩⟩
+  have hRbar_add : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ + t₂ ∈ Rbar := by
+    intro t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩
+    constructor
+    · obtain ⟨f₁, n₁, hf₁⟩ := h₁₁
+      obtain ⟨f₂, n₂, hf₂⟩ := h₂₁
+      refine ⟨f₁ * C (y₂ ^ n₂) + f₂ * C (y₂ ^ n₁), n₁ + n₂, ?_⟩
+      have key : (t₁ + t₂) * (↑y₂ : T) ^ (n₁ + n₂) =
+          t₁ * (↑y₂ : T) ^ n₁ * (↑y₂ : T) ^ n₂ +
+          t₂ * (↑y₂ : T) ^ n₂ * (↑y₂ : T) ^ n₁ := by rw [pow_add]
+                                                     ring
+      rw [key, hf₁, hf₂, map_add, map_mul, map_mul, aeval_C, aeval_C]
+      simp only [show algebraMap R.carrier T = R.carrier.subtype from rfl,
+        Subring.coe_subtype, map_pow]
+    · obtain ⟨f₁, n₁, hf₁⟩ := h₁₂
+      obtain ⟨f₂, n₂, hf₂⟩ := h₂₂
+      refine ⟨f₁ * C (y₁ ^ n₂) + f₂ * C (y₁ ^ n₁), n₁ + n₂, ?_⟩
+      have key : (t₁ + t₂) * (↑y₁ : T) ^ (n₁ + n₂) =
+          t₁ * (↑y₁ : T) ^ n₁ * (↑y₁ : T) ^ n₂ +
+          t₂ * (↑y₁ : T) ^ n₂ * (↑y₁ : T) ^ n₁ := by rw [pow_add]
+                                                     ring
+      rw [key, hf₁, hf₂, map_add, map_mul, map_mul, aeval_C, aeval_C]
+      simp only [show algebraMap R.carrier T = R.carrier.subtype from rfl,
+        Subring.coe_subtype, map_pow]
   have hRbar_mul : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ * t₂ ∈ Rbar :=
-    fun _ _ h₁ h₂ => mul_mem_intersectionSet R x₁ x₂ y₁ y₂ h₁ h₂
+    fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
+      ⟨(fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
+        ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
+                              ring⟩) x₁ y₂ t₁ t₂ h₁₁ h₂₁,
+       (fun x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩ =>
+        ⟨f₁ * f₂, n₁ + n₂, by rw [map_mul, ← hf₁, ← hf₂, pow_add]
+                              ring⟩) x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
   have hS_mem_rep : ∀ s : S_sub,
       ∃ (a b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
         b ∉ IsLocalRing.maximalIdeal T ∧ (s : T) * b = a := by
@@ -650,14 +678,44 @@ private def build_intersection_nsubring_proof
   set S_carrier : Set T :=
     {t : T | ∃ (a : T) (b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
       b ∉ IsLocalRing.maximalIdeal T ∧ t * b = a}
-  have hRbar_zero : (0 : T) ∈ Rbar := zero_mem_intersectionSet R x₁ x₂ y₁ y₂
-  have hRbar_one : (1 : T) ∈ Rbar := one_mem_intersectionSet R x₁ x₂ y₁ y₂
+  have hALS_zero : ∀ (x' : T) (y' : R.carrier), (0 : T) ∈ adjoinLocSetY R x' y' :=
+    fun x' y' => ⟨0, 0, by simp⟩
+  have hALS_one : ∀ (x' : T) (y' : R.carrier), (1 : T) ∈ adjoinLocSetY R x' y' :=
+    fun x' y' => ⟨C 1, 0, by simp⟩
+  have hALS_neg : ∀ (x' : T) (y' : R.carrier) (t : T),
+      t ∈ adjoinLocSetY R x' y' → -t ∈ adjoinLocSetY R x' y' := by
+    intro x' y' t ⟨f, n, hf⟩
+    exact ⟨-f, n, by rw [map_neg, ← hf, neg_mul]⟩
+  have hALS_mul : ∀ (x' : T) (y' : R.carrier) (t₁ t₂ : T),
+      t₁ ∈ adjoinLocSetY R x' y' → t₂ ∈ adjoinLocSetY R x' y' →
+      t₁ * t₂ ∈ adjoinLocSetY R x' y' := by
+    intro x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩
+    exact ⟨f₁ * f₂, n₁ + n₂, by
+      rw [map_mul, ← hf₁, ← hf₂, pow_add]
+      ring⟩
+  have hALS_add : ∀ (x' : T) (y' : R.carrier) (t₁ t₂ : T),
+      t₁ ∈ adjoinLocSetY R x' y' → t₂ ∈ adjoinLocSetY R x' y' →
+      t₁ + t₂ ∈ adjoinLocSetY R x' y' := by
+    intro x' y' t₁ t₂ ⟨f₁, n₁, hf₁⟩ ⟨f₂, n₂, hf₂⟩
+    refine ⟨f₁ * C (y' ^ n₂) + f₂ * C (y' ^ n₁), n₁ + n₂, ?_⟩
+    have key : (t₁ + t₂) * (↑y' : T) ^ (n₁ + n₂) =
+        t₁ * (↑y' : T) ^ n₁ * (↑y' : T) ^ n₂ +
+        t₂ * (↑y' : T) ^ n₂ * (↑y' : T) ^ n₁ := by
+      rw [pow_add]
+      ring
+    rw [key, hf₁, hf₂, map_add, map_mul, map_mul, aeval_C, aeval_C]
+    simp only [show algebraMap R.carrier T = R.carrier.subtype from rfl,
+      Subring.coe_subtype, map_pow]
+  have hRbar_zero : (0 : T) ∈ Rbar := ⟨hALS_zero x₁ y₂, hALS_zero x₂ y₁⟩
+  have hRbar_one : (1 : T) ∈ Rbar := ⟨hALS_one x₁ y₂, hALS_one x₂ y₁⟩
   have hRbar_neg : ∀ t, t ∈ Rbar → -t ∈ Rbar :=
-    fun _ h => neg_mem_intersectionSet R x₁ x₂ y₁ y₂ h
+    fun t ⟨h₁, h₂⟩ => ⟨hALS_neg x₁ y₂ t h₁, hALS_neg x₂ y₁ t h₂⟩
   have hRbar_mul : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ * t₂ ∈ Rbar :=
-    fun _ _ h₁ h₂ => mul_mem_intersectionSet R x₁ x₂ y₁ y₂ h₁ h₂
+    fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
+      ⟨hALS_mul x₁ y₂ t₁ t₂ h₁₁ h₂₁, hALS_mul x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
   have hRbar_add : ∀ t₁ t₂, t₁ ∈ Rbar → t₂ ∈ Rbar → t₁ + t₂ ∈ Rbar :=
-    fun _ _ h₁ h₂ => add_mem_intersectionSet R x₁ x₂ y₁ y₂ h₁ h₂
+    fun t₁ t₂ ⟨h₁₁, h₁₂⟩ ⟨h₂₁, h₂₂⟩ =>
+      ⟨hALS_add x₁ y₂ t₁ t₂ h₁₁ h₂₁, hALS_add x₂ y₁ t₁ t₂ h₁₂ h₂₂⟩
   -- Verify S_carrier is closed under ring operations, hence forms a subring of T
   have hS_carrier_subring : ∃ S_sub : Subring T, (S_sub : Set T) = S_carrier := by
     refine ⟨{
