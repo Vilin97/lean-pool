@@ -404,7 +404,6 @@ theorem Module.Dual.pi.IsFaithfulPosMap.toMatrixLinEquiv_symm_apply' [hψ : ∀ 
     pi.IsFaithfulPosMap.includeBlock_left_inner, Finset.sum_product_univ, Finset.sum_smul,
     smul_smul]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a i j b c d) -/
 theorem Module.Dual.pi.IsFaithfulPosMap.toMatrix_symm_apply' [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     (x : Matrix (Σ i, s i × s i) (Σ i, s i × s i) ℂ) :
     withPiInner[ψ]
@@ -472,7 +471,6 @@ theorem Module.Dual.pi.IsFaithfulPosMap.linearMap_eq [hψ : ∀ i, (ψ i).IsFait
   simp only [orthonormalBasis_eq_toBasis, toMatrixLinEquiv,
     LinearMap.toMatrix_symm, toLin_toMatrix]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Forward map underlying `psi` for faithful positive functionals on matrix-block products. -/
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.psiToFun' (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
   (hψ₂ : ∀ i, (ψ₂ i).IsFaithfulPosMap)
@@ -608,7 +606,6 @@ noncomputable def tensorProductMulOpEquiv :
         (Pi.transposeAlgEquiv k s : PiMat ℂ k s ≃ₐ[ℂ] (PiMat ℂ k s)ᵐᵒᵖ).symm).trans
     (f₂_equiv.trans f₃_equiv)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 /-- Inverse map underlying `psi` for faithful positive functionals on matrix-block products. -/
 noncomputable def Module.Dual.pi.IsFaithfulPosMap.psiInvFun'
   (hψ : ∀ i, (ψ i).IsFaithfulPosMap) (hψ₂ : ∀ i, (ψ₂ i).IsFaithfulPosMap)

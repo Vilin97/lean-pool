@@ -56,7 +56,6 @@ variable {𝕜 R : Type _} [RCLike 𝕜] [CommSemiring R]
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- the matrix of a linear map `φ : M_n →ₗ[R] R` is given by
   `∑ i j, single j i (φ (single i j 1))`. -/
 def Module.Dual.matrix (φ : Module.Dual R (Matrix n n R)) :=
@@ -514,8 +513,6 @@ private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
   simp only [smul_eq_diagonal_mul, Matrix.mul_one]
   rwa [← hre]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /--
 A linear functional is tracial and positive if and only if there exists a non-negative real $α$
   such that $f\colon x \mapsto \alpha \operatorname{Tr}(x)$. -/
@@ -538,8 +535,6 @@ theorem Module.Dual.isTracial_pos_map_iff_of_matrix (φ : Module.Dual ℂ (Matri
         (Matrix.trace_conjTranspose_hMul_self_nonneg _),
       fun _ _ => by rw [trace_mul_comm]⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /--
 A linear functional is tracial and positive if and only if there exists a unique non-negative real
   $α$ such that $f\colon x \mapsto \alpha \operatorname{Tr}(x)$. -/

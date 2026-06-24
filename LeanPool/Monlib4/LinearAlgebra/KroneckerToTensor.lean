@@ -88,7 +88,6 @@ theorem TensorProduct.toKronecker_star {R m n : Type _} [Field R] [StarRing R]
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
 theorem Matrix.kronecker_eq_sum_std_basis (x : Matrix (m × n) (m × n) R) :
     x = ∑ i, ∑ j, ∑ k, ∑ l, x (i, k) (j, l) • single i j 1 ⊗ₖ single k l 1 := by
   ext a b
@@ -97,11 +96,6 @@ theorem Matrix.kronecker_eq_sum_std_basis (x : Matrix (m × n) (m × n) R) :
   simp [Matrix.sum_apply, Matrix.kroneckerMap, Matrix.of_apply,
     Matrix.single, mul_ite, mul_one, mul_zero, ite_and, eq_comm]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
 theorem TensorProduct.matrix_eq_sum_std_basis (x : Matrix m m R ⊗[R] Matrix n n R) :
     x =
       ∑ i, ∑ j, ∑ k, ∑ l,
