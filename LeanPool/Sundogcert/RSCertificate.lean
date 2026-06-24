@@ -109,9 +109,9 @@ theorem nodes_distinct_cert :
 /-- A cheap verifier: a forward decoder whose `some f` output carries a proof it decodes. -/
 structure Verifier (S : RSScheme F) where
   /-- Forward decoder: optionally produce a decoding polynomial for a received word. -/
-  decode? : (Fin S.n → F) → Option F[X]
+  decodeOpt : (Fin S.n → F) → Option F[X]
   /-- Soundness of the decoder: any returned polynomial genuinely decodes the received word. -/
-  decode_sound : ∀ y f, decode? y = some f → Decodes S f y
+  decode_sound : ∀ y f, decodeOpt y = some f → Decodes S f y
 
 /-- The two-valued verdict of the Reed–Solomon verifier. -/
 inductive Verdict
@@ -123,7 +123,7 @@ deriving DecidableEq
 
 /-- accept if a decoding is exhibited; quarantine otherwise (the cheap forward check). -/
 def Verifier.run (V : Verifier S) (y : Fin S.n → F) : Verdict :=
-  match V.decode? y with
+  match V.decodeOpt y with
   | some _ => Verdict.accept
   | none => Verdict.quarantine
 
@@ -131,7 +131,7 @@ def Verifier.run (V : Verifier S) (y : Fin S.n → F) : Verdict :=
 theorem accept_sound (V : Verifier S) (y : Fin S.n → F) :
     V.run S y = Verdict.accept → Safe S y := by
   intro h
-  cases hd : V.decode? y with
+  cases hd : V.decodeOpt y with
   | some f => exact ⟨f, V.decode_sound y f hd⟩
   | none => simp only [Verifier.run, hd] at h; exact absurd h (by decide)
 

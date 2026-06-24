@@ -48,13 +48,13 @@ def S : Scheme (ZMod 2) where
 /-! ### The shared witness search and the two verifiers. -/
 
 /-- Forward witness: if `y` is already light (`wt y ≤ τ`) it is its own same-syndrome witness. -/
-def witness? (y : Fin S.n → ZMod 2) : Option (Fin S.n → ZMod 2) :=
+def witnessOpt (y : Fin S.n → ZMod 2) : Option (Fin S.n → ZMod 2) :=
   if wt y ≤ S.τ then some y else none
 
 theorem witness_sound :
-    ∀ y e', witness? y = some e' → S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ := by
+    ∀ y e', witnessOpt y = some e' → S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ := by
   intro y e' h
-  unfold witness? at h
+  unfold witnessOpt at h
   by_cases hwt : wt y ≤ S.τ
   · simp only [hwt, if_true, Option.some.injEq] at h
     subst h
@@ -64,13 +64,13 @@ theorem witness_sound :
 
 /-- Verifier with the degenerate support bound `supportLb`. -/
 def vSupp : Verifier S where
-  witness? := witness?
+  witnessOpt := witnessOpt
   lb := supportLb S
   witness_sound := witness_sound
 
 /-- Verifier with the non-degenerate column-weight bound `colWeightLb`. -/
 def vCol : Verifier S where
-  witness? := witness?
+  witnessOpt := witnessOpt
   lb := colWeightLb S
   witness_sound := witness_sound
 

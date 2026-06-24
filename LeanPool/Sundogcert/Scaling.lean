@@ -113,15 +113,15 @@ def projScheme (m : ℕ) : Scheme (ZMod 2) where
   hHG := hHG_proj m
 
 /-- Forward witness: a light body is its own same-syndrome witness. -/
-def witness? (m : ℕ) (y : Fin (projScheme m).n → ZMod 2) :
+def witnessOpt (m : ℕ) (y : Fin (projScheme m).n → ZMod 2) :
     Option (Fin (projScheme m).n → ZMod 2) :=
   if wt y ≤ (projScheme m).τ then some y else none
 
 theorem witness_sound (m : ℕ) :
-    ∀ y e', witness? m y = some e' →
+    ∀ y e', witnessOpt m y = some e' →
       (projScheme m).H *ᵥ e' = (projScheme m).H *ᵥ y ∧ wt e' ≤ (projScheme m).τ := by
   intro y e' h
-  unfold witness? at h
+  unfold witnessOpt at h
   by_cases hwt : wt y ≤ (projScheme m).τ
   · simp only [hwt, if_true, Option.some.injEq] at h
     subst h
@@ -131,13 +131,13 @@ theorem witness_sound (m : ℕ) :
 
 /-- Verifier with the degenerate support bound. -/
 def vSupp (m : ℕ) : Verifier (projScheme m) where
-  witness? := witness? m
+  witnessOpt := witnessOpt m
   lb := supportLb (projScheme m)
   witness_sound := witness_sound m
 
 /-- Verifier with the non-degenerate column-weight bound. -/
 def vCol (m : ℕ) : Verifier (projScheme m) where
-  witness? := witness? m
+  witnessOpt := witnessOpt m
   lb := colWeightLb (projScheme m)
   witness_sound := witness_sound m
 

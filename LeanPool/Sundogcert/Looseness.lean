@@ -372,15 +372,15 @@ theorem looseness (m : ℕ) (hm : 2 ≤ m) :
 /-! ### Anchor verdicts (TIER 2): SAME body, SAME code, OPPOSITE verdict from `H` alone. -/
 
 /-- Forward witness for the dense scheme (identical search to the sparse one). -/
-def witnessDense? (m : ℕ) (y : Fin (denseScheme m).n → ZMod 2) :
+def witnessDenseOpt (m : ℕ) (y : Fin (denseScheme m).n → ZMod 2) :
     Option (Fin (denseScheme m).n → ZMod 2) :=
   if wt y ≤ (denseScheme m).τ then some y else none
 
 theorem witnessDense_sound (m : ℕ) :
-    ∀ y e', witnessDense? m y = some e' →
+    ∀ y e', witnessDenseOpt m y = some e' →
       (denseScheme m).H *ᵥ e' = (denseScheme m).H *ᵥ y ∧ wt e' ≤ (denseScheme m).τ := by
   intro y e' h
-  unfold witnessDense? at h
+  unfold witnessDenseOpt at h
   by_cases hwt : wt y ≤ (denseScheme m).τ
   · simp only [hwt, if_true, Option.some.injEq] at h
     subst h
@@ -390,7 +390,7 @@ theorem witnessDense_sound (m : ℕ) :
 
 /-- The DENSE column-weight verifier — same code, same body, but built on `denseH`. -/
 def vColDense (m : ℕ) : Verifier (denseScheme m) where
-  witness? := witnessDense? m
+  witnessOpt := witnessDenseOpt m
   lb := colWeightLb (denseScheme m)
   witness_sound := witnessDense_sound m
 

@@ -76,16 +76,16 @@ inductive Verdict
     bundled in (clean); the *lower-bound* spec is deferred to `reject_sound`. -/
 structure Verifier (S : Scheme F) where
   /-- Forward witness search: optionally produce a same-syndrome light witness for a body. -/
-  witness? : (Fin S.n → F) → Option (Fin S.n → F)
+  witnessOpt : (Fin S.n → F) → Option (Fin S.n → F)
   /-- A sound lower bound on the minimum same-syndrome weight, read off the syndrome. -/
   lb : (Fin S.m → F) → ℕ
   /-- Soundness of the witness search: any returned witness is genuinely same-syndrome and light. -/
-  witness_sound : ∀ y e', witness? y = some e' → S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ
+  witness_sound : ∀ y e', witnessOpt y = some e' → S.H *ᵥ e' = S.H *ᵥ y ∧ wt e' ≤ S.τ
 
 /-- accept if a light witness is exhibited; reject if the cheap bound rules out every light
     witness; quarantine otherwise. -/
 def Verifier.run (V : Verifier S) (y : Fin S.n → F) : Verdict :=
-  match V.witness? y with
+  match V.witnessOpt y with
   | some _ => Verdict.accept
   | none => if S.τ < V.lb (S.H *ᵥ y) then Verdict.reject else Verdict.quarantine
 
@@ -115,7 +115,7 @@ theorem accept_sound (V : Verifier S) (y : Fin S.n → F) :
     V.run S y = Verdict.accept → Safe S y := by
   intro h
   unfold Verifier.run at h
-  cases hw : V.witness? y with
+  cases hw : V.witnessOpt y with
   | some e' => exact ⟨e', V.witness_sound y e' hw⟩
   | none => simp only [hw] at h; split at h <;> simp at h
 
@@ -140,7 +140,7 @@ theorem reject_sound (V : Verifier S) (hLb : LbSound S V) (y : Fin S.n → F) :
   obtain ⟨e', he, hwt⟩ := hsafe
   have hlb := hLb y e' he
   unfold Verifier.run at h
-  cases hw : V.witness? y with
+  cases hw : V.witnessOpt y with
   | some w => simp [hw] at h
   | none =>
       simp only [hw] at h

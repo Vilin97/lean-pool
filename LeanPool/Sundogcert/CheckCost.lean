@@ -26,7 +26,7 @@ import LeanPool.Sundogcert.Certificate
   TRUST SURFACE (load-bearing, audited by a human exactly as the `Scheme` fields are).
   The COST MODEL below is a trust-surface item.  A reviewer checks that `verifyCost` /
   `syndromeMulCost` faithfully count the field/Boolean operations of `Verifier.run` on its dominant
-  path, for the DEPLOYED verifier (`witness?` = `wt y ≤ τ` light test; `lb` = `colWeightLb`).
+  path, for the DEPLOYED verifier (`witnessOpt` = `wt y ≤ τ` light test; `lb` = `colWeightLb`).
   Nothing forces this correspondence mechanically — it is asserted, then audited, like `hHG`.
   Given that audited model, the polynomial bound is a THEOREM (kernel-checked, `sorry`-free).
 -/
@@ -47,7 +47,7 @@ variable (S : Scheme F)
 
     • syndrome `H *ᵥ y`     : one MULT per term of `(H *ᵥ y)_i = ∑_{j:Fin n} H i j * y j`, over
                               `m` rows ⟹ `m·n` mults; plus `m·(n-1)` ADDs to sum each row.
-    • witness search `V.witness? y` : the deployed `wt y ≤ τ` light-witness test ⟹ `n` zero-tests.
+    • witness search `V.witnessOpt y` : the deployed `wt y ≤ τ` light-witness test ⟹ `n` zero-tests.
     • `wt (H *ᵥ y)`         : `m` zero-tests (after the syndrome is formed).
     • the `τ < lb` decision : `1` compare, plus `1` division for `colWeightLb` (`‖z‖/colBound H`).
 
@@ -68,7 +68,7 @@ theorem syndromeMulCost_eq : syndromeMulCost S = S.m * S.n := by
 /-- **Per-query verification cost** on the dominant (reject/quarantine) path:
       `syndromeMulCost S`  — `m·n` syndrome mults,
     + `S.m * (S.n - 1)`    — syndrome row-sum adds,
-    + `S.n`                — witness search `V.witness? y` (the `wt y ≤ τ` test),
+    + `S.n`                — witness search `V.witnessOpt y` (the `wt y ≤ τ` test),
     + `S.m`                — `wt (H *ᵥ y)` zero-tests,
     + `2`                  — one `colWeightLb` division + one `τ < lb` compare. -/
 def verifyCost : ℕ :=
