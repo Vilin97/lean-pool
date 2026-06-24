@@ -1021,8 +1021,6 @@ lemma helper_2
     rcases (sq_eq_sq_iff_eq_or_eq_neg.mp h₁ : x = 1 ∨ x = -1) with h | h <;>
       subst h h₂ <;> tauto
 
-lemma omg {n : ℕ} (n_ge_4 : n ≥ (4 : ℕ)) (n_ne_4 : n ≠ (4 : ℕ)) : n ≥ 5 := by omega
-
 lemma helper_3
   {x : ℤ} {n : ℕ} (h₁ : x ^ 2 = 25) (h₂ : n = 5) :
     (x, n) = (1, 3) ∨ (x, n) = (-1, 3)
