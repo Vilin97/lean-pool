@@ -72,7 +72,8 @@ private lemma elliptic_finset_sum_eq_three (S : Finset UpperHalfPlane)
       x ∉ S.filter P → g x = 0 := by
     intro x hx hx_not
     simp only [Finset.mem_insert, Finset.mem_singleton] at hx
-    have hx_not_S : x ∉ S := fun hx_S => hx_not (Finset.mem_filter.mpr ⟨hx_S, hx⟩)
+    have hx_not_S : x ∉ S :=
+      fun hx_S => hx_not (Finset.mem_filter.mpr ⟨hx_S, hx⟩)
     have hx_fd : x ∈ 𝒟 := by
       rcases hx with rfl | rfl | rfl
       · exact ellipticPointI_mem_fd
@@ -188,8 +189,9 @@ private lemma vert_edge_im_gt_sqrt3_half (s : ℍ) (hs_norm : ‖(s : ℂ)‖ > 
     rw [Complex.normSq_eq_norm_sq]; nlinarith [hs_norm, sq_nonneg (‖(s : ℂ)‖ - 1)]
   have h_re_sq : (s : ℂ).re * (s : ℂ).re ≤ 1/4 := by
     rcases (abs_eq (by norm_num : (1 : ℝ)/2 ≥ 0)).mp hs_abs_re with h | h <;> rw [h] <;> norm_num
-  have h_im_sq : (s : ℂ).im * (s : ℂ).im ≤ 3/4 :=
-    by nlinarith [Real.mul_self_sqrt (show (3 : ℝ) ≥ 0 by norm_num), mul_self_le_mul_self s.2.le h_le]
+  have h_im_sq : (s : ℂ).im * (s : ℂ).im ≤ 3/4 := by
+    have h3 := Real.mul_self_sqrt (show (3 : ℝ) ≥ 0 by norm_num)
+    nlinarith [mul_self_le_mul_self s.2.le h_le]
   linarith [Complex.normSq_apply (s : ℂ)]
 
 private lemma unit_circle_re_zero_eq_i (s : ℍ)
@@ -197,10 +199,11 @@ private lemma unit_circle_re_zero_eq_i (s : ℍ)
   apply UpperHalfPlane.ext
   have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
   rw [Complex.normSq_apply, hs_re, mul_zero, zero_add] at h_nsq
-  have h_le : (s : ℂ).im ≤ 1 := by nlinarith [mul_self_nonneg ((s : ℂ).im - 1)]
+  have h_le : (s : ℂ).im ≤ 1 := by nlinarith [mul_self_nonneg ((s : ℂ).im - 1), h_nsq]
+  have h_ge : 1 ≤ (s : ℂ).im := by nlinarith [mul_le_of_le_one_right s.2.le h_le, h_nsq]
   apply Complex.ext
   · exact hs_re.trans Complex.I_re.symm
-  · exact (le_antisymm h_le (by nlinarith [mul_le_of_le_one_right s.2.le h_le])).trans Complex.I_im.symm
+  · exact (le_antisymm h_le h_ge).trans Complex.I_im.symm
 
 private theorem boundary_weight_auto
     (S : Finset UpperHalfPlane) (hS : ∀ p ∈ S, p ∈ 𝒟) :
@@ -217,8 +220,9 @@ private theorem boundary_weight_auto
   have hnorm_ge : 1 ≤ ‖(s : ℂ)‖ := by
     rw [Complex.norm_def]; exact Real.sqrt_one ▸ Real.sqrt_le_sqrt hs_fd.1
   have hH_ge2 : (2 : ℝ) ≤ H := le_trans (le_max_left 2 (M + 1)) hH
-  have h_im_lt_H : (s : ℂ).im < H :=
-    by linarith [Finset.single_le_sum (fun x _ => le_of_lt x.2) hs, le_max_right (2 : ℝ) (M + 1)]
+  have h_im_lt_H : (s : ℂ).im < H := by
+    have h1 : (s : ℂ).im ≤ M := Finset.single_le_sum (fun x _ => le_of_lt x.2) hs
+    linarith [le_max_right (2 : ℝ) (M + 1)]
   have hH_sqrt : Real.sqrt 3 / 2 < H := by
     nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num), sq_nonneg (Real.sqrt 3 - 2)]
   rcases eq_or_lt_of_le hnorm_ge with h_eq | h_gt
@@ -447,7 +451,8 @@ theorem valence_formula_orbit_sum (S : Finset UpperHalfPlane) (hS : ∀ p ∈ S,
     linarith [le_max_left heightCutoff M,
       le_max_right (max H₀ H₁) (max heightCutoff M + 1)]
   have hH_above : ∀ s ∈ S, (s : ℂ).im < H := fun s hs => by
-    linarith [Finset.single_le_sum (fun x _ => le_of_lt x.2) hs, le_max_right heightCutoff M,
+    have h1 : (s : ℂ).im ≤ M := Finset.single_le_sum (fun x _ => le_of_lt x.2) hs
+    linarith [le_max_right heightCutoff M,
       le_max_right (max H₀ H₁) (max heightCutoff M + 1)]
   have hH0_le : H₀ ≤ H := le_trans (le_max_left _ _) (le_max_left _ _)
   have h_explicit' := h_explicit hH0_le

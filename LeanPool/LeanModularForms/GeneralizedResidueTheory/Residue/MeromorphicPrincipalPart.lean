@@ -96,16 +96,20 @@ noncomputable def meromorphicPrincipalPart (f : ℂ → ℂ) (s : ℂ) : ℂ →
 theorem meromorphicPrincipalPart_eq_zero_of_analyticAt (f : ℂ → ℂ) (s : ℂ)
     (hf : AnalyticAt ℂ f s) :
     meromorphicPrincipalPart f s = fun _ => 0 := by
-  simp [meromorphicPrincipalPart, not_lt.mpr hf.meromorphicOrderAt_nonneg]
+  unfold meromorphicPrincipalPart
+  have h_ord : 0 ≤ meromorphicOrderAt f s := hf.meromorphicOrderAt_nonneg
+  exact dif_neg (fun h => absurd h.2 (not_lt.mpr h_ord))
 
 /-! ### Differentiability of the principal part -/
 
 /-- Each term `c * (z - s)^n` with `n < 0` is differentiable away from `s`. -/
 private theorem differentiableOn_zpow_sub_compl (s : ℂ) (n : ℤ) (c : ℂ) :
-    DifferentiableOn ℂ (fun z => c * (z - s) ^ n) {s}ᶜ :=
-  fun z hz => ((differentiableAt_const c).mul
-    ((differentiableAt_id.sub (differentiableAt_const s)).zpow
-      (Or.inl (sub_ne_zero.mpr (Set.mem_compl_singleton_iff.mp hz))))).differentiableWithinAt
+    DifferentiableOn ℂ (fun z => c * (z - s) ^ n) {s}ᶜ := by
+  intro z hz
+  have hne : z - s ≠ 0 := sub_ne_zero.mpr (Set.mem_compl_singleton_iff.mp hz)
+  apply DifferentiableAt.differentiableWithinAt
+  exact (differentiableAt_const c).mul
+    ((differentiableAt_id.sub (differentiableAt_const s)).zpow (Or.inl hne))
 
 /-- The principal part is differentiable on `{s}ᶜ`. -/
 theorem meromorphicPrincipalPart_differentiableOn (f : ℂ → ℂ) (s : ℂ)
@@ -270,26 +274,28 @@ private theorem integral_zpow_comp_sub_mul_deriv'
       (fun t => (γ t - s) ^ n * (deriv γ t : ℂ)) MeasureTheory.volume a b) :
     ∫ t in a..b, (γ t - s) ^ n * (deriv γ t : ℂ) =
       ((γ b - s) ^ (n + 1) - (γ a - s) ^ (n + 1)) / (↑(n + 1) : ℂ) := by
-  have hn1_cast : (↑(n + 1) : ℂ) ≠ 0 := Int.cast_ne_zero.mpr (by omega)
+  have hn1 : (n : ℤ) + 1 ≠ 0 := by omega
+  have hn1_cast : (↑(n + 1) : ℂ) ≠ 0 := Int.cast_ne_zero.mpr hn1
   set F : ℝ → ℂ := fun t => (γ t - s) ^ (n + 1) / (↑(n + 1) : ℂ) with hF_def
   set f : ℝ → ℂ := fun t => (γ t - s) ^ n * (deriv γ t : ℂ) with hf_def
   have hF_cont : ContinuousOn F (Icc a b) :=
     (continuousOn_zpow_comp_sub' hγ_cont hγ_ne (n := n + 1)).div_const _
+  have hE_count : (E ∩ Ioo a b).Countable := hE.mono Set.inter_subset_left
   have hF_deriv : ∀ t ∈ Ioo a b \ (E ∩ Ioo a b),
       HasDerivAt F (f t) t := by
     intro t ⟨ht, ht_not⟩
+    have ht_not_E : t ∉ E := fun hE_mem => ht_not ⟨hE_mem, ht⟩
     have hne : γ t ≠ s := hγ_ne t (Ioo_subset_Icc_self ht)
     have h_div := (hasDerivAt_zpow_comp_sub' (n := n + 1)
-      (hγ_diff t ht (fun hE_mem => ht_not ⟨hE_mem, ht⟩)).hasDerivAt hne).div_const
-      (↑(n + 1) : ℂ)
+      (hγ_diff t ht ht_not_E).hasDerivAt hne).div_const (↑(n + 1) : ℂ)
     change HasDerivAt F ((γ t - s) ^ n * ↑(deriv γ t)) t
     have : (↑(n + 1) : ℂ) * (γ t - s) ^ (n + 1 - 1) * ↑(deriv γ t) / (↑(n + 1) : ℂ)
         = (γ t - s) ^ n * ↑(deriv γ t) := by
       rw [show (n + 1 : ℤ) - 1 = n from by ring]
       rw [mul_assoc, mul_div_cancel_left₀ _ hn1_cast]
     rwa [this] at h_div
-  rw [MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le F f hab
-    (hE.mono Set.inter_subset_left) hF_cont hF_deriv h_int]
+  rw [MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le
+    F f hab hE_count hF_cont hF_deriv h_int]
   simp only [F]
   rw [← sub_div]
 
@@ -505,12 +511,17 @@ theorem contourIntegral_principalPart_eq_zero_of_residue_zero
         (fun t => iteratedDeriv k g s / ↑(k.factorial) * (γ.toFun t - s) ^
           ((k : ℤ) - (N : ℤ)) * deriv γ.toFun t) MeasureTheory.volume γ.a γ.b := by
       intro k _
+      have h_zpow_cont : ContinuousOn
+          (fun t => (γ.toFun t - s) ^ ((k : ℤ) - (N : ℤ))) (Icc γ.a γ.b) :=
+        continuousOn_zpow_comp_sub' γ.continuous_toFun hγ_avoids
+      have h_const_zpow_cont : ContinuousOn
+          (fun t => iteratedDeriv k g s / ↑(k.factorial) *
+            (γ.toFun t - s) ^ ((k : ℤ) - (N : ℤ))) (Icc γ.a γ.b) :=
+        (continuousOn_const.mul h_zpow_cont)
       exact IntervalIntegrable.continuousOn_mul
         (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve
           (piecewiseC1Immersion_deriv_bounded γ))
-        ((continuousOn_const.mul
-            (continuousOn_zpow_comp_sub' γ.continuous_toFun hγ_avoids)).mono
-          (by rw [Set.uIcc_of_le (le_of_lt γ.hab)]))
+        (h_const_zpow_cont.mono (by rw [Set.uIcc_of_le (le_of_lt γ.hab)]))
     rw [intervalIntegral.integral_finsetSum h_int]
     apply Finset.sum_eq_zero
     intro k hk
@@ -518,7 +529,9 @@ theorem contourIntegral_principalPart_eq_zero_of_residue_zero
     by_cases hk_eq : k = N - 1
     · subst hk_eq
       simp only [h_coeff_zero, zero_mul, intervalIntegral.integral_zero]
-    · exact contourIntegral_const_mul_zpow_eq_zero s _ (by omega) _ γ hγ_closed hγ_avoids
+    · have hk_lt : k < N - 1 := by omega
+      have h_exp : (k : ℤ) - (N : ℤ) ≤ -2 := by omega
+      exact contourIntegral_const_mul_zpow_eq_zero s _ h_exp _ γ hγ_closed hγ_avoids
   · have h_pp : meromorphicPrincipalPart f s = fun _ => 0 := by
       unfold meromorphicPrincipalPart
       rw [dif_neg (not_and_of_not_right _ h_neg)]

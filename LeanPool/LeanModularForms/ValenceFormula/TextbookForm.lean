@@ -38,14 +38,16 @@ private lemma repCanon_ne_elliptic (p : ℍ) (hp : p ∈ repCanon f hf) :
   rcases hp with (h | h) | h
   · have h2 := (Finset.mem_filter.mp h).2; exact ⟨h2.1, h2.2.1, h2.2.2.1⟩
   · have h2 := (Finset.mem_filter.mp h).2; refine ⟨?_, ?_, ?_⟩
-    · intro heq; rw [heq] at h2; linarith [Complex.I_re, h2.1]
+    · intro heq; rw [heq] at h2
+      have : (ellipticPointI' : ℂ).re = 0 := Complex.I_re; linarith [h2.1]
     · intro heq; rw [heq] at h2; linarith [h2.2, ellipticPointRho_norm]
     · intro heq; rw [heq] at h2
       have : (ellipticPointRhoPlusOne' : ℂ).re = 1/2 := by
         change (1/2 + (Real.sqrt 3 / 2) * I : ℂ).re = 1/2; simp [add_re, mul_re, I_re, I_im]
       linarith [h2.1]
   · have h2 := (Finset.mem_filter.mp h).2; refine ⟨?_, h2.1, ?_⟩
-    · intro heq; rw [heq] at h2; linarith [Complex.I_re, h2.2.2]
+    · intro heq; rw [heq] at h2
+      have : (ellipticPointI' : ℂ).re = 0 := Complex.I_re; linarith [h2.2.2]
     · intro heq; rw [heq] at h2
       have : (ellipticPointRhoPlusOne' : ℂ).re = 1/2 := by
         change (1/2 + (Real.sqrt 3 / 2) * I : ℂ).re = 1/2; simp [add_re, mul_re, I_re, I_im]
@@ -324,8 +326,8 @@ private lemma c_abs_le_one_of_smul_fd (g : SL(2, ℤ)) (p₁ p₂ : ℍ)
     (hg : g • p₂ = p₁) (hp₁ : p₁ ∈ 𝒟) (hp₂ : p₂ ∈ 𝒟) :
     |(g : Matrix (Fin 2) (Fin 2) ℤ) 1 0| ≤ 1 := by
   set c := (g : Matrix (Fin 2) (Fin 2) ℤ) 1 0
-  have h_p1_im_eq : p₁.im = p₂.im / Complex.normSq (UpperHalfPlane.denom g p₂) :=
-    hg ▸ ModularGroup.im_smul_eq_div_normSq g p₂
+  have h_p1_im_eq : p₁.im = p₂.im / Complex.normSq (UpperHalfPlane.denom g p₂) := by
+    have := ModularGroup.im_smul_eq_div_normSq g p₂; rw [hg] at this; exact this
   have h_nsq_eq : Complex.normSq (UpperHalfPlane.denom g p₂) = p₂.im / p₁.im := by
     rw [h_p1_im_eq]; field_simp
   by_contra h_gt; push Not at h_gt
@@ -367,9 +369,9 @@ private lemma injOn_c_eq_zero (g : SL(2, ℤ)) (p₁ p₂ : ℍ)
     have h1 := repCanon_re_lt_half f hf p₁ hp₁
     have h3 := repCanon_re_lt_half f hf p₂ hp₂
     have h4 : -(1 / 2) ≤ p₂.re := by
-      rw [← UpperHalfPlane.coe_re]; exact (abs_le.mp hp₂_fd.2).1
+      have := hp₂_fd.2; rw [← UpperHalfPlane.coe_re] at this; exact (abs_le.mp this).1
     have h5 : -(1 / 2) ≤ p₁.re := by
-      rw [← UpperHalfPlane.coe_re]; exact (abs_le.mp hp₁_fd.2).1
+      have := hp₁_fd.2; rw [← UpperHalfPlane.coe_re] at this; exact (abs_le.mp this).1
     have h_n_lt : (↑n : ℝ) < 1 := by linarith
     have h_n_gt : (-1 : ℝ) < (↑n : ℝ) := by linarith
     have : n < 1 := by exact_mod_cast h_n_lt
