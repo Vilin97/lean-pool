@@ -358,44 +358,18 @@ lemma cross_edge_sum_le_graphLaplacian
   -- Abbreviate the double sum matrix
   set DS := ∑ v ∈ Finset.univ.filter (· ∉ pc.colored), ∑ γ : Fin r,
     (inducedLaplacian G (S γ ∪ {v}) - inducedLaplacian G (S γ)) with DS_def
-  -- Helper: graphLaplacian row sum = 0
+  -- Helper: graphLaplacian row sum = 0 (via mathlib's lapMatrix mulVec on the all-ones vector)
   have laplacian_row_sum : ∀ (H : SimpleGraph V) [DecidableRel H.Adj] (a : V),
       ∑ b, graphLaplacian H a b = 0 := by
     intro H _ a
-    simp only [graphLaplacian, Matrix.of_apply]
-    rw [Finset.sum_ite, Finset.sum_ite]
-    simp only [Finset.sum_const_zero, add_zero]
-    have hfilt_eq : Finset.univ.filter (fun x => a = x) = {a} := by ext x; simp [eq_comm]
-    rw [hfilt_eq, Finset.sum_singleton]
-    simp only [Finset.sum_const]
-    have : (Finset.univ.filter (fun x => ¬a = x)).filter (H.Adj a) =
-        Finset.univ.filter (H.Adj a) := by
-      ext b; simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨fun ⟨_, h⟩ => h, fun h => ⟨fun hab => H.loopless.irrefl a (hab ▸ h), h⟩⟩
-    rw [this]; simp [nsmul_eq_mul]
-  -- Helper: inducedLaplacian row sum = 0
+    have h := congrFun (SimpleGraph.lapMatrix_mulVec_const_eq_zero (R := ℝ) H) a
+    rw [graphLaplacian_eq_lapMatrix]
+    simpa [Matrix.mulVec, dotProduct] using h
+  -- Helper: inducedLaplacian row sum = 0 (induced subgraph is itself a graph Laplacian)
   have il_row_sum : ∀ (T : Finset V) (a : V), ∑ b, inducedLaplacian G T a b = 0 := by
     intro T a
-    simp only [inducedLaplacian, Matrix.of_apply]
-    rw [Finset.sum_ite, Finset.sum_ite]
-    simp only [Finset.sum_const_zero, add_zero]
-    have hfilt_eq : Finset.univ.filter (fun x => a = x) = {a} := by ext x; simp [eq_comm]
-    rw [hfilt_eq, Finset.sum_singleton]
-    -- Reconcile filter orders:
-    -- (a ∈ T ∧ k ∈ T ∧ G.Adj a k) vs (G.Adj a k ∧ a ∈ T ∧ k ∈ T)
-    have h_filt : Finset.univ.filter (fun k => a ∈ T ∧ k ∈ T ∧ G.Adj a k) =
-        Finset.univ.filter (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) := by
-      ext k; simp only [Finset.mem_filter, Finset.mem_univ, true_and]; tauto
-    rw [h_filt]
-    simp only [Finset.sum_const]
-    have : (Finset.univ.filter (fun x => ¬a = x)).filter
-        (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) =
-        Finset.univ.filter (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) := by
-      ext b; simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨fun ⟨_, h⟩ => h, fun ⟨h, _, _⟩ =>
-        ⟨fun hab => G.loopless.irrefl a (hab ▸ h),
-         h, ‹_›, ‹_›⟩⟩
-    rw [this]; simp [nsmul_eq_mul]
+    rw [inducedLaplacian_eq_graphLaplacian_inducedSubgraph]
+    exact laplacian_row_sum _ a
   -- Off-diagonal equality via cross_edge_off_diagonal
   have hG_same : ∀ a b, G_same.Adj a b ↔
       (G.Adj a b ∧ (a ∈ pc.colored ↔ b ∈ pc.colored)) :=
