@@ -294,8 +294,7 @@ by
           intro x h_x_lt
           apply aux.mp hy_in
           rw [B11, hy_eq]
-          rw [h_lenY_eq_lenX]
-          exact h_x_lt
+          rwa [h_lenY_eq_lenX]
         have h_X_empty' : ¬∃ x < len X, x ∈ X := by
           refine not_exists_of_forall_not ?_
           intro x hx
@@ -322,8 +321,7 @@ by
           have aux := (h_Y.right y (M.L1 hy_in)).mp hy_in y (_root_.le_refl _)
           apply aux
           apply L2
-          rw [<- h]
-          exact hy_eq
+          rwa [<- h]
         | inr h =>
           have aux := (not_congr <| h_Y.right (len Y) h).mp len_not_in
           simp only [not_forall, not_not] at aux
@@ -331,8 +329,7 @@ by
           rw [le_iff_eq_or_lt] at h_x_le
           cases h_x_le with
           | inl h =>
-            rw [<- h]
-            exact h_x_X
+            rwa [<- h]
           | inr h =>
             -- first, obtain hypothesis for last y of Y
             have len_Y_ne_zero : (len Y : num) ≠ 0 := by
@@ -371,18 +368,15 @@ by
                   rw [le_iff_eq_or_lt] at hy3
                   cases hy3 with
                   | inl hy3 =>
-                    rw [hy3]
-                    exact h_lenY_notin_X
+                    rwa [hy3]
                   | inr hy3 =>
                     apply (h_Y.right y h_y_lt_lenX).mp hy_in
-                    rw [B11, hy_eq]
-                    exact hy3
+                    rwa [B11, hy_eq]
                 · rfl
               | inr h_y2 =>
                 clear h
                 apply (h_Y.right y h_y_lt_lenX).mp hy_in
-                rw [B11, hy_eq]
-                exact h_y2
+                rwa [B11, hy_eq]
       · -- ∀ z < len Y, z ∉ X
         intro z h_z h_zX
         -- notice: Y is of the form 11111..1 - if we get any 0 in Y,
@@ -412,8 +406,7 @@ by
           apply (h_Y.right 0 h_lenX).mpr
           intro y hy
           have y_zero := B7 hy (M.B9 _)
-          rw [y_zero, <- Y_empty]
-          exact h_contr
+          rwa [y_zero, <- Y_empty]
         rw [<- Y_empty] at zero_in_Y
         exact len_not_in zero_in_Y
       · -- ∀ y < len Y, y ∉ X
@@ -745,8 +738,7 @@ lemma carry_lt_add_len :
     · have h_pred_lt_i : pred_i < i := by
         simpa [hpred_i_eq] using (lt_succ pred_i)
       have h_k_le_pred : k ≤ pred_i := by
-        rw [B11, hpred_i_eq]
-        exact h_k_lt_i
+        rwa [B11, hpred_i_eq]
       have h_k_lt_pred : k < pred_i := lt_of_le_of_ne h_k_le_pred h_k_eq_pred
       exact h_kprop pred_i h_pred_lt_i h_k_lt_pred
   rcases h_pred_or with h_predX | h_predY

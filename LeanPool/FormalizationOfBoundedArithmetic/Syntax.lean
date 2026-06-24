@@ -253,11 +253,9 @@ theorem relabel_relabelSum [enum : IsEnum β] (g : α ≃ γ) :
       funext i
       exact hterm (ts i)
   | imp φ ψ ihφ ihψ =>
-      simp only [relabel_imp, imp, imp.injEq]
-      exact ⟨ihφ, ihψ⟩
+      simpa only [relabel_imp, imp, imp.injEq] using ⟨ihφ, ihψ⟩
   | all φ ih =>
-      simp only [relabel_all, Nat.add_eq, all, all.injEq]
-      exact ih
+      simpa only [relabel_all, Nat.add_eq, all, all.injEq] using ih
 
 @[simp]
 theorem iExs' {α β γ} [henum : IsEnum β] (g : α ≃ γ)

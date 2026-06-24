@@ -251,8 +251,7 @@ by
     exists a
     apply add_cancel_right.mp
     conv at ha => rw [idelta0.add_assoc]; lhs; rhs; rw [idelta0.add_comm]
-    rw [idelta0.add_assoc]
-    exact ha
+    rwa [idelta0.add_assoc]
 
 theorem le_cancel_left :
   ∀ {x y z : M}, x <= y -> z + x <= z + y := by
@@ -410,8 +409,7 @@ by
     constructor
     · rw [le_iff_exists_add]
       exists (1 + diff)
-      rw [<- idelta0.add_assoc]
-      exact hdiff
+      rwa [<- idelta0.add_assoc]
     · intro absurd
       rw [<- hdiff, idelta0.add_assoc] at absurd
       have aux : 1 + diff = 0 := by

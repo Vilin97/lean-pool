@@ -775,8 +775,7 @@ lemma add_succ_of_succ_add_zero :
           have h_not_xor :=
             hy_not.1 (add_pos_of_nonneg_of_pos (B9 (len X)) (L1 hY0))
           simp only [not_xor] at h_not_xor
-          rw [h_not_xor]
-          exact hY0
+          rwa [h_not_xor]
 
 lemma add_succ_of_succ_add_of_mem_add :
     ∀ {X Y : str} {y pred_y : num},
@@ -1098,8 +1097,7 @@ lemma succ_len_eq : ∀ {X Y : str}, len (X + succ Y) = (len (succ (X + Y)) : nu
       exact _root_.le_antisymm h_succ_le_old len_le_len_succ
     have h_new_eq : len (X + succ Y) = (len (X + Y) : num) := by
       have h_old_le_new : (len (X + Y) : num) ≤ len (X + succ Y) := by
-        rw [<- h_succ_eq]
-        exact h_succ_le_new
+        rwa [<- h_succ_eq]
       have h_new_le_old : len (X + succ Y) ≤ (len (X + Y) : num) := by
         by_contra h
         have h_lt : len (X + Y) < len (X + succ Y) := lt_of_not_ge h
