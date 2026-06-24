@@ -248,8 +248,7 @@ theorem torus_hKillingToHarmonic (b : Torus3 → Fin 3 → ℝ)
     intro y i k
     rw [← periodicLift_torusGradX (fun w => b w k) i y,
         ← periodicLift_torusGradX (fun w => b w i) k y]
-    simp only [periodicLift, Function.comp_apply]
-    exact hKilling (torusMk y) i k
+    simpa only [periodicLift, Function.comp_apply] using hKilling (torusMk y) i k
   -- Main proof: for each j and x, show div(grad(b_j))(x) = 0
   intro jj x
   simp only [torusDivX]
