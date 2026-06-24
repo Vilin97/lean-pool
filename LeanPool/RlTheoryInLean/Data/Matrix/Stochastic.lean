@@ -533,11 +533,9 @@ lemma multi_step_stationary
   Stationary μ (P ^ n) := by
   constructor
   induction n with
-  | zero =>
-    simp [Matrix.vecMul_one]
+  | zero => simp [Matrix.vecMul_one]
   | succ n ih =>
-    have := (inferInstance : Stationary μ P).stationary
-    rw [pow_succ, ←vecMul_vecMul, ih, this]
+    rw [pow_succ, ←vecMul_vecMul, ih, (inferInstance : Stationary μ P).stationary]
 
 theorem pos_of_stationary
   (μ : S → ℝ) [StochasticVec μ]
@@ -549,7 +547,6 @@ theorem pos_of_stationary
   obtain ⟨s, hsle⟩ := h
   rw [not_lt] at hsle
   have hμ := (inferInstance : StochasticVec μ)
-  have hPn_nonneg : ∀ n, RowStochastic (P ^ n) := fun n => inferInstance
   have hs : μ s = 0 := le_antisymm hsle (hμ.nonneg s)
   have hμ0 : ∀ s', μ s' = 0 := by
     intro s'
@@ -559,9 +556,8 @@ theorem pos_of_stationary
       have := congrFun hPn s
       rw [Matrix.vecMul, dotProduct] at this
       simpa [hs] using this
-    have hterm : ∀ i ∈ Finset.univ, 0 ≤ μ i * (P ^ n) i s := by
-      intro i _
-      exact mul_nonneg (hμ.nonneg i) (((hPn_nonneg n).stochastic i).nonneg s)
+    have hterm : ∀ i ∈ Finset.univ, 0 ≤ μ i * (P ^ n) i s := fun i _ =>
+      mul_nonneg (hμ.nonneg i) ((RowStochastic.stochastic (P := P ^ n) i).nonneg s)
     have := (Finset.sum_eq_zero_iff_of_nonneg hterm).mp hsum s' (Finset.mem_univ s')
     rcases mul_eq_zero.mp this with h0 | h0
     · exact h0
@@ -582,12 +578,12 @@ lemma cesaro_average_is_svec
   (x₀ : S → ℝ) [StochasticVec x₀]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ)
   : StochasticVec (cesaroAverage x₀ P n) := by
+  have hval : ∀ i, (cesaroAverage x₀ P n) i
+      = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := fun i => by
+    simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
   constructor
   case nonneg =>
     intro i
-    have hval : (cesaroAverage x₀ P n) i
-        = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
-      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [hval]
     apply mul_nonneg
     · exact inv_nonneg.mpr (by linarith)
@@ -595,10 +591,6 @@ lemma cesaro_average_is_svec
       intro k _
       exact (svec_mul_smat_is_svec x₀ (P ^ k)).nonneg i
   case rowsum =>
-    have hval : ∀ i, (cesaroAverage x₀ P n) i
-        = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
-      intro i
-      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [Finset.sum_congr rfl (fun i _ => hval i), ← mul_sum, Finset.sum_comm]
     have hsum : ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i = n + 1 := by
       calc ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i
