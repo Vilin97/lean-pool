@@ -2270,11 +2270,6 @@ private noncomputable def fromRapidDecayNdLM (d : ℕ) :
     simp only [RapidDecaySeq.smul_val, smul_eq_mul, mul_assoc]
     exact tsum_mul_left
 
-/-- `fromRapidDecayNdLM d a` equals the tsum of scaled Hermite basis elements. -/
-private lemma fromRapidDecayNdLM_eq (d : ℕ) (a : RapidDecaySeq) :
-    fromRapidDecayNdLM d a = ∑' n, a.val n • flatBasisNd d n :=
-  (rapidDecay_hermite_hasSumNd d a).tsum_eq.symm
-
 /-- Seminorm bound: `p_{k,l}(fromRapidDecayNdLM d a) ≤ ∑' |aₙ| · p_{k,l}(Φₙ)`. -/
 private lemma fromRapidDecayNdLM_seminorm_le (d : ℕ) (a : RapidDecaySeq) (k l : ℕ) :
     SchwartzMap.seminorm ℝ k l (fromRapidDecayNdLM d a) ≤

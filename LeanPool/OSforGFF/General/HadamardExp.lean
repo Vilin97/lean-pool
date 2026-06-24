@@ -64,8 +64,7 @@ private lemma isHermitian_entrywiseExp_real (R : Matrix ι ι ℝ)
     (hR : R.IsHermitian) : (entrywiseExp R).IsHermitian := by
   rw [Matrix.IsHermitian]
   ext i j
-  have h_R_herm : R j i = R i j := by
-    simpa using (Matrix.IsHermitian.apply hR j i).symm
+  have h_R_herm : R j i = R i j := by simpa using (Matrix.IsHermitian.apply hR j i).symm
   simpa [Matrix.conjTranspose, entrywiseExp] using congrArg Real.exp h_R_herm
 
 /-- Hadamard identity element: the all-ones matrix for entrywise multiplication. -/
@@ -87,10 +86,8 @@ private lemma isHermitian_hadamard_real {A B : Matrix ι ι ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ∘ₕ B).IsHermitian := by
   rw [Matrix.IsHermitian]
   ext i j
-  have hAij : A i j = A j i := by
-    simpa using (Matrix.IsHermitian.apply hA i j).symm
-  have hBij : B i j = B j i := by
-    simpa using (Matrix.IsHermitian.apply hB i j).symm
+  have hAij : A i j = A j i := by simpa using (Matrix.IsHermitian.apply hA i j).symm
+  have hBij : B i j = B j i := by simpa using (Matrix.IsHermitian.apply hB i j).symm
   simp [Matrix.conjTranspose, Matrix.hadamard, hAij, hBij]
 
 /-- Hadamard powers act entrywise as usual scalar powers. -/
@@ -146,10 +143,8 @@ lemma entrywiseExp_eq_hadamardSeries (R : Matrix ι ι ℝ) :
   have h_re_exp : (Complex.exp (x : ℂ)).re = Real.exp x := Complex.exp_ofReal_re x
   have h_re_terms : (fun n : ℕ => (fC n).re) = fR := by
     funext n
-    -- First show fC n equals the complexification of fR n
-    have hpt : fC n = (fR n : ℂ) := by
-      simp [fC, fR, div_eq_mul_inv]
-    -- Then take real parts
+    -- First show fC n equals the complexification of fR n, then take real parts
+    have hpt : fC n = (fR n : ℂ) := by simp [fC, fR, div_eq_mul_inv]
     simpa [Complex.ofReal_re] using congrArg Complex.re hpt
   -- Combine: real parts of both sides of h_seriesC give the real series identity
   have hx_sum : ∑' n : ℕ, fR n = Real.exp x := by

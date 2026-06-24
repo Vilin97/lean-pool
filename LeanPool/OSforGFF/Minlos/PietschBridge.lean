@@ -129,10 +129,7 @@ def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
       -- S = A + 2M + B where M = ∑' f n x * f n y * c n
       have hS_eq : S = A + 2 * (∑' n, f n x * f n y * c n) + B := by
         change ∑' n, (f n (x + y)) ^ 2 * c n = _
-        have : (fun n => (f n (x + y)) ^ 2 * c n) =
-            (fun n => (f n x) ^ 2 * c n + 2 * (f n x * f n y * c n) + (f n y) ^ 2 * c n) :=
-          funext hexpand
-        rw [this, (hSx.add (hcross_summable.mul_left 2)).tsum_add hSy,
+        rw [funext hexpand, (hSx.add (hcross_summable.mul_left 2)).tsum_add hSy,
             hSx.tsum_add (hcross_summable.mul_left 2), tsum_mul_left]
       -- (√A + √B)² = A + 2√A√B + B
       have hrhs : (Real.sqrt A + Real.sqrt B) ^ 2 =
@@ -166,9 +163,8 @@ def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (fun a x => by
       -- Homogeneity: √(Σ(fₙ(a•x))²cₙ) = ‖a‖ · √(Σfₙ(x)²cₙ)
       simp_rw [map_smul, smul_eq_mul]
-      have : (fun n => (a * f n x) ^ 2 * c n) = (fun n => a ^ 2 * ((f n x) ^ 2 * c n)) :=
-        funext (fun n => by ring)
-      rw [this, tsum_mul_left, Real.sqrt_mul (sq_nonneg a),
+      rw [funext (fun n => by ring : ∀ n, (a * f n x) ^ 2 * c n = a ^ 2 * ((f n x) ^ 2 * c n)),
+        tsum_mul_left, Real.sqrt_mul (sq_nonneg a),
         Real.sqrt_sq_eq_abs, Real.norm_eq_abs])
 
 /-- The Hilbertian lift evaluates as `r(x) = √(Σₖ fₖ(x)² · cₖ)`. -/

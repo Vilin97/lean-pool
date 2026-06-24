@@ -17,8 +17,7 @@ import Mathlib.LinearAlgebra.TensorProduct.Map
 
 @[simp]
 theorem star_ite {α : Type _} [InvolutiveStar α] (P : Prop) [Decidable P] (a b : α) :
-    star (ite P a b) = ite P (star a) (star b) :=
-  by
+    star (ite P a b) = ite P (star a) (star b) := by
   by_cases h : a = b
   · simp_rw [h, ite_self]
   · have : ¬star a = star b := by
@@ -35,8 +34,7 @@ by split_ifs <;> rfl
 
 theorem ite_apply_lm {R A B : Type _} [Semiring R] [AddCommMonoid A] [AddCommMonoid B] [Module R A]
     [Module R B] (f g : A →ₗ[R] B) (x : A) (P : Prop) [Decidable P] :
-    (if P then f else g : A →ₗ[R] B) x = if P then f x else g x :=
-  by
+    (if P then f else g : A →ₗ[R] B) x = if P then f x else g x := by
   by_cases h : P
   · simp only [h, if_true]
   · simp only [h, if_false]

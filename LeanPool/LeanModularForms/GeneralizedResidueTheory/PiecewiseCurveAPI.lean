@@ -85,10 +85,6 @@ theorem sortedPartition_mem_Icc (γ : PiecewiseC1Curve) (x : ℝ)
     (hx : x ∈ γ.sortedPartition) : x ∈ Icc γ.a γ.b :=
   γ.partition_subset ((mem_sortedPartition γ x).mp hx)
 
-/-- The partition is nonempty. -/
-private theorem partition_nonempty (γ : PiecewiseC1Curve) : γ.partition.Nonempty :=
-  ⟨γ.a, γ.endpoints_in_partition.1⟩
-
 /-! ### Head and last of `sortedPartition` -/
 
 /-- The first element of the sorted partition equals `γ.a`.

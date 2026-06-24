@@ -32,8 +32,7 @@ open LinearMap in
 /-- $U$ is $T$-invariant if and only if $U^\bot$ is $T^*$ invariant -/
 theorem Submodule.invariantUnder_iff_ortho_adjoint_invariant [FiniteDimensional 𝕜 V]
     (U : Submodule 𝕜 V) (T : V →ₗ[𝕜] V) :
-    Submodule.InvariantUnder U T ↔ Submodule.InvariantUnder Uᗮ (adjoint T) :=
-  by
+    Submodule.InvariantUnder U T ↔ Submodule.InvariantUnder Uᗮ (adjoint T) := by
   suffices
     ∀ U : Submodule 𝕜 V,
       ∀ T : V →ₗ[𝕜] V, Submodule.InvariantUnder U T → Submodule.InvariantUnder Uᗮ (adjoint T)
@@ -79,8 +78,7 @@ open LinearMap in
 /-- $\textnormal{ker}(T) = \textnormal{range}(T^*)^\bot$ -/
 theorem ker_ortho_adjoint_range {W : Type _} [FiniteDimensional 𝕜 V] [NormedAddCommGroup W]
     [InnerProductSpace 𝕜 W] [FiniteDimensional 𝕜 W] (T : V →ₗ[𝕜] W) :
-    ker T = (range (adjoint T))ᗮ :=
-  by
+    ker T = (range (adjoint T))ᗮ := by
   ext x
   simp_rw [LinearMap.mem_ker, Submodule.mem_orthogonal, LinearMap.mem_range, forall_exists_index,
     forall_apply_eq_imp_iff, LinearMap.adjoint_inner_left]
@@ -92,8 +90,7 @@ theorem ker_ortho_adjoint_range {W : Type _} [FiniteDimensional 𝕜 V] [NormedA
 in other words, there exists unique $v \in \textnormal{ker}(T)$ and
 $w \in \textnormal{range}(T)$ such that $x = v + w$ -/
 theorem LinearMap.IsProj.isCompl_range_ker {V R : Type _} [Ring R] [AddCommGroup V] [Module R V]
-    (U : Submodule R V) (T : V →ₗ[R] V) (h : LinearMap.IsProj U T) : IsCompl (ker T) (range T) :=
-  by
+    (U : Submodule R V) (T : V →ₗ[R] V) (h : LinearMap.IsProj U T) : IsCompl (ker T) (range T) := by
   have : IsIdempotentElem T := T.isProj_iff_isIdempotentElem.mp ⟨U, h⟩
   constructor
   · rw [disjoint_iff]
@@ -127,8 +124,7 @@ theorem LinearMap.IsProj.isCompl_range_ker {V R : Type _} [Ring R] [AddCommGroup
 idempotent $T$ is self-adjoint if and only if $\textnormal{ker}(T)^\bot=\textnormal{range}(T)$ -/
 theorem LinearMap.is_idempotent_isSelfAdjoint_iff_ker_ortho_range [InnerProductSpace ℂ V]
     [FiniteDimensional ℂ V] (T : V →ₗ[ℂ] V) (h : IsIdempotentElem T) :
-    IsSelfAdjoint T ↔ (ker T)ᗮ = range T :=
-  by
+    IsSelfAdjoint T ↔ (ker T)ᗮ = range T := by
   rw [LinearMap.isSelfAdjoint_iff']
   constructor
   · intro l; rw [ker_ortho_adjoint_range, Submodule.orthogonal_orthogonal]
@@ -165,8 +161,7 @@ theorem isSymmetric_hMul_adjoint_self [FiniteDimensional 𝕜 V] (T : V →ₗ[�
     IsSymmetric (T * (adjoint T)) := fun u v => by
   simp_rw [Module.End.mul_apply, ← adjoint_inner_left T, ← adjoint_inner_right T]
 
-theorem IsSymmetric.neg (T : V →ₗ[𝕜] V) (hT : T.IsSymmetric) : IsSymmetric (-T) :=
-  by
+theorem IsSymmetric.neg (T : V →ₗ[𝕜] V) (hT : T.IsSymmetric) : IsSymmetric (-T) := by
   intro u v
   simp_rw [LinearMap.neg_apply, inner_neg_left, inner_neg_right, neg_inj]
   exact hT u v
@@ -178,8 +173,7 @@ theorem IsSymmetric.sub {T S : V →ₗ[𝕜] V} (hT : T.IsSymmetric) (hS : S.Is
 
 /-- $T$ is normal if and only if $\forall v, \|T v\| = \|T^* v\|$ -/
 theorem LinearMap.IsStarNormal.norm_eq_adjoint [FiniteDimensional 𝕜 V] (T : V →ₗ[𝕜] V) :
-    IsStarNormal T ↔ ∀ v : V, ‖T v‖ = ‖adjoint T v‖ :=
-  by
+    IsStarNormal T ↔ ∀ v : V, ‖T v‖ = ‖adjoint T v‖ := by
   rw [T.isStarNormal_iff_adjoint, Commute, SemiconjBy, ← sub_eq_zero]
   simp_rw [←
     IsSymmetric.inner_map_self_eq_zero
@@ -191,8 +185,7 @@ theorem LinearMap.IsStarNormal.norm_eq_adjoint [FiniteDimensional 𝕜 V] (T : V
   simp_rw [eq_comm]
 
 theorem ContinuousLinearMap.IsStarNormal.norm_eq_adjoint [CompleteSpace V] (T : V →L[𝕜] V) :
-    IsStarNormal T ↔ ∀ v : V, ‖T v‖ = ‖adjoint T v‖ :=
-  by
+    IsStarNormal T ↔ ∀ v : V, ‖T v‖ = ‖adjoint T v‖ := by
   rw [T.isStarNormal_iff_adjoint, Commute, SemiconjBy, ← sub_eq_zero]
   simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe,
     ContinuousLinearMap.toLinearMap_sub,
@@ -300,8 +293,7 @@ $x \in \textnormal{eigenspace}(T ,\mu) \iff x \in \textnormal{eigenspace}(T^* ,\
 -/
 theorem LinearMap.IsStarNormal.eigenvec_in_eigenspace_iff_eigenvec_in_adjoint_conj_eigenspace
     [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] (T : V →ₗ[ℂ] V) (h : IsStarNormal T) (μ : ℂ) :
-    ∀ x : V, x ∈ eigenspace T μ ↔ x ∈ eigenspace (adjoint T) (conj μ) :=
-  by
+    ∀ x : V, x ∈ eigenspace T μ ↔ x ∈ eigenspace (adjoint T) (conj μ) := by
   suffices
     ∀ T : V →ₗ[ℂ] V,
       IsStarNormal T → ∀ μ : ℂ, ∀ v : V, v ∈ eigenspace T μ → v ∈ eigenspace (adjoint T) (conj μ)
@@ -311,8 +303,7 @@ theorem LinearMap.IsStarNormal.eigenvec_in_eigenspace_iff_eigenvec_in_adjoint_co
     apply this _ _ _ _ hv; exact IsStarNormal.star
   clear h μ T
   intro T h μ v hv
-  have t1 : (T - μ • 1) v = 0 :=
-    by
+  have t1 : (T - μ • 1) v = 0 := by
     rw [sub_apply, smul_apply, one_apply, sub_eq_zero]
     exact mem_eigenspace_iff.mp hv
   suffices (adjoint T - conj μ • 1) v = 0

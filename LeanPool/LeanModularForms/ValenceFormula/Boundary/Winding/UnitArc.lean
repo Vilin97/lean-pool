@@ -131,28 +131,6 @@ private lemma unitArc_normSq_at_offset (s : ℂ) (H : ℝ) (t₀ δ : ℝ)
   rw [normSq_exp_sub]
   congr 1; congr 1; congr 1; ring
 
-private lemma unitArc_norm_strict_mono (s : ℂ) (H : ℝ) (t₀ : ℝ)
-    (_ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3) (h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I))
-    (δ₁ δ₂ : ℝ) (hδ₁_nn : 0 ≤ δ₁) (hδ₁₂ : δ₁ < δ₂) (hδ₂ : δ₂ < min (t₀ - 1) (3 - t₀)) :
-    ‖fdBoundaryH H (t₀ + δ₁) - s‖ < ‖fdBoundaryH H (t₀ + δ₂) - s‖ := by
-  have hδ₂_left : δ₂ < t₀ - 1 := lt_of_lt_of_le hδ₂ (min_le_left _ _)
-  have hδ₂_right : δ₂ < 3 - t₀ := lt_of_lt_of_le hδ₂ (min_le_right _ _)
-  have h1a : 1 < t₀ + δ₁ := by linarith [_ht₀_Ioo.1]
-  have h3a : t₀ + δ₁ < 3 := by linarith
-  have h1b : 1 < t₀ + δ₂ := by linarith [_ht₀_Ioo.1]
-  have h3b : t₀ + δ₂ < 3 := by linarith
-  have hns₁ := unitArc_normSq_at_offset s H t₀ δ₁ h_s_arc h1a h3a
-  have hns₂ := unitArc_normSq_at_offset s H t₀ δ₂ h_s_arc h1b h3b
-  have hφ₁_nn : 0 ≤ Real.pi * δ₁ / 6 := by positivity
-  have hφ₂_le_pi : Real.pi * δ₂ / 6 ≤ Real.pi := by
-    rw [div_le_iff₀ (by norm_num : (0 : ℝ) < 6)]
-    nlinarith [Real.pi_pos, _ht₀_Ioo.2]
-  have hφ_lt : Real.pi * δ₁ / 6 < Real.pi * δ₂ / 6 := by nlinarith [Real.pi_pos]
-  rw [Complex.norm_def, Complex.norm_def]
-  apply Real.sqrt_lt_sqrt (Complex.normSq_nonneg _)
-  rw [hns₁, hns₂]
-  linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hφ₁_nn hφ₂_le_pi hφ_lt]
-
 private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
     (ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3) (h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I))
     (t₁ t₂ : ℝ) (ht₁_arc : 1 < t₁) (ht₁_arc' : t₁ < 3) (ht₂_arc : 1 < t₂) (ht₂_arc' : t₂ < 3)

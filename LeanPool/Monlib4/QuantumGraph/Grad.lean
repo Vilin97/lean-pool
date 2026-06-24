@@ -93,8 +93,7 @@ theorem QuantumGraph.Grad_apply' (gns : k B = 0) (A : B →ₗ[ℂ] B) (x : B) :
 theorem QuantumGraph.Real.range_grad_le_range_phiMap
   (gns : k B = 0) {A : B →ₗ[ℂ] B} (hA : QuantumGraph.Real _ A) :
     LinearMap.range (QuantumGraph.Grad A) ≤ LinearMap.range (PhiMap A).1 := by
-  have : IsIdempotentElem (PhiMap A).1 :=
-  by
+  have : IsIdempotentElem (PhiMap A).1 := by
     rw [IsIdempotentElem, PhiMap_apply, ← schurMul_Upsilon_toBimodule, hA.1]
   apply (IsIdempotentElem.comp_idempotent_iff this (p := QuantumGraph.Grad A)).mp
   rw [QuantumGraph.Grad_eq gns, LinearMap.comp_sub]

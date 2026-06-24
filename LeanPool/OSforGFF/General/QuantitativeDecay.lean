@@ -106,8 +106,6 @@ def schwartzHasPolynomialDecay (f : SchwartzMap E ℂ) (k : ℕ) :
 /-- Schwartz functions have polynomial decay at any real rate (via ceiling). -/
 def schwartzHasPolynomialDecayReal (f : SchwartzMap E ℂ) (N : ℝ) (_hN : N > 0) :
     PolynomialDecayBound f N := by
-  let _ := _hN
-  -- Use the natural number version with k = ⌈N⌉
   obtain ⟨C, hC_pos, hbound⟩ := schwartzHasPolynomialDecay f (⌈N⌉₊)
   refine ⟨C, hC_pos, fun x => ?_⟩
   have h1 : 1 ≤ 1 + ‖x‖ := le_add_of_nonneg_right (norm_nonneg x)
@@ -445,7 +443,6 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
     ∃ _result : PolynomialDecayBound
       (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ), True := by
   refine ⟨?_, trivial⟩
-  let _ := _hN
   -- K_sing has support in closedBall 0 R₀
   -- (f ⋆ K_sing)(y) = ∫ f(x) K_sing(x-y) dx
   -- For |y| large, x-y ∈ supp(K_sing) implies x ∈ closedBall y R₀
@@ -669,7 +666,6 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
     refine ⟨C, hC_pos, ?_⟩
     intro z
     simp only [K_refl]
-    have h_neg : ‖(kernelTail K R₀ (-z) : ℂ)‖ = ‖(kernelTail K R₀ (-z) : ℂ)‖ := rfl
     calc ‖(kernelTail K R₀ (-z) : ℂ)‖
         ≤ C / (1 + ‖-z‖)^N := hbound (-z)
       _ = C / (1 + ‖z‖)^N := by rw [norm_neg]

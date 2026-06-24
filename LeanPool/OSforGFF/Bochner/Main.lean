@@ -507,46 +507,6 @@ theorem pd_l1_fourier_re_nonneg_ax
     (ξ : V) : 0 ≤ (𝓕 φ ξ).re :=
   pd_l1_fourier_re_nonneg_theorem φ hpd hint hcont ξ
 
-omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
-/-- 𝓕(φ_ε)(ξ) → 𝓕(φ)(ξ) as ε → 0⁺, by dominated convergence.
-    The integrand φ_ε(x)·e^{-2πi⟨x,ξ⟩} is dominated by |φ(x)|.
--/
-private lemma gaussianRegularize_norm_le (φ : V → ℂ) {ε : ℝ} (hε : 0 ≤ ε) (x : V) :
-    ‖gaussianRegularize φ ε x‖ ≤ ‖φ x‖ := by
-  simp only [gaussianRegularize, norm_mul]
-  calc ‖φ x‖ * ‖cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))‖
-      ≤ ‖φ x‖ * 1 := by
-        apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        rw [Complex.norm_exp, Real.exp_le_one_iff]
-        simp only [neg_mul, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
-          mul_zero, sub_zero]
-        exact neg_nonpos_of_nonneg (mul_nonneg hε (by positivity))
-    _ = ‖φ x‖ := mul_one _
-
-private lemma ft_gaussianRegularize_tendsto (φ : V → ℂ) (hint : Integrable φ) (ξ : V) :
-    Tendsto (fun ε => 𝓕 (gaussianRegularize φ ε) ξ) (𝓝[>] 0) (𝓝 (𝓕 φ ξ)) := by
-  -- Unfold 𝓕 to VectorFourier.fourierIntegral and then to the integral definition
-  change Tendsto (fun ε => ∫ v, 𝐞 (-(innerₗ V) v ξ) • gaussianRegularize φ ε v) (𝓝[>] 0)
-    (𝓝 (∫ v, 𝐞 (-(innerₗ V) v ξ) • φ v))
-  apply tendsto_integral_filter_of_dominated_convergence (fun x => ‖φ x‖)
-  · -- AEStronglyMeasurable
-    apply eventually_nhdsWithin_of_forall; intro ε hε
-    have hεnn : (0 : ℝ) ≤ ε := le_of_lt hε
-    have : Integrable (gaussianRegularize φ ε) :=
-      hint.mono (hint.aestronglyMeasurable.mul (by fun_prop))
-        (ae_of_all _ (fun x => gaussianRegularize_norm_le φ hεnn x))
-    exact ((VectorFourier.fourierIntegral_convergent_iff
-      Real.continuous_fourierChar
-      (show Continuous fun p : V × V => (innerₗ V) p.1 p.2 from continuous_inner) ξ).mpr this).1
-  · -- Norm bound: ‖e(⟪x,ξ⟫) • φ_ε(x)‖ ≤ ‖φ(x)‖
-    apply eventually_nhdsWithin_of_forall; intro ε hε
-    exact ae_of_all _ (fun x => by
-      simp only [Circle.norm_smul]; exact gaussianRegularize_norm_le φ (le_of_lt hε) x)
-  · -- Bound integrable
-    exact hint.norm
-  · -- Pointwise convergence
-    exact ae_of_all _ (fun x => Tendsto.smul tendsto_const_nhds (gaussianRegularize_tendsto φ x))
-
 /-- The real part of the Fourier transform of an L¹ PD function is nonneg.
     Ref: Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8.
 -/

@@ -111,8 +111,7 @@ theorem Qam.mul'_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap] [
     withMatrixQuantum[φ]
     (
     TensorProduct.map (innerAut x) (innerAut x) ∘ₗ Coalgebra.comul =
-      Coalgebra.comul ∘ₗ innerAut x) :=
-by
+      Coalgebra.comul ∘ₗ innerAut x) := by
   exact withMatrixQuantum[φ] (commutes_with_mul''_adjoint (f := innerAutStarAlg x) (by
       rw [innerAutStarAlg_apply, ← hx, mul_assoc, ← unitaryGroup.star_coe_eq_coe_star,
         unitaryGroup.star_coe_eq_coe_star, Unitary.coe_mul_star_self, mul_one]))
@@ -230,8 +229,7 @@ omit [DecidableEq n] in
 theorem StarAlgEquiv.commutes_with_mul' (f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)) :
     letI : DecidableEq n := Classical.decEq n
     (LinearMap.mul' ℂ (Matrix n n ℂ) ∘ₗ f.toLinearMap ⊗ₘ f.toLinearMap) =
-      f.toLinearMap ∘ₗ LinearMap.mul' ℂ (Matrix n n ℂ) :=
-  by
+      f.toLinearMap ∘ₗ LinearMap.mul' ℂ (Matrix n n ℂ) := by
   classical
   rw [commutes_with_mul'_iff]
   intro x y
@@ -263,8 +261,7 @@ theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontri
   withMatrixQuantum[φ] (by
     simp only [schurMul_apply_apply, TensorProduct.map_comp, ←
       LinearMap.comp_assoc, StarAlgEquiv.commutes_with_mul' f]
-    have hsymm : StarAlgEquiv.IsIsometry f.symm :=
-      by
+    have hsymm : StarAlgEquiv.IsIsometry f.symm := by
       simp_rw [StarAlgEquiv.IsIsometry, isometry_iff_norm] at hf ⊢
       have := List.TFAE.out
           (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f.symm)
@@ -356,8 +353,7 @@ local notation "e_{" x "," y "}" => Matrix.stdBasisMatrix x y (1 : ℂ)
 
 --MOVE:
 theorem innerAut_lm_basis_apply (U : Matrix.unitaryGroup n ℂ) (i j k l : n) :
-    (f_{U} e_{i,j}) k l = (U ⊗ₖ star U) (k, j) (i, l) :=
-  by
+    (f_{U} e_{i,j}) k l = (U ⊗ₖ star U) (k, j) (i, l) := by
   simp_rw [Matrix.innerAut_apply, Matrix.mul_apply, Matrix.UnitaryGroup.inv_apply,
     Matrix.stdBasisMatrix, Matrix.single, of_apply, mul_boole, Finset.sum_mul, ite_mul,
       MulZeroClass.zero_mul, ite_and,

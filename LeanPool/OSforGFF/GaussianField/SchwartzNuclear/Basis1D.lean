@@ -100,28 +100,6 @@ Key fact: Mathlib's Schwartz seminorms use ‖x‖^k (NOT (1+‖x‖)^k), so the
 NOT individually monotone in k. The bound goes through the (1+‖x‖) framework.
 -/
 
-/-- Each individual Schwartz seminorm in `Finset.Iic q` is bounded by
-    `2^q.1` times the sup over the same finite set. Combined with
-    `finset_sup_apply_le`, this gives the sup bounded by itself (with constant),
-    which then allows us to bound by any element with a larger constant.
--/
-private theorem seminorm_le_sup_of_mem {q : ℕ × ℕ} {k' l' : ℕ}
-    (hk : k' ≤ q.1) (hl : l' ≤ q.2) (f : SchwartzMap ℝ ℝ) :
-    SchwartzMap.seminorm ℝ k' l' f ≤
-      2 ^ q.1 * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-  apply SchwartzMap.seminorm_le_bound ℝ k' l' f (by positivity)
-  intro x
-  have hx_le : ‖x‖ ^ k' ≤ (1 + ‖x‖) ^ q.1 :=
-    calc ‖x‖ ^ k'
-        ≤ (1 + ‖x‖) ^ k' :=
-          pow_le_pow_left₀ (norm_nonneg x) (le_add_of_nonneg_left zero_le_one) k'
-      _ ≤ (1 + ‖x‖) ^ q.1 :=
-          pow_le_pow_right₀ (le_add_of_nonneg_right (norm_nonneg x)) hk
-  calc ‖x‖ ^ k' * ‖iteratedFDeriv ℝ l' f x‖
-      ≤ (1 + ‖x‖) ^ q.1 * ‖iteratedFDeriv ℝ l' f x‖ := by gcongr
-    _ ≤ 2 ^ q.1 * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f :=
-        SchwartzMap.one_add_le_sup_seminorm_apply le_rfl hl f x
-
 /-- Coefficient decay with a finset-sup seminorm bound. This is the natural form
     that follows directly from `hermiteCoeff1D_decay`.
 -/

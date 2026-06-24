@@ -119,26 +119,22 @@ def LinearMap.IsBimoduleMap (P : l(R,H₁ ⊗[R] H₂)) : Prop :=
   ∀ (x : H₁) (y : H₂) (a : H₁ ⊗[R] H₂), P (x •ₗ a •ᵣ y) = x •ₗ P a •ᵣ y
 
 theorem LinearMap.IsBimoduleMap.lsmul {P : l(R,H₁ ⊗[R] H₂)} (hP : P.IsBimoduleMap) (x : H₁)
-    (a : H₁ ⊗[R] H₂) : P (x •ₗ a) = x •ₗ P a :=
-  by
+    (a : H₁ ⊗[R] H₂) : P (x •ₗ a) = x •ₗ P a := by
   nth_rw 1 [← Bimodule.rsmul_one a]
   rw [← Bimodule.lsmul_rsmul_assoc, hP, Bimodule.rsmul_one]
 
 theorem LinearMap.IsBimoduleMap.rsmul {P : l(R,H₁ ⊗[R] H₂)} (hP : P.IsBimoduleMap) (x : H₂)
-    (a : H₁ ⊗[R] H₂) : P (a •ᵣ x) = P a •ᵣ x :=
-  by
+    (a : H₁ ⊗[R] H₂) : P (a •ᵣ x) = P a •ᵣ x := by
   nth_rw 1 [← Bimodule.one_lsmul a]
   rw [hP, Bimodule.one_lsmul]
 
 theorem LinearMap.IsBimoduleMap.add {P Q : l(R,H₁ ⊗[R] H₂)} (hP : P.IsBimoduleMap)
-    (hQ : Q.IsBimoduleMap) : (P + Q).IsBimoduleMap :=
-  by
+    (hQ : Q.IsBimoduleMap) : (P + Q).IsBimoduleMap := by
   simp_rw [LinearMap.IsBimoduleMap, LinearMap.add_apply, Bimodule.lsmul_add, Bimodule.add_rsmul]
   intro x y a
   rw [hP, hQ]
 
-theorem LinearMap.isBimoduleMap.zero : (0 : l(R,H₁ ⊗[R] H₂)).IsBimoduleMap :=
-  by
+theorem LinearMap.isBimoduleMap.zero : (0 : l(R,H₁ ⊗[R] H₂)).IsBimoduleMap := by
   intro x y a
   simp_rw [LinearMap.zero_apply, Bimodule.lsmul_zero, Bimodule.zero_rsmul]
 
@@ -202,8 +198,7 @@ theorem LinearMap.isBimoduleMap_iff_ltensor_lsmul_rtensor_rsmul {R H₁ H₂ : T
     [Field R] [Ring H₁] [Ring H₂] [Algebra R H₁] [Algebra R H₂] {x : l(R,H₁)}
     {y : l(R,H₂)} :
     (x ⊗ₘ y).IsBimoduleMap ↔
-      (x ⊗ₘ y) = 0 ∨ x = LinearMap.mulRight R (x 1) ∧ y = LinearMap.mulLeft R (y 1) :=
-  by
+      (x ⊗ₘ y) = 0 ∨ x = LinearMap.mulRight R (x 1) ∧ y = LinearMap.mulLeft R (y 1) := by
   rw [← left_module_map_iff, ← right_module_map_iff]
   by_cases h : (x ⊗ₘ y) = 0
   · simp_rw [h, true_or, iff_true, LinearMap.isBimoduleMap.zero]
@@ -249,8 +244,7 @@ x.induction_on (by simp only [map_zero]; rfl)
     rw [hα, hβ, Bimodule.lsmul_add, Bimodule.add_rsmul])
 
 theorem LinearMap.isBimoduleMap_iff' {f : l(R,H₁ ⊗[R] H₂)} :
-    f.IsBimoduleMap ↔ rmulMapLmul (f 1) = f :=
-  by
+    f.IsBimoduleMap ↔ rmulMapLmul (f 1) = f := by
   constructor
   · intro h
     apply TensorProduct.ext'
@@ -274,8 +268,7 @@ theorem LinearMap.mem_isBimoduleMaps_iff {x : l(R,H₁ ⊗[R] H₂)} :
 by rfl
 
 theorem rmulMapLmul_mem_isBimoduleMaps (x : H₁ ⊗[R] H₂) :
-  rmulMapLmul x ∈ LinearMap.IsBimoduleMaps R H₁ H₂ :=
-by
+  rmulMapLmul x ∈ LinearMap.IsBimoduleMaps R H₁ H₂ := by
   simp_rw [LinearMap.mem_isBimoduleMaps_iff, LinearMap.isBimoduleMap_iff',
     rmulMapLmul_apply_one]
 

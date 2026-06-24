@@ -160,11 +160,6 @@ private lemma per_weight_injective_unique_monomial {n : ℕ} (p : MvPolynomial (
       MvPolynomial.monomial d₀ 0 from by rw [hc], MvPolynomial.monomial_zero]
   · exact absurd hmz hmf_ne
 
-private lemma X0_cubed_eq : (MvPolynomial.X (0 : Fin 2)) ^ 3 =
-    (MvPolynomial.X (1 : Fin 2)) ^ 2 + (1728 : ℂ) • DeltaPoly := by
-  simp only [DeltaPoly, smul_smul]
-  norm_num
-
 private lemma Delta_poly_isWeightedHomogeneous :
     MvPolynomial.IsWeightedHomogeneous E₄E₆Weight DeltaPoly 12 := by
   unfold DeltaPoly
@@ -179,23 +174,6 @@ private lemma Delta_poly_isWeightedHomogeneous :
         (MvPolynomial.X (1 : Fin 2) ^ 2 : MvPolynomial (Fin 2) ℂ) ≠ 0
     · exact ((MvPolynomial.isWeightedHomogeneous_X ℂ E₄E₆Weight (1 : Fin 2)).pow 2) hd6
     · push Not at hd6; simp only [hd3, hd6, sub_self, mul_zero, ne_eq, not_true] at hd
-
-private lemma mul_Delta_map_injective {k : ℤ} (f : ModularForm Γ(1) (k - 12))
-    (hf : mulDeltaMap k f = 0) : f = 0 := by
-  ext z
-  have hz := congr_fun (congr_arg (fun x => x.toFun) hf) z
-  simp only [ModularForm.zero_apply, SlashInvariantForm.toFun_eq_coe,
-    ModularForm.toSlashInvariantForm_coe, mul_Delta_map_eq] at hz
-  exact (mul_eq_zero.mp hz).resolve_right (Δ_ne_zero z)
-
-private lemma monomial_reduction (a b : ℕ) (ha : 3 ≤ a) :
-    (MvPolynomial.X (0 : Fin 2) ^ a * MvPolynomial.X (1 : Fin 2) ^ b : MvPolynomial (Fin 2) ℂ) =
-    MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ (b + 2) +
-    (1728 : ℂ) • DeltaPoly * (MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ b) := by
-  rw [show (MvPolynomial.X (0 : Fin 2) : MvPolynomial (Fin 2) ℂ) ^ a =
-      MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X (0 : Fin 2) ^ 3
-    from by rw [← pow_add]; congr 1; omega, X0_cubed_eq]
-  ring
 
 private lemma X0_pow_mul_X1_pow_isWeightedHomogeneous (a b n : ℕ) (hab : a * 4 + b * 6 = n) :
     MvPolynomial.IsWeightedHomogeneous E₄E₆Weight

@@ -132,8 +132,7 @@ theorem TensorProduct.rid_real :
 
 omit [Module.Finite 𝕜 E] in
 theorem tensor_op_star_apply (x : E) (y : Eᵐᵒᵖ) :
-    star (x ⊗ₜ[𝕜] y) = star x ⊗ₜ[𝕜] (op 𝕜) (star (unop 𝕜 y)) :=
-  by
+    star (x ⊗ₜ[𝕜] y) = star x ⊗ₜ[𝕜] (op 𝕜) (star (unop 𝕜 y)) := by
   simp only [TensorProduct.star_tmul]
   rfl
 
@@ -223,8 +222,7 @@ lemma StarAlgEquiv.lTensor_tmul {R A B C : Type*}
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C]
   [StarModule R A] [StarModule R B] [StarModule R C]
   (f : A ≃⋆ₐ[R] B) (x : C) (y : A) :
-  (StarAlgEquiv.lTensor C f) (x ⊗ₜ[R] y) = x ⊗ₜ f (y) :=
-by
+  (StarAlgEquiv.lTensor C f) (x ⊗ₜ[R] y) = x ⊗ₜ f (y) := by
   simpa [StarAlgEquiv.lTensor] using AlgEquiv.lTensor_tmul (C := C) f.toAlgEquiv x y
 lemma StarAlgEquiv.lTensor_symm_tmul {R A B C : Type*} [RCLike R]
   [Ring A]
@@ -232,7 +230,6 @@ lemma StarAlgEquiv.lTensor_symm_tmul {R A B C : Type*} [RCLike R]
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C]
   [StarModule R A] [StarModule R B] [StarModule R C]
   (f : A ≃⋆ₐ[R] B) (x : C) (y : B) :
-  (StarAlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) :=
-by
+  (StarAlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) := by
   simpa [StarAlgEquiv.lTensor, StarAlgEquiv.toAlgEquiv_symm] using
     AlgEquiv.lTensor_symm_tmul (C := C) f.toAlgEquiv x y

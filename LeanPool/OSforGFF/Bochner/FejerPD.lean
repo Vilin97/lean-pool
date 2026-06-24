@@ -95,14 +95,6 @@ private lemma isPositiveDefinite_exp_inner (ξ : V) :
 instance volumeIsNegInvariant : (volume : Measure V).IsNegInvariant := by
   constructor; exact ((LinearIsometryEquiv.neg ℝ (E := V)).measurePreserving).map_eq
 
-/-- Haar translation: ∫ f(a - x) dx = ∫ f(x) dx. -/
-private lemma integral_sub_left_eq (f : V → ℂ) (a : V) :
-    ∫ x, f (a - x) = ∫ x, f x := by
-  simp_rw [sub_eq_add_neg]
-  have h1 : ∫ x : V, f (a + -x) = ∫ x : V, f (a + x) :=
-    integral_neg_eq_self (fun y : V => f (a + y)) volume
-  rw [h1]; exact integral_add_left_eq_self f a
-
 /-! ### Step A: The PD double integral has nonneg real part -/
 
 omit [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [BorelSpace V] in

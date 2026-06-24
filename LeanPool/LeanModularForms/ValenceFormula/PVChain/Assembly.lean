@@ -251,27 +251,6 @@ private lemma seg4_shift_and_re {H : ℝ} {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ
   · rw [h_seg1]; simp [fdBoundarySeg1H, add_re, ofReal_re, mul_re, I_re, I_im, ofReal_im]
 
 omit hf in
-private theorem pvIntegral_vertical_cancel (S : Finset UpperHalfPlane)
-    {H : ℝ} (_hH : Real.sqrt 3 / 2 < H)
-    (_h_oncurve_vert : ∀ t ∈ Set.Ioo (0 : ℝ) 1,
-      modularFormCompOfComplex f (fdBoundaryH H t) = 0 →
-      (fdBoundaryH H t : ℂ) ∈ (↑(sVertOfS S) : Set ℂ)) :
-    ∀ ε > 0,
-      (∫ t in (0 : ℝ)..1, pvIntegrand f (fdBoundaryH H) (sVertOfS S) ε t) +
-      (∫ t in (3 : ℝ)..4, pvIntegrand f (fdBoundaryH H) (sVertOfS S) ε t) = 0 := by
-  intro ε hε
-  rw [integral_seg4_cov]
-  have h_trunc_iff : ∀ u ∈ Set.Ioo (0 : ℝ) 1,
-      (∃ s ∈ sVertOfS S, ‖fdBoundaryH H (4 - u) - s‖ ≤ ε) ↔
-      (∃ s ∈ sVertOfS S, ‖fdBoundaryH H u - s‖ ≤ ε) := by
-    intro u hu
-    obtain ⟨h_shift, h_re_u⟩ := seg4_shift_and_re (H := H) hu
-    rw [h_shift]; exact (truncation_iff_shift S (fdBoundaryH H u) h_re_u ε).symm
-  rw [integral_neg_of_pw_neg _ (fun u hu =>
-      pvIntegrand_seg4_eq_neg_seg1 f S (sVertOfS S) h_trunc_iff u hu),
-    intervalIntegral.integral_neg]; ring
-
-omit hf in
 private theorem pvIntegral_vertical_cancel_union (S : Finset UpperHalfPlane)
     {H : ℝ} (_hH : Real.sqrt 3 / 2 < H)
     (_h_oncurve_vert : ∀ t ∈ Set.Ioo (0 : ℝ) 1,

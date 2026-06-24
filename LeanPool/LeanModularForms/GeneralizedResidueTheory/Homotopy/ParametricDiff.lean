@@ -246,28 +246,6 @@ lemma schwarz_partialDeriv_comm
   rw [hLHS, hRHS]
   exact h_symm.eq (0, 1) (1, 0)
 
-private lemma differentiableAt_mul_of_contDiff
-    (g : ℝ → ℂ) (h : ℝ → ℂ) (t : ℝ)
-    (hg : DifferentiableAt ℝ g t)
-    (hh : ContDiff ℝ 1 h) :
-    DifferentiableAt ℝ (fun t' => g t' * h t') t :=
-  hg.mul (hh.differentiable one_ne_zero t)
-
-private lemma differentiableAt_comp_of_holomorphic
-    (f : ℂ → ℂ) (H : ℝ × ℝ → ℂ) (t s : ℝ)
-    (hH : ContDiff ℝ 2 H)
-    (hf : DifferentiableAt ℂ f (H (t, s))) :
-    DifferentiableAt ℝ
-      (fun t' => f (H (t', s))) t := by
-  have hH_diff :
-      DifferentiableAt ℝ (fun t' => H (t', s)) t := by
-    have h := hH.differentiable
-      (by norm_num : (2 : WithTop ℕ∞) ≠ 0)
-    exact DifferentiableAt.comp t (h (t, s))
-      (differentiableAt_id.prodMk
-        (differentiableAt_const s))
-  exact (hf.restrictScalars ℝ).comp t hH_diff
-
 /-! ### Shared differentiability helpers for homotopy decomposition -/
 
 /-- `s' ↦ H(t, s')` is differentiable when H is C². -/

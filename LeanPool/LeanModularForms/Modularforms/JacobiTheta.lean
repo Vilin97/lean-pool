@@ -746,6 +746,15 @@ theorem jacobiTheta₂_half_mul_apply_tendsto_atImInfty :
       simpa using le_mul_of_one_le_right
         (by rw [← mul_add, add_comm]; exact mul_nonneg Real.pi_nonneg (this k)) hz
 
+private theorem summable_ofReal_exp_neg_pi_sq :
+    Summable (fun n : ℤ ↦ ((rexp (-π * n ^ 2) : ℝ) : ℂ)) := by
+  have := (summable_jacobiTheta₂_term_iff 0 I).mpr (by simp)
+  rw [← summable_norm_iff, ← summable_ofReal] at this
+  simp_rw [jacobiTheta₂_term, mul_zero, zero_add, mul_right_comm _ I, mul_assoc, ← sq, I_sq,
+    mul_neg_one, norm_exp, re_ofReal_mul, neg_re, mul_neg, ← neg_mul, ← ofReal_intCast,
+    ← ofReal_pow, ofReal_re] at this
+  exact this
+
 theorem jacobiTheta₂_zero_apply_tendsto_atImInfty :
     Tendsto (fun x : ℍ ↦ jacobiTheta₂ 0 x) atImInfty (𝓝 1) := by
   simp_rw [jacobiTheta₂, jacobiTheta₂_term, mul_zero, zero_add]
@@ -755,13 +764,7 @@ theorem jacobiTheta₂_zero_apply_tendsto_atImInfty :
     (g := fun k ↦ if k = 0 then 1 else 0)
     (bound := fun n : ℤ ↦ rexp (-π * n ^ 2)) ?_ ?_ ?_
   · simp
-  · apply summable_ofReal.mp
-    have := (summable_jacobiTheta₂_term_iff 0 I).mpr (by simp)
-    rw [← summable_norm_iff, ← summable_ofReal] at this
-    simp_rw [jacobiTheta₂_term, mul_zero, zero_add, mul_right_comm _ I, mul_assoc, ← sq, I_sq,
-      mul_neg_one, norm_exp, re_ofReal_mul, neg_re, mul_neg, ← neg_mul, ← ofReal_intCast,
-      ← ofReal_pow, ofReal_re] at this
-    exact this
+  · exact summable_ofReal.mp summable_ofReal_exp_neg_pi_sq
   · intro k
     split_ifs with hk
     · subst hk
@@ -788,13 +791,7 @@ theorem jacobiTheta₂_half_apply_tendsto_atImInfty :
     (g := fun k ↦ if k = 0 then 1 else 0)
     (bound := fun n : ℤ ↦ rexp (-π * n ^ 2)) ?_ ?_ ?_
   · simp
-  · apply summable_ofReal.mp
-    have := (summable_jacobiTheta₂_term_iff 0 I).mpr (by simp)
-    rw [← summable_norm_iff, ← summable_ofReal] at this
-    simp_rw [jacobiTheta₂_term, mul_zero, zero_add, mul_right_comm _ I, mul_assoc, ← sq, I_sq,
-      mul_neg_one, norm_exp, re_ofReal_mul, neg_re, mul_neg, ← neg_mul, ← ofReal_intCast,
-      ← ofReal_pow, ofReal_re] at this
-    exact this
+  · exact summable_ofReal.mp summable_ofReal_exp_neg_pi_sq
   · intro k
     split_ifs with hk
     · subst hk
@@ -908,11 +905,6 @@ private lemma theta_prod_sq_S_action : (theta_prod_sq ∣[(12 : ℤ)] S) = theta
 private lemma theta_prod_sq_T_action : (theta_prod_sq ∣[(12 : ℤ)] T) = theta_prod_sq := by
   rw [theta_prod_sq_eq_mul, show (12 : ℤ) = 6 + 6 from by norm_num,
     mul_slash_SL2 6 6 T _ _, theta_prod_T_action, neg_mul_neg]
-
-private lemma theta_prod_sq_SL2Z_invariant :
-    ∀ γ : SL(2, ℤ), theta_prod_sq ∣[(12 : ℤ)] γ = theta_prod_sq :=
-  slashaction_generators_SL2Z theta_prod_sq 12
-    theta_prod_sq_S_action theta_prod_sq_T_action
 
 private lemma theta_prod_sq_MDifferentiable : MDiff theta_prod_sq := by
   change MDiff (fun z => (H₂ z * H₃ z * H₄ z) ^ 2)

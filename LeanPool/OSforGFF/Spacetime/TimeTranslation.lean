@@ -394,8 +394,7 @@ private lemma schwartz_timeTranslation_mvt_bound
       ≤ ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
             (iteratedFDeriv ℝ (n + 1) f (x + t • y))‖ * ‖y‖ :=
           ContinuousLinearMap.le_opNorm _ _
-      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by
-          rw [LinearIsometryEquiv.norm_map]
+      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by rw [LinearIsometryEquiv.norm_map]
       _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * |h| := by rw [hy]
       _ = |h| * D t := by ring
       _ ≤ |h| * ⨆ s ∈ Set.Icc (0 : ℝ) 1, D s := by

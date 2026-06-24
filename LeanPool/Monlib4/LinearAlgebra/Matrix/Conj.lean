@@ -59,8 +59,7 @@ theorem conj {α n : Type _} [Star α] {x : Matrix n n α} (hx : x.IsHermitian) 
 end IsHermitian
 
 theorem conj_mul {α m n p : Type _} [Fintype n] [CommSemiring α] [StarRing α] (x : Matrix m n α)
-    (y : Matrix n p α) : (x * y)ᴴᵀ = xᴴᵀ * yᴴᵀ :=
-  by
+    (y : Matrix n p α) : (x * y)ᴴᵀ = xᴴᵀ * yᴴᵀ := by
   ext
   simp_rw [conj_apply, mul_apply, star_sum, StarMul.star_mul, conj_apply, mul_comm]
 

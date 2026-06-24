@@ -880,10 +880,6 @@ private lemma bessel_identity (f : SchwartzMap ℝ ℝ) (N : ℕ) :
         rw [cross_term_integral, partial_sum_l2_norm_sq]
     _ = _ := by ring
 
--- Helper: ∫ f² ≥ 0
-private lemma integral_f_sq_nonneg (f : SchwartzMap ℝ ℝ) :
-    0 ≤ ∫ x, (f x) ^ 2 := integral_nonneg (fun x => sq_nonneg (f x))
-
 -- Helper: Bessel's inequality
 private lemma bessel_inequality (f : SchwartzMap ℝ ℝ) (N : ℕ) :
     ∑ n ∈ Finset.range N, hermiteCoeff1D n f ^ 2 ≤ ∫ x, (f x) ^ 2 := by
@@ -1226,8 +1222,8 @@ private lemma hermiteFunction_norm_le_seminorm (n : ℕ) (x : ℝ) :
 -- Helper: iteratedFDeriv of schwartzHermiteBasis1D equals that of hermiteFunction
 private lemma iteratedFDeriv_schwartzHermiteBasis1D_eq (n k : ℕ) (x : ℝ) :
     iteratedFDeriv ℝ k (⇑(schwartzHermiteBasis1D n)) x =
-    iteratedFDeriv ℝ k (hermiteFunction n) x := by
-  exact congr_arg (iteratedFDeriv ℝ k · x) (schwartzHermiteBasis1D_coe n)
+    iteratedFDeriv ℝ k (hermiteFunction n) x :=
+  congr_arg (iteratedFDeriv ℝ k · x) (schwartzHermiteBasis1D_coe n)
 
 -- Helper: uniform bound on iteratedFDeriv of cₙ * ψₙ by |cₙ| * p_{0,k}(ψₙ)
 private lemma hermite_term_iteratedFDeriv_bound (f : SchwartzMap ℝ ℝ) (k n : ℕ) (x : ℝ) :

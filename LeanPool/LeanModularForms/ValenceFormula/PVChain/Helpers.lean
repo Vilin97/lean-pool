@@ -187,13 +187,6 @@ lemma sVertOfS_pair_right (S : Finset UpperHalfPlane) :
   · exfalso; simp only [Complex.add_re] at hre
     rw [(Finset.mem_filter.mp hp).2.1] at hre; norm_num at hre
 
-omit hf in
-/-- `modularFormCompOfComplex f` is periodic with period 1. -/
-private theorem modularFormCompOfComplex_periodic :
-    Function.Periodic (modularFormCompOfComplex f) (1 : ℂ) := by
-  exact SlashInvariantFormClass.periodic_comp_ofComplex f
-    (by simp)
-
 omit f hf in
 /-- There exists a height above √3/2 exceeding all points in `S`. -/
 theorem exists_height_bound_S (S : Finset UpperHalfPlane) :
@@ -222,15 +215,6 @@ lemma sVertOfS_im_lt_height_bound (S : Finset UpperHalfPlane) (s : ℂ)
   simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs
   obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs <;>
     simpa using h_bound p (Finset.mem_of_mem_filter p hp)
-
-include hf in
-/-- Zeros in `S` are complete: every zero of `f` in `𝒟` is in `S.filter zeros`. -/
-private theorem zeros_complete_of_hS_complete (S : Finset UpperHalfPlane)
-    (hS_complete : ∀ p, p ∈ 𝒟 → orderOfVanishingAt' (⇑f) p ≠ 0 → p ∈ S) :
-    ∀ s, s ∈ 𝒟 → f s = 0 → s ∈ S.filter (fun p => f p = 0) := by
-  intro s hs_fd hs_zero
-  exact Finset.mem_filter.mpr
-    ⟨hS_complete s hs_fd (orderOfVanishingAt'_ne_zero_of_eq_zero f hf s hs_zero), hs_zero⟩
 
 omit hf in
 /-- Summing `gWN · ord` over all of `S` equals summing over just zeros. -/

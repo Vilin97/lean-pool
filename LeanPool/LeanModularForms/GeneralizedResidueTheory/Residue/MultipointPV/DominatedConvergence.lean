@@ -59,17 +59,6 @@ private lemma residue_sum_ifs_eq_mul_deriv {S0 : Finset ℂ} {f : ℂ → ℂ} {
       else 0) = (∑ s ∈ S0, residueSimplePole f s / (γ t - s)) * deriv γ t := by
   rw [Finset.sum_mul]; apply Finset.sum_congr rfl; intro s hs; rw [if_pos (hall s hs)]
 
-private lemma A_int_eq_greg_mul_deriv {S0 : Finset ℂ} {f g_reg : ℂ → ℂ} {γ : ℝ → ℂ} {t : ℝ}
-    {ε : ℝ} (hε : 0 < ε) (hall : ∀ s ∈ S0, ε < ‖γ t - s‖)
-    (hg_decomp : ∀ z, z ∉ (S0 : Set ℂ) →
-      f z = g_reg z + ∑ s ∈ S0, residueSimplePole f s / (z - s)) :
-    f (γ t) * deriv γ t - (∑ s ∈ S0, residueSimplePole f s / (γ t - s)) * deriv γ t =
-      g_reg (γ t) * deriv γ t := by
-  have h_not_in := γt_not_mem_S0_of_all_far hε hall
-  have h_eq : f (γ t) - ∑ s ∈ S0, residueSimplePole f s / (γ t - s) = g_reg (γ t) := by
-    rw [hg_decomp (γ t) h_not_in]; ring
-  rw [← sub_mul, h_eq]
-
 private lemma residueSimplePole_norm_bound (S0 : Finset ℂ) (f : ℂ → ℂ)
     (hS0_ne : S0.Nonempty) :
     ∃ Mc : ℝ, ∀ s ∈ S0, ‖residueSimplePole f s‖ ≤ Mc := by

@@ -88,17 +88,6 @@ theorem pv_higher_order_term_tendsto_zero
     exact Tendsto.congr (fun ε => by ring) h1
   exact Tendsto.congr' (h_eq.mono fun ε h => h.symm) h_bdy
 
-/-- The CPV integrand of any function is pointwise bounded by
-`‖g(γ(t))‖ * ‖γ'(t)‖` (since it's either 0 or `g(γ(t)) * γ'(t)`). -/
-private lemma norm_cpvIntegrandOn_le (S0 : Finset ℂ) (g : ℂ → ℂ)
-    (γ : ℝ → ℂ) (ε : ℝ) (t : ℝ) :
-    ‖cauchyPrincipalValueIntegrandOn S0 g γ ε t‖ ≤
-      ‖g (γ t)‖ * ‖deriv γ t‖ := by
-  simp only [cauchyPrincipalValueIntegrandOn]
-  split_ifs with h
-  · simp only [norm_zero]; positivity
-  · exact norm_mul_le _ _
-
 /-- CPV integrand of `f` minus CPV integrand of `g` equals CPV integrand of `f - g`,
 pointwise, because both use the same indicator set `{t : ∃ s ∈ S0, ‖γ t - s‖ ≤ ε}`. -/
 lemma cpvIntegrandOn_sub (S0 : Finset ℂ) (f g : ℂ → ℂ)

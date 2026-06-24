@@ -45,12 +45,6 @@ noncomputable instance : Fintype AvailFrom3 := by infer_instance
 private lemma card_outside : Fintype.card AvailFrom3 = n - 3 := by
   simpa using (card_availFrom (s := 3))
 
-private lemma base_i0 : (baseVertex.1 ⟨0, by decide⟩ : SymN) = ⟨0, by decide⟩ := by rfl
-
-private lemma base_i1 : (baseVertex.1 ⟨1, by decide⟩ : SymN) = ⟨1, by decide⟩ := by rfl
-
-private lemma base_i2 : (baseVertex.1 ⟨2, by decide⟩ : SymN) = ⟨2, by decide⟩ := by rfl
-
 private lemma ge_three_of_ne_base (x : SymN)
     (h0 : x ≠ (baseVertex.1 ⟨0, by decide⟩))
     (h1 : x ≠ (baseVertex.1 ⟨1, by decide⟩))

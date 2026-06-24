@@ -438,12 +438,10 @@ theorem covarianceSchwingerRep_eq_besselFormula (m r : ℝ) (hm : 0 < m) (hr : 0
               ∫ t in Set.Ioi 0, (1 / t^2) * Real.exp (-m^2 * t - r^2 / (4 * t)) := by
     apply setIntegral_congr_fun measurableSet_Ioi
     intro t _ht
-    simp only []
-    -- Rearrange: exp(a) * c * exp(b) = c * exp(a) * exp(b) = c * exp(a + b)
-    have h1 : Real.exp (-t * m^2) * (1 / t^2) * Real.exp (-r^2 / (4 * t)) =
-              (1 / t^2) * (Real.exp (-t * m^2) * Real.exp (-r^2 / (4 * t))) := by ring
-    rw [h1, ← Real.exp_add]
-    ring_nf
+    change Real.exp (-t * m^2) * (1 / t^2) * Real.exp (-r^2 / (4 * t)) =
+        (1 / t^2) * Real.exp (-m^2 * t - r^2 / (4 * t))
+    rw [show -m^2 * t - r^2 / (4 * t) = -t * m^2 + -r^2 / (4 * t) from by ring, Real.exp_add]
+    ring
   rw [h_eq, h_integral]
   ring
 

@@ -30,44 +30,6 @@ open scoped Real Interval
 
 noncomputable section
 
-private lemma taylor_one_eq_linear
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    (f : ℝ → E) (s : Set ℝ) (a x : ℝ) :
-    taylorWithinEval f 1 s a x =
-      f a + (x - a) • derivWithin f s a := by
-  rw [taylor_within_apply]
-  simp only [Finset.sum_range_succ, Finset.range_one,
-    Finset.sum_singleton]
-  simp [iteratedDerivWithin_zero, iteratedDerivWithin_one,
-    Nat.factorial]
-
-private lemma contDiffOn_Icc_of_contDiffAt
-    {γ : ℝ → ℂ} {t₀ : ℝ} {n : ℕ}
-    (hγ : ContDiffAt ℝ n γ t₀) :
-    ∃ δ > 0,
-      ContDiffOn ℝ n γ (Set.Icc (t₀ - δ) (t₀ + δ)) := by
-  obtain ⟨u, hu_mem, hγ_on⟩ :=
-    hγ.contDiffOn (m := n) le_rfl (by simp [ENat.natCast_ne_coe_top])
-  obtain ⟨r, hr_pos, hball_sub⟩ := Metric.mem_nhds_iff.mp hu_mem
-  use r / 2, by linarith
-  apply hγ_on.mono
-  intro x hx
-  apply hball_sub
-  simp only [Metric.mem_ball, Real.dist_eq]
-  rw [abs_sub_lt_iff]; constructor <;> linarith [hx.1, hx.2]
-
-private lemma bound_iteratedDerivWithin_two_on_Icc
-    {γ : ℝ → ℂ} {a b : ℝ} (hab : a < b)
-    (hγ : ContDiffOn ℝ 2 γ (Set.Icc a b)) :
-    ∃ C ≥ 0, ∀ y ∈ Set.Icc a b,
-      ‖iteratedDerivWithin 2 γ (Set.Icc a b) y‖ ≤ C := by
-  obtain ⟨M, hM⟩ := isCompact_Icc.exists_bound_of_continuousOn
-    (hγ.continuousOn_iteratedDerivWithin (by norm_cast) (uniqueDiffOn_Icc hab))
-  by_cases hM_neg : M < 0
-  · exact ⟨0, le_refl 0, fun y hy => by
-      linarith [norm_nonneg (iteratedDerivWithin 2 γ (Set.Icc a b) y), hM y hy]⟩
-  · exact ⟨M, le_of_not_gt hM_neg, hM⟩
-
 /-- C¹ regularity of `deriv γ` from C² regularity of `γ`. -/
 lemma contDiffAt_one_deriv_of_contDiffAt_two
     {γ : ℝ → ℂ} {t₀ : ℝ}
@@ -151,12 +113,10 @@ lemma quadratic_approx_of_contDiffAt_two
     fun s hs => ((h_γ_diff_on s hs).sub (h_f₂_diff s)).sub (h_f₃_diff s)
   have h_deriv_f₂ : ∀ s, deriv f₂ s = 0 := fun s => deriv_const s (γ t₀)
   have h_deriv_f₃ : ∀ s, deriv f₃ s = L := fun s => by
-    simp only [f₃]
-    have hid : deriv (fun x : ℝ => x) s = 1 := deriv_id s
-    have hsub : deriv (fun x => x - t₀) s = 1 := by rw [deriv_sub_const, hid]
-    have h_smul : deriv (fun s => (s - t₀) • L) s = deriv (fun s => s - t₀) s • L :=
-      deriv_smul_const (differentiableAt_id.sub (differentiableAt_const _)) L
-    rw [h_smul, hsub]; simp
+    rw [show f₃ = fun s => (s - t₀) • L from rfl,
+      deriv_smul_const (differentiableAt_id.sub (differentiableAt_const _)),
+      deriv_sub_const]
+    simp
   have h_deriv : ∀ s ∈ Set.uIcc t₀ t, deriv h s = deriv γ s - L := by
     intro s hs
     have hs_diff : DifferentiableAt ℝ γ s := h_γ_diff_on s hs

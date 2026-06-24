@@ -24,8 +24,7 @@ alias pos_def := pos_iff
 alias nonpos_def := nonpos_iff
 alias neg_def := neg_iff
 
-theorem nonneg_def' {x : 𝕜} : 0 ≤ x ↔ (re x : 𝕜) = x ∧ 0 ≤ re x :=
-  by
+theorem nonneg_def' {x : 𝕜} : 0 ≤ x ↔ (re x : 𝕜) = x ∧ 0 ≤ re x := by
   rw [nonneg_def, ← conj_eq_iff_re, conj_eq_iff_im, and_comm]
 
 theorem real_le_real {x y : ℝ} : (x : 𝕜) ≤ (y : 𝕜) ↔ x ≤ y := by

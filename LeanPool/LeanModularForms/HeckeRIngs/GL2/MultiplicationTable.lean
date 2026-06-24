@@ -106,17 +106,6 @@ Shimura's T(m) is defined as `TSum m`, which is exactly the sum
 section Telescoping
 
 include hp in
-/-- `TAd(p^i, p^d)` unfolds to `TAd` when `i ≤ d`. -/
-private lemma T_ad_ppow (i d : ℕ) (hid : i ≤ d) :
-    TAd (p ^ i) (p ^ d) = TElem ![p ^ i, p ^ d] := by
-  rw [T_ad_of_pos _ _ (pow_pos hp.pos i) (pow_pos hp.pos d) (Nat.pow_dvd_pow p hid)]
-
-include hp in
-/-- `TAd(1, p^k)` equals `TAd 1 (p^k)`. -/
-private lemma T_ad_one_ppow (k : ℕ) : TAd 1 (p ^ k) = TElem ![1, p ^ k] := by
-  rw [T_ad_of_pos 1 (p ^ k) Nat.one_pos (pow_pos hp.pos k) (one_dvd _)]
-
-include hp in
 /-- Key shift: `TPp(p) * TAd(p^j, p^d) = TAd(p^{j+1}, p^{d+1})` when `j ≤ d`. -/
 private lemma T_pp_mul_T_ad_ppow (j d : ℕ) (hjd : j ≤ d) :
     TPp p * TAd (p ^ j) (p ^ d) = TAd (p ^ (j + 1)) (p ^ (d + 1)) := by
@@ -372,7 +361,6 @@ private lemma D_out1_pp_in_mulSupport (k : ℕ) (_hk : 0 < k) :
   -- = L₁⁻¹ * (L₁ D₁ R₁) * (R₁⁻¹ L₂⁻¹ * L₂ D₂ R₂)
   -- = D₁ * D₂ * R₂ (after cancellation)
   -- This is in H * diag * H with witnesses 1 and R₂
-  simp only []
   rw [hα_eq, hβ_eq, DoubleCoset.mem_doubleCoset]
   refine ⟨1, (GLPair 2).H.one_mem, R₂, hR₂, ?_⟩
   -- After simp cancellation: D₁ * (D₂ * R₂) = diagMatDelta(![1,p^{k+1}]) * R₂

@@ -683,15 +683,6 @@ private lemma posSemidef_of_isRePSD_isHermitian
   rw [Complex.nonneg_iff]
   exact ⟨hM v, (quadForm_im_eq_zero_of_hermitian hH v).symm⟩
 
-/-- Bridge: `Matrix.PosSemidef` over `ℂ` implies `IsRePSD`. -/
-private lemma isRePSD_of_posSemidef
-    {n : ℕ} {M : Fin n → Fin n → ℂ} (hM : (Matrix.of M).PosSemidef) :
-    IsRePSD M := by
-  intro v
-  have h := hM.dotProduct_mulVec_nonneg v
-  rw [quadForm_eq_double_sum] at h
-  exact (Complex.nonneg_iff.mp h).1
-
 /-- Complex Schur product theorem: the Hadamard product of two `PosSemidef`
     complex matrices is `PosSemidef`.  Follows from the Kronecker product
     (`PosSemidef.kronecker`) restricted to the diagonal (`PosSemidef.submatrix`).

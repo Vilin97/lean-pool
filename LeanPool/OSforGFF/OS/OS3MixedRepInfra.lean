@@ -725,44 +725,19 @@ theorem schwinger_bound_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ
       ((volume.restrict (Set.Ioi 0)).prod (volume.prod volume)) := by
   -- Mass positivity
   have hm : 0 < m := Fact.out
-  -- Key ingredient 1: Heat kernel integrates to 1 for any translation
-  have h_heat_L1 : ∀ s > 0, ∀ a : SpaceTime,
-      ∫ y : SpaceTime, heatKernelPositionSpace s ‖a - y‖ = 1 :=
-    fun s hs a => heatKernelPositionSpace_integral_translated s hs a
-  -- Key ingredient 2: f is L¹ (Schwartz functions are integrable)
   have h_f_int : Integrable (fun x => ‖f x‖) (volume : Measure SpaceTime) :=
     f.integrable.norm
-  -- Key ingredient 3: exponential integral converges
   have h_exp_int : ∫ s in Set.Ioi 0, Real.exp (-s * m^2) = 1 / m^2 := by
     have := integral_exp_neg_mul_Ioi_eq_inv (m^2) (sq_pos_of_pos hm)
     simp only [one_div] at this ⊢
     convert this using 2
     ext s; ring_nf
-  -- For the inner y-integral: ∫_y H(s, ‖Θx - y‖) dy = 1
   have h_y_eq_one : ∀ s > 0, ∀ x : SpaceTime,
       ∫ y : SpaceTime, heatKernelPositionSpace s ‖timeReflection x - y‖ = 1 :=
-    fun s hs x => h_heat_L1 s hs (timeReflection x)
-  -- The total integral is: ∫_s ∫_x ∫_y bound = Cf * ‖f‖_{L¹} / m² < ∞
-  -- The full Fubini-Tonelli argument requires:
-  -- 1. AEStronglyMeasurable of the integrand (from continuous components)
-  -- 2. Tonelli to swap integrals and compute
-  -- 3. Bound by finite total
-  -- First establish that Cf ≥ 0 (since ‖f 0‖ ≤ Cf and norms are nonnegative)
+    fun s hs x => heatKernelPositionSpace_integral_translated s hs (timeReflection x)
   have hCf_nonneg : 0 ≤ Cf := by
     have := hCf 0
     linarith [norm_nonneg (f 0)]
-  -- The integrand is nonnegative when s > 0 (all factors are nonnegative)
-  have h_nonneg : ∀ p : ℝ × SpaceTime × SpaceTime, p.1 > 0 →
-      0 ≤ ‖f p.2.1‖ * Cf * Real.exp (-p.1 * m ^ 2) * heatKernelPositionSpace p.1 ‖timeReflection
-        p.2.1 - p.2.2‖ := by
-    intro ⟨s, x, y⟩ hs
-    apply mul_nonneg
-    · apply mul_nonneg
-      · apply mul_nonneg
-        · exact norm_nonneg _
-        · exact hCf_nonneg
-      · exact Real.exp_nonneg _
-    · exact heatKernelPositionSpace_nonneg s hs ‖timeReflection x - y‖
   exact schwinger_bound_integrable_fubini m f Cf hCf h_f_int hCf_nonneg h_y_eq_one h_exp_int
 
 

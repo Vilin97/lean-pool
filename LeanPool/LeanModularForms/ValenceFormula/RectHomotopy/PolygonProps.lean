@@ -110,10 +110,7 @@ lemma fdPolygon_match_t4 :
   push_cast; ring
 
 lemma fdPolygon_continuous : Continuous fdPolygon := by
-  have hf1 : frontier {x : ℝ | x ≤ 1} = {1} := frontier_Iic
-  have hf2 : frontier {x : ℝ | x ≤ 2} = {2} := frontier_Iic
-  have hf3 : frontier {x : ℝ | x ≤ 3} = {3} := frontier_Iic
-  have hf4 : frontier {x : ℝ | x ≤ 4} = {4} := frontier_Iic
+  have hf : ∀ a : ℝ, frontier {x : ℝ | x ≤ a} = {a} := fun _ => frontier_Iic
   have h_full : Continuous (fun t =>
       if t ≤ 1 then fdPolygonSeg1 t
       else if t ≤ 2 then fdPolygonSeg2 t
@@ -121,22 +118,22 @@ lemma fdPolygon_continuous : Continuous fdPolygon := by
       else if t ≤ 4 then fdPolygonSeg4 t
       else fdPolygonSeg5 t) := by
     apply Continuous.if
-    · intro t ht; rw [hf1, mem_singleton_iff] at ht; rw [ht]
+    · intro t ht; rw [hf 1, mem_singleton_iff] at ht; rw [ht]
       simp only [show (1 : ℝ) ≤ 2 from by norm_num, ↓reduceIte]
       exact fdPolygon_match_t1
     · exact fdPolygon_seg1_continuous
     · apply Continuous.if
-      · intro t ht; rw [hf2, mem_singleton_iff] at ht; rw [ht]
+      · intro t ht; rw [hf 2, mem_singleton_iff] at ht; rw [ht]
         simp only [show (2 : ℝ) ≤ 3 from by norm_num, ↓reduceIte]
         exact fdPolygon_match_t2
       · exact fdPolygon_seg2_continuous
       · apply Continuous.if
-        · intro t ht; rw [hf3, mem_singleton_iff] at ht; rw [ht]
+        · intro t ht; rw [hf 3, mem_singleton_iff] at ht; rw [ht]
           simp only [show (3 : ℝ) ≤ 4 from by norm_num, ↓reduceIte]
           exact fdPolygon_match_t3
         · exact fdPolygon_seg3_continuous
         · apply Continuous.if
-          · intro t ht; rw [hf4, mem_singleton_iff] at ht; rw [ht]
+          · intro t ht; rw [hf 4, mem_singleton_iff] at ht; rw [ht]
             exact fdPolygon_match_t4
           · exact fdPolygon_seg4_continuous
           · exact fdPolygon_seg5_continuous

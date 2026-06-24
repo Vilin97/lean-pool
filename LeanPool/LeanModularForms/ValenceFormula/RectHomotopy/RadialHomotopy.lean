@@ -53,10 +53,8 @@ lemma polygonToCircleRadial_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
     · linarith
   intro heq
   rw [add_eq_left] at heq
-  have hsmul_zero : ((1 - s) * ‖fdPolygon t - p‖ + s) •
-        ((fdPolygon t - p) / ‖fdPolygon t - p‖) = 0 := heq
-  rw [RCLike.real_smul_eq_coe_mul] at hsmul_zero
-  rcases mul_eq_zero.mp hsmul_zero with hcoeff_zero | hdir_zero
+  rw [RCLike.real_smul_eq_coe_mul] at heq
+  rcases mul_eq_zero.mp heq with hcoeff_zero | hdir_zero
   · exact ne_of_gt hcoeff (Complex.ofReal_eq_zero.mp hcoeff_zero)
   · rw [div_eq_zero_iff] at hdir_zero
     rcases hdir_zero with h1 | h2

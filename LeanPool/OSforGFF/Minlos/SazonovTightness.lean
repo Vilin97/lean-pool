@@ -982,7 +982,7 @@ theorem orthonormal_diag_le_hilbert_trace (S : H →L[ℝ] H) (hS : S.IsPositive
         ∑' k, @inner ℝ H _ (b k) (S (b k)) - ∑ j, @inner ℝ H _ (v j) (S (v j)) := by ring
     rw [← hv]
     refine h.congr (fun k => ?_)
-    ring
+    ring_nf
   linarith [hQ.tsum_eq]
 
 omit [CompleteSpace H] in

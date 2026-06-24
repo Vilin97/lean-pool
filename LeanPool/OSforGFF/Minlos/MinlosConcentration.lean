@@ -505,12 +505,6 @@ private lemma gs_seminorm_add_kernel (p : Seminorm ℝ F) (x z : F) (hz : p z = 
     _ = p (x + z) := by rw [map_neg_eq_map, hz, add_zero]
 
 omit [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] in
-private lemma gs_seminorm_sub_kernel (p : Seminorm ℝ F) (x z : F) (hz : p z = 0) :
-    p (x - z) = p x := by
-  rw [sub_eq_add_neg]
-  exact gs_seminorm_add_kernel p x (-z) (by rwa [map_neg_eq_map])
-
-omit [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] in
 private lemma gs_innerProd_sub_left (p : Seminorm ℝ F) (hp : p.IsHilbertian)
     (x₁ x₂ y : F) :
     p.innerProd (x₁ - x₂) y = p.innerProd x₁ y - p.innerProd x₂ y := by
@@ -870,8 +864,7 @@ private lemma joint_kernel_bound_finite
     Measure.isProbabilityMeasure_map h_meas_z.aemeasurable
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   -- Step 1: Coordinate access: (eval_z ω) i = ω (z i)
-  have h_coord : ∀ (ω : E → ℝ) (i : Fin (n + 1)), (eval_z ω) i = ω (z i) := by
-    intro ω i; rfl
+  have h_coord : ∀ (ω : E → ℝ) (i : Fin (n + 1)), (eval_z ω) i = ω (z i) := fun _ _ => rfl
   -- Step 2: Inner product on V: ⟨eval_z(ω), v⟩ = ∑ j, v j * ω(z j)
   have h_inner : ∀ (ω : E → ℝ) (v : V),
       @inner ℝ V _ (eval_z ω) v = ∑ j, v j * ω (z j) := by

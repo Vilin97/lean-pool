@@ -1011,8 +1011,7 @@ theorem _root_.OSforGFF.L2_process_covariance_fubini_integrable {Ω : Type*} [Me
   haveI : SFinite ν := inferInstance
   have hg_meas : ∀ ω, Measurable (fun s : ℝ => (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2) := fun ω =>
     ((h_cont_s ω).sub continuous_const).measurable.nnnorm.coe_nnreal_ennreal.pow_const _
-  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by
-    fun_prop
+  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by fun_prop
   calc ∫⁻ x, ↑‖(A x.2.1 x.1 - c) * starRingEnd ℂ (A x.2.2 x.1 - c)‖₊
         ∂(μ.prod (ν.prod ν))
       ≤ ∫⁻ x, (↑‖A x.2.1 x.1 - c‖₊ ^ 2 + ↑‖A x.2.2 x.1 - c‖₊ ^ 2)

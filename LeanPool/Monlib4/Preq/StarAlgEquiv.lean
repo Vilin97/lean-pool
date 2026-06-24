@@ -23,8 +23,7 @@ theorem AlgEquiv.comp_inj {R A B C : Type _} [CommSemiring R] [Semiring A] [Semi
 
 theorem AlgEquiv.inj_comp {R A B C : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Semiring C]
     [Algebra R A] [Algebra R B] [Algebra R C] (f : C ≃ₐ[R] A) (S T : A →ₗ[R] B) :
-    S ∘ₗ f.toLinearMap = T ∘ₗ f.toLinearMap ↔ S = T :=
-  by
+    S ∘ₗ f.toLinearMap = T ∘ₗ f.toLinearMap ↔ S = T := by
   refine ⟨fun h => ?_, fun h => by rw [h]⟩
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, AlgEquiv.toLinearMap_apply] at h ⊢
   intro x
@@ -60,8 +59,7 @@ theorem StarAlgEquiv.inj_comp {R A B C : Type*} [Semiring R] [AddCommMonoid A]
   [AddCommMonoid B]
   [AddCommMonoid C] [Mul A] [Mul C] [Module R A] [Module R B] [Module R C]
   [Star A] [Star C] (f : C ≃⋆ₐ[R] A) (S T : A →ₗ[R] B) :
-    S ∘ₗ f.toLinearMap = T ∘ₗ f.toLinearMap ↔ S = T :=
-  by
+    S ∘ₗ f.toLinearMap = T ∘ₗ f.toLinearMap ↔ S = T := by
   refine ⟨fun h => ?_, fun h => by rw [h]⟩
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, StarAlgEquiv.toLinearMap_apply] at h ⊢
   intro x
@@ -108,8 +106,7 @@ theorem StarAlgEquiv.comp_eq_iff {R E₁ E₂ E₃ : Type _} [CommSemiring R]
     [AddCommMonoid E₁] [AddCommMonoid E₂] [AddCommMonoid E₃]
     [Module R E₁] [Module R E₂] [Module R E₃] [Star E₁] [Star E₂] [Mul E₁] [Mul E₂]
     (f : E₁ ≃⋆ₐ[R] E₂) (x : E₂ →ₗ[R] E₃) (y : E₁ →ₗ[R] E₃) :
-    x ∘ₗ f.toLinearMap = y ↔ x = y ∘ₗ f.symm.toLinearMap :=
-  by
+    x ∘ₗ f.toLinearMap = y ↔ x = y ∘ₗ f.symm.toLinearMap := by
   constructor
   · intro h
     ext1
@@ -151,15 +148,12 @@ IsIdempotentElem.mulEquiv
 
 lemma _root_.isIdempotentElem_pi_iff
   {ι : Type*} {A : ι → Type*} [Π i, Mul (A i)] {a : Π i, A i} :
-  IsIdempotentElem a ↔ ∀ i, IsIdempotentElem (a i) :=
-by
+  IsIdempotentElem a ↔ ∀ i, IsIdempotentElem (a i) := by
   simp only [IsIdempotentElem, Pi.mul_def, funext_iff]
 
 theorem AlgEquiv.eq_apply_iff_symm_eq {R A B : Type _} [CommSemiring R] [Semiring A] [Semiring B]
-    [Algebra R A] [Algebra R B] (f : A ≃ₐ[R] B) {a : B} {b : A} : a = f b ↔ f.symm a = b :=
-  by
-  have : ∀ e : A ≃ B, a = e b ↔ e.symm a = b :=
-    by
+    [Algebra R A] [Algebra R B] (f : A ≃ₐ[R] B) {a : B} {b : A} : a = f b ↔ f.symm a = b := by
+  have : ∀ e : A ≃ B, a = e b ↔ e.symm a = b := by
     intro e
     rw [← Equiv.apply_eq_iff_eq e, Equiv.apply_symm_apply]
   exact this f
@@ -167,8 +161,7 @@ theorem AlgEquiv.eq_apply_iff_symm_eq {R A B : Type _} [CommSemiring R] [Semirin
 theorem StarAlgEquiv.eq_apply_iff_symm_eq {R A B : Type _}
   [Add A] [Add B] [Mul A] [Mul B] [SMul R A] [SMul R B] [Star A] [Star B]
   (f : A ≃⋆ₐ[R] B) {a : B} {b : A} :
-    a = f b ↔ f.symm a = b :=
-by
+    a = f b ↔ f.symm a = b := by
   rw [eq_comm]
   nth_rw 2 [eq_comm]
   exact Equiv.apply_eq_iff_eq_symm_apply f.toRingEquiv.toEquiv
@@ -182,8 +175,7 @@ Equiv.apply_eq_iff_eq f.toEquiv
 lemma MulEquiv.image_center {F A B : Type*} [Semigroup A] [Semigroup B]
   [EquivLike F A B] [MulEquivClass F A B]
   (f : F) :
-  f '' (Set.center A) = Set.center B :=
-by
+  f '' (Set.center A) = Set.center B := by
   let f' : A ≃* B := f
   ext x
   symm
@@ -207,8 +199,7 @@ instance
 lemma NonUnitalAlgEquiv.image_span_center {F R A B : Type*} [Semiring R]
   [NonUnitalSemiring A] [NonUnitalSemiring B] [Module R A] [Module R B]
   [EquivLike F A B] [NonUnitalAlgHomClass F R A B] (f : F) :
-  f '' (Submodule.span R (Set.center A)) = Submodule.span R (Set.center B) :=
-by
+  f '' (Submodule.span R (Set.center A)) = Submodule.span R (Set.center B) := by
   change (LinearMapClass.linearMap f : A → B) ''
       (Submodule.span R (Set.center A) : Set A) =
     (Submodule.span R (Set.center B) : Set B)
@@ -222,8 +213,7 @@ lemma NonUnitalAlgEquiv.map_span_center {F R A B : Type*} [Semiring R]
   [NonUnitalSemiring A] [NonUnitalSemiring B] [Module R A] [Module R B]
   [EquivLike F A B] [NonUnitalAlgHomClass F R A B] (f : F) :
   Submodule.map (LinearMapClass.linearMap f) (Submodule.span R (Set.center A)) =
-    Submodule.span R (Set.center B) :=
-by
+    Submodule.span R (Set.center B) := by
   rw [Submodule.map_span]
   rw [show (LinearMapClass.linearMap f : A → B) '' Set.center A = Set.center B by
     change f '' Set.center A = Set.center B

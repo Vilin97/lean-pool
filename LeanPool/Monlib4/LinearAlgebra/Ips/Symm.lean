@@ -40,8 +40,7 @@ theorem inner_map_polarization [CompleteSpace E] {T : E →L[𝕜] E} (hT : IsSe
     ⟪T x,y⟫ =
       (⟪T (x + y),x + y⟫ - ⟪T (x - y),x - y⟫ - I * ⟪T (x + (I : 𝕜) • y),x + (I : 𝕜) • y⟫ +
           I * ⟪T (x - (I : 𝕜) • y),x - (I : 𝕜) • y⟫) /
-        4 :=
-  by
+        4 := by
   rw [← ContinuousLinearMap.coe_coe,
     LinearMap.IsSymmetric.inner_map_polarization (IsSelfAdjoint.isSymmetric hT)]
 

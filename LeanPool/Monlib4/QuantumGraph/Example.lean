@@ -82,8 +82,7 @@ variable {A B : Type*} [ha : starAlgebra A] [hb : starAlgebra B]
 
 theorem Qam.completeGraph_eq' :
   Qam.completeGraph A B =
-    Algebra.linearMap ℂ A ∘ₗ Coalgebra.counit :=
-by
+    Algebra.linearMap ℂ A ∘ₗ Coalgebra.counit := by
   rw [Coalgebra.counit_eq_bra_one]
   ext
   simp [Algebra.algebraMap_eq_smul_one]
@@ -123,8 +122,7 @@ theorem Qam.Nontracial.CompleteGraph.is_symm :
 Qam.Nontracial.CompleteGraph.symm_eq
 
 theorem Qam.Nontracial.CompleteGraph.is_reflexive :
-  (Qam.completeGraph A A) •ₛ 1 = 1 :=
-by
+  (Qam.completeGraph A A) •ₛ 1 = 1 := by
   obtain ⟨α, β, hαβ⟩ := (1 : l(A)).exists_sum_rankOne
   nth_rw 1 [hαβ]
   simp_rw [map_sum, Qam.completeGraph, schurMul.apply_rankOne, one_mul, ← hαβ]
@@ -150,8 +148,7 @@ private theorem starRingEnd_delta [hA2 : QuantumSetDeltaForm A] :
   exact this.2
 
 theorem Qam.trivialGraph_eq [hA2 : QuantumSetDeltaForm A] :
-    Qam.trivialGraph A = hA2.delta⁻¹ • (1 : l(A)) :=
-  by
+    Qam.trivialGraph A = hA2.delta⁻¹ • (1 : l(A)) := by
   simp_rw [Qam.trivialGraph]
   apply invOf_eq_right_inv
   rw [hA2.mul_comp_comul_eq, smul_mul_smul_comm, one_mul, mul_inv_cancel₀,
@@ -159,8 +156,7 @@ theorem Qam.trivialGraph_eq [hA2 : QuantumSetDeltaForm A] :
   · exact ne_of_gt hA2.delta_pos
 
 theorem Qam.Nontracial.TrivialGraph.qam [hA2 : QuantumSetDeltaForm A] :
-    (Qam.trivialGraph A) •ₛ (Qam.trivialGraph A) = Qam.trivialGraph A :=
-  by
+    (Qam.trivialGraph A) •ₛ (Qam.trivialGraph A) = Qam.trivialGraph A := by
   rw [Qam.trivialGraph_eq]
   simp_rw [_root_.map_smul, LinearMap.smul_apply, smul_smul, schurMul]
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
@@ -170,16 +166,14 @@ theorem Qam.Nontracial.TrivialGraph.qam [hA2 : QuantumSetDeltaForm A] :
   · exact ne_of_gt hA2.delta_pos
 
 theorem Qam.Nontracial.TrivialGraph.qam.is_self_adjoint [hA2 : QuantumSetDeltaForm A] :
-    LinearMap.adjoint (Qam.trivialGraph A) = Qam.trivialGraph A :=
-  by
+    LinearMap.adjoint (Qam.trivialGraph A) = Qam.trivialGraph A := by
   simp_rw [Qam.trivialGraph_eq, LinearMap.adjoint_smul, LinearMap.adjoint_one, starRingEnd_apply,
     star_inv₀, ← starRingEnd_apply]
   congr 2
   exact starRingEnd_delta
 
 theorem Qam.Nontracial.trivialGraph [hA2 : QuantumSetDeltaForm A] :
-    (Qam.trivialGraph A) •ₛ 1 = 1 :=
-  by
+    (Qam.trivialGraph A) •ₛ 1 = 1 := by
   rw [Qam.trivialGraph_eq, _root_.map_smul, LinearMap.smul_apply]
   simp only [schurMul, LinearMap.coe_mk, AddHom.coe_mk]
   simp_rw [TensorProduct.map_one, Module.End.one_eq_id,
@@ -192,8 +186,7 @@ theorem Qam.refl_idempotent_one_one_of_delta [hA2 : QuantumSetDeltaForm A] :
 
 theorem Qam.Lm.Nontracial.is_unreflexive_iff_reflexive_add_one [hA2 : QuantumSetDeltaForm A]
     (x : l(A)) :
-    x •ₛ 1 = 0 ↔ (hA2.delta⁻¹ • (x + 1)) •ₛ 1 = 1 :=
-  by
+    x •ₛ 1 = 0 ↔ (hA2.delta⁻¹ • (x + 1)) •ₛ 1 = 1 := by
   simp_rw [_root_.map_smul, LinearMap.smul_apply, _root_.map_add, LinearMap.add_apply,
     Qam.refl_idempotent_one_one_of_delta, smul_add, smul_smul,
     inv_mul_cancel₀ (ne_of_gt hA2.delta_pos), one_smul, add_eq_right]
@@ -219,16 +212,14 @@ Qam.completeGraph E₁ E₂ - x
 theorem Qam.Nontracial.Complement'.qam
     (x : A →ₗ[ℂ] B) :
     x •ₛ x = x ↔
-      (Qam.complement' x) •ₛ (Qam.complement' x) = Qam.complement' x :=
-  by
+      (Qam.complement' x) •ₛ (Qam.complement' x) = Qam.complement' x := by
   simp only [Qam.complement', _root_.map_sub, LinearMap.sub_apply,
     Qam.refl_idempotent_completeGraph_left, Qam.refl_idempotent_completeGraph_right]
   simp only [sub_eq_self]
   simp only [sub_eq_zero, @eq_comm _ x]
 
 theorem Qam.Nontracial.Complement'.qam.isReal
-    (x : A →ₗ[ℂ] B) : LinearMap.IsReal x ↔ LinearMap.IsReal (Qam.complement' x) :=
-  by
+    (x : A →ₗ[ℂ] B) : LinearMap.IsReal x ↔ LinearMap.IsReal (Qam.complement' x) := by
   simp only [Qam.complement', LinearMap.isReal_iff, LinearMap.real_sub,
     (LinearMap.isReal_iff _).mp (Qam.Nontracial.CompleteGraph.isReal)]
   simp only [sub_right_inj]
@@ -244,8 +235,7 @@ theorem Qam.complement'_complement' {E₁ E₂ : Type _} [NormedAddCommGroupOfRi
 theorem Qam.Nontracial.Complement'.ir_reflexive
     (x : l(A)) (α : Prop) [Decidable α] :
     x •ₛ (1 : l(A)) = ite α (1 : l(A)) (0 : l(A)) ↔
-      (Qam.complement' x) •ₛ (1 : l(A)) = ite α (0 : l(A)) (1 : l(A)) :=
-by
+      (Qam.complement' x) •ₛ (1 : l(A)) = ite α (0 : l(A)) (1 : l(A)) := by
   simp_rw [Qam.complement', _root_.map_sub, LinearMap.sub_apply,
     Qam.refl_idempotent_completeGraph_left]
   by_cases h : α <;> simp_rw [h]
@@ -275,16 +265,14 @@ lemma QamIrreflexive_iff (x : l(A)) :
 ⟨fun h => ⟨h.toQam, h.toIrrefl⟩, fun h => ⟨h.1, h.2⟩⟩
 
 theorem Qam.complement'_is_irreflexive_iff
-    (x : l(A)) : QamIrreflexive (Qam.complement' x) ↔ QamReflexive x :=
-  by
+    (x : l(A)) : QamIrreflexive (Qam.complement' x) ↔ QamReflexive x := by
   have := Qam.Nontracial.Complement'.ir_reflexive x True
   simp_rw [if_true] at this
   rw [QamReflexive_iff, QamIrreflexive_iff, ← Qam.Nontracial.Complement'.qam]
   simp_rw [this]
 
 theorem Qam.complement'_is_reflexive_iff
-    (x : l(A)) : QamReflexive (Qam.complement' x) ↔ QamIrreflexive x :=
-  by
+    (x : l(A)) : QamReflexive (Qam.complement' x) ↔ QamIrreflexive x := by
   have := Qam.Nontracial.Complement'.ir_reflexive x False
   simp_rw [if_false] at this
   rw [QamReflexive_iff, QamIrreflexive_iff, ← Qam.Nontracial.Complement'.qam, this]
@@ -296,8 +284,7 @@ noncomputable def Qam.complement'' [QuantumSetDeltaForm A]
   x - Qam.trivialGraph A
 
 theorem Qam.complement''_is_irreflexive_iff [hA2 : QuantumSetDeltaForm A] {x : l(A)}
-    (hx : LinearMap.IsReal x) : QamIrreflexive (Qam.complement'' x) ↔ QamReflexive x :=
-  by
+    (hx : LinearMap.IsReal x) : QamIrreflexive (Qam.complement'' x) ↔ QamReflexive x := by
   rw [QamReflexive_iff, QamIrreflexive_iff]
   have t1 := @Qam.Nontracial.TrivialGraph.qam A _ _ _
   have t2 := @Qam.Nontracial.trivialGraph A _ _ _
@@ -323,8 +310,7 @@ noncomputable def Qam.reflexiveComplement [QuantumSetDeltaForm A] (x : l(A)) :
 Qam.completeGraph A A + Qam.trivialGraph A - x
 
 theorem Qam.Nontracial.trivialGraph.isReal [hA2 : QuantumSetDeltaForm A] :
-    LinearMap.IsReal (Qam.trivialGraph A) :=
-  by
+    LinearMap.IsReal (Qam.trivialGraph A) := by
   rw [LinearMap.isReal_iff, Qam.trivialGraph_eq, LinearMap.real_smul, LinearMap.real_one,
     starRingEnd_apply, star_inv₀]
   congr
@@ -372,8 +358,7 @@ theorem Qam.complement'_eq {E₁ E₂ : Type _} [NormedAddCommGroupOfRing E₁]
 
 theorem Qam.irreflexiveComplement_is_irreflexive_qam_iff_irreflexive_qam
   [hA2 : QuantumSetDeltaForm A] {x : l(A)} (hx : LinearMap.IsReal x) :
-    QamIrreflexive (Qam.irreflexiveComplement x) ↔ QamIrreflexive x :=
-  by
+    QamIrreflexive (Qam.irreflexiveComplement x) ↔ QamIrreflexive x := by
   rw [Qam.irreflexiveComplement, sub_sub, ← Qam.complement'_eq,
     Qam.complement'_is_irreflexive_iff, ← Qam.complement''_is_irreflexive_iff,
     Qam.complement'', add_sub_cancel_left]
@@ -382,8 +367,7 @@ theorem Qam.irreflexiveComplement_is_irreflexive_qam_iff_irreflexive_qam
 
 theorem Qam.reflexive_complment_is_reflexive_qam_iff_reflexive_qam
   [hA2 : QuantumSetDeltaForm A] {x : l(A)} (hx : LinearMap.IsReal x) :
-    QamReflexive (Qam.reflexiveComplement x) ↔ QamReflexive x :=
-  by
+    QamReflexive (Qam.reflexiveComplement x) ↔ QamReflexive x := by
   rw [Qam.reflexiveComplement, ← sub_sub_eq_add_sub, ← Qam.complement'_eq,
     Qam.complement'_is_reflexive_iff]
   exact Qam.complement''_is_irreflexive_iff hx

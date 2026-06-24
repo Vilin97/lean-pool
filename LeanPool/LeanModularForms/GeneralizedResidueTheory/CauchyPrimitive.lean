@@ -44,16 +44,6 @@ private lemma segment_subset_convex {S : Set ℂ} (hS : Convex ℝ S)
   rw [show c + t • (z - c) = (1 - t) • c + t • z from by module]
   exact hS hc hz (by linarith [ht.2]) ht.1 (by linarith [ht.1])
 
-private lemma segmentIntegrand_continuousOn {f : ℂ → ℂ} {S : Set ℂ}
-    {c z : ℂ} (hf : ContinuousOn f S)
-    (h_seg : ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S) :
-    ContinuousOn (fun t : ℝ => f (c + t • (z - c)) * (z - c))
-      (Icc 0 1) := by
-  apply ContinuousOn.mul _ continuousOn_const
-  apply ContinuousOn.comp hf _ (fun t ht => h_seg t ht)
-  exact (continuous_const.add
-    (continuous_ofReal.smul continuous_const)).continuousOn
-
 private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
     {c z : ℂ} (hS_open : IsOpen S)
     (hf : DifferentiableOn ℂ f S)

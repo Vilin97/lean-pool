@@ -32,8 +32,7 @@ theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E
   · exact Invertible.mk (y * z) hz2 hz1
   · exact Invertible.mk (x * z) hz2 hz1
 
-theorem isUnit_neg {α : Type _} [Monoid α] [HasDistribNeg α] (x : α) : IsUnit (-x) ↔ IsUnit x :=
-  by
+theorem isUnit_neg {α : Type _} [Monoid α] [HasDistribNeg α] (x : α) : IsUnit (-x) ↔ IsUnit x := by
   constructor
   all_goals
     intro h

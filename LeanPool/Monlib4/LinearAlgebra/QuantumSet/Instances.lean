@@ -22,8 +22,7 @@ open Matrix
 open scoped Functional
 
 theorem Module.Dual.IsFaithfulPosMap.sig_trans_sig [hφ : φ.IsFaithfulPosMap] (x y : ℝ) :
-    (sig hφ x).trans (sig hφ y) = sig hφ (x + y) :=
-  by
+    (sig hφ x).trans (sig hφ y) = sig hφ (x + y) := by
   ext1
   simp_rw [AlgEquiv.trans_apply,
     sig_apply, ← mul_assoc, PosDef.rpow_mul_rpow,
@@ -42,8 +41,7 @@ theorem posSemidefOne_smul_rpow {𝕜 : Type*} [RCLike 𝕜]
     (Matrix.PosSemidef.smul (Matrix.PosSemidef.one : PosSemidef (1 : Matrix n n 𝕜))
       (RCLike.ofReal_nonneg.mpr (NNReal.coe_nonneg α)) :
       PosSemidef ((((α : NNReal) : ℝ) : 𝕜) • 1 : Matrix n n 𝕜)).rpow r
-        = ((((α : NNReal) : ℝ) ^ r : ℝ) : 𝕜) • 1 :=
-by
+        = ((((α : NNReal) : ℝ) ^ r : ℝ) : 𝕜) • 1 := by
   rw [PosSemidef.rpow, IsHermitian.rpow, innerAut_eq_iff, _root_.map_smul, innerAut_apply_one]
   symm
   nth_rw 1 [← diagonal_one]
@@ -71,8 +69,7 @@ theorem posDefOne_smul_rpow {𝕜 : Type*} [RCLike 𝕜]
   posSemidefOne_smul_rpow (α : NNReal) r
 
 theorem Module.Dual.IsFaithfulPosMap.sig_zero [hφ : φ.IsFaithfulPosMap] :
-  sig hφ 0 = 1 :=
-by
+  sig hφ 0 = 1 := by
   ext1
   simp only [sig_apply, neg_zero, PosDef.rpow_zero, one_mul, mul_one,
     AlgEquiv.one_apply]
@@ -85,8 +82,7 @@ by simp only [AlgEquiv.ext_iff, AlgEquiv.one_apply]
 theorem Matrix.PosDef.rpow_neg_eq_inv_rpow {𝕜 : Type*} [RCLike 𝕜] {n :
     Type _} [Fintype n] [DecidableEq n]
   {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℝ) :
-  hQ.rpow (-r) = (hQ.rpow r)⁻¹ :=
-by
+  hQ.rpow (-r) = (hQ.rpow r)⁻¹ := by
   haveI := (PosDef.rpow.isPosDef hQ r).invertible
   letI :=  Matrix.PosDef.eigenvaluesInvertible' hQ
   simp_rw [rpow_eq, innerAut.map_inv]
@@ -111,8 +107,7 @@ by
   rw [Real.rpow_neg (le_of_lt (eigenvalues_pos hQ i)), RCLike.ofReal_inv]
 
 theorem _root_.RCLike.pos_toNNReal_units {𝕜 : Type*} [RCLike 𝕜] (r : 𝕜) :
-  0 < r ↔ ∃ s : NNRealˣ, r = (((s : NNReal) : ℝ) : 𝕜) :=
-by
+  0 < r ↔ ∃ s : NNRealˣ, r = (((s : NNReal) : ℝ) : 𝕜) := by
   refine ⟨fun h => ?_, fun ⟨s, hs⟩ => by
     simp only [hs, RCLike.ofReal_pos, NNReal.coe_pos,
       Units.zero_lt]⟩
@@ -121,8 +116,7 @@ by
   change r = ((RCLike.re r : ℝ) : 𝕜)
   exact (RCLike.conj_eq_iff_re.mp (RCLike.conj_eq_iff_im.mpr (RCLike.pos_def.mp h).2)).symm
 theorem _root_.RCLike.nonneg_toNNReal {𝕜 : Type*} [RCLike 𝕜] (r : 𝕜) :
-  0 ≤ r ↔ ∃ s : NNReal, r = (((s : NNReal) : ℝ) : 𝕜) :=
-by
+  0 ≤ r ↔ ∃ s : NNReal, r = (((s : NNReal) : ℝ) : 𝕜) := by
   refine ⟨fun h => ?_, fun ⟨s, hs⟩ => by
     simp only [hs, RCLike.ofReal_nonneg, NNReal.zero_le_coe]⟩
   use Real.toNNReal (RCLike.re r)
@@ -135,8 +129,7 @@ theorem _root_.Matrix.smulPosDef_isPosDef_iff {𝕜 : Type*} [RCLike 𝕜] {n :
     Type _} [Finite n]
   [H : Nonempty n]
   {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : 𝕜) :
-  (r • Q).PosDef ↔ 0 < r :=
-by
+  (r • Q).PosDef ↔ 0 < r := by
   classical
   letI : Fintype n := Fintype.ofFinite n
   let j : n := H.some
@@ -163,8 +156,7 @@ by
 theorem smul_onePosDef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
   {n : Type _} [Fintype n] [DecidableEq n] {α : 𝕜}
     (h : ((α : 𝕜) • (1 : Matrix n n 𝕜)).PosDef) (r : ℝ) :
-    h.rpow r = ((RCLike.re α ^ r : ℝ) : 𝕜) • 1 :=
-by
+    h.rpow r = ((RCLike.re α ^ r : ℝ) : 𝕜) • 1 := by
   by_cases H : IsEmpty n
   · simp only [← Matrix.ext_iff]
     simp only [IsEmpty.forall_iff, Matrix.smul_apply]
@@ -183,8 +175,7 @@ by
 theorem _root_.Matrix.smulPosSemidef_isPosSemidef_iff {𝕜 : Type*} [RCLike 𝕜] {n :
     Type _} [Finite n]
   {Q : Matrix n n 𝕜} (hQ : Q.PosSemidef) (r : 𝕜) :
-  (r • Q).PosSemidef ↔ 0 ≤ r ∨ Q = 0 :=
-by
+  (r • Q).PosSemidef ↔ 0 ≤ r ∨ Q = 0 := by
   classical
   letI : Fintype n := Fintype.ofFinite n
   by_cases hr : r = 0
@@ -220,8 +211,7 @@ by
 theorem smul_onePosSemidef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
   {n : Type _} [Fintype n] [DecidableEq n] {α : 𝕜}
     (h : ((α : 𝕜) • (1 : Matrix n n 𝕜)).PosSemidef) (r : ℝ) :
-    h.rpow r = ((RCLike.re α ^ r : ℝ) : 𝕜) • 1 :=
-by
+    h.rpow r = ((RCLike.re α ^ r : ℝ) : 𝕜) • 1 := by
   by_cases H : IsEmpty n
   · simp only [← Matrix.ext_iff]
     simp only [IsEmpty.forall_iff, Matrix.smul_apply]
@@ -236,8 +226,7 @@ by
 theorem _root_.Matrix.smulOneInv {𝕜 : Type*} [RCLike 𝕜]
   {n : Type _} [Fintype n] [DecidableEq n] {s : NNRealˣ} :
     ((((s : NNReal) : ℝ) : 𝕜) • (1 : Matrix n n 𝕜))⁻¹
-      = (((s⁻¹ : NNReal) : ℝ) : 𝕜) • 1 :=
-by
+      = (((s⁻¹ : NNReal) : ℝ) : 𝕜) • 1 := by
   simp only [NNReal.coe_inv, RCLike.ofReal_inv]
   letI : Invertible (((s : NNReal) : ℝ) : 𝕜) := by
     use (((s⁻¹ : NNReal) : ℝ) : 𝕜) <;> aesop
@@ -247,8 +236,7 @@ by
 
 theorem _root_.Matrix.PosDef.commutes_iff_rpow_commutes {𝕜 : Type*} [RCLike 𝕜]
   {n : Type _} [Fintype n] [DecidableEq n] {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℝˣ) :
-  (∀ x, Commute x (hQ.rpow (r : ℝ))) ↔ ∀ x, Commute x Q :=
-by
+  (∀ x, Commute x (hQ.rpow (r : ℝ))) ↔ ∀ x, Commute x Q := by
   by_cases H : IsEmpty n
   · simp only [commute_iff_eq, ← Matrix.ext_iff]
     simp only [IsEmpty.forall_iff, implies_true]
@@ -265,8 +253,7 @@ by
       simp_rw [Function.comp_apply, Pi.pow_apply] at hα
       simp only [algebraMap.coe_inj] at hα
       use ((RCLike.re (((s : NNReal) : ℝ) : 𝕜) ^ ((1 / r) : ℝ) : ℝ) : 𝕜)
-      have : ∀ i, hQ.1.eigenvalues i = ((s : NNReal) : ℝ) ^ (1/r : ℝ) :=
-      by
+      have : ∀ i, hQ.1.eigenvalues i = ((s : NNReal) : ℝ) ^ (1/r : ℝ) := by
         intro i
         rw [← hα i, one_div, Real.rpow_rpow_inv (le_of_lt (PosDef.eigenvalues_pos hQ _))
           (Units.ne_zero r)]
@@ -282,8 +269,7 @@ by
 theorem Module.Dual.IsPosMap.isTracial_iff
   {n : Type _} [Fintype n] [DecidableEq n]
   {φ : Module.Dual ℂ (Matrix n n ℂ)} (hφ : φ.IsPosMap) :
-    φ.IsTracial ↔ ∃ α : ℂ, φ.matrix = α • 1 :=
-by
+    φ.IsTracial ↔ ∃ α : ℂ, φ.matrix = α • 1 := by
   have := isTracial_pos_map_iff_of_matrix φ
   simp only [hφ, true_and] at this
   rw [this]
@@ -306,8 +292,7 @@ by
 
 /-- `σ_k = 1` iff either `k = 0` or `φ` is tracial -/
 theorem sig_eq_id_iff [hφ : φ.IsFaithfulPosMap] (k : ℝ) :
-  sig hφ k = 1 ↔ k = 0 ∨ φ.IsTracial :=
-by
+  sig hφ k = 1 ↔ k = 0 ∨ φ.IsTracial := by
   by_cases hk : k = 0
   · simp_rw [hk, true_or, iff_true, Module.Dual.IsFaithfulPosMap.sig_zero]
   · by_cases H : IsEmpty n
@@ -354,8 +339,7 @@ theorem Module.Dual.pi_isTracial_iff {k : Type*} [Fintype k]
   {s : k → Type*}
   [∀ i, Fintype (s i)]
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)} :
-    (Module.Dual.pi φ).IsTracial ↔ ∀ i, (φ i).IsTracial :=
-by
+    (Module.Dual.pi φ).IsTracial ↔ ∀ i, (φ i).IsTracial := by
   classical
   constructor
   · intro h i x y
@@ -526,8 +510,7 @@ noncomputable def PiMat.isStarAlgebra [_hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
 noncomputable
 def Module.Dual.pi.IsFaithfulPosMap.innerProductAlgebra
   [∀ i, (ψ i).IsFaithfulPosMap] :
-    @InnerProductAlgebra (PiMat ℂ k s) (PiMat.isStarAlgebra (ψ := ψ)) :=
-by
+    @InnerProductAlgebra (PiMat ℂ k s) (PiMat.isStarAlgebra (ψ := ψ)) := by
   letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := ψ)
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) :=
     Module.Dual.PiNormedAddCommGroup (φ := ψ)
@@ -621,8 +604,7 @@ theorem LinearMap.mul'_comp_mul'_adjoint_of_delta_form {φ : Module.Dual ℂ (Ma
     letI : QuantumSet (Matrix n n ℂ) :=
       Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
     letI : Coalgebra ℂ (Matrix n n ℂ) := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-    LinearMap.mul' ℂ (Matrix n n ℂ) ∘ₗ Coalgebra.comul = φ.matrix⁻¹.trace • 1 :=
-by
+    LinearMap.mul' ℂ (Matrix n n ℂ) ∘ₗ Coalgebra.comul = φ.matrix⁻¹.trace • 1 := by
   letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
   letI : QuantumSet (Matrix n n ℂ) :=
     Module.Dual.IsFaithfulPosMap.quantumSet (φ := φ)
@@ -647,8 +629,7 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_of_delta_form [∀ i, Nontrivial (s 
     letI : ∀ i, Coalgebra ℂ (Matrix (s i) (s i) ℂ) :=
       fun _ => Coalgebra.ofFiniteDimensionalHilbertAlgebra
     letI : CoalgebraStruct ℂ (PiMat ℂ k s) := inferInstance
-    LinearMap.mul' ℂ (PiMat ℂ k s) ∘ₗ Coalgebra.comul = δ • 1 :=
-by
+    LinearMap.mul' ℂ (PiMat ℂ k s) ∘ₗ Coalgebra.comul = δ • 1 := by
   letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
   letI : QuantumSet (PiMat ℂ k s) :=
     Module.Dual.pi.IsFaithfulPosMap.quantumSet (ψ := φ)
@@ -693,8 +674,7 @@ theorem Qam.Nontracial.delta_pos [Nonempty n] {φ : Module.Dual ℂ (Matrix n n 
 omit [Fintype k] [DecidableEq k] in
 theorem Pi.Qam.Nontracial.delta_ne_zero [Nonempty k] [∀ i, Nontrivial (s i)] {δ : ℂ}
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
-  [hφ : ∀ i, (φ i).IsFaithfulPosMap] (hφ₂ : ∀ i, (φ i).matrix⁻¹.trace = δ) : 0 < δ :=
-by
+  [hφ : ∀ i, (φ i).IsFaithfulPosMap] (hφ₂ : ∀ i, (φ i).matrix⁻¹.trace = δ) : 0 < δ := by
   let j : k := Classical.arbitrary k
   rw [← hφ₂ j]
   exact Qam.Nontracial.delta_pos

@@ -83,34 +83,29 @@ theorem sig_apply_posDef_matrix_hMul [hφ : φ.IsFaithfulPosMap] (t : ℝ) (x : 
     neg_add_cancel, PosDef.rpow_zero, Matrix.one_mul]
 
 theorem sig_apply_posDef_matrix_mul' [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
-  hφ.sig 1 (φ.matrix * x) = x * φ.matrix :=
-  by
+  hφ.sig 1 (φ.matrix * x) = x * φ.matrix := by
   nth_rw 2 [← PosDef.rpow_one_eq_self hφ.matrixIsPosDef]
   rw [← sig_apply_posDef_matrix_hMul, PosDef.rpow_one_eq_self]
 
 theorem sig_apply_matrix_hMul_posDef [hφ : φ.IsFaithfulPosMap] (t : ℝ) (x : ℍ) :
-    hφ.sig t (x * hφ.matrixIsPosDef.rpow (-t)) = hφ.matrixIsPosDef.rpow (-t) * x :=
-  by
+    hφ.sig t (x * hφ.matrixIsPosDef.rpow (-t)) = hφ.matrixIsPosDef.rpow (-t) * x := by
   simp_rw [Module.Dual.IsFaithfulPosMap.sig_apply, Matrix.mul_assoc, PosDef.rpow_mul_rpow,
     neg_add_cancel, PosDef.rpow_zero, Matrix.mul_one]
 
 theorem sig_apply_matrix_hMul_posDef' [hφ : φ.IsFaithfulPosMap] (x : ℍ) : hφ.sig (-1) (x *
-  φ.matrix) = φ.matrix * x :=
-  by
+  φ.matrix) = φ.matrix * x := by
   nth_rw 2 [← PosDef.rpow_one_eq_self hφ.matrixIsPosDef]
   nth_rw 2 [← neg_neg (1 : ℝ)]
   rw [← sig_apply_matrix_hMul_posDef, neg_neg, PosDef.rpow_one_eq_self]
 
 theorem sig_apply_matrix_hMul_posDef'' [hφ : φ.IsFaithfulPosMap] (x : ℍ) : hφ.sig 1 (x *
-  φ.matrix⁻¹) = φ.matrix⁻¹ * x :=
-  by
+  φ.matrix⁻¹) = φ.matrix⁻¹ * x := by
   nth_rw 2 [← PosDef.rpow_neg_one_eq_inv_self hφ.matrixIsPosDef]
   rw [← sig_apply_matrix_hMul_posDef, PosDef.rpow_neg_one_eq_inv_self]
 
 theorem sig_apply_basis [hφ : φ.IsFaithfulPosMap] (i : n × n) :
     hφ.sig 1 (hφ.basis i) =
-      φ.matrix⁻¹ * e_{i.1,i.2} * hφ.matrixIsPosDef.rpow (1 / 2) :=
-  by
+      φ.matrix⁻¹ * e_{i.1,i.2} * hφ.matrixIsPosDef.rpow (1 / 2) := by
   rw [Module.Dual.IsFaithfulPosMap.basis_apply]
   simp_rw [Module.Dual.IsFaithfulPosMap.sig_apply, Matrix.mul_assoc, PosDef.rpow_mul_rpow,
     PosDef.rpow_neg_one_eq_inv_self]
@@ -123,8 +118,7 @@ theorem Qam.symm'_symm_real_apply_adjoint_tFAE [hφ : φ.IsFaithfulPosMap] (A : 
       (List.TFAE
         [symmMap ℂ ℍ _ A = A, (symmMap ℂ ℍ _).symm A = A,
           A.real = LinearMap.adjoint A,
-          ∀ x y, φ (A x * y) = φ (x * A y)]) :=
-by
+          ∀ x y, φ (A x * y) = φ (x * A y)]) := by
   classical
   exact withMatrixQuantum[φ] (by
     letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
@@ -136,8 +130,7 @@ by
       conjTranspose_one, one_mul])
 
 theorem sig_comp_eq_iff [hφ : φ.IsFaithfulPosMap] (t : ℝ) (A B : ℍ →ₗ[ℂ] ℍ) :
-    (hφ.sig t).toLinearMap.comp A = B ↔ A = (hφ.sig (-t)).toLinearMap.comp B :=
-by
+    (hφ.sig t).toLinearMap.comp A = B ↔ A = (hφ.sig (-t)).toLinearMap.comp B := by
   rw [AlgEquiv.comp_linearMap_eq_iff, Module.Dual.IsFaithfulPosMap.sig_symm_eq]
 
 theorem stdBasisMatrix_squash (i j k l : n) (x : Matrix n n ℂ) :
@@ -148,24 +141,12 @@ theorem stdBasisMatrix_squash (i j k l : n) (x : Matrix n n ℂ) :
   split_ifs <;> rfl
 
 open scoped ComplexOrder
-private theorem nontracial_basis_apply {Q : ℍ} (hQ : Q.PosDef) (i j k l : n) :
-    (e_{i,j} * hQ.rpow (-(1 / 2))) k l = ite (i = k) (hQ.rpow (-(1 / 2)) j l) 0 := by
-  simp [Matrix.mul_apply, Matrix.stdBasisMatrix, Matrix.single, ite_and]
-
-private theorem Psi.adjoint_rank_one [hφ : φ.IsFaithfulPosMap] (a b : ℍ) (t s : ℝ) :
-    withMatrixQuantum[φ]
-      (hφ.psi (ψ := φ) t s (LinearMap.adjoint ((|a⟩⟨b|).toLinearMap)) =
-        ((hφ.sig (t - s)).toLinearMap ⊗ₘ (hφ.sig (t - s)).op.toLinearMap)
-          (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) :=
-withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
-
 theorem map_sig_mulLeft_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :
     Function.Injective
       (LinearMap.mulLeft ℂ
         (hφ.matrixIsPosDef.rpow t ⊗ₜ[ℂ]
           ((op ℂ (A := ℍ)).toLinearMap : ℍ →ₗ[ℂ] ℍᵐᵒᵖ)
-            (hφ.matrixIsPosDef.rpow s))) :=
-  by
+            (hφ.matrixIsPosDef.rpow s))) := by
   intro a b h
   have :
     ∀ a,
@@ -178,8 +159,7 @@ theorem map_sig_mulLeft_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :
             (hφ.matrixIsPosDef.rpow t ⊗ₜ[ℂ]
               ((op ℂ (A := ℍ)).toLinearMap : ℍ →ₗ[ℂ] ℍᵐᵒᵖ)
                 (hφ.matrixIsPosDef.rpow s))
-            a) :=
-    by
+            a) := by
     intro a
     simp_rw [← LinearMap.comp_apply, ← LinearMap.mulLeft_mul, Algebra.TensorProduct.tmul_mul_tmul,
       LinearEquiv.coe_coe, op_apply, ← MulOpposite.op_mul, PosDef.rpow_mul_rpow, neg_add_cancel,
@@ -192,8 +172,7 @@ theorem map_sig_mulRight_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :
       (LinearMap.mulRight ℂ
         (hφ.matrixIsPosDef.rpow t ⊗ₜ[ℂ]
           ((op ℂ (A := ℍ)).toLinearMap : ℍ →ₗ[ℂ] ℍᵐᵒᵖ)
-            (hφ.matrixIsPosDef.rpow s))) :=
-  by
+            (hφ.matrixIsPosDef.rpow s))) := by
   intro a b h
   have :
     ∀ a,
@@ -206,8 +185,7 @@ theorem map_sig_mulRight_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :
             (hφ.matrixIsPosDef.rpow t ⊗ₜ[ℂ]
               ((op ℂ (A := ℍ)).toLinearMap : ℍ →ₗ[ℂ] ℍᵐᵒᵖ)
                 (hφ.matrixIsPosDef.rpow s))
-            a) :=
-    by
+            a) := by
     intro a
     simp_rw [← LinearMap.comp_apply, ← LinearMap.mulRight_mul, Algebra.TensorProduct.tmul_mul_tmul,
       LinearEquiv.coe_coe, op_apply, ← MulOpposite.op_mul, PosDef.rpow_mul_rpow, neg_add_cancel,
@@ -231,8 +209,7 @@ omit [DecidableEq n] in
 theorem LinearMap.matrix.mulLeft_adjoint [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
     letI : DecidableEq n := Classical.decEq n
     withMatrixQuantum[φ]
-      (LinearMap.adjoint (LinearMap.mulLeft ℂ x) = LinearMap.mulLeft ℂ xᴴ) :=
-  by
+      (LinearMap.adjoint (LinearMap.mulLeft ℂ x) = LinearMap.mulLeft ℂ xᴴ) := by
   classical
   exact withMatrixQuantum[φ] (by
     symm

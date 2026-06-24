@@ -263,26 +263,6 @@ The proof decomposes h into:
 The identification `a_0 = residueAt f s` uses `residueAt_eq_laurent_head_coeff`
 (Sublemma 1). -/
 
-/-- If two functions agree eventually on `𝓝[≠] s`, they have the same `residueAt`.
-This is because `residueAt` is defined via circle integrals, and two functions that
-agree on a punctured neighborhood have the same circle integrals for small radii. -/
-private lemma residueAt_congr {f g : ℂ → ℂ} {s : ℂ}
-    (h : f =ᶠ[𝓝[≠] s] g) : residueAt f s = residueAt g s := by
-  have h_mem : {z | f z = g z} ∈ 𝓝[≠] s := h
-  rw [Metric.mem_nhdsWithin_iff] at h_mem
-  obtain ⟨δ, hδ_pos, hδ_eq⟩ := h_mem
-  have h_ci_eq : ∀ r, 0 < r → r < δ →
-      (∮ z in C(s, r), f z) = (∮ z in C(s, r), g z) := by
-    intro r hr_pos hr_lt
-    apply circleIntegral.integral_congr hr_pos.le
-    intro z hz
-    have hne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    exact hδ_eq ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt),
-      Set.mem_compl_singleton_iff.mpr hne⟩
-  exact limUnder_eventually_eq (by
-    filter_upwards [Ioo_mem_nhdsGT hδ_pos] with r ⟨hr_pos, hr_lt⟩
-    congr 1; exact h_ci_eq r hr_pos hr_lt)
-
 /-- Circle integrals of a meromorphic `f` are constant for small radii: if `f` is
 analytic on `ball s rf \ {s}`, then `∮_{C(s,r)} f = ∮_{C(s,R₀)} f` for `r ≤ R₀ < rf`.
 The proof multiplies by `(z-s)` to get a holomorphic `F` on the annulus, applies

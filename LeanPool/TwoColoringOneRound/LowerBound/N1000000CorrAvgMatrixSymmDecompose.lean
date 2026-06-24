@@ -116,11 +116,6 @@ theorem coeff_invDir (f : Coloring n) (d : DirIdx) :
           simpa using (corrAvg_eq_coeff_of_dirMask_eq (f := f) (u := repVertex d) (v := baseVertex)
             (d := invDir d) hswap)
 
--- A tiny lookup-table fact: for a `DirIdx`, the safe indexer `get?` is never `none`.
-private theorem tTr_getD0_eq_getBang (d : DirIdx) :
-    N1000000Witness.tTr[d.1]?.getD 0 = N1000000Witness.tTr[d.1]! := by
-  fin_cases d <;> decide
-
 -- The transpose constructor used in `ASymm` has the same `.1` as `invDir`, so it defines the same
 -- orbital indicator matrix `A`.
 private theorem A_tTr_mk_eq_A_invDir (d : DirIdx) :

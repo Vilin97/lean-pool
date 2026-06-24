@@ -83,8 +83,6 @@ def compBasis (r : Block) (d : DirIdx) : Matrix (Fin 3) (Fin 3) Q :=
 
 private theorem D_pos : 0 < N1000000Data.D := by decide
 
-private theorem DQ_ne_zero : (N1000000Data.D : Q) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt D_pos)
-
 theorem div_by_D_eq_div_by_div_gcd (s : Int) :
     let g : Nat := Nat.gcd s.natAbs D
     (s : Q) / (D : Q) = ((s / (g : Int)) : Q) / ((D / g : Nat) : Q) := by

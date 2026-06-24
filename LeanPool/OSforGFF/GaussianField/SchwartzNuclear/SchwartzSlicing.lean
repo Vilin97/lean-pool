@@ -216,17 +216,6 @@ Use the key norm bound `‖y‖ ≤ ‖euclideanSnoc y t‖` (`euclideanSnoc_nor
 4. The resulting `t`-integral is finite since `hermiteFunction n` is integrable.
 -/
 
-/-- The integrand `f(euclideanSnoc y t) * hermiteFunction n t` is dominated
-by `(seminorm ℝ 0 0 f) * |hermiteFunction n t|`, which is `y`-independent.
--/
-private lemma hermiteCoeff_integrand_bound (d : ℕ)
-    (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n : ℕ)
-    (y : EuclideanSpace ℝ (Fin (d + 1))) (t : ℝ) :
-    ‖f (euclideanSnoc (d + 1) y t) * hermiteFunction n t‖ ≤
-      SchwartzMap.seminorm ℝ 0 0 f * ‖hermiteFunction n t‖ := by
-  rw [norm_mul]
-  exact mul_le_mul_of_nonneg_right (norm_le_seminorm ℝ f _) (norm_nonneg _)
-
 /-- The dominating function `C * |hermiteFunction n t|` is integrable in `t`. -/
 private lemma hermiteCoeff_bound_integrable (n : ℕ) (C : ℝ) :
     Integrable (fun t : ℝ => C * ‖hermiteFunction n t‖) := by
@@ -235,30 +224,6 @@ private lemma hermiteCoeff_bound_integrable (n : ℕ) (C : ℝ) :
     (fun t => ‖(schwartzHermiteBasis1D n) t‖) from
     by ext t; rw [schwartzHermiteBasis1D_apply]]
   exact (schwartzHermiteBasis1D n).integrable.norm
-
-/-- For fixed `t`, the map `y ↦ euclideanSnoc y t` is continuous.
-Proved via 1-Lipschitz: changing `y` by `δ` changes `euclideanSnoc y t` by at most `δ`
-since only the first `d+1` coordinates change.
--/
-private lemma continuous_euclideanSnoc_y (d : ℕ) (t : ℝ) :
-    Continuous (fun y : EuclideanSpace ℝ (Fin (d + 1)) =>
-      euclideanSnoc (d + 1) y t) := by
-  apply LipschitzWith.continuous (K := 1)
-  intro y₁ y₂
-  simp only [ENNReal.coe_one, one_mul, edist_dist, dist_eq_norm]
-  apply ENNReal.ofReal_le_ofReal
-  -- ‖euclideanSnoc y₁ t - euclideanSnoc y₂ t‖ ≤ ‖y₁ - y₂‖
-  rw [show euclideanSnoc (d + 1) y₁ t - euclideanSnoc (d + 1) y₂ t =
-    euclideanSnoc (d + 1) (y₁ - y₂) 0 from by
-    ext i
-    simp only [euclideanSnoc, WithLp.equiv_symm_apply, WithLp.ofLp_sub, Pi.sub_apply]
-    refine Fin.lastCases ?_ ?_ i
-    · simp [Fin.snoc_last]
-    · intro j; simp [Fin.snoc_castSucc]]
-  have h : ‖euclideanSnoc (d + 1) (y₁ - y₂) 0‖ ^ 2 = ‖y₁ - y₂‖ ^ 2 := by
-    rw [euclideanSnoc_norm_sq]; ring
-  nlinarith [norm_nonneg (euclideanSnoc (d + 1) (y₁ - y₂) 0), norm_nonneg (y₁ - y₂),
-    sq_nonneg (‖euclideanSnoc (d + 1) (y₁ - y₂) 0‖ - ‖y₁ - y₂‖)]
 
 /-- For fixed `t`, the map `y ↦ euclideanSnoc y t` has temperate growth.
 This is because the map is affine: `euclideanSnoc y t = c + L(y)` where

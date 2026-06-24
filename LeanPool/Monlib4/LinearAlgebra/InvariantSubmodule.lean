@@ -70,8 +70,7 @@ theorem invariantUnder_iff_linear_proj_comp_self_eq :
     invariantUnderOfLinearProjCompSelfEq U V hUV T⟩
 
 theorem linearProjOfIsCompl_eq_self_sub_linear_proj {p q : Submodule R E} (hpq : IsCompl p q)
-    (x : E) : (q.projectionOnto p hpq.symm x : E) = x - (p.projectionOnto q hpq x : E) :=
-  by
+    (x : E) : (q.projectionOnto p hpq.symm x : E) = x - (p.projectionOnto q hpq x : E) := by
   change q.projection p hpq.symm x = x - p.projection q hpq x
   exact Submodule.projection_eq_self_sub_projection hpq x
 
@@ -96,8 +95,7 @@ theorem invariant_under'_iff_linear_proj_comp_self_comp_linear_proj_eq :
 
 /-- Both `U` and `V` are invariant under `T` iff `T` commutes with `pᵤ`. -/
 theorem isCompl_invariantUnder_iff_linear_proj_and_self_commute :
-    U.InvariantUnder T ∧ V.InvariantUnder T ↔ Commute (U.subtype ∘ₗ pᵤ) T :=
-  by
+    U.InvariantUnder T ∧ V.InvariantUnder T ↔ Commute (U.subtype ∘ₗ pᵤ) T := by
   simp_rw [Commute, SemiconjBy, LinearMap.ext_iff, Module.End.mul_apply, LinearMap.comp_apply,
     U.subtype_apply]
   constructor
@@ -161,8 +159,7 @@ theorem invariantUnder_inv_iff_U_subset_image [Invertible T] :
     exact hy.1
 
 theorem inv_linear_proj_comp_map_eq_linear_proj_iff_images_eq [Invertible T] :
-    (⅟ T).comp ((U.subtype.comp pᵤ).comp T) = U.subtype.comp pᵤ ↔ T '' U = U ∧ T '' V = V :=
-  by
+    (⅟ T).comp ((U.subtype.comp pᵤ).comp T) = U.subtype.comp pᵤ ↔ T '' U = U ∧ T '' V = V := by
   simp_rw [← Submodule.commutes_with_linear_proj_iff_linear_proj_eq, ←
     isCompl_invariantUnder_iff_linear_proj_and_self_commute, Set.Subset.antisymm_iff]
   have Hu : ∀ p q r s : Prop, ((p ∧ q) ∧ r ∧ s) = ((p ∧ r) ∧ q ∧ s) := fun _ _ _ _ => by
@@ -185,8 +182,7 @@ namespace StarAlgebra
 
 theorem centralizer_prod {M : Type _} [AddCommGroup M] [Module ℂ M]
     [StarRing (M →ₗ[ℂ] M)] [StarModule ℂ (M →ₗ[ℂ] M)] (A B : StarSubalgebra ℂ (M →ₗ[ℂ] M)) :
-    (A.carrier ×ˢ B.carrier).centralizer = A.carrier.centralizer ×ˢ B.carrier.centralizer :=
-  by
+    (A.carrier ×ˢ B.carrier).centralizer = A.carrier.centralizer ×ˢ B.carrier.centralizer := by
   ext
   simp_rw [Set.mem_prod, Set.mem_centralizer_iff, ← forall_and, Set.mem_prod, and_imp, Prod.forall,
     Prod.mul_def, Prod.eq_iff_fst_eq_snd_eq, StarSubalgebra.mem_carrier]

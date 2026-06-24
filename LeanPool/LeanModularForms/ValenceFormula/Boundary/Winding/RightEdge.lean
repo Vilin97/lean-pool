@@ -190,17 +190,6 @@ lemma log_div_of_re_pos {a b : ℂ} (ha : 0 < a.re) (hb : 0 < b.re) :
       by linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]⟩
   rw [Complex.log_mul ha_ne hb_inv_ne h_sum, Complex.log_inv b hb_arg_ne_pi]; ring
 
-private lemma rightEdge_g_seg1_eq {H : ℝ} {s : ℂ} (hs_re : s.re = 1 / 2) (t : ℝ)
-    (ht : t ≤ 1) :
-    fdBoundaryH H t - s = (↑(H - t * (H - Real.sqrt 3 / 2) - s.im) : ℂ) * I := by
-  simp only [fdBoundaryH, ht, ↓reduceIte]
-  rw [show s = (↑(1/2 : ℝ) : ℂ) + ↑s.im * I from by
-    rw [show (1/2 : ℝ) = s.re from hs_re.symm]; exact (Complex.re_add_im s).symm]
-  apply Complex.ext
-  · simp [Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
-  · simp [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-          Complex.I_re, Complex.I_im]
-
 private lemma rightEdge_h₀_eq {H : ℝ} {s : ℂ} (hs_re : s.re = 1 / 2) (t : ℝ) :
     fdBoundarySeg1H H t - s = (↑(H - t * (H - Real.sqrt 3 / 2) - s.im) : ℂ) * I := by
   simp only [fdBoundarySeg1H]

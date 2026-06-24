@@ -88,8 +88,7 @@ theorem qamA.toMatrix [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
       (hφ.toMatrix (qamA hφ x) =
         (1 / ‖x.1‖ ^ 2 : ℂ) •
           (x.1 * φ.matrix) ⊗ₖ
-            (hφ.matrixIsPosDef.rpow (1 / 2) * x.1 * hφ.matrixIsPosDef.rpow (1 / 2))ᴴᵀ) :=
-  by
+            (hφ.matrixIsPosDef.rpow (1 / 2) * x.1 * hφ.matrixIsPosDef.rpow (1 / 2))ᴴᵀ) := by
   withMatrixQuantumCtx[φ]
   simp only [qamA_eq, _root_.map_smul, _root_.map_mul, LinearMap.mulLeft_toMatrix,
     LinearMap.matrix.mulRight_adjoint, LinearMap.mulRight_toMatrix,
@@ -111,8 +110,7 @@ theorem qamA.toMatrix [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
         by simp only [Matrix.PosDef.rpow_one_eq_self]
       _ =
           (hφ.matrixIsPosDef.rpow (1 / 2) * x.1 *
-              hφ.matrixIsPosDef.rpow (1 / 2))ᴴ :=
-        by
+              hφ.matrixIsPosDef.rpow (1 / 2))ᴴ := by
           simp only [Matrix.PosDef.rpow_mul_rpow, Matrix.conjTranspose_mul,
             (Matrix.PosDef.rpow.isPosDef _ _).1.eq, Matrix.mul_assoc]
           norm_num
@@ -134,8 +132,7 @@ open Matrix
 
 /-- given a non-zero matrix $x$, we always get $A(x)$ is non-zero -/
 theorem qamA.ne_zero [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) :
-    qamA hφ x ≠ 0 :=
-  by
+    qamA hφ x ≠ 0 := by
   withMatrixQuantumCtx[φ]
   have hx := x.property
   simp_rw [ne_eq, qamA, smul_eq_zero, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
@@ -149,8 +146,7 @@ theorem qamA.ne_zero [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x 
   in other words, it is not injective. However, it `is_almost_injective` (see
     `qam_A.is_almost_injective`). -/
 theorem qamA.smul [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) (α : ℂˣ) :
-    qamA hφ (α • x) = qamA hφ x :=
-  by
+    qamA hφ (α • x) = qamA hφ x := by
   withMatrixQuantumCtx[φ]
   simp_rw [qamA_eq, has_smul.units_matrix_ne_zero_coe, norm_smul, smul_mul, Matrix.mul_smul,
     LinearMap.mulRight_smul, LinearMap.adjoint_smul, LinearMap.mulLeft_smul, smul_mul_smul,
@@ -160,18 +156,10 @@ theorem qamA.smul [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠
   · simp_rw [ne_eq, Complex.ofReal_eq_zero, sq_eq_zero_iff, norm_eq_zero]
     exact Units.ne_zero _
 
-private theorem kronecker_to_tensor_product_mul' (x y : Matrix (n × n) (n × n) ℂ) :
-    kroneckerToTensorProduct (x * y) = kroneckerToTensorProduct x * kroneckerToTensorProduct y :=
-  calc
-    kroneckerToTensorProduct (x * y) = kroneckerToTensor (x * y) := rfl
-    _ = kroneckerToTensor x * kroneckerToTensor y := (map_mul _ _ _)
-    _ = kroneckerToTensorProduct x * kroneckerToTensorProduct y := rfl
-
 theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-      (Qam.reflIdempotent hφ (qamA hφ x) (qamA hφ x) = qamA hφ x) :=
-  by
+      (Qam.reflIdempotent hφ (qamA hφ x) (qamA hφ x) = qamA hφ x) := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   rw [← Function.Injective.eq_iff (hφ.psi (ψ := φ) 0 (1 / 2)).injective,
@@ -182,8 +170,7 @@ theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ
   have hrank :
       (((rankOne ℂ x.1 x.1 : L(ℍ)) : l(ℍ)) *
           ((rankOne ℂ x.1 x.1 : L(ℍ)) : l(ℍ)) : l(ℍ)) =
-        (‖x.1‖ ^ 2 : ℂ) • ((rankOne ℂ x.1 x.1 : L(ℍ)) : l(ℍ)) :=
-    by
+        (‖x.1‖ ^ 2 : ℂ) • ((rankOne ℂ x.1 x.1 : L(ℍ)) : l(ℍ)) := by
     ext y i j
     simp [Module.End.mul_apply, inner_self_eq_norm_sq_to_K]
     ring
@@ -199,8 +186,7 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
     withMatrixQuantum[φ]
       (hφ.psi (ψ := φ) 0 (1 / 2) 1 =
         (TensorProduct.map (1 : l(ℍ)) (transposeAlgEquiv n ℂ ℂ).toLinearMap)
-          (Matrix.kroneckerToTensorProduct (hφ.toMatrix |φ.matrix⁻¹⟩⟨φ.matrix⁻¹|))) :=
-  by
+          (Matrix.kroneckerToTensorProduct (hφ.toMatrix |φ.matrix⁻¹⟩⟨φ.matrix⁻¹|))) := by
   withMatrixQuantumCtx[φ]
   nth_rw 1 [←
     rankOne.sum_orthonormalBasis_eq_id_lm
@@ -251,8 +237,7 @@ theorem one_map_transpose_psi_eq [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
       ((TensorProduct.map (1 : l(ℍ)) (transposeAlgEquiv n ℂ ℂ).symm.toLinearMap)
           (hφ.psi (ψ := φ) 0 (1 / 2) A) =
         (TensorProduct.map A (1 : l(ℍ)))
-          (kroneckerToTensorProduct (hφ.toMatrix |φ.matrix⁻¹⟩⟨φ.matrix⁻¹|))) :=
-  by
+          (kroneckerToTensorProduct (hφ.toMatrix |φ.matrix⁻¹⟩⟨φ.matrix⁻¹|))) := by
   withMatrixQuantumCtx[φ]
   have :=
     calc
@@ -278,8 +263,7 @@ theorem one_map_transpose_psi_eq [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
       (modAut 0) (A (stdBasisMatrix x x_1 1 * hφ.matrixIsPosDef.rpow (-(1 / 2)))) =
         A
           ((modAut 0)
-            (stdBasisMatrix x x_1 1 * hφ.matrixIsPosDef.rpow (-(1 / 2)))) :=
-    by
+            (stdBasisMatrix x x_1 1 * hφ.matrixIsPosDef.rpow (-(1 / 2)))) := by
     intro x x_1
     simp [starAlgebra.modAut_zero]
   simp_rw [hzero, TensorProduct.map_tmul, Module.End.one_apply, ← TensorProduct.map_tmul A,
@@ -293,8 +277,7 @@ theorem one_map_transpose_psi_eq [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
     ∀ x,
       (TensorProduct.map A (transposeAlgEquiv n ℂ ℂ).symm.toLinearMap)
           (StarAlgEquiv.symm (oneMapTranspose : (ℍ ⊗[ℂ] ℍᵐᵒᵖ) ≃⋆ₐ[ℂ] _) x) =
-        (TensorProduct.map A (1 : l(ℍ))) (kroneckerToTensorProduct x) :=
-    by
+        (TensorProduct.map A (1 : l(ℍ))) (kroneckerToTensorProduct x) := by
     intro x
     rw [Matrix.kmul_representation x]
     simp_rw [map_sum, _root_.map_smul, oneMapTranspose_symm_eq,
@@ -325,14 +308,12 @@ theorem qamA.isReal [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
 private theorem qam_A_is_sa_iff_aux [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
     withMatrixQuantum[φ]
       ((|φ.matrix * x⟩⟨φ.matrix * x| : l(ℍ)) =
-        LinearMap.mulLeft ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix) :=
-  by
+        LinearMap.mulLeft ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix) := by
   withMatrixQuantumCtx[φ]
   calc
     (|φ.matrix * x⟩⟨φ.matrix * x| : l(ℍ)) =
         LinearMap.mulLeft ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ
-          LinearMap.adjoint (LinearMap.mulLeft ℂ φ.matrix) :=
-      by
+          LinearMap.adjoint (LinearMap.mulLeft ℂ φ.matrix) := by
       simp only [LinearMap.comp_rankOne, LinearMap.rankOne_comp', LinearMap.mulLeft_apply]
     _ = LinearMap.mulLeft ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix := by
       simp_rw [LinearMap.matrix.mulLeft_adjoint, hφ.matrixIsPosDef.1.eq]
@@ -340,74 +321,21 @@ private theorem qam_A_is_sa_iff_aux [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
 private theorem qam_A_is_sa_iff_aux2 [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
     withMatrixQuantum[φ]
       ((|x * φ.matrix⟩⟨φ.matrix * x| : l(ℍ)) =
-        LinearMap.mulRight ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix) :=
-  by
+        LinearMap.mulRight ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix) := by
   withMatrixQuantumCtx[φ]
   calc
     (|x * φ.matrix⟩⟨φ.matrix * x| : l(ℍ)) =
         LinearMap.mulRight ℂ φ.matrix ∘ₗ
-          (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.adjoint (LinearMap.mulLeft ℂ φ.matrix) :=
-      by
+          (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.adjoint (LinearMap.mulLeft ℂ φ.matrix) := by
       simp only [LinearMap.comp_rankOne, LinearMap.rankOne_comp', LinearMap.mulLeft_apply,
         LinearMap.mulRight_apply]
     _ = LinearMap.mulRight ℂ φ.matrix ∘ₗ (|x⟩⟨x| : l(ℍ)) ∘ₗ LinearMap.mulLeft ℂ φ.matrix := by
       simp_rw [LinearMap.matrix.mulLeft_adjoint, hφ.matrixIsPosDef.1.eq]
 
-private theorem qam_A_is_sa_iff_aux3 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
-    withMatrixQuantum[φ]
-      ((h : inner ℂ x.1ᴴ x.1ᴴ • (φ.matrix * x.1ᴴ) =
-        inner ℂ x.1 x.1ᴴ • (x.1 * φ.matrix)) →
-      inner ℂ x.1 x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ ≠ 0) :=
-  by
-  withMatrixQuantumCtx[φ]
-  intro h
-  simp_rw [ne_eq, div_eq_zero_iff, inner_self_eq_zero, ← star_eq_conjTranspose, star_eq_zero,
-    x.property, or_false, star_eq_conjTranspose]
-  intro h'
-  simp_rw [h', zero_smul, smul_eq_zero, inner_self_eq_zero, ← star_eq_conjTranspose, star_eq_zero,
-    x.property, false_or] at h
-  letI := hφ.matrixIsPosDef.invertible
-  have : LinearMap.mulLeft ℂ φ.matrix (star x.1) = LinearMap.mulLeft ℂ φ.matrix 0 := by
-    simp_rw [LinearMap.mulLeft_apply, h, MulZeroClass.mul_zero]
-  simpa [LinearMap.mulLeft_apply, star_eq_zero, x.property] using
-    congrArg (fun y : ℍ => φ.matrix⁻¹ * y) this
-
-private theorem qam_A_is_sa_iff_aux4 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
-    withMatrixQuantum[φ]
-      ((h : inner ℂ x.1ᴴ x.1ᴴ • (φ.matrix * x.1ᴴ) =
-        inner ℂ x.1 x.1ᴴ • (x.1 * φ.matrix)) →
-      (inner ℂ x.1 x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ) • hφ.sig 1 x.1 = x.1ᴴ) :=
-  by
-  withMatrixQuantumCtx[φ]
-  intro h
-  letI := hφ.matrixIsPosDef.invertible
-  calc
-    (inner ℂ x.1 x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ) • hφ.sig 1 x.1 =
-        (inner ℂ x.1 x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ) •
-          φ.matrix⁻¹ * x.1 * φ.matrix :=
-      by simp_rw [hφ.sig_apply, PosDef.rpow_one_eq_self, PosDef.rpow_neg_one_eq_inv_self,
-        smul_mul_assoc]
-    _ = ((1 / inner ℂ x.1ᴴ x.1ᴴ) • φ.matrix⁻¹) *
-        (inner ℂ x.1 x.1ᴴ • x.1 * φ.matrix) := by
-      simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, Matrix.mul_assoc, mul_one_div]
-    _ = ((1 / inner ℂ x.1ᴴ x.1ᴴ) • φ.matrix⁻¹) *
-        (inner ℂ x.1ᴴ x.1ᴴ • φ.matrix * x.1ᴴ) := by
-      simp_rw [smul_mul_assoc, ← h]
-    _ = (inner ℂ x.1ᴴ x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ) •
-        φ.matrix⁻¹ * φ.matrix * x.1ᴴ := by
-      simp_rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul,
-        mul_assoc, mul_comm (1 / _ : ℂ), mul_one_div]
-    _ = x.1ᴴ :=
-      by
-      rw [div_self, one_smul, Matrix.mul_assoc, inv_mul_cancel_left_of_invertible]
-      simp_rw [ne_eq, inner_self_eq_zero, ← star_eq_conjTranspose, star_eq_zero]
-      exact x.property
-
 theorem sig_eq_lmul_rmul [hφ : φ.IsFaithfulPosMap] (t : ℝ) :
     (hφ.sig t).toLinearMap =
       LinearMap.mulLeft ℂ (hφ.matrixIsPosDef.rpow (-t)) ∘ₗ
-        LinearMap.mulRight ℂ (hφ.matrixIsPosDef.rpow t) :=
-  by
+        LinearMap.mulRight ℂ (hφ.matrixIsPosDef.rpow t) := by
   rw [LinearMap.ext_iff]
   intro a
   simp_rw [AlgEquiv.toLinearMap_apply, hφ.sig_apply, LinearMap.comp_apply,
@@ -444,8 +372,7 @@ private theorem qam_A_is_sa_iff_aux5 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ 
       ((h :
         (LinearMap.mulLeft ℂ φ.matrix).comp (|x.1ᴴ⟩⟨x.1ᴴ| : l(ℍ)) =
           (LinearMap.mulRight ℂ φ.matrix).comp (|x.1⟩⟨x.1| : l(ℍ))) →
-      symmMap ℂ ℍ ℍ |x.1⟩⟨x.1| = |x.1⟩⟨x.1|) :=
-  by
+      symmMap ℂ ℍ ℍ |x.1⟩⟨x.1| = |x.1⟩⟨x.1|) := by
   withMatrixQuantumCtx[φ]
   intro h
   haveI := hφ.matrixIsPosDef.invertible
@@ -476,8 +403,7 @@ private theorem qam_A_is_sa_iff_aux5 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ 
       LinearMap.mulRight_one, LinearMap.id_comp]
 
 theorem sig_comp_eq_iff_eq_sig_inv_comp [hφ : φ.IsFaithfulPosMap] (r : ℝ) (a b : l(ℍ)) :
-    (hφ.sig r).toLinearMap.comp a = b ↔ a = (hφ.sig (-r)).toLinearMap.comp b :=
-  by
+    (hφ.sig r).toLinearMap.comp a = b ↔ a = (hφ.sig (-r)).toLinearMap.comp b := by
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply]
   constructor <;> intro h x
   · simp_rw [← h, AlgEquiv.toLinearMap_apply, hφ.sig_apply_sig, neg_add_cancel,
@@ -492,8 +418,7 @@ theorem sig_eq_iff_eq_sig_inv [hφ : φ.IsFaithfulPosMap] (r : ℝ) (a b : ℍ) 
       AlgEquiv.one_apply]
 
 theorem comp_sig_eq_iff_eq_comp_sig_inv [hφ : φ.IsFaithfulPosMap] (r : ℝ) (a b : l(ℍ)) :
-    a.comp (hφ.sig r).toLinearMap = b ↔ a = b.comp (hφ.sig (-r)).toLinearMap :=
-  by
+    a.comp (hφ.sig r).toLinearMap = b ↔ a = b.comp (hφ.sig (-r)).toLinearMap := by
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply]
   constructor <;> intro h x
   · simp only [← h, AlgEquiv.toLinearMap_apply, hφ.sig_apply_sig, add_neg_cancel,
@@ -502,39 +427,19 @@ theorem comp_sig_eq_iff_eq_comp_sig_inv [hφ : φ.IsFaithfulPosMap] (r : ℝ) (a
       AlgEquiv.one_apply]
 
 private theorem qam_A_is_sa_iff_aux_aux6 [hφ : φ.IsFaithfulPosMap] (r : ℝ) (a b : ℍ) :
-    inner ℂ (hφ.sig r a) b = inner ℂ (hφ.sig (r / 2) a) (hφ.sig (r / 2) b) :=
-  by
+    inner ℂ (hφ.sig r a) b = inner ℂ (hφ.sig (r / 2) a) (hφ.sig (r / 2) b) := by
   simp_rw [← AlgEquiv.toLinearMap_apply]
   symm
   nth_rw 2 [← Module.Dual.IsFaithfulPosMap.sig_adjoint]
   simp_rw [LinearMap.adjoint_inner_right, AlgEquiv.toLinearMap_apply,
     Module.Dual.IsFaithfulPosMap.sig_apply_sig hφ, add_halves]
 
-private theorem qam_A_is_sa_iff_aux2_aux6 [hφ : φ.IsFaithfulPosMap] (x : ℍ) (α : NNRealˣ)
-    (h : hφ.sig 1 x = (((α : NNReal) : ℝ) : ℂ) • x) :
-    x * φ.matrix = (((α : NNReal) : ℝ) : ℂ) • φ.matrix * x :=
-  by
-  have hα : (((α : NNReal) : ℝ) : ℂ) ≠ 0 := by norm_cast; exact Units.ne_zero α
-  letI gg : NoZeroSMulDivisors ℂ ℍ := inferInstance
-  have h' := h
-  rw [sig_eq_iff_eq_sig_inv, _root_.map_smul] at h
-  symm
-  calc
-    (((α : NNReal) : ℝ) : ℂ) • φ.matrix * x = φ.matrix * ((((α : NNReal) : ℝ) : ℂ) • x) := by
-      simp_rw [Matrix.mul_smul, smul_mul_assoc]
-    _ = φ.matrix * hφ.sig 1 x := by rw [← h']
-    _ = x * φ.matrix := ?_
-  haveI := hφ.matrixIsPosDef.invertible
-  simp_rw [Module.Dual.IsFaithfulPosMap.sig_apply hφ, PosDef.rpow_one_eq_self,
-    PosDef.rpow_neg_one_eq_inv_self, Matrix.mul_assoc, mul_inv_cancel_left_of_invertible]
-
 private theorem qam_A_is_sa_iff_aux3_aux6 [hφ : φ.IsFaithfulPosMap] (x : ℍ) (α : NNRealˣ)
     : withMatrixQuantum[φ]
       ((H : (|xᴴ⟩⟨xᴴ|) = (|hφ.sig 1 x⟩⟨x|)) →
       (h : hφ.sig 1 x = (((α : NNReal) : ℝ) : ℂ) • x) →
       |(Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x⟩⟨(Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x| =
-        |xᴴ⟩⟨xᴴ|) :=
-  by
+        |xᴴ⟩⟨xᴴ|) := by
   withMatrixQuantumCtx[φ]
   intro H h
   have : 0 ≤ ((α : NNReal) : ℝ) := NNReal.coe_nonneg _
@@ -566,8 +471,7 @@ private theorem qam_A_is_sa_iff_aux4_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
       ((this :
         inner ℂ x'.1 x'.1 • hφ.sig 1 x'.1 =
           inner ℂ (hφ.sig 1 x'.1) x'.1 • x'.1) →
-      ∃ α : NNRealˣ, hφ.sig 1 x'.1 = (((α : NNReal) : ℝ) : ℂ) • x'.1) :=
-  by
+      ∃ α : NNRealˣ, hφ.sig 1 x'.1 = (((α : NNReal) : ℝ) : ℂ) • x'.1) := by
   withMatrixQuantumCtx[φ]
   intro this
   let x : ℍ := x'.1
@@ -608,8 +512,7 @@ private theorem qam_A_is_sa_iff_aux4_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
   rw [smul_smul, one_div, inv_mul_cancel₀ (inner_self_ne_zero.mpr hx), one_smul]
 
 theorem sig_eq_self_iff_commute [hφ : φ.IsFaithfulPosMap] (x : ℍ) : hφ.sig 1 x = x ↔
-  Commute φ.matrix x :=
-  by
+  Commute φ.matrix x := by
   simp_rw [hφ.sig_apply, Commute, SemiconjBy, PosDef.rpow_one_eq_self,
     PosDef.rpow_neg_one_eq_inv_self]
   haveI := hφ.matrixIsPosDef.invertible
@@ -622,8 +525,7 @@ omit [Fintype n] [DecidableEq n] in
 private theorem qam_A_is_sa_iff_aux7 (x : { x : ℍ // x ≠ 0 }) (α : NNRealˣ) (β : ℂˣ)
     (hx : x.1 = (star (β : ℂ) * (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • x.1ᴴ)
     (hx2 : x.1 = ((β⁻¹ : ℂ) * (((Real.sqrt ((α : NNReal) : ℝ))⁻¹ : ℝ) : ℂ)) • x.1ᴴ) :
-    ‖(β : ℂ)‖ ^ 2 * ((α : NNReal) : ℝ) = 1 :=
-  by
+    ‖(β : ℂ)‖ ^ 2 * ((α : NNReal) : ℝ) = 1 := by
   have : x.1 - x.1 = 0 := sub_self _
   nth_rw 1 [hx] at this
   nth_rw 2 [hx2] at this
@@ -642,8 +544,7 @@ private theorem qam_A_is_sa_iff_aux8 (α : NNRealˣ) (β : ℂˣ)
     (h : ‖(β : ℂ)‖ ^ 2 * ((α : NNReal) : ℝ) = 1) :
     ∃ γ : ℂˣ,
       (γ : ℂ) ^ 2 = (β : ℂ) * (((α : NNReal) : ℝ).sqrt : ℂ) ∧
-        ‖(γ : ℂ)‖ ^ 2 = 1 ∧ star (γ : ℂ) = (γ : ℂ)⁻¹ :=
-  by
+        ‖(γ : ℂ)‖ ^ 2 = 1 ∧ star (γ : ℂ) = (γ : ℂ)⁻¹ := by
   let γ : ℂ := ((β : ℂ) * (((α : NNReal) : ℝ).sqrt : ℂ)) ^ ((2 : ℕ) : ℂ)⁻¹
   have hγ : γ ≠ 0 := by
     simp only [ne_eq, γ, Complex.cpow_eq_zero_iff, ne_eq, inv_eq_zero, Units.mul_right_eq_zero,
@@ -673,8 +574,7 @@ private theorem qam_A_is_sa_iff_aux8 (α : NNRealˣ) (β : ℂˣ)
 omit [Fintype n] [DecidableEq n] in
 private theorem qam_A_is_sa_iff_aux9 (x : ℍ) (α : NNRealˣ) (β γ : ℂˣ)
     (h : (γ : ℂ) ^ 2 = (β : ℂ) * (((α : NNReal) : ℝ).sqrt : ℂ)) (h2 : star (γ : ℂ) = (γ : ℂ)⁻¹)
-    (hx : xᴴ = ((β : ℂ) * (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • x) : x.IsAlmostHermitian :=
-  by
+    (hx : xᴴ = ((β : ℂ) * (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • x) : x.IsAlmostHermitian := by
   use Units.mk0 (star (γ : ℂ)) (star_ne_zero.mpr (Units.ne_zero _))
   use (γ : ℂ) • x
   simp_rw [IsHermitian, conjTranspose_smul, h2, Units.val_mk0, smul_smul,
@@ -688,8 +588,7 @@ private theorem qam_A_is_sa_iff_aux5_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
         inner ℂ x'.1 x'.1 • hφ.sig 1 x'.1 =
           inner ℂ (hφ.sig 1 x'.1) x'.1 • x'.1) →
       (h : symmMap ℂ ℍ ℍ |x'.1⟩⟨x'.1| = |x'.1⟩⟨x'.1|) →
-      (hh : x'.1.IsAlmostHermitian) → Commute φ.matrix x'.1) :=
-  by
+      (hh : x'.1.IsAlmostHermitian) → Commute φ.matrix x'.1) := by
   withMatrixQuantumCtx[φ]
   intro this h hh
   obtain ⟨α, hα⟩ := qam_A_is_sa_iff_aux4_aux6 x' this
@@ -724,22 +623,19 @@ private theorem qam_A_is_sa_iff_aux5_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
 private theorem qam_A_is_sa_iff_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ // x ≠ 0 })
     : withMatrixQuantum[φ]
       ((h : symmMap ℂ ℍ ℍ |x'.1⟩⟨x'.1| = |x'.1⟩⟨x'.1|) →
-      x'.1.IsAlmostHermitian ∧ Commute φ.matrix x'.1) :=
-  by
+      x'.1.IsAlmostHermitian ∧ Commute φ.matrix x'.1) := by
   withMatrixQuantumCtx[φ]
   intro h
   let x : ℍ := x'.1
   have hx : x ≠ 0 := x'.property
   have h' := h
   rw [← LinearEquiv.eq_symm_apply] at h'
-  have H : (|xᴴ⟩⟨xᴴ| : l(ℍ)) = (|hφ.sig 1 x⟩⟨x| : l(ℍ)) :=
-    by
+  have H : (|xᴴ⟩⟨xᴴ| : l(ℍ)) = (|hφ.sig 1 x⟩⟨x| : l(ℍ)) := by
     rw [← AlgEquiv.toLinearMap_apply, ← LinearMap.comp_rankOne, ← neg_neg (1 : ℝ), ←
       sig_comp_eq_iff_eq_sig_inv_comp, LinearMap.comp_rankOne]
     rw [Qam.RankOne.symmetric_eq] at h
     exact h
-  have H' : (|xᴴ⟩⟨xᴴ| : l(ℍ)) = (|x⟩⟨hφ.sig 1 x| : l(ℍ)) :=
-    by
+  have H' : (|xᴴ⟩⟨xᴴ| : l(ℍ)) = (|x⟩⟨hφ.sig 1 x| : l(ℍ)) := by
     simp_rw [← AlgEquiv.toLinearMap_apply]
     rw [← Module.Dual.IsFaithfulPosMap.sig_adjoint, ← LinearMap.rankOne_comp, ← neg_neg (1 : ℝ), ←
       comp_sig_eq_iff_eq_comp_sig_inv]
@@ -764,14 +660,12 @@ private theorem qam_A_is_sa_iff_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ
     · exact hx
   obtain ⟨β, hβ⟩ := rankOne.ext_iff hxstar hsqrtx hα'
   rw [smul_smul] at hβ
-  have hβ' : (x : ℍ) = (star (β : ℂ) * (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • (x : ℍ)ᴴ :=
-    by
+  have hβ' : (x : ℍ) = (star (β : ℂ) * (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • (x : ℍ)ᴴ := by
     rw [← Function.Injective.eq_iff (conjTransposeAddEquiv n n ℂ).injective]
     simp_rw [conjTransposeAddEquiv_apply, conjTranspose_smul, star_mul', star_star,
       Complex.star_def, Complex.conj_ofReal, conjTranspose_conjTranspose]
     exact hβ
-  have hβ'' : (x : ℍ) = ((β⁻¹ : ℂ) * (((Real.sqrt ((α : NNReal) : ℝ))⁻¹ : ℝ) : ℂ)) • (x : ℍ)ᴴ :=
-    by
+  have hβ'' : (x : ℍ) = ((β⁻¹ : ℂ) * (((Real.sqrt ((α : NNReal) : ℝ))⁻¹ : ℝ) : ℂ)) • (x : ℍ)ᴴ := by
     rw [hβ, smul_smul, mul_mul_mul_comm, inv_mul_cancel₀ (Units.ne_zero β), one_mul, ←
       Complex.ofReal_mul, inv_mul_cancel₀ (by
         rw [Real.sqrt_ne_zero (NNReal.coe_nonneg _), NNReal.coe_ne_zero]
@@ -784,8 +678,7 @@ private theorem qam_A_is_sa_iff_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ
 theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 })
     : withMatrixQuantum[φ]
       ((h : LinearMap.adjoint (qamA hφ x) = qamA hφ x) →
-      x.1.IsAlmostHermitian ∧ Commute φ.matrix x.1) :=
-  by
+      x.1.IsAlmostHermitian ∧ Commute φ.matrix x.1) := by
   withMatrixQuantumCtx[φ]
   intro h
   simp_rw [qamA_eq, LinearMap.adjoint_smul, Module.End.mul_eq_comp, LinearMap.adjoint_comp,
@@ -793,16 +686,14 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
     (LinearMap.commute_mulLeft_right _ _).eq, conjTranspose_mul, hφ.matrixIsPosDef.1.eq] at h
   have :
     LinearMap.mulRight ℂ (φ.matrix * x.1) =
-      LinearMap.adjoint (LinearMap.mulRight ℂ (φ.matrix * x.1ᴴ)) :=
-    by
+      LinearMap.adjoint (LinearMap.mulRight ℂ (φ.matrix * x.1ᴴ)) := by
     simp_rw [LinearMap.matrix.mulRight_adjoint, conjTranspose_mul, conjTranspose_conjTranspose,
       hφ.matrixIsPosDef.1.eq, sig_apply_matrix_hMul_posDef']
   nth_rw 1 [this] at h
   simp_rw [← rankOne_psi_transpose_to_lin, ← oneMapTranspose_eq, ← _root_.map_smul] at h
   simp only [(AlgEquiv.injective _).eq_iff, (LinearEquiv.injective _).eq_iff,
     (StarAlgEquiv.injective _).eq_iff] at h
-  have thisss : 1 / (‖x.1‖ : ℂ) ^ 2 ≠ 0 :=
-    by
+  have thisss : 1 / (‖x.1‖ : ℂ) ^ 2 ≠ 0 := by
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
@@ -823,15 +714,13 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
 theorem qamA.is_self_adjoint_of [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) (hx₁ :
     x.1.IsAlmostHermitian)
     (hx₂ : Commute φ.matrix x.1) : withMatrixQuantum[φ] (LinearMap.adjoint (qamA hφ x) =
-      qamA hφ x) :=
-  by
+      qamA hφ x) := by
   withMatrixQuantumCtx[φ]
   simp_rw [qamA_eq, LinearMap.adjoint_smul, Module.End.mul_eq_comp, LinearMap.adjoint_comp,
     LinearMap.adjoint_adjoint, LinearMap.matrix.mulLeft_adjoint, ← Module.End.mul_eq_comp, ←
     (LinearMap.commute_mulLeft_right _ _).eq, conjTranspose_mul, hφ.matrixIsPosDef.1.eq]
   obtain ⟨α, y, ⟨hxy, hy⟩⟩ := hx₁
-  have : 1 / (‖x.1‖ : ℂ) ^ 2 ≠ 0 :=
-    by
+  have : 1 / (‖x.1‖ : ℂ) ^ 2 ≠ 0 := by
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
@@ -860,8 +749,7 @@ theorem qamA.isRealQam [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) 
 
 open scoped ComplexOrder
 omit [Fintype n] [DecidableEq n] in
-theorem Matrix.PosDef.ne_zero [Finite n] [Nontrivial n] {Q : ℍ} (hQ : Q.PosDef) : Q ≠ 0 :=
-  by
+theorem Matrix.PosDef.ne_zero [Finite n] [Nontrivial n] {Q : ℍ} (hQ : Q.PosDef) : Q ≠ 0 := by
   classical
   letI := Fintype.ofFinite n
   have := PosDef.trace_ne_zero hQ
@@ -872,8 +760,7 @@ theorem Matrix.PosDef.ne_zero [Finite n] [Nontrivial n] {Q : ℍ} (hQ : Q.PosDef
 theorem qamA.edges [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-      (@qamA.isRealQam n _ _ φ hφ x).edges = 1 :=
-  by
+      (@qamA.isRealQam n _ _ φ hφ x).edges = 1 := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   rw [RealQam.edges_eq_one_iff]
@@ -882,8 +769,7 @@ theorem qamA.edges [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
 theorem qamA.is_irreflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-      (Qam.reflIdempotent hφ (qamA hφ x) 1 = 0 ↔ x.1.trace = 0) :=
-  by
+      (Qam.reflIdempotent hφ (qamA hφ x) 1 = 0 ↔ x.1.trace = 0) := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   simp_rw [qamA_eq, ← rankOne_toMatrix_transpose_psi_symm]
@@ -904,8 +790,7 @@ theorem qamA.is_irreflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : 
 
 theorem qamA.is_almost_injective [hφ : φ.IsFaithfulPosMap] (x y : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
-      (qamA hφ x = qamA hφ y ↔ ∃ α : ℂˣ, x.1 = (α : ℂ) • y.1) :=
-  by
+      (qamA hφ x = qamA hφ y ↔ ∃ α : ℂˣ, x.1 = (α : ℂ) • y.1) := by
   withMatrixQuantumCtx[φ]
   simp_rw [qamA_eq, ← rankOne_toMatrix_transpose_psi_symm, ← _root_.map_smul, ←
     oneMapTranspose_symm_eq]
@@ -915,8 +800,7 @@ theorem qamA.is_almost_injective [hφ : φ.IsFaithfulPosMap] (x y : { x : ℍ //
   have :
     ∀ x : { x : ℍ // x ≠ 0 },
       (1 / (‖x.1‖ : ℂ) ^ 2) • (|x.1⟩⟨x.1| : l(ℍ)) =
-        |(1 / (‖x.1‖ : ℂ)) • x.1⟩⟨(1 / (‖x.1‖ : ℂ)) • x.1| :=
-    by
+        |(1 / (‖x.1‖ : ℂ)) • x.1⟩⟨(1 / (‖x.1‖ : ℂ)) • x.1| := by
     intro y
     symm
     rw [show (1 / (‖y.1‖ : ℂ)) • y.1 =
@@ -962,8 +846,7 @@ theorem qamA.is_almost_injective [hφ : φ.IsFaithfulPosMap] (x y : { x : ℍ //
 theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
-      (Qam.reflIdempotent hφ (qamA hφ x) 1 = 1 ↔ ∃ α : ℂˣ, x.1 = (α : ℂ) • φ.matrix⁻¹) :=
-  by
+      (Qam.reflIdempotent hφ (qamA hφ x) 1 = 1 ↔ ∃ α : ℂˣ, x.1 = (α : ℂ) • φ.matrix⁻¹) := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   simp_rw [qamA_eq, ← rankOne_toMatrix_transpose_psi_symm]
@@ -995,8 +878,7 @@ theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { 
       intro h'
       rw [h', star_zero, MulZeroClass.mul_zero, zero_smul] at h
       exact hφ.matrixIsPosDef.inv.ne_zero h.symm
-    have : 1 / ↑‖x.1‖ ^ 2 * star x.1.trace ≠ 0 :=
-      by
+    have : 1 / ↑‖x.1‖ ^ 2 * star x.1.trace ≠ 0 := by
       apply mul_ne_zero
       · simp only [one_div, inv_eq_zero, ne_eq, sq_eq_zero_iff, Complex.ofReal_eq_zero,
           norm_eq_zero]
@@ -1024,8 +906,7 @@ theorem qamA.of_trivialGraph [hφ : φ.IsFaithfulPosMap] [Nontrivial n] [Nonempt
     withMatrixQuantum[φ]
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
-      qamA hφ ⟨φ.matrix⁻¹, hφ.matrixIsPosDef.inv.ne_zero⟩ = Qam.trivialGraph ℍ :=
-  by
+      qamA hφ ⟨φ.matrix⁻¹, hφ.matrixIsPosDef.inv.ne_zero⟩ = Qam.trivialGraph ℍ := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
@@ -1047,8 +928,7 @@ theorem Qam.unique_one_edge_and_refl [hφ : φ.IsFaithfulPosMap] [Nontrivial n] 
       letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
       letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
       (hA : RealQam hφ A) →
-      hA.edges = 1 ∧ Qam.reflIdempotent hφ A 1 = 1 ↔ A = Qam.trivialGraph ℍ :=
-  by
+      hA.edges = 1 ∧ Qam.reflIdempotent hφ A 1 = 1 ↔ A = Qam.trivialGraph ℍ := by
   withMatrixQuantumCtx[φ]
   letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
   letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
@@ -1079,8 +959,7 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
         f.toAlgEquiv.toLinearMap ∘ₗ qamA hφ x ∘ₗ f.symm.toAlgEquiv.toLinearMap =
           qamA hφ
             ⟨f x.1,
-              (LinearEquiv.map_ne_zero_iff f.toAlgEquiv.toLinearEquiv).mpr x.property⟩) :=
-  by
+              (LinearEquiv.map_ne_zero_iff f.toAlgEquiv.toLinearEquiv).mpr x.property⟩) := by
   withMatrixQuantumCtx[φ]
   intro f hf
   apply_fun hφ.toMatrix using (AlgEquiv.injective _)
@@ -1112,20 +991,17 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
           rpow (1 / 2) * U * (rpow (-(1 / 2)) * rpow (1 / 2)) * x.1 *
                 (rpow (1 / 2) * rpow (1 / 2)) *
               (U⁻¹ : unitaryGroup n ℂ) *
-            rpow (-(1 / 2)) :=
-        by
+            rpow (-(1 / 2)) := by
           rw [show (modAut (-(1 / 2)) : ℍ ≃ₐ[ℂ] ℍ) = hφ.sig (-(1 / 2)) from rfl]
           simp only [Module.Dual.IsFaithfulPosMap.sig_apply, Matrix.mul_assoc, rpow, neg_neg]
-      _ = rpow (1 / 2) * U * x.1 * (φ.matrix * (U⁻¹ : unitaryGroup n ℂ)) * rpow (-(1 / 2)) :=
-        by
+      _ = rpow (1 / 2) * U * x.1 * (φ.matrix * (U⁻¹ : unitaryGroup n ℂ)) * rpow (-(1 / 2)) := by
         rw [PosDef.rpow_mul_rpow, PosDef.rpow_mul_rpow,
           neg_add_cancel, PosDef.rpow_zero, Matrix.mul_one,
           add_halves, PosDef.rpow_one_eq_self, Matrix.mul_assoc]
         simp_rw [mul_assoc]
       _ = rpow (1 / 2) * U * x.1 * (U⁻¹ : unitaryGroup n ℂ) * (rpow 1 * rpow (-(1 / 2))) := by
         simp_rw [hU.eq, rpow, PosDef.rpow_one_eq_self, mul_assoc]
-      _ = rpow (1 / 2) * U * x.1 * (U⁻¹ : unitaryGroup n ℂ) * rpow (1 / 2) :=
-        by
+      _ = rpow (1 / 2) * U * x.1 * (U⁻¹ : unitaryGroup n ℂ) * rpow (1 / 2) := by
         simp only [rpow, PosDef.rpow_mul_rpow]
         have : (1 : ℝ) + -(1 / 2 : ℝ) = 1 / 2 := by norm_num
         rw [this]
@@ -1145,8 +1021,7 @@ theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
           (@Qam.Iso
             n _ _ φ (qamA hφ x) (qamA hφ y) ↔
           ∃ U : unitaryGroup n ℂ,
-            (∃ β : ℂˣ, x.1 = innerAut U ((β : ℂ) • y.1)) ∧ Commute φ.matrix U) :=
-  by
+            (∃ β : ℂˣ, x.1 = innerAut U ((β : ℂ) • y.1)) ∧ Commute φ.matrix U) := by
   withMatrixQuantumCtx[φ]
   rw [Qam.iso_iff]
   simp_rw [← innerAutStarAlg_equiv_toLinearMap]

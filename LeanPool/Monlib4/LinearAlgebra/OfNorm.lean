@@ -26,10 +26,8 @@ section Ex4
 variable {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 theorem cs_aux {x y : E} (hy : y ≠ 0) :
-    ‖x - (inner 𝕜 y x * (‖y‖ ^ 2 : ℝ)⁻¹) • y‖ ^ 2 = ‖x‖ ^ 2 - ‖inner 𝕜 x y‖ ^ 2 * (‖y‖ ^ 2)⁻¹ :=
-  by
-  have : ((‖y‖ ^ 2 : ℝ) : 𝕜) ≠ 0 :=
-    by
+    ‖x - (inner 𝕜 y x * (‖y‖ ^ 2 : ℝ)⁻¹) • y‖ ^ 2 = ‖x‖ ^ 2 - ‖inner 𝕜 x y‖ ^ 2 * (‖y‖ ^ 2)⁻¹ := by
+  have : ((‖y‖ ^ 2 : ℝ) : 𝕜) ≠ 0 := by
     rw [ne_eq, RCLike.ofReal_eq_zero, sq_eq_zero_iff, norm_eq_zero]
     exact hy
   rw [← @inner_self_eq_norm_sq 𝕜]
@@ -58,8 +56,7 @@ theorem cs_aux {x y : E} (hy : y ≠ 0) :
 
 -- already exists in `mathlib`... but different proof... just for fun
 example {x y : E} (hx : x ≠ 0) (hy : y ≠ 0) :
-    ‖inner 𝕜 x y‖ = ‖x‖ * ‖y‖ ↔ ∃ α : 𝕜ˣ, x = (α : 𝕜) • y :=
-  by
+    ‖inner 𝕜 x y‖ = ‖x‖ * ‖y‖ ↔ ∃ α : 𝕜ˣ, x = (α : 𝕜) • y := by
   constructor
   · intro h
     have : inner 𝕜 y x ≠ 0 := by
@@ -109,8 +106,7 @@ theorem re_innerDef (x y : X) : re (innerDef x y : 𝕜) = 4⁻¹ * (‖x + y‖
         (4⁻¹ : ℝ) *
           re
             (((‖x + y‖ ^ 2 - ‖x - y‖ ^ 2 : ℝ) : 𝕜) +
-              I * ((‖(I : 𝕜) • x + y‖ ^ 2 - ‖(I : 𝕜) • x - y‖ ^ 2 : ℝ) : 𝕜)) :=
-      by
+              I * ((‖(I : 𝕜) • x + y‖ ^ 2 - ‖(I : 𝕜) • x - y‖ ^ 2 : ℝ) : 𝕜)) := by
       rw [mul_re]
       have : im (4 : 𝕜)⁻¹ = 0 := by simp
       simp only [this, MulZeroClass.zero_mul, sub_zero, mul_sub, ofReal_sub, ofReal_pow]
@@ -120,8 +116,7 @@ theorem re_innerDef (x y : X) : re (innerDef x y : 𝕜) = 4⁻¹ * (‖x + y‖
           re (4 : 𝕜)⁻¹ = re ((4 : ℝ) : 𝕜)⁻¹ := by
             congr
             norm_cast
-          _ = (re ((4 : ℝ) : 𝕜))⁻¹ :=
-            by
+          _ = (re ((4 : ℝ) : 𝕜))⁻¹ := by
             simp_rw [inv_re, normSq_eq_def', norm_ofReal]
             norm_num
           _ = (4 : ℝ)⁻¹ := by simp only [ofReal_re]
@@ -153,15 +148,13 @@ theorem innerDef_i_smul_left (x y : X) : (innerDef ((I : 𝕜) • x) y : 𝕜) 
 theorem im_innerDef_aux (x y : X) : im (innerDef x y : 𝕜) = re (innerDef ((I : 𝕜) • x) y : 𝕜) := by
   rw [im_eq_re_neg_i, ← innerDef_i_smul_left]
 
-theorem re_innerDef_symm (x y : X) : re (innerDef x y : 𝕜) = re (innerDef y x : 𝕜) :=
-  by
+theorem re_innerDef_symm (x y : X) : re (innerDef x y : 𝕜) = re (innerDef y x : 𝕜) := by
   simp_rw [re_innerDef]
   rw [add_comm]
   congr 2
   simp only [norm_sub_rev]
 
-theorem im_innerDef_symm (x y : X) : im (innerDef x y : 𝕜) = -im (innerDef y x : 𝕜) :=
-  by
+theorem im_innerDef_symm (x y : X) : im (innerDef x y : 𝕜) = -im (innerDef y x : 𝕜) := by
   simp_rw [im_innerDef_aux]
   rw [re_innerDef_symm]
   by_cases h : (I : 𝕜) = 0
@@ -177,14 +170,12 @@ theorem im_innerDef_symm (x y : X) : im (innerDef x y : 𝕜) = -im (innerDef y 
     simp only [smul_add, smul_sub, smul_smul, I_mul_I_of_nonzero h, neg_one_smul]
     simp_rw [sub_eq_add_neg, neg_neg]
 
-theorem innerDef_conj (x y : X) : conj (innerDef x y : 𝕜) = innerDef y x :=
-  by
+theorem innerDef_conj (x y : X) : conj (innerDef x y : 𝕜) = innerDef y x := by
   rw [← @re_add_im 𝕜 _ (innerDef x y)]
   simp_rw [map_add, map_mul, conj_ofReal, conj_I]
   calc
     ↑(re (innerDef x y : 𝕜)) + ↑(im (innerDef x y : 𝕜)) * -(I : 𝕜) =
-        ↑(re (innerDef y x : 𝕜)) + ↑(-im (innerDef x y : 𝕜)) * (I : 𝕜) :=
-      by
+        ↑(re (innerDef y x : 𝕜)) + ↑(-im (innerDef x y : 𝕜)) * (I : 𝕜) := by
       rw [re_innerDef_symm]
       congr 1
       simp
@@ -214,8 +205,7 @@ theorem IsContinuousLinearMap.coe_mk' {𝕜 : Type _} [NormedField 𝕜] {E : Ty
 
 theorem isBoundedLinearMap_iff_isContinuousLinearMap {𝕜 E : Type _} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
-    (f : E → F) : IsBoundedLinearMap 𝕜 f ↔ IsContinuousLinearMap 𝕜 f :=
-  by
+    (f : E → F) : IsBoundedLinearMap 𝕜 f ↔ IsContinuousLinearMap 𝕜 f := by
   refine
     ⟨fun h => ⟨IsBoundedLinearMap.toIsLinearMap h, IsBoundedLinearMap.continuous h⟩,
       fun h => ?_⟩
@@ -233,8 +223,7 @@ theorem IsBoundedLinearMap.def {𝕜 E : Type _} [NontriviallyNormedField 𝕜] 
 
 theorem LinearMap.withBound_iff_is_continuous {𝕜 E : Type _} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
-    {f : E →ₗ[𝕜] F} : WithBound f ↔ Continuous f :=
-  by
+    {f : E →ₗ[𝕜] F} : WithBound f ↔ Continuous f := by
   have := @isBoundedLinearMap_iff_isContinuousLinearMap 𝕜 _ _ _ _ _ _ _ f
   simpa only [IsBoundedLinearMap.def, IsContinuousLinearMap, and_congr_right_iff, f.isLinear,
     true_imp_iff] using this
@@ -244,8 +233,7 @@ theorem LinearMap.ker_coe_def {R E F : Type _} [Semiring R] [AddCommMonoid E] [A
   rfl
 
 theorem exists_dual_vector_of_ne {X : Type _} [NormedAddCommGroup X] [NormedSpace 𝕜 X] {x y : X}
-    (h : x ≠ y) : ∃ f : StrongDual 𝕜 X, f x ≠ f y :=
-  by
+    (h : x ≠ y) : ∃ f : StrongDual 𝕜 X, f x ≠ f y := by
   rw [ne_eq, ← sub_eq_zero] at h
   obtain ⟨f, ⟨_, hxy⟩⟩ := exists_dual_vector (𝕜 := 𝕜) (x - y) (by
     rwa [norm_ne_zero_iff])
@@ -268,8 +256,7 @@ open scoped Topology BigOperators NNReal
 
 theorem IsContinuousLinearMap.ofInnerSymmetricFun {X : Type _} [NormedAddCommGroup X]
     [InnerProductSpace 𝕜 X] [CompleteSpace X] {f : X → X}
-    (h : ∀ a b : X, inner 𝕜 (f a) b = inner 𝕜 a (f b)) : IsContinuousLinearMap 𝕜 f :=
-  by
+    (h : ∀ a b : X, inner 𝕜 (f a) b = inner 𝕜 a (f b)) : IsContinuousLinearMap 𝕜 f := by
   have : IsLinearMap 𝕜 f :=
     { map_add := fun x y => by
         apply @ext_inner_right 𝕜
@@ -319,8 +306,7 @@ theorem isRightLinearMap_iff {𝕜 : Type _} [NormedField 𝕜] {E : Type _} {F 
 theorem isBilinearMap_iff_is_linear_map_left_right {𝕜 : Type _} [NormedField 𝕜] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
     {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {f : E × F → G} :
-    IsBilinearMapProd 𝕜 f ↔ IsLeftLinearMap 𝕜 f ∧ IsRightLinearMap 𝕜 f :=
-  by
+    IsBilinearMapProd 𝕜 f ↔ IsLeftLinearMap 𝕜 f ∧ IsRightLinearMap 𝕜 f := by
   refine ⟨fun hf => ⟨fun x => ⟨fun y z => hf.add_left y z x, fun r a => hf.smul_left r a x⟩,
     fun x => ⟨fun y z => hf.add_right x y z, fun r a => hf.smul_right r x a⟩⟩, fun ⟨h1, h2⟩ => ?_⟩
   fconstructor
@@ -431,8 +417,7 @@ example
     {𝕜 X Y Z : Type _}
     [RCLike 𝕜] [NormedAddCommGroup X] [NormedAddCommGroup Y] [NormedAddCommGroup Z]
     [NormedSpace 𝕜 X] [NormedSpace 𝕜 Y] [NormedSpace 𝕜 Z] [CompleteSpace X] [CompleteSpace Y]
-    [CompleteSpace Z] (β : X →L[𝕜] Y →L[𝕜] Z) : ∃ M : ℝ, ∀ x y, ‖β x y‖ ≤ M * ‖x‖ * ‖y‖ :=
-  by
+    [CompleteSpace Z] (β : X →L[𝕜] Y →L[𝕜] Z) : ∃ M : ℝ, ∀ x y, ‖β x y‖ ≤ M * ‖x‖ * ‖y‖ := by
   use ‖β‖
   intro x y
   apply ContinuousLinearMap.le_of_opNorm_le
@@ -486,8 +471,7 @@ lemma Metric.exists_mem_closed_unitBall_of_norm_one (𝕜 H : Type _) [RCLike �
 
 lemma Metric.exists_mem_unitBall_of_norm_one (𝕜 H : Type _) [RCLike 𝕜]
   [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Nontrivial H] :
-  ∃ (x : H) (ε : ℝ), ‖x‖ = ε ∧ 0 < ε ∧ ε < 1 ∧ x ∈ ball (0 : H) 1 :=
-by
+  ∃ (x : H) (ε : ℝ), ‖x‖ = ε ∧ 0 < ε ∧ ε < 1 ∧ x ∈ ball (0 : H) 1 := by
   obtain ⟨x, hx⟩ : ∃ x : H, x ≠ 0 := exists_ne 0
   obtain ⟨ε, hε⟩ : ∃ r : ℝ, 0 < r ∧ r < 1 := ⟨1 / 2, by norm_num⟩
   use ((ε / ‖x‖ : ℝ) : 𝕜) • x, ε
@@ -501,8 +485,7 @@ open scoped InnerProductSpace
 theorem inner_lt_one_iff_of_norm_one {𝕜 H : Type _} [RCLike 𝕜] [NormedAddCommGroup H]
   [InnerProductSpace 𝕜 H]
   {x y : H} (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) :
-  ⟪x, y⟫_𝕜 < 1 ↔ x ≠ y ∧ (re ⟪x, y⟫_𝕜 : 𝕜) = ⟪x, y⟫_𝕜 :=
-by
+  ⟪x, y⟫_𝕜 < 1 ↔ x ≠ y ∧ (re ⟪x, y⟫_𝕜 : 𝕜) = ⟪x, y⟫_𝕜 := by
   simp_rw [lt_iff_le_and_ne, ne_eq, inner_eq_one_iff_of_norm_eq_one hx hy]
   refine ⟨fun ⟨h1, h2⟩ => ⟨h2, ?_⟩, fun h => ⟨?_, h.1⟩⟩
   · rw [@le_def 𝕜, one_re, one_im, ← conj_eq_iff_im, conj_eq_iff_re] at h1
@@ -514,8 +497,7 @@ by
 theorem re_inner_lt_one_iff_of_norm_one {𝕜 H : Type _} [RCLike 𝕜] [NormedAddCommGroup H]
   [InnerProductSpace 𝕜 H]
   {x y : H} (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) :
-  re ⟪x, y⟫_𝕜 < 1 ↔ x ≠ y :=
-by
+  re ⟪x, y⟫_𝕜 < 1 ↔ x ≠ y := by
   rw [← real_inner_eq_re_inner]
   exact @inner_lt_one_iff_real_of_norm_eq_one H _ (InnerProductSpace.rclikeToReal 𝕜 H) _ _ hx hy
 
@@ -523,8 +505,7 @@ theorem ne_zero_iff_nontrivial_of_mem_extremePoints_closed_unitBall
   {𝕜 H : Type _} [RCLike 𝕜] [NormedAddCommGroup H]
   [NormedSpace 𝕜 H] {x : H}
   (hx : x ∈ Set.extremePoints 𝕜 (Metric.closedBall (0 : H) 1)) :
-  x ≠ 0 ↔ Nontrivial H :=
-by
+  x ≠ 0 ↔ Nontrivial H := by
   refine ⟨fun h => ⟨⟨x, 0, h⟩⟩, fun h => ?_⟩
   simp only [Metric.mem_extremePoints_of_closed_unitBall_iff] at hx
   rintro rfl
@@ -568,8 +549,7 @@ theorem mem_extremePoints_of_closedBall_iff_norm_eq_one
   simp_rw [Metric.mem_extremePoints_of_closed_unitBall_iff]
   refine ⟨by simp_rw [hx, le_rfl], fun y hy z hz ⟨α, hα₁, hα₂, hαx⟩ => ?_⟩
   let β : ℝ := re α
-  have : (β : 𝕜) = α :=
-  by
+  have : (β : 𝕜) = α := by
     simp_rw [@lt_def 𝕜, map_zero] at hα₁
     rw [← re_add_im α, ← hα₁.2, ofReal_zero, zero_mul, add_zero]
   simp_rw [← this, ← @ofReal_zero 𝕜, ← @ofReal_one 𝕜, real_lt_real, ← ofReal_sub] at hα₁ hα₂ hαx
@@ -578,8 +558,7 @@ theorem mem_extremePoints_of_closedBall_iff_norm_eq_one
         _ = ‖(β : 𝕜) • y + ((1 - β : ℝ) : 𝕜) • z‖ ^ 2 := by rw [hαx]
         _ = (‖(β : 𝕜) • y‖ ^ 2 + 2 * re (⟪(β : 𝕜) • y, ((1 - β : ℝ) : 𝕜) • z⟫_𝕜)
               + ‖((1 - β : ℝ) : 𝕜) • z‖ ^ 2 : ℝ) := by rw [← norm_add_pow_two]
-        _ = β ^ 2 * ‖y‖ ^ 2 + (2 * β * (1 - β)) * re (⟪y, z⟫_𝕜) + (1 - β) ^ 2 * ‖z‖ ^ 2 :=
-          by
+        _ = β ^ 2 * ‖y‖ ^ 2 + (2 * β * (1 - β)) * re (⟪y, z⟫_𝕜) + (1 - β) ^ 2 * ‖z‖ ^ 2 := by
             simp_rw [norm_smul, inner_smul_left, inner_smul_right, conj_ofReal,
               ← mul_assoc, ← ofReal_mul, re_ofReal_mul, mul_pow, ← norm_pow, ← ofReal_pow]
             simp only [norm_ofReal, abs_sq]
@@ -607,12 +586,10 @@ theorem mem_extremePoints_of_closedBall_iff_norm_eq_one
           calc 1 = ‖x‖ := hx.symm
             _ = ‖(β : 𝕜) • y + ((1 - β : ℝ) : 𝕜) • z‖ := by rw [hαx]
             _ ≤ ‖(β : 𝕜) • y‖ + ‖((1 - β : ℝ) : 𝕜) • z‖ := norm_add_le _ _
-            _ ≤ β * ‖y‖ + (1 - β) * ‖z‖ :=
-              by
+            _ ≤ β * ‖y‖ + (1 - β) * ‖z‖ := by
                 simp_rw [norm_smul, norm_ofReal, abs_of_pos hα₁]
                 rw [abs_of_pos]; simp_rw [sub_pos, hα₂]
-            _ < β * 1 + (1 - β) * 1 :=
-              by
+            _ < β * 1 + (1 - β) * 1 := by
                 try
                 { apply add_lt_add_of_lt_of_le
                   apply mul_lt_mul' le_rfl Hyy (norm_nonneg _) hα₁
@@ -631,8 +608,7 @@ theorem LinearIsometry.norm_comp_toContinuousLinearMap_le
   [NormedAddCommGroup Y] [NormedAddCommGroup Z] [NormedSpace 𝕜 X] [NormedSpace 𝕜 Y]
   [NormedSpace 𝕜 Z]
   (f : X →ₗᵢ[𝕜] Y) (h : Y →L[𝕜] Z) :
-  ‖h ∘L f.toContinuousLinearMap‖ ≤ ‖h‖ :=
-by
+  ‖h ∘L f.toContinuousLinearMap‖ ≤ ‖h‖ := by
   refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) (fun x => ?_)
   rw [ContinuousLinearMap.comp_apply, LinearIsometry.coe_toContinuousLinearMap, ← f.norm_map x]
   exact h.le_opNorm _
@@ -641,8 +617,7 @@ example {𝕜 X Y Z : Type _} [RCLike 𝕜] [NormedAddCommGroup X]
   [NormedAddCommGroup Y] [NormedAddCommGroup Z] [NormedSpace 𝕜 X] [NormedSpace 𝕜 Y]
   [NormedSpace 𝕜 Z]
   (f : X ≃ₗᵢ[𝕜] Y) (h : Y →L[𝕜] Z) :
-  ‖h ∘L f.toLinearIsometry.toContinuousLinearMap‖ = ‖h‖ :=
-by
+  ‖h ∘L f.toLinearIsometry.toContinuousLinearMap‖ = ‖h‖ := by
   apply le_antisymm (f.toLinearIsometry.norm_comp_toContinuousLinearMap_le _)
   calc
     ‖h‖ =
@@ -670,8 +645,7 @@ lemma NormedSpace.Dual.transpose_isometry
   {𝕜 X Y : Type*} [RCLike 𝕜] [NormedAddCommGroup X] [NormedAddCommGroup Y]
   [NormedSpace 𝕜 X] [NormedSpace 𝕜 Y]
   {f : X ≃ₗᵢ[𝕜] Y} :
-  _root_.Isometry (NormedSpace.Dual.transpose 𝕜 f.toLinearIsometry.toContinuousLinearMap) :=
-by
+  _root_.Isometry (NormedSpace.Dual.transpose 𝕜 f.toLinearIsometry.toContinuousLinearMap) := by
   rw [AddMonoidHomClass.isometry_iff_norm]
   intro x
   simp_rw [NormedSpace.Dual.transpose_apply]
@@ -706,8 +680,7 @@ open NormedSpace in
 
 theorem Set.subset_diff_inj {α : Type _} (s : Set α) {t u : Set α}
   (h : u ⊆ t) :
-  s ⊆ t ↔ s \ u ⊆ t \ u :=
-by
+  s ⊆ t ↔ s \ u ⊆ t \ u := by
   simp only [Set.sdiff_subset_iff, union_sdiff_self]
   rw [union_eq_self_of_subset_left h]
 
@@ -716,8 +689,7 @@ lemma example_pos_commute_iff_pos_mul_of {𝕜 R : Type _} [RCLike 𝕜] [Ring R
   (h₁ : ∀ x : R, 0 ≤ x ↔ ∃ r : R, x = star r * r)
   (h₂ : ∀ x : R, 0 ≤ x ↔ IsSelfAdjoint x ∧ spectrum 𝕜 x ⊆ { a : 𝕜 | 0 ≤ a })
   {x y : R} (hx : 0 ≤ x) (hy : 0 ≤ y) :
-  Commute x y ↔ 0 ≤ x * y :=
-by
+  Commute x y ↔ 0 ≤ x * y := by
   have : {(0 : 𝕜)} ⊆ {a : 𝕜 | 0 ≤ a} :=
   by simp only [Set.singleton_subset_iff, Set.mem_setOf_eq, le_refl]
   have := fun s => Set.subset_diff_inj s this

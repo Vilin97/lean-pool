@@ -156,9 +156,8 @@ lemma atImInfy_pnat_mono (S : Set ℍ) (hS : S ∈ atImInfty) (B : ℝ) : ∃ A 
       have hn : (1 : ℝ) ≤ n := by
         norm_cast
         exact one_le
-      constructor
-      · exact le_trans hs2.1 ((le_mul_iff_one_le_left s.2).mpr hn)
-      · exact le_trans hs2.2 ((le_mul_iff_one_le_left s.2).mpr hn)
+      exact ⟨le_trans hs2.1 ((le_mul_iff_one_le_left s.2).mpr hn),
+        le_trans hs2.2 ((le_mul_iff_one_le_left s.2).mpr hn)⟩
     refine ⟨?_, K⟩
     simp only [sup_le_iff] at K
     apply hA _ K.1

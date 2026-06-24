@@ -61,11 +61,4 @@ private theorem cuspFunction_eqOn_const_of_nonpos_wt (hk : k ≤ 0) (f : F) :
         simpa [Nat.cast_one] using this
       rw [e1, e2]; exact hξ₂
 
-private theorem levelOne_nonpos_wt_const (hk : k ≤ 0) (f : F) :
-    ⇑f = Function.const _ (cuspFunction 1 f 0) := funext fun z ↦ by
-  have hQ : 𝕢 1 z ∈ Metric.ball 0 1 := by simpa using (norm_qParam_lt_iff zero_lt_one 0 _).mpr z.2
-  simpa [← eq_cuspFunction' f (dvd_of_eq <| Subgroup.Gamma_width 1)] using
-    cuspFunction_eqOn_const_of_nonpos_wt hk f hQ
-
-
 end ModularFormClass
