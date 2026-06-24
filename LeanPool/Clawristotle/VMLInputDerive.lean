@@ -75,7 +75,7 @@ variable {X : Type*} [FlatTorus3 X]
 /-- Extract Maxwellian parameters from VMLInput.
     Uses the H-theorem chain to show f is locally Maxwellian at each x,
     then extracts the parameters via Classical.choice. -/
-private def VMLInput.isMaxwellian_at (p : VMLInput X) (x : X) : IsMaxwellian (p.f x) :=
+private theorem VMLInput.isMaxwellian_at (p : VMLInput X) (x : X) : IsMaxwellian (p.f x) :=
   steady_state_is_local_maxwellian X p.f p.Ψ p.hΨ p.hf_pos
     p.hf_smooth p.hf_int p.hD_zero p.hScoreForm p.hPSD_cont p.hPSD_inner p.hPSD_outer x
 

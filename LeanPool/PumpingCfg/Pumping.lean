@@ -350,4 +350,4 @@ theorem Language.IsContextFree.pumping {L : Language T} (hL : L.IsContextFree) :
   by_cases hw : w = []
   · simp [hw] at hw2
   · obtain ⟨u, v, x, y, z, hw, hvy, hvxy, hL⟩ := g.toCNF.pumping (g.toCNF_correct ▸ ⟨hwg, hw⟩) hw2
-    exact ⟨u, v, x, y, z, hw, hvy, hvxy, fun i => Set.diff_subset (g.toCNF_correct ▸ hL i)⟩
+    exact ⟨u, v, x, y, z, hw, hvy, hvxy, fun i => Set.sdiff_subset (g.toCNF_correct ▸ hL i)⟩

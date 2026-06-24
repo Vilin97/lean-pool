@@ -16,6 +16,9 @@ section «lp_section_1»
 variable {α : Type u} (rel : α → α → Prop)
 local infix:50 " ≺ " => rel
 
+/-- Imported declaration from the Incompleteness formalization. -/
+def IsSymmetric := ∀ ⦃x y⦄, x ≺ y → y ≺ x
+
 -- NOTE: Another convention uses `x ≺ y → x ≺ z → y ≺ z`.
 /-- Imported declaration from the Incompleteness formalization. -/
 def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
@@ -67,22 +70,22 @@ variable {rel : α → α → Prop}
 
 lemma serial_of_refl (hRefl : ∀ x, rel x x) : Serial rel := fun w => ⟨w, hRefl w⟩
 
-lemma eucl_of_symm_trans (hSymm : Symmetric rel)
+lemma eucl_of_symm_trans (hSymm : IsSymmetric rel)
     (hTrans : ∀ ⦃x y z⦄, rel x y → rel y z → rel x z) :
     Euclidean rel := fun _ _ _ Rxy Rxz => hSymm <| hTrans (hSymm Rxy) Rxz
 
-lemma trans_of_symm_eucl (hSymm : Symmetric rel) (hEucl : Euclidean rel) :
+lemma trans_of_symm_eucl (hSymm : IsSymmetric rel) (hEucl : Euclidean rel) :
     ∀ ⦃x y z⦄, rel x y → rel y z → rel x z :=
   fun _ _ _ Rxy Ryz => hSymm <| hEucl (hSymm Rxy) Ryz
 
 lemma symm_of_refl_eucl (hRefl : ∀ x, rel x x) (hEucl : Euclidean rel) :
-    Symmetric rel := fun {x} {_} Rxy => hEucl (hRefl x) Rxy
+    IsSymmetric rel := fun {x} {_} Rxy => hEucl (hRefl x) Rxy
 
 lemma trans_of_refl_eucl (hRefl : ∀ x, rel x x) (hEucl : Euclidean rel) :
     ∀ ⦃x y z⦄, rel x y → rel y z → rel x z :=
   trans_of_symm_eucl (symm_of_refl_eucl hRefl hEucl) hEucl
 
-lemma refl_of_symm_serial_eucl (hSymm : Symmetric rel) (hSerial : Serial rel) (hEucl :
+lemma refl_of_symm_serial_eucl (hSymm : IsSymmetric rel) (hSerial : Serial rel) (hEucl :
     Euclidean rel) :
     ∀ x, rel x x := by
   rintro x;

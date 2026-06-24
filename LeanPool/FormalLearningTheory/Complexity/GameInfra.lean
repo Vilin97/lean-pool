@@ -10,7 +10,7 @@ import LeanPool.FormalLearningTheory.Criterion.Online
 import LeanPool.FormalLearningTheory.Complexity.Generalization
 -- Path B (Γ₂₁): WithBot (WithTop ℕ) for LittlestoneDim
 -- Required for CompleteLattice instance and ConditionallyCompleteLinearOrderBot ℕ
-import Mathlib.Data.Nat.Lattice
+import Mathlib.Order.Lattice.Nat
 
 /-!
 # Game-Theoretic Infrastructure for Online Learning

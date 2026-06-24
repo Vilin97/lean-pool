@@ -202,8 +202,10 @@ by
     change g₁.Derives _ _
     have sinked := sink_deri lg₁ deri (good_initial_singleton ⟨g₁.initial, rfl⟩)
     convert sinked
-    unfold sinkString
-    exact filterMap_sinkSymbol_terminals lg₁.sinkNt w
+    all_goals first
+      | rfl
+      | (unfold sinkString
+         exact heq_of_eq (filterMap_sinkSymbol_terminals lg₁.sinkNt w))
   · rw [req₂] at aft
     dsimp only at aft
     rw [aft] at deri
@@ -211,8 +213,10 @@ by
     change g₂.Derives _ _
     have sinked := sink_deri lg₂ deri (good_initial_singleton ⟨g₂.initial, rfl⟩)
     convert sinked
-    unfold sinkString
-    exact filterMap_sinkSymbol_terminals lg₂.sinkNt w
+    all_goals first
+      | rfl
+      | (unfold sinkString
+         exact heq_of_eq (filterMap_sinkSymbol_terminals lg₂.sinkNt w))
   · exfalso
     rcases List.mem_map.mp rin₁ with ⟨r₁, -, r_of_r₁⟩
     rw [← r_of_r₁, unionGrammar_initial] at same_nt
@@ -232,8 +236,12 @@ by
   · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩, ?_, [], [], rfl, rfl⟩
     apply List.mem_cons_self
   convert lift_deri lg₁ hwg
-  symm
-  apply List.map_map
+  all_goals first
+    | rfl
+    | (apply heq_of_eq
+       change _ = List.map (liftSymbol _) (w.map Symbol.terminal)
+       rw [List.map_map]
+       rfl)
 
 lemma in_union_of_in_L₂ {w : List T} (hwg : w ∈ g₂.language) :
   w ∈ (unionGrammar g₁ g₂).language :=
@@ -243,8 +251,12 @@ by
     apply List.mem_cons_of_mem
     apply List.mem_cons_self
   convert lift_deri lg₂ hwg
-  symm
-  apply List.map_map
+  all_goals first
+    | rfl
+    | (apply heq_of_eq
+       change _ = List.map (liftSymbol _) (w.map Symbol.terminal)
+       rw [List.map_map]
+       rfl)
 
 /-- The class of grammar-generated languages is closed under union. -/
 theorem GG_of_GG_u_GG (L₁ : Language T) (L₂ : Language T) :

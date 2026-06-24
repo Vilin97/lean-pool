@@ -98,7 +98,7 @@ end BodySystemObj
     apply BodySystemObj.ext
     funext n
     apply resEq_ext
-    convert bodyMap_restrict f x n using 1)
+    convert bodyMap_restrict f x n using 1 <;> rfl)
 lemma bodyEquivSystem_hom_app_res_coe (x : bodyFunctor.obj T) :
   ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := by
   rfl

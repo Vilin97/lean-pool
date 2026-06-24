@@ -626,7 +626,7 @@ lemma conjFactor_linearIndependent (x_ : Π σ, A.conjFactor σ) :
   rw [← mul_smul, inv_mul_cancel₀ c_ne_zero, one_smul] at hc
   clear c c_ne_zero
   have mem1 : (x_ σ).1.1 ∈ Submodule.span K (Set.range fun (σ : J) ↦ (x_ σ.1).1.1) := by
-    convert hc; aesop
+    rw [← Set.image_eq_range (fun (i : Gal(K, F)) => (x_ i).1.1) J]; exact hc
   have eq0 : (⟨(x_ σ).1.1, mem1⟩ : Submodule.span K (Set.range fun (σ : J) ↦ (x_ σ.1).1.1)) =
       ∑ τ ∈ (B.repr ⟨_, mem1⟩).support, B.repr ⟨_, mem1⟩ τ • (x_ τ).1.1 := by
     conv_lhs => rw [← B.linearCombination_repr ⟨(x_ σ).1.1, mem1⟩, Finsupp.linearCombination_apply,

@@ -321,8 +321,9 @@ lemma linearCombinationDetLast' {n : ℕ} {x y : ℝ²} {P : Fin n → ℝ²} {�
     (hα : ∑ i, α i = 1) :
   det (fun | 0 => x | 1 => y | 2 => (∑ i, α i • P i)) =
   ∑ i, (α i * det (fun | 0 => x | 1 => y | 2 => (P i))) := by
-  simp only [det, Fin.isValue, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply _, Pi.smul_apply,
-    smul_eq_mul, mul_sum, left_distrib, sum_add_distrib, ← sum_mul, hα, one_mul, add_left_inj]
+  simp only [det, Fin.isValue, WithLp.ofLp_sum, WithLp.ofLp_smul, Finset.sum_apply _,
+    Pi.smul_apply, smul_eq_mul, mul_sum, left_distrib, sum_add_distrib, ← sum_mul, hα, one_mul,
+    add_left_inj]
   congr <;> (ext; ring)
 
 lemma det_0_triangle_imp_triv {T : Triangle} (hT : det T = 0) :

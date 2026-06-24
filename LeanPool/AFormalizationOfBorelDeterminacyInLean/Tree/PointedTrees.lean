@@ -30,7 +30,7 @@ namespace PointedLenHom
 def toHom (f : PointedLenHom S T) : S.1 ⟶ T.1 := f.toLenHom
 instance : FunLike (PointedLenHom S T) S.1 T.1 where
   coe f := f.toHom
-  coe_injective' _ _ h := PointedLenHom.ext <| LenHom.ext h
+  coe_injective _ _ h := PointedLenHom.ext <| LenHom.ext h
 instance : OrderHomClass (PointedLenHom S T) S.1 T.1 where
   map_rel f _ _ h := f.toOrderHom.monotone' h
 @[simp] lemma add_toHom (f : PointedLenHom S T) (x : S.1) :

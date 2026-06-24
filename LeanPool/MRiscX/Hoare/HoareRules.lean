@@ -68,7 +68,7 @@ theorem BL_TO_WL : ∀ (code : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L :
   · apply weak_L_w_with_L_from_L_b <;> try assumption
   · constructor <;> try assumption
     apply Set.notMem_subset (t := L_b) <;> try assumption
-    apply Set.diff_subset
+    apply Set.sdiff_subset
 
 
 
@@ -106,7 +106,7 @@ theorem WL_TO_BL : ∀ (c : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L : Se
     · intros n'' Hn''
       specialize H4' n'' Hn''
       apply MState.runNSteps_diff <;> try assumption
-      simp only [Set.union_subset_iff, Set.diff_subset_iff, Set.subset_union_right, true_and]
+      simp only [Set.union_subset_iff, Set.sdiff_subset_iff, Set.subset_union_right, true_and]
       constructor
       · intros hx h
         apply Set.mem_union_right

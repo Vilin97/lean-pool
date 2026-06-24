@@ -3,7 +3,7 @@ Copyright (c) 2026 Julius Marx. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
-import Lean
+import Lean.Elab.Tactic.Basic
 import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.AbstractSyntax.Instr
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
@@ -123,19 +123,14 @@ def calcRExprDefault (Q: Expr) (lastInstrExpr : Expr): MetaM Expr := do
   if !hasOneLam then
     throwError s!"Expected postcondition Q {Q} to be a λ-expression"
   let hasScdLam := Q.bindingBody!.getAppFn.isLambda
-  let mstateInferredOld := ← match hasScdLam with
-                | true => do
-                  match Q.bindingBody!.getArg? 1 with
-                  | some state => do
-                    return state
-                  | none => throwError "Expected Q with 2 λ-expressions to have 2 arguments"
-                | false =>
-                  return (.bvar 0)
-  let qBody := ←match hasScdLam with
-              | true => do
-                return Q.bindingBody!.getAppFn
-              | false => do
-                return Q
+  let mstateInferredOld ← do
+    if hasScdLam then
+      match Q.bindingBody!.getArg? 1 with
+      | some state => pure state
+      | none => throwError "Expected Q with 2 λ-expressions to have 2 arguments"
+    else
+      pure (.bvar 0)
+  let qBody := if hasScdLam then Q.bindingBody!.getAppFn else Q
   let assignmentToAdd ← getExprOfInstrForRFromExpr lastInstrExpr mstateInferredOld
   return Expr.lam `st (.const `MState []) (mkApp qBody assignmentToAdd)
     BinderInfo.default

@@ -131,14 +131,16 @@ theorem realHermiteGenerating_hasDerivAt (t : ℝ) (u : ℂ) :
     have hquad : HasDerivAt (fun v : ℂ => v ^ 2 / 2) u u := by
       simpa [id, two_mul] using
         HasDerivAt.div_const ((hasDerivAt_id u).fun_pow 2) 2
-    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1
-    ext v
-    simp only [Pi.sub_apply]
-    ring_nf
+    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1 <;>
+      first
+      | rfl
+      | (funext v; simp only [Pi.sub_apply]; ring_nf)
   unfold realHermiteGenerating
   convert HasDerivAt.const_mul
-    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1
-  ring
+    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1 <;>
+      first
+      | rfl
+      | ring
 
 theorem realHermiteGenerating_integral_mul (u w : ℂ) :
     (∫ t : ℝ, realHermiteGenerating t u * realHermiteGenerating t w) =
@@ -1357,7 +1359,10 @@ theorem hasDerivAt_integral_shifted_generating_mul_modulated_right_closed
   have hlin :
       HasDerivAt (fun w : ℂ => u * w + z * u - star z * w) (u - star z) w0 := by
     have h := (hu.add_const (z * u)).sub hz
-    convert h using 1
+    have heq : (fun w : ℂ => u * w + z * u - star z * w) =
+        (fun x => u * x + z * u) - fun w => star z * w := by
+      funext w; simp [Pi.sub_apply]
+    rw [heq]; exact h
   simpa [z, E, mul_assoc, mul_left_comm, mul_comm] using hlin.cexp.mul_const E
 
 private theorem integral_shifted_generating_right_deriv_eq_closed
@@ -7193,12 +7198,15 @@ private theorem oneDWindowAmbiguityOneOneShiftedMoment_eq_closed
         ((1 - zeta * star zeta) * E) 0 := by
     have hlin : HasDerivAt (fun u : ℂ => u - star zeta) 1 0 := by
       simpa using (hasDerivAt_id (0 : ℂ)).sub_const (star zeta)
-    have harg : HasDerivAt (fun u : ℂ => zeta * u) zeta 0 := by
-      simpa using HasDerivAt.const_mul zeta (hasDerivAt_id (0 : ℂ))
+    have harg : HasDerivAt (fun u : ℂ => zeta * u) zeta 0 :=
+      hasDerivAt_const_mul zeta
     have hprod := hlin.mul harg.cexp
-    convert hprod.mul_const E using 1
-    simp only [mul_zero, Complex.exp_zero, mul_one, zero_sub, one_mul]
-    ring
+    have hd := hprod.mul_const E
+    rw [show (1 * Complex.exp (zeta * 0) +
+        (0 - star zeta) * (Complex.exp (zeta * 0) * zeta)) * E
+        = (1 - zeta * star zeta) * E by
+      simp only [mul_zero, Complex.exp_zero, mul_one, zero_sub]; ring] at hd
+    exact hd
   have hclosed_F : HasDerivAt F ((1 - zeta * star zeta) * E) 0 := by
     simpa [hF_closed] using hclosed_deriv
   simpa [zeta, E] using hderiv_moment.unique hclosed_F

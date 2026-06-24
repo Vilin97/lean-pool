@@ -67,10 +67,10 @@ lemma Nat.card_eq_mul_card_fiber {α β : Type*} (f : α → β) {n : ℕ} (hn :
     left_inv := fun a => by simp only [Equiv.symm_apply_apply]
     right_inv := fun (b, m) => by
       rw [Prod.mk.injEq]
-      have := ((φ b).invFun m).property
-      use this
-      have : (φ b) ((φ b).symm m) = m := (φ b).right_inv m
-      convert this using 6
+      have hfb : f ((φ b).symm m).val = b := ((φ b).symm m).property
+      refine ⟨hfb, ?_⟩
+      have heq : (φ b) ((φ b).symm m) = m := (φ b).right_inv m
+      convert heq using 6
   }
   convert Nat.card_congr F using 1
   rw [Nat.card_prod, Nat.card_fin]
@@ -146,7 +146,8 @@ lemma nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
   have hQ_normal : Subgroup.Normal (Q : Subgroup G) := by
     rw [← Subgroup.normalizer_eq_top_iff, ← Subgroup.index_eq_one]
     trans Nat.card (Sylow q G)
-    · convert Q.card_eq_index_normalizer.symm using 1
+    · convert Q.card_eq_index_normalizer.symm using 3
+      exact Q.coe_coe
     refine (Nat.Prime.eq_one_or_self_of_dvd (hp.elim) (Nat.card (Sylow q G)) ?_).resolve_right ?_
     · convert Sylow.card_dvd_index Q using 1; symm
       rw [← Nat.mul_left_cancel_iff (Nat.zero_lt_of_ne_zero hq.elim.ne_zero), mul_comm]

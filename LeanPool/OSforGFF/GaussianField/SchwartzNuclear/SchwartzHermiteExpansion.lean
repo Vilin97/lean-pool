@@ -474,7 +474,7 @@ private def harmonicOscillator : (SchwartzMap ℝ ℝ) →L[ℝ] (SchwartzMap �
 -- Pointwise: (H f)(x) = -f''(x) + x²f(x)
 private lemma harmonicOscillator_apply (f : SchwartzMap ℝ ℝ) (x : ℝ) :
     harmonicOscillator f x = -(iteratedDeriv 2 (⇑f) x) + x ^ 2 * f x := by
-  simp only [harmonicOscillator, ContinuousLinearMap.add_apply, ContinuousLinearMap.neg_apply,
+  simp only [harmonicOscillator, add_apply, neg_apply,
     ContinuousLinearMap.comp_apply]
   -- SchwartzMap add_apply/neg_apply and derivCLM_apply are rfl; use change to make pointwise
   change -(deriv (deriv (⇑f)) x) + (smulLeftCLM ℝ (fun x : ℝ => x ^ 2) f) x =
@@ -501,7 +501,7 @@ private lemma hermiteCoeff1D_harmonicOscillator_pow :
   | zero => intro n f; simp
   | succ k ih =>
     intro n f
-    rw [pow_succ, ContinuousLinearMap.mul_apply, ih n (harmonicOscillator f),
+    rw [pow_succ, mul_apply_eq_comp, ih n (harmonicOscillator f),
       hermiteCoeff1D_harmonicOscillator, pow_succ]; ring
 
 -- L² norm ≤ sup-seminorms for Schwartz functions
@@ -656,7 +656,7 @@ private lemma pow_clm_sup_seminorm_bound (T : (SchwartzMap ℝ ℝ) →L[ℝ] (S
     obtain ⟨q_T, C_T, hC_T, h_T⟩ := clm_sup_seminorm_bound T q_k
     refine ⟨q_T, C_k * C_T, by positivity, fun f => ?_⟩
     -- T^(k+1) f = T^k (T f)
-    rw [pow_succ, ContinuousLinearMap.mul_apply]
+    rw [pow_succ, mul_apply_eq_comp]
     calc (Finset.Iic q₀).sup (fun p => SchwartzMap.seminorm ℝ p.1 p.2) ((T ^ k) (T f))
         ≤ C_k * (Finset.Iic q_k).sup (fun p => SchwartzMap.seminorm ℝ p.1 p.2) (T f) :=
           h_k (T f)
@@ -1331,7 +1331,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
         ∑ i ∈ t, g i y := by
       intro t; induction t using Finset.cons_induction with
       | empty => simp
-      | cons a t' ha ih => simp [SchwartzMap.smul_apply, smul_eq_mul,
+      | cons a t' ha ih => simp [smul_eq_mul,
           schwartzHermiteBasis1D_apply, g]
     exact this s
   -- Step 3: iteratedFDeriv of the finite sum = ∑_{i∈s} iteratedFDeriv(gᵢ)
@@ -1358,7 +1358,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
         (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
     -- ⇑r = ⇑f - (finite sum function)
     have hcoe_r : (⇑r : ℝ → ℝ) = fun y => f y - ∑ i ∈ s, g i y := by
-      ext y; simp only [hr_def, SchwartzMap.sub_apply]
+      ext y; simp only [hr_def, sub_apply]
       exact congrArg (f y - ·) (hsum_coe y)
     rw [hcoe_r]
     -- Compute iteratedFDeriv of (f - sum) via iteratedFDeriv_add + iteratedFDeriv_neg

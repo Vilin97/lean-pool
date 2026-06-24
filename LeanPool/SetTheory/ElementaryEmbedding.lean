@@ -29,7 +29,7 @@ variable {j k : NontrivialElementaryEmbedding M}
 
 instance : FunLike (NontrivialElementaryEmbedding M) M M where
   coe j := j.toElementaryEmbedding
-  coe_injective' := by
+  coe_injective := by
     rintro ⟨j, hj⟩ ⟨k, hk⟩ eq
     congr 1
     simpa using eq

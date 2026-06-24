@@ -93,7 +93,7 @@ theorem aEStronglyMeasurable_of_continuousOn_off_finite {f : ℝ → ℂ} {a b :
   have h_eq : volume.restrict (Icc a b) =
       volume.restrict (Icc a b \ P) + volume.restrict (↑P ∩ Icc a b) := by
     rw [← Measure.restrict_union h_disj hP_inter_meas]; congr 1; ext x
-    simp only [Set.mem_union, Set.mem_diff, Set.mem_inter_iff]; tauto
+    simp only [Set.mem_union, Set.mem_sdiff, Set.mem_inter_iff]; tauto
   rw [h_eq]; apply AEStronglyMeasurable.add_measure h_cont_meas
   simp only [Measure.restrict_eq_zero.mpr hP_meas_zero]
   exact aestronglyMeasurable_zero_measure f
@@ -112,7 +112,7 @@ private lemma measurableSet_multipoint_condition {γ : ℝ → ℂ} {a b ε : �
     measurableSet_norm_gt_Icc ε (hγ.sub continuousOn_const)
   have h_eq' : {t | ‖γ t - s‖ ≤ ε} ∩ Icc a b =
       Icc a b \ ({t | ε < ‖γ t - s‖} ∩ Icc a b) := by
-    ext t; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_diff, not_and]
+    ext t; simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_sdiff, not_and]
     constructor
     · intro ⟨h_le, ht_Icc⟩; exact ⟨ht_Icc, fun h_gt => absurd h_gt (not_lt.mpr h_le)⟩
     · intro ⟨ht_Icc, h_not⟩; refine ⟨?_, ht_Icc⟩

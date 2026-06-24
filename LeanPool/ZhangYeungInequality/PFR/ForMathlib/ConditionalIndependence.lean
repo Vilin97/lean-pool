@@ -252,7 +252,8 @@ lemma _root_.ProbabilityTheory.condIndep_copies
       have h3' {x : β} (hx : x ≠ y) : (m x) ((Prod.snd⁻¹' {y}) ∩ E) = 0 := by
         apply measure_inter_null_of_null_left E
         rw [← Measure.map_apply measurable_snd (by simp), MeasureTheory.Measure.map_snd_prod]
-        simp only [smul_apply, MeasurableSet.singleton, dirac_apply', smul_eq_mul, mul_eq_zero,
+        simp only [Measure.smul_apply, MeasurableSet.singleton, dirac_apply', smul_eq_mul,
+          mul_eq_zero,
           indicator_apply_eq_zero, Pi.one_apply,
           one_ne_zero, imp_false]; right; exact hx
       simp only [coe_finsetSum, coe_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, ν]
@@ -262,7 +263,8 @@ lemma _root_.ProbabilityTheory.condIndep_copies
       · intro _ _ hx
         rw [h3' hx]
         simp
-      · convert FiniteRange.range Y ▸ Set.preimage_singleton_nonempty.mp
+      · rw [← Finset.mem_coe]
+        convert FiniteRange.range Y ▸ Set.preimage_singleton_nonempty.mp
           (nonempty_of_measure_ne_zero hy'')
     rw [h2, indepFun_iff_map_prod_eq_prod_map_map]
     · let f : (α × α) × β → α × α := Prod.fst

@@ -257,7 +257,7 @@ theorem cauchyPrincipalValueExists_of_continuous
               hε.2, ite_true]⟩) tendsto_const_nhds⟩
   · filter_upwards [self_mem_nhdsWithin] with ε _
     exact (aEStronglyMeasurable_pv_integrand
-      (hg.mono diff_subset) hγ hγ').mono_measure
+      (hg.mono sdiff_subset) hγ hγ').mono_measure
       (Measure.restrict_mono
         (by rw [uIoc_of_le hab.le]; exact Ioc_subset_Icc_self)
         le_rfl)

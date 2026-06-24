@@ -70,19 +70,20 @@ def coneSourceTrivConeArrow {J : Type u} [Category.{v} J] (f : J ⥤ Arrow C)
           rfl)
       naturality := fun i j α => by
         have naturality' := s.π.naturality α
-        ext
-        · aesop_cat
-        · convert (congrArg (fun h => h ≫ (f.obj j).hom) naturality') using 1
-          · rw [Arrow.comp_right]
-            convert Category.id_comp (s.π.app j ≫ (f.obj j).hom) using 1
-            convert congrArg (fun h => h ≫ (f.obj j).hom) (Category.id_comp (s.π.app j)) using 1
-          · rw [Arrow.comp_right]
-            convert congrArg (fun h => s.π.app i ≫ h) (f.map α).w.symm using 1
-            · simp only [Arrow.homMk_right]
-              rw [Category.assoc]
-              rfl
-            · simp only [Functor.comp_map, leftFunc_map]
-              exact Category.assoc (s.π.app i) (f.map α).left (f.obj j).hom}
+        apply Arrow.hom_ext
+        · simp only [Arrow.comp_left, Arrow.homMk_left, Functor.const_obj_map,
+            Functor.comp_map, leftFunc_map] at naturality' ⊢
+          exact naturality'
+        · have hnat : s.π.app j = s.π.app i ≫ (f.map α).left :=
+            (Category.id_comp (s.π.app j)).symm.trans naturality'
+          simp only [Arrow.comp_right, Arrow.homMk_right, Functor.const_obj_map,
+            Arrow.id_right]
+          change 𝟙 s.pt ≫ s.π.app j ≫ (f.obj j).hom
+            = (s.π.app i ≫ (f.obj i).hom) ≫ Hom.right (f.map α)
+          rw [Category.id_comp, hnat]
+          exact (Category.assoc _ _ _).trans
+            ((congrArg (s.π.app i ≫ ·) (f.map α).w).trans
+              (Category.assoc _ _ _).symm)}
         }
 
 /-- Imported FactorizationSystems declaration. -/
@@ -121,7 +122,9 @@ def sourceLimitConeArrowLimitCone {J : Type u} [Category.{v} J] (f : J ⥤ Arrow
                   (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom =
                     s.π.app j ≫ (f.obj j).hom :=
                 congrArg (· ≫ (f.obj j).hom) (p j)
-              convert hcomm.trans hp using 1
+              change (m_triv ≫ Cf.cone.π.app j).right = s.π.app j ≫ (f.obj j).hom
+              simp only [Arrow.comp_right]
+              exact hcomm.trans hp
         have uniq' := Cf.isLimit.uniq (coneSourceTrivConeArrow f s) m_triv p'
         exact congrArg (fun h : Arrow.mk (𝟙 s.pt) ⟶ Cf.cone.pt => h.left) uniq'
     }
@@ -299,8 +302,8 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
             _ = sq_j.bot := by rfl}
         have hunique : d.map = d'.map := (m_ort_fj.diagonal_unique sq_j) d d'
         calc
-          ((Functor.const J).obj B).map α ≫ d.map = d.map := by
-            convert Category.id_comp d.map using 1
+          ((Functor.const J).obj B).map α ≫ d.map = d.map :=
+            Category.id_comp d.map
           _ = d'.map := hunique}
   }
 

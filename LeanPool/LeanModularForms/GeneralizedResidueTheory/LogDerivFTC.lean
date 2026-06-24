@@ -178,7 +178,8 @@ theorem ftc_log_neg_on_segment {f : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     have hslit := hf_slit x (Ioo_subset_Icc_self hx)
     have h_log := (hf_diff x hx).hasDerivAt.neg.clog_real hslit
     convert h_log using 1
-    exact (neg_div_neg_eq (deriv f x) (f x)).symm
+    · rfl
+    · exact (neg_div_neg_eq (deriv f x) (f x)).symm
   have hint : IntervalIntegrable (fun t => deriv f t / f t) volume a b := by
     apply ContinuousOn.intervalIntegrable
     rw [Set.uIcc_of_le hab]

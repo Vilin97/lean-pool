@@ -49,7 +49,7 @@ lemma traceEquiv_trans : ∀ ⦃t₁ t₂ t₃⦄,
   | swap ind _ ih => exact TraceEquiv.swap ind (ih h₂₃)
 
 /-- Trace equivalence is symmetric. -/
-lemma traceEquiv_symm : Symmetric (TraceEquiv es) := by
+lemma traceEquiv_symm : ∀ ⦃t₁ t₂⦄, TraceEquiv es t₁ t₂ → TraceEquiv es t₂ t₁ := by
   intro t₁ t₂ h
   induction h with
   | refl _ => exact TraceEquiv.refl _

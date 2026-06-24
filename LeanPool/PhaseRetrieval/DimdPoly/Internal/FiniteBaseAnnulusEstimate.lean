@@ -1418,7 +1418,7 @@ private theorem Phi_rotate_one_exp_annulus
     Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp),
     oneDimPhi_phaseLaw_annulus]
   conv_rhs =>
-    rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
+    rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
   ring_nf
 
 private lemma fourier_mk_eq_exp_annulus

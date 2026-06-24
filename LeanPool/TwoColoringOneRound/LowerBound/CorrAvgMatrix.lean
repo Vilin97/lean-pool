@@ -33,6 +33,8 @@ theorem corrMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrMatrix f).PosSem
   -- `corrMatrix f = vecMulVec a (star a)` where `a u = spin (f u)`.
   convert (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
     (a := fun u => spin (f u))) using 1
+  ext u v
+  simp [corrMatrix, corr, Matrix.vecMulVec_apply]
 
 theorem corrAvgMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrAvgMatrix f).PosSemidef := by
   classical
@@ -46,6 +48,8 @@ theorem corrAvgMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrAvgMatrix f).
       -- again rank-1 PSD
       convert (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
         (a := fun u => spin (f (σ • u)))) using 1
+      ext u v
+      simp [corrMat, corr, Matrix.vecMulVec_apply]
     -- `Matrix.posSemidef_sum` is stated for a finset-indexed sum.
     have hsum' := Matrix.posSemidef_sum (s := (Finset.univ : Finset G)) (x := corrMat) hterm
     simpa [corrMat] using hsum'

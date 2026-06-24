@@ -100,7 +100,7 @@ theorem analyticSet_nullMeasurableSet
     obtain ⟨K, hKc, hKs, hKapprox⟩ :=
       hs.exists_isCompact_measureReal_gt (μ := μ) (μ.real (t \ s) / 2) (by positivity)
     have hdiff_eq : μ.real (t \ K) = μ.real t - μ.real K :=
-      measureReal_diff (fun x hx => hst (hKs hx)) hKc.isClosed.measurableSet
+      measureReal_sdiff (fun x hx => hst (hKs hx)) hKc.isClosed.measurableSet
     have ht_real : μ.real t = μ.real s := by simp only [Measure.real]; rw [ht_eq]
     have hle : μ.real (t \ s) ≤ μ.real (t \ K) :=
       measureReal_mono (Set.diff_subset_diff_right hKs)
@@ -108,5 +108,5 @@ theorem analyticSet_nullMeasurableSet
     linarith
   have h_ae : s =ᵐ[μ] t := by
     rw [Filter.eventuallyEq_comm, ae_eq_set]
-    exact ⟨hzero, by simp [Set.diff_eq_empty.mpr hst]⟩
+    exact ⟨hzero, by simp [Set.sdiff_eq_empty.mpr hst]⟩
   exact ht_meas.nullMeasurableSet.congr h_ae.symm

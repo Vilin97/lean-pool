@@ -64,7 +64,7 @@ namespace DirectedMap
 
 instance instFunLike : FunLike D(α,β) α β where
   coe := fun f => f.toFun
-  coe_injective' f g h := by
+  coe_injective f g h := by
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
@@ -75,7 +75,7 @@ instance toDirectedMapClass : DirectedMapClass D(α,β) α β where
 
 /-- Helper instance for when there's too many metavariables to apply `FunLike.hasCoeToFun` directly.
 -/
-instance : CoeFun (D(α,β)) fun _ => α → β := DFunLike.hasCoeToFun
+instance : CoeFun (D(α,β)) fun _ => α → β := DFunLike.toCoeFun
 
 /-- A directed map can be coerced into a continuous map -/
 instance : Coe D(α,β) C(α, β) := ⟨fun f => f.toContinuousMap⟩

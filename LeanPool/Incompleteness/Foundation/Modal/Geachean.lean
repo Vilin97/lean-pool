@@ -44,8 +44,8 @@ lemma reflexive_def : Std.Refl rel ↔ (Geachean ⟨0, 0, 1, 0⟩ rel) := by
       exists_eq_right', and_imp, forall_apply_eq_imp_iff, forall_eq'] at h
     exact ⟨fun x => h (x := x)⟩
 
-lemma symmetric_def : Symmetric rel ↔ (Geachean ⟨0, 1, 0, 1⟩ rel) := by
-  simp only [Symmetric, Geachean, Rel.iterate.iff_zero, Rel.iterate.iff_succ,
+lemma symmetric_def : IsSymmetric rel ↔ (Geachean ⟨0, 1, 0, 1⟩ rel) := by
+  simp only [IsSymmetric, Geachean, Rel.iterate.iff_zero, Rel.iterate.iff_succ,
     exists_eq_right, exists_eq_left', and_imp];
   constructor;
   · rintro h x y z rfl Rxz; exact h Rxz;

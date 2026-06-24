@@ -798,7 +798,7 @@ private def build_ufd_proof_proof
     have hq_M : (↑q : T) ∈ IsLocalRing.maximalIdeal T := by
       by_contra h
       exact hP_prime.ne_top (Ideal.eq_top_of_isUnit_mem P hq_P (hinv (ι q) h))
-    exact ⟨ι q, hq_P, by convert hR_prime_in_S q hq_prime hq_M using 1⟩
+    exact ⟨ι q, hq_P, hR_prime_in_S q hq_prime hq_M⟩
 ⟩
 
 omit [IsAdicComplete (IsLocalRing.maximalIdeal T) T] in

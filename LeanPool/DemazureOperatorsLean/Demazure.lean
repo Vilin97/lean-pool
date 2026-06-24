@@ -170,7 +170,7 @@ lemma demazure_denominator_not_null (i : Fin n) :
     (X (Fin.castSucc i) : MvPolynomial (Fin (n + 1)) ℂ) - X (Fin.succ i) ≠ 0 := by
   apply MvPolynomial.ne_zero_iff.mpr
   use Finsupp.single (Fin.succ i) 1
-  rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_X, MvPolynomial.coeff_X']
+  rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_X, MvPolynomial.coeff_X]
   have h : Finsupp.single (Fin.castSucc i) 1 ≠ Finsupp.single (Fin.succ i) 1 := by
     apply Finsupp.ne_iff.mpr
     use Fin.succ i

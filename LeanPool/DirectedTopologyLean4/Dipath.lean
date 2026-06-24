@@ -48,7 +48,7 @@ def toDirectedMap (γ : Dipath x y) : D(I,X) where
 
 instance instFunLike : FunLike (Dipath x y) I X where
   coe := fun γ => γ.toFun
-  coe_injective' := fun γ γ' h => by
+  coe_injective := fun γ γ' h => by
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ'
     congr
@@ -147,6 +147,7 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) :
     refine ⟨t, t_ab, ?_⟩
     rw [← ht]
     convert Path.extend_apply γ.toPath ⟨le_trans a.2.1 t_ab.1, le_trans t_ab.2 b.2.2⟩
+    rfl
 
 /-! ### Reflexive dipaths -/
 

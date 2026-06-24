@@ -157,13 +157,13 @@ private abbrev _Tnae3 : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
   map_add' := by
     intro f g
     funext x
-    simp only [one_div, inv_pow, add_apply, sum_boole]
+    simp only [one_div, inv_pow, Pi.add_apply, sum_boole]
     conv => enter [1, 2, 2, y]; rw [add_mul]
     rw [sum_add_distrib, mul_add]
   map_smul' := by
     intro c f
     funext x
-    simp only [smul_apply, smul_eq_mul, RingHom.id_apply]
+    simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
     conv => enter [1, 2, 2, y]; rw [mul_assoc]
     rw [← mul_sum, ← mul_assoc, mul_comm _ c, mul_assoc]
 
@@ -178,7 +178,7 @@ lemma _eq_noise_operator : T = @noiseOperator n (-1/3) := by
   rw [walshBasis, noiseOperator, coe_basisOfOrthonormalOfCardEqFinrank,
     LinearMap.coe_mk, AddHom.coe_mk, multiplier_walsh]
   funext x
-  rw [smul_apply, smul_eq_mul]
+  rw [Pi.smul_apply, smul_eq_mul]
   have : ∀ y : Fin n → Fin 2, ∑ z : Fin n → Fin 2, oneOn (VoteConsistent x y z)
       =  ∏ i, (1 + oneOn (x i ≠ y i)) := by
     intro y
@@ -330,7 +330,7 @@ theorem dictator_of_condorcet_and_unanimous (h : IsUnanimous f) :
   use i
   have := funext_iff.mp hfeq 0
   rw [h.1] at this
-  simp only [smul_apply, prod_singleton, zero_apply, Fin.isValue, Fin.coe_ofNat_eq_mod,
+  simp only [Pi.smul_apply, prod_singleton, Pi.zero_apply, Fin.isValue, Fin.coe_ofNat_eq_mod,
     Nat.zero_mod, pow_zero, smul_eq_mul, mul_one] at this
   rw [hfeq, ← this]
   simp

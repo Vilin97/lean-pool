@@ -456,7 +456,7 @@ lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K
   use k₂
   refine ⟨⟨⟨?_, ?_⟩, ?_⟩, ?_⟩
   · ext j _
-    simp only [Units.val_mul, Matrix.map_mul, zero_apply, k₁, k₂]
+    simp only [Units.val_mul, Matrix.map_mul, Matrix.zero_apply, k₁, k₂]
     convert_to
       ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inl j)
         (Sum.inr ()) = 0
@@ -464,7 +464,7 @@ lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K
       group
     · apply colEliminator_mul_rowEliminator_lastCol
   · ext _ j
-    simp only [Units.val_mul, Matrix.map_mul, zero_apply, k₁, k₂]
+    simp only [Units.val_mul, Matrix.map_mul, Matrix.zero_apply, k₁, k₂]
     convert_to
       ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inr ())
         (Sum.inl j) = 0

@@ -168,7 +168,7 @@ theorem isSymmetric_hMul_adjoint_self [FiniteDimensional 𝕜 V] (T : V →ₗ[�
 theorem IsSymmetric.neg (T : V →ₗ[𝕜] V) (hT : T.IsSymmetric) : IsSymmetric (-T) :=
   by
   intro u v
-  simp_rw [neg_apply, inner_neg_left, inner_neg_right, neg_inj]
+  simp_rw [LinearMap.neg_apply, inner_neg_left, inner_neg_right, neg_inj]
   exact hT u v
 
 theorem IsSymmetric.sub {T S : V →ₗ[𝕜] V} (hT : T.IsSymmetric) (hS : S.IsSymmetric) :
@@ -194,19 +194,20 @@ theorem ContinuousLinearMap.IsStarNormal.norm_eq_adjoint [CompleteSpace V] (T : 
     IsStarNormal T ↔ ∀ v : V, ‖T v‖ = ‖adjoint T v‖ :=
   by
   rw [T.isStarNormal_iff_adjoint, Commute, SemiconjBy, ← sub_eq_zero]
-  simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe, ContinuousLinearMap.coe_sub,
-    ← LinearMap.ext_iff, ContinuousLinearMap.coe_zero]
+  simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe,
+    ContinuousLinearMap.toLinearMap_sub,
+    ← LinearMap.ext_iff, ContinuousLinearMap.toLinearMap_zero]
   have : IsSymmetric ((T.comp (adjoint T) : V →ₗ[𝕜] V) - ((adjoint T).comp T : V →ₗ[𝕜] V)) :=
     fun u v => by
     simp_rw [← ContinuousLinearMap.mul_def, LinearMap.sub_apply,
       ContinuousLinearMap.coe_coe,
-      ContinuousLinearMap.mul_apply, inner_sub_left, inner_sub_right,
+      mul_apply_eq_comp, inner_sub_left, inner_sub_right,
       ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_right, sub_left_inj,
       ← ContinuousLinearMap.adjoint_inner_left T, ← ContinuousLinearMap.adjoint_inner_right T]
   simp_rw [← ContinuousLinearMap.mul_def] at this
   rw [← IsSymmetric.inner_map_self_eq_zero this]
   simp_rw [LinearMap.sub_apply, inner_sub_left, ContinuousLinearMap.coe_coe,
-    ContinuousLinearMap.mul_apply, ContinuousLinearMap.adjoint_inner_left,
+    mul_apply_eq_comp, ContinuousLinearMap.adjoint_inner_left,
     inner_self_eq_norm_sq_to_K, ← ContinuousLinearMap.adjoint_inner_right T,
     inner_self_eq_norm_sq_to_K, sub_eq_zero, ←
     sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _), eq_comm]
@@ -253,7 +254,7 @@ theorem ContinuousLinearMap.IsStarNormal.isCompl_ker_range (T : V →L[𝕜] V)
   [T.range.HasOrthogonalProjection]
   (h : IsStarNormal T) : IsCompl T.ker T.range := by
   simpa [ContinuousLinearMap.IsStarNormal.orthogonal_range h] using
-    (Submodule.isCompl_orthogonal_of_hasOrthogonalProjection (K := T.range)).symm
+    (Submodule.isCompl_orthogonal (K := T.range)).symm
 
 theorem ContinuousLinearMap.IsIdempotentElem.isSelfAdjoint_iff_ker_isOrtho_to_range
     [InnerProductSpace ℂ V] [CompleteSpace V] (T : V →L[ℂ] V) (h : IsIdempotentElem T) :
@@ -267,7 +268,7 @@ theorem ContinuousLinearMap.IsIdempotentElem.isSelfAdjoint_iff_ker_isOrtho_to_ra
     rw [ContinuousLinearMap.isSelfAdjoint_iff']
     apply eq_of_sub_eq_zero
     simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe,
-      ContinuousLinearMap.coe_sub, ContinuousLinearMap.coe_zero,
+      ContinuousLinearMap.toLinearMap_sub, ContinuousLinearMap.toLinearMap_zero,
       ← LinearMap.ext_iff, ← inner_map_self_eq_zero]
     intro x
     have h_toLinearMap : IsIdempotentElem T.toLinearMap :=

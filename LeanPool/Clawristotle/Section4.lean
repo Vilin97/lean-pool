@@ -53,8 +53,8 @@ theorem steady_state_is_local_maxwellian
 private lemma hasFDerivAt_proj_mul_const (j : Fin 3) (c : ℝ) (v : Fin 3 → ℝ) :
     HasFDerivAt (fun w : Fin 3 → ℝ => w j * c)
       (c • (ContinuousLinearMap.proj j : (Fin 3 → ℝ) →L[ℝ] ℝ)) v := by
-  convert (ContinuousLinearMap.proj (ι := Fin 3) (φ := fun _ => ℝ) j :
-    (Fin 3 → ℝ) →L[ℝ] ℝ).hasFDerivAt.mul_const c using 1
+  exact (ContinuousLinearMap.proj (ι := Fin 3) (φ := fun _ => ℝ) j :
+    (Fin 3 → ℝ) →L[ℝ] ℝ).hasFDerivAt.mul_const c
 
 /-- HasFDerivAt for each component of the Lorentz force E + v×B.
     Component 0: fderiv is B₂·proj₁ - B₁·proj₂
@@ -96,8 +96,7 @@ lemma lorentz_force_div_zero (E_val B_val : Fin 3 → ℝ) :
   simp_rw [hsimp]
   obtain ⟨h0, h1, h2⟩ := lorentz_hasFDerivAt_components E_val B_val v
   rw [h0.fderiv, h1.fderiv, h2.fderiv]
-  simp [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
-        ContinuousLinearMap.proj_apply]
+  simp [ContinuousLinearMap.proj_apply]
 
 /-- Chain rule for the entropy potential: ∇(g·log g - g) = log(g) · ∇g.
     This is the Fréchet derivative version, used to relate IBP to entropy integrals. -/
@@ -113,6 +112,7 @@ private lemma fderiv_entropy_potential (g : (Fin 3 → ℝ) → ℝ) (v : Fin 3 
   have hlog_fderiv : fderiv ℝ (fun w => Real.log (g w)) v = (g v)⁻¹ • fderiv ℝ g v := by
     have h := ((Real.hasDerivAt_log hg_ne).comp_hasFDerivAt v hg_diff.hasFDerivAt).fderiv
     convert h using 1
+    rfl
   have h1 : fderiv ℝ (fun w => g w * Real.log (g w)) v =
       g v • fderiv ℝ (fun w => Real.log (g w)) v + Real.log (g v) • fderiv ℝ g v := by
     have h_eq : (fun w => g w * Real.log (g w)) = g * (fun w => Real.log (g w)) := by
@@ -123,8 +123,7 @@ private lemma fderiv_entropy_potential (g : (Fin 3 → ℝ) → ℝ) (v : Fin 3 
       (fderiv ℝ (fun w => g w * Real.log (g w)) v - fderiv ℝ g v) v :=
     (hg_diff.mul hlog_diff).hasFDerivAt.sub hg_diff.hasFDerivAt
   rw [h_sub.fderiv, h1]; ext x
-  simp [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
-        ContinuousLinearMap.smul_apply]
+  simp
   field_simp; ring
 
 /-- The diagonal partial derivative ∂(E + v×B)_i/∂v_i = 0 for each i.
@@ -136,14 +135,11 @@ private lemma lorentz_partial_diag_zero (E_val B_val : Fin 3 → ℝ) (i : Fin 3
   obtain ⟨h0, h1, h2⟩ := lorentz_hasFDerivAt_components E_val B_val v
   fin_cases i
   · change (fderiv ℝ (fun w => (E_val + cross w B_val) 0) v) (Pi.single 0 1) = 0
-    rw [hsimp, h0.fderiv]; simp [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.proj_apply, Pi.single]
+    rw [hsimp, h0.fderiv]; simp [ContinuousLinearMap.proj_apply, Pi.single]
   · change (fderiv ℝ (fun w => (E_val + cross w B_val) 1) v) (Pi.single 1 1) = 0
-    rw [hsimp, h1.fderiv]; simp [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.proj_apply, Pi.single]
+    rw [hsimp, h1.fderiv]; simp [ContinuousLinearMap.proj_apply, Pi.single]
   · change (fderiv ℝ (fun w => (E_val + cross w B_val) 2) v) (Pi.single 2 1) = 0
-    rw [hsimp, h2.fderiv]; simp [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.proj_apply, Pi.single]
+    rw [hsimp, h2.fderiv]; simp [ContinuousLinearMap.proj_apply, Pi.single]
 
 /-- Force transport vanishes: ∫_v (E + v×B) · ∇_v f · log f dv = 0.
     Uses: div_v(E + v×B) = 0 + velocity-space IBP (velocity_ibp). -/
@@ -167,7 +163,7 @@ lemma force_transport_zero
           (vGrad (fun w => g w * Real.log (g w) - g w) v)) := by
       ext v; simp only [dotProduct, vGrad]
       have h := fderiv_entropy_potential g v hg_smooth (hg_pos v)
-      simp_rw [h, ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp_rw [h, _root_.smul_apply, smul_eq_mul]
       simp [Fin.sum_univ_three]; ring
     conv_lhs => rw [show (∫ v, dotProduct (E_val + cross v B_val) (vGrad g v) * Real.log (g v)) =
         ∫ v, (fun v => dotProduct (E_val + cross v B_val) (vGrad g v) * Real.log (g v)) v

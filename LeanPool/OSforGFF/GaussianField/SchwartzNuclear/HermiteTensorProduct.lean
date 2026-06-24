@@ -385,7 +385,7 @@ private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [No
               (∑ i ∈ t, a.val i • b i : SchwartzMap E ℝ) y = ∑ i ∈ t, G i y := by
             intro t; induction t using Finset.cons_induction with
             | empty => simp
-            | cons a' t' ha' ih => simp [SchwartzMap.smul_apply, smul_eq_mul, G]
+            | cons a' t' ha' ih => simp [smul_eq_mul, G]
           exact this s
         have h_iFD_r : iteratedFDeriv ℝ l (⇑r) x =
             ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (G ↑i) x := by
@@ -395,7 +395,7 @@ private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [No
             ContDiff.sum (fun i _ => contDiff_const.mul (h_contDiff i l))
           have hcoe_r : (⇑r : E → ℝ) = fun y =>
               (∑' n, a.val n * b n y) - ∑ i ∈ s, G i y := by
-            ext y; simp only [hr_def, SchwartzMap.sub_apply, hg_apply]
+            ext y; simp only [hr_def, sub_apply, hg_apply]
             exact congrArg ((∑' n, a.val n * b n y) - ·) (hsum_coe y)
           rw [hcoe_r]
           set h_sum := fun y => ∑ i ∈ s, G i y with h_sum_def
@@ -807,8 +807,11 @@ private lemma euclidean_norm_le_l1 (d : ℕ) (x : EuclideanSpace ℝ (Fin (d + 1
     ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
   rw [EuclideanSpace.norm_eq]
   have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤ (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-    convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-      (fun j _ => abs_nonneg (x j)) using 2
+    have heq : ∀ j : Fin (d + 1), ‖x j‖ ^ 2 = |x j| ^ 2 := fun j => by
+      rw [Real.norm_eq_abs]
+    simp only [heq]
+    exact Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
+      (fun j _ => abs_nonneg (x j))
   calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) := Real.sqrt_le_sqrt hsq
     _ = ∑ j, |x j| := by
         rw [Real.sqrt_sq_eq_abs,
@@ -1399,6 +1402,7 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     exact congr_fun (congrArg SchwartzMap.toFun (h_slice y)) t
   have h_val := h_zero (euclideanInit (d' + 1) x) (x (Fin.last (d' + 1)))
   rw [schwartz_slice_eq] at h_val
+  rw [zero_apply]
   convert h_val using 1
   congr 1
   exact (euclideanSnoc_init_last (d' + 1) x).symm

@@ -109,8 +109,8 @@ private lemma dixonH1_cauchyIntegrand_integrable (hU : IsOpen U)
     have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
     apply ContinuousWithinAt.mul
     · apply ContinuousWithinAt.div
-      · exact (hf_cont_on t ht_Icc).mono diff_subset
-      · exact ((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const).mono diff_subset
+      · exact (hf_cont_on t ht_Icc).mono sdiff_subset
+      · exact ((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const).mono sdiff_subset
       · exact sub_ne_zero.mpr (hoff t ht_Icc)
     · exact (γ.deriv_continuous_off_partition t ht_Ioo ht_npart).continuousWithinAt
   · intro t ht
@@ -164,7 +164,7 @@ private lemma dixonH2_integrand_integrable (f : ℂ → ℂ) (γ : PiecewiseC1Im
     have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_npart
     exact ((hfγ_cont t ht_Icc).div
         ((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const)
-        (sub_ne_zero.mpr (hball_avoids t ht_Icc)) |>.mono diff_subset).mul
+        (sub_ne_zero.mpr (hball_avoids t ht_Icc)) |>.mono sdiff_subset).mul
       (γ.deriv_continuous_off_partition t ht_Ioo ht_npart).continuousWithinAt
   · intro t ht
     rw [norm_mul, norm_div]
@@ -187,15 +187,13 @@ private noncomputable def dixonH2_F' (f : ℂ → ℂ) (γ : PiecewiseC1Immersio
 private lemma dixonH2_pointwise_hasDerivAt (fz c z x : ℂ) (hne : z - x ≠ 0) :
     HasDerivAt (fun x => fz * (z - x)⁻¹ * c) (fz * (z - x)⁻¹ ^ 2 * c) x := by
   have h1 : HasDerivAt (fun x => z - x) (-1) x := by
-    convert (hasDerivAt_const x z).sub (hasDerivAt_id x) using 1
-    simp only [zero_sub]
+    simpa using (hasDerivAt_id x).const_sub z
   have h2 : HasDerivAt (fun x => (z - x)⁻¹) (-(-1) / (z - x) ^ 2) x :=
     h1.fun_inv hne
   simp only [neg_neg, one_div] at h2
-  have h3 : HasDerivAt (fun x => fz * (z - x)⁻¹) (fz * ((z - x) ^ 2)⁻¹) x := by
-    convert h2.const_mul fz using 1
-  convert h3.mul_const c using 1
-  rw [inv_pow]
+  have h3 : HasDerivAt (fun x => fz * (z - x)⁻¹) (fz * ((z - x) ^ 2)⁻¹) x :=
+    h2.const_mul fz
+  exact (h3.mul_const c).congr_deriv (by rw [inv_pow])
 
 private lemma dixonH2_deriv_bound (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
     (M_f M_d ε : ℝ) (hM_f : ∀ t ∈ Icc γ.a γ.b, ‖f (γ.toFun t)‖ ≤ M_f)
@@ -269,7 +267,7 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
       exact ((hfγ_cont t ht_Icc).mul
           (((γ.continuous_toFun t ht_Icc).sub continuousWithinAt_const |>.inv₀
             (sub_ne_zero.mpr (hav_w t ht_Icc))).pow 2)
-          |>.mono diff_subset).mul
+          |>.mono sdiff_subset).mul
         (γ.deriv_continuous_off_partition t ht_Ioo ht_npart).continuousWithinAt
     · intro t ht
       change ‖f (γ.toFun t) * (γ.toFun t - w)⁻¹ ^ 2 * deriv γ.toFun t‖ ≤ M_f * ε⁻¹ ^ 2 * M_d
@@ -294,8 +292,11 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
     simp only [dixonH2_F, dixonH2_F']
     exact dixonH2_pointwise_hasDerivAt (f (γ.toFun t)) (deriv γ.toFun t) (γ.toFun t) x
       (sub_ne_zero.mpr (_hball_avoids x hx_ball t ht'))
-  convert (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
-    (Metric.ball_mem_nhds w hε_pos) hF_meas hF_int hF'_meas h_bound hbound_int h_diff).2 using 2
+  refine ((intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
+    (Metric.ball_mem_nhds w hε_pos) hF_meas hF_int hF'_meas h_bound hbound_int
+    h_diff).2).congr_deriv ?_
+  refine intervalIntegral.integral_congr (fun t _ => ?_)
+  simp only [dixonH2_F', sq]
 
 private lemma ball_avoids_curve_of_infDist_pos (γ : PiecewiseC1Immersion)
     (w : ℂ) (hinfDist_pos : 0 < Metric.infDist w (γ.toFun '' Icc γ.a γ.b)) :
@@ -481,8 +482,8 @@ private theorem dixonH1_F'_aestronglyMeasurable {M_d C_b δ₀ : ℝ}
       (fun t ⟨ht_Icc, ht_np⟩ => by
         have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_np
         exact (continuousWithinAt_const.mul
-          ((hdslope_t_cont _ t ht_Icc |>.mono diff_subset).sub
-            (hdslope_t_cont _ t ht_Icc |>.mono diff_subset))).mul
+          ((hdslope_t_cont _ t ht_Icc |>.mono sdiff_subset).sub
+            (hdslope_t_cont _ t ht_Icc |>.mono sdiff_subset))).mul
           (γ.deriv_continuous_off_partition t ht_Ioo ht_np).continuousWithinAt)
       (fun t ht => by
         simp only [norm_mul]
@@ -536,7 +537,7 @@ private theorem dixonH1_dslope_intervalIntegrable (hU : IsOpen U) (hf : Differen
   apply intervalIntegrable_of_piecewise_continuousOn_bounded (P := γ.partition) (C_b * M_d) hab
   · intro t ⟨ht_Icc, ht_np⟩
     have ht_Ioo : t ∈ Ioo γ.a γ.b := mem_Ioo_of_notMem_partition γ ht_Icc ht_np
-    exact (hdslope_t_cont x t ht_Icc |>.mono diff_subset).mul
+    exact (hdslope_t_cont x t ht_Icc |>.mono sdiff_subset).mul
       (γ.deriv_continuous_off_partition t ht_Ioo ht_np).continuousWithinAt
   · intro t ht
     rw [norm_mul]
@@ -928,7 +929,7 @@ lemma piecewiseC1_image_interior_empty (γ : PiecewiseC1Immersion) :
       γ.toFun '' (Icc γ.a γ.b \ ↑γ.partition) ∪ γ.toFun '' ↑γ.partition := by
     rw [← Set.image_union]
     congr 1
-    exact (Set.diff_union_of_subset γ.partition_subset).symm
+    exact (Set.sdiff_union_of_subset γ.partition_subset).symm
   rw [hsplit, dimH_union]
   apply max_lt
   · apply lt_of_le_of_lt

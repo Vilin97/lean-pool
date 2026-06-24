@@ -572,7 +572,7 @@ lemma eq_sum_degree_one_of_fourier_weight_one {f : BooleanFunc n}
     (h : fourierWeight 1 f = ‖f‖ ^ 2) :
     ∀ x, f x = ∑ i, 𝓕 f {i} * (-1)^(x i).val := by
   intro
-  nth_rewrite 1 [eq_sum_fourier_of_fourier_weight h, sum_apply]
+  nth_rewrite 1 [eq_sum_fourier_of_fourier_weight h, Finset.sum_apply]
   apply sum_singletons
   intro
   simp only [Pi.smul_apply, prod_singleton, smul_eq_mul]
@@ -587,14 +587,14 @@ def multiplier (m : ℕ → ℝ) : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
   toFun := fun f ↦ ∑ S : Finset (Fin n), (m S.card) • 𝓕 f S • χ S
   map_add' := by
     intros; ext; dsimp
-    repeat rw [sum_apply]
+    repeat rw [Finset.sum_apply]
     rw [← sum_add_distrib, sum_congr (by rfl)]
     intros
     simp only [map_add, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     ring
   map_smul' := by
     intros; ext
-    simp only [map_smul, Pi.smul_apply, smul_eq_mul, sum_apply, RingHom.id_apply, mul_sum]
+    simp only [map_smul, Pi.smul_apply, smul_eq_mul, Finset.sum_apply, RingHom.id_apply, mul_sum]
     congr! 1; ring
 
 /-- Walsh characters are eigenfunctions of multipliers. -/

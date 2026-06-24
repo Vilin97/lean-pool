@@ -159,7 +159,7 @@ private lemma slope_tendsto_right_of_deriv
   have h_deriv : HasDerivWithinAt γ.toFun L (Ici t₀) t₀ :=
     hasDerivWithinAt_Ici_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsGT hδ_gt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope] at h_deriv
-  rw [show (Ici t₀ \ {t₀} : Set ℝ) = Ioi t₀ from Ici_diff_left] at h_deriv
+  rw [show (Ici t₀ \ {t₀} : Set ℝ) = Ioi t₀ from Ici_sdiff_left] at h_deriv
   refine (h_deriv.comp (tendsto_add_nhdsGT t₀)).congr (fun ε => ?_)
   simp only [Function.comp, slope, vsub_eq_sub, hcross, add_sub_cancel_left]
 
@@ -235,7 +235,7 @@ private lemma slope_tendsto_left_of_deriv
   have h_deriv : HasDerivWithinAt γ.toFun L (Iic t₀) t₀ :=
     hasDerivWithinAt_Iic_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsLT hδ_lt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope, show (Iic t₀ \ {t₀} : Set ℝ) = Iio t₀ from
-    Iic_diff_right] at h_deriv
+    Iic_sdiff_right] at h_deriv
   have h_comp := h_deriv.comp (tendsto_sub_nhdsLT t₀)
   have h_neg : Tendsto (fun ε : ℝ => -((-ε)⁻¹ • (γ.toFun (t₀ - ε) - s)))
       (𝓝[>] 0) (𝓝 (-L)) := h_comp.neg.congr (fun ε => by
@@ -560,7 +560,7 @@ private lemma eventually_differentiableAt_of_filter
     (l : Filter ℝ) (hl : l ≤ 𝓝 t₀) (hne : ∀ᶠ t in l, t ≠ t₀) :
     ∀ᶠ t in l, DifferentiableAt ℝ γ.toFun t := by
   have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-    (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
+    (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
   filter_upwards [hl (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
     hl (Icc_mem_nhds ht₀.1 ht₀.2), hne] with t ht₁ ht₂ ht₃
   exact γ.smooth_off_partition t ht₂ fun hm => ht₁ ⟨hm, ht₃⟩

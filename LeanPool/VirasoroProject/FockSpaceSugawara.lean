@@ -45,6 +45,10 @@ Heisenberg algebra, Fock space, Virasoro algebra, Sugawara construction
 
 namespace VirasoroProject
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it provides the Lie ring
+-- structure on the universal enveloping algebra, used for `LieHom.map_lie`.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 
 
 section Fock_space_Sugawara_construction
@@ -78,10 +82,24 @@ private lemma commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra
         exact same
     · simp only [hkl, ↓reduceIte, map_zero, zero_smul] at key ⊢
       simp_rw [← smul_assoc, ← sub_smul]
-      convert key.symm using 1
+      rw [show (ιUEA 𝕜) (jgen 𝕜 k) • (ιUEA 𝕜) (jgen 𝕜 l)
+              - (ιUEA 𝕜) (jgen 𝕜 l) • (ιUEA 𝕜) (jgen 𝕜 k)
+            = ⁅(ιUEA 𝕜) (jgen 𝕜 k), (ιUEA 𝕜) (jgen 𝕜 l)⁆ by
+          rw [Ring.lie_def, smul_eq_mul, smul_eq_mul]]
+      exact key.symm
   ext v
   convert key v using 1
-  by_cases hkl : k + l = 0 <;> simp [hkl, Int.cast_smul_eq_zsmul] <;> rfl
+  all_goals
+    first
+      | rfl
+      | (rw [apply_ite (f := fun A : ModuleOfModuleAlgebra 𝕜 _ V →ₗ[𝕜]
+              ModuleOfModuleAlgebra 𝕜 _ V ↦ A v)]
+         by_cases hkl : k + l = 0
+         · simp only [hkl, ↓reduceIte, LinearMap.smul_apply, Module.End.one_apply,
+             Int.cast_smul_eq_zsmul]
+           rfl
+         · simp only [hkl, ↓reduceIte, LinearMap.zero_apply]
+           rfl)
 
 open HeisenbergAlgebra Filter in
 -- TODO: Generalize to `kgen` acting as `κ • 1`, maybe.

@@ -19,7 +19,7 @@ Authors: ruplet
 --    of work which we can skip until making sure that we'll get to any
 --    interesting result at all
 
-import Lean
+import Lean.Elab.Command
 
 import Mathlib.ModelTheory.Basic
 import Mathlib.ModelTheory.Syntax

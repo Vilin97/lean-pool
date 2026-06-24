@@ -72,7 +72,7 @@ lemma negMap_measurable : Measurable negMap := by
   rw [MeasurableSpace.comap_comp]
   conv_lhs => rw [show (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) ∘ negMap =
       Neg.neg ∘ (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) from by
-    ext ω; change (-ω) g = -(ω g); exact ContinuousLinearMap.neg_apply ω g]
+    ext ω; change (-ω) g = -(ω g); rfl]
   rw [← MeasurableSpace.comap_comp]
   have h_neg_meas : (borel ℝ).comap (Neg.neg : ℝ → ℝ) ≤ borel ℝ :=
     measurable_iff_comap_le.mp measurable_neg
@@ -114,8 +114,10 @@ lemma integral_neg_invariance
         h_inner_meas).aestronglyMeasurable
     rw [integral_map (Measurable.aemeasurable negMap_measurable) h_aestrongly_measurable]
     have h_neg_eq : ∀ ω : FieldConfiguration,
-        distributionPairing (-ω) g = -distributionPairing ω g :=
-      fun ω => ContinuousLinearMap.neg_apply ω g
+        distributionPairing (-ω) g = -distributionPairing ω g := by
+      intro ω
+      change (-ω) g = -(ω g)
+      rfl
     have h_integrand_conj :
         (fun ω => Complex.exp (Complex.I * (distributionPairing (negMap ω) g : ℂ))) =
         (fun ω => starRingEnd ℂ (Complex.exp (Complex.I * (distributionPairing ω g : ℂ)))) := by
@@ -176,7 +178,7 @@ lemma moment_zero_from_realCF
   -- Flip integrand: ((-ω) a : ℂ) = - (ω a : ℂ)
   have hflip : (fun ω : FieldConfiguration => ((-ω) a : ℂ)) = (fun ω => - (ω a : ℂ)) := by
     funext ω
-    have : (-ω) a = -(ω a) := ContinuousLinearMap.neg_apply ω a
+    have : (-ω) a = -(ω a) := rfl
     simp [this]
   -- Hence ∫ X = ∫ -X = -∫ X
   have : ∫ ω, (ω a : ℂ) ∂μ.toMeasure = - ∫ ω, (ω a : ℂ) ∂μ.toMeasure := by

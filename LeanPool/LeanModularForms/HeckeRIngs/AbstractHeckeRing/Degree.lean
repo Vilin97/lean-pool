@@ -90,7 +90,11 @@ lemma smulOrbit_card (g : P.Δ) (β : P.Δ) :
   change (Finset.image _ ⊤).card = _
   rw [Finset.top_eq_univ]
   convert (Finset.card_image_of_injective Finset.univ (smulOrbit_map_inj P g β)).trans
-    Finset.card_univ
+    Finset.card_univ using 2
+  · rfl
+  · apply heq_of_eq
+    congr 1
+    exact Subsingleton.elim _ _
 
 /-- The cardinality of a smul orbit cast to `ℤ` equals `HeckeCosetDeg`. -/
 lemma smulOrbit_card_intCast (D : HeckeCoset P) (β : P.Δ) :

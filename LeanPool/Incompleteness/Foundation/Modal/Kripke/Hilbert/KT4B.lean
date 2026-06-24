@@ -20,11 +20,11 @@ open Geachean
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveSymmetricFrameClass :
     FrameClass :=
-  { F | Std.Refl F ∧ IsTrans F.World F.Rel ∧ Symmetric F }
+  { F | Std.Refl F ∧ IsTrans F.World F.Rel ∧ IsSymmetric F }
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveSymmetricFiniteFrameClass :
     FiniteFrameClass :=
-  { F | Std.Refl F.Rel ∧ IsTrans F.World F.Rel ∧ Symmetric F.Rel }
+  { F | Std.Refl F.Rel ∧ IsTrans F.World F.Rel ∧ IsSymmetric F.Rel }
 
 namespace Hilbert
 namespace KT4B

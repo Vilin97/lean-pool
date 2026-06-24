@@ -5,7 +5,7 @@ Authors: FrenzyMath
 -/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Combinatorics.SimpleGraph.Basic
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!

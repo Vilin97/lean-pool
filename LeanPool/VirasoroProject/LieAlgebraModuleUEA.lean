@@ -64,6 +64,11 @@ Lie algebra, universal enveloping algebra
 -/
 
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it is needed to view the
+-- universal enveloping algebra (and operator algebras) as Lie rings, e.g. for `LieHom.map_lie`
+-- and `LieAlgebra.Representation`.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 section modules_over_algebras_are_modules_over_scalars
 
 variable (𝕜 A : Type*) [CommRing 𝕜] [Semiring A] [Algebra 𝕜 A]

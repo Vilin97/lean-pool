@@ -125,8 +125,10 @@ This is actually a colimit cocone (see `CWComplex.IProd.colimitCocone`). -/
 noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
   { pt := TopCat.of (I × X.toTopCat)
     ι := NatTrans.ofSequence (incl X) <| by
-      convert naturality X
-      simp only [homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ] }
+      intro n
+      have h := naturality X n
+      simp only [Functor.const_obj_map, Functor.ofSequence_map_homOfLE_succ]
+      exact h }
 
 /-- The cocone with `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯` as base and `Z.pt` as vertex -/
 noncomputable def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I) :=

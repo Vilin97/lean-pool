@@ -1449,7 +1449,8 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
                     (fun z : ℝ × ℝ => |z.1| * Real.exp (-(1/(4*s)) * z.1^2) *
                                       (|z.2| * Real.exp (-(1/(4*s)) * z.2^2)))
                     (MeasureTheory.volume.restrict (Set.Ioi 0 ×ˢ Set.Ioi 0)) := by
-                  convert h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0) using 2
+                  rw [MeasureTheory.Measure.volume_eq_prod]
+                  exact h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0)
                 apply MeasureTheory.Integrable.mono h_prod_restr
                 · fun_prop
                 · -- Pointwise bound on Ioi 0 × Ioi 0
@@ -1631,7 +1632,8 @@ lemma heat_kernel_moment_integrableOn_quadrant (s : ℝ) (hs : 0 < s) :
       (fun z : ℝ × ℝ => |z.1| * Real.exp (-(1/(4*s)) * z.1^2) *
                         (|z.2| * Real.exp (-(1/(4*s)) * z.2^2)))
       (volume.restrict (Set.Ioi 0 ×ˢ Set.Ioi 0)) := by
-    convert h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0) using 2
+    rw [MeasureTheory.Measure.volume_eq_prod]
+    exact h_prod.restrict (s := Set.Ioi 0 ×ˢ Set.Ioi 0)
   -- Dominate by √(π/s) * h_prod_restr
   apply MeasureTheory.Integrable.mono (h_prod_restr.const_mul (Real.sqrt (π/s)))
   · fun_prop

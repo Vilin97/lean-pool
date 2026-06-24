@@ -55,23 +55,23 @@ lemma case1a (dim3 : Module.finrank K L = 3) (h₁ : Module.finrank K (commutato
   rw [dim3, ← Set.cast_ncard finι, Nat.cast_inj] at card3
   --construct elements f,g such that ι = {e,f,g}
   have : Set.ncard (ι \ {e}) = 2 := by
-    rw [Set.ncard_diff_singleton_of_mem eι, ← card3]
+    rw [Set.ncard_sdiff_singleton_of_mem eι, ← card3]
   have : (ι \ {e}).Nonempty := by
     rw [← Set.ncard_pos]
     simp only [this, Nat.ofNat_pos]
   obtain ⟨f, hf⟩ := this
   have : Set.ncard (ι \ ({e} ∪ {f})) = 1 := by
-    rw [← Set.diff_diff, Set.ncard_diff_singleton_of_mem hf, this]
+    rw [← Set.sdiff_sdiff, Set.ncard_sdiff_singleton_of_mem hf, this]
   simp only [Set.union_singleton, Set.ncard_eq_one] at this
   obtain ⟨g, hg⟩ := this
-  have fι := Set.mem_of_mem_diff hf
+  have fι := Set.mem_of_mem_sdiff hf
   have gι : g ∈ ι := by
     rw [Set.singleton_subset_iff.symm, ← hg]
-    exact Set.diff_subset
+    exact Set.sdiff_subset
   have hfg : ι = {e, f, g} := by
     apply Set.eq_of_subset_of_subset
     · have : ι ⊆ {f, e} ∪ {g} := by
-        rw [← Set.diff_subset_iff, hg]
+        rw [← Set.sdiff_subset_iff, hg]
       simp only [Set.union_singleton] at this
       rw [Set.pair_comm, Set.insert_comm, Set.pair_comm]
       assumption
@@ -1270,16 +1270,17 @@ lemma case2 : Module.finrank K L = 3 ∧ Module.finrank K (commutator K L) = 2 �
         trans finrank K ↥(span K {B 1, B 2})
         · exact hcomm
         · have range_b : { B 1, B 2 } = Set.range ![B 1, B 2] := by aesop
-          convert_to Set.finrank K (Set.range ![B 1, B 2]) = Fintype.card (Fin 2)
-          · dsimp [Set.finrank]
-            rw [range_b]
-          · symm
-            rw [← linearIndependent_iff_card_eq_finrank_span (b:=![B 1, B 2])]
+          have hli : LinearIndependent K (![B 1, B 2]) := by
             convert_to LinearIndependent K (⇑B ∘ ![1, 2])
             · ext j; fin_cases j <;> rfl
             · apply LinearIndependent.comp B.linearIndependent
               intro x y hxy
               fin_cases x, y <;> simp_all
+          have key : Set.finrank K (Set.range ![B 1, B 2]) = Fintype.card (Fin 2) :=
+            ((linearIndependent_iff_card_eq_finrank_span).mp hli).symm
+          rw [show finrank K ↥(span K {B 1, B 2})
+            = Set.finrank K (Set.range ![B 1, B 2]) by rw [Set.finrank, range_b], key,
+            Fintype.card_fin]
     · constructor
       · rw [finrank_eq_card_basis B, Fintype.card_fin]
       · apply finrank_com_eq2_from_basis_bracket

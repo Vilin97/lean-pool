@@ -182,7 +182,7 @@ lemma score_bound_of_grad_bound
   have hfu := hf_pos u
   rw [show Real.log ∘ f = fun u => Real.log (f u) from rfl,
       fderiv.log (hf_smooth.differentiable (by norm_num)).differentiableAt (ne_of_gt hfu)]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul, abs_mul,
+  simp only [_root_.smul_apply, smul_eq_mul, abs_mul,
     abs_of_pos (inv_pos.mpr hfu)]
   rw [inv_mul_le_iff₀ hfu]; linarith [hGrad u i]
 

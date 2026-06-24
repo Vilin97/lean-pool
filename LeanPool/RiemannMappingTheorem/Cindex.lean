@@ -30,7 +30,7 @@ lemma circle_integral_eq_zero (hU : IsOpen U) (hr : 0 < r) (hcr : closedBall c r
   circleIntegral_eq_zero_of_differentiable_on_off_countable hr.le Set.countable_empty
     (f_hol.continuousOn.mono hcr)
     (fun _ hz => f_hol.differentiableAt
-      (hU.mem_nhds (hcr (ball_subset_closedBall (Set.diff_subset hz)))))
+      (hU.mem_nhds (hcr (ball_subset_closedBall (Set.sdiff_subset hz)))))
 
 lemma circle_integral_sub_center_inv_smul [CompleteSpace E] {v : E} (hr : 0 < r) :
     (∮ z in C(c, r), (z - c)⁻¹ • v) = (2 * π * I : ℂ) • v := by

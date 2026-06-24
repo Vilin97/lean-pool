@@ -72,7 +72,7 @@ theorem unitArc_continuous (θ₁ θ₂ a b : ℝ) : Continuous (unitArc θ₁ �
   fun_prop
 
 /-- Helper: the angle function for the unit arc has a specific derivative. -/
-private lemma unitArc_angle_hasDerivAt (θ₁ θ₂ a b t : ℝ) (hab : b - a ≠ 0) :
+private lemma unitArc_angle_hasDerivAt (θ₁ θ₂ a b t : ℝ) (_hab : b - a ≠ 0) :
     HasDerivAt (fun s => θ₁ + (s - a) / (b - a) * (θ₂ - θ₁))
       ((θ₂ - θ₁) / (b - a)) t := by
   have hd : HasDerivAt (fun s => (s - a) / (b - a)) (1 / (b - a)) t := by
@@ -80,8 +80,9 @@ private lemma unitArc_angle_hasDerivAt (θ₁ θ₂ a b t : ℝ) (hab : b - a �
   have h1 : HasDerivAt (fun s => (s - a) / (b - a) * (θ₂ - θ₁))
       ((θ₂ - θ₁) / (b - a)) t := by
     have hmul := hd.mul_const (θ₂ - θ₁)
-    convert hmul using 1
-    field_simp
+    convert hmul using 2 <;> first
+      | rfl
+      | ring
   simpa using h1.const_add θ₁
 
 /-- Derivative of the unit arc. -/
@@ -98,7 +99,8 @@ theorem unitArc_hasDerivAt (θ₁ θ₂ a b t : ℝ) (hab : a < b) :
     hlift.mul_const I
   have hexp := hc.cexp
   simp only [unitArc]
-  convert hexp using 1
+  convert hexp using 2
+  rfl
 
 /-- Key distance formula: squared norm of difference of two points on the unit circle. -/
 theorem exp_sub_norm_sq (θ₁ θ₂ : ℝ) :

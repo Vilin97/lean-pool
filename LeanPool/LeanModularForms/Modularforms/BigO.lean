@@ -34,7 +34,7 @@ lemma linear_bigO (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻
     use 1
     simp only [gt_iff_lt, zero_lt_one, norm_inv, Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev,
       norm_mul, Real.norm_eq_abs, one_mul, Int.cofinite_eq, eventually_sup,
-      eventually_atBot, eventually_atTop, ge_iff_le, true_and, abs_norm]
+      eventually_atBot, eventually_atTop, true_and, abs_norm]
     constructor
     repeat{
     use 0
@@ -52,7 +52,7 @@ lemma linear_bigO (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻
   refine ⟨by simp only [gt_iff_lt, inv_pos]; exact r_pos z, ?_⟩
   simp only [Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev, norm_mul, norm_inv,
     Real.norm_eq_abs, abs_abs, abs_norm, Int.cofinite_eq, eventually_sup, eventually_atBot,
-    eventually_atTop, ge_iff_le]
+    eventually_atTop]
   constructor
   · use min (-1) m
     intro n hn
@@ -92,7 +92,7 @@ lemma Asymptotics.IsBigO.zify {α β : Type*} [Norm α] [Norm β] {f : ℤ → �
   rw [Int.cofinite_eq] at hC
   rw [Nat.cofinite_eq_atTop]
   apply Filter.Eventually.natCast_atTop (p := fun n => ‖f n‖ ≤ C * ‖g n‖)
-  simp_all only [eventually_sup, eventually_atBot, eventually_atTop, ge_iff_le]
+  simp_all only [eventually_sup, eventually_atBot, eventually_atTop]
 
 lemma Asymptotics.IsBigO.of_neg {α β : Type*} [Norm α] [Norm β] {f : ℤ → α} {g : ℤ → β}
     (hf : f =O[cofinite] g) : (fun n => f (-n)) =O[cofinite] fun n => g (-n) := by
@@ -112,7 +112,7 @@ lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)�
     use 1
     simp only [gt_iff_lt, zero_lt_one, norm_inv, Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev,
       norm_mul, Real.norm_eq_abs, one_mul, Int.cofinite_eq, eventually_sup,
-      eventually_atBot, eventually_atTop, ge_iff_le, true_and, abs_norm]
+      eventually_atBot, eventually_atTop, true_and, abs_norm]
     constructor
     repeat{
       use 0
@@ -134,7 +134,7 @@ lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)�
   refine ⟨by simp only [gt_iff_lt, inv_pos]; exact r_pos z, ?_⟩
   simp only [Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev, norm_mul, norm_inv,
     Real.norm_eq_abs, abs_abs, abs_norm, Int.cofinite_eq, eventually_sup, eventually_atBot,
-    eventually_atTop, ge_iff_le]
+    eventually_atTop]
   constructor
   · use min (-1) m
     intro n hn

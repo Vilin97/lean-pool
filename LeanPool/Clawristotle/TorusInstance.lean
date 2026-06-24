@@ -79,7 +79,7 @@ private theorem killing_harmonic_rn' {n : ℕ} (b : (Fin n → ℝ) → (Fin n �
     intro y; linarith [hKilling y i j]
   rw [funext hK_fun, show (fun y => -(fderiv ℝ (fun z => b z i) y (Pi.single j 1))) =
       -(fun y => fderiv ℝ (fun z => b z i) y (Pi.single j 1)) from by ext; simp, fderiv_neg]
-  simp only [ContinuousLinearMap.neg_apply, neg_eq_zero]
+  simp only [_root_.neg_apply, neg_eq_zero]
   rw [clairaut_fderiv (fun z => b z i) x i j (hb i),
     show (fun y => fderiv ℝ (fun z => b z i) y (Pi.single i 1)) = fun _ => 0 from by
       ext y; linarith [hKilling y i i]]
@@ -113,7 +113,7 @@ private theorem curl_div_harmonic_rn' {n : ℕ} (F : (Fin n → ℝ) → (Fin n 
         fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x (Pi.single j 1) =
       (∑ i : Fin n,
         fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x) (Pi.single j 1) :=
-    (ContinuousLinearMap.sum_apply _ _ _).symm
+    (_root_.sum_apply _ _ _).symm
   rw [hap]
   have hfsum : (∑ i : Fin n, fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x) =
       fderiv ℝ (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x := by
@@ -400,7 +400,7 @@ instance : VML.FlatTorus3 Torus3 where
     show fderiv ℝ (periodicLift (fun y => Real.exp (φ y))) _ (Pi.single i 1) = _
     rw [show periodicLift (fun y => Real.exp (φ y)) = fun y => Real.exp (periodicLift φ y) from
       by ext y; simp [periodicLift]]
-    rw [fderiv_exp_comp_always, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    rw [fderiv_exp_comp_always, _root_.smul_apply, smul_eq_mul]
     simp [periodicLift, (torusMk_surjective x).choose_spec]
   hKillingToHarmonic := fun b hb_C1 hb_C2 hKilling =>
     torus_hKillingToHarmonic b (fun j => (hb_C1 j).of_le (by decide))

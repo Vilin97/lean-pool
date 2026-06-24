@@ -35,12 +35,12 @@ theorem exists_compact
     ∃ K, IsCompact K ∧ IsClosed K ∧ K ⊆ A ∧ P J (A \ K) ≤ ε := by
   by_cases hPA : P J A = 0
   · refine ⟨∅, isCompact_empty, isClosed_empty, empty_subset _, ?_⟩
-    rw [diff_empty, hPA]
+    rw [sdiff_empty, hPA]
     exact zero_le
   have h : P J A - ε < P J A := ENNReal.sub_lt_self (measure_ne_top _ _) hPA hε.ne'
   obtain ⟨K, hKA, ⟨hK_compact, hK_closed⟩, h_lt⟩ := hP_inner J hA (P J A - ε) h
   refine ⟨K, hK_compact, hK_closed, hKA, ?_⟩
-  rw [measure_diff hKA hK_closed.nullMeasurableSet (measure_ne_top (P J) _)]
+  rw [measure_sdiff hKA hK_closed.nullMeasurableSet (measure_ne_top (P J) _)]
   have h_le := h_lt.le
   rw [tsub_le_iff_left] at h_le ⊢
   rwa [add_comm]
@@ -70,7 +70,7 @@ lemma innerRegular_projectiveFamilyContent (hP : IsProjectiveMeasureFamily P)
     · have : (s \ cylinder (Js hs) K') = (cylinder (Js hs) (As hs) \ cylinder (Js hs) K') := by
         congr
         exact measurableCylinders.eq_cylinder hs
-      rw [this, diff_cylinder_same]
+      rw [this, sdiff_cylinder_same]
       refine (le_of_eq ?_).trans hK'
       have h_meas : MeasurableSet (As hs \ K') :=
         MeasurableSet.diff (measurableCylinders.measurableSet hs) hK'_closed.measurableSet

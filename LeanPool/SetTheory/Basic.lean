@@ -252,7 +252,7 @@ lemma ext_of_subset {X A B : M}
 
 instance instSetLike : SetLike M M where
   coe := fun x => {y | y ∈ x}
-  coe_injective' := fun x y eq => by
+  coe_injective := fun x y eq => by
     simp only [Set.ext_iff, Set.mem_setOf_eq] at eq
     exact ext eq
 

@@ -63,6 +63,7 @@ lemma isDipath_reparam (hfmono : Monotone f) (hγ : IsDipath γ) :
 lemma isDipath_cast {x y x' y' : α} (γ : Path x y) (hx : x' = x) (hy : y' = y) (hγ : IsDipath γ) :
   IsDipath (γ.cast hx hy) := by
     subst_vars
-    convert hγ
+    rw [Path.cast_rfl_rfl]
+    exact hγ
 
 end DirectedSpace

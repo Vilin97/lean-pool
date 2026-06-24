@@ -450,9 +450,11 @@ private lemma hasDerivAt_i_seg3 (H : ℝ) (t : ℝ) :
 
 private lemma hasDerivAt_i_seg4 (H : ℝ) (t : ℝ) :
     HasDerivAt (fun s : ℝ => ↑(s - 9/2) + ↑(H - 1) * I) (1 : ℂ) t := by
-  have key := (((hasDerivAt_id t).sub (hasDerivAt_const t (9/2 : ℝ))).ofReal_comp.add
-    (hasDerivAt_const t (↑(H - 1) * I)))
-  convert key using 1; simp [sub_zero]
+  have h1 : HasDerivAt (fun s : ℝ => s - 9/2) (1 : ℝ) t := by
+    have := (hasDerivAt_id t).sub (hasDerivAt_const t (9/2 : ℝ))
+    exact this.congr_deriv (by ring)
+  have h2 := h1.ofReal_comp.add (hasDerivAt_const t (↑(H - 1) * I))
+  exact h2.congr_deriv (by simp only [Complex.ofReal_one, add_zero])
 
 private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
     let g := fun t => fdBoundaryH H t - I

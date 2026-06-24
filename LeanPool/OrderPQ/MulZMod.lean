@@ -30,8 +30,9 @@ instance {n : ℕ} : IsCyclic (MulZMod n) := isCyclic_multiplicative
 
 @[simp]
 lemma card_mulZMod {n : ℕ} [NeZero n] : Fintype.card (MulZMod n) = n := by
-  convert Fintype.card_multiplicative (ZMod n) using 1
-  exact ZMod.card n |>.symm
+  have : Fintype.card (MulZMod n) = Fintype.card (ZMod n) :=
+    Fintype.card_multiplicative (ZMod n)
+  rw [this, ZMod.card]
 
 lemma nat_card_mulZMod {n : ℕ} [NeZero n] : Nat.card (MulZMod n) = n := by simp
 

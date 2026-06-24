@@ -39,7 +39,7 @@ lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :
     apply List.sum_eq_zero_iff.mpr
     intro x hx
     obtain ⟨i, hi⟩ : ∃ i : Fin n, x = v[i] := by
-      apply List.mem_iff_get.mp hx |> fun ⟨i, hi⟩ => ⟨⟨i, by grind⟩, by convert hi.symm⟩
+      apply List.mem_iff_get.mp hx |> fun ⟨i, hi⟩ => ⟨⟨i, by grind⟩, by simp [← hi]⟩
     exact hi.trans (nonpos_iff_eq_zero.mp (h_nonpos i))
   · intro ⟨i, hi⟩
     refine lt_of_lt_of_le hi ?_

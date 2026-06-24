@@ -229,7 +229,7 @@ theorem Phi_rotate_one_exp
     · simp [Function.update, hq]
   rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs =>
-    rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
+    rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
   ring_nf
 
 private lemma fourier_mk_eq_exp

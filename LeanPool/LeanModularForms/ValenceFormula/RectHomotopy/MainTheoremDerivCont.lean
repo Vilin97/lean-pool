@@ -61,7 +61,7 @@ private lemma seg2_deriv_eq (s t : ℝ) (ht1 : 1 < t) (ht2 : t < 2) :
     have h2 : HasDerivAt (fun t' : ℝ => (t' - 1) • iPoint) iPoint t := by
       have := h_shift.smul_const iPoint
       simpa only [one_smul] using this
-    convert h1.add h2 using 1; ring
+    exact (h1.add h2).congr_deriv (by ring)
   exact ((h_arc.const_smul (1 - s)).add (h_chord.const_smul s)).deriv
 
 /-- On `(2, 3)`, the homotopy's `t`-derivative equals the arc/chord formula at `(t, s)`. -/
@@ -137,6 +137,7 @@ private lemma deriv_cont_seg1 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_se
         simp only [zero_sub] at this; exact this
       have h5 := (hasDerivAt_const q.1 ((1/2 : ℂ))).add (h3.mul_const I)
       simp only [zero_add] at h5; convert h5.deriv using 2
+      all_goals rfl
     apply ContinuousOn.congr continuousOn_const hconst
 
 private lemma deriv_cont_seg2 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)

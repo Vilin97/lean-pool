@@ -98,7 +98,8 @@ lemma GL.mem_range_map_iff {f : R →+* S} (hf : Function.Injective f)
   simp only [_root_.map_mul, RingHom.map_det, RingHom.mapMatrix_apply, _root_.map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  congr; ext; simp [hr]
+  · congr; ext; simp [hr]
+  · exact (Units.inv_eq_val_inv _).symm
 
 variable {K : Type*} [CommRing K] (R : Subring K)
 

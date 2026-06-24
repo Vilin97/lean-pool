@@ -27,7 +27,7 @@ variable (k : Type*) [CommRing k] [LinearOrder k] [IsStrictOrderedRing k] (α : 
 
 instance funlike : FunLike (stdSimplex k α) α k where
   coe := Subtype.val
-  coe_injective' := Subtype.val_injective
+  coe_injective := Subtype.val_injective
 
 omit [IsStrictOrderedRing k] in
 lemma funlike_eval1 (f : stdSimplex k α) : f = f.val := rfl

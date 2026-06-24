@@ -228,7 +228,7 @@ by
   intro A hA ι _ u
   simp_rw [← QuantumSet.Psi_symm_transpose_kroneckerToTensor_toMatrix_rankOne]
   rw [← map_sum, ← map_sum (StarAlgEquiv.lTensor (Matrix n n ℂ) (transposeStarAlgEquiv n)),
-    ← map_sum kroneckerToTensor, ← map_sum onb.toMatrix, ← ContinuousLinearMap.coe_sum,
+    ← map_sum kroneckerToTensor, ← map_sum onb.toMatrix, ← ContinuousLinearMap.toLinearMap_sum,
     ← OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne u, hA.matrix_orthogonalProjection_eq]
   simp only [ContinuousLinearMap.toLinearMapAlgEquiv_symm_apply]
   simp only [LinearMap.coe_toContinuousLinearMap,
@@ -322,7 +322,7 @@ by
     rfl
   simp only [this, star_eq_conjTranspose, conjTranspose_conjTranspose]
   ext
-  simp only [sum_apply, kroneckerMap_apply, vecMulVec_apply,
+  simp only [Matrix.sum_apply, kroneckerMap_apply, vecMulVec_apply,
     Pi.star_apply, OrthonormalBasis.repr_apply_apply, transpose_apply,
     Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, mul_apply,
     single_eq, boole_mul]
@@ -561,7 +561,7 @@ by
     have := x.property
     simp only [hα, norm_smul, y.property, mul_one] at this
     simp only [hα, _root_.map_smul, map_smulₛₗ,
-      LinearMap.smul_apply, ContinuousLinearMap.coe_smul]
+      LinearMap.smul_apply, ContinuousLinearMap.toLinearMap_smul]
     rw [smul_smul, RCLike.conj_mul, this, RCLike.ofReal_one, one_pow, one_smul]
 
 theorem QuantumGraph.Real.reflexive_matrix_numOfEdges_eq_one_iff_eq_trivialGraph_of_counit_eq_trace

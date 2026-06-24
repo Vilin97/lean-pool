@@ -155,8 +155,8 @@ lemma graphLaplacian_isHermitian (G : SimpleGraph V) [DecidableRel G.Adj] :
   · subst hij; rfl
   · by_cases hadj : G.Adj i j
     · have : ¬(j = i) := fun h => hij (h.symm)
-      simp [hij, this, hadj, G.symm hadj]
-    · have : ¬G.Adj j i := fun h => hadj (G.symm h)
+      simp [hij, this, hadj, G.adj_symm hadj]
+    · have : ¬G.Adj j i := fun h => hadj (G.adj_symm h)
       by_cases hji : j = i
       · exact absurd hji.symm hij
       · simp [hij, hji, hadj, this]
@@ -172,8 +172,8 @@ lemma lapMatrix_loewner_mono {H₁ H₂ : SimpleGraph V}
     (H₂.lapMatrix ℝ - H₁.lapMatrix ℝ).PosSemidef := by
   let H' : SimpleGraph V :=
     { Adj := fun v w => H₂.Adj v w ∧ ¬ H₁.Adj v w
-      symm := fun v w ⟨h2, h1⟩ => ⟨H₂.symm h2, fun hh => h1 (H₁.symm hh)⟩
-      loopless := ⟨fun v ⟨h2, _⟩ => (SimpleGraph.irrefl H₂) h2⟩ }
+      symm.symm := fun v w ⟨h2, h1⟩ => ⟨H₂.adj_symm h2, fun hh => h1 (H₁.adj_symm hh)⟩
+      loopless.irrefl := fun v ⟨h2, _⟩ => (SimpleGraph.irrefl H₂) h2 }
   haveI : DecidableRel H'.Adj := inferInstance
   suffices heq : H₂.lapMatrix ℝ - H₁.lapMatrix ℝ = H'.lapMatrix ℝ by
     rw [heq]; exact SimpleGraph.posSemidef_lapMatrix ℝ H'

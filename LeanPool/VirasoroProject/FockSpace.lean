@@ -62,6 +62,10 @@ namespace VirasoroProject
 
 open Module
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it provides the Lie ring
+-- structure on the universal enveloping algebra, used for `LieHom.map_lie`.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 section HasCharge
 
 variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
@@ -150,7 +154,10 @@ lemma _root_.VirasoroProject.heisenbergTri_cartan_basis_none_eq_kgen :
   simp only [heisenbergTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              heisenbergTri_kgen_val]
   convert (basisJK 𝕜).basis_submodule_span_apply {none, some 0} ⟨none, Set.mem_insert none {some 0}⟩
-  simp
+  all_goals
+    first
+      | rfl
+      | rw [HeisenbergAlgebra.basisJK_none]
 
 open HeisenbergAlgebra in
 lemma _root_.VirasoroProject.heisenbergTri_cartan_basis_some_eq_jzero :
@@ -161,7 +168,10 @@ lemma _root_.VirasoroProject.heisenbergTri_cartan_basis_some_eq_jzero :
              heisenbergTri_jzero_val]
   convert (basisJK 𝕜).basis_submodule_span_apply {none, some 0}
           ⟨some 0, Set.mem_insert_of_mem none rfl⟩
-  simp
+  all_goals
+    first
+      | rfl
+      | rw [HeisenbergAlgebra.basisJK_some]
 
 lemma _root_.VirasoroProject.heisenbergTri_kgen_mem_cartan :
     .kgen 𝕜 ∈ (heisenbergTri 𝕜).cartan := by

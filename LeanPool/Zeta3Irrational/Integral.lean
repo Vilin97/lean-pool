@@ -7,7 +7,7 @@ Authors: Junqi Liu, Jujian Zhang
 import Mathlib.Analysis.Normed.Field.Instances
 import Mathlib.Analysis.PSeries
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Function.AEEqOfIntegral
 import Mathlib.MeasureTheory.Integral.IntegralEqImproper
 import Mathlib.Topology.Algebra.Module.ModuleTopology

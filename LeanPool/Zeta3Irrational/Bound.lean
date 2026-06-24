@@ -5,7 +5,7 @@ Authors: Junqi Liu, Jujian Zhang
 -/
 
 import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # LeanPool.Zeta3Irrational.Bound

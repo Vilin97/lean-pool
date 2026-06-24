@@ -18,7 +18,7 @@ open Geachean
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.SymmetricEuclideanFrameClass :
     FrameClass :=
-  { F | Symmetric F ∧ Euclidean F }
+  { F | IsSymmetric F ∧ Euclidean F }
 
 namespace Hilbert
 namespace KB5

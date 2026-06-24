@@ -136,7 +136,10 @@ lemma _root_.VirasoroProject.virasoroTri_cartan_basis_none_eq_cgen :
   simp only [virasoroTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              virasoroTri_cgen_val]
   convert (basisLC 𝕜).basis_submodule_span_apply {none, some 0} ⟨none, Set.mem_insert none {some 0}⟩
-  simp
+  all_goals
+    first
+      | rfl
+      | rw [VirasoroAlgebra.basisLC_none]
 
 open VirasoroAlgebra in
 lemma _root_.VirasoroProject.virasoroTri_cartan_basis_some_eq_lzero :
@@ -147,7 +150,10 @@ lemma _root_.VirasoroProject.virasoroTri_cartan_basis_some_eq_lzero :
              virasoroTri_lzero_val]
   convert (basisLC 𝕜).basis_submodule_span_apply {none, some 0}
           ⟨some 0, Set.mem_insert_of_mem none rfl⟩
-  simp
+  all_goals
+    first
+      | rfl
+      | rw [VirasoroAlgebra.basisLC_some]
 
 lemma _root_.VirasoroProject.virasoroTri_cgen_mem_cartan :
     .cgen 𝕜 ∈ (virasoroTri 𝕜).cartan := by

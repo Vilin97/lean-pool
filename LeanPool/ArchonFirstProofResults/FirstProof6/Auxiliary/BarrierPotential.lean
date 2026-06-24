@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
 import Mathlib.Analysis.Matrix.PosDef
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # Problem 6: Large epsilon-light vertex subsets -- Barrier Potential

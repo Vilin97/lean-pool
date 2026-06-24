@@ -356,7 +356,8 @@ lemma time_average_memLp_two (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (T :
     have h_int_meas : AEStronglyMeasurable (fun ω => ∫ s in Set.Icc 0 T, A s ω) μ :=
       AEStronglyMeasurable.integral_prod_right' h_swap
     -- c * f = c • f for ℂ
-    convert AEStronglyMeasurable.const_smul h_int_meas (1/T : ℂ)
+    convert AEStronglyMeasurable.const_smul h_int_meas (1/T : ℂ) using 2 with ω
+    simp [Pi.smul_apply, smul_eq_mul]
   -- Apply the proved theorem from L2TimeIntegral
   exact OSforGFF.time_average_memLp_two μ A T hT h_As_L2 h_uniform h_joint_meas h_avg_meas
 
@@ -381,7 +382,8 @@ lemma gff_err_sq_integrable (m : ℝ) [Fact (0 < m)] (T : ℝ) (hT : T > 0) (f :
   -- Step 3: Difference is in L² (L² is a vector space)
   have h_diff_L2 : MemLp (fun ω => (1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T, A s ω) - EA) 2 μ := by
     have h := h_avg_L2.sub h_const_L2
-    convert h using 2
+    convert h using 2 with ω
+    simp [Pi.sub_apply]
   -- Step 4: L² function has integrable square
   have h_sq_int : Integrable (fun ω => ‖(1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T,
     A s ω) - EA‖^2) μ := by
@@ -538,7 +540,8 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
     rw [h_eq3]
     let L : ℝ →L[ℝ] ℝ →L[ℝ] ℝ := ContinuousLinearMap.mul ℝ ℝ
     have h_conv := Integrable.convolution_integrand L hg_int hK_norm
-    convert h_conv using 1
+    convert h_conv using 2 with p
+    simp [L, ContinuousLinearMap.mul_apply']
   -- Apply continuous_of_dominated
   apply MeasureTheory.continuous_of_dominated
   · intro s
@@ -1022,7 +1025,9 @@ lemma variance_decay_from_clustering (m : ℝ) [Fact (0 < m)] (f : TestFunction�
       :=
       Filter.Tendsto.const_mul (2 * c * C) h1
     simp only [mul_zero] at h2
-    convert h2 using 1 with T
+    convert h2 using 1
+    ext T
+    rw [div_eq_mul_inv]
   -- Lower bound: variance ≥ 0
   have h_nonneg : ∀ T, 0 ≤ ∫ ω, ‖(1 / T) * ∫ s in Set.Icc (0 : ℝ) T,
       Complex.exp (distributionPairingℂReal (timeTranslationDistribution s ω) f)

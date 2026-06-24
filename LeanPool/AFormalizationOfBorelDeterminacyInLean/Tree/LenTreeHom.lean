@@ -46,7 +46,7 @@ instance : forgetPO.Faithful where
   map_injective {_ _} _ _ h := LenHom.ext (congr_arg (OrderHom.toFun ∘ PartOrd.Hom.hom) h)
 instance : FunLike (S ⟶ T) S T where
   coe f := f.toFun
-  coe_injective' _ _ h := LenHom.ext h
+  coe_injective _ _ h := LenHom.ext h
 instance : OrderHomClass (S ⟶ T) S.2 T.2 where
   map_rel f _ _ h := f.toOrderHom.monotone' h
 instance : ConcreteCategory Trees (fun S T ↦ S ⟶ T) (CC := fun S ↦ S.2) where

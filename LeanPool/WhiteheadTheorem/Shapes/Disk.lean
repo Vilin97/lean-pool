@@ -53,7 +53,9 @@ instance isEmpty_diskBoundary_zero : IsEmpty (diskBoundary.{u} 0) := by
   apply Set.subset_empty_iff.mp
   intro x hx
   have x0 : ‖x‖ = 0 := by rw [Subsingleton.elim x 0, norm_zero]
-  have x1 : ‖x‖ = 1 := by convert mem_sphere_iff_norm.mp hx; rw [sub_zero]
+  have x1 : ‖x‖ = 1 := by
+    have := mem_sphere_iff_norm.mp hx
+    rwa [sub_zero] at this
   norm_num [x0] at x1
 
 end TopCat

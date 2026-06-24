@@ -257,7 +257,7 @@ lemma Mat.inv_toFun2' (n : ℕ) :
     Finset.sum_apply, Pi.smul_apply, AlgHom.mulLeftRight_apply, unop_op, single_mul_mul_single,
     one_mul, mul_one, smul_single, smul_eq_mul, LinearMap.id_coe, id_eq, stdBasis_eq_single]
   ext k l
-  simp [sum_apply, single, Fintype.sum_prod_type, ite_and]
+  simp [Matrix.sum_apply, single, Fintype.sum_prod_type, ite_and]
 
 lemma Mat.bij (n : ℕ) : Function.Bijective (AlgHom.mulLeftRight R (Matrix (Fin n) (Fin n) R)) :=
   ⟨Function.HasLeftInverse.injective ⟨Mat.inv R n, DFunLike.congr_fun (Mat.inv_toFun1' R n)⟩,

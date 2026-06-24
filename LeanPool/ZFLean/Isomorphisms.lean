@@ -27,7 +27,7 @@ theorem isIso_trans (x y z : ZFSet) (x_iso_y : x ≅ᶻ y) (y_iso_z : y ≅ᶻ z
   exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
 instance : Trans ZFSet.isIso ZFSet.isIso ZFSet.isIso where
   trans := isIso_trans _ _ _
-theorem isIso_symm : Symmetric ZFSet.isIso := by
+theorem isIso_symm : ∀ ⦃x y⦄, ZFSet.isIso x y → ZFSet.isIso y x := by
   intro x y iso
   obtain ⟨bij, is_func, is_bij⟩ := iso
   have := is_func.1

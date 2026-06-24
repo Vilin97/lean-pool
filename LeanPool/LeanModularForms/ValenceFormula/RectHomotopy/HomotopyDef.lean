@@ -208,7 +208,7 @@ lemma fdBoundaryToPolygonHomotopy_continuous :
     intro p hp
     simp only [show p.1 ≤ 2 from le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2), if_true]
     exact H_match_at_t1 p hp
-  convert h12345 using 1
+  exact h12345
 
 lemma fdBoundaryToPolygonHomotopy_at_zero (t : ℝ) (_ht : t ∈ Icc 0 5) :
     fdBoundaryToPolygonHomotopy (t, 0) = fdBoundary t := by

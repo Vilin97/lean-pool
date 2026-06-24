@@ -251,7 +251,7 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     MeasureTheory.integrableOn_zero.congr_fun h_compl_zero.symm hcompl_meas
   have h_int_union : MeasureTheory.IntegrableOn F (Set.uIoc (1 : ℝ) 3) := by
     have := h_int_K.union h_int_compl
-    rwa [Set.union_diff_cancel (fun t ht => ht.1)] at this
+    rwa [Set.union_sdiff_cancel (fun t ht => ht.1)] at this
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (by norm_num : (1 : ℝ) ≤ 3)]
   rwa [Set.uIoc_of_le (by norm_num : (1 : ℝ) ≤ 3)] at h_int_union
 

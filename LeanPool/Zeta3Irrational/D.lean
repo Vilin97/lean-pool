@@ -9,7 +9,7 @@ import Mathlib.Algebra.GCDMonoid.Nat
 import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Data.Nat.Choose.Factorization
 import Mathlib.Data.Nat.Factorization.LCM
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.NumberTheory.PrimeCounting
 
 /-!

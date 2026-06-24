@@ -5,7 +5,7 @@ Authors: Yury G. Kudryashov
 -/
 
 import Mathlib.Analysis.Normed.Order.Lattice
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.Topology.Order.LowerUpperTopology

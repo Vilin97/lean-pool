@@ -34,7 +34,8 @@ theorem Nat.modEq_finset_prod_iff {a b : ℕ} {ι : Type*} (s : Finset ι) (e : 
   obtain ⟨l, hl, rfl⟩ := s.exists_list_nodup_eq
   rw [List.prod_toFinset e hl, Nat.modEq_list_map_prod_iff]
   · simp_rw [List.mem_toFinset]
-  · rwa [← List.pairwise_iff_coe_toFinset_pairwise hl (Coprime.symmetric.comap _)]
+  · have : Std.Symm (Coprime.onFun e) := ⟨fun _ _ ↦ Coprime.symm⟩
+    rwa [← List.pairwise_iff_coe_toFinset_pairwise hl]
 
 theorem multiplicity_zero_right {α : Type*} [MonoidWithZero α] (x : α) : multiplicity x 0 = 1 :=
   multiplicity_eq_one_of_not_finiteMultiplicity fun h ↦ h.ne_zero rfl

@@ -51,6 +51,6 @@ lemma algebraMap_def [CommSemiring α] [Semiring R] [Algebra α R] (c : RingCon 
 variable (α) in
 /-- The quotient map as an algebra homomorphism. -/
 def mkA [CommSemiring α] [Semiring R] [Algebra α R] (c : RingCon R) : R →ₐ[α] c.Quotient :=
-  c.mkₐ (S := α)
+  c.mkₐ (α := α)
 
 end RingCon
