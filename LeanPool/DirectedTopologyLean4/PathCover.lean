@@ -410,11 +410,11 @@ lemma has_interval_division {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) 
     rw [c_def]
     by_cases i = 0
     case pos h =>
-      simp only [h, if_pos]
-      exact (Path.continuous_extend γ.toPath).isOpen_preimage X₁ X₁_open
+      simpa only [h, if_pos]
+        using (Path.continuous_extend γ.toPath).isOpen_preimage X₁ X₁_open
     case neg h =>
-      simp only [if_neg h]
-      exact (Path.continuous_extend γ.toPath).isOpen_preimage X₂ X₂_open
+      simpa only [if_neg h]
+        using (Path.continuous_extend γ.toPath).isOpen_preimage X₂ X₂_open
   have h₂ : I ⊆ ⋃ (i : ℕ), c i := by
     intros x _
     simp only [mem_iUnion]

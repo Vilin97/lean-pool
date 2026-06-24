@@ -36,8 +36,8 @@ universe u v
     split_ifs with h₁ h₂ h₂
     · -- a ≤ 1/2 and b ≤ 1/2, so use monotonicity of γ₁
       apply hγ₁
-      simp only [Subtype.mk_le_mk, Nat.ofNat_pos, mul_le_mul_iff_right₀, Subtype.coe_le_coe]
-      exact hab
+      simpa only [Subtype.mk_le_mk, Nat.ofNat_pos, mul_le_mul_iff_right₀, Subtype.coe_le_coe]
+        using hab
     · -- a ≤ 1/2 and b > 1/2, so use that γ₁ ≤ y ≤ γ₂
       exact le_trans (monotone_path_bounded hγ₁ _).2 (monotone_path_bounded hγ₂ _).1
     · -- Impossible, as 1/2 < a and b ≤ 1/2 and a ≤ b
