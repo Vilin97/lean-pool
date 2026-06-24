@@ -276,8 +276,7 @@ lemma wonPosition_iff_disjoint' {x} :
     have hpay' : body.append x a ∉ (Player.residual x p).payoff G := by
       intro hp
       apply hpay
-      rw [Player.payoff_residual]
-      exact hp
+      rwa [Player.payoff_residual]
     exact h (body.append x a) ⟨⟨a, rfl⟩, by
       rw [Player.payoff_swap_residual]
       exact hpay'⟩

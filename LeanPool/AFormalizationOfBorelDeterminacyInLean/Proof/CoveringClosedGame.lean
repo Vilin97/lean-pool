@@ -282,8 +282,7 @@ def pInvTreeHom : (Tree.res (2 * k)).obj ⟨_, G.tree⟩ ⟶
       · have hconcat := pInvTreeHomMap_concat (hyp := hyp) (x := x) (a := a)
         have hvalid : ValidExt (pInvTreeHomMap hyp x) ⟨a, (G.residual (x ++ [a])).tree⟩ := by
           have hplen : (pInvTreeHomMap hyp x).length < 2 * k := by
-            rw [pInvTreeHomMap_len]
-            exact hxlt
+            rwa [pInvTreeHomMap_len]
           rw [validExt_short hplen]
           constructor
           · rw [getTree_pInvTreeHomMap, Game.residual_tree]
@@ -511,8 +510,7 @@ lemma wins_iff_answer (x : body (game hyp).tree) :
         ((ConcreteCategory.hom (bodyFunctor.map (treeHom hyp))) x).val ∈
           body (pullSub (getTree' hyp (Stream'.take (2 * k + 2) x.val))
             (List.map Prod.fst (Stream'.take (2 * k + 2) x.val))) := by
-      rw [pullSub_body]
-      exact hmem
+      rwa [pullSub_body]
     exact h' (a := (bodyFunctor.map (treeHom hyp) x).val)
       ⟨hbody, by simpa⟩
   · change (bodyFunctor.map (treeHom hyp) x) ∈ G.payoff
@@ -520,8 +518,7 @@ lemma wins_iff_answer (x : body (game hyp).tree) :
         ((ConcreteCategory.hom (bodyFunctor.map (treeHom hyp))) x).val ∈
           body (pullSub (getTree' hyp (Stream'.take (2 * k + 2) x.val))
             (List.map Prod.fst (Stream'.take (2 * k + 2) x.val))) := by
-      rw [pullSub_body]
-      exact hmem
+      rwa [pullSub_body]
     exact Subtype.val_injective.mem_set_image.mp (h.1 hbody)
 instance : TopologicalSpace (upA hyp) := ⊥
 instance : DiscreteTopology (upA hyp) where eq_bot := rfl
@@ -650,8 +647,7 @@ lemma getTree_lost
           (if (y.val.length % 2 = 0) then Player.one else Player.zero).swap
         else
           (if (y.val.length % 2 = 0) then Player.one else Player.zero).swap.swap).payoff G
-    rw [hp]
-    exact hpay
+    rwa [hp]
 lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ x.val.length)
   (H : LosingCondition (Tree.take (2 * k + 2) x).val (by simpa))
   (hnL : ¬ G.WonPosition (x.val.map Prod.fst) (Player.one.residual x.val)) :

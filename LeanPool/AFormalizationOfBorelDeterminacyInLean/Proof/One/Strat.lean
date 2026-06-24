@@ -123,8 +123,7 @@ lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.t
   rw [IsPosition] at hp ⊢
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take n H.x.val)).length % 2 = p.toNat
-    rw [pInvTreeHomMap_len]
-    exact hp
+    rwa [pInvTreeHomMap_len]
   · change (List.take n H.x.val).length ≤ 2 * k
     exact (List.length_take_le n H.x.val).trans h
 lemma pInv_fixing_short :
@@ -231,8 +230,7 @@ lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player
         (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
       H.pInv_fixing_short).val.length ≤ 2 * k := hlen.trans_le htakeLen
     rw [take_coe]
-    simp only [List.length_take]
-    exact min_le_iff.mpr (Or.inr hpInvLen))
+    simpa only [List.length_take] using min_le_iff.mpr (Or.inr hpInvLen))
   erw [take_apply (treeHom hyp)]
   rw [cancel_pInv_right]
   refine Eq.trans ?_ (hvalT.trans ?_)

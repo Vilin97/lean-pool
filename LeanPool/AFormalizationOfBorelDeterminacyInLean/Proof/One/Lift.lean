@@ -155,10 +155,8 @@ variable (hp : IsPosition H.x.val Player.one)
             List.drop (2 * k + 2) H.x.val := by
           rw [List.map_drop, H.liftVal_lift]
         have htake : List.take (2 * k + 2) H.liftVal = H.liftShort.val := by
-          rw [H.liftVal_take_short]
-          exact hlong
-        rw [← htail, ← htake]
-        exact h
+          rwa [H.liftVal_take_short]
+        rwa [← htail, ← htake]
       · conv => lhs; rw [show (H.extensionMap hp R).val = (H.extension hp R).val.1 by
             simp [extensionMap]]
         have hdropAppend :

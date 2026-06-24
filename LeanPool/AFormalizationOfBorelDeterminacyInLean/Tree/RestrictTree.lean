@@ -148,8 +148,7 @@ lemma fixing_iff_fixingEq k (f : S ⟶ T) :
     intro j
     exact (hs.ι_map (evResCocone k T)
       (Discrete.natTrans fun x ↦ match x with | { as := j } => (resEq ↑j).map f) j).symm
-  rw [hmap]
-  exact hres
+  rwa [hmap]
 lemma Fixing.mon {f : S ⟶ T} (h : Fixing k f) (hn : n ≤ k) :
   Fixing n f := by rw [fixing_iff_fixingEq] at *; intro m _; apply h m; omega
 lemma fixing_iso {f : S ⟶ T} [IsIso f] {k : ℕ} : Fixing k f := by constructor; infer_instance
