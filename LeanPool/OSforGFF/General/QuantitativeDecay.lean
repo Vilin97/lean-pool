@@ -106,6 +106,7 @@ def schwartzHasPolynomialDecay (f : SchwartzMap E ℂ) (k : ℕ) :
 /-- Schwartz functions have polynomial decay at any real rate (via ceiling). -/
 def schwartzHasPolynomialDecayReal (f : SchwartzMap E ℂ) (N : ℝ) (_hN : N > 0) :
     PolynomialDecayBound f N := by
+  let _ := _hN
   obtain ⟨C, hC_pos, hbound⟩ := schwartzHasPolynomialDecay f (⌈N⌉₊)
   refine ⟨C, hC_pos, fun x => ?_⟩
   have h1 : 1 ≤ 1 + ‖x‖ := le_add_of_nonneg_right (norm_nonneg x)
