@@ -258,8 +258,7 @@ lemma mem_product_iff' {x a b : V} : x ∈ a ×ʰᶠ b ↔ π₁ x ∈ a ∧ π�
   simp [mem_product_iff']
 
 lemma pair_mem_product {x y a b : V} (hx : x ∈ a) (hy : y ∈ b) : ⟪x, y⟫ ∈ a ×ʰᶠ b := by
-  simp only [pair_mem_product_iff]
-  exact ⟨hx, hy⟩
+  simpa only [pair_mem_product_iff] using ⟨hx, hy⟩
 
 private lemma product_graph {u a b : V} :
     u = a ×ʰᶠ b ↔ ∀ x < u + (a + b + 1) ^ 2, (x ∈ u ↔ ∃ y ∈ a, ∃ z ∈ b, x = ⟪y, z⟫) :=
@@ -464,8 +463,7 @@ lemma _root_.LO.Arith.Disjoint.iff {s t : V} :
 
 lemma _root_.LO.Arith.Disjoint.not_of_mem {s t x : V} (hs : x ∈ s) (ht : x ∈ t) :
     ¬Disjoint s t := by
-  simp only [Disjoint.iff, not_forall, not_or, not_not]
-  exact ⟨x, hs, ht⟩
+  simpa only [Disjoint.iff, not_forall, not_or, not_not] using ⟨x, hs, ht⟩
 
 lemma _root_.LO.Arith.Disjoint.symm {s t : V} (h : Disjoint s t) :
     Disjoint t s := by
