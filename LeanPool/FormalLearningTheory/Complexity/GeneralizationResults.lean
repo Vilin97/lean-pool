@@ -37,19 +37,6 @@ section UCNotOnline
 private noncomputable def thresholdClassX {X : Type u} (φ : ℕ ↪ X) : ConceptClass X Bool :=
   { f | ∃ n : ℕ, f = fun x => decide (∃ k, k ≤ n ∧ φ k = x) }
 
-/-- Threshold monotonicity for C_φ: if k ≤ n then c_n(φ(k)) = true. -/
-private theorem thresholdX_mem {X : Type u} {φ : ℕ ↪ X} {n k : ℕ} (hk : k ≤ n) :
-    (fun x => decide (∃ j, j ≤ n ∧ φ j = x)) (φ k) = true := by
-  simp only [decide_eq_true_eq]; exact ⟨k, hk, rfl⟩
-
-/-- If k > n then c_n(φ(k)) = false. -/
-private theorem thresholdX_not_mem {X : Type u} {φ : ℕ ↪ X} {n k : ℕ} (hk : n < k) :
-    (fun x => decide (∃ j, j ≤ n ∧ φ j = x)) (φ k) = false := by
-  simp only [decide_eq_false_iff_not]
-  rintro ⟨j, hj, hφ⟩
-  have := φ.injective hφ
-  omega
-
 /-- No 2-element subset of X is shattered by C_φ. -/
 private theorem thresholdX_not_shatter_pair {X : Type u} {φ : ℕ ↪ X}
     {S : Finset X} (hcard : 2 ≤ S.card) :

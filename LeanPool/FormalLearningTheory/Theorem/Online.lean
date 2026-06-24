@@ -68,13 +68,6 @@ private theorem WithBot_WithTop_lt_succ_le {a : WithBot (WithTop ℕ)} {n : ℕ}
 -- INFRASTRUCTURE LEMMAS (all compile)
 -- ============================================================
 
-/-- Restricting C can only decrease Ldim. -/
-private theorem ldim_restriction_le {X : Type} {C : ConceptClass X Bool}
-    {x : X} {y : Bool} :
-    LittlestoneDim X {c ∈ C | c x = y} ≤ LittlestoneDim X C := by
-  apply iSup₂_le; intro n ⟨T, hT⟩
-  exact le_iSup₂_of_le n ⟨T, T.isShattered_mono (fun _ hm => hm.1) hT⟩ le_rfl
-
 /-- Build a tree of depth k+1 from shattered subtrees on both sides.
     Parametrized over b : Bool so we don't need to case-split in the caller. -/
 private theorem ldim_branch_lower_bound {X : Type} {V : ConceptClass X Bool}

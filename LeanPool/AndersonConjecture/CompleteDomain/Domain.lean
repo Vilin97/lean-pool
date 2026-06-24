@@ -116,9 +116,6 @@ lemma mkFin3_ext (n : Fin 3 →₀ ℕ) : n = mkFin3 (n 0) (n 1) (n 2) := by
 def mkFin2 (a b : ℕ) : Fin 2 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm ![a, b]
 
-@[simp] private lemma mkFin2_zero : mkFin2 a b 0 = a := rfl
-@[simp] private lemma mkFin2_one : mkFin2 a b 1 = b := rfl
-
 /-- Explicit quotient: given f, define q so that f = q * (X₀² - X₁X₂) when ψ(f)=0.
   q(n₀,n₁,n₂) = Σ_{k=0}^{min(n₁,n₂)} f(n₀+2+2k, n₁-k, n₂-k). -/
 def divQ (f : MvPowerSeries (Fin 3) ℂ) : MvPowerSeries (Fin 3) ℂ :=
