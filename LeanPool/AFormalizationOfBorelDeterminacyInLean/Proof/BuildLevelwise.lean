@@ -100,8 +100,7 @@ end BodySystemObj
     apply resEq_ext
     convert bodyMap_restrict f x n using 1 <;> rfl)
 lemma bodyEquivSystem_hom_app_res_coe (x : bodyFunctor.obj T) :
-  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := by
-  rfl
+  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := rfl
 
 namespace BodySystemObj
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

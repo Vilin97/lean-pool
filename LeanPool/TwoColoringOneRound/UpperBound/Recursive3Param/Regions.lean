@@ -204,8 +204,7 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
       exact innerBC_eq_gTB_of_b_lt_t1_of_b_le_c_of_c_lt_t (b := b) (c := c) hb hc.1 hc.2
     calc
       (∫⁻ c in Set.Ico b t, innerBC b c ∂μ) =
-          ∫⁻ _c in Set.Ico b t, gTB b ∂μ := by
-            exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
+          ∫⁻ _c in Set.Ico b t, gTB b ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
       _ = gTB b * μ (Set.Ico b t) := by simp
   have hsplit2' :
       (∫⁻ c in Set.Iio t, innerBC b c ∂μ) =
@@ -447,8 +446,7 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
       exact innerBC_eq_gT2B_of_t1_le_b_lt_t2_of_b_le_c_of_c_lt_t2 (b := b) hb1 hb2 hc.1 hc.2
     calc
       (∫⁻ c in Set.Ico b t2, innerBC b c ∂μ) =
-          ∫⁻ _c in Set.Ico b t2, gT2B b ∂μ := by
-            exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs' hEq
+          ∫⁻ _c in Set.Ico b t2, gT2B b ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs' hEq
       _ = gT2B b * μ (Set.Ico b t2) := by simp
   have hsplit4' :
       (∫⁻ c in Set.Ico t1 t2, innerBC b c ∂μ) =

@@ -348,12 +348,10 @@ variable (hp : IsPosition H.x.val Player.zero)
 @[simp] lemma extension_take :
   (H.extension hp R).val' (A := no_index _).take (α := no_index _)
     (H.x.val.length (α := no_index _))
-  = H.liftVal := by
-  exact ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
+  = H.liftVal := ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
 @[simp] lemma extensionMap_take (h : n ≤ H.x.val.length) :
   (H.extensionMap hp R).val' (A := no_index _).take (α := no_index _) n
-  = H.x.val.take n := by
-  exact ExtensionsAt.val'_take_of_le _ h
+  = H.x.val.take n := ExtensionsAt.val'_take_of_le _ h
 @[simp] lemma extension_take_medium :
   (H.extension hp R).val'.take (α := no_index _) (2 * k + 2) = H.liftMediumVal := by
   rw [ExtensionsAt.val'_take_of_le _ (by

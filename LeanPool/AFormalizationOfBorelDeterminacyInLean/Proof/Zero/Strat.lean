@@ -103,8 +103,7 @@ lemma body_lost_of_losable n (h : (takeLift y n).Losable) (h' : ∀ m, ¬ (takeL
     generalize_proofs at this
     conv => simp [Stream'.take_drop]
     generalize_proofs pf4 pf5
-    have hsub : pf3.strat.pre.subtree = pf1.strat.pre.subtree := by
-      exact pf1.prefix_strat_subtree
+    have hsub : pf3.strat.pre.subtree = pf1.strat.pre.subtree := pf1.prefix_strat_subtree
         (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
         (by as_aux_lemma => change _ = (takeLift y _).game; simp) rfl
     convert (hsub ▸ this) using 3

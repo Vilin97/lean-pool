@@ -58,8 +58,8 @@ variable (hp : IsPosition H.x.val Player.one)
   htree := by
     obtain ⟨S, hS⟩ := H.htree
     have htake : (H.extensionMap hp R).val'.take (2 * k + 1) =
-        H.x.val.take (2 * k + 1) := by
-      exact H.extensionMap_take hp R (n := 2 * k + 1) (by have := H.hlvl; omega)
+        H.x.val.take (2 * k + 1) :=
+      H.extensionMap_take hp R (n := 2 * k + 1) (by have := H.hlvl; omega)
     have hsub : subAt G.tree (H.x.val.take (2 * k + 1)) =
         subAt G.tree ((H.extensionMap hp R).val'.take (2 * k + 1)) :=
       congrArg (subAt G.tree) htake.symm
@@ -82,8 +82,7 @@ variable (hp : IsPosition H.x.val Player.one)
   toLift := H.extensionLift hp R
   con := by
     let a : upA hyp := (H.extension hp R).val
-    have hprop : H.lift.val ++ [a] ∈ gameTree hyp := by
-      exact (H.extension hp R).prop
+    have hprop : H.lift.val ++ [a] ∈ gameTree hyp := (H.extension hp R).prop
     have hvalid := ((gameTree_concat H.lift.val a).mp hprop).2
     have h := hvalid.1
     erw [getTree_eq H.lift] at h; conv at h => simp
@@ -136,8 +135,8 @@ variable (hp : IsPosition H.x.val Player.one)
           rw [List.drop_eq_nil_of_le (by omega : H.x.val.length ≤ 2 * k + 1)]
           rfl
         have hval1 : (H.extension hp R).val.1 =
-            (R H.liftVeryShort hpVeryShort hleVeryShort).val.1 := by
-          exact congrArg Prod.fst hval
+            (R H.liftVeryShort hpVeryShort hleVeryShort).val.1 :=
+          congrArg Prod.fst hval
         refine hdrop.symm ▸ ?_
         rw [hval1]
       · exact (getTree_ne_and_pruned H.liftShort).1
@@ -179,8 +178,8 @@ attribute [simp_lengths] extensionLift_x extensionLift'_toLift
 lemma extensionLift'_game : (H.extensionLift' hp R hR).game = H.game := by
   have htake :
       (H.extensionMap hp R).val'.take (α := no_index _) (2 * k + 1) =
-        H.x.val.take (α := no_index _) (2 * k + 1) := by
-    exact H.extensionMap_take hp R (n := 2 * k + 1) (by have := H.hlvl; omega)
+        H.x.val.take (α := no_index _) (2 * k + 1) :=
+    H.extensionMap_take hp R (n := 2 * k + 1) (by have := H.hlvl; omega)
   ext x <;> conv => simp [PreLift.game]
   · exact htake ▸ Iff.rfl
   · intro y hy hxy

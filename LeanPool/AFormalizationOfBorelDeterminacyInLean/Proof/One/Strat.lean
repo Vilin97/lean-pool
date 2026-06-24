@@ -579,8 +579,7 @@ lemma won_of_winnable n (h : (bodyTake y n).preLift.Winnable) :
       conv at this => simp [Stream'.take_drop]
       conv => simp [Stream'.take_drop]
       generalize_proofs pf1 pf2 pf3 at this
-      have hsub : pf1.strat.pre.subtree = h.strat.pre.subtree := by
-        exact h.prefix_strat_subtree
+      have hsub : pf1.strat.pre.subtree = h.strat.pre.subtree := h.prefix_strat_subtree
           (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
           (by simp) rfl
       simp_rw [add_assoc] at this ⊢; convert (hsub ▸ this) using 4

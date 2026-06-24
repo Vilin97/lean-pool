@@ -154,8 +154,8 @@ lemma conShort : H.preLift.ConShort := by
               _ = 2 * k + 1 := by rw [hbaseLen']
           exact Nat.lt_of_lt_of_eq (Nat.lt_succ_self (2 * k)) htarget.symm)).1 =
         (H.R (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
-          H.pInv_fixing_short) H.pInv_isPosition_short).val.1 := by
-    exact congrArg Prod.fst (ExtensionsAt.val'_get_last_of_eq _ hbaseLen.symm)
+          H.pInv_fixing_short) H.pInv_isPosition_short).val.1 :=
+    congrArg Prod.fst (ExtensionsAt.val'_get_last_of_eq _ hbaseLen.symm)
   erw [hlast]
   have harg :
       pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
@@ -359,8 +359,8 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
           ((H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
             H.preLift.pInv_take_position).val'[2 * k]'hindex) =
             (H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
-              H.preLift.pInv_take_position).val := by
-        exact ExtensionsAt.val'_get_last_of_eq _ H.preLift.pInv_take_length.symm
+              H.preLift.pInv_take_position).val :=
+        ExtensionsAt.val'_get_last_of_eq _ H.preLift.pInv_take_length.symm
       change ((H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
         H.preLift.pInv_take_position).val'[2 * k]'hindex) =
         (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))

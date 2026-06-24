@@ -77,12 +77,10 @@ private lemma sum_corrEdge_eq_sum_corrEmb (f : Coloring n) :
       (by intro e; rfl))
 
 private lemma edge_src_smul (σ : G) (e : Edge n) :
-    Edge.src (σ • e) = σ • Edge.src e := by
-  exact Subtype.ext rfl
+    Edge.src (σ • e) = σ • Edge.src e := Subtype.ext rfl
 
 private lemma edge_dst_smul (σ : G) (e : Edge n) :
-    Edge.dst (σ • e) = σ • Edge.dst e := by
-  exact Subtype.ext rfl
+    Edge.dst (σ • e) = σ • Edge.dst e := Subtype.ext rfl
 
 private lemma corrEdge_smul (f : Coloring n) (σ : G) (e : Edge n) :
     corrEdge f (σ • e) = corr f (σ • Edge.src e) (σ • Edge.dst e) := by
@@ -147,8 +145,7 @@ private lemma orbitProdStabilizerEquivGroup_smul_fst
     simp [g]
   have hfst :
       (Subgroup.groupEquivQuotientProdSubgroup (s := MulAction.stabilizer G b) g).1
-        = (MulAction.orbitEquivQuotientStabilizer G b) x := by
-    exact congrArg Prod.fst hgpair
+        = (MulAction.orbitEquivQuotientStabilizer G b) x := congrArg Prod.fst hgpair
   have hmk : QuotientGroup.mk g = (MulAction.orbitEquivQuotientStabilizer G b) x := by
     -- The first projection of `groupEquivQuotientProdSubgroup` is `QuotientGroup.mk`.
     simpa [Subgroup.groupEquivQuotientProdSubgroup] using hfst

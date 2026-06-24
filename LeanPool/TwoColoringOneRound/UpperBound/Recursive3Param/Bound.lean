@@ -418,8 +418,7 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
         -- compute the `lintegral` of the indicator
         calc
           (∫⁻ c : Rand, F b c ∂μ) = ∫⁻ c : Rand, (Set.Iio b).indicator f c ∂μ := by simp [hFc]
-          _ = ∫⁻ c in Set.Iio b, f c ∂μ := by
-            exact (MeasureTheory.lintegral_indicator (μ := μ) hIo f)
+          _ = ∫⁻ c in Set.Iio b, f c ∂μ := (MeasureTheory.lintegral_indicator (μ := μ) hIo f)
       have hbmem : b ∈ (Set.Iio B : Set Rand) := by simpa [Set.mem_Iio] using hb
       rw [this]
       simp [Set.indicator_of_mem hbmem]
@@ -452,8 +451,7 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
       · have hEq : (fun b : Rand => F b c) = 0 := by
           funext b
           by_cases hb : b < B
-          · have : ¬ c < b := by
-              exact not_lt_of_ge (le_trans (le_of_lt hb) (le_of_not_gt hcB))
+          · have : ¬ c < b := not_lt_of_ge (le_trans (le_of_lt hb) (le_of_not_gt hcB))
             simp [F, hb, this]
           · simp [F, hb]
         -- Here `c ≥ B`, so the set `{b | b < B ∧ c < b}` is empty.
@@ -786,8 +784,7 @@ lemma lintegral_gCt_Iio_t1 :
       (∫⁻ c in Set.Iio t1, gCt c ∂μ) =
         ∫⁻ c in Set.Iio t1,
           (ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) +
-            ENNReal.ofReal (3 / 8 : ℝ)) ∂μ := by
-    exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
+            ENNReal.ofReal (3 / 8 : ℝ)) ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
   rw [hcongr]
   -- Split the integral into affine and constant parts.
   have hmeas1 : Measurable fun c : Rand => ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) := by
