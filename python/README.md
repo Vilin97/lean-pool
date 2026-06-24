@@ -26,4 +26,14 @@ uv run pytest       # run tests
 uv run ruff check   # lint
 uv run ruff format  # format
 uv run python -m lean_pool.quality --repo ..  # repository quality gates
+uv run python -m lean_pool.aggregator discover
 ```
+
+## Candidate discovery
+
+`.github/workflows/discovery.yml` runs daily at 14:20 UTC and updates
+`candidates/discovered.yml` with recent GitHub/arXiv Lean project
+matches.
+
+The YAML file is keyed by canonical GitHub repository and arXiv ID, so
+reruns add only new discoveries instead of appending duplicates.

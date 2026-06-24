@@ -9,6 +9,8 @@ Run with ``uv run python -m lean_pool.aggregator <subcommand>`` from
   ``raw_data/clones/`` so downstream classification can read source
   files locally.
 - ``render``: regenerate the candidates README table from those files.
+- ``discover``: query GitHub and arXiv for recent untracked Lean
+  projects and add them to ``candidates/discovered.yml``.
 """
 
 import json
@@ -19,6 +21,17 @@ import click
 from lean_pool.aggregator.cloner import (
     DEFAULT_PARALLELISM,
     clone_all,
+)
+from lean_pool.aggregator.discovery import (
+    DEFAULT_LOOKBACK_DAYS,
+    github_token_from_environment,
+    load_known_repository_keys,
+    render_discovery_report,
+    save_discovery_report,
+    update_discovered_file,
+)
+from lean_pool.aggregator.discovery import (
+    discover as run_discovery,
 )
 from lean_pool.aggregator.manual import (
     fetch_manual_packages,
@@ -48,6 +61,7 @@ DEFAULT_CLONES_DIR = CANDIDATES_DIR / "raw_data" / "clones"
 DEFAULT_DECISIONS = CANDIDATES_DIR / "decisions.jsonl"
 DEFAULT_README = CANDIDATES_DIR / "README.md"
 DEFAULT_PROJECTS_YML = REPO_ROOT / "LeanPool" / "projects.yml"
+DEFAULT_DISCOVERED = CANDIDATES_DIR / "discovered.yml"
 
 
 @click.group()
@@ -282,6 +296,119 @@ def render(
         f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual; "
         f"min-stars={min_stars}, min-loc={min_loc}, "
         f"decisions={len(decisions)}, pool={len(pool_repos)}) into {readme_path}"
+    )
+
+
+@cli.command("discover")
+@click.option(
+    "--lookback-days",
+    type=int,
+    default=DEFAULT_LOOKBACK_DAYS,
+    show_default=True,
+    help="How many days of GitHub and arXiv activity to scan.",
+)
+@click.option(
+    "--manifest",
+    "manifest_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_MANIFEST,
+    show_default=True,
+    help="Reservoir manifest JSON used to suppress already-tracked repos.",
+)
+@click.option(
+    "--manual-list",
+    "manual_list_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_MANUAL_LIST,
+    show_default=True,
+    help="Manual GitHub URL list used to suppress already-tracked repos.",
+)
+@click.option(
+    "--manual-data",
+    "manual_data_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_MANUAL_DATA,
+    show_default=True,
+    help="Manual package metadata used to suppress already-tracked repos.",
+)
+@click.option(
+    "--projects-yml",
+    "projects_yml_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_PROJECTS_YML,
+    show_default=True,
+    help="Lean Pool project registry used to suppress already-merged repos.",
+)
+@click.option(
+    "--include-known/--skip-known",
+    default=False,
+    show_default=True,
+    help="Include repositories that are already tracked locally.",
+)
+@click.option(
+    "--max-github-results-per-query",
+    type=int,
+    default=100,
+    show_default=True,
+    help="Maximum GitHub search results fetched for each query.",
+)
+@click.option(
+    "--output",
+    "output_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional local markdown report path.",
+)
+@click.option(
+    "--discovered",
+    "discovered_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_DISCOVERED,
+    show_default=True,
+    help="YAML file to update with newly discovered GitHub/arXiv entries.",
+)
+def discover(
+    lookback_days: int,
+    manifest_path: Path,
+    manual_list_path: Path,
+    manual_data_path: Path,
+    projects_yml_path: Path,
+    include_known: bool,
+    max_github_results_per_query: int,
+    output_path: Path | None,
+    discovered_path: Path,
+) -> None:
+    """Query GitHub/arXiv for recent untracked Lean projects."""
+    known = load_known_repository_keys(
+        manifest_path=manifest_path,
+        manual_list_path=manual_list_path,
+        manual_data_path=manual_data_path,
+        projects_yml_path=projects_yml_path,
+    )
+    result = run_discovery(
+        lookback_days=lookback_days,
+        known_repositories=set(known),
+        github_token=github_token_from_environment(),
+        include_known=include_known,
+        max_github_results_per_query=max_github_results_per_query,
+    )
+    report = render_discovery_report(result)
+    if output_path is not None:
+        save_discovery_report(report, output_path)
+    update = update_discovered_file(result, discovered_path)
+
+    candidate_count = sum(
+        1 for repository in result.github_repositories if repository.signal != "low"
+    )
+    click.echo(
+        f"Discovery found {candidate_count} candidate repos, "
+        f"{len(result.github_repositories)} untracked repos total, "
+        f"{len(result.arxiv_papers)} arXiv matches, and skipped "
+        f"{result.known_repositories_skipped} known repos."
+    )
+    click.echo(
+        f"Updated {discovered_path}: {update.added_github} new GitHub repos, "
+        f"{update.added_arxiv} new arXiv papers."
     )
 
 

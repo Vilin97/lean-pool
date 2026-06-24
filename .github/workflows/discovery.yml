@@ -1,0 +1,49 @@
+name: Candidate Discovery
+
+on:
+  schedule:
+    - cron: "20 14 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    name: Update discovered candidates
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - name: Discover candidates
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          cd python
+          uv run python -m lean_pool.aggregator discover \
+            --discovered ../candidates/discovered.yml
+
+      - name: Commit new discoveries
+        run: |
+          if git diff --quiet -- candidates/discovered.yml; then
+            echo "No new discoveries."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add candidates/discovered.yml
+          git commit -m "Update discovered Lean candidates"
+          git push
