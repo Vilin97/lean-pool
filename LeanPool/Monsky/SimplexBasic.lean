@@ -110,8 +110,8 @@ lemma closedHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
 lemma open_pol_nonempty {n : ℕ} (hn : 0 < n) (P : Fin n → ℝ²) : Set.Nonempty (openHull P) := by
   use ∑ i, (1/(n : ℝ)) • P i, fun _ ↦ (1/(n : ℝ))
   refine ⟨⟨fun _ ↦ by simp [hn], ?_⟩, by simp⟩
-  simp only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
-  exact mul_inv_cancel₀ (by simp; linarith)
+  simpa only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    using mul_inv_cancel₀ (by simp; linarith)
 
 
 lemma open_sub_closedSimplex {n : ℕ} : openSimplex n ⊆ closedSimplex n :=

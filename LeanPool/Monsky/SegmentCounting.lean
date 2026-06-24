@@ -99,8 +99,7 @@ lemma glueChains_assoc {u v w x : ℝ²} (C₁ : Chain u v) (C₂ : Chain v w) (
   induction C₁ with
   | basic         => rfl
   | join h₃ C ih  =>
-    simp only [glueChains, Chain.join.injEq, heq_eq_eq, true_and]
-    exact ih C₂ _ _
+    simpa only [glueChains, Chain.join.injEq, heq_eq_eq, true_and] using ih C₂ _ _
 
 
 lemma reverseChain_glue {u v w : ℝ²} (h : colin u v w) (CL : Chain u v)
@@ -178,8 +177,8 @@ lemma reverseChain_basic_segments_disjoint {u v : ℝ²} (C : Chain u v) (huv : 
     Disjoint (toBasicSegments C) (toBasicSegments (reverseChain C)) := by
   induction C with
   | basic =>
-      simp only [toBasicSegments, reverseChain, disjoint_singleton_left, mem_singleton]
-      exact fun h ↦ huv (congrFun h 0)
+      simpa only [toBasicSegments, reverseChain, disjoint_singleton_left, mem_singleton]
+        using fun h ↦ huv (congrFun h 0)
   | @join x y z h₂ C ih =>
       have hyz : y ≠ z := (middle_not_boundary_colin h₂).2
       have hxy : x ≠ y := (middle_not_boundary_colin h₂).1
@@ -301,13 +300,11 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
       · exact absurd (h0 ▸ h1) hLdif
     · rintro (hL | hL) <;> rw [hL]
       · refine ⟨?_, fun _ a ↦ a⟩
-        simp only [basicAvoidingSegmentSet, mem_filter]
-        exact ⟨hS,Scard⟩
+        simpa only [basicAvoidingSegmentSet, mem_filter] using ⟨hS,Scard⟩
       · rw [←reverseSegment]
         refine ⟨?_, by rw [reverseSegment_closedHull]⟩
         apply basicAvoidingSegmentSet_reverse
-        simp only [basicAvoidingSegmentSet, mem_filter]
-        exact ⟨hS,Scard⟩
+        simpa only [basicAvoidingSegmentSet, mem_filter] using ⟨hS,Scard⟩
   · have hEl : Finset.Nonempty (filter (fun p ↦ p ∈ openHull S) X) := by
       rw [← Finset.card_pos, Scard]
       exact Nat.zero_lt_of_ne_zero hN
