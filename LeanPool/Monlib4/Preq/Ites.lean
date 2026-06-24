@@ -22,8 +22,7 @@ theorem star_ite {α : Type _} [InvolutiveStar α] (P : Prop) [Decidable P] (a b
   · simp_rw [h, ite_self]
   · have : ¬star a = star b := by
       apply star_injective.ne_iff.mp
-      rw [star_star a, star_star b]
-      exact h
+      rwa [star_star a, star_star b]
     by_cases h' : P
     · simp_rw [(Ne.ite_eq_left_iff h).mpr h', (Ne.ite_eq_left_iff this).mpr h']
     · simp_rw [(Ne.ite_eq_right_iff h).mpr h', (Ne.ite_eq_right_iff this).mpr h']

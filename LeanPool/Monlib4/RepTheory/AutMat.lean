@@ -101,8 +101,7 @@ theorem automorphism_matrix_inner [Field R] [DecidableEq n] [Nonempty n]
     exact ⟨LinearMap.injective_iff_surjective.mpr this, this⟩
   intro w
   have hTu : T u ≠ 0 := by
-    rw [matT_apply _ y z]
-    exact hz
+    rwa [matT_apply _ y z]
   have exists_dual : ∃ d : n → R, T u ⬝ᵥ d = 1 := by
     rw [← vec_ne_zero] at hTu
     obtain ⟨q, hq⟩ := hTu

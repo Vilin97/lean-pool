@@ -158,8 +158,7 @@ theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
   constructor
   · intro hA
     apply hconj_injective
-    rw [hconj_const]
-    exact hA
+    rwa [hconj_const]
   · intro hA
     rw [hA, hconj_const]
 

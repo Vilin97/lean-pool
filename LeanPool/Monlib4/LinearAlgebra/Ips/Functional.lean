@@ -512,8 +512,7 @@ private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
       boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] using hQ
   refine ⟨(RCLike.nonneg_def'.mp hnn).2, ?_⟩
   simp only [smul_eq_diagonal_mul, Matrix.mul_one]
-  rw [← hre]
-  exact HH
+  rwa [← hre]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/

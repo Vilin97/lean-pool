@@ -31,8 +31,7 @@ theorem Set.piOfPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i, Ad
   · intro hx j _
     by_cases hj : j = i
     · rw [hj]
-      rw [Pi.single_eq_same]
-      exact hx
+      rwa [Pi.single_eq_same]
     · rw [Pi.single_eq_of_ne hj]
       exact h j
 
@@ -73,8 +72,7 @@ theorem Set.ofPi_mem' {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i,
   intro j _
   by_cases hj : j = i
   · rw [hj]
-    rw [Pi.single_eq_same]
-    exact hx
+    rwa [Pi.single_eq_same]
   · rw [Pi.single_eq_of_ne hj]
     exact h j
 
@@ -110,8 +108,7 @@ theorem Pi.StarOrderedRing.le_def {ι : Type _} {α : ι → Type _} [∀ i, Rin
     [∀ i, PartialOrder (α i)] [∀ i, StarRing (α i)] [∀ i, StarOrderedRing (α i)]
     (h : ∀ (i : ι) (x : α i), 0 ≤ x ↔ ∃ y, star y * y = x) (x y : ∀ i, α i) :
     x ≤ y ↔ ∃ z, star z * z = y - x := by
-  rw [← sub_nonneg, ← Pi.StarOrderedRing.nonneg_def]
-  exact h
+  rwa [← sub_nonneg, ← Pi.StarOrderedRing.nonneg_def]
 
 /-- Dependent functions over star-ordered rings are star-ordered coordinatewise. -/
 theorem Pi.starOrderedRing {ι : Type _} {B : ι → Type _} [∀ i, Ring (B i)] [∀ i, PartialOrder (B i)]

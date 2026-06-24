@@ -490,8 +490,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     rw [(smul_left_injective _ hone_ne_zero).eq_iff] at hsmul
     rw [hsmul]
   have hdiag_pos : (diagonal fun _ : n => α).PosDef := by
-    rw [← Matrix.smul_one_eq_diagonal α, ← hα]
-    exact hpos_def
+    rwa [← Matrix.smul_one_eq_diagonal α, ← hα]
   have hpositive : 0 < RCLike.re α := by
     have hαpos : 0 < α := (Matrix.posDef_diagonal_iff.mp hdiag_pos) h.some
     rw [hα_re, RCLike.ofReal_pos] at hαpos

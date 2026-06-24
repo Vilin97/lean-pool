@@ -237,8 +237,7 @@ theorem TensorProduct.singleton_tmul
   use (b₁.tensorProduct b₂).repr x (0, 0) • b₁ 0, b₂ 0
   have := TensorProduct.of_basis_eq_span x b₁ b₂
   simp only [Finset.univ_unique, Fin.default_eq_zero, Fin.isValue, Finset.sum_singleton] at this
-  rw [← TensorProduct.smul_tmul']
-  exact this
+  rwa [← TensorProduct.smul_tmul']
 
 theorem RCLike.inner_tensor_apply {𝕜 : Type*} [RCLike 𝕜] (x y : 𝕜 ⊗[𝕜] 𝕜) :
     ⟪x, y⟫_𝕜 = ⟪LinearMap.mul' 𝕜 _ x, LinearMap.mul' 𝕜 _ y⟫_𝕜 := by
