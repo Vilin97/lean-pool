@@ -62,28 +62,21 @@ theorem posDefAsymm_iff'
     case mp =>
       intro h
       let η := (Finset.univ : Finset α).inf' (by simp) h.1.eigenvalues
-      have hηmin : ∀ i, η ≤ h.1.eigenvalues i := by
-        intro i
-        apply Finset.inf'_le
-        simp
+      have hηmin : ∀ i, η ≤ h.1.eigenvalues i := fun i => Finset.inf'_le _ (by simp)
       have hηpos : 0 < η := by
         obtain ⟨i, _, hi⟩ :=
           exists_mem_eq_inf' (s := Finset.univ) (by simp) h.1.eigenvalues
-        have := PosDef.eigenvalues_pos h i
         unfold η
         rw [hi]
-        exact this
-      refine ⟨?η, ?hηpos, ?hη⟩
-      case η => exact (2⁻¹ : ℝ) * η
-      case hηpos => positivity
-      case hη =>
-        intro x
+        exact PosDef.eigenvalues_pos h i
+      refine ⟨(2⁻¹ : ℝ) * η, by positivity, ?_⟩
+      · intro x
         apply (mul_le_mul_iff_of_pos_left (a := 2) (by simp)).mp
         conv_rhs => rw [two_mul]
         nth_rw 2 [←dotProduct_transpose_mulVec]
         rw [←dotProduct_add, ←add_mulVec, h.1.spectral_theorem]
         simp only [RCLike.ofReal_real_eq_id, CompTriple.comp_eq, Unitary.conjStarAlgAut_apply]
-        rw [←mulVec_mulVec, dotProduct_mulVec, ←vecMul_vecMul, ]
+        rw [←mulVec_mulVec, dotProduct_mulVec, ←vecMul_vecMul]
         rw [vecMul_diagonal_dotProduct]
         simp_rw [mul_assoc]
         rw [←mul_assoc, mul_inv_cancel₀]
@@ -110,15 +103,12 @@ theorem posDefAsymm_iff'
             apply sq_nonneg
         · norm_num
     case mpr =>
-      intro h
-      obtain ⟨η, hηpos, hη⟩ := h
+      rintro ⟨η, hηpos, hη⟩
       apply PosDef.of_dotProduct_mulVec_pos
       · apply isHermitian_add_transpose_self
       · intro x hx
         simp only [star_trivial]
         rw [add_mulVec, dotProduct_add, dotProduct_transpose_mulVec]
-        have h1 : x ⬝ᵥ A *ᵥ x + x ⬝ᵥ A *ᵥ x = 2 * (x ⬝ᵥ A *ᵥ x) := by ring
-        rw [h1]
         have hxx_pos : 0 < x ⬝ᵥ x := by
           rw [← star_trivial x]
           exact dotProduct_star_self_pos_iff.mpr hx
@@ -146,8 +136,8 @@ noncomputable instance [PosDefAsymm A] : Invertible A.det := by
   have hA := (inferInstance : PosDefAsymm A).pd x h
   linarith [show x ⬝ᵥ A *ᵥ x = 0 by rw [hx]; simp]
 
-noncomputable instance [PosDefAsymm A] : Invertible A := by
-  apply Matrix.invertibleOfDetInvertible
+noncomputable instance [PosDefAsymm A] : Invertible A :=
+  Matrix.invertibleOfDetInvertible A
 
 noncomputable instance [NegDefAsymm A] : Invertible A.det := by
   apply invertibleOfNonzero
@@ -157,8 +147,8 @@ noncomputable instance [NegDefAsymm A] : Invertible A.det := by
   haveI : PosDefAsymm (-A) := (inferInstance : NegDefAsymm A).nd
   exact absurd hdet (inferInstance : Invertible (-A).det).ne_zero
 
-noncomputable instance [NegDefAsymm A] : Invertible A := by
-  apply Matrix.invertibleOfDetInvertible
+noncomputable instance [NegDefAsymm A] : Invertible A :=
+  Matrix.invertibleOfDetInvertible A
 
 end invertible
 
