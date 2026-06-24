@@ -898,8 +898,7 @@ private lemma joint_kernel_bound_finite
           apply mul_le_mul_of_nonneg_left _ hCinv_nn
           apply integral_mono
           · have h1 := gaussDensity_mul_charFun_re_integrable' μ' _ (fun _ => rfl) σ hσ
-            have h2 := gaussDensity_integrable' (V := V) σ hσ
-            exact h2.sub h1 |>.congr
+            exact (gaussDensity_integrable' (V := V) σ hσ).sub h1 |>.congr
               (Filter.Eventually.of_forall fun x => by simp [Pi.sub_apply]; ring)
           · exact (gaussDensity_integrable' (V := V) σ hσ).mul_const ε_q
           · intro x

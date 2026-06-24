@@ -940,9 +940,8 @@ theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
             -- Show integrand is integrable
             have h_integrand_int : Integrable
                 (fun k : SpatialCoords => s ^ (3/2 : ℝ) * Real.exp (-s * m^2) * Real.exp (-s *
-                   ‖k‖^2)) := by
-              have h1 : Integrable (fun k : SpatialCoords => Real.exp (-s * ‖k‖^2)) := h_gauss_int
-              exact h1.const_mul _
+                   ‖k‖^2)) :=
+              h_gauss_int.const_mul _
             -- Convert lintegral to integral using ofReal_integral_eq_lintegral_ofReal
             rw [← MeasureTheory.ofReal_integral_eq_lintegral_ofReal h_integrand_int
                 (ae_of_all _ h_integrand_nn)]

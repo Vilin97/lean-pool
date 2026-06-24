@@ -1342,12 +1342,11 @@ theorem lift_pure
   have h_inner : ∀ n, HasSum (fun k => c₂ k e₂ • B (ψ₁ n) (ψ₂ k))
       (B (ψ₁ n) e₂) := by
     intro n
-    have h := (DyninMityaginSpace.hasSum_basis e₂).map (B (ψ₁ n)) (hBn_cont n)
-    exact h.congr_fun (fun k => (map_smul (B (ψ₁ n)) (c₂ k e₂) (ψ₂ k)).symm)
+    exact ((DyninMityaginSpace.hasSum_basis e₂).map (B (ψ₁ n)) (hBn_cont n)).congr_fun
+      (fun k => (map_smul (B (ψ₁ n)) (c₂ k e₂) (ψ₂ k)).symm)
   -- Step 4: Outer HasSum: ∑ₙ c₁(n)(e₁) • B(ψ₁(n))(e₂) → B(e₁)(e₂)
   have h_outer : HasSum (fun n => c₁ n e₁ • B (ψ₁ n) e₂) (B e₁ e₂) := by
-    have h := (DyninMityaginSpace.hasSum_basis e₁).map (B.flip e₂) hBflip_cont
-    exact h.congr_fun (fun n => by
+    exact ((DyninMityaginSpace.hasSum_basis e₁).map (B.flip e₂) hBflip_cont).congr_fun (fun n => by
       simp only [Function.comp, LinearMap.flip_apply]
       exact (map_smul (B.flip e₂) (c₁ n e₁) (ψ₁ n)).symm)
   -- Step 5: Summability of the ℕ-indexed sum (from lift_summable via pure_val)
