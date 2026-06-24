@@ -829,8 +829,7 @@ theorem qamA.is_almost_injective [hφ : φ.IsFaithfulPosMap] (x y : { x : ℍ //
           exact x.property
         · exact Units.ne_zero _
       · apply inv_ne_zero
-        simp only [Complex.ofReal_ne_zero, norm_ne_zero_iff]
-        exact y.property
+        simpa only [Complex.ofReal_ne_zero, norm_ne_zero_iff] using y.property
     use Units.mk0 β this
     simp_rw [Units.val_mk0, β, mul_assoc]
     rw [← smul_smul]

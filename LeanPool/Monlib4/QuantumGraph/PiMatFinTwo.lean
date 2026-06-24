@@ -443,8 +443,7 @@ theorem Finset.sum_nat_eq_one_iff_exists_unique_eq_one
   obtain ⟨i, ⟨hi, hii⟩⟩ := this
   simp_rw [le_antisymm_iff]
   use i
-  simp only [this1, true_and, hi]
-  exact hii
+  simpa only [this1, true_and, hi] using hii
 
 theorem QuantumGraph.Real.dimOfPiMatSubmodule_eq_zero_iff_eq_zero
   {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]

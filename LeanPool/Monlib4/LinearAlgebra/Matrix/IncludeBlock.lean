@@ -479,11 +479,9 @@ theorem npow {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     (hx : x.IsBlockDiagonal) : (x ^ n).IsBlockDiagonal := by
   induction n with
   | zero =>
-      simp only [pow_zero]
-      exact IsBlockDiagonal.one
+      simpa only [pow_zero] using IsBlockDiagonal.one
   | succ d hd =>
-      simp only [pow_succ]
-      exact IsBlockDiagonal.mul hd hx
+      simpa only [pow_succ] using IsBlockDiagonal.mul hd hx
 
 @[reducible, instance]
 def hasNpow {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
