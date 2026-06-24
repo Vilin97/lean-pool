@@ -495,14 +495,8 @@ private def build_ufd_proof_proof
       have : r ∈ P.comap ι := hrP
       rw [hPR_ne] at this
       exact hr (Ideal.mem_bot.mp this)
-    have hy₁_ne : (y₁ : R.carrier) ≠ 0 := by
-      intro h
-      apply hy₁
-      exact congrArg R.carrier.subtype h
-    have hy₂_ne : (y₂ : R.carrier) ≠ 0 := by
-      intro h
-      apply hy₂
-      exact congrArg R.carrier.subtype h
+    have hy₁_ne : (y₁ : R.carrier) ≠ 0 := fun h => hy₁ (congrArg R.carrier.subtype h)
+    have hy₂_ne : (y₂ : R.carrier) ≠ 0 := fun h => hy₂ (congrArg R.carrier.subtype h)
     set s : S_sub := ι y₁ * ι y₂ with hs_def
     have hs_ne : s ≠ 0 := by
       rw [hs_def]
