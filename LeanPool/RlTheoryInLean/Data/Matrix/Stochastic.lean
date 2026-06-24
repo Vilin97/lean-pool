@@ -144,10 +144,8 @@ instance svec_mul_smat_is_svec
   constructor
   case nonneg =>
     intro j
-    have : 0 ≤ ∑ i, μ i * P i j := by
-      refine sum_nonneg ?_
-      intro i _
-      exact mul_nonneg (hμ.nonneg i) ((hP i).nonneg j)
+    have : 0 ≤ ∑ i, μ i * P i j :=
+      sum_nonneg fun i _ => mul_nonneg (hμ.nonneg i) ((hP i).nonneg j)
     simpa [Matrix.vecMul, dotProduct] using this
   case rowsum =>
     simp only [Matrix.vecMul, dotProduct]
@@ -162,43 +160,34 @@ instance smat_mul_smat_is_smat
   constructor; intro i; constructor
   case nonneg =>
     intro j
-    have : 0 ≤ ∑ k, P i k * Q k j := by
-      refine sum_nonneg ?_
-      intro k _
-      exact mul_nonneg ((hP i).nonneg k) ((hQ k).nonneg j)
+    have : 0 ≤ ∑ k, P i k * Q k j :=
+      sum_nonneg fun k _ => mul_nonneg ((hP i).nonneg k) ((hQ k).nonneg j)
     simpa [Matrix.mul_apply] using this
   case rowsum =>
     calc
       ∑ j, (P * Q) i j
     _ = ∑ j, ∑ k, P i k * Q k j := by
         simp [Matrix.mul_apply]
-    _ = ∑ k, ∑ j, P i k * Q k j := by
-        simpa [mul_comm] using
-          (sum_comm :
-            ∑ j, ∑ k, P i k * Q k j = ∑ k, ∑ j, P i k * Q k j)
     _ = ∑ k, P i k * (∑ j, Q k j) := by
-        simp [Finset.mul_sum]
-    _ = ∑ k, P i k * 1 := by
+        rw [Finset.sum_comm]; simp [Finset.mul_sum]
+    _ = ∑ k, P i k := by
         apply sum_congr rfl
-        intro j _; simp [(inferInstance : StochasticVec (Q j)).rowsum]
-    _ = ∑ k, P i k := by simp
-    _ = 1 := (inferInstance : StochasticVec (P i)).rowsum
+        intro j _; simp [(hQ j).rowsum]
+    _ = 1 := (hP i).rowsum
 
 instance smat_pow_is_smat [DecidableEq S]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ) :
   RowStochastic (P ^ n) := by
   induction n with
   | zero =>
-    have hI : RowStochastic (1 : Matrix S S ℝ) := by
-      constructor; intro i; constructor
-      case nonneg =>
-        intro j
-        by_cases h : i = j
-        · rw [h]; simp
-        · exact (Matrix.one_apply_ne (α := ℝ) h).ge
-      case rowsum =>
-        simp [Matrix.one_apply]
-    exact hI
+    constructor; intro i; constructor
+    case nonneg =>
+      intro j
+      by_cases h : i = j
+      · rw [h]; simp
+      · exact (Matrix.one_apply_ne (α := ℝ) h).ge
+    case rowsum =>
+      simp [Matrix.one_apply]
   | succ n ih =>
     simp_rw [pow_add, pow_one]
     exact smat_mul_smat_is_smat (P ^ n) P
@@ -214,11 +203,8 @@ lemma chapman_kolmogorov_eq_ge [DecidableEq S]
   rw [add_sub_cancel_right]
   apply sum_nonneg
   intro l _
-  apply mul_nonneg
-  · have hP := RowStochastic.stochastic (P := P ^ m)
-    exact (hP i).nonneg l
-  · have hP := RowStochastic.stochastic (P := P ^ n)
-    exact (hP l).nonneg j
+  exact mul_nonneg ((RowStochastic.stochastic (P := P ^ m) i).nonneg l)
+    ((RowStochastic.stochastic (P := P ^ n) l).nonneg j)
 
 section minorization
 
