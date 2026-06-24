@@ -244,8 +244,7 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
       rw [sumElim_dotWeig_sumElim]
       have h1 : (↓(P.c ᵥ⬝ x) : Unit → F∞) ᵥ⬝ (1 : Unit → F≥0) = P.c ᵥ⬝ x := by
         simp only [dotWeig, Fintype.sum_unique, EF.one_smul, Pi.one_apply]
-      rw [h1]
-      exact hlt0
+      rwa [h1]
 
 lemma ValidELP.no_bot_of_reaches [Fintype J] (P : ValidELP I J F) {p : F∞} (hP : P.Reaches p)
     (i : I) : P.b i ≠ ⊥ := by

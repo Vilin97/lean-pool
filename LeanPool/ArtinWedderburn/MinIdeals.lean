@@ -59,8 +59,7 @@ theorem mul_ne_zero_imply_set_ne_zero (I J : Ideal R) (h : I * J ≠ ⊥) :
   obtain ⟨z, ⟨⟨x, ⟨hx, ⟨y, ⟨hy, hz⟩⟩⟩⟩, hnz⟩⟩ := hnzz
   refine ⟨x, hx, y, hy, ?_⟩
   simp only at hz
-  rw [hz]
-  exact hnz
+  rwa [hz]
 
 -- if I*I is nonzero, then there is y in I, such that Iy is nonzero
 theorem ideal_sq_ne_bot_imply_subideal_ne_bot (I : Ideal R) (h : I * I ≠ ⊥) :

@@ -392,8 +392,7 @@ theorem sqrt_le_sqrtq_add (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤ 
   have h₄ : (0 : ℝ) ≤ 1 - 2 / 2 ^ n := by
     have h2n : 2 ≤ 2^n := hn.trans Nat.lt_two_pow_self.le
     rify at h2n
-    rw [sub_nonneg, div_le_one (by positivity)]
-    exact h2n
+    rwa [sub_nonneg, div_le_one (by positivity)]
   trans (x.snd - x.fst) / (2 * √x.fst) * (1 - 2 / 2^n)
   · rw [h₃]
     refine mul_le_mul_of_nonneg_right ?_ h₄
@@ -442,8 +441,7 @@ theorem sqrt_le_sqrtq_add' (r : ℝ) (x : ℚInterval) (n : ℕ) (hq : x.fst ≤
   have h₄ : (0 : ℝ) ≤ 1 - 2 / 2 ^ n := by
     have h2n : 2 ≤ 2^n := hn.trans Nat.lt_two_pow_self.le
     rify at h2n
-    rw [sub_nonneg, div_le_one (by positivity)]
-    exact h2n
+    rwa [sub_nonneg, div_le_one (by positivity)]
   trans (x.snd - x.fst) / (√r) * (1 - 2 / 2^n)
   · refine mul_le_mul_of_nonneg_right ?_ h₄
     apply h₃.trans

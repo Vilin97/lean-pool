@@ -363,8 +363,7 @@ lemma el_push_smul_in_I (a y : R) (I : Ideal (CornerSubring idem_e)) :
   have h'' : v = w * r := by
     rw [Subtype.ext_iff]
     rw [NonUnitalSubring.val_mul]
-    simp only [v, w, elPush]
-    exact h
+    simpa only [v, w, elPush] using h
   rw [← h''] at h'
   exact h'
 

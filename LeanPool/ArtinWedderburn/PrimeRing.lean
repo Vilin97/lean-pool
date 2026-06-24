@@ -239,8 +239,7 @@ lemma span_mul_closure_bot_forall' {a b x y : R} (hab : bothMul a b = {0})
   rw [← span_mul_closure_eq_span a] at hx
   apply span_mul_closure_bot_forall hab
   · have hx' : x ∈ (AddSubgroup.closure (mulClosure a) : Set R) := by
-      rw [ideal_mul_closure a]
-      exact hx
+      rwa [ideal_mul_closure a]
     exact hx'
   · exact hy
 

@@ -816,8 +816,7 @@ theorem val_safeInv {x : ComputableℝSeq} (hnz : x.val ≠ 0) : (x.safeInv hnz)
   rw [safeInv, mk_val_eq_val]
 
 theorem val_safeInv_ne_zero {x : ComputableℝSeq} (hnz : x.val ≠ 0) : (x.safeInv hnz).val ≠ 0 := by
-  rw [val_safeInv, ne_eq, inv_eq_zero]
-  exact hnz
+  rwa [val_safeInv, ne_eq, inv_eq_zero]
 
 /-- Subtype of sequences with nonzero values. These admit a (terminating) inverse function. -/
 def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
@@ -863,8 +862,7 @@ theorem inv_eq_safeInv {x : ComputableℝSeq} (hnz : x.val ≠ 0) : x⁻¹ = x.s
   next h => rfl
   next h =>
     absurd h
-    rw [sign_zero_iff]
-    exact hnz
+    rwa [sign_zero_iff]
 
 @[simp]
 theorem val_inv (x : ComputableℝSeq) : x⁻¹.val = x.val⁻¹ := by

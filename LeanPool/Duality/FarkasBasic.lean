@@ -74,8 +74,7 @@ theorem basicLinearAlgebra_lt (A : Matrix I J F) (b : I → F) :
           funext j
           simp only [Pi.sub_apply, Pi.posPart_apply, Pi.negPart_apply]
           exact posPart_sub_negPart (x j)
-        rw [hxx]
-        exact hAx
+        rwa [hxx]
     · intro ⟨x, _, hAx⟩
       use x ∘ Sum.inl - x ∘ Sum.inr
       rw [Matrix.mulVec_sub]

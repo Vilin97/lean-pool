@@ -236,8 +236,7 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
   let x : CornerSubring idem_e := ⟨e * a * f * b * e, hx⟩
   have x_val_eq : x.val = e * a * f * b * e := rfl
   have x_nonzero : (x : CornerSubring idem_e) ≠ 0 := by
-    rw [nonzero, x_val_eq]
-    exact hb
+    rwa [nonzero, x_val_eq]
   have x_inv : ∃ (y : CornerSubring idem_e), x * y = (1 : CornerSubring idem_e) := by
     obtain ⟨_, h'⟩ := heRe
     specialize h' x x_nonzero
@@ -381,8 +380,7 @@ lemma f_mem_corner_e_e_sub_f_idem (e : R) (idem_e : IsIdempotentElem e)
 
 lemma ort_comm (e f : R) (ort : IsOrthogonal e f) : IsOrthogonal f e := by
   unfold IsOrthogonal at *
-  rw [and_comm]
-  exact ort
+  rwa [and_comm]
 
 lemma orth_coercion (e : R) (idem_e : IsIdempotentElem e) (x y : CornerSubring idem_e)
     (ort : IsOrthogonal x y) : IsOrthogonal x.val y.val := by
