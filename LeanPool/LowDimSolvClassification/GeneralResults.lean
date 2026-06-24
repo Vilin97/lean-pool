@@ -344,8 +344,7 @@ theorem LinearEquiv.ofComplSubmodules_symm_add (h : IsCompl p q) (x : L) :
     x = ((LinearEquiv.ofComplSubmodules h).symm x).1.val +
       ((LinearEquiv.ofComplSubmodules h).symm x).2.val := by
   obtain ⟨y, z, hy, hz, hx⟩ := Submodule.codisjoint_iff_exists_add_eq.mp h.codisjoint x
-  simp only [LinearEquiv.ofComplSubmodules_symm_apply h x y z hy hz hx.symm]
-  exact hx.symm
+  simpa only [LinearEquiv.ofComplSubmodules_symm_apply h x y z hy hz hx.symm] using hx.symm
 
 variable (K L : Type*) [Field K] [AddCommGroup L] [Module K L]
 

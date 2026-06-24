@@ -1167,8 +1167,7 @@ noncomputable def _root_.LieAlgebra.Dim3.Family.commutatorBasis (α β : K) (hα
       use a
       use b
       apply Subtype.ext
-      simp only [SetLike.mk_smul_mk, AddMemClass.mk_add_mk]
-      exact h)
+      simpa only [SetLike.mk_smul_mk, AddMemClass.mk_add_mk] using h)
   exact B_basis
 
 theorem _root_.LieAlgebra.Dim3.Family.dim_commutator {hα : α ≠ 0} : finrank K (commutator K
@@ -1190,8 +1189,7 @@ theorem _root_.LieAlgebra.Dim3.Family.B_basis_repr {hα : α ≠ 0} {x : commuta
   let ⟨x, hx⟩ := x
   have h_repr := Basis.repr_fin_two (commutatorBasis α β hα) ⟨x, hx⟩
   have : x ∈ span K {e₂, e₃} := by
-    rw [← commutator_is_span_e₂e₃ (hα := hα)]
-    exact hx
+    rwa [← commutator_is_span_e₂e₃ (hα := hα)]
   let ⟨a, b, h⟩ := mem_span_pair.mp this
   have w := h
   unfold e₂ e₃ at h
@@ -1254,15 +1252,13 @@ theorem _root_.LieAlgebra.Dim3.Family.ade₁_pc : ∀ x ∈ (commutator K (Famil
   ade₁ x ∈ (commutator K (Family K α β)) := by
   intro x hx
   unfold ade₁
-  simp only [ad_apply]
-  exact lie_mem_commutator e₁ x
+  simpa only [ad_apply] using lie_mem_commutator e₁ x
 
 theorem _root_.LieAlgebra.Dim3.Family.ad_pc (x : Family K α β) : ∀ y ∈ (commutator K
     (Family K α β)), (adjoint x) y ∈ (commutator K (Family K α β)) := by
   intro y hy
   unfold adjoint
-  simp only [ad_apply]
-  exact lie_mem_commutator x y
+  simpa only [ad_apply] using lie_mem_commutator x y
 
 /-- TODO. -/
 def _root_.LieAlgebra.Dim3.Family.adRestr (x : Family K α β) : (commutator K

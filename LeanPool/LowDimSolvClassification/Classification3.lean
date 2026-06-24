@@ -343,15 +343,13 @@ theorem classification (dim3 : finrank K L = 3) (hs : IsSolvable L) :
       use α, hα
       rw [family_iff α 0]
       use B, hB01, hB02
-      rw [zero_smul, add_zero]
-      exact hB12
+      rwa [zero_smul, add_zero]
     · right
       right -- Family_α_β α 1
       use α, hα
       rw [family_iff α 1]
       use B, hB01, hB02
-      rw [one_smul]
-      exact hB12
+      rwa [one_smul]
   · have : Nontrivial L := nontrivial_of_finrank_pos (by exact Nat.lt_of_sub_eq_succ dim3)
     have := derivedSeries_lt_top_of_solvable K L
     rw [← dim3] at dc₃
@@ -424,8 +422,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     have : u.val 0 = 0 := by
       obtain ⟨u, hu⟩ := u
       have u_in_span : u ∈ span K {Family.e₂, Family.e₃} := by
-        rw [← Family.commutator_is_span_e₂e₃ hα']
-        exact hu
+        rwa [← Family.commutator_is_span_e₂e₃ hα']
       let ⟨a, b, h⟩ := mem_span_pair.mp u_in_span
       have w := h
       unfold Family.e₂ Family.e₃ at h
