@@ -425,9 +425,6 @@ private theorem term3 (N : Nat) (hN : 16 ≤ N) :
     Nat.mul_le_mul_left _ (by omega)
   omega
 
-private theorem n_le_pow (N : Nat) : N ≤ 2 ^ N := by
-  have := @Nat.lt_pow_self N 2 (by omega); omega
-
 theorem shannon_arithmetic (N : Nat) (hN : 16 ≤ N) :
     (4 * 2 ^ dataBits N + 2 * 2 ^ addrBits N +
       2 ^ (2 ^ addrBits N + addrBits N)) * N ≤ 18 * 2 ^ N := by
@@ -600,39 +597,6 @@ theorem colPatIdx_lt (N : Nat) (f : BitString N → Bool)
     (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) :
     colPatIdx N f k q hkq y < 2^(2^k) :=
   encodeCol_lt k (colFun N f k q hkq y)
-
-/-- The sum Σ_{j < k} (if b j then 2^j else 0) has no overlap between
-    powers, so it is bounded by 2^k. -/
-private lemma sum_cond_pow_range_lt (k : Nat) (b : Nat → Bool) :
-    Finset.sum (Finset.range k) (fun j => if b j then 2^j else 0) < 2^k := by
-  induction k with
-  | zero => simp
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    have : (if b n then 2^n else 0) ≤ 2^n := by split_ifs <;> omega
-    calc _ < 2^n + 2^n := by omega
-      _ = 2^(n+1) := by ring
-
-/-- testBit of a sum of conditional powers of 2 (range version). -/
-private theorem testBit_sum_cond_pow_range (k : Nat) (b : Nat → Bool)
-    (i : Nat) (hi : i < k) :
-    Nat.testBit (Finset.sum (Finset.range k)
-      (fun j => if b j then 2^j else 0)) i = b i := by
-  induction k with
-  | zero => omega
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    have hS_lt := sum_cond_pow_range_lt n b
-    by_cases hi_n : i < n
-    · split_ifs with hbn
-      · rw [Nat.add_comm, Nat.testBit_two_pow_add_gt (by omega)]; exact ih hi_n
-      · simp only [Nat.add_zero]; exact ih hi_n
-    · have hi_eq : i = n := by omega
-      subst hi_eq
-      split_ifs with hbn
-      · rw [Nat.add_comm, Nat.testBit_two_pow_add_eq, Nat.testBit_lt_two_pow hS_lt]; simp [hbn]
-      · simp only [Nat.add_zero]; rw [Nat.testBit_lt_two_pow hS_lt]
-        exact (Bool.eq_false_iff.mpr hbn).symm
 
 /-- Bound on conditional-power sum over Fin. -/
 private lemma sum_cond_pow_fin_lt (k : Nat) (b : BitString k) :

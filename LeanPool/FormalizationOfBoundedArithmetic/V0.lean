@@ -536,9 +536,6 @@ end V0Model
 -- Corollary V.1.8
 -- T, extending V0, if proves Comp for set of formulas Phi,
 -- then also proves Ind, Min and Max for Phi.
--- theorem ind_of_comp : ∀ x : num, comp x ->
-
--- variable {num} {str : outParam Type} [V0Model num str]
 
 
 /-- Types equipped with a successor operation. -/

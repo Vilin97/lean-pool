@@ -58,24 +58,6 @@ end BoolFun
 theorem parity_ne_zero (x : Fin n → Bool) : parity x ≠ 0 := by
   unfold parity; positivity
 
-private theorem filter_flipBit_true (x : Fin n → Bool) (i : Fin n) (hi : x i = true) :
-    Finset.univ.filter (fun j : Fin n => flipBit x i j = true) =
-    (Finset.univ.filter (fun j : Fin n => x j = true)).erase i := by
-  ext j
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_erase]
-  by_cases hji : j = i
-  · subst hji; simp [flipBit_apply_same, hi]
-  · simp [hji]
-
-private theorem filter_flipBit_false (x : Fin n → Bool) (i : Fin n) (hi : x i = false) :
-    Finset.univ.filter (fun j : Fin n => flipBit x i j = true) =
-    insert i (Finset.univ.filter (fun j : Fin n => x j = true)) := by
-  ext j
-  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert]
-  by_cases hji : j = i
-  · subst hji; simp [flipBit_apply_same, hi]
-  · simp [hji]
-
 /-- Flipping any single bit negates the parity. -/
 theorem parity_flipBit (x : Fin n → Bool) (i : Fin n) :
     parity (flipBit x i) = -parity x := by

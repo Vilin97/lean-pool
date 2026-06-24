@@ -572,8 +572,8 @@ lemma T'_snd_medium' (x : gameTree hyp) (h : x.val.length = 2 * k + 1) :
     rfl
   have hlast := congrArg List.getLast? hval'
   have hleft : (ExtensionsAt.map (treeHom hyp) h a).val'.getLast? =
-      some (ExtensionsAt.map (treeHom hyp) h a).val := by
-    exact List.getLast?_append_of_ne_nil _ (by simp)
+      some (ExtensionsAt.map (treeHom hyp) h a).val :=
+    List.getLast?_append_of_ne_nil _ (by simp)
   have hright : (a.val'.map Prod.fst).getLast? = some a.val.1 := by
     change (List.map Prod.fst (x.val ++ [a.val])).getLast? = some a.val.1
     have hmap : List.map Prod.fst (x.val ++ [a.val]) = x.val.map Prod.fst ++ [a.val.1] :=

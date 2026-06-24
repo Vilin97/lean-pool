@@ -61,29 +61,6 @@ end Term
 namespace BoundedFormula
 variable {L : Language} {M : Type*} [L.Structure M] {a b} {n1 n2 n3} {n}
 
--- important: DON'T make this a simp lemma!
--- breaks everything
--- @[delta0_simps]
--- lemma realize_Formula (phi : L.Formula a) {v : a -> M} {xs}
---   : BoundedFormula.Realize phi v xs
---     <->
---     phi.Realize v
---   :=
--- by
---   exact Formula.boundedFormula_realize_eq_realize phi v xs
-
--- @[delta0_simps]
--- lemma realize_flip (phi : L.BoundedFormula (a ⊕ b) n) {v : (b ⊕ a) -> M} {xs}
---   : phi.flip.Realize v xs
---     <->
---     phi.Realize (v ∘ Sum.swap) xs
---   :=
--- by
---   unfold BoundedFormula.flip
---   rw [realize_relabelEquiv]
---   dsimp only [Equiv.coe_fn_mk]
---   exact Eq.to_iff rfl
-
 end BoundedFormula
 
 
@@ -413,25 +390,6 @@ theorem _root_.FirstOrder.Term.realize_isstr {num str : Type u} [ZambellaModel n
     <-> (t.realize (Sum.elim v Fin.elim0)).isRight := ax_realize_isstr
 
 
--- @[delta0_simps]
--- lemma realize_IsNum (phi : zambella.Formula a) {v : a -> (num ⊕ str)}
---   : (Formula.IsNum phi).Realize v
---     <->
---     phi.Realize (v ∘ Sum.inl)
---   :=
--- by
---   unfold Formula.Realize
---   unfold Formula.mkInl
---   rw [realize_relabelEquiv]
---   dsimp only [Equiv.coe_fn_mk]
---   exact Eq.to_iff rfl
-
-
--- @[delta0_simps]
--- theorem realize_isstr {a : Type} {v : a -> (num ⊕ str)} {t : zambella.Term (a ⊕ Fin 0)} :
---     (IsStr t).Realize v
---     <-> (t.realize (Sum.elim v Fin.elim0)).isRight := ax_realize_isstr
-
 @[delta0_simps]
 theorem _root_.FirstOrder.Term.realize_in {num str : Type u} [ZambellaModel num str] {a : Type} {n}
     {t1 t2 : zambella.Term (a ⊕ Fin n)}
@@ -634,31 +592,5 @@ by
 
 end realize_iBdAllNum'
 
--- @[delta0_simps]
--- lemma realize_iBdAllNumLt'.Vars1
---   {num str}
---   [inst1 : ZambellaModel num str]
---   (phi : zambella.Formula (a ⊕ Vars1 n1) )
---   {t : zambella.Term (a ⊕ Fin 0)}
---   {v : a -> (num ⊕ str)}
---   : (phi.iBdAllNumLt' t).Realize v
---     <->
---       ∀ x : (num ⊕ str),
---       x < (t.realize (Sum.elim v default))
---       -> x.isLeft
---       -> phi.Realize
---         (Sum.elim v (fun fv => match fv with | .fv1 => x))
---   :=
--- by
---   unfold iBdAllNumLt'
---   rw [realize_iBdAllLt'.Vars1]
-
---   conv =>
---     lhs; ext; rhs;
---     rw [realize_imp]
---     conv =>
---       lhs
---       rw [Term.realize_isnum]
---       simp only [Term.realize_var, Sum.elim_inl, Sum.elim_inr]
 end Formula
 end FirstOrder.Language

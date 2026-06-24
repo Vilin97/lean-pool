@@ -227,8 +227,8 @@ lemma limConeBodySystem_map_contains (S : (LvlStratHom.system p).obj ⟨limConeP
     ((limConeπMap hF (n ⊔ (x.val.length + 1))) x) := by
   unfold BodySystemObj.containsTree at hc ⊢
   simp only [LenHom.h_length_simp]
-  have hfix : Tree.Fixing x.val.length (mapIneqRec (F := F) n x.val.length).toHom := by
-    exact (transition_fixing hF (ineq_rec n x.val.length)).1.mon (by simp)
+  have hfix : Tree.Fixing x.val.length (mapIneqRec (F := F) n x.val.length).toHom :=
+    (transition_fixing hF (ineq_rec n x.val.length)).1.mon (by simp)
   apply Tree.Fixing.inj (mapIneqRec (F := F) n x.val.length).toHom
     (ht := by simpa only [LenHom.h_length_simp] using hfix)
   rw [← CategoryTheory.comp_apply]
@@ -345,8 +345,8 @@ lemma limConeBodySystem_lift (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
       (limConeπMap hF (n ⊔ k))
         (resEq.val' (inv ((resEq k).map (limConeπMap hF (n ⊔ k)))
           ((limConeBodyLifts hF S (cast (by simp) y) yc k).1.res k))) =
-        resEq.val' ((limConeBodyLifts hF S (cast (by simp) y) yc k).1.res k) := by
-    exact congrArg (resEq.val' (S := (F.obj (Opposite.op (n ⊔ k))).1))
+        resEq.val' ((limConeBodyLifts hF S (cast (by simp) y) yc k).1.res k) :=
+    congrArg (resEq.val' (S := (F.obj (Opposite.op (n ⊔ k))).1))
       (cancel_inv_right_types ((resEq k).map (limConeπMap hF (n ⊔ k)))
         ((limConeBodyLifts hF S (cast (by simp) y) yc k).1.res k))
   rw [hcancel]

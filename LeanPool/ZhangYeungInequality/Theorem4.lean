@@ -284,9 +284,6 @@ private def baseWitness (S : Finset (Fin 4)) : ℚ := (S.card : ℚ) + nonemptyB
 private lemma fullBonus_nonneg (S : Finset (Fin 4)) : 0 ≤ fullBonus S := by
   by_cases h : S = Finset.univ <;> simp [fullBonus, h]
 
-private lemma pairBonus_nonneg (S : Finset (Fin 4)) : 0 ≤ pairBonus S := by
-  by_cases h : S = pair01 <;> simp [pairBonus, h]
-
 private lemma FWitnessℚ_eq_base_add_pair :
     ∀ S : Finset (Fin 4), FWitnessℚ S = baseWitness S + pairBonus S := by
   intro S

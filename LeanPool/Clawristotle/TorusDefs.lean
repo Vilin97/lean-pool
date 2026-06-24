@@ -84,8 +84,8 @@ lemma periodicLift_shift (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   simp only [torusMk, Pi.add_apply, Pi.sub_apply]
   -- x i - y i is an integer, so adding it doesn't change the equivalence class
   have hi : (fun i => QuotientAddGroup.mk (x i) : Torus3) i =
-            (fun i => QuotientAddGroup.mk (y i) : Torus3) i := by
-    exact congr_fun h i
+            (fun i => QuotientAddGroup.mk (y i) : Torus3) i :=
+    congr_fun h i
   simp only at hi
   rw [QuotientAddGroup.eq] at hi ⊢
   obtain ⟨n, hn⟩ := hi

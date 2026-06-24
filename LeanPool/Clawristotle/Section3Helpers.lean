@@ -282,8 +282,8 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
           Filter.eventually_of_mem self_mem_nhdsWithin
             fun t ht => Submodule.smul_mem _ _ <|
             h_deriv_eq t
-    have h_deriv_scalar : ∀ w : Fin 3 → ℝ, ∃ c : ℝ, (fderiv ℝ g v) w = c • w := by
-      exact fun w => by simpa [eq_comm] using Submodule.mem_span_singleton.mp (h_deriv_eq w)
+    have h_deriv_scalar : ∀ w : Fin 3 → ℝ, ∃ c : ℝ, (fderiv ℝ g v) w = c • w :=
+      fun w => by simpa [eq_comm] using Submodule.mem_span_singleton.mp (h_deriv_eq w)
     choose c hc using h_deriv_scalar
     have h_c_const : ∀ i j : Fin 3, c (Pi.single i 1) = c (Pi.single j 1) := by
       intro i j

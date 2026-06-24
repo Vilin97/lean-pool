@@ -174,10 +174,6 @@ def derivedLength (w : Wrd) : IO Float := do
   let cache ← proofCache.get
   derivedLengthWithFuel (cache.size + 1) w
 
-/-- Recompute the derived length from cached proof nodes, panicking if a node is absent. -/
-private def derivedLength! (w : Wrd) : IO Float := do
-  derivedLength w
-
 /-- Recompute a derived length proof with a bounded traversal fuel. -/
 private def derivedProofWithFuel : Nat → Wrd → IO (Float × (List ProofNode))
 | 0, w => throw <| IO.userError s!"proof cache recursion exhausted at {w}"
@@ -204,9 +200,5 @@ private def derivedProofWithFuel : Nat → Wrd → IO (Float × (List ProofNode)
 def derivedProof (w : Wrd) : IO (Float × (List ProofNode)) := do
   let cache ← proofCache.get
   derivedProofWithFuel (cache.size + 1) w
-
-/-- Recompute the derived length together with the list of proof nodes used. -/
-private def derivedProof! (w : Wrd) : IO (Float × (List ProofNode)) := do
-  derivedProof w
 
 end LeanPool.Polylean

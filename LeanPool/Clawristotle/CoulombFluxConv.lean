@@ -52,8 +52,8 @@ private lemma inv_norm_bounded_integrable
           exact (mul_le_mul_of_nonneg_left (hg_bounded w)
             (inv_nonneg.mpr (norm_nonneg _))).trans (by rw [mul_comm]))
   have h_far : IntegrableOn (fun w => ‖v - w‖⁻¹ * g w)
-      (Set.univ \ Metric.closedBall v 1) := by
-    exact hg_int.norm.integrableOn.mono'
+      (Set.univ \ Metric.closedBall v 1) :=
+    hg_int.norm.integrableOn.mono'
       ((Measurable.aestronglyMeasurable (Measurable.inv
         (measurable_norm.comp (measurable_const.sub measurable_id')))).mul
         (hg_meas.mono_measure Measure.restrict_le_self))
@@ -174,8 +174,8 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
     have h_pos : 0 < 1 + ‖v - u‖ := by linarith [norm_nonneg (v - u)]
     have h_pos2 : 0 < 1 + ‖v₀ - u‖ := by linarith [norm_nonneg (v₀ - u)]
     calc ‖fderiv ℝ g (v - u)‖
-        ≤ C8 / (1 + ‖v - u‖) ^ 8 := by
-          exact (le_div_iff₀ (by positivity)).mpr (hC8 (v - u))
+        ≤ C8 / (1 + ‖v - u‖) ^ 8 :=
+          (le_div_iff₀ (by positivity)).mpr (hC8 (v - u))
       _ ≤ C8 / ((1 + ‖v₀ - u‖) / 2) ^ 8 := by
           gcongr
       _ = C8 * 2 ^ 8 / (1 + ‖v₀ - u‖) ^ 8 := by

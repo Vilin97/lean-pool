@@ -359,14 +359,7 @@ by
   · exact h
   · apply zero_le
 
--- O9. x ≤ x
--- This is proved already as BASICModel.le_refl (doesn't need induction)
--- theorem le_refl
---   : ∀ x : M, x ≤ x :=
--- by
---   intro x
---   conv => right; rw [<- B3 x]
---   apply B8
+-- O9. x ≤ x is proved already as BASICModel.le_refl (doesn't need induction)
 
 -- O10. x ≠ x + 1
 theorem ne_succ

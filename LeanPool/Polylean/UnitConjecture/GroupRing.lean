@@ -301,9 +301,6 @@ instance : Ring (R[G]) :=
         intro x
         let l := FreeModule.coeffs_distrib (-1 : R) (1 : R) x
         simp only [neg_add_cancel] at l
-        have lc : (-1 : R) + 1 = 0 := by
-            apply neg_add_cancel
-        -- rw [lc] at l
         rw [FreeModule.unit_coeffs] at l
         rw [FreeModule.zero_coeffs] at l
         exact l
@@ -364,7 +361,6 @@ instance : Ring (R[G]) :=
         apply funext; intro x₀
         let lih := congrFun ih x₀
         rw [coords] at lih
-        -- rw [← append_coords]
         rw [lih]
         simp only [coords]
 

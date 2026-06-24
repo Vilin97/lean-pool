@@ -74,21 +74,6 @@ theorem conv_lambda_sq_larger_sum (f : ℕ → ℕ → ℕ → ℝ) (n : ℕ) :
   rintro rfl
   exact ⟨Nat.dvd_lcm_left d1 d2, Nat.dvd_lcm_right d1 d2, rfl⟩
 
--- theorem dvd_iff_mul_of_dvds {P : ℕ} (k d l m : ℕ) (hd : d ∈ P.divisors) :
---     k = d / l ∧ l ∣ d ∧ d ∣ m ↔ d = k * l ∧ d ∣ m := by
---   constructor
---   · intro ⟨hk_eq, hld, hdm⟩
---     exact ⟨Nat.eq_mul_of_div_eq_left hld hk_eq.symm, hdm⟩
---   · intro ⟨hd_eq, hdm⟩
---     refine ⟨?_, ?_, hdm⟩
---     · apply (Nat.div_eq_of_eq_mul_left _ hd_eq).symm
---       apply Nat.pos_of_ne_zero
---       apply right_ne_zero_of_mul (a:=k)
---       rw [←hd_eq]
---       apply _root_.ne_of_gt
---       apply Nat.pos_of_mem_divisors hd
---     · use k; rw [hd_eq, mul_comm]
-
 theorem moebius_inv_dvd_lower_bound (l m : ℕ) (hm : Squarefree m) :
     (∑ d ∈ m.divisors, if l ∣ d then (μ d:ℤ) else 0) = if l = m then (μ l:ℤ) else 0 := by
   have hm_pos : 0 < m := Nat.pos_of_ne_zero <| Squarefree.ne_zero hm

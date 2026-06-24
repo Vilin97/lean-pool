@@ -104,10 +104,4 @@ instance : IsLeftCancelAdd M where
     rw [@IOPENModel.add_cancel_right] at h
     exact h
 
--- instance : IsStrictOrderedRing M where
---   le_of_add_le_add_left := by
---     intro a b c h
---     rw [le_cancel_left]
-
-
 end IDelta0

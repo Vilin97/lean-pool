@@ -366,22 +366,6 @@ by
   intro x y hxy
   rw [hxy]
 
--- theorem lt_of_not_ge :
---   ∀ {x y : M}, ¬ x <= y -> y < x :=
--- by
---   intro x y h
---   constructor
---   · cases le_total x y with
---     | inl x_le =>
---       contradiction
---     | inr y_le =>
---       exact y_le
---   · intro h_eq
---     apply h
---     apply le_of_eq
---     apply Eq.symm
---     exact h_eq
-
 theorem zero_if_sum_zero :
   ∀ {x y : M}, x + y = 0 -> x = 0 ∧ y = 0 := by
   intro x y h

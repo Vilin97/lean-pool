@@ -218,8 +218,8 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
               simpa using hsmul.const_add (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ)
             exact (hF.contDiffAt.differentiableAt one_ne_zero).hasFDerivAt.comp_hasDerivAt x hg
           · apply_rules [ Continuous.intervalIntegrable ]
-            have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) := by
-              exact hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
+            have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) :=
+              hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
                 continuous_pi_iff.mpr fun j => by fin_cases i <;> fin_cases j <;> continuity
             exact h_cont.clm_apply continuous_const
         convert h_ftc using 1 <;> norm_num [ intervalIntegral.integral_of_le zero_le_one ]

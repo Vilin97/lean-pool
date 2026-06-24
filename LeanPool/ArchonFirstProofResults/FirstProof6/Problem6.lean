@@ -1231,8 +1231,8 @@ lemma coloring_induction_exists
     let k := n / 4
     ∃ (pc : PartialColoring V r),
       pc.colored.card = k ∧
-      ∀ γ : Fin r, IsEpsLight G ε (pc.colored.filter (fun v => pc.color v = γ)) := by
-  exact bss_coloring_eps_light G ε hε hε1 hn
+      ∀ γ : Fin r, IsEpsLight G ε (pc.colored.filter (fun v => pc.color v = γ)) :=
+  bss_coloring_eps_light G ε hε hε1 hn
 
 /-! ### Proof of the main theorem -/
 

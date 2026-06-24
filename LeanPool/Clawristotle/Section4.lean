@@ -52,8 +52,8 @@ theorem steady_state_is_local_maxwellian
 
 private lemma hasFDerivAt_proj_mul_const (j : Fin 3) (c : ℝ) (v : Fin 3 → ℝ) :
     HasFDerivAt (fun w : Fin 3 → ℝ => w j * c)
-      (c • (ContinuousLinearMap.proj j : (Fin 3 → ℝ) →L[ℝ] ℝ)) v := by
-  exact (ContinuousLinearMap.proj (ι := Fin 3) (φ := fun _ => ℝ) j :
+      (c • (ContinuousLinearMap.proj j : (Fin 3 → ℝ) →L[ℝ] ℝ)) v :=
+  (ContinuousLinearMap.proj (ι := Fin 3) (φ := fun _ => ℝ) j :
     (Fin 3 → ℝ) →L[ℝ] ℝ).hasFDerivAt.mul_const c
 
 /-- HasFDerivAt for each component of the Lorentz force E + v×B.

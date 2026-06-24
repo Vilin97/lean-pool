@@ -1319,38 +1319,6 @@ by
         push Not
         constructor <;> unfold H at * <;> aesop
 
-private lemma case_3_false_of_wbr_eq_urz {g : Grammar T} {r₀ : Grule T g.nt} {w : List (List T)}
-    {β : List T} {u z : List (ns T g.nt)}
-    (contradictory_equality :
-      w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [R] =
-      u ++ r₀.inputL.map wrapSym ++ [Symbol.nonterminal ◄r₀.inputN] ++ z) :
-  False :=
-by
-  apply false_of_true_eq_false
-  convert congr_arg ((Symbol.nonterminal ◄r₀.inputN ∈ ·)) contradictory_equality.symm
-  · rw [true_iff]
-    apply List.mem_append_left
-    apply List.mem_append_right
-    apply List.mem_singleton_self
-  · rw [false_iff]
-    intro hyp_N_in
-    rw [List.mem_append] at hyp_N_in
-    cases hyp_N_in with
-    | inl hr₀ =>
-      rw [List.mem_append] at hr₀
-      cases hr₀ with
-      | inl hw =>
-        rw [List.mem_map] at hw
-        rcases hw with ⟨t, -, impos⟩
-        simp at impos
-      | inr hβ =>
-        rw [List.mem_map] at hβ
-        rcases hβ with ⟨t, -, impos⟩
-        simp at impos
-    | inr hR =>
-      rw [List.mem_singleton] at hR
-      simp [R] at hR
-
 private lemma case_3_le_u_len {g : Grammar T} {r₀ : Grule T g.nt}
     {x : List (List (Symbol T g.nt))} {u v : List (ns T g.nt)} {w : List (List T)} {β : List T}
     {γ : List (Symbol T g.nt)} {v' : List (ns T g.nt)}

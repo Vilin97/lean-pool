@@ -522,26 +522,6 @@ private lemma andOr2_eval (op : AONOp) (v : BitString 2) :
     op.eval 2 v = op.binOp (v 0) (v 1) := by
   cases op <;> simp [AONOp.eval, Fin.foldl_succ_last, Fin.foldl_zero, AONOp.binOp]
 
-/-- For k = 0: the single chain gate computes `op.identity`. -/
-private lemma mkChainGate_eval_zero {W base : Nat} (op : AONOp) (ri : Fin 0 → Fin W)
-  (rn : Fin 0 → Bool)
-    (hW : 0 < W) (hj : 0 < chainLen 0) (hbase : base + chainLen 0 ≤ W)
-    (wv : BitString W) :
-    (mkChainGate hW op 0 ri rn base 0 hj hbase).eval wv = op.identity := by
-  simp only [mkChainGate, Gate.eval, Basis.andOr2, mkChainOp, mkChainInputs, mkChainNeg,
-             dite_true]
-  exact AONOp.dual_const op (wv ⟨0, hW⟩)
-
-/-- For k = 1: the single chain gate is a passthrough. -/
-private lemma mkChainGate_eval_one {W base : Nat} (op : AONOp) (ri : Fin 1 → Fin W)
-  (rn : Fin 1 → Bool)
-    (hW : 0 < W) (hj : 0 < chainLen 1) (hbase : base + chainLen 1 ≤ W)
-    (wv : BitString W) :
-    (mkChainGate hW op 1 ri rn base 0 hj hbase).eval wv =
-    (rn ⟨0, by omega⟩).xor (wv (ri ⟨0, by omega⟩)) := by
-  simp [mkChainGate, Gate.eval, Basis.andOr2, mkChainOp, mkChainInputs, mkChainNeg,
-        AONOp.passthrough_eq]
-
 /-- For k ≥ 2, j = 0: first chain gate computes `op.binOp (v 0) (v 1)`. -/
 private lemma mkChainGate_eval_ge2_zero {W base : Nat} (op : AONOp) {k : Nat} (hk : 2 ≤ k)
     (ri : Fin k → Fin W) (rn : Fin k → Bool)

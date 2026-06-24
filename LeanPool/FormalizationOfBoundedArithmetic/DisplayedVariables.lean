@@ -121,9 +121,6 @@ inductive Vars4 : FvName -> FvName -> FvName -> FvName -> Type
   : IsEnum.toIdx x = match x with | .fv1 => 0 | .fv2 => 1 | .fv3 => 2 | .fv4 => 3
   := rfl
 
-private lemma displayedVariablesDelimiter1 : True := by
-  trivial
-
 universe u
 variable {α : Type u} {L : FirstOrder.Language}
 
@@ -285,9 +282,6 @@ def FirstOrder.Language.Formula.displaySwapleft'
       | inr vr => simp only
   }
 
-private lemma displayedVariablesDelimiter2 : True := by
-  trivial
-
 -- Vars2 .x .y -> Vars2 .y .x
 /-- Swap the two variables in a two-variable displayed formula. -/
 def FirstOrder.Language.Formula.rotate21
@@ -352,9 +346,6 @@ def FirstOrder.Language.Formula.rotate231
       intro v; cases v <;> simp only
   }
 
-private lemma displayedVariablesDelimiter3 : True := by
-  trivial
-
 variable {β}
 
 /-- Flip the two sides of the free-variable sum in a bounded formula. -/
@@ -375,9 +366,6 @@ def FirstOrder.Language.Formula.flip (phi : L.Formula (α ⊕ β)) : L.Formula (
     left_inv := Sum.swap_leftInverse
     right_inv := Sum.swap_rightInverse
   }
-
--- theorem FirstOrder.Language.Formula.realize_flip (phi : L.Formula (α ⊕ β)) {v}
---   : phi.flip.Realize v <-> phi.Realize (v ∘ )
 
 /-- Embed a formula into a sum context by putting all variables on the left. -/
 def FirstOrder.Language.Formula.mkInl (phi : L.Formula α) : L.Formula (α ⊕ Empty) :=

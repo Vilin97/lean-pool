@@ -308,7 +308,7 @@ lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   rw [hpoint]
 lemma bodyEquivSystem_strat'' {x} (S : Strategy T.2 p) :
   x.val ∈ body S.pre.subtree
-  ↔ consistent (bodyEquivSystem.hom.app T x) (strategyEquivSystem S) := by
-  exact bodyEquivSystem_strat (x := x) (strategyEquivSystem S)
+  ↔ consistent (bodyEquivSystem.hom.app T x) (strategyEquivSystem S) :=
+  bodyEquivSystem_strat (x := x) (strategyEquivSystem S)
 end «Section1»
 end GaleStewartGame
