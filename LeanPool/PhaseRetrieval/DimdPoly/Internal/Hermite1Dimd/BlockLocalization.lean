@@ -931,8 +931,7 @@ private lemma shellExp_global_majorant
         exact_mod_cast (by simp [shellCardinality] : shellCardinality d 0 ≤ 1)
       have hpow1 : (1 : ℝ) ≤ (3 : ℝ) ^ d := one_le_pow₀ (by norm_num)
       have hfac : (1 : ℝ) ≤ 1 + (((0 : ℕ) : ℝ) ^ d) := by
-        have : (0 : ℝ) ≤ (((0 : ℕ) : ℝ) ^ d) := by positivity
-        linarith
+        linarith [show (0 : ℝ) ≤ (((0 : ℕ) : ℝ) ^ d) by positivity]
       nlinarith [hzero, mul_le_mul hpow1 hfac (by norm_num) (by positivity)]
     · have hr1 : 1 ≤ r := Nat.succ_le_of_lt (Nat.pos_iff_ne_zero.mpr hr0)
       have hs : (shellCardinality d r : ℝ) ≤ ((2 * r + 1) ^ d : ℕ) := by

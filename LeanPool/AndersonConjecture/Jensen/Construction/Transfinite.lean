@@ -612,7 +612,8 @@ private def transfinite_construction_proof
             · have h_prevF_eq : prevF α (fun γ hγ => data γ) = ring
                   ((Order.not_isSuccPrelimit_iff_succ_eq.mp
                     ((Order.not_isSuccLimit_iff.mp hlim).resolve_left hmin)).choose) := by
-                simpa only [prevF, dif_neg hmin, dif_neg hlim]
+                simp only [prevF, dif_neg hmin, dif_neg hlim]
+                rfl
               let hprelim := (Order.not_isSuccLimit_iff.mp hlim).resolve_left hmin
               let hγ_ex := Order.not_isSuccPrelimit_iff_succ_eq.mp hprelim
               let hγ_lt := lt_of_lt_of_eq

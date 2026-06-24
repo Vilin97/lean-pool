@@ -168,8 +168,7 @@ private def intersection_close_up_proof_ker_pf₁
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
         (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := by
-    simp only [Set.mem_setOf_eq]
-    exact heval_zero
+    simpa only [Set.mem_setOf_eq] using heval_zero
   have hf_ne : f ≠ 0 := by
     intro h
     apply h_ndvd
@@ -295,8 +294,7 @@ include T in theorem intersection_close_up_ker_pf₂
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
         (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := by
-    simp only [Set.mem_setOf_eq]
-    exact heval_zero
+    simpa only [Set.mem_setOf_eq] using heval_zero
   have hf_ne : f ≠ 0 := by
     intro h
     apply h_ndvd

@@ -465,9 +465,7 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
               have hsq2 : ((1 + r ^ (D - 1)) * C) ^ 2 ≤
                   2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2 := by nlinarith [sq_nonneg (1 - r ^ (D - 1))]
               have hpow_eq : r ^ 3 * (r ^ (D - 1)) ^ 2 = r * r ^ (D * 2) := by
-                have hexp_eq : 3 + (D - 1) * 2 = 1 + D * 2 := by
-                  have := Nat.sub_add_cancel (show 1 ≤ D from hD_pos)
-                  nlinarith
+                have hexp_eq : 3 + (D - 1) * 2 = 1 + D * 2 := by omega
                 rw [← pow_mul, ← pow_add, hexp_eq, pow_add, pow_one]
               calc r ^ 3 * (∑ x, r ^ x.val * ‖a x‖) ^ 2
                   ≤ r ^ 3 * (2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2) := by

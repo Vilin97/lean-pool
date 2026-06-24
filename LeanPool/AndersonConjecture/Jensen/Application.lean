@@ -355,7 +355,8 @@ theorem T_depth_ge_two :
     obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective t
     have hmem : X 2 * f - X 1 * g ∈ conjI := by
       have : Ideal.Quotient.mk conjI (X 2 * f - X 1 * g) = 0 := by
-        simpa only [map_sub, map_mul] using sub_eq_zero.mpr ht.symm
+        simp only [map_sub, map_mul]
+        exact sub_eq_zero.mpr ht.symm
       rwa [Ideal.Quotient.eq_zero_iff_mem] at this
     refine ⟨Ideal.Quotient.mk conjI (shiftX1'App f + X 2 * divR'App f), Submodule.mem_top, ?_⟩
     change Ideal.Quotient.mk conjI (X 1) *

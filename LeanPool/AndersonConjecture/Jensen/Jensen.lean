@@ -254,8 +254,7 @@ lemma coeff_rhs' (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
       simp only [Finsupp.single_apply]
       by_cases hi : i = 0
       · subst hi
-        simp only [Fin.isValue, ↓reduceIte]
-        exact h
+        simpa only [Fin.isValue, ↓reduceIte] using h
       · simp [show (0 : Fin 3) ≠ i from fun h => hi h.symm]
     simp [hle, hd0]
 
