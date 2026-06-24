@@ -466,9 +466,8 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
           ≤ r ^ 2 * (C / (m * r)) := by nlinarith [besselK1_pos (m * r) hmr_pos]
         _ = C * r / m := by field_simp [ne_of_gt hr_pos, ne_of_gt hm]
     -- The bounding function C*r/m is integrable on (0, 1/m]
-    have h_bound_int : IntegrableOn (fun r => C * r / m) (Ioc 0 (1/m)) := by
-      have h_cont : Continuous (fun r : ℝ => C * r / m) := by continuity
-      exact h_cont.integrableOn_Ioc
+    have h_bound_int : IntegrableOn (fun r => C * r / m) (Ioc 0 (1/m)) :=
+      (by continuity : Continuous (fun r : ℝ => C * r / m)).integrableOn_Ioc
     -- Key insight: the function is continuous and bounded by an integrable function
     -- Use Integrable.mono' with the bound
     have hf_meas :
@@ -525,8 +524,7 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
         apply integrable_of_isBigO_exp_neg (by linarith : 0 < m/2)
         · -- ContinuousOn (fun r => r² * exp(-mr)) (Ici (1/m))
           apply ContinuousOn.mul (continuous_pow 2).continuousOn
-          have hcont : Continuous (fun r : ℝ => exp (-m * r)) := by continuity
-          exact hcont.continuousOn
+          exact (by continuity : Continuous (fun r : ℝ => exp (-m * r))).continuousOn
         · -- r² * exp(-mr) = O(exp(-m/2 * r)) at infinity
           -- First establish that r² * exp(-mr/2) → 0, so eventually r² * exp(-mr/2) ≤ 1
           have h_tendsto := tendsto_pow_mul_exp_neg_atTop_nhds_zero 2

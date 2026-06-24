@@ -486,8 +486,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
       ℝ))).mulVec x := by
       intro ε hε
       -- Use the positive semidefiniteness of entrywiseExp (R + εI)
-      have hPSD := Matrix.PosDef.posSemidef (h_exp_perturb_posDef ε hε)
-      exact hPSD.dotProduct_mulVec_nonneg x
+      exact (Matrix.PosDef.posSemidef (h_exp_perturb_posDef ε hε)).dotProduct_mulVec_nonneg x
     -- Quadratic form is continuous: x ⬝ᵥ A.mulVec x is continuous in A
     have h_quad_continuous : Continuous (fun A : Matrix ι ι ℝ => x ⬝ᵥ A.mulVec x) := by
       -- Quadratic forms are finite sums of coordinate functions, hence continuous

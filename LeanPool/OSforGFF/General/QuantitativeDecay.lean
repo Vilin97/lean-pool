@@ -511,9 +511,8 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
       _ ≤ (1 + ‖x‖) ^ (N : ℝ) * (1 + R₀) ^ (N : ℝ) := h_pow
       _ = (1 + R₀) ^ (N : ℝ) * (1 + ‖x‖) ^ (N : ℝ) := by ring
   -- Shifted kernel integrability (needed in multiple places)
-  have hK_shift_int : Integrable (fun x => |kernelSingular K R₀ (x - y)|) volume := by
-    have h := hK_sing_int.comp_sub_right y
-    exact h.abs
+  have hK_shift_int : Integrable (fun x => |kernelSingular K R₀ (x - y)|) volume :=
+    (hK_sing_int.comp_sub_right y).abs
   -- Main calculation using Peetre inequality
   -- The integral bound follows from:
   -- 1. ‖f x‖ ≤ C_f / (1 + ‖x‖)^N (Schwartz decay)
@@ -588,9 +587,7 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
     _ = (C_f * (1 + R₀)^(N : ℝ) / (1 + ‖y‖)^(N : ℝ)) * I_Ksing := by
         congr 1
         -- Change of variables: z = x - y
-        have hcov : ∫ x, |kernelSingular K R₀ (x - y)| = ∫ z, |kernelSingular K R₀ z| :=
-          MeasureTheory.integral_sub_right_eq_self (fun z => |kernelSingular K R₀ z|) y
-        exact hcov
+        exact MeasureTheory.integral_sub_right_eq_self (fun z => |kernelSingular K R₀ z|) y
     _ ≤ C / (1 + ‖y‖)^(N : ℝ) := by
         have h_rpow_pos : 0 < (1 + ‖y‖)^(N : ℝ) := Real.rpow_pos_of_pos h_one_plus_y_pos N
         -- Goal: C_f * (1 + R₀) ^ N / (1 + ‖y‖) ^ N * I_Ksing ≤ C / (1 + ‖y‖) ^ N
@@ -876,10 +873,8 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
         _ ≤ C_f / 1 := by apply div_le_div_of_nonneg_left (le_of_lt hC_f_pos) one_pos h2
         _ = C_f := by ring
     have hint1 : Integrable (fun x => f x * (kernelSingular K R₀ (x - y) : ℂ)) volume := by
-      have hK_sing_shift : Integrable (fun x => kernelSingular K R₀ (x - y)) volume :=
-        hK_sing_int.comp_sub_right y
       have hK_sing_shift_C : Integrable (fun x => (kernelSingular K R₀ (x - y) : ℂ)) volume :=
-        hK_sing_shift.ofReal
+        (hK_sing_int.comp_sub_right y).ofReal
       exact hK_sing_shift_C.bdd_mul (c := C_f) f.continuous.aestronglyMeasurable
         (Eventually.of_forall hf_bdd)
     have hint2 : Integrable (fun x => f x * (kernelTail K R₀ (x - y) : ℂ)) volume := by

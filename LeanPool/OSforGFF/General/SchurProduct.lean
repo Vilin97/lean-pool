@@ -81,9 +81,8 @@ If A B are positive definite matrices over ℝ, then the Hadamard product is pos
     let y : ι × ι → ℝ := diagEmbed (ι:=ι) x
     have hy : y ≠ 0 := diagEmbed_ne_zero_of_ne_zero (ι:=ι) hx
     -- Built-in Kronecker product is PosDef
-    have hk : 0 < y ⬝ᵥ (A ⊗ₖ B).mulVec y := by
-      have hK : (A ⊗ₖ B).PosDef := Matrix.PosDef.kronecker hA hB
-      exact hK.dotProduct_mulVec_pos hy
+    have hk : 0 < y ⬝ᵥ (A ⊗ₖ B).mulVec y :=
+      (Matrix.PosDef.kronecker hA hB).dotProduct_mulVec_pos hy
     -- The quadratic forms coincide on diagonal-embedded vectors
     have hquad_eq : y ⬝ᵥ (A ⊗ₖ B).mulVec y = x ⬝ᵥ (A ∘ₕ B).mulVec x := by
       classical
