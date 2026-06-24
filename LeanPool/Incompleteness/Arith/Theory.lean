@@ -630,9 +630,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₁.proof (n m : V) :
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₂.proof (n m : V) :
     ⌜𝐑₀'⌝[V] ⊢ (n * m : ⌜ℒₒᵣ⌝[V].Semiterm 0) =' ↑(n * m) := Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 3 apply FirstOrder.Semiformula.curve_mem_right
   apply FirstOrder.Semiformula.curve_mem_left
   unfold Ω₂
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,

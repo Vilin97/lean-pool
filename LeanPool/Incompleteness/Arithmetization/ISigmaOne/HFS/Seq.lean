@@ -535,9 +535,7 @@ lemma order_ball_induction_sigma1 {f : V → V → V} (hf : Sg1-Function₂ f) {
           (BoldfaceFunction.comp₁ (.var _)))
       apply Boldface.and
         (Boldface.comp₂ (.var 0) (by definability))
-      apply Boldface.ball_lt (.var _)
-      apply Boldface.ball_lt (.var _)
-      apply Boldface.ball_lt (.var _)
+      iterate 3 apply Boldface.ball_lt (.var _)
       apply Boldface.imp
         (Boldface.comp₂ (.var _) (BoldfaceFunction.comp₂ (.var _) (.var _)))
       apply Boldface.imp
