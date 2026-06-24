@@ -845,8 +845,8 @@ lemma ncard_nonneg_multiples_le (B : ℤ) (P : ℕ) (hP : 0 < P) (hB : 0 ≤ B) 
         apply Set.ncard_le_ncard_of_injOn
           (fun x : ℤ => (x / (P : ℤ)).toNat)
           (fun a ha => by
-            simp only [Finset.coe_range, Set.mem_Iio]
-            exact div_toNat_mem_range B P hP hB a ha.1 ha.2.1)
+            simpa only [Finset.coe_range, Set.mem_Iio] using
+              div_toNat_mem_range B P hP hB a ha.1 ha.2.1)
           h1
     _ = B.toNat / P + 1 := by rw [Set.ncard_coe_finset, Finset.card_range]
 
@@ -3478,8 +3478,7 @@ lemma weight_sum_le_log
   have h_subset : Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ ¬((d : ℕ) ∣ ZMod.val k)) ⊆
       Finset.univ.filter (fun k : ZMod n => k ≠ 0) := by
     intro k
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact And.left
+    simpa only [Finset.mem_filter, Finset.mem_univ, true_and] using And.left
   have h_nonneg : ∀ k ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0),
       k ∉ Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ ¬((d : ℕ) ∣ ZMod.val k)) →
       0 ≤ (1 : ℝ) / (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
@@ -4398,8 +4397,7 @@ lemma general_case_bound
     exists_padic_valuation p hp α hα k_val hk_dvd_p hk_nd'
   set M := p ^ (α - v) with hM_def
   have hM_pos : 0 < M := by
-    simp only [hM_def]
-    exact pow_pos hp.pos _
+    simpa only [hM_def] using pow_pos hp.pos _
   haveI : NeZero M := ⟨by omega⟩
   haveI : NeZero (p ^ (α - v)) := ⟨by omega⟩
   have hM_ge : 2 ≤ M := by
@@ -4976,8 +4974,7 @@ lemma harmonic_range_le_one_plus_log (M n : ℕ) (hn : 2 ≤ n) (hM : M ≤ n) :
     ∑ j ∈ Finset.range M, (1 : ℝ) / ((j : ℝ) + 1) ≤ 1 + Real.log ↑n := by
   by_cases hM0 : M = 0
   · subst hM0
-    simp only [Finset.range_zero, Finset.sum_empty]
-    exact one_plus_log_nonneg n hn
+    simpa only [Finset.range_zero, Finset.sum_empty] using one_plus_log_nonneg n hn
   · push Not at hM0
     have hM_pos : 1 ≤ M := Nat.one_le_iff_ne_zero.mpr hM0
     rw [sum_range_eq_sum_Icc M]
@@ -5983,11 +5980,9 @@ lemma bad_set_from_average
     by_contra h
     push Not at h
     have : u ∈ B_units := by
-      simp only [hB_units_def, Finset.mem_filter, Finset.mem_univ, true_and]
-      exact h
+      simpa only [hB_units_def, Finset.mem_filter, Finset.mem_univ, true_and] using h
     have : (u : ZMod d).val ∈ B := by
-      simp only [hB_def]
-      exact Finset.mem_image_of_mem _ this
+      simpa only [hB_def] using Finset.mem_image_of_mem _ this
     contradiction
 
 
@@ -6822,8 +6817,7 @@ lemma residue_class_fiber_ncard_le (n d : ℕ) (hd_pos : 0 < d) (b : ℕ)
       ≤ (↑(Finset.range (n / (2 * d) + 1)) : Set ℕ).ncard := by
         apply Set.ncard_le_ncard_of_injOn (fun x : ℤ => (x / (d : ℤ)).toNat)
         · intro x hx
-          simp only [Finset.mem_coe]
-          exact fiber_div_mem_range n d hd_pos b S hS_sub x hx
+          simpa only [Finset.mem_coe] using fiber_div_mem_range n d hd_pos b S hS_sub x hx
         · exact fiber_div_injOn n d hd_pos b S hS_sub
     _ = (Finset.range (n / (2 * d) + 1)).card := Set.ncard_coe_finset _
     _ = n / (2 * d) + 1 := Finset.card_range _
