@@ -570,8 +570,7 @@ private lemma modFormComp_ne_zero_at_height
     simp only [div_one, seg5QRadiusH, hz_im]; exact le_refl _
   have h_qne :
       Function.Periodic.qParam (1 : ℝ) (↑(⟨z, hz_pos⟩ : ℍ) : ℂ) ≠ 0 := by
-    simp only [Function.Periodic.qParam, ne_eq]
-    exact Complex.exp_ne_zero _
+    simpa only [Function.Periodic.qParam, ne_eq] using Complex.exp_ne_zero _
   exact absurd ((SlashInvariantFormClass.eq_cuspFunction f ⟨z, hz_pos⟩
     (by simp) one_ne_zero).trans
     (h_bridge ▸ h_zero)) (hcusp _ h_qmem h_qne)

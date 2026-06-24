@@ -887,8 +887,7 @@ lemma tendsto_exp_cutoff_integral_crossing
       (∀ t ∈ Ioc (σ₂ ε) γ.b, ε < ‖γ.toFun t - z₀‖) ∧
       (∀ t ∈ Icc (σ₁ ε) (σ₂ ε), ‖γ.toFun t - z₀‖ ≤ ε) := by
     intro ε hε
-    simp only [σ₁, σ₂, hε, dif_pos]
-    exact (hbnd ε hε).choose_spec.choose_spec
+    simpa only [σ₁, σ₂, hε, dif_pos] using (hbnd ε hε).choose_spec.choose_spec
   have hIoo_ev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ∈ Ioo 0 δ := Ioo_mem_nhdsGT hδ
   have h_eq : ∀ᶠ ε in 𝓝[>] (0 : ℝ),
       Complex.exp (∫ t in γ.a..γ.b,
