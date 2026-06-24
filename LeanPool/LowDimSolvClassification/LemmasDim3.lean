@@ -272,8 +272,7 @@ lemma case1a' : Module.finrank K L = 3 ∧ Module.finrank K (commutator K L) = 1
 lemma case1b (dim3 : Module.finrank K L = 3) (h₁ : Module.finrank K (commutator K L) = 1)
     (h : ¬ IsTwoStepNilpotent K L) :
     ∃ B : Basis (Fin 3) K L, ⁅B 0, B 1⁆ = 0 ∧ ⁅B 0, B 2⁆ = 0 ∧ ⁅B 1, B 2⁆ = B 1 := by
-  have _ : Module.Finite K (commutator K L) := by
-    exact finite_of_finrank_eq_succ h₁
+  have _ : Module.Finite K (commutator K L) := finite_of_finrank_eq_succ h₁
   -- take a basis of the commutator
   let  V := finBasisOfFinrankEq K (commutator K L) h₁
   set e := V 0 with hs
@@ -594,8 +593,7 @@ lemma commutator_abelian_of_dim_two (dim3 : Module.finrank K L = 3)
         _ = (( (((B.repr ⟨u, ucomm⟩) 0 +  (B.repr ⟨v, vcomm⟩) 1))) + (-(((B.repr ⟨u,
           ucomm⟩) 0 + (B.repr ⟨v, vcomm⟩) 1))))• B 1 := by module
         _ = 0 := by module
-    have B1n0 : B 1 ≠ 0 := by
-      exact Basis.ne_zero B 1
+    have B1n0 : B 1 ≠ 0 := Basis.ne_zero B 1
     have z : (B.repr ⟨u, ucomm⟩) 0 = 0 := by
       have sme := smul_eq_zero.mp d
       rcases sme with (p| q)
@@ -943,8 +941,7 @@ lemma case2_coarse (dim3 : Module.finrank K L = 3) (h₂ : Module.finrank K (com
     (∃ B : Basis (Fin 3) K L, ⁅B 0, B 1⁆ =  B 1 ∧ ⁅B 0, B 2⁆ = B 2 ∧ ⁅B 1, B 2⁆ = 0) ∨ -- Hyperbolic
     (∃ B : Basis (Fin 3) K L, ⁅B 0, B 1⁆ = B 2 ∧ ⁅B 1, B 2⁆ = 0 ∧ (∃ α β : K, α ≠ 0 ∧ ⁅B 0,
       B 2⁆ = α • B 1 + β • B 2)) := by --Family α β , α ≠ 0
-  have _ : Module.Finite K (commutator K L) := by
-    exact finite_of_finrank_eq_succ h₂
+  have _ : Module.Finite K (commutator K L) := finite_of_finrank_eq_succ h₂
   -- take a basis of the commutator
   let  V := finBasisOfFinrankEq K (commutator K L) h₂
   have V0c : (V 0).val ∈ (commutator K L) :=by

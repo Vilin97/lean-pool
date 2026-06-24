@@ -179,10 +179,4 @@ has a lift, up to relative homotopy.
 structure IsCompressible (ι : A' ⟶ X') (i : A ⟶ X) : Prop where
   sq_hasLift : ∀ {F : X' ⟶ X} {f : A' ⟶ A} (sq : CommSq f ι i F), HasLiftUpToRelHomotopy sq
 
--- #check CommSq
--- #check CommSq.HasLift
--- #check CommSq.LiftStruct
--- #check HasLiftingProperty
--- #check cubeBoundaryIncl
-
 end TopCat

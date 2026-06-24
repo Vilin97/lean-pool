@@ -139,10 +139,6 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
     exact hr2
   rw [h']
   congr 4
-  -- TODO: refactor
-  -- have : X.skIncl n ≫ iX = isk ≫ l X n := rfl
-  -- have : X.skIncl n =
-  --   (X.attachCells n).pushoutInl ≫ (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) := sorry
   have : (X.attachCells n).pushoutInl ≫ (X.attachCells n).isoPushout.inv ≫
       X.skIncl (n + 1) ≫ iX = isk ≫ l X n := by
     ext x

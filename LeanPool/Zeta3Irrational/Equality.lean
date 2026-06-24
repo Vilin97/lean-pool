@@ -61,10 +61,8 @@ lemma integral_equality_help (s t : ℝ) (s0 : 0 < s) (s1 : s < 1) (t0 : 0 < t) 
     · rw [b21]
       field_simp [show t ≠ 0 by linarith, show 1 - (1 - s) * t ≠ 0 by linarith]
       ring_nf
-    · have b12 : 0 < a := by
-        exact lt_of_le_of_ne b1 (Ne.symm b11)
-      have b22 : a < 1 := by
-        exact lt_of_le_of_ne b2 b21
+    · have b12 : 0 < a := lt_of_le_of_ne b1 (Ne.symm b11)
+      have b22 : a < 1 := lt_of_le_of_ne b2 b21
       obtain b00 := eq1 a b12 b22
       rw [b00]
       ring_nf

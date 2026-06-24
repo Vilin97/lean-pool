@@ -515,13 +515,6 @@ lemma ringChar_eq_of_Prime [Nat.AtLeastTwo n] (hn : @OfNat.ofNat K n _ = 0) (hnp
   | inr h =>
     assumption
 
--- lemma test (e : Model K) :
---   c4 e ^ 3 * ((b2 e * b5 e + 3 * b7 e) ^ 2 * (c4 e)⁻¹ ^ 2) + 0 =
---             c4 e^ 3 * (c4 e)⁻¹ ^ 2 * ((b2 e * b5 e + 3 * b7 e) ^ 2) :=
--- by
---   rw [show c4 e ^ 3 * ((b2 e * b5 e+ 3 * b7 e) ^ 2 * (c4 e)⁻¹ ^ 2) =
---             c4 e^ 3 * (c4 e)⁻¹ ^ 2 * ((b2 e * b5 e + 3 * b7 e) ^ 2) by ac_rfl]
---   sorry
 -- TODO a field should be a division comm monoid
 
 -- TODO maybe rewrite to take an explicit point
@@ -671,11 +664,6 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
       -- simp [b2, b5, b7]
       apply nzero_mul_left_cancel (e.c4 ^ 3) _ _ (pow_ne_zero _ hc4)
       rw [mul_zero]
-      -- simp only [mul_add, mul_sub, div_eq_mul_inv, mul_pow]
-      -- have : c4 e ^ 3 * ((b2 e * b5 e + 3 * b7 e) ^ 2 * (c4 e)⁻¹ ^ 2) =
-      --     c4 e ^ 3 * (c4 e)⁻¹ ^ 2 * ((b2 e * b5 e + 3 * b7 e) ^ 2 ) :=
-      --       by ac_rfl -- TODO ac_rfl bug or show bug?
-      -- rw [this]
       simp only [div_eq_mul_inv]
       rw [show c4 e ^ 3 * (((b2 e * b5 e + 3 * b7 e) * (c4 e)⁻¹) ^ 2 +
             e.a1 * ((18 * b6 e - b2 e * b4 e) * (c4 e)⁻¹)

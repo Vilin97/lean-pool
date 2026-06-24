@@ -146,13 +146,6 @@ def star
     Set G :=
   {c : G | if a = b then c = a else ell a b c}
 
--- theorem p_1
---   -- [ProjectiveGeometry G ell]
---   (a : G) :
---     star ell a a = {a} := by
---   unfold star
---   simp
-
 theorem p_2 :
     ∀ a b, a ∈ star ell b a := by
   intro a b

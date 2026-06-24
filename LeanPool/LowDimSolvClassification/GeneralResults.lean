@@ -156,8 +156,7 @@ theorem LinearIndependent.extend_fin {n k : ℕ} {l : Fin n → L}
     | zero =>
       exact ⟨l,hs,fun i↦rfl⟩
     | succ k ih =>
-      have le : n + k ≤ Module.finrank K L := by
-        exact Nat.le_of_succ_le ht
+      have le : n + k ≤ Module.finrank K L := Nat.le_of_succ_le ht
       let ⟨b, bI, bH⟩ := ih le
       let ⟨b'I,b'H⟩ := LinearIndependent.extendFinSucc bI ht
       use (LinearIndependent.extendFinSuccFun bI ht)

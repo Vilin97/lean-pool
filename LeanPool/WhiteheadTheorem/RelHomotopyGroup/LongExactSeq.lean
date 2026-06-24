@@ -433,12 +433,6 @@ theorem isExactAt_bd_iStar :
   ExactSeq.isExactAt_of_ker_supset_im_of_ker_subset_im
     (ker_iStar_supset_im_bd n X A a) (ker_iStar_subset_im_bd n X A a)
 
--- #check (RelGenLoop n X A a : Set C(I^ Fin n, X))
--- #check (iStar n X A a : π_ n A a → π_ n X a)
--- #check (jStar n X A a : π_ n X a → π_rel n X A a)
--- #check (jStar (n+1) X A a : π_ (n+1) X a → π_rel (n+1) X A a)
--- #check (bd n X A a : π_rel (n+1) X A a → π_ n A a)
-
 theorem unique_relHomotopyGroup_of_bijective_iStar
     {X : TopCat.{u}} {A : Set X} (a : A)
     (hbi : ∀ n, Function.Bijective <| iStar n X A a) :

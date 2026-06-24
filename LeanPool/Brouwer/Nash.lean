@@ -172,24 +172,6 @@ notation:999 "μ" rhs:60 => (FinGame2MixedGame rhs)
 
 variable (G : FinGame)
 
---theorem ExistsNashEq : ∃ m :  (i:(μ G).I )→ (μ G).SS i, (μ G).NashEquilibrium m := by sorry
-/-
-@[simp]
-noncomputable def with_hole {G: FinGame} (s : G.mixedS) (i : G.I)
-    (x : MixedStrategy (G.SS i))
-    := Function.update G.I (fun i => MixedStrategy (G.SS i)) s i x
-
--- comma_notation for mixed game
-noncomputable instance comma.mixed {G : FinGame} {i : G.I}
-    : CoeOut
-        ((MixedStrategy (G.SS i)) × (@IFun' G.I (fun i => MixedStrategy (G.SS i)) i))
-        (IFun (fun i => MixedStrategy (G.SS i)))
-    where
-  coe := @combinePair G.I (fun i=> MixedStrategy (G.SS i)) i
--/
-
-
-
 /-- A mixed strategy profile is a Nash equilibrium of the mixed game. -/
 def mixedNashEquilibrium {G : FinGame} (x : G.mixedS) :=
   ∀ (i:G.I), ∀ (y : MixedStrategy (G.SS  i)),
