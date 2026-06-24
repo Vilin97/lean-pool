@@ -145,8 +145,7 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   · refine ⟨↓ωₛ, ?_⟩
     intro y hy
     rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
-    rw [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
-    exact hy
+    rwa [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
 
 @[simp] lemma natCast_mem_ωₘ {n : ℕ} : (n : M₀) ∈ (ωₘ : M₀) := by
   simp only [ωₘ.spec, memOmega_natCast]

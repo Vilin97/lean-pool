@@ -361,8 +361,7 @@ private theorem mem_indexSet (ε : ℝ) (X : ℕ) (i j k n : ℕ) :
   aesop
 
 theorem Nat.Coprime.isRelPrime (a b : ℕ) (h : a.Coprime b) : IsRelPrime a b := by
-  rw [← Nat.coprime_iff_isRelPrime]
-  exact h
+  rwa [← Nat.coprime_iff_isRelPrime]
 
 theorem Finset.abcExceptionsBelow_subset_union_dyadicPoints (ε : ℝ) (X : ℕ) :
     Finset.abcExceptionsBelow ε X ⊆
@@ -637,8 +636,7 @@ private theorem p_dvd_y_iff (i : ℕ) (p : ℕ) (hp : p.Prime) : p ∣ y i → n
   simp only [Finset.mem_filter, Nat.mem_primeFactors, ne_eq]
   rintro ⟨q, ⟨⟨hq, _⟩, rfl⟩, hpq⟩
   congr
-  rw [eq_comm, ← hq.dvd_iff_eq hp.ne_one]
-  exact hpq
+  rwa [eq_comm, ← hq.dvd_iff_eq hp.ne_one]
 
 private theorem hy_cop (i j : ℕ) (hij : i ≠ j) : Nat.Coprime (y i) (y j) := by
   apply Nat.coprime_of_dvd

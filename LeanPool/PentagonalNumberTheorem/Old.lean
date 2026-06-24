@@ -1994,8 +1994,7 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         rw [← hsingle, Set.setOf_and]
         simp only [Set.inter_eq_left, Set.setOf_subset_setOf]
         intro y hy
-        rw [show y = x from pentagonal_subsingleton hn hy hx]
-        exact heven
+        rwa [show y = x from pentagonal_subsingleton hn hy hx]
       have hnodd : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           ¬Even x.delta.length}.ncard = 0 := by
         rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
@@ -2012,8 +2011,7 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         rw [← hsingle, Set.setOf_and]
         simp only [Set.inter_eq_left, Set.setOf_subset_setOf]
         intro y hy
-        rw [show y = x from pentagonal_subsingleton hn hy hx]
-        exact heven
+        rwa [show y = x from pentagonal_subsingleton hn hy hx]
       have hneven : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           Even x.delta.length}.ncard = 0 := by
         rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]

@@ -379,8 +379,7 @@ lemma right_cancellation_left_class :
     i.hom (F.contains_isos_left_class _)
   have Lp : L p := by rw [←fact']; exact Lp'
   have Lsp := F.is_closed_comp_left_class.precomp s (F.left_map_in_left_class v) p Lp
-  rw [←fact]
-  exact Lsp
+  rwa [←fact]
 
 lemma left_cancellation_right_class :
     (F : FactorizationSystem L R) → MorphismProperty.leftCancellation R := by
@@ -407,7 +406,6 @@ lemma left_cancellation_right_class :
   have Rt : R t := by rw [eq]; exact Riinv
   have Rqt : R (t ≫ q) := by
     exact F.is_closed_comp_right_class.precomp t Rt q (F.right_map_in_right_class u)
-  rw [←fact]
-  exact Rqt
+  rwa [←fact]
 
 end CategoryTheory
