@@ -220,8 +220,8 @@ theorem LinearMap.IsStarNormal.range_eq_range_adjoint [InnerProductSpace ℂ V]
     Submodule.orthogonal_orthogonal]
 
 theorem ContinuousLinearMap.IsStarNormal.ker_eq_ker_adjoint [CompleteSpace V] {T : V →L[𝕜] V}
-    (h : IsStarNormal T) : T.ker = (adjoint T).ker := by
-  exact (ContinuousLinearMap.IsStarNormal.ker_adjoint_eq_ker h).symm
+    (h : IsStarNormal T) : T.ker = (adjoint T).ker :=
+  (ContinuousLinearMap.IsStarNormal.ker_adjoint_eq_ker h).symm
 
 
 theorem ContinuousLinearMap.ker_eq_ortho_adjoint_range {W : Type _} [NormedAddCommGroup W]

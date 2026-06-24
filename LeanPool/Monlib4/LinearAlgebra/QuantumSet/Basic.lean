@@ -148,8 +148,8 @@ instance n_isFinite [QuantumSet A] : Finite (n A) := by
 
 /-- A quantum set is finite-dimensional over `ℂ` via its fixed orthonormal basis. -/
 instance QuantumSet.toFinite [hA : QuantumSet A] :
-    Module.Finite ℂ A := by
-  exact Module.Finite.of_basis hA.onb.toBasis
+    Module.Finite ℂ A :=
+  Module.Finite.of_basis hA.onb.toBasis
 
 lemma QuantumSet.modAut_isSelfAdjoint [hA : QuantumSet A] (r : ℝ) :
     IsSelfAdjoint (ha.modAut r).toLinearMap := by
@@ -502,8 +502,8 @@ lemma _root_.QuantumSet.rTensor_mul_comp_lTensor_comul_eq_comul_comp_mul
     [QuantumSet A] :
     rTensor A (mul' ℂ A) ∘ₗ (TensorProduct.assoc ℂ _ _ _).symm.toLinearMap
         ∘ₗ lTensor A (Coalgebra.comul) =
-      Coalgebra.comul ∘ₗ mul' ℂ A := by
-  exact FrobeniusAlgebra.rTensor_mul_comp_lTensor_comul_eq_comul_comp_mul
+      Coalgebra.comul ∘ₗ mul' ℂ A :=
+  FrobeniusAlgebra.rTensor_mul_comp_lTensor_comul_eq_comul_comp_mul
     (R := ℂ) (A := A)
 
 open LinearMap in
@@ -511,8 +511,8 @@ lemma _root_.QuantumSet.lTensor_mul_comp_rTensor_comul_eq_comul_comp_mul
     [QuantumSet A] :
     lTensor A (mul' ℂ A) ∘ₗ (TensorProduct.assoc ℂ _ _ _).toLinearMap
         ∘ₗ rTensor A (Coalgebra.comul) =
-      Coalgebra.comul ∘ₗ mul' ℂ A := by
-  exact FrobeniusAlgebra.lTensor_mul_comp_rTensor_comul_eq_comul_comp_mul
+      Coalgebra.comul ∘ₗ mul' ℂ A :=
+  FrobeniusAlgebra.lTensor_mul_comp_rTensor_comul_eq_comul_comp_mul
     (R := ℂ) (A := A)
 
 open scoped TensorProduct

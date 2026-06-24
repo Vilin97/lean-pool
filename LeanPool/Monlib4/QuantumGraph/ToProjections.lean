@@ -796,8 +796,7 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     let this : (hA.toIdempotent : ((Qam.reflIdempotent hφ) A) A = A) = hA.toIdempotent := rfl
     rw [this] at h
     obtain ⟨u, hu⟩ := orthogonal_projection_of_dim_one h
-    let hu' : (u : ℍ) ≠ 0 := by
-      exact u.property
+    let hu' : (u : ℍ) ≠ 0 := u.property
     use⟨u, hu'⟩
     let t1 := Qam.orthogonalProjection'_eq hA.toIdempotent hA.toIsReal
     simp_rw [← rankOne_toMatrix_transpose_psi_symm, ← LinearEquiv.map_smul,
