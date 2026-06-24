@@ -4483,16 +4483,6 @@ lemma E2_fiber_bound (X : ℝ) (hX : 2 < X) (x : ℕ+)
     _ = 4 := by norm_num
 namespace E2XBoundHelpers
 
-lemma denom_pos (ε : ℝ) (hε1 : 0 < ε) (hε3 : ε ≤ 1 / 10) :
-    (0 : ℝ) < 9 - 13 * ε := show 0 < 9 - 13 * ε from by linarith
-
-lemma cleared_ineq (η ε : ℝ) (hη : 0 < η)
-    (hε1 : 0 < ε) (hε2 : ε ≤ η / 4) (hε3 : ε ≤ 1 / 10) :
-    (4 : ℝ) + 2 * ε < (4 / 9 + η) * (9 - 13 * ε) := by
-  nlinarith [sq_nonneg (ε - 9 / 70), sq_nonneg (η - 4 * ε),
-    mul_nonneg hε1.le hη.le, mul_nonneg hε1.le (sub_nonneg.mpr hε2),
-    mul_nonneg hε1.le (sub_nonneg.mpr hε3)]
-
 lemma X_lt_X_sq (X : ℝ) (hX : 1 < X) : X < X ^ (2 : ℕ) := by nlinarith [sq_nonneg (X - 1)]
 
 lemma x11_pow_gt_X (x : ℕ+) (X : ℝ) (hX : 1 < X)
