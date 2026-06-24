@@ -274,20 +274,6 @@ lemma formalized_consistent_of_existance_unprovable :
     T₀ ⊢!. ∼(𝔅 σ) ==> 𝔅.con :=
   contra₀'! <| 𝔅.D2 ⨀ (D1 efq!)
 
-private lemma consistency_lemma_1 [T₀ wkn U] :
-    (U ⊢!. 𝔅.con ==> ∼(𝔅 σ)) ↔ (U ⊢!. (𝔅 σ) ==> 𝔅 (∼σ)) := by
-  constructor;
-  · intro H;
-    exact contra₃'! <| imp_trans''! (WeakerThan.pbl (𝓢 :=
-      T₀.alt) formalized_consistent_of_existance_unprovable) H;
-  · intro H
-    apply contra₀'!
-    have : T₀ ⊢!. (𝔅 σ) ⋏ 𝔅 (∼σ) ==> 𝔅 ⊥ :=
-      imp_trans''! prov_collect_and <| prov_distribute_imply lac!;
-    have : U ⊢!. (𝔅 σ) ==> 𝔅 (∼σ) ==> 𝔅 ⊥ :=
-      WeakerThan.pbl <| and_imply_iff_imply_imply'!.mp <| this;
-    exact this ⨀₁ H;
-
 omit [L.DecidableEq] in
 private lemma consistency_lemma_2 : T₀ ⊢!. ((𝔅 σ) ==> 𝔅 (∼σ)) ==> (𝔅 σ) ==> 𝔅 ⊥ := by
   have : T ⊢!. σ ==> ∼σ ==> ⊥ := and_imply_iff_imply_imply'!.mp lac!
@@ -451,9 +437,6 @@ variable [Diagonalization T₀] [𝔅.Rosser]
 
 omit [𝔅.Rosser] in
 lemma _root_.LO.FirstOrder.DerivabilityCondition.rosser_spec : T₀ ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_spec
-
-omit [𝔅.Rosser] in
-private lemma rosser_specAux₁ [T₀ wkn T] : T ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_specAux₁
 
 end «lp_section_8»
 

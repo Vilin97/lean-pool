@@ -250,23 +250,18 @@ def eqIndex : ℕ := Encodable.encode (Language.Eq.eq : (ℒₒᵣ : FirstOrder.
 /-- Imported declaration from the Incompleteness formalization. -/
 def ltIndex : ℕ := Encodable.encode (Language.LT.lt : (ℒₒᵣ : FirstOrder.Language).Rel 2)
 
-@[simp] lemma LOR_func_zeroIndex : ⌜ℒₒᵣ⌝.Func 0 (zeroIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Zero.zero
-
-@[simp] lemma LOR_func_oneIndex : ⌜ℒₒᵣ⌝.Func 0 (oneIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.One.one
-
-@[simp] lemma LOR_func_addIndex : ⌜ℒₒᵣ⌝.Func 2 (addIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Add.add
-
-@[simp] lemma LOR_func_mulIndex : ⌜ℒₒᵣ⌝.Func 2 (mulIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Mul.mul
-
-@[simp] lemma LOR_rel_eqIndex : ⌜ℒₒᵣ⌝.Rel 2 (eqIndex : V) := by
-  exact codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.Eq.eq
-
-@[simp] lemma LOR_rel_ltIndex : ⌜ℒₒᵣ⌝.Rel 2 (ltIndex : V) := by
-  exact codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.LT.lt
+@[simp] lemma LOR_func_zeroIndex : ⌜ℒₒᵣ⌝.Func 0 (zeroIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Zero.zero
+@[simp] lemma LOR_func_oneIndex : ⌜ℒₒᵣ⌝.Func 0 (oneIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.One.one
+@[simp] lemma LOR_func_addIndex : ⌜ℒₒᵣ⌝.Func 2 (addIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Add.add
+@[simp] lemma LOR_func_mulIndex : ⌜ℒₒᵣ⌝.Func 2 (mulIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Mul.mul
+@[simp] lemma LOR_rel_eqIndex : ⌜ℒₒᵣ⌝.Rel 2 (eqIndex : V) :=
+  codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.Eq.eq
+@[simp] lemma LOR_rel_ltIndex : ⌜ℒₒᵣ⌝.Rel 2 (ltIndex : V) :=
+  codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.LT.lt
 
 lemma _root_.LO.Arith.Formalized.lDef.func_def :
     (ℒₒᵣ).lDef.func = .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k =

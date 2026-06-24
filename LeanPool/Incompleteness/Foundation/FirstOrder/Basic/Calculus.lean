@@ -175,8 +175,6 @@ lemma _root_.LO.FirstOrder.Derivation.ne_step_max (n m : ℕ) : n ≠ max n m + 
 @[simp 1100] lemma _root_.LO.FirstOrder.Derivation.ne_step_max' (n m : ℕ) : n ≠ max m n + 1 :=
   ne_of_lt <| Nat.lt_succ_of_le <| by simp
 
-private lemma neg_ne_and {φ ψ : SyntacticFormula L} : ¬∼φ = φ ⋏ ψ := ne_of_ne_complexity (by simp)
-
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.em
     {Δ : Sequent L} : {φ : SyntacticFormula L} → (hpos : φ ∈ Δ) → (hneg : ∼φ ∈ Δ) → T ⟹ Δ
