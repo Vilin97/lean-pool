@@ -283,7 +283,6 @@ theorem p_5
           split
           · contradiction
           · relSym
-            -- apply rel_sym_bca p b c PG.l1 PG.l2 c_in_ab
       · obtain rfl | pc_neq := eq_or_ne p c
         · unfold star
           simp only [mem_setOf_eq]
