@@ -1663,12 +1663,12 @@ theorem pac_lower_bound_good_event_le_half
     have hd_ne : (T.card : ENNReal) ≠ 0 := Nat.cast_ne_zero.mpr (by
       rw [← Fintype.card_coe]; exact Nat.pos_iff_ne_zero.mp hTpos)
     have hd_nt : (T.card : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top T.card
+    have hquarter : ENNReal.ofReal (1 / 4 : ℝ) = (4 : ENNReal)⁻¹ := by
+      rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 4)]; norm_num
     constructor
     · intro hle
       rw [ENNReal.div_le_iff hd_ne hd_nt] at hle
-      rw [show ENNReal.ofReal (1 / 4 : ℝ) = (4 : ENNReal)⁻¹ from by
-        rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 4)]; norm_num,
-        mul_comm] at hle
+      rw [hquarter, mul_comm] at hle
       have h4 : (k : ENNReal) * 4 ≤ (T.card : ENNReal) :=
         calc (k : ENNReal) * 4
             ≤ (T.card : ENNReal) * (4 : ENNReal)⁻¹ * 4 := mul_le_mul_left hle 4
@@ -1676,10 +1676,7 @@ theorem pac_lower_bound_good_event_le_half
               rw [mul_assoc, ENNReal.inv_mul_cancel (by norm_num) (by norm_num), mul_one]
       exact_mod_cast h4
     · intro hle
-      rw [ENNReal.div_le_iff hd_ne hd_nt]
-      rw [show ENNReal.ofReal (1 / 4 : ℝ) = (4 : ENNReal)⁻¹ from by
-        rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 4)]; norm_num,
-        mul_comm]
+      rw [ENNReal.div_le_iff hd_ne hd_nt, hquarter, mul_comm]
       have hk4 : (k : ENNReal) * 4 ≤ (T.card : ENNReal) := by exact_mod_cast hle
       calc (k : ENNReal) = (k : ENNReal) * 4 * (4 : ENNReal)⁻¹ := by
               rw [mul_assoc, mul_comm 4 (4 : ENNReal)⁻¹,

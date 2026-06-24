@@ -96,16 +96,13 @@ lemma chebyshev_majority_bound
       _ = k / 4 := by ring
   have hk_pos : (0 : ℝ) < ↑k := lt_of_lt_of_le (by positivity : (0 : ℝ) < 9 / δ) hk
   have hX_int : ∀ j, Integrable (X j) μ := fun j => (hX_memLp j).integrable one_le_two
-  have hS_memLp : MemLp S 2 μ := by
-    change MemLp (fun ω => ∑ j : Fin k, X j ω) 2 μ
-    have h := memLp_finsetSum univ (fun j (_ : j ∈ univ) => hX_memLp j)
-    convert h using 1
+  have hS_memLp : MemLp S 2 μ :=
+    memLp_finsetSum univ (fun j (_ : j ∈ univ) => hX_memLp j)
   have hvar_S_fn : ProbabilityTheory.variance S μ ≤ ↑k / 4 := by
-    change ProbabilityTheory.variance (fun ω => ∑ j : Fin k, X j ω) μ ≤ _
-    have : ProbabilityTheory.variance (fun ω => ∑ j : Fin k, X j ω) μ =
+    have heq : ProbabilityTheory.variance S μ =
         ProbabilityTheory.variance (∑ j : Fin k, X j) μ := by
-      congr 1; ext ω; simp [Finset.sum_apply]
-    rw [this]; exact hvar_S
+      congr 1; ext ω; simp [S, Finset.sum_apply]
+    rw [heq]; exact hvar_S
   have hk6_pos : (0 : ℝ) < ↑k / 6 := by positivity
   have hcheb := meas_ge_le_variance_div_sq hS_memLp hk6_pos
   have hcheb_bound : ProbabilityTheory.variance S μ / ((↑k / 6) ^ 2) ≤ δ := by
@@ -148,23 +145,10 @@ lemma chebyshev_majority_bound
   have hmeas : MeasurableSet {ω | ↑k / 2 < S ω} :=
     measurableSet_lt measurable_const hS_meas
   have hgood : μ {ω | ↑k / 2 < S ω} ≥ ENNReal.ofReal (1 - δ) := by
-    rw [ge_iff_le]
-    have h_add : μ {ω | ↑k / 2 < S ω} + μ {ω | ↑k / 2 < S ω}ᶜ = 1 := by
-      rw [measure_add_measure_compl hmeas, measure_univ]
-    by_cases hδ1 : δ ≤ 1
-    · rw [ENNReal.ofReal_sub 1 h_delta_pos.le, ENNReal.ofReal_one]
-      have hcompl_le_one : μ {ω | ↑k / 2 < S ω}ᶜ ≤ 1 := by
-        calc μ {ω | ↑k / 2 < S ω}ᶜ ≤ μ Set.univ := μ.mono (Set.subset_univ _)
-          _ = 1 := measure_univ
-      have hne : μ {ω | ↑k / 2 < S ω}ᶜ ≠ ⊤ :=
-        ne_top_of_le_ne_top ENNReal.one_ne_top hcompl_le_one
-      have hgood_eq : 1 - μ {ω | ↑k / 2 < S ω}ᶜ = μ {ω | ↑k / 2 < S ω} :=
-        ENNReal.sub_eq_of_eq_add hne h_add.symm
-      rw [← hgood_eq]
-      exact tsub_le_tsub_left hcompl_le _
-    · push Not at hδ1
-      have h1d : 1 - δ ≤ 0 := by linarith
-      simp [ENNReal.ofReal_eq_zero.mpr h1d]
+    rw [ge_iff_le, ENNReal.ofReal_sub _ h_delta_pos.le, ENNReal.ofReal_one,
+      ← measure_univ (μ := μ), ← measure_add_measure_compl hmeas,
+      tsub_le_iff_right]
+    exact add_le_add (le_refl _) hcompl_le
   apply le_trans hgood
   apply μ.mono
   intro ω hω

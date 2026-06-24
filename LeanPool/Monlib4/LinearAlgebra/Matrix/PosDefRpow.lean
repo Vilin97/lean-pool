@@ -75,8 +75,7 @@ theorem _root_.Matrix.PosSemidef.rpow_mul_rpow (r₁ r₂ : NNRealˣ) {Q : Matri
     simp [Real.zero_rpow, hr₁, hr₂, hsum]
   · rw [← Real.rpow_add]
     apply lt_of_le_of_ne (hQ.eigenvalues_nonneg _)
-    rw [ne_eq, eq_comm]
-    exact h
+    rwa [ne_eq, eq_comm]
 
 theorem _root_.Matrix.PosDef.rpow_mul_rpow (r₁ r₂ : ℝ) {Q : Matrix n n 𝕜}
     (hQ : PosDef Q) :

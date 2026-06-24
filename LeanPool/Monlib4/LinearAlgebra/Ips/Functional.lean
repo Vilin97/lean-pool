@@ -56,7 +56,6 @@ variable {𝕜 R : Type _} [RCLike 𝕜] [CommSemiring R]
 
 open Matrix
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- the matrix of a linear map `φ : M_n →ₗ[R] R` is given by
   `∑ i j, single j i (φ (single i j 1))`. -/
 def Module.Dual.matrix (φ : Module.Dual R (Matrix n n R)) :=
@@ -512,11 +511,8 @@ private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
       boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] using hQ
   refine ⟨(RCLike.nonneg_def'.mp hnn).2, ?_⟩
   simp only [smul_eq_diagonal_mul, Matrix.mul_one]
-  rw [← hre]
-  exact HH
+  rwa [← hre]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /--
 A linear functional is tracial and positive if and only if there exists a non-negative real $α$
   such that $f\colon x \mapsto \alpha \operatorname{Tr}(x)$. -/
@@ -539,8 +535,6 @@ theorem Module.Dual.isTracial_pos_map_iff_of_matrix (φ : Module.Dual ℂ (Matri
         (Matrix.trace_conjTranspose_hMul_self_nonneg _),
       fun _ _ => by rw [trace_mul_comm]⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /--
 A linear functional is tracial and positive if and only if there exists a unique non-negative real
   $α$ such that $f\colon x \mapsto \alpha \operatorname{Tr}(x)$. -/
@@ -698,7 +692,6 @@ variable {n : Type _} [Fintype n] [DecidableEq n] (φ : Module.Dual ℂ (Matrix 
 @[reducible]
 noncomputable def Module.Dual.NormedAddCommGroup [hφ : φ.IsFaithfulPosMap] :
   _root_.NormedAddCommGroup (Matrix n n ℂ) :=
-  -- have := φ.isFaithfulPosMap_iff_isInner_of_matrix.mp hφ
   @InnerProductSpace.Core.toNormedAddCommGroup ℂ (Matrix n n ℂ) _ _ _
     { inner := fun x y => φ (xᴴ * y)
       conj_inner_symm := fun _ _ => ((φ.isFaithfulPosMap_iff_isInner_of_matrix.mp hφ).1 _ _).symm
@@ -715,7 +708,6 @@ variable [hφ : φ.IsFaithfulPosMap]
 /-- The inner product space structure induced by a faithful positive functional on matrices. -/
 @[reducible]
 noncomputable def Module.Dual.InnerProductSpace :
-    -- letI := hφ.NormedAddCommGroup
   @_root_.InnerProductSpace ℂ (Matrix n n ℂ) _
     ((Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) :=
@@ -789,7 +781,6 @@ noncomputable def Module.Dual.PiNormedAddCommGroup
 noncomputable def Module.Dual.pi.InnerProductSpace
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
   [hφ : Π i, (φ i).IsFaithfulPosMap] :
-    -- letI := Module.Dual.PiNormedAddCommGroup hφ
   @_root_.InnerProductSpace ℂ (PiMat ℂ k s) _
   ((Module.Dual.PiNormedAddCommGroup (_hφ := hφ)).toSeminormedAddCommGroup)
    := by

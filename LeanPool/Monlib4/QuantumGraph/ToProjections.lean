@@ -22,13 +22,11 @@ variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fin
 
 open scoped TensorProduct BigOperators Kronecker Functional ComplexOrder
 
--- local notation `ℍ` := matrix (n i) (n i) ℂ
 @[reducible]
 local notation "ℍ" => Matrix p p ℂ
 @[reducible]
 local notation "ℍ_" i => Matrix (n i) (n i) ℂ
 
--- local notation `⊗K` := matrix (n × n) (n × n) ℂ
 @[reducible]
 local notation "l(" x ")" => x →ₗ[ℂ] x
 @[reducible]
@@ -37,8 +35,6 @@ local notation "L(" x ")" => x →L[ℂ] x
 local notation "e_{" i "," j "}" => Matrix.stdBasisMatrix i j (1 : ℂ)
 
 variable {φ : Module.Dual ℂ (Matrix p p ℂ)}
-  --{φ : Π i, module.dual ℂ (ℍ_ i)}
-  --[hφ : ∀ i, fact (φ i).is_faithful_pos_map]
 
 open scoped Matrix
 
@@ -221,39 +217,6 @@ private theorem matrix.stdBasisMatrix.transpose' {R n p : Type _} [DecidableEq n
   ext
   simp [transpose_apply, stdBasisMatrix, single, and_comm]
 
--- example :
---   -- { x : matrix (Σ i, n i × n i) (Σ i, n i × n i) ℂ // x.is_blockDiagonal }
---   matrix (Σ i, n i × n i) (Σ i, n i × n i) ℂ
---     ≃ₐ[ℂ]
---   { x : matrix (Σ i : p × p, n i.1 × n i.2) (Σ i : p × p, n i.1 × n i.2) ℂ // x.is_blockDiagonal
--- }
---   -- {x : (matrix (Σ i, n i) (Σ i, n i) ℂ) ⊗[ℂ] (matrix (Σ i, n i) (Σ i, n i) ℂ) //
--- x.is_blockDiagonal}
---   -- {x : matrix (Σ i, n i) (Σ i, n i) ℂ // x.is_blockDiagonal} :=
---   -- (Π i, matrix (n i) (n i) ℂ) ⊗[ℂ] (Π i, matrix (n i) (n i) ℂ)
---   :=
--- { to_fun := fun x, by {  },
---   -- dite (a.1.1 = b.1.1)
---   -- (fun h1,
---   --   dite (a.1.1 = a.2.1 ∧ b.1.1 = b.2.1) (
---   --   fun h : a.1.1 = a.2.1 ∧ b.1.1 = b.2.1,
---   --   let a' : n a.1.1 := by rw [h.1]; exact a.2.2 in
---   --   let b' : n b.1.1 := by rw [h.2]; exact b.2.2 in
---   --   x (⟨a.1.1, a.1.2, a'⟩) (⟨b.1.1, b.1.2, b'⟩))
---   -- (fun h, 0),
---   inv_fun := fun x a b, x (⟨a.1, a.2.1⟩, ⟨a.1, a.2.2⟩) (⟨b.1, b.2.1⟩, ⟨b.1, b.2.2⟩),
---   left_inv := fun x, by
---   { ext1,
---     simp only [],
---     split_ifs,
---     tidy, },
---   right_inv := fun x, by
---   { ext1,
---     simp only [],
---     split_ifs,
---     tidy, },
---      }
-
 theorem rankOne_toMatrix_transpose_psi_symm [hφ : φ.IsFaithfulPosMap]
   (x y : ℍ) :
     withMatrixQuantum[φ]
@@ -337,12 +300,6 @@ theorem rankOne_toMatrix_transpose_psi_symm [hφ : φ.IsFaithfulPosMap]
     (hφ.matrixIsPosDef.rpow (1 / 2)) (hφ.matrixIsPosDef.rpow (1 / 2))]
   rw [PosDef.rpow_mul_rpow]
   ring_nf
-
--- @[instance]
--- private def hmm {H : Type _} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ
--- H]
---     (U : Submodule ℂ H) : CompleteSpace U :=
---   FiniteDimensional.complete ℂ U
 
 open LinearMap in
 private theorem lm_to_clm_comp {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
@@ -839,9 +796,7 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     let this : (hA.toIdempotent : ((Qam.reflIdempotent hφ) A) A = A) = hA.toIdempotent := rfl
     rw [this] at h
     obtain ⟨u, hu⟩ := orthogonal_projection_of_dim_one h
-    let hu' : (u : ℍ) ≠ 0 := by
-      exact u.property
-      -- simp_rw [Ne.def, Submodule.coe_eq_zero]
+    let hu' : (u : ℍ) ≠ 0 := u.property
     use⟨u, hu'⟩
     let t1 := Qam.orthogonalProjection'_eq hA.toIdempotent hA.toIsReal
     simp_rw [← rankOne_toMatrix_transpose_psi_symm, ← LinearEquiv.map_smul,
@@ -869,7 +824,6 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     have this' : ((‖(x : ℍ)‖ : ℝ) ^ 2 : ℂ) ≠ (0 : ℂ) := by
       simp_rw [ne_eq, sq_eq_zero_iff, Complex.ofReal_eq_zero, norm_eq_zero]
       exact x.property
-    -- exact set.mem_set_of.mp (subtype.mem x),
     --},
     rw [inv_mul_cancel₀ this', Nat.cast_one]
 

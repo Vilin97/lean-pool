@@ -76,10 +76,7 @@ private lemma psd_resolvent_trace_le (U B Uhalf K : Matrix V V ℝ) (hU : U.PosD
     Unitary.coe_star_mul_self hK_herm.eigenvectorUnitary
   have hQ_mul_star : eigQ * star eigQ = 1 :=
     Unitary.coe_mul_star_self hK_herm.eigenvectorUnitary
-  have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := by
-    have h := hK_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def, RCLike.ofReal_real_eq_id, id] at h
-    exact h
+  have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := realSpectralDecomp hK_herm
   have h_eig_nn := hK_psd.eigenvalues_nonneg
   have h_eig_lt_1 : ∀ i, eig i < 1 := fun i =>
     lt_of_le_of_lt (eigenvalue_le_trace_of_posSemidef K hK_psd i) htrK_lt

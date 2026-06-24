@@ -17,13 +17,11 @@ This file defines the single-edged quantum graph, and proves that it is a `QAM`.
 variable {n : Type _} [Fintype n] [DecidableEq n]
 
 open scoped TensorProduct BigOperators Kronecker Functional
--- local notation `ℍ` := matrix (n i) (n i) ℂ
 @[reducible]
 local notation "ℍ" => Matrix n n ℂ
 @[reducible]
 local notation "ℍ_" i => Matrix (n i) (n i) ℂ
 
--- local notation `⊗K` := matrix (n × n) (n × n) ℂ
 @[reducible]
 local notation "l(" x ")" => x →ₗ[ℂ] x
 @[reducible]
@@ -32,8 +30,6 @@ local notation "L(" x ")" => x →L[ℂ] x
 local notation "e_{" i "," j "}" => Matrix.stdBasisMatrix i j (1 : ℂ)
 
 variable {φ : Module.Dual ℂ (Matrix n n ℂ)}
-  --{φ : Π i, module.dual ℂ (ℍ_ i)}
-  --[hφ : ∀ i, fact (φ i).is_faithful_pos_map]
 
 open scoped Matrix
 
@@ -697,12 +693,10 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
-  -- letI gg : NoZeroSMulDivisors ℂ l(ℍ) := LinearMap.noZeroSMulDivisors
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow] at h
   simp_rw [← ContinuousLinearMap.toLinearMap_smul, ContinuousLinearMap.coe_inj] at h
   letI gg : NoZeroSMulDivisors ℂ (ℍ →ₗ[ℂ] ℍ) := by infer_instance
-  -- have h'' := smul_right_inj this
   rw [smul_right_inj thisss] at h
   simp_rw [← ContinuousLinearMap.coe_inj] at h
   rw [qam_A_is_sa_iff_aux, qam_A_is_sa_iff_aux2] at h
@@ -724,7 +718,6 @@ theorem qamA.is_self_adjoint_of [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
-  -- letI gg : NoZeroSMulDivisors ℂ l(ℍ) := LinearMap.noZeroSMulDivisors
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow, smul_right_inj this]
   simp_rw [← hx₂.eq, ← hxy, conjTranspose_smul, mul_smul_comm,
@@ -829,8 +822,7 @@ theorem qamA.is_almost_injective [hφ : φ.IsFaithfulPosMap] (x y : { x : ℍ //
           exact x.property
         · exact Units.ne_zero _
       · apply inv_ne_zero
-        simp only [Complex.ofReal_ne_zero, norm_ne_zero_iff]
-        exact y.property
+        simpa only [Complex.ofReal_ne_zero, norm_ne_zero_iff] using y.property
     use Units.mk0 β this
     simp_rw [Units.val_mk0, β, mul_assoc]
     rw [← smul_smul]

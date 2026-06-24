@@ -32,7 +32,6 @@ variable {p : Type _} [Fintype p] [DecidableEq p] {n : p → Type _} [∀ i, Fin
 local notation "ℍ" => PiMat ℂ p n
 local notation "ℍ₂" => PiMat ℂ p₂ n₂
 
--- local notation `⊗K` := matrix (n × n) (n × n) ℂ
 local notation "l(" x ")" => x →ₗ[ℂ] x
 
 variable {φ : Π i : p, Module.Dual ℂ (Matrix (n i) (n i) ℂ)} {ψ : Π i,

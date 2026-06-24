@@ -28,8 +28,7 @@ variable {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpa
 theorem cs_aux {x y : E} (hy : y ≠ 0) :
     ‖x - (inner 𝕜 y x * (‖y‖ ^ 2 : ℝ)⁻¹) • y‖ ^ 2 = ‖x‖ ^ 2 - ‖inner 𝕜 x y‖ ^ 2 * (‖y‖ ^ 2)⁻¹ := by
   have : ((‖y‖ ^ 2 : ℝ) : 𝕜) ≠ 0 := by
-    rw [ne_eq, RCLike.ofReal_eq_zero, sq_eq_zero_iff, norm_eq_zero]
-    exact hy
+    rwa [ne_eq, RCLike.ofReal_eq_zero, sq_eq_zero_iff, norm_eq_zero]
   rw [← @inner_self_eq_norm_sq 𝕜]
   simp only [inner_sub_sub_self, inner_smul_left, inner_smul_right, _root_.map_mul, inner_conj_symm]
   simp_rw [inner_self_eq_norm_sq_to_K, starRingEnd_apply,
@@ -65,8 +64,7 @@ example {x y : E} (hx : x ≠ 0) (hy : y ≠ 0) :
       rw [h', norm_zero, eq_comm, mul_eq_zero] at h
       simp_rw [norm_eq_zero, hx, hy, false_or] at h
     have hy' : ‖y‖ ^ 2 ≠ 0 := by
-      rw [ne_eq, sq_eq_zero_iff, norm_eq_zero]
-      exact hy
+      rwa [ne_eq, sq_eq_zero_iff, norm_eq_zero]
     rw [← sq_eq_sq₀ (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _)),
       mul_pow, eq_comm, ← eq_mul_inv_iff_mul_eq₀ hy', ← sub_eq_zero, ← cs_aux hy,
       sq_eq_zero_iff, norm_eq_zero, sub_eq_zero] at h

@@ -474,27 +474,10 @@ private lemma chebyshev_seven_twelfths_bound
     hS_meas measurableSet_Ici
   -- Step 20: μ{S ≥ 7k/12} ≥ 1 - δ
   have hgood : μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω} ≥ ENNReal.ofReal (1 - δ) := by
-    rw [ge_iff_le]
-    have h_add : μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω} + μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ = 1 := by
-      rw [measure_add_measure_compl hmeas, measure_univ]
-    by_cases hδ1 : δ ≤ 1
-    · -- ENNReal.ofReal (1-δ) = 1 - ENNReal.ofReal δ
-      rw [ENNReal.ofReal_sub 1 h_delta_pos.le, ENNReal.ofReal_one]
-      -- From h_add: μ{good} + μ{compl} = 1
-      -- So μ{good} = 1 - μ{compl} (since μ{compl} ≤ 1)
-      have hcompl_le_one : μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ ≤ 1 := by
-        calc μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ ≤ μ Set.univ := μ.mono (Set.subset_univ _)
-          _ = 1 := measure_univ
-      -- μ{good} = 1 - μ{compl} from h_add
-      have hne : μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ ≠ ⊤ :=
-        ne_top_of_le_ne_top ENNReal.one_ne_top hcompl_le_one
-      have hgood_eq : 1 - μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω}ᶜ = μ {ω | (7 : ℝ) * ↑k / 12 ≤ S ω} :=
-        ENNReal.sub_eq_of_eq_add hne h_add.symm
-      rw [← hgood_eq]
-      exact tsub_le_tsub_left hcompl_le _
-    · push Not at hδ1
-      have h1d : 1 - δ ≤ 0 := by linarith
-      simp [ENNReal.ofReal_eq_zero.mpr h1d]
+    rw [ge_iff_le, ENNReal.ofReal_sub _ h_delta_pos.le, ENNReal.ofReal_one,
+      ← measure_univ (μ := μ), ← measure_add_measure_compl hmeas,
+      tsub_le_iff_right]
+    exact add_le_add (le_refl _) hcompl_le
   -- Step 21: Convert from {7k/12 ≤ S ω} to {7*k ≤ 12 * card}
   apply le_trans hgood
   apply μ.mono

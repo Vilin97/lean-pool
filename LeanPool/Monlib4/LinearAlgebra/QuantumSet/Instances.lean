@@ -168,7 +168,6 @@ theorem smul_onePosDef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
     have : α = (((p : NNReal) : ℝ) : 𝕜) := by
       rw [← RCLike.conj_eq_iff_re.mp (RCLike.conj_eq_iff_im.mpr (RCLike.pos_def.mp this).2)]
       rfl
-    -- rw [this] at h
     rw [PosDef.rpow_cast h _ (by rw [this]), posDefOne_smul_rpow]
     exact rfl
 

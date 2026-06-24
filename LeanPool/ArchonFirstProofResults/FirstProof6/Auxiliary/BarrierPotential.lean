@@ -40,6 +40,15 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 def barrierPotential (u : ℝ) (M : Matrix V V ℝ) : ℝ :=
   (u • (1 : Matrix V V ℝ) - M)⁻¹.trace
 
+/-- Real form of the spectral theorem: a real Hermitian matrix equals
+    `U * diagonal eigenvalues * star U` for its eigenvector unitary `U`. -/
+lemma realSpectralDecomp {M : Matrix V V ℝ} (hM : M.IsHermitian) :
+    M = (hM.eigenvectorUnitary : Matrix V V ℝ) * diagonal hM.eigenvalues *
+      star (hM.eigenvectorUnitary : Matrix V V ℝ) := by
+  have h := hM.spectral_theorem
+  simpa only [Unitary.conjStarAlgAut_apply, Function.comp_def,
+    RCLike.ofReal_real_eq_id, id] using h
+
 omit [DecidableEq V] in
 /-- PSD factorization via spectral theorem: P PSD implies P = Nᴴ * N for some N. -/
 lemma psd_factorization (P : Matrix V V ℝ) (hP : P.PosSemidef) :
@@ -48,11 +57,7 @@ lemma psd_factorization (P : Matrix V V ℝ) (hP : P.PosSemidef) :
   set herm := hP.isHermitian
   set U := (herm.eigenvectorUnitary : Matrix V V ℝ)
   set eig := herm.eigenvalues
-  have hP_eq : P = U * diagonal eig * star U := by
-    have h := herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at h
-    exact h
+  have hP_eq : P = U * diagonal eig * star U := realSpectralDecomp herm
   have h_nn := hP.eigenvalues_nonneg
   set sqrt_eig := fun i => Real.sqrt (eig i)
   use diagonal sqrt_eig * star U
@@ -75,10 +80,7 @@ lemma posDef_sqrt_exists (U : Matrix V V ℝ) (hU : U.PosDef) :
   set d := hU_herm.eigenvalues
   have hP_star_mul : star eigP * eigP = 1 := Unitary.coe_star_mul_self hU_herm.eigenvectorUnitary
   have hP_mul_star : eigP * star eigP = 1 := Unitary.coe_mul_star_self hU_herm.eigenvectorUnitary
-  have hU_eq : U = eigP * Matrix.diagonal d * star eigP := by
-    have h := hU_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def, RCLike.ofReal_real_eq_id, id] at h
-    exact h
+  have hU_eq : U = eigP * Matrix.diagonal d * star eigP := realSpectralDecomp hU_herm
   set sqrtd := fun i => Real.sqrt (d i) with sqrtd_def
   set Uhalf := eigP * Matrix.diagonal sqrtd * star eigP with Uhalf_def
   have hsqrtd_ne : ∀ i, sqrtd i ≠ 0 := fun i =>
@@ -257,10 +259,7 @@ lemma one_sub_posDef_of_trace_lt_one (K : Matrix V V ℝ) (hK_psd : K.PosSemidef
   set eigQ := (hK_herm.eigenvectorUnitary : Matrix V V ℝ)
   set eig := hK_herm.eigenvalues
   have hQ_mul_star : eigQ * star eigQ = 1 := Unitary.coe_mul_star_self hK_herm.eigenvectorUnitary
-  have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := by
-    have h := hK_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def, RCLike.ofReal_real_eq_id, id] at h
-    exact h
+  have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := realSpectralDecomp hK_herm
   have h_eig_lt_1 : ∀ i, eig i < 1 := fun i =>
     lt_of_le_of_lt (eigenvalue_le_trace_of_posSemidef K hK_psd i) htrK_lt
   have hQ_unit : IsUnit (eigQ : Matrix V V ℝ) := by

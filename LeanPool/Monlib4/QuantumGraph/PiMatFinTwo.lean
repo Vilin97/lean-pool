@@ -443,8 +443,7 @@ theorem Finset.sum_nat_eq_one_iff_exists_unique_eq_one
   obtain ⟨i, ⟨hi, hii⟩⟩ := this
   simp_rw [le_antisymm_iff]
   use i
-  simp only [this1, true_and, hi]
-  exact hii
+  simpa only [this1, true_and, hi] using hii
 
 theorem QuantumGraph.Real.dimOfPiMatSubmodule_eq_zero_iff_eq_zero
   {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
@@ -563,8 +562,6 @@ theorem QuantumGraph.Real.piFinTwo_same_exists_matrix_map_eq_map_of_adjoint_and_
     add_zero, zero_add, LinearMap.comp_assoc] at hf
   · exact Or.inl hf
   · exact Or.inr hf
-  -- exact Or.inl ⟨_, hf⟩
-  -- exact Or.inr ⟨_, hf⟩
 
 /-- Projection from a dependent product as an algebra homomorphism. -/
 def AlgHom.proj

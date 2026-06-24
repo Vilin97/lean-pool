@@ -393,7 +393,6 @@ theorem _root_.LinearMap.invertiblePos (T : E →ₗ[𝕜] E) [hTi : Invertible 
     rw [← adjoint_inner_left]
     revert v
     have ugh := ((isSymmetric_iff_isSelfAdjoint T).mp hT.1).star_eq
-    -- have hmm : Invertible (adjoint T) := by rw [ugh]; exact hTi
     have t : star (⅟ T) = ⅟ (star T) := star_invOf _
     rw [← ext_inner_left_iff ((⅟ T) u) (adjoint (⅟ T) u), ← star_eq_adjoint]
     simp_rw [t, ugh]
@@ -426,8 +425,6 @@ theorem _root_.LinearMap.IsSymmetric.invertible (hT : T.IsSymmetric) [Invertible
 theorem _root_.LinearMap.isPositive'_and_invertible_pos_eigenvalues
     (hT : T.IsPositive') [Invertible T]
     (i : Fin (Module.finrank 𝕜 E)) : 0 < hT.1.eigenvalues rfl i := by
-  -- have := linear_map.invertible_pos T hn hT,
-  -- have fs : function.bijective ⇑(⅟ T),
   have fs : Function.Bijective ⇑T := by
     rw [Function.bijective_iff_has_inverse]
     use⇑(⅟ T)

@@ -835,8 +835,7 @@ theorem QuantumGraph.Real.PiMat_eq :
           ext <;> simp [h₂]
         refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
           Fintype.sum_eq_zero _ fun _ => ?_
-        simp only [AlgEquiv.one_apply]
-        exact PiMat_eq_right_block_miss h₂ _ _
+        simpa only [AlgEquiv.one_apply] using PiMat_eq_right_block_miss h₂ _ _
       · refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
           Fintype.sum_eq_zero _ fun _ => ?_
         exact PiMat_eq_left_block_miss h₁ _ _)]

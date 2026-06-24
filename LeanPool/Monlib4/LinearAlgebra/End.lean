@@ -38,8 +38,7 @@ theorem Module.End.has_eigenvector_iff_hasEigenvalue {R M : Type _} [CommRing R]
   constructor
   · rintro ⟨v, hv⟩
     apply Module.End.hasEigenvalue_of_hasEigenvector (x := v)
-    rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
-    exact hv
+    rwa [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
   · intro h
     simp only [Module.End.HasEigenvalue, Module.End.HasUnifEigenvalue] at h
     simp_rw [Submodule.ne_bot_iff] at h
