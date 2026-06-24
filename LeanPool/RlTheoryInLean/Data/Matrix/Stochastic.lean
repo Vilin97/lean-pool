@@ -691,20 +691,11 @@ theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
     rw [WithLp.ofLp_toLp]
     exact cesaro_average_is_svec x₀ P n
   obtain ⟨μ, hμ, hstationary⟩ := IsCompact.tendsto_subseq hs hx
-  refine ⟨?μ, ?hμ, ?hstationary⟩
-  case μ => exact μ.ofLp
-  case hμ => exact hμ
-  case hstationary =>
-    constructor
+  refine ⟨μ.ofLp, hμ, ?_⟩
+  · constructor
     obtain ⟨nk, hn_increasing, hn_lim⟩ := hstationary
-    have ha : Tendsto (fun n => ‖xn (nk n) - μ‖) atTop (𝓝 0) := by
-      have := tendsto_iff_norm_sub_tendsto_zero.mp hn_lim
-      convert this using 2 with n
-      rfl
-    have halmostinv : ∀ n, ‖WithLp.toLp 1 ((xn n).ofLp ᵥ* P - (xn n).ofLp)‖₁ ≤ 2 / (n + 1) := by
-      intro n
-      unfold xn
-      exact cesaro_average_almost_invariant x₀ P n
+    have halmostinv : ∀ n, ‖WithLp.toLp 1 ((xn n).ofLp ᵥ* P - (xn n).ofLp)‖₁ ≤ 2 / (n + 1) :=
+      fun n => cesaro_average_almost_invariant x₀ P n
     have hb : Tendsto (fun n => ‖WithLp.toLp 1 ((xn (nk n)).ofLp ᵥ* P - (xn (nk n)).ofLp)‖₁)
       atTop (𝓝 0) := by
       apply tendsto_of_tendsto_of_tendsto_of_le_of_le
@@ -748,41 +739,34 @@ theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
     have hd : Tendsto (fun n => ‖f (xn (nk n)) - xn (nk n)‖) atTop (𝓝 0) := by
       have hcoe : ∀ n, ‖f (xn (nk n)) - xn (nk n)‖ =
           (‖WithLp.toLp 1 ((xn (nk n)).ofLp ᵥ* P - (xn (nk n)).ofLp)‖₁ : ℝ) := fun n => by
-        simp only [f]
-        rfl
+        simp only [f]; rfl
       simp_rw [hcoe]
       exact NNReal.tendsto_coe.mpr hb
-    have he : ‖f μ - μ‖ = 0 := by
-      have := tendsto_nhds_unique (continuous_norm.tendsto _|>.comp hc) hd
-      exact this
+    have he : ‖f μ - μ‖ = 0 :=
+      tendsto_nhds_unique (continuous_norm.tendsto _|>.comp hc) hd
     have : f μ = μ := by rwa [norm_eq_zero, sub_eq_zero] at he
     simp only [f] at this
-    have := (WithLp.toLp_injective 1).eq_iff.mp this
-    exact this
+    exact (WithLp.toLp_injective 1).eq_iff.mp this
 
 theorem stationary_distribution_uniquely_exists
   (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   : ∃! μ : S → ℝ, StochasticVec μ ∧ Stationary μ P := by
   obtain ⟨μ, hμ, hμstationary⟩ := stationary_distribution_exists P
-  refine ⟨μ, ?hμ, ?huniq⟩
-  case hμ => exact ⟨hμ, hμstationary⟩
-  case huniq =>
-    intro ν hν
-    obtain ⟨hν, hνstationary⟩ := hν
-    obtain ⟨N, _, hN⟩ := smat_minorizable_with_large_pow P
-    let f := smatAsOperator (P ^ N)
-    obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
-    have : IsFixedPt f ⟨WithLp.toLp 1 μ, hμ⟩ := by
-      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-      exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P N).stationary
-    have hμfixed := fixedPoint_unique hf this
-    have : IsFixedPt f ⟨WithLp.toLp 1 ν, hν⟩ := by
-      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-      exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary ν P N).stationary
-    have hνfixed := fixedPoint_unique hf this
-    have := hνfixed.trans hμfixed.symm
-    simp only [Subtype.mk.injEq] at this
-    exact (WithLp.toLp_injective 1).eq_iff.mp this
+  refine ⟨μ, ⟨hμ, hμstationary⟩, ?_⟩
+  rintro ν ⟨hν, hνstationary⟩
+  obtain ⟨N, _, hN⟩ := smat_minorizable_with_large_pow P
+  let f := smatAsOperator (P ^ N)
+  obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
+  have fixed : ∀ (σ : S → ℝ) (hσ : StochasticVec σ), Stationary σ P →
+      IsFixedPt f ⟨WithLp.toLp 1 σ, hσ⟩ := fun σ hσ hσst => by
+    haveI := hσst
+    simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
+    exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary σ P N).stationary
+  have hμfixed := fixedPoint_unique hf (fixed μ hμ hμstationary)
+  have hνfixed := fixedPoint_unique hf (fixed ν hν hνstationary)
+  have := hνfixed.trans hμfixed.symm
+  simp only [Subtype.mk.injEq] at this
+  exact (WithLp.toLp_injective 1).eq_iff.mp this
 
 /-- Geometric convergence to stationarity in total variation/L¹ distance. -/
 class GeometricMixing
