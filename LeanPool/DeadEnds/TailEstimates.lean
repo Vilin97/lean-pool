@@ -20,10 +20,8 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (_hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
   have h₆ : (X₀ : ℝ) ≤ (X : ℝ) := by exact_mod_cast le_trans (le_max_right _ _) hX
   have hX₀' : (X₀ : ℝ) > 2 * (b : ℝ) / ε ^ 2 := hX₀
   have hεsq : (0 : ℝ) < ε ^ 2 := by positivity
-  have h₈ : ε ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by
-    rw [gt_iff_lt, ← div_lt_iff₀' hεsq]; linarith
-  have h₁₀ : (b : ℝ) * X + b < ε ^ 2 * (X : ℝ) ^ 2 := by
-    nlinarith [sq_nonneg ((X : ℝ) - 1)]
+  have h₈ : ε ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by rw [gt_iff_lt, ← div_lt_iff₀' hεsq]; linarith
+  have h₁₀ : (b : ℝ) * X + b < ε ^ 2 * (X : ℝ) ^ 2 := by nlinarith [sq_nonneg ((X : ℝ) - 1)]
   have hsq : ((Nat.sqrt (b * X + b) : ℝ)) * (Nat.sqrt (b * X + b) : ℝ) ≤ (b : ℝ) * X + b := by
     exact_mod_cast Nat.sqrt_le (b * X + b)
   have h₁₁ : (Nat.sqrt (b * X + b) : ℝ) < ε * X := by
@@ -95,8 +93,7 @@ lemma choose_y_for_tail (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (ε : ℝ) (h
           apply mul_le_mul_of_nonneg_left
           · exact tail_sum_antitone y₁ (max b y₁) (le_max_right b y₁)
           · linarith
-    _ < (T.card + 1 : ℝ) * (ε / (2 * (T.card + 1))) := by
-          apply mul_lt_mul_of_pos_left hy₁ hK
+    _ < (T.card + 1 : ℝ) * (ε / (2 * (T.card + 1))) := by apply mul_lt_mul_of_pos_left hy₁ hK
     _ = ε / 2 := by field_simp
 
 /-- Choose X₀ large enough that the √(bX+b)/X term is small and X₀ > 0. -/
@@ -218,8 +215,7 @@ lemma exists_finite_prime_set (y : ℕ) :
   have hfin : {p : Nat.Primes | (p : ℕ) ≤ y}.Finite :=
     Set.Finite.preimage (Set.injOn_of_injective Subtype.val_injective) (Set.finite_Iic y)
   refine ⟨hfin.toFinset, fun p hp => ?_⟩
-  rw [Set.Finite.mem_toFinset]
-  exact hp
+  rwa [Set.Finite.mem_toFinset]
 
 /-- Upper bound: for large X, C(X)/X ≤ D(b,T) + ε. -/
 lemma count_upper_bound_direct (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
