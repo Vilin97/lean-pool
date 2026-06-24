@@ -324,7 +324,6 @@ private lemma integral_norm_pow_exp_gaussian (a : ℕ) :
     intro z; exact (rpow_natCast ‖z‖ (2 * a)).symm
   have h_exp : ∀ z : ℂ, Real.exp (-‖z‖ ^ 2) = Real.exp (-‖z‖ ^ (2 : ℝ)) := by intro z; norm_num
   simp_rw [h_rpow, h_exp]
-  rw [show ((2 * a : ℕ) : ℝ) = ((2 * a : ℕ) : ℝ) from rfl]
   rw [Complex.integral_rpow_mul_exp_neg_rpow (show (1 : ℝ) ≤ 2 from by linarith)
     (show (-2 : ℝ) < ((2 * a : ℕ) : ℝ) from by
       have : (0 : ℝ) ≤ ((2 * a : ℕ) : ℝ) := Nat.cast_nonneg _; linarith)]

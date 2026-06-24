@@ -1815,8 +1815,7 @@ private lemma one_plus_abs_u_le_sq (m : ℕ) (hm : 1 ≤ m) (r : ℝ) (hr : 0 �
   have hsqrt_nn : 0 ≤ Real.sqrt (m : ℝ) := le_of_lt hsqrt_pos
   -- r² - m = (r - √m)(r + √m), so |r²-m|/√m = |r-√m| * (r+√m)/√m
   have hfactor : r ^ 2 - (m : ℝ) = (r - Real.sqrt (m : ℝ)) * (r + Real.sqrt (m : ℝ)) := by
-    have hsq := Real.sq_sqrt (le_of_lt hm_pos)
-    nlinarith
+    nlinarith [Real.sq_sqrt (le_of_lt hm_pos)]
   set t := r - Real.sqrt (m : ℝ)
   set s := r + Real.sqrt (m : ℝ)
   have hs_nn : 0 ≤ s := by positivity
@@ -2166,8 +2165,7 @@ private lemma radial_density_large_step (k n : ℕ) (hkn_strict : k < n) (r : �
           (Ak ^ 2 * (↑n - ↑k + 1) ^ k * (1 + |r - √↑(α + 1)|) ^ (4 * k)) *
           (r ^ (2 * α + 1) * Real.exp (-r ^ 2)) := by
         have hm_nonneg : 0 ≤ (↑n - ↑k + 1 : ℝ) := by
-          have hkn_cast : (k : ℝ) < (n : ℝ) := by exact_mod_cast hkn_strict
-          linarith
+          linarith [show (k : ℝ) < (n : ℝ) by exact_mod_cast hkn_strict]
         have hcoef_nonneg : 0 ≤ Ak ^ 2 * (↑n - ↑k + 1) ^ k := by positivity
         have hmid :
             Ak ^ 2 * (↑n - ↑k + 1) ^ k * (1 + |r ^ 2 - (↑n - ↑k + 1)| / √(↑n - ↑k + 1)) ^ (2 * k)
@@ -2257,8 +2255,7 @@ private lemma radial_density_eq_step (k : ℕ) (r : ℝ) (hr : 0 ≤ r) (hr_pos 
         Real.exp 1 * (1 + |r - 1|) * Real.exp (-(r - 1) ^ 2 / 2) := by
     set t : ℝ := r - 1
     have hr_le : r ≤ 1 + |t| := by
-      have ht_le : t ≤ |t| := le_abs_self t
-      linarith
+      linarith [le_abs_self t]
     have hexp :
         Real.exp (-r ^ 2) ≤ Real.exp 1 * Real.exp (-t ^ 2 / 2) := by
       have hr_eq : r = t + 1 := by simp [t]
@@ -2299,8 +2296,7 @@ private lemma radial_density_eq_step (k : ℕ) (r : ℝ) (hr : 0 ≤ r) (hr_pos 
   have hfact_inv_le_one : 1 / ((Nat.factorial k : ℝ) ^ 2) ≤ 1 := by
     have hfac_ge_one_nat : 1 ≤ Nat.factorial k := Nat.succ_le_of_lt (Nat.factorial_pos k)
     have hfac_sq_ge : (1 : ℝ) ≤ (Nat.factorial k : ℝ) ^ 2 := by
-      have hfac_ge_one : (1 : ℝ) ≤ (Nat.factorial k : ℝ) := by exact_mod_cast hfac_ge_one_nat
-      nlinarith
+      nlinarith [show (1 : ℝ) ≤ (Nat.factorial k : ℝ) by exact_mod_cast hfac_ge_one_nat]
     have htmp : (1 : ℝ) / ((Nat.factorial k : ℝ) ^ 2) ≤ (1 : ℝ) / 1 :=
       one_div_le_one_div_of_le (by positivity : (0 : ℝ) < 1) hfac_sq_ge
     simpa using htmp

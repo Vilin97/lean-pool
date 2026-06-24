@@ -691,8 +691,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
       have hcLim_spec : ∀ g, g ∈ genS → ∀ n,
           pc n g ≡ cLim g [SMOD (Mi ^ n • ⊤ : Submodule R (AdicCompletion Mi R))] := by
         intro g hg n
-        simp only [cLim, dif_pos hg]
-        exact (hpc_lim g hg).choose_spec n
+        simpa only [cLim, dif_pos hg] using (hpc_lim g hg).choose_spec n
       -- Step 7: L = y₀ + ∑ cLim(g) * g by Hausdorff, hence L ∈ I₀
       suffices hL_eq : L = y₀ + sumG cLim from
         hL_eq ▸ I₀.add_mem hy₀ (hsum_in_I₀ cLim)

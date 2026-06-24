@@ -76,8 +76,7 @@ theorem close_up_aux_factor_dvd_a
     fun x => if h : q' ∣ x then Classical.choose h else x
   have hdiv_a : ∀ x ∈ insert a rest, x = q' * div_q_a x := by
     intro x hx
-    simp only [div_q_a, dif_pos (hq'_dvd_all x hx)]
-    exact Classical.choose_spec (hq'_dvd_all x hx)
+    simpa only [div_q_a, dif_pos (hq'_dvd_all x hx)] using Classical.choose_spec (hq'_dvd_all x hx)
   let t_q' := (insert a rest).image div_q_a
   have h_ie : span (↑(insert a rest) : Set R.carrier) =
       span {q'} * span (↑t_q' : Set R.carrier) :=
@@ -102,8 +101,7 @@ theorem close_up_aux_factor_dvd_a
     have hc_eq : (⟨(c_n : T), hle c_n.2⟩ : S.carrier) =
         ⟨(q' : T), hle q'.2⟩ * ⟨(c_n' : T), hle c_n'.2⟩ := by
       ext
-      simp only [Subring.coe_mul]
-      exact hq'c.symm
+      simpa only [Subring.coe_mul] using hq'c.symm
     rw [hc_eq]
     exact Ideal.mul_mem_mul (Ideal.mem_map_of_mem _ (Ideal.subset_span rfl)) hc'_S
   by_cases ht_card : t_q'.card ≤ n'' + 1 + 1
@@ -232,8 +230,7 @@ theorem close_up_aux_factor_dvd_c
     fun x => if h : q' ∣ x then Classical.choose h else x
   have hdiv_b : ∀ x ∈ rest, x = q' * div_q_b x := by
     intro x hx
-    simp only [div_q_b, dif_pos (hq'_dvd x hx)]
-    exact Classical.choose_spec (hq'_dvd x hx)
+    simpa only [div_q_b, dif_pos (hq'_dvd x hx)] using Classical.choose_spec (hq'_dvd x hx)
   let rest' := rest.image div_q_b
   have h_ie_b : span (↑rest : Set R.carrier) =
       span {q'} * span (↑rest' : Set R.carrier) :=
@@ -249,8 +246,7 @@ theorem close_up_aux_factor_dvd_c
     have hc_eq : (⟨(c_n : T), hle c_n.2⟩ : S.carrier) =
         ⟨(q' : T), hle q'.2⟩ * ⟨(c_n' : T), hle c_n'.2⟩ := by
       ext
-      simp only [Subring.coe_mul]
-      exact hq'c_val
+      simpa only [Subring.coe_mul] using hq'c_val
     rw [hc_eq]
     have hmul := Ideal.mul_mem_mul
       (Ideal.mem_map_of_mem (Subring.inclusion hle)

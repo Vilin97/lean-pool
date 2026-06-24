@@ -60,9 +60,7 @@ private theorem norm_ne_zero_of_ne_zero_pkappa_wip
       simpa using
         (Finset.single_le_sum (f := fun a : Idx d => ‖F a‖ ^ 2) (s := F.support) (a := alpha)
           (fun a _ => by positivity) hmem)
-    have hterm_pos : 0 < ‖F alpha‖ ^ 2 := by
-      have hnorm_pos : 0 < ‖F alpha‖ := norm_pos_iff.mpr hcoeff_ne
-      nlinarith
+    have hterm_pos : 0 < ‖F alpha‖ ^ 2 := pow_pos (norm_pos_iff.mpr hcoeff_ne) 2
     have hsum_pos : 0 < Finset.sum F.support (fun a : Idx d => ‖F a‖ ^ 2) :=
       lt_of_lt_of_le hterm_pos hle
     change Real.sqrt (Finset.sum F.support (fun a : Idx d => ‖F a‖ ^ 2)) = 0 at hnorm
@@ -153,9 +151,8 @@ private theorem integrable_evalPkappa_sq_wip
         (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = ‖F‖ ^ 2 :=
       evalPkappa_total_mass hd kappa F
     have hnorm_ne : ‖F‖ ≠ 0 := norm_ne_zero_of_ne_zero_pkappa_wip hd hF
-    have hpos : 0 < ‖F‖ ^ 2 := by
-      have hnorm_pos : 0 < ‖F‖ := lt_of_le_of_ne (norm_nonneg_pkappa_wip hd F) hnorm_ne.symm
-      nlinarith
+    have hpos : 0 < ‖F‖ ^ 2 :=
+      pow_pos (lt_of_le_of_ne (norm_nonneg_pkappa_wip hd F) hnorm_ne.symm) 2
     linarith
 
 private theorem finite_sum_annulusMass_le_wip

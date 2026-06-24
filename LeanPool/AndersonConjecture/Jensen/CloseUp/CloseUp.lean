@@ -86,8 +86,7 @@ theorem close_up_aux_wf
         if h : p ∣ x then Classical.choose h else x
       have hdiv_spec : ∀ x ∈ s, x = p * div_p x := by
         intro x hx
-        simp only [div_p, dif_pos (hp_dvd_all x hx)]
-        exact Classical.choose_spec (hp_dvd_all x hx)
+        simpa only [div_p, dif_pos (hp_dvd_all x hx)] using Classical.choose_spec (hp_dvd_all x hx)
       let t_set := s.image div_p
       have h_ideal_eq : span (↑s : Set R.carrier) =
           span {p} * span (↑t_set : Set R.carrier) :=
@@ -114,8 +113,7 @@ theorem close_up_aux_wf
         have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) =
             ⟨(p : T), hle p.2⟩ * ⟨(c' : T), hle c'.2⟩ := by
           ext
-          simp only [Subring.coe_mul]
-          exact hpc.symm
+          simpa only [Subring.coe_mul] using hpc.symm
         rw [hc_eq]
         exact Ideal.mul_mem_mul
           (Ideal.mem_map_of_mem _ (Ideal.subset_span rfl)) hc'_S

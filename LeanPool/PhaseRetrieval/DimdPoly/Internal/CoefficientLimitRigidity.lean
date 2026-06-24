@@ -1967,9 +1967,7 @@ private theorem pkappa_eq_zero_of_norm_eq_zero_coeff_wip
   ext alpha
   by_contra hne
   have hmem : alpha ∈ F.support := Finsupp.mem_support_iff.mpr hne
-  have hterm_pos : 0 < ‖F alpha‖ ^ 2 := by
-    have hnorm_pos : 0 < ‖F alpha‖ := norm_pos_iff.mpr hne
-    nlinarith
+  have hterm_pos : 0 < ‖F alpha‖ ^ 2 := pow_pos (norm_pos_iff.mpr hne) 2
   have hle :
       ‖F alpha‖ ^ 2 <= Finset.sum F.support (fun beta => ‖coeffPkappa F beta‖ ^ 2) := by
     simpa [coeffPkappa] using
@@ -4345,8 +4343,7 @@ theorem positiveGauge_coercivity
           _ ≤ C_F * defect F G := mul_le_mul_of_nonneg_right hdelta_inv_le (Real.sqrt_nonneg _)
     · have hge4 : 4 ≤ t := le_of_not_gt hlt4
       have htwo_defect : t ≤ 2 * defect F G := by
-        have hdefect_nonneg : 0 ≤ defect F G := Real.sqrt_nonneg _
-        nlinarith
+        nlinarith [(Real.sqrt_nonneg _ : (0:ℝ) ≤ defect F G)]
       have htwo_le_C : 2 ≤ C_F := by
         dsimp [C_F]
         exact le_max_left _ _

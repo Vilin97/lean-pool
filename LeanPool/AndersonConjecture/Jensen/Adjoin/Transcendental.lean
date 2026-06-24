@@ -620,8 +620,7 @@ private lemma adjoinLoc_prime_of_prime
     have hinj := transcendental_iff_injective.mp hx_trans
     have poly_eq : pa * pb * qc = C r * pc * qa * qb := by
       apply hinj
-      simp only [map_mul, aeval_C]
-      exact heq_T
+      simpa only [map_mul, aeval_C] using heq_T
     have hCr_prime : Prime (C r : (R.carrier)[X]) := Polynomial.prime_C_iff.mpr hr
     have hCr_dvd : C r ∣ pa * pb * qc := ⟨pc * qa * qb, by rw [poly_eq]
                                                            ring⟩

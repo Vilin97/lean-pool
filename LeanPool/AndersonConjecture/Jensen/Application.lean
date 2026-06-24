@@ -218,8 +218,7 @@ lemma coeff_rhs (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
       simp only [Finsupp.single_apply]
       by_cases hi : i = 0
       · subst hi
-        simp only [Fin.isValue, ↓reduceIte]
-        exact h
+        simpa only [Fin.isValue, ↓reduceIte] using h
       · simp [show (0 : Fin 3) ≠ i from fun h => hi h.symm]
     simp [hle, hd0]
 
@@ -356,8 +355,7 @@ theorem T_depth_ge_two :
     obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective t
     have hmem : X 2 * f - X 1 * g ∈ conjI := by
       have : Ideal.Quotient.mk conjI (X 2 * f - X 1 * g) = 0 := by
-        simp only [map_sub, map_mul]
-        exact sub_eq_zero.mpr ht.symm
+        simpa only [map_sub, map_mul] using sub_eq_zero.mpr ht.symm
       rwa [Ideal.Quotient.eq_zero_iff_mem] at this
     refine ⟨Ideal.Quotient.mk conjI (shiftX1'App f + X 2 * divR'App f), Submodule.mem_top, ?_⟩
     change Ideal.Quotient.mk conjI (X 1) *

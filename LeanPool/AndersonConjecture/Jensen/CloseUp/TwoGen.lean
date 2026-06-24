@@ -110,8 +110,7 @@ theorem close_up_two_gen_coprime
     obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp this
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
     change c - 0 * y₁ ∈ Ideal.span {y₂}
-    simp only [zero_mul, sub_zero]
-    exact Ideal.mem_span_singleton.mpr ⟨q, hq⟩
+    simpa only [zero_mul, sub_zero] using Ideal.mem_span_singleton.mpr ⟨q, hq⟩
   exact intersection_close_up R y₁ y₂ c hc hcoprime hy₁_zero hy₂_zero hM_bot
     hM_not_assoc hAss_ht hR_card hT_card
 

@@ -6134,8 +6134,7 @@ private theorem circle_variance_ratio_le_one_div_520
     hK_le_A.trans hNlargeA
   have hNpos : (0 : ℝ) < (N : ℝ) := by nlinarith
   have hLm1sq : ((L : ℝ) - 1) ^ 2 <= (L : ℝ) ^ 2 := by
-    have hLm1_nonneg : 0 <= (L : ℝ) - 1 := by exact sub_nonneg.mpr (by exact_mod_cast hL)
-    nlinarith [sq_nonneg (1 : ℝ)]
+    nlinarith [sq_nonneg (1 : ℝ), sub_nonneg.mpr (show (1:ℝ) ≤ L by exact_mod_cast hL)]
   have hratio :
       (L : ℝ) ^ 2 / (N : ℝ) ^ 2 <= (1 : ℝ) / K ^ 2 := by
     field_simp [sq_pos_of_pos hNpos, sq_pos_of_pos hKpos]

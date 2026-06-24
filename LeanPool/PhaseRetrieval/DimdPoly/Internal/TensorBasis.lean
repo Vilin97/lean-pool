@@ -661,9 +661,7 @@ theorem integrable_evalPkappa_sq
       ext alpha
       by_contra hne
       have hmem : alpha ∈ F.support := Finsupp.mem_support_iff.mpr hne
-      have hterm_pos : 0 < ‖F alpha‖ ^ 2 := by
-        have hnorm_pos : 0 < ‖F alpha‖ := norm_pos_iff.mpr hne
-        nlinarith
+      have hterm_pos : 0 < ‖F alpha‖ ^ 2 := pow_pos (norm_pos_iff.mpr hne) 2
       have hle :
           ‖F alpha‖ ^ 2 <= Finset.sum F.support (fun beta => ‖F beta‖ ^ 2) := Finset.single_le_sum
           (f := fun beta : Idx d => ‖F beta‖ ^ 2) (s := F.support) (a := alpha)

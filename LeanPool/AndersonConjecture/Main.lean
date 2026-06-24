@@ -213,8 +213,7 @@ lemma ringKrullDim_le_of_adic_completion
       ← IsLocalRing.maximalIdeal_height_eq_ringKrullDim (R := Ahat)]
   have h := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown M
     (IsLocalRing.maximalIdeal Ahat)
-  simp only [h, WithBot.coe_le_coe]
-  exact le_self_add
+  simpa only [h, WithBot.coe_le_coe] using le_self_add
 
 lemma smul_top_eq_bot_quotient {A : Type*} [CommRing A] [IsLocalRing A] :
     (IsLocalRing.maximalIdeal A) •
@@ -250,8 +249,7 @@ instance residueField_isPrecomplete (A : Type*) [CommRing A] [IsLocalRing A] :
     intro n
     by_cases hn : n = 0
     · subst hn
-      simp only [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
-      exact SModEq.top
+      simpa only [pow_zero, Ideal.one_eq_top, Submodule.top_smul] using SModEq.top
     · rw [pow_smul_top_eq_bot_quotient n hn]
       have h1 := hf (Nat.one_le_iff_ne_zero.mpr hn)
       rw [pow_one, smul_top_eq_bot_quotient] at h1
@@ -275,8 +273,7 @@ lemma map_mkQ_mk_eq_of_evalOneₐ {A : Type*} [CommRing A] [IsLocalRing A]
   rw [Submodule.Quotient.eq]
   by_cases hn : n = 0
   · subst hn
-    simp only [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
-    exact Submodule.mem_top
+    simpa only [pow_zero, Ideal.one_eq_top, Submodule.top_smul] using Submodule.mem_top
   · rw [pow_smul_top_eq_bot_quotient n hn, Submodule.mem_bot, sub_eq_zero]
     simp only [AdicCompletion.evalOneₐ, AlgHom.coe_comp, Function.comp_apply,
       AdicCompletion.evalₐ_mk, Ideal.Quotient.factorₐ_apply_mk]

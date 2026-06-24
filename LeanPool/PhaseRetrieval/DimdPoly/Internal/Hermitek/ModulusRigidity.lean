@@ -130,8 +130,7 @@ private theorem qkn_eventual_lower_bound' (k n : ℕ) :
   have hr_nonneg : 0 ≤ r := le_trans zero_le_one hr1
   have hr_pos : 0 < r := lt_of_lt_of_le zero_lt_one hr1
   have hmain : ‖(c : ℂ)‖ / 2 ≤ ‖(qkn k n r : ℂ) / (r ^ n : ℂ)‖ := by
-    have haux := norm_le_norm_sub_add ((c : ℂ)) ((qkn k n r : ℂ) / (r ^ n : ℂ))
-    linarith
+    linarith [norm_le_norm_sub_add ((c : ℂ)) ((qkn k n r : ℂ) / (r ^ n : ℂ))]
   have hpow_nonzero : (r ^ n : ℂ) ≠ 0 :=
     pow_ne_zero n (by exact_mod_cast (ne_of_gt hr_pos))
   have hpow_norm : ‖(r ^ n : ℂ)‖ = r ^ n := by
