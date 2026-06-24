@@ -124,8 +124,7 @@ private lemma hasDerivAt_seg1_fun (H : ℝ) (t : ℝ) :
       exact (hasDerivAt_const t (↑H : ℂ)).sub ((hasDerivAt_id t).ofReal_comp.mul_const _)
     simp only [zero_sub, one_mul] at h2
     exact h2
-  convert (hasDerivAt_const t ((1 : ℂ) / 2)).add h1 using 1
-  simp only [zero_add]
+  exact h1.const_add ((1 : ℂ) / 2)
 
 lemma fdBoundary_H_hasDerivAt_seg1' (H : ℝ) (t : ℝ)
     (ht : t ∈ Ioo (0 : ℝ) 1) :

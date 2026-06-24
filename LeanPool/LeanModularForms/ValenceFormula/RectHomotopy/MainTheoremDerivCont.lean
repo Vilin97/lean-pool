@@ -108,7 +108,7 @@ private lemma seg3_deriv_eq (s t : ℝ) (ht2 : 2 < t) (ht3 : t < 3) :
     have h2 : HasDerivAt (fun t' : ℝ => (t' - 2) • rho) rho t := by
       have := h_shift.smul_const rho
       simpa only [one_smul] using this
-    convert h1.add h2 using 1; ring
+    exact (h1.add h2).congr_deriv (by ring)
   exact ((h_arc.const_smul (1 - s)).add (h_chord.const_smul s)).deriv
 
 private lemma deriv_cont_seg1 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_seg1 : p₂ ≤ 1) :
@@ -225,8 +225,9 @@ private lemma deriv_cont_seg5 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_se
           not_le.mpr (by linarith : 1 < t'), not_le.mpr (by linarith : 2 < t'),
           not_le.mpr (by linarith : 3 < t'), not_le.mpr ht4', ite_false]
       rw [heq.deriv_eq]
-      convert (Complex.ofRealCLM.hasDerivAt.sub_const (9/2)).add_const ((HHeight : ℂ) * I) |>.deriv
-        using 1
+      have hd : HasDerivAt (fun t' : ℝ => ((↑t' : ℂ) - 9/2) + (HHeight : ℂ) * I) 1 q.1 :=
+        (Complex.ofRealCLM.hasDerivAt.sub_const (9/2)).add_const ((HHeight : ℂ) * I)
+      exact hd.deriv
     apply ContinuousOn.congr continuousOn_const hconst
 
 lemma fdBoundaryToPolygonHomotopy_deriv_continuousOn_pieces (p₁ p₂ : ℝ) (hp₁p₂ : p₁ < p₂)

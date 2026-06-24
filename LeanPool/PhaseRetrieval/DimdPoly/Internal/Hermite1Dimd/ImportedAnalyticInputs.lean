@@ -46,7 +46,7 @@ private lemma integral_funUnique_one {E : Type*} [NormedAddCommGroup E] [NormedS
   have hEq0 :=
     ((MeasureTheory.volume_preserving_funUnique (Fin 1) ℂ).integral_comp'
       (f := MeasurableEquiv.funUnique (Fin 1) ℂ) φ)
-  convert hEq0 using 1
+  exact hEq0
 
 private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
     (N L : ℕ) (hL : 1 ≤ L) (f : ℕ → α) :

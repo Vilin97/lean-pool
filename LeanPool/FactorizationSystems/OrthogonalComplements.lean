@@ -257,12 +257,7 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
         let m_ort_fj : orthogonal m (f.obj j).hom := homOrthogonalImpliesOrthogonal ((p j) m Wm)
         let sq_j := squareCompletionIsClosedUnderLimitsROrtComplement f s m sq_lim j
         simp only [Functor.comp_map, leftFunc_map]
-        have nat_eq : s.cone.π.app i ≫ f.map α = s.cone.π.app j := by
-          have naturality := s.cone.π.naturality α
-          have hid : ((Functor.const J).obj s.cone.pt).map α ≫ s.cone.π.app j =
-              s.cone.π.app j := by
-            convert Category.id_comp (s.cone.π.app j) using 1
-          exact naturality.symm.trans hid
+        have nat_eq : s.cone.π.app i ≫ f.map α = s.cone.π.app j := s.cone.w α
         let d : diagonalFiller sq_j := {
           map := (m_ort_fj.diagonal sq_j).map
           comm_top := (m_ort_fj.diagonal sq_j).comm_top

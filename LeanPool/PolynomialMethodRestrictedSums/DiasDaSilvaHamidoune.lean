@@ -40,7 +40,6 @@ variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 def distinctSumSet (A : Finset (ZMod p)) (s : ℕ) : Finset (ZMod p) :=
   (A.powerset.filter (fun B => B.card = s)).image (fun B => ∑ x ∈ B, x)
 
-omit [Fact (Nat.Prime p)] in
 /-- The restricted sumset of `n + 1` copies of `A` embeds into the set of sums of `n + 1`
 distinct elements of `A`. -/
 private lemma restrictedSumSet_subset_distinctSumSet (A : Finset (ZMod p)) (n : ℕ) :

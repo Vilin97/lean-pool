@@ -1155,7 +1155,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
             intro h1 h2
             have key := degree_product_minus_pow_lt (k := k) E
               (by contrapose! h1; simp_all (config := { singlePass := Bool.true }))
-            simp only [sumXPolynomial, hE_card] at key
+            simp only [sumXPolynomial] at key
+            rw [show E.card = m from hE_card] at key
             exact key
         by_cases h_diff_zero :
             (E.map (fun e => (∑ i : Fin (k + 1),
@@ -1236,7 +1237,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
               by_contra hcard
               apply h_coeff
               have hm0 : m = 0 := by
-                rw [← hE_card]; omega
+                have hEc : E.card = m := hE_card
+                omega
               subst hm0
               simp only [pow_zero, one_mul]
               have hS_empty : S = ∅ := by
@@ -1256,7 +1258,8 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
                 exact Finset.notMem_empty _ this
               exact coeff_target_eq_zero_of_vanishes_on_grid h A c hA (by linarith) H_eval
             have key := degree_product_minus_pow_lt (k := k) E hE_pos
-            simp only [sumXPolynomial, hE_card, productPolynomial] at key ⊢
+            simp only [sumXPolynomial, productPolynomial] at key ⊢
+            rw [show E.card = m from hE_card] at key
             exact key
           have h_coeff_eq : ∀ (P Q : MvPolynomial (Fin (k + 1)) (ZMod p)),
               (P - Q).totalDegree < m → MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (

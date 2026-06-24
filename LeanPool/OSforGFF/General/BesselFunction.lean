@@ -153,11 +153,18 @@ private lemma besselK1_integrand_tail_integral_le (z : ℝ) (hz : 0 < z) :
   have hF_deriv : ∀ t, HasDerivAt F (g t) t := by
     intro t
     have h1 : HasDerivAt (fun s => -z * exp s / 2) (-z / 2 * exp t) t := by
-      have := (hasDerivAt_exp t).const_mul (-z / 2); convert this using 1; funext; ring
+      have h := (hasDerivAt_exp t).const_mul (-z / 2)
+      have heq : (fun s => -z * exp s / 2) = fun y => -z / 2 * exp y := by funext s; ring
+      rw [heq]
+      exact h
     have h2 : HasDerivAt (fun s => exp (-z * exp s / 2))
         (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
       (hasDerivAt_exp _).comp t h1
-    simp only [hg_def]; convert h2.const_mul (-2 / z) using 1; field_simp
+    have hval : g t = -2 / z * (exp (-z * exp t / 2) * (-z / 2 * exp t)) := by
+      simp only [hg_def]
+      field_simp
+    rw [show F = fun s => -2 / z * exp (-z * exp s / 2) from hF_def, hval]
+    exact h2.const_mul (-2 / z)
   have hF_cont : ContinuousWithinAt F (Ici 1) 1 :=
     (continuousAt_const.mul (continuous_exp.continuousAt.comp
       ((continuousAt_const.mul continuous_exp.continuousAt).div_const _))).continuousWithinAt

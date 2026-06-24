@@ -103,6 +103,7 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
     simp only [smul_eq_mul] at h_chain
     convert h_chain using 1
     · rfl
+    · rfl
     · ring
   have hu'_int : IntervalIntegrable u' MeasureTheory.volume 0 1 :=
     ContinuousOn.intervalIntegrable continuousOn_const

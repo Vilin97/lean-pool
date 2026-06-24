@@ -161,11 +161,15 @@ lemma gaussian_rhs_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
     · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m f f : ℂ)))
       exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
     · -- 2 * z₀ * t * Q(f,g)
-      have : AnalyticOnNhd ℂ
+      have hbase : AnalyticOnNhd ℂ
           (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) Set.univ :=
         AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-      convert this using 2
-      ring
+      have hfun : (fun z₀ : ℂ => 2 * z₀ * t * (freeCovarianceFormR m f g : ℂ)) =
+          (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) := by
+        funext z₀
+        ring
+      rw [hfun]
+      exact hbase
   · exact analyticOnNhd_const
 
 omit [Fact (0 < m)] in
@@ -181,11 +185,15 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
   · apply AnalyticOnNhd.add
     · exact analyticOnNhd_const
     · -- 2 * z₀ * z₁ * Q(f,g)
-      have : AnalyticOnNhd ℂ
+      have hbase : AnalyticOnNhd ℂ
           (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) Set.univ :=
         AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-      convert this using 2
-      ring
+      have hfun : (fun z₁ : ℂ => 2 * z₀ * z₁ * (freeCovarianceFormR m f g : ℂ)) =
+          (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) := by
+        funext z₁
+        ring
+      rw [hfun]
+      exact hbase
   · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m g g : ℂ)))
     exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
 

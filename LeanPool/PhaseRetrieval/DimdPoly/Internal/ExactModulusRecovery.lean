@@ -4700,8 +4700,9 @@ private theorem deriv_mgf_four_formula (z : ℂ) :
       have h := ((hasDerivAt_id z).const_mul (3 / 4 : ℂ)).add
           ((hasDerivAt_pow 3 z).div_const (8 : ℂ))
       convert h.deriv using 1
-      push_cast
-      ring]
+      · congr 1
+      · push_cast
+        ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop
@@ -4726,8 +4727,9 @@ private theorem deriv_mgf_five_formula (z : ℂ) :
             (((hasDerivAt_pow 2 z).const_mul (3 / 4 : ℂ)))).add
             (((hasDerivAt_pow 4 z).div_const (16 : ℂ)))
         convert h.deriv using 1
-        push_cast
-        ring]
+        · congr 1
+        · push_cast
+          ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop
@@ -4752,8 +4754,9 @@ private theorem deriv_mgf_six_formula (z : ℂ) :
             (((hasDerivAt_pow 3 z).const_mul (5 / 8 : ℂ)))).add
             (((hasDerivAt_pow 5 z).div_const (32 : ℂ)))
         convert h.deriv using 1
-        push_cast
-        ring]
+        · congr 1
+        · push_cast
+          ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop

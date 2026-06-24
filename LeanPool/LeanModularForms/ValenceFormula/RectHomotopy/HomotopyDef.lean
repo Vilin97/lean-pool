@@ -101,8 +101,8 @@ lemma hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
   have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
     have := h_shift.smul_const b
     simpa only [one_smul] using this
-  convert h1.add h2 using 1
-  ring
+  rw [show b - a = -a + b from by ring]
+  exact h1.add h2
 
 lemma exp_pi_div_three_eq_rho' :
     Complex.exp (↑(Real.pi / 3) * I) = rho' := by
