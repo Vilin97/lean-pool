@@ -3086,8 +3086,7 @@ lemma radical_E4_bound_nat (U x D : ℕ) (hU : 0 < U) (hx : 0 < x) (hD : 0 < D) 
 
 lemma radical_E4_bound (U x D : ℕ) (hU : 0 < U) (hx : 0 < x) (hD : 0 < D) :
     (Nat.radical (U ^ 2 * D * (5 * x ^ 22)) : ℝ) ≤ (U : ℝ) * (D : ℝ) * (5 * (x : ℝ)) := by
-  have h := radical_E4_bound_nat U x D hU hx hD
-  exact_mod_cast h
+  exact_mod_cast radical_E4_bound_nat U x D hU hx hD
 
 lemma radical_E4_bound' (U x D : ℕ) (hU : 0 < U) (hx : 0 < x) (hD : 0 < D) :
     (Nat.radical (5 * x ^ 22 * D * (U ^ 2)) : ℝ) ≤ (5 * (x : ℝ)) * (D : ℝ) * (U : ℝ) := by
@@ -4543,8 +4542,7 @@ lemma radical_abc_bound'_nat (x : ℕ) (Y B : ℕ) (hx : 0 < x) (hY : 0 < Y) (hB
 
 lemma radical_abc_bound' (x : ℕ) (Y B : ℕ) (hx : 0 < x) (hY : 0 < Y) (hB : 0 < B) :
     (Nat.radical (x ^ 11 * B * (Y ^ 2)) : ℝ) ≤ (x : ℝ) * (B : ℝ) * (Y : ℝ) := by
-  have h := radical_abc_bound'_nat x Y B hx hY hB
-  exact_mod_cast h
+  exact_mod_cast radical_abc_bound'_nat x Y B hx hY hB
 
 lemma abc_triple_sum_case1
     (x : ℕ+) (y : ℤ)
@@ -4714,8 +4712,7 @@ lemma rad_bound_le (x : ℕ+) (y : ℤ) (X : ℝ)
 lemma x11_le_y2_real (x : ℕ+) (y : ℤ)
     (hlt : (↑(x : ℕ) : ℤ) ^ 11 < y ^ 2) :
     (x : ℝ) ^ 11 ≤ (↑(y.natAbs ^ 2) : ℝ) := by
-  have h_nat := x11_le_natAbs_sq x y hlt
-  exact_mod_cast h_nat
+  exact_mod_cast x11_le_natAbs_sq x y hlt
 
 lemma rad_bound_nonneg (x : ℕ+) (y : ℤ) (X : ℝ) (hX : 1 < X) :
     0 ≤ (↑(x : ℕ) : ℝ) * (↑y.natAbs : ℝ) * X := by positivity
