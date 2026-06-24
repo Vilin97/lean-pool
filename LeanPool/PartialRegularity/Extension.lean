@@ -53,14 +53,12 @@ noncomputable def AK (α : ℝ) (X : ℕ) (k : ℕ) : Set ℕ :=
 /-- The explicit constant used for the Bernoulli-factor counting bound. -/
 noncomputable def bernoulliOmegaConst : ℝ := 10
 
-lemma bernoulliOmegaConst_pos : bernoulliOmegaConst > 0 := by
-  norm_num [bernoulliOmegaConst]
+lemma bernoulliOmegaConst_pos : bernoulliOmegaConst > 0 := by norm_num [bernoulliOmegaConst]
 
 lemma M_alpha_lt_K_max_sup (α : ℝ) (X : ℕ) (p : ℕ) (hp : Nat.Prime p) (hpX : p ≤ X) :
     MAlpha α p < KMaxSup α X := by
   have h1 : p ∈ Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1)) := by
-    simp only [Finset.mem_filter, Finset.mem_range]
-    exact ⟨by omega, hp⟩
+    simpa only [Finset.mem_filter, Finset.mem_range] using ⟨by omega, hp⟩
   have h2 := Finset.le_sup h1 (f := MAlpha α)
   unfold KMaxSup
   omega
@@ -131,8 +129,7 @@ lemma sorted_primes_get_ge (l : List ℕ) (hsort : l.SortedLT) (hge2 : ∀ x ∈
   have hmono : StrictMono l.get := List.SortedLT.strictMono_get hsort
   induction h : i.val generalizing i with
   | zero =>
-    simp only [zero_add]
-    exact hge2 (l.get i) (List.get_mem ..)
+    simpa only [zero_add] using hge2 (l.get i) (List.get_mem ..)
   | succ n ih =>
     have hn_lt : n < l.length := by have := h ▸ i.isLt; omega
     let j : Fin l.length := ⟨n, hn_lt⟩
@@ -217,8 +214,7 @@ lemma gcd_mul_coprime_eq_gcd (n a d : ℕ) (hcop : a.Coprime d) : (n * a).gcd d 
       (Nat.gcd_dvd_right _ _)
 
 lemma gcd_natAbs_mul_num_dvd_n (n : ℕ) (q : ℚ) : (↑n * q.num).natAbs.gcd q.den ∣ n := by
-  have h1 : (↑n * q.num).natAbs = n * q.num.natAbs := by
-    rw [Int.natAbs_mul]; rfl
+  have h1 : (↑n * q.num).natAbs = n * q.num.natAbs := by rw [Int.natAbs_mul]; rfl
   rw [h1, gcd_mul_coprime_eq_gcd n q.num.natAbs q.den q.reduced]
   exact Nat.gcd_dvd_left n q.den
 
