@@ -265,23 +265,7 @@ example (a b : ℕ) : Set.Finite {a, b} := by simp only [Set.finite_singleton, S
       · exact PeanoMinus.ltTrans
       · exact PeanoMinus.ltTri
   rw [this]; simp only [Set.finite_union, EqAxiom.finite, true_and]
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.Finite.insert
-  apply Set.finite_singleton
+  exact Set.toFinite _
 
 end Theory
 
