@@ -238,8 +238,8 @@ noncomputable abbrev colimitCoconeUndropFirst :
             exact step1.trans hstep
         | succ n =>
             dsimp [cc, coconeUndropFirst]
-            simp only [NatTrans.ofSequence_app]
-            exact Limits.colimit.ι_desc (Functor.ofSequence.coconeDropFirst i cc') n
+            simpa only [NatTrans.ofSequence_app] using
+              Limits.colimit.ι_desc (Functor.ofSequence.coconeDropFirst i cc') n
       uniq cc' M hM := by
         apply Limits.colimit.hom_ext
         intro n

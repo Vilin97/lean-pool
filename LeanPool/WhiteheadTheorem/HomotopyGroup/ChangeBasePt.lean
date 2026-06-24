@@ -238,8 +238,8 @@ noncomputable def get
   have hep := TopCat.cubeBoundaryIncl_hasHEP n X f₀' h
   have : f₀' ∘ (TopCat.cubeBoundaryIncl n).hom = h ∘ fun x ↦ (x, 0) := by
     funext ⟨y, hy⟩
-    simp only [Function.comp_apply, ContinuousMap.coe_mk, Path.source, h]
-    exact f₀.property y hy
+    simpa only [Function.comp_apply, ContinuousMap.coe_mk, Path.source, h] using
+      f₀.property y hy
   let H' := Classical.choose (hep this)
   have H'_spec := Classical.choose_spec (hep this)
   constructor
