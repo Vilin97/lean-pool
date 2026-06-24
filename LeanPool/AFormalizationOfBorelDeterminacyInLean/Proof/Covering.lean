@@ -157,8 +157,7 @@ lemma bodyLiftExists_iff_system
         change ((bodyEquivSystem.inv.app T.1 ≫ bodyEquivSystem.hom.app T.1) x) = x
         rw [← NatTrans.comp_app, bodyEquivSystem.inv_hom_id]
         rfl
-      rw [hpoint]
-      exact hxe
+      rwa [hpoint]
     simpa [y'] using congrArg Subtype.val hmap
 
 end Covering
@@ -262,8 +261,7 @@ lemma covering_winning {G' G} (f : Games.Covering G' G) {p : Player}
         p.payoff G.2.1 := by
     change ⟨x.val, body_mono S.pre.subtree_sub x.prop⟩ ∈
       (Tree.bodyFunctor.map f.toHom)⁻¹' p.payoff G.2.1
-    rw [covering_hpre_pl f p]
-    exact hxg'
+    rwa [covering_hpre_pl f p]
   exact ⟨(Tree.bodyFunctor.map f.toHom) ⟨x.val, body_mono S.pre.subtree_sub x.prop⟩,
     hxpre, rfl⟩
 

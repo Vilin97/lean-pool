@@ -25,8 +25,7 @@ instance instSigmaLeanPool : OmegaCompletePartialOrder ((i : I) × P i) where
     cases c using Chain.Sigma.distrib_cases
     rename_i j d
     change (⟨j, d i⟩ : Sigma P) ≤ Sigma.map id (fun _ ↦ ωSup) ⟨j, d⟩
-    simp only [Sigma.map_mk, id_eq, Sigma.mk_le_mk_iff]
-    exact le_ωSup _ _
+    simpa only [Sigma.map_mk, id_eq, Sigma.mk_le_mk_iff] using le_ωSup _ _
   ωSup_le := by
     rintro c ⟨x, y⟩ h
     cases c using Chain.Sigma.distrib_cases

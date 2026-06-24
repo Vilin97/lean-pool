@@ -49,8 +49,7 @@ lemma isHom_mk {P : B → Prop}
 
 @[fun_prop]
 lemma isHom_val {P : B → Prop} {f : A → Subtype P} (hf : IsHom f) : IsHom (fun x ↦ (f x).val) := by
-  rw [← isHom_def]
-  exact hf
+  rwa [← isHom_def]
 
 end QuasiBorelSpace.Subtype
 

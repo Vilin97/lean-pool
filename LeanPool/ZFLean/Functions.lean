@@ -452,8 +452,7 @@ theorem IsFunc_of_composition_IsFunc {g f : ZFSet} {A B C : ZFSet}
       rw [pair_inj] at eq
       obtain ⟨rfl, rfl⟩ := eq
       apply z_unq
-      rw [← y_unq y' x'y'f]
-      exact y'z'g
+      rwa [← y_unq y' x'y'f]
 
 /-- Imported ZFLean declaration. -/
 abbrev fcomp (g f : ZFSet) {A B C : ZFSet}
@@ -999,8 +998,7 @@ theorem inv_bijective_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   · intro x xA
     obtain ⟨y, yA, _⟩ := f_is_func.2 x xA
     refine ⟨y, f_is_func.1 yA |> pair_mem_prod.mp |>.2, ?_⟩
-    rw [mem_inv]
-    exact yA
+    rwa [mem_inv]
 
 theorem composition_self_inv_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   (hf : f.IsBijective) :
@@ -1021,8 +1019,7 @@ theorem composition_self_inv_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc 
       and_self_left]
     apply And.intro aA
     use b, f_is_func.1 ab_f |> pair_mem_prod.mp |>.2
-    rw [mem_inv, and_self]
-    exact ab_f
+    rwa [mem_inv, and_self]
 
 theorem composition_inv_self_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   (hf : f.IsBijective) :

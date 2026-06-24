@@ -132,10 +132,6 @@ noncomputable def hilbertNumerator {S : NumericalSemigroup} (G : NumericalSemigr
       ((∑ k ∈ Finset.range (n + 1), P.coeff k) -
        (∑ g ∈ S.gaps.filter (· ≤ n), P.coeff (n - g)))
 
-lemma coeff_polynomial_map_coe {P : Polynomial ℤ} (n : ℕ) :
-    (PowerSeries.coeff n) (P.map (Int.castRingHom ℚ) : PowerSeries ℚ) =
-    (Int.castRingHom ℚ) (P.coeff n) := by simp
-
 lemma coeff_mul_hilbert_product {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n :
   ℕ) :
     (PowerSeries.coeff n) (S.hilbertSeries *
@@ -412,8 +408,7 @@ lemma numeratorIdentity_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGe
   by_cases h : n < G.hilbertNumeratorDegBound
   · -- Case n < bound: use the formula
     rw [coeff_mul_hilbert_product, coeff_hilbertNumerator_formula, if_pos h]
-    simp only [NumericalSemigroup.hilbertSeries_coeff]
-    exact sum_over_semigroup_eq_diff G n
+    simpa only [NumericalSemigroup.hilbertSeries_coeff] using sum_over_semigroup_eq_diff G n
   · -- Case n >= bound: both sides are 0
     push Not at h
     rw [coeff_eq_zero_of_large G n h]
@@ -847,8 +842,7 @@ lemma productPolynomial_leadingCoeff {S : NumericalSemigroup} (G : NumericalSemi
   have h : ∀ i : Fin G.m, (1 - Polynomial.X ^ G.d i : Polynomial ℤ).leadingCoeff = -1 := by
     intro i
     exact leadingCoeff_one_sub_X_pow (G.d i) (G.hd_pos i)
-  simp only [h]
-  exact Fin.prod_const G.m (-1 : ℤ)
+  simpa only [h] using Fin.prod_const G.m (-1 : ℤ)
 
 lemma natDegree_ge_of_gaps_nonempty {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
     (h : S.gaps.Nonempty) :
@@ -870,8 +864,7 @@ lemma natDegree_ge_of_gaps_nonempty {S : NumericalSemigroup} (G : NumericalSemig
              _ ≤ G.productPolynomial.natDegree + S.gaps.sup id := le_add_self
       have hsum_partial : ∑ k ∈ Finset.range (G.productPolynomial.natDegree + S.gaps.sup id + 1),
           G.productPolynomial.coeff k = 0 := by
-        have hge : 1 ≤ S.gaps.sup id := by
-          rw [hgmax_eq]; exact pos_of_mem_gaps hgmax_mem
+        have hge : 1 ≤ S.gaps.sup id := by rw [hgmax_eq]; exact pos_of_mem_gaps hgmax_mem
         have h1 :=
           NumericalSemigroupGenerators.sum_coeff_large_eq_sum_coeff_deg G
             (G.productPolynomial.natDegree + S.gaps.sup id) (by omega)
@@ -880,8 +873,7 @@ lemma natDegree_ge_of_gaps_nonempty {S : NumericalSemigroup} (G : NumericalSemig
       rw [hfilter] at hcontra
       rw [Finset.sum_eq_single_of_mem gmax hgmax_mem] at hcontra
       · have hsub : G.productPolynomial.natDegree +
-        S.gaps.sup id - gmax = G.productPolynomial.natDegree := by
-          rw [hgmax_eq, Nat.add_sub_cancel]
+        S.gaps.sup id - gmax = G.productPolynomial.natDegree := by rw [hgmax_eq, Nat.add_sub_cancel]
         rw [hsub, Polynomial.coeff_natDegree, productPolynomial_leadingCoeff G] at hcontra
         simp only [hsum_partial] at hcontra
         exact Int.neg_one_pow_ne_zero hcontra.symm
@@ -1220,8 +1212,7 @@ lemma exp_poly_sub_one_sub_X_pow_coeff_zero (k : ℕ) (hk : 0 < k) :
   · intro j hj hj_not
     simp only [Finset.mem_range] at hj hj_not
     have : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree < j := by omega
-    simp only [Int.cast_eq_zero]
-    exact Polynomial.coeff_eq_zero_of_natDegree_lt this
+    simpa only [Int.cast_eq_zero] using Polynomial.coeff_eq_zero_of_natDegree_lt this
 
 lemma natDegree_one_sub_X_pow_eq (k : ℕ) (hk : 0 < k) :
     (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree = k := by
@@ -1272,8 +1263,7 @@ lemma exp_poly_sub_one_sub_X_pow_coeff_pos (k n : ℕ) (hk : 0 < k) (hn : 1 ≤ 
 
 lemma rhs_coeff_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (i : Fin G.m) :
     (PowerSeries.coeff 0) (-(G.d i : ℚ) • (PowerSeries.X * G.scaledExpFactor i)) = 0 := by
-  have h₁ : (PowerSeries.coeff 0) (PowerSeries.X * G.scaledExpFactor i) = 0 := by
-    simp
+  have h₁ : (PowerSeries.coeff 0) (PowerSeries.X * G.scaledExpFactor i) = 0 := by simp
   have h₂ : (PowerSeries.coeff 0) (-(G.d i : ℚ) • (PowerSeries.X *
     G.scaledExpFactor i)) = (-(G.d i : ℚ)) * (PowerSeries.coeff 0) (PowerSeries.X *
       G.scaledExpFactor i) := by
@@ -1867,8 +1857,7 @@ lemma gap_sum_at_jstar {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
   rw [hfilter]
   rw [Finset.sum_eq_single_of_mem gmax hgmax_mem]
   · have hsub : G.productPolynomial.natDegree +
-    S.gaps.sup id - gmax = G.productPolynomial.natDegree := by
-      rw [hgmax_eq, Nat.add_sub_cancel]
+    S.gaps.sup id - gmax = G.productPolynomial.natDegree := by rw [hgmax_eq, Nat.add_sub_cancel]
     rw [hsub, Polynomial.coeff_natDegree, productPolynomial_leadingCoeff G]
   · intro g hg hne
     apply Polynomial.coeff_eq_zero_of_natDegree_lt
@@ -1905,8 +1894,7 @@ lemma hilbertNumerator_coeff_at_jstar {S : NumericalSemigroup} (G : NumericalSem
   have hgap := gap_sum_at_jstar G hnonempty
   rw [hgap, neg_neg_one_pow_eq]
 
-lemma neg_one_pow_ne_zero' (m : ℕ) : ((-1 : ℤ) ^ (m + 1)) ≠ 0 := by
-  exact Int.neg_one_pow_ne_zero
+lemma neg_one_pow_ne_zero' (m : ℕ) : ((-1 : ℤ) ^ (m + 1)) ≠ 0 := by exact Int.neg_one_pow_ne_zero
 
 lemma hilbertNumerator_natDegree_ge_jstar {S : NumericalSemigroup} (G :
   NumericalSemigroupGenerators S)

@@ -71,8 +71,7 @@ lemma isHom_def
     exact hf
   · intro hf
     constructor
-    simp only [isVar_iff_isHom]
-    exact hf
+    simpa only [isVar_iff_isHom] using hf
 
 namespace IsHom
 

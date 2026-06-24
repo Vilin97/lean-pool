@@ -207,8 +207,7 @@ lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
     rw [hval']
     rw [← List.singleton_append]
     rw [← liftNode]
-    rw [← WLLift.liftMediumVal_length H.toWLift]
-    exact hsub
+    rwa [← WLLift.liftMediumVal_length H.toWLift]
   conv => simp [PreLift.ConLong]
   convert hm using 1
   rw [← List.getElem_cons_drop (by

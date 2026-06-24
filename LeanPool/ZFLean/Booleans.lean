@@ -44,8 +44,7 @@ theorem symmDiff_empty (p : ZFSet) : p Δ ∅ = p := by
 
 theorem symmDiff_comm (p q : ZFSet) : p Δ q = q Δ p := by
   ext x
-  simp only [mem_symmDiff]
-  exact Or.comm
+  simpa only [mem_symmDiff] using Or.comm
 
 @[simp]
 theorem symmDiff_self (p : ZFSet) : p Δ p = ∅ := by

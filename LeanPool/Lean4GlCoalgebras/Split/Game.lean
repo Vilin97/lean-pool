@@ -300,8 +300,7 @@ lemma no_inf_chain_from_prover (g : ℕ → GamePos)
     have := @move_move_in_FL (g 0) (g (2 * n)) (f_helper 0) (f_helper n) (by
       induction n
       case zero =>
-        simp only [mul_zero]
-        exact Relation.ReflTransGen.refl
+        simpa only [mul_zero] using Relation.ReflTransGen.refl
       case succ n ih =>
         apply Relation.ReflTransGen.tail ih
         refine ⟨g (2 * n + 1), g_rel (2 * n), ?_⟩

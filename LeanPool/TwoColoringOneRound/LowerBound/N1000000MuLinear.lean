@@ -199,8 +199,7 @@ private theorem corrAvg_tgt_eq_xFromColoring
       simpa using (List.getD_eq_get pm.srcSyms 0 ⟨k, hkSrc⟩)
     have htgt : pm.tgtSyms.getD k 0 = pm.tgtSyms.get ⟨k, hkTgt⟩ := by
       simpa using (List.getD_eq_get pm.tgtSyms 0 ⟨k, hkTgt⟩)
-    rw [hsrc, htgt]
-    exact hj
+    rwa [hsrc, htgt]
   -- Rewrite the `getD` identities in the bracketed `get?` form used by the simplifications below.
   have hsrcU0' : pm.srcSyms[0]?.getD 0 = pm.srcU.1 := by simpa using hsrcU0
   have hsrcU1' : pm.srcSyms[1]?.getD 0 = pm.srcU.2.1 := by simpa using hsrcU1

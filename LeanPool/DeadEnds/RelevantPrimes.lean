@@ -26,8 +26,7 @@ lemma primesBelow_succ_card_le (k : ℕ) : (k + 1).primesBelow.card ≤ k := by
   have h₂ : (k + 1).primesBelow ⊆ Finset.Icc 2 k := by
     intro p hp
     simp only [Nat.mem_primesBelow] at hp
-    simp only [Finset.mem_Icc]
-    exact ⟨hp.2.two_le, by omega⟩
+    simpa only [Finset.mem_Icc] using ⟨hp.2.two_le, by omega⟩
   have h₃ : (k + 1).primesBelow.card ≤ (Finset.Icc 2 k).card := Finset.card_le_card h₂
   rw [Nat.card_Icc] at h₃
   omega

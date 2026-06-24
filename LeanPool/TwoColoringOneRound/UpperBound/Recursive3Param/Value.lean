@@ -526,8 +526,7 @@ private lemma setLIntegral_ofReal_lift (a b : Rand) (g : ℝ → ℝ) (v : ℝ)
     simpa using
       (MeasureTheory.setLIntegral_subtype (μ := (volume : Measure ℝ))
         (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b) (f := fun y : ℝ => ENNReal.ofReal (g y)))
-  rw [hsub, image_val_Icc]
-  exact hreal
+  rwa [hsub, image_val_Icc]
 
 lemma setLIntegral_ofReal_id_Icc (a b : Rand) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =

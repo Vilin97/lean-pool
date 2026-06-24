@@ -98,8 +98,7 @@ lemma measurable_eq_rec
     (p : ∀ x, ix x = i)
     (f : ∀ x, P (ix x)) (hf : Measurable fun x ↦ (⟨ix x, f x⟩ : Sigma P))
     : Measurable fun x : A ↦ p x ▸ f x := by
-  simp only [eqRec_eq_cast]
-  exact measurable_cast ix i p f hf
+  simpa only [eqRec_eq_cast] using measurable_cast ix i p f hf
 
 lemma measurable_distrib [Countable I]
     : Measurable (fun x : A × Sigma P ↦ (⟨x.2.1, x.1, x.2.2⟩ : (i : I) × A × P i)) := by

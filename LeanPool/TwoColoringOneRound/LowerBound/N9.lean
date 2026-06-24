@@ -520,8 +520,7 @@ private lemma edgeCount_9 : edgeCount n = 3024 := by
           left_inv := by intro e; apply Subtype.ext; funext i; rfl
           right_inv := by intro x; ext i; rfl }
     have hcongr : edgeCount n = Fintype.card (Fin 4 ↪ Sym n) := by
-      rw [edgeCount]
-      exact this
+      rwa [edgeCount]
     rw [hcongr]
     simp [Sym, n, Fintype.card_embedding_eq]
   exact this.trans (by decide : (9 : Nat).descFactorial 4 = 3024)

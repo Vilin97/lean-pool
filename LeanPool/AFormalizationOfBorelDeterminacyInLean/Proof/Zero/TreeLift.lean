@@ -88,8 +88,7 @@ lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.t
     rw [IsPosition] at hp ⊢
     rw [pInv_treeHom_val]
     · change (pInvTreeHomMap hyp (List.take n H.x.val)).length % 2 = p.toNat
-      rw [pInvTreeHomMap_len]
-      exact hp
+      rwa [pInvTreeHomMap_len]
     · change (List.take n H.x.val).length ≤ 2 * k
       exact (List.length_take_le n H.x.val).trans h
 lemma pInv_fixing_short :

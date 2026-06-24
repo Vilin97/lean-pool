@@ -154,8 +154,7 @@ lemma lintegral_mono
     {f g : A → ENNReal} (h : f ≤ g) (μ : PreProbabilityMeasure A)
     : lintegral f μ ≤ lintegral g μ := by
   rcases μ with ⟨eval, base⟩
-  simp only [lintegral_mk]
-  exact MeasureTheory.lintegral_mono fun a ↦ h _
+  simpa only [lintegral_mk] using MeasureTheory.lintegral_mono fun a ↦ h _
 
 lemma lintegral_iSup
     (f : ℕ → A → ENNReal) (hf₁ : Monotone f) (hf₂ : ∀ n, IsHom (f n)) (μ : PreProbabilityMeasure A)

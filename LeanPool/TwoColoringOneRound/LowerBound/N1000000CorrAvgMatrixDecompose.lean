@@ -189,8 +189,7 @@ theorem corrAvgMatrix_eq_sum_coeff_A (f : Coloring n) :
     calc
       (∑ d : DirIdx, (coeff (f := f) d) • A d) u v
           = ∑ d : DirIdx, ((coeff (f := f) d) • A d) u v := by
-              rw [huv]
-              exact hv
+              rwa [huv]
       _ = ∑ d : DirIdx,
         (if dirMask v u = N1000000StructureConstants.maskAt d then (coeff (f := f) d) else 0) := by
             simp [N1000000OrbitalBasis.A, Matrix.smul_apply, mul_ite, mul_one, mul_zero]

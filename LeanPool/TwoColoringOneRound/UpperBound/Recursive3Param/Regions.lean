@@ -597,8 +597,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
               (Set.Ici t1).indicator (fun c : Rand => gCt2 c * μ (Set.Ioo c t2)) c ∂μ) =
             ∫⁻ c in Set.Ico t1 t2, gCt2 c * μ (Set.Ioo c t2) ∂μ := by
       -- rewrite the target set and reuse `hInd`
-      rw [← hset]
-      exact hInd
+      rwa [← hset]
     calc
       (∫⁻ c in Set.Iio t2, f c * μ (Set.Ioo c t2) ∂μ) =
           ∫⁻ c in Set.Iio t2,

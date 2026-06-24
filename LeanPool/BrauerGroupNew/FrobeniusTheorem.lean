@@ -301,8 +301,7 @@ lemma x2_is_real (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
         at x_commutes_k
       norm_num at x_commutes_k
   change _ ∈ (⊥ : Subalgebra ℝ D)
-  rw [← Algebra.IsCentral.center_eq_bot ℝ D]
-  exact x2_is_central
+  rwa [← Algebra.IsCentral.center_eq_bot ℝ D]
 
 open scoped algebraMap in
 /-- The set of elements whose square is a negative real scalar. -/
@@ -543,8 +542,7 @@ lemma linindep1ij (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
       apply Complex.ext <;> simp
     replace hab : ((e.symm (⟨b, a⟩ : ℂ) : k) : D) =
         ((algebraMap ℝ D) √(x_corre_R k e x hx hDD).choose)⁻¹ * ↑x := by
-      rw [← hsum]
-      exact hab
+      rwa [← hsum]
     apply_fun ((algebraMap ℝ D) (Real.sqrt (x_corre_R _ _ _ hx hDD).choose) * · ) at hab
     rw [← mul_assoc, mul_inv_cancel₀ (by
       simp_all only [ne_eq, map_eq_zero]

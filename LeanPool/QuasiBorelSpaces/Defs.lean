@@ -120,11 +120,9 @@ See [HeunenKSY17], Proposition 14.
   measurableSet_empty hφ := by
     simp only [Set.preimage_empty, MeasurableSet.empty]
   measurableSet_compl X hX φ hφ := by
-    simp only [Set.preimage_compl, MeasurableSet.compl_iff]
-    exact hX hφ
+    simpa only [Set.preimage_compl, MeasurableSet.compl_iff] using hX hφ
   measurableSet_iUnion f hf φ hφ := by
-    simp only [Set.preimage_iUnion]
-    exact MeasurableSet.iUnion fun n ↦ hf n hφ
+    simpa only [Set.preimage_iUnion] using MeasurableSet.iUnion fun n ↦ hf n hφ
 
 /-- We can lift a `QuasiBorelSpace` from one type to another. -/
 @[reducible] def lift (f : B → A) : QuasiBorelSpace B where
