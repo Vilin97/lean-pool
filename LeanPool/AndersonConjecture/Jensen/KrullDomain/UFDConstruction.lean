@@ -29,6 +29,20 @@ section MainTheorem
 
 variable [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
 
+/-- Divisibility descent through `Localization.Away s`: clearing the denominator of the
+witness yields `x * s ^ m = r * c` for some `c` and `m`. -/
+private theorem away_dvd_clear {A : Type*} [CommRing A] [IsDomain A] (s : A)
+    (hpow_le : Submonoid.powers s ≤ nonZeroDivisors A) {r x : A}
+    (hdvd : algebraMap A (Localization.Away s) r ∣ algebraMap A (Localization.Away s) x) :
+    ∃ (c : A) (m : ℕ), x * s ^ m = r * c := by
+  obtain ⟨z, hz⟩ := hdvd
+  obtain ⟨⟨c, ⟨_, m, rfl⟩⟩, hc⟩ := IsLocalization.surj (Submonoid.powers s) z
+  refine ⟨c, m, IsLocalization.injective (Localization.Away s) hpow_le ?_⟩
+  rw [map_mul, map_mul, map_pow]
+  calc algebraMap A _ x * (algebraMap A _ s) ^ m
+      = algebraMap A _ r * (z * (algebraMap A _ s) ^ m) := by rw [hz, mul_assoc]
+    _ = algebraMap A _ r * algebraMap A _ c := by rw [← map_pow, hc]
+
 omit [IsAdicComplete (IsLocalRing.maximalIdeal T) T] in
 /- R-primes in the maximal ideal are prime in S_sub.
 If p is prime in R with (p:T) ∈ M_T, then the image of p in S_sub is prime.
@@ -557,19 +571,8 @@ private def build_ufd_proof_proof
           (algebraMap S_sub (Localization.Away s) r ∣ algebraMap S_sub _ x) →
           r ∣ x := by
         intro x hqx
-        obtain ⟨z, hz⟩ := hqx
-        obtain ⟨⟨c, ⟨_, m, rfl⟩⟩, hc⟩ :=
-          IsLocalization.surj (Submonoid.powers s) z
-        have key : x * s ^ m = r * c := by
-          apply hinj_loc
-          rw [map_mul, map_mul, map_pow]
-          calc algebraMap S_sub _ x * (algebraMap S_sub _ s) ^ m
-              = algebraMap S_sub _ r * (z * (algebraMap S_sub _ s) ^ m) := by
-                rw [hz, mul_assoc]
-            _ = algebraMap S_sub _ r * algebraMap S_sub _ c := by rw [← map_pow, hc]
-        have hsm_unit : IsUnit (s ^ m) := IsUnit.pow m hs_unit
-        have : r ∣ x * s ^ m := ⟨c, key⟩
-        exact (hsm_unit.dvd_mul_right).mp this
+        obtain ⟨c, m, key⟩ := away_dvd_clear s hpow_le hqx
+        exact ((IsUnit.pow m hs_unit).dvd_mul_right).mp ⟨c, key⟩
       have hr_prime : Prime r := by
         refine ⟨hr_ne, hr_not_unit, fun a b hab => ?_⟩
         have hab_loc : algebraMap S_sub (Localization.Away s) r ∣
@@ -688,17 +691,7 @@ private def build_ufd_proof_proof
               r' ∣ x by
             exact (hr'_prime_loc.dvd_or_dvd hab_loc).imp (hdvd_back a) (hdvd_back b)
           intro x hqx
-          obtain ⟨z, hz⟩ := hqx
-          obtain ⟨⟨c, ⟨_, m, rfl⟩⟩, hc⟩ :=
-            IsLocalization.surj (Submonoid.powers s) z
-          have key : x * s ^ m = r' * c := by
-            apply hinj_loc
-            rw [map_mul, map_mul, map_pow]
-            calc algebraMap S_sub _ x * (algebraMap S_sub _ s) ^ m
-                = algebraMap S_sub _ r' * (z * (algebraMap S_sub _ s) ^ m) := by
-                  rw [hz, mul_assoc]
-              _ = algebraMap S_sub _ r' * algebraMap S_sub _ c := by
-                  rw [← map_pow, hc]
+          obtain ⟨c, m, key⟩ := away_dvd_clear s hpow_le hqx
           have hr'_dvd_xsm : r' ∣ x * s ^ m := ⟨c, key⟩
           obtain ⟨u_s, hu_s⟩ := hpfactors_assoc
           -- Key lemma: if r' | a * (prod of primes)^m and r' is coprime to each prime, then r' | a
