@@ -239,8 +239,7 @@ lemma isSimpleChain_of_cons_isSimpleChain {l : List (Lattice R)} {M : Lattice R}
     | L₁ :: L₂ :: l =>
     have := h.no_backtrack
     simp [List.zipWith₃] at this
-    simp only [List.tail_cons]
-    exact this.right
+    simpa only [List.tail_cons] using this.right
 
 /-- A chain `(Lᵢ)` is a standard chain, if `L₀` has a basis `b` such that
 each `Lᵢ` is given by `b.ntwist₂ hϖ n 0`. -/

@@ -239,8 +239,7 @@ where `w` is the source vertex wrt. to `v₀`. -/
 def outwardEdgeCone (w : V) : Finset X.edgeSet :=
   let s : Set X.edgeSet := { e | w ∈ e.val ∧ X.source v₀ e = w }
   have hs : s.Finite := (Finset.finite_toSet (incidenceFinset' w)).subset fun e he ↦ by
-    simp only [Finset.mem_coe, mem_incidenceFinset']
-    exact he.left
+    simpa only [Finset.mem_coe, mem_incidenceFinset'] using he.left
   hs.toFinset
 
 lemma mem_outwardEdgeCone_iff (w : V) (e : X.edgeSet) :
@@ -461,8 +460,7 @@ def auxBorder (e : X.edgeSet) (he : X.dist v₀ (X.target v₀ e) = n + 1) : M :
     have hd : (X.outwardEdgeCone v₀ d).Nonempty := by
       use e
       rw [mem_outwardEdgeCone_iff]
-      simp only [d, and_true]
-      exact source_mem v₀ e
+      simpa only [d, and_true] using source_mem v₀ e
     if X.distinguishedEdge v₀ d hd = e
       then (w d)⁻¹ • f d
       else 0
@@ -471,8 +469,7 @@ def auxBorder (e : X.edgeSet) (he : X.dist v₀ (X.target v₀ e) = n + 1) : M :
     have hd : (X.outwardEdgeCone v₀ d).Nonempty := by
       use e
       rw [mem_outwardEdgeCone_iff]
-      simp only [d, and_true]
-      exact source_mem v₀ e
+      simpa only [d, and_true] using source_mem v₀ e
     have hd2 : 0 < X.dist v₀ d := by
       rw [norm_target_eq_norm_source_add_one] at he
       rw [add_left_inj] at he

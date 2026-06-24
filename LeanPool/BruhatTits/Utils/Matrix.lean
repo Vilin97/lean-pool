@@ -39,8 +39,7 @@ lemma coeffs_nonempty [Nonempty n] [Nonempty m] (g : Matrix n m R) : g.coeffs.No
 
 lemma finite_coeffs [Finite n] [Finite m] (g : Matrix n m R) :
     (coeffs g).Finite := by
-  simp only [coeffs]
-  exact Set.toFinite (Set.image2 g Set.univ Set.univ)
+  simpa only [coeffs] using Set.toFinite (Set.image2 g Set.univ Set.univ)
 
 @[simp]
 lemma transpose_coeffs (g : Matrix n m R) : g.transpose.coeffs = g.coeffs := by

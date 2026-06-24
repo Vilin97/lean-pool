@@ -227,8 +227,7 @@ lemma Submodule.comap_subtype_smul (I : Ideal R) (p : Submodule R M) :
 lemma Submodule.map_subtype_smul (I : Ideal R) (p : Submodule R M) :
     Submodule.map p.subtype (I • ⊤) = I • p := by
   rw [← Submodule.comap_subtype_smul, map_comap_eq_self]
-  simp only [range_subtype]
-  exact smul_le_right
+  simpa only [range_subtype] using smul_le_right
 
 lemma ideal_smul_lt_of_ne_bot {I : Ideal R} (p : Submodule R M)
     (q : { q : Submodule R p // (I • ⊤ : Submodule R p) ≤ q}) (h : q ≠ ⊥) :
