@@ -439,49 +439,6 @@ private theorem carrierAverage_mass_le_defect_plus_variance
         simp [Dint, V, u, I]
         ring
 
-private theorem carrierPoint_mass_le_defect_plus_variance
-    {N : Nat} (k : Fin N) {L : Nat} (p : Fin L -> ℂ)
-    {c u : ℂ} (hc : c ≠ 0) :
-    arcLength (carrierArc N k) * ‖u‖ ^ 2 <=
-      2 * Crot *
-          arcIntegral (carrierArc N k)
-            (fun x => (‖c + bandPoly N p x‖ - ‖c‖) ^ 2) +
-        2 * Crot *
-          arcIntegral (carrierArc N k)
-            (fun x => ‖slowBandPoly p x - u‖ ^ 2) := by
-  let I : CircleArc := carrierArc N k
-  let A : ℝ := arcIntegral I
-    (fun x => (‖c + circleChar N x * u‖ - ‖c‖) ^ 2)
-  let Dint : ℝ := arcIntegral I
-    (fun x => (‖c + bandPoly N p x‖ - ‖c‖) ^ 2)
-  let V : ℝ := arcIntegral I
-    (fun x => ‖slowBandPoly p x - u‖ ^ 2)
-  have hrot : arcLength I * ‖u‖ ^ 2 <= Crot * A := by
-    simpa [I, A] using
-      constantCenter_fastRotate_carrierArc_sq_le_defectSq
-        (N := N) k (c := c) (u := u) hc
-  have hsafe :
-      (1 / 2) * A - V <= Dint := by
-    have h :=
-      defect_setIntegral_safe_carrier_average
-        (arcSet I) (fun _ : Circle => c) continuous_const N p u
-    exact h
-  have hA : A <= 2 * Dint + 2 * V := by nlinarith
-  calc
-    arcLength (carrierArc N k) * ‖u‖ ^ 2
-        <= Crot * A := by simpa [I] using hrot
-    _ <= Crot * (2 * Dint + 2 * V) :=
-        mul_le_mul_of_nonneg_left hA (le_of_lt Crot_pos)
-    _ =
-        2 * Crot *
-            arcIntegral (carrierArc N k)
-              (fun x => (‖c + bandPoly N p x‖ - ‖c‖) ^ 2) +
-          2 * Crot *
-            arcIntegral (carrierArc N k)
-              (fun x => ‖slowBandPoly p x - u‖ ^ 2) := by
-        simp [Dint, V, I]
-        ring
-
 private theorem const_center_abs_defect_eq_norm_mul_rho
     {c w : ℂ} (hc : c ≠ 0) :
     |‖c + w‖ - ‖c‖| = ‖c‖ * FockSPR.rho (c⁻¹ * w) := by

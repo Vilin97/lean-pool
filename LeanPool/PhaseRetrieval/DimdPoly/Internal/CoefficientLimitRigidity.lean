@@ -803,10 +803,6 @@ private def coefficientControlSet_wip
     Finset (Idx d) :=
   E ∪ F.support
 
-private def nearBlocks_wip {d : Nat} (j : Idx d) (M : Nat) : Finset (Idx d) :=
-  (Fintype.piFinset fun q : Fin d => Finset.range (j q + M + 1)).filter fun ℓ =>
-    Hermite1DimdLEAN.blockDistance j ℓ <= M
-
 private theorem norm_smul_pkappa_complex_wip
     {d : Nat} {kappa : MultiIndex d} (c : ℂ) (F : Pkappa d kappa) :
     ‖c • F‖ = ‖c‖ * ‖F‖ := by
