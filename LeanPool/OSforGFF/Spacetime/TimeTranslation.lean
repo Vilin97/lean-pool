@@ -582,8 +582,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
           have h1 : (1 + ‖w‖) ^ k ≤ 2 ^ k := by
             apply pow_le_pow_left₀ (by linarith [norm_nonneg w])
             linarith
-          simp only [max_eq_left (pow_le_one₀ (norm_nonneg w) hw), mul_one]
-          exact h1
+          simpa only [max_eq_left (pow_le_one₀ (norm_nonneg w) hw), mul_one] using h1
         · -- ‖w‖ > 1 case: (1 + ‖w‖)^k ≤ (2‖w‖)^k = 2^k * ‖w‖^k = 2^k * max(1, ‖w‖^k)
           push Not at hw
           have h1 : 1 + ‖w‖ ≤ 2 * ‖w‖ := by linarith
@@ -592,8 +591,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
             exact h1
           simp only [mul_pow] at h2
           have h3 : 1 ≤ ‖w‖ ^ k := one_le_pow₀ hw.le
-          simp only [max_eq_right h3]
-          exact h2
+          simpa only [max_eq_right h3] using h2
       -- Use seminorm bounds
       have h_S0 : ‖iteratedFDeriv ℝ (n + 1) f w‖ ≤ S_0 := by
         have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f w

@@ -646,8 +646,7 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
       · -- Interior case: ‖z‖ > R₀
         have h_strict : ‖z‖ > R₀ := lt_of_le_of_ne hz (Ne.symm h_boundary)
         have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
-          simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
-          exact h_strict
+          simpa only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] using h_strict
         rw [indicator_of_mem hmem, mul_one]
         exact hK_decay z hz
     · exact ⟨M, fun z => by rw [Complex.norm_real]; exact hM z⟩

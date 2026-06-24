@@ -180,8 +180,7 @@ theorem gaussian_pairing_product_integrable_free_2point
     -- Need to prove 2⁻¹ + 2⁻¹ = 1⁻¹, i.e., 1/2 + 1/2 = 1
     apply ENNReal.HolderTriple.mk
     -- Use the fact that inv_one gives us 1⁻¹ = 1
-    simp only [inv_one]
-    exact ENNReal.inv_two_add_inv_two
+    simpa only [inv_one] using ENNReal.inv_two_add_inv_two
   have h_ac_bd : Integrable (fun ω => distributionPairing ω φRe * distributionPairing ω ψRe -
     distributionPairing ω φIm * distributionPairing ω ψIm)
                    (gaussianFreeFieldFree m).toMeasure := by

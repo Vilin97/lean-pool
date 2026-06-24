@@ -884,8 +884,7 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     -- F α p = f(p.1) * C_α(p.1, p.2) * conj(g(p.2))
     -- Each factor is AEStronglyMeasurable, so their product is too
     filter_upwards [self_mem_nhdsWithin] with α hα
-    simp only [F]
-    exact aestronglyMeasurable_bilinear_prod
+    simpa only [F] using aestronglyMeasurable_bilinear_prod
       (aestronglyMeasurable_freeCovariance_regulated α (Set.mem_Ioi.mp hα) m hm)
   -- Apply DCT on product space
   have h_prod_tendsto := MeasureTheory.tendsto_integral_filter_of_dominated_convergence

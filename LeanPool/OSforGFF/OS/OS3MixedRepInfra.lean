@@ -1959,8 +1959,7 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
       intro j
       cases j using Fin.cases with
       | zero =>
-        simp only [Fin.cons_zero]
-        exact continuous_fst
+        simpa only [Fin.cons_zero] using continuous_fst
       | succ j =>
         simp only [Fin.cons_succ]
         exact (PiLp.continuous_apply 2 _ j).comp continuous_snd
@@ -2027,8 +2026,7 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     intro t
     by_cases ht : 0 < t
     · have h1 : G t ≤ C_sp * t := h_spatial t ht
-      simp only [max_eq_left (le_of_lt ht)]
-      exact h1
+      simpa only [max_eq_left (le_of_lt ht)] using h1
     · push Not at ht
       have h1 : G t = 0 := hG_zero t ht
       simp only [h1, max_eq_right ht, mul_zero, le_refl]
@@ -2455,8 +2453,7 @@ theorem fubini_s_ksp_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
         -- Apply F_norm_bound_via_linear_vanishing with the obtained constant
         have h_bound := h_F_bound s hs' k_sp
         -- dominateG equals C * s^(3/2) * exp(-s*(‖k‖² + m²)) for s > 0
-        simp only [G, dominateG, hs', ↓reduceIte]
-        exact h_bound
+        simpa only [G, dominateG, hs', ↓reduceIte] using h_bound
       · -- Measurability: {p | ‖F p‖ ≤ G p} is measurable
         apply measurableSet_le
         · -- ‖F‖ is measurable

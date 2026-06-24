@@ -471,8 +471,7 @@ lemma freeCovarianceBessel_pos (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x
     0 < freeCovarianceBessel m x y := by
   unfold freeCovarianceBessel
   have hr : ‖x - y‖ ≠ 0 := by
-    simp only [ne_eq, norm_eq_zero, sub_eq_zero]
-    exact hxy
+    simpa only [ne_eq, norm_eq_zero, sub_eq_zero] using hxy
   simp only [hr, ↓reduceIte]
   apply mul_pos
   · apply div_pos hm
