@@ -325,47 +325,6 @@ private theorem evalPkappa_smul_real_wip
       (t : ℂ) * (H alpha * Phi kappa alpha z)
     ring
 
-private theorem annulusMass_ofPkappa_eq_hermite_annulusMass_coeff_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (j : Idx d) (F : Pkappa d kappa) :
-    annulusMass j (ofPkappa kappa F) =
-      Hermite1DimdLEAN.annulusMass j (Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩) := by
-  classical
-  let _ := hd
-  have hgauss : gammaD d = Hermite1DimdLEAN.gaussianMeasure d := by
-    unfold gammaD Hermite1DimdLEAN.gaussianMeasure
-    congr 1
-  have hleft :
-      annulusMass j (ofPkappa kappa F) =
-        ∫ z : Cd d,
-          if z ∈ productAnnulus j then ‖Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩ z‖ ^ 2 else 0
-          ∂ Hermite1DimdLEAN.gaussianMeasure d := by
-    simp [annulusMass, hgauss,
-      toFun_ofPkappa_wip kappa F, evalPkappa_eq_evalHermiteSum_coeff_wip kappa F,
-      Set.indicator]
-  have hright :
-      Hermite1DimdLEAN.annulusMass j (Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩) =
-        ∫ z : Cd d,
-          if z ∈ productAnnulus j then ‖Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩ z‖ ^ 2 else 0
-          ∂ Hermite1DimdLEAN.gaussianMeasure d := by
-    unfold Hermite1DimdLEAN.annulusMass
-    change
-      (∫ z : Cd d,
-          if z ∈ productAnnulus j then ‖Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩ z‖ ^ 2 else 0
-          ∂ Hermite1DimdLEAN.gaussianMeasure d) =
-        (∫ z : Cd d,
-          if z ∈ productAnnulus j then ‖Hermite1DimdLEAN.evalHermiteSum kappa ⟨F⟩ z‖ ^ 2 else 0
-          ∂ Hermite1DimdLEAN.gaussianMeasure d)
-    simp [productAnnulus]
-  rw [hleft, hright]
-
-private theorem hermiteNormSq_eq_norm_sq_coeff_wip
-    {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) :
-    Hermite1DimdLEAN.hermiteNormSq kappa ⟨F⟩ = ‖F‖ ^ 2 := by
-  rw [norm_sq_eq_sum_coeff_wip]
-  simpa [Hermite1DimdLEAN.FiniteHermiteSum.support, coeffPkappa] using
-    (Hermite1DimdLEAN.finiteParseval kappa ⟨F⟩)
-
 private theorem finite_eval_sum_norm_le_wip
     {d : Nat} (kappa : MultiIndex d) (E : Finset (Idx d))
     (a : Idx d -> ℂ) (z : Cd d) :
@@ -778,14 +737,6 @@ private theorem truncateFinset_ofPkappa_apply_wip
   · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
   · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
 
-private theorem farPart_apply_coeff_wip
-    {d : Nat} (kappa : MultiIndex d) (E : Finset (Idx d))
-    (H : Pkappa d kappa) (alpha : Idx d) :
-    (H - truncateFinset E (ofPkappa kappa H)) alpha = if alpha ∈ E then 0 else H alpha := by
-  by_cases h : alpha ∈ E
-  · simp [truncateFinset_ofPkappa_apply_wip kappa E H alpha, h]
-  · simp [truncateFinset_ofPkappa_apply_wip kappa E H alpha, h]
-
 private theorem pkappaInner_eq_sum_right_support_wip
     {d : Nat} {kappa : MultiIndex d} (G F : Pkappa d kappa) :
     pkappaInner G F = Finset.sum F.support (fun alpha => G alpha * star (F alpha)) := by
@@ -948,43 +899,6 @@ private theorem mem_nearLowBlocks_wip
       have hdist' : Nat.dist (ℓ q) (j q) <= M := by simpa [Nat.dist_comm] using hqdist
       exact le_trans htri (Nat.add_le_add_left hdist' _)
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le hidx_upper)
-
-private theorem mem_nearLowCoeffSet_wip
-    {d : Nat} (J M : Nat) (alpha : Idx d) :
-    alpha ∈ nearLowCoeffSet_wip (d := d) J M ↔
-      ∃ j ∈ lowAnnuli d J,
-        Hermite1DimdLEAN.blockDistance j (Hermite1DimdLEAN.blockIndexMulti alpha) <= M := by
-  constructor
-  · intro h
-    rw [nearLowCoeffSet_wip, Finset.mem_biUnion] at h
-    rcases h with ⟨ℓ, hℓ, hα⟩
-    rcases (mem_nearLowBlocks_wip (J := J) (M := M) ℓ).mp hℓ with ⟨j, hj, hjdist⟩
-    have hblock : Hermite1DimdLEAN.blockIndexMulti alpha = ℓ :=
-      (mem_coeffBlockFinset_wip ℓ alpha).mp hα
-    exact ⟨j, hj, by simpa [hblock] using hjdist⟩
-  · rintro ⟨j, hj, hjdist⟩
-    rw [nearLowCoeffSet_wip, Finset.mem_biUnion]
-    refine ⟨Hermite1DimdLEAN.blockIndexMulti alpha, ?_, ?_⟩
-    · exact
-        (mem_nearLowBlocks_wip (J := J) (M := M) (Hermite1DimdLEAN.blockIndexMulti alpha)).mpr
-          ⟨j, hj, hjdist⟩
-    · exact
-        (mem_coeffBlockFinset_wip (Hermite1DimdLEAN.blockIndexMulti alpha) alpha).mpr rfl
-
-private theorem remainderPart_eq_self_of_support_far_coeff_wip
-    {d : Nat} (kappa : MultiIndex d) (j : Idx d) (M : Nat)
-    (F : Pkappa d kappa)
-    (hfar : ∀ alpha ∈ F.support,
-      M < Hermite1DimdLEAN.blockDistance j (Hermite1DimdLEAN.blockIndexMulti alpha)) :
-    Hermite1DimdLEAN.remainderPart j M ⟨F⟩ = ⟨F⟩ := by
-  unfold Hermite1DimdLEAN.remainderPart
-  congr
-  ext alpha
-  by_cases hα : alpha ∈ F.support
-  · have hdist := hfar alpha hα
-    simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support, hdist]
-  · simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support,
-      Finsupp.notMem_support_iff.mp hα]
 
 private theorem norm_smul_pkappa_complex_wip
     {d : Nat} {kappa : MultiIndex d} (c : ℂ) (F : Pkappa d kappa) :
@@ -1832,62 +1746,12 @@ private lemma productAnnulus_eq_of_mem_coeff_wip
     have hlt_real : ((j q : Nat) : ℝ) + 1 <= l q := by exact_mod_cast hlt'
     linarith
 
-private lemma sum_indicator_productAnnulus_le_coeff_wip
-    {d : Nat} (s : Finset (Idx d)) (z : Cd d) (a : ℝ)
-    (ha : 0 <= a) :
-    ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : Cd d => a) z <= a := by
-  classical
-  by_cases hs : ∃ j ∈ s, z ∈ productAnnulus j
-  · rcases hs with ⟨j0, hj0s, hj0z⟩
-    have hsum :
-        ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : Cd d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : Cd d => a) z := by
-      exact Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := by
-          intro hzj
-          have heq := productAnnulus_eq_of_mem_coeff_wip hzj hj0z
-          exact hjne heq
-        simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hj hzj
-      exact hs ⟨j, hj, hzj⟩
-    rw [Finset.sum_eq_zero]
-    · exact ha
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
-
 private def lowAnnulusEval_wip
     {d : Nat} (kappa : MultiIndex d) (J : Nat) (F : Pkappa d kappa) :
     Cd d -> ℂ :=
   fun z =>
     ∑ j ∈ lowAnnuli d J,
       Set.indicator (productAnnulus j) (fun w : Cd d => evalPkappa kappa F w) z
-
-private theorem aestronglyMeasurable_lowAnnulusEval_wip
-    {d : Nat} (kappa : MultiIndex d) (J : Nat) (F : Pkappa d kappa) :
-    MeasureTheory.AEStronglyMeasurable
-      (lowAnnulusEval_wip kappa J F) (gammaD d) := by
-  unfold lowAnnulusEval_wip
-  have hsum :
-      MeasureTheory.AEStronglyMeasurable
-        ((∑ j ∈ lowAnnuli d J,
-          Set.indicator (productAnnulus j)
-            (fun w : Cd d => evalPkappa kappa F w)) : Cd d -> ℂ)
-        (gammaD d) := Finset.aestronglyMeasurable_sum
-      (μ := gammaD d)
-      (M := ℂ)
-      (f := fun j : Idx d =>
-        Set.indicator (productAnnulus j) (fun w : Cd d => evalPkappa kappa F w))
-      (lowAnnuli d J)
-      (by
-        intro j hj
-        exact ((continuous_evalPkappa_coeff_wip kappa F).measurable.indicator
-          (measurableSet_productAnnulus_coeff_wip j)).aestronglyMeasurable)
-  refine hsum.congr ?_
-  filter_upwards with z
-  simp
 
 private theorem lowAnnulusEval_norm_sq_eq_sum_indicator_wip
     {d : Nat} (kappa : MultiIndex d) (J : Nat) (F : Pkappa d kappa)
@@ -1942,60 +1806,6 @@ private theorem lowAnnulusEval_norm_sq_eq_sum_indicator_wip
       intro j hj
       simp [Set.indicator, hzero j hj]
     simp [lowAnnulusEval_wip, hsum_eval, hsum_norm]
-
-private theorem integrable_lowAnnulusEval_norm_sq_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (J : Nat)
-    (F : Pkappa d kappa) :
-    MeasureTheory.Integrable
-      (fun z : Cd d => ‖lowAnnulusEval_wip kappa J F z‖ ^ 2)
-      (gammaD d) := by
-  have hIntEval :
-      MeasureTheory.Integrable
-        (fun z : Cd d => ‖evalPkappa kappa F z‖ ^ 2) (gammaD d) :=
-    integrable_evalPkappa_sq_coeff_wip hd kappa F
-  have hIntSum :
-      MeasureTheory.Integrable
-        (fun z : Cd d =>
-          ∑ j ∈ lowAnnuli d J,
-            Set.indicator (productAnnulus j)
-              (fun w : Cd d => ‖evalPkappa kappa F w‖ ^ 2) z)
-        (gammaD d) := by
-    refine MeasureTheory.integrable_finsetSum _ ?_
-    intro j hj
-    exact hIntEval.indicator (measurableSet_productAnnulus_coeff_wip j)
-  exact hIntSum.congr (Filter.Eventually.of_forall fun z =>
-    (lowAnnulusEval_norm_sq_eq_sum_indicator_wip kappa J F z).symm)
-
-private theorem lowAnnulusEval_integral_eq_lowAnnulusMass_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (J : Nat)
-    (F : Pkappa d kappa) :
-    (∫ z : Cd d, ‖lowAnnulusEval_wip kappa J F z‖ ^ 2 ∂ gammaD d) =
-      lowAnnulusMass J (ofPkappa kappa F) := by
-  have hIntEval :
-      MeasureTheory.Integrable
-        (fun z : Cd d => ‖evalPkappa kappa F z‖ ^ 2) (gammaD d) :=
-    integrable_evalPkappa_sq_coeff_wip hd kappa F
-  calc
-    (∫ z : Cd d, ‖lowAnnulusEval_wip kappa J F z‖ ^ 2 ∂ gammaD d)
-        = ∫ z : Cd d,
-            ∑ j ∈ lowAnnuli d J,
-              Set.indicator (productAnnulus j)
-                (fun w : Cd d => ‖evalPkappa kappa F w‖ ^ 2) z ∂ gammaD d := by
-          refine MeasureTheory.integral_congr_ae ?_
-          filter_upwards with z
-          exact lowAnnulusEval_norm_sq_eq_sum_indicator_wip kappa J F z
-    _ = ∑ j ∈ lowAnnuli d J,
-          ∫ z : Cd d,
-            Set.indicator (productAnnulus j)
-              (fun w : Cd d => ‖evalPkappa kappa F w‖ ^ 2) z ∂ gammaD d := by
-          rw [MeasureTheory.integral_finsetSum]
-          intro j hj
-          exact hIntEval.indicator (measurableSet_productAnnulus_coeff_wip j)
-    _ = lowAnnulusMass J (ofPkappa kappa F) := by
-          unfold lowAnnulusMass annulusMass
-          refine Finset.sum_congr rfl ?_
-          intro j hj
-          simp [toFun_ofPkappa_wip kappa F]
 
 private theorem finite_head_bad_limit_eval_tendsto_wip
     {d : Nat} {kappa : MultiIndex d}

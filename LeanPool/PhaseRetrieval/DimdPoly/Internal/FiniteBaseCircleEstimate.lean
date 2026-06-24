@@ -4148,38 +4148,6 @@ private theorem goodCarrier_base_mass_le_actual_defect_plus_measure_errors
               arcLength (carrierArc N k) ^ 2) *
             μCircle.real (arcSet (carrierArc N k))) := by simp [A, E, Vbd]
 
-private theorem goodCarrier_base_mass_le_actual_defect_plus_measure_errors_of_arcLength_slope
-    {D N L : Nat}
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta theta : ℝ} (hdelta_pos : 0 < delta)
-    (htheta_nonneg : 0 <= theta) (htheta_le : theta <= 1 / 2)
-    {k : Fin N} (hgood :
-      k ∉ badCarrierIndices N (polyOfCoeff q).roots delta)
-    (hslope :
-      (∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ)) *
-          arcLength (carrierArc N k) <=
-        theta *
-          (‖(polyOfCoeff q).leadingCoeff‖ *
-            delta ^ (polyOfCoeff q).roots.card)) :
-    arcLength (carrierArc N k) *
-        ‖slowBandPoly p (carrierBase k)‖ ^ 2 <=
-      4 * Crot *
-          ∫ x in arcSet (carrierArc N k),
-            (‖lowPoly q x + bandPoly N p x‖ - ‖lowPoly q x‖) ^ 2 ∂ μCircle +
-        4 * Crot *
-          ∫ x in arcSet (carrierArc N k),
-            (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle +
-        2 * Crot *
-          ((((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-              arcLength (carrierArc N k) ^ 2) *
-            μCircle.real (arcSet (carrierArc N k))) := by
-  exact goodCarrier_base_mass_le_actual_defect_plus_measure_errors
-    (q := q) hq p hdelta_pos htheta_nonneg htheta_le hgood
-    (goodCarrier_relative_oscillation_of_absolute_bound q
-      hdelta_pos htheta_nonneg hgood
-      (goodCarrier_absolute_oscillation_of_chord_bound q
-        (carrierArc_chord_le_length k) hslope))
-
 private theorem norm_slowBandPoly_le_sum_norm {L : Nat}
     (p : Fin L -> ℂ) (x : Circle) :
     ‖slowBandPoly p x‖ <= ∑ m : Fin L, ‖p m‖ := by
@@ -4265,28 +4233,6 @@ private theorem bandPoly_setIntegral_norm_sq_le_measure
     MeasureTheory.integral_nonneg fun x => sq_nonneg _
   rw [Real.norm_eq_abs, abs_of_nonneg hnonneg] at hbound
   simpa [C] using hbound
-
-private theorem bandPoly_setIntegral_theta_error_le_measure
-    (s : Set Circle) (N : Nat) {L : Nat} (p : Fin L -> ℂ) {theta : ℝ} :
-    (∫ x in s, (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle) <=
-      (4 * theta) ^ 2 *
-        (((L : ℝ) * circleL2Sq (bandPoly N p)) * μCircle.real s) := by
-  have hmass := bandPoly_setIntegral_norm_sq_le_measure s N p
-  have hcoef_nonneg : 0 <= (4 * theta) ^ 2 := sq_nonneg _
-  calc
-    (∫ x in s, (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle)
-        =
-      ∫ x in s, (4 * theta) ^ 2 * ‖bandPoly N p x‖ ^ 2 ∂ μCircle := by
-        congr
-        ext x
-        ring
-    _ =
-      (4 * theta) ^ 2 *
-        ∫ x in s, ‖bandPoly N p x‖ ^ 2 ∂ μCircle := by rw [MeasureTheory.integral_const_mul]
-    _ <=
-      (4 * theta) ^ 2 *
-        (((L : ℝ) * circleL2Sq (bandPoly N p)) * μCircle.real s) :=
-        mul_le_mul_of_nonneg_left hmass hcoef_nonneg
 
 private theorem carrierAverage_mass_le_slow_l2
     {N L : Nat} (k : Fin N) (p : Fin L -> ℂ) :
