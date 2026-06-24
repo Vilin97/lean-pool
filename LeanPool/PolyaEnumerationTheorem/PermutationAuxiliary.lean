@@ -127,8 +127,7 @@ lemma forall_exists_lt_perm_pow_eq_perm_pow {n : ℕ} {f : Equiv.Perm X} {x : X}
           (Int.mul_ediv_add_emod k _).symm]
     rw [zpow_add, zpow_mul]
     have hint_h : ((f : Equiv.Perm X) ^ ((n + 1) : ℤ)) x = x := by
-      rw [show ((n + 1) : ℤ) = ((n + 1 : ℕ) : ℤ) from by push_cast; ring, zpow_natCast]
-      exact h
+      rwa [show ((n + 1) : ℤ) = ((n + 1 : ℕ) : ℤ) from by push_cast; ring, zpow_natCast]
     have hfix : ∀ q : ℤ, ((f ^ ((n + 1) : ℤ)) ^ q) x = x := by
       intro q
       induction q with
