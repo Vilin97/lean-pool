@@ -433,9 +433,7 @@ theorem no_algorithm_p_lt_one_fifth :
       calc
         (1 : ENNReal) = (volume : Measure (Samples 5)) Set.univ := hone.symm
         _ ≤ ∑' i : Fin 5, (volume : Measure (Samples 5)) (edgeEvent alg i) := hle
-    have hle'' := hle'
-    rw [hsum] at hle''
-    exact hle''
+    rwa [hsum] at hle'
   have hbound : (1 / 5 : ENNReal) ≤ ClassicalAlgorithm.p alg := by
     have hineq' : (1 : ENNReal) ≤ ClassicalAlgorithm.p alg * (5 : ENNReal) := by
       simpa [mul_comm, mul_left_comm, mul_assoc] using hineq
