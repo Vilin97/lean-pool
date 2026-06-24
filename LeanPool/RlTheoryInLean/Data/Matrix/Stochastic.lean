@@ -458,28 +458,17 @@ theorem smat_contraction_in_simplex
         _ = (1 - ε) * a := by rw [sub_mul]
         _ = 1 := by unfold a; simp [hnonzero]
     let K : ℝ≥0 := ⟨1 - ε, hε0⟩
-    refine ⟨?K, ?hKpos, ?hK⟩
-    case K => exact K
-    case hKpos =>
-      unfold K;
-      have : 0 < 1 - ε := by linarith
-      exact_mod_cast this
+    refine ⟨K, by unfold K; exact_mod_cast show (0:ℝ) < 1 - ε by linarith, ?hK⟩
     case hK =>
-      unfold ContractingWith
-      unfold LipschitzWith
-      unfold smatAsOperator
+      unfold ContractingWith LipschitzWith smatAsOperator
       refine ⟨?hKlt1, ?hLip⟩
       case hLip =>
         intro x y
         simp only [Set.coe_setOf, Set.mem_setOf_eq]
-        have hx_sum : ∑ i, x.val.ofLp i = 1 := (x.property).rowsum
-        have hy_sum : ∑ i, y.val.ofLp i = 1 := (y.property).rowsum
         have hxB : x.val.ofLp ᵥ* broadcast ν = ν := by
-          funext j
-          simp [vecMul_broadcast, hx_sum]
+          funext j; simp [vecMul_broadcast, (x.property).rowsum]
         have hyB : y.val.ofLp ᵥ* broadcast ν = ν := by
-          funext j
-          simp [vecMul_broadcast, hy_sum]
+          funext j; simp [vecMul_broadcast, (y.property).rowsum]
         have hxP : x.val.ofLp ᵥ* P =
           ε • (x.val.ofLp ᵥ* broadcast ν) + (1 - ε) • (x.val.ofLp ᵥ* Q) := by
           rw [h_decomp]
@@ -509,9 +498,7 @@ theorem smat_contraction_in_simplex
               simp only [diff_eq, ← WithLp.toLp_smul]
             rw [h, nnnorm_smul]
             have hK : ‖(1 - ε : ℝ)‖₊ = K := by
-              apply NNReal.eq
-              rw [coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hε0]
-              rfl
+              apply NNReal.eq; rw [coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hε0]; rfl
             rw [hK]
             have hLipQ := @smat_nonexpansive_in_l1 S _ Q hQ x.val.ofLp y.val.ofLp
             exact mul_le_mul_right hLipQ K
@@ -527,8 +514,7 @@ theorem smat_contraction_in_simplex
         _ = K * edist x y := by rfl
       case hKlt1 =>
         unfold K
-        have : 1 - ε < 1 := by linarith
-        exact this
+        exact show 1 - ε < 1 by linarith
 
 end contraction
 
