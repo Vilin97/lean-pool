@@ -466,8 +466,7 @@ private lemma tendsto_exp_slope' (A : ℝ) :
       simpa [zero_mul, Real.exp_zero, Function.comp_def] using this
     have h2 : HasDerivAt (fun _ : ℝ => (1 : ℝ)) 0 0 := hasDerivAt_const 0 1
     have h := h1.sub h2
-    rw [sub_zero] at h
-    exact h
+    rwa [sub_zero] at h
   have := hd.tendsto_slope_zero_right
   simp only [zero_add, zero_mul, Real.exp_zero, sub_self, sub_zero] at this
   exact this.congr fun t => by rw [smul_eq_mul, ← div_eq_inv_mul]

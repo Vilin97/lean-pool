@@ -336,8 +336,7 @@ theorem memLp_prod_of_uniform_slicewise_bound (μ : Measure Ω) [SFinite μ]
         simp [Real.volume_Icc, ENNReal.ofReal_ne_top]
       exact integrableOn_const h_vol
   -- Now use the integrability to get MemLp 2
-  rw [memLp_two_iff_integrable_sq_norm h_meas]
-  exact h_sq_int
+  rwa [memLp_two_iff_integrable_sq_norm h_meas]
 
 /-! ## Time Average is in L² (Theorem 2)
 
@@ -917,8 +916,7 @@ private lemma l2cov_term_finite {Ω : Type*} [MeasurableSpace Ω]
   conv_lhs => rw [show (fun ω => ∫⁻ s, (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2 ∂ν) =
     (fun ω => ∫⁻ s, (fun z : Ω × ℝ => (↑‖A z.2 z.1 - c‖₊ : ℝ≥0∞) ^ 2) (ω, s) ∂ν)
     from rfl]
-  rw [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
-  exact h_both_finite
+  rwa [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
 
 /-- Term-by-term finiteness used in `L2_process_covariance_fubini_integrable` (factor out the
 first `ℝ`-coordinate via Tonelli).
@@ -937,8 +935,7 @@ private lemma l2cov_term2_finite {Ω : Type*} [MeasurableSpace Ω]
   conv_lhs => rw [show (fun ω => ∫⁻ u, (↑‖A u ω - c‖₊ : ℝ≥0∞) ^ 2 ∂ν) =
     (fun ω => ∫⁻ s, (fun z : Ω × ℝ => (↑‖A z.2 z.1 - c‖₊ : ℝ≥0∞) ^ 2) (ω, s) ∂ν)
     from rfl]
-  rw [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
-  exact h_both_finite
+  rwa [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
 
 /-- Inner Tonelli rewrite for `L2_process_covariance_fubini_integrable`,
 factoring out the first coordinate. -/

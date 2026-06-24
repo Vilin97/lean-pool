@@ -168,8 +168,7 @@ lemma gaussian_rhs_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
           (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) := by
         funext z₀
         ring
-      rw [hfun]
-      exact hbase
+      rwa [hfun]
   · exact analyticOnNhd_const
 
 omit [Fact (0 < m)] in
@@ -192,8 +191,7 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
           (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) := by
         funext z₁
         ring
-      rw [hfun]
-      exact hbase
+      rwa [hfun]
   · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m g g : ℂ)))
     exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
 
@@ -519,6 +517,4 @@ theorem gff_complex_generating (m : ℝ) [Fact (0 < m)] :
 -/
 theorem isGaussianGJ_gaussianFreeField_free (m : ℝ) [Fact (0 < m)] :
     isGaussianGJ (gaussianFreeFieldFree m) := by
-  constructor
-  · exact gaussianFreeField_free_centered m
-  · exact fun J => gff_complex_generating m J
+  exact ⟨gaussianFreeField_free_centered m, fun J => gff_complex_generating m J⟩

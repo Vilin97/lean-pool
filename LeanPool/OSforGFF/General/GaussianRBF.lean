@@ -143,8 +143,7 @@ lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ
       simp only [star_def, Complex.conj_ofReal, Complex.mul_re, Complex.ofReal_re,
                  Complex.ofReal_im, mul_zero, sub_zero, him]
       ring
-    rw [h_eq]
-    exact h
+    rwa [h_eq]
 
 /-- Step 3b: Exponential of a symmetric real-valued PD kernel is PD.
     Uses the Hadamard series machinery from HadamardExp.lean (same as OS3 proof).

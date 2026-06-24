@@ -154,8 +154,7 @@ private lemma besselK1_integrand_tail_integral_le (z : ℝ) (hz : 0 < z) :
     have h1 : HasDerivAt (fun s => -z * exp s / 2) (-z / 2 * exp t) t := by
       have h := (hasDerivAt_exp t).const_mul (-z / 2)
       have heq : (fun s => -z * exp s / 2) = fun y => -z / 2 * exp y := by funext s; ring
-      rw [heq]
-      exact h
+      rwa [heq]
     have h2 : HasDerivAt (fun s => exp (-z * exp s / 2))
         (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
       (hasDerivAt_exp _).comp t h1
@@ -363,8 +362,7 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
       have h_cosh_le : cosh t ≤ cosh 1 := by
         -- cosh is increasing on [0,∞), so for 0 ≤ t ≤ 1, cosh t ≤ cosh 1
         rw [cosh_le_cosh]
-        rw [abs_of_nonneg ht0, abs_of_pos (by linarith : (0:ℝ) < 1)]
-        exact ht1
+        rwa [abs_of_nonneg ht0, abs_of_pos (by linarith : (0:ℝ) < 1)]
       calc exp (-z * cosh t) * cosh t ≤ 1 * cosh t := by nlinarith [cosh_pos t]
         _ ≤ cosh 1 := by simp [h_cosh_le]
     have h_meas_finite : volume (Icc (0:ℝ) 1) < ⊤ := measure_Icc_lt_top

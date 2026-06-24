@@ -208,8 +208,7 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         ring
       rw [h1] at hql_c hbd_c
-      rw [(hql_c.trans h2).symm]
-      exact hbd_c
+      rwa [(hql_c.trans h2).symm]
     -- Use the bound to prove ContinuousWithinAt
     change Filter.Tendsto ω (nhdsWithin (d n) (Set.range d)) (nhds (ω (d n)))
     rw [Metric.tendsto_nhds]

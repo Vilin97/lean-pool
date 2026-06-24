@@ -165,8 +165,7 @@ theorem schwinger_two_point_decay_bound (m : ℝ) [Fact (0 < m)] :
     rw [schwingerTwoPointFunction_eq_freeCovarianceKernel m (x - y) h]
     rw [Real.norm_eq_abs]
     have := hC_bound x y
-    rw [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
-    exact this
+    rwa [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
 
 /-- The abstract two-point Schwinger function is measurable.
     This uses the bridge lemma to connect to the concrete GFF definition.

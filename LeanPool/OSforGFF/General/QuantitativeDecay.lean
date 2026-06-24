@@ -712,8 +712,7 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
         have h_nonneg : 0 ≤ C_poly * (1 + ‖z‖)^(-N) := by
           apply mul_nonneg (le_of_lt hC_poly_pos)
           exact Real.rpow_nonneg (by linarith [norm_nonneg z]) _
-        rw [Real.norm_eq_abs, abs_of_nonneg h_nonneg]
-        exact hb
+        rwa [Real.norm_eq_abs, abs_of_nonneg h_nonneg]
   -- The integral ∫ f(x) K_tail(x - y) dx equals (f ⋆ K_refl)(y)
   have h_conv_eq : ∀ y, ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ) =
       ∫ x, f x * K_refl (y - x) := by

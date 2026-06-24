@@ -840,8 +840,7 @@ theorem deriv_hermiteFunction (n : ℕ) (x : ℝ) :
       (Real.sqrt 2 * (Polynomial.derivative (hermiteR n)).eval (x * Real.sqrt 2) * e +
        (hermiteR n).eval (x * Real.sqrt 2) * (-x * e)) x := by
     have h := hpoly_hasderiv.mul hexp_hasderiv
-    rw [he_def] at h
-    exact h
+    rwa [he_def] at h
   -- Compute HasDerivAt for the full hermiteFunction = c_n * (poly * exp)
   have hfn_eq : hermiteFunction n = fun u =>
       hermiteFunctionNormConst n * ((hermiteR n).eval (u * Real.sqrt 2) * Real.exp (-(u ^ 2) / 2))

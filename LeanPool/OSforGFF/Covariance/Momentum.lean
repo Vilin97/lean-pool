@@ -677,8 +677,7 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
     have h_eq_indicator : h = (Set.Ioi (0:ℝ)).indicator (fun t => Real.exp (-t * m^2)) := by
       ext t
       simp only [Set.indicator, Set.mem_Ioi, hh_def]
-    rw [h_eq_indicator]
-    exact h_indicator
+    rwa [h_eq_indicator]
   -- Step 3: The product g(k) * h(t) is integrable on the product measure
   have hgh_int : Integrable (fun p : SpaceTime × ℝ => g p.1 * h p.2) (volume.prod volume) := by
     exact Integrable.mul_prod hg_int hh_int
@@ -1833,8 +1832,7 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
   have hK1_bound := besselK1_asymptotic (m * r) hmr_ge1
   -- Key step: m/r ≤ m² because r ≥ 1/m (from mr ≥ 1)
   have hr_ge_inv : 1/m ≤ r := by
-    rw [one_div, inv_le_iff_one_le_mul₀ hm, mul_comm]
-    exact hmr_ge1
+    rwa [one_div, inv_le_iff_one_le_mul₀ hm, mul_comm]
   have hm_over_r_le : m / r ≤ m^2 := by
     rw [div_le_iff₀ hr_pos, sq]
     calc m = m * 1 := by ring

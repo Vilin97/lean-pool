@@ -459,8 +459,7 @@ theorem schwartz_bilinear_prod_integrable
         (volume.prod volume) := by
       have heq : (fun p : E × E => (K_sing (p.1 - p.2) : ℂ) * g (p.2 - a)) =
           (fun p => (K_sing p.1 : ℂ) * g (p.2 - a)) ∘ e := by ext p; rfl
-      rw [heq, he_preserves.integrable_comp_emb e.measurableEmbedding]
-      exact h_prod_Ks_g
+      rwa [heq, he_preserves.integrable_comp_emb e.measurableEmbedding]
     -- Now bound: |f(x) K_sing(x-y) g(y-a)| ≤ Cf * |K_sing(x-y) * g(y-a)|
     have hCf_pos : 0 < max Cf 1 := lt_max_of_lt_right one_pos
     have h_dom : Integrable (fun p : E × E => max Cf 1 * ‖(K_sing (p.1 - p.2) : ℂ) * g (p.2 - a)‖)
@@ -852,8 +851,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
         have hxy_not_sphere : ‖x - y₀‖ ≠ R₀ := by
           intro h
           apply hx_sphere
-          rw [Metric.mem_sphere, dist_eq_norm]
-          exact h
+          rwa [Metric.mem_sphere, dist_eq_norm]
         apply ContinuousAt.comp (g := Complex.ofReal)
         · exact Complex.continuous_ofReal.continuousAt
         · unfold kernelTail

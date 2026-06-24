@@ -735,8 +735,7 @@ private lemma parseval_l1 (f g : V → ℂ) (hf : Integrable f) (hg : Integrable
     Real.continuous_fourierChar hL hf hg
     (ν := volume) (μ := volume) (F := ℂ)
   simp only [smul_eq_mul] at h
-  rw [flip_innerₗ] at h
-  exact h
+  rwa [flip_innerₗ] at h
 
 /-- The Fourier transform of a Gaussian is integrable (it's also a Gaussian). -/
 private lemma ft_gaussian_integrable (t : ℝ) (ht : 0 < t) :

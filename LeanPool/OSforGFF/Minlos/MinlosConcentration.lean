@@ -1023,8 +1023,7 @@ private lemma joint_kernel_bound_finite
       lt_trans (by positivity : (0 : ℝ) < ε_q / (ε_q + η)) h_c_lb
     calc (ν {ω | δ ≤ S ω}).toReal
         ≤ ε_q / (1 - Real.exp (-(σ₀ ^ 2 * δ / 2))) := by
-          rw [le_div_iff₀ h_c_pos, mul_comm]
-          exact h_bound
+          rwa [le_div_iff₀ h_c_pos, mul_comm]
       _ < ε_q / (ε_q / (ε_q + η)) := by
           apply div_lt_div_of_pos_left hε_q (by positivity) h_c_lb
       _ = ε_q + η := by field_simp

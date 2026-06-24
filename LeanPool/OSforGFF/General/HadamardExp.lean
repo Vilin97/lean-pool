@@ -301,8 +301,7 @@ lemma summable_hadamardQuadSeries
     simp [Matrix.mulVec, dotProduct, hadamardPow_apply, div_eq_mul_inv,
       Finset.mul_sum, mul_comm, mul_left_comm, mul_assoc]
   -- Conclude summability via the established equality.
-  rw [h_eq]
-  exact h_outer
+  rwa [h_eq]
 
 /-- The Hadamard-series entrywise exponential preserves positive definiteness.
     Sketch: each Hadamard power (for n ≥ 1) is PD by the Schur product theorem and induction;
@@ -432,8 +431,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
       have h_norm_pos : 0 < x ⬝ᵥ x := by
         -- For real vectors, x ⬝ᵥ x = star x ⬝ᵥ x since star = id on ℝ
         have : x ⬝ᵥ x = star x ⬝ᵥ x := by simp [star]
-        rw [this, Matrix.dotProduct_star_self_pos_iff]
-        exact hx_ne_zero
+        rwa [this, Matrix.dotProduct_star_self_pos_iff]
       exact mul_pos hε h_norm_pos
     have h_expand : x ⬝ᵥ (R + ε • (1 : Matrix ι ι ℝ)).mulVec x =
                     x ⬝ᵥ R.mulVec x + ε * (x ⬝ᵥ x) := by
@@ -535,6 +533,5 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
     -- Convert from regular inner product to star inner product
     simpa [h_star_eq] using h_final
   -- Convert the result back to entrywiseExpHadamardSeries
-  rw [← entrywiseExp_eq_hadamardSeries]
-  exact h_limit_posSemidef_entry
+  rwa [← entrywiseExp_eq_hadamardSeries]
 end OSforGFF

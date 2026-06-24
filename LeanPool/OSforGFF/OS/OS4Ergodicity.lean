@@ -388,8 +388,7 @@ lemma gff_err_sq_integrable (m : ℝ) [Fact (0 < m)] (T : ℝ) (hT : T > 0) (f :
   have h_sq_int : Integrable (fun ω => ‖(1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T,
     A s ω) - EA‖^2) μ := by
     have h_meas := h_diff_L2.1
-    rw [memLp_two_iff_integrable_sq_norm h_meas] at h_diff_L2
-    exact h_diff_L2
+    rwa [memLp_two_iff_integrable_sq_norm h_meas] at h_diff_L2
   -- Goal matches h_sq_int up to notation: smul ↔ mul, and ∫ ω' ... ↔ EA
   have h_EA : ∫ ω' : FieldConfiguration, Complex.exp (distributionPairingℂReal ω' f) ∂μ = EA := by
     simp only [EA, A]

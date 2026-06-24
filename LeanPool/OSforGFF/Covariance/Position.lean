@@ -455,8 +455,7 @@ theorem freeCovarianceℂ_bilinear_smul_left
     simp_rw [show ∀ x y, (0 : TestFunctionℂ) x * (freeCovariance m x y : ℂ) * g y = 0 from
       fun x y => by simp only [show (0 : TestFunctionℂ) x = 0 from rfl, zero_mul]]
     rw [integral_zero, integral_zero]
-  rw [zero_bilinear, add_zero] at h
-  exact h
+  rwa [zero_bilinear, add_zero] at h
 
 /-- Symmetry of the complex bilinear form: swapping arguments gives the same result. -/
 theorem freeCovarianceℂ_bilinear_symm

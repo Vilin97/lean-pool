@@ -2382,8 +2382,7 @@ private lemma schwartz_hermite_completeness_nd (d' : ℕ)
       rw [h_alpha]
       have h_Sf := hermiteCoeffNd_rapidDecay_schwartzMapNd d' a n
       have h_a : a.val n = hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f := rfl
-      rw [h_a] at h_Sf
-      exact h_Sf
+      rwa [h_a] at h_Sf
     exact sub_eq_zero.mp h_sub
   rwa [h_eq] at h_sum
 

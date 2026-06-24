@@ -289,8 +289,7 @@ theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunct
     -- Apply k_integral_after_k0_eval
     have h_k := k_integral_after_k0_eval s hs_pos (timeReflection x - y)
     -- Rewrite using helper lemmas for time and spatial components
-    rw [timeReflection_sub_zero, spatialPart_timeReflection_sub] at h_k
-    exact h_k
+    rwa [timeReflection_sub_zero, spatialPart_timeReflection_sub] at h_k
   -- Step 4: Rearrange the integrand to match fubini_ksp_xy_swap LHS form
   -- Move the constant outside x,y integrals and swap k_sp integrand order
   have h_step3 : ∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *

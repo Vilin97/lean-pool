@@ -587,8 +587,7 @@ lemma schwinger_bound_integrand_integral_xy (s : ℝ) (hs : 0 < s)
   calc
     ∫ p : SpaceTime × SpaceTime, G p
         = ∫ x : SpaceTime, ∫ y : SpaceTime, G (x, y) := by
-            rw [Measure.volume_eq_prod]
-            exact h_prod
+            rwa [Measure.volume_eq_prod]
     _ = ∫ x : SpaceTime, ‖f x‖ * Cf * Real.exp (-s * m^2) := by
           refine integral_congr_ae ?_
           filter_upwards with x

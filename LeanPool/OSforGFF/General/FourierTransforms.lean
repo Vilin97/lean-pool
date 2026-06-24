@@ -696,8 +696,7 @@ theorem fourier_inversion_exp_decay (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
   -- Adjust coefficient
   have h_coeff : (1 / (2 * π) : ℂ) = ((2 * π)⁻¹ : ℝ) := by
     simp only [one_div, Complex.ofReal_inv, Complex.ofReal_mul, Complex.ofReal_ofNat]
-  rw [h_coeff]
-  exact hinv
+  rwa [h_coeff]
 
 /-! ### The Lorentzian Fourier Transform (Main Result)
 

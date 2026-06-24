@@ -652,8 +652,7 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
     -- The RHS is exactly the form of the decay lemma with a = timeShiftConst(t)
     have h_norm_bound := hBound (TimeTranslation.timeShiftConst t)
     -- ‖timeShiftConst(t)‖ = |t| = t for t ≥ 0
-    rw [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
-    exact h_norm_bound
+    rwa [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
   -- Step 6: Construct the final constant
   -- The bound is: |LHS - Ef·Eg| ≤ |Ef| · |Eg| · |e^{S₂} - 1|
   --             ≤ |Ef| · |Eg| · |S₂| · e^{|S₂|}  (by exp bound)
