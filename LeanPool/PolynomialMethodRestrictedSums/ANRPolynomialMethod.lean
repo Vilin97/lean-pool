@@ -459,8 +459,7 @@ private lemma coeff_equivFun_eq_zero_of_totalDegree_lt
     (hP : P.totalDegree < ∑ i, c i) :
     coeff (Finsupp.equivFunOnFinite.symm c) P = 0 := by
   apply MvPolynomial.coeff_eq_zero_of_totalDegree_lt
-  rw [equivFun_symm_support_sum_eq]
-  exact hP
+  rwa [equivFun_symm_support_sum_eq]
 
 /-- The total degree of `∏ a ∈ s, (X i - C a)` is at most `s.card`. -/
 private lemma totalDegree_prod_X_sub_C_le (i : Fin (k + 1)) (s : Finset (ZMod p)) :

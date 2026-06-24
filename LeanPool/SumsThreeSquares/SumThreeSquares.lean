@@ -493,8 +493,7 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
     intro x hx
     unfold S_pre B at hx ⊢
     simp only [Set.mem_preimage, Metric.mem_ball, dist_zero_right] at hx ⊢
-    rw [map_neg, norm_neg]
-    exact hx
+    rwa [map_neg, norm_neg]
   have h_conv : Convex ℝ S_pre :=
     (convex_ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m))).linear_preimage _
   have h_vol : (2 : ENNReal) ^ 3 < MeasureTheory.volume S_pre := by

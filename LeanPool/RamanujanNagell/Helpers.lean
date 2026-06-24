@@ -192,8 +192,7 @@ private lemma N_mul_norm_rem_eq (a b q : R) (hb : b ≠ 0) :
          (QuadraticAlgebra.norm b * QuadraticAlgebra.norm (a - b * q)) =
          QuadraticAlgebra.norm b *
          QuadraticAlgebra.norm (a * star b - ((QuadraticAlgebra.norm b : ℤ) : R) * q) := by
-    rw [← mul_assoc, ← h_sq]
-    exact h_norm
+    rwa [← mul_assoc, ← h_sq]
   exact mul_left_cancel₀ hN_ne this
 
 /-- Smart-rounded quotient. -/
@@ -277,8 +276,7 @@ private lemma natAbs_norm_rem_lt (a : R) {b : R} (hb : b ≠ 0) :
   have h_bd := sixteen_norm_rem_le a b hb
   have hr_lt : QuadraticAlgebra.norm (rem a b) < QuadraticAlgebra.norm b := by linarith
   zify
-  rw [abs_of_nonneg hr_nn, abs_of_nonneg hN_pos.le]
-  exact hr_lt
+  rwa [abs_of_nonneg hr_nn, abs_of_nonneg hN_pos.le]
 
 private lemma norm_mul_left_not_lt (a : R) {b : R} (hb : b ≠ 0) :
     ¬ normMeasure (a * b) < normMeasure a := by
