@@ -4571,21 +4571,14 @@ lemma y_ne_zero_of_E2
   rw [show (|(↑(x : ℕ) : ℤ) ^ 11 - (0 : ℤ) ^ 2| : ℝ) = (↑↑x : ℝ) ^ 11 from by norm_num] at habs_le
   linarith
 
-lemma radical_mul_le (m n : ℕ) (hm : 0 < m) (hn : 0 < n) :
-    Nat.radical (m * n) ≤ Nat.radical m * Nat.radical n := by
-  have hm' : m ≠ 0 := ne_of_gt hm
-  have hn' : n ≠ 0 := ne_of_gt hn
-  have hmn' : m * n ≠ 0 := Nat.mul_ne_zero hm' hn'
-  simpa only [Nat.radical, hmn', ↓reduceIte, hm', hn'] using radical_mul_le_aux m n hm hn
-
 lemma radical_abc_bound (x : ℕ) (Y B : ℕ) (hx : 0 < x) (hY : 0 < Y) (hB : 0 < B) :
     (Nat.radical (Y ^ 2 * B * (x ^ 11)) : ℝ) ≤ (Y : ℝ) * (B : ℝ) * (x : ℝ) := by
   have h : (Y ^ 2 * B * x ^ 11).radical ≤ Y * B * x := by
     calc Nat.radical (Y ^ 2 * B * x ^ 11)
         _ ≤ Nat.radical (Y ^ 2 * B) * Nat.radical (x ^ 11) :=
-            radical_mul_le _ _ (by positivity) (by positivity)
+            radical_mul_le _ _
         _ ≤ (Nat.radical (Y ^ 2) * Nat.radical B) * Nat.radical (x ^ 11) :=
-            Nat.mul_le_mul_right _ (radical_mul_le _ _ (by positivity) hB)
+            Nat.mul_le_mul_right _ (radical_mul_le _ _)
         _ = (Nat.radical Y * Nat.radical B) * Nat.radical x := by
             rw [radical_pow Y 2 hY (by norm_num), radical_pow x 11 hx (by norm_num)]
         _ ≤ (Y * B) * x :=
@@ -4601,9 +4594,9 @@ lemma radical_abc_bound'_nat (x : ℕ) (Y B : ℕ) (hx : 0 < x) (hY : 0 < Y) (hB
     Nat.radical (x ^ 11 * B * (Y ^ 2)) ≤ x * B * Y := by
   calc Nat.radical (x ^ 11 * B * (Y ^ 2))
       _ ≤ Nat.radical (x ^ 11 * B) * Nat.radical (Y ^ 2) :=
-          radical_mul_le _ _ (by positivity) (by positivity)
+          radical_mul_le _ _
       _ ≤ (Nat.radical (x ^ 11) * Nat.radical B) * Nat.radical (Y ^ 2) :=
-          Nat.mul_le_mul_right _ (radical_mul_le _ _ (by positivity) hB)
+          Nat.mul_le_mul_right _ (radical_mul_le _ _)
       _ = (Nat.radical x * Nat.radical B) * Nat.radical Y := by
           rw [radical_pow x 11 hx (by norm_num), radical_pow Y 2 hY (by norm_num)]
       _ ≤ (x * B) * Y :=
