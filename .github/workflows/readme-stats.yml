@@ -1,0 +1,49 @@
+name: README stats
+
+on:
+  push:
+    branches:
+      - main
+    # Only the inputs to the stats can change them. The refresh commit
+    # below touches README.md only, which is NOT in this list, so it
+    # cannot re-trigger this workflow (no commit loop).
+    paths:
+      - 'LeanPool/**'
+      - 'python/lean_pool/stats.py'
+      - '.github/workflows/readme-stats.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: cd python && uv sync --locked
+
+      - name: Refresh README stats
+        run: cd python && uv run python -m lean_pool.stats --repo ..
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "README stats already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: refresh README stats [skip ci]"
+          git push
