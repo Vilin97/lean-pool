@@ -263,8 +263,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
         MoveDigits.topBad_lt_of_good_from hq1 hbad' hgoodi
       have hsgi : StrictGoodAt q i (n - S) := by
         unfold StrictGoodAt
-        rw [hfrozen i (le_refl i)]
-        exact hbi
+        rwa [hfrozen i (le_refl i)]
       have hi'le : leastGoodAbove hq3 hbad' ≤ i := Nat.find_min' _ ⟨htb', hsgi⟩
       rcases Nat.eq_or_lt_of_le hi'le with heq' | hlt'
       · -- index and digit frozen: μ unchanged, n strictly drops

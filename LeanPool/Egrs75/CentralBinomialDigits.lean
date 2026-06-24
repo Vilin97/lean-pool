@@ -264,8 +264,7 @@ theorem carryCount_eq_zero_iff {b : ℕ} (_hb : 2 ≤ b) (ds : List ℕ) :
         have htail : ∀ e ∈ ds, 2 * e < b := fun e he => h e (List.mem_cons_of_mem d he)
         have hstep : doubleCarryStep b 0 d = 0 := by
           unfold doubleCarryStep; simp only [Nat.add_zero]; rw [if_neg (by omega)]
-        simp only [doubleCarryCountAux, hstep, Nat.zero_add]
-        exact ih.mpr htail
+        simpa only [doubleCarryCountAux, hstep, Nat.zero_add] using ih.mpr htail
 
 /-! ## Per-prime Kummer coprimality characterisation -/
 

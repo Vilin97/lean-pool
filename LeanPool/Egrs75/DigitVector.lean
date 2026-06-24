@@ -71,8 +71,7 @@ theorem badCount_filter_replicate_zero (q k : ℕ) :
   rw [List.length_eq_zero_iff, List.filter_eq_nil_iff]
   intro d hd
   rw [List.mem_replicate] at hd
-  simp only [bigQ, hd.2, decide_eq_true_eq, not_lt]
-  exact Nat.zero_le _
+  simpa only [bigQ, hd.2, decide_eq_true_eq, not_lt] using Nat.zero_le _
 
 /-! ## High/low split of the base-`q` digit list and bad count
 
