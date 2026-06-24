@@ -695,12 +695,10 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
-  -- letI gg : NoZeroSMulDivisors ℂ l(ℍ) := LinearMap.noZeroSMulDivisors
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow] at h
   simp_rw [← ContinuousLinearMap.toLinearMap_smul, ContinuousLinearMap.coe_inj] at h
   letI gg : NoZeroSMulDivisors ℂ (ℍ →ₗ[ℂ] ℍ) := by infer_instance
-  -- have h'' := smul_right_inj this
   rw [smul_right_inj thisss] at h
   simp_rw [← ContinuousLinearMap.coe_inj] at h
   rw [qam_A_is_sa_iff_aux, qam_A_is_sa_iff_aux2] at h
@@ -722,7 +720,6 @@ theorem qamA.is_self_adjoint_of [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
     simp_rw [ne_eq, div_eq_zero_iff, one_ne_zero, false_or, sq_eq_zero_iff,
       Complex.ofReal_eq_zero, norm_eq_zero]
     exact x.property
-  -- letI gg : NoZeroSMulDivisors ℂ l(ℍ) := LinearMap.noZeroSMulDivisors
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow, smul_right_inj this]
   simp_rw [← hx₂.eq, ← hxy, conjTranspose_smul, mul_smul_comm,

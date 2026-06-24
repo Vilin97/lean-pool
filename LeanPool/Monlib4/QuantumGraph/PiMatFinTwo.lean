@@ -562,8 +562,6 @@ theorem QuantumGraph.Real.piFinTwo_same_exists_matrix_map_eq_map_of_adjoint_and_
     add_zero, zero_add, LinearMap.comp_assoc] at hf
   · exact Or.inl hf
   · exact Or.inr hf
-  -- exact Or.inl ⟨_, hf⟩
-  -- exact Or.inr ⟨_, hf⟩
 
 /-- Projection from a dependent product as an algebra homomorphism. -/
 def AlgHom.proj

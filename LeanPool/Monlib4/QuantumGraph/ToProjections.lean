@@ -800,7 +800,6 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     obtain ⟨u, hu⟩ := orthogonal_projection_of_dim_one h
     let hu' : (u : ℍ) ≠ 0 := by
       exact u.property
-      -- simp_rw [Ne.def, Submodule.coe_eq_zero]
     use⟨u, hu'⟩
     let t1 := Qam.orthogonalProjection'_eq hA.toIdempotent hA.toIsReal
     simp_rw [← rankOne_toMatrix_transpose_psi_symm, ← LinearEquiv.map_smul,
@@ -828,7 +827,6 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     have this' : ((‖(x : ℍ)‖ : ℝ) ^ 2 : ℂ) ≠ (0 : ℂ) := by
       simp_rw [ne_eq, sq_eq_zero_iff, Complex.ofReal_eq_zero, norm_eq_zero]
       exact x.property
-    -- exact set.mem_set_of.mp (subtype.mem x),
     --},
     rw [inv_mul_cancel₀ this', Nat.cast_one]
 

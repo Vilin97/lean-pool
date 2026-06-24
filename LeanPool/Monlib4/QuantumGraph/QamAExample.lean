@@ -375,7 +375,6 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
     exact (Subtype.mem y) this
   use Units.mk0 (Hx.eigenvalues 1 * (Hy.eigenvalues 1)⁻¹) (mul_ne_zero hx₁ (inv_ne_zero hy₁))
   use Hx.eigenvectorUnitary * star Hy.eigenvectorUnitary
-  -- use ⟨Hx.eigenvectorMatrix, Hx.eigenvectorMatrix_mem_unitaryGroup⟩ * star
   -- (⟨Hy.eigenvectorMatrix, Hy.eigenvectorMatrix_mem_unitaryGroup⟩ : unitaryGroup (Fin 2) ℂ)
   have :
     (Hx.eigenvalues 1 * (Hy.eigenvalues 1)⁻¹) • diagonal Hy.eigenvalues = diagonal Hx.eigenvalues :=

@@ -692,7 +692,6 @@ variable {n : Type _} [Fintype n] [DecidableEq n] (φ : Module.Dual ℂ (Matrix 
 @[reducible]
 noncomputable def Module.Dual.NormedAddCommGroup [hφ : φ.IsFaithfulPosMap] :
   _root_.NormedAddCommGroup (Matrix n n ℂ) :=
-  -- have := φ.isFaithfulPosMap_iff_isInner_of_matrix.mp hφ
   @InnerProductSpace.Core.toNormedAddCommGroup ℂ (Matrix n n ℂ) _ _ _
     { inner := fun x y => φ (xᴴ * y)
       conj_inner_symm := fun _ _ => ((φ.isFaithfulPosMap_iff_isInner_of_matrix.mp hφ).1 _ _).symm
@@ -709,7 +708,6 @@ variable [hφ : φ.IsFaithfulPosMap]
 /-- The inner product space structure induced by a faithful positive functional on matrices. -/
 @[reducible]
 noncomputable def Module.Dual.InnerProductSpace :
-    -- letI := hφ.NormedAddCommGroup
   @_root_.InnerProductSpace ℂ (Matrix n n ℂ) _
     ((Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) :=
@@ -783,7 +781,6 @@ noncomputable def Module.Dual.PiNormedAddCommGroup
 noncomputable def Module.Dual.pi.InnerProductSpace
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
   [hφ : Π i, (φ i).IsFaithfulPosMap] :
-    -- letI := Module.Dual.PiNormedAddCommGroup hφ
   @_root_.InnerProductSpace ℂ (PiMat ℂ k s) _
   ((Module.Dual.PiNormedAddCommGroup (_hφ := hφ)).toSeminormedAddCommGroup)
    := by
