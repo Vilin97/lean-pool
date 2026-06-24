@@ -30,8 +30,6 @@ local notation "L(" x ")" => x →L[ℂ] x
 local notation "e_{" i "," j "}" => Matrix.stdBasisMatrix i j (1 : ℂ)
 
 variable {φ : Module.Dual ℂ (Matrix n n ℂ)}
-  --{φ : Π i, module.dual ℂ (ℍ_ i)}
-  --[hφ : ∀ i, fact (φ i).is_faithful_pos_map]
 
 open scoped Matrix
 
