@@ -27,7 +27,6 @@ lemma injective_iff_ker_eq_bot {F : Type*} [FunLike F R S] [RingHomClass F R S] 
     rw [h]; rfl
   · intro h a b hab
     specialize h (a - b) (by rwa [map_sub, sub_eq_zero])
-    rw [← sub_eq_zero]
-    exact h
+    rwa [← sub_eq_zero]
 
 end TwoSidedIdeal
