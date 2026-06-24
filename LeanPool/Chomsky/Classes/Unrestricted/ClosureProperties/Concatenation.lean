@@ -1024,8 +1024,7 @@ by
         omega
       have goal_as_le_sub_sub : 1 ≤ x.length - u.length
         - (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length := by omega
-      rw [tsub_add_eq_tsub_tsub]
-      exact goal_as_le_sub_sub
+      rwa [tsub_add_eq_tsub_tsub]
     have chunk4 :
       (r₁.inputR.map (wrapSymbol₁ g₂.nt)).take
         (x.length
@@ -1383,8 +1382,7 @@ by
       exact Nat.lt_add_right _ ul_lt_xl
     have ulth := correspondingStrings_getElem ul_lt_ihls (by simp) ih_concat
     have ul_lt_xlm : u.length < (x.map (wrapSymbol₁ g₂.nt)).length := by
-      rw [List.length_map]
-      exact ul_lt_xl
+      rwa [List.length_map]
     simp_rw [List.getElem_append, ul_lt_xlm] at ulth
     simp only [↓reduceDIte, List.getElem_map, lt_self_iff_false, tsub_self, List.length_map,
                 zero_tsub, List.length_cons, List.length_nil, zero_add, zero_lt_one,
@@ -1429,8 +1427,7 @@ by
         exact min_uxy
       apply congr_arg₂
       · rw [fmu1]
-        rw [List.length_drop]
-        exact tuxy
+        rwa [List.length_drop]
       clear seg1 fmu1 tuxy min_uxy
       rw [List.length_map] at rest1
       obtain ⟨seg2, rest2⟩ := correspondingStrings_split (r₂.inputL.map (wrapSymbol₂ g₁.nt)).length
@@ -1680,8 +1677,7 @@ by
           have ul_lt_len_xy : u.length <
             (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
             have same_len := correspondingStrings_length ih_concat
-            rw [same_len]
-            exact ul_lt_len_umv
+            rwa [same_len]
           have middle_nt := correspondingStrings_getElem ul_lt_len_xy ul_lt_len_umv ih_concat
           have middle_nt_elem :
             correspondingSymbols
@@ -1759,8 +1755,7 @@ by
         Symbol.nonterminal r.inputN := by
       have bef_fst := congr_arg (·[0]?) bef
       rw [u_nil, rif_nil] at bef_fst
-      rw [←Option.some_inj]
-      exact bef_fst
+      rwa [←Option.some_inj]
     simp only [bigGrammar, List.mem_cons, List.mem_append, or_assoc, List.mem_map] at rin
     rcases rin with rinit | rin₁ | rin₂ | rte₁ | rte₂
     · rw [rinit] at bef aft
@@ -1856,8 +1851,7 @@ by
         · rw [List.drop_left]
         · rw [List.take_append_drop]
       have i_lt_len_lwy : i < (y.map (wrapSymbol₂ g₁.nt)).length := by
-        rw [List.length_map]
-        exact hiy
+        rwa [List.length_map]
       have i_lt_len_dxw :
           i < ((w.map (Symbol.terminal (N := g₂.nt))).drop x.length).length := by
         simp only [List.length_map, bigGrammar_nt] at xylen
@@ -1866,8 +1860,7 @@ by
         rw [List.length_map, add_comm, Nat.add_sub_assoc (by rfl), Nat.sub_self, Nat.add_zero]
       have i_lt_len_mtw :
           i < ((w.drop x.length).map (Symbol.terminal (N := g₂.nt))).length := by
-        rw [List.map_drop]
-        exact i_lt_len_dxw
+        rwa [List.map_drop]
       have goal_as_ith_drop : y[i]'hiy
         = (List.drop x.length (w.map Symbol.terminal))[i]'i_lt_len_dxw := by
         have xli_lt_len_w : x.length + i < w.length := by

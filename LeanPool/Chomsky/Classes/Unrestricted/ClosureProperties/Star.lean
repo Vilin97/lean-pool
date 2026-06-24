@@ -1917,8 +1917,7 @@ by
       rw [←r_of_r₀] at aft
       dsimp only [wrapGr] at aft
       use w.take u.length ++ r₀.output
-      rw [List.map_append]
-      exact aft
+      rwa [List.map_append]
     · exfalso
       have x_is_R : x = [R] := by
         by_cases is_v_nil : v = []
@@ -2355,8 +2354,7 @@ by
           apply Symbol.terminal.inj
         rw [←List.map_injective_iff] at st_inj
         exact st_inj map_eq_map
-      rw [w_eq_u]
-      exact win
+      rwa [w_eq_u]
     · exfalso
       obtain ⟨σ, contr⟩ := result
       have last_symbols := congr_arg (·[0]?) (congr_arg List.reverse contr)

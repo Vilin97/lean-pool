@@ -71,8 +71,7 @@ by
   unfold Grammar.language at *
   have almost_done := derives_reversed hwg
   change g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
-  rw [List.map_reverse]
-  exact almost_done
+  rwa [List.map_reverse]
 
 
 /-- The class of grammar-generated languages is closed under reversal. -/
