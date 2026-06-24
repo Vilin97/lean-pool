@@ -132,10 +132,6 @@ noncomputable def hilbertNumerator {S : NumericalSemigroup} (G : NumericalSemigr
       ((∑ k ∈ Finset.range (n + 1), P.coeff k) -
        (∑ g ∈ S.gaps.filter (· ≤ n), P.coeff (n - g)))
 
-lemma coeff_polynomial_map_coe {P : Polynomial ℤ} (n : ℕ) :
-    (PowerSeries.coeff n) (P.map (Int.castRingHom ℚ) : PowerSeries ℚ) =
-    (Int.castRingHom ℚ) (P.coeff n) := by simp
-
 lemma coeff_mul_hilbert_product {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n :
   ℕ) :
     (PowerSeries.coeff n) (S.hilbertSeries *
