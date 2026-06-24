@@ -52,12 +52,6 @@ open Module.Dual
 
 local notation "ℍ_" i => Matrix (s i) (s i) ℂ
 
-private theorem add_neg_self {G : Type*} [AddGroup G] (a : G) : a + -a = 0 :=
-  add_neg_cancel a
-
-private theorem neg_add_self {G : Type*} [AddGroup G] (a : G) : -a + a = 0 :=
-  neg_add_cancel a
-
 section SingleBlock
 
 /-! # Section single_block -/
@@ -270,19 +264,19 @@ noncomputable def Module.Dual.pi.IsFaithfulPosMap.sig (hψ : ∀ i, (ψ i).IsFai
     left_inv := fun x => by
       simp only [← mul_assoc, Pi.PosDef.rpow_hMul_rpow]
       simp only [mul_assoc, Pi.PosDef.rpow_hMul_rpow]
-      simp only [add_neg_self, Pi.PosDef.rpow_zero, one_mul, mul_one]
+      simp only [add_neg_cancel, Pi.PosDef.rpow_zero, one_mul, mul_one]
     right_inv := fun x => by
       simp only [← mul_assoc, Pi.PosDef.rpow_hMul_rpow]
       simp only [mul_assoc, Pi.PosDef.rpow_hMul_rpow]
-      simp only [Pi.PosDef.rpow_zero, one_mul, mul_one, neg_add_self]
+      simp only [Pi.PosDef.rpow_zero, one_mul, mul_one, neg_add_cancel]
     map_add' := fun x y => by simp only [mul_add, add_mul]
     map_mul' := fun x y => by
       simp_rw [mul_assoc]
       simp only [← mul_assoc (Pi.PosDef.rpow hQ z) (Pi.PosDef.rpow hQ (-z)),
-        Pi.PosDef.rpow_hMul_rpow, add_neg_self, Pi.PosDef.rpow_zero, one_mul]
+        Pi.PosDef.rpow_hMul_rpow, add_neg_cancel, Pi.PosDef.rpow_zero, one_mul]
     commutes' := fun r => by
       simp only [Algebra.algebraMap_eq_smul_one, mul_smul_comm, smul_mul_assoc, mul_one,
-        Pi.PosDef.rpow_hMul_rpow, neg_add_self, Pi.PosDef.rpow_zero]
+        Pi.PosDef.rpow_hMul_rpow, neg_add_cancel, Pi.PosDef.rpow_zero]
         }
 
 omit [Fintype k] [DecidableEq k] in
@@ -606,12 +600,6 @@ private noncomputable def f₃_equiv :
   intro i
   exact kroneckerToTensor.symm
 
-private def f₄_equiv :
-    (Π i : k × k, Matrix (s i.1 × s i.2) (s i.1 × s i.2) ℂ) ≃ₐ[ℂ]
-      { x : Matrix (Σ i : k × k, s i.1 × s i.2) (Σ i : k × k, s i.1 × s i.2) ℂ //
-        x.IsBlockDiagonal } :=
-  isBlockDiagonalPiAlgEquiv.symm
-
 /-- The tensor-product equivalence used to pass from block products to block-diagonal matrices. -/
 noncomputable def tensorProductMulOpEquiv :
     ((PiMat ℂ k s) ⊗[ℂ] (PiMat ℂ k s)ᵐᵒᵖ) ≃ₐ[ℂ] (Π i : k × k,
@@ -672,7 +660,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.Psi_left_inv [hψ : ∀ i, (ψ i).IsFait
   rw [Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply,
     Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply]
   simp_rw [LinearEquiv.coe_coe, op_apply, MulOpposite.unop_op, star_star,
-    Module.Dual.pi.IsFaithfulPosMap.sig_apply_sig, neg_add_self,
+    Module.Dual.pi.IsFaithfulPosMap.sig_apply_sig, neg_add_cancel,
     Module.Dual.pi.IsFaithfulPosMap.sig_zero]
 
 omit [DecidableEq k] in
@@ -687,7 +675,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.Psi_right_inv [hψ : ∀ i, (ψ i).IsFai
   withPiInnerTac[ψ₂]
   rw [Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply,
     Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply]
-  simp_rw [LinearEquiv.coe_coe, Module.Dual.pi.IsFaithfulPosMap.sig_apply_sig, add_neg_self,
+  simp_rw [LinearEquiv.coe_coe, Module.Dual.pi.IsFaithfulPosMap.sig_apply_sig, add_neg_cancel,
     Module.Dual.pi.IsFaithfulPosMap.sig_zero, star_star, op_apply, MulOpposite.op_unop]
 
 /-- Linear equivalence between linear maps and tensor products for faithful positive block
@@ -851,8 +839,8 @@ theorem Pi.comp_sig_eq_iff
       f = g ∘ₗ (Module.Dual.pi.IsFaithfulPosMap.sig hψ (-t)).toLinearMap := by
   constructor <;> rintro rfl
   all_goals rw [LinearMap.comp_assoc, Module.Dual.pi.IsFaithfulPosMap.sig_comp_sig]
-  on_goal 1 => rw [add_neg_self]
-  on_goal 2 => rw [neg_add_self]
+  on_goal 1 => rw [add_neg_cancel]
+  on_goal 2 => rw [neg_add_cancel]
   all_goals
     rw [Module.Dual.pi.IsFaithfulPosMap.sig_zero', AlgEquiv.one_toLinearMap, LinearMap.comp_one]
 
@@ -863,8 +851,8 @@ theorem Pi.sig_comp_eq_iff {A : Type*} [AddCommMonoid A] [Module ℂ A]
       f = (Module.Dual.pi.IsFaithfulPosMap.sig hψ (-t)).toLinearMap ∘ₗ g := by
   constructor <;> rintro rfl
   all_goals rw [← LinearMap.comp_assoc, Module.Dual.pi.IsFaithfulPosMap.sig_comp_sig]
-  on_goal 1 => rw [neg_add_self]
-  on_goal 2 => rw [add_neg_self]
+  on_goal 1 => rw [neg_add_cancel]
+  on_goal 2 => rw [add_neg_cancel]
   all_goals
     rw [Module.Dual.pi.IsFaithfulPosMap.sig_zero', AlgEquiv.one_toLinearMap, LinearMap.one_comp]
 
@@ -921,7 +909,7 @@ theorem pi_lmul_toMatrix [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k
   rw [← hx', includeBlock_apply', ite_mul, zero_mul]
   simp_rw [kroneckerMap_apply, one_apply, mul_boole, @eq_comm _ r.fst]
   simp_rw [x', Module.Dual.IsFaithfulPosMap.basis_apply, dite_hMul,
-    zero_mul, Matrix.mul_assoc, PosDef.rpow_mul_rpow, neg_add_self,
+    zero_mul, Matrix.mul_assoc, PosDef.rpow_mul_rpow, neg_add_cancel,
     PosDef.rpow_zero, Matrix.mul_one, Matrix.single_eq]
   split_ifs with h hh hhh
   · simp only [mul_apply, mul_ite, mul_zero,
