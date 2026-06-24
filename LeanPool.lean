@@ -1988,6 +1988,7 @@ import LeanPool.ZFLean.Tactics
 import LeanPool.Zeta3Irrational
 import LeanPool.Zeta3Irrational.Basic
 import LeanPool.Zeta3Irrational.Bound
+import LeanPool.Zeta3Irrational.Chebyshev
 import LeanPool.Zeta3Irrational.D
 import LeanPool.Zeta3Irrational.Equality
 import LeanPool.Zeta3Irrational.Integral

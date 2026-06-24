@@ -11,6 +11,7 @@ import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.DedekindDomain.Dvr
 import Mathlib.NumberTheory.Chebyshev
 import LeanPool.Zeta3Irrational.Bound
+import LeanPool.Zeta3Irrational.Chebyshev
 import LeanPool.Zeta3Irrational.LegendrePoly
 import LeanPool.Zeta3Irrational.LinearForm
 
@@ -111,10 +112,10 @@ lemma pos_aux (x : ℝ × ℝ × ℝ)
   · nlinarith
 
 lemma JJENN_upper (n : ℕ) : JJENN n ≤
-    ENNReal.ofReal (2 * (1 / 24) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
+    ENNReal.ofReal (2 * (1 / 30) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
   calc
   _ ≤ ∫⁻ (x : ℝ × ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-    ENNReal.ofReal ((1 / 24) ^ n / (1 - (1 - x.2.1 * x.2.2) * x.1)) := by
+    ENNReal.ofReal ((1 / 30) ^ n / (1 - (1 - x.2.1 * x.2.2) * x.1)) := by
     rw [JJENN, ← MeasureTheory.lintegral_indicator (by measurability),
         ← MeasureTheory.lintegral_indicator (by measurability)]
     apply MeasureTheory.lintegral_mono
@@ -134,11 +135,11 @@ lemma JJENN_upper (n : ℕ) : JJENN n ≤
             apply mul_nonneg (by linarith) (by linarith)
           · linarith [pos_aux x h]
         · suffices x.2.1 * (1 - x.2.1) * x.2.2 * (1 - x.2.2) * x.1 * (1 - x.1) /
-            (1 - (1 - x.2.1 * x.2.2) * x.1) < (1 / 24 : ℝ)by linarith
-          apply bound' <;> linarith
+            (1 - (1 - x.2.1 * x.2.2) * x.1) < (1 / 30 : ℝ)by linarith
+          apply bound'' <;> linarith
       · exact pos_aux x h
     · simp only [h, ↓reduceIte, le_refl]
-  _ = ENNReal.ofReal ((1 / 24) ^ n) *
+  _ = ENNReal.ofReal ((1 / 30) ^ n) *
       ∫⁻ (x : ℝ × ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
     ENNReal.ofReal (1 / (1 - (1 - x.2.1 * x.2.2) * x.1)) := by
     rw [← MeasureTheory.lintegral_const_mul]
@@ -160,7 +161,7 @@ lemma JJENN_upper (n : ℕ) : JJENN n ≤
       apply Measurable.mul
       · exact Measurable.fun_comp measurable_fst measurable_snd
       · exact Measurable.fun_comp measurable_snd measurable_snd
-  _ = ENNReal.ofReal (2 * (1 / 24) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
+  _ = ENNReal.ofReal (2 * (1 / 30) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
     have h := JENN_eq_triple 0 0
     simp only [pow_zero, mul_one] at h
     rw [← h, J_ENN_rr]
@@ -1116,11 +1117,11 @@ lemma zeta3_pos : 0 < ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3 := by
   · positivity
 
 theorem JJ_upper (n : ℕ) :
-    JJ n ≤ 2 * (1 / 24) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
+    JJ n ≤ 2 * (1 / 30) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
   rw [JJ_eq_form, JJ', MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
   · trans
       (ENNReal.ofReal
-        (2 * (1 / 24 : ℝ) ^ n * ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3)).toReal
+        (2 * (1 / 30 : ℝ) ^ n * ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3)).toReal
     · apply ENNReal.toReal_mono
       · exact ENNReal.ofReal_ne_top
       · exact JJENN_upper n
@@ -1167,5 +1168,146 @@ lemma zeta3_le_zeta2 :
     · positivity
   · norm_num
   · exact Summable_of_zeta_two'
+
+private lemma log_30_gt_339_div_100 : (339 / 100 : ℝ) < Real.log 30 := by
+  have h30 : Real.log (30 : ℝ) = Real.log 2 + Real.log 3 + Real.log 5 := by
+    rw [show (30 : ℝ) = (2 * 3) * 5 by norm_num, Real.log_mul, Real.log_mul] <;>
+      norm_num
+  nlinarith [Real.log_two_gt_d9, Real.log_three_gt_d9, Real.log_five_gt_d9]
+
+private lemma exp_339_div_100_div_30_lt_one : Real.exp (339 / 100 : ℝ) / 30 < 1 := by
+  have h_exp : Real.exp (339 / 100 : ℝ) < 30 := by
+    exact (Real.lt_log_iff_exp_lt (by norm_num : (0 : ℝ) < 30)).mp log_30_gt_339_div_100
+  nlinarith
+
+lemma eventually_d_pow_three_le_exp :
+    ∀ᶠ n : ℕ in Filter.atTop,
+      (d (Finset.Icc 1 n) : ℝ) ^ 3 ≤ (Real.exp (339 / 100 : ℝ)) ^ n := by
+  have hpsi_nat :
+      ∀ᶠ n : ℕ in Filter.atTop,
+        Chebyshev.psi (n : ℝ) ≤ (113 / 100 : ℝ) * (n : ℝ) :=
+    tendsto_natCast_atTop_atTop.eventually ChebyshevAux.eventually_psi_le_mul
+  filter_upwards [hpsi_nat] with n hn
+  have hlog : Real.log (Nat.lcmUpto n : ℝ) ≤ (113 / 100 : ℝ) * (n : ℝ) := by
+    simpa [Chebyshev.psi_eq_log_lcmUpto n] using hn
+  have hlcm : (Nat.lcmUpto n : ℝ) ≤ Real.exp ((113 / 100 : ℝ) * (n : ℝ)) :=
+    (Real.log_le_iff_le_exp (by exact_mod_cast Nat.lcmUpto_pos n)).mp hlog
+  change (Nat.lcmUpto n : ℝ) ^ 3 ≤ (Real.exp (339 / 100 : ℝ)) ^ n
+  calc
+    (Nat.lcmUpto n : ℝ) ^ 3 ≤ (Real.exp ((113 / 100 : ℝ) * (n : ℝ))) ^ 3 := by
+      gcongr
+    _ = (Real.exp (339 / 100 : ℝ)) ^ n := by
+      rw [← Real.exp_nat_mul ((113 / 100 : ℝ) * (n : ℝ)) 3,
+        ← Real.exp_nat_mul (339 / 100 : ℝ) n]
+      congr 1
+      ring
+
+theorem fun1_tendsto_zero :
+    Filter.Tendsto (fun n ↦ ENNReal.ofReal (fun1 n)) Filter.atTop (nhds 0) := by
+  rw [ENNReal.tendsto_atTop_zero]
+  intro ε hε
+  if h : ε = ⊤ then
+    simp [h]
+  else
+    delta fun1
+    rw [show ε = ENNReal.ofReal ε.toReal by simp [h]]
+    obtain hden := eventually_d_pow_three_le_exp
+    obtain hpow := ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one
+      (r := ENNReal.ofReal (Real.exp (339 / 100 : ℝ) / 30))
+      (by
+        simp only [ENNReal.ofReal_lt_one]
+        exact exp_339_div_100_div_30_lt_one)
+    rw [ENNReal.tendsto_atTop_zero] at hpow
+    specialize hpow (ε / (ENNReal.ofReal (2 * (∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3))))
+      (by
+        simp only [one_div, gt_iff_lt, ENNReal.div_pos_iff, ne_eq, ENNReal.ofReal_ne_top,
+          not_false_eq_true, and_true]
+        aesop)
+    rw [Filter.eventually_atTop] at hden
+    obtain ⟨N1, hN1⟩ := hden
+    obtain ⟨N2, hN2⟩ := hpow
+    use N1.max N2
+    intro n hn
+    rw [ENNReal.ofReal_le_ofReal_iff (by simp)]
+    suffices
+        (d (Finset.Icc 1 n) : ℝ) ^ 3 * 2 * (1 / 30 : ℝ) ^ n *
+            ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 ≤ ε.toReal by
+      trans
+        (d (Finset.Icc 1 n) : ℝ) ^ 3 * 2 * (1 / 30 : ℝ) ^ n *
+          ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3
+      · rw [mul_assoc, mul_assoc]
+        apply mul_le_mul_of_nonneg_left _ (by simp)
+        linarith [JJ_upper n]
+      · exact this
+    calc
+      (d (Finset.Icc 1 n) : ℝ) ^ 3 * 2 * (1 / 30 : ℝ) ^ n *
+          ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3
+          ≤ 2 * (Real.exp (339 / 100 : ℝ) / 30) ^ n *
+              (∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
+            apply mul_le_mul_of_nonneg_right _ (by linarith [zeta3_pos])
+            nth_rewrite 2 [mul_comm, div_eq_mul_one_div]
+            rw [mul_pow, ← mul_assoc]
+            apply mul_le_mul_of_nonneg_right _ (by positivity)
+            apply mul_le_mul_of_nonneg_left _ (by positivity)
+            exact hN1 n (le_of_max_le_left hn)
+      _ ≤ ε.toReal := by
+        specialize hN2 n (le_of_max_le_right hn)
+        rw [← ENNReal.ofReal_toReal_eq_iff.2 h,
+          ← ENNReal.ofReal_div_of_pos (by linarith [zeta3_pos]),
+          ← ENNReal.ofReal_pow (by positivity), ENNReal.ofReal_le_ofReal_iff] at hN2
+        · rw [le_div_iff₀ (by linarith [zeta3_pos])] at hN2
+          linarith
+        · suffices 0 < ε.toReal / (2 * ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3) by
+            linarith
+          apply div_pos _ (by linarith [zeta3_pos])
+          apply ENNReal.toReal_pos (by aesop) (by aesop)
+
+theorem zeta3_irrational : ¬ ∃ r : ℚ, r = riemannZeta 3 := by
+  rw [zeta_eq_tsum_one_div_nat_add_one_cpow (by simp)]
+  simp_rw [← Complex.ofReal_natCast]
+  norm_cast
+  simp_rw [Nat.cast_pow, Nat.cast_add, Nat.cast_one]
+  by_contra! r
+  rcases r with ⟨r, hr⟩
+  let q := r.den
+  let hq := Rat.den_nz r
+  have prop1 := ENNReal.Tendsto.mul_const (b := (q : ENNReal)) fun1_tendsto_zero (by simp)
+  rw [zero_mul] at prop1
+  have prop2 : ∀ n : ℕ, fun1 n * q > 1 / 2 := by
+    suffices ∀ n : ℕ, fun1 n * q ≥ 1 by
+      intro n
+      linarith [this n]
+    intro n
+    obtain ⟨a, b, h⟩ := linear_int n
+    have : fun1 n * q > 0 := by
+      delta fun1
+      rw [mul_comm, ← mul_assoc]
+      refine mul_pos ?_ (JJ_pos n)
+      norm_cast
+      apply mul_pos (by omega)
+      exact pow_pos (fin_d_neq_zero n) 3
+    rw [h, add_mul, mul_assoc, ← hr] at this ⊢
+    simp only [ge_iff_le, q] at this ⊢
+    norm_cast at this ⊢
+    rw [Rat.mul_den_eq_num] at this ⊢
+    norm_cast at this ⊢
+  rw [ENNReal.tendsto_atTop_zero] at prop1
+  specialize prop1 (1 / 2) (by simp)
+  rcases prop1 with ⟨a, ha⟩
+  specialize prop2 (a + 1)
+  specialize ha (a + 1) (by simp)
+  rw [gt_iff_lt, ← ENNReal.ofReal_lt_ofReal_iff, ENNReal.ofReal_mul' (by simp)] at prop2
+  · suffices ENNReal.ofReal (fun1 (a + 1)) * ↑q < ENNReal.ofReal (fun1 (a + 1)) * ↑q by
+      exact (lt_irrefl _ this).elim
+    rw [show ENNReal.ofReal ↑q = (q : ENNReal) by simp only [ENNReal.ofReal_natCast],
+      show ENNReal.ofReal (1 / 2) = 1 / 2 by
+        rw [ENNReal.ofReal_div_of_pos (by norm_num)]
+        simp] at prop2
+    apply LE.le.trans_lt (b := (1 / 2 : ENNReal)) ha prop2
+  · apply mul_pos _ (by simp; omega)
+    apply mul_pos _ (JJ_pos (a + 1))
+    apply pow_pos
+    simp only [Nat.cast_pos]
+    exact fin_d_neq_zero (a + 1)
 
 end LeanPool.Zeta3Irrational

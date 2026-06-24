@@ -152,4 +152,73 @@ lemma bound' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
     _ < (1 / 24 : ℝ) := by
       norm_num
 
+lemma bound'' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
+    (z0 : 0 < z) (z1 : z < 1) :
+    x * (1 - x) * y * (1 - y) * z * (1 - z) / (1 - (1 - x * y) * z) <
+      (1 / 30 : ℝ) := by
+  let s := √(x * y)
+  have hs0 : 0 ≤ s := by positivity
+  have hs1 : s ≤ 1 := by
+    change √(x * y) ≤ 1
+    rw [Real.sqrt_le_one]
+    nlinarith
+  have hs_sq : s ^ 2 = x * y := by
+    change (√(x * y)) ^ 2 = x * y
+    rw [pow_two, Real.mul_self_sqrt]
+    positivity
+  have hxy_le : (1 - x) * (1 - y) ≤ (1 - s) ^ 2 := by
+    have h_amgm : 2 * s ≤ x + y := by
+      have hsqrtx : √x * √x = x := Real.mul_self_sqrt (le_of_lt x0)
+      have hsqrty : √y * √y = y := Real.mul_self_sqrt (le_of_lt y0)
+      have hsqrtxy : √x * √y = s := by
+        change √x * √y = √(x * y)
+        rw [← Real.sqrt_mul (le_of_lt x0) y]
+      nlinarith [sq_nonneg (√x - √y)]
+    nlinarith [hs_sq]
+  have hden_pos : 0 < 1 - (1 - x * y) * z := by
+    have hxy_lt_one : x * y < 1 := by nlinarith
+    nlinarith
+  have hden_pos_s : 0 < 1 - (1 - s ^ 2) * z := by
+    rw [hs_sq]
+    exact hden_pos
+  have hfrac :
+      z * (1 - z) / (1 - (1 - s ^ 2) * z) ≤ 1 / (1 + s) ^ 2 := by
+    rw [div_le_div_iff₀ hden_pos_s (by positivity : 0 < (1 + s) ^ 2)]
+    ring_nf
+    nlinarith [sq_nonneg (1 - (1 + s) * z)]
+  have hratio_nonneg : 0 ≤ s * (1 - s) / (1 + s) := by positivity
+  have hratio_le : s * (1 - s) / (1 + s) ≤ (2 / 11 : ℝ) := by
+    rw [div_le_iff₀ (by positivity : 0 < 1 + s)]
+    have hquad : 0 ≤ 11 * s ^ 2 - 9 * s + 2 := by
+      nlinarith [sq_nonneg (22 * s - 9)]
+    nlinarith
+  have hratio_sq_le : (s * (1 - s) / (1 + s)) ^ 2 ≤ (2 / 11 : ℝ) ^ 2 := by
+    nlinarith [sq_nonneg ((2 / 11 : ℝ) - s * (1 - s) / (1 + s)), hratio_nonneg,
+      hratio_le]
+  have hnum_le :
+      x * (1 - x) * y * (1 - y) * z * (1 - z) ≤
+        s ^ 2 * (1 - s) ^ 2 * z * (1 - z) := by
+    calc
+      x * (1 - x) * y * (1 - y) * z * (1 - z)
+          = s ^ 2 * ((1 - x) * (1 - y)) * (z * (1 - z)) := by
+            rw [hs_sq]
+            ring
+      _ ≤ s ^ 2 * (1 - s) ^ 2 * (z * (1 - z)) := by
+        gcongr
+      _ = s ^ 2 * (1 - s) ^ 2 * z * (1 - z) := by ring
+  calc
+    x * (1 - x) * y * (1 - y) * z * (1 - z) / (1 - (1 - x * y) * z)
+        ≤ s ^ 2 * (1 - s) ^ 2 * z * (1 - z) / (1 - (1 - s ^ 2) * z) := by
+          rw [← hs_sq]
+          refine div_le_div₀ ?_ hnum_le hden_pos_s (le_refl _)
+          positivity
+    _ = s ^ 2 * (1 - s) ^ 2 * (z * (1 - z) / (1 - (1 - s ^ 2) * z)) := by
+      ring
+    _ ≤ s ^ 2 * (1 - s) ^ 2 * (1 / (1 + s) ^ 2) := by
+      gcongr
+    _ = (s * (1 - s) / (1 + s)) ^ 2 := by
+      field_simp [(by positivity : 0 < 1 + s).ne']
+    _ ≤ (2 / 11 : ℝ) ^ 2 := hratio_sq_le
+    _ < (1 / 30 : ℝ) := by norm_num
+
 end LeanPool.Zeta3Irrational
