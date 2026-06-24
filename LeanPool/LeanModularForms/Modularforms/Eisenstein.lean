@@ -247,8 +247,7 @@ lemma qParam_surj_onto_ball (r : ℝ) (hr : 0 < r) (hr2 : r < 1) [NeZero n] : �
     · rw [hq]
       simp [hr.le]
     · exact Ne.symm (NeZero.ne' _)
-    simp only [ne_eq, ofReal_eq_zero]
-    exact ne_of_gt hr
+    simpa only [ne_eq, ofReal_eq_zero] using ne_of_gt hr
   rw [Function.Periodic.im_invQParam]
   simp only [norm_real, norm_eq_abs, log_abs]
   rw [mul_pos_iff]
@@ -360,8 +359,7 @@ lemma sigma_bound (k n : ℕ) : σ k n ≤ n ^ (k + 1) := by
   simp only [Finset.sum_const, smul_eq_mul]
   rw [pow_add, mul_comm]
   gcongr
-  simp only [pow_one]
-  exact Nat.card_divisors_le_self n
+  simpa only [pow_one] using Nat.card_divisors_le_self n
 
 /-- The `q`-expansion coefficients of the weight-`k` Eisenstein series. -/
 def EkQ (k : ℕ) : ℕ → ℂ := fun m => if m = 0 then 1 else
@@ -661,8 +659,7 @@ lemma asdf : TendstoLocallyUniformlyOn
         (fun x : ℂ ↦ ∏' i, (1 - x ^ (i + 1))) atTop (Metric.closedBall (0 : ℂ) (1/2 : ℝ)) := by
     have hsum : Summable (fun n : ℕ => (1 / 2 : ℝ) ^ (n + 1)) := by
       rw [@summable_nat_add_iff, summable_geometric_iff_norm_lt_one]
-      simp only [one_div, norm_inv, Real.norm_ofNat]
-      exact two_inv_lt_one
+      simpa only [one_div, norm_inv, Real.norm_ofNat] using two_inv_lt_one
     simpa [sub_eq_add_neg] using
       (hsum.hasProdUniformlyOn_nat_one_add (f := fun n : ℕ => fun y : ℂ => -y ^ (n + 1))
         (hK := isCompact_closedBall (0 : ℂ) (1 / 2))

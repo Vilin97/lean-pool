@@ -131,8 +131,7 @@ lemma rc_integral_eq_neg_two_pi_I_ref_p₀ :
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff, not_or] at ht_exc
     obtain ⟨ht1, ht2, ht3, htL, ht4⟩ := ht_exc
     have ht_not_P : t ∉ ({1, 2, 3, 4} : Finset ℝ) := by
-      simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-      exact ⟨ht1, ht2, ht3, ht4⟩
+      simpa only [Finset.mem_insert, Finset.mem_singleton, not_or] using ⟨ht1, ht2, ht3, ht4⟩
     have hrc_diff : DifferentiableAt ℝ rc t := by
       change DifferentiableAt ℝ (fun t' => polygonToCircleRadial refP₀ (t', 1)) t
       exact polygonToCircleRadial_differentiable_off_partition refP₀ ref_p₀_norm ref_p₀_re
@@ -263,8 +262,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
   have h_dist_target : ∀ t, ‖γ_target t - refP₀‖ = 1 := by
     intro t
     change ‖(refP₀ + exp (I * (θ_target t : ℂ))) - refP₀‖ = 1
-    simp only [add_sub_cancel_left, mul_comm I]
-    exact norm_exp_ofReal_mul_I _
+    simpa only [add_sub_cancel_left, mul_comm I] using norm_exp_ofReal_mul_I _
   have h_target_integral : ∀ ε > 0, ε < 1 → (∫ t in (0 : ℝ)..5,
         if ‖γ_target t - refP₀‖ > ε then (γ_target t - refP₀)⁻¹ * deriv γ_target t else 0) =
       -2 * Real.pi * I := by

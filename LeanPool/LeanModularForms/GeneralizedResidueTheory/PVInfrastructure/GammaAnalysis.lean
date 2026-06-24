@@ -136,8 +136,7 @@ lemma integrand_asymptotic
   have h_bound := hδ h_ne (by rwa [Real.dist_eq])
   rw [Complex.dist_eq] at h_bound
   have h_ne_c : (↑(t - t₀) : ℂ) ≠ 0 := by
-    simp only [ne_eq, ofReal_eq_zero, sub_eq_zero]
-    exact h_ne
+    simpa only [ne_eq, ofReal_eq_zero, sub_eq_zero] using h_ne
   have h_key :
       (γ t - γ t₀)⁻¹ * deriv γ t - (↑(t - t₀))⁻¹ =
       ((↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ *

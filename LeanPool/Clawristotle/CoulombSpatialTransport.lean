@@ -163,8 +163,7 @@ lemma spatial_transport_joint_integrable
     obtain ⟨C_total, hC_total_pos, hbound⟩ :=
       spatial_transport_uniform_bound hSchwartz C_log K_log hLB
     exact ⟨C_total, hC_total_pos, fun x v => by
-      simp only [hg_def]
-      exact hbound x v⟩
+      simpa only [hg_def] using hbound x v⟩
   obtain ⟨C_total, hC_total_pos, h_bound⟩ := h_unif_bound
   -- Use integrable_prod_iff
   refine (integrable_prod_iff ?_).mpr ⟨?_, ?_⟩

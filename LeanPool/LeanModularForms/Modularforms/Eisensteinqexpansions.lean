@@ -142,8 +142,7 @@ def GammaSetOneEquiv : (Fin 2 → ℤ) ≃ (Σn : ℕ, gammaSetN n) where
              omega
            · fin_cases i
              · refine Int.mul_ediv_cancel' ?_
-               simp only [Fin.isValue]
-               exact Int.gcd_dvd_left _ _
+               simpa only [Fin.isValue] using Int.gcd_dvd_left _ _
              · simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, Fin.mk_one,
                Pi.smul_apply, Matrix.cons_val_one, Matrix.cons_val_fin_one, Int.nsmul_eq_mul]
                exact Int.mul_ediv_cancel' (Int.gcd_dvd_right _ _)

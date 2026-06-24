@@ -33,8 +33,7 @@ lemma slope_fdPolygon_seg1 (s t : ℝ) (hs : s < 1) (ht : t < 1) (hst : s ≠ t)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 
@@ -49,8 +48,7 @@ lemma slope_fdPolygon_seg2 (s t : ℝ) (hs : s > 1) (ht : t > 1) (hs2 : s ≤ 2)
       chordSegment rho' iPoint (t - 1) := by simp only [fdPolygon, ht', ↓reduceIte, ht2]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_sub, Complex.ofReal_one, rho', iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -67,8 +65,7 @@ lemma slope_fdPolygon_seg3 (s t : ℝ) (hs : s > 2) (ht : t > 2) (hs3 : s ≤ 3)
       chordSegment iPoint rho (t - 2) := by simp only [fdPolygon, ht1, ↓reduceIte, ht2, ht3]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_sub, Complex.ofReal_one, Complex.ofReal_ofNat, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -90,8 +87,7 @@ lemma slope_fdPolygon_seg4 (s t : ℝ) (hs : s > 3) (ht : t > 3) (hs4 : s ≤ 4)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 
@@ -112,8 +108,7 @@ lemma slope_fdPolygon_seg5 (s t : ℝ) (hs : s > 4) (ht : t > 4) (hst : s ≠ t)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 

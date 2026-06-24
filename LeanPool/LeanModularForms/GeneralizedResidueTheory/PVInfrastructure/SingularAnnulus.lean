@@ -428,8 +428,7 @@ private lemma singular_annulus_lin_integral_zero
   have hE_L := lin_indicator_eq_inv_left hc₁_pos.le (by linarith : t₀ - c₂ ≤ t₀ - c₁) hφ_val
   have hE_R := lin_indicator_eq_inv_right hc₁_pos.le (by linarith : t₀ + c₁ ≤ t₀ + c₂) hφ_val
   rw [h_split, h0_L, h0_R, h0_M, hE_L, hE_R]
-  simp only [zero_add, add_zero]
-  exact singular_tAnnLin_cancel t₀ hL_pos ε₁ ε₂ hε₂_pos hε₂_le
+  simpa only [zero_add, add_zero] using singular_tAnnLin_cancel t₀ hL_pos ε₁ ε₂ hε₂_pos hε₂_le
 
 /-! ### Helper: pointwise bound on difference between gamma and linearized indicators -/
 

@@ -659,8 +659,7 @@ noncomputable instance instNonUnitalNonAssocSemiring :
       · rfl
 
     zero_mul := fun f => by
-      simp only [mul_def]
-      exact Finsupp.sum_zero_index
+      simpa only [mul_def] using Finsupp.sum_zero_index
     mul_zero := fun f => by
       simp only [mul_def]
       exact Eq.trans (congr_arg (sum f)

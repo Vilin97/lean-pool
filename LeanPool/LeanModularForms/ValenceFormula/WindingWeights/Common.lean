@@ -191,8 +191,7 @@ lemma ftc_log_piece_lower {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     logDeriv_integrable_congr hab hh_cont hh_deriv_cont hh_ne heq
   have hnh_slit : ∀ t ∈ Ioo a b, (-(h t)) ∈ slitPlane := by
     intro t ht; rw [Complex.mem_slitPlane_iff]; right
-    simp only [Complex.neg_im, ne_eq, neg_eq_zero]
-    exact ne_of_lt (hh_im_neg_interior t ht)
+    simpa only [Complex.neg_im, ne_eq, neg_eq_zero] using ne_of_lt (hh_im_neg_interior t ht)
   have h_ftc := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
     hnh_log_cont (fun t ht => by
       have hda := (hh_diff t ht).hasDerivAt.neg

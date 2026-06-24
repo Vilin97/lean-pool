@@ -519,8 +519,7 @@ lemma cutoff_zpow_infrastructure
       (∀ t ∈ Ioc (σ₂ ε) γ.b, ε < ‖γ.toFun t - s‖) ∧
       (∀ t ∈ Icc (σ₁ ε) (σ₂ ε), ‖γ.toFun t - s‖ ≤ ε) := by
     intro ε hε
-    simp only [σ₁, σ₂, hε, dif_pos]
-    exact (h_exit ε hε).choose_spec.choose_spec
+    simpa only [σ₁, σ₂, hε, dif_pos] using (h_exit ε hε).choose_spec.choose_spec
   have hIoo_ev : ∀ᶠ ε in 𝓝[>] (0 : ℝ), ε ∈ Ioo 0 δ := Ioo_mem_nhdsGT hδ_pos
   let wR : ℝ → ℂ := fun ε => γ.toFun (σ₂ ε) - s
   let wL : ℝ → ℂ := fun ε => γ.toFun (σ₁ ε) - s

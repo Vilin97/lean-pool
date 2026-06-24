@@ -95,8 +95,8 @@ lemma schwartz_fderiv_component_schwartz
   have h_norm_eval : ‖(ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1 : Fin 3 → ℝ))‖ ≤ 1 := by
     apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
     intro L
-    simp only [ContinuousLinearMap.apply_apply]
-    exact le_trans (L.le_opNorm _) (by simp [Pi.norm_single])
+    simpa only [ContinuousLinearMap.apply_apply] using
+      le_trans (L.le_opNorm _) (by simp [Pi.norm_single])
   calc ‖(ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1 : Fin 3 → ℝ)).compContinuousMultilinearMap
         (iteratedFDeriv ℝ k (fderiv ℝ f) v)‖ * (1 + ‖v‖) ^ N
       ≤ ‖ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1 : Fin 3 → ℝ)‖ *
@@ -379,20 +379,11 @@ lemma coulomb_flux_eq_decomposed
        f v * (∫ w, landauMatrix coulombKernel (v - w) i j *
         fderiv ℝ f w (Pi.single j 1))) := by
   -- Extract k=0 decay
-  have hf_decay : ∀ N : ℕ, ∃ C > 0, ∀ v, |f v| * (1 + ‖v‖) ^ N ≤ C := by
-    intro N; obtain ⟨C, hC, hb⟩ := hf_schwartz N (k := 0) (by decide)
-    exact ⟨C, hC, fun v => by
-      have := hb v
-      simp only [norm_iteratedFDeriv_zero, Real.norm_eq_abs] at this
-      exact this⟩
-  have hdf_schwartz := fun j => schwartz_fderiv_component_schwartz f hf_smooth hf_schwartz j
+  have hf_decay : ∀ N : ℕ, ∃ C > 0, ∀ v, |f v| * (1 + ‖v‖) ^ N ≤ C :=
+    schwartz_pointwise_decay hf_schwartz
   have hdf_decay : ∀ j, ∀ N : ℕ, ∃ C > 0, ∀ v,
-      |fderiv ℝ f v (Pi.single j 1)| * (1 + ‖v‖) ^ N ≤ C := by
-    intro jj N; obtain ⟨C, hC, hb⟩ := hdf_schwartz jj N (k := 0) (by decide)
-    exact ⟨C, hC, fun v => by
-      have := hb v
-      simp only [norm_iteratedFDeriv_zero, Real.norm_eq_abs] at this
-      exact this⟩
+      |fderiv ℝ f v (Pi.single j 1)| * (1 + ‖v‖) ^ N ≤ C :=
+    fun j => schwartz_fderiv_component_decay hf_schwartz j
   have h_Af : ∀ j, Integrable (fun w => landauMatrix coulombKernel (v - w) i j * f w) :=
     fun j => coulomb_entry_schwartz_integrable f (hf_smooth.of_le (by decide)) hf_decay v i j
   have h_Adf : ∀ j, Integrable (fun w => landauMatrix coulombKernel (v - w) i j *
@@ -492,8 +483,7 @@ lemma coulomb_flux_differentiable
        f v * (∫ w, landauMatrix coulombKernel (v - w) i j *
         fderiv ℝ f w (Pi.single j 1)))) :=
     funext (coulomb_flux_eq_decomposed f hf_pos hf_smooth hf_schwartz i)
-  rw [h_fn_eq]
-  exact h_decomp_diff
+  rwa [h_fn_eq]
 
 /-- Coulomb convolution of a Schwartz-decaying function is uniformly bounded:
     |∫ A_{ij}(v-w) * g(w) dw| ≤ M for all v. Uses |A_{ij}(z)| ≤ ‖z‖⁻¹ and the

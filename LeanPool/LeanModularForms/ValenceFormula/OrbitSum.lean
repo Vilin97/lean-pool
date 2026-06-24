@@ -170,11 +170,9 @@ private theorem no_zeros_above_height' (hf : f ≠ 0) :
   have h_qParam_mem : Function.Periodic.qParam (1 : ℝ) (↑p : ℂ) ∈
       Metric.closedBall (0 : ℂ) (Real.exp (-2 * Real.pi * H₀)) := by
     rw [Metric.mem_closedBall, dist_zero_right, Function.Periodic.norm_qParam]
-    simp only [div_one]
-    exact Real.exp_le_exp.mpr (by nlinarith [Real.pi_pos])
+    simpa only [div_one] using Real.exp_le_exp.mpr (by nlinarith [Real.pi_pos])
   have h_qParam_ne : Function.Periodic.qParam (1 : ℝ) (↑p : ℂ) ≠ 0 := by
-    simp only [Function.Periodic.qParam, ne_eq]
-    exact Complex.exp_ne_zero _
+    simpa only [Function.Periodic.qParam, ne_eq] using Complex.exp_ne_zero _
   exact hH₀_nonvan _ h_qParam_mem h_qParam_ne (h_eq ▸ hfp)
 
 /-- The set of zeros (with nonzero order) in `𝒟` is finite. -/

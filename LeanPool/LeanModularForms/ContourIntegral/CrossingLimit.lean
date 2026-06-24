@@ -204,8 +204,7 @@ theorem pv_tendsto_of_crossing_limit_asymmetric
     -- Assemble
     change ∫ t in a..b, F t = E ε
     rw [h_split, h_mid_zero, h_eq_left, h_eq_right]
-    simp only [add_zero]
-    exact h_ftc ε hε_pos hε_lt
+    simpa only [add_zero] using h_ftc ε hε_pos hε_lt
   exact h_limit.congr' h_ev.symm
 
 end ContourIntegral

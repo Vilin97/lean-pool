@@ -139,8 +139,7 @@ lemma rightEdge_dist_from_horizontal (s : ℂ) (hs_im : s.im < H) (z : ℂ) (hz_
 /-- Minimum distance from s (on right edge) to the non-seg1 parts of the boundary. -/
 lemma rightEdge_min_dist_pos (s : ℂ) (hs_norm : ‖s‖ > 1) (hs_im : s.im < H) :
     0 < min (min (‖s‖ - 1) 1) (H - s.im) := by
-  simp only [lt_min_iff]
-  exact ⟨⟨by linarith, by norm_num⟩, by linarith⟩
+  simpa only [lt_min_iff] using ⟨⟨by linarith, by norm_num⟩, by linarith⟩
 
 /-- FTC on a smooth segment: `∫ f'/f = log(−f(b)) − log(−f(a))`
 when `−f` stays in `slitPlane`. Delegates to `LogDerivFTC.ftc_log_neg_on_segment`. -/
@@ -830,8 +829,7 @@ private lemma rightEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     intro ε hε_pos hε_lt
     obtain ⟨_, h1, h2⟩ :=
       rightEdge_eps_bounds hα_pos hthresh_le_t₀α hthresh_le_1mt₀α hε_pos hε_lt
-    simp only [sub_zero]
-    exact lt_min h1 (h2.trans (by linarith))
+    simpa only [sub_zero] using lt_min h1 (h2.trans (by linarith))
   -- Apply pv_tendsto_of_crossing_limit
   refine ContourIntegral.pv_tendsto_of_crossing_limit
       (t₀ := t₀) (ht₀ := ⟨by linarith, by linarith⟩)
@@ -934,8 +932,7 @@ def rightEdgeCrossingData (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     obtain ⟨_, h1, h2⟩ := rightEdge_eps_bounds hα_pos
       (le_trans (min_le_right _ _) (min_le_left _ _))
       (le_trans (min_le_right _ _) (min_le_right _ _)) hε_pos hε_lt
-    simp only [sub_zero]
-    exact lt_min h1 (h2.trans (by linarith))
+    simpa only [sub_zero] using lt_min h1 (h2.trans (by linarith))
   h_far := by
     set α := H - Real.sqrt 3 / 2 with hα_def
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith

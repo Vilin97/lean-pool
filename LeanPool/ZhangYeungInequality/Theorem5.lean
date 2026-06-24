@@ -444,7 +444,7 @@ theorem _root_.ZhangYeung.theorem5_averaged
     simpa [hleft, hright] using hsum
   have hn_pos_nat : 0 < n := lt_of_lt_of_le (by decide : 0 < 2) hn
   have hn_pos : (0 : ℝ) < n := by exact_mod_cast hn_pos_nat
-  have hn_ne : (n : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hn_pos_nat)
+  have hn_ne : (n : ℝ) ≠ 0 := hn_pos.ne'
   have hdiv : lhs ≤ ((∑ i : Fin n, rhs i) + n * tail) / n :=
     (le_div_iff₀ hn_pos).2 (by simpa [mul_comm] using hscaled)
   have hsplit : ((∑ i : Fin n, rhs i) + n * tail) / n = (1 / n : ℝ) * (∑ i : Fin n,

@@ -119,18 +119,15 @@ lemma fdPolygon_continuous : Continuous fdPolygon := by
       else fdPolygonSeg5 t) := by
     apply Continuous.if
     · intro t ht; rw [hf 1, mem_singleton_iff] at ht; rw [ht]
-      simp only [show (1 : ℝ) ≤ 2 from by norm_num, ↓reduceIte]
-      exact fdPolygon_match_t1
+      simpa only [show (1 : ℝ) ≤ 2 from by norm_num, ↓reduceIte] using fdPolygon_match_t1
     · exact fdPolygon_seg1_continuous
     · apply Continuous.if
       · intro t ht; rw [hf 2, mem_singleton_iff] at ht; rw [ht]
-        simp only [show (2 : ℝ) ≤ 3 from by norm_num, ↓reduceIte]
-        exact fdPolygon_match_t2
+        simpa only [show (2 : ℝ) ≤ 3 from by norm_num, ↓reduceIte] using fdPolygon_match_t2
       · exact fdPolygon_seg2_continuous
       · apply Continuous.if
         · intro t ht; rw [hf 3, mem_singleton_iff] at ht; rw [ht]
-          simp only [show (3 : ℝ) ≤ 4 from by norm_num, ↓reduceIte]
-          exact fdPolygon_match_t3
+          simpa only [show (3 : ℝ) ≤ 4 from by norm_num, ↓reduceIte] using fdPolygon_match_t3
         · exact fdPolygon_seg3_continuous
         · apply Continuous.if
           · intro t ht; rw [hf 4, mem_singleton_iff] at ht; rw [ht]

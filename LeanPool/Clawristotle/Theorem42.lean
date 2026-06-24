@@ -295,8 +295,8 @@ theorem Theorem42
       show J x = ρ x • ((-1 / (2 * c₀)) • b_func x)
       simp only [J, ρ]
       ext i
-      simp only [Pi.smul_apply, smul_eq_mul]
-      exact current_density_of_gaussian (f x) (hf_pos x) (hf_int x) a₀ (b_func x) c₀ ha₀ i
+      simpa only [Pi.smul_apply, smul_eq_mul] using
+        current_density_of_gaussian (f x) (hf_pos x) (hf_int x) a₀ (b_func x) c₀ ha₀ i
     xMax := xMax
     hmax := hmax
     xMin := xMin

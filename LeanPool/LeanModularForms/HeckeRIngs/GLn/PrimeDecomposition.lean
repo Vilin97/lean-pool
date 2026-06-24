@@ -56,8 +56,7 @@ lemma ppowDiag_pos (p : ℕ) (hp : p.Prime) (e : Fin n → ℕ) :
 /-- DivChain for p-power diagonals when exponents are monotone. -/
 lemma divChain_ppow (p : ℕ) (e : Fin n → ℕ) (hmono : Monotone e) :
     DivChain n (ppowDiag n p e) := fun i hi => by
-  simp only [ppowDiag]
-  exact Nat.pow_dvd_pow p (hmono (Fin.mk_le_mk.mpr (by omega)))
+  simpa only [ppowDiag] using Nat.pow_dvd_pow p (hmono (Fin.mk_le_mk.mpr (by omega)))
 
 /-- Extract the p-component of each entry in a positive diagonal. -/
 def pComponent (p : ℕ) (a : Fin n → ℕ) : Fin n → ℕ :=

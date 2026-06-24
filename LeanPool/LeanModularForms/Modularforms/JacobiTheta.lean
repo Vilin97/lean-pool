@@ -478,8 +478,7 @@ lemma isBoundedAtImInfty_H₃_aux (z : ℍ) (hz : 1 ≤ z.im) :
       simp
     _ ≤ _ := Summable.tsum_le_tsum (fun b ↦ ?_) ?_ ?_
   · apply exp_monotone
-    simp only [neg_mul, neg_le_neg_iff]
-    exact le_mul_of_one_le_right (by positivity) hz
+    simpa only [neg_mul, neg_le_neg_iff] using le_mul_of_one_le_right (by positivity) hz
   · exact h_sum z
   · simpa using h_sum UpperHalfPlane.I
 
@@ -950,11 +949,6 @@ private lemma finrank_cuspform_12 :
 private lemma theta_prod_sq_proportional :
     ∃ c : ℂ, c • Delta = theta_prod_sq_CF :=
   (finrank_eq_one_iff_of_nonzero' Delta Delta_ne_zero).mp finrank_cuspform_12 theta_prod_sq_CF
-
-private lemma Θ₂_div_exp_tendsto :
-    Tendsto (fun z : ℍ ↦ Θ₂ z / cexp (π * I * ↑z / 4)) atImInfty (nhds 2) := by
-  simp_rw [Θ₂_as_jacobiTheta₂, mul_div_cancel_left₀ _ (Complex.exp_ne_zero _)]
-  exact jacobiTheta₂_half_mul_apply_tendsto_atImInfty
 
 private lemma H₂_div_exp_tendsto :
     Tendsto (fun z : ℍ ↦ H₂ z / cexp (↑π * I * ↑z)) atImInfty (nhds 16) := by

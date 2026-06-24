@@ -198,8 +198,7 @@ lemma piecewiseC1Immersion_deriv_bounded
     obtain ⟨p, q, hp, hq, hpq, hc, ht_in⟩ :=
       off_partition_in_consecutive_pair γ t ht ht_nP
     have hmem : (p, q) ∈ pairs := by
-      simp only [Finset.mem_filter, Finset.mem_product, pairs]
-      exact ⟨⟨hp, hq⟩, hpq, hc⟩
+      simpa only [Finset.mem_filter, Finset.mem_product, pairs] using ⟨⟨hp, hq⟩, hpq, hc⟩
     exact hM_off (p, q) hmem t ht_in⟩
 
 /-- The derivative of a piecewise C¹ curve is interval integrable when bounded. -/
@@ -250,8 +249,7 @@ lemma singular_sum_intervalIntegrable
       MeasureTheory.volume γ.a γ.b := by
   induction S0 using Finset.induction_on with
   | empty =>
-    simp only [Finset.sum_empty]
-    exact intervalIntegrable_const
+    simpa only [Finset.sum_empty] using intervalIntegrable_const
   | insert s S hs_nin ih =>
     simp only [Finset.sum_insert hs_nin]
     exact (singular_term_intervalIntegrable f s γ

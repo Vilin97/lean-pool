@@ -643,8 +643,7 @@ lemma entropyFn_singleton (hX : ∀ i, Measurable (X i)) (i : Fin 4) :
       (fun ω : Ω => fun j : ({i} : Finset (Fin 4)) => X j.1 ω) :=
     measurable_pi_lambda _ (fun j => hX j.1)
   -- π ∘ joint = X i definitionally, so the composed entropy collapses.
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -677,8 +676,7 @@ lemma entropyFn_pair (hX : ∀ i, Measurable (X i))
       (fun ω : Ω => fun k : ({i, j} : Finset (Fin 4)) => X k.1 ω) :=
     measurable_pi_lambda _ (fun k => hX k.1)
   -- π ∘ joint = ⟨X i, X j⟩ definitionally.
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -714,8 +712,7 @@ lemma entropyFn_triple (hX : ∀ i, Measurable (X i))
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({i, j, k} : Finset (Fin 4)) => X m.1 ω) :=
     measurable_pi_lambda _ (fun m => hX m.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -755,8 +752,7 @@ lemma entropyFn_quad (hX : ∀ i, Measurable (X i)) :
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({0, 1, 2, 3} : Finset (Fin 4)) => X m.1 ω) :=
     measurable_pi_lambda _ (fun m => hX m.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 end EntropyFnEvaluation
 
@@ -1002,10 +998,9 @@ private lemma almostEntropicRegion_four_subset_zhangYeungRegion_4 :
     (closure_minimal entropyRegion_four_subset_zhangYeungRegion_4 isClosed_zhangYeungRegion_4)
 
 /-- The witness is not almost entropic in dimension `4`. -/
-private lemma not_mem_almostEntropicRegion_witness : FWitness ∉ almostEntropicRegionN.{u} 4 :=
-  by
-  intro hF
-  exact not_zhangYeungHolds_witness (almostEntropicRegion_four_subset_zhangYeungRegion_4 hF)
+private lemma not_mem_almostEntropicRegion_witness :
+    FWitness ∉ almostEntropicRegionN.{u} 4 := fun hF =>
+  not_zhangYeungHolds_witness (almostEntropicRegion_four_subset_zhangYeungRegion_4 hF)
 
 /--
 **Theorem 4 of [@zhangyeung1998, §II, eq. 26]** at `n = 4`. The Shannon outer bound
@@ -1021,9 +1016,7 @@ lives entirely at the level of `Finset (Fin 4) → ℝ`.
 theorem _root_.ZhangYeung.theorem4 :
     ∃ F : Finset (Fin 4) → ℝ,
       F ∈ shannonRegionN 4 ∧ F ∉ almostEntropicRegionN.{u} 4 := by
-  refine ⟨FWitness, ?_, not_mem_almostEntropicRegion_witness⟩
-  change shannonConeN FWitness
-  exact shannonCone_of_witness
+  exact ⟨FWitness, shannonCone_of_witness, not_mem_almostEntropicRegion_witness⟩
 
 /--
 Sequence-level strengthening of the witness exclusion: `FWitness` is not the pointwise
@@ -1168,9 +1161,7 @@ realization back down to the first four coordinates and applying the `n = 4` exc
 theorem _root_.ZhangYeung.theorem4_ge_four (n : ℕ) (hn : 4 ≤ n) :
     ∃ F : Finset (Fin n) → ℝ,
       F ∈ shannonRegionN n ∧ F ∉ almostEntropicRegionN.{u} n := by
-  refine ⟨FWitnessN hn, ?_, ?_⟩
-  · change shannonConeN (FWitnessN hn)
-    exact shannonCone_of_witness_n hn
+  refine ⟨FWitnessN hn, shannonCone_of_witness_n hn, ?_⟩
   · intro hF
     have h_restrict : FWitness ∈ almostEntropicRegionN.{u} 4 := by
       simpa [restrictFirstFour_witness_n hn] using restrictFirstFour_mem_almostEntropicRegionN
