@@ -950,11 +950,6 @@ private lemma theta_prod_sq_proportional :
     ∃ c : ℂ, c • Delta = theta_prod_sq_CF :=
   (finrank_eq_one_iff_of_nonzero' Delta Delta_ne_zero).mp finrank_cuspform_12 theta_prod_sq_CF
 
-private lemma Θ₂_div_exp_tendsto :
-    Tendsto (fun z : ℍ ↦ Θ₂ z / cexp (π * I * ↑z / 4)) atImInfty (nhds 2) := by
-  simp_rw [Θ₂_as_jacobiTheta₂, mul_div_cancel_left₀ _ (Complex.exp_ne_zero _)]
-  exact jacobiTheta₂_half_mul_apply_tendsto_atImInfty
-
 private lemma H₂_div_exp_tendsto :
     Tendsto (fun z : ℍ ↦ H₂ z / cexp (↑π * I * ↑z)) atImInfty (nhds 16) := by
   have h_eq : ∀ z : ℍ, H₂ z / cexp (↑π * I * ↑z) = (jacobiTheta₂ (↑z / 2) ↑z) ^ 4 := by

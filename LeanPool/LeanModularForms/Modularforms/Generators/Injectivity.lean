@@ -68,19 +68,6 @@ private lemma weight_fin2_cast (d : Fin 2 →₀ ℕ) :
     (Finsupp.weight E₄E₆Weight d : ℤ) = ↑(d 0) * 4 + ↑(d 1) * 6 := by
   rw [weight_eq_4a_6b]; push_cast; ring
 
-private lemma evalE₄E₆_whc_grade (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
-    (hp : MvPolynomial.IsWeightedHomogeneous E₄E₆Weight p n) (k : ℤ) (hk : k ≠ ↑n) :
-    (evalE₄E₆ p) k = 0 := by
-  rw [← MvPolynomial.support_sum_monomial_coeff p, map_sum,
-    show (∑ x ∈ p.support, evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x p))) k =
-      ∑ x ∈ p.support, (evalE₄E₆ ((MvPolynomial.monomial x) (MvPolynomial.coeff x p))) k from
-      map_sum (DFinsupp.evalAddMonoidHom k) _ _]
-  apply Finset.sum_eq_zero
-  intro d hd
-  apply evalE₄E₆_monomial_grade
-  intro heq; apply hk
-  rw [heq, ← weight_fin2_cast d, hp (MvPolynomial.mem_support_iff.mp hd)]
-
 private lemma evalE₄E₆_component_eq (p : MvPolynomial (Fin 2) ℂ) (n : ℕ) :
     (evalE₄E₆ (MvPolynomial.weightedHomogeneousComponent E₄E₆Weight n p)) (↑n : ℤ) =
     (evalE₄E₆ p) (↑n : ℤ) := by
