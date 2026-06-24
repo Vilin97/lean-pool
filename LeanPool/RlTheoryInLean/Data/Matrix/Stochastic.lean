@@ -791,10 +791,8 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   have hKle1 := NNReal.coe_le_coe.mpr hf.1.le
   conv_rhs at hKle1 => simp
   constructor
-  refine ⟨?C, ?ρ, ?μ, ?hCpos, ?hρpos, ?hρlt1, ?hμ, ?hμstationary, ?hmixing⟩
-  case C => exact 2 / K / (1 - K)
-  case ρ => exact K ^ (1 / (N : ℝ))
-  case μ => exact μ
+  refine ⟨2 / K / (1 - K), K ^ (1 / (N : ℝ)), μ, ?hCpos, ?hρpos, ?hρlt1, hμ,
+    hμstationary, ?hmixing⟩
   case hCpos =>
     have h₁ : 0 < 1 - (K : ℝ) := by simp [hf.1]
     have h₂ : 0 < 2 / (K : ℝ) := by simp [hKpos]
@@ -805,8 +803,6 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
     · simp
     · simp [hf.1]
     · simp [hNpos]
-  case hμ => exact hμ
-  case hμstationary => exact hμstationary
   case hmixing =>
     intro x₀ hx₀ n
     have hrate := apriori_dist_iterate_fixedPoint_le hf
