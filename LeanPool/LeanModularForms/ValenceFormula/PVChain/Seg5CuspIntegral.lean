@@ -268,8 +268,7 @@ lemma circleIntegral_logDeriv_cuspFunction_of_radius (hf : f ≠ 0)
     apply ContinuousOn.inv₀ continuousOn_id
     intro z hz
     simp only [Metric.mem_sphere, dist_zero_right] at hz
-    simp only [id]
-    exact norm_ne_zero_iff.mp (by linarith)
+    simpa only [id] using norm_ne_zero_iff.mp (by linarith)
   have hci_logDeriv : CircleIntegrable (fun q => logDeriv g q) 0 R := by
     apply ContinuousOn.circleIntegrable hR_le
     have h_sphere_sub : Metric.sphere (0 : ℂ) R ⊆ Metric.ball 0 1 :=

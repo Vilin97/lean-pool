@@ -224,8 +224,7 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
       congr 1; ext x; simp only [Set.mem_union, Set.mem_sdiff, Set.mem_inter_iff]; tauto
     rw [h_eq]
     apply AEStronglyMeasurable.add_measure (h_cont.aestronglyMeasurable (μ := volume) h_diff_meas)
-    simp only [Measure.restrict_eq_zero.mpr hP_meas_zero]
-    exact aestronglyMeasurable_zero_measure _
+    simpa only [Measure.restrict_eq_zero.mpr hP_meas_zero] using aestronglyMeasurable_zero_measure _
   have h_piecewise : AEStronglyMeasurable
       ((S ∩ Icc a b).piecewise (fun t => f (γ t) * deriv γ t) (fun _ => (0 : ℂ))) volume :=
     AEStronglyMeasurable.piecewise hS_meas h_base_meas aestronglyMeasurable_const

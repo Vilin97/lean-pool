@@ -76,8 +76,7 @@ private lemma homotopy_integrand_continuousOn_t
   obtain ⟨ε, hε_pos, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP'.1
   set ε' := min (ε / 2) (min (t - a) (b - t)) with hε'_def
   have hε'_pos : 0 < ε' := by
-    simp only [hε'_def, lt_min_iff]
-    exact ⟨by linarith, sub_pos.mpr ht_Ioo.1, sub_pos.mpr ht_Ioo.2⟩
+    simpa only [hε'_def, lt_min_iff] using ⟨by linarith, sub_pos.mpr ht_Ioo.1, sub_pos.mpr ht_Ioo.2⟩
   have hε'_le : ε' ≤ ε / 2 := min_le_left _ _
   have h_avoid_P : ∀ t' ∈ Ioo (t - ε') (t + ε'), t' ∉ P := fun t' ht' =>
     hε_avoid t' ⟨by linarith [ht'.1], by linarith [ht'.2]⟩
@@ -114,8 +113,7 @@ private lemma homotopy_integrand_continuousWithinAt_s
   obtain ⟨ε, hε_pos, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
   set ε' := min (ε / 2) (min (t - a) (b - t)) with hε'_def
   have hε'_pos : 0 < ε' := by
-    simp only [hε'_def, lt_min_iff]
-    exact ⟨by linarith, sub_pos.mpr ht_Ioo.1, sub_pos.mpr ht_Ioo.2⟩
+    simpa only [hε'_def, lt_min_iff] using ⟨by linarith, sub_pos.mpr ht_Ioo.1, sub_pos.mpr ht_Ioo.2⟩
   have hε'_le : ε' ≤ ε / 2 := min_le_left _ _
   have h_avoid_P : ∀ t' ∈ Ioo (t - ε') (t + ε'), t' ∉ P := fun t' ht' =>
     hε_avoid t' ⟨by linarith [ht'.1], by linarith [ht'.2]⟩

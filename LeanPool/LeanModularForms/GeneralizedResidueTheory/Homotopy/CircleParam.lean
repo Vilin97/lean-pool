@@ -177,8 +177,7 @@ lemma circleParamCW_closed (z₀ : ℂ) (r : ℝ) (a b : ℝ)
 lemma circleParamCW_dist (z₀ : ℂ) (r : ℝ) (hr : 0 ≤ r)
     (a b : ℝ) (hab : a < b) (t : ℝ) :
     ‖circleParamCW z₀ r a b t - z₀‖ = r := by
-  simp only [circleParamCW]
-  exact circleParam_dist z₀ r hr a b hab (a + b - t)
+  simpa only [circleParamCW] using circleParam_dist z₀ r hr a b hab (a + b - t)
 
 lemma circleParam_differentiable (z₀ : ℂ) (r : ℝ)
     (a b : ℝ) :

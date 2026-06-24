@@ -361,8 +361,7 @@ private lemma hasDerivAt_segmentIntegral {f : ℂ → ℂ}
         f (c + t • (w - c)) * (w - c)) =
       H w * (w - c) := by
     intro w
-    simp only [H]
-    exact intervalIntegral.integral_mul_const (𝕜 := ℂ) _ _
+    simpa only [H] using intervalIntegral.integral_mul_const (𝕜 := ℂ) _ _
   suffices HasDerivAt (fun w => H w * (w - c)) (f z) z by
     convert this using 1
     ext w; exact hF_eq w

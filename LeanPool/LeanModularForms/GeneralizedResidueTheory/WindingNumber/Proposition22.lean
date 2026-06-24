@@ -525,11 +525,9 @@ private theorem cpv_exists_on_subinterval
       set α := max (max a' a₀) c with hα_def
       set β := min (min b' b₀) d with hβ_def
       have hα_lt_t₁ : α < t₁ := by
-        simp only [hα_def, max_lt_iff]
-        exact ⟨⟨ha'_lt, ht₁_Ioo_a₀b₀.1⟩, ht₁_Ioo.1⟩
+        simpa only [hα_def, max_lt_iff] using ⟨⟨ha'_lt, ht₁_Ioo_a₀b₀.1⟩, ht₁_Ioo.1⟩
       have ht₁_lt_β : t₁ < β := by
-        simp only [hβ_def, lt_min_iff]
-        exact ⟨⟨ht₁_lt_b', ht₁_Ioo_a₀b₀.2⟩, ht₁_Ioo.2⟩
+        simpa only [hβ_def, lt_min_iff] using ⟨⟨ht₁_lt_b', ht₁_Ioo_a₀b₀.2⟩, ht₁_Ioo.2⟩
       have hαβ_sub_a'b' : Icc α β ⊆ Icc a' b' := fun t ht =>
         ⟨(le_max_left _ _).trans ((le_max_left _ _).trans ht.1),
          ht.2.trans ((min_le_left _ _).trans (min_le_left _ _))⟩

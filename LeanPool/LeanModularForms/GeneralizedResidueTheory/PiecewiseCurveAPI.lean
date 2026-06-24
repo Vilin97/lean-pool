@@ -104,8 +104,7 @@ private theorem pairwise_le_getLast : ∀ (l : List ℝ) (_hl : l.Pairwise (· �
     (hne : l ≠ []) (elem : ℝ) (_hmem : elem ∈ l), elem ≤ l.getLast hne
   | [], _, hne, _, _ => absurd rfl hne
   | [hd], _, _, elem, hmem => by
-      simp only [List.getLast_singleton]
-      exact List.eq_of_mem_singleton hmem ▸ le_refl _
+      simpa only [List.getLast_singleton] using List.eq_of_mem_singleton hmem ▸ le_refl _
   | hd :: hd2 :: tl2, hl, _, elem, hmem => by
       have htl_ne : hd2 :: tl2 ≠ [] := List.cons_ne_nil hd2 tl2
       rw [show (hd :: hd2 :: tl2).getLast (List.cons_ne_nil hd (hd2 :: tl2)) =
@@ -159,8 +158,7 @@ private theorem pairwise_consecutive_union :
         subst hlast
         simp only [List.zip_nil_right]
         intro t ht
-        simp only [Set.mem_iUnion]
-        exact ⟨(x, y), List.mem_singleton.mpr rfl, ht⟩
+        simpa only [Set.mem_iUnion] using ⟨(x, y), List.mem_singleton.mpr rfl, ht⟩
       | cons z zs =>
         have htail_ne' : (y :: z :: zs).tail ≠ [] := List.cons_ne_nil z zs
         intro t ht

@@ -389,8 +389,7 @@ private lemma unitArc_winding_aux (H : ℝ) (hH : 1 < H) (s : ℂ)
       _ = hw := by field_simp
   have hδ_pos : ∀ ε, 0 < ε → ε < threshold → 0 < δ_fn ε := by
     intro ε hε_pos _
-    simp only [hδ_fn_def]
-    exact mul_pos (by positivity) (Real.arcsin_pos.mpr (by linarith))
+    simpa only [hδ_fn_def] using mul_pos (by positivity) (Real.arcsin_pos.mpr (by linarith))
   have hδ_small : ∀ ε, 0 < ε → ε < threshold → δ_fn ε < min (t₀ - 0) (5 - t₀) := by
     intro ε hε_pos hε_lt
     have hδ_lt := hδ_lt_hw ε hε_pos hε_lt

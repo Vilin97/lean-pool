@@ -95,8 +95,7 @@ theorem aEStronglyMeasurable_of_continuousOn_off_finite {f : ℝ → ℂ} {a b :
     rw [← Measure.restrict_union h_disj hP_inter_meas]; congr 1; ext x
     simp only [Set.mem_union, Set.mem_sdiff, Set.mem_inter_iff]; tauto
   rw [h_eq]; apply AEStronglyMeasurable.add_measure h_cont_meas
-  simp only [Measure.restrict_eq_zero.mpr hP_meas_zero]
-  exact aestronglyMeasurable_zero_measure f
+  simpa only [Measure.restrict_eq_zero.mpr hP_meas_zero] using aestronglyMeasurable_zero_measure f
 
 private lemma measurableSet_multipoint_condition {γ : ℝ → ℂ} {a b ε : ℝ} (S : Finset ℂ)
     (hγ : ContinuousOn γ (Icc a b)) :

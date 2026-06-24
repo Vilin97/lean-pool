@@ -280,8 +280,7 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
     · have hzne := ne_zero z
       have hI : Complex.I ≠ 0 := I_ne_zero
       have hpi : (π : ℂ) ≠ 0 := by
-        simp only [ne_eq, ofReal_eq_zero]
-        exact Real.pi_ne_zero
+        simpa only [ne_eq, ofReal_eq_zero] using Real.pi_ne_zero
       simp at hzne ⊢
       field_simp
       ring
