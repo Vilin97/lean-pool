@@ -478,8 +478,7 @@ lemma isBoundedAtImInfty_H₃_aux (z : ℍ) (hz : 1 ≤ z.im) :
       simp
     _ ≤ _ := Summable.tsum_le_tsum (fun b ↦ ?_) ?_ ?_
   · apply exp_monotone
-    simp only [neg_mul, neg_le_neg_iff]
-    exact le_mul_of_one_le_right (by positivity) hz
+    simpa only [neg_mul, neg_le_neg_iff] using le_mul_of_one_le_right (by positivity) hz
   · exact h_sum z
   · simpa using h_sum UpperHalfPlane.I
 
