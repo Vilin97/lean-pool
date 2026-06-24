@@ -6253,22 +6253,6 @@ private theorem cross_ambiguity_monomial_kernel_sum_eq_hermite_eval₂
     realHermiteGeneratingExpansionCoeff_sum_eq_hermite_eval₂]
   ring
 
-private theorem iteratedDeriv_generating_cross_ambiguity_integrand_eq_hermite_eval₂
-    (n m : ℕ) (x ω t : ℝ) :
-    iteratedDeriv n (realHermiteGenerating (t + (1 / 2 : ℝ) * x)) 0 *
-        iteratedDeriv m (realHermiteGenerating (t - (1 / 2 : ℝ) * x)) 0 *
-          Complex.exp (-(2 * Real.pi : ℂ) * Complex.I * ((inner ℝ ω t : ℝ) : ℂ)) =
-      (realHermiteCoeffScale * realHermiteCoeffScale) *
-        (Polynomial.eval₂ (Int.castRingHom ℂ)
-            ((Real.sqrt 2 : ℂ) * ((t + (1 / 2 : ℝ) * x : ℝ) : ℂ))
-            (Polynomial.hermite n) *
-          Polynomial.eval₂ (Int.castRingHom ℂ)
-            ((Real.sqrt 2 : ℂ) * ((t - (1 / 2 : ℝ) * x : ℝ) : ℂ))
-            (Polynomial.hermite m)) *
-          oneDWindowAmbiguityShiftedModulatedGaussian x ω t := by
-  rw [iteratedDeriv_generating_cross_ambiguity_integrand_finite_expansion,
-    cross_ambiguity_monomial_kernel_sum_eq_hermite_eval₂]
-
 private theorem iteratedDeriv_generating_cross_ambiguity_normalized_integral_finite_sum
     (n m : ℕ) (x ω : ℝ) :
     (∫ t : ℝ,
@@ -6723,16 +6707,6 @@ private theorem oneDWindowAmbiguityFactor_zero_eq_normalized_monomial_kernel_int
   apply MeasureTheory.integral_congr_ae
   filter_upwards with t
   rw [realHermiteGenerating_pi_quarter_mul_self]
-
-private theorem oneDWindowAmbiguityMonomialKernel_zero_zero_normalized_integral
-    (x ω : ℝ) :
-    (∫ t : ℝ,
-        (((Real.pi ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) *
-          oneDWindowAmbiguityMonomialKernel 0 0 x ω t)) =
-      Complex.ofReal
-        (Real.exp (-((x ^ 2 + (2 * Real.pi) ^ 2 * ω ^ 2) / 4))) := by
-  rw [← oneDWindowAmbiguityFactor_zero_eq_normalized_monomial_kernel_integral]
-  exact oneDWindowAmbiguityFactor_zero x ω
 
 private theorem oneDWindowAmbiguityFactor_one_eq_normalized_monomial_kernel_integral
     (x ω : ℝ) :
