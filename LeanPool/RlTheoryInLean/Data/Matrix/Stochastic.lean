@@ -49,9 +49,8 @@ class StochasticVec (x : S → ℝ) where
   nonneg : ∀ s, 0 ≤ x s
   rowsum : ∑ s, x s = 1
 
-lemma StochasticVec.le_one (x : S → ℝ) [StochasticVec x] (s : S) :
+lemma StochasticVec.le_one (x : S → ℝ) [hx : StochasticVec x] (s : S) :
   x s ≤ 1 := by
-  have hx : StochasticVec x := inferInstance
   rw [←hx.rowsum]
   apply single_le_sum
   · intro z _
@@ -87,10 +86,7 @@ instance : IsClosed (Simplex S) := by
   have : {x : l1Space | StochasticVec x.ofLp} =
     {x | (∀ s, 0 ≤ x.ofLp s) ∧ (∑ s, x.ofLp s = 1)} := by
     ext1
-    simp only [Set.mem_setOf_eq]
-    constructor
-    · intro h; exact ⟨h.nonneg, h.rowsum⟩
-    · intro h; exact ⟨h.1, h.2⟩
+    exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
   unfold Simplex
   rw [this]
   exact h
@@ -100,11 +96,10 @@ instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 lemma l1_norm_eq_sum (f : l1Space S) : ‖f‖ = ∑ s, |f.ofLp s| := by
   simpa using (PiLp.norm_eq_sum (f := f))
 
-lemma l1_norm_eq_one (x : l1Space S) [StochasticVec x.ofLp]
+lemma l1_norm_eq_one (x : l1Space S) [hx : StochasticVec x.ofLp]
   : ‖x‖₊ = 1 := by
   apply NNReal.eq
   simp only [coe_nnnorm, NNReal.coe_one, l1_norm_eq_sum]
-  have hx := (inferInstance : StochasticVec x.ofLp)
   rw [←hx.rowsum]
   apply sum_congr rfl
   intro s _
@@ -135,12 +130,11 @@ class RowStochastic (P : Matrix S S ℝ) where
 lemma sum_svec_mul_smat_eq_one
   (μ : S → ℝ) [StochasticVec μ] (P : Matrix S S ℝ) [RowStochastic P]
   : ∑ i, ∑ j, μ i * P i j = 1 := by
-  have hμ := (inferInstance : StochasticVec μ)
   have hP := (inferInstance : RowStochastic P).stochastic
   have hrow : ∀ i, ∑ j, μ i * P i j = μ i := by
     intro i
     rw [← mul_sum, (hP i).rowsum, mul_one]
-  rw [sum_congr rfl (fun i _ => hrow i), hμ.rowsum]
+  rw [sum_congr rfl (fun i _ => hrow i), StochasticVec.rowsum]
 
 instance svec_mul_smat_is_svec
   (μ : S → ℝ) [StochasticVec μ] (P : Matrix S S ℝ) [RowStochastic P] :
