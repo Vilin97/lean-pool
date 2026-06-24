@@ -2755,19 +2755,6 @@ private lemma hermite_eval₂_eq_coeff_sum
     simp [mul_comm]
   · simp [Polynomial.natDegree_hermite]
 
-private lemma realHermiteGeneratingExpansionCoeff_sum_eq_hermite_eval₂
-    (n : ℕ) (z : ℂ) :
-    ∑ k ∈ Finset.range (n + 1),
-        realHermiteGeneratingExpansionCoeff n k * z ^ k =
-      realHermiteCoeffScale *
-        Polynomial.eval₂ (Int.castRingHom ℂ) ((Real.sqrt 2 : ℂ) * z)
-          (Polynomial.hermite n) := by
-  rw [hermite_eval₂_eq_coeff_sum, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro k hk
-  rw [realHermiteGeneratingExpansionCoeff_eq_scale_coeff, mul_pow]
-  ring
-
 private lemma hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv
     (n k : ℕ) :
     ((Polynomial.hermite n).coeff k : ℂ) =
@@ -2794,29 +2781,6 @@ private lemma hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv
         ((Nat.choose n k : ℂ) *
           iteratedDeriv (n - k)
             (fun u : ℂ => Complex.exp (-(u ^ (2 : ℕ)) / 2)) 0) := by ring
-
-private theorem hermite_eval₂_eq_iteratedDeriv_cexp_generating
-    (n : ℕ) (z : ℂ) :
-    Polynomial.eval₂ (Int.castRingHom ℂ) z (Polynomial.hermite n) =
-      iteratedDeriv n
-        (fun u : ℂ => Complex.exp (z * u - u ^ (2 : ℕ) / 2)) 0 := by
-  rw [show (fun u : ℂ => Complex.exp (z * u - u ^ (2 : ℕ) / 2)) =
-      fun u : ℂ =>
-        Complex.exp (z * u) *
-          Complex.exp (-(u ^ (2 : ℕ)) / 2) by
-    funext u
-    rw [← Complex.exp_add]
-    congr 1
-    ring]
-  rw [iteratedDeriv_fun_mul]
-  · rw [hermite_eval₂_eq_coeff_sum]
-    apply Finset.sum_congr rfl
-    intro k hk
-    rw [iteratedDeriv_cexp_const_mul, hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv]
-    ring_nf
-    simp
-  · fun_prop
-  · fun_prop
 
 theorem realHermiteGenerating_iteratedDeriv_zero_expansion_monomial
     (n : ℕ) (t : ℝ) :

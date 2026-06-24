@@ -937,27 +937,6 @@ private theorem farPart_support_eq_sdiff_wip
   · simp [Finsupp.mem_support_iff, truncateFinset_ofPkappa_apply_wip kappa K H alpha, hK]
   · simp [Finsupp.mem_support_iff, truncateFinset_ofPkappa_apply_wip kappa K H alpha, hK]
 
-private theorem farPart_norm_sq_eq_tailMass_wip
-    {d : Nat} (kappa : MultiIndex d)
-    (K : Finset (Idx d)) (H : Pkappa d kappa) :
-    ‖H - truncateFinset K (ofPkappa kappa H)‖ ^ 2 =
-      Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by
-  rw [norm_sq_eq_sum_coeff_wip, farPart_support_eq_sdiff_wip kappa K H]
-  refine Finset.sum_congr rfl ?_
-  intro alpha halpha
-  have hnotK : alpha ∉ K := (Finset.mem_sdiff.mp halpha).2
-  simp [coeffPkappa, truncateFinset_ofPkappa_apply_wip kappa K H alpha, hnotK]
-
-private theorem truncate_add_farPart_eq_wip
-    {d : Nat} (kappa : MultiIndex d)
-    (K : Finset (Idx d)) (H : Pkappa d kappa) :
-    truncateFinset K (ofPkappa kappa H) +
-        (H - truncateFinset K (ofPkappa kappa H)) = H := by
-  ext alpha
-  by_cases hK : alpha ∈ K
-  · simp
-  · simp
-
 private theorem mem_squareBlock_finset_iff_blockIndex_eq_coeff_wip
     (ℓ n : Nat) :
     n ∈ HermiteLEAN.squareBlock ℓ ↔ HermiteLEAN.blockIndex n = ℓ := by
@@ -1062,23 +1041,6 @@ private theorem remainderPart_eq_self_of_support_far_coeff_wip
     simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support, hdist]
   · simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support,
       Finsupp.notMem_support_iff.mp hα]
-
-private theorem tail_mass_le_norm_sq_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (K : Finset (Idx d)) (H : Pkappa d kappa) :
-    Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) <= ‖H‖ ^ 2 := by
-  have hsplit := norm_sq_eq_truncate_add_tail_wip hd kappa K H
-  have htrunc_nonneg : 0 <= ‖truncateFinset K (ofPkappa kappa H)‖ ^ 2 := sq_nonneg _
-  nlinarith
-
-private theorem truncate_norm_sq_eq_one_sub_tail_of_norm_one_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (K : Finset (Idx d)) {H : Pkappa d kappa} (hH_norm : ‖H‖ = 1) :
-    ‖truncateFinset K (ofPkappa kappa H)‖ ^ 2 =
-      1 - Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by
-  have hsplit := norm_sq_eq_truncate_add_tail_wip hd kappa K H
-  have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith
-  nlinarith
 
 private theorem norm_smul_pkappa_complex_wip
     {d : Nat} {kappa : MultiIndex d} (c : ℂ) (F : Pkappa d kappa) :
@@ -1925,74 +1887,6 @@ private lemma defectFunction_le_add_eval_norm_wip
       _ = ‖evalPkappa kappa R z‖ := by simp
   linarith
 
-private theorem defect_le_defect_add_norm_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (F G R : Pkappa d kappa) :
-    defect F G <= defect F (G + R) + ‖R‖ := by
-  let _ := hd
-  have hdefGR_mem := memLp_two_defectFunctionPkappa_coeff_wip hd kappa F (G + R)
-  have hR_mem :
-      MeasureTheory.MemLp (fun z : Cd d => ‖evalPkappa kappa R z‖) 2 (gammaD d) :=
-    (memLp_two_evalPkappa_coeff_wip hd kappa R).norm
-  have hsum_mem :
-      MeasureTheory.MemLp
-        (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-          fun z : Cd d => ‖evalPkappa kappa R z‖)
-        2 (gammaD d) := hdefGR_mem.add hR_mem
-  have hmono :
-      MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F G) 2 (gammaD d) <=
-        MeasureTheory.lpNorm
-          (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-            fun z : Cd d => ‖evalPkappa kappa R z‖)
-          2 (gammaD d) := by
-    refine MeasureTheory.lpNorm_mono_real hsum_mem ?_
-    intro z
-    have hpoint := defectFunction_le_add_eval_norm_wip kappa F G R z
-    have hnonneg : 0 <= defectFunctionPkappa_coeff_wip kappa F G z := by
-      unfold defectFunctionPkappa_coeff_wip
-      exact abs_nonneg _
-    calc
-      ‖defectFunctionPkappa_coeff_wip kappa F G z‖ =
-          defectFunctionPkappa_coeff_wip kappa F G z := by
-            simp [Real.norm_eq_abs, abs_of_nonneg hnonneg]
-      _ <=
-          (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-            fun z : Cd d => ‖evalPkappa kappa R z‖) z := by simpa [Pi.add_apply] using hpoint
-  have htri :
-      MeasureTheory.lpNorm
-          (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-            fun z : Cd d => ‖evalPkappa kappa R z‖)
-          2 (gammaD d)
-        <=
-      MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F (G + R)) 2
-          (gammaD d) +
-        MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa R z‖) 2
-          (gammaD d) := MeasureTheory.lpNorm_add_le hdefGR_mem
-      (g := fun z : Cd d => ‖evalPkappa kappa R z‖) (by norm_num)
-  have hnorm_eval :
-      MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa R z‖) 2 (gammaD d) =
-        MeasureTheory.lpNorm (evalPkappa kappa R) 2 (gammaD d) := by
-    simpa using
-      (MeasureTheory.lpNorm_norm (μ := gammaD d) (p := (2 : ENNReal))
-        (memLp_two_evalPkappa_coeff_wip hd kappa R).aestronglyMeasurable)
-  calc
-    defect F G =
-        MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F G) 2 (gammaD d) := by
-          rw [defect_lpNorm_eq_coeff_wip hd kappa F G]
-    _ <=
-        MeasureTheory.lpNorm
-          (defectFunctionPkappa_coeff_wip kappa F (G + R) +
-            fun z : Cd d => ‖evalPkappa kappa R z‖)
-          2 (gammaD d) := hmono
-    _ <=
-        MeasureTheory.lpNorm (defectFunctionPkappa_coeff_wip kappa F (G + R)) 2
-          (gammaD d) +
-        MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa R z‖) 2
-          (gammaD d) := htri
-    _ = defect F (G + R) + ‖R‖ := by
-          rw [← defect_lpNorm_eq_coeff_wip hd kappa F (G + R), hnorm_eval,
-            evalPkappa_lpNorm_eq_norm_coeff_wip hd kappa R]
-
 private lemma measurableSet_productAnnulus_coeff_wip
     {d : Nat} (j : Idx d) :
     MeasurableSet (productAnnulus j) := by
@@ -2279,25 +2173,6 @@ private theorem lowAnnulusEval_norm_le_eval_wip
       _ = ‖evalPkappa kappa F z‖ ^ 2 := rfl
   exact (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).1 hsquare
 
-private theorem sqrt_lowAnnulusMass_le_norm_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (J : Nat)
-    (F : Pkappa d kappa) :
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa F)) <= ‖F‖ := by
-  have hmono :
-      MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J F) 2 (gammaD d) <=
-        MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := by
-    refine MeasureTheory.lpNorm_mono_real (memLp_two_evalPkappa_coeff_wip hd kappa F).norm ?_
-    intro z
-    exact lowAnnulusEval_norm_le_eval_wip kappa J F z
-  calc
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa F))
-        = MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J F) 2 (gammaD d) := by
-          rw [lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J F]
-    _ <= MeasureTheory.lpNorm (fun z : Cd d => ‖evalPkappa kappa F z‖) 2 (gammaD d) := hmono
-    _ = MeasureTheory.lpNorm (evalPkappa kappa F) 2 (gammaD d) :=
-          MeasureTheory.lpNorm_norm (memLp_two_evalPkappa_coeff_wip hd kappa F).1 2
-    _ = ‖F‖ := evalPkappa_lpNorm_eq_norm_coeff_wip hd kappa F
-
 private theorem lowAnnulusMass_farPart_le_leakage_of_witness_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     (J M : Nat) {C c B : ℝ}
@@ -2359,99 +2234,6 @@ private theorem lowAnnulusMass_farPart_le_leakage_of_witness_wip
           simpa using hpartial (lowAnnuli d J) M ⟨Hfar⟩
     _ = Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M * ‖Hfar‖ ^ 2 := by
           rw [hermiteNormSq_eq_norm_sq_coeff_wip kappa Hfar]
-
-private theorem sqrt_lowAnnulusMass_farPart_le_sqrt_leakage_norm_of_witness_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (J M : Nat) {C c B : ℝ}
-    (hpartial : ∀ (s : Finset (Idx d)) (M : Nat)
-      (G : Hermite1DimdLEAN.FiniteHermiteSum d),
-      ∑ j ∈ s,
-        Hermite1DimdLEAN.annulusMass j
-          (Hermite1DimdLEAN.evalHermiteSum kappa
-            (Hermite1DimdLEAN.remainderPart j M G)) <=
-        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
-          Hermite1DimdLEAN.hermiteNormSq kappa G)
-    (hloc_nonneg : 0 <= Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M)
-    (H : Pkappa d kappa) :
-    let E : Finset (Idx d) := nearLowCoeffSet_wip (d := d) J M
-    let Hfar : Pkappa d kappa := H - truncateFinset E (ofPkappa kappa H)
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar)) <=
-      Real.sqrt (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M) * ‖Hfar‖ := by
-  classical
-  dsimp
-  let E : Finset (Idx d) := nearLowCoeffSet_wip (d := d) J M
-  let Hfar : Pkappa d kappa := H - truncateFinset E (ofPkappa kappa H)
-  have hle :
-      lowAnnulusMass J (ofPkappa kappa Hfar) <=
-        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M * ‖Hfar‖ ^ 2 :=
-    lowAnnulusMass_farPart_le_leakage_of_witness_wip hd kappa J M hpartial H
-  calc
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hfar))
-        <= Real.sqrt
-            (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M * ‖Hfar‖ ^ 2) :=
-          Real.sqrt_le_sqrt hle
-    _ = Real.sqrt (Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M) * ‖Hfar‖ := by
-          rw [Real.sqrt_mul hloc_nonneg, Real.sqrt_sq_eq_abs]
-          have hnorm_nonneg : 0 <= ‖Hfar‖ := by
-            change 0 <= Real.sqrt (Finset.sum Hfar.support fun alpha => ‖Hfar alpha‖ ^ 2)
-            exact Real.sqrt_nonneg _
-          rw [abs_of_nonneg hnorm_nonneg]
-
-private theorem sqrt_gap_for_tail_contradiction_wip
-    {tau : ℝ} (htau_pos : 0 < tau) (htau_le_one : tau <= 1) :
-    Real.sqrt (1 - tau / 16) >
-      Real.sqrt (1 - tau) + tau / 16 := by
-  have h1tau_nonneg : 0 <= 1 - tau := by linarith
-  have h1tau16_nonneg : 0 <= 1 - tau / 16 := by nlinarith
-  have hsqrt_le_one : Real.sqrt (1 - tau) <= 1 := by
-    calc
-      Real.sqrt (1 - tau) <= Real.sqrt 1 := Real.sqrt_le_sqrt (by linarith)
-      _ = 1 := by norm_num
-  have hrhs_nonneg : 0 <= Real.sqrt (1 - tau) + tau / 16 := by positivity
-  rw [gt_iff_lt, Real.lt_sqrt hrhs_nonneg]
-  have hsquare_bound :
-      (Real.sqrt (1 - tau) + tau / 16) ^ 2 <=
-        (1 - tau) + tau / 8 + tau ^ 2 / 256 := by
-    have hterm :
-        2 * Real.sqrt (1 - tau) * (tau / 16) <= 2 * 1 * (tau / 16) := by
-      nlinarith [hsqrt_le_one, Real.sqrt_nonneg (1 - tau), htau_pos]
-    rw [add_sq]
-    have hsqrt_sq : Real.sqrt (1 - tau) ^ 2 = 1 - tau := Real.sq_sqrt h1tau_nonneg
-    nlinarith
-  have hstrict : (1 - tau) + tau / 8 + tau ^ 2 / 256 < 1 - tau / 16 := by
-    nlinarith [htau_pos, htau_le_one, sq_nonneg tau]
-  exact lt_of_le_of_lt hsquare_bound hstrict
-
-private theorem sqrt_lowAnnulusMass_add_le_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    (J : Nat) (F G : Pkappa d kappa) :
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa (F + G))) <=
-      Real.sqrt (lowAnnulusMass J (ofPkappa kappa F)) +
-        Real.sqrt (lowAnnulusMass J (ofPkappa kappa G)) := by
-  have hmemF := memLp_two_lowAnnulusEval_wip hd kappa J F
-  have htri :
-      MeasureTheory.lpNorm
-          (lowAnnulusEval_wip kappa J F + lowAnnulusEval_wip kappa J G)
-          2 (gammaD d)
-        <=
-      MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J F) 2 (gammaD d) +
-        MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J G) 2 (gammaD d) := by
-    exact MeasureTheory.lpNorm_add_le hmemF (g := lowAnnulusEval_wip kappa J G)
-      (by norm_num)
-  calc
-    Real.sqrt (lowAnnulusMass J (ofPkappa kappa (F + G)))
-        = MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J (F + G)) 2 (gammaD d) := by
-          rw [lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J (F + G)]
-    _ = MeasureTheory.lpNorm
-          (lowAnnulusEval_wip kappa J F + lowAnnulusEval_wip kappa J G)
-          2 (gammaD d) := by rw [lowAnnulusEval_add_wip]
-    _ <=
-      MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J F) 2 (gammaD d) +
-        MeasureTheory.lpNorm (lowAnnulusEval_wip kappa J G) 2 (gammaD d) := htri
-    _ = Real.sqrt (lowAnnulusMass J (ofPkappa kappa F)) +
-        Real.sqrt (lowAnnulusMass J (ofPkappa kappa G)) := by
-          rw [lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J F,
-            lowAnnulusEval_lpNorm_eq_sqrt_mass_wip hd kappa J G]
 
 private theorem finite_head_bad_limit_eval_tendsto_wip
     {d : Nat} {kappa : MultiIndex d}
