@@ -17,13 +17,11 @@ This file defines the single-edged quantum graph, and proves that it is a `QAM`.
 variable {n : Type _} [Fintype n] [DecidableEq n]
 
 open scoped TensorProduct BigOperators Kronecker Functional
--- local notation `ℍ` := matrix (n i) (n i) ℂ
 @[reducible]
 local notation "ℍ" => Matrix n n ℂ
 @[reducible]
 local notation "ℍ_" i => Matrix (n i) (n i) ℂ
 
--- local notation `⊗K` := matrix (n × n) (n × n) ℂ
 @[reducible]
 local notation "l(" x ")" => x →ₗ[ℂ] x
 @[reducible]

@@ -26,7 +26,6 @@ variable {V 𝕜 : Type _} [RCLike 𝕜] [NormedAddCommGroup V] [InnerProductSpa
 
 local notation "P" => Submodule.orthogonalProjection
 
--- local notation `↥P` := orthogonal_projection'
 
 open LinearMap in
 /-- $U$ is $T$-invariant if and only if $U^\bot$ is $T^*$ invariant -/

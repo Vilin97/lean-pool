@@ -33,20 +33,6 @@ theorem ite_eq_ite_iff_of_pi {n α : Type _} [DecidableEq n] (a b c : n → α) 
     intro i j
     rfl
 
-
--- theorem dite_add_dite {α : Type _} [Add α] (P : Prop) [Decidable P]
---     (a b : P → α) (c d : ¬P → α) :
---     ((dite P (fun x => a x) fun x => c x) + dite P (fun x => b x) fun x => d x) =
---       dite P (fun x => a x + b x) fun x => c x + d x :=
---   by
---   rw [eq_comm]
---   simp only [dite_eq_iff']
---   constructor
---   · intro h
---     simp only [h, dif_pos]
---   · intro h
---     simp only [h, dif_neg, not_false_iff]
-
 theorem hMul_dite {α : Type _} [Mul α] (P : Prop) [Decidable P] (a : α) (b : P → α) (c : ¬P → α) :
     (a * dite P (fun x => b x) fun x => c x) = dite P (fun x => a * b x) fun x => a * c x := by
   rw [eq_comm]
