@@ -141,8 +141,7 @@ lemma index_split_spec (k : Fin (totalCard card)) :
 noncomputable def indexCombine (p : Σ i, Fin (card i)) : Fin (totalCard card) :=
   ⟨prefixSum card p.1 + (p.2 : ℕ), by
     have h1 : prefixSum card p.1 + (p.2 : ℕ) < prefixSum card p.1 + (card p.1 : ℕ) := by
-      simp only [add_lt_add_iff_left]
-      exact p.2.is_lt
+      simpa only [add_lt_add_iff_left] using p.2.is_lt
     have h2 : prefixSum card p.1 + (card p.1 : ℕ) ≤ (totalCard card : ℕ) := by
       simp only [prefixSum, totalCard]
       have h_subset : Finset.univ.filter (· ≤ p.1) ⊆ Finset.univ := Finset.filter_subset _ _

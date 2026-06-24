@@ -420,8 +420,7 @@ theorem exists_subseq_constant_of_finite_image {s : Finset α} (e : ℕ → α) 
       intro a ha
       by_contra hnf
       have a_in_imgs : a ∈ imgs := by
-        simp only [Set.not_finite, Finset.mem_filter, ha, true_and, imgs]
-        exact hnf
+        simpa only [Set.not_finite, Finset.mem_filter, ha, true_and, imgs] using hnf
       have : imgs ≠ ∅ := Finset.ne_empty_of_mem a_in_imgs
       contradiction
     have nat_finite : Set.Finite (Set.univ : Set ℕ) := by
@@ -464,12 +463,10 @@ theorem exists_subseq_constant_of_finite_image {s : Finset α} (e : ℕ → α) 
     intro m n hmn
     induction hmn with
     | refl =>
-      simp only [g, mkSubseq]
-      exact f_lt (g m)
+      simpa only [g, mkSubseq] using f_lt (g m)
     | step hmn ih =>
       rename_i n
-      simp only [g, mkSubseq]
-      exact lt_trans ih (f_lt (g n))
+      simpa only [g, mkSubseq] using lt_trans ih (f_lt (g n))
   use OrderEmbedding.ofStrictMono g hg_strict
   intro n
   exact hg_in n
