@@ -550,28 +550,15 @@ private theorem probability_compl_le_of_ge_one_sub_half {Ω : Type*} [Measurable
     {S : Set Ω} (hS_meas : MeasurableSet S) {δ : ℝ}
     (h_ge : μ S ≥ ENNReal.ofReal (1 - δ / 2)) :
     μ Sᶜ ≤ ENNReal.ofReal (δ / 2) := by
-  by_cases hδ2 : δ ≥ 2
-  · calc μ Sᶜ
-        ≤ μ Set.univ := MeasureTheory.measure_mono (Set.subset_univ _)
-      _ = 1 := MeasureTheory.IsProbabilityMeasure.measure_univ
-      _ ≤ ENNReal.ofReal (δ / 2) := by
-          rw [← ENNReal.ofReal_one]
-          exact ENNReal.ofReal_le_ofReal (by linarith)
-  · push Not at hδ2
-    have h_ne_top : μ S ≠ ⊤ := by
-      intro h_top
-      have : μ S ≤ μ Set.univ := MeasureTheory.measure_mono (Set.subset_univ S)
-      rw [h_top, MeasureTheory.IsProbabilityMeasure.measure_univ] at this
-      exact absurd this (not_le.mpr ENNReal.one_lt_top)
-    rw [MeasureTheory.measure_compl hS_meas h_ne_top,
-      MeasureTheory.IsProbabilityMeasure.measure_univ]
-    calc (1 : ENNReal) - μ S
-        ≤ 1 - ENNReal.ofReal (1 - δ / 2) := tsub_le_tsub_left h_ge 1
-      _ = ENNReal.ofReal (δ / 2) := by
-          have : (1 : ℝ) - (1 - δ / 2) = δ / 2 := by ring
-          rw [← ENNReal.ofReal_one,
-            ← ENNReal.ofReal_sub 1 (by linarith : (0 : ℝ) ≤ 1 - δ / 2),
-            this]
+  rw [MeasureTheory.measure_compl hS_meas (MeasureTheory.measure_ne_top _ _),
+    MeasureTheory.IsProbabilityMeasure.measure_univ]
+  refine le_trans (tsub_le_tsub_left h_ge 1) ?_
+  by_cases hδ2 : 2 ≤ δ
+  · exact le_trans tsub_le_self
+      (by rw [← ENNReal.ofReal_one]; exact ENNReal.ofReal_le_ofReal (by linarith))
+  · rw [← ENNReal.ofReal_one,
+      ← ENNReal.ofReal_sub _ (by linarith : (0 : ℝ) ≤ 1 - δ / 2)]
+    exact ENNReal.ofReal_le_ofReal (by linarith)
 
 private lemma adviceValidationUniformBound {X : Type u} [MeasurableSpace X]
     {A : Type*} [Fintype A] [Nonempty A]
