@@ -166,13 +166,6 @@ private theorem slowBandPoly_slope_nonneg {L : Nat} (p : Fin L -> ℂ) :
     0 <= ∑ m : Fin L, ‖p m‖ * (m.1 : ℝ) := Finset.sum_nonneg fun m hm =>
     mul_nonneg (norm_nonneg (p m)) (by exact_mod_cast Nat.zero_le m.1)
 
-private theorem bandPoly_eq_fourier_sum
-    (N : Nat) {L : Nat} (p : Fin L -> ℂ) :
-    bandPoly N p =
-      fun t => ∑ m : Fin L, p m * fourier ((N + m.1 : Nat) : Int) t := by
-  ext t
-  simp [bandPoly, circleChar_eq_fourier_nat]
-
 private theorem continuous_circleChar (n : Nat) : Continuous (circleChar n) := by
   unfold circleChar zeta
   continuity
@@ -353,78 +346,6 @@ private theorem carrierAverage_constCenter_sq_le_defect
               carrierAverage (N := N) k (slowBandPoly p)‖ - ‖c‖) ^ 2) := by
   exact constantCenter_fastRotate_carrierArc_sq_le_defectSq
     (N := N) k (c := c) (u := carrierAverage (N := N) k (slowBandPoly p)) hc
-
-private theorem defectSq_safe_carrier_average_global
-    (Q : Circle -> ℂ) (hQ : Continuous Q)
-    (N : Nat) {L : Nat} (p : Fin L -> ℂ) (u : ℂ) :
-    (1 / 2) *
-        ∫ x : Circle,
-          (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 ∂ μCircle -
-        ∫ x : Circle, ‖slowBandPoly p x - u‖ ^ 2 ∂ μCircle
-      <= defectSq Q (bandPoly N p) := by
-  have hband : Continuous (bandPoly N p) := continuous_bandPoly N p
-  have hslow : Continuous (slowBandPoly p) := continuous_slowBandPoly p
-  have hfast_const : Continuous fun x : Circle => circleChar N x * u :=
-    (continuous_circleChar N).mul continuous_const
-  have havg_cont : Continuous fun x : Circle =>
-      (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 :=
-    (((hQ.add hfast_const).norm).sub hQ.norm).pow 2
-  have hvar_cont : Continuous fun x : Circle =>
-      ‖slowBandPoly p x - u‖ ^ 2 :=
-    ((hslow.sub continuous_const).norm).pow 2
-  have hactual_cont : Continuous fun x : Circle =>
-      (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2 :=
-    (((hQ.add hband).norm).sub hQ.norm).pow 2
-  have havg_int :
-      MeasureTheory.Integrable
-        (fun x : Circle =>
-          (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2) μCircle := by
-    simpa [μCircle] using
-      havg_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hvar_int :
-      MeasureTheory.Integrable
-        (fun x : Circle => ‖slowBandPoly p x - u‖ ^ 2) μCircle := by
-    simpa [μCircle] using
-      hvar_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hactual_int :
-      MeasureTheory.Integrable
-        (fun x : Circle =>
-          (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2) μCircle := by
-    simpa [μCircle] using
-      hactual_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hcombo_int :
-      MeasureTheory.Integrable
-        (fun x : Circle =>
-          (1 / 2) *
-            (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 -
-            ‖slowBandPoly p x - u‖ ^ 2) μCircle :=
-    (havg_int.const_mul (1 / 2)).sub hvar_int
-  have hmono :
-      (∫ x : Circle,
-          (1 / 2) *
-            (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 -
-            ‖slowBandPoly p x - u‖ ^ 2 ∂ μCircle)
-        <=
-      ∫ x : Circle,
-        (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2 ∂ μCircle := by
-    refine MeasureTheory.integral_mono_ae hcombo_int hactual_int ?_
-    filter_upwards with x
-    exact defect_pointwise_safe_carrier_average Q N p u x
-  calc
-    (1 / 2) *
-        ∫ x : Circle,
-          (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 ∂ μCircle -
-        ∫ x : Circle, ‖slowBandPoly p x - u‖ ^ 2 ∂ μCircle
-        =
-      ∫ x : Circle,
-          (1 / 2) *
-            (‖Q x + circleChar N x * u‖ - ‖Q x‖) ^ 2 -
-            ‖slowBandPoly p x - u‖ ^ 2 ∂ μCircle := by
-          rw [MeasureTheory.integral_sub (havg_int.const_mul (1 / 2)) hvar_int,
-            MeasureTheory.integral_const_mul]
-    _ <= ∫ x : Circle,
-        (‖Q x + bandPoly N p x‖ - ‖Q x‖) ^ 2 ∂ μCircle := hmono
-    _ = defectSq Q (bandPoly N p) := by simp [defectSq, μCircle]
 
 private theorem defect_setIntegral_safe_carrier_average
     (s : Set Circle) (Q : Circle -> ℂ) (hQ : Continuous Q)
@@ -1035,8 +956,8 @@ theorem circleGap_ge_bad_budget (D : Nat) :
   unfold circleGap
   exact le_max_right 37 (2 * circleBadConst D * circleGoodBudget D)
 
-theorem circleGap_pos (D : Nat) : 1 <= circleGap D := by
-  exact (by norm_num : 1 <= 37).trans (circleGap_ge_37 D)
+theorem circleGap_pos (D : Nat) : 1 <= circleGap D :=
+  (by norm_num : 1 <= 37).trans (circleGap_ge_37 D)
 
 theorem circleConst_pos (D : Nat) : 0 < circleConst D := by
   dsimp [circleConst]
@@ -1100,8 +1021,8 @@ private theorem roots_card_polyOfCoeff_le {D : Nat}
 
 private theorem roots_card_polyOfCoeff_eq_natDegree {D : Nat}
     (q : Fin (D + 1) -> ℂ) :
-    (polyOfCoeff q).roots.card = (polyOfCoeff q).natDegree := by
-  exact ((IsAlgClosed.splits (k := ℂ) (polyOfCoeff q)).natDegree_eq_card_roots).symm
+    (polyOfCoeff q).roots.card = (polyOfCoeff q).natDegree :=
+  ((IsAlgClosed.splits (k := ℂ) (polyOfCoeff q)).natDegree_eq_card_roots).symm
 
 private theorem coeff_polyOfCoeff {D : Nat}
     (q : Fin (D + 1) -> ℂ) (n : Fin (D + 1)) :
@@ -1129,8 +1050,8 @@ private theorem polyOfCoeff_ne_zero_of_ne_zero {D : Nat}
 
 private theorem leadingCoeff_polyOfCoeff_ne_zero_of_ne_zero {D : Nat}
     {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) :
-    (polyOfCoeff q).leadingCoeff ≠ 0 := by
-  exact Polynomial.leadingCoeff_ne_zero.mpr (polyOfCoeff_ne_zero_of_ne_zero hq)
+    (polyOfCoeff q).leadingCoeff ≠ 0 :=
+  Polynomial.leadingCoeff_ne_zero.mpr (polyOfCoeff_ne_zero_of_ne_zero hq)
 
 private theorem natDegree_polyOfCoeff_pos_of_nonconst {D : Nat}
     {q : Fin (D + 1) -> ℂ}
@@ -1153,8 +1074,8 @@ private theorem exists_mem_roots_polyOfCoeff_of_nonconst {D : Nat}
 
 private theorem norm_leadingCoeff_polyOfCoeff_pos_of_ne_zero {D : Nat}
     {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) :
-    0 < ‖(polyOfCoeff q).leadingCoeff‖ := by
-  exact norm_pos_iff.mpr (leadingCoeff_polyOfCoeff_ne_zero_of_ne_zero hq)
+    0 < ‖(polyOfCoeff q).leadingCoeff‖ :=
+  norm_pos_iff.mpr (leadingCoeff_polyOfCoeff_ne_zero_of_ne_zero hq)
 
 private theorem lowPoly_eq_leadingCoeff_mul_roots {D : Nat}
     (q : Fin (D + 1) -> ℂ) (x : Circle) :
@@ -1479,17 +1400,6 @@ private theorem goodCarrier_root_distance_ge
       ⟨Finset.mem_univ k, ⟨ζ, hζ, x, hx, hlt⟩⟩
   exact hgood hbad
 
-private theorem badCarrierIndices_card_le
-    (N : Nat) (roots : Multiset ℂ) (delta : ℝ) :
-    (badCarrierIndices N roots delta).card <= N := by
-  classical
-  calc
-    (badCarrierIndices N roots delta).card <=
-        (Finset.univ : Finset (Fin N)).card := by
-          unfold badCarrierIndices
-          exact Finset.card_filter_le _ _
-    _ = N := by simp
-
 private theorem card_biUnion_le_sum_card
     {α β : Type} [DecidableEq β]
     (s : Finset α) (t : α -> Finset β) :
@@ -1587,27 +1497,6 @@ private theorem carrierBase_mem {N : Nat} (k : Fin N) :
   exact intervalParam_mem_arc (carrierArc N k) 0
     ⟨le_rfl, by norm_num⟩
 
-private theorem badCarrierIndices_eq_univ_of_unit_root_of_two_lt_delta
-    {N : Nat} {roots : Multiset ℂ} {delta : ℝ} {ζ : ℂ}
-    (hζ : ζ ∈ roots) (hζnorm : ‖ζ‖ = 1) (hdelta : 2 < delta) :
-    badCarrierIndices N roots delta = (Finset.univ : Finset (Fin N)) := by
-  classical
-  ext k
-  constructor
-  · intro _
-    exact Finset.mem_univ k
-  · intro _
-    unfold badCarrierIndices
-    refine Finset.mem_filter.mpr ⟨Finset.mem_univ k, ?_⟩
-    refine ⟨ζ, hζ, carrierBase k, carrierBase_mem k, ?_⟩
-    calc
-      ‖zeta (carrierBase k) - ζ‖ <=
-          ‖zeta (carrierBase k)‖ + ‖ζ‖ := norm_sub_le _ _
-      _ = 2 := by
-          rw [norm_zeta, hζnorm]
-          norm_num
-      _ < delta := hdelta
-
 private theorem carrierArc_length_pos_wip {N : Nat} (k : Fin N) :
     0 < arcLength (carrierArc N k) := by
   rw [carrierArc_length k]
@@ -1701,8 +1590,8 @@ private theorem addCircle_norm_mk_le_pi_div_two_chord (theta : ℝ) :
       |phi| =
           (2 * Real.pi) * |((2 * Real.pi) : ℝ)⁻¹ * theta - (m : ℝ)| := by
         rw [hphi_scale, abs_mul, abs_of_pos hTpos]
-      _ <= (2 * Real.pi) * (1 / 2 : ℝ) := by
-        exact mul_le_mul_of_nonneg_left (by simpa [m] using hround) (le_of_lt hTpos)
+      _ <= (2 * Real.pi) * (1 / 2 : ℝ) :=
+        mul_le_mul_of_nonneg_left (by simpa [m] using hround) (le_of_lt hTpos)
       _ = Real.pi := by ring
   have hhalf : |phi / 2| <= Real.pi / 2 := by
     rw [abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
@@ -2115,8 +2004,8 @@ private theorem carrierIocImage_indicator_preimage_eq_wip
       exact htiff
     by_cases hs : (QuotientAddGroup.mk t : Circle) ∈ carrierIocImage k
     · simp [Set.indicator_of_mem, ht, hs, hmem.mp hs]
-    · have hnot : t ∉ Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) := by
-        exact fun h => hs (hmem.mpr h)
+    · have hnot : t ∉ Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) :=
+        fun h => hs (hmem.mpr h)
       simp [Set.indicator_of_notMem, ht, hs, hnot]
   · have hnot : t ∉ Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) := by
       intro htc
@@ -2551,8 +2440,8 @@ private theorem μCircle_real_closedBall_eq_min_div_period
   rw [AddCircle.volume_closedBall] at hmeasure
   have h := congrArg ENNReal.toReal hmeasure
   have hT_nonneg : 0 <= (2 * Real.pi : ℝ) := by positivity
-  have hmin_nonneg : 0 <= min (2 * Real.pi) (2 * R) := by
-    exact le_min hT_nonneg (mul_nonneg (by norm_num) hR)
+  have hmin_nonneg : 0 <= min (2 * Real.pi) (2 * R) :=
+    le_min hT_nonneg (mul_nonneg (by norm_num) hR)
   rw [ENNReal.toReal_ofReal hmin_nonneg, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal hT_nonneg] at h
   have hT_pos : 0 < (2 * Real.pi : ℝ) := by positivity
@@ -2685,10 +2574,10 @@ private theorem carrierArc_length_le_canonical_delta
       simpa using hbad_ge_real
     nlinarith
   calc
-    (2 * Real.pi) / (N : ℝ) <= 8 / (N : ℝ) := by
-      exact div_le_div_of_nonneg_right htwo_pi_le_eight (le_of_lt hNpos)
-    _ <= (8 * ((circleBadConst D : ℝ) / ((D + 1 : Nat) : ℝ))) / (N : ℝ) := by
-      exact div_le_div_of_nonneg_right hscale (le_of_lt hNpos)
+    (2 * Real.pi) / (N : ℝ) <= 8 / (N : ℝ) :=
+      div_le_div_of_nonneg_right htwo_pi_le_eight (le_of_lt hNpos)
+    _ <= (8 * ((circleBadConst D : ℝ) / ((D + 1 : Nat) : ℝ))) / (N : ℝ) :=
+      div_le_div_of_nonneg_right hscale (le_of_lt hNpos)
     _ =
         (1 / (128 * ((D + 1 : Nat) : ℝ))) *
           (16 * (circleGoodBudget D : ℝ) / (N : ℝ)) := by
@@ -3364,31 +3253,6 @@ private theorem goodCarrier_defect_compare_band_of_chord_bound {D N L : Nat}
     (q := q) hq p hdelta_pos htheta_nonneg htheta_le hgood
     (goodCarrier_absolute_oscillation_of_chord_bound q hchord hslope)
 
-private theorem goodCarrier_defect_compare_band_of_arcLength_slope {D N L : Nat}
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta theta : ℝ} (hdelta_pos : 0 < delta)
-    (htheta_nonneg : 0 <= theta) (htheta_le : theta <= 1 / 2)
-    {k : Fin N} (hgood :
-      k ∉ badCarrierIndices N (polyOfCoeff q).roots delta)
-    (hslope :
-      (∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ)) *
-          arcLength (carrierArc N k) <=
-        theta *
-          (‖(polyOfCoeff q).leadingCoeff‖ *
-            delta ^ (polyOfCoeff q).roots.card)) :
-    (1 / 2) *
-        ∫ x in arcSet (carrierArc N k),
-          (‖lowPoly q (carrierBase k) + bandPoly N p x‖ -
-            ‖lowPoly q (carrierBase k)‖) ^ 2 ∂ μCircle -
-        ∫ x in arcSet (carrierArc N k),
-          (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle
-      <=
-        ∫ x in arcSet (carrierArc N k),
-          (‖lowPoly q x + bandPoly N p x‖ - ‖lowPoly q x‖) ^ 2 ∂ μCircle := by
-  exact goodCarrier_defect_compare_band_of_chord_bound
-    (q := q) hq p hdelta_pos htheta_nonneg htheta_le hgood
-    (carrierArc_chord_le_length k) hslope
-
 private theorem goodCarrier_base_mass_le_actual_defect_plus_fast_variance_error
     {D N L : Nat}
     {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
@@ -3877,8 +3741,8 @@ private theorem goodCarrier_base_mass_le_actual_defect_plus_errors
     exact lowPoly_ne_zero_at_goodCarrierBase hq hdelta_pos hgood
   have hbase :
       arcLength (carrierArc N k) * ‖u‖ ^ 2 <=
-        2 * Crot * A + 2 * Crot * V := by
-    exact carrierPoint_mass_le_defect_plus_variance (N := N) k p (u := u) hc
+        2 * Crot * A + 2 * Crot * V :=
+    carrierPoint_mass_le_defect_plus_variance (N := N) k p (u := u) hc
   have hcompare :
       (1 / 2) * A - E <= Dint := by
     simpa [A, Dint, E, c] using
@@ -3969,47 +3833,6 @@ private theorem goodCarrier_average_mass_le_actual_defect_plus_errors_of_chord_b
   exact goodCarrier_average_mass_le_actual_defect_plus_errors_of_absolute_bound
     (q := q) hq p hdelta_pos htheta_nonneg htheta_le hgood
     (goodCarrier_absolute_oscillation_of_chord_bound q hchord hslope)
-
-private theorem goodCarrier_average_mass_le_actual_defect_plus_errors_of_arcLength_slope
-    {D N L : Nat}
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta theta : ℝ} (hdelta_pos : 0 < delta)
-    (htheta_nonneg : 0 <= theta) (htheta_le : theta <= 1 / 2)
-    {k : Fin N} (hgood :
-      k ∉ badCarrierIndices N (polyOfCoeff q).roots delta)
-    (hslope :
-      (∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ)) *
-          arcLength (carrierArc N k) <=
-        theta *
-          (‖(polyOfCoeff q).leadingCoeff‖ *
-            delta ^ (polyOfCoeff q).roots.card)) :
-    arcLength (carrierArc N k) *
-        ‖carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 <=
-      4 * Crot *
-          ∫ x in arcSet (carrierArc N k),
-            (‖lowPoly q x + bandPoly N p x‖ - ‖lowPoly q x‖) ^ 2 ∂ μCircle +
-        4 * Crot *
-          ∫ x in arcSet (carrierArc N k),
-            (4 * theta * ‖bandPoly N p x‖) ^ 2 ∂ μCircle +
-        2 * Crot *
-          arcIntegral (carrierArc N k)
-            (fun x =>
-              ‖slowBandPoly p x -
-                carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2) := by
-  exact goodCarrier_average_mass_le_actual_defect_plus_errors_of_chord_bound
-    (q := q) hq p hdelta_pos htheta_nonneg htheta_le hgood
-    (carrierArc_chord_le_length k) hslope
-
-private theorem lowPoly_ne_zero_of_forall_roots_ne {D : Nat}
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (x : Circle)
-    (hroots : ∀ ζ ∈ (polyOfCoeff q).roots, zeta x - ζ ≠ 0) :
-    lowPoly q x ≠ 0 := by
-  rw [lowPoly_eq_leadingCoeff_mul_roots q x]
-  refine mul_ne_zero (leadingCoeff_polyOfCoeff_ne_zero_of_ne_zero hq) ?_
-  intro hprod
-  rw [Multiset.prod_eq_zero_iff] at hprod
-  rcases Multiset.mem_map.mp hprod with ⟨ζ, hζ, hζzero⟩
-  exact hroots ζ hζ hζzero
 
 private theorem circleL2Sq_nonneg
     (f : AddCircle (2 * Real.pi) -> ℂ) :
@@ -4273,8 +4096,8 @@ private theorem sum_carrierAverage_variance_le_global
           carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 ∂ μCircle)
         <= ∑ k : Fin N, (1 / (2 * Real.pi)) * (c * I k) := hsum_local
     _ = c * ((1 / (2 * Real.pi)) * ∑ k : Fin N, I k) := hsum_eq
-    _ <= c * (((L : ℝ) - 1) ^ 2 * circleL2Sq (slowBandPoly p)) := by
-          exact mul_le_mul_of_nonneg_left hderiv_le hc_nonneg
+    _ <= c * (((L : ℝ) - 1) ^ 2 * circleL2Sq (slowBandPoly p)) :=
+          mul_le_mul_of_nonneg_left hderiv_le hc_nonneg
     _ = (4 * Real.pi ^ 2 * ((L : ℝ) - 1) ^ 2 / (N : ℝ) ^ 2) *
         circleL2Sq (slowBandPoly p) := by
           simp [c]
@@ -4384,8 +4207,8 @@ private theorem slowBandPoly_carrier_variance_le_measure
   haveI : MeasureTheory.IsFiniteMeasure μCircle := by
     dsimp [μCircle]
     infer_instance
-  have hsfin : μCircle (arcSet (carrierArc N k)) < ⊤ := by
-    exact MeasureTheory.measure_lt_top μCircle (arcSet (carrierArc N k))
+  have hsfin : μCircle (arcSet (carrierArc N k)) < ⊤ :=
+    MeasureTheory.measure_lt_top μCircle (arcSet (carrierArc N k))
   have hbound :=
     MeasureTheory.norm_setIntegral_le_of_norm_le_const
       (μ := μCircle) (s := arcSet (carrierArc N k))
@@ -4394,8 +4217,8 @@ private theorem slowBandPoly_carrier_variance_le_measure
       hsfin hpoint
   have hnonneg :
       0 <= ∫ x in arcSet (carrierArc N k),
-          ‖slowBandPoly p x - slowBandPoly p (carrierBase k)‖ ^ 2 ∂ μCircle := by
-    exact MeasureTheory.integral_nonneg fun x => sq_nonneg _
+          ‖slowBandPoly p x - slowBandPoly p (carrierBase k)‖ ^ 2 ∂ μCircle :=
+    MeasureTheory.integral_nonneg fun x => sq_nonneg _
   rw [Real.norm_eq_abs, abs_of_nonneg hnonneg] at hbound
   simpa [C] using hbound
 
@@ -4665,8 +4488,8 @@ private theorem bandPoly_setIntegral_norm_sq_le_measure
     MeasureTheory.norm_setIntegral_le_of_norm_le_const
       (μ := μCircle) (s := s)
       (f := fun x : Circle => ‖bandPoly N p x‖ ^ 2) hsfin hpoint
-  have hnonneg : 0 <= ∫ x in s, ‖bandPoly N p x‖ ^ 2 ∂ μCircle := by
-    exact MeasureTheory.integral_nonneg fun x => sq_nonneg _
+  have hnonneg : 0 <= ∫ x in s, ‖bandPoly N p x‖ ^ 2 ∂ μCircle :=
+    MeasureTheory.integral_nonneg fun x => sq_nonneg _
   rw [Real.norm_eq_abs, abs_of_nonneg hnonneg] at hbound
   simpa [C] using hbound
 
@@ -4705,8 +4528,8 @@ private theorem carrierAverage_mass_le_slow_l2
       0 <=
         ∫ x in arcSet (carrierArc N k),
           ‖slowBandPoly p x -
-            carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 ∂ μCircle := by
-    exact MeasureTheory.integral_nonneg fun x => sq_nonneg _
+            carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 ∂ μCircle :=
+    MeasureTheory.integral_nonneg fun x => sq_nonneg _
   have hle :
       arcLength (carrierArc N k) / (2 * Real.pi) *
           ‖carrierAverage (N := N) k (slowBandPoly p)‖ ^ 2 <=
@@ -5622,31 +5445,6 @@ private theorem sum_goodCarrier_base_mass_le_global_defect_plus_fast_variance
           (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
             ((2 * Real.pi) / (N : ℝ)) ^ 2) := by nlinarith
 
-private theorem sum_goodCarrierIndices_base_mass_le_global_defect_plus_fast_variance
-    {D N L : Nat} (hN : 0 < N)
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta theta : ℝ} (hdelta_pos : 0 < delta)
-    (htheta_nonneg : 0 <= theta) (htheta_le : theta <= 1 / 2)
-    (htheta_le_small : theta <= 1 / 64)
-    (hslope : ∀ k ∈ goodCarrierIndices N (polyOfCoeff q).roots delta,
-      (∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ)) *
-          arcLength (carrierArc N k) <=
-        theta *
-          (‖(polyOfCoeff q).leadingCoeff‖ *
-            delta ^ (polyOfCoeff q).roots.card)) :
-    ∑ k ∈ goodCarrierIndices N (polyOfCoeff q).roots delta,
-        arcLength (carrierArc N k) *
-          ‖slowBandPoly p (carrierBase k)‖ ^ 2 <=
-      8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-        8 * Crot *
-          (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-            ((2 * Real.pi) / (N : ℝ)) ^ 2) := by
-  exact sum_goodCarrier_base_mass_le_global_defect_plus_fast_variance
-    (D := D) (N := N) (L := L) hN (q := q) hq p
-    hdelta_pos htheta_nonneg htheta_le htheta_le_small
-    (goodCarrierIndices N (polyOfCoeff q).roots delta)
-    (fun k hk => goodCarrierIndices_not_bad hk) hslope
-
 private theorem sum_goodCarrier_base_mass_le_global_defect_plus_l2_errors
     {D N L : Nat} (hN : 0 < N)
     {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
@@ -5686,33 +5484,6 @@ private theorem sum_goodCarrier_base_mass_le_global_defect_plus_l2_errors
         <= 4 * Crot * defectSq (lowPoly q) (bandPoly N p) :=
     mul_le_mul_of_nonneg_left hdef hcoef_nonneg
   nlinarith
-
-private theorem sum_goodCarrierIndices_base_mass_le_global_defect_plus_l2_errors
-    {D N L : Nat} (hN : 0 < N)
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta theta : ℝ} (hdelta_pos : 0 < delta)
-    (htheta_nonneg : 0 <= theta) (htheta_le : theta <= 1 / 2)
-    (hslope : ∀ k ∈ goodCarrierIndices N (polyOfCoeff q).roots delta,
-      (∑ n : Fin (D + 1), ‖q n‖ * (n.1 : ℝ)) *
-          arcLength (carrierArc N k) <=
-        theta *
-          (‖(polyOfCoeff q).leadingCoeff‖ *
-            delta ^ (polyOfCoeff q).roots.card)) :
-    ∑ k ∈ goodCarrierIndices N (polyOfCoeff q).roots delta,
-        arcLength (carrierArc N k) *
-          ‖slowBandPoly p (carrierBase k)‖ ^ 2 <=
-      4 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-        4 * Crot *
-          ((4 * theta) ^ 2 *
-            ((L : ℝ) * circleL2Sq (bandPoly N p))) +
-        2 * Crot *
-          (((L : ℝ) ^ 3 * circleL2Sq (bandPoly N p)) *
-            ((2 * Real.pi) / (N : ℝ)) ^ 2) := by
-  exact sum_goodCarrier_base_mass_le_global_defect_plus_l2_errors
-    (D := D) (N := N) (L := L) hN (q := q) hq p
-    hdelta_pos htheta_nonneg htheta_le
-    (goodCarrierIndices N (polyOfCoeff q).roots delta)
-    (fun k hk => goodCarrierIndices_not_bad hk) hslope
 
 private theorem sum_carrier_base_mass_le_card_L_l2
     {N L : Nat} (K : Finset (Fin N)) (p : Fin L -> ℂ) :
@@ -6057,97 +5828,6 @@ private theorem slowBandPoly_l2_le_good_bad_average_defect_poincare
         (4 * Real.pi ^ 2 * ((L : ℝ) - 1) ^ 2 / (N : ℝ) ^ 2) *
           circleL2Sq (slowBandPoly p) := by simp [Cvar, R, BadBd]
 
-private theorem slowBandPoly_l2_le_good_bad_defect_variance
-    {D N L : Nat} (hN : 0 < N)
-    {q : Fin (D + 1) -> ℂ} (hq : q ≠ 0) (p : Fin L -> ℂ)
-    {delta : ℝ} (hdelta_pos : 0 < delta)
-    (harc : ∀ k ∈ goodCarrierIndices N (polyOfCoeff q).roots delta,
-      arcLength (carrierArc N k) <=
-        (1 / (128 * ((D + 1 : Nat) : ℝ))) * delta) :
-    circleL2Sq (slowBandPoly p) <=
-      (1 / Real.pi) *
-        (8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-          8 * Crot *
-            (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-              ((2 * Real.pi) / (N : ℝ)) ^ 2) +
-          ((badCarrierIndices N (polyOfCoeff q).roots delta).card : ℝ) *
-            (((2 * Real.pi) / (N : ℝ)) *
-              ((L : ℝ) * circleL2Sq (bandPoly N p)))) +
-        2 *
-          (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-            ((2 * Real.pi) / (N : ℝ)) ^ 2) := by
-  let G : Finset (Fin N) :=
-    goodCarrierIndices N (polyOfCoeff q).roots delta
-  let B : Finset (Fin N) :=
-    badCarrierIndices N (polyOfCoeff q).roots delta
-  let Base : Fin N -> ℝ := fun k =>
-    arcLength (carrierArc N k) *
-      ‖slowBandPoly p (carrierBase k)‖ ^ 2
-  let Err : ℝ :=
-    ((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-      ((2 * Real.pi) / (N : ℝ)) ^ 2
-  let BadBd : ℝ :=
-    (B.card : ℝ) *
-      (((2 * Real.pi) / (N : ℝ)) *
-        ((L : ℝ) * circleL2Sq (bandPoly N p)))
-  have hsample :
-      circleL2Sq (slowBandPoly p) <=
-        (1 / Real.pi) * (∑ k : Fin N, Base k) + 2 * Err := by
-    simpa [Base, Err] using
-      slowBandPoly_l2_le_sampled_base_mass_plus_variance_error
-        (N := N) (L := L) hN p
-  have hsplit :
-      ∑ k : Fin N, Base k =
-        ∑ k ∈ G, Base k + ∑ k ∈ B, Base k := by
-    simpa [G, B, Base] using
-      sum_carrier_base_mass_eq_good_add_bad
-        (D := D) (N := N) (L := L) q p (delta := delta)
-  have hgood :
-      ∑ k ∈ G, Base k <=
-        8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-          8 * Crot * Err := by
-    simpa [G, Base, Err] using
-      sum_goodCarrier_base_mass_le_global_defect_plus_fast_variance_of_root_product_canonical
-        (D := D) (N := N) (L := L) hN (q := q) hq p
-        hdelta_pos G
-        (fun k hk => goodCarrierIndices_not_bad hk)
-        (by simpa [G] using harc)
-  have hbad :
-      ∑ k ∈ B, Base k <= BadBd := by
-    simpa [B, Base, BadBd] using
-      sum_badCarrier_base_mass_le_card_L_l2
-        (D := D) (N := N) (L := L) q p (delta := delta)
-  have hsum_bound :
-      ∑ k : Fin N, Base k <=
-        8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-          8 * Crot * Err + BadBd := by
-    rw [hsplit]
-    linarith
-  have hcoef_nonneg : 0 <= 1 / Real.pi := by positivity
-  calc
-    circleL2Sq (slowBandPoly p)
-        <= (1 / Real.pi) * (∑ k : Fin N, Base k) + 2 * Err :=
-      hsample
-    _ <=
-        (1 / Real.pi) *
-            (8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-              8 * Crot * Err + BadBd) +
-          2 * Err := by
-      have hmul := mul_le_mul_of_nonneg_left hsum_bound hcoef_nonneg
-      nlinarith
-    _ =
-      (1 / Real.pi) *
-        (8 * Crot * defectSq (lowPoly q) (bandPoly N p) +
-          8 * Crot *
-            (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-              ((2 * Real.pi) / (N : ℝ)) ^ 2) +
-          ((badCarrierIndices N (polyOfCoeff q).roots delta).card : ℝ) *
-            (((2 * Real.pi) / (N : ℝ)) *
-              ((L : ℝ) * circleL2Sq (bandPoly N p)))) +
-        2 *
-          (((L : ℝ) ^ 3 * circleL2Sq (slowBandPoly p)) *
-            ((2 * Real.pi) / (N : ℝ)) ^ 2) := by simp [Err, BadBd, B]
-
 private theorem circleL2Sq_bandPoly_pos_of_ne_zero
     (N : Nat) {L : Nat} {p : Fin L -> ℂ} (hp : p ≠ 0) :
     0 < circleL2Sq (bandPoly N p) := by
@@ -6163,24 +5843,6 @@ private theorem circleL2Sq_bandPoly_pos_of_ne_zero
   exact Finset.sum_pos' (fun m hm => sq_nonneg _) ⟨m0, Finset.mem_univ _, by
     have hnorm_pos : 0 < ‖p m0‖ := norm_pos_iff.mpr hm0
     nlinarith⟩
-
-private theorem circleL2Sq_bandPoly_eq_zero_iff
-    (N : Nat) {L : Nat} (p : Fin L -> ℂ) :
-    circleL2Sq (bandPoly N p) = 0 ↔ p = 0 := by
-  rw [circleL2Sq_bandPoly]
-  constructor
-  · intro hsum
-    funext m
-    have hterm_le : ‖p m‖ ^ 2 <= ∑ m : Fin L, ‖p m‖ ^ 2 := by
-      exact Finset.single_le_sum
-        (fun x hx => (sq_nonneg (‖p x‖) : 0 <= ‖p x‖ ^ 2))
-        (Finset.mem_univ m)
-    have hterm_zero : ‖p m‖ ^ 2 = 0 := by nlinarith [sq_nonneg (‖p m‖)]
-    have hnorm_zero : ‖p m‖ = 0 := by nlinarith [sq_nonneg (‖p m‖)]
-    exact norm_eq_zero.mp hnorm_zero
-  · intro hp
-    subst p
-    simp
 
 private theorem lowPoly_zero_case {D L N : Nat}
     {q : Fin (D + 1) -> ℂ} (p : Fin L -> ℂ)
@@ -6235,12 +5897,6 @@ private theorem constant_coeff_ne_zero_of_tail_zero {D : Nat}
   · have hn0 : n = 0 := Fin.ext hn
     simpa [hn0] using h0
   · exact htail n hn
-
-private theorem bandPoly_const_mul
-    (N : Nat) {L : Nat} (c : ℂ) (p : Fin L -> ℂ) :
-    bandPoly N (fun m => c * p m) = fun x => c * bandPoly N p x := by
-  ext x
-  simp [bandPoly, Finset.mul_sum, mul_assoc]
 
 private theorem circleL2Sq_const_mul
     (c : ℂ) (P : Circle -> ℂ) :

@@ -456,8 +456,8 @@ private theorem norm_le_defect_add_two_wip
   let _ := hd
   have hdef_mem := memLp_two_defectFunctionPkappa_wip hd kappa F G
   have htwoF_mem :
-      MeasureTheory.MemLp (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖) 2 (gammaD d) := by
-    exact (memLp_two_evalPkappa_wip hd kappa F).norm.const_smul (2 : ℝ)
+      MeasureTheory.MemLp (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖) 2 (gammaD d) :=
+    (memLp_two_evalPkappa_wip hd kappa F).norm.const_smul (2 : ℝ)
   have hsum_mem :
       MeasureTheory.MemLp
         (defectFunctionPkappa_wip kappa F G + fun z : Cd d => 2 * ‖evalPkappa kappa F z‖)

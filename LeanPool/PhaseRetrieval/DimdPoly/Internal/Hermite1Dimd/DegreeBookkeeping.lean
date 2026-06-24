@@ -101,8 +101,8 @@ theorem localDegreeInterval
         simpa [max_eq_left (le_of_lt hjgt)] using hle
     · have hlt : α q < (blockIndexMulti α q + 1) ^ 2 := by
         simpa [blockIndexMulti, HermiteLEAN.blockIndex, pow_two] using Nat.lt_succ_sqrt' (α q)
-      have hmono : (blockIndexMulti α q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := by
-        exact Nat.pow_le_pow_left (Nat.succ_le_succ hidx_upper) 2
+      have hmono : (blockIndexMulti α q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 :=
+        Nat.pow_le_pow_left (Nat.succ_le_succ hidx_upper) 2
       omega
   have hsubset :
       localDegreeSet j M G ⊆
@@ -266,8 +266,8 @@ theorem highAnnulusDegreeBounds
   let R := annulusRadius j
   let C := (2 * M + 1) * (2 * R + 1)
   have hMR : M + 1 ≤ R := by simpa [R] using hj
-  have hlower : (annulusRadius j - M) ^ 2 ≤ degreeIntervalLower j M := by
-    exact highAnnulusDegreeLowerBound (hd := hd) (j := j) (M := M) hj
+  have hlower : (annulusRadius j - M) ^ 2 ≤ degreeIntervalLower j M :=
+    highAnnulusDegreeLowerBound (hd := hd) (j := j) (M := M) hj
   rcases annulusRadius_exists_coord (hd := hd) (j := j) with ⟨q0, hq0⟩
   have hR : ∀ q : Fin d, j q ≤ R := fun q => coord_le_annulusRadius j q
   let gap : Fin d → ℕ := fun q =>
@@ -344,14 +344,14 @@ theorem highFrequencyThreshold
       _ = (120 * d * (2 * M + 1)) * x := hstep2
       _ ≤ x * x := hstep3
   have h40 : 40 * degreeWidth j M ≤ x * x := by
-    have hmul : 40 * degreeWidth j M ≤ 40 * (d * (2 * M + 1) * (2 * R + 1)) := by
-      exact Nat.mul_le_mul_left 40 (by simpa [R] using hwidth)
+    have hmul : 40 * degreeWidth j M ≤ 40 * (d * (2 * M + 1) * (2 * R + 1)) :=
+      Nat.mul_le_mul_left 40 (by simpa [R] using hwidth)
     exact le_trans hmul (by simpa [mul_assoc] using h40base)
   have h1600 : 1600 * (degreeWidth j M) ^ 2 ≤ x ^ 4 := by
     have hsq := Nat.mul_self_le_mul_self h40
     simpa [pow_two, pow_succ, x, mul_assoc, mul_left_comm, mul_comm] using hsq
-  have h1343 : 1343 * (degreeWidth j M) ^ 2 ≤ x ^ 4 := by
-    exact le_trans (Nat.mul_le_mul_right ((degreeWidth j M) ^ 2) (by decide : 1343 ≤ 1600)) h1600
+  have h1343 : 1343 * (degreeWidth j M) ^ 2 ≤ x ^ 4 :=
+    le_trans (Nat.mul_le_mul_right ((degreeWidth j M) ^ 2) (by decide : 1343 ≤ 1600)) h1600
   have hlower_sq : x ^ 4 ≤ (degreeIntervalLower j M) ^ 2 := by
     have hsq := Nat.mul_self_le_mul_self (by simpa [x, R] using hlower)
     simpa [pow_two, pow_succ, x, mul_assoc, mul_left_comm, mul_comm] using hsq

@@ -99,19 +99,6 @@ private lemma rho_arc_lower_bound {r : ℝ} (hr : 0 ≤ r) {θ : ℝ} (hθ : |θ
     mul_nonneg hr h1, sq_nonneg (a - 1 - r / Real.sqrt 2),
     Real.sq_sqrt (show (2 : ℝ) ≥ 0 by norm_num), Real.sqrt_nonneg 2]
 
-/-! ## Private Lemma 2.6b: Algebraic bound
-
-For `r ≥ 0`: `(r + √2) / (r + 2) ≥ 1 / √2`.
-Equivalently: `√2 (r + √2) ≥ r + 2`, i.e., `(√2 − 1) r ≥ 0`.
--/
-private lemma algebraic_bound {r : ℝ} (hr : 0 ≤ r) :
-    (r + Real.sqrt 2) / (r + 2) ≥ 1 / Real.sqrt 2 := by
-  rw [ge_iff_le, div_le_div_iff₀
-    (by positivity : (0 : ℝ) < Real.sqrt 2)
-    (by linarith : (0 : ℝ) < r + 2)]
-  nlinarith [Real.sq_sqrt (show (2 : ℝ) ≥ 0 by norm_num),
-    Real.sqrt_nonneg 2]
-
 /-! ### Auxiliary lemmas for the integral bound -/
 
 /-- `fourier 1 (↑θ)` equals `exp(i θ)` on `AddCircle (2π)`. -/

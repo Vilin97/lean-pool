@@ -47,8 +47,8 @@ theorem orthogonalReduction_core
         (1 / 4601 : ℝ) ^ 2) :
     ∫ z : ℂ, ‖p.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
       23003 ^ 2 *
-        ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-  exact LocalFockSPR_of_small_norm p hp_real hsmall
+        ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) :=
+  LocalFockSPR_of_small_norm p hp_real hsmall
 
 /-- The phase-aligned version used in the final statement. -/
 theorem orthogonalReduction_exists_phase
@@ -59,7 +59,7 @@ theorem orthogonalReduction_exists_phase
     ∃ w : ℂ, ‖w‖ = 1 ∧
       ∫ z : ℂ, ‖w * ((1 : ℂ) + p.eval z) - 1‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
         23003 ^ 2 *
-          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-  exact LocalFockSPR_of_small_norm_exists_phase p hsmall
+          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) :=
+  LocalFockSPR_of_small_norm_exists_phase p hsmall
 
 end FockSPR

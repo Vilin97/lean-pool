@@ -377,29 +377,6 @@ private lemma circle_pow_factor
     ring]
   rw [key, mul_one]
 
-private lemma Phi_rotation_equivariant
-    (ω : _root_.Circle) (z : ℂ) (k p : ℕ) :
-    oneDimPhi k p ((ω : ℂ) * z) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k * oneDimPhi k p z := by
-  unfold oneDimPhi
-  simp only [mul_pow, star_mul]
-  suffices h : ∀ j ∈ Finset.range (min k p + 1),
-      (-1 : ℂ) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-        ((ω : ℂ) ^ (p - j) * z ^ (p - j)) * (star z ^ (k - j) * star (ω : ℂ) ^ (k - j)) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k *
-        ((-1) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-          z ^ (p - j) * star z ^ (k - j)) by
-    have hsum := Finset.sum_congr rfl h
-    rw [← Finset.mul_sum] at hsum
-    linear_combination
-      (1 / ↑(Real.sqrt (↑k.factorial * ↑p.factorial))) * hsum
-  intro j hj
-  simp only [Finset.mem_range, Nat.lt_succ_iff, le_min_iff] at hj
-  have key := circle_pow_factor ω hj.1 hj.2
-  linear_combination
-    ((-1 : ℂ) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-      z ^ (p - j) * star z ^ (k - j)) * key
-
 private lemma oneDimPhi_phaseLaw
     (k n : ℕ) (t : ℝ) (z : ℂ) :
     oneDimPhi k n (Complex.exp (Complex.I * t) * z) =
@@ -877,36 +854,6 @@ private lemma PhiKappaAlpha_rotate_one
   conv_rhs => rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by
       simp)]
   ring
-
-private lemma finite_sum_annulusMass_le
-    {d : ℕ} (F : CSpace d → ℂ)
-    (hF : Integrable (fun z : CSpace d => ‖F z‖ ^ 2) (gaussianMeasure d))
-    (s : Finset (MultiIndex d)) :
-    ∑ j ∈ s, annulusMass j F ≤ gaussianL2NormSq F := by
-  classical
-  have hindi : ∀ j ∈ s,
-      Integrable (fun z : CSpace d => if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0)
-        (gaussianMeasure d) := fun j _ =>
-    (hF.indicator (measurableSet_productAnnulus j)).congr (by
-      filter_upwards with z; simp only [Set.indicator])
-  have hInt :
-      Integrable
-        (fun z : CSpace d =>
-          ∑ j ∈ s, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0)
-        (gaussianMeasure d) :=
-    MeasureTheory.integrable_finsetSum _ hindi
-  calc
-    ∑ j ∈ s, annulusMass j F
-      = ∫ z : CSpace d,
-          ∑ j ∈ s, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0
-          ∂ gaussianMeasure d := by
-            rw [MeasureTheory.integral_finsetSum _ hindi]
-            simp [annulusMass]
-    _ ≤ ∫ z : CSpace d, ‖F z‖ ^ 2 ∂ gaussianMeasure d := by
-          refine MeasureTheory.integral_mono_ae hInt hF ?_
-          filter_upwards with z
-          exact sum_indicator_productAnnulus_le s z (‖F z‖ ^ 2) (by positivity)
-    _ = gaussianL2NormSq F := by simp [gaussianL2NormSq]
 
 /-- Rotation averaging on a product annulus for nonnegative measurable functions. -/
 theorem annulusRotationAveraging

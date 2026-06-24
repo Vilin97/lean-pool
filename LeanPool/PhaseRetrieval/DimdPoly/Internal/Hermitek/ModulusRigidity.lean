@@ -58,26 +58,6 @@ theorem leading_term_extraction :
   rw [hdiv, norm_neg] at hsmall
   linarith
 
--- to_mathlib: Mathlib/Algebra/BigOperators/Intervals
-/-- Reindex a finite sum over `Icc N (N + L - 1)` to `Fin L`. -/
-private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
-    (N L : ℕ) (hL : 1 ≤ L) (f : ℕ → α) :
-    ∑ n ∈ Finset.Icc N (N + L - 1), f n =
-      ∑ m : Fin L, f (N + m.val) := by
-  symm
-  apply Finset.sum_nbij (fun (m : Fin L) => N + m.val)
-  · intro m hm
-    exact Finset.mem_Icc.mpr ⟨Nat.le_add_right N m.val, by omega⟩
-  · intro a ha b hb hab
-    exact Fin.ext (Nat.add_left_cancel hab)
-  · intro n hn
-    obtain ⟨hlo, hhi⟩ := Finset.mem_Icc.mp hn
-    refine ⟨⟨n - N, by omega⟩, Finset.mem_univ _, ?_⟩
-    change N + (n - N) = n
-    omega
-  · intro m hm
-    simp
-
 private def finiteCoeffSeq {d : ℕ} (a : Fin (d + 1) → ℂ) : ℕ → ℂ :=
   fun n => if h : n < d + 1 then a ⟨n, h⟩ else 0
 

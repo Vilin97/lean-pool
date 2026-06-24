@@ -91,26 +91,6 @@ private lemma card_biUnion_freqBlock (a b : ℕ) (h : a ≤ b) :
 
 /-! ## Private Lemma 6.1a: Monotonicity of `f(j) = 11(2j+1)/(j-5)^2` -/
 
-private lemma freq_ratio_decreasing {j₁ j₂ : ℕ} (hj₁ : 6 ≤ j₁) (hj₂ : 6 ≤ j₂)
-    (h : j₁ ≤ j₂) :
-    (11 * (2 * j₂ + 1) : ℝ) / ((j₂ - 5 : ℤ) : ℝ) ^ 2 ≤
-    (11 * (2 * j₁ + 1) : ℝ) / ((j₁ - 5 : ℤ) : ℝ) ^ 2 := by
-  have hj₁_sub : (j₁ - 5 : ℤ) = (j₁ : ℤ) - 5 := by omega
-  have hj₂_sub : (j₂ - 5 : ℤ) = (j₂ : ℤ) - 5 := by omega
-  rw [hj₁_sub, hj₂_sub]
-  have hd₁ : (0 : ℝ) < (((j₁ : ℤ) - 5 : ℤ) : ℝ) := by
-    exact_mod_cast (show (0 : ℤ) < (j₁ : ℤ) - 5 by omega)
-  have hd₂ : (0 : ℝ) < (((j₂ : ℤ) - 5 : ℤ) : ℝ) := by
-    exact_mod_cast (show (0 : ℤ) < (j₂ : ℤ) - 5 by omega)
-  rw [div_le_div_iff₀ (by positivity) (by positivity)]
-  have cast₁ : (((j₁ : ℤ) - 5 : ℤ) : ℝ) = (j₁ : ℝ) - 5 := by push_cast; ring
-  have cast₂ : (((j₂ : ℤ) - 5 : ℤ) : ℝ) = (j₂ : ℝ) - 5 := by push_cast; ring
-  rw [cast₁, cast₂]
-  nlinarith [sq_nonneg ((j₂ : ℝ) - j₁),
-    mul_nonneg (sub_nonneg.mpr (show (j₁ : ℝ) ≤ j₂ from by exact_mod_cast h))
-      (mul_nonneg (by linarith : (0 : ℝ) ≤ (j₁ : ℝ) - 5)
-        (by linarith : (0 : ℝ) ≤ (j₂ : ℝ) - 5))]
-
 /-! ## Structural matching: localPoly as a Fourier sum -/
 
 /-- The frequency support of `localPoly a 5 j`, restricted to indices `≤ D`. -/

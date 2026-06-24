@@ -3089,10 +3089,6 @@ theorem realHermiteGenerating_iteratedDeriv_zero_star (n : ℕ) (t : ℝ) :
     (fun z => realHermiteGenerating_conj t z) n 0
   simpa using h
 
-private theorem realHermite1D_star (n : ℕ) (t : ℝ) :
-    star (realHermite1D n t) = realHermite1D n t := by
-  simp [realHermite1D, realHermiteGenerating_iteratedDeriv_zero_star]
-
 private theorem realHermiteGenerating_stft_integral_eq_phase_mul_halfCentered
     (n k : ℕ) (x ω : ℝ) :
     (∫ t : ℝ,
@@ -3586,35 +3582,6 @@ noncomputable def bKappa {d : Nat} (kappa : MultiIndex d)
 noncomputable def bKappaRep {d : Nat} (kappa : MultiIndex d) (U : Skappa d kappa) :
     RealVec d -> ℂ :=
   (bKappa kappa U : L2Real d)
-
-private lemma bKappaSeriesRep_smul
-    {d : Nat} (kappa : MultiIndex d) (w : ℂ) (U : Skappa d kappa) :
-    bKappaSeriesRep kappa (w • U) = fun x => w * bKappaSeriesRep kappa U x := by
-  funext x
-  unfold bKappaSeriesRep
-  calc
-    (∑' alpha : Idx d, coeffSkappa (w • U) alpha * realHermiteTensorRep alpha x) =
-        ∑' alpha : Idx d, w * (coeffSkappa U alpha * realHermiteTensorRep alpha x) := by
-          apply tsum_congr
-          intro alpha
-          change (w * U.coeff alpha) * realHermiteTensorRep alpha x =
-            w * (U.coeff alpha * realHermiteTensorRep alpha x)
-          rw [mul_assoc]
-    _ = w * ∑' alpha : Idx d, coeffSkappa U alpha * realHermiteTensorRep alpha x := by
-          rw [tsum_mul_left]
-
-private lemma memLp_of_const_mul_memLp
-    {d : Nat} {f : RealVec d -> ℂ} {w : ℂ} (hw : w ≠ 0)
-    (h : MemLp (fun x => w * f x) 2 (volume : Measure (RealVec d))) :
-    MemLp f 2 (volume : Measure (RealVec d)) := by
-  have h_inv : MemLp (fun x => w⁻¹ * (w * f x)) 2
-      (volume : Measure (RealVec d)) := by
-    refine MeasureTheory.MemLp.ae_eq ?_ (h.const_smul w⁻¹)
-    filter_upwards with x
-    simp only [Pi.smul_apply, smul_eq_mul]
-  refine (memLp_congr_ae ?_).1 h_inv
-  filter_upwards with x
-  field_simp [hw]
 
 theorem bKappa_smul
     {d : Nat} (kappa : MultiIndex d) (w : ℂ) (U : Skappa d kappa) :
@@ -4397,18 +4364,6 @@ private theorem oneDWindowAmbiguityFactor_zero
     mul_comm, mul_left_comm]
     using realHermiteGenerating_ambiguity_integral_conj_kernel x ω 0 0
 
-private theorem oneDWindowAmbiguityFactor_zero_closed
-    (x ω : ℝ) :
-    oneDWindowAmbiguityFactor 0 x ω =
-      (-1 : ℂ) ^ (0 : Nat) *
-        phi1D 0 0
-          (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-            (Real.sqrt 2 : ℂ)) *
-        Complex.ofReal
-          (Real.exp (-((x ^ 2 + (2 * Real.pi) ^ 2 * ω ^ 2) / 4))) := by
-  rw [oneDWindowAmbiguityFactor_zero]
-  simp [phi1D, complexHermite]
-
 private noncomputable def realHermite1DExpansionScale (n : ℕ) : ℂ :=
   (Real.sqrt (Nat.factorial n : ℝ) : ℂ) / (Nat.factorial n : ℂ)
 
@@ -4422,8 +4377,8 @@ private theorem realHermiteGenerating_pi_quarter_mul_self :
   norm_num
 
 private theorem realHermiteGeneratingExpansionCoeff_one_zero :
-    realHermiteGeneratingExpansionCoeff 1 0 = 0 := by
-  exact realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
+    realHermiteGeneratingExpansionCoeff 1 0 = 0 :=
+  realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
 
 private theorem realHermiteGeneratingExpansionCoeff_one_one :
     realHermiteGeneratingExpansionCoeff 1 1 =
@@ -4441,8 +4396,8 @@ private theorem realHermiteGeneratingExpansionCoeff_two_zero :
   ring
 
 private theorem realHermiteGeneratingExpansionCoeff_two_one :
-    realHermiteGeneratingExpansionCoeff 2 1 = 0 := by
-  exact realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
+    realHermiteGeneratingExpansionCoeff 2 1 = 0 :=
+  realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
 
 private theorem realHermiteGeneratingExpansionCoeff_two_two :
     realHermiteGeneratingExpansionCoeff 2 2 =
@@ -4454,8 +4409,8 @@ private theorem realHermiteGeneratingExpansionCoeff_two_two :
   ring
 
 private theorem realHermiteGeneratingExpansionCoeff_three_zero :
-    realHermiteGeneratingExpansionCoeff 3 0 = 0 := by
-  exact realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
+    realHermiteGeneratingExpansionCoeff 3 0 = 0 :=
+  realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
 
 private theorem realHermiteGeneratingExpansionCoeff_three_one :
     realHermiteGeneratingExpansionCoeff 3 1 =
@@ -4469,8 +4424,8 @@ private theorem realHermiteGeneratingExpansionCoeff_three_one :
   ring
 
 private theorem realHermiteGeneratingExpansionCoeff_three_two :
-    realHermiteGeneratingExpansionCoeff 3 2 = 0 := by
-  exact realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
+    realHermiteGeneratingExpansionCoeff 3 2 = 0 :=
+  realHermiteGeneratingExpansionCoeff_eq_zero_of_odd_sub (by norm_num)
 
 private theorem realHermiteGeneratingExpansionCoeff_three_three :
   realHermiteGeneratingExpansionCoeff 3 3 =
@@ -6228,11 +6183,6 @@ private theorem iteratedDeriv_generating_cross_ambiguity_integrand_finite_expans
   simp [oneDWindowAmbiguityMonomialKernel, star_complex_monomial_gaussian]
   ring
 
-private theorem realHermiteCoeffScale_mul_self :
-    realHermiteCoeffScale * realHermiteCoeffScale =
-      ((Real.pi ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) := by
-  simpa [realHermiteCoeffScale] using realHermiteGenerating_pi_quarter_mul_self
-
 private theorem cross_ambiguity_monomial_kernel_sum_eq_hermite_eval₂
     (n m : ℕ) (x ω t : ℝ) :
     (∑ k ∈ Finset.range (n + 1), ∑ l ∈ Finset.range (m + 1),
@@ -6318,26 +6268,6 @@ private theorem iteratedDeriv_generating_cross_ambiguity_integrand_eq_hermite_ev
           oneDWindowAmbiguityShiftedModulatedGaussian x ω t := by
   rw [iteratedDeriv_generating_cross_ambiguity_integrand_finite_expansion,
     cross_ambiguity_monomial_kernel_sum_eq_hermite_eval₂]
-
-private theorem iteratedDeriv_generating_cross_ambiguity_integral_eq_hermite_eval₂
-    (n m : ℕ) (x ω : ℝ) :
-    (∫ t : ℝ,
-      iteratedDeriv n (realHermiteGenerating (t + (1 / 2 : ℝ) * x)) 0 *
-        iteratedDeriv m (realHermiteGenerating (t - (1 / 2 : ℝ) * x)) 0 *
-          Complex.exp (-(2 * Real.pi : ℂ) * Complex.I *
-            ((inner ℝ ω t : ℝ) : ℂ))) =
-      ∫ t : ℝ,
-        (realHermiteCoeffScale * realHermiteCoeffScale) *
-          (Polynomial.eval₂ (Int.castRingHom ℂ)
-              ((Real.sqrt 2 : ℂ) * ((t + (1 / 2 : ℝ) * x : ℝ) : ℂ))
-              (Polynomial.hermite n) *
-            Polynomial.eval₂ (Int.castRingHom ℂ)
-              ((Real.sqrt 2 : ℂ) * ((t - (1 / 2 : ℝ) * x : ℝ) : ℂ))
-              (Polynomial.hermite m)) *
-            oneDWindowAmbiguityShiftedModulatedGaussian x ω t := by
-  apply MeasureTheory.integral_congr_ae
-  filter_upwards with t
-  exact iteratedDeriv_generating_cross_ambiguity_integrand_eq_hermite_eval₂ n m x ω t
 
 private theorem iteratedDeriv_generating_cross_ambiguity_normalized_integral_finite_sum
     (n m : ℕ) (x ω : ℝ) :
@@ -6803,18 +6733,6 @@ private theorem oneDWindowAmbiguityMonomialKernel_zero_zero_normalized_integral
         (Real.exp (-((x ^ 2 + (2 * Real.pi) ^ 2 * ω ^ 2) / 4))) := by
   rw [← oneDWindowAmbiguityFactor_zero_eq_normalized_monomial_kernel_integral]
   exact oneDWindowAmbiguityFactor_zero x ω
-
-private theorem oneDWindowAmbiguityMonomialKernel_zero_zero_half_normalized_integral
-    (x ω : ℝ) :
-    (∫ t : ℝ,
-        ((1 / 2 : ℂ) * ((Real.pi ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) *
-          oneDWindowAmbiguityMonomialKernel 0 0 x ω t)) =
-      (1 / 2 : ℂ) *
-        Complex.ofReal
-          (Real.exp (-((x ^ 2 + (2 * Real.pi) ^ 2 * ω ^ 2) / 4))) := by
-  simp_rw [mul_assoc]
-  rw [MeasureTheory.integral_const_mul,
-    oneDWindowAmbiguityMonomialKernel_zero_zero_normalized_integral]
 
 private theorem oneDWindowAmbiguityFactor_one_eq_normalized_monomial_kernel_integral
     (x ω : ℝ) :
@@ -8361,16 +8279,16 @@ private lemma ae_prod_of_ae_ae_of_aestronglyMeasurable
     F =ᵐ[μ.prod ν] fun _ => (0 : E) := by
   let Fm : α × β -> E := hF_meas.mk F
   have hF_eq_mk_sections :
-      ∀ᵐ x ∂μ, (fun y : β => F (x, y)) =ᵐ[ν] fun y => Fm (x, y) := by
-    exact MeasureTheory.Measure.ae_ae_of_ae_prod hF_meas.ae_eq_mk
+      ∀ᵐ x ∂μ, (fun y : β => F (x, y)) =ᵐ[ν] fun y => Fm (x, y) :=
+    MeasureTheory.Measure.ae_ae_of_ae_prod hF_meas.ae_eq_mk
   have hmk_sec_zero :
       ∀ᵐ x ∂μ, (fun y : β => Fm (x, y)) =ᵐ[ν] fun _ => (0 : E) := by
     filter_upwards [hsec, hF_eq_mk_sections] with x hx hxm
     exact hxm.symm.trans hx
-  have hmeas_zero : MeasurableSet {p : α × β | Fm p = 0} := by
-    exact hF_meas.stronglyMeasurable_mk.measurable (measurableSet_singleton (0 : E))
-  have hmk_prod : Fm =ᵐ[μ.prod ν] fun _ => (0 : E) := by
-    exact (MeasureTheory.Measure.ae_prod_iff_ae_ae hmeas_zero).2 hmk_sec_zero
+  have hmeas_zero : MeasurableSet {p : α × β | Fm p = 0} :=
+    hF_meas.stronglyMeasurable_mk.measurable (measurableSet_singleton (0 : E))
+  have hmk_prod : Fm =ᵐ[μ.prod ν] fun _ => (0 : E) :=
+    (MeasureTheory.Measure.ae_prod_iff_ae_ae hmeas_zero).2 hmk_sec_zero
   exact hF_meas.ae_eq_mk.trans hmk_prod
 
 private lemma sectionDiff_fourier_eq_ambiguity_sub
@@ -8667,12 +8585,12 @@ theorem rankOneKernel_ae_to_unimodular_phase
       ae_unimodular_phase_to_L2_eq hf_rep hg_rep hphase
     have hphase_fst :
         (fun p : RealVec d × RealVec d => gRep p.1)
-          =ᵐ[μ.prod μ] fun p => w * fRep p.1 := by
-      exact MeasureTheory.Measure.quasiMeasurePreserving_fst.ae hphase
+          =ᵐ[μ.prod μ] fun p => w * fRep p.1 :=
+      MeasureTheory.Measure.quasiMeasurePreserving_fst.ae hphase
     have hphase_snd :
         (fun p : RealVec d × RealVec d => gRep p.2)
-          =ᵐ[μ.prod μ] fun p => w * fRep p.2 := by
-      exact MeasureTheory.Measure.quasiMeasurePreserving_snd.ae hphase
+          =ᵐ[μ.prod μ] fun p => w * fRep p.2 :=
+      MeasureTheory.Measure.quasiMeasurePreserving_snd.ae hphase
     have hscale_prod :
         (fun p : RealVec d × RealVec d => fRep p.1 * star (fRep p.2))
           =ᵐ[μ.prod μ]
@@ -8730,32 +8648,13 @@ theorem ae_modulus_to_pointwise_modulus
         fun z => ((‖toFun kappa V z‖ : ℝ) : ℂ) := by
     filter_upwards [hmod] with z hz
     rw [hz]
-  have hcontU : Continuous (fun z => ((‖toFun kappa U z‖ : ℝ) : ℂ)) := by
-    exact Complex.continuous_ofReal.comp ((continuous_toFun hd kappa U).norm)
-  have hcontV : Continuous (fun z => ((‖toFun kappa V z‖ : ℝ) : ℂ)) := by
-    exact Complex.continuous_ofReal.comp ((continuous_toFun hd kappa V).norm)
+  have hcontU : Continuous (fun z => ((‖toFun kappa U z‖ : ℝ) : ℂ)) :=
+    Complex.continuous_ofReal.comp ((continuous_toFun hd kappa U).norm)
+  have hcontV : Continuous (fun z => ((‖toFun kappa V z‖ : ℝ) : ℂ)) :=
+    Complex.continuous_ofReal.comp ((continuous_toFun hd kappa V).norm)
   have hC := continuous_eq_of_ae_eq_gamma hd hcontU hcontV hmodC
   intro z
   exact Complex.ofReal_injective (congrFun hC z)
-
-private theorem ae_modulus_to_pointwise_self_kernel_wip
-    {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
-    {U V : Skappa d kappa}
-    (hmod :
-      (fun z => ‖toFun kappa U z‖) =ᵐ[gammaD d]
-        fun z => ‖toFun kappa V z‖) :
-    ∀ z,
-      toFun kappa V z * star (toFun kappa V z) =
-        toFun kappa U z * star (toFun kappa U z) := by
-  have hpoint := ae_modulus_to_pointwise_modulus hd kappa hmod
-  intro z
-  calc
-    toFun kappa V z * star (toFun kappa V z) =
-        ((‖toFun kappa V z‖ ^ 2 : ℝ) : ℂ) := by simpa using (RCLike.mul_conj (toFun kappa V z))
-    _ = ((‖toFun kappa U z‖ ^ 2 : ℝ) : ℂ) := by rw [← hpoint z]
-    _ = toFun kappa U z * star (toFun kappa U z) := by
-          symm
-          simpa using (RCLike.mul_conj (toFun kappa U z))
 
 theorem ae_modulus_to_stft_modulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -8895,8 +8794,8 @@ private theorem skappa_eq_zero_of_toFun_zero_exact_wip
   calc
     coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := coeff_recovery hd kappa U beta
     _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa (0 : Skappa d kappa)) := by rw [hL2]
-    _ = coeffSkappa (0 : Skappa d kappa) beta := by
-      exact (coeff_recovery hd kappa (0 : Skappa d kappa) beta).symm
+    _ = coeffSkappa (0 : Skappa d kappa) beta :=
+      (coeff_recovery hd kappa (0 : Skappa d kappa) beta).symm
     _ = 0 := rfl
 
 private theorem coeff_eq_zero_of_self_kernel_zero_exact_wip {z : ℂ}

@@ -640,8 +640,8 @@ private lemma integrableOn_polar_const (u : ℝ) :
         intro y hy
         exact hnorm_eq y)]
       have hnn :
-          0 ≤ r * (u ^ 2 * Real.exp (-r ^ 2)) := by
-        exact mul_nonneg (le_of_lt hr) (mul_nonneg (sq_nonneg u) (le_of_lt (Real.exp_pos _)))
+          0 ≤ r * (u ^ 2 * Real.exp (-r ^ 2)) :=
+        mul_nonneg (le_of_lt hr) (mul_nonneg (sq_nonneg u) (le_of_lt (Real.exp_pos _)))
       calc
         ∫ θ in Set.Ioo (-Real.pi) Real.pi, r * (u ^ 2 * Real.exp (-r ^ 2))
             = T * (r * (u ^ 2 * Real.exp (-r ^ 2))) := by
@@ -667,8 +667,8 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
   let μ : Measure (ℝ × ℝ) :=
     (volume.prod volume).restrict (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
   have hconst :
-      Integrable (fun p : ℝ × ℝ => p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_const ‖c‖
+      Integrable (fun p : ℝ × ℝ => p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) μ :=
+    integrableOn_polar_const ‖c‖
   have hnorm :
       Integrable (fun p : ℝ × ℝ =>
         p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *

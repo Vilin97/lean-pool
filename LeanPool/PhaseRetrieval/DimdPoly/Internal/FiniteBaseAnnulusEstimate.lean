@@ -662,8 +662,8 @@ private theorem localPartPkappa_coord_band
     · simp [hjm]
     · have hjgt : M < j q := lt_of_not_ge hjm
       have hidx : j q - M ≤ Hermite1DimdLEAN.blockIndexMulti alpha q := by omega
-      have hsq : (j q - M) ^ 2 ≤ (Hermite1DimdLEAN.blockIndexMulti alpha q) ^ 2 := by
-        exact Nat.pow_le_pow_left hidx 2
+      have hsq : (j q - M) ^ 2 ≤ (Hermite1DimdLEAN.blockIndexMulti alpha q) ^ 2 :=
+        Nat.pow_le_pow_left hidx 2
       have hsqrt : (Hermite1DimdLEAN.blockIndexMulti alpha q) ^ 2 ≤ alpha q := by
         simpa [Hermite1DimdLEAN.blockIndexMulti, HermiteLEAN.blockIndex, pow_two]
           using Nat.sqrt_le' (alpha q)
@@ -674,8 +674,8 @@ private theorem localPartPkappa_coord_band
       simpa [Hermite1DimdLEAN.blockIndexMulti, HermiteLEAN.blockIndex, pow_two]
         using Nat.lt_succ_sqrt' (alpha q)
     have hmono :
-        (Hermite1DimdLEAN.blockIndexMulti alpha q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := by
-      exact Nat.pow_le_pow_left (Nat.succ_le_succ hidx_upper) 2
+        (Hermite1DimdLEAN.blockIndexMulti alpha q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 :=
+      Nat.pow_le_pow_left (Nat.succ_le_succ hidx_upper) 2
     exact lt_of_lt_of_le hlt hmono
 
 private theorem annulusBandSeparation_of_large_coord
@@ -809,8 +809,8 @@ private theorem annulus_mass_split
         2 * annulusMass j (ofPkappa kappa (remainderPartPkappa j M G)) := by
   classical
   have hIntG :
-      Integrable (fun z : Cd d => ‖evalPkappa kappa G z‖ ^ 2) (gammaD d) := by
-    exact integrable_evalPkappa_sq_annulus hd kappa G
+      Integrable (fun z : Cd d => ‖evalPkappa kappa G z‖ ^ 2) (gammaD d) :=
+    integrable_evalPkappa_sq_annulus hd kappa G
   have hIntLocal :
       Integrable
         (fun z : Cd d => ‖evalPkappa kappa (localPartPkappa j M G) z‖ ^ 2)
@@ -879,11 +879,11 @@ private theorem integrable_baseDefectSq_annulus
           ‖evalPkappa kappa F z‖) ^ 2)
       (gammaD d) := by
   have hplus_int :
-      Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa (F + G) z‖ ^ 2) (gammaD d) := by
-    exact (integrable_evalPkappa_sq_annulus hd kappa (F + G)).const_mul 2
+      Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa (F + G) z‖ ^ 2) (gammaD d) :=
+    (integrable_evalPkappa_sq_annulus hd kappa (F + G)).const_mul 2
   have hbase_int :
-      Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖ ^ 2) (gammaD d) := by
-    exact (integrable_evalPkappa_sq_annulus hd kappa F).const_mul 2
+      Integrable (fun z : Cd d => 2 * ‖evalPkappa kappa F z‖ ^ 2) (gammaD d) :=
+    (integrable_evalPkappa_sq_annulus hd kappa F).const_mul 2
   have hsq :
       Integrable
         (fun z : Cd d =>
@@ -1795,41 +1795,6 @@ private theorem localPartPkappa_fiber_circle_estimate_annulus
   intro alpha halpha
   exact localPartPkappa_coord_band (j := j) (M := M) (G := G) halpha q0
 
-private theorem exists_high_localPartPkappa_fiber_circle_estimate_annulus
-    {d : Nat} (hd : 0 < d) {kappa : MultiIndex d}
-    (F G : Pkappa d kappa) (M : Nat) :
-    ∃ Jsep : Nat, ∀ (j : Idx d) (z : Cd d),
-      Jsep ≤ j (maxCoordAnnulus hd j) ->
-        circleL2Sq
-          (fun x : Circle =>
-            evalPkappa kappa (localPartPkappa j M G)
-              (Function.update z (maxCoordAnnulus hd j)
-                ((fourier (1 : Int) x : ℂ) * z (maxCoordAnnulus hd j)))) ≤
-        circleConst (baseCoordDegree F) *
-          ∫ x : Circle,
-            (‖evalPkappa kappa F
-                  (Function.update z (maxCoordAnnulus hd j)
-                    ((fourier (1 : Int) x : ℂ) * z (maxCoordAnnulus hd j))) +
-                evalPkappa kappa (localPartPkappa j M G)
-                  (Function.update z (maxCoordAnnulus hd j)
-                    ((fourier (1 : Int) x : ℂ) * z (maxCoordAnnulus hd j)))‖ -
-              ‖evalPkappa kappa F
-                  (Function.update z (maxCoordAnnulus hd j)
-                    ((fourier (1 : Int) x : ℂ) * z (maxCoordAnnulus hd j)))‖) ^ 2
-            ∂AddCircle.haarAddCircle := by
-  obtain ⟨Jsep, hJsep⟩ :=
-    highAnnulusBandSeparation_annulus hd (baseCoordDegree F) M
-  refine ⟨Jsep, ?_⟩
-  intro j z hlarge
-  let q0 : Fin d := maxCoordAnnulus hd j
-  have hsep :
-      circleGap (baseCoordDegree F) * annulusBandLength j q0 M ≤
-        annulusBandStart j q0 M := by simpa [q0] using hJsep j hlarge
-  exact localPartPkappa_fiber_circle_estimate_annulus
-    (q0 := q0) (D := baseCoordDegree F) (F := F) (G := G)
-    (j := j) (M := M) (z := z)
-    (fun alpha halpha => baseCoordDegree_spec F halpha q0) hsep
-
 private theorem baseDefectAnnulusMass_nonneg_annulus
     {d : Nat} (kappa : MultiIndex d) (j : Idx d)
     (F H : Pkappa d kappa) :
@@ -2076,8 +2041,8 @@ private theorem hermiteNormSq_ofPkappa_eq_norm_sq_annulus
     Hermite1DimdLEAN.hermiteNormSq kappa ⟨G⟩ = ‖G‖ ^ 2 := by
   have hparseval :
       Hermite1DimdLEAN.hermiteNormSq kappa ⟨G⟩ =
-        Finset.sum G.support (fun alpha => ‖G alpha‖ ^ 2) := by
-    exact Hermite1DimdLEAN.finiteParseval kappa ⟨G⟩
+        Finset.sum G.support (fun alpha => ‖G alpha‖ ^ 2) :=
+    Hermite1DimdLEAN.finiteParseval kappa ⟨G⟩
   rw [hparseval]
   change Finset.sum G.support (fun alpha => ‖G alpha‖ ^ 2) =
     (Real.sqrt (Finset.sum G.support (fun alpha => ‖G alpha‖ ^ 2))) ^ 2
@@ -2384,8 +2349,8 @@ theorem finite_base_product_annulus_estimate
     have hsmall_event :
         ∀ᶠ M : Nat in Filter.atTop,
           Crem *
-            Hermite1DimdLEAN.localizationLeakageCoefficient Cleak cleak Bleak d M < eps := by
-      exact hprod_tend.eventually (Iio_mem_nhds h_eps)
+            Hermite1DimdLEAN.localizationLeakageCoefficient Cleak cleak Bleak d M < eps :=
+      hprod_tend.eventually (Iio_mem_nhds h_eps)
     rw [Filter.eventually_atTop] at hsmall_event
     obtain ⟨M0, hM0⟩ := hsmall_event
     let M : Nat := max 1 M0
@@ -2460,8 +2425,8 @@ theorem finite_base_product_annulus_estimate
             ∑ j ∈ s,
               (4 * Cloc * baseDefectAnnulusMass kappa j F G +
                 Crem *
-                  annulusMass j (ofPkappa kappa (remainderPartPkappa j M G))) := by
-              exact Finset.sum_le_sum hpoint
+                  annulusMass j (ofPkappa kappa (remainderPartPkappa j M G))) :=
+              Finset.sum_le_sum hpoint
           _ =
             4 * Cloc *
                 (∑ j ∈ s, baseDefectAnnulusMass kappa j F G) +
@@ -2529,8 +2494,8 @@ theorem finite_base_annulus_estimate
     have ht_sq_pos : 0 < t ^ 2 := by positivity
     have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith [hH_norm]
     have hdef_nonneg : 0 <= defect F (t • H) := defect_nonneg_annulus F (t • H)
-    have hdef_sq : defect F (t • H) ^ 2 <= (eta * t) ^ 2 := by
-      exact sq_le_sq' (by nlinarith [heta_nonneg, ht_pos]) hdefect
+    have hdef_sq : defect F (t • H) ^ 2 <= (eta * t) ^ 2 :=
+      sq_le_sq' (by nlinarith [heta_nonneg, ht_pos]) hdefect
     have hdef_mul : C * defect F (t • H) ^ 2 <= C * (eta * t) ^ 2 :=
       mul_le_mul_of_nonneg_left hdef_sq (le_of_lt hC_pos)
     have hscaled :
@@ -2581,8 +2546,8 @@ theorem highAnnulusControl
   have hdelta_sq_le : delta_high ^ 2 <= delta_high := by nlinarith [sq_nonneg delta_high]
   have hCdelta_sq_le : C * delta_high ^ 2 <= 1 / 8 := by
     calc
-      C * delta_high ^ 2 <= C * delta_high := by
-        exact mul_le_mul_of_nonneg_left hdelta_sq_le (le_of_lt hC_pos)
+      C * delta_high ^ 2 <= C * delta_high :=
+        mul_le_mul_of_nonneg_left hdelta_sq_le (le_of_lt hC_pos)
       _ <= 1 / 8 := hCdelta_le
   have hhigh :
       highAnnulusMass J (ofPkappa kappa H) <= C * delta_high ^ 2 + 1 / 8 :=

@@ -204,8 +204,8 @@ private lemma continuous_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ) 
   exact continuous_const.mul (fourier _).continuous
 
 private lemma continuous_mul_fourier_pow (r : ℝ) (n : ℕ) :
-    Continuous (fun t : AddCircle T => ((↑r : ℂ) * (fourier 1 t : ℂ)) ^ n) := by
-  exact ((continuous_const.mul (fourier 1).continuous).pow n)
+    Continuous (fun t : AddCircle T => ((↑r : ℂ) * (fourier 1 t : ℂ)) ^ n) :=
+  ((continuous_const.mul (fourier 1).continuous).pow n)
 
 private lemma continuous_localPoly_circle {D : ℕ} (a : Fin D → ℂ) (M j : ℕ) (r : ℝ) :
     Continuous (fun t : AddCircle T => localPoly a M j (↑r * (fourier 1 t : ℂ))) := by
@@ -414,33 +414,6 @@ private lemma sum_intervalIntegral_telescope {f : ℝ → ℝ}
     rw [Finset.sum_range_succ, ih, show (↑(n + 1) : ℝ) = (↑n : ℝ) + 1 from by push_cast; ring]
     exact intervalIntegral.integral_add_adjacent_intervals (hf_ii 0 n) (hf_ii n (↑n + 1))
 
-/-- Partial annular sums of fock integrand ≤ fockNormSq.
-Standard measure-theory fact: nonneg sum over disjoint subsets ≤ integral. -/
-private lemma annular_fock_partial_le {D : ℕ} (a : Fin D → ℂ) (J : ℕ) :
-    (∑ j ∈ Finset.range J,
-      2 * ∫ r in (j : ℝ)..(j + 1 : ℝ), r * Real.exp (-r ^ 2) *
-        (∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2
-          ∂AddCircle.haarAddCircle)) ≤ fockNormSq a := by
-  rw [fockNormSq_polar]
-  set f := fun r : ℝ => r * Real.exp (-r ^ 2) *
-    (∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle) with hf_def
-  rw [← Finset.mul_sum]
-  gcongr
-  have hf_cont : Continuous f := fockIntegrand_continuous a
-  have hf_ii : ∀ (a b : ℝ), IntervalIntegrable f volume a b :=
-    fun a b => hf_cont.intervalIntegrable a b
-  rw [sum_intervalIntegral_telescope hf_ii]
-  have hf_intOn : IntegrableOn f (Set.Ioi 0) volume := fockIntegrand_integrableOn a
-  have hJ_nn : (0 : ℝ) ≤ (J : ℝ) := Nat.cast_nonneg _
-  rw [intervalIntegral.integral_of_le hJ_nn]
-  apply setIntegral_mono_set hf_intOn
-  · rw [Filter.EventuallyLE, ae_restrict_iff' measurableSet_Ioi]
-    exact Filter.Eventually.of_forall (fun r hr => by
-      simp only [hf_def, Pi.zero_apply]; apply mul_nonneg
-      · exact mul_nonneg (le_of_lt (Set.mem_Ioi.mp hr)) (le_of_lt (Real.exp_pos _))
-      · exact integral_nonneg (fun t => sq_nonneg _))
-  · exact Filter.Eventually.of_forall (fun r hr => Set.Ioc_subset_Ioi_self hr)
-
 /-- Partial annular sums of rho integrand ≤ rhoFockNormSq. -/
 private lemma annular_rho_partial_le {D : ℕ} (a : Fin D → ℂ) (J : ℕ) :
     (∑ j ∈ Finset.range J,
@@ -647,8 +620,7 @@ private lemma annular_circle_bound {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) 
         have hrIcc : r ∈ Set.Icc (j : ℝ) ((j : ℝ) + 1) := ⟨hr_lo, hr_hi⟩
         have hwr : 0 ≤ w r := hw_nn r hrIcc
         have hfr : f r ≤ C₁ * g r + C₂ * h r := hpw r hrIcc
-        calc w r * f r ≤ w r * (C₁ * g r + C₂ * h r) := by
-              exact mul_le_mul_of_nonneg_left hfr hwr
+        calc w r * f r ≤ w r * (C₁ * g r + C₂ * h r) := mul_le_mul_of_nonneg_left hfr hwr
           _ = C₁ * (w r * g r) + C₂ * (w r * h r) := by ring
     calc ∫ r in (j : ℝ)..(j + 1 : ℝ), w r * f r
         ≤ ∫ r in (j : ℝ)..(j + 1 : ℝ), (C₁ * (w r * g r) + C₂ * (w r * h r)) := h_bound

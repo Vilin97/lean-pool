@@ -131,12 +131,6 @@ private lemma hermiteNormSq_nonneg
   rw [finiteParseval]
   positivity
 
-private lemma localizationLeakageCoefficient_nonneg
-    {C c B : ℝ} {d M : ℕ} (hC : 0 ≤ C) :
-    0 ≤ localizationLeakageCoefficient C c B d M := by
-  unfold localizationLeakageCoefficient
-  positivity
-
 private lemma annulusMass_blockDecomposition_sum_support_image
     {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d) (G : FiniteHermiteSum d) :
     annulusMass j (evalHermiteSum κ G) =

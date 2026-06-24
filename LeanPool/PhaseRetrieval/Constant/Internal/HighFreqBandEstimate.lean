@@ -992,12 +992,6 @@ private lemma circleNormSq_nonneg
   unfold circleNormSq; apply integral_nonneg; intro
   positivity
 
-/-- Poincaré approximation (placeholder retained for
-    compatibility with the non-WIP file). -/
-private lemma poincare_approximation {N L : ℕ}
-    (_hN : 1 ≤ N) (_hL : 1 ≤ L) (_b : Fin L → ℂ) :
-    True := trivial
-
 /-! ## Core lower bound
 
 Combines assembly + Poincaré to get:

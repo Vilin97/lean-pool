@@ -548,32 +548,6 @@ private theorem explicitClosure_subset_explicitSequentialClosure
   rw [hsq]
   simpa using hsqrt_tendsto.pow 2
 
-private theorem stablePhaseRetrievalExplicitRange_phaseOptimized
-    {d : ℕ} (hd : 0 < d) (κ : Fin d -> ℕ)
-    (P : (Fin d -> ℂ) -> ℂ) (hP : P ∈ Set.range (explicitEvalPkappa κ)) :
-    ∃ C_P : ℝ, 0 < C_P ∧
-      ∀ Q : (Fin d -> ℂ) -> ℂ, Q ∈ Set.range (explicitEvalPkappa κ) →
-        explicitPhaseOptimizedDistanceSq P Q ≤
-          C_P ^ 2 * explicitModulusDistanceSq P Q := by
-  rcases stablePhaseRetrievalExplicitRange hd κ P hP with ⟨C_P, hC_P_pos, hstable⟩
-  refine ⟨C_P, hC_P_pos, ?_⟩
-  intro Q hQ
-  rcases hstable Q hQ with ⟨θ, hθ, hbound⟩
-  have hle :
-      explicitPhaseOptimizedDistanceSq P Q ≤
-        explicitGaussianL2DistanceSq P (fun z => θ * Q z) := by
-    have hbdd :
-        BddBelow (Set.range fun θ' : UnitPhase =>
-          explicitGaussianL2DistanceSq P (fun z => θ'.1 * Q z)) := by
-      refine ⟨0, ?_⟩
-      rintro r ⟨θ', rfl⟩
-      exact explicitGaussianL2DistanceSq_nonneg P (fun z => θ'.1 * Q z)
-    exact csInf_le hbdd ⟨⟨θ, hθ⟩, rfl⟩
-  change
-    explicitGaussianL2DistanceSq P (fun z => θ * Q z) ≤
-      C_P ^ 2 * explicitModulusDistanceSq P Q at hbound
-  exact hle.trans hbound
-
 private theorem explicitPhaseOptimized_bound_of_l2_closure
     {d : ℕ} (hd : 0 < d) (κ : Fin d -> ℕ)
     (P Q : (Fin d -> ℂ) -> ℂ) (C_P : ℝ)
