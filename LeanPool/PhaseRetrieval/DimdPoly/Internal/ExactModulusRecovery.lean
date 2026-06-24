@@ -4643,36 +4643,51 @@ private theorem deriv_mgf_six_formula (z : ℂ) :
   · fun_prop
   · fun_prop
 
+private theorem deriv_mgf_one_fun :
+    deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) =
+      fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4) := by
+  funext c
+  rw [deriv_cexp_sq_div_four]
+
+private theorem deriv_mgf_two_fun :
+    deriv (fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4)) =
+      fun c : ℂ => ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4) := by
+  funext c
+  rw [deriv_mgf_two_formula]
+
+private theorem deriv_mgf_three_fun :
+    deriv (fun c : ℂ => ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4)) =
+      fun c : ℂ => ((3 / 4 : ℂ) * c + c ^ 3 / 8) * Complex.exp (c ^ 2 / 4) := by
+  funext c
+  rw [deriv_mgf_three_formula]
+
+private theorem deriv_mgf_four_fun :
+    deriv (fun c : ℂ => ((3 / 4 : ℂ) * c + c ^ 3 / 8) * Complex.exp (c ^ 2 / 4)) =
+      fun c : ℂ =>
+        ((3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) * Complex.exp (c ^ 2 / 4) := by
+  funext c
+  rw [deriv_mgf_four_formula]
+
+private theorem deriv_mgf_five_fun :
+    deriv (fun c : ℂ =>
+        ((3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) * Complex.exp (c ^ 2 / 4)) =
+      fun c : ℂ =>
+        ((15 / 8 : ℂ) * c + (5 / 8 : ℂ) * c ^ 3 + c ^ 5 / 32) * Complex.exp (c ^ 2 / 4) := by
+  funext c
+  rw [deriv_mgf_five_formula]
+
 private theorem iteratedDeriv_two_cexp_sq_div_four (z : ℂ) :
     iteratedDeriv 2 (fun c : ℂ => Complex.exp (c ^ 2 / 4)) z =
       ((1 / 2 : ℂ) + z ^ 2 / 4) * Complex.exp (z ^ 2 / 4) := by
   simp only [iteratedDeriv_succ, iteratedDeriv_zero]
-  rw [show deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_cexp_sq_div_four]]
-  rw [deriv_mgf_two_formula]
+  rw [deriv_mgf_one_fun, deriv_mgf_two_formula]
 
 private theorem iteratedDeriv_four_cexp_sq_div_four (z : ℂ) :
     iteratedDeriv 4 (fun c : ℂ => Complex.exp (c ^ 2 / 4)) z =
       ((3 / 4 : ℂ) + (3 / 4 : ℂ) * z ^ 2 + z ^ 4 / 16) *
         Complex.exp (z ^ 2 / 4) := by
   simp only [iteratedDeriv_succ, iteratedDeriv_zero]
-  rw [show deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_cexp_sq_div_four]]
-  rw [show deriv (fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_two_formula]]
-  rw [show deriv (fun c : ℂ =>
-      ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((3 / 4 : ℂ) * c + c ^ 3 / 8) *
-        Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_three_formula]]
-  rw [deriv_mgf_four_formula]
+  rw [deriv_mgf_one_fun, deriv_mgf_two_fun, deriv_mgf_three_fun, deriv_mgf_four_formula]
 
 private theorem iteratedDeriv_six_cexp_sq_div_four (z : ℂ) :
     iteratedDeriv 6 (fun c : ℂ => Complex.exp (c ^ 2 / 4)) z =
@@ -4680,34 +4695,8 @@ private theorem iteratedDeriv_six_cexp_sq_div_four (z : ℂ) :
           z ^ 6 / 64) *
         Complex.exp (z ^ 2 / 4) := by
   simp only [iteratedDeriv_succ, iteratedDeriv_zero]
-  rw [show deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_cexp_sq_div_four]]
-  rw [show deriv (fun c : ℂ => (c / 2) * Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_two_formula]]
-  rw [show deriv (fun c : ℂ =>
-      ((1 / 2 : ℂ) + c ^ 2 / 4) * Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((3 / 4 : ℂ) * c + c ^ 3 / 8) *
-        Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_three_formula]]
-  rw [show deriv (fun c : ℂ =>
-      ((3 / 4 : ℂ) * c + c ^ 3 / 8) * Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) *
-        Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_four_formula]]
-  rw [show deriv (fun c : ℂ =>
-      ((3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) *
-        Complex.exp (c ^ 2 / 4)) =
-      fun c : ℂ => ((15 / 8 : ℂ) * c + (5 / 8 : ℂ) * c ^ 3 + c ^ 5 / 32) *
-        Complex.exp (c ^ 2 / 4) by
-    funext c
-    rw [deriv_mgf_five_formula]]
-  rw [deriv_mgf_six_formula]
+  rw [deriv_mgf_one_fun, deriv_mgf_two_fun, deriv_mgf_three_fun, deriv_mgf_four_fun,
+    deriv_mgf_five_fun, deriv_mgf_six_formula]
 
 private theorem gaussian_half_moment_zero (z : ℂ) :
     (∫ t : ℝ, Complex.exp (z * (t : ℂ))
