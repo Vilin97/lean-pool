@@ -62,8 +62,6 @@ projects:
     status: verified
     main_declarations:
       - LeanPool.Zeta3Irrational.zeta3_irrational
-      - LeanPool.Zeta3Irrational.linear_int
-      - LeanPool.Zeta3Irrational.JJ_upper
     main_results:
       - declaration: LeanPool.Zeta3Irrational.zeta3_irrational
         informal: Proves that ζ(3) is irrational.
