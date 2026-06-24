@@ -24,29 +24,6 @@ open Cardinal Ideal Polynomial Set Pointwise
 
 variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain T]
 
-/- In a domain, a height-≤-1 ideal `J` containing a nonzero prime ideal
-`span{p}` coincides with it: a strict inclusion would force `span{p}` to have
-height `0`, contradicting `⊥ < span{p}`. -/
-private theorem span_singleton_eq_of_height_le_one {A : Type*} [CommRing A]
-    [IsDomain A] (J : Ideal A) [J.IsPrime] (hJ_ht : J.height ≤ 1) {p : A} (hp_ne : p ≠ 0)
-    [(Ideal.span {p}).IsPrime] (hspan_le : Ideal.span {p} ≤ J) :
-    Ideal.span {p} = J := by
-  have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal A) :=
-    Ideal.span_singleton_eq_bot.not.mpr hp_ne
-  by_contra hne
-  have hstrict := lt_of_le_of_ne hspan_le hne
-  rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl, Ideal.height_le_iff] at hJ_ht
-  have hspan_ht := hJ_ht (Ideal.span {p}) inferInstance hstrict
-  have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
-  have hbot_fin : (⊥ : Ideal A).FiniteHeight :=
-    ⟨Or.inr (by simp [Ideal.height_bot])⟩
-  have h0 := @Ideal.height_strict_mono_of_isPrime A _
-    (⊥ : Ideal A) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
-  rw [Ideal.height_bot] at h0
-  rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
-  rw [hspan_ht] at h0
-  exact lt_irrefl _ h0
-
 /- Derive mod-principal transcendence from the stronger mod-P version.
 If for every associated prime P of T/(p) with y ∉ P, the polynomial
 evaluation aeval x f ∈ P implies C(p) | f, then aeval x f ∈ span{p}
@@ -87,11 +64,26 @@ include T in theorem derive_mod_principal_trans
   haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
   have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
+  have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
+    Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
   haveI : (Ideal.span {p}).IsPrime :=
     (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
   -- Since R is a UFD and P∩R has height ≤ 1, the prime ideal (p) must equal P∩R
-  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype :=
-    span_singleton_eq_of_height_le_one _ hR_ht hp.ne_zero hspan_le
+  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
+    by_contra hne
+    have hstrict := lt_of_le_of_ne hspan_le hne
+    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hR_ht
+    rw [Ideal.height_le_iff] at hR_ht
+    have hspan_ht := hR_ht (Ideal.span {p}) inferInstance hstrict
+    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
+    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
+      (⊥ : Ideal R.carrier) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
+    rw [hspan_ht] at h0
+    exact lt_irrefl _ h0
   -- y ∉ P because p ∤ y and (p) = P∩R
   have hy_nP : (↑y : T) ∉ P := by
     intro hyP
@@ -159,13 +151,33 @@ include T in theorem height_bound_wf_descent
   -- Since P∩R ≠ ⊥ and R is a UFD, pick a prime generator p₀ of P∩R
   obtain ⟨p₀, hp₀_prime, hp₀_mem⟩ :=
     exists_prime_mem_of_ne_bot (Ideal.comap R.carrier.subtype P) hPR_bot
+  have hspan_ne_bot : Ideal.span {p₀} ≠ ⊥ := by
+    rw [ne_eq, Ideal.span_singleton_eq_bot]
+    exact hp₀_prime.ne_zero
   haveI : (Ideal.span {p₀}).IsPrime :=
     Ideal.span_singleton_prime hp₀_prime.ne_zero |>.mpr hp₀_prime
   have hspan_le : Ideal.span {p₀} ≤ Ideal.comap R.carrier.subtype P :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp₀_mem)
   -- Height-1 argument: (p₀) = P∩R since there is no room for a strict inclusion
-  have hspan_eq : Ideal.span {p₀} = Ideal.comap R.carrier.subtype P :=
-    span_singleton_eq_of_height_le_one _ hR_bound hp₀_prime.ne_zero hspan_le
+  have hspan_eq : Ideal.span {p₀} = Ideal.comap R.carrier.subtype P := by
+    by_contra hne
+    have hstrict : Ideal.span {p₀} < Ideal.comap R.carrier.subtype P :=
+      lt_of_le_of_ne hspan_le hne
+    have hht' : (Ideal.comap R.carrier.subtype P).height ≤ ↑(1 : ℕ) := hR_bound
+    rw [Ideal.height_le_iff] at hht'
+    have hspan_height : (Ideal.span {p₀}).height < ↑(1 : ℕ) :=
+      hht' _ inferInstance hstrict
+    have hbot_lt : (⊥ : Ideal R.carrier) < Ideal.span {p₀} :=
+      bot_lt_iff_ne_bot.mpr hspan_ne_bot
+    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 : (⊥ : Ideal R.carrier).height < (Ideal.span {p₀}).height :=
+      @Ideal.height_strict_mono_of_isPrime R.carrier _ (⊥ : Ideal R.carrier)
+        (Ideal.span {p₀}) Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_height
+    rw [hspan_height] at h0
+    exact lt_irrefl _ h0
   have hp₀_P : (↑p₀ : T) ∈ P :=
     (hspan_eq ▸ Ideal.mem_span_singleton_self p₀ : p₀ ∈ Ideal.comap R.carrier.subtype P)
   have hp₀_not_unit_T : ¬IsUnit (↑p₀ : T) :=
