@@ -3001,3 +3001,32 @@ projects:
       - commuting-probability
     msc:
       - "20P05"
+  - slug: kaprekar4
+    title: Kaprekar4
+    summary: Formalizes the structure of Kaprekar's routine on four base-B digits for odd bases greater than three, including eventual entry into the odd target set, conjugacy with doubling on projective residues, the maximal cycle-length criterion, and the prime-base count of maximal cycles.
+    branch: number theory
+    entry_module: LeanPool.Kaprekar4
+    authors:
+      - Axiom Math
+    source:
+      url: https://github.com/AxiomMath/kaprekar4
+      github_repo: AxiomMath/kaprekar4
+    status: verified
+    main_declarations:
+      - Kaprekar4.thm_structural
+      - Kaprekar4.cor_length
+      - Kaprekar4.cor_prime
+    main_results:
+      - declaration: Kaprekar4.thm_structural
+        informal: Proves that the Kaprekar map preserves the terminal target set, sends every state into it after three iterates, and is conjugate there to the doubling map on unordered projective residues.
+      - declaration: Kaprekar4.cor_length
+        informal: Bounds the maximal terminal cycle length by half the base minus one, with equality characterized by prime bases whose projective order of 2 is maximal.
+      - declaration: Kaprekar4.cor_prime
+        informal: Counts the terminal cycles of maximal length in prime bases satisfying the maximal-length equality condition.
+    tags:
+      - number-theory
+      - dynamical-systems
+      - kaprekar-routine
+    msc:
+      - "11A63"
+      - "37P99"

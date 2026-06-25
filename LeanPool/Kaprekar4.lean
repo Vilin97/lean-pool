@@ -6,6 +6,17 @@ Authors: Axiom Math
 
 import Mathlib
 
+/-!
+# Kaprekar4
+
+Source: url:https://github.com/AxiomMath/kaprekar4
+Authors: Axiom Math
+Status: verified
+Main declarations: `Kaprekar4.thm_structural`, `Kaprekar4.cor_length`, `Kaprekar4.cor_prime`
+Tags: number-theory, dynamical-systems, kaprekar-routine
+MSC: 11A63, 37P99
+-/
+
 namespace Kaprekar4
 
 
