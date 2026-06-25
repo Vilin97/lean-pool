@@ -2067,7 +2067,7 @@ lemma Compare_Supports [DecidableEq α]
   -- 4) tratamos os dois casos de hcase
   cases hcase
   case inl hq1 =>
-    -- caso 𝚙.1 ∪ 𝚙.2 = q.1
+    -- caso p.1 ∪ p.2 = q.1
     have hpsup : combinatorialSupport p = q.1 := by
       dsimp [combinatorialSupport]; rw [hq1]
     -- (a) se w = q, sobra mostrar p.support ⊆ w.support
@@ -2187,7 +2187,7 @@ lemma Compare_Supports [DecidableEq α]
                     exact hq1 ▸ hq2
                   exact hg.trans hqsubw22
   case inr hq2 =>
-    -- case 𝚙.1 ∪ 𝚙.2 = q.2
+    -- case p.1 ∪ p.2 = q.2
     have hpsup : combinatorialSupport p = q.2 := by
       dsimp [combinatorialSupport]; rw [hq2]
     -- (a) if  w = q, it remains to show p.support ⊆ w.support
