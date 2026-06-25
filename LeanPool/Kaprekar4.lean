@@ -44,9 +44,9 @@ residues.
 ## Notes and Interpretation
 
 - All claims were checked computationally for odd bases `B` up to `39`.
-- The bound `c_max(B) ≤ (B-1)/2` holds for all tested `B`, with equality exactly for
+- The bound `c_max(B) ≤ (B - 1)/2` holds for all tested `B`, with equality exactly for
   `B ∈ {7, 11, 13, 19, 23, 29, 37}` in this range — precisely the primes `≥ 7` for
-  which `2` has projective order `(B-1)/2` (the least `m` with `2^m ≡ ±1 mod B`).
+  which `2` has projective order `(B - 1)/2` (the least `m` with `2^m ≡ ±1 mod B`).
 - The map `Φ` realizes the dynamics of `K_B` on `T_B` as multiplication by `2` on
   (unordered pairs of) projective residues.
 - "`4`-digit" allows leading zeros: states are arbitrary multisets of four base-`B`
@@ -124,7 +124,8 @@ def binomSet (B : ℕ) : Set (Sym2 (PB B)) :=
 For `(d₁, d₂)` (with `d₁, d₂` both odd, as in `T_B`), set `r = (d₁ + d₂)/2` and
 `s = (d₁ - d₂)/2`, and return the unordered pair `{[r], [s]}` of projective residues. -/
 def Phi (B : ℕ) (p : ℕ × ℕ) : Sym2 (PB B) :=
-  Sym2.mk (PBmk B (((p.1 + p.2) / 2 : ℕ) : ZMod B), PBmk B (((p.1 - p.2) / 2 : ℕ) : ZMod B))
+  Sym2.mk (PBmk B (((p.1 + p.2) / 2 : ℕ) : ZMod B))
+    (PBmk B (((p.1 - p.2) / 2 : ℕ) : ZMod B))
 
 /-- Doubling on projective residues: `[x] ↦ [2x]`. Well-defined since `2(-x) = -(2x)`. -/
 def doubleP (B : ℕ) : PB B → PB B :=
@@ -168,8 +169,8 @@ order (`B³`-place, `B²`-place, `B`-place, units),
 
 *Proof (informal).* Expand `N = d₁B³ + d₂B² - d₂B - d₁`. Regroup using one borrow at
 the units place and one at the `B`-place:
-`N = d₁·B³ + (d₂-1)·B² + (B-1-d₂)·B + (B-d₁)`.
-Indeed `(d₂-1)B² + (B-1-d₂)B + (B-d₁) = d₂B² - B² + B² - B - d₂B + B - d₁
+`N = d₁·B³ + (d₂ - 1)·B² + (B - 1 - d₂)·B + (B - d₁)`.
+Indeed `(d₂ - 1)B² + (B - 1 - d₂)B + (B - d₁) = d₂B² - B² + B² - B - d₂B + B - d₁
       = d₂B² - d₂B - d₁`, matching `N - d₁B³`. Each coefficient lies in `[0,B-1]`
 because `1 ≤ d₂ ≤ d₁ < B`: `0 ≤ d₂-1 ≤ B-2`, `0 ≤ B-1-d₂ ≤ B-2`, `1 ≤ B-d₁ ≤ B-1`,
 and `d₁ ≤ B-1`. Hence these are exactly the digits, i.e. `N / B³ = d₁`,
@@ -182,9 +183,9 @@ theorem digits_of_N_pos (B d₁ d₂ : ℕ) (hd₂ : 1 ≤ d₂) (hd : d₂ ≤ 
   have hB1 : 1 ≤ B := by omega
   have hBpos : 0 < B := by omega
   have hbd2 : d₂ ≤ B - 1 := by omega
-  -- Horner regrouping: N = (B-d₁) + B*((B-1-d₂) + B*((d₂-1) + B*d₁))
+  -- Horner regrouping: N = (B - d₁) + B*((B - 1 - d₂) + B*((d₂ - 1) + B*d₁))
   have key : N = (B - d₁) + B * ((B - 1 - d₂) + B * ((d₂ - 1) + B * d₁)) := by
-    show d₁ * (B ^ 3 - 1) + d₂ * (B ^ 2 - B) = _
+    change d₁ * (B ^ 3 - 1) + d₂ * (B ^ 2 - B) = _
     have h3 : 1 ≤ B ^ 3 := Nat.one_le_pow _ _ (by omega)
     have h2 : B ≤ B ^ 2 := by nlinarith [sq_nonneg B]
     zify [hd₁, h3, h2, hB1, hd₂, hd, hbd2, Nat.sub_le]
@@ -215,7 +216,7 @@ theorem digits_of_N_pos (B d₁ d₂ : ℕ) (hd₂ : 1 ≤ d₂) (hd : d₂ ≤ 
 /-- **Lemma `digits_of_N_zero` (degenerate case `d₂ = 0`).**
 For `1 ≤ d₁ < B`, the base-`B` digits of `N = d₁(B³-1)` are `(d₁-1, B-1, B-1, B-d₁)`.
 
-*Proof (informal).* `N = d₁B³ - d₁ = (d₁-1)B³ + (B-1)B² + (B-1)B + (B-d₁)` since the
+*Proof (informal).* `N = d₁B³ - d₁ = (d₁ - 1)B³ + (B - 1)B² + (B - 1)B + (B - d₁)` since the
 right side equals `d₁B³ - B³ + (B³ - B²) + (B² - B) + (B - d₁) = d₁B³ - d₁`. All four
 coefficients lie in `[0,B-1]` as `1 ≤ d₁ < B`. -/
 theorem digits_of_N_zero (B d₁ : ℕ) (hd₁0 : 1 ≤ d₁) (hd₁ : d₁ < B) :
@@ -225,9 +226,9 @@ theorem digits_of_N_zero (B d₁ : ℕ) (hd₁0 : 1 ≤ d₁) (hd₁ : d₁ < B)
   intro N
   have hB1 : 1 ≤ B := by omega
   have hBpos : 0 < B := by omega
-  -- Horner regrouping: N = (B-d₁) + B*((B-1) + B*((B-1) + B*(d₁-1)))
+  -- Horner regrouping: N = (B - d₁) + B*((B - 1) + B*((B - 1) + B*(d₁ - 1)))
   have key : N = (B - d₁) + B * ((B - 1) + B * ((B - 1) + B * (d₁ - 1))) := by
-    show d₁ * (B ^ 3 - 1) = _
+    change d₁ * (B ^ 3 - 1) = _
     have h3 : 1 ≤ B ^ 3 := Nat.one_le_pow _ _ (by omega)
     zify [hd₁, h3, hB1, hd₁0, Nat.sub_le]
     ring
@@ -260,47 +261,49 @@ theorem digits_of_N_zero (B d₁ : ℕ) (hd₁0 : 1 ≤ d₁) (hd₁ : d₁ < B)
 
 /-- Helper: `sort4` evaluation via a sorted permutation. -/
 theorem sort4_perm_eq (a b c d w x y z : ℕ)
-    (hperm : List.Perm [a,b,c,d] [w,x,y,z])
+    (hperm : List.Perm [a, b, c, d] [w, x, y, z])
     (hwx : x ≤ w) (hxy : y ≤ x) (hyz : z ≤ y) :
     sort4 a b c d = (w,x,y,z) := by
-  have hms : List.mergeSort [a,b,c,d] (· ≥ ·) = [w,x,y,z] := by
-    have hp1 : List.Perm (List.mergeSort [a,b,c,d] (· ≥ ·)) [w,x,y,z] :=
+  have hms : List.mergeSort [a, b, c, d] (· ≥ ·) = [w, x, y, z] := by
+    have hp1 : List.Perm (List.mergeSort [a, b, c, d] (· ≥ ·)) [w, x, y, z] :=
       (List.mergeSort_perm _ _).trans hperm
     apply List.Perm.eq_of_pairwise (le := (· ≥ ·))
     · intro p q _ _ hpq hqp; omega
     · have := List.pairwise_mergeSort (le := fun (x1 x2 : ℕ) => decide (x1 ≥ x2))
-        (by intro a b c hab hbc; simp_all; omega) (by intro a b; simp; omega) [a,b,c,d]
+        (by intro a b c hab hbc; simp_all; omega) (by intro a b; simp; omega) [a, b, c, d]
       simpa using this
-    · simp [List.Pairwise]; omega
+    · simp; omega
     · exact hp1
   unfold sort4
   rw [hms]
 
 /-- Helper: equality of projective classes. -/
 theorem PBmk_eq_iff (B : ℕ) (a b : ZMod B) : PBmk B a = PBmk B b ↔ (a = b ∨ a = -b) := by
-  unfold PBmk; rw [Quotient.eq]; rfl
+  change Quotient.mk (projSetoid B) a = Quotient.mk (projSetoid B) b ↔ (a = b ∨ a = -b)
+  rw [Quotient.eq]
+  rfl
 
 /-- Helper: build a `Sym2` equality from componentwise projective equalities. -/
 theorem Sym2_finish (B : ℕ) (u₁ u₂ v₁ v₂ : ZMod B)
     (h : (u₁ = v₁ ∨ u₁ = -v₁) ∧ (u₂ = v₂ ∨ u₂ = -v₂)) :
-    Sym2.mk (PBmk B u₁, PBmk B u₂) = Sym2.mk (PBmk B v₁, PBmk B v₂) := by
+    Sym2.mk (PBmk B u₁) (PBmk B u₂) = Sym2.mk (PBmk B v₁) (PBmk B v₂) := by
   obtain ⟨h1, h2⟩ := h
   rw [(PBmk_eq_iff B _ _).2 h1, (PBmk_eq_iff B _ _).2 h2]
 
 /-- Helper: build a `Sym2` equality from cross componentwise projective equalities. -/
 theorem Sym2_finish_swap (B : ℕ) (u₁ u₂ v₁ v₂ : ZMod B)
     (h : (u₁ = v₂ ∨ u₁ = -v₂) ∧ (u₂ = v₁ ∨ u₂ = -v₁)) :
-    Sym2.mk (PBmk B u₁, PBmk B u₂) = Sym2.mk (PBmk B v₁, PBmk B v₂) := by
+    Sym2.mk (PBmk B u₁) (PBmk B u₂) = Sym2.mk (PBmk B v₁) (PBmk B v₂) := by
   obtain ⟨h1, h2⟩ := h
   rw [(PBmk_eq_iff B _ _).2 h1, (PBmk_eq_iff B _ _).2 h2, Sym2.eq_swap]
 
 /-- Helper: explicit form of `Dmap ∘ Phi`. -/
 theorem Dmap_Phi (B : ℕ) (p : ℕ × ℕ) :
     Dmap B (Phi B p) =
-      Sym2.mk (PBmk B (2 * (((p.1 + p.2) / 2 : ℕ) : ZMod B)),
-               PBmk B (2 * (((p.1 - p.2) / 2 : ℕ) : ZMod B))) := by
+      Sym2.mk (PBmk B (2 * (((p.1 + p.2) / 2 : ℕ) : ZMod B)))
+        (PBmk B (2 * (((p.1 - p.2) / 2 : ℕ) : ZMod B))) := by
   unfold Dmap Phi
-  rw [Sym2.map_pair_eq]
+  rw [Sym2.map_mk]
   congr 1
 
 
@@ -349,7 +352,7 @@ theorem KB_eq_on_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
   -- case-split on the descending order of the four digits {d₁, d₂-1, B-1-d₂, B-d₁}
   rcases le_total (B - 1 - d₂) (d₂ - 1) with hPQ | hPQ
   · -- order A,P,Q,R  (P1)
-    rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-1-d₂) (B-d₁)
+    rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
         (List.Perm.refl _)
         (by omega) (by omega) (by omega)]
     simp only
@@ -367,7 +370,7 @@ theorem KB_eq_on_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
   · rcases le_total (B - 1 - d₂) d₁ with hQA | hQA
     · rcases le_total (d₂ - 1) (B - d₁) with hPR | hPR
       · -- order A,Q,R,P  (P3); d₁+d₂ ∈ {B-1, B+1}
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (B-d₁) (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (B - d₁) (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -390,7 +393,7 @@ theorem KB_eq_on_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
             rw [Nat.cast_add, ZMod.natCast_self]; simp
           rw [hB1]; simp
       · -- order A,Q,P,R  (P2)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (d₂-1) (B-d₁)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1) (B - d₁)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -405,7 +408,7 @@ theorem KB_eq_on_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
         rw [e, ZMod.natCast_self]; push_cast; ring
     · rcases le_total (B - d₁) d₁ with hRA | hRA
       · -- order Q,A,R,P  (P4)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) d₁ (B-d₁) (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) d₁ (B - d₁) (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -418,7 +421,7 @@ theorem KB_eq_on_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
         rw [Nat.cast_sub (by omega), Nat.cast_sub (by omega), ZMod.natCast_self]
         push_cast; ring
       · -- order Q,R,A,P  (P5)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) (B-d₁) d₁ (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -464,7 +467,7 @@ theorem KB_maps_T_into_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
   -- case-split on the descending order of the four digits {d₁, d₂-1, B-1-d₂, B-d₁}
   rcases le_total (B - 1 - d₂) (d₂ - 1) with hPQ | hPQ
   · -- order A,P,Q,R  (P1)
-    rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-1-d₂) (B-d₁)
+    rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
         (List.Perm.refl _)
         (by omega) (by omega) (by omega)]
     simp only
@@ -473,14 +476,14 @@ theorem KB_maps_T_into_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
   · rcases le_total (B - 1 - d₂) d₁ with hQA | hQA
     · rcases le_total (d₂ - 1) (B - d₁) with hPR | hPR
       · -- order A,Q,R,P  (P3)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (B-d₁) (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (B - d₁) (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
         refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
           first | omega | (rw [Nat.odd_iff]; omega)
       · -- order A,Q,P,R  (P2)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (d₂-1) (B-d₁)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1) (B - d₁)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -488,14 +491,14 @@ theorem KB_maps_T_into_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
           first | omega | (rw [Nat.odd_iff]; omega)
     · rcases le_total (B - d₁) d₁ with hRA | hRA
       · -- order Q,A,R,P  (P4)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) d₁ (B-d₁) (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) d₁ (B - d₁) (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
         refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
           first | omega | (rw [Nat.odd_iff]; omega)
       · -- order Q,R,A,P  (P5)
-        rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) (B-d₁) d₁ (d₂-1)
+        rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1)
             (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
             (by omega) (by omega) (by omega)]
         simp only
@@ -513,7 +516,7 @@ within at most three steps:
     by `2d₁ - B`, which is odd since `B` is odd, forcing the new first coordinate
     `e₁ = b₁ - b₄` odd);
   * the constraint `e₂ < e₁` and `e₂ > 0` is reached because the middle digits
-    `d₂-1, B-1-d₂` are distinct unless `d₂ = (B-1)/2... ` handled by a further step;
+    `d₂-1, B-1-d₂` are distinct unless `d₂ = (B - 1)/2... ` handled by a further step;
   * the projective picture (via `KB_eq_on_T`, valid once in `T_B`) confirms no further
     degeneration. Concretely: `K_B(X_B) ⊆ {d₁ odd}`, `K_B²(X_B) ⊆ {d₁,d₂ odd}`, and the
     third step removes the boundary cases `d₂ = 0` and `d₂ = d₁`, landing in `T_B`.
@@ -554,13 +557,13 @@ theorem KB_step1_into_I (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     -- order the four digits {d₁-1, B-1, B-1, B-d₁}
     rcases le_total (d₁ - 1) (B - d₁) with hAB | hAB
     · -- B-1 ≥ B-1 ≥ B-d₁ ≥ d₁-1
-      rw [sort4_perm_eq (d₁-1) (B-1) (B-1) (B-d₁) (B-1) (B-1) (B-d₁) (d₁-1)
+      rw [sort4_perm_eq (d₁ - 1) (B - 1) (B - 1) (B - d₁) (B - 1) (B - 1) (B - d₁) (d₁ - 1)
           (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
           (by omega) (by omega) (by omega)]
       simp only
       refine ⟨by omega, by omega, by omega, by omega, by omega⟩
     · -- B-1 ≥ B-1 ≥ d₁-1 ≥ B-d₁
-      rw [sort4_perm_eq (d₁-1) (B-1) (B-1) (B-d₁) (B-1) (B-1) (d₁-1) (B-d₁)
+      rw [sort4_perm_eq (d₁ - 1) (B - 1) (B - 1) (B - d₁) (B - 1) (B - 1) (d₁ - 1) (B - d₁)
           (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
           (by omega) (by omega) (by omega)]
       simp only
@@ -579,54 +582,54 @@ theorem KB_step1_into_I (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       rcases le_total (B - d₁) d₁ with hRA | hRA
       · rcases le_total (B - d₁) (d₂ - 1) with hRP | hRP
         · -- d₁ ≥ d₂-1 ≥ B-d₁ ≥ B-1-d₂
-          rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-d₁) (B-1-d₂)
+          rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - d₁) (B - 1 - d₂)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨by omega, by omega, by omega, by omega, by omega⟩
         · -- d₁ ≥ B-d₁ ≥ d₂-1 ≥ B-1-d₂
-          rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-d₁) (d₂-1) (B-1-d₂)
+          rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - d₁) (d₂ - 1) (B - 1 - d₂)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨by omega, by omega, by omega, by omega, by omega⟩
       · rcases le_total d₁ (B - 1 - d₂) with hAQ | hAQ
         · -- B-d₁ ≥ B-1-d₂ ≥ d₁ ≥ d₂-1
-          rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-d₁) (B-1-d₂) d₁ (d₂-1)
+          rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - d₁) (B - 1 - d₂) d₁ (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨by omega, by omega, by omega, by omega, by omega⟩
         · -- B-d₁ ≥ d₁ ≥ B-1-d₂ ≥ d₂-1
-          rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-d₁) d₁ (B-1-d₂) (d₂-1)
+          rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨by omega, by omega, by omega, by omega, by omega⟩
     · rcases le_total (B - 1 - d₂) (d₂ - 1) with hPQ | hPQ
-      · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-1-d₂) (B-d₁)
+      · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
             (List.Perm.refl _) (by omega) (by omega) (by omega)]
         simp only
         refine ⟨by omega, by omega, by omega, by omega, by omega⟩
       · rcases le_total (B - 1 - d₂) d₁ with hQA | hQA
         · rcases le_total (d₂ - 1) (B - d₁) with hPR | hPR
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (B-d₁) (d₂-1)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (B - d₁) (d₂ - 1)
                 (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
                 (by omega) (by omega) (by omega)]
             simp only
             refine ⟨by omega, by omega, by omega, by omega, by omega⟩
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (d₂-1) (B-d₁)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1) (B - d₁)
                 (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
                 (by omega) (by omega) (by omega)]
             simp only
             refine ⟨by omega, by omega, by omega, by omega, by omega⟩
         · rcases le_total (B - d₁) d₁ with hRA | hRA
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) d₁ (B-d₁) (d₂-1)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) d₁ (B - d₁) (d₂ - 1)
                 (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
                 (by omega) (by omega) (by omega)]
             simp only
             refine ⟨by omega, by omega, by omega, by omega, by omega⟩
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) (B-d₁) d₁ (d₂-1)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1)
                 (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
                 (by omega) (by omega) (by omega)]
             simp only
@@ -651,20 +654,20 @@ theorem KB_stepI (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (q : ℕ × ℕ) (hq : 
       rw [hN1, hN2, hN3, hN4]
     rw [hKB]
     rcases le_total (d₁ - 1) (B - d₁) with hAB | hAB
-    · rw [sort4_perm_eq (d₁-1) (B-1) (B-1) (B-d₁) (B-1) (B-1) (B-d₁) (d₁-1)
+    · rw [sort4_perm_eq (d₁ - 1) (B - 1) (B - 1) (B - d₁) (B - 1) (B - 1) (B - d₁) (d₁ - 1)
           (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
           (by omega) (by omega) (by omega)]
       simp only
       unfold inE
-      -- d₁ ∈ {2, B-1}; the output is (d₁-1)-difference; decide T_B vs E by parity
-      simp only [Nat.odd_iff, Nat.not_odd_iff]
+      -- d₁ ∈ {2, B-1}; the output is (d₁ - 1)-difference; decide T_B vs E by parity
+      simp only [Nat.odd_iff]
       omega
-    · rw [sort4_perm_eq (d₁-1) (B-1) (B-1) (B-d₁) (B-1) (B-1) (d₁-1) (B-d₁)
+    · rw [sort4_perm_eq (d₁ - 1) (B - 1) (B - 1) (B - d₁) (B - 1) (B - 1) (d₁ - 1) (B - d₁)
           (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
           (by omega) (by omega) (by omega)]
       simp only
       unfold inE
-      simp only [Nat.odd_iff, Nat.not_odd_iff]
+      simp only [Nat.odd_iff]
       omega
   · -- d₂ ≥ 1: digits {d₁, d₂-1, B-1-d₂, B-d₁}, with d₁ ≡ d₂ (mod 2)
     obtain ⟨hN1, hN2, hN3, hN4⟩ := digits_of_N_pos B d₁ d₂ (by omega) (by omega) hd1B
@@ -679,63 +682,93 @@ theorem KB_stepI (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (q : ℕ × ℕ) (hq : 
     · -- d₂ = d₁: digits {d₁, d₁-1, B-1-d₁, B-d₁} (heqd : d₂ = d₁)
       rcases le_total (B - d₁) d₁ with hRA | hRA
       · rcases le_total (B - d₁) (d₂ - 1) with hRP | hRP
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-d₁) (B-1-d₂)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - d₁) (B - 1 - d₂)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
+          right
           simp only
-          simp only [Nat.odd_iff, Nat.not_odd_iff]
+          simp only [Nat.odd_iff]
           omega
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-d₁) (d₂-1) (B-1-d₂)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - d₁) (d₂ - 1) (B - 1 - d₂)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
+          right
           simp only
-          simp only [Nat.odd_iff, Nat.not_odd_iff]
+          simp only [Nat.odd_iff]
           omega
       · rcases le_total d₁ (B - 1 - d₂) with hAQ | hAQ
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-d₁) (B-1-d₂) d₁ (d₂-1)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - d₁) (B - 1 - d₂) d₁ (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
+          right
           simp only
-          simp only [Nat.odd_iff, Nat.not_odd_iff]
+          simp only [Nat.odd_iff]
           omega
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-d₁) d₁ (B-1-d₂) (d₂-1)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
+          right
           simp only
-          simp only [Nat.odd_iff, Nat.not_odd_iff]
+          simp only [Nat.odd_iff]
           omega
     · rcases le_total (B - 1 - d₂) (d₂ - 1) with hPQ | hPQ
-      · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-1-d₂) (B-d₁)
+      · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁
+            (d₂ - 1) (B - 1 - d₂) (B - d₁)
             (List.Perm.refl _) (by omega) (by omega) (by omega)]
+        left
         simp only
-        simp only [Nat.odd_iff, Nat.not_odd_iff]
+        simp only [Nat.odd_iff]
         omega
       · rcases le_total (B - 1 - d₂) d₁ with hQA | hQA
         · rcases le_total (d₂ - 1) (B - d₁) with hPR | hPR
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (B-d₁) (d₂-1)
-                (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁
+                (B - 1 - d₂) (B - d₁) (d₂ - 1)
+                (by
+                  apply (List.perm_iff_count).2
+                  intro x
+                  simp only [List.count_cons, List.count_nil]
+                  ring)
                 (by omega) (by omega) (by omega)]
+            left
             simp only
-            simp only [Nat.odd_iff, Nat.not_odd_iff]
+            simp only [Nat.odd_iff]
             omega
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (d₂-1) (B-d₁)
-                (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁
+                (B - 1 - d₂) (d₂ - 1) (B - d₁)
+                (by
+                  apply (List.perm_iff_count).2
+                  intro x
+                  simp only [List.count_cons, List.count_nil]
+                  ring)
                 (by omega) (by omega) (by omega)]
+            left
             simp only
-            simp only [Nat.odd_iff, Nat.not_odd_iff]
+            simp only [Nat.odd_iff]
             omega
         · rcases le_total (B - d₁) d₁ with hRA | hRA
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) d₁ (B-d₁) (d₂-1)
-                (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
+                (B - 1 - d₂) d₁ (B - d₁) (d₂ - 1)
+                (by
+                  apply (List.perm_iff_count).2
+                  intro x
+                  simp only [List.count_cons, List.count_nil]
+                  ring)
                 (by omega) (by omega) (by omega)]
+            left
             simp only
-            simp only [Nat.odd_iff, Nat.not_odd_iff]
+            simp only [Nat.odd_iff]
             omega
-          · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) (B-d₁) d₁ (d₂-1)
-                (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
+          · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
+                (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1)
+                (by
+                  apply (List.perm_iff_count).2
+                  intro x
+                  simp only [List.count_cons, List.count_nil]
+                  ring)
                 (by omega) (by omega) (by omega)]
+            left
             simp only
-            simp only [Nat.odd_iff, Nat.not_odd_iff]
+            simp only [Nat.odd_iff]
             omega
 
 /-- **Helper 3.** From the exceptional set `E = {(d,d-2): d even}`, one step lands in `T_B`. -/
@@ -757,7 +790,7 @@ theorem KB_stepE (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (q : ℕ × ℕ) (hq : 
       simp only [← hd1def, hq2z, Nat.zero_mul, Nat.add_zero]
       rw [hN1, hN2, hN3, hN4]
     rw [hKB]
-    rw [sort4_perm_eq (d₁-1) (B-1) (B-1) (B-d₁) (B-1) (B-1) (B-d₁) (d₁-1)
+    rw [sort4_perm_eq (d₁ - 1) (B - 1) (B - 1) (B - d₁) (B - 1) (B - 1) (B - d₁) (d₁ - 1)
         (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
         (by omega) (by omega) (by omega)]
     simp only
@@ -772,33 +805,33 @@ theorem KB_stepE (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (q : ℕ × ℕ) (hq : 
       rw [hN1, hN2, hN3, hN4]
     rw [hKB]
     rcases le_total (B - 1 - d₂) (d₂ - 1) with hPQ | hPQ
-    · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (d₂-1) (B-1-d₂) (B-d₁)
+    · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁)
           (List.Perm.refl _) (by omega) (by omega) (by omega)]
       simp only
       refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
         first | omega | (rw [Nat.odd_iff]; omega)
     · rcases le_total (B - 1 - d₂) d₁ with hQA | hQA
       · rcases le_total (d₂ - 1) (B - d₁) with hPR | hPR
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (B-d₁) (d₂-1)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (B - d₁) (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
             first | omega | (rw [Nat.odd_iff]; omega)
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) d₁ (B-1-d₂) (d₂-1) (B-d₁)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) d₁ (B - 1 - d₂) (d₂ - 1) (B - d₁)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
             first | omega | (rw [Nat.odd_iff]; omega)
       · rcases le_total (B - d₁) d₁ with hRA | hRA
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) d₁ (B-d₁) (d₂-1)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) d₁ (B - d₁) (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
           refine ⟨⟨⟨?_, ?_⟩, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
             first | omega | (rw [Nat.odd_iff]; omega)
-        · rw [sort4_perm_eq d₁ (d₂-1) (B-1-d₂) (B-d₁) (B-1-d₂) (B-d₁) d₁ (d₂-1)
+        · rw [sort4_perm_eq d₁ (d₂ - 1) (B - 1 - d₂) (B - d₁) (B - 1 - d₂) (B - d₁) d₁ (d₂ - 1)
               (by apply (List.perm_iff_count).2; intro x; simp only [List.count_cons, List.count_nil]; ring)
               (by omega) (by omega) (by omega)]
           simp only
@@ -827,12 +860,12 @@ theorem KB3_maps_X_into_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       `r+s = d₁ ∈ (0,B)` are both nonzero mod `B`. Hence `Φ(d₁,d₂)` is an
       off-diagonal pair avoiding `[0]`.
   (b) *Injective.* From `{[r],[s]}` one recovers the unordered pair of *absolute*
-      representatives `{r,s} ⊆ {1,…,(B-1)/2}` (each class has a unique representative
-      in `1..(B-1)/2`), then `d₁ = r+s`, `d₂ = r-s` (with `r > s`). So `Φ` is injective
+      representatives `{r,s} ⊆ {1,…,(B - 1)/2}` (each class has a unique representative
+      in `1..(B - 1)/2`), then `d₁ = r+s`, `d₂ = r-s` (with `r > s`). So `Φ` is injective
       on `T_B`.
-  (c) *Surjective / cardinality.* `|P_B| = (B-1)/2`, so
-      `|binom(P_B,2)| = C((B-1)/2, 2)`. Also `|T_B| = C((B-1)/2, 2)` (pairs of distinct
-      odd numbers `d₂ < d₁` in `[1,B)` biject with pairs `s < r` in `[1,(B-1)/2]`).
+  (c) *Surjective / cardinality.* `|P_B| = (B - 1)/2`, so
+      `|binom(P_B,2)| = C((B - 1)/2, 2)`. Also `|T_B| = C((B - 1)/2, 2)` (pairs of distinct
+      odd numbers `d₂ < d₁` in `[1,B)` biject with pairs `s < r` in `[1,(B - 1)/2]`).
       An injection between finite sets of equal cardinality is a bijection; combined
       with (a),(b) this gives `Set.BijOn`. -/
 /-- **Helper `Phi_mapsTo`** — part (a) of `Phi_bijOn`.
@@ -840,7 +873,7 @@ theorem KB3_maps_X_into_T (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
 
 *Proof route.* For `(d₁,d₂) ∈ T_B`, set `r = (d₁+d₂)/2`, `s = (d₁-d₂)/2`; then
 `0 < s < r < B`, `r+s = d₁`, `r-s = d₂`. Unfold `Phi`, `binomSet`, `Sym2.IsDiag`
-(use `Sym2.isDiag_iff_proj_eq` / `Sym2.mk_isDiag_iff`) and `Sym2` membership
+(use `Sym2.mk_isDiag_iff` / `Sym2.mk_isDiag_iff`) and `Sym2` membership
 (`Sym2.mem_iff`). Reduce to three facts via `PBmk_eq_iff`:
   * `[r] ≠ [s]`: would need `r = ±s (mod B)`; `r-s = d₂` and `r+s = d₁` are both in
     `(0,B)`, hence nonzero mod `B`, contradiction.
@@ -894,7 +927,7 @@ theorem Phi_mapsTo (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
   · -- PBmk B 0 ∉ {[r],[s]}
     rw [Phi, Sym2.mem_iff]
     rw [← hr, ← hs]
-    push_neg
+    push Not
     constructor
     · intro h
       rw [eq_comm, PBmk_eq_iff] at h
@@ -913,13 +946,13 @@ theorem Phi_mapsTo (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
 `Φ` is injective on `T_B`.
 
 *Proof route.* Suppose `Phi B p = Phi B q` for `p,q ∈ T_B`. With
-`rₚ=(p.1+p.2)/2, sₚ=(p.1-p.2)/2` (similarly `q`), all four lie in `1..(B-1)/2`
+`rₚ=(p.1+p.2)/2, sₚ=(p.1-p.2)/2` (similarly `q`), all four lie in `1..(B - 1)/2`
 (since `0 < sₚ < rₚ` and `rₚ ≤ p.1 < B`, but more precisely the canonical
-representative of each class is in `1..(B-1)/2`). From the `Sym2` equality use
+representative of each class is in `1..(B - 1)/2`). From the `Sym2` equality use
 `Sym2.eq_iff` to get matched or swapped cases; `PBmk_eq_iff` turns each into
-`x = ±y (mod B)`. Because all of `rₚ,sₚ,rₚ,sₚ ∈ (0, B/2)` (use `r,s ≤ (B-1)/2`,
-which holds as `r = (d₁+d₂)/2 ≤ (2·((B-1)/2)+...)` — CAUTION: r can be up to `d₁ ≤ B-1`,
-so `r` is NOT always `≤ (B-1)/2`; the correct uniqueness uses the projective
+`x = ±y (mod B)`. Because all of `rₚ,sₚ,rₚ,sₚ ∈ (0, B/2)` (use `r,s ≤ (B - 1)/2`,
+which holds as `r = (d₁+d₂)/2 ≤ (2·((B - 1)/2)+...)` — CAUTION: r can be up to `d₁ ≤ B-1`,
+so `r` is NOT always `≤ (B - 1)/2`; the correct uniqueness uses the projective
 representative `min(x, B-x)`). Establish: for `0<x<B, 0<y<B`, `(x:ZMod B)=±(y:ZMod B)`
 ⟹ `x=y ∨ x+y=B`. Then with `rₚ+sₚ=p.1<B`, `rₚ-sₚ=p.2`, and the same for `q`, an `omega`
 case-split recovers `p.1=q.1 ∧ p.2=q.2`. (See the closer's analysis in CONTEXT.md: the
@@ -1004,18 +1037,18 @@ theorem Phi_injOn (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
 /- **Helper `binomSet_ncard_le_TBset`** — the cardinality input to surjectivity.
 `|binom(P_B,2)| ≤ |T_B|`. (In fact equality, but `≤` suffices given injectivity.)
 
-*Proof route.* Both equal `C((B-1)/2, 2)`.
-  * `|T_B|`: `T_B` is in bijection with pairs `s < r` in `1..(B-1)/2` via
+*Proof route.* Both equal `C((B - 1)/2, 2)`.
+  * `|T_B|`: `T_B` is in bijection with pairs `s < r` in `1..(B - 1)/2` via
     `(d₁,d₂) ↦ ((d₁+d₂)/2,(d₁-d₂)/2)`; counting the odd pairs `d₂ < d₁` in `[1,B)`
-    gives `C((B-1)/2, 2)`.
-  * `|binomSet B|`: `|P_B| = (B-1)/2` (each nonzero class `{x,-x}` has two
+    gives `C((B - 1)/2, 2)`.
+  * `|binomSet B|`: `|P_B| = (B - 1)/2` (each nonzero class `{x,-x}` has two
     representatives; there are `B-1` nonzero residues, plus the class of `0`, but the
-    binomSet excludes `[0]`, so it counts 2-subsets of the `(B-1)/2` nonzero classes,
-    i.e. `C((B-1)/2, 2)`). Use `Sym2` / `Fintype.card` and
+    binomSet excludes `[0]`, so it counts 2-subsets of the `(B - 1)/2` nonzero classes,
+    i.e. `C((B - 1)/2, 2)`). Use `Sym2` / `Fintype.card` and
     `Nat.card_eq_fintype_card`; relate `|P_B|` to `ZMod B` via the quotient cardinality
     (`ZMod.card`, `Fintype.card_quotient` / orbit-size 2 for `x ≠ 0`, fixed `0`).
 This is the hardest counting step; it may be split further if needed. -/
--- SANITY CHECK PASSED (no counterexample; equal to |T_B|=C((B-1)/2,2), B≤199 exhaustive)
+-- SANITY CHECK PASSED (no counterexample; equal to |T_B|=C((B - 1)/2,2), B≤199 exhaustive)
 /-- The "odd representative" of `x : ZMod B`: the odd one of `x.val` and `B - x.val`. -/
 def oddVal (B : ℕ) (x : ZMod B) : ℕ := if Odd x.val then x.val else B - x.val
 
@@ -1148,7 +1181,7 @@ def gmap (B : ℕ) (hBodd : Odd B) : Sym2 (PB B) → ℕ × ℕ :=
             by intro a b; simp [max_comm, min_comm]⟩
 
 theorem gmap_mk (B : ℕ) (hBodd : Odd B) (c d : PB B) :
-    gmap B hBodd (Sym2.mk (c, d)) =
+    gmap B hBodd (Sym2.mk c d) =
       (max (oddRep B hBodd c) (oddRep B hBodd d), min (oddRep B hBodd c) (oddRep B hBodd d)) := rfl
 
 theorem binomSet_ncard_le_TBset (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
@@ -1163,7 +1196,7 @@ theorem binomSet_ncard_le_TBset (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       obtain ⟨hdiag, hmem⟩ := hs
       rw [Sym2.mk_isDiag_iff] at hdiag
       rw [Sym2.mem_iff] at hmem
-      push_neg at hmem
+      push Not at hmem
       obtain ⟨hc0, hd0⟩ := hmem
       have hcne : c ≠ PBmk B 0 := fun h => hc0 h.symm
       have hdne : d ≠ PBmk B 0 := fun h => hd0 h.symm
@@ -1256,7 +1289,7 @@ theorem thm_structural (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
    fun p hp => KB_eq_on_T B hB3 hBodd p hp⟩
 
 /-- **Lemma `cmax_le`** — the bound half of Corollary 1.
-`c_max(B) ≤ (B-1)/2`.
+`c_max(B) ≤ (B - 1)/2`.
 
 *Proof (informal).* By Theorem 1, every terminal cycle of `K_B` lies in `T_B`
 (part 2: `K_B³(X_B) ⊆ T_B`, and periodic points lie in the eventual image), and on
@@ -1265,14 +1298,14 @@ theorem thm_structural (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
 corresponding `D`-orbit on an unordered pair `{[r],[s]}`. Doubling acts as
 multiplication by `2` on `P_B ≅ (ℤ/B)^× / {±1}` (restricted to the nonzero classes
 appearing); the order of `2` in this quotient is the least `m` with `2^m ≡ ±1 (mod B)`,
-which divides `|(ℤ/B)^×/{±1}| = φ(B)/2 ≤ (B-1)/2`. The period of a *pair* divides the
-period of its larger entry, so every cycle length divides this order and is `≤ (B-1)/2`.
-Taking the sup over `X_B` gives `c_max(B) ≤ (B-1)/2`.
+which divides `|(ℤ/B)^×/{±1}| = φ(B)/2 ≤ (B - 1)/2`. The period of a *pair* divides the
+period of its larger entry, so every cycle length divides this order and is `≤ (B - 1)/2`.
+Taking the sup over `X_B` gives `c_max(B) ≤ (B - 1)/2`.
 
 Formal route: transport `minimalPeriod (KB B)` along the conjugacy to
 `minimalPeriod (Dmap B)`, bound the latter by the projective order of `2`, and bound
-that by `(B-1)/2` via `ZMod.card_units_le`/`orderOf_dvd_card` and `φ(B) ≤ B-1`. -/
--- SANITY CHECK PASSED (no counterexample; cmax B ≤ (B-1)/2 holds for all odd B in (3,40),
+that by `(B - 1)/2` via `ZMod.card_units_le`/`orderOf_dvd_card` and `φ(B) ≤ B-1`. -/
+-- SANITY CHECK PASSED (no counterexample; cmax B ≤ (B - 1)/2 holds for all odd B in (3,40),
 -- equality at {7,11,13,19,23,29,37}, verified computationally in Lean)
 theorem cmax_le (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     cmax B ≤ (B - 1) / 2 := by
@@ -1314,7 +1347,7 @@ theorem cmax_le (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
   have hrpos : 0 < orderOf (2 : ZMod B) := h2fin.orderOf_pos
   have hperiodic1 : PBmk B 1 ∈ Function.periodicPts σ := by
     refine ⟨orderOf (2 : ZMod B), hrpos, ?_⟩
-    show σ^[orderOf (2 : ZMod B)] (PBmk B 1) = PBmk B 1
+    change σ^[orderOf (2 : ZMod B)] (PBmk B 1) = PBmk B 1
     rw [hdblIt]
     rw [mul_one, hr]
   -- (P2) 0 < m₀
@@ -1334,12 +1367,12 @@ theorem cmax_le (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     intro c
     induction c using Quotient.inductionOn with
     | _ x =>
-      show σ^[m₀] (PBmk B x) = PBmk B x
+      change σ^[m₀] (PBmk B x) = PBmk B x
       rw [hdblIt]
       rcases hpm1 with h | h
       · rw [h, one_mul]
       · apply (hmk_eq _ _).mpr; right; rw [h, neg_one_mul]
-  -- (P5) m₀ ≤ (B-1)/2 : the orbit of [1] injects into the nonzero classes
+  -- (P5) m₀ ≤ (B - 1)/2 : the orbit of [1] injects into the nonzero classes
   have hcardPB : Fintype.card (PB B) = (B - 1) / 2 + 1 := by
     have hne : ∀ x : ZMod B, x ≠ 0 → x ≠ -x := by
       intro x hx h
@@ -1352,7 +1385,7 @@ theorem cmax_le (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       intro c
       induction c using Quotient.inductionOn with
       | _ a =>
-        show (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)).card = _
+        change (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)).card = _
         have hset : (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)) = {a, -a} := by
           ext x
           simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
@@ -1482,7 +1515,7 @@ theorem cmax_le (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       have hinj : Set.InjOn (Phi B) (↑(TBset B)) := (Phi_bijOn B hB3 hBodd).injOn
       exact hinj (horbT m₀) hqT h1
     -- conclude
-    show n ≤ (B - 1) / 2
+    change n ≤ (B - 1) / 2
     have hfin : Function.minimalPeriod (KB B) q ≤ m₀ :=
       Function.IsPeriodicPt.minimalPeriod_le hm0pos hKBfix
     rw [hnq] at hfin
@@ -1536,18 +1569,18 @@ theorem cmax_five_le : cmax 5 ≤ 1 := by
     omega
 
 /-- **Lemma `cmax_eq_iff`** — the equality characterization of Corollary 1.
-`c_max(B) = (B-1)/2` iff `B ≥ 7`, `B` prime, and the least `m` with `2^m ≡ ±1 (mod B)`
-equals `(B-1)/2`.
+`c_max(B) = (B - 1)/2` iff `B ≥ 7`, `B` prime, and the least `m` with `2^m ≡ ±1 (mod B)`
+equals `(B - 1)/2`.
 
 *Proof (informal).* By the conjugacy, `c_max(B)` is the largest `D`-orbit length on
 `binom(P_B,2)`, which (for the maximal orbits) equals the projective order
 `ord = ` least `m` with `2^m ≡ ±1 (mod B)`, *provided* the action of `⟨2⟩` on `P_B` is
 free with full-length orbits — this requires `B` prime (so `(ℤ/B)^×` is the cyclic group
 of order `B-1` and `P_B` is a single `⟨2⟩`-orbit-friendly torsor) and the projective
-order of `2` to be exactly `(B-1)/2` (i.e. `2` generates `(ℤ/B)^×/{±1}`). Equality
-`c_max(B) = (B-1)/2` then holds. Conversely, if `B` is composite or the projective order
-of `2` is a proper divisor of `(B-1)/2`, the orbits of `2` on `P_B` are shorter than
-`(B-1)/2`, and the maximal pair-orbit is strictly smaller, so `c_max(B) < (B-1)/2`.
+order of `2` to be exactly `(B - 1)/2` (i.e. `2` generates `(ℤ/B)^×/{±1}`). Equality
+`c_max(B) = (B - 1)/2` then holds. Conversely, if `B` is composite or the projective order
+of `2` is a proper divisor of `(B - 1)/2`, the orbits of `2` on `P_B` are shorter than
+`(B - 1)/2`, and the maximal pair-orbit is strictly smaller, so `c_max(B) < (B - 1)/2`.
 The threshold `B ≥ 7` excludes `B = 5` (where `|T_B| = 1`, `c_max = 1 < 2`). This is the
 characterization verified computationally for all odd `B ≤ 39`. -/
 theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
@@ -1585,7 +1618,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
   have hrpos : 0 < orderOf (2 : ZMod B) := h2fin.orderOf_pos
   have hperiodic1 : PBmk B 1 ∈ Function.periodicPts σ := by
     refine ⟨orderOf (2 : ZMod B), hrpos, ?_⟩
-    show σ^[orderOf (2 : ZMod B)] (PBmk B 1) = PBmk B 1
+    change σ^[orderOf (2 : ZMod B)] (PBmk B 1) = PBmk B 1
     rw [hdblIt, mul_one, hr]
   have hm0pos : 0 < m₀ := Function.minimalPeriod_pos_of_mem_periodicPts hperiodic1
   have hfix1 : σ^[m₀] (PBmk B 1) = PBmk B 1 := Function.iterate_minimalPeriod
@@ -1604,14 +1637,14 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     intro m hm
     obtain ⟨hmpos, hpm⟩ := hm
     have hper : Function.IsPeriodicPt σ m (PBmk B 1) := by
-      show σ^[m] (PBmk B 1) = PBmk B 1
+      change σ^[m] (PBmk B 1) = PBmk B 1
       rw [hdblIt, mul_one]
       rcases hpm with h | h
       · rw [h]
       · apply (hmk_eq _ _).mpr; right; rw [h]
     exact Function.IsPeriodicPt.minimalPeriod_le hmpos hper
   have hIsLeast_m0 : IsLeast S m₀ := ⟨hm0mem, hm0lb⟩
-  -- Claim B : IsLeast S ((B-1)/2) ↔ m₀ = (B-1)/2
+  -- Claim B : IsLeast S ((B - 1)/2) ↔ m₀ = (B - 1)/2
   have hIsLeast_iff : IsLeast S ((B - 1) / 2) ↔ m₀ = (B - 1) / 2 := by
     constructor
     · intro h; exact IsLeast.unique hIsLeast_m0 h
@@ -1623,7 +1656,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     intro c
     induction c using Quotient.inductionOn with
     | _ x =>
-      show σ^[m₀] (PBmk B x) = PBmk B x
+      change σ^[m₀] (PBmk B x) = PBmk B x
       rw [hdblIt]
       rcases hpm1 with h | h
       · rw [h, one_mul]
@@ -1704,7 +1737,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     · rwa [hcmax_eq]
     · exfalso; rw [hcmax_eq] at hpos; omega
   have hm0_le : m₀ ≤ (B - 1) / 2 := by
-    -- cardinality of the projective space: (B-1)/2 nonzero classes + the zero class
+    -- cardinality of the projective space: (B - 1)/2 nonzero classes + the zero class
     have hcardPB : Fintype.card (PB B) = (B - 1) / 2 + 1 := by
       have hne : ∀ x : ZMod B, x ≠ 0 → x ≠ -x := by
         intro x hx h
@@ -1717,7 +1750,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
         intro c
         induction c using Quotient.inductionOn with
         | _ a =>
-          show (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)).card = _
+          change (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)).card = _
           have hset : (Finset.univ.filter (fun x : ZMod B => PBmk B x = PBmk B a)) = {a, -a} := by
             ext x
             simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
@@ -1802,11 +1835,11 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       | succ j ih => intro s; rw [Function.iterate_succ', Function.comp_apply, ih, Dmap, Sym2.map_map, Function.iterate_succ']
     have hDw : ∀ k, (Dmap B)^[k] w = s(PBmk B (2 ^ k * 1), PBmk B (2 ^ k * 2)) := by
       intro k
-      rw [hiter, hwdef, Sym2.map_pair_eq, hdblIt, hdblIt]
+      rw [hiter, hwdef, Sym2.map_mk, hdblIt, hdblIt]
     -- w ∈ binomSet B
     have hwmem : w ∈ binomSet B := by
       refine ⟨?_, ?_⟩
-      · rw [hwdef, Sym2.isDiag_iff_proj_eq]
+      · rw [hwdef, Sym2.mk_isDiag_iff]
         intro heq
         rcases (hmk_eq _ _).mp heq with h | h
         · have h2 : (2 : ZMod B) ^ 1 = 1 := by rw [pow_one]; linear_combination -h
@@ -1816,7 +1849,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
           have : m₀ ≤ 1 := hm0lb 1 ⟨one_pos, Or.inr h2⟩
           omega
       · rw [hwdef, Sym2.mem_iff]
-        push_neg
+        push Not
         refine ⟨?_, ?_⟩
         · intro hc
           rcases (hmk_eq _ _).mp hc with h | h
@@ -1849,12 +1882,12 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       · intro hpp
         have h1 : Phi B ((KB B)^[n] p₀) = Phi B p₀ := by rw [hpp]
         rw [hconj, hp₀eq] at h1
-        show (Dmap B)^[n] w = w
+        change (Dmap B)^[n] w = w
         exact h1
       · intro hpp
         have h1 : Phi B ((KB B)^[n] p₀) = Phi B p₀ := by
           rw [hconj, hp₀eq]; exact hpp
-        show (KB B)^[n] p₀ = p₀
+        change (KB B)^[n] p₀ = p₀
         exact hinj (Finset.mem_coe.mpr (horbT n)) hp₀T h1
     -- minimalPeriod (Dmap B) w = m₀
     have hwper_m0 : (Dmap B)^[m₀] w = w := by
@@ -1904,10 +1937,10 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     calc m₀ = Function.minimalPeriod (KB B) p₀ := hmp_m0.symm
       _ ≤ cmax B := by rw [cmax]; exact Finset.le_sup hp₀X
   -- (H3) B = 5 is excluded : cmax 5 ≠ 2
-  -- prime from m₀ = (B-1)/2
+  -- prime from m₀ = (B - 1)/2
   have hprime_of_m0 : m₀ = (B - 1) / 2 → B.Prime := by
     -- SANITY CHECK PASSED (no counterexample: for all odd B in 5..5000, whenever the
-    -- projective order of 2 equals (B-1)/2, B is prime)
+    -- projective order of 2 equals (B - 1)/2, B is prime)
     intro hm0eq
     -- Setup
     haveI : Fact (2 < B) := ⟨by omega⟩
@@ -2036,7 +2069,7 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     refine ⟨?_, hprime_of_m0 hm0eq, hIsLeast_iff.mpr hm0eq⟩
     -- 7 ≤ B : exclude B = 5
     by_contra hlt
-    push_neg at hlt
+    push Not at hlt
     -- B odd, 3 < B, B < 7 ⟹ B = 5
     have hB5 : B = 5 := by rcases hBodd with ⟨t, ht⟩; omega
     -- SANITY CHECK PASSED (computational: for B=5, every K_B orbit on X_5 reaches the
@@ -2053,9 +2086,9 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     omega
 
 /-- **Statement 2 (Corollary 1, cycle-length bound).**
-Let `B > 3` be odd. Then `c_max(B) ≤ (B-1)/2`. Moreover equality holds if and only if
+Let `B > 3` be odd. Then `c_max(B) ≤ (B - 1)/2`. Moreover equality holds if and only if
 `B ≥ 7`, `B` is prime, and the least positive integer `m` with `2^m ≡ ±1 (mod B)` is
-`m = (B-1)/2`. -/
+`m = (B - 1)/2`. -/
 theorem cor_length (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
     cmax B ≤ (B - 1) / 2 ∧
     (cmax B = (B - 1) / 2 ↔
@@ -2101,7 +2134,7 @@ theorem srot_minPeriod_eq (n : ℕ) [NeZero n] (a b : ZMod n) (hab : a ≠ b) :
   have hnpos : 0 < n := Nat.pos_of_ne_zero (NeZero.ne n)
   -- s is periodic with period n
   have hper_n : Function.IsPeriodicPt r n (s(a, b)) := by
-    show r^[n] (s(a, b)) = s(a, b)
+    change r^[n] (s(a, b)) = s(a, b)
     exact srot_pow_n n (s(a, b))
   have hmem : (s(a, b)) ∈ Function.periodicPts r := ⟨n, hnpos, hper_n⟩
   have hmpos : 0 < Function.minimalPeriod r (s(a, b)) :=
@@ -2200,7 +2233,7 @@ theorem rot_count_kernel_even (n : ℕ) [NeZero n] (m : ℕ) (hm : n = 2 * m) (h
       obtain ⟨j, hj⟩ := hmdvd
       have hjlt : j < 2 := by
         by_contra h
-        push_neg at h
+        push Not at h
         have : 2 * m ≤ m * j := by nlinarith
         omega
       interval_cases j
@@ -2264,7 +2297,7 @@ theorem rot_period_count (n : ℕ) [NeZero n] (hn : 3 ≤ n) :
   set K := (Finset.univ.filter (fun c : ZMod n => c ≠ 0 ∧ (2:ZMod n)*c ≠ 0)).card with hK
   -- Step 2: O.card = 2 * S.card  (Sym2.mk is 2-to-1 off the diagonal).
   have hOS : O.card = 2 * S.card := by
-    have hmaps : Set.MapsTo (fun p : ZMod n × ZMod n => Sym2.mk p) (↑O) (↑S) := by
+    have hmaps : Set.MapsTo (fun p : ZMod n × ZMod n => Sym2.mk p.1 p.2) (↑O) (↑S) := by
       intro p hp
       simp only [hO, Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_univ, true_and] at hp
       simp only [hS, Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_univ, true_and]
@@ -2273,7 +2306,7 @@ theorem rot_period_count (n : ℕ) [NeZero n] (hn : 3 ≤ n) :
       · rw [Sym2.mk_isDiag_iff]; exact hp.1
       · unfold Qsym; rw [Sym2.lift_mk]; exact hp.2
     rw [Finset.card_eq_sum_card_fiberwise hmaps]
-    have hfib : ∀ x ∈ S, (Finset.filter (fun p => Sym2.mk p = x) O).card = 2 := by
+    have hfib : ∀ x ∈ S, (Finset.filter (fun p => Sym2.mk p.1 p.2 = x) O).card = 2 := by
       intro x hx
       simp only [hS, Finset.mem_filter, Finset.mem_univ, true_and] at hx
       induction x using Sym2.inductionOn with
@@ -2294,8 +2327,8 @@ theorem rot_period_count (n : ℕ) [NeZero n] (hn : 3 ≤ n) :
           · rintro ⟨_, heq⟩
             rw [Sym2.eq_iff] at heq
             rcases heq with ⟨h1,h2⟩ | ⟨h1,h2⟩
-            · left; rw [h1, h2]
-            · right; rw [h1, h2]
+            · left; exact Prod.ext h1 h2
+            · right; exact Prod.ext h1 h2
           · rintro (h | h) <;> (rw [Prod.mk.injEq] at h; obtain ⟨h1,h2⟩ := h; subst h1; subst h2)
             · exact ⟨⟨hab, hQ⟩, rfl⟩
             · refine ⟨⟨fun hh => hab hh.symm, ?_⟩, Sym2.eq_swap⟩
@@ -2384,12 +2417,12 @@ theorem minPeriod_Phi (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (p : ℕ × ℕ)
   intro k
   constructor
   · intro hpp
-    show (Dmap B)^[k] (Phi B p) = Phi B p
+    change (Dmap B)^[k] (Phi B p) = Phi B p
     rw [← hconj k]
     have : (KB B)^[k] p = p := hpp
     rw [this]
   · intro hpp
-    show (KB B)^[k] p = p
+    change (KB B)^[k] p = p
     apply hinj (Finset.mem_coe.mpr (horbT k)) (Finset.mem_coe.mpr hp)
     rw [hconj k]; exact hpp
 
@@ -2432,9 +2465,9 @@ theorem neg_eq_self_iff (B : ℕ) [NeZero B] (hBodd : Odd B) (x : ZMod B) : x = 
     exact (hunit.mul_right_eq_zero).mp h2
   · intro h; rw [h]; ring
 
-/-- `|P_B| = (B-1)/2 + 1` for odd `B`. -/
+/-- `|P_B| = (B - 1)/2 + 1` for odd `B`. -/
 theorem PB_card (B : ℕ) [NeZero B] (hBodd : Odd B) :
-    Fintype.card (PB B) = (B-1)/2 + 1 := by
+    Fintype.card (PB B) = (B - 1)/2 + 1 := by
   classical
   have hmaps : ∀ x ∈ (Finset.univ : Finset (ZMod B)), PBmk B x ∈ (Finset.univ : Finset (PB B)) :=
     fun x _ => Finset.mem_univ _
@@ -2446,7 +2479,7 @@ theorem PB_card (B : ℕ) [NeZero B] (hBodd : Odd B) :
     intro c
     induction c using Quotient.inductionOn with
     | h a =>
-      show (Finset.univ.filter (fun x => PBmk B x = PBmk B a)).card = if PBmk B a = PBmk B 0 then 1 else 2
+      change (Finset.univ.filter (fun x => PBmk B x = PBmk B a)).card = if PBmk B a = PBmk B 0 then 1 else 2
       have hset : (Finset.univ.filter (fun x => PBmk B x = PBmk B a)) = {a, -a} := by
         ext x
         simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert, Finset.mem_singleton]
@@ -2494,7 +2527,7 @@ theorem doubleP_iterate (B : ℕ) (i : ℕ) : (doubleP B)^[i] (PBmk B 1) = PBmk 
   | zero => simp
   | succ j ih =>
       rw [Function.iterate_succ_apply', ih]
-      show doubleP B (PBmk B (2^j)) = PBmk B (2^(j+1))
+      change doubleP B (PBmk B (2^j)) = PBmk B (2^(j+1))
       rw [show doubleP B (PBmk B (2^j)) = PBmk B (2 * 2^j) from rfl]
       congr 1; ring
 
@@ -2572,7 +2605,7 @@ theorem gZ_ne_zero (B : ℕ) [NeZero B] (hBprime : B.Prime) (hB3 : 3 < B) (n : �
   unfold gZ
   rw [doubleP_iterate]
   rw [Ne, PBmk_eq_iff]
-  push_neg
+  push Not
   have h2ne : (2 : ZMod B) ≠ 0 := by
     have : ((2 : ℕ) : ZMod B) ≠ 0 := by
       rw [Ne, ZMod.natCast_eq_zero_iff]
@@ -2586,7 +2619,7 @@ theorem gZ_ne_zero (B : ℕ) [NeZero B] (hBprime : B.Prime) (hB3 : 3 < B) (n : �
 
 /-- `gZ` surjects onto the nonzero classes (injective + equal cardinality `n`). -/
 theorem gZ_surj (B : ℕ) [NeZero B] (hBodd : Odd B) (hBprime : B.Prime) (hB3 : 3 < B)
-    (n : ℕ) [NeZero n] (hndef : n = (B-1)/2)
+    (n : ℕ) [NeZero n] (hndef : n = (B - 1)/2)
     (hmp : Function.minimalPeriod (doubleP B) (PBmk B 1) = n)
     (c : PB B) (hc : c ≠ PBmk B 0) :
     ∃ z : ZMod n, gZ B n z = c := by
@@ -2639,21 +2672,21 @@ theorem minPeriod_map_eq (B : ℕ) [NeZero B] (n : ℕ) [NeZero n]
   intro k
   constructor
   · intro hpp
-    show (Sym2.map (fun x : ZMod n => x + 1))^[k] s = s
+    change (Sym2.map (fun x : ZMod n => x + 1))^[k] s = s
     apply hmapinj
     rw [← hconj k]
     exact hpp
   · intro hpp
-    show (Dmap B)^[k] (Sym2.map (gZ B n) s) = Sym2.map (gZ B n) s
+    change (Dmap B)^[k] (Sym2.map (gZ B n) s) = Sym2.map (gZ B n) s
     rw [hconj k]
     have : (Sym2.map (fun x : ZMod n => x + 1))^[k] s = s := hpp
     rw [this]
 
 /-- **Lemma `numMaxCycles_eq`** — Corollary 2.
 Under the equality hypothesis of Corollary 1 (with `B` prime), the number of terminal
-cycles of length `c_max(B) = (B-1)/2` equals `⌊(c_max(B) - 1)/2⌋`.
+cycles of length `c_max(B) = (B - 1)/2` equals `⌊(c_max(B) - 1)/2⌋`.
 
-*Proof (informal).* By the conjugacy, terminal cycles of length `n := (B-1)/2`
+*Proof (informal).* By the conjugacy, terminal cycles of length `n := (B - 1)/2`
 correspond to `D`-orbits of size `n` on `binom(P_B,2)`. Since `2` has full projective
 order `n` (equality hypothesis, `B` prime), `⟨2⟩` acts on `P_B` (a set of size `n`) as a
 single transitive cyclic action — `P_B` is one `⟨2⟩`-orbit of size `n`. The induced
@@ -2743,13 +2776,13 @@ theorem numMaxCycles_eq (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (hBprime : B.Pri
       refine ⟨⟨?_, ?_⟩, ?_⟩
       · induction s using Sym2.inductionOn with
         | hf a b =>
-          simp only [Sym2.map_pair_eq, Sym2.mk_isDiag_iff] at hdiag ⊢
+          simp only [Sym2.map_mk, Sym2.mk_isDiag_iff] at hdiag ⊢
           intro hgab
           exact hdiag (gZ_inj B n hmp hgab)
       · induction s using Sym2.inductionOn with
         | hf a b =>
-          simp only [Sym2.map_pair_eq, Sym2.mem_iff]
-          push_neg
+          simp only [Sym2.map_mk, Sym2.mem_iff]
+          push Not
           exact ⟨fun h => gZ_ne_zero B hBprime hB3 n a h.symm,
                  fun h => gZ_ne_zero B hBprime hB3 n b h.symm⟩
       · rw [minPeriod_map_eq B n hmp]; exact hper
@@ -2773,10 +2806,10 @@ theorem numMaxCycles_eq (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) (hBprime : B.Pri
             apply hdiag
             rw [← ha, ← hb, hab]
           · have hmapeq : Sym2.map (gZ B n) s(a, b) = s(c, d) := by
-              simp only [Sym2.map_pair_eq, ha, hb]
+              simp only [Sym2.map_mk, ha, hb]
             rw [← minPeriod_map_eq B n hmp s(a, b), hmapeq]
             exact hper
-        · simp only [Sym2.map_pair_eq, ha, hb]
+        · simp only [Sym2.map_mk, ha, hb]
   rw [hA, hB, hEq, Nat.mul_div_cancel_left _ (by omega : 0 < n)]
 
 /-- **Statement 3 (Corollary 2, count of maximal cycles).**
