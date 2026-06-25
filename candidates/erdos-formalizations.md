@@ -11,6 +11,7 @@
 - The **DeepMind AlphaProof Nexus** paper (arXiv:2605.22763) contributes **9 `sorry`-free files** (problems 12, 26, 125, 138, 152, 741, 846) in the Apache-2.0 repo [`google-deepmind/alphaproof-nexus-results`](https://github.com/google-deepmind/alphaproof-nexus-results). (A quick fetch initially misread its license as CC BY-NC-ND; the Lean code is Apache-2.0, verified against the LICENSE file.)
 - The **unit-distance problem (#90)** is now *solved in the negative and Lean-verified* (Alpöge), Apache-2.0 — though multi-file with external dependencies.
 - Already reconciled with Lean Pool: **#1196 is already in the pool**; `jcpaik/erdos-tuza-valtr` and ~10 others are already on your candidate shortlist; import worktrees already exist for #137/#346/#367/#403.
+- **57 formalization-ready targets** (§11): problems whose statement is already formalized and whose solution is known, but with **no Lean proof yet** — the prime targets for new formalization work.
 
 ## How this was compiled
 
@@ -257,6 +258,23 @@ The bulk of recent solves are **AI-generated or AI-assisted** — Aristotle (Har
 - **Very recent solves** (June 2026) may not yet be indexed by GitHub code search.
 - **`neelsomani/gpt-erdos`** (~700 candidate `.lean` files) is a *benchmark of mostly-failing attempts* (its own README documents subtle errors / hidden constraints); it is excluded except where a proof was independently verified.
 - The numbers are a **lower bound on what exists** but a careful, cross-checked one; the per-problem verdicts in §§1–3 reflect direct file inspection except for the bot-blocked forum entries.
+
+## 11. Formalization-ready targets — statement formalized, solution known, proof not yet in Lean
+
+The complement of the inventory above: **57 problems** (list supplied by the maintainer from erdosproblems.com) that satisfy all three of —
+1. the **statement is formalized** (all 57 have a `FormalConjectures/ErdosProblems/<n>.lean` file in [`google-deepmind/formal-conjectures`](https://github.com/google-deepmind/formal-conjectures), confirmed), and
+2. the **informal solution is known** (per erdosproblems.com), and
+3. **no Lean proof exists yet.**
+
+These are the highest-value formalization targets: the hard "is it true and how" question is already answered, the formal statement already exists, and a Lean proof would be a genuinely new contribution. Verified against this survey — **none of the 57 overlaps any complete, partial, or statement-only entry in §§1–3** (consistent with "not yet formalized"). Each links to its erdosproblems.com page; the formal statement is at `FormalConjectures/ErdosProblems/<n>.lean`.
+
+**Proved (38).** [4](https://www.erdosproblems.com/4), [6](https://www.erdosproblems.com/6), [13](https://www.erdosproblems.com/13), [22](https://www.erdosproblems.com/22), [48](https://www.erdosproblems.com/48), [67](https://www.erdosproblems.com/67), [69](https://www.erdosproblems.com/69), [109](https://www.erdosproblems.com/109), [139](https://www.erdosproblems.com/139), [219](https://www.erdosproblems.com/219), [228](https://www.erdosproblems.com/228), [239](https://www.erdosproblems.com/239), [245](https://www.erdosproblems.com/245), [248](https://www.erdosproblems.com/248), [250](https://www.erdosproblems.com/250), [277](https://www.erdosproblems.com/277), [285](https://www.erdosproblems.com/285), [358](https://www.erdosproblems.com/358), [402](https://www.erdosproblems.com/402), [480](https://www.erdosproblems.com/480), [494](https://www.erdosproblems.com/494), [516](https://www.erdosproblems.com/516), [590](https://www.erdosproblems.com/590), [591](https://www.erdosproblems.com/591), [594](https://www.erdosproblems.com/594), [599](https://www.erdosproblems.com/599), [697](https://www.erdosproblems.com/697), [755](https://www.erdosproblems.com/755), [822](https://www.erdosproblems.com/822), [825](https://www.erdosproblems.com/825), [851](https://www.erdosproblems.com/851), [899](https://www.erdosproblems.com/899), [937](https://www.erdosproblems.com/937), [946](https://www.erdosproblems.com/946), [1064](https://www.erdosproblems.com/1064), [1096](https://www.erdosproblems.com/1096), [1105](https://www.erdosproblems.com/1105), [1214](https://www.erdosproblems.com/1214)
+
+**Disproved (14).** [43](https://www.erdosproblems.com/43), [92](https://www.erdosproblems.com/92), [253](https://www.erdosproblems.com/253), [266](https://www.erdosproblems.com/266), [442](https://www.erdosproblems.com/442), [448](https://www.erdosproblems.com/448), [615](https://www.erdosproblems.com/615), [705](https://www.erdosproblems.com/705), [847](https://www.erdosproblems.com/847), [884](https://www.erdosproblems.com/884), [965](https://www.erdosproblems.com/965), [1077](https://www.erdosproblems.com/1077), [1092](https://www.erdosproblems.com/1092), [1128](https://www.erdosproblems.com/1128)
+
+**Otherwise solved (5).** [318](https://www.erdosproblems.com/318), [587](https://www.erdosproblems.com/587), [633](https://www.erdosproblems.com/633), [868](https://www.erdosproblems.com/868), [888](https://www.erdosproblems.com/888)
+
+*(Caveat: erdosproblems.com is bot-blocked, so the "solution known / not yet formalized" status here is taken as given from the maintainer's list rather than re-scraped; it is a point-in-time snapshot and a fresh Lean proof for any of these may already be in flight.)*
 
 ## Appendix A — repos checked and rejected
 
