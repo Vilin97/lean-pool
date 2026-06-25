@@ -49,8 +49,9 @@ class StochasticVec (x : S → ℝ) where
   nonneg : ∀ s, 0 ≤ x s
   rowsum : ∑ s, x s = 1
 
-lemma StochasticVec.le_one (x : S → ℝ) [hx : StochasticVec x] (s : S) :
+lemma StochasticVec.le_one (x : S → ℝ) [StochasticVec x] (s : S) :
   x s ≤ 1 := by
+  have hx : StochasticVec x := inferInstance
   rw [←hx.rowsum]
   apply single_le_sum
   · intro z _
@@ -96,10 +97,11 @@ instance : CompleteSpace (Simplex S) := IsClosed.completeSpace_coe
 lemma l1_norm_eq_sum (f : l1Space S) : ‖f‖ = ∑ s, |f.ofLp s| := by
   simpa using (PiLp.norm_eq_sum (f := f))
 
-lemma l1_norm_eq_one (x : l1Space S) [hx : StochasticVec x.ofLp]
+lemma l1_norm_eq_one (x : l1Space S) [StochasticVec x.ofLp]
   : ‖x‖₊ = 1 := by
   apply NNReal.eq
   simp only [coe_nnnorm, NNReal.coe_one, l1_norm_eq_sum]
+  have hx := (inferInstance : StochasticVec x.ofLp)
   rw [←hx.rowsum]
   apply sum_congr rfl
   intro s _
