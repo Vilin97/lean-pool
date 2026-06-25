@@ -15,6 +15,54 @@ A **[June 2026 refresh](#june-2026-refresh--new-candidates)** of projects that
 appeared or became active since the early-May sweep is appended at the end of
 this file.
 
+## June 23 2026 import shortlist
+
+Focused shortlist from the newest candidate decisions, meant as an actionable
+import queue rather than a complete catalog. I prioritized projects with an
+explicit permissive license, a clear theorem-level endpoint, no active
+`sorry`/`admit`/custom `axiom` hits in the local clone scan, and a manageable
+size. I did not run `lake build`; these still need the normal import, porting,
+lint, and quality-gate pass.
+
+### First batch
+
+| Repo | Why import | License | Lean | LOC | Import notes |
+| --- | --- | --- | --- | ---: | --- |
+| [M1ngXU/PL-Accelerated-Nesterov-Lean](https://github.com/M1ngXU/PL-Accelerated-Nesterov-Lean) | Accelerated Nesterov convergence under local Polyak-Lojasiewicz assumptions; explicit exponential-rate theorem | MIT | v4.28.0 | 15,576 | Clean scan; good size and old enough toolchain |
+| [boonsuan/KaltonRoberts](https://github.com/boonsuan/KaltonRoberts) | Certified Kalton-Roberts constant bound `< 19.838` with paper-style set-algebra endpoint | MIT | v4.28.0 | 6,794 | Clean scan; strong headline theorem |
+| [t4ccer/misere-games](https://github.com/t4ccer/misere-games) | Misere combinatorial game theory library with 1k+ theorem endpoints | Apache-2.0 | v4.29.0-rc1 | 17,511 | Clean scan; likely moderate port |
+| [scottdhughes/erdos137](https://github.com/scottdhughes/erdos137) | ABC-conditional finiteness results for powerful products of consecutive integers | Apache-2.0 | v4.28.0 | 3,532 | Clean scan; `sorry` hits are comments |
+| [scottdhughes/erdos367](https://github.com/scottdhughes/erdos367) | Powerful parts of consecutive integers, including Pell and Davenport-Zannier cores | Apache-2.0 | v4.28.0 | 1,772 | Clean scan; compact import |
+| [KitaKen1/erdos346-ratio-limit-lean](https://github.com/KitaKen1/erdos346-ratio-limit-lean) | Ratio-limit interpretation of Erdos #346 forcing the golden ratio | Apache-2.0 | v4.31.0 | 14,160 | Clean scan; newer Mathlib but low logical risk |
+| [kim-em/erdos-unit-distance](https://github.com/kim-em/erdos-unit-distance) | Disproof of the uniform-constant Erdos unit-distance conjecture | Apache-2.0 | v4.31.0-rc2 | 3,203 | Clean scan; check overlap with companion mathlib branch |
+| [humiliati/sundogcert](https://github.com/humiliati/sundogcert) | Coding-theory/complexity certificate: syndrome soundness, lossiness, and 3SAT-to-decoding reduction correctness | Apache-2.0 | v4.30.0 | 6,372 | Clean scan; `sorry`/`axiom` hits are audit comments |
+| [QudeLeap/Lean-QuantumAlg](https://github.com/QudeLeap/Lean-QuantumAlg) | Quantum algorithms: gates, QFT, Grover, QPE, Simon, teleportation, superdense coding | Apache-2.0 | v4.30.0 | 12,305 | Clean scan; medium-confidence significance review |
+| [dududuguo/HighDimProb](https://github.com/dududuguo/HighDimProb) | High-dimensional probability: concentration, Rademacher variables, covariance, random-matrix APIs | Apache-2.0 | v4.29.1 | 34,981 | Clean scan; larger but straightforward library shape |
+| [catskillsresearch/domain_theory](https://github.com/catskillsresearch/domain_theory) | Dana Scott domain theory via information systems, with accompanying paper | Apache-2.0 | v4.30.0 | 36,520 | Clean scan; `partial` hits are comments |
+| [no-way-labs/lean-critical-portraits](https://github.com/no-way-labs/lean-critical-portraits) | Count of degree-d critical portraits via a cycle lemma and finite portrait model | Apache-2.0 | v4.31.0 | 4,680 | Clean scan; many linter options upstream, so expect style fixes |
+
+### Good, but handle deliberately
+
+| Repo | Why not first batch |
+| --- | --- |
+| [AxiomMath/kaprekar4](https://github.com/AxiomMath/kaprekar4) | Good small MIT target, but import `solution.lean` only; upstream `problem.lean` contains sorries |
+| [AxiomMath/zeta-h123](https://github.com/AxiomMath/zeta-h123) | Good MIT number-theory target, but import solution files only; problem files contain sorries |
+| [linzialessandro/FundamentalInequality](https://github.com/linzialessandro/FundamentalInequality) | Clean Apache project, but only 578 LOC; worth doing as a quick small import |
+| [karlesmarin/runge-kutta-order-conditions-lean](https://github.com/karlesmarin/runge-kutta-order-conditions-lean) | Clean Apache project, but only 563 LOC; include if small certified-numerics artifacts are acceptable |
+| [makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming](https://github.com/makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming) | Clean MIT formalization, but the repo is on v4.31.0-rc1 and needs a closer endpoint/significance review |
+| [karlesmarin/connes-kreimer-lean](https://github.com/karlesmarin/connes-kreimer-lean) | Good Apache Hopf-algebra target, but one evaluation helper is a `partial def`; exclude/fix that before import |
+| [peterdoyle1717/taut](https://github.com/peterdoyle1717/taut) | Clean MIT scan and substantive, but no `lean-toolchain` was present in the clone; inspect setup first |
+
+### Manual scheduling / hold
+
+| Repo | Reason |
+| --- | --- |
+| [scottnarmstrong/CoarseGraining](https://github.com/scottnarmstrong/CoarseGraining) | Very high value, but 461k LOC; audit challenge files contain active sorries, so scope must be chosen manually |
+| [florath/covering-codes-lean](https://github.com/florath/covering-codes-lean) | Huge 285k LOC proof-carrying database; tool-generation files use `partial def`, so import scope must be curated |
+| [schmittj/prop51-formal](https://github.com/schmittj/prop51-formal) | Strong 80k LOC target; schedule manually because generated/computational surfaces may stress CI |
+| [marcmorningstar/lean4-oseledets](https://github.com/marcmorningstar/lean4-oseledets) | Important theorem, but many frontier/test/docs files still mention or contain sorries/opaque interfaces |
+| [math-commons/graphons](https://github.com/math-commons/graphons) | Substantive graphon library, but current clone declares explicit analytic axioms |
+
 ## Selection criteria (all four required)
 
 1. **Substantive research- or graduate-level mathematics.** A named theorem, a
