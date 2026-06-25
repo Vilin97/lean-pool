@@ -3001,3 +3001,44 @@ projects:
       - commuting-probability
     msc:
       - "20P05"
+  - slug: laminar-families-binary-trees
+    title: Rooted binary trees of disjoint Finset pairs and maximal laminar families
+    summary: >-
+      Formalizes BinaryTreeWithRootandTops, a rooted ordered binary tree whose nodes are pairs of
+      disjoint nonempty finite subsets of a finite set of children, with a distinguished set of
+      tops as leaves, modelling the tree-representations of maximal laminar families, and proves
+      that any finite set with at least two elements admits such a tree whose children set is the
+      whole set and whose tops cover the entire set.
+    branch: combinatorics
+    entry_module: LeanPool.LaminarFamiliesMaximalBinaryTrees
+    authors:
+      - Daniel Smania
+    source:
+      title: "Combinatorial Optimization: Polyhedra and Efficiency (Theorem 13.21)"
+      authors:
+        - Alexander Schrijver
+      url: https://github.com/SmaniaD/LaminarFamiliesMaximalBinaryTrees
+      github_repo: SmaniaD/LaminarFamiliesMaximalBinaryTrees
+    status: verified
+    main_declarations:
+      - LaminarFamiliesMaximalBinaryTrees.BinaryTreeWithRootandTops
+    main_results:
+      - declaration: LaminarFamiliesMaximalBinaryTrees.BinaryTreeWithRootandTops
+        informal: >-
+          A rooted ordered binary tree whose nodes are pairs of disjoint nonempty finite subsets of
+          a finite children set, with a distinguished set of tops acting as leaves; its structural
+          invariants encode the laminar nesting of supports.
+      - declaration: LaminarFamiliesMaximalBinaryTrees.exists_tree_childs_eq_C_and_all_childs_in_Tops_of_card_ge_two
+        informal: >-
+          Any finite set with at least two elements admits a BinaryTreeWithRootandTops whose children
+          set equals the set and whose set of tops is the entire set, i.e. a maximal tree.
+      - declaration: LaminarFamiliesMaximalBinaryTrees.exists_binary_tree_with_childs_eq_C
+        informal: >-
+          Any finite set with at least two elements admits a BinaryTreeWithRootandTops whose children
+          set equals the set.
+    tags:
+      - combinatorics
+      - laminar-families
+      - binary-trees
+    msc:
+      - "05C05"

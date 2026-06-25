@@ -843,6 +843,7 @@ import LeanPool.Isoperimetric.Basic
 import LeanPool.Isoperimetric.BrunnMinkowski
 import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
+import LeanPool.LaminarFamiliesMaximalBinaryTrees
 import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
 import LeanPool.Lean4GlCoalgebras
