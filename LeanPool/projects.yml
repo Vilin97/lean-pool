@@ -3001,3 +3001,43 @@ projects:
       - commuting-probability
     msc:
       - "20P05"
+  - slug: runge-kutta-order-conditions
+    title: Certified Runge-Kutta Order Conditions
+    summary: Certifies Runge-Kutta order conditions over planar rooted trees, including RK4 order four, Dormand-Prince order five, and Gauss-Legendre order six.
+    branch: numerical analysis
+    entry_module: LeanPool.RungeKuttaOrderConditions
+    authors:
+      - Carles Marín
+    source:
+      title: What Order a Method Knows
+      authors:
+        - Carles Marín
+      doi: 10.5281/zenodo.20787666
+      github_repo: karlesmarin/runge-kutta-order-conditions-lean
+    status: verified
+    main_declarations:
+      - RungeKuttaOrderConditions.Butcher.gauss_order6
+    main_results:
+      - declaration: RungeKuttaOrderConditions.Butcher.satisfiesOrderConditions_iff
+        informal: Reduces order-p Runge-Kutta conditions to a finite catalogue check over rooted trees.
+      - declaration: RungeKuttaOrderConditions.Butcher.rk4_order4
+        informal: Certifies that classical RK4 satisfies all planar rooted-tree order conditions through order four.
+      - declaration: RungeKuttaOrderConditions.Butcher.rk4_not_ord5
+        informal: Shows that RK4 fails a fifth-order condition, pinning its order exactly.
+      - declaration: RungeKuttaOrderConditions.Butcher.orderCond_node_perm
+        informal: Proves order conditions are invariant under permutations of a node's children.
+      - declaration: RungeKuttaOrderConditions.Butcher.dp_order5
+        informal: Certifies the Dormand-Prince RK45 fifth-order tableau through order five.
+      - declaration: RungeKuttaOrderConditions.Butcher.gauss_order4
+        informal: Certifies the Gauss-Legendre three-stage tableau through order four over Q(sqrt(15)).
+      - declaration: RungeKuttaOrderConditions.Butcher.gauss_order6
+        informal: Certifies the Gauss-Legendre three-stage tableau through order six using an integer Z(sqrt(15)) scaling.
+    tags:
+      - numerical-analysis
+      - runge-kutta
+      - rooted-trees
+      - order-conditions
+    msc:
+      - "65L06"
+      - "65L05"
+      - "05C05"

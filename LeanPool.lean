@@ -1674,6 +1674,8 @@ import LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
 import LeanPool.RootSystem
 import LeanPool.RootSystem.An
 import LeanPool.RootSystem.BCn
+import LeanPool.RungeKuttaOrderConditions
+import LeanPool.RungeKuttaOrderConditions.ButcherOrder
 import LeanPool.Rupert
 import LeanPool.Rupert.Affine
 import LeanPool.Rupert.Attr
