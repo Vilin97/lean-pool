@@ -3001,3 +3001,43 @@ projects:
       - commuting-probability
     msc:
       - "20P05"
+  - slug: highdimprob
+    title: HighDimProb
+    summary: Provides a Lean 4 library layer for high-dimensional probability, including scalar concentration inequalities, random-variable and random-vector wrappers, metric entropy interfaces, and experimental random-matrix Matrix Bernstein and sample-covariance tail statements.
+    branch: probability
+    entry_module: LeanPool.HighDimProb
+    authors:
+      - Zhihao Guo
+      - freezed-corpse-143
+    source:
+      url: "https://github.com/dududuguo/HighDimProb"
+      github_repo: dududuguo/HighDimProb
+    status: verified
+    main_declarations:
+      - HighDimProb.RandomVariable
+      - HighDimProb.upperTailProb
+    main_results:
+      - declaration: HighDimProb.RandomVariable
+        informal: Defines the bare-function random-variable wrapper used by the imported probability APIs.
+      - declaration: HighDimProb.upperTailProb
+        informal: Defines upper-tail probabilities for real random variables as measures of upper-tail events.
+      - declaration: HighDimProb.upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF
+        informal: Proves the standard Chernoff upper-tail bound from a centered sub-Gaussian MGF assumption.
+      - declaration: HighDimProb.absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExponentialMGFLIntegral_sum
+        informal: Proves a Bernstein-style two-sided tail bound for finite sums satisfying centered sub-exponential MGF assumptions.
+      - declaration: HighDimProb.coveringNumber_le_card_of_isInternalEpsilonNet
+        informal: Bounds the internal covering number by the cardinality of a finite internal epsilon-net.
+      - declaration: HighDimProb.matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithCoeff_of_troppAssumptions
+        informal: Packages the optimized quadratic-form Matrix Bernstein tail bound under the project's Tropp-style assumptions.
+      - declaration: HighDimProb.matrixBernsteinOpNormTailOptimizedScalarRHSWithCoeff_arbitrary_of_troppAssumptions
+        informal: Packages the two-sided self-adjoint operator-norm Matrix Bernstein bound for arbitrary finite index types under positive- and negative-side Tropp assumptions.
+      - declaration: HighDimProb.sampleCovariance_quadraticForm_tail_exactRowSqNorm_centeredSquareChain_troppAssumptions
+        informal: Applies the Matrix Bernstein framework to centered sample covariance with exact row-square-norm variance proxy assumptions.
+    tags:
+      - probability
+      - high-dimensional-probability
+      - random-matrices
+    msc:
+      - "60B20"
+      - "60E15"
+      - "60G50"
