@@ -369,6 +369,13 @@ import LeanPool.ComputableReal.SpecialFunctions.Basic
 import LeanPool.ComputableReal.SpecialFunctions.Exp
 import LeanPool.ComputableReal.SpecialFunctions.Pi
 import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+import LeanPool.CrdtLean
+import LeanPool.CrdtLean.Crdt.Convergence
+import LeanPool.CrdtLean.Crdt.Defs
+import LeanPool.CrdtLean.Crdt.Instances
+import LeanPool.CrdtLean.Crdt.Liveness
+import LeanPool.CrdtLean.Crdt.ORSet
+import LeanPool.CrdtLean.Crdt.Sequence
 import LeanPool.CriticalPortraits
 import LeanPool.CriticalPortraits.Census
 import LeanPool.CriticalPortraits.Core

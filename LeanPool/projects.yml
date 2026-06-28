@@ -3550,3 +3550,49 @@ projects:
     msc:
       - "11N05"
       - "11N35"
+  - slug: crdt-lean
+    title: State-Based CRDT Convergence
+    summary: >-
+      Formalizes strong eventual consistency and conditional liveness for
+      state-based CRDTs over join-semilattice carriers, then instantiates the
+      framework for G-Sets, G-Counters, PN-Counters, add-wins OR-Sets, and an
+      RGA-style sequence CRDT.
+    branch: theoretical computer science
+    entry_module: LeanPool.CrdtLean
+    authors:
+      - crdt-lean contributors
+    source:
+      title: "State-based CRDT convergence"
+      url: "https://github.com/velvetmonkey/crdt-lean"
+      github_repo: velvetmonkey/crdt-lean
+    license: MIT
+    status: verified
+    main_declarations:
+      - Crdt.strong_eventual_consistency
+      - Crdt.RGA.read_strong_eventual_consistency
+    main_results:
+      - declaration: Crdt.strong_eventual_consistency
+        informal: >-
+          Replicas that delivered the same finite set of update states have
+          equal folded states, independent of delivery order and redelivery.
+      - declaration: Crdt.DeliverySystem.eventual_agreement
+        informal: >-
+          Under monotone, sound, fair delivery from a finite fixed update pool,
+          any two replicas eventually hold identical observable states.
+      - declaration: Crdt.gset_strong_eventual_consistency
+        informal: >-
+          Specializes strong eventual consistency to grow-only set CRDTs.
+      - declaration: Crdt.ORSet.add_wins
+        informal: >-
+          A fresh add merged with a concurrent remove of the same element leaves
+          the element present, formalizing add-wins OR-Set semantics.
+      - declaration: Crdt.RGA.read_strong_eventual_consistency
+        informal: >-
+          Sequence replicas with the same delivered set produce the identical
+          ordered read list, not merely the same live-position set.
+    tags:
+      - distributed-systems
+      - crdt
+      - theoretical-computer-science
+    msc:
+      - "68Q85"
