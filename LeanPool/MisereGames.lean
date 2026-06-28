@@ -3,6 +3,18 @@ Copyright (c) 2026 Tomasz Maciosowski, Alfie Davies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tomasz Maciosowski, Alfie Davies
 -/
+
+/-!
+# Misere combinatorial games
+
+Source: url:https://github.com/t4ccer/misere-games
+Authors: Tomasz Maciosowski, Alfie Davies
+Status: verified
+Main declarations: `MisereGames.Form.Promain.of_universe`
+Tags: combinatorial-games, misere-play, game-theory
+MSC: 91A46, 05C57
+-/
+
 module
 
 public import LeanPool.MisereGames.AugmentedForm
@@ -54,14 +66,3 @@ public import LeanPool.MisereGames.Ruleset.Push
 public import LeanPool.MisereGames.Ruleset.Shove
 public import LeanPool.MisereGames.Ruleset.Strip
 public import LeanPool.MisereGames.Tactic.DocAlias
-
-/-!
-# Misere combinatorial games
-
-Source: url:https://github.com/t4ccer/misere-games
-Authors: Tomasz Maciosowski, Alfie Davies
-Status: verified
-Main declarations: `MisereGames.Form.Promain.of_universe`
-Tags: combinatorial-games, misere-play, game-theory
-MSC: 91A46, 05C57
--/

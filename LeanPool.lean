@@ -369,6 +369,15 @@ import LeanPool.ComputableReal.SpecialFunctions.Basic
 import LeanPool.ComputableReal.SpecialFunctions.Exp
 import LeanPool.ComputableReal.SpecialFunctions.Pi
 import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+import LeanPool.ConsensusLean
+import LeanPool.ConsensusLean.CheckerMain
+import LeanPool.ConsensusLean.Consensus
+import LeanPool.ConsensusLean.Consensus.Certificate
+import LeanPool.ConsensusLean.Consensus.Checker
+import LeanPool.ConsensusLean.Consensus.Demo
+import LeanPool.ConsensusLean.Consensus.Majority
+import LeanPool.ConsensusLean.Consensus.Quorum
+import LeanPool.ConsensusLean.Consensus.Reconfig
 import LeanPool.CriticalPortraits
 import LeanPool.CriticalPortraits.Census
 import LeanPool.CriticalPortraits.Core

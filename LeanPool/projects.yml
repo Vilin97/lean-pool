@@ -3550,3 +3550,50 @@ projects:
     msc:
       - "11N05"
       - "11N35"
+  - slug: consensus-lean
+    title: Consensus Safety and Executable Certificate Checking
+    summary: >-
+      Formalizes quorum-intersection consensus safety, strict-majority quorum
+      agreement, safe reconfiguration across compatible quorum systems, and a
+      decidable certificate checker whose accepted certificates are proved unable
+      to carry conflicting values.
+    branch: theoretical computer science
+    entry_module: LeanPool.ConsensusLean
+    authors:
+      - consensus-lean contributors
+    source:
+      title: "Consensus safety and executable certificate checking"
+      url: "https://github.com/velvetmonkey/consensus-lean"
+      github_repo: velvetmonkey/consensus-lean
+    license: MIT
+    status: verified
+    main_declarations:
+      - Consensus.agreement
+      - Consensus.Checker.agreement
+    main_results:
+      - declaration: Consensus.agreement
+        informal: >-
+          In any quorum system with pairwise-intersecting quorums, two values
+          chosen by the same single-vote assignment are equal.
+      - declaration: Consensus.majority_agreement
+        informal: >-
+          Specializes quorum agreement to strict-majority quorums over a finite
+          acceptor population.
+      - declaration: Consensus.agreement_cross
+        informal: >-
+          Proves agreement across two compatible quorum systems, capturing the
+          safety condition for membership reconfiguration.
+      - declaration: Consensus.Bridge.cert_agreement
+        informal: >-
+          Proves that two concrete certificates accepted by the decidable
+          Finset-based checker for the same configuration carry the same value.
+      - declaration: Consensus.Checker.agreement
+        informal: >-
+          Re-establishes the certificate-agreement guarantee for the extracted
+          list-based checker used by the small runtime entry point.
+    tags:
+      - distributed-systems
+      - consensus
+      - theoretical-computer-science
+    msc:
+      - "68Q85"
