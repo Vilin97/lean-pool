@@ -1023,6 +1023,9 @@ import LeanPool.Isoperimetric.Basic
 import LeanPool.Isoperimetric.BrunnMinkowski
 import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
+import LeanPool.IsoperimetricInequality
+import LeanPool.IsoperimetricInequality.AdolfHurwitzProof
+import LeanPool.IsoperimetricInequality.Basic
 import LeanPool.KrafftSieve
 import LeanPool.KrafftSieve.Basic
 import LeanPool.KrafftSieve.Defs

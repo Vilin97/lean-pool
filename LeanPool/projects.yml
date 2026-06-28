@@ -679,6 +679,35 @@ projects:
       - "28A75"
       - "52A40"
       - "49Q20"
+  - slug: isoperimetricinequality
+    title: Formalizing the Classical Isoperimetric Inequality
+    summary: Formalizes Adolf Hurwitz's Fourier-series proof of the planar isoperimetric inequality, including Parseval's theorem, Wirtinger's inequality, a shoelace-style area formula, and the final area-perimeter bound for arc-length parametrized simple closed curves.
+    branch: geometric analysis
+    entry_module: LeanPool.IsoperimetricInequality
+    authors:
+      - M. Samarakkody
+    source:
+      arxiv: "2603.14663"
+      doi: "10.5281/zenodo.20258500"
+      github_repo: mirajcs/IsoperimetricInequality
+    license: MIT
+    status: verified
+    main_declarations:
+      - IsoperimetricInequality.isoperimetric_inequality
+    main_results:
+      - declaration: IsoperimetricInequality.Parsevals_thm
+        informal: Proves a Parseval identity for the square integral of a Fourier series in terms of its cosine and sine coefficients.
+      - declaration: IsoperimetricInequality.Wirtingers_inequality
+        informal: Derives Wirtinger's inequality from the Parseval identity for the derivative Fourier series.
+      - declaration: IsoperimetricInequality.isoperimetric_inequality
+        informal: Proves Adolf Hurwitz's planar isoperimetric area bound for an arc-length parametrized simple closed curve.
+    tags:
+      - isoperimetric-inequality
+      - fourier-analysis
+      - geometric-analysis
+    msc:
+      - "52A40"
+      - "42A16"
   - slug: leancomplexanalysis
     title: Formalized Complex Analysis in Lean
     summary: Formalizes Poisson integral formulas on the unit disc and arbitrary centered discs, Herglotz–Riesz representation, and Harnack's inequality on the unit disc, plus infrastructure for univalent function classes S and Σ.
