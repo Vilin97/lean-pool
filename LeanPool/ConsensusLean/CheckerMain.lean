@@ -6,7 +6,7 @@ Authors: consensus-lean contributors
 
 import LeanPool.ConsensusLean.Consensus.Checker
 
-open Consensus.Checker
+namespace Consensus.Checker
 
 /-- Parse a comma-separated list of naturals (blanks dropped). -/
 def parseNats (s : String) : List Nat :=
@@ -26,3 +26,5 @@ def main (args : List String) : IO Unit := do
     let ok := validB (parseNats m) (parseVotes vs) ⟨value, parseNats voters⟩
     IO.println (if ok then "ALLOW" else "DENY")
   | _ => IO.println "DENY"
+
+end Consensus.Checker
