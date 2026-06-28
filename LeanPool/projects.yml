@@ -3590,3 +3590,48 @@ projects:
     msc:
       - "11N05"
       - "11N35"
+  - slug: ordvec-formalization
+    title: OrdVec bitmap overlap formalization
+    summary: >-
+      Formalizes a finite constant-weight bitmap overlap model: under explicit
+      monotone overlap evidence, an overlap-tail admission rule has Bayes risk
+      no larger than any deterministic full-space rule, and its uniform-null
+      tail probability is exactly hypergeometric.
+    branch: computer science
+    entry_module: LeanPool.OrdvecFormalization
+    authors:
+      - Nelson Spence
+    source:
+      title: ordvec-formalization
+      url: "https://github.com/Fieldnote-Echo/ordvec-formalization"
+      github_repo: Fieldnote-Echo/ordvec-formalization
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - OrdvecFormalization.uniformBitmapOverlapTailOptimal
+    main_results:
+      - declaration: OrdvecFormalization.uniformBitmapOverlapTailOptimal
+        informal: >-
+          For constant-weight bitmaps and a finite exponential-tilt signal law,
+          some literal overlap-tail rule has Bayes risk no larger than any
+          deterministic admission rule on the full bitmap space, and the same
+          tail event has the checked hypergeometric probability under the
+          uniform bitmap null.
+      - declaration: OrdvecFormalization.exists_uniformBitmapOverlapTail_finiteBayesRisk_le_and_hypergeomTail
+        informal: Original long-name statement of the uniform bitmap overlap theorem.
+      - declaration: OrdvecFormalization.exists_uniformBitmapOverlapTail_finiteCostedBayesRisk_le_and_hypergeomTail
+        informal: Gives the corresponding finite cost-sensitive Bayes-risk bound and hypergeometric calibration.
+      - declaration: OrdvecFormalization.invariantOn_constantWeightBitmapSpace_factorsThrough_overlap
+        informal: Proves that any query-stabilizer-invariant rule on the constant-weight bitmap space factors through literal bitmap overlap.
+      - declaration: OrdvecFormalization.exists_calibratedOrderedThreshold_finiteBayesRisk_le_of_orderedEvidenceFactor
+        informal: Packages ordered-tail calibration with Bayes-optimal threshold selection for a monotone ordered quotient evidence factor.
+    tags:
+      - finite-probability
+      - bayes-risk
+      - hypergeometric
+      - quotient-sufficiency
+      - bitmap-overlap
+    msc:
+      - "62C20"
+      - "60C05"
+      - "68T99"
