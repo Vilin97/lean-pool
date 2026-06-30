@@ -257,7 +257,7 @@ lemma fixedpoint_eq_subst_template {α : Type u} [DecidableEq α]
 @[simp]
 lemma subst_diagonalTemplate_self {α : Type u} [DecidableEq α]
     (a : α) (phi : ModalFormula α) :
-    subst a (diagonalTemplate a phi) (code (diagonalTemplate a phi)) =
+    subst a (diagonalTemplate a phi) (kreiselFixed phi) =
       kreiselFixed phi := by
   simp [diagonalTemplate, subst]
 

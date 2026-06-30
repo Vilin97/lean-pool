@@ -38,14 +38,18 @@ one-hole self-substitution construction.
 -/
 structure FixedpointStructuralEvidence (α : Type u) [DecidableEq α]
     (fixedpoint : ModalFormula α → ModalFormula α) (distinguishedAtom : α) where
+  /-- The one-hole template whose self-substitution builds the fixed point. -/
   template : ModalFormula α → ModalFormula α
+  /-- The packaged fixed point is the template with its own code substituted in. -/
   fixedpoint_eq_subst :
     ∀ phi, fixedpoint phi =
       Substitution.subst distinguishedAtom (template phi) (Substitution.code (template phi))
+  /-- The self-substituted template propositionally unfolds to the boxed-code implication. -/
   subst_unfolding :
     ∀ phi, (Substitution.subst distinguishedAtom (template phi)
       (Substitution.code (template phi)) ⟷
         (□ₛ(Substitution.code (template phi)) ⟶ phi)).PropTaut
+  /-- The boxed template code is propositionally equivalent to the boxed fixed point. -/
   box_code_fixedpoint :
     ∀ phi, (□ₛ(Substitution.code (template phi)) ⟷ □ₛ(fixedpoint phi)).PropTaut
 
@@ -177,7 +181,7 @@ class Diagonalisable (α : Type u) [DecidableEq α] where
   diagonal (phi : ModalFormula α) :
     Provable (fixedpoint phi ⟷ kreiselOperator phi (fixedpoint phi))
   /-- The fixed-point operator is backed by self-substitution structure. -/
-  fixedpoint_structural :
+  fixedpointStructural :
     FixedpointStructuralEvidence α fixedpoint distinguishedAtom
 
 namespace Diagonalisable
@@ -192,7 +196,7 @@ lemma spec {α : Type u} [DecidableEq α] [Diagonalisable α] (phi : ModalFormul
 abbrev structural {α : Type u} [DecidableEq α] [Diagonalisable α] :
     FixedpointStructuralEvidence α Diagonalisable.fixedpoint
       Diagonalisable.distinguishedAtom :=
-  Diagonalisable.fixedpoint_structural
+  Diagonalisable.fixedpointStructural
 
 end Diagonalisable
 
@@ -208,6 +212,6 @@ instance canonicalDiagonalisable (α : Type u) [DecidableEq α] [Inhabited α] :
   distinguishedAtom := default
   fixedpoint := Substitution.fixedpoint default
   diagonal := ModalFormula.canonicalDiagonalPostulateConsequence default
-  fixedpoint_structural := ModalFormula.canonicalFixedpointStructural default
+  fixedpointStructural := ModalFormula.canonicalFixedpointStructural default
 
 end ModalLogic.GoedelLoeb
