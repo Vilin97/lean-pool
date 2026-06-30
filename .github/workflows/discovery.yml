@@ -26,7 +26,7 @@ jobs:
           enable-cache: true
 
       - name: Install Python tooling
-        run: cd python && uv sync --locked
+        run: cd python && uv sync --locked --group review
 
       - name: Discover candidates
         env:
@@ -34,6 +34,17 @@ jobs:
         run: |
           cd python
           uv run python -m lean_pool.aggregator discover \
+            --discovered ../candidates/discovered.yml
+
+      - name: Triage new discoveries
+        # Non-fatal: a triage hiccup must never block committing the
+        # deterministic discoveries above.
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd python
+          uv run python -m lean_pool.aggregator triage \
             --discovered ../candidates/discovered.yml
 
       - name: Commit new discoveries

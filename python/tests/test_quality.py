@@ -59,6 +59,7 @@ def _write_project_yaml(root: Path, projects: list[dict[str, str | None]]) -> No
                 f"    entry_module: {project['entry_module']}",
                 "    authors: [Test Author]",
                 *source_lines,
+                f"    license: {project.get('license', 'Apache-2.0')}",
                 f"    status: {project.get('status', 'verified')}",
                 "    main_declarations: [hello]",
                 "    main_results:",
@@ -345,6 +346,7 @@ _PROJECT_FIXTURE = {
     "entry_module": "LeanPool.MyProj",
     "authors": ["Test Author"],
     "source": {"arxiv": "1234.5678"},
+    "license": "Apache-2.0",
     "status": "verified",
     "main_declarations": ["hello"],
     "main_results": [{"declaration": "hello", "informal": "A test result."}],
@@ -492,6 +494,34 @@ def test_quality_check_rejects_non_verified_status(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("invalid status" in error.message for error in errors)
+
+
+def test_quality_check_requires_license(tmp_path: Path) -> None:
+    """Every project entry must declare a `license` field."""
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(tmp_path, [{"slug": "p", "entry_module": "LeanPool.Basic"}])
+    projects = tmp_path / "LeanPool" / "projects.yml"
+    projects.write_text(projects.read_text().replace("    license: Apache-2.0\n", ""))
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any(
+        "missing fields" in error.message and "license" in error.message
+        for error in errors
+    )
+
+
+def test_quality_check_rejects_non_permissive_license(tmp_path: Path) -> None:
+    """Only permissive SPDX licenses (Apache-2.0 or MIT) are accepted."""
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(
+        tmp_path,
+        [{"slug": "p", "entry_module": "LeanPool.Basic", "license": "GPL-3.0"}],
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("invalid license" in error.message for error in errors)
 
 
 def test_axiom_audit_resolved_parses_success_lines() -> None:

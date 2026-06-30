@@ -1,4 +1,131 @@
 projects:
+  - slug: biswal
+    title: Chebyshev Quotients and Demazure Multiplicities
+    summary: >-
+      Formalizes positivity results for the coefficients of Chebyshev-type
+      polynomial quotients attached to integer partitions, modelling Demazure
+      multiplicities. Proves that the relevant generating function is a
+      polynomial and that its coefficients are eventually positive (Theorem 1),
+      gives explicit Cauchy-product and matrix-inverse formulas for the
+      coefficients (Theorem 2), and establishes their nonnegativity through a
+      Dyck-path lattice counting model (Theorem 3).
+    branch: algebraic combinatorics
+    entry_module: LeanPool.Biswal
+    authors:
+      - Jujian Zhang
+    source:
+      title: "Chebyshev quotients, Demazure multiplicities, and Dyck-path models"
+      authors:
+        - Evan Chen
+        - Kenny Lau
+        - Seewoo Lee
+        - Ken Ono
+        - Jujian Zhang
+      arxiv: "2604.25246"
+      github_repo: AxiomMath/Biswal
+    license: MIT
+    status: verified
+    main_declarations:
+      - Biswal.Theorem23.thm_manifest_coeff_nonneg
+    main_results:
+      - declaration: Biswal.Theorem1.genFun_is_polynomial
+        informal: >-
+          Proves that the generating function attached to a partition is a
+          polynomial whenever its parts are bounded by the parameter `m`.
+      - declaration: Biswal.Theorem1.genFun_coeff_eventually_pos
+        informal: >-
+          Proves that the coefficients of the generating function attached to a
+          partition are eventually strictly positive.
+      - declaration: Biswal.Theorem23.thm_manifest_coeff_nonneg
+        informal: >-
+          Proves that every coefficient of the generating function is
+          nonnegative, via the explicit Dyck-path lattice counting model.
+    tags:
+      - algebraic-combinatorics
+      - chebyshev
+      - demazure
+    msc:
+      - "05E10"
+  - slug: pythagorean-polynomial-parametrization
+    title: Polynomial parametrizations of Pythagorean triples
+    summary: Formalizes Frisch and Vaserstein's result that Pythagorean triples are not parametrizable by one triple of integer-coefficient polynomials in any number of variables, but are parametrizable by a single triple of integer-valued rational polynomials, including the positive and sixteen-parameter variants.
+    branch: number theory
+    entry_module: LeanPool.PythagoreanPolynomialParametrization
+    authors:
+      - Lazar Milikic
+    source:
+      title: Parametrization of Pythagorean triples by a single triple of polynomials
+      authors:
+        - Sophie Frisch
+        - Leonid Vaserstein
+      arxiv: "0706.0290"
+      doi: "10.1016/j.jpaa.2007.05.019"
+      github_repo: epfl-lara/AutoformalizedProjects
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - LeanPool.PythagoreanPolynomialParametrization.exists_int_valued_parametrization
+    main_results:
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.no_int_poly_parametrization
+        informal: Proves that no single triple of integer-coefficient polynomials in any number of variables parametrizes all Pythagorean triples.
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.exists_int_valued_parametrization
+        informal: Gives the explicit four-variable integer-valued polynomial parametrization of all Pythagorean triples.
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.positive_triples_parametrization
+        informal: Formalizes the positive Pythagorean-triple parametrization with positive parameters and a nonnegative auxiliary parameter.
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.exists_16_param_parametrization
+        informal: Converts the positive parametrization to an unrestricted sixteen-integer-parameter parametrization using the four-square theorem.
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.single_intValued_parametrization_yields_finite_intPoly_parametrization
+        informal: Proves the cited reduction from one integer-valued polynomial tuple to finitely many integer-coefficient polynomial tuples.
+      - declaration: LeanPool.PythagoreanPolynomialParametrization.integerValued_polynomial_ring_not_uniqueFactorization
+        informal: Records the integer-valued polynomial ring non-UFD phenomenon behind the paper's motivating discussion.
+    tags:
+      - number-theory
+      - pythagorean-triples
+      - integer-valued-polynomials
+    msc:
+      - "11D09"
+      - "11D85"
+      - "13F20"
+  - slug: cramer-wold
+    title: The Cramer-Wold theorem
+    summary: Formalizes the finite-dimensional Cramer-Wold theorem for measures on Euclidean spaces, with Banach-space continuous-dual generalizations, Hilbert-space inner-product versions, and random-variable law corollaries for identical distributions and `HasLaw`.
+    branch: probability theory
+    entry_module: LeanPool.CramerWold
+    authors:
+      - Lazar Milikic
+    source:
+      title: Some theorems on distribution functions
+      authors:
+        - Harald Cramer
+        - Herman Wold
+      doi: "10.1112/jlms/s1-11.4.290"
+      github_repo: Lemmy00/lean-pool
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inner_map_eq
+    main_results:
+      - declaration: LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inner_map_eq
+        informal: Proves the classical finite-dimensional Cramer-Wold theorem for finite Borel measures on `EuclideanSpace ℝ (Fin n)`, showing equality when all scalar projections have equal pushforward measures.
+      - declaration: LeanPool.CramerWold.measure_eq_of_forall_dual_map_eq
+        informal: Generalizes the extensionality criterion to finite Borel measures on complete second-countable real normed spaces, using all continuous-linear real projections.
+      - declaration: LeanPool.CramerWold.measure_eq_of_forall_inner_map_eq
+        informal: Specializes Cramer-Wold extensionality to real Hilbert spaces, using scalar projections of the form `x ↦ ⟪t, x⟫_ℝ`.
+      - declaration: LeanPool.CramerWold.identDistrib_of_forall_dual_comp_identDistrib
+        informal: Proves that two finite-measure random variables are identically distributed when every continuous-linear real projection of them is identically distributed.
+      - declaration: LeanPool.CramerWold.identDistrib_of_forall_inner_comp_identDistrib
+        informal: Gives the Hilbert-space random-variable version using all scalar inner-product projections.
+      - declaration: LeanPool.CramerWold.hasLaw_of_forall_dual_comp_hasLaw
+        informal: Proves that a random variable has a target law when every continuous-linear real projection has the corresponding projected target law.
+    tags:
+      - probability
+      - measure-theory
+      - characteristic-functions
+      - cramer-wold
+    msc:
+      - "60B11"
+      - "60E10"
+      - "28A33"
   - slug: demazureoperatorslean
     title: Demazure Operators and Lean
     summary: Formalizes Demazure operators on multivariate polynomials and their nilpotence, braid, commutation, and symmetric-polynomial linearity relations, with auxiliary Coxeter-theory support including strong exchange and a conditional Matsumoto theorem.
@@ -14,6 +141,7 @@ projects:
         - S. I. Gelfand
       doi: "10.1070/RM1973v028n03ABEH001557"
       github_repo: bolito2/DemazureOperatorsLean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Demazure.Dem
@@ -59,6 +187,7 @@ projects:
       doi: "10.1112/blms/11.3.268"
       arxiv: "2503.07625"
       github_repo: ahhwuhu/zeta_3_irrational
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.Zeta3Irrational.zeta3_irrational
@@ -80,6 +209,45 @@ projects:
     msc:
       - "11M06"
       - "11J72"
+  - slug: zeta-h123
+    title: Thakur's hypotheses on power sums of F_q[t]
+    summary: Formalizes four components of Thakur's hypotheses on power sums over finite polynomial rings, including uniqueness and monotonicity results for the carry-free digit optimization problems and the Laurent-series expansion of finite-field power sums.
+    branch: number theory
+    entry_module: LeanPool.ZetaH123
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      title: Thakur's hypotheses on power sums of F_q[t]
+      authors:
+        - Evan Chen
+        - Ken Ono
+      arxiv: "2606.16239"
+      github_repo: AxiomMath/zeta-h123
+    license: MIT
+    status: verified
+    main_declarations:
+      - ZetaH123.H1.main_theorem
+      - ZetaH123.Lem41.main
+    main_results:
+      - declaration: ZetaH123.H1.main_theorem
+        informal: Proves uniqueness of the admissible base-q decomposition maximizing the H1 power-sum weight functional.
+      - declaration: ZetaH123.H2.main
+        informal: Proves the H2 unique-minimizer statement for the recursive digit/carry-free optimization problem defining the values s_d(k).
+      - declaration: ZetaH123.H3.main_theorem
+        informal: Proves the H3 monotonicity statement that s_d(k) is strictly less than s_d(k+1) when p does not divide k.
+      - declaration: ZetaH123.Lem41.main
+        informal: Proves the Lemma 4.1 Laurent-series expansion for S_d(k), with nonzero coefficients indexed by the carry-free tuples.
+    tags:
+      - number-theory
+      - function-fields
+      - zeta-functions
+    msc:
+      - "11M38"
+      - "11T55"
+      - "11G09"
   - slug: bruhat-tits
     title: Formalisation of the Bruhat-Tits Tree
     summary: Formalizes the Bruhat-Tits tree for GL₂ over the fraction field of a discrete valuation ring.
@@ -94,6 +262,7 @@ projects:
         - Jean-Pierre Serre
       url: https://doi.org/10.1007/978-3-642-61856-7
       github_repo: chrisflav/bruhat-tits
+    license: Apache-2.0
     status: verified
     main_declarations:
       - BruhatTits.BTtree
@@ -126,6 +295,7 @@ projects:
     source:
       arxiv: "2603.29970"
       github_repo: AxiomMath/ramanujan-tau-misses-primes
+    license: MIT
     status: verified
     main_declarations:
       - main_theorem
@@ -160,6 +330,7 @@ projects:
     source:
       arxiv: "2602.03716"
       github_repo: AxiomMath/fel-polynomial
+    license: MIT
     status: verified
     main_declarations:
       - fels_conjecture
@@ -187,6 +358,7 @@ projects:
     source:
       arxiv: "2602.05095"
       github_repo: AxiomMath/dead-ends
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.DeadEnds.baseBDeadEnd_density_formula
@@ -208,6 +380,7 @@ projects:
     source:
       url: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
       github_repo: Zetetic-Dhruv/formal-learning-theory-kernel
+    license: Apache-2.0
     status: verified
     main_declarations:
       - fundamental_theorem
@@ -248,6 +421,7 @@ projects:
     source:
       arxiv: "2511.03618"
       github_repo: ShangtongZhang/rl-theory-in-lean
+    license: MIT
     status: verified
     main_declarations:
       - StochasticMatrix.stationary_distribution_exists
@@ -272,6 +446,7 @@ projects:
     source:
       url: https://github.com/Vilin97/forward_euler
       github_repo: Vilin97/forward_euler
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ODE.EulerMethod.dist_path_le
@@ -300,6 +475,7 @@ projects:
     source:
       arxiv: "2603.15929"
       github_repo: Vilin97/Clawristotle
+    license: Apache-2.0
     status: verified
     main_declarations:
       - VML.Theorem42
@@ -331,6 +507,7 @@ projects:
     source:
       arxiv: "2602.05090"
       github_repo: AxiomMath/partial-regularity
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
@@ -353,6 +530,7 @@ projects:
     source:
       url: https://github.com/vbeffara/RMT4
       github_repo: vbeffara/RMT4
+    license: Apache-2.0
     status: verified
     main_declarations:
       - RMT
@@ -385,6 +563,7 @@ projects:
     source:
       arxiv: "2602.05192"
       github_repo: frenzymath/Archon-FirstProof-Results
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Problem4.harmonic_mean_inequality_full
@@ -414,6 +593,7 @@ projects:
     source:
       arxiv: "2605.00301"
       github_repo: math-inc/Erdos1196
+    license: Apache-2.0
     status: verified
     main_declarations:
       - PrimitiveSetsAboveX.mainTheorem
@@ -430,6 +610,52 @@ projects:
     msc:
       - "11N25"
       - "05D05"
+  - slug: erdos137
+    title: "Erdős Problem #137: powerful products of consecutive integers"
+    summary: >-
+      Formalizes the abc-conditional finiteness results for Erdős Problem #137 (Erdős–Selfridge):
+      a number N is powerful if every prime dividing N has its square dividing N, and the question
+      is whether the product F(k,n) = n(n+1)⋯(n+k-1) of k ≥ 3 consecutive integers can be powerful
+      for infinitely many n. Each route isolates its abc input (a radical lower bound) as a single
+      explicit hypothesis and proves everything else outright, concluding that, conditionally,
+      F(k,n) is powerful for only finitely many n for each fixed k ≥ 3.
+    branch: number theory
+    entry_module: LeanPool.Erdos137
+    authors:
+      - Scott D. Hughes
+    source:
+      title: "Erdős Problem #137: powerful products of consecutive integers"
+      authors:
+        - Scott D. Hughes
+      url: "https://www.erdosproblems.com/137"
+      github_repo: scottdhughes/erdos137
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - Erdos137.erdos137_finite
+      - Erdos137.erdos137_eventually_not_powerful
+    main_results:
+      - declaration: Erdos137.erdos137_finite
+        informal: >-
+          Under the Granville–Langevin radical bound RadLB k (an abc-conditional hypothesis) and
+          k ≥ 3, the set of n ≥ 1 for which F(k,n) is powerful is finite.
+      - declaration: Erdos137.erdos137_eventually_not_powerful
+        informal: >-
+          Under RadLB k and k ≥ 3, there is a threshold beyond which F(k,n) is never powerful.
+      - declaration: Erdos137.lemma_star
+        informal: >-
+          Unconditionally, the radical squared times the powerful part of m is at most m squared
+          (rad m ^ 2 * B2 m ≤ m ^ 2).
+      - declaration: Erdos137.powerful_rad_sq_le
+        informal: >-
+          A nonzero powerful number N satisfies rad N ^ 2 ≤ N.
+    tags:
+      - number-theory
+      - powerful-numbers
+      - erdos-problems
+    msc:
+      - "11A51"
+      - "11N25"
   - slug: lattice-triangle
     title: On the paucity of lattice triangles
     summary: Formalizes an analytic lower bound used in the paucity theorem for lattice triangles.
@@ -443,6 +669,7 @@ projects:
     source:
       arxiv: "2603.23928"
       github_repo: AxiomMath/lattice-triangle
+    license: MIT
     status: verified
     main_declarations:
       - analyticEngine_lower_bound
@@ -467,6 +694,7 @@ projects:
       doi: "10.1007/978-1-4757-3849-0"
       url: https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing
       github_repo: Vilin97/Clawristotle
+    license: Apache-2.0
     status: verified
     main_declarations:
       - GrothendieckVanishing
@@ -491,6 +719,7 @@ projects:
       arxiv: "1907.00847"
       doi: "10.4007/annals.2019.190.3.6"
       github_repo: SamuelSchlesinger/sensitivity-conjecture
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
@@ -516,6 +745,7 @@ projects:
     source:
       url: https://terrytao.wordpress.com/2011/09/16/the-brunn-minkowski-inequality-for-nilpotent-groups/
       github_repo: hojonathanho/isoperimetric
+    license: Apache-2.0
     status: verified
     main_declarations:
       - prekopa_leindler
@@ -546,6 +776,7 @@ projects:
     source:
       url: https://github.com/seb488/LeanComplexAnalysis
       github_repo: seb488/LeanComplexAnalysis
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.LeanComplexAnalysis.harnack_ineq
@@ -580,6 +811,7 @@ projects:
         - Jaap van Oosten
       url: https://doi.org/10.1016/S0049-237X(08)80003-1
       github_repo: andrejbauer/partial-combinatory-algebras
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.PartialCombinatoryAlgebras.PCA
@@ -610,6 +842,7 @@ projects:
       arxiv: "2409.08119"
       doi: "10.46298/afm.14253"
       github_repo: madvorak/duality
+    license: Apache-2.0
     status: verified
     main_declarations:
       - extendedFarkas
@@ -644,6 +877,7 @@ projects:
     source:
       doi: "10.1090/S0002-9939-1957-0085275-8"
       github_repo: pitmonticone/SumsThreeSquares
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
@@ -672,6 +906,7 @@ projects:
         - Phuong Nguyen
       doi: "10.1017/CBO9780511676277"
       github_repo: ruplet/formalization-of-bounded-arithmetic
+    license: MIT
     status: verified
     main_declarations:
       - V0Model.ind_strengthened_v0
@@ -715,6 +950,7 @@ projects:
       arxiv: "2102.11818"
       doi: "10.4007/annals.2021.194.3.9"
       github_repo: siddhartha-gadgil/Polylean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.Polylean.P.torsionFree
@@ -745,6 +981,7 @@ projects:
       arxiv: "2312.06506"
       doi: "10.4230/LIPIcs.ITP.2024.8"
       github_repo: Dominique-Lawson/Directed-Topology-Lean-4
+    license: MIT
     status: verified
     main_declarations:
       - DirectedSpace
@@ -781,6 +1018,7 @@ projects:
         - Hans-Egon Richert
       url: https://archive.org/details/sievemethods0000halb
       github_repo: amellendijk/selberg-sieve4
+    license: Apache-2.0
     status: verified
     main_declarations:
       - fundamental_theorem_simple
@@ -820,6 +1058,7 @@ projects:
         - Joni Teräväinen
       arxiv: "2410.12234"
       github_repo: b-mehta/ABC-Exceptions
+    license: Apache-2.0
     status: verified
     main_declarations:
       - abcConjecture_iff_countTriples
@@ -849,6 +1088,7 @@ projects:
       arxiv: "2105.10386"
       doi: "10.1017/CBO9781139814782"
       github_repo: roos-j/lean-booleanfun
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
@@ -873,6 +1113,7 @@ projects:
     source:
       url: "https://github.com/Luka-O/polya-enumeration-theorem"
       github_repo: Luka-O/polya-enumeration-theorem
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.PolyaEnumerationTheorem.polya_theorem
@@ -898,6 +1139,7 @@ projects:
       arxiv: "1906.11174"
       doi: "10.5802/afst.1766"
       github_repo: nasqret/fineqs
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.Fineqs.theorem_1
@@ -933,6 +1175,7 @@ projects:
         - Victor Kac
       url: https://doi.org/10.1017/CBO9780511626234
       github_repo: kkytola/VirasoroProject
+    license: Apache-2.0
     status: verified
     main_declarations:
       - VirasoroProject.VirasoroAlgebra
@@ -970,6 +1213,7 @@ projects:
       doi: "10.1090/crmm/033"
       url: https://bookstore.ams.org/crmm-33
       github_repo: LieLean/LowDimSolvClassification
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LieAlgebra.Dim3.classification
@@ -998,6 +1242,7 @@ projects:
       arxiv: "2405.04588"
       doi: "10.1007/978-1-4419-8616-0"
       github_repo: JobPetrovcic/ArtinWedderburn
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.ArtinWedderburn.ArtinWedderburnForPrime
@@ -1022,6 +1267,7 @@ projects:
     source:
       arxiv: "2501.09769"
       github_repo: wupr/order-p-q
+    license: Apache-2.0
     status: verified
     main_declarations:
       - OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
@@ -1053,6 +1299,7 @@ projects:
         - Emily Riehl
       url: https://emilyriehl.github.io/files/context.pdf
       github_repo: ivankobe/FactorizationSystems
+    license: MIT
     status: verified
     main_declarations:
       - CategoryTheory.FactorizationSystemCharacterization
@@ -1082,6 +1329,7 @@ projects:
     source:
       doi: "10.1002/j.1538-7305.1948.tb01338.x"
       github_repo: SamuelSchlesinger/shannon-1948-formalization
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.Shannon1948Formalization.entropyNat_unique
@@ -1114,6 +1362,7 @@ projects:
       arxiv: "2411.16844"
       doi: "10.1007/BF00383948"
       github_repo: b-mehta/AharoniKorman
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.AharoniKorman.aharoni_korman_false
@@ -1137,6 +1386,7 @@ projects:
     source:
       doi: "10.1007/978-1-4020-5764-9_15"
       github_repo: YnirPaz/PCF-Theory
+    license: MIT
     status: verified
     main_declarations:
       - Ordinal.exists_isClubGuessing_of_cof_uncountable
@@ -1166,6 +1416,7 @@ projects:
         - Karl Petersen
       url: https://doi.org/10.1017/CBO9780511608728
       github_repo: lua-vr/pointwise-birkhoff
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
@@ -1194,6 +1445,7 @@ projects:
         - Thomas Jech
       url: https://doi.org/10.1007/3-540-44761-X
       github_repo: ishiut/fo_zfc
+    license: Apache-2.0
     status: verified
     main_declarations:
       - FirstOrder.ZFC.ModelZF
@@ -1221,6 +1473,7 @@ projects:
       doi: "10.5565/PUBLMAT_45101_06"
       github_repo: urkud/SardMoreira
       paper: http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+    license: Apache-2.0
     status: verified
     main_declarations:
       - dimH_image_le_sardMoreiraBound_of_finrank_le
@@ -1249,6 +1502,7 @@ projects:
     source:
       arxiv: "2603.04235"
       github_repo: suomela/2-coloring-1-round
+    license: MIT
     status: verified
     main_declarations:
       - Distributed2Coloring.pStar_ge_23879
@@ -1277,6 +1531,7 @@ projects:
     source:
       arxiv: "2604.09808"
       github_repo: BarinderBanwait/ramanujan_nagell
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ramanujanNagellExact
@@ -1302,6 +1557,7 @@ projects:
     source:
       arxiv: "2502.03432"
       github_repo: sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - GaleStewartGame.borel_determinacy
@@ -1330,6 +1586,7 @@ projects:
       title: "Main theorem of polytopes"
       url: https://github.com/Jun2M/Main-theorem-of-polytopes
       github_repo: Jun2M/Main-theorem-of-polytopes
+    license: Apache-2.0
     status: verified
     main_declarations:
       - MainTheoremOfPolytopes
@@ -1357,6 +1614,7 @@ projects:
       title: "Formalization of Polynomial ABC and FLT"
       arxiv: "2408.15180"
       github_repo: seewoo5/lean-poly-abc
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPolyABC.Polynomial.abc
@@ -1388,6 +1646,7 @@ projects:
       arxiv: "2206.04260"
       doi: "10.1016/j.ejc.2024.104085"
       github_repo: jcpaik/erdos-tuza-valtr
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ErdosTuzaValtr.main
@@ -1415,6 +1674,7 @@ projects:
     source:
       url: https://github.com/jzxia/WhiteheadTheorem
       github_repo: jzxia/WhiteheadTheorem
+    license: Apache-2.0
     status: verified
     main_declarations:
       - WhiteheadTheorem
@@ -1448,6 +1708,7 @@ projects:
       arxiv: "2407.16717"
       doi: "10.1080/00150517.2024.2430958"
       github_repo: Antoine-dSG/frieze_patterns
+    license: Apache-2.0
     status: verified
     main_declarations:
       - main3
@@ -1483,6 +1744,7 @@ projects:
     source:
       url: https://en.wikipedia.org/wiki/Pentagonal_number_theorem
       github_repo: wwylele/PentagonalNumberTheorem
+    license: Apache-2.0
     status: verified
     main_declarations:
       - pentagonalNumberTheorem_powerSeries
@@ -1513,6 +1775,7 @@ projects:
     source:
       doi: "10.1007/978-3-662-03983-0"
       github_repo: jjdishere/neukirch
+    license: Apache-2.0
     status: verified
     main_declarations:
       - NumberField.ramificationIdx_mul_inertiaDegOfIsGalois
@@ -1558,6 +1821,7 @@ projects:
         - Ian Connell
       url: "https://www.math.rug.nl/~top/ian.pdf"
       github_repo: KisaraBlue/ec-tate-lean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Model
@@ -1602,6 +1866,7 @@ projects:
         - Paul Monsky
       doi: "10.2307/2317329"
       github_repo: dhyan-aranha/Monsky
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.Monsky.monsky_theorem
@@ -1625,6 +1890,7 @@ projects:
     source:
       url: https://github.com/dwrensha/Rupert.lean
       github_repo: dwrensha/Rupert.lean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Cube.rupert
@@ -1657,6 +1923,7 @@ projects:
         - Thomas Jech
       url: https://doi.org/10.1007/3-540-44761-X
       github_repo: VTrelat/ZFLean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ZFSet.isIso_of_biembedding
@@ -1686,6 +1953,7 @@ projects:
     source:
       url: https://www.math.ucsd.edu/~tkemp/247A.Notes.pdf
       github_repo: FredRaj3/SemicircleLaw
+    license: MIT
     status: verified
     main_declarations:
       - LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
@@ -1722,6 +1990,7 @@ projects:
       doi: 10.4169/amer.math.monthly.124.10.966
       arxiv: "1810.08368"
       github_repo: themathqueen/monlib4
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Matrix.aut_mat_inner
@@ -1787,6 +2056,7 @@ projects:
         - Tamás Szamuely
       url: https://doi.org/10.1017/9781316661277
       github_repo: Whysoserioushah/BrauerGroup
+    license: Apache-2.0
     status: verified
     main_declarations:
       - BrauerGroup.BruaerGroup
@@ -1828,6 +2098,7 @@ projects:
     source:
       doi: "10.1109/18.681320"
       github_repo: cboone/zhang-yeung-inequality
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ZhangYeung.zhangYeung
@@ -1855,6 +2126,7 @@ projects:
     source:
       url: https://archive.org/details/fairrepresentati00bali
       github_repo: mdbrnowski/apportionmentlib
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Apportionment.balinski_young
@@ -1877,6 +2149,7 @@ projects:
     source:
       doi: "10.1007/978-1-4939-0925-4_2"
       github_repo: frenzymath/Anderson-Conjecture
+    license: Apache-2.0
     status: verified
     main_declarations:
       - anderson_main_theorem
@@ -1901,6 +2174,7 @@ projects:
       arxiv: "1701.02547"
       doi: "10.1109/LICS.2017.8005137"
       github_repo: YellPika/quasi-borel-spaces
+    license: MIT
     status: verified
     main_declarations:
       - QuasiBorelSpace
@@ -1934,6 +2208,7 @@ projects:
     source:
       doi: "10.1134/S0081543811060198"
       github_repo: mgignoux/lean4-gl-coalgebras
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Lean4GlCoalgebras.interpolation
@@ -1959,6 +2234,7 @@ projects:
       arxiv: "1808.00997"
       doi: "10.1155/2019/6130464"
       github_repo: CBirkbeck/LeanModularForms
+    license: Apache-2.0
     status: verified
     main_declarations:
       - generalizedResidueTheorem
@@ -1993,6 +2269,7 @@ projects:
         - Frank Stephan
       doi: "10.1017/S1446788725000084"
       github_repo: Parcly-Taxel/Redhill
+    license: MIT
     status: verified
     main_declarations:
       - not_ramaekersConjecture_ge_six
@@ -2033,6 +2310,7 @@ projects:
       doi: "10.1017/S1755020309990098"
       url: "https://github.com/ah1112/synthetic_euclid_4"
       github_repo: ah1112/synthetic_euclid_4
+    license: Apache-2.0
     status: verified
     main_declarations:
       - SyntheticEuclid4.pythagoras
@@ -2065,6 +2343,7 @@ projects:
       doi: "10.1109/IEEESTD.2019.8766229"
       url: "https://github.com/josephmckinsey/flean"
       github_repo: josephmckinsey/flean
+    license: Apache-2.0
     status: verified
     msc:
       - "65G50"
@@ -2103,6 +2382,7 @@ projects:
     source:
       url: "https://github.com/samuelborza/IsTranscendentalPi"
       github_repo: samuelborza/IsTranscendentalPi
+    license: Apache-2.0
     status: verified
     main_declarations:
       - IsTranscendentalPi
@@ -2134,6 +2414,7 @@ projects:
       doi: "10.1073/pnas.36.1.48"
       url: "https://github.com/math-xmum/Brouwer"
       github_repo: math-xmum/Brouwer
+    license: MIT
     status: verified
     main_declarations:
       - ExistsNashEq
@@ -2170,45 +2451,6 @@ projects:
       - "91A06"
       - "91A10"
       - "47H10"
-  - slug: primecert
-    title: Formally verified primality certificates
-    summary: Implements Pocklington's primality test and the cube-root Brillhart-Lehmer-Selfridge variant in Lean 4, with custom metaprogramming to produce compact, kernel-checkable primality certificates.
-    branch: primality certificates
-    entry_module: LeanPool.PrimeCert
-    authors:
-      - Kenny Lau
-      - Bhavik Mehta
-    source:
-      doi: "10.1090/S0025-5718-1975-0384673-1"
-      url: "https://github.com/b-mehta/PrimeCert"
-      github_repo: b-mehta/PrimeCert
-    status: verified
-    main_declarations:
-      - pocklington_test
-      - PrimeCert.pocklington3_test
-      - wieferich_mirimanoff
-    main_results:
-      - declaration: pocklington_test
-        informal: "The core Pocklington divisor theorem: every prime factor of N is congruent to 1 modulo a fully factored divisor F of N - 1, given pseudo-primitive roots for each prime factor of F."
-        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
-      - declaration: pocklington_certify
-        informal: Certifies that N is prime when a fully factored divisor F of N - 1 exceeds the square root of N and the Pocklington primitive-root predicate holds for a single root.
-        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
-      - declaration: PrimeCert.pocklington3_test
-        informal: The cube-root (Brillhart-Lehmer-Selfridge) variant of the Pocklington test, requiring only a divisor F of N - 1 exceeding the cube root of N together with a sieve and a non-square certificate.
-        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
-      - declaration: wieferich_mirimanoff
-        informal: No prime below 6000 is simultaneously a Wieferich prime and a Mirimanoff prime.
-        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
-    tags:
-      - number-theory
-      - primality-testing
-      - pocklington
-      - primality-certificate
-      - metaprogramming
-    msc:
-      - "11A41"
-      - "11Y11"
   - slug: circuit-complexity
     title: Circuit Complexity in Lean 4
     summary: A Lean 4 formalization of classical Boolean circuit complexity, including the Shannon counting lower bound, Schnorr's XOR gate lower bound, a gate-elimination lower bound, CNF/DNF lower bounds for parity, and nondeterministic quantification complexity bounds.
@@ -2219,6 +2461,7 @@ projects:
     source:
       url: "https://github.com/SamuelSchlesinger/circuit-complexity"
       github_repo: SamuelSchlesinger/circuit-complexity
+    license: Apache-2.0
     status: verified
     main_declarations:
       - CircuitComplexity.shannon_lower_bound_circuit
@@ -2255,6 +2498,7 @@ projects:
     source:
       url: "https://github.com/tannerduve/computability"
       github_repo: tannerduve/computability
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Computability.RecursiveIn
@@ -2292,6 +2536,7 @@ projects:
     source:
       url: "https://github.com/AlexLoitzl/pumping_cfg"
       github_repo: AlexLoitzl/pumping_cfg
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Language.IsContextFree.pumping
@@ -2308,42 +2553,6 @@ projects:
       - pumping-lemma
     msc:
       - "68Q45"
-  - slug: chomsky
-    title: Chomsky hierarchy in Lean 4
-    summary: Formalizes general (unrestricted) grammars and context-free grammars together with their derivation relations, shows context-free languages form a subclass of general-grammar languages, proves both classes are closed under union, concatenation, and reversal (and general-grammar languages under the Kleene star), and defines the Kuroda normal form.
-    branch: formal language theory
-    entry_module: LeanPool.Chomsky
-    authors:
-      - Martin Dvořák
-    source:
-      url: "https://github.com/madvorak/chomsky"
-      arxiv: "2302.06420"
-      github_repo: madvorak/chomsky
-    status: verified
-    main_declarations:
-      - Chomsky.CF_subclass_GG
-      - Chomsky.GG_of_GG_u_GG
-      - Chomsky.GG_of_star_GG
-    main_results:
-      - declaration: Chomsky.CF_subclass_GG
-        informal: Proves that every context-free language is generated by some general (unrestricted) grammar, i.e. the context-free class is a subclass of the general-grammar class.
-      - declaration: Chomsky.CF_of_CF_u_CF
-        informal: Proves that the union of two context-free languages is context-free.
-      - declaration: Chomsky.CF_of_CF_c_CF
-        informal: Proves that the concatenation of two context-free languages is context-free.
-      - declaration: Chomsky.CF_of_reverse_CF
-        informal: Proves that the reversal of a context-free language is context-free.
-      - declaration: Chomsky.GG_of_GG_u_GG
-        informal: Proves that the union of two general-grammar languages is again a general-grammar language.
-      - declaration: Chomsky.GG_of_star_GG
-        informal: Proves that the Kleene star of a general-grammar language is again a general-grammar language.
-    tags:
-      - formal-languages
-      - chomsky-hierarchy
-      - context-free-grammar
-      - closure-properties
-    msc:
-      - "68Q42"
   - slug: lentil
     title: 'Lentil: Temporal Logic of Actions in Lean 4'
     summary: A shallow embedding of Leslie Lamport's Temporal Logic of Actions (TLA) in Lean 4, with the temporal modalities, standard propositional and temporal proof rules, weak-fairness and leads-to reasoning, and an interactive proof mode for TLA judgments.
@@ -2354,6 +2563,7 @@ projects:
     source:
       url: "https://github.com/verse-lab/Lentil"
       github_repo: verse-lab/Lentil
+    license: Apache-2.0
     status: verified
     msc:
       - "03B44"
@@ -2391,6 +2601,7 @@ projects:
     source:
       doi: "10.1007/BF01700692"
       github_repo: FormalizedFormalLogic/Incompleteness
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanPool.Incompleteness.goedelFirst
@@ -2423,6 +2634,7 @@ projects:
         - Jaume de Dios Pont
       url: https://github.com/susannabertolini/PhaseRetrieval
       github_repo: susannabertolini/PhaseRetrieval
+    license: Apache-2.0
     status: verified
     main_declarations:
       - DimdPolyShowcaseChallenge.stable_phase_retrieval
@@ -2460,6 +2672,7 @@ projects:
     source:
       url: "https://github.com/ro-gut/turan3"
       github_repo: ro-gut/turan3
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Turan3.turans
@@ -2495,6 +2708,7 @@ projects:
       doi: "10.2307/2269948"
       url: "https://github.com/znssong/SetTheory"
       github_repo: znssong/SetTheory
+    license: Apache-2.0
     status: verified
     main_declarations:
       - SetTheory.kunen_inconsistency_V
@@ -2529,6 +2743,7 @@ projects:
       arxiv: "1906.00046"
       doi: "10.1145/3371119"
       github_repo: mit-plv/lean4-itree
+    license: MIT
     status: verified
     main_declarations:
       - Lean4Itree.ITree
@@ -2574,6 +2789,7 @@ projects:
       doi: "10.1007/3-540-60915-6_6"
       url: "https://github.com/kuruczgy/lean-model-checking"
       github_repo: kuruczgy/lean-model-checking
+    license: Apache-2.0
     status: verified
     main_declarations:
       - LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
@@ -2612,6 +2828,7 @@ projects:
       arxiv: "0805.2438"
       doi: "10.1007/978-3-540-71067-7_21"
       github_repo: Timeroot/computableReal
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ComputableℝSeq
@@ -2647,6 +2864,7 @@ projects:
       arxiv: "2201.10456"
       url: "https://github.com/matthunz/circuitlib"
       github_repo: matthunz/circuitlib
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Circuit.SequentialCircuitCategory.instSymmetricCategory
@@ -2684,6 +2902,7 @@ projects:
     source:
       url: https://github.com/mrdouglasny/OSforGFF
       github_repo: mrdouglasny/OSforGFF
+    license: Apache-2.0
     status: verified
     main_declarations:
       - OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
@@ -2713,6 +2932,7 @@ projects:
         - Alfred Frölicher
       doi: "10.1007/978-94-015-9590-2"
       github_repo: oneofvalts/desargues
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Basic.ProjectiveGeometry
@@ -2743,6 +2963,7 @@ projects:
       doi: "10.1007/978-3-030-58768-0_11"
       url: "https://github.com/JulsDE/MRiscX"
       github_repo: JulsDE/MRiscX
+    license: Apache-2.0
     status: verified
     main_declarations:
       - hoareTripleUp
@@ -2787,6 +3008,7 @@ projects:
         - Oren Patashnik
       url: "https://github.com/provables/special-numbers"
       github_repo: provables/special-numbers
+    license: MIT
     status: verified
     main_declarations:
       - SpecialNumbers.sylvester
@@ -2830,6 +3052,7 @@ projects:
       doi: "10.1007/978-1-4612-6398-2"
       url: https://antoine-dsg.github.io/root_system/
       github_repo: Antoine-dSG/root_system
+    license: Apache-2.0
     status: verified
     main_declarations:
       - An.rootPairing
@@ -2864,6 +3087,7 @@ projects:
       doi: "10.1007/3-540-17906-2_31"
       url: "https://github.com/vikraman/event-structures"
       github_repo: vikraman/event-structures
+    license: Apache-2.0
     status: verified
     main_declarations:
       - EventStructures.EventStructure
@@ -2904,6 +3128,7 @@ projects:
     source:
       url: https://github.com/NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes
       github_repo: NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes
+    license: Apache-2.0
     status: verified
     main_declarations:
       - ANR_polynomial_method
@@ -2951,6 +3176,7 @@ projects:
         - Ernst G. Straus
       doi: "10.1090/S0025-5718-1975-0369288-3"
       github_repo: lyfar/egrs75-lean
+    license: Apache-2.0
     status: verified
     main_declarations:
       - Egrs75.MuFinish.egrs_two_prime_mu
@@ -2985,6 +3211,7 @@ projects:
         - W. H. Gustafson
       doi: "10.2307/2317564"
       github_repo: ldct/lean-monorepo
+    license: Apache-2.0
     status: verified
     main_declarations:
       - FiveEighths.commProb_le_five_eighths
@@ -3011,6 +3238,7 @@ projects:
     source:
       url: https://github.com/AxiomMath/kaprekar4
       github_repo: AxiomMath/kaprekar4
+    license: MIT
     status: verified
     main_declarations:
       - Kaprekar4.thm_structural
@@ -3030,3 +3258,495 @@ projects:
     msc:
       - "11A63"
       - "37P99"
+  - slug: burkholder
+    title: Burkholder Martingale Transform Inequality
+    summary: >-
+      Formalizes Burkholder's sharp Lp inequality for real-valued martingale
+      transforms: if `f` is a discrete martingale and `w` a predictable
+      multiplier bounded by `1`, then the Lp norm of the transform `w ⋆ₘ f` is
+      at most `(pStar p - 1)` times the Lp norm of `f`, where `pStar p` is the
+      maximum of `p` and its conjugate exponent. The proof builds the Burkholder
+      special function as a majorant of the relevant payoff in each exponent
+      regime (`1 < p < 2`, `p = 2`, `p > 2`).
+    branch: probability
+    entry_module: LeanPool.Burkholder
+    authors:
+      - Daniel Smania
+    source:
+      title: "Boundary value problems and sharp inequalities for martingale transforms"
+      authors:
+        - Donald L. Burkholder
+      doi: "10.1214/aop/1176993220"
+      github_repo: SmaniaD/Burkholder
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - MeasureTheory.Lp_Burkholder_inequality_martingaleTransform
+    main_results:
+      - declaration: MeasureTheory.Lp_Burkholder_inequality_martingaleTransform
+        informal: >-
+          The sharp Lp Burkholder inequality: for a discrete martingale `f` and a
+          predictable multiplier `w` with `|w n| ≤ 1`, the Lp norm of the
+          martingale transform `(w ⋆ₘ f) n` is bounded by `(pStar p - 1)` times
+          the Lp norm of `f n`.
+      - declaration: MeasureTheory.martingaleTransform_martingale
+        informal: >-
+          The martingale transform of a martingale by a strongly predictable
+          bounded multiplier is itself a martingale.
+      - declaration: Majorants.exists_majorant_p_g_1
+        informal: >-
+          For every exponent `p > 1` there exists a Burkholder majorant, the
+          special function dominating the payoff and driving the inequality.
+    tags:
+      - probability
+      - martingales
+      - burkholder-inequality
+    msc:
+      - "60G42"
+  - slug: erdos367
+    title: "Erdős Problem #367"
+    summary: Formalizes upper and lower bound results for powerful parts of products of consecutive integers, including abc-conditional upper bounds, an unconditional odd r-full lower bound, a Pell-style limsup theorem, and polynomial arithmetic cores.
+    branch: number theory
+    entry_module: LeanPool.Erdos367
+    authors:
+      - Scott D. Hughes
+    source:
+      title: Powerful parts of consecutive integers and Davenport-Zannier polynomials
+      authors:
+        - Scott D. Hughes
+      url: https://github.com/scottdhughes/erdos367
+      github_repo: scottdhughes/erdos367
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - Erdos367.erdos_367_k3
+      - RFullOdd.erdos367_iv
+      - Erdos367.erdos367
+    main_results:
+      - declaration: Erdos367.erdos_367_k3
+        informal: Proves an abc-conditional k = 3 upper bound for the product of square-full parts of three consecutive integers.
+      - declaration: GeneralK.B2_upper_bound
+        informal: Proves a general-k upper bound for the square-full part of a product of consecutive integers from an explicit radical lower-bound hypothesis.
+      - declaration: RFullOdd.erdos367_iv
+        informal: Gives an unconditional odd r construction where the product of r-full parts of two consecutive integers is larger than the stated power of n.
+      - declaration: Erdos367.erdos367
+        informal: Proves an unconditional limsup form showing that the product of square-full parts of three consecutive integers exceeds any fixed multiple of n squared times log n.
+      - declaration: Core139.T3
+        informal: Proves the integer-form arithmetic core yielding the E3 at least 13/9 lower-bound construction under explicit prime-supply data.
+      - declaration: Core4027.IDENT
+        informal: Verifies the degree-27 polynomial identity used in the Davenport-Zannier construction.
+      - declaration: Core4027.T3
+        informal: Proves the integer-form arithmetic core yielding the E3 at least 40/27 lower-bound construction under explicit prime-supply data.
+    tags:
+      - number-theory
+      - erdos-problems
+      - powerful-numbers
+      - abc-conjecture
+      - pell-equations
+    msc:
+      - "11D09"
+      - "11N25"
+      - "11D45"
+  - slug: critical-portraits
+    title: Counting Critical Portraits
+    summary: >-
+      Formalizes the census of degree-d critical portraits, modeled as
+      level-canonical (d-1)-subsets of the cyclic group ZMod (d*m), and proves
+      that their number equals C(d*m, d-1)/d for all d, via the
+      Dvoretzky-Motzkin cycle lemma together with an explicit
+      level-canonicalization bijection (injectivity and surjectivity of the
+      delete-minimum map).
+    branch: combinatorics
+    entry_module: LeanPool.CriticalPortraits
+    authors:
+      - Keston Aquino-Michaels
+    source:
+      title: "Counting critical portraits via the cycle lemma"
+      authors:
+        - Keston Aquino-Michaels
+      doi: "10.5281/zenodo.20737896"
+      github_repo: no-way-labs/lean-critical-portraits
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - CriticalPortraits.card_portraits
+      - CriticalPortraits.Cycle.cycle_lemma
+    main_results:
+      - declaration: CriticalPortraits.card_portraits
+        informal: >-
+          The number of degree-d critical portraits at level m equals
+          C(d*m, d-1)/d.
+      - declaration: CriticalPortraits.Cycle.cycle_lemma
+        informal: >-
+          The Dvoretzky-Motzkin cycle lemma: a period-n integer sequence with
+          period-sum 1 has exactly one good cyclic shift.
+      - declaration: CriticalPortraits.T_injOn
+        informal: >-
+          The delete-minimum map is injective on critical portraits.
+      - declaration: CriticalPortraits.T_surjOn
+        informal: >-
+          The delete-minimum map surjects onto the level-canonical subsets.
+    tags:
+      - combinatorics
+      - cycle-lemma
+      - critical-portraits
+      - enumeration
+    msc:
+      - "05A15"
+      - "37F20"
+  - slug: domain-theory
+    title: DomainTheory
+    summary: Formalizes Dana Scott's domain theory through Scott information systems and PRG-19 neighbourhood systems, including approximable maps, products, function spaces, fixed points, recursive presentations, and initial-algebra constructions for denotational semantics.
+    branch: domain theory
+    entry_module: LeanPool.DomainTheory
+    authors:
+      - Catskills Research Company
+    source:
+      title: "Domains for Denotational Semantics"
+      authors:
+        - Dana Scott
+      doi: "10.1007/BFb0012801"
+      url: "https://doi.org/10.1007/BFb0012801"
+      github_repo: catskillsresearch/domain_theory
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - InfoSys
+      - Domain.Neighborhood.NeighborhoodSystem
+    main_results:
+      - declaration: InfoSys
+        informal: Defines Scott information systems, with a distinguished bottom token, finite consistency predicate, entailment relation, and Scott's six axioms.
+      - declaration: Domain.Neighborhood.NeighborhoodSystem
+        informal: Defines PRG-19 neighbourhood systems, Scott's neighbourhood presentation of domains.
+      - declaration: Domain.Neighborhood.ApproximableMap
+        informal: Defines approximable maps between neighbourhood systems as relations preserving finite approximations.
+      - declaration: Domain.Neighborhood.trianglelefteq_of_isInitial
+        informal: Proves that an initial algebra for a functor embeds into every other solution through Scott's subdomain relation.
+      - declaration: ScottMap.fix_eq
+        informal: Proves the fixed-point equation for Scott-continuous self maps on complete lattices.
+    tags:
+      - domain-theory
+      - denotational-semantics
+      - information-systems
+    msc:
+      - "03B70"
+      - "06B35"
+      - "68Q55"
+  - slug: lean-quantumalg
+    title: Lean-QuantumAlg
+    summary: Provides a Mathlib-based library of formally verified quantum-algorithm definitions, primitives, and endpoints, including QFT, QSP, quantum kernels, amplitude amplification, Grover search, phase estimation, order finding, teleportation, and a Lie-algebraic barren-plateau witness.
+    branch: quantum computing
+    entry_module: LeanPool.LeanQuantumAlg
+    authors:
+      - QudeLeap Team
+    source:
+      title: Lean-QuantumAlg
+      authors:
+        - QudeLeap Team
+      url: https://github.com/QudeLeap/Lean-QuantumAlg
+      github_repo: QudeLeap/Lean-QuantumAlg
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - QuantumAlg.GroverSearch.main_success_probability
+    main_results:
+      - declaration: QuantumAlg.QuantumFourierTransform.main
+        informal: Proves the QFT action on computational-basis states and records exact circuit counts.
+      - declaration: QuantumAlg.ReflectionBasedQuantumSignalProcessing.main
+        informal: Characterizes reflection-based single-qubit QSP transforms in the Chebyshev basis.
+      - declaration: QuantumAlg.TrigonometricQuantumSignalProcessing.main
+        informal: Characterizes trigonometric single-qubit QSP transforms in the YZZYZ form.
+      - declaration: QuantumAlg.QuantumKernel.main
+        informal: Proves that fidelity quantum-kernel Gram matrices are positive semidefinite.
+      - declaration: QuantumAlg.QuantumKernelAdvantage.separation
+        informal: States the conditional quantum-kernel learning separation from discrete-log hardness.
+      - declaration: QuantumAlg.fullControllability_hasBarrenPlateau
+        informal: >-
+          Exhibits an exponentially vanishing loss-variance family for a fully controllable
+          dynamical Lie algebra, conditional on the assumed Ragone second-moment variance law
+          (the Haar/Weingarten averaging identity Var = P_g(rho)*P_g(O)/dim, taken as a
+          hypothesis rather than derived from a circuit twirl).
+      - declaration: QuantumAlg.GroverSearch.main_success_probability
+        informal: Derives Grover search success probability from the amplitude-amplification closed form.
+    tags:
+      - quantum-computing
+      - quantum-algorithms
+      - quantum-signal-processing
+      - quantum-kernels
+    msc:
+      - "81P68"
+      - "81P45"
+      - "68Q12"
+  - slug: five-distance-sharp
+    title: Sharp Five-Distance and Sup-Norm Gap Theorems
+    summary: >-
+      Formalizes sharp gap theorems for Kronecker sequences on tori: the Euclidean
+      five-distance theorem on the 2-torus and the sup-norm gap bound, together with explicit
+      arithmetic witnesses realizing the extremal cases - five distinct nearest-neighbour
+      distances for the Euclidean and sup-norm metrics in dimension two, and nine distinct
+      sup-norm distances in dimension three (Haynes-Marklof-Ramirez), via exact modular
+      arithmetic on best simultaneous Diophantine approximations.
+    branch: number theory
+    entry_module: LeanPool.ThreeGap
+    authors:
+      - Vico Bonfioli
+    source:
+      title: "Higher dimensional gap theorems for the maximum metric"
+      authors:
+        - Alan Haynes
+        - Jens Marklof
+        - Ana Cristina Moreira Ramirez
+      arxiv: "2010.08842"
+      github_repo: ElVec1o/five-distance-sharp
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - ThreeGap.LinftyRecords3.nine_attained
+    main_results:
+      - declaration: ThreeGap.EuclideanRecords.sharp_attained
+        informal: >-
+          Exhibits a base point on the 2-torus with an irrational coordinate and an N whose
+          Euclidean nearest-neighbour distances realize exactly five distinct values, showing the
+          Euclidean five-distance bound is sharp.
+        source_ref: "A. Haynes and J. Marklof, A five distance theorem for Kronecker sequences, International Mathematics Research Notices 2022(24):19747-19789, doi:10.1093/imrn/rnab205, arXiv:2009.08444."
+      - declaration: ThreeGap.LinftyRecords.sharp_attained
+        informal: >-
+          Exhibits a base point on the 2-torus with an irrational coordinate and an N whose sup-norm
+          nearest-neighbour distances realize exactly five distinct values, showing the sup-norm gap
+          bound is sharp in dimension two.
+      - declaration: ThreeGap.LinftyRecords3.nine_attained
+        informal: >-
+          Exhibits a base point on the 3-torus with an irrational coordinate and an N whose sup-norm
+          nearest-neighbour distances realize at least nine distinct values, showing the sup-norm gap
+          bound is sharp in dimension three.
+    tags:
+      - number-theory
+      - kronecker-sequences
+      - three-gap
+    msc:
+      - "11J71"
+  - slug: misere-games
+    title: Misere combinatorial games
+    summary: Formalizes a combinatorial game theory library for misere play, including comparison modulo universes, p-free forms, outcome-stability, Property X, and concrete rulesets such as Hackenbush.
+    branch: combinatorics
+    entry_module: LeanPool.MisereGames
+    authors:
+      - Tomasz Maciosowski
+      - Alfie Davies
+    source:
+      title: misere-games
+      authors:
+        - Tomasz Maciosowski
+        - Alfie Davies
+        - Violeta Hernandez Palacios
+        - Yuyang Zhao
+      url: https://github.com/t4ccer/misere-games
+      github_repo: t4ccer/misere-games
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - MisereGames.Form.Promain.of_universe
+    main_results:
+      - declaration: MisereGames.Form.Promain.of_universe
+        informal: Shows that comparison modulo a universe is characterized by the maintenance-proviso test.
+      - declaration: MisereGames.IntegerInvertible.isPFree_of_propertyX
+        informal: Proves that Property X makes the sum of two short p-free games p-free in an outcome-stable, hereditary, integer-invertible monoid.
+      - declaration: MisereGames.Form.Preservation.endLikeSeedToUniverse_bijective
+        informal: Proves that universal closure gives a bijection from bounded end-like seeds to universes.
+    tags:
+      - combinatorial-games
+      - misere-play
+      - game-theory
+    msc:
+      - "91A46"
+      - "05C57"
+  - slug: frontiermath-open-hypergraphs
+    title: FrontierMath Ramsey Hypergraphs
+    summary: Formalizes lower bounds for the Brian-Larson hypergraph extremal function H(n), including a uniform 26/25 improvement over the recursive benchmark k_n for n ≥ 15 and a Lubell-frame asymptotic lower bound.
+    branch: combinatorics
+    entry_module: LeanPool.FrontierMathOpenHypergraphs
+    authors:
+      - Dean Cureton
+    source:
+      title: Choosing between incompatible ideals
+      authors:
+        - Will Brian
+        - Paul B. Larson
+      doi: "10.1016/j.ejc.2021.103349"
+      arxiv: "1908.10914"
+      github_repo: math-inc/FrontierMathOpen-Hypergraphs
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - HypergraphLowerBound.thm_main_H_lower_bound
+    main_results:
+      - declaration: HypergraphLowerBound.thm_main_H_lower_bound
+        informal: Proves H(n) ≥ 26 * k(n) / 25 for every n ≥ 15.
+        source_ref: "Epoch AI FrontierMath, A Ramsey-style Problem on Hypergraphs."
+      - declaration: HypergraphLowerBound.uniform_26_25
+        informal: Proves the uniform recursive construction bound A(n) ≥ 26 * k(n) / 25 for every n ≥ 15.
+      - declaration: HypergraphLowerBound.frame_recurrence
+        informal: The substitution-frame recurrence that combines block witnesses and a valid support frame into a larger witness.
+      - declaration: HypergraphLowerBound.lubell_is_frame
+        informal: Proves that the Lubell support family forms a valid frame for every arity t ≥ 2.
+      - declaration: HypergraphLowerBound.fixed_t_bound
+        informal: Derives a fixed-t lower bound for the exact witness supremum from Lubell frames.
+      - declaration: HypergraphLowerBound.asymptotic_lower_bound
+        informal: Proves the asymptotic lower bound liminf H(n) / k(n) ≥ 2 * log 2.
+      - declaration: HypergraphLowerBound.thm_asymptotic
+        informal: States the asymptotic consequence in terms of H(n) divided by n log n.
+    tags:
+      - combinatorics
+      - hypergraphs
+      - ramsey-theory
+      - extremal-combinatorics
+      - frontiermath
+    msc:
+      - "05C65"
+      - "05D10"
+      - "03E02"
+  - slug: fundamental-inequality
+    title: The Fundamental Inequality of Valued Fields
+    summary: Defines the ramification index and residue degree of an extension of valued fields and proves the fundamental inequality e * f ≤ finrank K L for finite extensions, via the valuation independence of products of coset representatives and residue-field basis lifts.
+    branch: number theory
+    entry_module: LeanPool.FundamentalInequality
+    authors:
+      - Alessandro Linzi
+    source:
+      title: "Valued Fields"
+      authors:
+        - Franz-Viktor Kuhlmann
+      url: "https://github.com/linzialessandro/FundamentalInequality"
+      github_repo: linzialessandro/FundamentalInequality
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - Valuation.fundamentalInequality
+      - Valuation.ramificationIndex
+    main_results:
+      - declaration: Valuation.ramificationIndex
+        informal: Defines the ramification index e(w/v) as the relative index of the value group of the restricted valuation inside the value group of the extension.
+      - declaration: Valuation.residueDegree
+        informal: Defines the residue degree f(w/v) as the rank of the residue field extension.
+      - declaration: Valuation.valuation_independence
+        informal: Elements with valuations in distinct cosets and residues that are linearly independent give products that are linearly independent over the base field.
+      - declaration: Valuation.fundamentalInequality
+        informal: The fundamental inequality e(w/v) * f(w/v) ≤ finrank K L for finite extensions of valued fields.
+        source_ref: "F.-V. Kuhlmann, Valued Fields, Chapter 4, §4.4."
+    tags:
+      - valued-fields
+      - number-theory
+      - valuation-theory
+    msc:
+      - "12J20"
+  - slug: pebbling-hypercube
+    title: Optimal Pebbling Number of the Hypercube
+    summary: >-
+      Formalizes that the optimal pebbling number of the n-dimensional hypercube
+      Q_n is Theta((4/3)^n).  Builds a weight-function lower bound of (4/3)^n and
+      a probabilistic recursive upper bound C * (4/3)^n with an explicit constant,
+      combining them into a two-sided big-Theta witness.
+    branch: combinatorics
+    entry_module: LeanPool.PebblingLean
+    authors:
+      - Lior Pachter
+    source:
+      title: "Optimal pebbling number of the hypercube"
+      authors:
+        - Lior Pachter
+      url: "https://github.com/pachterlab/P_2026_2"
+      github_repo: pachterlab/P_2026_2
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta
+    main_results:
+      - declaration: PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta
+        informal: >-
+          The optimal pebbling number of Q_n has order (4/3)^n: there is a positive
+          constant C with (4/3)^n <= o(Q_n) <= C * (4/3)^n for all n.
+      - declaration: PebblingLean.Hypercube.Paper.lower_bound
+        informal: >-
+          The optimal pebbling number of Q_n is at least (4/3)^n, proved by a
+          weight-function argument summing one-pebble weights over the cube.
+      - declaration: PebblingLean.Hypercube.Paper.upper_bound
+        informal: >-
+          The optimal pebbling number of Q_n is at most C * (4/3)^n for an explicit
+          constant C, via a probabilistic recursive splitting construction.
+    tags:
+      - combinatorics
+      - pebbling
+      - hypercube
+    msc:
+      - "05C57"
+  - slug: krafftsieve
+    title: "A Conditional Sieve Criterion for Twin Primes via Krafft Geometry"
+    summary: Introduces an original conditional sieve criterion for the Twin Prime Conjecture. Using a centered modular alignment (termed the Krafft alignment), proves that if the Rayleigh-Ritz quotient over the orthogonal unit sphere satisfies muMin < 1, then a twin prime pair must exist in the corresponding interval.
+    branch: analytic number theory
+    entry_module: LeanPool.KrafftSieve
+    authors:
+      - Fernando Portela
+    source:
+      doi: "10.5281/zenodo.19763833"
+      github_repo: ElNando888/KrafftSieve
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - KrafftSieve.mu_min_lt_one_implies_tpc
+    main_results:
+      - declaration: KrafftSieve.krafft_sieve_guarantee_with_mu_min
+        informal: Proves that muMin n < 1 is a sufficient condition for the existence of a twin prime pair in the corresponding interval.
+      - declaration: KrafftSieve.mu_min_lt_one_implies_tpc
+        informal: If there are infinitely many intervals where the optimal multidimensional weight achieves a ratio strictly less than 1, then there are infinitely many twin primes. This is a conditional reduction; the hypothesis muMin n < 1 is not established here for any n.
+    tags:
+      - analytic-number-theory
+      - sieve-theory
+      - twin-primes
+      - optimization
+    msc:
+      - "11N05"
+      - "11N35"
+  - slug: agree-to-disagree
+    title: "Aumann's Agreement Theorem"
+    summary: >-
+      Formalizes Aumann's agreement theorem for information partitions and a
+      common-prior setting, together with a p-belief variant bounding posterior
+      disagreement by 2 * (1 - p).
+    branch: probability theory
+    entry_module: LeanPool.AgreeToDisagree
+    authors:
+      - Ruiz Chen
+      - Ben Eltschig
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      title: "We Can't Agree to Disagree, Formally: Aumann's Theorem and Assumption Accounting in Lean"
+      url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6837298"
+      github_repo: AxiomMath/AgreeToDisagree
+    license: MIT
+    status: verified
+    main_declarations:
+      - AgreeToDisagree.agreeToDisagree
+      - AgreeToDisagree.agreeToDisagree_beliefs
+    main_results:
+      - declaration: AgreeToDisagree.agreeToDisagree
+        informal: >-
+          If it is common knowledge at a state that two agents assign fixed
+          posterior probabilities to an event, and the common-knowledge cell has
+          equal posterior under their priors, then the two posterior
+          probabilities are equal.
+      - declaration: AgreeToDisagree.agreeToDisagree'
+        informal: >-
+          Generalizes the agreement theorem to a family of agents indexed by an
+          arbitrary type.
+      - declaration: AgreeToDisagree.agreeToDisagree_beliefs
+        informal: >-
+          Proves that common p-belief of fixed posteriors bounds the difference
+          between any two agents' real-valued posteriors by 2 * (1 - p).
+    tags:
+      - probability
+      - game-theory
+      - epistemic-logic
+    msc:
+      - "60A10"
+      - "91A40"

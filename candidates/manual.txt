@@ -117,7 +117,6 @@ https://github.com/AydenLamp/FinDFA
 https://github.com/ayhon/iris-loogle
 https://github.com/b-mehta/ExponentialRamsey
 https://github.com/b-mehta/HighlyAbundant
-https://github.com/b-mehta/PrimeCert
 https://github.com/badly-drawn-wizards/impdf
 https://github.com/badly-drawn-wizards/noperthedron
 https://github.com/badly-drawn-wizards/sqlean
@@ -454,7 +453,6 @@ https://github.com/katydid/symbolic-automatic-derivatives
 https://github.com/katzenpost/lean-ffi
 https://github.com/kbuzzard/IISc-experiments
 https://github.com/kbuzzard/MweSkeletons
-https://github.com/kckennylau/PrimeCert
 https://github.com/kencyke/quantum-system
 https://github.com/kevinsullivan/cs2120f24
 https://github.com/Kha/do-supplement

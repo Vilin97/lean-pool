@@ -20,10 +20,19 @@ Either way the result must pass CI (build, linters, and quality checks — see [
 Requires Lean (via [`elan`](https://leanprover-community.github.io/install/), with the toolchain pinned in [`lean-toolchain`](lean-toolchain)) and Python 3.13+ with [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-make setup            # pull Mathlib oleans, build LeanPool, install Python tooling
-lake build            # build the Lean library
-cd python && uv sync  # Python tooling; add `--group test` for pytest
+make setup            # pull Mathlib oleans, build the whole pool (~1.5h), install Python tooling
+cd python && uv sync  # Python tooling only; add `--group test` for pytest
 ```
+
+`make setup` builds every project in the pool, which takes about 1.5 hours from cold. **You almost never need that.** The projects are independent — none imports another — so to work on one project you only need Mathlib's prebuilt oleans plus your own project:
+
+```bash
+lake exe cache get                # prebuilt Mathlib oleans (fast)
+lake build LeanPool.YourProject   # builds only your project — minutes, not hours
+# or: make build-project P=YourProject
+```
+
+The whole-library checks (`lake exe runLinter LeanPool`, `lake exe lint-style LeanPool`, the quality checker) do need the full pool built, but CI runs them on your PR — you don't have to reproduce them locally.
 
 ## Pull requests
 

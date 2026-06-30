@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 GITHUB_API_ROOT = "https://api.github.com"
 ARXIV_API_URL = "https://export.arxiv.org/api/query"
-DEFAULT_LOOKBACK_DAYS = 3
+DEFAULT_LOOKBACK_DAYS = 1
 DEFAULT_MAX_GITHUB_RESULTS_PER_QUERY = 100
 DEFAULT_HTTP_TIMEOUT_SECONDS = 30
 
@@ -539,9 +539,12 @@ def _discover_github(
 
 def _github_queries(start_date: date) -> list[str]:
     since = start_date.isoformat()
+    # Filter on `created:` only. A `pushed:` filter would re-surface old,
+    # already-established repos every time they receive a single commit
+    # (e.g. mathlib, teorth/pfr), which is noise: we only want repos that
+    # are genuinely new within the lookback window.
     return [
         f"language:Lean created:>={since} fork:false archived:false",
-        f"language:Lean pushed:>={since} fork:false archived:false",
         f"topic:lean4 created:>={since} fork:false archived:false",
         f"topic:lean created:>={since} fork:false archived:false",
         f'"Lean 4" created:>={since} fork:false archived:false',
