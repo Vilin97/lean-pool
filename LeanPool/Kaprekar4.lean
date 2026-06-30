@@ -2297,8 +2297,8 @@ theorem cmax_eq_iff (B : ℕ) (hB3 : 3 < B) (hBodd : Odd B) :
       (7 ≤ B ∧ B.Prime ∧
         IsLeast {m : ℕ | 0 < m ∧ ((2 : ZMod B) ^ m = 1 ∨ (2 : ZMod B) ^ m = -1)}
           ((B - 1) / 2)) := by
-  -- SANITY CHECK PASSED (no counterexample; LHS⟺RHS for all odd B in 5..41;
-  -- equality holds exactly for B∈{7,11,13,19,23,29,37}≤39)
+  -- SANITY CHECK PASSED (no counterexample; LHS iff RHS for all odd B in 5..41;
+  -- equality holds exactly for B in {7,11,13,19,23,29,37} up to 39)
   haveI : NeZero B := ⟨by omega⟩
   classical
   set m₀ : ℕ := Function.minimalPeriod (doubleP B) (PBmk B 1) with hm0def
