@@ -23,6 +23,7 @@ projects:
         - Jujian Zhang
       arxiv: "2604.25246"
       github_repo: AxiomMath/Biswal
+    license: MIT
     status: verified
     main_declarations:
       - Biswal.Theorem23.thm_manifest_coeff_nonneg
