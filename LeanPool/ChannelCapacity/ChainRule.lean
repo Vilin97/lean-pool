@@ -37,13 +37,14 @@ theorem klDiv_mutualInformation_chain
         klDiv (outputPrior k p).toMeasure ν := by
   let e : (α × β) ≃ᵐ (β × α) := MeasurableEquiv.prodComm
   let post : Kernel β α := k†p.toMeasure
+  have hce : ⇑(MeasurableEquiv.prodComm : (α × β) ≃ᵐ (β × α)) = Prod.swap := rfl
   have hswap_joint :
       ((jointLaw k p).toMeasure).map e = (outputPrior k p).toMeasure ⊗ₘ post := by
-    simpa [jointLaw_toMeasure, outputPrior_toMeasure, e, post] using
+    simpa [jointLaw_toMeasure, outputPrior_toMeasure, e, post, hce] using
       (ProbabilityTheory.compProd_posterior_eq_map_swap (κ := k) (μ := p.toMeasure)).symm
   have hswap_const :
       (p.toMeasure ⊗ₘ Kernel.const α ν).map e = ν ⊗ₘ Kernel.const β p.toMeasure := by
-    simpa [e] using
+    simpa [e, hce] using
       (by
         rw [Measure.compProd_const, Measure.prod_swap, ← Measure.compProd_const] :
           (p.toMeasure ⊗ₘ Kernel.const α ν).map Prod.swap =
@@ -51,7 +52,7 @@ theorem klDiv_mutualInformation_chain
   have hswap_indep :
       ((independentJointLaw k p).toMeasure).map e =
         (outputPrior k p).toMeasure ⊗ₘ Kernel.const β p.toMeasure := by
-    simpa [independentJointLaw_toMeasure, e] using
+    simpa [independentJointLaw_toMeasure, e, hce] using
       (by
         rw [independentJointLaw_toMeasure, Measure.compProd_const, Measure.prod_swap,
           ← Measure.compProd_const] :

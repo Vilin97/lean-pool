@@ -68,7 +68,8 @@ lemma priorPushforward_dirac (k : Kernel α β) [IsMarkovKernel k] (a : α) :
         ProbabilityMeasure β) := by
   apply ProbabilityMeasure.toMeasure_injective
   ext s hs
-  simpa [priorPushforward, outputPrior] using
+  have hd : (MeasureTheory.diracProba a).toMeasure = Measure.dirac a := rfl
+  simpa [priorPushforward, outputPrior, hd] using
     congrArg (fun μ : Measure β => μ s) (Measure.dirac_bind k.measurable a)
 
 lemma priorPushforward_convexCombination (k : Kernel α β) [IsMarkovKernel k]

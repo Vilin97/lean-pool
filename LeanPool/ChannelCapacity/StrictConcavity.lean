@@ -269,12 +269,12 @@ private lemma mutualInformation_strictlyConcave_aux
     have hleft_fin :
         t • ∫⁻ x, InformationTheory.klDiv (k x) ν ∂p.toMeasure ≠ ∞ := by
       rw [← hKp_eq]
-      simpa [smul_eq_mul] using ENNReal.mul_ne_top (by simp) hKp_fin
+      simpa [ENNReal.smul_def, smul_eq_mul] using ENNReal.mul_ne_top (by simp) hKp_fin
     have hright_fin :
         ((1 : NNReal) - t) • ∫⁻ x, InformationTheory.klDiv (k x) ν ∂q.toMeasure ≠ ∞ := by
       rw [← hKq_eq]
       have hcoeff : ((((1 : NNReal) - t : NNReal) : ENNReal)) ≠ ∞ := by simp
-      simpa [smul_eq_mul] using ENNReal.mul_ne_top hcoeff hKq_fin
+      simpa [ENNReal.smul_def, smul_eq_mul] using ENNReal.mul_ne_top hcoeff hKq_fin
     rw [hKr_eq, hKp_eq, hKq_eq]
     rw [hr_toMeasure]
     rw [lintegral_add_measure, lintegral_smul_measure, lintegral_smul_measure,
