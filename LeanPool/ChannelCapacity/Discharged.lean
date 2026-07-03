@@ -51,6 +51,7 @@ with respect to `ν`, this density is jointly continuous, it is strictly positiv
 mutual-information functional is upper semicontinuous on priors. -/
 structure ContinuousPositiveDensity
     (k : Kernel α β) (ν : Measure β) [IsMarkovKernel k] [OpensMeasurableSpace α] where
+  /-- The common density of every row of `k` with respect to `ν`. -/
   density : α → β → NNReal
   continuous_density : Continuous (Function.uncurry density)
   eq_withDensity : ∀ a, k a = ν.withDensity (fun b => (density a b : ℝ≥0∞))
@@ -127,8 +128,10 @@ section OutputPrior
 
 variable [CompactSpace α] [CompactSpace β] [PolishSpace α] [PolishSpace β]
 variable [BorelSpace α] [BorelSpace β]
-variable [OpensMeasurableSpace α] [OpensMeasurableSpace β] [IsFiniteMeasure ν]
+variable [OpensMeasurableSpace β] [IsFiniteMeasure ν]
 
+/-- The density of the output prior `outputPrior k p` with respect to `ν`, given as the
+`p`-average of the row densities. -/
 noncomputable def outputDensity (h : ContinuousPositiveDensity k ν) (p : ProbabilityMeasure α) :
     β → ENNReal :=
   fun b => ∫⁻ a, (h.density a b : ENNReal) ∂p.toMeasure
@@ -140,7 +143,7 @@ lemma aemeasurable_outputDensity (h : ContinuousPositiveDensity k ν) (p : Proba
       AEMeasurable
         (Function.uncurry fun a b => (h.density a b : ENNReal))
         (p.toMeasure.prod ν) := by
-    simpa [Function.uncurry] using (ENNReal.continuous_coe.comp h.continuous_density).aemeasurable
+    exact (ENNReal.continuous_coe.comp h.continuous_density).aemeasurable
   exact hbase.lintegral_prod_left (μ := p.toMeasure) (ν := ν)
 
 omit [CompactSpace α] [CompactSpace β] [BorelSpace α] [BorelSpace β] in
@@ -156,9 +159,8 @@ lemma outputPrior_eq_withDensity_outputDensity
       AEMeasurable
         (Function.uncurry fun a b => (h.density a b : ENNReal))
         (p.toMeasure.prod (ν.restrict s)) := by
-    simpa [Function.uncurry] using (ENNReal.continuous_coe.comp h.continuous_density).aemeasurable
-  simpa [Function.uncurry] using
-    (lintegral_lintegral_swap (μ := p.toMeasure) (ν := ν.restrict s)
+    exact (ENNReal.continuous_coe.comp h.continuous_density).aemeasurable
+  exact (lintegral_lintegral_swap (μ := p.toMeasure) (ν := ν.restrict s)
       (f := fun a b => (h.density a b : ENNReal)) hbase)
 
 omit [CompactSpace β] [PolishSpace α] [PolishSpace β] [BorelSpace α] [BorelSpace β]
@@ -169,7 +171,7 @@ lemma outputDensity_pos (h : ContinuousPositiveDensity k ν) (p : ProbabilityMea
   have hcont : Continuous fun a : α => h.density a b := by
     have hpair : Continuous fun a : α => (a, b) := by
       fun_prop
-    simpa [Function.uncurry] using h.continuous_density.comp hpair
+    exact h.continuous_density.comp hpair
   obtain ⟨a0, -, ha0⟩ := IsCompact.exists_isMinOn (α := NNReal)
     (β := α) isCompact_univ Set.univ_nonempty hcont.continuousOn
   have ha0' : ∀ a : α, h.density a0 b ≤ h.density a b :=
@@ -259,7 +261,7 @@ lemma row_klDiv_le_outputPrior_bound
     have hcont_density_a : Continuous fun b : β => h.density a b := by
       have hpair : Continuous fun b : β => (a, b) := by
         fun_prop
-      simpa [Function.uncurry] using h.continuous_density.comp hpair
+      exact h.continuous_density.comp hpair
     exact (ENNReal.continuous_coe.comp hcont_density_a).measurable
   have h_rnDeriv_ref :
       (k a).rnDeriv ν =ᵐ[ν] fun b => (h.density a b : ENNReal) := by
@@ -386,7 +388,7 @@ end OutputPrior
 
 section Compactness
 
-variable [CompactSpace α] [PolishSpace α] [BorelSpace α] [OpensMeasurableSpace α] [Nonempty α]
+variable [CompactSpace α] [PolishSpace α] [BorelSpace α] [Nonempty α]
 
 omit [TopologicalSpace α] [CompactSpace α] [PolishSpace α] [BorelSpace α]
   [OpensMeasurableSpace α] in

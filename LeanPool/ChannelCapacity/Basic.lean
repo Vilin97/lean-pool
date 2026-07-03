@@ -68,7 +68,6 @@ lemma convexCombination_toMeasure (μ ν : ProbabilityMeasure Ω) (t : NNReal)
       t • μ.toMeasure + ((1 : NNReal) - t) • ν.toMeasure :=
   rfl
 
-@[simp]
 lemma convexCombination_apply (μ ν : ProbabilityMeasure Ω) (t : NNReal)
     (ht : t ≤ (1 : NNReal))
     {s : Set Ω} (_hs : MeasurableSet s) :

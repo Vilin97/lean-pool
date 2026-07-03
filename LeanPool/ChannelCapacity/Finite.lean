@@ -504,6 +504,7 @@ variable [TopologicalSpace α] [TopologicalSpace β]
   [BorelSpace α] [BorelSpace β]
   [CompactSpace α] [CompactSpace β]
 
+/-- The indicator of the singleton `{a}` as a continuous bundled map, using that `α` is discrete. -/
 noncomputable def singletonIndicatorContinuousMap (a : α) : C(α, ℝ) :=
   ⟨({a} : Set α).indicator (fun _ => (1 : ℝ)), continuous_of_discreteTopology⟩
 
@@ -517,7 +518,7 @@ lemma continuous_toReal_apply_singleton (a : α) :
 lemma continuous_entropy :
     Continuous fun p : ProbabilityMeasure α => ProbabilityMeasure.entropy p := by
   simpa [ProbabilityMeasure.entropy] using
-    (continuous_finset_sum (s := Finset.univ) fun a _ha =>
+    (continuous_finsetSum (s := Finset.univ) fun a _ha =>
       Real.continuous_negMulLog.comp (continuous_toReal_apply_singleton a))
 
 omit [TopologicalSpace α] [DiscreteTopology α] [BorelSpace α] [CompactSpace α] in
@@ -541,7 +542,7 @@ lemma continuous_outputPrior_toReal_apply_singleton [Finite α]
   have hsum :
       Continuous fun p : ProbabilityMeasure α =>
         ∑ a, (p.toMeasure {a}).toReal * (k a {b}).toReal :=
-    continuous_finset_sum (s := (Finset.univ : Finset α)) fun a _ha =>
+    continuous_finsetSum (s := (Finset.univ : Finset α)) fun a _ha =>
       (continuous_toReal_apply_singleton a).mul continuous_const
   convert hsum using 1
   ext p
@@ -557,7 +558,7 @@ lemma continuous_outputPrior [Finite α] [Finite β] (k : Kernel α β) [IsMarko
   have hsum :
       Continuous fun p : ProbabilityMeasure α =>
         ∑ b, ((outputPrior k p).toMeasure {b}).toReal * f b :=
-    continuous_finset_sum (s := (Finset.univ : Finset β)) fun b _hb =>
+    continuous_finsetSum (s := (Finset.univ : Finset β)) fun b _hb =>
       (continuous_outputPrior_toReal_apply_singleton k b).mul continuous_const
   convert hsum using 1
   ext p
@@ -568,7 +569,7 @@ lemma continuous_outputEntropy [Finite α] (k : Kernel α β) [IsMarkovKernel k]
     Continuous fun p : ProbabilityMeasure α => ProbabilityMeasure.entropy (outputPrior k p) := by
   let _instFintypeα : Fintype α := Fintype.ofFinite α
   simpa [ProbabilityMeasure.entropy] using
-    (continuous_finset_sum (s := (Finset.univ : Finset β)) fun b _hb =>
+    (continuous_finsetSum (s := (Finset.univ : Finset β)) fun b _hb =>
       Real.continuous_negMulLog.comp (continuous_outputPrior_toReal_apply_singleton k b))
 
 omit [MeasurableSingletonClass β] [TopologicalSpace β] [DiscreteTopology β] [BorelSpace β]
@@ -576,7 +577,7 @@ omit [MeasurableSingletonClass β] [TopologicalSpace β] [DiscreteTopology β] [
 lemma continuous_conditionalEntropy (k : Kernel α β) [IsMarkovKernel k] :
     Continuous fun p : ProbabilityMeasure α => conditionalEntropy p k := by
   simpa [conditionalEntropy] using
-    (continuous_finset_sum (s := (Finset.univ : Finset α)) fun a _ha =>
+    (continuous_finsetSum (s := (Finset.univ : Finset α)) fun a _ha =>
       (continuous_toReal_apply_singleton a).mul continuous_const)
 
 omit [Fintype α] [Fintype β] [TopologicalSpace β] [DiscreteTopology β] [BorelSpace β]

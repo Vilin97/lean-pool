@@ -36,6 +36,8 @@ private lemma oneQuarter_add_threeQuarter :
     (1 / 4 : ℝ≥0∞) + 3 / 4 = 1 := by
   simpa [add_comm] using threeQuarter_add_oneQuarter
 
+/-- The two rows of the `2 × 2` channel as probability mass functions on `Fin 2`
+(mass `3/4` on the matching output, `1/4` on the other). -/
 noncomputable def twoByTwoRowPMF : Fin 2 → PMF (Fin 2)
   | 0 => PMF.ofFintype (fun
       | 0 => (3 / 4 : ℝ≥0∞)
@@ -46,6 +48,7 @@ noncomputable def twoByTwoRowPMF : Fin 2 → PMF (Fin 2)
       | _ => (3 / 4 : ℝ≥0∞)) (by
         simpa [Fin.sum_univ_two] using oneQuarter_add_threeQuarter)
 
+/-- The two channel rows as probability measures on `Fin 2`. -/
 noncomputable def twoByTwoRows (i : Fin 2) : ProbabilityMeasure (Fin 2) :=
   ⟨(twoByTwoRowPMF i).toMeasure, by infer_instance⟩
 
@@ -54,6 +57,7 @@ lemma twoByTwoRows_apply_singleton (i j : Fin 2) :
     (twoByTwoRows i).toMeasure {j} = twoByTwoRowPMF i j := by
   simp [twoByTwoRows]
 
+/-- The `2 × 2` Markov kernel whose rows are `twoByTwoRows`. -/
 noncomputable def twoByTwoKernel : Kernel (Fin 2) (Fin 2) :=
   Kernel.ofFunOfCountable fun i => (twoByTwoRows i).toMeasure
 
@@ -62,7 +66,6 @@ lemma twoByTwoKernel_apply (i : Fin 2) :
     twoByTwoKernel i = (twoByTwoRows i).toMeasure := by
   rfl
 
-@[simp]
 lemma twoByTwoKernel_apply_singleton (i j : Fin 2) :
     twoByTwoKernel i {j} = twoByTwoRowPMF i j := by
   simp [twoByTwoKernel_apply, twoByTwoRows]
@@ -73,6 +76,8 @@ noncomputable instance twoByTwoKernel_isMarkov : IsMarkovKernel twoByTwoKernel :
   change IsProbabilityMeasure ((twoByTwoRowPMF i).toMeasure)
   infer_instance
 
+/-- The density of `twoByTwoKernel` with respect to the counting measure:
+`3/4` on the diagonal and `1/4` off it. -/
 noncomputable def twoByTwoDensity (i j : Fin 2) : NNReal :=
   if i = j then 3 / 4 else 1 / 4
 
@@ -98,6 +103,7 @@ theorem twoByTwo_injectivePriorPushforward :
     Kernel.InjectivePriorPushforward twoByTwoKernel :=
   Kernel.injectivePriorPushforward_of_rowMatrixFullRank twoByTwoKernel twoByTwo_rowMatrixFullRank
 
+/-- The `ContinuousPositiveDensity` witness for `twoByTwoKernel` over the counting measure. -/
 noncomputable def twoByTwoContinuousPositiveDensity :
     Kernel.ContinuousPositiveDensity twoByTwoKernel Measure.count := by
   refine

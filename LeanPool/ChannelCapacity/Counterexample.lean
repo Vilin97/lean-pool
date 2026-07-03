@@ -19,10 +19,12 @@ open scoped ENNReal NNReal
 
 namespace ChannelCapacity.Counterexample
 
+/-- The probability measure induced by a probability mass function. -/
 noncomputable def asProbabilityMeasure {α : Type*} [MeasurableSpace α] (p : PMF α) :
     ProbabilityMeasure α :=
   ⟨p.toMeasure, by infer_instance⟩
 
+/-- The uniform probability measure supported on the three points `a`, `b`, and `c`. -/
 noncomputable def uniformTriple {α : Type*} [MeasurableSpace α] (a b c : α) :
     ProbabilityMeasure α :=
   ProbabilityMeasure.convexCombination
@@ -95,6 +97,8 @@ private lemma prior₂_case2 :
     norm_num
   exact (by simpa using congrArg (fun x : ℝ≥0 => (x : ℝ≥0∞)) h)
 
+/-- The six rows of the channel, one for each permutation of the values `1/2, 1/3, 1/6`,
+as probability mass functions on `Fin 3`. -/
 noncomputable def rowPMF : Fin 6 → PMF (Fin 3)
   | 0 => PMF.ofFintype (fun
       | 0 => (1 / 2 : ℝ≥0∞)
@@ -127,6 +131,7 @@ noncomputable def rowPMF : Fin 6 → PMF (Fin 3)
       | _ => (1 / 2 : ℝ≥0∞)) (by
         simpa [Fin.sum_univ_three, add_comm, add_left_comm, add_assoc] using permutationWeightSum)
 
+/-- The six channel rows as probability measures on `Fin 3`. -/
 noncomputable def permutationRows : Fin 6 → ProbabilityMeasure (Fin 3) :=
   fun i => asProbabilityMeasure (rowPMF i)
 
@@ -135,6 +140,7 @@ lemma permutationRows_apply_singleton (i : Fin 6) (y : Fin 3) :
     (permutationRows i).toMeasure {y} = rowPMF i y := by
   simp [permutationRows, asProbabilityMeasure]
 
+/-- The Markov kernel `Fin 6 → Fin 3` whose rows are the six permutation rows. -/
 noncomputable def permutationKernel : Kernel (Fin 6) (Fin 3) :=
   Kernel.ofFunOfCountable fun i => (permutationRows i).toMeasure
 
@@ -143,7 +149,6 @@ lemma permutationKernel_apply (i : Fin 6) :
     permutationKernel i = (rowPMF i).toMeasure := by
   rfl
 
-@[simp]
 lemma permutationKernel_apply_singleton (i : Fin 6) (y : Fin 3) :
     permutationKernel i {y} = rowPMF i y := by
   simp [permutationKernel_apply]
@@ -155,15 +160,19 @@ noncomputable instance permutationKernel_isMarkov :
   change IsProbabilityMeasure ((rowPMF i).toMeasure)
   infer_instance
 
+/-- The first prior: uniform on the inputs `{0, 3, 4}`. -/
 noncomputable def prior₁ : ProbabilityMeasure (Fin 6) :=
   uniformTriple 0 3 4
 
+/-- The second prior: uniform on the inputs `{1, 2, 5}`. -/
 noncomputable def prior₂ : ProbabilityMeasure (Fin 6) :=
   uniformTriple 1 2 5
 
+/-- The uniform distribution on the output alphabet `Fin 3`. -/
 noncomputable def uniformOutput : ProbabilityMeasure (Fin 3) :=
   uniformTriple 0 1 2
 
+/-- The rational values of each channel row, matching `rowPMF` entrywise. -/
 def rowCode : Fin 6 → Fin 3 → Rat
   | 0, 0 => 1 / 2
   | 0, 1 => 1 / 3
@@ -185,26 +194,44 @@ def rowCode : Fin 6 → Fin 3 → Rat
   | _, _ => 1 / 2
 
 lemma rowCode_injective : Function.Injective rowCode := by
-  decide
+  intro a b hab
+  have h0 := congrFun hab 0
+  have h1 := congrFun hab 1
+  fin_cases a <;> fin_cases b <;>
+    first
+      | rfl
+      | (exfalso; simp [rowCode] at h0 h1)
 
+/-- The rational weight vector of `prior₁`: mass `1/3` on each of `0, 3, 4`. -/
 def prior₁Code : Fin 6 → Rat
   | 0 => 1 / 3
   | 3 => 1 / 3
   | 4 => 1 / 3
   | _ => 0
 
+/-- The rational weight vector of `prior₂`: mass `1/3` on each of `1, 2, 5`. -/
 def prior₂Code : Fin 6 → Rat
   | 1 => 1 / 3
   | 2 => 1 / 3
   | 5 => 1 / 3
   | _ => 0
 
+/-- The output weight vector obtained by pushing an input weight vector `w` through `rowCode`. -/
 def outputCode (w : Fin 6 → Rat) : Fin 3 → Rat :=
   fun y => ∑ x, w x * rowCode x y
 
 lemma priorCode_counterexample :
     prior₁Code ≠ prior₂Code ∧ outputCode prior₁Code = outputCode prior₂Code := by
-  decide
+  refine ⟨?_, ?_⟩
+  · intro h
+    have h0 := congrFun h 0
+    revert h0
+    simp only [prior₁Code, prior₂Code]
+    norm_num
+  · funext y
+    fin_cases y
+    all_goals simp [outputCode, Fin.sum_univ_six, prior₁Code, prior₂Code, rowCode]
+    all_goals norm_num
 
 lemma prior_ne : prior₁ ≠ prior₂ := by
   intro h
@@ -271,17 +298,12 @@ theorem permutationKernel_not_injectivePriorPushforward :
 
 lemma rowPMF_injective : Function.Injective rowPMF := by
   intro i j hij
-  fin_cases i <;> fin_cases j
-  all_goals try rfl
-  all_goals
-    try
-      exfalso
-      have h0 := congrArg (fun p : PMF (Fin 3) => p 0) hij
-      norm_num [rowPMF] at h0
-  all_goals
-    exfalso
-    have h1 := congrArg (fun p : PMF (Fin 3) => p 1) hij
-    norm_num [rowPMF] at h1
+  have h0 := congrArg (fun p : PMF (Fin 3) => p 0) hij
+  have h1 := congrArg (fun p : PMF (Fin 3) => p 1) hij
+  fin_cases i <;> fin_cases j <;>
+    first
+      | rfl
+      | (exfalso; simp [rowPMF, PMF.ofFintype_apply] at h0 h1)
 
 example : ChannelCapacity.Kernel.RowSeparating permutationKernel := by
   intro i j hij hEq
@@ -300,6 +322,7 @@ example :
 
 namespace Toy
 
+/-- The identity kernel on `Fin 3`, used as a positive control with injective pushforward. -/
 noncomputable def identityKernel : Kernel (Fin 3) (Fin 3) := Kernel.id
 
 noncomputable instance : IsMarkovKernel identityKernel := by
