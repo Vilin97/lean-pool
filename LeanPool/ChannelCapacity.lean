@@ -16,14 +16,12 @@ import LeanPool.ChannelCapacity.DischargedExample
 import LeanPool.ChannelCapacity.Counterexample
 
 /-!
-# Channel capacity: uniqueness of the capacity-achieving prior
+# Uniqueness of Shannon Capacity-Achieving Priors
 
-Source: https://github.com/abenenson/channel-capacity
+Source: url:https://github.com/abenenson/channel-capacity
 Authors: Adam Benenson
 Status: verified
-Main declarations: `ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite`,
-`ChannelCapacity.exists_unique_capacity_achieving_prior_discharged`,
-`ChannelCapacity.exists_unique_capacity_achieving_prior`
+Main declarations: `ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite`
 Tags: information-theory, channel-capacity, mutual-information, kullback-leibler, markov-kernel
 MSC: 94A17, 94A15, 60A10
 -/

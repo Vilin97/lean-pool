@@ -46,6 +46,51 @@ projects:
       - demazure
     msc:
       - "05E10"
+  - slug: channel-capacity
+    title: Uniqueness of Shannon Capacity-Achieving Priors
+    summary: >-
+      Formalizes uniqueness of the capacity-achieving input distribution for a
+      Markov-kernel channel in three aligned layers: a finite-alphabet theorem
+      (compactness, continuity, and strict concavity of mutual information on
+      Mathlib's weak topology for `ProbabilityMeasure`), a concrete discharged
+      theorem for compact-Polish channels with a common strictly positive
+      jointly continuous density, and a general measure-theoretic packaging that
+      isolates the abstract well-conditioning hypotheses, plus a counterexample
+      witnessing non-uniqueness when strict concavity fails.
+    branch: information theory
+    entry_module: LeanPool.ChannelCapacity
+    authors:
+      - Adam Benenson
+    source:
+      github_repo: abenenson/channel-capacity
+      url: https://github.com/abenenson/channel-capacity
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+    main_results:
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+        informal: >-
+          For a Markov kernel with finite output alphabet, a capacity-achieving
+          input prior exists and is unique.
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_discharged
+        informal: >-
+          For compact-Polish channels admitting a common strictly positive
+          jointly continuous density, the capacity-achieving prior is unique.
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior
+        informal: >-
+          General measure-theoretic packaging: under abstract well-conditioning
+          hypotheses, the capacity-achieving prior is unique.
+    tags:
+      - information-theory
+      - channel-capacity
+      - mutual-information
+      - kullback-leibler
+      - markov-kernel
+    msc:
+      - "94A17"
+      - "94A15"
+      - "60A10"
   - slug: pythagorean-polynomial-parametrization
     title: Polynomial parametrizations of Pythagorean triples
     summary: Formalizes Frisch and Vaserstein's result that Pythagorean triples are not parametrizable by one triple of integer-coefficient polynomials in any number of variables, but are parametrizable by a single triple of integer-valued rational polynomials, including the positive and sixteen-parameter variants.
