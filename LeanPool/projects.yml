@@ -4132,3 +4132,35 @@ projects:
       - "46B20"
       - "28A12"
       - "05C35"
+  - slug: johnson-lindenstrauss-lean
+    title: The Johnson–Lindenstrauss Lemma and Quantized JL
+    summary: >-
+      Formalizes the Johnson–Lindenstrauss lemma end to end — a Gaussian random
+      projection preserves pairwise distances of a finite point set up to a
+      (1 ± ε) factor, so a distortion-ε embedding of any m-point set exists once
+      k is logarithmic in m — together with the quantized JL (QJL) one-bit sign
+      sketch: unbiasedness of the asymmetric 1-bit estimator and its sub-Gaussian
+      distortion bound.
+    branch: probability
+    entry_module: LeanPool.JohnsonLindenstraussLean
+    authors:
+      - claytomode
+    source:
+      title: Johnson–Lindenstrauss Lemma (Lean formalization)
+      url: https://github.com/claytomode/johnson-lindenstrauss-lean
+      github_repo: claytomode/johnson-lindenstrauss-lean
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+      - JL.johnson_lindenstrauss
+      - JL.johnson_lindenstrauss_pointset
+    tags:
+      - dimensionality-reduction
+      - random-projection
+      - johnson-lindenstrauss
+      - gaussian
+      - quantization
+    msc:
+      - "68W20"
+      - "60G15"
+      - "68P05"

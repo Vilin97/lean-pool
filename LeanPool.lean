@@ -1091,6 +1091,7 @@ import LeanPool.Isoperimetric.Basic
 import LeanPool.Isoperimetric.BrunnMinkowski
 import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
+import LeanPool.JohnsonLindenstraussLean
 import LeanPool.JohnsonLindenstraussLean.ChiSquared
 import LeanPool.JohnsonLindenstraussLean.EndToEnd
 import LeanPool.JohnsonLindenstraussLean.GaussianTail
