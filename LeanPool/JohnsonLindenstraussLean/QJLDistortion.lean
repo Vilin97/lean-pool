@@ -1,5 +1,10 @@
-import JL.QJL
-import JL.GaussianTail
+/-
+Copyright (c) 2026 claytomode. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: claytomode
+-/
+import LeanPool.JohnsonLindenstraussLean.QJL
+import LeanPool.JohnsonLindenstraussLean.GaussianTail
 import Mathlib.Probability.Moments.Variance
 import Mathlib.Probability.Moments.SubGaussian
 

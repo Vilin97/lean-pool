@@ -1,13 +1,18 @@
-import JL.SquaredGaussian
-import JL.ChiSquared
-import JL.Projection
-import JL.NormPreservation
-import JL.Rotation
-import JL.Lemma
-import JL.EndToEnd
-import JL.InnerProduct
-import JL.QJL
-import JL.QJLDistortion
+/-
+Copyright (c) 2026 claytomode. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: claytomode
+-/
+import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
+import LeanPool.JohnsonLindenstraussLean.ChiSquared
+import LeanPool.JohnsonLindenstraussLean.Projection
+import LeanPool.JohnsonLindenstraussLean.NormPreservation
+import LeanPool.JohnsonLindenstraussLean.Rotation
+import LeanPool.JohnsonLindenstraussLean.Lemma
+import LeanPool.JohnsonLindenstraussLean.EndToEnd
+import LeanPool.JohnsonLindenstraussLean.InnerProduct
+import LeanPool.JohnsonLindenstraussLean.QJL
+import LeanPool.JohnsonLindenstraussLean.QJLDistortion
 
 /-!
 # Verification: sanity instantiations and axiom audit

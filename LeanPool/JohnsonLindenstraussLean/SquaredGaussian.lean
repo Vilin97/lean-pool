@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Clayton Thomas Bradley. All rights reserved.
+Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Clayton Thomas Bradley
+Authors: claytomode
 -/
 import Mathlib.Probability.Distributions.Gaussian.Real
 
@@ -57,3 +57,5 @@ theorem sqGaussian_mgf {t : ℝ} (ht : t < 1 / 2) :
   have hpi : (π : ℝ) ≠ 0 := Real.pi_ne_zero
   have hb' : (1 / 2 - t) ≠ 0 := ne_of_gt hb
   field_simp
+
+end JL
