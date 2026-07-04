@@ -4154,6 +4154,11 @@ projects:
     main_declarations:
       - JL.johnson_lindenstrauss
       - JL.johnson_lindenstrauss_pointset
+    main_results:
+      - declaration: JL.johnson_lindenstrauss
+        informal: The abstract probabilistic-method union bound — if the summed per-pair distortion-failure probability is below one, a distortion-preserving map exists.
+      - declaration: JL.johnson_lindenstrauss_pointset
+        informal: The end-to-end Johnson–Lindenstrauss lemma — a Gaussian random projection into k dimensions embeds any m-point set with (1 ± ε) distortion once k is logarithmic in m.
     tags:
       - dimensionality-reduction
       - random-projection

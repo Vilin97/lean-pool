@@ -52,7 +52,8 @@ lemma log_one_add_le {ε : ℝ} (hε : 0 ≤ ε) :
       (interior (Set.Ici 0)) := by
     rw [interior_Ici]
     exact fun x hx =>
-      (hderiv x (by simp only [Set.mem_Ioi] at hx; linarith)).differentiableAt.differentiableWithinAt
+      (hderiv x (by simp only [Set.mem_Ioi] at hx; linarith)).differentiableAt
+        |>.differentiableWithinAt
   have hmono : MonotoneOn (fun y : ℝ => y - y ^ 2 / 2 + y ^ 3 / 2 - Real.log (1 + y))
       (Set.Ici 0) := by
     apply monotoneOn_of_deriv_nonneg (convex_Ici 0) hcont hdiff

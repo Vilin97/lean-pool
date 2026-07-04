@@ -86,7 +86,7 @@ theorem integral_abs_gaussianReal :
     have e1 : (fun x : ℝ => |x| * rexp (-(1 / 2) * x ^ 2))
         = (fun x : ℝ => (fun t : ℝ => t * rexp (-(1 / 2) * t ^ 2)) |x|) := by
       funext x
-      show |x| * rexp (-(1 / 2) * x ^ 2) = |x| * rexp (-(1 / 2) * |x| ^ 2)
+      change |x| * rexp (-(1 / 2) * x ^ 2) = |x| * rexp (-(1 / 2) * |x| ^ 2)
       rw [sq_abs]
     calc ∫ x : ℝ, |x| * rexp (-(1 / 2) * x ^ 2)
         = ∫ x : ℝ, (fun t : ℝ => t * rexp (-(1 / 2) * t ^ 2)) |x| := by rw [e1]
@@ -189,7 +189,8 @@ theorem sign_product_identity {d : ℕ} (u v : EuclideanSpace ℝ (Fin d)) (hu :
     simp [Function.comp, ContinuousLinearMap.prod_apply, innerSL_apply_apply]
   have hcov : cov[fun g : EuclideanSpace ℝ (Fin d) => ⟪u, g⟫,
       fun g : EuclideanSpace ℝ (Fin d) => ⟪vp, g⟫; μ] = 0 := by
-    rw [hμ, ← covarianceBilin_apply_eq_cov IsGaussian.memLp_two_id u vp, covarianceBilin_stdGaussian]
+    rw [hμ, ← covarianceBilin_apply_eq_cov IsGaussian.memLp_two_id u vp,
+      covarianceBilin_stdGaussian]
     exact hperp
   have hind : IndepFun (fun g : EuclideanSpace ℝ (Fin d) => ⟪u, g⟫)
       (fun g : EuclideanSpace ℝ (Fin d) => ⟪vp, g⟫) μ :=

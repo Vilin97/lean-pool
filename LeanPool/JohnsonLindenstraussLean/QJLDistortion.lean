@@ -62,7 +62,8 @@ theorem memLp_sign_inner {d : ℕ} (u q : EuclideanSpace ℝ (Fin d)) :
       (ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d))) := by
   refine (memLp_inner q).of_le ?_ ?_
   · exact (measurable_real_sign.comp
-      (by fun_prop : Measurable (fun g : EuclideanSpace ℝ (Fin d) => ⟪u, g⟫))).aestronglyMeasurable.mul
+      (by fun_prop : Measurable (fun g : EuclideanSpace ℝ (Fin d) => ⟪u, g⟫)))
+        |>.aestronglyMeasurable.mul
       (by fun_prop)
   · filter_upwards with g
     rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_mul]
@@ -199,7 +200,8 @@ for `m` rows). That estimate is **not** in mathlib, so we build it from scratch 
 `JL/GaussianTail.lean` (`foldedNormal_subgaussian`) and assemble the per-row bound here in
 `isPerRowSubgaussian_of_unit` / `isPerRowSubgaussian_normalized`. With this in hand the entire
 exponential bound — per-row MGF, coordinate independence under `Measure.pi`, additivity of the
-sub-Gaussian parameter over independent rows, the `1/m` rescaling, and the two-sided Chernoff bound —
+sub-Gaussian parameter over independent rows, the `1/m` rescaling, and the two-sided
+Chernoff bound —
 is proved fully and **unconditionally**. -/
 
 open scoped RealInnerProductSpace in
@@ -217,7 +219,8 @@ abbreviation used by the exponential distortion bound below. -/
     ⟨π / 2 * ‖q‖ ^ 2, by positivity⟩
     (ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)))
 
-/-- The moment generating function of a centered real Gaussian: `∫ exp(r·b) d(N(0,v)) = exp(v·r²/2)`. -/
+/-- The moment generating function of a centered real Gaussian:
+`∫ exp(r·b) d(N(0,v)) = exp(v·r²/2)`. -/
 theorem gaussianReal_mgf_id (r : ℝ) (v : ℝ≥0) :
     ∫ b, rexp (r * b) ∂(gaussianReal 0 v) = rexp ((v : ℝ) * r ^ 2 / 2) := by
   have h := mgf_gaussianReal (X := (id : ℝ → ℝ)) (p := gaussianReal (0 : ℝ) v) Measure.map_id r
@@ -245,7 +248,8 @@ theorem isPerRowSubgaussian_of_unit {d : ℕ} (u q : EuclideanSpace ℝ (Fin d))
   have hs0nn : (0 : ℝ) ≤ s0 := Real.sqrt_nonneg _
   have hs0sq : s0 ^ 2 = π / 2 := Real.sq_sqrt (by positivity)
   have hs0cc : s0 * Real.sqrt (2 / π) = 1 := by
-    rw [hs0, ← Real.sqrt_mul (by positivity), show (π / 2) * (2 / π) = 1 by field_simp, Real.sqrt_one]
+    rw [hs0, ← Real.sqrt_mul (by positivity),
+      show (π / 2) * (2 / π) = 1 by field_simp, Real.sqrt_one]
   -- orthogonal decomposition `q = ⟪u,q⟫ • u + w`
   set w : EuclideanSpace ℝ (Fin d) := q - ⟪u, q⟫ • u with hw
   have hperp : ⟪u, w⟫ = 0 := by
@@ -381,7 +385,7 @@ theorem isPerRowSubgaussian_of_unit {d : ℕ} (u q : EuclideanSpace ℝ (Fin d))
   have hGsub : HasSubgaussianMGF G ⟨π / 2 * ‖q‖ ^ 2, by positivity⟩
       ((gaussianReal 0 1).prod (gaussianReal 0 vw)) := by
     refine ⟨hIntProd, fun t => ?_⟩
-    show mgf G _ t ≤ rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2)
+    change mgf G _ t ≤ rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2)
     rw [mgf, integral_prod _ (hIntProd t)]
     -- integrate in `b` first
     have hinner : ∀ a : ℝ, ∫ b, rexp (t * G (a, b)) ∂(gaussianReal 0 vw)
@@ -423,7 +427,8 @@ theorem isPerRowSubgaussian_of_unit {d : ℕ} (u q : EuclideanSpace ℝ (Fin d))
       · refine (Measurable.mul ?_ ?_).aestronglyMeasurable
         · exact measurable_exp.comp (by fun_prop)
         · exact measurable_exp.comp
-            ((((measurable_const.mul measurable_real_sign).pow_const 2).const_mul (vw : ℝ)).div_const 2)
+            ((((measurable_const.mul measurable_real_sign).pow_const 2).const_mul
+                (vw : ℝ)).div_const 2)
       · filter_upwards with a
         rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
         exact hpt a
@@ -507,7 +512,8 @@ theorem qjlEstimator_centered_hasSubgaussianMGF {m d : ℕ} (hm : 0 < m)
   have hcoord : ∀ i : Fin m,
       HasSubgaussianMGF (fun S : Fin m → EuclideanSpace ℝ (Fin d) => G (S i))
         (⟨π / 2 * ‖q‖ ^ 2, by positivity⟩ : ℝ≥0)
-        (Measure.pi (fun _ : Fin m => ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)))) := by
+        (Measure.pi
+          (fun _ : Fin m => ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)))) := by
     intro i
     have hmap : (Measure.pi
         (fun _ : Fin m => ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)))).map
@@ -547,7 +553,7 @@ theorem qjlEstimator_centered_hasSubgaussianMGF {m d : ℕ} (hm : 0 < m)
   convert hscale using 2
   apply NNReal.coe_injective
   rw [NNReal.coe_mul, NNReal.coe_sum]
-  show π / 2 * ‖q‖ ^ 2 / (m : ℝ)
+  change π / 2 * ‖q‖ ^ 2 / (m : ℝ)
       = ((m : ℝ)⁻¹) ^ 2 * ∑ _i : Fin m, (π / 2 * ‖q‖ ^ 2)
   rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
   field_simp

@@ -111,13 +111,16 @@ theorem hasDerivAt_gTail (t : ℝ) : HasDerivAt gTail (rexp (-t ^ 2 / 2)) t := b
   have hφcont : Continuous (fun y : ℝ => rexp (-y ^ 2 / 2)) := by fun_prop
   have hφint : Integrable (fun y : ℝ => rexp (-y ^ 2 / 2)) := integrable_exp_neg_half_sq
   -- FTC: `s ↦ ∫_{Iic s} exp(−y²/2)` has derivative `exp(−s²/2)`.
-  have hH : ∀ s₀ : ℝ, HasDerivAt (fun s => ∫ y in Iic s, rexp (-y ^ 2 / 2)) (rexp (-s₀ ^ 2 / 2)) s₀ := by
+  have hH : ∀ s₀ : ℝ,
+      HasDerivAt (fun s => ∫ y in Iic s, rexp (-y ^ 2 / 2)) (rexp (-s₀ ^ 2 / 2)) s₀ := by
     intro s₀
-    have hFTC : HasDerivAt (fun s => ∫ y in (0 : ℝ)..s, rexp (-y ^ 2 / 2)) (rexp (-s₀ ^ 2 / 2)) s₀ :=
+    have hFTC : HasDerivAt (fun s => ∫ y in (0 : ℝ)..s, rexp (-y ^ 2 / 2))
+        (rexp (-s₀ ^ 2 / 2)) s₀ :=
       intervalIntegral.integral_hasDerivAt_right (hφcont.intervalIntegrable 0 s₀)
         hφcont.aestronglyMeasurable.stronglyMeasurableAtFilter hφcont.continuousAt
     have heq : (fun s => ∫ y in Iic s, rexp (-y ^ 2 / 2))
-        = fun s => (∫ y in Iic (0 : ℝ), rexp (-y ^ 2 / 2)) + ∫ y in (0 : ℝ)..s, rexp (-y ^ 2 / 2) := by
+        = fun s => (∫ y in Iic (0 : ℝ), rexp (-y ^ 2 / 2))
+            + ∫ y in (0 : ℝ)..s, rexp (-y ^ 2 / 2) := by
       funext s
       have hsub := intervalIntegral.integral_Iic_sub_Iic (f := fun y : ℝ => rexp (-y ^ 2 / 2))
         (a := (0 : ℝ)) (b := s) (μ := volume) hφint.integrableOn hφint.integrableOn
@@ -195,7 +198,8 @@ theorem two_g_le (t : ℝ) : √(2 / π) * gTail t ≤ rexp (t * √(2 / π)) :=
     have h2 : HasDerivAt (fun s => c * gTail s) (c * rexp (-s ^ 2 / 2)) s :=
       (hasDerivAt_gTail s).const_mul c
     have h3 := h1.sub h2
-    have hval : c * (rexp (c * s) - rexp (-s ^ 2 / 2)) = rexp (c * s) * c - c * rexp (-s ^ 2 / 2) := by
+    have hval : c * (rexp (c * s) - rexp (-s ^ 2 / 2))
+        = rexp (c * s) * c - c * rexp (-s ^ 2 / 2) := by
       ring
     rw [hval]
     exact h3
@@ -274,7 +278,7 @@ theorem foldedNormal_subgaussian :
       filter_upwards with z
       rw [← Real.exp_add]; congr 1; ring
     rw [hrw]
-    show rexp (-(t * √(2 / π))) * (√(2 / π) * rexp (t ^ 2 / 2) * gTail t) ≤ rexp (1 * t ^ 2 / 2)
+    change rexp (-(t * √(2 / π))) * (√(2 / π) * rexp (t ^ 2 / 2) * gTail t) ≤ rexp (1 * t ^ 2 / 2)
     rw [one_mul]
     have hg := two_g_le t
     calc rexp (-(t * √(2 / π))) * (√(2 / π) * rexp (t ^ 2 / 2) * gTail t)

@@ -49,7 +49,7 @@ theorem map_dotProduct_gaussianReal {n : ℕ} (u : Fin n → ℝ) (hu : ∑ j, u
   have hcomp : (fun row : Fin n → ℝ => ∑ j, row j * u j)
       = (⇑L) ∘ (WithLp.toLp 2 : (Fin n → ℝ) → EuclideanSpace ℝ (Fin n)) := by
     funext row
-    show ∑ j, row j * u j = L (WithLp.toLp 2 row)
+    change ∑ j, row j * u j = L (WithLp.toLp 2 row)
     rw [hL, innerSL_apply_apply, hy, PiLp.inner_apply]
     refine Finset.sum_congr rfl (fun j _ => ?_)
     simp [RCLike.inner_apply, mul_comm]
@@ -92,11 +92,13 @@ theorem gaussianMatrix_map_dotProduct {k n : ℕ} (u : Fin n → ℝ) (hu : ∑ 
     rw [hrow]; infer_instance
   have e1 : (Measure.pi (fun _ : Fin k => gaussianVec n)).map
         (fun A i => (fun row : Fin n → ℝ => ∑ j, row j * u j) (A i))
-      = Measure.pi (fun _ : Fin k => (gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) :=
+      = Measure.pi
+          (fun _ : Fin k => (gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) :=
     Measure.pi_map_pi (μ := fun _ : Fin k => gaussianVec n)
       (f := fun _ : Fin k => fun row : Fin n → ℝ => ∑ j, row j * u j) (fun _ => hAE)
   calc (gaussianMatrix k n).map (fun A i => ∑ j, A i j * u j)
-      = Measure.pi (fun _ : Fin k => (gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) :=
+      = Measure.pi
+          (fun _ : Fin k => (gaussianVec n).map (fun row : Fin n → ℝ => ∑ j, row j * u j)) :=
         e1
     _ = Measure.pi (fun _ : Fin k => gaussianReal 0 1) := by simp only [hrow]
     _ = gaussianVec k := rfl
