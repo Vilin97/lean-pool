@@ -228,6 +228,86 @@ theorem gaussianReal_mgf_id (r : ℝ) (v : ℝ≥0) :
   simpa using h
 
 open scoped RealInnerProductSpace in
+private theorem sign_prod_subgaussian_aux {d : ℕ} (u q w : EuclideanSpace ℝ (Fin d))
+    (s0 : ℝ) (vw : ℝ≥0) (G : ℝ × ℝ → ℝ)
+    (hGval : ∀ a b : ℝ, G (a, b) = s0 * Real.sign a * (⟪u, q⟫ * a + b) - ⟪u, q⟫)
+    (hIntProd : ∀ t : ℝ, Integrable (fun p : ℝ × ℝ => rexp (t * G p))
+      ((gaussianReal 0 1).prod (gaussianReal 0 vw)))
+    (hs0cc : s0 * Real.sqrt (2 / π) = 1) (hs0sq : s0 ^ 2 = π / 2)
+    (hvwc : (vw : ℝ) = ‖w‖ ^ 2) (hnq : ‖q‖ ^ 2 = ⟪u, q⟫ ^ 2 + ‖w‖ ^ 2) :
+    HasSubgaussianMGF G ⟨π / 2 * ‖q‖ ^ 2, by positivity⟩
+      ((gaussianReal 0 1).prod (gaussianReal 0 vw)) := by
+  refine ⟨hIntProd, fun t => ?_⟩
+  change mgf G _ t ≤ rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2)
+  rw [mgf, integral_prod _ (hIntProd t)]
+  -- integrate in `b` first
+  have hinner : ∀ a : ℝ, ∫ b, rexp (t * G (a, b)) ∂(gaussianReal 0 vw)
+      = rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+        * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2) := by
+    intro a
+    have e : ∀ b : ℝ, rexp (t * G (a, b))
+        = rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+          * rexp ((t * s0 * Real.sign a) * b) := by
+      intro b
+      rw [hGval a b, ← Real.exp_add]
+      congr 1
+      rw [← sign_mul_self a]
+      linear_combination (t * ⟪u, q⟫) * hs0cc
+    simp_rw [e]
+    rw [integral_const_mul, gaussianReal_mgf_id]
+  simp_rw [hinner]
+  set K : ℝ := rexp ((vw : ℝ) * (t * s0) ^ 2 / 2) with hK
+  have hpt : ∀ a : ℝ,
+      rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+          * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2)
+        ≤ rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K := by
+    intro a
+    apply mul_le_mul_of_nonneg_left _ (Real.exp_pos _).le
+    apply Real.exp_le_exp.mpr
+    have hsq1 : (Real.sign a) ^ 2 ≤ 1 := by
+      rcases Real.sign_apply_eq a with h | h | h <;> rw [h] <;> norm_num
+    have hvwnn : (0 : ℝ) ≤ (vw : ℝ) := vw.coe_nonneg
+    have heq : (t * s0 * Real.sign a) ^ 2 = (t * s0) ^ 2 * (Real.sign a) ^ 2 := by ring
+    rw [heq]
+    have hkey := mul_le_mul_of_nonneg_left hsq1 (mul_nonneg hvwnn (sq_nonneg (t * s0)))
+    nlinarith [hkey]
+  have hI2 : Integrable (fun a => rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K)
+      (gaussianReal 0 1) :=
+    (foldedNormal_subgaussian.integrable_exp_mul (t * s0 * ⟪u, q⟫)).mul_const K
+  have hI1 : Integrable (fun a => rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+      * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2)) (gaussianReal 0 1) := by
+    refine hI2.mono' ?_ ?_
+    · refine (Measurable.mul ?_ ?_).aestronglyMeasurable
+      · exact measurable_exp.comp (by fun_prop)
+      · exact measurable_exp.comp
+          ((((measurable_const.mul measurable_real_sign).pow_const 2).const_mul
+              (vw : ℝ)).div_const 2)
+    · filter_upwards with a
+      rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+      exact hpt a
+  calc ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+          * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2) ∂(gaussianReal 0 1)
+      ≤ ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K ∂(gaussianReal 0 1) :=
+        integral_mono hI1 hI2 hpt
+    _ = (∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) ∂(gaussianReal 0 1)) * K := by
+        rw [integral_mul_const]
+    _ ≤ rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) * K := by
+        have hfold : (∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
+            ∂(gaussianReal 0 1)) ≤ rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) := by
+          have h := foldedNormal_subgaussian.mgf_le (t * s0 * ⟪u, q⟫)
+          rw [mgf] at h
+          calc ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) ∂(gaussianReal 0 1)
+              ≤ rexp (1 * (t * s0 * ⟪u, q⟫) ^ 2 / 2) := h
+            _ = rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) := by rw [one_mul]
+        have hKnn : (0 : ℝ) ≤ K := (Real.exp_pos _).le
+        exact mul_le_mul_of_nonneg_right hfold hKnn
+    _ = rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2) := by
+        rw [hK, ← Real.exp_add]
+        congr 1
+        rw [hvwc, hnq]
+        linear_combination ((⟪u, q⟫ ^ 2 + ‖w‖ ^ 2) * t ^ 2 / 2) * hs0sq
+
+open scoped RealInnerProductSpace in
 /-- **Per-row sub-Gaussian MGF bound (unit `u`), proved unconditionally.** For a unit vector `u`
 and arbitrary `q`, the centered `√(π/2)`-scaled sign-product term
 `g ↦ √(π/2)·sign⟪u,g⟫·⟪q,g⟫ − ⟪u,q⟫` is sub-Gaussian with variance proxy `(π/2)·‖q‖²` under the
@@ -382,77 +462,8 @@ theorem isPerRowSubgaussian_of_unit {d : ℕ} (u q : EuclideanSpace ℝ (Fin d))
       _ = rexp (|t| * |⟪u, q⟫|) * (rexp (k * a) + rexp (-k * a))
             * (rexp (k' * b) + rexp (-k' * b)) := by ring
   -- the sub-Gaussian bound on the product law
-  have hGsub : HasSubgaussianMGF G ⟨π / 2 * ‖q‖ ^ 2, by positivity⟩
-      ((gaussianReal 0 1).prod (gaussianReal 0 vw)) := by
-    refine ⟨hIntProd, fun t => ?_⟩
-    change mgf G _ t ≤ rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2)
-    rw [mgf, integral_prod _ (hIntProd t)]
-    -- integrate in `b` first
-    have hinner : ∀ a : ℝ, ∫ b, rexp (t * G (a, b)) ∂(gaussianReal 0 vw)
-        = rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-          * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2) := by
-      intro a
-      have e : ∀ b : ℝ, rexp (t * G (a, b))
-          = rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-            * rexp ((t * s0 * Real.sign a) * b) := by
-        intro b
-        rw [hGval a b, ← Real.exp_add]
-        congr 1
-        rw [← sign_mul_self a]
-        linear_combination (t * ⟪u, q⟫) * hs0cc
-      simp_rw [e]
-      rw [integral_const_mul, gaussianReal_mgf_id]
-    simp_rw [hinner]
-    set K : ℝ := rexp ((vw : ℝ) * (t * s0) ^ 2 / 2) with hK
-    have hpt : ∀ a : ℝ,
-        rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-            * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2)
-          ≤ rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K := by
-      intro a
-      apply mul_le_mul_of_nonneg_left _ (Real.exp_pos _).le
-      apply Real.exp_le_exp.mpr
-      have hsq1 : (Real.sign a) ^ 2 ≤ 1 := by
-        rcases Real.sign_apply_eq a with h | h | h <;> rw [h] <;> norm_num
-      have hvwnn : (0 : ℝ) ≤ (vw : ℝ) := vw.coe_nonneg
-      have heq : (t * s0 * Real.sign a) ^ 2 = (t * s0) ^ 2 * (Real.sign a) ^ 2 := by ring
-      rw [heq]
-      have hkey := mul_le_mul_of_nonneg_left hsq1 (mul_nonneg hvwnn (sq_nonneg (t * s0)))
-      nlinarith [hkey]
-    have hI2 : Integrable (fun a => rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K)
-        (gaussianReal 0 1) :=
-      (foldedNormal_subgaussian.integrable_exp_mul (t * s0 * ⟪u, q⟫)).mul_const K
-    have hI1 : Integrable (fun a => rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-        * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2)) (gaussianReal 0 1) := by
-      refine hI2.mono' ?_ ?_
-      · refine (Measurable.mul ?_ ?_).aestronglyMeasurable
-        · exact measurable_exp.comp (by fun_prop)
-        · exact measurable_exp.comp
-            ((((measurable_const.mul measurable_real_sign).pow_const 2).const_mul
-                (vw : ℝ)).div_const 2)
-      · filter_upwards with a
-        rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
-        exact hpt a
-    calc ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-            * rexp ((vw : ℝ) * (t * s0 * Real.sign a) ^ 2 / 2) ∂(gaussianReal 0 1)
-        ≤ ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) * K ∂(gaussianReal 0 1) :=
-          integral_mono hI1 hI2 hpt
-      _ = (∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) ∂(gaussianReal 0 1)) * K := by
-          rw [integral_mul_const]
-      _ ≤ rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) * K := by
-          have hfold : (∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π)))
-              ∂(gaussianReal 0 1)) ≤ rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) := by
-            have h := foldedNormal_subgaussian.mgf_le (t * s0 * ⟪u, q⟫)
-            rw [mgf] at h
-            calc ∫ a, rexp (t * s0 * ⟪u, q⟫ * (|a| - Real.sqrt (2 / π))) ∂(gaussianReal 0 1)
-                ≤ rexp (1 * (t * s0 * ⟪u, q⟫) ^ 2 / 2) := h
-              _ = rexp ((t * s0 * ⟪u, q⟫) ^ 2 / 2) := by rw [one_mul]
-          have hKnn : (0 : ℝ) ≤ K := (Real.exp_pos _).le
-          exact mul_le_mul_of_nonneg_right hfold hKnn
-      _ = rexp (π / 2 * ‖q‖ ^ 2 * t ^ 2 / 2) := by
-          rw [hK, ← Real.exp_add]
-          congr 1
-          rw [hvwc, hnq]
-          linear_combination ((⟪u, q⟫ ^ 2 + ‖w‖ ^ 2) * t ^ 2 / 2) * hs0sq
+  -- the sub-Gaussian bound on the product law (extracted to `sign_prod_subgaussian_aux`)
+  have hGsub := sign_prod_subgaussian_aux u q w s0 vw G hGval hIntProd hs0cc hs0sq hvwc hnq
   -- transport back to `g ↦ √(π/2)·sign⟪u,g⟫·⟪q,g⟫ − ⟪u,q⟫`
   have hofmap : HasSubgaussianMGF
       (G ∘ (fun g : EuclideanSpace ℝ (Fin d) => (⟪u, g⟫, ⟪w, g⟫)))

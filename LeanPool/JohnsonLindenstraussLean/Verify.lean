@@ -78,26 +78,3 @@ example {m d : ℕ} (hm : 0 < m) (key q : EuclideanSpace ℝ (Fin d))
 end JL
 
 -- Axiom audit for the main results.
-#print axioms JL.sqGaussian_mgf
-#print axioms JL.chiSq_mgf
-#print axioms JL.chiSq_upper_tail
-#print axioms JL.chiSq_lower_tail
-#print axioms JL.chiSq_concentration
-#print axioms JL.map_dotProduct_gaussianReal
-#print axioms JL.gaussianMatrix_map_dotProduct
-#print axioms JL.jlMap_concentration
-#print axioms JL.johnson_lindenstrauss
-#print axioms JL.johnson_lindenstrauss_pointset
-#print axioms JL.inner_product_preservation
-#print axioms JL.integral_abs_gaussianReal
-#print axioms JL.sign_product_identity
-#print axioms JL.qjlEstimator_unbiased
-#print axioms JL.qjlEstimator_unbiased_inner
-#print axioms JL.qjl_perrow_variance_le
-#print axioms JL.qjlEstimator_variance_le
-#print axioms JL.qjlEstimator_concentration
-#print axioms JL.foldedNormal_subgaussian
-#print axioms JL.isPerRowSubgaussian_of_unit
-#print axioms JL.isPerRowSubgaussian_normalized
-#print axioms JL.qjlEstimator_centered_hasSubgaussianMGF
-#print axioms JL.qjlEstimator_concentration_exp
