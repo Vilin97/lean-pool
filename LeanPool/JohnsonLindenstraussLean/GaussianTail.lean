@@ -3,7 +3,10 @@ Copyright (c) 2026 claytomode. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: claytomode
 -/
-import Mathlib
+import Mathlib.Probability.Moments.SubGaussian
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.Calculus.DerivativeTest
 import LeanPool.JohnsonLindenstraussLean.SquaredGaussian
 
 /-!
