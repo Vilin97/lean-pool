@@ -120,7 +120,8 @@ private lemma norm_shift_neg_inv_eq {z s : ℂ} (hz_re : z.re = 1 / 2) (hs_unit 
 omit f hf in
 private lemma neg_inv_involution {s : ℂ} (hs_unit : ‖s‖ = 1) :
     -(1 : ℂ) / (-(1 : ℂ) / s) = s := by
-  simp_all
+  have hs_ne : s ≠ 0 := by intro h; rw [h, norm_zero] at hs_unit; norm_num at hs_unit
+  field_simp
 
 omit f hf in
 private lemma norm_neg_inv_of_norm_one {s : ℂ} (hs : ‖s‖ = 1) :
@@ -143,7 +144,8 @@ private lemma truncation_iff_shift_union
     · have h_unit := sArcOfS_unit S s h_arc
       refine ⟨-(1 : ℂ) / s, Finset.mem_union_left _ (sArcOfS_closed S s h_arc), ?_⟩
       have h_eq := norm_shift_neg_inv_eq hz_re (norm_neg_inv_of_norm_one h_unit)
-      simp_all
+      rw [neg_inv_involution h_unit] at h_eq
+      linarith
     · obtain ⟨s', hs', h_le'⟩ := (truncation_iff_shift S z hz_re ε).mpr ⟨s, h_vert, h_le⟩
       exact ⟨s', Finset.mem_union_right _ hs', h_le'⟩
 
@@ -213,7 +215,9 @@ private lemma pvIntegrand_seg4_eq_neg_seg1 (_S : Finset UpperHalfPlane) (Sx : Fi
       rw [h_shift]
       have h_per := logDeriv_modFormComp_periodic f
       have := h_per (fdBoundaryH H u - 1)
-      simp_all
+      simp only [Function.Periodic] at h_per
+      rw [show fdBoundaryH H u - 1 + 1 = fdBoundaryH H u from by ring] at this
+      exact this.symm
     erw [h_logDeriv, deriv_fdBoundary_H_on_seg4 H (4 - u) ⟨h4u_gt3, h4u_lt4⟩,
         deriv_fdBoundary_H_on_seg1 H u hu]
     ring
@@ -319,7 +323,8 @@ private theorem tendsto_pvIntegral_seg5
       ∀ t, 4 < t → t ≤ 5 →
         ¬∃ s ∈ sArcOfS S ∪ sVertOfS S, ‖fdBoundaryH H t - s‖ ≤ ε := by
     rcases (sArcOfS S ∪ sVertOfS S).eq_empty_or_nonempty with h_empty | h_ne
-    · simp_all
+    · filter_upwards [self_mem_nhdsWithin] with ε _
+      intro t _ _; simp [h_empty]
     · set δ := (sArcOfS S ∪ sVertOfS S).inf' h_ne (fun s => H - s.im)
       have hδ_pos : 0 < δ :=
         (Finset.lt_inf'_iff h_ne).mpr (fun s hs => by linarith [h_below s hs])
@@ -388,7 +393,8 @@ private lemma norm_deriv_fdBoundary_H_le
         exact le_trans (by linarith [Real.sqrt_nonneg 3]) (le_max_left H 1)
       · push Not at h4
         have h4' : 4 < t := lt_of_le_of_ne h4 (Ne.symm ht_ne4)
-        erw [(fdBoundary_H_hasDerivAt_seg5 H h4').deriv]; simp_all
+        erw [(fdBoundary_H_hasDerivAt_seg5 H h4').deriv]; rw [norm_one]
+        exact le_max_right H 1
 
 omit hf in
 private lemma integrableOn_logDeriv_mul_deriv_farSet
@@ -483,12 +489,16 @@ private lemma pvIntegrand_intervalIntegrable
     intro t ⟨_, h_not_near⟩
     change cauchyPrincipalValueIntegrandOn S₀ (logDeriv g) γ ε t = _
     simp only [cauchyPrincipalValueIntegrandOn]
-    simp_all
+    simp only [Finset.mem_coe] at h_not_near
+    exact if_neg h_not_near
   have h_compl_zero : EqOn F 0 (uIoc a b \ K) := by
     intro t ⟨ht_uioc, h_not_K⟩
     change cauchyPrincipalValueIntegrandOn S₀ (logDeriv g) γ ε t = 0
     simp only [cauchyPrincipalValueIntegrandOn]
-    simp_all
+    have h_near : ∃ s ∈ (S₀ : Set ℂ), ‖γ t - s‖ ≤ ε := by
+      by_contra h_far; exact h_not_K ⟨ht_uioc, h_far⟩
+    simp only [Finset.mem_coe] at h_near
+    exact if_pos h_near
   have h_int_K' := integrableOn_logDeriv_mul_deriv_farSet f S hH h_capture hε
   have hK_meas : MeasurableSet K := by
     apply measurableSet_uIoc.inter
@@ -647,7 +657,8 @@ private lemma modular_side_h_capture
           have h_F_zero_shifted :
               modularFormCompOfComplex f (fdBoundaryH H (4 - t)) = 0 := by
             have := h_F_per (fdBoundaryH H (4 - t) - 1)
-            simp_all
+            simp only [sub_add_cancel] at this
+            rw [ht_seg4] at h_zero; rwa [this]
           have h_re : (fdBoundaryH H (4 - t)).re = 1/2 := by
             rw [fdBoundary_H_eq_seg1_H (by linarith : 4 - t ≤ 1)]
             simp [fdBoundarySeg1H, add_re, ofReal_re, mul_re, I_re, I_im,

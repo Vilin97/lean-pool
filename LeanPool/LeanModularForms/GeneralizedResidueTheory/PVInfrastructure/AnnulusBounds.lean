@@ -81,7 +81,8 @@ private lemma remainder_annulus_zero_of_far
       exact absurd hcond.1 (not_lt.mpr hε₂_pos.le)
     exact not_lt.mpr
       (annulus_t_measure_bound hL hε₁_pos h_lower
-        (fun s hs hγs => by simp_all)
+        (fun s hs hγs => by simp only [min_self]
+                            exact lt_of_lt_of_le (h_localize s hs hγs) (min_le_right _ _))
         t ht_in_Icc ht_eq hcond.1 hcond.2) h_far
   · simp only [hcond, ↓reduceIte]
 
@@ -105,9 +106,12 @@ private lemma remainder_annulus_pw_bound
       · exact Set.Ioc_subset_Icc_self h
       · exact absurd (Set.Ioc_eq_empty_of_le hab.le ▸ h) (Set.notMem_empty t)
     by_cases ht_eq : t = t₀
-    · simp_all
+    · simp only [ht_eq, sub_self, norm_zero] at hcond
+      exact absurd hcond.1 (not_lt.mpr hε₂_pos.le)
     have ht_pos : 0 < |t - t₀| := abs_pos.mpr (sub_ne_zero.mpr ht_eq)
-    simp_all
+    exact le_trans (hr_bounded t ht_pos
+      (lt_of_lt_of_le (h_localize t ht_in_Icc hcond.2) (min_le_left _ _)))
+      (le_max_right 0 C)
   · simp only [hcond, ↓reduceIte, norm_zero, le_max_iff, le_refl, true_or]
 
 lemma remainder_integral_bound_on_annulus
@@ -138,7 +142,8 @@ lemma remainder_integral_bound_on_annulus
     (Set.mem_Ioo.mp hat₀).1.trans_le (le_of_lt (Set.mem_Ioo.mp hat₀).2)
   have h_loc_δ₁ : ∀ t ∈ Set.Icc a b,
       ‖γ t - γ t₀‖ ≤ ε₁ → |t - t₀| < min δ₁ δ₁ := by
-    simp_all
+    intro s hs hγs; simp only [min_self]
+    exact lt_of_lt_of_le (h_localize s hs hγs) (min_le_right _ _)
   set R := 2 * ε₁ / ‖L‖
   have hR_pos : 0 < R := by positivity
   set Icontain := Set.Icc (t₀ - R) (t₀ + R)
@@ -234,7 +239,8 @@ lemma volume_shell_le {t₀ r₁ r₂ : ℝ}
         MeasureTheory.measure_union_le _ _
     _ = ENNReal.ofReal (r₂ - r₁) +
         ENNReal.ofReal (r₂ - r₁) := by
-        simp_all
+        simp only [Real.volume_Ico,
+          Real.volume_Ioc]; ring_nf
     _ = ENNReal.ofReal (2 * (r₂ - r₁)) := by
         rw [← ENNReal.ofReal_add
           (by linarith) (by linarith)]; ring_nf
@@ -259,13 +265,17 @@ lemma symmDiff_subset_boundaryLayers
     · exact Or.inl (abs_sub_threshold_le h_approx (Or.inr ⟨hx_le_ε₂, by linarith⟩))
     · push Not at hx_le_ε₂
       have hx_gt_ε₁ : ε₁ < x := by
-        simp_all
+        by_contra h_not
+        push Not at h_not
+        exact hnotB ⟨hx_le_ε₂, h_not⟩
       exact Or.inr (abs_sub_threshold_le h_approx (Or.inl ⟨hg_upper, by linarith⟩))
   · by_cases hg_le_ε₂ : g ≤ ε₂
     · exact Or.inl (abs_sub_threshold_le h_approx (Or.inl ⟨hg_le_ε₂, by linarith⟩))
     · push Not at hg_le_ε₂
       have hg_gt_ε₁ : ε₁ < g := by
-        simp_all
+        by_contra h_not
+        push Not at h_not
+        exact hnotA ⟨hg_le_ε₂, h_not⟩
       exact Or.inr (abs_sub_threshold_le h_approx (Or.inr ⟨hx_upper, by linarith⟩))
 
 lemma tAnnLin_implies_r_le
@@ -423,7 +433,8 @@ lemma annulus_symmDiff_measure_bound
       hγ_deriv
   have ht₀_dist_pos :
       0 < min (t₀ - a) (b - t₀) := by
-    simp_all
+    simp only [lt_min_iff, Set.mem_Ioo] at ht₀ ⊢
+    constructor <;> linarith
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   let δ₁ := min δ₀ (‖L‖ / (4 * K₀))
   have hδ₁_pos : 0 < δ₁ :=

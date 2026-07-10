@@ -160,7 +160,10 @@ theorem fdBoundary_H_sub_rho_seg4_slitPlane (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     rw [fdBoundary_H_seg4 H (by linarith) (by linarith) (by linarith) (by linarith)]
     simp only [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
     push_cast; ring
-  rw [h_diff, Complex.mem_slitPlane_iff]; simp_all
+  rw [h_diff, Complex.mem_slitPlane_iff]; right
+  simp only [Complex.add_im, Complex.ofReal_im, Complex.mul_im, Complex.I_re, Complex.I_im,
+    Complex.ofReal_re]
+  linarith
 
 /-- Combined: `γ(t) - ρ ∈ slitPlane` for all `t ∈ [0, 5]` with `t ≠ 3`. -/
 theorem fdBoundary_H_sub_rho_slitPlane (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
@@ -185,7 +188,8 @@ theorem fdBoundary_H_eq_rho_iff (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   constructor
   · intro heq; by_contra hne
     have := fdBoundary_H_sub_rho_slitPlane H hH ht hne
-    simp_all
+    rw [heq, sub_self] at this
+    exact Complex.zero_notMem_slitPlane this
   · intro heq
     rw [heq, fdBoundary_H_at_three_eq_rho]
 
@@ -234,7 +238,11 @@ theorem arg_approach_rho_right (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     simp only [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
     push_cast; ring
   rw [h_diff, Complex.arg_eq_pi_div_two_iff]
-  simp_all
+  constructor
+  · simp only [Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.ofReal_im, Complex.I_im]
+    ring
+  · simp only [Complex.mul_im, Complex.ofReal_re, Complex.I_im, Complex.ofReal_im, Complex.I_re]
+    nlinarith
 
 private lemma g_seg3_value (H : ℝ) {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ ≤ 1) :
     fdBoundaryH H (3 + δ) - ellipticPointRho = ↑(δ * (H - Real.sqrt 3 / 2)) * I := by
@@ -291,7 +299,8 @@ private lemma g_norm_ge_seg4 (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
         rw [fdBoundary_H_seg4 H (by linarith) (by linarith) (by linarith) (by linarith)]
         simp only [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
         push_cast; ring
-      simp_all
+      rw [hd, Complex.add_im, Complex.ofReal_im, zero_add,
+        mul_comm, Complex.I_mul_im, Complex.ofReal_re]
   calc H - Real.sqrt 3 / 2 = |(H - Real.sqrt 3 / 2 : ℝ)| := (abs_of_pos (by linarith)).symm
     _ = |(fdBoundaryH H t - (ellipticPointRho : ℂ)).im| := by rw [him]
     _ ≤ ‖fdBoundaryH H t - (ellipticPointRho : ℂ)‖ := Complex.abs_im_le_norm _
@@ -472,7 +481,8 @@ private lemma ftc_logDeriv_telescope_rho (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   have hg_closed : g 0 = g 5 := by
     change fdBoundaryH H 0 - ρ = fdBoundaryH H 5 - ρ
     rw [fdBoundary_H_closed H]
-  simp_all
+  rw [hg_closed]
+  ring
 
 private lemma norm_le_middle_rho (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     {ε δ_L δ_R : ℝ} (hε : 0 < ε) (hδ_L_pos : 0 < δ_L) (hδ_L_lt_one : δ_L < 1)
@@ -820,7 +830,15 @@ theorem pv_integral_at_rho_tendsto (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     h_far_left h_far_right h_near
     (E := fun ε => Complex.log (g (3 - δ_L ε)) - Complex.log (g (3 + δ_R ε)))
     h_ftc_api hint_left hint_right h_limit
-  simp_all
+  have h_eq : (fun ε => ∫ t in (0 : ℝ)..5,
+      if ‖fdBoundaryH H t - ellipticPointRho‖ > ε
+      then (fdBoundaryH H t - ellipticPointRho)⁻¹ *
+           deriv (fun s => fdBoundaryH H s - ellipticPointRho) t
+      else 0) = (fun ε => ∫ t in (0 : ℝ)..5,
+      if ‖g t - 0‖ > ε then (g t - 0)⁻¹ * deriv g t else 0) := by
+    funext ε; congr 1; funext t; simp only [hg_def, sub_zero]
+  rw [h_eq]
+  exact h_tendsto
 
 /-- `generalizedWindingNumber' (fdBoundaryH H) 0 5 ρ = -1/6`. -/
 theorem gWN_fdBoundary_H_at_rho (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :

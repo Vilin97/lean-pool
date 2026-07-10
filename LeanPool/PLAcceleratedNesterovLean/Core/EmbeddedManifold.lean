@@ -343,9 +343,12 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
   -- Near 0, bump = 1 so φ = φ_raw
   have hφ_eq_raw_near : φ =ᶠ[𝓝 0] φ_raw := by
     filter_upwards [bump.eventuallyEq_one] with v hv
-    simp_all
+    change bump v • φ_raw v = φ_raw v
+    have hbv : (↑bump : ↥V → ℝ) v = 1 := by simpa using hv
+    rw [hbv, one_smul]
   have hφ_zero : φ 0 = 0 := by
-    simp_all
+    change bump 0 • φ_raw 0 = 0
+    rw [hφ_raw_zero, smul_zero]
   have hφ_smooth : ContDiff ℝ 2 φ := by
     rw [contDiff_iff_contDiffAt]
     intro v
@@ -356,7 +359,9 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
       exact (bump.contDiff (n := 2)).contDiffAt.smul (hε_ball hv_dist)
     · have hφ_eq_zero : φ =ᶠ[𝓝 v] (fun _ : ↥V => (0 : ↥(Vᗮ))) := by
         filter_upwards [notMem_tsupport_iff_eventuallyEq.mp hv] with w hw
-        simp_all
+        change bump w • φ_raw w = (0 : ↥(Vᗮ))
+        have hbw : (↑bump : ↥V → ℝ) w = 0 := by simpa using hw
+        rw [hbw, zero_smul]
       exact contDiffAt_const.congr_of_eventuallyEq hφ_eq_zero
   have hDφ_zero : fderiv ℝ φ 0 = 0 := by
     rw [hφ_eq_raw_near.fderiv_eq]
@@ -393,7 +398,11 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
     rw [dist_eq_norm, sub_zero, dist_eq_norm]
     have hxm : x - m = (v : E d) + (φ v : E d) := by rw [hx, add_assoc, add_sub_cancel_left]
     have hproj : V.orthogonalProjectionOnto (x - m) = v := by
-      simp_all
+      have hφ_proj : V.orthogonalProjectionOnto (φ v : E d) = 0 :=
+        Submodule.orthogonalProjectionOnto_eq_zero_iff.mpr (Submodule.coe_mem (φ v))
+      rw [hxm, map_add,
+          Submodule.orthogonalProjectionOnto_mem_subspace_eq_self v,
+          hφ_proj, add_zero]
     calc ‖v‖ = ‖V.orthogonalProjectionOnto (x - m)‖ := by rw [hproj]
       _ ≤ ‖x - m‖ := Submodule.norm_orthogonalProjectionOnto_apply_le V (x - m)
   -- Forward direction: embedding provides local preimage in chart domain
@@ -551,7 +560,8 @@ private lemma nearest_ift_coord {d : ℕ}
         rw [dist_zero_right]
         linarith [dist_eq_norm x m, @dist_nonneg (E d) _ x m])
       (lt_trans huq_dist h3r_lt_εi)
-  simp_all
+  have huniq := hε_ift (x - m, u_q) h_ift_dist_q
+  exact ⟨u_q, huq_graph, huniq.mp (by rw [hF_uq, hF_zero])⟩
 
 /-- Compact-graph existence of a nearest point in `S` inside a local graph
     chart. The minimizing point for the compact local graph is also globally
@@ -699,7 +709,8 @@ private theorem local_tubular_of_graph_chart
       ∀ p : E d × V, dist p (0, (0 : V)) < ε_ift →
         (optimalityEqn φ m p = optimalityEqn φ m (0, (0 : V)) ↔
           v_impl p.1 = p.2) := by
-    simp_all
+    intro p hp
+    exact @hε_ift p hp
   obtain ⟨r_U, hr_U_pos, hr_U_sub⟩ := Metric.isOpen_iff.mp hU_open m (hS_sub hm)
   set r := min (min (δ / 8) (η / 4)) (min (ε_ift / 4) (min (ε_cont / 4) r_U))
     with hr_def
@@ -734,7 +745,10 @@ private theorem local_tubular_of_graph_chart
     intro q ⟨hq_S, hq_dist⟩
     have hq_near_m : dist q m < 2 * r := by
       have hxq : dist x q < r := by
-        simp_all
+        calc dist x q ≤ dist x m := by
+                rw [hq_dist]
+                exact Metric.infDist_le_dist_of_mem hm
+          _ < r := hxm
       calc dist q m ≤ dist q x + dist x m := dist_triangle _ _ _
         _ = dist x q + dist x m := by rw [dist_comm]
         _ < r + r := add_lt_add hxq hxm
@@ -746,7 +760,8 @@ private theorem local_tubular_of_graph_chart
         (ε_cont := ε_cont) (r := r) (δ := δ) hφC2 hF_zero
         hε_ift_explicit hε_cont hchart
         h3r_lt_δ h3r_lt_εi h3r_lt_εc hxm hq_S hq_near_m hq_dist hq_in_chart
-    simp_all
+    rw [hu₀_graph, h_impl_u₀.symm.trans h_impl_uq]
+    exact huq_graph
 
 /-- A C² smooth embedded submanifold has local balls on which the nearest point
     in the embedded range exists and is unique. -/
@@ -800,7 +815,8 @@ private theorem local_tubular_of_smooth_embedding
       ∀ p : E d × V, dist p (0, (0 : V)) < ε_ift →
         (optimalityEqn φ m p = optimalityEqn φ m (0, (0 : V)) ↔
           v_impl p.1 = p.2) := by
-    simp_all
+    intro p hp
+    exact @hε_ift p hp
   obtain ⟨r_U, hr_U_pos, hr_U_sub⟩ := Metric.isOpen_iff.mp hU_open m (hS_sub hm)
   set r := min (min (δ / 8) (η / 4)) (min (ε_ift / 4) (min (ε_cont / 4) r_U))
     with hr_def
@@ -835,7 +851,10 @@ private theorem local_tubular_of_smooth_embedding
     intro q ⟨hq_S, hq_dist⟩
     have hq_near_m : dist q m < 2 * r := by
       have hxq : dist x q < r := by
-        simp_all
+        calc dist x q ≤ dist x m := by
+                rw [hq_dist]
+                exact Metric.infDist_le_dist_of_mem hm
+          _ < r := hxm
       calc dist q m ≤ dist q x + dist x m := dist_triangle _ _ _
         _ = dist x q + dist x m := by rw [dist_comm]
         _ < r + r := add_lt_add hxq hxm
@@ -847,7 +866,8 @@ private theorem local_tubular_of_smooth_embedding
         (ε_cont := ε_cont) (r := r) (δ := δ) hφC2 hF_zero
         hε_ift_explicit hε_cont hchart
         h3r_lt_δ h3r_lt_εi h3r_lt_εc hxm hq_S hq_near_m hq_dist hq_in_chart
-    simp_all
+    rw [hu₀_graph, h_impl_u₀.symm.trans h_impl_uq]
+    exact huq_graph
 
 /-- Given local unique-projection balls around every point of `S`, construct a
     general tubular sub-neighborhood. -/
@@ -904,7 +924,11 @@ private lemma projection_iff_graph {d : ℕ} {V : Submodule ℝ (E d)}
     have hxm : x - m = (v : E d) + ((φ v) : E d) := by
       rw [hv, add_assoc, add_sub_cancel_left]
     have hproj_v : V.orthogonalProjectionOnto (x - m) = v := by
-      simp_all
+      have hφ_proj : V.orthogonalProjectionOnto (φ v : E d) = 0 :=
+        Submodule.orthogonalProjectionOnto_eq_zero_iff.mpr (Submodule.coe_mem (φ v))
+      rw [hxm, map_add,
+        Submodule.orthogonalProjectionOnto_mem_subspace_eq_self v,
+        hφ_proj, add_zero]
     have decomp := V.starProjection_add_starProjection_orthogonal (x - m)
     simp only [Submodule.starProjection_apply] at decomp
     rw [congrArg Subtype.val hproj_v] at decomp
@@ -951,7 +975,9 @@ private theorem c3_pl_argmin_global_graph
   set φ : V → V.orthogonal := fun v => bump v • φ_raw v with hφ_def
   have hφ_eq_raw_near : φ =ᶠ[𝓝 0] φ_raw := by
     filter_upwards [bump.eventuallyEq_one] with v hv
-    simp_all
+    change bump v • φ_raw v = φ_raw v
+    have hbv : (↑bump : V → ℝ) v = 1 := by simpa using hv
+    rw [hbv, one_smul]
   obtain ⟨r_eq, hr_eq_pos, hr_eq⟩ := Metric.eventually_nhds_iff.mp hφ_eq_raw_near
   have hφ0 : φ 0 = 0 := by
     change bump 0 • φ_raw 0 = 0
@@ -966,7 +992,9 @@ private theorem c3_pl_argmin_global_graph
       exact (bump.contDiff (n := 2)).contDiffAt.smul (hε_ball hv_dist)
     · have hφ_eq_zero : φ =ᶠ[𝓝 v] (fun _ : V => (0 : V.orthogonal)) := by
         filter_upwards [notMem_tsupport_iff_eventuallyEq.mp hv] with w hw
-        simp_all
+        change bump w • φ_raw w = (0 : V.orthogonal)
+        have hbw : (↑bump : V → ℝ) w = 0 := by simpa using hw
+        rw [hbw, zero_smul]
       exact contDiffAt_const.congr_of_eventuallyEq hφ_eq_zero
   have hDφ0 : fderiv ℝ φ 0 = 0 := by
     rw [hφ_eq_raw_near.fderiv_eq]

@@ -262,7 +262,11 @@ theorem real_analytic_rearrangement (habc : ABCConjecture) (ε : ℝ) (hε : 0 <
     have h_powerful_pos_real :
         0 < (Nat.powerfulPart n : ℝ) * (Nat.powerfulPart (n + 1) : ℝ) *
           (Nat.powerfulPart (n + 2) : ℝ) := by
-      simp_all
+      exact
+        mul_pos
+          (mul_pos (Nat.cast_pos.mpr (Nat.powerfulPart_pos _ hn))
+            (Nat.cast_pos.mpr (Nat.powerfulPart_pos _ (Nat.succ_pos _))))
+          (Nat.cast_pos.mpr (Nat.powerfulPart_pos _ (Nat.succ_pos _)))
     have h_bound_step :
         ((Nat.rad n : ℝ) * (Nat.rad (n + 1) : ℝ) *
           (Nat.rad (n + 2) : ℝ)) ^ (1 + ε / 4) ≤
@@ -276,7 +280,8 @@ theorem real_analytic_rearrangement (habc : ABCConjecture) (ε : ℝ) (hε : 0 <
               ((Nat.powerfulPart n * Nat.powerfulPart (n + 1) *
                 Nat.powerfulPart (n + 2)) : ℝ) := by
         rw [le_div_iff₀]
-        · simp_all
+        · norm_cast at *
+          simp_all +decide only [CanonicallyOrderedAdd.mul_pos]
         · exact h_powerful_pos_real
       convert
         Real.rpow_le_rpow (by positivity) h_bound_step
@@ -326,7 +331,8 @@ theorem real_analytic_rearrangement (habc : ABCConjecture) (ε : ℝ) (hε : 0 <
           (by
             rw [Real.mul_rpow (by positivity) (by positivity), ← Real.rpow_natCast,
               ← Real.rpow_mul (by positivity)]
-            simp_all)
+            ring_nf
+            norm_num)
     refine le_trans h_bound ?_
     rw [div_le_iff₀ (by positivity)]
     refine le_trans (mul_le_mul_of_nonneg_left h_bound_simplified_step <| by positivity) ?_

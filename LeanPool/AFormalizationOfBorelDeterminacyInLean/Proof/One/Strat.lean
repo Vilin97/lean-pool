@@ -221,7 +221,16 @@ lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player
   have hvalT := congrArg (fun e ↦ e.valT') hx
   apply Fixing.inj (f := treeHom hyp) (ht := by
     apply Fixing.mon (f := treeHom hyp) (k := 2 * k) inferInstance
-    simp_all)
+    have hlen := h_length_pInv (f := treeHom hyp)
+      (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x)) H.pInv_fixing_short
+    have htakeLen :
+        (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x)).val.length ≤ 2 * k := by
+      simp [take_coe]
+    have hpInvLen :
+        (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
+      H.pInv_fixing_short).val.length ≤ 2 * k := hlen.trans_le htakeLen
+    rw [take_coe]
+    simpa only [List.length_take] using min_le_iff.mpr (Or.inr hpInvLen))
   erw [take_apply (treeHom hyp)]
   rw [cancel_pInv_right]
   refine Eq.trans ?_ (hvalT.trans ?_)
@@ -466,9 +475,12 @@ lemma lLift_mem_tree (h : H.preLift.Losable) :
       have hnX : n < H.x.val.length := by simpa [PreLift.Losable.lift'_toLift] using hnLift
       congr 1
       ext1
-      · simp_all
+      · simp_rw [PreLift.LLift.toLift_toPreLift, Lift.take_toPreLift]
+        congr
+        simp [take_coe, hnX]
       · have htake : min (n + 1) ((List.take (n + 1) H.x.val).length - 1) = n := by
-          simp_all
+          rw [List.length_take, min_eq_left (Nat.succ_le_of_lt hnX)]
+          omega
         change
           (defensiveQuasi
             (H.preLift.take
@@ -477,7 +489,8 @@ lemma lLift_mem_tree (h : H.preLift.Losable) :
             Player.one (hyp.pruned.sub _)).1.subtree = _
         have hG :
             (H.preLift.take (min (n + 1) ((List.take (n + 1) H.x.val).length - 1)) (by
-              simp_all)).game = H.preLift.game := by rw [PreLift.game_take]
+              rw [htake]
+              omega)).game = H.preLift.game := by rw [PreLift.game_take]
         exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
 
 lemma take_winnable (h : H.preLift.Winnable) n :
@@ -492,7 +505,8 @@ lemma winnable_subtree (hL : H.preLift.Winnable) (hnL : ¬ ∃ h, (H.dropLast h)
     refine ⟨?_, ?_⟩
     · conv => simp [PreLift.game_tree, residual_tree]
       exact subtree_sub _ H.x.prop
-    · simp_all)
+    · intros
+      exact Set.mem_univ _)
   intro n hn _ _ _
   conv at hn => simp
   conv => simp
@@ -618,7 +632,8 @@ lemma wonLift_map (h : (bodyTake y n).preLift.Won) :
       ⟨(h k).lift'.liftVal.take k, ⟨take_mem ⟨_, (bodyTake y _).lLift_mem_tree _⟩, by
         rw [List.length_take, min_eq_left]
         change k ≤ (h k).lift'.toLift.liftVal.length
-        simp_all⟩⟩, fun k ↦
+        rw [Lift.liftVal_length]
+        simp [PreLift.Losable.lift'_toLift, bodyTake]⟩⟩, fun k ↦
       ((Lift.liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))
         (PreLift.LLift.toLift_mono ((takeLift_mono y).mpr (Nat.le_succ _)))).take k).trans
       ((h (k + 1)).lift'.liftVal.take_prefix_take_left (Nat.le_succ _))⟩

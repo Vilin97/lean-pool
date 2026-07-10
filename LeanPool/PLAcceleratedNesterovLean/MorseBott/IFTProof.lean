@@ -51,7 +51,8 @@ private lemma restrictToN_eq_zero_iff (N : Submodule ℝ E) (L : E →L[ℝ] ℝ
     have := ContinuousLinearMap.ext_iff.mp h w
     rwa [restrictToN_apply, zero_apply] at this
   · intro h; ext w
-    simp_all
+    rw [restrictToN_apply, zero_apply]
+    exact h w
 
 private lemma isInvertible_of_bijective_finiteDimensional
     {A B : Type*}
@@ -76,7 +77,9 @@ private lemma comp_inl_eq_zero_of_ker
     (compR.comp (H.comp ι)).comp
       (ContinuousLinearMap.inl ℝ ↥T ↥N) = 0 := by
   ext ⟨t, ht⟩ w
-  simp_all
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.inl_apply,
+    zero_apply]
+  rw [hι_inl, hker ⟨t, ht⟩, hcompR, zero_apply]
 
 -- Helper: if F(t, φ(t)) is locally zero and F'∘inl = 0 and F'∘inr is injective, then Dφ(0) = 0
 private lemma fderiv_eq_zero_of_locally_const_comp
@@ -111,7 +114,11 @@ private lemma fderiv_eq_zero_of_locally_const_comp
   have h2 : F' (ContinuousLinearMap.inl ℝ A B dt) +
             F' (ContinuousLinearMap.inr ℝ A B (fderiv ℝ φ 0 dt)) = 0 := by
     rw [← F'.map_add]
-    simp_all
+    convert h1 using 1
+    simp only [ContinuousLinearMap.inl_apply,
+      ContinuousLinearMap.inr_apply,
+      Prod.mk_add_mk, add_zero, zero_add,
+      ContinuousLinearMap.coe_id', id_eq]
   have h3 : F' (ContinuousLinearMap.inl ℝ A B dt) = 0 := by
     have := ContinuousLinearMap.ext_iff.mp hF'_inl_zero dt
     simp only [ContinuousLinearMap.comp_apply, zero_apply] at this
@@ -237,7 +244,9 @@ lemma ift_gives_graph_impl (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < μ)
   -- F' ∘ inl = 0 (since T = ker(H))
   have hF'_inl_zero : F'.comp (ContinuousLinearMap.inl ℝ ↥T ↥N) = 0 := by
     have hker : ∀ t : ↥T, H (↑t) = 0 := by
-      simp_all
+      intro ⟨t, ht⟩
+      have : t ∈ hessianKer f x₀ := ht
+      rwa [hessianKer, LinearMap.mem_ker] at this
     have hι_inl : ∀ (t : ↥T), ι (t, (0 : ↥N)) = (↑t : E) := by
       intro t
       simp only [ι, ContinuousLinearMap.coprod_apply, Submodule.subtypeL_apply,
@@ -374,7 +383,8 @@ lemma ift_gives_graph_impl₂ (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < �
       hf.fderiv_right (by norm_cast : (2 : WithTop ℕ∞) + 1 ≤ 3)
     have h1 : ContDiffAt ℝ 2 (fun p => fderiv ℝ f (x₀ + ι p)) (0, 0) := by
       have hfdr_at : ContDiffAt ℝ 2 (fderiv ℝ f) (x₀ + ι (0 : ↥T × ↥N)) := by
-        simp_all
+        rw [hι0, add_zero]
+        exact hfdr
       apply ContDiffAt.comp (f := fun p : ↥T × ↥N => x₀ + ι p)
       · exact hfdr_at
       · exact (contDiff_const.add ι.contDiff).contDiffAt
@@ -424,7 +434,9 @@ lemma ift_gives_graph_impl₂ (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < �
     exact hF_cda.implicitFunction_apply_self two_ne_zero hF_partial_inv
   have hF'_inl_zero : F'.comp (ContinuousLinearMap.inl ℝ ↥T ↥N) = 0 := by
     have hker : ∀ t : ↥T, H (↑t) = 0 := by
-      simp_all
+      intro ⟨t, ht⟩
+      have : t ∈ hessianKer f x₀ := ht
+      rwa [hessianKer, LinearMap.mem_ker] at this
     have hι_inl : ∀ (t : ↥T), ι (t, (0 : ↥N)) = (↑t : E) := by
       intro t
       simp only [ι, ContinuousLinearMap.coprod_apply, Submodule.subtypeL_apply,
@@ -465,7 +477,8 @@ lemma ift_gives_graph_impl₂ (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < �
     have h : (↑(orthogonalProjectionOnto T (x - x₀)) : E) +
         ↑(orthogonalProjectionOnto N (x - x₀)) = x - x₀ :=
       T.starProjection_add_starProjection_orthogonal (x - x₀)
-    simp_all
+    rw [h]
+    abel
   have h_fwd_local :
       ∀ᶠ p in 𝓝 (0 : ↥T × ↥N), F p = F (0, 0) ↔ φ p.1 = p.2 := by
     rw [hφ_def]

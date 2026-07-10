@@ -256,7 +256,8 @@ private abbrev bootstrapTotalDisplacementProof
         calc ‖nesterovH f η ρ x₁ n‖
             ≤ C_h * Real.sqrt η * Real.sqrt (L n) := hh_bound
           _ ≤ C_h * Real.sqrt η * (Real.sqrt c ^ n * Real.sqrt (L 0)) := by
-              simp_all
+              apply mul_le_mul_of_nonneg_left hsqrt_Ln
+              apply mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _)
           _ = C_h * Real.sqrt η * Real.sqrt (L 0) * Real.sqrt c ^ n := by ring
       -- ── Displacement bound for x'_{n+1} ────────────────────────────────
       -- x'_{n+1} = x'_n + h_n  (by definition of nesterovH)
@@ -302,7 +303,8 @@ private abbrev bootstrapTotalDisplacementProof
                 (Finset.range (n + 1)).sum (fun k => Real.sqrt c ^ k)
               ≤ C_h * Real.sqrt η * Real.sqrt (L 0) * (1 / (1 - Real.sqrt c)) := by
                 apply mul_le_mul_of_nonneg_left hle
-                simp_all
+                apply mul_nonneg (mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _))
+                  (Real.sqrt_nonneg _)
             _ = C_h * Real.sqrt η * Real.sqrt (L 0) / (1 - Real.sqrt c) := by ring
             _ ≤ r / 4 := hdisp_bound
         linarith [hDn1, hx₁_dist]
@@ -562,7 +564,8 @@ private abbrev bootstrapTotalDisplacementGenProof
         calc ‖stepDispOfState f η ρ (nesterovSeqGen f η ρ s₀ n)‖
             ≤ C_h * Real.sqrt η * Real.sqrt (Ln n) := hh_bound
           _ ≤ C_h * Real.sqrt η * (Real.sqrt c ^ n * Real.sqrt L₀) := by
-              simp_all
+              apply mul_le_mul_of_nonneg_left hsqrt_Ln
+              apply mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _)
           _ = C_h * Real.sqrt η * Real.sqrt L₀ * Real.sqrt c ^ n := by ring
       -- ── Displacement bound for lookahead at n+1 ────────────────────────
       have hla_step : (nesterovSeqGen f η ρ s₀ (n + 1)).lookahead η =
@@ -605,7 +608,8 @@ private abbrev bootstrapTotalDisplacementGenProof
                 (Finset.range (n + 1)).sum (fun k => Real.sqrt c ^ k)
               ≤ C_h * Real.sqrt η * Real.sqrt L₀ * (1 / (1 - Real.sqrt c)) := by
                 apply mul_le_mul_of_nonneg_left hle
-                simp_all
+                apply mul_nonneg (mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _))
+                  (Real.sqrt_nonneg _)
             _ = C_h * Real.sqrt η * Real.sqrt L₀ / (1 - Real.sqrt c) := by ring
             _ ≤ r / 4 := hdisp_bound
         linarith [hDn1, hs₀_la_dist]
@@ -673,7 +677,8 @@ private abbrev bootstrapTotalDisplacementGenProof
               (Finset.range n).sum (fun k => Real.sqrt c ^ k)
             ≤ C_h * Real.sqrt η * Real.sqrt L₀ * (1 / (1 - Real.sqrt c)) := by
               apply mul_le_mul_of_nonneg_left hle
-              simp_all
+              apply mul_nonneg (mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _))
+                (Real.sqrt_nonneg _)
           _ = C_h * Real.sqrt η * Real.sqrt L₀ / (1 - Real.sqrt c) := by ring
           _ ≤ r / 4 := hdisp_bound
       linarith [hDn, hs₀_la_dist]
@@ -714,7 +719,8 @@ private abbrev bootstrapTotalDisplacementGenProof
                 (Finset.range (n + 1)).sum (fun k => Real.sqrt c ^ k)
               ≤ C_h * Real.sqrt η * Real.sqrt L₀ * (1 / (1 - Real.sqrt c)) := by
                 apply mul_le_mul_of_nonneg_left hle
-                simp_all
+                apply mul_nonneg (mul_nonneg (le_of_lt hC_h) (Real.sqrt_nonneg _))
+                  (Real.sqrt_nonneg _)
             _ = C_h * Real.sqrt η * Real.sqrt L₀ / (1 - Real.sqrt c) := by ring
             _ ≤ r / 4 := hdisp_bound
         linarith [hDn1, hs₀_la_dist]
@@ -738,7 +744,8 @@ private abbrev bootstrapTotalDisplacementGenProof
                   norm_sub_le _ _
         _ ≤ r / 2 + r / 4 := by linarith [hla_n1_half, hv_bound_small]
         _ < r := by linarith
-  simp_all
+  refine ⟨fun n => (hinduction n).1, hball_contain, fun n => ?_⟩
+  exact (hinduction (n + 1)).2.1
 
 
 /-- Public theorem wrapper for `bootstrapTotalDisplacementProof`. -/

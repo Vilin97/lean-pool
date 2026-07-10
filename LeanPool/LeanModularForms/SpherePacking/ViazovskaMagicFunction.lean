@@ -232,7 +232,8 @@ theorem convex_upperHalfPlaneSet : Convex ℝ {z : ℂ | 0 < z.im} := by
 theorem neg_inv_add_one_im_pos {z : ℂ} (hz : 0 < z.im) : 0 < (-1 / (z + 1)).im := by
   have hne : z + 1 ≠ 0 := by intro h; have := (Complex.ext_iff.mp h).2; simp at this; linarith
   rw [neg_div, Complex.neg_im, Complex.div_im]
-  simp_all
+  rw [Complex.one_im, Complex.one_re, zero_mul, zero_div, one_mul, zero_sub, neg_neg]
+  exact div_pos (by simpa using hz) (Complex.normSq_pos.mpr hne)
 
 /-- The integrand `viazovskaIntegrandLeft r` is holomorphic on the upper half-plane.
 This follows from holomorphicity of `φ₀''` and the algebraic factors. -/
@@ -314,13 +315,17 @@ private theorem hasDerivAt_contour_neg1_to_i (t : ℝ) :
     HasDerivAt (fun s : ℝ => contourNeg1ToI s) (1 + I : ℂ) t := by
   simp only [contourNeg1ToI]
   have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (1 + I : ℂ)
-  simp_all
+  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
+    mul_one] at h1
+  simpa only [contourNeg1ToI] using h1.const_add (-1 : ℂ)
 
 /-- The derivative of the vertical contour map. -/
 private theorem hasDerivAt_vert_contour (t : ℝ) :
     HasDerivAt (fun s : ℝ => (-1 : ℂ) + I * ↑s) (I : ℂ) t := by
   have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (I : ℂ)
-  simp_all
+  simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
+    mul_one] at h1
+  simpa using h1.const_add (-1 : ℂ)
 
 /-- The derivative of `contourNeg1ToI` is the constant `1 + I`. -/
 theorem deriv_contour_neg1_to_i (t : ℝ) : deriv contourNeg1ToI t = 1 + I :=
@@ -362,7 +367,10 @@ theorem I12_horiz_eq_segment (r : ℝ) :
     I12Horiz r = ∫ t in (0 : ℝ)..1,
       viazovskaIntegrandLeft r ((-1 + I : ℂ) + t • ((I : ℂ) - (-1 + I))) *
         ((I : ℂ) - (-1 + I)) := by
-  simp only [I12Horiz]; simp_all
+  simp only [I12Horiz]; congr 1; ext t
+  have h1 : (I : ℂ) - (-1 + I) = 1 := by ring
+  rw [h1, mul_one]
+  congr 1; simp [Complex.real_smul]
 
 /-! ### Truncated contour equivalence
 
@@ -495,7 +503,9 @@ private theorem norm_sq_diag {t : ℝ} (ht : 0 < t) :
 /-- Norm bound for `(z+1)^2` along the vertical: `‖(It)^2‖ ≤ t^2`. -/
 private theorem norm_sq_vert {t : ℝ} (ht : 0 < t) :
     ‖((-1 : ℂ) + I * ↑t + 1) ^ 2‖ ≤ t ^ 2 := by
-  simp_all
+  rw [vert_contour_add_one]
+  simp only [norm_pow, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos ht]
+  simp [Complex.norm_I]
 
 /-- Exponential bound along the diagonal contour for `t ∈ (0, 1]`. -/
 private theorem exp_bound_diag {r : ℝ} {t : ℝ} (ht : 0 < t) (ht1 : t ≤ 1) :
@@ -920,7 +930,9 @@ private theorem segment_integrand_norm_bound (r : ℝ) {δ : ℝ} (hδ_pos : 0 <
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
       Complex.one_re, Complex.one_im, Complex.sub_re, Complex.sub_im]; ring
   have him_eq : (z₀ + 1).im = δ := by
-    simp_all
+    rw [hz_plus_1]
+    simp [Complex.mul_im, Complex.I_re, Complex.I_im, Complex.ofReal_re,
+      Complex.ofReal_im, Complex.add_im, Complex.sub_im, Complex.one_im]
   -- Im(-1/(z+1)) >= 1/(2*delta) >= A
   have h1t_sq : (1 - t) ^ 2 + 1 ≤ 2 := by nlinarith
   have him_lb : 1 / (2 * δ) ≤ (-1 / (z₀ + 1)).im := by
@@ -978,7 +990,10 @@ private theorem segment_integrand_norm_bound (r : ℝ) {δ : ℝ} (hδ_pos : 0 <
   have hneg_norm : ‖dir‖ = δ := by
     change ‖(-(↑δ : ℂ))‖ = δ
     rw [norm_neg, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hδ_pos]
-  simp_all
+  calc ‖viazovskaIntegrandLeft r z₀ * dir‖
+      ≤ ‖viazovskaIntegrandLeft r z₀‖ * ‖dir‖ := norm_mul_le _ _
+    _ ≤ 1 * δ := by rw [hneg_norm]; exact mul_le_mul_of_nonneg_right hFb hδ_pos.le
+    _ = δ := one_mul _
 
 /-- The G-difference `G(-1 + delta*I) - G(contourNeg1ToI delta)` tends to 0
 as `delta -> 0+`. This is the hardest piece: we express the difference as a

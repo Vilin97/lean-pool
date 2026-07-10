@@ -24,13 +24,19 @@ lemma sum_singletons [AddCommMonoid α] {F : Finset ι → α} {G : ι → α} (
     ∑ S ∈ {S | S.card = 1}, F S = ∑ i, G i := by
   symm
   apply sum_of_injOn (e := fun i ↦ {i})
-  · intro j simp_all
-  · simp_all
+  · intro j _ l _ h'
+    simp only at h'
+    exact Finset.singleton_inj.mp h'
+  · intro j _
+    simp
   · intro S hS hS'
     simp only [mem_filter, mem_univ, true_and] at hS
     obtain ⟨i, hi⟩ := card_eq_one.mp hS
-    simp_all
-  · simp_all
+    simp only [coe_univ, Set.image_univ, Set.mem_range, not_exists] at hS'
+    exact absurd hi.symm (hS' i)
+  · intro i _
+    symm
+    exact h i
 
 lemma sum_singletons' [AddCommMonoid α] {F : Finset ι → α} :
     ∑ S ∈ {S | S.card = 1}, F S = ∑ i, F {i} := by apply sum_singletons; intro i; rfl
@@ -42,11 +48,15 @@ lemma ite_ite_same (a b c : α) :
 
 lemma rw_ite_left (h : P → a = c) :
     ite P a b = ite P c b := by
-  simp_all
+  split_ifs with hp
+  · rw [h hp]
+  · rfl
 
 lemma rw_ite_right (h : ¬P → a = c) :
     ite P b a = ite P b c := by
-  simp_all
+  split_ifs with hp
+  · rfl
+  · rw [h hp]
 
 lemma ite_add_ite {α : Type*} [AddCommMonoid α] (a₁ b₁ a₂ b₂ : α) :
     ite P a₁ b₁ + ite P a₂ b₂ = ite P (a₁ + a₂) (b₁ + b₂) := by split_ifs <;> simp

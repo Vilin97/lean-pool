@@ -170,7 +170,8 @@ lemma measurableSet_norm_gt_of_continuousOn {f : ℝ → ℂ} {s : Set ℝ}
     · intro ⟨hx_U, hx_s⟩
       refine ⟨?_, hx_s⟩
       have h1 : (⟨x, hx_s⟩ : ↑s) ∈ Subtype.val ⁻¹' U := hx_U
-      simp_all
+      rw [hU_eq] at h1
+      simp only [mem_preimage, restrict_apply, mem_Ioi] at h1; exact h1
   rw [h_eq]; exact hU_open.measurableSet.inter hs
 
 lemma measurableSet_norm_gt_Icc {f : ℝ → ℂ} {a b : ℝ}
@@ -244,7 +245,9 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
 lemma indicator_integrand_deriv_eq (γ : ℝ → ℂ) (c : ℂ) (ε : ℝ) (t : ℝ) :
     (if ‖γ t - c‖ > ε then (γ t - c)⁻¹ * deriv (fun s => γ s - c) t else 0) =
     (if ‖γ t - c‖ > ε then (γ t - c)⁻¹ * deriv γ t else 0) := by
-  simp_all
+  split_ifs with h
+  · congr 1; exact deriv_sub_const c
+  · rfl
 
 lemma cpv_exists_from_shifted_tendsto (γ : ℝ → ℂ) (a b : ℝ) (c : ℂ) (L : ℂ)
     (h : Tendsto (fun ε => ∫ t in a..b, if ‖γ t - c‖ > ε
@@ -279,7 +282,8 @@ lemma arc_angle_injective {t t' : ℝ}
       exact le_mul_of_one_le_right (by positivity) h1
     have h3 : |2 * Real.pi * (n : ℝ)| < Real.pi := by rwa [h_vals] at h_diff_small
     linarith [Real.pi_pos]
-  simp_all
+  rw [hn0] at h_vals; simp only [Int.cast_zero, mul_zero] at h_vals
+  nlinarith [Real.pi_ne_zero, Real.pi_pos]
 
 /-- CPV trivially exists when the curve avoids `z₀` on `[a, b]`. -/
 lemma cpv_avoidance (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ)

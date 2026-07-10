@@ -55,7 +55,11 @@ lemma digit_le_half_iff_two_mul_lt {p d : ℕ} (hp2 : 2 ≤ p) (hpodd : Odd p) :
     d ≤ (p - 1) / 2 ↔ 2 * d < p := by
   obtain ⟨k, hk⟩ := hpodd
   -- p = 2k+1, so (p-1)/2 = k and the claim is `d ≤ k ↔ 2*d < 2k+1 ↔ 2*d ≤ 2k`.
-  simp_all
+  subst hk
+  have hhalf : (2 * k + 1 - 1) / 2 = k := by
+    have : 2 * k + 1 - 1 = 2 * k := by omega
+    rw [this]; exact Nat.mul_div_cancel_left k (by decide)
+  rw [hhalf]; omega
 
 /-- `LowDigits` and #376's `LowDoubleDigits` coincide for odd primes. -/
 theorem lowDigits_iff_lowDoubleDigits {p n : ℕ} (hp2 : 2 ≤ p) (hpodd : Odd p) :

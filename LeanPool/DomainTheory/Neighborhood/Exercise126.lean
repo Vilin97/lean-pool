@@ -126,7 +126,9 @@ def idealOf (x : (ringSystem (A := A)).Element) : Ideal A where
   zero_mem' := by
     change x.mem (IFamily {(0 : A)})
     refine x.up_mem x.master_mem (IFamily_mem {(0 : A)}) ?_
-    intro G simp_all
+    intro G _
+    rw [mem_IFamily, Finset.coe_singleton, Set.singleton_subset_iff]
+    exact Submodule.zero_mem _
   add_mem' := by
     intro a b ha hb
     change x.mem (IFamily {a + b})
@@ -169,11 +171,13 @@ def ofIdeal (J : Ideal A) : (ringSystem (A := A)).Element where
   sub := by rintro S ⟨F, rfl, _⟩; exact ⟨F, rfl⟩
   master_mem := by
     refine ⟨∅, rfl, ?_⟩
-    simp_all
+    rw [Finset.coe_empty, Ideal.span_empty]
+    exact bot_le
   inter_mem := by
     rintro X Y ⟨F₁, rfl, h₁⟩ ⟨F₂, rfl, h₂⟩
     refine ⟨F₁ ∪ F₂, IFamily_inter F₁ F₂, ?_⟩
-    simp_all
+    rw [Finset.coe_union, Ideal.span_union]
+    exact sup_le h₁ h₂
   up_mem := by
     rintro X Y ⟨F, rfl, hF⟩ ⟨F', rfl⟩ hXY
     refine ⟨F', rfl, ?_⟩

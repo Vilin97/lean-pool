@@ -46,7 +46,8 @@ lemma rightEdge_fdBoundary_eq (H : ℝ) (s : ℂ)
   have ht₀_le : t₀ ≤ 1 := by rw [div_le_one hden_pos]; linarith
   simp only [fdBoundaryH, ht₀_le, ↓reduceIte]
   apply Complex.ext
-  · simp_all
+  · simp [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
+    linarith [hs_re]
   · simp only [one_div, add_im, inv_im, im_ofNat, neg_zero, normSq_ofNat, zero_div, mul_im, sub_re,
     ofReal_re, mul_re, div_ofNat_re, ofReal_im, sub_im, div_ofNat_im, sub_self, mul_zero, sub_zero,
     I_im, mul_one, zero_mul, add_zero, I_re, zero_add]
@@ -305,10 +306,13 @@ private lemma rightEdge_ae_seg_eq (g h₀ h_arc h₃ h₅ : ℝ → ℂ)
     filter_upwards [this] with t ht_ne ht_mem
     rw [Set.uIoc_of_le (by norm_num : (1 : ℝ) ≤ 3)] at ht_mem
     have ht1 : 1 < t := by
-      simp_all
+      rcases eq_or_lt_of_le (le_of_lt ht_mem.1) with h | h
+      · exfalso; exact ht_ne (Set.mem_insert_iff.mpr (Or.inl (by linarith)))
+      · exact h
     have ht3 : t < 3 := by
       rcases eq_or_lt_of_le ht_mem.2 with h | h
-      · simp_all
+      · exfalso
+        exact ht_ne (Set.mem_insert_iff.mpr (Or.inr (Set.mem_singleton_iff.mpr (by linarith))))
       · exact h
     rw [hg_arc t ht1 ht3, hderiv_arc t ⟨ht1, ht3⟩]
   · have : ({3, 4} : Set ℝ)ᶜ ∈ ae volume := mem_ae_iff.mpr (by
@@ -316,10 +320,13 @@ private lemma rightEdge_ae_seg_eq (g h₀ h_arc h₃ h₅ : ℝ → ℂ)
     filter_upwards [this] with t ht_ne ht_mem
     rw [Set.uIoc_of_le (by norm_num : (3 : ℝ) ≤ 4)] at ht_mem
     have ht3 : 3 < t := by
-      simp_all
+      rcases eq_or_lt_of_le (le_of_lt ht_mem.1) with h | h
+      · exfalso; exact ht_ne (Set.mem_insert_iff.mpr (Or.inl (by linarith)))
+      · exact h
     have ht4 : t < 4 := by
       rcases eq_or_lt_of_le ht_mem.2 with h | h
-      · simp_all
+      · exfalso
+        exact ht_ne (Set.mem_insert_iff.mpr (Or.inr (Set.mem_singleton_iff.mpr (by linarith))))
       · exact h
     rw [hg_h₃ t ht3 (le_of_lt ht4), hderiv_3 t ⟨ht3, ht4⟩]
   · have : ({4, 5} : Set ℝ)ᶜ ∈ ae volume := mem_ae_iff.mpr (by
@@ -327,10 +334,13 @@ private lemma rightEdge_ae_seg_eq (g h₀ h_arc h₃ h₅ : ℝ → ℂ)
     filter_upwards [this] with t ht_ne ht_mem
     rw [Set.uIoc_of_le (by norm_num : (4 : ℝ) ≤ 5)] at ht_mem
     have ht4 : 4 < t := by
-      simp_all
+      rcases eq_or_lt_of_le (le_of_lt ht_mem.1) with h | h
+      · exfalso; exact ht_ne (Set.mem_insert_iff.mpr (Or.inl (by linarith)))
+      · exact h
     have ht5 : t < 5 := by
       rcases eq_or_lt_of_le ht_mem.2 with h | h
-      · simp_all
+      · exfalso
+        exact ht_ne (Set.mem_insert_iff.mpr (Or.inr (Set.mem_singleton_iff.mpr (by linarith))))
       · exact h
     rw [hg_h₅ t ht4, hderiv_5 t ⟨ht4, ht5⟩]
 
@@ -674,7 +684,22 @@ lemma rightEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     have hd : deriv (fun t => fdBoundaryH H t - s) t = deriv (fdBoundaryH H) t :=
       deriv_sub_const (f := fdBoundaryH H) _
     rw [hd, div_eq_mul_inv, mul_comm]
-  simp_all
+  have hint_left_g : IntervalIntegrable
+      (fun t => (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t)
+      volume 0 (t₀ - δ) := hint₀.congr_ae (ae_of_all _ h_congr)
+  have hint_right_g : IntervalIntegrable
+      (fun t => (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t)
+      volume (t₀ + δ) 5 := hint_right.congr_ae (ae_of_all _ h_congr)
+  have h_int_eq_left :
+      (∫ t in (0 : ℝ)..(t₀ - δ), (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t) =
+      ∫ t in (0 : ℝ)..(t₀ - δ), deriv g t / g t :=
+    intervalIntegral.integral_congr_ae (ae_of_all _ (fun t _ => (h_congr t).symm))
+  have h_int_eq_right :
+      (∫ t in (t₀ + δ)..(5 : ℝ), (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t) =
+      ∫ t in (t₀ + δ)..(5 : ℝ), deriv g t / g t :=
+    intervalIntegral.integral_congr_ae (ae_of_all _ (fun t _ => (h_congr t).symm))
+  refine ⟨hint_left_g, hint_right_g, ?_⟩
+  rw [h_int_eq_left, h_int_eq_right, h_ftc₀, h_right_total, h_telescope]
 
 private lemma rightEdge_h_far (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     (s : ℂ) (hs_re : s.re = 1 / 2) (hs_norm : ‖s‖ > 1) (hs_im : s.im < H)
@@ -853,7 +878,10 @@ theorem gWN_fdBoundary_H_eq_neg_half_of_rightEdge (H : ℝ) (hH_sqrt : Real.sqrt
     generalizedWindingNumber' (fdBoundaryH H) 0 5 s = -1/2 := by
   apply ContourIntegral.gWN_eq_neg_half_of_pv_tendsto
   have h_tendsto := rightEdge_winding_aux H hH_sqrt s hs_re hs_norm hs_im_lower hs_im
-  simp_all
+  have hd : ∀ t, deriv (fun t => fdBoundaryH H t - s) t = deriv (fdBoundaryH H) t :=
+    fun t => deriv_sub_const (f := fdBoundaryH H) _
+  convert h_tendsto using 1
+  ext ε; congr 1; ext t; simp only [sub_zero, gt_iff_lt, hd]
 
 /-! ### SingleCrossingData construction for right edge
 

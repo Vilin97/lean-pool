@@ -119,7 +119,8 @@ private theorem laurent_coeff_le_poleOrder (f : ℂ → ℂ) (s : ℂ)
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hk⟩)
   suffices h_ord : meromorphicOrderAt f s =
       ↑(-(↑(m_idx.val + 1) : ℤ)) by
-    simp_all
+    rw [h_ord]; simp only [WithTop.untop₀_coe, neg_neg, Int.toNat_natCast]
+    omega
   rw [meromorphicOrderAt_eq_int_iff hMero_s]
   refine ⟨fun z => (z - s) ^ (m_idx.val + 1) * g_loc z +
     ∑ k : Fin N_s, a_s k * (z - s) ^ (m_idx.val - k.val), ?_, ?_, ?_⟩
@@ -221,7 +222,10 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
     have h_sum_eq : ∀ z ∈ Metric.sphere s r,
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z =
         (fun z => f z - residueAt f s / (z - s)) z := by
-      simp_all
+      intro z hz
+      have := h_eq_on z hz
+      simp only
+      linear_combination this
     have h_int_eq : (∮ z in C(s, r),
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z) =
       (∮ z in C(s, r), (fun z => f z - residueAt f s / (z - s)) z) :=
@@ -306,7 +310,10 @@ private theorem assembly_regNF_differentiableWithinAt_pole
       assembly_regNF S0 f g_corr w
     simp only [assembly_regNF]
     by_cases hw_S : w ∈ S0
-    · simp_all
+    · have hw_eq : w = z := by
+        by_contra hne
+        exact hw_compl (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hne, hw_S⟩))
+      rw [hw_eq]; simp [hz_S]
     · have hw_ne_z : w ≠ z := fun heq => hw_S (heq ▸ hz_S)
       have h_fw : f w - meromorphicPrincipalPart f z w = g_corr z hz_S w :=
         hV_eq ⟨hw_V, hw_ne_z⟩
@@ -482,7 +489,8 @@ private theorem cpv_tendsto_zero_of_fin_sum {N : ℕ} (S0 : Finset ℂ)
     conv_rhs => rw [h0]
     exact tendsto_finsetSum Finset.univ (fun k _ => h_tendsto k)
   apply h_sum_tendsto.congr'
-  filter_upwards [self_mem_nhdsWithin] with ε simp_all
+  filter_upwards [self_mem_nhdsWithin] with ε (hε : 0 < ε)
+  exact (h_int_eq ε hε).symm
 
 /-- Given two functions whose CPV integrals each tend to 0, and a third function
 that agrees with their sum off `S0`, the CPV integral of the third also tends to 0.
@@ -557,7 +565,9 @@ private theorem cpv_perTerm_crossed_zero_order (S0 : Finset ℂ) (f : ℂ → �
     exact dif_neg (fun h => absurd h.2 (not_lt.mpr h_ord_nn))
   have h_res_zero : residueAt f s = 0 := by
     have hf_eq_g : ∀ᶠ (z : ℂ) in 𝓝[≠] s, f z = g_loc z := by
-      simp_all
+      filter_upwards [hf_eq_loc] with z hz
+      simp only [Finset.univ_eq_empty, Finset.sum_empty, add_zero] at hz
+      exact hz
     exact residueAt_eq_zero_of_analyticExpansion f s g_loc hg_loc_an hf_eq_g
   have h_term_eq_zero : (fun z => meromorphicPrincipalPart f s z -
       residueAt f s / (z - s)) = fun _ => 0 := by
@@ -661,7 +671,16 @@ private theorem cpv_polar_term_tendsto (S0 : Finset ℂ) (f : ℂ → ℂ)
         γ.toFun ε t = 0 := by
       intro ε t; simp only [cauchyPrincipalValueIntegrandOn, ha_zero,
         zero_div, zero_mul, ite_self]
-    simp_all
+    simp only [show (fun ε => ∫ t in γ.a..γ.b,
+        cauchyPrincipalValueIntegrandOn S0
+          (fun z => a_s ⟨kv, hkv⟩ / (z - s) ^ (kv + 1))
+          γ.toFun ε t) = fun _ => 0 from
+      funext fun ε => by
+        rw [show (fun t => cauchyPrincipalValueIntegrandOn S0
+            (fun z => a_s ⟨kv, hkv⟩ / (z - s) ^ (kv + 1))
+            γ.toFun ε t) = fun _ => 0 from funext (h_zero ε)]
+        exact intervalIntegral.integral_zero]
+    exact tendsto_const_nhds
   · have h_order_bound : kv + 1 ≤ poleOrderAt f s :=
       laurent_coeff_le_poleOrder f s hMero_s a_s g_loc hg_loc_an
         hf_eq_loc ha_zero
@@ -727,7 +746,8 @@ private theorem assembly_errNF_eventuallyEq (f : ℂ → ℂ) (s : ℂ)
         a_s ⟨0, hN_s_pos⟩ / (z - s) := by
       rw [← Finset.sum_sub_distrib]
       rw [Finset.sum_eq_single ⟨0, hN_s_pos⟩]
-      · simp_all
+      · simp only [zero_add, pow_one, ge_iff_le, nonpos_iff_eq_zero, one_ne_zero, ↓reduceIte,
+        sub_zero]
       · intro k _ hk
         have hkval : k.val ≥ 1 := by
           by_contra h
@@ -787,7 +807,10 @@ private theorem cpv_polarHigher_tendsto (U : Set ℂ) (S0 : Finset ℂ)
       · simp only [hk, ite_false]; exact continuousOn_const)
     (fun k => by
       by_cases hk : k.val ≥ 1
-      · simp_all
+      · have h_eq : (fun z => if k.val ≥ 1 then
+            a_s k / (z - s) ^ (k.val + 1) else 0) =
+          fun z => a_s k / (z - s) ^ (k.val + 1) := by ext z; simp [hk]
+        simp_rw [h_eq]; exact h_polar_term_tendsto k hk
       · have h_eq : (fun z => if k.val ≥ 1 then
             a_s k / (z - s) ^ (k.val + 1) else 0) =
           fun _ => (0 : ℂ) := by ext z; simp [hk]

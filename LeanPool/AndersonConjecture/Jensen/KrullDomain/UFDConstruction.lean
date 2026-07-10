@@ -215,7 +215,8 @@ private def build_loc_away_ufd_proof
     intro s'
     have := s'.2
     change s'.1 ∈ (S_sub : Set T) at this
-    simp_all
+    rw [hS_sub_eq] at this
+    exact this
   haveI : IsDomain (Localization.Away s) :=
     IsLocalization.isDomain_localization hpow_le
   have hinj_loc :=
@@ -269,21 +270,29 @@ private def build_loc_away_ufd_proof
         (Localization.Away s) (ι y₂)) := by
     have := IsLocalization.Away.algebraMap_isUnit
       (S := Localization.Away s) (x := s)
-    simp_all
+    rw [show s = ι y₁ * ι y₂ from rfl,
+      map_mul] at this
+    exact isUnit_of_mul_isUnit_right this
   have hy₁_unit :
       IsUnit (algebraMap S_sub
         (Localization.Away s) (ι y₁)) := by
     have := IsLocalization.Away.algebraMap_isUnit
       (S := Localization.Away s) (x := s)
-    simp_all
+    rw [show s = ι y₁ * ι y₂ from rfl,
+      map_mul] at this
+    exact isUnit_of_mul_isUnit_left this
   letI : Algebra (Polynomial R.carrier)
       (Localization.Away s) := φ.toAlgebra
   let M : Submonoid (Polynomial R.carrier) :=
     { carrier := {f | IsUnit (φ f)}
       one_mem' := by
-        simp_all
+        change IsUnit (φ 1)
+        rw [map_one]
+        exact isUnit_one
       mul_mem' := fun {a b} ha hb => by
-        simp_all }
+        change IsUnit (φ (a * b))
+        rw [map_mul]
+        exact ha.mul hb }
   have hM_le :
       M ≤ nonZeroDivisors (Polynomial R.carrier) := by
     intro f hf
@@ -502,7 +511,8 @@ private def build_ufd_proof_proof
     intro s
     have := s.2
     change s.1 ∈ (S_sub : Set T) at this
-    simp_all
+    rw [hS_sub_eq] at this
+    exact this
   rw [UniqueFactorizationMonoid.iff_exists_prime_mem_of_isPrime]
   intro P hP_ne_bot hP_prime
   let ι : R.carrier →+* S_sub := Subring.inclusion hR_le
@@ -512,11 +522,16 @@ private def build_ufd_proof_proof
     have hR_avoids_P : ∀ (r : R.carrier), r ≠ 0 → ι r ∉ P := by
       intro r hr hrP
       have : r ∈ P.comap ι := hrP
-      simp_all
+      rw [hPR_ne] at this
+      exact hr (Ideal.mem_bot.mp this)
     have hy₁_ne : (y₁ : R.carrier) ≠ 0 := by
-      simp_all
+      intro h
+      apply hy₁
+      exact congrArg R.carrier.subtype h
     have hy₂_ne : (y₂ : R.carrier) ≠ 0 := by
-      simp_all
+      intro h
+      apply hy₂
+      exact congrArg R.carrier.subtype h
     set s : S_sub := ι y₁ * ι y₂ with hs_def
     have hs_ne : s ≠ 0 := by
       rw [hs_def]
@@ -616,7 +631,11 @@ private def build_ufd_proof_proof
       have hpfactors_assoc : Associated (pfactors.map ι).prod s := by
         have h1 := hfactors_assoc.map ι
         rw [map_multiset_prod] at h1
-        simp_all
+        have h2 : (Multiset.map ι factors).prod = (pfactors.map ι).prod := by
+          rw [show (factors : Multiset R.carrier) = ↑pfactors from
+            (Multiset.coe_toList factors).symm, Multiset.map_coe, Multiset.prod_coe]
+        rw [h2, show ι (y₁ * y₂) = ι y₁ * ι y₂ from map_mul ι y₁ y₂] at h1
+        exact h1
       -- Each prime factor of y₁y₂ is either prime-and-avoiding-P or a unit in S_sub
       have hfactor_class : ∀ p ∈ pfactors,
           (Prime (ι p) ∧ ι p ∉ P) ∨ IsUnit (ι p) := by
@@ -732,7 +751,8 @@ private def build_ufd_proof_proof
               r' ∣ a * (ps.map ι).prod ^ m → r' ∣ a := by
             intro ps
             induction ps with
-            | nil => simp_all
+            | nil => intro a _ _ h
+                     simpa using h
             | cons p ps ih =>
               intro a hclass hndvd h
               have hclass' := fun q hq => hclass q (List.mem_cons_of_mem p hq)
@@ -884,10 +904,12 @@ include T in theorem build_primes_preserved
       obtain ⟨ha_nu, hb_nu⟩ := h_neither
       have ha_M : (a : T) ∈ IsLocalRing.maximalIdeal T := by
         have := (IsLocalRing.mem_maximalIdeal (a : S_sub)).mpr ha_nu
-        simp_all
+        rw [hmax_eq, Ideal.mem_comap] at this
+        exact this
       have hb_M : (b : T) ∈ IsLocalRing.maximalIdeal T := by
         have := (IsLocalRing.mem_maximalIdeal (b : S_sub)).mpr hb_nu
-        simp_all
+        rw [hmax_eq, Ideal.mem_comap] at this
+        exact this
       have ha_sc : (a : T) ∈ S_carrier := hS_sub_eq' ▸ a.2
       have hb_sc : (b : T) ∈ S_carrier := hS_sub_eq' ▸ b.2
       obtain ⟨a₁, a₂, ha₁_Rbar, ha₂_Rbar, ha₂_nM, ha_eq⟩ := ha_sc
@@ -913,9 +935,14 @@ include T in theorem build_primes_preserved
         rw [← hcleared]
         ring
       have hr_M : (r : T) ∈ IsLocalRing.maximalIdeal T := by
-        simp_all
+        have hmem : r ∈ IsLocalRing.maximalIdeal R.carrier := by
+          rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
+          exact hr.not_unit
+        rw [R.maximal_ideal_eq] at hmem
+        exact Ideal.mem_comap.mp hmem
       have hr_ne : (r : T) ≠ 0 := by
-        simp_all
+        intro h
+        exact hr.ne_zero (Subtype.ext h)
       suffices h_one_divides :
           (∃ d ∈ adjoinLocSetY R x₁ y₂, a₁ = (r : T) * d) ∨
           (∃ d ∈ adjoinLocSetY R x₁ y₂, b₁ = (r : T) * d) ∨
@@ -944,14 +971,23 @@ include T in theorem build_primes_preserved
           have hab₂_unit : IsUnit (a₂ * b₂) := ha₂_unit.mul hb₂_unit
           rw [← hda₁] at hab₂_unit
           have ha₁_unit : IsUnit a₁ := isUnit_of_mul_isUnit_left hab₂_unit
-          simp_all
-        simp_all
+          have ha_unit : IsUnit (a : T) :=
+            isUnit_of_mul_isUnit_left (ha_eq ▸ ha₁_unit)
+          exact absurd ha_M (IsLocalRing.notMem_maximalIdeal.mpr ha_unit)
+        rcases h_one_divides with ⟨d, _, hd⟩ | ⟨d, _, hd⟩ |
+          ⟨d, _, hd⟩ | ⟨d, _, hd⟩
+        · exact (case_a₁ d hd).elim
+        · exact (case_b₁ d hd).elim
+        · exact (case_a₁ d hd).elim
+        · exact (case_b₁ d hd).elim
       have hcoprime_r := hcoprime r hr
       by_cases hry₂' : r ∣ y₂
       · have hry₁' : ¬ r ∣ y₁ := fun h => hcoprime_r ⟨h, hry₂'⟩
         have := prime_in_adjoinLocSet R x₂ y₁ r hx₂_trans hr hry₁'
           a₁ b₁ (a₂ * b₂) ha₁_Rbar.2 hb₁_Rbar.2 hab₂_A₂ hprod_eq
-        simp_all
+        rcases this with h | h
+        · exact Or.inr (Or.inr (Or.inl h))
+        · exact Or.inr (Or.inr (Or.inr h))
       · have := prime_in_adjoinLocSet R x₁ y₂ r hx₁_trans hr hry₂'
           a₁ b₁ (a₂ * b₂) ha₁_Rbar.1 hb₁_Rbar.1 hab₂_A₁ hprod_eq
         rcases this with h | h

@@ -73,7 +73,8 @@ private lemma AONFor_wireValue_gate {N : Nat} [NeZero N] (f : BitString N → Bo
       (AONFor.mkGate f i).eval ((AONFor f).wireValue x) := by
   have hge : ¬ ((Fin.natAdd N i).val < N) := by simp [Fin.natAdd]
   rw [Circuit.wireValue_ge _ _ _ hge]
-  congr 1; simp only [AONFor]; simp_all
+  congr 1; simp only [AONFor]; congr 1
+  exact Fin.ext (by simp [Fin.natAdd])
 
 @[simp] private lemma AONFor_outputs {N : Nat} [NeZero N] (f : BitString N → Bool) (j : Fin 1) :
     (AONFor f).outputs j =
@@ -212,7 +213,9 @@ theorem AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
       rw [mkGate_eval_true_iff f m _ hfm]
       intro j; rw [AONFor_wireValue_input f x j]; exact (hm j).symm
   -- Close by Bool case analysis using the ↔
-  simp_all <;>
+  cases hfx : f x <;>
+    cases hfold : Fin.foldl (2 ^ N) (fun acc i =>
+      acc || (AONFor.mkGate f i).eval ((AONFor f).wireValue x)) false <;>
     simp_all
 
 /-! ## Multi-output DNF circuit: AONForM -/
@@ -393,7 +396,9 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
       intro p; rw [AONForM_wireValue_input f x p]
       rw [AONForM_idx_i]; exact (hm p).symm
   -- Close by Bool case analysis
-  simp_all <;>
+  cases hfx : f x j <;>
+    cases hfold : Fin.foldl (2 ^ N) (fun acc k =>
+      acc || (AONForM_mkGate f (AONForM_idx j k)).eval ((AONForM f).wireValue x)) false <;>
     simp_all
 
 instance : CompleteBasis Basis.unboundedAON where

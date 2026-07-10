@@ -67,10 +67,16 @@ private theorem HA_zero_mul (a : HeckeAlgebra 2) : 0 * a = 0 := instNUNAS.zero_m
 private theorem HA_mul_zero (a : HeckeAlgebra 2) : a * 0 = 0 := instNUNAS.mul_zero a
 
 private theorem HA_mul_neg (a b : HeckeAlgebra 2) : a * (-b) = -(a * b) := by
-  simp_all
+  have h := HA_mul_add a b (-b)
+  rw [add_neg_cancel, HA_mul_zero] at h
+  -- h : 0 = a * b + a * -b
+  exact eq_neg_of_add_eq_zero_right h.symm
 
 private theorem HA_neg_mul (a b : HeckeAlgebra 2) : (-a) * b = -(a * b) := by
-  simp_all
+  have h := HA_add_mul a (-a) b
+  rw [add_neg_cancel, HA_zero_mul] at h
+  -- h : 0 = a * b + -a * b
+  exact eq_neg_of_add_eq_zero_right h.symm
 
 private theorem HA_mul_sub (a b c : HeckeAlgebra 2) :
     a * (b - c) = a * b - a * c := by rw [sub_eq_add_neg, HA_mul_add, HA_mul_neg, ← sub_eq_add_neg]
@@ -264,7 +270,8 @@ private lemma mulSupport_pp_dvd_p (k : ℕ) (_hk : 0 < k) (a : Fin 2 → ℕ)
       ((SL_j₀ : GL (Fin 2) ℚ) *
         ((SL_L₂ : GL (Fin 2) ℚ) * dpk * (SL_R₂ : GL (Fin 2) ℚ))) =
       (SL_La : GL (Fin 2) ℚ) * da * (SL_Ra : GL (Fin 2) ℚ) := by
-    simp_all
+    rw [← hi₀, ← hj₀, ← hD1_eq, ← hD2_eq]
+    exact h_prod_eq_a
   have := congr_arg₂ (· * ·) (congr_arg ((SL_La : GL (Fin 2) ℚ)⁻¹ * ·) hprod)
     (show (SL_Ra : GL (Fin 2) ℚ)⁻¹ = (SL_Ra : GL (Fin 2) ℚ)⁻¹ from rfl)
   simp only [mul_assoc, inv_mul_cancel_left] at this
@@ -280,7 +287,8 @@ private lemma mulSupport_pp_case_split (k : ℕ) (_hk : 0 < k) (a : Fin 2 → �
   rcases Nat.Prime.eq_one_or_self_of_dvd hp (a 0) h_dvd_p with ha0_1 | ha0_p
   · left; congr 1; ext i; fin_cases i
     · exact ha0_1
-    · simp_all
+    · simp only [Fin.mk_one, Fin.isValue, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one]; rw [ha0_1, one_mul] at h_det_prod; exact h_det_prod
   · right; congr 1; ext i; fin_cases i
     · exact ha0_p
     · simp only [Fin.mk_one, Fin.isValue, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.cons_val_one,
@@ -567,7 +575,10 @@ theorem T_sum_prime_mul_T_ad (k : ℕ) (hk : 0 < k) :
 /-- `TSum(1) = 1`: the sum over divisor pairs of 1 is the identity. -/
 lemma T_sum_one : TSum 1 = (1 : HeckeAlgebra 2) := by
   change ∑ a ∈ Nat.divisors 1, TAd a (1 / a) = 1
-  simp_all
+  simp only [Nat.divisors_one, Finset.sum_singleton, Nat.div_self one_pos]
+  unfold TAd
+  rw [dif_pos ⟨one_pos, one_pos, dvd_refl 1⟩]
+  exact T_ad_one_one
 
 include hp in
 /-- `TAd(p, p^k) = TPp * TAd(1, p^{k-1})` for `k ≥ 1`.
@@ -1025,7 +1036,9 @@ lemma gcd_factor_prime_pow (q : ℕ) (hq : q.Prime) (a b : ℕ) (m' n' : ℕ+)
       Nat.Prime.factorization_pow hq]
     simp only [Finsupp.single_apply, Nat.factorization_eq_zero_of_not_dvd hqm,
       Nat.factorization_eq_zero_of_not_dvd hqn, add_zero, min_zero]; rfl
-  · simp_all
+  · rw [Nat.Prime.factorization_pow hq, Nat.Prime.factorization_pow hq,
+      Nat.Prime.factorization_pow hq]; simp only [Finsupp.single_apply,
+      show q ≠ p' from Ne.symm hpq, if_false, zero_add]
 
 /-- RHS computation for the inner summand: TSumNat product equals the combined quotient. -/
 private lemma T_sum_mul_peel_prime_summand_rhs (q : ℕ) (hq : q.Prime) (a b : ℕ) (m' n' : ℕ+)

@@ -453,9 +453,11 @@ theorem square_root_transform_in_S (f : ℂ → ℂ) (hf : f ∈ classS) :
           DifferentiableAt.hasDerivAt) (hasDerivAt_pow 2 0))) using 1 <;>
         first | rfl | norm_num [h_eq, Function.comp_def]
   · intro z hz; by_cases hz' : z = 0
-    · simp_all
+    · subst hz'
+      simp [hf.2.2.1, h_eq.1]
     · have hz2 : z ^ 2 ∈ ball (0 : ℂ) 1 := by
-        simp_all
+        rw [mem_ball, dist_zero_right, norm_pow]
+        exact pow_lt_one₀ (norm_nonneg _) (by simpa using hz) (by norm_num)
       rw [show (z * h (z ^ 2)) ^ 2 = z ^ 2 * h (z ^ 2) ^ 2 from by ring,
         h_eq.2 (z ^ 2) hz2 (pow_ne_zero 2 hz')]
       rw [mul_div_cancel₀ _ (pow_ne_zero 2 hz')]

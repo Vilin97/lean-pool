@@ -160,13 +160,15 @@ lemma freeCovariance_regulated_eq_complex_integral (α : ℝ) (m : ℝ) (x y : S
   have hf_conj : ∀ k, f (-k) = starRingEnd ℂ (f k) := fun k => by
     simp only [f, norm_neg, freePropagator_even, inner_neg_left,
       map_mul, Complex.conj_ofReal, ← Complex.exp_conj, map_neg, Complex.conj_I, neg_neg]
-    simp_all
+    congr 1
+    simp only [Complex.ofReal_neg, neg_mul, mul_neg, neg_neg]
   -- So I = ∫f(k) = ∫f(-k) = ∫conj(f(k)) = conj(I)
   have h_self_conj : I = starRingEnd ℂ I := by
     have h1 : I = ∫ k, f (-k) := (integral_comp_neg_spacetime f).symm
     have h2 : starRingEnd ℂ I = ∫ k, conj (f k) := by
       rw [hI]; exact (integral_conj (𝕜 := ℂ)).symm
-    simp_all
+    rw [h2, h1]
+    congr 1; funext k; exact hf_conj k
   exact conj_eq_iff_re.mp (id (Eq.symm h_self_conj))
 
 /-! ### Regulated Parseval Identity - Full Proof
@@ -339,7 +341,8 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
                   (2 * Real.pi) ^ STDimension : ℂ)) := by
               convert Complex.continuous_ofReal.comp h1 using 1
               ext k
-              simp_all
+              simp only [Function.comp_apply, Complex.ofReal_div, Complex.ofReal_mul,
+                Complex.ofReal_pow, Complex.ofReal_ofNat]
             exact h2
           exact hcont.aestronglyMeasurable.comp_measurable (measurable_snd.comp measurable_snd)
       · have h_inner_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime => ⟪p.2.2,
@@ -425,7 +428,9 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
   have h_subst := MeasureTheory.Measure.integral_comp_smul (μ := volume) g (2 * Real.pi)
   have h_rearranged : ∫ k, g k ∂volume = |2 * Real.pi| ^ STDimension * ∫ p, g ((2 * Real.pi) • p)
     ∂volume := by
-    simp_all
+    rw [h_subst, h_finrank]
+    rw [abs_inv, abs_pow, smul_eq_mul]
+    field_simp
   simp only [g] at h_rearranged
   rw [h_rearranged]
   have h_integrand : ∀ p, g ((2 * Real.pi) • p) =
@@ -491,7 +496,8 @@ lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (
     convert h_int using 1
     ext ⟨x, y, k⟩
     simp only [F, amplitude]
-    simp_all
+    push_cast
+    ring
   have h_fubini : ∫ x, ∫ y, ∫ k, F x y k = ∫ k, ∫ x, ∫ y, F x y k := fubini_triple_reorder
     h_F_integrable
   have h_factor_xy : ∀ k,
@@ -554,7 +560,8 @@ lemma y_integral_eq_physicsFT_conj (f : TestFunctionℂ) (k : SpaceTime) :
   simp only [starRingEnd_apply, map_mul]
   congr 1
   rw [Complex.star_def, ← Complex.exp_conj]
-  simp_all
+  congr 1
+  simp only [map_neg, map_mul, Complex.conj_I, Complex.conj_ofReal, neg_neg, neg_mul]
 
 /-- The product physicsFT f k * conj(physicsFT f k) = ‖physicsFT f k‖² -/
 lemma physicsFT_mul_conj (f : TestFunctionℂ) (k : SpaceTime) :
@@ -578,14 +585,16 @@ lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ)
         ‖physicsFT f k‖^2 : ℝ) : ℂ) := by
     intro k
     rw [mul_assoc, physicsFT_mul_conj]
-    simp_all
+    push_cast
+    ring
   simp_rw [h]
   have h_re : ∫ k, ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^
     STDimension *
       ‖physicsFT f k‖^2 : ℝ) : ℂ) ∂volume =
       (((∫ k, Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension *
         ‖physicsFT f k‖^2 ∂volume : ℝ)) : ℂ) := integral_ofReal
-  simp_all
+  rw [h_re]
+  simp only [Complex.ofReal_re]
 
 /-- **Parseval identity for regulated covariance (proven theorem).**
 
@@ -751,14 +760,19 @@ private lemma prod_diagonal_null :
     (volume.prod volume) {p : SpaceTime × SpaceTime | p.1 = p.2} = 0 := by
   have h_meas : MeasurableSet {p : SpaceTime × SpaceTime | p.1 = p.2} := measurableSet_diagonal
   rw [MeasureTheory.Measure.prod_apply h_meas]
-  simp_all
+  simp only [Set.preimage_setOf_eq]
+  have h_slice : ∀ x, (volume : Measure SpaceTime) {y : SpaceTime | x = y} = 0 := fun x => by
+    rw [show {y : SpaceTime | x = y} = {x} from by ext y; simp [eq_comm]]
+    exact MeasureTheory.measure_singleton x
+  simp only [h_slice, MeasureTheory.lintegral_zero]
 
 /-- For `volume.prod volume`-a.e. `p`, the two coordinates differ. -/
 private lemma ae_fst_ne_snd :
     ∀ᵐ p ∂(volume.prod volume), (p : SpaceTime × SpaceTime).1 ≠ p.2 := by
   have h := prod_diagonal_null
   rw [MeasureTheory.measure_eq_zero_iff_ae_notMem] at h
-  simp_all
+  filter_upwards [h] with p hp
+  exact fun heq => hp (Set.mem_setOf.mpr heq)
 
 /-- For complex test functions `f g`, the integrand `p ↦ f p.1 * ⟨middle p⟩ * conj (g p.2)`
     is a.e. strongly measurable whenever the middle factor is. -/
@@ -805,7 +819,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     have h_norm_eq : ∀ p : SpaceTime × SpaceTime,
         ‖f p.1 * (freeCovariance m p.1 p.2 : ℂ) * g p.2‖ = ‖f p.1‖ * |freeCovariance m p.1 p.2| *
           ‖g p.2‖ := by
-      simp_all
+      intro p
+      rw [norm_mul, norm_mul, Complex.norm_real, Real.norm_eq_abs]
     -- Rewrite bound in terms of the norm
     have h_bound_eq : bound = fun p => Real.exp (m^2) * ‖f p.1 * (freeCovariance m p.1 p.2 : ℂ) * g
       p.2‖ := by
@@ -842,7 +857,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     have h_mem : Set.Ioo 0 1 ∈ nhdsWithin (0 : ℝ) (Set.Ioi 0) := by
       rw [mem_nhdsWithin]
       refine ⟨Set.Iio 1, isOpen_Iio, by norm_num, ?_⟩
-      intro x simp_all
+      intro x ⟨hx_lt, hx_pos⟩
+      exact ⟨hx_pos, hx_lt⟩
     filter_upwards [h_mem] with α ⟨hα_pos, hα_lt1⟩
     -- Now α ∈ (0, 1), need to show a.e. bound (diagonal has measure zero)
     filter_upwards [ae_fst_ne_snd] with p hxy

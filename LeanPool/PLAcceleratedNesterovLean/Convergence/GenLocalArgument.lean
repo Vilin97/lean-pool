@@ -158,13 +158,16 @@ private abbrev localConvergenceAtBasePointGenProof
       (hπ'_C1 mstar hmstar).continuousAt_fderiv one_ne_zero
     exact hCA_π'.congr (h_evt_eq'.fderiv.symm)
   have hP_self_adj : ∀ x y : E d, @inner ℝ _ _ (P x) y = @inner ℝ _ _ x (P y) := by
-    simp_all
+    intro x y
+    simp only [hP_def, h_fderiv_eq']
+    exact hπ'_self_adj mstar hmstar x y
   have hP_idem : ∀ x : E d, P (P x) = P x := by
     have h_pipi : ∀ x, π (π x) = π x := fun x => hπ_fix (π x) (hπ_in_S x)
     have hπ_diff : DifferentiableAt ℝ π mstar :=
       h_evt_eq'.differentiableAt_iff.mpr (hπ'_diff mstar hmstar)
     have h_eq : fderiv ℝ (fun x => π (π x)) mstar = fderiv ℝ π mstar := by
-      simp_all
+      have : (fun x => π (π x)) = π := funext h_pipi
+      rw [this]
     have hπm : π mstar = mstar := hπ_fix mstar hmstar
     have h_chain : fderiv ℝ (fun x => π (π x)) mstar =
         (fderiv ℝ π mstar).comp (fderiv ℝ π mstar) := by

@@ -38,7 +38,8 @@ abbrev Bounded₂ (f : V → V → V) : Prop := Bounded (k := 2) (fun v ↦ f (v
 abbrev Bounded₃ (f : V → V → V → V) : Prop := Bounded (k := 3) (fun v ↦ f (v 0) (v 1) (v 2))
 
 instance (f : (Fin k → V) → V) [h : Bounded f] : Bounded f := by
-  simp_all
+  rcases h with ⟨t, ht⟩
+  exact ⟨Semiterm.lMap Language.oringEmb t, by simpa⟩
 
 variable {ℌ}
 
@@ -224,7 +225,8 @@ lemma ball_blt {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     simpa [←le_iff_lt_succ, Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
       (hf_graph.and ((hp.retraction (0 :> (·.succ.succ))).ball #0)).bex ‘!!bf + 1’
   exact .of_iff ⟨_, this⟩ (fun v ↦ ⟨fun h ↦ ⟨f v, hbf v, rfl, h⟩, by
-    simp_all⟩)
+    rintro ⟨y, hy, rfl, h⟩
+    exact h⟩)
 
 
 lemma bex_blt {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
@@ -241,7 +243,8 @@ lemma bex_blt {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     simpa [←le_iff_lt_succ, Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
       (hf_graph.and ((hp.retraction (0 :> (·.succ.succ))).bex #0)).bex ‘!!bf + 1’
   exact .of_iff ⟨_, this⟩ (fun v ↦ ⟨fun h ↦ ⟨f v, hbf v, rfl, h⟩, by
-    simp_all⟩)
+    rintro ⟨y, hy, rfl, h⟩
+    exact h⟩)
 
 lemma ball_ble {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     (hf : BoldfaceBoundedFunction f) (h : ℌ.Boldface fun w ↦ P (w ·.succ) (w 0)) :
@@ -257,7 +260,8 @@ lemma ball_ble {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     simpa [←le_iff_lt_succ, Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
       (hf_graph.and ((hp.retraction (0 :> (·.succ.succ))).ball ‘x. x + 1’)).bex ‘!!bf + 1’
   exact .of_iff ⟨_, this⟩ (fun v ↦ ⟨fun h ↦ ⟨f v, hbf v, rfl, h⟩, by
-    simp_all⟩)
+    rintro ⟨y, hy, rfl, h⟩
+    exact h⟩)
 
 lemma bex_ble {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     (hf : BoldfaceBoundedFunction f) (h : ℌ.Boldface fun w ↦ P (w ·.succ) (w 0)) :
@@ -273,7 +277,8 @@ lemma bex_ble {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     simpa [←le_iff_lt_succ, Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
       (hf_graph.and ((hp.retraction (0 :> (·.succ.succ))).bex ‘x. x + 1’)).bex ‘!!bf + 1’
   exact .of_iff ⟨_, this⟩ (fun v ↦ ⟨fun h ↦ ⟨f v, hbf v, rfl, h⟩, by
-    simp_all⟩)
+    rintro ⟨y, hy, rfl, h⟩
+    exact h⟩)
 
 lemma ball_blt_zero {P : (Fin k → V) → V → Prop} {f : (Fin k → V) → V}
     (hf : BoldfaceBoundedFunction f) (h : Γ-[0].Boldface fun w ↦ P (w ·.succ) (w 0)) :

@@ -172,7 +172,10 @@ theorem finField_pow_sum (Fq : Type) [Field Fq] [Fintype Fq] (m : ℕ) :
     rw [← Fintype.sum_eq_add_sum_subtype_ne (fun x : Fq => x ^ m) 0]
   rw [hsplit, ← hunits, FiniteField.sum_pow_units Fq m]
   rcases Nat.eq_zero_or_pos m with hm | hm
-  · simp_all
+  · subst hm
+    simp only [pow_zero, lt_irrefl, false_and, if_false]
+    rw [if_pos (dvd_zero _)]
+    ring
   · rw [zero_pow hm.ne', zero_add]
     simp only [hm, true_and]
 
@@ -207,7 +210,12 @@ theorem negChoose_cast_ne_zero_iff (Fq : Type) [Field Fq]
   have hCpos : Nat.choose N y ≠ 0 := (Nat.choose_pos (by omega : y ≤ N)).ne'
   have step3 : ¬ (p ∣ Nat.choose N y) ↔ (Nat.choose N y).factorization p = 0 := by
     rw [Nat.factorization_eq_zero_iff]
-    simp_all
+    constructor
+    · intro h; right; left; exact h
+    · rintro (h|h|h)
+      · exact absurd hp h
+      · exact h
+      · exact absurd h hCpos
   rw [step3]
   set b := Nat.log p N + 1 with hb
   have hbgt : Nat.log p N < b := by omega
@@ -229,7 +237,9 @@ theorem negChoose_cast_ne_zero_iff (Fq : Type) [Field Fq]
         have hy : y < p ^ i := by omega
         have hk1 : k-1 < p ^ i := by omega
         rw [Nat.mod_eq_of_lt hy, Nat.mod_eq_of_lt hk1]; omega
-    · simp_all
+    · intro H i hi hle
+      rw [Finset.mem_Ico] at hi
+      have := H i hi.1; omega
   rw [bridge]
   change (∀ i, 1 ≤ i → y % p ^ i + (k - 1) % p ^ i < p ^ i) ↔ CarryFree p [k-1, y]
   unfold CarryFree digit
@@ -271,7 +281,8 @@ theorem negChoose_cast_ne_zero_iff (Fq : Type) [Field Fq]
         have h3 : Pe * (p-1) = Pe*p - Pe := by rw [Nat.mul_sub_one]
         have h4 : Pe ≤ Pe * p := Nat.le_mul_of_pos_right _ (by omega)
         omega
-    simp_all
+    intro i _
+    exact hno i
 
 /-- **L4 (Lucas, multinomial).** With `y = ∑ i, m i`, the multinomial coefficient
 `multinomial(y; m_1,…,m_d)` has nonzero image in `F_q` iff the addition
@@ -289,8 +300,16 @@ theorem multinomial_cast_ne_zero_iff (Fq : Type) [Field Fq]
     have he1 : (a + 1) + s - 1 = a + s := by omega
     have he2 : Nat.choose (a + s) s = Nat.choose (a + s) a := by
       have := Nat.choose_symm (n := a + s) (k := a) (by omega)
-      simp_all
-    simp_all
+      rw [show a + s - a = s by omega] at this
+      exact this
+    rw [he1, he2] at h3
+    have hsimp : (a + 1) - 1 = a := by omega
+    rw [hsimp] at h3
+    rw [← h3]
+    push_cast
+    have hu : ((-1:Fq)) ^ s ≠ 0 := pow_ne_zero _ (by simp)
+    rw [mul_ne_zero_iff]
+    tauto
   -- Product of factorials divides factorial of sum (so the list multinomial is an
   -- integer).
   have hmultidvd : ∀ L : List ℕ, (L.map Nat.factorial).prod ∣ L.sum.factorial := by
@@ -369,9 +388,13 @@ theorem multinomial_cast_ne_zero_iff (Fq : Type) [Field Fq]
         rcases Nat.eq_zero_or_pos e with he | he
         · subst he
           have hd : ∀ x : ℕ, digit 0 x 0 = x := by intro x; unfold digit; simp
-          simp_all
+          rw [hd]
+          conv_rhs => rw [show (fun x => digit 0 x 0) = (id : ℕ → ℕ) by funext x; simp [hd]]
+          simp
         · unfold digit
-          simp_all
+          have h0 : (0:ℕ) ^ e = 0 := by simp [Nat.pow_eq_zero]; omega
+          simp only [h0, Nat.div_zero, Nat.zero_mod, List.map_const', List.sum_replicate,
+            smul_eq_mul, mul_zero]
       · intro h e
         have hd : ∀ x : ℕ, digit 1 x e = 0 := by intro x; unfold digit; simp [Nat.mod_one]
         simp [hd]
@@ -382,7 +405,16 @@ theorem multinomial_cast_ne_zero_iff (Fq : Type) [Field Fq]
       | cons a t ih =>
         have htail : ∀ e, (t.map (fun x => digit p x e)).sum ≤ p - 1 := by
           intro e; have := h e; simp only [List.map_cons, List.sum_cons] at this; omega
-        simp_all
+        have ihd := ih htail
+        intro e
+        simp only [List.map_cons, List.sum_cons]
+        have hpair : ∀ e, digit p a e + digit p t.sum e ≤ p - 1 := by
+          intro e
+          rw [ihd e]
+          have := h e
+          simp only [List.map_cons, List.sum_cons] at this
+          exact this
+        rw [crux_digit_two a t.sum hp' hpair e, ihd e]
   -- CarryFree splits over a cons: the head together with the tail-sum.
   have hcons : ∀ (a : ℕ) (L : List ℕ),
       (CarryFree p [a, L.sum] ∧ CarryFree p L) ↔ CarryFree p (a :: L) := by
@@ -391,11 +423,19 @@ theorem multinomial_cast_ne_zero_iff (Fq : Type) [Field Fq]
     simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, add_zero]
     constructor
     · rintro ⟨h1, h2⟩ e
-      simp_all
+      have hc := crux_list L h2 e
+      have h1e := h1 e
+      rw [hc] at h1e
+      exact h1e
     · intro h
       have h2 : ∀ e, (L.map (fun x => digit p x e)).sum ≤ p - 1 := by
         intro e; have := h e; omega
-      simp_all
+      refine ⟨?_, h2⟩
+      intro e
+      have hc := crux_list L h2 e
+      have he := h e
+      rw [← hc] at he
+      exact he
   -- Main induction on lists: the list multinomial cast is nonzero iff CarryFree.
   have hmain : ∀ L : List ℕ,
       (((L.sum.factorial / (L.map Nat.factorial).prod : ℕ) : ℤ) : Fq) ≠ 0 ↔ CarryFree p L := by
@@ -407,7 +447,22 @@ theorem multinomial_cast_ne_zero_iff (Fq : Type) [Field Fq]
       · intro _ e; simp [digit]
       · intro _; simp
     | cons a t ih =>
-      simp_all
+      have hrr := hrec a t
+      rw [List.sum_cons]
+      have hcast : (((a + t.sum).factorial / ((a :: t).map Nat.factorial).prod : ℕ) : Fq)
+          = ((a + t.sum).choose a : Fq)
+            * ((t.sum.factorial / (t.map Nat.factorial).prod : ℕ) : Fq) := by
+        rw [hrr]; push_cast; ring
+      rw [Int.cast_natCast, hcast]
+      rw [mul_ne_zero_iff]
+      have hb := hbinom a t.sum
+      rw [Int.cast_natCast] at hb
+      rw [hb]
+      rw [show (((t.sum.factorial / (t.map Nat.factorial).prod : ℕ) : Fq))
+          = ((((t.sum.factorial / (t.map Nat.factorial).prod : ℕ) : ℤ)) : Fq) by
+        rw [Int.cast_natCast]] at *
+      rw [ih]
+      rw [hcons a t]
   -- Reduce `Nat.multinomial Finset.univ m` to the list version over `List.ofFn m`.
   have hreduce : ((Nat.multinomial Finset.univ m : ℤ) : Fq)
       = ((((List.ofFn m).sum.factorial
@@ -469,9 +524,13 @@ theorem crux_list (p : ℕ) (L : List ℕ)
       rcases Nat.eq_zero_or_pos e with he | he
       · subst he
         have hd : ∀ x : ℕ, digit 0 x 0 = x := by intro x; unfold digit; simp
-        simp_all
+        rw [hd]
+        conv_rhs => rw [show (fun x => digit 0 x 0) = (id : ℕ → ℕ) by funext x; simp [hd]]
+        simp
       · unfold digit
-        simp_all
+        have h0 : (0:ℕ) ^ e = 0 := by simp [Nat.pow_eq_zero]; omega
+        simp only [h0, Nat.div_zero, Nat.zero_mod, List.map_const', List.sum_replicate,
+          smul_eq_mul, mul_zero]
     · intro e
       have hd : ∀ x : ℕ, digit 1 x e = 0 := by intro x; unfold digit; simp [Nat.mod_one]
       simp [hd]
@@ -485,7 +544,11 @@ theorem crux_list (p : ℕ) (L : List ℕ)
       intro e
       simp only [List.map_cons, List.sum_cons]
       have hpair : ∀ e, digit p a e + digit p t.sum e ≤ p - 1 := by
-        simp_all
+        intro e
+        rw [ihd e]
+        have := h e
+        simp only [List.map_cons, List.sum_cons] at this
+        exact this
       rw [crux_digit_two p a t.sum hp' hpair e, ihd e]
 
 /-- **L5 (carry-free combination).** With `y = ∑ i, m i`, the two carry-free
@@ -503,14 +566,18 @@ theorem carryfree_combine (p kk d : ℕ) (m : Fin d → ℕ) :
     have hc := crux_list p (List.ofFn m) h2 e
     rw [hsum] at hc
     have h1e := h1 e
-    simp_all
+    rw [hc] at h1e
+    exact h1e
   · intro h
     have h2 : ∀ e, ((List.ofFn m).map (fun x => digit p x e)).sum ≤ p - 1 := by
       intro e; have := h e; omega
     refine ⟨?_, h2⟩
     intro e
     have hc := crux_list p (List.ofFn m) h2 e
-    simp_all
+    rw [hsum] at hc
+    have he := h e
+    rw [← hc] at he
+    exact he
 
 /-! ### L1 helper lemmas (PowerSeries / LaurentSeries infrastructure)
 
@@ -592,7 +659,10 @@ theorem coeff_inv_one_add_pow
       simp only [Function.mem_support] at hd
       rw [Finset.coe_range, Set.mem_Iio]
       by_contra hcon
-      simp_all
+      push Not at hcon
+      apply hd
+      rw [PowerSeries.coeff_mk, coeff_neg_pow, coeff_pow_high d (by omega)]
+      simp
 
 /-- **H2 (`phi (monicOf θ)` made explicit).** `phi (monicOf θ)` equals the shift
 `single (-d) 1` times the coercion of the unit power series
@@ -606,21 +676,31 @@ theorem phi_monicOf_eq (Fq : Type) [Field Fq] (d : ℕ) (θ : Fin d → Fq) :
                 (PowerSeries.C (R := Fq) (θ i)) * PowerSeries.X ^ (d - (i : ℕ)))) := by
   have hpow : ∀ (n : ℕ) (a : ℤ),
       (HahnSeries.single a (1 : Fq)) ^ n = HahnSeries.single (n * a) 1 := by
-    simp_all
+    intro n a
+    induction n with
+    | zero => simp
+    | succ k ih =>
+      rw [pow_succ, ih, HahnSeries.single_mul_single]
+      congr 1 <;> push_cast <;> ring_nf
   have hXinv :
       ((PowerSeries.X : PowerSeries Fq) : LaurentSeries Fq)⁻¹ = HahnSeries.single (-1) 1 := by
-    simp_all
+    apply inv_eq_of_mul_eq_one_left
+    rw [PowerSeries.coe_X, HahnSeries.single_mul_single]; norm_num
   have halg : ∀ a : Fq, algebraMap Fq (LaurentSeries Fq) a = HahnSeries.single 0 a := by
     intro a
     rw [LaurentSeries.algebraMap_apply, HahnSeries.C_apply]
   have hofX : ∀ m : ℕ,
       HahnSeries.ofPowerSeries ℤ Fq (PowerSeries.X ^ m) = HahnSeries.single (m : ℤ) 1 := by
-    simp_all
+    intro m
+    rw [map_pow, PowerSeries.coe_X, hpow]; congr 1; simp
   have hLHSterm : ∀ i : Fin d,
       (Polynomial.aeval ((HahnSeries.single (-1) 1 : LaurentSeries Fq)))
           (Polynomial.C (θ i) * Polynomial.X ^ (i : ℕ))
         = HahnSeries.single (-(i : ℤ)) (θ i) := by
-    simp_all
+    intro i
+    rw [map_mul, map_pow, Polynomial.aeval_C, Polynomial.aeval_X, hpow, halg,
+        HahnSeries.single_mul_single]
+    congr 1 <;> ring_nf
   have hRHSterm : ∀ i : Fin d,
       (HahnSeries.single (-(d : ℤ)) (1 : Fq)) *
           (HahnSeries.ofPowerSeries ℤ Fq
@@ -640,7 +720,10 @@ theorem phi_monicOf_eq (Fq : Type) [Field Fq] (d : ℕ) (θ : Fin d → Fq) :
   rw [Finset.sum_congr rfl (fun i _ => hLHSterm i)]
   -- RHS transform
   rw [map_add, mul_add, map_sum, Finset.mul_sum]
-  simp_all
+  rw [Finset.sum_congr rfl (fun i _ => hRHSterm i)]
+  -- now: single(-d)1 + ∑ single(-i)(θi) = single(-d)1 * ofPowerSeries 1 + ∑ single(-i)(θi)
+  congr 1
+  simp
 
 /-- **H3 (inverse `k`-th power as shift × PowerSeries inverse).** From H2: the
 `k`-th power of the inverse is `single (d*k) 1` times the coercion of the
@@ -676,7 +759,12 @@ theorem inv_phi_pow_eq_shift_mul (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d 
     simp
   have hpow : ∀ (n : ℕ) (a : ℤ),
       (HahnSeries.single a (1 : Fq)) ^ n = HahnSeries.single (n * a) 1 := by
-    simp_all
+    intro n a
+    induction n with
+    | zero => simp
+    | succ m ih =>
+      rw [pow_succ, ih, HahnSeries.single_mul_single]
+      congr 1 <;> push_cast <;> ring_nf
   -- rewrite phi via H2
   rw [phi_monicOf_eq, ← hu]
   rw [mul_inv_rev, mul_pow]
@@ -685,7 +773,8 @@ theorem inv_phi_pow_eq_shift_mul (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d 
       (HahnSeries.single (-(d : ℤ)) (1 : Fq))⁻¹ ^ k =
         HahnSeries.single (d * k : ℤ) 1 := by
     have hinv : (HahnSeries.single (-(d : ℤ)) (1 : Fq))⁻¹ = HahnSeries.single (d : ℤ) 1 := by
-      simp_all
+      apply inv_eq_of_mul_eq_one_left
+      rw [HahnSeries.single_mul_single]; norm_num
     rw [hinv, hpow]; congr 1; ring_nf
   rw [mul_comm ((HahnSeries.ofPowerSeries ℤ Fq u)⁻¹ ^ k) _, hsingle]
   congr 1
@@ -797,7 +886,8 @@ theorem Sdk_coeff_per_theta (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d → F
           rw [hs, hp]
         have hprodθ : (∏ i, (θ (Fin.rev i)) ^ ((c ∘ Fin.rev) i)) = ∏ i, (θ i) ^ (c i) := by
           rw [← Equiv.prod_comp (Fin.revPerm) (fun i => (θ i) ^ (c i))]
-          simp_all
+          apply Finset.prod_congr rfl
+          intro j _; simp [Function.comp, Fin.revPerm_apply]
         have hweight : weight d (c ∘ Fin.rev) = ∑ i : Fin d, (d - (i : ℕ)) * c i := by
           rw [weight, ← Equiv.sum_comp (Fin.revPerm) (fun i => ((i : ℕ) + 1) * (c ∘ Fin.rev) i)]
           apply Finset.sum_congr rfl
@@ -835,7 +925,10 @@ theorem Sdk_coeff_per_theta (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d → F
               Finset.single_le_sum (f := fun j : Fin d => ((j : ℕ)+1) * m j)
                 (fun j _ => Nat.zero_le _) (Finset.mem_univ i)
         omega
-      · simp_all
+      · rintro ⟨_, hw⟩
+        have : (weight d m : ℤ) = (e : ℤ) := by exact_mod_cast hw
+        push_cast [← he, this]
+        omega
     rw [hset, finsum_mem_coe_finset]
     -- LHS → fiberwise
     rw [← Finset.sum_fiberwise_of_maps_to (s := FS) (t := Finset.range (e + 1))
@@ -868,7 +961,11 @@ theorem Sdk_coeff_per_theta (Fq : Type) [Field Fq] (d k : ℕ) (θ : Fin d → F
           omega
         · omega
         · exact hsum
-      · simp_all
+      · intro m hm
+        simp only [hFS, Finset.mem_filter, Fintype.mem_piFinset, Finset.mem_range] at hm
+        simp only [Finset.mem_filter, Finset.mem_piAntidiag]
+        obtain ⟨⟨_, hw⟩, hsum⟩ := hm
+        exact ⟨⟨hsum, fun i _ => Finset.mem_univ i⟩, hw.symm⟩
       · intro m hm; rfl
       · intro m hm; rfl
       · intro m hm
@@ -920,7 +1017,8 @@ theorem Sdk_coeff_as_thetasum (Fq : Type) [Field Fq] [Fintype Fq]
   -- which turns `∏ i, (θ (Fin.rev i)) ^ (m i)` into `∏ i, (θ i) ^ (m i)`.
   apply Fintype.sum_bijective (fun θ : Fin d → Fq => θ ∘ Fin.rev)
     (Function.Involutive.bijective (fun θ => by funext i; simp [Function.comp]))
-  simp_all
+  intro θ
+  rfl
 
 /-- **Assembly (b): nonvanishing of `cwit` on the index set.** For `m ∈ T_{d,k-1}`,
 `cwit Fq d k m ≠ 0`.  From L3, L4, and L5: membership in `Tindex` supplies both
@@ -936,7 +1034,15 @@ theorem cwit_ne_zero (Fq : Type) [Field Fq] [Fintype Fq]
   have h4 : ((Nat.multinomial Finset.univ m : ℤ) : Fq) ≠ 0 :=
     (multinomial_cast_ne_zero_iff Fq p d hp hchar m).mpr hcf2
   unfold cwit
-  simp_all
+  simp only
+  push_cast
+  push_cast at h3 h4
+  have hsign : ((-1 : Fq)) ^ d ≠ 0 := pow_ne_zero _ (by norm_num)
+  have hcombo := mul_ne_zero (mul_ne_zero hsign h3) h4
+  intro hzero
+  apply hcombo
+  rw [← hzero]
+  ring
 
 /-- **Assembly (c): the coefficient identity** with the explicit witness `cwit`.
 Combines L1 (expansion), L2 (the finite-field power sum collapsing the `θ`-sum to
@@ -1121,7 +1227,9 @@ theorem monicOf_injective (Fq : Type) [Field Fq] (d : ℕ) :
   funext i
   have := monicOf_coeff Fq d θ i
   have h2 := monicOf_coeff Fq d θ' i
-  simp_all
+  rw [h] at this
+  rw [this] at h2
+  exact h2
 
 /-- The parameterization is surjective onto `A_d ^ +`: every monic polynomial of
 degree exactly `d` arises as `monicOf` of its lower coefficients. -/

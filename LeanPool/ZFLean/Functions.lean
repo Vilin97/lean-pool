@@ -34,7 +34,8 @@ theorem mem_inv {x y R A B : ZFSet} (hR : R ⊆ A.prod B) :
   mp := by
     intro h
     dsimp [inv] at h
-    simp_all
+    rw [mem_sep, pair_mem_prod, π₁_pair, π₂_pair] at h
+    exact h.2
   mpr := by
     intro h
     rw [inv, mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
@@ -80,7 +81,9 @@ theorem _root_.ZFSet.funs.nonempty {A B : ZFSet} (hB : B ≠ ∅) : ZFSet.funs A
       exact ⟨⟨hx, hb⟩, x, ⟨hx, rfl⟩⟩
     · intro y hy
       rw [mem_sep, pair_mem_prod] at hy
-      simp_all
+      obtain ⟨⟨xA, yB⟩, z, z_A, eq⟩ := hy
+      rw [pair_inj] at eq
+      exact eq.2
   intro contr
   rw [← mem_funs, contr] at hf
   nomatch notMem_empty f hf
@@ -154,7 +157,9 @@ theorem is_pfunc_func_exists {f A B : ZFSet} :
       obtain ⟨x_A, y, pair⟩ := x_A
       have y_B : y ∈ B := by
         obtain ⟨_,_,_,_,h⟩ := mem_prod.mp <| sub_AB pair
-        simp_all
+        rw [pair_inj] at h
+        rcases h with ⟨rfl, rfl⟩
+        assumption
       exact ⟨y, pair, fun z hz ↦ func x z hz y pair⟩
     repeat (intro z hz; exact mem_sep.mp hz |>.left)
 
@@ -197,7 +202,9 @@ theorem is_func_of_pfunc (f : ZFSet) {A B} (hf : f.IsPFunc A B) : IsFunc f.Dom B
   refine ⟨fun z hz ↦ ?_, uniq⟩
   obtain ⟨x, xA, y, yB, rfl⟩ := mem_prod.mp <| fsub hz
   obtain ⟨u, u_dom, v, v_dom, eq⟩ := mem_prod.mp <| ftot hz
-  simp_all
+  rcases pair_inj.mp eq with ⟨rfl, rfl⟩
+  rw [pair_mem_prod]
+  exact ⟨u_dom, yB⟩
 /-- Imported ZFLean declaration. -/
 def IsInjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
   let _ := _hf
@@ -273,13 +280,15 @@ prefix:max "𝟙" => Id
 theorem pair_mem_Id_iff {A : ZFSet} {x y : ZFSet} (hx : x ∈ A) : x.pair y ∈ 𝟙A ↔ x = y := by
   simp only [Id, mem_sep, mem_prod, pair_inj, exists_eq_right_right', and_assoc]
   constructor
-  · simp_all
+  · rintro ⟨_, _, _, _, rfl⟩
+    rfl
   · rintro rfl
     simpa only [and_true, and_self]
 
 theorem mem_Id_iff {A : ZFSet} {z : ZFSet} : z ∈ 𝟙A ↔ ∃ x ∈ A, z = x.pair x := by
   simp only [Id, mem_sep, mem_prod, and_iff_right_iff_imp, forall_exists_index, and_imp]
-  simp_all
+  rintro x xA rfl
+  use x, xA, x, xA
 
 theorem pair_self_mem_Id {A : ZFSet} {x : ZFSet} (hx : x ∈ A) : x.pair x ∈ 𝟙A := by
   rwa [pair_mem_Id_iff]
@@ -289,11 +298,16 @@ theorem _root_.ZFSet.Id.IsFunc {A : ZFSet} : A.IsFunc A 𝟙A := by
   unfold Id
   and_intros
   · intro z hz
-    simp_all
+    rw [mem_sep] at hz
+    exact hz.1
   · intro x xA
     simp only [mem_sep, mem_prod, pair_inj, exists_eq_right_right']
     exists x
-    simp_all
+    beta_reduce
+    simp only [and_self, and_true, and_imp, forall_self_imp]
+    refine ⟨xA, ?_⟩
+    rintro _ _ _ rfl
+    rfl
 
 @[zpfun]
 theorem _root_.ZFSet.Id.IsPFunc {A : ZFSet} : (𝟙A).IsPFunc A A := is_func_is_pfunc Id.IsFunc
@@ -302,7 +316,12 @@ theorem _root_.ZFSet.Id.IsBijective {A : ZFSet} : (𝟙A).IsBijective Id.IsFunc 
   constructor
   · intro x y z xA yA zA x_pair_y y_pair_z
     rw [Id, mem_sep, pair_mem_prod] at x_pair_y y_pair_z
-    simp_all
+    obtain ⟨x', x'_A, eq_x⟩ := x_pair_y.2
+    obtain ⟨y', y'_A, eq_y⟩ := y_pair_z.2
+    rw [pair_inj] at eq_x eq_y
+    obtain ⟨rfl, rfl⟩ := eq_x
+    obtain ⟨rfl, rfl⟩ := eq_y
+    rfl
   · intro y yA
     simp_rw [Id, mem_sep, pair_mem_prod, pair_inj, exists_eq_right_right',
       existsAndEq, and_self, yA, and_true]
@@ -340,7 +359,14 @@ theorem mem_composition (g f : ZFSet) {A B C : ZFSet} {z : ZFSet} :
     ∃ (x w y : ZFSet), z = x.pair y ∧ x ∈ A ∧ y ∈ C ∧ w ∈ B ∧ x.pair w ∈ f ∧ w.pair y ∈ g := by
   simp only [composition, mem_sep, mem_prod]
   constructor
-  · simp_all
+  · rintro ⟨⟨a, ha, c, hc, rfl⟩, ⟨_, _, eq, _, memB, memf, memg⟩⟩
+    rw [pair_inj] at eq
+    obtain ⟨rfl, rfl⟩ := eq
+    simp only [pair_inj, existsAndEq, and_true, exists_and_left, exists_eq_left']
+    and_intros
+    · exact ha
+    · exact hc
+    · exact ⟨_, memB, memf, memg⟩
   · rintro ⟨x, w, y, rfl, xA, yC, wB, xw_f, wy_g⟩
     simp only [pair_inj, exists_eq_right_right', existsAndEq, and_true, exists_eq_left']
     and_intros
@@ -354,7 +380,10 @@ theorem _root_.ZFSet.Id.composition_left
   unfold Id composition
   simp only [mem_sep, mem_prod, pair_inj, exists_eq_right_right', existsAndEq, and_self, and_true]
   constructor
-  · simp_all
+  · rintro ⟨⟨a, aA, b, bB, rfl⟩, x, y, eq, yB, memf, -⟩
+    rw [pair_inj] at eq
+    obtain ⟨rfl, rfl⟩ := eq
+    exact memf
   · intro xf
     and_intros
     · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
@@ -368,7 +397,10 @@ theorem _root_.ZFSet.Id.composition_right
   unfold Id composition
   simp only [mem_sep, mem_prod, pair_inj, exists_eq_right_right', existsAndEq, and_self, and_true]
   constructor
-  · simp_all
+  · rintro ⟨⟨a, aA, b, bB, rfl⟩, x, y, eq, xB, xA, memf⟩
+    rw [pair_inj] at eq
+    obtain ⟨rfl, rfl⟩ := eq
+    exact memf
   · intro xf
     and_intros
     · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
@@ -415,7 +447,12 @@ theorem IsFunc_of_composition_IsFunc {g f : ZFSet} {A B C : ZFSet}
       and_intros
       · rfl
       · exists y
-    · simp_all
+    · intro z' hz'
+      obtain ⟨x', z', eq, y', y'_B, x'y'f, y'z'g⟩ := hz'.2
+      rw [pair_inj] at eq
+      obtain ⟨rfl, rfl⟩ := eq
+      apply z_unq
+      rwa [← y_unq y' x'y'f]
 
 /-- Imported ZFLean declaration. -/
 abbrev fcomp (g f : ZFSet) {A B C : ZFSet}
@@ -433,7 +470,8 @@ infixl:90 " ∘ᶻ " => fcomp
     intro hxy
     simp only [mem_composition, pair_inj, ↓existsAndEq, and_true, exists_and_left,
       exists_eq_left'] at hxy
-    simp_all
+    obtain ⟨a, ha, b, hb, fxb, gby⟩ := hxy
+    use b, hb
   mpr := by
     intro ⟨w, hw, fxw, gwy⟩
     simp only [mem_composition, pair_inj, ↓existsAndEq, and_true, exists_and_left, exists_eq_left']
@@ -522,7 +560,10 @@ open Classical in
 noncomputable def fapply (f : ZFSet) {A B : ZFSet} (hf : f.IsPFunc A B := by zpfun) :
   {x // x ∈ f.Dom} → {x // x ∈ B} := fun ⟨x, x_dom⟩ ↦
   have : ∃ y ∈ B, pair x y ∈ f := by
-    simp_all
+    unfold Dom at x_dom
+    rw [mem_sep] at x_dom
+    obtain ⟨xA, y, yB, xyf⟩ := x_dom
+    use y
   ⟨choose this, choose_spec this |>.left⟩
 
 /-- Notation for applying a ZF partial function. -/
@@ -532,7 +573,10 @@ notation:max "@ᶻ" f:max => fapply f
 theorem is_func_dom_eq {f A B : ZFSet} (hf : IsFunc A B f := by zfun) : f.Dom = A := by
   ext1 x
   constructor
-  · simp_all
+  · intro x_dom
+    rw [mem_sep] at x_dom
+    obtain ⟨xA⟩ := x_dom
+    exact xA
   · intro mem_x_A
     rw [mem_sep]
     obtain ⟨y, hy, _⟩ := hf.2 x mem_x_A
@@ -630,7 +674,9 @@ theorem _root_.ZFSet.IsPFunc.mem_range_of_mem {f A B : ZFSet}
   rw [mem_sep]
   refine ⟨?_, x, mem_dom hf hxy, hxy⟩
   obtain ⟨_, _, _, _, eq⟩ := mem_prod.mp <| hf.1 hxy
-  simp_all
+  rw [pair_inj] at eq
+  rcases eq with ⟨rfl, rfl⟩
+  assumption
 
 theorem _root_.ZFSet.IsPFunc.nonempty_range_of_nonempty_dom {f A B x y : ZFSet}
   (hf : f.IsPFunc A B) (hxy : x.pair y ∈ f) :
@@ -645,7 +691,15 @@ theorem _root_.ZFSet.IsInjective.apply_inj_pfun {f A B : ZFSet}
   congr
   unfold IsInjective at inj
   apply inj x y (@ᶻf ⟨x, x_dom⟩) x_dom y_dom
-  · simp_all
+  · dsimp [fapply]
+    have : ∃ z ∈ B, pair x z ∈ f := by
+      unfold Dom at x_dom
+      rw [mem_sep] at x_dom
+      obtain ⟨xA, y, yB, xy_f⟩ := x_dom
+      use y
+    generalize_proofs
+    obtain ⟨memB, -⟩ := Classical.choose_spec this
+    exact memB
   · exact fapply.def hf x_dom
   · rw [h]
     exact fapply.def hf y_dom
@@ -723,11 +777,15 @@ theorem mem_lambda {dom ran : ZFSet} {exp : ZFSet → ZFSet} {z : ZFSet} :
     obtain ⟨hz, eq⟩ := hz
     rw [mem_prod] at hz
     obtain ⟨x, x_dom, y, y_ran, rfl⟩ := hz
-    simp_all
+    rw [π₁_pair, π₂_pair] at eq
+    subst y
+    exists x, exp x
   mpr := by
     rintro ⟨x, y, ⟨rfl, x_dom, y_ran, rfl⟩⟩
     rw [lambda, mem_sep, mem_prod]
-    simp_all
+    and_intros
+    · exact ⟨x, x_dom, exp x, y_ran, rfl⟩
+    · rw [π₁_pair, π₂_pair]
 
 theorem lambda_ext_iff {d r : ZFSet} {f₁ f₂ : ZFSet → ZFSet} (hf₁ : ∀ {x}, x ∈ d → f₁ x ∈ r) :
     (λᶻ : d → r | x ↦ f₁ x) = (λᶻ : d → r | x ↦ f₂ x) ↔ ∀ z ∈ d, f₁ z = f₂ z where
@@ -778,8 +836,26 @@ theorem lambda_ext_iff' {d₁ d₂ r₁ r₂ : ZFSet} {f₁ f₂ : ZFSet → ZFS
     unfold lambda
     simp only [mem_sep, mem_prod]
     constructor
-    · simp_all
-    · simp_all
+    · rintro ⟨⟨a, ha, b, hb, rfl⟩, eq⟩
+      rw [π₁_pair, π₂_pair] at eq
+      subst b
+      and_intros
+      · use a, ha, f₁ a
+        and_intros
+        · rw [hext a ha]
+          exact hf₂ ha
+        · rfl
+      · rw [π₁_pair, π₂_pair, hext a ha]
+    · rintro ⟨⟨a, ha, b, hb, rfl⟩, eq⟩
+      rw [π₁_pair, π₂_pair] at eq
+      subst b
+      and_intros
+      · use a, ha, f₂ a
+        and_intros
+        · rw [←hext a ha]
+          exact hf₁ ha
+        · rfl
+      · rw [π₁_pair, π₂_pair, ←hext a ha]
 
 open Classical in
 theorem lambda_eta {A B : ZFSet} {f : ZFSet} (hf : A.IsFunc B f) :
@@ -812,7 +888,9 @@ where
       lambda_eta hg,
       lambda_ext_iff
         (fun h ↦ by rw [dite_cond_eq_true (eq_true h)]; apply Subtype.property)]
-    simp_all
+    intro z hz
+    simp_rw [dite_cond_eq_true (eq_true hz), ←Subtype.ext_iff]
+    exact h _ hz
 
 theorem lambda_subset {A B : ZFSet} {exp : ZFSet → ZFSet} : lambda A B exp ⊆ A.prod B := by
   intro z hz
@@ -871,7 +949,8 @@ theorem inv_is_func_of_injective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
     have x_A : x ∈ A := (mem_sep.mp hx).1
     and_intros <;> beta_reduce
     · unfold inv
-      simp_all
+      rw [mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
+      exact ⟨⟨hy, x_A⟩, pair_f⟩
     · intro z hz
       rw [inv, mem_sep, π₁_pair, π₂_pair, pair_mem_prod] at hz
       symm
@@ -887,7 +966,12 @@ theorem inv_is_func_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   and_intros
   · intro xy hxy
     dsimp [inv] at hxy
-    simp_all
+    rw [mem_sep] at hxy
+    obtain ⟨xy_prod, pair_f⟩ := hxy
+    rw [mem_prod] at xy_prod
+    obtain ⟨a, ha, b, hb, rfl⟩ := xy_prod
+    rw [pair_mem_prod]
+    exact ⟨ha, hb⟩
   · intro z hz
     rw [bijective_exists1_iff] at hf
     obtain ⟨x, ⟨x_A, hx⟩, x_unq⟩ := hf z hz
@@ -1122,7 +1206,8 @@ theorem Image_of_singleton_pair_mem_iff {A B : ZFSet} {f : ZFSet}
   · rw [ZFSet.ext_iff] at h
     specialize h b
     rw [ZFSet.mem_singleton, eq_self, iff_true, mem_Image] at h
-    simp_all
+    simp only [mem_singleton, exists_eq_left] at h
+    exact h.2
 
 theorem eq_singleton_of_bijective_inv_Image_of_singleton {A B : ZFSet} {f : ZFSet}
   {hf : A.IsFunc B f} (hbij : f.IsBijective) {b : ZFSet} (hb : b ∈ B) :
@@ -1291,7 +1376,8 @@ theorem isTuple_pair {a b : ZFSet} : hasArity (ZFSet.pair a b) 2 := by
   rw [hasArity]
   · split_ifs with cond
     · trivial
-    · simp_all
+    · push Not at cond
+      nomatch cond a b
   · rintro ⟨⟩
 
 theorem sep_mem_powerset {D T : ZFSet} {P : ZFSet → Prop} :
@@ -1305,24 +1391,44 @@ theorem subset_of_𝔹_sInter (B : ZFSet) : B ⊆ ZFSet.𝔹 → (⋂₀ B : ZFS
   simp_rw [← ZFSet.mem_powerset, ZFSet.ZFBool.powerset_𝔹_def,
     ZFSet.mem_insert_iff, ZFSet.mem_singleton] at h
   rcases h with rfl | rfl | rfl | rfl
-  · simp_all
-  · simp_all
-  · simp_all
+  · rw [ZFSet.sInter_empty]
+    exact ZFSet.ZFBool.zffalse_mem_𝔹
+  · rw [ZFSet.sInter_singleton]
+    exact ZFSet.ZFBool.zffalse_mem_𝔹
+  · rw [ZFSet.sInter_singleton]
+    exact ZFSet.ZFBool.zftrue_mem_𝔹
   · rw [ZFSet.sInter_pair, ZFSet.ZFBool.mem_𝔹_iff]
-    simp_all
+    left
+    ext1 x
+    constructor
+    · intro hx
+      rcases ZFSet.mem_inter.mp hx
+      assumption
+    · intro hx
+      unfold ZFSet.zffalse at hx
+      nomatch (ZFSet.notMem_empty x) hx
 
 theorem subset_of_𝔹_sUnion (B : ZFSet) : B ⊆ ZFSet.𝔹 → (⋃₀ B : ZFSet) ∈ ZFSet.𝔹 := by
   intro h
   simp_rw [← ZFSet.mem_powerset, ZFSet.ZFBool.powerset_𝔹_def,
     ZFSet.mem_insert_iff, ZFSet.mem_singleton] at h
   rcases h with rfl | rfl | rfl | rfl
-  · simp_all
-  · simp_all
-  · simp_all
+  · rw [ZFSet.sUnion_empty]
+    exact ZFSet.ZFBool.zffalse_mem_𝔹
+  · rw [ZFSet.sUnion_singleton]
+    exact ZFSet.ZFBool.zffalse_mem_𝔹
+  · rw [ZFSet.sUnion_singleton]
+    exact ZFSet.ZFBool.zftrue_mem_𝔹
   · rw [ZFSet.sUnion_pair, ZFSet.ZFBool.mem_𝔹_iff]
     right
     ext1 x
-    simp_all
+    constructor
+    · intro hx
+      rcases ZFSet.mem_union.mp hx with hx | hx
+      · nomatch (ZFSet.notMem_empty x) hx
+      · exact hx
+    · intro hx
+      exact mem_union.mpr <| Or.inr hx
 
 theorem sInter_sep_subset_of_𝔹_mem_𝔹 {D : ZFSet} {P : ZFSet → Prop} :
     D ⊆ ZFSet.𝔹 → (⋂₀ (D.sep P) : ZFSet) ∈ ZFSet.𝔹 := by
@@ -1341,7 +1447,22 @@ theorem _root_.ZFSet.IsFunc.sep_on_eq {A B : ZFSet} {f : ZFSet → ZFSet} (hf : 
   · exact sep_subset_self
   · intro x hx
     exists f x
-    simp_all
+    and_intros
+    · beta_reduce
+      rw [mem_sep, pair_mem_prod]
+      and_intros
+      · exact hx
+      · exact hf x hx
+      · exists x, (f x)
+        and_intros
+        · rfl
+        · rw [π₁_pair]
+    · intro w hw
+      rw [mem_sep, pair_mem_prod] at hw
+      obtain ⟨⟨hx, hw⟩, z, _, eq, rfl⟩ := hw
+      rw [π₁_pair] at eq
+      obtain ⟨rfl, rfl⟩ := pair_inj.mp eq
+      rfl
 
 theorem _root_.ZFSet.IsFunc.is_func_on_range {f A B : ZFSet} (hf : A.IsFunc B f) :
   A.IsFunc (f.Range) f := by
@@ -1357,7 +1478,8 @@ theorem _root_.ZFSet.IsPFunc.empty_dom
   · intro hz
     obtain ⟨x, xA, y, yB, rfl⟩ := mem_prod.mp <| hf.1 hz
     nomatch notMem_empty _ <| dom_emp ▸ mem_dom hf hz
-  · simp_all
+  · intro hz
+    nomatch notMem_empty _ <| hz
 
 theorem _root_.ZFSet.IsPFunc.empty_range_of_empty_dom {f A B : ZFSet}
   (hf : IsPFunc f A B) (dom_emp : f.Dom = ∅) : f.Range = ∅ := by
@@ -1365,7 +1487,8 @@ theorem _root_.ZFSet.IsPFunc.empty_range_of_empty_dom {f A B : ZFSet}
     conv =>
       arg 1
       rw [dom_emp, IsPFunc.empty_dom hf dom_emp]
-    simp_all
+    simp only [notMem_empty, and_self, exists_const, sep_empty_iff,
+      not_false_eq_true, implies_true, or_true]
 
 theorem _root_.ZFSet.IsPFunc.exists_dom_of_mem_range {f A B : ZFSet}
   (hf : IsPFunc f A B) {y : ZFSet} (hy : y ∈ f.Range) :
@@ -1374,7 +1497,11 @@ theorem _root_.ZFSet.IsPFunc.exists_dom_of_mem_range {f A B : ZFSet}
   rw [mem_sep] at hy
   obtain ⟨y_B, x, x_dom, pair⟩ := hy
   exists x
-  simp_all
+  and_intros
+  · unfold Dom at x_dom
+    rw [mem_sep] at x_dom
+    exact x_dom.1
+  · exact pair
 
 theorem _root_.ZFSet.IsFunc.surj_on_range {f A B : ZFSet} (hf : IsFunc A B f) :
     IsSurjective (f := f) (A := A) (B := f.Range) (IsFunc.is_func_on_range hf) := by
@@ -1386,7 +1513,8 @@ theorem bijective_of_injective {f A B : ZFSet} (hf : IsFunc A B f) (inj : f.IsIn
   constructor
   · intro x y z xA yA zRange xz yz
     apply inj x y z xA yA _ xz yz
-    simp_all
+    rw [mem_sep] at zRange
+    exact zRange.1
   · intro y hy
     exact IsPFunc.exists_dom_of_mem_range (is_func_is_pfunc hf) hy
 
@@ -1395,14 +1523,17 @@ theorem _root_.ZFSet.IsFunc.range_eq_of_surjective {f A B : ZFSet} (hf : IsFunc 
     f.Range = B := by
   ext1 y
   constructor
-  · simp_all
+  · intro hy
+    exact (mem_sep.mp hy).1
   · intro hy
     rw [mem_sep]
     and_intros
     · exact hy
     · obtain ⟨x, x_dom, xy⟩ := surj y hy
       exists x
-      simp_all
+      and_intros
+      · exact ZFSet.mem_dom (is_func_is_pfunc hf) xy
+      · exact xy
 
 /-- The inherited preorder on the elements of a finite von Neumann ordinal. -/
 @[reducible]
@@ -1431,7 +1562,8 @@ theorem _root_.ZFSet.IsFinite.subset {A B : ZFSet} (finB : B.IsFinite) (subAB : 
   · rw [mem_funs] at hf ⊢
     and_intros
     · intro z hz
-      simp_all
+      rw [mem_sep] at hz
+      exact hz.1
     · intro x xA
       simp only [exists_and_left, mem_sep, mem_prod, pair_inj,
         exists_eq_right_right', exists_eq', and_true]
@@ -1441,7 +1573,9 @@ theorem _root_.ZFSet.IsFinite.subset {A B : ZFSet} (finB : B.IsFinite) (subAB : 
       · exact xA
       · exact And.right <| pair_mem_prod.mp <| hf.1 hz
       · exact hz
-      · simp_all
+      · intro y hy
+        apply z_unq
+        exact hy.2
   · generalize_proofs f'_A_n
     intro x y z xA yA zn eq
     simp_rw [mem_sep, pair_mem_prod, pair_inj] at eq ⊢
@@ -1454,7 +1588,10 @@ theorem _root_.ZFSet.IsFinite.insert {A : ZFSet} (finA : A.IsFinite) (x : ZFSet)
   by_cases hx : x ∈ A
   · have : Insert.insert x A = A := by
       ext1 w
-      simp_all
+      rw [mem_insert_iff]
+      constructor
+      · rintro (rfl | h) <;> assumption
+      · intro; right; assumption
     rwa [this]
   · obtain ⟨n, f, hn, hf, inj⟩ := finA
     let sucn := ZFNat.succ (⟨n, hn⟩:ZFNat)
@@ -1472,30 +1609,39 @@ theorem _root_.ZFSet.IsFinite.insert {A : ZFSet} (finA : A.IsFinite) (x : ZFSet)
           · exists b
             and_intros
             · unfold sucn ZFNat.succ
-              simp_all
+              rw [mem_insert_iff]
+              right
+              exact hb
             · rfl
         · rw [pair_mem_prod]
           and_intros
           · exact mem_insert x A
           · unfold sucn ZFNat.succ
-            simp_all
+            rw [mem_insert_iff]
+            left
+            rfl
       · intro z hz
         rw [mem_insert_iff] at hz
         rcases hz with rfl | hz
         · exists n
           beta_reduce
           and_intros
-          · simp_all
+          · rw [mem_union, mem_singleton]
+            right
+            rfl
           · intro z' hz'
             rw [mem_union, mem_singleton] at hz'
             rcases hz' with hz' | hz'
             · nomatch hx <| And.left <| pair_mem_prod.mp <| mem_funs.mp hf |>.1 hz'
-            · simp_all
+            · rw [pair_inj] at hz'
+              exact hz'.2
         · obtain ⟨w, hw, w_unq⟩ := mem_funs.mp hf |>.2 z hz
           exists w
           beta_reduce
           and_intros
-          · simp_all
+          · rw [mem_union]
+            left
+            exact hw
           · intro w' hw'
             rw [mem_union, mem_singleton, pair_inj] at hw'
             rcases hw' with hw' | ⟨rfl, rfl⟩
@@ -1549,7 +1695,11 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
             exact ZFNat.add_lt_add_of_lt_of_le hb ZFNat.zero_le
         · rw [mem_sep, mem_prod] at hz
           obtain ⟨⟨z₁,hz₁,z₂,hz₂, rfl⟩, _, b, hb, eq, z₁b⟩ := hz
-          simp_all
+          obtain ⟨rfl, rfl⟩ := pair_inj.mp eq
+          rw [pair_mem_prod, mem_union]
+          and_intros
+          · right; exact hz₁
+          · exact hz₂
       · intro z hz
         rw [mem_union] at hz
         rcases hz with hz | hz
@@ -1558,7 +1708,9 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
           beta_reduce
           and_intros
           · unfold f'
-            simp_all
+            rw [mem_union]
+            left
+            exact z_a_fA
           · intro y hy
             rw [mem_union] at hy
             rcases hy with hy | hy
@@ -1595,7 +1747,8 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
             · simp only [exists_and_right, mem_sep, mem_prod, pair_inj,
                 exists_eq_right_right', exists_and_left] at hy
               obtain ⟨⟨zB, z_lt_n₂⟩, _, w, ⟨rfl, w_Nat, rfl⟩, zw⟩ := hy
-              simp_all
+              obtain ⟨⟩ := a_unq w zw
+              rfl
     · intro x y z xA yA hz xz yz
       have contr := ZFSet.ext_iff.mp disjoint
       simp_rw [mem_inter, notMem_empty, iff_false] at contr
@@ -1609,9 +1762,15 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
       · obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
         obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz
         apply injA <;> assumption
-      · simp_all
-      · simp_all
-      · simp_all
+      · simp_rw [mem_sep, pair_mem_prod, pair_inj, exists_and_right, exists_and_left] at yz
+        obtain ⟨_, w, ⟨rfl, ⟨w_Nat, rfl⟩⟩, yw⟩ := yz.2
+        nomatch contr y ⟨yA, And.left <| pair_mem_prod.mp <| mem_funs.mp hfB |>.1 yw⟩
+      · simp_rw [mem_sep, pair_mem_prod, pair_inj, exists_and_right, exists_and_left] at xz
+        obtain ⟨_, w, ⟨rfl, ⟨w_Nat, rfl⟩⟩, xw⟩ := xz.2
+        nomatch contr x ⟨xA, And.left <| pair_mem_prod.mp <| mem_funs.mp hfB |>.1 xw⟩
+      · simp only [exists_and_right, mem_sep, mem_prod, pair_inj,
+          exists_eq_right_right', exists_and_left] at xz
+        nomatch contr x ⟨xA, xz.1.1⟩
       · obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
         obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz
         apply injA <;> assumption
@@ -1626,10 +1785,14 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
         rw [ZFNat.add_lt_add_iff_right] at v_add_n₁_lt_n₁
         nomatch ZFNat.not_lt_zero v_add_n₁_lt_n₁
       · nomatch contr y ⟨And.left <| pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz, yB⟩
-      · simp_all
+      · simp only [exists_and_right, mem_sep, mem_prod, pair_inj,
+          exists_eq_right_right', exists_and_left] at xz
+        nomatch contr x ⟨xA, xz.1.1⟩
       · obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
-        simp_all
-      · simp_all
+        obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz
+        apply injA <;> assumption
+      · obtain ⟨zA, -⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
+        nomatch contr x ⟨And.left <| pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz, xB⟩
       · simp only [exists_and_right, mem_sep, mem_prod, pair_inj,
           exists_eq_right_right', exists_and_left] at xz
         obtain ⟨⟨-, w_lt_n₂⟩, ⟨_, v, ⟨rfl, v_Nat, rfl⟩, yv⟩⟩ := xz
@@ -1640,9 +1803,12 @@ theorem _root_.ZFSet.IsFinite.disjoint_union {A B : ZFSet}
           rw [←@ZFNat.zero_add ⟨n₁, hn₁⟩]
         rw [ZFNat.add_lt_add_iff_right] at v_add_n₁_lt_n₁
         nomatch ZFNat.not_lt_zero v_add_n₁_lt_n₁
-      · simp_all
+      · simp only [exists_and_right, mem_sep, mem_prod, pair_inj,
+          exists_eq_right_right', exists_and_left] at yz
+        nomatch contr y ⟨yA, yz.1.1⟩
       · obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
-        simp_all
+        obtain ⟨⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz
+        apply injA <;> assumption
       · obtain ⟨xA, -⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 xz
         nomatch contr x ⟨xA, xB⟩
       · obtain ⟨yA, -⟩ := pair_mem_prod.mp <| mem_funs.mp hfA |>.1 yz
@@ -1673,7 +1839,8 @@ theorem _root_.ZFSet.IsFinite.union {A B : ZFSet} (finA : A.IsFinite) (finB : B.
   rw [this]
   have : (A \ B) ∩ B = ∅ := by
     ext1 z
-    simp_all
+    rw [mem_inter, mem_sdiff, and_assoc]
+    simp only [not_and_self, and_false, notMem_empty]
   exact IsFinite.disjoint_union
     (IsFinite.subset finA fun _ hz ↦ (mem_sdiff.mp hz).1) finB this
 
@@ -1706,7 +1873,8 @@ theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
     have : S = ∅ := by
       simp only [subset_refl, notMem_empty, existsUnique_false, imp_false, true_and] at h
       exact (eq_empty S).mpr h
-    simp_all
+    subst S
+    exact empty
   · intro n hn IH S fS _ S_fin fS_fun fS_inj
     by_cases n_range : n ∈ fS.Range
     · rw [Range, mem_sep, mem_insert_iff, eq_self, true_or, true_and,] at n_range
@@ -1736,7 +1904,8 @@ theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
                 rw [not_and, eq_self, true_implies] at hz
                 obtain ⟨fS_x, hfS_x, fS_x_unq⟩ := fS_fun.2 x xS
                 obtain ⟨⟩ := fS_x_unq y hz.1
-                simp_all
+                obtain ⟨⟩ := fS_x_unq n an
+                nomatch mem_irrefl _ yS
             · exact yS
         · intro z zS
           rw [mem_sdiff, mem_singleton] at zS
@@ -1744,10 +1913,17 @@ theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
           exists w
           and_intros
           · unfold fS'
-            simp_all
+            beta_reduce
+            rw [mem_sdiff, mem_singleton, pair_inj]
+            and_intros
+            · exact hw
+            · rw [not_and_or]
+              left
+              exact zS.2
           · intro w' hw'
             unfold fS' at hw'
-            simp_all
+            rw [mem_sdiff, mem_singleton, pair_inj] at hw'
+            exact w_unq w' hw'.left
       have : fS'.IsInjective := by
         intro x y z xS' yS' zn xy yz
         apply fS_inj x y z
@@ -1764,11 +1940,19 @@ theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
         unfold S'
         ext1 z
         simp_rw [mem_insert_iff, mem_sdiff, mem_singleton, or_and_left, Classical.em, and_true]
-        simp_all
+        constructor
+        · exact Or.inr
+        · rintro (rfl | hz)
+          · exact And.left <| pair_mem_prod.mp <| fS_fun |>.1 an
+          · exact hz
       specialize insert _ a IH (by
         unfold S'
-        simp_all)
-      simp_all
+        rw [mem_sdiff, mem_singleton, not_and_or, not_not]
+        right; rfl)
+      conv at insert =>
+        enter [1,1]
+        rw [←this]
+      exact insert
     · have : S.IsFunc n fS := by
         and_intros
         · intro z hz
@@ -1777,13 +1961,17 @@ theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
           rw [pair_mem_prod]
           apply And.intro aS
           rcases bS with rfl | bS
-          · simp_all
+          · unfold Range at n_range
+            simp_rw [mem_sep, mem_insert_iff, true_or, true_and, not_exists, not_and] at n_range
+            nomatch n_range a ⟨aS, b, Or.inl rfl, hz⟩ hz
           · exact bS
         · exact fS_fun.2
       apply IH S fS (mem_funs.mpr this) S_fin this
       intro x y z xS yS zn xy yz
       apply fS_inj x y z xS yS
-      · simp_all
+      · rw [mem_insert_iff]
+        right
+        exact zn
       · exact xy
       · exact yz
 
@@ -1797,16 +1985,23 @@ theorem _root_.ZFSet.IsFinite.singleton {x : ZFSet} : ({x} : ZFSet).IsFinite := 
       obtain ⟨⟩ := hz
       rw [pair_mem_prod, mem_singleton, eq_self, true_and]
       exact singleton_subset_mem_iff.mp fun _ => id
-    · simp_all
+    · intro z
+      simp only [mem_singleton, pair_inj]
+      rintro rfl
+      simp only [true_and, existsUnique_eq]
   · intro x y z
-    simp_all
+    simp only [mem_singleton, pair_inj, and_imp]
+    intros
+    subst_eqs
+    rfl
 
 theorem _root_.ZFSet.IsFinite.prod_singleton {A x : ZFSet} (finA : A.IsFinite) :
   (A.prod {x}).IsFinite := by
   induction hA : (⟨A, finA⟩ : ZFFinSet) using ZFFinSet.inductionOn generalizing A finA x with
   | empty =>
     injections
-    simp_all
+    subst_vars
+    rwa [prod_empty_left]
   | insert E e ih he =>
     injections
     subst_vars
@@ -1823,7 +2018,8 @@ theorem _root_.ZFSet.IsFinite.singleton_prod {A x : ZFSet} (finA : A.IsFinite) :
   induction hA : (⟨A, finA⟩ : ZFFinSet) using ZFFinSet.inductionOn generalizing A finA x with
   | empty =>
     injections
-    simp_all
+    subst_vars
+    rwa [prod_empty_right]
   | insert E e ih he =>
     injections
     subst_vars
@@ -1840,7 +2036,8 @@ theorem _root_.ZFSet.IsFinite.prod {A B : ZFSet} (finA : A.IsFinite) (finB : B.I
   induction hA : (⟨A, finA⟩ : ZFFinSet) using ZFFinSet.inductionOn generalizing A finA with
   | empty =>
     injections
-    simp_all
+    subst_vars
+    rwa [prod_empty_left]
   | insert S x ih x_not_mem_S =>
     injections
     subst_vars
@@ -1865,7 +2062,8 @@ theorem _root_.ZFSet.IsFinite.exists_bij {A : ZFSet} (finA : A.IsFinite) :
     · simp_rw [mem_funs, IsFunc, prod_empty_left, subset_refl, notMem_empty,
         existsUnique_false, imp_self, implies_true, and_self]
     · and_intros
-      · intro _ simp_all
+      · intro _ _ _ h
+        nomatch notMem_empty _ h
       · intro _ h
         nomatch notMem_empty _ h
   | insert S x ih x_not_mem_S =>
@@ -1884,14 +2082,16 @@ theorem _root_.ZFSet.IsFinite.exists_bij {A : ZFSet} (finA : A.IsFinite) :
           simp only [mem_prod, mem_insert_iff, pair_inj, exists_eq_right_right']
           obtain ⟨aS, bn⟩ := pair_mem_prod.mp <| (mem_funs.mp hf).1 hz
           and_intros
-          · simp_all
+          · right
+            exact aS
           · change ⟨b, ZFNat.mem_Nat_of_mem_mem_Nat hn bS⟩ < ZFNat.succ ⟨n, hn⟩
             trans ⟨n, hn⟩
             · exact bn
             · exact ZFNat.lt_succ
         · rw [pair_mem_prod, mem_insert_iff]
           and_intros
-          · simp_all
+          · left
+            rfl
           · exact ZFNat.lt_succ
       · simp only [mem_insert_iff, mem_union, mem_singleton, pair_inj, forall_eq_or_imp, true_and]
         and_intros
@@ -1909,7 +2109,8 @@ theorem _root_.ZFSet.IsFinite.exists_bij {A : ZFSet} (finA : A.IsFinite) :
           · left; exact wS
           · intro w' hw'
             rcases hw' with hw' | ⟨rfl, rfl⟩
-            · simp_all
+            · obtain ⟨⟩ := w_unq w' hw'
+              rfl
             · contradiction
     · rw [bijective_exists1_iff] at bij ⊢
       intro y hy
@@ -1920,21 +2121,27 @@ theorem _root_.ZFSet.IsFinite.exists_bij {A : ZFSet} (finA : A.IsFinite) :
       · obtain ⟨x, ⟨xS, xy⟩, x_unq⟩ := bij y hy
         exists x
         and_intros
-        · simp_all
-        · simp_all
+        · rw [mem_insert_iff]
+          right; exact xS
+        · rw [mem_union, mem_singleton]
+          left; exact xy
         · intro x' hx'
           rw [mem_insert_iff, mem_union, mem_singleton, pair_inj] at hx'
           rcases hx' with ⟨rfl|_, _|⟨_,rfl⟩⟩
           · nomatch x_not_mem_S <| And.left <| pair_mem_prod.mp <| (mem_funs.mp hf).1 ‹_ ∈ f›
           · nomatch mem_irrefl _ <| And.right <| pair_mem_prod.mp <| (mem_funs.mp hf).1 ‹_ ∈ f›
-          · simp_all
-          · simp_all
+          · obtain ⟨⟩ := x_unq x' ⟨‹_›, ‹_›⟩
+            rfl
+          · subst_vars
+            contradiction
       · injection hy
         subst y
         exists x
         and_intros
-        · simp_all
-        · simp_all
+        · rw [mem_insert_iff]
+          left; rfl
+        · rw [mem_union, mem_singleton]
+          right; rfl
         · intro y hy
           simp only [mem_insert_iff, mem_union, mem_singleton, pair_inj, and_true] at hy
           rcases hy with ⟨rfl|_, _|_⟩
@@ -1992,7 +2199,8 @@ theorem _root_.ZFSet.Card.singleton (x : ZFSet) : Card ⟨{x}, IsFinite.singleto
       induction ind_n : (⟨n, hn⟩ : ZFNat) using ZFNat.induction generalizing n hn with
       | zero =>
         injection ind_n with eq
-        simp_all
+        rw [eq] at this
+        nomatch notMem_empty _ this
       | succ m IH =>
         injection ind_n with eq
         rw [eq, mem_insert_iff] at this
@@ -2015,7 +2223,8 @@ theorem image_of_lambda_subset_range {A B φ : ZFSet} {hφ : A.IsFunc B φ} {S :
   φ[S] ⊆ B := by
   intro y hy
   rw [mem_Image] at hy
-  simp_all
+  obtain ⟨hy, x, hx, φxy⟩ := hy
+  exact hφ.1 φxy |> pair_mem_prod.mp |>.2
 
 open Classical in
 /-- Imported ZFLean declaration. -/
@@ -2042,7 +2251,16 @@ theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.
   · intro z hz
     simp only [fprod, mem_prod, mem_lambda, existsAndEq, and_true] at hz
     obtain ⟨a', b', a, b, rfl, ⟨aA, bB⟩, ⟨a'A', b'B'⟩, eq⟩ := hz
-    simp_all
+    rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨aA, bB⟩)), pair_inj] at eq
+    obtain ⟨rfl, rfl⟩ := eq
+    let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
+    let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
+    simp only [mem_prod, pair_inj, exists_eq_right_right', π₁_pair, π₂_pair]
+    and_intros
+    · exact aA
+    · exact bB
+    · apply fapply_mem_range
+    · apply fapply_mem_range
   · intro z hz
     rw [mem_prod] at hz
     obtain ⟨a, ha, b, hb, rfl⟩ := hz
@@ -2138,13 +2356,21 @@ theorem mem_fprod {A B C D f g x : ZFSet} {hf : A.IsFunc C f} {hg : B.IsFunc D g
     rw [dite_cond_eq_true (eq_true hab)] at hcd
     rw [mem_prod] at hab
     obtain ⟨a, ha, b, hb, rfl⟩ := hab
-    simp_all
+    rw [pair_mem_prod] at hab
+    simp only [mem_prod, pair_inj, exists_eq_right_right', π₁_pair, π₂_pair,
+      exists_and_left, existsAndEq, and_true, exists_eq_left']
+    rw [dite_cond_eq_true (eq_true ‹_›)]
+    simp only [exists_prop, and_true, ha, hb]
   mpr := by
     rintro ⟨a, b, ha, hb, rfl⟩
     simp only [fprod, mem_prod, mem_lambda, pair_inj, existsAndEq, and_true,
       exists_eq_right_right', SetLike.coe_mem, true_and, exists_eq_right', exists_eq_left', π₁_pair,
       π₂_pair, left_eq_dite_iff, not_and]
-    simp_all
+    and_intros
+    · exact ha
+    · exact hb
+    · intro c
+      nomatch c ha hb
 
 theorem pair_mem_fprod {A B C D f g x y : ZFSet} {hf : A.IsFunc C f} {hg : B.IsFunc D g} :
   x.pair y ∈ fprod f g ↔ ∃ (a b : ZFSet) (ha : a ∈ A) (hb : b ∈ B),
@@ -2170,10 +2396,12 @@ theorem fapply_fprod {A B C D f g a b : ZFSet} (hf : A.IsFunc C f) (hg : B.IsFun
       ←fapply_eq_Image_singleton
         (lambda_isFunc
           (fun h ↦ by
-            simp_all))
+            rw [dite_cond_eq_true (eq_true h), pair_mem_prod]
+            and_intros <;> apply fapply_mem_range))
         (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
       fapply_lambda (fun h ↦ by
-        simp_all)
+        rw [dite_cond_eq_true (eq_true h), pair_mem_prod]
+        and_intros <;> apply fapply_mem_range)
         (by rw [pair_mem_prod]; exact ⟨ha, hb⟩),
       dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))]
     simp only [π₁_pair, π₂_pair]
@@ -2241,7 +2469,10 @@ theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
       and_intros
       · intro z hz
         rw [mem_Image] at hz
-        simp_all
+        obtain ⟨hz, y, hy, yz⟩ := hz
+        rw [mem_inv, pair_mem_fprod] at yz
+        obtain ⟨a, b, ha, hb, rfl, rfl⟩ := yz
+        exact hz
       · exact hY
       · rw [Image_of_composition_self_inv_of_bijective hφ_ψ hY]
   · apply lambda_isFunc

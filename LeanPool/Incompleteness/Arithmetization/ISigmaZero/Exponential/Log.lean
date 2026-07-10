@@ -113,7 +113,8 @@ lemma log_eq_of_pos {x y : V} (pos : 0 < y) {y'} (H : Exponential x y') (hy' : y
 
 lemma log_two_mul_of_pos {y : V} (pos : 0 < y) : log (2 * y) = log y + 1 := by
   rcases log_pos pos with ⟨y', hy', H, hy⟩
-  exact log_eq_of_pos (by simpa using pos) (Exponential.exponential_succ_mul_two.mpr H) (by simp_all) (by simpa using hy)
+  exact log_eq_of_pos (by simpa using pos) (Exponential.exponential_succ_mul_two.mpr H) (by simpa
+    using hy') (by simpa using hy)
 
 lemma log_two_mul_add_one_of_pos {y : V} (pos : 0 < y) : log (2 * y + 1) = log y + 1 := by
   rcases log_pos pos with ⟨y', hy', H, hy⟩
@@ -342,7 +343,8 @@ lemma bexp_exists_unique (a x : V) : ∃! y, (x < ‖a‖ → Exponential x y) �
   by_cases hx : x < ‖a‖
   · rcases brange_exists_unique a x hx with ⟨y, Hy, Huniq⟩
     refine ⟨y, ⟨fun _ ↦ Hy, fun hle ↦ False.elim ((not_le.mpr hx) hle)⟩, ?_⟩
-    simp_all
+    intro y' hy'
+    exact Huniq y' (hy'.1 hx)
   · simp [hx, show ‖a‖ ≤ x from by simpa using hx]
 
 /-- `bexp a x = exp x` if `x < ‖a‖`; `= 0` o.w. -/

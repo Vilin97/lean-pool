@@ -94,7 +94,8 @@ variable {n : ℕ} {R : Type*} [CommSemiring R]
 lemma fin1_finsupp_eq {u : Fin 1 →₀ ℕ} : u = Finsupp.single 0 (u 0) := by
   refine Finsupp.ext_iff.mpr (fun i => ?_)
   have : i = (0 : Fin 1) := Subsingleton.elim i 0
-  simp_all
+  subst this
+  simp [Finsupp.single_eq_same]
 
 /-- `MvPowerSeries (Fin (n+1)) R ≃+* MvPowerSeries (Fin 1) (MvPowerSeries (Fin n) R)` -/
 noncomputable def mvPowerSeriesFinSuccRingEquiv :
@@ -102,7 +103,9 @@ noncomputable def mvPowerSeriesFinSuccRingEquiv :
   toFun f u s := f (Finsupp.cons (u 0) s)
   invFun F m := F (Finsupp.single 0 (m 0)) (Finsupp.tail m)
   left_inv f := by
-    simp_all
+    funext m
+    change f (Finsupp.cons ((Finsupp.single (0 : Fin 1) (m 0)) 0) (Finsupp.tail m)) = f m
+    simp [Finsupp.single_eq_same, Finsupp.cons_tail]
   right_inv F := by
     funext u s
     change F (Finsupp.single 0 (Finsupp.cons (u 0) s 0))
@@ -150,13 +153,17 @@ noncomputable def mvPowerSeriesFinSuccRingEquiv :
       rw [Finset.mem_antidiagonal]
       rw [Finset.mem_antidiagonal] at hab
       apply Finsupp.ext_iff.mpr
-      simp_all
+      intro i
+      have : i = (0 : Fin 1) := Subsingleton.elim i 0
+      subst this
+      simp [Finsupp.single_eq_same, Finsupp.add_apply, hab.1]
     · -- backward maps into antidiagonal
       intro ⟨⟨u₁, u₂⟩, ⟨v₁, v₂⟩⟩ hpq
       rw [Finset.mem_product] at hpq
       rw [Finsupp.mem_antidiagonal_cons_iff]
       refine ⟨?_, by
-        simp_all⟩
+        simp only [Fin.isValue, Finsupp.tail_cons, Finset.mem_antidiagonal]
+        exact Finset.mem_antidiagonal.mp hpq.2⟩
       rw [Finset.mem_antidiagonal]
       rw [Finset.mem_antidiagonal] at hpq
       simp only [Fin.isValue, Finsupp.cons_zero]
@@ -164,13 +171,16 @@ noncomputable def mvPowerSeriesFinSuccRingEquiv :
       simp only [Finsupp.add_apply] at this
       exact this
     · -- left inverse
-      simp_all
+      intro ⟨a, b⟩ _
+      simp only [Finsupp.single_eq_same, Prod.mk.injEq]
+      exact ⟨Finsupp.cons_tail a, Finsupp.cons_tail b⟩
     · -- right inverse
       intro ⟨⟨u₁, u₂⟩, ⟨v₁, v₂⟩⟩ _
       simp only [Finsupp.cons_zero, Finsupp.tail_cons, Prod.mk.injEq]
       exact ⟨⟨fin1_finsupp_eq.symm, fin1_finsupp_eq.symm⟩, trivial⟩
     · -- values agree
-      simp_all
+      intro ⟨a, b⟩ _
+      simp only [Finsupp.single_eq_same, Finsupp.cons_tail]
 
 end MvPowerSeriesFinSuccEquiv
 
@@ -221,7 +231,8 @@ lemma constantCoeff_eq_zero_of_mem_MPS
     (hm : m ∈ MPS) :
     MvPowerSeries.constantCoeff (σ := Fin 3) (R := ℂ) m = 0 := by
   simp only [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, isUnit_iff_constantCoeff] at hm
-  simp_all
+  by_contra h
+  exact hm (IsUnit.mk0 _ h)
 
 -- If f ∈ MPS^n then all coefficients at degree < n vanish
 lemma coeff_eq_zero_of_mem_MPS_pow
@@ -229,8 +240,10 @@ lemma coeff_eq_zero_of_mem_MPS_pow
     (hf : f ∈ MPS ^ n) :
     ∀ d : Fin 3 →₀ ℕ, tdeg d < n → coeff d f = 0 := by
   induction hf using Submodule.pow_induction_on_left' with
-  | algebraMap r => simp_all
-  | add _ _ _ _ _ ihx ihy => simp_all
+  | algebraMap r => intro d hd
+                    omega
+  | add _ _ _ _ _ ihx ihy => intro d hd
+                             simp [ihx d hd, ihy d hd]
   | mem_mul m hm i x _ ih =>
     intro d hd
     change coeff d (m * x) = 0
@@ -274,20 +287,23 @@ lemma mem_MPS_pow_of_coeff_vanish
       change coeff (d + single 0 1) f = 0
       exact hf _ (by
                     rw [tdeg_add]
-                    simp_all)
+                    simp [tdeg, Finsupp.sum_single_index]
+                    omega)
     have hg₁ : g₁ ∈ MPS ^ n := ih _ fun d hd => by
       change (if d 0 = 0 then coeff (d + single 1 1) f else 0) = 0
       split
       · exact hf _ (by
                       rw [tdeg_add]
-                      simp_all)
+                      simp [tdeg, Finsupp.sum_single_index]
+                      omega)
       · rfl
     have hg₂ : g₂ ∈ MPS ^ n := ih _ fun d hd => by
       change (if d 0 = 0 ∧ d 1 = 0 then coeff (d + single 2 1) f else 0) = 0
       split
       · exact hf _ (by
                       rw [tdeg_add]
-                      simp_all)
+                      simp [tdeg, Finsupp.sum_single_index]
+                      omega)
       · rfl
     have hfM : f ∈ MPS := by
       rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, isUnit_iff_constantCoeff, hconst]
@@ -344,7 +360,8 @@ lemma mem_MPS_pow_of_coeff_vanish
       · simp only [if_neg h1, if_pos h2, t2 h2, add_zero]
       · simp only [if_neg h1, if_neg h2, add_zero]
     · rw [if_neg hm0, zero_add]
-      have hm0v : m 0 = 0 := by simp_all
+      have hm0v : m 0 = 0 := by simp [single_le_iff] at hm0
+                                omega
       by_cases hm1 : single (1 : Fin 3) 1 ≤ m
       · rw [if_pos hm1]
         set d₁ := m - single (1 : Fin 3) 1
@@ -352,7 +369,8 @@ lemma mem_MPS_pow_of_coeff_vanish
         have hm1v := single_le_iff.mp hm1
         have hd₁_0 : d₁ 0 = 0 := by
           change (m - single (1 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
-          simp_all
+          rw [tsub_val 1 0 hm1, single_apply]
+          simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
         change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
         rw [if_pos hd₁_0, hd₁_add, coeff_apply]
         have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
@@ -360,24 +378,30 @@ lemma mem_MPS_pow_of_coeff_vanish
           intro h2
           rw [tsub_val 2 1 h2, single_apply, if_neg (by decide : (2 : Fin 3) ≠ 1)]
           omega
-        simp_all
+        by_cases h2 : single (2 : Fin 3) 1 ≤ m
+        · simp only [if_pos h2, h_g2_van_1 _ (h1_ne h2), add_zero]
+        · simp only [if_neg h2, add_zero]
       · rw [if_neg hm1, zero_add]
-        have hm1v : m 1 = 0 := by simp_all
+        have hm1v : m 1 = 0 := by simp [single_le_iff] at hm1
+                                  omega
         by_cases hm2 : single (2 : Fin 3) 1 ≤ m
         · rw [if_pos hm2]
           set d₂ := m - single (2 : Fin 3) 1
           have hd₂_add : d₂ + single 2 1 = m := tsub_add_cancel_of_le hm2
           have hd₂_0 : d₂ 0 = 0 := by
             change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
-            simp_all
+            rw [tsub_val 2 0 hm2, single_apply]
+            simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm0v
           have hd₂_1 : d₂ 1 = 0 := by
             change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 = 0
-            simp_all
+            rw [tsub_val 2 1 hm2, single_apply]
+            simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
           change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
           rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
         · -- All exponents zero: m = 0, so coeff 0 f = constantCoeff f = 0
           rw [if_neg hm2]
-          have hm2v : m 2 = 0 := by simp_all
+          have hm2v : m 2 = 0 := by simp [single_le_iff] at hm2
+                                    omega
           have : m = 0 := by ext i
                              fin_cases i <;> simp_all
           subst this
@@ -401,7 +425,8 @@ lemma mvPS_isPrecomplete : IsPrecomplete MPS (MvPowerSeries (Fin 3) ℂ) := by
     have hcoeff := coeff_eq_zero_of_mem_MPS_pow h d (by omega)
     simp only [map_sub] at hcoeff
     exact sub_eq_zero.mp hcoeff |>.symm
-  · simp_all
+  · push Not at hn
+    omega
 
 -- Lift Cauchy sequence from T to MvPowerSeries, use mvPS_isPrecomplete, project back
 lemma T_isPrecomplete : IsPrecomplete (IsLocalRing.maximalIdeal T) T := by
@@ -450,7 +475,8 @@ lemma T_isPrecomplete : IsPrecomplete (IsLocalRing.maximalIdeal T) T := by
     suffices h : ∑ i ∈ Finset.range m \ Finset.range n, δ i ∈ MPS ^ n by
       have calc_eq : (g0 - ∑ i ∈ Finset.range m, δ i) - (g0 - ∑ i ∈ Finset.range n, δ i) =
           -(∑ i ∈ Finset.range m \ Finset.range n, δ i) := by
-        simp_all
+        rw [← Finset.sum_sdiff (Finset.range_mono hnm)]
+        ring
       rw [calc_eq, neg_mem_iff]
       exact h
     apply Ideal.sum_mem
@@ -530,7 +556,8 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
     by_cases h1 : single (1 : Fin 3) 1 ≤ m <;> by_cases h2 : single (2 : Fin 3) 1 ≤ m <;>
       simp only [h1, h2, t1, t2, ↓reduceIte, add_zero]
   · rw [if_neg hm0, zero_add]
-    have hm0v : m 0 = 0 := by simp_all
+    have hm0v : m 0 = 0 := by simp [single_le_iff] at hm0
+                              omega
     by_cases hm1 : single (1 : Fin 3) 1 ≤ m
     · rw [if_pos hm1]
       set d₁ := m - single (1 : Fin 3) 1
@@ -538,7 +565,8 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
       have hm1v := single_le_iff.mp hm1
       have hd₁_0 : d₁ 0 = 0 := by
         change (m - single (1 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
-        simp_all
+        rw [tsub_val 1 0 hm1, single_apply]
+        simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
       change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
       rw [if_pos hd₁_0, hd₁_add, coeff_apply]
       have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
@@ -547,24 +575,29 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
         rw [tsub_val 2 1 h2, single_apply]
         simp
         omega
-      simp_all
+      by_cases h2 : single (2 : Fin 3) 1 ≤ m <;>
+        simp only [h2, ↓reduceIte, add_zero]
       exact (h_g2_van_1 _ (h1_ne ‹_›) ▸ add_zero (f m)).symm
     · rw [if_neg hm1, zero_add]
-      have hm1v : m 1 = 0 := by simp_all
+      have hm1v : m 1 = 0 := by simp [single_le_iff] at hm1
+                                omega
       by_cases hm2 : single (2 : Fin 3) 1 ≤ m
       · rw [if_pos hm2]
         set d₂ := m - single (2 : Fin 3) 1
         have hd₂_add : d₂ + single 2 1 = m := tsub_add_cancel_of_le hm2
         have hd₂_0 : d₂ 0 = 0 := by
           change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
-          simp_all
+          rw [tsub_val 2 0 hm2, single_apply]
+          simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm0v
         have hd₂_1 : d₂ 1 = 0 := by
           change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 = 0
-          simp_all
+          rw [tsub_val 2 1 hm2, single_apply]
+          simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
         change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
         rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
       · rw [if_neg hm2]
-        have hm2v : m 2 = 0 := by simp_all
+        have hm2v : m 2 = 0 := by simp [single_le_iff] at hm2
+                                  omega
         have : m = 0 := by ext i
                            fin_cases i <;> assumption
         subst this
@@ -580,7 +613,8 @@ lemma mvPS_maximalIdeal_eq_span_X :
     simp only [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hf
     rw [MvPowerSeries.isUnit_iff_constantCoeff] at hf
     exact mvPS_mem_span_X_of_constantCoeff_zero f (by
-                                                     simp_all)
+                                                     by_contra h
+                                                     exact hf (IsUnit.mk0 _ h))
   · apply Ideal.span_le.mpr
     intro x hx
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx
@@ -612,7 +646,8 @@ lemma mvPS_ringKrullDim_le :
         _ ≤ ({X 2} : Set (MvPowerSeries (Fin 3) ℂ)).ncard + 1 + 1 := by
             gcongr
             exact Set.ncard_insert_le _ _
-        _ ≤ 1 + 1 + 1 := by simp_all
+        _ ≤ 1 + 1 + 1 := by gcongr
+                            exact le_of_eq (Set.ncard_singleton _)
         _ = 3 := by norm_num)
   change (↑(Ideal.span _).height : WithBot ℕ∞) ≤ 3
   calc (↑(Ideal.span _).height : WithBot ℕ∞)
@@ -651,7 +686,12 @@ lemma cToT_injective : Function.Injective
 -- |Fin 3 →₀ ℕ| = ℵ₀ and |ℂ| = continuum, so |(Fin 3 →₀ ℕ) → ℂ| = |ℂ|
 lemma mvPS_card_eq : Cardinal.mk (MvPowerSeries (Fin 3) ℂ) = Cardinal.mk ℂ := by
   change Cardinal.mk ((Fin 3 →₀ ℕ) → ℂ) = Cardinal.mk ℂ
-  simp_all
+  rw [Cardinal.mk_arrow]
+  simp only [Cardinal.lift_id]
+  rw [Cardinal.mk_complex]
+  rw [le_antisymm Cardinal.mk_le_aleph0 (Cardinal.aleph0_le_mk_iff.mpr (Infinite.of_injective
+    (fun n => Finsupp.single (0 : Fin 3) n) (Finsupp.single_injective _)))]
+  exact Cardinal.continuum_power_aleph0
 
 /-- |T| = |ℂ| (a power series ring over ℂ in finitely many vars has cardinality |ℂ|). -/
 theorem T_card_eq : Cardinal.mk T = Cardinal.mk ℂ :=
@@ -683,7 +723,10 @@ lemma mk_sub_C_mem_maxIdeal_T (f : MvPowerSeries (Fin 3) ℂ) :
   rw [IsLocalRing.mem_maximalIdeal]
   intro hu
   have hcc := unit_of_mk_unit_T _ hu
-  simp_all
+  have : constantCoeff (f - MvPowerSeries.C (σ := Fin 3) (constantCoeff f)) = 0 := by
+    simp [map_sub, MvPowerSeries.constantCoeff_C]
+  rw [this] at hcc
+  exact (not_isUnit_zero hcc).elim
 
 open MvPowerSeries in
 /-- The composite `ℂ →[C] MvPowerSeries (Fin 3) ℂ →[mk] T →[residue] T/M` from `ℂ` to the

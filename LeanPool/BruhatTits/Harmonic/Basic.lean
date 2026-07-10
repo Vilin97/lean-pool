@@ -117,12 +117,14 @@ lemma dist_ne_of_of_adj {v w : V} (h : X.Adj v w) : X.dist v₀ v ≠ X.dist v�
     let r' : X.Path v v₀ := ⟨r, hr⟩
     have : pv' = r' := X.isTree.isAcyclic.path_unique _ _
     have : pv = r := by rwa [Subtype.ext_iff] at this
-    simp_all
+    have : pw.length = pv.length + 1 := by simp [this, hpr]
+    omega
   let q' : X.Path v v₀ := ⟨q, hqpath⟩
   have hpeq : pv' = q' := X.isTree.isAcyclic.path_unique _ _
   have heq : pv = q := congrArg Subtype.val hpeq
   have : q.length = pw.length + 1 := by simp [q]
-  simp_all
+  rw [← heq, hpvlength, dist_comm, hdist, dist_comm, ← hpwlength] at this
+  omega
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma exists_ordered (e : X.edgeSet) :
@@ -137,7 +139,9 @@ lemma exists_ordered (e : X.edgeSet) :
     · by_contra hc
       have hdist : X.dist v₀ p.1 = X.dist v₀ p.2 := by omega
       have hadj : s(p.1, p.2) ∈ X.edgeSet := by
-        simp_all
+        change Quot.mk (Sym2.Rel V) p ∈ _
+        rw [hp]
+        exact e.property
       rw [mem_edgeSet] at hadj
       apply dist_ne_of_of_adj v₀ hadj hdist
     · rw [Sym2.eq_swap]
@@ -252,7 +256,8 @@ lemma outwardEdgeCone_nonempty_of_source (e : X.edgeSet) :
 lemma outwardEdgeCone_origin_eq : X.outwardEdgeCone v₀ v₀ = X.incidenceFinset' v₀ := by
   ext e
   simp only [mem_outwardEdgeCone_iff, mem_incidenceFinset', and_iff_left_iff_imp]
-  simp_all
+  intro h
+  exact source_eq_origin_of_mem v₀ e h
 
 /-- An arbitrary choice of a distinguished edge pointing away from `v₀`. -/
 def distinguishedEdge (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty) : X.edgeSet :=
@@ -292,7 +297,9 @@ lemma exists_edge_dist_source_lt (w : V) (hw : 0 < X.dist v₀ w) :
   revert hp hplen
   induction p using Walk.rec with
   | nil =>
-    simp_all
+    intro hp hplen
+    simp_rw [Walk.length_nil] at hplen
+    omega
   | @cons x y z hadj p ih =>
     intro hp hplen
     rw [adj_iff_exists_edge_coe] at hadj
@@ -301,7 +308,8 @@ lemma exists_edge_dist_source_lt (w : V) (hw : 0 < X.dist v₀ w) :
     have hx : x ∈ e.val := by simp [he]
     have hy : y ∈ e.val := by simp [he]
     have hp' : p.IsPath := by
-      simp_all
+      simp only [Walk.cons_isPath_iff] at hp
+      exact hp.left
     obtain ⟨q, hq, hqlen⟩ := X.isTree.connected.exists_path_of_dist y z
     let p' : X.Path y z := ⟨p, hp'⟩
     let q' : X.Path y z := ⟨q, hq⟩
@@ -313,7 +321,9 @@ lemma exists_edge_dist_source_lt (w : V) (hw : 0 < X.dist v₀ w) :
     rcases eq_source_or_eq_target_of_mem z e x hx with hsource | h
     · have hsec : target z e = y := by
         rcases eq_source_or_eq_target_of_mem z e y hy with h' | h'
-        · simp_all
+        · rw [h'] at hsource
+          absurd hsource.symm
+          exact hadj.ne
         · assumption
       rw [← hsource, ← hsec, norm_target_eq_norm_source_add_one] at hdist
       omega
@@ -387,7 +397,8 @@ lemma eq_edgeTowardsOrigin_iff_of_mem (w : V) (hw : 0 < X.dist v₀ w) (e : X.ed
     (hmem : w ∈ e.val) :
     e = X.edgeTowardsOrigin v₀ w hw ↔ X.target v₀ e = w := by
   constructor
-  · simp_all
+  · rintro rfl
+    apply edgeTowardsOrigin_target_eq
   · intro h
     exact eq_of_target_eq v₀ _ _ (by simpa)
 
@@ -404,7 +415,8 @@ lemma edgeTowardsOrigin_not_mem_outwardEdgeCone (v : V) (hdist : 0 < X.dist v₀
   have := edgeTowardsOrigin_target_eq v₀ v hdist
   nth_rw 4 [← this] at hc
   have := source_adj_target v₀ (edgeTowardsOrigin v₀ v hdist)
-  simp_all
+  apply this.ne
+  exact hc.right
 
 lemma outwardEdgeCone_nonempty_of_two_le_degree {v : V} (hv : 2 ≤ X.degree v) :
     (X.outwardEdgeCone v₀ v).Nonempty := by
@@ -430,7 +442,9 @@ lemma outwardEdgeCone_nonempty_of_two_le_degree {v : V} (hv : 2 ≤ X.degree v) 
   absurd hne
   simp only [Subtype.mk.injEq, Sym2.eq, Sym2.rel_iff', Prod.mk.injEq, true_and, Prod.swap_prod_mk,
     ea, eb] at this
-  simp_all
+  rcases this with h | h
+  · exact h
+  · rw [← h.left, h.right]
 
 end «API»
 
@@ -512,7 +526,8 @@ lemma aux_extends' (n : ℕ) (e : X.edgeSet) (he : X.dist v₀ (X.target v₀ e)
       have : X.dist v₀ (target v₀ e) = n + 1 := by omega
       simp_rw [this]
       simp only [aux]
-      simp_all
+      split_ifs
+      · rfl
 
 lemma incidenceFinset_eq_union (v : V) (hv : 0 < X.dist v₀ v) :
     X.incidenceFinset' v = { edgeTowardsOrigin v₀ v hv } ∪ X.outwardEdgeCone v₀ v := by
@@ -531,7 +546,8 @@ lemma incidenceFinset_eq_union (v : V) (hv : 0 < X.dist v₀ v) :
         rcases eq_source_or_eq_target_of_mem v₀ e v h with h₂ | h₂
         · exact h₂
         · rw [← eq_edgeTowardsOrigin_iff_of_mem v₀ v hv e h] at h₂
-          simp_all
+          absurd h₂
+          exact fun hc ↦ heq hc.symm
   · intro h
     simp only [Finset.mem_union, Finset.mem_singleton] at h
     cases h
@@ -614,7 +630,9 @@ lemma aux_spec_distinguishedEdge (n : ℕ) (v : V) (hv : X.dist v₀ v + 1 = n) 
       · rw [auxBorder]
         simp only [source_distinguishedEdge, ↓reduceIte, sub_right_inj]
         rw [← aux_extends]
-        simp_all
+        simp only [edgeTowardsOrigin_target_eq]
+        rw [add_left_inj] at hv
+        rw [hv]
 
 lemma aux_spec (n : ℕ) (v : V) (hv : X.dist v₀ v + 1 = n)
     (hnonempty : (X.outwardEdgeCone v₀ v).Nonempty) :
@@ -643,7 +661,8 @@ lemma aux_spec (n : ℕ) (v : V) (hv : X.dist v₀ v + 1 = n)
   | n + 2 =>
     /- the case `v ≠ v₀` -/
     have hdist : 0 < X.dist v₀ v := by
-      simp_all
+      rw [add_left_inj] at hv
+      omega
     simp_rw [incidenceFinset_eq_union v₀ v hdist]
     rw [Finset.sum_union]
     · simp only [Finset.sum_singleton]
@@ -677,7 +696,8 @@ lemma laplace_preimage (hinfinite : ∀ v, (X.outwardEdgeCone v₀ v).Nonempty) 
       rcases eq_source_or_eq_target_of_mem v₀ e v he with h | h
       · subst h
         rw [norm_target_eq_norm_source_add_one]
-      · simp_all
+      · subst h
+        simp
     rwa [aux_extends' w f v₀ (X.dist v₀ v + 1)]
   simp_rw [Finset.sum_congr rfl this]
   rw [aux_spec]

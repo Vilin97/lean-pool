@@ -312,7 +312,8 @@ example (r₀ r₁ p : UInt64) :
         · exact this
         · exact Ne.symm h₂
         · exact Ne.symm h₁
-      · simp_all
+      · rw [t_update_neq, t_update_eq]
+        assumption
       -- /:
   · applySpec specification_LoadAddress (dst := 2) (pc := 2) (addr := 291)
 

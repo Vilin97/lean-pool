@@ -50,7 +50,18 @@ lemma DivChain_mul (a b : Fin n → ℕ) (ha : DivChain n a) (hb : DivChain n b)
 @[simp] lemma diagMat_mul (a b : Fin n → ℕ) (ha : ∀ i, 0 < a i) (hb : ∀ i, 0 < b i) :
     diagMat n a * diagMat n b = diagMat n (a * b) := by
   apply Units.ext
-  simp_all
+  simp only [Units.val_mul, diagMat_val _ _ ha, diagMat_val _ _ hb,
+    diagMat_val _ _ (pi_mul_pos n a b ha hb), Pi.mul_apply]
+  ext i j; simp only [Matrix.mul_apply, Matrix.diagonal_apply]
+  by_cases hij : i = j
+  · subst hij; rw [Finset.sum_eq_single i]
+    · simp
+    · intro b' _ hb'; simp [hb']
+    · intro h; exact absurd (Finset.mem_univ i) h
+  · simp only [hij, ↓reduceIte]; apply Finset.sum_eq_zero; intro k _
+    by_cases hik : i = k
+    · subst hik; simp [hij]
+    · simp [hik]
 
 variable [NeZero n]
 
@@ -60,7 +71,8 @@ lemma T_diag_eq_T_mk_mul (a b : Fin n → ℕ) (ha : ∀ i, 0 < a i) (hb : ∀ i
       (diagMat_mul n a b ha hb).symm ▸ diagMat_mem_posDetInt n (a * b)
         (pi_mul_pos n a b ha hb)⟩⟧ : HeckeCoset (GLPair n)) := by
   simp only [TDiag]; rw [HeckeCoset.eq_iff]
-  simp_all
+  simp only [diagMatDelta, dif_pos (pi_mul_pos n a b ha hb)]
+  congr 1; exact (diagMat_mul n a b ha hb).symm
 
 end DiagMul
 
@@ -620,7 +632,8 @@ private lemma diagConj_scaling (a : Fin n → ℕ) (ha : ∀ i, 0 < a i)
   have hai_ne_int : (a i : ℤ) ≠ 0 := ne_of_gt (Int.natCast_pos.mpr (ha i))
   rw [show ((∏ k, (a k : ℤ)) / (a i : ℤ) * σ.val i j * (a j : ℤ) : ℤ) =
       (∏ k, (a k : ℤ)) / (a i : ℤ) * ((σ.val i j : ℤ) * (a j : ℤ)) from by ring]
-  simp_all
+  push_cast [Int.cast_div h_dvd (show ((a i : ℤ) : ℚ) ≠ 0 from Int.cast_ne_zero.mpr hai_ne_int)]
+  ring
 
 omit [NeZero n] in
 private lemma diagSandwich_scaling (b : Fin n → ℕ) (hb : ∀ i, 0 < b i)

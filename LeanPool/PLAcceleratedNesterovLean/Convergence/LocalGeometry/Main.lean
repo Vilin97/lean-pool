@@ -217,7 +217,9 @@ private abbrev localFiberwiseGeometryProof
             have h1 : fderiv ℝ (fun z => @inner ℝ (E d) _ (gradient f z) u') m w =
                 @inner ℝ (E d) _ (fderiv ℝ (gradient f) m w) u' := by
               rw [fderiv_inner_apply (𝕜 := ℝ) (hgrad_da_m) (differentiableAt_const u')]
-              simp_all
+              simp only [fderiv_fun_const, Pi.zero_apply,
+                zero_apply,
+                inner_zero_right, zero_add]
             have hDf_diff' : DifferentiableAt ℝ (fderiv ℝ f) m := hfderiv_da_m
             have hcomp : HasFDerivAt (fun y => (fderiv ℝ f y) u')
                 ((ContinuousLinearMap.apply ℝ ℝ u').comp (fderiv ℝ (fderiv ℝ f) m)) m :=
@@ -226,7 +228,8 @@ private abbrev localFiberwiseGeometryProof
                 (fderiv ℝ (fderiv ℝ f) m) w u' := by
               have heq : (fun z => @inner ℝ (E d) _ (gradient f z) u') =ᶠ[𝓝 m]
                   (fun y => (fderiv ℝ f y) u') := by
-                simp_all
+                filter_upwards [hU_is_open.mem_nhds hmU] with z hz
+                exact inner_gradient_left (𝕜 := ℝ) (f := f) (x := z) (y := u')
               rw [heq.fderiv_eq, hcomp.fderiv]
               rfl
             rw [← h2, h1, hw', inner_zero_left]
@@ -344,7 +347,8 @@ private abbrev localFiberwiseGeometryProof
           have hleft : fderiv ℝ G m w = @inner ℝ (E d) _ (H w) u' := by
             rw [hG_inner_nhds.fderiv_eq]
             rw [fderiv_inner_apply (𝕜 := ℝ) hgrad_da_m (differentiableAt_const u')]
-            simp_all
+            simp only [fderiv_fun_const, Pi.zero_apply,
+              zero_apply, inner_zero_right, ← hH_def, zero_add]
           have hright : fderiv ℝ G m w = (fderiv ℝ (fderiv ℝ f) m) w u' := by
             have hcomp : HasFDerivAt G
                 ((ContinuousLinearMap.apply ℝ ℝ u').comp
@@ -354,7 +358,12 @@ private abbrev localFiberwiseGeometryProof
             rw [hcomp.fderiv]
             rfl
           linarith
-        simp_all
+        change @inner ℝ (E d) _ (H w) u' = @inner ℝ (E d) _ (0 : E d) u'
+        calc
+          @inner ℝ (E d) _ (H w) u'
+              = (fderiv ℝ (fderiv ℝ f) m) w u' := hbridge
+          _ = 0 := by rw [hw_hess_zero, zero_apply]
+          _ = @inner ℝ (E d) _ (0 : E d) u' := by rw [inner_zero_left]
       have hξK := hξ_orth
       rw [K.mem_orthogonal] at hξK
       exact hξK w hwK
@@ -486,7 +495,8 @@ private abbrev localFiberwiseGeometryProof
           rw [hξ₀_norm, one_pow, mul_one] at this; exact this
         -- (π(x), ξ₀) ∈ N
         have hπξ_in_N : (π x, ξ₀) ∈ N := by
-          simp_all
+          refine ⟨Set.mk_mem_prod hπ_in_S_loc hξ₀_sphere, ?_⟩
+          simp only [Set.mem_preimage, Set.mem_Ici]; exact hge_mu
         -- dist((x, ξ₀), (π(x), ξ₀)) = dist(x, π(x)) < δ
         have hdist_pair : dist (x, ξ₀) (π x, ξ₀) = dist x (π x) := by
           simp only [Prod.dist_eq, dist_self, dist_nonneg, sup_of_le_left]
@@ -560,7 +570,8 @@ private abbrev localFiberwiseGeometryProof
     -- Step 5: hessianQuadForm ≥ 0 on S × sphere (PSD at minimizers)
     have hg_K : ∀ p ∈ S ×ˢ Metric.sphere (0 : E d) 1,
         (0 : ℝ) ≤ g₂ p := by
-      simp_all
+      rintro ⟨x, ξ⟩ ⟨hx, -⟩
+      exact h_hess_psd_M x hx ξ
     -- Step 6: V_prod = (U ×ˢ univ) ∩ {p | g₂ p > -ε₀} is open, contains K = S × sphere
     set V_prod : Set (E d × E d) :=
       (U ×ˢ Set.univ) ∩ g₂ ⁻¹' Set.Ioi (-ε₀) with hVp_def
@@ -813,7 +824,8 @@ private abbrev localFiberwiseGeometryProof
     rw [hφ1, hφ0] at hgrowth
     -- dist(x, S) = ‖x − π(x)‖ = ‖e‖ by the projection property
     have hdist : Metric.infDist x S = ‖e‖ := by
-      simp_all
+      have hxU : x ∈ U := hU_cl_U (subset_closure hx)
+      rw [← (hπ_proj x hxU).2, dist_eq_norm]
     rw [hdist]
     have : μ' * ‖e‖ ^ 2 / 2 = μ' / 2 * ‖e‖ ^ 2 := by ring
     linarith

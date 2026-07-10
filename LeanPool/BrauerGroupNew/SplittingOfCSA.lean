@@ -36,7 +36,9 @@ instance moduleOverOver (A : CSA k) (I : TwoSidedIdeal A) :
 theorem is_simple_A [IsSimpleRing (K ⊗[k] A)] : IsSimpleRing A := IsSimpleRing.right_of_tensor k K A
 
 private lemma subsingleton_tensor [Subsingleton A] : Subsingleton (K ⊗[k] A) := by
-  simp_all
+  rw [← subsingleton_iff_zero_eq_one, show (0 : K ⊗[k] A) = 0 ⊗ₜ 0 by simp,
+      show (1 : K ⊗[k] A) = 1 ⊗ₜ 1 by rfl, show (1 : A) = 0 from Subsingleton.elim _ _]
+  simp
 
 theorem central_over_extension_iff_subsingleton
     [Subsingleton A] [FiniteDimensional k A] [FiniteDimensional k K] :
@@ -75,7 +77,8 @@ theorem centralSimple_over_extension_iff_nontrivial
         simp only [OrderEmbedding.lt_iff_lt]
         rw [bot_lt_iff_ne_bot]
         exact h)
-      simp_all
+      erw [eq1] at ineq1
+      exact ineq1
     let e : K ⊗[k] Subalgebra.center k A ≃ₗ[k] Subalgebra.center k (K ⊗[k] A) :=
       (TensorProduct.congr (Submodule.topEquiv.symm ≪≫ₗ
         show _ ≃ₗ[k] Subalgebra.toSubmodule (Subalgebra.center k K) from LinearEquiv.ofLinear
@@ -95,7 +98,9 @@ theorem centralSimple_over_extension_iff_nontrivial
               Module.finrank K (Subalgebra.center K (K ⊗[k] A)) := by
       rw [Module.finrank_mul_finrank]
     have eq4 : Module.finrank K (Subalgebra.center K (K ⊗[k] A)) = 1 := by
-      simp_all
+      rw [← Subalgebra.finrank_bot (F := K) (E := K ⊗[k] A)]
+      have := hAt.center_eq_bot
+      rw [this.symm]
     rw [eq4, mul_one] at eq3
     rw [eq3] at eq2
     have ineq0 : 0 < Module.finrank k K := Module.finrank_pos
@@ -132,7 +137,27 @@ def extensionInv [FiniteDimensional k A]
   isCentral := centralsimple_over_extension_iff k A K |>.2 ⟨inferInstance, inferInstance⟩ |>.1
   isSimple := centralsimple_over_extension_iff k A K |>.2 ⟨inferInstance, inferInstance⟩ |>.2
   fin_dim := by
-    simp_all
+    have := centralsimple_over_extension_iff k A K |>.2 ⟨inferInstance, inferInstance⟩ |>.2
+    let to_ten: A →ₐ[k] K ⊗[k] A :=
+    {
+      toFun := fun a ↦ 1 ⊗ₜ a
+      map_one' := rfl
+      map_mul' := by simp
+      map_zero' := TensorProduct.tmul_zero A 1
+      map_add' := TensorProduct.tmul_add 1
+      commutes' := fun _ ↦ Algebra.TensorProduct.algebraMap_apply' _|>.symm
+    }
+    have Isinj : Function.Injective to_ten := by
+      have := IsSimpleRing.iff_eq_zero_or_injective' A k|>.1 inferInstance (B := K ⊗[k] A) to_ten
+      have nezero : TwoSidedIdeal.ker to_ten ≠ ⊤ := by
+        intro h
+        have : (1 : A) ∈ (⊤ : TwoSidedIdeal A) := by simp
+        rw [h.symm, TwoSidedIdeal.mem_ker] at this
+        simp only [map_one, one_ne_zero] at this
+      simp only [nezero, false_or] at this
+      exact this
+    haveI : FiniteDimensional k (K ⊗[k] A) := Module.Finite.trans (R := k) K (K ⊗[k] A)
+    exact FiniteDimensional.of_injective (K := k) to_ten.toLinearMap Isinj
 
 theorem CSA_iff_exist_split (k_bar : Type u) [Field k_bar] [Algebra k k_bar]
     [hk_bar : IsAlgClosure k k_bar] [hA : FiniteDimensional k A] :

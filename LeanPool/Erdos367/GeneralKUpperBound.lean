@@ -58,7 +58,8 @@ def F (k n : ℕ) : ℕ := ∏ i ∈ Finset.range k, (n + i)
 /-- Every element of the factorization support is a prime. -/
 lemma prime_of_mem_factorization_support {m p : ℕ} (hp : p ∈ m.factorization.support) :
     Nat.Prime p := by
-  simp_all
+  rw [Nat.support_factorization, Nat.mem_primeFactors] at hp
+  exact hp.1
 
 /-
 rad(m) ≥ 1 for all m.
@@ -189,7 +190,8 @@ theorem B2_upper_bound (k : ℕ) (hk : 1 ≤ k) (hRadLB : RadLB k) :
       ← Real.rpow_neg ( by positivity : 0 ≤ ( n : ℝ ) ) ]; ring;
     exact Or.inl (by
       rw [← Real.rpow_natCast, ← Real.rpow_add (by positivity)]
-      simp_all)
+      push_cast
+      ring)
 
 -- Remark (not part of the proof):
 -- ∏_{i=0}^{k-1} B₂(n+i) ≤ B₂(F(n)) up to a factor depending only on k

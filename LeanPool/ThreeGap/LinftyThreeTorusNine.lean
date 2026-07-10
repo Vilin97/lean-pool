@@ -57,7 +57,8 @@ theorem delta_astar (d n₀ n₁ n₂ r₀ r₁ r₂ M : ℤ)
     have : (0 : ℝ) ≤ (M : ℝ) := by exact_mod_cast h
     positivity
   have normcoord : ∀ z : ℤ, ‖((z : ℝ)) / 50000‖ = ((|z| : ℤ) : ℝ) / 50000 := by
-    simp_all
+    intro z
+    rw [Real.norm_eq_abs, abs_div, abs_of_pos (show (0 : ℝ) < 50000 by norm_num), ← Int.cast_abs]
   have c0 : ∀ p : Fin 3 → ℤ, (rem astar d p) 0 = ((-785 * d - 50000 * p 0 : ℤ) : ℝ) / 50000 := by
     intro p; simp only [rem, astar, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Matrix.cons_val_zero]
     push_cast; ring
@@ -107,7 +108,8 @@ theorem delta_astar (d n₀ n₁ n₂ r₀ r₁ r₂ M : ℤ)
     · refine le_trans ?_ (norm_le_pi_norm (rem astar d p) 1)
       rw [c1 p, normcoord, hMa]
       have hnum : ((|r₁| : ℤ) : ℝ) ≤ ((|-11872 * d - 50000 * p 1| : ℤ) : ℝ) := by
-        exact_mod_cast abs_residue_le 50000 r₁ (-11872 * d) (by norm_num) hb1 ⟨n₁, by simp_all⟩ (p 1)
+        exact_mod_cast abs_residue_le 50000 r₁ (-11872 * d) (by norm_num) hb1 ⟨n₁, by linarith
+          [hr1]⟩ (p 1)
       linarith
     · refine le_trans ?_ (norm_le_pi_norm (rem astar d p) 2)
       rw [c2 p, normcoord, hMa]
@@ -471,7 +473,10 @@ theorem nine_le_card_image {N : ℕ} (f : ℕ → ℝ) {q₀ q₁ q₂ q₃ q₄
     simp only [Finset.mem_singleton]
     exact ne_of_gt h78
   have hcard : (({f q₀, f q₁, f q₂, f q₃, f q₄, f q₅, f q₆, f q₇, f q₈} : Finset ℝ)).card = 9 := by
-    simp_all
+    rw [Finset.card_insert_of_notMem e0, Finset.card_insert_of_notMem e1,
+      Finset.card_insert_of_notMem e2, Finset.card_insert_of_notMem e3,
+      Finset.card_insert_of_notMem e4, Finset.card_insert_of_notMem e5,
+      Finset.card_insert_of_notMem e6, Finset.card_insert_of_notMem e7, Finset.card_singleton]
   have hsub : ({f q₀, f q₁, f q₂, f q₃, f q₄, f q₅, f q₆, f q₇, f q₈} : Finset ℝ) ⊆ (Finset.range (N
     + 1)).image f := by
     intro x hx
