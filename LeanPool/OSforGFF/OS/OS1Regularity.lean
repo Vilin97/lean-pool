@@ -143,8 +143,7 @@ theorem schwinger_two_point_decay_bound_GFF (m : ℝ) [Fact (0 < m)] :
   -- schwingerTwoPointFunctionGFF is definitionally equal to freeCovarianceKernel
   rw [schwingerTwoPoint_eq_freeCovarianceKernel]
   -- The norm of a real number is its absolute value
-  rw [Real.norm_eq_abs]
-  exact hC_bound (x - y)
+  simp_all
 
 /-- The abstract two-point Schwinger function satisfies a polynomial decay bound.
     Uses the bridge lemma to connect to the concrete GFF definition.
@@ -188,8 +187,7 @@ theorem schwingerTwoPoint_measurable (m : ℝ) [Fact (0 < m)] :
     -- The complement of {0} has full measure, so {x ≠ 0} ∈ ae volume
     have h_mem : {x : SpaceTime | x ≠ 0} ∈ ae volume := by
       rw [MeasureTheory.mem_ae_iff]
-      simp only [ne_eq, Set.compl_setOf, not_not]
-      exact h_singleton_null
+      simp_all
     -- The functions agree on this set
     exact Filter.eventuallyEq_of_mem h_mem (fun x hx =>
       schwingerTwoPointFunction_eq_freeCovarianceKernel m x hx)
@@ -208,8 +206,7 @@ lemma gff_generating_norm_eq (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   ‖GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) f‖ =
     Real.exp (-(1/2) * (freeCovarianceℂBilinear m f f).re) := by
   rw [gff_complex_generating, gff_two_point_equals_covarianceℂ_free, Complex.norm_exp]
-  simp only [Complex.neg_re, Complex.mul_re]
-  norm_num
+  simp_all
 
 /-- Using bilinearity and the real/imaginary decomposition, the real part of C(f,f)
     satisfies Re C(f,f) = C(Re f, Re f) - C(Im f, Im f). Combined with monotonicity
@@ -325,8 +322,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
       have : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
       linarith
     -- 0 < m^2 and m^2 ≤ (2π)²‖k‖² + m^2 ⇒ 1 / ((2π)²‖k‖² + m^2) ≤ 1 / m^2
-    have := one_div_le_one_div_of_le (a := m^2) (b := (2 * Real.pi)^2 * ‖k‖^2 + m^2) (by exact
-      hm2pos) hden
+    have := one_div_le_one_div_of_le (a := m^2) (b := (2 * Real.pi)^2 * ‖k‖^2 + m^2) (by simp_all) hden
     simpa [one_div] using this
   -- Show integrability of ‖F‖² via MemLp → Integrable (square norm)
   have hF_memLp : MemLp F 2 volume := F.memLp 2 volume
@@ -361,10 +357,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
         = (1 / m^2) * ∫ k, ‖F k‖^2 ∂volume :=
       integral_const_mul_eq (μ := volume) (c := (1 / m^2))
         (f := fun k => ‖F k‖^2) hF_sq_int
-    calc
-      ∫ k, ‖F k‖^2 * freePropagatorMomentumMathlib m k ∂volume
-          ≤ ∫ k, (1 / m^2) * ‖F k‖^2 ∂volume := h_int_le
-      _ = (1 / m^2) * ∫ k, ‖F k‖^2 ∂volume := h_const_pull
+    simp_all
   -- Combine with Parseval to reach a bound in terms of ‖F‖²
   have : (freeCovarianceℂBilinear m (toComplex fIm) (toComplex fIm)).re ≤
       (1 / m^2) * (∫ k, ‖F k‖^2 ∂volume) := by
@@ -384,8 +377,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := le_add_of_nonneg_left (sq_nonneg _)
     have hnorm_sq : ‖f x‖ ^ 2 = (f x).re ^ 2 + (f x).im ^ 2 := by
       simpa [Complex.normSq_apply, pow_two] using (Complex.sq_norm (f x))
-    have hsq : |(f x).im| ^ 2 ≤ ‖f x‖ ^ 2 := by simpa [habs_sq, hnorm_sq] using hineq
-    simpa [hL, fIm, complexTestFunctionDecompose] using hsq
+    simp_all
   -- Show integrability of both sides to apply integral monotonicity
   have hIm_memLp : MemLp (toComplex fIm) 2 volume := (toComplex fIm).memLp 2 volume
   have hIm_meas : AEStronglyMeasurable (toComplex fIm) volume := hIm_memLp.1

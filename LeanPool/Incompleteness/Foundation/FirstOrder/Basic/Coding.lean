@@ -62,8 +62,7 @@ lemma ofNat_toNat {n : ℕ} : ∀ t : Semiterm L ξ n, ofNat n (toNat t) = some 
         true_and, exists_eq_right]
       have : (fun i ↦ ofNat n (toNat (v i))) = (fun i ↦ pure (v i)) :=
         funext <| fun i ↦ ofNat_toNat (v i)
-      rw [this, Matrix.getM_pure]
-      simp
+      simp_all
 
 instance encodable : Encodable (Semiterm L ξ n) where
   encode := toNat

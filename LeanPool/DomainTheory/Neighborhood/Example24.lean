@@ -80,9 +80,7 @@ theorem out_append (σ t : Str) : out σ <+: out (σ ++ t) := by
     cases c with
     | true => simpa using del_append σ₀ t
     | false =>
-      simp only [List.cons_append, out_false]
-      obtain ⟨u, hu⟩ := ih
-      exact ⟨u, by rw [List.cons_append, hu]⟩
+      simp_all
 
 /-- **Prefix-monotonicity of the output.** Extending the input prefix can only
 extend the guaranteed

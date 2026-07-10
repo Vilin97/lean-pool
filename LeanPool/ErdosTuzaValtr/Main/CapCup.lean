@@ -86,8 +86,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
       · rcases hcap with ⟨c, ⟨c_cap, c_length⟩, c_in⟩
         have c_nnil : c ≠ [] := by
           rintro rfl
-          simp only [List.length_nil] at c_length
-          omega
+          simp_all
         rcases List.takeHead c_nnil with ⟨ch, ct, eq_c⟩
         have h : ch ∈ S \ T := c_in ch (by rw [eq_c]; simp)
         rw [def_T, Finset.mem_sdiff, Finset.mem_filter] at h
@@ -106,8 +105,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
     · rcases ha1b T sz_cases with hcap | hcup
       · left
         refine hasNCap_supset ?_ hcap
-        rw [def_T]
-        exact Finset.filter_subset _ _
+        simp_all
       · rcases hcup with ⟨cl, ⟨cl_cup, cl_length⟩, cl_in_T⟩
         have cl_sz2 : 2 ≤ cl.length := by rw [cl_length]; omega
         rcases List.takeLast2 cl_sz2 with ⟨p, q, cl', eq_cl⟩
@@ -135,8 +133,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
           · rw [List.append_in, List.cons_in]
             refine ⟨?_, ?_, List.nil_in⟩
             · exact List.in_superset (by rw [def_T]; exact Finset.filter_subset _ _) cl_in_T
-            · rw [eq_cr, List.cons_in, List.cons_in] at cr_in_S
-              exact cr_in_S.2.1
+            · simp_all
         · left
           refine ⟨p::cr, ⟨?_, ?_⟩, ?_⟩
           · rw [eq_cr]
@@ -146,13 +143,8 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
               rw [eq_cl] at cl_cup
               have h_infix : [p, q] <:+: cl' ++ [p, q] := ⟨cl', [], by simp⟩
               exact List.isChain_pair.mp (cl_cup.left.infix h_infix)
-            · rw [eq_cr] at cr_cap
-              exact cr_cap
+            · simp_all
           · rw [List.length_cons, cr_length]
-          · rw [List.cons_in]
-            refine ⟨?_, cr_in_S⟩
-            apply Finset.filter_subset is_start_of_cap
-            rw [← def_T]
-            exact cl_in_T p (by rw [eq_cl]; simp)
+          · simp_all
 
 end Config

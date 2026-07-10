@@ -831,8 +831,7 @@ theorem QuantumGraph.Real.PiMat_eq :
       · subst j₁
         have h₂ : j₂ ≠ i.2 := by
           intro h₂
-          apply hj
-          ext <;> simp [h₂]
+          simp_all
         refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
           Fintype.sum_eq_zero _ fun _ => ?_
         simpa only [AlgEquiv.one_apply] using PiMat_eq_right_block_miss h₂ _ _
@@ -867,9 +866,7 @@ theorem PiMat.piAlgEquiv_trace_apply
   (f : (i : ι) → (Matrix (p i) (p i) ℂ ≃ₐ[ℂ] Matrix (p i) (p i) ℂ))
   (x : PiMat ℂ ι p) (a : ι) :
   ((AlgEquiv.piCongrRight f x) a).trace = (x a).trace := by
-  calc (((AlgEquiv.piCongrRight f) x) a).trace
-      = ((f a) (x a)).trace := rfl
-    _ = (x a).trace := Matrix.aut_mat_inner_trace_preserving _ _
+  simp_all
 
 omit [Nonempty ι] [∀ (i : ι), Nontrivial (p i)] in
 omit [Fintype ι] [DecidableEq ι] in
@@ -1320,8 +1317,7 @@ theorem modAut_eq_id_iff :
         constructor
         · intro h i a
           simpa [Matrix.includeBlock_apply_same] using h (Matrix.includeBlock a) i
-        · intro h a i
-          exact h i (a i)
+        · simp_all
     _ ↔ r = 0 ∨ Module.Dual.IsTracial (Module.Dual.pi φ) := by
       simp_rw [sig_eq_id_iff, forall_or_left, Module.Dual.pi_isTracial_iff]
 
@@ -1466,9 +1462,7 @@ theorem QuantumGraph.Real.PiMat_conj_unitary_submodule_eq_map :
     rcases x with ⟨x₁, x₂⟩
     by_cases h₂ : x₂ = i.2
     · by_cases h₁ : x₁ = i.1
-      · exfalso
-        apply hx
-        ext <;> assumption
+      · simp_all
       · simp [h₂, h₁]
     · simp [h₂]
 

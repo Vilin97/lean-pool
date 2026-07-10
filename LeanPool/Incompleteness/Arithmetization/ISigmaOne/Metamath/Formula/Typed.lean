@@ -191,12 +191,10 @@ def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
     (p ⋎ q).substs w = p.substs w ⋎ q.substs w := by ext; simp [substs]
 @[simp] lemma substs_all (w : L.SemitermVec n m) (p : L.Semiformula (n + 1)) :
     p.all.substs w = (p.substs w.q).all := by
-  ext; simp [substs, Language.bvar, Language.qVec, Language.SemitermVec.bShift,
-    Language.SemitermVec.q, w.prop.lh]
+  ext; simp_all
 @[simp] lemma substs_ex (w : L.SemitermVec n m) (p : L.Semiformula (n + 1)) :
     p.ex.substs w = (p.substs w.q).ex := by
-  ext; simp [substs, Language.bvar, Language.qVec, Language.SemitermVec.bShift,
-    Language.SemitermVec.q, w.prop.lh]
+  ext; simp_all
 
 @[simp] lemma substs_neg (w : L.SemitermVec n m) (p : L.Semiformula n) :
     (∼p).substs w = ∼(p.substs w) := by
@@ -256,9 +254,7 @@ lemma subst_eq_self {n : V} (w : L.SemitermVec n n) (p : L.Semiformula n) (H : �
 @[simp] lemma subst_eq_self₁ (p : L.Semiformula (0 + 1)) :
     p^/[(L.bvar 0 (by simp)).sing] = p := by
   apply subst_eq_self
-  simp only [zero_add, lt_one_iff_eq_zero]
-  rintro _ rfl
-  simp
+  simp_all
 
 @[simp] lemma subst_nil_eq_self (w : L.SemitermVec 0 0) : p^/[w] = p := subst_eq_self _ _ (by simp)
 

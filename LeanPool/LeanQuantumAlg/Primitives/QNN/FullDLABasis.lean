@@ -79,8 +79,7 @@ theorem hermUnit_gt {i j : Fin N} (h : j < i) :
 theorem rt2inv_sq : rt2inv ^ 2 = 1 / 2 := by rw [sq, rt2inv_mul_self]
 
 theorem star_I_eq : star Complex.I = -Complex.I := by
-  rw [← starRingEnd_apply]
-  exact Complex.conj_I
+  simp_all
 
 /-- Shared finisher for the orthonormality Gram-matrix computation: expand the
 Hilbert–Schmidt inner product, then resolve the index `if`s (impossible ones by `omega`)
@@ -124,10 +123,8 @@ theorem hermUnit_linearIndependent :
     rw [hsInner_sum_right]
     have hterm : ∀ q, hsInner (hermUnit p) (c q • hermUnit q) = if p = q then c q else 0 := by
       intro q; rw [hsInner_smul_right, hermUnit_orthonormal]; split <;> simp
-    rw [Finset.sum_congr rfl (fun q _ => hterm q), Finset.sum_ite_eq]
-    simp
-  rw [hc] at h1
-  simpa [hsInner] using h1.symm
+    simp_all
+  simp_all
 
 /-- The Hermitized matrix units span all of `gl(N, ℂ)`. -/
 theorem hermUnit_span_top :
@@ -179,8 +176,7 @@ theorem fullControllability_hasBarrenPlateau :
   · intro n
     have hdimeq : ((fullHermBasis (2 ^ n)).dim : ℝ) = (2 : ℝ) ^ n * (2 : ℝ) ^ n := by
       change ((2 ^ n * 2 ^ n : ℕ) : ℝ) = _
-      push_cast
-      ring
+      simp_all
     rw [hdimeq]
     nlinarith [one_le_pow₀ (show (1 : ℝ) ≤ 2 by norm_num) (n := n),
       pow_nonneg (show (0 : ℝ) ≤ 2 by norm_num) n]

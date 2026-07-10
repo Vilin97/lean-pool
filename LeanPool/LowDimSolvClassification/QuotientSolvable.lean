@@ -58,7 +58,6 @@ theorem solvable_of_ideal_and_quot_solvable {I : LieIdeal R L} (quotsol : LieAlg
     apply le_refl
   rw [LieIdeal.derivedSeries_eq_derivedSeriesOfIdeal_comap,
     LieIdeal.comap_incl_eq_bot_of_le (derivedSeriesOfIdeal_le_self I k₂)] at hk₂
-  rw [hk₂] at h₁
-  assumption
+  simp_all
 
 end LieAlgebra

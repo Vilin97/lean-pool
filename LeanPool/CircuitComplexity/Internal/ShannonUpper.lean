@@ -174,8 +174,7 @@ private theorem binop_wireValue_c₁ {N G₁ G₂ : Nat} [NeZero N]
         · exact ih _ hacyc1 (by omega) (by omega)
         · exact ih _ hacyc0 (by omega) (by omega)
         · exact ih _ hacyc1 (by omega) (by omega)
-  have := key w.val (by omega) hw
-  convert this using 2
+  simp_all
 
 private theorem binop_wireValue_c₂ {N G₁ G₂ : Nat} [NeZero N]
     (op : AONOp)
@@ -279,8 +278,7 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
     simp [gw, cb, binopCircuit]
   have hcb_gw1 : gw 1 (cb.outputs 0) = ⟨N + G₁ + G₂ + 1, by omega⟩ := by
     simp [gw, cb, binopCircuit]
-  rw [hcb_op, hcb_gn0, hcb_gn1, hcb_gw0, hcb_gw1, Bool.false_xor, Bool.false_xor]
-  exact congr_arg₂ (· || ·) hw1 hw2
+  simp_all
 
 /-! ## Arithmetic -/
 
@@ -646,8 +644,7 @@ private theorem testBit_sum_cond_pow_fin (k : Nat) (b : BitString k) (i : Nat) (
         rw [hlast_eq] at hbn; exact hbn.symm
       · simp only [hbn, ite_false, Fin.val_last, Nat.add_zero, Bool.false_eq_true]
         rw [Nat.testBit_lt_two_pow hS_lt]
-        rw [hlast_eq] at hbn
-        exact (Bool.eq_false_iff.mpr hbn).symm
+        simp_all
 
 private theorem addrDataSum (N : Nat) (hN : 16 ≤ N) :
     addrBits N + dataBits N = N := by
@@ -927,8 +924,7 @@ private theorem colFun_at_actual_bits (N : Nat) [NeZero N]
   · exact testBit_sum_cond_pow_fin k _ idx h
   · have hq_bound : idx - k < q := by omega
     rw [testBit_sum_cond_pow_fin q _ (idx - k) hq_bound]
-    dsimp only
-    congr 1; ext; simp; omega
+    simp_all
 
 /-! #### Circuit correctness -/
 
@@ -1394,10 +1390,7 @@ private theorem colOutput_constFalse (N : Nat) [NeZero N]
   rw [dif_pos (show N - N = 0 from by omega)]
   simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
     Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
-  simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
-    show ¬((1 : Nat) = 0) from by omega, Bool.false_xor, Bool.true_xor]
-  rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from h0N)]
-  cases x ⟨0, h0N⟩ <;> rfl
+  simp_all
 
 private theorem wireValue_colOutput (N : Nat) [NeZero N]
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N)
@@ -1487,8 +1480,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
           simp [htb]]
         exact h
       · have h := colOutput_constFalse N f hN x (by linarith [hsel_bound pos hpos])
-        rw [show (Nat.testBit p pos && decide (pos = aSum)) = false from by simp [htb]]
-        exact h
+        simp_all
     induction r with
     | zero =>
       have h_ne0 : oD k q + p * (2 ^ k - 1) ≠ 0 := by
@@ -1532,10 +1524,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact colOutput_constFalse N f hN x _
     | succ r' ih =>
       have h_ne0' : oD k q + p * (2 ^ k - 1) + (r' + 1) ≠ 0 := by
-        change oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N)
-          (addrDataSum N hN)
-          ⟨y, hy⟩ * (2 ^ (addrBits N) - 1) + (r' + 1) ≠ 0
-        unfold oD oC; omega
+        simp_all
       have h_ge_oC' : ¬(oD k q + p * (2 ^ k - 1) + (r' + 1) < oC q) := by
         simp only [show k = addrBits N from rfl, show q = dataBits N from rfl] at *
         unfold oD oC; omega

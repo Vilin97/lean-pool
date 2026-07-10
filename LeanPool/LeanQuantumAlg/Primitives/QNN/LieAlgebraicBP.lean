@@ -150,8 +150,7 @@ theorem barrenPlateau_of_full_dla
     simp
   rw [hdim]
   have h1 : (1 : ℝ) ≤ (2 : ℝ) ^ n := one_le_pow₀ (by norm_num)
-  push_cast
-  nlinarith [h1, pow_pos (show (0:ℝ) < 2 by norm_num) n]
+  simp_all
 
 /-! ### Tier 3b — worked example: single generator, constant ⟹ no barren plateau -/
 
@@ -220,8 +219,7 @@ theorem not_barrenPlateau_of_dlaDim_const
   have hconst : variance = fun _ => numer := by
     funext n; rw [hvar n, dlaDim_singleton (hH n)]; simp
   have h0 : Filter.Tendsto variance Filter.atTop (nhds 0) := hbp.variance_tendsto_zero
-  rw [hconst] at h0
-  exact hnum.ne (tendsto_nhds_unique h0 tendsto_const_nhds)
+  simp_all
 
 end
 

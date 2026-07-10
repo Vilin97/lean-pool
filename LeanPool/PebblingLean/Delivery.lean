@@ -117,24 +117,18 @@ theorem single_eq_twoPoint_right_zero [DecidableEq V] {u v : V} (k : ℕ) (huv :
     single u k = twoPoint u v k 0 := by
   funext x
   by_cases hxu : x = u
-  · subst x
-    simp [single, twoPoint]
+  · simp_all
   · by_cases hxv : x = v
-    · subst x
-      have hvu : v ≠ u := fun h => huv h.symm
-      simp [single, twoPoint, hvu]
+    · simp_all
     · simp [single, twoPoint, hxu, hxv]
 
 theorem single_eq_twoPoint_left_zero [DecidableEq V] {u v : V} (k : ℕ) (huv : u ≠ v) :
     single v k = twoPoint u v 0 k := by
   funext x
   by_cases hxu : x = u
-  · subst x
-    simp [single, twoPoint, huv]
+  · simp_all
   · by_cases hxv : x = v
-    · subst x
-      have hvu : v ≠ u := fun h => huv h.symm
-      simp [single, twoPoint, hvu]
+    · simp_all
     · simp [single, twoPoint, hxu, hxv]
 
 /-- One edge move transfers one pebble from the left support vertex to the
@@ -154,9 +148,7 @@ theorem twoPoint_edge_move [DecidableEq V] {G : Graph V} {u v : V}
       simp [moveDistribution, twoPoint]
       omega
     · by_cases hxv : x = v
-      · subst x
-        have hvu : v ≠ u := fun h => huv h.symm
-        simp [moveDistribution, twoPoint, hvu]
+      · simp_all
       · simp [moveDistribution, twoPoint, hxu, hxv]
 
 /-- Repeating the same edge move sends `k` pebbles across an edge from a pile
@@ -188,8 +180,7 @@ theorem reaches_single_edge [DecidableEq V] {G : Graph V} {u v : V}
     single_eq_twoPoint_right_zero (v := v) (2 * k) huv
   have hfinish : single v k = twoPoint u v 0 k :=
     single_eq_twoPoint_left_zero (u := u) k huv
-  rw [hstart, hfinish]
-  simpa [Nat.zero_add] using hreach
+  simp_all
 
 /-- Direct delivery along a walk. -/
 theorem canReachAtLeast_single_of_walk [DecidableEq V] {G : Graph V} {u target : V}

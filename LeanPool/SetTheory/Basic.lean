@@ -279,10 +279,7 @@ attribute [formula_builder_pre, formula_builder] Set.mem_setOf_eq
 lemma isSet_iff_exists_set {C : Set M} : IsSet C ↔ ∃ x : M, ∀ y, y ∈ x ↔ y ∈ C := by
   refine ⟨fun | ⟨x, hx⟩ => ⟨x, hx.1⟩, fun | ⟨x, hx⟩ => ⟨x, hx, fun y hy => ?_⟩⟩
   ext z
-  refine ⟨fun hz => ?_, fun hz => ?_⟩ <;> (
-    simp only [hx, hy] at hz ⊢
-    exact hz
-  )
+  simp_all
 
 lemma not_mem_self {x : M} : x ∉ x := by
   simpa [toZFSet_simps] using mem_irrefl _
@@ -340,8 +337,7 @@ lemma mem_vonNeumann_powerset {μ x} (hμ : IsSuccLimit μ) (hx : x ∈ V_ μ) :
 
 lemma mem_vonNeumann_singleton {μ x} (hμ : IsSuccLimit μ) (hx : x ∈ V_ μ) : {x} ∈ V_ μ := by
   refine mem_vonNeumann_of_subset (fun y hy => ?_) (mem_vonNeumann_powerset hμ hx)
-  simp only [mem_singleton] at hy
-  simp [hy]
+  simp_all
 
 lemma mem_vonNeumann_union {μ} {x y : ZFSet} (hx : x ∈ V_ μ) (hy : y ∈ V_ μ) : x ∪ y ∈ V_ μ := by
   simp only [mem_vonNeumann, rank_union] at hx hy ⊢
@@ -438,8 +434,7 @@ namespace SetTheory
 @[toV_simps] lemma singleton.toV {x} : {↓x} = ↓({x} : M) := by
   rw [Singleton.singleton.eq_iff, ToV.forall_mem_toV_iff]
   · simpa only [toV_simps] using Singleton.singleton.spec _
-  · rintro z ⟨_⟩
-    exact ⟨x, rfl⟩
+  · simp_all
 
 @[toZFSet_simps] lemma singleton.toZFSet {x} : ⇓({x} : M) = {⇓x} := by
   simp (config := {singlePass := true}) only [← ToZFSet.toZFSet_toV]

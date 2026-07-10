@@ -188,17 +188,9 @@ scoped instance : CanonicallyOrderedAdd M where
     · exact ⟨0, by simp⟩
     · simpa[eq_comm] using add_eq_of_lt x y h
   le_add_self := by
-    intro x y
-    rw [add_comm]
-    exact show x ≤ x + y by
-      rcases zero_le y with (rfl | hy)
-      · exact Or.inl (by simp)
-      · exact Or.inr (by simpa using add_lt_add 0 y x hy)
+    simp_all
   le_self_add := by
-    intro x y
-    rcases zero_le y with (rfl | hy)
-    · exact Or.inl (by simp)
-    · exact Or.inr (by simpa using add_lt_add 0 y x hy)
+    simp_all
 
 lemma numeral_eq_natCast : (n : ℕ) → (ORingStruc.numeral n : M) = n
   | 0     => rfl

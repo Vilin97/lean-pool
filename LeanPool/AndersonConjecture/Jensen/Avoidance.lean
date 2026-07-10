@@ -172,8 +172,7 @@ lemma avoidStep_diff [IsNoetherianRing T]
   · dsimp
     rw [show u + (ea q).choose - u = (ea q).choose from by ring]
     exact (ea q).choose_spec.1
-  · dsimp
-    simp [(I * IsLocalRing.maximalIdeal T ^ q).zero_mem]
+  · simp_all
 
 lemma avoidStep_avoids [IsNoetherianRing T]
     (I P : Ideal T) (hP : P.IsPrime) (hP_ne : P ≠ IsLocalRing.maximalIdeal T)
@@ -296,9 +295,7 @@ theorem countable_avoidance
     intro P hP n
     induction n with
     | zero =>
-      intro h
-      have : P = ⊤ := top_le_iff.mp (by rwa [pow_zero, Ideal.one_eq_top] at h)
-      exact absurd this hP.ne_top
+      simp_all
     | succ k ih =>
       intro h
       rw [pow_succ] at h
@@ -367,8 +364,7 @@ theorem countable_avoidance
                                      omega) (hu_diff k))
           (ih hak)
       · have : a = k + 1 := by omega
-        subst this
-        simp
+        simp_all
   -- Cauchy property in SModEq form for IsPrecomplete
   have hu_smodEq : ∀ {a b : ℕ}, a ≤ b →
       u_seq a ≡ u_seq b [SMOD (𝔪 ^ a • ⊤ : Submodule T T)] := by
@@ -412,9 +408,7 @@ theorem countable_avoidance
       intro a b hab
       induction b with
       | zero =>
-        have ha : a = 0 := by omega
-        subst ha
-        simp [(𝔪 ^ q_seq 0).zero_mem]
+        simp_all
       | succ k ih =>
         by_cases hak : a ≤ k
         · have heq : u_seq (k + 1) - u_seq a =
@@ -424,8 +418,7 @@ theorem countable_avoidance
             (Ideal.pow_le_pow_right (hq_mono a k hak) (hu_diff k))
             (ih hak)
         · have hak1 : a = k + 1 := by omega
-          subst hak1
-          simp [(𝔪 ^ q_seq (k + 1)).zero_mem]
+          simp_all
     have hL_diff_q : L - u_seq (n + 1) ∈ 𝔪 ^ q_seq (n + 1) := by
       have : L - u_seq (n + 1) =
         (L - u_seq (q_seq (n + 1))) + (u_seq (q_seq (n + 1)) - u_seq (n + 1)) := by ring
@@ -494,16 +487,14 @@ lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
       exact Ideal.span_le.mpr fun x hx => by
         rw [Finset.mem_coe] at hx
         by_cases hxg : x = g
-        · subst hxg
-          exact hgP
+        · simp_all
         · exact hJP (Ideal.subset_span
             (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hxg, hx⟩)))
     have hS_card : Cardinal.mk S_bad < Cardinal.mk (IsLocalRing.ResidueField T) :=
       lt_of_le_of_lt (Cardinal.mk_le_mk_of_subset Set.inter_subset_left) hC_card
     obtain ⟨s_elem, hs_mem, hs_avoid⟩ := ih J S_bad
       (fun P ⟨hPC, _⟩ => hC_prime P hPC) hS_card hJ_notI
-      ⟨s.erase g, rfl, by rw [Finset.card_erase_of_mem hg]
-                          omega⟩
+      ⟨s.erase g, rfl, by simp_all⟩
     have hs_in_I : s_elem ∈ I := hJ_le_I hs_mem
     -- Line argument: for each P ∈ C, at most one residue class of a puts g + a*s_elem ∈ P
     let forbidden : ↑C → IsLocalRing.ResidueField T :=

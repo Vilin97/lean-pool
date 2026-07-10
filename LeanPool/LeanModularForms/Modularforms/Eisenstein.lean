@@ -44,8 +44,7 @@ lemma exists_smul_eq_of_rank_one' {M : Type*} [AddCommGroup M] [Module ℂ M]
 /-- Convert smul equality of modular forms to pointwise equality. -/
 lemma smul_modularForm_eq_pointwise {Γ : Subgroup SL(2, ℤ)} {k : ℤ} {f g : ModularForm Γ k}
     {c : ℂ} (h : f = c • g) (z : ℍ) : (f : ℍ → ℂ) z = c * (g : ℍ → ℂ) z := by
-  simpa [ModularForm.coe_smul, smul_eq_mul] using
-    congrFun (congrArg (↑· : ModularForm _ _ → ℍ → ℂ) h) z
+  simp_all
 
 section Definitions
 
@@ -148,8 +147,7 @@ theorem cuspfunc_lim_coef {k : ℤ} {F : Type u_1} [inst : FunLike F ℍ ℂ] (n
     (SlashInvariantFormClass.periodic_comp_ofComplex f (by simp))
   simp only [smul_eq_mul, ne_eq] at *
   rw [Function.Periodic.qParam_right_inv] at this hft
-  · rw [← this] at hft
-    exact hft
+  · simp_all
   · simp only [ne_eq, Nat.cast_eq_zero]
     exact NeZero.ne n
   · exact hq1
@@ -213,10 +211,7 @@ lemma modfom_q_exp_cuspfunc (c : ℕ → ℂ) (f : F) [ModularFormClass F Γ(n) 
         · rw [@mem_nhdsWithin_iff]
           refine ⟨1/2, by norm_num, ?_⟩
           intro y hy
-          simp only [smul_eq_mul, ne_eq, Decidable.not_not, one_div,
-            mem_inter_iff, mem_ball, dist_zero_right, mem_compl_iff, mem_singleton_iff,
-            mem_setOf_eq] at *
-          refine ⟨hy.2, hy.1⟩
+          simp_all
         · intro y hy k
           simp only [norm_mul, norm_pow, one_div, inv_pow]
           gcongr
@@ -276,8 +271,7 @@ lemma q_exp_unique (c : ℕ → ℂ) (f : ModularForm Γ(n) k) [hn : NeZero n]
     simp only [qq]
     rw [
     ← (ContinuousMultilinearMap.piFieldEquiv ℂ (Fin m) ℂ).symm.norm_map]
-    simp only [_root_.map_smul, smul_eq_mul, norm_mul,
-      LinearIsometryEquiv.norm_map, ContinuousMultilinearMap.norm_mkPiAlgebraFin, mul_one]
+    simp_all
   have H2 : HasFPowerSeriesOnBall (cuspFunction n f) qq 0 1 := by
     have H21 : 1 ≤ qq.radius := by
         refine le_of_forall_lt_imp_le_of_dense fun r hr ↦ ?_
@@ -389,8 +383,7 @@ lemma qexpsummable (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) :
     rw [this]
     have ht : ‖cexp (2 * ↑π * Complex.I * ↑z)‖ < 1 := norm_exp_two_pi_I_lt_one z
     have := summable_norm_pow_mul_geometric_of_norm_lt_one k ht
-    simp only [Complex.norm_mul, norm_pow, RCLike.norm_natCast] at *
-    apply this
+    simp_all
   apply Summable.of_nonneg_of_le _ _ hs
   · simp
   intro b
@@ -494,8 +487,7 @@ lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
   simp_all only [inv_div]
   split
   next h =>
-    subst h
-    simp_all only
+    simp_all
   next h =>
     simp_all only [mul_eq_mul_right_iff, Nat.cast_eq_zero]
     left
@@ -503,9 +495,7 @@ lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
       Nat.cast_ofNat, bernoulli, bernoulli'_four, Rat.cast_mul, Rat.cast_pow, Rat.cast_neg,
       Rat.cast_one, Rat.cast_div, Rat.cast_ofNat]
     ring_nf
-    rw [Complex.I_pow_four ]
-    have pin : (π : ℂ) ≠ 0 := by simp
-    field_simp
+    simp_all
 
 lemma E4_q_exp_zero : (qExpansion 1 E₄).coeff 0 = 1 := by simpa using congr_fun E4_q_exp 0
 
@@ -545,9 +535,7 @@ lemma E6_q_exp : (fun m => (qExpansion 1 E₆).coeff m) =
     Rat.cast_one, Rat.cast_inv, Rat.cast_ofNat, Nat.factorial,
     Nat.succ_eq_add_one, Nat.reduceAdd, zero_add, mul_one, Nat.reduceMul, Nat.cast_ofNat]
   ring_nf
-  rw [Complex.I_pow_six ]
-  have pin : (π : ℂ) ≠ 0 := by simp
-  field_simp
+  simp_all
 
 lemma E6_q_exp_zero : (qExpansion 1 E₆).coeff 0 = 1 := by simpa using congr_fun E6_q_exp 0
 
@@ -619,8 +607,7 @@ lemma Delta_cuspFuntion_eq : Set.EqOn (cuspFunction 1 Delta)
     simpa using this
   · rw [Function.Periodic.cuspFunction_eq_of_nonzero]
     · simp only [comp_apply]
-      have hz := Function.Periodic.im_invQParam_pos_of_norm_lt_one (h := 1) (by exact
-        Real.zero_lt_one) (q := y) ?_ ?_
+      have hz := Function.Periodic.im_invQParam_pos_of_norm_lt_one (h := 1) (by simp_all) (q := y) ?_ ?_
       · rw [ofComplex_apply_of_im_pos hz]
         rw [Delta_apply, Δ]
         have hq := Function.Periodic.qParam_right_inv (h := 1) ?_ (q := y) hyn0
@@ -637,8 +624,7 @@ lemma Delta_cuspFuntion_eq : Set.EqOn (cuspFunction 1 Delta)
             rw [← Complex.exp_nsmul]
             congr
             ring
-          rw [this]
-          congr
+          simp_all
         exact Ne.symm (zero_ne_one' ℝ)
       · simp only [one_div, mem_ball, dist_zero_right] at hy
         apply lt_trans hy
@@ -712,9 +698,7 @@ lemma Delta_q_one_term : (qExpansion 1 Delta).coeff 1 = 1 := by
       zero_pow, sub_zero, one_pow, tprod_one, mul_one, zero_mul, add_zero]
       have := derivWithin_id' ( 0 * ∏' (i : ℕ), (1 - 0 ^ (i + 1)) ^ 24 : ℂ)
         (Metric.ball 0 (1 / 2 : ℝ)) ?_
-      · simp only [one_div, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
-        zero_pow, sub_zero, one_pow, tprod_one, mul_one] at *
-        rw [this]
+      · simp_all
       simp only [one_div, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
         zero_pow, sub_zero, one_pow, tprod_one, mul_one]
       apply IsOpen.uniqueDiffWithinAt
@@ -762,8 +746,7 @@ lemma Ek_ne_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : E k hk ≠ 0 
   have hqzero : PowerSeries.constantCoeff (qExpansion 1 (0 : ℍ → ℂ)) = 0 := by
     simpa using congrArg (fun p : PowerSeries ℂ => p.coeff 0)
       ((qExpansion_zero (h := (1 : ℕ))) : qExpansion 1 (0 : ℍ → ℂ) = 0)
-  have : (0 : ℂ) = 1 := by simp [hqzero] at hcoeff
-  exact zero_ne_one this
+  simp_all
 
 /-This is in the mod forms repo-/
 lemma E4_ne_zero : E₄ ≠ 0 := Ek_ne_zero 4 (by norm_num) (Nat.even_iff.mpr rfl)
@@ -813,8 +796,7 @@ lemma exp_imag_axis_arg (t : ℝ) (ht : 0 < t) (n : ℕ+) :
     (-(2 * Real.pi * (n : ℝ) * t) : ℝ) := by
   push_cast
   ring_nf
-  simp only [I_sq]
-  ring
+  simp_all
 
 /-- `E_k(it)` is real for all `t > 0` when `k` is even and `k ≥ 4`.
 This is the generalized theorem from which `E₄_imag_axis_real` and `E₆_imag_axis_real` follow. -/
@@ -870,9 +852,7 @@ theorem E_even_imag_axis_real (k : ℕ) (hk : (3 : ℤ) ≤ k) (hk2 : Even k) :
   have hzeta_im : (riemannZeta k).im = 0 := by
     rw [show (k : ℂ) = ((k : ℝ) : ℂ) from by push_cast; ring]
     exact riemannZeta_im_eq_zero_of_one_lt (by exact_mod_cast show 1 < (k : ℤ) by omega)
-  have hinv_zeta_im : (1 / riemannZeta k).im = 0 := by simp [hzeta_im]
-  simp only [mul_im, div_im, hinv_zeta_im, hsum_im, hpow_im, hfact_im]
-  ring
+  simp_all
 
 /-- `E₄(it)` is real for all `t > 0`. -/
 @[fun_prop]
@@ -941,8 +921,7 @@ This bound on the q-parameter is useful for estimating q-expansions when im(z) �
 lemma norm_exp_two_pi_I_le_exp_neg_two_pi (z : ℍ) (hz : 1 ≤ z.im) :
     ‖cexp (2 * π * Complex.I * z)‖ ≤ Real.exp (-2 * π) := by
   have h : (2 * ↑π * Complex.I * (z : ℂ)).re = -2 * π * z.im := by
-    rw [show (2 : ℂ) * ↑π * Complex.I * z = Complex.I * (2 * π * z) by ring]
-    simp [Complex.I_re, Complex.I_im, mul_comm]
+    simp_all
   rw [Complex.norm_exp, h, Real.exp_le_exp]
   nlinarith [Real.pi_pos]
 

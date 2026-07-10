@@ -26,9 +26,7 @@ variable (K L : Type u) [Field K] [Field L] [Algebra K L]
   (V : Type u) [AddCommGroup V] [Module K V] [Module.Finite K V]
 
 lemma dim_eq : Module.finrank K V = Module.finrank L (L ⊗[K] V) := by
-  let b := Module.finBasis K V
-  let b' := Algebra.TensorProduct.basis L b
-  rw [Module.finrank_eq_card_basis b, Module.finrank_eq_card_basis b']
+  simp_all
 
 end
 
@@ -240,8 +238,7 @@ theorem eHat_linear_independent : LinearIndependent ℒ e^' := by
     intro x hx
     rfl
   have H := (linearIndependent_iff'.1 <| e |>.linearIndependent) s (algebraMap ℒ k⁻ ∘ g) h'
-  intro i hi
-  simpa using H i hi
+  simp_all
 
 -- shortcut instance search
 instance : Module ℒ (ℒ ⊗[k] A) := TensorProduct.leftModule
@@ -335,9 +332,7 @@ lemma comm_square' :
   simp only [inclusion']
   simp only [Algebra.ofId]
   simp only [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.single]
-  change (if i.1 = a ∧ i.2 = b then 1 else 0) =
-    algebraMap ℒ k_bar ((if i.1 = a ∧ i.2 = b then 1 else 0) : ℒ)
-  simp
+  simp_all
 
 /-- This shows the following diagram commutes:
      isoRestrict
@@ -406,20 +401,7 @@ lemma isoRestrict_map_mul (x y : ℒ ⊗[k] A) :
   simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, AlgHom.toLinearMap_apply,
     AlgEquiv.toLinearEquiv_toLinearMap, LinearMap.coe_restrictScalars] at eq₁ eq₂
   apply inclusion'_injective n k k_bar A iso
-  calc
-    (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) (x * y)) =
-        iso ((inclusion n k k_bar A iso) x) * iso ((inclusion n k k_bar A iso) y) := by
-      change
-        ((inclusion' n k k_bar A iso).toLinearMap ∘ₗ ↑(isoRestrict' n k k_bar A iso)) (x * y) =
-          iso ((inclusion n k k_bar A iso) x) * iso ((inclusion n k k_bar A iso) y)
-      exact eq
-    _ = (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) x) *
-        (inclusion' n k k_bar A iso) ((isoRestrict' n k k_bar A iso) y) := by
-      rw [eq₁, eq₂]
-      rfl
-    _ = (inclusion' n k k_bar A iso)
-        ((isoRestrict' n k k_bar A iso) x * (isoRestrict' n k k_bar A iso) y) := by
-      rw [_root_.map_mul]
+  simp_all
 
 /-- The restricted algebra equivalence over the finite intermediate field `ℒ`. -/
 def isoRestrict : ℒ ⊗[k] A ≃ₐ[ℒ] Matrix (Fin n) (Fin n) ℒ :=

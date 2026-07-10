@@ -36,8 +36,7 @@ omit [FiniteDimensional ℝ E] in
 private lemma hasDerivAt_line' (x v : E) (t : ℝ) :
     HasDerivAt (fun s => x + s • v) v t := by
   have := (hasDerivAt_id t).smul_const v
-  simp only [one_smul] at this
-  exact this.const_add x
+  simp_all
 
 omit [FiniteDimensional ℝ E] in
 private lemma hasDerivAt_f_line' {f : E → ℝ} {x v : E} {t : ℝ}
@@ -57,8 +56,7 @@ private lemma hasDerivAt_fderiv_line_eval' {f : E → ℝ} {x v : E} {t : ℝ}
       one_ne_zero).hasFDerivAt.comp_hasDerivAt
       t (hasDerivAt_line' x v t)
   have h := hΦ.clm_apply (hasDerivAt_const t v)
-  simp only [ContinuousLinearMap.map_zero, add_zero] at h
-  exact h
+  simp_all
 
 omit [FiniteDimensional ℝ E] in
 private lemma taylor_remainder_bound' {f : E → ℝ} {x v : E}
@@ -77,10 +75,7 @@ private lemma taylor_remainder_bound' {f : E → ℝ} {x v : E}
         ‖hessian f (x + s • v) v v‖ ≤ C * ‖v‖ ^ 2 :=
       fun s hs => hbound s ⟨hs.1, le_of_lt hs.2⟩
     have h := norm_image_sub_le_of_norm_deriv_le_segment' hd hb
-    intro t ht
-    have := h t ht
-    simp only [zero_smul, add_zero] at this
-    exact this
+    simp_all
   have hk_deriv : ∀ s ∈ Icc (0:ℝ) 1,
       HasDerivWithinAt
         (fun s => f (x + s • v) - f x - s * (fderiv ℝ f x v))
@@ -109,8 +104,7 @@ private lemma taylor_remainder_bound' {f : E → ℝ} {x v : E}
           mul_le_mul_of_nonneg_left (by linarith [hs.2]) (mul_nonneg hC (sq_nonneg _))
       _ = C * ‖v‖ ^ 2 := mul_one _
   have hmvt2 := norm_image_sub_le_of_norm_deriv_le_segment_01' hk_deriv hk_bound
-  simp only [one_smul, zero_smul, add_zero, one_mul, zero_mul, sub_zero, sub_self] at hmvt2
-  exact hmvt2
+  simp_all
 
 -- ═══════════════════════════════════════════════════════════════
 -- § Main theorem
@@ -164,9 +158,7 @@ lemma gradient_alignment_impl (f : E → ℝ) (μ : ℝ) (x₀ : E) (hμ : 0 < �
       ∃ r > 0, ∀ z : E, dist z x₀ < r → ‖fderiv ℝ f z‖ < μ * R / 6 := by
     have : ∀ᶠ z in 𝓝 x₀, ‖fderiv ℝ f z‖ < μ * R / 6 := by
       have : ‖fderiv ℝ f x₀‖ < μ * R / 6 := by
-        simp only [hDf_zero, norm_zero,
-          Nat.ofNat_pos, div_pos_iff_of_pos_right]
-        positivity
+        simp_all
       exact hDf_cont.norm.preimage_mem_nhds (gt_mem_nhds this)
     exact Metric.eventually_nhds_iff.mp this
   set r := min r_grad (R / 3)

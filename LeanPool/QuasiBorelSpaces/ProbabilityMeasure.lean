@@ -124,10 +124,7 @@ lemma ext
   cases μ₁ with | mk μ =>
   cases μ₂ with | mk ν =>
   simp only [mk_eq_iff, PreProbabilityMeasure.equiv_def]
-  intro k hk
-  specialize hμ hk
-  simp only [hk, lintegral_mk] at hμ
-  exact hμ
+  simp_all
 
 /-- The integral of a homomorphism is itself a homomorphism. -/
 @[fun_prop]
@@ -279,10 +276,7 @@ lemma unit_injective [SeparatesPoints A] : Function.Injective (unit (A := A)) :=
   have : IsHom fun x ↦ if p x then 1 else (0 : ENNReal) := by
     apply Prop.isHom_ite <;> fun_prop
   specialize h this
-  simp (disch := fun_prop) only [
-    lintegral_unit, hx, ↓reduceIte, left_eq_ite_iff, one_ne_zero,
-    imp_false, Decidable.not_not] at h
-  exact h
+  simp_all
 
 /-- `unit` is injective iff the inputs are equal. -/
 @[simp]
@@ -339,8 +333,7 @@ lemma lintegral_bind
   have : IsHom fun x ↦ ∫⁻ x, k x ∂f x := by fun_prop
   simp only [bind, hk, lintegral_mk, this]
   rw [PreProbabilityMeasure.lintegral_bind]
-  · apply toPreProbabilityMeasure_mk
-    fun_prop
+  · simp_all
   · fun_prop
   · fun_prop
 
@@ -478,9 +471,7 @@ lemma isHom_bind'
   have {x}
       : bind (f x) (g x)
       = bind (fun x : (A →𝒒 ProbabilityMeasure B) × A ↦ x.1 x.2) (str ⟨f x, hf' x⟩ (g x)) := by
-    simp only [
-      str_eq_map, QuasiBorelHom.isHom_eval, Prod.isHom_iff, isHom_const',
-      isHom_id', and_self, bind_map, QuasiBorelHom.coe_mk]
+    simp_all
   simp only [this]
   fun_prop
 
@@ -509,9 +500,7 @@ example
 example
     (x : A) (μ : ProbabilityMeasure (ProbabilityMeasure B))
     : bind (Function.uncurry str) (str x μ) = str x (bind id μ) := by
-  simp only [
-    str_eq_map, isHom_str, Prod.isHom_iff, isHom_const', isHom_id', and_self,
-    bind_map, Function.uncurry_apply_pair, isHom_id, map_bind, id_eq]
+  simp_all
 
 /-! ### `coin` -/
 
@@ -560,12 +549,7 @@ lemma lintegral_choose
     : ∫⁻ x, k x ∂(μ ◃p▹ ν)
     = ENNReal.ofReal p * ∫⁻ x, k x ∂μ + ENNReal.ofReal (σ p) * ∫⁻ x, k x ∂ν := by
   simp (disch := fun_prop) only [choose, unitInterval.coe_symm_eq]
-  rw [lintegral_bind, lintegral_coin]
-  · simp only [↓reduceIte, Bool.false_eq_true]
-  · fun_prop
-  · apply isHom_cases (f := fun (p : Bool) _ ↦ if p then μ else ν)
-    · fun_prop
-    · fun_prop
+  simp_all
 
 /-- Choosing with probability 1 returns the first measure. -/
 @[simp]
@@ -595,8 +579,7 @@ lemma choose_eq (p : I) (μ : ProbabilityMeasure A) : μ ◃p▹ μ = μ := by
     by_cases h : p > 0
     · simp only [ne_eq, ENNReal.ofReal_eq_zero, not_le, h, ENNReal.mul_top, true_or]
     · have : p = 0 := by grind
-      subst this
-      simp only [ENNReal.ofReal_zero, zero_mul, ENNReal.zero_ne_top, tsub_zero, one_mul, or_true]
+      simp_all
   rw [ENNReal.sub_mul]
   · simp only [one_mul]
     apply add_tsub_cancel_of_le

@@ -194,8 +194,7 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_kgen (α : 𝕜) :
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
   rw [Finset.sum_eq_single ⟨none, Set.mem_insert none {some 0}⟩]
   · simp
-  · intro j _ hj
-    simp [hj.symm, show ¬ (j : Option ℤ) = none by aesop]
+  · simp_all
   · simp
 
 lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_jzero (α : 𝕜) :
@@ -205,8 +204,7 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_jzero (α : 𝕜) :
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
   rw [Finset.sum_eq_single ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩]
   · simp
-  · intro j _ hj
-    simp [hj.symm]
+  · simp_all
   · simp
 
 /-- The charged Fock space with charge `α`. -/

@@ -471,8 +471,7 @@ lemma segLookup_of_prefixSum (n : Nat) (f : Nat → Nat) (i j : Nat)
         by_contra h'
         have := prefixSum_mono f (by omega : i + 1 ≤ n)
         rw [prefixSum_succ] at this; omega
-      subst this
-      simp
+      simp_all
 
 /-- Partial fold: the result of folding `op.binOp` over the first `j` values. -/
 private def partialFold (op : AONOp) (v : Fin k → Bool) (j : Nat) : Bool :=
@@ -547,9 +546,7 @@ private lemma mkChainGate_eval_ge2_succ {W base : Nat} (op : AONOp) {k : Nat} (h
   simp only [show ¬(k = 0) from by omega, show ¬(k = 1) from by omega,
              show ¬(j' + 1 = 0) from by omega, ite_false, dite_false]
   rw [andOr2_eval]
-  simp only [fin2, show ¬(1 : Fin 2).val = 0 from by decide,
-             show (0 : Fin 2).val = 0 from by decide, ite_true, ite_false]
-  simp only [Bool.false_xor]; congr 1
+  simp_all
 
 /-- The eval of the compiled gate at `iOffset c i + j` equals the chain gate's eval.
     This requires showing that `segLookup` at `iOffset c i + j` returns `(i, j)` and
@@ -679,9 +676,7 @@ private theorem lastChainValue_eq (c : Circuit Basis.unboundedAON N M G) (input 
       (c.gates ⟨i, hi⟩).eval (c.wireValue input) by
     have heq : N + iOffset c i + chainLen (c.gates ⟨i, hi⟩).fanIn - 1 =
         N + iOffset c i + (chainLen (c.gates ⟨i, hi⟩).fanIn - 1) := by omega
-    rwa [show (⟨N + iOffset c i + chainLen (c.gates ⟨i, hi⟩).fanIn - 1, _⟩ : Fin (N + G' c)) =
-        ⟨N + iOffset c i + (chainLen (c.gates ⟨i, hi⟩).fanIn - 1), by unfold G'; omega⟩ from
-        Fin.ext heq]
+    simp_all
   -- Each chain wire evaluates to its compiled gate
   have chain_wire : ∀ j : Nat, (hj : j < chainLen (c.gates ⟨i, hi⟩).fanIn) →
       (compileFn c).wireValue input ⟨N + iOffset c i + j, by unfold G'; omega⟩ =
@@ -729,10 +724,7 @@ theorem wireValue_remapWire (c : Circuit Basis.unboundedAON N M G) (input : BitS
               (c.gates ⟨n - N, hi⟩).fanIn; unfold G'; omega⟩
             from Fin.ext (by rw [remapWire_gate c hi])]
         exact lastChainValue_eq c input (n - N) hi (fun w' hw' => by
-          have hwlt : w'.val < n := by
-            have : w'.val < N + (n - N) := hw'
-            omega
-          exact ih w'.val hwlt w'.isLt)
+          simp_all)
   exact hmain w.val w.isLt
 
 /-- The eval of the compiled gate at output offset position equals the chain gate's eval. -/
@@ -779,9 +771,7 @@ private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (
       (c.outputs ⟨j', hj'⟩).eval (c.wireValue input) by
     have heq : N + oOffset c j' + chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1 =
         N + oOffset c j' + (chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1) := by omega
-    rwa [show (⟨N + oOffset c j' + chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1, _⟩ : Fin (N + G' c)) =
-        ⟨N + oOffset c j' + (chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1), by omega⟩ from
-        Fin.ext heq]
+    simp_all
   -- Each chain wire evaluates to its compiled gate
   have chain_wire : ∀ p : Nat, (hp : p < chainLen (c.outputs ⟨j', hj'⟩).fanIn) →
       (compileFn c).wireValue input ⟨N + oOffset c j' + p, by omega⟩ =

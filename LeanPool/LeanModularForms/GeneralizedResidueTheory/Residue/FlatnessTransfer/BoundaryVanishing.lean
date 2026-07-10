@@ -90,8 +90,7 @@ theorem integral_zpow_comp_sub_mul_deriv
         = (γ t - s) ^ n * ↑(deriv γ t) := by
       rw [show (n + 1 : ℤ) - 1 = n from by ring]
       rw [mul_assoc, mul_div_cancel_left₀ _ hn1_cast]
-    rw [← this]
-    exact h_div
+    simp_all
   have h_ftc := MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le
     F f hab hE_count hF_cont hF_deriv h_int
   rw [h_ftc]
@@ -119,15 +118,13 @@ private lemma tendsto_add_nhdsGT (t₀ : ℝ) :
     Tendsto (fun ε : ℝ => t₀ + ε) (𝓝[>] (0 : ℝ)) (𝓝[>] t₀) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
   · simpa using ((continuous_const_add t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
-  · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-    exact lt_add_of_pos_right t₀ hε
+  · filter_upwards [self_mem_nhdsWithin] with ε simp_all
 
 private lemma tendsto_sub_nhdsLT (t₀ : ℝ) :
     Tendsto (fun ε : ℝ => t₀ - ε) (𝓝[>] (0 : ℝ)) (𝓝[<] t₀) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
   · simpa using ((continuous_sub_left t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
-  · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-    exact sub_lt_self t₀ hε
+  · filter_upwards [self_mem_nhdsWithin] with ε simp_all
 
 private lemma slope_tendsto_right_of_deriv
     (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ)
@@ -241,10 +238,7 @@ private lemma slope_tendsto_left_of_deriv
       (𝓝[>] 0) (𝓝 (-L)) := h_comp.neg.congr (fun ε => by
     simp only [Function.comp, slope, vsub_eq_sub]
     rw [hcross]; erw [Complex.real_smul, Complex.real_smul]; ring)
-  convert h_neg using 1
-  ext ε
-  erw [Complex.real_smul, Complex.real_smul]
-  push_cast; ring
+  simp_all
 
 /-- Left-side analogue of `crossing_direction_right_tendsto`:
 `(γ(t₋(ε)) - s) / ‖γ(t₋(ε)) - s‖ → -L_left / ‖L_left‖`. -/
@@ -444,10 +438,7 @@ lemma unit_zpow_eq_of_angle_multiple
       (↑k * (↑(arg z₂) * I) + ↑n * (2 * ↑Real.pi * I)) =
       ↑((↑k : ℝ) * (arg z₁ - arg z₂) -
         (↑n : ℝ) * (2 * Real.pi)) * I := by push_cast; ring
-  rw [h_eq, mul_eq_zero]
-  left
-  rw [ofReal_eq_zero]
-  linarith
+  simp_all
 
 private lemma orthogonalProjectionComplex_real_smul_left (c : ℝ) (w L : ℂ) :
     orthogonalProjectionComplex (c • w) L = c • orthogonalProjectionComplex w L := by

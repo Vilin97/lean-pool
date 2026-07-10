@@ -116,8 +116,7 @@ theorem star_eq (z : Set S) : star z = (1 : Set S) ∪ z * star z := by
     obtain ⟨n, hn⟩ := mem_star.mp hs
     cases n with
     | zero =>
-        rw [kpow_zero] at hn
-        rw [Set.mem_union]; exact Or.inl hn
+        simp_all
     | succ m =>
         rw [kpow_succ, Set.mem_mul] at hn
         obtain ⟨a, ha, t, ht, rfl⟩ := hn
@@ -186,11 +185,8 @@ theorem mem_kpow_singleton (e s : S) (n : ℕ) : s ∈ kpow ({e} : Set S) n ↔ 
   | succ m ih =>
       rw [kpow_succ, pow_succ', Set.mem_mul]
       constructor
-      · rintro ⟨a, ha, t, ht, rfl⟩
-        rw [Set.mem_singleton_iff] at ha
-        rw [(ih t).mp ht, ha]
-      · rintro rfl
-        exact ⟨e, Set.mem_singleton_iff.mpr rfl, e ^ m, (ih (e ^ m)).mpr rfl, rfl⟩
+      · simp_all
+      · simp_all
 
 /-- `{e}* = e* = {Λ, e, e², …}`: a point lies in `star {e}` iff it is some power
 of `e`. -/

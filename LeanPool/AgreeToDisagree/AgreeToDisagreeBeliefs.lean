@@ -81,18 +81,13 @@ lemma Partition.belief_belief_subset {P : Partition Ω}
     have hbel : p ≤ μ (X ∩ P.class ω') / μ (P.class ω') := hω'bel
     rw [Partition.class_eq_of_mem hsP hω's] at hbel
     exact (not_le.mpr h_not) hbel
-  rw [h_empty] at hs_prob
-  have h_zero : p ≤ 0 := by
-    simpa only [measure_empty, ENNReal.zero_div] using hs_prob
-  exact (not_le.mpr hp) h_zero
+  simp_all
 
 /-- If `0 < p ≤ a / b`, then `0 < a`. -/
 lemma ennreal_num_pos_of_ratio_ge {p a b : ENNReal} (hp : 0 < p)
     (h : p ≤ a / b) : 0 < a := by
   by_contra h₁
-  push Not at h₁
-  rw [le_antisymm h₁ zero_le, ENNReal.zero_div] at h
-  exact absurd (h.trans_lt hp) (lt_irrefl _)
+  simp_all
 
 omit [IsProbabilityMeasure μ] in
 /-- If `A` is `p`-evident with `0 < p`, then `μ A > 0`. -/

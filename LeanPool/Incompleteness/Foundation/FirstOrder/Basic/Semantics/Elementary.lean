@@ -84,10 +84,7 @@ instance : FunLike (M₁ →ₛ[L] M₂) M₁ M₂ where
   coe := fun φ => φ.toFun
   coe_injective := fun φ ψ h => by
     rcases φ
-    rcases ψ
-    simp only [Hom.mk.injEq] at h ⊢
-    ext
-    exact congr_fun h _
+    simp_all
 
 instance : HomClass (M₁ →ₛ[L] M₂) L M₁ M₂ where
   map_func := Hom.func'

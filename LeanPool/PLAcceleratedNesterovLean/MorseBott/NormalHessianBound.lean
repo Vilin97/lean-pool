@@ -144,8 +144,7 @@ lemma ExternalThm3.hessianQuadForm_eq_hessian (f : E → ℝ) (x ξ : E)
   -- Step 2: Since φ = ψ everywhere, fderiv φ x = fderiv ψ x
   have h_fderiv_eq : fderiv ℝ (fun z => @inner ℝ E _ (ExternalThm3.gradient f z) ξ) x =
       fderiv ℝ (fun z => (fderiv ℝ f z) ξ) x := by
-    apply Filter.EventuallyEq.fderiv_eq
-    exact Filter.Eventually.of_forall h_eq
+    simp_all
   -- Step 3: Evaluate the RHS (fderiv of ψ)
   -- ψ(z) = (fderiv ℝ f z) ξ, its derivative at x is (hessian f x ·) ξ
   -- i.e., fderiv ℝ ψ x w = (hessian f x w) ξ

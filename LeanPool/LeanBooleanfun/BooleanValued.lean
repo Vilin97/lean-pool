@@ -88,17 +88,10 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
       use 1
       simp only [isValue, one_smul]
       ext x
-      rw [hf] at hf1
-      simp only [Nat.reduceAdd, univ_unique, default_eq_zero, isValue, Pi.zero_apply,
-        coe_ofNat_eq_mod, Nat.zero_mod, pow_zero, mul_one, sum_singleton] at hf1
-      rw [hf]
-      simpa
+      simp_all
     | succ n hi =>
       have hf0eq : f 0 = ∑ i, 𝓕 f {i} := by
-        rw [hf]
-        apply sum_congr (by rfl)
-        intro i _
-        simp
+        simp_all
       have hf0feq : ∀ i₀, f (flipAt i₀ 0) = ∑ i ∈ univ.erase i₀, 𝓕 f {i} + -𝓕 f {i₀} := by
         intro i₀
         rw [hf]
@@ -108,8 +101,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
           intro i hi
           rw [flipAt_unflipped (h := ne_of_mem_erase hi)]
           rw [Pi.zero_apply, Fin.val_zero, pow_zero, mul_one]
-        · rw [flipAt_flipped]
-          rw [Pi.zero_apply, sub_zero, Fin.val_one, pow_one, mul_neg, mul_one]
+        · simp_all
       have : ∃ i₀, f (flipAt i₀ 0) = 1 := by
         by_contra hc
         have hfm1 : ∀ i, f (flipAt i 0) = -1 := by
@@ -122,8 +114,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
             _ = (∑ i', 𝓕 f {i'} - ∑ i' ∈ univ.erase i, 𝓕 f {i'} + 𝓕 f {i})/2 := by
                   rw [hf0eq, hf0feq]; ring
             _ = _                         := by
-                  rw [← sum_erase_add (a := i) (h := mem_univ i)]
-                  ring
+                  simp_all
         have hf0n2 : f 0 = n + 2 := by
           rw [hf0eq]
           conv => enter [1, 2, i]; rw [this]
@@ -147,17 +138,10 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
         rw [← sum_erase_add (a := i₀) (h := mem_univ i₀), hFi0zero, zero_mul, add_zero]
         symm
         apply sum_of_injOn (e := fun i ↦ i₀.succAbove i)
-        · intro i _ j _
-          dsimp
-          exact succAbove_right_inj.mp
-        · intro i _
-          exact Finset.mem_erase.mpr ⟨succAbove_ne i₀ i, Finset.mem_univ _⟩
-        · intro i hi0 hi1
-          simp at hi1
-          simp at hi0
-          contradiction
-        · intro i _
-          simp
+        · intro i simp_all
+        · simp_all
+        · simp_all
+        · simp_all
       have : ∀ i, 𝓕 g {i} = 𝓕 f {i₀.succAbove i} := by
         intro i
         calc
@@ -168,12 +152,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
           _ = 𝓕 f {i₀.succAbove i}                     := by
             (conv => enter [1, 2, i']; rw [walsh_inner_eq]); simp
       have hgeq' : ∀ x, g x = ∑ i, 𝓕 g {i} * (-1)^(x i).val := by
-        intro x
-        nth_rewrite 1 [hgeq]
-        rw [Finset.sum_apply]
-        apply sum_congr (by rfl)
-        intro i _
-        simp [this]
+        simp_all
       have : g 0 = 1 := by
         unfold g
         simpa only [isValue, insertNth_zero_right, Pi.single_zero] using hf1
@@ -201,8 +180,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
               rw [hFi0zero]; simp
             _  = ∑ i ∈ univ.erase i₀, 𝓕 f {i} * (-1)^(update x i₀ 0 i).val +
                   0 * (-1)^(update x i₀ 0 i₀).val := by
-              congr 1; apply sum_congr (by rfl); intro i hi; apply ne_of_mem_erase at hi;
-              rw [update_of_ne hi]
+              congr 1; apply sum_congr (by rfl); simp_all
             _ = _ := by
               rw [← hFi0zero, sum_erase_add (h := mem_univ i₀), ← hf]
         calc

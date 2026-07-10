@@ -225,9 +225,7 @@ lemma bosonic_sugawara_cc_calc (R : Type*) [Field R] [CharZero R] (n : ℤ) :
 lemma bosonic_sugawara_cc_calc_nonneg (n : ℕ) :
     ∑ l ∈ range n, (l : ℚ) * (n - l) = (n^3 - n) / 6 := by
   have key := bosonic_sugawara_cc_calc ℚ n
-  simp only [Int.cast_natCast, Nat.cast_nonneg, zPrimitive_apply_of_nonneg, Int.toNat_natCast]
-    at key
-  rw [← key]
+  simp_all
 
 end central_charge_calculation
 

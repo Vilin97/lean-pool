@@ -66,9 +66,7 @@ theorem addRegister_getRegister_neq :
   := by
   intros ms r1 r2 v H
   unfold MState.addRegister MState.getRegisterAt
-  rw [t_update_neq]
-  simp at H
-  simp [H]
+  simp_all
 
 theorem addRegister_getRegister_eq :
   ∀(ms:MState) (r1 r2 v : UInt64),
@@ -173,10 +171,7 @@ theorem run_n_run_one_comm : ∀ (ms:MState) (n:Nat),
   revert ms
   induction n
   case zero =>
-    intros ms
-    rw [MState.run_zero_steps]
-    unfold MState.runNSteps
-    rfl
+    simp_all
   case succ n' IHN' =>
     intros ms
     unfold MState.runNSteps
@@ -194,8 +189,7 @@ theorem run_N_comm : ∀ (ms:MState) (n m:Nat),
   revert ms
   induction n
   case zero =>
-    intro ms m
-    rw [MState.run_zero_steps, MState.run_zero_steps]
+    simp_all
   case succ n IHN' =>
     intros ms m
     rw [<- MState.run_n_run_one, <- MState.run_n_run_one]
@@ -208,9 +202,7 @@ theorem run_N_comm : ∀ (ms:MState) (n m:Nat),
   revert ms
   induction n
   case zero =>
-    intros m
-    rw [MState.run_zero_steps]
-    simp
+    simp_all
   case succ n' IHN' =>
     intros ms m
     rw [<- MState.run_n_run_one, Nat.add_assoc, <- IHN', Nat.add_comm,
@@ -389,11 +381,9 @@ theorem runNSteps_pc_nin_extra_step : ∀ (s s' : MState) (n : Nat) (L : Set UIn
   rw [← HRun] at HPc
   cases Nat.lt_or_eq_of_le HN''LeN' with
   | inl hlt =>
-    apply HRunLTNin
-    constructor <;> assumption
+    simp_all
   | inr heq =>
-    rw [heq]
-    exact HPc
+    simp_all
 
 
 
@@ -421,8 +411,7 @@ theorem run_n_plus_m_pc_not_in_set :
   · exact hL_b n'' ⟨hn0, h⟩
   · push Not at h
     obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_eq h hnlt
-    rw [h_run_eq]
-    exact hL_b' n' hn'_pre
+    simp_all
 
 theorem run_n_plus_m_diff_set :
   ∀ (s s' : MState) (m m' : Nat) (L_b L_b' : Set UInt64),
@@ -434,13 +423,10 @@ theorem run_n_plus_m_diff_set :
   intros s s' m m' L_b L_b' h_eq hL_b hL_b' n'' hn
   rcases hn with ⟨hn0, hnlt⟩
   by_cases h : n'' ≤ m
-  · intro h_in
-    exact hL_b n'' ⟨hn0, h⟩ (Set.mem_of_mem_inter_left h_in)
+  · simp_all
   · push Not at h
     obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_eq h hnlt
-    rw [h_run_eq]
-    intro h_in
-    exact hL_b' n' hn'_pre (Set.mem_of_mem_inter_right h_in)
+    simp_all
 
 
 theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' L_b' : Set UInt64),
@@ -471,21 +457,16 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
         simp only [not_or] at h_safe1
         rcases h_safe1 with ⟨_, h_safe1_r⟩
         exact ⟨Set.notMem_subset h_Lw'SubL_b h_safe1_r, h_safe1_r⟩
-      intros h_in
-      exact h_safe1_NinLw' (Set.mem_of_mem_inter_left h_in)
+      simp_all
     | inr heq =>
       have h_pc_not_b' : (s.runNSteps m).pc ∉ L_b := h_run1 ▸ h_pc_not_b
       have h_safe1_m: (s.runNSteps n'').pc ∉ L_w' ∪ L_b := by
         rw [heq, Set.mem_union]
         simpa only [not_or]
           using ⟨Set.notMem_subset h_Lw'SubL_b h_pc_not_b', h_pc_not_b'⟩
-      intros h_in
-      exact h_safe1_m (Set.mem_of_mem_inter_left h_in)
+      simp_all
   · push Not at h
     obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_run1 h h_lt
-    rw [h_run_eq]
-    specialize h_safe2 n' hn'_pre
-    intro h_in
-    exact h_safe2 (Set.mem_of_mem_inter_right h_in)
+    simp_all
 
 end MState

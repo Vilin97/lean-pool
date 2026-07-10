@@ -46,8 +46,7 @@ protected theorem MeasureTheory.Measure.AbsolutelyContinuous.comap {α β : Type
     · exact hsm.nullMeasurableSet
   · rw [Measure.comap, dif_neg]
     · exact .zero _
-    · contrapose! hf
-      exact ⟨hf.1, hfν⟩
+    · simp_all
 
 theorem MeasurableEmbedding.quasiMeasurePreserving_iff_comap {α β : Type*}
     {_ : MeasurableSpace α} {_ : MeasurableSpace β} {e : α → β} (he : MeasurableEmbedding e)
@@ -70,8 +69,7 @@ theorem absolutelyContinuous_volumeIoiPow_right (n : ℕ) :
     .comap Subtype.val volume ≪ .volumeIoiPow n := by
   refine MeasureTheory.withDensity_absolutelyContinuous' ?_ <| .of_forall ?_
   · fun_prop
-  · rintro ⟨x, hx : 0 < x⟩
-    positivity
+  · simp_all
 
 /-- If a finite measure `μ` is absolutely continuous with respect to a σ-finite measure `ν`,
 then `μ s → 0` as `ν s → 0`. More precisely, for any `ε ≠ 0` there exists `δ > 0`

@@ -124,12 +124,7 @@ lemma largeEigenspaceProjector_comp
       intro i
       change t.eigenspace i.1 ≤ (t.eigenspace i.1).comap t
       intro x hx
-      have hx' : t x = (i.1 : 𝕜) • x := by
-        simpa using (Module.End.mem_eigenspace_iff (f := t) (μ := i.1) (x := x)).1 hx
-      refine (Module.End.mem_eigenspace_iff (f := t) (μ := i.1) (x := t x)).2 ?_
-      calc
-        t (t x) = t ((i.1 : 𝕜) • x) := by simp [hx']
-        _ = (i.1 : 𝕜) • t x := by simp
+      simp_all
     have h_sup : (Finset.univ.sup fun i : ι => t.eigenspace i.1) ∈ t.invtSubmodule := by
       classical
       refine Finset.induction_on (Finset.univ : Finset ι) ?_ ?_
@@ -156,9 +151,7 @@ lemma largeEigenspaceProjector_comp
   have hTorth_mem : T (x - P x) ∈ U.orthogonal := by
     simpa [t] using hU_orth_forall (x - P x) hx_orth
   have hx_decomp : x = P x + (x - P x) := by
-    calc
-      x = (x - P x) + P x := (sub_add_cancel x (P x)).symm
-      _ = P x + (x - P x) := by ac_rfl
+    simp_all
   have hP_TPx : P (T (P x)) = T (P x) :=
     (Submodule.starProjection_eq_self_iff (K := U)).2 hTP_mem
   have hP_Torth : P (T (x - P x)) = 0 :=

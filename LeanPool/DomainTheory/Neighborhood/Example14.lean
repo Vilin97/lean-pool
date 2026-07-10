@@ -375,10 +375,7 @@ def neighborhoodSystem : NeighborhoodSystem Token where
     · rw [h]; exact mem_leaf01
     · rw [h]; exact mem_leaf10
     · rw [h]; exact mem_leaf11
-    · rw [h] at hZsub
-      have hz : Z = (∅ : Set Token) := Set.subset_empty_iff.mp hZsub
-      subst hz
-      exact absurd hZ not_mem_empty
+    · simp_all
 
 namespace neighborhoodSystem
 
@@ -390,8 +387,7 @@ def bot : neighborhoodSystem.Element where
   sub h := by rw [h]; exact mem_master
   master_mem := rfl
   inter_mem := by
-    intro X Y hX hY
-    rw [hX, hY, master_inter]
+    simp_all
   up_mem := by
     intro X Y hX hY hXY
     rw [hX] at hXY

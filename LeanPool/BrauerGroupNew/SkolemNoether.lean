@@ -98,8 +98,7 @@ def smul1 (K A B M : Type u)
         ext k m
         change k • m = algebraMap _ _ k • m
         simp only [algebraMap_smul]
-      · rename_i bl1 bl2 hbl1 hbl2
-        simp only [smul_add, map_add, hbl1, hbl2]
+      · simp_all
   }
 
 lemma one_smul1 (K A B M : Type u)
@@ -158,8 +157,7 @@ lemma add_smul1 (K A B M : Type u)
     [Ring B] [Algebra K B] [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M]
     (f : B →ₐ[K] A) (r s : B ⊗[K] Module.End A M) (x : moduleInst K A B M f) :
     smul1 K A B M f x (r + s) = smul1 K A B M f x r + smul1 K A B M f x s := by
-  simp only [smul1, ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, map_add, LinearMap.coe_mk,
-    AddHom.coe_mk]
+  simp_all
 
 instance IsMod (K A B M : Type u)
     [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A] [Ring B] [Algebra K B]
@@ -214,8 +212,7 @@ instance moduleInst_findim (K A B M : Type u)
   have : Module.Finite A M := ⟨⟨{gen A M}, eq_top_iff.2 fun x _ => by
     obtain ⟨a, rfl⟩ := gen_spec A M x
     apply Submodule.smul_mem
-    refine Submodule.subset_span ?_
-    aesop⟩⟩
+    simp_all⟩⟩
   obtain ⟨s, hs⟩ : Module.Finite K M := Module.Finite.trans A M
   refine ⟨⟨s, eq_top_iff.2 ?_⟩⟩
   rintro x -

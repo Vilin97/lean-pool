@@ -207,8 +207,7 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         ring
-      rw [h1] at hql_c hbd_c
-      rwa [(hql_c.trans h2).symm]
+      simp_all
     -- Use the bound to prove ContinuousWithinAt
     change Filter.Tendsto ω (nhdsWithin (d n) (Set.range d)) (nhds (ω (d n)))
     rw [Metric.tendsto_nhds]
@@ -467,8 +466,7 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
       calc |ω (d m) - ω ((q : ℝ) • d n)|
           = |ω (d m) - (q : ℝ) * ω (d n)| := by rw [h_ω_qn]
         _ = |ω (d m - (q : ℝ) • d n)| := by
-              have := hql_c'.trans h2'  -- ω(dm - q•dn) = ω(dm) - q*ω(dn)
-              congr 1; linarith
+              simp_all
         _ ≤ (C : ℝ) * (s.sup p) (d m - (q : ℝ) • d n) := hbd_c'
         _ ≤ ((C : ℝ) + 1) * (s.sup p) (d m - (q : ℝ) • d n) := by
             apply mul_le_mul_of_nonneg_right (by linarith) (apply_nonneg _ _)
@@ -530,8 +528,7 @@ lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     simp only [qLinearPaths, Set.mem_iInter, Set.mem_setOf_eq]
     intro c
     simp only [weakDualEmbed, Finsupp.sum]
-    rw [map_sum]
-    simp_rw [map_smul, smul_eq_mul]
+    simp_all
   · -- Boundedness: l is continuous, hence bounded by finitely many p_n
     simp only [boundedPaths, Set.mem_iUnion, Set.mem_iInter, Set.mem_setOf_eq]
     -- View |l(·)| as a continuous seminorm and apply bound_of_continuous
@@ -662,8 +659,7 @@ private lemma measurable_eval_comp_projection
         unfold measurableProjectionAux
         rw [dif_neg hω]
         rfl
-      rw [h_unfold]
-      exact tendsto_const_nhds
+      simp_all
   exact measurable_of_tendsto_metrizable hF_meas hF_tendsto
 
 /-- The projection map is measurable.
@@ -799,10 +795,7 @@ theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
         simp only [← Finset.sum_coe_sort c.support, σ]
         exact Fintype.sum_equiv c.support.equivFin.symm _ _ (fun _ => rfl)
       rw [h2, Finsupp.sum]
-    rw [h_sum_x, h_normalized] at h
-    rwa [show (fun ω' => exp (I * ↑(t * X ω'))) =
-      (fun ω' => exp (I * ↑(∑ i : Fin (k + 1), s' i * ω' (x' i)))) from by
-      funext ω'; congr 2; exact_mod_cast (h_sum_ω ω').symm]
+    simp_all
   -- Apply ae_eq_zero_of_charfun_eq_one
   have := ae_eq_zero_of_charfun_eq_one hX_meas hX_cf
   filter_upwards [this] with ω hω
@@ -893,11 +886,9 @@ theorem boundedPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
           (C : ℝ) * (s.sup p) (c.sum fun i a => (a : ℝ) • d i))} := by
     intro ω hω
     simp only [Set.mem_setOf_eq, boundedPaths, Set.mem_iUnion, Set.mem_iInter] at hω ⊢
-    push Not at hω ⊢
-    exact hω s C
+    simp_all
   have h_lt := lt_of_le_of_lt (measure_mono h_subset) hC
-  rw [hε₀_def, ENNReal.ofReal_toReal (measure_ne_top ν _)] at h_lt
-  exact absurd h_lt (lt_irrefl _)
+  simp_all
 
 /-- The good paths have full ν-measure. Combines ℚ-linearity and boundedness a.e. -/
 lemma goodPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
@@ -942,8 +933,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
   -- Step 0: Derive Φ(0) = 1 from h_cf_joint with n=1
   have h_normalized : Φ 0 = 1 := by
     have h1 := h_cf_joint 1 (fun _ => 0) (fun _ => (0 : E))
-    simp at h1
-    exact h1.symm
+    simp_all
   -- Step 1: Good paths have full measure
   have h_good := goodPaths_ae Φ ν h_cf_joint h_cf_cont h_normalized
   -- Step 2: Choose a sequence d(n_k) → f
@@ -992,8 +982,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
       h_Pω_cont.continuousAt.tendsto.comp hφ
     have h_ω_tendsto : Filter.Tendsto (fun k => ω (d (φ k)))
         Filter.atTop (nhds ((measurableProjection ω : E →L[ℝ] ℝ) f)) := by
-      convert h_Pω_tendsto using 1
-      ext k; exact (h_eq_dense k).symm
+      simp_all
     exact Filter.Tendsto.sub h_ω_tendsto tendsto_const_nhds
   -- Step 8: Apply DCT + CF convergence to show ∫ exp(it Z) = 1
   have hZ_cf : ∀ t : ℝ, ∫ ω, exp (I * ↑(t * Z ω)) ∂ν = 1 := by
@@ -1112,9 +1101,7 @@ lemma uniqueness_via_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempt
         MeasurableEquiv.trans_apply, MeasurableEquiv.coe_mk, Equiv.coe_fn_mk,
         MeasurableEquiv.coe_toLp, Function.comp_apply, Finset.restrict,
         weakDualEmbed]
-      simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-        fun a b => RCLike.inner_apply a b]
-      rw [map_sum]; simp_rw [map_smul, smul_eq_mul]
+      simp_all
     simp_rw [h_inner_eq, mul_comm _ Complex.I]
     rw [← hμ']
     rfl

@@ -349,8 +349,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
       · exact fun i => Finset.card_pos.mp ( by
           rw [ left_1 ];
           exact compressedSizes_pos h_last_pos i )
-      · intro i j hij
-        exact right i j hij
+      · simp_all
       · simp_rw [left_1]; exact h_case
     -- Since $A'_i \subseteq A_i$, we have $restrictedSumSet k A' \subseteq restrictedSumSet k
     -- A$.

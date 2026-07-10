@@ -103,9 +103,7 @@ def LvlStratHom.global (p : Player) : PTreesS ⥤ Type where
   map_id _ := rfl
   map_comp f g := by
     apply ConcreteCategory.hom_ext
-    intro S
-    apply strategyEquivSystem.injective
-    simp [LvlStratHom.systemToObj, LvlStratHom.systemOfObj]
+    simp_all
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev LvlStratHom.globalToObj {T : PTreesS} (S : Strategy T.tree.1.2 p) :
     (LvlStratHom.global p).obj T :=
@@ -152,12 +150,7 @@ lemma bodyLiftExists_iff_system
     use ⟨(bodyEquivSystem.inv.app T.1 x).val, hmem⟩
     have hmap : (bodyFunctor.map toHom) (bodyEquivSystem.inv.app T.1 x) = y' := by
       apply ((isIso_iff_bijective (bodyEquivSystem.hom.app U.1)).mp inferInstance).1
-      rw [naturality_apply_types]
-      have hpoint : (bodyEquivSystem.hom.app T.1) ((bodyEquivSystem.inv.app T.1) x) = x := by
-        change ((bodyEquivSystem.inv.app T.1 ≫ bodyEquivSystem.hom.app T.1) x) = x
-        rw [← NatTrans.comp_app, bodyEquivSystem.inv_hom_id]
-        rfl
-      rwa [hpoint]
+      simp_all
     simpa [y'] using congrArg Subtype.val hmap
 
 end Covering
@@ -174,8 +167,7 @@ namespace Covering
 instance : Category PTrees where
   Hom := Covering
   id T := ⟨𝟙 T.1, LvlStratHom.id _, fun {p} {S} y ↦ ⟨y, by
-    exact congrArg Subtype.val
-      (bodyFunctor.map_id_apply T.1 ⟨y.val, body_mono S.pre.subtree_sub y.prop⟩)⟩⟩
+    simp_all⟩⟩
   comp f g := ⟨f.toHom ≫ g.toHom, f.str ≫ g.str, fun {p} {S} x ↦ by as_aux_lemma =>
     obtain ⟨y, hy⟩ := g.h_body (S :=
       LvlStratHom.globalOfObj
@@ -192,8 +184,7 @@ instance : Category PTrees where
         (bodyFunctor.map f.toHom) ⟨↑z, body_mono S.pre.subtree_sub z.prop⟩ =
           ⟨↑y, body_mono (PreStrategy.subtree_sub _) y.prop⟩ :=
       Subtype.ext hz
-    rw [← hybody]
-    rw [Functor.map_comp_apply]⟩
+    simp_all⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def PTreeForget : PTrees ⥤ Trees where
   obj T := T.1

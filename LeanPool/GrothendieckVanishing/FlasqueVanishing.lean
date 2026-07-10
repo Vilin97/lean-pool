@@ -137,8 +137,7 @@ private lemma exists_patch_of_shortExact {X : TopCat.{u}}
   refine ⟨tW', ?_, ?_⟩
   · simp only [tW', map_add, hgf_zero, add_zero, htW]
   · simp only [tW', map_add]
-    rw [hf_naturality, hahat, ha]
-    abel
+    simp_all
 
 private lemma bool_isCompatible_of_false_true_eq {X : TopCat.{u}}
     (F : TopCat.Presheaf AddCommGrpCat.{u} X)

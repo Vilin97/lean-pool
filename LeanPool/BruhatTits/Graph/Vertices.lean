@@ -122,13 +122,11 @@ lemma exists_repr_inv'_of_fixed (M : Lattice R) (L : Vertices R) :
     simp only [inv_mk, Basis.fromLattice_apply]
     match i with
     | 0 =>
-      simp only [Basis.ntwist₂_apply₀, Basis.fromLattice_apply, h0]
-      rfl
+      simp_all
     | 1 => simp [h1]
   refine ⟨ϖ, hϖ, bM.fromLattice, ?_, ?_⟩
   · simp only [Basis.toLattice_fromLattice]
-  · rw [hML]
-    simp only [Basis.toLattice_fromLattice, hL]
+  · simp_all
 
 /-- Variant of `exists_repr_inv` in terms of `Basis.ntwist₂`. -/
 lemma exists_repr_inv' (M L : Vertices R) :

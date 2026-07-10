@@ -284,8 +284,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
       have hdiff := γ.smooth_off_partition t
         ⟨le_trans hl₁_ge_a (le_of_lt ht.1), le_trans ht.2.le ht₀.2.le⟩ (hno_L₁ t ht)
       have hne : γ.toFun t ≠ z₀ := by
-        intro heq; have := hneg_L t ht; simp only [heq, sub_self, inner_zero_left, norm_zero,
-          zero_div, lt_irrefl] at this
+        intro heq; have := hneg_L t ht; simp_all
       rw [(hasDerivAt_norm_sub γ.toFun t _ hdiff.hasDerivAt hne).deriv]
       exact hneg_L t ht
   · apply strictMonoOn_of_deriv_pos (convex_Icc _ _)
@@ -296,8 +295,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
       have hdiff := γ.smooth_off_partition t
         ⟨le_trans ht₀.1.le (le_of_lt ht.1), le_trans ht.2.le hr₁_le_b⟩ (hno_R₁ t ht)
       have hne : γ.toFun t ≠ z₀ := by
-        intro heq; have := hpos_R t ht; simp only [heq, sub_self, inner_zero_left, norm_zero,
-          zero_div, lt_irrefl] at this
+        intro heq; have := hpos_R t ht; simp_all
       rw [(hasDerivAt_norm_sub γ.toFun t _ hdiff.hasDerivAt hne).deriv]
       exact hpos_R t ht
 
@@ -621,8 +619,7 @@ lemma exp_cutoff_integral_eq_ratio
              ⟨by linarith [ht.1, hδ], by linarith⟩⟩
     have h_sub : Ioo p₁ p₂ ⊆ Ioo γ.a γ.b := fun x hx => by
       simp only [p₁, p₂, mem_Ioo] at hx ⊢
-      exact ⟨lt_of_le_of_lt (le_max_left γ.a _) hx.1,
-             lt_of_lt_of_le hx.2 (min_le_left γ.b _)⟩
+      simp_all
     have ht_in : t ∈ Ioo p₁ p₂ := by
       simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
       exact ⟨⟨ht.1, by linarith [hδ]⟩, ⟨ht.2, by linarith [hδ]⟩⟩
@@ -699,9 +696,7 @@ private lemma crossing_sigma_tendsto_t₀
   have hK_nonzero : ∀ t ∈ K, γ.toFun t ≠ z₀ := by
     intro t ⟨ht_Icc, ht_ball⟩ hγt
     have heq := honly t ht_Icc hγt
-    simp only [Metric.mem_ball, Real.dist_eq] at ht_ball
-    push Not at ht_ball
-    subst heq; simp only [sub_self, abs_zero] at ht_ball; linarith
+    simp_all
   by_cases hK_ne : K.Nonempty
   · have hcont_norm : ContinuousOn (fun t => ‖γ.toFun t - z₀‖) K :=
       continuous_norm.comp_continuousOn
@@ -792,11 +787,7 @@ lemma crossing_ratio_tendsto
                ((γ.toFun (σ₂ ε) - z₀) / ↑‖γ.toFun (σ₂ ε) - z₀‖))
       (𝓝[>] (0 : ℝ)) (𝓝 ((-L_L / ↑‖L_L‖) / (L_R / ↑‖L_R‖))) := by
     apply hdir_σ₁.div hdir_σ₂
-    intro h
-    rw [div_eq_zero_iff] at h
-    rcases h with h1 | h2
-    · exact hL_R_ne h1
-    · exact hL_R_ne' h2
+    simp_all
   have halg : (-L_L / ↑‖L_L‖) / (L_R / ↑‖L_R‖) =
       Complex.exp (-(I * ↑(angleAtCrossing γ t₀ ht₀))) := by
     unfold angleAtCrossing

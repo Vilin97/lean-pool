@@ -236,8 +236,7 @@ lemma _root_.ProbabilityTheory.condIndep_copies
       rw [← map_apply measurable_snd (by simp), ← map_apply hY <| .singleton y, h1]
     rw [h1] at hy
     have hy'' : μ (Y ⁻¹' {y}) ≠ 0 := by
-      convert hy
-      exact (map_apply hY .of_discrete).symm
+      simp_all
     have h2 : ν[| Prod.snd⁻¹' {y}] = m y := by
       rw [Measure.ext_iff]
       intro E _
@@ -252,17 +251,12 @@ lemma _root_.ProbabilityTheory.condIndep_copies
       have h3' {x : β} (hx : x ≠ y) : (m x) ((Prod.snd⁻¹' {y}) ∩ E) = 0 := by
         apply measure_inter_null_of_null_left E
         rw [← Measure.map_apply measurable_snd (by simp), MeasureTheory.Measure.map_snd_prod]
-        simp only [Measure.smul_apply, MeasurableSet.singleton, dirac_apply', smul_eq_mul,
-          mul_eq_zero,
-          indicator_apply_eq_zero, Pi.one_apply,
-          one_ne_zero, imp_false]; right; exact hx
+        simp_all
       simp only [coe_finsetSum, coe_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, ν]
       rw [Finset.sum_eq_single_of_mem y ?_]
       · rw [h3, ← mul_assoc, ENNReal.inv_mul_cancel hy'', one_mul]
         finiteness
-      · intro _ _ hx
-        rw [h3' hx]
-        simp
+      · simp_all
       · rw [← Finset.mem_coe]
         convert FiniteRange.range Y ▸ Set.preimage_singleton_nonempty.mp
           (nonempty_of_measure_ne_zero hy'')

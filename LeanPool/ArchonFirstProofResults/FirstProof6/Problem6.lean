@@ -204,16 +204,13 @@ lemma cross_edge_off_diagonal
       -- Base sets don't contain both endpoints (cross-edge)
       have h_base : ∀ (γ : Fin r), ¬(G.Adj i j ∧ i ∈ S γ ∧ j ∈ S γ) := by
         intro γ ⟨_, hi, hj⟩
-        rw [hS] at hi hj; simp only [Finset.mem_filter] at hi hj
-        exact hcross ⟨fun _ => hj.1, fun _ => hi.1⟩
+        simp_all
       simp_rw [if_neg (h_base _), sub_zero]
       have h_cases : (i ∈ pc.colored ∧ j ∉ pc.colored) ∨
           (i ∉ pc.colored ∧ j ∈ pc.colored) := by
         by_cases hi : i ∈ pc.colored
         · exact Or.inl ⟨hi, fun hj => hcross ⟨fun _ => hj, fun _ => hi⟩⟩
-        · exact Or.inr ⟨hi, by_contra fun hj =>
-            hcross ⟨fun h => absurd h hi,
-                    fun h => absurd h hj⟩⟩
+        · simp_all
       -- Goal: -1 - ∑ v, ∑ γ, (if ... then -1 else 0) = 0
       suffices h_sum :
           ∑ v ∈ Finset.univ.filter (· ∉ pc.colored),
@@ -226,37 +223,21 @@ lemma cross_edge_off_diagonal
       · -- i ∈ colored, j ∉ colored: only (v=j, γ=color i) contributes
         rw [Finset.sum_eq_single_of_mem j
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hnjc⟩)]
-        · rw [Finset.sum_eq_single_of_mem (pc.color i) (Finset.mem_univ _)]
-          · rw [if_pos]
-            refine ⟨hadj,
-              Finset.mem_union_left _ ?_,
-              Finset.mem_union_right _
-                (Finset.mem_singleton_self _)⟩
-            rw [hS]; exact Finset.mem_filter.mpr ⟨hic, rfl⟩
-          · intro γ _ hne; rw [if_neg]; intro ⟨_, hi_mem, _⟩
-            simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hi_mem
-            exact hi_mem.elim (fun ⟨_, h⟩ => hne h.symm) (fun h => hnjc (h ▸ hic))
+        · simp_all
         · intro v _ hne
           apply Finset.sum_eq_zero; intro γ _; rw [if_neg]; intro ⟨_, _, hj_mem⟩
-          simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hj_mem
-          exact hj_mem.elim (fun ⟨h, _⟩ => hnjc h) (fun h => hne h.symm)
+          simp_all
       · -- i ∉ colored, j ∈ colored: only (v=i, γ=color j) contributes
         rw [Finset.sum_eq_single_of_mem i
           (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hnic⟩)]
         · rw [Finset.sum_eq_single_of_mem (pc.color j) (Finset.mem_univ _)]
-          · rw [if_pos]
-            refine ⟨hadj,
-              Finset.mem_union_right _
-                (Finset.mem_singleton_self _),
-              Finset.mem_union_left _ ?_⟩
-            rw [hS]; exact Finset.mem_filter.mpr ⟨hjc, rfl⟩
+          · simp_all
           · intro γ _ hne; rw [if_neg]; intro ⟨_, _, hj_mem⟩
             simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hj_mem
             exact hj_mem.elim (fun ⟨_, h⟩ => hne h.symm) (fun h => hnic (h ▸ hjc))
         · intro v _ hne
           apply Finset.sum_eq_zero; intro γ _; rw [if_neg]; intro ⟨_, hi_mem, _⟩
-          simp only [hS, Finset.mem_union, Finset.mem_filter, Finset.mem_singleton] at hi_mem
-          exact hi_mem.elim (fun ⟨h, _⟩ => hnic h) (fun h => hne h.symm)
+          simp_all
     · -- Same-status edge: G_same has edge, double sum = 0
       have hcross' : i ∈ pc.colored ↔ j ∈ pc.colored := not_not.mp hcross
       rw [if_pos ((hG_same i j).mpr ⟨hadj, hcross'⟩)]
@@ -280,29 +261,14 @@ lemma cross_edge_off_diagonal
           refine ⟨h1, ?_, ?_⟩
           · rcases h2 with h2 | rfl
             · rw [hS]; exact Finset.mem_filter.mpr h2
-            · rcases h3 with ⟨hjc, _⟩ | rfl
-              · exact absurd (hcross'.mpr hjc) hv
-              · exact absurd rfl hij
+            · simp_all
           · rcases h3 with h3 | rfl
             · rw [hS]; exact Finset.mem_filter.mpr h3
-            · rcases h2 with ⟨hic, _⟩ | rfl
-              · exact absurd (hcross'.mp hic) hv
-              · exact absurd rfl.symm hij
-        · intro ⟨h1, h2, h3⟩
-          exact ⟨h1, Finset.mem_union_left _ h2, Finset.mem_union_left _ h3⟩
+            · simp_all
+        · simp_all
       simp only [h_iff, sub_self]
   · -- not G.Adj i j: L = 0, all terms vanish
-    rw [if_neg hadj, if_neg (show ¬G_same.Adj i j from
-      fun h => hadj ((hG_same i j).mp h).1)]
-    -- Goal: 0 - ∑ ... = 0, need ∑ ... = 0
-    suffices h_sum : ∑ v ∈ Finset.univ.filter (· ∉ pc.colored), ∑ γ : Fin r,
-        ((if G.Adj i j ∧ i ∈ (S γ ∪ {v}) ∧ j ∈ (S γ ∪ {v}) then (-1 : ℝ) else 0) -
-         (if G.Adj i j ∧ i ∈ S γ ∧ j ∈ S γ then (-1 : ℝ) else 0)) = 0 by
-      linarith
-    apply Finset.sum_eq_zero; intro v _
-    apply Finset.sum_eq_zero; intro γ _
-    have h_neg : ∀ P, ¬(G.Adj i j ∧ P) := fun _ h => hadj h.1
-    simp only [if_neg (h_neg _), sub_self]
+    simp_all
 
 omit [DecidableEq V] in
 /-- Diagonal entry derivation for the cross-edge decomposition:
@@ -382,8 +348,7 @@ lemma cross_edge_sum_le_graphLaplacian
     rw [Finset.sum_comm]
     apply Finset.sum_eq_zero; intro v _
     rw [Finset.sum_comm]
-    apply Finset.sum_eq_zero; intro γ _
-    rw [Finset.sum_sub_distrib, il_row_sum, il_row_sum, sub_self]
+    simp_all
   -- Entry-by-entry equality from off-diagonal + row sums
   ext i j
   by_cases hij : i = j
@@ -414,9 +379,7 @@ lemma total_barrier_bound_base
         ((∅ : Finset V).filter (fun v =>
           (fun (_ : V) => (⟨0, hr_pos⟩ : Fin r)) v = γ)) *
         Lhalf_pinv = 0 := by
-    apply Finset.sum_eq_zero; intro γ _
-    simp only [Finset.filter_empty]
-    rw [h_lap_le1 _ (by simp), Matrix.mul_zero, Matrix.zero_mul]
+    simp_all
   refine ⟨⟨∅, fun _ => ⟨0, hr_pos⟩⟩, by simp, ?_, ?_⟩
   · -- PosDef: (ε/2 · I - 0).PosDef
     simp only [zero_mul, add_zero, h_sum_zero, sub_zero]
@@ -609,8 +572,7 @@ lemma good_pair_exists [Nonempty V]
   have h_exists_uncolored : ∃ v₀ : V, v₀ ∉ pc_t.colored := by
     by_contra hall; push Not at hall
     have : Finset.univ ⊆ pc_t.colored := fun x _ => hall x
-    have := Finset.card_le_card this
-    rw [Finset.card_univ, ← hn_def, hcard_t] at this; omega
+    simp_all
   -- Step A: Define the set of uncolored vertices
   set uncolored := Finset.univ.filter (· ∉ pc_t.colored) with h_uncol_def
   have h_uncol_card : uncolored.card = n - t := by
@@ -716,8 +678,7 @@ lemma good_pair_exists [Nonempty V]
         Lhalf_pinv * U * U).trace / gap) := by
     calc (m : ℝ) * (r : ℝ) = (uncolored.card : ℝ) * (r : ℝ) := by rw [h_uncol_card]
       _ = ∑ _ ∈ uncolored, ∑ _ : Fin r, (1 : ℝ) := by
-          simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-            Nat.smul_one_eq_cast]; ring
+          simp_all
       _ ≤ _ := by gcongr with v hv γ _; exact h_cost_ge_1 v hv γ
   -- Step M: ∑(trBU + trBU2/gap) = ∑trBU + (∑trBU2)/gap ≤ tr(U) + tr(U²)/gap
   have h_sum_le : ∑ v ∈ uncolored, ∑ γ : Fin r,
@@ -753,8 +714,7 @@ lemma good_pair_exists [Nonempty V]
   -- Step N: tr(U²)/gap ≤ n/ε
   have htrU2_over_gap : (U * U).trace / gap ≤ (n : ℝ) / ε := by
     have h1 : gap ≥ (ε / (n : ℝ)) * (U * U).trace := by
-      calc gap ≥ (u' - u_t) * (U * U).trace := hgap_bound
-        _ = (ε / (n : ℝ)) * (U * U).trace := by rw [hu_diff]
+      simp_all
     have htrU2_nn : 0 ≤ (U * U).trace := hU_sq_psd.trace_nonneg
     rw [div_le_div_iff₀ hgap_pos hε]
     -- Goal: (U * U).trace * ε ≤ ↑n * gap
@@ -881,9 +841,7 @@ lemma total_barrier_bound_step [Nonempty V]
   set colored' := pc_t.colored ∪ {v₀'} with hcolored'_def
   refine ⟨⟨colored', color'⟩, ?_, ?_⟩
   · -- Card: |colored'| = t + 1
-    rw [hcolored'_def, Finset.card_union_of_disjoint
-      (Finset.disjoint_singleton_right.mpr hv₀')]
-    simp [hcard_t]
+    simp_all
   · -- PosDef + Potential: show the new sum = M_t + B, then apply hpd_new/hphi_new
     -- Helper: color' agrees with pc_t.color on old vertices
     have hcolor'_old : ∀ w ∈ pc_t.colored, color' w = pc_t.color w := by
@@ -946,8 +904,7 @@ lemma total_barrier_bound_step [Nonempty V]
           Lhalf_pinv * inducedLaplacian G
             (pc_t.colored.filter (fun v => pc_t.color v = γ)) *
             Lhalf_pinv := by
-        intro γ hγ
-        rw [if_neg (Finset.ne_of_mem_erase hγ)]
+        simp_all
       rw [Finset.sum_congr rfl h_rest]
       -- Now LHS = L_new_γ₀ + ∑_{γ≠γ₀} old = M_t + B
       -- Reduce the if True
@@ -963,9 +920,7 @@ lemma total_barrier_bound_step [Nonempty V]
             Lhalf_pinv := by
         simp [Matrix.mul_sub, Matrix.sub_mul]
       rw [h_new_split]; abel
-    dsimp only
-    rw [h_sum_eq]
-    exact ⟨hpd_new, hphi_new⟩
+    simp_all
 
 /-- **Total barrier bound (Steps 3-4 of informal proof, core BSS)**: Given the spectral
     setup, there exists a partial coloring of k = n/4 vertices with r = ⌈16/ε⌉ colors
@@ -1282,17 +1237,9 @@ lemma eps_light_small_n
       simp only [inducedLaplacian, Matrix.of_apply, Matrix.zero_apply]
       split_ifs with hij h
       · -- diagonal: need filter card = 0 since no edges within singleton
-        rw [Nat.cast_eq_zero, Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-        intro k _ ⟨hiv, hkv, hadj⟩
-        have hi := Finset.mem_singleton.mp hiv
-        have hk := Finset.mem_singleton.mp hkv
-        rw [hi, hk] at hadj
-        exact absurd hadj (G.loopless.irrefl _)
+        simp_all
       · -- off-diagonal with adj and both in {v}: contradicts i ≠ j
-        exfalso
-        have hi := Finset.mem_singleton.mp h.2.1
-        have hj := Finset.mem_singleton.mp h.2.2
-        exact hij (hi.trans hj.symm)
+        simp_all
       · rfl
     unfold IsEpsLight
     rw [hLS, sub_zero]

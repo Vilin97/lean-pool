@@ -40,8 +40,7 @@ abbrev SupportOcc {t : ℕ} (F : Multiset (SupportPattern t)) := Fin F.card
 noncomputable def supportPatternAt {t : ℕ}
     (F : Multiset (SupportPattern t)) (s : SupportOcc F) : SupportPattern t :=
   F.toList.get ⟨s.1, by
-    rw [Multiset.length_toList]
-    exact s.2
+    simp_all
   ⟩
 
 /-- The underlying subset of `[t]` attached to a support occurrence. -/
@@ -195,8 +194,7 @@ noncomputable def allNewVertices {t : ℕ}
   · intro h
     rw [liftBlockEdge, Finset.mem_union] at h
     rcases h with h | h
-    · rcases Finset.mem_image.mp h with ⟨v', hv', hEq⟩
-      lia
+    · simp_all
     · rcases Finset.mem_image.mp h with ⟨s, hs, hEq⟩
       cases hEq
   · rintro ⟨rfl, hv⟩
@@ -216,8 +214,7 @@ lemma liftBlockEdge_injective {t : ℕ}
   · intro hv
     have hmem : SubstVertex.old i v ∈ liftBlockEdge F i e := by
       simp [hv]
-    rw [hEq] at hmem
-    simpa using (old_mem_liftBlockEdge_iff.mp hmem).2
+    simp_all
   · intro hv
     have hmem : SubstVertex.old i v ∈ liftBlockEdge F i e' := by
       simp [hv]
@@ -259,8 +256,7 @@ lemma liftBlockEdge_ne_of_ne {t : ℕ}
     by_cases hne' : e'.Nonempty
     · rcases hne' with ⟨v, hv⟩
       have hmem : SubstVertex.old j v ∈ liftBlockEdge F i e := by
-        rw [hEq]
-        simp [hv]
+        simp_all
       exact hij.symm (old_mem_liftBlockEdge_iff.mp hmem).1
     · have he'0 : e' = ∅ := Finset.not_nonempty_iff_eq_empty.mp hne'
       exact Finset.disjoint_left.mp (hEdgeDisjoint hij)
@@ -591,8 +587,7 @@ theorem substitution_theorem {t : ℕ}
         · intro hx
           rcases Finset.mem_union.mp hx with hxOld | hxNew
           · rcases Finset.mem_biUnion.mp hxOld with ⟨i, -, hEi⟩
-            rcases Finset.mem_image.mp hEi with ⟨v, hv, hEq⟩
-            cases hEq
+            simp_all
           · rcases Finset.mem_image.mp hxNew with ⟨s', hs, hEq⟩
             cases hEq
             exact Finset.mem_filter.mpr
@@ -608,8 +603,7 @@ theorem substitution_theorem {t : ℕ}
         cases hEq
     | new s =>
         rcases Finset.mem_biUnion.mp hx with ⟨i, -, hEi⟩
-        rcases Finset.mem_image.mp hEi with ⟨v, hv, hEq⟩
-        cases hEq
+        simp_all
   have hUniqueEq :
       uniqueCoverage (substitutionHypergraph F blocks) P =
         (oldUniqueVertexUnion F blocks P).card +
@@ -627,8 +621,7 @@ theorem substitution_theorem {t : ℕ}
       refine Finset.disjoint_left.mpr ?_
       intro x hx hy
       rcases Finset.mem_image.mp hx with ⟨v, hv, rfl⟩
-      rcases Finset.mem_image.mp hy with ⟨w, hw, hEq⟩
-      exact hij (by cases hEq; rfl)
+      simp_all
   have hOldLe : ∀ i, oldCount i ≤ cap i := by
     intro i
     simpa [oldCount, uniqueCoverage, oldUniqueVerticesOnBlock, selectedOldVertexCount] using
@@ -654,9 +647,7 @@ theorem substitution_theorem {t : ℕ}
       apply Finset.sum_subset (by simp)
       intro i hiU hiNot
       have hiT : i ∈ T := by
-        by_contra hiT
-        exact hiNot <| Finset.mem_union.mpr <| Or.inl <|
-          Finset.mem_sdiff.mpr ⟨Finset.mem_univ i, hiT⟩
+        simp_all
       have hiNotI : i ∉ I := by
         exact fun hiI => hiNot <| Finset.mem_union.mpr <| Or.inr hiI
       exact hOldZero i (Finset.mem_sdiff.mpr ⟨hiT, hiNotI⟩)
@@ -745,8 +736,7 @@ theorem frame_recurrence {t : ℕ}
         refine Finset.disjoint_left.mpr ?_
         intro x hx hy
         rcases Finset.mem_image.mp hx with ⟨v, hv, rfl⟩
-        rcases Finset.mem_image.mp hy with ⟨w, hw, hEq⟩
-        exact hij (by cases hEq; rfl)
+        simp_all
     have hNewCard : (allNewVertices F).card = F.card := by
       rw [allNewVertices, Finset.card_image_of_injective]
       · simp
@@ -761,8 +751,7 @@ theorem frame_recurrence {t : ℕ}
           cases hEq
       | new s =>
           rcases Finset.mem_biUnion.mp hx with ⟨i, -, hEi⟩
-          rcases Finset.mem_image.mp hEi with ⟨v, hv, hEq⟩
-          cases hEq
+          simp_all
     have hVertexSetEq :
         vertexSet (substitutionHypergraph F blocks) =
           oldVertexUnion F blocks ∪ allNewVertices F := by
@@ -791,8 +780,7 @@ theorem frame_recurrence {t : ℕ}
           · intro hx
             rcases Finset.mem_union.mp hx with hxOld | hxNew
             · rcases Finset.mem_biUnion.mp hxOld with ⟨i, -, hEi⟩
-              rcases Finset.mem_image.mp hEi with ⟨v, hv, hEq⟩
-              cases hEq
+              simp_all
             · rcases Finset.mem_image.mp hxNew with ⟨s', hs, hEq⟩
               cases hEq
               exact (new_mem_vertexSet_substitution_iff F blocks s).2

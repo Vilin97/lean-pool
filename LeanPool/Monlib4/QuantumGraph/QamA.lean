@@ -148,9 +148,7 @@ theorem qamA.smul [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠
     LinearMap.mulRight_smul, LinearMap.adjoint_smul, LinearMap.mulLeft_smul, smul_mul_smul,
     smul_smul, Complex.mul_conj, Complex.ofReal_mul, mul_pow, ← one_div_mul_one_div_rev, mul_assoc,
     ← Complex.ofReal_pow, Complex.normSq_eq_norm_sq]
-  rw [one_div_mul_cancel, mul_one]
-  · simp_rw [ne_eq, Complex.ofReal_eq_zero, sq_eq_zero_iff, norm_eq_zero]
-    exact Units.ne_zero _
+  simp_all
 
 theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) :
     withMatrixQuantum[φ]
@@ -174,9 +172,7 @@ theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ
   simp_rw [_root_.map_smul, smul_smul, mul_assoc]
   have : (‖x.1‖ ^ 2 : ℂ) ≠ 0 :=
   by simp_rw [ne_eq, sq_eq_zero_iff, Complex.ofReal_eq_zero, norm_eq_zero]; exact x.property
-  have this' := one_div_mul_cancel this
-  simp_rw [Complex.ofReal'_eq_isROrC_ofReal] at this' ⊢
-  simp_rw [this', mul_one]
+  simp_all
 
 theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
     withMatrixQuantum[φ]
@@ -260,8 +256,7 @@ theorem one_map_transpose_psi_eq [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
         A
           ((modAut 0)
             (stdBasisMatrix x x_1 1 * hφ.matrixIsPosDef.rpow (-(1 / 2)))) := by
-    intro x x_1
-    simp [starAlgebra.modAut_zero]
+    simp_all
   simp_rw [hzero, TensorProduct.map_tmul, Module.End.one_apply, ← TensorProduct.map_tmul A,
     ← QuantumSet.PsiToFun_apply, ← QuantumSet.Psi_apply, ← map_sum, ← Finset.sum_product',
     ← Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, Finset.univ_product_univ,
@@ -481,8 +476,7 @@ private theorem qam_A_is_sa_iff_aux4_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
     have hsig : hφ.sig (1 / 2) x ≠ 0 := by
       intro hzero
       rw [sig_eq_iff_eq_sig_inv] at hzero
-      have hzero' : x = 0 := by simpa using hzero
-      exact hx hzero'
+      simp_all
     have hnum : ‖hφ.sig (1 / 2) x‖ ^ 2 ≠ 0 := by
       simpa [norm_eq_zero] using hsig
     have hden : ‖x‖ ^ 2 ≠ 0 := by
@@ -747,8 +741,7 @@ theorem Matrix.PosDef.ne_zero [Finite n] [Nontrivial n] {Q : ℍ} (hQ : Q.PosDef
   letI := Fintype.ofFinite n
   have := PosDef.trace_ne_zero hQ
   intro h
-  rw [h, trace_zero] at this
-  contradiction
+  simp_all
 
 theorem qamA.edges [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x ≠ 0 }) :
     withMatrixQuantum[φ]
@@ -875,8 +868,7 @@ theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { 
       · simp only [one_div, inv_eq_zero, ne_eq, sq_eq_zero_iff, Complex.ofReal_eq_zero,
           norm_eq_zero]
         exact x.property
-      · simp only [ne_eq, star_eq_zero]
-        exact this
+      · simp_all
     use Units.mk0 _ (inv_ne_zero this)
     rw [Units.val_mk0, inv_mul_cancel₀ this, one_smul]
   · rintro ⟨α, hx⟩
@@ -1032,9 +1024,7 @@ theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
     rw [qamA.isometric_starAlgEquiv_conj _ hUUiso, qamA.is_almost_injective,
       Subtype.coe_mk] at hU'
     use U
-    constructor
-    · simpa [_root_.map_smul, AlgEquiv.toLinearMap_apply, StarAlgEquiv.coe_toAlgEquiv] using hU'
-    · exact hUU
+    simp_all
   · rintro ⟨U, ⟨hU, hUU⟩⟩
     have hUUiso : StarAlgEquiv.IsIsometry (innerAutStarAlg U) :=
       (unitary_commutes_with_hφ_matrix_iff_isIsometry hφ U).mp hUU

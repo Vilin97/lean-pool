@@ -297,9 +297,7 @@ theorem Phi_E₃_at_delta : Phi 4 (2/7) (1/100 : ℝ) < -(1 : ℝ)/1000 := by
           have hbase : Real.exp 1 < (2.719 : ℝ) := by linarith [this]
           have hpow : (Real.exp 1) ^ 263 < (2.719 : ℝ) ^ 263 := by
             exact pow_lt_pow_left₀ hbase (by positivity) (by norm_num : (263 : ℕ) ≠ 0)
-          convert hpow using 1
-          rw [← Real.exp_nat_mul]
-          norm_num
+          simp_all
         have h1 : (2.719 : ℝ) ^ 121 < 193 ^ 23 := by norm_num
         have h2 : (2.719 : ℝ) ^ 142 < 193 ^ 27 := by norm_num
         have hnum : (2.719 : ℝ) ^ 263 < 193 ^ 50 := by

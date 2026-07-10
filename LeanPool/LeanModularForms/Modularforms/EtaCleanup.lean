@@ -140,8 +140,7 @@ theorem one_add_eta_logDeriv_eq (z : ℂ) (i : ℕ) :
       ((fun z ↦ 1 - 1 * cexp z) ∘ fun x ↦ 2 * ↑π * Complex.I * (↑i + 1) * x) := by aesop
   have h3 : deriv (fun x : ℂ ↦ (2 * π * Complex.I * (i + 1) * x)) =
         fun _ ↦ 2 * π * Complex.I * (i + 1) := by
-      ext y
-      simp [deriv_const_mul (2 * π * Complex.I * (i + 1)) (d := fun (x : ℂ) => x) (x := y)]
+      simp_all
   simp_rw [eta_q_eq_exp, h2, logDeriv_one_sub_mul_cexp_comp 1
     (g := fun x => (2 * π * Complex.I * (i + 1) * x)) (by fun_prop), h3]
   simp
@@ -329,8 +328,7 @@ lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn 
         enter [2,1]
         rw [neg_div, div_eq_mul_inv]
         simp
-      simp only [inv_neg, neg_im, inv_im, Left.neg_pos_iff] at *
-      exact this
+      simp_all
   · apply DifferentiableOn.mul
     · simp only [DifferentiableOn, mem_setOf_eq]
       intro x hx
@@ -371,5 +369,4 @@ lemma eta_equality' : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   have hcd := (mul_eq_right₀ he).mp (_root_.id (Eq.symm h3))
   rw [mul_eq_one_iff_inv_eq₀ hz] at hcd
   rw [@inv_eq_iff_eq_inv] at hcd
-  rw [hcd] at h2
-  exact h2
+  simp_all

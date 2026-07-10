@@ -143,8 +143,7 @@ theorem phiCoeff_eq_zero_iff (n : ℤ) : phiCoeff n = 0 ↔ n ∉ Set.range pent
       · rw [Int.natAbs_of_nonneg h] at h1
         simp at h1
       · rw [Int.ofNat_natAbs_of_nonpos h] at h2
-        rw [show 1 - -(6 * k - 1) = 6 * k by ring] at h2
-        simp at h2
+        simp_all
     · intro _
       contrapose! hsq with hmem
       obtain ⟨k, h⟩ := hmem
@@ -298,8 +297,7 @@ theorem lengthWhile_eq_iff_of_lt_length
   rw [lengthWhile]
   by_cases h : p x <;> simp only [h, ↓reduceIte]
   · by_cases ha0 : a = 0
-    · simp_rw [ha0]
-      simpa using h
+    · simp_all
     · have hiff : lengthWhile p xs + 1 = a ↔ lengthWhile p xs = a - 1 := by
         grind
       rw [hiff, List.lengthWhile_eq_iff_of_lt_length (by grind)]
@@ -384,8 +382,7 @@ theorem updateLast_eq_nil_iff (l : List α) (f : α → α) :
   · intro h
     contrapose! h
     simp [h]
-  · intro h
-    simp [h]
+  · simp_all
 
 theorem getLast_updateLast (l : List α) (f : α → α) (h : l ≠ []) :
     (l.updateLast f).getLast ((List.updateLast_eq_nil_iff _ _).ne.mpr h) = f (l.getLast h) := by
@@ -817,8 +814,7 @@ theorem down_notPosPentagonal (hn : 0 < n) (x : FerrersDiagram n)
   rw [getLast_down, length_down]
   by_contra!
   obtain hlt := x.diagSize_lt_length hn hdown
-  simp only [Nat.add_right_cancel_iff] at this
-  simp [this] at hlt
+  simp_all
 
 /-- Non-pentagonal configuration will not be negative-pentagonal after `down`. -/
 theorem down_notNegPentagonal (hn : 0 < n) (x : FerrersDiagram n)
@@ -831,8 +827,7 @@ theorem down_notNegPentagonal (hn : 0 < n) (x : FerrersDiagram n)
   rw [getLast_down, length_down]
   by_contra!
   obtain hlt := x.diagSize_lt_length hn hdown
-  simp only [Nat.add_right_cancel_iff] at this
-  simp [this] at hlt
+  simp_all
 
 /-- Drop the last element of `delta` and add its value to the new last element. -/
 abbrev takeLastFun (delta : List ℕ) (h : delta ≠ []) :=
@@ -897,8 +892,7 @@ def takeLast (hn : 0 < n) (x : FerrersDiagram n) :
       suffices (x.delta.length : ℤ) = 1 + (x.delta.length - 1 : ℕ) by simp [this]
       push_cast [h1]
       simp
-    rw [this]
-    exact List.sum_take_add_sum_drop _ _
+    simp_all
 
 theorem length_takeLast (hn : 0 < n) (x : FerrersDiagram n) :
     (x.takeLast hn).delta.length = x.delta.length - 1 := by
@@ -1132,11 +1126,7 @@ theorem getLast_up (hn : 0 < n) (x : FerrersDiagram n)
     apply List.forall_iff_forall_mem.mp x.delta_pos
     exact List.mem_of_mem_take (List.getLast_mem _)
   split_ifs with h
-  · have : x.delta.getLast (x.delta_ne_nil hn) - 1 = x.delta.length - 1 - 1 := by
-      simpa [takeLastFun] using h
-    simp_rw [this]
-    apply hh.trans_le
-    simp
+  · simp_all
   · simpa using hh
 
 /-- Barring pentagonal configuration, doing `up` will make it legal to do `down`. -/
@@ -1462,8 +1452,7 @@ match l with
     simp_rw [List.mem_cons] at hpos
     rw [List.mem_cons, ← h] at ha
     obtain h | h := ha
-    · have hx : 0 < x :=  hpos x (Or.inl rfl)
-      simp [h, hx]
+    · simp_all
     · apply foldDelta_pos_of_pos (fun a ha ↦ hpos a (Or.inr ha)) _ h
 
 theorem head_foldDelta (l : List ℕ) :
@@ -1574,8 +1563,7 @@ match l with
 | x :: y :: xs => by
   rw [List.pairwise_cons_cons_iff_of_trans] at hsort
   rw [unfoldDelta, List.sum_cons, sum_unfoldDelta' hsort.2]
-  suffices x - y + y = x by simpa
-  refine Nat.sub_add_cancel hsort.1
+  simp_all
 
 theorem sum_unfoldDelta {l : List ℕ} (hsort : l.Pairwise (· ≥ ·)) :
     (((unfoldDelta l).zipIdx 1).map fun p ↦ p.1 * p.2).sum = l.sum :=
@@ -1676,12 +1664,10 @@ def equivPartitionDistincts : FerrersDiagram n ≃ Nat.Partition.distincts n whe
   }
   left_inv := by
     intro
-    ext1
-    simp
+    simp_all
   right_inv := by
     intro
-    ext1
-    simp
+    simp_all
 
 instance : Fintype (FerrersDiagram n) := Fintype.ofEquiv _ (equivPartitionDistincts n).symm
 
@@ -1744,8 +1730,7 @@ theorem sum_range_id_mul_two' (n : ℕ) :
   rw [h]
   obtain h | h := lt_or_ge n 1
   · simp [Nat.lt_one_iff.mp h]
-  · push_cast [h]
-    rfl
+  · simp_all
 
 end Finset
 
@@ -1770,9 +1755,7 @@ theorem negpenSum {k : ℕ} (hk : 0 < k) :
       ∑ i ∈ Finset.range (k - 1), (i + 1) := by
     rw [Finset.sum_fin_eq_sum_range]
     apply Finset.sum_congr rfl
-    intro i hi
-    rw [Finset.mem_range] at hi
-    simp [hi]
+    simp_all
   rw [hsum]
   rw [Finset.sum_add_distrib]
   push_cast
@@ -1800,9 +1783,7 @@ theorem pospenSum {k : ℕ} (hk : 0 < k) :
       ∑ i ∈ Finset.range (k - 1), (i + 1) := by
     rw [Finset.sum_fin_eq_sum_range]
     apply Finset.sum_congr rfl
-    intro i hi
-    rw [Finset.mem_range] at hi
-    simp [hi]
+    simp_all
   rw [hsum]
   rw [Finset.sum_add_distrib]
   push_cast
@@ -1817,8 +1798,7 @@ private theorem take_eq_replicate (x : FerrersDiagram n)
     (hone : ∀ i, (h : i < x.delta.length - 1) → x.delta[i] = 1) :
     List.take (x.delta.length - 1) x.delta = List.replicate (x.delta.length - 1) 1 := by
   apply List.ext_getElem (by simp)
-  intro i h1 h2
-  simpa using hone i (by simpa using h1)
+  simp_all
 
 namespace IsPosPentagonal
 
@@ -1884,9 +1864,7 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
     · refine Or.inr ⟨?_, ?_⟩
       · suffices (-k).toNat = (-k).toNat - 1 + 1 by simpa
         grind
-      · intro i hi
-        have hi : i < (-k).toNat - 1 := by simpa using hi
-        simp [hi]
+      · simp_all
   · have h0 : n = 0 := by simpa using h
     simp [h0] at hn
   · refine ⟨{
@@ -1909,9 +1887,7 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
           List.length_nil, zero_add]
         suffices k.toNat = k.toNat - 1 + 1 by simpa
         grind
-      · intro i hi
-        have hi : i < k.toNat - 1 := by simpa using hi
-        simp [hi]
+      · simp_all
 
 /-- There is at most one pentagonal case for a given `n`. -/
 theorem pentagonal_subsingleton (hn : 0 < n) :
@@ -1992,16 +1968,11 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         rw [Set.ncard_eq_one]
         use x
         rw [← hsingle, Set.setOf_and]
-        simp only [Set.inter_eq_left, Set.setOf_subset_setOf]
-        intro y hy
-        rwa [show y = x from pentagonal_subsingleton hn hy hx]
+        simp_all
       have hnodd : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           ¬Even x.delta.length}.ncard = 0 := by
         rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
-        rw [Set.disjoint_left]
-        intro y hy
-        rw [show y = x from pentagonal_subsingleton hn hy hx]
-        simpa using heven
+        simp_all
       rw [Int.negOnePow_even _ (hkeven.mp heven), hneven, hnodd]
       simp
     · have hnodd : {x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
@@ -2009,16 +1980,11 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         rw [Set.ncard_eq_one]
         use x
         rw [← hsingle, Set.setOf_and]
-        simp only [Set.inter_eq_left, Set.setOf_subset_setOf]
-        intro y hy
-        rwa [show y = x from pentagonal_subsingleton hn hy hx]
+        simp_all
       have hneven : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           Even x.delta.length}.ncard = 0 := by
         rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
-        rw [Set.disjoint_left]
-        intro y hy
-        rw [show y = x from pentagonal_subsingleton hn hy hx]
-        simpa using heven
+        simp_all
       rw [Int.negOnePow_odd _ (by simpa using hkeven.not.mp heven), hneven, hnodd]
       simp
   · rw [(phiCoeff_eq_zero_iff _).mpr hpen]
@@ -2064,14 +2030,12 @@ theorem phiCoeff_eq (n : ℕ) : phiCoeff n = phiCoeff' n := by
     apply Finset.sum_congr rfl
     intro x hx
     unfold even at hx
-    rw [Finset.mem_filter] at hx
-    exact Even.neg_one_pow hx.2
+    simp_all
   have hodd : ∑ x ∈ odd, (-1) ^ x.parts.card = ∑ x ∈ odd, -1 := by
     apply Finset.sum_congr rfl
     intro x hx
     unfold odd at hx
-    rw [Finset.mem_filter] at hx
-    exact Odd.neg_one_pow (by simpa using hx.2)
+    simp_all
   rw [heven, hodd, Finset.sum_neg_distrib]
   simp_rw [Finset.sum_const, nsmul_one, Int.add_neg_eq_sub]
   congr 2
@@ -2105,8 +2069,7 @@ theorem eularPhi : HasProd (fun (n : ℕ+) ↦ (1 - PowerSeries.monomial n (1 : 
     parts := x.val.map (↑)
     parts_pos := by simp
     parts_sum := by
-      rw [Finset.mem_filter] at h
-      simpa using h.2.symm
+      simp_all
   }
   let g (x : n.Partition) (h : x ∈ Nat.Partition.distincts n) : Finset ℕ+ := Finset.mk
       (x.parts.map (Nat.toPNat')) (by
@@ -2120,8 +2083,7 @@ theorem eularPhi : HasProd (fun (n : ℕ+) ↦ (1 - PowerSeries.monomial n (1 : 
   · intro x hx
     suffices (Multiset.map PNat.val x.val).Nodup by simpa [f, Nat.Partition.distincts]
     refine (Multiset.nodup_map_iff_of_inj_on ?_).mpr x.nodup
-    intro a ha b hb hab
-    exact PNat.eq hab
+    simp_all
   · intro x hx
     rw [Finset.mem_filter, Finset.mem_powerset]
     constructor

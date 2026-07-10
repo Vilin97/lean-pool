@@ -47,9 +47,7 @@ private lemma exists_linearMap_of_ker {F V : Type*} [Field F] [AddCommGroup V] [
     rw [hquot, Module.finrank_fin_fun]
   let e : (V ⧸ L) ≃ₗ[F] (Fin n → F) := LinearEquiv.ofFinrankEq _ _ hrank
   refine ⟨e.toLinearMap.comp L.mkQ, ?_⟩
-  rw [LinearMap.ker_comp]
-  have he : LinearMap.ker e.toLinearMap = ⊥ := e.ker
-  rw [he, Submodule.comap_bot, Submodule.ker_mkQ]
+  simp_all
 
 /-- A member of the span of a finite family of functions is a linear combination of them. -/
 private lemma exists_coeffs_of_mem_span {F ι α : Type*} [Field F] [Fintype ι] {f : ι → α → F}
@@ -63,8 +61,7 @@ private lemma exists_nonzero_mulVec_zero {F : Type*} [Field F] {m k : ℕ} (hmk 
     (A : Matrix (Fin m) (Fin k) F) : ∃ v : Fin k → F, v ≠ 0 ∧ A.mulVec v = 0 := by
   have hker_ne : LinearMap.ker (Matrix.mulVecLin A) ≠ ⊥ := by
     apply LinearMap.ker_ne_bot_of_finrank_lt
-    rw [Module.finrank_fin_fun, Module.finrank_fin_fun]
-    omega
+    simp_all
   obtain ⟨v, hvker, hvne⟩ := (Submodule.ne_bot_iff _).mp hker_ne
   exact ⟨v, hvne, by simpa [LinearMap.mem_ker] using hvker⟩
 
@@ -190,10 +187,8 @@ lemma theorem_1_aux {X : Type*} [Finite X] (n : ℕ) (f : X → (Fin (n + 1) →
     by_contra hfx
     have hmem : f x ∈ LinearMap.ker M := by
       simpa [LinearMap.mem_ker] using hx
-    rw [hM] at hmem
-    exact hp_avoid x hfx hmem
-  · intro hx
-    simp [show f x = 0 by simpa using hx]
+    simp_all
+  · simp_all
 
 /--
 Base case of Theorem 1: `n + 1` equations over a small finite set can be replaced
@@ -344,8 +339,7 @@ private lemma exists_lift_of_subset_span_image {K V W : Type*} [Field K]
   haveI : Fintype U := Fintype.ofFinite U
   have hpre : ∀ y : U, ∃ v ∈ Submodule.span K S, φ v = y.1 := fun y => by
     have hyspan := hU_span y.2
-    rw [Submodule.span_image] at hyspan
-    exact hyspan
+    simp_all
   choose v hvspan hvmap using hpre
   refine ⟨Set.range v, Set.finite_range v, ?_, ?_, ?_⟩
   · rw [← Set.image_univ]
@@ -353,11 +347,7 @@ private lemma exists_lift_of_subset_span_image {K V W : Type*} [Field K]
   · rintro x ⟨y, rfl⟩
     exact hvspan y
   · ext y
-    constructor
-    · rintro ⟨x, ⟨u, rfl⟩, rfl⟩
-      simp [hvmap u, u.2]
-    · intro hy
-      exact ⟨v ⟨y, hy⟩, ⟨⟨y, hy⟩, rfl⟩, hvmap ⟨y, hy⟩⟩
+    simp_all
 
 /--
 Corollary 2: zero loci in affine `n`-space over a finite field can be defined using

@@ -66,8 +66,7 @@ by rw [ket_RCLike, ContinuousLinearMap.mul_one_apply]
 theorem bra_RCLike {𝕜 : Type*} [RCLike 𝕜] (x : 𝕜) :
   bra 𝕜 x = ContinuousLinearMap.mul 𝕜 𝕜 ((starRingEnd 𝕜) x) := by
   ext
-  simp only [innerSL_apply_apply, RCLike.inner_apply, mul_one, ContinuousLinearMap.mul_apply',
-    one_mul]
+  simp_all
 
 theorem bra_RCLike_one {𝕜 : Type*} [RCLike 𝕜] :
   bra 𝕜 (1 : 𝕜) = 1 :=
@@ -93,8 +92,7 @@ lemma bra_ket_apply {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] (x y : E) :
   (bra 𝕜 x) ∘L (ket 𝕜 y) = ket 𝕜 ⟪x, y⟫_𝕜 := by
   ext
-  simp_rw [ContinuousLinearMap.comp_apply, ket_one_apply]
-  rfl
+  simp_all
 
 lemma bra_ket_one_eq_inner {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] (x y : E) :
@@ -153,8 +151,7 @@ rfl
 theorem ket_eq_rankOne_one (x : E₁) :
   ket 𝕜 x = rankOne 𝕜 x 1 := by
   ext
-  simp only [ket_apply_apply, one_smul, rankOne_apply_apply_apply, RCLike.inner_apply, map_one,
-    mul_one]
+  simp_all
 theorem bra_eq_one_rankOne (x : E₁) :
   bra 𝕜 x = rankOne 𝕜 1 x := by
   ext
@@ -241,17 +238,13 @@ theorem ContinuousLinearMap.commutes_with_all_iff [CompleteSpace E₁] {T : E₁
     by_cases H : ∀ x : E₁, x = 0
     · use 0
       simp_rw [ContinuousLinearMap.ext_iff]
-      intro x
-      rw [H x, zero_smul, map_zero, zero_apply]
+      simp_all
     push Not at H
     obtain ⟨x, hx⟩ := H
     use (⟪x,x⟫_𝕜)⁻¹ * ⟪adjoint T x, x⟫_𝕜
     simp_rw [ContinuousLinearMap.ext_iff, smul_apply,
       one_apply_eq_self, mul_smul, h', smul_smul]
-    rw [inv_mul_cancel₀]
-    · simp_rw [one_smul, forall_true_iff]
-    · rw [inner_self_ne_zero]
-      exact hx
+    simp_all
   · rintro ⟨α, hα⟩ S
     simp_rw [Commute, SemiconjBy, mul_def, hα, comp_smul, smul_comp, one_def, comp_id, id_comp]
 
@@ -263,8 +256,7 @@ theorem ContinuousLinearMap.centralizer [CompleteSpace E₁] :
 theorem ContinuousLinearMap.scalar_centralizer :
     {x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1}.centralizer = @Set.univ (E₁ →L[𝕜] E₁) := by
   simp_rw [Set.centralizer, Set.ext_iff, Set.mem_setOf, Set.mem_univ, iff_true]
-  rintro x y ⟨α, rfl⟩
-  simp only [Algebra.smul_mul_assoc, one_mul, Algebra.mul_smul_comm, mul_one]
+  simp_all
 
 theorem ContinuousLinearMap.centralizer_centralizer [CompleteSpace E₁] :
     (@Set.univ (E₁ →L[𝕜] E₁)).centralizer.centralizer = Set.univ := by
@@ -284,13 +276,11 @@ theorem colinear_of_rankOne_self_eq_rankOne_self
       exact h
   simp_rw [ContinuousLinearMap.ext_iff, rankOne_apply] at h
   by_cases Hx : x = 0
-  · use 1
-    simp_rw [Hx, Units.val_one, one_smul, eq_comm, ← this, Hx]
+  · simp_all
   · have ugh : inner 𝕜 y x ≠ 0 := by
       intro hy
       specialize h x
-      rw [hy, zero_smul, smul_eq_zero, inner_self_eq_zero, or_self_iff] at h
-      contradiction
+      simp_all
     use Units.mk0 (inner 𝕜 y x / inner 𝕜 x x)
         (div_ne_zero ugh ((@inner_self_ne_zero 𝕜 _ _ _ _ _).mpr Hx))
     simp_rw [div_eq_inv_mul, Units.val_mk0, mul_smul, ← h, smul_smul,
@@ -312,15 +302,13 @@ theorem colinear_of_ne_zero_rankOne_eq_rankOne [CompleteSpace E₂] [CompleteSpa
   specialize h₂ a
   have h₃ : a = (⟪d, b⟫_𝕜 / ⟪b, b⟫_𝕜) • c := by
     calc a = (⟪b, b⟫_𝕜 / ⟪b, b⟫_𝕜) • a := by
-          rw [div_self, one_smul]
-          simp only [ne_eq, inner_self_eq_zero]; exact hb
+          simp_all
       _ = (1 / ⟪b, b⟫_𝕜) • (⟪b, b⟫_𝕜 • a) := by simp only [smul_smul]; ring_nf
       _ = (1 / ⟪b, b⟫_𝕜) • (⟪d, b⟫_𝕜 • c) := by rw [h]
       _ = (⟪d, b⟫_𝕜 / ⟪b, b⟫_𝕜) • c := by simp only [smul_smul]; ring_nf
   have h₄ :=
   calc b = (⟪a, a⟫_𝕜 / ⟪a, a⟫_𝕜) • b := by
-          rw [div_self, one_smul]
-          simp only [ne_eq, inner_self_eq_zero]; exact ha
+          simp_all
       _ = (1 / ⟪a, a⟫_𝕜) • (⟪a, a⟫_𝕜 • b) := by simp only [smul_smul]; ring_nf
       _ = (1 / ⟪a, a⟫_𝕜) • (⟪c, a⟫_𝕜 • d) := by rw [h₂]
       _ = (1 / ⟪a, a⟫_𝕜) • (⟪c, (⟪d, b⟫_𝕜 / ⟪b, b⟫_𝕜) • c⟫_𝕜 • d) := by rw [h₃]
@@ -351,9 +339,7 @@ theorem ket_eq_ket_iff {x y : E₁} :
 
 theorem bra_eq_bra_iff {x y : E₁} :
   bra 𝕜 x = bra 𝕜 y ↔ x = y := by
-  simp only [ContinuousLinearMap.ext_iff, bra_apply_apply,
-    ← @sub_eq_zero _ _ ⟪_, _⟫_𝕜, ← @sub_eq_zero _ _ x]
-  simp only [← inner_sub_left, forall_inner_eq_zero_iff]
+  simp_all
 
 theorem ContinuousLinearMap.ext_inner_map {F : Type _} [NormedAddCommGroup F]
   [InnerProductSpace 𝕜 F] (T S : E₁ →L[𝕜] F) :
@@ -533,15 +519,13 @@ theorem rankOne.left_sub {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCommG
     [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₁] [InnerProductSpace 𝕜 E₂]
     (x y : E₁) (z : E₂) :
     rankOne 𝕜 (x - y) z = rankOne 𝕜 x z - rankOne 𝕜 y z := by
-  ext w
-  simp []
+  simp_all
 
 theorem rankOne.smul_right_to_left {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
     [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₁] [InnerProductSpace 𝕜 E₂]
     (x : E₁) (y : E₂) (r : 𝕜) :
     rankOne 𝕜 x (r • y) = rankOne 𝕜 (star r • x) y := by
-  ext w
-  simp [smul_smul]
+  simp_all
 
 theorem rankOne.eq_zero_iff {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₁] [InnerProductSpace 𝕜 E₂]
@@ -638,16 +622,7 @@ theorem OrthonormalBasis.repr_adjoint {ι 𝕜 E : Type*} [RCLike 𝕜] [NormedA
   letI := FiniteDimensional.complete 𝕜 E
   ContinuousLinearMap.adjoint b.repr.toContinuousLinearEquiv.toContinuousLinearMap
     = b.repr.symm.toContinuousLinearEquiv.toContinuousLinearMap := by
-  haveI := Module.Basis.finiteDimensional_of_finite b.toBasis
-  haveI := FiniteDimensional.complete 𝕜 E
-  ext x
-  apply ext_inner_left 𝕜
-  intro
-  simp_rw [ContinuousLinearMap.adjoint_inner_right, ContinuousLinearEquiv.coe_apply,
-    LinearIsometryEquiv.coe_toContinuousLinearEquiv]
-  rw [PiLp.inner_apply]
-  simp_rw [OrthonormalBasis.repr_apply_apply, RCLike.inner_apply, inner_conj_symm,
-    ← inner_smul_right, ← inner_sum, OrthonormalBasis.sum_repr_symm]
+  simp_all
 
 theorem OrthonormalBasis.repr_adjoint'
   {ι 𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]

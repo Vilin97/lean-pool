@@ -100,8 +100,7 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
         ne_eq, mul_eq_zero, inv_eq_zero, OfNat.ofNat_ne_zero, or_false, f]
       intro h
       have hf0 := g_sqf hz₀
-      rw [Pi.pow_apply, h, zero_pow two_ne_zero] at hf0
-      exact f_noz hz₀ hf0
+      simp_all
     refine e2.eventually_constant_or_nhds_le_map_nhds.resolve_left (fun h => ?_) (image_mem_map e1)
     simp [EventuallyEq.deriv_eq h] at dg_nonzero
   obtain ⟨r, r_pos, hr⟩ := Metric.mem_nhds_iff.mp gU_nhd

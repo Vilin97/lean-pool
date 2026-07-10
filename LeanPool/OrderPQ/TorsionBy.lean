@@ -31,8 +31,7 @@ def Subgroup.torsionBy' (d : ℕ) : Subgroup α where
   one_mem' := by
     rw [Set.mem_setOf_eq, one_pow]
   inv_mem' {x} hx := by
-    rw [Set.mem_setOf_eq] at hx ⊢
-    rwa [inv_pow, inv_eq_one]
+    simp_all
 
 @[to_additive (attr := simp)]
 lemma Subgroup.mem_torsionBy' (d : ℕ) (a : α) :

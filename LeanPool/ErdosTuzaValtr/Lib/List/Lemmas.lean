@@ -87,9 +87,7 @@ theorem List.ofMirrorMirror {l : List αᵒᵈ} : l.ofMirror.Mirror = l := by
   | nil => rfl
   | cons a l ih =>
     rw [List.ofMirror, List.Mirror] at ih ⊢
-    simp only [map_reverse, map_map, reverse_reverse, map_cons,
-      OrderDual.toDual_ofDual] at ih ⊢
-    rw [ih]
+    simp_all
 
 @[simp]
 theorem Finset.ofMirrorMirror [LinearOrder α] {S : Finset αᵒᵈ} : S.ofMirror.Mirror = S :=
@@ -151,8 +149,7 @@ theorem List.getLast?_cons_append_cons (a b : α) (l1 l2 : List α) :
   induction l1 generalizing a with
   | nil => simp only [nil_append, getLast?_cons_cons]
   | cons c l1 ih =>
-    rw [cons_append, getLast?_cons_cons]
-    exact ih c
+    simp_all
 
 /-- Split off the head of a list given a witness that `a` is its head. -/
 def List.takeHead' {a : α} : ∀ {l : List α} (_ : a ∈ l.head?), Σ' t, l = a :: t

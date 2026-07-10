@@ -36,8 +36,7 @@ instance : Kripke.ReflexiveTransitiveConnectedFrameClass.IsNonempty := by
   · exact ⟨fun _ => trivial⟩
   · constructor
     · exact ⟨fun _ _ _ _ _ => trivial⟩
-    · intro _ _ _ _
-      exact Or.inl trivial
+    · intro _ simp_all
 
 
 namespace Hilbert

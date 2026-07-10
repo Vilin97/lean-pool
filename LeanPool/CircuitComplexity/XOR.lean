@@ -46,8 +46,7 @@ theorem xorBool_flip (N : Nat) (x : BitString N) (a : Fin N) :
     · subst ha
       rw [Function.update_self]
       have htail : Function.update x 0 (!x 0) ∘ Fin.succ = x ∘ Fin.succ := by
-        funext i; change Function.update x 0 (!x 0) (Fin.succ i) = x (Fin.succ i)
-        exact Function.update_of_ne (Fin.succ_ne_zero i) (!x 0) x
+        funext i; simp_all
       rw [htail, Bool.not_xor]
     · rw [Function.update_of_ne (Ne.symm ha)]
       have hpos : 0 < a.val := Nat.pos_of_ne_zero (fun h => ha (Fin.ext h))

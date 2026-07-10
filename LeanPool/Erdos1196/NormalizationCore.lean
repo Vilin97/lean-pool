@@ -226,8 +226,7 @@ used in the normalization argument.
 private lemma abs_harmonic_pred_sub_log_le_one (x : ℕ) (hx : 1 ≤ x) :
     |(harmonic (x - 1) : ℝ) - Real.log (x : ℝ)| ≤ 1 := by
   by_cases hx1 : x = 1
-  · subst hx1
-    norm_num [harmonic_zero]
+  · simp_all
   have hlower : Real.log (x : ℝ) ≤ (harmonic (x - 1) : ℝ) :=
     by simpa [Nat.sub_add_cancel hx] using log_add_one_le_harmonic (x - 1)
   have hupper0 : (harmonic (x - 1) : ℝ) ≤ 1 + Real.log ((x - 1 : ℕ) : ℝ) :=
@@ -268,14 +267,9 @@ private lemma sum_sigma_divisorsAntidiagonal_eq_sum_product
     rcases Finset.mem_filter.1 hp with ⟨hpprod, hp1pos, hp2pos, hplt⟩
     refine Finset.mem_sigma.2 ⟨Finset.mem_range.2 hplt,
       Nat.mem_divisorsAntidiagonal.2 ⟨rfl, mul_ne_zero hp1pos.ne' hp2pos.ne'⟩⟩
-  · intro z hz
-    rcases z with ⟨n, q, m⟩
-    simp only [Sigma.mk.injEq, heq_eq_eq, and_true]
-    exact (Nat.mem_divisorsAntidiagonal.1 (Finset.mem_sigma.1 hz).2).1
-  · intro p hp
-    simp
-  · intro z hz
-    rfl
+  · simp_all
+  · simp_all
+  · simp_all
 
 /-- The small-prime divisor sum can be rewritten over the divisor antidiagonal. -/
 private lemma smallPrimeDivisorSum_eq_sum_divisorsAntidiagonal (Y n : ℕ) :

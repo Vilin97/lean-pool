@@ -135,9 +135,7 @@ private abbrev localConvergenceAtBasePointProof
     exact hCA_π'.congr (h_evt_eq'.fderiv.symm)
   -- P is self-adjoint (from tubular_neighborhood_projection property 9)
   have hP_self_adj : ∀ x y : E d, @inner ℝ _ _ (P x) y = @inner ℝ _ _ x (P y) := by
-    intro x y
-    simp only [hP_def, h_fderiv_eq']
-    exact hπ'_self_adj mstar hmstar x y
+    simp_all
   -- P is idempotent (from π ∘ π = π, differentiated at m⋆ ∈ S)
   have hP_idem : ∀ x : E d, P (P x) = P x := by
     -- π ∘ π = π everywhere (π maps into S and fixes S)
@@ -147,8 +145,7 @@ private abbrev localConvergenceAtBasePointProof
       h_evt_eq'.differentiableAt_iff.mpr (hπ'_diff mstar hmstar)
     -- fderiv (π ∘ π) = fderiv π (since π ∘ π = π as functions)
     have h_eq : fderiv ℝ (fun x => π (π x)) mstar = fderiv ℝ π mstar := by
-      have : (fun x => π (π x)) = π := funext h_pipi
-      rw [this]
+      simp_all
     -- Chain rule: fderiv (π ∘ π) = (fderiv π mstar) ∘ (fderiv π mstar)
     have hπm : π mstar = mstar := hπ_fix mstar hmstar
     have h_chain : fderiv ℝ (fun x => π (π x)) mstar =

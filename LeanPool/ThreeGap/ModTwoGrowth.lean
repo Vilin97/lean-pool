@@ -64,9 +64,7 @@ theorem growth_additive_modTwo {d : ℕ}
   have key : ∀ i0 j0 : ℕ, i0 < j0 → j0 ≤ 2 ^ (d + 1) → sig i0 = sig j0 → False := by
     intro i0 j0 hlt hle hse
     have hqpar : Even (q (n + j0)) ↔ Even (q (n + i0)) := by
-      have h := congrArg Prod.snd hse
-      simp only [hsig, decide_eq_decide] at h
-      exact h.symm
+      simp_all
     have hppar : ∀ k, Even (p (n + j0) k) ↔ Even (p (n + i0) k) := by
       intro k
       have h := congrFun (congrArg Prod.fst hse) k

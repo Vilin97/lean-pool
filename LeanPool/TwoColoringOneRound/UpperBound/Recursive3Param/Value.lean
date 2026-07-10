@@ -84,8 +84,7 @@ lemma aSlice_eq_of_t2_le_b_lt_t {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t) :
         have ht' : (t : ℝ) < a := lt_of_not_ge hat
         have : (c : ℝ) < 0 := by
           have ha2 : ¬ (a : ℝ) < t2 := not_lt_of_ge (le_trans t2_le_t ht'.le)
-          have hat' : ¬ (a : ℝ) ≤ t := not_le_of_gt ht'
-          simpa [ha2, hat'] using hca
+          simp_all
         exact (not_lt_of_ge (show (0 : ℝ) ≤ c from c.property.1) this)
       · intro hat
         by_cases ha2 : (a : ℝ) < t2
@@ -111,9 +110,7 @@ lemma aSlice_eq_of_t2_le_b_lt_t {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t) :
             by_cases hat : (a : ℝ) ≤ t <;> simp [ha2, hat, ht20]
           have : (c : ℝ) < t2 := lt_of_lt_of_le hca hz0expr_le_t2
           exact hc' (show c < t2 from this)
-        · intro ha2
-          have hctR : (c : ℝ) < t := hct
-          simpa [ha2] using hctR
+        · simp_all
       exact (hL.trans hR.symm)
     · have hct' : ¬ c < t := hct
       have hR : a ∈ (if c < t2 then Set.Iic t else if c < t then Set.Iio t2 else ∅) ↔ False := by
@@ -131,8 +128,7 @@ lemma aSlice_eq_of_t2_le_b_lt_t {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t) :
               · simpa [ha2, hat] using (t.property.1 : (0 : ℝ) ≤ t)
           have : (c : ℝ) < t := lt_of_lt_of_le hca hz0_le
           exact hct' (show c < t from this)
-        · intro hf
-          exact False.elim hf
+        · simp_all
       exact (hL.trans hR.symm)
 
 lemma aSlice_eq_of_t_lt_b {b c : Rand} (hb : t < b) :
@@ -163,8 +159,7 @@ lemma aSlice_eq_of_t_lt_b {b c : Rand} (hb : t < b) :
           by_contra hat
           have : (c : ℝ) < t := by simpa [hat] using hca
           exact hct (show c < t from this)
-        · intro hat
-          simp [hat, hc1]
+        · simp_all
       exact (hL.trans hR.symm)
     · have hc1' : ¬ (c : ℝ) < 1 := hc1
       have hR : a ∈ (if c < t then Set.univ else if (c : ℝ) < 1 then Set.Iio t else ∅) ↔ False := by
@@ -179,8 +174,7 @@ lemma aSlice_eq_of_t_lt_b {b c : Rand} (hb : t < b) :
               by_cases hat : (a : ℝ) < t <;> simp [hat, (le_of_lt t_lt_one)]
             exact lt_of_lt_of_le hca hzle
           exact hc1' this
-        · intro hf
-          exact False.elim hf
+        · simp_all
       exact (hL.trans hR.symm)
 
 private lemma z0_eq_of_t1_le_b_lt_t2 {a b : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2) :
@@ -289,8 +283,7 @@ private lemma mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t2 {a b c : Rand}
   by_cases hab : (a : ℝ) ≤ b
   · by_cases ha1 : (a : ℝ) < t1
     · have hct : (c : ℝ) < t := lt_trans hc2R t2_lt_t
-      refine ⟨fun _ => hab, fun _ => ?_⟩
-      simpa [ha1, hab] using hct
+      simp_all
     · refine ⟨fun _ => hab, fun _ => ?_⟩
       simpa [ha1, hab] using hc2R
   · have hab' : (b : ℝ) < a := lt_of_not_ge hab
@@ -323,17 +316,8 @@ private lemma mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t2 {a b c : Rand}
               else 0) := by
       simpa [hab] using hnot'
     refine ⟨?_, ?_⟩
-    · intro hlt
-      have hlt' :
-          (c : ℝ) <
-            (if (a : ℝ) < t1 then (t : ℝ)
-              else if (a : ℝ) < t2 then (b : ℝ)
-              else if (a : ℝ) ≤ t then (t1 : ℝ)
-              else 0) := by
-        simpa [hab] using hlt
-      exact False.elim (hnot'' hlt')
-    · intro hab''
-      exact False.elim (hab hab'')
+    · simp_all
+    · simp_all
 
 private lemma mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t {a b c : Rand}
     (hb1 : t1 ≤ b) (hb2 : b < t2) (hc2 : ¬ c < t2) (hct : c < t) :
@@ -365,10 +349,8 @@ private lemma mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t {a b c : Rand}
           else 0) ≤ c := by
       simpa [hz0] using hle
     refine ⟨?_, ?_⟩
-    · intro hlt
-      exact False.elim ((not_lt_of_ge hle') hlt)
-    · intro hat1
-      exact (ha1 hat1).elim
+    · simp_all
+    · simp_all
 
 private lemma mem_aSlice_of_t1_le_b_lt_t2_of_not_c_lt_t {a b c : Rand}
     (hb1 : t1 ≤ b) (hb2 : b < t2) (hct : ¬ c < t) :
@@ -394,8 +376,7 @@ private lemma mem_aSlice_of_t1_le_b_lt_t2_of_not_c_lt_t {a b c : Rand}
               simp [ha1, hab, ha2, hat, h0]
     have : (c : ℝ) < t := lt_of_lt_of_le hca hz0_le
     exact hct (show c < t from this)
-  · intro hf
-    exact False.elim hf
+  · simp_all
 
 lemma aSlice_eq_of_t1_le_b_lt_t2 {b c : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2) :
     aSlice b c =
@@ -498,12 +479,7 @@ end RealHelpers
 /-- The image of `Icc a b ⊆ Rand` under the coercion is the real interval `Icc a b`. -/
 private lemma image_val_Icc (a b : Rand) :
     (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
-  ext y
-  constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact hx
-  · intro hy
-    exact ⟨⟨y, ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩⟩, hy, rfl⟩
+  simp_all
 
 /-- For `b ∈ Rand`, the order ideal `Iic b` is the closed interval `Icc 0 b`. -/
 private lemma Iic_eq_Icc_zero (b : Rand) : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := by

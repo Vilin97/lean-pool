@@ -77,8 +77,7 @@ lemma arg_pow (n : ℕ) (f : ℕ → ℂ) (hf : Tendsto f atTop (𝓝 0)) : ∀�
     simp only [gt_iff_lt, dist_zero_right, eventually_atTop,
       dist_self_add_left, arg_one, Real.norm_eq_abs, comp_apply] at *
     by_cases hn0 : n = 0
-    · rw [hn0]
-      simp only [pow_zero, arg_one, CharP.cast_eq_zero, zero_mul, implies_true, exists_const]
+    · simp_all
     · have hpi : 0 < π / n := div_pos Real.pi_pos (by exact_mod_cast Nat.pos_of_ne_zero hn0)
       obtain ⟨a, hA⟩ := h3 (π / n) hpi
       obtain ⟨a2, ha2⟩ := hf (1/2) (one_half_pos)
@@ -108,8 +107,7 @@ lemma arg_pow2 (n : ℕ) (f : ℍ → ℂ) (hf : Tendsto f atImInfty (𝓝 0)) :
       use {r : ℝ | 1 ≤ r}
       refine ⟨?_, ?_⟩
       · use 1
-        intro b hb
-        aesop
+        simp_all
       simp only [preimage_setOf_eq, subset_refl]
     · have hpi : 0 < π / n := div_pos Real.pi_pos (by exact_mod_cast Nat.pos_of_ne_zero hn0)
       have hA1 := h3 (π / n) hpi
@@ -119,9 +117,7 @@ lemma arg_pow2 (n : ℕ) (f : ℍ → ℂ) (hf : Tendsto f atImInfty (𝓝 0)) :
       obtain ⟨a2, ha2, hA2⟩ := hA2
       use min a a2
       refine ⟨by
-        rw [atImInfty] at *
-        simp only [inf_eq_inter, inter_mem_iff, mem_comap, mem_atTop_sets] at *
-        refine ⟨ha1, ha2⟩, ?_⟩
+        simp_all, ?_⟩
       intro b hb
       rw [arg_pow_aux n (1 + f b)
         (one_add_abs_half_ne_zero (hA2 b (mem_of_mem_inter_right hb)))]

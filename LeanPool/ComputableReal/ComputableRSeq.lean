@@ -870,11 +870,9 @@ theorem val_inv (x : ComputableℝSeq) : x⁻¹.val = x.val⁻¹ := by
   · rw [h, inv_zero, inv_def, inv]
     split
     next h =>
-      let _ := (x.sign_pos_iff.1 h).ne'
-      contradiction
+      simp_all
     next h =>
-      let _ := (x.sign_neg_iff.1 h).ne
-      contradiction
+      simp_all
     next h => exact val_zero
   · rwa [inv_eq_safeInv, val_safeInv]
 

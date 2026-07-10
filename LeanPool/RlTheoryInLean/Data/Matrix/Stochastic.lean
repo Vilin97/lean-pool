@@ -360,13 +360,11 @@ theorem smat_nonexpansive_in_l1 (Q : Matrix S S ℝ) [RowStochastic Q] :
     convert h1 using 2 with j
     congr 1
     have := congrFun hxy j
-    simp at this
-    exact this.symm
+    simp_all
   have hnorm2 : (‖WithLp.toLp 1 (x - y)‖₊ : ℝ) = ∑ i, |x i - y i| := by
     rw [coe_nnnorm]
     have := l1_norm_eq_sum (WithLp.toLp 1 (x - y))
-    simp only [Pi.sub_apply] at this
-    exact this
+    simp_all
   have : ∑ j, |∑ i, (x i - y i) * Q i j| ≤ ∑ i, |x i - y i| := by
     calc
       ∑ j, |∑ i, (x i - y i) * Q i j|
@@ -385,8 +383,7 @@ theorem smat_nonexpansive_in_l1 (Q : Matrix S S ℝ) [RowStochastic Q] :
       apply sum_congr rfl
       · intro i _; simp [(hQ i).rowsum]
   refine (NNReal.coe_le_coe.mp ?_)
-  rw [hnorm, hnorm2]
-  linarith
+  simp_all
 
 theorem smat_pow_nonexpansive_in_l1 [DecidableEq S] (Q : Matrix S S ℝ) [RowStochastic Q] :
     ∀ n (x y : S → ℝ),
@@ -565,8 +562,7 @@ theorem pos_of_stationary
     · exact h0
     · exact absurd h0 (ne_of_gt hn)
   have := hμ.rowsum
-  simp_rw [hμ0] at this
-  simp at this
+  simp_all
 
 
 /-- The Cesaro average of the first `n + 1` iterates of a stochastic vector. -/
@@ -630,17 +626,12 @@ lemma cesaro_average_almost_invariant
         rw [Finset.sum_sub_distrib, Matrix.sum_vecMul]
       _ = ‖WithLp.toLp 1 ((n + 1 : ℝ)⁻¹ • (∑ k ∈ Finset.range (n + 1),
           (x₀ ᵥ* P ^ (k + 1) - x₀ ᵥ* P ^ k)))‖ := by
-        congr 3
-        apply Finset.sum_congr rfl
-        intro k _
-        exact hstep k
+        simp_all
       _ = ‖WithLp.toLp 1 ((n + 1 : ℝ)⁻¹ • (x₀ ᵥ* P ^ (n + 1) - x₀ ᵥ* P ^ 0))‖ := by
         congr 2
         rw [← Finset.sum_range_sub (f := fun k => x₀ ᵥ* P ^ k)]
       _ = ‖(n + 1 : ℝ)⁻¹ • WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1) - x₀)‖ := by
-        rw [← WithLp.toLp_smul]
-        congr 2
-        simp only [pow_zero, Matrix.vecMul_one]
+        simp_all
       _ = |(n + 1 : ℝ)⁻¹| * ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1) - x₀)‖ := by
         rw [norm_smul, Real.norm_eq_abs]
       _ = (n + 1 : ℝ)⁻¹ * ‖WithLp.toLp 1 (x₀ ᵥ* P ^ (n + 1) - x₀)‖ := by
@@ -797,8 +788,7 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
     hμstationary, ?hmixing⟩
   case hCpos =>
     have h₁ : 0 < 1 - (K : ℝ) := by simp [hf.1]
-    have h₂ : 0 < 2 / (K : ℝ) := by simp [hKpos]
-    exact _root_.mul_pos h₂ (by simp [h₁])
+    simp_all
   case hρpos => apply Real.rpow_pos_of_pos hKpos
   case hρlt1 =>
     apply Real.rpow_lt_one

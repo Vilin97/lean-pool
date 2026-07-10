@@ -42,9 +42,7 @@ noncomputable def chain
           | [y] =>
             have h : ¬evaluateSSeq (M, w_ih) (f (r 𝕏.α y)) := by
               have 𝕏h_x_ih := 𝕏.step x_ih
-              have 𝕏h_x_ih := by simpa [r_def, p_def, -Finset.union_singleton] using 𝕏h_x_ih
-              convert w_ih_prop using 2
-              rw [𝕏h_x_ih, r_def]
+              simp_all
               ⟨y, w_ih, h⟩
           | [] => False.elim (by have := 𝕏.step x_ih; simp [r_def, p_def] at this)
           | y :: z :: l => False.elim (by have := 𝕏.step x_ih; simp [r_def, p_def] at this)

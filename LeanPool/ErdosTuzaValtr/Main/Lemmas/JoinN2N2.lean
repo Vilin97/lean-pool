@@ -33,14 +33,10 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
   have bc2_in : (b::c2).In S := by rw [List.cons_in]; exact ⟨b_in_S, c2_in_S⟩
   rcases List.takeLast h_b_c2 with ⟨c, c3, eq_c2⟩
   have c_in_S : c ∈ S := by
-    have h_in := bc2_in
-    rw [eq_c2] at h_in
-    exact h_in c (by simp)
+    simp_all
   have hc2' : C.NCup (n + 2) (x :: (c3 ++ [c])) := by rw [← eq_c2]; exact hc2
   have hc_last : c ∈ (x :: (c3 ++ [c])).getLast? := by
-    rw [List.getLast?_cons_of_ne_nil (by simp), List.getLast?_append_of_ne_nil _ (by simp),
-      List.getLast?_singleton]
-    rfl
+    simp_all
   have hxc : x < c := hc2'.head_lt_getLast x c (by simp) hc_last
   by_cases haxc : C.Cup3 a x c
   · apply ncup_is_ngon (by omega)
@@ -49,36 +45,23 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
       exact ⟨hc1.left, haxc, by rw [Config.Cup.pair]; exact hxc⟩
     · rw [show c1 ++ [a, x, c] = c1 ++ [a, x] ++ [c] by simp, List.length_append, hc1.2,
         List.length_singleton]
-    · rw [show c1 ++ [a, x, c] = c1 ++ [a, x] ++ [c] by simp, List.append_in, List.append_in,
-        List.cons_in, List.cons_in, List.cons_in]
-      exact ⟨⟨c1_in_S, a_in_S, x_in_S, List.nil_in⟩, c_in_S, List.nil_in⟩
+    · simp_all
   · have key : C.Cup (a :: (c3 ++ [c])) := by
       have hbc2 : C.Cup (b :: c2) := by rw [eq_c2]; exact hc2'.tail.left
       rw [← eq_c2]
       exact hbc2.extend_left sab a_in_S hab bc2_in (by simp)
     have key_in : (a :: (c3 ++ [c])).In S := by
-      rw [List.cons_in]
-      refine ⟨a_in_S, ?_⟩
-      have h_in := bc2_in
-      rw [eq_c2] at h_in
-      exact h_in
+      simp_all
     refine ⟨[a, x, c], a :: (c3 ++ [c]), ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩, ?_, key_in⟩
     · simp
     · refine ⟨?_, ?_⟩
-      · rw [List.isChain_cons_cons, List.isChain_cons_cons]
-        exact ⟨hax, hxc, List.isChain_singleton c⟩
+      · simp_all
       · rw [show ([a, x, c] : List α) = [] ++ a :: x :: c :: [] by simp, List.chain3'_append_cons3]
         exact ⟨List.chain3'_pair a x, haxc, List.chain3'_pair x c⟩
     · simp
     · exact key
     · rw [List.head?_cons, List.head?_cons]
-    · have hc_last2 : c ∈ (a :: (c3 ++ [c])).getLast? := by
-        rw [List.getLast?_cons_of_ne_nil (by simp), List.getLast?_append_of_ne_nil _ (by simp),
-          List.getLast?_singleton]
-        rfl
-      rw [Option.mem_def] at hc_last2
-      rw [hc_last2]
-      rfl
+    · simp_all
     · rw [show a :: (c3 ++ [c]) = a :: c3 ++ [c] by simp, List.length_append, List.length_cons,
         List.length_singleton, List.length_cons, List.length_cons, List.length_cons,
         List.length_nil]
@@ -87,8 +70,7 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
       have := hc2'.2
       rw [List.length_cons, List.length_append, List.length_singleton] at this
       omega
-    · rw [List.cons_in, List.cons_in, List.cons_in]
-      exact ⟨a_in_S, x_in_S, c_in_S, List.nil_in⟩
+    · simp_all
 
 theorem Config.join_n2_n2_case_tt (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 : List α)
     (lab : C.Label S) (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)

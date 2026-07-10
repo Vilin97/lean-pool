@@ -127,10 +127,8 @@ theorem linearIndependent_B : LinearIndependent ℂ b.B := by
       intro i
       rw [hsInner_smul_right, b.ortho k i]
       split <;> simp
-    rw [Finset.sum_congr rfl (fun i _ => hterm i), Finset.sum_ite_eq]
-    simp
-  rw [hc] at h1
-  simpa [hsInner] using h1.symm
+    simp_all
+  simp_all
 
 /-- The basis cardinality is the dimension of the dynamical Lie algebra. -/
 theorem dlaDim_eq : dlaDim gens = b.dim := by
@@ -162,10 +160,8 @@ theorem casimir_hsInner_self : hsInner b.casimir b.casimir = (b.dim : ℂ) := by
       intro k
       rw [hsInner_kronecker, b.ortho i k]
       split <;> simp
-    rw [Finset.sum_congr rfl (fun k _ => hk k), Finset.sum_ite_eq]
-    simp
-  rw [Finset.sum_congr rfl (fun i _ => hi i)]
-  simp
+    simp_all
+  simp_all
 
 /-- **Step 9b (contraction).** `⟪C, H ⊗ H⟫ = P_g(H)` — the Casimir contracts to the
 `g`-purity. -/
@@ -202,8 +198,7 @@ theorem gPurity_basis_elem (i : Fin b.dim) : b.gPurity (b.B i) = 1 := by
   rw [gPurity]
   have hterm : ∀ j, (hsInner (b.B j) (b.B i)) ^ 2 = if j = i then (1 : ℂ) else 0 := by
     intro j; rw [b.ortho j i]; split <;> simp
-  rw [Finset.sum_congr rfl fun j _ => hterm j, Finset.sum_ite_eq']
-  simp
+  simp_all
 
 end DLAHermBasis
 

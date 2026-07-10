@@ -129,9 +129,7 @@ lemma val_func {k} (f : L.Func k) (v) :
   simp only [val_func]
   congr
   funext i
-  cases i using Fin.cases with
-  | zero => rfl
-  | succ i => exact Fin.elim0 i
+  simp_all
 
 @[simp] lemma val_func₂ (f : L.Func 2) (t u) :
     val s e ε (func f ![t, u]) = s.func f ![t.val s e ε, u.val s e ε] :=
@@ -246,8 +244,7 @@ lemma val_toEmpty [DecidableEq ξ] (t : Semiterm L ξ n) (h : t.freeVariables = 
     simp only [val_func, Semiterm.toEmpty]
     have : ∀ i, (v i).freeVariables = ∅ := by
       simpa [Semiterm.freeVariables_func, Finset.biUnion_eq_empty] using h
-    congr 1; funext i
-    exact ih i (this i)
+    simp_all
 
 end Semiterm
 
@@ -336,9 +333,7 @@ lemma _root_.LO.FirstOrder.Semiformula.Eval.of_eq
     Eval s e ε (rel r ![t]) ↔ s.rel r ![t.val s e ε] := by
   simp only [eval_rel]; apply of_eq; congr
   funext i
-  cases i using Fin.cases with
-  | zero => rfl
-  | succ i => exact Fin.elim0 i
+  simp_all
 
 @[simp] lemma eval_rel₂ {r : L.Rel 2} (t₁ t₂ : Semiterm L ξ n) :
     Eval s e ε (rel r ![t₁, t₂]) ↔ s.rel r ![t₁.val s e ε, t₂.val s e ε] := by
@@ -355,9 +350,7 @@ lemma eval_nrel {k} {r : L.Rel k} {v} :
     Eval s e ε (nrel r ![t]) ↔ ¬s.rel r ![t.val s e ε] := by
   simp only [eval_nrel]; apply of_eq; congr
   funext i
-  cases i using Fin.cases with
-  | zero => rfl
-  | succ i => exact Fin.elim0 i
+  simp_all
 
 @[simp] lemma eval_nrel₂ {r : L.Rel 2} (t₁ t₂ : Semiterm L ξ n) :
     Eval s e ε (nrel r ![t₁, t₂]) ↔ ¬s.rel r ![t₁.val s e ε, t₂.val s e ε] := by
@@ -560,11 +553,9 @@ lemma eval_toEmpty [DecidableEq ξ] {φ : Semiformula L ξ n} (hp : φ.freeVaria
   case hverum => simp
   case hfalsum => simp
   case hand φ ψ ihp ihq =>
-    simp [ihp (e := e) (by simp [by simpa [Finset.union_eq_empty] using hp]), ihq (e := e) (by simp
-      [by simpa [Finset.union_eq_empty] using hp])]
+    simp [ihp (e := e) (by simp [by simpa [Finset.union_eq_empty] using hp]), ihq (e := e) (by simp_all)]
   case hor φ ψ ihp ihq =>
-    simp [ihp (e := e) (by simp [by simpa [Finset.union_eq_empty] using hp]), ihq (e := e) (by simp
-      [by simpa [Finset.union_eq_empty] using hp])]
+    simp [ihp (e := e) (by simp [by simpa [Finset.union_eq_empty] using hp]), ihq (e := e) (by simp_all)]
   case hall φ ih => simp [fun x ↦ ih (e := (x :> e)) (by simpa using hp)]
   case hex φ ih => simp [fun x ↦ ih (e := (x :> e)) (by simpa using hp)]
 
@@ -575,10 +566,7 @@ lemma eval_close {ε} (φ : SyntacticFormula L) :
   · intro h f
     refine (eval_iff_of_funEqOn φ ?_).mp (h (fun x ↦ f x))
     intro x hx; simp [Rew.fixitr_fvar, lt_fvSup_of_fvar? hx]
-  · intro h f
-    refine (eval_iff_of_funEqOn φ ?_).mp (h (fun x ↦ if hx :
-        x < φ.fvSup then f ⟨x, by simp [hx]⟩ else ε 0))
-    intro x hx; simp [Rew.fixitr_fvar, lt_fvSup_of_fvar? hx]
+  · simp_all
 
 lemma eval_close₀ [Nonempty M] (φ : SyntacticFormula L) :
     Evalb s ![] (∀∀₀φ) ↔ ∀ f, Evalf s f φ := by

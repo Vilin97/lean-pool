@@ -96,17 +96,7 @@ private lemma im_B_eq_zero (a : A → B) (b : B → C) (a_surj : Function.Surjec
     [IsPointedMap a] [IsPointedMap b] (exb : IsExactAt a b) :
     Set.range b = {default} := by
   rw [IsExactAt, Set.range_eq_univ.mpr a_surj] at exb
-  ext y
-  constructor
-  · rintro ⟨x, rfl⟩
-    have hx : x ∈ b ⁻¹' ({default} : Set C) := by
-      rw [exb]
-      exact Set.mem_univ x
-    simpa using hx
-  · intro hy
-    rw [Set.mem_singleton_iff] at hy
-    subst y
-    exact ⟨default, IsPointedMap.map_default⟩
+  simp_all
 
 private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective d)
     [IsPointedMap c] [IsPointedMap d] (exd : IsExactAt c d) :
@@ -120,12 +110,7 @@ private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective
     apply @d_inj x default
     rw [hx]
     exact Eq.symm IsPointedMap.map_default
-  have : {default} = Set.range c := this.symm.trans exd
-  apply Set.eq_univ_of_forall
-  intro x
-  have hx : c x ∈ Set.range c := ⟨x, rfl⟩
-  rw [← this] at hx
-  exact hx
+  simp_all
 
 /-- `C = {0}` if there is an exact sequence `A --a-> B --b-> C --c-> D --d-> E`
 of five pointed sets such that `a` is surjective and `d` is injective. -/

@@ -54,8 +54,7 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
       simp_rw [RCLike.star_def, RCLike.conj_mul] at h
       norm_cast at h
       constructor <;> intro H
-      · rw [H, norm_zero, zero_pow (two_ne_zero), sq_eq_zero_iff, norm_eq_zero] at h
-        exact h
+      · simp_all
       · rw [H, norm_zero, zero_pow (two_ne_zero), eq_comm, sq_eq_zero_iff, norm_eq_zero] at h
         exact h
     by_cases h' : x = 0
@@ -153,13 +152,10 @@ theorem isDiagonal_eq {R : Type _} [Zero R] [DecidableEq n] (A : Matrix n n R) :
   · intro h i j
     by_cases H : i = j
     · simp_rw [H, of_apply, if_true, diag]
-    · rw [of_apply, h _ _ H, ite_eq_right_iff]
-      intros
-      contradiction
+    · simp_all
   · rintro h i j hij
     specialize h i j
-    simp_rw [of_apply, hij, if_false] at h
-    exact h.symm
+    simp_all
 
 open scoped BigOperators
 

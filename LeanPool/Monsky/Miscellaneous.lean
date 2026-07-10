@@ -54,16 +54,14 @@ lemma sign_mul_pos {a b : ℝ} (ha : 0 < a) : Real.sign (a * b) = Real.sign b :=
 lemma sign_pos' {a : ℝ} (h : Real.sign a = 1) : 0 < a := by
   by_contra hnonpos; simp only [not_lt] at hnonpos
   by_cases h0 : a = 0
-  · rw [Real.sign_eq_zero_iff.mpr h0] at h
-    linarith
+  · simp_all
   · rw [Real.sign_of_neg (lt_of_le_of_ne hnonpos h0 )] at h
     linarith
 
 lemma sign_neg' {a : ℝ} (h : Real.sign a = -1) : a < 0 := by
   by_contra hnonneg; simp only [not_lt] at hnonneg
   by_cases h0 : a = 0
-  · rw [Real.sign_eq_zero_iff.mpr h0] at h
-    linarith
+  · simp_all
   · rw [Real.sign_of_pos (lt_of_le_of_ne hnonneg (fun a_1 ↦ h0 a_1.symm))] at h
     linarith
 
@@ -142,11 +140,7 @@ lemma forall_exists_pos_swap {α : Type} [Finite α] {P : ℝ → α → Prop}
       have hS : (image fδ univ).Nonempty := by rwa [image_nonempty, univ_nonempty_iff]
       use min' (image fδ univ) hS
       refine ⟨?_,?_⟩
-      · rw [gt_iff_lt, Finset.lt_min'_iff]
-        intro y hy
-        have ⟨x,_,hx⟩ := mem_image.1 hy
-        rw [←hx]
-        exact (hfδ x).1
+      · simp_all
       · intro x
         apply h (fδ x) x (hfδ x).2
         exact min'_le _ _ (mem_image_of_mem fδ (mem_univ x))

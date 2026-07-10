@@ -123,17 +123,14 @@ theorem corrector_centerSq_full_step_eq_cross_sq {n : Nat}
     apply Finset.sum_congr rfl
     intro i _
     have hp := corrector_component_product_full_step w d hdir i
-    rw [hp]
-    ring
+    simp_all
   have hscalar :
       ((addStep w d 1).tau * (addStep w d 1).kappa - mu w) ^ 2 =
         (d.dtau * d.dkappa) ^ 2 := by
     have hp := corrector_scalar_product_full_step w d hdir
-    rw [hp]
-    ring
+    simp_all
   unfold centerSq
-  rw [hmu]
-  exact congrArg₂ (fun a b : ℝ => a + b) hsum hscalar
+  simp_all
 
 
 /-! ## Elementary estimates for the corrector obligation -/
@@ -191,8 +188,7 @@ theorem corrector_component_second_order_upper {n : Nat}
               ring
       _ = (mu w - w.x i * w.s i) ^ 2 -
               4 * (w.x i * w.s i) * (d.dx i * d.ds i) := by
-              rw [hc]
-              ring
+              simp_all
   nlinarith
 
 /-- Scalar analogue of `corrector_component_second_order_upper`. -/
@@ -214,8 +210,7 @@ theorem corrector_scalar_second_order_upper {n : Nat}
               ring
       _ = (mu w - w.tau * w.kappa) ^ 2 -
               4 * (w.tau * w.kappa) * (d.dtau * d.dkappa) := by
-              rw [hc]
-              ring
+              simp_all
   nlinarith
 
 
@@ -785,11 +780,7 @@ theorem ytmStepConstant_pos : 0 < ytmStepConstant := by
 theorem ytmStepConstant_le_one : ytmStepConstant ≤ 1 := by
   unfold ytmStepConstant
   have hsqrt_ge_one : (1 : ℝ) ≤ Real.sqrt (8 : ℝ) := by
-    have hsqrt_sq : (Real.sqrt (8 : ℝ)) ^ 2 = 8 := by
-      rw [Real.sq_sqrt]
-      norm_num
-    have hsqrt_nonneg : 0 ≤ Real.sqrt (8 : ℝ) := Real.sqrt_nonneg 8
-    nlinarith
+    simp_all
   have hden_pos : 0 < (8 : ℝ) ^ 2 * Real.sqrt (8 : ℝ) := by
     positivity
   rw [div_le_iff₀ hden_pos]
@@ -798,9 +789,7 @@ theorem ytmStepConstant_le_one : ytmStepConstant ≤ 1 := by
 /-- The homogenized dimension is at least one. -/
 theorem one_le_hdim (n : Nat) : (1 : ℝ) ≤ hdim n := by
   unfold hdim
-  have hn : (0 : ℝ) ≤ (n : ℝ) := by
-    exact_mod_cast Nat.zero_le n
-  linarith
+  simp_all
 
 /-- The square root of the homogenized dimension is positive. -/
 theorem sqrt_hdim_pos (n : Nat) : 0 < Real.sqrt (hdim n) := by

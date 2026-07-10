@@ -54,8 +54,7 @@ lemma toFun_rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
 
 lemma rwTargetPt_eq {f g : C(X, Y)} (point : X) (gf : g = f) :
     rwTargetPt point gf = ofHom f point := by
-  ext x
-  exact congr_fun (congr_arg ContinuousMap.toFun gf) x
+  simp_all
 
 end Hom
 
@@ -79,8 +78,7 @@ lemma toFun_rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = 
 
 lemma rwTargetPt_eq {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
     rwTargetPt point gf = ofHom' f point := by
-  ext x
-  exact congr_fun (congr_arg (ContinuousMap.toFun ∘ TopCat.Hom.hom) gf) x
+  simp_all
 
 end Hom'
 
@@ -132,13 +130,10 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
       have h1 : (f ≫ inv f) a₁ = (f ≫ inv f) a₂ := by
         change (inv f) (f a₁) = (inv f) (f a₂)
         rw [ha]
-      rw [CategoryTheory.IsIso.hom_inv_id] at h1
-      exact h1
+      simp_all
     · intro b
       refine ⟨(inv f) b, ?_⟩
-      have : (inv f ≫ f) b = b := by
-        rw [CategoryTheory.IsIso.inv_hom_id]; rfl
-      exact this
+      simp_all
   · intro bf
     constructor
     obtain ⟨g, ⟨gl, gr⟩⟩ := Function.bijective_iff_has_inverse.mp bf
@@ -165,8 +160,7 @@ lemma toFun_rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
 
 lemma rwTargetPt_eq {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
     rwTargetPt point gf = ⟨f, rfl⟩ := by
-  ext x
-  exact congr_fun gf x
+  simp_all
 
 end Hom
 
@@ -326,8 +320,7 @@ lemma toFun_rwTargetPt
 
 lemma rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
     rwTargetPt n x₀ gf = inducedPointedHom n x₀ f := by
-  unfold rwTargetPt inducedPointedHom
-  rw [PointedTopCat.Hom.rwTargetPt_eq]
+  simp_all
 
 end inducedPointedHom
 
@@ -355,8 +348,7 @@ lemma toFun_rwTargetPt
 lemma rwTargetPt_eq
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
     rwTargetPt n x₀ gf = inducedPointedHom' n x₀ f := by
-  unfold rwTargetPt inducedPointedHom'
-  rw [PointedTopCat.Hom'.rwTargetPt_eq]
+  simp_all
 
 end inducedPointedHom'
 

@@ -263,8 +263,7 @@ end «lp_section_2»
     constructor
     · intro h
       exact h.2 (by simp [bvar])
-    · intro h
-      exact ⟨fun _ => h, fun _ => h⟩
+    · simp_all
 
 namespace GoedelNumber
 
@@ -339,9 +338,7 @@ lemma val_operator {k} (o : Operator L k) (v) :
   rw [val_operator]
   congr
   funext i
-  cases i using Fin.cases with
-  | zero => rfl
-  | succ i => exact Fin.elim0 i
+  simp_all
 
 @[simp] lemma val_operator₂ (o : Operator L 2) (t u) :
     val s e ε (o.operator ![t, u]) = o.val ![t.val s e ε, u.val s e ε] := by
@@ -351,9 +348,7 @@ lemma val_operator {k} (o : Operator L k) (v) :
   cases i using Fin.cases with
   | zero => rfl
   | succ i =>
-    cases i using Fin.cases with
-    | zero => rfl
-    | succ i => exact Fin.elim0 i
+    simp_all
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.val_comp (o₁ : Operator L k) (o₂ :
     Fin k → Operator L m) (v :
@@ -549,9 +544,7 @@ lemma eval_operator {k} {o : Operator L k} {v : Fin k → Semiterm L ξ n} :
   cases i using Fin.cases with
   | zero => rfl
   | succ i =>
-    cases i using Fin.cases with
-    | zero => rfl
-    | succ i => exact Fin.elim0 i
+    simp_all
 
 end «lp_section_5»
 

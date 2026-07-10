@@ -93,10 +93,7 @@ lemma bind_bind
     (f : B → Rose C) (g : A → Rose B) (t : Rose A)
     : bind f (bind g t) = bind (fun x ↦ bind f (g x)) t := by
   induction t with | mk label children ih =>
-  simp_all only [
-    bind.eq_1, List.map_append, List.map_map, label_bind, children_bind,
-    List.append_assoc, mk.injEq, List.append_cancel_left_eq, List.map_inj_left,
-    Function.comp_apply, implies_true, and_self]
+  simp_all
 
 @[simp]
 lemma bind_comp
@@ -118,10 +115,7 @@ lemma fold_eq_bind
     : fold (fun x xs ↦ ⟨(f x).label, (f x).children ++ xs⟩) = bind f := by
   ext t
   induction t with | mk label children ih
-  simp only [
-    fold.eq_1, bind.eq_1, mk.injEq, List.append_cancel_left_eq,
-    List.map_inj_left, true_and]
-  exact ih
+  simp_all
 
 @[simp]
 lemma map_mk
@@ -273,9 +267,7 @@ instance [Preorder A] : Preorder (Rose A) where
     · exact h₁.1.trans h₂.1
     · induction xs generalizing ys zs with
       | nil =>
-        simp_all only [
-          List.not_mem_nil, IsEmpty.forall_iff, implies_true,
-          List.forall₂_nil_left_iff, List.forall₂_same]
+        simp_all
       | cons _ _ ih' =>
         cases ys with
         | nil => simp only [List.forall₂_nil_right_iff, reduceCtorEq, and_false] at h₁
@@ -296,8 +288,7 @@ instance [PartialOrder A] : PartialOrder (Rose A) where
     · apply le_antisymm h₁ h₃
     · induction xs generalizing ys with
       | nil =>
-        simp only [List.forall₂_nil_left_iff] at h₂
-        simp only [h₂]
+        simp_all
       | cons _ _ ih' =>
         cases ys with
         | nil => simp only [List.forall₂_nil_left_iff, reduceCtorEq] at h₄

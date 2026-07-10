@@ -370,13 +370,7 @@ def unroll [Continuous F] : Nu F →𝒒 F (Nu F) where
 lemma roll_unroll [Continuous F] (x : Nu F) : roll (unroll x) = x := by
   rcases x with ⟨x⟩
   simp only [roll, unroll, QuasiBorelHom.coe_mk, Functor.map_comp_coe, mk.injEq]
-  ext n
-  cases n with
-  | zero => subsingleton
-  | succ n =>
-    simp only [
-      QuasiBorelHom.eq_comp, QuasiBorelHom.eq_id, Functor.map_id,
-      QuasiBorelHom.id_coe, Continuous.seq_unseq_coe, unshift_shift_coe]
+  simp_all
 
 @[simp]
 lemma unroll_roll [Continuous F] (x : F (Nu F)) : unroll (roll x) = x := by

@@ -76,18 +76,7 @@ variable [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
 theorem norm_tmul {𝕜 B C : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
     [NormedAddCommGroup C] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [FiniteDimensional 𝕜 B]
     [FiniteDimensional 𝕜 C] (x : B) (y : C) : ‖x ⊗ₜ[𝕜] y‖ = ‖x‖ * ‖y‖ := by
-  symm
-  calc
-    ‖x‖ * ‖y‖ = Real.sqrt (RCLike.re (inner 𝕜 x x)) * Real.sqrt (RCLike.re (inner 𝕜 y y)) := by
-      simp_rw [@norm_eq_sqrt_re_inner 𝕜]
-    _ = Real.sqrt (RCLike.re (inner 𝕜 x x) * RCLike.re (inner 𝕜 y y)) := by
-      rw [Real.sqrt_mul inner_self_nonneg]
-    _ = Real.sqrt (RCLike.re ((inner 𝕜 x x) * (inner 𝕜 y y))) := by
-      congr 1
-      simp only [RCLike.mul_re, @inner_self_im 𝕜, MulZeroClass.zero_mul, sub_zero]
-    _ = Real.sqrt (RCLike.re (inner 𝕜 (x ⊗ₜ[𝕜] y) (x ⊗ₜ[𝕜] y))) := by
-      rw [TensorProduct.inner_tmul]
-    _ = ‖x ⊗ₜ[𝕜] y‖ := by rw [@norm_eq_sqrt_re_inner 𝕜]
+  simp_all
 
 open scoped InnerProductSpace
 omit [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] in
@@ -344,10 +333,7 @@ noncomputable def TensorProduct.lidLinearIsometryEquiv
     (𝕜 ⊗[𝕜] E) ≃ₗᵢ[𝕜] E where
   toLinearEquiv := TensorProduct.lid _ _
   norm_map' x := by
-    rw [norm_eq_sqrt_re_inner (𝕜 := 𝕜)]
-    simp only [← LinearEquiv.coe_toLinearMap, ← LinearMap.adjoint_inner_left,
-      TensorProduct.lid_adjoint]
-    simp only [LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply, ← norm_eq_sqrt_re_inner]
+    simp_all
 
 /-- Tensor product equivalence for finite Euclidean spaces, using `R ⊗[R] R ≃ R`. -/
 noncomputable abbrev euclideanSpaceTensor' {R : Type*} [RCLike R] {ι₁ ι₂ : Type*}
@@ -368,8 +354,7 @@ lemma euclideanSpaceTensor'_apply {R : Type*} [RCLike R] {ι₁ ι₂ : Type*}
     x i.1 * y i.2
   rw [euclideanSpaceTensor_apply]
   change (TensorProduct.lid R R) (x i.1 ⊗ₜ[R] y i.2) = x i.1 * y i.2
-  rw [TensorProduct.lid_tmul]
-  rfl
+  simp_all
 
 open scoped FiniteDimensional
 theorem LinearIsometryEquiv.linearMap_adjoint {f : E ≃ₗᵢ[𝕜] F} :

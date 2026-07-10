@@ -225,9 +225,7 @@ theorem gColim_obj_sys_eq (T : GExpr) (hT : T.RootedConst) :
     exact ⟨gTower T (max n m), ⟨max n m, rfl⟩,
       gTower_le T hT (le_max_left n m), gTower_le T hT (le_max_right n m)⟩
   have hU : ∀ X, (gColim T hT).sys.mem X ↔ ∃ D ∈ ℱ, D.sys.mem X := by
-    intro X; constructor
-    · rintro ⟨n, hn⟩; exact ⟨gTower T n, ⟨n, rfl⟩, hn⟩
-    · rintro ⟨D, ⟨n, rfl⟩, hn⟩; exact ⟨n, hn⟩
+    simp_all
   apply NeighborhoodSystem.ext
   · intro W
     rw [T.obj_continuous hdir hne hsub hU W]
@@ -652,15 +650,13 @@ relations are
 theorem Subsystem.self_inj {α : Type*} {D : NeighborhoodSystem α} (h : D ◁ D) :
     h.inj = idMap D := by
   apply ApproximableMap.ext
-  intro X Y
-  rw [Subsystem.inj_rel, idMap_rel]
+  simp_all
 
 /-- On `D ◁ D`, the projection is the identity. -/
 theorem Subsystem.self_proj {α : Type*} {D : NeighborhoodSystem α} (h : D ◁ D) :
     h.proj = idMap D := by
   apply ApproximableMap.ext
-  intro X Y
-  rw [Subsystem.proj_rel, idMap_rel]
+  simp_all
 
 /-! ### The functor carries projection pairs: the token-level lemmas -/
 

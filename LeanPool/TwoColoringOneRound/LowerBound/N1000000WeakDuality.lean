@@ -303,8 +303,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
           apply Fin.ext
           exact hEq
         simp [this]
-      · intro he
-        simp at he
+      · simp_all
       · simp [e]
     simpa [xEdge, e] using this
   -- Commute the finite sums for the μ term.
@@ -380,9 +379,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     have h0 :
         xEdge x + (∑ i : Var, x i * muCoeff i) - (∑ i : Var, x i * zCoeff i) = 0 := by
       -- Rewrite the edge-indicator sum to `xEdge x` without letting `simp` change its shape first.
-      have h := h0'
-      rw [hedge] at h
-      simpa using h
+      simp_all
     have :
         xEdge x = - (∑ i : Var, x i * muCoeff i) + (∑ i : Var, x i * zCoeff i) := by
       linarith
@@ -420,8 +417,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     have : (∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i))
         ≥ ∑ r : Block, (-frobInner (Z r) (S0 r)) := by
       refine Finset.sum_le_sum ?_
-      intro r _
-      exact hblock r
+      simp_all
     simpa [Finset.sum_neg_distrib] using this
   -- Combine and rewrite the dual objective.
   have hDual : dualObjective = -muSum - zSum0 := dualObjective_eq_expression

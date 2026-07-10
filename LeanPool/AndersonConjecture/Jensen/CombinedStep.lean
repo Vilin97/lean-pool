@@ -113,8 +113,7 @@ include T in theorem build_union_isNSubring
     -- Suffices to show every prime q ⊊ P∩U is zero
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
-    suffices q = ⊥ by rw [this, Ideal.height_bot]
-                      norm_cast
+    suffices q = ⊥ by simp_all
     by_contra hq_ne
     -- Pick nonzero s ∈ q and x ∈ P \ q
     obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
@@ -147,10 +146,7 @@ include T in theorem build_union_isNSubring
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
     haveI : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
-      lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
+      simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
 
 /- Process one (gens, c) pair: given NSubring Sk with R' ≤ Sk and #Sk < #T,
@@ -252,16 +248,7 @@ private def close_up_all_one_pass_aux_proof
   have hPairs_card : Cardinal.mk Pairs ≤ max Cardinal.aleph0 (Cardinal.mk R'.carrier) := by
     by_cases hfin : Finite R'.carrier
     · exact le_trans Cardinal.mk_le_aleph0 (le_max_left ..)
-    · haveI : Infinite R'.carrier := not_finite_iff_infinite.mp hfin
-      change Cardinal.mk (Finset R'.carrier × R'.carrier) ≤ _
-      calc Cardinal.mk (Finset R'.carrier × R'.carrier)
-          ≤ Cardinal.mk R'.carrier * Cardinal.mk R'.carrier := by
-            rw [Cardinal.mk_prod, Cardinal.lift_id, Cardinal.lift_id]
-            gcongr
-            exact Cardinal.mk_finset_of_infinite R'.carrier ▸ le_rfl
-        _ = Cardinal.mk R'.carrier := Cardinal.mul_eq_self
-            (Cardinal.aleph0_le_mk R'.carrier)
-        _ ≤ max Cardinal.aleph0 (Cardinal.mk R'.carrier) := le_max_right ..
+    · simp_all
   have hPairs_card_res : Cardinal.mk Pairs ≤
       max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) :=
     le_trans hPairs_card (max_le (le_max_left ..) R'.card_le)
@@ -330,8 +317,7 @@ private def close_up_all_one_pass_aux_proof
       fun q hq => (IHGood q hq).1.choose
     have hfq_R'_primes : ∀ q (hq : q < p) (r : R'.carrier), Prime r →
         Prime (⟨r.1, (hfq_R'_le q hq) r.2⟩ : (f q).carrier) := by
-      intro q hq r hr
-      exact (IHGood q hq).1.choose_spec r hr
+      simp_all
     have hfq_card : ∀ q (hq : q < p),
         Cardinal.mk (f q).carrier ≤ max Cardinal.aleph0 (Cardinal.mk R'.carrier) :=
       fun q hq => (IHGood q hq).2.1
@@ -599,8 +585,7 @@ include T in theorem build_union_isNSubring_nat
     change (Ideal.comap U.subtype P).height ≤ ↑(1 : ℕ)
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
-    suffices q = ⊥ by rw [this, Ideal.height_bot]
-                      norm_cast
+    suffices q = ⊥ by simp_all
     by_contra hq_ne
     obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
@@ -629,10 +614,7 @@ include T in theorem build_union_isNSubring_nat
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
     haveI : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
-      lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
+      simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
 
 /- ω-iteration: given a one-pass close-up procedure, iterate it to close all f.g. ideals. -/
@@ -677,8 +659,7 @@ include T in theorem close_up_all_omega
         Prime r → Prime (⟨r.1, hpass_mono h r.2⟩ : (pass b).carrier) := by
       intro a b hab
       induction hab with
-      | refl => intro r hr
-                exact (Subtype.ext rfl : (⟨r.1, _⟩ : (pass a).carrier) = r) ▸ hr
+      | refl => simp_all
       | @step m hle ih =>
         intro r hr
         exact (hpass_aext m).primes_preserved ⟨r.1, hpass_mono hle r.2⟩ (ih r hr)
@@ -844,8 +825,7 @@ include T in theorem combined_step
     have hr_unit : IsUnit r := by
       by_contra h_not
       have := (IsLocalRing.mem_maximalIdeal _).mpr h_not
-      rw [h] at this
-      exact hr_ne (by simpa using this)
+      simp_all
     exact hq_prime.ne_top (q.eq_top_of_isUnit_mem hr_mem hr_unit)
   -- Step 1: Adjoin a nonzero element of q to R, producing A-extension R₀ that catches q
   obtain ⟨R₀, hAext₀, t₀, ht₀_mem, ht₀_ne⟩ := adjoin_from_prime R q hq_prime hq_ne_bot

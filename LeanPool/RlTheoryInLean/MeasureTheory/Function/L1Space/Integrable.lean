@@ -32,8 +32,6 @@ lemma Integrable.finset_sum
   induction s using Finset.induction_on with
   | empty => simp
   | insert a s ha ih =>
-    simp only [Finset.sum_insert ha]
-    exact (hf a (Finset.mem_insert_self a s)).add
-      (ih (fun i hi => hf i (Finset.mem_insert_of_mem hi)))
+    simp_all
 
 end MeasureTheory

@@ -98,8 +98,7 @@ lemma harnack_ineq_cont_normalized_upper
         exact mul_le_mul_of_nonneg_left h_max (by positivity)
     _ = 1 / (2 * π) * ((1 - ‖z‖ ^ 2) / (1 - ‖z‖) ^ 2 *
         ∫ (t : ℝ) in 0..2 * π, u (cexp (↑t * I))) := by
-        congr 1
-        rw [← intervalIntegral.integral_const_mul]
+        simp_all
     _ = (1 + ‖z‖) / (1 - ‖z‖) := by
         rw [h_integral]
         field_simp [show (1 - ‖z‖) ≠ (0 : ℝ) by linarith]
@@ -152,8 +151,7 @@ lemma harnack_ineq_cont_normalized_lower
       ∫ (t : ℝ) in 0..2 * π, (1 - ‖z‖ ^ 2) / ‖cexp (↑t * I) - z‖ ^ 2 * u (cexp (↑t * I)) :=
     calc (1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * (2 * π)
         = ∫ (t : ℝ) in 0..2 * π, (1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * u (cexp (↑t * I)) := by
-          rw [intervalIntegral.integral_const_mul, h_univ_mean, h_f_zero]
-          ring
+          simp_all
       _ ≤ _ := h_mean_value
   linarith [mul_le_mul_of_nonneg_left key (by positivity : (0 : ℝ) ≤ 1 / (2 * π)),
             show (1 / (2 * π)) * ((1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * (2 * π)) =

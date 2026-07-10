@@ -553,9 +553,7 @@ lemma _root_.LO.Arith.IsMapping.union_of_disjoint_domain {m₁ m₂ : V}
 
 @[simp] lemma _root_.LO.Arith.IsMapping.singleton (x y : V) : IsMapping ({⟪x, y⟫} : V) := by
   intro x
-  simp only [domain_singleton, mem_singleton_iff, pair_ext_iff]
-  rintro rfl
-  exact ExistsUnique.intro y (by simp) (by rintro _ ⟨_, rfl⟩; simp)
+  simp_all
 
 lemma _root_.LO.Arith.IsMapping.insert {x y m : V}
     (h : IsMapping m) (disjoint : x ∉ domain m) : IsMapping (insert ⟪x, y⟫ m) := by

@@ -58,10 +58,7 @@ theorem interYs_single_not_subset_eq {YX : Set α} {Z : Set β} {X : Set α}
     (hXY : ¬ X ⊆ YX) : interYs V₁.master [(YX, Z)] X = V₁.master := by
   ext z
   rw [mem_interYs]
-  constructor
-  · rintro ⟨hm, _⟩; exact hm
-  · intro hz
-    exact ⟨hz, fun p hp hXp => by rw [List.mem_singleton] at hp; subst hp; exact absurd hXp hXY⟩
+  simp_all
 
 /-! ### The least element of a single step neighbourhood. -/
 

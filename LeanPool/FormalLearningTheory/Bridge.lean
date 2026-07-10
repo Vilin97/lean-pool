@@ -176,17 +176,13 @@ theorem shatters_iff_finset_shatters {X : Type u} [Fintype X] [DecidableEq X]
     have hx_in_t : x ∈ t ↔ f ⟨x, hxS⟩ = true := by
       simp only [t, Finset.mem_map, Finset.mem_filter, Finset.mem_attach, true_and,
         Function.Embedding.coeFn_mk]
-      constructor
-      · rintro ⟨⟨y, hyS⟩, hfy, rfl⟩; exact hfy
-      · intro hfx; exact ⟨⟨x, hxS⟩, hfx, rfl⟩
+      simp_all
     have hx_cx : x ∈ S ∩ conceptToFinset c ↔ c x = true := by
       simp only [Finset.mem_inter, conceptToFinset, Finset.mem_filter, Finset.mem_univ,
         true_and]
       exact ⟨fun h => h.2, fun h => ⟨hxS, h⟩⟩
     -- Combine: c x = true ↔ f ⟨x, hxS⟩ = true
-    have key : c x = true ↔ f ⟨x, hxS⟩ = true := by
-      rw [← hx_cx, hx_in_inter, hx_in_t]
-    cases hfx : f ⟨x, hxS⟩ <;> cases hcx : c x <;> simp_all
+    simp_all
 
 /-!
 ## B₄: VCDim Bridge (ours ↔ Mathlib's Finset.vcDim)
@@ -242,8 +238,7 @@ theorem vcdim_eq_finset_vcdim {X : Type u} [Fintype X] [DecidableEq X]
     · -- shatterer is empty, so sup = 0 = ⊥ ≤ anything
       rw [Finset.not_nonempty_iff_eq_empty] at h
       change (↑(𝒜.shatterer.sup Finset.card) : WithTop ℕ) ≤ _
-      rw [h, Finset.sup_empty]
-      exact bot_le
+      simp_all
 
 /-- VCDim is finite for finite concept classes over finite domains.
     This is a consequence of the bridge: Finset.vcDim is always finite (it's ℕ). -/
@@ -358,10 +353,7 @@ private theorem restrict_shatters_lift {X : Type u} [Fintype X] [DecidableEq X]
       exact hxS
     have hyT : (⟨y, hyS⟩ : ↥S) ∈ T := by
       have := ht hyt
-      simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at this
-      obtain ⟨⟨z, hzS⟩, hzT, hzy⟩ := this
-      have : (⟨y, hyS⟩ : ↥S) = ⟨z, hzS⟩ := Subtype.ext hzy.symm
-      rw [this]; exact hzT
+      simp_all
     constructor
     · exact ⟨⟨y, hyS⟩, hyT, rfl⟩
     · have hy_t' : (⟨y, hyS⟩ : ↥S) ∈ t' := by
@@ -540,9 +532,7 @@ theorem vcdim_to_ordinal_vcdim (X : Type u)
       (↑m) (WithTop.coe_lt_top m)
     have hS_shat : Shatters X C S := by
       by_contra hns
-      exact absurd hS_lt (not_lt.mpr (by
-        haveI : IsEmpty (Shatters X C S) := ⟨hns⟩
-        simp))
+      simp_all
     rw [iSup_pos hS_shat] at hS_lt
     calc (↑m : Ordinal) ≤ ↑S.card :=
           Nat.cast_le.mpr (le_of_lt (by exact_mod_cast hS_lt))
@@ -572,8 +562,7 @@ theorem vcdim_to_ordinal_vcdim (X : Type u)
           omega
         have hbound : VCDim X C ≤ ↑(n - 1) := by
           apply iSup₂_le
-          intro S hS
-          exact WithTop.coe_le_coe.mpr (this S hS)
+          simp_all
         rw [hv] at hbound
         have : n ≤ n - 1 := WithTop.coe_le_coe.mp hbound
         omega
@@ -706,9 +695,7 @@ theorem compression_bounds_vcdim (X : Type u)
         ≤ (Finset.range (k + 1)).sum (fun j => (A.powersetCard j).card) := by
           have : target ⊆ (Finset.range (k + 1)).biUnion (fun j => A.powersetCard j) := by
             intro S' hS'
-            simp only [htarget_def, Finset.mem_filter, Finset.mem_powerset] at hS'
-            simp only [Finset.mem_biUnion, Finset.mem_range]
-            exact ⟨S'.card, by omega, Finset.mem_powersetCard.mpr ⟨hS'.1, rfl⟩⟩
+            simp_all
           exact (Finset.card_le_card this).trans Finset.card_biUnion_le
       _ = (Finset.range (k + 1)).sum (fun j => (2 * n).choose j) := by
           simp [Finset.card_powersetCard, hA_card]

@@ -127,8 +127,7 @@ theorem lsmooth_qub {d : ℕ} (f : E d → ℝ) (L : ℝ≥0)
       convert h using 1
       · rfl
       · rfl
-      · funext s
-        simp
+      · simp_all
       · ring
     have h_comb := ((h1.sub h2).sub h3).sub h4
     simp only [sub_zero] at h_comb

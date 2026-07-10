@@ -28,8 +28,7 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
   have hsum : ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card =
       (X / M) * A.card := by
-    simp only [hblock]
-    rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
+    simp_all
   rw [hsum]
   linarith [partialBlock_valid_count_le b T S X]
 
@@ -142,8 +141,7 @@ lemma count_finite_prime_approx (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : 
       (∏ p ∈ S, (p : ℕ) ^ 2 : ℝ) := by
   have h := error_bound b hb T hT S X
   simp only [primeSquareProduct, localDensityProduct] at h
-  convert h using 2
-  simp only [Nat.cast_prod, Nat.cast_pow]
+  simp_all
 
 lemma hasProd_implies_finite_approx (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ)
     (hT : T ⊆ Finset.range b) (ε : ℝ) (hε : 0 < ε) :
@@ -304,13 +302,11 @@ lemma sdiff_subset_violations (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     obtain ⟨q, hq_dvd⟩ := not_squarefree_has_prime_sq_divisor (b * N + d) hd_not_sq
     refine ⟨q, ?_, Or.inr ⟨d, hd_mem, hq_dvd⟩⟩
     intro hqS
-    have := (hNS q hqS).2 d hd_mem
-    exact this hq_dvd
+    simp_all
   · obtain ⟨q, hq_dvd⟩ := not_squarefree_has_prime_sq_divisor N hSqN
     refine ⟨q, ?_, Or.inl hq_dvd⟩
     intro hqS
-    have := (hNS q hqS).1
-    exact this hq_dvd
+    simp_all
 
 lemma count_ge_finite_minus_violations (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ)
     (_hT : T ⊆ Finset.range b) (S : Finset Nat.Primes) (X : ℕ) :

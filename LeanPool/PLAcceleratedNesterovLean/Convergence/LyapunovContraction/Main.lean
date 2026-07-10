@@ -511,10 +511,7 @@ private abbrev lyapunovContractionProof
       set Fnprime := f x'n - fStar f with hFnprime_def
       -- Descent bound: Fn1 ≤ Fnprime - η/2·(‖Pg‖² + ‖P⊥g‖²)
       have hFn1_descent : Fn1 ≤ Fnprime - η / 2 * (‖P gn‖ ^ 2 + ‖gn - P gn‖ ^ 2) := by
-        have h_mid : Fn1 ≤ Fnprime - η / 2 * ‖gn‖ ^ 2 := by linarith [hFn'_bound, h_aim]
-        have h_eq : η / 2 * ‖gn‖ ^ 2 = η / 2 * (‖P gn‖ ^ 2 + ‖gn - P gn‖ ^ 2) := by
-          rw [hG_pyth]
-        linarith
+        simp_all
       -- Segment: √η·(⟨Pg,Pv⟩ + ⟨P⊥g,P⊥v⟩) ≥ Fnprime - Fn - εη/2·(‖Pv‖² + ‖P⊥v‖²)
       have h_segment_arith :
           Real.sqrt η * (@inner ℝ _ _ (P gn) (P sn.v) +

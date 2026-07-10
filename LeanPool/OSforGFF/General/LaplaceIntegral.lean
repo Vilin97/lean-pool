@@ -135,10 +135,7 @@ lemma glasser_integral_substitution_identity (c : ℝ) (hc : 0 < c) :
 
 /-- Split (0, ∞) = (0, 1] ∪ (1, ∞) -/
 private lemma Ioi_zero_eq_Ioc_union_Ioi : Ioi (0 : ℝ) = Ioc 0 1 ∪ Ioi 1 := by
-  ext x; simp only [mem_union, mem_Ioi, mem_Ioc]
-  constructor
-  · intro hx; by_cases h : x ≤ 1 <;> [exact .inl ⟨hx, h⟩; exact .inr (not_le.mp h)]
-  · intro h; cases h with | inl h => exact h.1 | inr h => exact lt_trans one_pos h
+  simp_all
 
 /-- The Glasser integrand is integrable on (0, ∞).
     Proof: On (0, 1], bounded by 1 on finite measure set.
@@ -223,9 +220,7 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
         · field_simp
     have h_int_image : IntegrableOn (fun v => exp (-(c/v - v)^2)) (Ici c) := by
       apply h_base.mono_set
-      intro v hv
-      simp only [mem_Ici, mem_Ioi] at hv ⊢
-      exact lt_of_lt_of_le hc hv
+      simp_all
     -- f(u) = c/u is antitone on (0, 1]
     have h_anti : AntitoneOn (fun u => c / u) (Ioc 0 1) := by
       intro x hx y hy hxy
@@ -332,8 +327,7 @@ lemma glasser_tendsto_atTop_at_zero (c : ℝ) (hc : 0 < c) :
     · rw [mem_nhdsWithin]; use Iio (1 : ℝ)
       refine ⟨isOpen_Iio, (zero_lt_one : (0 : ℝ) < 1), ?_⟩
       intro x hx
-      simp only [mem_inter_iff, mem_Ioi, mem_Iio, mem_Ioo] at hx ⊢
-      exact ⟨hx.2, hx.1⟩
+      simp_all
     · intro u hu; simp only [mem_Ioo] at hu; linarith
   have h_eq : (fun u => c / u - u) = (fun u => (-u) + (c / u)) := by ext u; ring
   rw [h_eq]
@@ -362,9 +356,7 @@ lemma glasser_strictAntiOn (c : ℝ) (hc : 0 < c) : StrictAntiOn (fun u => c / u
   -- c(y - x)/(xy) > 0 > x - y ✓
   have h1 : c / x - c / y = c * (y - x) / (x * y) := by field_simp
   have h2 : 0 < c * (y - x) / (x * y) := by
-    apply div_pos
-    · exact mul_pos hc (sub_pos.mpr hxy)
-    · exact mul_pos hx hy
+    simp_all
   have h3 : x - y < 0 := sub_neg_of_lt hxy
   calc c / y - y = c / x - (c / x - c / y) - y := by ring
     _ = c / x - c * (y - x) / (x * y) - y := by rw [h1]
@@ -393,9 +385,7 @@ lemma glasser_image_eq_univ (c : ℝ) (hc : 0 < c) :
   have hbot := glasser_tendsto_atBot_at_top c hc
   have h_at_sqrt : f (sqrt c) = 0 := by
     simp only [f]
-    have h : sqrt c ≠ 0 := ne_of_gt (sqrt_pos.mpr hc)
-    have h2 : c / sqrt c = sqrt c := by rw [div_eq_iff h, ← sq]; exact (sq_sqrt (le_of_lt hc)).symm
-    linarith
+    simp_all
   have h_sqrt_pos : sqrt c ∈ Ioi 0 := sqrt_pos.mpr hc
   have hpc : IsPreconnected (Ioi (0 : ℝ)) := isPreconnected_Ioi
   have hatTop_le : (atTop : Filter ℝ) ≤ 𝓟 (Ioi 0) := le_principal_iff.mpr (Ioi_mem_atTop 0)
@@ -442,10 +432,7 @@ theorem weighted_glasser_integral_eq_gaussian (c : ℝ) (hc : 0 < c) :
   -- The LHS of h_cov is ∫_ℝ exp(-w²) = √π
   have h_gaussian : ∫ w : ℝ, exp (-w^2) = sqrt π := by
     have h := integral_gaussian (1 : ℝ)
-    simp only [div_one] at h
-    convert h using 2
-    ext w
-    simp only [one_mul, neg_mul]
+    simp_all
   -- Transform h_cov: ∫_ℝ g = ∫_{Ioi 0} |f'| • (g ∘ f)
   -- i.e., √π = ∫_{Ioi 0} |f' u| * exp(-(c/u - u)²)
   simp only [smul_eq_mul, f, f', g] at h_cov

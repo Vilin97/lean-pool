@@ -328,17 +328,14 @@ def _root_.Dipath.Dihomotopy.hcomp (F : Dihomotopy p₀ q₀) (G : Dihomotopy p�
                 split_ifs with h
                 · have : ((a₂ x).2 : ℝ) ≤ 2⁻¹ := by convert h using 1; norm_num
                   have ha₂x : ((a₂ x).2 : ℝ) = 2⁻¹ := by linarith
-                  have : G (_, 0) = F (_, 1) := Eq.trans (G.source (a₂ x).1)
-                      (F.target (a₂ x).1).symm
-                  convert this <;> rw [ha₂x] <;> norm_num
+                  simp_all
                 · rfl
         _ = if h : ((a₂ x).2 : ℝ) ≤ 1/2
                 then Fₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ),
                   by { apply double_mem_I; convert h using 1; norm_num }⟩
                 else Gₕ.eval (a₂ x).1 ⟨2 * ((a₂ x).2 : ℝ) - 1,
                   by { apply double_sub_one_mem_I (le_of_lt _)
-                       convert h using 1
-                       norm_num }⟩
+                       simp_all⟩
               := rfl
         _ = (Fₕ.hcomp Gₕ) (a₂ x)
               := (Path.Homotopy.hcomp_apply Fₕ Gₕ (a₂ x)).symm
@@ -397,8 +394,7 @@ def _root_.Dipath.Dihomotopy.reparam (p : Dipath x y) (f : D(I,I)) (g : D(I,I))
       apply Subtype.coe_inj.mp
       change (σ (0 : I) : ℝ) * f x + (0 : ℝ) * g x = f x
       rw [h0]; ring
-    rw [hint]
-    rfl
+    simp_all
   map_one_left := fun x => by
     change p ((interpolate f.toContinuousMap g.toContinuousMap) (1, x)) = _
     have h0 : (σ (1 : I) : ℝ) = 0 := by simp
@@ -406,8 +402,7 @@ def _root_.Dipath.Dihomotopy.reparam (p : Dipath x y) (f : D(I,I)) (g : D(I,I))
       apply Subtype.coe_inj.mp
       change (σ (1 : I) : ℝ) * f x + (1 : ℝ) * g x = g x
       rw [h0]; ring
-    rw [hint]
-    rfl
+    simp_all
   prop' := fun t x hx => by
     rcases hx with hx | hx
     · have heq : g 0 = f 0 := hg₀.trans hf₀.symm

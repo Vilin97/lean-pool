@@ -49,8 +49,7 @@ private lemma injective_topDualPairing_flip : Function.Injective (topDualPairing
     have h :
         inner 𝕜 (x - y) (x - y) = inner 𝕜 (x - y) x - inner 𝕜 (x - y) y := by
       simpa using (inner_sub_right (𝕜 := 𝕜) (x := x - y) (y := x) (z := y))
-    rw [h]
-    exact hdiff
+    simp_all
   have : x - y = 0 := (inner_self_eq_zero).1 hself
   exact sub_eq_zero.mp this
 
@@ -81,8 +80,7 @@ lemma tendsto_zero_weakSpace_of_orthonormal {e : ℕ → E} (he : Orthonormal �
       Tendsto (fun n => Real.sqrt (‖inner 𝕜 (e n) y‖ ^ 2)) atTop (𝓝 (Real.sqrt (0 : ℝ))) :=
     (Real.continuous_sqrt.tendsto 0).comp hsq
   have hsimp : (fun n => Real.sqrt (‖inner 𝕜 (e n) y‖ ^ 2)) = fun n => ‖inner 𝕜 (e n) y‖ := by
-    funext n
-    simp [Real.sqrt_sq (norm_nonneg _ : 0 ≤ ‖inner 𝕜 (e n) y‖)]
+    simp_all
   have hnorm' : Tendsto (fun n => ‖inner 𝕜 (e n) y‖) atTop (𝓝 (0 : ℝ)) := by
     simpa [hsimp, Real.sqrt_zero] using hsqrt
   have hnorm : Tendsto (fun n => ‖inner 𝕜 y (e n)‖) atTop (𝓝 (0 : ℝ)) := by
@@ -110,9 +108,7 @@ lemma tendsto_zero_apply_of_isCompactOperator_of_orthonormal (T : E →L[𝕜] E
       have hn : ‖e n‖ = (1 : ℝ) := by
         simpa [Orthonormal] using he.1 n
       change (e n : E) ∈ Metric.closedBall (α := E) (0 : E) (1 : ℝ)
-      have : dist (e n) (0 : E) ≤ (1 : ℝ) := by
-        simp [dist_eq_norm, hn]
-      exact (Metric.mem_closedBall).2 this
+      simp_all
   have hweak : Tendsto ew atTop (𝓝 (0 : WeakSpace 𝕜 E)) := by
     simpa [ew] using tendsto_zero_weakSpace_of_orthonormal (𝕜 := 𝕜) (E := E) he
   have hT :

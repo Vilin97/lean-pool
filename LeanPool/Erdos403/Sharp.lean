@@ -82,10 +82,7 @@ theorem factSum_ne_of_leading_two {m M : ℕ} (hM : 2 ^ m < (M + 1)!) (h2 : 2 * 
   -- `2·M! < 2^m < (M+1)! = (M+1)·M!` forces `M ≥ 2`, so `M` is a valid positive digit index.
   have hM1 : 1 ≤ M := by
     by_contra h
-    have hle : (M + 1)! ≤ 2 * M ! := by
-      interval_cases M
-      decide
-    omega
+    simp_all
   refine not_factSum_of_digits (2 ^ m) ⟨M, hM1, ?_⟩ ⟨M, hM1, ?_⟩ S
   · exact two_le_factDigit_top hM (by omega)
   · exact two_le_factDigit_top (by omega) (by omega)
@@ -184,8 +181,7 @@ private theorem two_pow_reduce {m : ℕ} (hm : 10 ≤ m) :
   obtain ⟨k, rfl⟩ : ∃ k, m = 10 + k := ⟨m - 10, by omega⟩
   conv_lhs => rw [show k = 1620 * (k / 1620) + k % 1620 from (Nat.div_add_mod k 1620).symm]
   rw [two_pow_drop]
-  have : (10 + k - 10) % 1620 = k % 1620 := by omega
-  rw [this]
+  simp_all
 
 -- Base window (one full period): every `m ∈ [10, 1630)` has an offending factorial digit of
 -- `2^m` (resp. `2^m - 1`) at an index in `[1, 11]`. Proved **kernel-pure** (no `native_decide`):
@@ -336,8 +332,7 @@ private theorem segSub_true {d r : ℕ} (h : (segSub d r).1 = true) :
     · obtain ⟨j, rfl⟩ : ∃ j, k = 2 ^ n + j := ⟨k - 2 ^ n, by omega⟩
       have hsplit : adv^[2 ^ n + j] r = adv^[j] (segSub n r).2 := by
         rw [segSub_snd n r, Nat.add_comm, Function.iterate_add_apply]
-      rw [hsplit]
-      exact ih h.2 j (by omega)
+      simp_all
 
 private theorem base_offending :
     ∀ m ∈ Finset.Ico 10 1630, ∃ i ∈ Finset.Icc 1 11, 2 ≤ factDigit i (2 ^ m) := by

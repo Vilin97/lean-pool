@@ -130,11 +130,7 @@ private lemma phaseDistanceSqNorm_one_eq
     phaseDistanceSqNorm p 1 =
       (1 / Real.pi) * ∫ z : ℂ, ‖p.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
   unfold phaseDistanceSqNorm phaseDistanceSq
-  congr 1
-  apply integral_congr_ae
-  filter_upwards with z
-  have hz : (1 : ℂ) + p.eval z - 1 = p.eval z := by ring
-  rw [hz]
+  simp_all
 
 theorem LocalFockSPR_of_small_norm_exists_phase
     (p : Polynomial ℂ)
@@ -194,32 +190,17 @@ theorem LocalFockSPR_of_small_norm_exists_phase
         q.eval 0 = conj lam0 * w0 - 1 := by simpa [w0] using hq_eval_mul 0
         _ = (‖w0‖ : ℂ) - 1 := by rw [hw0_phase]
         _ = ((‖w0‖ - 1 : ℝ) : ℂ) := by simp
-    rw [hq0]
-    simp
+    simp_all
   have hsmallq :
       (1 / Real.pi) * ∫ z : ℂ, ‖q.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ≤
         (1 / 4601 : ℝ) ^ 2 := by
-    rw [← hdistNorm_eq]
-    exact hsmall0
+    simp_all
   have hlocal := LocalFockSPR_of_small_norm q hq_real hsmallq
   have hrho_eq :
       ∫ z : ℂ, (|‖1 + q.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) =
         ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-    apply integral_congr_ae
-    filter_upwards with z
-    have hone :
-        (1 : ℂ) + q.eval z = conj lam0 * ((1 : ℂ) + p.eval z) := by simp [q, mul_add, add_comm]
-    rw [hone, norm_mul, Complex.norm_conj, hlam0, one_mul]
+    simp_all
   refine ⟨conj lam0, by simpa [Complex.norm_conj] using hlam0, ?_⟩
-  calc
-    ∫ z : ℂ, ‖conj lam0 * ((1 : ℂ) + p.eval z) - 1‖ ^ 2 * Real.exp (-‖z‖ ^ 2)
-        = ∫ z : ℂ, ‖q.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-            apply integral_congr_ae
-            filter_upwards with z
-            rw [hq_eval_mul z]
-    _ ≤ 23003 ^ 2 *
-          ∫ z : ℂ, (|‖1 + q.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := hlocal
-    _ = 23003 ^ 2 *
-          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by rw [hrho_eq]
+  simp_all
 
 end FockSPR

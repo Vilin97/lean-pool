@@ -64,8 +64,7 @@ instance
             have : Sum.inl '' tᶜ = (Sum.inl '' t)ᶜ \ (Sum.inr (β := B) '' Set.univ) := by grind
             rw [this]
             apply MeasurableSet.diff
-            · apply MeasurableSet.compl
-              apply ih
+            · simp_all
             · apply MeasurableSpace.measurableSet_generateFrom
               simp only [Set.image_univ, Set.mem_setOf_eq, isOpen_range_inr]
           | iUnion f _ ih => simp only [Set.image_iUnion, MeasurableSet.iUnion ih]
@@ -81,8 +80,7 @@ instance
             have : Sum.inr '' tᶜ = (Sum.inr '' t)ᶜ \ (Sum.inl (α := A) '' Set.univ) := by grind
             rw [this]
             apply MeasurableSet.diff
-            · apply MeasurableSet.compl
-              apply ih
+            · simp_all
             · apply MeasurableSpace.measurableSet_generateFrom
               simp only [Set.image_univ, Set.mem_setOf_eq, isOpen_range_inl]
           | iUnion f _ ih => simp only [Set.image_iUnion, MeasurableSet.iUnion ih]

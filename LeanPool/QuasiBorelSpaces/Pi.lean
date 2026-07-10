@@ -43,8 +43,7 @@ lemma isHom_def (φ : ℝ → ∀ i, P i) : IsHom φ ↔ ∀ i, IsHom (φ · i) 
 @[fun_prop]
 lemma isHom_apply (i : I) : IsHom (fun (f : (i : I) → P i) ↦ f i) := by
   rw [QuasiBorelSpace.isHom_def]
-  simp only [isHom_def]
-  fun_prop
+  simp_all
 
 @[fun_prop]
 lemma isHom_pi {f : A → ∀ i, P i} (hf : ∀ i, IsHom (f · i)) : IsHom f := by

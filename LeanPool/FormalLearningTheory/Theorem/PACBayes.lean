@@ -209,9 +209,7 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
         Real.sqrt (Real.log (1 / (P.prob h * δ)) / (2 * ↑m)) } := by
     intro S hS
     simp only [Set.mem_compl_iff, Good, Set.mem_setOf_eq, not_forall] at hS
-    obtain ⟨h, hh⟩ := hS
-    push Not at hh
-    exact Set.mem_iUnion.mpr ⟨h, by simp only [Set.mem_setOf_eq]; linarith⟩
+    simp_all
   -- Per-hypothesis bounds
   have h_per : ∀ h : H, μ { S : Fin m → X |
       TrueErrorReal X (hs h) c D >
@@ -251,9 +249,7 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
             · positivity
         -- gap ≤ 1 ≤ 1 + emp ≤ emp + t (since t > 1 and emp ≥ 0)
         linarith
-      rw [h_empty]
-      simp only [MeasureTheory.measure_empty]
-      exact zero_le
+      simp_all
   -- Union bound + ∑ P(h)·δ = δ
   have h_compl_bound : μ Goodᶜ ≤ ENNReal.ofReal δ := by
     calc μ Goodᶜ

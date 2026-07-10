@@ -52,8 +52,7 @@ lemma smul_sym2 (g : G) (x y : V) : g • s(x, y) = s(g • x, g • y) :=
 instance : MulAction G (Sym2 V) where
   one_smul x := by
     refine Sym2.inductionOn x ?_
-    intro x y
-    simp
+    simp_all
   mul_smul g h x := by
     refine Sym2.inductionOn x ?_
     intro x y
@@ -65,8 +64,7 @@ instance : SMul G X.edgeSet where
     revert this
     generalize e.val = t
     refine Sym2.inductionOn t ?_
-    intro x y
-    simp⟩
+    simp_all⟩
 
 @[simp]
 lemma smul_edgeSet_coe (g : G) (e : X.edgeSet) : (g • e).val = g • e.val := rfl
@@ -87,8 +85,7 @@ lemma smul_mem_smul_of (g : G) (e : Sym2 V) (x : V) (h : x ∈ e) :
     g • x ∈ g • e := by
   revert h
   refine Sym2.inductionOn e ?_
-  intro a b h
-  simpa using h
+  simp_all
 
 @[simp]
 lemma smul_mem_smul_iff (g : G) (e : Sym2 V) (x : V) :

@@ -245,10 +245,7 @@ theorem sHom_app_generator {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U))
   change (((AddCommGrpCat.Hom.hom (eqToHom hObjU))
       ((AddCommGrpCat.Hom.hom (eqToHom hObjU.symm)) (1 : ULift ℤ))).down : ℤ) •
         ((ConcreteCategory.hom (F.map (homOfLE (le_rfl : U ≤ U)).op)) s) = s
-  rw [show (homOfLE (le_rfl : U ≤ U)).op = 𝟙 (op U) from Subsingleton.elim _ _]
-  rw [F.map_id]
-  rw [congrArg ULift.down h1]
-  simp
+  simp_all
 
 /-- The restriction of the distinguished generator of `constZ.zeroOutside V` to a smaller open
 `W ≤ V` corresponds to `1 : ULift ℤ` under the canonical identification with `ULift ℤ`. -/
@@ -266,8 +263,7 @@ theorem resGen_eqToHom_eq_one
     change eqToHom _ ≫ eqToHom
       (rfl : AddCommGrpCat.of (ULift ℤ) = AddCommGrpCat.of (ULift ℤ)) ≫
       eqToHom _ = eqToHom _
-    rw [eqToHom_trans_assoc]
-    simp [eqToHom_trans]
+    simp_all
   rw [hmap]
   simp [← ConcreteCategory.comp_apply, eqToHom_trans]
 
@@ -403,10 +399,7 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
     NatTrans.comp_app, ConcreteCategory.comp_apply,
     ← (CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).naturality_apply
       (homOfLE h).op (Presheaf.zeroOutside.generator U)]
-  exact congrArg
-    (fun s ↦ (ConcreteCategory.hom
-      ((CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).app (op V))) s)
-    hpresheaf
+  simp_all
 
 end zeroOutsideInt
 

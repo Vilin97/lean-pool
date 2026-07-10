@@ -40,9 +40,7 @@ noncomputable def phiToPS : MvPowerSeries (Fin 3) ℂ →+* PowerSeries ℂ wher
     simp only [PowerSeries.coeff_mk]
     erw [PowerSeries.coeff_mul]
     rw [MvPowerSeries.coeff_mul, Finsupp.antidiagonal_single, Finset.sum_map]
-    congr 1
-    ext ⟨a, b⟩
-    simp [PowerSeries.coeff_mk]
+    simp_all
   map_zero' := by
     ext n
     simp only [PowerSeries.coeff_mk, map_zero]
@@ -85,23 +83,13 @@ theorem coeff_sub_X_mul_divX
     from rfl]
   rw [MvPowerSeries.coeff_monomial_mul]
   split_ifs with hle hms
-  · exfalso
-    have := hle s
-    simp [Finsupp.single_eq_same] at this
-    omega
+  · simp_all
   · simp only [one_mul]
     simp only [sub_eq_zero]
     change f m = f (m - Finsupp.single s 1 + Finsupp.single s 1)
     rw [tsub_add_cancel_of_le hle]
   · simp
-  · exfalso
-    apply hle
-    intro i
-    simp only [Finsupp.single_apply]
-    split_ifs with heq
-    · subst heq
-      omega
-    · exact Nat.zero_le _
+  · simp_all
 
 open MvPowerSeries in
 /-- ker phiToPS = PPre. -/
@@ -237,20 +225,7 @@ theorem Q_height_one : Q.height = 1 := by
     simp [MvPowerSeries.coeff_X] at this
   refine le_antisymm hle ?_
   by_contra hlt
-  push Not at hlt
-  apply hne
-  rcases h : Q.height with _ | n
-  · exact absurd hle (by
-      rw [h]
-      exact not_le.mpr (by
-        exact_mod_cast (show 1 < (⊤ : ℕ∞) from WithTop.coe_lt_top 1)))
-  · have hlt' : n < 1 := by
-      have h1 := hlt
-      rw [h] at h1
-      exact WithTop.coe_lt_coe.mp h1
-    have hn : n = 0 := by omega
-    subst hn
-    rfl
+  simp_all
 
 lemma ψBar_mk (f : MvPowerSeries (Fin 3) ℂ) :
     ψBar (Ideal.Quotient.mk conjI f) = ψHom f :=
@@ -360,8 +335,7 @@ lemma coeff_negSubst (g : MvPowerSeries (Fin 2) ℂ) (m : Fin 2 →₀ ℕ) :
       rw [Finsupp.sum]
       exact Finset.sum_subset (Finset.subset_univ _)
         (fun i _ hi => by
-           simp only [Finsupp.mem_support_iff, ne_eq, not_not] at hi
-           exact hi)
+           simp_all)
         |>.trans (by simp [Finset.univ_fin2])
     rw [hsum]
     ring
@@ -380,8 +354,7 @@ lemma ψHom_coeff_odd_parity (f : MvPowerSeries (Fin 3) ℂ)
   have h2 : (2 : ℂ) • MvPowerSeries.coeff m (ψHom f) = 0 := by
     rw [two_smul]
     exact neg_eq_iff_add_eq_zero.mp h1
-  rw [smul_eq_mul] at h2
-  exact (mul_eq_zero.mp h2).resolve_left two_ne_zero
+  simp_all
 
 open MvPowerSeries in
 lemma Q_le_maximalIdeal : Q ≤ IsLocalRing.maximalIdeal T :=
@@ -422,25 +395,13 @@ theorem Q_not_isPrincipal : ¬ Q.IsPrincipal := by
     change MvPowerSeries.coeff _ (MvPowerSeries.monomial (Finsupp.single (0 : Fin 2) 1) 1 * _) =
       MvPowerSeries.coeff _ (MvPowerSeries.monomial (Finsupp.single (1 : Fin 2) 1) 1 * _) at h1
     rw [MvPowerSeries.coeff_monomial_mul, MvPowerSeries.coeff_monomial_mul] at h1
-    have hle : Finsupp.single (0 : Fin 2) 1 ≤ Finsupp.single (0 : Fin 2) 1 := le_refl _
-    have hnle : ¬ Finsupp.single (1 : Fin 2) 1 ≤ Finsupp.single (0 : Fin 2) 1 := by
-      intro h
-      have := h 1
-      simp at this
-    simp only [hle, ite_true, hnle, ite_false, tsub_self, one_mul] at h1
-    exact h1
+    simp_all
   have hconst_s : MvPowerSeries.constantCoeff (ψBar s) = 0 := by
     have h1 := congr_arg (MvPowerSeries.coeff (Finsupp.single (1 : Fin 2) 1)) hcross
     change MvPowerSeries.coeff _ (MvPowerSeries.monomial (Finsupp.single (0 : Fin 2) 1) 1 * _) =
       MvPowerSeries.coeff _ (MvPowerSeries.monomial (Finsupp.single (1 : Fin 2) 1) 1 * _) at h1
     rw [MvPowerSeries.coeff_monomial_mul, MvPowerSeries.coeff_monomial_mul] at h1
-    have hle : Finsupp.single (1 : Fin 2) 1 ≤ Finsupp.single (1 : Fin 2) 1 := le_refl _
-    have hnle : ¬ Finsupp.single (0 : Fin 2) 1 ≤ Finsupp.single (1 : Fin 2) 1 := by
-      intro h
-      have := h 0
-      simp at this
-    simp only [hle, ite_true, hnle, ite_false, tsub_self, one_mul] at h1
-    exact h1.symm
+    simp_all
   have ha_mem_Q : a ∈ Q := ha ▸ Submodule.mem_span_singleton_self a
   have ha_mem_M : a ∈ IsLocalRing.maximalIdeal T := Q_le_maximalIdeal ha_mem_Q
   have hconst_a : MvPowerSeries.constantCoeff (ψBar a) = 0 := by
@@ -459,8 +420,7 @@ theorem Q_not_isPrincipal : ¬ Q.IsPrincipal := by
       rw [MvPowerSeries.isUnit_iff_constantCoeff]
       exact Ne.isUnit hf
     have hmk_unit : IsUnit (Ideal.Quotient.mk conjI f) := hf_unit.map _
-    have hnonunit := (IsLocalRing.mem_maximalIdeal _).mp ha_mem_M
-    exact (mem_nonunits_iff.mp hnonunit) hmk_unit
+    simp_all
   have hparity_a : MvPowerSeries.coeff (Finsupp.single (0 : Fin 2) 1) (ψBar a) = 0 := by
     obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective a
     rw [ψBar_mk]
@@ -503,9 +463,7 @@ theorem Q_not_isPrincipal : ¬ Q.IsPrincipal := by
     · have hv0 : v 0 = 0 := by omega
       rw [hv_eq, hv0, Finsupp.single_zero (0 : Fin 2),
         MvPowerSeries.coeff_zero_eq_constantCoeff, hconst_a, mul_zero]
-  have : (1 : ℂ) = 0 := by
-    rw [← hcoeff_X0sq, hψs, hcoeff_prod]
-  exact one_ne_zero this
+  simp_all
 
 open MvPowerSeries in
 lemma mk_X2_not_mem_Q :
@@ -526,8 +484,7 @@ lemma mk_X2_not_mem_Q :
     change (phiToPS (X 2)).coeff 1 = 0 at h1
     simp only [phiToPS, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
       PowerSeries.coeff_mk] at h1
-    rw [MvPowerSeries.coeff_X] at h1
-    simp at h1
+    simp_all
   exact this hX2_P
 
 /-- T has Krull dimension 2. -/
@@ -544,16 +501,14 @@ theorem T_ringKrullDim : ringKrullDim T = 2 := by
     | coe a =>
       rw [hT] at h3
       rw [show (↑a : WithBot ℕ∞) + 1 = ↑(a + 1) by
-            push_cast
-            rfl,
+            simp_all,
           show (3 : WithBot ℕ∞) = ↑(3 : ℕ∞) from rfl, WithBot.coe_le_coe] at h3
       rw [show (2 : WithBot ℕ∞) = ↑(2 : ℕ∞) from rfl, WithBot.coe_le_coe]
       cases a using ENat.recTopCoe with
       | top => exact absurd h3 (by norm_num)
       | coe n =>
         rw [show (↑n : ℕ∞) + 1 = ↑(n + 1) by
-              push_cast
-              ring,
+              simp_all,
             show (3 : ℕ∞) = ↑(3 : ℕ) from rfl, ENat.coe_le_coe] at h3
         rw [show (2 : ℕ∞) = ↑(2 : ℕ) from rfl, ENat.coe_le_coe]
         omega
@@ -565,8 +520,7 @@ theorem T_ringKrullDim : ringKrullDim T = 2 := by
         have := congr_arg PrimeSpectrum.asIdeal h
         simpa using this
       have := Q_height_one
-      rw [hQ_bot, Ideal.height_bot] at this
-      norm_num at this
+      simp_all
     have hQ_lt_top : (⟨Q, Q_isPrime⟩ : PrimeSpectrum T) < ⊤ := by
       simp only [lt_top_iff_ne_top, ne_eq, PrimeSpectrum.ext_iff]
       intro h

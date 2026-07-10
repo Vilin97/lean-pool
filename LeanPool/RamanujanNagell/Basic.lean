@@ -27,8 +27,7 @@ private lemma alpha_sq : (2 * θ - 1 : R) ^ 2 = -7 := by
     _ = -7 := by ring
 
 private lemma two_R_ne_zero : (2 : R) ≠ 0 := by
-  intro h0
-  have := congrArg QuadraticAlgebra.re h0; simp at this
+  simp_all
 
 private lemma theta_pow_mul_theta'_pow (m : ℕ) : θ ^ m * θ' ^ m = (2 : R) ^ m := by
   rw [theta'_eq_one_sub_theta, ← mul_pow, two_factorisation_R]
@@ -40,9 +39,7 @@ private lemma two_pow_R_im_zero (m : ℕ) : ((2 : R) ^ m).im = 0 := by
 private lemma alpha_ne_zero : (2 * θ - 1 : R) ≠ 0 := by
   intro h0
   have hsq := alpha_sq
-  rw [h0, zero_pow two_ne_zero] at hsq
-  have : ((0 : ℤ) : R) = ((-7 : ℤ) : R) := by exact_mod_cast hsq
-  have := congrArg QuadraticAlgebra.re this; simp at this
+  simp_all
 
 private lemma binom_two_theta (d : ℕ) :
     (2 * θ) ^ d = ∑ k ∈ Finset.range (d + 1), ((d.choose k : ℤ) : R) * (2 * θ - 1) ^ k := by
@@ -244,10 +241,7 @@ lemma eliminate_x_conclude (α β : R) (m : ℕ)
   have hθ_ne : θ ≠ 0 := Irreducible.ne_zero theta_irreducible
   have hθ'_ne : θ' ≠ 0 := Irreducible.ne_zero theta'_irreducible
   rcases h_assoc with (rfl | rfl) | (rfl | rfl)
-  · left
-    have hβ : β = θ' ^ m := mul_left_cancel₀ (pow_ne_zero m hθ_ne) h_prod
-    subst hβ
-    linear_combination -h_diff
+  · simp_all
   · right
     have hβ : β = -(θ' ^ m) :=
       mul_left_cancel₀ (neg_ne_zero.mpr (pow_ne_zero m hθ_ne))
@@ -397,11 +391,9 @@ lemma expand_by_binomial (m : ℕ) (hm_ge : m ≥ 3)
       apply Int.cast_injective (α := R)
       apply mul_left_cancel₀ h2α_ne
       rw [← hS, hα_def, diff_two_pow_eq_binomB m]
-    obtain ⟨q, hq⟩ := hT_mod
-    exact ⟨q, by rw [hcancel, hS_eq, hq]⟩
+    simp_all
   obtain ⟨q, hq⟩ := step2
-  rw [hq]
-  omega
+  simp_all
 
 
 /-- Key consequence of unique factorization in ℤ[(1+√-7)/2]:
@@ -685,8 +677,7 @@ lemma traceSeq_eq (n : ℕ) : (traceSeq n : R) = θ ^ n + θ' ^ n := by
     have h_sum : θ + θ' = 1 := theta_add_theta'
     have key : θ ^ (n + 2) + θ' ^ (n + 2) =
         (θ + θ') * (θ ^ (n + 1) + θ' ^ (n + 1)) - θ * θ' * (θ ^ n + θ' ^ n) := by ring
-    rw [key, h_sum, h_prod]
-    ring
+    simp_all
 
 private lemma traceSeq_mod7_period (m : ℕ) :
     traceSeq m % 7 = traceSeq (m % 3) % 7 := by
@@ -1017,8 +1008,7 @@ lemma helper_2
   ∨ (x, n) = (5, 5) ∨ (x, n) = (-5, 5)
   ∨ (x, n) = (11, 7) ∨ (x, n) = (-11, 7)
   ∨ (x, n) = (181, 15) ∨ (x, n) = (-181, 15) := by
-    rcases (sq_eq_sq_iff_eq_or_eq_neg.mp h₁ : x = 1 ∨ x = -1) with h | h <;>
-      subst h h₂ <;> tauto
+    simp_all <;> tauto
 
 lemma helper_3
   {x : ℤ} {n : ℕ} (h₁ : x ^ 2 = 25) (h₂ : n = 5) :

@@ -82,8 +82,7 @@ theorem ramanujan_E₂' : serreD 1 E₂ = - 12⁻¹ * E₄.toFun := by
   have hc_val : c = -(1/12 : ℂ) :=
     scalar_eq_of_tendsto hfun serre_DE₂_tendsto_atImInfty E₄_tendsto_one_atImInfty
   ext z
-  simp only [hfun z, hc_val, Pi.mul_apply]
-  norm_num
+  simp_all
 
 /-- Serre derivative of E₄: `serreD 4 E₄ = - 3⁻¹ * E₆`.
 
@@ -100,8 +99,7 @@ theorem ramanujan_E₄' : serreD 4 E₄.toFun = - 3⁻¹ * E₆.toFun := by
   have hc_val : c = -(1/3 : ℂ) :=
     scalar_eq_of_tendsto hfun serre_DE₄_tendsto_atImInfty E₆_tendsto_one_atImInfty
   ext z
-  simp only [hfun z, hc_val, Pi.mul_apply]
-  norm_num
+  simp_all
 
 /-- Serre derivative of E₆: `serreD 6 E₆ = - 2⁻¹ * E₄²`.
 

@@ -60,8 +60,7 @@ theorem ScottOpen_iff_dirSupInacc {U : Set D} : ScottOpen U ↔ IsUpperSet U ∧
   · intro ⟨hU, hU'⟩
     refine ⟨hU, fun d hd₁ hd₂ a ha hmem => ?_⟩
     rw [← IsLUB.sSup_eq ha] at hmem
-    obtain ⟨s, hs, hsU⟩ := hU' hd₁ hd₂ hmem
-    exact ⟨s, hs, hsU⟩
+    simp_all
   · intro ⟨hU, hU'⟩
     refine ⟨hU, fun d hd₁ hd₂ hmem => ?_⟩
     obtain ⟨s, hs, hsU⟩ := hU' hd₁ hd₂ (isLUB_sSup d) hmem

@@ -202,8 +202,7 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
                 fun y : ℝ => (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ) + y • Pi.single i 1 := by
               funext y; funext j
               by_cases hji : j = i
-              · subst hji
-                simp [Fin.insertNth_apply_same, Pi.single_eq_same]
+              · simp_all
               · rcases lt_or_gt_of_ne hji with h | h
                 · rw [Fin.insertNth_apply_below h]
                   simp [Fin.insertNth_apply_below h, Pi.single_eq_of_ne hji]

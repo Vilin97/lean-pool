@@ -37,8 +37,7 @@ abbrev ellipticPointI : ℂ := (ellipticPointI' : ℂ)
 /-- The elliptic point ρ = e^{2πi/3} = -1/2 + (√3/2)i as an element of ℍ. -/
 def ellipticPointRho' : UpperHalfPlane :=
   ⟨-1/2 + (Real.sqrt 3 / 2) * I, by
-    simp only [add_im, neg_im, one_im, div_im, mul_im, I_re, I_im]
-    norm_num⟩
+    simp_all⟩
 
 /-- The elliptic point `ρ` as a complex number. -/
 abbrev ellipticPointRho : ℂ := (ellipticPointRho' : ℂ)
@@ -46,8 +45,7 @@ abbrev ellipticPointRho : ℂ := (ellipticPointRho' : ℂ)
 /-- The T-translate ρ+1 = e^{πi/3} = 1/2 + (√3/2)i. -/
 def ellipticPointRhoPlusOne' : UpperHalfPlane :=
   ⟨1/2 + (Real.sqrt 3 / 2) * I, by
-    simp only [add_im, one_im, div_im, mul_im, I_re, I_im]
-    norm_num⟩
+    simp_all⟩
 
 /-- The T-translate `ρ + 1` as a complex number. -/
 abbrev ellipticPointRhoPlusOne : ℂ := (ellipticPointRhoPlusOne' : ℂ)
@@ -86,9 +84,7 @@ theorem ellipticPointRho_norm : ‖ellipticPointRho‖ = 1 := by
 
 theorem ellipticPointI_mem_fd : ellipticPointI' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointI', mem_setOf_eq]
-  constructor
-  · simp [Complex.normSq_I]
-  · simp only [UpperHalfPlane.re]; norm_num
+  simp_all
 
 theorem ellipticPointRho_mem_fd : ellipticPointRho' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointRho', mem_setOf_eq]

@@ -328,8 +328,7 @@ def runDag
       obtain ⟨Y, p_sat, p_sub⟩ := p_sat M.q₀ _ 0 G.p_root
       exists Subtype.embedLe hle '' Y
       constructor
-      · apply h_delta_root
-        exact p_sat
+      · simp_all
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
         rintro ⟨⟨q, l⟩, q'⟩ H
@@ -439,9 +438,7 @@ def runDag
       Prod.exists, Subtype.exists] at hV ⊢
     rcases hV with ⟨rfl, rfl⟩|⟨z, hz, l, hV, rfl, rfl⟩
     · exists {⟨M.q₀.val, M.q₀.prop.trans hle⟩}
-      constructor
-      · exact h_root
-      · simp
+      simp_all
     · specialize p_sat _ hV
       simp only at p_sat
       obtain ⟨Y, p_sat, p_sub⟩ := p_sat
@@ -512,9 +509,7 @@ def dag : DAG (Iic Φ) := {
       constructor
       · split
         next q_root =>
-          cases q_root
-          left; left
-          simp only [Set.mem_singleton_iff]
+          simp_all
         · left; right
           simp only [Set.mem_image, Set.mem_sdiff]
           grind
@@ -870,9 +865,7 @@ lemma mini_le q l (H : (q, l) ∈ Vb G) : mini G (q, l) ≤ l := by
   rcases H with ⟨i, q, pq, l, hV, rfl, rfl⟩
   apply (show ∀ x y z, x ≤ z → x ≤ y + z by omega)
   apply csInf_le ⟨0, by intro i _; exact Nat.zero_le i⟩
-  simp only [Set.mem_setOf_eq, le_add_iff_nonneg_left, zero_le, add_tsub_cancel_right,
-    true_and]
-  exact hV
+  simp_all
 
 lemma mini_in q l (H : (q, l) ∈ Vb G) : let i' := mini G (q, l); (q, l - i') ∈ (G i').V := by
   have hne : Set.Nonempty { i | i ≤ l ∧ (q, l - i) ∈ (G i).V } := by
@@ -1015,8 +1008,7 @@ def runDag
     · obtain ⟨Y, p_sat, p_sub⟩ := (G l).p_sat _ (G l).p_root
       exists ((Subtype.embedLe ltφ.le) '' Y) ∪ {M.q₀}
       constructor
-      · apply h_delta_root
-        simpa using p_sat
+      · simp_all
       · simp only [dag, base, E]
         grind only [
           = Set.subset_def,
@@ -1550,8 +1542,7 @@ lemma next
           Y ⊆ _ by grind)
         let : DecidablePred (· ∈ w 0) := by classical infer_instance
         rwa [←PositiveBool.sat_map_image _ delta_forall]
-      · right
-        simp
+      · simp_all
     )
   intros op op_path
   rcases conjoinDag.preserves_path _ _ _ _ _ _ _ _ op_path with ⟨k, p_path⟩|p_path
@@ -1692,16 +1683,14 @@ theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := b
     · intros H
       by_cases hAlways : ∀ i, g.language (fun j => w (j + i))
       · apply release_mpr.always
-        rw [g_ih]
-        exact hAlways
+        simp_all
       · simp only [not_forall] at hAlways
         obtain ⟨n, hgn⟩ := hAlways
         revert w
         induction n
         · intros w H hgn
           specialize H 0
-          simp at H
-          contradiction
+          simp_all
         next n ih =>
           intros w H hgn
           rw [release_expand] at H

@@ -364,8 +364,7 @@ lemma termShiftVec_cons {k t ts : V} (ht : L.IsUTerm t) (hts : L.IsUTermVec k ts
       Language.termBV_func hf hv]
     congr 1
     apply nth_ext' k (by simp [*]) (by simp [*])
-    intro i hi
-    simp [*]
+    simp_all
 
 @[simp] lemma _root_.LO.Arith.Language.IsUTermVec.termBVVectermShiftVec {v} (hv :
     L.IsUTermVec k v) :

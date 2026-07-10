@@ -188,8 +188,7 @@ theorem val_natpow (x : Computableℝ) (n : ℕ) : (x ^ n).val = x.val ^ n := by
 theorem val_nsmul (x : Computableℝ) (n : ℕ) : (n • x).val = n • x.val := by
   induction n
   · simp
-  · rename_i ih
-    simpa using ih
+  · simp_all
 
 section safeInv
 

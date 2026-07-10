@@ -53,11 +53,8 @@ theorem fdBoundary_H_avoids_interior (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : 
   by_cases h1 : t ≤ 1
   · have hre : (fdBoundaryH H t).re = 1 / 2 := by
       rw [fdBoundary_H_eq_seg1_H h1, fdBoundarySeg1H]
-      simp only [add_re, mul_re, ofReal_re, ofReal_im,
-        I_re, I_im, div_ofNat, one_re]
-      norm_num
-    rw [habs] at hre
-    have := abs_lt.mp hp_re; linarith
+      simp_all
+    simp_all
   · push Not at h1
     by_cases h3 : t ≤ 3
     · have hnorm : ‖fdBoundaryH H t‖ = 1 := by
@@ -71,18 +68,14 @@ theorem fdBoundary_H_avoids_interior (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : 
       · have hre : (fdBoundaryH H t).re = -1 / 2 := by
           rw [fdBoundary_H_eq_seg4_H h3 h4,
             fdBoundarySeg4H]
-          simp only [add_re, neg_re, mul_re, ofReal_re,
-            ofReal_im, I_re, I_im, div_ofNat, one_re]
-          norm_num
+          simp_all
         rw [habs] at hre
         have := abs_lt.mp hp_re; linarith
       · push Not at h4
         have him : (fdBoundaryH H t).im = H := by
           rw [fdBoundary_H_eq_seg5_H h4,
             fdBoundarySeg5H]
-          simp only [add_im, mul_im, ofReal_re, ofReal_im,
-            I_re, I_im, div_ofNat]
-          norm_num
+          simp_all
         rw [habs] at him; linarith
 
 private lemma fdBoundary_H_eq_arc' {H : ℝ} {t : ℝ} (ht1 : 1 < t) (ht3 : t < 3) :
@@ -125,8 +118,7 @@ private lemma heightSens_continuous : Continuous heightSens := by
   unfold heightSens
   apply Continuous.if
   · intro t ht; rw [show {t : ℝ | t ≤ 1} = Set.Iic 1 from rfl, frontier_Iic] at ht
-    simp only [mem_singleton_iff] at ht; subst ht
-    simp only [show (1 : ℝ) ≤ 3 from by norm_num, ↓reduceIte]; push_cast; ring
+    simp_all
   · exact (continuous_ofReal.comp (by fun_prop)).mul continuous_const
   · apply Continuous.if
     · intro t ht; rw [show {t : ℝ | t ≤ 3} = Set.Iic 3 from rfl, frontier_Iic] at ht
@@ -226,8 +218,7 @@ private lemma fdHomot_deriv_bound (H : ℝ) (hH : heightCutoff ≤ H) :
       · exact fdBoundary_H_not_differentiableAt_1 hH_s_sqrt
       · exact fdBoundary_H_not_differentiableAt_3 hH_s_sqrt
       · exact fdBoundary_H_not_differentiableAt_4 hH_s_sqrt
-    erw [deriv_zero_of_not_differentiableAt hnd]; rw [norm_zero]
-    exact le_trans zero_le_one (le_max_right _ _)
+    erw [deriv_zero_of_not_differentiableAt hnd]; simp_all
   · simp only [fdBoundaryHPartition, Finset.mem_insert, Finset.mem_singleton] at htp
     push Not at htp; obtain ⟨h1, h3, h4⟩ := htp
     by_cases ht1 : t < 1
@@ -258,8 +249,7 @@ private lemma fdHomot_deriv_bound (H : ℝ) (hH : heightCutoff ≤ H) :
           exact le_trans (by linarith) (le_max_left _ _)
         · push Not at ht4
           have ht4' : 4 < t := lt_of_le_of_ne ht4 (Ne.symm h4)
-          erw [(fdBoundary_H_hasDerivAt_seg5 H_s ht4').deriv]; rw [norm_one]
-          exact le_max_right _ _
+          erw [(fdBoundary_H_hasDerivAt_seg5 H_s ht4').deriv]; simp_all
 
 private lemma fdBoundary_H_piecewise_homotopic (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
     (hp_im_pos : 0 < p.im) (hp_im : p.im < heightCutoff) {H : ℝ} (hH : heightCutoff ≤ H) :
@@ -269,9 +259,7 @@ private lemma fdBoundary_H_piecewise_homotopic (p : ℂ) (hp_norm : ‖p‖ > 1)
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact fdHomot_continuous heightCutoff H
   · intro t _; simp only [zero_mul, add_zero]
-  · intro t _
-    change fdBoundaryH (heightCutoff + 1 * (H - heightCutoff)) t = fdBoundaryH H t
-    congr 1; ring
+  · simp_all
   · intro s _; exact fdBoundary_H_closed _
   · intro t ht s hs
     exact fdBoundary_H_avoids_interior p hp_norm hp_re hp_im_pos
@@ -393,32 +381,11 @@ theorem gWN_fdBoundary_H_eq_neg_one_of_strictInterior
         fun t ht => (fdBoundary_H_deriv_continuousAt_off_fullPartition H t
           (hsub ht) (hfree t ht)).continuousWithinAt
       exact (hc_base.comp continuousOn_fst (fun r hr => hr.1)).congr (fun r hr => by
-        have ht_not_part : r.1 ∉ fdBoundaryHPartition := by
-          simp only [fdBoundaryFullPartition, fdBoundaryHPartition,
-            Finset.mem_insert, Finset.mem_singleton] at hfree ⊢
-          push Not; have := hfree r.1 hr.1; push Not at this
-          exact ⟨this.2.1, this.2.2.2.1, this.2.2.2.2.1⟩
-        have hd := fdBoundary_H_differentiableAt_off_partition H r.1 ht_not_part
-        simp only [Function.comp_def]
-        erw [show (fun t' => fdBoundaryH H t' - zPath r.2) =
-            fdBoundaryH H - fun _ => zPath r.2 from funext fun _ => rfl,
-          deriv_sub hd (differentiableAt_const _), deriv_const, sub_zero])
+        simp_all)
     · obtain ⟨M, hM'⟩ := piecewiseC1Immersion_deriv_bounded (fdBoundaryHImmersion H hH_sqrt)
       have hM : ∀ t ∈ Icc (0 : ℝ) 5, ‖deriv (fdBoundaryH H) t‖ ≤ M := hM'
       refine ⟨M, fun t ht s _ => ?_⟩
-      change ‖deriv (fun t' => fdBoundaryH H t' - zPath s) t‖ ≤ M
-      by_cases hd : DifferentiableAt ℝ (fdBoundaryH H) t
-      · erw [show (fun t' => fdBoundaryH H t' - zPath s) =
-            fdBoundaryH H - fun _ => zPath s from funext fun _ => rfl,
-          deriv_sub hd (differentiableAt_const _), deriv_const, sub_zero]
-        exact hM t ht
-      · have hnd : ¬DifferentiableAt ℝ (fun t' => fdBoundaryH H t' - zPath s) t := by
-          erw [show (fun t' => fdBoundaryH H t' - zPath s) =
-              fun t' => fdBoundaryH H t' + (-zPath s) from by ext; ring,
-            differentiableAt_add_const_iff]
-          exact hd
-        erw [deriv_zero_of_not_differentiableAt hnd]; rw [norm_zero]
-        linarith [norm_nonneg (deriv (fdBoundaryH H) t), hM t ht]
+      simp_all
   have h_eq := windingNumber_eq_of_piecewise_homotopic _ _ 0 5 0 fdBoundaryFullPartition
     (by norm_num : (0 : ℝ) < 5) hhom
   rw [gWN_translate, gWN_translate] at h_eq

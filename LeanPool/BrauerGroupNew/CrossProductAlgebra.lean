@@ -142,10 +142,7 @@ def mulLinearMap : (Gal(K, F) →₀ K) →ₗ[F] (Gal(K, F) →₀ K) →ₗ[F]
         map_smul' := by simp only [map_smul, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,
           RingHom.id_apply, Finsupp.smul_single, implies_true] }
     map_add' _ _ := by ext; simp [add_mul]
-    map_smul' _ _ := by ext; simp only [Algebra.smul_mul_assoc, Finsupp.lsum_comp_lsingle,
-      LinearMap.coe_mk, AddHom.coe_mk, RingHom.id_apply, LinearMap.coe_comp, comp_apply,
-      Finsupp.lsingle_apply, LinearMap.smul_apply, Finsupp.coe_lsum, map_zero, mul_zero, zero_mul,
-      Finsupp.single_zero, Finsupp.sum_single_index, Finsupp.smul_single] }
+    map_smul' _ _ := by ext; simp_all }
 
 variable (f) in
 @[simp]

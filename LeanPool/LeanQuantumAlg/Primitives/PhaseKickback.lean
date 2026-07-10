@@ -81,11 +81,7 @@ theorem xorOracle_apply_tensor_ketPlus (f : Fin (2 ^ n) → Bool)
   rcases (prodEquiv (m := n) (n := 1)).surjective i with ⟨⟨y, b⟩, rfl⟩
   rw [Gate.xorOracle_apply, PureState.tensor_apply_prod, PureState.tensor_apply_prod]
   simp only [Equiv.symm_apply_apply, Gate.xorPerm_apply]
-  by_cases hy : y = x
-  · subst y
-    by_cases h : f x <;> fin_cases b <;> simp [h, ketPlus_apply]
-  · by_cases h : f y <;> fin_cases b <;>
-      simp [h, hy, PureState.ket_apply]
+  simp_all
 
 /-- **Eigenvalue phase kickback** [CEMM98, cemm6.tex:163]: if the target
 register holds an eigenstate `|u⟩` of `U` with eigenvalue `e^{iθ}`, the

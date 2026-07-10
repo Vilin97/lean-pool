@@ -34,8 +34,7 @@ lemma left_eqToHom_iff_heq {W X Y : C} (f : W ⟶ X) (g : Y ⟶ X) (h : W = Y) :
 lemma congr_comp {a b b' c d : C} (f : c ⟶ d) {g : b ⟶ c} {g' : b' ⟶ c} {h : a ⟶ b} {h' : a ⟶ b'}
   (H : h ≫ g = h' ≫ g') : h ≫ g ≫ f = h' ≫ g' ≫ f := by
   replace H := congr_fun (congr_arg CategoryStruct.comp H) f
-  conv at H => simp
-  exact H
+  simp_all
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def recComp m n {F : ℕ → C} (f : ∀ n, F (n + 1) ⟶ F n) : F (m + n) ⟶ F m := by
   induction n with

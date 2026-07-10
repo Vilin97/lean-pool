@@ -49,14 +49,11 @@ lemma IsCentral.left_of_tensor (B C : Type*)
     | zero => simp
     | tmul b' c =>
       subst hb
-      simp only [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
-      congr 1
-      exact hb0 b'
+      simp_all
     | add _ _ _ _ => simp_all [add_mul, mul_add]
   have eq: (Algebra.TensorProduct.includeLeft.comp (Subalgebra.center K B).val).range =
       (⊥ : Subalgebra K (B ⊗[K] C)) := by
-    refine le_antisymm ?_ <| OrderBot.bot_le _
-    rw [← hbc.center_eq_bot]; exact this
+    simp_all
   let f : Subalgebra.center K B →ₐ[K] ((Algebra.TensorProduct.includeLeft (R := K) (B := C)).comp
     (Subalgebra.center K B).val).range := {
       toFun := fun ⟨b, hb⟩ ↦ ⟨b ⊗ₜ 1, ⟨⟨b, hb⟩, rfl⟩⟩
@@ -68,9 +65,7 @@ lemma IsCentral.left_of_tensor (B C : Type*)
   have f_surj : Function.Surjective f := fun ⟨bc, ⟨⟨b, hb⟩, h⟩⟩ ↦ ⟨⟨b, hb⟩, by
     simp only [f, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
       Subtype.mk.injEq]
-    change _ ⊗ₜ _ = _ at h
-    simp only [RingHom.coe_coe, Subalgebra.coe_val] at h⊢
-    exact h⟩
+    simp_all⟩
   have e : ((Algebra.TensorProduct.includeLeft (R := K) (B := C)).comp
     (Subalgebra.center K B).val).range ≃ₐ[K] (Subalgebra.center K B) :=
     (AlgEquiv.ofBijective f
@@ -116,8 +111,7 @@ theorem IsAzumaya_iff_CentralSimple [Nontrivial A] : IsAzumaya K A ↔ FiniteDim
       out := Module.Projective.out
       eq_of_smul_eq_smul {k1} {k2} ha := by
         specialize ha (1 : A)
-        rw [← Algebra.algebraMap_eq_smul_one, ← Algebra.algebraMap_eq_smul_one] at ha
-        exact FaithfulSMul.algebraMap_injective _ _ ha
+        simp_all
       fg_top := fin.1
       bij := bijective_of_dim_eq_of_isCentralSimple K _ _
         (AlgHom.mulLeftRight K A) <| tensorSelfOp.dim_eq _ _
@@ -182,8 +176,7 @@ instance (n : ℕ) [NeZero n] : FaithfulSMul R (Matrix (Fin n) (Fin n) R) where
     specialize h12 (1 : Matrix _ _ _)
     rw [← Matrix.ext_iff] at h12
     specialize h12 ⟨0, Nat.pos_of_neZero n⟩ ⟨0, Nat.pos_of_neZero _⟩
-    simp only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one] at h12
-    exact h12
+    simp_all
 
 open MulOpposite in
 /-- The matrix algebra is equivalent to its opposite algebra over the base ring. -/
@@ -217,8 +210,7 @@ lemma bij_Rtensor : Function.Bijective (AlgHom.mulLeftRight R R) := by
 instance : FaithfulSMul R R where
   eq_of_smul_eq_smul {r1 r2} hr := by
     specialize hr 1
-    simp only [smul_eq_mul, mul_one] at hr
-    exact hr
+    simp_all
 
 theorem IsAzumaya_R : IsAzumaya R R where
   bij := bij_Rtensor R
@@ -270,7 +262,6 @@ instance (n : ℕ) [NeZero n] : FaithfulSMul R (Matrix (Fin n) (Fin n) R) where
     specialize h 1
     rw [← Matrix.ext_iff] at h
     specialize h ⟨0, Nat.pos_of_neZero n⟩ ⟨0, Nat.pos_of_neZero n⟩
-    simp only [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one] at h
-    exact h
+    simp_all
 
 end Matrix

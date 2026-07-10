@@ -100,8 +100,7 @@ private lemma gaussian_cexp_integrable (t : ℝ) (ht : 0 < t) :
     Integrable (fun x : V => cexp (-(t : ℂ) * ↑(‖x‖ ^ 2))) := by
   have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
     (V := V) (b := (t : ℂ)) (show 0 < ((t : ℂ)).re from by simp [ht]) 0 (0 : V)
-  simp only [add_zero, zero_mul] at this
-  convert this using 1; ext x; push_cast; ring
+  simp_all
 
 /-- The double sum ∑ᵢ ∑ⱼ conj(aᵢ) * aⱼ equals normSq(∑ₖ aₖ). -/
 private lemma sum_star_mul_eq_normSq {m : ℕ} (a : Fin m → ℂ) :
@@ -130,8 +129,7 @@ omit [FiniteDimensional ℝ V] in
 lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     IsPositiveDefinite (fun t : V => charFun μ t) where
   hermitian t := by
-    rw [starRingEnd_apply, star_def]
-    exact charFun_neg t
+    simp_all
   nonneg m t c := by
     -- Step 1: Unfold charFun
     simp only [charFun_apply]
@@ -210,10 +208,7 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     -- hre_swap : ∫ reCLM ↑(normSq ...) = reCLM (∫ ↑(normSq ...))
     -- LHS simplifies: reCLM ↑r = r, so LHS = ∫ normSq ...
     -- RHS is reCLM applied to integral, which = (integral).re
-    change ∫ x, Complex.re (↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I)))) ∂μ =
-        Complex.re (∫ x, ↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I))) ∂μ) at hre_swap
-    simp only [Complex.ofReal_re] at hre_swap
-    exact hre_swap.symm
+    simp_all
 
 omit [FiniteDimensional ℝ V] in
 /-- Pointwise product of a PD function and the characteristic function of a
@@ -227,9 +222,7 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
   hermitian t := by
     change φ (-t) * charFun μ (-t) = (starRingEnd ℂ) (φ t * charFun μ t)
     rw [map_mul, ← hpd.hermitian t]
-    congr 1
-    rw [starRingEnd_apply, star_def]
-    exact charFun_neg t
+    simp_all
   nonneg m t c := by
     simp only [charFun_apply]
     -- Integrability of exponentials on a finite measure (norm ≤ 1)
@@ -428,8 +421,7 @@ lemma gaussianRegularize_pd (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
   hermitian x := by
     simp only [gaussianRegularize, norm_neg]
     rw [hpd.hermitian x, starRingEnd_apply, star_def, map_mul, ← Complex.exp_conj]
-    congr 1
-    simp [Complex.conj_ofReal]
+    simp_all
   nonneg m x c := by
     -- gaussianRegularize φ ε = fun t => φ t * cexp(...)
     -- By gaussian_eq_charFun, cexp(-ε‖t‖²) = charFun μ t for some Gaussian μ
@@ -538,8 +530,7 @@ lemma pd_l1_fourier_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     -- Change variables: v → -v
     have hsub := integral_neg_eq_self
       (fun v => (↑(𝐞 (⟪v, ξ⟫_ℝ)) : ℂ) * φ (-v)) (volume : Measure V)
-    simp only [inner_neg_left, neg_neg] at hsub
-    exact hsub.symm
+    simp_all
   have him : (𝓕 φ ξ).im = 0 := by
     have := congr_arg Complex.im hft_conj
     simp only [Complex.conj_im] at this
@@ -644,8 +635,7 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       hψ_int.fourierInv_fourier_eq hψ_ft_int hψ_cont.continuousAt
     -- Step B: ψ(0) = φ(T 0) = φ(0) = 1
     have hψ0 : ψ 0 = 1 := by
-      change φ (T 0) = 1
-      simp [T, smul_zero, hnorm]
+      simp_all
     -- Step C: ∫ 𝓕ψ = ψ(0) = 1 via Fourier inversion at 0
     have hint_eq : ∫ x, 𝓕 ψ x = 1 := by
       -- Fourier inversion: 𝓕⁻(𝓕ψ) = ψ, evaluate at 0
@@ -654,15 +644,11 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       -- h0 : 𝓕⁻(𝓕ψ)(0) = ψ(0)
       -- Expand LHS: 𝓕⁻(𝓕ψ)(0) = ∫ 𝓕ψ
       rw [Real.fourierInv_eq'] at h0
-      simp only [inner_zero_right, mul_zero, Complex.ofReal_zero, zero_mul,
-        Complex.exp_zero, one_smul] at h0
-      -- h0 : ∫ 𝓕ψ v = ψ(0); need ∫ 𝓕ψ x = 1
-      convert h0.trans hψ0
+      simp_all
     -- Step D: ∫ Re(𝓕ψ) = Re(∫ 𝓕ψ) = 1
     have hre_eq : ∫ x, (𝓕 ψ x).re = 1 := by
       have h1 := Complex.reCLM.integral_comp_comm hψ_ft_int
-      change ∫ x, (𝓕 ψ x).re = (∫ x, 𝓕 ψ x).re at h1
-      rw [h1, hint_eq]; simp
+      simp_all
     rw [hre_eq]; simp
   -- Step 9: Package as ProbabilityMeasure
   have hfm : IsFiniteMeasure μ_raw := by
@@ -780,10 +766,7 @@ private lemma integral_norm_ft_gaussian_eq_one (t : ℝ) (ht : 0 < t) :
   have hnorm_eq_re : ∀ w : V, ‖𝓕 g w‖ = (𝓕 g w).re := by
     intro w; have ⟨hre, him⟩ := hft_nonneg w
     rw [← RCLike.sqrt_normSq_eq_norm, RCLike.normSq_apply]
-    have : RCLike.im (𝓕 g w) = 0 := him
-    rw [this, mul_zero, add_zero]
-    have : RCLike.re (𝓕 g w) = (𝓕 g w).re := rfl
-    rw [this, Real.sqrt_mul_self hre]
+    simp_all
   -- ∫ ‖𝓕 g‖ = ∫ (𝓕 g).re = Re(∫ 𝓕 g) = Re(1) = 1
   simp_rw [hnorm_eq_re, show ∀ x : V, (𝓕 g x).re = RCLike.re (𝓕 g x) from fun _ => rfl]
   rw [integral_re hft_int]
@@ -1144,8 +1127,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
     -- μ.real {r < |⟪y,x⟫|} ≤ 2*(δ/4) + 8‖y‖²/r² = δ/2 + 8‖y‖²/r² < δ
     -- Convert from μ.real to μ (ENNReal)
     rw [show μ {x | r < |⟪y, x⟫_ℝ|} = ENNReal.ofReal (μ.real {x | r < |⟪y, x⟫_ℝ|}) from by
-      rw [Measure.real, ENNReal.ofReal_toReal]
-      exact measure_ne_top μ _]
+      simp_all]
     apply ENNReal.ofReal_le_ofReal
     linarith
   -- Step 5: Conclude iSup ≤ ENNReal.ofReal δ < a
@@ -1188,9 +1170,7 @@ private theorem bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
   -- So charFun(μ_seq (f n))(ξ) → charFun(μ)(ξ)
   have hcharfun_conv : Tendsto (fun n => charFun (μ_seq (f n) : Measure V) ξ) atTop
       (𝓝 (charFun (μ : Measure V) ξ)) := by
-    rwa [show (fun n => charFun (↑(μ_seq (f n))) ξ) =
-      (fun n => ∫ x, g_ξ x ∂(μ_seq (f n) : Measure V)) from funext (fun n => (hlhs n).symm),
-      show charFun (↑μ) ξ = ∫ x, g_ξ x ∂(μ : Measure V) from hrhs.symm]
+    simp_all
   -- Also charFun(μ_seq (f n))(ξ) = gaussianRegularize φ (1/(f n + 1)) ξ → φ ξ
   have hcharfun_vals : ∀ n, charFun (μ_seq (f n) : Measure V) ξ =
       gaussianRegularize φ (1 / (↑(f n) + 1)) ξ :=
@@ -1209,8 +1189,7 @@ private theorem bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
     (gaussianRegularize_tendsto φ ξ).comp heps_tendsto
   -- The same sequence also → charFun(μ)(ξ) by weak convergence
   have hgr_conv' : Tendsto (fun n => charFun (μ_seq (f n) : Measure V) ξ) atTop (𝓝 (φ ξ)) := by
-    rwa [show (fun n => charFun (↑(μ_seq (f n))) ξ) =
-      (fun n => gaussianRegularize φ (1 / (↑(f n) + 1)) ξ) from funext hcharfun_vals]
+    simp_all
   -- By uniqueness of limits: charFun μ ξ = φ ξ
   exact tendsto_nhds_unique hcharfun_conv hgr_conv'
 

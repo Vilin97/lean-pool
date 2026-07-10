@@ -33,8 +33,7 @@ lemma iteratedDeriv_aeval_fun (T : ℤ[X]) (k : ℕ) :
     iteratedDeriv k (fun z : ℂ => aeval z T) = fun z => aeval z (derivative^[k] T) := by
   induction k with
   | zero =>
-      funext z
-      simp
+      simp_all
   | succ k ih =>
       rw [iteratedDeriv_succ, ih]
       funext z

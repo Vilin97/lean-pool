@@ -42,8 +42,7 @@ private lemma direction_rate_from_flatness_right
   have hL_pos : (0 : ℝ) < ‖L_R‖ := norm_pos_iff.mpr hL_R_ne
   have hL_ne : ‖L_R‖ ≠ 0 := ne_of_gt hL_pos
   have hv₀_norm : ‖v₀‖ = 1 := by
-    rw [hv₀_def]
-    simp only [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hL_pos, div_self hL_ne]
+    simp_all
   have h_flat_eps : (fun ε => ‖tangentDeviation (γ.toFun (σ ε) - s) L_R‖) =o[𝓝[>] 0]
       (fun ε => ε ^ m) := by
     have h1 := (h_flat.right_flat L_R hL_R_ne htend_R).congr
@@ -105,9 +104,7 @@ private lemma direction_rate_from_flatness_left
   have hL_pos : (0 : ℝ) < ‖L_L‖ := norm_pos_iff.mpr hL_L_ne
   have hL_ne : ‖L_L‖ ≠ 0 := ne_of_gt hL_pos
   have hv₀_norm : ‖v₀‖ = 1 := by
-    rw [hv₀_def]
-    simp only [norm_div, norm_neg, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hL_pos,
-      div_self hL_ne]
+    simp_all
   have h_flat_eps : (fun ε => ‖tangentDeviation (γ.toFun (σ ε) - s) (-L_L)‖) =o[𝓝[>] 0]
       (fun ε => ε ^ m) := by
     have h1 := (h_flat.left_flat L_L hL_L_ne htend_L).congr
@@ -280,8 +277,7 @@ private lemma exit_time_tendsto_right
     have ht₁_mem : t₁ ∈ Icc t₀ r := ⟨ht₁_gt.le, ht₁_lt_r.le⟩
     have hg_t₁ : 0 < ‖γ.toFun t₁ - s‖ := by
       have h_lt := hg_mono ⟨le_rfl, hr_gt.le⟩ ht₁_mem ht₁_gt
-      have : ‖γ.toFun t₀ - s‖ = 0 := by rw [hcross, sub_self, norm_zero]
-      linarith
+      simp_all
     set ε₀ := min ‖γ.toFun t₁ - s‖ δ
     have hε₀_pos : 0 < ε₀ := lt_min hg_t₁ hδ
     filter_upwards [Ioo_mem_nhdsGT hε₀_pos] with ε ⟨hε_pos, hε_lt⟩
@@ -541,11 +537,9 @@ lemma cutoff_zpow_infrastructure
     have h_norm := (hprops ε hε).2.2.2.2.1
     exact sub_ne_zero.mpr (fun h => by rw [h, sub_self, norm_zero] at h_norm; linarith [hε.1])
   · change ‖L_R / ↑‖L_R‖‖ = 1
-    rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (norm_pos_iff.mpr hL_R_ne),
-      div_self (norm_ne_zero_iff.mpr hL_R_ne)]
+    simp_all
   · change ‖-L_L / ↑‖L_L‖‖ = 1
-    rw [norm_div, norm_neg, Complex.norm_real, Real.norm_eq_abs,
-      abs_of_pos (norm_pos_iff.mpr hL_L_ne), div_self (norm_ne_zero_iff.mpr hL_L_ne)]
+    simp_all
   · have h_arg_uR : uR.arg = L_R.arg := by
       change (L_R / ↑‖L_R‖).arg = L_R.arg
       rw [div_eq_inv_mul, ← Complex.ofReal_inv,

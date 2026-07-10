@@ -53,8 +53,7 @@ lemma prod_of_full_measure_finset {μ : Measure α} {ν : Measure β} [SigmaFini
   have : (↑(A ×ˢ B) : Set (α × β))ᶜ =
     ((A : Set α)ᶜ ×ˢ Set.univ) ∪ (Set.univ ×ˢ (B : Set β)ᶜ) := by
     ext ⟨s, t⟩; simp; tauto
-  rw [this]
-  simp [hA, hB]
+  simp_all
 
 end MeasureTheory.Measure
 

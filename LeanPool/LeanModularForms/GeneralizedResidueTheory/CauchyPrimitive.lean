@@ -106,9 +106,7 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
     intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
       hu_cont hv_cont hu_deriv hv_deriv hu'_int hv'_int
   simp only [u, v, u', v'] at h_parts
-  simp only [ofReal_one, ofReal_zero, one_mul, zero_mul,
-    sub_zero] at h_parts
-  rwa [show f (c + (1 : ℝ) • (z - c)) = f z by simp] at h_parts
+  simp_all
 
 private lemma continuous_segmentMap (c w : ℂ) :
     Continuous (fun t : ℝ => c + t • (w - c)) :=
@@ -235,8 +233,7 @@ private lemma segmentIntegrand_lipschitzOnWith {f : ℂ → ℂ}
     _ = |t| * M * ‖x - y‖ := by ring
     _ = |t| * M * dist x y := by rw [dist_eq_norm]
     _ ≤ Real.toNNReal (|t| * M) * dist x y := by
-        apply mul_le_mul_of_nonneg_right _ dist_nonneg
-        exact Real.le_coe_toNNReal _
+        simp_all
 
 private lemma hasDerivAt_segmentIntegral_aux {f : ℂ → ℂ}
     {S : Set ℂ} {c z : ℂ} {ε : ℝ}
@@ -381,9 +378,7 @@ private lemma hasDerivAt_segmentIntegral {f : ℂ → ℂ}
   suffices hH : HasDerivAt H (H' z) z by
     have h_prod := hH.mul h1
     refine h_prod.congr_deriv ?_
-    calc H' z * (z - c) + H z * 1 = H' z * (z - c) + H z := by ring
-      _ = (f z - H z) + H z := by rw [h_key]
-      _ = f z := by ring
+    simp_all
   exact hasDerivAt_segmentIntegral_aux hε_pos hS_convex
     hS_open hc hz hf hε_ball
 

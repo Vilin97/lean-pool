@@ -48,35 +48,18 @@ private theorem thresholdX_not_shatter_pair {X : Type u} {φ : ℕ ↪ X}
     simpa using hc₁ ⟨a, ha⟩
   have hc₁b : ¬ ∃ k, k ≤ n₁ ∧ φ k = b := by
     intro hbad
-    have h := hc₁ ⟨b, hb⟩
-    have htrue : decide (∃ k, k ≤ n₁ ∧ φ k = b) = true := decide_eq_true hbad
-    have hfalse : (if (b : X) = a then true else false) = false := by
-      simp [Ne.symm hab]
-    change decide (∃ k, k ≤ n₁ ∧ φ k = b) =
-        (if (b : X) = a then true else false) at h
-    rw [htrue, hfalse] at h
-    cases h
+    simp_all
   obtain ⟨c₂, ⟨n₂, rfl⟩, hc₂⟩ := hshat (fun s => if (s : X) = b then true else false)
   have hc₂a : ¬ ∃ k, k ≤ n₂ ∧ φ k = a := by
-    intro hbad
-    have h := hc₂ ⟨a, ha⟩
-    have htrue : decide (∃ k, k ≤ n₂ ∧ φ k = a) = true := decide_eq_true hbad
-    have hfalse : (if (a : X) = b then true else false) = false := by
-      simp [hab]
-    change decide (∃ k, k ≤ n₂ ∧ φ k = a) =
-        (if (a : X) = b then true else false) at h
-    rw [htrue, hfalse] at h
-    cases h
+    simp_all
   have hc₂b : ∃ k, k ≤ n₂ ∧ φ k = b := by
     simpa using hc₂ ⟨b, hb⟩
   obtain ⟨i, hi_le, rfl⟩ := hc₁a
   obtain ⟨j, hj_le, hφj⟩ := hc₂b
   have hj_gt : n₁ < j := by
-    by_contra h; push Not at h
-    exact hc₁b ⟨j, h, hφj⟩
+    by_contra h; simp_all
   have hi_gt : n₂ < i := by
-    by_contra h; push Not at h
-    exact hc₂a ⟨i, h, rfl⟩
+    simp_all
   omega
 
 /-- VCDim of C_φ is finite (≤ 1). -/
@@ -130,8 +113,7 @@ private theorem adversary_threshold {X : Type u} {φ : ℕ ↪ X}
     · obtain ⟨seq', n, hn_lo, hn_hi, hn_mem, hn_count⟩ := ih (L.update s (φ mid) false) lo
       have hn_lt_mid : n < mid := by omega
       have hcn_mid : decide (∃ k, k ≤ n ∧ φ k = φ mid) = false := by
-        simp only [decide_eq_false_iff_not]
-        rintro ⟨k, hk, hφ⟩; have := φ.injective hφ; omega
+        simp_all
       refine ⟨φ mid :: seq', n, hn_lo, by ring_nf; omega, hn_mem, ?_⟩
       change (if L.predict s (φ mid) ≠ _ then 1 else 0) +
         mistakesFromG L (L.update s (φ mid) _) _ seq' = d + 1

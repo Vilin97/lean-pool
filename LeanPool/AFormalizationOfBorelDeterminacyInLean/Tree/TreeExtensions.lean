@@ -52,8 +52,7 @@ def extensionsRes T :
       rw [List.take_of_length_le (Nat.le_succ T.2.val.length)]
       exact a.prop
     · change (T.2.val.take (T.2.val.length + 1) ++ [a.val]).length ≤ T.2.val.length + 1
-      rw [List.take_of_length_le (Nat.le_succ T.2.val.length)]
-      simp only [List.length_append, List.length_singleton, le_refl]⟩
+      simp_all⟩
   invFun a := ⟨a.val, by
     have hbase : ((pointedRes (T.2.val.length + 1)).obj T).2.val = T.2.val := by
       change T.2.val.take (T.2.val.length + 1) = T.2.val
@@ -142,8 +141,7 @@ def extensionsEquiv' (hy : Fixing (y.val.length + 1) f := by as_aux_lemma => syn
   have hnode : f (pInv f y) = y := cancel_pInv_right f y (hy.mon (by simp))
   change (cast (congrArg ExtensionsAt hnode) (extensionsEquiv f (pInv f y) hy' a)).valT' =
     f a.valT'
-  exact (ExtensionsAt.cast_valT' hnode (extensionsEquiv f (pInv f y) hy' a)).trans
-    (extensionsEquiv_val' f (pInv f y) a hy')
+  simp_all
 @[simp] lemma extensionsEquiv'_val' (a : ExtensionsAt y) (hy : Fixing (y.val.length + 1) f) :
   (extensionsEquiv' f y hy a).valT' = pInv f a.valT' := by
   obtain ⟨a, rfl⟩ := (extensionsEquiv' f y).symm.surjective a

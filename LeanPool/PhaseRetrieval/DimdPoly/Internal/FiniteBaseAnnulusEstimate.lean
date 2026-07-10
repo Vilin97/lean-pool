@@ -102,8 +102,7 @@ private def mulCircleLIE_annulus (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ :
     · intro z
       refine ⟨((ω⁻¹ : _root_.Circle) : ℂ) * z, ?_⟩
       simp
-  · intro z
-    simp
+  · simp_all
 
 private lemma productAnnulus_rotate_one_iff_annulus
     {d : Nat} (j : Idx d) (q0 : Fin d) (ω : _root_.Circle) (z : Cd d) :
@@ -136,8 +135,7 @@ private lemma rotate_one_volume_preserving_annulus
         funext z
         simp only [f, dite_true]
         rfl
-      rw [hfeq] at hmp
-      exact hmp
+      simp_all
     · simpa [f, h] using
         (show MeasurePreserving (id : ℂ → ℂ) (volume : Measure ℂ) (volume : Measure ℂ) from
           ⟨measurable_id, by simp⟩)
@@ -196,8 +194,7 @@ private lemma rotate_one_gamma_preserving_annulus
       refine Finset.sum_congr rfl ?_
       intro q hq
       by_cases h : q = q0
-      · subst h
-        simp [Function.update]
+      · simp_all
       · simp [Function.update, h]
     simp [dens, f, gaussianDensity, hsum]
   have hmap : Measure.map f (gammaD d) = gammaD d := by
@@ -270,9 +267,7 @@ private theorem annulusCoordinateRotationAveraging
                   Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0) ∈
                     productAnnulus j := by simpa [fourier_one] using hrot
               simp only [G]
-              split_ifs with hmem
-              · rfl
-              · exact (hmem hrot).elim
+              simp_all
             · have hzero :
                 ∫⁻ x : Circle,
                     G (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))
@@ -297,9 +292,7 @@ private theorem annulusCoordinateRotationAveraging
                                       ((productAnnulus_rotate_one_iff_annulus (j := j) (q0 := q0)
                                         (ω := AddCircle.toCircle x) (z := z)).1 hz'')
                             simp only [G]
-                            split_ifs with hmem
-                            · exact (hrot hmem).elim
-                            · rfl
+                            simp_all
                       _ = 0 := by simp
               simpa [hz] using hzero.symm
     _ = ∫⁻ x : Circle,
@@ -323,8 +316,7 @@ private theorem annulusCoordinateRotationAveraging
             (gamma_lintegral_rotate_one_eq_annulus
               (d := d) (q0 := q0) (ω := AddCircle.toCircle x) (g := G))
     _ = ∫⁻ z : Cd d, G z ∂ gammaD d := by
-          rw [lintegral_const]
-          simp
+          simp_all
     _ = ∫⁻ z : Cd d, if z ∈ productAnnulus j then F z else 0 ∂ gammaD d := by rfl
 
 private theorem exists_maxCoord_annulus
@@ -428,11 +420,7 @@ private theorem integrable_evalPkappa_sq_annulus
         (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = ‖F‖ ^ 2 :=
       evalPkappa_total_mass hd kappa F
     have hnorm_ne : ‖F‖ ≠ 0 := norm_ne_zero_of_ne_zero_pkappa_annulus hF
-    have hpos : 0 < ‖F‖ ^ 2 := by
-      have hnorm_pos : 0 < ‖F‖ :=
-        lt_of_le_of_ne (norm_nonneg_pkappa_annulus F) hnorm_ne.symm
-      nlinarith
-    linarith
+    simp_all
 
 private theorem evalPkappa_add_apply_annulus
     {d : Nat} (kappa : MultiIndex d)
@@ -545,8 +533,7 @@ private theorem annulusMass_eq_coordFiber_average_annulus
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gammaD d := by
-          rw [hmass0, hmass_indicator]
-          exact havg.symm
+          simp_all
     _ = ∫⁻ z : Cd d,
           Set.indicator (productAnnulus j)
             (fun z =>
@@ -582,17 +569,8 @@ private theorem localPartPkappa_add_remainderPart
   unfold Hermite1DimdLEAN.localPart Hermite1DimdLEAN.remainderPart
   by_cases hdist :
       Hermite1DimdLEAN.blockDistance j (Hermite1DimdLEAN.blockIndexMulti alpha) ≤ M
-  · have hnlt :
-        ¬ M < Hermite1DimdLEAN.blockDistance j
-            (Hermite1DimdLEAN.blockIndexMulti alpha) := by omega
-    simp [Hermite1DimdLEAN.localCoeffSet, Hermite1DimdLEAN.farCoeffSet,
-      Hermite1DimdLEAN.FiniteHermiteSum.support, hdist, hnlt]
-  · have hlt :
-        M < Hermite1DimdLEAN.blockDistance j
-            (Hermite1DimdLEAN.blockIndexMulti alpha) :=
-      Nat.lt_of_not_ge hdist
-    simp [Hermite1DimdLEAN.localCoeffSet, Hermite1DimdLEAN.farCoeffSet,
-      Hermite1DimdLEAN.FiniteHermiteSum.support, hdist, hlt]
+  · simp_all
+  · simp_all
 
 private theorem localPart_add_remainderPart_evalPkappa
     {d : Nat} {kappa : MultiIndex d} (j : Idx d) (M : Nat)
@@ -915,11 +893,7 @@ private theorem integrable_baseDefectSq_annulus
       nlinarith
         [sq_nonneg (‖evalPkappa kappa F z + evalPkappa kappa G z‖ +
           ‖evalPkappa kappa F z‖)]
-    have hnonneg :
-        0 ≤
-          (‖evalPkappa kappa F z + evalPkappa kappa G z‖ -
-            ‖evalPkappa kappa F z‖) ^ 2 := by positivity
-    simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hsqz
+    simp_all
   simpa [Real.norm_eq_abs, abs_of_nonneg] using
     MeasureTheory.Integrable.mono' hsq hmeasSq hbound
 
@@ -1066,8 +1040,7 @@ private theorem baseDefectAnnulusMass_eq_coordFiber_average_annulus
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gammaD d := by
-          rw [hdef0, hdef_indicator]
-          exact havg.symm
+          simp_all
     _ = ∫⁻ z : Cd d,
           Set.indicator (productAnnulus j)
             (fun z =>
@@ -1198,16 +1171,8 @@ private theorem sum_indicator_productAnnulus_le_annulus
           have heq := productAnnulus_eq_of_mem_annulus hjz hj0z
           exact hjne heq
         simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hjs
-      by_contra hjz
-      exact hs ⟨j, hjs, hjz⟩
-    rw [Finset.sum_eq_zero]
-    · linarith
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
+    simp_all
+  · simp_all
 
 private theorem defect_sq_eq_baseDefectIntegral_annulus
     {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) :
@@ -1409,8 +1374,7 @@ private theorem Phi_rotate_one_exp_annulus
             (Complex.exp (Complex.I * t) * z q0)) := by
     funext q
     by_cases hq : q = q0
-    · subst hq
-      simp
+    · simp_all
     · simp [Function.update, hq]
   rw [hupdate,
     Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp),
@@ -1444,8 +1408,7 @@ private theorem Phi_rotateCoord_circle_phase_annulus
       have hone :
         Complex.exp (Complex.I * ((1 : ℤ) : ℂ) * θ) =
             Complex.exp (Complex.I * θ) := by
-        congr 1
-        ring_nf
+        simp_all
       rw [hone, Phi_rotate_one_exp_annulus]
       have hphase :
           Complex.exp (Complex.I * (((kappa q0 : Nat) : Int) : ℂ) * θ) *
@@ -1550,9 +1513,7 @@ private theorem lowPoly_fiberCoeffLow_eq_sum_annulus
           intro n hn
           rw [Finset.sum_mul]
           refine Finset.sum_congr rfl ?_
-          intro alpha halpha
-          have hg : g alpha = n := (Finset.mem_filter.mp halpha).2
-          rw [hg]
+          simp_all
     _ = ∑ alpha ∈ F.support, A alpha * circleChar (g alpha).1 x := by simpa using hdecomp
     _ = ∑ alpha ∈ F.support, A alpha * circleChar (alpha q0) x := by
           refine Finset.sum_congr rfl ?_
@@ -1618,9 +1579,7 @@ private theorem bandPoly_fiberCoeffBand_eq_sum_annulus
           intro m hm
           rw [Finset.sum_mul]
           refine Finset.sum_congr rfl ?_
-          intro alpha halpha
-          have hg : g alpha = m := (Finset.mem_filter.mp halpha).2
-          rw [hg]
+          simp_all
     _ = ∑ alpha ∈ H.support, A alpha * circleChar (N + (g alpha).1) x := by simpa using hdecomp
     _ = ∑ alpha ∈ H.support, A alpha * circleChar (alpha q0) x := by
           refine Finset.sum_congr rfl ?_
@@ -1692,9 +1651,7 @@ private theorem corrected_fiber_circleL2Sq_eq_uncorrected_annulus
         evalPkappa kappa H
           (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by
   unfold circleL2Sq
-  congr
-  ext x
-  simp
+  simp_all
 
 private theorem corrected_fiber_defectSq_eq_uncorrected_annulus
     {d : Nat} {kappa : MultiIndex d}
@@ -1732,8 +1689,7 @@ private theorem corrected_fiber_defectSq_eq_uncorrected_annulus
     (‖phase * Fz + phase * Hz‖ - ‖phase * Fz‖) ^ 2
         = (‖phase * (Fz + Hz)‖ - ‖phase * Fz‖) ^ 2 := by rw [hadd]
     _ = (‖Fz + Hz‖ - ‖Fz‖) ^ 2 := by
-          rw [norm_mul, norm_mul, hphase_norm]
-          norm_num
+          simp_all
 
 private theorem fiber_circle_estimate_uncorrected_annulus
     {d : Nat} {kappa : MultiIndex d}
@@ -2448,8 +2404,7 @@ theorem finite_base_product_annulus_estimate
     calc
       highAnnulusMass Jloc (ofPkappa kappa G)
           ≤ 4 * Cloc * defect F G ^ 2 + (Crem * L) * ‖G‖ ^ 2 := by
-            rw [htail_eq]
-            exact htail_bound
+            simp_all
       _ ≤ 4 * Cloc * defect F G ^ 2 + eps * ‖G‖ ^ 2 := by
             exact add_le_add le_rfl
               (mul_le_mul_of_nonneg_right (le_of_lt hleak_small) (by positivity))
@@ -2539,8 +2494,7 @@ theorem highAnnulusControl
   have hCdelta_le : C * delta_high <= 1 / 8 := by
     have hmul := mul_le_mul_of_nonneg_left hdelta_le_inv (le_of_lt hC_pos)
     have hC_ne : C ≠ 0 := ne_of_gt hC_pos
-    have hcalc : C * (1 / (8 * C)) = 1 / 8 := by field_simp [hC_ne]
-    nlinarith
+    simp_all
   have hdelta_sq_le : delta_high ^ 2 <= delta_high := by nlinarith [sq_nonneg delta_high]
   have hCdelta_sq_le : C * delta_high ^ 2 <= 1 / 8 := by
     calc

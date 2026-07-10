@@ -122,9 +122,7 @@ lemma DualCertificate.negMass_nonneg
 
 /-- `|x| = max(x, 0) + max(-x, 0)` -/
 private lemma abs_eq_max_add (x : ℝ) : |x| = max x 0 + max (-x) 0 := by
-  rcases le_or_gt x 0 with h | h
-  · rw [abs_of_nonpos h, max_eq_right h, max_eq_left (by linarith)]; ring
-  · rw [abs_of_pos h, max_eq_left h.le, max_eq_right (by linarith)]; ring
+  simp_all
 
 /-
 Positive mass plus negative mass equals 1.
@@ -135,8 +133,7 @@ lemma DualCertificate.posMass_add_negMass
   have h_sum : ∑ S : Finset U, |cert.lam S| = 1 := by
     exact cert.norm_one;
   rw [ ← h_sum, DualCertificate.posMass, DualCertificate.negMass, ← Finset.sum_add_distrib ];
-  exact Finset.sum_congr rfl fun _ _ => by rw [ max_def, max_def ]; split_ifs <;> cases abs_cases (
-    cert.lam _ ) <;> linarith;
+  simp_all
 
 /-- p ≤ 1 -/
 lemma DualCertificate.posMass_le_one
@@ -190,8 +187,7 @@ lemma DualCertificate.marginal_pos_eq_neg
       by
     simpa only [← Finset.sum_sub_distrib] using
       Finset.sum_congr rfl fun x hx => by
-        cases max_cases (cert.lam x) 0 <;>
-          cases max_cases (-cert.lam x) 0 <;>
+        simp_all <;>
           linarith
   linarith
 
@@ -303,9 +299,7 @@ lemma DualCertificate.negCollection_avgSurplus_eq_zero
     by_cases hS : cert.lam S < 0;
     · have := cert.neg_support S hS; aesop;
     · simp only [DualCertificate.negCollection]
-      rw [max_eq_right]
-      · ring
-      · linarith [le_of_not_gt hS]
+      simp_all
   exact div_eq_zero_iff.mpr ( Or.inl <| Finset.sum_eq_zero fun S _ => h_negCollection_weights S )
 
 /-
@@ -498,12 +492,8 @@ lemma DualCertificate.augPosCollection_avgDeficit_le
     intro S
     rcases max_cases (cert.lam S) 0 with hpos | hnonpos
     · rcases max_cases (-cert.lam S) 0 with hneg | hnonneg
-      · have hlam : cert.lam S = 0 := by linarith [hpos.2, hneg.2]
-        simp only [hpos.1, hneg.1]
-        norm_num [hlam]
-      · simp only [hpos.1, hnonneg.1, zero_mul, add_zero]
-        rw [h_cases S |>.1 (by linarith)]
-        nlinarith
+      · simp_all
+      · simp_all
     · rcases max_cases (-cert.lam S) 0 with hneg | hnonneg
       · simp only [hnonpos.1, hneg.1, zero_mul, zero_add]
         have hadd := abs_le.mp (h_additivity S)
@@ -572,8 +562,7 @@ noncomputable def WeightedCollection.uniformOfFamily
   weight := fun _ => 1
   weight_nonneg := fun _ => zero_le_one
   total_pos := by
-    simp only [sum_const, card_univ, nsmul_eq_mul, mul_one, Nat.cast_pos]
-    exact hJ
+    simp_all
 
 omit [Fintype U'] in
 /-- Total weight of a uniform collection equals the cardinality. -/

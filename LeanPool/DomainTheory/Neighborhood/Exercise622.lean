@@ -90,15 +90,9 @@ def Cnat : ScottSys where
         · exact Or.inl (Set.inter_eq_self_of_subset_right hAB)
         · exact Or.inr (Set.inter_self _)
       sub_master := by
-        have hAB : ({([false] : Str)} : Set Str) ⊆ {([false] : Str), ([] : Str)} :=
-          Set.singleton_subset_iff.mpr (Set.mem_insert _ _)
-        rintro X (rfl | rfl)
-        · exact hAB
-        · exact subset_rfl }
+        simp_all }
   ne := by
-    rintro X (rfl | rfl)
-    · exact ⟨[false], rfl⟩
-    · exact ⟨[false], Set.mem_insert _ _⟩
+    simp_all
 
 /-- `Λ ∈ tok(Cnat)`, so `Cnat` is a rooted constant. -/
 theorem nil_mem_Cnat : ([] : Str) ∈ Cnat.sys.master := Set.mem_insert_iff.mpr (Or.inr rfl)

@@ -326,9 +326,7 @@ structure IsFaithfulLoss {Y : Type v} [DecidableEq Y] (loss : LossFunction Y) : 
 theorem zeroOneLoss_faithful : IsFaithfulLoss (zeroOneLoss Bool) := by
   refine ⟨fun y => by simp [zeroOneLoss], fun y₁ y₂ h => ?_⟩
   unfold zeroOneLoss at h
-  split_ifs at h with heq
-  · exact heq
-  · simp at h
+  simp_all
 
 /-- EmpiricalError with a faithful loss is zero iff consistent. -/
 theorem empError_zero_iff_consistent {X : Type u} {Y : Type v} [DecidableEq Y]
@@ -402,8 +400,7 @@ theorem erm_consistent_realizable (X : Type u) [MeasurableSpace X] [DecidableEq 
   have hexists : ∃ h₀ ∈ H, ∀ h' ∈ H,
       EmpiricalError X Bool h₀ S' loss ≤ EmpiricalError X Bool h' S' loss := by
     refine ⟨c, hreal hcC, fun h' _ => ?_⟩
-    rw [hc_emp_zero]
-    exact hEmp_nonneg h'
+    simp_all
   -- Step 4: Unfold ermLearn, the if branch fires
   unfold ermLearn
   rw [dif_pos hexists]
@@ -477,8 +474,7 @@ theorem empiricalError_bounded_diff {X : Type u} [MeasurableSpace X]
   have key : ∀ i : Fin m, i ≠ j →
     zeroOneLoss Bool (h (xs i)) (c (xs i)) -
     zeroOneLoss Bool (h (Function.update xs j x' i)) (c (Function.update xs j x' i)) = 0 := by
-    intro i hij
-    simp [Function.update_of_ne hij]
+    simp_all
   rw [Finset.sum_eq_single j
     (fun i _ hij => key i hij)
     (fun habs => absurd (Finset.mem_univ j) habs)]
@@ -687,13 +683,10 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
         have : y ∈ t := hy_in_t.mpr hfby
         have : y ∈ T ∩ A := hy_inter.mpr this
         have := Finset.mem_inter.mp this
-        have := hy_in_A.mp this.2
         simp_all
       · exfalso
         have : y ∈ A := hy_in_A.mpr hgy
         have : y ∈ T ∩ A := Finset.mem_inter.mpr ⟨hyT, this⟩
-        have : y ∈ t := hy_inter.mp this
-        have := hy_in_t.mp this
         simp_all
       · rfl
     rw [hcgy, key, hy_fb]
@@ -1018,11 +1011,7 @@ theorem disagreement_sum_eq {α : Type*} [Fintype α] [DecidableEq α]
                 rfl
             right_inv := by
               intro g; ext ⟨y, hy⟩; simp [hy] }]
-  rw [Fintype.card_fun, Fintype.card_bool]
-  congr 1
-  -- card { y : α // y ≠ x } = card α - 1
-  rw [Fintype.card_subtype_compl]
-  simp
+  simp_all
 
 /-- Pigeonhole consequence: for any h on a Fintype with card ≥ 2,
     there exists a function f disagreeing with h on more than |α|/4 points.
@@ -1115,8 +1104,7 @@ theorem agreement_count_markov {α : Type*} [Fintype α] [DecidableEq α]
     have hadd : ∑ f : α → Bool, (n - disagree_count f) +
         ∑ f : α → Bool, disagree_count f = ∑ _f : α → Bool, n := by
       rw [← Finset.sum_add_distrib]
-      apply Finset.sum_congr rfl; intro f _
-      exact Nat.sub_add_cancel (hdc_le_n f)
+      simp_all
     rw [htotal, hsum_disagree] at hadd
     nlinarith [hpow]
   -- Step 3: S = #{f : disagree ≤ n/4}
@@ -1175,8 +1163,7 @@ private lemma per_sample_labeling_bound {α : Type*} [Fintype α] [DecidableEq �
     intro f; ext t; simp only [flip]; split_ifs <;> simp
   have hflip_seen : ∀ (f : α → Bool) (i : Fin m), flip f (xs i) = f (xs i) := by
     intro f i; simp only [flip]
-    have : xs i ∈ seen := Finset.mem_image_of_mem _ (Finset.mem_univ i)
-    simp [this]
+    simp_all
   have hflip_output : ∀ f : α → Bool, output (flip f) = output f :=
     fun f => houtput (flip f) f (hflip_seen f)
   -- Key: for each pair (f, flip f), at most one is good.
@@ -1213,10 +1200,7 @@ private lemma per_sample_labeling_bound {α : Type*} [Fintype α] [DecidableEq �
               · right
                 push Not at hft
                 change (if t ∈ seen then f t else !f t) ≠ output f t
-                simp only [ht, ↓reduceIte]
-                -- !f(t) ≠ output(f)(t) since f(t) = output(f)(t) (from hft)
-                rw [← hft]
-                exact Bool.not_ne_self (f t)
+                simp_all
           _ ≤ (Finset.univ.filter fun t => f t ≠ output f t).card +
               (Finset.univ.filter fun t => flip f t ≠ output f t).card :=
             Finset.card_union_le _ _
@@ -1284,8 +1268,7 @@ lemma nfl_counting_core {X : Type u} {C : ConceptClass X Bool} {T : Finset X}
     have hbound := per_sample_labeling_bound m (by rwa [hd_card]) xs
       (fun f t => (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t))
         (fun f f' hff' => by
-          ext t
-          congr 1; funext i; exact Prod.ext rfl (hff' i))
+          simp_all)
     rwa [hd_card] at hbound
   -- Step 2: By contradiction + pigeonhole to find f₀.
   -- The goal is ∃ f₀ c₀, c₀ ∈ C ∧ c₀|_T = f₀ ∧ 2 * count ≤ card.
@@ -1305,27 +1288,7 @@ lemma nfl_counting_core {X : Type u} {C : ConceptClass X Bool} {T : Finset X}
     have hlt := h_all_bad f (hrealize f).choose (hrealize f).choose_spec.1 hcf
     -- The statement uses c₀, we use f. Since c₀(↑t) = f(t) for all t,
     -- the filter predicates are equivalent.
-    suffices heq : (Finset.univ.filter fun xs : Fin m → ↥T =>
-        (Finset.univ.filter fun t : ↥T =>
-          (hrealize f).choose ((↑t : X)) ≠
-            L.learn (fun i => ((↑(xs i) : X), (hrealize f).choose (↑(xs i)))) (↑t)).card * 4
-        ≤ d).card =
-      (Finset.univ.filter fun xs : Fin m → ↥T =>
-        (Finset.univ.filter fun t : ↥T =>
-          f t ≠ (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t)).card * 4
-        ≤ d).card by
-      rw [← heq]; exact hlt
-    congr 1; apply Finset.filter_congr; intro xs _
-    -- Show inner filters equal by showing predicates agree for each t
-    have hinner : (Finset.univ.filter fun t : ↥T =>
-          (hrealize f).choose ((↑t : X)) ≠
-            L.learn (fun i => ((↑(xs i) : X), (hrealize f).choose (↑(xs i)))) (↑t)) =
-        (Finset.univ.filter fun t : ↥T =>
-          f t ≠ (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t)) := by
-      apply Finset.filter_congr; intro t _
-      rw [hcf t, show (fun i => ((↑(xs i) : X), (hrealize f).choose (↑(xs i)))) =
-        (fun i => ((↑(xs i) : X), f (xs i))) from funext (fun i => by rw [hcf])]
-    rw [hinner]
+    simp_all
   -- Step 3: Sum contradiction.
   -- Define good_count(f) = |{xs : error(f,xs)*4 ≤ d}|
   -- ∑_f 2*gc(f) > |↥T → Bool| * |Fin m → ↥T| (from h_all_large)
@@ -1495,8 +1458,7 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
         calc hfin.toFinset.card
             ≤ (Finset.image xs Finset.univ).card :=
               Finset.card_le_card (fun x hx => by
-                simpa only [Set.Finite.mem_toFinset, Set.mem_range, Finset.mem_image,
-                  Finset.mem_univ, true_and] using hx)
+                simp_all)
           _ ≤ Fintype.card (Fin m) := Finset.card_image_le
           _ = m := Fintype.card_fin m
       have hn0 : (Fintype.card X : ENNReal) ≠ 0 :=
@@ -1544,11 +1506,7 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
         change D {xs₀ i} ≠ 0
         change (uniformMeasure X hne) {xs₀ i} ≠ 0
         simp only [uniformMeasure, MeasureTheory.Measure.smul_apply, smul_eq_mul]
-        apply mul_ne_zero
-        · exact ne_of_gt (ENNReal.div_pos one_ne_zero (ENNReal.natCast_ne_top _))
-        · rw [MeasureTheory.Measure.count_apply_finite'
-              (Set.toFinite _) (measurableSet_singleton _)]
-          simp
+        simp_all
     _ ≤ MeasureTheory.Measure.pi (fun _ : Fin m => D)
           { xs | D { x | L.learn (fun i => (xs i, c₀ (xs i))) x ≠ c₀ x }
             > ENNReal.ofReal (1 / 8) } := by
@@ -1584,9 +1542,7 @@ theorem pac_lower_bound_good_event_le_half
     constructor
     show D Set.univ = 1
     simp only [D, MeasureTheory.Measure.map_apply hval_meas MeasurableSet.univ]
-    have : Subtype.val ⁻¹' (Set.univ : Set X) = (Set.univ : Set ↥T) := Set.preimage_univ
-    rw [this]
-    exact hD_sub_prob.measure_univ
+    simp_all
   refine ⟨D, hDprob, ?_⟩
   have hval_emb : @MeasurableEmbedding ↥T X ⊤ _ Subtype.val := {
     injective := Subtype.val_injective
@@ -1701,14 +1657,10 @@ theorem pac_lower_bound_good_event_le_half
     have hD_sub_singleton : ∀ t : ↥T, D_sub {t} = 1 / (T.card : ENNReal) := by
       intro t
       simp only [D_sub, uniformMeasure, MeasureTheory.Measure.smul_apply, smul_eq_mul]
-      rw [@MeasureTheory.Measure.count_apply_finite' ↥T ⊤ _
-        (Set.toFinite _) MeasurableSpace.measurableSet_top]
-      simp [Set.Finite.toFinset, Fintype.card_coe]
+      simp_all
     have hpi_singleton : ∀ xs : Fin m → ↥T,
         μ_pi {xs} = (1 / (T.card : ENNReal)) ^ m := by
-      intro xs
-      rw [hμ_pi_def, @MeasureTheory.Measure.pi_singleton]
-      simp only [hD_sub_singleton, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
+      simp_all
     have hsum_eq : μ_pi (↑count_finset) = ∑ xs ∈ count_finset, μ_pi {xs} :=
       (@MeasureTheory.sum_measure_singleton (Fin m → ↥T)
         (@MeasurableSpace.pi (Fin m) (fun _ => ↥T) (fun _ => ⊤)) μ_pi
@@ -1794,8 +1746,7 @@ theorem pac_lower_bound_core (X : Type u) [MeasurableSpace X] [MeasurableSinglet
     have hstrict : ∀ S, Shatters X C S → S.card ≤ d - 1 := by
       intro S hS; have := hle S hS; have := h_none S hS; omega
     have hbound : VCDim X C ≤ ↑(d - 1) := by
-      apply iSup₂_le; intro S hS
-      exact WithTop.coe_le_coe.mpr (hstrict S hS)
+      apply iSup₂_le; simp_all
     rw [hd] at hbound
     have : d ≤ d - 1 := WithTop.coe_le_coe.mp hbound
     omega
@@ -1862,16 +1813,13 @@ theorem compress_injective_on_labelings {X : Type u} {n : ℕ}
   -- Realizability hypotheses match the correct field's guard
   have hf_real' : ∃ c ∈ C, ∀ i : Fin n,
       c ((fun i => (pts i, f i)) i).1 = ((fun i => (pts i, f i)) i).2 := by
-    obtain ⟨c, hcC, hc⟩ := hf_real
-    exact ⟨c, hcC, fun i => by simp [hc i]⟩
+    simp_all
   have hg_real' : ∃ c ∈ C, ∀ i : Fin n,
       c ((fun i => (pts i, g i)) i).1 = ((fun i => (pts i, g i)) i).2 := by
-    obtain ⟨c, hcC, hc⟩ := hg_real
-    exact ⟨c, hcC, fun i => by simp [hc i]⟩
+    simp_all
   have hf := cs.correct (fun i => (pts i, f i)) hf_real' i
   have hg := cs.correct (fun i => (pts i, g i)) hg_real' i
-  simp only at hf hg
-  rw [← hf, congr_fun h_recon (pts i), hg]
+  simp_all
 
 /-- k + 1 ≤ 2^k for all k. Used in the counting step of compression_imp_vcdim_finite. -/
 private lemma succ_le_two_pow (k : ℕ) : k + 1 ≤ 2 ^ k := by
@@ -2026,9 +1974,7 @@ theorem compression_imp_vcdim_finite (X : Type u)
         ≤ (Finset.range (k + 1)).sum (fun j => (A.powersetCard j).card) := by
           have : target ⊆ (Finset.range (k + 1)).biUnion (fun j => A.powersetCard j) := by
             intro S hS
-            simp only [htarget_def, Finset.mem_filter, Finset.mem_powerset] at hS
-            simp only [Finset.mem_biUnion, Finset.mem_range]
-            exact ⟨S.card, by omega, Finset.mem_powersetCard.mpr ⟨hS.1, rfl⟩⟩
+            simp_all
           exact (Finset.card_le_card this).trans Finset.card_biUnion_le
       _ = (Finset.range (k + 1)).sum (fun j => (2 * n).choose j) := by
           simp [Finset.card_powersetCard, hA_card]
@@ -2102,8 +2048,7 @@ theorem growth_bounded_imp_vcdim_finite (X : Type u)
         _ = Nat.card (↥S → Bool) := Set.ncard_univ _
         _ = Nat.card Bool ^ Nat.card ↥S := Nat.card_fun
         _ = 2 ^ S.card := by
-            rw [Nat.card_eq_fintype_card, Fintype.card_bool,
-                Nat.card_eq_fintype_card, Fintype.card_coe]
+            simp_all
         _ = 2 ^ T.card := by rw [hScard]
     · -- T witnesses this value in the range
       refine ⟨⟨T, rfl⟩, ?_⟩
@@ -2183,8 +2128,7 @@ theorem pac_lower_bound_member (X : Type u) [MeasurableSpace X] [MeasurableSingl
     have hstrict : ∀ S, Shatters X C S → S.card ≤ d - 1 := by
       intro S hS; have := hle S hS; have := h_none S hS; omega
     have hbound : VCDim X C ≤ ↑(d - 1) := by
-      apply iSup₂_le; intro S hS
-      exact WithTop.coe_le_coe.mpr (hstrict S hS)
+      apply iSup₂_le; simp_all
     rw [hd] at hbound
     have : d ≤ d - 1 := WithTop.coe_le_coe.mp hbound
     omega

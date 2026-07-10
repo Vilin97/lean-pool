@@ -24,13 +24,9 @@ lemma tsum_primes_gt_le_tsum_compl (f : Nat.Primes → ℝ) (hf : ∀ p, 0 ≤ f
     ∑' (p : {q : Nat.Primes // q ∉ s}), f p := by
   apply Summable.tsum_le_tsum_of_inj
     (fun x => ⟨x.val, gt_sup_imp_not_mem s x.val x.property⟩)
-  · intro ⟨a, ha⟩ ⟨b, hb⟩ h
-    simp only [Subtype.mk.injEq] at h
-    exact Subtype.ext h
-  · intro c _
-    exact hf c.val
-  · intro i
-    rfl
+  · intro ⟨a, ha⟩ simp_all
+  · simp_all
+  · simp_all
   · exact hsum.subtype _
   · exact hsum.subtype _
 
@@ -130,8 +126,7 @@ lemma floor_diff_bound_rat (X v r : ℕ) (hr : 0 < r) :
   have h := floor_sub_floor_le (((X : ℚ) - v) / r) ((-(v : ℚ)) / r)
   have hr' : (r : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hr)
   have heq : ((X : ℚ) - v) / r - (-(v : ℚ)) / r = (X : ℚ) / r := by field_simp; ring
-  rw [heq] at h
-  exact h
+  simp_all
 
 lemma card_modEq_Icc_bound (v r X : ℕ) (hr : 0 < r) :
     ((Finset.Ioc 0 X).filter fun N => N ≡ v [MOD r]).card ≤ X / r + 1 := by
@@ -149,8 +144,7 @@ lemma card_modEq_Icc_bound (v r X : ℕ) (hr : 0 < r) :
     have := congrArg Int.toNat h
     simp only [Int.toNat_natCast] at this
     exact this
-  rw [hcard]
-  omega
+  simp_all
 
 lemma gcd_psq_b_eq_one (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp : b < p) :
     (p ^ 2).gcd b = 1 :=
@@ -236,8 +230,7 @@ lemma card_union_shifted_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : 
     ext N
     simp only [Finset.mem_filter, Finset.mem_biUnion]
     constructor
-    · rintro ⟨hN, d, hd, hdiv⟩
-      exact ⟨d, hd, hN, hdiv⟩
+    · simp_all
     · rintro ⟨d, hd, hN, hdiv⟩
       exact ⟨hN, d, hd, hdiv⟩
   rw [h_eq]

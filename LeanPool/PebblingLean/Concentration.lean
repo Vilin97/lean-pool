@@ -147,8 +147,7 @@ theorem exp_neg_mul_le_chord {lam B z : ℝ}
       1 - (1 - Real.exp (-(lam * B))) * (z / B) := by
     simp [w, p]
     ring
-  rw [harg, hrhs] at hconv
-  exact hconv
+  simp_all
 
 /-- A scalar lower bound for `1 - exp(-x)` that follows from `1 + x ≤ exp x`.
 This is the elementary replacement for the usual Taylor estimate in the
@@ -235,12 +234,7 @@ theorem exp_neg_le_inv_two_pow_succ_of_log_le (n : ℕ) {exponent : ℝ}
       _ = ((2 : ℝ) ^ (n + 1))⁻¹ := by
             rw [Real.exp_nat_mul, Real.exp_log (by norm_num : (0 : ℝ) < 2)]
       _ = (((1 : ℚ) / (2 ^ (n + 1) : ℚ) : ℚ) : ℝ) := by
-            have hcast :
-                (((2 ^ (n + 1) : ℚ) : ℝ) = (2 : ℝ) ^ (n + 1)) := by
-              norm_num
-            simp only [Rat.cast_div, Rat.cast_one]
-            rw [hcast]
-            rw [one_div]
+            simp_all
   exact hfirst.trans_eq heq
 
 end FiniteProbability

@@ -146,8 +146,7 @@ theorem badPrefix_eq_zero_iff_lowDigits {q n : ℕ} (hq : 1 < q) :
     by_contra hne
     have hpos : 0 < badCountQ q n := Nat.pos_of_ne_zero hne
     obtain ⟨i, hi⟩ := badIndexSet_nonempty hq hpos
-    have := h i hi
-    exact absurd this (by positivity)
+    simp_all
   · intro h0 i hi
     -- badCountQ = 0 ⟹ badIndexSet empty ⟹ no such i
     rw [badCountQ_eq_zero_iff_lowDigits] at h0
@@ -199,8 +198,7 @@ theorem badPrefix_drop_of_top_cleared {q n n' : ℕ} (hq : 1 < q)
     -- k ∈ badIndexSet q n' ⟹ BadAt q k n' ⟹ k < j (else cleared)
     rw [mem_badIndexSet_iff hq] at hk
     by_contra hcon
-    push Not at hcon
-    exact hcleared k hcon hk
+    simp_all
   -- lower bound on badPrefix q n
   have hlb : 2 ^ j ≤ badPrefix q n := two_pow_top_le_badPrefix hq hbad
   omega

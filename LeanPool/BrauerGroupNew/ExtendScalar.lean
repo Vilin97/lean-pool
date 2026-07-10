@@ -52,13 +52,10 @@ def release : L ⊗[k] A →ₐ[L] L ⊗[K] (K ⊗[k] A) where
         rw [Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul, mul_one]
       | add x y hx hy =>
         simp only [mul_add, ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, map_add]
-        change releaseAddHom k K L A _ = releaseAddHom k K L A _ * releaseAddHom k K L A _ at hx
-        change releaseAddHom k K L A _ = releaseAddHom k K L A _ * releaseAddHom k K L A _ at hy
-        rw [hx, hy]
+        simp_all
     | add z w hz hw =>
       simp only [add_mul, ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, map_add]
-      simp only [ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe] at hw hz ⊢
-      rw [hz, hw]
+      simp_all
   commutes' := fun l ↦ by
     simp only [Algebra.TensorProduct.algebraMap_apply, ZeroHom.toFun_eq_coe,
       AddMonoidHom.toZeroHom_coe, Algebra.TensorProduct.one_def]; rfl
@@ -109,8 +106,7 @@ def absorbAddHom : L ⊗[K] (K ⊗[k] A) →+ L ⊗[k] A :=
       change (m • (r • l)) ⊗ₜ a = ((r • m) • l) ⊗ₜ a
       rw [← smul_assoc, smul_eq_mul, mul_comm, ← smul_eq_mul]
     | add x y hx hy =>
-      simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk] at hx hy
-      simp only [AddMonoidHom.coe_mk, ZeroHom.coe_mk, map_add, hx, hy, smul_add]
+      simp_all
     )
 
 /-- Algebra homomorphism inverse to `release`, absorbing the intermediate `K` tensor factor. -/

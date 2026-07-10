@@ -401,8 +401,7 @@ lemma bitRemove_lt_of_mem {i a : V} (h : i ∈ a) : bitRemove i a < a := by
 
 lemma pos_of_nonempty {i a : V} (h : i ∈ a) : 0 < a := by
   exact pos_iff_ne_zero.mpr (fun ha ↦ by
-    rw [ha] at h
-    exact not_mem_zero i h)
+    simp_all)
 
 @[simp 1100] lemma mem_insert (i a : V) : i ∈ insert i a := by simp
 
@@ -584,13 +583,11 @@ lemma eq_empty_or_nonempty (a : V) : a = ∅ ∨ ∃ i, i ∈ a := by
 
 lemma nonempty_iff {s : V} : s ≠ ∅ ↔ ∃ x, x ∈ s := by
   rcases eq_empty_or_nonempty s with rfl | hs
-  · exact iff_of_false (by exact not_not_intro rfl)
-      (by rintro ⟨x, hx⟩; exact not_mem_zero x hx)
+  · simp_all
   · exact iff_of_true
       (by
         rintro rfl
-        rcases hs with ⟨x, hx⟩
-        exact not_mem_zero x hx)
+        simp_all)
       hs
 
 lemma isempty_iff {s : V} : s = ∅ ↔ ∀ x, x ∉ s := by
@@ -610,8 +607,7 @@ lemma lt_of_lt_log {a b : V} (pos : 0 < b) (h : ∀ i ∈ a, i < log b) : a < b 
   wlog lt : i < j
   · exact this (Eq.symm h) (Ne.symm ne) (lt_of_le_of_ne (by simpa using lt) (Ne.symm ne))
   have : i ∉ under i := by simp
-  have : i ∈ under i := by rw [h]; simp [mem_under_iff, lt]
-  contradiction, by rintro rfl; simp⟩
+  simp_all, by rintro rfl; simp⟩
 
 @[simp] lemma under_zero : under (0 : V) = ∅ := mem_ext (by simp [mem_under_iff])
 

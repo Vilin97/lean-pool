@@ -49,8 +49,7 @@ lemma continuous_fisherBilin_apply (u v : tangentSpace (α := α)) :
       (continuous_finsetSum (s := (Finset.univ : Finset α))
         (f := fun a (p : Simplex α) => ((u : α → ℝ) a) * ((v : α → ℝ) a) / p.p a)
         (by
-          intro a ha
-          simpa using hterm a))
+          simp_all))
   simpa [fisherBilin] using hsum
 
 end Simplex

@@ -66,8 +66,7 @@ def constTree (k : ℕ) : Type* ⥤ Trees where
     apply tree_ext
     change List.map (ConcreteCategory.hom g ∘ ConcreteCategory.hom f) x.val =
       List.map (ConcreteCategory.hom g) (List.map (ConcreteCategory.hom f) x.val)
-    exact (List.map_map (f := ConcreteCategory.hom f) (g := ConcreteCategory.hom g)
-      (l := x.val)).symm
+    simp_all
 @[simp] lemma head_constTree_map {B} (k : ℕ) (f : A ⟶ B)
   {x : constTreeObj k A} (h : x.val ≠ []) :
   List.head (((constTree k).map f) x).val (LenHom.map_ne_nil _ h)
@@ -90,9 +89,7 @@ def resEqCounitComp k T : (constTree k).obj ((resEq k).obj T) ⟶ T where
   toFun := fun x ↦ take x.val.length ⟨(headD x).val, by simp⟩
   monotone' := by
     intro x y h; by_cases hx : x.val = []
-    · change List.take x.val.length (headD x).val <+: List.take y.val.length (headD y).val
-      rw [hx]
-      exact List.nil_prefix
+    · simp_all
     · have h' : headD x = headD y := by simpa only [← headD_nonempty] using h.head hx
       change List.take x.val.length (headD x).val <+: List.take y.val.length (headD y).val
       rw [h']
@@ -191,8 +188,7 @@ def resEqAdj (k : ℕ) : constTree k ⊣ resEq k := Adjunction.mkOfUnitCounit {
         change (List.replicate (k + 1) x).length = k + 1
         exact List.length_replicate
       rw [show resEq.val' ((resEqUnit (k + 1)).app ((resEq (k + 1)).obj T) x) = u from rfl]
-      rw [hlen, hhead]
-      exact List.take_of_length_le (by omega)
+      simp_all
 }
 instance (k : ℕ) : Functor.IsRightAdjoint (Tree.resEq k) :=
   ⟨Tree.constTree k, ⟨Tree.resEqAdj k⟩⟩
@@ -241,15 +237,12 @@ def coneZip (s : Limits.Cone F) (x : s.pt) : List (∀ j, (F.obj j).1) :=
 def isLimitLift (s : Limits.Cone F) : s.pt ⟶ (limCone F).pt where
   toFun x := ⟨coneZip F s x, by
     refine ⟨fun j ↦ ?_, ?_⟩
-    · rw [coneZip_mapEval]
-      exact ((s.π.app j) x).prop
+    · simp_all
     · intro i j f
       have hi :
           (⟨(coneZip F s x).mapEval i, by
-            rw [coneZip_mapEval]
-            exact ((s.π.app i) x).prop⟩ : (F.obj i).2) = (s.π.app i) x := by
-        apply tree_ext
-        exact coneZip_mapEval F s x i
+            simp_all⟩ : (F.obj i).2) = (s.π.app i) x := by
+        simp_all
       rw [hi, coneZip_mapEval]
       rw [← s.w f]
       rfl⟩

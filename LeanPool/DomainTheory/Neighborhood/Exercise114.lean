@@ -98,10 +98,7 @@ theorem singleton_isTotal (n : ℕ) :
   by_contra hc
   rw [Set.singleton_subset_iff] at hc
   have hempty : ({n} : Set ℕ) ∩ W = (∅ : Set ℕ) := by
-    ext k
-    simp only [Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
-    rintro ⟨rfl, hk⟩
-    exact hc hk
+    simp_all
   have hi := y.inter_mem hn hW
   rw [hempty] at hi
   exact empty_not_mem (y.sub hi)

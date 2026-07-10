@@ -211,10 +211,7 @@ theorem hermiteFunction_memLp (n : ℕ) :
   simp only [ENNReal.toReal_ofNat]
   -- Reduce to showing (hermiteFunction n)² is integrable (npow, avoiding rpow headaches)
   suffices h : Integrable (fun x : ℝ => (hermiteFunction n x) ^ 2) volume by
-    exact h.congr (by
-      filter_upwards with x
-      rw [Real.norm_eq_abs]
-      simp [sq_abs])
+    simp_all
   -- Express (hermiteFunction n x)² as c² · (Q·Q)(x) · exp(-x²)
   -- where Q = (hermiteR n) ∘ (√2 · X), so Q(x) = Hₙ(x√2)
   set P := (hermite n).map (Int.castRingHom ℝ) with hP_def
@@ -290,17 +287,13 @@ private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
   rw [hd]
   -- Convert deriv of polynomial eval via aeval
   have hpoly : deriv (fun u => (hermiteR m).eval u) x = (derivative (hermiteR m)).eval x := by
-    have h1 : (fun u => (hermiteR m).eval u) = fun u => Polynomial.aeval u (hermiteR m) := by
-      ext u; simp [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_id]
-    rw [h1, Polynomial.deriv_aeval]
-    simp [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_id]
+    simp_all
   rw [hpoly]
   have hexp : deriv (fun u : ℝ => Real.exp (-(u ^ 2 / 2))) x = -x * gaussian x := by
     have h1 : HasDerivAt (fun u : ℝ => -(u ^ 2 / 2)) (-x) x := by
       have := ((hasDerivAt_pow 2 x).div_const 2).neg
       have hf : (fun u : ℝ => -(u ^ 2 / 2)) = -fun x => x ^ 2 / 2 := by ext u; simp
-      have hv : (-x : ℝ) = -(↑2 * x ^ (2 - 1) / 2) := by norm_num
-      rw [hf, hv]; exact this
+      simp_all
     exact h1.exp.deriv.trans (mul_comm _ _)
   rw [hexp]
   -- Hermite recurrence: H_{m+1}(x) = x · Hₘ(x) - Hₘ'(x)
@@ -308,8 +301,7 @@ private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
     x := by
     have h1 : hermiteR (m + 1) = X * hermiteR m - derivative (hermiteR m) := by
       unfold hermiteR
-      rw [hermite_succ, Polynomial.map_sub, Polynomial.map_mul, Polynomial.map_X,
-        Polynomial.derivative_map]
+      simp_all
     rw [h1]; simp [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_X]
   rw [hrec]; ring
 
@@ -598,8 +590,7 @@ noncomputable def gaussianSchwartz : SchwartzMap ℝ ℝ where
       rw [Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_X,
           abs_mul, abs_mul, abs_pow, abs_of_pos (Real.exp_pos _)]
       ring_nf
-    rw [hrw]
-    exact hbound x
+    simp_all
 
 /-- `x ^ k * exp(-x²/2)` is a Schwartz function, proved by iterating multiplication by x
     via `SchwartzMap.smulLeftCLM`.
@@ -1012,8 +1003,7 @@ private lemma integrable_hermiteFunction_mul_deriv (n : ℕ) :
 private lemma schwartz_tendsto_atBot (φ : SchwartzMap ℝ ℝ) :
     Filter.Tendsto (fun x => φ x) Filter.atBot (nhds 0) := by
   have hza := ZeroAtInftyContinuousMapClass.zero_at_infty φ
-  rw [cocompact_eq_atBot_atTop] at hza
-  exact hza.mono_left le_sup_left
+  simp_all
 
 /-- ψₙ(x)² → 0 as x → -∞. -/
 private lemma hermiteFunction_sq_tendsto_atBot (n : ℕ) :
@@ -1153,8 +1143,7 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
       -- Base case: k=0, m=0. Use hermiteFunction_sup_bound.
       obtain ⟨C, s, hC, hs, hbound⟩ := hermiteFunction_sup_bound
       exact ⟨C, s, hC, hs, fun n x => by
-        simp only [pow_zero, one_mul, iteratedDeriv_zero, Real.norm_eq_abs]
-        exact hbound n x⟩
+        simp_all⟩
     | succ k ih =>
       -- Step k → k+1 (m=0): use mul_x_hermiteFunction
       -- |x|^{k+1} |ψ_n| = |x|^k |x·ψ_n| ≤ |x|^k (√((n+1)/2)|ψ_{n+1}| + √(n/2)|ψ_{n-1}|)
@@ -1205,8 +1194,7 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
           apply Real.rpow_le_rpow (by positivity) _ hs; push_cast; linarith
         have hrpow2 : (1 + ↑(n - 1) : ℝ) ^ s ≤ (1 + (↑n : ℝ)) ^ s := by
           apply Real.rpow_le_rpow (by positivity) _ hs
-          have : (↑(n - 1) : ℝ) ≤ (↑n : ℝ) := Nat.cast_le.mpr (Nat.sub_le n 1)
-          linarith
+          simp_all
         have hrpow_split : (1 + (↑n : ℝ)) ^ (s + 1) = (1 + ↑n) ^ s * (1 + ↑n) := by
           rw [Real.rpow_add (by positivity : (0:ℝ) < 1 + ↑n), Real.rpow_one]
         calc Real.sqrt ((↑(n + 1) : ℝ) / 2) * (|x| ^ k * |hermiteFunction (n + 1) x|) +
@@ -1295,8 +1283,7 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
               nlinarith [sq_nonneg ((n : ℕ) : ℝ)]
             · apply mul_le_mul_of_nonneg_left _ (le_of_lt hC)
               apply Real.rpow_le_rpow (by positivity) _ hs
-              have : (↑(n - 1) : ℝ) ≤ (↑n : ℝ) := Nat.cast_le.mpr (Nat.sub_le n 1)
-              linarith
+              simp_all
           · apply mul_le_mul _ _ (by positivity) (by positivity)
             · rw [← Real.sqrt_sq (by positivity : (0:ℝ) ≤ 1 + ↑n)]
               apply Real.sqrt_le_sqrt; push_cast
@@ -1330,8 +1317,7 @@ theorem hermiteFunction_seminorm_bound (k m : ℕ) :
   · intro x
     have hext : ⇑(Classical.choose (hermiteFunction_schwartz n)) = hermiteFunction n :=
       funext (Classical.choose_spec (hermiteFunction_schwartz n))
-    simp only [hext]
-    exact hbound n x
+    simp_all
 
 /-! ## Sobolev-Hermite Spaces
 
@@ -1452,9 +1438,7 @@ private lemma integral_f_xpow_gaussian_zero
   have h_sqrt2_pow_ne : Real.sqrt 2 ^ k ≠ 0 := pow_ne_zero k h_sqrt2_ne
   set R := Q - Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^ k with hR_def
   have hQR : ∀ x : ℝ, Q.eval x = Real.sqrt 2 ^ k * x ^ k + R.eval x := by
-    intro x
-    simp [hR_def, Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_C,
-      Polynomial.eval_pow, Polynomial.eval_X]
+    simp_all
   have hR_deg : R.natDegree < k ∨ k = 0 := by
     by_cases hk : k = 0
     · right; exact hk
@@ -1481,9 +1465,7 @@ private lemma integral_f_xpow_gaussian_zero
       · rw [hR_zero]; exact Nat.pos_of_ne_zero hk
       · rwa [Polynomial.degree_eq_natDegree hR_zero, Nat.cast_lt] at h_deg_lt
   have h_xpow : ∀ x : ℝ, x ^ k = (Real.sqrt 2 ^ k)⁻¹ * (Q.eval x - R.eval x) := by
-    intro x
-    have hsub : Q.eval x - R.eval x = Real.sqrt 2 ^ k * x ^ k := by linarith [hQR x]
-    rw [hsub, inv_mul_cancel_left₀ h_sqrt2_pow_ne]
+    simp_all
   have h_rewrite : ∀ x : ℝ,
       f x * (x ^ k * Real.exp (-(x ^ 2 / 2))) =
       (Real.sqrt 2 ^ k)⁻¹ * (f x * (Q.eval x * Real.exp (-(x ^ 2 / 2)))) -
@@ -1652,8 +1634,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
           = ‖∑ k ∈ Finset.range N, z x ^ k / (Nat.factorial k : ℂ)‖ := rfl
         _ ≤ ∑ k ∈ Finset.range N, ‖z x ^ k / (Nat.factorial k : ℂ)‖ := norm_sum_le _ _
         _ = ∑ k ∈ Finset.range N, ‖z x‖ ^ k / (Nat.factorial k) := by
-            congr 1; ext k
-            rw [norm_div, norm_pow, Complex.norm_natCast]
+            simp_all
         _ ≤ Real.exp ‖z x‖ :=
             Real.sum_le_exp_of_nonneg (norm_nonneg _) N
         _ ≤ Real.exp (2 * π * |ξ| * |x|) :=
@@ -1697,8 +1678,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     intro k y
     simp only [z, innerₗ_apply_apply]
     rw [show @inner ℝ ℝ _ y ξ = y * ξ from by
-      rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real,
-        mul_comm]]
+      simp_all]
     rw [show (↑(-2 * π * (y * ξ)) : ℂ) * Complex.I = c * ↑y from by
       simp only [c]; push_cast; ring]
     rw [mul_pow, Complex.ofReal_pow]
@@ -1708,8 +1688,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     intro k
     obtain ⟨φ, hφ⟩ := poly_mul_gaussian_schwartz (Polynomial.X ^ k)
     have hpG : MemLp (fun y => y ^ k * Real.exp (-(y ^ 2 / 2))) 2 volume :=
-      MemLp.ae_eq (Filter.Eventually.of_forall (fun y => by simp [hφ y, Polynomial.eval_pow,
-        Polynomial.eval_X])) (φ.memLp 2 volume)
+      MemLp.ae_eq (Filter.Eventually.of_forall (fun y => by simp_all)) (φ.memLp 2 volume)
     exact (L2.integrable_inner (𝕜 := ℝ) (MemLp.toLp f hf) (MemLp.toLp _ hpG)).congr
       (by filter_upwards [MemLp.coeFn_toLp hf, MemLp.coeFn_toLp hpG] with x hfx hGx
           rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial,
@@ -1739,8 +1718,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
           congr_arg _ integral_ofReal
       _ = 0 := by rw [h_moments k, Complex.ofReal_zero, mul_zero]
   -- Step 8: Limit of zeros is zero
-  exact tendsto_nhds_unique h_DCT
-    (tendsto_const_nhds.congr (fun N => (h_zero N).symm))
+  simp_all
 
 /-- If ĝ = 0 and φ is smooth compactly supported, then ∫ φ · g = 0.
     Uses Parseval identity and Fourier inversion for Schwartz functions.
@@ -1799,8 +1777,7 @@ private theorem hermiteFunction_complete_proof :
   have h_moments := integral_f_xpow_gaussian_zero f hf horth
   suffices hg : (fun x => f x * Real.exp (-(x ^ 2 / 2))) =ᵐ[volume] 0 by
     filter_upwards [hg] with x hx
-    have hexp_pos : Real.exp (-(x ^ 2 / 2)) > 0 := Real.exp_pos _
-    exact (mul_eq_zero.mp hx).resolve_right (ne_of_gt hexp_pos)
+    simp_all
   have hg_loc : LocallyIntegrable (fun x => f x * Real.exp (-(x ^ 2 / 2))) volume :=
     (integrable_f_mul_gaussian f hf).locallyIntegrable
   exact ae_eq_zero_of_integral_contDiff_smul_eq_zero hg_loc

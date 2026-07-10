@@ -346,7 +346,6 @@ lemma maxAbs_tup : ∀ᶠ h in Filter.atTop, maxAbs (tup n F h) = (X F h + Y F) 
       · exact Nat.le_add_right ..
     · rw [tup_natAdd_four, Int.natAbs_pow, ← cast_sub (by grind [Y_lt_X]), Int.natAbs_natCast]
       exact Nat.pow_le_pow_left (by lia) _
-    · rw [tup_natAdd_five, Int.natAbs_neg]
-      norm_cast
+    · simp_all
 
 end GeneralCase

@@ -136,8 +136,7 @@ theorem vis_inj {ε α ρ}
   apply And.intro
   · exact eq_of_heq (shape.vis.inj this.left).right
   · have := eq_of_heq this.right
-    funext x
-    exact congr (a₁ := x) this rfl
+    simp_all
 
 theorem tau_inj {ε ρ} {t1 t2 : ITree ε ρ} (h : tau t1 = tau t2) : t1 = t2 := by
   simp only [tau, tau'] at h

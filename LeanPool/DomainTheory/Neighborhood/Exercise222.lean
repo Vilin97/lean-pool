@@ -90,8 +90,7 @@ theorem Cl_mem {F : Set τ} (h : ∃ X ∈ C, F ⊆ X) : Cl C F ∈ C := by
   apply hInter
   · obtain ⟨X, hX, hFX⟩ := h
     exact ⟨X, hX, hFX⟩
-  · intro X hX
-    exact hX.1
+  · simp_all
 
 /-! ### The neighbourhood system `reprSystem`. -/
 
@@ -161,11 +160,7 @@ def toC (x : (reprSystem C hInter hne).Element) : Set τ := ⋃₀ famC C hInter
 theorem mem_toC (x : (reprSystem C hInter hne).Element) {t : τ} :
     t ∈ toC C hInter hne x ↔ ∃ F : Tok C, x.mem (nbhd C F.1) ∧ t ∈ Cl C F.1 := by
   simp only [toC, famC, Set.mem_sUnion, Set.mem_setOf_eq]
-  constructor
-  · rintro ⟨Y, ⟨F, hF, rfl⟩, ht⟩
-    exact ⟨F, hF, ht⟩
-  · rintro ⟨F, hF, ht⟩
-    exact ⟨Cl C F.1, ⟨F, hF, rfl⟩, ht⟩
+  simp_all
 
 /-- **Directedness step.** If `C(F), C(F') ∈ x` then there is a token `F₃` with
 `C(F₃) ∈ x` whose

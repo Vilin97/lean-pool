@@ -181,11 +181,7 @@ theorem execList_exists_finite [DecidableEventStructure es] {c : Conf es} {e : e
       have hsdiff_empty : cF \ cF' = ∅ := Finset.card_eq_zero.mp hcard
       have heq_finset : cF = cF' := by
         apply Finset.Subset.antisymm _ hcF'sub
-        intro x hxcF
-        by_cases hxcF' : x ∈ cF'
-        · exact hxcF'
-        · exact absurd (Finset.mem_sdiff.mpr ⟨hxcF, hxcF'⟩)
-            (hsdiff_empty ▸ Finset.notMem_empty x)
+        simp_all
       have hc_eq : c.1 = c'.1 := by
         ext x; rw [← hcF, heq_finset, hcF']
       have heq : c' = c := Subtype.ext hc_eq.symm

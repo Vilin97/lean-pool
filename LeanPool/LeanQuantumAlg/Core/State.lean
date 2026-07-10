@@ -135,8 +135,7 @@ theorem ext {ψ φ : PureState n} (h : ∀ i, ψ i = φ i) : ψ = φ := by
         apply WithLp.ofLp_injective
         funext i
         exact h i
-      subst hv
-      rfl
+      simp_all
 
 /-- The computational basis ket `|x⟩ : PureState n`, big-endian (qubit 0 is
 the most significant bit of `x`). -/

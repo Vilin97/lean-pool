@@ -117,8 +117,7 @@ theorem phase_normalized_orthogonal_reduction
     set g : H := h - (a : ℂ) • f0
     have hinner_real : inner ℂ h f0 = (a : ℂ) := by apply Complex.ext <;> simp [a, him]
     have hf0_inner : inner ℂ f0 f0 = (1 : ℂ) := by
-      rw [inner_self_eq_norm_sq_to_K, hf0]
-      simp
+      simp_all
     have hsmul : inner ℂ ((a : ℂ) • f0) f0 = (a : ℂ) := by
       rw [inner_smul_left, hf0_inner]
       simp

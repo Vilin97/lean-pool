@@ -215,8 +215,7 @@ private lemma mulVecLin_injective_of_det_ne_zero (A : Matrix (Fin n) (Fin n) ℤ
   have h1 : A.adjugate *ᵥ (A *ᵥ v) = A.det • v :=
     by rw [mulVec_mulVec, adjugate_mul, smul_mulVec, one_mulVec]
   rw [hv, mulVec_zero] at h1; ext i
-  have := congr_fun h1.symm i; simp only [Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at this
-  exact (mul_eq_zero.mp this).resolve_left hdet
+  have := congr_fun h1.symm i; simp_all
 
 private lemma finrank_range_mulVecLin (A : Matrix (Fin n) (Fin n) ℤ) (hdet : A.det ≠ 0) :
     Module.finrank ℤ (LinearMap.range A.mulVecLin) = Module.finrank ℤ (Fin n → ℤ) :=
@@ -336,10 +335,7 @@ theorem exists_diagonal_of_posdet (A : Matrix (Fin n) (Fin n) ℤ) (hdet : 0 < A
   have h_sd : Matrix.diagonal a = Matrix.diagonal sv * Matrix.diagonal d := by
     rw [Matrix.diagonal_mul_diagonal]; congr 1; ext i; exact (hsv_mul_d i).symm
   have hss : Matrix.diagonal sv * Matrix.diagonal sv = 1 := by
-    rw [Matrix.diagonal_mul_diagonal]; ext i j; simp only [Matrix.diagonal_apply, Matrix.one_apply]
-    by_cases h : i = j
-    · subst h; simp [hsv_sq]
-    · simp [h]
+    simp_all
   have hs_det_unit : IsUnit (Matrix.diagonal sv).det := by
     rw [Matrix.det_diagonal]; exact IsUnit.of_mul_eq_one _
       (by rw [← Finset.prod_mul_distrib]; exact Finset.prod_eq_one (fun i _ => hsv_sq i))
@@ -594,8 +590,7 @@ private lemma make_first_divide_all (k : ℕ) (d : Fin (k + 2) → ℤ) (hd : �
       obtain ⟨L₁, R₁, d₁, hd₁_pos, hd₁_zero, hd₁_rest, _, hlt, hmul₁⟩ :=
         gcd_step_general k d hd j hj_ne
       have hN₁ : (d₁ (0 : Fin (k + 2))).natAbs < N := by
-        rw [show d₁ (0 : Fin (k + 2)) = d₁ ⟨0, by omega⟩ from rfl, hd₁_zero, ← hN]
-        exact hlt hj_ndvd
+        simp_all
       obtain ⟨d₂, hd₂_pos, hd₂_div, L₂, R₂, hmul₂⟩ :=
         ih _ hN₁ d₁ hd₁_pos (hd₁_pos 0) rfl
       refine ⟨d₂, hd₂_pos, hd₂_div, L₂ * L₁, R₁ * R₂, ?_⟩
@@ -635,11 +630,7 @@ private lemma slSuccEmbed_mul_diagonal (k : ℕ) (d : Fin (k + 2) → ℤ)
   have h_decomp : Matrix.diagonal (d ∘ e.symm) =
       fromBlocks (Matrix.diagonal (fun _ : Fin 1 => d 0))
         0 0 (Matrix.diagonal (fun i : Fin (k + 1) => d ⟨i.val + 1, by omega⟩)) := by
-    ext (i | i) (j | j)
-    · fin_cases i; fin_cases j; simp [fromBlocks, Function.comp, he_inl]
-    · simp [fromBlocks]
-    · simp [fromBlocks]
-    · simp [fromBlocks, diagonal_apply, Function.comp, he_inr]
+    simp_all
   rw [h_decomp, fromBlocks_multiply]; simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero,
     zero_add, Matrix.one_mul]
   rw [fromBlocks_multiply]; simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
@@ -796,13 +787,7 @@ theorem exists_diagonal_representative (α : (GLPair n).Δ) :
     DoubleCoset.doubleCoset (↑(diagMatDelta n a) : GL (Fin n) ℚ) (SLnZSubgroup n)
       (SLnZSubgroup n)
   rw [diagMat_delta_val n a hd_pos_nat, double_coset_eq_of_SLnZ_equiv n α A hA d hd_pos L R hLR]
-  congr 1; apply GeneralLinearGroup.ext; intro i j
-  change ((Matrix.diagonal d).map (Int.cast : ℤ → ℚ)) i j =
-    (↑(diagMat n a) : Matrix (Fin n) (Fin n) ℚ) i j
-  simp only [diagMat_val n a hd_pos_nat, Matrix.diagonal_apply, Matrix.map_apply]
-  split_ifs with h
-  · rw [hd_eq i]; push_cast; rfl
-  · simp
+  congr 1; apply GeneralLinearGroup.ext; simp_all
 
 omit [NeZero n] in
 private lemma divChain_prod_dvd_of_injective {a : Fin n → ℕ} (hda : DivChain n a)

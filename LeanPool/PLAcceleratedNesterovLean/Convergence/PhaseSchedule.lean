@@ -91,8 +91,7 @@ theorem muOfTheta_lt_mu {μ θ : ℝ} (hμ : 0 < μ) (hθ_pos : 0 < θ) :
 theorem muOfPhase_lt_mu {μ : ℝ} (hμ : 0 < μ) (k : ℕ) :
     muOfPhase μ k < μ := by
   simp only [muOfPhase]
-  have h1 : 0 < (4 : ℝ)⁻¹ ^ k := by positivity
-  nlinarith
+  simp_all
 
 theorem muOfPhase_increasing {μ : ℝ} (hμ : 0 < μ) (k : ℕ) :
     muOfPhase μ k ≤ muOfPhase μ (k + 1) := by

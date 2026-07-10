@@ -161,8 +161,7 @@ lemma restrictTerminalRule_right_terminal_output {t : T} {r : ContextFreeRule T 
     obtain ⟨s, _, hsr⟩ := hrr
     cases s <;> simp only [Option.some.injEq, reduceCtorEq] at hsr
     rw [← hsr] at hrt ⊢
-    simp only [Sum.inr.injEq, List.cons.injEq, Symbol.terminal.injEq, and_true] at hrt ⊢
-    exact hrt
+    simp_all
 
 lemma restrictTerminalRules_right_terminal_output [DecidableEq T] [DecidableEq g.NT] {t : T}
     {r : ContextFreeRule T (g.NT ⊕ T)} (hrg : r ∈ restrictTerminalRules g.rules.toList)
@@ -245,9 +244,7 @@ lemma restrictTerminals_derives_rightEmbedString_embedString {u : List (Symbol T
     simp only [List.mem_cons, List.map_cons] at hu ⊢
     rw [← List.singleton_append, ← @List.singleton_append _ (embedSymbol a)]
     apply Derives.append_left_trans
-    · apply ih
-      intro t ht
-      exact hu t (Or.inr ht)
+    · simp_all
     · cases a with
       | nonterminal => rfl
       | terminal t =>
@@ -300,10 +297,7 @@ lemma derives_restrictTerminals_derives_embedString {u v : List (Symbol T g.NT)}
               List.mem_map.2 ⟨r, Finset.mem_toList.2 hrg, rfl⟩, ?_⟩)
             unfold restrictTerminalRule
             split <;> rename_i heq
-            · rename_i t'
-              exfalso
-              apply hrt
-              use t'
+            · simp_all
             · exact List.mem_cons_self
           exact hmem
         · unfold embedString embedSymbol

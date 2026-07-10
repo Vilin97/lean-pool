@@ -430,8 +430,7 @@ protected noncomputable def basis (hφ : φ.IsFaithfulPosMap) : Basis (n × n) �
       Finsupp.linearCombination_apply, Finsupp.sum] at this ⊢
     simp_rw [← smul_mul_assoc, ← Finset.sum_mul]
     by_cases h : IsEmpty n
-    · haveI := h
-      simp only [eq_iff_true_of_subsingleton, forall_const]
+    · simp_all
     rw [not_isEmpty_iff] at h
     have t1 :
       ∀ a : n × n →₀ ℂ,
@@ -1045,8 +1044,7 @@ theorem Matrix.linearMap_ext_iff_inner_map [hφ : φ.IsFaithfulPosMap] {x y : l(
   mat_inner_instances φ
   simp_rw [LinearMap.ext_iff]
   constructor
-  · intro h u v
-    rw [h]
+  · simp_all
   · intro h a
     apply @_root_.ext_inner_right ℂ _ _
     exact h _
@@ -1292,10 +1290,8 @@ lemma Matrix.smul_inj_mul_one {n : Type*} [DecidableEq n]
   · intro h
     let i : n := Nonempty.some ‹_›
     specialize h i i
-    simp only [↓reduceIte] at h
-    exact h
-  · rintro rfl i j
-    rfl
+    simp_all
+  · simp_all
 
 open scoped Classical in
 omit [DecidableEq k] in
@@ -1313,8 +1309,5 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff [hψ : ∀ i, (ψ i).
   constructor
   · intro h
     specialize h (1 : PiMat ℂ k s)
-    simp only [Pi.smul_apply, Pi.one_apply] at h
-    simp_rw [Matrix.smul_inj_mul_one] at h
-    exact h
-  · intro h i a
-    rw [h]
+    simp_all
+  · simp_all

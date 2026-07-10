@@ -198,8 +198,7 @@ lemma barrier_potential_decrease
       rw [Matrix.sub_mul, Matrix.trace_sub]; ring
     linarith
   -- Step 7: Conclude
-  rw [htrace]
-  exact mul_le_mul_of_nonneg_left hkey (sub_nonneg.mpr hu.le)
+  simp_all
 
 /-- Helper: the barrier potential gap is positive when u' > u and M ≺ uI.
     Requires Nonempty V since trace is 0 on the empty type. -/
@@ -245,8 +244,7 @@ lemma eigenvalue_le_trace_of_posSemidef
   -- trace = sum of eigenvalues (for real Hermitian matrices, ofReal is the identity on ℝ)
   have htr : K.trace = ∑ j, hK_herm.eigenvalues j := by
     have h := hK_herm.trace_eq_sum_eigenvalues
-    simp only [RCLike.ofReal_real_eq_id, id] at h
-    exact h
+    simp_all
   rw [htr]
   exact Finset.single_le_sum (fun j _ => h_eig_nn j) (Finset.mem_univ i)
 

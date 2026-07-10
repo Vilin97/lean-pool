@@ -35,8 +35,7 @@ theorem rhoPointwise
       |A - B| = |‖a + u‖ - ‖a + v‖| := by simp [A, B]
       _ ≤ ‖(a + u) - (a + v)‖ := abs_norm_sub_norm_le (a + u) (a + v)
       _ = ‖u - v‖ := by
-        rw [sub_eq_add_neg, sub_eq_add_neg]
-        ring_nf
+        simp_all
   calc
     |A| = |(A - B) + B| := by ring_nf
     _ ≤ |A - B| + |B| := abs_add_le _ _
@@ -108,8 +107,7 @@ private theorem productBasisPhaseLawCircle
           fun q => Complex.exp (Complex.I * θ) * z q := by
       funext q
       rw [fourier_mk_eq_exp]
-      congr 1
-      ring_nf
+      simp_all
     rw [hrot, productBasisPhaseLaw, fourier_mk_eq_exp]
     apply congrArg₂ (· * ·)
     · congr 1
@@ -155,11 +153,7 @@ private theorem localOrbit_eq_positiveFrequencyPolynomial
                 fourier (totalDegree j_1 : ℤ) t
         rw [Finset.sum_mul]
         refine Finset.sum_congr rfl ?_
-        intro β hβ
-        by_cases hdeg : totalDegree β = totalDegree α
-        · simp [hdeg, mul_left_comm, mul_comm]
-        · exfalso
-          exact hdeg ((Finset.mem_filter.mp hβ).2))
+        simp_all)
   calc
     (fourier (totalDegree κ : ℤ) t : ℂ) *
         evalHermiteSum κ (localPart j M G) (fun q => (fourier (1 : ℤ) t : ℂ) * z q)
@@ -532,8 +526,7 @@ private lemma annulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hmass0, hmass_indicator]
-          exact havg.symm
+          simp_all
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)
             (fun z => ENNReal.ofReal (circleL2NormSq (localOrbit κ j M G z))) z
@@ -645,8 +638,7 @@ private lemma defectAnnulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hdef0, hdef_indicator]
-          exact havg.symm
+          simp_all
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)
             (fun z =>

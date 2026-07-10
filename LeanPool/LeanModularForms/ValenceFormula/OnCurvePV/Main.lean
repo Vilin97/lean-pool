@@ -51,8 +51,7 @@ private theorem cpv_exists_at_I_H_lt_one (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
       · rcases eq_or_lt_of_le ht3 with rfl | ht3'
         · exact hγ3_ne_I h_eq
         · have := fdBoundary_H_seg4_re' H ht3' ht4; rw [h_eq] at this; norm_num at this
-      · push Not at ht4
-        exact h_seg5_ne_I ht4 ht.2 h_eq
+      · simp_all
 
 /-! ### Helper: s = I, H = 1 -/
 
@@ -296,9 +295,7 @@ private theorem cpv_exists_generic_arc_seg5_cross (H : ℝ) (hH : Real.sqrt 3 / 
       have ht4 : 4 < t := by linarith [ht.1]
       have ht5 : t ≤ 5 := by linarith [ht.2]
       have h_re_t := fdBoundary_H_seg5_re' H ht4 ht5
-      have h_re_t₁ := fdBoundary_H_seg5_re' H ht₁_gt4 (le_of_lt ht₁_lt5)
-      have : (fdBoundaryH H t).re = (fdBoundaryH H t₁).re := by rw [hγt]
-      linarith
+      simp_all
   have h_cpv_0_t0h : CauchyPrincipalValueExists' (fun z => (z - s)⁻¹)
       (fdBoundaryH H) 0 ((t₀ + 3) / 2) s := by
     apply cpv_concat _ _ 0 ((t₀ + 1) / 2) ((t₀ + 3) / 2) s
@@ -457,10 +454,7 @@ private theorem cpv_exists_generic_arc (H : ℝ) (hH : Real.sqrt 3 / 2 < H) (s :
         (by fun_prop : ContDiffAt ℝ 2 (fun u : ℝ => Real.pi * (1 + u) / 6) t₀)).mul
           contDiffAt_const).cexp
     · erw [(fdBoundary_H_hasDerivAt_arc H ht₀_gt_1 ht₀_lt_3).deriv]
-      apply mul_ne_zero (exp_ne_zero _)
-      apply mul_ne_zero
-      · exact by norm_num [Complex.ofReal_ne_zero]
-      · exact I_ne_zero
+      simp_all
     · apply (fdBoundary_H_deriv_continuousOn_Ioo_13 H).mono
       intro t ht; exact ⟨by linarith [ht.1], by linarith [ht.2]⟩
     · intro t ht hγt
@@ -575,9 +569,7 @@ private theorem cpv_exists_generic_seg4 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) (s 
       · subst ht4_eq
         have h_im_eq : s.im = H := by
           rw [← h_eq, fdBoundary_H_at_four]
-          simp only [Complex.add_im, Complex.neg_im, Complex.div_ofNat_im, Complex.one_im,
-                     Complex.mul_im, Complex.ofReal_re, Complex.I_re, Complex.I_im,
-                     mul_zero, mul_one, neg_zero, zero_add, zero_div, add_zero]
+          simp_all
         rw [← hγt₀,
           fdBoundary_H_eq_seg4_H (by linarith) (le_of_lt ht₀_lt_4)] at h_im_eq
         simp [fdBoundarySeg4H] at h_im_eq
@@ -660,10 +652,7 @@ private theorem cpv_exists_generic_seg5_normSq_one (H : ℝ) (hH : Real.sqrt 3 /
             Real.pi * (1 + u) / 6) t₁)).mul
           contDiffAt_const).cexp
     · erw [(fdBoundary_H_hasDerivAt_arc H ht₁_gt1 ht₁_lt3).deriv]
-      apply mul_ne_zero (exp_ne_zero _)
-      apply mul_ne_zero
-      · exact by norm_num [Complex.ofReal_ne_zero]
-      · exact I_ne_zero
+      simp_all
     · apply (fdBoundary_H_deriv_continuousOn_Ioo_13 H).mono
       intro t ht; exact ⟨by linarith [ht.1], by linarith [ht.2]⟩
     · intro t ht hγt
@@ -827,9 +816,7 @@ private theorem cpv_exists_generic_seg5 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) (s 
       have ht4 : 4 < t := by linarith [ht.1]
       have ht5 : t ≤ 5 := by linarith [ht.2]
       have h_re_t := fdBoundary_H_seg5_re' H ht4 ht5
-      have h_re_t₀ := fdBoundary_H_seg5_re' H ht₀_gt_4 (le_of_lt ht₀_lt_5)
-      have : (fdBoundaryH H t).re = (fdBoundaryH H t₀).re := by rw [hγt]
-      linarith
+      simp_all
   by_cases h_normSq : Complex.normSq s = 1
   · exact cpv_exists_generic_seg5_normSq_one H hH s hs_rho hs_endpoint t₀
       ht₀_gt_4 ht₀_lt_5 h_im_s h_re_s h_seg5_cpv h_normSq
@@ -859,8 +846,7 @@ theorem fdBoundary_H_cpv_exists_of_onCurve (H : ℝ) (hH : Real.sqrt 3 / 2 < H) 
       have hγ2 : fdBoundaryH H 2 = I := by
         rw [fdBoundary_H_eq_arc (by norm_num : (1 : ℝ) < 2) (by norm_num : (2 : ℝ) < 3)]
         have : Real.pi * (1 + 2) / 6 = Real.pi / 2 := by ring
-        rw [this, show (↑(Real.pi / 2) : ℂ) * I = ↑Real.pi / 2 * I from by push_cast; ring]
-        exact Complex.exp_pi_div_two_mul_I
+        simp_all
       have h_arc_cpv : CauchyPrincipalValueExists' (fun z => (z - I)⁻¹)
           (fdBoundaryH H) (3/2) (5/2) I := by
         apply cpv_exists_on_smooth_subinterval H hH I
@@ -877,10 +863,7 @@ theorem fdBoundary_H_cpv_exists_of_onCurve (H : ℝ) (hH : Real.sqrt 3 / 2 < H) 
         · have hd := fdBoundary_H_hasDerivAt_arc H
             (show (1 : ℝ) < 2 from by norm_num) (show (2 : ℝ) < 3 from by norm_num)
           erw [hd.deriv]
-          apply mul_ne_zero (exp_ne_zero _)
-          apply mul_ne_zero
-          · exact by norm_num [Complex.ofReal_ne_zero]
-          · exact I_ne_zero
+          simp_all
         · apply (fdBoundary_H_deriv_continuousOn_Ioo_13 H).mono
           intro t ht; exact ⟨by linarith [ht.1], by linarith [ht.2]⟩
         · intro t ht hγt

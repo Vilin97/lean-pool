@@ -150,8 +150,7 @@ theorem S_smul_re_neg_of_unit (p : ℍ) (hp : ‖(p : ℂ)‖ = 1) :
   have hns := normSq_eq_one_of_norm_eq_one hp
   change ((ModularGroup.S • p : ℍ) : ℂ).re = -p.re
   rw [S_smul_coe]
-  simp only [Complex.inv_re, Complex.neg_re,
-    Complex.normSq_neg, hns, div_one]; rfl
+  simp_all
 
 /-- S-action preserves 𝒟 for unit-circle points. -/
 theorem S_smul_mem_fd_of_unit (p : ℍ) (hp_fd : p ∈ 𝒟) (hp_norm : ‖(p : ℂ)‖ = 1) :
@@ -204,10 +203,7 @@ theorem sum_ord_leftVert_eq_sum_T_image (S : Finset ℍ) :
 lemma ord_vAdd_neg_one_eq (p : ℍ) :
     orderOfVanishingAt' (⇑f) ((-1 : ℝ) +ᵥ p) = orderOfVanishingAt' (⇑f) p := by
   have h := ord_add_one_eq f ((-1 : ℝ) +ᵥ p)
-  rw [show (1 : ℝ) +ᵥ ((-1 : ℝ) +ᵥ p) = p from by
-    ext; change ((1 : ℝ) : ℂ) + (((-1 : ℝ) : ℂ) + (p : ℂ)) = (p : ℂ)
-    push_cast; ring] at h
-  exact h.symm
+  simp_all
 
 /-- The left-arc filter: points on the unit circle with negative real part. -/
 def sLeftArc (S : Finset ℍ) : Finset ℍ :=
@@ -223,8 +219,7 @@ private lemma S_mul_S : ModularGroup.S * ModularGroup.S = -1 := by
 /-- S² acts as the identity on ℍ. -/
 lemma S_smul_S_smul (p : ℍ) : ModularGroup.S • (ModularGroup.S • p) = p := by
   rw [← mul_smul, S_mul_S]
-  apply UpperHalfPlane.ext
-  simp only [ModularGroup.SL_neg_smul, one_smul]
+  simp_all
 
 /-- The S-action is injective on ℍ. -/
 lemma S_smul_injective : Function.Injective (ModularGroup.S • · : ℍ → ℍ) :=
@@ -265,8 +260,7 @@ theorem sum_ord_rightVert_eq_sum_ord_leftVert (S : Finset ℍ)
     · show ‖((1 : ℝ) +ᵥ q : ℂ)‖ > 1
       rw [vAdd_one_norm_eq_of_re_neg_half q hre]; exact hnorm
     · rw [ord_add_one_eq f q]; exact hord
-    · change (-1 : ℝ) +ᵥ ((1 : ℝ) +ᵥ q) = q
-      rw [← add_vadd, show (-1 : ℝ) + 1 = 0 from by ring, zero_vadd]
+    · simp_all
   · intro p _; rw [ord_vAdd_neg_one_eq f p]
 
 /-- Orders on right arc equal orders on left arc (via S-action). -/

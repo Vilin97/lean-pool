@@ -77,9 +77,7 @@ include R in lemma factorPow_comp_evalₐ_noeth {m n : ℕ} (hmn : m ≤ n) (x :
   have hcauchy := a.2 hmn
   rw [SModEq.sub_mem] at hcauchy
   have hmem : a.1 m - a.1 n ∈ (I ^ m : Ideal R) := by
-    rwa [show I ^ m • (⊤ : Submodule R R) = (I ^ m : Ideal R) by
-           ext
-           simp] at hcauchy
+    simp_all
   rw [Ideal.Quotient.eq]
   rwa [show a.1 n - a.1 m = -(a.1 m - a.1 n) from by ring, neg_mem_iff]
 
@@ -124,8 +122,7 @@ instance adicCompletion_isPrecomplete :
   have hr_cauchy : ∀ k, r k ≡ r (k + 1) [SMOD M ^ k • (⊤ : Submodule R R)] := by
     intro k
     rw [SModEq.sub_mem, show M ^ k • (⊤ : Submodule R R) = (M ^ k : Ideal R) by
-          ext
-          simp]
+          simp_all]
     have h1 : (Ideal.Quotient.mk (M ^ k)) (r k) = evalₐ M k (f k) := hr k
     have h2 : (Ideal.Quotient.mk (M ^ (k + 1))) (r (k + 1)) = evalₐ M (k + 1) (f (k + 1)) :=
       hr (k + 1)
@@ -205,8 +202,7 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma filtration_smul_le
     have hfp_r : Ideal.Quotient.factorPow Mi (Nat.le_succ (n + 1))
         (Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r) =
         Ideal.Quotient.mk (Mi ^ (n + 1)) r := by
-      unfold Ideal.Quotient.factorPow
-      simp [Ideal.Quotient.factor_mk]
+      simp_all
     have hdiff_quot : evalₐ Mi (n + 1 + 1) y - Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r ∈
         RingHom.ker (Ideal.Quotient.factorPow Mi (Nat.le_succ (n + 1))) := by
       rw [RingHom.mem_ker, map_sub, hfp_y, hfp_r, hyr, sub_self]
@@ -357,8 +353,7 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma extract_filtration_rep
     rw [hFN_def]
     exact ⟨hr_pow, Ideal.mem_comap.mpr (hr_eq ▸ Ideal.mem_map_of_mem _ heJ)⟩
   refine ⟨r, ?_, hr_eq.symm⟩
-  rw [hn0_pow]
-  exact (hFN_def (n0 + K) ▸ hr_FN : r ∈ (FN (n0 + K) : Submodule R R))
+  simp_all
 
 /-- Every ideal of the adic completion of a Noetherian local ring is finitely generated. -/
 private def adicCompletion_ideal_fg_proof : PLift (
@@ -385,19 +380,13 @@ private def adicCompletion_ideal_fg_proof : PLift (
       (surjective_evalₐ Mi (n + 1))).mpr ⟨y, hyJ, ?_⟩
     have heval : evalₐ Mi (n + 1) y = Ideal.Quotient.mk (Mi ^ (n + 1)) r := by
       rw [← factorPow_comp_evalₐ_noeth Mi (Nat.le_succ (n + 1)) y]
-      change Ideal.Quotient.factorPow Mi _ ((evalₐ Mi (n + 1 + 1)).toRingHom y) =
-        Ideal.Quotient.mk (Mi ^ (n + 1)) r
-      conv_lhs => rw [show (evalₐ Mi (n + 1 + 1)).toRingHom y =
-        Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r from hyr]
-      rfl
+      simp_all
     exact heval
   have hFN_smul_sub : forall n, Mi * FN n ≤ FN (n + 1) :=
     filtration_smul_le R Mi J FN hFN_def
   -- Build the Ideal.Filtration and prove stability
   have hFN_smul_R : forall n, Mi • (FN n : Submodule R R) ≤ (FN (n + 1) : Submodule R R) := by
-    intro n
-    rw [Ideal.smul_eq_mul]
-    exact hFN_smul_sub n
+    simp_all
   set F_filt : Mi.Filtration R :=
     { N := fun n => (FN n : Submodule R R)
       mono := fun n => hFN_mono_sub n
@@ -436,12 +425,10 @@ private def adicCompletion_ideal_fg_proof : PLift (
     rcases hx with hx | hx
     · rw [Finset.mem_image] at hx
       obtain ⟨a, ha, rfl⟩ := hx
-      rw [dif_pos ha]
-      exact hlJ_mem a ha
+      simp_all
     · rw [Finset.mem_image] at hx
       obtain ⟨r, hr, rfl⟩ := hx
-      rw [dif_pos hr]
-      exact hlF_mem r hr
+      simp_all
   · -- HARD DIRECTION: J ≤ Ideal.span ↑(genJ ∪ genF)
     -- It suffices to show ∀ x ∈ J, ∀ N, x ∈ I₀ + M̂^N, then conclude by Hausdorff.
     set I₀ := Ideal.span (↑(genJ ∪ genF) : Set (AdicCompletion Mi R))
@@ -456,12 +443,10 @@ private def adicCompletion_ideal_fg_proof : PLift (
       rcases hz with hz | hz
       · rw [Finset.mem_image] at hz
         obtain ⟨a, ha, rfl⟩ := hz
-        rw [dif_pos ha]
-        exact hlJ_mem a ha
+        simp_all
       · rw [Finset.mem_image] at hz
         obtain ⟨r, hr, rfl⟩ := hz
-        rw [dif_pos hr]
-        exact hlF_mem r hr
+        simp_all
     have hgenJ_sub : ∀ a ∈ S_J, (if h : a ∈ S_J then lJ a h else 0) ∈ I₀ := by
       intro a ha
       exact Ideal.subset_span (Finset.mem_coe.mpr
@@ -488,8 +473,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         have ht_fin : t ∈ S_F := Finset.mem_coe.mp ht_mem
         refine ⟨of Mi R c * (if h : t ∈ S_F then lF t h else 0),
           I₀.mul_mem_left _ (hgenF_sub t ht_fin), ?_⟩
-        rw [dif_pos ht_fin, map_mul, evalₐ_of, hlF_eq t ht_fin]
-        rw [show c • t = c * t from rfl, ← map_mul]
+        simp_all
     -- Phase 1: ∀ K x ∈ J, x ∈ I₀ ⊔ Mhat^(n0 + K)
     suffices hphase1 : ∀ (K : ℕ) (x : AdicCompletion Mi R), x ∈ J →
         x ∈ I₀ ⊔ Mhat ^ (n0 + K) by
@@ -624,9 +608,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         simp only [sumG, zero_mul, Finset.sum_const_zero]
       have csd0 : { c // CSDPred 0 c } := ⟨fun _ => 0, by
         constructor
-        · show x - y₀ - sumG (fun _ => 0) ∈ _
-          rw [hsum_zero, sub_zero]
-          rwa [Nat.add_zero]
+        · simp_all
         · show x - y₀ - sumG (fun _ => 0) ∈ _
           rw [hsum_zero, sub_zero]
           exact J.sub_mem hx (hI0_le_J hy₀)⟩
@@ -760,8 +742,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         have ha_fin : a ∈ S_J := ha
         exact (Ideal.mem_map_iff_of_surjective _ (surjective_evalₐ Mi n0)).mpr
           ⟨if h : a ∈ S_J then lJ a h else 0, hgenJ_sub a ha_fin, by
-            rw [dif_pos ha_fin]
-            exact hlJ_eq a ha_fin⟩
+            simp_all⟩
     | succ K ih =>
       intro x hx
       obtain ⟨y, hy, e, he, hxye⟩ := Submodule.mem_sup.mp (ih x hx)
@@ -772,8 +753,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
       obtain ⟨δ, hδI, hδeq⟩ := smul_lift_of_filtration R Mi n0 K (FN n0) S_F
         hS_F I₀ hlift_span r hr_in_smul
       have hsum : (y + δ) + (e - δ) = x := by
-        rw [show y + δ + (e - δ) = y + e from by abel]
-        exact hxye
+        simp_all
       have hmem_ker : e - δ ∈ Mhat ^ (n0 + (K + 1)) := by
         rw [show n0 + (K + 1) = n0 + K + 1 from by omega, ← hker_eq,
           RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,

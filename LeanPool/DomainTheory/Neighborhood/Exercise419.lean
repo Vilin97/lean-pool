@@ -193,8 +193,7 @@ def liftC (V : NeighborhoodSystem β) (coneVal singVal : Str → V.Element)
       rcases hX' with ⟨τ, rfl⟩ | ⟨τ, rfl⟩
       · exact absurd hX'X (not_cone_subset_singleton τ σ)
       · have hτσ : τ = σ := by
-          have := Set.singleton_subset_iff.mp hX'X
-          rwa [Set.mem_singleton_iff] at this
+          simp_all
         subst hτσ
         exact Or.inr ⟨τ, rfl, (singVal τ).up_mem hY hY' hYY'⟩
 
@@ -225,13 +224,9 @@ theorem liftC_strElem (V : NeighborhoodSystem β) (coneVal singVal : Str → V.E
   · rintro ⟨X, ⟨_, hsub⟩, hrel⟩
     rcases hrel with ⟨σ', hXcone, hY⟩ | ⟨σ', hXsing, hY⟩
     · have hpre : σ' <+: σ := by
-        apply singleton_subset_cone.mp
-        rw [← hXcone]; exact hsub
+        simp_all
       exact hsing hpre Y hY
-    · have hσσ' : σ = σ' := by
-        have := Set.singleton_subset_iff.mp (hXsing ▸ hsub)
-        rwa [Set.mem_singleton_iff] at this
-      subst hσσ'; exact hY
+    · simp_all
   · intro hY
     exact ⟨{σ}, ⟨memC_singleton σ, subset_rfl⟩, Or.inr ⟨σ, rfl, hY⟩⟩
 
@@ -305,9 +300,7 @@ theorem condT_bot (x y : T.Element) :
     · rw [NeighborhoodSystem.mem_bot] at h0; exact absurd h0 Exercise326.zero_ne_master
     · rw [NeighborhoodSystem.mem_bot] at h1; exact absurd h1 Exercise326.one_ne_master
     · exact T.bot.master_mem
-  · intro h
-    rw [NeighborhoodSystem.mem_bot] at h
-    exact Or.inr (Or.inr h)
+  · simp_all
 
 /-- The defining right-hand side: `cond(empty(x), false, cond(zero(x), false,
 true))`. It uses only

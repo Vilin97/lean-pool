@@ -69,8 +69,7 @@ theorem radical_pow (a : α) {n : Nat} (hn : 0 < n) : radical (a ^ n) = radical 
 theorem radical_dvd_self (a : α) : radical a ∣ a := by
   classical
   by_cases ha : a = 0
-  · rw [ha]
-    apply dvd_zero
+  · simp_all
   · rw [radical, ← Finset.prod_val, ← (prod_normalizedFactors ha).dvd_iff_dvd_right]
     apply Multiset.prod_dvd_prod_of_le
     rw [primeFactors, Multiset.toFinset_val]
@@ -100,11 +99,9 @@ theorem radical_dvd_radical_of_dvd {a b : α} (hb : b ≠ 0) (h : a ∣ b) :
 theorem radical_mul_dvd_mul_radical (a b : α) : radical (a * b) ∣ radical a * radical b := by
   classical
   by_cases ha : a = 0
-  · rw [ha]
-    simp only [zero_mul, dvd_mul_right]
+  · simp_all
   by_cases hb : b = 0
-  · rw [hb]
-    simp only [mul_zero, dvd_mul_left]
+  · simp_all
   rw [radical, primeFactors, normalizedFactors_mul ha hb, Multiset.toFinset_add, radical,
     primeFactors, radical, primeFactors]
   exact ⟨((normalizedFactors a).toFinset ∩ (normalizedFactors b).toFinset).prod id,

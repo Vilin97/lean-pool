@@ -77,8 +77,7 @@ lemma intExpNegPoly_bounded
     (b := (1 : ℝ))
     (f := fun t : ℝ => a * cexp (-(t * a)) * aeval (t * a) (Fp T p))
     (by
-      intro t ht
-      simpa [mul_assoc] using hM p hp t ht))
+      simp_all))
 
 /-- The weighted sum `∑ᵢ bᵢ exp(aᵢ) ∫₀¹ aᵢ * exp(-(t aᵢ)) * T(t aᵢ) dt` is `≤ A Bᵖ`. -/
 lemma sum_intExpNegPoly_bound

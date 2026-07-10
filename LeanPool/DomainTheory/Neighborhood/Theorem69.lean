@@ -222,13 +222,10 @@ theorem homOp_apply_filter (g : StrictMap (T.obj D).sys (T.obj E).sys) :
       = homOpComp T D E j k hj hk g := by
     apply Subtype.ext
     apply ApproximableMap.ext
-    intro X Z
-    rw [toStrictMap_rel]
-    exact key X Z
+    simp_all
   have hL := toStrictFilter_toStrictMap
     ((homOp T D E j k hj hk).toElementMap (toStrictFilter g))
-  rw [hmap] at hL
-  exact hL.symm
+  simp_all
 
 end HomOp
 

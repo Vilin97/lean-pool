@@ -39,15 +39,7 @@ end Ne
 
 omit [DecidableEq k] in
 theorem dvd_derivative_iff {a : k[X]} : a ∣ derivative a ↔ derivative a = 0 := by
-  constructor
-  · intro h
-    by_cases a_nz : a = 0
-    · rw [a_nz]; simp only [derivative_zero]
-    by_contra deriv_nz
-    have deriv_lt := degree_derivative_lt a_nz
-    have le_deriv := Polynomial.degree_le_of_dvd h deriv_nz
-    exact absurd (le_deriv.trans_lt deriv_lt) (lt_irrefl _)
-  · intro h; rw [h]; simp
+  simp_all
 
 namespace IsCoprime
 
@@ -191,9 +183,7 @@ theorem abc_char0 [CharZero k] {a b c : k[X]}
     (a.natDegree = 0 ∧ b.natDegree = 0 ∧ c.natDegree = 0) ∨
       Nat.max₃ a.natDegree b.natDegree c.natDegree + 1 ≤ (radical (a * b * c)).natDegree := by
   rcases LeanPolyABC.Polynomial.abc ha hb hc hab hsum with _ | h
-  · left
-    repeat (any_goals constructor)
-    all_goals (apply derivative_eq_zero.mp; tauto)
+  · simp_all
   · tauto
 
 end Polynomial

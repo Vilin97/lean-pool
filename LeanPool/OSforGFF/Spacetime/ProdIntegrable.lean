@@ -38,8 +38,7 @@ section SpaceTime
 /-- `‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖` via the curry isometry. -/
 private lemma norm_iteratedFDeriv_one_eq (f : TestFunctionℂ) (y : SpaceTime) :
     ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := by
-  rw [← iteratedFDerivWithin_univ, ← fderivWithin_univ]
-  exact norm_iteratedFDerivWithin_one f uniqueDiffWithinAt_univ
+  simp_all
 
 /-- For a Schwartz function vanishing on {x₀ ≤ 0}, the linear bound ‖f(x)‖ ≤ C · x₀ holds.
     Follows from mean value theorem + global derivative bounds on Schwartz functions.
@@ -92,9 +91,7 @@ theorem schwartz_vanishing_linear_bound (f : TestFunctionℂ)
     exact f.differentiableAt.hasFDerivAt.hasFDerivWithinAt
   -- Connection: ‖fderiv ℝ f y‖ = ‖iteratedFDeriv ℝ 1 f y‖ (via curry isomorphism)
   have h_fderiv_bound : ∀ y ∈ (Set.univ : Set SpaceTime), ‖fderiv ℝ f y‖ ≤ C_deriv := by
-    intro y _
-    rw [← norm_iteratedFDeriv_one_eq]
-    exact h_deriv_bound y
+    simp_all
   -- Apply the Mean Value Theorem (Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le)
   -- Note: The lemma gives ‖f y - f x‖ ≤ C * ‖y - x‖, so we need to swap x and x₀_bdy
   have h_mvt := h_convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
@@ -230,8 +227,7 @@ lemma schwartz_time_slice_integrable (f : TestFunctionℂ) (t : ℝ) :
   --
   -- Use Schwartz decay bound from FunctionalAnalysis
   have hST_dim : Module.finrank ℝ SpaceTime < 5 := by
-    simp only [SpaceTime, finrank_euclideanSpace, Fintype.card_fin]
-    norm_num
+    simp_all
   obtain ⟨C, hC_pos, hf_decay⟩ := schwartz_integrable_decay f 5 hST_dim
   -- Note: SpatialCoords3 has dimension 3, and we need N > dim, so N = 5 > 3 works
   -- The dominator function: x ↦ C / (1 + ‖x‖)^5
@@ -443,8 +439,7 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
         0 1
       have h3 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 3 = 0 := spacetimeOfTimeSpace_spatial t
         0 2
-      simp only [h0, h1, h2, h3, Real.norm_eq_abs, abs_zero, sq_abs]
-      ring
+      simp_all
     have hnorm : 0 ≤ ‖spacetimeOfTimeSpace t 0‖ := norm_nonneg _
     nlinarith [sq_nonneg ‖spacetimeOfTimeSpace t 0‖, sq_nonneg t, hsq, ht]
   -- Apply 1D MVT via parameterization F(s) = f(spacetimeOfTimeSpace s x_sp)

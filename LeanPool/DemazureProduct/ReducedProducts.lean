@@ -103,8 +103,7 @@ private lemma star_sum_eq_mul_add_errors (α β : AspPerm) (a b l : ℤ) :
       AspPerm.mul_apply, P, P_hi, A]
     constructor
     · rintro ⟨⟨k, ⟨hbk, hαβk⟩, rfl⟩, hlβk⟩
-      refine ⟨⟨hlβk, hαβk⟩, ?_⟩
-      simpa only [AspPerm.inv_mul_cancel_eval] using hbk
+      simp_all
     · rintro ⟨⟨hln, hαn⟩, hbn⟩
       refine ⟨⟨β⁻¹ n, ?_, by simp only [AspPerm.mul_inv_cancel_eval]⟩, hln⟩
       simpa only [AspPerm.mul_apply, AspPerm.mul_inv_cancel_eval] using ⟨hbn, hαn⟩
@@ -114,8 +113,7 @@ private lemma star_sum_eq_mul_add_errors (α β : AspPerm) (a b l : ℤ) :
       AspPerm.mem_nw, AspPerm.mul_apply, P, P_lo, B]
     constructor
     · rintro ⟨⟨k, ⟨hbk, hαβk⟩, rfl⟩, hlβk⟩
-      refine ⟨⟨by omega, ?_⟩, hαβk⟩
-      simpa only [AspPerm.inv_mul_cancel_eval] using hbk
+      simp_all
     · rintro ⟨⟨hnl, hbn⟩, hαn⟩
       refine ⟨⟨β⁻¹ n, ?_, by simp only [AspPerm.mul_inv_cancel_eval]⟩, by omega⟩
       simpa only [AspPerm.mul_apply, AspPerm.mul_inv_cancel_eval] using ⟨hbn, hαn⟩
@@ -191,8 +189,7 @@ private lemma star_le_mul_of_reducedProduct (α β : AspPerm)
     have hβm : β⁻¹ m ∈ β.seFinset l₀ b := by
       simpa only [AspPerm.mem_se, ge_iff_le, AspPerm.mul_inv_cancel_eval] using
         ⟨hm'.2.1, hm'.1⟩
-    rw [hse₀] at hβm
-    exact Finset.notMem_empty _ hβm
+    simp_all
   have hval₀ : (α.s ⋆ β.s) a b ≤ α.s a l₀ + β.s l₀ b := by
     simpa using
       SlipFace.star_val_le α.s β.s a b l₀
@@ -317,8 +314,7 @@ private lemma lres_diff_eq_mul_sub_errors (α β : AspPerm) (a b l : ℤ) :
       AspPerm.mul_apply, P, P_hi, A]
     constructor
     · rintro ⟨⟨k, ⟨hbk, hαβk⟩, rfl⟩, hlβk⟩
-      refine ⟨⟨hlβk, hαβk⟩, ?_⟩
-      simpa only [AspPerm.inv_mul_cancel_eval] using hbk
+      simp_all
     · rintro ⟨⟨hln, hαn⟩, hbn⟩
       refine ⟨⟨β⁻¹ n, ?_, by simp only [AspPerm.mul_inv_cancel_eval]⟩, hln⟩
       simpa only [AspPerm.mul_apply, AspPerm.mul_inv_cancel_eval] using ⟨hbn, hαn⟩
@@ -329,8 +325,7 @@ private lemma lres_diff_eq_mul_sub_errors (α β : AspPerm) (a b l : ℤ) :
       AspPerm.mem_nw, AspPerm.mul_apply, P, lres_lo_error]
     constructor
     · rintro ⟨⟨k, ⟨hbk, hαβk⟩, rfl⟩, hlβk⟩
-      refine ⟨⟨by omega, ?_⟩, hαβk⟩
-      simpa only [AspPerm.inv_mul_cancel_eval] using hbk
+      simp_all
     · rintro ⟨⟨hnl, hbn⟩, hαn⟩
       refine ⟨⟨β⁻¹ n, ?_, by simp only [AspPerm.mul_inv_cancel_eval]⟩, by omega⟩
       simpa only [AspPerm.mul_apply, AspPerm.mul_inv_cancel_eval] using ⟨hbn, hαn⟩
@@ -417,10 +412,7 @@ private lemma mul_le_lres_of_le_weak_L (α β : AspPerm)
     have hcount := lres_diff_eq_mul_sub_errors α β a b l
     simp only [hlo, hhi, Finset.card_empty, Nat.cast_zero, sub_zero] at hcount
     have hcand := Submodular.lres_candidate_le α β a b l
-    have hcand' : α.s a l - (β⁻¹).s b l ≤ (α ◃ β).s a b := by
-      simpa only [AspPerm.lres_spec] using hcand
-    rw [← hcount]
-    exact hcand'
+    simp_all
   obtain ⟨l₀, hl₀⟩ := β.tend_zero_a b
   have hse₀ : β.seFinset l₀ b = ∅ := by
     apply Finset.card_eq_zero.mp
@@ -434,8 +426,7 @@ private lemma mul_le_lres_of_le_weak_L (α β : AspPerm)
     have hβm : β⁻¹ m ∈ β.seFinset l₀ b := by
       simpa only [AspPerm.mem_se, ge_iff_le, AspPerm.mul_inv_cancel_eval] using
         ⟨hm'.2.1, hm'.1⟩
-    rw [hse₀] at hβm
-    exact Finset.notMem_empty _ hβm
+    simp_all
   by_cases hhi₀_empty : lres_hi_error α β a b l₀ = ∅
   · exact hle_of_errors_empty l₀ hlo₀ hhi₀_empty
   · have hhi₀ : 0 < (lres_hi_error α β a b l₀).card :=
@@ -647,8 +638,7 @@ private theorem of_lel_lres {α β γ : AspPerm}
   := by
   have eq_α : γ * β⁻¹ = α := by
     have := ReducedProducts.lres_eq_mul_iff γ β⁻¹
-    rw [inv_inv, h_lres] at this
-    rw [this.mpr h_lel]
+    simp_all
   have h_mul : α * β = γ := by
     rw [← eq_α, mul_assoc, inv_mul_cancel, mul_one]
   rw [← h_mul] at h_lel
@@ -658,8 +648,7 @@ theorem of_ler_rres {α β γ : AspPerm}
     (h_ler : α ≤R γ) (h_rres : α⁻¹ ▹ γ = β) : ReducedFact α β γ := by
   have eq_β : α⁻¹ * γ = β := by
     have := ReducedProducts.rres_eq_mul_iff α⁻¹ γ
-    rw [inv_inv, h_rres] at this
-    rw [this.mpr h_ler]
+    simp_all
   have h_mul : α * β = γ := by
     rw [← eq_β, ← mul_assoc, mul_inv_cancel, one_mul]
   rw [← h_mul] at h_ler

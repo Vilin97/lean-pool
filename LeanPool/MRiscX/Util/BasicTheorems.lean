@@ -89,8 +89,7 @@ theorem Nat.size_sub_lt_size : ∀ (x l s: Nat),
 theorem UInt64.gt_zero_neq_zero : ∀ (u:UInt64),
   u > 0 → u ≠ 0 := by
   intro u h neq
-  rw [neq] at h
-  contradiction
+  simp_all
 
 theorem UInt64.lt_zero : ∀ (u:UInt64), u < 0 ↔ False := by
   simp
@@ -119,23 +118,11 @@ theorem UInt64.add_lt_add : ∀ (n m k c : UInt64),
 
 theorem UInt64.add_cancel_right_iff : ∀ (u i k : UInt64),
   u + k = i + k ↔ u = i := by
-  intros u i k
-  constructor
-  · intro h
-    simpa using h
-  · rintro rfl
-    rfl
+  simp_all
 
 theorem UInt64.add_cancel_left_iff : ∀ (u i k: UInt64),
   k + u = k + i ↔ u = i := by
-  intros u i k
-  constructor
-  · intro h
-    rw [←UInt64.add_cancel_right_iff (k := k), UInt64.add_comm]
-    nth_rewrite 2 [UInt64.add_comm]
-    exact h
-  · rintro rfl
-    rfl
+  simp_all
 
 
 theorem UInt64.add_sub_assoc : ∀ (p l x : UInt64),
@@ -150,9 +137,7 @@ theorem UInt64.add_right_ne_of_lt : ∀ (n i l : UInt64),
   i < l →
   n + l ≠ n + i := by
   intro n i l h_iLtl neq
-  rw [UInt64.add_cancel_left_iff] at neq
-  rw [neq] at h_iLtl
-  exact UInt64.lt_irrefl i h_iLtl
+  simp_all
 
 
 

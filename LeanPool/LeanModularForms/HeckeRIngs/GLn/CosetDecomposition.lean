@@ -222,13 +222,9 @@ private lemma coset_sum_eq {a : Fin n → ℕ} {hdiv : DivChain n a}
     rw [Finset.sum_eq_single_of_mem i
         (Finset.mem_erase.mpr ⟨Fin.ne_of_lt hij, Finset.mem_univ i⟩)]
     · rw [h_sum_rest i (Fin.ne_of_lt hij)]; simp [hij]
-    · intro k hk hki
-      rw [Finset.mem_erase] at hk; rw [h_sum_rest k hk.1]
-      simp [show ¬(k = i ∧ i < j) from fun ⟨h, _⟩ => hki h]
+    · simp_all
   · simp only [hij, ite_false]
-    apply Finset.sum_eq_zero; intro k hk
-    rw [Finset.mem_erase] at hk; rw [h_sum_rest k hk.1]
-    simp [show ¬(k = i ∧ i < j) from fun ⟨_, h⟩ => hij h]
+    apply Finset.sum_eq_zero; simp_all
 
 /-- When `i < j`, the entry `σ i j` must be zero: the bounded difference of `B₁` and `B₂`
     cannot absorb a nonzero integer multiple of `a_j / a_i`. -/

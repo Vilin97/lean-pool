@@ -84,8 +84,7 @@ theorem pv_higher_order_term_tendsto_zero
         ((1 : ℂ) - ↑(m : ℤ)))
       (𝓝[>] 0) (𝓝 0) := by
     have h1 := h_L3.neg.div_const ((1 : ℂ) - ↑(m : ℤ))
-    simp only [neg_zero, zero_div] at h1
-    exact Tendsto.congr (fun ε => by ring) h1
+    simp_all
   exact Tendsto.congr' (h_eq.mono fun ε h => h.symm) h_bdy
 
 /-- CPV integrand of `f` minus CPV integrand of `g` equals CPV integrand of `f - g`,
@@ -114,17 +113,10 @@ private theorem circleIntegral_laurent_term
   rw [circleIntegral.integral_congr hr_pos.le h_eq,
     circleIntegral.integral_const_mul]
   by_cases hk : k = 0
-  · simp only [hk, zero_add, Nat.cast_one, if_true]
-    congr 1
-    have h_eq' : Set.EqOn (fun z => (z - s) ^ (-(1 : ℤ)))
-        (fun z => (z - s)⁻¹) (Metric.sphere s r) := by intro z _; simp only [zpow_neg_one]
-    rw [circleIntegral.integral_congr hr_pos.le h_eq',
-      circleIntegral.integral_sub_center_inv s hr_ne]
+  · simp_all
   · simp only [hk, if_false]
     rw [circleIntegral.integral_sub_zpow_of_ne, mul_zero]
-    intro h_neg_eq
-    apply hk
-    omega
+    simp_all
 
 /-- Helper: circle integral of the Laurent sum equals `a₀ * 2πi`. -/
 private theorem circleIntegral_laurent_sum (s : ℂ) (r : ℝ) (hr_pos : 0 < r)
@@ -164,8 +156,7 @@ private theorem circleIntegral_laurent_sum (s : ℂ) (r : ℝ) (hr_pos : 0 < r)
     Finset.sum_ite, Finset.sum_const_zero, add_zero]
   have h_filter : Finset.filter (fun k : Fin N => k.val = 0) Finset.univ = {⟨0, hN⟩} := by
     ext ⟨j, hj⟩
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-    exact ⟨fun h => Fin.ext h, fun h => congr_arg Fin.val h⟩
+    simp_all
   rw [h_filter, Finset.sum_singleton]
 
 /-- **Sublemma 1**: The residue of `f` at `s` equals the leading Laurent coefficient `a₀`.
@@ -258,39 +249,9 @@ private lemma ae_eq_indicator_diff_cpv_zpow
     simp only [h_not_mem, ite_false, if_pos h1,
       if_neg (show ¬∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from by push Not; exact h2)]
     ring
-  · push Not at h2
-    obtain ⟨s', hs', hs'_le⟩ := h2
-    have h_mem : t ∈ ({t | ε < ‖γ.toFun t - s‖} \
-        {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
-        Icc γ.a γ.b :=
-      ⟨⟨h1, fun h_all =>
-        absurd (h_all s' hs') (not_lt.mpr hs'_le)⟩, ht_Icc⟩
-    simp only [h_mem, ite_true, if_pos h1,
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε from ⟨s', hs', hs'_le⟩)]
-    ring
-  · push Not at h1
-    have h_not_mem :
-        ¬(t ∈ ({t | ε < ‖γ.toFun t - s‖} \
-          {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
-          Icc γ.a γ.b) :=
-      fun ⟨⟨h_far, _⟩, _⟩ => absurd h_far (not_lt.mpr h1)
-    simp only [h_not_mem, ite_false,
-      if_neg (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
-        from ⟨s, hs, h1⟩)]
-    ring
-  · push Not at h1 h2
-    have h_not_mem :
-        ¬(t ∈ ({t | ε < ‖γ.toFun t - s‖} \
-          {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
-          Icc γ.a γ.b) :=
-      fun ⟨⟨h_far, _⟩, _⟩ => absurd h_far (not_lt.mpr h1)
-    obtain ⟨s', hs', hs'_le⟩ := h2
-    simp only [h_not_mem, ite_false,
-      if_neg (show ¬‖γ.toFun t - s‖ > ε from not_lt.mpr h1),
-      if_pos (show ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε
-        from ⟨s', hs', hs'_le⟩)]
-    ring
+  · simp_all
+  · simp_all
+  · simp_all
 
 /-- Helper 2a: The multi-point "good set"
 `{t | ∀ s' ∈ S0, ε < ‖γ(t)-s'‖} ∩ Icc` is measurable. -/
@@ -300,10 +261,8 @@ lemma measurableSet_goodSet_Icc
   have h_eq : {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖} ∩ Icc γ.a γ.b =
       Icc γ.a γ.b \ ({t | ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b) := by
     ext t; constructor
-    · intro ⟨h_good, ht⟩; exact ⟨ht, fun ⟨⟨s', hs', h_le⟩, _⟩ =>
-        absurd (h_good s' hs') (not_lt.mpr h_le)⟩
-    · intro ⟨ht, h_not⟩; exact ⟨fun s' hs' => by
-        by_contra h_le; push Not at h_le; exact h_not ⟨⟨s', hs', h_le⟩, ht⟩, ht⟩
+    · simp_all
+    · simp_all
   rw [h_eq]; apply MeasurableSet.diff isClosed_Icc.measurableSet
   have h_eq2 : {t | ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b =
       ⋃ s' ∈ S0, ({t | ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b) := by
@@ -480,9 +439,7 @@ private lemma single_cutoff_zpow_intervalIntegrable
       · intro t ⟨ht_Icc, ht_nP⟩
         exact (γ.toPiecewiseC1Curve.deriv_continuous_off_partition
           t (mem_Ioo_of_notMem_partition γ ht_Icc ht_nP) ht_nP).continuousWithinAt
-    exact h_aesm_if.congr (by
-      filter_upwards [ae_restrict_mem measurableSet_Icc] with t _
-      exact (cauchyPrincipalValueIntegrandOn_singleton f_zpow γ.toFun s ε t).symm)
+    simp_all
   · intro t ht
     rw [cauchyPrincipalValueIntegrandOn_singleton]
     split_ifs with h
@@ -578,8 +535,7 @@ private lemma dct_bound_diff_cpv_zpow
   · rw [if_neg h_multi_cut]
     by_cases h_single_cut : ‖γ.toFun t - s‖ > ε
     · rw [if_pos h_single_cut]; norm_num; positivity
-    · push Not at h_single_cut h_multi_cut
-      exact absurd (h_multi_cut s hs) (not_lt.mpr h_single_cut)
+    · simp_all
 
 /-- A.e. pointwise limit of the single-multi CPV difference is 0 when `t` does
 not land on any point of `S0`. -/
@@ -605,9 +561,7 @@ private lemma ae_limit_diff_cpv_zpow
     push Not; intro s' hs'
     exact lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs')
   rw [if_neg h_no_near]
-  have h_far_s : ‖γ.toFun t - s‖ > ε :=
-    lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs)
-  rw [if_pos h_far_s]; ring
+  simp_all
 
 /-- Reduce the multi-point CPV goal to showing the single-multi difference
 tends to 0, using `Tendsto.sub` and `integral_sub`. -/
@@ -650,10 +604,7 @@ private lemma reduce_to_diff_tendsto_zero
       ∫ t in γ.a..γ.b,
         ((if ‖γ.toFun t - s‖ > ε then f_zpow (γ.toFun t) * deriv γ.toFun t else 0) -
          cauchyPrincipalValueIntegrandOn S0 f_zpow γ.toFun ε t) := by
-    filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-    rw [← intervalIntegral.integral_sub (h_single_int ε hε)
-      ((h_single_int ε hε).sub (h_multi_int ε hε))]
-    congr 1; ext t; ring
+    filter_upwards [self_mem_nhdsWithin] with ε simp_all
   have h_sub := h_single.sub h_diff
   simp only [sub_self] at h_sub
   exact h_sub.congr' (h_eventually_eq.mono fun ε h => h.symm)
@@ -720,7 +671,6 @@ theorem multipoint_pv_zpow_tendsto_zero (S0 : Finset ℂ)
             δ_sep hδ_pos hδ_sep_le ε hε)
       intervalIntegrable_const
       (ae_limit_diff_cpv_zpow S0 γ s m hs hS0_ne)
-    simp only [intervalIntegral.integral_zero] at h_dct
-    exact h_dct
+    simp_all
 
 end GeneralizedResidueTheory

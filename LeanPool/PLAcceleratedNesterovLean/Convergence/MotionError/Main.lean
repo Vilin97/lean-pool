@@ -32,8 +32,7 @@ theorem gradient_bound_from_lipschitz {d : ℕ}
     ‖gradient f x‖ ≤ (L : ℝ) * ‖x - y‖ := by
   have h := hf_lip.dist_le_mul x hx_V y hy_V
   rw [dist_eq_norm, dist_eq_norm] at h
-  rw [hzero, sub_zero] at h
-  exact h
+  simp_all
 
 /-- Velocity bound: ‖v_{n+1}‖ = ‖ρ(v_n - √η g_n)‖ ≤ |ρ|(‖v_n‖ + √η ‖g_n‖). -/
 theorem velocity_bound_from_step (v g : E d) (ρ sqrtη : ℝ) :

@@ -112,10 +112,7 @@ omit [Inhabited T] [Fintype T] IST in
 lemma goods_slacks_disjoint (σ : Finset T) (C : Finset I) :
     Disjoint (σ.image Sum.inl) ((Finset.univ \ C).image Sum.inr) := by
   rw [Finset.disjoint_left]
-  intro x hxGoods hxSlack
-  rcases Finset.mem_image.mp hxGoods with ⟨t, _, rfl⟩
-  rcases Finset.mem_image.mp hxSlack with ⟨i, _, h⟩
-  cases h
+  simp_all
 
 omit [Inhabited T] [Fintype T] IST in
 lemma card_toPrimitiveSet (σ : Finset T) (C : Finset I) :
@@ -123,14 +120,12 @@ lemma card_toPrimitiveSet (σ : Finset T) (C : Finset I) :
   rw [toPrimitiveSet, Finset.card_union_of_disjoint (goods_slacks_disjoint σ C)]
   have hGoods : (σ.image (Sum.inl : T → ExtendedGoods T I)).card = σ.card := by
     apply Finset.card_image_of_injOn
-    intro a _ b _ h
-    exact Sum.inl.inj h
+    simp_all
   have hSlacks :
       (((Finset.univ \ C).image (Sum.inr : I → ExtendedGoods T I)).card =
         (Finset.univ \ C).card) := by
     apply Finset.card_image_of_injOn
-    intro a _ b _ h
-    exact Sum.inr.inj h
+    simp_all
   rw [hGoods, hSlacks]
 
 omit [Inhabited T] IST in
@@ -174,8 +169,7 @@ lemma exists_insert_eq_of_subset_card_eq_succ {α : Type*} [DecidableEq α]
     omega
   obtain ⟨x, hx⟩ := Finset.card_eq_one.mp hdiff_card
   have hxmem : x ∈ t \ s := by
-    rw [hx]
-    simp
+    simp_all
   refine ⟨x, (Finset.mem_sdiff.mp hxmem).2, ?_⟩
   calc
     insert x s = {x} ∪ s := rfl
@@ -331,20 +325,13 @@ lemma doorof_toAlmost_subset_toPrimitive {τ σ : Finset T} {D C : Finset I}
           rw [← hInsert]
           exact Finset.mem_insert_of_mem hz
       | odoor _ _ _ hNot hτ hD =>
-          rw [mem_toAlmostPrimitive_inl] at hz
-          rw [mem_toPrimitiveSet_inl]
-          rwa [← hτ]
+          simp_all
   | inr i =>
       cases h with
       | idoor _ _ _ _ hInsert hD =>
-          rw [mem_toAlmostPrimitive_inr] at hz
-          rw [mem_toPrimitiveSet_inr]
-          rwa [hD] at hz
+          simp_all
       | odoor _ _ j hNot hτ hD =>
-          rw [mem_toAlmostPrimitive_inr] at hz
-          rw [mem_toPrimitiveSet_inr]
-          rw [hD] at hz
-          exact fun hiC => hz (Finset.mem_insert_of_mem hiC)
+          simp_all
 
 /-- A useful packaged form of the door/primitive-set incidence correspondence. -/
 lemma doorof_iff_subset_primitive {τ σ : Finset T} {D C : Finset I} :
@@ -380,8 +367,7 @@ lemma subset_toPrimitive_toAlmost_doorof {τ σ : Finset T} {D C : Finset I}
     by_contra hiD
     have hmem : Sum.inr i ∈ toPrimitiveSet (T := T) σ C :=
       hsub (by simpa using hiD)
-    have hiNotC : i ∉ C := by simpa using hmem
-    exact hiNotC hiC
+    simp_all
   have hτleσ : τ.card ≤ σ.card := Finset.card_le_card hτsub
   have hσleτsucc : σ.card ≤ τ.card + 1 := by
     calc
@@ -426,8 +412,7 @@ lemma nativeAlmostPrimitive_to_almostPrimitive {Y : Finset (ExtendedGoods T I)}
     rw [mem_fromMissing]
     intro hy
     have hx : Sum.inr i ∈ toPrimitiveSet (T := T) σ C := hsub hy
-    have hiNotC : i ∉ C := by simpa using hx
-    exact hiNotC hiC
+    simp_all
   have hCell : IST.isCell τ D := by
     exact IST.Dominant_of_supset τ C D hCsubD
       (IST.Dominant_of_subset σ τ C hτsub hRoom.1)
@@ -442,8 +427,7 @@ lemma nativeAlmostPrimitive_to_almostPrimitive {Y : Finset (ExtendedGoods T I)}
       have hDle : D.card ≤ Fintype.card I := Finset.card_le_univ D
       omega
   have hsubParts : toAlmostPrimitive (I := I) τ D ⊆ toPrimitiveSet (I := I) σ C := by
-    rw [← hYeq]
-    exact hsub
+    simp_all
   exact ⟨τ, D, σ, C, subset_toPrimitive_toAlmost_doorof hDoor hRoom hsubParts, hYeq⟩
 
 lemma almostPrimitive_to_nativeAlmostPrimitive {Y : Finset (ExtendedGoods T I)}
@@ -591,18 +575,15 @@ theorem native_primitive_erase_mainLemma
       · intro Z hZ
         rcases hZ with ⟨hPrimZ, hSubZ, hZneX⟩
         rcases hUnique Z hPrimZ hSubZ with hZ₁ | hZ₂
-        · exfalso
-          exact hZneX (hZ₁.trans hXX₁.symm)
+        · simp_all
         · exact hZ₂
     · refine ⟨X₁, ⟨hPrim₁, hSub₁, ?_⟩, ?_⟩
-      · intro hX₁
-        exact hNe (hX₁.trans hXX₂)
+      · simp_all
       · intro Z hZ
         rcases hZ with ⟨hPrimZ, hSubZ, hZneX⟩
         rcases hUnique Z hPrimZ hSubZ with hZ₁ | hZ₂
         · exact hZ₁
-        · exfalso
-          exact hZneX (hZ₂.trans hXX₂.symm)
+        · simp_all
   · left
     exact hInternal
 
@@ -633,17 +614,9 @@ theorem native_primitive_erase_replacement_mainLemma
     obtain ⟨y, hyNotY, hyInsert⟩ := exists_insert_eq_of_subset_card_eq_succ hSub hX'card
     have hyNotX : y ∉ X := by
       intro hyX
-      have hyx : y = x := by
-        by_contra hyNe
-        exact hyNotY (Finset.mem_erase.mpr ⟨hyNe, hyX⟩)
-      subst hyx
-      have hX'eqX : X' = X := by
-        rw [← hyInsert]
-        simp [hx]
-      exact hNe hX'eqX
+      simp_all
     refine ⟨y, ⟨hyNotX, ?_⟩, ?_⟩
-    · rw [hyInsert]
-      exact hPrimX'
+    · simp_all
     · intro z hz
       rcases hz with ⟨hzNotX, hzPrim⟩
       have hNez : insert z Y ≠ X := by
@@ -660,9 +633,7 @@ theorem native_primitive_erase_replacement_mainLemma
         rw [← hEqInsert]
         exact Finset.mem_insert_self z Y
       rw [Finset.mem_insert] at hzMem
-      rcases hzMem with hzy | hzY
-      · exact hzy
-      · exact False.elim (hzNotY hzY)
+      simp_all
 
 /-- The boundary almost primitive set made only of slacks, missing `i`. -/
 def slackBoundary (i : I) : Finset (ExtendedGoods T I) :=
@@ -774,8 +745,7 @@ lemma slackBoundary_unique_incident_nativePrimitive (i : I) :
       isPrimitiveNative (IST := IST) X ∧ slackBoundary (T := T) (I := I) i ⊆ X := by
   rcases slackBoundary_unique_incident_primitive (IST := IST) i with ⟨X, hX, hUnique⟩
   refine ⟨X, hX, ?_⟩
-  intro Y hY
-  exact hUnique Y hY
+  simp_all
 
 /--
 Every almost primitive face made only of slack vectors is one of the boundary
@@ -791,11 +761,7 @@ lemma boundary_almostPrimitive_eq_slackBoundary {Y : Finset (ExtendedGoods T I)}
       (fromMissing (T := T) (I := I) Y) :=
     almostPrimitive_to_door hY
   have hDcard : (fromMissing (T := T) (I := I) Y).card = 1 := by
-    have hDoorCard := hDoor.2
-    rw [hGoods] at hDoorCard
-    have hEmpty : (Finset.empty : Finset T).card = 0 := rfl
-    rw [hEmpty] at hDoorCard
-    simpa using hDoorCard
+    simp_all
   obtain ⟨i, hD⟩ := Finset.card_eq_one.mp hDcard
   refine ⟨i, ?_⟩
   rw [almostPrimitive_eq_toAlmost_from_parts hY, hGoods, hD]
@@ -964,27 +930,7 @@ lemma image_extendedColoring_toPrimitiveSet (c : T → I) (σ : Finset T) (C : F
     (toPrimitiveSet (I := I) σ C).image (extendedColoring (T := T) (I := I) c) =
       (σ.image c) ∪ (Finset.univ \ C) := by
   ext i
-  constructor
-  · intro hi
-    rcases Finset.mem_image.mp hi with ⟨x, hx, rfl⟩
-    cases x with
-    | inl t =>
-        rw [mem_toPrimitiveSet_inl] at hx
-        exact Finset.mem_union_left _ (Finset.mem_image_of_mem c hx)
-    | inr j =>
-        rw [mem_toPrimitiveSet_inr] at hx
-        exact Finset.mem_union_right _ (by simpa [extendedColoring] using hx)
-  · intro hi
-    rcases Finset.mem_union.mp hi with hImage | hSlack
-    · rcases Finset.mem_image.mp hImage with ⟨t, ht, rfl⟩
-      exact Finset.mem_image_of_mem (extendedColoring (T := T) (I := I) c)
-        (show Sum.inl t ∈ toPrimitiveSet (I := I) σ C by
-          rw [mem_toPrimitiveSet_inl]
-          exact ht)
-    · exact Finset.mem_image_of_mem (extendedColoring (T := T) (I := I) c)
-        (show Sum.inr i ∈ toPrimitiveSet (T := T) σ C by
-          rw [mem_toPrimitiveSet_inr]
-          exact (Finset.mem_sdiff.mp hSlack).2)
+  simp_all
 
 omit [Fintype T] in
 /--
@@ -1003,8 +949,7 @@ lemma full_color_primitive_iff_colorful_room (c : T → I) {σ : Finset T} {C : 
     have hC_subset_image : C ⊆ σ.image c := by
       intro i hiC
       have hiUnion : i ∈ (σ.image c) ∪ (Finset.univ \ C) := by
-        rw [hUnion]
-        exact Finset.mem_univ i
+        simp_all
       rcases Finset.mem_union.mp hiUnion with hiImage | hiCompl
       · exact hiImage
       · exact False.elim ((Finset.mem_sdiff.mp hiCompl).2 hiC)
@@ -1067,16 +1012,14 @@ lemma diff_image_eq_singleton_iff_allButColor_toPrimitiveSet
           intro hji
           subst j
           have hiDiff : i ∈ C \ σ.image c := by
-            rw [hDiff]
-            simp
+            simp_all
           exact (Finset.mem_sdiff.mp hiDiff).2 hjImage
         exact Finset.mem_erase.mpr ⟨hji, Finset.mem_univ j⟩
       · have hji : j ≠ i := by
           intro hji
           subst j
           have hiDiff : i ∈ C \ σ.image c := by
-            rw [hDiff]
-            simp
+            simp_all
           exact (Finset.mem_sdiff.mp hjCompl).2 (Finset.mem_sdiff.mp hiDiff).1
         exact Finset.mem_erase.mpr ⟨hji, Finset.mem_univ j⟩
     · intro hj
@@ -1086,10 +1029,7 @@ lemma diff_image_eq_singleton_iff_allButColor_toPrimitiveSet
         have hjNotC : j ∉ C := by
           intro hjC
           have hjDiff : j ∈ C \ σ.image c := Finset.mem_sdiff.mpr ⟨hjC, hjImage⟩
-          have : j = i := by
-            rw [hDiff] at hjDiff
-            exact Finset.mem_singleton.mp hjDiff
-          exact hji this
+          simp_all
         exact Finset.mem_union_right _ (Finset.mem_sdiff.mpr ⟨Finset.mem_univ j, hjNotC⟩)
   · intro hAllBut
     ext j
@@ -1100,21 +1040,13 @@ lemma diff_image_eq_singleton_iff_allButColor_toPrimitiveSet
         rcases Finset.mem_union.mp hUnion with hjImage | hjCompl
         · exact (Finset.mem_sdiff.mp hj).2 hjImage
         · exact (Finset.mem_sdiff.mp hjCompl).2 (Finset.mem_sdiff.mp hj).1
-      have hjNotErase : j ∉ Finset.univ.erase i := by
-        rw [← hAllBut]
-        exact hjNotUnion
-      have hji : j = i := by
-        by_contra hne
-        exact hjNotErase (Finset.mem_erase.mpr ⟨hne, Finset.mem_univ j⟩)
-      rw [hji]
-      simp
+      simp_all
     · intro hj
       have hji : j = i := Finset.mem_singleton.mp hj
       subst j
       have hiNotErase : i ∉ (Finset.univ.erase i : Finset I) := by simp
       have hiNotUnion : i ∉ σ.image c ∪ (Finset.univ \ C) := by
-        rw [hAllBut]
-        exact hiNotErase
+        simp_all
       have hiC : i ∈ C := by
         by_contra hiNotC
         exact hiNotUnion (Finset.mem_union_right _
@@ -1186,11 +1118,8 @@ omit [Fintype T] IST in
     rcases hj with hjEmpty | hjCompl
     · rcases Finset.mem_image.mp hjEmpty with ⟨x, hx, _⟩
       exact False.elim (Finset.notMem_empty x hx)
-    · exact Finset.mem_erase.mpr
-        ⟨fun hji => (Finset.mem_sdiff.mp hjCompl).2 (by simp [hji]), Finset.mem_univ j⟩
-  · intro hj
-    exact Finset.mem_union_right _ (Finset.mem_sdiff.mpr
-      ⟨Finset.mem_univ j, fun hji => (Finset.mem_erase.mp hj).1 (Finset.mem_singleton.mp hji)⟩)
+    · simp_all
+  · simp_all
 
 lemma slackBoundary_GiDoorVertex (c : T → I) (i : I) :
     GiDoorVertex (IST := IST) c i
@@ -1445,8 +1374,7 @@ lemma giVertex_of_GiDegree_eq_one {c : T → I} {i : I} {v : GiCell T I}
   have hNonempty : (GiNeighbors (IST := IST) c i v).Nonempty := by
     apply Finset.card_pos.mp
     change 0 < GiDegree (IST := IST) c i v
-    rw [hdeg]
-    norm_num
+    simp_all
   rcases hNonempty with ⟨w, hw⟩
   exact GiEdge.left_vertex ((mem_GiNeighbors (IST := IST)).1 hw)
 
@@ -1486,8 +1414,7 @@ lemma reachableComponentGraph_degree_eq
     H.degree x = (H.neighborFinset x).card := rfl
     _ = ((H.neighborFinset x).image (fun y : {v : α // G.Reachable v₀ v} => y.1)).card := by
       rw [Finset.card_image_of_injOn]
-      intro a _ b _ h
-      exact Subtype.ext h
+      simp_all
     _ = (G.neighborFinset x.1).card := by rw [hImage]
     _ = G.degree x.1 := rfl
 
@@ -1713,8 +1640,7 @@ noncomputable def utilityImageEquiv [Inhabited I] (u : I → T → ℝ)
   right_inv v := by
     rcases v with ⟨v, hv⟩
     have hchosen := Classical.choose_spec (Finset.mem_image.mp hv)
-    ext i
-    exact congrFun hchosen.2 i
+    simp_all
 
 /--
 The coordinate model of Scarf's slack vector for face `i`: the `i`th
@@ -1944,8 +1870,7 @@ lemma utilityCoordinateValues_nonempty [Inhabited I] (u : I → T → ℝ) :
     (utilityCoordinateValues (T := T) (I := I) u).Nonempty := by
   refine ⟨u default default, ?_⟩
   unfold utilityCoordinateValues
-  rw [Finset.mem_image]
-  exact ⟨((default : I), (default : T)), by simp, rfl⟩
+  simp_all
 
 omit IST in
 /--
@@ -1962,8 +1887,7 @@ lemma utility_lt_utilityCoordinateBound [Inhabited I] (u : I → T → ℝ) (j :
   unfold utilityCoordinateBound
   have hmem : u j x ∈ utilityCoordinateValues (T := T) (I := I) u := by
     unfold utilityCoordinateValues
-    rw [Finset.mem_image]
-    exact ⟨(j, x), by simp, rfl⟩
+    simp_all
   have hle :
       u j x ≤ (utilityCoordinateValues (T := T) (I := I) u).max'
         (utilityCoordinateValues_nonempty (T := T) (I := I) u) :=
@@ -2061,8 +1985,7 @@ lemma extendedCoordinatePoint_coordinate_injective
                 simpa [slackVector, hil] using hM l i default hil
               have hpos : 0 < slackVector (I := I) M l i :=
                 lt_trans (hu.positive i default) hlt
-              exact (ne_of_lt hpos)
-                (by simpa [extendedCoordinatePoint, slackVector, hki.symm, hil] using hEq)
+              simp_all
           · by_cases hli : l = i
             · exfalso
               have hik : i ≠ k := fun hik => hki hik.symm
@@ -2070,8 +1993,7 @@ lemma extendedCoordinatePoint_coordinate_injective
                 simpa [slackVector, hik] using hM k i default hik
               have hpos : 0 < slackVector (I := I) M k i :=
                 lt_trans (hu.positive i default) hlt
-              exact (ne_of_lt hpos)
-                (by simpa [extendedCoordinatePoint, slackVector, hik, hli.symm] using hEq.symm)
+              simp_all
             · have hik : i ≠ k := fun hik => hki hik.symm
               have hil : i ≠ l := fun hil => hli hil.symm
               have hMkMl : M k = M l := by
@@ -2195,8 +2117,7 @@ lemma coordinateGoods_le_of_original_le {u : I → T → ℝ} {M : I → ℝ}
   letI : LinearOrder (ExtendedGoods T I) := (coordinateIndexedLOrder (T := T) (I := I) u M hCoord) i
   letI : LinearOrder T := IST i
   by_cases hEq : x = y
-  · subst hEq
-    exact le_rfl
+  · simp_all
   · exact le_of_lt (show ((coordinateIndexedLOrder (T := T) (I := I) u M hCoord) i).lt
       (Sum.inl x) (Sum.inl y) from
         extendedCoordinateLt_goods_of_original_lt hu (lt_of_le_of_ne hxy hEq))
@@ -2288,10 +2209,7 @@ theorem nativePrimitive_to_coordinatePrimitive {u : I → T → ℝ} {M : I → 
               (Sum.inr j) (Sum.inl x) from coordinateSlack_lt_good (M := M) hu j x)
         | inr k =>
             by_cases hkj : k = j
-            · subst hkj
-              letI : LinearOrder (ExtendedGoods T I) := (coordinateIndexedLOrder (T := T) (I := I)
-                  u M hCoord) k
-              exact le_rfl
+            · simp_all
             · letI : LinearOrder (ExtendedGoods T I) := (coordinateIndexedLOrder (T := T) (I := I)
                 u M hCoord) j
               exact le_of_lt (show ((coordinateIndexedLOrder (T := T) (I := I) u M hCoord) j).lt

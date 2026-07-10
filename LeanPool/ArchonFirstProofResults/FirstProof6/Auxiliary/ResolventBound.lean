@@ -49,8 +49,7 @@ private lemma psd_resolvent_conj_inv (U B Uhalf K : Matrix V V ℝ)
             (Uhalf⁻¹ * Uhalf) * ((1 : Matrix V V ℝ) - K)⁻¹ * Uhalf := by
           simp only [Matrix.mul_assoc]
       _ = Uhalf⁻¹ * (((1 : Matrix V V ℝ) - K) * ((1 : Matrix V V ℝ) - K)⁻¹) * Uhalf := by
-          rw [hUU]
-          simp only [Matrix.mul_one, Matrix.mul_assoc]
+          simp_all
       _ = 1 := by rw [Matrix.mul_nonsing_inv _ hIK_det, Matrix.mul_one, hUU]
   exact Matrix.inv_eq_right_inv h_prod
 

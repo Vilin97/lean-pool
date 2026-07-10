@@ -56,11 +56,7 @@ lemma polygonToCircleRadial_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
   rw [RCLike.real_smul_eq_coe_mul] at heq
   rcases mul_eq_zero.mp heq with hcoeff_zero | hdir_zero
   · exact ne_of_gt hcoeff (Complex.ofReal_eq_zero.mp hcoeff_zero)
-  · rw [div_eq_zero_iff] at hdir_zero
-    rcases hdir_zero with h1 | h2
-    · exact hdir_ne h1
-    · have hnorm_zero : ‖fdPolygon t - p‖ = 0 := Complex.ofReal_eq_zero.mp h2
-      exact ne_of_gt hnorm_pos hnorm_zero
+  · simp_all
 
 /-- The radial circle around p: normalized projection of fdPolygon onto unit circle around p.
     This is polygonToCircleRadial at s=1. -/
@@ -75,11 +71,7 @@ lemma fdPolygonRadialCircle_dist (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.r
     fdPolygon_sub_p_norm_pos p hp_norm hp_re hp_im t ht
   simp only [fdPolygonRadialCircle, polygonToCircleRadial, sub_self, zero_mul, zero_add,
     add_sub_cancel_left]
-  erw [one_smul]
-  rw [norm_div]
-  have h_norm_real : ‖(‖fdPolygon t - p‖ : ℂ)‖ = |‖fdPolygon t - p‖| :=
-    RCLike.norm_ofReal ‖fdPolygon t - p‖
-  rw [h_norm_real, abs_norm, div_self (ne_of_gt hnorm_pos)]
+  simp_all
 
 /-- fdPolygonRadialCircle avoids p. -/
 lemma fdPolygonRadialCircle_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
@@ -195,8 +187,7 @@ lemma polygonToCircleRadial_differentiable_off_partition (p : ℂ) (hp_norm : �
   have h_norm_C_diff : DifferentiableAt ℝ (fun t' => (‖fdPolygon t' - p‖ : ℂ)) t :=
     Complex.ofRealCLM.differentiableAt.comp t h_norm_diff
   have h_norm_C_ne : (‖fdPolygon t - p‖ : ℂ) ≠ 0 := by
-    simp only [Complex.ofReal_ne_zero]
-    exact norm_ne_zero_iff.mpr hdir_ne
+    simp_all
   have h_unit_diff : DifferentiableAt ℝ
       (fun t' => (fdPolygon t' - p) / (‖fdPolygon t' - p‖ : ℂ)) t :=
     h_diff_sub.div h_norm_C_diff h_norm_C_ne
@@ -340,9 +331,7 @@ lemma norm_normalize_sub_le {w₁ w₂ : ℂ} {δ : ℝ} (hδ : 0 < δ)
   have hterm2 : ‖w₂ * ((‖w₂‖ : ℂ) - (‖w₁‖ : ℂ)) / ((‖w₁‖ : ℂ) * (‖w₂‖ : ℂ))‖ ≤ ‖w₁ - w₂‖ / δ := by
     have h_eq : ‖w₂ * ((‖w₂‖ : ℂ) - (‖w₁‖ : ℂ)) / ((‖w₁‖ : ℂ) * (‖w₂‖ : ℂ))‖ =
         ‖w₂‖ * ‖((‖w₂‖ : ℂ) - (‖w₁‖ : ℂ))‖ / (‖w₁‖ * ‖w₂‖) := by
-      rw [norm_div, norm_mul, norm_mul, norm_real, norm_real,
-          Real.norm_eq_abs, Real.norm_eq_abs,
-          abs_of_nonneg (le_of_lt h1_pos), abs_of_nonneg (le_of_lt h2_pos)]
+      simp_all
     rw [h_eq,
       show ‖w₂‖ * ‖((‖w₂‖ : ℂ) - (‖w₁‖ : ℂ))‖ =
         ‖((‖w₂‖ : ℂ) - (‖w₁‖ : ℂ))‖ * ‖w₂‖ from mul_comm _ _,

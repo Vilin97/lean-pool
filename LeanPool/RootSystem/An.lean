@@ -351,12 +351,10 @@ instance finite (n : ℕ) : Fintype (SignedInterval n) := by
       invFun := fun J => ⟨((J.i, J.j), J.ε), J.hij⟩
       left_inv := by
         intro x
-        rcases x with ⟨⟨⟨i, j⟩, ε⟩, hij⟩
-        rfl
+        simp_all
       right_inv := by
         intro J
-        cases J
-        rfl }
+        simp_all }
 
 lemma An_is_finite (n : ℕ) [NeZero n] : Finite (SignedInterval n) := by
   infer_instance

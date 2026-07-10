@@ -559,8 +559,7 @@ lemma braiding_hom_lt
     {X Y : SequentialCircuitCategory V G}
     {j : Fin Y.obj} :
     X.obj + ↑j < (X ⊗ Y).obj := by
-  change X.obj + j.val < X.obj + Y.obj
-  omega
+  simp_all
 
 lemma braiding_hom_ge
     {X Y : SequentialCircuitCategory V G}
@@ -688,8 +687,7 @@ omit [Preorder V] in
 lemma iso_hom_get
     (h : n = m) (v : Stream (Wires V n)) (t : ℕ) (i : Fin m) :
     (isoHomVal (V:=V) h v t).get i = (v t).get ⟨i.val, h ▸ i.isLt⟩ := by
-  unfold isoHomVal
-  simp [Stream'.map, Stream'.get, Wires.get_cast]
+  simp_all
 
 lemma braiding_get
     (X Y : SequentialCircuitCategory V G)
@@ -763,8 +761,7 @@ lemma hexagon_forward
         Array.getElem_append_left (by simp [*]; omega),
         Array.getElem_append_left (by simp [*]),
         Array.getElem_extract, Array.getElem_extract]
-    congr 1
-    omega
+    simp_all
   · rw [Array.getElem_append_left (by simp [*]), Array.getElem_extract,
         Array.getElem_append_right (by simp [*])]
     simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_forward, hm1, hm2, min_self,
@@ -866,47 +863,13 @@ lemma hexagon_reverse
                omega),
           Array.getElem_append_left
             (by
-               simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse,
-                           min_self, hm3', Nat.add_sub_cancel_left, Nat.sub_zero]
-               omega),
+               simp_all),
           Array.getElem_extract, Array.getElem_extract,
           Array.getElem_append_right
              (by
-                simp only [Array.size_extract, tensorObj_size_eq_reverse, hm3', Nat.sub_zero]
-                omega)]
-      simp only [Array.size_extract, tensorObj_size_eq_reverse, hm3', Nat.sub_zero]
-      rw [Array.getElem_append_left
-            (by
-               simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self,
-                          Nat.add_sub_cancel_left]
-               omega),
-          Array.getElem_extract, Array.getElem_extract]
-      congr 1
-      omega
-    | rw [Array.getElem_append_right
-            (by simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, hsub1]; omega)]
-      simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, hsub1]
-      rw [Array.getElem_extract,
-          Array.getElem_append_left
-            (by
-               simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse,
-                          min_self, Nat.add_sub_cancel_left, Nat.sub_zero]
-               omega),
-          Array.getElem_append_right
-            (by
-              simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse, min_self,
-                         hm3', Nat.add_sub_cancel_left, Nat.sub_zero]
-              omega)]
-      simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse, hm3', min_self,
-                 Nat.add_sub_cancel_left, Nat.sub_zero]
-      rw [Array.getElem_extract, Array.getElem_extract,
-          Array.getElem_append_left
-            (by
-               simp only [Array.size_extract, tensorObj_size_eq_reverse, hm3', hm9, Nat.sub_zero]
-               omega),
-          Array.getElem_extract]
-      congr 1
-      omega
+                simp_all)]
+      simp_all
+    | simp_all
 
 lemma symmetry
     (X Y : SequentialCircuitCategory V G) :

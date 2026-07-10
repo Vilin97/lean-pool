@@ -177,10 +177,7 @@ theorem staircase {q : ℕ} (hq3 : 3 ≤ q) (hqo : Odd q) :
   intro i
   induction i with
   | zero =>
-    intro R hR
-    exfalso
-    simp only [pow_zero] at hR
-    omega
+    simp_all
   | succ i ih =>
     intro R hR
     have hq1 : 1 < q := by omega

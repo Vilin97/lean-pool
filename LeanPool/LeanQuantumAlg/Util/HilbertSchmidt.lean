@@ -116,8 +116,7 @@ theorem hsInner_single [DecidableEq m] (i j k l : m) :
       = if i = k ∧ j = l then 1 else 0 := by
   rw [hsInner, Matrix.conjTranspose_single, star_one, Matrix.trace_single_mul, one_smul]
   by_cases h : i = k ∧ j = l
-  · obtain ⟨rfl, rfl⟩ := h
-    rw [Matrix.single_apply_same, if_pos ⟨rfl, rfl⟩]
+  · simp_all
   · rw [if_neg h]
     apply Matrix.single_apply_of_ne
     rintro ⟨hki, hlj⟩

@@ -90,18 +90,13 @@ private theorem edgeImage_injective {α β : Type*} [DecidableEq β]
   constructor
   · intro hx
     have hxImg : f x ∈ e.image f := Finset.mem_image.mpr ⟨x, hx, rfl⟩
-    have hx' : f x ∈ e'.image f := by
-      simpa [h] using hxImg
-    rcases Finset.mem_image.mp hx' with ⟨y, hy, hyx⟩
-    have : y = x := f.injective hyx
-    simpa [this] using hy
+    simp_all
   · intro hx
     have hxImg : f x ∈ e'.image f := Finset.mem_image.mpr ⟨x, hx, rfl⟩
     have hx' : f x ∈ e.image f := by
       simpa [h] using hxImg
     rcases Finset.mem_image.mp hx' with ⟨y, hy, hyx⟩
-    have : y = x := f.injective hyx
-    simpa [this] using hy
+    simp_all
 
 private theorem mapHypergraph_card {α β : Type*} [DecidableEq α] [DecidableEq β]
     (f : α ↪ β) (edges : Finset (Finset α)) :
@@ -211,8 +206,7 @@ private theorem EdgesNonempty.map {α β : Type*} [DecidableEq α] [DecidableEq 
     ∀ E ∈ mapHypergraph f edges, E.Nonempty := by
   intro E hE
   rcases Finset.mem_image.mp hE with ⟨e, he, rfl⟩
-  rcases h e he with ⟨x, hx⟩
-  exact ⟨f x, Finset.mem_image.mpr ⟨x, hx, rfl⟩⟩
+  simp_all
 
 private def blockEmb {t : ℕ} (i : Fin t) : ℕ ↪ ℕ where
   toFun := fun v => Nat.pair i.1 v
@@ -622,8 +616,7 @@ private lemma eBonus1_mod2 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 2) :
   have hnum : 13 * m + 1 = 3 * (q * 13 + 9) := by
     rw [← hq2]
     omega
-  rw [hnum]
-  simp
+  simp_all
 
 private lemma eBonus2_mod0 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 0) :
     eBonus 2 m = q * 13 + 1 := by
@@ -644,8 +637,7 @@ private lemma eBonus2_mod1 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 1) :
   have hnum : 13 * m + 5 = 3 * (q * 13 + 6) := by
     rw [← hq1]
     omega
-  rw [hnum]
-  simp
+  simp_all
 
 private lemma eBonus2_mod2 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 2) :
     eBonus 2 m = q * 13 + 10 := by
@@ -666,8 +658,7 @@ private lemma eBonus3_mod0 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 0) :
   have hnum : 13 * m + 6 = 3 * (q * 13 + 2) := by
     rw [← hq0]
     omega
-  rw [hnum]
-  simp
+  simp_all
 
 private lemma eBonus3_mod1 (m q : ℕ) (hq : q = m / 3) (hs : m % 3 = 1) :
     eBonus 3 m = q * 13 + 6 := by
@@ -796,8 +787,7 @@ private theorem exists_cover_subset_card_le_of_noLargePartition
         intro v hv
         rcases Finset.mem_biUnion.mp hv with ⟨e', he', hv'⟩
         by_cases hEq : e' = e
-        · subst hEq
-          exact hsubset hv'
+        · simp_all
         · exact Finset.mem_biUnion.mpr ⟨e', Finset.mem_erase.mpr ⟨hEq, he'⟩, hv'⟩
     have hEraseMem : C.erase e ∈ covers := by
       refine Finset.mem_filter.mpr ⟨?_, hcoverErase⟩
@@ -890,8 +880,7 @@ private theorem ws_one : WitnessStrong 1 1 := by
       rw [Finset.singleton_biUnion]
       simp [Finset.filter_singleton, Finset.card_singleton]
   · intro e he
-    rw [Finset.mem_singleton.mp he]
-    exact ⟨0, Finset.mem_singleton.mpr rfl⟩
+    simp_all
 
 private theorem ws_bin (a b va vb c : ℕ) (hc : c ≤ min a b)
     (ha : WitnessStrong a va) (hb : WitnessStrong b vb) :
@@ -1194,12 +1183,7 @@ private theorem A_witnessStrong_bootstrap_1_20
           decide
       have hbonus : spec.bonus = 15 := by decide
       have hA : A 13 = 28 := by eval_A_small
-      calc
-        A 13 = 28 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![2, 2, 2, 3, 4] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 14: binary(1,13,1)
   · exact ws_bin_A 1 13 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1224,9 +1208,7 @@ private theorem A_witnessStrong_bootstrap_1_20
         simp [ht]
       have hbonus : spec.bonus = 26 := by decide
       have hA : A 16 = 50 := by eval_A_small
-      calc
-        A 16 = 50 := hA
-        _ = (∑ _ : Fin spec.t, (3 : ℕ)) + spec.bonus := by omega
+      simp_all
   -- n = 17: binary(1,16,1)
   · exact ws_bin_A 1 16 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1248,9 +1230,7 @@ private theorem A_witnessStrong_bootstrap_1_20
         simp [ht]
       have hbonus : spec.bonus = 15 := by decide
       have hA : A 18 = 57 := by eval_A_small
-      calc
-        A 18 = 57 := hA
-        _ = (∑ _ : Fin spec.t, (14 : ℕ)) + spec.bonus := by omega
+      simp_all
   -- n = 19: boost19 [2,2,2,3,4,6]
   · let spec := boosters.get ⟨3, by decide⟩
     have hValid := finite_bank_valid.2.1 spec (List.get_mem _ _)
@@ -1271,12 +1251,7 @@ private theorem A_witnessStrong_bootstrap_1_20
           decide
       have hbonus : spec.bonus = 24 := by decide
       have hA : A 19 = 60 := by eval_A_small
-      calc
-        A 19 = 60 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![3, 3, 3, 5, 8, 14] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 20: frame [4,4,4,4,4] with WS(4,8)×5
   · let spec := exactSmallFrames.get ⟨13, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1294,9 +1269,7 @@ private theorem A_witnessStrong_bootstrap_1_20
         simp [ht]
       have hbonus : spec.bonus = 25 := by decide
       have hA : A 20 = 65 := by eval_A_small
-      calc
-        A 20 = 65 := hA
-        _ = (∑ _ : Fin spec.t, (8 : ℕ)) + spec.bonus := by omega
+      simp_all
 
 private theorem A_witnessStrong_bootstrap_21_30
     (n : ℕ) (h21 : 21 ≤ n) (h30 : n ≤ 30)
@@ -1323,12 +1296,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 25 := by decide
       have hA : A 21 = 68 := by eval_A_small
-      calc
-        A 21 = 68 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![5, 8, 8, 8, 14] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 22: frame [4,4,4,4,6] with WS(4,8)×4+WS(6,14)
   · let spec := exactSmallFrames.get ⟨14, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1349,12 +1317,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 27 := by decide
       have hA : A 22 = 73 := by eval_A_small
-      calc
-        A 22 = 73 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![8, 8, 8, 8, 14] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 23: binary(1,22,1)
   · exact ws_bin_A 1 22 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1376,9 +1339,7 @@ private theorem A_witnessStrong_bootstrap_21_30
         simp [ht]
       have hbonus : spec.bonus = 26 := by decide
       have hA : A 24 = 82 := by eval_A_small
-      calc
-        A 24 = 82 := hA
-        _ = (∑ _ : Fin spec.t, (14 : ℕ)) + spec.bonus := by omega
+      simp_all
   -- n = 25: binary(1,24,1)
   · exact ws_bin_A 1 24 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1403,12 +1364,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 27 := by decide
       have hA : A 26 = 89 := by eval_A_small
-      calc
-        A 26 = 89 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 20] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 27: frame [6,6,6,9] with WS(6,14)×3+WS(9,23)
   · let spec := exactSmallFrames.get ⟨9, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1429,12 +1385,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 28 := by decide
       have hA : A 27 = 93 := by eval_A_small
-      calc
-        A 27 = 93 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 23] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 28: frame [6,6,6,10] with WS(6,14)×3+WS(10,27)
   · let spec := exactSmallFrames.get ⟨10, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1455,12 +1406,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 29 := by decide
       have hA : A 28 = 98 := by eval_A_small
-      calc
-        A 28 = 98 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 27] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 29: frame [5,6,6,6,6] with WS(5,10)+WS(6,14)×4
   · let spec := exactSmallFrames.get ⟨15, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1481,12 +1427,7 @@ private theorem A_witnessStrong_bootstrap_21_30
           decide
       have hbonus : spec.bonus = 35 := by decide
       have hA : A 29 = 101 := by eval_A_small
-      calc
-        A 29 = 101 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![10, 14, 14, 14, 14] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 30: frame [6,6,6,6,6] with WS(6,14)×5
   · let spec := exactSmallFrames.get ⟨16, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1504,9 +1445,7 @@ private theorem A_witnessStrong_bootstrap_21_30
         simp [ht]
       have hbonus : spec.bonus = 38 := by decide
       have hA : A 30 = 108 := by eval_A_small
-      calc
-        A 30 = 108 := hA
-        _ = (∑ _ : Fin spec.t, (14 : ℕ)) + spec.bonus := by omega
+      simp_all
 
 private theorem A_witnessStrong_bootstrap_31_38
     (n : ℕ) (h31 : 31 ≤ n) (h38 : n ≤ 38)
@@ -1572,12 +1511,7 @@ private theorem A_witnessStrong_bootstrap_31_38
           decide
       have hbonus : spec.bonus = 55 := by decide
       have hA : A 33 = 120 := by eval_A_small
-      calc
-        A 33 = 120 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![1, 8, 8, 8, 8, 8, 8, 8, 8] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 34: frame [6,6,6,6,10] with WS(6,14)×4+WS(10,27)
   · let spec := exactSmallFrames.get ⟨17, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1598,12 +1532,7 @@ private theorem A_witnessStrong_bootstrap_31_38
           decide
       have hbonus : spec.bonus = 42 := by decide
       have hA : A 34 = 125 := by eval_A_small
-      calc
-        A 34 = 125 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 14, 27] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 35: binary(1,34,1)
   · exact ws_bin_A 1 34 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1628,12 +1557,7 @@ private theorem A_witnessStrong_bootstrap_31_38
           decide
       have hbonus : spec.bonus = 44 := by decide
       have hA : A 36 = 134 := by eval_A_small
-      calc
-        A 36 = 134 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 14, 34] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 37: frame [6,6,6,6,13] with WS(6,14)×4+WS(13,37)
   · let spec := exactSmallFrames.get ⟨20, by decide⟩
     have hValid := finite_bank_valid.1 spec (List.get_mem _ _)
@@ -1654,12 +1578,7 @@ private theorem A_witnessStrong_bootstrap_31_38
           decide
       have hbonus : spec.bonus = 44 := by decide
       have hA : A 37 = 137 := by eval_A_small
-      calc
-        A 37 = 137 := hA
-        _ =
-            ((Finset.univ : Finset (Fin spec.t)).sum
-              (![14, 14, 14, 14, 37] : Fin spec.t → ℕ)) + spec.bonus := by
-          omega
+      simp_all
   -- n = 38: binary(18,20,18)
   · exact ws_bin_A 18 20 18 (by omega)
       (ih 18 (by omega) (by omega))
@@ -1702,12 +1621,7 @@ private theorem A_witnessStrong_bootstrap_39_49
             (![23, 27, 27, 27] : Fin 4 → ℕ)) = 104 := by
         decide
       have hA : A 39 = 145 := by eval_A_small
-      calc
-        A 39 = 145 := hA
-        _ =
-            ((Finset.univ : Finset (Fin 4)).sum
-              (![23, 27, 27, 27] : Fin 4 → ℕ)) + 41 := by
-          omega
+      simp_all
   -- n = 40: core4×3+residue[4]
   · have core_valid : SupportsValid core4Spec.supportList core4Spec.cap :=
       (SupportsValid.ofSpec core4Spec).mpr core4Spec_valid
@@ -1736,12 +1650,7 @@ private theorem A_witnessStrong_bootstrap_39_49
             (![27, 27, 27, 27] : Fin 4 → ℕ)) = 108 := by
         decide
       have hA : A 40 = 151 := by eval_A_small
-      calc
-        A 40 = 151 := hA
-        _ =
-            ((Finset.univ : Finset (Fin 4)).sum
-              (![27, 27, 27, 27] : Fin 4 → ℕ)) + 43 := by
-          omega
+      simp_all
   -- n = 41: binary(1,40,1)
   · exact ws_bin_A 1 40 1 (by omega)
       (ih 1 (by omega) (by omega))
@@ -1807,12 +1716,7 @@ private theorem A_witnessStrong_bootstrap_39_49
             (![34, 34, 34, 37] : Fin 4 → ℕ)) = 139 := by
         decide
       have hA : A 49 = 191 := by eval_A_small
-      calc
-        A 49 = 191 := hA
-        _ =
-            ((Finset.univ : Finset (Fin 4)).sum
-              (![34, 34, 34, 37] : Fin 4 → ℕ)) + 52 := by
-          omega
+      simp_all
 
 private theorem A_witnessStrong_bootstrap_50_59
     (n : ℕ) (h50 : 50 ≤ n) (h60 : n < 60)
@@ -1880,12 +1784,7 @@ private theorem A_witnessStrong_bootstrap_50_59
             (![41, 41, 41, 45] : Fin 4 → ℕ)) = 168 := by
         decide
       have hA : A 57 = 229 := by eval_A_small
-      calc
-        A 57 = 229 := hA
-        _ =
-            ((Finset.univ : Finset (Fin 4)).sum
-              (![41, 41, 41, 45] : Fin 4 → ℕ)) + 61 := by
-          omega
+      simp_all
   -- n = 58: binary(28,30,28)
   · exact ws_bin_A 28 30 28 (by omega)
       (ih 28 (by omega) (by omega))
@@ -2448,8 +2347,7 @@ private theorem A_witnessStrong_recursive_mod3
         fin_cases i <;> first | exact ws_m | exact ws_m1)
     convert h using 1
     · rw [hedgeCounts, Fin.sum_univ_four]
-      simp
-      omega
+      simp_all
     · simp only [← hm_def]
       rw [Fin.sum_univ_four]
       simp [hbonus, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]

@@ -127,13 +127,11 @@ lemma powerfulPart_ge_of_prime_sq_dvd {m p : ℕ} (hm : m ≠ 0) (hp : p.Prime)
     (Finset.dvd_prod_of_mem _
       (Nat.mem_primeFactors.mpr ⟨hp, by
         have hp_dvd_sq : p ∣ p ^ 2 := by
-          rw [pow_two]
-          exact dvd_mul_right p p
+          simp_all
         exact dvd_trans hp_dvd_sq hd, hm⟩))
   have hfactor : 2 ≤ m.factorization p := by
     have hle := (Nat.factorization_le_iff_dvd (pow_ne_zero 2 hp.ne_zero) hm).2 hd
-    have := hle p
-    simpa [Nat.Prime.factorization_pow hp] using this
+    simp_all
   simp only [ge_iff_le, hfactor, ite_true]
   exact pow_dvd_pow p hfactor
 
@@ -472,8 +470,7 @@ lemma pell_sq_plus_one_div (L : ℕ) (m : ℤ) (_hm : 0 < m)
           | succ j ih₂ =>
             simp only [Nat.mul_succ, pellX_succ, pellY_succ]
             constructor <;> [rw [ih₂.2]; rw [ih₂.2]] <;> nlinarith [pell_identity j]
-        simp only [Nat.mul_succ, pellX_succ, pellY_succ]
-        rw [h_ind j |>.2]; nlinarith [pell_identity j]
+        simp_all
     rw [mul_comm, h_double]
   rw [show (L + 1) / 2 * 2 = L + 1 by omega] at h_double
   -- Now: 4*(pellX((L+1)/2)² + 1) = 2*(pellX(L+1) + 3) = 6*(pellX L + 1) + 16*pellY L
@@ -684,9 +681,7 @@ lemma finset_coprime_sq_dvd (S : Finset ℕ) (m : ℕ)
                   (hS x (Finset.mem_insert_of_mem hx))).mp hpx_dvd
                 simpa [hpx] using hx
       · exact hdvd p (Finset.mem_insert_self p S)
-      · exact ih
-          (fun q hq => hS q (Finset.mem_insert_of_mem hq))
-          (fun q hq => hdvd q (Finset.mem_insert_of_mem hq))
+      · simp_all
 
 /-
 Upper bound: `pellN j < 11 ^ (2 * j)` for `j ≥ 1`.

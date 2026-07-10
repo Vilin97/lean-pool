@@ -112,8 +112,7 @@ lemma restrictTerminals_terminal_or_nonterminals :
   split <;> intro h
   · cases h with
     | inl hr =>
-      rw [hr]
-      simp
+      simp_all
     | inr hr =>
       left
       exact newTerminalRules_terminal_output r' hr
@@ -192,16 +191,13 @@ theorem toCNF_correct : g.language \ {[]} = g.toCNF.language := by
   | [Symbol.nonterminal _] =>
     exfalso
     apply restrictTerminals_nonUnit_output at hrg
-    · rw [hrₒ] at hrg
-      contradiction
+    · simp_all
     · exact eliminateUnitRules_output_nonUnit
   | _ :: _ :: _ =>
     cases r
     apply restrictTerminals_terminal_or_nonterminals at hrg
     cases hrg <;> rename_i hrg
-    · obtain ⟨t, ht⟩ := hrg
-      rw [ht] at hrₒ
-      simp at hrₒ
+    · simp_all
     · rw [hrₒ] at hrg
       simp only [List.mem_cons, forall_eq_or_imp] at hrg
       obtain ⟨n₁, hn₁⟩ := hrg.1
@@ -218,7 +214,6 @@ theorem toCNF_correct : g.language \ {[]} = g.toCNF.language := by
           | head => constructor
           | tail _ hs =>
             obtain ⟨_, hs⟩ := hrg.2.2 s hs
-            rw [hs]
-            constructor
+            simp_all
 
 end ContextFreeGrammar

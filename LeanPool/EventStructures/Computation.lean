@@ -31,11 +31,7 @@ local infixr:60 " ≈ₜ " => TraceEquiv es
 /-- The empty configuration is a valid configuration. -/
 def emptyConf : Conf es :=
   ⟨(∅ : Set es.Event), by
-    constructor
-    · intro e₁ e₂ h₁ h₂
-      exact False.elim (by simp at h₁)
-    · intro e e' hmem hle
-      exact False.elim (by simp at hmem)
+    simp_all
   ⟩
 
 /-- A computation to a configuration `c` is an asynchronous path

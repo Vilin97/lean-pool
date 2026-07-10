@@ -316,8 +316,7 @@ theorem windingNumber_eq_of_piecewise_homotopic
     apply windingNumber_integer_of_piecewise_closed_avoiding (fun t => H (t, s)) a b z₀ P hab
     · exact hH_closed s hs
     · exact hH_cont.comp (continuous_id.prodMk continuous_const) |>.continuousOn
-    · intro t ht h_not_P
-      exact hH_diff t ht h_not_P s hs
+    · simp_all
     · intro p₁ p₂ hp₁p₂ hpiece h_sub
       convert (hH_deriv_cont p₁ p₂ hp₁p₂ hpiece h_sub).comp
         (continuous_id.prodMk continuous_const).continuousOn
@@ -518,8 +517,7 @@ theorem generalizedWindingNumber_eq_classical_away
   have ht' : t ∈ Icc γ.a γ.b := by
     rw [Set.uIoc_of_le (le_of_lt γ.hab)] at ht
     exact Ioc_subset_Icc_self ht
-  have h_cond : ε < ‖γ.toFun t - z₀‖ := hε t ht'
-  simp only [h_cond, ↓reduceIte, deriv_sub_const]
+  simp_all
 
 private lemma integral_congr_homotopy_endpoint
     {f : ℂ → ℂ} {γ : ℝ → ℂ} {H : ℝ × ℝ → ℂ} {a b : ℝ} {s : ℝ}

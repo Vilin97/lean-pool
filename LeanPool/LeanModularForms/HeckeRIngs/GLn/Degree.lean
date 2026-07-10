@@ -172,11 +172,7 @@ private lemma transpose_mem_conj_inv_of_mem_conj
   have h_trans := transpose_mul_diagMat n a ha σ ρ h_eq
   rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def,
     ConjAct.ofConjAct_inv, ConjAct.ofConjAct_toConjAct, inv_inv]
-  have hmul : diagMat n a * (σ.transpose : GL (Fin n) ℚ) *
-      (diagMat n a)⁻¹ = (ρ.transpose : GL (Fin n) ℚ) := by
-    have h := congr_arg (· * (diagMat n a)⁻¹) h_trans
-    simp only [mul_assoc, mul_inv_cancel, mul_one] at h; rwa [← mul_assoc] at h
-  rw [hmul]; exact coe_mem_SLnZ n ρ.transpose
+  simp_all
 
 private lemma transpose_mem_conj_of_mem_conj_inv
     (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) (τ : SL(n, ℤ))
@@ -487,9 +483,7 @@ private lemma diagMat_comm_of_const (a : Fin n → ℕ) (ha : ∀ i, 0 < a i)
       (a 0 : ℚ) • (1 : Matrix (Fin n) (Fin n) ℚ) := by
     ext i j
     simp only [Matrix.diagonal_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
-    split_ifs with h
-    · subst h; simp [h_const]
-    · simp
+    simp_all
   rw [h_diag, smul_mul_assoc, mul_smul_comm, one_mul, mul_one]
 
 /-- For `n = 2`, scalar case: `deg(T(c, c)) = 1`. -/

@@ -406,24 +406,7 @@ theorem close_up_aux_factor_no_factor
       exact hq'.not_unit hq'_unit
     · -- M ≠ ⊥: use intersection_close_up
       by_cases ha_zero : (a : T) = 0
-      · have ha_zero_R : a = 0 := by
-          exact Subtype.val_injective ha_zero
-        have hc_n_rest : (c_n : T) ∈
-            Ideal.map R.carrier.subtype (span (↑rest : Set R.carrier)) := by
-          have hle_span : span (↑(insert a rest) : Set R.carrier) ≤
-              span (↑rest : Set R.carrier) := by
-            apply Ideal.span_le.mpr
-            intro x hx
-            rw [Finset.mem_coe, Finset.mem_insert] at hx
-            rcases hx with rfl | hx'
-            · rw [ha_zero_R]
-              exact zero_mem _
-            · exact Ideal.subset_span (Finset.mem_coe.mpr hx')
-          exact Ideal.map_mono hle_span hc_n
-        obtain ⟨S, hAext, hle, hmem⟩ := ih R hR_card rest hrest_card c_n hc_n_rest
-        exact ⟨S, hAext, hle,
-          Ideal.map_mono
-            (Ideal.span_mono (Finset.coe_subset.mpr (Finset.subset_insert a rest))) hmem⟩
+      · simp_all
       · -- a ≠ 0 and M ≠ ⊥: main case
         exact close_up_aux_factor_intersection
           hM_not_assoc hAss_ht hT_card hT_aleph0 n'' ih m ih_m
@@ -433,18 +416,15 @@ theorem close_up_aux_factor_no_factor
   · -- Negative case: no common prime divides all of rest
     have h_no_common : ∀ (q : R.carrier), Prime q →
         ¬(∀ x ∈ rest, q ∣ x) := by
-      intro q hq hall
-      exact h_common ⟨q, hq, hall⟩
+      simp_all
     have hc_n' : (c_n : T) ∈
         Ideal.map R.carrier.subtype (span (insert (a : R.carrier) (↑rest : Set R.carrier))) := by
-      rw [← Finset.coe_insert]
-      exact hc_n
+      simp_all
     obtain ⟨S, hAext, hle, hmem⟩ :=
       close_up_avoidance_step hM_not_assoc hAss_ht ih R hR_card hT_card hT_aleph0 a rest
         hrest_card c_n hc_n' h_no_common
     exact ⟨S, hAext, hle, by
-      rw [Finset.coe_insert]
-      exact hmem⟩
+      simp_all⟩
 
 
 end

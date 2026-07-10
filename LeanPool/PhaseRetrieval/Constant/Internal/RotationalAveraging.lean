@@ -60,9 +60,7 @@ private lemma rho_eq_norm_sub {w : ℂ} (hw : ‖(1 : ℂ) + w‖ ≥ 1) :
 /-- `‖r * exp(iθ)‖ = r` for `r ≥ 0`. -/
 private lemma norm_r_exp (r θ : ℝ) (hr : 0 ≤ r) :
     ‖(↑r : ℂ) * Complex.exp (Complex.I * ↑θ)‖ = r := by
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hr,
-    show Complex.I * (↑θ : ℂ) = (↑θ : ℂ) * Complex.I from mul_comm _ _,
-    Complex.norm_exp_ofReal_mul_I, mul_one]
+  simp_all
 
 /-! ## Private Lemma 2.6a: Pointwise bound on an arc
 

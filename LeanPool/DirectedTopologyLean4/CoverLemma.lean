@@ -39,8 +39,7 @@ lemma mid_point_I {i n : ℕ} (hi : i < n) : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈
   refine ⟨div_nonneg (by positivity) (by positivity), ?_⟩
   refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
   have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
-  push_cast at hcast
-  linarith
+  simp_all
 
 namespace UnitIntervalSub
 
@@ -171,16 +170,14 @@ theorem lebesgue_number_lemma_unitSquare {ι : Sort u} {c : ι → Set (I × I)}
       rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
     · have := hx.2.2
       rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
-      push_cast at this ⊢
-      linarith
+      simp_all
   have hx1_mem : (x.1 : ℝ) ∈ Set.Icc ((i : ℝ) / n.succ) ((i + 1) / n.succ) := by
     refine ⟨?_, ?_⟩
     · have := hx.1.1
       rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
     · have := hx.1.2
       rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
-      push_cast at this ⊢
-      linarith
+      simp_all
   have hsub_v : ((j + 1 : ℝ) / n.succ) - ((j : ℝ) / n.succ) = 1 / n.succ := by
     rw [div_sub_div_same]; ring_nf
   have hsub_h : ((i + 1 : ℝ) / n.succ) - ((i : ℝ) / n.succ) = 1 / n.succ := by

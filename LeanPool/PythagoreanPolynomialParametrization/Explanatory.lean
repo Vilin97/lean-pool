@@ -27,8 +27,7 @@ private lemma bind_affine_sub_const_dvd {σ : Type*}
         C (eval₂ (RingHom.id ℤ) r P) + C D * H := by
   induction P using MvPolynomial.induction_on with
   | C a =>
-      refine ⟨0, ?_⟩
-      simp
+      simp_all
   | add P Q hP hQ =>
       rcases hP with ⟨HP, hHP⟩
       rcases hQ with ⟨HQ, hHQ⟩
@@ -45,21 +44,13 @@ private lemma rat_scaled_num_den_cast_eq (N : ℕ) (q : ℚ) (hdiv : q.den ∣ N
     (((N : ℤ) / (q.den : ℤ) * q.num : ℤ) : ℚ) = (N : ℚ) * q := by
   rcases hdiv with ⟨m, hm⟩
   have hden_ne_zero : (q.den : ℤ) ≠ 0 := by
-    have h : q.den ≠ 0 := q.den_ne_zero
-    exact_mod_cast h
+    simp_all
   have hN_eq : (N : ℤ) = (q.den : ℤ) * (m : ℤ) := by
-    have h : (N : ℕ) = q.den * m := hm
-    have h' : (N : ℤ) = ((q.den * m : ℕ) : ℤ) := by exact_mod_cast h
-    rw [h']
-    norm_num [Nat.cast_mul]
+    simp_all
   have h1 : ((N : ℤ) / (q.den : ℤ) : ℤ) = (m : ℤ) := by
-    rw [hN_eq]
-    exact Int.mul_ediv_cancel_left m hden_ne_zero
+    simp_all
   have h2 : (N : ℚ) = (q.den : ℚ) * (m : ℚ) := by
-    have h : (N : ℕ) = q.den * m := hm
-    have h' : (N : ℚ) = ((q.den * m : ℕ) : ℚ) := by exact_mod_cast h
-    rw [h']
-    norm_num [Nat.cast_mul]
+    simp_all
   have h3 : (q.den : ℚ) * q = (q.num : ℚ) := by
     exact_mod_cast Rat.den_mul_eq_num q
   calc
@@ -117,8 +108,7 @@ private lemma eval_bind1_affine_int {n : ℕ}
   | add p q hp hq =>
       rw [map_add, MvPolynomial.eval_add, hp, hq, MvPolynomial.eval_add]
   | mul_X p j hp =>
-      rw [map_mul, MvPolynomial.bind₁_X_right, MvPolynomial.eval_mul, hp]
-      simp [MvPolynomial.eval_add, MvPolynomial.eval_mul, MvPolynomial.eval_X]
+      simp_all
 
 private lemma int_eval_cast_eq_rat_eval_map {n : ℕ} (a : Fin n → ℤ)
     (P : MvPolynomial (Fin n) ℤ) :
@@ -153,19 +143,7 @@ private lemma ratPolyEval_eq_intPolyEval_on_residue {n : ℕ}
       congr
       funext j
       ring
-    rw [h4]
-    have hH' :
-        bind₁ (fun j => C (r j) + C (D : ℤ) * X j) P =
-          C (eval r P) + C (D : ℤ) * H := by
-      have h5 :
-          bind₁ (fun j => C (r j) + C (D : ℤ) * X j) P =
-            C (eval₂ (RingHom.id ℤ) r P) + C (D : ℤ) * H := hH
-      rw [h5]
-      have : eval₂ (RingHom.id ℤ) r P = eval r P := by
-        rw [MvPolynomial.eval₂_id]
-      rw [this]
-    rw [hH']
-    simp [eval_add, eval_mul]
+    simp_all
   have h2 : (eval a P : ℚ) = D * ratPolyEval F a := hP_eval a
   have h3 :
       (eval r P : ℚ) =
@@ -241,8 +219,7 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
     have hmap :
         MvPolynomial.map (Int.castRingHom ℚ) (P i) = (D_total : ℚ) • (F i) := by
       exact map_intPoly_eq_nat_smul_of_coeff (F i) (P i) D_total (hP_coeff i)
-    rw [hmap]
-    simp
+    simp_all
   let m := D_total ^ n
   have hcard : Fintype.card (Fin n → Fin D_total) = m := by
     simp [m]
@@ -295,12 +272,7 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
       exact ratPolyEval_eq_intPolyEval_on_residue
         (F := F i) (P := P i) (Q := G idx i) (H := H)
         hD_total_pos (hF_int i) (hP_eval i) r b a ha' hH rfl
-    have h_eq : intPolyEval (G idx i) b = v i := by
-      have h : (intPolyEval (G idx i) b : ℚ) = (v i : ℚ) := by
-        rw [← h_key]
-        exact ha i
-      exact_mod_cast h
-    exact h_eq
+    simp_all
   · rintro ⟨idx, b, hGb⟩
     let r : Fin n → ℤ := fun j => ((e idx j : ℕ) : ℤ)
     let a : Fin n → ℤ := fun j => D_total * b j + r j
@@ -312,10 +284,7 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
       exact ratPolyEval_eq_intPolyEval_on_residue
         (F := F i) (P := P i) (Q := G idx i) (H := H)
         hD_total_pos (hF_int i) (hP_eval i) r b a rfl hH rfl
-    have h_eq : ratPolyEval (F i) a = (v i : ℚ) := by
-      rw [h_key]
-      exact_mod_cast hGb i
-    exact h_eq
+    simp_all
 
 /-! ## The displayed integer-valued factorization example -/
 
@@ -375,8 +344,7 @@ theorem integerValued_polynomial_ring_not_uniqueFactorization :
     trans fallingFactorialRatPoly 2
     · simp [fallingFactorialRatPoly, Finset.prod_range_succ]
     · have hf := fallingFactorial_eq_factorial_mul_binomialRatPoly 2
-      norm_num at hf
-      exact hf
+      simp_all
   have hnotdivx : ¬ (2 : IntegerValuedPoly 1) ∣ x := by
     rintro ⟨q, hq⟩
     obtain ⟨z, hz⟩ := q.2 (fun _ : Fin 1 => (1 : ℤ))
@@ -431,8 +399,7 @@ theorem integerValued_polynomial_ring_not_uniqueFactorization :
     rw [isUnit_iff_dvd_one]
     obtain ⟨w, hw⟩ := (isUnit_iff_dvd_one.mp hzunit)
     refine ⟨⟨(C (w : ℚ) : RatPoly 1), ?_⟩, ?_⟩
-    · intro a
-      exact ⟨w, by simp⟩
+    · simp_all
     · apply Subtype.ext
       change (1 : RatPoly 1) = p.1 * C (w : ℚ)
       rw [hp]
@@ -456,8 +423,7 @@ theorem integerValued_polynomial_ring_not_uniqueFactorization :
           rfl
         simpa [htwo] using h.symm
       have hprod_ne : (a.1 * c.1 : RatPoly 1) ≠ 0 := by
-        rw [hacv]
-        norm_num
+        simp_all
       have ha_ne : (a.1 : RatPoly 1) ≠ 0 := by
         intro ha
         exact hprod_ne (by simp [ha])
@@ -468,9 +434,7 @@ theorem integerValued_polynomial_ring_not_uniqueFactorization :
         MvPolynomial.totalDegree_mul_of_isDomain
           (f := (a.1 : RatPoly 1)) (g := (c.1 : RatPoly 1)) ha_ne hc_ne
       have hsum : (a.1 : RatPoly 1).totalDegree + (c.1 : RatPoly 1).totalDegree = 0 := by
-        rw [hacv] at htd
-        simp at htd
-        exact htd.symm
+        simp_all
       have ha_td0 : (a.1 : RatPoly 1).totalDegree = 0 := by omega
       have hc_td0 : (c.1 : RatPoly 1).totalDegree = 0 := by omega
       have ha_const : (a.1 : RatPoly 1) = C (constantCoeff (a.1 : RatPoly 1)) := by

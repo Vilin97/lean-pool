@@ -628,9 +628,7 @@ lemma coconeInl (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     change ((Limits.pushout.inl (xskl X n) (xskr X n) ≫
       Limits.pushout.desc (l' ..) (r' ..) (w' ..)).hom x) t = _
     rw [Limits.pushout.inl_desc]
-    unfold l'
-    simp only [TopCat.hom_comp, ContinuousMap.argSwap, ContinuousMap.coe_mk,
-      ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply, hom_ofHom]
+    simp_all
 
 lemma coconeInr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     (cocone X n).inr ≫ desc X n Z = Z.inr := by

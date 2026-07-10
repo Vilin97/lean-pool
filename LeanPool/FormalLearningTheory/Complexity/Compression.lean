@@ -169,10 +169,7 @@ private lemma disagreementFamily_boolVCDim_le
   -- Normalize: ↑(⟨embed y, hxS⟩ : ↥S) = y.val = ↑y
   change h_concept (y : X) = g ⟨(y : X), hxS⟩
   by_cases heq : h_concept (y : X) = c (y : X)
-  · have hay : a y = false := by rw [ha_y]; simp [heq]
-    have hgeq : ¬(g ⟨y.val, hxS⟩ ≠ c y.val) := by
-      rw [← h_ay_iff, hay]; simp
-    push Not at hgeq; rw [heq, hgeq]
+  · simp_all
   · have hay : a y = true := by rw [ha_y]; simp [heq]
     have hgne := h_ay_iff.mp hay
     cases hc : c (y : X) <;> cases hh : h_concept (y : X) <;>
@@ -185,8 +182,7 @@ private lemma supportError_eq_boolTestExpectation
     supportError Y q h c =
     boolTestExpectation q (fun y : ↥Y => decide (h (y : X) ≠ c (y : X))) := by
   simp only [supportError, boolTestExpectation, trueExpectation]
-  congr 1; ext y
-  by_cases heq : h (y : X) = c (y : X) <;> simp [heq]
+  simp_all
 
 /-- Finite VC dimension implies existence of a proper finite-support learner.
     The construction uses ERM + finite_support_vc_approx on the disagreement family. -/
@@ -398,17 +394,7 @@ lemma decodeWitnessXCoords_encode_eq
     obtain ⟨⟨x0, hx0W⟩, _, hidx_mem2⟩ := hidx_mem
     by_cases hmk : ((x0 : X), c x0) ∈ kernel
     · by_cases hlt : (kernel.equivFin ⟨(x0, c x0), hmk⟩).val < K
-      · simp only [dif_pos hmk, dif_pos hlt, Finset.mem_singleton] at hidx_mem2
-        have hltCard : ((kernel.equivFin ⟨(x0, c x0), hmk⟩ : Fin kernel.card) : ℕ) < kernel.card :=
-          (kernel.equivFin ⟨(x0, c x0), hmk⟩).isLt
-        subst hidx_mem2
-        simp only [dif_pos hltCard, Finset.mem_singleton] at hx
-        have hrt := congrArg Subtype.val
-          (Equiv.symm_apply_apply (kernel.equivFin) ⟨(x0, c x0), hmk⟩)
-        rw [hrt] at hx
-        have hx_eq : x = x0 := by simpa using hx
-        rw [hx_eq]
-        exact hx0W
+      · simp_all
       · simp [dif_pos hmk, dif_neg hlt] at hidx_mem2
     · simp [dif_neg hmk] at hidx_mem2
   · intro hxW
@@ -424,9 +410,7 @@ lemma decodeWitnessXCoords_encode_eq
     change x ∈ decodeWitnessXCoords kernel (encodeWitnessInfo kernel c K W)
     simp only [decodeWitnessXCoords, Finset.mem_biUnion]
     refine ⟨⟨(kernel.equivFin ⟨(x, c x), hmk⟩).val, hltK⟩, hidx_in_enc, ?_⟩
-    have hltCard : ((kernel.equivFin ⟨(x, c x), hmk⟩ : Fin kernel.card) : ℕ) < kernel.card :=
-      (kernel.equivFin ⟨(x, c x), hmk⟩).isLt
-    simp [Equiv.symm_apply_apply]
+    simp_all
 
 /-- On the encoded witness support, the decoded label function agrees with the true
 label function `c`, provided every pair in the kernel has the correct second coordinate. -/
@@ -444,12 +428,8 @@ lemma decodeWitnessLabel_eq_on_encoded
     simp [hmem, hc]
   · have hnot : (x, true) ∉ kernel := by
       intro htrue
-      have hcoord : true = c x := by
-        simpa using hlabels (x, true) htrue
-      exact hc hcoord.symm
-    have hfalse : c x = false := by
-      cases hcx : c x <;> simp_all
-    simp [hnot, hfalse]
+      simp_all
+    simp_all
 
 /-- If two label functions agree on all points of `Z`, then the labeled samples they
 induce on `Z.equivFin` are equal. -/
@@ -460,8 +440,7 @@ lemma labeledSampleOfFinset_eq_of_eq_on_support
     labeledSampleOfFinset ℓ₁ Z = labeledSampleOfFinset ℓ₂ Z := by
   funext j
   simp only [labeledSampleOfFinset]
-  congr 1
-  exact hℓ _ (Z.equivFin.symm j).property
+  simp_all
 
 /-- Generic roundtrip theorem for the compression reconstruction invariant.
 
@@ -579,8 +558,7 @@ private lemma agreeTests_boolVCDim_le
       exact hjk_ne hb'k.symm
     -- x j = x k gives: h.val (x j) = c (x j) ↔ h ∈ halfSet' j, same for k.
     have hj := (hx j h0.val h0.property).mpr h0_in_j
-    rw [hjk] at hj
-    exact h0_nin_k ((hx k h0.val h0.property).mp hj)
+    simp_all
   -- Step 4: Build P = {x 0, ..., x d}.
   let P : Finset X := Finset.univ.image x
   have hP_card : P.card = d + 1 := by
@@ -818,10 +796,7 @@ private theorem moranKernel_labels {X : Type u} [DecidableEq X] {T : ℕ} (c : X
     (getWitness : Fin T → Finset X) :
     ∀ pair ∈ Finset.univ.biUnion (fun t => (getWitness t).image (fun x => (x, c x))),
       pair.2 = c pair.1 := by
-  intro pair hp
-  simp only [Finset.mem_biUnion, Finset.mem_image] at hp
-  obtain ⟨_, _, x, _, rfl⟩ := hp
-  rfl
+  simp_all
 
 private theorem witness_mem_moranKernel {X : Type u} [DecidableEq X] {T : ℕ} (c : X → Bool)
     (getWitness : Fin T → Finset X) (t : Fin T) {x : X} (hx : x ∈ getWitness t) :
@@ -972,8 +947,7 @@ private theorem moran_yehudayoff_forward_construction
       let getWitness : Fin Tvc → Finset X :=
         fun t => (Finset.mem_image.mp (reps t).property).choose
       dsimp only [compressCore]
-      simp only [dif_pos hreal, dif_pos hm]
-      simpa only [reps, getWitness] using moranKernel_labels hreal.choose getWitness
+      simp_all
     have hround : ∀ t : Fin Tvc,
         rowHyp S hreal t (S i).1 = (mkReps S hreal hm t).val (S i).1 := by
       intro t
@@ -1139,8 +1113,7 @@ theorem compress_with_info_injective_on_labelings {X : Type u} {n : ℕ}
     obtain ⟨c, hcC, hc⟩ := hg_real; exact ⟨c, hcC, fun i => by simp [hc i]⟩
   have hf := cs.correct (fun i => (pts i, f i)) hf_real' i
   have hg := cs.correct (fun i => (pts i, g i)) hg_real' i
-  simp only at hf hg
-  rw [← hf, congr_fun h_recon (pts i), hg]
+  simp_all
 
 private lemma shatters_subset_compression {X : Type u} {C : ConceptClass X Bool}
     {S T : Finset X} (hST : T ⊆ S) (hS : Shatters X C S) : Shatters X C T := by
@@ -1249,9 +1222,7 @@ theorem compression_with_info_imp_vcdim_finite
           have hsub : A.powerset.filter (fun S => S.card ≤ K) ⊆
               (Finset.range (K + 1)).biUnion (fun j => A.powersetCard j) := by
             intro S hS
-            simp only [Finset.mem_filter, Finset.mem_powerset] at hS
-            simp only [Finset.mem_biUnion, Finset.mem_range]
-            exact ⟨S.card, by omega, Finset.mem_powersetCard.mpr ⟨hS.1, rfl⟩⟩
+            simp_all
           exact (Finset.card_le_card hsub).trans Finset.card_biUnion_le
       _ = (Finset.range (K + 1)).sum (fun j => (2 * n).choose j) := by
           congr 1; ext j; simp [Finset.card_powersetCard, hA_card]

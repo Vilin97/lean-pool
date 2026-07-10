@@ -81,8 +81,7 @@ private theorem explicitPkappaNorm_smul
       refine Finset.sum_congr rfl ?_
       intro α halpha
       simp [Finsupp.smul_apply, mul_pow]
-    rw [hsum, Real.sqrt_mul (sq_nonneg ‖c‖), Real.sqrt_sq_eq_abs]
-    simp [abs_of_nonneg (norm_nonneg _)]
+    simp_all
 
 private theorem explicitPkappaNorm_pos_of_ne_zero
     {d : ℕ} {F : Finsupp (Fin d -> ℕ) ℂ} (hF : F ≠ 0) :
@@ -286,9 +285,7 @@ theorem stablePhaseRetrievalExplicitRange
   rcases hP with ⟨F, rfl⟩
   rcases stablePhaseRetrievalCoefficientsAll hd κ F with ⟨C_P, hC_P_pos, hstable⟩
   refine ⟨C_P, hC_P_pos, ?_⟩
-  intro Q hQ
-  rcases hQ with ⟨G, rfl⟩
-  exact hstable G
+  simp_all
 
 /-! ## Closure upgrade -/
 
@@ -330,9 +327,7 @@ private theorem sqrt_integral_norm_sq_eq_lpNorm
       (∫ z, ‖F z‖ ^ (2 : ℝ) ∂ explicitGamma d) ^ ((2 : ℝ)⁻¹)
   rw [show (∫ z, ‖F z‖ ^ (2 : ℝ) ∂ explicitGamma d) =
       ∫ z, ‖F z‖ ^ 2 ∂ explicitGamma d by
-    congr 1
-    ext z
-    exact Real.rpow_natCast ‖F z‖ 2]
+    simp_all]
   rw [Real.sqrt_eq_rpow]
   norm_num
 
@@ -666,8 +661,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       have hdecomp :
           (fun z => ‖P z‖ - ‖Qn n z‖) =
             fun z => (‖P z‖ - ‖Q z‖) + (‖Q z‖ - ‖Qn n z‖) := by
-        funext z
-        ring
+        simp_all
       rw [hdecomp]
       have htri :=
         MeasureTheory.lpNorm_add_le
@@ -814,8 +808,7 @@ theorem stablePhaseRetrievalExplicitLpClosure_exists
       hP_mem hQ_mem with
     ⟨θ, hθ, hθ_eq⟩
   refine ⟨θ, hθ, ?_⟩
-  rw [hθ_eq]
-  exact hbound Q hQ
+  simp_all
 
 private theorem explicitHermiteLpPolys_eq_ae
     {d : ℕ} (κ : Fin d -> ℕ) :

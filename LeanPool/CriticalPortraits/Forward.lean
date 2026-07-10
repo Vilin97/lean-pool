@@ -253,8 +253,7 @@ lemma fiber_eq_contained {r : ι} (hr : r ∈ Roots fam a b) :
   · rintro ⟨hgS, hgr⟩
     have hgSmem : g ∈ Sstrict fam a b := by rw [mem_Sstrict]; exact hgS
     have hcont := rootS_contains fam hgSmem
-    rw [hgr] at hcont
-    exact ⟨hgS.1.1, hcont.1, hcont.2⟩
+    simp_all
   · rintro ⟨hgE, hglo, hghi⟩
     have hgwin : a ≤ fam.lo g ∧ fam.hi g ≤ b := ⟨le_trans hra hglo, le_trans hghi hrb⟩
     have hglh := fam.lh g hgE
@@ -368,10 +367,7 @@ lemma crux (hab : a < b) (htop : (topEdges fam a b).Nonempty) :
       obtain ⟨_, hra, hrb, _⟩ := root_self_props fam hr
       omega
     · rw [Finset.card_biUnion (roots_Ioc_disjoint fam)]
-      have : ∑ r ∈ Roots fam a b, (Finset.Ioc (fam.lo r) (fam.hi r)).card
-          = ∑ r ∈ Roots fam a b, (fam.hi r - fam.lo r) := by
-        apply Finset.sum_congr rfl; intro r _; rw [Nat.card_Ioc]
-      rw [this, hsum, Nat.card_Ioc]
+      simp_all
   obtain ⟨e0, he0⟩ := htop
   unfold topEdges at he0
   rw [mem_filter, mem_contained] at he0
@@ -380,9 +376,7 @@ lemma crux (hab : a < b) (htop : (topEdges fam a b).Nonempty) :
     intro t ht1 ht2
     have htmem : t ∈ Finset.Ioc a b := by rw [Finset.mem_Ioc]; exact ⟨ht1, ht2⟩
     rw [← hbu, Finset.mem_biUnion] at htmem
-    obtain ⟨r, hr, htr⟩ := htmem
-    rw [Finset.mem_Ioc] at htr
-    exact ⟨r, hr, htr.1, htr.2⟩
+    simp_all
   have scan : ∀ t, a < t → t ≤ b → ∀ r ∈ Roots fam a b,
       fam.lo r < t → t ≤ fam.hi r → fam.col e0 < fam.col r := by
     intro t
@@ -436,8 +430,7 @@ theorem master (a b : ℕ) : N fam a b ≤ b - a := by
         have hwlt : fam.hi r - fam.lo r < w := by
           rw [mem_Roots] at hr
           have := rootS_width_lt fam hr.1
-          rw [hr.2] at this
-          omega
+          simp_all
         exact ih (fam.hi r - fam.lo r) hwlt (fam.lo r) (fam.hi r) rfl
       rcases Finset.eq_empty_or_nonempty (topEdges fam a b) with htop | htop
       · rw [htop, Finset.card_empty]
@@ -631,11 +624,7 @@ lemma no_alt [NeZero (d * m)] {P : Finset (Finset (ZMod (d * m)))} (hP : Portrai
 lemma eq_imp_sameHost {P : Finset (Finset (ZMod (d * m)))} (hP : Portrait d m P)
     {x y : ZMod (d * m)} (hx : x ∈ T P) (hy : y ∈ T P) (hxy : x = y) :
     hostSet P x hx = hostSet P y hy := by
-  by_contra hne
-  have hdisj := hP.2.1 _ (hostSet_mem hx) _ (hostSet_mem hy) hne
-  have hmemx : x ∈ hostSet P x hx := mem_hostSet hx
-  have hmemy : x ∈ hostSet P y hy := hxy ▸ mem_hostSet hy
-  exact (Finset.disjoint_left.mp hdisj hmemx) hmemy
+  simp_all
 
 /-- If predecessors coincide as points the survivors share a host. -/
 lemma predEq_imp_sameHost {P : Finset (Finset (ZMod (d * m)))} (hP : Portrait d m P)
@@ -775,13 +764,9 @@ lemma lemmaB_left [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
     have hfmem : f ∈ hostSet P e he := by rw [hhost]; exact mem_hostSet hf
     -- p.val < f.val < e.val
     have hlt1 : (predIn P e he).val < f.val := by
-      rw [hpe, htf, hbot]
-      have := sep_master (m := m) (p := colV e) (q := colV f) hce hcf hlhf
-      omega
+      simp_all
     have hlt2 : f.val < e.val := by
-      rw [htf, hte]
-      have := sep_master (m := m) (p := colV f) (q := colV e) hcf hce hhi
-      omega
+      simp_all
     exact predIn_immediate he hfmem hlt1 hlt2
 
 /-- INJECTIVITY: distinct survivors have distinct level-intervals. -/

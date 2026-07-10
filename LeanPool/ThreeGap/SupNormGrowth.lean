@@ -91,8 +91,7 @@ theorem supNorm_growth_doubling (α : Fin d → ℝ) (q : ℕ → ℤ) (p : ℕ 
     have hsign : ∀ i, (0 ≤ ε j1 i) ↔ (0 ≤ ε j2 i) := by
       intro i
       have hi := congrFun hse i
-      simp only [hsgn, decide_eq_decide] at hi
-      exact hi
+      simp_all
     have hsub : ‖ε j2 - ε j1‖ ≤ delta α (q N) :=
       norm_sub_le_of_sameOrthant (fun i => (hsign i).symm) hnorm2 hnorm1
     have hdd : delta α (q (N + j2) - q (N + j1)) ≤ ‖ε j2 - ε j1‖ := by
@@ -108,8 +107,7 @@ theorem supNorm_growth_doubling (α : Fin d → ℝ) (q : ℕ → ℤ) (p : ℕ 
     omega
   -- pigeonhole: two of the 2^d + 1 indices share a sign pattern
   have hcard : Fintype.card (Fin d → Bool) < Fintype.card (Fin (2 ^ d + 1)) := by
-    simp only [Fintype.card_fun, Fintype.card_bool, Fintype.card_fin]
-    omega
+    simp_all
   obtain ⟨a, b, hab, heq⟩ :=
     Fintype.exists_ne_map_eq_of_card_lt (fun i : Fin (2 ^ d + 1) => sgn i.val) hcard
   have hne : a.val ≠ b.val := fun h => hab (Fin.val_injective h)

@@ -92,9 +92,7 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
     have h1 : Set.EqOn g (fun z => g 0 + (z - 0) • dslope g 0 0) (Metric.ball 0 1) :=
       affine_of_mapsTo_ball_of_norm_dslope_eq_div g_diff h2 (mem_ball_self zero_lt_one) hdiv
     have g_lin : EqOn g (fun (z : ℂ) => z • deriv g 0) (ball 0 1) := by
-      convert h1 using 1
-      ext1 z
-      rw [g_0_eq_0, zero_add, sub_zero, dslope_same]
+      simp_all
     have g'0_ne_0 : deriv g 0 ≠ 0 := fun h' => by simp [h'] at h
     have g_inj : InjOn g 𝔻 := fun x hx y hy => by
       rw [g_lin hx, g_lin hy]

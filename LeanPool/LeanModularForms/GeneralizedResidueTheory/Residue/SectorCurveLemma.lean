@@ -286,8 +286,7 @@ private theorem sectorCurve_zero_set_finite (r : ℝ) (hr : 0 < r) (α : ℝ) :
     simp [(mul_eq_zero.mp h0).resolve_right hr.ne']
   · rcases le_or_gt t 2 with h2 | h2
     · exfalso; rw [sectorCurve_seg2 r α t ⟨le_of_lt h1, h2⟩] at h0
-      simp only [mul_eq_zero, Complex.ofReal_eq_zero] at h0
-      exact h0.elim (fun h => by linarith) (Complex.exp_ne_zero _)
+      simp_all
     · rw [sectorCurve_seg3 r α t ⟨le_of_lt h2, ht3⟩] at h0
       simp only [mul_eq_zero, Complex.ofReal_eq_zero] at h0
       exact h0.elim (fun h => by
@@ -463,8 +462,7 @@ private theorem cauchyPV_g_tendsto_zero (r : ℝ) (hr : 0 < r) (α : ℝ)
         exact tendsto_const_nhds.congr' (by
           filter_upwards [Ioo_mem_nhdsGT
             (norm_pos_iff.mpr (sub_ne_zero.mpr h_ne))] with ε hε
-          simp only [cauchyPrincipalValueIntegrand', sub_zero, gt_iff_lt]
-          rw [if_pos (by rw [sub_zero] at hε; exact hε.2)]))
+          simp_all))
 
 private theorem cauchyPV_simplePole_integral_split (r : ℝ) (hr : 0 < r) (α : ℝ)
     (c : ℂ) (g : ℂ → ℂ) (hg : AnalyticOnNhd ℂ g (Metric.ball 0 (↑r + 1))) :
@@ -571,9 +569,7 @@ private theorem sectorCurve_ne_zero_of_Icc_δ (r : ℝ) (hr : 0 < r) (α : ℝ)
     · linarith
   · rcases le_or_gt t 2 with h2 | h2
     · rw [sectorCurve_seg2 r α t ⟨le_of_lt h1, h2⟩] at h0
-      rcases mul_eq_zero.mp h0 with hr0 | hexp0
-      · exact absurd (Complex.ofReal_eq_zero.mp hr0) (ne_of_gt hr)
-      · exact absurd hexp0 (Complex.exp_ne_zero _)
+      simp_all
     · rw [sectorCurve_seg3 r α t ⟨le_of_lt h2, by linarith [ht.2]⟩] at h0
       rcases mul_eq_zero.mp h0 with h3t | hexp0
       · have : (3 - t) * r = 0 := Complex.ofReal_eq_zero.mp h3t

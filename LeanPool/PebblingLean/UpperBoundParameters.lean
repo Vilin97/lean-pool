@@ -239,8 +239,7 @@ theorem recursiveCostBound_step {K : ℝ} {n0 n : ℕ}
     recursiveCostBound K n0 n =
       recursiveCostBound K n0 (splitM K n) * costMultiplier K n := by
   rw [recursiveCostBound.eq_1]
-  have hnot : ¬ n < n0 := by omega
-  simp [hnot, hsmall]
+  simp_all
 
 theorem recursiveCostBound_base_cost {K : ℝ} {n0 : ℕ} :
     ∀ n : ℕ, n < n0 → 2 ^ n * minPile n ≤ recursiveCostBound K n0 n := by
@@ -278,8 +277,7 @@ theorem demandGapForDemand_pos {n t : ℕ} (hn : 0 < n) (ht : 0 < t) :
     0 < demandGapForDemand n t := by
   unfold demandGapForDemand
   have hloss : 0 < loss n := loss_pos hn
-  have ht_real : 0 < (t : ℝ) := by exact_mod_cast ht
-  positivity
+  simp_all
 
 theorem loss_le_of_le {m n : ℕ} (hm : 0 < m) (hmn : m ≤ n) :
     loss n ≤ loss m := by
@@ -524,8 +522,7 @@ theorem log_two_mul_sq_le_three_log {n : ℕ} (hn : 2 ≤ n) :
       rw [Real.log_mul (by norm_num : (2 : ℝ) ≠ 0)
         (by positivity : ((n : ℝ) ^ 2) ≠ 0)]
     _ = Real.log 2 + 2 * Real.log (n : ℝ) := by
-      rw [Real.log_pow]
-      ring_nf
+      simp_all
     _ ≤ 3 * Real.log (n : ℝ) := by linarith
 
 /-- Coarse real upper bound for the annulus-width core. -/
@@ -939,12 +936,9 @@ theorem stack_mul_le_of_log_budget {A K : ℝ} {n : ℕ}
     rw [Real.log_mul
       (by positivity : ((2 ^ (splitM K n / 5) : ℕ) : ℝ) ≠ 0)
       (by positivity : (((4 : ℝ) / 3) ^ splitA K n) ≠ 0)]
-    rw [Nat.cast_pow]
-    rw [Real.log_pow, Real.log_pow]
-    ring_nf
+    simp_all
   have hlogLR : Real.log L ≤ Real.log R := by
-    rw [hlogL, hlogR]
-    exact hlog
+    simp_all
   exact (Real.log_le_log_iff hL_pos hR_pos).mp hlogLR
 
 /-- Logarithmic sufficient condition for the multiplication-form Bernstein
@@ -1028,8 +1022,7 @@ theorem bernstein_width_log_budget_of_core_budget {A K : ℝ} {n : ℕ}
   have hwidth2 :
       ((2 * annulusWidth A K n : ℕ) : ℝ) ≤
         2 * (annulusWidthCore A K n + 1) := by
-    norm_num
-    linarith
+    simp_all
   have hwidthLog :
       ((2 * annulusWidth A K n : ℕ) : ℝ) * Real.log 2 ≤
         (2 * (annulusWidthCore A K n + 1)) * Real.log 2 :=
@@ -1073,9 +1066,7 @@ theorem log_splitA_succ_mul_log_two_le_log_n_succ_mul_log_two {K : ℝ} {n : ℕ
   have hle_real :
       (((splitA K n + 1 : ℕ) : ℝ) * Real.log 2) ≤
         (((n + 1 : ℕ) : ℝ) * Real.log 2) := by
-    have hcast : ((splitA K n + 1 : ℕ) : ℝ) ≤ ((n + 1 : ℕ) : ℝ) := by
-      exact_mod_cast hle_nat
-    exact mul_le_mul_of_nonneg_right hcast hlog2_pos.le
+    simp_all
   exact Real.log_le_log (by positivity) hle_real
 
 /-- Coarse sufficient condition for the Bernstein-width core log budget.  This
@@ -1512,10 +1503,7 @@ theorem split_log_budget_of_quadratic_threshold {K : ℝ} {n : ℕ}
   have hn_nonneg : 0 ≤ (n : ℝ) := by positivity
   have hsqrt_threshold : 128 * K ^ 2 ≤ Real.sqrt (n : ℝ) := by
     have hsqrt := Real.sqrt_le_sqrt hthreshold
-    have hleft :
-        Real.sqrt ((128 * K ^ 2) ^ 2) = 128 * K ^ 2 := by
-      rw [Real.sqrt_sq_eq_abs, abs_of_nonneg hcoef_nonneg]
-    rwa [hleft] at hsqrt
+    simp_all
   have hlog_half :=
     Real.log_natCast_le_rpow_div n (by norm_num : (0 : ℝ) < 1 / 2)
   have hlog_sqrt : Real.log (n : ℝ) ≤ 2 * Real.sqrt (n : ℝ) := by
@@ -1549,11 +1537,7 @@ theorem stack_log_linear_budget_of_quadratic_threshold {n : ℕ}
   have hn_nonneg : 0 ≤ (n : ℝ) := by positivity
   have hsqrt_threshold : 32 / stackMargin ^ 2 ≤ Real.sqrt (n : ℝ) := by
     have hsqrt := Real.sqrt_le_sqrt hthreshold
-    have hleft :
-        Real.sqrt ((32 / stackMargin ^ 2) ^ 2) =
-          32 / stackMargin ^ 2 := by
-      rw [Real.sqrt_sq_eq_abs, abs_of_nonneg hcoef_nonneg]
-    rwa [hleft] at hsqrt
+    simp_all
   have hlog_half :=
     Real.log_natCast_le_rpow_div n (by norm_num : (0 : ℝ) < 1 / 2)
   have hlog_sqrt : Real.log (n : ℝ) ≤ 2 * Real.sqrt (n : ℝ) := by
@@ -2148,8 +2132,7 @@ theorem tail_budget_of_six_log {n : ℕ} {E : ℝ}
     Real.log_le_log (by norm_num : (0 : ℝ) < 2) h2_le_n
   have hlog16 : Real.log 16 = 4 * Real.log 2 := by
     rw [show (16 : ℝ) = 2 ^ 4 by norm_num]
-    rw [Real.log_pow]
-    norm_num
+    simp_all
   calc
     Real.log 16 + 2 * Real.log (n : ℝ) =
         4 * Real.log 2 + 2 * Real.log (n : ℝ) := by rw [hlog16]
@@ -5814,8 +5797,7 @@ theorem explicit_widthConstCutoff_of_splitThreshold {n0 : ℕ}
           (by norm_num : (0 : ℝ) ≤ 3) hcoeff_nonneg
   have hlog128 : Real.log 128 = 7 * Real.log 2 := by
     rw [show (128 : ℝ) = 2 ^ 7 by norm_num]
-    rw [Real.log_pow]
-    norm_num
+    simp_all
   have hlhs : Real.log 128 + 4 * Real.log 2 ≤ 11 := by
     rw [hlog128]
     have hlog2le1 := log_two_le_one

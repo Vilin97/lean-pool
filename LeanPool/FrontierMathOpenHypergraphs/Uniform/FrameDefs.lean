@@ -51,8 +51,7 @@ private def supportPatternOfList {t : ℕ} (s : List ℕ)
   let finList : List (Fin t) := s.pmap (fun i hi => (⟨i, hi⟩ : Fin t)) hIn
   have hFinNodup : finList.Nodup := by
     apply hNodup.pmap
-    intro a ha b hb hEq
-    simpa using congrArg Fin.val hEq
+    simp_all
   refine ⟨finList.toFinset, ?_⟩
   rw [List.toFinset_card_of_nodup hFinNodup]
   simpa [finList] using hCard
@@ -65,8 +64,7 @@ def FrameSpec.supportList (spec : FrameSpec) : List (SupportPattern spec.t) :=
         (spec.rawSupports_ok s hs).1
         (spec.rawSupports_ok s hs).2.2)
     (by
-      intro s hs
-      exact hs) : List (SupportPattern spec.t))
+      simp_all) : List (SupportPattern spec.t))
 
 /-- The support multiset of a frame specification, interpreted on `Fin spec.t`. -/
 def FrameSpec.supports (spec : FrameSpec) : Multiset (SupportPattern spec.t) :=
@@ -1340,8 +1338,7 @@ lemma card_filter_univ_multiset_toList_eq_countP_prop {α : Type*}
     apply Finset.card_bij
       (fun i _ => (⟨i.1, by rw [Multiset.length_toList]; exact i.2⟩ :
         Fin m.toList.length))
-    · intro i hi
-      simpa using hi
+    · simp_all
     · intro i _ j _ hij
       apply Fin.ext
       exact congrArg (fun x : Fin m.toList.length => x.1) hij
@@ -1466,8 +1463,7 @@ private theorem mem_supportPatternOfList_iff {t : ℕ} {s : List ℕ}
   · intro hi
     rw [List.mem_toFinset, List.mem_pmap]
     refine ⟨i.1, hi, ?_⟩
-    apply Fin.ext
-    rfl
+    simp_all
 
 private theorem rawCapSum_eq_sum (spec : FrameSpec)
     (Tmask Imask : Nat) (T I : Finset (Fin spec.t))
@@ -1499,8 +1495,7 @@ private theorem rawInterCount_eq_interCard (spec : FrameSpec)
     x.1.pmap (fun i hi => (⟨i, hi⟩ : Fin spec.t)) hIn
   have hfinNodup : finList.Nodup := by
     apply hNodup.pmap
-    intro a ha b hb hEq
-    simpa using congrArg Fin.val hEq
+    simp_all
   have hcount :
       rawInterCount Imask x.1 = finList.countP (fun j => decide (j ∈ I)) := by
     unfold rawInterCount finList
@@ -1547,8 +1542,7 @@ private theorem rawAll_eq_decide_subset (spec : FrameSpec)
     have hbit' : Tmask.testBit i'.1 = true := by
       simpa [i'] using hbit
     have hmem : i' ∈ T := of_decide_eq_true <| by
-      rw [← hT i']
-      exact hbit'
+      simp_all
     change i' ∈ T
     exact hmem
   · intro hSub
@@ -1667,8 +1661,7 @@ private theorem bit_testBit_gt {n i : Nat} (hi : n < i) :
     · exfalso
       exact hne ((Nat.testBit_one_eq_true_iff_self_eq_zero).mp htrue)
     · cases htest : Nat.testBit 1 (i - n) <;> simp_all
-  rw [Nat.testBit_shiftLeft]
-  simp [Nat.le_of_lt hi, hbit]
+  simp_all
 
 private theorem checkMasksDown_sound (spec : FrameSpec) :
     ∀ n Tmask Imask, n ≤ spec.t →
@@ -1692,11 +1685,9 @@ private theorem checkMasksDown_sound (spec : FrameSpec) :
         rw [rawAttachedCount_eq_count]
         exact hleaf
       have hTall : ∀ i : Fin spec.t, Tmask.testBit i.1 = decide (i ∈ T) := by
-        intro i
-        exact hTrep i (by omega)
+        simp_all
       have hIall : ∀ i : Fin spec.t, Imask.testBit i.1 = decide (i ∈ I) := by
-        intro i
-        exact hIrep i (by omega)
+        simp_all
       calc
         spec.countWitnesses T I =
             spec.rawSupports.attach.countP (rawAttachedWitness spec Tmask Imask) := by
@@ -1775,10 +1766,7 @@ private theorem checkMasksDown_sound (spec : FrameSpec) :
             · have hj0 : j = i0 := by
                 apply Fin.ext
                 simpa using hEq
-              subst hj0
-              have hImask : Imask.testBit n = false := (hzero n (Nat.lt_succ_self n)).2
-              rw [hImask]
-              simp [hIn]
+              simp_all
             · have hgt : n < j.1 := by omega
               exact hIrep j (by omega)
       · have hInot : i0 ∉ I := by
@@ -1794,34 +1782,25 @@ private theorem checkMasksDown_sound (spec : FrameSpec) :
           · have hj0 : j = i0 := by
               apply Fin.ext
               simpa using hEq
-            subst hj0
-            have hTmask : Tmask.testBit n = false := (hzero n (Nat.lt_succ_self n)).1
-            rw [hTmask]
-            simp [hTn]
+            simp_all
           · exact hTrep j (by omega)
         · intro j hj
           by_cases hEq : j.1 = n
           · have hj0 : j = i0 := by
               apply Fin.ext
               simpa using hEq
-            subst hj0
-            have hImask : Imask.testBit n = false := (hzero n (Nat.lt_succ_self n)).2
-            rw [hImask]
-            simp [hInot]
+            simp_all
           · exact hIrep j (by omega)
 
 theorem FrameSpec.rawCheckValid_sound (spec : FrameSpec)
     (h : spec.rawCheckValid = true) : spec.IsValid := by
   intro T I hIT
   have hzero : ∀ i < spec.t, (0 : Nat).testBit i = false ∧ (0 : Nat).testBit i = false := by
-    intro i hi
-    simp
+    simp_all
   have hTrep : ∀ i : Fin spec.t, spec.t ≤ i.1 → (0 : Nat).testBit i.1 = decide (i ∈ T) := by
-    intro i hi
-    exact (False.elim (Nat.not_le_of_lt i.2 hi))
+    simp_all
   have hIrep : ∀ i : Fin spec.t, spec.t ≤ i.1 → (0 : Nat).testBit i.1 = decide (i ∈ I) := by
-    intro i hi
-    exact (False.elim (Nat.not_le_of_lt i.2 hi))
+    simp_all
   exact checkMasksDown_sound spec spec.t 0 0 le_rfl hzero
     (by simpa [FrameSpec.rawCheckValid] using h) T I hIT hTrep hIrep
 

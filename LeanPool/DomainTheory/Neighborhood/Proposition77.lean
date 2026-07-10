@@ -237,9 +237,7 @@ theorem memS_sub_embZero (hD : ∀ X, D.mem X → X.Nonempty) {W : Set (List Boo
   | @pair Pp Qq hP hQ =>
       obtain ⟨⟨pth, a⟩, ht⟩ := embPair_nonempty (memS_nonempty hD hP) (Q := Qq)
       have hmem := hsub ht
-      rcases ht with ⟨p', hp', -⟩ | ⟨q', hq', -⟩
-      · exact absurd (hp'.symm.trans hmem.1) (by simp)
-      · exact absurd (hq'.symm.trans hmem.1) (by simp)
+      simp_all
 
 theorem memS_sub_embPair (hD : ∀ X, D.mem X → X.Nonempty)
     {W A B : Set (List Bool × α)} (hW : MemS D W) (hsub : W ⊆ embPair A B) :
@@ -415,8 +413,7 @@ theorem getD_gList (step : ℕ → ℕ) : ∀ (w p : ℕ), p < w →
       cases p with
       | zero =>
           rw [gList, List.getD_cons_zero]
-          have : w + 1 - 1 - 0 = w := by omega
-          rw [this]
+          simp_all
       | succ p =>
           rw [gList, List.getD_cons_succ, ih p (by omega)]
           have : w + 1 - 1 - (p + 1) = w - 1 - p := by omega
@@ -542,19 +539,13 @@ theorem dsharpStep_ln (a b tbl : ℕ) :
     dsharpStep fcons feq finter (Nat.pair (Nat.pair (2 * a + 1) (2 * b +
       2)) tbl) = packT 0 0 0 := by
   simp only [dsharpStep, unpair_pair_fst, unpair_pair_snd]
-  rw [show (1 : ℕ) - (2 * a + 1) = 0 by omega, selectFn_zero,
-    show (1 : ℕ) - (2 * b + 2) = 0 by omega, selectFn_zero,
-    show (2 * a + 1) % 2 = 1 by omega, selectFn_one,
-    show (2 * b + 2) % 2 = 0 by omega, selectFn_zero]
+  simp_all
 
 theorem dsharpStep_nl (a b tbl : ℕ) :
     dsharpStep fcons feq finter (Nat.pair (Nat.pair (2 * a + 2) (2 * b +
       1)) tbl) = packT 0 0 0 := by
   simp only [dsharpStep, unpair_pair_fst, unpair_pair_snd]
-  rw [show (1 : ℕ) - (2 * a + 2) = 0 by omega, selectFn_zero,
-    show (1 : ℕ) - (2 * b + 1) = 0 by omega, selectFn_zero,
-    show (2 * a + 2) % 2 = 0 by omega, selectFn_zero,
-    show (2 * b + 1) % 2 = 1 by omega, selectFn_one]
+  simp_all
 
 theorem dsharpStep_nn (a b tbl : ℕ) :
     dsharpStep fcons feq finter (Nat.pair (Nat.pair (2 * a + 2) (2 * b + 2)) tbl)
@@ -573,11 +564,7 @@ theorem dsharpStep_nn (a b tbl : ℕ) :
               2) - 1 - Nat.pair a.unpair.2 b.unpair.2)))
             + 2) := by
   simp only [dsharpStep, unpair_pair_fst, unpair_pair_snd]
-  rw [show (1 : ℕ) - (2 * a + 2) = 0 by omega, selectFn_zero,
-    show (1 : ℕ) - (2 * b + 2) = 0 by omega, selectFn_zero,
-    show (2 * a + 2) % 2 = 0 by omega, selectFn_zero,
-    show (2 * b + 2) % 2 = 0 by omega, selectFn_zero,
-    show (2 * a + 2) / 2 - 1 = a by omega, show (2 * b + 2) / 2 - 1 = b by omega]
+  simp_all
 
 /-- The decider step is primitive recursive when the `D`-level functions are. -/
 theorem primrec_dsharpStep (hfcons : Nat.Primrec fcons) (hfeq : Nat.Primrec feq)
@@ -942,12 +929,10 @@ def dsharpPresentation (hD : ∀ X, D.mem X → X.Nonempty) :
     obtain ⟨fe, hfe_pr, hfe⟩ := P.eq_computable
     have hcons : ∀ a b, fc (Nat.pair a b) = 1 ↔ ∃ l, P.X l ⊆ P.X a ∩ P.X b := fun a b => by
       have := hfc (Nat.pair a b)
-      simp only [unpair_pair_fst, unpair_pair_snd] at this
-      exact this.symm
+      simp_all
     have heq : ∀ a b, fe (Nat.pair a b) = 1 ↔ P.X a = P.X b := fun a b => by
       have := hfe (Nat.pair a b)
-      simp only [unpair_pair_fst, unpair_pair_snd] at this
-      exact this.symm
+      simp_all
     have hinter : ∀ a b, (∃ l, P.X l ⊆ P.X a ∩ P.X b) →
         P.X ((fun s => P.inter s.unpair.1 s.unpair.2) (
           Nat.pair a b)) = P.X a ∩ P.X b := fun a b h => by
@@ -971,12 +956,10 @@ def dsharpPresentation (hD : ∀ X, D.mem X → X.Nonempty) :
     obtain ⟨fe, hfe_pr, hfe⟩ := P.eq_computable
     have hcons : ∀ a b, fc (Nat.pair a b) = 1 ↔ ∃ l, P.X l ⊆ P.X a ∩ P.X b := fun a b => by
       have := hfc (Nat.pair a b)
-      simp only [unpair_pair_fst, unpair_pair_snd] at this
-      exact this.symm
+      simp_all
     have heq : ∀ a b, fe (Nat.pair a b) = 1 ↔ P.X a = P.X b := fun a b => by
       have := hfe (Nat.pair a b)
-      simp only [unpair_pair_fst, unpair_pair_snd] at this
-      exact this.symm
+      simp_all
     have hinter : ∀ a b, (∃ l, P.X l ⊆ P.X a ∩ P.X b) →
         P.X ((fun s => P.inter s.unpair.1 s.unpair.2) (
           Nat.pair a b)) = P.X a ∩ P.X b := fun a b h => by

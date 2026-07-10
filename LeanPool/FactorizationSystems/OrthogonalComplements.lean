@@ -199,8 +199,7 @@ def targetLimitConeArrowLimitCone {J : Type u} [Category.{v} J]
         calc
           m = (mapTrivMapArrowTarget Cf.cone.pt s.pt m).right := by rfl
           _ = (Cf.isLimit.lift (coneTargetTrivConeArrow f s)).right := by
-            exact congrArg (fun h : Arrow.mk (Limits.initial.to s.pt) ⟶ Cf.cone.pt => h.right)
-              uniq'}
+            simp_all}
   }
 
 /- We now proceed to prove that the right orthogonal complement of a class of morphisms is closed
@@ -276,8 +275,7 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
                     exact congrArg (fun h => sq_lim.top ≫ h)
                       (leftFunc.map_comp (s.cone.π.app i) (f.map α)).symm
                 _ = sq_lim.top ≫ leftFunc.map (s.cone.π.app j) := by
-                  exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.top ≫ leftFunc.map h)
-                    nat_eq
+                  simp_all
             _ = sq_j.top := by rfl
           comm_bot := by calc
             ((m_ort_fi.diagonal sq_i).map ≫ (f.map α).left) ≫ (f.obj j).hom =
@@ -292,8 +290,7 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
                     exact congrArg (fun h => sq_lim.bot ≫ h)
                       (rightFunc.map_comp (s.cone.π.app i) (f.map α)).symm
                 _ = sq_lim.bot ≫ rightFunc.map (s.cone.π.app j) := by
-                  exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.bot ≫ rightFunc.map h)
-                    nat_eq
+                  simp_all
             _ = sq_j.bot := by rfl}
         have hunique : d.map = d'.map := (m_ort_fj.diagonal_unique sq_j) d d'
         calc

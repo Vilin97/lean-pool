@@ -387,8 +387,7 @@ lemma F_lt_of_Phi_lt (q d _k : ℕ) (hq : 2 ≤ q)
         + ((q : ℤ) - 1) * ∑ i : Fin (d + 1), (i : ℤ) * (q : ℤ) ^ (i : ℕ) * (kk i)) := by
     have := hPhi
     have hcastineq := (Nat.cast_lt (α := ℤ)).mpr this
-    push_cast [hcast] at hcastineq
-    simpa only using hcastineq
+    simp_all
   -- now finish
   unfold F
   have hqpos : (0 : ℤ) < (q : ℤ) - 1 := by
@@ -405,8 +404,7 @@ lemma F_lt_of_Phi_lt (q d _k : ℕ) (hq : 2 ≤ q)
           - (bCoeff q 0 d + ∑ i : Fin (d + 1), (kk i : ℤ) * bCoeff q (i : ℕ) d))
         = (((q : ℤ) - 1) * (∑ i : Fin (d + 1), (kk' i : ℤ) * bCoeff q (i : ℕ) d))
           - (((q : ℤ) - 1) * (∑ i : Fin (d + 1), (kk i : ℤ) * bCoeff q (i : ℕ) d)) := by ring
-    rw [expand, kkey, kkey', hkZ]
-    linarith [hPhiZ]
+    simp_all
   nlinarith [hdiff, hqpos]
 
 /-- **Row selection (take-from-top).** Given nonnegative row-counts `a` on `Fin (d + 1)`
@@ -440,14 +438,11 @@ theorem row_take_top : ∀ (d : ℕ) (a : Fin (d + 1) → ℕ) (c : ℕ),
         · simp
         · intro i'; simpa using hr'le i'
       · rw [Fin.sum_univ_castSucc]
-        simp only [Fin.lastCases_last, Fin.lastCases_castSucc]
-        rw [hr'sum]; ring
+        simp_all
       · simpa using hJ'pos
       · refine Fin.lastCases ?_ (fun i' hi => ?_)
         · intro hi; simp
-        · simp only [Fin.lastCases_castSucc]
-          apply hJ'top i'
-          simpa using hi
+        · simp_all
     · push Not at hcase
       set s := ∑ i, a' i with hs
       have hrem : 1 ≤ c - s := by omega
@@ -520,8 +515,7 @@ theorem repr_preserved (q d m : ℕ) (_hq : 1 ≤ q) (kk : Fin (d + 1) → ℕ)
       by_cases hi : (i : ℕ) ≤ m
       · have hpp : q ^ (m - (i : ℕ)) * q ^ (i : ℕ) = q ^ m := by
           rw [← pow_add]
-          congr 1
-          omega
+          simp_all
         rw [mul_assoc, hpp, Nat.mul_comm]
       · push Not at hi; simp [hr0 i hi]
     rw [heq, hrsum, pow_succ]
@@ -532,8 +526,7 @@ theorem repr_preserved (q d m : ℕ) (_hq : 1 ≤ q) (kk : Fin (d + 1) → ℕ)
     · rw [if_pos rfl, hjj, ← pow_add]; congr 1; omega
     · intro b _ hb; rw [if_neg hb]; ring
     · intro h; exact absurd (Finset.mem_univ _) h
-  rw [hsum1, hsum2] at hkey
-  omega
+  simp_all
 
 /-- **Maximal removed non-top row.** From a removal `r` with `∑ r = q` whose top-row
 value is `≤ q-1`, there is a maximal row `j < d` that loses a stone, with no removed
@@ -607,8 +600,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
   -- jj ≠ jrow since their values differ
   have hjj_ne_jrow : jj ≠ jrow := by
     intro h
-    rw [h] at hjjval
-    omega
+    simp_all
   -- digit of kk jrow at m-jv is ≥ r jrow ≥ 1
   have hjrow_pos_pos : m - (jrow : ℕ) = m - jv := by rw [hjv]
   have hjrow_dig : r jrow ≤ digit q (kk jrow) (m - jv) := by
@@ -621,8 +613,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
         ≤ ∑ i : Fin (d + 1), digit q (kk i) (m - jv) := by
       have hsub : ({jj, jrow} : Finset (Fin (d + 1))) ⊆ Finset.univ := Finset.subset_univ _
       have := Finset.sum_le_sum_of_subset (f := fun i => digit q (kk i) (m - jv)) hsub
-      rw [Finset.sum_pair hjj_ne_jrow] at this
-      exact this
+      simp_all
     omega
   -- precondition for digit_add_self / digit_add_other at jj
   have hadd_pre : digit q (x jj) (m - jv) + 1 < q := by
@@ -681,8 +672,7 @@ lemma exchange_carryfree (q d m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → ℕ
         -- need precondition digit q (x i) (m-jv) + 1 < q
         rw [digit_add_other q (x i) (m - jv) n hq1 hadd_pre hn]
         exact hsub_le i n
-      · rw [if_neg hij, add_zero]
-        exact hsub_le i n
+      · simp_all
     calc ∑ i, digit q (kk' i) n ≤ ∑ i : Fin (d + 1), digit q (kk i) n :=
           Finset.sum_le_sum (fun i _ => hle i)
       _ ≤ q - 1 := hcf n
@@ -761,8 +751,7 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
       calc w i * (r i * q ^ (m - (i : ℕ))) = (w i * q ^ (m - (i : ℕ))) * r i := by ring
         _ = (q ^ m * gWeight q d (i : ℕ)) * r i := by rw [this]
         _ = q ^ m * (gWeight q d (i : ℕ) * r i) := by ring
-    · push Not at hi
-      rw [hr0 i hi]; ring
+    · simp_all
   -- compute  w_jj q ^ (m-jv) = q ^ m * (q * g_{jv+1})
   have hwjj : (∑ i : Fin (d + 1), w i * (if i = jj then q ^ (m - jv) else 0))
       = q ^ m * (q * gWeight q d (jv + 1)) := by
@@ -879,8 +868,7 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
     have hqmpos : 0 < q ^ m := pow_pos (by omega) m
     have hdpos : 0 < (q - 1) ^ 2 * (d - jv) := by
       have : 0 < q - 1 := by omega
-      have : 0 < d - jv := by omega
-      positivity
+      simp_all
     -- g_jv + (q - 1) g_d = q*g_{jv+1} + (q - 1) ^ 2(d-jv)
     nlinarith [hbal, hmono, hgex, hqmpos, hdpos,
       Nat.mul_le_mul_left (q ^ m) hlb]
@@ -888,10 +876,7 @@ lemma exchange_phi_gain (q d k m : ℕ) (hq2 : 2 ≤ q) (kk : Fin (d + 1) → �
   have hk : (∑ i : Fin (d + 1), kk i * q ^ (i : ℕ))
       = (∑ i : Fin (d + 1), kk' i * q ^ (i : ℕ)) := by
     have := repr_preserved q d m hq1 kk r jj jv hjjval hjm hrdig hr0 hrsum
-    rw [← this]
-    apply Finset.sum_congr rfl
-    intro i _
-    rw [hkk' i]
+    simp_all
   exact F_lt_of_Phi_lt q d k hq2 kk kk' hk hPhilt
 
 /-- **Carry-exchange improvement.** If an admissible `kk` has a *shifted carry* at
@@ -940,9 +925,7 @@ lemma carry_exchange_improves (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) →
   -- j ≤ m (since row j is occupied on the diagonal)
   have hjm : jv ≤ m := by
     by_contra hc
-    push Not at hc
-    have := hr0 jrow (by rw [← hjv]; exact hc)
-    omega
+    simp_all
   -- STEP B: the exchanged tuple
   set kk' : Fin (d + 1) → ℕ :=
     fun i => kk i - r i * q ^ (m - (i : ℕ)) + (if i = jj then q ^ (m - jv) else 0) with hkk'
@@ -1025,14 +1008,12 @@ theorem digit_ext (q : ℕ) (hq : 2 ≤ q) : ∀ x y : ℕ, (∀ n, digit q x n 
       have hh := Nat.div_add_mod y q
       rw [hyq] at hh
       simp only [Nat.mul_zero, Nat.zero_add] at hh
-      simp only [Nat.zero_mod] at h0
-      omega
+      simp_all
     · have hxq : x / q < x := Nat.div_lt_self (by omega) hq
       have hkey := ih (x / q) hxq (y / q) hrec
       have hx2 := Nat.div_add_mod x q
       have hy2 := Nat.div_add_mod y q
-      rw [hkey] at hx2
-      omega
+      simp_all
 
 /-- The potential `Φ(kk) = q ^ {d+1}·∑ᵢ kkᵢ + (q - 1)·∑ᵢ i·qⁱ·kkᵢ` (matches the form used by
 `F_lt_of_Phi_lt`). Minimizing `Φ` over equal-representation admissible tuples is equivalent
@@ -1071,16 +1052,12 @@ lemma gWeight_anti (q d i j : ℕ) (hq : 2 ≤ q) (hij : i < j) (hjd : j ≤ d) 
     | succ m ih =>
       intro e hle hpos
       rcases Nat.eq_zero_or_pos m with hm | hm
-      · subst hm
-        have : e + (0 + 1) = e + 1 := by omega
-        rw [this]
-        exact step e (by omega)
+      · simp_all
       · have h1 : gWeight q d (e + (m + 1)) < gWeight q d (e + m) := by
           have hlt : e + m < d := by omega
           have hs := step (e + m) hlt
           have heq : e + m + 1 = e + (m + 1) := by omega
-          rw [heq] at hs
-          exact hs
+          simp_all
         have h2 : gWeight q d (e + m) < gWeight q d e := ih e (by omega) hm
         exact lt_trans h1 h2
   have hj : j = i + (j - i) := by omega
@@ -1464,10 +1441,7 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
             digit_add_other q (kk J + q ^ (m - i)) (m - j) n hq1 hmid_j hnj,
             digit_add_other q (kk J) (m - i) n hq1 hpre_i hni]
     have hkkO : ∀ r : Fin (d + 1), r ≠ I → r ≠ J → r ≠ JT → kk' r = kk r := by
-      intro r hrI hrJ hrJT
-      have hrIT : r ≠ IT := by rw [hITJ]; exact hrJ
-      simp only [hkk'def, if_neg hrI, if_neg hrJ, if_neg hrJT, if_neg hrIT,
-        Nat.sub_zero, add_zero]
+      simp_all
     intro n
     have h3sub : ({I, J, JT} : Finset (Fin (d + 1))) ⊆ Finset.univ := Finset.subset_univ _
     have heq : (∑ r : Fin (d + 1), digit q (kk' r) n) =
@@ -1477,10 +1451,7 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       have hrest : (∑ r ∈ Finset.univ \ {I, J, JT}, digit q (kk' r) n) =
           ∑ r ∈ Finset.univ \ {I, J, JT}, digit q (kk r) n := by
         apply Finset.sum_congr rfl
-        intro r hr
-        simp only [Finset.mem_sdiff, Finset.mem_univ, true_and, Finset.mem_insert,
-          Finset.mem_singleton, not_or] at hr
-        rw [hkkO r hr.1 hr.2.1 hr.2.2]
+        simp_all
       rw [hrest]
       congr 1
       rw [Finset.sum_insert (by simp [hIJ, hIJT]),
@@ -1494,17 +1465,12 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
         have hI1 : 1 ≤ digit q (kk I) (m - i) := hsrcP
         omega
       · by_cases hnj : n = m - j
-        · subst hnj
-          rw [if_neg hni, if_neg hni, if_pos rfl, if_pos rfl]
-          have hJT1 : 1 ≤ digit q (kk JT) (m - j) := hsrcS
-          omega
+        · simp_all
         · rw [if_neg hni, if_neg hni, if_neg hnj, if_neg hnj]
     rw [heq]; exact hcf n
   · have hITJ : IT ≠ J := by
       intro h
-      have := congrArg Fin.val h
-      simp [hITval, hJval] at this
-      omega
+      simp_all
     have hkkIT : kk' IT = kk IT + q ^ (m - i) := by
       have e : kk' IT = kk IT - (if IT = I then q ^ (m - i) else 0)
             - (if IT = JT then q ^ (m - j) else 0)
@@ -1536,9 +1502,7 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       · subst hn; rw [if_pos rfl, digit_add_self q (kk J) (m - j) hq1 hpre]
       · rw [if_neg hn, digit_add_other q (kk J) (m - j) n hq1 hpre hn]
     have hkkO : ∀ r : Fin (d + 1), r ≠ I → r ≠ J → r ≠ IT → r ≠ JT → kk' r = kk r := by
-      intro r hrI hrJ hrIT hrJT
-      simp only [hkk'def, if_neg hrI, if_neg hrJ, if_neg hrJT, if_neg hrIT,
-        Nat.sub_zero, add_zero]
+      simp_all
     intro n
     have h4sub : ({I, J, IT, JT} : Finset (Fin (d + 1))) ⊆ Finset.univ := Finset.subset_univ _
     have heq : (∑ r : Fin (d + 1), digit q (kk' r) n) =
@@ -1548,10 +1512,7 @@ lemma move_parallelogram_carry_free (q d m i j t : ℕ)
       have hrest : (∑ r ∈ Finset.univ \ {I, J, IT, JT}, digit q (kk' r) n) =
           ∑ r ∈ Finset.univ \ {I, J, IT, JT}, digit q (kk r) n := by
         apply Finset.sum_congr rfl
-        intro r hr
-        simp only [Finset.mem_sdiff, Finset.mem_univ, true_and, Finset.mem_insert,
-          Finset.mem_singleton, not_or] at hr
-        rw [hkkO r hr.1 hr.2.1 hr.2.2.1 hr.2.2.2]
+        simp_all
       rw [hrest]
       congr 1
       rw [Finset.sum_insert (by simp [hIJ, hIIT, hIJT]),
@@ -1631,28 +1592,16 @@ lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
     omega
   have hswI : (∑ r : Fin (d + 1), w r * (if r = I then q ^ (m - i) else 0)) =
       w I * q ^ (m - i) := by
-    rw [Finset.sum_eq_single I]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
-    · intro h; exact absurd (Finset.mem_univ _) h
+    simp_all
   have hswJT : (∑ r : Fin (d + 1), w r * (if r = JT then q ^ (m - j) else 0)) =
       w JT * q ^ (m - j) := by
-    rw [Finset.sum_eq_single JT]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
-    · intro h; exact absurd (Finset.mem_univ _) h
+    simp_all
   have hswIT : (∑ r : Fin (d + 1), w r * (if r = IT then q ^ (m - i) else 0)) =
       w IT * q ^ (m - i) := by
-    rw [Finset.sum_eq_single IT]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
-    · intro h; exact absurd (Finset.mem_univ _) h
+    simp_all
   have hswJ : (∑ r : Fin (d + 1), w r * (if r = J then q ^ (m - j) else 0)) =
       w J * q ^ (m - j) := by
-    rw [Finset.sum_eq_single J]
-    · rw [if_pos rfl]
-    · intro b _ hb; rw [if_neg hb, Nat.mul_zero]
-    · intro h; exact absurd (Finset.mem_univ _) h
+    simp_all
   have hLb : (∑ r : Fin (d + 1), w r * ((if r = I then q ^ (m - i) else 0)
             + (if r = JT then q ^ (m - j) else 0))) =
       w I * q ^ (m - i) + w JT * q ^ (m - j) := by
@@ -1728,8 +1677,7 @@ lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
         ring
       have hRe : i * Pm + (i + s + t) * Pt = (i * Pt + t * Pt + i * Pm) + s * Pt := by
         ring
-      rw [hLe, hRe]
-      exact Nat.add_lt_add_left hsP _
+      simp_all
     calc c * (i + t) * Pt + c * j * Pm
         = c * ((i + t) * Pt + j * Pm) := by ring
       _ < c * (i * Pm + (j + t) * Pt) := Nat.mul_lt_mul_of_pos_left hbase hcpos
@@ -1747,8 +1695,7 @@ lemma move_parallelogram_phi_lt (q d m i j t : ℕ) (hq : 2 ≤ q)
         = (q ^ (d + 1) * q ^ (m - i) + q ^ (d + 1) * q ^ (m - j))
           + ((q - 1) * i * q ^ m + (q - 1) * (j + t) * q ^ (m + t)) := by
       ring
-    rw [hL, hR]
-    exact Nat.add_lt_add_left hred _
+    simp_all
   change Phi q d kk' < Phi q d kk
   unfold Phi
   rw [hPhiEq kk', hPhiEq kk]
@@ -1794,15 +1741,9 @@ lemma move_parallelogram (q d k m i j t : ℕ) (hq : 2 ≤ q) (kk : Fin (d + 1) 
     simp [hIval, hJTval] at this
     omega
   have hJJT : J ≠ JT := by
-    intro h
-    have := congrArg Fin.val h
-    simp [hJval, hJTval] at this
-    omega
+    simp_all
   have hITJT : IT ≠ JT := by
-    intro h
-    have := congrArg Fin.val h
-    simp [hITval, hJTval] at this
-    omega
+    simp_all
   -- no-borrow at I (source P) and JT (source S)
   have hborrowP : q ^ (m - i) ≤ kk I := by
     calc q ^ (m - i) = 1 * q ^ (m - i) := (one_mul _).symm
@@ -1868,9 +1809,7 @@ theorem digit_sum_repr (q : ℕ) :
   intro N
   induction N with
   | zero =>
-    intro x hx
-    simp only [pow_zero] at hx
-    simp only [Finset.range_zero, Finset.sum_empty]; omega
+    simp_all
   | succ N ih =>
     intro x hx
     rw [Finset.sum_range_succ']
@@ -2010,9 +1949,7 @@ lemma column_sum_eq (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) → ℕ)
       apply Finset.sum_congr rfl
       intro mm _
       rw [Finset.sum_mul]
-      apply Finset.sum_congr rfl
-      intro i _
-      rw [ite_mul, zero_mul]
+      simp_all
     rw [step1]
     have step2 : ∀ i : Fin (d + 1),
         (∑ mm ∈ Finset.range M,
@@ -2026,10 +1963,7 @@ lemma column_sum_eq (q d k : ℕ) (hq : q.Prime) (kk : Fin (d + 1) → ℕ)
           _ < q ^ N := hkN
           _ ≤ q ^ (M - (i : ℕ)) := Nat.pow_le_pow_right (by omega) hMiN
       rw [← digit_sum_repr q (M - (i : ℕ)) (kk i) hkkN]; ring
-    rw [hrepk]
-    apply Finset.sum_congr rfl
-    intro i _
-    rw [step2 i]
+    simp_all
   -- conclude by uniqueness of base-q representation
   exact digit_eq_of_repr' q hq2 m colSum k (fun mm => hce mm) ⟨M, hvanish, hcolrep⟩
 
@@ -2088,9 +2022,7 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
   -- membership characterization
   have hDmem : ∀ p : Fin (d + 1) × ℕ, p ∈ D ↔
       (p.2 < N ∧ digit q (a p.1) p.2 ≠ digit q (b p.1) p.2) := by
-    intro p
-    simp only [hDdef, Finset.mem_filter, Finset.mem_product, Finset.mem_univ,
-      Finset.mem_range, true_and]
+    simp_all
   -- nonempty: a ≠ b gives a differing digit
   have hDne : D.Nonempty := by
     by_contra hempty
@@ -2105,8 +2037,7 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
         rw [hDmem]; exact ⟨hn, hcontra⟩
       rw [hempty] at this
       simp at this
-    · push Not at hn
-      rw [hazero r n hn, hbzero r n hn]
+    · simp_all
   -- lex key: column primary, row tiebreak
   set key : Fin (d + 1) × ℕ → ℕ := fun p => ((p.1 : ℕ) + p.2) * (d + 1) + (p.1 : ℕ) with hkeydef
   obtain ⟨p₀, hp₀mem, hp₀min⟩ := Finset.exists_min_image D key hDne
@@ -2128,9 +2059,7 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
     -- (r, nn) is a differing cell, with nn < N
     have hnnN : nn < N := by
       by_contra hge
-      push Not at hge
-      rw [hazero r nn hge, hbzero r nn hge] at hcontra
-      exact hcontra rfl
+      simp_all
     have hmem : (r, nn) ∈ D := by rw [hDmem]; exact ⟨hnnN, hcontra⟩
     have hmin := hp₀min (r, nn) hmem
     -- key (r,nn) = (r+nn)*(d + 1)+r. key p₀ = m₀*(d + 1)+i₀
@@ -2151,17 +2080,10 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
     have hcolr : (r : ℕ) + nn = m₀ := by omega
     have hnnN : nn < N := by
       by_contra hge
-      push Not at hge
-      rw [hazero r nn hge, hbzero r nn hge] at hdiffr
-      exact hdiffr rfl
+      simp_all
     have hmem : (r, nn) ∈ D := by rw [hDmem]; exact ⟨hnnN, hdiffr⟩
     have hmin := hp₀min (r, nn) hmem
-    rw [hkeyp₀] at hmin
-    simp only [hkeydef] at hmin
-    -- (r+nn) = m₀, so key = m₀*(d + 1) + r ≥ m₀*(d + 1)+i₀ ⟹ i₀ ≤ r
-    have hrr : ((r : ℕ) + nn) * (d + 1) + (r : ℕ) = m₀ * (d + 1) + (r : ℕ) := by
-      rw [hcolr]
-    omega
+    simp_all
   -- STEP 5: column functions
   set fa : Fin (d + 1) → ℕ := fun i => if (i : ℕ) ≤ m₀ then digit q (a i) (m₀ - (i : ℕ)) else 0
     with hfadef
@@ -2192,9 +2114,7 @@ lemma differing_cell_select (q d k : ℕ) (hq : q.Prime)
       ((J : ℕ) ≤ m₀ ∧ digit q (a J) (m₀ - (J:ℕ)) < digit q (b J) (m₀ - (J:ℕ))) := by
     intro J hJlt
     by_cases hJm : (J : ℕ) ≤ m₀
-    · refine ⟨hJm, ?_⟩
-      simp only [hfadef, hfbdef, if_pos hJm] at hJlt
-      exact hJlt
+    · simp_all
     · exfalso; simp only [hfadef, hfbdef, if_neg hJm] at hJlt; omega
   have JfromFb : ∀ (J : Fin (d + 1)), fb J < fa J →
       ((J : ℕ) ≤ m₀ ∧ digit q (b J) (m₀ - (J:ℕ)) < digit q (a J) (m₀ - (J:ℕ))) := by
@@ -2289,9 +2209,7 @@ lemma parallelogram_exists (q d k : ℕ) (hq : q.Prime)
     have hcell := hcon t htjd ht1
     have hidx : (⟨j₀ + t, by omega⟩ : Fin (d + 1)) = r := by
       apply Fin.ext; simp [ht]; omega
-    rw [hidx] at hcell
-    simp only [hf]
-    omega
+    simp_all
   -- Carry-free for `b` at column `nT`.
   have hbcf : (∑ r : Fin (d + 1), g r) ≤ q - 1 := hadmb.2 nT
   -- The full diagonal for `a`.
@@ -2300,8 +2218,7 @@ lemma parallelogram_exists (q d k : ℕ) (hq : q.Prime)
   set Sle : Finset (Fin (d + 1)) := univ.filter (fun r => (r : ℕ) ≤ j₀) with hSle
   -- `J ∈ Sle`.
   have hJSle : J ∈ Sle := by
-    simp only [hSle, mem_filter, mem_univ, true_and, hJ]
-    exact le_refl j₀
+    simp_all
   -- Sum over `Sle` of `g` is `≤` total sum of `g`.
   have hsubset : Sle ⊆ univ := filter_subset _ _
   have hgle : (∑ r ∈ Sle, g r) ≤ ∑ r : Fin (d + 1), g r :=
@@ -2313,9 +2230,7 @@ lemma parallelogram_exists (q d k : ℕ) (hq : q.Prime)
   -- Equivalently, sum over `Sle` of `f` = total sum of `f`, since rows not in `Sle` are zero.
   have hafle : (∑ r ∈ Sle, f r) = ∑ r : Fin (d + 1), f r := by
     apply Finset.sum_subset hsubset
-    intro r _ hrnotin
-    simp only [hSle, mem_filter, mem_univ, true_and, not_le] at hrnotin
-    exact hzero r hrnotin
+    simp_all
   -- Peel `J` off the `Sle` sum for `f`.
   have hfpeel : (∑ r ∈ Sle, f r) = (∑ r ∈ Sle.erase J, f r) + f J := by
     rw [Finset.sum_erase_add _ _ hJSle]
@@ -2331,9 +2246,7 @@ lemma parallelogram_exists (q d k : ℕ) (hq : q.Prime)
       · exfalso; apply hrne; apply Fin.ext; simp [hJ, h]
     -- column `(r:ℕ) + nT < m₀`.
     have hcol : (r : ℕ) + nT < m₀ := by omega
-    have := hagree r nT hcol
-    simp only [hf, hg]
-    exact this
+    simp_all
   have hsumeq : (∑ r ∈ Sle.erase J, f r) = (∑ r ∈ Sle.erase J, g r) :=
     Finset.sum_congr rfl hagree_erase
   -- `hdef` says `f J < g J`.
@@ -2446,9 +2359,7 @@ theorem main_theorem (q d k : ℕ) (hq : q.Prime) :
   have hkstarAdm : Admissible q d k kstar := by
     rw [hT, Set.Finite.mem_toFinset] at hkstarMem; exact hkstarMem
   have hkstarDom : ∀ kk : Fin (d + 1) → ℕ, Admissible q d k kk → F q d kk ≤ F q d kstar := by
-    intro kk hkk
-    apply hkstarMax
-    rw [hT, Set.Finite.mem_toFinset]; exact hkk
+    simp_all
   refine ⟨kstar, hkstarAdm, hkstarDom, ?_⟩
   -- Uniqueness: any admissible maximizer `kk` and `kstar` are both maximizers, so
   -- `maximizer_unique` gives `kk = kstar`.

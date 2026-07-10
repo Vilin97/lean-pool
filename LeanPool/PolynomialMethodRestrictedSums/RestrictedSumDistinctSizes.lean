@@ -173,8 +173,7 @@ lemma restricted_sum_m_bound (A : Fin (k + 1) → Finset (ZMod p))
         -- We know that $\sum |A_i| = \sum (c_i + 1) = \sum c_i + (k + 1)$.
         have h_card_sum : ∑ i, #(A i) = ∑ i, ((#(A i)) - 1) + (k + 1) := by
           zify;
-          rw [Finset.sum_congr rfl fun _ _ => Nat.cast_sub <| Finset.card_pos.mpr <| h_nonempty _];
-              norm_num;
+          simp_all
         simp_all +decide [Nat.choose];
         omega;
       rcases p with (_ | p) <;> (try simp_all (config := { decide := Bool.true }))
@@ -224,9 +223,7 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
            -- Push `map` through the polynomial product.
            rw [map_mul, map_pow, map_sum, map_prod]
            refine congrArg₂ (· * ·) ?_ ?_
-           · refine congrArg (· ^ m) ?_
-             refine Finset.sum_congr rfl fun i _ => ?_
-             rw [MvPolynomial.map_X]
+           · simp_all
            · refine Finset.prod_congr rfl fun i _ => ?_
              rw [map_prod]
              refine Finset.prod_congr rfl fun j _ => ?_

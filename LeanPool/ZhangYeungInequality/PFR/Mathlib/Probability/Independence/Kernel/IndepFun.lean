@@ -67,12 +67,10 @@ lemma _root_.ProbabilityTheory.Kernel.iIndepFun.finsets {J : Type*} [Finite J]
     κ a (⋂ (i : S j), E' j i) by
     convert this with x
     · rw [Set.iInter_subtype]
-      congr! with j hj
-      exact Ej_eq ⟨j, hj⟩
+      simp_all
     rw [Finset.prod_subtype s (p := fun j ↦ j ∈ s)]
     · apply Finset.prod_congr rfl
-      intro j _
-      rw [Ej_eq j]
+      simp_all
     simp only [implies_true]
   set E'' := fun (i:ι) ↦ ⋂ (j:s) (h: i ∈ S j), E' j ⟨i, h⟩
   set h_disjoint' :
@@ -83,8 +81,7 @@ lemma _root_.ProbabilityTheory.Kernel.iIndepFun.finsets {J : Type*} [Finite J]
     ext x
     simp only [Set.mem_iInter, Subtype.forall, E'']
     constructor
-    · intro h i _ j hj hi
-      exact h j hj i hi
+    · simp_all
     intro h j hj i hi
     have hit : i ∈ t := by simpa [t] using ⟨j, hj, hi⟩
     exact h i hit j hj hi
@@ -145,11 +142,7 @@ lemma _root_.ProbabilityTheory.Kernel.iIndepFun.finsets {J : Type*} [Finite J]
       apply Measurable.of_comap_le le_rfl
   rw [← Filter.eventually_all] at Ej_mes
   apply Filter.Eventually.mono (Filter.eventually_and.mpr ⟨Ej_mes, Einter_mes⟩)
-  intro x ⟨h1, h2⟩
-  rw [h2]
-  apply Finset.prod_congr rfl
-  intro i _
-  rw [h1 i]
+  simp_all
 
 /-- If `f` is a family of mutually independent random variables, `(S j)ⱼ` are pairwise
 disjoint

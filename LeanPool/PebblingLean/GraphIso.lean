@@ -68,11 +68,9 @@ theorem map_move [DecidableEq V] [DecidableEq W]
   · simpa [mapDistribution] using hD
   · funext w
     by_cases hwu : w = iso.toEquiv u
-    · subst w
-      simp [mapDistribution, Pebbling.moveDistribution]
+    · simp_all
     · by_cases hwv : w = iso.toEquiv v
-      · subst w
-        simp [mapDistribution, Pebbling.moveDistribution, hvu_ne, hevu_ne]
+      · simp_all
       · have hsymm_u : iso.toEquiv.symm w ≠ u := by
           intro h
           exact hwu (by

@@ -290,18 +290,7 @@ def Ω₁ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ |
         V))).df.iff, (Language.isSemiformula_defined (LOR (V := V))).proper.iff',
       (Language.substs_defined (LOR (V := V))).df.iff, (Language.imp_defined (LOR (V := V))).df.iff]
     -/
-    simp only [Fin.isValue, Nat.reduceAdd, Nat.succ_eq_add_one,
-      HierarchySymbol.Semiformula.sigma_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
-      Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_one, Matrix.vecHead,
-      Semiformula.eval_ex, LogicalConnective.HomClass.map_and, Semiformula.eval_substs,
-      Matrix.comp_vecCons', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_two,
-      Matrix.vecTail, Function.comp_apply, Fin.succ_zero_eq_one, Matrix.constant_eq_singleton,
-      eval_numeralDef, eval_qqAddDef, Semiterm.val_operator₂, Matrix.cons_app_five,
-      Matrix.cons_val_four, Fin.succ_one_eq_two, Matrix.cons_val_succ, Structure.Add.add,
-      Matrix.cons_app_six, eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left,
-      HierarchySymbol.Semiformula.pi_mkDelta, HierarchySymbol.Semiformula.val_mkPi,
-      Semiformula.eval_all, LogicalConnective.HomClass.map_imply, Semiformula.eval_operator₂,
-      Matrix.cons_app_seven, Structure.Eq.eq, LogicalConnective.Prop.arrow_eq, forall_eq]
+    simp_all
 
 private lemma Ω₁_set_mem_iff {φ : SyntacticFormula ℒₒᵣ} :
     φ ∈ {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m = ↑(n + m)”} ↔
@@ -364,18 +353,7 @@ def Ω₂ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ |
         V))).df.iff, (Language.isSemiformula_defined (LOR (V := V))).proper.iff',
       (Language.substs_defined (LOR (V := V))).df.iff, (Language.imp_defined (LOR (V := V))).df.iff]
     -/
-    simp only [Fin.isValue, Nat.reduceAdd, Nat.succ_eq_add_one,
-      HierarchySymbol.Semiformula.sigma_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
-      Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_one, Matrix.vecHead,
-      Semiformula.eval_ex, LogicalConnective.HomClass.map_and, Semiformula.eval_substs,
-      Matrix.comp_vecCons', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_two,
-      Matrix.vecTail, Function.comp_apply, Fin.succ_zero_eq_one, Matrix.constant_eq_singleton,
-      eval_numeralDef, eval_qqMulDef, Semiterm.val_operator₂, Matrix.cons_app_five,
-      Matrix.cons_val_four, Fin.succ_one_eq_two, Matrix.cons_val_succ, Structure.Mul.mul,
-      Matrix.cons_app_six, eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left,
-      HierarchySymbol.Semiformula.pi_mkDelta, HierarchySymbol.Semiformula.val_mkPi,
-      Semiformula.eval_all, LogicalConnective.HomClass.map_imply, Semiformula.eval_operator₂,
-      Matrix.cons_app_seven, Structure.Eq.eq, LogicalConnective.Prop.arrow_eq, forall_eq]
+    simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
@@ -430,8 +408,7 @@ private lemma quote_disjLt_eq (n : ℕ) :
       Semiterm.quote_bvar, Fin.val_eq_zero, natCast_nat, quote_numeral_eq_numeral,
       substItr_succ, qqDisj_cons, qqOr_inj]
     rw [substs_eq (by simp) (by simp)]
-    simp only [Language.termSubst_bvar, nth_cons_one, nth_cons_zero, Fin.isValue, true_and]
-    exact ih
+    simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]

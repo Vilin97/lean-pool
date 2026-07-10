@@ -82,9 +82,7 @@ theorem shift_tail (n : ℕ) : shift (tail n) = tail (n + 1) := by
 theorem shift_singleton (n : ℕ) : shift ({n} : Set ℕ) = {n + 1} := by
   ext k
   simp only [shift, Set.mem_singleton_iff, Set.mem_setOf_eq]
-  constructor
-  · rintro ⟨m, rfl, rfl⟩; rfl
-  · rintro rfl; exact ⟨n, rfl, rfl⟩
+  simp_all
 
 theorem shift_mono {X X' : Set ℕ} (h : X' ⊆ X) : shift X' ⊆ shift X := by
   rintro k ⟨m, hm, rfl⟩; exact ⟨m, h hm, rfl⟩
@@ -112,11 +110,7 @@ theorem singleton_tail_nd (n k : ℕ) :
     ({k} : Set ℕ) ⊆ tail n ∨ tail n ⊆ {k} ∨ ({k} : Set ℕ) ∩ tail n = ∅ := by
   by_cases h : n ≤ k
   · exact Or.inl (by intro x hx; rw [Set.mem_singleton_iff] at hx; subst hx; exact h)
-  · refine Or.inr (Or.inr ?_)
-    ext w
-    simp only [Set.mem_inter_iff, Set.mem_singleton_iff, mem_tail, Set.mem_empty_iff_false,
-      iff_false, not_and]
-    rintro rfl hw; exact h hw
+  · simp_all
 
 /-- Any two neighbourhoods of `C₁` are nested or disjoint. -/
 theorem nestedOrDisjoint : NestedOrDisjoint memC1 := by
@@ -134,11 +128,7 @@ theorem nestedOrDisjoint : NestedOrDisjoint memC1 := by
     · exact Or.inr (Or.inr h)
   · by_cases h : n = m
     · subst h; exact Or.inl (Set.Subset.refl _)
-    · refine Or.inr (Or.inr ?_)
-      ext w
-      simp only [Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false,
-        not_and]
-      rintro rfl h2; exact h h2
+    · simp_all
 
 /-- **Exercise 4.25 (Scott 1981, PRG-19).** The unary sequence system `C₁` on `Δ =
 {1}* ≅ ℕ`. -/

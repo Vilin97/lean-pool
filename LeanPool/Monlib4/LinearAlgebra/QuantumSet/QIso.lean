@@ -267,8 +267,7 @@ theorem QFun.self_comp_adjoint_eq_id_of_map_comul
     LinearEquiv.coe_coe, TensorProduct.comm_tmul, Algebra.linearMap_apply,
     Algebra.algebraMap_eq_smul_one] at this
   specialize this 1
-  simp only [one_smul] at this
-  simp [this]
+  simp_all
 
 theorem QFun.adjoint_comp_self_eq_id_of_map_counit
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P)
@@ -293,8 +292,7 @@ theorem QFun.adjoint_comp_self_eq_id_of_map_counit
         ∘ₗ (ϰ (B₁ ⊗[ℂ] B₁) H B₂).symm.toLinearMap
     = lT _ (ϰ _ _ _).symm.toLinearMap ∘ₗ (ϰ _ _ _).toLinearMap := by
     apply TensorProduct.ext_fourfold'
-    intro a b c d
-    simp
+    simp_all
   calc (τ' (B₁ ⊗[ℂ] H)).toLinearMap ∘ₗ lT (B₁ ⊗[ℂ] H) Coalgebra.counit
         ∘ₗ lT (B₁ ⊗[ℂ] H) (LinearMap.mul' ℂ B₂)
         ∘ₗ (ϰ B₁ H (B₂ ⊗[ℂ] B₂)).symm.toLinearMap

@@ -41,8 +41,7 @@ lemma numDistinctColoringsOfTrivialGroup (X : Type u) (Y : Type v) [Fintype X] [
     by
       intro f
       rcases Quotient.mk_surjective f with ⟨g, rfl⟩
-      apply Quotient.sound
-      exact @Setoid.refl _ (MulAction.orbitRel _ _) g,
+      simp_all,
     by
       intro
       rfl⟩

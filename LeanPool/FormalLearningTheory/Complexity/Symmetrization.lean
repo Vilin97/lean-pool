@@ -67,9 +67,7 @@ private theorem subgaussian_sum_tail {X : Type u} [MeasurableSpace X]
   have : MeasureTheory.IsProbabilityMeasure μ := by rw [hμ_def]; infer_instance
   have h_g_subG : ProbabilityTheory.HasSubgaussianMGF g ((1 / 2 : NNReal) ^ 2) D := by
     have h_param : (‖(a + 1) - a‖₊ / 2) ^ 2 = ((1 : NNReal) / 2) ^ 2 := by
-      congr 1
-      rw [show (a + 1) - a = (1 : ℝ) from by ring]
-      simp [nnnorm_one]
+      simp_all
     rw [← h_param]
     exact ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
       h_g_meas.aemeasurable (Filter.Eventually.of_forall h_g_bound) h_int_g
@@ -370,8 +368,7 @@ theorem symmetrization_step {X : Type u} [MeasurableSpace X]
               TrueErrorReal X h_star c D - ε / 2} with hH_set_def
           have h_H_le_half : μ H_set ≤ 1 / 2 :=
             h_hoeff.trans (ENNReal.ofReal_le_ofReal h_exp_le_half |>.trans (by
-              rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
-              simp [ENNReal.ofReal_one]))
+              simp_all))
           have h_compl_ge : 1 / 2 ≤ μ H_setᶜ := by
             have h_total : 1 ≤ μ H_set + μ H_setᶜ := by
               have := measure_union_le (μ := μ) H_set H_setᶜ
@@ -513,9 +510,7 @@ theorem per_hypothesis_gap_bound {X : Type u} [MeasurableSpace X]
         have h_g_subG : ProbabilityTheory.HasSubgaussianMGF g (1 : NNReal) ν := by
           have h_param : (‖(1:ℝ) - (-1:ℝ)‖₊ / 2) ^ 2 = (1 : NNReal) := by
             have h2 : (1:ℝ) - (-1:ℝ) = 2 := by ring
-            rw [h2, Real.nnnorm_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
-            ext
-            simp
+            simp_all
           rw [← h_param]
           exact ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
             h_g_meas.aemeasurable (Filter.Eventually.of_forall h_g_bound) h_int_g
@@ -615,9 +610,7 @@ private theorem rademacher_markov_filter_bound {m : ℕ} (hm : 0 < m) {ε : ℝ}
       (1 / (m : ℝ)) * ∑ i, a i * boolToSign (σ i) ≥ ε / 2),
       Real.exp (t₀ * (ε / 2)) ≤
       Real.exp (t₀ * ((1 / (m : ℝ)) * ∑ i, a i * boolToSign (σ i))) := by
-    intro σ hσ
-    simp only [Finset.mem_filter] at hσ
-    exact Real.exp_le_exp_of_le (by nlinarith [hσ.2])
+    simp_all
   have h_sum_filter : (Finset.univ.filter (fun σ : SignVector m =>
       (1 / (m : ℝ)) * ∑ i, a i * boolToSign (σ i) ≥ ε / 2)).card *
       Real.exp (t₀ * (ε / 2)) ≤
@@ -846,13 +839,11 @@ theorem exchangeability_chain_bound {X : Type u} [MeasurableSpace X] [Infinite X
           rcases Bool.eq_false_or_eq_true (σ i) with hσi | hσi <;> simp only [hσi]
           · -- σ i = false: not swapped, .2 = (z i).2, .1 = (z i).1
             simp only [boolToSign, zeroOneLoss]
-            rcases Bool.eq_false_or_eq_true (h (z i).2 == c (z i).2) with h2 | h2 <;>
-            rcases Bool.eq_false_or_eq_true (h (z i).1 == c (z i).1) with h1 | h1 <;>
+            simp_all <;>
             simp [Ne]
           · -- σ i = true: swapped, .2 = (z i).1, .1 = (z i).2
             simp only [boolToSign, Prod.swap, zeroOneLoss]
-            rcases Bool.eq_false_or_eq_true (h (z i).2 == c (z i).2) with h2 | h2 <;>
-            rcases Bool.eq_false_or_eq_true (h (z i).1 == c (z i).1) with h1 | h1 <;>
+            simp_all <;>
             simp [Ne]
         have h_filter_biUnion :
             Finset.univ.filter (fun σ : SignVector m => swap_fun σ z ∈ S) ⊆
@@ -909,8 +900,7 @@ theorem exchangeability_chain_bound {X : Type u} [MeasurableSpace X] [Infinite X
           ((swap_fun σ ⁻¹' S).indicator (1 : (Fin m → X × X) → ENNReal)) z) =
           ((Finset.univ.filter (fun σ : SignVector m => swap_fun σ z ∈ S)).card : ENNReal) := by
         simp only [Set.indicator_apply, Pi.one_apply, Set.mem_preimage]
-        rw [← Finset.sum_filter]
-        simp only [Finset.sum_const, nsmul_eq_mul, mul_one]
+        simp_all
       rw [h_sum_eq_card]
       calc ((Finset.univ.filter (fun σ : SignVector m => swap_fun σ z ∈ S)).card : ENNReal)
           ≤ ENNReal.ofReal (↑(GrowthFunction X C (2 * m)) *
@@ -1049,11 +1039,7 @@ theorem double_sample_pattern_bound {X : Type u} [MeasurableSpace X] [Infinite X
       (zeroOneLoss Bool) ≥ ε / 2} with hE_def
   by_cases hC : C = ∅
   · -- Event is empty when C is empty
-    have hE_empty : E = ∅ := by
-      ext p; simp only [hE_def, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-      intro ⟨h_hyp, h_in_C, _⟩
-      rw [hC] at h_in_C; exact h_in_C
-    rw [hE_empty, MeasureTheory.measure_empty]; exact bot_le
+    simp_all
   · -- C is nonempty
     by_cases hε2 : 2 < ε
     · -- EmpiricalError ∈ [0,1], so gap ∈ [-1,1] and ε/2 > 1 makes event empty
@@ -1136,8 +1122,7 @@ theorem hoeffding_one_sided_upper {X : Type u} [MeasurableSpace X]
           simp only [hind_def, zeroOneLoss, Set.mem_Icc]
           split <;> norm_num
         have h_g_bound : ∀ x : X, g x ∈ Set.Icc (-p) ((-p) + 1) := fun x => by
-          simp only [hg_def, Set.mem_Icc]
-          constructor <;> linarith [(h_ind_bound x).1, (h_ind_bound x).2]
+          simp_all
         have h_ind_meas : Measurable indicator := by
           simp only [hind_def, zeroOneLoss]
           exact Measurable.ite (by convert hmeas.compl using 1; ext x; simp)
@@ -1240,8 +1225,7 @@ theorem symmetrization_step_lower {X : Type u} [MeasurableSpace X]
               TrueErrorReal X h_star c D + ε / 2} with hH_set_def
           have h_H_le_half : μ H_set ≤ 1 / 2 :=
             h_hoeff.trans (ENNReal.ofReal_le_ofReal h_exp_le_half |>.trans (by
-              rw [ENNReal.ofReal_div_of_pos (by norm_num : (0 : ℝ) < 2)]
-              simp [ENNReal.ofReal_one]))
+              simp_all))
           have h_compl_ge : 1 / 2 ≤ μ H_setᶜ := by
             have h_total : 1 ≤ μ H_set + μ H_setᶜ := by
               have := measure_union_le (μ := μ) H_set H_setᶜ
@@ -1511,8 +1495,7 @@ private lemma growth_exp_le_delta_large_v {X : Type u} [MeasurableSpace X]
       exact pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) (by omega)
     have : (16 : ℝ) ^ (v + 1) = (2 : ℝ) ^ (v + 1) * (8 : ℝ) ^ (v + 1) := by
       rw [show (16 : ℝ) = 2 * 8 from by norm_num, mul_pow]
-    rw [this]
-    exact mul_le_mul_of_nonneg_right h_2_pow (pow_nonneg (by norm_num) (v + 1))
+    simp_all
   have hgoal_equiv : δ * (↑m * ε ^ 2 / 8) ^ (v + 1) =
       δ * ↑m ^ (v + 1) * (ε ^ 2) ^ (v + 1) / (8 : ℝ) ^ (v + 1) := by
     rw [div_pow]; ring
@@ -1626,8 +1609,7 @@ theorem growth_exp_le_delta {X : Type u} [MeasurableSpace X]
         have : K * ε ^ 2 * ↑v ^ (v + 1) * (↑v + 1) ^ (v + 1) * K ^ v =
             ε ^ 2 * (K ^ (v + 1) * ↑v ^ (v + 1) * (↑v + 1) ^ (v + 1)) := by
           rw [show K ^ (v + 1) = K ^ v * K from pow_succ K v]; ring
-        rw [this]
-        exact mul_le_mul_of_nonneg_left hCvv hε2.le
+        simp_all
       have hcombine : 32 * ↑((v + 1).factorial) * K ^ v ≤ δ * ↑m * ε ^ 2 := by
         calc 32 * ↑((v + 1).factorial) * K ^ v
             ≤ (K * ε ^ 2 * ↑v ^ (v + 1) * (↑v + 1) ^ (v + 1)) * K ^ v :=
@@ -1867,8 +1849,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
           _ = ↑N * ENNReal.ofReal (2 * Real.exp (-2 * ↑m * ε' ^ 2)) := by
               rw [Finset.sum_const, nsmul_eq_mul]
           _ ≤ ENNReal.ofReal (↑N * (2 * Real.exp (-2 * ↑m * ε' ^ 2))) := by
-              rw [ENNReal.ofReal_mul (Nat.cast_nonneg' N),
-                  ENNReal.ofReal_natCast]
+              simp_all
           _ ≤ ENNReal.ofReal δ := by
               apply ENNReal.ofReal_le_ofReal
               by_cases hN_zero : N = 0
@@ -1912,8 +1893,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
           ≤ ∑ i ∈ Finset.range (v₀ + 1), Nat.choose n i := hv₀ n hn₀
         _ ≤ ∑ i ∈ Finset.range (v + 1), Nat.choose n i := by
             apply Finset.sum_le_sum_of_subset
-            apply Finset.range_mono
-            omega
+            simp_all
     use Nat.ceil ((16 * Real.exp 1 * (↑v + 1) / ε ^ 2) ^ (v + 1) / δ)
     intro D hD c m hm
     by_cases hδ1 : 1 ≤ δ

@@ -32,8 +32,7 @@ lemma standardBorelSpace_iff (A : Type*) [MeasurableSpace A]
         have h₅ : MeasurableSet (h₄ '' s) := by
           simp only [Set.image, measurableSet_setOf]
           fun_prop
-        have := h₄.measurable h₅
-        simpa only [MeasurableEquiv.preimage_image] using this
+        simp_all
       | inr h₃ =>
         obtain ⟨h₄⟩ := MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable A
         left
@@ -42,8 +41,7 @@ lemma standardBorelSpace_iff (A : Type*) [MeasurableSpace A]
         have h₅ : MeasurableSet (h₄ '' s) := by
           simp only [Set.image, measurableSet_setOf]
           fun_prop
-        have := h₄.measurable h₅
-        simpa only [MeasurableEquiv.preimage_image] using this
+        simp_all
     · exact .inr ⟨PolishSpace.measurableEquivOfNotCountable h₂ not_countable⟩
   · rintro (⟨h₁, h₂⟩|⟨⟨h₂⟩⟩)
     · infer_instance

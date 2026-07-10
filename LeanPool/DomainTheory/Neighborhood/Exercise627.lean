@@ -314,17 +314,14 @@ def inlProj : ApproximableMap (oplusTok D₀ D₁ h₀ h₁) D₀ where
     rcases hW with rfl | ⟨A, hA, hAne, rfl⟩ | ⟨B, hB, hBne, rfl⟩
     · have hXm := X_eq_master_of_nil_mem_leftN (hsub nil_mem_sumTokMaster)
       have hX'm := X_eq_master_of_nil_mem_leftN (hsub' nil_mem_sumTokMaster)
-      subst hXm; subst hX'm; rw [Set.inter_self]
-      exact ⟨Or.inl rfl, D₀.master_mem, leftN_master.ge⟩
+      simp_all
     · have hAX : A ⊆ X := subset_of_embF_subset_leftN (D₀.sub_master hA) hsub
       have hAX' : A ⊆ X' := subset_of_embF_subset_leftN (D₀.sub_master hA) hsub'
       exact ⟨oplusTok_mem_embF hA hAne, D₀.inter_mem hX hX' hA (Set.subset_inter hAX hAX'),
         (embBit_subset.mpr (Set.subset_inter hAX hAX')).trans embF_subset_leftN⟩
     · have hXm := X_eq_master_of_embT_subset_leftN (h₁ B hB) hsub
       have hX'm := X_eq_master_of_embT_subset_leftN (h₁ B hB) hsub'
-      subst hXm; subst hX'm; rw [Set.inter_self]
-      exact ⟨oplusTok_mem_embT hB hBne, D₀.master_mem, by
-        rw [leftN_master]; exact embT_subset_sumTokMaster hB⟩
+      simp_all
   mono := by
     rintro W W' X X' ⟨_, hX, hsub⟩ hW'W hXX' hW' hX'
     exact ⟨hW', hX', hW'W.trans (hsub.trans ((leftN_subset_iff hX hX').mpr hXX'))⟩
@@ -584,9 +581,7 @@ def twoPt : NeighborhoodSystem Str where
   master := Set.univ
   master_mem := Or.inl rfl
   sub_master := by
-    rintro X (rfl | rfl)
-    · exact subset_rfl
-    · exact Set.subset_univ _
+    simp_all
   inter_mem := by
     rintro X Y Z (rfl | rfl) (rfl | rfl) _ _
     · rw [Set.inter_self]; exact Or.inl rfl

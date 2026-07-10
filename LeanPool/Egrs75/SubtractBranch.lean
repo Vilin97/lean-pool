@@ -134,20 +134,14 @@ theorem mod_pow_lowPDigitIndex {p n : ℕ} (hp : 1 < p) (hn : n ≠ 0) :
 /-- `2 * ((p - 1) / 2) = p - 1` for odd `p`. -/
 theorem two_mul_half_pred {p : ℕ} (hodd : Odd p) : 2 * ((p - 1) / 2) = p - 1 := by
   obtain ⟨k, hk⟩ := hodd
-  subst hk
-  have : (2 * k + 1 - 1) / 2 = k := by
-    rw [show 2 * k + 1 - 1 = 2 * k by omega, Nat.mul_div_cancel_left k (by norm_num)]
-  omega
+  simp_all
 
 /-- `2 * ((p^m - 1)/2) = p^m - 1` (odd base ⟹ `p^m` odd ⟹ `p^m - 1` even). -/
 theorem two_mul_half_pred_pow {p : ℕ} (hodd : Odd p) (m : ℕ) :
     2 * ((p ^ m - 1) / 2) = p ^ m - 1 := by
   have hoddpow : Odd (p ^ m) := hodd.pow
   obtain ⟨k, hk⟩ := hoddpow
-  rw [hk]
-  have : (2 * k + 1 - 1) / 2 = k := by
-    rw [show 2 * k + 1 - 1 = 2 * k by omega, Nat.mul_div_cancel_left k (by norm_num)]
-  omega
+  simp_all
 
 /-- The recursion for the half-repunit: `(p^(m+1) - 1)/2 = p · ((p^m - 1)/2) + (p-1)/2`.
 -/
@@ -257,8 +251,7 @@ theorem sub_block_lt {p : ℕ} (hp : 3 ≤ p) (hodd : Odd p) {a m : ℕ}
     _ = a * p ^ m := heq
     _ ≤ ((p - 1) / 2) * p ^ m := Nat.mul_le_mul_right _ hahalf
     _ < p * p ^ m := by
-        rw [Nat.mul_comm ((p - 1) / 2) (p ^ m), Nat.mul_comm p (p ^ m)]
-        exact (Nat.mul_lt_mul_left hpmpos).mpr hhalflt
+        simp_all
     _ = p ^ (m + 1) := by rw [pow_succ]; ring
 
 /-! ## The low `(m+1)`-block of `n` equals `a_m·p^m` -/
@@ -299,8 +292,7 @@ theorem sub_preserves_lowDigits {p : ℕ} (hp : p.Prime) (hodd : Odd p) {n : ℕ
     rw [lowDigits_iff_digitAt (by omega)] at hpn
     have := hpn m
     unfold digitAt at this
-    rw [← ha] at this
-    exact this
+    simp_all
   -- low block: n % p^(m+1) = a·p^m
   have hlow : n % p ^ (m + 1) = a * p ^ m := mod_pow_succ_lowPDigitIndex hp1 hn
   -- high block

@@ -129,8 +129,7 @@ private lemma case_right_arc_via_S (q : NonEllOrbit) (p0 : ℍ)
   have h_re_S : (ModularGroup.S • p0 : ℍ).re = -p0.re :=
     S_smul_re_neg_of_unit p0 h_norm_eq
   have hp1_re_neg : (↑p1 : ℂ).re < 0 := by
-    change (ModularGroup.S • p0 : ℍ).re < 0; rw [h_re_S]
-    have : p0.re = (↑p0 : ℂ).re := rfl; linarith
+    change (ModularGroup.S • p0 : ℍ).re < 0; simp_all
   have hp1_ne_rho : p1 ≠ ellipticPointRho' := by
     intro h
     have : orb ellipticPointRho' = q.val := by

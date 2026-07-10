@@ -217,9 +217,7 @@ theorem close_up_aux
     simp only [Finset.coe_empty, Ideal.span_empty,
       Ideal.map_bot, Submodule.mem_bot] at hc
     exact ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _,
-      by simp only [Finset.coe_empty, Ideal.span_empty,
-           Ideal.map_bot, Submodule.mem_bot]
-         exact Subtype.val_injective hc⟩
+      by simp_all⟩
   | succ n ih =>
     intro R hR_card s hs_card c hc
     haveI : DecidableEq R.carrier := Classical.decEq _

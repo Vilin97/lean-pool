@@ -36,9 +36,7 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
       EmbeddingLike.apply_eq_iff_eq, exists_eq_right, List.Mirror_head] at h
     rcases h with ⟨hIn, ⟨eq_ab, h⟩⟩
     rw [add_comm] at eq_ab
-    refine ⟨(by tauto), eq_ab, ?_⟩
-    simp only [Option.mem_def]
-    tauto
+    simp_all
   · intro h; rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩
     use b, a, cq.Mirror, c.Mirror, cp.Mirror
     refine ⟨?_, ?_, ?_, ?_⟩ <;> try rw [Mirror.ncup] <;> tauto
@@ -71,5 +69,4 @@ theorem Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirr
   · intro h; rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, ⟨cr_cup, cr_in, cr_last⟩⟩
     use toDual p, cr.Mirror, cl.Mirror
     rw [List.Mirror_mem_getLast, List.Mirror_mem_head]
-    simp only [List.Mirror_in, Mirror.ncup, Option.mem_def]
-    tauto
+    simp_all

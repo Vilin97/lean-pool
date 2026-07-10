@@ -228,8 +228,7 @@ theorem featCompC_layer (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : 
       rw [show featCompC W lam ψ 0 = tpVecConstMul (W 0) (tpVecConst ψ) from rfl,
         tpVecConstMul_freqs] at hω
       simp only [tpVecConst_freqs, Finset.mem_biUnion, Finset.mem_singleton] at hω
-      obtain ⟨i, -, rfl⟩ := hω
-      exact ⟨fun h => absurd h (Nat.not_lt_zero _), fun _ => rfl⟩
+      simp_all
   | succ j ih =>
       intro m ω hω a
       by_cases hj : j < N
@@ -245,18 +244,14 @@ theorem featCompC_layer (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : 
           mul_one, mul_zero]
         refine ⟨fun hlt1 => ?_, fun hge2 => ?_⟩
         · by_cases hak : a = (⟨j, hj⟩ : Fin N)
-          · have haj : (a : ℕ) = j := by rw [hak]
-            rw [if_pos hak, hge (by omega)]
-            exact ⟨i, by ring⟩
+          · simp_all
           · rw [if_neg hak, add_zero]
             refine hlt ?_
             have hne : (a : ℕ) ≠ j := fun he => hak (Fin.ext he)
             omega
         · have hak : a ≠ (⟨j, hj⟩ : Fin N) := by
             intro he
-            have hcontra : (a : ℕ) = j := by
-              rw [he]
-            omega
+            simp_all
           rw [if_neg hak, add_zero]
           exact hge (by omega)
       · have hfc : featCompC W lam ψ (j + 1) m = featCompC W lam ψ j m := by
@@ -326,8 +321,7 @@ theorem fourier_real (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : Fin
   rw [← TrigPolynomial.coeffAt_conj]
   refine TrigPolynomial.coeffAt_eq_of_eval_eq (fun z => ?_) ω
   rw [TrigPolynomial.eval_conj]
-  simp only [hk]
-  rw [Complex.conj_ofReal]
+  simp_all
 
 /-! ### Integer-spectrum corollary -/
 
@@ -351,8 +345,7 @@ theorem overlapES_freq (W : Fin (N + 1) → Matrix (Fin d) (Fin d) ℂ) (lam : F
   obtain ⟨ν₁, hν₁, rfl⟩ := hν
   refine ⟨fun a => ?_, fun a => ?_⟩
   · obtain ⟨μ, hμ⟩ := featComp_freq W lam ψ m ν₁ hν₁ a
-    refine ⟨μ, ?_⟩
-    rw [Pi.add_apply, Fin.append_left, Fin.append_left, Pi.zero_apply, add_zero, hμ]
+    simp_all
   · obtain ⟨ν', hν'⟩ := featComp_freq W lam ψ m ω₁ hω₁ a
     refine ⟨ν', ?_⟩
     rw [Pi.add_apply, Fin.append_right, Fin.append_right, Pi.zero_apply, zero_add,

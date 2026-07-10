@@ -353,8 +353,7 @@ private lemma inverr_monotone_x (ε : ℝ) (hε : 0 < ε) :
     apply AntitoneOn.const_add
     intro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy
     refine div_le_div₀ hε.le le_rfl (Real.exp_pos _) (Real.exp_le_exp.mpr hxy)
-  · intro x (h : 0 ≤ x)
-    positivity
+  · simp_all
   · intros
     rw [inv_nonneg, Real.log_nonneg_iff]
     · rw [le_add_iff_nonneg_right]; positivity

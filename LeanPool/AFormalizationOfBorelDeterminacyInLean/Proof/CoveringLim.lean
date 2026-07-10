@@ -182,8 +182,7 @@ def limConeBodySystem (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
       -- Regression: the second rewrite needs the explicit fixing proof.
       simp_rw [inv_val_eq_pInv_val', inv_val_eq_pInv_val' _ _ htr]
       simp_rw [← take_apply_pInv_val]
-      congr; simp_rw [bodySystem_take]
-      simp only [le_add_iff_nonneg_right, zero_le, inf_of_le_right]
+      simp_all
 
 lemma consistent_cast {S T : Trees} (h : S = T)
   {S' : StrategySystem S p} {S'' : StrategySystem T p} (h' : HEq S' S'')
@@ -196,8 +195,7 @@ lemma cancel_resEq_inv_cast {m n} (h : n = m) (h' : k ≤ m) (x : (resEq k).obj 
   ((resEq k).map (limConeπMap hF m)) (inv ((resEq k).map (limConeπMap hF n)) x)
   = cast (by simp [h]) x := by
     subst h
-    have : FixingEq k (limConeπMap hF n) := fixingEq_of_fixing (h := by synthFixing)
-    apply cancel_inv_right_types
+    simp_all
 lemma cancel_pInv_cast {m n} (h : m = n) x [Tree.Fixing x.val.length (limConeπMap hF n)] :
   (limConeπMap hF m (pInv (limConeπMap hF n) x)) = cast (by rw [h]) x := by subst h; simp
 lemma cast_lifts' {m n} (h : m = n) {S : (LvlStratHom.system p).obj ⟨limConePt hF⟩} {y} hy :

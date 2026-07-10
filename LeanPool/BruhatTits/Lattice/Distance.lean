@@ -314,10 +314,8 @@ lemma eq_dist_iff₂ (M L : BruhatTits.Lattice R) (n : ℕ) :
     refine ⟨ϖ, bM, bL, f 0, f 1, hϖ, Int.le.intro_sub n hdiff, hrep 0, hrep 1, hdiff⟩
   · rintro ⟨ϖ, bM, bL, a, b, hϖ, hle, h0, h1, hdiff⟩
     refine ⟨ϖ, bM, bL, ![a, b], hϖ, ?_, ?_, hdiff⟩
-    · intro i j hij
-      fin_cases i <;> fin_cases j <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
-    · intro i
-      fin_cases i <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
+    · simp_all
+    · simp_all
 
 /-- Monotone variant of `BruhatTits.eq_dist_iff`. -/
 lemma eq_dist_iff_monotone (M L : BruhatTits.Lattice R) (n : ℕ) :
@@ -363,8 +361,7 @@ lemma dist_symm (M L : BruhatTits.Lattice R) :
       apply zpow_ne_zero
       simpa using hϖ.ne_zero
     simp only [_root_.zpow_neg, hrep i, smul_smul]
-    field_simp
-    simp
+    simp_all
   · simpa only [Fin.isValue, sub_neg_eq_add, add_comm]
 
 /-- The distance of a lattice to itself is zero. -/
@@ -453,9 +450,7 @@ lemma dist_smul_eq_dist (M L : BruhatTits.Lattice R) (a : Kˣ) :
     mulBasisScalar ((Units.mk0 ϖ.val h0) ^ n) bM
   have hbM' (i : Fin 2) : ϖ.val ^ (-n) • (bM' i).val = bM i := by
     simp only [bM', mulBasisScalar_apply]
-    simp only [_root_.zpow_neg, Units.val_zpow_eq_zpow_val, Units.val_mk0, smul_smul]
-    field_simp
-    simp
+    simp_all
   let f' (i : Fin 2) : ℤ := f i + (-n)
   rw [eq_dist_iff]
   use ϖ, bM', bL, f', hϖ

@@ -64,17 +64,14 @@ lemma factorization_roughPartAbove (k m p : ℕ) :
       if p ∈ m.primeFactors.filter (fun q => ¬ q < k) then m.factorization p else 0 := by
   unfold RoughPartAbove
   rw [Nat.factorization_prod (by
-    intro q hq
-    exact pow_ne_zero _ (Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hq)).ne_zero)]
+    simp_all)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ m.primeFactors.filter (fun q => ¬ q < k)
   · rw [if_pos hp]
     have hpprime : p.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hp)
     rw [Finset.sum_eq_single p]
     · rw [Nat.Prime.factorization_pow hpprime, Finsupp.single_apply, if_pos rfl]
-    · intro q hq hqp
-      have hqprime : q.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hq)
-      rw [Nat.Prime.factorization_pow hqprime, Finsupp.single_apply, if_neg hqp]
+    · simp_all
     · intro h; exact absurd hp h
   · rw [if_neg hp]
     apply Finset.sum_eq_zero
@@ -93,10 +90,7 @@ lemma prime_dvd_roughPartAbove_imp {k m p : ℕ} (hp : p.Prime) (hpdvd : p ∣ R
   by_contra hbad
   push Not at hbad
   have hnot : p ∉ m.primeFactors.filter (fun q => ¬ q < k) := by
-    intro hmem
-    have hpmem : p ∈ m.primeFactors := (Finset.mem_filter.mp hmem).1
-    have hnotlt : ¬ p < k := (Finset.mem_filter.mp hmem).2
-    exact hnotlt (hbad hpmem)
+    simp_all
   have hfac := factorization_roughPartAbove k m p
   rw [if_neg hnot] at hfac
   omega

@@ -48,8 +48,7 @@ theorem HOp_mem_unitaryGroup :
         * !![(1 : ℂ), 1; 1, -1] = (2 : ℂ) • 1 := by
     ext i j
     fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply] <;> norm_num
-  rw [hstar, hmul, smul_smul]
-  norm_num
+  simp_all
 
 /-- The Hadamard gate. -/
 def H : Gate 1 := ofUnitary HOp HOp_mem_unitaryGroup
@@ -189,8 +188,7 @@ theorem H_mul_H : H * H = 1 := by
           * !![(1 : ℂ), 1; 1, -1] = (2 : ℂ) • 1 := by
       ext i j
       fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply] <;> norm_num
-    rw [hmul, smul_smul]
-    norm_num
+    simp_all
   rw [h]
 
 /-- `H |+> = |0>`. -/
@@ -316,8 +314,7 @@ theorem rotYOp_mem_unitaryGroup (theta : ℝ) :
     rotYOp theta ∈ Matrix.unitaryGroup (Fin (2 ^ 1)) ℂ := by
   have hcs' : (Real.sin (theta / 2) : ℂ) ^ 2
       + (Real.cos (theta / 2) : ℂ) ^ 2 = 1 := by
-    have := Real.sin_sq_add_cos_sq (theta / 2)
-    exact_mod_cast congrArg (fun t : ℝ => (t : ℂ)) this
+    simp_all
   rw [Matrix.mem_unitaryGroup_iff]
   unfold rotYOp
   generalize Real.cos (theta / 2) = c at hcs' ⊢

@@ -70,16 +70,14 @@ theorem derivative_pow_eq_zero_iff {n : ℕ} (chn : ¬ringChar k ∣ n) {a : k[X
     rcases apd with (nz | powz) | goal
     · rw [← C_eq_natCast, C_eq_zero] at nz
       exact absurd (ringChar.dvd nz) chn
-    · have az : a = 0 := (pow_eq_zero_iff'.mp powz).1
-      rw [az, map_zero]
+    · simp_all
     · exact goal
   · intro hd; rw [derivative_pow, hd, MulZeroClass.mul_zero]
 
 theorem mul_eq_zero_left_iff
     {M₀ : Type*} [MulZeroClass M₀] [NoZeroDivisors M₀]
     {a : M₀} {b : M₀} (ha : a ≠ 0) : a * b = 0 ↔ b = 0 := by
-  rw [mul_eq_zero]
-  tauto
+  simp_all
 
 namespace Polynomial
 
@@ -152,15 +150,7 @@ private theorem expand_dvd {a b : k[X]} {n : ℕ} (_hn : n ≠ 0) (h : a ∣ b) 
 omit [DecidableEq k] in
 private theorem is_coprime_of_expand {a b : k[X]} {n : ℕ} (hn : n ≠ 0) :
     IsCoprime (expand k n a) (expand k n b) → IsCoprime a b := by
-  classical
-  simp_rw [← EuclideanDomain.gcd_isUnit_iff]
-  rw [← not_imp_not]; intro h
-  obtain ⟨ha, hb⟩ := EuclideanDomain.gcd_dvd a b
-  have hh := EuclideanDomain.dvd_gcd (expand_dvd hn ha) (expand_dvd hn hb)
-  intro h'; apply h; have tt := isUnit_of_dvd_unit hh h'
-  rw [Polynomial.isUnit_iff] at tt ⊢
-  obtain ⟨zz, yy⟩ := tt; rw [eq_comm, expand_eq_C (zero_lt_iff.mpr hn), eq_comm] at yy
-  exact ⟨zz, yy⟩
+  simp_all
 
 namespace Polynomial
 
@@ -181,8 +171,7 @@ theorem flt_catalan_aux
     have ii : CharZero k := by
       apply charZero_of_inj_zero; intro n; rw [ringChar.spec]
       rw [ch0]; exact zero_dvd_iff.mp
-    have tt := eq_C_of_derivative_eq_zero da
-    rw [tt]; exact natDegree_C _
+    simp_all
   /- Characteristic ch ≠ 0, where we use infinite descent.
     We use proof by contradiction (`by_contra`) combined with strong induction
     (`Nat.case_strong_induction_on`) to formalize the proof.

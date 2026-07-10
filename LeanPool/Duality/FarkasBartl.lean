@@ -79,10 +79,7 @@ private lemma filter_yielding_singleton_attach_sum {m : ℕ} {R V : Type*} [Semi
     · have him := hi.right
       push Not at him
       exact le_antisymm (Nat.le_of_lt_succ i.isLt) him
-    · refine ⟨Finset.mem_univ i, ?_⟩
-      rw [hi]
-      push Not
-      rfl
+    · simp_all
   rw [singlet, Finset.sum_attach _ (fun j : Fin m.succ => f j • v), Finset.sum_singleton]
 
 private lemma impossible_index {m : ℕ} {i : Fin m.succ} (hi : ¬(i.val < m))
@@ -158,8 +155,7 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
       convert inv_mul_cancel₀ hAy'.ne
       simp [y]
     have hAA : ∀ w : W, A (w - (A w M • y)) M = 0 := by
-      intro w
-      simp [hAy]
+      simp_all
     have hbA : ∀ w : W, 0 ≤ withoutLastMap A (w - (A w M • y)) → 0 ≤ b (w - (A w M • y)) := by
       intro w hw
       apply hAb

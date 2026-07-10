@@ -74,8 +74,7 @@ lemma gff_cf_two_testfunctions (f g : TestFunction) (t s : ℝ) :
         2 * t * s * freeCovarianceFormR m f g + s^2 * freeCovarianceFormR m g g)) := by
   have h := gff_real_characteristic m (t • f + s • g)
   rw [freeCovarianceFormR_bilinear_expand] at h
-  convert h using 2
-  push_cast; ring
+  simp_all
 
 /-! ## OS0-Based Derivative Machinery
 
@@ -89,13 +88,7 @@ lemma gff_two_param_analytic (f g : TestFunction) :
       Set.univ := by
   -- Direct application of gaussianFreeField_satisfies_OS0 with n=2, J = ![toComplex f, toComplex g]
   have h := gaussianFreeField_satisfies_OS0 m 2 ![toComplex f, toComplex g]
-  convert h using 2
-  -- Goal: GJGeneratingFunctionalℂ _ (z 0 • toComplex f + z 1 • toComplex g) =
-  --       GJGeneratingFunctionalℂ _ (∑ i, z i • ![toComplex f, toComplex g] i)
-  -- muGFF m = gaussianFreeFieldFree m by definition (abbrev)
-  -- For the test function argument, use Fin.sum_univ_two
-  congr 1
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  simp_all
 
 /-! ## OS0-Based Complex Extension via Identity Theorem
 
@@ -232,8 +225,7 @@ lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
   -- First note: t • f + s • g is real, so toComplex (t • f + s • g) = t • toComplex f + s •
   -- toComplex g
   have h_eq_test : (t : ℂ) • toComplex f + (s : ℂ) • toComplex g = toComplex (t • f + s • g) := by
-    ext x
-    simp
+    simp_all
   rw [h_eq_test]
   -- GJGeneratingFunctionalℂ on a real test function equals GJGeneratingFunctional
   rw [GJGeneratingFunctionalℂ_toComplex, h]
@@ -279,8 +271,7 @@ theorem gff_complex_characteristic_OS0 :
   -- Step 5: Simplify LHS
   have h_LHS : GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) J = F 1 Complex.I := by
     simp only [F, hJ]
-    congr 1
-    simp [one_smul]
+    simp_all
   -- Step 6: Simplify RHS using Qc formula
   have h_RHS : Complex.exp (-(1/2 : ℂ) * freeCovarianceℂBilinear m J J) = G 1 Complex.I := by
     simp only [G]

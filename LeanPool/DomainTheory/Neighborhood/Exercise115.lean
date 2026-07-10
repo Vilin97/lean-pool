@@ -51,10 +51,7 @@ open Domain.Neighborhood NeighborhoodSystem
 
 /-- `{n} ∩ {m} = ∅` for `n ≠ m`. -/
 theorem singleton_disjoint {n m : ℕ} (h : n ≠ m) : ({n} : Set ℕ) ∩ {m} = ∅ := by
-  ext k
-  simp only [Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
-  rintro ⟨rfl, h2⟩
-  exact h h2
+  simp_all
 
 /-! ## The flat domain `flat`. -/
 
@@ -105,8 +102,7 @@ theorem flat_classify (x : flat.Element) :
     · intro hx
       rcases (x.sub hx) with rfl | ⟨k, rfl⟩
       · exact ⟨Or.inl rfl, Set.subset_univ _⟩
-      · obtain rfl := huniq k hx
-        exact ⟨flat_mem_singleton k, subset_rfl⟩
+      · simp_all
     · rintro ⟨hWmem, hsub⟩
       exact x.up_mem hn hWmem hsub
   · refine Or.inl ?_
@@ -128,13 +124,10 @@ theorem flat_atom_maximal (n : ℕ) (y : flat.Element)
   rcases flat_classify y with rfl | ⟨m, rfl⟩
   · exfalso
     have hmem : flat.bot.mem {n} := hle {n} ⟨flat_mem_singleton n, subset_rfl⟩
-    rw [flat.mem_bot, flat_master] at hmem
-    have : (n + 1) ∈ ({n} : Set ℕ) := by rw [hmem]; exact Set.mem_univ _
-    simp at this
+    simp_all
   · have hsub : ({m} : Set ℕ) ⊆ {n} :=
       (flat.principal_le_iff (flat_mem_singleton n) (flat_mem_singleton m)).mp hle
-    obtain rfl : m = n := Set.mem_singleton_iff.mp (Set.singleton_subset_iff.mp hsub)
-    rfl
+    simp_all
 
 /-- **Flat has no strict 3-chain** (`a ⊏ b ⊏ c` is impossible): `⊥` is least and
 atoms are
@@ -174,22 +167,15 @@ theorem stemNOD : NestedOrDisjoint stemMem := by
   have pair_single : ∀ m : ℕ, ({m} : Set ℕ) ⊆ {0, 1} ∨ ({0, 1} : Set ℕ) ∩ {m} = ∅ := by
     intro m
     by_cases h : m = 0 ∨ m = 1
-    · refine Or.inl ?_
-      rcases h with rfl | rfl <;> intro k hk <;> simp_all
-    · refine Or.inr ?_
-      ext k
-      simp only [Set.mem_inter_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
-        Set.mem_empty_iff_false, iff_false, not_and]
-      rintro (rfl | rfl) rfl <;> simp_all
+    · simp_all
+    · simp_all
   rintro X Y (rfl | rfl | ⟨n, rfl⟩) (rfl | rfl | ⟨m, rfl⟩)
   · exact Or.inl (subset_refl _)
   · exact Or.inr (Or.inl (Set.subset_univ _))
   · exact Or.inr (Or.inl (Set.subset_univ _))
   · exact Or.inl (Set.subset_univ _)
   · exact Or.inl (subset_refl _)
-  · rcases pair_single m with h | h
-    · exact Or.inr (Or.inl h)
-    · exact Or.inr (Or.inr h)
+  · simp_all
   · exact Or.inl (Set.subset_univ _)
   · rcases pair_single n with h | h
     · exact Or.inl h

@@ -244,12 +244,7 @@ lemma deformRetrToBot_apply_bot {n : ℕ}
   simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
     Prod.map_apply, id_eq, ContinuousMap.coe_mk]
   unfold splitAtLast
-  simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
-    Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
-    Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
-    Homeomorph.symm_symm, Homeomorph.apply_symm_apply, Homeomorph.funSplitAt_symm_apply,
-    ↓reduceDIte, mul_eq_zero]
-  exact Or.inl hy
+  simp_all
 
 /-- If `y` is in the sides
 (the closure of the complement of the top and bottom faces of the boundary) of the cube,
@@ -258,8 +253,7 @@ lemma deformRetrToBot_apply_sides {n : ℕ}
     (t : I) {y : I^Fin (n + 1)} (hy : (splitAtLast y).snd ∈ ∂I^n) :
     (splitAtLast (deformRetrToBot ⟨t, y⟩)).snd ∈ ∂I^n := by
   unfold deformRetrToBot
-  simpa only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
-    ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk, Homeomorph.apply_symm_apply]
+  simp_all
 
 /-- Deformation retraction from `⊔I^(n + 1)` to its bottom face -/
 def boundaryJarDeformRetrToBot {n : ℕ} : C(I × ⊔I^(n + 1), ⊔I^(n + 1)) :=
@@ -293,8 +287,7 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
     split
     · rename_i hi
       change i.castSucc = _ at hi
-      exfalso
-      exact (Fin.castSucc_ne_last i) hi
+      simp_all
     · simp only [homeoNeqLast, ne_eq, Homeomorph.piCongr_apply]
       rfl
   right_inv := Nonempty.intro <|

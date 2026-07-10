@@ -94,8 +94,7 @@ def _root_.Module.Basis.toQuotient [IsFractionRing R K] {L : Lattice R} (b : Bas
     rintro x -
     refine Quotient.inductionOn' x (fun x ↦ ?_)
     have hx : x ∈ Submodule.span R (Set.range b) := by
-      rw [b.span_eq]
-      trivial
+      simp_all
     refine Submodule.span_induction ?_ ?_ ?_ ?_ hx
     · intro x hx
       obtain ⟨i, rfl⟩ := hx
@@ -182,8 +181,7 @@ lemma _root_.Module.Basis.unipotentResidue_mk [IsFractionRing R K]
       Submodule.Quotient.mk (⟨b.transvectEquiv x y, b.transvectEquiv_apply_mem x y⟩) := by
   let b' : Basis (Fin 2) R (b.toSubmodule (R := R)) := b.restrict
   have : y ∈ Submodule.span R (Set.range b') := by
-    rw [b'.span_eq]
-    trivial
+    simp_all
   refine Submodule.span_induction ?_ ?_ ?_ ?_ this
   · intro x hx
     obtain ⟨i, rfl⟩ := hx
@@ -474,8 +472,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_ne_bot_of (L M : Lattice R)
     · exact Submodule.smul_le_self_of_tower ϖ L.M
     · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
     · exact heq
-  rw [this] at h2
-  simp at h2
+  simp_all
 
 lemma _root_.BruhatTits.Lattice.mapIntermediate_ne_top_of (L M : Lattice R)
     {ϖ : R} (hϖ : Irreducible ϖ) (h1 : M.M < L.M) (h2 : ϖ • L.M ≤ M.M) :
@@ -499,8 +496,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_ne_top_of (L M : Lattice R)
     · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
       exact Submodule.smul_le_self_of_tower ϖ L.M
     · exact heq
-  rw [this] at h1
-  simp at h1
+  simp_all
 
 variable [IsFractionRing R K]
 
@@ -582,8 +578,7 @@ lemma mapIntermediate_unipotent_smul (b : Basis (Fin 2) K (Fin 2 → K)) (x : R)
       apply b.transvectEquiv_symm_mem_of_mem
       exact y.property
     let y' : (b.toLattice (R := R)).M := ⟨b.transvectEquiv x m, by
-      rw [heq]
-      exact y.property⟩
+      simp_all⟩
     have : y = y' := by
       ext : 1
       rw [← heq]

@@ -101,7 +101,6 @@ instance : IsLeftCancelAdd M where
       rw [add_comm]
       rhs
       rw [add_comm]
-    rw [@IOPENModel.add_cancel_right] at h
-    exact h
+    simp_all
 
 end IDelta0

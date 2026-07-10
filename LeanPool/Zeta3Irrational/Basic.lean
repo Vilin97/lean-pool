@@ -106,10 +106,7 @@ lemma pos_aux (x : ℝ × ℝ × ℝ)
     0 < (1 - (1 - x.2.1 * x.2.2) * x.1) := by
   simp only [sub_pos]
   suffices (1 - x.2.1 * x.2.2) * x.1 < x.1 by linarith
-  rw [mul_lt_iff_lt_one_left]
-  · simp only [sub_lt_self_iff]
-    nlinarith
-  · nlinarith
+  simp_all
 
 private lemma JJ'_nonneg (x : ℝ × ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1)
     (n : ℕ) :
@@ -356,8 +353,7 @@ lemma integrableOn_JJ2 (n : ℕ) : MeasureTheory.Integrable (Function.uncurry fu
                     pow_le_one₀ (abs_nonneg _) ineq1
                   rw [show (1 - (1 - y * z) * x) = 1 - x + y * z * x by ring]
                   by_cases ineq : 1 - x + y * z * x = 0
-                  · rw [ineq]
-                    simp only [div_zero, mul_zero, abs_zero, zero_le_one]
+                  · simp_all
                   · rw [
                     show y * z * x * ((1 - z) / (1 - x + y * z * x)) = (1-z)/((1-x)/(y*z*x) + 1) by
                       rw [mul_div, div_eq_div_iff]
@@ -1022,17 +1018,11 @@ theorem JJ_pos (n : ℕ) : 0 < JJ n := by
           suffices 1 - (1 - a.2.1 * a.2.2) * a.1 > 0 by linarith
           simp only [gt_iff_lt, sub_pos]
           suffices (1 - a.2.1 * a.2.2) * a.1 < a.1 by linarith
-          rw [mul_lt_iff_lt_one_left]
-          · simp only [sub_lt_self_iff]
-            nlinarith
-          · exact hx0
+          simp_all
       · suffices 1 - (1 - a.2.1 * a.2.2) * a.1 > 0 by linarith
         simp only [gt_iff_lt, sub_pos]
         suffices (1 - a.2.1 * a.2.2) * a.1 < a.1 by linarith
-        rw [mul_lt_iff_lt_one_left]
-        · simp only [sub_lt_self_iff]
-          nlinarith
-        · exact hx0
+        simp_all
     rw [MeasureTheory.Measure.restrict_apply']
     · rw [Set.inter_eq_right.2 subset]
       simp only [MeasureTheory.Measure.volume_eq_prod, MeasureTheory.Measure.prod_prod]
@@ -1046,8 +1036,7 @@ theorem JJ_pos (n : ℕ) : 0 < JJ n := by
       intro x hx
       by_cases h : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
       · exact JJ'_nonneg x h n
-      · rw [Set.mem_inter_iff] at hx
-        tauto
+      · simp_all
   · exact integrableOn_JJ' n
 
 lemma Summable_of_zeta_two' : Summable (fun (n : ℕ) ↦ 1 / ((n : ℝ) + 1) ^ 2) := by
@@ -1111,8 +1100,7 @@ theorem JJ_upper (n : ℕ) :
       intro x hx
       by_cases h : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
       · exact JJ'_nonneg x h n
-      · rw [Set.mem_inter_iff] at hx
-        tauto
+      · simp_all
   · apply AEMeasurable.aestronglyMeasurable
     measurability
 
@@ -1210,9 +1198,7 @@ theorem fun1_tendsto_zero :
             apply mul_le_mul_of_nonneg_right _ (by linarith [zeta3_pos])
             nth_rewrite 2 [mul_comm, div_eq_mul_one_div]
             rw [mul_pow, ← mul_assoc]
-            apply mul_le_mul_of_nonneg_right _ (by positivity)
-            apply mul_le_mul_of_nonneg_left _ (by positivity)
-            exact hN1 n (le_of_max_le_left hn)
+            simp_all
       _ ≤ ε.toReal := by
         specialize hN2 n (le_of_max_le_right hn)
         rw [← ENNReal.ofReal_toReal_eq_iff.2 h,
@@ -1264,8 +1250,7 @@ theorem zeta3_irrational : ¬ ∃ r : ℚ, r = riemannZeta 3 := by
       exact (lt_irrefl _ this).elim
     rw [show ENNReal.ofReal ↑q = (q : ENNReal) by simp only [ENNReal.ofReal_natCast],
       show ENNReal.ofReal (1 / 2) = 1 / 2 by
-        rw [ENNReal.ofReal_div_of_pos (by norm_num)]
-        simp] at prop2
+        simp_all] at prop2
     apply LE.le.trans_lt (b := (1 / 2 : ENNReal)) ha prop2
   · apply mul_pos _ (by simp; omega)
     apply mul_pos _ (JJ_pos (a + 1))

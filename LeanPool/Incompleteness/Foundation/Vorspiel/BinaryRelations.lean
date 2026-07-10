@@ -219,8 +219,7 @@ lemma WCWF_of_finite_trans_antisymm {R : α → α → Prop} (hFin : Finite α)
       induction hij with
       | refl => exact hf i |>.2;
       | step _ ih => exact R_trans ih <| hf _ |>.2;
-    have := H (i + 1) j this;
-    simpa [e];
+    simp_all
 
 end «lp_section_4»
 

@@ -90,9 +90,7 @@ theorem existQuantify_mono {f g : BitString (k + m) → Bool}
 theorem forallQuantify_mono {f g : BitString (k + m) → Bool}
     (h : ∀ z, f z = true → g z = true) {y : BitString m} :
     forallQuantify f y = true → forallQuantify g y = true := by
-  simp only [forallQuantify_eq_true]
-  intro hf x
-  exact h _ (hf x)
+  simp_all
 
 /-- Constant true: existential quantification is always true. -/
 @[simp]

@@ -56,16 +56,7 @@ private def close_up_avoidance_step_proof
   rw [Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton] at hu
   obtain ⟨t, ht_eq⟩ := hu
   by_cases ha_zero : (a : T) = 0
-  · have hu_zero : u = 0 := by
-      rw [ht_eq]
-      change (a : T) * t = 0
-      rw [ha_zero, zero_mul]
-    have hc_s' : (c : T) ∈ Ideal.map R.carrier.subtype (span (↑s' : Set R.carrier)) := by
-      rw [← huv, hu_zero, zero_add]
-      exact hv
-    obtain ⟨S, hAext, hle, hmem⟩ := ih R hR_card s' hs'_card c hc_s'
-    exact ⟨S, hAext, hle, Ideal.map_mono (Ideal.span_mono
-      (Set.subset_insert a ↑s')) hmem⟩
+  · simp_all
   · -- a ≠ 0
     by_cases hI_bot : Ideal.map R.carrier.subtype (span (↑s' : Set R.carrier)) = ⊥
     · have hv_zero : v = 0 := (Submodule.mem_bot T).mp (hI_bot ▸ hv)
@@ -227,10 +218,7 @@ private def close_up_avoidance_step_proof
                     · exact (Cardinal.mk_iUnion_le _).trans ((mul_le_mul'
                         (Polynomial.cardinalMk_le_max.trans (max_le le_rfl hR_inf))
                         (ciSup_le' fun f => Cardinal.mk_le_aleph0_iff.mpr (by
-                          by_cases hf : f = 0
-                          · exact Set.Countable.to_subtype (by simp [hf])
-                          · exact (Set.countable_iUnion fun _ =>
-                              hD_root_countable f hf).to_subtype))).trans
+                          simp_all))).trans
                         (Cardinal.mul_aleph0_eq hR_inf).le)
                 _ = Cardinal.mk R.carrier := Cardinal.add_eq_left hR_inf le_rfl
             -- #D_mod ≤ #R (following Adjoin.lean D_mod_shifted pattern)
@@ -291,13 +279,8 @@ private def close_up_avoidance_step_proof
         have hI_not_le_good : ∀ P ∈ C_good, ¬(I_s' ≤ P) := by
           intro P hP hle
           rcases (Set.mem_union _ _ _).mp hP with h | h
-          · rw [Set.mem_iUnion] at h
-            obtain ⟨r, h⟩ := h
-            rw [Set.mem_iUnion] at h
-            obtain ⟨_, hPmem⟩ := h
-            exact hPmem.2 hle
-          · rw [Set.mem_singleton_iff.mp h] at hle
-            exact hI_bot (le_antisymm hle bot_le)
+          · simp_all
+          · simp_all
         -- I_s' ⊄ P for ALL associated primes (not just C_good ones).
         -- This follows from h_no_common: if I_s' ≤ P with P∩R ≠ ⊥,
         -- then P∩R = span{q_P} for some prime q_P, so q_P | all of s',
@@ -316,11 +299,7 @@ private def close_up_avoidance_step_proof
               have h1 : x ∈ P.comap R.carrier.subtype :=
                 Ideal.mem_comap.mpr (hle (Ideal.mem_map_of_mem _
                   (Ideal.subset_span (Finset.mem_coe.mpr hx))))
-              have h1' : x ∈ (⊥ : Ideal R.carrier) := hcomap ▸ h1
-              have hx_zero : x = 0 := (Submodule.mem_bot _).mp h1'
-              change R.carrier.subtype x ∈ (⊥ : Ideal T)
-              rw [hx_zero, map_zero]
-              exact (Submodule.mem_bot T).mpr rfl) bot_le)
+              simp_all) bot_le)
           · -- P ∩ R ≠ ⊥: find q_P, contradiction from h_no_common
             haveI : (P.comap R.carrier.subtype).IsPrime := hP_mem.isPrime.comap _
             obtain ⟨q_P, hqP_prime, hqP_in⟩ :=
@@ -350,9 +329,7 @@ private def close_up_avoidance_step_proof
                   ⟨hp_ne, ⟨t + δ, hp_eval, by ring⟩⟩⟩))
           open scoped Pointwise in
           have h_absurd : δ ∈ ((⊥ : Ideal T) : Set T) + ({δ} : Set T) := by
-            have := Set.add_mem_add (⊥ : Ideal T).zero_mem
-              (show δ ∈ ({δ} : Set T) from rfl)
-            rwa [zero_add] at this
+            simp_all
           exact absurd h_absurd
             (hδ_avoid ⊥ (Set.mem_union_right _ rfl) δ hδ_in_D)
         have ht'_avoid : ∀ (r : R.carrier), (r : T) ≠ 0 →
@@ -376,8 +353,7 @@ private def close_up_avoidance_step_proof
             rw [hrw]
             exact Submodule.sub_mem _ hv (Ideal.mul_mem_right _ _ hδ_mem)
           have h_c_eq : (↑c : T) = (↑a : T) * t + v := by
-            rw [← huv, ht_eq]
-            simp
+            simp_all
           rw [h_c_eq]
           ring
         -- Adjoin t+δ to R → S₁
@@ -479,9 +455,7 @@ private def close_up_avoidance_step_proof
               (span (↑(s'.image liftR₁) : Set S₁.carrier)) at hrem₂
           rw [Finset.coe_image, ← Ideal.map_span, Ideal.map_map, hcomp₂] at hrem₂
           exact hrem₂
-        · exact Subtype.ext (by
-                               simp only [Subring.coe_add, Subring.coe_mul]
-                               ring)
+        · simp_all
 ⟩
 
 lemma close_up_avoidance_step

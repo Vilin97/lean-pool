@@ -55,8 +55,7 @@ lemma not_exists_until_iff_forall {P Q : Nat → Prop} :
   constructor
   · intro h i
     rcases Classical.em (Q i) with hQi | hQi
-    · obtain ⟨k, hk⟩ := Classical.not_forall.mp fun hPi => h ⟨i, hQi, hPi⟩
-      exact Or.inr ⟨k, Classical.not_imp.mp hk⟩
+    · simp_all
     · exact Or.inl hQi
   · rintro h ⟨i, hQi, hPi⟩
     rcases h i with hneg | ⟨k, hk, hk'⟩

@@ -128,10 +128,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
       · --  b = cs 0
         intro h_eq
         rw [Finsupp.ext_iff] at h_eq
-        specialize h_eq 0
-        simp only [Finsupp.add_apply] at h_eq
-        simp [cs] at h_eq
-        contradiction
+        simp_all
     · --  3  cs 0  (cs 0 < m + 1)
       intro h_notin
       exfalso --
@@ -223,8 +220,7 @@ theorem cauchy_davenport (A B S : Finset (ZMod p)) (hp : p.Prime)
       have h_lower_bound : (sumset A B').card ≥ p := by
         have step1 :=
             cauchy_davenport_small_sum A B' (sumset A B') Fact.out hA hB'_ne h_new_sum_le rfl
-        rw [h_sum_exact] at step1
-        simpa using step1
+        simp_all
       have h_subset_sum : sumset A B' ⊆ sumset A B := Finset.add_subset_add_left hB'_sub
       apply Nat.le_trans h_lower_bound
       rw [hS]

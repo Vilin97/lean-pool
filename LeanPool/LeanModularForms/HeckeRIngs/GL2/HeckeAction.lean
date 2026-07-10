@@ -173,9 +173,7 @@ private lemma leftMulQuot_injective (D : HeckeCoset (GLPair 2)) (σ : (GLPair 2)
       (HeckeCoset.rep D : GL _ ℚ) ∈ (GLPair 2).H := by
     have := h_K
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def] at this
-    simp only [ConjAct.ofConjAct_toConjAct, map_inv, inv_inv] at this
-    convert this using 1
-    simp only [Subgroup.coe_mul, Subgroup.coe_inv]; group
+    simp_all
   exact decompQuot_coset_diff (GLPair 2) (HeckeCoset.rep D) i₁ i₂ hne
     (leftCoset_eq_of_not_disjoint (GLPair 2).H _ _ (by
       rw [Set.not_disjoint_iff]
@@ -199,10 +197,7 @@ private lemma heckeSlash_slash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ �
     (g : GL (Fin 2) ℚ) : (heckeSlash k D f) ∣[k] g =
     ∑ i : decompQuot (GLPair 2) (HeckeCoset.rep D), (f ∣[k] tRep D i) ∣[k] g := by
   simp only [heckeSlash]
-  induction Finset.univ (α := decompQuot (GLPair 2) (HeckeCoset.rep D))
-      using Finset.cons_induction with
-  | empty => simp [SlashAction.zero_slash]
-  | cons a s has ih => simp [Finset.sum_cons, SlashAction.add_slash, ih]
+  simp_all
 
 /-- Left multiplication by a transposed H-element preserves the slash action
     under Γ-invariance: `f ∣[k] (hᵀ * g) = f ∣[k] g` when `h ∈ H`. -/

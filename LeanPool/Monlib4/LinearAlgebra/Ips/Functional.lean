@@ -338,8 +338,7 @@ lemma Module.Dual.piIsFaithful_iff {k : Type _} [Finite k]
     nth_rw 1 [← sum_includeBlock x]
     simp_rw [star_sum, Finset.sum_mul, includeBlock_conjTranspose,
       includeBlock_hMul, map_sum]
-    refine ⟨fun h1 => ?_, fun h => by simp_rw [h, Pi.zero_apply, mul_zero, map_zero,
-      Finset.sum_const_zero]⟩
+    refine ⟨fun h1 => ?_, fun h => by simp_all⟩
     ext1 i
     rw [Pi.zero_apply]
     rw [Finset.sum_eq_zero_iff_of_nonneg] at h1
@@ -407,8 +406,7 @@ theorem Module.Dual.IsPosMap.isFaithful_iff_of_matrix {φ : Module.Dual ℂ (Mat
       have this3 := hs' (vecMulVec x (star x)) (vecMulVec_posSemidef _)
       rw [le_iff_eq_or_lt] at this3
       rcases this3 with (this3 | this32)
-      · rw [eq_comm, this2, vecMulVec_eq_zero_iff] at this3
-        contradiction
+      · simp_all
       · rw [← Module.Dual.apply]
         exact this32
   · intro hQ a ha
@@ -458,8 +456,7 @@ theorem Module.Dual.IsState.isFaithful_iff_of_matrix {φ : Module.Dual ℂ (Matr
     · exact hQ
     rw [Module.Dual.isState_iff_of_matrix] at hs
     exact hs.2
-  · intro hQ
-    exact hQ.1
+  · simp_all
 
 theorem Module.Dual.isFaithful_state_iff_of_matrix (φ : Module.Dual ℂ (Matrix n n ℂ)) :
     φ.IsState ∧ φ.IsFaithful ↔ φ.matrix.PosDef ∧ φ.matrix.trace = 1 := by
@@ -575,9 +572,7 @@ theorem Module.Dual.isTracial_faithful_pos_map_iff_of_matrix [Nonempty n]
       specialize h1 ((1 : Matrix n n ℂ)ᴴ * (1 : Matrix n n ℂ))
       simp only [Matrix.conjTranspose_one, Matrix.mul_one, Module.Dual.apply,
         star_eq_conjTranspose] at h1
-      simp_rw [HH, NNReal.coe_zero, Complex.ofReal_zero, zero_smul] at hα
-      rw [hα, trace_zero, eq_self_iff_true, true_iff] at h1
-      simp only [one_ne_zero'] at h1
+      simp_all
     let α' : { x : NNReal // 0 < x } := ⟨α, this⟩
     have : α = α' := rfl
     use α'
@@ -593,14 +588,7 @@ theorem Module.Dual.isTracial_faithful_pos_map_iff_of_matrix [Nonempty n]
         trace_smul, smul_eq_zero, Complex.ofReal_eq_zero, NNReal.coe_eq_zero, ne_zero_of_lt this,
         false_or, star_eq_conjTranspose,
         trace_conjTranspose_hMul_self_eq_zero, forall_true_iff]
-    · use α
-      constructor
-      · exact h1
-      · intro y hy
-        rw [h1, ← sub_eq_zero, ← sub_smul, smul_eq_zero, sub_eq_zero] at hy
-        simp only [one_ne_zero', or_false, NNReal.coe_inj,
-          Complex.ofReal_inj, NNReal.coe_inj] at hy
-        exact hy.symm
+    · simp_all
 
 theorem Matrix.ext_iff_trace' {R m n : Type _} [Semiring R] [StarRing R] [Fintype n] [Fintype m]
     (A B : Matrix m n R) :
@@ -612,8 +600,7 @@ theorem Matrix.ext_iff_trace' {R m n : Type _} [Semiring R] [StarRing R] [Fintyp
     specialize h (single i j (1 : R))
     simp_rw [single_conjTranspose, star_one, Matrix.single_hMul_trace] at h
     exact h
-  · intro h x
-    rw [h]
+  · simp_all
 
 theorem Module.Dual.isReal_iff {φ : Module.Dual ℂ (Matrix n n ℂ)} :
     LinearMap.IsReal φ ↔ φ.matrix.IsHermitian := by
@@ -736,10 +723,7 @@ noncomputable def Module.Dual.PiInnerProductCore
   exact
     { inner := fun x y => ∑ i, @inner ℂ (Matrix (s i) (s i) ℂ) _ (x i) (y i)
       conj_inner_symm := fun x y => by
-        simp_rw [map_sum]
-        apply Finset.sum_congr rfl
-        intro i _
-        exact inner_conj_symm _ _
+        simp_all
       re_inner_nonneg := fun x => by
         simp_rw [map_sum]
         exact Finset.sum_nonneg fun i _ => inner_self_nonneg

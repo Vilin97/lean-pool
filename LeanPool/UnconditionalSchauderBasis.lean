@@ -130,8 +130,7 @@ private theorem exists_perm_subseq_range_image_of_monotone_finset
   have hL_succ (n : ℕ) : L (n + 1) = L n ++ block n := by
     simp [L]
   have hL_prefix_succ (n : ℕ) : L n <+: L (n + 1) := by
-    rw [hL_succ n]
-    exact (L n).prefix_append (block n)
+    simp_all
   have hL_prefix : ∀ {n m : ℕ}, n ≤ m → L n <+: L m := by
     intro n m hnm
     induction hnm with
@@ -283,8 +282,7 @@ private theorem hasSum_of_forall_tendsto_sum_nat_rearranged
     exact ⟨m + 1, hA_range m (by simp)⟩
   have hA_bad (n : ℕ) :
       ε ≤ dist (∑ m ∈ A (n + 1), f m) a := by
-    rw [hA_succ n]
-    exact hbad_dist ((A n ∪ Finset.range (n + 1)) ∪ {(A n).sup id + 1})
+    simp_all
   obtain ⟨σ, hAσ⟩ :=
     exists_perm_subseq_range_image_of_monotone_finset A hA_zero hA_mono hA_strict hA_cover
   have hA_card_ge : ∀ n : ℕ, n ≤ (A n).card := by
@@ -505,8 +503,7 @@ theorem coeff_basis_self (b : UnconditionalSchauderBasisAbstractIndex 𝕜 Index
           = Pi.single i (b.basis i) := by
       funext k
       by_cases hki : k = i
-      · subst k
-        simp [Pi.single]
+      · simp_all
       · simp [Pi.single, hki]
     simpa [← hfun] using (hasSum_pi_single (β := Index) (α := E) i (b.basis i))
   have hcoeff :=
@@ -527,8 +524,7 @@ theorem coeff_basis_ne (b : UnconditionalSchauderBasisAbstractIndex 𝕜 Index E
           = Pi.single j (b.basis j) := by
       funext k
       by_cases hkj : k = j
-      · subst k
-        simp [Pi.single]
+      · simp_all
       · simp [Pi.single, hkj]
     simpa [← hfun] using (hasSum_pi_single (β := Index) (α := E) j (b.basis j))
   have hcoeff :=
@@ -599,15 +595,10 @@ noncomputable def toUnconditionalSchauderBasis
                   · subst m
                     simp [c, coeff_basis_self]
                   · have hemn : e m ≠ e n := by
-                      intro h
-                      exact hmn (e.injective h)
+                      simp_all
                     simp [c, hmn, coeff_basis_ne b hemn]
           _ = a n := by
-                  exact
-                    (Finset.sum_eq_single (s := Finset.range k) (a := n)
-                      (f := fun m : ℕ => if m = n then a n else 0)
-                      (fun m _hm hmn => if_neg hmn)
-                      (fun hn => False.elim (hn hnmem))).trans (by simp)
+                  simp_all
       have hscalar :
           Filter.Tendsto
             (fun k : ℕ => c (∑ m ∈ Finset.range k, a m • b.basis (e m)))
@@ -706,8 +697,7 @@ def toUnconditionalSchauderBasisAbstractIndex (b : UnconditionalSchauderBasis �
   basis := b.basis
   coeff := b.coeff
   hasSum_repr := by
-    intro x
-    exact b.unconditional x
+    simp_all
   unique_coeff := by
     intro x a ha
     exact b.toSchauderBasis.unique_coeff x a (by simpa [basis] using! ha.tendsto_sum_nat)
@@ -810,10 +800,8 @@ private lemma projectionSigns_is_sign {Index : Type*} [DecidableEq Index]
         projectionSigns (𝕜 := 𝕜) t i = (-1 : 𝕜) := by
   intro i _hi
   by_cases hit : i ∈ t
-  · left
-    simp [projectionSigns, hit]
-  · right
-    simp [projectionSigns, hit]
+  · simp_all
+  · simp_all
 
 omit [CharZero 𝕜] [CompleteSpace 𝕜] [CompleteSpace E] in
 /--
@@ -844,12 +832,9 @@ private lemma signed_sum_eq_two_projection_sub_sum
               (s₁ := t) (s₂ := s)
               (f := fun i => (((if i ∈ t then (2 : 𝕜) else 0) * a i) • x i))
               hts (by
-                intro i _his hit
-                simp [hit])).symm
+                simp_all)).symm
       _ = ∑ i ∈ t, ((2 : 𝕜) * a i) • x i := by
-            refine Finset.sum_congr rfl ?_
-            intro i hi
-            simp [hi]
+            simp_all
       _ = (2 : 𝕜) • (∑ i ∈ t, a i • x i) := by
             rw [Finset.smul_sum]
             change (∑ i ∈ t, ((2 : 𝕜) * a i) • x i)
@@ -867,8 +852,7 @@ private lemma signed_sum_eq_two_projection_sub_sum
     congr 1
     simp [hit]
     ring
-  · rw [projectionSigns_of_not_mem (𝕜 := 𝕜) t hit]
-    simp [hit, neg_smul]
+  · simp_all
 
 omit [CompleteSpace 𝕜] [CompleteSpace E] in
 /--
@@ -902,8 +886,7 @@ private lemma finite_projection_bound_of_sign_bound
   have hz_eq : z = (2 : 𝕜) • p - y := by
     simpa [z, p, y] using signed_sum_eq_two_projection_sub_sum x s t hts a
   have hp_eq : p = ((2 : 𝕜)⁻¹) • (z + y) := by
-    rw [hz_eq]
-    simp [p]
+    simp_all
   have hnorm :
       ‖p‖ ≤ ‖((2 : 𝕜)⁻¹)‖ * (‖z‖ + ‖y‖) := by
     calc
@@ -974,16 +957,8 @@ private lemma linearIndependent_of_finiteProjectionBound
   have hsingleton :
       ‖∑ j ∈ ({i} : Finset Index), a j • x j‖ ≤ K * ‖∑ j ∈ s, a j • x j‖ :=
     h_proj s ({i} : Finset Index) (by
-      intro j hj
-      have hji : j = i := by simpa using hj
-      simpa [hji] using hi) a
-  have hsingleton_zero : ∑ j ∈ ({i} : Finset Index), a j • x j = 0 := by
-    have hnorm_le_zero : ‖∑ j ∈ ({i} : Finset Index), a j • x j‖ ≤ 0 := by
-      simpa [hsum] using hsingleton
-    exact norm_eq_zero.mp (le_antisymm hnorm_le_zero (norm_nonneg _))
-  have hai_smul : a i • x i = 0 := by
-    simpa using hsingleton_zero
-  exact (smul_eq_zero.mp hai_smul).resolve_right (hx_ne i)
+      simp_all) a
+  simp_all
 
 /--
 Compatibility of coordinate maps with finite expansions.
@@ -1043,9 +1018,7 @@ private lemma exists_coordMaps_of_finiteProjectionBound
       exact mul_nonneg (div_nonneg hK_nonneg (norm_nonneg _)) (norm_nonneg _)
     · have hnmem : n ∈ c.support := Finsupp.mem_support_iff.mpr hcn
       have hsingleton_subset : ({n} : Finset Index) ⊆ c.support := by
-        intro j hj
-        have hji : j = n := by simpa using hj
-        simpa [hji] using hnmem
+        simp_all
       have hproj_single :
           ‖∑ j ∈ ({n} : Finset Index), c j • x j‖
             ≤ K * ‖∑ j ∈ c.support, c j • x j‖ :=
@@ -1175,15 +1148,9 @@ private lemma coordMaps_tendsto_finite_partial_sums_of_finiteProjectionBound
       P s (z : E)
           = ∑ n ∈ s, (if n ∈ c.support then c n else 0) • x n := by
             refine Finset.sum_congr rfl ?_
-            intro n _hn
-            rw [hcoord n]
+            simp_all
       _ = ∑ n ∈ s, c n • x n := by
-            refine Finset.sum_congr rfl ?_
-            intro n hn
-            by_cases hnc : n ∈ c.support
-            · simp [hnc]
-            · have hcn : c n = 0 := by simpa [Finsupp.mem_support_iff] using hnc
-              simp [hnc, hcn]
+            simp_all
       _ = ∑ n ∈ c.support, c n • x n := by
             exact (Finset.sum_subset hzs (by
               intro n _hns hnc
@@ -1211,26 +1178,17 @@ private lemma coordMaps_tendsto_finite_partial_sums_of_finiteProjectionBound
         P s (z : E)
             = ∑ n ∈ s, (if n ∈ c.support then c n else 0) • x n := by
               refine Finset.sum_congr rfl ?_
-              intro n _hn
-              rw [hcoord n]
+              simp_all
         _ = ∑ n ∈ s ∩ c.support, (if n ∈ c.support then c n else 0) • x n := by
               exact (Finset.sum_subset (Finset.inter_subset_left) (by
-                intro n _hns hninter
-                have hnc : n ∉ c.support := by
-                  intro hnc
-                  exact hninter (Finset.mem_inter.mpr ⟨_hns, hnc⟩)
-                simp [hnc])).symm
+                simp_all)).symm
         _ = ∑ n ∈ s ∩ c.support, c n • x n := by
-              refine Finset.sum_congr rfl ?_
-              intro n hn
-              have hnc : n ∈ c.support := (Finset.mem_inter.mp hn).2
-              simp [hnc]
+              simp_all
     have hproj_bound :
         ‖∑ n ∈ s ∩ c.support, c n • x n‖
           ≤ K * ‖∑ n ∈ c.support, c n • x n‖ :=
       h_proj c.support (s ∩ c.support) (Finset.inter_subset_right) (fun n => c n)
-    simpa [hP_eq, hzsum]
-      using hproj_bound
+    simp_all
   have hP_bound :
       ∀ (s : Finset Index) (y : E), ‖P s y‖ ≤ K * ‖y‖ := by
     intro s y
@@ -1255,8 +1213,7 @@ private lemma coordMaps_tendsto_finite_partial_sums_of_finiteProjectionBound
     simp [P, map_sub, sub_smul, Finset.sum_sub_distrib]
   have hdecomp :
       P s y - y = P s (y - (z : E)) + ((z : E) - y) := by
-    rw [hP_sub, hPz]
-    abel
+    simp_all
   have hynorm_lt : ‖y - (z : E)‖ < δ := by
     simpa [dist_eq_norm, e] using hzdist
   calc

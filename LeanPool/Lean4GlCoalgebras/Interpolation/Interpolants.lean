@@ -489,11 +489,8 @@ private theorem interpolant_strong_prop_loop_other {𝕏 : Proof} [fin_X : Finty
         · intro ⟨y, y_in, y_eq⟩
           subst y_eq
           by_cases y_is_box : y = box_in_Y.choose
-          · subst y_is_box
-            right
-            rfl
-          · left
-            use y
+          · simp_all
+          · simp_all
         · intro mpp
           rcases mpp with ⟨y, ⟨y_in, y_not_box⟩, y_eq⟩ | x_eq
           · subst y_eq
@@ -517,11 +514,8 @@ private theorem interpolant_strong_prop_loop_other {𝕏 : Proof} [fin_X : Finty
               have ⟨y, y_in_Y, y_eq⟩ := mpp
               subst y_eq
               by_cases h : y = box_in_Y.choose
-              · right
-                subst h
-                rfl
-              · left
-                use y
+              · simp_all
+              · simp_all
           · exact HEq.symm heq
         · intro mp
           have ⟨y, ⟨y_in, y_not_box⟩, y_eq⟩ := mp
@@ -541,11 +535,8 @@ private theorem interpolant_strong_prop_loop_other {𝕏 : Proof} [fin_X : Finty
           have ⟨y, y_in_Y, y_eq⟩ := mp
           subst y_eq
           by_cases h : y = box_in_Y.choose
-          · right
-            subst h
-            rfl
-          · left
-            use y
+          · simp_all
+          · simp_all
         · intro mpp
           rcases mpp with l | r
           · exact ⟨l.choose, l.choose_spec.1.1, l.choose_spec.2⟩
@@ -567,11 +558,8 @@ private theorem interpolant_strong_prop_loop_other {𝕏 : Proof} [fin_X : Finty
               have ⟨y, y_in_Y, y_eq⟩ := mpp
               subst y_eq
               by_cases h : y = box_in_Y.choose
-              · right
-                subst h
-                rfl
-              · left
-                use y
+              · simp_all
+              · simp_all
           · exact HEq.symm heq
         · intro mp
           have ⟨y, ⟨y_in, y_not_box⟩, y_eq⟩ := mp
@@ -629,10 +617,7 @@ private theorem interpolant_strong_prop_loop_other {𝕏 : Proof} [fin_X : Finty
         intro x x_in con
         apply ih2.2 x x_in ?_ con
         intro eq
-        subst eq
-        subst con
-        apply m_not_box
-        rfl
+        simp_all
   · simp only [partial_, n_in, ↓reduceDIte, n_in']
     simp only [partial_, n_in', ↓reduceDIte] at path
     intro y mp
@@ -735,11 +720,8 @@ private theorem interpolant_strong_prop_leaf_other {𝕏 : Proof} [fin_X : Finty
           have ⟨y, y_in_Y, y_eq⟩ := mp
           subst y_eq
           by_cases h : y = leaf_in_Y.choose
-          · right
-            subst h
-            rfl
-          · left
-            use y
+          · simp_all
+          · simp_all
         · intro mpp
           rcases mpp with l | r
           · exact ⟨l.choose, l.choose_spec.1.1, l.choose_spec.2⟩
@@ -761,11 +743,8 @@ private theorem interpolant_strong_prop_leaf_other {𝕏 : Proof} [fin_X : Finty
               have ⟨y, y_in_Y, y_eq⟩ := mpp
               subst y_eq
               by_cases h : y = leaf_in_Y.choose
-              · right
-                subst h
-                rfl
-              · left
-                use y
+              · simp_all
+              · simp_all
           · exact HEq.symm heq
         · intro mp
           have ⟨y, ⟨y_in, y_not_box⟩, y_eq⟩ := mp
@@ -788,11 +767,8 @@ private theorem interpolant_strong_prop_leaf_other {𝕏 : Proof} [fin_X : Finty
           have ⟨y, y_in_Y, y_eq⟩ := mp
           subst y_eq
           by_cases h : y = leaf_in_Y.choose
-          · right
-            subst h
-            rfl
-          · left
-            use y
+          · simp_all
+          · simp_all
         · intro mpp
           rcases mpp with l | r
           · exact ⟨l.choose, l.choose_spec.1.1, l.choose_spec.2⟩
@@ -814,11 +790,8 @@ private theorem interpolant_strong_prop_leaf_other {𝕏 : Proof} [fin_X : Finty
               have ⟨y, y_in_Y, y_eq⟩ := mpp
               subst y_eq
               by_cases h : y = leaf_in_Y.choose
-              · right
-                subst h
-                rfl
-              · left
-                use y
+              · simp_all
+              · simp_all
           · exact HEq.symm heq
         · intro mp
           have ⟨y, ⟨y_in, y_not_box⟩, y_eq⟩ := mp
@@ -851,10 +824,7 @@ private theorem interpolant_strong_prop_leaf_other {𝕏 : Proof} [fin_X : Finty
         intro x x_in con
         apply ih2.2 x x_in ?_ con
         intro eq
-        subst eq
-        subst con
-        apply m_not_box
-        rfl
+        simp_all
   · simp only [partial_, n_in, ↓reduceDIte, n_in']
     simp only [partial_, n_in', ↓reduceDIte] at path
     intro y mp
@@ -1062,8 +1032,6 @@ theorem interpolant_strong_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
         Finset.mem_sdiff, Finset.mem_image, not_exists, not_and]
       have y_in_Y : ∃ y, y ∈ Y := by
         by_contra h
-        apply em_con
-        apply Finset.eq_empty_of_forall_notMem
         simp_all
       have leaf_in_Y :=
         finite_and_no_loop_implies_exists_leaf (fun x ↦ x ∈ Y) y_in_Y.choose

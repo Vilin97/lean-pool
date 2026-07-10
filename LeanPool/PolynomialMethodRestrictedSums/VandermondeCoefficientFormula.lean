@@ -134,22 +134,17 @@ lemma det_fallingFactorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
         simp_all only [Nat.cast_ite, Nat.cast_one, Nat.cast_prod]
         split
         next h =>
-          subst h
-          simp_all only [range_zero, prod_empty, zero_add, range_one, Polynomial.coeff_one,
-              ite_mul, pow_zero,
-            mul_one, zero_mul, sum_ite_eq', mem_singleton, ↓reduceIte]
+          simp_all
         next h =>
           by_cases hi : c i < j <;> simp_all +decide only [prod_range, not_lt]
           · -- both products vanish since the factor at index ⟨c i, hi⟩ is c i - c i = 0
             rw [← h_poly]
             rw [Finset.prod_eq_zero (i := (⟨c i, hi⟩ : Fin j))
                   (Finset.mem_univ _)
-                  (by change ((c i - ↑(⟨c i, hi⟩ : Fin j) : ℕ) : ℚ) = 0
-                      simp)]
+                  (by simp_all)]
             symm
             apply Finset.prod_eq_zero (i := (⟨c i, hi⟩ : Fin j)) (Finset.mem_univ _)
-            change (↑(c i) - ↑↑(⟨c i, hi⟩ : Fin j) : ℚ) = 0
-            simp
+            simp_all
           · exact Eq.trans
               (Finset.prod_congr rfl fun _ _ => by
                 rw [Nat.cast_sub (by linarith [Fin.is_lt ‹_›])])
@@ -222,8 +217,7 @@ lemma fallingFactorial_eq_factorial_div (n k : ℕ) :
           rw [Nat.descFactorial_eq_prod_range]
     · split
       next h =>
-        subst h
-        simp_all only [not_lt_zero]
+        simp_all
       next h =>
         split
         next h_1 =>
@@ -273,8 +267,7 @@ lemma symmetricSumFixed_eq_expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) :
         (∏ i, (fallingFactorial (c i) (σ i).val : ℚ)) := by
       rw [Matrix.det_apply']
       refine Finset.sum_bij (fun σ _ => σ.symm) ?_ ?_ ?_ ?_
-      · intro a ha
-        simp_all only [mem_univ]
+      · simp_all
       · intro a₁ ha₁ a₂ ha₂ a
         simp_all only [mem_univ]
         simpa using congr_arg Equiv.symm a
@@ -334,9 +327,7 @@ private lemma sum_X_pow_eq_multinomial_sum (m : ℕ) :
     refine ⟨?_, ?_⟩
     · exact fun i => le_trans (Multiset.count_le_card _ _) (by simp)
     · -- ∑ i, Multiset.count i ↑a = a.card = m
-      classical
-      rw [Multiset.sum_count_eq_card (fun _ _ => Finset.mem_univ _)]
-      exact a.prop
+      simp_all
   case h_inj =>
     intro a₁ _ a₂ _ heq
     apply Sym.coe_injective
@@ -370,47 +361,24 @@ private lemma sum_X_pow_eq_multinomial_sum (m : ℕ) :
           ∏ x ∈ (↑a : Multiset (Fin (k + 1))).toFinset,
             (Multiset.count x ↑a).factorial := by
       rw [Multiset.countPerms, Finsupp.multinomial_eq, Nat.multinomial]
-      have hsupp :
-          ((↑a : Multiset (Fin (k + 1))).toFinsupp.support) =
-            (↑a : Multiset (Fin (k + 1))).toFinset := by
-        ext x; simp [Multiset.toFinsupp, Multiset.mem_toFinset]
-      rw [hsupp]
-      have hsum_card :
-          ((↑a : Multiset (Fin (k + 1))).toFinset.sum
-              (fun x => Multiset.count x ↑a))
-            = (↑a : Multiset (Fin (k + 1))).card :=
-        Multiset.toFinset_sum_count_eq _
-      have hcard_eq : (↑a : Multiset (Fin (k + 1))).card = m := a.2
-      rw [show
-          (((↑a : Multiset (Fin (k + 1))).toFinset.sum
-              fun x => (↑a : Multiset (Fin (k + 1))).toFinsupp x) : ℕ)
-            = m from by
-          simp only [Multiset.toFinsupp_apply]
-          rw [hsum_card, hcard_eq]]
-      apply congrArg
-      apply Finset.prod_congr rfl
-      intros; rfl
+      simp_all
     have h_prod_extend :
         (∏ x ∈ (↑a : Multiset (Fin (k + 1))).toFinset,
             (Multiset.count x (↑a : Multiset (Fin (k + 1)))).factorial)
           = ∏ x : Fin (k + 1),
               (Multiset.count x (↑a : Multiset (Fin (k + 1)))).factorial := by
       apply Finset.prod_subset (Finset.subset_univ _)
-      intro x _ hx
-      rw [Multiset.count_eq_zero.mpr (by simpa using hx)]
-      rfl
+      simp_all
     -- The LHS is `↑countPerms * ∏ m_1 ∈ (↑a).toFinset, X m_1 ^ count`.
     -- The RHS is `(m! / ∏ i, count!) • ∏ i, X i ^ count`.
     rw [nsmul_eq_mul]
     -- Now both sides are `_ * _`; congr on the two factors.
     congr 1
     · -- ↑countPerms = ↑(m! / ∏ i, count!)
-      rw [← h_prod_extend]
-      exact congrArg _ h_count_perms
+      simp_all
     · -- ∏ m_1 ∈ (↑a).toFinset, X m_1 ^ count = ∏ i, X i ^ count
       apply Finset.prod_subset (Finset.subset_univ _)
-      intro x _ hx
-      rw [Multiset.count_eq_zero.mpr (by simpa using hx), pow_zero]
+      simp_all
 
 lemma coeff_term (c : Fin (k + 1) → ℕ) (m : ℕ) (σ : Equiv.Perm (Fin (k + 1)))
     (h_sum : ∑ i, c i = m + ((k + 1).choose 2)) :
@@ -509,8 +477,7 @@ lemma coeff_term (c : Fin (k + 1) → ℕ) (m : ℕ) (σ : Equiv.Perm (Fin (k + 
                     · simp_all only [prod_empty, sum_empty, monomial_zero', C_1]
                     · simp_all only [not_false_eq_true, prod_insert, monomial_mul, mul_one,
                           sum_insert]
-                  simp_all only [coeff_monomial, ite_eq_right_iff, one_ne_zero, imp_false,
-                      Decidable.not_not]
+                  simp_all
                 exact h_snd_support
               simp +decide [h_snd_support, Finsupp.single_apply]
             simp_all? +decide [Finsupp.ext_iff, toFinsupp]
@@ -589,24 +556,18 @@ theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
         rw [Finset.prod_sigma', Finset.prod_sigma']
         rw [← Finset.prod_filter]
         refine Finset.prod_bij (fun x hx => ⟨x.snd, x.fst⟩) ?_ ?_ ?_ ?_
-        · intro a ha
-          simp_all only [mem_sigma, mem_univ, mem_Ioi, true_and]
-          simp_all only [univ_sigma_univ, mem_filter, mem_univ, true_and]
+        · simp_all
         · intro a₁ ha₁ a₂ ha₂ a
           simp_all only [Sigma.mk.injEq, heq_eq_eq]
           simp_all only [univ_sigma_univ, mem_filter, mem_univ, true_and, and_self]
           obtain ⟨fst, snd⟩ := a₁
-          obtain ⟨fst_1, snd_1⟩ := a₂
-          obtain ⟨left, right⟩ := a
-          subst left right
-          simp_all only
+          simp_all
         · intro b a
           simp_all only [mem_sigma, mem_univ, mem_Ioi, true_and, univ_sigma_univ, mem_filter,
               exists_prop, Sigma.exists]
           obtain ⟨fst, snd⟩ := b
           simp_all only [Sigma.mk.injEq, heq_eq_eq, ↓existsAndEq, true_and, exists_eq_right]
-        · intro a ha
-          simp_all only
+        · simp_all
       rw [h_coeff, Matrix.det_apply']
       simp +decide [Algebra.smul_def]
     simp +decide only [h_vandermonde, mul_smul_comm, Finset.mul_sum _ _ _]

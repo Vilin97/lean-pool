@@ -177,8 +177,7 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
           ccz.ι.app n ≫ p
       rw [← Category.assoc, hfac]
       rfl
-    rw [uniq_f]
-    exact uniq_desc_p ⟩
+    simp_all ⟩
 
 
 namespace Functor.ofSequence
@@ -324,9 +323,7 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
           change _ = h.hom.uncurry ⟨a, t⟩; rw [H2]; simp
         fac_right := by
           ext x
-          simp only [TopCat.hom_comp, ConcreteCategory.hom_ofHom, ContinuousMap.comp_apply,
-            ContinuousMap.coe_mk, ContinuousMap.curry_apply]
-          rw [H1]; simp } ⟩ ⟩ ⟩
+          simp_all } ⟩ ⟩ ⟩
 
 instance TopCat.diskBoundaryIncl_hasCurriedHEP (n : ℕ) (Y : TopCat.{u}) :
     HasCurriedHEP (diskBoundaryIncl.{u} n) Y :=

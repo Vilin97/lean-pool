@@ -350,10 +350,7 @@ private lemma inequality_for_transform_differences
     have hsq_nonneg : 0 ≤ (f (n + 1) ω - f n ω) ^ 2 :=
       sq_nonneg (f (n + 1) ω - f n ω)
     have hw_sq_succ : w (n + 1) ω ^ 2 ≤ 1 := by
-      have hneg : -1 ≤ w (n + 1) ω := (abs_le.mp hwω).1
-      have hpos : w (n + 1) ω ≤ 1 := (abs_le.mp hwω).2
-      nlinarith [sq_nonneg (w (n + 1) ω - 1),
-        sq_nonneg (w (n + 1) ω + 1)]
+      simp_all
     calc
       (X_{n+1}[w, f] ω - X_{n}[w, f] ω) *
           (Y_{n+1}[w, f] ω - Y_{n}[w, f] ω)
@@ -364,9 +361,7 @@ private lemma inequality_for_transform_differences
       _ ≤ 0 := by nlinarith
   · filter_upwards [h.hbound 0] with ω hwω
     have hw_sq : w 0 ω ^ 2 ≤ 1 := by
-      have hneg : -1 ≤ w 0 ω := (abs_le.mp hwω).1
-      have hpos : w 0 ω ≤ 1 := (abs_le.mp hwω).2
-      nlinarith [sq_nonneg (w 0 ω - 1), sq_nonneg (w 0 ω + 1)]
+      simp_all
     have hsq_nonneg : 0 ≤ f 0 ω ^ 2 := sq_nonneg (f 0 ω)
     calc
       X_{0}[w, f] ω *
@@ -1462,8 +1457,7 @@ theorem Lp_Burkholder_inequality_martingaleTransform (p : ℝ≥0∞) (Ω : Type
     simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using
       ((burkholder_X_memLp h n).add (burkholder_Y_memLp h n)).const_mul (1 / 2 : ℝ)
   have hB_mem : MemLp B p μ := by
-    rw [hB_eq]
-    exact hLp n
+    simp_all
   have hc_nonneg : 0 ≤ c := by
     dsimp [c, Burkholder.pStar, Majorants.pStar]
     have hp_le_max : p.toReal ≤ max p.toReal (Majorants.q p.toReal) := le_max_left _ _
@@ -1518,8 +1512,7 @@ theorem Lp_Burkholder_inequality_martingaleTransform (p : ℝ≥0∞) (Ω : Type
                   Real.rpow (Real.rpow c p.toReal) p.toReal⁻¹ :=
               Real.rpow_mul hc_nonneg p.toReal p.toReal⁻¹
             rw [← hmul_root, mul_inv_cancel₀ (ne_of_gt (zero_lt_one.trans hp_toReal))]
-            change c ^ (1 : ℝ) = c
-            exact Real.rpow_one c
+            simp_all
           have hmul :
               Real.rpow
                 (Real.rpow c p.toReal *

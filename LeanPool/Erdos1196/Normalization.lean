@@ -56,8 +56,7 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
       exact (hsummable hm1 hmx).mul_left (1 / (m : ℝ))
     · simp [hm]
   have hrow_zero : ∀ m ∉ Finset.Icc 1 (x - 1), row m = 0 := fun m hm => by
-    rw [hrow m, if_neg]
-    simpa [hIcc m] using hm
+    simp_all
   have hrow_summable : Summable row :=
     summable_of_hasFiniteSupport ((Finset.Icc 1 (x - 1)).finite_toSet.subset
       (fun m hm => by by_contra hm'; exact hm (hrow_zero m hm')))
@@ -87,8 +86,7 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
   rw [hrows] at hfirst
   rw [tsum_eq_sum (s := Finset.Icc 1 (x - 1)) hrow_zero] at hfirst
   convert hfirst using 1
-  exact Finset.sum_congr rfl fun m hm => by rw [hrow m, if_pos]
-                                            simpa [hIcc m] using hm
+  exact Finset.sum_congr rfl fun m hm => by simp_all
 
 /--
 For fixed `Y ≥ 2`, the first-entry contribution to `B_x` is summable and equals

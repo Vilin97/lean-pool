@@ -85,9 +85,7 @@ lemma not_linearIndependent_pair_iff (x y : L) (hy : y ≠ 0) : ¬LinearIndepend
   · intro ⟨c,hc⟩
     push Not
     use 1, 0, 0, c
-    simp only [one_smul, zero_smul, add_zero, zero_add, one_ne_zero, ne_eq, IsEmpty.forall_iff,
-      and_true]
-    assumption
+    simp_all
 
 /-- A linearly independent set in a submodule is linearly independent in the ambient space. -/
 theorem LinearIndependent.iff_in_submodule {S : Type*} (N : Submodule K L) {f : S → N} :
@@ -125,8 +123,7 @@ theorem Submodule.linearIndependent_from_ambient
   · unfold Set.mapIntoSubtype Subtype.coind at sum
     simp only [SetLike.coe_sort_coe, SetLike.mk_smul_mk] at sum
     apply_fun (fun (x :  ↥N) ↦ x.val) at sum
-    simp only [AddSubmonoidClass.coe_finsetSum, ZeroMemClass.coe_zero] at sum
-    exact sum
+    simp_all
   · exact hi
 
 /-- extends linear independent set -/
@@ -208,8 +205,7 @@ theorem Basis.extend_fin_succ_head_not_in_span {n : ℕ} {l : Fin n → L}
       rw [Fin.range_fin_succ]
       intro x hx
       rcases hx with h₀ | htail
-      · rw [h₀]
-        exact h
+      · simp_all
       · rw [Basis.extend_fin_succ_tail_eq hs ht] at htail
         revert x htail
         rw [← Set.subset_def]
@@ -228,8 +224,7 @@ lemma exists_unitsSMul (B : Basis (Fin 3) K L) (α β γ : Kˣ) :
     use B'Basis
     dsimp [B'Basis]
     repeat rw [Basis.unitsSMul_apply (v := B) (w := ![α, β, γ])]
-    simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-      Matrix.cons_val_two, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.tail_cons, and_self]
+    simp_all
 
 end Basis
 
@@ -246,8 +241,7 @@ theorem Submodule.compl_span_singleton_of_codim_one
     ∃ x : L, IsCompl p (Submodule.span K {x}) := by
   have : FiniteDimensional K L := Module.finite_of_finrank_eq_succ h
   have : Module.finrank K p < Module.finrank K L := by
-    apply Nat.lt_of_succ_le
-    rw [h]
+    simp_all
   obtain ⟨x, hx⟩ := Submodule.exists_of_finrank_lt p this
   use x
   specialize hx 1 one_ne_zero
@@ -256,16 +250,14 @@ theorem Submodule.compl_span_singleton_of_codim_one
     rw [Submodule.disjoint_span_singleton']
     · exact hx
     · intro h
-      rw [h] at hx
-      exact hx (zero_mem _)
+      simp_all
   constructor
   · exact disj
   · rw [codisjoint_iff]
     apply Submodule.eq_top_of_disjoint
     · rw [h, finrank_span_singleton]
       intro h
-      rw [h] at hx
-      exact hx (zero_mem _)
+      simp_all
     · exact disj
 
 variable {K L : Type*} [CommRing K] [AddCommGroup L] [Module K L] (p q : Submodule K L)
@@ -297,15 +289,12 @@ theorem Submodule.prod_injective_of_disjoint (h : Disjoint p q) :
     exact x.2.prop
   have x₁0 := Submodule.disjoint_def.mp h _ x₁p x₁q
   have x₂p : x.2.val ∈ p := by
-    rw [← Submodule.neg_mem_iff, hx]
-    exact x.1.prop
+    simp_all
   have x₂q : x.2.val ∈ q := x.2.prop
   have x₂0 := Submodule.disjoint_def.mp h _ x₂p x₂q
   ext
-  · rw [x₁0]
-    rfl
-  · rw [x₂0]
-    rfl
+  · simp_all
+  · simp_all
 
 /-- If two submodules are codisjoint, then the canonical map from the product is surjectve. -/
 theorem Submodule.prod_surjective_of_codisjoint (h : Codisjoint p q) :
@@ -381,8 +370,7 @@ theorem LinearEquiv.toSpanSingleton_symm_apply' {x : L} (h : x ≠ 0) (y : Submo
     ((LinearEquiv.toSpanSingleton K L h).symm y) • x = y := by
   obtain ⟨a, hy⟩ := Submodule.mem_span_singleton.mp y.2
   have : y = ⟨a • x, mem_span_singleton.mpr ⟨a, rfl⟩⟩ := by
-    ext
-    rw [← hy]
+    simp_all
   rw [this, LinearEquiv.toSpanSingleton_symm_apply K L h]
 
 end linalg
@@ -610,9 +598,7 @@ theorem codim_commutator_ge_one_of_solvable {n : ℕ} (dimn : Module.finrank K L
   have t : Module.finrank K (LieAlgebra.commutator K L) < Module.finrank K (⊤ : Submodule K L) := by
    apply Submodule.finrank_lt_finrank_of_lt
    assumption
-  rw [← finrank_top K L] at dimn
-  rw [dimn] at t
-  exact Nat.le_of_lt_succ t
+  simp_all
 
 /-- A finite-dimensional Lie algebra has commutator dimension at most one if for a basis,
   all Lie brackets are multiples of the same element. -/
@@ -667,14 +653,11 @@ theorem isTwoStepNilpotent_iff_lowerCentral :
     rw [LieSubmodule.lie_eq_bot_iff]
     intro x _ y hy
     apply h at hy
-    rw [LieModule.mem_maxTrivSubmodule] at hy
-    exact hy x
+    simp_all
   · intro h y hy
     simp only [LieModule.lowerCentralSeries_succ, LieModule.lowerCentralSeries_zero] at h
     rw [LieSubmodule.lie_eq_bot_iff] at h
-    rw [LieModule.mem_maxTrivSubmodule]
-    intro x
-    exact h x (LieSubmodule.mem_top (R := K) (L := L) (M := L) x) y hy
+    simp_all
 
 /-- A Lie algebra is two-step nilpotent iff its lower central series terminates after two steps. -/
 theorem isTwoStepNilpotent_iff_lowerCentral' :
@@ -754,20 +737,14 @@ theorem LieAlgebra.ad_into_commutator' (x : L) :
   rw [LieDerivation.ad_apply_apply]
   simp only [derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_zero, LieSubmodule.mem_toSubmodule]
   apply LieSubmodule.subset_lieSpan
-  simp only [Subtype.exists, LieSubmodule.mem_top, exists_const, Set.mem_setOf_eq,
-    exists_apply_eq_apply2]
+  simp_all
 
 /-- The adjoint action of a Lie algebra on itself maps everything into the commutator. -/
 theorem LieAlgebra.ad_into_commutator (x : L) :
     Submodule.map (LieAlgebra.ad K L x) ⊤ ≤ (LieAlgebra.commutator K L).toSubmodule := by
   intro y hy
   apply LieAlgebra.ad_into_commutator' x
-  obtain ⟨z, _, hzy⟩ := hy
-  refine ⟨z, trivial, ?_⟩
-  change (LieDerivation.ad K L x) z = y
-  rw [show ((LieDerivation.ad K L) x : L → L) z = (LieAlgebra.ad K L) x z by
-        simp []]
-  exact hzy
+  simp_all
 
 end LieDerivations
 
@@ -804,8 +781,7 @@ theorem LieAlgebra.abelian_iff_dim_comm_zero [FiniteDimensional K L] :
 theorem LieAlgebra.abelian_iff_lie_basis_eq_zero {n : ℕ} (B : Basis (Fin n) K L) :
     IsLieAbelian L ↔ ∀ i j : Fin n, (i < j → ⁅B i, B j⁆ = 0) := by
   constructor
-  · intro ⟨h⟩ _ _ _
-    apply h
+  · intro ⟨h⟩ simp_all
   · intro h
     have h' : ∀ i j : Fin n, ⁅B i, B j⁆ = 0 := by
       intro i j

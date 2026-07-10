@@ -57,8 +57,7 @@ theorem measure_eq_iff_forall_dual_map_eq {μ ν : Measure E} [IsFiniteMeasure �
     [IsFiniteMeasure ν] :
     μ = ν ↔ ∀ L : StrongDual ℝ E, μ.map L = ν.map L := by
   constructor
-  · intro h L
-    rw [h]
+  · simp_all
   · exact measure_eq_of_forall_dual_map_eq
 
 /-- Probability measures on a real Banach space are determined by all continuous-linear
@@ -73,8 +72,7 @@ theorem probabilityMeasure_eq_of_forall_dual_map_eq (μ ν : ProbabilityMeasure 
 theorem probabilityMeasure_eq_iff_forall_dual_map_eq (μ ν : ProbabilityMeasure E) :
     μ = ν ↔ ∀ L : StrongDual ℝ E, (μ : Measure E).map L = (ν : Measure E).map L := by
   constructor
-  · intro h L
-    rw [h]
+  · simp_all
   · exact probabilityMeasure_eq_of_forall_dual_map_eq μ ν
 
 end DualMeasures
@@ -117,8 +115,7 @@ theorem measure_eq_iff_forall_inner_map_eq {μ ν : Measure E} [IsFiniteMeasure 
         μ.map (fun x : E => ⟪t, x⟫_ℝ) =
           ν.map (fun x : E => ⟪t, x⟫_ℝ) := by
   constructor
-  · intro h t
-    rw [h]
+  · simp_all
   · exact measure_eq_of_forall_inner_map_eq
 
 /-- Probability measures on a real Hilbert space are determined by scalar inner-product
@@ -139,8 +136,7 @@ theorem probabilityMeasure_eq_iff_forall_inner_map_eq (μ ν : ProbabilityMeasur
         (μ : Measure E).map (fun x : E => ⟪t, x⟫_ℝ) =
           (ν : Measure E).map (fun x : E => ⟪t, x⟫_ℝ) := by
   constructor
-  · intro h t
-    rw [h]
+  · simp_all
   · exact probabilityMeasure_eq_of_forall_inner_map_eq μ ν
 
 end InnerProductMeasures
