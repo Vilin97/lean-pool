@@ -1,9 +1,10 @@
 name: Proof Profile
 
-# Same triggering model as LLM Review: profile once when a PR is opened, and
-# again on demand when someone comments `/profile` on the PR. No `synchronize`
-# trigger — the profile is advisory, so re-run it by hand after a push if you
-# want a fresh one. workflow_dispatch takes an explicit PR number.
+# Profile once when a PR is opened, and again on demand when the PR author (or
+# anyone with write access) comments `/profile`. No `synchronize` trigger — the
+# profile is advisory, so re-run it by hand after a push if you want a fresh
+# one. That on-demand path is what lets an external contributor re-profile
+# their own PR after pushing. workflow_dispatch takes an explicit PR number.
 on:
   pull_request:
     types: [opened]
@@ -47,16 +48,23 @@ jobs:
     runs-on: ubuntu-latest
     name: Proof profile (advisory)
     # Run on a fresh PR or a workflow_dispatch unconditionally; for issue
-    # comments, only when the body starts with `/profile` AND the commenter
-    # has write access. This job checks out and *runs* the PR's Lean code,
-    # so an untrusted commenter must not be able to trigger it on a fork PR.
+    # comments, only when the body starts with `/profile` AND the commenter is
+    # either the PR author or someone with write access. This job checks out
+    # and *runs* the PR's Lean code, so it stays least-privilege (read-only
+    # token, no secrets) and the workflow definition always comes from the base
+    # default branch (issue_comment context) — the same trust model under which
+    # fork PRs are already auto-profiled on `opened`. Letting the PR author
+    # re-profile their own PR therefore adds no new code-execution surface,
+    # while still barring an arbitrary commenter from triggering a run on
+    # someone else's fork PR.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'pull_request' ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request != null &&
        startsWith(github.event.comment.body, '/profile') &&
-       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+       (github.event.comment.user.login == github.event.issue.user.login ||
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)))
     steps:
       - name: Resolve PR number, head SHA, base SHA
         id: pr
