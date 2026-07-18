@@ -8,12 +8,21 @@ name: Proof Profile
 #
 # Added files get an absolute profile (`lean --profile` + heartbeat counts).
 # Modified files instead get a base→head compile-cost comparison: heartbeats
-# and wall time are measured at the merge base and at the PR head, and the
-# comment reports the deltas. That answers the right question for refactor
-# PRs — "did this golf change compile cost?" — where absolute numbers alone
-# are noise. On PRs that change the toolchain/manifest (or when no warm
-# build cache exists) the comparison is skipped and modified files fall
-# back to the absolute profile.
+# and wall time are measured for the base and head sources, and the comment
+# reports the deltas. That answers the right question for refactor PRs —
+# "did this golf change compile cost?" — where absolute numbers alone are
+# noise. On PRs that change the toolchain/manifest (or when no warm build
+# cache exists) the comparison is skipped and modified files fall back to
+# the absolute profile.
+#
+# Speed (same approach as physlib's /check-golf): measurement only needs the
+# measured files' *imports* built, never the whole library, so `lake build`
+# targets just the changed modules. Both sides of a comparison are elaborated
+# against the single merge-base environment (whose build is ~all cache hits) —
+# sound when only proofs/bodies change, which is what a refactor PR does; a
+# head file that no longer compiles there is flagged in the comment. Sources
+# come from `git show`, so no checkout juggling, and the per-side measurement
+# logs are cached so re-profiling an unchanged PR skips the passes entirely.
 on:
   pull_request:
     types: [opened]
@@ -177,6 +186,24 @@ jobs:
           else
             profile_files="$files"
           fi
+          # Module names for targeted `lake build` (path → dotted module):
+          # measurement only needs the measured files' imports built, so the
+          # build targets are the changed modules, never the whole library.
+          base_build_modules=""
+          head_build_modules=""
+          if [ "$compare" = true ] && [ -n "$modified" ]; then
+            # shellcheck disable=SC2086 # word-split the file list on purpose
+            base_build_modules=$(printf '%s\n' $modified \
+              | sed -e 's/\.lean$//' -e 's#/#.#g' | tr '\n' ' ')
+          fi
+          if [ -n "$profile_files" ]; then
+            # shellcheck disable=SC2086 # word-split the file list on purpose
+            head_build_modules=$(printf '%s\n' $profile_files \
+              | sed -e 's/\.lean$//' -e 's#/#.#g' | tr '\n' ' ')
+          fi
+          # Keys the per-side measurement caches: same merge base + same set
+          # of modified files → identical, reusable base measurements.
+          modified_hash=$(printf '%s' "$modified" | sha256sum | cut -c1-16)
           {
             echo "files=$files"
             echo "added=$added"
@@ -185,6 +212,9 @@ jobs:
             echo "compare=$compare"
             echo "compare_note=$compare_note"
             echo "merge_base=$merge_base"
+            echo "base_build_modules=$base_build_modules"
+            echo "head_build_modules=$head_build_modules"
+            echo "modified_hash=$modified_hash"
           } >> "$GITHUB_OUTPUT"
           if [ -z "$files" ]; then
             echo "No new or modified Lean files in this diff; profile will no-op."
@@ -199,43 +229,55 @@ jobs:
           set -euo pipefail
           cat > "$RUNNER_TEMP/measure-one.sh" <<'SH'
           #!/usr/bin/env bash
-          # Measure one file with Mathlib's countHeartbeats linter (which
-          # reports in `set_option maxHeartbeats` units) plus wall time,
-          # into <outdir>/<slugified-path>.log.
-          file="$1"
-          outdir="$2"
+          # Measure one file at one git revision with Mathlib's
+          # countHeartbeats linter (which reports in `set_option
+          # maxHeartbeats` units) plus wall time, into
+          # <outdir>/<slugified-path>.log. The source comes from `git show`
+          # and is compiled out-of-tree against whatever environment is
+          # currently built (imports resolve by module name, not path), so
+          # the working tree never has to sit at <ref>.
+          ref="$1"
+          file="$2"
+          outdir="$3"
           # The checksum disambiguates paths that collide under `tr` (an
           # underscore in a directory name vs a slash).
           slug="$(printf '%s' "$file" | tr '/' '_')_$(printf '%s' "$file" | cksum | cut -d' ' -f1)"
+          src="$outdir/src-$slug.lean"
           {
             echo "## $file"
-            /usr/bin/time -p "$HOME/.elan/bin/lake" env lean \
-              -Dlinter.countHeartbeats=true \
-              "$file"
-            status=$?
-            if [ "$status" -ne 0 ]; then
-              echo "error: count-heartbeats command exited with status $status"
+            if git show "$ref:$file" > "$src"; then
+              /usr/bin/time -p "$HOME/.elan/bin/lake" env lean \
+                -Dlinter.countHeartbeats=true \
+                "$src"
+              status=$?
+              if [ "$status" -ne 0 ]; then
+                echo "error: count-heartbeats command exited with status $status"
+              fi
+            else
+              echo "error: could not read $file at revision $ref"
             fi
             echo
           } > "$outdir/$slug.log" 2>&1
+          rm -f "$src"
           SH
           cat > "$RUNNER_TEMP/measure-heartbeats.sh" <<'SH'
           #!/usr/bin/env bash
-          # Usage: measure-heartbeats.sh <combined-log> <file>...
-          # Measures files in parallel (they are independent), then stitches
-          # the per-file sections together in input order so the combined
-          # log is deterministic. Parallelism trades some per-file
-          # wall-clock accuracy for hours of runtime on refactor-sized PRs;
-          # heartbeats are unaffected, and both sides of a comparison are
-          # measured the same way.
+          # Usage: measure-heartbeats.sh <combined-log> <ref> <file>...
+          # Measures each file's source at <ref> in parallel (files are
+          # independent), then stitches the per-file sections together in
+          # input order so the combined log is deterministic. Parallelism
+          # trades some per-file wall-clock accuracy for hours of runtime
+          # on refactor-sized PRs; heartbeats are unaffected, and both
+          # sides of a comparison are measured the same way.
           set -euo pipefail
           out="$1"
-          shift
+          ref="$2"
+          shift 2
           outdir=$(mktemp -d)
           jobs=$(nproc)
           if [ "$jobs" -gt 1 ]; then jobs=$((jobs - 1)); fi
           printf '%s\n' "$@" | xargs -P "$jobs" -I{} \
-            bash "$RUNNER_TEMP/measure-one.sh" {} "$outdir"
+            bash "$RUNNER_TEMP/measure-one.sh" "$ref" {} "$outdir"
           : > "$out"
           for file in "$@"; do
             slug="$(printf '%s' "$file" | tr '/' '_')_$(printf '%s' "$file" | cksum | cut -d' ' -f1)"
@@ -245,34 +287,109 @@ jobs:
           SH
           chmod +x "$RUNNER_TEMP/measure-one.sh" "$RUNNER_TEMP/measure-heartbeats.sh"
 
-      - name: Measure modified files at the merge base
+      # Measurements are deterministic per (environment, source revision), so
+      # each side's combined log is cached: re-profiling a PR skips any pass
+      # whose inputs did not change (always the base pass, and the head pass
+      # too when nothing was pushed since).
+      - name: Restore cached merge-base measurements
+        id: base-hb
         if: steps.files.outputs.compare == 'true'
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-base-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.files.outputs.merge_base }}-${{ steps.files.outputs.modified_hash }}
+
+      - name: Restore cached head measurements
+        id: head-hb
+        if: steps.files.outputs.compare == 'true'
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-modified-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.pr.outputs.head_sha }}-${{ steps.files.outputs.modified_hash }}
+
+      - name: Build the measurement environment at the merge base
+        id: base-env
+        # Both sides are measured against this environment; skip the build
+        # only when both passes are already cached.
+        if: >-
+          steps.files.outputs.compare == 'true' &&
+          !(steps.base-hb.outputs.cache-hit == 'true' &&
+            steps.head-hb.outputs.cache-hit == 'true')
         env:
           MERGE_BASE: ${{ steps.files.outputs.merge_base }}
+          BASE_MODULES: ${{ steps.files.outputs.base_build_modules }}
+        run: |
+          set -euo pipefail
+          # The restored cache was built from the base branch, so building
+          # the modified modules (which pulls in exactly the dependency
+          # cones the measurements need) is mostly cache hits.
+          git checkout -f --detach "$MERGE_BASE"
+          ok=true
+          # shellcheck disable=SC2086 # BASE_MODULES is a space-separated list on purpose
+          if ! /usr/bin/time -p ~/.elan/bin/lake build $BASE_MODULES 2>&1 \
+               | tee proof-profile-base-build.log; then
+            echo "::warning::Merge-base build failed; comparison measurements are skipped."
+            ok=false
+          fi
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
+      - name: Measure modified files at the merge base
+        id: measure-base
+        if: >-
+          steps.base-env.outputs.ok == 'true' &&
+          steps.base-hb.outputs.cache-hit != 'true'
+        env:
+          MERGE_BASE: ${{ steps.files.outputs.merge_base }}
+          MODIFIED: ${{ steps.files.outputs.modified }}
+        run: |
+          set -euo pipefail
+          measured=true
+          # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
+          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-base-heartbeats.log "$MERGE_BASE" $MODIFIED \
+            || { echo "::warning::Merge-base measurement failed."; measured=false; rm -f proof-profile-base-heartbeats.log; }
+          echo "measured=$measured" >> "$GITHUB_OUTPUT"
+
+      - name: Save merge-base measurements to the cache
+        if: steps.measure-base.outputs.measured == 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-base-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.files.outputs.merge_base }}-${{ steps.files.outputs.modified_hash }}
+
+      - name: Measure modified files at the head (merge-base environment)
+        id: measure-head
+        if: >-
+          steps.base-env.outputs.ok == 'true' &&
+          steps.head-hb.outputs.cache-hit != 'true'
+        env:
           HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
           MODIFIED: ${{ steps.files.outputs.modified }}
         run: |
           set -euo pipefail
-          # Whatever happens below, later steps must run against the head.
-          trap 'git checkout -f --detach "$HEAD_SHA"' EXIT
-          # The restored cache was built from the base branch, so building
-          # the merge base first is mostly cache hits; the head build in the
-          # next step then measures exactly the PR's rebuild cost.
-          git checkout -f --detach "$MERGE_BASE"
-          if /usr/bin/time -p ~/.elan/bin/lake build LeanPool 2>&1 \
-               | tee proof-profile-base-build.log; then
-            # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
-            "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-base-heartbeats.log $MODIFIED \
-              || echo "::warning::Base-side measurement failed; modified files fall back to head-only numbers."
-          else
-            echo "::warning::Base build failed; skipping base-side measurements."
-          fi
+          measured=true
+          # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
+          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-modified-heartbeats.log "$HEAD_SHA" $MODIFIED \
+            || { echo "::warning::Head-side measurement failed."; measured=false; rm -f proof-profile-modified-heartbeats.log; }
+          echo "measured=$measured" >> "$GITHUB_OUTPUT"
 
-      - name: Build project so profile imports resolve
-        if: steps.files.outputs.files != ''
+      - name: Save head measurements to the cache
+        if: steps.measure-head.outputs.measured == 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-modified-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.pr.outputs.head_sha }}-${{ steps.files.outputs.modified_hash }}
+
+      - name: Build the changed modules at the head
+        if: steps.files.outputs.head_build_modules != ''
+        env:
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          HEAD_MODULES: ${{ steps.files.outputs.head_build_modules }}
         run: |
+          set -euo pipefail
           set -o pipefail
-          /usr/bin/time -p ~/.elan/bin/lake build LeanPool 2>&1 | tee proof-profile-build.log
+          git checkout -f --detach "$HEAD_SHA"
+          # shellcheck disable=SC2086 # HEAD_MODULES is a space-separated list on purpose
+          /usr/bin/time -p ~/.elan/bin/lake build $HEAD_MODULES 2>&1 | tee proof-profile-build.log
 
       - name: Profile new and modified files
         if: steps.files.outputs.profile_files != ''
@@ -297,24 +414,31 @@ jobs:
             } >> proof-profile.log 2>&1
           done
 
-      - name: Count heartbeats for new and modified files
-        if: steps.files.outputs.files != ''
+      - name: Count heartbeats for profiled files at the head
+        if: steps.files.outputs.profile_files != ''
         env:
-          FILES: ${{ steps.files.outputs.files }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          FILES: ${{ steps.files.outputs.profile_files }}
         run: |
           set -euo pipefail
           # shellcheck disable=SC2086 # FILES is a space-separated list on purpose
-          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-heartbeats.log $FILES
+          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-heartbeats.log "$HEAD_SHA" $FILES
 
       - name: Render profile summary
         if: steps.files.outputs.files != ''
         env:
           BASE_SHA: ${{ steps.pr.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
           ADDED_FILES: ${{ steps.files.outputs.added }}
           MODIFIED_FILES: ${{ steps.files.outputs.modified }}
           COMPARE: ${{ steps.files.outputs.compare }}
           COMPARE_NOTE: ${{ steps.files.outputs.compare_note }}
         run: |
+          # The modified files' head-side sections live in their own
+          # (cacheable) log; fold them into the head log the renderer reads.
+          if [ -f proof-profile-modified-heartbeats.log ]; then
+            cat proof-profile-modified-heartbeats.log >> proof-profile-heartbeats.log
+          fi
           python3 <<'PY'
           import os
           import re
@@ -448,6 +572,7 @@ jobs:
               """Count added LOC in the profiled files from the PR diff."""
 
               base_sha = os.environ.get("BASE_SHA")
+              head_sha = os.environ.get("HEAD_SHA", "HEAD")
               loc = {fname: 0 for fname in files}
               if not base_sha or not files:
                   return loc
@@ -458,7 +583,7 @@ jobs:
                           "diff",
                           "--numstat",
                           "--diff-filter=AM",
-                          f"{base_sha}...HEAD",
+                          f"{base_sha}...{head_sha}",
                           "--",
                           *files,
                       ],
@@ -480,6 +605,7 @@ jobs:
               """Added/deleted line counts per file from the PR diff."""
 
               base_sha = os.environ.get("BASE_SHA")
+              head_sha = os.environ.get("HEAD_SHA", "HEAD")
               stats = {fname: (0, 0) for fname in files}
               if not base_sha or not files:
                   return stats
@@ -490,7 +616,7 @@ jobs:
                           "diff",
                           "--numstat",
                           "--diff-filter=AM",
-                          f"{base_sha}...HEAD",
+                          f"{base_sha}...{head_sha}",
                           "--",
                           *files,
                       ],
@@ -569,7 +695,7 @@ jobs:
                       build_clock[timing.group(1)] = float(timing.group(2))
           if "real" in build_clock:
               lead = (
-                  f"**`lake build LeanPool` wall time:** "
+                  f"**`lake build` wall time (changed modules):** "
                   f"**{build_clock['real']:.2f} s** "
                   f"(= {build_clock['real'] / 60:.2f} min)"
               )
@@ -581,26 +707,25 @@ jobs:
               out.append(lead + ".\n\n")
               if compared:
                   out.append(
-                      "_This is the head build on top of a warm base cache, i.e. "
-                      "the cost of rebuilding the modified files and their "
-                      "dependents. The serial per-file sums below are useful for "
-                      "ranking slow files, not as a build budget._\n\n"
+                      "_This build covers the added modules and their dependency "
+                      "cones on top of the measurement environment; modified "
+                      "files are measured without rebuilding the pool._\n\n"
                   )
               else:
                   out.append(
-                      "_This is the parallel build wall clock and is the "
-                      "compile-time answer for this PR. The serial per-file "
-                      "sums below are useful for ranking slow files, not as a "
-                      "build budget._\n\n"
+                      "_This build covers the changed modules and their "
+                      "dependency cones on top of the restored cache. The serial "
+                      "per-file sums below are useful for ranking slow files, "
+                      "not as a build budget._\n\n"
                   )
 
           if compare_note:
               out.append(f"_{compare_note}_\n\n")
           if compare and modified_files and not compared:
               out.append(
-                  "_A base→head comparison was attempted but base-side "
-                  "measurements are unavailable (see the run log); modified "
-                  "files are shown with head-only numbers below._\n\n"
+                  "_A base→head comparison was attempted but its measurements "
+                  "are unavailable (see the run log); modified files are "
+                  "omitted from the tables below._\n\n"
               )
 
 
@@ -718,10 +843,12 @@ jobs:
                       )
                   s.append("\n\n")
                   s.append(
-                      "_Base is the merge-base with the target branch; both sides "
-                      "are measured with Mathlib's `linter.countHeartbeats`, in "
-                      "`maxHeartbeats` units. Δ lines counts added/deleted lines "
-                      "from this PR diff._\n\n"
+                      "_Both sides are elaborated against the merge-base build of "
+                      "the pool — sound when only proofs and definition bodies "
+                      "change; a file whose statements changed may fail there and "
+                      "is flagged ⚠. Heartbeats come from Mathlib's "
+                      "`linter.countHeartbeats`, in `maxHeartbeats` units. "
+                      "Δ lines counts added/deleted lines from this PR diff._\n\n"
                   )
                   s.append(
                       "| File | Δ lines | HB base | HB head | Δ HB | Δ HB % | "
@@ -1129,5 +1256,6 @@ jobs:
             proof-profile-heartbeats.log
             proof-profile-build.log
             proof-profile-base-heartbeats.log
+            proof-profile-modified-heartbeats.log
             proof-profile-base-build.log
           if-no-files-found: ignore
