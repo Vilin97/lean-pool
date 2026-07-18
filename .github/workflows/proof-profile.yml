@@ -569,10 +569,92 @@ jobs:
                   "artifact._\n"
               )
 
+          def bound_comment(text, limit):
+              """Trim a rendered profile to fit GitHub's comment size cap.
+
+              Keeps the headline paragraphs, the hottest rows of the per-file
+              table, and the small aggregate sections; drops the per-file raw
+              `lean --profile` dump, which is preserved in full in the step
+              summary and the `proof-profile` artifact. Falls back to a hard
+              character cut if the expected section markers are absent.
+              """
+              lines = text.splitlines()
+              try:
+                  header_i = next(
+                      i for i, ln in enumerate(lines)
+                      if ln.startswith("| File | LOC |")
+                  )
+                  total_i = next(
+                      i for i in range(header_i, len(lines))
+                      if lines[i].startswith("| **Total**")
+                  )
+                  phase_i = next(
+                      i for i in range(total_i, len(lines))
+                      if lines[i].startswith("### Aggregate phase totals")
+                  )
+                  details_i = next(
+                      (i for i in range(phase_i, len(lines))
+                       if lines[i].startswith("<details>")),
+                      len(lines),
+                  )
+              except StopIteration:
+                  cut = text[: limit - 200].rstrip()
+                  return (
+                      cut
+                      + "\n\n_…truncated to fit GitHub's comment limit; full "
+                      f"profile in the [`proof-profile` artifact]({run_url})._\n"
+                  )
+              head = lines[:header_i]
+              table_header = lines[header_i:header_i + 2]  # header + separator
+              data_rows = lines[header_i + 2:total_i]
+              total_row = lines[total_i]
+              tail = lines[phase_i:details_i]  # phase totals + slowest modules
+
+              def assemble(n):
+                  more = len(data_rows) - n
+                  ellipsis = (
+                      [f"| … _+{more} more files_ | | | | | | | | |"]
+                      if more > 0 else []
+                  )
+                  body = (
+                      head + table_header + data_rows[:n] + ellipsis
+                      + [total_row, ""] + tail
+                  )
+                  note = (
+                      "\n> **Comment truncated to fit GitHub's 64 KB limit.** "
+                      f"This PR profiles {len(data_rows)} files; the per-file "
+                      f"table shows only the {n} hottest by heartbeats. The "
+                      "full table and raw `lean --profile` output for every "
+                      "file are in the [run's step summary and `proof-profile` "
+                      f"artifact]({run_url}).\n"
+                      "\n_Advisory only — never blocks merge._\n"
+                  )
+                  return "\n".join(body).rstrip() + "\n" + note
+
+              n = len(data_rows)
+              out_text = assemble(n)
+              while len(out_text) > limit and n > 10:
+                  n = max(10, int(n * 0.8))
+                  out_text = assemble(n)
+              return out_text
+
           rendered = "".join(out)
-          rendered_path.write_text(rendered)
+
+          # The full render always goes to the job step summary (~1 MB limit)
+          # and the raw logs to the `proof-profile` artifact.
           with summary_path.open("a") as f:
               f.write(rendered)
+
+          # A PR comment body is capped by GitHub at 65536 characters. On large
+          # PRs (hundreds of changed files) the full render blows past that and
+          # the companion poster fails, so nothing gets posted at all. Bound the
+          # comment to the headline paragraphs, the hottest table rows, and the
+          # small aggregate sections; the dropped per-file dump stays available
+          # in full in the step summary above and in the artifact.
+          comment = rendered
+          if len(comment) > 62000:
+              comment = bound_comment(rendered, 62000)
+          rendered_path.write_text(comment)
           PY
 
       # A `pull_request` run from a fork gets a read-only GITHUB_TOKEN and
