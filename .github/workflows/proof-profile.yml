@@ -21,8 +21,10 @@ name: Proof Profile
 # against the single merge-base environment (whose build is ~all cache hits) —
 # sound when only proofs/bodies change, which is what a refactor PR does; a
 # head file that no longer compiles there is flagged in the comment. Sources
-# come from `git show`, so no checkout juggling, and the per-side measurement
-# logs are cached so re-profiling an unchanged PR skips the passes entirely.
+# come from `git show`, so no checkout juggling. (Measurement logs are not
+# cached across runs: the cache service denies writes to comment-triggered
+# runs outright, and with the two sides in parallel jobs a cached base pass
+# would not shorten the wall clock anyway.)
 #
 # Structure: a cheap `plan` job resolves the PR and decides what to measure;
 # the two comparison sides then run as parallel `measure` matrix jobs (the
@@ -107,7 +109,6 @@ jobs:
       merge_base: ${{ steps.files.outputs.merge_base }}
       base_build_modules: ${{ steps.files.outputs.base_build_modules }}
       head_build_modules: ${{ steps.files.outputs.head_build_modules }}
-      modified_hash: ${{ steps.files.outputs.modified_hash }}
     steps:
       - name: Resolve PR number, head SHA, base SHA
         id: pr
@@ -214,9 +215,6 @@ jobs:
             head_build_modules=$(printf '%s\n' $profile_files \
               | sed -e 's/\.lean$//' -e 's#/#.#g' | tr '\n' ' ')
           fi
-          # Keys the per-side measurement caches: same merge base + same set
-          # of modified files → identical, reusable base measurements.
-          modified_hash=$(printf '%s' "$modified" | sha256sum | cut -c1-16)
           {
             echo "files=$files"
             echo "added=$added"
@@ -227,7 +225,6 @@ jobs:
             echo "merge_base=$merge_base"
             echo "base_build_modules=$base_build_modules"
             echo "head_build_modules=$head_build_modules"
-            echo "modified_hash=$modified_hash"
           } >> "$GITHUB_OUTPUT"
           if [ -z "$files" ]; then
             echo "No new or modified Lean files in this diff; profile will no-op."
@@ -261,25 +258,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      # Measurements are deterministic per (environment, source revision), so
-      # each side's combined log is cached: re-profiling a PR skips any pass
-      # whose inputs did not change (always the base pass, and the head pass
-      # too when nothing was pushed since). On a hit, the entire Lean setup
-      # below is skipped as well. The save key is made unique per run and
-      # restores match on the prefix — reusing one fixed key trips the cache
-      # service's "unable to reserve" failure on every save (observed on
-      # both runs that tried), so no measurement ever got cached.
-      - name: Restore cached measurements
-        id: hb-cache
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: ${{ matrix.log }}
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
-          restore-keys: |
-            proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-
-
       - name: Restore caches
-        if: steps.hb-cache.outputs.cache-matched-key == ''
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -291,7 +270,6 @@ jobs:
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
-        if: steps.hb-cache.outputs.cache-matched-key == ''
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           auto-config: false
@@ -299,7 +277,6 @@ jobs:
           use-mathlib-cache: false
 
       - name: Install Mathlib cache
-        if: steps.hb-cache.outputs.cache-matched-key == ''
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -308,7 +285,6 @@ jobs:
           fi
 
       - name: Fetch measurement helpers from the default branch
-        if: steps.hb-cache.outputs.cache-matched-key == ''
         run: |
           set -euo pipefail
           git show origin/main:scripts/proof-profile/measure-one.sh > "$RUNNER_TEMP/measure-one.sh"
@@ -317,7 +293,6 @@ jobs:
 
       - name: Build the measurement environment at the merge base
         id: base-env
-        if: steps.hb-cache.outputs.cache-matched-key == ''
         env:
           MERGE_BASE: ${{ needs.plan.outputs.merge_base }}
           BASE_MODULES: ${{ needs.plan.outputs.base_build_modules }}
@@ -343,7 +318,6 @@ jobs:
         env:
           REF: ${{ matrix.ref }}
           LOG: ${{ matrix.log }}
-          SIDE: ${{ matrix.side }}
           MODIFIED: ${{ needs.plan.outputs.modified }}
         run: |
           set -euo pipefail
@@ -351,12 +325,8 @@ jobs:
           # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
           "$RUNNER_TEMP/measure-heartbeats.sh" "$LOG" "$REF" $MODIFIED \
             || { echo "::warning::Measurement failed."; measured=false; rm -f "$LOG"; }
-          # The report job saves fresh measurements to the cache — this job's
-          # read-only token cannot write caches (by design: it runs PR code).
-          # The marker tells the report job this side was measured rather
-          # than restored.
-          if [ "$measured" = true ]; then
-            touch "proof-profile-fresh-$SIDE.marker"
+          if [ "$measured" = false ]; then
+            echo "This side will be missing from the report."
           fi
 
       - name: Upload measurements for the report job
@@ -367,7 +337,6 @@ jobs:
           path: |
             ${{ matrix.log }}
             proof-profile-env-build-*.log
-            proof-profile-fresh-*.marker
           if-no-files-found: ignore
 
   absolute:
@@ -477,16 +446,6 @@ jobs:
       needs.plan.outputs.files != ''
     runs-on: ubuntu-latest
     name: Report profile
-    # The measurement jobs run untrusted PR code, so their tokens stay
-    # read-only — and the cache service refuses writes from read-only tokens
-    # anyway ("cache write denied: token has no writable scopes"). This job
-    # runs only trusted code (scripts from the default branch, over log
-    # data), so it carries the actions:write scope and saves the fresh
-    # measurement logs on the measurement jobs' behalf. Keeping the scope
-    # here also keeps cache poisoning out of reach of PR code.
-    permissions:
-      contents: read
-      actions: write
     steps:
       - name: Checkout PR head
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -500,24 +459,6 @@ jobs:
         with:
           pattern: proof-profile-part-*
           merge-multiple: true
-
-      - name: Save fresh base measurements to the cache
-        if: >-
-          needs.plan.outputs.compare == 'true' &&
-          hashFiles('proof-profile-fresh-base.marker') != ''
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: proof-profile-base-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.merge_base }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
-
-      - name: Save fresh head measurements to the cache
-        if: >-
-          needs.plan.outputs.compare == 'true' &&
-          hashFiles('proof-profile-fresh-head.marker') != ''
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: proof-profile-modified-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.head_sha }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
 
       - name: Render profile summary
         env:
