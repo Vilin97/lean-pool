@@ -265,16 +265,21 @@ jobs:
       # each side's combined log is cached: re-profiling a PR skips any pass
       # whose inputs did not change (always the base pass, and the head pass
       # too when nothing was pushed since). On a hit, the entire Lean setup
-      # below is skipped as well.
+      # below is skipped as well. The save key is made unique per run and
+      # restores match on the prefix — reusing one fixed key trips the cache
+      # service's "unable to reserve" failure on every save (observed on
+      # both runs that tried), so no measurement ever got cached.
       - name: Restore cached measurements
         id: hb-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ${{ matrix.log }}
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
+          restore-keys: |
+            proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-
 
       - name: Restore caches
-        if: steps.hb-cache.outputs.cache-hit != 'true'
+        if: steps.hb-cache.outputs.cache-matched-key == ''
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -286,7 +291,7 @@ jobs:
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
-        if: steps.hb-cache.outputs.cache-hit != 'true'
+        if: steps.hb-cache.outputs.cache-matched-key == ''
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           auto-config: false
@@ -294,7 +299,7 @@ jobs:
           use-mathlib-cache: false
 
       - name: Install Mathlib cache
-        if: steps.hb-cache.outputs.cache-hit != 'true'
+        if: steps.hb-cache.outputs.cache-matched-key == ''
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -303,7 +308,7 @@ jobs:
           fi
 
       - name: Fetch measurement helpers from the default branch
-        if: steps.hb-cache.outputs.cache-hit != 'true'
+        if: steps.hb-cache.outputs.cache-matched-key == ''
         run: |
           set -euo pipefail
           git show origin/main:scripts/proof-profile/measure-one.sh > "$RUNNER_TEMP/measure-one.sh"
@@ -312,7 +317,7 @@ jobs:
 
       - name: Build the measurement environment at the merge base
         id: base-env
-        if: steps.hb-cache.outputs.cache-hit != 'true'
+        if: steps.hb-cache.outputs.cache-matched-key == ''
         env:
           MERGE_BASE: ${{ needs.plan.outputs.merge_base }}
           BASE_MODULES: ${{ needs.plan.outputs.base_build_modules }}
@@ -352,7 +357,7 @@ jobs:
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ${{ matrix.log }}
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
 
       - name: Upload measurements for the report job
         if: ${{ !cancelled() }}
