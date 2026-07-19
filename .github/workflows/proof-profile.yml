@@ -343,6 +343,7 @@ jobs:
         env:
           REF: ${{ matrix.ref }}
           LOG: ${{ matrix.log }}
+          SIDE: ${{ matrix.side }}
           MODIFIED: ${{ needs.plan.outputs.modified }}
         run: |
           set -euo pipefail
@@ -350,14 +351,13 @@ jobs:
           # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
           "$RUNNER_TEMP/measure-heartbeats.sh" "$LOG" "$REF" $MODIFIED \
             || { echo "::warning::Measurement failed."; measured=false; rm -f "$LOG"; }
-          echo "measured=$measured" >> "$GITHUB_OUTPUT"
-
-      - name: Save measurements to the cache
-        if: steps.measure.outputs.measured == 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: ${{ matrix.log }}
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
+          # The report job saves fresh measurements to the cache — this job's
+          # read-only token cannot write caches (by design: it runs PR code).
+          # The marker tells the report job this side was measured rather
+          # than restored.
+          if [ "$measured" = true ]; then
+            touch "proof-profile-fresh-$SIDE.marker"
+          fi
 
       - name: Upload measurements for the report job
         if: ${{ !cancelled() }}
@@ -367,6 +367,7 @@ jobs:
           path: |
             ${{ matrix.log }}
             proof-profile-env-build-*.log
+            proof-profile-fresh-*.marker
           if-no-files-found: ignore
 
   absolute:
@@ -476,6 +477,16 @@ jobs:
       needs.plan.outputs.files != ''
     runs-on: ubuntu-latest
     name: Report profile
+    # The measurement jobs run untrusted PR code, so their tokens stay
+    # read-only — and the cache service refuses writes from read-only tokens
+    # anyway ("cache write denied: token has no writable scopes"). This job
+    # runs only trusted code (scripts from the default branch, over log
+    # data), so it carries the actions:write scope and saves the fresh
+    # measurement logs on the measurement jobs' behalf. Keeping the scope
+    # here also keeps cache poisoning out of reach of PR code.
+    permissions:
+      contents: read
+      actions: write
     steps:
       - name: Checkout PR head
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -489,6 +500,24 @@ jobs:
         with:
           pattern: proof-profile-part-*
           merge-multiple: true
+
+      - name: Save fresh base measurements to the cache
+        if: >-
+          needs.plan.outputs.compare == 'true' &&
+          hashFiles('proof-profile-fresh-base.marker') != ''
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-base-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.merge_base }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
+
+      - name: Save fresh head measurements to the cache
+        if: >-
+          needs.plan.outputs.compare == 'true' &&
+          hashFiles('proof-profile-fresh-head.marker') != ''
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: proof-profile-modified-heartbeats.log
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ needs.plan.outputs.head_sha }}-${{ needs.plan.outputs.modified_hash }}-${{ github.run_id }}
 
       - name: Render profile summary
         env:
