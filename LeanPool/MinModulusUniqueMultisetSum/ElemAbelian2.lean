@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jose Fonollosa
 -/
 
-import Mathlib
+import Mathlib.Algebra.Field.ZMod
+import Mathlib.RingTheory.PicardGroup
 
 /-!
 # Elementary abelian 2-groups attain the optimal bound
