@@ -4398,7 +4398,7 @@ projects:
       and proves the sharp elementary-abelian-2-group lower bound `k >= n - 1`
       for unique multiset sums in `(Z/2Z)^k`.
     branch: additive combinatorics
-    entry_module: MinModulusUniqueMultisetSum
+    entry_module: LeanPool.MinModulusUniqueMultisetSum
     authors:
       - José A. R. Fonollosa
     source:
@@ -4410,15 +4410,15 @@ projects:
     license: Apache-2.0
     status: verified
     main_declarations:
-      - UniqueSums.nmin_eq
-      - ElemAbelian2.elementaryAbelianTwoGroups_optimal
+      - MinModulus.nmin_eq
+      - MinModulus.elementaryAbelianTwoGroups_optimal
     main_results:
-      - declaration: UniqueSums.nmin_eq
+      - declaration: MinModulus.nmin_eq
         informal: >-
           Proves that the least modulus making the super-increasing residue set
           `{2^i - 1 : 0 <= i < n}` valid for the unique multiset-sum problem is
           `2^n - 2^{floor(log_2 n)}` for every `n >= 2`.
-      - declaration: ElemAbelian2.elementaryAbelianTwoGroups_optimal
+      - declaration: MinModulus.elementaryAbelianTwoGroups_optimal
         informal: >-
           Proves that if `g_0, ..., g_{n-1}` in `(Z/2Z)^k` have unique
           multiset sums, then `k >= n - 1`, so the least elementary abelian
