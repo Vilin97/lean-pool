@@ -7,15 +7,13 @@ Authors: José A. R. Fonollosa
 import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
 import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
 
-
 /-!
 # Minimum modulus for the unique multiset-sum problem
 
-Source: url:https://github.com/jarfo/min-modulus
+Source: arxiv:2607.08366
 Authors: José A. R. Fonollosa
 Status: verified
-Main declarations: `UniqueSums.nmin_eq`, `ElemAbelian2.elementaryAbelianTwoGroups_optimal`
+Main declarations: `MinModulus.nmin_eq`, `MinModulus.elementaryAbelianTwoGroups_optimal`
 Tags: additive-combinatorics, multiset-sums, finite-groups, permanent
 MSC: 11B75, 05D99
 -/
-
