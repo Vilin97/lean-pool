@@ -686,8 +686,7 @@ lemma f₂_eq_zero : f₂ = 0 := by
     funext z
     have hz := congrFun hh z
     unfold thetaH at hz
-    simp only [Pi.add_apply, Pi.pow_apply, Pi.mul_apply, Pi.zero_apply, hf₄] at hz
-    simpa [sq_eq_zero_iff] using hz
+    simp_all
   -- From f₄_sq_mul_eq and thetaH = 0: f₄² * (3 * HSumSq) = 0
   have h_f₄_sq_3H : f₄ ^ 2 * (fun z => 3 * HSumSq z) = 0 := by
     ext z
@@ -703,8 +702,7 @@ lemma f₂_eq_zero : f₂ = 0 := by
     ((UpperHalfPlane.mul_eq_zero_iff f₄_sq_MDiff three_H_sum_sq_MDifferentiable).mp h_f₄_sq_3H
       ).resolve_right three_H_sum_sq_ne_zero
   -- From f₄² = f₄ * f₄ = 0: f₄ = 0
-  exact (UpperHalfPlane.mul_eq_zero_iff f₄_MDifferentiable f₄_MDifferentiable).mp
-    (pow_two f₄ ▸ h_f₄_sq_zero) |>.elim id id
+  simp_all
 
 /-- From f₂ = 0 and h = 0, deduce f₄ = 0 -/
 lemma f₄_eq_zero : f₄ = 0 := by

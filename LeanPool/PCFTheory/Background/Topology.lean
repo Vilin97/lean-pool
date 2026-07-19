@@ -106,8 +106,7 @@ theorem isAccPt_iSup {o : Ordinal.{u}} {α : Iio o} (ho : IsSuccLimit o) (f : Ii
   · have flt := hf ⟨0, ho.bot_lt⟩ ⟨1, hone⟩ (Subtype.mk_lt_mk.mpr zero_lt_one)
     have lesup := le_ciSup (f := f) bddAbove_of_small ⟨1, hone⟩
     intro h
-    have := h ▸ bot_lt_of_lt (flt.trans_le lesup)
-    exact not_lt_bot this
+    simp_all
   · intro β hβ
     obtain ⟨γ, hγ⟩ := (lt_ciSup_iff bddAbove_of_small).mp hβ
     refine ⟨f (succ (max α γ)),
@@ -152,8 +151,7 @@ theorem mk_derivedSet_le (S : Set Ordinal) : #(derivedSet S) ≤ #S := by
         csInf_lt_of_lt (a := x) (OrderBot.bddBelow _) ⟨hx.1, hx.2.1⟩ hx.2.2
       exact lt_irrefl _ (lt_of_lt_of_le (heq ▸ hkey) blt)
     · unfold f at hab
-      rw [dif_pos ha, dif_neg hb] at hab
-      cases hab
+      simp_all
   · obtain ⟨x, hx⟩ := IsAccPt.forall_lt b.2 a.1 altb
     exact ha ⟨x, ⟨hx.1, hx.2.1⟩⟩
 

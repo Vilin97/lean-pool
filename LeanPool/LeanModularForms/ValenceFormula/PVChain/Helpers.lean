@@ -143,9 +143,7 @@ lemma sArcOfS_closed (S : Finset UpperHalfPlane) :
     Finset.mem_filter, Finset.mem_insert, Finset.mem_singleton] at hs ⊢
   rcases hs with ⟨⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩⟩ | hs
   · left; right; exact ⟨p, hp, rfl⟩
-  · have hp_ne : (↑p : ℂ) ≠ 0 := by
-      intro h; have := hp.2; rw [h, norm_zero] at this; norm_num at this
-    left; left; exact ⟨p, hp, by field_simp⟩
+  · simp_all
   · rcases hs with rfl | rfl
     · right; right; exact neg_inv_rho_eq_rho_plus_one
     · right; left; exact neg_inv_rho_plus_one_eq_rho
@@ -168,11 +166,9 @@ lemma sVertOfS_pair_left (S : Finset UpperHalfPlane) :
   simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs ⊢
   obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
   · exact Or.inl (Or.inl (Or.inr ⟨p, hp, rfl⟩))
-  · exfalso; simp only [Complex.sub_re] at hre
-    rw [(Finset.mem_filter.mp hp).2.1] at hre; norm_num at hre
+  · simp_all
   · exfalso; linarith [(Finset.mem_filter.mp hp).2.1, hre]
-  · rw [show (↑p : ℂ) + 1 - 1 = (↑p : ℂ) from by ring]
-    exact Or.inl (Or.inr ⟨p, hp, rfl⟩)
+  · simp_all
 
 omit f hf in
 lemma sVertOfS_pair_right (S : Finset UpperHalfPlane) :
@@ -181,11 +177,9 @@ lemma sVertOfS_pair_right (S : Finset UpperHalfPlane) :
   simp only [sVertOfS, Finset.mem_union, Finset.mem_image] at hs ⊢
   obtain ((⟨p, hp, rfl⟩ | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩) | ⟨p, hp, rfl⟩ := hs
   · exfalso; linarith [(Finset.mem_filter.mp hp).2.1, hre]
-  · rw [show (↑p : ℂ) - 1 + 1 = (↑p : ℂ) from by ring]
-    exact Or.inl (Or.inl (Or.inl ⟨p, hp, rfl⟩))
+  · simp_all
   · exact Or.inr ⟨p, hp, rfl⟩
-  · exfalso; simp only [Complex.add_re] at hre
-    rw [(Finset.mem_filter.mp hp).2.1] at hre; norm_num at hre
+  · simp_all
 
 omit f hf in
 /-- There exists a height above √3/2 exceeding all points in `S`. -/

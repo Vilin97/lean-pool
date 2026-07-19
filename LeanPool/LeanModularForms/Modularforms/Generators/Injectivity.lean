@@ -40,11 +40,7 @@ private lemma evalE₄E₆_mono_grade (a b : ℕ) (k : ℤ)
 private lemma monomial_fin2_eq (d : Fin 2 →₀ ℕ) (c : ℂ) :
     MvPolynomial.monomial d c =
     MvPolynomial.C c * MvPolynomial.X 0 ^ d 0 * MvPolynomial.X 1 ^ d 1 := by
-  rw [MvPolynomial.monomial_eq, mul_assoc]; congr 1
-  rw [Finsupp.prod, Finset.prod_subset (fun _ _ => Finset.mem_univ _) (fun i _ hi => by
-    have : d i = 0 := by rwa [Finsupp.mem_support_iff, not_not] at hi
-    rw [this, pow_zero])]
-  simp only [Fin.prod_univ_two]
+  rw [MvPolynomial.monomial_eq, mul_assoc]; simp_all
 
 private lemma evalE₄E₆_monomial_grade (d : Fin 2 →₀ ℕ) (c : ℂ) (k : ℤ)
     (hk : k ≠ (↑(d 0) * 4 + ↑(d 1) * 6 : ℤ)) :
@@ -286,14 +282,8 @@ private lemma mvpoly_support_after_reduction {σ R : Type*} [CommRing R] [Decida
     · exact absurd (hxd ▸ hx) hd_not
     · exact Finset.mem_union_left _ (Finset.mem_erase.mpr ⟨hxd, hp⟩)
   · rcases Finset.mem_union.mp (MvPolynomial.support_sub σ _ _ hdelta) with h1 | h2
-    · rw [MvPolynomial.support_monomial] at h1
-      split_ifs at h1
-      · exact absurd h1 (Finset.notMem_empty _)
-      · exact absurd ((Finset.mem_singleton.mp h1) ▸ hx) hd_not
-    · rw [MvPolynomial.support_monomial] at h2
-      split_ifs at h2
-      · exact absurd h2 (Finset.notMem_empty _)
-      · exact Finset.mem_union_right _ (by rwa [Finset.mem_singleton] at h2 ⊢)
+    · simp_all
+    · simp_all
 
 private lemma whomog_poly_Delta_decomp {n : ℕ} (hn12 : 12 ≤ n)
     (p : MvPolynomial (Fin 2) ℂ)

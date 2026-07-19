@@ -133,10 +133,7 @@ lemma timeReflection_inner_map (x y : SpaceTime) :
 @[simp] lemma timeReflection_involutive (x : SpaceTime) :
     timeReflection (timeReflection x) = x := by
   refine PiLp.ext fun i => ?_
-  simp only [timeReflection, WithLp.equiv_symm_apply]
-  rcases eq_or_ne i 0 with h | h
-  · subst h; simp [Function.update_self]
-  · simp [Function.update_of_ne h]
+  simp_all
 
 /-- The `timeReflectionLE` declaration. -/
 def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
@@ -173,9 +170,7 @@ private lemma timeReflection_hg_upper :
   refine ⟨1, 1, fun x => ?_⟩
   have h_iso : ‖timeReflectionCLM x‖ = ‖x‖ := by
     rw [← LinearIsometryEquiv.norm_map timeReflectionLE x]; rfl
-  rw [h_iso]
-  simp only [pow_one, one_mul]
-  linarith [norm_nonneg x]
+  simp_all
 
 /-- The `compTimeReflection` declaration. -/
 noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=

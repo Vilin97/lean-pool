@@ -250,10 +250,7 @@ def freshVar (Γ : Finset Formula) : Nat :=
 def D (Γ : Sequent) : Sequent := Finset.filter (
   fun x => decide (Formula.isDiamond x)) Γ
        ∪ Finset.filterMap Formula.opUnDi Γ (by
-  intro A B C C_in_A C_in_B
-  cases A <;> cases B
-  all_goals
-  simp_all [Formula.opUnDi])
+  simp_all)
 
 lemma form_in_seq_size_le {A : Formula} {Δ : Sequent} : A ∈ Δ → A.length ≤ Δ.length :=
   fun A_in ↦ Finset.sum_le_sum_of_subset_of_nonneg (Finset.singleton_subset_iff.2 A_in) (by simp)
@@ -373,12 +370,10 @@ lemma FL_mon {φ ψ : SplitFormula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ
       exact Finset.mem_map.mpr
         ⟨χ, Formula.FL_mon (in_FL_of_in_FL_SplitFormula_left ψ_sub_φ) χ_in, rfl⟩
     · have is_left := in_FL_SplitFormula_left ψ_sub_φ
-      change false = true at is_left
-      cases is_left
+      simp_all
   · rcases ψ with ψ | ψ
     · have is_right := in_FL_SplitFormula_right ψ_sub_φ
-      change false = true at is_right
-      cases is_right
+      simp_all
     · rw [FL_SplitFormula_right_eq_FL_Formula_map φ, FL_SplitFormula_right_eq_FL_Formula_map ψ]
       intro x x_in
       rcases Finset.mem_map.mp x_in with ⟨χ, χ_in, rfl⟩
@@ -543,8 +538,7 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
     case atom k =>
       intro hψ hn m_in
       by_cases hk : k = n
-      · subst k
-        exact mp (by simpa only [if_true] using m_in)
+      · simp_all
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
@@ -554,8 +548,7 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
     case negAtom k =>
       intro hψ hn m_in
       by_cases hk : k = n
-      · subst k
-        exact mp (by simpa only [if_true, in_neg_voc_iff] using m_in)
+      · simp_all
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
@@ -572,15 +565,13 @@ lemma not_in_single_voc (n : Nat) (φ ψ : Formula) :
 lemma not_in_single_top_voc (n : ℕ) (φ : Formula) : n ∉ (single n ⊤ φ).vocab := by
   apply in_single_voc n n ⊤ φ
   · simpa only [Formula.instTop, Formula.vocab] using Finset.notMem_empty n
-  · intro h
-    exact False.elim (h rfl)
+  · simp_all
   · simpa only [Formula.instTop, Formula.vocab] using Finset.notMem_empty n
 
 lemma not_in_single_bot_voc (n : ℕ) (φ : Formula) : n ∉ (single n ⊥ φ).vocab := by
   apply in_single_voc n n ⊥ φ
   · simpa only [Formula.instBot, Formula.vocab] using Finset.notMem_empty n
-  · intro h
-    exact False.elim (h rfl)
+  · simp_all
   · simpa only [Formula.instBot, Formula.vocab] using Finset.notMem_empty n
 
 lemma in_single_voc' {m n : ℕ} {φ ψ : Formula} :

@@ -696,8 +696,7 @@ noncomputable def Module.Dual.pi.IsFaithfulPosMap.psi (hψ : ∀ i, (ψ i).IsFai
       simp only [Module.Dual.pi.IsFaithfulPosMap.Psi_right_inv, map_sum]
     map_add' := fun x y => by simp_rw [map_add]
     map_smul' := fun r x => by
-      simp_rw [_root_.map_smul]
-      rfl }
+      simp_all }
 
 omit [DecidableEq k] in
 theorem Pi.inner_symm [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x y : PiMat ℂ k s) :
@@ -761,8 +760,7 @@ theorem Pi.rankOneLm_real_apply {k₂ : Type*} [Fintype k₂]
   simp only [LinearMap.real_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
     star_smul, ← starRingEnd_apply]
   have := Pi.inner_symm (ψ := φ) (x := star x_1) (y := y)
-  rw [star_star] at this
-  rw [← this, inner_conj_symm]
+  simp_all
 
 omit [Fintype k] [DecidableEq k] in
 theorem Pi.PosDef.rpow_one_eq_self {Q : PiMat ℂ k s} (hQ : ∀ i,
@@ -911,10 +909,7 @@ theorem pi_lmul_toMatrix [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k
   split_ifs with h hh hhh
   · simp only [mul_apply, mul_ite, mul_zero,
       Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_one, ite_and]
-    split_ifs with hhhh
-    · rfl
-    · rw [eq_comm] at hhh
-      contradiction
+    simp_all
   · rw [eq_comm] at h
     simp only [eq_mpr_eq_cast, mul_apply, mul_ite, mul_one, mul_zero, ite_and,
       Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte, ite_eq_right_iff]
@@ -950,10 +945,7 @@ theorem pi_rmul_toMatrix [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k
   · simp only [mul_apply, ite_mul, zero_mul,
       Finset.sum_ite_eq, Finset.mem_univ, if_true, ite_and, one_mul,
       Finset.sum_ite_irrel, Finset.sum_const_zero]
-    split_ifs with hhhh
-    · rfl
-    · rw [eq_comm] at hhh
-      contradiction
+    simp_all
   · rw [eq_comm] at h
     simp only [eq_mpr_eq_cast, one_div, sig_apply, mul_apply, ite_mul, one_mul,
       zero_mul, ite_and, Finset.sum_ite_irrel, Finset.sum_ite_eq, Finset.mem_univ,

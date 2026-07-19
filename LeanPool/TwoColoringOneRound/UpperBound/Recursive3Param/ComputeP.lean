@@ -181,8 +181,7 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
           by_cases hta : (t : ℝ) ≤ a
           · have : (c : ℝ) < 0 := by simpa [hta] using hc
             exact (not_lt_of_ge (show (0 : ℝ) ≤ c from c.property.1) this)
-          · have : (c : ℝ) < b := by simpa [hta, hab] using hc
-            exact hcb (show c < b from this)
+          · simp_all
         · intro hab
           have hta : ¬ (t : ℝ) ≤ a := by exact not_le_of_gt (lt_of_le_of_lt hab hbt)
           have hab' : (a : ℝ) ≤ b := hab
@@ -240,8 +239,7 @@ lemma lintegral_ite_const {α : Type*} [MeasurableSpace α] (μ : Measure α) {s
     (∫⁻ x,
         (s.indicator (fun _ : α => a) x + sᶜ.indicator (fun _ : α => b) x) ∂μ) =
       a * μ s + b * μ sᶜ
-  rw [MeasureTheory.lintegral_add_left (μ := μ) hf (g := fun x => sᶜ.indicator (fun _ : α => b) x)]
-  simp [hs]
+  simp_all
 
 lemma lmarginal_AD (x : Samples 4) :
     (∫⋯∫⁻_({0, 3} : Finset (Fin 4)), pInd ∂μ4) x =
@@ -371,8 +369,7 @@ lemma p_eq_lintegral_innerBC :
     have h :=
       (MeasureTheory.lmarginal_union (μ := μ4) (s := ({1} : Finset (Fin 4)))
         (t := ({2} : Finset (Fin 4))) f03 hf03 (by decide))
-    have hunion : (({1} : Finset (Fin 4)) ∪ {2}) = ({1, 2} : Finset (Fin 4)) := by decide
-    simpa [hunion] using h
+    simp_all
   have hsplit12_x0 :
       (∫⋯∫⁻_({1, 2} : Finset (Fin 4)), f03 ∂μ4) x0 =
         (∫⋯∫⁻_({1} : Finset (Fin 4)),

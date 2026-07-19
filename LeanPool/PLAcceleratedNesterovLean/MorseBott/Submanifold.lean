@@ -154,9 +154,7 @@ lemma localMinSet_iff_critical_near (f : E → ℝ) (μ : ℝ) (x₀ : E) (_hμ 
     intro hgrad
     -- PŁ + Df(x) = 0 gives RHS = 0, so f(x) ≤ f(x₀)
     have hrhs : (2 * μ)⁻¹ * ‖fderiv ℝ f x‖ ^ 2 = 0 := by
-      simp only [mul_inv_rev, hgrad, norm_zero, ne_eq,
-        OfNat.ofNat_ne_zero, not_false_eq_true,
-        zero_pow, mul_zero]
+      simp_all
     -- f(x) = f(x₀) by antisymmetry
     have hfx_eq : f x = f x₀ := le_antisymm (by linarith) hfx0_le
     -- x ∈ localMinSet: IsLocalMin f x ∧ f x = f x₀

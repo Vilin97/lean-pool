@@ -246,18 +246,14 @@ theorem groundEdge_mem_groundComp {graph : SimpleGraph V}
                SimpleGraph.Reachable.rfl, true_and]
     apply SimpleGraph.Reachable.symm
     apply SimpleGraph.Adj.reachable
-    subst h1
-    simp only [SimpleGraph.deleteEdges_adj, Set.mem_singleton_iff, not_false_eq_true, and_self, h2,
-      hne]
+    simp_all
   · subst h3
     simp only [h1, ne_eq] at hne
     simp only [groundComp, SimpleGraph.deleteEdges_adj, Set.mem_singleton_iff, h1,
                SimpleGraph.mem_edgeSet, h2, hne, not_false_eq_true, and_self,
                SimpleGraph.Reachable.rfl, true_and, and_true]
     apply SimpleGraph.Adj.reachable
-    subst h1
-    simp only [SimpleGraph.deleteEdges_adj, Set.mem_singleton_iff, not_false_eq_true, and_self, h2,
-      hne]
+    simp_all
 
 /--
 Ground edges of the removed position = ground edges of original minus the
@@ -305,8 +301,7 @@ theorem groundCount_remove_neg {hack : Hackenbush V} {e : Sym2 V} {p : Player}
   unfold groundCount
   rw [← hack.groundEdges_remove_eq e p, Finset.erase_eq_of_notMem]
   simp only [groundEdges, Finset.mem_filter, mem_edgeFinset, not_and]
-  intro _ _ hnc
-  exact Player.absurd hnc hc
+  simp_all
 
 /--
 Ground count is preserved when removing a non-ground edge.
@@ -317,8 +312,7 @@ theorem groundCount_remove_non_ground {hack : Hackenbush V} {e : Sym2 V} {p : Pl
   unfold groundCount
   rw [← hack.groundEdges_remove_eq e p, Finset.erase_eq_of_notMem]
   simp only [groundEdges, Finset.mem_filter, mem_edgeFinset, not_and]
-  intro _ hg
-  exact absurd hg hng
+  simp_all
 
 /--
 Removing a p-coloured edge preserves (-p)-coloured ground count.
@@ -410,8 +404,7 @@ theorem toGameForm_eq_zero_iff {hack : Hackenbush V} :
     contrapose! h
     obtain ⟨e, he⟩ : ∃ e : Sym2 V, e ∈ hack.graph.edgeSet := by
       refine Set.nonempty_iff_ne_empty.mpr fun h' => h <| ?_
-      ext
-      simp only [SimpleGraph.edgeSet_eq_empty, h] at h'
+      simp_all
     intro h
     have := toGameForm_remove_mem_moves he
     simp only [h, moves_zero, Set.mem_empty_iff_false] at this
@@ -462,11 +455,7 @@ theorem exists_neg_ground_edge {hack : Hackenbush V} {p : Player}
     apply Nat.ne_of_gt
     exact Finset.card_pos.mpr ⟨e, Finset.mem_filter.mpr ⟨hack.mem_edgeFinset.mpr he₁, he₂, he₃⟩⟩
   · use e
-    refine ⟨?_, ?_, ?_⟩
-    · exact he₁
-    · exact he₂
-    · simp only [Player.ne_iff_eq_neg] at he₃
-      exact he₃
+    simp_all
 
 /--
 A p-move cannot lead to the zero game when groundCount p = 0.
@@ -487,8 +476,7 @@ theorem move_not_zero_of_groundCount_zero {hack : Hackenbush V} {p : Player} {e 
     simp only [remove_graph]
     exact groundEdge_mem_groundComp he'_mem hne he'_gnd hack.connected
   intro hbot
-  rw [hbot] at h_survive
-  simp only [SimpleGraph.edgeSet, SimpleGraph.edgeSet_bot, Set.mem_empty_iff_false] at h_survive
+  simp_all
 
 /--
 Removing any edge preserves the zero-ness of groundCount p.
@@ -507,8 +495,7 @@ theorem groundCount_zero_of_option {hack : Hackenbush V} {p : Player} {e : Sym2 
     simp only [groundEdges, Finset.mem_filter, mem_edgeFinset]
     exact ⟨he'_G, he'_gnd, he'_col⟩
   rw [groundCount, Finset.card_eq_zero] at hgc
-  rw [hgc] at this
-  exact absurd this (Finset.notMem_empty _)
+  simp_all
 
 /-!
 ### Stride theory
@@ -567,9 +554,7 @@ theorem not_isSolved_of_groundCount_pos {hack : Hackenbush V} {p : Player}
       intro hbot
       have : hack.edgeFinset = ∅ := by
         rw [Finset.eq_empty_iff_forall_notMem]
-        intro e
-        simp only [mem_edgeFinset, hbot, SimpleGraph.edgeSet_bot, Set.mem_empty_iff_false,
-                  not_false_eq_true]
+        simp_all
       simp [groundCount, groundEdges, this] at hgc
     have hne0 : hack.toGameForm ≠ 0 :=
       fun h => hne (toGameForm_eq_zero_iff.mp h)
@@ -593,8 +578,7 @@ theorem not_isSolved_of_groundCount_pos {hack : Hackenbush V} {p : Player}
       rw [isEnd_def, moves_toGameForm, Set.image_eq_empty]
       ext
       simp only [Hackenbush.moves, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-      rintro ⟨e, he, hc, _⟩
-      exact absurd hc (h_neg e he)
+      simp_all
 
 /--
 The p-stride of a Hackenbush position equals the number of p-coloured ground

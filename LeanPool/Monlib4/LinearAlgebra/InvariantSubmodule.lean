@@ -60,8 +60,7 @@ end InvariantUnder
 
 theorem invariantUnderOfLinearProjCompSelfEq (h : ∀ x : U, (pᵤ (T x) : E) = T x) :
     U.InvariantUnder T := fun u hu => by
-  rw [mem_comap, ← linearProjOfIsCompl_eq_self_iff hUV _, ←
-    (linearProjOfIsCompl_eq_self_iff hUV u).mpr hu, h]
+  simp_all
 
 /-- `U` is invariant under `T` iff `pᵤ ∘ₗ T = T` on `U`. -/
 theorem invariantUnder_iff_linear_proj_comp_self_eq :
@@ -105,10 +104,7 @@ theorem isCompl_invariantUnder_iff_linear_proj_and_self_commute :
   · intro h
     constructor
     · rw [U.invariantUnder_iff_linear_proj_comp_self_eq V hUV]
-      intro x
-      calc
-        (pᵤ (T x) : E) = T (pᵤ (x : E)) := h x
-        _ = T x := by rw [(linearProjOfIsCompl_eq_self_iff hUV _).mpr (SetLike.coe_mem x)]
+      simp_all
     · rw [U.invariant_under'_iff_linear_proj_comp_self_comp_linear_proj_eq V hUV]
       intro x
       calc

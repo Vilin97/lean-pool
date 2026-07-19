@@ -180,10 +180,7 @@ lemma exists_gap {a b : ℕ} (hab : a < b) (hsat : N fam a b = b - a)
   obtain ⟨g, hgIoc, hgB⟩ := Finset.exists_of_ssubset hssub
   rw [Finset.mem_Ioc] at hgIoc
   refine ⟨g, hgIoc.1, hgIoc.2, ?_⟩
-  intro r hr ⟨h1, h2⟩
-  apply hgB
-  rw [hB, Finset.mem_biUnion]
-  exact ⟨r, hr, by rw [Finset.mem_Ioc]; exact ⟨h1, h2⟩⟩
+  simp_all
 
 /-- Every level in `(a,b]` except the gap `g` (with `a < g ≤ b`) is covered by some root. -/
 lemma covered_of_ne_gap {a b g : ℕ} (htop : (topEdges fam a b).Nonempty)
@@ -207,11 +204,7 @@ lemma covered_of_ne_gap {a b g : ℕ} (htop : (topEdges fam a b).Nonempty)
       Finset.sum_congr rfl (fun r _ => Nat.card_Ioc _ _)
     rw [this, roots_width_sum_eq fam hab hsat htop]
   have hgnotB : g ∉ B := by
-    rw [hB, Finset.mem_biUnion]; push Not
-    intro r hr
-    rw [Finset.mem_Ioc]
-    intro ⟨h1, h2⟩
-    exact hgap r hr ⟨h1, h2⟩
+    simp_all
   have hgIoc : g ∈ Finset.Ioc a b := by rw [Finset.mem_Ioc]; exact ⟨hg1, hg2⟩
   -- insert g B ⊆ Ioc a b with card (b-a-1)+1 = b-a = card Ioc ⇒ insert g B = Ioc a b.
   have hins_sub : insert g B ⊆ Finset.Ioc a b := Finset.insert_subset hgIoc hsub
@@ -224,12 +217,7 @@ lemma covered_of_ne_gap {a b g : ℕ} (htop : (topEdges fam a b).Nonempty)
   -- t ∈ Ioc a b, t ≠ g ⇒ t ∈ B
   have htIoc : t ∈ Finset.Ioc a b := by rw [Finset.mem_Ioc]; exact ⟨ht1, ht2⟩
   rw [← heq, Finset.mem_insert] at htIoc
-  rcases htIoc with h | h
-  · exact absurd h htne
-  · rw [hB, Finset.mem_biUnion] at h
-    obtain ⟨r, hr, htr⟩ := h
-    rw [Finset.mem_Ioc] at htr
-    exact ⟨r, hr, htr.1, htr.2⟩
+  simp_all
 
 /-- Distinct roots covering adjacent levels seam: if `r''` covers `s` and `r` covers a level just
     above `s` (with `lo r < s+1`), and `r'' ≠ r`, then `hi r'' = lo r`.  (Used in the seam scan.) -/
@@ -683,8 +671,7 @@ lemma root_val_lt [NeZero (d * m)] (hd : 0 < d) (hm : 0 < m)
       · exact h
       · exact absurd (edge_inj hd hm hP hx hg h heq.symm) (fun hxg => hcol (by rw [hxg]))
     have hcg : colV g < colV x := lemmaB_right hd hm hP hx hg heq.symm hlostrict
-    have : colV g + hiV g * m < colV x + hiV x * m := by rw [heq]; omega
-    omega
+    simp_all
 
 /-- **The spanning-edge kernel.**  In one portrait `P`, for a survivor `x` and a level `ℓ`
     strictly inside `x`'s own window `(loV P x, hiV x)`, there is a survivor `b` of a different
@@ -906,8 +893,7 @@ lemma reach_sameHost [NeZero (d * m)] {P : Finset (Finset (ZMod (d * m)))} (hP :
     obtain ⟨hb, hc', hcase⟩ := hbc
     have hbc_host : hostSet P b hb = hostSet P c hc' :=
       edgeStep_sameHost hP ⟨hb, hc', hcase⟩ hb hc'
-    have hzc : hostSet P c hz = hostSet P c hc' := rfl
-    rw [hzc, ← hbc_host]; exact ih hb
+    simp_all
 
 /-- Every survivor `z` reaches the bottom survivor `q` of its block (predecessor a non-survivor). -/
 lemma reach_to_low [NeZero (d * m)] {P : Finset (Finset (ZMod (d * m)))} (hP : Portrait d m P) :

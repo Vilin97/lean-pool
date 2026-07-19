@@ -42,7 +42,4 @@ theorem Module.End.has_eigenvector_iff_hasEigenvalue {R M : Type _} [CommRing R]
   · intro h
     simp only [Module.End.HasEigenvalue, Module.End.HasUnifEigenvalue] at h
     simp_rw [Submodule.ne_bot_iff] at h
-    rcases h with ⟨x, Hx, hx⟩
-    use x
-    rw [← Module.End.mem_eigenspace_iff]
-    exact ⟨Hx, hx⟩
+    simp_all

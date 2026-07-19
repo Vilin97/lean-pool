@@ -219,9 +219,7 @@ private lemma dixonH2_deriv_bound (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
           · exact hM_f_nn
         · exact hM_d t ht
         · positivity
-        · apply mul_nonneg
-          · exact hM_f_nn
-          · positivity
+        · simp_all
 
 private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
     (hfγ_cont : ContinuousOn (fun t => f (γ.toFun t)) (Icc γ.a γ.b))
@@ -519,9 +517,7 @@ private theorem dixonH1_F'_aestronglyMeasurable {M_d C_b δ₀ : ℝ}
         ((1 : ℂ) / (↑n + 1))⁻¹ •
           (dslope f (γ.toFun t) (w₀ + 1 / (↑n + 1)) - dslope f (γ.toFun t) w₀) *
         deriv γ.toFun t := by
-      intro n; simp only [smul_eq_mul]
-      have hn1 : (↑n + 1 : ℂ) ≠ 0 := by norm_cast
-      field_simp [hn1]
+      simp_all
     simp_rw [hGn_eq]
     exact (hderiv.tendsto_slope_zero.comp h_tendsto_zero).mul_const _
 
@@ -950,11 +946,9 @@ lemma piecewiseC1_image_interior_empty (γ : PiecewiseC1Immersion) :
         hLip.mono Set.inter_subset_right⟩
     · apply lt_of_le_of_lt (dimH_mono (Set.subset_univ _))
       simp only [Real.dimH_univ]
-      rw [Complex.finrank_real_complex]
-      norm_cast
+      simp_all
   · rw [(γ.partition.finite_toSet.image γ.toFun).dimH_zero]
-    rw [Complex.finrank_real_complex]
-    norm_cast
+    simp_all
 
 theorem contourIntegral_eq_zero_of_nullHomologous (hU : IsOpen U) (hf : DifferentiableOn ℂ f U)
     (γ : PiecewiseC1Immersion) (h_null : IsNullHomologous γ U) :
@@ -965,8 +959,7 @@ theorem contourIntegral_eq_zero_of_nullHomologous (hU : IsOpen U) (hf : Differen
   obtain ⟨w₀, hw₀U, hw₀_off⟩ : ∃ w₀ ∈ U, w₀ ∉ γ.toFun '' Icc γ.a γ.b := by
     by_contra h; push Not at h
     have : U ⊆ interior (γ.toFun '' Icc γ.a γ.b) := hU.subset_interior_iff.mpr h
-    rw [h_im_int_empty] at this
-    exact Set.not_nonempty_empty (hU_ne.mono this)
+    simp_all
   have hw₀_avoids : ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ w₀ := fun t ht heq =>
     hw₀_off ⟨t, ht, heq⟩
   set F := fun z => f z * (z - w₀) with hF_def

@@ -194,15 +194,7 @@ theorem QFT_mem_unitaryGroup (n : ℕ) :
   simp only [hterm]
   rw [← Finset.mul_sum]
   by_cases hjk : j = k
-  · subst hjk
-    rw [if_pos rfl]
-    have h0 : ∀ l : Fin (2 ^ n),
-        omega n ^ ((l.val : ℤ) * ((j.val : ℤ) - (j.val : ℤ))) = (1 : ℂ) :=
-      fun l => by rw [sub_self, mul_zero, zpow_zero]
-    simp only [h0, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-      nsmul_eq_mul, mul_one]
-    push_cast
-    exact inv_mul_cancel₀ (pow_ne_zero n two_ne_zero)
+  · simp_all
   · rw [if_neg hjk]
     have hd : ¬ ((2 ^ n : ℕ) : ℤ) ∣ ((k.val : ℤ) - (j.val : ℤ)) := by
       intro hdvd
@@ -247,8 +239,7 @@ theorem QuantumFourierTransform.main (n : ℕ) (x : Fin (2 ^ n)) :
       CircuitGateProfile.HasExactCounts
         (QFTCircuitProfile n) n (n * (n - 1) / 2) (n / 2) := by
   constructor
-  · intro i
-    exact QFT_apply_ket n x i
+  · simp_all
   · exact QFTCircuitProfile_exact n
 
 

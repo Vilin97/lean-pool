@@ -45,10 +45,7 @@ theorem annulus_distance_lower_bound (j : ℕ) (x : ℝ) :
   have habs : |a - b| ≤ 1 := by
     have h := abs_abs_sub_abs_le_abs_sub ((j : ℝ) - x) ((((j + 1 : ℕ) : ℝ) - x))
     have hrhs : |((j : ℝ) - x) - ((((j + 1 : ℕ) : ℝ) - x))| = 1 := by
-      push_cast
-      rw [abs_eq (by norm_num)]
-      right
-      ring
+      simp_all
     simpa [a, b, hrhs] using h
   rw [le_min_iff]
   refine ⟨max_le (by linarith) ha0, max_le ?_ hb0⟩

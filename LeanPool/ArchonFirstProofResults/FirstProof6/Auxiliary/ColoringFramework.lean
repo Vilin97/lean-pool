@@ -114,9 +114,7 @@ lemma coloring_step_exists
     by_contra hall
     push Not at hall
     have hsub : Finset.univ ⊆ pc.colored := fun x _ => hall x
-    have := Finset.card_le_card hsub
-    rw [Finset.card_univ] at this
-    omega
+    simp_all
   obtain ⟨v₀, hv₀⟩ := h_exists_uncolored
   -- === Step 2: r > 0 (needed for Fin r) ===
   have hr_pos : 0 < r := by
@@ -140,9 +138,7 @@ lemma coloring_step_exists
     set colored' := pc.colored ∪ {v₀} with hcolored'_def
     refine ⟨⟨colored', color'⟩, ?_, ?_, ?_⟩
     · -- Card: |colored'| = t + 1
-      rw [hcolored'_def, Finset.card_union_of_disjoint
-        (Finset.disjoint_singleton_right.mpr hv₀)]
-      simp [hcard]
+      simp_all
     · -- Subset: pc.colored ⊆ colored'
       exact Finset.subset_union_left
     · -- Barrier: for all γ, (u_t' • I - ∑ ...).PosSemidef
@@ -273,8 +269,7 @@ lemma coloring_iterate
         (ε / 2 + (t : ℝ) * (ε / (n : ℝ))) rfl hA_small hbarrier_t
     refine ⟨pc', hcard', ?_⟩
     -- The barrier at step t+1 matches u_{t+1}
-    convert hbarrier' using 2
-    push_cast; ring_nf
+    simp_all
 
 /-- **Parameter bound (Step 3)**: The final barrier parameter u_k = eps/2 + k*(eps/n)
     satisfies u_k <= 3*eps/4 < eps when k = n/4 and n >= 4.

@@ -68,8 +68,7 @@ theorem ftc_telescope_closed_split {f : ℝ → ℂ} {a b t₀ δ : ℝ}
       Complex.log (f b) - Complex.log (f (t₀ + δ))) :
     (∫ t in a..(t₀ - δ), deriv f t / f t) + (∫ t in (t₀ + δ)..b, deriv f t / f t) =
     Complex.log (f (t₀ - δ)) - Complex.log (f (t₀ + δ)) := by
-  rw [h_left, h_right, ← h_closed]
-  ring
+  simp_all
 
 /-- FTC on three consecutive segments telescopes: the integral over [a,d] is
 log(f d) - log(f a) if each sub-interval satisfies the FTC-for-log. -/

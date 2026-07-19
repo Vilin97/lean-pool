@@ -122,8 +122,7 @@ theorem rootedAdjoint_not_isEnd (r g : G) (p : Player) : ¬(IsEnd p (rootedAdjoi
   all_goals by_cases h3 : moves .right g = ∅ <;>
     simp only [h2, h3, ↓reduceIte, moves_ofSets, Set.singleton_ne_empty,
       not_false_eq_true, Set.range_eq_empty_iff, Set.isEmpty_coe_sort, not_true_eq_false]
-  rw [not_and] at h1
-  exact h1 h2 h3
+  simp_all
 
 theorem adjoint_not_isEnd (g : G) (p : Player) : ¬(IsEnd p (g°)) :=
   rootedAdjoint_not_isEnd 0 g p
@@ -140,8 +139,7 @@ theorem rootedAdjoint_not_isEndLike (r g : G) (p : Player) :
     simp only [h2, h3, ↓reduceIte, ofSets_isEndLike_iff, isEnd_def, moves_ofSets,
       Set.singleton_ne_empty, not_false_eq_true, Set.range_eq_empty_iff,
       Set.isEmpty_coe_sort, not_true_eq_false]
-  rw [not_and] at h1
-  exact h1 h2 h3
+  simp_all
 
 theorem adjoint_not_isEndLike (g : G) (p : Player) : ¬(IsEndLike p (g°)) :=
   rootedAdjoint_not_isEndLike 0 g p
@@ -151,10 +149,8 @@ private theorem mem_leftMoves_mem_rootedAdjoint_rightMoves {r g gl : G} (h1 : gl
   rw [rootedAdjoint, isEnd_def, isEnd_def]
   have h2 : g ≠ 0 := mem_moves_ne_zero h1
   by_cases h3 : moves .left g = ∅ <;> by_cases h4 : moves .right g = ∅
-  · simp only [and_self, ↓reduceIte, rightMoves_ofSets, Set.mem_singleton_iff, h3, h4]
-    simp only [h3, Set.mem_empty_iff_false] at h1
-  · simp only [and_false, ↓reduceIte, rightMoves_ofSets, Set.mem_singleton_iff, h3, h4]
-    simp only [h3, Set.mem_empty_iff_false] at h1
+  · simp_all
+  · simp_all
   · simp only [and_true, ↓reduceIte, rightMoves_ofSets, Set.mem_range, Subtype.exists,
       exists_prop, h3, h4]
     use gl
@@ -167,13 +163,11 @@ private theorem mem_rightMoves_mem_rootedAdjoint_leftMoves {r g gr : G} (h1 : gr
   rw [rootedAdjoint, isEnd_def, isEnd_def]
   have h2 : g ≠ 0 := mem_moves_ne_zero h1
   by_cases h3 : moves .left g = ∅ <;> by_cases h4 : moves .right g = ∅
-  · simp only [and_self, ↓reduceIte, leftMoves_ofSets, Set.mem_singleton_iff, h3, h4]
-    simp only [h4, Set.mem_empty_iff_false] at h1
+  · simp_all
   · simp only [and_false, ↓reduceIte, leftMoves_ofSets, Set.mem_range, Subtype.exists,
       exists_prop, h3, h4]
     use gr
-  · simp only [and_true, ↓reduceIte, leftMoves_ofSets, Set.mem_singleton_iff, h3, h4]
-    simp only [h4, Set.mem_empty_iff_false] at h1
+  · simp_all
   · simp only [and_self, ↓reduceIte, leftMoves_ofSets, Set.mem_range, Subtype.exists,
       exists_prop, h3, h4]
     use gr
@@ -240,15 +234,9 @@ theorem short_rootedAdjoint {r : G} (h_root_short : IsShort r) {g : G} (h1 : IsS
     · simp only [hleft, hright, and_self, ↓reduceIte]
       apply Short.ofSets
       · exact Set.finite_singleton r
-      · intro y hy
-        simp only [Set.mem_singleton_iff] at hy
-        subst y
-        exact h_root_short
+      · simp_all
       · exact Set.finite_singleton r
-      · intro y hy
-        simp only [Set.mem_singleton_iff] at hy
-        subst y
-        exact h_root_short
+      · simp_all
     · simp only [hleft, hright, and_false, ↓reduceIte]
       apply Short.ofSets
       · have : Finite (moves .right g) := Short.finite_moves .right h1
@@ -258,18 +246,12 @@ theorem short_rootedAdjoint {r : G} (h_root_short : IsShort r) {g : G} (h1 : IsS
         obtain ⟨gr', hgr', rfl⟩ := hgr
         exact short_rootedAdjoint h_root_short (Short.of_mem_moves h1 hgr')
       · exact Set.finite_singleton r
-      · intro gr hgr
-        simp only [Set.mem_singleton_iff] at hgr
-        subst gr
-        exact h_root_short
+      · simp_all
   · by_cases hright : IsEnd .right g
     · simp only [hleft, hright, and_true, ↓reduceIte]
       apply Short.ofSets
       · exact Set.finite_singleton r
-      · intro gl hgl
-        simp only [Set.mem_singleton_iff] at hgl
-        subst gl
-        exact h_root_short
+      · simp_all
       · have : Finite (moves .left g) := Short.finite_moves .left h1
         exact Set.finite_range (fun gl : moves .left g => rootedAdjoint r (gl : G))
       · intro gl hgl

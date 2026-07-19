@@ -57,8 +57,7 @@ theorem shatters_iff {m n : ℕ} (M : BinaryMatrix m n) (S : Finset (Fin n)) :
     · ext j
       simp only [mem_inter, mem_filter, mem_univ, true_and]
       constructor
-      · rintro ⟨hj, hMij⟩
-        exact (hi j hj).mp hMij
+      · simp_all
       · intro hjt
         have hjS := ht hjt
         exact ⟨hjS, (hi j hjS).mpr hjt⟩
@@ -93,8 +92,7 @@ theorem bool_fun_eq_of_filter_eq {n : ℕ} (f g : Fin n → Bool)
   · exfalso
     have : j ∈ Finset.univ.filter (fun j => g j = true) := by simp [hg]
     rw [← h] at this; simp [hf] at this
-  · simp only [Bool.not_eq_true] at hf hg
-    rw [hf, hg]
+  · simp_all
 
 /-- **Sauer-Shelah lemma for binary matrices**: the number of distinct rows in the
     Finset family is bounded by the sum of binomial coefficients up to the VC dimension. -/
@@ -170,9 +168,7 @@ theorem transpose_shatters_imp_shatters {m n : ℕ} (M : BinaryMatrix m n)
         have : embed b' = embed b := by
           exact Subtype.val_injective (by rw [hb'eq])
         have := hembed_inj this
-        rw [this] at hb'k
-        rw [hbk] at hb'k
-        exact Bool.noConfusion hb'k
+        simp_all
       rw [Bool.eq_false_iff.mpr (mt (hc k _ hemb_mem).mp hmem), hbk]
   -- Build T = {c 0, c 1, ..., c d}
   let T : Finset (Fin n) := Finset.univ.image c
@@ -189,8 +185,7 @@ theorem transpose_shatters_imp_shatters {m n : ℕ} (M : BinaryMatrix m n)
       cases hkj : (k == j)
       · rfl
       · exact absurd (beq_iff_eq.mp hkj).symm hjk_ne
-    rw [hjk] at h1
-    exact Bool.noConfusion (h1 ▸ h2)
+    simp_all
   have hT_card : T.card = d + 1 := by
     simp only [T, card_image_of_injective _ hc_inj, card_univ, Fintype.card_fin]
   -- M shatters T

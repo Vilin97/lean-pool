@@ -30,9 +30,7 @@ theorem landauMatrix_even (Ψ : ℝ → ℝ) (z : Fin 3 → ℝ) :
     landauMatrix Ψ (-z) = landauMatrix Ψ z := by
   unfold landauMatrix innerLandauMatrix
   rw [eucNorm_neg, normSq_neg]
-  congr 1
-  ext i j
-  simp [vecMulVec_apply]
+  simp_all
 
 -- ============================================================================
 -- Lemma 2: Positive semidefiniteness of A(z)  [lem:A_psd]
@@ -146,8 +144,7 @@ theorem innerLandauMatrix_mulVec_self (z : Fin 3 → ℝ) :
     mulVec (innerLandauMatrix z) z = 0 := by
   unfold innerLandauMatrix
   simp only [sub_mulVec, smul_mulVec, one_mulVec, vecMulVec_self_mulVec, normSq]
-  ext i
-  simp [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, sub_self]
+  simp_all
 
 /-- Lemma 3: A(z) z = 0. Reference: lem:zA_zero -/
 theorem landauMatrix_mulVec_self (Ψ : ℝ → ℝ) (z : Fin 3 → ℝ) :

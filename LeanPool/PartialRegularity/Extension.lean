@@ -97,11 +97,9 @@ lemma bernoulli_two_mul_ne_zero (k : ℕ) (hk : k ≠ 0) : bernoulli (2 * k) ≠
   have hre : (1 : ℝ) < 2 * k :=
     mod_cast lt_of_lt_of_le one_lt_two (show (2 : ℕ) ≤ 2 * k by omega)
   have hne : riemannZeta (2 * k) ≠ 0 := riemannZeta_ne_zero_of_one_lt_re <| by
-    simp only [Complex.mul_re, Complex.natCast_re, Complex.natCast_im, mul_zero, sub_zero]
-    exact hre
+    simp_all
   have hzeta := riemannZeta_two_mul_nat hk
-  simp only [h, Rat.cast_zero, mul_zero, zero_div] at hzeta
-  exact hne hzeta
+  simp_all
 
 lemma bernoulli_num_natAbs_ne_zero (k : ℕ) (hk : 1 ≤ k) :
     (bernoulli (2 * k)).num.natAbs ≠ 0 := by
@@ -152,8 +150,7 @@ lemma factorial_le_prod_primes (S : Finset ℕ) (hS : ∀ p ∈ S, Nat.Prime p) 
     simpa only [zero_add, mul_one, Finset.prod_range_add_one_eq_factorial] using h
   rw [hfact]
   have hprod_eq : l.prod = ∏ i : Fin l.length, l.get i := by
-    conv_lhs => rw [← List.ofFn_get l]
-    rw [List.prod_ofFn]
+    simp_all
   rw [hprod_eq]
   calc ∏ i ∈ Finset.range l.length, (i + 2)
       = ∏ i : Fin l.length, (i.val + 2) := (Fin.prod_univ_eq_prod_range _ _).symm
@@ -230,8 +227,7 @@ lemma rat_den_dvd_mul_of_int_mul (q : ℚ) (n : ℕ) (_hn : 0 < n) :
   exact Nat.mul_dvd_mul_right (gcd_natAbs_mul_num_dvd_n n q) ((↑n * q).den)
 
 lemma choose_two_k_plus_one_two_k (k : ℕ) : (2 * k + 1).choose (2 * k) = 2 * k + 1 := by
-  conv_lhs => rw [Nat.choose_symm_add]
-  simp
+  simp_all
 
 lemma sum_bernoulli_eq_neg_mul (k : ℕ) (hk : 2 ≤ k) :
     ∑ j ∈ Finset.range (2 * k), (↑((2 * k + 1).choose j) : ℚ) * bernoulli j =
@@ -281,8 +277,7 @@ lemma each_term_den_dvd_factorial (k : ℕ) (hk : 2 ≤ k)
     ((↑((2 * k + 1).choose j) : ℚ) * bernoulli j).den ∣ (2 * k).factorial := by
   rcases Nat.even_or_odd j with ⟨m, hm_eq⟩ | ⟨m, hm_eq⟩
   · rcases m.eq_zero_or_pos with rfl | hm_pos
-    · simp only [hm_eq]
-      exact term_j_zero_den_dvd k hk
+    · simp_all
     · have hm_lt : m < k := by omega
       simp only [hm_eq, two_mul]
       convert term_even_den_dvd k m hk hm_pos hm_lt (ih m hm_pos hm_lt) using 2 <;> ring_nf
@@ -326,8 +321,7 @@ lemma bernoulli_den_dvd_factorial (k : ℕ) (hk : 1 ≤ k) :
       exact bernoulli_den_dvd_factorial_base
     · apply bernoulli_den_dvd_factorial_step
       · omega
-      · intro m hm1 hmk
-        exact ih m (by omega) hm1
+      · simp_all
 
 lemma pi_sq_div_six_lt_two : Real.pi ^ 2 / 6 < 2 := by
   have h2 : Real.pi ^ 2 < 3.1416 ^ 2 := sq_lt_sq' (by linarith [Real.pi_pos]) Real.pi_lt_d4
@@ -335,10 +329,7 @@ lemma pi_sq_div_six_lt_two : Real.pi ^ 2 / 6 < 2 := by
 
 private lemma summable_one_div_nat_pow {m : ℕ} (hm : 1 < m) :
     Summable (fun n : ℕ => (1 : ℝ) / n ^ m) := by
-  have h : (1 : ℝ) < m := by exact_mod_cast hm
-  refine (Real.summable_one_div_nat_rpow.mpr h).congr (fun n => ?_)
-  simp only [one_div]
-  norm_cast
+  simp_all
 
 lemma tsum_inv_pow_two_mul_le (k : ℕ) (hk : 1 ≤ k) :
     ∑' (n : ℕ), (1 : ℝ) / n ^ (2 * k) ≤ Real.pi ^ 2 / 6 := by
@@ -524,8 +515,7 @@ lemma rpow_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
   change x ^ (1 / (2 * α)) / Real.log x ≤ y ^ (1 / (2 * α)) / Real.log y
   have h_eq_one_div : ∀ z : ℝ, 0 < z →
       z ^ (1 / (2 * α)) / Real.log z = 1 / (Real.log z / z ^ (1 / (2 * α))) := by
-    intro z hz
-    field_simp [(Real.rpow_pos_of_pos hz (1 / (2 * α))).ne']
+    simp_all
   rw [h_eq_one_div x hx_pos, h_eq_one_div y hy_pos]
   exact one_div_le_one_div_of_le hgy_pos hanti_xy
 

@@ -82,8 +82,7 @@ lemma through_original_root {x : (MDPCounterexampleFrame F₁ F₂).World} (h :
       F₂.root ∨ (Sum.inr (Sum.inr F₂.root) ≺ x)) := by
   match x with
   | .inl x =>
-    have := (MDPCounterexampleFrame F₁ F₂).rel_irreflexive.irrefl _ h;
-    contradiction;
+    simp_all
   | .inr (.inl x) =>
     by_cases h : x = F₁.root;
     · subst h; left; tauto;

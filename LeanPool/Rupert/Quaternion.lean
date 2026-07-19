@@ -95,8 +95,7 @@ lemma matrixOfQuat_is_unitary (q : Quaternion ℝ) (nz : Quaternion.normSq q ≠
   have local_arith : n2 * n2 * (Quaternion.normSq q)^2 = 1 := by
     simp only [n2]
     rw [← Quaternion.normSq_def', sq, mul_mul_mul_comm]
-    simp_all only [ne_eq, one_div, isUnit_iff_ne_zero, not_false_eq_true, IsUnit.inv_mul_cancel,
-      mul_one]
+    simp_all
   constructor
   · rw [star_smul, smul_mul_smul_comm, denorm_half_unitary2, smul_smul,
       show star n2 = n2 by rfl, local_arith, one_smul]

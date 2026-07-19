@@ -418,8 +418,7 @@ lemma apply_ne_zero_of_isDiag [Nontrivial R] (g : GL n R) (h : g.val.IsDiag)
   apply Matrix.det_eq_zero_of_column_eq_zero j
   intro i
   by_cases hij : i = j
-  · subst hij
-    exact hzero
+  · simp_all
   · exact h hij
 
 lemma coe_mul_inv (g : GL n R) : g.val * g.val⁻¹ = 1 := by
@@ -449,9 +448,7 @@ lemma toBasis_coe_apply (g : GL ι K) (i : ι) : g.toBasis i = (fun j ↦ g j i)
     rw [mulVec_mulVec, coe_inv_mul, one_mulVec]
   rw [h]
   erw [← toLin_apply g]
-  rw [toLin_apply g, ← h]
-  ext
-  simp
+  simp_all
 
 /-- From an invertible matrix over `K`, we obtain an `R` submodule by taking
 the span of the columns. -/
@@ -495,8 +492,7 @@ lemma mem_toSubmodule (g : GL ι K) (x : ι → K) :
       change _ = g.val *ᵥ (Subtype.val ∘ Pi.single i 1)
       ext
       simp
-    · simp only [Pi.comp_zero, ZeroMemClass.coe_zero, Function.const_zero, mulVec_zero,
-        Submodule.zero_mem]
+    · simp_all
     · intro v w _ _ hv hw
       rw [Subtype.val_comp_add, mulVec_add]
       exact Submodule.add_mem _ hv hw
@@ -535,8 +531,7 @@ instance instMulActionSubmoduleSubtypeMemSubringForallLeanPool :
     MulAction (GL ι K) (Submodule R (ι → K)) where
   one_smul M := by
     rw [smul_def]
-    ext
-    simp
+    simp_all
   mul_smul g h M := by
     simp_rw [smul_def]
     ext

@@ -133,11 +133,9 @@ instance : Group (urstTransform R) where
     intros
     simp [urstTransform.mul_def, urstTransform.one_def, urstTransform.inv_def]
   mul_one := by
-    intros
-    simp [urstTransform.mul_def, urstTransform.one_def]
+    simp_all
   one_mul := by
-    intros
-    simp [urstTransform.mul_def, urstTransform.one_def]
+    simp_all
   mul_assoc := by
     intros
     simp only [urstTransform.mul_def, mk.injEq]
@@ -443,18 +441,14 @@ lemma c4_zero_iff_a1_zero_of_char_two (e : Model K) (h : ringChar K = 2) :
   -- TODO use the nicer mod strategy from cubic roots here or a tactic
   rw [c4, b2, show (24 : K) = 2 * 12 by norm_num, show (4 : K) = 2 * 2 by norm_num,
     hchar'', ← pow_two]
-  simp only [mul_zero, zero_mul, add_zero, ← pow_mul, sub_zero]
-  rw [pow_eq_zero_iff]
-  norm_num
+  simp_all
 
 lemma c4_zero_iff_b2_zero_of_char_three (e : Model K) (h : ringChar K = 3) :
   e.c4 = 0 ↔ e.b2 = 0 := by
   have hchar' : (ringChar K : K) = 3 := by simp [h]
   have hchar'' : (3 : K) = 0 := by simp [← hchar']
   rw [c4, show (24 : K) = 3 * 8 by norm_num, hchar'']
-  simp only [zero_mul, sub_zero] -- TODO simp? doesn't do back arrows
-  rw [pow_eq_zero_iff]
-  norm_num
+  simp_all
 
 -- TODO is this actually an iff
 lemma a3_zero_of_a1_zero_of_disc_zero_of_char_two
@@ -465,11 +459,7 @@ lemma a3_zero_of_a1_zero_of_disc_zero_of_char_two
   rw [discr, b2, b4, b6, b8, ha1,
     show (8 : K) = 2 * 4 by norm_num, show (4 : K) = 2 * 2 by norm_num, show (27 : K) = 2 * 13
         + 1 by norm_num, hchar''] at hdisc
-  simp only [mul_zero, zero_mul, add_zero, neg_zero, sub_self, zero_add, one_mul, zero_sub,
-    neg_eq_zero] at hdisc
-  rw [← pow_two, ← pow_two, ← pow_mul] at hdisc
-  rwa [pow_eq_zero_iff] at hdisc
-  norm_num
+  simp_all
 
 -- TODO is this actually an iff discr
 lemma b4_zero_of_b2_zero_of_disc_zero_of_char_three
@@ -548,8 +538,7 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
         rw [← hchar, pthRoot_pow_char hcharne, ← sub_eq_add_neg]
         simp only [sub_eq_iff_eq_add, zero_add]
         rw [show (3 : K) = 2 * 2 - 1 by norm_num]
-        rw [hchar'']
-        simp []
+        simp_all
       · simp [dweierstrassDy, ha1, ha3, hchar'']
     · rw [isSingularPoint]
       have hchar : ringChar K = 3 := by assumption
@@ -581,8 +570,7 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
           rw [show (4 : K) = 1 by rw [← add_zero 1, ← hchar'']; norm_num]
           simp only [neg_mul, one_mul] at hb4
           simp [sub_eq_add_neg, hb4]
-        rw [hfac2, hfac4]
-        simp only [zero_mul, add_zero, hchar'']
+        simp_all
       · rw [dweierstrassDx]
         rw [hchar'', zero_mul, zero_add]
         simp only
@@ -608,8 +596,7 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
       have h3 : (3 : K) ≠ 0 := fun hh => hn3 (ringChar_eq_of_Prime (n := 3) hh Nat.prime_three)
       have h12 : (12 : K) ≠ 0 := by
         rw [show (12 : K) = 2 * 2 * 3 by norm_num]
-        repeat' apply mul_ne_zero
-        all_goals assumption
+        simp_all
       refine ⟨?_, ?_, ?_⟩
       · apply nzero_mul_left_cancel (12 ^ 3) _ _ (pow_ne_zero _ h12)
         simp only [weierstrass, div_eq_mul_inv, mul_zero]
@@ -654,10 +641,7 @@ lemma isSingularPoint_singularPoint [PerfectRing K] (e : Model K) (h : e.discr =
             + e.a1 * (-b2 e * (12 * 12⁻¹))
               + 12 * e.a3
           by ring]
-        simp only [mul_inv_cancel₀ h2, mul_inv_cancel₀ h12, mul_one]
-        -- This is 2*c6
-        simp only [b2]
-        ring
+        simp_all
   · rw [isSingularPoint]
     refine ⟨?_, ?_, ?_⟩
     · rw [weierstrass]

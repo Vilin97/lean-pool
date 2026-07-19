@@ -102,8 +102,7 @@ lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
     rcases x with ⟨x, _⟩
     replace hx0 : x ≠ 0 := fun h ↦ hx0 (by congr)
     have hx0' : WithLp.toLp q x.ofLp ≠ 0 := fun h ↦ hx0 (by
-      have := congrArg WithLp.ofLp h
-      simpa using this)
+      simp_all)
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
@@ -112,10 +111,7 @@ lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
     rw [mul_assoc ‖x‖]
     conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
     simp only [mul_one, ← mul_assoc]
-    conv in ‖x‖ * _ => equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
-    rw [one_mul, mul_assoc _ _ ‖x‖, @inv_mul_cancel₀ _ _ ‖x‖ (norm_ne_zero_iff.mpr hx0), mul_one]
-    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0')
-    rw [one_smul]
+    simp_all
 
 /-- The map `toQDisk` is continuous at `0`. -/
 lemma continuousAt_toQDisk_zero : ContinuousAt (toQDisk n p q) 0 := by
@@ -127,8 +123,7 @@ lemma continuousAt_toQDisk_zero : ContinuousAt (toQDisk n p q) 0 := by
   simp only [toQDisk, norm_smul, norm_mul, norm_norm, norm_inv]
   by_cases hx0 : x = 0
   · simp only [hx0, norm_zero, zero_mul, le_refl]
-  rw [mul_assoc, mul_le_iff_le_one_right (norm_pos_iff.mpr hx0)]
-  exact inv_mul_le_one
+  simp_all
 
 /-- The map `toQDisk` is continuous on `{x | x ≠ 0}`. -/
 lemma continuousOn_toQDisk_nonzero : ContinuousOn (toQDisk n p q) {x | x ≠ 0} := by
@@ -150,8 +145,7 @@ lemma continuousOn_toQDisk_nonzero : ContinuousOn (toQDisk n p q) {x | x ≠ 0} 
   simp only [norm_eq_zero] at h
   change WithLp.toLp q x.down.val.ofLp = 0 at h
   have hxz : x.down.val = 0 := by
-    have := congrArg WithLp.ofLp h
-    simpa using this
+    simp_all
   rw [← eq_zero_iff] at hxz
   exact hx0 hxz
 
@@ -188,9 +182,7 @@ namespace pDiskBoundary
 instance instIsEmptyZero : IsEmpty (pDiskBoundary 0 p) where
   false := fun ⟨p, p1⟩ ↦ by
     have p0 : p = 0 := Subsingleton.elim _ _
-    simp only [mem_sphere_iff_norm, sub_zero] at p1
-    have : (1 : ℝ) = (0 : ℝ) := p1.symm.trans (by rw [p0, norm_zero])
-    exact (by norm_num : (1 : ℝ) ≠ (0 : ℝ)) this
+    simp_all
 
 lemma neq_zero (x : pDiskBoundary n p) : x.down.val ≠ 0 := fun xz ↦ by
   have x0 : ‖x.down.val‖ = 0 := by rw [xz]; apply norm_zero
@@ -204,15 +196,7 @@ noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary n q
       have xnz := neq_zero.{u} n p ⟨x, hx⟩
       simp only [mem_sphere_iff_norm, sub_zero] at hx ⊢
       rw [hx, one_mul, norm_smul, norm_inv, norm_norm]
-      refine inv_mul_cancel₀ (norm_ne_zero_iff.mpr ?_)
-      intro xz
-      have : x.ofLp = 0 := by
-        have := congrArg WithLp.ofLp xz
-        simpa using this
-      have : x = 0 := by
-        have h2 := congrArg (WithLp.toLp p) this
-        simpa using h2
-      exact xnz this ⟩
+      simp_all ⟩
 
 /-- The map `boundaryToQDiskBoundary` has a left inverse. -/
 lemma toPDiskBoundary_comp_toQDiskBoundary x :
@@ -222,21 +206,13 @@ lemma toPDiskBoundary_comp_toQDiskBoundary x :
     rcases x with ⟨x, hx⟩
     have hx0 : x ≠ 0 := neq_zero.{u} n p ⟨x, hx⟩
     have hx0' : WithLp.toLp q x.ofLp ≠ 0 := fun h ↦ hx0 (by
-      have := congrArg WithLp.ofLp h
-      have h2 := congrArg (WithLp.toLp p) (by simpa using this : x.ofLp = 0)
-      simpa using h2)
+      simp_all)
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
     simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul]
     simp only [norm_smul, norm_mul, norm_norm, norm_inv, mul_inv_rev, inv_inv, smul_smul]
-    rw [mul_assoc ‖x‖]
-    conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
-    simp only [mul_one, ← mul_assoc]
-    conv in ‖x‖ * _ => equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
-    rw [one_mul, mul_assoc _ _ ‖x‖, @inv_mul_cancel₀ _ _ ‖x‖ (norm_ne_zero_iff.mpr hx0), mul_one]
-    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0')
-    rw [one_smul]
+    simp_all
 
 /-- The map `boundaryToQDiskBoundary` is continuous. -/
 lemma continuous_toQDiskBoundary : Continuous (toQDiskBoundary n p q) := by
@@ -254,9 +230,7 @@ lemma continuous_toQDiskBoundary : Continuous (toQDiskBoundary n p q) := by
   rw [norm_eq_zero] at h
   change WithLp.toLp q x.down.val.ofLp = 0 at h
   have : x.down.val = 0 := by
-    have h1 := congrArg WithLp.ofLp h
-    have h2 := congrArg (WithLp.toLp p) (by simpa using h1 : x.down.val.ofLp = 0)
-    simpa using h2
+    simp_all
   exact (neq_zero n p x) this
 
 /-- `pDiskBounday n p` is homeomorphic to `pDiskBoundary n q`. -/

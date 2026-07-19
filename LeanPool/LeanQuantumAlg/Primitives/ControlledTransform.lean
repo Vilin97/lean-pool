@@ -197,9 +197,7 @@ theorem TransformationOnControlledUnitary.main_phase_gate_signal (θ : ℝ) :
       Complex.exp ((θ / 2 : ℝ) * Complex.I)
         * Complex.exp ((-(θ / 2) : ℝ) * Complex.I)
     rw [show (1 : ℂ) = Complex.exp 0 from (Complex.exp_zero).symm, ← Complex.exp_add]
-    congr 1
-    push_cast
-    ring
+    simp_all
   · change (0 : ℂ) = Complex.exp ((θ / 2 : ℝ) * Complex.I) * 0
     ring
   · change (0 : ℂ) = Complex.exp ((θ / 2 : ℝ) * Complex.I) * 0

@@ -53,16 +53,7 @@ lemma Finset.exists_minimal_dec {α : Type*} [PartialOrder α]
         · exact lt_irrefl _ hya
         · exact hmmin y hyS (lt_trans hya hlt)
       · refine ⟨m, Finset.mem_insert_of_mem hmS, ?_⟩
-        intro y hyT hym
-        rcases Finset.mem_insert.mp hyT with rfl | hyS
-        · exact hlt hym
-        · exact hmmin y hyS hym
-    · have hSe : S = ∅ := Finset.not_nonempty_iff_eq_empty.mp hS
-      subst hSe
-      refine ⟨a, Finset.mem_insert_self a ∅, ?_⟩
-      intro y hyT hya
-      rcases Finset.mem_insert.mp hyT with rfl | hy
-      · exact lt_irrefl _ hya
-      · exact (Finset.notMem_empty y) hy
+        simp_all
+    · simp_all
 
 end EventStructures

@@ -84,11 +84,7 @@ lemma factorization_rad {m : ℕ} (hm : m ≠ 0) (p : ℕ) :
       intro q hq; exact (Nat.prime_of_mem_primeFactors hq).ne_zero)]
     rw [Finset.sum_eq_single p]
     · exact Nat.Prime.factorization_self hpprime
-    · intro q hq hqp
-      rw [Nat.factorization_eq_zero_of_not_dvd]
-      intro hdvd
-      exact hqp ((Nat.prime_dvd_prime_iff_eq hpprime
-        (Nat.prime_of_mem_primeFactors hq)).mp hdvd).symm
+    · simp_all
     · intro h; exact absurd hp h
   · simp only [hp, if_false]
     by_cases hpp : p.Prime
@@ -330,8 +326,7 @@ lemma L_dvd_F {k n : ℕ} (hn : 1 ≤ n) : L k ∣ F k n := by
   intro p
   rw [show L k = ∏ q ∈ Nat.primesBelow k, q ^ (k / q) from rfl]
   rw [Nat.factorization_prod (fun q hq => by
-    have := (Nat.prime_of_mem_primesBelow hq).pos
-    positivity)]
+    simp_all)]
   rw [Finset.sum_apply']
   by_cases hp : p ∈ Nat.primesBelow k
   · have hpp : p.Prime := Nat.prime_of_mem_primesBelow hp
@@ -375,8 +370,7 @@ lemma L_le_smooth {k n : ℕ} (hn : 1 ≤ n) : L k ∣ Ssmooth k n := by
           rw [Finset.mem_filter]; exact ⟨hpdvd, hplt⟩
         rw [Finset.sum_eq_single p
               (fun q hq hqp => by
-                have hqp' : q.Prime := Nat.prime_of_mem_primeFactors (Finset.mem_of_mem_filter _ hq)
-                rw [Nat.Prime.factorization_pow hqp', Finsupp.single_apply, if_neg hqp])
+                simp_all)
               (fun h => absurd hmem h)]
         rw [Nat.Prime.factorization_pow hpp, Finsupp.single_apply, if_pos rfl]
       · -- p ∤ F ⇒ v_p(F) = 0

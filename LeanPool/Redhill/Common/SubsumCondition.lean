@@ -199,10 +199,7 @@ theorem pair_of_sum_natAbs_lt (hi : ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (a i).na
       b₁ ≠ b₂ → ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (b₁ * a i + b₂ * a j).natAbs by
     apply this
     contrapose! ncb
-    refine ⟨b 0, fun i ↦ ?_⟩
-    obtain rfl | rfl : i = 0 ∨ i = 1 := by lia
-    · rfl
-    · exact ncb.symm
+    simp_all
   intro b₁ b₂ hb
   cases b₁ <;> cases b₂ <;> simp at hb
   case zero.neg => simpa using hj

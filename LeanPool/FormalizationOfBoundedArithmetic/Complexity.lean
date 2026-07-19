@@ -481,8 +481,7 @@ by
       Equiv.coe_refl, Sum.map_inr, id_eq]
     congr
     funext i
-    fin_cases i
-    rfl
+    simp_all
   | bdAll phi t =>
     unfold iBdAllNum'
     rw [iBdAll'.relabelEquiv]
@@ -495,8 +494,7 @@ by
     rw [relabelEquiv.rel]
     congr
     funext i
-    fin_cases i
-    rfl
+    simp_all
   | bdAllLt phi t =>
     rw [iBdAllLt'.relabelEquiv]
     convert BoundedFormula.IsSigma0B.bdAllLt
@@ -507,8 +505,7 @@ by
       Equiv.coe_refl, Sum.map_inr, id_eq]
     congr
     funext i
-    fin_cases i
-    rfl
+    simp_all
   | of_isQF h =>
     exact BoundedFormula.IsSigma0B.of_isQF (BoundedFormula.IsQF.relabelEquiv.mp g h)
 

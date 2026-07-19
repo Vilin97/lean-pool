@@ -158,8 +158,7 @@ private lemma cuspFunction_factored (hf : f ≠ 0) :
       (Convex.isPreconnected (convex_ball 0 1)) h0_mem hF_local
   refine ⟨g₀, hg_diff, hg_ne, fun q hq => ?_⟩
   have := hF_eq hq
-  simp only [sub_zero, smul_eq_mul] at this
-  rw [this, hp_order]
+  simp_all
 
 /-! ### Circle integral helpers -/
 
@@ -242,8 +241,7 @@ lemma circleIntegral_logDeriv_cuspFunction_of_radius (hf : f ≠ 0)
       logDeriv F q = ↑m / q + logDeriv g q := by
     intro q hq
     have hq_ne : q ≠ 0 := by
-      intro h; simp [h] at hq
-      exact absurd hq.symm (ne_of_gt hR_pos)
+      intro h; simp_all
     have hq_ball : q ∈ Metric.ball (0 : ℂ) 1 :=
       Metric.sphere_subset_closedBall.trans (Metric.closedBall_subset_ball hR_lt) hq
     have hF_eq : F =ᶠ[𝓝 q] (fun z => z ^ m * g z) :=
@@ -283,10 +281,7 @@ lemma circleIntegral_logDeriv_cuspFunction_of_radius (hf : f ≠ 0)
   have h_congr : (∮ q in C(0, R), logDeriv F q) =
       ∮ q in C(0, R), ((↑m : ℂ) / q + logDeriv g q) := by
     simp only [circleIntegral]
-    apply intervalIntegral.integral_congr
-    intro θ _
-    simp only
-    rw [h_split _ (circleMap_mem_sphere 0 hR_le θ)]
+    simp_all
   have h_div_eq : (fun q : ℂ => (↑m : ℂ) / q + logDeriv g q) =
       (fun q => (↑m : ℂ) * q⁻¹ + logDeriv g q) := by ext; simp [div_eq_mul_inv]
   rw [h_congr, h_div_eq, circleIntegral.integral_add hci_inv hci_logDeriv,
@@ -320,8 +315,7 @@ omit f hf in
 private lemma im_fdBoundary_seg5_H_pos {H : ℝ} (hH : 0 < H) (t : ℝ) :
     0 < (fdBoundarySeg5H H t).im := by
   change 0 < ((↑t : ℂ) - 9 / 2 + ↑H * I).im
-  simp [add_im, mul_im, sub_im, ofReal_im, ofReal_re, I_re, I_im]
-  linarith
+  simp_all
 
 omit hf in
 /-- Chain rule for logDeriv along seg5 at height H:

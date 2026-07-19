@@ -146,14 +146,8 @@ theorem telescope_aux (z : ℍ) (m : ℤ) (b : ℕ) :
       ring
     · omega
     · omega
-    · simp only [neg_add_rev, Int.reduceNeg, Finset.disjoint_insert_right, Finset.mem_Ico,
-      le_add_iff_nonneg_left, Left.nonneg_neg_iff, Int.reduceLE, add_neg_lt_iff_lt_add, false_and,
-      not_false_eq_true, Finset.disjoint_singleton_right, neg_le_self_iff, Nat.cast_nonneg,
-      lt_self_iff_false, and_false, and_self]
-    · simp only [neg_add_rev, Int.reduceNeg, Finset.disjoint_insert_right, Finset.mem_Ico,
-      le_add_iff_nonneg_left, Left.nonneg_neg_iff, Int.reduceLE, add_neg_lt_iff_lt_add, false_and,
-      not_false_eq_true, Finset.disjoint_singleton_right, neg_le_self_iff, Nat.cast_nonneg,
-      lt_self_iff_false, and_false, and_self]
+    · simp_all
+    · simp_all
 
 theorem extracted_3 (z : ℍ) (b : ℤ) : CauchySeq fun N : ℕ ↦
   ∑ n ∈ Finset.Ico (-↑N : ℤ) ↑N, (1 / ((b : ℂ) * ↑z + ↑n) - 1 / (↑b * ↑z + ↑n + 1)) := by
@@ -285,9 +279,7 @@ theorem G2_c_tendsto (z : ℍ) :
         rw [← this]
         have := (a4 2 z).prod_symm.prod
         apply Summable.mul_left
-        apply this.congr
-        intro b
-        congr
+        simp_all
     have := hf.hasSum
     have V := this.comp tendsto_finset_range
     simp only [neg_mul, even_two, Even.neg_pow, Nat.add_one_sub_one, Nat.factorial_one,

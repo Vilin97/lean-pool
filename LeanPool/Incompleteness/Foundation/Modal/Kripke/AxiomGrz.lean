@@ -72,9 +72,7 @@ lemma validate_Grz_of_refl_trans_wcwf
         exact ⟨y, Rxy, hy⟩;
     · constructor;
       · by_contra hC;
-        subst hC;
-        simp [Satisfies] at hw₂;
-        contradiction;
+        simp_all
       · assumption;
   · obtain ⟨x, Rwx, hx⟩ := by simpa [Satisfies] using hw₂;
     use x;
@@ -85,9 +83,7 @@ lemma validate_Grz_of_refl_trans_wcwf
         exact hw₁ _ (hTrans.trans _ _ _ Rwx Rxy) hy;
     · constructor;
       · by_contra hC;
-        subst hC;
-        simp [Satisfies] at hw₃
-        contradiction;
+        simp_all
       · assumption;
 
 
@@ -159,8 +155,7 @@ lemma WCWF_of_validate_Grz (h : F ⊧ Axioms.Grz (.atom 0)) : WCWF F := by
         rcases (lt_trichotomy i j) with (hij | rfl | hij);
         · apply H;
           omega;
-        · apply H;
-          omega;
+        · simp_all
         · apply @H _ _ ?_ |>.symm;
           omega;
       · apply hf _ |>.2;

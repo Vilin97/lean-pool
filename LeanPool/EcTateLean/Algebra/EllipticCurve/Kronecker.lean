@@ -26,8 +26,7 @@ lemma div_succ_le_succ_div (m n : ℕ) : succ m / succ n ≤ succ (m / succ n) :
   rw [Nat.succ_div]
   split
   · rw [succ_eq_add_one]
-  · rw [add_zero]
-    exact le_succ (m / succ n)
+  · simp_all
 
 lemma div2_succ_succ_eq_succ_div2 (n : ℕ) : succ (succ n) / 2 = succ (n / 2) := by
   omega

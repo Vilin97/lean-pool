@@ -80,9 +80,7 @@ private lemma se_finite_of_finite {τ : ℤ → ℤ} (h_inj : Function.Injective
     · right; left
       simp only [H, H₀]
       simp only [Finset.coe_Ico, Set.mem_preimage, Set.mem_Ico, τk_ge_m, hk.2, and_self]
-    obtain τk_lt_m : τ k < m := by
-      push Not at τk_ge_m; exact τk_ge_m
-    left; exact ⟨k_ge_n, τk_lt_m⟩
+    simp_all
   refine Set.Finite.subset ?_ h
   exact Set.Finite.union fin_A (Set.Finite.union fin_H fin_V)
 
@@ -190,11 +188,7 @@ lemma inv_iff_lt {i j : ℤ} (i_le_j : i ≤ j) :
   wlog i_lt_j : i < j
   · have i_eq_j : i = j := le_antisymm i_le_j (le_of_not_gt i_lt_j)
     rw [i_eq_j]; simp
-  constructor
-  · intro ij_inv
-    exact ij_inv.2
-  · intro τ_j_lt_i
-    exact ⟨i_lt_j, τ_j_lt_i⟩
+  simp_all
 lemma inv_iff_le {i j : ℤ} (i_lt_j : i < j) :
   ⟨i, j⟩ ∈ invSet τ ↔ τ j ≤ τ i := by
   constructor
@@ -222,16 +216,11 @@ def mul (σ τ : AspPerm) : AspPerm where
       ⊆ {n | n * (τ n) < 0} ∪ {n | (τ n) * (σ (τ n)) < 0} ∪ { n | τ n = 0}:= by
       intro n hn
       by_cases h0 : τ n = 0
-      · right
-        exact h0
+      · simp_all
       by_cases hτ : n * τ n < 0
-      · left
-        left
-        exact hτ
+      · simp_all
       by_cases hσ : τ n * σ (τ n) < 0
-      · left
-        right
-        exact hσ
+      · simp_all
       exfalso
       push Not at hτ hσ
       let C := (τ n) ^ 2
@@ -247,8 +236,7 @@ def mul (σ τ : AspPerm) : AspPerm where
     refine Set.Finite.subset ?_ this
     have h_pre : Set.Finite {n | τ n * σ (τ n) < 0} := by
       rw [show {n | τ n * σ (τ n) < 0} = τ ⁻¹' {n | n * σ n < 0} by
-        ext n
-        simp]
+        simp_all]
       exact Set.Finite.preimage (Set.injOn_of_injective τ.injective) σ.asp
     have h_zero : Set.Finite {n | τ n = 0} := by
       rw [show {n | τ n = 0} = τ ⁻¹' ({0} : Set ℤ) by
@@ -283,8 +271,7 @@ def id : AspPerm where
     have : {n:ℤ | n * _root_.id n < 0} = ∅ := by
       ext n; simp only [id_eq, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
       exact mul_self_nonneg n
-    unfold isAsp; rw [this]
-    exact Set.finite_empty
+    unfold isAsp; simp_all
 
 noncomputable instance : Group AspPerm where
   mul := mul
@@ -374,8 +361,7 @@ private lemma dual_inverse_raw : τ.s'_raw = (τ⁻¹).s_raw := by
       · intro h
         use τ⁻¹ n
         unfold northwestSet; unfold southeastSet at h
-        obtain ⟨a_le_n, τin_lt_b⟩ := h
-        simpa using ⟨τin_lt_b, a_le_n⟩
+        simp_all
     _ = (τ⁻¹).s_raw b a := by rfl
 
 private lemma flip_bij (τ : AspPerm) : Function.Bijective (flipFunc τ.func) := by
@@ -446,9 +432,7 @@ private lemma flip_s (a b : ℤ) : τ.flip.s_raw a b = τ.s'_raw (-b) (-a) := by
     simpa [hflip] using (flip_quadrant τ.flip a b)
   have himage_card : ((-1 - ·) '' A).ncard = A.ncard :=
     Set.ncard_image_of_injective A (fun x y h => by omega)
-  calc
-    A.ncard = ((-1 - ·) '' A).ncard := by simpa using himage_card.symm
-    _ = B.ncard := by simp only [Int.reduceNeg, himage]
+  simp_all
 
 /-- The shift $\chi_\tau = s_\tau(0,0) - s_{\tau^{-1}}(0,0)$.
 
@@ -474,21 +458,13 @@ private lemma se_diff_card (a a' b : ℤ) :
     ((τ.seFinset a' b) \ (τ.seFinset a b)).card =
       ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
   apply Finset.card_bij (fun k _ => τ k)
-  · intro k hk
-    simp only [Finset.mem_sdiff, mem_se] at hk
-    obtain ⟨⟨k_ge_b, τk_lt_a'⟩, hk_not⟩ := hk
-    have τk_ge_a : a ≤ τ k := by
-      by_contra h; push Not at h
-      exact hk_not ⟨k_ge_b, h⟩
-    simp only [Finset.mem_filter, Finset.mem_Ico, τ.inv_mul_cancel_eval]
-    exact ⟨⟨τk_ge_a, τk_lt_a'⟩, k_ge_b⟩
+  · simp_all
   · intro k₁ _ k₂ _ h; exact τ.injective h
   · intro x hx
     simp only [Finset.mem_filter, Finset.mem_Ico] at hx
     obtain ⟨⟨x_ge_a, x_lt_a'⟩, τinv_ge_b⟩ := hx
     refine ⟨τ⁻¹ x, ?_, τ.mul_inv_cancel_eval x⟩
-    simp only [Finset.mem_sdiff, mem_se, τ.mul_inv_cancel_eval]
-    exact ⟨⟨τinv_ge_b, x_lt_a'⟩, fun ⟨_, h⟩ => by omega⟩
+    simp_all
 
 private lemma a_move_up_raw (a a' b : ℤ) (a_le_a' : a ≤ a') :
     τ.s_raw a' b = τ.s_raw a b + ((Finset.Ico a a').filter (τ⁻¹ · ≥ b)).card := by
@@ -537,16 +513,11 @@ private lemma b_move_up_raw (a b b' : ℤ) (b_le_b' : b ≤ b') :
         constructor
         · exact le_trans b_le_b' hA.1
         · exact True.intro
-      · simp only [hC.2]
-        constructor
-        · exact (Finset.mem_Ico.mp hC.1).1
-        · exact True.intro
+      · simp_all
     · intro hB
       by_cases n_ge_b' : b' ≤ n
       · left; exact ⟨n_ge_b', hB.2⟩
-      right
-      have : n < b' := lt_of_not_ge n_ge_b'
-      simp only [Finset.mem_Ico, hB.1, this, and_self, hB.2]
+      simp_all
   rw [← h_union, Finset.card_union_of_disjoint h_disj]
 
 /-- We have $s_\alpha(a+1,b) = s_\alpha(a,b) + \delta(\alpha^{-1}(a) \ge b)$.
@@ -580,17 +551,12 @@ private lemma b_step_raw (a b : ℤ) : τ.s_raw a (b+1) = τ.s_raw a b - (if τ 
   by_cases h_lt : τ b < a
   · simp only [h_lt]
     suffices {x ∈ Finset.Ico b (b+1) | τ x < a} = {b} by
-      rw [this]
-      simp only [Finset.card_singleton, if_true]
+      simp_all
     ext n
     constructor
     · intro h; simp only [Finset.mem_filter, Finset.mem_Ico, Finset.mem_singleton] at h ⊢
       linarith [h.1]
-    · intro h
-      rw [Finset.mem_singleton] at h
-      subst n
-      simp only [Finset.mem_filter, Finset.mem_Ico]
-      exact ⟨⟨le_rfl, by omega⟩, h_lt⟩
+    · simp_all
   · have ge_a : τ b ≥ a := le_of_not_gt h_lt
     simp only [h_lt, ite_false, Finset.card_eq_zero, Finset.eq_empty_iff_forall_notMem]
     intro x x_Ico
@@ -686,14 +652,11 @@ private lemma tend_zero_a_raw (b : ℤ) : ∃ a : ℤ, τ.s_raw a b = 0 := by
       have : a ∈ S := Finset.min'_mem S S_nonempty
       simp only [S, Finset.mem_image] at this
       obtain ⟨n, ⟨n_se, n_eq⟩⟩ := this
-      have := ((τ.mem_se 0 b n).mp n_se).2
-      rwa [n_eq] at this
+      simp_all
     use a
     suffices southeastSet τ (Finset.min' S S_nonempty) b = ∅ by
       have h_ncard : (southeastSet τ (Finset.min' S S_nonempty) b).ncard = 0 := by
-        exact (Set.ncard_eq_zero
-          (s := southeastSet τ (Finset.min' S S_nonempty) b)
-          (hs := τ.se_finite (Finset.min' S S_nonempty) b)).2 this
+        simp_all
       unfold AspPerm.s_raw
       exact_mod_cast h_ncard
     apply Set.eq_empty_iff_forall_notMem.mpr
@@ -717,8 +680,7 @@ private lemma s_nondec_raw {a a' : ℤ} (a_le_a' : a ≤ a') (b : ℤ) :
   rw [a_move_up_raw τ a a' b a_le_a']
   let S := {x ∈ Finset.Ico a a' | τ⁻¹ x ≥ b}
   constructor
-  · have : S.card ≥ 0 := by simp
-    omega
+  · simp_all
   -- Now handle the equality case
   suffices (∀ (x : ℤ), a ≤ τ.func x → τ.func x < a' → x < b) ↔ S.card = 0 by
     simp only [this]
@@ -742,11 +704,9 @@ private lemma s_noninc_raw (a : ℤ) {b b' : ℤ} (b_le_b' : b ≤ b') :
     rw [b_move_up_raw τ a b b' b_le_b']
     simp only [sub_add_cancel, S]
   constructor
-  · have : S.card ≥ 0 := by simp
-    omega
+  · simp_all
   · have : τ.s_raw a b = τ.s_raw a b' ↔ S.card = 0 := by
-      rw [heq]
-      constructor <;> (intro; omega)
+      simp_all
     rw [this, Finset.card_eq_zero, Finset.eq_empty_iff_forall_notMem]
     unfold S
     simp
@@ -978,11 +938,7 @@ lemma chi_mul (α β : AspPerm) : (α * β).χ = α.χ + β.χ := by
           + (Q.filter (fun n => β⁻¹ n < 0)).card := by
     have hsplit := Finset.card_filter_add_card_filter_not
       (s := Q) (p := fun n => 0 ≤ β⁻¹ n)
-    have hnot :
-        Q.filter (fun n => ¬ 0 ≤ β⁻¹ n) = Q.filter (fun n => β⁻¹ n < 0) := by
-      ext n
-      simp only [Finset.mem_filter, not_le]
-    simpa only [hQ_cross, hnot] using hsplit.symm
+    simp_all
   have hA_card :
       A.card =
         (A.filter (fun n => α n < 0)).card
@@ -995,11 +951,7 @@ lemma chi_mul (α β : AspPerm) : (α * β).χ = α.χ + β.χ := by
           + (B.filter (fun n => 0 ≤ α n)).card := by
     have hsplit := Finset.card_filter_add_card_filter_not
       (s := B) (p := fun n => α n < 0)
-    have hnot :
-        B.filter (fun n => ¬ α n < 0) = B.filter (fun n => 0 ≤ α n) := by
-      ext n
-      simp only [Finset.mem_filter, not_lt]
-    simpa only [hnot] using hsplit.symm
+    simp_all
   have hse_image :
       (β.seFinset 0 0).card = A.card :=
     (Finset.card_image_of_injective _ β.injective).symm
@@ -1022,11 +974,7 @@ lemma chi_mul (α β : AspPerm) : (α * β).χ = α.χ + β.χ := by
 
 lemma b_step_one_iff (a b : ℤ) : τ.s a (b+1) = τ.s a b - 1 ↔ τ b < a := by
   rw [b_step τ a b]
-  by_cases h_lt : τ b < a
-  · simp only [h_lt, ↓reduceIte]
-  · simp only [h_lt, ↓reduceIte, sub_zero, iff_false]
-    intro h_eq
-    omega
+  simp_all
 
 lemma b_step_lt_iff (a b : ℤ) : τ.s a (b + 1) < τ.s a b ↔ τ b < a := by
   -- Proof written by GPT-5.
@@ -1037,15 +985,11 @@ lemma b_step_lt_iff (a b : ℤ) : τ.s a (b + 1) < τ.s a b ↔ τ b < a := by
   · intro h
     exact hiff.mp (by omega)
   · intro h
-    have hs := hiff.mpr h
-    omega
+    simp_all
 
 lemma b_step_eq_iff (a b : ℤ) : τ.s a (b+1) = τ.s a b ↔ a ≤ τ b := by
   rw [b_step τ a b]
-  by_cases h_lt : τ b < a
-  · simp only [h_lt, ↓reduceIte, sub_eq_self, one_ne_zero, false_iff, not_le]
-  · simp only [h_lt, ↓reduceIte, sub_zero, true_iff]
-    omega
+  simp_all
 
 lemma b_step_ge_iff (a b : ℤ) : τ.s a (b + 1) ≥ τ.s a b ↔ a ≤ τ b := by
   constructor
@@ -1070,8 +1014,7 @@ lemma a_step_gt_iff (a b : ℤ) : τ.s a b < τ.s (a + 1) b ↔ b ≤ τ⁻¹ a 
   · intro h
     exact hiff.mp (by omega)
   · intro h
-    have hs := hiff.mpr h
-    omega
+    simp_all
 
 lemma a_step_le_iff (a b : ℤ) : τ.s (a+1) b ≤ τ.s a b ↔ τ⁻¹ a < b := by
   constructor
@@ -1088,10 +1031,7 @@ lemma a_step_one_iff' (u b : ℤ) : τ.s (τ u + 1) b = τ.s (τ u) b + 1 ↔ u 
 
 lemma a_step_eq_iff (a b : ℤ) : τ.s (a+1) b = τ.s a b ↔ τ⁻¹ a < b := by
   rw [a_step τ a b]
-  by_cases h_ge : τ⁻¹ a ≥ b
-  · simp only [ge_iff_le, h_ge, ↓reduceIte, add_eq_left, one_ne_zero, false_iff, not_lt]
-  · simp only [ge_iff_le, h_ge, ↓reduceIte, add_zero, true_iff]
-    omega
+  simp_all
 
 lemma a_step_eq_iff' (u b : ℤ) : τ.s (τ u + 1) b = τ.s (τ u) b ↔ u < b := by
   have := a_step_eq_iff τ (τ u) b
@@ -1360,8 +1300,7 @@ private lemma R_nonempty (m_pos : m > 0) : (R τ b m).Nonempty := by
   have := tend_zero_a (τ := τ) b
   obtain ⟨n, hn⟩ := this
   use n
-  unfold R; simp
-  linarith [m_pos, hn]
+  unfold R; simp_all
 
 private lemma R_bddAbove : ∃ N : ℤ, ∀ n ∈ R τ b m, n ≤ N := by
   use m + b - τ.χ
@@ -1424,8 +1363,7 @@ lemma v_crit (b : ℤ) {m : ℤ} (m_pos : m > 0) (v : ℤ) :
     have v_ge_b : b ≤ v := by
       by_contra! v_lt_b
       have : τ.s (τ v + 1) b = τ.s (τ v) b := (a_step_eq_iff' τ v b).mpr v_lt_b
-      rw [this] at s_inc
-      exact lt_irrefl _ s_inc
+      simp_all
     let s_inc : τ.s (τ v + 1) b = τ.s (τ v) b + 1 := (a_step_one_iff' τ v b).mpr v_ge_b
     have s_next_le : τ.s (τ v + 1) b ≤ m := by
       rw [s_inc]
@@ -1526,10 +1464,7 @@ lemma u_crit (b : ℤ) {n : ℤ} (n_pos : n > 0) (u : ℤ) :
       have hs_u0_ge_n : (τ⁻¹).s b (τ u₀) ≥ n := by
         simpa [u₀] using (τ.u_spec b n_pos).1
       have hs_u0_le : (τ⁻¹).s b (τ u₀) ≤ n - 1 := by
-        rw [hs_dec] at hs_noninc
-        have hs_eq_inv : (τ⁻¹).s b (τ u) = n := by
-          simpa using s_eq
-        omega
+        simp_all
       omega
     exact τ.injective <| le_antisymm τu_le τu_ge
 
@@ -1638,8 +1573,7 @@ lemma reduced_iff_leR (α β : AspPerm) :
       intro hβ
       have hα : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ invSet α := by
         refine ⟨hαpq, ?_⟩
-        simp only [mul_inv_cancel_eval]
-        exact p_lt_q
+        simp_all
       have hβ' : ⟨α⁻¹ q, α⁻¹ p⟩ ∈ invSet (β⁻¹).func :=
         ⟨hαpq, hβ⟩
       exact Set.disjoint_left.mp hred hα hβ'
@@ -1680,8 +1614,7 @@ lemma reduced_iff_leL (α β : AspPerm) :
       have hα' : ⟨β q, β p⟩ ∈ invSet α := ⟨hβpq, hα⟩
       have hβ' : ⟨β q, β p⟩ ∈ invSet (β⁻¹).func := by
         refine ⟨hβpq, ?_⟩
-        simp only [inv_mul_cancel_eval]
-        exact p_lt_q
+        simp_all
       exact Set.disjoint_left.mp hred hα' hβ'
     have hne : α (β q) ≠ α (β p) := by
       intro h
@@ -2004,22 +1937,15 @@ private lemma M_sub_M'' : τ.M ⊆ τ.M'' := by
           have b_le_m : b ≤ m := le_trans nge hm.1
           have τm_lt_a : τ m < a:= lt_trans hm.2 τnlt
           have m_se : m ∈ τ.seFinset a b := by
-            rw [τ.mem_se]
-            exact ⟨b_le_m, τm_lt_a⟩
+            simp_all
           have : m ≤ n := Finset.le_max' _ m m_se
           have m_eq_n : m = n := le_antisymm this hm.1
-          rw [m_eq_n] at hm
-          exact lt_irrefl (τ n) hm.2
+          simp_all
         rw [this, Finset.card_empty, Nat.cast_zero, zero_add]
   rw [τ.mem_se] at hn
   use τ n + 1, n
   constructor
-  · have : τ.s (τ n + 1) n = τ.s (τ n) n + 1 := by
-      apply (τ.a_step_one_iff (τ n) n).2
-      rw [τ.inv_mul_cancel_eval]
-    rw [this]
-    have := τ.s_nonneg (τ n) n
-    omega
+  · simp_all
   · have mle' : m ≤ τ⁻¹.s n (τ n + 1) := by
       apply le_trans mle
       apply τ⁻¹.s.nondec (a := b) (b := a) (a' := n) (b' := τ n + 1) nge (by omega)
@@ -2059,8 +1985,7 @@ private lemma bdiff_width_helper (M : ℤ) :
       use n
       omega
     rcases this with ⟨a, b, hpos, hm⟩
-    have := h a b (by omega)
-    omega
+    simp_all
 
 /-- A permutation $\tau$ has bounded difference if and only if $s_\tau(a,b)$ agrees with
 $\max\{0, a-b+\chi(\tau)\}$ for all $|a-b| \gg 0$. *Proposition 7.7*
@@ -2098,8 +2023,7 @@ theorem bdiff_iff_width : τ.isBdiff ↔ ∃ N, τ.width_bound N := by
       rw [τ.bdiff_width_helper]
       exact h_left_zero
     have h_right_zero : ∀ (a b : ℤ), N ≤ b - a → τ⁻¹.s a b = 0 := by
-      intro a b hab
-      exact (hMN b a).2 hab
+      simp_all
     have h_right : ∀ n : ℤ, n - τ⁻¹ n ≤ N := by
       rw [τ⁻¹.bdiff_width_helper]
       exact h_right_zero
@@ -2141,8 +2065,7 @@ theorem bdiff_iff_clifford : τ.isBdiff ↔ τ.s.isClifford := by
     have sle : τ.s a b ≤ M + τ.χ := by
       have hmem : τ.s a b ∈ τ⁻¹.M := by
         use b, a
-        rw [inv_inv]
-        exact ⟨s'pos, le_rfl⟩
+        simp_all
       rw [← τ⁻¹.M'_eq_M] at hmem
       rcases hmem with ⟨n, hn⟩
       rw [τ.chi_dual] at hn

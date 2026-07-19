@@ -102,9 +102,7 @@ lemma corrAvg_le_one {n : Nat} (f : Coloring n) (u v : Vertex n) : corrAvg f u v
     have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
       have : s.card = Fintype.card (G n) := by simp [s]
       exact_mod_cast this
-    have : s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤ (s.card : Q) := by
-      simpa [nsmul_one] using hsum
-    simpa [hcard] using this
+    simp_all
   exact (div_le_one (cardG_pos n)).2 hsum'
 
 lemma neg_one_le_corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) :
@@ -124,11 +122,7 @@ lemma neg_one_le_corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) :
     have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
       have : s.card = Fintype.card (G n) := by simp [s]
       exact_mod_cast this
-    have :
-        (-1 : Q) * (s.card : Q) ≤
-          s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) := by
-      simpa [nsmul_eq_mul, mul_comm, mul_left_comm, mul_assoc] using hsum
-    simpa [hcard] using this
+    simp_all
   exact (_root_.le_div_iff₀ hpos).2 this
 
 lemma triangle_inequalities (b0 b1 b2 : Bool) :

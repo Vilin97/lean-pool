@@ -37,8 +37,7 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
   intro x hx
   induction k generalizing x with
   | zero =>
-    simp only [iteratedDerivWithin_zero, pow_zero, Nat.factorial_zero, one_mul]
-    simp at *
+    simp_all
   | succ k IH =>
     rw [iteratedDerivWithin_succ]
     simp only [one_div, Nat.cast_succ, Nat.factorial, Nat.cast_mul]
@@ -90,11 +89,7 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
         Nat.cast_one, Int.cast_add] at *
       intro r hr
       apply IH hr
-    norm_cast at *
-    simp only [mem_setOf_eq, one_div, Int.reduceNegSucc, Int.reduceNeg, Int.cast_mul, Int.cast_pow,
-      Int.cast_neg, Int.cast_one, Int.cast_natCast, Nat.cast_mul, Nat.cast_add, Nat.cast_one,
-      Int.cast_add] at *
-    apply this
+    simp_all
 
 theorem aut_iter_deriv' (d : ℤ) (k : ℕ) :
     EqOn (iteratedDerivWithin k (fun z : ℂ => 1 / (z - d)) {z : ℂ | 0 < z.im})
@@ -124,8 +119,7 @@ theorem iter_div_aut_add (d : ℤ) (k : ℕ) :
   rw [iteratedDerivWithin_add hx ?_]
   · have h2 := aut_iter_deriv d k hx
     have h3 := aut_iter_deriv' d k hx
-    simp only [mem_setOf_eq, one_div] at *
-    rw [h2, h3]
+    simp_all
   · have h4 := aut_contDiffOn d k
     simp only [one_div] at h4
     apply h4

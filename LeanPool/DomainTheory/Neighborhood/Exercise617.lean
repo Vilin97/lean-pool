@@ -772,8 +772,7 @@ theorem consMap_not_mem_nil {b : Bool} {z : C.Element} :
   rintro ⟨X', hzX', hX'mem, _, hsub⟩
   obtain ⟨a, ha⟩ := C_nonempty X' hX'mem
   rw [← embBit_eq_prepend] at hsub
-  have := hsub ⟨a, rfl, ha⟩
-  rw [Set.mem_singleton_iff] at this; exact absurd this (by simp)
+  simp_all
 
 /-- **`toCC ∘ (0·) = inj₁` and `toCC ∘ (1·) = inj₂`.** Prepending the bit `b` to
 `z` is, across the

@@ -75,8 +75,7 @@ variable (A p) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def emptyStrategy : Strategy (A := A) ⊥ p := fun x _ ↦ x.prop.elim
 @[simp] lemma emptyStrategy_subtree : (emptyStrategy A p).pre.subtree = ⊥ := by
-  ext x
-  simp [emptyStrategy, PreStrategy.subtree]
+  simp_all
 lemma existsWinning_empty : ExistsWinning (A := A) ⟨⊥, ∅⟩ p :=
   ⟨emptyStrategy A p, by simp [PreStrategy.IsWinning]⟩
 
@@ -278,8 +277,7 @@ lemma wonPosition_iff_disjoint' {x} :
       apply hpay
       rwa [Player.payoff_residual]
     exact h (body.append x a) ⟨⟨a, rfl⟩, by
-      rw [Player.payoff_swap_residual]
-      exact hpay'⟩
+      simp_all⟩
 lemma wonPosition_iff_disjoint {x} :
   G.WonPosition x p ↔ principalOpen x ∩ (p.swap.residual x).payoff G = ∅ := by
   simpa [← Set.image_val_inj, Set.inter_assoc, ← Set.inter_sdiff_assoc] using
@@ -340,9 +338,7 @@ lemma followUntilWon_body : body S.followUntilWon.subtree ≤ body S.subtree ∪
     have hmem := Set.eq_univ_iff_forall.mp h' (body.drop n ⟨x, hx'⟩)
     simpa [body.append] using hmem
   · left; apply subtree_induction_body hx
-    intros _ _ _; unfold followUntilWon; split_ifs
-    · tauto
-    · exact id
+    intros _ _ _; unfold followUntilWon; simp_all
 @[simp] lemma followUntilWon_isWinning : S.followUntilWon.IsWinning ↔ S.IsWinning :=
   ⟨sub_winning S.le_followUntilWon, fun h ↦ subset_trans S.followUntilWon_body (by simpa)⟩
 end «followUntilWon»

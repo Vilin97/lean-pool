@@ -52,8 +52,7 @@ private lemma parametrization_not_C_two_dvd_second {n : ℕ} {f g h : IntPoly n}
     rw [hq]
     simp [intPolyEval]
   have hodd : (3 : ℤ) = 2 * intPolyEval q a := by
-    rw [← hgval]
-    exact hEval
+    simp_all
   omega
 
 /-- Frisch--Vaserstein's obstruction: no finite-variable triple of integer-coefficient
@@ -77,11 +76,9 @@ theorem no_int_poly_parametrization :
           h ^ 2 - (f ^ 2 + g ^ 2) - (2 : IntPoly n) * (f * g) := by
         ring
       _ = (2 : IntPoly n) * (-(f * g)) := by
-        rw [← hId]
-        ring
+        simp_all
   have hfac_dvd : two ∣ (h - f - g) * (h + f + g) := by
-    refine ⟨-(f * g), ?_⟩
-    exact hfac
+    simp_all
   have hfg_of_left (hleft : two ∣ h - f - g) : two ∣ f * g := by
     rcases hleft with ⟨r, hr⟩
     have hleft' : two ∣ h - f - g := ⟨r, hr⟩
@@ -98,10 +95,7 @@ theorem no_int_poly_parametrization :
     have hfour' : two * two ∣ two * (-(f * g)) := by
       simpa [hfac] using hfour
     have hdivneg : two ∣ -(f * g) := (mul_dvd_mul_iff_left htwo_ne).mp hfour'
-    rcases hdivneg with ⟨s, hs⟩
-    refine ⟨-s, ?_⟩
-    rw [← neg_neg (f * g), hs]
-    ring
+    simp_all
   have hfg_of_right (hright : two ∣ h + f + g) : two ∣ f * g := by
     rcases hright with ⟨r, hr⟩
     have hleft : two ∣ h - f - g := by
@@ -128,8 +122,7 @@ theorem no_int_poly_parametrization :
       rw [hq]
       simp [intPolyEval, two]
     have hodd : (3 : ℤ) = 2 * intPolyEval q a := by
-      rw [← hfval]
-      exact hEval
+      simp_all
     omega
   have hnotg : ¬ two ∣ g := by
     dsimp [two]

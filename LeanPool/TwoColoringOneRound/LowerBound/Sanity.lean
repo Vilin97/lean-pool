@@ -70,8 +70,7 @@ private lemma not_all_small (e : Edge 5) : ¬ (∀ i : Fin 4, e.1 i < two5) := b
   have hle : Fintype.card (Fin 4) ≤ Fintype.card Small5 :=
     Fintype.card_le_of_embedding emb
   -- Turn the card inequality into a numeral contradiction.
-  simp only [Fintype.card_fin, card_Small5] at hle
-  exact (by decide : ¬(4 : Nat) ≤ 2) hle
+  simp_all
 
 private lemma not_all_big (e : Edge 5) : ¬ (∀ i : Fin 4, two5 ≤ e.1 i) := by
   classical
@@ -84,8 +83,7 @@ private lemma not_all_big (e : Edge 5) : ¬ (∀ i : Fin 4, two5 ≤ e.1 i) := b
         exact congrArg Subtype.val hij }
   have hle : Fintype.card (Fin 4) ≤ Fintype.card Big5 :=
     Fintype.card_le_of_embedding emb
-  simp only [Fintype.card_fin, card_Big5] at hle
-  exact (by decide : ¬(4 : Nat) ≤ 3) hle
+  simp_all
 
 private abbrev pat0000 : Edge 5 → Prop := EdgePatterns.Pat0000 (two := two5)
 private abbrev pat1111 : Edge 5 → Prop := EdgePatterns.Pat1111 (two := two5)
@@ -124,19 +122,14 @@ private lemma monochromatic_iff_pat (e : Edge 5) :
       exact False.elim (not_all_big (e := e) hall)
     · exact Or.inl hall2
     · exact Or.inr hall3
-  · rintro (h1001 | h0110)
-    · exact hpatterns.mpr (Or.inr <| Or.inr <| Or.inl h1001)
-    · exact hpatterns.mpr (Or.inr <| Or.inr <| Or.inr h0110)
+  · simp_all
 private lemma card_pat1001 : Fintype.card {e : Edge 5 // pat1001 e} = 12 := by
   classical
   have h :
       Fintype.card {e : Edge 5 // pat1001 e}
         = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
     exact EdgePatterns.card_pat1001 (n := 5) (two := two5)
-  have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
-    rw [card_Big5, card_Small5]
-    decide
-  exact h.trans hnum
+  simp_all
 
 private lemma card_pat0110 : Fintype.card {e : Edge 5 // pat0110 e} = 12 := by
   classical
@@ -144,10 +137,7 @@ private lemma card_pat0110 : Fintype.card {e : Edge 5 // pat0110 e} = 12 := by
       Fintype.card {e : Edge 5 // pat0110 e}
         = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
     exact EdgePatterns.card_pat0110 (n := 5) (two := two5)
-  have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
-    rw [card_Big5, card_Small5]
-    decide
-  exact h.trans hnum
+  simp_all
 
 theorem edgeCount_5 : edgeCount 5 = 120 := by
   classical
@@ -160,8 +150,7 @@ theorem edgeCount_5 : edgeCount 5 = 120 := by
           left_inv := by intro e; apply Subtype.ext; funext i; rfl
           right_inv := by intro x; ext i; rfl }
     simpa [edgeCount] using this
-  have : edgeCount 5 = (5 : Nat).descFactorial 4 := by simp [hcongr, Sym, Fintype.card_embedding_eq]
-  simpa using this.trans (by decide : (5 : Nat).descFactorial 4 = 120)
+  simp_all
 
 theorem monoCount_f5 : monoCount f5 = 24 := by
   classical

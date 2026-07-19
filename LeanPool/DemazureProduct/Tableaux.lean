@@ -74,9 +74,7 @@ lemma A_subset (L : Link) : L.A ⊆ L.S.I := by
 lemma mem_A_of_mem_inv_not_mem_B (L : Link) {p : ℤ × ℤ}
   (hpτ : p ∈ L.S.I) (hpB : p ∉ L.B) : p ∈ L.A := by
   rw [← L.union_eq] at hpτ
-  rcases hpτ with (hpA | hpB')
-  · exact hpA
-  · exact (hpB hpB').elim
+  simp_all
 
 theorem ext {L₁ L₂ : Link}
     (hA : L₁.A = L₂.A) (hB : L₁.B = L₂.B)
@@ -90,15 +88,9 @@ theorem ext {L₁ L₂ : Link}
           simpa [hs1, hs2] using (by
             rw [← L₁.union_eq, ← L₂.union_eq, hA, hB] : L₁.S.I = L₂.S.I)
         have hAsp : S1 = S2 := AspSet.ext hI
-        rw [tfas.mk.injEq]
-        simpa using hAsp
+        simp_all
   cases L₁
-  cases L₂
-  cases hA
-  cases hB
-  cases hχa
-  cases hχb
-  simpa
+  simp_all
 
 lemma B_AspSet_prop (L : Link) :
   AspSet_prop L.B where
@@ -127,20 +119,14 @@ lemma B_AspSet_prop (L : Link) :
         · exact le_refl u
         · exact le_of_lt v_lt_w
       have := L.sep ⟨u, v⟩ huv' ⟨u, w⟩ huw this
-      have : v = w := by
-        simpa
-      rw [this] at v_lt_w
-      exact lt_irrefl w v_lt_w
+      simp_all
     · have hvw' : ⟨v, w⟩ ∈ L.A := L.mem_A_of_mem_inv_not_mem_B h_vw hvw
       have : ⟨v, w⟩ ≼ ⟨u, w⟩ := by
         constructor
         · exact le_of_lt u_lt_v
         · exact le_refl w
       have := L.sep ⟨v, w⟩ hvw' ⟨u, w⟩ huw this
-      have : v = u := by
-        simpa
-      rw [this] at u_lt_v
-      exact lt_irrefl u u_lt_v
+      simp_all
   finiteOutdegree := by
     intro u
     exact (L.S.finiteOutdegree u).subset (by
@@ -365,8 +351,7 @@ lemma rev_A_eq_inv_inv_of_Link_of_dprod {α β : AspPerm} (dprod : α ⋆ β = �
     rcases h with ⟨⟨u', v'⟩, hu'v', hEq⟩
     have hα : ⟨τ v', τ u'⟩ ∈ invSet α⁻¹.func := (τ.sr_crit α u' v').mp hu'v'
     simp only [AspPerm.revMap, Prod.mk.injEq] at hEq
-    rcases hEq with ⟨hv, hu⟩
-    simpa [hv, hu] using hα
+    simp_all
   · intro huv
     have hsr : ⟨τ⁻¹ v, τ⁻¹ u⟩ ∈ τ.sr α '' invSet α := by
       apply (τ.sr_crit α (τ⁻¹ v) (τ⁻¹ u)).mpr
@@ -553,8 +538,7 @@ lemma LSet_boxUnion (A : HeckeFactorization τ) :
       have τ_eq : α ⋆ β = τ := by
         rw [← dprodA, ← DProd_cons]
       have h_R : α ≤R τ := by
-        rw [← dprodA]
-        exact Submodular.ler_of_dprod α β
+        simp_all
       have h_χ : τ.χ = α.χ + β.χ := by
         rw [← dprodA]
         exact (AspPerm.chi_star α β)
@@ -759,15 +743,13 @@ lemma HF_of_PChain_of_HF (A : HeckeFactorization τ) :
         simpa [e, x, linkEquivDprod] using
           congrArg Prod.fst (congrArg Subtype.val (e.right_inv x))
       have hα : Lnk.α = α := by
-        rw [hLink]
-        exact hα₀
+        simp_all
       calc
         Lnk.α :: lPermOfChain (lSetOfLPerm T)
             (LSet_isChain h_321a ⟨α :: T, dprodA⟩).2 htfasT
           = α :: lPermOfChain (lSetOfLPerm T)
               (LSet_isChain h_321a ⟨α :: T, dprodA⟩).2 htfasT := by
-                simpa using congrArg (fun γ => γ :: lPermOfChain (lSetOfLPerm T)
-                  (LSet_isChain h_321a ⟨α :: T, dprodA⟩).2 htfasT) hα
+                simp_all
         _ = α :: T := by simp only [hTail]
 
 /-- Hecke factorizations of a 321-avoiding ASP permutation are equivalent to
@@ -835,9 +817,7 @@ def labelChainOfTableau (T : SetValuedTableau τ n) : LabelChain τ n := by
     · rcases hp with ⟨hpτ, hip⟩
       rcases hq with ⟨hqτ, hjq⟩
       have hneq : (⟨p, hpτ⟩ : ↥(invSet τ)) ≠ ⟨q, hqτ⟩ := by
-        intro h
-        apply hEq
-        exact congrArg Subtype.val h
+        simp_all
       exfalso
       exact (not_le_of_gt hij) (T.2.weak hip hjq hpq hneq)
 
@@ -866,10 +846,7 @@ lemma mem_labelChainOfTableau_iff (T : SetValuedTableau τ n)
     p.1 ∈ (labelChainOfTableau T).1 i ↔ i ∈ T.1 p := by
   constructor
   · rintro ⟨hp, hi⟩
-    have hp_eq : (⟨p.1, hp⟩ : ↥(invSet τ)) = p := by
-      apply Subtype.ext
-      rfl
-    simpa [hp_eq] using hi
+    simp_all
   · intro hi
     exact ⟨p.2, hi⟩
 
@@ -998,8 +975,7 @@ lemma eq_of_isChain_getElem {L : List (Set (ℤ × ℤ) × ℤ)} (hChain : isCha
       ∀ p ∈ (L[i]'hi).1, ∀ q ∈ (L[j]'hj).1, p ≼ q → p = q := by
   induction L with
   | nil =>
-      intro i j hi
-      simp at hi
+      simp_all
   | cons head tail ih =>
       intro i j hi hj hij p hp q hq hpq
       rcases hChain with ⟨hLink, hTail⟩

@@ -271,8 +271,7 @@ theorem lamDef_succ : LamDef (strictGuardN 1 (succMap.comp (projN N 0)))
   lamDef_total _ _ (fun v => by
     rw [toElementMap_comp, toElementMap_projN, component_vecElem_lt v (by norm_num),
       succMap_natElem]
-    congr 1
-    simp [List.Vector.get_zero])
+    simp_all)
 
 /-- `get i : Vector ℕ n → ℕ`, the `i`-th projection. -/
 theorem lamDef_get {n : ℕ} (i : Fin n) :
@@ -803,11 +802,7 @@ theorem lamDef_rfind {n : ℕ} {f : List.Vector ℕ (n + 1) → ℕ}
   · intro v hv
     rw [findMap_vecElem]
     have hdiv : ∀ k, f (k ::ᵥ v) ≠ 0 := by
-      intro k h0
-      refine hv ?_
-      rw [Nat.rfind_dom]
-      exact ⟨k, by rw [Part.mem_some_iff]; exact (decide_eq_true_iff.mpr h0).symm,
-        fun {m} _ => trivial⟩
+      simp_all
     exact searchMap_diverge φf hf v hdiv 0
 
 end Rfind

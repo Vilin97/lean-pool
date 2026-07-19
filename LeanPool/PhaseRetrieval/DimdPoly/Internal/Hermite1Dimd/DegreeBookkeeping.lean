@@ -186,8 +186,7 @@ private theorem highAnnulusDegreeLowerBound
   dsimp [degreeIntervalLower]
   rw [← Finset.add_sum_erase (s := Finset.univ)
       (f := fun q : Fin d => (max (j q) M - M) ^ 2) (by simp : q0 ∈ Finset.univ)]
-  rw [hq0, hsq]
-  omega
+  simp_all
 
 private theorem coordGapEqInt
     (n M : ℕ) (hMn : M ≤ n) :
@@ -284,8 +283,7 @@ theorem highAnnulusDegreeBounds
       _ = (∑ q : Fin d, gap q) + ∑ q : Fin d, (if q = q0 then 1 else 0) := by
             rw [Finset.sum_add_distrib]
       _ = (∑ q : Fin d, gap q) + 1 := by
-            rw [Finset.sum_ite_eq' (s := Finset.univ) (a := q0) (b := fun _ => (1 : ℕ))]
-            simp
+            simp_all
   have hpointwise : ∀ q : Fin d, gap' q ≤ C := by
     intro q
     by_cases hqq : q = q0
@@ -395,18 +393,15 @@ theorem zeroPaddingBand
     rw [positiveFrequencyPolynomial, bandLimitedPolynomial, hfilter]
     symm
     refine Finset.sum_bij (fun m hm => N + m.1) ?_ ?_ ?_ ?_
-    · intro m hm
-      simpa using (Finset.mem_filter.mp hm).2
+    · simp_all
     · intro m₁ hm₁ m₂ hm₂ hEq
       exact Fin.ext (Nat.add_left_cancel hEq)
     · intro n hn
       obtain ⟨hlo, hhi⟩ := hE n hn
       refine ⟨⟨n - N, by omega⟩, ?_, ?_⟩
       · simp [hlo, hn]
-      · change N + (n - N) = n
-        omega
-    · intro a ha
-      rfl
+      · simp_all
+    · simp_all
 
 /-- Orthogonality to `ν_κ` removes zero from every local degree window. -/
 theorem zeroFrequencyAbsent

@@ -129,7 +129,6 @@ instance [DiscreteMeasurableSpace A] [Countable A] : DiscreteMeasurableSpace (Li
     · have {n} : DiscreteMeasurableSpace (Fin n → A) := by
         apply MeasurableSingletonClass.toDiscreteMeasurableSpace
       apply MeasurableSet.of_discrete (α := (n : ℕ) × (Fin n → A))
-    · rw [Set.preimage_image_eq]
-      simp only [List.Encoding.encode_injective]
+    · simp_all
 
 end MeasureTheory.List

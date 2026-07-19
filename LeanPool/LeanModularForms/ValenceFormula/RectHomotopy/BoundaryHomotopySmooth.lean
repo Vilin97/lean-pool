@@ -80,8 +80,7 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
             ((↑(1 : ℝ) : ℂ) - ↑(1 : ℝ)) * (↑(Real.pi / 6) : ℂ)) * I) = rho' := by
           rw [show ((↑(1 : ℝ) : ℂ) - ↑(1 : ℝ)) = 0 from by norm_num, zero_mul, add_zero,
             exp_pi_div_three_eq_rho']
-        rw [h_val] at h_raw
-        convert h_raw using 2 <;> push_cast <;> ring
+        simp_all
       have h_chord : HasDerivAt (fun t' : ℝ => chordSegment rho' iPoint (t' - 1))
           (iPoint - rho') (1 : ℝ) :=
         hasDerivAt_chordSegment_shift rho' iPoint 1 1
@@ -157,14 +156,7 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
               (-Real.pi * Real.sqrt 3 / 12 + Real.pi / 12 * I) +
               (s:ℂ) * (-1/2 + (1 - Real.sqrt 3 / 2) * I)) =
             (1 - s) * (-Real.pi * Real.sqrt 3 / 12) + s * (-1/2) := by
-        simp only [Complex.add_re, Complex.mul_re, Complex.sub_re, Complex.ofReal_re,
-          Complex.one_re, Complex.div_ofNat_re, Complex.neg_re, Complex.ofReal_im, Complex.I_re,
-          Complex.I_im,
-          show Complex.im (1 - (s:ℂ)) = 0 from by simp [Complex.sub_im, Complex.ofReal_im],
-          show Complex.im ((1:ℂ) - Real.sqrt 3 / 2) = 0 from by
-            simp [Complex.sub_im, Complex.ofReal_im, Complex.div_ofNat_im],
-          mul_zero, sub_zero, mul_one, Complex.neg_im, Complex.div_ofNat_im, add_zero]
-        ring
+        simp_all
       have h_re_eq := congr_arg Complex.re heq
       rw [h_lhs_re, h_rhs_re] at h_re_eq
       linarith [h_re_eq, arc_chord_re_neg s hs]
@@ -193,8 +185,7 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
           rw [show ((↑(Real.pi / 2) : ℂ) + ((↑(3 : ℝ) : ℂ) - ↑(2 : ℝ)) * (↑(Real.pi / 6) : ℂ)) =
               ↑(2 * Real.pi / 3) from by push_cast; ring]
           exact exp_two_pi_div_three_eq_rho
-        rw [h_val] at h_raw
-        convert h_raw using 2 <;> push_cast <;> ring
+        simp_all
       have h_chord : HasDerivAt (fun t' : ℝ => chordSegment iPoint rho (t' - 2))
           (rho - iPoint) (3 : ℝ) :=
         hasDerivAt_chordSegment_shift iPoint rho 2 3
@@ -294,14 +285,7 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
               (-Real.pi * Real.sqrt 3 / 12 - Real.pi / 12 * I) +
               (s:ℂ) * (-1/2 + (Real.sqrt 3 / 2 - 1) * I)) =
             (1 - s) * (-Real.pi * Real.sqrt 3 / 12) + s * (-1/2) := by
-        simp only [Complex.add_re, Complex.mul_re, Complex.sub_re, Complex.ofReal_re,
-          Complex.one_re, Complex.div_ofNat_re, Complex.neg_re, Complex.ofReal_im,
-          Complex.I_re, Complex.I_im,
-          show Complex.im (1 - (s:ℂ)) = 0 from by simp [Complex.sub_im, Complex.ofReal_im],
-          show Complex.im ((Real.sqrt 3 : ℂ) / 2 - 1) = 0 from by
-            simp [Complex.sub_im, Complex.div_ofNat_im, Complex.ofReal_im],
-          mul_zero, sub_zero, mul_one, Complex.neg_im, Complex.div_ofNat_im, add_zero]
-        ring
+        simp_all
       have h_re_eq := congr_arg Complex.re heq
       rw [h_lhs_re, h_rhs_re] at h_re_eq
       linarith [h_re_eq, arc_chord_re_neg s hs]
@@ -423,14 +407,12 @@ lemma interval_in_segment (p₁ p₂ : ℝ) (_hp : p₁ < p₂)
           · by_contra hlt
             have h3_in : (3 : ℝ) ∈ Set.Ioo p₁ p₂ := ⟨not_le.mp hlt, not_le.mp h3⟩
             have := h_avoid 3 h3_in
-            exact absurd (Finset.mem_insert.mpr (Or.inr (Finset.mem_insert.mpr
-              (Or.inr (Finset.mem_insert_self 3 _))))) this
+            simp_all
           · exact h4
         · right
           by_contra hlt
           have h4_in : (4 : ℝ) ∈ Set.Ioo p₁ p₂ := ⟨not_le.mp hlt, not_le.mp h4⟩
           have := h_avoid 4 h4_in
-          exact absurd (Finset.mem_insert.mpr (Or.inr (Finset.mem_insert.mpr (Or.inr
-            (Finset.mem_insert.mpr (Or.inr (Finset.mem_singleton_self 4))))))) this
+          simp_all
 
 end RectHomotopyProof

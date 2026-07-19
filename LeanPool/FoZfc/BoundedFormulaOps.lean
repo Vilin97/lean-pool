@@ -154,9 +154,7 @@ theorem realize_liftAt'_one {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     {t : L.Term (ℕ ⊕ Fin n)} {a : V} :
     Term.realize (Sum.elim s (Fin.snoc xs a)) (Term.liftAt 1 n t)
     = Term.realize (Sum.elim s xs) t := by
-  induction t with
-  | var i => rcases i with k | k <;> simp [Term.liftAt]
-  | func _f _ts _ih => simp
+  simp_all
 
 /-- Realization of `liftAt n' n t` agrees with realization of `t` when the
   extra context values `xs1` extend `xs` along `castAdd`. Lifts the hypothesis
@@ -170,18 +168,10 @@ theorem realize_liftAt' {n n' : ℕ} {s : ℕ → V} {xs : Fin n → V}
   induction t with
   | var i =>
     rcases i with k | k
-    · unfold Term.liftAt
-      simp
-    · simp only [Term.realize_liftAt, Fin.is_lt, ↓reduceIte, Term.realize_var,
-        Function.comp_apply, Sum.map_inr, Sum.elim_inr]
-      rw [← h_xs1_restriction_xs]
+    · simp_all
+    · simp_all
   | func _f _ts _ih =>
-    simp only [Term.realize_liftAt, Fin.is_lt, ↓reduceIte, Term.realize_func]
-    apply congr
-    · rfl
-    · funext k
-      rw [← _ih]
-      simp
+    simp_all
 
 end Term
 
@@ -213,20 +203,12 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
         Structure.RelMap _R fun i ↦
           Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs)
             (_ts i) := by apply realize_rel
-    rw [h1, h2]
-    have h4 : (fun i ↦ Term.realize (Sum.elim s xs) (Term.replaceFV (_ts i) tsN)) =
-        (fun i ↦ Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs)
-          (_ts i)) := funext fun i ↦ Term.realize_replaceFV
-    rw [h4]
+    simp_all
   | imp _f₁ _f₂ ih₁ ih₂ =>
     simp only [BoundedFormula.replaceFV, realize_imp, ih₁, ih₂]
   | @all _n _f ih =>
     simp only [BoundedFormula.replaceFV, realize_all, Nat.succ_eq_add_one, snoc_conv, ih]
-    apply forall_congr'
-    intro a
-    rw [show (fun k ↦ Term.realize (Sum.elim s (fixedSnoc xs a))
-        (Term.liftAt 1 _n (tsN k))) = (fun k ↦ Term.realize (Sum.elim s xs) (tsN k))
-      from funext fun k ↦ Term.realize_liftAt'_one]
+    simp_all
 
 end BoundedFormula
 
@@ -313,8 +295,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             · rw [Nat.mod_eq_of_lt]
               · omega
               · omega
-          rw [h2_3]
-          simp
+          simp_all
         · omega
       · by_cases h_k__n : k = _n
         · rw [h_k__n]
@@ -322,15 +303,13 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
           rw [if_neg]
           · have h2 : (Fin.cast h_bar_n (k.addNat n')) = Fin.last (_n+n') := by
               apply Fin.eq_of_val_eq
-              simp only [Fin.val_cast, Fin.val_addNat, Fin.val_last, Nat.add_right_cancel_iff]
-              exact h_k__n
+              simp_all
             rw [h2]
             simp only [snoc_last]
             have h3 : k = Fin.last _n := by
               apply Fin.eq_of_val_eq
               simpa only [Fin.val_last] using h_k__n
-            rw [h3]
-            simp
+            simp_all
           · omega
         · rw [if_neg]
           · unfold xs1
@@ -388,9 +367,7 @@ theorem replaceInitialValues_2_1 {s : ℕ → V} {a b : V} :
 theorem realize_makeTsN {n m k : ℕ} {ts : Fin (m + 1) → L.Term (ℕ ⊕ Fin n)}
     {h : k < m + 1} : makeTsN ts k = ts (Fin.ofNat (m+1) k) := by
   unfold makeTsN
-  simp only [Fin.ofNat_eq_cast, ite_eq_left_iff, not_lt]
-  intro h1
-  omega
+  simp_all
 
 end ReplaceFV
 

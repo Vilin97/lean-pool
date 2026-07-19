@@ -178,13 +178,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
       ≤ ∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t‖ :=
         norm_sum_le _ _
     _ ≤ ∑ k : Fin D, ‖a k‖ * |r| ^ (k.val + 1) := by
-        apply Finset.sum_le_sum; intro k _
-        rw [norm_mul, norm_mul, norm_pow, Complex.norm_real]
-        calc ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖fourier ((k.val + 1 : ℕ) : ℤ) t‖
-            ≤ ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖(fourier ((k.val + 1 : ℕ) : ℤ) : C(AddCircle T, ℂ))‖ :=
-              mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
-          _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by rw [fourier_norm]; ring
-          _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
+        simp_all
 
 /-- ‖polyEvalCircle a r t‖² ≤ D * ∑ ‖a_k‖² * r^{2(k+1)}, a convenient bound.
     Actually, we prove the simpler bound: ≤ (∑ ‖a_k‖ * |r|^{k+1})² . -/
@@ -218,9 +212,7 @@ private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
   have hs : (-1 : ℝ) < (n : ℝ) := by exact_mod_cast (show -1 < (n : ℤ) by omega)
   have h := integrable_rpow_mul_exp_neg_mul_sq one_pos hs
-  refine h.congr ?_
-  filter_upwards with r
-  rw [rpow_natCast]; ring_nf
+  simp_all
 
 /-- `|r|^n * exp(-r²)` is integrable on `ℝ` for any `n : ℕ`. -/
 private lemma integrable_abs_pow_mul_exp_neg_sq (n : ℕ) :
@@ -585,8 +577,7 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
       intro j; constructor
       · intro h; ext; omega
       · intro h; rw [h]
-    simp_rw [this]
-    simp [Finset.sum_ite_eq']
+    simp_all
   let c : ℤ → ℂ := fun n =>
     if h : ∃ k : Fin D, ((k.val + 1 : ℕ) : ℤ) = n
     then a h.choose * (r : ℂ) ^ (h.choose.val + 1)
@@ -616,8 +607,7 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
       intro j; constructor
       · intro h; ext; omega
       · intro h; rw [h]
-    simp_rw [this]
-    simp [Finset.sum_ite_eq']
+    simp_all
   -- Step 4: Compute inner product via orthonormality
   have hinner_orth : @inner ℂ _ _ PLp PLp =
       Complex.ofReal (∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1)‖ ^ 2) := by
@@ -686,12 +676,8 @@ private lemma radial_gaussian_integral (n : ℕ) :
     intro r _
     congr 1
     · rw [← rpow_natCast r (2 * n + 1)]
-      congr 1
-      push_cast
-      ring
-    · congr 1; congr 1
-      rw [← rpow_natCast r 2]
-      norm_num
+      simp_all
+    · simp_all
   rw [setIntegral_congr_fun measurableSet_Ioi pow_eq, integral_rpow_mul_exp_neg_rpow hp hq]
   -- Now we have: 2 * (1/2 * Γ((2n+2)/2)) = n!
   -- (2n+2)/2 = n+1, and Γ(n+1) = n!

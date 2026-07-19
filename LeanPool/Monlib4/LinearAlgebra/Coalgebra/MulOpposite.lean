@@ -93,8 +93,7 @@ private lemma coassoc_aux_1
   --   ∘ₗ ((MulOpposite.opLinearEquiv R).symm.rTensor Aᵐᵒᵖ).toLinearMap :=
 by
     apply TensorProduct.ext_threefold
-    intro x y z
-    simp
+    simp_all
 
 private lemma coassoc_aux_2
   {R A : Type*} [CommSemiring R]
@@ -105,8 +104,7 @@ private lemma coassoc_aux_2
     ∘ₗ (MulOpposite.opLinearEquiv R).toLinearMap
   = (MulOpposite.opLinearEquiv R).toLinearMap.lTensor A := by
     apply TensorProduct.ext'
-    intro x y
-    simp
+    simp_all
 
 private lemma coassoc_aux3
   {R A : Type*} [CommSemiring R]
@@ -122,8 +120,7 @@ private lemma coassoc_aux3
       (MulOpposite.opLinearEquiv R).toLinearMap))
         ∘ₗ (TensorProduct.assoc R _ _ _).toLinearMap := by
     apply TensorProduct.ext_threefold
-    intro x y z
-    simp
+    simp_all
 
 lemma LinearMap.op_eq
   {R A B : Type*} [CommSemiring R]

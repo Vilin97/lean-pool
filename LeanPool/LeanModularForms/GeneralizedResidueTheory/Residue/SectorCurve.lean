@@ -251,8 +251,7 @@ theorem pv_integrand_seg3 (r : ℝ) (hr : 0 < r) (α : ℝ) (t : ℝ) (ht : t �
 /-- The integral of `1/t` from `epsilon` to `1` is `-log(epsilon)`. -/
 theorem integral_seg1_eq_neg_log (ε : ℝ) (hε : 0 < ε) (_hε1 : ε < 1) :
     ∫ t in ε..1, (t : ℝ)⁻¹ = -Real.log ε := by
-  rw [integral_inv_of_pos hε one_pos,
-    Real.log_div one_ne_zero (ne_of_gt hε), Real.log_one, zero_sub]
+  simp_all
 
 /-- The integral of `-1/(3-t)` from `2` to `3-epsilon` is `log(epsilon)`. -/
 theorem integral_seg3_eq_log (ε : ℝ) (hε : 0 < ε) (_hε1 : ε < 1) :
@@ -263,8 +262,7 @@ theorem integral_seg3_eq_log (ε : ℝ) (hε : 0 < ε) (_hε1 : ε < 1) :
       (a := (2 : ℝ)) (b := 3 - ε)
     rw [this]
     congr 1 <;> ring
-  rw [h1, integral_inv_of_pos hε one_pos,
-    Real.log_div one_ne_zero (ne_of_gt hε), Real.log_one, zero_sub, neg_neg]
+  simp_all
 
 /-- On segment 1, the norm of the sector curve is `t * r`. -/
 theorem sectorCurve_norm_seg1 (r : ℝ) (hr : 0 < r) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 0 1) :
@@ -293,8 +291,7 @@ theorem log_cancellation (r : ℝ) (hr : 0 < r) (ε : ℝ) (hε : 0 < ε) (hεr 
       have := intervalIntegral.integral_comp_sub_left (fun u => u⁻¹) (3 : ℝ)
         (a := (2 : ℝ)) (b := 3 - ε / r)
       rw [this]; congr 1 <;> ring
-    rw [h_sub, integral_inv_of_pos hεr_pos one_pos, Real.log_div one_ne_zero
-      (ne_of_gt hεr_pos), Real.log_one, zero_sub, neg_neg]
+    simp_all
   have h1c : ∫ t in (ε / r)..(1 : ℝ), (↑(t⁻¹) : ℂ) = ↑(-(Real.log (ε / r))) := by
     rw [← h1, intervalIntegral.integral_ofReal]
   have h2c : ∫ t in (2 : ℝ)..(3 - ε / r), (-(↑((3 - t)⁻¹)) : ℂ) =

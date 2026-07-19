@@ -142,8 +142,7 @@ theorem upSet_succ (m : ℕ) : upSet (m + 1) = succImage (upSet m) := by
   constructor
   · intro h
     exact ⟨k - 1, by omega, by omega⟩
-  · rintro ⟨j, hj, rfl⟩
-    omega
+  · simp_all
 
 /-- **Exercise 4.21 / 4.13(3) (Scott 1981, PRG-19).** `[·] = upSet` is the
 *unique* function with
@@ -169,8 +168,7 @@ def addIso (m : ℕ) : ℕ ≃ {k : ℕ // k ∈ upSet m} where
   right_inv := by
     rintro ⟨k, hk⟩
     have : m ≤ k := hk
-    simp only [Subtype.mk.injEq]
-    omega
+    simp_all
 
 /-- The isomorphism is given by addition: `addIso m n = m + n`. -/
 theorem addIso_apply (m n : ℕ) : (addIso m n : ℕ) = m + n := rfl

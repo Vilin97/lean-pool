@@ -168,8 +168,7 @@ theorem symmMap_eq (f : A →ₗ[ℂ] B) :
   rw [← LinearMap.adjoint_inner_left, QuantumSet.modAut_adjoint]
   simp only [AlgEquiv.toLinearMap_apply, QuantumSet.modAut_apply_modAut]
   congr 1
-  · ring_nf
-    simp only [starAlgebra.modAut_zero, AlgEquiv.one_apply]
+  · simp_all
   · change
       ∑ i, ⟪β i, y⟫_ℂ * ⟪(modAut (-k A)).toLinearMap (α i), b⟫_ℂ =
         ⟪(modAut (-(2 * k A) - 1)).toLinearMap (star y), b⟫_ℂ
@@ -306,8 +305,7 @@ theorem symmMap_eq_conj_modAut_tfae (f : B →ₗ[ℂ] B) :
   tfae_have 1 → 3 := by
     intro h x y
     simp_rw [counit_map_mul_eq_counit_mul_modAut_conj_symmMap]
-    simp_rw [h, LinearMap.comp_apply, AlgEquiv.toLinearMap_apply, QuantumSet.modAut_apply_modAut,
-      add_neg_cancel, starAlgebra.modAut_zero, AlgEquiv.one_apply]
+    simp_all
   tfae_have 3 → 2 := by
     intro h
     rw [LinearMap.ext_iff_inner_map]
@@ -378,8 +376,7 @@ theorem Psi.real_apply (r₁ r₂ : ℝ) (f : A →ₗ[ℂ] B) :
           (star (hA.Psi r₁ r₂ |a⟩⟨b|))
     by
     obtain ⟨α, β, rfl⟩ := f.exists_sum_rankOne
-    letI ttt : StarAddMonoid (B ⊗[ℂ] Aᵐᵒᵖ) := by infer_instance
-    simp only [_root_.map_sum, LinearMap.real_sum, map_sum, star_sum, this]
+    simp_all
   intro a b
   simp_rw [rankOne_real, hA.Psi_apply, hA.PsiToFun_apply,
     star_tmul, map_tmul, AlgEquiv.toLinearMap_apply, AlgEquiv.op_apply_apply, ←
@@ -448,10 +445,7 @@ theorem Psi.symmMap_symm_apply (r₁ r₂ : ℝ) (f : A →ₗ[ℂ] B) :
 theorem symmMap_apply_adjoint (x : A →ₗ[ℂ] B) :
     LinearMap.adjoint (symmMap ℂ A _ x)
       = ((symmMap ℂ _ _).symm) (LinearMap.adjoint x) := by
-  obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne x
-  simp_rw [map_sum, ContinuousLinearMap.linearMap_adjoint, rankOne_adjoint,
-    symmMap_symm_apply, symmMap_apply, ContinuousLinearMap.linearMap_adjoint,
-    rankOne_adjoint, LinearMap.adjoint_adjoint]
+  simp_all
 
 theorem symmMap_comp {C : Type*} [starAlgebra C] [QuantumSet C]
   (x : A →ₗ[ℂ] B) (y : C →ₗ[ℂ] A) :

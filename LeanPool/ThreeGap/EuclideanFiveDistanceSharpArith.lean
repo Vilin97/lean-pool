@@ -88,8 +88,7 @@ noncomputable def astar : Fin 2 → ℝ := ![3 / 29, 8 / 29]
 
 /-- `euclNorm 2` of an explicit plane vector is `√(x₀² + x₁²)`. -/
 theorem euclNorm_two (x : Fin 2 → ℝ) : euclNorm 2 x = Real.sqrt (x 0 ^ 2 + x 1 ^ 2) := by
-  rw [euclNorm, EuclideanSpace.norm_eq]; congr 1
-  rw [Fin.sum_univ_two]; simp [Real.norm_eq_abs, sq_abs]
+  rw [euclNorm, EuclideanSpace.norm_eq]; simp_all
 
 /-- **Defect by attainment + lower bound.** If some translate realizes value `c` and `c` bounds all
 translates below, the defect equals `c`. -/
@@ -122,8 +121,7 @@ theorem deltaN_astar (d : ℤ) (n₀ n₁ r₀ r₁ : ℤ)
     simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
     have h0 : (3 * (d : ℝ)) = (r₀ : ℝ) + 29 * (n₀ : ℝ) := by exact_mod_cast hr0
     have h1 : (8 * (d : ℝ)) = (r₁ : ℝ) + 29 * (n₁ : ℝ) := by exact_mod_cast hr1
-    rw [show (3 * (d : ℝ) - 29 * (n₀ : ℝ)) = (r₀ : ℝ) by linarith,
-        show (8 * (d : ℝ) - 29 * (n₁ : ℝ)) = (r₁ : ℝ) by linarith]
+    simp_all
   · intro p
     rw [hcoord, div_eq_mul_inv, div_eq_mul_inv]
     have e0 := sq_residue_le 29 r₀ (3 * d) (by norm_num) hb0 ⟨n₀, by linarith [hr0]⟩ (p 0)
@@ -206,8 +204,7 @@ theorem five_le_card_image_of_strictAnti_chain {N : ℕ} (f : ℕ → ℝ) {q₀
   have e4 : f q₃ ∉ ({f q₄} : Finset ℝ) := by
     simp only [Finset.mem_singleton]; exact ne_of_gt h34
   have hcard : ({f q₀, f q₁, f q₂, f q₃, f q₄} : Finset ℝ).card = 5 := by
-    rw [Finset.card_insert_of_notMem e1, Finset.card_insert_of_notMem e2,
-      Finset.card_insert_of_notMem e3, Finset.card_insert_of_notMem e4, Finset.card_singleton]
+    simp_all
   have hsub : ({f q₀, f q₁, f q₂, f q₃, f q₄} : Finset ℝ) ⊆ (Finset.range (N + 1)).image f := by
     intro x hx
     simp only [Finset.mem_insert, Finset.mem_singleton] at hx

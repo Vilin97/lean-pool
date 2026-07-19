@@ -93,17 +93,13 @@ lemma polynomial_identity_from_vlasov
   -- Step 3: Vlasov simplifies to collisionless transport = 0
   have hTransport : dotProduct v (FlatTorus3.gradX (fun y => f y v) x) +
       dotProduct (E x + cross v (B x)) (vGrad (f x) v) = 0 := by
-    have h := _hVlasov x v
-    rw [hQ_zero x v, mul_zero] at h
-    exact h
+    simp_all
   -- Step 4: Compute vGrad(f x)(v) = f(x,v) · (b x + 2c(x)·v)
   have hvGrad : vGrad (f x) v = f x v • (b x + (2 * c x) • v) := by
     have h1 := vGrad_exp_quadratic (a x) (b x) (c x) v
     conv_lhs => rw [show f x = (fun w => Real.exp (a x + dotProduct (b x) w + c x * normSq w))
       from funext (hform x)]
-    rw [h1]
-    congr 1
-    exact (hform x v).symm
+    simp_all
   -- Step 5: Compute gradX(f(·,v)) via chain rule + linearity
   have hgradX_i : ∀ i, FlatTorus3.gradX (fun y => f y v) x i =
       f x v * (FlatTorus3.gradX a x i +

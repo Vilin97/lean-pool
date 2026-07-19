@@ -116,8 +116,7 @@ theorem blockDecompositionNorm
   rw [tsum_hermiteNormSq_blockPart_eq_sum_support_image (κ := κ), finiteParseval]
   simp_rw [finiteParseval]
   have hkey := blockwise_regroup G (fun _ => 1)
-  simp only [mul_one] at hkey
-  exact hkey.symm
+  simp_all
 
 private lemma blockDecompositionNorm_sum_support_image
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
@@ -431,8 +430,7 @@ private lemma block_decay_compare_coord
   have hdist_eq : ((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) = |((j q : ℕ) : ℝ) - ((ℓ q : ℕ) : ℝ)| := by
     rcases Nat.le_total (j q) (ℓ q) with hj | hℓ
     · rw [Nat.dist_eq_sub_of_le hj, abs_of_nonpos]
-      · rw [Nat.cast_sub hj]
-        simp
+      · simp_all
       · exact sub_nonpos.mpr (by exact_mod_cast hj)
     · rw [Nat.dist_eq_sub_of_le_right hℓ, abs_of_nonneg]
       · rw [Nat.cast_sub hℓ]
@@ -584,9 +582,7 @@ private lemma sharpShellCount_of_pos
   by_cases hd : d = 0
   · subst hd
     letI := shellSubtype_isEmpty ℓ hr
-    rw [Nat.card_eq_fintype_card, Fintype.card_eq_zero]
-    have hr0 : r ≠ 0 := by omega
-    simp [shellCardinality]
+    simp_all
   · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
     have hshell : Nat.card {x // x ∈ shellFinset d r} = shellCardinality d r := by
       rw [Nat.card_eq_fintype_card]
@@ -667,9 +663,7 @@ theorem productBasisLocalization
       exact Finset.prod_pos (fun q hq => hCq_pos q)
     have hc_pos : 0 < c := by
       dsimp [c]
-      rw [Finset.lt_inf'_iff]
-      intro q hq
-      exact hcq_pos q
+      simp_all
     have hB_nonneg : 0 ≤ B := by
       dsimp [B]
       positivity
@@ -698,8 +692,7 @@ theorem productBasisLocalization
             Real.exp
               (-(cq q) *
                 max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2) := by
-        apply Real.exp_le_exp.mpr
-        nlinarith [hsq, hcq_pos q]
+        simp_all
       exact le_trans hbase <| mul_le_mul_of_nonneg_left hexp (le_of_lt (hCq_pos q))
     have hprod_bound :
         ∏ q : Fin d, annulusMass (d := 1) (fun _ => j q) (oneDimLift (oneDimPhi (κ q) (α q))) ≤
@@ -712,8 +705,7 @@ theorem productBasisLocalization
       · intro q hq
         unfold annulusMass
         positivity
-      · intro q hq
-        exact hcoord q
+      · simp_all
     refine le_trans hprod_bound ?_
     have hcsmall : ∀ q : Fin d, c ≤ cq q := by
       intro q
@@ -812,9 +804,7 @@ theorem blockLocalization
                   have hsuppnz : (blockPart ℓ G).coeff α ≠ 0 := by
                     simpa [FiniteHermiteSum.support, Finsupp.mem_support_iff] using hα
                   rw [blockPart, Finsupp.onFinset_apply] at hsuppnz
-                  by_cases hb : α ∈ squareBlock ℓ
-                  · exact hb
-                  · simp [hb] at hsuppnz
+                  simp_all
                 exact mul_le_mul_of_nonneg_left (hloc α j ℓ hblock) (by positivity)
     _ =
         (C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)) *
@@ -1029,8 +1019,7 @@ private lemma localizationLeakageCoefficient_tendsto_zero
         C * (if M + 1 ≤ r then
           (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
         else 0) := by
-    refine tsum_congr fun r => ?_
-    by_cases hr : M + 1 ≤ r <;> simp [hr]
+    simp_all
   rw [hterm, tsum_mul_left]
 
 private lemma shell_sum_localizationLeakageCoefficient_bound
@@ -1059,8 +1048,7 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
       by_cases hr : M + 1 ≤ r
       · by_cases hlt : M < r
         · simp [u, hlt]
-        · have : False := by omega
-          contradiction
+        · simp_all
       · have hlt : ¬ M < r := by omega
         simp only [Order.add_one_le_iff, neg_mul, hlt, ↓reduceIte, ge_iff_le, u]
         positivity
@@ -1082,8 +1070,7 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
             · simp only [hMr, ↓reduceIte, neg_mul]
               positivity
             · by_cases hlt : M < r
-              · have : False := by omega
-                contradiction
+              · simp_all
               · simp [hMr])
     _ = localizationLeakageCoefficient C c B d M := by
           unfold localizationLeakageCoefficient
@@ -1169,8 +1156,7 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                     hermiteNormSq κ (blockPart ℓ G)
                 else 0)) := by
                   refine Finset.sum_le_sum ?_
-                  intro j hj
-                  exact hpoint j
+                  simp_all
     _ = Finset.sum (G.support.image blockIndexMulti)
           (fun ℓ =>
             Finset.sum s
@@ -1201,8 +1187,7 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                       else 0)) *
                     hermiteNormSq κ (blockPart ℓ G) := by
               rw [Finset.sum_mul]
-              refine Finset.sum_congr rfl fun j _ => ?_
-              by_cases hfar : M < blockDistance j ℓ <;> simp [hfar]
+              simp_all
             rw [hfactor]
             exact mul_le_mul_of_nonneg_right hshell' hnorm_nonneg
     _ = localizationLeakageCoefficient C c B d M * hermiteNormSq κ G := by
@@ -1263,9 +1248,7 @@ private lemma shell_sum_bound_of_shell_cardinality_bound
             (fun _ =>
               if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0) := by
               refine Finset.sum_congr rfl ?_
-              intro j hj
-              have hjr : blockDistance j ℓ = r := by simpa using (Finset.mem_filter.mp hj).2
-              simp [hjr]
+              simp_all
       _ =
           (((s.filter fun j => blockDistance j ℓ = r).card : ℕ) : ℝ) *
             (if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0) := by

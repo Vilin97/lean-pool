@@ -61,17 +61,7 @@ lemma v0_quadrant (p : ℂ) (hp_re : |p.re| < 1 / 2) (hp_im : p.im < HHeight) :
     (fdPolygon 0 - p).re > 0 ∧ (fdPolygon 0 - p).im > 0 := by
   rw [fdPolygon_at_zero]
   have hpre : p.re < 1/2 := (abs_lt.mp hp_re).2
-  constructor
-  · have : (1/2 + HHeight * I - p).re = 1/2 - p.re := by
-      simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-                 Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_zero, zero_mul,
-                 Complex.div_ofNat_re, Complex.one_re, sub_self, add_zero]
-    linarith
-  · have : (1/2 + HHeight * I - p).im = HHeight - p.im := by
-      simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
-                 Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_one, zero_mul, add_zero,
-                 Complex.div_ofNat_im, Complex.one_im, zero_div, zero_add]
-    linarith
+  simp_all
 
 /-- For interior points with ‖p‖ > 1, |p.re| < 1/2, 0 < p.im, we have p.im > √3/2. -/
 lemma interior_point_im_bound (p : ℂ) (hp_norm : ‖p‖ > 1)
@@ -125,18 +115,7 @@ lemma v4_quadrant (p : ℂ) (hp_re : |p.re| < 1 / 2) (hp_im : p.im < HHeight) :
   rw [fdPolygon_at_four]
   have hpre_neg : -(1/2) < p.re := (abs_lt.mp hp_re).1
   have hpre : -1/2 < p.re := by linarith
-  have hre : (-1/2 + HHeight * I - p).re = -1/2 - p.re := by
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-               Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_zero, zero_mul,
-               Complex.neg_re, Complex.div_ofNat_re, Complex.one_re, sub_self, add_zero]
-  have him : (-1/2 + HHeight * I - p).im = HHeight - p.im := by
-    simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
-               Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_one, zero_mul,
-               Complex.neg_im, Complex.div_ofNat_im, Complex.one_im, zero_div, neg_zero,
-               zero_add, add_zero]
-  constructor
-  · rw [hre]; linarith
-  · rw [him]; linarith
+  simp_all
 
 /-- Q1: re > 0, im > 0 → 0 < arg < π/2. -/
 lemma arg_Q1 (z : ℂ) (hz_re : 0 < z.re) (hz_im : 0 < z.im) :
@@ -157,16 +136,14 @@ lemma arg_Q4 (z : ℂ) (hz_re : 0 < z.re) (hz_im : z.im < 0) :
   constructor
   · rw [Complex.neg_pi_div_two_lt_arg_iff]
     left; exact hz_re
-  · rw [Complex.arg_neg_iff]
-    exact hz_im
+  · simp_all
 
 /-- Q3: im < 0 → -π < arg < 0. -/
 lemma arg_Q3 (z : ℂ) (hz_im : z.im < 0) :
     -Real.pi < z.arg ∧ z.arg < 0 := by
   constructor
   · exact (Complex.arg_mem_Ioc z).1
-  · rw [Complex.arg_neg_iff]
-    exact hz_im
+  · simp_all
 
 /-- Q2: re < 0, im > 0 → π/2 < arg ≤ π. -/
 lemma arg_Q2 (z : ℂ) (hz_re : z.re < 0) (hz_im : 0 < z.im) :
@@ -210,8 +187,7 @@ lemma seg4_vec_re_neg (p : ℂ) (hp_re : |p.re| < 1 / 2) (t : ℝ)
     · linarith [ht.1]
     · simp
     · linarith [ht.2]
-  rw [Complex.sub_re, hseg4_re]
-  linarith
+  simp_all
 
 /-- On seg4, the imaginary part of fdPolygon t. -/
 lemma seg4_im_formula (t : ℝ) (ht : t ∈ Set.Ioc (3 : ℝ) 4) : (fdPolygon t).im =
@@ -248,8 +224,7 @@ lemma seg4_vec_im_sign (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2
     rw [h2, mul_div_cancel₀ _ hdenom_ne]
     ring
   refine ⟨?_, ?_, ?_⟩
-  · intro hlt; rw [him_eq]
-    exact mul_neg_of_pos_of_neg hdenom_pos (by linarith)
+  · simp_all
   · intro heq; rw [him_eq, heq, sub_self, mul_zero]
   · intro hgt; rw [him_eq]; exact mul_pos hdenom_pos (by linarith)
 
@@ -316,8 +291,7 @@ lemma fdPolygon_zero_ne_interior (p : ℂ) (hp_im : p.im < HHeight) : fdPolygon 
     simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.I_re, Complex.I_im,
                Complex.ofReal_im, mul_one, zero_mul, Complex.div_ofNat_im, Complex.one_im,
                zero_div, zero_add, add_zero]
-  have hp_im' : p.im = HHeight := by rw [← heq]; exact him
-  linarith
+  simp_all
 
 /-- fdPolygon 5 ≠ p for interior points. -/
 lemma fdPolygon_five_ne_interior (p : ℂ) (hp_im : p.im < HHeight) : fdPolygon 5 ≠ p := by
@@ -418,9 +392,7 @@ lemma ref_p₀_norm : ‖refP₀‖ > 1 := by
 
 lemma ref_p₀_re : |refP₀.re| < 1 / 2 := by
   unfold refP₀
-  simp only [Complex.mul_re, Complex.I_re, Complex.I_im,
-    Complex.ofReal_re, Complex.ofReal_im, zero_mul, one_mul, sub_zero]
-  norm_num
+  simp_all
 
 lemma ref_p₀_im_pos : 0 < refP₀.im := by
   unfold refP₀

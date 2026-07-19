@@ -129,9 +129,7 @@ lemma QuantumSet.inner_eq_subset_inner [hA : QuantumSet A] (new_k : ℝ) (x y : 
   = (hA.subsetInnerProductAlgebra new_k).inner
     (toSubsetEquiv new_k x) (toSubsetEquiv new_k (ha.modAut (hA.k + -new_k) y)) := by
   rw [subset_inner_eq]
-  simp_rw [Equiv.symm_apply_apply, QuantumSet.modAut_apply_modAut]
-  ring_nf
-  rw [starAlgebra.modAut_zero]; rfl
+  simp_all
 
 open scoped InnerProductSpace
 /-- A shifted quantum-set synonym inherits a quantum-set structure with exponent `new_k`. -/

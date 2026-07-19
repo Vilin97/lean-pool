@@ -58,9 +58,7 @@ theorem eulerian_of_n_succ_n (n k : ℕ) (h : n > 0) (hp : k ≥ n) : eulerian n
               false_or]
             constructor
             · exact eulerian_of_zero_k k (by omega)
-            · by_cases d : 1 - k = 0
-              · exact Or.inl d
-              · exact Or.inr <| eulerian_of_zero_k (k - 1) (by omega)
+            · simp_all
           · simp [ih k (by omega) (by omega), ih (k - 1) (by omega) (by omega)]
         · omega
 

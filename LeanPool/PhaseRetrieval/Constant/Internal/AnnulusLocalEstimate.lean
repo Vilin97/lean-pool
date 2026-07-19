@@ -64,8 +64,7 @@ private lemma sum_ite_mem_biUnion (S : Finset ℕ) (n : ℕ) (c : ℂ) :
           (Finset.mem_coe.mpr hℓS) hne) h' hℓn)
       (fun habs => absurd hℓS habs)]
     simp only [hℓn, ite_true]
-  · exact Finset.sum_eq_zero (fun ℓ hℓ => if_neg (fun h' =>
-      h (Finset.mem_biUnion.mpr ⟨ℓ, hℓ, h'⟩)))
+  · simp_all
 
 /-- Sum of `2ℓ+1` over `Icc a b` plus `a²` equals `(b+1)²`. -/
 private lemma sum_odd_sq (a b : ℕ) (h : a ≤ b) :

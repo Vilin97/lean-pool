@@ -190,12 +190,10 @@ theorem Real_mk_of_TendstoLocallyUniformly' (fImpl : ℕ → ℚ → ℚ) (f : �
   replace hnd_sub : ∀ (r : ℚ), nl < r ∧ r < nu → ↑r ∈ i₂_nhd := fun r a => hnd_sub a
   replace hi₃ : ∀ (b : ℕ), i₃ ≤ b → ∀ (y : ℚ), nl < y ∧ y < nu → |f ↑y - ↑(fImpl b y)| < (ε / 2) :=
     by
-    peel hi₃
-    exact fun h ↦ this (hnd_sub _ h)
+    simp_all
   set ε_nhd := min (nu - (.mk ⟨x,hx⟩)) ((.mk ⟨x,hx⟩) - nl) with hε_nhd
   obtain ⟨i₄, hi₄⟩ := cauchy_real_mk ⟨x,hx⟩ (ε_nhd / 2) (by
-    rw [hε_nhd, gt_iff_lt, ← min_div_div_right (zero_le_two), lt_inf_iff]
-    constructor <;> linarith)
+    simp_all)
   have hεn₁ : ε_nhd ≤ _ := inf_le_left
   have hεn₂ : ε_nhd ≤ _ := inf_le_right
   set i := max i₁ (max i₃ i₄) with hi

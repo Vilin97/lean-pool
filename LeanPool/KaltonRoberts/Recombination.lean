@@ -47,10 +47,7 @@ theorem approx_additive_finset_partition_lower
     simp_all +decide only [ne_eq, ge_iff_le, tsub_le_iff_right, forall_eq, le_add_iff_nonneg_left,
       zero_le, Fin.sum_univ_castSucc, Nat.cast_add, Nat.cast_one, add_sub_cancel_right]
     rcases n with (_ | n)
-    · simp_all +decide only [IsEmpty.forall_iff, univ_eq_empty, sum_empty,
-        biUnion_empty, CharP.cast_eq_zero, zero_sub, le_add_neg_iff_add_le, zero_add, forall_const,
-        Nat.reduceAdd, Fin.forall_fin_one, Fin.isValue, disjoint_self, bot_eq_empty, univ_unique,
-        Fin.default_eq_zero, singleton_biUnion, Fin.last_zero, add_zero, Std.le_refl]
+    · simp_all
     · simp_all +decide only [le_add_iff_nonneg_left, zero_le, Fin.sum_univ_castSucc, Nat.cast_add,
         Nat.cast_one, add_sub_cancel_right, forall_const]
       have h_union : f (Finset.biUnion Finset.univ pieces) ≥ f (Finset.biUnion Finset.univ (pieces ∘
@@ -105,11 +102,7 @@ theorem approx_additive_finset_partition_upper
     contradiction
   | succ n ih =>
     rcases n with (_ | n)
-    · simp_all +decide only [ne_eq, IsEmpty.forall_iff, univ_eq_empty, biUnion_empty,
-        sum_empty, CharP.cast_eq_zero, zero_sub, le_add_neg_iff_add_le, zero_add, forall_eq,
-        forall_const, Nat.reduceAdd, Fin.forall_fin_one, Fin.isValue, disjoint_self, bot_eq_empty,
-        univ_unique, Fin.default_eq_zero, singleton_biUnion, sum_singleton, Nat.cast_one, sub_self,
-        add_zero, Std.le_refl]
+    · simp_all
     · simp_all +decide only [le_add_iff_nonneg_left, zero_le, ne_eq, Fin.sum_univ_succ,
         Nat.cast_add, Nat.cast_one, add_sub_cancel_right, forall_eq, forall_const,
         Fin.succ_zero_eq_one]
@@ -180,9 +173,7 @@ theorem hall_matching_from_expansion
     calc s.card = S.card := hS_card.symm
       _ ≤ (S.biUnion (fun v => edgeNeighbors edge v)).card := hexp_S
       _ = (s.biUnion (fun x => edgeNeighbors edge x.val)).card := by
-          congr 1; ext w; simp only [Finset.mem_biUnion, Finset.mem_image, hS_def]
-          exact ⟨fun ⟨_, ⟨a, ha, rfl⟩, hw⟩ => ⟨a, ha, hw⟩,
-                 fun ⟨a, ha, hw⟩ => ⟨_, ⟨a, ha, rfl⟩, hw⟩⟩
+          congr 1; ext w; simp_all
   rw [Finset.all_card_le_biUnion_card_iff_exists_injective] at hall_cond
   exact hall_cond
 
@@ -461,11 +452,7 @@ lemma recombination_source_target_ineq
                 ⟨v₂, hv₂⟩ := by
           rw [← hmatch₁, ← hmatch₂, h₁_edge, h₂_edge]
         have hsource := perItemMatch_injective edge C threshold hexp hfreq i h_eq
-        have hv : v₁ = v₂ := congrArg Subtype.val hsource
-        subst v₂
-        have he : e₁ = e₂ := by
-          simpa using hlabel₁.symm.trans hlabel₂
-        exact hne (by ext <;> simp [he])
+        simp_all
     refine le_trans ( Finset.sum_le_sum fun w _ => h_target_sum_upper w ) ?_;
     simp +decide only [
       sum_add_distrib,

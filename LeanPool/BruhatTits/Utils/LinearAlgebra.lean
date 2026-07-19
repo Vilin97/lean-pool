@@ -28,8 +28,7 @@ omit [Module.Free R M] in
 lemma Submodule.zero_lt_finrank_of_ne_bot (p : Submodule R M) (hp : p ≠ ⊥) :
     0 < Module.finrank R p := by
   by_contra h
-  simp only [not_lt, nonpos_iff_eq_zero, finrank_eq_zero] at h
-  contradiction
+  simp_all
 
 omit [Module.Free R M] in
 lemma Submodule.finrank_lt_finrank_of_ne_top (p : Submodule R M) (hp : p ≠ ⊤) :
@@ -54,15 +53,12 @@ lemma Submodule.exists_generator_of_finrank_eq_one (p : Submodule R M)
   have : (⟨v, hvmem⟩ : p) ≠ 0 := by simpa
   rw [finrank_eq_one_iff_of_nonzero (K := R) _ this] at h
   apply le_antisymm
-  · rw [Submodule.span_le]
-    simpa only [Set.singleton_subset_iff, SetLike.mem_coe, ne_eq, AddSubmonoid.mk_eq_zero]
+  · simp_all
   · intro x hx
     have hx' : (⟨x, hx⟩ : p) ∈ Submodule.span R {⟨v, hvmem⟩} := by
-      rw [h]
-      trivial
+      simp_all
     rw [Submodule.mem_span_singleton] at hx' ⊢
-    simp only [SetLike.mk_smul_mk, Subtype.mk.injEq] at hx'
-    assumption
+    simp_all
 
 omit [Module.Free R M] in
 lemma Submodule.exists_generator_of_finrank_eq_one_basis (b : Basis (Fin 2) R M) (p : Submodule R M)
@@ -83,18 +79,14 @@ lemma Submodule.exists_generator_of_finrank_eq_one_basis (b : Basis (Fin 2) R M)
     intro hβ
     rw [hβ, zero_smul, add_zero] at hvr
     have : c 0 ≠ 0 := by
-      intro hc
-      rw [hc] at hvr
-      simp at hvr
-      contradiction
+      simp_all
     apply ht
     rw [← hvspan, hvr]
     apply le_antisymm
     · rw [Submodule.span_le]
       simp only [Fin.isValue, Set.singleton_subset_iff, SetLike.mem_coe]
       apply Submodule.smul_mem
-      apply Submodule.subset_span
-      simp
+      simp_all
     · rw [Submodule.span_le]
       simp only [Fin.isValue, Set.singleton_subset_iff, SetLike.mem_coe]
       have : b 0 = (c 0)⁻¹ • c 0 • b 0 := by
@@ -114,15 +106,13 @@ lemma Submodule.exists_generator_of_finrank_eq_one_basis (b : Basis (Fin 2) R M)
     simp only [Fin.isValue, Set.singleton_subset_iff, SetLike.mem_coe]
     nth_rw 1 [this]
     apply Submodule.smul_mem
-    apply Submodule.subset_span
-    simp
+    simp_all
   · rw [Submodule.span_le]
     simp only [Fin.isValue, Set.singleton_subset_iff, SetLike.mem_coe]
     have : (c 0 / β) • b 0 + b 1 = (1 / β) • (c 0 • b 0 + β • b 1) := by
       rw [smul_add, smul_smul, smul_smul]
       have hleft : (1 / β) * c 0 = c 0 / β := by ring
-      have hright : (1 / β) * β = 1 := by field_simp [this]
-      rw [hleft, hright, one_smul]
+      simp_all
     nth_rw 1 [this]
     apply Submodule.smul_mem
     apply Submodule.subset_span
@@ -208,8 +198,7 @@ lemma lt_of_ne_top (p : Submodule R M) {p' : Submodule R p}
     rw [eq_top_iff]
     rintro x -
     have : x.val ∈ Submodule.map p.subtype q := by
-      rw [hc]
-      exact x.property
+      simp_all
     simpa using this
 
 end
@@ -226,8 +215,7 @@ lemma Submodule.comap_subtype_smul (I : Ideal R) (p : Submodule R M) :
 
 lemma Submodule.map_subtype_smul (I : Ideal R) (p : Submodule R M) :
     Submodule.map p.subtype (I • ⊤) = I • p := by
-  rw [← Submodule.comap_subtype_smul, map_comap_eq_self]
-  simpa only [range_subtype] using smul_le_right
+  simp_all
 
 lemma ideal_smul_lt_of_ne_bot {I : Ideal R} (p : Submodule R M)
     (q : { q : Submodule R p // (I • ⊤ : Submodule R p) ≤ q}) (h : q ≠ ⊥) :

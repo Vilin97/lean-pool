@@ -40,12 +40,9 @@ lemma exists_embedding_of_isSplit [FiniteDimensional F K] (A : CSA F) (split : i
           ext
           rfl
         map_zero' := by
-          ext
-          rfl
+          simp_all
         map_add' := by
-          intros
-          ext
-          rfl
+          simp_all
         commutes' := by
           intros
           ext
@@ -188,11 +185,9 @@ theorem isSplit_iff_dimension [FiniteDimensional F K] (A : CSA F) :
         simp [← op_mul, ← map_mul, mul_comm]
       map_zero' := by simp
       map_add' := by
-        intros
-        simp
+        simp_all
       commutes' := by
-        intros
-        simp
+        simp_all
     }, eq2.trans ?_⟩
     · rw [show (Quotient.mk'' A : BrauerGroup F) = (Quotient.mk'' B)⁻¹ by
         rwa [eq_inv_iff_mul_eq_one]]
@@ -231,12 +226,10 @@ theorem isSplit_iff_dimension [FiniteDimensional F K] (A : CSA F) :
     have smul_def (r : K) (a : B) : r • a = a * (ι r) := rfl
     haveI : SMulCommClass K F B :=
     { smul_comm := by
-        intro a b c
-        simp only [smul_def, Algebra.smul_mul_assoc] }
+        simp_all }
     haveI : IsScalarTower F K B :=
     { smul_assoc := by
-        intro a b c
-        simp only [smul_def, map_smul, Algebra.mul_smul_comm] }
+        simp_all }
     let μ : K →ₗ[F] B →ₗ[F] Module.End K B :=
     { toFun c :=
       { toFun a :=
@@ -280,9 +273,7 @@ theorem isSplit_iff_dimension [FiniteDimensional F K] (A : CSA F) :
           rw [mul_comm r c, map_mul]
           simp only [_root_.mul_assoc]
         | add x y hx hy =>
-          simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, RingHom.id_apply] at hx hy
-          simp only [smul_add, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, map_add, hx, hy,
-            RingHom.id_apply] }
+          simp_all }
     let μAlg : K ⊗[F] B →ₐ[K] Module.End K B := AlgHom.ofLinearMap μ''
       (by
         ext

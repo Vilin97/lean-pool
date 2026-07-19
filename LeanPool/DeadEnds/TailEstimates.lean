@@ -181,9 +181,7 @@ theorem finite_count_upper_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT :
     have := abs_sub_le_iff.mp h2
     linarith [this.1, this.2]
   have h4 : ((∏ p ∈ S, (p : ℕ) ^ 2 : ℕ) : ℝ) = prodPsq := by
-    rw [hprodPsq, Nat.cast_prod]
-    push_cast
-    rfl
+    simp_all
   calc (countJointSquarefree b T X : ℝ) ≤ (count : ℝ) := h1
     _ ≤ (X : ℝ) * prodMu + prodPsq := h3
     _ = (X : ℝ) * prodMu + (∏ p ∈ S, (p : ℕ) ^ 2 : ℕ) := by rw [h4]

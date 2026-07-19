@@ -59,8 +59,7 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n := by
     set Sl := S.sort (· ≤ ·) with def_Sl
     have Sl_card : 3 ≤ Sl.length := by rw [def_Sl, Finset.length_sort]; omega
     have mem_Sl : ∀ {a : γ}, a ∈ Sl ↔ a ∈ S := by
-      intro a
-      rw [def_Sl, Finset.mem_sort]
+      simp_all
     -- Take three elements of S
     rcases List.takeHead3 Sl_card with ⟨a, b, c, Sl', eq_Sl⟩
     have a_mem : a ∈ S := by rw [← mem_Sl, eq_Sl]; simp

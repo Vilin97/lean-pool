@@ -121,8 +121,7 @@ theorem ClosedCurvesHomotopicAvoiding.toPiecewise
     PiecewiseCurvesHomotopicAvoiding γ₀ γ₁ a b z₀ ∅ := by
   obtain ⟨H, hcont, hH0, hH1, hclosed, havoid, hdiff, hderiv_cont⟩ := h
   refine ⟨H, hcont, hH0, hH1, hclosed, havoid, ?_, ?_, ?_⟩
-  · intro t ht _ht_not_in_empty s hs
-    exact hdiff t ht s hs
+  · simp_all
   · intro p₁ p₂ _hp _hvac _hI
     exact hderiv_cont.continuousOn.mono (Set.subset_univ _)
   · have hK : IsCompact (Set.Icc a b ×ˢ Set.Icc (0 : ℝ) 1) :=
@@ -204,10 +203,8 @@ private lemma exists_partition_free_subinterval
     exact ⟨by linarith [le_max_right a (t - ε / 2), hs.1],
            by linarith [min_le_right b (t + ε / 2), hs.2]⟩
   · intro x hx
-    simp only [mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1, lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  · simp only [mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+    simp_all
+  · simp_all
 
 private lemma logDeriv_integrand_bound
     {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {M δ : ℝ}
@@ -410,8 +407,7 @@ private lemma winding_integer_from_exp_one
     have h := hn; linear_combination -h
   rw [hFb']
   have hne : (2 : ℂ) * Real.pi * I ≠ 0 := by
-    simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, Complex.ofReal_eq_zero,
-      Real.pi_ne_zero, Complex.I_ne_zero, or_self, not_false_eq_true]
+    simp_all
   field_simp; simp [Int.cast_neg]
 
 private lemma windingNumber_integer_of_piecewise_with_bound
@@ -481,8 +477,7 @@ theorem exp_integral_eq_endpoint_ratio_piecewise
   have hGb' : (γ b - z₀) *
       Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) = γ a - z₀ := by
     have := hG_const b (right_mem_Icc.mpr hab.le)
-    simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
-    exact this
+    simp_all
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
       (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =
@@ -584,8 +579,7 @@ private lemma exp_endpoint_ratio_from_gFunc
   have hGb' : (γ b - z₀) *
       Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) = γ a - z₀ := by
     have := hG_const b (right_mem_Icc.mpr hab.le)
-    simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
-    exact this
+    simp_all
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
       (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =

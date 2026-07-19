@@ -100,8 +100,7 @@ lemma E₂_sub_one_isBigO_exp : (fun z : ℍ => E₂ z - 1) =O[atImInfty]
       _ = 8 * ‖q‖ := by ring
   have hq_eq_exp : ‖q‖ = Real.exp (-2 * π * z.im) := by
     have hre : (2 * ↑π * Complex.I * (z : ℂ)).re = -2 * π * z.im := by
-      rw [show (2 : ℂ) * ↑π * Complex.I * z = Complex.I * (2 * π * z) by ring]
-      simp [Complex.I_re, Complex.I_im, mul_comm]
+      simp_all
     rw [Complex.norm_exp, hre]
   calc 24 * ‖∑' n : ℕ+, ↑n * q ^ (n : ℕ) / (1 - q ^ (n : ℕ))‖
       ≤ 24 * (‖q‖ / (1 - ‖q‖) ^ 3) := by gcongr
@@ -284,20 +283,11 @@ lemma qexp_deriv_bound_of_coeff_bound {a : ℕ+ → ℂ} {k : ℕ}
             rw [h_norm_2pin]
             have hexp : ‖cexp (2 * π * I * ↑↑n * z)‖ ≤ rexp (-2 * π * n * z.im) := by
               rw [Complex.norm_exp]
-              have : (2 * π * I * ↑↑n * z).re = -2 * π * n * z.im := by
-                have hrw : (2 * π * I * ↑↑n * z) = (↑(2 * π * (n : ℝ)) * I) * z := by
-                  push_cast; ring
-                rw [hrw, Complex.mul_re, Complex.mul_re]
-                simp only [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re,
-                  Complex.I_im, mul_zero, mul_one, zero_mul, sub_zero, zero_sub, add_zero]
-                ring
-              rw [this]
+              simp_all
             gcongr; exact ha n
         _ ≤ (n : ℝ)^k * (2 * π * n) * rexp (-2 * π * n * k_min.im) := by
             apply mul_le_mul_of_nonneg_left _ (by positivity)
-            apply Real.exp_le_exp_of_le
-            apply mul_le_mul_of_nonpos_left hz_im
-            nlinarith [pi_pos, hn_pos]
+            simp_all
         _ = 2 * π * (n : ℝ)^(k + 1) * rexp (-2 * π * n * k_min.im) := by ring
   · use fun _ => 0
     constructor

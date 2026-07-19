@@ -91,9 +91,7 @@ theorem MistakeTree.fromList_shattered {X : Type u} [DecidableEq X] {C : Concept
     have hnd := (List.nodup_cons.mp hl).2
     have hxS : x ∈ (x :: xs).toFinset := by simp
     have hsub : xs.toFinset ⊆ (x :: xs).toFinset := by
-      intro a ha
-      simp only [List.toFinset_cons, Finset.mem_insert, List.mem_toFinset] at ha ⊢
-      exact Or.inr ha
+      simp_all
     have hxs_shat : Shatters X C xs.toFinset := hS.subset hsub
     refine ⟨?_, ?_⟩
     · obtain ⟨c, hcC, hc⟩ := hS (fun _ => true)

@@ -96,8 +96,7 @@ theorem isControllable_iff_forall_mem (gens : Set (Matrix (Fin N) (Fin N) ℂ)) 
   constructor
   · intro h A
     rw [IsControllable] at h
-    rw [h]
-    exact LieSubalgebra.mem_top A
+    simp_all
   · intro h
     exact le_antisymm le_top fun a _ => h a
 
@@ -107,8 +106,7 @@ theorem IsControllable.mono {gens gens' : Set (Matrix (Fin N) (Fin N) ℂ)}
   have hmono : dynamicalLieAlgebra gens ≤ dynamicalLieAlgebra gens' :=
     LieSubalgebra.lieSpan_le.mpr (hsub.trans LieSubalgebra.subset_lieSpan)
   rw [IsControllable] at hc ⊢
-  rw [hc] at hmono
-  exact top_le_iff.mp hmono
+  simp_all
 
 /-! ### Classification: the abelian (mutually commuting) case -/
 

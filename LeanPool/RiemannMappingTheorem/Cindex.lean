@@ -73,9 +73,7 @@ lemma deriv_div_self_eq_div_add_deriv_div_self (hg : DifferentiableAt ℂ g z) (
   case succ n =>
     have hzz : z - z₀ ≠ 0 := sub_ne_zero.mpr hz
     have h2 : deriv (fun y : ℂ => (y - z₀) ^ (n + 1)) z = (n + 1) * (z - z₀) ^ n := by
-      simp only [differentiableAt_fun_id, differentiableAt_const, DifferentiableAt.fun_sub,
-        deriv_fun_pow, cast_add, cast_one, add_tsub_cancel_right, deriv_fun_sub, deriv_id'',
-        deriv_const', sub_zero, mul_one]
+      simp_all
     simp only [cast_add, cast_one]
     rw [deriv_fun_mul h1 hg, h2]
     field_simp [_root_.pow_succ, hzz]
@@ -158,13 +156,7 @@ lemma exists_cindex_eq_order (hp : HasFPowerSeriesAt f p z₀) :
       have hd : dist z z₀ < R := by
         rw [mem_sphere_iff_norm, ← Complex.dist_eq] at hz
         simpa [hz] using hr.2
-      have hev : f =ᶠ[𝓝 z] 0 :=
-        Filter.eventually_of_mem (Metric.ball_mem_nhds z (sub_pos.mpr hd))
-          fun y hy => hf (by linarith [dist_triangle y z z₀, mem_ball.mp hy])
-      have hderiv : deriv f z = 0 := by
-        rw [hev.deriv_eq]
-        simp
-      simp [hderiv, hf hd]
+      simp_all
     simp only [cindex, mul_inv_rev, inv_I, neg_mul, FormalMultilinearSeries.order_zero,
       CharP.cast_eq_zero, neg_eq_zero, _root_.mul_eq_zero, I_ne_zero, inv_eq_zero,
       ofReal_eq_zero, pi_ne_zero, OfNat.ofNat_ne_zero, or_self, false_or]

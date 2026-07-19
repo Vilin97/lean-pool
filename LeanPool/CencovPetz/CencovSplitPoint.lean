@@ -212,34 +212,7 @@ theorem eq_smul_fisher_of_isSplitRepresentable (G : MonotoneMetricFamily)
   -- Rewrite the Fisher term back to `β`, then apply `hFin_apply`.
   rw [hF_equiv]
   -- Convert the left-hand side to the `B` abbreviation used in `hFin_apply`.
-  change
-    (TangentFin.Bilin.B (G := G) (n := n))
-        ((MarkovMorphism.deterministic
-            (α := β) (β := Fin n)
-            (g := (e : β → Fin n))
-            e.surjective).tangentPushforward
-          ((split (α := α) m hm).tangentPushforward u))
-        ((MarkovMorphism.deterministic
-            (α := β) (β := Fin n)
-            (g := (e : β → Fin n))
-            e.surjective).tangentPushforward
-          ((split (α := α) m hm).tangentPushforward v))
-      =
-      (uniformScalar G 2 (by decide)) *
-        fisherBilin (Simplex.uniform (α := Fin n))
-          ((MarkovMorphism.deterministic
-              (α := β) (β := Fin n)
-              (g := (e : β → Fin n))
-              e.surjective).tangentPushforward
-            ((split (α := α) m hm).tangentPushforward u))
-          ((MarkovMorphism.deterministic
-              (α := β) (β := Fin n)
-              (g := (e : β → Fin n))
-              e.surjective).tangentPushforward
-            ((split (α := α) m hm).tangentPushforward v))
-  -- Now `hFin_apply` matches the goal up to
-  -- unfolding scalar multiplication and rewriting the scalar.
-  simpa [hscalar, mul_assoc] using hFin_apply
+  simp_all
 
 theorem eq_smul_fisher_of_isRational (G : MonotoneMetricFamily)
     {α : Type} [Fintype α] [Nonempty α]

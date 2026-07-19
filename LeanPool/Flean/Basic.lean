@@ -119,18 +119,13 @@ lemma is_zero_iff_subnormal_to_q (sm : SubnormRep C) (h : sm.m < C.prec) :
   · intro h'
     simp only [Flean.Float.IsZero, Bool.false_eq_true]
     rcases sm with ⟨s, m⟩
-    split
-    · simp at *
-    simp only [C.prec_pos, Flean.Float.subnormal.injEq, SubnormRep.mk.injEq, imp_false,
-      not_and, forall_const, forall_eq'] at *
-    contradiction
+    simp_all
   intro h'
   rcases sm with ⟨s, m⟩
   simp only [Flean.Float.IsZero] at h'
   split at h'
   next s m h_again sm_def =>
-    rw [Flean.Float.subnormal.injEq] at sm_def
-    rw [sm_def]
+    simp_all
   simp at h'
 
 lemma subnormal_range (f : SubnormRep C) (vm : f.m < C.prec) (ne_zero : f.nonzero) :
@@ -264,9 +259,7 @@ lemma to_float_to_rat [R : Rounding] (f : Flean.Float C) (finite : f.IsFinite)
       rw [snormal_eq] at h_eq_pres
       linarith
     else
-      rw [<-snormal_eq] at h_eq_pres
-      simp only [mzero, this, h_eq_pres, ↓reduceDIte, Flean.Float.subnormal.injEq]
-      rw [snormal_eq]
+      simp_all
 
 
 /-

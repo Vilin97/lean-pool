@@ -272,8 +272,7 @@ lemma T_elem_ppow_in_range (p : ℕ) (hp : p.Prime)
         (ppowDiag 2 p ![0, e 1 - e 0])
         (ppowDiag_pos 2 p hp _)
         (divChain_ppow 2 p _ (by
-          intro i j hij
-          fin_cases i <;> fin_cases j <;> simp_all))]
+          simp_all))]
     apply (evalHom 2 p).range.mul_mem
     · rw [← T_pp_pow p hp (e 0), ← T_gen_one_eq_T_pp p hp]
       exact (evalHom 2 p).range.pow_mem (X_one_mem_range p) _
@@ -413,12 +412,7 @@ theorem evalHom_injective_one (p : ℕ) (hp : p.Prime) :
       exact Finsupp.ext (fun i => by
         fin_cases i; exact Nat.pow_right_injective hp.one_lt (congr_fun this 0))
     · rintro rfl; rfl
-  simp only [D, mul_ite, mul_one, mul_zero]
-  simp_rw [show ∀ d, (if (TDiag (n := 1) (fun _ => p ^ d 0)) =
-    TDiag (fun _ => p ^ s 0) then R.coeff d else 0) =
-    if d = s then R.coeff d else 0 from fun d => if_congr (hTd d) rfl rfl]
-  rw [Finset.sum_ite_eq']
-  simp [MvPolynomial.mem_support_iff, hcoeff]
+  simp_all
 
 /-! #### Surjectivity of restricted evalHom -/
 

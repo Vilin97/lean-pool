@@ -28,8 +28,7 @@ noncomputable def QuantumGraph.Grad :
   toFun f := (rT _ (LinearMap.adjoint f) - lT _ f) ∘ₗ Coalgebra.comul
   map_add' _ _ := by simp_rw [LinearMap.lTensor_add, map_add, LinearMap.rTensor_add,
     add_sub_add_comm, LinearMap.add_comp]
-  map_zero' := by simp only [map_zero, LinearMap.rTensor_zero, LinearMap.lTensor_zero, sub_self,
-    LinearMap.zero_comp]
+  map_zero' := by simp_all
 
 lemma QuantumGraph.Grad_apply (A : B →ₗ[ℂ] B) :
   QuantumGraph.Grad A = (rT _ (LinearMap.adjoint A) - lT _ A) ∘ₗ Coalgebra.comul :=

@@ -443,5 +443,4 @@ lemma tendsto_resToImagAxis_of_tendsto_atImInfty {F : ℍ → ℂ} {c : ℂ}
   refine ⟨max A 1, fun t ht ↦ ?_⟩
   have ht_pos : 0 < t := lt_of_lt_of_le one_pos (le_of_max_le_right ht)
   simp only [Function.resToImagAxis, ResToImagAxis, ht_pos, ↓reduceDIte]
-  set z : ℍ := ⟨Complex.I * t, by simp [ht_pos]⟩
-  exact hA z (by simpa [UpperHalfPlane.im, z] using le_of_max_le_left ht)
+  simp_all

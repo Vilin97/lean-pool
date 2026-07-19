@@ -155,16 +155,13 @@ lemma timeShift_hasTemperateGrowth (s : ℝ) : Function.HasTemperateGrowth (time
     have h_eq : fderiv ℝ (timeShift s) = fun _ => ContinuousLinearMap.id ℝ SpaceTime := by
       ext x v
       have h : timeShift s = fun u => u + timeShiftConst s := funext (timeShift_eq_add_const s)
-      rw [h]
-      simp only [fderiv_add_const, fderiv_fun_id, ContinuousLinearMap.id_apply]
-    rw [h_eq]
-    exact Function.HasTemperateGrowth.const _
+      simp_all
+    simp_all
   -- timeShift is differentiable
   have h_diff : Differentiable ℝ (timeShift s) := by
     intro x
     have h : timeShift s = fun u => u + timeShiftConst s := funext (timeShift_eq_add_const s)
-    rw [h]
-    exact differentiableAt_id.add_const _
+    simp_all
   -- Polynomial bound: ‖timeShift s x‖ ≤ C * (1 + ‖x‖)^k
   have h_bound : ∀ x : SpaceTime, ‖timeShift s x‖ ≤ (1 + ‖timeShiftConst s‖) * (1 + ‖x‖) ^ 1 := by
     intro x
@@ -324,8 +321,7 @@ lemma iteratedFDeriv_timeTranslationSchwartz (n : ℕ) (h : ℝ) (f : TestFuncti
   have h_shift_eq : timeShiftConst h = h • unitTimeDir := by
     ext i
     simp only [timeShiftConst, unitTimeDir, EuclideanSpace.single, timeIndex]
-    simp only [PiLp.smul_apply, smul_eq_mul, PiLp.ofLp_single, Pi.single_apply, Fin.ext_iff]
-    split_ifs <;> ring
+    simp_all
   have h_eq : ∀ z, timeTranslationSchwartz h f z = f (z + h • unitTimeDir) := by
     intro z
     rw [timeTranslationSchwartz_apply, timeShift_eq_add_const, h_shift_eq]
@@ -477,8 +473,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
   rw [h_diff]
   -- Step 2: Handle h = 0 case (trivial)
   by_cases hh : h = 0
-  · simp only [hh, zero_smul, add_zero, sub_self, norm_zero, mul_zero]
-    positivity
+  · simp_all
   -- Step 3: For h ≠ 0, apply Mean Value Theorem via line path
   -- Define the path g(t) = iteratedFDeriv ℝ n f (x + t • (h • unitTimeDir))
   -- g(0) = iteratedFDeriv ℝ n f x
@@ -562,8 +557,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
         rw [norm_smul, Real.norm_eq_abs, hy]
         have ht_bound : |t| ≤ 1 := by
           rw [abs_le]; constructor <;> linarith [ht.1, ht.2]
-        calc |t| * |h| ≤ 1 * |h| := by nlinarith [abs_nonneg t, abs_nonneg h]
-          _ = |h| := one_mul _
+        simp_all
       have h4 : (1 + ‖t • y‖) ^ k ≤ (1 + |h|) ^ k := by
         apply pow_le_pow_left₀ (by linarith [norm_nonneg (t • y)])
         linarith
@@ -837,7 +831,6 @@ lemma timeTranslationDistribution_add (s t : ℝ) (ω : FieldConfiguration) :
 lemma timeTranslationDistribution_zero (ω : FieldConfiguration) :
     timeTranslationDistribution 0 ω = ω := by
   apply DFunLike.ext
-  intro f
-  simp only [timeTranslationDistribution_apply, neg_zero, timeTranslationSchwartz_zero]
+  simp_all
 
 end TimeTranslation

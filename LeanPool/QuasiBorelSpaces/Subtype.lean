@@ -44,8 +44,7 @@ instance
 lemma isHom_mk {P : B → Prop}
     {f : A → B} (hf₁ : IsHom f) (hf₂ : (x : A) → P (f x))
     : IsHom (fun x ↦ Subtype.mk (f x) (hf₂ x)) := by
-  simp only [isHom_def]
-  apply hf₁
+  simp_all
 
 @[fun_prop]
 lemma isHom_val {P : B → Prop} {f : A → Subtype P} (hf : IsHom f) : IsHom (fun x ↦ (f x).val) := by

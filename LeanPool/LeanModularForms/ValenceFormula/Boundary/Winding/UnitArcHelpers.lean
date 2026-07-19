@@ -86,8 +86,7 @@ lemma unitArc_fdBoundary_eq (H : ℝ) (s : ℂ)
     rw [Real.sin_arccos]
     have h1m : 1 - s.re ^ 2 = s.im ^ 2 := by linarith
     rw [h1m, Real.sqrt_sq (le_of_lt hs_im_pos)]
-  rw [h_sin]
-  exact Complex.re_add_im s
+  simp_all
 
 private lemma unitArc_dist_from_seg1 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ)
     (hz_re : z.re = 1 / 2) : 1/2 - s.re ≤ ‖z - s‖ := by
@@ -277,8 +276,7 @@ private lemma unitArc_far_endpoint_correction (H : ℝ) (hH : 1 < H) (s : ℂ)
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
   have hg₀_im_pos : 0 < g₀.im := by rw [hg₀_im]; linarith
   have hg₀_ne : g₀ ≠ 0 := by
-    intro h; have := congr_arg Complex.im h
-    simp only [Complex.zero_im] at this; linarith [hg₀_im_pos]
+    intro h; simp_all
   simp only [Complex.log]
   rw [norm_neg, arg_neg_eq_arg_sub_pi_iff.mpr (Or.inl hg₀_im_pos)]
   push_cast; ring

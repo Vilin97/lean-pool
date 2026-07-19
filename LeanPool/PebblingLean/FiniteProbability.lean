@@ -44,19 +44,15 @@ theorem exists_not_of_uniformProbability_lt_one [Fintype Ω] [Nonempty Ω]
   classical
   by_contra hnone
   have hall : ∀ ω : Ω, P ω := by
-    intro ω
-    by_contra hω
-    exact hnone ⟨ω, hω⟩
+    simp_all
   have hfilter :
       (Finset.univ.filter P).card = Fintype.card Ω := by
-    rw [Finset.card_eq_iff_eq_univ]
-    exact Finset.filter_eq_self.mpr fun ω _ => hall ω
+    simp_all
   have hcard_ne : (Fintype.card Ω : ℚ) ≠ 0 := by
     exact_mod_cast (Fintype.card_pos_iff.mpr inferInstance).ne'
   have hprob_eq : uniformProbability P = 1 := by
     unfold uniformProbability
-    rw [hfilter]
-    field_simp [hcard_ne]
+    simp_all
   linarith
 
 /-- Union bound for finite uniform probabilities. -/

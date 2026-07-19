@@ -35,8 +35,7 @@ theorem exists_compact
     ∃ K, IsCompact K ∧ IsClosed K ∧ K ⊆ A ∧ P J (A \ K) ≤ ε := by
   by_cases hPA : P J A = 0
   · refine ⟨∅, isCompact_empty, isClosed_empty, empty_subset _, ?_⟩
-    rw [sdiff_empty, hPA]
-    exact zero_le
+    simp_all
   have h : P J A - ε < P J A := ENNReal.sub_lt_self (measure_ne_top _ _) hPA hε.ne'
   obtain ⟨K, hKA, ⟨hK_compact, hK_closed⟩, h_lt⟩ := hP_inner J hA (P J A - ε) h
   refine ⟨K, hK_compact, hK_closed, hKA, ?_⟩

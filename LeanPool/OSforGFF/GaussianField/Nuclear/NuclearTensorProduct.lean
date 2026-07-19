@@ -349,9 +349,7 @@ def basisVec (m : ℕ) : RapidDecaySeq where
   val n := if n = m then 1 else 0
   rapid_decay k := by
     apply summable_of_ne_finset_zero (s := {m})
-    intro n hn
-    simp only [Finset.mem_singleton] at hn
-    simp [hn]
+    simp_all
 
 @[simp] theorem basisVec_val_self (m : ℕ) : (basisVec m).val m = 1 := by
   simp [basisVec]
@@ -581,9 +579,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     change φ f = ∑' m, (equiv f).val m * φ (equiv.symm (RapidDecaySeq.basisVec m))
     have h := RapidDecaySeq.rapidDecay_expansion
       (φ.comp equiv.symm.toContinuousLinearMap) (equiv f)
-    simp only [ContinuousLinearMap.comp_apply] at h
-    rwa [show (↑equiv.symm : RapidDecaySeq →L[ℝ] E) (equiv f) = f from
-      equiv.symm_apply_apply f] at h
+    simp_all
   basis_growth i := by
     set q : Seminorm ℝ RapidDecaySeq := (p i).comp equiv.symm.toLinearMap
     have hq_cont : Continuous q :=
@@ -1504,9 +1500,7 @@ theorem _root_.GaussianField.NuclearTensorProduct.basisVec_eq_pure
         apply h
         rw [← Nat.pair_unpair n, ← Nat.pair_unpair m, h₁, h₂]
       · simp only [h₂, if_false]
-    · by_cases h₂ : (Nat.unpair n).2 = (Nat.unpair m).2
-      · simp only [h₁, h₂, if_false, if_true]
-      · simp only [h₁, h₂, if_false]
+    · simp_all
 
 end NuclearTensorProduct
 

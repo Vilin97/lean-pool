@@ -220,13 +220,9 @@ private theorem open_neighborhood_from_local_balls
   · exact isOpen_biUnion (fun m _ => Metric.isOpen_ball)
   · intro m hm
     have hpos : 0 < α' m := by
-      simp only [α', dif_pos hm]
-      exact (hα m hm).1
+      simp_all
     exact Set.mem_biUnion hm (Metric.mem_ball_self hpos)
-  · intro x hx
-    obtain ⟨m, hmS, hxm⟩ := Set.mem_iUnion₂.mp hx
-    rw [hα'_spec m hmS] at hxm
-    exact (hα m hmS).2.1 hxm
+  · simp_all
   · intro x hx
     obtain ⟨m, hmS, hxm⟩ := Set.mem_iUnion₂.mp hx
     rw [hα'_spec m hmS] at hxm
@@ -264,8 +260,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
   refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
   intro x₀ hx₀
   have hη : (1 : ℝ) / (L : ℝ) = 0 := by
-    rw [hL_zero]
-    norm_num
+    simp_all
   have hseq : ∀ k, nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ := by
     intro k
     rw [hη]
@@ -273,8 +268,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
   have hS_ne : (Set.range ι).Nonempty := Set.range_nonempty ι
   obtain ⟨m, hmS⟩ := hS_ne
   have hm_argmin : m ∈ argminSet f := by
-    rw [← hrange]
-    exact hmS
+    simp_all
   have hbdd : BddBelow (Set.range f) :=
     ⟨f m, by rintro _ ⟨z, rfl⟩; exact hm_argmin z⟩
   intro k
@@ -289,8 +283,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L
     have hrate :
         2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) =
           2 * (f x₀ - fStar f) := by
-      rw [hL_zero]
-      simp
+      simp_all
     calc f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f
         = f x₀ - fStar f := by simp only [hseq k]
       _ ≤ 2 * (f x₀ - fStar f) := by nlinarith
@@ -328,8 +321,7 @@ private theorem nesterov_pl_accelerated_rate_zero_dim
   obtain ⟨m, hmS⟩ := Set.range_nonempty ι
   have hx₀_argmin : x₀ ∈ argminSet f := by
     have hx₀_eq_m : x₀ = m := Subsingleton.elim x₀ m
-    rw [hx₀_eq_m, ← hrange]
-    exact hmS
+    simp_all
   have hbdd : BddBelow (Set.range f) :=
     ⟨f x₀, by rintro _ ⟨z, rfl⟩; exact hx₀_argmin z⟩
   have hfx₀ : f x₀ = fStar f :=
@@ -368,8 +360,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L_argmin
   · refine ⟨U, hU_open, hS_sub, Set.Subset.rfl, ?_⟩
     intro x₀ hx₀
     have hη : (1 : ℝ) / (L : ℝ) = 0 := by
-      rw [hL_zero]
-      norm_num
+      simp_all
     have hseq : ∀ k, nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k = ⟨x₀, 0⟩ := by
       intro k
       rw [hη]
@@ -389,8 +380,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L_argmin
       have hrate :
           2 * Real.exp (-(↑k / Real.sqrt (↑L / μ))) * (f x₀ - fStar f) =
             2 * (f x₀ - fStar f) := by
-        rw [hL_zero]
-        simp
+        simp_all
       calc f ((nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) - fStar f
           = f x₀ - fStar f := by simp only [hseq k]
         _ ≤ 2 * (f x₀ - fStar f) := by nlinarith
@@ -399,8 +389,7 @@ private theorem nesterov_pl_accelerated_rate_zero_L_argmin
   · refine ⟨∅, isOpen_empty, ?_, Set.empty_subset U, ?_⟩
     · intro x hx
       exact False.elim (hS_ne ⟨x, hx⟩)
-    · intro x hx
-      cases hx
+    · simp_all
 
 /-- Degenerate zero-dimensional branch for the C³-only theorem. -/
 private theorem nesterov_pl_accelerated_rate_zero_dim_argmin
@@ -508,8 +497,7 @@ private theorem nesterov_pl_accelerated_rate_theta_tubular
     · obtain ⟨r₀, hr₀_pos, hball₀⟩ :=
         Metric.isOpen_iff.mp hTub_sub.isOpen mstar (hTub_sub.subset hmstar)
       have hmstar_argmin : mstar ∈ argminSet f := by
-        rw [← hS_argmin]
-        exact hmstar
+        simp_all
       have hbdd : BddBelow (Set.range f) :=
         ⟨f mstar, by rintro _ ⟨z, rfl⟩; exact hmstar_argmin z⟩
       by_cases hloc_const : ∀ x ∈ Metric.ball mstar (r₀ / 3), f x = fStar f
@@ -524,8 +512,7 @@ private theorem nesterov_pl_accelerated_rate_theta_tubular
           rw [hfx₀]
           exact ciInf_le hbdd z
         have hx₀_S : x₀ ∈ S := by
-          rw [hS_argmin]
-          exact hx₀_argmin
+          simp_all
         have hgrad_x₀ : gradient f x₀ = 0 := hgrad_zero x₀ hx₀_S
         refine ⟨?_, ?_, ?_⟩
         · intro k
@@ -743,7 +730,6 @@ theorem nesterov_pl_accelerated_rate_c3_internal
   · refine ⟨∅, isOpen_empty, ?_, Set.empty_subset U, ?_⟩
     · intro x hx
       exact False.elim (hS_ne ⟨x, hx⟩)
-    · intro x hx
-      cases hx
+    · simp_all
 
 end PLAcceleratedNesterovLean

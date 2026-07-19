@@ -320,10 +320,7 @@ private lemma schauder_remainder_le
         set t' := t.map ⟨Subtype.val, Subtype.val_injective⟩ with ht'_def
         have h_disj : Disjoint t' s := by
           rw [Finset.disjoint_left]
-          intro n hn hn_s
-          rw [Finset.mem_map] at hn
-          obtain ⟨⟨m, hm⟩, _, rfl⟩ := hn
-          exact hm hn_s
+          simp_all
         have h_le := h_vanish t' h_disj
         rwa [ht'_def, Finset.sum_map] at h_le
 
@@ -455,8 +452,7 @@ theorem _root_.GaussianField.DyninMityaginSpace.toNuclearSpace (E : Type*)
         rw [div_le_div_iff₀ hpow_pos (pow_pos (h1m_pos m) 2)]
         calc (C₁nn : ℝ) * (s₁.sup hN.p) (hN.basis m) * (1 + (m : ℝ)) ^ 2
             ≤ (C₁nn : ℝ) * (D * (1 + (m : ℝ)) ^ S) * (1 + (m : ℝ)) ^ 2 := by
-              apply mul_le_mul_of_nonneg_right _ (pow_nonneg (h1m_pos m).le 2)
-              exact mul_le_mul_of_nonneg_left (hDbound m) (NNReal.coe_nonneg C₁nn)
+              simp_all
           _ = (C₁nn : ℝ) * D * ((1 + (m : ℝ)) ^ S * (1 + (m : ℝ)) ^ 2) := by ring
           _ = (C₁nn : ℝ) * D * (1 + (m : ℝ)) ^ (S + 2) := by rw [pow_add]
       · have : Summable (fun m : ℕ => (C₁nn : ℝ) * D * ((1 : ℝ) / ((m : ℝ) + 1) ^ 2)) :=

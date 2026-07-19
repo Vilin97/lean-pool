@@ -24,8 +24,7 @@ private lemma inv_norm_f_abs_integrable
     (v : Fin 3 → ℝ) : Integrable (fun w => ‖v - w‖⁻¹ * |g w|) :=
   (inv_norm_schwartz_integrable g hg_decay hg_smooth.continuous.aestronglyMeasurable v).norm.congr
     (Filter.Eventually.of_forall fun w => by
-      change ‖‖v - w‖⁻¹ * g w‖ = ‖v - w‖⁻¹ * |g w|
-      rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)), Real.norm_eq_abs])
+      simp_all)
 
 private lemma inv_norm_vGrad_abs_integrable
     {g : (Fin 3 → ℝ) → ℝ} (hg_smooth : ContDiff ℝ 3 g)
@@ -108,9 +107,7 @@ private lemma coulomb_flux_component_pointwise_le
                 smul_eq_mul, mul_assoc, mul_comm (‖v - w‖⁻¹)]
               ring
             exact h_uj_int.norm.congr (Filter.Eventually.of_forall fun w => by
-              change ‖‖v - w‖⁻¹ * u w j‖ = ‖v - w‖⁻¹ * |u w j|
-              rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
-                Real.norm_eq_abs]))
+              simp_all))
           (Filter.Eventually.of_forall h_pw)
     _ ≤ M₀ * (3 * ‖iteratedFDeriv ℝ 1 g v‖) +
         (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 g v‖ := by
@@ -207,8 +204,7 @@ lemma flux_times_log_integrable_coulomb
     fun j N => schwartz_partial_decay hSchwartz x j N
   -- Uniform Newtonian bounds
   obtain ⟨M₀, hM₀, hM₀_bound⟩ := newtonian_schwartz_uniform_bound (fun w => f x w)
-    (fun N => by obtain ⟨C, hC, hb⟩ := hf_decay N; exact ⟨C, hC, fun w => by
-      change |(fun w => f x w) w| * _ ≤ C; exact hb w⟩)
+    (fun N => by simp_all)
     (hf_smooth_v x).continuous.aestronglyMeasurable
   have hMj : ∀ j : Fin 3, ∃ M > 0, ∀ v,
       ∫ w, ‖v - w‖⁻¹ * |fderiv ℝ (f x) w (Pi.single j 1)| ≤ M := by

@@ -39,8 +39,7 @@ private lemma not_diffAt_at_two (s : ℝ) (hs0 : s ≠ 0) :
       rw [show ((↑(Real.pi / 3) : ℂ) + ((↑(2 : ℝ) : ℂ) - ↑(1 : ℝ)) * (↑(Real.pi / 6) : ℂ)) =
           ↑(Real.pi / 2) from by push_cast; ring]
       exact exp_pi_div_two_eq_I
-    rw [h_val] at h_raw
-    convert h_raw using 2 <;> push_cast <;> ring
+    simp_all
   have h_chord_left :
       HasDerivAt (fun t' : ℝ => chordSegment rho' iPoint (t' - 1)) (iPoint - rho') (2 : ℝ) :=
     hasDerivAt_chordSegment_shift rho' iPoint 1 2
@@ -73,13 +72,7 @@ private lemma not_diffAt_at_two (s : ℝ) (hs0 : s ≠ 0) :
           Complex.exp (((Real.pi : ℝ) / 2 + (t' - 2) * ((Real.pi : ℝ) / 6)) * I))
         (((Real.pi : ℝ) / 6) * I * I) (2 : ℝ) := by
     have h_raw := hasDerivAt_arc_exp (Real.pi / 2) (Real.pi / 6) 2 2
-    have h_val : Complex.exp (((↑(Real.pi / 2) : ℂ) +
-        ((↑(2 : ℝ) : ℂ) - ↑(2 : ℝ)) * (↑(Real.pi / 6) : ℂ)) * I) = I := by
-      rw [show ((↑(Real.pi / 2) : ℂ) + ((↑(2 : ℝ) : ℂ) - ↑(2 : ℝ)) * (↑(Real.pi / 6) : ℂ)) =
-          ↑(Real.pi / 2) from by push_cast; ring]
-      exact exp_pi_div_two_eq_I
-    rw [h_val] at h_raw
-    convert h_raw using 2 <;> push_cast <;> ring
+    simp_all
   have h_chord_right :
       HasDerivAt (fun t' : ℝ => chordSegment iPoint rho (t' - 2)) (rho - iPoint) (2 : ℝ) :=
     hasDerivAt_chordSegment_shift iPoint rho 2 2
@@ -113,8 +106,7 @@ private lemma not_diffAt_at_two (s : ℝ) (hs0 : s ≠ 0) :
   have h_eq_right := tendsto_nhds_unique (h_slope_inner.mono_left (nhdsGT_le_nhdsNE 2)) h_right_val
   rw [h_eq_left] at h_eq_right
   have h_pts_eq : iPoint - rho' = rho - iPoint := by
-    have h_smul_eq : s • (iPoint - rho') = s • (rho - iPoint) := add_left_cancel h_eq_right
-    exact (smul_right_injective ℂ hs0).eq_iff.mp h_smul_eq
+    simp_all
   have h_im_left : Complex.im (iPoint - rho') = 1 - Real.sqrt 3 / 2 := by
     simp only [iPoint, rho']
     simp [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_im, Complex.ofReal_re,
@@ -152,8 +144,7 @@ private lemma deriv_bound_at_two_zero :
     convert h_raw using 2 <;> push_cast <;> ring
   rw [h_deriv.deriv]
   have h_exp_norm : ‖Complex.exp ((Real.pi / 2) * I)‖ = 1 := by
-    rw [show ((Real.pi / 2) * I : ℂ) = ((Real.pi / 2 : ℝ) : ℂ) * I from by push_cast; ring,
-      Complex.norm_exp_ofReal_mul_I]
+    simp_all
   rw [norm_mul, norm_mul, h_exp_norm, Complex.norm_I, mul_one, mul_one,
     show (Real.pi / 6 : ℂ) = ((Real.pi / 6 : ℝ) : ℂ) from by push_cast; ring, Complex.norm_real,
     Real.norm_eq_abs, abs_of_pos (by positivity : (0 : ℝ) < Real.pi / 6)]

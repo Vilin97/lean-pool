@@ -119,8 +119,7 @@ lemma subAt_body_image_compl_preimage (y : List A) :
 lemma subAt_body_image_compl_compl_preimage (y : List A) :
     (fun a ↦ y ++ₛ a) ⁻¹' (Subtype.val '' ((body.append x)⁻¹' X)ᶜᶜ)
       = (fun a ↦ x ++ₛ (y ++ₛ a)) ⁻¹' (Subtype.val '' X) := by
-  ext a
-  simp
+  simp_all
 lemma mem_subAt_body y : y ∈ (body.append x)⁻¹' X ↔ x ++ₛ y.val ∈ Subtype.val '' X := by
   simp [body.append, by simpa using y.prop]
 end «Section1»

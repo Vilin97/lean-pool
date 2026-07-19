@@ -515,8 +515,7 @@ omit [DecidableEq F] in
 /-- Imported declaration from the Incompleteness formalization. -/
 def boxdotAxiomT : 𝓢 ⊢ ⊡φ ==> φ := and₁
 omit [DecidableEq F] in @[simp 1100] lemma boxdot_axiomT! : 𝓢 ⊢! ⊡φ ==> φ := by
-  classical
-  exact ⟨boxdotAxiomT⟩
+  simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def boxdotNec (d : 𝓢 ⊢ φ) : 𝓢 ⊢ ⊡φ := and₃' d (nec d)
@@ -527,15 +526,13 @@ omit [DecidableEq F] in lemma boxdot_nec! (d : 𝓢 ⊢! φ) : 𝓢 ⊢! ⊡φ :
 /-- Imported declaration from the Incompleteness formalization. -/
 def boxdotBox : 𝓢 ⊢ ⊡φ ==> □φ := and₂
 omit [DecidableEq F] in lemma boxdot_box! : 𝓢 ⊢! ⊡φ ==> □φ := by
-  classical
-  exact ⟨boxdotBox⟩
+  simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def BoxBoxdotBoxDotbox : 𝓢 ⊢ □⊡φ ==> ⊡□φ := impTrans'' distributeBoxAnd (impId _)
 omit [DecidableEq F] in
 lemma boxboxdot_boxdotbox : 𝓢 ⊢! □⊡φ ==> ⊡□φ := by
-  classical
-  exact ⟨BoxBoxdotBoxDotbox⟩
+  simp_all
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

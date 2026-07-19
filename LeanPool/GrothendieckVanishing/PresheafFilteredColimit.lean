@@ -239,10 +239,7 @@ private theorem sheafH_filtered_colimit_h1_boundary_square
         qCocone.ι.app j).hom.app (op ⊤)) =
       (((sheafHFilteredColimitSuccInjCocone Y').ι.app j ≫
         cokernel.π ι').hom.app (op ⊤))
-    exact congrArg
-      (fun β : ((sheafHFilteredColimitSuccInj Y').obj j) ⟶ qCocone.pt =>
-        β.hom.app (op ⊤))
-      hπ
+    simp_all
   exact
     (congrArg (fun t ↦ (sheafH_filtered_colimit_h1_gTopNat Y').app j ≫ t) heQ).trans
       (hπ_top.trans

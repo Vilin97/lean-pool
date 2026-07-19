@@ -56,8 +56,7 @@ private lemma filter_cast_eq_singleton {D : ℕ} (k : Fin D) :
   ext j; constructor
   · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
     intro h; ext; omega
-  · simp only [Finset.mem_singleton, Finset.mem_filter, Finset.mem_univ, true_and]
-    intro h; rw [h]
+  · simp_all
 
 private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
@@ -297,8 +296,7 @@ private lemma circle_level_bound {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ)
       2 * (rho (U t)) ^ 2 + 2 * ‖R t‖ ^ 2 := by
     intro t
     have h_VU : V t - U t = -(R t) := by
-      simp only [V, R, U]; rw [polyEvalCircle_eq_polyEval]
-      simp [remainderPoly]
+      simp_all
     have h_lip : rho (V t) ≤ rho (U t) + ‖R t‖ := by
       calc rho (V t) ≤ rho (U t) + ‖V t - U t‖ := rho_pointwise_upper (V t) (U t)
         _ = rho (U t) + ‖R t‖ := by rw [h_VU, norm_neg]
@@ -622,12 +620,7 @@ private lemma annular_circle_bound {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) 
         have hfr : f r ≤ C₁ * g r + C₂ * h r := hpw r hrIcc
         calc w r * f r ≤ w r * (C₁ * g r + C₂ * h r) := mul_le_mul_of_nonneg_left hfr hwr
           _ = C₁ * (w r * g r) + C₂ * (w r * h r) := by ring
-    calc ∫ r in (j : ℝ)..(j + 1 : ℝ), w r * f r
-        ≤ ∫ r in (j : ℝ)..(j + 1 : ℝ), (C₁ * (w r * g r) + C₂ * (w r * h r)) := h_bound
-      _ = C₁ * (∫ r in (j : ℝ)..(j + 1 : ℝ), w r * g r) +
-          C₂ * (∫ r in (j : ℝ)..(j + 1 : ℝ), w r * h r) := by
-        rw [intervalIntegral.integral_add (hwg_ii.const_mul _) (hwh_ii.const_mul _),
-            intervalIntegral.integral_const_mul, intervalIntegral.integral_const_mul]
+    simp_all
   -- Now combine: the goal has w*f = r*exp(-r²) * f, etc.
   change 2 * ∫ r in (j : ℝ)..(j + 1 : ℝ), w r * f r ≤
     C₁ * (2 * ∫ r in (j : ℝ)..(j + 1 : ℝ), w r * g r) +
@@ -786,10 +779,7 @@ theorem LocalFockSPR
     ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2)
     := by
   by_cases hp0 : p = 0
-  · subst hp0
-    simp only [eval_zero, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
-      zero_mul, integral_zero, add_zero, one_mem, CStarRing.norm_of_mem_unitary, sub_self,
-      abs_zero, mul_zero, le_refl]
+  · simp_all
   · have hcoeff0 : p.coeff 0 = 0 := by rw [coeff_zero_eq_eval_zero]; exact hp
     have hD : 1 ≤ p.natDegree := by
       by_contra hlt

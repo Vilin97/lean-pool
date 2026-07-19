@@ -45,8 +45,7 @@ instance : SetLike AspSet (ℤ × ℤ) where
   coe := AspSet.I
   coe_injective := by
     intro a b h
-    cases a; cases b
-    congr
+    cases a; simp_all
 
 @[simp] lemma mem_AspSet (asps : AspSet) (u v : ℤ) :
     ⟨u, v⟩ ∈ asps ↔ ⟨u, v⟩ ∈ asps.I := Iff.rfl
@@ -56,9 +55,7 @@ namespace AspSet
 /-- Two `AspSet`s are equal if their underlying sets of boxes are equal. -/
 theorem ext {A B : AspSet} (hI : A.I = B.I) : A = B := by
   cases A
-  cases B
-  cases hI
-  rfl
+  simp_all
 
 /-- Every inversion box of an abstract ASP set is directed upward. -/
 theorem directed (asps : AspSet) : ∀ u v : ℤ, ⟨u, v⟩ ∈ asps → u < v :=
@@ -256,14 +253,11 @@ private lemma endpointIndicator_eq_post_lt (a k : ℤ) :
       absurd (asps.directed a k ((mem_outset asps a k).mp hk)) (not_lt_of_ge k_lt_a.le)
     rw [post_lt_iff_not_mem asps k_lt_a]; simp only [← mem_inset]
     by_cases hin : k ∈ asps.inset a <;> simp [oneIf, k_lt_a, not_out, hin]
-  · simp only [oneIf, lt_self_iff_false, ↓reduceIte, Set.Finite.mem_toFinset,
-      Set.mem_setOf_eq, zero_sub, neg_add_cancel, not_post_lt_self]
+  · simp_all
   · have not_k_lt_a : ¬ k < a := not_lt_of_ge a_lt_k.le
     have not_in : k ∉ asps.inset a := fun hk =>
       absurd (asps.directed k a ((mem_inset asps a k).mp hk)) (not_lt_of_ge a_lt_k.le)
-    rw [post_lt_swap_iff_mem asps a_lt_k.le]; simp only [← mem_outset]
-    simp only [oneIf, not_k_lt_a, ↓reduceIte, not_in, sub_self,
-      Set.Finite.mem_toFinset, Set.mem_setOf_eq, zero_add]
+    rw [post_lt_swap_iff_mem asps a_lt_k.le]; simp_all
 
 private noncomputable def sigmaIndicator (asps : AspSet) (m n k : ℤ) : ℤ :=
   oneIf (k ∈ Finset.Ico m n)
@@ -666,8 +660,7 @@ lemma inset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).inset n = asps.inset n 
     have := asps.inset_eq_nw χ n
     rw [invSet_of_toAspPerm asps χ]
     simp
-  simp only [h1, ← h2]
-  rfl
+  simp_all
 
 lemma outset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).outset n = asps.outset n := by
   ext x
@@ -677,8 +670,7 @@ lemma outset_of_toAspPerm (n : ℤ) : (toAspPerm asps χ).outset n = asps.outset
     have := asps.outset_eq_se χ n
     rw [invSet_of_toAspPerm asps χ]
     simp
-  simp only [h1, ← h2]
-  rfl
+  simp_all
 
 lemma chi_of_toAspPerm : (toAspPerm asps χ).χ = χ := by
   let σ := toAspPerm asps χ

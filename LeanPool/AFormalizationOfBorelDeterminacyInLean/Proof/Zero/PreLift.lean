@@ -40,16 +40,14 @@ lemma pInv_take_length :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) = 2 * k := by
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length = 2 * k
-    rw [pInvTreeHomMap_len]
-    simp
+    simp_all
   · simp
 lemma pInv_take_position :
     IsPosition (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val Player.zero := by
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length % 2 =
       Player.zero.toNat
-    rw [pInvTreeHomMap_len]
-    simp
+    simp_all
   · simp
 lemma pInv_take_length_le :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) ≤ 2 * k := by
@@ -86,8 +84,7 @@ lemma game_closed : IsClosed H.game.payoff := by
   rw [G.residual_payoff_odd _ (by have := H.hlvl; synthIsPosition)]
   change IsClosed ((body.append (H.x.val.take (2 * k + 1)) ⁻¹' G.payoff)ᶜᶜ)
   convert hyp.closed.preimage (body.append_con (H.x.val.take (2 * k + 1))) using 1
-  ext x
-  simp
+  simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def take (n : ℕ) (h : 2 * k < n) : PreLift hyp where
@@ -133,8 +130,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
       rw [← htree]
       exact y.prop
     · refine ⟨⟨y.val, ?_⟩, hy, rfl⟩
-      rw [htree]
-      exact y.prop
+      simp_all
 
 @[simps] instance : LE (PreLift hyp) where
   le p q := q.take p.x.val.length p.hlvl = p
@@ -151,8 +147,7 @@ instance : PartialOrder (PreLift hyp) where
 lemma take_le {h} : H.take n h ≤ H := by
   dsimp [LE.le]
   ext1
-  · ext1
-    simp [PreLift.take]
+  · simp_all
   · rfl
 lemma take_le_take hm hn : H.take m hm ≤ H.take n hn ↔ m ≤ n ∨ H.x.val.length ≤ n := by
   (conv => lhs; dsimp [LE.le]); simp [PreLift.ext_iff]
@@ -267,8 +262,7 @@ def liftMediumVal : List (upA hyp) := H.liftShort.val ++ [⟨H.liftNode, H.liftT
       rw [H.liftShort_val_map]
       rfl
     _ = H.x.val.take (2 * k + 2) := by
-      rw [show 2 * k + 2 = 2 * k + 1 + 1 by omega]
-      exact H.x.val.take_concat_get' (2 * k + 1) H.h'lvl
+      simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftVal := H.liftMediumVal ++
@@ -293,8 +287,7 @@ def liftVal := H.liftMediumVal ++
       rw [← List.zipInitsMap_map]
       simp
     _ = H.x.val := by
-      rw [H.liftMediumVal_map]
-      exact List.take_append_drop (2 * k + 2) H.x.val
+      simp_all
 @[simp, simp_lengths] lemma liftVal_length : H.liftVal.length (α := no_index _)
   = H.x.val.length := by
   rw [← H.liftVal_lift]
@@ -356,8 +349,7 @@ variable (hp : IsPosition H.x.val Player.zero)
   (H.extension hp R).val'.take (α := no_index _) (2 * k + 2) = H.liftMediumVal := by
   rw [ExtensionsAt.val'_take_of_le _ (by
     change 2 * k + 2 ≤ H.liftVal.length
-    rw [H.liftVal_length]
-    exact H.h'lvl_le)]
+    simp_all)]
   exact H.liftVal_take_medium
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def extensionPreLift : PreLift hyp where

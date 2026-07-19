@@ -73,8 +73,7 @@ theorem depth_reduction
     · have hbound := depth_deleteEdges_levelEdges_le G hac hd I hIsub
       rw [hIcard] at hbound
       have hpow : (2 : ℕ) ^ k / 2 ^ r = 2 ^ (k - r) := Nat.pow_div hrk (by decide)
-      rw [hpow]
-      exact hbound
+      simp_all
   · refine ⟨∅, Finset.empty_subset _, by simp, ?_⟩
     rw [deleteEdges_empty_depth]
     change sSup _ ≤ _

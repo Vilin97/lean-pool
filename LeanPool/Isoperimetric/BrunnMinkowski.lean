@@ -202,8 +202,7 @@ theorem brunn_minkowski
         field_simp
       _ = (va + vb)^(va*(va + vb)⁻¹ + vb*(va + vb)⁻¹) := by rw [Real.rpow_add h_va_plus_vb_pos]
       _ = va + vb := by field_simp; apply Real.rpow_one
-    rw [this] at h_result_simp
-    exact h_result_simp
+    simp_all
   -- Final manipulation to remove ENNReal.ofReal and .toReal
   rw [ENNReal.ofReal_add (le_of_lt h_va_pos) (le_of_lt h_vb_pos),
     ← ENNReal.ofReal_rpow_of_pos (ENNReal.toReal_pos hvolAzero hvolAinf),

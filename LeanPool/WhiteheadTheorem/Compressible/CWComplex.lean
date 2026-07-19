@@ -144,12 +144,7 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
       rw [show (i ≫ Limits.Sigma.ι (fun _ ↦ X) c) ≫ H ≫ PathSpace.evalAt Y t =
           i ≫ (Limits.Sigma.ι (fun _ ↦ X) c ≫ H) ≫ PathSpace.evalAt Y t by
         rw [Category.assoc, Category.assoc]]
-      rw [hιH]
-      rw [show Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ : cells ↦ i) ≫ F =
-          (Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map fun _ ↦ i) ≫ F
-        from (Category.assoc _ _ _).symm]
-      rw [hmap, Category.assoc]
-      exact hp
+      simp_all
 
 /--
 Suppose the left square in the diagram below is a pushout square.
@@ -181,11 +176,7 @@ lemma pushout {A' A B X' X Y : TopCat.{u}}
       change (φ ≫ i ≫ F) _ = _
       rw [po.w_assoc]
       have := l'.curriedH_prop' t (ι a') (Set.mem_range_self a')
-      simp only [ContinuousMap.argSwap, ContinuousMap.coe_mk, ContinuousMap.comp_apply,
-        ContinuousMap.prodSwap_apply, ContinuousMap.uncurry_apply, Function.uncurry_apply_pair,
-        hom_comp] at this
-      convert this.symm using 1
-      simp only [hom_comp, ContinuousMap.comp_apply]
+      simp_all
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk l ?_ G ?_ ?_ fun t ↦ ?_⟩
     · apply po.inl_desc
     · apply po.hom_ext
@@ -236,10 +227,7 @@ private noncomputable def F : ∀ n : ℕ, FStruct X j n
       let sq' : CommSq f₀ (X.skInclSucc 0) j (X.skIncl 1 ≫ F₀) :=
         ⟨by
           rw [sq.w, ← Category.assoc]
-          congr 1
-          apply Eq.symm
-          exact Limits.colimit.w (Functor.ofSequence fun n ↦ (X.attachCells n).incl) <|
-            homOfLE (by omega : 0 ≤ 1) ⟩
+          simp_all ⟩
       let l' := jcom_sk 0 |>.sq_hasLift sq' |>.hasLift.some
       have hep_sq : CommSq l'.curriedH (X.skIncl 1) (PathSpace.eval₀ Y) F₀ :=
         ⟨l'.curriedH_apply_zero⟩

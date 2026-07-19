@@ -126,8 +126,7 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
         enter [2,1]
         rw [neg_div, div_eq_mul_inv]
         simp
-      simp only [inv_neg, neg_im, inv_im, Left.neg_pos_iff] at *
-      exact this
+      simp_all
   · apply DifferentiableOn.mul
     · intro x hx; exact (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
     · intro x hx
@@ -165,5 +164,4 @@ lemma eta_equality : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
     simpa [ModularForm.eta] using (ModularForm.eta_ne_zero (z := (Complex.I : ℂ)) (by simp))
   have hcd := (mul_eq_right₀ he).mp h3.symm
   rw [mul_eq_one_iff_inv_eq₀ hz, inv_eq_iff_eq_inv] at hcd
-  rw [hcd] at h2
-  exact h2
+  simp_all

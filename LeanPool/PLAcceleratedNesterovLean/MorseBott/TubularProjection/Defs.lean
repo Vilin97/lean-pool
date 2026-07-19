@@ -167,8 +167,7 @@ lemma fderiv_eq_zero_of_const_on_ray {f : E → E} {x v : E}
       map_smul, norm_smul, Real.norm_eq_abs, abs_of_pos ht_pos,
       norm_smul, Real.norm_eq_abs, abs_of_pos ht_pos] at hbound
   have hrhs : ε / ‖v‖ * (t * ‖v‖) = t * ε := by field_simp
-  rw [hrhs] at hbound
-  exact le_of_mul_le_mul_left hbound ht_pos
+  simp_all
 
 omit [FiniteDimensional ℝ E] in
 /-- Local version: constancy on a short initial segment `(0, t₀]` suffices. -/
@@ -199,8 +198,7 @@ lemma fderiv_eq_zero_of_const_on_ray_local {f : E → E} {x v : E}
       map_smul, norm_smul, Real.norm_eq_abs, abs_of_pos ht_pos,
       norm_smul, Real.norm_eq_abs, abs_of_pos ht_pos] at hbound
   have hrhs : ε / ‖v‖ * (t * ‖v‖) = t * ε := by field_simp
-  rw [hrhs] at hbound
-  exact le_of_mul_le_mul_left hbound ht_pos
+  simp_all
 
 omit [FiniteDimensional ℝ E] in
 /-- π is constant along the fiber segment `[(1-t)·πx + t·x]` for `t ∈ [0,1]`.

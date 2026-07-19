@@ -227,8 +227,7 @@ private lemma _root_.VirasoroProject.upper_smul_eq_zero_of_forall_pos_lgen_smul_
     ∀ {E} (_ : E ∈ (virasoroTri 𝕜).upper), (ιUEA 𝕜) E • v = 0 := by
   simp only [virasoroTri_upper]
   apply Submodule.span_induction
-  · simpa only [Set.mem_image, Set.mem_setOf_eq, forall_exists_index, and_imp,
-                forall_apply_eq_imp_iff₂] using hwv_lpos
+  · simp_all
   · simp
   · intro E₁ E₂ _ _ hE₁ hE₂
     simp only [map_add, add_smul, hE₁, hE₂, add_zero]

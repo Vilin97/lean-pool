@@ -105,11 +105,7 @@ def shiftDown (k : ℤ) : Valley where
   rises := by
     intro m
     have : {n : ℤ | v.f n - k ≤ m} = {n : ℤ | v.f n ≤ m + k} := by
-      ext n
-      simp only [Set.mem_setOf_eq]
-      constructor
-      · intro h; linarith
-      · intro h; linarith
+      simp_all
     rw [this]
     apply v.rises
 
@@ -132,16 +128,10 @@ lemma shift_down_M (k : ℤ) : (v.shiftDown k).M = v.M := by
     omega
   have M_le_M' : v.M ≤ v'.M := by
     have := (v'.M_spec v.M).2
-    contrapose! ge with h
-    have := this h
-    rw [f'_eq] at this
-    exfalso; apply lt_irrefl (v'.f v'.M) this
+    simp_all
   have M'_le_M : v'.M ≤ v.M := by
     have := (v.M_spec v'.M).2
-    contrapose! le with h
-    have := this h
-    rw [f_eq] at this
-    exfalso; apply lt_irrefl (v.f v'.M) this
+    simp_all
   exact le_antisymm M_le_M' M'_le_M
 
 /-- Shifting a valley downward subtracts `k` from its minimum value. -/

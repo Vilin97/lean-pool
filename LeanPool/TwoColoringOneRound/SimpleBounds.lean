@@ -157,8 +157,7 @@ lemma pEvent_inter_cell_of_good {w : Fin 4 → Color} (hw : good w) :
   classical
   ext x
   constructor
-  · intro hx
-    exact hx.2
+  · simp_all
   · intro hxC
     have hxW : ∀ i, threshold (x i) = w i := (mem_cell_iff_threshold_eq x w).1 hxC
     have hxE : x ∈ ClassicalAlgorithm.pEvent simpleUpperAlg := by
@@ -181,8 +180,7 @@ lemma pEvent_inter_cell_of_not_good {w : Fin 4 → Color} (hw : ¬ good w) :
         simpa [ClassicalAlgorithm.pEvent, simpleUpperAlg] using hxE
       simpa [good, hxW 0, hxW 1, hxW 2, hxW 3] using this
     exact (hw hw').elim
-  · intro hx
-    exact hx.elim
+  · simp_all
 
 theorem p_simpleUpperAlg : ClassicalAlgorithm.p simpleUpperAlg = (1 / 4 : ENNReal) := by
   classical
@@ -202,10 +200,7 @@ theorem p_simpleUpperAlg : ClassicalAlgorithm.p simpleUpperAlg = (1 / 4 : ENNRea
       refine Set.mem_iUnion.2 ?_
       refine ⟨by simp [all], ?_⟩
       exact ⟨hx, hxC⟩
-    · intro hx
-      rcases Set.mem_iUnion.1 hx with ⟨w, hx⟩
-      rcases Set.mem_iUnion.1 hx with ⟨_, hx⟩
-      exact hx.1
+    · simp_all
   have hdisj :
       ∀ {w1 w2 : Fin 4 → Color},
         w1 ∈ all → w2 ∈ all → w1 ≠ w2 →
@@ -428,12 +423,7 @@ theorem no_algorithm_p_lt_one_fifth :
     simp [hedge, tsum_fintype, Finset.sum_const, nsmul_eq_mul]
   have hone : (volume : Measure (Samples 5)) Set.univ = (1 : ENNReal) := by simp
   have hineq : (1 : ENNReal) ≤ (5 : ENNReal) * ClassicalAlgorithm.p alg := by
-    have hle' :
-        (1 : ENNReal) ≤ ∑' i : Fin 5, (volume : Measure (Samples 5)) (edgeEvent alg i) := by
-      calc
-        (1 : ENNReal) = (volume : Measure (Samples 5)) Set.univ := hone.symm
-        _ ≤ ∑' i : Fin 5, (volume : Measure (Samples 5)) (edgeEvent alg i) := hle
-    rwa [hsum] at hle'
+    simp_all
   have hbound : (1 / 5 : ENNReal) ≤ ClassicalAlgorithm.p alg := by
     have hineq' : (1 : ENNReal) ≤ ClassicalAlgorithm.p alg * (5 : ENNReal) := by
       simpa [mul_comm, mul_left_comm, mul_assoc] using hineq

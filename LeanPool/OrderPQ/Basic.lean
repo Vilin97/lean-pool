@@ -97,8 +97,7 @@ lemma Subgroup.card_prod_mul_card_meet [Finite G] (H K : Subgroup G) :
         · exact Subgroup.mul_mem _ hh (mem_inf.mp i.property).left
         · exact Subgroup.mul_mem _ (Subgroup.inv_mem _ (mem_inf.mp i.property).right) hk
         · rw [Subtype.mk.injEq]
-          convert hhk using 1
-          group
+          simp_all
       left_inv := fun a => by
         rw [Subtype.mk.injEq, Prod.mk.injEq, Subtype.mk.injEq, Subtype.mk.injEq,
           mul_inv_cancel_left, mul_inv_rev, inv_inv, mul_assoc, inv_mul_eq_iff_eq_mul, hhk]
@@ -194,8 +193,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
     simp [orderOf_eq_card_of_forall_mem_zpowers hb_generator]
   have hg_exists {φ : P →* A} (hφ : φ ≠ 1) : ∃ g : P, φ g = b := by
     have hb_range : (b : A) ∈ φ.range := by
-      rw [hB φ.range (hR hφ)]
-      exact b.property
+      simp_all
     exact MonoidHom.mem_range.mp hb_range
   have hg_gen {φ : P →* A} {g : P} (hg : φ g = b) := Subgroup.zpowers_eq_top_of_ne_one
     nat_card_mulZMod (ne_one_of_map (hg.symm ▸ hb)) ▸ Subgroup.mem_top
@@ -204,8 +202,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   obtain ⟨f, hf⟩ := IsCyclic.exists_mulEquiv_of_generators_and_card_eq (hg_gen hg1) (hg_gen hg2) rfl
   have hcompat (x : P) : φ1 x = φ2 (f x) := by
     rw [← (Subgroup.mem_zpowers_iff.mp (hg_gen hg1 x)).choose_spec]
-    rw [map_zpow, map_zpow, map_zpow]
-    rw [hf, hg1, hg2]
+    simp_all
   refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   ext y
   change (φ1 x) y = (φ2 (f x)) y

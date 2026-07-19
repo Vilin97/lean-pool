@@ -540,8 +540,7 @@ private lemma schwartz_l2_le_sup_seminorm :
     rw [← div_eq_mul_inv, le_div_iff₀ (show (0 : ℝ) < (1 + ‖x‖) ^ 2 from by positivity)]
     -- Goal: (f x)^2 * (1+‖x‖)^2 ≤ 4 * S^2
     have h_eq : (f x) ^ 2 * (1 + ‖x‖) ^ 2 = ((1 + ‖x‖) * ‖f x‖) ^ 2 := by
-      rw [mul_pow, mul_comm ((1 + ‖x‖) ^ 2)]; congr 1
-      rw [Real.norm_eq_abs, sq_abs]
+      rw [mul_pow, mul_comm ((1 + ‖x‖) ^ 2)]; simp_all
     rw [h_eq]
     calc ((1 + ‖x‖) * ‖f x‖) ^ 2 ≤ (2 * S) ^ 2 :=
           sq_le_sq' (by nlinarith [norm_nonneg (f x)]) (by linarith)
@@ -812,8 +811,7 @@ private lemma partial_sum_inner_hermite (f : SchwartzMap ℝ ℝ) (N m : ℕ) (h
     (fun x => hermiteCoeff1D n f * (hermiteFunction n x * hermiteFunction m x)) from
     by intro n; ext x; ring]
   simp_rw [integral_const_mul, hermiteFunction_orthonormal]
-  simp only [Finset.sum_ite_eq', Finset.mem_range.mpr hm, ite_true, mul_one,
-    mul_ite, mul_zero]
+  simp_all
 
 -- Helper: the L² norm of the partial sum: ∫ (∑ cₙψₙ)² = ∑ cₙ²
 private lemma partial_sum_l2_norm_sq (f : SchwartzMap ℝ ℝ) (N : ℕ) :
@@ -1341,8 +1339,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
     have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
       (fun i _ => (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
     -- h_eq : iteratedFDeriv ℝ l (∑ j ∈ s, g j ·) = ∑ j ∈ s, iteratedFDeriv ℝ l (g j)
-    have := congr_fun h_eq x
-    simpa only [Finset.sum_apply] using this
+    simp_all
   -- Step 4: iteratedFDeriv of r = ∑'_{i∉s} iteratedFDeriv(gₙ)
   have h_iFD_r : iteratedFDeriv ℝ l (⇑r) x =
       ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (g ↑i) x := by
@@ -1352,8 +1349,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
         (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
     -- ⇑r = ⇑f - (finite sum function)
     have hcoe_r : (⇑r : ℝ → ℝ) = fun y => f y - ∑ i ∈ s, g i y := by
-      ext y; simp only [hr_def, sub_apply]
-      exact congrArg (f y - ·) (hsum_coe y)
+      ext y; simp_all
     rw [hcoe_r]
     -- Compute iteratedFDeriv of (f - sum) via iteratedFDeriv_add + iteratedFDeriv_neg
     set h_sum := fun y => ∑ i ∈ s, g i y with h_sum_def
@@ -1368,9 +1364,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
       have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
         (fun i _ => (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
       -- h_eq : iteratedFDeriv ℝ l (∑ j ∈ s, g j ·) = ∑ j ∈ s, iteratedFDeriv ℝ l (g j)
-      calc iteratedFDeriv ℝ l (fun y => ∑ i ∈ s, g i y) x
-          = (∑ j ∈ s, iteratedFDeriv ℝ l (g j)) x := congr_fun h_eq x
-        _ = ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := Finset.sum_apply x s _
+      simp_all
     rw [h_iFD_h, ← h_summ_iFD.sum_add_tsum_compl (s := s)]
     abel
   -- Step 5: Bound |x|^k * ‖iteratedDeriv l r x‖
@@ -1422,10 +1416,7 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
         set t' := t.map ⟨Subtype.val, Subtype.val_injective⟩ with ht'_def
         have h_disj : Disjoint t' s := by
           rw [Finset.disjoint_left]
-          intro n hn hn_s
-          rw [Finset.mem_map] at hn
-          obtain ⟨⟨m, hm⟩, _, rfl⟩ := hn
-          exact hm hn_s
+          simp_all
         have h_le := h_vanish t' h_disj
         rwa [ht'_def, Finset.sum_map] at h_le
 

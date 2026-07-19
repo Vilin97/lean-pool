@@ -159,15 +159,11 @@ lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction
   have heq : freeCovarianceℂBilinear m (toComplex f) (toComplex f) =
              freeCovarianceℂ m (toComplex f) (toComplex f) := by
     unfold freeCovarianceℂBilinear freeCovarianceℂ
-    congr 1; ext x; congr 1; ext y
-    have : starRingEnd ℂ (toComplex f y) = toComplex f y := by simp [toComplex_apply]
-    rw [this]
+    simp_all
   rw [heq]
   have h_nonneg : 0 ≤ (freeCovarianceℂ m (toComplex f) (toComplex f)).re :=
     freeCovarianceℂ_positive m (toComplex f)
-  calc Real.exp (-(1/2) * (freeCovarianceℂ m (toComplex f) (toComplex f)).re)
-      ≤ Real.exp 0 := by apply Real.exp_le_exp.mpr; nlinarith
-    _ = 1 := Real.exp_zero
+  simp_all
 
 /-! ## Technical Lemma for OS4 (Real Test Functions) -/
 
@@ -260,8 +256,7 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
       -- fC = toComplex f and T_a_gC = toComplex (g.translate a)
       change distributionPairingℂReal ω (toComplex f) * distributionPairingℂReal ω (toComplex
         (g.translate a)) = _
-      rw [distributionPairingℂ_real_toComplex, distributionPairingℂ_real_toComplex,
-        Complex.ofReal_mul]
+      simp_all
     rw [h_fun_eq]
     exact integral_complex_ofReal
   have h_S2_norm : ‖S₂ fC T_a_gC‖ = |SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate
@@ -284,8 +279,7 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
     _ = 2 * |SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)| := by
         simp [norm_neg, h_S2_norm]
     _ < 2 * δ := by
-        apply mul_lt_mul_of_pos_left h_decay
-        norm_num
+        simp_all
 
 /-! ## Main Theorem: OS4 for Gaussian Free Field -/
 

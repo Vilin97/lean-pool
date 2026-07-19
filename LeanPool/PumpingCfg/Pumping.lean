@@ -282,8 +282,7 @@ lemma subtree_repeat_root_height_aux {n : g.NT} {p : parseTree n}
       use ChomskyNormalFormRule.leaf n t
     simp only [Nat.succ_eq_add_one, parseTree.height, add_le_iff_nonpos_left,
       nonpos_iff_eq_zero, Finset.card_eq_zero] at hgp
-    rw [hgp] at hn
-    simp at hn
+    simp_all
   | node t₁ t₂ hnc ih₁ ih₂ =>
     rw [Nat.le_iff_lt_or_eq] at hgp
     cases hgp with

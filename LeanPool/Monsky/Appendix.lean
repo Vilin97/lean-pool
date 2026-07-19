@@ -71,8 +71,7 @@ lemma erase_degree_leq_n (R : Type) [CommRing R] (p : Polynomial R) (n : ℕ) (h
     · rw[← eq]
       exact lt2
     · have def1 : p.eraseLead = p.erase p.natDegree := rfl
-      rw [← eq, ← def1, zero, eq]
-      exact h1
+      simp_all
 
 /-- For nonzero `α` and `x ≤ n`, we have `α ^ n * (α ^ x)⁻¹ = α ^ (n - x)`. -/
 lemma pow_mul_inv_pow_of_le {α : ℝ} (hα : α ≠ 0) {n x : ℕ} (h : x ≤ n) :
@@ -112,8 +111,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
   have two_eq_constant : C (2:B) = (2 : Polynomial ↥B) := rfl
   have constant_in_poly :
     ∀(b : B), ∀(p : Polynomial B), (aeval α) ((C b) * p) = b * (aeval α) p := by
-      intro b p
-      rw[map_mul, aeval_C, algebramap b]
+      simp_all
   have two_p_eval : (aeval α) (2 * p) = 1 := by -- (2p)(α)=1
     rw[← two_eq_constant, (constant_in_poly 2 p), p_eval]
     simp only [one_div]
@@ -202,9 +200,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     intro eq_zero4
     rw[← n_eq_degree_q] at eq_zero4
     simp at eq_zero4
-    have zero_lt_natDegree : 0 < q.natDegree := n_eq_degree_q ▸ Nat.zero_lt_of_ne_zero zero_lt_n
-    have q_neq_zero : q ≠ 0 := Polynomial.ne_zero_of_natDegree_gt zero_lt_natDegree
-    tauto
+    simp_all
   have deg1 : q1.natDegree ≤ n := by
     -- degree of sum is ≤ highest degree of summands
     apply natDegree_sum_le_of_forall_le
@@ -244,12 +240,10 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     -- We show this by considering two different cases:
     -- (1-2v₀) = 0 and (1-2v₀) ≠ 0.
     by_cases eq_zero5 : (1 - 2*v₀) = 0
-    · rw[eq_zero5] -- the case (1-2v₀) = 0
-      simp
+    · simp_all
     · rw[natDegree_add_C, natDegree_C_mul] -- the case (1-2v₀) ≠ 0
       · exact m_eq_degree_p.le
-      · simp
-        tauto
+      · simp_all
   have deg5 : (((C (1 - 2*v₀)) * p + (C v₀)).erase m).natDegree < m :=
     erase_degree_leq_n B _ m (Nat.zero_lt_of_ne_zero zero_lt_m) deg4
   -- Here we define a new polynomial which here we call pq (this is not the product of the two)
@@ -320,10 +314,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
       apply Subalgebra.algebraMap_mem'
     -- Here we use the maximality of B
     have B_is_Balpha : B = Balpha.toSubring := h2 Balpha.toSubring ⟨B_leq_Balpha, h⟩
-    have Balpha_leq_B : Balpha.toSubring ≤ B :=
-      le_of_eq_of_le (_root_.id (Eq.symm B_is_Balpha)) fun ⦃x⦄ a ↦ a
-    -- We have now shown that α ∈ B, but α ∉ B by assumption, a contradiction
-    exact H.1 (Balpha_leq_B alpha_in_Balpha)
+    simp_all
   have Balpha'_contains_half : 1/2 ∈ Balpha' := by
     -- This is essentially the same proof as above, only with primes
     by_contra h
@@ -334,10 +325,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
       apply Subalgebra.algebraMap_mem'
     -- Here we use the maximality of B
     have B_is_Balpha' : B = Balpha'.toSubring := h2 Balpha'.toSubring ⟨B_leq_Balpha', h⟩
-    have Balpha'_leq_B : Balpha'.toSubring ≤ B :=
-      le_of_eq_of_le (_root_.id (Eq.symm B_is_Balpha')) fun ⦃x⦄ a ↦ a
-    -- We have shown α⁻¹ ∈ B, but α⁻¹ ∉ B by assumption, a contradiction
-    exact H.2 (Balpha'_leq_B alpha_in_Balpha')
+    simp_all
   let degree : Set ℕ := {n : ℕ | ∃(p : Polynomial B),
    p.natDegree = n ∧ (Polynomial.aeval α) p = 1/2}
   let degree' : Set ℕ := {n : ℕ | ∃(p : Polynomial B),
@@ -393,9 +381,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
       simpa only [inv_inv] using _root_.id (And.symm H)
     have p_eval2 : (aeval α⁻¹⁻¹) p = 1/2 := by
-      simp only [inv_inv, one_div]
-      rw[← one_div]
-      exact p_eval
+      simp_all
     rcases (lower_degree B α⁻¹ n m H3 q p n_eq_degree_q m_eq_degree_p
      zero_lt_n zero_lt_m q_eval p_eval2 leq2) with ⟨m', pq, deg, eval, deg2⟩
     have main : m' ∈ degree' := ⟨pq, deg2.symm, eval⟩
@@ -419,8 +405,7 @@ lemma Z_in_S : Z ∈ S := by
   -- Here we use injectivity of coercion
   have inj : (Int.castRingHom ℝ).toFun.Injective := Isometry.injective fun x1 ↦ congrFun rfl
   have two_n : (Int.castRingHom ℝ) (2*n) = 1 := by-- 2n=1∈ ℤ
-    rw[map_mul, h]
-    simp
+    simp_all
   rw[← (Int.castRingHom ℝ).map_one] at two_n
   have two_n_eq_one : 2*n = 1 := inj two_n
   have n_two_eq_one : n*2 = 1 := by omega
@@ -516,9 +501,7 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
           have hypa' := hypa
           rcases hypa with ⟨ringa, H1a, H2a⟩
           refine Set.mem_sUnion.mpr ⟨cara, hypa', ?_⟩
-          rw[H2a, Subring.mem_carrier]
-          rw[H2a, Subring.mem_carrier] at a_in_cara
-          exact Subring.neg_mem ringa a_in_cara}
+          simp_all}
     -- Now we show that 1/2∉ ub
     have ub_carrier_non_half : 1/2 ∉ ub.carrier := by
       intro half_in
@@ -533,8 +516,7 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
     exact Subring.mem_carrier.mp (Set.mem_sUnion.mpr ⟨z, ⟨z, hz, rfl⟩, hx⟩)
   · simp only [ne_eq, Decidable.not_not] at emp_or_not
     refine ⟨Z, Z_in_S, ?_⟩ -- as Z lies in S, S is nonempty
-    rw[emp_or_not, Set.forall_mem_empty]
-    trivial
+    simp_all
 
 -- This lemma shows that there is a valuation ring of ℝ
 -- such that 1/2 does not lie in it
@@ -560,8 +542,7 @@ theorem valuation_on_reals : ∃(Γ₀ : Type) (_ : LinearOrderedCommGroupWithZe
     obtain ⟨B, h⟩ := valuation_ring_no_half
     use B.ValueGroup, inferInstance, B.valuation
     have g := valuation_le_one_iff B (1/2)
-    rw[← not_iff_not] at g
-    rwa[gt_iff_lt, ← not_le, g]
+    simp_all
 
 lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v : Valuation ℝ Γ₀)
 (vhalf : v (1 / 2) > 1) : ∀ n : ℕ, Odd n → v (1/n) = 1 := by
@@ -577,9 +558,7 @@ lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v
     · rename_i k kind
       intro kpos
       by_cases kpos' : k = 0
-      · rw [kpos']
-        simp only [zero_add, Nat.cast_one, mul_one]
-        apply vhalf'
+      · simp_all
       · apply kind at kpos'
         simpa only [Nat.cast_add, Nat.cast_one, mul_add, mul_one]
           using lt_of_le_of_lt (Valuation.map_add v _ _) (max_lt kpos' vhalf')
@@ -604,13 +583,8 @@ lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v
   rw [eq]
   specialize vind' k
   by_cases kpos : k = 0
-  · rw [kpos]
-    simp only [mul_zero, zero_add, one_div, map_inv₀, inv_eq_one, Nat.cast_one]
-    apply Valuation.map_one v
-  · have kpos_val : v (2 * ↑k + 1) = 1 := vind' kpos
-    rw [show (1 : ℝ) / ↑(2 * k + 1) = (↑(2 * k + 1))⁻¹ by rw [one_div], map_inv₀,
-      Nat.cast_add, Nat.cast_mul, Nat.cast_ofNat, Nat.cast_one, kpos_val]
-    simp
+  · simp_all
+  · simp_all
 
 end
 end Monsky

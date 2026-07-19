@@ -97,8 +97,7 @@ theorem norm_sq_invSqrt2 : ‖invSqrt2‖ ^ 2 = 2⁻¹ := by
 theorem norm_eq_two_terms (psi : StateVector 1) :
     ‖psi‖ = √(‖psi 0‖ ^ 2 + ‖psi 1‖ ^ 2) := by
   rw [EuclideanSpace.norm_eq]
-  congr 1
-  exact Fin.sum_univ_two (f := fun i : Fin (2 ^ 1) => ‖psi i‖ ^ 2)
+  simp_all
 
 theorem norm_ketPlusVec : ‖ketPlusVec‖ = 1 := by
   rw [norm_eq_two_terms, ketPlusVec_apply, ketPlusVec_apply, ← two_mul,

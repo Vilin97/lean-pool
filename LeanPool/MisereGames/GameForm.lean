@@ -411,10 +411,8 @@ theorem leftEnd_rightEnd_eq_zero {g : GameForm} (h1 : IsEnd .left g) (h2 : IsEnd
   rw [zero_def]
   ext p
   cases p
-  · simp only [moves_ofSets, Set.mem_empty_iff_false, iff_false] at ⊢ h1
-    simp only [h1, Set.mem_empty_iff_false, not_false_eq_true]
-  · simp only [moves_ofSets] at ⊢ h2
-    rw [h2]
+  · simp_all
+  · simp_all
 
 theorem both_ends_eq_zero {g : GameForm} {p : Player} (h1 : IsEnd p g) (h2 : IsEnd (-p) g) :
     g = 0 := by
@@ -442,14 +440,10 @@ theorem isOption_zero_add_iff {g h : GameForm} :
     apply Or.elim3 h1
     · intro h2
       apply Or.elim h2
-      · intro ⟨gl, h0⟩
-        exact Or.inl ⟨Or.inl gl, h0⟩
-      · intro ⟨hl, g0⟩
-        exact Or.inr ⟨Or.inl hl, g0⟩
-    · intro ⟨gr, h0⟩
-      exact Or.inl ⟨Or.inr gr, h0⟩
-    · intro ⟨hr, g0⟩
-      exact Or.inr ⟨Or.inr hr, g0⟩
+      · simp_all
+      · simp_all
+    · simp_all
+    · simp_all
   · rintro (⟨h_isOption_zero_g, h_h_zero⟩ | ⟨h_isOption_zero_h, h_g_zero⟩)
     · rwa [h_h_zero, add_zero]
     · rwa [h_g_zero, zero_add]

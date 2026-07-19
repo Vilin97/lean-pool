@@ -146,8 +146,7 @@ private lemma weighted_pair_in_shadow (i j : Fin 8) :
       positivity
   · simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]; norm_num
   · intro k; fin_cases k <;> apply outerShadow_points_in_shadow
-  · simp only [Fin.sum_univ_two]
-    rfl
+  · simp_all
 
 ---------------------------------------------------------------------------------
 -- ++
@@ -356,8 +355,7 @@ lemma openRectangle_is_interior (xmin xmax ymin ymax : ℝ) :
        exact U_open
      · rw [Set.mem_image]
        use (p0, p1)
-       subst pext
-       simp_all only [inject, and_self]
+       simp_all
   rw [transfer_int, interior_prod_eq, interior_Icc, interior_Icc]
 
 lemma nontrivial_rectangle0 : rnn 0 < rpp 0 := by

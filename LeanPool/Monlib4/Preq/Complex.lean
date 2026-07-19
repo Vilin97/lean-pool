@@ -122,16 +122,12 @@ theorem norm_of_sq_add_sq_norm_sq_add_norm_sq_iff'' (α₁ α₂ : ℂ) :
       · rw [h1, h2, ofReal_zero, zero_add, MulZeroClass.zero_mul]
         use α₁
         use 1
-        use 0
-        simp_rw [re_add_im, ofReal_zero, MulZeroClass.mul_zero, ofReal_one, mul_one,
-          true_and]
+        simp_all
       have : α₂.re = 0 ∨ α₁.im = 0 := by rw [← mul_eq_zero, ← h, h1, MulZeroClass.mul_zero]
       rcases this with (this | this)
       · contradiction
       · use 1
-        use α₁.re
-        use α₂.re
-        simp_rw [h1, this, ofReal_zero, MulZeroClass.zero_mul, add_zero, one_mul, and_self_iff]
+        simp_all
     by_cases h2 : α₂.re = 0
     · have : α₁.re = 0 ∨ α₂.im = 0 := by rw [← mul_eq_zero, h, h2, MulZeroClass.zero_mul]
       rcases this with (this | this)
@@ -163,10 +159,7 @@ theorem norm_of_sum_sq_eq_sum_norm_sq_iff'' {n : Type _} [Fintype n] (α : n →
   constructor
   · intro h
     by_cases H : α = 0
-    · use 0
-      intros
-      use 0
-      simp_rw [H, Pi.zero_apply, MulZeroClass.zero_mul]
+    · simp_all
     · have : ∃ i : n, α i ≠ 0 := by simp_rw [ne_eq, ← not_forall, ← funext_iff]; exact H
       have := this
       rcases this with ⟨i, hi⟩
@@ -176,8 +169,7 @@ theorem norm_of_sum_sq_eq_sum_norm_sq_iff'' {n : Type _} [Fintype n] (α : n →
       intro k
       obtain ⟨γ₂, β₃, β₄, ⟨hβ₃, hβ₄⟩⟩ := h i k
       by_cases h' : β₃ = 0
-      · simp_rw [h', ofReal_zero, MulZeroClass.mul_zero] at hβ₃
-        contradiction
+      · simp_all
       · use β₁ * (β₄ / β₃)
         simp_rw [ofReal_mul, ← mul_assoc, ← hβ₁, hβ₃, mul_assoc, ← ofReal_mul,
           mul_div_cancel₀ _ h', hβ₄]

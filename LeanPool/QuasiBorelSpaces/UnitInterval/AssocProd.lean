@@ -32,8 +32,7 @@ noncomputable def assocProd (p q : I) : I where
       · cases h <;> nlinarith
     · simp only [not_or, not_lt] at h
       have h₁ : (p : ℝ) = 1 := le_antisymm p.property.2 h.1
-      have h₂ : (q : ℝ) = 1 := le_antisymm q.property.2 h.2
-      simp only [h₁, h₂, sub_self, mul_one, div_zero, le_refl, zero_le_one, and_self]
+      simp_all
 
 @[inherit_doc]
 scoped infixr:80 " ⍟ " => assocProd
@@ -45,14 +44,9 @@ lemma mul_assocProd
   ext : 1
   wlog hp : (p : ℝ) < 1
   · have : (p : ℝ) = 1 := le_antisymm p.property.2 (by grind)
-    simp only [
-      Set.Icc.coe_mul, coe_symm_eq, this, one_mul,
-      assocProd_coe, sub_self, zero_mul, zero_div, mul_zero]
+    simp_all
   wlog hq : (q : ℝ) > 0
-  · simp only [gt_iff_lt, coe_pos, not_lt, le_zero_iff] at hq
-    simp only [
-      hq, mul_zero, symm_zero, one_mul, assocProd_coe, coe_symm_eq,
-      Set.Icc.coe_zero, Set.Icc.coe_one, div_one]
+  · simp_all
   simp only [Set.Icc.coe_mul, coe_symm_eq, assocProd_coe, mul_div]
   rw [div_eq_iff]
   · ring_nf
@@ -69,14 +63,9 @@ lemma mul_symm_assocProd
   ext : 1
   wlog hp : (p : ℝ) < 1
   · have : (p : ℝ) = 1 := le_antisymm p.property.2 (by grind)
-    simp only [
-      Set.Icc.coe_mul, coe_symm_eq, this, one_mul, assocProd_coe,
-      sub_self, zero_mul, zero_div, sub_zero, mul_one]
+    simp_all
   wlog hq : (q : ℝ) > 0
-  · simp only [gt_iff_lt, coe_pos, not_lt, le_zero_iff] at hq
-    simp only [
-      hq, mul_zero, symm_zero, one_mul, coe_symm_eq, assocProd_coe,
-      Set.Icc.coe_zero, Set.Icc.coe_one, div_one, sub_zero]
+  · simp_all
   have hpq : 1 - p * (q : ℝ) > 0 := by
     suffices p * (q : ℝ) < 1 by grind
     apply lt_of_lt_of_le
@@ -99,15 +88,9 @@ lemma mul_symm_assocProd'
     : p * σ (p ⍟ q) = q ⍟ p := by
   ext : 1
   wlog hq : (q : ℝ) > 0
-  · simp only [gt_iff_lt, coe_pos, not_lt, le_zero_iff] at hq
-    simp only [
-      hq, Set.Icc.coe_mul, coe_symm_eq, assocProd_coe, Set.Icc.coe_zero, mul_zero,
-      symm_zero, Set.Icc.coe_one, div_one, sub_zero, mul_one, one_mul, zero_mul]
+  · simp_all
   wlog hp : (p : ℝ) > 0
-  · simp only [gt_iff_lt, coe_pos, not_lt, le_zero_iff] at hp
-    simp only [
-      hp, zero_mul, Set.Icc.coe_zero, assocProd_coe,
-      coe_symm_eq, mul_zero, symm_zero, Set.Icc.coe_one, div_one]
+  · simp_all
   have hpq : 1 - q * (p : ℝ) ≠ 0 := by
     suffices q * (p : ℝ) < 1 by grind
     cases hpq with

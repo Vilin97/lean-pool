@@ -492,8 +492,7 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
   have h_symm : ∀ x ∈ S_pre, -x ∈ S_pre := by
     intro x hx
     unfold S_pre B at hx ⊢
-    simp only [Set.mem_preimage, Metric.mem_ball, dist_zero_right] at hx ⊢
-    rwa [map_neg, norm_neg]
+    simp_all
   have h_conv : Convex ℝ S_pre :=
     (convex_ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m))).linear_preimage _
   have h_vol : (2 : ENNReal) ^ 3 < MeasureTheory.volume S_pre := by
@@ -632,25 +631,16 @@ private lemma xyz_zero_of_sum_sq_eq_zero (m q : ℕ) (t b x y z : ℤ)
     nlinarith [hS0sq]
   have hx0R : (x : ℝ) = 0 := by
     have hcoef : (Real.sqrt 2 * Real.sqrt q : ℝ) ≠ 0 := by positivity
-    have hlin : (Real.sqrt 2 * Real.sqrt q : ℝ) * x = 0 := by
-      simpa [hy0R] using hS0
-    exact (mul_eq_zero.mp hlin).resolve_left hcoef
+    simp_all
   have hx0 : x = 0 := by exact_mod_cast hx0R
   have hR0sq : (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 = 0 := by
-    nlinarith [
-      sq_nonneg
-        (Real.sqrt 2 * Real.sqrt q * x +
-          (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y),
-      sq_nonneg (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y), hsum0]
+    simp_all
   have hR0 : (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) = 0 := by
     nlinarith [hR0sq]
   have hz0R : (z : ℝ) = 0 := by
     have hmne : (m : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
-    have hlin : (m : ℝ) * z = 0 := by
-      simpa [hx0R, hy0R] using hR0
-    exact (mul_eq_zero.mp hlin).resolve_left hmne
-  have hz0 : z = 0 := by exact_mod_cast hz0R
-  exact ⟨hx0, hy0, hz0⟩
+    simp_all
+  simp_all
 
 
 
@@ -694,17 +684,14 @@ lemma exists_Rv_from_Minkowski (m q : ℕ) (t b h : ℤ) (hm : 0 < m) (hq : 0 < 
         2 * (q * x ^ 2 + b * x * y + h * y ^ 2) := by
       nlinarith [sq_nonneg (2 * t * q * x + t * b * y + m * z), hquad_nonneg]
     have hk_nonneg : 0 ≤ k := by
-      have hm_nonneg : (0 : ℤ) ≤ m := by exact_mod_cast Nat.zero_le m
-      nlinarith [hk, hexpr_nonneg, hm_nonneg]
+      simp_all
     have hk_lt_two : k < 2 := by
       have hm_pos' : (0 : ℤ) < m := by exact_mod_cast hm
       nlinarith [hk, h_cases, hm_pos']
     have hk_zero_or_one : k = 0 ∨ k = 1 := by omega
     rcases hk_zero_or_one with rfl | rfl
-    · left
-      nlinarith [hk]
-    · right
-      nlinarith [hk]
+    · simp_all
+    · simp_all
   rcases h_cases with h_case1 | h_case2
   · -- If $R^2 + 2v = 0$, then `x = y = z = 0`.
     have h_contra : x = 0 ∧ y = 0 ∧ z = 0 := by
@@ -821,9 +808,7 @@ lemma jacobi_neg_d_of_odd_padicVal (p : ℕ) (a d b' : ℤ)
       have hlt : a'.natAbs + k.natAbs < n := by
         rw [← hn, hab, hkb, ← Nat.left_distrib]
         rcases Nat.eq_zero_or_pos (a'.natAbs + k.natAbs) with hz | hpos
-        · obtain ⟨ha0, hk0⟩ := Nat.add_eq_zero_iff.mp hz
-          rw [Int.natAbs_eq_zero] at ha0 hk0
-          exact absurd (by rw [ha0, hk0]; ring) hsum_ne
+        · simp_all
         · exact lt_mul_of_one_lt_left hpos hp.one_lt
       exact ih _ hlt a' k rfl hodd'
     · exact jacobi_neg_d_of_dvd_sq_add p a d b' hp hp_odd hp_dvd hp_not_dvd_d h_div_b'
@@ -882,8 +867,7 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
   have h_jacobi_neg_1 : jacobiSym (-1) p = 1 := by
     have h_mul : jacobiSym (-m) p = jacobiSym (-1) p * jacobiSym m p := by
       simpa [neg_mul] using (jacobiSym.mul_left (-1) m p)
-    rw [h_mul, h_jacobi_m] at h_jacobi_neg_m
-    simpa using h_jacobi_neg_m
+    simp_all
   rw [jacobiSym.at_neg_one] at h_jacobi_neg_1
   · rw [ZMod.χ₄_nat_mod_four] at h_jacobi_neg_1
     have := Nat.mod_lt p zero_lt_four
@@ -1018,10 +1002,6 @@ theorem blueprint_case_mod8_eq3 (m : ℕ) (hm_sq : Squarefree m) (hm_pos : 0 < m
   obtain ⟨a, b, c, habc⟩ := habc
   refine ⟨a.natAbs, b.natAbs, c.natAbs, ?_⟩
   apply Int.ofNat.inj
-  calc
-    ((a.natAbs ^ 2 + b.natAbs ^ 2 + c.natAbs ^ 2 : ℕ) : ℤ)
-        = a ^ 2 + b ^ 2 + c ^ 2 := by
-          norm_num [Int.natCast_natAbs, sq_abs]
-    _ = (m : ℤ) := by simpa using habc.symm
+  simp_all
 
 end LeanPool.SumsThreeSquares

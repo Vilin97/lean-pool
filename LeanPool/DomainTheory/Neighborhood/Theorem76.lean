@@ -418,8 +418,7 @@ theorem fixMap_isComputable
       rw [hdec] at hfst hsnd
       refine ⟨hsnd.mpr
         ((chainDec_iff_gStepsOK P gN hgN fincl hfincl t.unpair.1 full P.masterIdx).mpr hsteps), ?_⟩
-      rw [hfst, hincl, unpair_pair_fst, unpair_pair_snd]
-      exact hlast
+      simp_all
     · rintro ⟨i, hi⟩
       simp only [unpair_pair_fst, unpair_pair_snd] at hi
       obtain ⟨hi1, hi2⟩ := hi
@@ -427,9 +426,6 @@ theorem fixMap_isComputable
       refine ⟨decodeList i, ?_, ?_⟩
       · exact (chainDec_iff_gStepsOK P gN hgN fincl hfincl t.unpair.1 (decodeList i)
           P.masterIdx).mp (hsnd.mp hi1)
-      · rw [← hfst]
-        have hi2' := (hincl (Nat.pair (fixChainChar P fincl t.unpair.1 i).unpair.1
-          t.unpair.2)).mp hi2
-        rwa [unpair_pair_fst, unpair_pair_snd] at hi2'
+      · simp_all
 
 end Domain.Neighborhood

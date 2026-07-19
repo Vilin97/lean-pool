@@ -62,8 +62,7 @@ lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff
       rw [Sequent.codeIn_def]
     simp only [Sequent.codeIn_def, ha, not_false_eq_true, Finset.sum_insert,
       Finset.mem_insert]
-    rw [this]
-    simp [←ih]
+    simp_all
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.quote_inj
     {Γ Δ : Finset (SyntacticFormula L)} : (⌜Γ⌝ :
@@ -99,8 +98,7 @@ lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn
     have : x = ⌜a⌝ ∨ x ∈ (⌜Γ⌝ : V) := by simpa using hx
     rcases this with (rfl | hx)
     · exact ⟨a, by simp⟩
-    · rcases ih hx with ⟨p, hx, rfl⟩
-      exact ⟨p, by simp [*]⟩
+    · simp_all
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff'
     {Γ : Finset (SyntacticFormula L)} : x ∈ (⌜Γ⌝ :
@@ -442,8 +440,7 @@ lemma _root_.LO.Arith.Language.Theory.Provable.sound2
   rcases h with ⟨d, hp, hd⟩
   rcases hd.sound with ⟨Γ, e, b⟩
   have : Γ = {φ} := Sequent.quote_inj (V := ℕ) <| by simp [e, hp]
-  rcases this
-  exact b
+  simp_all
 
 end «lp_section_3»
 

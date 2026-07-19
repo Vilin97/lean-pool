@@ -41,18 +41,12 @@ lemma mem_imp (h : (ψ ==> χ) ∈ φ.subformulas) : ψ ∈ φ.subformulas ∧ �
   | himp φ₁ φ₂ ihp₁ ihp₂ =>
     simp only [subformulas, Finset.mem_insert, Finset.mem_union] at h ⊢
     rcases h with h_eq | h₁ | h₂
-    · cases h_eq
-      exact ⟨Or.inr (Or.inl mem_self), Or.inr (Or.inr mem_self)⟩
-    · have h_sub := ihp₁ h₁
-      exact ⟨Or.inr (Or.inl h_sub.1), Or.inr (Or.inl h_sub.2)⟩
-    · have h_sub := ihp₂ h₂
-      exact ⟨Or.inr (Or.inr h_sub.1), Or.inr (Or.inr h_sub.2)⟩
+    · simp_all
+    · simp_all
+    · simp_all
   | hbox _ ihp =>
     simp only [subformulas, Finset.mem_insert] at h ⊢
-    rcases h with h_eq | h_sub
-    · cases h_eq
-    · have h_sub := ihp h_sub
-      exact ⟨Or.inr h_sub.1, Or.inr h_sub.2⟩
+    simp_all
 
 lemma mem_imp₁ (h : (ψ ==> χ) ∈ φ.subformulas) : ψ ∈ φ.subformulas := mem_imp h |>.1
 
@@ -75,8 +69,7 @@ lemma mem_box (h : □ψ ∈ φ.subformulas) : ψ ∈ φ.subformulas := by
   | hbox _ ihp =>
     simp only [subformulas, Finset.mem_insert] at h ⊢
     rcases h with h_eq | h_sub
-    · cases h_eq
-      exact Or.inr mem_self
+    · simp_all
     · exact Or.inr (ihp h_sub)
 
 -- TODO: add tactic like `subformulas`.
@@ -91,8 +84,7 @@ lemma complexity_lower (h : ψ ∈ φ.subformulas) : ψ.complexity ≤ φ.comple
   | himp φ₁ φ₂ ihp₁ ihp₂ =>
     simp only [subformulas, Finset.mem_insert, Finset.mem_union] at h
     rcases h with h_eq | h₁ | h₂
-    · subst ψ
-      exact le_rfl
+    · simp_all
     · have h_le := ihp₁ h₁
       change ψ.complexity ≤ max φ₁.complexity φ₂.complexity + 1
       exact le_trans h_le (le_trans (Nat.le_max_left _ _) (Nat.le_succ _))
@@ -102,19 +94,16 @@ lemma complexity_lower (h : ψ ∈ φ.subformulas) : ψ.complexity ≤ φ.comple
   | hbox φ ihp =>
     simp only [subformulas, Finset.mem_insert] at h
     rcases h with h_eq | h₁
-    · subst ψ
-      exact le_rfl
+    · simp_all
     · have h_le := ihp h₁
       change ψ.complexity ≤ φ.complexity + 1
       exact le_trans h_le (Nat.le_succ _)
   | hatom =>
     simp only [subformulas, Finset.mem_singleton] at h
-    subst ψ
-    exact le_rfl
+    simp_all
   | hfalsum =>
     simp only [subformulas, Finset.mem_singleton] at h
-    subst ψ
-    exact le_rfl
+    simp_all
 
 /-
 @[simp]

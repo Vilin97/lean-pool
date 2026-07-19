@@ -165,7 +165,6 @@ NB: this is the **sup-norm** (`L^∞`) five-distance theorem. The *Euclidean* fi
 theorem nnDist_count_le_plane (α : Fin 2 → ℝ) (hr : RecordsContinue (deltaCost α)) {N : ℕ}
     (hN : 2 ≤ N) : ((Finset.range (N + 1)).image (nnDist α N)).card ≤ 5 := by
   have h := nnDist_count_le (d := 2) α hr hN
-  norm_num at h
-  exact h
+  simp_all
 
 end ThreeGap.DeltaCost

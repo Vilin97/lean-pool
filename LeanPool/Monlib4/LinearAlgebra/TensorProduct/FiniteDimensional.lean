@@ -133,8 +133,7 @@ theorem TensorProduct.rid_real :
 omit [Module.Finite 𝕜 E] in
 theorem tensor_op_star_apply (x : E) (y : Eᵐᵒᵖ) :
     star (x ⊗ₜ[𝕜] y) = star x ⊗ₜ[𝕜] (op 𝕜) (star (unop 𝕜 y)) := by
-  simp only [TensorProduct.star_tmul]
-  rfl
+  simp_all
 
 omit [Module.Finite 𝕜 E] in
 theorem tenSwap_star (x : E ⊗[𝕜] Eᵐᵒᵖ) : star (tenSwap 𝕜 x) = tenSwap 𝕜 (star x) :=

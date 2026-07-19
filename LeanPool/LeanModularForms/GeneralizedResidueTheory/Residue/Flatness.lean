@@ -385,8 +385,7 @@ theorem satisfiesConditionB_of_simple_poles
     · -- Smooth point: angle = pi = 1*pi/1
       refine ⟨1, 1, one_ne_zero, Nat.coprime_one_left 1, ?_⟩
       rw [angleAtCrossing_smooth γ t₀ ht₀_Ioo hp]
-      push_cast
-      ring
+      simp_all
   · intro s hs t₀ _ht₀ _hcross _ht₀_Ioo
     obtain ⟨c, g, hg, hf_eq⟩ := _hSimplePoles s hs
     refine ⟨1, ![c], g, hg, ?_, ?_⟩
@@ -394,8 +393,7 @@ theorem satisfiesConditionB_of_simple_poles
       rw [hz]
       simp [pow_one]
       ring
-    · intro ⟨k, hk⟩ _ hk1
-      exact absurd hk1 (by omega)
+    · simp_all
 
 /-- Both conditions (A) and (B) are satisfied for simple poles, provided
 corner crossing angles are rational multiples of π. Condition (A) is fully

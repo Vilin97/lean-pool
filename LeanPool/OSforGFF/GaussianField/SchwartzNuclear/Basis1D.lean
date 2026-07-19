@@ -43,10 +43,7 @@ def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
     -- Use norm from the decay bound (at k=0: |cₙ(f)| * 1 ≤ C * sup-seminorm(f))
     have key : ∀ f, ‖hermiteCoeff1D n f‖ ≤
         C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-      intro f
-      have h := hbound f n
-      simp only [rpow_zero, mul_one] at h
-      rwa [Real.norm_eq_abs]
+      simp_all
     -- Apply continuous_of_isBounded
     -- The linear map is: {toFun := hermiteCoeff1D n, ...}
     -- and we show it's bounded by Schwartz seminorms
@@ -82,10 +79,7 @@ theorem schwartz_hermite_expansion_CLF
   -- h states: inner 1 (φ f) = ∑' n, hermiteCoeff1D n f * inner 1 (φ (schwartzHermiteBasis1D n))
   -- On ℝ, RCLike.inner_apply tells us: inner x y = y * conj x
   -- For real numbers, conj x = x, so inner 1 x = x * 1 = x
-  have key : ∀ x : ℝ, @inner ℝ ℝ _ 1 x = x := fun x => by
-    rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real]
-    simp
-  simpa only [key] using h
+  simp_all
 
 /-! ## Seminorm Bounds
 

@@ -77,8 +77,7 @@ theorem reducible_vanishing
                 (hs := hZ_closed) Gsh ⟨x, hxZ⟩)
           exact stalk_zero_of_ses_g_iso S hSE x inferInstance a
         · exact stalk_zero_of_shortExact_kernel S hSE x (hG_stalks x (by
-            simpa only [Finset.coe_insert, Set.sUnion_insert, Set.mem_union, not_or]
-              using ⟨hxZ, hx⟩)) a
+            simp_all)) a
     haveI : IrreducibleSpace (TopCat.of Z) := isIrreducible_iff_irreducibleSpace.mp hZ_comp.1
     exact subsingleton_sheafH_of_closedImmersion_middle
       (Z := Z) (hZ := hZ_closed) Gsh n hker

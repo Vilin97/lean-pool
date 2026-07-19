@@ -312,8 +312,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
   specialize W_not_F (n + j)
   rw [←Set.disjoint_iff_inter_eq_empty] at W_not_F
   rw [Set.disjoint_left] at W_not_F
-  specialize W_not_F (bad_path_f j).prop
-  contradiction
+  simp_all
 
 theorem ABW.toNBW.lang_eq {S Q} (A : ABW S Q) [Finite Q] : A.language = (ABW.toNBW A).language := by
   funext; apply propext

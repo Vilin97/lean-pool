@@ -334,8 +334,7 @@ lemma bounds_of_continuousOn_circle_closedDisc {E : Type*} [NormedAddCommGroup E
               ⟨_, ball_subset_closedBall (mem_disc_of_scaled_exp_ofReal_mul_I hR hr t), rfl⟩
           · exact norm_nonneg _
           · apply sSup_nonneg
-            rintro _ ⟨_, ⟨_, hx⟩⟩
-            simp_rw [← hx, abs_nonneg]
+            simp_all
 
 /-- For a sequence `rₙ → 1` with `rₙ ∈ (0,1)`, the integral of
 `t ↦ k(R*e^{it}) • f(rₙ*R*e^{it})` on `[0 , 2π]` converges to the integral of
@@ -386,8 +385,7 @@ theorem poisson_ker_continousOn_circle {z : ℂ} {R : ℝ} (hz : z ∈ ball 0 R)
   refine ContinuousAt.div (continuousAt_const) (by fun_prop) ?_
   intro h
   rw [sq_eq_zero_iff, norm_eq_zero, sub_eq_zero] at h
-  rw [h, mem_sphere, dist_zero_right] at hζ
-  simp [mem_ball, dist_zero_right, hζ] at hz
+  simp_all
 
 
 /-- If `rₙ` tends to `1`, then `f (rₙ * z)` tends to `f z`, for `z` in a disc centered at `0`,

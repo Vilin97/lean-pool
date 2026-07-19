@@ -28,9 +28,7 @@ lemma measurable_cases
   intro s hs
   have : ((fun x ↦ f (ix x) x) ⁻¹' s) = ⋃i, { x | ix x ∈ ({i} : Set I) } ∩ { x | f i x ∈ s } := by
     ext
-    simp only [
-      Set.mem_preimage, Set.mem_singleton_iff, Set.mem_iUnion,
-      Set.mem_inter_iff, Set.mem_setOf_eq, exists_eq_left']
+    simp_all
   rw [this]
   refine MeasurableSet.iUnion fun i ↦ MeasurableSet.inter ?_ ?_
   · exact hix MeasurableSpace.measurableSet_top
@@ -59,7 +57,6 @@ lemma measurable_dite
   apply Measurable.dite
   · exact hf
   · exact hg
-  · simp only [measurableSet_setOf]
-    exact hp₁
+  · simp_all
 
 end MeasureTheory

@@ -110,8 +110,7 @@ lemma inv_norm_ball_volume (R : ℝ) (hR : 0 < R) (k : ℕ) :
     (2^(-k : ℝ) * R)^3 * (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) 1)).toReal := by
   rw [MeasureTheory.Measure.addHaar_closedBall]
   · norm_num
-    ring_nf
-    positivity
+    simp_all
   · positivity
 
 lemma inv_norm_lintegral_bounded (R : ℝ) (hR : 0 < R) (k : ℕ) :
@@ -211,12 +210,7 @@ lemma inv_norm_local_integrable (R : ℝ) (hR : 0 < R) :
             · exact div_pos (norm_pos_iff.mpr hx.2) hR
             · exact div_pos (norm_pos_iff.mpr hx.2) hR
           exact Set.mem_iUnion.mpr ⟨k, by
-            simp only [Set.mem_sdiff, Metric.mem_closedBall, dist_zero_right]
-            constructor
-            · convert hk.2 using 2
-            · intro h_le
-              have : ‖x‖ ≤ 2 ^ (-(↑k : ℝ) - 1) * R := by convert h_le using 2
-              linarith [hk.1]⟩
+            simp_all⟩
         · exact fun i => MeasurableSet.diff (measurableSet_closedBall) (measurableSet_closedBall)
         · intro k l hkl
           simp_all [ mul_comm, Real.rpow_sub ]
@@ -254,10 +248,7 @@ lemma inv_norm_local_integrable (R : ℝ) (hR : 0 < R) :
     refine ⟨ ?_, ?_ ⟩
     · exact Measurable.aestronglyMeasurable (by exact Measurable.inv (measurable_norm))
     · rw [MeasureTheory.hasFiniteIntegral_iff_norm]
-      convert h_integrable using 2
-      ext z
-      congr 1
-      rw [Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg z))]
+      simp_all
   rwa [ MeasureTheory.IntegrableOn, MeasureTheory.Measure.restrict_congr_set ]
   rw [ MeasureTheory.ae_eq_set ]; norm_num
   exact MeasureTheory.measure_mono_null (fun x hx => hx.2) (MeasureTheory.measure_singleton 0)
@@ -422,9 +413,7 @@ lemma newtonian_schwartz_uniform_bound
   refine ⟨C₀ * I_near + I_far + 1, by linarith [mul_nonneg hC₀.le hI_near_nn], fun v => ?_⟩
   have h_translate : ∫ w, ‖v - w‖⁻¹ * |g w| = ∫ z, ‖z‖⁻¹ * |g (v - z)| := by
     rw [← integral_sub_left_eq_self (fun w => ‖v - w‖⁻¹ * |g w|) volume v]
-    congr 1
-    ext z
-    simp [sub_sub_cancel]
+    simp_all
   have h_int_translated : Integrable (fun z => ‖z‖⁻¹ * |g (v - z)|) :=
     ((h_int v).comp_sub_left v).congr
       (Filter.Eventually.of_forall fun z => by simp [sub_sub_cancel])

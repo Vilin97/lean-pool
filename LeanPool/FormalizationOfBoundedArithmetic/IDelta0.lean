@@ -362,8 +362,7 @@ noncomputable instance : LinearOrder M where
 theorem le_of_eq :
   ∀ {x y : M}, x = y -> x ≤ y :=
 by
-  intro x y hxy
-  rw [hxy]
+  simp_all
 
 theorem zero_if_sum_zero :
   ∀ {x y : M}, x + y = 0 -> x = 0 ∧ y = 0 := by
@@ -381,10 +380,7 @@ by
   by_cases h : x = 0
   · exact h
   · obtain ⟨pred, _, hp2⟩ := pred_exists h
-    rw [hp2, idelta0.add_assoc, idelta0.add_comm 1 diff, ← idelta0.add_assoc] at hdiff
-    conv at hdiff => rhs; rw [← idelta0.zero_add 1]
-    rw [(zero_if_sum_zero (B2 _ _ hdiff)).left, idelta0.zero_add] at hp2
-    exact absurd (hp2 ▸ BASICModel.le_refl x) h_x_neq
+    simp_all
 
 -- D9. x < y ↔ x + 1 ≤ y  (Discreteness 2)
 -- recall: x < y means x ≤ y ∧ x ≠ y
@@ -492,8 +488,7 @@ by
       rw [hx] at hass
       rw [idelta0.zero_mul] at hass
       rw [mul_eq_zero_iff_left] at hass
-      · apply hz
-        exact hass
+      · simp_all
       · apply @B1 M
     rcases pred_exists hx with ⟨xp, _, hxp_eq⟩
     rw [hxp_eq] at hass

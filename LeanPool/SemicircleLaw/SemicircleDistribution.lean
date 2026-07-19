@@ -440,10 +440,7 @@ lemma semicircleReal_map_const_mul (c : ℝ) :
   simp only [e, Homeomorph.mulLeft₀, Equiv.mulLeft₀_symm_apply,
     Homeomorph.toMeasurableEquiv_coe, Homeomorph.homeomorph_mk_coe_symm,
     semicirclePDFReal_inv_mul hc]
-  congr with x
-  suffices |c⁻¹| * |c| = 1 by rw [← mul_assoc, this, one_mul]
-  rw [abs_inv, inv_mul_cancel₀]
-  rwa [ne_eq, abs_eq_zero]
+  simp_all
 
 /-- The map of a semicircle distribution by multiplication by a constant is semicircular. -/
 lemma semicircleReal_map_mul_const (c : ℝ) :
@@ -462,8 +459,7 @@ lemma semicircleReal_map_div_const (c : ℝ) :
       semicircleReal (μ / c) (v / .mk (c ^ 2) (sq_nonneg _)) := by
   simp_rw [div_eq_mul_inv]
   convert semicircleReal_map_mul_const (μ := μ) (v := v) c⁻¹ using 2 <;> rw [mul_comm]
-  ext
-  simp
+  simp_all
 
 lemma semicircleReal_map_sub_const (y : ℝ) :
     (semicircleReal μ v).map (· - y) = semicircleReal (μ - y) v := by
@@ -580,9 +576,7 @@ lemma support_semicirclePDF (hv : v ≠ 0) :
       · exact h2
       · exact absurd h2 (not_lt.mpr (Real.sqrt_nonneg _))
     have h_arg_pos : 0 < 4 * (v : ℝ) - (x - μ) ^ 2 := by
-      by_contra h
-      rw [Real.sqrt_eq_zero_of_nonpos (not_lt.mp h)] at h_sqrt_pos
-      exact lt_irrefl _ h_sqrt_pos
+      simp_all
     have h_lt : (x - μ) ^ 2 < (2 * √(v : ℝ)) ^ 2 := by
       rw [mul_pow, Real.sq_sqrt hv_nonneg]; linarith
     have h_abs : |x - μ| < 2 * √(v : ℝ) := abs_lt_of_sq_lt_sq h_lt (by positivity)
@@ -834,9 +828,7 @@ lemma integral_id_semicircleReal : ∫ x, x ∂semicircleReal μ v = μ := by
         ∫ y, -(1 / (2 * π * (v : ℝ)) * √(4 * (v : ℝ) - y ^ 2) * y) := by
       conv_lhs => rw [← integral_neg_eq_self
         (fun y => 1 / (2 * π * (v : ℝ)) * √(4 * (v : ℝ) - y ^ 2) * y)]
-      apply integral_congr_ae
-      filter_upwards [] with y
-      rw [neg_sq]; ring
+      simp_all
     rw [integral_neg] at h_odd
     linarith
   rw [h_symm, zero_add]

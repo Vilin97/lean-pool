@@ -75,9 +75,7 @@ theorem tau_sq_mem_span_p_of_p_dvd_d
     obtain ⟨m, hm⟩ := hp_dvd_q
     have hstep : ((d ^ 2 - d) / 4 : ℤ) • (1 : QuadraticOrder d) =
         (p : QuadraticOrder d) * (m • (1 : QuadraticOrder d)) := by
-      rw [hm, zsmul_eq_mul, zsmul_eq_mul]
-      push_cast
-      ring
+      simp_all
     rw [hstep]
     exact Ideal.mul_mem_right _ _ (Ideal.subset_span (Set.mem_singleton _))
 

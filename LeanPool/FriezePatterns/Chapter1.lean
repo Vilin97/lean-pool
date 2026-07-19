@@ -44,8 +44,7 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
     intro _ m
     have h₀ : f (0, m) = 0 := pattern_n.topBordZeros n m
     have h₁ : f (1, m) = 1 := pattern_n.topBordOnes n m
-    rw [h₀, h₁]
-    simp
+    simp_all
   | succ k ih =>
     intro h m
     have h' : 1 ≤ k + 1 ∧ k + 1 ≤ n := by omega
@@ -156,8 +155,7 @@ lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
               - f (n - (k + 1) - 1 + 2, m) * f (n - (k + 1) - 1 + 2, m + 1)
               * (f (n - (k + 1) - 1 + 2, m + 1))⁻¹ := by rw [a₁₁, a₁]
         _ = f (n - 1, m + 2) * f (n - (k + 1), m + 1) - f (n - (k + 1) - 1 + 2, m) := by
-              rw [mul_inv_cancel_right₀ h₂ (f (n - 1, m + 2) * f (n - (k + 1), m + 1)),
-                mul_inv_cancel_right₀ h₂ (f (n - (k + 1) - 1 + 2, m))]
+              simp_all
         _ = f (n - 1, m + 2) * f (n - (k + 1), m + 1) - f (n - (k + 1) + 1, m) := by rw [a₁₂]
   · -- Have proved it in the case 1 ≤ n; now do n = 0
     have n_eq_zero : n = 0 := by linarith
@@ -262,9 +260,7 @@ lemma imageFinite (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPatt
             specialize ih (m - (n + 1)) (by omega)
             have key := translationInvariance F f n i (by linarith) (m - (n + 1))
             have hsum : m - (n + 1) + n + 1 = m := by omega
-            rw [hsum] at key
-            rw [← key] at hx
-            exact ih hx
+            simp_all
       · -- if i > n, then f (i, n) = 0, so we can use (0, 0)
         refine ⟨⟨0, 0⟩, ⟨by simp, ?_⟩⟩
         rw [@pattern_n.topBordZeros F _ f n _ 0, ← hx,

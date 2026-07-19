@@ -40,14 +40,11 @@ theorem d_dvd_d_of_le (s t : Finset ℕ) (h : s ≤ t) : d s ∣ d t := by
 
 theorem d_ne_zero (s : Finset ℕ) (hs : 0 ∉ s) : d s ≠ 0 := by
   delta d
-  intro r
-  rw [Finset.lcm_eq_zero_iff] at r
-  exact hs (by simpa using r)
+  simp_all
 
 theorem d_eq_zero (s : Finset ℕ) (hs : 0 ∈ s) : d s = 0 := by
   delta d
-  rw [Finset.lcm_eq_zero_iff]
-  simpa
+  simp_all
 
 theorem Nat_Prime_dvd_lcm {p} (hp : Nat.Prime p) (a b) (h : p ∣ Nat.lcm a b) :
     p ∣ a ∨ p ∣ b := by
@@ -63,23 +60,13 @@ theorem Nat_primeFactors_lcm {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   constructor
   · rintro ⟨hp1, hp2, hp3⟩
     obtain hp4 | hp4 := Nat_Prime_dvd_lcm hp1 a b hp2
-    · left; refine ⟨hp1, hp4, ?_⟩
-      contrapose! hp3
-      subst hp3
-      simp
-    · right; refine ⟨hp1, hp4, ?_⟩
-      contrapose! hp3
-      subst hp3
-      simp
+    · simp_all
+    · simp_all
   · rintro (⟨hp1, hp2, hp3⟩|⟨hp1, hp2, hp3⟩)
     · refine ⟨hp1, hp2.trans <| dvd_lcm_left a b, ?_⟩
-      contrapose! hp3
-      erw [lcm_eq_zero_iff] at hp3
-      refine hp3.elim id fun hb' => absurd hb' hb
+      simp_all
     · refine ⟨hp1, hp2.trans <| dvd_lcm_right a b, ?_⟩
-      contrapose! hp3
-      erw [lcm_eq_zero_iff] at hp3
-      refine hp3.elim (fun ha' => absurd ha' ha) id
+      simp_all
 
 private lemma Nat_lcm_pow_n (n a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
     (Nat.lcm a b) ^ n = Nat.lcm (a ^ n) (b ^ n) := by
@@ -90,26 +77,21 @@ private lemma Nat_lcm_pow_n (n a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
   rw [Nat.factorization_pow, Nat.factorization_lcm ha hb,
     Nat.factorization_lcm (pow_ne_zero n ha) (pow_ne_zero n hb), Nat.factorization_pow,
     Nat.factorization_pow]
-  simp only [Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Finsupp.sup_apply]
-  exact mul_max_of_nonneg _ _ (Nat.zero_le n)
+  simp_all
 
 theorem Nat_lcm_pow_two (a b : ℕ) : (Nat.lcm a b) ^ 2 = Nat.lcm (a ^ 2) (b ^ 2) := by
   by_cases ha : a = 0
-  · subst ha
-    simp
+  · simp_all
   by_cases hb : b = 0
-  · subst hb
-    simp
+  · simp_all
   exact Nat_lcm_pow_n 2 a b ha hb
 
 theorem Nat_lcm_pow_three (a b : ℕ) :
     (Nat.lcm a b) ^ 3 = Nat.lcm (a ^ 3) (b ^ 3) := by
   by_cases ha : a = 0
-  · subst ha
-    simp
+  · simp_all
   by_cases hb : b = 0
-  · subst hb
-    simp
+  · simp_all
   exact Nat_lcm_pow_n 3 a b ha hb
 
 theorem d_sq (s : Finset ℕ) : (d s)^2 = d (s.image (· ^ 2)) := by
@@ -149,12 +131,7 @@ theorem d_factorization (s : Finset ℕ) (hs : s.Nonempty) (p : ℕ) (hs₁ : 0 
     rw [d_insert, lcm_factorization _ _ _]
     · if hs : s.Nonempty
       then
-      simp only [Finset.image_insert]
-      have hs₀ : 0 ∉ s := by
-        intro h0
-        exact hs₁ (Finset.mem_insert_of_mem h0)
-      rw [ih hs hs₀]
-      rw [Finset.max'_insert]
+      simp_all
       else
       simp only [Finset.not_nonempty_iff_eq_empty] at hs
       subst hs
@@ -174,12 +151,7 @@ theorem d_factorization' (s : Finset ℕ) (hs : s.Nonempty) (p : ℕ) (hs₁ : 0
     simp_rw [Finset.image_insert]
     if hs : s.Nonempty
     then
-    symm
-    rw [Finset.max'_insert (H := by aesop)]
-    specialize ih hs (by aesop)
-    rw [← ih, ← Nat.cast_max]
-    norm_cast
-    rw [← Finset.max'_insert (H := by aesop)]
+    simp_all
     else
     aesop
 
@@ -193,8 +165,7 @@ theorem d_primeFactors (s : Finset ℕ) (hs : 0 ∉ s) :
   | @insert m s hm ih =>
     simp only [Finset.mem_insert, not_or] at hs
     rw [d_insert, Nat_primeFactors_lcm (by aesop) (d_ne_zero _ (by aesop))]
-    simp only [Finset.sup_insert, Finset.sup_eq_union]
-    rw [ih (by aesop)]
+    simp_all
 
 theorem d_factorization_eq_div_log'' (p : ℕ) :
     (d (Finset.Icc 1 0)).factorization p =
@@ -252,8 +223,7 @@ theorem d_factorization_eq_div_log' (n p : ℕ) (hp : Nat.Prime p) :
   · apply Real.logb_nonneg
     · norm_cast
       exact Nat.Prime.one_lt hp
-    · norm_cast
-      omega
+    · simp_all
 
 theorem d_factorization_eq_div_log (n p : ℕ) (hp : Nat.Prime p) :
     (d (Finset.Icc 1 n)).factorization p =
@@ -327,8 +297,7 @@ theorem d_le_pow_counting (n : ℕ) : d (Finset.Icc 1 n) ≤ n ^ (n.primeCountin
     calc
     _ ≤ ∏ _ ∈ ((n + 1).primesBelow), n := by
       apply Finset.prod_le_prod
-      · intro p _
-        simp only [zero_le]
+      · simp_all
       · intro p hp
         rw [Nat.mem_primesBelow] at hp
         have h2 : 1 ≤ p := by
@@ -353,8 +322,7 @@ theorem d_le_pow_counting (n : ℕ) : d (Finset.Icc 1 n) ≤ n ^ (n.primeCountin
         · nth_rewrite 1 [← Real.exp_log (x := (p : ℝ)) (by norm_cast), ← Real.exp_one_rpow,
             ← Real.rpow_mul (by exact Real.exp_nonneg 1), mul_div, mul_comm, ← mul_div]
           if hp : p = 1 then
-            rw [hp]; simp only [Nat.cast_one, Real.log_one, div_zero, mul_zero, Real.rpow_zero,
-              Nat.one_le_cast, h1]
+            simp_all
           else
             rw [div_self, mul_one, Real.exp_one_rpow, Real.exp_log (by norm_cast)]
             rw [Real.log_ne_zero]

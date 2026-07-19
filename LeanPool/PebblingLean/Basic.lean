@@ -273,11 +273,7 @@ theorem sum_ite_nonzero_const [Fintype V] (D : Pebbling V) (K : ℕ) :
   calc
     (∑ v : V, if D v = 0 then 0 else K)
         = ∑ v : V, if D v ≠ 0 then K else 0 := by
-          refine Finset.sum_congr rfl ?_
-          intro v _hv
-          by_cases hv0 : D v = 0
-          · simp [hv0]
-          · simp [hv0]
+          simp_all
     _ = ∑ v ∈ (Finset.univ.filter fun v : V => D v ≠ 0), K := by
           rw [Finset.sum_filter]
     _ = supportSize D * K := by

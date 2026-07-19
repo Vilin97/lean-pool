@@ -90,9 +90,7 @@ lemma inter_cutSpace (H_1 H_2 : Set (Halfspace E)) :
   rw [mem_cutSpace, Set.mem_inter_iff, mem_cutSpace, mem_cutSpace]
   constructor
   · -- 1
-    intro h
-    constructor <;> intro Hi_ hH_ <;>
-      exact h Hi_ (by simp only [Set.mem_union, hH_, true_or, or_true])
+    simp_all
   · -- 2
     intro h Hi hHi
     rw [Set.mem_union] at hHi
@@ -132,9 +130,7 @@ lemma orthoHyperplane_mem (x : {x : E // x ≠ 0}) :
     have := le_antisymm h1 h2
     rw [mul_eq_zero] at this
     rcases this with h3 | h4
-    · rw [inv_eq_zero, norm_eq_zero] at h3
-      exfalso
-      exact x.2 h3
+    · simp_all
     · exact h4
   · -- 2.
     intro h H hH

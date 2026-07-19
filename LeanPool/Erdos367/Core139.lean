@@ -76,10 +76,7 @@ lemma factorization_rFullPart (r M : ℕ) :
     (rFullPart r M).factorization = M.factorization.filter (fun p => r ≤ M.factorization p) := by
   unfold rFullPart
   apply Nat.prod_pow_factorization_eq_self
-  intro p hp
-  have hp' : p ∈ M.factorization.support := Finset.mem_of_mem_filter p hp
-  rw [Nat.support_factorization] at hp'
-  exact Nat.prime_of_mem_primeFactors hp'
+  simp_all
 
 /-- If `d ≥ 1` and `d ^ r ∣ M` then `d ^ r ∣ rFullPart r M`: each prime `p ∣ d` has
 `v_p(M) ≥ r * v_p(d) ≥ r`, so it survives the filter and `v_p(rFullPart r M) = v_p(M)`. -/

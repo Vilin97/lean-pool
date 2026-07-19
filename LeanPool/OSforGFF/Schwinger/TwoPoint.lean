@@ -79,8 +79,7 @@ noncomputable def standardBumpSequence (n : ℕ) (hn : n ≠ 0) : ContDiffBump (
       have hn' : (0 : ℝ) < n := Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)
       have h2n : (0 : ℝ) < 2 * n := by positivity
       have : (2 * (n : ℝ))⁻¹ < (n : ℝ)⁻¹ := inv_strictAnti₀ hn' (by linarith)
-      simp only [one_div]
-      exact this }
+      simp_all }
 
 /-- Two-point correlation function defined as the limit of smeared correlations.
 
@@ -151,8 +150,7 @@ theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     (bumpToSchwartz (φ i)) =
       ∫ u, ∫ v, (translateSchwartz (bumpToSchwartz (φ i)) x) u * C (u - v) * (bumpToSchwartz (φ i))
         v := by
-    intro i
-    exact hS₂ _ _
+    simp_all
   simp_rw [h_eq]
   -- bumpToSchwartz produces the normed bump, so we can directly apply double_mollifier_convergence
   -- translateSchwartz is SchwartzMap.translate, which shifts by x

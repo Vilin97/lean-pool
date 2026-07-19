@@ -97,13 +97,7 @@ noncomputable def TrigPolynomial.add (f g : TrigPolynomial k) : TrigPolynomial k
 theorem TrigPolynomial.eval_add (f g : TrigPolynomial k) (x : Fin k → ℝ) :
     (f.add g).eval x = f.eval x + g.eval x := by
   simp only [TrigPolynomial.eval, TrigPolynomial.add, add_mul, Finset.sum_add_distrib]
-  congr 1
-  · rw [← Finset.sum_subset Finset.subset_union_left
-        (fun ω _ hω => by rw [if_neg hω, zero_mul])]
-    exact Finset.sum_congr rfl (fun ω hω => by rw [if_pos hω])
-  · rw [← Finset.sum_subset Finset.subset_union_right
-        (fun ω _ hω => by rw [if_neg hω, zero_mul])]
-    exact Finset.sum_congr rfl (fun ω hω => by rw [if_pos hω])
+  simp_all
 
 /-- Multiply an trigonometric polynomial by the character `e^{i⟨a,x⟩}`: shifts every frequency
 by `a` and leaves the coefficients (re-indexed) unchanged. -/
@@ -170,8 +164,7 @@ theorem TrigPolynomial.eval_conj (f : TrigPolynomial k) (x : Fin k → ℝ) :
   rw [← Complex.exp_conj]
   congr 1
   rw [freqDot_neg, map_mul, Complex.conj_I, Complex.conj_ofReal]
-  push_cast
-  ring
+  simp_all
 
 /-- The canonical coefficient of an trigonometric polynomial at a frequency: its (guarded)
 contribution. Two trigonometric polynomials with the same values have the same canonical
@@ -184,8 +177,7 @@ theorem freqDot_smul_single (ω : Fin k → ℝ) (t : ℝ) (j : Fin k) :
     freqDot ω (t • Pi.single j (1 : ℝ)) = t * ω j := by
   rw [freqDot, Finset.sum_eq_single j]
   · rw [Pi.smul_apply, Pi.single_eq_same, smul_eq_mul, mul_one]; ring
-  · intro i _ hij
-    rw [Pi.smul_apply, Pi.single_eq_of_ne hij, smul_zero, mul_zero]
+  · simp_all
   · intro hj; exact absurd (Finset.mem_univ j) hj
 
 /-- If `t ↦ exp(i t a)` and `t ↦ exp(i t b)` agree for all real `t`, then `a = b`. -/
@@ -252,8 +244,7 @@ theorem expSum_coeff_zero_of_eval_zero {s : Finset (Fin k → ℝ)} {c : (Fin k 
     (linearIndependent_monoidHom (Multiplicative (Fin k → ℝ)) ℂ).comp chiHom chiHom_injective
   apply linearIndependent_iff'.mp hli s c
   funext y
-  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, chiHom_apply, Pi.zero_apply]
-  exact h (Multiplicative.toAdd y)
+  simp_all
 
 /-- Two trigonometric polynomials with the same values have the same canonical coefficients. -/
 theorem TrigPolynomial.coeffAt_eq_of_eval_eq {f g : TrigPolynomial k}
@@ -349,8 +340,7 @@ theorem TrigPolynomial.eval_embedL (f : TrigPolynomial m) (x : Fin m → ℝ) (y
     have := congrFun hpq (Fin.castAdd n i); simpa [Fin.append_left] using this)]
   refine Finset.sum_congr rfl (fun ω _ => ?_)
   rw [freqDot_append_left]
-  congr 2
-  funext i; rw [Fin.append_left]
+  simp_all
 
 theorem TrigPolynomial.eval_embedR (f : TrigPolynomial n) (x : Fin m → ℝ) (y : Fin n → ℝ) :
     (f.embedR (m := m)).eval (Fin.append x y) = f.eval y := by
@@ -360,8 +350,7 @@ theorem TrigPolynomial.eval_embedR (f : TrigPolynomial n) (x : Fin m → ℝ) (y
     have := congrFun hpq (Fin.natAdd m i); simpa [Fin.append_right] using this)]
   refine Finset.sum_congr rfl (fun ω _ => ?_)
   rw [freqDot_append_right]
-  congr 2
-  funext i; rw [Fin.append_right]
+  simp_all
 
 @[simp] theorem TrigPolynomial.embedL_freqs (f : TrigPolynomial m) :
     (f.embedL (n := n)).freqs = f.freqs.image (fun ω => Fin.append ω (0 : Fin n → ℝ)) := rfl
@@ -383,14 +372,7 @@ theorem trig_parameter_shift (a b c θ : ℝ) :
           - (a + b * Real.cos (θ - Real.pi / 2) + c * Real.sin (θ - Real.pi / 2))) / 2 := by
   have hd : deriv (fun t => a + b * Real.cos t + c * Real.sin t) θ
       = -(b * Real.sin θ) + c * Real.cos θ := by
-    have h1 : HasDerivAt (fun t : ℝ => b * Real.cos t) (-(b * Real.sin θ)) θ := by
-      simpa using (Real.hasDerivAt_cos θ).const_mul b
-    have h2 : HasDerivAt (fun t : ℝ => c * Real.sin t) (c * Real.cos θ) θ :=
-      (Real.hasDerivAt_sin θ).const_mul c
-    have hH : HasDerivAt (fun t => a + b * Real.cos t + c * Real.sin t)
-        (-(b * Real.sin θ) + c * Real.cos θ) θ := by
-      simpa only [Pi.add_apply, add_assoc] using (h1.add h2).const_add a
-    exact hH.deriv
+    simp_all
   rw [hd, Real.cos_add, Real.cos_sub, Real.sin_add, Real.sin_sub,
     Real.cos_pi_div_two, Real.sin_pi_div_two]
   ring

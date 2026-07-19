@@ -141,9 +141,7 @@ theorem multSum_eq (hx : 0 < x) (d : ℕ) (hd : d ≠ 0) :
   simp only [Finset.sum_boole, Nat.cast_inj]
   trans ↑(Finset.Ioc (Nat.ceil x - 1) (Nat.floor (x+y)) |>.filter (d ∣ ·) |>.card)
   · rw [← Finset.Icc_succ_left_eq_Ioc]
-    congr
-    simpa [Nat.pred_eq_sub_one] using
-      (Nat.succ_pred_eq_of_pos (Nat.ceil_pos.mpr hx)).symm
+    simp_all
   · rw[card_Ioc_filter_dvd _ _ _ hd]
 
 theorem rem_eq (hx : 0 < x) (d : ℕ) (hd : d ≠ 0) :

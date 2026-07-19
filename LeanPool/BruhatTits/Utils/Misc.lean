@@ -28,9 +28,7 @@ lemma exp_le_exp_of_pow_le_pow (a : Γ₀) (hlt : a < 1) (h₀ : a ≠ 0) {n m :
   rwa [zpow_le_zpow_iff_right_of_lt_one₀ (zero_lt_iff.mpr h₀) hlt] at hle
 
 lemma exp_zero_of_pow_eq_one_aux {n : ℕ} (ha : (0 : Γ₀) ^ n = 1) : n = 0 := by
-  induction n with
-  | zero => rfl
-  | succ n _ => simp at ha
+  simp_all
 
 lemma exp_zero_of_zpow_eq_one' {n : ℤ} (ha : (0 : Γ₀) ^ n = 1) : n = 0 := by
   have haux (n : ℤ) (ha : (0 : Γ₀) ^ n = 1) (hn : n ≥ 0) : n = 0 := by
@@ -98,17 +96,13 @@ def Fin.succEquivUnit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
   left_inv j := by
     simp only
     split_ifs with h
-    · ext
-      simp
+    · simp_all
     · ext
       simp only [Sum.elim_inr, Fin.val_last]
       omega
   right_inv
     | Sum.inl i => by
-        simp only [Sum.elim_inl, Fin.val_castSucc]
-        split_ifs with h
-        · rw [Sum.inl.injEq]
-        · omega
+        simp_all
     | Sum.inr () => by simp
 
 lemma MulAction.stabilizer_fun_const {α : Type*} (ι G : Type*) [Nonempty ι] [Group G]

@@ -68,9 +68,7 @@ noncomputable def bestDenomAux (hr : RecordsContinue r) : ℕ → {q : ℕ // 1 
   | 0 => ⟨1, le_refl 1⟩
   | (n + 1) =>
     ⟨Nat.find (hr (bestDenomAux hr n).1 (bestDenomAux hr n).2), by
-      have h := (Nat.find_spec (hr (bestDenomAux hr n).1 (bestDenomAux hr n).2)).1
-      have := (bestDenomAux hr n).2
-      omega⟩
+      simp_all⟩
 
 /-- **The best-approximation denominators** `qₙ` (Shutov's Sequence 2): the record minima of the
 cost `r`. `q₀ = 1`; `qₙ₊₁` is the *smallest* `q > qₙ` with `r q < r qₙ`. -/
@@ -133,9 +131,7 @@ theorem strictMono_bracket (f : ℕ → ℕ) (hf : StrictMono f) {N : ℕ} (hN :
     omega
   have hspec : N < f (Nat.find hex) := Nat.find_spec hex
   have hpos : 0 < Nat.find hex := by
-    rcases Nat.eq_zero_or_pos (Nat.find hex) with h | h
-    · rw [h] at hspec; omega
-    · exact h
+    simp_all
   obtain ⟨m, hm⟩ : ∃ m, Nat.find hex = m + 1 := ⟨Nat.find hex - 1, by omega⟩
   refine ⟨m, ?_, hm ▸ hspec⟩
   by_contra hc

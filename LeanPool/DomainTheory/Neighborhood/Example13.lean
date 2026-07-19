@@ -158,8 +158,7 @@ def bot : neighborhoodSystem.Element where
   sub h := by rw [h]; exact mem_master
   master_mem := rfl
   inter_mem := by
-    intro X Y hX hY
-    rw [hX, hY, master_inter]
+    simp_all
   up_mem := by
     intro X Y hX hY hXY
     rw [hX] at hXY
@@ -252,10 +251,7 @@ private theorem mem_twelve_of_mem (x : neighborhoodSystem.Element) (htwelve : x.
     rcases (mem_iff X).mp (x.sub hx) with rfl | hX12 | hX2
     · exact Or.inl rfl
     · exact Or.inr hX12
-    · have hxo : x.mem two := hX2 ▸ hx
-      have := x.inter_mem htwelve hxo
-      rw [twelve_inter_two] at this
-      exact absurd this htwo
+    · simp_all
   · intro hx
     rcases hx with rfl | hx
     · exact x.master_mem

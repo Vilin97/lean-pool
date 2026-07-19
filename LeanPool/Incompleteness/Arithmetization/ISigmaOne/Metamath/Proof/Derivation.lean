@@ -62,8 +62,7 @@ end «lp_section_2»
 @[simp] lemma _root_.LO.Arith.Language.IsFormulaSet.singleton {p} :
     L.IsFormulaSet {p} ↔ L.IsFormula p :=
   ⟨fun h ↦  h p (by simp), fun h p ↦ by
-  simp only [mem_singleton_iff]
-  rintro rfl; exact h⟩
+  simp_all⟩
 
 @[simp] lemma _root_.LO.Arith.Language.IsFormulaSet.insert_iff {p s} :
     L.IsFormulaSet (insert p s) ↔ L.IsFormula p ∧ L.IsFormulaSet s :=

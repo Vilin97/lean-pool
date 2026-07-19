@@ -538,8 +538,7 @@ instance htOne {G : Graph V E} {x : V} : One (ht G x x) where
 theorem ht_mult_assoc {G : Graph V E} {x : V} (a b c : ht G x x) :
     ((a # b) # c) = (a # (b # c)) := by
   let k := @homotopy_mult_assoc V E G x x x x
-  let l (a b c : ht G x x) := k b c a
-  apply (l a b c)
+  simp_all
 
 /-- proves that the identity homotopy class is the right multiplicative identity -/
 theorem ht_right_identity {G : Graph V E} {x : V} :

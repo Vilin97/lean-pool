@@ -81,8 +81,7 @@ lemma neg_subnormal_round (r : IntRounder) {q : ℚ} (h : q ≠ 0) :
   have not_to_ge : 0 < q ↔ 0 ≤ q := by
     exact Iff.symm (Ne.le_iff_lt (id (Ne.symm h)))
   have lt_to_lt : 0 < q ↔ ¬(q < 0) := by
-    rw [not_to_ge]
-    exact Iff.symm not_lt
+    simp_all
   refine ⟨not_to_ge, ?_⟩
   simp_rw [lt_to_lt]
   rw [decide_not]
@@ -113,8 +112,7 @@ lemma subnormal_round_coe (r : IntRounder) [rh : ValidRounder r]
   · exact this
   nth_rw 4 [show m = r false m by symm; apply ValidRounder.leftInverse]
   congr
-  · apply decide_eq_false
-    exact not_lt_of_ge this
+  · simp_all
   have hprec : (C.prec : ℚ) ≠ 0 := by
     norm_cast; linarith [C.prec_pos]
   rw [abs_of_nonneg (by positivity), mul_assoc, mul_assoc, <-mul_assoc (2 ^ _),
@@ -298,8 +296,7 @@ lemma le_roundupsub (q : ℚ) :
       · apply le_neg.mpr
         exact le_of_lt h
       positivity
-    apply le_of_lt
-    exact_mod_cast C.prec_pos
+    simp_all
   rw [roundup]
   simp only [h, decide_false, Bool.false_eq_true, ↓reduceIte, zpow_neg, one_mul, ge_iff_le]
   replace h := le_of_not_gt h
@@ -362,9 +359,7 @@ lemma subnormal_round_eq_up_down (r : IntRounder) [rh : ValidRounder r] (q : ℚ
   set x := |q| * 2^(-C.emin) * C.prec
   have := round_eq_or' (r := r) (b := q < 0)
       (q := x) (h := by positivity)
-  rcases this with this | this
-  · simp [this]
-  simp [this]
+  simp_all
 
 lemma subnormal_round_close (r : IntRounder) [rh : ValidRounder r] (q : ℚ) :
   |q - subnormalToQ (subnormalRound (C := C) r q)| ≤ 2^C.emin / C.prec := by

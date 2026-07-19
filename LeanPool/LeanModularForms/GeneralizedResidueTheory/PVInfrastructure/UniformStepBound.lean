@@ -87,8 +87,7 @@ private lemma annulus_cutoff_intervalIntegrable
   · rw [if_pos h₂]
     by_cases h₁ : ε₁ < ‖γ t - γ t₀‖
     · rw [if_pos h₁, sub_self, if_neg (fun h => absurd h₁ (not_lt.mpr h.2))]
-    · push Not at h₁
-      rw [if_neg (not_lt.mpr h₁), sub_zero, if_pos ⟨h₂, h₁⟩]
+    · simp_all
   · rw [if_neg h₂, zero_sub]
     by_cases h₁ : ε₁ < ‖γ t - γ t₀‖
     · exact absurd (lt_of_le_of_lt hε₂_le h₁) h₂
@@ -116,8 +115,7 @@ private lemma annulus_integral_split
     by_cases hcond : ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
     · rw [if_pos hcond, if_pos hcond, if_pos hcond]; ring
     · rw [if_neg hcond, if_neg hcond, if_neg hcond, add_zero]
-  rw [h_eq]
-  exact intervalIntegral.integral_add hsing hrem
+  simp_all
 
 /-- Uniform step bound with epsilon-independent constant. -/
 lemma pv_step_bound_ratio_two_uniform

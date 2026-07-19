@@ -121,17 +121,13 @@ theorem replaceFiber_move_left [DecidableEq V] [DecidableEq W] {G : Graph V} {H 
         · by_cases hxv : x = v
           · subst x
             have hvu : v ≠ u := by
-              intro hvu
-              subst u
-              exact (G.loopless v) huv
+              simp_all
             simp [fibersDistribution, replaceFiber, moveDistribution, hvu]
           · simp [fibersDistribution, replaceFiber, moveDistribution, hxu, hxv]
       · have hp_ne_from : (x, z') ≠ (u, z) := by
-          intro hp
-          exact hz' (Prod.ext_iff.mp hp).2
+          simp_all
         have hp_ne_to : (x, z') ≠ (v, z) := by
-          intro hp
-          exact hz' (Prod.ext_iff.mp hp).2
+          simp_all
         simp [fibersDistribution, replaceFiber, moveDistribution, hz', hp_ne_from, hp_ne_to]
 
 /-- A pebbling sequence in the first factor can be replayed inside a fixed
@@ -228,26 +224,13 @@ theorem slice_move_right [DecidableEq V] [DecidableEq W] {G : Graph V} {H : Grap
         simp only at hpx
         subst x'
         by_cases hzu : z = u
-        · subst z
-          simp [sliceDistribution, moveDistribution]
+        · simp_all
         · by_cases hzv : z = v
-          · subst z
-            have hvu : v ≠ u := by
-              intro hvu
-              subst u
-              exact (H.loopless v) huv
-            simp [sliceDistribution, moveDistribution, hvu]
+          · simp_all
           · simp [sliceDistribution, moveDistribution, hzu, hzv]
     · cases p with
       | mk x' z =>
-        simp only at hpx
-        have hp_ne_from : (x', z) ≠ (x, u) := by
-          intro hp
-          exact hpx (Prod.ext_iff.mp hp).1
-        have hp_ne_to : (x', z) ≠ (x, v) := by
-          intro hp
-          exact hpx (Prod.ext_iff.mp hp).1
-        simp [sliceDistribution, moveDistribution, hpx, hp_ne_from, hp_ne_to]
+        simp_all
 
 /-- A pebbling sequence in the second factor can be replayed inside a fixed
 slice of the product. -/
@@ -314,8 +297,7 @@ theorem fibers_prepare_slice_right [Finite W] [DecidableEq V] [DecidableEq W]
     cases p with
     | mk v z =>
       by_cases hv : v = x
-      · subst v
-        simpa [fibersDistribution, sliceDistribution] using htarget z
+      · simp_all
       · simp [fibersDistribution, sliceDistribution, hv]
 
 /-- Deterministic product step.  If `E` solves `H`, and each `z`-fiber has

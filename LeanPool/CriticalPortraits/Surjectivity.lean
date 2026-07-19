@@ -100,8 +100,7 @@ lemma Defc_step {d m : ℕ} (_hm : 0 < m) (U : Finset (ZMod (d * m))) (φ lu uva
   unfold Defc
   have hmono : Scount U (φ + (k+1)*m) uval ≤ Scount U (φ + k*m) uval := by
     apply Scount_antitone_left
-    have : k * m ≤ (k+1) * m := Nat.mul_le_mul_right m (by omega)
-    omega
+    simp_all
   have h1 : (Scount U (φ + (k+1)*m) uval : ℤ) ≤ (Scount U (φ + k*m) uval : ℤ) := by
     exact_mod_cast hmono
   push_cast
@@ -112,12 +111,7 @@ lemma Defc_step {d m : ℕ} (_hm : 0 < m) (U : Finset (ZMod (d * m))) (φ lu uva
 lemma Defc_top_nonneg {d m : ℕ} (U : Finset (ZMod (d * m))) (φ lu uval : ℕ) (hlu : 1 ≤ lu) :
     0 ≤ Defc U φ lu uval (lu - 1) := by
   unfold Defc
-  have hc : ((lu : ℤ) - ((lu - 1 : ℕ) : ℤ) - 1) = 0 := by
-    have : ((lu - 1 : ℕ) : ℤ) = (lu : ℤ) - 1 := by omega
-    rw [this]; ring
-  rw [hc]
-  simp only [sub_zero]
-  exact_mod_cast Nat.zero_le _
+  simp_all
 
 /-- The scount bound from canonicity: `#{t ∈ U : φ < t.val < u.val} ≤ lu - 1`. -/
 lemma Scount_bot_le {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
@@ -276,8 +270,7 @@ lemma betaParent_fiber {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     (betaParent U u).val % m = u.val % m := by
   rw [betaParent_val hd hm hlu]
   unfold betaParentVal
-  have hφ : u.val % m < m := Nat.mod_lt _ hm
-  rw [Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt hφ]
+  simp_all
 
 /-- `betaParent`'s level is `betaK` (strictly below `u`'s level). -/
 lemma betaParent_level {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
@@ -352,8 +345,7 @@ noncomputable def betaBlock (U : Finset (ZMod (d * m))) (x : ZMod (d * m)) :
 
 lemma mem_betaBlock {U : Finset (ZMod (d * m))} {x y : ZMod (d * m)} :
     y ∈ betaBlock U x ↔ y ∈ bVerts U ∧ bReach U x y := by
-  unfold betaBlock; rw [Finset.mem_filter]
-  simp only [decide_eq_true_eq]
+  unfold betaBlock; simp_all
 
 /-- **The balance forest** `β(U)`: the connected components of the parent edges. -/
 noncomputable def beta (U : Finset (ZMod (d * m))) : Finset (Finset (ZMod (d * m))) :=
@@ -423,8 +415,7 @@ lemma Scount_split {d m : ℕ} [NeZero (d * m)] {U : Finset (ZMod (d * m))} {x y
   -- the three parts are pairwise disjoint
   have hdisj1 : Disjoint (U.filter (fun t => x < t.val ∧ t.val < w.val))
       ({w} : Finset (ZMod (d * m))) := by
-    rw [Finset.disjoint_singleton_right, Finset.mem_filter]
-    rintro ⟨_, _, hcontra⟩; omega
+    simp_all
   have hdisj2 : Disjoint (U.filter (fun t => x < t.val ∧ t.val < w.val) ∪ {w})
       (U.filter (fun t => w.val < t.val ∧ t.val < y)) := by
     rw [Finset.disjoint_union_left]
@@ -433,8 +424,7 @@ lemma Scount_split {d m : ℕ} [NeZero (d * m)] {U : Finset (ZMod (d * m))} {x y
       intro a ha hb
       rw [Finset.mem_filter] at ha hb
       omega
-    · rw [Finset.disjoint_singleton_left, Finset.mem_filter]
-      rintro ⟨_, hcontra, _⟩; omega
+    · simp_all
   rw [Finset.card_union_of_disjoint hdisj2, Finset.card_union_of_disjoint hdisj1,
     Finset.card_singleton]
 
@@ -717,8 +707,7 @@ lemma mem_U_of_mem_block_ne_root {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
   have hself : betaRoot hd hm hcanon y = y := betaRoot_of_not_mem hd hm hcanon hyU
   have heq : betaRoot hd hm hcanon x = betaRoot hd hm hcanon y :=
     betaRoot_bReach hd hm hcanon hreach
-  rw [hself] at heq
-  exact hne heq.symm
+  simp_all
 
 /-- `betaBlock U x ∈ beta U` for a vertex `x`. -/
 lemma betaBlock_mem_beta {d m : ℕ} {U : Finset (ZMod (d * m))} {x : ZMod (d * m)}
@@ -1000,14 +989,7 @@ lemma GPRE {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
       push_cast at hpos ⊢
       linarith
     · -- j = lu: w' = u.val, Scount = 0
-      have hwval : φ + j * m = u.val := by
-        rw [hjeq, hφ, hludef]; exact Nat.mod_add_div' u.val m
-      rw [hwval]
-      have : Scount U u.val u.val = 0 := by
-        unfold Scount
-        rw [Finset.card_eq_zero, Finset.filter_eq_empty_iff]
-        intro t _; omega
-      rw [this, hjeq]; push_cast; ring_nf; omega
+      simp_all
   -- combine
   push_cast at hadd hbal ⊢
   linarith
@@ -1037,9 +1019,7 @@ lemma N0 {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
   rw [hwval] at hgpre
   -- hgpre : Scount v (v+m) ≤ (K+1) - K - 1 = 0
   have hzero : Scount U (betaParent U u).val ((betaParent U u).val + m) = 0 := by
-    have : (Scount U (betaParent U u).val ((betaParent U u).val + m) : ℤ) ≤ 0 := by
-      push_cast at hgpre; linarith
-    omega
+    simp_all
   -- but t is in that window
   have htmem : t ∈ U.filter (fun w => (betaParent U u).val < w.val ∧
       w.val < (betaParent U u).val + m) := by
@@ -1153,16 +1133,7 @@ lemma Q {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
         have he : (K + 1) * m = K * m + m := by ring
         rw [hyVal, h] at hwhi
         omega
-    subst hlyEq
-    -- yVal = ψ + K*m = φ + K*m = v (ψ=φ); and j = ls (since ¬ φ < ψ); so w' = φ+ls*m = s.val
-    have hyv : yVal = φ + K * m := by rw [hyVal, hψφ]
-    rw [hyv]
-    have hjval : j = ls := by rw [hjdef]; rw [if_neg (by omega)]
-    have hwseq : φ + j * m = s.val := by
-      rw [hjval]; rw [← hsval, hψφ]
-    rw [hwseq, hjval] at hgpre
-    -- hgpre : Scount(v, s.val) ≤ ls - K - 1, exactly the goal (ly = K).
-    linarith
+    simp_all
   · -- ψ ≠ φ ⟹ s.val < w' strictly, use Scount_split for the -1, then case ly/j
     have hsltw : s.val < φ + j * m := by
       rcases lt_or_eq_of_le hsW with h | h
@@ -1264,9 +1235,7 @@ lemma noEscape {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
   set L := (ls - 1) - ly with hLdef
   set E : ℕ → ℤ := fun i => Defc U ψ ls s.val (ly + i) with hEdef
   have hE0 : E 0 ≤ 0 := by
-    simp only [hEdef, Nat.add_zero]
-    rw [hψdef, hlsdef]
-    exact hQ
+    simp_all
   have hEL : 0 ≤ E L := by
     have hjL : ly + L = ls - 1 := by omega
     simp only [hEdef]
@@ -1471,8 +1440,7 @@ lemma beta_interval_closed {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZM
     (betaRoot_bReach hd hm hcanon hxreach_c).symm
   have haz_le_minX : (betaParent U bz).val ≤ minX.val := by
     have := root_ge hd hm hcanon hbzU cstar (bReach_mem_bVerts hx hxreach_c) haz_lt_c hc_lt_bz
-    rw [hrootc, ← hminroot] at this
-    exact this
+    simp_all
   -- but a_z ∈ Z so a_z.val ≥ (betaRoot z).val ≥ minX.val
   have haz_ge_minX : minX.val ≤ (betaParent U bz).val :=
     le_trans hminX_le_rootz (betaRoot_min_in_block hd hm hcanon haz_mem)

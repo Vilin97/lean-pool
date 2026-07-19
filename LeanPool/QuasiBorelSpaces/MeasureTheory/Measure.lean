@@ -45,8 +45,7 @@ lemma measurable_apply
   simp only [← MeasureTheory.lintegral_indicator_one, hi']
   apply Measurable.lintegral_kernel_prod_left (κ := ⟨μ, hμ⟩)
   apply Measurable.ite
-  · simp only [measurableSet_setOf]
-    fun_prop
+  · simp_all
   · fun_prop
   · fun_prop
 

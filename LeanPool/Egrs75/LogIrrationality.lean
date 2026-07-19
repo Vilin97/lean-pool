@@ -123,11 +123,7 @@ theorem irrational_log_div_log {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     have habs : |(b : ℝ)| * Real.log p = |(a : ℝ)| * Real.log q := by
       have h1 : |(b : ℝ) * Real.log p| = |(a : ℝ) * Real.log q| := by rw [hcross]
       rwa [abs_mul, abs_mul, abs_of_pos hlp, abs_of_pos hlq] at h1
-    have hb' : |(b : ℝ)| = (n : ℝ) := by
-      rw [hn_def, Nat.cast_natAbs]; push_cast; rfl
-    have ha' : |(a : ℝ)| = (m : ℝ) := by
-      rw [hm_def, Nat.cast_natAbs]; push_cast; rfl
-    rw [hb', ha'] at habs; exact habs
+    simp_all
   -- n * log p = log (p^n), m * log q = log (q^m).
   have hlogp : Real.log ((p : ℝ) ^ n) = (n : ℝ) * Real.log p := Real.log_pow _ _
   have hlogq : Real.log ((q : ℝ) ^ m) = (m : ℝ) * Real.log q := Real.log_pow _ _

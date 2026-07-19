@@ -65,8 +65,7 @@ theorem short_auxT {g h : GameForm} (h_g : IsShort g) (h_h : IsShort h)
       · simp only [moves_ofSets, Player.cases]
         have : Finite (moves .left g) := Short.finite_moves .left h_g
         exact Set.finite_range (fun gl : moves .left g => (gl : GameForm)°)
-      · simp only [moves_ofSets, Player.cases, Set.mem_empty_iff_false,
-                   IsEmpty.forall_iff, implies_true]
+      · simp_all
       · simp only [moves_ofSets, Player.cases, Set.mem_range, Subtype.exists,
                    exists_prop, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
         intro gl h4

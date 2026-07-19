@@ -57,10 +57,7 @@ private def flipAt {m : ℕ} (i : Fin m) (σ : SignVector m) : SignVector m :=
 
 private theorem flipAt_involutive {m : ℕ} (i : Fin m) : Function.Involutive (flipAt i) := by
   intro σ; ext k; unfold flipAt
-  simp only [Function.update_apply]
-  split
-  · next h => subst h; simp [Bool.not_not]
-  · rfl
+  simp_all
 
 private theorem flipAt_boolToSign {m : ℕ} (i : Fin m) (σ : SignVector m) :
     boolToSign (flipAt i σ i) = -boolToSign (σ i) := by
@@ -126,8 +123,7 @@ theorem rademacherCorrelation_abs_le_one {X : Type u} {m : ℕ} (hm : 0 < m)
     linarith
   calc 1 / (m : ℝ) * |∑ i, boolToSign (σ i) * boolToSign (h (xs i))|
       ≤ 1 / m * m := by
-        apply mul_le_mul_of_nonneg_left hsum_le
-        exact div_nonneg one_pos.le hm_pos.le
+        simp_all
     _ = 1 := by field_simp
 
 /-- Empirical Rademacher complexity of a Boolean concept class on a fixed sample. -/
@@ -156,10 +152,7 @@ theorem empiricalRademacherComplexity_le_one (X : Type u)
       · rintro r ⟨h, _, rfl⟩
         exact le_trans (le_abs_self _) (rademacherCorrelation_abs_le_one hm h σ xs)
     · rw [Set.not_nonempty_iff_eq_empty] at hC
-      have : { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } = ∅ := by
-        ext r; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-        rintro ⟨h, hh, _⟩; simp [hC] at hh
-      rw [this, Real.sSup_empty]; exact zero_le_one
+      simp_all
   have h_sum_le : ∑ σ : SignVector m,
       sSup { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } ≤
       Fintype.card (SignVector m) := by
@@ -211,11 +204,7 @@ private theorem empRad_nonneg {X : Type u} (C : ConceptClass X Bool) {m : ℕ}
               sSup { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } :=
             Finset.sum_le_sum (fun σ _ => h_ge σ)
     · rw [Set.not_nonempty_iff_eq_empty] at hC
-      apply Finset.sum_nonneg; intro σ _
-      have : { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } = ∅ := by
-        ext r; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-        rintro ⟨h, hh, _⟩; simp [hC] at hh
-      rw [this, Real.sSup_empty]
+      simp_all
 
 theorem rademacherComplexity_le_one (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (m : ℕ) (hm : 0 < m)
@@ -319,8 +308,7 @@ private theorem empRad_eq_one_of_all_labelings {X : Type u}
   -- EmpRad = (1/N) * Σ_σ 1 = 1
   unfold EmpiricalRademacherComplexity
   rw [dif_neg (by omega)]
-  simp_rw [h_ssup_eq_one]
-  simp [Finset.sum_const, Finset.card_univ]
+  simp_all
 
 /-! ## Helpers for VCDim → Rademacher bound (Massart + Sauer-Shelah) -/
 
@@ -370,10 +358,7 @@ theorem rademacher_mgf_bound {m : ℕ} (hm : 0 < m) (a : Fin m → ℝ) (c : ℝ
       (fun (i : Fin m) (b : Bool) => Real.exp (t * a i * boolToSign b / ↑m))]
   -- Step 2b: Distribute (1/card) = (1 / 2)^m into the product
   have hcard_eq : (Fintype.card (SignVector m) : ℝ) = (2 : ℝ) ^ m := by
-    have : Fintype.card (SignVector m) = 2 ^ m := by
-      change Fintype.card (Fin m → Bool) = 2 ^ m
-      simp [Fintype.card_fin, Fintype.card_bool]
-    push_cast [this]; rfl
+    simp_all
   have h_inv : (1 : ℝ) / (Fintype.card (SignVector m) : ℝ) = (1 / 2 : ℝ) ^ m := by
     rw [hcard_eq, one_div, one_div, inv_pow]
   rw [h_inv]
@@ -690,27 +675,12 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
         simp [Finset.mem_inter, Finset.mem_filter, hy'T]
       have h2 : (⟨y', hy'S⟩ : ↥S) ∈ t_sub ↔ g' ⟨y', hy'S⟩ = true := by
         simp [t_sub, Finset.mem_filter, hy'T]
-      constructor
-      · intro hf_true
-        have hmem : (⟨y', hy'S⟩ : ↥S) ∈ T ∩ Finset.univ.filter (fun x => f x = true) :=
-          h1.mpr hf_true
-        have hmem2 : (⟨y', hy'S⟩ : ↥S) ∈ t_sub := hTA ▸ hmem
-        exact h2.mp hmem2
-      · intro hg_true
-        have hmem : (⟨y', hy'S⟩ : ↥S) ∈ t_sub := h2.mpr hg_true
-        have hmem2 : (⟨y', hy'S⟩ : ↥S) ∈ T ∩ Finset.univ.filter (fun x => f x = true) :=
-          hTA ▸ hmem
-        exact h1.mp hmem2
+      simp_all
     -- g' ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ since y' ∈ Tval
     have h_g'_eq : g' ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ := by
       simp only [g', dif_pos hyTval]
     -- Combine: c y' = f ⟨y',hy'S⟩ and f = true ↔ g = true
-    rw [hcf_y]
-    have : f ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ := by
-      rw [← h_g'_eq]
-      cases hf : f ⟨y', hy'S⟩ <;> cases hg : g' ⟨y', hy'S⟩ <;>
-        simp_all only [Bool.false_eq_true, true_iff, iff_true]
-    exact this
+    simp_all
   -- Step 5: Fintype.card ↥S = S.card
   have h5 : Fintype.card ↥S = S.card := Fintype.card_coe S
   -- Combine
@@ -775,9 +745,7 @@ theorem sum_choose_le_exp_pow (d m : ℕ) (hd : 0 < d) (hdm : d ≤ m) :
       (1 + t) ^ m := by
     rw [h_binom']
     apply Finset.sum_le_sum_of_subset_of_nonneg
-    · intro i hi
-      simp only [Finset.mem_range] at hi ⊢
-      omega
+    · simp_all
     · intro i _ _
       exact mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (le_of_lt ht_pos) _)
   -- Step 3: (1 + t)^m ≤ e^d
@@ -789,11 +757,7 @@ theorem sum_choose_le_exp_pow (d m : ℕ) (hd : 0 < d) (hdm : d ≤ m) :
       pow_le_pow_left₀ (by linarith) h1t_le m
     have h_exp_eq : (Real.exp t) ^ m = Real.exp (t * ↑m) := by
       rw [← Real.exp_nat_mul]; congr 1; ring
-    have h_tm : t * ↑m = ↑d := by
-      simp only [ht_def]; field_simp
-    rw [h_exp_eq, h_tm] at h_pow
-    calc (1 + t) ^ m ≤ Real.exp ↑d := h_pow
-      _ = Real.exp 1 ^ d := by rw [← Real.exp_nat_mul]; simp
+    simp_all
   -- Step 1: ∑_{i=0}^d C(m,i) ≤ (m/d)^d · ∑_{i=0}^d C(m,i) · t^i
   -- For each i ≤ d: C(m,i) = C(m,i) · t^i · (1/t)^i
   -- And (1/t)^i = (m/d)^i ≤ (m/d)^d since m/d ≥ 1 and i ≤ d
@@ -857,16 +821,9 @@ private theorem conceptClass_nonempty_of_vcdim_eq_pos {X : Type u}
     apply le_antisymm
     · apply iSup₂_le; intro S hS
       exfalso; unfold Shatters at hS
-      have := hS (fun _ => true)
-      obtain ⟨c, hcC, _⟩ := this
-      rw [hC_empty] at hcC; exact hcC
+      simp_all
     · exact bot_le
-  rw [this] at hd
-  have : d = 0 := by
-    have := hd.symm
-    rw [show (0 : WithTop ℕ) = ↑(0 : ℕ) from rfl] at this
-    exact WithTop.coe_injective this
-  omega
+  simp_all
 
 /-! ## VCDim → Rademacher bound -/
 
@@ -983,11 +940,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
     have h_empRad_le2 : EmpiricalRademacherComplexity X C xs ≤
         (1 / (Fintype.card (SignVector m) : ℝ)) *
           ∑ σ : SignVector m, Finset.univ.sup' Finset.univ_nonempty (fun j => Z j σ) := by
-      calc EmpiricalRademacherComplexity X C xs
-          ≤ (1 / (Fintype.card (SignVector m) : ℝ)) *
-              ∑ σ, dpats.sup' hdpats_ne (cf σ) := h_empRad_le
-        _ = _ := by
-            congr 1; apply Finset.sum_congr rfl; intro σ _; exact h_sup'_eq σ
+      simp_all
     -- === MGF bound for each Z_j ===
     set σ_param := (1 : ℝ) / Real.sqrt m
     have hσ_pos : 0 < σ_param := by positivity
@@ -1021,8 +974,7 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
         rw [one_pow, mul_one, show σ_param = 1 / Real.sqrt ↑m from rfl]
         rw [one_div, inv_pow, Real.sq_sqrt (le_of_lt hm_pos)]
         ring
-      rw [h_rhs_eq]
-      exact h_bound
+      simp_all
     -- Apply finite_massart_lemma
     haveI : Nonempty (Fin N) := Fin.pos_iff_nonempty.mp hN_pos
     have h_massart := finite_massart_lemma hm hN_pos Z σ_param hσ_pos h_mgf_Z
@@ -1169,9 +1121,7 @@ private theorem uniform_injective_tuple_measure_half
   have hDsub_sing : ∀ t : α, D_sub {t} = 1 / (n : ENNReal) := by
     intro t
     simp only [D_sub, uniformMeasure, MeasureTheory.Measure.smul_apply, smul_eq_mul]
-    rw [@MeasureTheory.Measure.count_apply_finite' α _ _
-      (Set.toFinite _) (measurableSet_singleton t)]
-    simp [Set.Finite.toFinset, hn_def]
+    simp_all
   haveI : MeasureTheory.IsFiniteMeasure D_sub := by
     constructor; rw [hD_sub_prob.measure_univ]; exact ENNReal.one_lt_top
   haveI : MeasureTheory.SigmaFinite D_sub :=
@@ -1243,12 +1193,8 @@ private theorem uniform_injective_tuple_measure_half
               rw [← Finset.mul_prod_erase _ _ hj_in]
               have hrest_eq : ∏ k ∈ ((Finset.univ : Finset (Fin m)).erase i).erase j,
                   (if k = i ∨ k = j then 1 / (n : ENNReal) else 1) = 1 := by
-                apply Finset.prod_eq_one; intro k hk
-                have hk_ne_j : k ≠ j := (Finset.mem_erase.mp hk).1
-                have hk_ne_i : k ≠ i := (Finset.mem_erase.mp (Finset.mem_erase.mp hk).2).1
-                simp [hk_ne_i, hk_ne_j]
-              rw [hrest_eq, mul_one]
-              simp [hij, hij.symm]
+                apply Finset.prod_eq_one; simp_all
+              simp_all
             rw [hprod_ij, sq]
     calc μ_sub Cij
         ≤ ∑ t : α, μ_sub {ys : Fin m → α | ys i = t ∧ ys j = t} := by
@@ -1516,8 +1462,7 @@ private theorem vcdim_zero_concepts_agree (X : Type u) (C : ConceptClass X Bool)
   have h1le : (1 : WithTop ℕ) ≤ VCDim X C := by
     unfold VCDim
     exact le_iSup₂_of_le {x} hshat (by simp)
-  rw [hd] at h1le
-  exact absurd h1le (by norm_num)
+  simp_all
 
 -- VCDim = 0 → all concepts in C agree → sSup collapses → EmpRad ≤ 1 (then Rad ≤ 1).
 -- Since 1/√m < 1 for m ≥ 2, we need the actual Rademacher variance bound.
@@ -1579,30 +1524,15 @@ private theorem vcdim_zero_rademacher_le_inv_sqrt (X : Type u) [MeasurableSpace 
             (fun _ _ _ => rfl)
         simp [this]
       rw [this, mul_zero]
-    rw [h_emprad_zero]
-    exact div_nonneg one_pos.le (Real.sqrt_nonneg _)
+    simp_all
   · -- C empty: EmpRad = 0 ≤ 1/√m.
     rw [Set.not_nonempty_iff_eq_empty] at hC
     have h_emp_zero : ∀ xs : Fin m → X, EmpiricalRademacherComplexity X C xs = 0 := by
       intro xs
       unfold EmpiricalRademacherComplexity
-      rw [dif_neg (by omega)]
-      have h_ssup_zero : ∀ σ : SignVector m,
-          sSup { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } = 0 := by
-        intro σ
-        have : { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } = ∅ := by
-          ext r; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-          rintro ⟨h, hh, _⟩; simp [hC] at hh
-        rw [this, Real.sSup_empty]
-      simp [h_ssup_zero]
+      simp_all
     unfold RademacherComplexity
-    calc ∫ xs, EmpiricalRademacherComplexity X C xs ∂(MeasureTheory.Measure.pi _)
-        = ∫ _xs, (0 : ℝ) ∂(MeasureTheory.Measure.pi (fun _ : Fin m => D)) := by
-          congr 1; ext xs; exact h_emp_zero xs
-      _ = 0 := by simp
-      _ ≤ 1 / Real.sqrt m := by
-          apply div_nonneg one_pos.le
-          exact Real.sqrt_nonneg _
+    simp_all
 
 /-- Analytical lemma: for d > 0, m ≥ ⌈32(d+1)/ε⁴⌉+1, ε ∈ (0,1],
     we have 2d·log(em/d)/m < ε².
@@ -1788,8 +1718,7 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
           -- √m > 1/ε, so ε·√m > 1
           have h_sqrt_m : 1 / ε < Real.sqrt m := by
             rw [Real.lt_sqrt (by positivity)]
-            rw [div_pow, one_pow]
-            linarith
+            simp_all
           -- ε * (1/ε) = 1, and ε * √m > ε * (1/ε) = 1
           have : ε * (1 / ε) = 1 := by field_simp
           nlinarith [mul_lt_mul_of_pos_left h_sqrt_m hε]
@@ -1804,9 +1733,7 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
             apply Real.sqrt_lt_sqrt
             · apply div_nonneg
               · apply mul_nonneg
-                · apply mul_nonneg
-                  · norm_num
-                  · exact Nat.cast_nonneg d
+                · simp_all
                 · exact Real.log_nonneg (by
                     rw [le_div_iff₀ (Nat.cast_pos.mpr hd_pos')]
                     have hd_r : (0 : ℝ) < d := Nat.cast_pos.mpr hd_pos'

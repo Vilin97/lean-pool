@@ -94,10 +94,7 @@ instance TT.IST : IsStrictTotalOrder (TT n l) (TT.Ilt i) where
     have h_eq :
         toLex (a i, a) = toLex (b i, b) :=
       le_antisymm (le_of_not_gt h_ba) (le_of_not_gt h_ab)
-    have h_pair : (a i, a) = (b i, b) :=
-      (EquivLike.injective (toLex : (Fin (l + 1) × TT n l) ≃
-        Lex (Fin (l + 1) × TT n l))) h_eq
-    exact congrArg Prod.snd h_pair
+    simp_all
   irrefl := by
     intro a
     unfold TT.Ilt
@@ -157,13 +154,10 @@ lemma size_bound_key (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.isD
       have sum_eq : ∑ x ∈ Finset.univ.erase 0, (if x = 0 then M' 0 + R else M' x)
           = ∑ x ∈ Finset.univ.erase 0, M' x := by
         apply Finset.sum_congr rfl
-        intro k hk
-        simp only [if_neg (Finset.ne_of_mem_erase hk)]
+        simp_all
       rw [sum_eq, add_comm (M' 0) R, add_assoc, ← h1]
       simp only [R]
-      have hM'0_le_S : M' 0 ≤ S :=
-        Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ 0)
-      omega
+      simp_all
     have h_M_coords_bound : ∀ k, M_coords k ≤ l := by
       intro k
       by_cases h_is_zero : k = 0
@@ -292,8 +286,7 @@ theorem size_bound_in (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.is
           simp
           have h_le : m i ≤ (z i : ℕ) := Finset.min'_le _ _ (Finset.mem_image_of_mem _ hz)
           omega
-        · simp only [Int.ofNat_zero, sub_zero]
-          exact Int.ofNat_lt.mpr this
+        · simp_all
       calc
         abs ((x i : ℤ) - (y i : ℤ)) = abs (((x i : ℤ) - (m' i : ℤ)) - ((y i : ℤ) - (m' i : ℤ)))
             := by rw [sub_sub_sub_cancel_right]
@@ -376,8 +369,7 @@ instance stdSimplex.upidx (x y : stdSimplex ℝ (Fin n)) : Nonempty { i | x.1 i 
         intro hle
         exact @IsEmpty.false _ h ⟨i, hle⟩
       exact lt_of_not_ge this
-  rw [sum_y_eq_1, sum_x_eq_1] at sum_lt
-  exact (lt_irrefl 1 sum_lt).elim
+  simp_all
 
 
 /-- A chosen index where `x` does not exceed `y`, for two simplex points. -/
@@ -421,8 +413,7 @@ theorem exists_subseq_constant_of_finite_image {s : Finset α} (e : ℕ → α) 
       by_contra hnf
       have a_in_imgs : a ∈ imgs := by
         simpa only [Set.not_finite, Finset.mem_filter, ha, true_and, imgs] using hnf
-      have : imgs ≠ ∅ := Finset.ne_empty_of_mem a_in_imgs
-      contradiction
+      simp_all
     have nat_finite : Set.Finite (Set.univ : Set ℕ) := by
       have univ_eq : Set.univ = e ⁻¹' (s : Set α) := by ext n; simp [he]
       rw [univ_eq]
@@ -440,8 +431,7 @@ theorem exists_subseq_constant_of_finite_image {s : Finset α} (e : ℕ → α) 
   have h_nonempty : preimage.Nonempty := by
     by_contra h_empty
     rw [Set.not_nonempty_iff_eq_empty] at h_empty
-    rw [h_empty] at preimage_infinite
-    exact Set.finite_empty.not_infinite preimage_infinite
+    simp_all
   obtain ⟨m₀, hm₀⟩ := h_nonempty
   have h_exists_larger : ∀ k : ℕ, ∃ m ∈ preimage, k < m := by
     intro k
@@ -757,10 +747,8 @@ theorem Brouwer (hf : Continuous f) : ∃ x , f x = x := by
       (Finset.sum_add_sum_compl C (z.1)).symm
     have compl_sum_zero : ∑ i ∈ Cᶜ, z.1 i = 0 := by
       apply Finset.sum_eq_zero
-      intro i_1 hi
-      exact coords_outside_C_zero i_1 (Finset.mem_compl.mp hi)
-    rw [split_sum, compl_sum_zero, add_zero] at total_sum_eq_one
-    exact total_sum_eq_one
+      simp_all
+    simp_all
   have f_coords_ge_z_coords := f_coords_ge_z_coords f hf
   have sum_f_coords_ge_one : ∑ i_1 ∈ C, (f z).1 i_1 ≥ 1 := by
     calc ∑ i_1 ∈ C, (f z).1 i_1
@@ -779,8 +767,7 @@ theorem Brouwer (hf : Continuous f) : ∃ x , f x = x := by
     have compl_sum_zero : ∑ i_2 ∈ Cᶜ, (f z).1 i_2 = 0 := by
       have split_sum : ∑ i, (f z).1 i = ∑ i ∈ C, (f z).1 i + ∑ i ∈ Cᶜ, (f z).1 i :=
         (Finset.sum_add_sum_compl C ((f z).1)).symm
-      rw [total_sum_f, sum_f_C_eq_one] at split_sum
-      linarith
+      simp_all
     have hi_in_compl : i_1 ∈ Cᶜ := Finset.mem_compl.mpr hi_not_C
     have h_nonneg : (f z).1 i_1 ≥ 0 := (f z).2.1 i_1
     have h_le_sum : (f z).1 i_1 ≤ ∑ j ∈ Cᶜ,

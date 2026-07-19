@@ -139,8 +139,7 @@ theorem pfix_eq_fixElement_recOp (τ : ApproximableMap (prod V V) V) :
     have hround : toApproxMap (toFilter (pfix τ)) = pfix τ := by
       have he := (funSpaceEquiv V V).apply_symm_apply (pfix τ)
       rwa [funSpaceEquiv_apply, funSpaceEquiv_symm_apply] at he
-    rw [hG, ← hround]
-    exact this
+    simp_all
 
 end ApproximableMap
 

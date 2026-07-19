@@ -86,16 +86,12 @@ def encSet (σ : Str) : Set (ℕ × Token) := {p | ∀ b, σ[p.1]? = some b → 
 theorem fiber_encSet_some {σ : Str} {i : ℕ} {b : Bool} (h : σ[i]? = some b) :
     fiber (encSet σ) i = bitNbhd b := by
   ext t
-  simp only [mem_fiber, mem_encSet]
-  constructor
-  · intro hh; exact hh b h
-  · intro ht b' hb'; rw [h] at hb'; cases hb'; exact ht
+  simp_all
 
 theorem fiber_encSet_none {σ : Str} {i : ℕ} (h : σ[i]? = none) :
     fiber (encSet σ) i = Set.univ := by
   ext t
-  simp only [mem_fiber, mem_encSet, Set.mem_univ, iff_true]
-  intro b hb; rw [h] at hb; exact absurd hb (by simp)
+  simp_all
 
 @[simp] theorem encSet_nil : encSet [] = Set.univ := by
   ext p; simp [encSet]
@@ -156,9 +152,7 @@ theorem prefix_of_encSet_subset {σ τ : Str} (h : encSet σ ⊆ encSet τ) : τ
       have hb' : τ[σ.length]? = some τ[σ.length] := List.getElem?_eq_getElem hlt
       obtain ⟨t, ht⟩ := exists_not_mem_bitNbhd τ[σ.length]
       have hmemσ : (σ.length, t) ∈ encSet σ := by
-        intro b hb
-        rw [List.getElem?_eq_none_iff.mpr (le_refl _)] at hb
-        exact absurd hb (by simp)
+        simp_all
       exact ht ((h hmemσ) _ hb')
   · exact hτσ
 

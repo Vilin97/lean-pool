@@ -49,8 +49,7 @@ lemma cartanDiag_map_mul {ϖ : R} (hϖ : Irreducible ϖ) {u : Rˣ} (hϖ' : Irred
   by_cases hij : i = j
   · subst hij
     simp [mul_comm, mul_zpow]
-  · rw [Matrix.diagonal_apply_ne _ hij, Matrix.diagonal_apply_ne _ hij]
-    simp
+  · simp_all
 
 variable [IsDiscreteValuationRing R] [IsFractionRing R K]
 
@@ -64,8 +63,7 @@ lemma cartan_decomposition_unique'_aux (x a : GL (Fin k) R) (f f' : Fin k → �
   have hadetunit : IsUnit a.val.det := Matrix.isUnits_det_units a
   have hxdetunit : IsUnit x.val.det := Matrix.isUnits_det_units x
   have : (cartanDiag ϖ hϖ f * a * (cartanDiag ϖ hϖ f')⁻¹).val.det = x.val.det := by
-    rw [hax]
-    simp
+    simp_all
   simp only [«GL».map, RingHom.mapMatrix_apply, Subring.coe_subtype, Units.inv_eq_val_inv,
     Matrix.coe_units_inv, Units.val_mul, val_cartanDiag, Matrix.det_mul, Matrix.det_diagonal,
     Subring.coe_det, Matrix.det_nonsing_inv, Ring.inverse_eq_inv'] at this
@@ -94,8 +92,7 @@ lemma cartan_decomposition_unique'_aux (x a : GL (Fin k) R) (f f' : Fin k → �
     rw [IsUnit.mul_iff] at hσ
     simp_rw [IsUnit.prod_iff] at hσ
     use σ
-    intro i
-    exact hσ.right i (Finset.mem_univ i)
+    simp_all
   obtain ⟨σ, hσ⟩ := this
   have hxij (i j : Fin k) :
       x.val i j = ϖ.val ^ (f i - f' j) * a.val i j := by
@@ -115,8 +112,7 @@ lemma cartan_decomposition_unique'_aux (x a : GL (Fin k) R) (f f' : Fin k → �
     exact (x.val (σ i) i).property
   have hsumzero : Finset.univ.sum (fun i ↦ f (σ i) - f' i) = 0 := by
     rw [Finset.sum_sub_distrib, Equiv.Perm.sum_comp]
-    · rw [← Finset.sum_sub_distrib]
-      exact hsumzero'
+    · simp_all
     · simp
   have hzero : ∀ i ∈ Finset.univ, f (σ i) - f' i = 0 := by
     rw [← Finset.sum_eq_zero_iff_of_nonneg]

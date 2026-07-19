@@ -91,8 +91,7 @@ lemma eq_unit_mul_pow_irreducible' [IsDiscreteValuationRing R] (x : Kˣ) :
   obtain ⟨n, u, h⟩ := eq_unit_mul_pow_irreducible ϖ hϖ x.val hx
   use n, u
   ext
-  rw [h]
-  simp
+  simp_all
 
 /-
 NOTE: The following lemmas are mostly copied from the analogous lemmas for `ValuationSubring`s.
@@ -113,13 +112,11 @@ lemma valuation_eq_one_iff (a : R) : IsUnit a ↔ v a = 1 :=
   ⟨fun h => valuation_unit h.unit, fun h => by
     have ha : (a : K) ≠ 0 := by
       intro c
-      rw [c, Valuation.map_zero] at h
-      exact zero_ne_one h
+      simp_all
     have ha' : (a : K)⁻¹ ∈ R := by rw [mem_subring_iff_integer, map_inv₀, h, inv_one]
     apply IsUnit.of_mul_eq_one ⟨(a : K)⁻¹, ha'⟩
     ext
-    change (a : K) * (a : K)⁻¹ = 1
-    field_simp [ha]⟩
+    simp_all⟩
 
 lemma valuation_unit_eq_one (x : Rˣ) : v x = 1 :=
   valuation_unit x
@@ -213,8 +210,7 @@ lemma valuation_irreducible_zpow_eq_one_iff (n : ℤ) : v (ϖ.val ^ n) = 1 ↔ n
     rw [map_zpow₀] at h
     have : v ϖ < 1 := valuation_lt_one_of_irreducible ϖ hϖ
     exact exp_zero_of_zpow_eq_one this h
-  · rintro rfl
-    simp
+  · simp_all
 
 include hϖ in
 omit [ValuationRing R] [IsDiscreteValuationRing ↥R] [IsFractionRing (↥R) K] in
@@ -226,12 +222,10 @@ lemma inv_irreducible_not_mem_subring : ϖ.val⁻¹ ∉ R := by
     ⟨ϖ, ⟨ϖ.val⁻¹, h⟩,
       by
         ext
-        change ϖ.val * ϖ.val⁻¹ = 1
-        field_simp [hϖnzero],
+        simp_all,
       by
         ext
-        change ϖ.val⁻¹ * ϖ.val = 1
-        field_simp [hϖnzero]⟩
+        simp_all⟩
   use x
 
 include hϖ in
@@ -268,8 +262,7 @@ lemma irreducible_zpow_mem_subring_iff (n : ℤ) : ϖ.val ^ n ∈ R ↔ n ≥ 0 
     have hn : - n ≥ 0 := by
       simpa only [ge_iff_le, Left.nonneg_neg_iff] using Int.le_of_lt h
     convert_to (ϖ.val ^ (- (- n).toNat : ℤ)) ∉ R
-    · rw [Int.toNat_of_nonneg hn]
-      simp
+    · simp_all
     · apply neg_pow_not_mem_subring _ (-n).toNat (hϖ := hϖ)
       simpa
   · intro hn
@@ -343,5 +336,4 @@ lemma zaddVal_units_map (x : Rˣ) :
     zaddVal (R := R) (Units.map R.subtype x) = 0 := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   rw [zaddVal_eq_iff' ϖ hϖ]
-  use x
-  simp
+  simp_all

@@ -83,10 +83,7 @@ lemma marginalFun_isPositiveDefinite (φ : H → ℂ) (hpd : IsPositiveDefinite 
 
 /-- 1 - exp(-t) > 0 for t > 0. -/
 lemma one_sub_exp_neg_pos {t : ℝ} (ht : 0 < t) : 0 < 1 - Real.exp (-t) := by
-  have h1 : Real.exp (-t) < 1 := by
-    calc Real.exp (-t) < Real.exp 0 := Real.exp_strictMono (by linarith)
-      _ = 1 := Real.exp_zero
-  linarith
+  simp_all
 
 /-- exp(-b) ≤ exp(-a) when a ≤ b. -/
 lemma exp_neg_le_exp_neg {a b : ℝ} (hab : a ≤ b) :
@@ -109,12 +106,7 @@ lemma tail_bound_from_exp_integral {V : Type*} [NormedAddCommGroup V]
     (μ.toMeasure {y | R ≤ ‖y‖}).toReal ≤ C / (1 - Real.exp (-(σ ^ 2 * R ^ 2 / 2))) := by
   set δ := 1 - Real.exp (-(σ ^ 2 * R ^ 2 / 2)) with hδ_def
   have hδ_pos : 0 < δ := by
-    rw [hδ_def]
-    have : Real.exp (-(σ ^ 2 * R ^ 2 / 2)) < 1 := by
-      calc Real.exp (-(σ ^ 2 * R ^ 2 / 2)) < Real.exp 0 :=
-            Real.exp_strictMono (by linarith [show 0 < σ ^ 2 * R ^ 2 / 2 from by positivity])
-        _ = 1 := Real.exp_zero
-    linarith
+    simp_all
   set A := {y : V | R ≤ ‖y‖}
   set f : V → ℝ := fun y => 1 - Real.exp (-(σ ^ 2 * ‖y‖ ^ 2 / 2))
   have hA_meas : MeasurableSet A :=
@@ -184,10 +176,7 @@ lemma gaussDensity_integrable' (σ : ℝ) (hσ : 0 < σ) :
   have hcint : Integrable (fun x : V => cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < ((b : ℂ)).re by simp [hb]) (0 : ℂ) (0 : V)
-    simp only [neg_mul] at this
-    convert this using 1
-    ext x
-    simp [Complex.ofReal_pow]
+    simp_all
   have heq : gaussDensity (V := V) σ = fun x => ‖cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))‖ := by
     ext x; unfold gaussDensity; rw [Complex.norm_exp]; congr 1
     simp only [Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
@@ -212,9 +201,7 @@ private lemma gaussian_fourier_eq' (σ : ℝ) (hσ : 0 < σ) (y : V) :
   have step1 : (∫ x : V, (gaussDensity σ x : ℂ) * cexp (↑(@inner ℝ V _ y x) * I)) =
       ∫ x : V, cexp (-(b : ℂ) * ‖x‖ ^ 2 + I * ↑⟪y, x⟫_ℝ) := by
     congr 1; ext x
-    rw [Complex.ofReal_exp, mul_comm (↑⟪y, x⟫_ℝ) I, ← exp_add]; congr 1
-    rw [show (-(1 / (2 * σ ^ 2)) * ‖x‖ ^ 2 : ℝ) = -b * ‖x‖ ^ 2 from by rw [hb_def]]
-    push_cast; ring
+    rw [Complex.ofReal_exp, mul_comm (↑⟪y, x⟫_ℝ) I, ← exp_add]; simp_all
   rw [step1, GaussianFourier.integral_cexp_neg_mul_sq_norm_add hb_re I y]
   set n := Module.finrank ℝ V
   congr 1
@@ -324,14 +311,8 @@ theorem fubini_gaussian_charFun
       apply Integrable.mono' (gaussDensity_integrable' σ hσ)
         (by fun_prop : Continuous (fun x : V =>
           (↑(gaussDensity σ x) : ℂ) * cexp (↑⟪y, x⟫_ℝ * I))).aestronglyMeasurable
-      filter_upwards with x
-      rw [norm_bound]
-    · have : (fun y : V => ∫ x, ‖uncurry (fun (y : V) (x : V) =>
-            (gaussDensity σ x : ℂ) * cexp (↑⟪y, x⟫_ℝ * I)) (y, x)‖ ∂volume) =
-          fun _ => ∫ x : V, gaussDensity σ x := by
-        ext y; congr 1; ext x
-        simp only [Function.uncurry_apply_pair, norm_bound]
-      rw [this]; exact integrable_const _
+      simp_all
+    · simp_all
   have fubini := integral_integral_swap hprod
   have lhs_eq : ∫ y, (∫ x, (gaussDensity σ x : ℂ) * cexp (↑⟪y, x⟫_ℝ * I)) ∂μ.toMeasure =
       ↑C * ∫ y, cexp (-(σ ^ 2 * ‖y‖ ^ 2 / 2 : ℝ)) ∂μ.toMeasure := by
@@ -387,19 +368,7 @@ private lemma gaussian_real_formula' (b : ℝ) (hb : 0 < b) (w : V) (c : ℝ) :
   congr 1; push_cast; ring
 
 private lemma id_le_sinh' {t : ℝ} (ht : 0 ≤ t) : t ≤ Real.sinh t := by
-  have hmono : MonotoneOn (fun x => Real.sinh x - x) (Set.Ici 0) := by
-    apply monotoneOn_of_deriv_nonneg (convex_Ici 0)
-    · exact (Real.continuous_sinh.sub continuous_id).continuousOn
-    · intro x _
-      exact ((Real.hasDerivAt_sinh x).sub (hasDerivAt_id x)).differentiableAt.differentiableWithinAt
-    · intro x _
-      have hd : HasDerivAt (fun y => Real.sinh y - y) (Real.cosh x - 1) x :=
-        (Real.hasDerivAt_sinh x).sub (hasDerivAt_id x)
-      rw [hd.deriv]
-      linarith [Real.one_le_cosh x]
-  have h0 : Real.sinh 0 - 0 = 0 := by simp [Real.sinh_zero]
-  have := hmono (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr ht) ht
-  linarith [h0]
+  simp_all
 
 private lemma half_sq_le_cosh_sub_one' (x : ℝ) : x ^ 2 / 2 ≤ Real.cosh x - 1 := by
   suffices key : (x / 2) ^ 2 ≤ Real.sinh (x / 2) ^ 2 by
@@ -416,8 +385,7 @@ private lemma half_sq_le_cosh_sub_one' (x : ℝ) : x ^ 2 / 2 ≤ Real.cosh x - 1
       have := id_le_sinh' (by linarith : 0 ≤ -t)
       rw [Real.sinh_neg] at this; linarith
     have h2 : Real.sinh t ≤ 0 := by
-      have := id_le_sinh' (by linarith : 0 ≤ -t)
-      rw [Real.sinh_neg] at this; linarith
+      simp_all
     have ha : Real.sinh t + t ≤ 0 := by linarith
     have hb : Real.sinh t - t ≤ 0 := by linarith
     exact mul_nonneg_of_nonpos_of_nonpos ha hb
@@ -464,9 +432,7 @@ private lemma tendsto_exp_slope' (A : ℝ) :
         ((hasDerivAt_id (0 : ℝ)).mul_const A)
       change HasDerivAt (fun t : ℝ => rexp (t * A)) A 0
       simpa [zero_mul, Real.exp_zero, Function.comp_def] using this
-    have h2 : HasDerivAt (fun _ : ℝ => (1 : ℝ)) 0 0 := hasDerivAt_const 0 1
-    have h := h1.sub h2
-    rwa [sub_zero] at h
+    simp_all
   have := hd.tendsto_slope_zero_right
   simp only [zero_add, zero_mul, Real.exp_zero, sub_self, sub_zero] at this
   exact this.congr fun t => by rw [smul_eq_mul, ← div_eq_inv_mul]
@@ -617,10 +583,7 @@ theorem gaussian_quadForm_integral_le
     fun i => gaussian_inner_sq_le' σ hσ (b i)
   have hnorm : ∀ i, ‖b i‖ = 1 := fun i => b.orthonormal.1 i
   have heveq : ∀ i, ev i = @inner ℝ V _ (b i) (S (b i)) := by
-    intro i
-    have h := hinner i (b i)
-    rw [real_inner_self_eq_norm_sq, hnorm i, one_pow, mul_one] at h
-    exact h.symm
+    simp_all
   rw [hint_eq]
   have hbound' : ∀ i, ∫ x : V, gaussDensity σ x * (@inner ℝ V _ (b i) x) ^ 2 ≤
       C * σ ^ 2 := by
@@ -1014,10 +977,8 @@ lemma restrictOp_trace_eq_diag (S : H →L[ℝ] H) {n : ℕ} (v : Fin n → H)
     have h_app : ∀ i, (restrictOp S v (EuclideanSpace.single j 1)) i =
         @inner ℝ H _ (v i) (S (v j)) := by
       intro i; rw [restrictOp_apply]
-      congr 1
-      simp [PiLp.single_apply, ite_smul, Finset.sum_ite_eq']
-    simp_rw [h_app, PiLp.single_apply]
-    simp [Finset.sum_ite_eq']
+      simp_all
+    simp_all
   exact lhs_eq.trans ((h1.symm.trans h2).trans rhs_eq)
 
 /-- The trace of the restricted operator is bounded by the trace of the

@@ -121,8 +121,7 @@ theorem flat_case_arithmetic
     apply mul_nonneg _ hPVsq_nn; nlinarith [sq_nonneg a]
   -- Coefficient of PGsq: a·η·PGsq ≥ 0
   have hc_pg : a * η * PGsq ≥ 0 := by
-    apply mul_nonneg _ hPGsq_nn
-    apply mul_nonneg <;> linarith
+    simp_all
   -- Main closure: combine all bounds and coefficient signs
   nlinarith [hTn', h_descent, h_seg_sc, h_aim_sc, hc_ppv, hc_pv, hc_pg]
 

@@ -117,9 +117,7 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
   fconstructor
   · rintro ⟨iso⟩
     refine LinearEquiv.finrank_eq { iso with map_smul' := ?_ }
-    intros a m
-    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearMap.map_smul_of_tower,
-      LinearEquiv.coe_coe, RingHom.id_apply]
+    simp_all
   · intro h
     obtain ⟨S, _, _, _, ι, ⟨iso⟩⟩ := directSum_simple_module_over_simple_ring k A M
     obtain ⟨ι', ⟨iso'⟩⟩ := directSum_simple_module_over_simple_ring' k A N S
@@ -295,10 +293,8 @@ private lemma matrixModuleVectorDecomp {n : ℕ} [NeZero n]
   rw [Finset.sum_apply]
   rw [Finset.sum_eq_single t]
   · simp [Matrix.mulVec, dotProduct, Matrix.single, Pi.single]
-  · intro j _ hj
-    simp [Matrix.mulVec, dotProduct, Matrix.single, Pi.single, hj]
-  · intro ht
-    simp at ht
+  · simp_all
+  · simp_all
 
 omit [IsSimpleRing A] [FiniteDimensional k A] in
 private lemma matrixModuleEnd_apply {n : ℕ} [NeZero n]
@@ -370,14 +366,12 @@ private noncomputable def matrixModuleEndAlgEquivMop {n : ℕ} [NeZero n]
     ext v i
     simp [matrixModuleEnd_apply D f v i]
   right_inv c := by
-    apply MulOpposite.unop_injective
-    simp
+    simp_all
   map_mul' f g := by
     apply MulOpposite.unop_injective
     simp [matrixModuleEnd_apply D f (g (Pi.single (0 : Fin n) (1 : D))) 0]
   map_add' f g := by
-    apply MulOpposite.unop_injective
-    simp
+    simp_all
   commutes' a := by
     apply MulOpposite.unop_injective
     simp [Pi.single, Algebra.smul_def]
@@ -389,8 +383,7 @@ def endSimpleModOfWedderburn (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionRing
     -- these should be in Morita file
     have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
     { smul_assoc a b x := by
-        ext i
-        exact congrFun (smul_assoc a b x) i }
+        simp_all }
     letI _ : IsScalarTower k A (Fin n → D) :=
     { smul_assoc a b x := by
         change wdb (a • b) • x = _
@@ -406,8 +399,7 @@ def endSimpleModOfWedderburn (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionRing
   let _ : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
   have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
   { smul_assoc a b x := by
-      ext i
-      exact congrFun (smul_assoc a b x) i }
+      simp_all }
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
@@ -433,8 +425,7 @@ lemma endSimpleModOfWedderburn' (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionR
   let _ : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
   have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
   { smul_assoc a b x := by
-      ext i
-      exact congrFun (smul_assoc a b x) i }
+      simp_all }
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
@@ -492,18 +483,7 @@ instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Mo
   commutes' := by
     intros r f
     ext m
-    simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, Module.End.mul_apply,
-      LinearMap.coe_mk, AddHom.coe_mk]
-    let s : Module.End A M :=
-    { toFun x := r • x
-      map_add' := by simp
-      map_smul' := fun a x => by
-        simp only [RingHom.id_apply]
-        rw [algebra_compatible_smul A, ← mul_smul, algebra_compatible_smul A, ← mul_smul]
-        congr 1
-        exact Algebra.commutes r a }
-    rw [show r • m = s • m by rfl, f.map_smul]
-    rfl
+    simp_all
   smul r f :=
   { toFun m := f <| r • m
     map_add' := by simp
@@ -703,8 +683,7 @@ lemma isBalanced_of_simpleMod (M : Type v) [AddCommGroup M] [Module A M] [IsSimp
     haveI : Subsingleton (ι →₀ M) := inferInstance
     haveI : Subsingleton A := Equiv.subsingleton e.toEquiv
     have eq1 : (1 : A) = 0 := Subsingleton.elim _ _
-    have : Nontrivial A := inferInstance
-    exact one_ne_zero eq1
+    simp_all
   obtain ⟨j⟩ := this
   have := congr($ha (Finsupp.single j m))
   simp only [toEndEnd_apply, Finsupp.smul_single, LinearMap.coe_mk, AddHom.coe_mk,
@@ -729,8 +708,7 @@ lemma WedderburnArtin_uniqueness₀
   let _ : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
   have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
   { smul_assoc a b x := by
-      ext i
-      exact congrFun (smul_assoc a b x) i }
+      simp_all }
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _

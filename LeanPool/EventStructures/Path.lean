@@ -137,8 +137,7 @@ lemma execList_target_eq_union {c₁ c₂ : Conf es} {t : List es.Event}
     c₂.1 = c₁.1 ∪ {e | e ∈ t} := by
   induction h with
   | nil c =>
-    ext x
-    simp
+    simp_all
   | cons e h hnext ih =>
     ext x
     simp [nextConf, ih, List.mem_cons, Set.mem_union, Set.mem_setOf_eq]
@@ -196,8 +195,7 @@ noncomputable def execListLift {c_small c_large c_target : Conf es} {t : List es
 /-- Existence of a path length. -/
 lemma pathLengthExists {c₁ c₂ : Conf es} (h : Nonempty (Path es c₁ c₂)) :
     ∃ n, ∃ p : Path es c₁ c₂, length es p = n := by
-  rcases h with ⟨p⟩
-  exact ⟨length es p, p, rfl⟩
+  simp_all
 
 /-- Minimal path length between two configurations, given existence of a path. -/
 noncomputable def minPathLength {c₁ c₂ : Conf es} (h : Nonempty (Path es c₁ c₂)) : Nat := by

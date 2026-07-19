@@ -38,8 +38,7 @@ def TwoSidedIdeal.mapMatrix (I : TwoSidedIdeal A) : TwoSidedIdeal M[ι, A] :=
       intro X Y hX hY i j
       simpa only [Matrix.add_apply] using I.add_mem (hX i j) (hY i j))
     (by
-      intro X hX i j
-      simpa only [Matrix.neg_apply] using I.neg_mem (hX i j))
+      simp_all)
     (by
       classical
       intro X Y hY i j
@@ -90,22 +89,7 @@ def TwoSidedIdeal.equivRingConMatrix (oo : ι) : TwoSidedIdeal A ≃ TwoSidedIde
           single i oo 1 * y i j * single oo j 1 by
         rw [this]
         exact J.mul_mem_right _ _ (J.mul_mem_left _ _ <| hy1 _ _)
-      ext a b
-      by_cases hab : a = i ∧ b = j
-      · rcases hab with ⟨ha, hb⟩
-        subst ha hb
-        simp only [single_apply_same, mul_single_apply_same,
-          single_mul_apply_same, one_mul, mul_one]
-        specialize hy2 a b
-        simp only [sub_zero] at hy2
-        exact hy2.symm
-      · conv_lhs =>
-          dsimp [single]
-          rw [if_neg (by tauto)]
-        rw [not_and_or] at hab
-        rcases hab with ha | hb
-        · rw [mul_assoc, Matrix.single_mul_apply_of_ne (h := ha)]
-        · rw [Matrix.mul_single_apply_of_ne (hbj := hb)]
+      simp_all
     · intro hx i j
       refine ⟨single oo i 1 * x * single j oo 1,
         J.mul_mem_right _ _ (J.mul_mem_left _ _ hx), ?_⟩
@@ -221,8 +205,7 @@ lemma Ideal.eq_of_le_of_isSimpleModule {A : Type u} [Ring A]
     eq_bot_or_eq_top _
   · rw [Submodule.eq_bot_iff] at eq
     specialize eq ⟨a, ineq mem⟩ (by simpa [Subtype.ext_iff])
-    rw [Subtype.ext_iff] at eq
-    exact ne_zero eq |>.elim
+    simp_all
   · simp only [Submodule.comap_subtype_eq_top] at eq
     exact le_antisymm ineq eq
 
@@ -241,9 +224,7 @@ lemma minimal_ideal_isSimpleModule {A : Type u} [Ring A]
     contrapose! hJ
     apply_fun Submodule.comap (f := I.subtype) at hJ
     rw [Submodule.comap_map_eq_of_injective (hf := Submodule.injective_subtype _)] at hJ
-    rw [hJ, Submodule.comap_bot]
-    rw [LinearMap.ker_eq_bot]
-    exact Submodule.injective_subtype _)
+    simp_all)
   apply_fun Submodule.map (f := I.subtype) using Submodule.map_injective_of_injective
     (hf := Submodule.injective_subtype I)
   simp only [Submodule.map_top, Submodule.range_subtype]
@@ -263,9 +244,7 @@ lemma WedderburnArtin.aux.one_eq
     have hy' : y.1 ∈ I' := by
       change I'.ringCon y 0
       exact .of _ _ <| by simp
-    rw [r] at hy'
-    change _ = _ at hy'
-    aesop)
+    simp_all)
   have one_mem_I' : 1 ∈ I' := by rw [I'_is_everything]; trivial
   rw [TwoSidedIdeal.mem_span_ideal_iff_exists_fin] at one_mem_I'
   obtain ⟨n, finn, x, y, hy⟩ := one_mem_I'
@@ -309,18 +288,7 @@ lemma WedderburnArtin.aux.n_ne_zero
     {A : Type u} [Ring A] [simple : IsSimpleRing A]
     (I : Ideal A) (I_nontrivial : I ≠ ⊥) :
     WedderburnArtin.aux.n I I_nontrivial ≠ 0 := by
-  rintro hn
-  let n : ℕ := WedderburnArtin.aux.n I I_nontrivial
-  let x : Fin n → A := WedderburnArtin.aux.x I I_nontrivial
-  let i : Fin n → I := WedderburnArtin.aux.i I I_nontrivial
-  have one_eq : ∑ j : Fin n, (i j) * (x j) = 1 :=
-    WedderburnArtin.aux.nxi_spec I I_nontrivial
-  let e : Fin n ≃ Fin 0 := Fin.castOrderIso hn
-  simpa using calc 1
-    _ = _ := one_eq.symm
-    _ = ∑ j : Fin 0, i (e.symm j) * x (e.symm j) :=
-        Fintype.sum_bijective e e.bijective _ _ (fun _ ↦ rfl)
-    _ = 0 := by simp
+  simp_all
 
 open WedderburnArtin.aux in
 lemma WedderburnArtin.aux.nxi_ne_zero {A : Type u} [Ring A] [simple : IsSimpleRing A]

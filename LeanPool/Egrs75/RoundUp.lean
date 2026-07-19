@@ -81,9 +81,7 @@ recursion: `LowDigits p (p·m + d) ` holds when `d ≤ (p-1)/2` and `LowDigits p
 /-- `0` has no digits, hence `LowDigits p 0` vacuously. -/
 lemma lowDigits_zero (p : ℕ) : LowDigits p 0 := by
   unfold LowDigits
-  rw [Nat.digits_zero]
-  intro d hd
-  exact absurd hd List.not_mem_nil
+  simp_all
 
 /-- A low last digit on top of a low number stays low: `LowDigits p (p*m + d)`
 when `d ≤ (p-1)/2` and `LowDigits p m` (and `2 ≤ p`). -/
@@ -100,11 +98,7 @@ lemma lowDigits_cons {p m d : ℕ} (hp : 2 ≤ p) (hd : d ≤ (p - 1) / 2)
     have hdiv : (p * m + d) / p = m := by
       rw [Nat.mul_add_div (by omega : 0 < p), Nat.div_eq_of_lt hdp, Nat.add_zero]
     rw [Nat.digits_def' hp1 (Nat.pos_of_ne_zero h0), hmod, hdiv]
-    intro e he
-    rw [List.mem_cons] at he
-    rcases he with rfl | he
-    · exact hd
-    · exact hm _ he
+    simp_all
 
 /-- For `p ≥ 3`, the digit `1 ≤ (p-1)/2`. -/
 lemma one_le_half {p : ℕ} (hp : 3 ≤ p) : (1 : ℕ) ≤ (p - 1) / 2 := by
@@ -160,10 +154,7 @@ lemma ru_bounds {p : ℕ} (hp : 3 ≤ p) (hodd : Odd p) :
   -- and any digit `> (p-1)/2` is `≥ (p+1)/2`, so `2*digit ≥ p+1 > p`.
   have hhalf : 2 * ((p - 1) / 2) + 1 = p := by
     obtain ⟨k, hk⟩ := hodd
-    subst hk
-    have : (2 * k + 1 - 1) / 2 = k := by
-      rw [show 2 * k + 1 - 1 = 2 * k by omega, Nat.mul_div_cancel_left k (by norm_num)]
-    omega
+    simp_all
   intro x
   induction x using Nat.strong_induction_on with
   | _ x ih =>

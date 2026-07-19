@@ -51,9 +51,7 @@ private lemma map_maxIdeal_le_of_closed
   have htop : Ideal.map R.subtype (Ideal.span ({r} : Set ↥R)) = ⊤ :=
     Ideal.eq_top_of_isUnit_mem _ hr_map hnotM
   have h1 : (1 : ↥R) ∈ Ideal.span ({r} : Set ↥R) := by
-    apply h_closed _ hI_fg
-    rw [htop]
-    exact Submodule.mem_top
+    simp_all
   have h_le : Ideal.span ({r} : Set ↥R) ≤ IsLocalRing.maximalIdeal ↥R :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hr)
   rw [(Ideal.eq_top_iff_one _).mpr h1] at h_le
@@ -194,8 +192,7 @@ private lemma heitmann_prop1_surj_pow
     exact ⟨0, by
       change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ y
       rw [Ideal.Quotient.eq, show IsLocalRing.maximalIdeal T ^ 0 = ⊤ from by
-        rw [pow_zero]
-        exact Ideal.one_eq_top]
+        simp_all]
       exact Submodule.mem_top⟩
   | succ n _ih =>
     set M := IsLocalRing.maximalIdeal T
@@ -464,9 +461,7 @@ theorem maximal_not_assoc_of_depth_ge_two
     intro hx0
     rw [hx0] at hx_ann
     have : IsLocalRing.maximalIdeal T = ⊤ := by
-      rw [hx_ann]
-      ext t
-      simp
+      simp_all
     exact (IsLocalRing.maximalIdeal.isMaximal T).ne_top this
   obtain ⟨x_lift, rfl⟩ := Ideal.Quotient.mk_surjective x
   have hx_not_mem : x_lift ∉ Ideal.span ({r} : Set T) := by
@@ -475,8 +470,7 @@ theorem maximal_not_assoc_of_depth_ge_two
     exact (Ideal.Quotient.eq_zero_iff_mem).mpr h
   have ha_in_ann : a ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
       {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    rw [← hx_ann]
-    exact ha_mem
+    simp_all
   have ha_mul : a * x_lift ∈ Ideal.span ({r} : Set T) := by
     rw [Submodule.mem_colon] at ha_in_ann
     have := ha_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
@@ -485,8 +479,7 @@ theorem maximal_not_assoc_of_depth_ge_two
     exact this
   have hb_in_ann : b ∈ (⊥ : Submodule T (T ⧸ Ideal.span {r})).colon
       {Ideal.Quotient.mk (Ideal.span {r}) x_lift} := by
-    rw [← hx_ann]
-    exact hb_mem
+    simp_all
   have hb_mul : b * x_lift ∈ Ideal.span ({r} : Set T) := by
     rw [Submodule.mem_colon] at hb_in_ann
     have := hb_in_ann (Ideal.Quotient.mk _ x_lift) (Set.mem_singleton _)
@@ -523,8 +516,7 @@ theorem maximal_not_assoc_of_depth_ge_two
     have hby₁_smul : b * y₁ ∈ (a • ⊤ : Submodule T T) := h_eq ▸ hby₁_mem
     have hy₁_smul : y₁ ∈ (a • ⊤ : Submodule T T) :=
       mem_of_isSMulRegular_quotient_of_smul_mem hb_reg_mod_a (by rwa [smul_eq_mul])
-    rw [h_eq]
-    exact hy₁_smul
+    simp_all
   rw [Ideal.mem_span_singleton] at hy₁_in_aT
   obtain ⟨z, hz⟩ := hy₁_in_aT
   -- Cancel a (regular on T): x_lift = r * z, contradicting x ≠ 0

@@ -36,17 +36,14 @@ universe u v
     split_ifs with h₁ h₂ h₂
     · -- a ≤ 1/2 and b ≤ 1/2, so use monotonicity of γ₁
       apply hγ₁
-      simpa only [Subtype.mk_le_mk, Nat.ofNat_pos, mul_le_mul_iff_right₀, Subtype.coe_le_coe]
-        using hab
+      simp_all
     · -- a ≤ 1/2 and b > 1/2, so use that γ₁ ≤ y ≤ γ₂
       exact le_trans (monotone_path_bounded hγ₁ _).2 (monotone_path_bounded hγ₂ _).1
     · -- Impossible, as 1/2 < a and b ≤ 1/2 and a ≤ b
       exact False.elim (h₁ (le_trans hab h₂))
     · -- a > 1/2 and b > 1/2, so use monotonicity of γ₂
       apply hγ₂
-      simp only [Subtype.mk_le_mk, tsub_le_iff_right, sub_add_cancel, Nat.ofNat_pos,
-        mul_le_mul_iff_right₀, Subtype.coe_le_coe]
-      exact hab
+      simp_all
 
   isDipath_reparam := fun {x y : α} γ t₀ t₁ f hf_mono hγ_mono a b hab => hγ_mono (hf_mono hab)
 

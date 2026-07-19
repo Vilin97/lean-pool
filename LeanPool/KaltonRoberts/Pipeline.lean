@@ -80,8 +80,7 @@ theorem mixed_intersection_weighted_surplus
       have h := hf.2 A B hAB
       rwa [show -f A + -f B - -f (A ∪ B) = -(f A + f B - f (A ∪ B)) from by ring, abs_neg]
   have hgM : ∀ S : Finset U, |(fun S => -f S) S| ≤ M := fun S => by
-    simp only [abs_neg]
-    exact hM S
+    simp_all
   have hg_deficit : C.avgDeficit (fun S => -f S) M ≤ S_val := by
     rw [show C.avgDeficit (fun S => -f S) M = C.avgSurplus f M by
       simp [WeightedCollection.avgDeficit, WeightedCollection.avgSurplus, deficit, surplus]]
@@ -91,8 +90,7 @@ theorem mixed_intersection_weighted_surplus
   refine ⟨C', hfreq', ?_⟩
   have : C'.avgDeficit (fun S => -f S) M = C'.avgSurplus f M := by
     simp [WeightedCollection.avgDeficit, WeightedCollection.avgSurplus, deficit, surplus]
-  rw [← this]
-  exact hdef'
+  simp_all
 
 /-! ## Expander existence for the four rows
 

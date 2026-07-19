@@ -118,8 +118,7 @@ theorem nonzero_coord_in_support (s : FormalSum R X) :
   | [] => fun x hyp => by
     have d : coords [] x = (0 : R) := by
       rfl
-    rw [d] at hyp
-    contradiction
+    simp_all
   | h :: t => by
     intro x hyp
     let (a₀, x₀) := h
@@ -128,24 +127,11 @@ theorem nonzero_coord_in_support (s : FormalSum R X) :
     rw [d]
     match p : x₀ == x with
     | true =>
-      have eqn : x₀ = x := of_decide_eq_true p
-      rw [eqn]
-      apply List.mem_of_elem_eq_true
-      simp only [List.elem, BEq.rfl]
+      simp_all
     | false =>
       rw [coords, monomCoeff, p, zero_add] at hyp
       let step := nonzero_coord_in_support t x hyp
-      apply List.mem_of_elem_eq_true
-      simp only [List.elem, List.elem_eq_contains, List.contains_eq_mem]
-      have p' : (x == x₀) = false := by
-        have eqn := of_decide_eq_false p
-        have eqn' : ¬(x = x₀) := by
-          intro contra
-          let contra' := Eq.symm contra
-          contradiction
-        exact decide_eq_false eqn'
-      rw [p']
-      simpa only [decide_eq_true_eq] using step
+      simp_all
 
 /-!
 ### Equality of coordinates on a list
@@ -170,9 +156,7 @@ theorem equalOnList_of_equal (l : List X) (f g : X → R) :
     rw [equalOnList]
   | cons h t step =>
     rw [equalOnList]
-    constructor
-    · rw [hyp]
-    · exact step
+    simp_all
 
 omit [Ring R] [DecidableEq R] [DecidableEq X] in
 /-- Functions equal on support `l` are equal on each `x ∈ l`. -/
@@ -207,14 +191,10 @@ theorem eq_mem_of_equalOnList (l : List X) (f g : X → R) (x : X) (mhyp : x ∈
         (if c : f h = g h then (Decidable.isTrue ⟨c, hs⟩)
         else by
           apply Decidable.isFalse
-          intro contra
-          have contra' := contra.left
-          contradiction)
+          simp_all)
     | isFalse hs =>
       apply Decidable.isFalse
-      intro contra
-      have contra' := contra.right
-      contradiction
+      simp_all
 
 
 /-!
@@ -343,8 +323,7 @@ theorem eql_on_support_of_true {l : List X} {f g : X → R} :
     simp only [equalOnList]
     simp only [beqOnSupport, List.all, Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true] at hyp
     simp only [beqOnSupport, List.all_eq_true, decide_eq_true_eq] at step
-    let p₂ := step hyp.right
-    exact And.intro hyp.left p₂
+    simp_all
 
 /-- Boolean equality on support gives equal quotients. -/
 theorem eqlquot_of_beq_support (s₁ s₂ : FormalSum R X)
@@ -591,12 +570,7 @@ theorem add_assoc_aux (s₁ : FormalSum R X) (x₂ x₃ : R[X]) :
   intro x₂ x₃
   apply Quotient.sound
   apply funext
-  intro x₀
-  rw [← append_coords]
-  rw [← append_coords]
-  rw [← append_coords]
-  rw [← append_coords]
-  simp only [add_assoc]
+  simp_all
 
 /-- Associativity of addition. -/
 theorem addn_assoc (x₁ x₂ x₃ : R[X]) : (x₁ + x₂) + x₃ = x₁ + (x₂ + x₃) := by
@@ -613,9 +587,7 @@ theorem addn_zero (x : R[X]) : x + zero = x := by
   intro x
   apply Quotient.sound
   apply funext
-  intro x₀
-  rw [← append_coords]
-  simp only [coords, add_zero]
+  simp_all
 
 /-- adding zero -/
 theorem zero_addn (x : R[X]) : zero + x = x := by
@@ -623,9 +595,7 @@ theorem zero_addn (x : R[X]) : zero + x = x := by
   intro x
   apply Quotient.sound
   apply funext
-  intro x₀
-  rw [← append_coords]
-  simp only [coords, zero_add]
+  simp_all
 
 /-- Distributivity for addition of module elements. -/
 theorem elem_distrib (a : R) (x₁ x₂ : R[X]) :
@@ -896,15 +866,13 @@ theorem equiv_e_of_zero_coeffs (s : FormalSum R X) (hyp : ∀ x : X, s.coords x 
           intro x
           exact
             if c : (x₀ = x) then by
-              rw [← c]
-              assumption
+              simp_all
             else by
               let hx := hyp x
               simp only [coords, monomCoeff] at hx
               have lf : (x₀ == x) = false := decide_eq_false c
               rw [lf] at hx
-              simp only [zero_add] at hx
-              assumption
+              simp_all
         have _ : t.length < (h :: t).length := by
           simp only [List.length_cons, Nat.lt_add_one]
         let step : t ≃ [] := by
@@ -919,9 +887,7 @@ theorem equiv_e_of_zero_coeffs (s : FormalSum R X) (hyp : ∀ x : X, s.coords x 
       else by
         have non_zero : 0 ≠ coords t x₀ := by
           intro contra'
-          let contra := Eq.symm contra'
-          rw [contra, add_zero] at hyp₀
-          contradiction
+          simp_all
         let ⟨ys, eqnStep, lIneqStep⟩ := nonzero_coeff_has_complement x₀ t non_zero
         have tail_coeffs : ∀ x : X, coords ys x = 0 := by
           intro x
@@ -939,8 +905,7 @@ theorem equiv_e_of_zero_coeffs (s : FormalSum R X) (hyp : ∀ x : X, s.coords x 
               simp only [zero_add] at hx
               let ceq := coords_well_defined x _ _ eqnStep
               simp only [coords, monomCoeff, lf, zero_add] at ceq
-              rw [hx] at ceq
-              exact ceq
+              simp_all
         have _ : ys.length < (h :: t).length := by
           simp only [List.length_cons]
           apply Nat.le_trans lIneqStep
@@ -982,8 +947,7 @@ theorem equiv_of_equal_coeffs (s₁ s₂ : FormalSum R X)
         have eq₁ : (a₀, x₀) :: t ≃ t := by
           apply Quot.sound
           apply ElementaryMove.zeroCoeff
-          apply Eq.symm
-          assumption
+          simp_all
         have _ : t.length < ((a₀, x₀) :: t).length := by
           simp only [List.length_cons, Nat.lt_add_one]
         have eq₂ : t ≃ s₂ := by
@@ -1002,8 +966,7 @@ theorem equiv_of_equal_coeffs (s₁ s₂ : FormalSum R X)
             let ⟨ys, eqn, _⟩ :=
               nonzero_coeff_has_complement x₀ s₂
                 (by
-                  rw [cf₂]
-                  assumption)
+                  simp_all)
             let cfs := fun x => coords_well_defined x _ _ eqn
             rw [cf₂] at cfs
             let cfs' := fun (x : X) => Eq.trans (hyp x) (Eq.symm (cfs x))
@@ -1026,8 +989,7 @@ theorem equiv_of_equal_coeffs (s₁ s₂ : FormalSum R X)
               assumption
             have eq₃ : s₃ ≃ s₂ := by
               have _ : ys.length + 1 < t.length + 1 := by
-                apply Nat.succ_lt_succ
-                exact ineqn
+                simp_all
               apply equiv_of_equal_coeffs
               intro x
               rw [← hyp x]
@@ -1057,8 +1019,7 @@ theorem func_eql_of_move_equiv {β : Sort u} (f : FormalSum R X → β) :
   rw [eqlCoords] at ec
   have pullback : sum s₁ = sum s₂ := by
     apply equiv_of_equal_coeffs
-    intro x
-    exact congrFun ec x
+    simp_all
   simp only [fct, pullback]
 
 end FormalSum
@@ -1176,9 +1137,7 @@ theorem max_in_support (norm : X → Nat) (crds : X → R) (s : List X) :
         let sl := eq_fst_or_snd_of_max (norm head + 1) (maxNormSuccOnSupp norm crds tail)
         cases sl
         case inr p =>
-            rw [p]
-            rw [p] at h
-            exact ih h
+            simp_all
         case inl p =>
             rw [p]
             rw [p] at h
@@ -1224,8 +1183,7 @@ theorem normsucc_le (norm : X → Nat) (s₁ s₂ : FormalSum R X) (eql : s₁ �
     s₁.normSucc norm ≤ s₂.normSucc norm :=
       if c : s₁.normSucc norm = 0 then
       by
-        rw [c]
-        apply Nat.zero_le
+        simp_all
       else by
         simp only [normSucc]
         simp only [normSucc] at c

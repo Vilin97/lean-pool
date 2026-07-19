@@ -116,8 +116,7 @@ theorem LinearMap.IsProj.isCompl_range_ker {V R : Type _} [Ring R] [AddCommGroup
     use ⟨x - T x, ?_⟩, ⟨T x, ?_⟩
     · simp only [sub_add_cancel]
     · rw [LinearMap.mem_ker, map_sub, ← Module.End.mul_apply, IsIdempotentElem.eq this, sub_self]
-    · rw [LinearMap.mem_range]
-      simp only [exists_apply_eq_apply]
+    · simp_all
 
 /--
 idempotent $T$ is self-adjoint if and only if $\textnormal{ker}(T)^\bot=\textnormal{range}(T)$ -/
@@ -303,8 +302,7 @@ theorem LinearMap.IsStarNormal.eigenvec_in_eigenspace_iff_eigenvec_in_adjoint_co
   clear h μ T
   intro T h μ v hv
   have t1 : (T - μ • 1) v = 0 := by
-    rw [sub_apply, smul_apply, one_apply, sub_eq_zero]
-    exact mem_eigenspace_iff.mp hv
+    simp_all
   suffices (adjoint T - conj μ • 1) v = 0
     by
     rw [mem_eigenspace_iff, ← sub_eq_zero]
@@ -325,8 +323,7 @@ end IsStarNormal
 lemma ContinuousLinearMap.ker_to_linearMap_ker {W : Type _} [NormedAddCommGroup W]
     [InnerProductSpace 𝕜 W] (T : V →L[𝕜] W) :
     ∀ x, x ∈ LinearMap.ker (T : V →ₗ[𝕜] W) ↔ T x = 0 := by
-  intro x
-  rfl
+  simp_all
 
 /-- $T$ is injective if and only if $T^*$ is surjective. -/
 theorem ContinuousLinearMap.adjoint_injective_iff_surjective {W : Type _} [NormedAddCommGroup W]

@@ -312,8 +312,7 @@ lemma bounds_of_continuousOn_unitCircle_closedUnitDisc {E : Type*} [NormedAddCom
               ⟨_, ball_subset_closedBall (mem_unitDisc_of_scaled_exp_ofReal_mul_I hr t), rfl⟩
           · exact norm_nonneg _
           · apply sSup_nonneg
-            rintro _ ⟨_, ⟨_, hx⟩⟩
-            simp_rw [← hx, abs_nonneg]
+            simp_all
 
 /-- For a sequence `r_n → 1` with `r_n ∈ (0,1)`, the integral of `t ↦ k(e^{it}) • f(r_n*e^{it})`
 on `[0 , 2π]` converges to the integral of `t ↦ k(e^{it}) • f(e^{it})` on `[0 , 2π]`,
@@ -336,8 +335,7 @@ lemma tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc
     apply Continuous.aestronglyMeasurable
     refine Continuous.smul ?_ ?_
     · refine ContinuousOn.comp_continuous (s:= sphere 0 1) hk (by fun_prop) ?_
-      · intro x
-        rw [mem_sphere, dist_zero_right, norm_exp_ofReal_mul_I]
+      · simp_all
     · exact ContinuousOn.comp_continuous (s:= closedBall 0 1) hf (by fun_prop) (hrn n)
   · exact Eventually.of_forall fun n => Eventually.of_forall fun t ht =>
              bounds_of_continuousOn_unitCircle_closedUnitDisc (hr n) hf hk
@@ -359,9 +357,7 @@ theorem poisson_kernel_continousOn_circle {z : ℂ} (hz : z ∈ ball 0 1) :
   refine ContinuousAt.div (continuousAt_const) (by fun_prop) ?_
   intro h
   rw [sq_eq_zero_iff, norm_eq_zero, sub_eq_zero] at h
-  rw [h, mem_sphere, dist_zero_right] at hζ
-  rw [mem_ball, dist_zero_right, hζ] at hz
-  exact (lt_self_iff_false 1).mp hz
+  simp_all
 
 /-- The sequence `r_n = 1 - 1 / (n + 2)` is in (0,1) and tends to `1` as `n → ∞`. -/
 lemma seq_tendsto_to_oneIn_unit_interval_aux :

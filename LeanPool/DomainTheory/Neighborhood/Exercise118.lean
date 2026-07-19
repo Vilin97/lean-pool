@@ -94,8 +94,7 @@ theorem interUpTo_appendSeq (X1 : ℕ → Set α) (n1 : ℕ) (X2 : ℕ → Set �
     rw [Nat.add_succ, interUpTo_succ, ih]
     have happ : appendSeq X1 n1 X2 (n1 + j) = X2 j := by
       simp only [appendSeq, if_neg (by omega : ¬ n1 + j < n1)]
-      congr 1
-      omega
+      simp_all
     rw [happ, interUpTo_succ, Set.inter_assoc]
 
 /-! ### Finite consistency. -/
@@ -162,8 +161,7 @@ theorem subset_leastFilter (C : Set (Set α)) (hCsub : ∀ X ∈ C, V.mem X)
     (hC : V.FinitelyConsistent C) {W : Set α} (hW : W ∈ C) :
     (V.leastFilter C hCsub hC).mem W := by
   refine ⟨hCsub W hW, 1, (fun _ => W), (fun _ _ => hW), ?_⟩
-  rw [interUpTo_succ, interUpTo_zero]
-  exact Set.inter_subset_right
+  simp_all
 
 /-- **Exercise 1.18 — `leastFilter` is least.** Any filter `z` with `C ⊆ z`
 contains
@@ -239,8 +237,7 @@ theorem not_finitelyConsistent : ¬ triSys.FinitelyConsistent family := by
   obtain ⟨Z, hZmem, hZsub⟩ := h 3 triple triple_mem
   have hZne : Z.Nonempty := hZmem
   rw [triple_interUpTo_empty, Set.subset_empty_iff] at hZsub
-  rw [hZsub] at hZne
-  exact Set.not_nonempty_empty hZne
+  simp_all
 
 end triSys
 

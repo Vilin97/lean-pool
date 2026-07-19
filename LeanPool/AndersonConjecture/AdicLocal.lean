@@ -52,8 +52,7 @@ lemma evalₐ_isUnit_of_evalOneₐ_isUnit (x : AdicCompletion I R)
   induction n with
   | zero =>
     have : Subsingleton (R ⧸ I ^ 0) := by
-      rw [pow_zero, Ideal.one_eq_top]
-      infer_instance
+      simp_all
     exact isUnit_of_subsingleton _
   | succ n ih =>
     by_cases hn : n = 0
@@ -72,8 +71,7 @@ lemma evalₐ_isUnit_of_evalOneₐ_isUnit (x : AdicCompletion I R)
 as an element of `AdicCompletion`. -/
 noncomputable def mkInverse (x : AdicCompletion I R)
     (hu : ∀ n, IsUnit (evalₐ I n x)) : AdicCompletion I R := by
-  have h_smul_eq : ∀ n, (I ^ n • ⊤ : Ideal R) = I ^ n := fun n => by ext
-                                                                     simp
+  have h_smul_eq : ∀ n, (I ^ n • ⊤ : Ideal R) = I ^ n := fun n => by simp_all
   refine ⟨fun n => (Ideal.quotientEquivAlgOfEq R (h_smul_eq n)).symm
     (↑(hu n).unit⁻¹ : R ⧸ I ^ n), ?_⟩
   intro m n hmn
@@ -96,8 +94,7 @@ noncomputable def mkInverse (x : AdicCompletion I R)
 omit [I.IsMaximal] in
 lemma evalₐ_mkInverse (x : AdicCompletion I R) (hu : ∀ n, IsUnit (evalₐ I n x)) (n : ℕ) :
     evalₐ I n (mkInverse I x hu) = ↑(hu n).unit⁻¹ := by
-  have h_eq : (I ^ n • ⊤ : Ideal R) = I ^ n := by ext
-                                                  simp
+  have h_eq : (I ^ n • ⊤ : Ideal R) = I ^ n := by simp_all
   have : (mkInverse I x hu).val n =
       (Ideal.quotientEquivAlgOfEq R h_eq).symm (↑(hu n).unit⁻¹) := rfl
   change (Ideal.quotientEquivAlgOfEq R h_eq) ((mkInverse I x hu).val n) = ↑(hu n).unit⁻¹
@@ -151,10 +148,7 @@ omit [IsLocalRing R] in
 lemma field_isUnit_or_isUnit {K : Type*} [Field K] {a b : K} (hab : a + b = 1) :
     IsUnit a ∨ IsUnit b := by
   by_cases ha : a = 0
-  · right
-    rw [ha, zero_add] at hab
-    rw [hab]
-    exact isUnit_one
+  · simp_all
   · exact Or.inl (IsUnit.mk0 a ha)
 
 theorem adicCompletion_isLocalRing :

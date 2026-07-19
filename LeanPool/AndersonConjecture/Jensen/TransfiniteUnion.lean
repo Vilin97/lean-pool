@@ -81,9 +81,7 @@ theorem transfinite_union_primes_preserved
     Prime (⟨(p : T), hS α p.2⟩ : S) := by
   refine ⟨?_, ?_, ?_⟩
   · intro h
-    apply hp.ne_zero
-    ext
-    exact congrArg (fun (x : ↥S) => (x : T)) h
+    simp_all
   · intro hu
     set q : ↥S := ↑(hu.unit⁻¹)
     obtain ⟨β, hβ⟩ := hS_union q
@@ -247,11 +245,9 @@ theorem transfinite_union_isNSubring
             (IsLocalRing.maximalIdeal T).comap (chain.ring α).carrier.subtype := by
           rw [← (chain.ring α).maximal_ideal_eq]
           exact hmem
-        simp only [Ideal.mem_comap, Subring.coe_subtype] at this
-        exact (IsLocalRing.mem_maximalIdeal _).mp this hu_T
+        simp_all
       have hu_Rα : IsUnit (⟨a, hα⟩ : (chain.ring α).carrier) := by
-        by_contra h
-        exact hmem_Rα ((IsLocalRing.mem_maximalIdeal _).mpr h)
+        simp_all
       exact (IsLocalRing.mem_maximalIdeal _).mp hx
         (hu_Rα.map (Subring.inclusion (hS_le α)))
     · intro hx
@@ -269,8 +265,7 @@ theorem transfinite_union_isNSubring
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
     suffices hq_bot : q = ⊥ by
-      rw [hq_bot, Ideal.height_bot]
-      norm_cast
+      simp_all
     by_contra hq_ne
     have ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     have ⟨x, hx_PS, hx_nq⟩ := Set.exists_of_ssubset hq_lt
@@ -285,8 +280,7 @@ theorem transfinite_union_isNSubring
     have hs'_q : s' ∈ Ideal.comap inclγ q := by
       change inclγ s' ∈ q
       have : inclγ s' = s := Subtype.ext rfl
-      rw [this]
-      exact hs_q
+      simp_all
     have hs'_ne : s' ≠ 0 := by
       intro h
       apply hs_ne
@@ -294,8 +288,7 @@ theorem transfinite_union_isNSubring
         (fun (x : (chain.ring γ).carrier) => (x : T)) h)
     have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := by
       intro h
-      rw [h] at hs'_q
-      exact hs'_ne (by simpa using hs'_q)
+      simp_all
     -- x ∈ P ∩ Rγ but x ∉ q ∩ Rγ → strict containment
     set x' : (chain.ring γ).carrier :=
       ⟨(x : T), chain.mono (le_max_right ..) hαx⟩
@@ -306,8 +299,7 @@ theorem transfinite_union_isNSubring
       intro h
       have h' : inclγ x' ∈ q := h
       have : inclγ x' = x := Subtype.ext rfl
-      rw [this] at h'
-      exact hx_nq h'
+      simp_all
     have hq'_lt :
         Ideal.comap inclγ q <
           Ideal.comap (chain.ring γ).carrier.subtype P := by
@@ -328,12 +320,7 @@ theorem transfinite_union_isNSubring
     -- height < 1 for nonzero prime in domain → contradiction
     haveI : IsDomain (chain.ring γ).carrier := inferInstance
     have h0 : (Ideal.comap inclγ q).height ≤ ↑(0 : ℕ) := by
-      have hne_top := ne_top_of_lt hq'_ht
-      lift (Ideal.comap inclγ q).height to ℕ
-        using hne_top with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
+      simp_all
     exact absurd
       ((Ideal.height_le_iff (n := 0)).mp h0 ⊥
         Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne))

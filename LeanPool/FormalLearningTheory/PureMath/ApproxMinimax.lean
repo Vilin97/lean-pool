@@ -81,8 +81,7 @@ def empiricalPMF {α : Type*} [Fintype α] [DecidableEq α]
     have hfib := Finset.card_eq_sum_card_fiberwise
       (f := rs) (s := univ) (t := univ)
       (fun t _ => mem_univ (rs t))
-    simp only [card_univ, Fintype.card_fin] at hfib
-    exact_mod_cast hfib.symm
+    simp_all
 
 /-! ## Boolean Game Payoff -/
 
@@ -464,8 +463,7 @@ private lemma boolGamePayoff_empirical_eq_avg
       · congr 1; ext t; simp
       · intro r₁ _ r₂ _ hne
         simp only [Function.onFun, Finset.disjoint_filter]
-        intro t _ ht1 ht2
-        exact hne (ht1.symm.trans ht2)]
+        simp_all]
   congr 1
   ext r
   rw [Finset.sum_congr rfl (fun t ht => by

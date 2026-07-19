@@ -61,17 +61,12 @@ lemma hasEigenvector_of_hasEigenvector_compress_of_invariant
     Module.End.HasEigenvector (T : E →ₗ[𝕜] E) μ (v : E) := by
   rcases (Module.End.hasEigenvector_iff.mp hv) with ⟨hv_mem, hv_ne0⟩
   have hv_ne0' : (v : E) ≠ 0 := by
-    intro h
-    apply hv_ne0
-    ext
-    simpa using h
+    simp_all
   refine Module.End.hasEigenvector_iff.mpr ?_
   refine ⟨?_, hv_ne0'⟩
   rw [Module.End.mem_eigenspace_iff]
   have hv_eq : (compress (T := T) (V := V) v : E) = μ • (v : E) := by
-    have : ((compress (T := T) (V := V)) : V →ₗ[𝕜] V) v = μ • v :=
-      (Module.End.mem_eigenspace_iff.mp hv_mem)
-    exact congrArg (fun w : V => (w : E)) this
+    simp_all
   have hproj : (compress (T := T) (V := V) v : E) = T v :=
     coe_compress_apply_of_invariant (T := T) (V := V) hV v
   simpa [hproj] using hv_eq

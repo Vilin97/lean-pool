@@ -375,9 +375,7 @@ def deduct [DecidableEq F] {φ ψ : F} {Γ : Set F} : (insert φ Γ) *⊢[𝓢] 
 /-- Imported declaration from the Incompleteness formalization. -/
 def deductInv {φ ψ : F} {Γ : Set F} : Γ *⊢[𝓢] φ ==> ψ → (insert φ Γ) *⊢[𝓢] ψ
   | ⟨Δ, h, b⟩ => ⟨φ :: Δ, by
-      simp only [List.mem_cons, mem_coe_iff, Set.mem_insert_iff, forall_eq_or_imp, true_or,
-        true_and]
-      intro χ hr; exact Or.inr (h χ hr), FiniteContext.deductInv b⟩
+      simp_all, FiniteContext.deductInv b⟩
 
 instance deduction [DecidableEq F] : Deduction (Context F 𝓢) where
   ofInsert := deduct

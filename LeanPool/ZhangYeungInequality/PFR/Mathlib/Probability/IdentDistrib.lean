@@ -270,8 +270,7 @@ lemma identDistrib_comp_fst {X : Ω
   aemeasurable_snd := hX.aemeasurable
   map_eq := by
     rw [← Measure.map_map hX measurable_fst, Measure.map_fst_prod]
-    congr
-    simp
+    simp_all
 
 /-- A random variable is identically distributed to its lift to a product space
 (in the second factor). -/
@@ -283,8 +282,7 @@ lemma identDistrib_comp_snd {X : Ω
   aemeasurable_snd := hX.aemeasurable
   map_eq := by
     rw [← Measure.map_map hX measurable_snd, Measure.map_snd_prod]
-    congr
-    simp
+    simp_all
 
 /-- For `X, Y` random variables, one can find independent copies `X', Y'` of `X, Y`. -/
 lemma independent_copies {X : Ω → α} {Y : Ω' → β} (hX : Measurable X) (hY : Measurable Y)

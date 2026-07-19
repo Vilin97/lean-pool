@@ -113,13 +113,8 @@ theorem dist_eq_zero_iff {n : ℕ} {x y : HypercubeVertex n} :
     have hempty :
         (Finset.univ.filter fun i : Fin n => x i ≠ y i) = ∅ := by
       exact Finset.card_eq_zero.mp hdist
-    have hi : i ∈ (Finset.univ.filter fun i : Fin n => x i ≠ y i) := by
-      simp [hne]
-    rw [hempty] at hi
-    simp at hi
-  · intro h
-    subst y
-    exact dist_self x
+    simp_all
+  · simp_all
 
 theorem dist_comm {n : ℕ} (x y : HypercubeVertex n) : dist x y = dist y x := by
   simp [dist, ne_comm]
@@ -135,12 +130,8 @@ theorem dist_triangle {n : ℕ} (x y z : HypercubeVertex n) :
   rw [Finset.mem_filter] at hi
   rw [Finset.mem_union, Finset.mem_filter, Finset.mem_filter]
   by_cases hxy : x i = y i
-  · right
-    refine ⟨Finset.mem_univ i, ?_⟩
-    intro hyz
-    exact hi.2 (hxy.trans hyz)
-  · left
-    exact ⟨Finset.mem_univ i, hxy⟩
+  · simp_all
+  · simp_all
 
 /-- The `n`-dimensional hypercube graph. -/
 def graph (n : ℕ) : Graph (HypercubeVertex n) where
@@ -150,8 +141,7 @@ def graph (n : ℕ) : Graph (HypercubeVertex n) where
     rw [dist_comm x y] at h
     exact h
   loopless := by
-    intro x h
-    simp at h
+    simp_all
 
 /-- Adjacent hypercube vertices have distances to any third vertex that differ
 by at most one in this direction. -/

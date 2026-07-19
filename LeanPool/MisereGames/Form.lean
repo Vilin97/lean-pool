@@ -267,8 +267,7 @@ theorem IsEnd.add_iff {g h : G} {p : Player} :
     IsEnd p (g + h) ↔ (IsEnd p g ∧ IsEnd p h) := by
   constructor <;> intro h1
   · unfold IsEnd at *
-    simp only [moves_add, Set.union_empty_iff, Set.image_eq_empty] at h1
-    exact h1
+    simp_all
   · unfold IsEnd at h1
     simp only [IsEnd, moves_add, Set.union_empty_iff, Set.image_eq_empty]
     exact h1
@@ -286,8 +285,7 @@ theorem mem_moves_ne_zero {g gl : G} {p : Player} (h1 : gl ∈ moves p g) : g �
 
 theorem not_isEnd_ne_zero {g : G} {p : Player} (h1 : ¬(IsEnd p g)) : g ≠ 0 := by
   intro h2
-  rw [h2] at h1
-  exact h1 isEnd_zero
+  simp_all
 
 theorem not_isEnd_exists_move {g : G} {p : Player}
     (h1 : ¬IsEnd p g) :
@@ -389,11 +387,8 @@ theorem isOption_not_mem {p : Player} {g g' : G}
   simp only [isOption_iff_mem_moves] at h_isOption
   obtain ⟨q, h_q⟩ := h_isOption
   by_cases h_pq : p = q
-  · subst h_pq
-    exact absurd h_q h_mem
-  · simp only [Player.ne_iff_eq_neg] at h_pq
-    subst h_pq
-    rwa [neg_neg]
+  · simp_all
+  · simp_all
 
 theorem isOption_not_mem_neg {p : Player} {g g' : G}
     (h_isOption : IsOption g' g) (h_mem : g' ∉ moves (-p) g) :
@@ -504,14 +499,12 @@ theorem leftMoves_intCast_zero_lt {a : ℤ} (h1 : 0 < a)
 theorem leftMoves_intCast_zero_le_succ {a : ℤ} (h1 : 0 ≤ a)
     : ((a : ℤ) : G) ∈ moves .left (((a + 1) : ℤ) : G) := by
   have := leftMoves_intCast_zero_lt (G := G) (Int.le_iff_lt_add_one.mp h1)
-  simp only [Int.add_sub_cancel] at this
-  exact this
+  simp_all
 
 theorem leftMoves_intCast_le_zero_of_empty {k : ℤ} (h1 : 0 ≤ k) (h2 : moves .left (k : G) = ∅)
     : k = 0 := by
   obtain h_lt | h_eq := lt_or_eq_of_le h1
-  · have h3 := leftMoves_intCast_zero_lt (G := G) h_lt
-    simp [h2] at h3
+  · simp_all
   · exact h_eq.symm
 
 theorem leftMoves_intCast_le_one_eq {a : ℤ} (h1 : 1 ≤ a)
@@ -541,8 +534,7 @@ private protected theorem natCast_eq_zero_iff {n : ℕ} : (n : G) = 0 ↔ n = 0 
       exfalso
       have := moves_zero (G := G) .left
       simp [<-h] at this
-  · intro h1
-    simp only [h1, Nat.cast_zero]
+  · simp_all
 
 theorem mem_moves_add_one_iff_mem_moves {g : G} {p : Player} {n : ℕ}
     : (g + 1 ∈ moves p (n + 1 : G)) ↔ (g ∈ moves p (n : G)) := by
@@ -564,8 +556,7 @@ theorem not_isEnd_left_one : ¬IsEnd Player.left (1 : G) := by
 theorem natCast_isEnd_right (n : ℕ) : IsEnd .right (n : G) := by
   induction n with
   | zero => simp only [Nat.cast_zero, isEnd_zero]
-  | succ k ih => simp only [isEnd_def, Nat.cast_add, Nat.cast_one, moves_add, rightMoves_natCast,
-                            Set.image_empty, rightMoves_one, Set.union_self]
+  | succ k ih => simp_all
 
 @[simp]
 theorem ofSets_isEndLike_iff {p : Player} {s t : Set G} [Small s] [Small t]
@@ -639,12 +630,7 @@ theorem isEnd_left_natCast_iff {n : ℕ} : IsEnd .left (n : G) ↔ n = 0 := by
   apply Iff.intro <;> intro h1
   · rw [<-Form.natCast_eq_zero_iff (G := G), <-Nat.cast_zero]
     apply natCast_ext
-    intro p gp
-    apply Iff.intro <;> intro h2
-    · cases p
-      · simp [h1] at h2
-      · simp at h2
-    · simp at h2
+    simp_all
   · simp [h1, isEnd_def]
 
 @[simp]
@@ -700,10 +686,8 @@ theorem eq_sub_one_of_mem_leftMoves_intCast {n : ℤ} {x : G} (hx : x ∈ moves 
   obtain ⟨n, rfl | rfl⟩ := n.eq_nat_or_neg
   · cases n
     · simp [moves_zero] at hx
-    · rw [Form.intCast_nat] at hx
-      simp_all
-  · simp only [Form.intCast_neg, Form.intCast_nat, moves_neg, Player.neg_left,
-               rightMoves_natCast, Set.neg_empty, Set.mem_empty_iff_false] at hx
+    · simp_all
+  · simp_all
 
 theorem eq_add_one_of_mem_rightMoves_intCast {n : ℤ} {x : G} (hx : x ∈ moves .right (n : G)) :
     x = (n + 1 : ℤ) := by
@@ -741,13 +725,8 @@ only such option).
 theorem nat_forall_moves {n : ℕ} {P : G → Prop} (h1 : P n)
     : ∀ (p : Player), ∀ gp ∈ moves p (n.succ : G), P gp := by
   intro p; cases p
-  · intro gl h_mem
-    rw [<-Form.intCast_nat] at h_mem
-    rw [eq_sub_one_of_mem_leftMoves_intCast h_mem, Nat.succ_eq_add_one]
-    simpa
-  · intro gr h_mem
-    rw [Form.rightMoves_natCast] at h_mem
-    exact False.elim h_mem
+  · simp_all
+  · simp_all
 
 @[simp]
 theorem add_eq_zero_iff {x y : G} : x + y = 0 ↔ x = 0 ∧ y = 0 := by

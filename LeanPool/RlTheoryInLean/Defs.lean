@@ -19,8 +19,7 @@ open MeasureTheory ProbabilityTheory Filter
 lemma Tendsto.filter_congr
   {α β : Type*} {f : α → β} {a : Filter α} {b b' : Filter β}
   (hb : b = b') (hf : Tendsto f a b) : Tendsto f a b' := by
-  rw [←hb]
-  exact hf
+  simp_all
 
 
 lemma Kernel.congrFun_apply
@@ -28,15 +27,12 @@ lemma Kernel.congrFun_apply
   {κ₁ κ₂ : Kernel α β}
   (h : κ₁ = κ₂) :
   ∀ a, κ₁ a = κ₂ a := by
-  intro a
-  rw [h]
+  simp_all
 
 lemma Measurable.congr
   {α β : Type*} {ma : MeasurableSpace α} {mb : MeasurableSpace β} {f g : α → β}
   (hfg : f = g) : Measurable f → Measurable g := by
-  intro hf
-  rw [←hfg]
-  exact hf
+  simp_all
 
 lemma Integrable.measure_congr
   {α : Type*} {mα : MeasurableSpace α} {μ ν : Measure α}
@@ -44,8 +40,7 @@ lemma Integrable.measure_congr
   [NormedAddCommGroup β] [NormedSpace ℝ β]
   {hμν : μ = ν}
   (hf : Integrable f μ) : Integrable f ν := by
-  rw [←hμν]
-  exact hf
+  simp_all
 
 lemma Integral.measure_congr
   {α : Type*} {mα : MeasurableSpace α} {μ ν : Measure α}
@@ -57,15 +52,13 @@ lemma Integral.measure_congr
 lemma HasDerivAt.congr
   {f g : ℝ → ℝ} {f' : ℝ} {x : ℝ} (hfg : f = g)
   (h : HasDerivAt f f' x) : HasDerivAt g f' x := by
-  rw [←hfg]
-  exact h
+  simp_all
 
 lemma HasDerivAt.congr_congr
   {f g : ℝ → ℝ} {f' g' : ℝ} {x : ℝ}
   (h : HasDerivAt f f' x)
   (hfg : f = g) (hfg' : f' = g') : HasDerivAt g g' x := by
-  rw [←hfg, ←hfg']
-  exact h
+  simp_all
 
 namespace RLTheory
 

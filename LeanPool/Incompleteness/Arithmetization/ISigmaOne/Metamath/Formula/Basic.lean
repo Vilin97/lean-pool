@@ -1540,20 +1540,14 @@ lemma _root_.LO.Arith.Language.IsSemiformula.case_iff {n p : V} :
     rcases h.isUFormula.case with
       (⟨k, r, v, _, _, rfl⟩ | ⟨k, r, v, _, _, rfl⟩ | rfl | rfl | ⟨p₁, p₂, _, _, rfl⟩ | ⟨p₁, p₂,
         _, _, rfl⟩ | ⟨p₁, _, rfl⟩ | ⟨p₁, _, rfl⟩)
-    · have : L.Rel k r ∧ L.IsSemitermVec k n v := by simpa using h
-      exact Or.inl ⟨k, r, v, by simp [this]⟩
-    · have : L.Rel k r ∧ L.IsSemitermVec k n v := by simpa using h
-      exact Or.inr <| Or.inl ⟨k, r, v, by simp [this]⟩
+    · simp_all
+    · simp_all
     · exact Or.inr <| Or.inr <| Or.inl rfl
     · exact Or.inr <| Or.inr <| Or.inr <| Or.inl rfl
-    · have : L.IsSemiformula n p₁ ∧ L.IsSemiformula n p₂ := by simpa using h
-      exact Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inl ⟨p₁, p₂, by simp [this]⟩
-    · have : L.IsSemiformula n p₁ ∧ L.IsSemiformula n p₂ := by simpa using h
-      exact Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inl ⟨p₁, p₂, by simp [this]⟩
-    · have : L.IsSemiformula (n + 1) p₁ := by simpa using h
-      exact Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inl ⟨p₁, by simp [this]⟩
-    · have : L.IsSemiformula (n + 1) p₁ := by simpa using h
-      exact Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr <| Or.inr ⟨p₁, by simp [this]⟩
+    · simp_all
+    · simp_all
+    · simp_all
+    · simp_all
   · rintro (⟨k, R, v, hR, hv, rfl⟩ | ⟨k, R, v, hR, hv, rfl⟩ | rfl | rfl | ⟨p₁, p₂, h₁, h₂,
     rfl⟩ | ⟨p₁, p₂, h₁, h₂, rfl⟩ | ⟨p₁, h₁, rfl⟩ | ⟨p₁, h₁, rfl⟩) <;> simp [*]
 
@@ -1625,26 +1619,14 @@ lemma _root_.LO.Arith.Language.IsSemiformula.induction_pi1 {P : V → V → Prop
   suffices L.IsUFormula p → ∀ n, L.IsSemiformula n p → P n p by intro h; exact this h.isUFormula n h
   apply Language.IsUFormula.induction_pi1 (P := fun p ↦ ∀ n, L.IsSemiformula n p → P n p)
   · definability
-  · intro k R v hR _ n h
-    have : L.Rel k R ∧ L.IsSemitermVec k n v := by simpa using h
-    exact hrel _ _ _ _ hR this.2
-  · intro k R v hR _ n h
-    have : L.Rel k R ∧ L.IsSemitermVec k n v := by simpa using h
-    exact hnrel _ _ _ _ hR this.2
+  · simp_all
+  · simp_all
   · intro n _; apply hverum
   · intro n _; apply hfalsum
-  · intro p q _ _ ihp ihq n h
-    have : L.IsSemiformula n p ∧ L.IsSemiformula n q := by simpa using h
-    apply hand _ _ _ this.1 this.2 (ihp n this.1) (ihq n this.2)
-  · intro p q _ _ ihp ihq n h
-    have : L.IsSemiformula n p ∧ L.IsSemiformula n q := by simpa using h
-    apply hor _ _ _ this.1 this.2 (ihp n this.1) (ihq n this.2)
-  · intro p _ ihp n h
-    have : L.IsSemiformula (n + 1) p := by simpa using h
-    apply hall _ _ this (ihp _ this)
-  · intro p _ ihp n h
-    have : L.IsSemiformula (n + 1) p := by simpa using h
-    apply hex _ _ this (ihp _ this)
+  · simp_all
+  · simp_all
+  · simp_all
+  · simp_all
 
 lemma _root_.LO.Arith.Language.IsSemiformula.induction1 (Γ) {P : V → V → Prop} (hP :
     Γ-[1]-Relation P)

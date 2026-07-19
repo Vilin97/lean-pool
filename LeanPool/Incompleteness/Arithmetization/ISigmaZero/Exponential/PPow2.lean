@@ -93,8 +93,7 @@ lemma of_sqrt (hm : SPPow2 m) {i : V} (pi : Pow2 i) (him : i ≤ m) (hsqi : (√
 
 @[simp] lemma two : SPPow2 (2 : V) :=
   ⟨by simp[LenBit.one], by simp, by
-    intro i hi pi
-    rcases le_two_iff_eq_zero_or_one_or_two.mp hi with (rfl | rfl | rfl) <;> simp⟩
+    simp_all⟩
 
 @[simp] lemma not_zero : ¬SPPow2 (0 : V) := by rintro ⟨_, h, _⟩; simp at h
 

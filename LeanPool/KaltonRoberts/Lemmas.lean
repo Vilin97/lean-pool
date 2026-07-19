@@ -72,8 +72,7 @@ theorem finite_boolean_algebra_bound_of_powerset
   · constructor
     · dsimp [μ]
       have : e.symm (⊥ : α) = (⊥ : Finset Atom) := by
-        apply e.injective
-        simp [e, finiteBoolOrderIso]
+        simp_all
       simp [this, additiveFunction]
     · intro A B hAB
       dsimp [μ]

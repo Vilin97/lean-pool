@@ -133,11 +133,7 @@ lemma LenHom.bodyPre_map_restrict (f : S ⟶ T) (a : body S.2) n :
     have htake : body.take (n + 1) (bodyPre.map f x) = f (body.take (n + 1) x) := by
       apply tree_ext
       exact LenHom.bodyPre_map_restrict f x (n + 1)
-    have htree : g (f (body.take (n + 1) x)) = g (body.take (n + 1) (bodyPre.map f x)) :=
-      (congrArg (fun y ↦ g y) htake).symm
-    simp [CategoryTheory.comp_apply]
-    have hval := congrArg Subtype.val htree
-    simp [hval]
+    simp_all
 instance bodySpace : TopologicalSpace (Tree.bodyFunctor.obj S) :=
   inferInstanceAs (TopologicalSpace (body S.2))
 lemma bodyMap_spec' (f : S ⟶ T) (a : body S.2)

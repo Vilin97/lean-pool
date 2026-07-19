@@ -250,14 +250,7 @@ theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunct
            ∫ k : SpaceTime, Complex.exp (-Complex.I * ⟪k, timeReflection x - y⟫_ℝ) *
                             Complex.exp (-(s : ℂ) * ‖k‖^2)) := by
     apply MeasureTheory.setIntegral_congr_ae measurableSet_Ioi
-    filter_upwards with s hs
-    congr 1
-    apply integral_congr_ae
-    filter_upwards with x
-    apply integral_congr_ae
-    filter_upwards with y
-    congr 1
-    exact h_hk s (Set.mem_Ioi.mp hs) (timeReflection x - y)
+    simp_all
   -- Step 3: Apply k_integral_after_k0_eval to evaluate the k-integral
   -- For each (s, x, y), this replaces the k-integral with:
   -- √(π/s) exp(-z₀²/(4s)) × ∫_{k_sp} exp(-I k_sp·z_sp) exp(-s‖k_sp‖²)
@@ -518,10 +511,7 @@ lemma s_integral_eval_complex (t : ℝ) (ω : ℝ) (hω : 0 < ω) :
       (Real.sqrt (π / s) : ℂ) * Complex.exp (-(t^2 / (4 * s) : ℝ)) *
         Complex.exp (-(s * ω^2 : ℝ)) =
       (((Real.sqrt (π / s) * Real.exp (-(t^2 / (4 * s))) * Real.exp (-(s * ω^2))) : ℝ) : ℂ) := by
-    intro s _
-    -- cexp(-↑r) = ↑(Real.exp(-r)); combine with ofReal_mul: ↑a * ↑b = ↑(a*b)
-    push_cast [Complex.ofReal_exp]
-    norm_cast
+    simp_all
   rw [setIntegral_congr_fun measurableSet_Ioi h_integrand]
   -- Step 2: Normalize -(x * ω²) to -x * ω² to match s_integral_eval
   have h_form : ∀ x : ℝ, -(x * ω^2) = -x * ω^2 := by intro x; ring
@@ -586,11 +576,7 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
   have h_exp_conv : ∀ a ∈ Set.Ioi (0:ℝ),
       Complex.exp (-(a : ℂ) * ((‖k_sp‖^2 : ℂ) + (m^2 : ℂ))) =
       Complex.exp (-(a * ω^2 : ℝ)) := by
-    intro a _
-    congr 1
-    rw [h_omega_sq]
-    push_cast
-    ring
+    simp_all
   have h_integrand_conv : ∀ a ∈ Set.Ioi (0:ℝ),
       (Real.sqrt (π / a) : ℂ) * Complex.exp (-((-(x 0) - y 0)^2 / (4 * a) : ℝ)) *
         Complex.exp (-(a : ℂ) * ((‖k_sp‖^2 : ℂ) + (m^2 : ℂ))) =
@@ -1036,10 +1022,7 @@ lemma freeCovariance_eq_schwingerRep (m : ℝ) (hm : 0 < m) (x y : SpaceTime)
   -- Goal: ↑(∫ t in Ioi 0, f t) = ∫ s in Ioi 0, ↑(f s)
   -- Use integral_complex_ofReal (reversed)
   rw [← integral_complex_ofReal]
-  congr 1
-  ext s
-  push_cast
-  ring
+  simp_all
 
 /-- **Bessel bilinear form equals the Schwinger heat kernel form.**
 
@@ -1306,9 +1289,7 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
   -- h_key says: (1/ω) exp(-|t|ω) = (1/π) ∫_{k₀} exp(-ik₀t)/(k₀²+ω²)
   -- First, convert the RHS to use t instead of the explicit expression
   have ht_eq : (-↑(x.ofLp 0) - ↑(y.ofLp 0) : ℂ) = (t : ℂ) := by
-    simp only [ht_def]
-    push_cast
-    ring
+    simp_all
   -- Rewrite the RHS to use t
   conv_rhs => rw [ht_eq]
   -- Substitute RHS using h_integral_factor

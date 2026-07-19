@@ -59,8 +59,7 @@ theorem boundedSqrt_le_rsqrt (y : ℚ) (n : ℕ) (b : ℕ) (hb : 0 < b) :
       rw [← Int.cast_natCast, Int.toNat_of_nonneg h₄.le]
     rw [Int.sqrt.eq_1]
     have hle := @Real.nat_sqrt_le_real_sqrt (y.num * b ^ n).toNat
-    rw [hcast] at hle
-    exact_mod_cast hle
+    simp_all
   · simp only [Nat.cast_mul, Nat.cast_pow, Nat.cast_nonneg, Real.sqrt_mul, Real.sqrt_pos,
       Nat.cast_pos, ← Nat.ne_zero_iff_zero_lt, ne_eq, Rat.den_ne_zero, not_false_eq_true,
       mul_pos_iff_of_pos_left]
@@ -104,8 +103,7 @@ theorem rsqrt_le_boundedSqrt (y : ℚ) (n : ℕ) (b : ℕ) (hb : 0 < b) :
       rw [← Int.cast_natCast, Int.toNat_of_nonneg h₄.le]
     rw [Int.sqrt.eq_1]
     have hle := @Real.real_sqrt_le_nat_sqrt_succ (y.num * b ^ n).toNat
-    rw [hcast] at hle
-    exact_mod_cast hle
+    simp_all
   · simp [← Nat.ne_zero_iff_zero_lt, Nat.sqrt_eq_zero, hb.ne']
   · exact Real.nat_sqrt_le_real_sqrt
 
