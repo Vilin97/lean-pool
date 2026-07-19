@@ -1,0 +1,787 @@
+"""Render the proof-profile PR comment and step summary from measurement logs.
+
+Fetched from origin/main and executed by .github/workflows/proof-profile.yml.
+Inputs are environment variables (BASE_SHA, HEAD_SHA, ADDED_FILES,
+MODIFIED_FILES, COMPARE, COMPARE_NOTE, GITHUB_* run metadata) plus the
+proof-profile*.log files in the working directory; outputs are
+proof-profile.md (the PR comment, bounded to GitHub's size cap) and the
+GitHub step summary (the full render).
+"""
+
+import os
+import re
+import subprocess
+from pathlib import Path
+
+log_path = Path("proof-profile.log")
+heartbeat_log_path = Path("proof-profile-heartbeats.log")
+base_heartbeat_log_path = Path("proof-profile-base-heartbeats.log")
+build_log_path = Path("proof-profile-build.log")
+rendered_path = Path("proof-profile.md")
+summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
+run_url = (
+    f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
+    f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
+)
+
+# Lean's `cumulative profiling times:` block is one indented
+# `<phase name> <number><unit>` per line, where the unit is `ms`
+# or `s`. The phase name can contain
+# spaces, parens, and hyphens (`compilation (IR)`,
+# `let-to-have transformation`, ...). Lean only emits a phase if
+# it accumulated nonzero time, so the set of phases differs per
+# file and per run; the renderer captures every phase rather than
+# cherry-picking known names.
+metric_re = re.compile(
+    r"^[ \t]+(.+?)\s+([0-9]+(?:\.[0-9]+)?)\s*(ms|s)\s*$"
+)
+built_re = re.compile(
+    r"Built\s+(?P<module>\S+)\s+"
+    r"\((?P<value>[0-9]+(?:\.[0-9]+)?)(?P<unit>ms|s)\)"
+)
+time_re = re.compile(r"^(real|user|sys)\s+([0-9]+(?:\.[0-9]+)?)$")
+heartbeat_re = re.compile(
+    r"(?:'[^']+'\s+)?[Uu]sed\s+"
+    r"(?:approximately\s+)?(?P<heartbeats>[0-9]+)\s+heartbeats"
+)
+
+
+def format_ms(ms: float) -> str:
+    """Format milliseconds with the equivalent seconds."""
+
+    return f"{ms:.1f} ms (= {ms / 1000:.2f} s)"
+
+
+def format_seconds(seconds: float | None) -> str:
+    """Format an optional wall-clock seconds value."""
+
+    if seconds is None:
+        return "—"
+    return f"{seconds:.2f}"
+
+
+def format_heartbeats(heartbeats: float) -> str:
+    """Format heartbeats in maxHeartbeats units."""
+
+    return f"{heartbeats:,.0f}"
+
+
+def format_int(value: int) -> str:
+    """Format an integer with thousands separators."""
+
+    return f"{value:,}"
+
+
+def format_signed(value: float) -> str:
+    """Format a signed heartbeat delta with thousands separators."""
+
+    return f"{value:+,.0f}"
+
+
+def format_delta_pct(delta: float, base: float) -> str:
+    """Format a delta as a percentage of a base, dash when undefined."""
+
+    if base <= 0:
+        return "—"
+    return f"{delta / base * 100:+.1f}%"
+
+
+def split_sections(log_text: str) -> list[tuple[str, str]]:
+    """Split a profile log into `## <file>` sections."""
+
+    sections: list[tuple[str, str]] = []
+    name = None
+    buf: list[str] = []
+    for line in log_text.splitlines():
+        header = re.match(r"^## (.+)$", line)
+        if header:
+            if name is not None:
+                sections.append((name, "\n".join(buf).rstrip()))
+            name = header.group(1)
+            buf = []
+        elif name is not None:
+            buf.append(line)
+    if name is not None:
+        sections.append((name, "\n".join(buf).rstrip()))
+    return sections
+
+
+def parse_heartbeat_sections(log_text: str) -> dict[str, dict[str, float | int | None]]:
+    """Parse a count-heartbeats log into per-file totals."""
+
+    result: dict[str, dict[str, float | int | None]] = {}
+    for fname, body in split_sections(log_text):
+        heartbeats = 0.0
+        declarations = 0
+        errors = 0
+        wall_seconds = None
+        for line in body.splitlines():
+            if "error:" in line:
+                errors += 1
+                continue
+            timing = time_re.match(line.strip())
+            if timing and timing.group(1) == "real":
+                wall_seconds = float(timing.group(2))
+                continue
+            match = heartbeat_re.search(line)
+            if match:
+                heartbeats += float(match.group("heartbeats"))
+                declarations += 1
+        result[fname] = {
+            "heartbeats": heartbeats,
+            "declarations": declarations,
+            "errors": errors,
+            "wall_seconds": wall_seconds,
+        }
+    return result
+
+
+def changed_loc_by_file(files: list[str]) -> dict[str, int]:
+    """Count added LOC in the profiled files from the PR diff."""
+
+    base_sha = os.environ.get("BASE_SHA")
+    head_sha = os.environ.get("HEAD_SHA", "HEAD")
+    loc = {fname: 0 for fname in files}
+    if not base_sha or not files:
+        return loc
+    try:
+        output = subprocess.check_output(
+            [
+                "git",
+                "diff",
+                "--numstat",
+                "--diff-filter=AM",
+                f"{base_sha}...{head_sha}",
+                "--",
+                *files,
+            ],
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        return loc
+    for line in output.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 3:
+            continue
+        additions, _deletions, path = parts[:3]
+        if additions.isdigit() and path in loc:
+            loc[path] = int(additions)
+    return loc
+
+
+def changed_line_stats(files: list[str]) -> dict[str, tuple[int, int]]:
+    """Added/deleted line counts per file from the PR diff."""
+
+    base_sha = os.environ.get("BASE_SHA")
+    head_sha = os.environ.get("HEAD_SHA", "HEAD")
+    stats = {fname: (0, 0) for fname in files}
+    if not base_sha or not files:
+        return stats
+    try:
+        output = subprocess.check_output(
+            [
+                "git",
+                "diff",
+                "--numstat",
+                "--diff-filter=AM",
+                f"{base_sha}...{head_sha}",
+                "--",
+                *files,
+            ],
+            text=True,
+        )
+    except subprocess.CalledProcessError:
+        return stats
+    for line in output.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 3:
+            continue
+        additions, deletions, path = parts[:3]
+        if additions.isdigit() and deletions.isdigit() and path in stats:
+            stats[path] = (int(additions), int(deletions))
+    return stats
+
+
+added_files = os.environ.get("ADDED_FILES", "").split()
+modified_files = os.environ.get("MODIFIED_FILES", "").split()
+compare = os.environ.get("COMPARE", "") == "true"
+compare_note = os.environ.get("COMPARE_NOTE", "").strip()
+
+log_text = log_path.read_text() if log_path.exists() else ""
+heartbeat_text = (
+    heartbeat_log_path.read_text(errors="replace")
+    if heartbeat_log_path.exists()
+    else ""
+)
+base_heartbeat_text = (
+    base_heartbeat_log_path.read_text(errors="replace")
+    if base_heartbeat_log_path.exists()
+    else ""
+)
+
+heartbeat_by_file = parse_heartbeat_sections(heartbeat_text)
+base_heartbeat_by_file = parse_heartbeat_sections(base_heartbeat_text)
+
+# A modified file is compared only when both sides were measured; anything
+# else falls back to the absolute table below.
+compared = [
+    fname
+    for fname in modified_files
+    if fname in base_heartbeat_by_file and fname in heartbeat_by_file
+]
+compared_set = set(compared)
+
+out = ["## Proof profile (new / modified Lean files)\n\n"]
+if not log_text.strip() and not heartbeat_text.strip():
+    out.append("_No proof profile output._\n")
+    rendered_path.write_text("".join(out))
+    summary_path.write_text("".join(out))
+    raise SystemExit(0)
+
+# Split the log into one section per profiled file (delimited by
+# `## <file>` markers written by the profile loop).
+sections = split_sections(log_text)
+
+# Parse `lake build` timing up front so the wall-clock number can
+# lead the comment — it is the single most useful answer to "how
+# long does this PR take to compile". The per-module breakdown
+# remains below in the "Lake build timing" section.
+build_clock: dict[str, float] = {}
+build_times: dict[str, float] = {}
+if build_log_path.exists():
+    for line in build_log_path.read_text(errors="replace").splitlines():
+        built = built_re.search(line)
+        if built:
+            module = built.group("module")
+            value = float(built.group("value"))
+            if built.group("unit") == "ms":
+                value /= 1000
+            build_times[module] = max(build_times.get(module, 0.0), value)
+            continue
+        timing = time_re.match(line.strip())
+        if timing:
+            build_clock[timing.group(1)] = float(timing.group(2))
+if "real" in build_clock:
+    lead = (
+        f"**`lake build` wall time (changed modules):** "
+        f"**{build_clock['real']:.2f} s** "
+        f"(= {build_clock['real'] / 60:.2f} min)"
+    )
+    if "user" in build_clock and "sys" in build_clock:
+        lead += (
+            f" — `user {build_clock['user']:.2f} s`, "
+            f"`sys {build_clock['sys']:.2f} s`"
+        )
+    out.append(lead + ".\n\n")
+    if compared:
+        out.append(
+            "_This build covers the added modules and their dependency "
+            "cones on top of the measurement environment; modified "
+            "files are measured without rebuilding the pool._\n\n"
+        )
+    else:
+        out.append(
+            "_This build covers the changed modules and their "
+            "dependency cones on top of the restored cache. The serial "
+            "per-file sums below are useful for ranking slow files, "
+            "not as a build budget._\n\n"
+        )
+
+if compare_note:
+    out.append(f"_{compare_note}_\n\n")
+if compare and modified_files and not compared:
+    out.append(
+        "_A base→head comparison was attempted but its measurements "
+        "are unavailable (see the run log); modified files are "
+        "omitted from the tables below._\n\n"
+    )
+
+
+def project_of(fname: str) -> str:
+    """Project bucket for a pooled Lean file path."""
+
+    parts = fname.split("/")
+    if len(parts) > 2:
+        return parts[1]
+    return "(root)"
+
+
+# ---------------------------------------------------------------------------
+# Comparison section: compile cost of modified files, base → head.
+# Heartbeats are deterministic and are the regression signal; wall clock
+# is measured under parallel load on both sides and is noisy.
+# ---------------------------------------------------------------------------
+COMPARISON_FILE_CAP = 50
+COMPARISON_PROJECT_CAP = 15
+# A file only counts as cheaper/costlier when its heartbeat delta clears
+# both an absolute and a relative floor; tiny files otherwise flip
+# category on single-digit heartbeat changes.
+CLASSIFY_MIN_HB = 1000
+CLASSIFY_MIN_PCT = 1.0
+
+comparison_full: list[str] = []
+comparison_capped: list[str] = []
+if compared:
+    line_stats = changed_line_stats(compared)
+    rows = []
+    for fname in compared:
+        base = base_heartbeat_by_file[fname]
+        head = heartbeat_by_file[fname]
+        base_hb = float(base["heartbeats"])
+        head_hb = float(head["heartbeats"])
+        delta = head_hb - base_hb
+        adds, dels = line_stats.get(fname, (0, 0))
+        rows.append(
+            {
+                "fname": fname,
+                "adds": adds,
+                "dels": dels,
+                "base_hb": base_hb,
+                "head_hb": head_hb,
+                "delta": delta,
+                "base_wall": base["wall_seconds"],
+                "head_wall": head["wall_seconds"],
+                "base_decls": int(base["declarations"]),
+                "head_decls": int(head["declarations"]),
+                "base_errors": int(base["errors"]),
+                "head_errors": int(head["errors"]),
+            }
+        )
+    rows.sort(key=lambda r: (-abs(r["delta"]), r["fname"]))
+
+    total_base_hb = sum(r["base_hb"] for r in rows)
+    total_head_hb = sum(r["head_hb"] for r in rows)
+    total_delta = total_head_hb - total_base_hb
+    total_base_wall = sum(r["base_wall"] or 0.0 for r in rows)
+    total_head_wall = sum(r["head_wall"] or 0.0 for r in rows)
+    total_adds = sum(r["adds"] for r in rows)
+    total_dels = sum(r["dels"] for r in rows)
+    total_base_decls = sum(r["base_decls"] for r in rows)
+    total_head_decls = sum(r["head_decls"] for r in rows)
+    base_error_files = sum(1 for r in rows if r["base_errors"])
+    head_error_files = sum(1 for r in rows if r["head_errors"])
+
+    def classify(row) -> int:
+        """-1 cheaper, +1 costlier, 0 within noise."""
+
+        delta = row["delta"]
+        if abs(delta) < CLASSIFY_MIN_HB:
+            return 0
+        if row["base_hb"] <= 0:
+            return 1 if delta > 0 else 0
+        if abs(delta) / row["base_hb"] * 100 < CLASSIFY_MIN_PCT:
+            return 0
+        return 1 if delta > 0 else -1
+
+    cheaper = sum(1 for r in rows if classify(r) < 0)
+    costlier = sum(1 for r in rows if classify(r) > 0)
+    unchanged = len(rows) - cheaper - costlier
+
+    def comparison_section(cap: int | None) -> list[str]:
+        s: list[str] = []
+        s.append("### Compile cost of modified files — base → head\n\n")
+        s.append(
+            f"**Heartbeats:** {format_heartbeats(total_base_hb)} → "
+            f"{format_heartbeats(total_head_hb)} "
+            f"({format_signed(total_delta)}, "
+            f"**{format_delta_pct(total_delta, total_base_hb)}**). "
+            f"**Declarations:** {format_int(total_base_decls)} → "
+            f"{format_int(total_head_decls)}.\n\n"
+        )
+        s.append(
+            f"**Per-file wall sum:** {total_base_wall:.1f} s → "
+            f"{total_head_wall:.1f} s "
+            f"({format_delta_pct(total_head_wall - total_base_wall, total_base_wall)}). "
+            "_Wall clock is measured under parallel load and is noisy; "
+            "heartbeats are deterministic and are the regression "
+            "signal._\n\n"
+        )
+        s.append(
+            f"**Files:** {format_int(len(rows))} compared — "
+            f"{format_int(cheaper)} cheaper, {format_int(costlier)} "
+            f"costlier, {format_int(unchanged)} within noise "
+            f"(threshold: |Δ heartbeats| ≥ {CLASSIFY_MIN_HB:,} "
+            f"and ≥ {CLASSIFY_MIN_PCT:.0f}%)."
+        )
+        if base_error_files or head_error_files:
+            s.append(
+                f" **Measurement errors:** {base_error_files} base-side / "
+                f"{head_error_files} head-side file(s), marked ⚠; their "
+                "heartbeat counts are partial."
+            )
+        s.append("\n\n")
+        s.append(
+            "_Both sides are elaborated against the merge-base build of "
+            "the pool — sound when only proofs and definition bodies "
+            "change; a file whose statements changed may fail there and "
+            "is flagged ⚠. Heartbeats come from Mathlib's "
+            "`linter.countHeartbeats`, in `maxHeartbeats` units. "
+            "Δ lines counts added/deleted lines from this PR diff._\n\n"
+        )
+        s.append(
+            "| File | Δ lines | HB base | HB head | Δ HB | Δ HB % | "
+            "Wall base (s) | Wall head (s) |\n"
+        )
+        s.append("|---|---:|---:|---:|---:|---:|---:|---:|\n")
+        shown = rows if cap is None else rows[:cap]
+        for r in shown:
+            marker = " ⚠" if r["base_errors"] or r["head_errors"] else ""
+            s.append(
+                f"| `{r['fname']}`{marker} | +{r['adds']}/-{r['dels']} | "
+                f"{format_heartbeats(r['base_hb'])} | "
+                f"{format_heartbeats(r['head_hb'])} | "
+                f"{format_signed(r['delta'])} | "
+                f"{format_delta_pct(r['delta'], r['base_hb'])} | "
+                f"{format_seconds(r['base_wall'])} | "
+                f"{format_seconds(r['head_wall'])} |\n"
+            )
+        if cap is not None and len(rows) > cap:
+            hidden = len(rows) - cap
+            hidden_max = abs(rows[cap]["delta"])
+            s.append(
+                f"| _… +{format_int(hidden)} more files, each with a "
+                f"smaller move (≤ {format_heartbeats(hidden_max)} HB); "
+                "full table in the run's step summary_ "
+                "| | | | | | | |\n"
+            )
+        s.append(
+            f"| **Total** | **+{format_int(total_adds)}/-"
+            f"{format_int(total_dels)}** | "
+            f"**{format_heartbeats(total_base_hb)}** | "
+            f"**{format_heartbeats(total_head_hb)}** | "
+            f"**{format_signed(total_delta)}** | "
+            f"**{format_delta_pct(total_delta, total_base_hb)}** | "
+            f"**{total_base_wall:.1f}** | **{total_head_wall:.1f}** |\n"
+        )
+        s.append("\n")
+
+        projects: dict[str, dict[str, float]] = {}
+        for r in rows:
+            p = projects.setdefault(
+                project_of(r["fname"]),
+                {"files": 0, "base": 0.0, "head": 0.0},
+            )
+            p["files"] += 1
+            p["base"] += r["base_hb"]
+            p["head"] += r["head_hb"]
+        if len(projects) > 1:
+            project_rows = sorted(
+                projects.items(),
+                key=lambda kv: -abs(kv[1]["head"] - kv[1]["base"]),
+            )
+            shown_projects = project_rows[:COMPARISON_PROJECT_CAP]
+            s.append(
+                f"**Per-project compile cost** (top "
+                f"{len(shown_projects)} of {len(project_rows)} "
+                "projects by |Δ heartbeats|):\n\n"
+            )
+            s.append("| Project | Files | HB base | HB head | Δ HB | Δ HB % |\n")
+            s.append("|---|---:|---:|---:|---:|---:|\n")
+            for pname, p in shown_projects:
+                pdelta = p["head"] - p["base"]
+                s.append(
+                    f"| `{pname}` | {format_int(int(p['files']))} | "
+                    f"{format_heartbeats(p['base'])} | "
+                    f"{format_heartbeats(p['head'])} | "
+                    f"{format_signed(pdelta)} | "
+                    f"{format_delta_pct(pdelta, p['base'])} |\n"
+                )
+            s.append("\n")
+        return s
+
+    comparison_full = comparison_section(None)
+    comparison_capped = comparison_section(COMPARISON_FILE_CAP)
+
+out_comment_extra: list[str] = []
+
+# ---------------------------------------------------------------------------
+# Absolute section: files without a base side (new files; also every file
+# when no comparison ran). This is the pre-existing render, restricted to
+# the non-compared files.
+# ---------------------------------------------------------------------------
+absolute_out: list[str] = []
+# Summary table: cumulative ms = sum over reported phases.
+# Import-excluded ms keeps the current workflow's signal while
+# separating repeated import cost from file-local elaboration.
+profile_by_file = {}
+phase_totals: dict[str, float] = {}
+for fname, body in sections:
+    if fname in compared_set:
+        continue
+    total = 0.0
+    import_ms = 0.0
+    phases = 0
+    errors = 0
+    wall_seconds = None
+    for line in body.splitlines():
+        if "error:" in line:
+            errors += 1
+            continue
+        timing = time_re.match(line.strip())
+        if timing and timing.group(1) == "real":
+            wall_seconds = float(timing.group(2))
+            continue
+        m = metric_re.match(line)
+        if m:
+            value = float(m.group(2))
+            if m.group(3) == "s":
+                value *= 1000
+            phase = m.group(1).strip()
+            phase_totals[phase] = phase_totals.get(phase, 0.0) + value
+            total += value
+            if phase == "import":
+                import_ms += value
+            phases += 1
+    profile_by_file[fname] = {
+        "total_ms": total,
+        "local_ms": total - import_ms,
+        "import_ms": import_ms,
+        "phases": phases,
+        "errors": errors,
+        "wall_seconds": wall_seconds,
+    }
+
+absolute_heartbeats = {
+    fname: data
+    for fname, data in heartbeat_by_file.items()
+    if fname not in compared_set
+}
+
+all_files = sorted(set(profile_by_file) | set(absolute_heartbeats))
+if not all_files and not compared:
+    out.append("_No files profiled._\n")
+elif all_files:
+    if compared:
+        absolute_out.append("### New files — absolute profile\n\n")
+    loc_by_file = changed_loc_by_file(all_files)
+    summary_rows = []
+    for fname in all_files:
+        profile = profile_by_file.get(fname, {})
+        heartbeat = absolute_heartbeats.get(fname, {})
+        summary_rows.append(
+            (
+                fname,
+                loc_by_file.get(fname, 0),
+                float(heartbeat.get("heartbeats", 0.0)),
+                heartbeat.get("wall_seconds"),
+                float(profile.get("total_ms", 0.0)),
+                float(profile.get("local_ms", 0.0)),
+                float(profile.get("import_ms", 0.0)),
+                int(profile.get("phases", 0)),
+                int(profile.get("errors", 0))
+                + int(heartbeat.get("errors", 0)),
+                int(heartbeat.get("declarations", 0)),
+            )
+        )
+    summary_rows.sort(key=lambda r: (-r[2], r[0]))
+    total_loc = sum(r[1] for r in summary_rows)
+    total_heartbeats = sum(r[2] for r in summary_rows)
+    total_wall_seconds = sum(r[3] or 0.0 for r in summary_rows)
+    total_ms = sum(r[4] for r in summary_rows)
+    total_local_ms = sum(r[5] for r in summary_rows)
+    total_import_ms = sum(r[6] for r in summary_rows)
+    total_phases = sum(r[7] for r in summary_rows)
+    total_errors = sum(r[8] for r in summary_rows)
+    total_declarations = sum(r[9] for r in summary_rows)
+    file_count = len(summary_rows)
+    absolute_out.append(
+        f"**Total heartbeats:** {format_heartbeats(total_heartbeats)} "
+        f"maxHeartbeats units across {file_count} file"
+        f"{'' if file_count == 1 else 's'} "
+        f"({format_int(total_loc)} added LOC).\n\n"
+    )
+    absolute_out.append(
+        f"**Sum of `lean --profile`:** {format_ms(total_ms)}. "
+        f"**Import-excluded time:** {format_ms(total_local_ms)}.\n\n"
+    )
+    absolute_out.append(
+        f"**Count-heartbeats wall-clock total:** {total_wall_seconds:.2f} s. "
+        f"Repeated import cost inside `lean --profile`: "
+        f"{format_ms(total_import_ms)}.\n\n"
+    )
+    absolute_out.append(
+        "_Heartbeat values come from Mathlib's `linter.countHeartbeats` "
+        "and are already in `maxHeartbeats` units. Per-file wall "
+        "clocks are measured under parallel load and are noisier "
+        "than heartbeats._\n\n"
+    )
+    absolute_out.append(
+        "_LOC counts added lines in the profiled Lean files from "
+        "this PR diff._\n\n"
+    )
+    absolute_out.append(
+        "| File | LOC | Heartbeats (maxHB) | Count wall (s) | "
+        "`lean --profile` (s) | Without import (s) | "
+        "Import (s) | Decls | Errors |\n"
+    )
+    absolute_out.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|\n")
+    for (
+        fname,
+        loc,
+        heartbeats,
+        wall_seconds,
+        total,
+        local,
+        import_ms,
+        _phases,
+        errors,
+        declarations,
+    ) in summary_rows:
+        absolute_out.append(
+            f"| `{fname}` | {format_int(loc)} | "
+            f"{format_heartbeats(heartbeats)} | "
+            f"{format_seconds(wall_seconds)} | {total / 1000:.2f} | "
+            f"{local / 1000:.2f} | {import_ms / 1000:.2f} | "
+            f"{declarations} | {errors} |\n"
+        )
+    # Total row in the same table so any single file's cumulative
+    # time can be compared against the whole at a glance.
+    absolute_out.append(
+        f"| **Total** | **{format_int(total_loc)}** "
+        f"| **{format_heartbeats(total_heartbeats)}** "
+        f"| **{total_wall_seconds:.2f}** | **{total_ms / 1000:.2f}** "
+        f"| **{total_local_ms / 1000:.2f}** "
+        f"| **{total_import_ms / 1000:.2f}** "
+        f"| **{total_declarations}** | **{total_errors}** |\n"
+    )
+    absolute_out.append("\n")
+
+    phase_rows = sorted(phase_totals.items(), key=lambda row: -row[1])
+    absolute_out.append("### Aggregate phase totals\n\n")
+    absolute_out.append("| Phase | Time |\n")
+    absolute_out.append("|---|---:|\n")
+    for phase, ms in phase_rows[:12]:
+        absolute_out.append(f"| `{phase}` | {format_ms(ms)} |\n")
+    absolute_out.append("\n")
+
+if all_files or compared:
+    # The lake-build ranking covers every changed module — compared and
+    # absolute alike — since the head build rebuilds both kinds.
+    changed_modules = {
+        fname.removesuffix(".lean").replace("/", ".")
+        for fname in set(all_files) | compared_set
+    }
+    changed_build_times = {
+        module: seconds
+        for module, seconds in build_times.items()
+        if module in changed_modules
+    }
+    if changed_build_times:
+        absolute_out.append("### Slowest changed modules (from `lake build`)\n\n")
+        absolute_out.append("| Changed module | Lake time |\n")
+        absolute_out.append("|---|---:|\n")
+        for module, seconds in sorted(
+            changed_build_times.items(), key=lambda row: -row[1]
+        )[:12]:
+            absolute_out.append(f"| `{module}` | {seconds:.2f} s |\n")
+        absolute_out.append("\n")
+
+    # Full per-file output, collapsed by default so the comment
+    # stays scannable when many files are profiled.
+    if sections:
+        absolute_out.append(
+            "<details><summary>Per-file `lean --profile` output</summary>\n\n"
+        )
+        for fname, body in sections:
+            absolute_out.append(f"#### `{fname}`\n\n")
+            absolute_out.append("```text\n")
+            absolute_out.append(body if body.strip() else "(empty)")
+            absolute_out.append("\n```\n\n")
+        absolute_out.append("</details>\n")
+
+    out_comment_extra.append(
+        "\n_Advisory only — never blocks merge. "
+        f"[Full log]({run_url}) uploaded as the `proof-profile` "
+        "artifact._\n"
+    )
+
+
+def bound_comment(text, limit):
+    """Trim a rendered profile to fit GitHub's comment size cap.
+
+    Keeps the headline paragraphs, the hottest rows of the per-file
+    table, and the small aggregate sections; drops the per-file raw
+    `lean --profile` dump, which is preserved in full in the step
+    summary and the `proof-profile` artifact. Falls back to a hard
+    character cut if the expected section markers are absent.
+    """
+    lines = text.splitlines()
+    try:
+        header_i = next(
+            i for i, ln in enumerate(lines)
+            if ln.startswith("| File | LOC |")
+        )
+        total_i = next(
+            i for i in range(header_i, len(lines))
+            if lines[i].startswith("| **Total**")
+        )
+        phase_i = next(
+            i for i in range(total_i, len(lines))
+            if lines[i].startswith("### Aggregate phase totals")
+        )
+        details_i = next(
+            (i for i in range(phase_i, len(lines))
+             if lines[i].startswith("<details>")),
+            len(lines),
+        )
+    except StopIteration:
+        cut = text[: limit - 200].rstrip()
+        return (
+            cut
+            + "\n\n_…truncated to fit GitHub's comment limit; full "
+            f"profile in the [`proof-profile` artifact]({run_url})._\n"
+        )
+    head = lines[:header_i]
+    table_header = lines[header_i:header_i + 2]  # header + separator
+    data_rows = lines[header_i + 2:total_i]
+    total_row = lines[total_i]
+    tail = lines[phase_i:details_i]  # phase totals + slowest modules
+
+    def assemble(n):
+        more = len(data_rows) - n
+        ellipsis = (
+            [f"| … _+{more} more files_ | | | | | | | | |"]
+            if more > 0 else []
+        )
+        body = (
+            head + table_header + data_rows[:n] + ellipsis
+            + [total_row, ""] + tail
+        )
+        note = (
+            "\n> **Comment truncated to fit GitHub's 64 KB limit.** "
+            f"This PR profiles {len(data_rows)} files; the per-file "
+            f"table shows only the {n} hottest by heartbeats. The "
+            "full table and raw `lean --profile` output for every "
+            "file are in the [run's step summary and `proof-profile` "
+            f"artifact]({run_url}).\n"
+            "\n_Advisory only — never blocks merge._\n"
+        )
+        return "\n".join(body).rstrip() + "\n" + note
+
+    n = len(data_rows)
+    out_text = assemble(n)
+    while len(out_text) > limit and n > 10:
+        n = max(10, int(n * 0.8))
+        out_text = assemble(n)
+    return out_text
+
+
+rendered_full = "".join(out + comparison_full + absolute_out + out_comment_extra)
+rendered_comment = "".join(
+    out + comparison_capped + absolute_out + out_comment_extra
+)
+
+# The full render always goes to the job step summary (~1 MB limit)
+# and the raw logs to the `proof-profile` artifact.
+with summary_path.open("a") as f:
+    f.write(rendered_full)
+
+# A PR comment body is capped by GitHub at 65536 characters. On large
+# PRs (hundreds of changed files) the full render blows past that and
+# the companion poster fails, so nothing gets posted at all. Bound the
+# comment to the headline paragraphs, the hottest table rows, and the
+# small aggregate sections; the dropped per-file dump stays available
+# in full in the step summary above and in the artifact.
+if len(rendered_comment) > 62000:
+    rendered_comment = bound_comment(rendered_comment, 62000)
+rendered_path.write_text(rendered_comment)
