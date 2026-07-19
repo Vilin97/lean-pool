@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jose Fonollosa
 -/
 
-/-
+import Mathlib
+
+/-!
 # Minimum modulus for the unique multiset-sum problem
 
 Formalization of the paper *Minimum modulus for the unique multiset-sum
@@ -32,7 +34,6 @@ Contents:
 * `nmin_eq` — the main theorem `Nmin(n) = 2^n − 2^⌊log₂ n⌋` — **complete,
   no axioms beyond propext / Classical.choice / Quot.sound**
 -/
-import Mathlib
 
 namespace MinModulus
 
@@ -226,8 +227,7 @@ lemma ones_erase_rep {w e : ℕ} (he : e < w) :
       have hne : ¬ i = e := by omega
       have hlt : ¬ i < w := by omega
       simp [hne, hlt], ?_, ?_⟩
-  · show (∑ i ∈ range w, (if i = e then 0 else if i < w then 1 else 0) * 2 ^ i)
-        = 2 ^ w - 1 - 2 ^ e
+  · simp only [val]
     have hsplit : (∑ i ∈ range w,
           (if i = e then 0 else if i < w then 1 else 0) * 2 ^ i)
         + (∑ i ∈ range w, if i = e then 2 ^ e else 0)
@@ -241,7 +241,7 @@ lemma ones_erase_rep {w e : ℕ} (he : e < w) :
       rw [Finset.sum_ite_eq' (range w) e (fun _ => 2 ^ e), if_pos hmem]
     rw [sum_two_pow] at hsplit
     omega
-  · show (∑ i ∈ range w, (if i = e then 0 else if i < w then 1 else 0)) = w - 1
+  · simp only [dsum]
     have hsplit : (∑ i ∈ range w, (if i = e then 0 else if i < w then 1 else 0))
         + (∑ i ∈ range w, if i = e then 1 else 0)
         = ∑ i ∈ range w, 1 := by
