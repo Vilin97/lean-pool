@@ -1563,6 +1563,9 @@ import LeanPool.MRiscX.Tactics.SpecificationTactics
 import LeanPool.MRiscX.Tactics.SplitLastSeq
 import LeanPool.MRiscX.Tactics.TacticUtil
 import LeanPool.MRiscX.Util.BasicTheorems
+import LeanPool.MinModulusUniqueMultisetSum
+import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
+import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
 import LeanPool.MisereGames
 import LeanPool.MisereGames.AugmentedForm
 import LeanPool.MisereGames.AugmentedForm.Lift
