@@ -1,0 +1,46 @@
+name: Cache Probe
+# Temporary diagnostic: which GITHUB_TOKEN permission configurations allow
+# Actions cache writes on this repo. Removed after use.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  explicit-actions-write:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - run: echo "probe" > probe.txt
+      - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: probe.txt
+          key: cache-probe-explicit-${{ github.run_id }}
+  default-read:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "probe" > probe.txt
+      - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: probe.txt
+          key: cache-probe-default-${{ github.run_id }}
+  write-all:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - run: echo "probe" > probe.txt
+      - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: probe.txt
+          key: cache-probe-writeall-${{ github.run_id }}
+  contents-write:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - run: echo "probe" > probe.txt
+      - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: probe.txt
+          key: cache-probe-contentsw-${{ github.run_id }}
