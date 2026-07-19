@@ -23,6 +23,16 @@ name: Proof Profile
 # head file that no longer compiles there is flagged in the comment. Sources
 # come from `git show`, so no checkout juggling, and the per-side measurement
 # logs are cached so re-profiling an unchanged PR skips the passes entirely.
+#
+# Structure: a cheap `plan` job resolves the PR and decides what to measure;
+# the two comparison sides then run as parallel `measure` matrix jobs (the
+# passes are independent, so this halves the wall clock of a fresh profile);
+# `absolute` profiles any added files; `report` merges the logs and stages
+# the PR comment for the posting companion workflow. The measurement and
+# render scripts are fetched from scripts/proof-profile/ on the default
+# branch — not from the PR checkout — so they stay in lockstep with this
+# workflow file (which issue_comment runs also take from the default branch).
+
 on:
   pull_request:
     types: [opened]
@@ -37,8 +47,9 @@ on:
 
 permissions:
   contents: read
-  # This job runs the PR's Lean code, so it stays least-privilege: it reads PR
-  # metadata but no longer posts (the `Proof Profile Comment` workflow does).
+  # These jobs run the PR's Lean code, so they stay least-privilege: they
+  # read PR metadata but never post (the `Proof Profile Comment` workflow
+  # does).
   pull-requests: read
 
 # Workflow-level concurrency applies to every run regardless of the job-level
@@ -62,19 +73,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  profile:
+  plan:
     runs-on: ubuntu-latest
-    name: Proof profile (advisory)
+    name: Plan profile
     # Run on a fresh PR or a workflow_dispatch unconditionally; for issue
     # comments, only when the body starts with `/profile` AND the commenter is
-    # either the PR author or someone with write access. This job checks out
-    # and *runs* the PR's Lean code, so it stays least-privilege (read-only
-    # token, no secrets) and the workflow definition always comes from the base
-    # default branch (issue_comment context) — the same trust model under which
-    # fork PRs are already auto-profiled on `opened`. Letting the PR author
-    # re-profile their own PR therefore adds no new code-execution surface,
-    # while still barring an arbitrary commenter from triggering a run on
-    # someone else's fork PR.
+    # either the PR author or someone with write access. The measurement jobs
+    # check out and *run* the PR's Lean code, so the workflow stays
+    # least-privilege (read-only token, no secrets) and the workflow
+    # definition always comes from the base default branch (issue_comment
+    # context) — the same trust model under which fork PRs are already
+    # auto-profiled on `opened`. Letting the PR author re-profile their own PR
+    # therefore adds no new code-execution surface, while still barring an
+    # arbitrary commenter from triggering a run on someone else's fork PR.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event_name == 'pull_request' ||
@@ -83,6 +94,20 @@ jobs:
        startsWith(github.event.comment.body, '/profile') &&
        (github.event.comment.user.login == github.event.issue.user.login ||
         contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)))
+    outputs:
+      number: ${{ steps.pr.outputs.number }}
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+      base_sha: ${{ steps.pr.outputs.base_sha }}
+      files: ${{ steps.files.outputs.files }}
+      added: ${{ steps.files.outputs.added }}
+      modified: ${{ steps.files.outputs.modified }}
+      profile_files: ${{ steps.files.outputs.profile_files }}
+      compare: ${{ steps.files.outputs.compare }}
+      compare_note: ${{ steps.files.outputs.compare_note }}
+      merge_base: ${{ steps.files.outputs.merge_base }}
+      base_build_modules: ${{ steps.files.outputs.base_build_modules }}
+      head_build_modules: ${{ steps.files.outputs.head_build_modules }}
+      modified_hash: ${{ steps.files.outputs.modified_hash }}
     steps:
       - name: Resolve PR number, head SHA, base SHA
         id: pr
@@ -119,10 +144,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Restore caches
+      # Only checks whether a warm build cache exists (the comparison is
+      # unaffordable without one); the measurement jobs download it.
+      - name: Check for a warm build cache
         id: lake-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
+          lookup-only: true
           path: |
             ~/.elan
             .lake/packages
@@ -130,21 +158,6 @@ jobs:
           key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ steps.pr.outputs.head_sha }}
           restore-keys: |
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
-
-      - name: Install Lean
-        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
-        with:
-          auto-config: false
-          use-github-cache: false
-          use-mathlib-cache: false
-
-      - name: Install Mathlib cache
-        run: |
-          if [ ! -d ".lake/packages/mathlib" ]; then
-            ~/.elan/bin/lake exe cache get
-          else
-            echo "Mathlib already present from cache"
-          fi
 
       - name: Determine new and modified Lean files
         id: files
@@ -223,101 +236,87 @@ jobs:
             echo "Compare against merge base $merge_base: $compare"
           fi
 
-      - name: Write heartbeat measurement helper
-        if: steps.files.outputs.files != ''
-        run: |
-          set -euo pipefail
-          cat > "$RUNNER_TEMP/measure-one.sh" <<'SH'
-          #!/usr/bin/env bash
-          # Measure one file at one git revision with Mathlib's
-          # countHeartbeats linter (which reports in `set_option
-          # maxHeartbeats` units) plus wall time, into
-          # <outdir>/<slugified-path>.log. The source comes from `git show`
-          # and is compiled out-of-tree against whatever environment is
-          # currently built (imports resolve by module name, not path), so
-          # the working tree never has to sit at <ref>.
-          ref="$1"
-          file="$2"
-          outdir="$3"
-          # The checksum disambiguates paths that collide under `tr` (an
-          # underscore in a directory name vs a slash).
-          slug="$(printf '%s' "$file" | tr '/' '_')_$(printf '%s' "$file" | cksum | cut -d' ' -f1)"
-          src="$outdir/src-$slug.lean"
-          {
-            echo "## $file"
-            if git show "$ref:$file" > "$src"; then
-              /usr/bin/time -p "$HOME/.elan/bin/lake" env lean \
-                -Dlinter.countHeartbeats=true \
-                "$src"
-              status=$?
-              if [ "$status" -ne 0 ]; then
-                echo "error: count-heartbeats command exited with status $status"
-              fi
-            else
-              echo "error: could not read $file at revision $ref"
-            fi
-            echo
-          } > "$outdir/$slug.log" 2>&1
-          rm -f "$src"
-          SH
-          cat > "$RUNNER_TEMP/measure-heartbeats.sh" <<'SH'
-          #!/usr/bin/env bash
-          # Usage: measure-heartbeats.sh <combined-log> <ref> <file>...
-          # Measures each file's source at <ref> in parallel (files are
-          # independent), then stitches the per-file sections together in
-          # input order so the combined log is deterministic. Parallelism
-          # trades some per-file wall-clock accuracy for hours of runtime
-          # on refactor-sized PRs; heartbeats are unaffected, and both
-          # sides of a comparison are measured the same way.
-          set -euo pipefail
-          out="$1"
-          ref="$2"
-          shift 2
-          outdir=$(mktemp -d)
-          jobs=$(nproc)
-          if [ "$jobs" -gt 1 ]; then jobs=$((jobs - 1)); fi
-          printf '%s\n' "$@" | xargs -P "$jobs" -I{} \
-            bash "$RUNNER_TEMP/measure-one.sh" "$ref" {} "$outdir"
-          : > "$out"
-          for file in "$@"; do
-            slug="$(printf '%s' "$file" | tr '/' '_')_$(printf '%s' "$file" | cksum | cut -d' ' -f1)"
-            cat "$outdir/$slug.log" >> "$out"
-          done
-          rm -rf "$outdir"
-          SH
-          chmod +x "$RUNNER_TEMP/measure-one.sh" "$RUNNER_TEMP/measure-heartbeats.sh"
+  measure:
+    needs: plan
+    if: needs.plan.outputs.compare == 'true'
+    runs-on: ubuntu-latest
+    name: Measure ${{ matrix.side }} side
+    strategy:
+      # One side failing must not cancel the other; the report degrades
+      # gracefully when a side is missing.
+      fail-fast: false
+      matrix:
+        include:
+          - side: base
+            ref: ${{ needs.plan.outputs.merge_base }}
+            log: proof-profile-base-heartbeats.log
+          - side: head
+            ref: ${{ needs.plan.outputs.head_sha }}
+            log: proof-profile-modified-heartbeats.log
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.plan.outputs.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
 
       # Measurements are deterministic per (environment, source revision), so
       # each side's combined log is cached: re-profiling a PR skips any pass
       # whose inputs did not change (always the base pass, and the head pass
-      # too when nothing was pushed since).
-      - name: Restore cached merge-base measurements
-        id: base-hb
-        if: steps.files.outputs.compare == 'true'
+      # too when nothing was pushed since). On a hit, the entire Lean setup
+      # below is skipped as well.
+      - name: Restore cached measurements
+        id: hb-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
-          path: proof-profile-base-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.files.outputs.merge_base }}-${{ steps.files.outputs.modified_hash }}
+          path: ${{ matrix.log }}
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}
 
-      - name: Restore cached head measurements
-        id: head-hb
-        if: steps.files.outputs.compare == 'true'
+      - name: Restore caches
+        if: steps.hb-cache.outputs.cache-hit != 'true'
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
-          path: proof-profile-modified-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.pr.outputs.head_sha }}-${{ steps.files.outputs.modified_hash }}
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ needs.plan.outputs.head_sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        if: steps.hb-cache.outputs.cache-hit != 'true'
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        if: steps.hb-cache.outputs.cache-hit != 'true'
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Fetch measurement helpers from the default branch
+        if: steps.hb-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          git show origin/main:scripts/proof-profile/measure-one.sh > "$RUNNER_TEMP/measure-one.sh"
+          git show origin/main:scripts/proof-profile/measure-heartbeats.sh > "$RUNNER_TEMP/measure-heartbeats.sh"
+          chmod +x "$RUNNER_TEMP/measure-one.sh" "$RUNNER_TEMP/measure-heartbeats.sh"
 
       - name: Build the measurement environment at the merge base
         id: base-env
-        # Both sides are measured against this environment; skip the build
-        # only when both passes are already cached.
-        if: >-
-          steps.files.outputs.compare == 'true' &&
-          !(steps.base-hb.outputs.cache-hit == 'true' &&
-            steps.head-hb.outputs.cache-hit == 'true')
+        if: steps.hb-cache.outputs.cache-hit != 'true'
         env:
-          MERGE_BASE: ${{ steps.files.outputs.merge_base }}
-          BASE_MODULES: ${{ steps.files.outputs.base_build_modules }}
+          MERGE_BASE: ${{ needs.plan.outputs.merge_base }}
+          BASE_MODULES: ${{ needs.plan.outputs.base_build_modules }}
+          SIDE: ${{ matrix.side }}
         run: |
           set -euo pipefail
           # The restored cache was built from the base branch, so building
@@ -327,74 +326,102 @@ jobs:
           ok=true
           # shellcheck disable=SC2086 # BASE_MODULES is a space-separated list on purpose
           if ! /usr/bin/time -p ~/.elan/bin/lake build $BASE_MODULES 2>&1 \
-               | tee proof-profile-base-build.log; then
-            echo "::warning::Merge-base build failed; comparison measurements are skipped."
+               | tee "proof-profile-env-build-$SIDE.log"; then
+            echo "::warning::Merge-base build failed; $SIDE-side measurements are skipped."
             ok=false
           fi
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
 
-      - name: Measure modified files at the merge base
-        id: measure-base
-        if: >-
-          steps.base-env.outputs.ok == 'true' &&
-          steps.base-hb.outputs.cache-hit != 'true'
+      - name: Measure modified files at the ${{ matrix.side }} revision
+        id: measure
+        if: steps.base-env.outputs.ok == 'true'
         env:
-          MERGE_BASE: ${{ steps.files.outputs.merge_base }}
-          MODIFIED: ${{ steps.files.outputs.modified }}
+          REF: ${{ matrix.ref }}
+          LOG: ${{ matrix.log }}
+          MODIFIED: ${{ needs.plan.outputs.modified }}
         run: |
           set -euo pipefail
           measured=true
           # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
-          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-base-heartbeats.log "$MERGE_BASE" $MODIFIED \
-            || { echo "::warning::Merge-base measurement failed."; measured=false; rm -f proof-profile-base-heartbeats.log; }
+          "$RUNNER_TEMP/measure-heartbeats.sh" "$LOG" "$REF" $MODIFIED \
+            || { echo "::warning::Measurement failed."; measured=false; rm -f "$LOG"; }
           echo "measured=$measured" >> "$GITHUB_OUTPUT"
 
-      - name: Save merge-base measurements to the cache
-        if: steps.measure-base.outputs.measured == 'true'
+      - name: Save measurements to the cache
+        if: steps.measure.outputs.measured == 'true'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
-          path: proof-profile-base-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.files.outputs.merge_base }}-${{ steps.files.outputs.modified_hash }}
+          path: ${{ matrix.log }}
+          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ matrix.ref }}-${{ needs.plan.outputs.modified_hash }}
 
-      - name: Measure modified files at the head (merge-base environment)
-        id: measure-head
-        if: >-
-          steps.base-env.outputs.ok == 'true' &&
-          steps.head-hb.outputs.cache-hit != 'true'
-        env:
-          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          MODIFIED: ${{ steps.files.outputs.modified }}
+      - name: Upload measurements for the report job
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: proof-profile-part-${{ matrix.side }}
+          path: |
+            ${{ matrix.log }}
+            proof-profile-env-build-*.log
+          if-no-files-found: ignore
+
+  absolute:
+    needs: plan
+    if: needs.plan.outputs.profile_files != ''
+    runs-on: ubuntu-latest
+    name: Profile added files
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.plan.outputs.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ needs.plan.outputs.head_sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Fetch measurement helpers from the default branch
         run: |
           set -euo pipefail
-          measured=true
-          # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
-          "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-modified-heartbeats.log "$HEAD_SHA" $MODIFIED \
-            || { echo "::warning::Head-side measurement failed."; measured=false; rm -f proof-profile-modified-heartbeats.log; }
-          echo "measured=$measured" >> "$GITHUB_OUTPUT"
+          git show origin/main:scripts/proof-profile/measure-one.sh > "$RUNNER_TEMP/measure-one.sh"
+          git show origin/main:scripts/proof-profile/measure-heartbeats.sh > "$RUNNER_TEMP/measure-heartbeats.sh"
+          chmod +x "$RUNNER_TEMP/measure-one.sh" "$RUNNER_TEMP/measure-heartbeats.sh"
 
-      - name: Save head measurements to the cache
-        if: steps.measure-head.outputs.measured == 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: proof-profile-modified-heartbeats.log
-          key: proof-profile-hb-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.toml') }}-${{ steps.pr.outputs.head_sha }}-${{ steps.files.outputs.modified_hash }}
-
-      - name: Build the changed modules at the head
-        if: steps.files.outputs.head_build_modules != ''
+      - name: Build the changed modules
         env:
-          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          HEAD_MODULES: ${{ steps.files.outputs.head_build_modules }}
+          HEAD_MODULES: ${{ needs.plan.outputs.head_build_modules }}
         run: |
           set -euo pipefail
           set -o pipefail
-          git checkout -f --detach "$HEAD_SHA"
           # shellcheck disable=SC2086 # HEAD_MODULES is a space-separated list on purpose
           /usr/bin/time -p ~/.elan/bin/lake build $HEAD_MODULES 2>&1 | tee proof-profile-build.log
 
-      - name: Profile new and modified files
-        if: steps.files.outputs.profile_files != ''
+      - name: Profile files with lean --profile
         env:
-          FILES: ${{ steps.files.outputs.profile_files }}
+          FILES: ${{ needs.plan.outputs.profile_files }}
         run: |
           set -euo pipefail
           : > proof-profile.log
@@ -414,822 +441,78 @@ jobs:
             } >> proof-profile.log 2>&1
           done
 
-      - name: Count heartbeats for profiled files at the head
-        if: steps.files.outputs.profile_files != ''
+      - name: Count heartbeats for profiled files
         env:
-          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          FILES: ${{ steps.files.outputs.profile_files }}
+          HEAD_SHA: ${{ needs.plan.outputs.head_sha }}
+          FILES: ${{ needs.plan.outputs.profile_files }}
         run: |
           set -euo pipefail
           # shellcheck disable=SC2086 # FILES is a space-separated list on purpose
           "$RUNNER_TEMP/measure-heartbeats.sh" proof-profile-heartbeats.log "$HEAD_SHA" $FILES
 
+      - name: Upload profile logs for the report job
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: proof-profile-part-absolute
+          path: |
+            proof-profile.log
+            proof-profile-heartbeats.log
+            proof-profile-build.log
+          if-no-files-found: ignore
+
+  report:
+    needs: [plan, measure, absolute]
+    # Render whatever was measured, even if one side's job failed — the
+    # renderer degrades gracefully when a log is missing. `!cancelled()`
+    # keeps this off only when the run was cancelled outright.
+    if: >-
+      !cancelled() && needs.plan.result == 'success' &&
+      needs.plan.outputs.files != ''
+    runs-on: ubuntu-latest
+    name: Report profile
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.plan.outputs.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download measurement logs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: proof-profile-part-*
+          merge-multiple: true
+
       - name: Render profile summary
-        if: steps.files.outputs.files != ''
         env:
-          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
-          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          ADDED_FILES: ${{ steps.files.outputs.added }}
-          MODIFIED_FILES: ${{ steps.files.outputs.modified }}
-          COMPARE: ${{ steps.files.outputs.compare }}
-          COMPARE_NOTE: ${{ steps.files.outputs.compare_note }}
+          BASE_SHA: ${{ needs.plan.outputs.base_sha }}
+          HEAD_SHA: ${{ needs.plan.outputs.head_sha }}
+          ADDED_FILES: ${{ needs.plan.outputs.added }}
+          MODIFIED_FILES: ${{ needs.plan.outputs.modified }}
+          COMPARE: ${{ needs.plan.outputs.compare }}
+          COMPARE_NOTE: ${{ needs.plan.outputs.compare_note }}
         run: |
+          set -euo pipefail
           # The modified files' head-side sections live in their own
           # (cacheable) log; fold them into the head log the renderer reads.
           if [ -f proof-profile-modified-heartbeats.log ]; then
             cat proof-profile-modified-heartbeats.log >> proof-profile-heartbeats.log
           fi
-          python3 <<'PY'
-          import os
-          import re
-          import subprocess
-          from pathlib import Path
-
-          log_path = Path("proof-profile.log")
-          heartbeat_log_path = Path("proof-profile-heartbeats.log")
-          base_heartbeat_log_path = Path("proof-profile-base-heartbeats.log")
-          build_log_path = Path("proof-profile-build.log")
-          rendered_path = Path("proof-profile.md")
-          summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
-          run_url = (
-              f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}"
-              f"/actions/runs/{os.environ['GITHUB_RUN_ID']}"
-          )
-
-          # Lean's `cumulative profiling times:` block is one indented
-          # `<phase name> <number><unit>` per line, where the unit is `ms`
-          # or `s`. The phase name can contain
-          # spaces, parens, and hyphens (`compilation (IR)`,
-          # `let-to-have transformation`, ...). Lean only emits a phase if
-          # it accumulated nonzero time, so the set of phases differs per
-          # file and per run; the renderer captures every phase rather than
-          # cherry-picking known names.
-          metric_re = re.compile(
-              r"^[ \t]+(.+?)\s+([0-9]+(?:\.[0-9]+)?)\s*(ms|s)\s*$"
-          )
-          built_re = re.compile(
-              r"Built\s+(?P<module>\S+)\s+"
-              r"\((?P<value>[0-9]+(?:\.[0-9]+)?)(?P<unit>ms|s)\)"
-          )
-          time_re = re.compile(r"^(real|user|sys)\s+([0-9]+(?:\.[0-9]+)?)$")
-          heartbeat_re = re.compile(
-              r"(?:'[^']+'\s+)?[Uu]sed\s+"
-              r"(?:approximately\s+)?(?P<heartbeats>[0-9]+)\s+heartbeats"
-          )
-
-
-          def format_ms(ms: float) -> str:
-              """Format milliseconds with the equivalent seconds."""
-
-              return f"{ms:.1f} ms (= {ms / 1000:.2f} s)"
-
-
-          def format_seconds(seconds: float | None) -> str:
-              """Format an optional wall-clock seconds value."""
-
-              if seconds is None:
-                  return "—"
-              return f"{seconds:.2f}"
-
-
-          def format_heartbeats(heartbeats: float) -> str:
-              """Format heartbeats in maxHeartbeats units."""
-
-              return f"{heartbeats:,.0f}"
-
-
-          def format_int(value: int) -> str:
-              """Format an integer with thousands separators."""
-
-              return f"{value:,}"
-
-
-          def format_signed(value: float) -> str:
-              """Format a signed heartbeat delta with thousands separators."""
-
-              return f"{value:+,.0f}"
-
-
-          def format_delta_pct(delta: float, base: float) -> str:
-              """Format a delta as a percentage of a base, dash when undefined."""
-
-              if base <= 0:
-                  return "—"
-              return f"{delta / base * 100:+.1f}%"
-
-
-          def split_sections(log_text: str) -> list[tuple[str, str]]:
-              """Split a profile log into `## <file>` sections."""
-
-              sections: list[tuple[str, str]] = []
-              name = None
-              buf: list[str] = []
-              for line in log_text.splitlines():
-                  header = re.match(r"^## (.+)$", line)
-                  if header:
-                      if name is not None:
-                          sections.append((name, "\n".join(buf).rstrip()))
-                      name = header.group(1)
-                      buf = []
-                  elif name is not None:
-                      buf.append(line)
-              if name is not None:
-                  sections.append((name, "\n".join(buf).rstrip()))
-              return sections
-
-
-          def parse_heartbeat_sections(log_text: str) -> dict[str, dict[str, float | int | None]]:
-              """Parse a count-heartbeats log into per-file totals."""
-
-              result: dict[str, dict[str, float | int | None]] = {}
-              for fname, body in split_sections(log_text):
-                  heartbeats = 0.0
-                  declarations = 0
-                  errors = 0
-                  wall_seconds = None
-                  for line in body.splitlines():
-                      if "error:" in line:
-                          errors += 1
-                          continue
-                      timing = time_re.match(line.strip())
-                      if timing and timing.group(1) == "real":
-                          wall_seconds = float(timing.group(2))
-                          continue
-                      match = heartbeat_re.search(line)
-                      if match:
-                          heartbeats += float(match.group("heartbeats"))
-                          declarations += 1
-                  result[fname] = {
-                      "heartbeats": heartbeats,
-                      "declarations": declarations,
-                      "errors": errors,
-                      "wall_seconds": wall_seconds,
-                  }
-              return result
-
-
-          def changed_loc_by_file(files: list[str]) -> dict[str, int]:
-              """Count added LOC in the profiled files from the PR diff."""
-
-              base_sha = os.environ.get("BASE_SHA")
-              head_sha = os.environ.get("HEAD_SHA", "HEAD")
-              loc = {fname: 0 for fname in files}
-              if not base_sha or not files:
-                  return loc
-              try:
-                  output = subprocess.check_output(
-                      [
-                          "git",
-                          "diff",
-                          "--numstat",
-                          "--diff-filter=AM",
-                          f"{base_sha}...{head_sha}",
-                          "--",
-                          *files,
-                      ],
-                      text=True,
-                  )
-              except subprocess.CalledProcessError:
-                  return loc
-              for line in output.splitlines():
-                  parts = line.split("\t")
-                  if len(parts) < 3:
-                      continue
-                  additions, _deletions, path = parts[:3]
-                  if additions.isdigit() and path in loc:
-                      loc[path] = int(additions)
-              return loc
-
-
-          def changed_line_stats(files: list[str]) -> dict[str, tuple[int, int]]:
-              """Added/deleted line counts per file from the PR diff."""
-
-              base_sha = os.environ.get("BASE_SHA")
-              head_sha = os.environ.get("HEAD_SHA", "HEAD")
-              stats = {fname: (0, 0) for fname in files}
-              if not base_sha or not files:
-                  return stats
-              try:
-                  output = subprocess.check_output(
-                      [
-                          "git",
-                          "diff",
-                          "--numstat",
-                          "--diff-filter=AM",
-                          f"{base_sha}...{head_sha}",
-                          "--",
-                          *files,
-                      ],
-                      text=True,
-                  )
-              except subprocess.CalledProcessError:
-                  return stats
-              for line in output.splitlines():
-                  parts = line.split("\t")
-                  if len(parts) < 3:
-                      continue
-                  additions, deletions, path = parts[:3]
-                  if additions.isdigit() and deletions.isdigit() and path in stats:
-                      stats[path] = (int(additions), int(deletions))
-              return stats
-
-
-          added_files = os.environ.get("ADDED_FILES", "").split()
-          modified_files = os.environ.get("MODIFIED_FILES", "").split()
-          compare = os.environ.get("COMPARE", "") == "true"
-          compare_note = os.environ.get("COMPARE_NOTE", "").strip()
-
-          log_text = log_path.read_text() if log_path.exists() else ""
-          heartbeat_text = (
-              heartbeat_log_path.read_text(errors="replace")
-              if heartbeat_log_path.exists()
-              else ""
-          )
-          base_heartbeat_text = (
-              base_heartbeat_log_path.read_text(errors="replace")
-              if base_heartbeat_log_path.exists()
-              else ""
-          )
-
-          heartbeat_by_file = parse_heartbeat_sections(heartbeat_text)
-          base_heartbeat_by_file = parse_heartbeat_sections(base_heartbeat_text)
-
-          # A modified file is compared only when both sides were measured; anything
-          # else falls back to the absolute table below.
-          compared = [
-              fname
-              for fname in modified_files
-              if fname in base_heartbeat_by_file and fname in heartbeat_by_file
-          ]
-          compared_set = set(compared)
-
-          out = ["## Proof profile (new / modified Lean files)\n\n"]
-          if not log_text.strip() and not heartbeat_text.strip():
-              out.append("_No proof profile output._\n")
-              rendered_path.write_text("".join(out))
-              summary_path.write_text("".join(out))
-              raise SystemExit(0)
-
-          # Split the log into one section per profiled file (delimited by
-          # `## <file>` markers written by the profile loop).
-          sections = split_sections(log_text)
-
-          # Parse `lake build` timing up front so the wall-clock number can
-          # lead the comment — it is the single most useful answer to "how
-          # long does this PR take to compile". The per-module breakdown
-          # remains below in the "Lake build timing" section.
-          build_clock: dict[str, float] = {}
-          build_times: dict[str, float] = {}
-          if build_log_path.exists():
-              for line in build_log_path.read_text(errors="replace").splitlines():
-                  built = built_re.search(line)
-                  if built:
-                      module = built.group("module")
-                      value = float(built.group("value"))
-                      if built.group("unit") == "ms":
-                          value /= 1000
-                      build_times[module] = max(build_times.get(module, 0.0), value)
-                      continue
-                  timing = time_re.match(line.strip())
-                  if timing:
-                      build_clock[timing.group(1)] = float(timing.group(2))
-          if "real" in build_clock:
-              lead = (
-                  f"**`lake build` wall time (changed modules):** "
-                  f"**{build_clock['real']:.2f} s** "
-                  f"(= {build_clock['real'] / 60:.2f} min)"
-              )
-              if "user" in build_clock and "sys" in build_clock:
-                  lead += (
-                      f" — `user {build_clock['user']:.2f} s`, "
-                      f"`sys {build_clock['sys']:.2f} s`"
-                  )
-              out.append(lead + ".\n\n")
-              if compared:
-                  out.append(
-                      "_This build covers the added modules and their dependency "
-                      "cones on top of the measurement environment; modified "
-                      "files are measured without rebuilding the pool._\n\n"
-                  )
-              else:
-                  out.append(
-                      "_This build covers the changed modules and their "
-                      "dependency cones on top of the restored cache. The serial "
-                      "per-file sums below are useful for ranking slow files, "
-                      "not as a build budget._\n\n"
-                  )
-
-          if compare_note:
-              out.append(f"_{compare_note}_\n\n")
-          if compare and modified_files and not compared:
-              out.append(
-                  "_A base→head comparison was attempted but its measurements "
-                  "are unavailable (see the run log); modified files are "
-                  "omitted from the tables below._\n\n"
-              )
-
-
-          def project_of(fname: str) -> str:
-              """Project bucket for a pooled Lean file path."""
-
-              parts = fname.split("/")
-              if len(parts) > 2:
-                  return parts[1]
-              return "(root)"
-
-
-          # ---------------------------------------------------------------------------
-          # Comparison section: compile cost of modified files, base → head.
-          # Heartbeats are deterministic and are the regression signal; wall clock
-          # is measured under parallel load on both sides and is noisy.
-          # ---------------------------------------------------------------------------
-          COMPARISON_FILE_CAP = 50
-          COMPARISON_PROJECT_CAP = 15
-          # A file only counts as cheaper/costlier when its heartbeat delta clears
-          # both an absolute and a relative floor; tiny files otherwise flip
-          # category on single-digit heartbeat changes.
-          CLASSIFY_MIN_HB = 1000
-          CLASSIFY_MIN_PCT = 1.0
-
-          comparison_full: list[str] = []
-          comparison_capped: list[str] = []
-          if compared:
-              line_stats = changed_line_stats(compared)
-              rows = []
-              for fname in compared:
-                  base = base_heartbeat_by_file[fname]
-                  head = heartbeat_by_file[fname]
-                  base_hb = float(base["heartbeats"])
-                  head_hb = float(head["heartbeats"])
-                  delta = head_hb - base_hb
-                  adds, dels = line_stats.get(fname, (0, 0))
-                  rows.append(
-                      {
-                          "fname": fname,
-                          "adds": adds,
-                          "dels": dels,
-                          "base_hb": base_hb,
-                          "head_hb": head_hb,
-                          "delta": delta,
-                          "base_wall": base["wall_seconds"],
-                          "head_wall": head["wall_seconds"],
-                          "base_decls": int(base["declarations"]),
-                          "head_decls": int(head["declarations"]),
-                          "base_errors": int(base["errors"]),
-                          "head_errors": int(head["errors"]),
-                      }
-                  )
-              rows.sort(key=lambda r: (-abs(r["delta"]), r["fname"]))
-
-              total_base_hb = sum(r["base_hb"] for r in rows)
-              total_head_hb = sum(r["head_hb"] for r in rows)
-              total_delta = total_head_hb - total_base_hb
-              total_base_wall = sum(r["base_wall"] or 0.0 for r in rows)
-              total_head_wall = sum(r["head_wall"] or 0.0 for r in rows)
-              total_adds = sum(r["adds"] for r in rows)
-              total_dels = sum(r["dels"] for r in rows)
-              total_base_decls = sum(r["base_decls"] for r in rows)
-              total_head_decls = sum(r["head_decls"] for r in rows)
-              base_error_files = sum(1 for r in rows if r["base_errors"])
-              head_error_files = sum(1 for r in rows if r["head_errors"])
-
-              def classify(row) -> int:
-                  """-1 cheaper, +1 costlier, 0 within noise."""
-
-                  delta = row["delta"]
-                  if abs(delta) < CLASSIFY_MIN_HB:
-                      return 0
-                  if row["base_hb"] <= 0:
-                      return 1 if delta > 0 else 0
-                  if abs(delta) / row["base_hb"] * 100 < CLASSIFY_MIN_PCT:
-                      return 0
-                  return 1 if delta > 0 else -1
-
-              cheaper = sum(1 for r in rows if classify(r) < 0)
-              costlier = sum(1 for r in rows if classify(r) > 0)
-              unchanged = len(rows) - cheaper - costlier
-
-              def comparison_section(cap: int | None) -> list[str]:
-                  s: list[str] = []
-                  s.append("### Compile cost of modified files — base → head\n\n")
-                  s.append(
-                      f"**Heartbeats:** {format_heartbeats(total_base_hb)} → "
-                      f"{format_heartbeats(total_head_hb)} "
-                      f"({format_signed(total_delta)}, "
-                      f"**{format_delta_pct(total_delta, total_base_hb)}**). "
-                      f"**Declarations:** {format_int(total_base_decls)} → "
-                      f"{format_int(total_head_decls)}.\n\n"
-                  )
-                  s.append(
-                      f"**Per-file wall sum:** {total_base_wall:.1f} s → "
-                      f"{total_head_wall:.1f} s "
-                      f"({format_delta_pct(total_head_wall - total_base_wall, total_base_wall)}). "
-                      "_Wall clock is measured under parallel load and is noisy; "
-                      "heartbeats are deterministic and are the regression "
-                      "signal._\n\n"
-                  )
-                  s.append(
-                      f"**Files:** {format_int(len(rows))} compared — "
-                      f"{format_int(cheaper)} cheaper, {format_int(costlier)} "
-                      f"costlier, {format_int(unchanged)} within noise "
-                      f"(threshold: |Δ heartbeats| ≥ {CLASSIFY_MIN_HB:,} "
-                      f"and ≥ {CLASSIFY_MIN_PCT:.0f}%)."
-                  )
-                  if base_error_files or head_error_files:
-                      s.append(
-                          f" **Measurement errors:** {base_error_files} base-side / "
-                          f"{head_error_files} head-side file(s), marked ⚠; their "
-                          "heartbeat counts are partial."
-                      )
-                  s.append("\n\n")
-                  s.append(
-                      "_Both sides are elaborated against the merge-base build of "
-                      "the pool — sound when only proofs and definition bodies "
-                      "change; a file whose statements changed may fail there and "
-                      "is flagged ⚠. Heartbeats come from Mathlib's "
-                      "`linter.countHeartbeats`, in `maxHeartbeats` units. "
-                      "Δ lines counts added/deleted lines from this PR diff._\n\n"
-                  )
-                  s.append(
-                      "| File | Δ lines | HB base | HB head | Δ HB | Δ HB % | "
-                      "Wall base (s) | Wall head (s) |\n"
-                  )
-                  s.append("|---|---:|---:|---:|---:|---:|---:|---:|\n")
-                  shown = rows if cap is None else rows[:cap]
-                  for r in shown:
-                      marker = " ⚠" if r["base_errors"] or r["head_errors"] else ""
-                      s.append(
-                          f"| `{r['fname']}`{marker} | +{r['adds']}/-{r['dels']} | "
-                          f"{format_heartbeats(r['base_hb'])} | "
-                          f"{format_heartbeats(r['head_hb'])} | "
-                          f"{format_signed(r['delta'])} | "
-                          f"{format_delta_pct(r['delta'], r['base_hb'])} | "
-                          f"{format_seconds(r['base_wall'])} | "
-                          f"{format_seconds(r['head_wall'])} |\n"
-                      )
-                  if cap is not None and len(rows) > cap:
-                      hidden = len(rows) - cap
-                      hidden_max = abs(rows[cap]["delta"])
-                      s.append(
-                          f"| _… +{format_int(hidden)} more files, each with a "
-                          f"smaller move (≤ {format_heartbeats(hidden_max)} HB); "
-                          "full table in the run's step summary_ "
-                          "| | | | | | | |\n"
-                      )
-                  s.append(
-                      f"| **Total** | **+{format_int(total_adds)}/-"
-                      f"{format_int(total_dels)}** | "
-                      f"**{format_heartbeats(total_base_hb)}** | "
-                      f"**{format_heartbeats(total_head_hb)}** | "
-                      f"**{format_signed(total_delta)}** | "
-                      f"**{format_delta_pct(total_delta, total_base_hb)}** | "
-                      f"**{total_base_wall:.1f}** | **{total_head_wall:.1f}** |\n"
-                  )
-                  s.append("\n")
-
-                  projects: dict[str, dict[str, float]] = {}
-                  for r in rows:
-                      p = projects.setdefault(
-                          project_of(r["fname"]),
-                          {"files": 0, "base": 0.0, "head": 0.0},
-                      )
-                      p["files"] += 1
-                      p["base"] += r["base_hb"]
-                      p["head"] += r["head_hb"]
-                  if len(projects) > 1:
-                      project_rows = sorted(
-                          projects.items(),
-                          key=lambda kv: -abs(kv[1]["head"] - kv[1]["base"]),
-                      )
-                      shown_projects = project_rows[:COMPARISON_PROJECT_CAP]
-                      s.append(
-                          f"**Per-project compile cost** (top "
-                          f"{len(shown_projects)} of {len(project_rows)} "
-                          "projects by |Δ heartbeats|):\n\n"
-                      )
-                      s.append("| Project | Files | HB base | HB head | Δ HB | Δ HB % |\n")
-                      s.append("|---|---:|---:|---:|---:|---:|\n")
-                      for pname, p in shown_projects:
-                          pdelta = p["head"] - p["base"]
-                          s.append(
-                              f"| `{pname}` | {format_int(int(p['files']))} | "
-                              f"{format_heartbeats(p['base'])} | "
-                              f"{format_heartbeats(p['head'])} | "
-                              f"{format_signed(pdelta)} | "
-                              f"{format_delta_pct(pdelta, p['base'])} |\n"
-                          )
-                      s.append("\n")
-                  return s
-
-              comparison_full = comparison_section(None)
-              comparison_capped = comparison_section(COMPARISON_FILE_CAP)
-
-          out_comment_extra: list[str] = []
-
-          # ---------------------------------------------------------------------------
-          # Absolute section: files without a base side (new files; also every file
-          # when no comparison ran). This is the pre-existing render, restricted to
-          # the non-compared files.
-          # ---------------------------------------------------------------------------
-          absolute_out: list[str] = []
-          # Summary table: cumulative ms = sum over reported phases.
-          # Import-excluded ms keeps the current workflow's signal while
-          # separating repeated import cost from file-local elaboration.
-          profile_by_file = {}
-          phase_totals: dict[str, float] = {}
-          for fname, body in sections:
-              if fname in compared_set:
-                  continue
-              total = 0.0
-              import_ms = 0.0
-              phases = 0
-              errors = 0
-              wall_seconds = None
-              for line in body.splitlines():
-                  if "error:" in line:
-                      errors += 1
-                      continue
-                  timing = time_re.match(line.strip())
-                  if timing and timing.group(1) == "real":
-                      wall_seconds = float(timing.group(2))
-                      continue
-                  m = metric_re.match(line)
-                  if m:
-                      value = float(m.group(2))
-                      if m.group(3) == "s":
-                          value *= 1000
-                      phase = m.group(1).strip()
-                      phase_totals[phase] = phase_totals.get(phase, 0.0) + value
-                      total += value
-                      if phase == "import":
-                          import_ms += value
-                      phases += 1
-              profile_by_file[fname] = {
-                  "total_ms": total,
-                  "local_ms": total - import_ms,
-                  "import_ms": import_ms,
-                  "phases": phases,
-                  "errors": errors,
-                  "wall_seconds": wall_seconds,
-              }
-
-          absolute_heartbeats = {
-              fname: data
-              for fname, data in heartbeat_by_file.items()
-              if fname not in compared_set
-          }
-
-          all_files = sorted(set(profile_by_file) | set(absolute_heartbeats))
-          if not all_files and not compared:
-              out.append("_No files profiled._\n")
-          elif all_files:
-              if compared:
-                  absolute_out.append("### New files — absolute profile\n\n")
-              loc_by_file = changed_loc_by_file(all_files)
-              summary_rows = []
-              for fname in all_files:
-                  profile = profile_by_file.get(fname, {})
-                  heartbeat = absolute_heartbeats.get(fname, {})
-                  summary_rows.append(
-                      (
-                          fname,
-                          loc_by_file.get(fname, 0),
-                          float(heartbeat.get("heartbeats", 0.0)),
-                          heartbeat.get("wall_seconds"),
-                          float(profile.get("total_ms", 0.0)),
-                          float(profile.get("local_ms", 0.0)),
-                          float(profile.get("import_ms", 0.0)),
-                          int(profile.get("phases", 0)),
-                          int(profile.get("errors", 0))
-                          + int(heartbeat.get("errors", 0)),
-                          int(heartbeat.get("declarations", 0)),
-                      )
-                  )
-              summary_rows.sort(key=lambda r: (-r[2], r[0]))
-              total_loc = sum(r[1] for r in summary_rows)
-              total_heartbeats = sum(r[2] for r in summary_rows)
-              total_wall_seconds = sum(r[3] or 0.0 for r in summary_rows)
-              total_ms = sum(r[4] for r in summary_rows)
-              total_local_ms = sum(r[5] for r in summary_rows)
-              total_import_ms = sum(r[6] for r in summary_rows)
-              total_phases = sum(r[7] for r in summary_rows)
-              total_errors = sum(r[8] for r in summary_rows)
-              total_declarations = sum(r[9] for r in summary_rows)
-              file_count = len(summary_rows)
-              absolute_out.append(
-                  f"**Total heartbeats:** {format_heartbeats(total_heartbeats)} "
-                  f"maxHeartbeats units across {file_count} file"
-                  f"{'' if file_count == 1 else 's'} "
-                  f"({format_int(total_loc)} added LOC).\n\n"
-              )
-              absolute_out.append(
-                  f"**Sum of `lean --profile`:** {format_ms(total_ms)}. "
-                  f"**Import-excluded time:** {format_ms(total_local_ms)}.\n\n"
-              )
-              absolute_out.append(
-                  f"**Count-heartbeats wall-clock total:** {total_wall_seconds:.2f} s. "
-                  f"Repeated import cost inside `lean --profile`: "
-                  f"{format_ms(total_import_ms)}.\n\n"
-              )
-              absolute_out.append(
-                  "_Heartbeat values come from Mathlib's `linter.countHeartbeats` "
-                  "and are already in `maxHeartbeats` units. Per-file wall "
-                  "clocks are measured under parallel load and are noisier "
-                  "than heartbeats._\n\n"
-              )
-              absolute_out.append(
-                  "_LOC counts added lines in the profiled Lean files from "
-                  "this PR diff._\n\n"
-              )
-              absolute_out.append(
-                  "| File | LOC | Heartbeats (maxHB) | Count wall (s) | "
-                  "`lean --profile` (s) | Without import (s) | "
-                  "Import (s) | Decls | Errors |\n"
-              )
-              absolute_out.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|\n")
-              for (
-                  fname,
-                  loc,
-                  heartbeats,
-                  wall_seconds,
-                  total,
-                  local,
-                  import_ms,
-                  _phases,
-                  errors,
-                  declarations,
-              ) in summary_rows:
-                  absolute_out.append(
-                      f"| `{fname}` | {format_int(loc)} | "
-                      f"{format_heartbeats(heartbeats)} | "
-                      f"{format_seconds(wall_seconds)} | {total / 1000:.2f} | "
-                      f"{local / 1000:.2f} | {import_ms / 1000:.2f} | "
-                      f"{declarations} | {errors} |\n"
-                  )
-              # Total row in the same table so any single file's cumulative
-              # time can be compared against the whole at a glance.
-              absolute_out.append(
-                  f"| **Total** | **{format_int(total_loc)}** "
-                  f"| **{format_heartbeats(total_heartbeats)}** "
-                  f"| **{total_wall_seconds:.2f}** | **{total_ms / 1000:.2f}** "
-                  f"| **{total_local_ms / 1000:.2f}** "
-                  f"| **{total_import_ms / 1000:.2f}** "
-                  f"| **{total_declarations}** | **{total_errors}** |\n"
-              )
-              absolute_out.append("\n")
-
-              phase_rows = sorted(phase_totals.items(), key=lambda row: -row[1])
-              absolute_out.append("### Aggregate phase totals\n\n")
-              absolute_out.append("| Phase | Time |\n")
-              absolute_out.append("|---|---:|\n")
-              for phase, ms in phase_rows[:12]:
-                  absolute_out.append(f"| `{phase}` | {format_ms(ms)} |\n")
-              absolute_out.append("\n")
-
-          if all_files or compared:
-              # The lake-build ranking covers every changed module — compared and
-              # absolute alike — since the head build rebuilds both kinds.
-              changed_modules = {
-                  fname.removesuffix(".lean").replace("/", ".")
-                  for fname in set(all_files) | compared_set
-              }
-              changed_build_times = {
-                  module: seconds
-                  for module, seconds in build_times.items()
-                  if module in changed_modules
-              }
-              if changed_build_times:
-                  absolute_out.append("### Slowest changed modules (from `lake build`)\n\n")
-                  absolute_out.append("| Changed module | Lake time |\n")
-                  absolute_out.append("|---|---:|\n")
-                  for module, seconds in sorted(
-                      changed_build_times.items(), key=lambda row: -row[1]
-                  )[:12]:
-                      absolute_out.append(f"| `{module}` | {seconds:.2f} s |\n")
-                  absolute_out.append("\n")
-
-              # Full per-file output, collapsed by default so the comment
-              # stays scannable when many files are profiled.
-              if sections:
-                  absolute_out.append(
-                      "<details><summary>Per-file `lean --profile` output</summary>\n\n"
-                  )
-                  for fname, body in sections:
-                      absolute_out.append(f"#### `{fname}`\n\n")
-                      absolute_out.append("```text\n")
-                      absolute_out.append(body if body.strip() else "(empty)")
-                      absolute_out.append("\n```\n\n")
-                  absolute_out.append("</details>\n")
-
-              out_comment_extra.append(
-                  "\n_Advisory only — never blocks merge. "
-                  f"[Full log]({run_url}) uploaded as the `proof-profile` "
-                  "artifact._\n"
-              )
-
-
-          def bound_comment(text, limit):
-              """Trim a rendered profile to fit GitHub's comment size cap.
-
-              Keeps the headline paragraphs, the hottest rows of the per-file
-              table, and the small aggregate sections; drops the per-file raw
-              `lean --profile` dump, which is preserved in full in the step
-              summary and the `proof-profile` artifact. Falls back to a hard
-              character cut if the expected section markers are absent.
-              """
-              lines = text.splitlines()
-              try:
-                  header_i = next(
-                      i for i, ln in enumerate(lines)
-                      if ln.startswith("| File | LOC |")
-                  )
-                  total_i = next(
-                      i for i in range(header_i, len(lines))
-                      if lines[i].startswith("| **Total**")
-                  )
-                  phase_i = next(
-                      i for i in range(total_i, len(lines))
-                      if lines[i].startswith("### Aggregate phase totals")
-                  )
-                  details_i = next(
-                      (i for i in range(phase_i, len(lines))
-                       if lines[i].startswith("<details>")),
-                      len(lines),
-                  )
-              except StopIteration:
-                  cut = text[: limit - 200].rstrip()
-                  return (
-                      cut
-                      + "\n\n_…truncated to fit GitHub's comment limit; full "
-                      f"profile in the [`proof-profile` artifact]({run_url})._\n"
-                  )
-              head = lines[:header_i]
-              table_header = lines[header_i:header_i + 2]  # header + separator
-              data_rows = lines[header_i + 2:total_i]
-              total_row = lines[total_i]
-              tail = lines[phase_i:details_i]  # phase totals + slowest modules
-
-              def assemble(n):
-                  more = len(data_rows) - n
-                  ellipsis = (
-                      [f"| … _+{more} more files_ | | | | | | | | |"]
-                      if more > 0 else []
-                  )
-                  body = (
-                      head + table_header + data_rows[:n] + ellipsis
-                      + [total_row, ""] + tail
-                  )
-                  note = (
-                      "\n> **Comment truncated to fit GitHub's 64 KB limit.** "
-                      f"This PR profiles {len(data_rows)} files; the per-file "
-                      f"table shows only the {n} hottest by heartbeats. The "
-                      "full table and raw `lean --profile` output for every "
-                      "file are in the [run's step summary and `proof-profile` "
-                      f"artifact]({run_url}).\n"
-                      "\n_Advisory only — never blocks merge._\n"
-                  )
-                  return "\n".join(body).rstrip() + "\n" + note
-
-              n = len(data_rows)
-              out_text = assemble(n)
-              while len(out_text) > limit and n > 10:
-                  n = max(10, int(n * 0.8))
-                  out_text = assemble(n)
-              return out_text
-
-
-          rendered_full = "".join(out + comparison_full + absolute_out + out_comment_extra)
-          rendered_comment = "".join(
-              out + comparison_capped + absolute_out + out_comment_extra
-          )
-
-          # The full render always goes to the job step summary (~1 MB limit)
-          # and the raw logs to the `proof-profile` artifact.
-          with summary_path.open("a") as f:
-              f.write(rendered_full)
-
-          # A PR comment body is capped by GitHub at 65536 characters. On large
-          # PRs (hundreds of changed files) the full render blows past that and
-          # the companion poster fails, so nothing gets posted at all. Bound the
-          # comment to the headline paragraphs, the hottest table rows, and the
-          # small aggregate sections; the dropped per-file dump stays available
-          # in full in the step summary above and in the artifact.
-          if len(rendered_comment) > 62000:
-              rendered_comment = bound_comment(rendered_comment, 62000)
-          rendered_path.write_text(rendered_comment)
-          PY
+          git show origin/main:scripts/proof-profile/render.py > "$RUNNER_TEMP/render.py"
+          python3 "$RUNNER_TEMP/render.py"
 
       # A `pull_request` run from a fork gets a read-only GITHUB_TOKEN and
       # cannot post a PR comment, so the comment is posted by the separate
       # `Proof Profile Comment` workflow (workflow_run), which runs in the
       # base-repo context with a writable token. Here we only stage the
       # rendered profile and the PR number as an artifact for it to consume —
-      # this keeps the untrusted, PR-code-executing job (this one) read-only
-      # while the privileged poster never runs PR code.
+      # this keeps the untrusted, PR-code-executing jobs read-only while the
+      # privileged poster never runs PR code.
       - name: Stage comment payload for the companion workflow
-        if: steps.files.outputs.files != ''
         env:
-          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          PR_NUMBER: ${{ needs.plan.outputs.number }}
         run: |
           set -euo pipefail
           # proof-profile.md is written by the render step above; the PR number
@@ -1237,7 +520,6 @@ jobs:
           printf '%s\n' "$PR_NUMBER" > proof-profile-pr.txt
 
       - name: Upload comment payload
-        if: steps.files.outputs.files != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: proof-profile-comment
@@ -1247,7 +529,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload proof profile
-        if: always() && steps.files.outputs.files != ''
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: proof-profile
@@ -1257,5 +539,5 @@ jobs:
             proof-profile-build.log
             proof-profile-base-heartbeats.log
             proof-profile-modified-heartbeats.log
-            proof-profile-base-build.log
+            proof-profile-env-build-*.log
           if-no-files-found: ignore
