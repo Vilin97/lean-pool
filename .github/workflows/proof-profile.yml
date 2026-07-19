@@ -244,8 +244,13 @@ jobs:
           HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
         run: |
           set -euo pipefail
+          # Fall back to the checkout's copy while the script has not landed
+          # on the default branch yet (a `pull_request` run executes the PR
+          # merge-ref workflow, so the checkout's copy is its lockstep
+          # partner there anyway).
           git show origin/main:scripts/proof-profile/plan-shards.py \
-            > "$RUNNER_TEMP/plan-shards.py"
+            > "$RUNNER_TEMP/plan-shards.py" \
+            || cp scripts/proof-profile/plan-shards.py "$RUNNER_TEMP/plan-shards.py"
           matrix=$(python3 "$RUNNER_TEMP/plan-shards.py")
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           echo "Measure matrix: $matrix"
