@@ -224,7 +224,9 @@ instance : PartialOrder num where
 
 instance : IsOrderedAddMonoid num where
   add_le_add_left := by
-    simp_all
+    intro a b h c
+    rw [add_comm a c, add_comm b c]
+    exact V0Model.add_le_add_left a b h c
 
 
 theorem xmin_comp (X : str) :
@@ -264,9 +266,13 @@ by
 
 instance : CanonicallyOrderedAdd num where
   le_self_add := by
-    simp_all
+    intro a b
+    conv => lhs; rw [<- M.B3 a]
+    exact add_le_add (_root_.le_refl _) (M.B9 _)
   le_add_self := by
-    simp_all
+    intro a b
+    rw [add_comm]
+    apply B8
 
 theorem xmin :
   ∀ {X : str}, (0 : num) < len X -> ∃ x < len X, x ∈ X ∧ ∀ y < x, y ∉ X :=
@@ -290,7 +296,9 @@ by
           rw [B11, hy_eq]
           rwa [h_lenY_eq_lenX]
         have h_X_empty' : ¬∃ x < len X, x ∈ X := by
-          simp_all
+          refine not_exists_of_forall_not ?_
+          intro x hx
+          apply h_X_empty x hx.left hx.right
         apply h_X_empty'
         obtain ⟨wit, h_wit⟩ := ex_elt_of_len_pos (X := X) (by
           rw [h_lenY_eq_lenX] at h
@@ -326,9 +334,16 @@ by
             -- first, obtain hypothesis for last y of Y
             have len_Y_ne_zero : (len Y : num) ≠ 0 := by
               intro h'
-              simp_all
+              rw [h'] at h
+              apply not_lt_zero h
             have len_Y_pos : 0 < (len Y : num) := by
-              simp_all
+              cases (eq_zero_or_pos (len Y : num)) with
+              | inl h =>
+                exfalso
+                apply len_Y_ne_zero
+                exact h
+              | inr h =>
+                exact h
             obtain ⟨y, hy_in, hy_eq⟩ := ex_elt_of_len_pos len_Y_pos
             clear len_Y_ne_zero len_Y_pos h_lenX
             rename_i h_lenY_lt_lenX
@@ -346,7 +361,18 @@ by
               rw [le_iff_eq_or_lt] at h_y2
               cases h_y2 with
               | inl h_y2 =>
-                simp_all
+                rw [h_y2]
+                apply (h_Y.right (len Y) h_lenY_lt_lenX).mp
+                · apply h
+                  intro y3 hy3
+                  rw [le_iff_eq_or_lt] at hy3
+                  cases hy3 with
+                  | inl hy3 =>
+                    rwa [hy3]
+                  | inr hy3 =>
+                    apply (h_Y.right y h_y_lt_lenX).mp hy_in
+                    rwa [B11, hy_eq]
+                · rfl
               | inr h_y2 =>
                 clear h
                 apply (h_Y.right y h_y_lt_lenX).mp hy_in
@@ -370,7 +396,8 @@ by
       | inl h1 => exact h1.symm
       | inr h1 => exfalso; apply h; exact h1
     constructor
-    · simp_all
+    · rw [Y_empty]
+      exact h_lenX
     · constructor
       · -- len Y ∈ X
         false_or_by_contra
@@ -421,10 +448,13 @@ by
   have h_y0_ne_zero : y0 ≠ 0 := by
     have h_0_notin_Y : 0 ∉ Y := by
       rw [h_Y]
-      · simp_all
+      · rw [@not_not]
+        exact h_base
       · exact lt_of_le_of_lt (B9 z) (lt_succ z)
     intro contr
-    simp_all
+    apply h_0_notin_Y
+    rw [<-contr]
+    exact h_y0.2.1
   obtain ⟨x0, h_x0⟩ := B12 h_y0_ne_zero
   have h_x0_in : x0 ∈ X := by
     apply not_not.mp
@@ -446,7 +476,8 @@ by
   apply h_y
   · have aux : y0 < z + 1 := by
       apply lt_of_lt_of_le _ h_Y_le
-      simp_all
+      apply L1
+      exact h_y0.2.1
     rw [<- B11] at aux
     apply lt_of_lt_of_le _ aux
     rw [<- h_x0.2]
@@ -571,7 +602,12 @@ by
     exact c_lt.1
   intro j
   by_cases j = i
-  · simp_all
+  · rename_i hji
+    intro _ hcj
+    rw [hji]
+    cases ixy with
+    | inl ix => left; exact ix
+    | inr iy => right; exact iy
   · rename_i hji
     intro hlt hcj
     exact cprev j (lt_of_le_of_ne (by rw [B11]; exact hlt) hji) hcj
@@ -697,7 +733,8 @@ lemma carry_lt_add_len :
   have h_len_Y_pos : (0 : num) < len Y := len_pos_of_exists h_kY
   have h_pred_or : pred_i ∈ X ∨ pred_i ∈ Y := by
     by_cases h_k_eq_pred : k = pred_i
-    · simp_all
+    · subst h_k_eq_pred
+      exact Or.inl h_kX
     · have h_pred_lt_i : pred_i < i := by
         simpa [hpred_i_eq] using (lt_succ pred_i)
       have h_k_le_pred : k ≤ pred_i := by

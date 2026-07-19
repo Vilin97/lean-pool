@@ -96,7 +96,8 @@ theorem l2_rep
   have pq_neq : p ≠ q := by
     intro hpq
     have inj := pq_indep.injective
-    simp_all
+    have : (0 : Fin 2) = 1 := inj (by simp [hpq])
+    simp at this
   -- a, b, p, q are in the span of p, q.
   have a_span_pq : a ∈ span K {p, q} := lin_dep_imp_span a p q pq_indep apq_dep
   have b_span_pq : b ∈ span K {p, q} := lin_dep_imp_span b p q pq_indep bpq_dep
@@ -238,7 +239,9 @@ intro A B
 rw [independent_iff, rep_comp_3]
 rw [not_linearIndependent_iff]
 use {0, 1, 2}, ![1, 0, -1]
-simp_all,
+refine ⟨?_, ?_⟩
+· simp
+· simp,
 by
 intro A B P Q ABPcol BPQcol PQ_neq
 rw [independent_iff, rep_comp_3] at ABPcol

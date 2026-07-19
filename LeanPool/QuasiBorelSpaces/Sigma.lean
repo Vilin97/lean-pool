@@ -211,8 +211,12 @@ noncomputable def chain [∀ i, Preorder (P i)] (φ : Chain (Var I P)) : Var I f
             rw [eqRec_eq_cast, eqRec_eq_cast]
             have hkey := cast_mono h₂.symm h₀.snd
             simp only [eqRec_eq_cast] at hkey
-            simp_all
-          · simp_all
+            convert hkey using 2
+            exact (cast_heq _ _).symm
+          · exfalso
+            apply h₂
+            simp only [apply_fst] at h₁ h₂ ⊢
+            rw [← h₀.fst]; exact h₁
         · by_cases h₂ : (i : I) = ((φ i₂).apply r).fst
           · exfalso
             apply h₁
@@ -416,7 +420,8 @@ instance
       · intro i
         apply MeasureTheory.Sigma.measurable_mk'
         have := ψ.isHom_var i
-        simp_all
+        simp only [isHom_iff_measurable] at this
+        exact this
     · intro h
       have := Encodable.ofCountable I
       have {i : {i : I // ∃r, (φ r).1 = i}} : Nonempty (P i.val) := by
@@ -488,7 +493,9 @@ lemma isHom_chain_distrib : IsHom (Chain.Sigma.distrib (I := I) (P := P)) := by
     Sigma.Var.chain_apply, Chain.Sigma.distrib, Chain.coe_map, OrderHom.coe_mk,
     Function.comp_apply, Sigma.Var.apply_fst, Sigma.Var.apply_snd, Sigma.mk.injEq]
   have hfst : ∀ k, ((φ r) k).fst = (ψ k).embed ((ψ k).index r) := by
-    simp_all
+    intro k
+    rw [hψ k r]
+    rfl
   refine ⟨hfst 0, ?_⟩
   apply heq_ext (P := P) (i := ((φ r) 0).fst) (j := (ψ 0).embed ((ψ 0).index r)) (h := hfst 0)
   intro k

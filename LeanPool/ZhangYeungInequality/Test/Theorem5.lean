@@ -135,7 +135,8 @@ example {Ω : Type*} [MeasurableSpace Ω]
       I[X 0 : ⟨U, Z⟩; μ] + ∑ j : Fin 3, H[X j; μ]
         - H[(fun ω : Ω => fun j : Fin 3 => X j ω); μ] = I[X 0 : ⟨U, Z⟩; μ] := by
     linarith
-  simp_all
+  rw [htail'] at h
+  simpa using h
 
 end AssumptionSpecialization
 

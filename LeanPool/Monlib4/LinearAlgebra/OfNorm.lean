@@ -61,7 +61,8 @@ example {x y : E} (hx : x ≠ 0) (hy : y ≠ 0) :
     have : inner 𝕜 y x ≠ 0 := by
       intro h'
       rw [inner_eq_zero_symm] at h'
-      simp_all
+      rw [h', norm_zero, eq_comm, mul_eq_zero] at h
+      simp_rw [norm_eq_zero, hx, hy, false_or] at h
     have hy' : ‖y‖ ^ 2 ≠ 0 := by
       rwa [ne_eq, sq_eq_zero_iff, norm_eq_zero]
     rw [← sq_eq_sq₀ (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _)),
@@ -174,7 +175,8 @@ theorem innerDef_conj (x y : X) : conj (innerDef x y : 𝕜) = innerDef y x := b
     ↑(re (innerDef x y : 𝕜)) + ↑(im (innerDef x y : 𝕜)) * -(I : 𝕜) =
         ↑(re (innerDef y x : 𝕜)) + ↑(-im (innerDef x y : 𝕜)) * (I : 𝕜) := by
       rw [re_innerDef_symm]
-      simp_all
+      congr 1
+      simp
     _ = ↑(re (innerDef y x : 𝕜)) + ↑(im (innerDef y x : 𝕜)) * (I : 𝕜) := by
       rw [← im_innerDef_symm]
     _ = innerDef y x := re_add_im _
@@ -460,7 +462,10 @@ lemma Metric.exists_mem_closed_unitBall_of_norm_one (𝕜 H : Type _) [RCLike �
   ∃ x : H, ‖x‖ = 1 ∧ x ∈ closedBall (0 : H) 1 := by
   obtain ⟨x, hx⟩ : ∃ x : H, x ≠ 0 := exists_ne 0
   use (1 / ‖x‖ : 𝕜) • x
-  simp_all
+  simp only [one_div, mem_closedBall, dist_zero_right, norm_smul, norm_inv]
+  simp only [norm_ofReal, abs_norm]
+  rw [inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx)]
+  exact ⟨rfl, le_rfl⟩
 
 lemma Metric.exists_mem_unitBall_of_norm_one (𝕜 H : Type _) [RCLike 𝕜]
   [NormedAddCommGroup H] [NormedSpace 𝕜 H] [Nontrivial H] :
@@ -509,7 +514,8 @@ theorem ne_zero_iff_nontrivial_of_mem_extremePoints_closed_unitBall
       by simp_rw [← @RCLike.ofReal_one 𝕜, RCLike.real_lt_real]; norm_num,
       by simp only [one_div, ofReal_inv, ofReal_ofNat, smul_neg, sub_smul, neg_sub,
         ← add_sub_assoc, ← add_smul]; norm_num⟩
-  simp_all
+  rw [hx.1, norm_zero] at hy
+  exact zero_ne_one hy.1
 
 theorem norm_one_of_mem_extremePoints_of_closed_unitBall {𝕜 H : Type _} [RCLike 𝕜]
   [NormedAddCommGroup H]
@@ -522,13 +528,17 @@ theorem norm_one_of_mem_extremePoints_of_closed_unitBall {𝕜 H : Type _} [RCLi
   by_cases hx' : ‖x‖ ≠ 1
   · specialize h ((1 / ‖x‖ : 𝕜) • x)
       (by
-        simp_all)
+        simp_rw [norm_smul, one_div, norm_inv, norm_ofReal, abs_norm,
+          inv_mul_cancel₀ (norm_ne_zero_iff.mpr this), le_rfl])
       0 (by simp_rw [norm_zero, zero_le_one])
       (⟨‖x‖, by simp_rw [RCLike.zero_lt_real]; exact norm_pos_iff.mpr this,
         by simp_rw [← @RCLike.ofReal_one 𝕜, real_lt_real, lt_iff_le_and_ne]; exact ⟨h1, hx'⟩,
-        by simp_all⟩)
-    simp_all
-  simp_all
+        by simp only [one_div, smul_zero, add_zero, smul_smul, ← ofReal_inv, ← ofReal_mul,
+          mul_inv_cancel₀ (norm_ne_zero_iff.mpr this), ofReal_one, one_smul]⟩)
+    exfalso
+    exact this h.2.symm
+  rw [not_ne_iff] at hx'
+  exact hx'
 
 theorem mem_extremePoints_of_closedBall_iff_norm_eq_one
   {𝕜 H : Type _} [RCLike 𝕜] [NormedAddCommGroup H] [InnerProductSpace 𝕜 H] [Nontrivial H] (x : H) :
@@ -613,7 +623,10 @@ example {𝕜 X Y Z : Type _} [RCLike 𝕜] [NormedAddCommGroup X]
           f.symm.toLinearIsometry.toContinuousLinearMap‖ := ?_
     _ ≤ _ := f.symm.toLinearIsometry.norm_comp_toContinuousLinearMap_le _
   apply ContinuousLinearMap.opNorm_ext
-  simp_all
+  intro y
+  simp only [ContinuousLinearMap.coe_comp, LinearIsometry.coe_toContinuousLinearMap,
+    LinearIsometryEquiv.coe_toLinearIsometry, Function.comp_apply,
+    LinearIsometryEquiv.apply_symm_apply]
 
 /-- Pull back continuous linear functionals along a continuous linear map. -/
 @[simps] def NormedSpace.Dual.transpose {E F : Type*} (𝕜 : Type*) [RCLike 𝕜]
@@ -647,10 +660,14 @@ open NormedSpace in
   invFun := NormedSpace.Dual.transpose 𝕜 (f.symm.toLinearIsometry).toContinuousLinearMap
   left_inv := fun x => by
     ext
-    simp_all
+    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp,
+      LinearIsometry.coe_toContinuousLinearMap, LinearIsometryEquiv.coe_toLinearIsometry,
+      Function.comp_apply, LinearIsometryEquiv.apply_symm_apply]
   right_inv := fun x => by
     ext
-    simp_all
+    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp,
+      LinearIsometry.coe_toContinuousLinearMap, LinearIsometryEquiv.coe_toLinearIsometry,
+      Function.comp_apply, LinearIsometryEquiv.symm_apply_apply]
   map_add' := fun x y => by
     simp only [map_add, Dual.transpose_apply]
   map_smul' := fun c x => by

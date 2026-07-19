@@ -127,7 +127,9 @@ instance : MulAction (A ⊗[F] B)ᵐᵒᵖ (M α β) where
     change AoxFBSmulM (1 ⊗ₜ[F] 1) x = LinearMap.id (R := F) x
     refine LinearMap.ext_iff |>.1 ?_ x
     ext a b
-    simp_all
+    simp only [AlgebraTensorModule.curry_apply, curry_apply, LinearMap.coe_restrictScalars,
+      LinearMap.coe_comp, Function.comp_apply, Submodule.mkQ_apply,
+      AoxFBSmulM_op_tmul_smul_mk_tmul, _root_.mul_one, LinearMap.id_comp]
   mul_smul := by
     rintro ⟨x⟩ ⟨y⟩ b
     change AoxFBSmulM (y * x) _ = AoxFBSmulM x (AoxFBSmulM y b)
@@ -185,7 +187,9 @@ def CSmulAux (c : C) : M α β →ₗ[F] M α β :=
           map_smul' f b := by
             dsimp only [RingHom.id_apply]
             rw [Finset.smul_sum]
-            simp_all }
+            refine Finset.sum_congr rfl fun σ _ => ?_
+            rw [smul_tmul', smul_tmul, ← F_smul_mul_compatible]
+            simp only [Algebra.smul_mul_assoc, tmul_smul] }
         map_add' a a' := by
           ext b : 1
           simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.add_apply]
@@ -216,7 +220,9 @@ def CSmulAux (c : C) : M α β →ₗ[F] M α β :=
     | zero => simp
     | add f g _ _ => simp_all
     | single a b =>
-      simp_all)
+      simp only [mulLinearMap_single_single, Finsupp.smul_single, smul_eq_mul, map_mul]
+      congr 1
+      field_simp [← _root_.mul_assoc])
 
 lemma CSmulAux_calc (k : K) (σ : Gal(K, F)) (a : A) (b : B) :
     CSmulAux (k • basis σ) (Submodule.Quotient.mk (a ⊗ₜ[F] b) : M α β) =
@@ -261,7 +267,10 @@ def CSmul : C →ₗ[F] M α β →ₗ[F] M α β where
     change Submodule.mkQ _ (∑ _, _) = f • Submodule.mkQ _ (∑ _, _)
     rw [← map_smul, Finset.smul_sum]
     simp_rw [smul_tmul']
-    simp_all
+    congr 1
+    refine Finset.sum_congr rfl fun σ _ => ?_
+    congr 1
+    simp
 
 instance : SMul C (M α β) where
   smul c x := CSmul c x
@@ -525,9 +534,12 @@ def AoxKBToM : A ⊗[K] B →ₗ[F] M α β where
         liftAddHom_tmul, AddMonoidHom.coe_mk, ZeroHom.coe_mk, RingHom.id_apply]
       rw [← Submodule.Quotient.mk_smul, smul_tmul']
     | add x y hx hy =>
-      simp_all
+      simp only [ZeroHom.toFun_eq_coe, AddMonoidHom.toZeroHom_coe, RingHom.id_apply, smul_add,
+        map_add] at hx hy ⊢
+      simp only [hx, hy]
     | zero =>
-      simp_all
+      simp only [smul_zero, ZeroHom.toFun_eq_coe, map_zero,
+        RingHom.id_apply]
 
 /-- The balanced quotient is linearly equivalent to the tensor product over `K`. -/
 def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinear MtoAoxKB AoxKBToM
@@ -540,7 +552,8 @@ def AoxKBEquivM : M α β ≃ₗ[F] A ⊗[K] B := .ofLinear MtoAoxKB AoxKBToM
         Function.comp_apply, liftAddHom_tmul, AddMonoidHom.coe_mk, ZeroHom.coe_mk,
         Submodule.liftQ_apply, lift.tmul, LinearMap.id_coe, id_eq]
     | add x y hx hy =>
-      simp_all
+      simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.id_coe, id_eq] at hx hy
+      simp only [LinearMap.coe_comp, Function.comp_apply, map_add, hx, hy, LinearMap.id_coe, id_eq]
     | zero => simp)
   (by
     ext a b
@@ -680,7 +693,8 @@ instance : LinearMap.CompatibleSMul (M α β) (ι →₀ SM) F C := by
     intro l f x
     change _ = algebraMap F C f • l x
     rw [← map_smul]
-    simp_all
+    congr 1
+    simp
 
 instance : IsScalarTower F C SM := by
     constructor
@@ -707,7 +721,8 @@ def isoDagger (m : ℕ) :
       Equiv.coe_fn_mk, LinearMap.coe_mk, AddHom.coe_mk, Matrix.algebraMap_matrix_apply]
     split_ifs with h
     · simp only [h, algebraMap_end_apply, Pi.smul_apply, Pi.single_eq_same]
-    · simp_all
+    · simp only [algebraMap_end_apply, Pi.smul_apply, Pi.single_eq_of_ne h, smul_zero,
+      LinearMap.zero_apply]
 
 /-- The opposite algebra of `C` as endomorphisms of the regular `C`-module. -/
 def mopEquivEnd' : Cᵐᵒᵖ ≃ₐ[F] Module.End C C :=
@@ -756,11 +771,18 @@ lemma M_directSum : ∃ (ιM : Type) (_ : Fintype ιM), Nonempty (M α β ≃ₗ
   refine ⟨ιM, ?_, ⟨iso⟩⟩
   haveI : LinearMap.CompatibleSMul C (ιM →₀ SM) F C := by
     constructor
-    simp_all
+    intro l f x
+    change _ = algebraMap F C f • l x
+    rw [← map_smul]
+    congr 1
+    apply val_injective
+    simp [Algebra.algebraMap_eq_smul_one]
   let iso' : M α β ≃ₗ[F] (ιM →₀ SM) := iso.restrictScalars F
   haveI : IsScalarTower F C (ιM →₀ SM) := by
     constructor
-    simp_all
+    intro f c x
+    change _ = algebraMap F C f • _ • x
+    rw [Algebra.smul_def, mul_smul]
   haveI : Module.Finite C (ιM →₀ SM) := Module.Finite.equiv iso
   haveI : Module.Finite F (ιM →₀ SM) := Module.Finite.trans C (ιM →₀ SM)
   have eq := LinearEquiv.finrank_eq iso'
@@ -812,7 +834,8 @@ lemma SM_F_dim : Fintype.card ι * finrank F SM = finrank F K ^ 2 := by
     show (Fintype.card ι : Cardinal) * (finrank F SM : Cardinal) =
       ((Fintype.card ι * finrank F SM : ℕ) : Cardinal) by simp] at eq2
   have := finrank_eq_of_rank_eq (n := Fintype.card ι * finrank F SM) eq2
-  simp_all
+  rw [this] at eq1
+  exact eq1.symm
 
 instance : Module.Finite C (Fin (Fintype.card ι * finrank F K) → SM) := by
   have := Finsupp.linearEquivFunOnFinite C SM (Fin (Fintype.card ι * finrank F K))
@@ -866,7 +889,8 @@ def endCMIso :
     simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
       Module.algebraMap_end_apply]
     change  (MIsoPow' α β) (f • (MIsoPow' α β).symm z) = _
-    simp_all
+    rw [map_smul]
+    simp [LinearEquiv.apply_symm_apply]
 
 instance : NeZero (finrank F K * Fintype.card ι) := by
   constructor

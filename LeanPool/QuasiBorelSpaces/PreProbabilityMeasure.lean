@@ -200,7 +200,9 @@ theorem lintegral_lintegral_swap
 @[simp]
 lemma measureOf_empty (μ : PreProbabilityMeasure B) : measureOf μ ∅ = 0 := by
   rcases μ
-  simp_all
+  simp only [
+    measureOf_mk, Set.mem_empty_iff_false, Set.setOf_false,
+    ProbabilityMeasure.coeFn_empty, ENNReal.coe_zero]
 
 @[simp]
 lemma measureOf_mono (μ : PreProbabilityMeasure B) : Monotone (measureOf μ) := by
@@ -371,7 +373,9 @@ instance : QuasiBorelSpace (PreProbabilityMeasure A) where
   isVar_comp hf := by
     rintro ⟨μ, hμ⟩
     use Var.comp hf μ
-    simp_all
+    simp only [Var.apply_comp]
+    intro r
+    apply hμ
   isVar_cases' hix hφ := by
     choose φ hφ using hφ
     use Var.cases hix φ
@@ -456,7 +460,8 @@ lemma isHom_lintegral
     (by fun_prop)
   simp only [isHom_ofMeasurableSpace] at hk
   have := Measurable.fun_comp hk (by fun_prop : Measurable (pack (A := ℝ × ℝ)))
-  simp_all
+  simp only [unpack_pack] at this
+  exact this
 
 @[gcongr]
 lemma lintegral_congr
