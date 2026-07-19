@@ -27,13 +27,16 @@ name: Proof Profile
 # would not shorten the wall clock anyway.)
 #
 # Structure: a cheap `plan` job resolves the PR and decides what to measure;
-# the two comparison sides then run as parallel `measure` matrix jobs (the
-# passes are independent, so this halves the wall clock of a fresh profile);
-# `absolute` profiles any added files; `report` merges the logs and stages
-# the PR comment for the posting companion workflow. The measurement and
-# render scripts are fetched from scripts/proof-profile/ on the default
-# branch — not from the PR checkout — so they stay in lockstep with this
-# workflow file (which issue_comment runs also take from the default branch).
+# the comparison then fans out as parallel `measure` matrix jobs — each side
+# (base/head) is split at run time into up to 8 round-robin shards of the
+# modified-file list, so the wall clock is one shard's worth of measurement
+# plus setup, and there is no static shard assignment to maintain as the
+# pool grows; `absolute` profiles any added files; `report` stitches the
+# shard logs back together and stages the PR comment for the posting
+# companion workflow. The measurement and render scripts are fetched from
+# scripts/proof-profile/ on the default branch — not from the PR checkout —
+# so they stay in lockstep with this workflow file (which issue_comment runs
+# also take from the default branch).
 
 on:
   pull_request:
@@ -107,8 +110,8 @@ jobs:
       compare: ${{ steps.files.outputs.compare }}
       compare_note: ${{ steps.files.outputs.compare_note }}
       merge_base: ${{ steps.files.outputs.merge_base }}
-      base_build_modules: ${{ steps.files.outputs.base_build_modules }}
       head_build_modules: ${{ steps.files.outputs.head_build_modules }}
+      measure_matrix: ${{ steps.shards.outputs.matrix }}
     steps:
       - name: Resolve PR number, head SHA, base SHA
         id: pr
@@ -203,13 +206,9 @@ jobs:
           # Module names for targeted `lake build` (path → dotted module):
           # measurement only needs the measured files' imports built, so the
           # build targets are the changed modules, never the whole library.
-          base_build_modules=""
+          # (The measure shards derive their own module lists from their
+          # slice of the modified files.)
           head_build_modules=""
-          if [ "$compare" = true ] && [ -n "$modified" ]; then
-            # shellcheck disable=SC2086 # word-split the file list on purpose
-            base_build_modules=$(printf '%s\n' $modified \
-              | sed -e 's/\.lean$//' -e 's#/#.#g' | tr '\n' ' ')
-          fi
           if [ -n "$profile_files" ]; then
             # shellcheck disable=SC2086 # word-split the file list on purpose
             head_build_modules=$(printf '%s\n' $profile_files \
@@ -223,7 +222,6 @@ jobs:
             echo "compare=$compare"
             echo "compare_note=$compare_note"
             echo "merge_base=$merge_base"
-            echo "base_build_modules=$base_build_modules"
             echo "head_build_modules=$head_build_modules"
           } >> "$GITHUB_OUTPUT"
           if [ -z "$files" ]; then
@@ -233,23 +231,35 @@ jobs:
             echo "Compare against merge base $merge_base: $compare"
           fi
 
+      # The measure matrix (side × shard) is computed from the diff at run
+      # time — no static shard list to maintain. When no comparison will run
+      # the script emits a placeholder entry so the strategy expression still
+      # parses; the measure job's `if:` skips it.
+      - name: Plan measurement shards
+        id: shards
+        env:
+          COMPARE: ${{ steps.files.outputs.compare }}
+          MODIFIED: ${{ steps.files.outputs.modified }}
+          MERGE_BASE: ${{ steps.files.outputs.merge_base }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          git show origin/main:scripts/proof-profile/plan-shards.py \
+            > "$RUNNER_TEMP/plan-shards.py"
+          matrix=$(python3 "$RUNNER_TEMP/plan-shards.py")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "Measure matrix: $matrix"
+
   measure:
     needs: plan
     if: needs.plan.outputs.compare == 'true'
     runs-on: ubuntu-latest
-    name: Measure ${{ matrix.side }} side
+    name: Measure ${{ matrix.side }} ${{ matrix.shard }}
     strategy:
-      # One side failing must not cancel the other; the report degrades
-      # gracefully when a side is missing.
+      # One shard failing must not cancel the rest; the report degrades
+      # gracefully when files are missing from a side.
       fail-fast: false
-      matrix:
-        include:
-          - side: base
-            ref: ${{ needs.plan.outputs.merge_base }}
-            log: proof-profile-base-heartbeats.log
-          - side: head
-            ref: ${{ needs.plan.outputs.head_sha }}
-            log: proof-profile-modified-heartbeats.log
+      matrix: ${{ fromJSON(needs.plan.outputs.measure_matrix) }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -291,49 +301,72 @@ jobs:
           git show origin/main:scripts/proof-profile/measure-heartbeats.sh > "$RUNNER_TEMP/measure-heartbeats.sh"
           chmod +x "$RUNNER_TEMP/measure-one.sh" "$RUNNER_TEMP/measure-heartbeats.sh"
 
+      - name: Select this shard's slice of the modified files
+        id: shard
+        env:
+          MODIFIED: ${{ needs.plan.outputs.modified }}
+          SHARD: ${{ matrix.shard }}
+          SHARD_COUNT: ${{ matrix.shard_count }}
+        run: |
+          set -euo pipefail
+          # Round-robin over the modified list — derived here from the shard
+          # index rather than passed through the matrix, so job outputs stay
+          # small on PRs that touch thousands of files.
+          # shellcheck disable=SC2086 # word-split the file list on purpose
+          shard_files=$(printf '%s\n' $MODIFIED \
+            | awk -v k="$SHARD_COUNT" -v i="$SHARD" '(NR - 1) % k == i' \
+            | tr '\n' ' ')
+          echo "files=$shard_files" >> "$GITHUB_OUTPUT"
+          # shellcheck disable=SC2086 # word-split the file list on purpose
+          echo "Shard $SHARD/$SHARD_COUNT measures $(printf '%s\n' $shard_files | wc -l) files"
+
       - name: Build the measurement environment at the merge base
         id: base-env
         env:
           MERGE_BASE: ${{ needs.plan.outputs.merge_base }}
-          BASE_MODULES: ${{ needs.plan.outputs.base_build_modules }}
+          SHARD_FILES: ${{ steps.shard.outputs.files }}
           SIDE: ${{ matrix.side }}
+          SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
           # The restored cache was built from the base branch, so building
-          # the modified modules (which pulls in exactly the dependency
-          # cones the measurements need) is mostly cache hits.
+          # this shard's modules (which pulls in exactly the dependency
+          # cones its measurements need) is mostly cache hits.
           git checkout -f --detach "$MERGE_BASE"
+          # shellcheck disable=SC2086 # word-split the file list on purpose
+          modules=$(printf '%s\n' $SHARD_FILES \
+            | sed -e 's/\.lean$//' -e 's#/#.#g' | tr '\n' ' ')
           ok=true
-          # shellcheck disable=SC2086 # BASE_MODULES is a space-separated list on purpose
-          if ! /usr/bin/time -p ~/.elan/bin/lake build $BASE_MODULES 2>&1 \
-               | tee "proof-profile-env-build-$SIDE.log"; then
-            echo "::warning::Merge-base build failed; $SIDE-side measurements are skipped."
+          # shellcheck disable=SC2086 # modules is a space-separated list on purpose
+          if ! /usr/bin/time -p ~/.elan/bin/lake build $modules 2>&1 \
+               | tee "proof-profile-env-build-$SIDE-$SHARD.log"; then
+            echo "::warning::Merge-base build failed; this shard's $SIDE-side measurements are skipped."
             ok=false
           fi
           echo "ok=$ok" >> "$GITHUB_OUTPUT"
 
-      - name: Measure modified files at the ${{ matrix.side }} revision
+      - name: Measure this shard at the ${{ matrix.side }} revision
         id: measure
         if: steps.base-env.outputs.ok == 'true'
         env:
           REF: ${{ matrix.ref }}
           LOG: ${{ matrix.log }}
-          MODIFIED: ${{ needs.plan.outputs.modified }}
+          SHARD_FILES: ${{ steps.shard.outputs.files }}
         run: |
           set -euo pipefail
           measured=true
-          # shellcheck disable=SC2086 # MODIFIED is a space-separated list on purpose
-          "$RUNNER_TEMP/measure-heartbeats.sh" "$LOG" "$REF" $MODIFIED \
+          # shellcheck disable=SC2086 # SHARD_FILES is a space-separated list on purpose
+          "$RUNNER_TEMP/measure-heartbeats.sh" "$LOG" "$REF" $SHARD_FILES \
             || { echo "::warning::Measurement failed."; measured=false; rm -f "$LOG"; }
           if [ "$measured" = false ]; then
-            echo "This side will be missing from the report."
+            echo "This shard will be missing from the report."
           fi
 
       - name: Upload measurements for the report job
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: proof-profile-part-${{ matrix.side }}
+          name: proof-profile-part-${{ matrix.side }}-${{ matrix.shard }}
           path: |
             ${{ matrix.log }}
             proof-profile-env-build-*.log
@@ -470,11 +503,20 @@ jobs:
           COMPARE_NOTE: ${{ needs.plan.outputs.compare_note }}
         run: |
           set -euo pipefail
-          # The modified files' head-side sections live in their own
-          # (cacheable) log; fold them into the head log the renderer reads.
-          if [ -f proof-profile-modified-heartbeats.log ]; then
-            cat proof-profile-modified-heartbeats.log >> proof-profile-heartbeats.log
-          fi
+          # Stitch the per-shard measurement logs back into the two per-side
+          # logs the renderer reads. Order does not matter — the renderer
+          # keys sections by file path — but zero-padded shard indices keep
+          # the glob deterministic anyway.
+          for shard_log in proof-profile-base-heartbeats-*.log; do
+            if [ -e "$shard_log" ]; then
+              cat "$shard_log" >> proof-profile-base-heartbeats.log
+            fi
+          done
+          for shard_log in proof-profile-modified-heartbeats-*.log; do
+            if [ -e "$shard_log" ]; then
+              cat "$shard_log" >> proof-profile-heartbeats.log
+            fi
+          done
           git show origin/main:scripts/proof-profile/render.py > "$RUNNER_TEMP/render.py"
           python3 "$RUNNER_TEMP/render.py"
 
@@ -513,6 +555,5 @@ jobs:
             proof-profile-heartbeats.log
             proof-profile-build.log
             proof-profile-base-heartbeats.log
-            proof-profile-modified-heartbeats.log
             proof-profile-env-build-*.log
           if-no-files-found: ignore
