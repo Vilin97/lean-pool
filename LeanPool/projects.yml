@@ -4512,3 +4512,47 @@ projects:
       - kuramoto
     msc:
       - "34D06"
+  - slug: min-modulus-unique-multiset-sum
+    title: Minimum modulus for the unique multiset-sum problem
+    summary: >-
+      Formalizes the exact minimum modulus
+      `N_min(n) = 2^n - 2^{floor(log_2 n)}` for the unique multiset-sum
+      problem on the super-increasing residue set `{2^i - 1 : 0 <= i < n}`,
+      and proves the sharp elementary-abelian-2-group lower bound `k >= n - 1`
+      for unique multiset sums in `(Z/2Z)^k`.
+    branch: additive combinatorics
+    entry_module: LeanPool.MinModulusUniqueMultisetSum
+    authors:
+      - José A. R. Fonollosa
+    source:
+      title: Minimum modulus for the unique multiset-sum problem, with an application to computing the permanent
+      authors:
+        - José A. R. Fonollosa
+      arxiv: "2607.08366"
+      github_repo: jarfo/min-modulus
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - MinModulus.nmin_eq
+      - MinModulus.elementaryAbelianTwoGroups_optimal
+    main_results:
+      - declaration: MinModulus.nmin_eq
+        informal: >-
+          Proves that among moduli `N >= 2` the least one making the
+          super-increasing residue set `{2^i - 1 : 0 <= i < n}` valid for the
+          unique multiset-sum problem is `2^n - 2^{floor(log_2 n)}`, for every
+          `n >= 2` (stated as `IsLeast`).
+      - declaration: MinModulus.elementaryAbelianTwoGroups_optimal
+        informal: >-
+          Proves that if `g_0, ..., g_{n-1}` in `(Z/2Z)^k` have unique
+          multiset sums, then `k >= n - 1`: an elementary abelian 2-group
+          admitting such a family has order at least `2^(n - 1)`.
+    tags:
+      - additive-combinatorics
+      - multiset-sums
+      - finite-groups
+      - permanent
+    msc:
+      - "11B75"
+      - "05D99"
