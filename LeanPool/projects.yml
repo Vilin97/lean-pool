@@ -4409,6 +4409,7 @@ projects:
       github_repo: jarfo/min-modulus
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - MinModulus.nmin_eq
       - MinModulus.elementaryAbelianTwoGroups_optimal
