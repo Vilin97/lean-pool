@@ -4638,3 +4638,46 @@ projects:
       - "11R06"
       - "11C08"
       - "20F55"
+  - slug: sabidussi
+    title: "Sabidussi's compatibility conjecture for Eulerian multigraphs"
+    summary: >-
+      Formalizes Sabidussi's compatibility conjecture for finite labelled endpoint multigraphs
+      with loops and parallel edges, where a loop contributes two half-edge incidences to the
+      degree of its vertex. Given an Euler tour and minimum degree at least four, the main theorem
+      constructs a partition of all edges into nonempty, edge-connected, 2-regular ordinary
+      circuits such that consecutive edges of the Euler tour never lie in the same circuit. The
+      proof runs a four-colour (F_2^2) algebra over the cyclic transition word, uses an odd
+      balancing parity lemma to choose compatible local frames, and transports the resulting
+      colouring back to a compatible ordinary circuit decomposition.
+    branch: graph theory
+    entry_module: LeanPool.Sabidussi
+    authors:
+      - Nikolay Ulyanov
+    source:
+      title: "Graph Puzzles III.1: A proof of Sabidussi's compatibility conjecture"
+      authors:
+        - Nikolay Ulyanov
+      url: "https://github.com/gexahedron/sabidussi-lean/blob/032e640df0cc41d4d3d217f7c68628ab19cb3767/sabidussi_proof.pdf"
+      github_repo: gexahedron/sabidussi-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Sabidussi.LoopMultigraph.loop_sabidussi_compatibility_ordinary
+    main_results:
+      - declaration: Sabidussi.LoopMultigraph.loop_sabidussi_compatibility_ordinary
+        informal: >-
+          For any finite endpoint multigraph with an Euler tour and minimum degree at least four,
+          the edges partition into ordinary, nonempty, connected, 2-regular circuits that are
+          compatible with the tour: no circuit contains two consecutive tour edges.
+      - declaration: Sabidussi.LoopMultigraph.loop_sabidussi_compatibility
+        informal: >-
+          The same compatibility statement phrased with the intrinsic even-edge-set circuit
+          decomposition, from which the ordinary-circuit form is derived.
+    tags:
+      - graph-theory
+      - eulerian-graphs
+      - circuit-decomposition
+      - sabidussi
+    msc:
+      - "05C45"
