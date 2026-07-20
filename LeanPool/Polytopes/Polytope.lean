@@ -128,8 +128,7 @@ lemma origin_Hpolytope [FiniteDimensional ℝ E] :
       simp only [Set.mem_preimage, Set.mem_range, forall_exists_index, Subtype.forall] at h
       exact h (Module.finBasis ℝ E i) (Basis.ne_zero (Module.finBasis ℝ E) i) i rfl
     · -- 2.
-      rintro rfl x _
-      rw [inner_zero_right]
+      simp_all
 
 lemma hyperplane_Hpolytope : ∀ (f : {f : (StrongDual ℝ E) // norm f = 1}) (c : ℝ),
   ∃ (H_ : Set (Halfspace E)) (hH_ : H_.Finite), Hpolytope hH_ = {x | f.1 x = c} := by
@@ -160,9 +159,7 @@ lemma inter_Hpolytope (H_1 H_2 : Set (Halfspace E)) (hH_1 : H_1.Finite) (hH_2 : 
   rw [mem_Hpolytope, Set.mem_inter_iff, mem_Hpolytope, mem_Hpolytope]
   constructor
   · -- 1
-    intro h
-    constructor <;> intro Hi_ hH_ <;>
-      exact h Hi_ (by simp only [Set.mem_union, hH_, true_or, or_true])
+    simp_all
   · -- 2
     intro h Hi hHi
     rw [Set.mem_union] at hHi

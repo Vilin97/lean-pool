@@ -34,8 +34,7 @@ lemma def_consistent : Consistent 𝓢 T ↔ ∀ Γ, (∀ ψ ∈ Γ, ψ ∈ T) �
   · intro h;
     simpa using Context.provable_iff.not.mp h;
   · intro h;
-    apply Context.provable_iff.not.mpr; push Not;
-    assumption;
+    apply Context.provable_iff.not.mpr; simp_all
 
 lemma def_inconsistent : Inconsistent 𝓢 T ↔ ∃ (Γ :
     List (Formula α)), (∀ ψ ∈ Γ, ψ ∈ T) ∧ Γ ⊢[𝓢]! ⊥ := by
@@ -88,13 +87,7 @@ lemma iff_insert_consistent : Consistent 𝓢 (insert φ T) ↔ ∀ {Γ :
     by_contra hC;
     have : 𝓢 ⊬ φ ⋏ ⋀Γ ==> ⊥ :=
         iff_imply_left_cons_conj'!.not.mp <| (def_consistent.mp h) (φ :: Γ) (by
-        rintro ψ hq;
-        simp only [List.mem_cons] at hq;
-        cases hq with
-        | inl h => subst h; simp only [Set.mem_insert_iff, true_or];
-        | inr h =>
-          simp only [Set.mem_insert_iff];
-          right; exact hΓ ψ h;
+        simp_all
       );
     contradiction;
   · intro h;
@@ -280,9 +273,7 @@ lemma intro_triunion_consistent
         apply conjconj_subset!;
         intro φ hp;
         simp only [List.mem_append, List.mem_filter, decide_eq_true_eq, Γ₁, Γ₂];
-        rcases h₁₂ φ hp with (h₁ | h₂);
-      · left; exact ⟨hp, h₁⟩;
-      · right; exact ⟨hp, h₂⟩;
+        simp_all
   · apply h;
     refine ⟨?_, ?_, h₃⟩;
     · intro φ hp;
@@ -291,8 +282,7 @@ lemma intro_triunion_consistent
       · simpa using List.of_mem_filter hp;
     · intro φ hp;
       rcases h₁₂ φ (List.mem_of_mem_filter hp) with (_ | _)
-      · have := List.of_mem_filter hp; simp at this;
-        simpa using List.of_mem_filter hp;
+      · have := List.of_mem_filter hp; simp_all
       · assumption;
 
 omit [DecidableEq α] in
@@ -374,8 +364,7 @@ lemma exists_of_consistent (consisT : Consistent 𝓢 T) : ∃ Ω :
   · rintro U ⟨hU₁, _⟩;
     by_contra hC;
     have := hΩ₃ U hC <| hU₁;
-    subst this;
-    simp_all;
+    simp_all
 
 alias lindenbaum := exists_of_consistent
 
@@ -443,8 +432,7 @@ lemma iff_mem_neg : (∼φ ∈ Ω) ↔ (φ ∉ Ω) := by classical
 
 omit [DecidableEq α] in
 @[simp 1100]
-lemma iff_mem_negneg : (∼∼φ ∈ Ω) ↔ (φ ∈ Ω) := by classical
-  simp
+lemma iff_mem_negneg : (∼∼φ ∈ Ω) ↔ (φ ∈ Ω) := by simp_all
 
 omit [DecidableEq α] in
 @[simp]
@@ -466,8 +454,7 @@ lemma iff_mem_imp : ((φ ==> ψ) ∈ Ω) ↔ (φ ∈ Ω) → (ψ ∈ Ω) := by c
       exact imply₁! ⨀ (membership_iff.mp h)
 
 omit [DecidableEq α] in
-lemma mdp (hφψ : φ ==> ψ ∈ Ω) (hψ : φ ∈ Ω) : ψ ∈ Ω := by classical
-  exact iff_mem_imp.mp hφψ hψ
+lemma mdp (hφψ : φ ==> ψ ∈ Ω) (hψ : φ ∈ Ω) : ψ ∈ Ω := by simp_all
 
 omit [DecidableEq α] in
 @[simp]
@@ -526,14 +513,10 @@ lemma intro_equality {h : ∀ φ, φ ∈ Ω₁.1 → φ ∈ Ω₂.1} : Ω₁ = �
 omit [DecidableEq α] in
 lemma neg_imp (h : ψ ∈ Ω₂ → φ ∈ Ω₁) : (∼φ ∈ Ω₁) → (∼ψ ∈ Ω₂) := by classical
   contrapose;
-  intro nhnψ hnφ;
-  have : φ ∈ Ω₁ := h <| iff_mem_negneg.mp <| iff_mem_neg.mpr nhnψ;
-  have : ⊥ ∈ Ω₁ := mdp hnφ this;
-  simpa;
+  simp_all
 
 omit [DecidableEq α] in
-lemma neg_iff (h : φ ∈ Ω₁ ↔ ψ ∈ Ω₂) : (∼φ ∈ Ω₁) ↔ (∼ψ ∈ Ω₂) := by classical
-  exact ⟨neg_imp <| h.mpr, neg_imp <| h.mp⟩
+lemma neg_iff (h : φ ∈ Ω₁ ↔ ψ ∈ Ω₂) : (∼φ ∈ Ω₁) ↔ (∼ψ ∈ Ω₂) := by simp_all
 
 omit [DecidableEq α] in
 lemma iff_mem_conj :
@@ -563,9 +546,7 @@ lemma iff_mem_multibox : (□^[n]φ ∈ Ω) ↔ (∀ {Ω' :
         have := Context.provable_iff.not.mp <| membership_iff.not.mp hp;
         push Not at this;
         have : 𝓢 ⊬ ⋀□'^[n]Γ ==> □^[n]φ := FiniteContext.provable_iff.not.mp <| this (□'^[n]Γ) (by
-          intro ψ hq;
-          obtain ⟨χ, hr₁, rfl⟩ := by simpa using hq;
-          simpa using hΓ₁ χ hr₁;
+          simp_all
         );
         revert this;
         contrapose;
@@ -588,11 +569,7 @@ lemma iff_mem_box : (□φ ∈ Ω) ↔ (∀ {Ω' :
 omit [DecidableEq α] in
 lemma multibox_dn_iff : (□^[n](∼∼φ) ∈ Ω) ↔ (□^[n]φ ∈ Ω) := by classical
   simp only [iff_mem_multibox];
-  constructor;
-  · intro h Ω hΩ;
-    exact iff_mem_negneg.mp <| h hΩ;
-  · intro h Ω hΩ;
-    exact iff_mem_negneg.mpr <| h hΩ;
+  simp_all
 
 omit [DecidableEq α] in
 lemma box_dn_iff : (□(∼∼φ) ∈ Ω) ↔ (□φ ∈ Ω) := by classical
@@ -641,11 +618,7 @@ lemma iff_mem_multidia : (◇^[n]φ ∈ Ω) ↔ (∃ Ω' :
     have := iff_mem_neg.mp this;
     have := iff_mem_multibox.not.mp this;
     push Not at this;
-    obtain ⟨Ω', h₁, h₂⟩ := this;
-    use Ω';
-    constructor;
-    · exact h₁;
-    · exact iff_mem_negneg.mp <| iff_mem_neg.mpr h₂;
+    simp_all
   · rintro ⟨Ω', h₁, h₂⟩;
     apply mem_multidia_dual.mpr;
     apply iff_mem_neg.mpr;

@@ -91,11 +91,7 @@ lemma compression_criterion_2
           R.H.toHomotopy.apply_zero (Cube.inclToTop y)]
         rw [Cube.splitAtLast_inclToTop_eq, HomotopyWith.apply_one]
       map_one_left y := by
-        simp only [Homotopy.comp_apply, Homotopy.refl_apply,
-          Homotopy.coe_toContinuousMap, HomotopyWith.coe_toHomotopy]
-        rw [show R.H (1, Cube.inclToTop y) = R.r (Cube.inclToTop y) from
-          R.H.toHomotopy.apply_one (Cube.inclToTop y)]
-        rfl
+        simp_all
       prop' t y hy := by
         have hRH := R.H.prop' t _ (Cube.inclToTop.mem_boundaryJar_of hy)
         simp only [id_apply, toFun_eq_coe, Homotopy.coe_toContinuousMap,

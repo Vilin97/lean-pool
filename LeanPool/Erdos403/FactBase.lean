@@ -39,21 +39,17 @@ theorem sum_lt_factorial_of_lt (T : Finset ℕ) (hT : ∀ a ∈ T, 1 ≤ a) (i :
     ∑ a ∈ T.filter (· < i), a ! < i ! := by
   have hsub : T.filter (· < i) ⊆ Finset.Ico 1 i := by
     intro a ha
-    rw [Finset.mem_filter] at ha
-    exact Finset.mem_Ico.mpr ⟨hT a ha.1, ha.2⟩
+    simp_all
   have h1 : ∑ a ∈ T.filter (· < i), a ! ≤ ∑ a ∈ Finset.Ico 1 i, a ! :=
     Finset.sum_le_sum_of_subset hsub
   rcases Nat.eq_zero_or_pos i with hi | hi
-  · subst hi
-    have he0 : T.filter (· < 0) = ∅ := by ext x; simp
-    rw [he0, Finset.sum_empty]; simp
+  · simp_all
   · have hsplit : 1 + ∑ a ∈ Finset.Ico 1 i, a ! = ∑ a ∈ Finset.range i, a ! := by
       have h0 : (0 : ℕ) ∈ Finset.range i := Finset.mem_range.mpr hi
       have herase : (Finset.range i).erase 0 = Finset.Ico 1 i := by
         ext x; simp only [Finset.mem_erase, Finset.mem_range, Finset.mem_Ico]; omega
       have hae := Finset.add_sum_erase (Finset.range i) (fun a => a !) h0
-      rw [herase] at hae
-      simpa using hae
+      simp_all
     have hr := sum_range_factorial_le i
     have hpos : 1 ≤ i ! := Nat.factorial_pos i
     omega
@@ -67,10 +63,7 @@ theorem factDigit_sum_factorial (T : Finset ℕ) (hT : ∀ a ∈ T, 1 ≤ a) {i 
   set e : ℕ := if i ∈ T then 1 else 0 with he
   -- set equalities used to refold the trichotomy filters
   have hset1 : (T.filter (¬ · < i)).filter (· = i) = T.filter (· = i) := by
-    ext x; simp only [Finset.mem_filter]
-    constructor
-    · rintro ⟨⟨hx, _⟩, hq⟩; exact ⟨hx, hq⟩
-    · rintro ⟨hx, hq⟩; exact ⟨⟨hx, by omega⟩, hq⟩
+    ext x; simp_all
   have hset2 : (T.filter (¬ · < i)).filter (¬ · = i) = T.filter (i < ·) := by
     ext x; simp only [Finset.mem_filter]
     constructor

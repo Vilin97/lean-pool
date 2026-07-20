@@ -75,8 +75,7 @@ lemma modEq_primeSquareProduct_of_forall_modEq (S : Finset Nat.Primes) (r₁ r�
     r₁ ≡ r₂ [MOD primeSquareProduct S] := by
   rw [← list_map_prod_eq_primeSquareProduct]
   rw [Nat.modEq_list_map_prod_iff (toList_pairwise_coprime_prime_squares S)]
-  intro p hp
-  exact h p (Finset.mem_toList.mp hp)
+  simp_all
 
 /-- The CRT remainder map is injective on residues below the product modulus. -/
 lemma crtMap_injective_on_range (S : Finset Nat.Primes) :
@@ -117,8 +116,7 @@ lemma valid_iff_locally_valid (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     · intro hr
       have hzero := (dvd_iff_mod_dvd (p : ℕ) hp_pos r).mp hr
       have hmod : (p : ℕ) ^ 2 ∣ r % (p : ℕ) ^ 2 := by
-        rw [hzero]
-        simp
+        simp_all
       exact (h p hp).1 hmod
     · intro d hd hr
       exact (h p hp).2 d hd ((shifted_dvd_iff_mod (p : ℕ) b d r hp_pos).mp hr)
@@ -238,9 +236,7 @@ lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) 
   have hf_surj : Function.Surjective f := by
     intro ⟨g, hg⟩
     have hg' : ∀ p (hp : p ∈ S), g p hp ∈ localValidResidues (p : ℕ) b T := by
-      intro p hp
-      rw [Finset.mem_pi] at hg
-      exact hg p hp
+      simp_all
     obtain ⟨r, hr, hr_eq⟩ := crt_inverse_mapsTo b T S g hg'
     use ⟨r, hr⟩
     apply Subtype.ext
@@ -258,8 +254,7 @@ lemma validResiduesMod_card_eq_prod (b : ℕ) (T : Finset ℕ) (S : Finset Nat.P
     ((validResiduesMod b T S).card : ℝ) =
       ∏ p ∈ S, ((localValidResidues (p : ℕ) b T).card : ℝ) := by
   rw [validResiduesMod_card_eq_pi_card]
-  rw [Finset.card_pi]
-  simp only [Nat.cast_prod]
+  simp_all
 
 lemma validResidues_card_eq_mul (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) :

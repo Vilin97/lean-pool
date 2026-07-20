@@ -268,8 +268,7 @@ theorem _root_.Moreira2001.Atlas.isLittleO_main_sub_of_fderiv_zero_right
         filter_upwards [hψcont.eventually hy] with z hz hψz using hz (ψ.mapsTo hψz)
     rw [EventuallyEq, eventually_nhdsWithin_iff]
     filter_upwards [ψ.fderiv₂_comp_eventuallyEq hx hcontDiff (by simp), hf₀] with y hy_eq hy hy_mem
-    rw [hy_eq, hy hy_mem]
-    simp
+    simp_all
   · exact hdensity
 
 end Moreira2001.Atlas

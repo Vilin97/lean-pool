@@ -26,8 +26,7 @@ theorem one_add_X_mul_deriv_log : (1 + X : A⟦X⟧) * d⁄dX A (log A) = 1 := b
   ext n
   rw [add_mul, one_mul, map_add, coeff_one]
   rcases Nat.eq_zero_or_pos n with hn | hn
-  · subst hn
-    simp [coeff_zero_X_mul, coeff_mk]
+  · simp_all
   · obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)
     rw [coeff_succ_X_mul, coeff_mk, coeff_mk, if_neg (Nat.succ_ne_zero m), ← map_add]
     simp only [Nat.succ_eq_add_one]
@@ -90,10 +89,7 @@ theorem logOf_mul [IsAddTorsionFree A] {f g : A⟦X⟧}
 @[simp]
 theorem logOf_one [IsAddTorsionFree A] : logOf (1 : A⟦X⟧) = 0 := by
   have h := logOf_mul (A := A) (f := 1) (g := 1) (by simp) (by simp)
-  rw [mul_one] at h
-  have : logOf (1 : A⟦X⟧) + 0 = logOf (1 : A⟦X⟧) + logOf (1 : A⟦X⟧) := by
-    rw [add_zero]; exact h
-  exact (add_left_cancel this).symm
+  simp_all
 
 /-- **Logarithm of a power**: `logOf (f ^ n) = n • logOf f` for `f` with constant term `1`.
 This is the eigen-relation engine: at `f = id` in the convolution algebra,
@@ -124,8 +120,7 @@ theorem coeff_logTrunc_pow [IsAddTorsionFree A] (p N m : ℕ) (hm : m ≤ N) :
       = p • coeff m (log A) := by
   set g : A⟦X⟧ := (1 + X) ^ p - 1 with hgdef
   have hgc : constantCoeff g = 0 := by
-    rw [hgdef, map_sub, map_pow, map_add, constantCoeff_X, constantCoeff_one, add_zero, one_pow,
-      sub_self]
+    simp_all
   have hS : HasSubst g := HasSubst.of_constantCoeff_zero' hgc
   have hfin : (∑ᶠ d : ℕ, coeff d (log A) • coeff m (g ^ d))
       = ∑ j ∈ Finset.range (N + 1), coeff j (log A) • coeff m (g ^ j) := by

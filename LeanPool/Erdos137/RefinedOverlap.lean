@@ -294,9 +294,7 @@ theorem master_ineq_crude_g_refinedOverlap (g : ℕ) (hBlock : BlockRadLBg g) (h
   rw [hLHS, hRHS] at hpowg
   -- Cast the real inequality `n^{(g-2)k} ≤ (WgRefinedCap g k)^{2g}` down to ℕ.
   have hcast : ((n ^ ((g - 2) * k) : ℕ) : ℝ) ≤ ((WgRefinedCap g k ^ (2 * g) : ℕ) : ℝ) := by
-    rw [hC] at hpowg
-    push_cast
-    exact hpowg
+    simp_all
   exact_mod_cast hcast
 
 /-- **Smooth-refined master inequality with the refined cap.** Under `BlockRadLBg g`, for
@@ -396,9 +394,7 @@ theorem master_ineq_g_refinedOverlap (g : ℕ) (hBlock : BlockRadLBg g) (hg : 3 
   -- Simplify RHS:  (P² · C²)^g = C^{2g} · P^{2g}.
   have hRHS : ((P k : ℝ) ^ 2 * C ^ 2) ^ g = C ^ (2 * g) * (P k : ℝ) ^ (2 * g) := by
     rw [mul_pow, ← pow_mul, ← pow_mul, mul_comm 2 g, mul_comm]
-  rw [hLHS, hRHS] at hpowg
-  rw [hC] at hpowg
-  exact hpowg
+  simp_all
 
 end  -- noncomputable section
 

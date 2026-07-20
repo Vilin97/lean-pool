@@ -151,12 +151,8 @@ lemma coveredPartwise_exists (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) (X
   obtain ⟨ι, hι⟩ := hn i j hi hj
   rw [c_def] at hι
   by_cases h : ι = 0
-  · left
-    simp only [h, if_pos] at hι
-    exact Set.image_subset_iff.mpr hι
-  · right
-    simp only [if_neg h] at hι
-    exact Set.image_subset_iff.mpr hι
+  · simp_all
+  · simp_all
 
 /-- The image of a dihomotopy F of the subrectangles `[0, 1/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
   contains the image of the first part of F, split at `1/(n+2)`, of `[0, 1]
@@ -209,8 +205,7 @@ lemma spv_aux₁_coed {t : ℝ} {n i : ℕ} (_ : i < n.succ) (ht : (i : ℝ) / (
   have h₂ : (n.succ : ℝ) > 0 := Nat.cast_pos.mpr (Nat.succ_pos n)
   have h₃ : 0 ≤ (n : ℝ) + 1 := by
     apply le_of_lt
-    rw [Nat.cast_succ _] at h₂
-    exact h₂
+    simp_all
   have hne : ((n : ℝ) + 1 + 1) ≠ 0 := by positivity
   rw [show (↑n.succ : ℝ) = (n : ℝ) + 1 from by push_cast; ring] at ht h₂
   have h₃' : ((n : ℝ) + 1) > 0 := h₂

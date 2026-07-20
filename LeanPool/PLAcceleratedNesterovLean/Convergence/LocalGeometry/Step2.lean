@@ -55,8 +55,7 @@ lemma hasDerivAt_quad (c x : ℝ) :
   rwa [this] at h3
 
 lemma differentiable_sq : Differentiable ℝ (fun (t : ℝ) => t ^ 2) := by
-  have : (fun t : ℝ => t ^ 2) = (fun t => t * t) := by ext; ring
-  rw [this]; exact differentiable_id.mul differentiable_id
+  simp_all
 
 lemma continuous_sq : Continuous (fun (t : ℝ) => t ^ 2) := by
   have : (fun t : ℝ => t ^ 2) = (fun t => t * t) := by ext; ring
@@ -201,7 +200,6 @@ theorem fiber_deriv {d : ℕ} (f : E d → ℝ) (m e : E d)
       hfat.hasFDerivAt hg rfl
   have key := hcomp.deriv
   change deriv (f ∘ fun s => m + s • e) t = _
-  rw [key]
-  exact (inner_gradient_left (𝕜 := ℝ) (f := f) (x := m + t • e) (y := e)).symm
+  simp_all
 
 end PLAcceleratedNesterovLean

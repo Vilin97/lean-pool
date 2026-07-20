@@ -84,14 +84,11 @@ private lemma contDiff_adjoint
       (ContinuousLinearMap.adjoint : (F₁ →L[ℝ] F₂) → (F₂ →L[ℝ] F₁)) :=
   IsBoundedLinearMap.contDiff {
     map_add := fun A B => by
-      ext x; exact ext_inner_left ℝ fun y => by
-        simp only [map_add, add_apply]
+      simp_all
     map_smul := fun c A => by
-      ext x; exact ext_inner_left ℝ fun y => by
-        simp only [map_smul, smul_apply]
+      simp_all
     bound := ⟨1, one_pos, fun A => by
-      rw [one_mul]
-      exact le_of_eq (LinearIsometryEquiv.norm_map ContinuousLinearMap.adjoint A)⟩
+      simp_all⟩
   }
 
 lemma optimalityEqn_contDiff
@@ -163,8 +160,7 @@ lemma optimalityEqn_partial_v_eq_neg_id
       · rfl
       · funext v
         rfl
-      · ext v
-        simp
+      · simp_all
     exact h_vE.neg.congr_of_eventuallyEq (Filter.Eventually.of_forall fun v => by
       change (0 : E) - (v : E) - (φ v : E) = -((v : E) + (φ v : E)); abel)
   have hterm1 : HasFDerivAt
@@ -208,10 +204,7 @@ lemma optimalityEqn_partial_v_eq_neg_id
         ((0 : E) - ((0 : V) : E) - (φ (0 : V) : E)) = 0 := by
       simp only [ZeroMemClass.coe_zero, sub_self, hφ0, map_zero]
     have hprod := hA.hasFDerivAt.clm_apply hb
-    rw [hA0, hb0] at hprod
-    simp only [ContinuousLinearMap.zero_comp, ContinuousLinearMap.map_zero,
-      add_zero] at hprod
-    exact hprod
+    simp_all
   have hcombined := hterm1.add hterm2
   simp only [add_zero] at hcombined
   have hdirect : HasFDerivAt (fun v : V => optimalityEqn φ m ((0 : E), v))
@@ -367,11 +360,7 @@ private lemma chart_point_isLocalMin {S U : Set E}
   have hv0_eq_v' : v_0 = v' := by
     have hπ_sub : πy - m = (v_0 : E) + (φ v_0 : E) := by rw [hv0_eq]; abel
     change v_0 = V.orthogonalProjectionOnto (πy - m)
-    have hφ_proj : V.orthogonalProjectionOnto (φ v_0 : E) = 0 :=
-      Submodule.orthogonalProjectionOnto_eq_zero_iff.mpr (V.orthogonal.coe_mem (φ v_0))
-    rw [hπ_sub, map_add,
-      Submodule.orthogonalProjectionOnto_mem_subspace_eq_self,
-      hφ_proj, add_zero]
+    simp_all
   -- The map v ↦ m + v + φ(v) is continuous
   have hcont_pt : Continuous (fun v : V => m + (v : E) + (φ v : E)) :=
     (continuous_const.add V.subtypeL.continuous).add
@@ -497,11 +486,7 @@ lemma tubularProj_contDiffAt_S {S U : Set E}
     obtain ⟨v_0, hv0_eq⟩ := (hchart (π y) hπ_ball).mp hπ_S
     have hv0_eq_w : v_0 = V.orthogonalProjectionOnto (π y - m) := by
       have hπ_sub : π y - m = (v_0 : E) + (φ v_0 : E) := by rw [hv0_eq]; abel
-      have hφ_proj : V.orthogonalProjectionOnto (φ v_0 : E) = 0 :=
-        Submodule.orthogonalProjectionOnto_eq_zero_iff.mpr (V.orthogonal.coe_mem (φ v_0))
-      rw [hπ_sub, map_add,
-        Submodule.orthogonalProjectionOnto_mem_subspace_eq_self,
-        hφ_proj, add_zero]
+      simp_all
     rw [← hv0_eq_w]; exact hv0_eq
   -- Combine: π = χ near m
   have hπ_eq_χ : π =ᶠ[𝓝 m] χ := by

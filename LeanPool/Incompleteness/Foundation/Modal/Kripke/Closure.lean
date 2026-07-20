@@ -65,8 +65,7 @@ lemma rel_reflexive : Std.Refl (F^*.Rel) := ⟨fun _ => ReflTransGen.refl⟩
 lemma rel_transitive : IsTrans (F^*) (F^*.Rel) := ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
 
 lemma rel_symmetric : IsSymmetric F.Rel → IsSymmetric (F^*) := fun h => by
-  letI : Std.Symm F.Rel := ⟨fun _ _ => @h _ _⟩
-  exact fun _ _ hxy => Std.Symm.symm (r := F^*.Rel) _ _ hxy
+  simp_all
 
 end TransitiveReflexiveClosure
 end Frame

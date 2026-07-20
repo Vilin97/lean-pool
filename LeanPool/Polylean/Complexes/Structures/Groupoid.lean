@@ -87,9 +87,7 @@ variable {R S T : Sort _} [F : Groupoid R] [G : Groupoid S] [H : Groupoid T]
 variable (Ψ : Groupoid.Functor F G) (Φ : Groupoid.Functor G H)
 
 theorem map_id' {X : S} : Φ.map (𝟙 X) = 𝟙 (Φ.obj X) := by
-  have := Φ.map_comp (𝟙 X) (𝟙 X)
-  rw [Category.comp_id, right_cancel_id] at this
-  exact this.symm
+  simp_all
 
 @[simp] theorem map_inv {X Y : S} (g : X ⟶ Y) : Φ.map g⁻¹ = (Φ.map g)⁻¹ := by
   apply (Groupoid.left_cancel (Φ.map g) _ _).mp

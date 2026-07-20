@@ -83,8 +83,7 @@ theorem exists_degree_witness (f : BoolFun n) (hd : 0 < f.degree) :
   set F := (Finset.univ : Finset (Finset (Fin n))).filter (fun S => f.moebius S ≠ 0)
   have hne : F.Nonempty := by
     by_contra h
-    rw [Finset.not_nonempty_iff_eq_empty] at h
-    simp [F, h] at hd
+    simp_all
   obtain ⟨S, hS, heq⟩ := Finset.exists_mem_eq_sup F hne Finset.card
   exact ⟨S, heq.symm, (Finset.mem_filter.mp hS).2⟩
 

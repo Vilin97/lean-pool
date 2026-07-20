@@ -56,9 +56,7 @@ private lemma eq_of_mapClusterPt_of_tendsto {X : Type*} [TopologicalSpace X] [T2
   have hle : (𝓝 z ⊓ Filter.map f l : Filter X) ≤ (𝓝 z ⊓ 𝓝 y : Filter X) :=
     inf_le_inf_left _ hmap
   have : (𝓝 z ⊓ Filter.map f l : Filter X) = ⊥ := by
-    apply le_antisymm
-    · exact le_trans hle (by simp [hbot])
-    · exact bot_le
+    simp_all
   exact (hz.clusterPt.neBot.ne this)
 /-- If `T` is compact, then it sends weak convergence on a weakly-closed ball
 to norm convergence. -/
@@ -164,8 +162,7 @@ lemma continuousOn_weakClosedBall_reApplyInnerSelf_of_isCompactOperator
           (g := fun _ => (0 : ℝ))
           (h := fun y => ‖T (y : E) - T (x : E)‖ * r)
           tendsto_const_nhds hrhs ?_ ?_
-      · filter_upwards with y
-        exact norm_nonneg _
+      · simp_all
       · filter_upwards [hx_ball] with y hy
         have hy' : ‖(y : E)‖ ≤ r := by
           let ye : E := y
@@ -258,9 +255,7 @@ private lemma extremizer_mem_unit_sphere
   have hf0 : f 0 = 0 := by simpa [norm_zero, zero_smul, zero_mul] using hf_scale (0 : 𝕜) x
   have hx_ne0 : (x : E) ≠ 0 := by
     intro h
-    have hxz : x = (0 : WeakSpace 𝕜 E) := h
-    rw [hxz, hf0, mul_zero] at hσ
-    exact lt_irrefl 0 hσ
+    simp_all
   have hx_pos : 0 < ‖(x : E)‖ := by
     let xe : E := x
     have : xe ≠ 0 := hx_ne0
@@ -307,10 +302,7 @@ lemma exists_reApplyInnerSelf_ne_zero_of_isSelfAdjoint
     have hRe : (T.reApplyInnerSelf x : 𝕜) = inner 𝕜 (T x) x := by
       simpa [ContinuousLinearMap.reApplyInnerSelf_apply] using
         (LinearMap.IsSymmetric.coe_re_inner_apply_self (T := (T : E →ₗ[𝕜] E)) hSym x)
-    have hx : T.reApplyInnerSelf x = 0 := h x
-    have : ((T.reApplyInnerSelf x : ℝ) : 𝕜) = 0 := by
-      simpa using congrArg (fun t : ℝ => (t : 𝕜)) hx
-    simpa [hRe] using this
+    simp_all
   have hinner : ∀ x y : E, inner 𝕜 ((T : E →ₗ[𝕜] E) x) y = 0 := by
     intro x y
     have hpol :=
@@ -325,17 +317,13 @@ lemma exists_reApplyInnerSelf_ne_zero_of_isSelfAdjoint
     have hxmIy :
         inner 𝕜 ((T : E →ₗ[𝕜] E) (x - (RCLike.I : 𝕜) • y)) (x - (RCLike.I : 𝕜) • y) = 0 := by
       simpa using hinner0 (x - (RCLike.I : 𝕜) • y)
-    rw [hxy, hxmy, hxIy, hxmIy] at hpol
-    simpa using hpol
+    simp_all
   have hTzero : T = 0 := by
     ext x
     have : ∀ v : E, inner 𝕜 v (T x) = 0 := by
-      intro v
-      have : inner 𝕜 (T x) v = 0 := hinner x v
-      simpa [inner_eq_zero_symm] using this
+      simp_all
     apply ext_inner_left 𝕜
-    intro v
-    simpa using (this v)
+    simp_all
   exact h0 hTzero
 /-- Compact self-adjoint operators attain an extremum of the Rayleigh quotient, yielding a nonzero
 eigenvector for either the global supremum or the global infimum. -/
@@ -351,20 +339,14 @@ theorem exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
   by_cases hT0 : T = 0
   · -- Any nonzero vector is an eigenvector with eigenvalue `0 = iSup`.
     have hsup : (⨆ x : { x : E // x ≠ 0 }, (0 : E →L[𝕜] E).rayleighQuotient x) = (0 : ℝ) := by
-      have h :
-          (fun x : { x : E // x ≠ 0 } =>
-            (0 : E →L[𝕜] E).rayleighQuotient x) = fun _ => (0 : ℝ) := by
-        funext x
-        simp [ContinuousLinearMap.rayleighQuotient, ContinuousLinearMap.reApplyInnerSelf_apply]
-      simp
+      simp_all
     obtain ⟨x, hx⟩ : ∃ x : E, x ≠ 0 := exists_ne (0 : E)
     left
     subst hT0
     refine ⟨x, ?_⟩
     have : Module.End.HasEigenvector (0 : E →ₗ[𝕜] E) (0 : 𝕜) x := by
       refine ⟨?_, hx⟩
-      rw [Module.End.mem_eigenspace_iff]
-      simp
+      simp_all
     simpa [hsup] using this
   -- Work on the unit weak closed ball, which is weakly compact in a Hilbert space.
   let s : Set (WeakSpace 𝕜 E) := weakClosedBall (𝕜 := 𝕜) (E := E) (1 : ℝ)
@@ -394,18 +376,14 @@ theorem exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
     simp [y, c, norm_smul, hx0]
   have hyw_mem : yw ∈ s := by
     change y ∈ closedBall (α := E) (0 : E) (1 : ℝ)
-    refine (mem_closedBall_zero_iff (a := y) (r := (1 : ℝ))).2 ?_
-    simp [hy_norm]
+    simp_all
   have hyw_eval : f yw = ‖c‖ ^ 2 * T.reApplyInnerSelf x := by
     simp [f, yw, y, c, ContinuousLinearMap.reApplyInnerSelf_smul]
   have hc2_pos : 0 < (‖c‖ ^ 2 : ℝ) := by
-    have : 0 < ‖c‖ := (norm_pos_iff).2 hc
-    exact pow_pos this 2
+    simp_all
   have hyw_ne : f yw ≠ 0 := by
     -- `f yw` is a nonzero scalar multiple of `T.reApplyInnerSelf x`.
-    have hc2_ne : (‖c‖ ^ 2 : ℝ) ≠ 0 := ne_of_gt hc2_pos
-    -- rewrite and use `hx`.
-    simpa [hyw_eval] using mul_ne_zero hc2_ne hx
+    simp_all
   have hyw_sign : f yw < 0 ∨ 0 < f yw := lt_or_gt_of_ne hyw_ne
   cases hyw_sign with
   | inl hyw_neg =>
@@ -426,8 +404,7 @@ theorem exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
         let xme : E := xMin
         have hxme0 : xme = 0 := hx0'
         have hxme_norm : ‖xme‖ = 1 := hxMin_norm_eq
-        rw [hxme0] at hxme_norm
-        simp at hxme_norm
+        simp_all
       have hmin_sphere : IsMinOn T.reApplyInnerSelf
           (sphere (0 : E) (1 : ℝ)) (xMin : E) := by
         refine (isMinOn_iff.2 ?_)
@@ -460,8 +437,7 @@ theorem exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
         let xme : E := xMax
         have hxme0 : xme = 0 := hx0'
         have hxme_norm : ‖xme‖ = 1 := hxMax_norm_eq
-        rw [hxme0] at hxme_norm
-        simp at hxme_norm
+        simp_all
       have hmax_sphere : IsMaxOn T.reApplyInnerSelf
           (sphere (0 : E) (1 : ℝ)) (xMax : E) := by
         refine (isMaxOn_iff.2 ?_)

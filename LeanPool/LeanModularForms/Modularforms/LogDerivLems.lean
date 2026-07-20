@@ -84,9 +84,7 @@ lemma logDeriv_one_sub_exp (r : ℂ) : logDeriv (fun z => 1 - r * cexp (z)) =
     fun z => -r * cexp z / (1 - r * cexp ( z)) := by
   ext z
   rw [logDeriv]
-  simp only [Pi.div_apply, differentiableAt_const, differentiableAt_exp, DifferentiableAt.fun_mul,
-    deriv_fun_sub, deriv_const', deriv_fun_mul, zero_mul, Complex.deriv_exp, zero_add, zero_sub,
-    neg_mul]
+  simp_all
 
 lemma logDeriv_one_sub_exp_comp (r : ℂ) (g : ℂ → ℂ) (hg : Differentiable ℂ g) :
     logDeriv ((fun z => 1 - r * cexp (z)) ∘ g) =
@@ -95,8 +93,7 @@ lemma logDeriv_one_sub_exp_comp (r : ℂ) (g : ℂ → ℂ) (hg : Differentiable
   rw  [logDeriv_comp, logDeriv_one_sub_exp]
   · simp only [neg_mul]
     ring
-  · simp only [differentiableAt_const, differentiableAt_exp, DifferentiableAt.fun_mul,
-      DifferentiableAt.fun_sub]
+  · simp_all
   · exact hg y
 
 lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : ℕ =>
@@ -112,8 +109,7 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
   · apply Summable.mul_left
     simp only [Complex.norm_mul, RCLike.norm_natCast, norm_pow]
     have := (summable_norm_pow_mul_geometric_of_norm_lt_one 1 hr)
-    simp only [pow_one, Complex.norm_mul, RCLike.norm_natCast, norm_pow] at this
-    apply this
+    simp_all
   · simp only [Complex.norm_div, Complex.norm_mul, RCLike.norm_natCast, norm_pow, eventually_atTop]
     obtain ⟨N, hN⟩ := h3
     use N

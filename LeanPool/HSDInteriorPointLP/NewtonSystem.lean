@@ -363,9 +363,7 @@ theorem HLPNullDirection_from_full_nullspace {m n : Nat}
       (∑ j : Fin n, D.dx j * D.ds j)
           = ∑ j : Fin n, D.dx j *
               (-(tMatVec P.A D.dy j) + P.c j * D.dtau - cbar P j * D.dtheta) := by
-              apply Finset.sum_congr rfl
-              intro j _
-              rw [hds j]
+              simp_all
       _ = ∑ j : Fin n,
               (-(D.dx j * tMatVec P.A D.dy j)
                 + D.dtau * (D.dx j * P.c j)
@@ -393,9 +391,7 @@ theorem HLPNullDirection_from_full_nullspace {m n : Nat}
               rw [dot_tMatVec_eq_dot_matVec]
       _ = dot D.dy (fun i => P.b i * D.dtau - bbar P i * D.dtheta) := by
               unfold dot
-              apply Finset.sum_congr rfl
-              intro i _
-              rw [hprimal i]
+              simp_all
       _ = D.dtau * dot P.b D.dy - D.dtheta * dot (bbar P) D.dy := by
               unfold dot
               calc
@@ -416,8 +412,7 @@ theorem HLPNullDirection_from_full_nullspace {m n : Nat}
       apply Finset.sum_congr rfl
       intro i _
       ring
-    rw [hcbar_comm]
-    exact hnorm
+    simp_all
   have hc_comm : dot D.dx P.c = dot P.c D.dx := by
     unfold dot
     apply Finset.sum_congr rfl
@@ -431,8 +426,7 @@ theorem HLPNullDirection_from_full_nullspace {m n : Nat}
             rw [hdot_ds, hdk, hmat, hc_comm]
             ring
     _ = 0 := by
-            rw [hnorm']
-            ring
+            simp_all
 
 
 
@@ -526,9 +520,7 @@ theorem HLPHomogeneous.schur_complementarity_identity {m n : Nat}
           = ∑ j : Fin n,
               (HLPThetaDiag w j * HLPSchurResidual P D j)
                 * (-(HLPSchurResidual P D j)) := by
-              apply Finset.sum_congr rfl
-              intro j _
-              rw [hdx j, hds j]
+              simp_all
       _ = ∑ j : Fin n, -(HLPThetaDiag w j * (HLPSchurResidual P D j) ^ 2) := by
               apply Finset.sum_congr rfl
               intro j _
@@ -566,8 +558,7 @@ theorem finite_sum_pos_sq_plus_pos_sq_eq_zero {n : Nat}
     exact mul_nonneg (le_of_lt (htheta j)) (sq_nonneg (r j))
   have hsum_nonneg : 0 ≤ ∑ j : Fin n, theta j * (r j) ^ 2 := by
     apply Finset.sum_nonneg
-    intro j _hj
-    exact hsummand_nonneg j
+    simp_all
   have htail_nonneg : 0 ≤ eta * t ^ 2 := by
     exact mul_nonneg (le_of_lt heta) (sq_nonneg t)
   have hsum_zero : (∑ j : Fin n, theta j * (r j) ^ 2) = 0 := by
@@ -578,8 +569,7 @@ theorem finite_sum_pos_sq_plus_pos_sq_eq_zero {n : Nat}
   · intro j
     have hzero_all :=
       (Finset.sum_eq_zero_iff_of_nonneg (by
-        intro i _hi
-        exact hsummand_nonneg i)).mp hsum_zero
+        simp_all)).mp hsum_zero
     have hprod_zero : theta j * (r j) ^ 2 = 0 := by
       exact hzero_all j (Finset.mem_univ j)
     have hsquare_zero : (r j) ^ 2 = 0 := by
@@ -625,8 +615,7 @@ theorem HLPHomogeneous.dx_dkappa_ds_zero_from_schur_core {m n : Nat}
   · rcases hw with ⟨_hx, htau, _hs, _hkappa⟩
     have htau_ne : w.tau ≠ 0 := ne_of_gt htau
     have h := hD.scalar_complementarity_block
-    rw [hdtau, mul_zero, add_zero] at h
-    exact (mul_eq_zero.mp h).resolve_left htau_ne
+    simp_all
 
 /-- Final algebra after the Schur core has vanished: the definitions of `bbar`, `cbar`,
 and `zbar` imply `dθ = 0`; then full row rank gives `dy = 0`. -/
@@ -649,24 +638,16 @@ theorem HLPHomogeneous.dtheta_dy_zero_from_schur_core {m n : Nat}
   -/
   have hdx_c : dot P.c D.dx = 0 := by
     unfold dot
-    apply Finset.sum_eq_zero
-    intro j _
-    rw [hdx j]
-    ring
+    simp_all
   have hdx_cbar : dot (cbar P) D.dx = 0 := by
     unfold dot
-    apply Finset.sum_eq_zero
-    intro j _
-    rw [hdx j]
-    ring
+    simp_all
   have hgap : dot P.b D.dy + zbar P * D.dtheta = 0 := by
     have h := hD.gap_block
-    rw [hdx_c, hdkappa] at h
-    linarith
+    simp_all
   have hnormalizing : dot (bbar P) D.dy = 0 := by
     have h := hD.normalizing_block
-    rw [hdx_cbar, hdtau] at h
-    linarith
+    simp_all
   have hbbar_expand :
       dot (bbar P) D.dy = dot P.b D.dy - dot (matVec P.A (ones : Vec n)) D.dy := by
     unfold dot bbar
@@ -700,17 +681,14 @@ theorem HLPHomogeneous.dtheta_dy_zero_from_schur_core {m n : Nat}
     intro j
     have h := hr j
     unfold HLPSchurResidual at h
-    rw [hdtau] at h
-    linarith
+    simp_all
   have hdual_sum :
       dot (ones : Vec n) (tMatVec P.A D.dy)
         + dot (ones : Vec n) (cbar P) * D.dtheta = 0 := by
     unfold dot ones
     have hsum :
         (∑ j : Fin n, (tMatVec P.A D.dy j + cbar P j * D.dtheta)) = 0 := by
-      apply Finset.sum_eq_zero
-      intro j _
-      exact hr_reduced j
+      simp_all
     calc
       (∑ j : Fin n, 1 * tMatVec P.A D.dy j)
           + (∑ j : Fin n, 1 * cbar P j) * D.dtheta
@@ -722,8 +700,7 @@ theorem HLPHomogeneous.dtheta_dy_zero_from_schur_core {m n : Nat}
       _ = 0 := hsum
   have hdual_b :
       dot P.b D.dy + dot (ones : Vec n) (cbar P) * D.dtheta = 0 := by
-    rw [hb_eq_At]
-    exact hdual_sum
+    simp_all
   have hcoef_mul :
       (zbar P - dot (ones : Vec n) (cbar P)) * D.dtheta = 0 := by
     have hsub : zbar P * D.dtheta - dot (ones : Vec n) (cbar P) * D.dtheta = 0 := by
@@ -743,10 +720,7 @@ theorem HLPHomogeneous.dtheta_dy_zero_from_schur_core {m n : Nat}
   have hdtheta : D.dtheta = 0 := by
     exact (mul_eq_zero.mp hcoef_mul).resolve_left (ne_of_gt hcoef_pos)
   have hAt_zero : ∀ j : Fin n, tMatVec P.A D.dy j = 0 := by
-    intro j
-    have h := hr_reduced j
-    rw [hdtheta] at h
-    linarith
+    simp_all
   have hrow_comb : ∀ j : Fin n, ∑ i : Fin m, D.dy i * P.A i j = 0 := by
     intro j
     have h := hAt_zero j
@@ -912,13 +886,10 @@ theorem aggregate_eq_from_component_eq {n : Nat}
   have hrightVec :
       (∑ i, (w.x i * d.ds i + w.s i * d.dx i)) =
         ∑ i, (γ * mu w - w.x i * w.s i) := by
-    apply Finset.sum_congr rfl
-    intro i _
-    exact hcomp i
+    simp_all
   have hsum_const :
       (∑ _i : Fin n, γ * mu w) = (n : ℝ) * (γ * mu w) := by
-    rw [Finset.sum_const]
-    simp
+    simp_all
   have hsum_gap_vec :
       (∑ i, w.x i * w.s i) = dot w.x w.s := by
     rfl

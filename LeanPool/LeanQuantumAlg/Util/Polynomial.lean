@@ -101,9 +101,7 @@ theorem hasParity_zero (p : ℕ) : HasParity 0 p := fun k hk => by simp at hk
 theorem hasParity_C (c : ℂ) {p : ℕ} (hp : p % 2 = 0) : HasParity (C c) p := by
   intro k hk
   rw [Polynomial.coeff_C] at hk
-  rcases Nat.eq_zero_or_pos k with rfl | hpos
-  · simp [hp]
-  · simp [Nat.pos_iff_ne_zero.mp hpos] at hk
+  simp_all
 
 theorem HasParity.add {P Q : ℂ[X]} {p : ℕ} (hP : HasParity P p)
     (hQ : HasParity Q p) : HasParity (P + Q) p := by
@@ -157,11 +155,7 @@ theorem coeff_X_sq_mul (P : ℂ[X]) (n : ℕ) :
   rcases n with - | m
   · simp
   · rw [if_neg (Nat.succ_ne_zero m), Nat.succ_sub_one, coeff_X_mul' P m]
-    rcases m with - | l
-    · simp
-    · have h1 : ¬ (l + 2 < 2) := by omega
-      have h2 : l + 2 - 2 = l + 1 - 1 := by omega
-      simp [h1, h2]
+    simp_all
 
 theorem HasParity.X_mul {P : ℂ[X]} {p : ℕ} (hP : HasParity P p) :
     HasParity (X * P) (p + 1) := by
@@ -231,13 +225,11 @@ theorem coeff_reflect_eq_zero {F : ℂ[X]} {N m : ℕ} (hF : F.natDegree ≤ N)
 
 theorem reflect_sub (F G : ℂ[X]) (N : ℕ) :
     (F - G).reflect N = F.reflect N - G.reflect N := by
-  ext k
-  simp [Polynomial.coeff_reflect]
+  simp_all
 
 theorem reflect_add' (F G : ℂ[X]) (N : ℕ) :
     (F + G).reflect N = F.reflect N + G.reflect N := by
-  ext k
-  simp [Polynomial.coeff_reflect]
+  simp_all
 
 /-- `reflect (L+1) F = X · reflect L F` for `natDegree F ≤ L`. -/
 theorem reflect_succ {F : ℂ[X]} {L : ℕ} (hF : F.natDegree ≤ L) :
@@ -297,10 +289,7 @@ theorem eval_reflect {F : ℂ[X]} {L : ℕ} (hF : F.natDegree ≤ L) {z : ℂ}
   field_simp
 
 theorem reflect_zero_C (r : ℂ) : (C r).reflect 0 = C r := by
-  ext k
-  rcases Nat.eq_zero_or_pos k with rfl | hk
-  · rw [Polynomial.coeff_reflect, Polynomial.revAt_le (le_refl 0)]
-  · rw [Polynomial.coeff_reflect, Polynomial.revAt_eq_self_of_lt hk]
+  simp_all
 
 /-! ### Evaluation on the unit circle -/
 
@@ -311,7 +300,6 @@ theorem eq_of_circle_eval_eq {F G : ℂ[X]}
       = G.eval (Complex.exp ((x : ℂ) * Complex.I))) : F = G := by
   refine Polynomial.eq_of_infinite_eval_eq F G ?_
   refine ((Set.Ioo_infinite Real.pi_pos).image exp_I_injOn_Ioo).mono ?_
-  rintro z ⟨x, _, rfl⟩
-  exact h x
+  simp_all
 
 end QuantumAlg

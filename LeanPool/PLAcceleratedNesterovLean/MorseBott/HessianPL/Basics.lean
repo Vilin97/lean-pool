@@ -54,8 +54,7 @@ lemma taylor_ray_isLittleO_pl (f : E → ℝ) (x₀ v : E)
   have hfx₀ : fderiv ℝ f x₀ = 0 := hmin.fderiv_eq_zero
   -- Handle v = 0 trivially
   by_cases hv0 : v = 0
-  · refine (isLittleO_zero (fun t : ℝ => t ^ 2) _).congr (fun t => ?_) (fun _ => rfl)
-    simp [hv0]
+  · simp_all
   -- v ≠ 0: scale v to fit in the ball
   have hv_norm : 0 < ‖v‖ := norm_pos_iff.mpr hv0
   set c := R / (2 * ‖v‖) with hc_def
@@ -76,8 +75,7 @@ lemma taylor_ray_isLittleO_pl (f : E → ℝ) (x₀ v : E)
     (v := (0 : E)) (w := w)
     (by rw [add_zero, Metric.isOpen_ball.interior_eq]; exact Metric.mem_ball_self hR_pos)
     (by rw [add_zero, Metric.isOpen_ball.interior_eq]
-        exact Metric.mem_ball.mpr (show dist (x₀ + w) x₀ < R by
-          rw [dist_comm, dist_eq_norm, sub_add_cancel_left, norm_neg]; exact hw_norm_lt))
+        simp_all)
   simp only [smul_zero, add_zero, hfx₀, map_zero, zero_apply,
     smul_eq_mul, mul_zero, sub_zero] at key
   -- key : (fun h => f(x₀ + h • w) - f(x₀) - (h²/2) * H(w,w)) =o[𝓝[>] 0] (h²)
@@ -149,8 +147,7 @@ lemma hessian_nonneg (f : E → ℝ) (x₀ v : E)
     have htend : Tendsto (fun t : ℝ => x₀ + t • v) (𝓝 0) (𝓝 x₀) := by
       have key : Tendsto (fun t : ℝ => x₀ + t • v) (𝓝 0) (𝓝 (x₀ + (0 : ℝ) • v)) :=
         tendsto_const_nhds.add (tendsto_id.smul tendsto_const_nhds)
-      simp only [zero_smul, add_zero] at key
-      exact key
+      simp_all
     exact (htend.eventually hmin).filter_mono nhdsWithin_le_nhds
   have h_pos : ∀ᶠ t in 𝓝[>] (0 : ℝ), 0 < t :=
     eventually_nhdsWithin_of_forall fun _ ht => ht

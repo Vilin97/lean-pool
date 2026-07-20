@@ -190,12 +190,7 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
         have hbase : baseVertex.1 i ∈ baseSet := by
           change (baseVertex.1 i : SymN) < cutoff
           fin_cases i <;> decide
-        have hτ_base : τ.1 (baseVertex.1 i) = baseVertex.1 i := hfix _ hbase
-        calc
-          (τ.1 • w.1).1 j = τ.1 (w.1.1 j) := rfl
-          _ = τ.1 (baseVertex.1 i) := by simp [hw]
-          _ = baseVertex.1 i := hτ_base
-          _ = w'.1.1 j := by simp [hw']
+        simp_all
 
 -- Full pair transitivity: equality of directed masks implies existence of a symbol permutation
 -- mapping the pair.
@@ -211,10 +206,7 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
   have hw' : dirMask baseVertex w' = dirMask u' v' := by
     simpa [w', hσ2] using dirMask_smul (σ := σ2) (u := u') (v := v')
   have hbase : dirMask baseVertex w = dirMask baseVertex w' := by
-    calc
-      dirMask baseVertex w = dirMask u v := hw
-      _ = dirMask u' v' := by simp [h]
-      _ = dirMask baseVertex w' := by simpa using hw'.symm
+    simp_all
   -- Choose the orbit index `k` for the common mask.
   let k : DirIdx := dirIdxOfDirMask baseVertex w
   have hk : dirMask baseVertex w = maskAt k := by simp [k, maskAt_dirIdxOfDirMask]

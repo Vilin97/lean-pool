@@ -81,8 +81,7 @@ private lemma trueErrorReal_extend_false
   simp only [Set.indicator_apply, Set.mem_setOf_eq, FinitePMF.toPMF, PMF.ofFintype_apply]
   by_cases hah : a h = true
   · simp [hah, ENNReal.toReal_ofReal (μ.prob_nonneg h)]
-  · have haf : a h = false := Bool.eq_false_iff.mpr fun htrue => hah htrue
-    simp [haf]
+  · simp_all
 
 private theorem liftClass_growth_bound
     {H : Type*} [Fintype H] [DecidableEq H] [Nonempty H] (A : Finset (H → Bool))
@@ -324,8 +323,7 @@ theorem finite_support_vc_approx
         ne_top_of_le_ne_top (by simp [measure_univ]) (measure_mono (Set.subset_univ _))
       have h1 := MeasureTheory.measure_compl
         (DiscreteMeasurableSpace.forall_measurableSet _) hfin
-      rw [measure_univ] at h1; rw [h1]
-      exact tsub_pos_of_lt hbad_lt_one
+      simp_all
     -- Sub-step 2: Witness extraction with all-Sum.inl guarantee
     -- D = PMF.toMeasure (μ.toPMF.map Sum.inl) is supported on range Sum.inl.
     -- So the product measure is supported on {xs | ∀ i, xs i ∈ range Sum.inl}.
@@ -358,8 +356,7 @@ theorem finite_support_vc_approx
       have hsub : allInlᶜ ⊆ ⋃ i : Fin Tnat, {xs | xs i ∉ Set.range Sum.inl} := by
         intro xs hxs
         simp only [allInl, Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hxs
-        obtain ⟨i, hi⟩ := hxs
-        exact Set.mem_iUnion.mpr ⟨i, hi⟩
+        simp_all
       have hzero : ∀ i : Fin Tnat,
           Measure.pi (fun _ => D) {xs | xs i ∉ Set.range Sum.inl} = 0 := by
         intro i
@@ -391,14 +388,12 @@ theorem finite_support_vc_approx
           _ ≤ Measure.pi (fun _ => D) (badᶜ ∩ allInl) +
               Measure.pi (fun _ => D) allInlᶜ :=
               MeasureTheory.measure_union_le _ _
-      rw [h0, hallInl_compl_zero, zero_add] at this
-      exact not_lt.mpr this hcompl_pos
+      simp_all
     -- Extract witness from badᶜ ∩ allInl
     have hne : (badᶜ ∩ allInl).Nonempty := by
       by_contra h
       rw [Set.not_nonempty_iff_eq_empty] at h
-      rw [h] at hinter_pos
-      simp at hinter_pos
+      simp_all
     obtain ⟨xs, hxs_good, hxs_inl⟩ := hne
     -- hxs_good : xs ∈ badᶜ, i.e., xs ∉ bad
     have hxs_not_bad : xs ∉ bad := hxs_good

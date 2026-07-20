@@ -154,11 +154,7 @@ private theorem pairwise_consecutive_union :
       rw [List.getLast_cons_cons] at hlast
       cases ys with
       | nil =>
-        simp only [List.getLast_singleton] at hlast
-        subst hlast
-        simp only [List.zip_nil_right]
-        intro t ht
-        simpa only [Set.mem_iUnion] using ⟨(x, y), List.mem_singleton.mpr rfl, ht⟩
+        simp_all
       | cons z zs =>
         have htail_ne' : (y :: z :: zs).tail ≠ [] := List.cons_ne_nil z zs
         intro t ht
@@ -183,10 +179,7 @@ theorem sortedPartition_tail_nonempty (γ : PiecewiseC1Curve) :
   intro h
   have hlen2 : γ.sortedPartition.length ≤ 1 := by
     rcases List.exists_cons_of_ne_nil (sortedPartition_nonempty γ) with ⟨hd, tl, heq⟩
-    rw [heq] at h
-    simp only [List.tail_cons] at h
-    rw [heq, h]
-    simp only [List.length_cons, List.length_nil, Nat.zero_add, le_refl]
+    simp_all
   linarith
 
 /-- The union of `Icc p.1 p.2` over all `p ∈ consecutivePairs γ` covers `[a, b]`. -/

@@ -101,8 +101,7 @@ noncomputable def vertexSigmaEquiv : V ≃ Σ k : DirIdx, BaseOrbit k where
     have hpred :
         ∀ x : V,
           (dirMask baseVertex x = maskAt (dirIdxBase u.1)) ↔ (dirMask baseVertex x = maskAt k) := by
-      intro x
-      simp [hk]
+      simp_all
     -- Use `Subtype.heq_iff_coe_eq` to reduce the `HEq` goal.
     have : (u.1 : V) = u.1 := rfl
     exact (Subtype.heq_iff_coe_eq hpred).2 this
@@ -188,10 +187,7 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
       _ = ∑ u : V, ∑ v : V, (B r u p) * (A d u v) * (B r v q) := by
             -- `((B r)ᴴ) p u = star (B r u p) = B r u p` over `ℚ`.
             refine Fintype.sum_congr _ _ ?_
-            intro u
-            refine Fintype.sum_congr _ _ ?_
-            intro v
-            simp [Matrix.conjTranspose_apply]
+            simp_all
   rw [hExpand]
   -- Reindex `u` and `v` by base orbits.
   have hU :
@@ -291,11 +287,7 @@ theorem congr_ASymm_eq_compBasisSymm (r : Block) (d : DirIdx) :
     have hCB : compBasisSymm r d = compBasis r d := by
       unfold compBasisSymm
       -- Avoid unfolding `tTr` by using `if_pos` directly.
-      simpa using (if_pos hFix :
-        (if tTr[d.1]! = d.1 then
-          compBasis r d
-        else
-          compBasis r d + compBasis r (invDir d)) = compBasis r d)
+      simp_all
     rw [hAS, hCB]
     exact congr_A_eq_compBasis (r := r) (d := d)
   · -- Non-fixed: `ASymm d = A d + A dTr`,
@@ -386,19 +378,7 @@ theorem compressionHypScaledForB :
                   Matrix.mul_smul,
                   Matrix.smul_mul,
                   Matrix.mul_assoc]
-              calc
-                compBasis r idDirIdx
-                    + (B r)ᴴ * (∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) * (B r)
-                    =
-                    compBasis r idDirIdx
-                      + ∑ i : Var,
-                        (xFromColoring f i) • ((B r)ᴴ * (ASymm (varOrbit i)) * (B r)) := by
-                        simpa [hSum]
-                  _ =
-                      compBasis r idDirIdx
-                        + ∑ i : Var, (xFromColoring f i) • (compBasisSymm r (varOrbit i)) := by
-                          -- `simp` may unfold `ᴴ` into `ᵀ`, so provide both forms.
-                          simp [congr_ASymm_eq_compBasisSymm_T]
+              simp_all
       _ =
           (blockScales[r.1]! : Q) • S0 r
             + ∑ i : Var, (xFromColoring f i) • ((blockScales[r.1]! : Q) • Si r i) := by

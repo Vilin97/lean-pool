@@ -63,9 +63,7 @@ lemma chebyshev_majority_bound
   set S : Ω → ℝ := fun ω => ∑ j : Fin k, X j ω
   have hS_count : ∀ ω, S ω = ((univ.filter (fun j => ω ∈ events j)).card : ℝ) := by
     intro ω; simp only [S, X, Set.indicator_apply]
-    conv_lhs => arg 2; ext j; rw [show (if ω ∈ events j then (1 : ℝ) else 0) =
-      (if ω ∈ events j then 1 else 0 : ℕ) from by split_ifs <;> simp]
-    rw [← Nat.cast_sum, Finset.sum_boole]; rfl
+    simp_all
   have hindep_fun : iIndepFun (m := fun _ => inferInstance)
       (fun j => (events j).indicator (fun _ => (1 : ℝ))) μ :=
     hindep.iIndepFun_indicator

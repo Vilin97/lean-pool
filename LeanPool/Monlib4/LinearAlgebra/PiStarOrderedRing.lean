@@ -26,8 +26,7 @@ theorem Set.piOfPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i, Ad
   constructor
   · intro hi
     specialize hi i
-    rw [Pi.single_eq_same] at hi
-    exact hi (Set.mem_univ i)
+    simp_all
   · intro hx j _
     by_cases hj : j = i
     · rw [hj]
@@ -41,8 +40,7 @@ def AddSubmonoid.ofPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i,
   { carrier := fun x => x ∈ Set.ofPi h.carrier i
     zero_mem' := by
       change Pi.single i 0 ∈ h.carrier
-      rw [Pi.single_zero]
-      exact h.zero_mem'
+      simp_all
     add_mem' := fun x y => by
       have := h.add_mem' x y
       simp only [AddSubmonoid.mem_carrier, ← Pi.single_add] at this ⊢
@@ -52,16 +50,7 @@ theorem AddSubmonoid.piOfPi {ι : Type _} {B : ι → Type _} [DecidableEq ι] [
     (h : ∀ i, AddSubmonoid (B i)) : (AddSubmonoid.pi Set.univ h).ofPi = h := by
   ext i x
   change Pi.single i x ∈ AddSubmonoid.pi Set.univ h ↔ x ∈ h i
-  rw [AddSubmonoid.mem_pi]
-  constructor
-  · intro hx
-    simpa using hx i
-  · intro hx j
-    by_cases hj : j = i
-    · rw [hj, Pi.single_eq_same]
-      intro _
-      exact hx
-    · simp [Pi.single_eq_of_ne hj, (h j).zero_mem]
+  simp_all
 
 theorem Set.ofPi_mem' {ι : Type _} {B : ι → Type _} [DecidableEq ι] [∀ i, AddZeroClass (B i)]
     {s : ∀ i, Set (B i)} {S : Set (∀ i, B i)} (hs : Set.univ.pi s ⊆ S) (h : ∀ i, s i 0) (i : ι) :

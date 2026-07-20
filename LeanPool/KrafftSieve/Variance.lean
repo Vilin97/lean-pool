@@ -94,9 +94,7 @@ lemma sum_exp_orthogonality (n : ℕ) (k : ZMod (q n)) :
         ( Finset.range ( q n ) ) ) ) ]
   · rw [ Finset.sum_image ] <;> norm_num
     · split_ifs
-      · rw [ Finset.sum_congr rfl fun x hx => by
-          rw [ Nat.mod_eq_of_lt ( Finset.mem_range.mp hx ) ] ]
-        aesop
+      · simp_all
       · -- Let $z = e^{2 \pi i k / q}$.
         -- Since $k \neq 0$,
         -- $z$ is a primitive $q$-th root of unity.

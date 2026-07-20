@@ -45,8 +45,7 @@ def decideBelow (p : Nat → Prop) [DecidablePred p] (bound : Nat) :
         if c: p k then
           .isTrue (fun n bd => by
             rcases Nat.eq_or_lt_of_le bd with eql | lt
-            · have : n = k := by injection eql
-              exact this ▸ c
+            · simp_all
             · exact hyp n (Nat.le_of_succ_le_succ lt))
         else
           .isFalse (fun contra => c (contra k (Nat.lt_succ_self k)))

@@ -63,8 +63,7 @@ lemma tendsto_zero_of_regular_addContent (hR : IsSetRing R) (m : AddContent ℝ�
           · simp only [hin, Set.iInter_true, Set.iUnion_true]
             refine Set.sdiff_subset_sdiff ?_ subset_rfl
             exact Set.biInter_subset_of_mem hin
-          · simp only [hin, Set.iInter_of_empty, Set.sdiff_univ, Set.iUnion_of_empty,
-              Set.empty_subset]
+          · simp_all
     _ = m (⋃ i ∈ Finset.range (n + 1), (s i \ t i)) := by simp only [Finset.mem_range_succ_iff]
     _ ≤ ∑ i ∈ Finset.range (n + 1), m (s i \ t i) :=
         addContent_biUnion_le hR (fun i _ ↦ hR.sdiff_mem (hs i) (hCR (ht_mem_C i)))

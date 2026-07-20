@@ -59,8 +59,7 @@ private lemma eventually_notMem_partition_of_eventually_ne
   have hcl : IsClosed ((↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)) :=
     (γ.toPiecewiseC1Curve.partition.finite_toSet.subset sdiff_subset).isClosed
   have hmem : p ∉ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ) := by
-    simp only [Set.mem_sdiff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
-      implies_true]
+    simp_all
   have h1 : ∀ᶠ t in l, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
     hl (hcl.isOpen_compl.mem_nhds hmem)
   exact (h1.and hne).mono fun t ⟨ht_compl, ht_ne⟩ ht_part => ht_compl ⟨ht_part, ht_ne⟩
@@ -249,8 +248,7 @@ theorem PiecewiseC1Immersion.crossing_not_accPt
 theorem crossing_set_isClosed (γ : PiecewiseC1Immersion) (z₀ : ℂ) :
     IsClosed {t ∈ Icc γ.a γ.b | γ.toFun t = z₀} := by
   have : {t ∈ Icc γ.a γ.b | γ.toFun t = z₀} = Icc γ.a γ.b ∩ γ.toFun ⁻¹' {z₀} := by
-    ext t; simp only [Set.mem_sep_iff, Set.mem_inter_iff, Set.mem_preimage,
-      Set.mem_singleton_iff]
+    ext t; simp_all
   rw [this]
   exact γ.continuous_toFun.preimage_isClosed_of_isClosed isClosed_Icc isClosed_singleton
 
@@ -505,9 +503,7 @@ private theorem cpv_exists_on_subinterval
     exact absurd hmem (Finset.card_eq_zero.mp (Nat.le_zero.mp h_card) ▸ Finset.notMem_empty t)
   | succ n ih =>
     by_cases h_empty : h_fin_cd.toFinset = ∅
-    · apply cpv_avoidance_sub γ z₀ c d hcd h_sub
-      intro t ht hγt
-      exact absurd (h_fin_cd.mem_toFinset.mpr ⟨ht, hγt⟩) (h_empty ▸ Finset.notMem_empty t)
+    · simp_all
     · obtain ⟨t₁, ht₁_mem⟩ := Finset.nonempty_of_ne_empty h_empty
       have ht₁_Icc : t₁ ∈ Icc c d := (h_fin_cd.mem_toFinset.mp ht₁_mem).1
       have hγt₁ : γ.toFun t₁ = z₀ := (h_fin_cd.mem_toFinset.mp ht₁_mem).2

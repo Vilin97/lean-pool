@@ -62,8 +62,7 @@ instance Halfspace.SetLike : SetLike (Halfspace E) E where
     have hf1 : f1.1 = (InnerProductSpace.toDual ℝ E) p1 :=
       (LinearIsometryEquiv.apply_symm_apply (InnerProductSpace.toDual ℝ E) _).symm
     have hf1p1 : f1.1 p1 = 1 := by
-      rw [hf1, InnerProductSpace.toDual_apply_apply, real_inner_self_eq_norm_sq, hp1norm, sq,
-        one_mul]
+      simp_all
     have hfeq : f1 = f2 := by
       rw [Subtype.ext_iff]
       refine LinearIsometryEquiv.injective (InnerProductSpace.toDual ℝ E).symm ?_
@@ -115,8 +114,7 @@ instance Halfspace.SetLike : SetLike (Halfspace E) E where
       rw [← Set.symmDiff_nonempty, Set.nonempty_def]
       use (1 + max M1 M2) • v'
       rw [Set.mem_symmDiff]
-      right
-      exact ⟨ hM2 (1 + max M1 M2) (by assumption), hM1 (1 + max M1 M2) (by assumption) ⟩
+      simp_all
     congr
     contrapose! h
     rw [← Set.symmDiff_nonempty, Set.nonempty_def]
@@ -160,9 +158,7 @@ lemma Halfspace_span (H_ : Halfspace E) : affineSpan ℝ (SetLike.coe H_) = ⊤ 
   · -- preimage of ball is not empty as f is surjective
     obtain ⟨x, hx⟩ := unitSphereDual_surj H_.f (H_.α - 1)
     use x
-    rw [Set.mem_preimage, Metric.mem_ball, dist_sub_eq_dist_add_right, hx, sub_add_cancel,
-      dist_self]
-    linarith
+    simp_all
   -- this open set is subset of the halfspace
   have hopen : IsOpen (H_.f.1 ⁻¹' Metric.ball (H_.α - 1) (1 / 2)) :=
     IsOpen.preimage H_.f.1.cont Metric.isOpen_ball
@@ -222,9 +218,7 @@ lemma Hyperplane_affineClosed (Hi_ : Halfspace E) :
   have hg : (fun i => Hi_.f.1 (a i • s i)) = fun i => a i * Hi_.α := by
     ext i
     rw [Set.range_subset_iff] at hs
-    specialize hs i
-    rw [Set.mem_setOf] at hs
-    rw [ContinuousLinearMap.map_smulₛₗ, smul_eq_mul, RingHom.id_apply, hs]
+    simp_all
   rw [hg, ←Finset.sum_mul, ha, one_mul]
 
 omit [CompleteSpace E] in

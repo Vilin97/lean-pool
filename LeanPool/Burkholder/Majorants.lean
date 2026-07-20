@@ -72,8 +72,7 @@ theorem exists_majorant_p_g_1 (p : ℝ) (hp : p > 1) :
               hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, _haxis⟩
           refine ⟨u, du_dx, du_dy, C, hC_nonneg, hu_cont, hdu_dx_cont, hdu_dy_cont,
             hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, ?_⟩
-          intro x y hxy
-          exact False.elim (hxy.1 hp2)
+          simp_all
         by_cases hp_gt_2 : 2 < p
         · -- Case p > 2
           rcases exists_majorant_geTwo p hp_gt_2 with
@@ -81,8 +80,7 @@ theorem exists_majorant_p_g_1 (p : ℝ) (hp : p > 1) :
               hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, haxis⟩
           refine ⟨u, du_dx, du_dy, C, hC_nonneg, hu_cont, hdu_dx_cont, hdu_dy_cont,
             hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, ?_⟩
-          intro x y hxy
-          exact haxis x y ⟨hxy.2.1, hxy.2.2⟩
+          simp_all
         -- Case 1 < p < 2
         have hp1 : 1 < p := hp
         have hp_lt_2 : p < 2 := lt_of_le_of_ne (le_of_not_gt hp_gt_2) hp2
@@ -91,8 +89,7 @@ theorem exists_majorant_p_g_1 (p : ℝ) (hp : p > 1) :
             hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, haxis⟩
         refine ⟨u, du_dx, du_dy, C, hC_nonneg, hu_cont, hdu_dx_cont, hdu_dy_cont,
           hu_growth, hdu_dx_growth, hdu_dy_growth, htangent, hmajor, hnonpos, ?_⟩
-        intro x y hxy
-        exact haxis x y ⟨hxy.2.1, hxy.2.2⟩
+        simp_all
 
 
 

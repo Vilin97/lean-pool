@@ -150,9 +150,7 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
   have hg_decay : ∀ N : ℕ, ∃ C > 0, ∀ v, |g v| * (1 + ‖v‖) ^ N ≤ C := by
     intro N; obtain ⟨C, hC, hb⟩ := hg_schwartz N (k := 0) (by norm_num)
     exact ⟨C, hC, fun v => by
-      have := hb v
-      simp only [norm_iteratedFDeriv_zero, Real.norm_eq_abs] at this
-      exact this⟩
+      simp_all⟩
   -- Schwartz decay of ‖fderiv g‖ (k=1)
   have hfderiv_decay : ∀ N : ℕ, ∃ C > 0, ∀ w,
       ‖fderiv ℝ g w‖ * (1 + ‖w‖) ^ N ≤ C := by
@@ -197,15 +195,11 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
     intro v
     exact ((coulomb_entry_schwartz_integrable g hg_smooth hg_decay v i j).comp_sub_left v
       |>.congr (ae_of_all _ fun u => by
-        change landauMatrix coulombKernel (v - (v - u)) i j * g (v - u) =
-          landauMatrix coulombKernel u i j * g (v - u)
-        congr 2; abel)).aestronglyMeasurable
+        simp_all)).aestronglyMeasurable
   · -- F integrable at v₀
     exact (coulomb_entry_schwartz_integrable g hg_smooth hg_decay v₀ i j).comp_sub_left v₀
       |>.congr (ae_of_all _ fun u => by
-        change landauMatrix coulombKernel (v₀ - (v₀ - u)) i j * g (v₀ - u) =
-          landauMatrix coulombKernel u i j * g (v₀ - u)
-        congr 2; abel)
+        simp_all)
   · -- F' measurable at v₀
     have h_sc : AEStronglyMeasurable (fun u => landauMatrix coulombKernel u i j) volume := by
       change AEStronglyMeasurable (fun u => coulombKernel (eucNorm u) *
@@ -233,8 +227,7 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
             rw [Real.norm_eq_abs]
             exact coulomb_landauMatrix_entry_le_pi u i j hu
         _ ≤ ‖u‖⁻¹ * (D / (1 + ‖v₀ - u‖) ^ 4) := by
-            gcongr
-            exact hD_bound u v hv
+            simp_all
   · -- Dominator integrable: ‖u‖⁻¹ * (D / (1+‖v₀-u‖)^4) is integrable
     -- Change variables w = v₀ - u: the integrand becomes ‖v₀-w‖⁻¹ * D/(1+‖w‖)^4
     -- which is integrable by inv_norm_bounded_integrable.
@@ -250,9 +243,7 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
     -- h_w_int : Integrable (fun w => ‖v₀ - w‖⁻¹ * (D / (1+‖w‖)^4))
     -- Substitute u = v₀ - w to get the u-coordinate form
     exact (h_w_int.comp_sub_left v₀).congr (ae_of_all _ fun u => by
-      change ‖v₀ - (v₀ - u)‖⁻¹ * (D / (1 + ‖v₀ - u‖) ^ 4) =
-        ‖u‖⁻¹ * (D / (1 + ‖v₀ - u‖) ^ 4)
-      congr 1; congr 1; abel_nf)
+      simp_all)
   · -- HasFDerivAt pointwise
     apply ae_of_all
     intro u v _
@@ -302,13 +293,10 @@ lemma coulomb_entry_conv_deriv_bounded
       ‖fderiv ℝ g w‖ * (1 + ‖w‖) ^ N ≤ C := by
     intro N; obtain ⟨C, hC, hb⟩ := hg_schwartz N (k := 1) le_rfl
     exact ⟨C, hC, fun w => by
-      calc ‖fderiv ℝ g w‖ * (1 + ‖w‖) ^ N
-          = ‖iteratedFDeriv ℝ 1 g w‖ * (1 + ‖w‖) ^ N := by rw [norm_fderiv_eq_iteratedFDeriv_one]
-        _ ≤ C := hb w⟩
+      simp_all⟩
   have hfderiv_abs_decay : ∀ N : ℕ, ∃ C > 0, ∀ w,
       |‖fderiv ℝ g w‖| * (1 + ‖w‖) ^ N ≤ C := by
-    intro N; obtain ⟨C, hC, hb⟩ := hfderiv_decay N
-    exact ⟨C, hC, fun w => by rw [abs_of_nonneg (norm_nonneg _)]; exact hb w⟩
+    simp_all
   -- Uniform bound on convolution via newtonian_schwartz_uniform_bound
   have h_meas : AEStronglyMeasurable (fun w => ‖fderiv ℝ g w‖) volume := by
     have hg_deriv_smooth : ContDiff ℝ 1 (fderiv ℝ g) := hg_smooth.fderiv_right (by decide)
@@ -344,8 +332,7 @@ lemma coulomb_entry_conv_deriv_bounded
             (ContDiff.continuous (n := 1)
               (hg_smooth.fderiv_right (by norm_num))).norm.aestronglyMeasurable v)
           exact this.comp_sub_left v |>.congr (ae_of_all _ fun u => by
-            change ‖v - (v - u)‖⁻¹ * ‖fderiv ℝ g (v - u)‖ = ‖u‖⁻¹ * ‖fderiv ℝ g (v - u)‖
-            congr 2; congr 1; abel)
+            simp_all)
         exact integral_mono_of_nonneg
           (ae_of_all _ fun u => by positivity)
           h_dom
@@ -357,9 +344,7 @@ lemma coulomb_entry_conv_deriv_bounded
                 (norm_nonneg _))
     _ = ∫ w, ‖v - w‖⁻¹ * ‖fderiv ℝ g w‖ := by
         rw [← integral_sub_left_eq_self (fun u => ‖u‖⁻¹ * ‖fderiv ℝ g (v - u)‖) volume v]
-        congr 1
-        ext u
-        simp [sub_sub_cancel]
+        simp_all
     _ ≤ M := by simp only [abs_norm] at hM; exact hM v
     _ ≤ M + 1 := le_add_of_nonneg_right one_pos.le
 
@@ -506,9 +491,7 @@ lemma coulomb_entry_conv_uniform_bound
             (ae_of_all _ fun w => norm_nonneg _)
             ((inv_norm_schwartz_integrable g hg_decay hg_meas v).norm.congr
               (ae_of_all _ fun w => by
-                change ‖‖v - w‖⁻¹ * g w‖ = ‖v - w‖⁻¹ * |g w|
-                rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
-                    Real.norm_eq_abs]))
+                simp_all))
             (ae_of_all _ fun w => by
               change ‖landauMatrix coulombKernel (v - w) i j * g w‖ ≤ ‖v - w‖⁻¹ * |g w|
               rw [norm_mul, Real.norm_eq_abs (g w)]

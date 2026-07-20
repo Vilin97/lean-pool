@@ -294,11 +294,7 @@ private theorem heckeSlash_comp (k : ℤ) (D₁ D₂ : HeckeCoset (GLPair 2)) (f
       (∑ j : decompQuot (GLPair 2) (HeckeCoset.rep D₂),
         f ∣[k] tRep D₂ j) ∣[k] tRep D₁ i) =
       ∑ i, ∑ j, (f ∣[k] tRep D₂ j) ∣[k] tRep D₁ i from by
-    congr 1; ext i
-    induction Finset.univ (α := decompQuot (GLPair 2) (HeckeCoset.rep D₂))
-        using Finset.cons_induction with
-    | empty => simp [SlashAction.zero_slash]
-    | cons a s has ih => simp [Finset.sum_cons, SlashAction.add_slash]]
+    simp_all]
   have h_slash_mul :
       ∀ (i : decompQuot (GLPair 2) (HeckeCoset.rep D₁))
         (j : decompQuot (GLPair 2) (HeckeCoset.rep D₂)),

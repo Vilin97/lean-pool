@@ -179,8 +179,7 @@ lemma MDifferentiable_div {F G : ℍ → ℂ}
     simp [Function.comp, Pi.div_apply, ofComplex_apply_of_im_pos hw]
   exact ((MDifferentiableAt_DifferentiableAt (hF τ)).div
     (MDifferentiableAt_DifferentiableAt (hG τ))
-    (by simp only [Function.comp_apply, ofComplex_apply,
-      ne_eq]; exact hG_ne _)).congr_of_eventuallyEq h_eq.symm
+    (by simp_all)).congr_of_eventuallyEq h_eq.symm
 
 @[simp]
 theorem D_const (c : ℂ) : D (Function.const ℍ c) = 0 := by
@@ -540,8 +539,7 @@ lemma D_slash (k : ℤ) (F : ℍ → ℂ) (hF : MDiff F) (γ : SL(2, ℤ)) :
   simp only [ModularForm.SL_slash_apply, hF_mob, hmob_eq]
   have hpow_combine : 1 / (denom γ z) ^ 2 * (denom γ z) ^ (-k) = (denom γ z) ^ (-(k + 2)) := by
     rw [one_div, ← zpow_natCast (denom γ z) 2, ← zpow_neg, ← zpow_add₀ hz_denom_ne]
-    congr 1
-    ring
+    simp_all
   have hpow_m1 : (denom γ z) ^ (-k - 1) = (denom γ z) ^ (-1 : ℤ) * (denom γ z) ^ (-k) := by
     rw [← zpow_add₀ hz_denom_ne]
     congr 1
@@ -655,8 +653,7 @@ theorem D_real_of_real {F : ℍ → ℂ} (hF_real : ResToImagAxis.Real F)
     im_deriv_eq_zero_of_im_eq_zero (ResToImagAxis.Differentiable F hF_diff t ht) him
   have h_im_eq : (deriv F.resToImagAxis t).im = -2 * π * ((D F).resToImagAxis t).im := by
     simpa [mul_assoc, ofReal_mul] using congrArg Complex.im (deriv_resToImagAxis_eq F hF_diff ht)
-  exact (mul_eq_zero.mp (h_im_deriv ▸ h_im_eq).symm).resolve_left
-    (mul_ne_zero (by norm_num) Real.pi_ne_zero)
+  simp_all
 
 /-- The real part of F.resToImagAxis has derivative -2π * ((D F).resToImagAxis t).re at t. -/
 lemma hasDerivAt_resToImagAxis_re {F : ℍ → ℂ} (hdiff : MDiff F)

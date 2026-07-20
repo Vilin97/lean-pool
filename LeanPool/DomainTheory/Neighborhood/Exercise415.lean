@@ -68,8 +68,7 @@ theorem exists_maximal_fixedPoint (f : V.Element → V.Element) (hf : Monotone f
     intro c hcS hchain
     rcases c.eq_empty_or_nonempty with rfl | hne
     · refine ⟨⊥, ?_, fun z hz => ((Set.mem_empty_iff_false z).mp hz).elim⟩
-      change (⊥ : V.Element) ≤ f ⊥
-      exact _root_.bot_le
+      simp_all
     · refine ⟨V.chainUnion c hne hchain, ?_, fun z hz => V.le_chainUnion c hne hchain hz⟩
       -- `⊔c` is post-fixed: each `x ∈ c` has `x ⊑ f x ⊑ f(⊔c)`.
       change V.chainUnion c hne hchain ≤ f (V.chainUnion c hne hchain)

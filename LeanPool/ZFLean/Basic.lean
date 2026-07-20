@@ -44,12 +44,10 @@ theorem sInter_pair {a b : ZFSet} : ⋂₀ {a, b} = a ∩ b := by
   constructor
   · intro h
     rw [mem_sInter (by simp only [nonempty_def, mem_insert_iff, exists_or_eq_left])] at h
-    simp only [mem_insert_iff, mem_singleton, forall_eq_or_imp, forall_eq] at h
-    rwa [← mem_inter] at h
+    simp_all
   · intro h
     rw [mem_sInter (by simp only [nonempty_def, mem_insert_iff, exists_or_eq_left])]
-    simp only [mem_insert_iff, mem_singleton, forall_eq_or_imp, forall_eq]
-    rwa [← mem_inter]
+    simp_all
 
 @[simp]
 theorem sep_empty_iff {A : ZFSet} {P : ZFSet → Prop} : A.sep P = ∅ ↔ (A = ∅ ∨ ∀ x ∈ A, ¬ P x) where
@@ -62,59 +60,38 @@ theorem sep_empty_iff {A : ZFSet} {P : ZFSet → Prop} : A.sep P = ∅ ↔ (A = 
       have : x ∈ A.sep P := by
         rw [mem_sep]
         exact ⟨mem_x_A, contr⟩
-      rw [h] at this
-      nomatch this, notMem_empty _
+      simp_all
   mpr h := by classical
     rcases h with rfl | h
     · exact sep_empty P
     · ext1 z
-      constructor
-      · intro hz
-        rw [mem_sep] at hz
-        nomatch h _ hz.left, hz.right
-      · intro hz
-        nomatch notMem_empty z, hz
+      simp_all
 
 theorem insert_prod {A B x : ZFSet} : (insert x A).prod B = A.prod B ∪ ({x} : ZFSet).prod B := by
   ext1 z
   simp only [mem_prod, mem_insert_iff, exists_eq_or_imp, mem_union, mem_singleton, exists_eq_left]
   constructor
   · rintro (⟨b, bB, rfl⟩ | ⟨a, aA, b, bB, rfl⟩)
-    · simp only [pair_inj, exists_eq_right_right', true_and, exists_eq_right']
-      right
-      exact bB
-    · simp only [pair_inj, exists_eq_right_right']
-      left
-      exact ⟨aA, bB⟩
+    · simp_all
+    · simp_all
   · rintro (⟨a, aA, b, bB, rfl⟩ | ⟨b, bB, rfl⟩)
-    · simp only [pair_inj, exists_eq_right_right']
-      right
-      exact ⟨aA, bB⟩
-    · simp only [pair_inj, true_and, exists_eq_right', exists_eq_right_right']
-      left
-      exact bB
+    · simp_all
+    · simp_all
 
 theorem prod_insert {A B x : ZFSet} : A.prod (insert x B) = A.prod B ∪ A.prod {x} := by
   ext1 z
   simp only [mem_prod, mem_insert_iff, exists_eq_or_imp, mem_union, mem_singleton, exists_eq_left]
   constructor
   · rintro ⟨a, aA, rfl | ⟨b, bB, rfl⟩⟩
-    · simp only [pair_inj, exists_eq_right_right', and_true, exists_eq_right']
-      right
-      exact aA
-    · simp only [pair_inj, exists_eq_right_right', existsAndEq, true_and]
-      left
-      exact ⟨aA, bB⟩
+    · simp_all
+    · simp_all
   · rintro (⟨a, aA, b, bB, rfl⟩ | ⟨a, aA, rfl⟩)
     · simp only [pair_inj, exists_eq_right_right']
       exists a, aA
-      rw [eq_self, and_true, true_and]
-      right
-      exact bB
+      simp_all
     · simp only [pair_inj, and_true, exists_eq_right_right']
       exists a, aA
-      left
-      rfl
+      simp_all
 
 lemma prod_nonempty {x y : ZFSet} : x ≠ ∅ → y ≠ ∅ → ZFSet.prod x y ≠ ∅ := by
   classical
@@ -159,19 +136,14 @@ theorem inter_mono {x y z : ZFSet} : x ⊆ z → y ⊆ z → x ∩ y ⊆ z := by
 theorem mem_powerset_self {x : ZFSet} : x ∈ x.powerset := mem_powerset.mpr fun _ => id
 
 theorem inter_self {A : ZFSet} : A ∩ A = A := by
-  ext1
-  rw [mem_inter]
-  exact and_iff_left_of_imp id
+  simp_all
 theorem inter_empty {A : ZFSet} : A ∩ ∅ = ∅ := by
-  ext1
-  simp
+  simp_all
 theorem empty_inter {A : ZFSet} : ∅ ∩ A = ∅ := by
-  ext1
-  simp
+  simp_all
 theorem union_self {A : ZFSet} : A ∪ A = A := by
   ext1
-  rw [mem_union]
-  exact or_iff_left_of_imp id
+  simp_all
 theorem sep_true {A : ZFSet} : A.sep (fun _ => True) = A := by
   ext1
   rw [mem_sep, and_true]
@@ -198,9 +170,7 @@ theorem epsilon_mem {y : ZFSet} (hy : y ≠ ∅) : ε y ∈ y := by
 
 theorem insert_mem {x y : ZFSet} (h : x ∈ y) : insert x y = y := by
   ext1
-  rw [mem_insert_iff, or_iff_right_iff_imp]
-  rintro rfl
-  trivial
+  simp_all
 
 theorem eq_of_subset_subset {A B : ZFSet} (hAB : A ⊆ B) (hBA : B ⊆ A) : A = B := by
   ext1 x
@@ -230,15 +200,9 @@ theorem prod_inj {A B C D : ZFSet} (h : A.prod B = C.prod D) (hA : A ≠ ∅) (h
   intro x y
   and_intros
   · specialize h (x.pair b)
-    simp only [pair_inj, exists_eq_right_right'] at h
-    constructor <;> intro hx
-    · exact (h.mp ⟨hx, hb⟩).1
-    · exact (h.mpr ⟨hx, bD⟩).1
+    simp_all
   · specialize h (a.pair y)
-    simp only [pair_inj, exists_eq_right_right'] at h
-    constructor <;> intro hy
-    · exact (h.mp ⟨ha, hy⟩).2
-    · exact (h.mpr ⟨aC, hy⟩).2
+    simp_all
 
 end ZFSet
 

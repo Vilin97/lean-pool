@@ -524,8 +524,7 @@ lemma ball {φ : List.Vector ℕ n → ℕ → ℕ} (hp : @Arith₁ (n + 1) (fun
     by_cases H : ∀ m < v.get i, 0 < φ v m
     · exact ⟨v.get i,
         ⟨by
-          symm
-          simp only [Std.le_refl, decide_true, Bool.or_true],
+          simp_all,
         by
           intro m hm
           symm
@@ -619,9 +618,7 @@ lemma prec {n f g} (hf : @Arith₁ n f) (hg : @Arith₁ (n + 2) g) :
       g (i ::ᵥ z.beta i ::ᵥ v.tail) by
       rcases least_number _ this with ⟨z, ⟨hz0, hzs⟩, hzm⟩
       exact ⟨z, ⟨by
-        symm
-        simp only [hz0, decide_true, Bool.true_and]
-        exact decide_eq_true hzs,
+        simp_all,
         by intro m hm; symm; simpa[imp_iff_not_or, not_or] using hzm m hm⟩,
         beta_eq_rec f g hz0 hzs⟩
     let l : List ℕ := recSequence f g v.head v.tail

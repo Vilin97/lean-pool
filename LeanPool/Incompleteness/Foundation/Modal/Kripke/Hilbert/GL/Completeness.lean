@@ -37,18 +37,15 @@ namespace miniCanonicalFrame
 
 lemma is_irreflexive : Std.Irrefl (miniCanonicalFrame φ).Rel := by
   constructor
-  rintro X ⟨_, χ, _, hnχ, hχ⟩
-  exact hnχ hχ
+  simp_all
 
 lemma is_transitive : IsTrans (miniCanonicalFrame φ).World (miniCanonicalFrame φ).Rel := by
   constructor
   rintro X Y Z ⟨RXY, ⟨χ, _, _, _⟩⟩ ⟨RYZ, _⟩;
   constructor;
-  · rintro ψ hq₁ hq₂;
-    exact RYZ ψ hq₁ <| RXY ψ hq₁ hq₂ |>.2;
+  · simp_all
   · use χ;
-    refine ⟨by assumption, by assumption, ?_⟩;
-    exact RYZ χ (by assumption) (by assumption) |>.2;
+    simp_all
 
 end miniCanonicalFrame
 
@@ -90,14 +87,12 @@ lemma truthlemma_lemma2
   apply FormulaFinset.intro_union_consistent;
   rintro Γ₁ Γ₂ ⟨hΓ₁, hΓ₂⟩;
   replace hΓ₂ : ∀ χ ∈ Γ₂, χ = □ψ ∨ χ = -ψ := by
-    intro χ hr;
-    simpa using hΓ₂ χ hr;
+    simp_all
   by_contra hC;
   have : Γ₁ ⊢[_]! ⋀Γ₂ ==> ⊥ := provable_iff.mpr <| and_imply_iff_imply_imply'!.mp hC;
   have : Γ₁ ⊢[_]! (□ψ ⋏ -ψ) ==> ⊥ := imp_trans''! (by
     suffices Γ₁ ⊢[Hilbert.GL]! ⋀[□ψ, -ψ] ==> ⋀Γ₂ by
-      simpa only [ne_eq, List.cons_ne_self, not_false_eq_true, List.conj₂_cons_nonempty,
-        List.conj₂_singleton];
+      simp_all
     apply conjconj_subset!;
     simpa using hΓ₂;
   ) this;
@@ -112,9 +107,7 @@ lemma truthlemma_lemma2
   have : _ ⊢! ⋀□'Γ₁ ==> □ψ := provable_iff.mp this;
   have : _ ⊢! ⋀□'(X.1.prebox ∪ X.1.prebox.modalBox |>.toList) ==> □ψ :=
     imp_trans''! (conjconj_subset! (by
-    suffices ∀ χ ∈ Γ₁, □χ ∈ X ∨ ∃ χ', □χ' ∈ X ∧ □χ' = χ by simpa;
-    intro χ hr;
-    have h := hΓ₁ _ hr; simp at h; tauto;
+    simp_all
   )) this;
   have : _ ⊢! ⋀□'(X.1.prebox.toList) ==> □ψ := imp_trans''! (conjconj_provable! (by
     suffices ∀ χ, (□χ ∈ X ∨ ∃ χ', □χ' ∈ X ∧ □χ' =

@@ -52,11 +52,7 @@ lemma rFullPart_factorization (r m : ℕ) (_hm : m ≠ 0) :
       m.factorization.filter (fun p => r ≤ m.factorization p) := by
   unfold rFullPart
   apply Nat.prod_pow_factorization_eq_self
-  intro p hp
-  have hp_support : p ∈ m.factorization.support := by
-    rw [Finsupp.support_filter] at hp
-    exact Finset.mem_of_mem_filter p hp
-  exact Nat.prime_of_mem_primeFactors (by simpa [Nat.support_factorization] using hp_support)
+  simp_all
 
 /-
 rFullPart r m is nonzero when m is nonzero.
@@ -78,8 +74,7 @@ lemma rFullPart_dvd (r m : ℕ) (hm : m ≠ 0) : rFullPart r m ∣ m := by
     unfold rFullPart
     simpa [Finsupp.prod, Finset.prod_ite] using
       (Finset.prod_congr rfl fun x hx => by
-        rw [Finsupp.filter_apply]
-        aesop)
+        simp_all)
   conv_rhs => rw [← Nat.prod_factorization_pow_eq_self hm]
   exact h_factorization.symm ▸
     Finset.prod_dvd_prod_of_dvd _ _ fun p hp => by
@@ -97,11 +92,7 @@ lemma rFullPart_pow (r m : ℕ) (hm : m ≠ 0) (hr : r ≠ 0) :
     by_cases hp : p.Prime
     · rw [rFullPart_factorization _ _ (pow_ne_zero _ hm)]
       by_cases h : r ≤ r * m.factorization p
-      · simp only [Nat.factorization_pow, Finsupp.coe_smul, Pi.smul_apply,
-          smul_eq_mul, Finsupp.filter_smul, mul_eq_mul_left_iff,
-          Finsupp.filter_apply, h]
-        left
-        rfl
+      · simp_all
       · simp only [Nat.factorization_pow, Finsupp.coe_smul, Pi.smul_apply,
           smul_eq_mul, Finsupp.filter_smul, mul_eq_mul_left_iff,
           Finsupp.filter_apply, h]

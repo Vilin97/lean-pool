@@ -134,8 +134,7 @@ def iStar : π_ n A a → π_ n X a :=
             ContinuousMap.Homotopy.coe_toContinuousMap,
             ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
           change ((Nonempty.some H) (t, y) : X) = _
-          rw [this]
-          rfl }
+          simp_all }
 
 /-- `jStar'` -/
 def jStar' (f : Ω^ (Fin n) X a) : π_rel n X A a :=

@@ -343,8 +343,7 @@ private lemma good_subsets_le {t : ℕ} (j : ℕ)
         · exact hST (Finset.mem_of_mem_erase hv)
         · intro hvI
           have : v ∈ S ∩ I := Finset.mem_inter.mpr ⟨Finset.mem_of_mem_erase hv, hvI⟩
-          rw [hSI_eq, Finset.mem_singleton] at this
-          exact absurd this (Finset.ne_of_mem_erase hv)
+          simp_all
       · -- |S.erase i| = j - 1
         rw [Finset.card_erase_of_mem hiS, hScard]
     · -- InjOn: S₁.erase i = S₂.erase i → S₁ = S₂
@@ -417,8 +416,7 @@ private lemma layer_filter_card_bound {t : ℕ} (j : ℕ) (hj : 2 ≤ j)
   have h_sub : ((Finset.univ.powersetCard j).filter Q) ⊆
       (T.powersetCard j).filter (fun S => (S ∩ I).card = 1) := by
     intro S hS
-    simp only [Finset.mem_filter, Finset.mem_powersetCard, hQ_def] at hS ⊢
-    exact ⟨⟨hS.2.1, hS.1.2⟩, hS.2.2⟩
+    simp_all
   calc c * ((Finset.univ.powersetCard j).filter Q).card
       ≤ c * ((T.powersetCard j).filter (fun S => (S ∩ I).card = 1)).card :=
         Nat.mul_le_mul_left c (Finset.card_le_card h_sub)
@@ -456,9 +454,7 @@ private lemma lubell_omega_bound (t : ℕ) (ht : 2 ≤ t)
   · -- I empty → omegaCount = 0
     suffices omegaCount (lubellFrame t) T I = 0 by omega
     rw [oc_eq_filter_card, Multiset.card_eq_zero, Multiset.filter_eq_nil]
-    intro S _ ⟨_, hSI⟩
-    rw [Finset.card_eq_zero.mp hIcard, Finset.inter_empty, Finset.card_empty] at hSI
-    exact absurd hSI (by omega)
+    simp_all
   · -- I nonempty: z ≤ t - 1
     have hzt1 : z ≤ t - 1 := by omega
     -- Divisibility for the Vandermonde identity
@@ -525,8 +521,7 @@ private lemma lubell_omega_bound (t : ℕ) (ht : 2 ≤ t)
         constructor
         · intro ⟨h1, h2⟩; exact ⟨j - 2, by omega, by omega⟩
         · rintro ⟨i, hi, rfl⟩; omega
-      rw [h_map, Finset.sum_map]
-      assumption
+      simp_all
     -- Final calc
     calc omegaCount (lubellFrame t) T I
         ≤ I.card * tail_sum := hoc_le
@@ -721,9 +716,7 @@ private lemma harmonic_sub_one_eq_sum_Icc (t : ℕ) (ht : 2 ≤ t) :
             rw [harmonic_eq_sum_Icc, Rat.cast_sum]
             simp_rw [Rat.cast_inv, Rat.cast_natCast]
     _ = (1 : ℝ) + ∑ j ∈ Finset.Icc 2 t, (j : ℝ)⁻¹ - 1 := by
-            rw [hIcc, Finset.sum_insert]
-            · simp
-            · simp
+            simp_all
     _ = ∑ j ∈ Finset.Icc 2 t, (j : ℝ)⁻¹ := by ring
 
 private lemma M_ne_zero (t : ℕ) (_ht : 2 ≤ t) : M t ≠ 0 := by
@@ -820,17 +813,14 @@ private lemma log_le_harmonic (t : ℕ) (ht : 2 ≤ t) :
       Real.log (t : ℝ) ≤ ((harmonic (t - 1) : ℚ) : ℝ) := by
     have h := log_add_one_le_harmonic (t - 1)
     have ht' : t - 1 + 1 = t := by omega
-    rw [ht'] at h
-    exact h
+    simp_all
   have hsucc :
       ((harmonic t : ℚ) : ℝ) = ((harmonic (t - 1) : ℚ) : ℝ) + (t : ℝ)⁻¹ := by
     have hsuccq : harmonic t = harmonic (t - 1) + (↑t : ℚ)⁻¹ := by
       have h := harmonic_succ (t - 1)
       have ht' : t - 1 + 1 = t := by omega
-      rw [ht'] at h
-      exact h
-    simpa [Rat.cast_add, Rat.cast_inv, Rat.cast_natCast] using
-      congrArg (fun q : ℚ => (q : ℝ)) hsuccq
+      simp_all
+    simp_all
   have hnonneg : 0 ≤ (t : ℝ)⁻¹ := by positivity
   calc
     Real.log (t : ℝ) ≤ ((harmonic (t - 1) : ℚ) : ℝ) := hmain
@@ -898,8 +888,7 @@ private lemma lubellRem_sum (t n : ℕ) (ht : 2 ≤ t) :
               fun i => if i.1 < lubellR t n % t then 1 else 0) := by
               simp [lubellRem, Finset.sum_add_distrib]
     _ = t * (lubellR t n / t) + lubellR t n % t := by
-          rw [hsum_ite]
-          simp [Finset.sum_const, Fintype.card_fin]
+          simp_all
     _ = lubellR t n := by
           exact Nat.div_add_mod (lubellR t n) t
 
@@ -998,14 +987,9 @@ private lemma lubellPart_sum_mul_log (t n : ℕ) (ht : 2 ≤ t) (hn : 1 ≤ n) :
       (by
         exact fun i a => Nat.one_div_cast_nonneg t)
       (by
-        rw [Finset.sum_const, nsmul_eq_mul]
-        have h : (t : ℝ) * (1 / t) = 1 := by
-          field_simp [ht_ne]
-        simpa using h)
+        simp_all)
       (by
-        intro i hi
-        change 0 ≤ (lubellPart t n i : ℝ)
-        positivity)
+        simp_all)
   have havg :
       (∑ i ∈ (Finset.univ : Finset (Fin t)), (1 : ℝ) / t * (lubellPart t n i : ℝ)) =
         (n : ℝ) / t := by
@@ -1015,15 +999,7 @@ private lemma lubellPart_sum_mul_log (t n : ℕ) (ht : 2 ≤ t) (hn : 1 ≤ n) :
       ((n : ℝ) / t) * Real.log ((n : ℝ) / t) ≤
         ∑ i ∈ (Finset.univ : Finset (Fin t)),
           (1 : ℝ) / t * ((lubellPart t n i : ℝ) * Real.log (lubellPart t n i : ℝ)) := by
-    have hJensen'' :
-        (∑ i ∈ (Finset.univ : Finset (Fin t)),
-            (1 : ℝ) / t * (lubellPart t n i : ℝ)) *
-            Real.log (∑ i ∈ (Finset.univ : Finset (Fin t)),
-              (1 : ℝ) / t * (lubellPart t n i : ℝ)) ≤
-          ∑ i ∈ (Finset.univ : Finset (Fin t)),
-            (1 : ℝ) / t * ((lubellPart t n i : ℝ) * Real.log (lubellPart t n i : ℝ)) := by
-      simpa [smul_eq_mul, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hJensen
-    lia
+    simp_all
   calc
     (n : ℝ) * Real.log ((n : ℝ) / t)
         = (t : ℝ) * (((n : ℝ) / t) * Real.log ((n : ℝ) / t)) := by
@@ -1035,9 +1011,7 @@ private lemma lubellPart_sum_mul_log (t n : ℕ) (ht : 2 ≤ t) (hn : 1 ≤ n) :
     _ = ((Finset.univ : Finset (Fin t)).sum
           fun i => (lubellPart t n i : ℝ) * Real.log (lubellPart t n i : ℝ)) := by
           rw [Finset.mul_sum]
-          apply Finset.sum_congr rfl
-          intro i hi
-          field_simp [ht_ne]
+          simp_all
 
 private lemma lubell_bonus_lower (t n : ℕ) (ht : 2 ≤ t) :
     (lubellQ t n : ℝ) * ((((lubellFrame t).card : ℕ) : ℝ)) ≥
@@ -1067,15 +1041,7 @@ private lemma lubell_bonus_lower (t n : ℕ) (ht : 2 ≤ t) :
       (n : ℝ) * b ≤
         (lubellQ t n : ℝ) * ((((lubellFrame t).card : ℕ) : ℝ)) +
           ((((lubellFrame t).card : ℕ) : ℝ)) := by
-    calc
-      (n : ℝ) * b
-          = (lubellQ t n : ℝ) * (((t * M t : ℕ) : ℝ) * b) +
-              (lubellR t n : ℝ) * b := hdecomp
-      _ = (lubellQ t n : ℝ) * ((((lubellFrame t).card : ℕ) : ℝ)) +
-            (lubellR t n : ℝ) * b := by rw [← hcard]
-      _ ≤ (lubellQ t n : ℝ) * ((((lubellFrame t).card : ℕ) : ℝ)) +
-            ((((lubellFrame t).card : ℕ) : ℝ)) := by
-            linarith
+    simp_all
   linarith
 
 private theorem exactWitnessSup_lubell_step (t n : ℕ) (ht : 2 ≤ t) (hn : t * M t ≤ n) :
@@ -1131,8 +1097,7 @@ private theorem fixed_t_bound_exact (t : ℕ) (ht : 2 ≤ t) :
       intro hn
       by_cases hsmall : n < N
       · by_cases hn1 : n = 1
-        · subst hn1
-          norm_num [Real.logb]
+        · simp_all
         · have hW : (n : ℝ) ≤ exactWitnessSup n := by
             exact_mod_cast exactWitnessSup_singleton_lower n hn
           have hlog_le :
@@ -1240,8 +1205,7 @@ private theorem fixed_t_bound_exact (t : ℕ) (ht : 2 ≤ t) :
                   C * ((lubellPart t n i : ℝ) - 1)) = C * ((n : ℝ) - t) := by
             have hsumSub :
                 (∑ i : Fin t, ((lubellPart t n i : ℝ) - 1)) = (n : ℝ) - t := by
-              rw [Finset.sum_sub_distrib, hsumParts]
-              simp [Finset.sum_const, Fintype.card_fin]
+              simp_all
             rw [← Finset.mul_sum, hsumSub]
           lia
         have hcoeff_natlog_nonneg :
@@ -1510,9 +1474,7 @@ private lemma card_degreeOneSubsets_eq
         · have he_not_mem : e ∉ B := by
             intro heB
             exact (mem_filter.mp ((mem_powersetCard.mp hB).1 heB)).2 ((mem_filter.mp he).2)
-          have hBcard : B.card = r - 1 := (mem_powersetCard.mp hB).2
-          have : r - 1 + 1 = r := by omega
-          simp [he_not_mem, hBcard, this]
+          simp_all
       · have hfilter_insert : (insert e B).filter (fun e' => v ∈ e') = {e} := by
           ext x
           constructor
@@ -1542,11 +1504,9 @@ private lemma card_degreeOneSubsets_eq
         · intro hvx
           have hx_filter : x ∈ A.filter fun e => v ∈ e :=
             mem_filter.mpr ⟨(mem_erase.mp hx).2, hvx⟩
-          rw [he_singleton] at hx_filter
-          exact (mem_erase.mp hx).1 (by simpa using hx_filter)
+          simp_all
       have hBcard : (A.erase e).card = r - 1 := by
-        have hAcard' : A.card = r := (mem_powersetCard.mp hAcard).2
-        rw [Finset.card_erase_of_mem heA, hAcard']
+        simp_all
       have hinsert : insert e (A.erase e) = A := insert_erase heA
       refine mem_biUnion.mpr ⟨e, ?_, ?_⟩
       · exact mem_filter.mpr ⟨(mem_powersetCard.mp hAcard).1 heA, hev⟩
@@ -1568,9 +1528,7 @@ private lemma card_degreeOneSubsets_eq
                 have he_not_mem2 : e ∉ B2 := fun heB =>
                   (mem_filter.mp ((mem_powersetCard.mp hB2).1 heB)).2 ((mem_filter.mp he).2)
                 simpa [he_not_mem1, he_not_mem2] using congrArg (fun s => s.erase e) hEq
-              · intro C hC
-                rcases mem_image.mp hC with ⟨B, hB, rfl⟩
-                exact ⟨B, hB, rfl⟩
+              · simp_all
       _ = inc.card * (non.powersetCard (r - 1)).card := by
               rw [Finset.sum_const_nat (m := (non.powersetCard (r - 1)).card) (fun _ _ => rfl)]
       _ = (edges.filter fun e => v ∈ e).card *
@@ -1803,9 +1761,7 @@ private theorem vertex_card_le_harmonic
                 refine sum_congr rfl ?_
                 intro A hA
                 rw [hucov A, div_eq_mul_inv, Finset.sum_mul]
-                refine sum_congr rfl ?_
-                intro v hv
-                split_ifs <;> simp [div_eq_mul_inv]
+                simp_all
       _ = ∑ v ∈ vertexSet edges,
               ∑ A ∈ edges.powersetCard r,
                 (if degree A v = 1 then ((1 : ℚ) / den) else 0) := by

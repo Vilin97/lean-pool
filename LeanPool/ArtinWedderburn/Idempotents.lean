@@ -85,8 +85,7 @@ theorem one_sub_e_larger_span_on_sub_e_sub_f (e f : R)
 theorem e_span_larger_e_sub_f (e f : R) (h : AreOrthogonalIdempotents (1 - e) f) (fnz : f ≠ 0) :
     Ideal.span {e - f} < Ideal.span {e} := by
   have h' := one_sub_e_larger_span_on_sub_e_sub_f (1 - e) f h fnz
-  simp only [sub_sub_cancel] at h'
-  exact h'
+  simp_all
 
 /-- `R` has a system of `n × n` matrix units when there exist `n^2` elements `es i j`
 summing to `1` on the diagonal and multiplying like matrix units. -/
@@ -113,8 +112,7 @@ theorem OrtIdem_imply_MatUnits {n : ℕ} (hn : 0 < n)
     (comp1 : ∀ i, row_es i * col_es i = diag_es ⟨0, hn⟩)
     (comp2 : ∀ i, col_es i * row_es i = diag_es i) : HasMatrixUnits R n := by
   refine ⟨fun i j => (col_es i) * (row_es j), ?_, ?_⟩
-  · simp_rw [comp2]
-    exact sum_eq_one
+  · simp_all
   · intro i j k l
     split_ifs with h
     · rw [h]
@@ -148,17 +146,13 @@ lemma eRf_nonzero (h : IsPrimeRing R) (e f : R) (he : e ≠ 0) (hf : f ≠ 0) :
     ext x
     constructor
     · intro ⟨r, hr⟩
-      specialize ha r
-      exact Set.mem_of_eq_of_mem hr ha
+      simp_all
     · intro hx
       rw [Set.mem_singleton_iff] at hx
       refine ⟨0, ?_⟩
-      rw [hx]
-      noncomm_ring
+      simp_all
   apply prime_ring_equiv.1 h at eRf_zero
-  cases eRf_zero with
-  | inl h => exact he h
-  | inr h => exact hf h
+  simp_all
 
 -- multiplication with e and f preserves bothMul e f
 lemma both_mul_e_f (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f) :
@@ -186,8 +180,7 @@ lemma both_mul_add :
 lemma both_mul_neg : ∀ (x : R), x ∈ bothMul e f → -x ∈ bothMul e f := by
   intro x ⟨a, ha⟩
   use -a
-  rw [ha]
-  noncomm_ring
+  simp_all
 
 -- bothMul is closed for additive inverses
 lemma both_mul_sub :
@@ -302,10 +295,7 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
         _ = (a * w) * v := by rw [← ha]; simp
         _ = a * (w * v) := by noncomm_ring
         _ = 0 := by rw [wv_eq_zero]; simp
-    have e_eq_zero : e = 0 := by
-      calc _ = u * v := by rw [uv_eq_e]
-        _ = 0 := by rw [v_eq_zero]; noncomm_ring
-    exact he e_eq_zero
+    simp_all
 
 /-- Packaging of `lemma_2_19` as a `twoNiceIdempotents` structure. -/
 noncomputable
@@ -415,8 +405,7 @@ theorem prime_and_artinian_esists_idem_corner_div [Nontrivial R]
     by_contra I_sq_zero
     specialize h I_sq_zero
     let I_neq_zero := hI.1
-    have I_eq_zero : I = ⊥ := by aesop
-    contradiction
+    simp_all
   obtain ⟨e, _he_mem, henz, he_idem, _hspan, hdiv⟩ :=
     minimal_ideal_I_sq_nonzero_exists_idem_and_div I hI I_sq_nonzero
   exact ⟨e, henz, he_idem, hdiv⟩

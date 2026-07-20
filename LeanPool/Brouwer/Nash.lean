@@ -108,14 +108,7 @@ lemma mixed_g_linear : G.mixedG i (update  x i y) = ∑ s : G.SS i,
            by_cases h1 : j = i
            · rw [h1, Function.update_self]
              simp
-           · push Not at h1
-             rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             set t := fun j =>(update x i y j) (f j)
-             have h2 : t j = (x j) (f j) := by
-              unfold t
-              rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             rw [h2]
+           · simp_all
   rw [h,Function.update_self]
   have h1 : y (f i) = ∑ j : G.SS i, y j * (stdSimplex.pure j) (f i) := by
     calc
@@ -143,14 +136,7 @@ lemma mixed_g_linear : G.mixedG i (update  x i y) = ∑ s : G.SS i,
   by_cases h2 : j = i
   · rw [h2,Function.update_self]
     simp
-  · push Not at h2
-    nth_rw 2 [Function.update_of_ne (show j ≠ i by exact h2)]
-    set p := fun j =>(update x i y j) (f j)
-    have h3 : p j = (x j) (f j) := by
-      unfold p
-      rw [Function.update_of_ne (show j ≠ i by exact h2)]
-    rw [Function.update_of_ne (show j ≠ i by exact h2)]
-    rw [h3]
+  · simp_all
 
 /-- The mixed extension of a finite game, as a `Game` on simplices. -/
 def FinGame2MixedGame (G : FinGame) : Game := {
@@ -531,9 +517,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
       have h2 : 1 ≠ ∑ b : G.SS i, gFunction i σ b := by
         intro h2
         replace h2 : ∑ b : G.SS i, σ i b  = ∑ b : G.SS i,   gFunction  i σ b := by
-          have h3 : 1 = ∑ b : G.SS i, σ i b := Eq.symm (σ i).2.2
-          rw [h3] at h2
-          exact h2
+          simp_all
         unfold gFunction at h2
         replace h2 : ∑ s : G.SS i, max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)
             = 0 := by
@@ -541,9 +525,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
           linarith
         replace h2 : mixedG i (update σ i (stdSimplex.pure t)) - mixedG i σ ≤ 0 := by
           by_cases h :  ∀ s : G.SS i, mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ ≤ 0
-          · specialize h t
-            simp only [tsub_le_iff_right, zero_add] at h
-            simpa only [tsub_le_iff_right, zero_add] using h
+          · simp_all
           · exfalso
             simp only [tsub_le_iff_right, zero_add, not_forall, not_le] at h
             obtain ⟨s, hs⟩:= h
@@ -564,8 +546,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
                 apply Finset.single_le_sum
                 · have h4 : ∀ s : G.SS i, 0 ≤ g s := by
                     simp [g]
-                  intro s _
-                  apply h4
+                  simp_all
                 · simp
               nlinarith
             nlinarith
@@ -584,11 +565,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
                                  rfl
       _ = _ := by
         rw [nashMapAux,gFunction]
-        have : max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)  = 0 := by
-          simp only [sup_eq_left, tsub_le_iff_right, zero_add]
-          apply hs2
-        rw [this]
-        norm_num
+        simp_all
     have self_div_lemma {x y : ℝ} : x ≠ 0 → x = x/y →  y = 1 := by
       intro h1 h2
       have hy : y ≠ 0 := by

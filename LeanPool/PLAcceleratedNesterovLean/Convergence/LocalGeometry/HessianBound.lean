@@ -211,9 +211,7 @@ theorem PL_gradient_hessian_bound (f : E d → ℝ) (μ : ℝ) (U : Set (E d))
     exact gradient_hessian_inner f m v w hf
   have h_norm : ‖fderiv ℝ (gradient f) m v‖ = ‖hessian f m v‖ := by
     have h := (InnerProductSpace.toDual ℝ (E d)).norm_map (fderiv ℝ (gradient f) m v)
-    rw [h_toDual_eq] at h
-    exact h.symm
-  rw [h_inner, h_norm]
-  exact hbound
+    simp_all
+  simp_all
 
 end PLAcceleratedNesterovLean

@@ -74,9 +74,7 @@ theorem Mirror.hasNCap {n : ℕ} {S : Finset α} : C.Mirror.HasNCap n S.Mirror �
       rw [← List.Mirror_in]; assumption
   · intro h; rcases h with ⟨c, ⟨c_ncap, c_in⟩⟩
     use c.Mirror
-    constructor
-    · rw [Mirror.ncap]; tauto
-    · rw [List.Mirror_in]; assumption
+    simp_all
 
 @[simp]
 theorem Mirror.hasNCup {n : ℕ} {S : Finset α} : C.Mirror.HasNCup n S.Mirror ↔ C.HasNCup n S :=
@@ -86,13 +84,10 @@ theorem Mirror.hasNCup {n : ℕ} {S : Finset α} : C.Mirror.HasNCup n S.Mirror �
     use c.ofMirror
     rw [← @List.ofMirrorMirror α c] at c_in c_ncup
     set co := c.ofMirror
-    rw [List.Mirror_in] at c_in
-    rw [Mirror.ncup] at c_ncup; tauto
+    simp_all
   · intro h; rcases h with ⟨c, ⟨c_ncup, c_in⟩⟩
     use c.Mirror
-    constructor
-    · rw [Mirror.ncup]; tauto
-    · rw [List.Mirror_in]; assumption
+    simp_all
 
 theorem Mirror.hasNGon {n : ℕ} {S : Finset α} : C.Mirror.HasNGon n S.Mirror ↔ C.HasNGon n S :=
   by

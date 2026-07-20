@@ -40,7 +40,6 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
   have hrange_eq : (hrange.choose ∘L f').range = ⊤ := by
     rw [LinearMap.range_eq_top]
     rintro ⟨_, x, rfl⟩
-    use x
     simp_all
   let φ := implicitFunctionDataOfComplemented (hrange.choose ∘ f) (hrange.choose ∘L f')
     (hrange.choose.hasStrictFDerivAt.comp a hf) hrange_eq (by rwa [hker_eq])

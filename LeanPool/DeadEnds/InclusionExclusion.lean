@@ -95,8 +95,7 @@ lemma indicator_conjunction_eq_prod (b N : ℕ) (T : Finset ℕ) :
       have hnot : ¬(Squarefree N ∧ ∀ x ∈ T, Squarefree (b * N + x)) := by
         rintro ⟨_, hall⟩
         exact hd_not_sqfree (hall d hd)
-      rw [if_neg hnot, hprod]
-      simp [sqfreeIndicator, hsq]
+      simp_all
   · simp [sqfreeIndicator, hsq]
 
 lemma countJointSquarefree_as_sum (b X : ℕ) (T : Finset ℕ) :

@@ -286,8 +286,7 @@ theorem small_term_E₁
         ((12 * m).choose (4 * m) : ℝ) / ((4 * N).choose (4 * m) : ℝ)
       ≤ ((1 / 20 : ℝ) ^ m) := by
   have hcmN : 12 * m ≤ 4 * N := by
-    have h := Nat.mul_le_mul_left 12 hmL
-    simpa [hNL, Nat.mul_comm, Nat.mul_assoc] using h
+    simp_all
   have hraw := pippenger_small_term_raw N L 4 12 m hm hmN hmL (by norm_num) hcmN
   refine le_trans hraw ?_
   have hm_ne : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -339,8 +338,7 @@ theorem bad_ratio_sum_E₁_core (t : ℕ) (ht : 0 < t)
     · norm_num
     · dsimp [B]; positivity
     · dsimp [A, N]
-      simp
-      nlinarith
+      simp_all
     · intro m hmI hmD
       have hmpos : 0 < m := (Finset.mem_Icc.mp hmI).1
       have hmA : m ≤ A := (Finset.mem_Icc.mp hmI).2
@@ -432,8 +430,7 @@ theorem small_term_E₂
         ((7 * m).choose (4 * m) : ℝ) / ((4 * N).choose (4 * m) : ℝ)
       ≤ ((1 / 20 : ℝ) ^ m) := by
   have hcmN : 7 * m ≤ 4 * N := by
-    have h := Nat.mul_le_mul_left 7 hmL
-    simpa [hNL, Nat.mul_comm, Nat.mul_assoc] using h
+    simp_all
   have hraw := pippenger_small_term_raw N L 4 7 m hm hmN hmL (by norm_num) hcmN
   refine le_trans hraw ?_
   have hm_ne : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -486,8 +483,7 @@ theorem bad_ratio_sum_E₂_core (t : ℕ) (ht : 0 < t)
     · norm_num
     · dsimp [B]; positivity
     · dsimp [A, N]
-      simp
-      nlinarith
+      simp_all
     · intro m hmI hmD
       have hmpos : 0 < m := (Finset.mem_Icc.mp hmI).1
       have hmA : m ≤ A := (Finset.mem_Icc.mp hmI).2
@@ -579,8 +575,7 @@ theorem small_term_E₃
         ((14 * m).choose (4 * m) : ℝ) / ((4 * N).choose (4 * m) : ℝ)
       ≤ ((1 / 20 : ℝ) ^ m) := by
   have hcmN : 14 * m ≤ 4 * N := by
-    have h := Nat.mul_le_mul_left 14 hmL
-    simpa [hNL, Nat.mul_comm, Nat.mul_assoc] using h
+    simp_all
   have hraw := pippenger_small_term_raw N L 4 14 m hm hmN hmL (by norm_num) hcmN
   refine le_trans hraw ?_
   have hm_ne : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -633,8 +628,7 @@ theorem bad_ratio_sum_E₃_core (t : ℕ) (ht : 0 < t)
     · norm_num
     · dsimp [B]; positivity
     · dsimp [A, N]
-      simp
-      nlinarith
+      simp_all
     · intro m hmI hmD
       have hmpos : 0 < m := (Finset.mem_Icc.mp hmI).1
       have hmA : m ≤ A := (Finset.mem_Icc.mp hmI).2
@@ -726,8 +720,7 @@ theorem small_term_E₄
         ((11 * m).choose (5 * m) : ℝ) / ((5 * N).choose (5 * m) : ℝ)
       ≤ ((1 / 20 : ℝ) ^ m) := by
   have hcmN : 11 * m ≤ 5 * N := by
-    have h := Nat.mul_le_mul_left 11 hmL
-    simpa [hNL, Nat.mul_comm, Nat.mul_assoc] using h
+    simp_all
   have hraw := pippenger_small_term_raw N L 5 11 m hm hmN hmL (by norm_num) hcmN
   refine le_trans hraw ?_
   have hm_ne : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -780,8 +773,7 @@ theorem bad_ratio_sum_E₄_core (t : ℕ) (ht : 0 < t)
     · norm_num
     · dsimp [B]; positivity
     · dsimp [A, N]
-      simp
-      nlinarith
+      simp_all
     · intro m hmI hmD
       have hmpos : 0 < m := (Finset.mem_Icc.mp hmI).1
       have hmA : m ≤ A := (Finset.mem_Icc.mp hmI).2

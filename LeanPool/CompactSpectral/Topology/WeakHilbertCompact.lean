@@ -75,9 +75,7 @@ private lemma eval_weakDualToWeak (l : E →L[𝕜] 𝕜) (f : WeakDual 𝕜 E) 
       l ((InnerProductSpace.toDual 𝕜 E).symm f) =
         inner 𝕜 ((InnerProductSpace.toDual 𝕜 E).symm l)
           ((InnerProductSpace.toDual 𝕜 E).symm f) := by
-    exact (InnerProductSpace.toDual_symm_apply (𝕜 := 𝕜) (E := E)
-      (x := (InnerProductSpace.toDual 𝕜 E).symm f)
-      (y := l)).symm
+    simp_all
   have hR :
       f ((InnerProductSpace.toDual 𝕜 E).symm l) =
         inner 𝕜 ((InnerProductSpace.toDual 𝕜 E).symm f)
@@ -103,22 +101,7 @@ private lemma eval_weakDualToWeak (l : E →L[𝕜] 𝕜) (f : WeakDual 𝕜 E) 
         (x := (InnerProductSpace.toDual 𝕜 E).symm l)
         (y := (InnerProductSpace.toDual 𝕜 E).symm f)
         ).symm
-    calc
-      inner 𝕜
-          ((InnerProductSpace.toDual 𝕜 E).symm l)
-          ((InnerProductSpace.toDual 𝕜 E).symm f)
-          = (starRingEnd 𝕜) (inner 𝕜
-              ((InnerProductSpace.toDual 𝕜 E).symm f)
-              ((InnerProductSpace.toDual 𝕜 E).symm l)
-              ) := h
-      _ = star (inner 𝕜
-              ((InnerProductSpace.toDual 𝕜 E).symm f)
-              ((InnerProductSpace.toDual 𝕜 E).symm l)
-              ) := by
-            exact starRingEnd_apply (R := 𝕜)
-              (inner 𝕜
-                ((InnerProductSpace.toDual 𝕜 E).symm f)
-                ((InnerProductSpace.toDual 𝕜 E).symm l))
+    simp_all
   calc
     l ((InnerProductSpace.toDual 𝕜 E).symm f)
         = inner 𝕜
@@ -144,8 +127,7 @@ lemma continuous_weakDualToWeak : Continuous (weakDualToWeak (𝕜 := 𝕜) (E :
       (WeakDual.eval_continuous (𝕜 := 𝕜) (E := E) ((InnerProductSpace.toDual 𝕜 E).symm l))
   have h_conj : Continuous (fun z : 𝕜 => (starRingEnd 𝕜) z) := by
     have h : (fun z : 𝕜 => (starRingEnd 𝕜) z) = fun z : 𝕜 => star z := by
-      funext z
-      exact starRingEnd_apply (R := 𝕜) z
+      simp_all
     rw [h]
     exact (continuous_star : Continuous fun z : 𝕜 => star z)
   have h :
@@ -185,8 +167,7 @@ private lemma weakDualToWeak_image_weakDualClosedBall (r : ℝ) :
     have hx_norm :
         ‖(InnerProductSpace.toDual 𝕜 E).symm
           (WeakDual.toStrongDual f)‖ ≤ r := by
-      simpa [(InnerProductSpace.toDual 𝕜 E).symm.norm_map]
-        using hf_norm
+      simp_all
     let y : E := weakDualToWeak (𝕜 := 𝕜) (E := E) f
     change y ∈ Metric.closedBall (0 : E) r
     exact mem_closedBall_zero_iff.2

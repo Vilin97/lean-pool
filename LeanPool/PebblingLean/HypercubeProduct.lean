@@ -209,10 +209,7 @@ theorem hasSolvableAtMostSize_split_product_of_linear_demand_cost
         K * Pebbling.size E := by
     rw [Pebbling.size, Finset.mul_sum]
     refine Finset.sum_congr rfl ?_
-    intro z _hz
-    by_cases hEz : E z = 0
-    · simp [hEz]
-    · simp [hEz]
+    simp_all
   simpa [hsum] using hprod
 
 /-- If the second factor is `T`-solvable with `T ≥ 1`, it may be used as the
@@ -425,10 +422,7 @@ theorem hasHighDemandDistribution_split_product_of_highDemand_variable
         Pebbling.size E * K := by
     rw [Pebbling.size, Finset.sum_mul]
     refine Finset.sum_congr rfl ?_
-    intro z _hz
-    by_cases hz : E z = 0
-    · simp [hz]
-    · simp [hz]
+    simp_all
   have hcompressed : Pebbling.size E * K ≤ costBound * K :=
     Nat.mul_le_mul_right K hEsize
   have hDsize : Pebbling.size D ≤ costBound * K := by

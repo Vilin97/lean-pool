@@ -182,20 +182,11 @@ lemma exists_max_sharp (h₁ : ∀ n, n♭ ∈ ‖φ‖) (h₂ : ‖φ‖ᶜ.Fin
   use (s.max' se);
   constructor;
   · have hmem := (@hs _).mp (Finset.max'_mem _ se)
-    rcases hmem with ⟨⟨n, i⟩, hx, hxfst⟩
-    cases i using Fin.cases with
-    | zero =>
-      simpa [cresswellFrame.sharp, ←hxfst] using hx
-    | succ i =>
-      cases i using Fin.cases with
-      | zero => exact False.elim (hx (h₁ n))
-      | succ i => exact Fin.elim0 i
+    simp_all
   · intro m hm;
     by_contra hC;
     have : m < m := Finset.max'_lt_iff (H := se) |>.mp hm m (by
-      apply hs m |>.mpr;
-      use m♯;
-      simpa;
+      simp_all
     );
     simp at this;
 
@@ -230,9 +221,7 @@ lemma either_finite_cofinite : (‖φ‖.Finite) ∨ (‖φ‖ᶜ.Finite) := by
     rcases ihφ with (_ | _) <;> rcases ihψ with (_ | _);
     · right; apply Set.Finite.inter_of_left; assumption;
     · right; apply Set.Finite.inter_of_left; assumption;
-    · left;
-      rw [Set.finite_union];
-      constructor <;> assumption;
+    · simp_all
     · right; apply Set.Finite.inter_of_right; assumption;
   | hbox φ ihφ =>
     by_cases h : ∀ n, n♭ ∈ ‖φ‖;
@@ -250,8 +239,7 @@ lemma either_finite_cofinite : (‖φ‖.Finite) ∨ (‖φ‖ᶜ.Finite) := by
           | m♭, k♯ => simp at Rxy;
           | m♯, k♭ => apply h;
           | m♭, k♭ => apply h;
-        rw [this];
-        simp;
+        simp_all
       obtain ⟨n, hn, hn_max⟩ := exists_max_sharp h tsφc_finite tsφc_ne;
       right;
       apply @Set.Finite.subset (s := (·♯) '' Set.Icc 0 (n + 1));

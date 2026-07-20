@@ -102,8 +102,7 @@ lemma iInf_comap_add_pow_eq_comap
     have hfr : f r ∈ A := by
       rw [← hkrull]
       rw [Submodule.mem_iInf]
-      intro n
-      exact Ideal.mem_comap.mp (hr n)
+      simp_all
     exact Ideal.mem_comap.mpr hfr
   · exact le_iInf fun n => Ideal.comap_mono le_sup_left
 
@@ -141,9 +140,7 @@ lemma wqc_implies_ideals_meet
     change AdicCompletion.evalₐ M _ (AdicCompletion.of M R r) = _
     rw [AdicCompletion.evalₐ_of, hr]
   have heval_diff : AdicCompletion.evalₐ M (max s k) (a - f r) = 0 := by
-    set e := AdicCompletion.evalₐ M (max s k)
-    show e (a - f r) = 0
-    rw [map_sub, heval_eq, sub_self]
+    simp_all
   have hdiff : a - f r ∈ Mhat ^ (max s k) :=
     mem_map_pow_of_evalₐ_eq_zero R (max s k) (a - f r) heval_diff
   have hfr_mem : f r ∈ A + Mhat ^ s :=
@@ -212,18 +209,7 @@ lemma not_wqc_exists_maximal_zero_contraction
     have hmem_Rhat_iff : ∀ n (x : AdicCompletion M R),
         x ∈ (Mhat ^ n • ⊤ : Submodule (AdicCompletion M R) (AdicCompletion M R)) ↔
         x ∈ (Mhat ^ n : Ideal (AdicCompletion M R)) := by
-      intro n x
-      constructor
-      · intro hx
-        refine Submodule.smul_induction_on hx (fun a ha b _ => ?_) (fun a b ha hb => ?_)
-        · exact Ideal.mul_mem_right b _ ha
-        · exact (Mhat ^ n).add_mem ha hb
-      · intro hx
-        change x ∈ (Mhat ^ n • ⊤ : Submodule (AdicCompletion M R) (AdicCompletion M R))
-        have h3 := Submodule.smul_mem_smul hx (Submodule.mem_top (R := AdicCompletion M R)
-          (M := AdicCompletion M R) (x := (1 : AdicCompletion M R)))
-        convert h3 using 1
-        exact (mul_one x).symm
+      simp_all
     have hsmod_R_to_Rhat : ∀ n (x y : AdicCompletion M R),
         x ≡ y [SMOD (M ^ n • ⊤ : Submodule R (AdicCompletion M R))] →
         x ≡ y [SMOD (Mhat ^ n • ⊤ :
@@ -305,27 +291,15 @@ theorem isWeaklyQuasiComplete_iff_primes_meet
     have hAprime : A.IsPrime := by
       constructor
       · rintro rfl
-        have h1 : (1 : R) ∈ Ideal.comap f ⊤ := Ideal.mem_comap.mpr Submodule.mem_top
-        rw [hAzero, Ideal.mem_bot] at h1
-        exact one_ne_zero h1
+        simp_all
       · intro x y hxy
         by_contra habs
         push Not at habs
         obtain ⟨hxna, hyna⟩ := habs
         have hAx : A < A ⊔ Ideal.span {x} := by
-          apply lt_of_le_of_ne le_sup_left
-          intro heq
-          apply hxna
-          have hsub : Ideal.span {x} ≤ A :=
-            le_of_le_of_eq le_sup_right heq.symm
-          exact hsub (Ideal.subset_span rfl)
+          simp_all
         have hAy : A < A ⊔ Ideal.span {y} := by
-          apply lt_of_le_of_ne le_sup_left
-          intro heq
-          apply hyna
-          have hsub : Ideal.span {y} ≤ A :=
-            le_of_le_of_eq le_sup_right heq.symm
-          exact hsub (Ideal.subset_span rfl)
+          simp_all
         have hcx := hAmax _ hAx
         have hcy := hAmax _ hAy
         rw [Submodule.ne_bot_iff] at hcx hcy
@@ -349,8 +323,7 @@ theorem isWeaklyQuasiComplete_iff_primes_meet
           rw [map_mul]
           exact hmul_le (Ideal.mul_mem_mul hfr hfs)
         have hmem : r * s ∈ Ideal.comap f A := Ideal.mem_comap.mpr hfrs
-        rw [hAzero, Ideal.mem_bot] at hmem
-        exact mul_ne_zero hrne hsne hmem
+        simp_all
     exact hprimes A hAprime hAne hAzero
 
 /-
@@ -402,13 +375,11 @@ theorem IsWeaklyQuasiComplete.isAnalyticallyIrreducible
     · intro x hx
       have h1 : r • x = 0 := by rw [Algebra.smul_def]
                                 exact hx
-      have h2 : r • x = r • (0 : Rhat) := by rw [h1, smul_zero]
-      exact hfr_reg h2
+      simp_all
     · intro x hx
       have h1 : r • x = 0 := by rw [Algebra.smul_def, mul_comm]
                                 exact hx
-      have h2 : r • x = r • (0 : Rhat) := by rw [h1, smul_zero]
-      exact hfr_reg h2
+      simp_all
   exact Set.disjoint_iff.mp hP_disj ⟨hfr_P, hfr_nzd⟩
 
 /-
@@ -449,8 +420,7 @@ lemma dim1_ai_nonzero_prime_contracts
     intro habs
     have h0 : ringKrullDim R = 0 := ringKrullDim_eq_zero_of_isField
       ((IsLocalRing.isField_iff_maximalIdeal_eq).mpr habs)
-    rw [h0] at hdim
-    norm_num at hdim
+    simp_all
   have hfm_notin : ∀ m ∈ M, m ≠ (0 : R) → f m ∉ P := by
     intro m _ hm habs
     apply hm
@@ -487,8 +457,7 @@ lemma dim1_ai_nonzero_prime_contracts
       (Ideal.Quotient.mk
         (Ideal.map (algebraMap R (AdicCompletion M R)) M))
       Mhat).height = 0 := by
-    rw [hfiber_bot]
-    exact Ideal.height_bot
+    simp_all
   rw [hfiber_ht, add_zero] at hht_eq
   have hM_ht : (M : Ideal R).height = 1 := by
     have := IsLocalRing.maximalIdeal_height_eq_ringKrullDim (R := R)
@@ -499,9 +468,7 @@ lemma dim1_ai_nonzero_prime_contracts
   have h1 : (⊥ : Ideal (AdicCompletion M R)).height < P.height :=
     Ideal.height_strict_mono_of_isPrime hbot_lt_P
   have h2 : P.height < Mhat.height := Ideal.height_strict_mono_of_isPrime hP_lt_Mhat
-  rw [Ideal.height_bot] at h1
-  rw [hht_eq] at h2
-  exact absurd (Order.lt_one_iff.mp h2) (ne_of_gt h1)
+  simp_all
 theorem dim1_wqc_iff_analyticallyIrreducible
     (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R]
     (hdim : ringKrullDim R = 1) :
@@ -613,8 +580,7 @@ theorem isQuasiComplete_iff_quotients_wqc
   · intro hall A hA k
     set I := ⨅ n, A n
     by_cases hI_top : I = ⊤
-    · exact ⟨0, by rw [hI_top]
-                   simp⟩
+    · simp_all
     · letI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI_top
       letI : IsLocalRing (R ⧸ I) :=
         IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
@@ -631,8 +597,7 @@ theorem isQuasiComplete_iff_quotients_wqc
             ⟨r, (IsLocalRing.mem_maximalIdeal r).mpr (fun hu => hx (hu.map mk)), rfl⟩
         · intro x hx
           obtain ⟨r, hr, rfl⟩ := (Ideal.mem_map_iff_of_surjective mk hmk_surj).mp hx
-          rw [IsLocalRing.mem_maximalIdeal] at hr ⊢
-          exact fun hu => hr (isUnit_of_map_unit mk r hu)
+          simp_all
       set B : ℕ → Ideal (R ⧸ I) := fun n => Ideal.map mk (A n)
       have hB_anti : Antitone B := fun _ _ hmn => Ideal.map_mono (hA hmn)
       have hBinf : ⨅ n, B n = ⊥ := by

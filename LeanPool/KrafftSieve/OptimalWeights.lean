@@ -281,8 +281,7 @@ def kernelQ1 (n : ℕ) : Submodule ℝ (Idx n → ℝ) :=
           exact Finset.sum_congr rfl fun _ _ => by
             rw [ Finset.mul_sum _ _ _ ]
             exact Finset.sum_congr rfl fun _ _ => by ring
-      intro c x a
-      simp_all [Set.mem_setOf_eq, mul_zero] }
+      simp_all }
 
 /--
 Lemma: $q1(\lambda) = 0$ if and only if $P_{multi}(\lambda, x) = 0$ for all $x \in \mathcal{A}_n$.

@@ -150,9 +150,7 @@ lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldCo
   simp only [distributionPairingℂReal, complexTestFunctionDecompose]
   -- I * ((ω f_re : ℂ) + I * (ω f_im : ℂ)) = I * (ω f_re) - (ω f_im)
   -- The real part is -(ω f_im)
-  simp only [Complex.mul_re, Complex.I_re, Complex.I_im, Complex.add_re, Complex.ofReal_re,
-             Complex.add_im, Complex.ofReal_im, Complex.mul_im]
-  ring
+  simp_all
 
 /-- Integrability of exp(-ω f) for a real test function f under the GFF measure.
     This follows from the Gaussian nature: for centered Gaussian X with variance σ²,
@@ -201,9 +199,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
         h_fernique.const_mul (Real.exp (p.toReal^2 / (4 * α)))
     apply h_dom.mono' ((Real.continuous_exp.measurable.comp (measurable_const.mul
       (continuous_abs.measurable.comp (WeakDual.eval_measurable f)))).aestronglyMeasurable)
-    filter_upwards with ω
-    simpa only [Function.comp_apply, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] using
-      h_exp_bound (ω f)
+    simp_all
   refine ⟨h_aesm, ?_⟩
   rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp_pos hp]
   -- ‖exp(|x|)‖ₑ^p = exp(p|x|), reducing finiteness to h_exp_p_integrable.

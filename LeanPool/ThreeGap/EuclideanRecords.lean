@@ -43,9 +43,7 @@ theorem euclNorm_le_sqrt_two_mul (x : Fin 2 → ℝ) : euclNorm 2 x ≤ Real.sqr
   calc Real.sqrt (∑ i, (x i) ^ 2) ≤ Real.sqrt (∑ _i : Fin 2, ‖x‖ ^ 2) :=
         Real.sqrt_le_sqrt (Finset.sum_le_sum (fun i _ => hb i))
     _ = Real.sqrt 2 * ‖x‖ := by
-        rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-        rw [show ((2 : ℕ) : ℝ) * ‖x‖ ^ 2 = 2 * ‖x‖ ^ 2 by norm_num,
-          Real.sqrt_mul (by norm_num), Real.sqrt_sq (norm_nonneg _)]
+        simp_all
 
 /-- **Dirichlet transferred to the Euclidean defect:** `δ^E_q ≤ √2 · δ_q`. -/
 theorem deltaE_le_sqrt_two_mul (α : Fin 2 → ℝ) (q : ℤ) :
@@ -107,12 +105,10 @@ theorem bestDenom_hbest (α : Fin 2 → ℝ) (hr : RecordsContinue (deltaE α)) 
   have hmnat : (m.toNat : ℤ) = m := Int.toNat_of_nonneg hpos.le
   have hj1 : 1 ≤ m.toNat := by omega
   have hj2 : m.toNat < bestDenom (deltaE α) hr k := by
-    have : (m.toNat : ℤ) < (bestDenom (deltaE α) hr k : ℤ) := by rw [hmnat]; exact hlt
-    exact_mod_cast this
+    simp_all
   have := bestDenom_strict_floor (deltaE α) hr k hj1 hj2
   simp only [deltaE] at this
-  rw [← hmnat]
-  exact this
+  simp_all
 
 /-- **The Euclidean growth `2 q_k ≤ q_{k+5}` for the record denominators (unconditional).** -/
 theorem bestDenom_euclidean_growth (α : Fin 2 → ℝ) {k₀ : Fin 2} (hirr : Irrational (α k₀))

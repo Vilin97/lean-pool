@@ -178,13 +178,10 @@ def Pi.LinearMap.apply {ι₁ ι₂ : Type _} {E₁ : ι₁ → Type _} [Decidab
         simp only [LinearMap.map_smul, Pi.smul_apply, RingHom.id_apply] }
   map_add' x y := by
     ext a
-    simp only [LinearMap.add_apply, Pi.add_apply, LinearMap.coe_mk]
-    rfl
+    simp_all
   map_smul' c x := by
     ext a
-    simp only [LinearMap.smul_apply, Pi.smul_apply, RingHom.id_apply,
-      LinearMap.coe_mk]
-    rfl
+    simp_all
 
 -- The matrix/tensor rank-one calculation unfolds several equivalences after the Mathlib port.
 theorem rankOne_psi_transpose_to_lin {n : Type _} [DecidableEq n] [Fintype n]
@@ -214,8 +211,7 @@ theorem rankOne_psi_transpose_to_lin {n : Type _} [DecidableEq n] [Fintype n]
 private theorem matrix.stdBasisMatrix.transpose' {R n p : Type _} [DecidableEq n] [DecidableEq p]
     [Semiring R] {i : n} {j : p} {α : R} :
     (stdBasisMatrix i j α)ᵀ = stdBasisMatrix j i α := by
-  ext
-  simp [transpose_apply, stdBasisMatrix, single, and_comm]
+  simp_all
 
 theorem rankOne_toMatrix_transpose_psi_symm [hφ : φ.IsFaithfulPosMap]
   (x y : ℍ) :
@@ -337,8 +333,7 @@ theorem orthogonal_projection_iff_lm {𝕜 E : Type _} [RCLike 𝕜] [NormedAddC
     use U
   · rw [← hU]
     rfl
-  · rw [hU]
-    rfl
+  · simp_all
 
 theorem Matrix.conj_eq_transpose_conjTranspose {R n₁ n₂ : Type _} [Star R] (A : Matrix n₁ n₂ R) :
     Aᴴᵀ = (Aᵀ)ᴴ :=
@@ -627,9 +622,7 @@ theorem RealQam.edges_eq [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam 
       _ = inner ℂ (Qam.onbOfIdempotentAndReal hA1 hA2 x)
           (Qam.onbOfIdempotentAndReal hA1 hA2 x) := rfl
       _ = 1 := by
-        rw [← OrthonormalBasis.repr_apply_apply, OrthonormalBasis.repr_self,
-          PiLp.single_apply]
-        simp_rw [if_true]
+        simp_all
   simp_rw [trace_sum, ← Matrix.mul_assoc, this, Finset.sum_const, Finset.card_fin,
     Nat.smul_one_eq_cast]
 
@@ -675,8 +668,7 @@ theorem Qam.trivialGraph_edges [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
   simp_rw [LinearMap.smul_apply, Module.End.one_apply, trace_smul, smul_eq_mul] at this
   rw [show QuantumSetDeltaForm.delta ℍ = φ.matrix⁻¹.trace by rfl] at this
   have hδ : φ.matrix⁻¹.trace ≠ 0 := ne_of_gt (Qam.Nontracial.delta_pos (φ := φ))
-  rw [inv_mul_cancel₀ hδ] at this
-  exact_mod_cast this
+  simp_all
 
 theorem RealQam.edges_eq_zero_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam hφ A) :
     hA.edges = 0 ↔ A = 0 := by
@@ -690,8 +682,7 @@ theorem RealQam.edges_eq_zero_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA :
     apply Finset.sum_eq_zero
     intro i _
     rw [finrank_zero_iff_forall_zero.mp h' (u i)]
-    norm_cast
-    simp_rw [Matrix.zero_mul, LinearMap.mulLeft_zero_eq_zero, MulZeroClass.zero_mul]
+    simp_all
   · intro h
     rw [← Nat.cast_inj (R := ℂ), RealQam.edges_eq, h, LinearMap.zero_apply, trace_zero]
     norm_cast

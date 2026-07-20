@@ -109,8 +109,7 @@ theorem Matrix.PosDef.rpow_neg_eq_inv_rpow {𝕜 : Type*} [RCLike 𝕜] {n :
 theorem _root_.RCLike.pos_toNNReal_units {𝕜 : Type*} [RCLike 𝕜] (r : 𝕜) :
   0 < r ↔ ∃ s : NNRealˣ, r = (((s : NNReal) : ℝ) : 𝕜) := by
   refine ⟨fun h => ?_, fun ⟨s, hs⟩ => by
-    simp only [hs, RCLike.ofReal_pos, NNReal.coe_pos,
-      Units.zero_lt]⟩
+    simp_all⟩
   use Units.mk0 ⟨RCLike.re r, le_of_lt (RCLike.pos_def.mp h).1⟩
     (ne_of_gt (RCLike.pos_def.mp h).1)
   change r = ((RCLike.re r : ℝ) : 𝕜)
@@ -142,14 +141,7 @@ theorem _root_.Matrix.smulPosDef_isPosDef_iff {𝕜 : Type*} [RCLike 𝕜] {n :
   · have h2' := (Matrix.posDef_iff_dotProduct_mulVec.mp h).2
     simp_rw [smul_mulVec_assoc, dotProduct_smul, smul_eq_mul] at h2'
     specialize h2' (x := a) ha2
-    obtain ⟨b, hb, hb2⟩ := RCLike.pos_iff_exists_ofReal.mp
-      (hQ.dotProduct_mulVec_pos ha2)
-    rw [← hb2] at h2'
-    rw [mul_comm, RCLike.pos_def, RCLike.re_ofReal_mul, RCLike.im_ofReal_mul,
-      mul_pos_iff] at h2'
-    simp_rw [hb, true_and, not_lt_of_gt hb, false_and, or_false,
-      mul_eq_zero, ne_of_gt hb, false_or] at h2'
-    exact RCLike.pos_def.mpr h2'
+    simp_all
   · obtain ⟨s, rfl⟩ := (RCLike.pos_toNNReal_units r).mp h
     exact PosDef.smul hQ _
 
@@ -202,10 +194,7 @@ theorem _root_.Matrix.smulPosSemidef_isPosSemidef_iff {𝕜 : Type*} [RCLike �
         simp only [hi, not_lt_of_ge (hQ.eigenvalues_nonneg _),
           and_false, or_false, h, and_true] at h2
         exact ⟨h2, h⟩
-      · simp only [RCLike.star_def, mul_eq_mul_right_iff, and_imp]
-        intro h hi
-        refine ⟨hi, ?_⟩
-        simp only [h, true_or, true_and, hi, implies_true]
+      · simp_all
 
 theorem smul_onePosSemidef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
   {n : Type _} [Fintype n] [DecidableEq n] {α : 𝕜}
@@ -259,8 +248,7 @@ theorem _root_.Matrix.PosDef.commutes_iff_rpow_commutes {𝕜 : Type*} [RCLike �
       rw [IsHermitian.spectral_theorem'' hQ.1]
       rw [innerAut_eq_iff, _root_.map_smul, innerAut_apply_one, smul_one_eq_diagonal,
         diagonal_eq_diagonal_iff]
-      simp only [Function.comp_apply, RCLike.ofReal_re, one_div, algebraMap.coe_inj]
-      simp only [this, one_div, implies_true]
+      simp_all
     · rintro ⟨α, hα⟩
       use ((RCLike.re α ^ (r : ℝ) : ℝ) : 𝕜)
       rw [PosDef.rpow_cast hQ _ hα, smul_onePosDef_rpow_eq]
@@ -277,8 +265,7 @@ theorem Module.Dual.IsPosMap.isTracial_iff
     exact ⟨((α : ℝ) : ℂ), h⟩
   · rintro ⟨α, h⟩
     by_cases H : (1 : Matrix n n ℂ) = 0
-    · use 0
-      simp only [NNReal.coe_zero, Complex.ofReal_zero, h, H, smul_zero]
+    · simp_all
     · use Real.toNNReal (RCLike.re α)
       rw [h]
       congr
@@ -298,8 +285,7 @@ theorem sig_eq_id_iff [hφ : φ.IsFaithfulPosMap] (k : ℝ) :
     · simp only [Module.Dual.IsTracial, Module.Dual.apply,
         trace_iff, AlgEquiv.ext_iff, sig_apply,
         ← Matrix.ext_iff]
-      simp only [AlgEquiv.one_apply, IsEmpty.forall_iff, implies_true, Finset.univ_eq_empty,
-        Finset.sum_empty, or_true]
+      simp_all
     · rw [not_isEmpty_iff] at H
       let nk : ℝˣ := Units.mk0 k hk
       have nk2 : k = (nk : ℝ) := rfl

@@ -63,13 +63,11 @@ theorem iSup_eigenspace_orthogonal_eq_bot_of_isCompactOperator_of_isSelfAdjoint
         exact hTx0 (by simp [hx0])
       have hnx : 0 < ‖x‖ := norm_pos_iff.2 hx_ne
       have hntx : 0 < ‖T x‖ := norm_pos_iff.2 (by
-        intro h
-        exact hTx0 h)
+        simp_all)
       -- Use the approximation estimate with `ε = ‖T x‖ / (2 * ‖x‖)`.
       set ε : ℝ := ‖T x‖ / (2 * ‖x‖) with hεdef
       have hε : 0 < ε := by
-        have : 0 < (2 * ‖x‖ : ℝ) := by nlinarith [hnx]
-        exact div_pos hntx this
+        simp_all
       haveI : FiniteDimensional 𝕜 (largeEigenspace (𝕜 := 𝕜) (E := E) T ε) :=
         finiteDimensional_largeEigenspace_of_isCompactOperator_of_isSelfAdjoint
           (𝕜 := 𝕜) (E := E) T hT hTc (ε := ε) hε
@@ -129,9 +127,7 @@ theorem iSup_eigenspace_orthogonal_eq_bot_of_isCompactOperator_of_isSelfAdjoint
         ⟨hxker, hxker_orth⟩
       simpa [hdisj.eq_bot] using this
     simpa using this
-  · intro hx0
-    subst hx0
-    simp
+  · simp_all
 theorem exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
     (T : E →L[𝕜] E) (hT : IsSelfAdjoint T) (hTc : IsCompactOperator (T : E → E)) :
     ∃ (ι : Type (max u v)) (μ : ι → 𝕜) (b : HilbertBasis ι 𝕜 E),
@@ -251,9 +247,7 @@ theorem exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
           simpa using (inner_eq_zero_symm.mp this)
         -- Now package the pointwise orthogonality.
         have hx_inf : x ∈ ⨅ μ : 𝕜, (t.eigenspace μ)ᗮ := by
-          refine (Submodule.mem_iInf (p := fun μ : 𝕜 => (t.eigenspace μ)ᗮ) (x := x)).2 ?_
-          intro μ
-          exact hx_each μ
+          simp_all
         simpa [Submodule.iInf_orthogonal] using hx_inf
       have hx0 : x = 0 := by
         have hxbot : x ∈ (⊥ : Submodule 𝕜 E) := by
@@ -264,9 +258,7 @@ theorem exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
           simpa [this] using hx_eigs
         simpa using hxbot
       simp [hx0]
-    · intro hx0
-      subst hx0
-      simp
+    · simp_all
   refine ⟨ι, μ', HilbertBasis.mkOfOrthogonalEqBot hv_orthonormal hv_span_orth, ?_⟩
   intro i
   rcases i with ⟨μi, vi⟩
@@ -283,8 +275,7 @@ theorem exists_hilbertBasis_hasEigenvector_of_isCompactOperator_of_isSelfAdjoint
   -- Identify `b`'s coerced family with `v`.
   have hb' :
       (HilbertBasis.mkOfOrthogonalEqBot hv_orthonormal hv_span_orth) ⟨μi, vi⟩ = v ⟨μi, vi⟩ := by
-    exact congrArg (fun f : ι → E => f ⟨μi, vi⟩)
-      (HilbertBasis.coe_mkOfOrthogonalEqBot hv_orthonormal hv_span_orth)
+    simp_all
   -- Conclude.
   refine (Module.End.hasEigenvector_iff.mpr ?_)
   refine ⟨?_, ?_⟩

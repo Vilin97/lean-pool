@@ -541,15 +541,13 @@ lemma conj {k l} {P : Fin l → (Fin k → V) → Prop}
     suffices ℌ.Boldface fun v : Fin k → V ↦ P 0 v ∧ ∀ i : Fin l, P i.succ v by
       apply of_iff this; intro x
       constructor
-      · intro h
-        exact ⟨h 0, fun i ↦ h i.succ⟩
+      · simp_all
       · rintro ⟨h0, hs⟩
         intro i
         cases i using Fin.cases with
         | zero => exact h0
         | succ i => exact hs i
-    apply and (h 0); apply ih
-    intro i; exact h i.succ
+    apply and (h 0); simp_all
 
 lemma or (h₁ : ℌ.Boldface P) (h₂ : ℌ.Boldface Q) :
     ℌ.Boldface (fun v ↦ P v ∨ Q v) := by
@@ -853,8 +851,7 @@ lemma of_eq {f : (Fin k → V) → V} (g) (h : ∀ v, f v = g v) (H : ℌ.Boldfa
 
 lemma retraction {n k} {f : (Fin k → V) → V} (hf : ℌ.BoldfaceFunction f) (e : Fin k → Fin n) :
     ℌ.BoldfaceFunction fun v ↦ f (fun i ↦ v (e i)) := by
-  have := Boldface.retraction (n := n + 1) hf (0 :> fun i ↦ (e i).succ); simp at this
-  exact this.of_iff (by intro x; simp)
+  have := Boldface.retraction (n := n + 1) hf (0 :> fun i ↦ (e i).succ); simp_all
 
 lemma retractiont {n k} {f : (Fin k → V) → V} (hf : ℌ.BoldfaceFunction f) (t :
     Fin k → Semiterm ℒₒᵣ V n) :
@@ -866,8 +863,7 @@ lemma rel {f : (Fin k → V) → V} (h : ℌ.BoldfaceFunction f) :
   ℌ.Boldface (fun v ↦ v 0 = f (v ·.succ)) := h
 
 lemma nth (ℌ : HierarchySymbol) (i : Fin k) : ℌ.BoldfaceFunction fun w : Fin k → V ↦ w i := by
-  apply Boldface.of_zero (Γ' := Sg)
-  exact ⟨.mkSigma “x. x = #i.succ” (by simp), by intro v; simp⟩
+  simp_all
 
 lemma substitution {f : Fin k → (Fin l → V) → V}
     (hF : Γ-[m + 1].BoldfaceFunction F) (hf : ∀ i, Sg-[m + 1].BoldfaceFunction (f i)) :

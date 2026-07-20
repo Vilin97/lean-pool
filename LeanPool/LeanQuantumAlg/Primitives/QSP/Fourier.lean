@@ -629,8 +629,7 @@ private theorem exists_rotYZ_angles {v w : ℂ}
       have h := Complex.norm_mul_exp_arg_mul_I w
       rwa [hnw, Complex.ofReal_one, one_mul] at h
     refine ⟨Real.pi, -(2 * w.arg), ?_, ?_⟩
-    · rw [Real.cos_pi_div_two]
-      simp [hv0]
+    · simp_all
     · rw [show (-(2 * w.arg) / 2 : ℝ) = -w.arg by ring,
         Real.sin_pi_div_two,
         show -(((-w.arg : ℝ) : ℂ) * Complex.I)
@@ -712,9 +711,7 @@ private theorem IsYZPair.edge_rel {L : ℕ} {A B : ℂ[X]} (h : IsYZPair (L + 1)
     A.coeff 0 * starRingEnd ℂ (A.coeff (L + 1))
       + B.coeff 0 * starRingEnd ℂ (B.coeff (L + 1)) = 0 := by
   have hn := congrArg (fun p : ℂ[X] => p.coeff 0) h.norm
-  simpa [Polynomial.mul_coeff_zero,
-    coeff_reflect_of_le (Nat.zero_le (L + 1)), Polynomial.coeff_X_pow]
-    using hn
+  simp_all
 
 /-- Some unit pair `(v, w)` with real product satisfies both unstep edge
 conditions; three cases on the vanishing of the edge coefficients
@@ -734,14 +731,10 @@ private theorem exists_unstep_vw {L : ℕ} {A B : ℂ[X]} (h : IsYZPair (L + 1) 
       obtain ⟨c, hunit, him⟩ := exists_unit_mul hne
       refine ⟨c * -B.coeff (L + 1), c * A.coeff (L + 1), hunit, him,
         by ring, ?_⟩
-      rw [h0.1, h0.2]
-      ring
+      simp_all
   · have hne : ¬(starRingEnd ℂ (A.coeff 0) = 0
         ∧ starRingEnd ℂ (B.coeff 0) = 0) := by
-      rintro ⟨h1, h2⟩
-      refine h0 ⟨?_, ?_⟩
-      · simpa using congrArg (starRingEnd ℂ) h1
-      · simpa using congrArg (starRingEnd ℂ) h2
+      simp_all
     obtain ⟨c, hunit, him⟩ := exists_unit_mul hne
     have hRc : starRingEnd ℂ (A.coeff 0) * A.coeff (L + 1)
         + starRingEnd ℂ (B.coeff 0) * B.coeff (L + 1) = 0 := by
@@ -770,8 +763,7 @@ private theorem isYZPair_unstep {L : ℕ} {A B : ℂ[X]} (h : IsYZPair (L + 1) A
   set B'' : ℂ[X] := C (starRingEnd ℂ v) * B - C (starRingEnd ℂ w) * A
     with hB''def
   have hB''0 : B''.coeff 0 = 0 := by
-    simp only [hB''def, Polynomial.coeff_sub, Polynomial.coeff_C_mul]
-    linear_combination h2
+    simp_all
   have hXdiv : X * B''.divX = B'' := by
     have hh := Polynomial.X_mul_divX_add B''
     rwa [hB''0, map_zero, add_zero] at hh
@@ -781,9 +773,7 @@ private theorem isYZPair_unstep {L : ℕ} {A B : ℂ[X]} (h : IsYZPair (L + 1) A
     · simp [hA'def, Polynomial.coeff_add, Polynomial.coeff_C_mul,
         h.coeff_A_eq_zero hgt, h.coeff_B_eq_zero hgt]
     · have hme : m = L + 1 := by omega
-      subst hme
-      simp only [hA'def, Polynomial.coeff_add, Polynomial.coeff_C_mul]
-      linear_combination h1
+      simp_all
   have hB'c : ∀ m, L < m → B''.divX.coeff m = 0 := by
     intro m hm
     rw [Polynomial.coeff_divX]
@@ -948,14 +938,12 @@ theorem qspYZY_converse :
         linear_combination hu
       have h2C : starRingEnd ℂ (v : ℂ) * B.coeff 0
           - starRingEnd ℂ (w : ℂ) * A.coeff 0 = 0 := by
-        rw [Complex.conj_ofReal, Complex.conj_ofReal]
-        exact h2
+        simp_all
       obtain ⟨A', B', hp', hAeq, hBeq⟩ :=
         isYZPair_unstep h.toIsYZPair hvwC h1 h2C
       rw [Complex.conj_ofReal] at hAeq hBeq
       have hCv : ((v : ℂ) * v + (w : ℂ) * w : ℂ) = 1 := by
-        norm_cast
-        linear_combination hu
+        simp_all
       have hCp : (C (v : ℂ) * C (v : ℂ) + C (w : ℂ) * C (w : ℂ) : ℂ[X])
           = 1 := by
         rw [← C_mul, ← C_mul, ← C_add, hCv, map_one]

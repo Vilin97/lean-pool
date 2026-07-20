@@ -114,18 +114,12 @@ theorem fix_induction_eq (f a b : ApproximableMap V V)
     have h1 : (b.comp f).toElementMap x = (f.comp b).toElementMap x := by rw [hfb]
     rwa [toElementMap_comp, toElementMap_comp] at h1
   refine fix_induction f (fun x => a.toElementMap x = b.toElementMap x) hbot ?_ ?_
-  · intro x hx
-    rw [hca, hcb, hx]
+  · simp_all
   · intro s hmono hs
     -- both sides are directed unions of equal families.
     show a.toElementMap (supChain s hmono) = b.toElementMap (supChain s hmono)
     rw [supChain, toElementMap_iSupDirected, toElementMap_iSupDirected]
-    apply Element.ext
-    intro Z
-    rw [NeighborhoodSystem.mem_iSupDirected, NeighborhoodSystem.mem_iSupDirected]
-    constructor
-    · rintro ⟨n, hn⟩; exact ⟨n, by rw [← hs n]; exact hn⟩
-    · rintro ⟨n, hn⟩; exact ⟨n, by rw [hs n]; exact hn⟩
+    simp_all
 
 end ApproximableMap
 

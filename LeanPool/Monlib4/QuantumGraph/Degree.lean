@@ -371,9 +371,7 @@ lemma QuantumGraph.zero_le_degree_le_norm_one_sq_of_gns
       norm_num
   rw [hd]
   refine ⟨mul_nonneg (QuantumGraph.Real.innerOne_map_one_nonneg h₁ h) ?_, ?_⟩
-  · simp only [inner_self_eq_norm_sq_to_K]
-    simp only [Complex.coe_algebraMap, ← Complex.ofReal_pow, ← Complex.ofReal_inv,
-      Complex.zero_le_real, inv_nonneg, pow_two_nonneg]
+  · simp_all
   rw [← ge_iff_le, ← Complex.ofReal_pow]
   calc ((‖(1 : A)‖ ^ 2 : ℝ) : ℂ) = ((‖(1 : A)‖ ^ 2) ^ 2 / ‖(1 : A)‖ ^ 2 : ℝ) := by
         rw [pow_two, pow_two, mul_div_assoc, div_self, mul_one]
@@ -443,8 +441,7 @@ theorem Coalgebra.comul_comp_mul_quantumSetSubset
             ((TensorProduct.map (QuantumSet.toSubsetAlgEquiv r).toLinearMap
               (QuantumSet.toSubsetAlgEquiv r).toLinearMap) ∘ₗ
                 Coalgebra.comul (R := ℂ) (A := A))]
-          rw [AlgEquiv.symm_comp_toLinearMap]
-          simp only [LinearMap.comp_id, LinearMap.comp_assoc]
+          simp_all
 
 
 theorem QuantumGraph.toSubset_isRegular_iff

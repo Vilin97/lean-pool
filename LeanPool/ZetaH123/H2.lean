@@ -152,9 +152,7 @@ theorem not_dvd_choose (q n k : ℕ) (hq : q.Prime) (hkn : k ≤ n)
   have hfac : (Nat.choose n k).factorization q = 0 := by
     rw [Nat.factorization_choose hq hkn hb, Finset.card_eq_zero,
         Finset.filter_eq_empty_iff]
-    intro i _
-    simp only [not_le]
-    exact hcarry i
+    simp_all
   have hpos : 0 < Nat.choose n k := Nat.choose_pos hkn
   intro hdvd
   have := (Nat.Prime.dvd_iff_one_le_factorization hq (by omega)).mp hdvd
@@ -206,8 +204,7 @@ theorem main_zero_mem (q : ℕ) (hq : q.Prime) (d k : ℕ) (_hd : 1 < d) (hk : 0
     refine ⟨?_, ?_, ?_⟩
     · intro i; have h1 : 0 < q ^ k := Nat.pow_pos (by omega)
       have h2 : 0 < q - 1 := by omega
-      have : 0 < (q - 1) * q ^ k := Nat.mul_pos h2 h1
-      simpa using this
+      simp_all
     · intro i; exact ⟨q ^ k, rfl⟩
     · -- AddNoCarry q [k-1, (q - 1)*q ^ k]
       intro e
@@ -387,8 +384,7 @@ theorem comp_id_le (q : ℕ) (hq : q.Prime) (d k : ℕ) (hd : 1 < d) (hk : 0 < k
   have hcf1 : ∀ e, qdigit q (k - 1) e + qdigit q μ e ≤ q - 1 := by
     intro e
     have := hnc₁ e
-    rw [hofn1] at this
-    simpa [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, hμ] using this
+    simp_all
   -- minimizer for s q d' (s q 1 k)
   obtain ⟨mν, hmνT, hmνval⟩ := s_minimizer q d' (s q 1 k) hq2 hs1pos
   obtain ⟨hposν, hdvdν, hncν⟩ := hmνT
@@ -423,10 +419,7 @@ theorem comp_id_le (q : ℕ) (hq : q.Prime) (d k : ℕ) (hd : 1 < d) (hk : 0 < k
   have hobj : ∑ i : Fin (d'+1), (i.val + 1) * m i
       = (∑ i : Fin d', (i.val + 1) * mν i) + (d'+1) * μ := by
     rw [Fin.sum_univ_castSucc]
-    congr 1
-    · apply Finset.sum_congr rfl; intro i _
-      rw [hmdef, Fin.snoc_castSucc, Fin.val_castSucc]
-    · rw [hmdef, Fin.snoc_last, Fin.val_last]
+    simp_all
   -- bound s q (d'+1) k by the constructed objective
   have hbound : s q (d'+1) k ≤ (d'+1) * k + ∑ i : Fin (d'+1), (i.val + 1) * m i := by
     unfold s
@@ -530,11 +523,7 @@ theorem Phi_split (q k1 d L : ℕ) (hd : 1 ≤ d) :
   rw [Finset.sum_range_succ']
   simp only [Nat.add_sub_cancel, Nat.sub_zero]
   rw [Nat.add_comm]
-  congr 1
-  apply Finset.sum_congr rfl; intro r hr; simp only [Finset.mem_range] at hr
-  have h1 : e + 1 - (r + 1) = e - r := by omega
-  have h2 : r + 1 + 1 = r + 2 := by ring
-  rw [h1, h2]
+  simp_all
 
 -- Recurrence for `slotList`: appending the slots at position `Lx`.
 theorem slotList_succ (q k1 Lx : ℕ) :
@@ -782,8 +771,7 @@ theorem sum_pow_modEq (q L : ℕ) (hq : 2 ≤ q) (d : ℕ → ℕ) :
   | succ L ih =>
     rw [Finset.sum_range_succ, Finset.sum_range_succ]
     have hh : d L * q ^ L ≡ d L * 1 [MOD (q - 1)] := Nat.ModEq.mul_left _ (hpow L)
-    rw [Nat.mul_one] at hh
-    exact Nat.ModEq.add ih hh
+    simp_all
 
 -- The digit sum (slot count) of a positive multiple of `q-1` is at least `q-1`.
 theorem digitsum_ge (q x L : ℕ) (hq : 2 ≤ q) (hdvd : (q - 1) ∣ x) (hpos : 0 < x)
@@ -1017,12 +1005,7 @@ theorem wsum_eq (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
       apply Finset.sum_congr rfl
       intro e _
       rw [hcount e, Nat.add_mul]
-    have hfirst : ∑ e ∈ Finset.range L, (if e = ea then 1 else 0) * q ^ e = a := by
-      rw [Finset.sum_eq_single ea]
-      · simp [haeq]
-      · intro b _ hb; rw [if_neg hb]; ring
-      · intro hcontra; exact absurd (Finset.mem_range.mpr heaL) hcontra
-    rw [hrw, hfirst]
+    simp_all
 
 theorem qdigit_window (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
     (hpow : ∀ x ∈ w, ∃ e, e < L ∧ x = q ^ e)
@@ -1333,20 +1316,10 @@ theorem slotList_drop (q k1 p r : ℕ)
       rw [hrange, List.flatMap_append]
       congr 1
       rw [List.range_succ, List.flatMap_append]
-      have hhead : (List.range p).flatMap g = [] := by
-        rw [List.flatMap_eq_nil_iff]
-        intro e he; simp only [List.mem_range] at he
-        rw [hg]; simp only; rw [if_pos he]; simp
-      rw [hhead, List.nil_append]
-      simp only [List.flatMap_cons, List.flatMap_nil, List.append_nil]
-      rw [hg]; simp
+      simp_all
     rw [hLHS, hRHS, htail]
     rw [List.drop_append_of_le_length (by simp; omega)]
-    rw [List.drop_append]
-    rw [List.drop_eq_nil_of_le (by omega), List.nil_append]
-    rw [List.drop_replicate]
-    congr 2
-    omega
+    simp_all
 
 -- Digit extraction from a base-`q` expansion with bounded coefficients.
 theorem digit_of_sum (q : ℕ) (hq : 2 ≤ q) (m : ℕ) (coeff : ℕ → ℕ)
@@ -1482,9 +1455,7 @@ theorem slot_subtraction (q k1 L₀ : ℕ) (hq : 2 ≤ q)
   obtain ⟨p, hpL, r, htake, hlen, hr⟩ := slotList_take q k1 L₀ (q - 1) hβ
   have hβval : blockSum q k1 L₀ 1 = (slotList q k1 p).sum + r * q ^ p := by
     unfold blockSum
-    simp only [Nat.sub_self, Nat.zero_mul, List.drop_zero]
-    rw [htake, List.sum_append, List.sum_replicate]
-    simp
+    simp_all
   intro Lx
   rw [hβval]
   have hnew : slotList q (k1 + ((slotList q k1 p).sum + r * q ^ p)) Lx
@@ -1678,13 +1649,9 @@ theorem wlen_eq (q L : ℕ) (hq : 2 ≤ q) (w : List ℕ)
         = (∑ e ∈ Finset.range L, (if e = ea then 1 else 0))
           + ∑ e ∈ Finset.range L, t.count (q ^ e) := by
       rw [← Finset.sum_add_distrib]
-      apply Finset.sum_congr rfl
-      intro e _; rw [hcount e]
+      simp_all
     have hfirst : ∑ e ∈ Finset.range L, (if e = ea then 1 else 0) = 1 := by
-      rw [Finset.sum_eq_single ea]
-      · simp
-      · intro b _ hb; rw [if_neg hb]
-      · intro hcontra; exact absurd (Finset.mem_range.mpr heaL) hcontra
+      simp_all
     rw [hrw, hfirst]; omega
 
 /-- Carry-free digit additivity for two numbers. -/
@@ -1787,11 +1754,7 @@ theorem removal_bound (q k1 u Lbig : ℕ) (hq : 2 ≤ q)
     have hc2 : (slotList q (k1+u) Lbig).count (q ^ e) = (q - 1) - qdigit q (k1+u) e := by
       by_cases he : e < Lbig
       · exact slotList_count q (k1+u) Lbig hq e he
-      · rw [List.count_eq_zero.mpr]
-        · have hkk := qdigit_le q (k1+u) e hq; omega
-        · intro hmem
-          obtain ⟨e', he'L, hxe⟩ := slotList_pow q (k1+u) Lbig _ hmem
-          exact absurd (Nat.pow_right_injective hq hxe) (by omega)
+      · simp_all
     have hmg := newmult_gen q k1 u e hq hcf
     omega
   -- count condition: ∑_{e<p} s_e + r = t + m = ∑_{e<Lbig} b_e
@@ -1803,8 +1766,7 @@ theorem removal_bound (q k1 u Lbig : ℕ) (hq : 2 ≤ q)
   -- apply greedy_core
   have hgc := greedy_core q p Lbig hq hpL bcoef (fun e => (q - 1) - qdigit q k1 e) r hbs
     hcountcond
-  rw [hcandval] at hgc
-  simpa using hgc
+  simp_all
 
 /-- Converse Kummer/Lucas: if `k`+`(n - k)` has a carry in base `q` at some
 position (`q ^ i ≤ k%q ^ i + (n - k)%q ^ i`), then `q ∣ C(n,k)`. Proved via
@@ -1945,10 +1907,7 @@ theorem extraction_core (q : ℕ) (hq : 2 ≤ q) (k1 : ℕ) (d : ℕ) (hd : 1 < 
     have hz : ∑ e ∈ Finset.range Lbig, qdigit q u e = 0 := by omega
     have hu0 : u = 0 := by
       rw [digitsum_eq q u Lbig hq huLbig]
-      apply Finset.sum_eq_zero
-      intro e he
-      have : qdigit q u e = 0 := Finset.sum_eq_zero_iff.mp hz e he
-      rw [this]; ring
+      simp_all
     omega
   have hmdvd : n ∣ m := by
     have hmod : u ≡ m [MOD n] := by
@@ -1983,8 +1942,7 @@ theorem extraction_core (q : ℕ) (hq : 2 ≤ q) (k1 : ℕ) (d : ℕ) (hd : 1 < 
     have hrb := removal_bound q k1 u Lbig hq hcf huLbig m hmdef ((c + 1)*n) htlen
     have hidx : (c + 1) * n + m = (c + 1 + ℓ) * n := by
       rw [hℓ]; ring
-    rw [hidx] at hrb
-    exact hrb
+    simp_all
   -- monotonicity: P (c+2) ≤ P (c+1+ℓ)  since c+2 ≤ c+1+ℓ (ℓ ≥ 1)
   have hmono : ∀ c, P (c + 2) ≤ P (c + 1 + ℓ) := by
     intro c
@@ -2073,10 +2031,7 @@ theorem extraction_strict (q : ℕ) (hq : q.Prime) (d k : ℕ) (hd : 1 < d)
     rw [hβdef, blockSum]
     set w := ((slotList q (k - 1) (slotLen q 1 k)).drop ((1 - 1) * (q - 1))).take (q - 1) with hwdef
     have hwlen : w.length = q - 1 := by
-      rw [hwdef]
-      apply window_len
-      simp only [Nat.sub_self, Nat.zero_mul, Nat.zero_add]
-      exact hlen0
+      simp_all
     have hmod := pow_sum_modEq q hq2 w (fun x hx => by
       rw [hwdef] at hx
       have h1 : x ∈ (slotList q (k - 1) (slotLen q 1 k)).drop ((1 - 1) * (q - 1)) :=

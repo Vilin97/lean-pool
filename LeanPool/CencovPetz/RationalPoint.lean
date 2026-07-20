@@ -59,13 +59,7 @@ lemma IsRational.isSplitRepresentable {p : Simplex α} (hp : IsRational (α := �
     IsSplitRepresentable (α := α) p := by
   rcases hp with ⟨m, hm, hp⟩
   refine ⟨m, hm, ?_⟩
-  intro a
-  have hcard_nat : Fintype.card (MarkovMorphism.SplitTarget (α := α) m) = ∑ a : α, m a :=
-    MarkovMorphism.card_splitTarget (α := α) (m := m)
-  have hcard :
-      (Fintype.card (MarkovMorphism.SplitTarget (α := α) m) : ℝ) = ((∑ a : α, m a : ℕ) : ℝ) := by
-    exact_mod_cast hcard_nat
-  simpa [hcard] using hp a
+  simp_all
 
 end Simplex
 end LeanPool.CencovPetz

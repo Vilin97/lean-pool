@@ -35,9 +35,7 @@ lemma smul_eq_zero_of_quotient (I : Ideal R) (n : ℕ)
       change Submodule.Quotient.mk (r • a) = 0
       rw [Submodule.Quotient.mk_eq_zero]
       exact Submodule.smul_mem_smul hr Submodule.mem_top
-  · intro a b ha hb
-    rw [ha, hb]
-    exact add_zero 0
+  · simp_all
 
 instance quotientIsHausdorff (I : Ideal R) (n : ℕ) :
     IsHausdorff I (R ⧸ (I ^ n • ⊤ : Submodule R R)) where
@@ -157,5 +155,4 @@ theorem mem_map_pow_of_evalₐ_eq_zero
       (IsLocalRing.maximalIdeal R)) ^ n := by
   rw [← Ideal.map_pow]
   have hmem := ker_evalₐ_le_smul_top (IsLocalRing.maximalIdeal R) n x hx
-  rw [Ideal.smul_top_eq_map] at hmem
-  exact hmem
+  simp_all

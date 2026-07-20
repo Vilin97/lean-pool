@@ -95,9 +95,7 @@ theorem exists_majorant_p_eq_2 (p : ℝ) (hp : p = 2) :
         norm_num [pStar, q]
         ring
       _ ≤ x * y := le_rfl
-  · intro x y hxy
-    exact hxy
-  · intro x y
-    rfl
+  · simp_all
+  · simp_all
 
 end Majorants

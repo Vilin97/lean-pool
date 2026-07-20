@@ -76,8 +76,7 @@ else
 lemma continuous_ReflTransReparamAux : Continuous ReflTransReparamAux := by
   refine continuous_if_le ?_ ?_ (Continuous.continuousOn ?_) (Continuous.continuousOn ?_) ?_ <;>
   [continuity; continuity; continuity; continuity; skip]
-  intros x hx
-  norm_num [hx]
+  simp_all
 
 lemma reflTransReparamAux_mem_I (t : I) : ReflTransReparamAux t ∈ I := by
   unfold ReflTransReparamAux

@@ -51,9 +51,7 @@ theorem Int.sum_mod {n : ℕ} (x : Fin n → ℤ) (a : ℤ) : (∑ i, x i) % a =
     have hx' : ∀ i, x' i = x i.succ := fun i => rfl
     simp_rw [Fin.sum_univ_succ]
     rw [Int.add_emod]
-    simp_rw [← hx', Int.emod_add_cancel_left]
-    rw [hd]
-    simp_rw [Int.emod_emod]
+    simp_all
 
 -- `n.succ % n = 1` if `1 < n`
 theorem Fin.succ_mod_self {n : ℕ} (hn : 1 < n) : n.succ % n = 1 := by

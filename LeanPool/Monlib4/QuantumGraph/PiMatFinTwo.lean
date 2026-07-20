@@ -203,8 +203,7 @@ theorem AlgEquiv.PiMat_finTwo_same
       (MatProdAlgEquivPiMat _).symm.trans
       (f'.trans (MatProdAlgEquivPiMat _)) = f :=
     by ext1; simp [f']
-    rw [this] at hf'
-    exact hf'
+    simp_all
   · right
     obtain ⟨U, hg₁⟩ := Matrix.aut_mat_inner' g₁
     obtain ⟨V, hg₂⟩ := Matrix.aut_mat_inner' g₂
@@ -397,9 +396,7 @@ lemma Pi.nat_eq_zero_of_sum_eq_one_and_unique_one
   {j : ι} (hj : j ≠ i) : f j = 0 := by
   classical
   rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ i), hd] at h
-  simp only [add_eq_left, Finset.sum_eq_zero_iff, Finset.mem_sdiff, Finset.mem_univ,
-    Finset.mem_singleton, true_and] at h
-  exact h _ hj
+  simp_all
 
 theorem Finset.sum_nat_eq_one_iff_exists_unique_eq_one
   {ι : Type*} [Fintype ι] {f : ι → ℕ}
@@ -421,9 +418,7 @@ theorem Finset.sum_nat_eq_one_iff_exists_unique_eq_one
   have : ∃! i, 1 ≤ f i := by
     apply existsUnique_of_exists_of_unique
     · by_contra!
-      simp only [Nat.lt_one_iff] at this
-      simp only [this, Finset.sum_const_zero] at h
-      norm_num at h
+      simp_all
     · intro y₁ y₂ hy hd
       by_contra!
       have :=
@@ -462,11 +457,8 @@ theorem QuantumGraph.Real.dimOfPiMatSubmodule_eq_zero_iff_eq_zero
   constructor
   · intro h
     rw [LinearMap.eq_sum_conj_adjoint_proj_comp_proj (hφ := hφ) A]
-    simp only [h _ (Finset.mem_univ _), LinearMap.comp_zero, LinearMap.zero_comp,
-      Finset.sum_const_zero]
-  · rintro rfl
-    simp only [LinearMap.zero_comp, LinearMap.comp_zero,
-      Finset.mem_univ, imp_self, implies_true]
+    simp_all
+  · simp_all
 
 theorem QuantumGraph.Real.exists_unique_includeMap_of_adjoint_and_dim_ofPiMatSubmodule_eq_one
   {ι : Type*} {p : ι → Type*} [Fintype ι] [DecidableEq ι]
@@ -504,8 +496,7 @@ theorem QuantumGraph.Real.exists_unique_includeMap_of_adjoint_and_dim_ofPiMatSub
         ((LinearMap.proj x.1 ∘ₗ A ∘ₗ LinearMap.adjoint (LinearMap.proj x.2))) ∘ₗ LinearMap.proj x.2
       = (0 : PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p) := by
     apply Finset.sum_eq_zero
-    intro j hj
-    simp only [this₁ _ hj, LinearMap.comp_zero, LinearMap.zero_comp]
+    simp_all
   have hAA : A = LinearMap.adjoint (LinearMap.proj i.1)
     ∘ₗ (LinearMap.proj i.1 ∘ₗ A ∘ₗ LinearMap.adjoint (LinearMap.proj i.1))
     ∘ₗ LinearMap.proj i.1 := by
@@ -621,11 +612,7 @@ theorem LinearMap.single_isReal
   [(i : ι) → StarAddMonoid (φ i)] (i : ι) :
   LinearMap.IsReal (LinearMap.single R φ i) := by
   intro x
-  ext j
-  by_cases h : j = i
-  · subst j
-    simp [LinearMap.single_apply]
-  · simp [LinearMap.single_apply, Pi.single_eq_of_ne h]
+  simp_all
 
 theorem LinearMap.proj_isReal
   {R ι : Type*} [Semiring R] {φ : ι → Type*}

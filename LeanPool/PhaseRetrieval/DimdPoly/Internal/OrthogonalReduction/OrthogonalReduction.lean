@@ -43,8 +43,7 @@ private lemma lpNorm_mono_real_ae {f : Ω → ℝ} {g : Ω → ℝ}
       ← MeasureTheory.toReal_eLpNorm hg.aestronglyMeasurable]
     exact ENNReal.toNNReal_mono hg.eLpNorm_ne_top
       (MeasureTheory.eLpNorm_mono_ae_real hfg)
-  · simp only [lpNorm, hf, ↓reduceIte]
-    exact MeasureTheory.lpNorm_nonneg
+  · simp_all
 
 omit [SigmaFinite μ] in
 private lemma lpNorm_coe_l2 {E : Type*} [NormedAddCommGroup E]
@@ -107,9 +106,7 @@ private lemma compare_pointwise_ae
   have h0 := abs_norm_sub_norm_le (Hh x - (a : ℂ) * F x + F x) (Hh x + F x)
   have hdiff :
       ‖(Hh x - (a : ℂ) * F x + F x) - (Hh x + F x)‖ = |a| * ‖F x‖ := by
-    rw [show (Hh x - (a : ℂ) * F x + F x) - (Hh x + F x) = -((a : ℂ) * F x) by ring,
-      norm_neg, norm_mul]
-    simp [Complex.norm_real, Real.norm_eq_abs]
+    simp_all
   simpa [hdiff, F] using h0
 
 /-
@@ -182,8 +179,7 @@ theorem local_stability
                 AddSubgroupClass.coe_sub, defect, db, dh]
               congr 1
               funext x
-              simp only [Pi.add_apply]
-              ring
+              simp_all
       _ ≤ MeasureTheory.lpNorm db 2 μ + MeasureTheory.lpNorm dh 2 μ := by
               simpa using
                 (MeasureTheory.lpNorm_add_le hdb_mem (g := dh)

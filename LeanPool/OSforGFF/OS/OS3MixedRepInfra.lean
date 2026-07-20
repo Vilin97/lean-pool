@@ -411,8 +411,7 @@ lemma heatKernelPositionSpace_integral_translated (s : ℝ) (hs : 0 < s) (a : Sp
     rw [← neg_sub, norm_neg]
   have h_fun : (fun y : SpaceTime => heatKernelPositionSpace s ‖a - y‖) =
       (fun y : SpaceTime => heatKernelPositionSpace s ‖y - a‖) := by
-    funext y
-    rw [h_norm_eq y]
+    simp_all
   rw [h_fun]
   -- Use translation invariance: ∫ f(y - a) dy = ∫ f(z) dz
   -- SpaceTime = EuclideanSpace ℝ (Fin 4) has translation-invariant Lebesgue measure
@@ -550,20 +549,12 @@ lemma schwinger_bound_integrable_xy (s : ℝ) (hs : 0 < s)
             = ∫ y : SpaceTime,
                 (‖f x‖ * Cf * Real.exp (-s * m^2)) *
                   heatKernelPositionSpace s ‖timeReflection x - y‖ := by
-                exact integral_congr_ae (by
-                  filter_upwards with y
-                  have h := congrArg (fun h => h y) h_eq
-                  simpa using h)
+                simp_all
         _ = (‖f x‖ * Cf * Real.exp (-s * m^2)) :=
               schwinger_bound_integrand_integral_y s hs f Cf m x
     have h_int_x : Integrable (fun x : SpaceTime => ‖f x‖ * Cf * Real.exp (-s * m^2)) :=
       schwinger_bound_integrand_integrable_x s f Cf m h_f_int
-    exact h_int_x.congr (by
-      filter_upwards with x
-      have h := h_norm x
-      have h' : ∫ y : SpaceTime, |G (x, y)| = ‖f x‖ * Cf * Real.exp (-s * m^2) := by
-        simpa [Real.norm_eq_abs] using h
-      exact h'.symm)
+    simp_all
 
 /-- Compute the (x,y)-integral of the Schwinger bound integrand for fixed `s > 0`. -/
 lemma schwinger_bound_integrand_integral_xy (s : ℝ) (hs : 0 < s)
@@ -589,9 +580,7 @@ lemma schwinger_bound_integrand_integral_xy (s : ℝ) (hs : 0 < s)
         = ∫ x : SpaceTime, ∫ y : SpaceTime, G (x, y) := by
             rwa [Measure.volume_eq_prod]
     _ = ∫ x : SpaceTime, ‖f x‖ * Cf * Real.exp (-s * m^2) := by
-          refine integral_congr_ae ?_
-          filter_upwards with x
-          simp [h_inner]
+          simp_all
     _ = (Cf * (∫ x : SpaceTime, ‖f x‖)) * Real.exp (-s * m^2) := by
           -- pull out the constant
           let r : ℝ := Cf * Real.exp (-s * m^2)
@@ -764,10 +753,7 @@ theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
     integrableOn_exp_mul_Ioi (neg_neg_of_pos ha) 0
   -- Step 2: f '' (Ioi 0) = Ioi 0
   have h_img : (fun s : ℝ => s⁻¹) '' Set.Ioi 0 = Set.Ioi 0 := by
-    ext y; simp only [Set.mem_image, Set.mem_Ioi]
-    constructor
-    · rintro ⟨x, hx, rfl⟩; exact inv_pos.mpr hx
-    · intro hy; use y⁻¹; exact ⟨inv_pos.mpr hy, inv_inv y⟩
+    ext y; simp_all
   -- Step 3: Define f' and apply the iff
   let f' : ℝ → ℝ := fun s => -(s^((-2 : ℝ)))
   have h_iff := integrableOn_image_iff_integrableOn_deriv_smul_of_antitoneOn
@@ -783,8 +769,7 @@ theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
         -- We need -(s^(-2 : ℝ)) which equals -(s^2)⁻¹
         have heq : -(s^((-2 : ℝ))) = -(s ^ (2 : ℕ))⁻¹ := by
           rw [Real.rpow_neg (le_of_lt hs_pos)]
-          congr 2
-          exact Real.rpow_natCast s 2
+          simp_all
         rwa [heq]
       exact h.hasDerivWithinAt)
     (fun x hx y _ hxy => inv_anti₀ hx hxy)
@@ -897,9 +882,7 @@ theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
               Real.exp (-s * ‖k‖^2)) ∂volume ∂volume := by
           apply lintegral_congr_ae
           filter_upwards [h_eq_integrand] with s hs
-          congr 1
-          ext k
-          rw [hs k]
+          simp_all
       _ < ⊤ := by
           -- Strategy: Compute exact inner integral using Gaussian formula, then bound outer
           --
@@ -926,9 +909,7 @@ theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
               simp only [zero_mul, add_zero, inner_zero_left, Complex.ofReal_zero] at h
               have h_eq : (fun k_sp : SpatialCoords => Complex.exp (-(s : ℂ) * ‖k_sp‖^2)) =
                   (fun k_sp => (Real.exp (-s * ‖k_sp‖^2) : ℂ)) := by
-                ext k_sp
-                simp only [Complex.ofReal_exp, Complex.ofReal_neg, Complex.ofReal_mul,
-                  Complex.ofReal_pow]
+                simp_all
               rw [h_eq] at h
               exact h.re
             -- Show integrand is nonnegative
@@ -1142,11 +1123,7 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
     -- Use the change of variables formula with φ(y) = y + x
     -- The image of Ioi 0 under (· + x) is Ioi x
     have h_image : (fun y => y + x) '' Set.Ioi 0 = Set.Ioi x := by
-      ext u
-      simp only [Set.mem_image, Set.mem_Ioi]
-      constructor
-      · rintro ⟨y, hy, rfl⟩; linarith
-      · intro hu; use u - x; constructor <;> linarith
+      simp_all
     -- Apply integral_image_eq_integral_abs_deriv_smul with derivative = 1
     rw [← h_image]
     symm
@@ -1312,10 +1289,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
       _ = 4 / 3 * Real.sqrt π * (s^2 / Real.sqrt s) := by ring
       _ = 4 / 3 * Real.sqrt π * (s * (s / Real.sqrt s)) := by ring
       _ = 4 / 3 * Real.sqrt π * (s * Real.sqrt s) := by
-          congr 1
-          congr 1
-          -- s / √s = √s (since s = √s · √s)
-          exact div_sqrt
+          simp_all
   -- Step 3a: Pull out the constant √(π/s) from the integral
   have h_pull_const : ∫ x₀ in Set.Ioi 0, ∫ y₀ in Set.Ioi 0,
       x₀ * y₀ * Real.sqrt (π / s) * Real.exp (-(x₀ + y₀)^2 / (4 * s)) =
@@ -1334,8 +1308,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
       congr 1; ext x; ring
     rw [h1, intervalIntegral.integral_sub]
     · have hx : ∫ x in (0 : ℝ)..u, x = u^2 / 2 := by
-        rw [show (fun x : ℝ => x) = (fun x => x^1) by ext; simp, integral_pow]
-        simp; ring
+        simp_all
       have hx2 : ∫ x in (0 : ℝ)..u, x^2 = u^3 / 3 := by
         rw [integral_pow]; simp; ring
       rw [intervalIntegral.integral_const_mul, hx, hx2]
@@ -1455,8 +1428,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
                     linarith
                   calc x * y * Real.exp (-(x + y) ^ 2 / (4 * s))
                       ≤ x * y * (Real.exp (-x^2 / (4 * s)) * Real.exp (-y^2 / (4 * s))) := by
-                        apply mul_le_mul_of_nonneg_left h_exp_bound
-                        apply mul_nonneg (le_of_lt hx) (le_of_lt hy)
+                        simp_all
                     _ = (x * Real.exp (-x^2 / (4 * s))) * (y * Real.exp (-y^2 / (4 * s))) := by ring
                     _ = (x * Real.exp (-(1/(4*s)) * x^2)) * (y * Real.exp (-(1/(4*s)) * y^2)) := by
                         congr 2 <;> (congr 1; ring)
@@ -1483,8 +1455,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
             rw [← MeasureTheory.integral_Ioc_eq_integral_Ioo]
             rw [← intervalIntegral.integral_of_le (le_of_lt hu)]
             exact h_poly_int u hu
-          simp only
-          rw [h_factor, h_inner]
+          simp_all
       _ = (1/6) * ∫ u in Set.Ioi 0, u^3 * Real.exp (-u^2 / (4 * s)) := by
           conv_lhs => arg 2; ext u; rw [show Real.exp (-u^2 / (4 * s)) * (u^3 / 6) =
               (1/6) * (u^3 * Real.exp (-u^2 / (4 * s))) by ring]
@@ -1540,13 +1511,7 @@ lemma gaussian_moment_integrableOn_Ioi {b : ℝ} (hb : 0 < b) :
   rw [MeasureTheory.IntegrableOn]
   apply MeasureTheory.Integrable.mono (h_int.restrict)
   · fun_prop
-  · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t ht
-    simp only [Set.mem_Ioi] at ht
-    -- ‖t * exp(-b*t²)‖ = |t * exp(-b*t²)| = t * exp(-b*t²) (since t > 0 and exp > 0)
-    rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (le_of_lt ht) (Real.exp_nonneg _))]
-    -- ‖|t| * exp(-b*t²)‖ = |t| * exp(-b*t²) = t * exp(-b*t²) (since t > 0)
-    rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (abs_nonneg _) (Real.exp_nonneg _))]
-    rw [abs_of_pos ht]
+  · simp_all
 
 /-- Helper lemma: For s > 0 and any t₁ ≥ 0, the function t₂ ↦ t₂ * exp(-(t₁+t₂)²/(4s))
     is integrable on (0, ∞). This is the key integrability fact for heat kernel moment bounds.
@@ -1698,8 +1663,7 @@ lemma heatKernelMomentExt_parametric_eq_setIntegral (s : ℝ) (t₁ : ℝ) (ht�
     unfold heatKernelMomentExt
     by_cases ht₂ : t₂ > 0
     · simp only [ht₁, ht₂, and_self, ↓reduceIte, Set.indicator_apply, Set.mem_Ioi]
-    · push Not at ht₂
-      simp only [not_lt.mpr ht₂, and_false, ↓reduceIte, Set.indicator_apply, Set.mem_Ioi]
+    · simp_all
   simp_rw [h_eq]
   rw [MeasureTheory.integral_indicator measurableSet_Ioi]
 
@@ -1762,16 +1726,12 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
     intro t₁
     symm
     apply MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero
-    intro t₂ ht₂
-    simp only [Set.mem_Ioi, not_lt] at ht₂
-    simp only [hG_zero t₂ ht₂, mul_zero]
+    simp_all
   have h_supp_outer : ∫ t₁ : ℝ, ∫ t₂ in Set.Ioi 0, K t₁ t₂ * G t₁ * G t₂ =
       ∫ t₁ in Set.Ioi 0, ∫ t₂ in Set.Ioi 0, K t₁ t₂ * G t₁ * G t₂ := by
     symm
     apply MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero
-    intro t₁ ht₁
-    simp only [Set.mem_Ioi, not_lt] at ht₁
-    simp only [hG_zero t₁ ht₁, mul_zero, zero_mul, MeasureTheory.integral_zero]
+    simp_all
   have h_bound : ∀ t₁ ∈ Set.Ioi (0:ℝ), ∀ t₂ ∈ Set.Ioi (0:ℝ),
       K t₁ t₂ * G t₁ * G t₂ ≤ K t₁ t₂ * (C_sp * t₁) * (C_sp * t₂) := by
     intro t₁ ht₁ t₂ ht₂
@@ -1856,11 +1816,7 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
         rw [Real.norm_eq_abs, abs_of_nonneg, Real.norm_eq_abs, abs_of_nonneg]
         · exact h_mono_inner t₁ (Set.mem_Ioi.mpr ht₁)
         · apply MeasureTheory.setIntegral_nonneg measurableSet_Ioi
-          intro t₂ ht₂; simp only [Set.mem_Ioi] at ht₂
-          apply mul_nonneg
-          · apply mul_nonneg (hK_nonneg t₁ t₂)
-            exact mul_nonneg hC_sp_pos.le (le_of_lt ht₁)
-          · exact mul_nonneg hC_sp_pos.le (le_of_lt ht₂)
+          simp_all
         · apply MeasureTheory.setIntegral_nonneg measurableSet_Ioi
           intro t₂ ht₂
           apply mul_nonneg
@@ -2027,9 +1983,7 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     by_cases ht : 0 < t
     · have h1 : G t ≤ C_sp * t := h_spatial t ht
       simpa only [max_eq_left (le_of_lt ht)] using h1
-    · push Not at ht
-      have h1 : G t = 0 := hG_zero t ht
-      simp only [h1, max_eq_right ht, mul_zero, le_refl]
+    · simp_all
   -- Bound: K * G(t₁) * G(t₂) ≤ K * C_sp² * max(t₁,0) * max(t₂,0)
   have h_pointwise_bound : ∀ t₁ t₂,
       K t₁ t₂ * G t₁ * G t₂ ≤ K t₁ t₂ * (C_sp * max t₁ 0) * (C_sp * max t₂ 0) := by
@@ -2126,9 +2080,7 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
           exact div_nonneg hsq (le_of_lt hden)
         have hneg' : -(p.1 0 + p.2 0)^2 / (4 * s) = -((p.1 0 + p.2 0)^2 / (4 * s)) := by
           ring
-        have hneg : -(p.1 0 + p.2 0)^2 / (4 * s) ≤ 0 := by
-          simpa [hneg'] using (neg_nonpos.mpr h_nonneg)
-        simpa using (Real.exp_le_exp.mpr hneg)
+        simp_all
       have h1 : |Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s))| ≤ 1 := by
         simpa [abs_of_nonneg (Real.exp_nonneg _)] using h_exp_le
       have h_nonneg : 0 ≤ (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖) := by
@@ -2152,11 +2104,7 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
       have h2'' : ((‖f p.1‖ * ‖f p.2‖) * |c₁| * 1) * |c₂| =
           (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖) := by
         ring
-      have h2_final : (‖f p.1‖ * ‖f p.2‖) * |c₁| *
-          |Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s))| * |c₂| ≤
-          (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖) := by
-        simpa [mul_assoc] using (h2'.trans_eq h2'')
-      simpa [hnorm, mul_assoc] using h2_final
+      simp_all
     have h_bound_int : Integrable (fun p : SpaceTime × SpaceTime =>
         (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖)) (volume.prod volume) := by
       have h_prod : Integrable (fun p : SpaceTime × SpaceTime => ‖f p.1‖ * ‖f p.2‖)
@@ -2555,8 +2503,7 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
           have h1 : (-(1:ℝ)/2) * π = -(π/2) := by ring
           rw [h1, Real.cos_neg, Real.cos_pi_div_two]
         rw [hcos, mul_zero]
-    rw [h_sqrt, h_rpow]
-    ring_nf
+    simp_all
 
 private lemma fubini_s_xy_swap_integrable (m : ℝ) [Fact (0 < m)]
     (f : TestFunctionℂ) (k_sp : SpatialCoords) :
@@ -2638,8 +2585,7 @@ private lemma fubini_s_xy_swap_integrable (m : ℝ) [Fact (0 < m)]
       rw [Filter.eventually_iff, MeasureTheory.mem_ae_iff]
       have h_compl : ({p : ℝ × SpaceTime × SpaceTime | 0 < p.1})ᶜ =
           Prod.fst ⁻¹' Set.Iic 0 := by
-        ext p; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt, Set.mem_preimage,
-          Set.mem_Iic]
+        ext p; simp_all
       rw [h_compl]
       have h_prod : (Prod.fst ⁻¹' Set.Iic (0 : ℝ) : Set (ℝ × SpaceTime × SpaceTime)) =
           Set.Iic 0 ×ˢ Set.univ := by
@@ -2806,12 +2752,7 @@ lemma gaussian_integrable_spatialCoords (s : ℝ) (hs : 0 < s) :
   -- Convert complex exponential to real: exp(-(s:ℂ) * ‖v‖²) for real s is real
   have h_eq : (fun k_sp : SpatialCoords => Complex.exp (-(s : ℂ) * ‖k_sp‖^2)) =
       (fun k_sp => (Real.exp (-s * ‖k_sp‖^2) : ℂ)) := by
-    ext k_sp
-    -- Use Complex.ofReal_exp: (Real.exp x : ℂ) = Complex.exp (x : ℂ)
-    -- We need to show cexp(-(s:ℂ) * ↑‖k‖²) = (rexp(-s * ‖k‖²) : ℂ)
-    -- The RHS = cexp(↑(-s * ‖k‖²)) by Complex.ofReal_exp
-    -- And ↑(-s * ‖k‖²) = -(s:ℂ) * ↑‖k‖² by push_cast
-    simp only [Complex.ofReal_exp, Complex.ofReal_neg, Complex.ofReal_mul, Complex.ofReal_pow]
+    simp_all
   rw [h_eq] at h
   -- Integrable (ofReal ∘ g) implies Integrable g via .re since re(ofReal x) = x
   exact h.re

@@ -36,8 +36,7 @@ lemma isVar_cases
   have hφk (n) : IsVar (φ (Function.invFun k n)) := by
     simp only [hφ]
   have := isVar_cases' hix' hφk
-  simp only [hk'] at this
-  apply this
+  simp_all
 
 @[simp]
 lemma isVar_iff_isHom {A : Type*} {_ : QuasiBorelSpace A} (f : ℝ → A) : IsVar f ↔ IsHom f := by
@@ -67,8 +66,7 @@ lemma isHom_def
     : IsHom f ↔ (∀⦃φ : ℝ → A⦄, IsHom φ → IsHom fun x ↦ f (φ x)) := by
   apply Iff.intro
   · rintro ⟨hf⟩
-    simp only [isVar_iff_isHom] at hf
-    exact hf
+    simp_all
   · intro hf
     constructor
     simpa only [isVar_iff_isHom] using hf
@@ -142,8 +140,7 @@ lemma isHom_cases
   simp only [isVar_iff_isHom] at hφ
   apply isVar_cases (ix := fun x ↦ ix (φ x)) (φ := fun n x ↦ f n (φ x))
   · replace hix := hix hφ
-    simp only [isHom_ofMeasurableSpace] at hix
-    exact hix
+    simp_all
   · intro n
     simp only [isVar_iff_isHom]
     refine hf _ ?_
@@ -211,8 +208,7 @@ lemma isHom_cast
   subst eq
   have : instB = instC := by
     ext
-    simp only [isVar_iff_isHom]
-    apply heq
+    simp_all
   subst this
   rfl
 
@@ -254,11 +250,7 @@ lemma isHom_mono
     (hinst : ∀ φ : ℝ → B, inst₁.IsVar φ → inst₂.IsVar φ)
     : IsHom[_, inst₂] f := by
   rw [isHom_def] at ⊢ hf
-  intro φ hφ
-  specialize hf hφ
-  rw [← isVar_iff_isHom] at ⊢ hf
-  apply hinst
-  apply hf
+  simp_all
 
 lemma measurableSet_toMeasurableSpace
     (X : Set A)

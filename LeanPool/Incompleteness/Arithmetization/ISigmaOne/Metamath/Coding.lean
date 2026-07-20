@@ -233,21 +233,7 @@ lemma quote_func {k} (f : L.Func k) (v : Fin k → SyntacticSemiterm L n) :
     quote_eq_vecToNat, ←quote_matrix_absolute]
 
 @[simp 1100] lemma codeIn_inj {n} {t u : SyntacticSemiterm L n} : (⌜t⌝ : V) = ⌜u⌝ ↔ t = u := by
-  induction t generalizing u
-  case bvar z =>
-    rcases u <;> simp [quote_bvar, quote_fvar, quote_func, qqBvar, qqFvar, qqFunc, Fin.val_inj]
-  case fvar x => rcases u <;> simp [quote_bvar, quote_fvar, quote_func, qqBvar, qqFvar, qqFunc]
-  case func k f v ih =>
-    rcases u <;>
-      simp only [quote_func, qqFunc, quote_bvar, qqBvar, quote_fvar, qqFvar, add_left_inj,
-        pair_ext_iff, OfNat.ofNat_ne_zero, OfNat.ofNat_ne_one, false_and, reduceCtorEq,
-        Nat.cast_inj, true_and, func.injEq, and_congr_right_iff]
-    rintro rfl
-    simp only [quote_inj_iff, quote_matrix_inj, heq_eq_eq, and_congr_right_iff]
-    rintro rfl
-    constructor
-    · intro h; funext i; exact (ih i).mp (congr_fun h i)
-    · rintro rfl; rfl
+  simp_all
 
 @[simp 1100] lemma quote_zero (n) :
     (⌜(Semiterm.func Language.Zero.zero ![] : SyntacticSemiterm ℒₒᵣ n)⌝ : V) = qqZero := by
@@ -343,8 +329,7 @@ lemma eq_fin_of_lt_nat {n : ℕ} {x : V} (hx : x < n) : ∃ i : Fin n, x = i := 
     intro i hi
     have hi : i < k := by simpa [Hw.termSubstVec Hv |>.lh] using hi
     rcases eq_fin_of_lt_nat hi with ⟨i, rfl⟩
-    rw [nth_termSubstVec Hv.isUTerm hi]
-    simpa using ih i
+    simp_all
 
 lemma quote_termSubstVec {k n m} (w : Fin n → SyntacticSemiterm L m) (v :
     Fin k → SyntacticSemiterm L n) :
@@ -372,8 +357,7 @@ lemma quote_termSubstVec {k n m} (w : Fin n → SyntacticSemiterm L m) (v :
     intro i hi
     have hi : i < k := by simpa [Hv.termShiftVec |>.lh] using hi
     rcases eq_fin_of_lt_nat hi with ⟨i, rfl⟩
-    rw [nth_termShiftVec Hv.isUTerm hi]
-    simpa using ih i
+    simp_all
 
 lemma quote_termShiftVec {k n} (v : Fin k → SyntacticSemiterm L n) :
     ⌜fun i ↦ ⌜Rew.shift (v i)⌝⌝ = (L.codeIn V).termShiftVec k ⌜fun i ↦ ⌜v i⌝⌝ := by
@@ -398,8 +382,7 @@ lemma quote_termShiftVec {k n} (v : Fin k → SyntacticSemiterm L n) :
     intro i hi
     have hi : i < k := by simpa [Hv.termBShiftVec |>.lh] using hi
     rcases eq_fin_of_lt_nat hi with ⟨i, rfl⟩
-    rw [nth_termBShiftVec Hv.isUTerm hi]
-    simpa using ih i
+    simp_all
 
 @[simp] lemma _root_.LO.Arith.Formalized.quote_numeral_eq_numeral (k : ℕ) :
     (⌜(‘↑k’ : SyntacticSemiterm ℒₒᵣ n)⌝ : V) = Formalized.numeral (k : V) := by

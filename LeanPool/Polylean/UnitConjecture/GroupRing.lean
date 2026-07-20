@@ -147,8 +147,7 @@ def mulAux : FormalSum R G → R[G] → R[G] := by
     intro x₀
     rw [← append_coords]
     let l := mul_monom_zero g x₀ s
-    rw [l]
-    simp only [zero_add]
+    simp_all
   | addCoeffs a b x tail =>
     apply Quotient.sound
     apply funext; intro x₀
@@ -358,11 +357,7 @@ instance : Ring (R[G]) :=
       | cons h t ih =>
         rw [FormalSum.mul]
         simp only [mulMonom, List.nil_append]
-        apply funext; intro x₀
-        let lih := congrFun ih x₀
-        rw [coords] at lih
-        rw [lih]
-        simp only [coords]
+        simp_all
 
     mul_zero := by
       apply Quotient.ind
@@ -480,8 +475,7 @@ theorem groupInclusionHom_injective {F : Type} [Field F] [DecidableEq F]
     Function.Injective (groupInclusionHom (R := F) G) := by
   intro _ _
   apply groupInclusionHom_injective'
-  have : (0 : F) ≠ (1 : F) := zero_ne_one
-  simp_all only [ne_eq, zero_ne_one, not_false_iff, one_ne_zero]
+  simp_all
 
 /-- The ring homomorphism `R → R[G]` given by `a ↦  a ⬝ 1` -/
 def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=

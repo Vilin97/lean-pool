@@ -48,10 +48,7 @@ macro_rules | `(tactic| trivial) => `(tactic|
   )
 
 lemma mem_left (h : ψ ∈ φ.subformulas) : ψ ∈ φ.subformulasGrz := by
-  unfold subformulasGrz;
-  simp only [Finset.mem_union];
-  left;
-  tauto;
+  simp_all
 
 
 
@@ -89,17 +86,9 @@ lemma transitive : IsTrans (miniCanonicalFrame φ).World (miniCanonicalFrame φ)
   constructor
   rintro X Y Z ⟨RXY₁, RXY₂⟩ ⟨RYZ₁, RYZ₂⟩;
   constructor;
-  · rintro ψ hq₁ hq₂;
-    exact RYZ₁ ψ hq₁ <| RXY₁ ψ hq₁ hq₂;
+  · simp_all
   · intro h;
-    have eXY : X = Y := RXY₂ <| by
-      intro ψ hs hq;
-      exact h ψ hs <| RYZ₁ ψ hs hq;
-    have eYZ : Y = Z := RYZ₂ <| by
-      intro ψ hs hq;
-      exact RXY₁ ψ hs <| h ψ hs hq;
-    subst_vars;
-    tauto;
+    simp_all
 
 lemma antisymm : Std.Antisymm (miniCanonicalFrame φ).Rel := by
   constructor
@@ -124,9 +113,7 @@ lemma truthlemma_lemma1
     simp at hr; tauto;
   apply Finset.mem_union.mpr;
   rcases hr with (rfl | rfl | ⟨χ, hr, rfl⟩);
-  · left;
-    simp;
-    tauto;
+  · simp_all
   · right;
     simp only [Finset.mem_image, Finset.mem_union, Finset.eq_prebox_premultibox_one,
       Finset.mem_preimage, Function.iterate_one];
@@ -146,14 +133,12 @@ lemma truthlemma_lemma2
     apply FormulaFinset.intro_union_consistent;
     rintro Γ₁ Γ₂ ⟨hΓ₁, hΓ₂⟩;
     replace hΓ₂ : ∀ χ ∈ Γ₂, χ = □(ψ ==> □ψ) ∨ χ = -ψ := by
-      intro χ hr;
-      simpa using hΓ₂ χ hr;
+      simp_all
     by_contra hC;
     have : Γ₁ ⊢[(Hilbert.Grz)]! ⋀Γ₂ ==> ⊥ := and_imply_iff_imply_imply'!.mp hC;
     have : Γ₁ ⊢[(Hilbert.Grz)]! (□(ψ ==> □ψ) ⋏ -ψ) ==> ⊥ := imp_trans''! (by
       suffices Γ₁ ⊢[(Hilbert.Grz)]! ⋀[□(ψ ==> □ψ), -ψ] ==> ⋀Γ₂ by
-        simpa only [ne_eq, List.cons_ne_self, not_false_eq_true, List.conj₂_cons_nonempty,
-          List.conj₂_singleton];
+        simp_all
       apply conjconj_subset!;
       simpa using hΓ₂;
     ) this;
@@ -173,15 +158,7 @@ lemma truthlemma_lemma2
     have : (Hilbert.Grz) ⊢! ⋀□'Γ₁ ==> □ψ := imp_trans''! collect_box_conj! this;
     have : (Hilbert.Grz) ⊢! ⋀□'(X.1.prebox.modalBox |>.toList) ==> □ψ :=
       imp_trans''! (conjconj_subset! (by
-      simp only [List.eq_box_multibox_one, Finset.mem_toList, Finset.mem_image,
-        List.mem_toFinset, Function.iterate_one, Finset.eq_prebox_premultibox_one,
-        Finset.eq_box_multibox_one, Finset.toList_toFinset, Finset.mem_preimage,
-        exists_exists_and_eq_and, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂,
-        Box.box_injective'];
-      intro χ hr;
-      have := hΓ₁ _ hr;
-      simp at this;
-      tauto;
+      simp_all
     )) this;
     have : (Hilbert.Grz) ⊢! ⋀□'(X.1.prebox.toList) ==> □ψ := imp_trans''! (conjconj_provable! (by
       intro ψ hq;
@@ -214,8 +191,7 @@ lemma truthlemma_lemma3 : (Hilbert.Grz) ⊢! (φ ⋏ □(φ ==> □φ)) ==> □�
     LogicalConnective.Prop.arrow_eq, imp_false, not_forall, not_exists, not_not] at hF;
   obtain ⟨V, x, ⟨⟨h₁, h₂⟩, ⟨y, ⟨Rxy, h₃⟩⟩⟩⟩ := hF;
   have := h₂ x (F_refl.refl x);
-  have := (this h₁) _ Rxy;
-  contradiction;
+  simp_all
 
 lemma truthlemma {X : (miniCanonicalModel φ).World} (q_sub : ψ ∈ φ.subformulas) :
   Satisfies (miniCanonicalModel φ) X ψ ↔ ψ ∈ X := by
@@ -289,8 +265,7 @@ lemma truthlemma {X : (miniCanonicalModel φ).World} (q_sub : ψ ∈ φ.subformu
               have : ↑X *⊢[(Hilbert.Grz)]! □(ψ ==> □ψ) :=
                 membership_iff
                   (subformulasGrz.mem_boximpbox (by
-                    simpa only [Finset.eq_prebox_premultibox_one, Finset.mem_preimage,
-                      Function.iterate_one] using q_sub)) |>.mp hC;
+                    simp_all)) |>.mp hC;
               have : ↑X *⊢[(Hilbert.Grz)]! (ψ ⋏ □(ψ ==> □ψ)) ==> □ψ :=
                 Context.of! <| truthlemma_lemma3;
               have : ↑X *⊢[(Hilbert.Grz)]! □ψ := this ⨀ and₃'! (by assumption) (by assumption);

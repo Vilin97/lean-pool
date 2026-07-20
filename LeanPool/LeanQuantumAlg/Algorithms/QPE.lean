@@ -254,11 +254,9 @@ theorem QuantumPhaseEstimation.main {n : Nat}
     QuantumPhaseEstimation.main_exact_dyadic t j P.phase hphase
   refine ⟨hreadout, ?_⟩
   refine ⟨?_, ?_⟩
-  · rw [hphase, sub_self, abs_zero]
-    exact heps
+  · simp_all
   · refine ⟨?_, qpeExactResourceProfile_exact t⟩
-    rw [QuantumPhaseEstimation.main_exact_probability_one t j P.phase hphase]
-    simpa using heta
+    simp_all
 
 end
 

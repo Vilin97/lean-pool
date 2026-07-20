@@ -212,8 +212,7 @@ theorem nonempty_iInter_projCylinder_inter_piCylinderSet (hs : ∀ n, s n ∈ cl
       congr
     rw [this]
     have hyi : y ∈ projCylinder hs i := by
-      suffices ⋂ j ≤ n, projCylinder hs j ⊆ projCylinder hs i by exact this hy
-      exact biInter_subset_of_mem hi
+      simp_all
     rwa [mem_projCylinder] at hyi
   · rw [mem_piCylinderSet]
     intro i
@@ -271,10 +270,7 @@ lemma exists_finset_iInter_projCylinder_eq_empty [∀ i, Nonempty (α i)]
 theorem isCompactSystem_closedCompactCylinders : IsCompactSystem (closedCompactCylinders α) := by
   by_cases hα : ∀ i, Nonempty (α i)
   swap
-  · have : IsEmpty (Π i, α i) := isEmpty_pi.mpr (by simpa using hα)
-    refine fun s hs h ↦ ⟨0, ?_⟩
-    simp only [dissipate_zero_nat]
-    refine Set.eq_empty_of_isEmpty _
+  · simp_all
   refine IsCompactSystem.of_nonempty_iInter fun s hs h_nonempty ↦ ?_
   have h' n : (dissipate (projCylinder hs) n).Nonempty := by
     simp_rw [dissipate, ← preimage_projCylinder hs, ← preimage_iInter] at h_nonempty

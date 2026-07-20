@@ -328,8 +328,7 @@ by
   intro x y z
   constructor
   · exact add_cancel_right.mp
-  · intro h
-    rw [h]
+  · simp_all
 
 theorem add_cancel_left
   : ∀ {x y z : M}, z + x = z + y <-> x = y :=
@@ -338,8 +337,7 @@ by
   constructor
   · conv => rw [add_comm]; lhs; rhs; rw [add_comm]
     apply add_cancel_right.mp
-  · intro h
-    rw [h]
+  · simp_all
 
 -- O7. 0 ≤ x
 theorem zero_le

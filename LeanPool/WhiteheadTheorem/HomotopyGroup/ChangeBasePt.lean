@@ -124,8 +124,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       ContinuousMap.coe_mk, Fb, Fs]
     change H.toFun (t, ((TopCat.cubeBoundaryIncl n).hom y).down) = (Nonempty.some pnull) (0, t)
     rw [H.prop' t ((TopCat.cubeBoundaryIncl n).hom y).down y.down.property]
-    rw [pnull.some.apply_zero _]
-    rfl
+    simp_all
   obtain ⟨F, ⟨hFb, hFs⟩⟩ := TopCat.cubeBoundaryIncl_prod_unitInterval_hasHEP n X Fb Fs this
   have Fyts_eq_x₀ (y : ∂I^n) (t s : I) (hts : (t = 0 ∨ t = 1) ∨ s = 1) :
       F ((⟨y.val⟩, t), s) = x₀ := by
@@ -143,9 +142,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       cases ht with
       | inl ht0 => rw [ht0, p.source]
       | inr ht1 => rw [ht1, p.target]
-    · rw [hs]
-      simp only [ContinuousMap.HomotopyWith.apply_one, Path.coe_toContinuousMap, Path.refl_apply,
-        ]
+    · simp_all
   let Fyts (t s : I) (hts : (t = 0 ∨ t = 1) ∨ s = 1) : Ω^ (Fin n) X x₀ :=
     ⟨⟨fun y ↦ F ((⟨y⟩, t), s), by fun_prop⟩, fun y hy ↦ Fyts_eq_x₀ ⟨y, hy⟩ t s hts⟩
   let Fy01 := Fyts 0 1 (Or.inr rfl)

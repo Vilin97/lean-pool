@@ -51,10 +51,7 @@ theorem not_N_mem_empty : ¬ N.mem (∅ : Set ℕ) := by
 /-- Distinct singletons are disjoint. -/
 private theorem singleton_inter_eq_empty {n m : ℕ} (hmn : m ≠ n) :
     ({n} : Set ℕ) ∩ {m} = ∅ := by
-  ext k
-  simp only [Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false, not_and]
-  rintro rfl h2
-  exact hmn h2.symm
+  simp_all
 
 /-- **Exercise 4.18 (Scott 1981, PRG-19).** Element classification: every element
 of `|N|` is either
@@ -97,9 +94,7 @@ n = m`. -/
 theorem natElem_injective {n m : ℕ} (h : natElem n = natElem m) : n = m := by
   have hmem : (natElem m).mem {n} := h ▸ (mem_natElem_iff.mpr (Or.inr rfl))
   rw [mem_natElem_iff] at hmem
-  rcases hmem with hu | hs
-  · exact absurd hu (singleton_ne_univ n)
-  · exact singleton_nat_inj hs
+  simp_all
 
 /-- **Exercise 4.18 (Scott 1981, PRG-19).** `succ` is injective on the total
 elements. -/

@@ -169,8 +169,7 @@ lemma isHom_project
         · exact isHom_comp' Option.isHom_isSome (isHom_comp' (Chain.isHom_apply n) hf)
         · fun_prop
       · fun_prop
-    · intro n
-      apply isHom_comp' (Chain.isHom_apply n) hf
+    · simp_all
   · fun_prop
 
 @[fun_prop]

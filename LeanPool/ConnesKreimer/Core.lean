@@ -102,9 +102,7 @@ theorem _root_.CK.flatMap_append_distrib {α β} (l : List α) (X Y : α → Lis
 open List in
 theorem _root_.CK.flatMap_const_nil {α β} (l : List α) :
     l.flatMap (fun _ => ([] : List β)) = [] := by
-  induction l with
-  | nil => rfl
-  | cons a as ih => simp [List.flatMap_cons, ih]
+  simp_all
 
 theorem _root_.CK.flatMap_singleton_eq_map {α β} (g : α → β) (l : List α) :
     l.flatMap (fun a => [g a]) = l.map g := by
@@ -463,11 +461,7 @@ mutual
     | node F =>
       simp only [coprodTree_node, List.map_cons, List.sum_cons, List.map_map, Function.comp_def,
         εmon_nil, εmon_cons, zero_smul, one_smul]
-      rw [List.sum_eq_zero (l := (coprodForest F).map _) ?_, add_zero]
-      intro x hx
-      simp only [List.mem_map] at hx
-      obtain ⟨a, _, rfl⟩ := hx
-      rfl
+      simp_all
   theorem _root_.CK.collapseR_forest {M : Type*} [AddCommMonoid M] [Module k M]
       (f : Forest) (g : Forest → M) :
       ((coprodForest f).map (fun pr => εmon k pr.2 • g pr.1)).sum = g f := by
@@ -698,8 +692,7 @@ decreasing_by
   have hr : pr.val.2 ≠ [] := by simpa [List.isEmpty_iff] using hmem.2
   have hpos := sizeF_pos hr
   have hlt : sizeF pr.val.1 < sizeF pr.val.1 + sizeF pr.val.2 := by omega
-  rw [hcons] at hlt
-  exact hlt
+  simp_all
 
 /-! ### Antipode as a linear map + the left convolution axiom (`S ⋆ id = η∘ε`). -/
 
@@ -723,9 +716,7 @@ theorem _root_.CK.antipodeF_cons (t : RTree) (ts : Forest) :
 /-- `r ++ b` is nonempty when `r` is. -/
 theorem _root_.CK.isEmpty_append_of_ne {r b : Forest} (h : r ≠ []) :
     (r ++ b).isEmpty = false := by
-  cases r with
-  | nil => exact absurd rfl h
-  | cons c cs => rfl
+  simp_all
 
 /-- Filtering cuts by "empty right leg" factorizes over `tmul`. -/
 theorem _root_.CK.filter_emptyR_tmul (A B : Tens) :
@@ -740,8 +731,7 @@ theorem _root_.CK.filter_emptyR_tmul (A B : Tens) :
         if_true, List.filter_map, Function.comp_def, List.nil_append]
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_cons,
         Bool.false_eq_true, if_false, List.filter_map, Function.comp_def]
-      rw [List.filter_eq_nil_iff.2 (fun b _ => by simp)]
-      simp
+      simp_all
 
 mutual
   /-- The unique empty-right cut of a tree `t` is `([t], [])`. -/
@@ -751,8 +741,7 @@ mutual
     | node F =>
       rw [coprodTree_node, List.filter_cons]
       simp only [List.isEmpty_nil, if_true, List.filter_map, Function.comp_def]
-      rw [List.filter_eq_nil_iff.2 (fun b _ => by simp)]
-      simp
+      simp_all
   theorem _root_.CK.coprodForest_filter_emptyR (f : Forest) :
       (coprodForest f).filter (fun pr => pr.2.isEmpty) = [(f, [])] := by
     cases f with
@@ -778,8 +767,7 @@ theorem _root_.CK.filter_emptyL_tmul (A B : Tens) :
         if_true, List.filter_map, Function.comp_def, List.nil_append]
     · simp only [tmul_cons, List.filter_append, ih, List.filter_cons, List.isEmpty_cons,
         Bool.false_eq_true, if_false, List.filter_map, Function.comp_def]
-      rw [List.filter_eq_nil_iff.2 (fun b _ => by simp)]
-      simp
+      simp_all
 
 mutual
   /-- The unique empty-left cut of a tree `t` is `([], [t])`. -/
@@ -869,8 +857,7 @@ decreasing_by
   have hp : pr.val.1 ≠ [] := by simpa [List.isEmpty_iff] using hmem.2
   have hpos := sizeF_pos hp
   have hlt : sizeF pr.val.2 < sizeF pr.val.1 + sizeF pr.val.2 := by omega
-  rw [hcons] at hlt
-  exact hlt
+  simp_all
 
 theorem _root_.CK.antipodeF'_cons (t : RTree) (ts : Forest) :
     antipodeF' k (t :: ts)
@@ -979,8 +966,7 @@ theorem _root_.CK.antipode_eq_antipode' : antipode k = antipode' k := by
             * WithConv.toConv (antipode' k) := (mul_assoc _ _ _).symm
       _ = 1 * WithConv.toConv (antipode' k) := by rw [hSI]
       _ = WithConv.toConv (antipode' k) := one_mul _
-  have := congrArg WithConv.ofConv key
-  simpa using this
+  simp_all
 
 noncomputable instance : HopfAlgebraStruct k (H k) where
   antipode := antipode k
@@ -1191,8 +1177,7 @@ theorem _root_.CK.adams_unit (n : ℕ) : adams k n (1 : H k) = 1 := by
     change ((WithConv.toConv (LinearMap.id (R := k) (M := H k))) ^ 0).ofConv (1 : H k) = 1
     rw [pow_zero]
     have h := convOne_ofConv_sf k []
-    rw [sf_nil, εmon_nil, one_smul] at h
-    exact h
+    simp_all
   | succ m ih =>
     rw [adams_succ_apply, Δ_one_tmul, TensorProduct.map_tmul, LinearMap.id_apply, ih,
         LinearMap.mul'_apply, one_mul]
@@ -1286,9 +1271,7 @@ theorem _root_.CK.IsPrimitive.counit_zero {x : H k} (hx : IsPrimitive k x) : ε 
   rw [hx, map_add, LinearMap.rTensor_tmul, LinearMap.rTensor_tmul,
       show ε k (1 : H k) = 1 by rw [← sf_nil, ε_sf, εmon_nil]] at hc
   have ha : (ε k x) ⊗ₜ[k] (1 : H k) = 0 := by
-    have h2 : (ε k x) ⊗ₜ[k] (1 : H k) + (1 : k) ⊗ₜ[k] x = 0 + (1 : k) ⊗ₜ[k] x := by
-      rw [zero_add]; exact hc
-    exact add_right_cancel h2
+    simp_all
   have h1 : ε k x • (1 : H k) = 0 := by
     have := congrArg (TensorProduct.lid k (H k)) ha; simpa using this
   have h2 := congrArg (ε k) h1
@@ -1530,8 +1513,7 @@ theorem _root_.CK.rTensor_εab_comp_Δab :
       = TensorProduct.mk k k (Hab k) 1 := by
   have hsplit : TensorProduct.map (ε k) (π k).toLinearMap
       = LinearMap.lTensor k (π k).toLinearMap ∘ₗ LinearMap.rTensor (H k) (ε k) := by
-    apply TensorProduct.ext'; intro a b
-    simp
+    simp_all
   apply Hab_lhom_ext
   intro x
   rw [LinearMap.comp_apply, AlgHom.toLinearMap_apply, Δab_π, ← AlgHom.toLinearMap_apply,
@@ -1551,8 +1533,7 @@ theorem _root_.CK.lTensor_εab_comp_Δab :
       = (TensorProduct.mk k (Hab k) k).flip 1 := by
   have hsplit : TensorProduct.map (π k).toLinearMap (ε k)
       = LinearMap.rTensor k (π k).toLinearMap ∘ₗ LinearMap.lTensor (H k) (ε k) := by
-    apply TensorProduct.ext'; intro a b
-    simp
+    simp_all
   apply Hab_lhom_ext
   intro x
   rw [LinearMap.comp_apply, AlgHom.toLinearMap_apply, Δab_π, ← AlgHom.toLinearMap_apply,
@@ -1572,8 +1553,7 @@ theorem _root_.CK.Δab_π' (x : H k) :
       = TensorProduct.map (π k).toLinearMap (π k).toLinearMap (Δ k x) := by
   have h : (Algebra.TensorProduct.map (π k) (π k)).toLinearMap
       = TensorProduct.map (π k).toLinearMap (π k).toLinearMap := by
-    apply TensorProduct.ext'; intro a b
-    simp only [AlgHom.toLinearMap_apply, Algebra.TensorProduct.map_tmul, TensorProduct.map_tmul]
+    apply TensorProduct.ext'; simp_all
   rw [Δab_π, ← AlgHom.toLinearMap_apply, h]
   rfl
 
@@ -1697,9 +1677,7 @@ theorem _root_.CK.mul'_π :
     LinearMap.mul' k (Hab k) ∘ₗ TensorProduct.map (π k).toLinearMap (π k).toLinearMap
       = (π k).toLinearMap ∘ₗ LinearMap.mul' k (H k) := by
   apply TensorProduct.ext'
-  intro a b
-  simp only [LinearMap.comp_apply, TensorProduct.map_tmul, LinearMap.mul'_apply,
-    AlgHom.toLinearMap_apply, map_mul]
+  simp_all
 
 omit [Algebra ℚ k] in
 /-- Antipode (left) naturality for the descent: `(S_ab⊗id)∘(π⊗π) = (π⊗π)∘(S⊗id)`. -/
@@ -1875,10 +1853,7 @@ theorem _root_.CK.adamsAbHom_toLinearMap (n : ℕ) :
     have e1 : (Algebra.TensorProduct.map (AlgHom.id k (Hab k)) (adamsAbHom k m)).toLinearMap
         = TensorProduct.map LinearMap.id (adamsAb k m) := by
       apply TensorProduct.ext'
-      intro a b
-      rw [← ih]
-      simp only [AlgHom.toLinearMap_apply, Algebra.TensorProduct.map_tmul, TensorProduct.map_tmul,
-        AlgHom.coe_id, id_eq, LinearMap.id_apply]
+      simp_all
     change Algebra.TensorProduct.lmul' k
         ((Algebra.TensorProduct.map (AlgHom.id k (Hab k)) (adamsAbHom k m)) ((Δab k) x))
       = LinearMap.mul' k (Hab k)
@@ -1896,8 +1871,7 @@ omit [Algebra ℚ k] in
 theorem _root_.CK.adamsAb_mul (n : ℕ) (a b : Hab k) :
     adamsAb k n (a * b) = adamsAb k n a * adamsAb k n b := by
   rw [← adamsAbHom_toLinearMap]
-  change (adamsAbHom k n) (a * b) = (adamsAbHom k n) a * (adamsAbHom k n) b
-  rw [map_mul]
+  simp_all
 
 /-! Brick 3: the Adams composition law `Ψᵖ ∘ Ψq = Ψ^{pq}`. Post-composition by an algebra hom
     distributes over convolution (`LinearMap.algHom_comp_convMul_distrib`), so an algebra-hom
@@ -1914,11 +1888,7 @@ theorem _root_.CK.algHom_comp_adamsAb (φ : Hab k →ₐ[k] Hab k) (p : ℕ) :
     change φ.toLinearMap ∘ₗ ((WithConv.toConv (LinearMap.id (R := k) (M := Hab k))) ^ 0).ofConv
        = ((WithConv.toConv φ.toLinearMap) ^ 0).ofConv
     rw [pow_zero, pow_zero]
-    apply LinearMap.ext; intro x
-    rw [LinearMap.comp_apply]
-    change φ.toLinearMap ((1 : WithConv (Hab k →ₗ[k] Hab k)) x)
-       = (1 : WithConv (Hab k →ₗ[k] Hab k)) x
-    rw [LinearMap.convOne_apply, AlgHom.toLinearMap_apply, AlgHom.commutes]
+    apply LinearMap.ext; simp_all
   | succ n ih =>
     change φ.toLinearMap ∘ₗ
         ((WithConv.toConv (LinearMap.id (R := k) (M := Hab k))) ^ (n + 1)).ofConv
@@ -1976,8 +1946,7 @@ theorem _root_.CK.alternating_choose_weighted (j : ℕ) :
     have hsum : ∑ i ∈ Finset.range (n + 1), ((-1 : ℤ) ^ (n - i) * (n.choose i))
         = (0 : ℤ) ^ n := by
       have hap := add_pow (1 : ℤ) (-1) n
-      simp only [one_pow, one_mul, show (1 : ℤ) + (-1) = 0 from by ring] at hap
-      rw [hap]
+      simp_all
     simp only [Nat.cast_zero, mul_zero, add_zero, Nat.sub_zero, hsum]
     rcases n with _ | m
     · simp
@@ -2087,11 +2056,7 @@ theorem _root_.CK.algHom_comp_convPow (φ : Hab k →ₐ[k] Hab k)
   induction j with
   | zero =>
     rw [pow_zero, pow_zero]
-    apply LinearMap.ext; intro x
-    rw [LinearMap.comp_apply]
-    change φ.toLinearMap ((1 : WithConv (Hab k →ₗ[k] Hab k)) x)
-      = (1 : WithConv (Hab k →ₗ[k] Hab k)) x
-    rw [LinearMap.convOne_apply, AlgHom.toLinearMap_apply, AlgHom.commutes]
+    apply LinearMap.ext; simp_all
   | succ n ih =>
     rw [pow_succ' g n, LinearMap.algHom_comp_convMul_distrib,
         show WithConv.toConv (φ.toLinearMap ∘ₗ (g ^ n).ofConv)
@@ -2113,11 +2078,7 @@ theorem _root_.CK.adamsAb_comp_JcAb_pow (p j : ℕ) (y : Hab k) :
     · rw [LinearMap.comp_id, adamsAbHom_toLinearMap, adamsAb, WithConv.toConv_ofConv]
     · have hu : (adamsAbHom k p).toLinearMap ∘ₗ (1 : WithConv (Hab k →ₗ[k] Hab k)).ofConv
           = (1 : WithConv (Hab k →ₗ[k] Hab k)).ofConv := by
-        apply LinearMap.ext; intro c
-        rw [LinearMap.comp_apply]
-        change (adamsAbHom k p).toLinearMap ((1 : WithConv (Hab k →ₗ[k] Hab k)) c)
-          = (1 : WithConv (Hab k →ₗ[k] Hab k)) c
-        rw [LinearMap.convOne_apply, AlgHom.toLinearMap_apply, AlgHom.commutes]
+        apply LinearMap.ext; simp_all
       rw [hu, WithConv.toConv_ofConv]
   have hgen := LinearMap.congr_fun
     (algHom_comp_convPow k (adamsAbHom k p)
@@ -2144,9 +2105,7 @@ noncomputable def _root_.CK.smulOne : k →+* WithConv (Hab k →ₗ[k] Hab k) w
 theorem _root_.CK.eulerCoef_eq_coeff_log (j : ℕ) :
     eulerCoef k j = PowerSeries.coeff j (PowerSeries.log k) := by
   rw [eulerCoef, PowerSeries.coeff_log]
-  split_ifs with h
-  · subst h; simp
-  · rfl
+  simp_all
 
 omit [Algebra ℚ k] in
 /-- `eval₂ smulOne J_ab P`, applied through `.ofConv` to `w`, is the explicit sum
@@ -2165,11 +2124,7 @@ theorem _root_.CK.PR_coeff (N m : ℕ) (hm : m ≤ N) :
     (∑ j ∈ Finset.range (N + 1),
         Polynomial.C (PowerSeries.coeff j (PowerSeries.log k)) * Polynomial.X ^ j).coeff m
       = PowerSeries.coeff m (PowerSeries.log k) := by
-  rw [Polynomial.finsetSum_coeff, Finset.sum_eq_single m]
-  · simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
-  · intro b _ hbm
-    simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow, Ne.symm hbm]
-  · intro hm'; exact absurd (Finset.mem_range.2 (Nat.lt_succ_of_le hm)) hm'
+  simp_all
 
 /-- **(★) — the eigen-transport identity** on a per-degree-nilpotent `w`: applying `Ψᵖ`
     to the truncated convolution-log scales it by `p`. Proven by evaluating the polynomial
@@ -2310,11 +2265,7 @@ theorem _root_.CK.adamsAb_eigen (p : ℕ) (x : H k) :
     have he : eulerian1 k ((f : H k) + (g : H k))
         = eulerian1 k (f : H k) + eulerian1 k (g : H k) :=
       map_add (eulerian1 k) (f : H k) (g : H k)
-    change adamsAb k p (π k (eulerian1 k ((f : H k) + (g : H k))))
-      = (p : k) • π k (eulerian1 k ((f : H k) + (g : H k)))
-    rw [he]
-    simp only [map_add, smul_add]
-    rw [hf, hg]
+    simp_all
   | single a b =>
     have hsa : (Finsupp.single a b : H k) = b • sf k (FreeMonoid.toList a) := by
       rw [sf, FreeMonoid.ofList_toList]

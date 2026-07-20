@@ -304,8 +304,7 @@ lemma prekopa_leindler_1d_normalized
   have hhint : hint = ∫⁻ t in Ioi 0, vh t := layercake hh_measurable
   -- implies ∫ f + ∫ g ≤ ∫ h
   have h_ineq_integral : fint + gint ≤ hint := by
-    rw [← hhint, ← hfint, ← hgint] at h_vol_ineq_integral
-    exact h_vol_ineq_integral
+    simp_all
   -- quickly prove the result in the case of fint = ⊤ or gint = ⊤
   by_cases h_fint_eq_top : fint = ⊤
   · simp only [h_fint_eq_top, top_add, top_le_iff] at h_ineq_integral
@@ -757,8 +756,7 @@ theorem prekopa_leindler
   have result_d_3 : ENNReal.ofReal ((1-θ)^((d+2)*(1-θ))*θ^((d+2)*θ))⁻¹
       * (∫⁻ (x : Fin (d + 2) → ℝ), f x) ^ (1 - θ) * (∫⁻ (x : Fin (d + 2) → ℝ), g x) ^ θ ≤
       ∫⁻ (x : Fin (d + 2) → ℝ), h x := by
-    rw [rewrite_lhs_of_result_d_2, combine_consts_of_result_d_2] at result_d_2
-    exact result_d_2
+    simp_all
   have rewrite_const_of_result_d_3 :
       ENNReal.ofReal ((1-θ)^((d+2)*(1-θ))*θ^((d+2)*θ))⁻¹ =
       ENNReal.ofReal ((1-θ)^((↑(d+1)+1)*(1-θ))*θ^((↑(d+1)+1)*θ))⁻¹ := by
@@ -767,8 +765,4 @@ theorem prekopa_leindler
       ring
     simp only [Nat.cast_add, Nat.cast_one]
     ring
-  change ENNReal.ofReal ((1-θ)^((↑(d+1)+1)*(1-θ))*θ^((↑(d+1)+1)*θ))⁻¹
-    * (∫⁻ (x : Fin (d + 2) → ℝ), f x)^(1-θ) * (∫⁻ (x : Fin (d + 2) → ℝ), g x)^θ
-    ≤ ∫⁻ (x : Fin (d + 2) → ℝ), h x
-  rw [rewrite_const_of_result_d_3] at result_d_3
-  exact result_d_3
+  simp_all

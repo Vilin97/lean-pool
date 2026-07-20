@@ -88,7 +88,6 @@ lemma tendsto_int (a : ℤ → ℂ) (ha : Summable fun n : ℤ ↦ ‖a n‖ * r
     by_cases hb : 0 ≤ b
     · gcongr
       simp [hz]
-    · norm_num at hb
-      simp [ha' _ hb]
+    · simp_all
 
 end QExp

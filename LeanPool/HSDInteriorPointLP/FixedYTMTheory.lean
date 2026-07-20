@@ -114,8 +114,7 @@ theorem predictor_quotient_weighted_cross_zero {n : Nat}
     field_simp [htne, hkne]
   have hzero : (∑ i : Fin n, d.dx i * d.ds i) + d.dtau * d.dkappa = 0 := by
     simpa [hdot, dot] using hdir.skew.cross_zero
-  rw [hvec, hscalar]
-  exact hzero
+  simp_all
 
 /-- Step 3: the total complementarity product is `hdim n * mu w`. -/
 theorem complementarity_total_eq_hdim_mul_mu {n : Nat} (w : HSState n) :
@@ -131,8 +130,7 @@ theorem square_sum_eq_one_sub_two_mul_of_sum_eq_neg_one
   calc
     u ^ 2 + v ^ 2 = (u + v) ^ 2 - 2 * (u * v) := by ring
     _ = 1 - 2 * (u * v) := by
-      rw [h]
-      ring
+      simp_all
 
 /-- Step 4: weighted norm identity for predictor quotient variables. -/
 theorem predictor_weighted_relative_norm_identity {n : Nat}
@@ -197,8 +195,7 @@ theorem predictor_weighted_relative_norm_identity {n : Nat}
     _ = ((∑ i : Fin n, w.x i * w.s i) + w.tau * w.kappa) -
           2 * ((∑ i : Fin n, crossVec i) + crossScalar) := by ring
     _ = hdim n * mu w := by
-          rw [hcross, htotal]
-          ring
+          simp_all
 
 /-- Step 5, vector part: tight-neighborhood lower bound `3μ/4 ≤ xᵢsᵢ`. -/
 theorem neighborhood_component_product_lower_tight {n : Nat}
@@ -354,11 +351,7 @@ theorem predictor_scalar_quotient_square_bounds {n : Nat}
 theorem ytmStepConstant_le_half : ytmStepConstant ≤ (1 / 2 : ℝ) := by
   unfold ytmStepConstant
   have hsqrt_ge_one : (1 : ℝ) ≤ Real.sqrt (8 : ℝ) := by
-    have hsqrt_sq : (Real.sqrt (8 : ℝ)) ^ 2 = 8 := by
-      rw [Real.sq_sqrt]
-      norm_num
-    have hsqrt_nonneg : 0 ≤ Real.sqrt (8 : ℝ) := Real.sqrt_nonneg 8
-    nlinarith
+    simp_all
   have hden_pos : 0 < (8 : ℝ) ^ 2 * Real.sqrt (8 : ℝ) := by
     positivity
   rw [div_le_iff₀ hden_pos]
@@ -400,13 +393,7 @@ theorem abs_alpha_mul_lt_one_of_square_bound
       _ ≤ α ^ 2 * B := by
           exact mul_le_mul_of_nonneg_left hu (sq_nonneg α)
   have hsq_lt : (α * u) ^ 2 < 1 := lt_of_le_of_lt hsq_le hαB
-  have habs_sq : |α * u| ^ 2 < 1 := by
-    simpa [sq_abs] using hsq_lt
-  by_contra hnot
-  have hge : (1 : ℝ) ≤ |α * u| := le_of_not_gt hnot
-  have hsq_ge : (1 : ℝ) ≤ |α * u| ^ 2 := by
-    nlinarith [sq_nonneg (|α * u| - 1)]
-  nlinarith
+  simp_all
 
 
 /-! ## Predictor center-bound estimates for Steps 9--12 -/

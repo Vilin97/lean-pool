@@ -110,10 +110,7 @@ theorem lfpSet_eq_closure (a b : S) :
       apply Set.union_subset
       · apply Set.union_subset
         · rintro s rfl; exact (Submonoid.closure ({a, b} : Set S)).one_mem
-        · intro s hs
-          rcases hs with rfl | rfl
-          · exact Submonoid.subset_closure (Set.mem_insert _ _)
-          · exact Submonoid.subset_closure (Set.mem_insert_of_mem _ rfl)
+        · simp_all
       · rintro s ⟨t, ht, u, hu, rfl⟩
         exact (Submonoid.closure ({a, b} : Set S)).mul_mem ht hu
     exact lfpSet_subset (F a b) hclosed
@@ -141,8 +138,7 @@ theorem F_univ (a b : S) : F a b (Set.univ : Set S) = Set.univ := by
 /-- `{1}` is a fixed point of `F 1 1`: `{1} ∪ {1, 1} ∪ {1}·{1} = {1}`. -/
 theorem F_one_one_singleton : F (1 : ℕ) 1 ({1} : Set ℕ) = {1} := by
   unfold F
-  rw [Set.singleton_mul_singleton]
-  simp
+  simp_all
 
 /-- **Exercise 4.17 (Scott 1981, PRG-19).** The fixed point need **not** be
 unique: over `S = ℕ`
@@ -152,8 +148,6 @@ they are distinct. -/
 theorem fixedPoint_not_unique :
     ∃ x y : Set ℕ, F 1 1 x = x ∧ F 1 1 y = y ∧ x ≠ y := by
   refine ⟨{1}, Set.univ, F_one_one_singleton, F_univ 1 1, ?_⟩
-  intro h
-  have h2 : (2 : ℕ) ∈ ({1} : Set ℕ) := by rw [h]; exact Set.mem_univ 2
-  simp at h2
+  simp_all
 
 end Domain.Neighborhood.Exercise417

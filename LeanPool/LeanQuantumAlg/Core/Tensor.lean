@@ -99,32 +99,28 @@ theorem neg_tensor (ψ : StateVector m) (φ : StateVector n) :
     tensor (-ψ) φ = -tensor ψ φ := by
   apply WithLp.ofLp_injective
   funext i
-  change tensor (-ψ) φ i = (-tensor ψ φ) i
-  simp [tensor_apply]
+  simp_all
 
 @[simp]
 theorem tensor_neg (ψ : StateVector m) (φ : StateVector n) :
     tensor ψ (-φ) = -tensor ψ φ := by
   apply WithLp.ofLp_injective
   funext i
-  change tensor ψ (-φ) i = (-tensor ψ φ) i
-  simp [tensor_apply]
+  simp_all
 
 @[simp]
 theorem zero_tensor (φ : StateVector n) :
     tensor (0 : StateVector m) φ = 0 := by
   apply WithLp.ofLp_injective
   funext i
-  change tensor (0 : StateVector m) φ i = (0 : StateVector (m + n)) i
-  simp [tensor_apply]
+  simp_all
 
 @[simp]
 theorem tensor_zero (ψ : StateVector m) :
     tensor ψ (0 : StateVector n) = 0 := by
   apply WithLp.ofLp_injective
   funext i
-  change tensor ψ (0 : StateVector n) i = (0 : StateVector (m + n)) i
-  simp [tensor_apply]
+  simp_all
 
 /-- The norm is multiplicative under tensor products. -/
 theorem norm_tensor (ψ : StateVector m) (φ : StateVector n) :
@@ -224,8 +220,7 @@ theorem tensor_ket (x : Fin (2 ^ m)) (y : Fin (2 ^ n)) :
   ext i
   rw [tensor_apply, ket_apply, ket_apply, ket_apply]
   by_cases h : i = prodEquiv (x, y)
-  · rw [if_pos h, if_pos (by rw [h, Equiv.symm_apply_apply]),
-      if_pos (by rw [h, Equiv.symm_apply_apply]), one_mul]
+  · simp_all
   · have h' : ¬((prodEquiv.symm i).1 = x ∧ (prodEquiv.symm i).2 = y) := by
       rintro ⟨h1, h2⟩
       exact h (by
@@ -369,10 +364,7 @@ theorem tensor_mul_tensor (G G' : Gate m) (K K' : Gate n) :
 theorem conjTranspose_tensor (G : Gate m) (K : Gate n) :
     (G.tensor K).conjTranspose = tensor G.conjTranspose K.conjTranspose := by
   ext i j
-  change (HilbertOperator.tensor (G : HilbertOperator m) (K : HilbertOperator n)).conjTranspose i j
-      = HilbertOperator.tensor ((G : HilbertOperator m).conjTranspose)
-          ((K : HilbertOperator n).conjTranspose) i j
-  rw [HilbertOperator.conjTranspose_tensor]
+  simp_all
 
 @[simp]
 theorem one_tensor_one : (1 : Gate m).tensor (1 : Gate n) = 1 := by

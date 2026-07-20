@@ -214,8 +214,7 @@ theorem filterOf (M_trans : IsTrans M.World M.Rel) :
     induction RQxQy using Relation.TransGen.head_induction_on with
     | single rxy =>
       obtain ⟨x, y, rfl, rfl, rxy⟩ := rxy;
-      intro φ _ hpx;
-      exact hpx _ rxy;
+      simp_all
     | head ha hxy ih =>
       obtain ⟨x, y, rfl, rfl, rxy⟩ := ha;
       obtain ⟨w, z, _, rfl, _⟩ := hxy;

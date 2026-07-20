@@ -18,18 +18,12 @@ import Mathlib.Algebra.Star.Pi
 theorem AlgEquiv.comp_inj {R A B C : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Semiring C]
     [Algebra R A] [Algebra R B] [Algebra R C] (f : B ≃ₐ[R] C) (S T : A →ₗ[R] B) :
     f.toLinearMap ∘ₗ S = f.toLinearMap ∘ₗ T ↔ S = T := by
-  simp only [LinearMap.ext_iff, LinearMap.comp_apply, AlgEquiv.toLinearMap_apply,
-    f.injective.eq_iff]
+  simp_all
 
 theorem AlgEquiv.inj_comp {R A B C : Type _} [CommSemiring R] [Semiring A] [Semiring B] [Semiring C]
     [Algebra R A] [Algebra R B] [Algebra R C] (f : C ≃ₐ[R] A) (S T : A →ₗ[R] B) :
     S ∘ₗ f.toLinearMap = T ∘ₗ f.toLinearMap ↔ S = T := by
-  refine ⟨fun h => ?_, fun h => by rw [h]⟩
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, AlgEquiv.toLinearMap_apply] at h ⊢
-  intro x
-  specialize h (f.symm x)
-  rw [AlgEquiv.apply_symm_apply] at h
-  exact h
+  simp_all
 
 /-- The linear map underlying a star algebra equivalence. -/
 @[simps]
@@ -64,8 +58,7 @@ theorem StarAlgEquiv.inj_comp {R A B C : Type*} [Semiring R] [AddCommMonoid A]
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, StarAlgEquiv.toLinearMap_apply] at h ⊢
   intro x
   specialize h (f.symm x)
-  rw [StarAlgEquiv.apply_symm_apply] at h
-  exact h
+  simp_all
 
 /-- The linear equivalence underlying a star algebra equivalence. -/
 @[simps]

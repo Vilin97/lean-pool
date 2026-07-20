@@ -134,23 +134,17 @@ private lemma Iio_inter_Iio_eq {a b : Rand} (hab : a ≤ b) :
 /-- `Iio b \ Iio a = Ico a b` for `a ≤ b`. -/
 private lemma Iio_diff_Iio_eq {a b : Rand} (_hab : a ≤ b) :
     (Set.Iio b \ Set.Iio a : Set Rand) = Set.Ico a b := by
-  ext c
-  simp only [Set.mem_sdiff, Set.mem_Iio, Set.mem_Ico, not_lt]
-  exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
+  simp_all
 
 /-- `Ico a b ∩ Iio c = Ico a c` for `c ≤ b`. -/
 private lemma Ico_inter_Iio_eq {a b c : Rand} (hcb : c ≤ b) :
     (Set.Ico a b ∩ Set.Iio c : Set Rand) = Set.Ico a c := by
-  ext x
-  simp only [Set.mem_inter_iff, Set.mem_Ico, Set.mem_Iio]
-  exact ⟨fun h => ⟨h.1.1, h.2⟩, fun h => ⟨⟨h.1, lt_of_lt_of_le h.2 hcb⟩, h.2⟩⟩
+  simp_all
 
 /-- `Ico a b \ Iio c = Ico c b` for `a ≤ c`. -/
 private lemma Ico_diff_Iio_eq {a b c : Rand} (hac : a ≤ c) :
     (Set.Ico a b \ Set.Iio c : Set Rand) = Set.Ico c b := by
-  ext x
-  simp only [Set.mem_sdiff, Set.mem_Ico, Set.mem_Iio, not_lt]
-  exact ⟨fun h => ⟨h.2, h.1.2⟩, fun h => ⟨⟨le_trans hac h.1, h.2⟩, h.1⟩⟩
+  simp_all
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def constAboveT : ℝ≥0∞ :=
@@ -416,21 +410,15 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           funext c
           by_cases hc : c < b <;> simp [F, hb, hc, Set.indicator, Set.mem_Iio]
         -- compute the `lintegral` of the indicator
-        calc
-          (∫⁻ c : Rand, F b c ∂μ) = ∫⁻ c : Rand, (Set.Iio b).indicator f c ∂μ := by simp [hFc]
-          _ = ∫⁻ c in Set.Iio b, f c ∂μ := (MeasureTheory.lintegral_indicator (μ := μ) hIo f)
-      have hbmem : b ∈ (Set.Iio B : Set Rand) := by simpa [Set.mem_Iio] using hb
-      rw [this]
-      simp [Set.indicator_of_mem hbmem]
+        simp_all
+      simp_all
     · have :
           (∫⁻ c : Rand, F b c ∂μ) = 0 := by
         have hFc : (fun c : Rand => F b c) = 0 := by
           funext c
           simp [F, hb]
         simp [hFc]
-      have hbmem : b ∉ (Set.Iio B : Set Rand) := by simpa [Set.mem_Iio] using hb
-      rw [this]
-      simp [Set.indicator_of_notMem hbmem]
+      simp_all
   have hR :
       (∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ) =
         ∫⁻ c in Set.Iio B, f c * μ (Set.Ioo c B) ∂μ := by
@@ -445,9 +433,7 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           funext b
           by_cases hb : b < B <;> by_cases hcb : c < b <;>
             simp [F, hb, hcb, Set.indicator, Set.mem_Ioo]
-        have hIoo : MeasurableSet (Set.Ioo c B : Set Rand) := by simp
-        -- `lintegral` of an indicator of a constant function.
-        simp [hEq, MeasureTheory.lintegral_indicator, hIoo, hcB]
+        simp_all
       · have hEq : (fun b : Rand => F b c) = 0 := by
           funext b
           by_cases hb : b < B
@@ -460,21 +446,9 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           simpa using (MeasureTheory.lintegral_zero_fun (μ := μ) (α := Rand))
         simp [hcB, this]
     -- Use the pointwise formula and rewrite the outer integral as a set integral.
-    have :
-        (∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ) =
-          ∫⁻ c : Rand, (Set.Iio B).indicator (fun c => f c * μ (Set.Ioo c B)) c ∂μ := by
-      refine MeasureTheory.lintegral_congr fun c => ?_
-      simpa using congrArg (fun g => g c) hinner
-    rw [this]
-    exact
-      (MeasureTheory.lintegral_indicator (μ := μ) (by simp)
-        (f := fun c => f c * μ (Set.Ioo c B)))
+    simp_all
   -- Put it together.
-  calc
-    (∫⁻ b in Set.Iio B, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) =
-        ∫⁻ b : Rand, ∫⁻ c : Rand, F b c ∂μ ∂μ := hL
-    _ = ∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ := hswap
-    _ = ∫⁻ c in Set.Iio B, f c * μ (Set.Ioo c B) ∂μ := hR
+  simp_all
 
 lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
@@ -511,25 +485,7 @@ lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
             exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs this
       _ = constAboveT * μ (Set.Ico t (1 : Rand)) := by simp
   -- Use the splitting identity.
-  have hsplit' :
-      (∫⁻ c in Set.Iio t, innerBC b c ∂μ) +
-          ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ =
-        ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ := by
-    simpa [hIio, hdiff] using hsplit
-  -- Replace terms.
-  have hco :
-      (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) =
-        constAboveT * μ (Set.Ico t (1 : Rand)) := by
-    simpa [hdiff] using hconst
-  have hio : (∫⁻ c in Set.Iio t, innerBC b c ∂μ) = 0 := by
-    -- restrict `hzero` to `Iio t` (since it equals `A ∩ B`)
-    simpa [hIio] using hzero
-  -- Solve.
-  have :
-      ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ =
-        0 + constAboveT * μ (Set.Ico t (1 : Rand)) := by
-    simpa [hio, hco] using hsplit'.symm
-  simpa using this
+  simp_all
 
 lemma lintegral_b_above_t :
     (∫⁻ b in Set.Ico t (1 : Rand), ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -560,8 +516,7 @@ lemma lintegral_b_above_t :
           ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
         (∫⁻ _b in Set.Ioo t (1 : Rand), constAboveT * μ (Set.Ico t (1 : Rand)) ∂μ) := by
     exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hconst
-  rw [this]
-  simp [mul_assoc]
+  simp_all
 
 private lemma lintegral_innerBC_Ico_t_one_eq_zero_of_t2_le_b_lt_t {b : Rand}
     (hb1 : t2 ≤ b) (hb2 : b < t) :
@@ -708,20 +663,7 @@ lemma lintegral_b_t2_t :
               simp [h_on_t1, h_on_t1_t2, h_on_t2_t]
               ac_rfl
     -- Now conclude the full `Iio 1` integral.
-    have hA :
-        (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
-          (∫⁻ c in Set.Iio t, innerBC b c ∂μ) + 0 := by
-      have hAB :
-          (∫⁻ c in Set.Iio t, innerBC b c ∂μ) +
-              ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ =
-            ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ := by
-        simpa [hAint, hAdiff] using hsplit
-      -- The `Ico t 1` part is zero.
-      have hIco0 : (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) = 0 := by
-        -- rewrite the set and use `hzero`
-        simpa [hAdiff] using hzero
-      simpa [hIco0, add_comm] using hAB.symm
-    simp [hA, h_t]
+    simp_all
   -- Finally, integrate over `b ∈ [t2,t)` (constant function).
   have hs : MeasurableSet (Set.Ico t2 t : Set Rand) := by simp
   have :

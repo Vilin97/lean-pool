@@ -266,10 +266,7 @@ private theorem ASymm_varOrbit_entry_one_of_orbit {u v : V} {d0 : DirIdx} {i0 : 
             congrArg (fun d => d.1) hEqDir.symm
           simpa [invDir] using this
         exact hFix this
-      have hA1 : A (varOrbit i0) u v = 1 := by simp [A, this]
-      have hA2 : A (invDir (varOrbit i0)) u v = 0 := by simp [A, hNeInv]
-      rw [hA1, hA2]
-      simp
+      simp_all
   · have : dirMask v u = maskAt (invDir (varOrbit i0)) := by
       simpa [h0] using hd0
     by_cases hFix : N1000000Witness.tTr[(varOrbit i0).1]! = (varOrbit i0).1
@@ -289,10 +286,7 @@ private theorem ASymm_varOrbit_entry_one_of_orbit {u v : V} {d0 : DirIdx} {i0 : 
           have : (invDir (varOrbit i0)).1 = (varOrbit i0).1 := congrArg (fun d => d.1) this
           simpa [invDir] using this
         exact hFix hEqDir
-      have hA2 : A (invDir (varOrbit i0)) u v = 1 := by simp [A, this]
-      have hA1 : A (varOrbit i0) u v = 0 := by simp [A, hNeVar]
-      rw [hA1, hA2]
-      simp
+      simp_all
 
 -- Final symmetric decomposition into the reduced variables `xFromColoring`.
 theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
@@ -364,12 +358,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         rw [Matrix.add_apply]
         -- First summand vanishes since `dirMask v u ≠ maskAt (varOrbit i)`.
         have hA1 : A (varOrbit i) u v = 0 := by simp [A, hNe1]
-        rw [hA1, zero_add]
-        -- For the transpose summand, unfold `A` and use the inequality `hNeT` (up to unfolding
-        -- `tTr`).
-        simp [A]
-        · -- Discharge the inequality goal produced by `if_neg`.
-          simpa [N1000000Witness.tTr] using hNeT
+        simp_all
     have hSum0 :
         (∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) u v = 0 := by
       classical
@@ -379,17 +368,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
       rw [Matrix.sum_apply]
       simp [Matrix.smul_apply, hASymmZero]
     have hCoeff : coeff (f := f) d0 = (1 : Q) := by simpa [hId] using coeff_idDirIdx_eq_one (f := f)
-    have hLHS1 : corrAvgMatrix (f := f) u v = (1 : Q) := by
-      calc
-        corrAvgMatrix (f := f) u v = coeff (f := f) d0 := hLHS
-        _ = (1 : Q) := by simpa [hId] using hCoeff
-    have hRHS1 :
-        (A idDirIdx + ∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) u v = (1 : Q) := by
-      -- Avoid unfolding `A` (which would reintroduce a `dirMask` equality goal).
-      rw [Matrix.add_apply]
-      rw [hAid, hSum0]
-      simp
-    exact hLHS1.trans hRHS1.symm
+    simp_all
   · -- Off-diagonal: use the unique variable orbit for `d0`.
     rcases varOfDirIdx_spec (d := d0) (hd := hId) with ⟨i0, hi0, hOrb⟩
     have hAid0 : A idDirIdx u v = 0 := by
@@ -408,10 +387,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
           -- `varOfDirIdx d0 = some i0`.
           have hSome : varOfDirIdx d0 = some i0 := hi0
           intro hEq
-          have : i = i0 := by
-            -- Both equalities describe the same `Option` value.
-            exact Option.some.inj (hEq.symm.trans hSome)
-          exact hiNe this
+          simp_all
         -- If `d0` is not in the orbit of `i`, then both `A (varOrbit i)` and `A (invDir ...)`
         -- vanish.
         have hNot : ¬(d0 = varOrbit i ∨ d0 = invDir (varOrbit i)) := by
@@ -440,8 +416,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
           unfold ASymm
           rw [dif_neg hFix]
           rw [A_tTr_mk_eq_A_invDir (d := varOrbit i)]
-          rw [Matrix.add_apply]
-          simp [A, hNeVar, hNeInv]
+          simp_all
       -- Use `Finset.sum_eq_single` to extract the `i0` term.
       have hASymmI0 : ASymm (varOrbit i0) u v = 1 := by
         exact ASymm_varOrbit_entry_one_of_orbit (u := u) (v := v) hd0 hOrb
@@ -451,11 +426,8 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         refine
           Finset.sum_eq_single i0
             (f := fun i => (xFromColoring f i) * (ASymm (varOrbit i) u v)) ?_ ?_
-        · intro i _ hiNe
-          have h0 : ASymm (varOrbit i) u v = 0 := hI0 i hiNe
-          simp [h0]
-        · intro hNotMem
-          exact False.elim (hNotMem (Finset.mem_univ i0))
+        · simp_all
+        · simp_all
       -- Convert to the matrix sum.
       calc
         (∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) u v
@@ -481,17 +453,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         have : coeff (f := f) d0 = coeff (f := f) (varOrbit i0) := by simpa [h0] using hInv.symm
         simpa [this] using (coeff_varOrbit_eq_xFromColoring (f := f) (i := i0))
     -- Finish.
-    have hLHS' : corrAvgMatrix (f := f) u v = xFromColoring f i0 := by
-      calc
-        corrAvgMatrix (f := f) u v = coeff (f := f) d0 := hLHS
-        _ = xFromColoring f i0 := hCoeff
-    have hRHS :
-        (A idDirIdx + ∑ i : Var, (xFromColoring f i) • ASymm (varOrbit i)) u v =
-          xFromColoring f i0 := by
-      rw [Matrix.add_apply]
-      rw [hAid0, hSum]
-      simp
-    exact hLHS'.trans hRHS.symm
+    simp_all
 
 end N1000000CorrAvgMatrixSymmDecompose
 

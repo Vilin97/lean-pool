@@ -36,8 +36,7 @@ attribute [local fun_prop] DifferentiableAt.differentiableWithinAt
 
 private lemma Finset.Ioc_eq_Icc (M N : ℕ) : Finset.Ioc N M = Finset.Icc (N + 1) M := by
   ext n
-  simp only [mem_Ioc, mem_Icc]
-  omega
+  simp_all
 
 private lemma Ioc_eq_Icc (M N : ℕ) : Finset.Ioc N M = Finset.Icc (N + 1) M :=
   Finset.Ioc_eq_Icc M N
@@ -310,8 +309,7 @@ lemma U_bound.lemma_4 (x : ℝ) (hx : 0 < x) :
   have ha : a = -(log 1 / 1 - log 2 / 2 - log 3 / 3 - log 5 / 5 + log 30 / 30) := by
     simp_rw [a, mul_div_assoc]
     rw [ν_sum_mul (fun m ↦ log m / m)]
-    push_cast
-    rfl
+    simp_all
   rw [ν_sum_mul (fun m ↦ (x / m) * log (x / m)), ha]
   simp [Real.log_div hx0]
   ring
@@ -323,8 +321,7 @@ lemma U_bound.lemma_5 (x : ℝ) : ν.sum (fun m w ↦ w * (x / m)) = 0 := by
 
 lemma U_bound.lemma_6 : ν.sum (fun _ w ↦ w) = (-1 : ℝ) := by
   have := ν_sum_mul (fun _ ↦ (1 : ℝ))
-  simp at this
-  linarith
+  simp_all
 
 lemma Finsupp.abs_sum_le (A : Type*) (ν : A →₀ ℝ) (g : A → ℝ → ℝ) : |ν.sum g| ≤ ν.sum |g| := by
   simp_rw [Finsupp.sum.eq_1]
@@ -390,8 +387,7 @@ theorem U_bound (x : ℝ) (hx : 30 ≤ x) : |U x - a * x| ≤ 5 * log x - 5 := b
   have hgeq6 : ν.sum (fun m w ↦ |w| * log m) ≥ 6 := by
     have hsum_eq : ν.sum (fun m w ↦ |w| * log (m : ℝ)) =
         log 2 + log 3 + log 5 + log 30 := by
-      rw [expand_sum _ (by intros; simp)]
-      simp [log_one]
+      simp_all
     linarith [Real.log_two_gt_d9, Real.log_three_gt_d9, Real.log_five_gt_d9, log_30_gt]
   grw [hgeq6]
   rw [habs]

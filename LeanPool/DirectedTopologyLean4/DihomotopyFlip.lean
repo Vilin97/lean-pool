@@ -145,13 +145,7 @@ lemma hcomp'_apply_zero_right (F : Dihomotopy p₀.toDirectedMap q₀.toDirected
   (h : (F.evalAtRight 1).toDirectedMap = (G.evalAtRight 0).toDirectedMap) (x : I) :
     (hcomp' F G h) (x, 0) = F (x, 0) := by
   rw [hcomp'_apply]
-  split_ifs with h
-  · change F (x, _) = F (x, 0)
-    apply congr_arg
-    ext
-    · rfl
-    simp
-  · exact absurd (by change (0 : ℝ) ≤ 1/2; linarith) h
+  simp_all
 
 lemma hcomp'_apply_one_right (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap)
     (G : Dihomotopy p₁.toDirectedMap q₁.toDirectedMap)

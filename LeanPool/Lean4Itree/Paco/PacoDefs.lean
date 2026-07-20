@@ -30,9 +30,7 @@ theorem top_spec [CompleteLattice α] (x : α) : x ⊑ ⊤ₚ := le_sup _ True.i
 theorem meet_spec [CompleteLattice α] (x y : α) : z ⊑ x ⊓ₚ y ↔ z ⊑ x ∧ z ⊑ y := by
   constructor <;> simp only [min, inf_spec]
   · exact λ h => ⟨h _ <| Or.intro_left _ rfl, h _ <| Or.intro_right _ rfl⟩
-  · intro ⟨hx, hy⟩
-    intros; rename_i h
-    cases h <;> (rename_i h; subst h; assumption)
+  · simp_all
 
 theorem meet_le_left' [CompleteLattice α] (x : α) : x ⊑ z → x ⊓ₚ y ⊑ z := by
   simp only [min]

@@ -173,8 +173,7 @@ theorem topologicalKrullDim_add_one_eq_iSup_height_add_one (X : Type u) [Topolog
   cases isEmpty_or_nonempty (IrreducibleCloseds X) with
   | inl h =>
       rw [topologicalKrullDim_eq_iSup_height]
-      letI := h
-      simp
+      simp_all
   | inr h =>
       letI := h
       rw [topologicalKrullDim_eq_iSup_height]
@@ -229,8 +228,7 @@ private theorem topologicalKrullDim_lt_of_add_one_le_of_lt_top {X Y : Type u}
       rw [hYdim] at hfin
       have hy_coe_ne_top : (((ydim : ℕ∞) : WithBot ℕ∞)) ≠ ⊤ := ne_top_of_lt hfin
       have hy_ne_top : ydim ≠ ⊤ := by
-        intro hy_top
-        exact hy_coe_ne_top (by simp [hy_top])
+        simp_all
       have hy_lt : ydim < ydim + 1 := (ENat.lt_add_one_iff hy_ne_top).mpr le_rfl
       have hy_lt' :
           (((ydim : ℕ∞) : WithBot ℕ∞) < (((ydim + 1 : ℕ∞) : WithBot ℕ∞))) := by

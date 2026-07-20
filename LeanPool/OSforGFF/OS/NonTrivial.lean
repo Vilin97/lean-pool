@@ -130,8 +130,7 @@ theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction
     exact toComplex_injective (h_tc_zero.trans h_tc_0.symm)
   · intro h; subst h; intro k
     unfold sqrtPropagatorMap
-    rw [h_tc_0, ContinuousLinearMap.map_zero]
-    simp
+    simp_all
 
 /-- The embedding `T : S(ℝ⁴,ℝ) → L²(ℝ⁴,ℂ)` is injective.
 
@@ -148,8 +147,7 @@ theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
   have h_norm_zero : ‖embeddingMap m (f - g)‖ = 0 := by rw [map_sub, h, sub_self, norm_zero]
   have h_int_zero : ∫ k, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 ∂volume = 0 := by
     have h_sq := embeddingMap_norm_sq m (f - g)
-    rw [h_norm_zero, zero_pow (by norm_num : 2 ≠ 0)] at h_sq
-    linarith
+    simp_all
   -- Nonneg continuous integrand with zero integral vanishes a.e., hence (‖·‖²=0 ⟹ ·=0) a.e.
   have h_ae_sq : ∀ᵐ k ∂volume, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 = 0 :=
     (integral_eq_zero_iff_of_nonneg_ae (Filter.Eventually.of_forall fun k => sq_nonneg _)

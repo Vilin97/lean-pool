@@ -315,15 +315,11 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
   have hnorm_pos : (0 : ℝ) < ‖w‖ := norm_pos_iff.mpr hw_ne
   have hgoal_eq : fdPolygonRadialCircle refP₀ t - refP₀ = w / ↑‖w‖ := by
     unfold fdPolygonRadialCircle polygonToCircleRadial
-    simp only [← hw_def, sub_self, zero_mul, zero_add, add_sub_cancel_left, div_eq_mul_inv]
-    exact one_smul ℝ _
+    simp_all
   rw [hgoal_eq]
   suffices hw_slit : w ∈ Complex.slitPlane by
     simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw_slit ⊢
-    rw [Complex.div_ofReal_re, Complex.div_ofReal_im]
-    rcases hw_slit with hre | him
-    · left; exact div_pos hre hnorm_pos
-    · right; exact div_ne_zero him (ne_of_gt hnorm_pos)
+    simp_all
   simp only [Complex.slitPlane, Set.mem_setOf_eq]
   have ref_re : refP₀.re = 0 := refP₀_re_eq_zero
   have ref_im : refP₀.im = refY₀ := refP₀_im_eq
@@ -378,12 +374,7 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
           have hfd_im : (fdPolygon t).im =
               Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2) := by
             simp only [fdPolygon, not_le.mpr ht1, not_le.mpr ht2, not_le.mpr ht3, ht4, ↓reduceIte]
-            have heq : (-1/2 + (↑(Real.sqrt 3) / 2 + (↑t - 3) *
-                (↑HHeight - ↑(Real.sqrt 3) / 2)) * I) =
-              ↑(-1/2 : ℝ) +
-              ↑(Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2)) * I := by push_cast; ring
-            rw [heq, add_im, ofReal_im, mul_im, ofReal_re, ofReal_im, I_re, I_im,
-              mul_one, mul_zero, add_zero, zero_add]
+            simp_all
           have hdenom_pos : HHeight - Real.sqrt 3 / 2 > 0 := by unfold HHeight; linarith
           intro h_eq
           have him_eq : (fdPolygon t).im = refY₀ := by linarith
@@ -398,10 +389,7 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
           have hfd_im : (fdPolygon t).im = HHeight := by
             simp only [fdPolygon, not_le.mpr ht1, not_le.mpr ht2, not_le.mpr ht3,
               not_le.mpr ht4, ↓reduceIte]
-            have heq : ((↑t - 9/2) + ↑HHeight * I) = ↑(t - 9/2 : ℝ) + ↑HHeight * I := by
-              push_cast; ring
-            rw [heq, add_im, ofReal_im, mul_im, ofReal_re, ofReal_im, I_re, I_im,
-              mul_one, mul_zero, add_zero, zero_add]
+            simp_all
           linarith [ref_Y₀_lt_H]
 
 /-- fdPolygon t - refP₀ is in slitPlane for t ∈ [0, 5] with t ≠ tL refP₀.
@@ -418,18 +406,10 @@ lemma fdPolygon_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5
   have hnorm_pos : (0 : ℝ) < ‖w‖ := norm_pos_iff.mpr hw_ne
   have hrc_eq : fdPolygonRadialCircle refP₀ t - refP₀ = w / ↑‖w‖ := by
     unfold fdPolygonRadialCircle polygonToCircleRadial
-    simp only [← hw_def, sub_self, zero_mul, zero_add, add_sub_cancel_left, div_eq_mul_inv]
-    exact one_smul ℝ _
+    simp_all
   rw [hrc_eq] at hw
   simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw ⊢
-  rcases hw with hre | him
-  · left
-    rw [Complex.div_ofReal_re] at hre
-    exact (div_pos_iff.mp hre).elim (fun h => h.1)
-      (fun h => absurd h.2 (not_lt.mpr (le_of_lt hnorm_pos)))
-  · right
-    rw [Complex.div_ofReal_im] at him
-    exact fun h => him (div_eq_zero_iff.mpr (Or.inl h))
+  simp_all
 
 /-- w = fdPolygon · - refP₀ is continuous. -/
 lemma continuous_w : Continuous (fun t => fdPolygon t - refP₀) :=

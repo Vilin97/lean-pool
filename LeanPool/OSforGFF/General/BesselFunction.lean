@@ -312,20 +312,11 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
           apply mul_le_mul_of_nonneg_right hz_bound; positivity
   -- Combine using Ico for proper disjointness
   have h_union' : Ici (0 : ℝ) = Ico 0 1 ∪ Ici 1 := by
-    ext x; simp only [mem_Ici, mem_union, mem_Ico]
-    constructor
-    · intro hx
-      by_cases h : x < 1
-      · left; exact ⟨hx, h⟩
-      · right; push Not at h; exact h
-    · intro h; cases h with | inl h => exact h.1 | inr h => linarith
+    simp_all
   have hf_int_Ico : IntegrableOn f (Ico 0 1) := hf_int_Icc.mono_set Ico_subset_Icc_self
   have h_disjoint : Disjoint (Ico (0:ℝ) 1) (Ici 1) := by
     rw [Set.disjoint_left]
-    intro x hx hx'
-    simp only [mem_Ico] at hx
-    simp only [mem_Ici] at hx'
-    linarith
+    simp_all
   have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t :=
     setIntegral_congr_set Ico_ae_eq_Icc
   rw [h_union', setIntegral_union h_disjoint measurableSet_Ici hf_int_Ico hf_int_Ici1]
@@ -372,10 +363,7 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
     have h_mono : ∫ t in Icc 0 1, f t ≤ ∫ _ in Icc (0:ℝ) 1, cosh 1 := by
       apply setIntegral_mono_on hf_int_Icc h_const_int measurableSet_Icc
       exact h_pointwise
-    have h_const_val : ∫ _ in Icc (0:ℝ) 1, cosh 1 = cosh 1 := by
-      rw [setIntegral_const, volume_real_Icc]
-      simp only [sub_zero, max_eq_left (by linarith : (0:ℝ) ≤ 1), one_smul]
-    linarith
+    simp_all
   -- Part 2: Bound z * ∫₁^∞ f(t) dt ≤ 2 via the shared tail-integral helper
   have h_part2 : z * ∫ t in Ici 1, f t ≤ 2 := by
     rw [hf_def]
@@ -389,21 +377,12 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
       _ = 2 := by ring
   -- Combine: Use Ico instead of Icc for proper disjointness
   have h_union' : Ici (0 : ℝ) = Ico 0 1 ∪ Ici 1 := by
-    ext x; simp only [mem_Ici, mem_union, mem_Ico]
-    constructor
-    · intro hx
-      by_cases h : x < 1
-      · left; exact ⟨hx, h⟩
-      · right; simp only [not_lt] at h; exact h
-    · intro h; cases h with | inl h => exact h.1 | inr h => linarith
+    simp_all
   have hf_int_Ico : IntegrableOn f (Ico 0 1) := hf_int_Icc.mono_set Ico_subset_Icc_self
   -- Disjointness: Ico 0 1 and Ici 1 are disjoint since x < 1 and x ≥ 1 are contradictory
   have h_disjoint : Disjoint (Ico (0:ℝ) 1) (Ici 1) := by
     rw [Set.disjoint_left]
-    intro x hx hx'
-    simp only [mem_Ico] at hx
-    simp only [mem_Ici] at hx'
-    linarith
+    simp_all
   -- The integrals over Ico and Icc are equal (they differ by a null set)
   have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t :=
     setIntegral_congr_set Ico_ae_eq_Icc
@@ -580,8 +559,7 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
         intro r hr; simp only [mem_Ioi] at hr ⊢; exact mul_pos hm hr
       -- Ioi (1/m) ⊆ Ioi 0 for the restriction
       have hsub : Ioi (1 / m) ⊆ Ioi 0 := fun r hr => by
-        simp only [mem_Ioi] at hr ⊢
-        linarith [one_div_pos.mpr hm]
+        simp_all
       exact (hcont.mono hsub).aestronglyMeasurable measurableSet_Ioi
     have h_nonneg : ∀ r ∈ Ioi (1/m : ℝ), 0 ≤ r ^ 2 * besselK1 (m * r) := by
       intro r hr
@@ -660,12 +638,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
               have heq : (fun v => exp v - v^2 / 2) = (fun v => exp v) - (fun v => v^2 / 2) := by
                 ext v; simp [sub_eq_add_neg]
               rw [heq, deriv_sub hd1 hd2, deriv_div_const]
-              simp only [Real.deriv_exp]
-              -- deriv (fun v => v^2) x = 2 * x
-              have hpow : deriv (fun v : ℝ => v ^ (2 : ℕ)) x = (2 : ℝ) * x ^ (2 - 1) :=
-                deriv_pow_field 2
-              simp only [pow_one, Nat.add_one_sub_one] at hpow
-              rw [hpow]; ring
+              simp_all
             rw [hderiv]
             -- Need exp(x) - x > 0 for x > 4. Use exp(x) > x for all x > 0.
             -- exp(x) ≥ 1 + x, so exp(x) - x ≥ 1 > 0
@@ -740,11 +713,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
   have h_neg_part : ∫ u in Iic 0, exp (-u) * exp (-z * cosh u) =
                     ∫ u in Ioi 0, exp u * exp (-z * cosh u) := by
     have h := integral_comp_neg_Iic (f := fun u => exp u * exp (-z * cosh u)) 0
-    simp only [neg_zero] at h
-    rw [← h]
-    apply MeasureTheory.setIntegral_congr_fun measurableSet_Iic
-    intro u _
-    simp only [cosh_neg]
+    simp_all
   -- 3. Substitute and combine
   rw [h_neg_part, ← MeasureTheory.integral_add hg_int hf_int_Ioi]
   -- Combine integrands: (e^u + e^-u) * exp(-z cosh u) = 2 cosh(u) * exp(-z cosh u)
@@ -825,8 +794,7 @@ lemma schwingerIntegral_eq_besselK1 (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
       field_simp
       rw [cosh_eq]
       ring_nf
-      rw [h1]
-      ring
+      simp_all
     -- Verify: c * exp(u) / (c * exp(u))² = (2m/r) * exp(-u)
     have h_jacobian : r / (2 * m) * exp u / (r / (2 * m) * exp u) ^ 2 =
         2 * m / r * exp (-u) := by
@@ -895,7 +863,5 @@ lemma schwingerIntegral_eq_besselK1 (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
     filter_upwards with u
     simp only [g]
     -- The expressions differ only in parenthesization: -(m^2 * t) vs -m^2 * t
-    convert h_transform u using 2
-    congr 1
-    ring_nf
+    simp_all
   rw [h_eq, integral_const_mul]

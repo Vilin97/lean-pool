@@ -34,15 +34,11 @@ private lemma ite_const_eq_iff_of_ne {P Q : Prop} [Decidable P] [Decidable Q] {c
     (hc : c ≠ 0) (h : (if P then c else 0) = if Q then c else 0) : P ↔ Q := by
   constructor
   · intro hp
-    rw [if_pos hp] at h
-    by_contra hq
-    rw [if_neg hq] at h
-    exact hc h
+    simp_all
   · intro hq
     rw [if_pos hq] at h
     by_contra hp
-    rw [if_neg hp] at h
-    exact hc h.symm
+    simp_all
 
 /-- The `h'`-thresholded singular indicator is measurable, given `h'` strongly measurable. -/
 private lemma singular_annulus_fγ'_measurable {t₀ ε₁ ε₂ : ℝ} {h' : ℝ → ℝ}
@@ -114,31 +110,9 @@ private lemma singular_annulus_indicator_diff_zero
       (if ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁ then (↑(t - t₀) : ℂ)⁻¹ else 0) = 0 := by
   rw [Set.mem_setOf_eq, Set.mem_setOf_eq, not_xor] at h_not_sd
   by_cases hδ : |t - t₀| < δ₀'
-  · have h_agree :
-        (ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁) ↔
-        (ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁) := by
-      have h'_iff_lin :
-          (ε₂ < h' t ∧ h' t ≤ ε₁) ↔
-          (ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁) := by
-        constructor
-        · intro ⟨h1, h2⟩; exact (h_not_sd.1 ⟨ht_Icc, hδ, h1, h2⟩).2.2
-        · intro ⟨h1, h2⟩; exact (h_not_sd.2 ⟨ht_Icc, hδ, h1, h2⟩).2.2
-      by_cases ht_eq : t = t₀
-      · subst ht_eq; simp only [sub_self, norm_zero, abs_zero, mul_zero]
-      · have hinv_ne : (↑(t - t₀) : ℂ)⁻¹ ≠ 0 :=
-          inv_ne_zero (Complex.ofReal_ne_zero.mpr (sub_ne_zero.mpr ht_eq))
-        refine ite_const_eq_iff_of_ne hinv_ne ?_
-        rw [show (if ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁
-            then (↑(t - t₀) : ℂ)⁻¹ else 0) =
-            (if ε₂ < h' t ∧ h' t ≤ ε₁ then (↑(t - t₀) : ℂ)⁻¹ else 0) from
-          if_congr h'_iff_lin.symm rfl rfl]
-        exact hfγ_eq
-    by_cases hcond : ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁
-    · simp [hcond, h_agree.mp hcond, sub_self]
-    · simp [hcond, mt h_agree.mpr hcond]
+  · simp_all
   · have hγ_fail : ¬(ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁) := by
-      intro ⟨_, h_up⟩
-      exact absurd (h_loc_δ₀' h_up) hδ
+      simp_all
     have hlin_fail : ¬(ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁) := by
       intro ⟨_, h_le⟩
       linarith [mul_le_mul_of_nonneg_left (not_lt.mp hδ) (le_of_lt hL_pos)]
@@ -583,8 +557,7 @@ lemma singular_annulus_bound_explicit
   have ht₀_mem := Set.mem_Ioo.mp hat₀
   have h_dist_pos :
       0 < min (t₀ - a) (b - t₀) := by
-    simp only [lt_min_iff]
-    constructor <;> linarith
+    simp_all
   let δ := min (min δ_meas ρ)
     (min (‖L‖ * min (t₀ - a) (b - t₀)) (‖L‖ * δ₀'))
   have hδ_pos : 0 < δ :=

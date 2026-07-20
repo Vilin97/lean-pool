@@ -44,8 +44,7 @@ abbrev _root_.LO.Arith.Language.Semiformula.free (p : L.Semiformula (0 + 1)) :
 
 lemma _root_.LO.Arith.Language.Semiformula.val_free (p : L.Semiformula (0 + 1)) :
     p.free.val = L.substs ?[^&0] (L.shift p.val) := by
-  simp [Language.Semiformula.free, Language.Semiformula.substs₁, Language.Semiformula.substs,
-    Language.Semiformula.shift, Language.fvar]
+  simp_all
 
 @[simp 1100] lemma substs₁_neg (p : L.Semiformula (0 + 1)) (t : L.Term) :
     (∼p).substs₁ t = ∼(p.substs₁ t) := by simp [Language.Semiformula.substs₁]

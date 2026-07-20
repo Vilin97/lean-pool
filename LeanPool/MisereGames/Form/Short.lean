@@ -157,22 +157,14 @@ protected theorem ofSets {s t : Set G} [Small s] [Small t]
 protected theorem star : IsShort (!{{0} | {0}} : G) := by
   apply Short.ofSets
   · exact Set.finite_singleton 0
-  · intro g hg
-    simp only [Set.mem_singleton_iff] at hg
-    subst g
-    exact Short.zero
+  · simp_all
   · exact Set.finite_singleton 0
-  · intro g hg
-    simp only [Set.mem_singleton_iff] at hg
-    subst g
-    exact Short.zero
+  · simp_all
 
 @[simp]
 protected theorem one : IsShort (1 : G) := by
   rw [one_def, Form.short_def]
-  simp only [moves_ofSets, Player.cases, Player.forall, Set.finite_singleton, Set.mem_singleton_iff,
-             forall_eq, Short.zero, and_self, Set.finite_empty, Set.mem_empty_iff_false,
-             IsEmpty.forall_iff, implies_true]
+  simp_all
 
 protected theorem sub {x y : GameForm} (hx : IsShort x) (hy : IsShort y) : IsShort (x - y) :=
   Short.add hx (Short.neg hy)

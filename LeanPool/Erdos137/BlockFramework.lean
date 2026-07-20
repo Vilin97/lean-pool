@@ -226,13 +226,8 @@ lemma factorization_Wg {g k n : ℕ} (_hn : 1 ≤ n) (p : ℕ) :
   by_cases hp : p ∈ (Bg g k n).primeFactors
   · simp only [hp, if_true]
     rw [Finset.sum_eq_single p]
-    · have hpprime : p.Prime := (Nat.mem_primeFactors.mp hp).1
-      rw [factorization_prime_pow_applyg hpprime]
-      simp
-    · intro q hq hqp
-      have hqprime : q.Prime := (Nat.mem_primeFactors.mp hq).1
-      rw [factorization_prime_pow_applyg hqprime]
-      simp [hqp]
+    · simp_all
+    · simp_all
     · intro h; exact absurd hp h
   · simp only [hp, if_false]
     apply Finset.sum_eq_zero
@@ -310,14 +305,7 @@ lemma firstHit_mem_Icc (g n p j : ℕ) :
 lemma overlapg_le (hg : 1 ≤ g) {k n p : ℕ} (hn : 1 ≤ n) : overlapg g k n p ≤ k / p + 1 := by
   rcases Nat.eq_zero_or_pos p with hp0 | hp
   · subst hp0; unfold overlapg
-    have hz : (∑ j ∈ Finset.range (k / g),
-        (if (0 : ℕ) ∈ (F g (n + g * j)).primeFactors then (1 : ℕ) else 0)) = 0 := by
-      apply Finset.sum_eq_zero
-      intro j _
-      have hnotmem : (0 : ℕ) ∉ (F g (n + g * j)).primeFactors := by
-        intro h; exact absurd (Nat.prime_of_mem_primeFactors h) Nat.not_prime_zero
-      rw [if_neg hnotmem]
-    rw [hz]; omega
+    simp_all
   · set t := k / g with ht
     set m := g * t with hm
     have hmk : m ≤ k := by rw [hm, ht]; exact Nat.mul_div_le k g
@@ -327,8 +315,7 @@ lemma overlapg_le (hg : 1 ≤ g) {k n p : ℕ} (hn : 1 ≤ n) : overlapg g k n p
       have hsum : (∑ j ∈ Finset.range t,
           (if p ∈ (F g (n + g * j)).primeFactors then (1 : ℕ) else 0))
           = #{j ∈ Finset.range t | p ∈ (F g (n + g * j)).primeFactors} := by
-        rw [Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const, smul_eq_mul,
-          mul_one]
+        simp_all
       rw [show k / g = t from rfl, hsum]
       apply Finset.card_le_card_of_injOn (firstHit g n p)
       · intro j hj
@@ -532,8 +519,7 @@ theorem master_ineq_g (g : ℕ) (hBlock : BlockRadLBg g) (hg : 3 ≤ g) {k n : �
   have hRHS : ((P k : ℝ) ^ 2 * (k : ℝ) ^ (2 * k)) ^ g
       = ((k : ℝ) ^ (2 * k)) ^ g * (P k : ℝ) ^ (2 * g) := by
     rw [mul_pow, ← pow_mul, mul_comm 2 g]; ring
-  rw [hLHS, hRHS] at hpowg
-  exact hpowg
+  simp_all
 
 /-- The explicit generic `g`-block finiteness bound `Mg g k = (k^{2k})^g · P k^{2g}`. Generic form
 of `Msplice`. -/

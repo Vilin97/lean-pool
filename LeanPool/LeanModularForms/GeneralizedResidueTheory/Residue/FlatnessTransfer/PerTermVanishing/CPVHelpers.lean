@@ -70,11 +70,7 @@ theorem tendsto_cpv_of_continuousOn_zero_integral
         simp only [cauchyPrincipalValueIntegrandOn]
         have h_not_in' := h_not_in ht_in
         by_cases hS0_empty : S0 = ∅
-        · have : ∀ ε, ¬∃ s ∈ S0, ‖γ.toFun t - s‖ ≤ ε := by
-            intro ε h_ex; obtain ⟨s, hs, _⟩ := h_ex
-            exact absurd hs (hS0_empty ▸ Finset.notMem_empty s)
-          apply tendsto_const_nhds.congr'
-          filter_upwards with ε; rw [if_neg (this ε)]
+        · simp_all
         · have hS0_ne : S0.Nonempty := Finset.nonempty_of_ne_empty hS0_empty
           let δ := S0.inf' hS0_ne (fun s => ‖γ.toFun t - s‖)
           have hδ_pos : 0 < δ :=
@@ -277,8 +273,7 @@ private lemma circleIntegral_const_of_meromorphicAt_aux (f : ℂ → ℂ) (s : �
       Set.EqOn (fun z => (z - s)⁻¹ • ((z - s) * f z)) f (Metric.sphere s ρ) := by
     intro ρ hρ_ne z hz
     have h_ne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz
-      exact hρ_ne hz.symm
+      intro heq; simp_all
     simp only [smul_eq_mul, inv_mul_cancel_left₀ (sub_ne_zero.mpr h_ne)]
   set F : ℂ → ℂ := fun z => (z - s) * f z with hF_def
   have hF_analytic : ∀ z, z ∈ Metric.ball s rf → z ≠ s → AnalyticAt ℂ F z := by
@@ -401,8 +396,7 @@ lemma residueAt_sub_residueSum_eq_zero
     exact (hf_analytic_at z
       (by rwa [Metric.mem_ball, Metric.mem_sphere.mp hz])
       (by intro heq
-          rw [heq, Metric.mem_sphere, dist_self] at hz
-          linarith)).continuousAt.continuousWithinAt
+          simp_all)).continuousAt.continuousWithinAt
   have h_const_integral : ∀ r, 0 < r → r ≤ R₀ →
       (∮ z in C(s, r), f z) = (∮ z in C(s, R₀), f z) := fun r hr hr_le =>
     circleIntegral_const_of_meromorphicAt_aux f s rf R₀ hR₀_pos hR₀_lt_rf

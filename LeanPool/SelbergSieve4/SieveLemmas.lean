@@ -133,8 +133,7 @@ theorem nu_ne_zero_of_mem_divisors_prodPrimes {d : ℕ} (hd : d ∈ divisors P) 
   apply s.nu_pos_of_dvd_prodPrimes hd.left
 
 theorem multSum_eq_main_err (d : ℕ) : s.multSum d = ν d * X + R d := by
-  dsimp [rem]
-  ring
+  simp_all
 
 /-- Kronecker delta at `1`, valued in the reals. -/
 def delta (n : ℕ) : ℝ := if n=1 then 1 else 0
@@ -147,8 +146,7 @@ theorem siftedSum_as_delta : s.siftedSum = ∑ d ∈ s.support, a d * δ (Nat.gc
   apply sum_congr rfl
   intro d _
   dsimp only [Nat.Coprime, delta] at *
-  rw [mul_ite_zero]
-  exact if_congr Iff.rfl (symm <| mul_one _) rfl
+  simp_all
 
 -- Unused ?
 theorem nu_lt_self_of_dvd_prodPrimes : ∀ d : ℕ, d ∣ P → d ≠ 1 → ν d < 1 := by
@@ -310,10 +308,7 @@ theorem _root_.Sieve.lambdaSquared_eq_zero_of_support (w : ℕ → ℝ) (y : ℝ
       intro d'; apply hw
       have : (0:ℝ) ≤ (d') ^ 2 := by norm_num
       linarith
-    apply sum_eq_zero; intro d1 _
-    apply sum_eq_zero; intro d2 _
-    rw [this d1, this d2]
-    simp only [ite_self, MulZeroClass.mul_zero]
+    simp_all
   apply sum_eq_zero; intro d1 _; apply sum_eq_zero; intro d2 _
   split_ifs with h
   swap
@@ -360,8 +355,7 @@ theorem _root_.Sieve.lambdaSquared_mainSum_eq_quad_form (w : ℕ → ℝ) :
           if d = d1.lcm d2 then w d1 * w d2 * ν d else 0)
   · rw [sum_congr rfl]; intro d _
     rw [sum_mul, sum_congr rfl]; intro d1 _
-    rw [sum_mul, sum_congr rfl]; intro d2 _
-    rw [ite_zero_mul]
+    rw [sum_mul, sum_congr rfl]; simp_all
   trans (∑ d ∈ divisors P, ∑ d1 ∈ divisors P, ∑ d2 ∈ divisors P,
           if d = d1.lcm d2 then w d1 * w d2 * ν d else 0)
   · apply conv_lambda_sq_larger_sum

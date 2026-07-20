@@ -188,14 +188,12 @@ variable {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) (
 lemma trans_apply_half_left (ht : t = halfI) : (dihomToHom F).trans (dihomToHom G) (t, x)
     = F (1, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  simp [ht_coe]
+  simp_all
 
 lemma trans_apply_half_right (ht : t = halfI) : (dihomToHom F).trans (dihomToHom G) (t, x)
     = G (0, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  split_ifs <;> simp [ht_coe]
+  simp_all
 
 lemma trans_apply_left (t : I) (x : X) (ht : (t : ℝ) ≤ 2⁻¹) :
   (dihomToHom F).trans (dihomToHom G) (t, x) = F (⟨2 * t, double_mem_I ht⟩, x) := by
@@ -351,9 +349,7 @@ def trans {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) 
                 split_ifs with h
                 · have : ((a₂ x).1 : ℝ) ≤ 2⁻¹ := by convert h using 1; norm_num
                   have ha₂x : ((a₂ x).1 : ℝ) = 2⁻¹ := by linarith
-                  have : G (0, _) = F (1, _) := Eq.trans (G.map_zero_left (a₂ x).2)
-                      (F.map_one_left (a₂ x).2).symm
-                  convert this <;> rw [ha₂x] <;> norm_num
+                  simp_all
                 · rfl
         _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
                 then Fₕ (⟨2 * ((a₂ x).1 : ℝ), double_mem_I (by linarith)⟩, (a₂ x).2)

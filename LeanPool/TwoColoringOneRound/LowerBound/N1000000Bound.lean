@@ -88,11 +88,7 @@ theorem monoFraction_ge_23879_of_psd (f : Coloring n)
   -- Arithmetic: `(1 + (-26121/50000))/2 = 23879/100000`.
   have htarget : ((1 : Q) + ((-26121 : Q) / 50000)) / 2 = (23879 : Q) / 100000 := by norm_num
   -- Combine.
-  calc
-    (23879 : Q) / 100000
-        = ((1 : Q) + ((-26121 : Q) / 50000)) / 2 := by simp [htarget]
-    _ ≤ ((1 : Q) + edgeCorrelation f) / 2 := hmono
-    _ = monoFraction f := by simp [hmonoEq]
+  simp_all
 
 end N1000000Bound
 

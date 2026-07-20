@@ -108,8 +108,6 @@ instance : PartialOrder sys.Element where
     -- `subst` + `rfl` keeps the development constructive.
     have hc : x.carrier = y.carrier := Set.Subset.antisymm h1 h2
     cases x
-    cases y
-    subst hc
-    rfl
+    simp_all
 
 end InfoSys

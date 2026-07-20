@@ -53,9 +53,7 @@ noncomputable def box (α : Fin d → ℝ) (Q : ℕ) (hQ : 1 ≤ Q) (i : ℕ) : 
     have hlt : Int.fract ((i : ℝ) * α k) * Q < Q := by nlinarith
     have hub : ⌊Int.fract ((i : ℝ) * α k) * Q⌋ < (Q : ℤ) := by
       exact_mod_cast lt_of_le_of_lt (Int.floor_le _) hlt
-    have hge : 0 ≤ ⌊Int.fract ((i : ℝ) * α k) * Q⌋ :=
-      Int.floor_nonneg.mpr (mul_nonneg (Int.fract_nonneg _) (by positivity))
-    omega⟩
+    simp_all⟩
 
 /-- **Dirichlet's simultaneous approximation theorem (inverse-resolution form).** For `Q ≥ 1` there
 is
@@ -65,9 +63,7 @@ theorem exists_delta_lt_inv (α : Fin d → ℝ) (Q : ℕ) (hQ : 1 ≤ Q) :
   have hQ0 : (0 : ℝ) < Q := by exact_mod_cast hQ
   -- pigeonhole: two of the Q^d + 1 points share a box
   have hcard : (Finset.univ : Finset (Fin d → Fin Q)).card < (Finset.range (Q ^ d + 1)).card := by
-    rw [Finset.card_range, Finset.card_univ, Fintype.card_pi]
-    simp only [Fintype.card_fin, Finset.prod_const, Finset.card_univ]
-    exact Nat.lt_succ_self _
+    simp_all
   obtain ⟨i₀, _, j₀, _, hij, hbox₀⟩ :=
     Finset.exists_ne_map_eq_of_card_lt_of_maps_to hcard
       (fun a _ => Finset.mem_univ (box α Q hQ a))
@@ -111,9 +107,7 @@ theorem exists_delta_lt_inv (α : Fin d → ℝ) (Q : ℕ) (hQ : 1 ≤ Q) :
   calc delta α (q : ℤ) ≤ ‖rem α (q : ℤ) M‖ := delta_le α (q : ℤ) M
     _ < 1 / Q := by
         rw [pi_norm_lt_iff (by positivity)]
-        intro k
-        rw [Real.norm_eq_abs]
-        exact hcoord k
+        simp_all
 
 /-- **Dirichlet's theorem (ε form).** For every `ε > 0` there is `q ≥ 1` with `delta α q < ε`. -/
 theorem exists_delta_lt (α : Fin d → ℝ) {ε : ℝ} (hε : 0 < ε) :

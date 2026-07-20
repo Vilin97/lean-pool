@@ -308,8 +308,7 @@ lemma no_inf_chain_from_prover (g : ℕ → GamePos)
         have this := by simpa [Function.swap] using this
         grind)
     unfold f
-    simp only [g0_def] at this
-    exact this
+    simp_all
   let sequents : (n : ℕ) → List SplitSequent := Nat.rec [] (fun n ih => f n :: ih)
   have seq_prop : ∀ n, sequents n ++ Γs = (g (2 * n)).2.1 := by
     intro n
@@ -456,8 +455,7 @@ theorem move_iff_in_moves {g g' : coalgebraGame.Pos} :
     case prover R Rs Γ Γs R_mem =>
       exact (Finset.mem_map).mpr ⟨R, R_mem, rfl⟩
     case builder R Rs Γ Γs Γ_mem Γ_not_mem =>
-      exact (Finset.mem_filterMap _).mpr
-        ⟨Γ, Γ_mem, by simp [Γ_not_mem]⟩
+      simp_all
   · intro in_moves
     exact @coalgebraGame.move_rel g g' in_moves
 

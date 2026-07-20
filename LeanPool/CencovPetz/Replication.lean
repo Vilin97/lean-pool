@@ -44,8 +44,7 @@ noncomputable def replicate (m : ℕ) (hm : 0 < m) : MarkovMorphism α (α × Fi
     simp [Finset.sum_const, Finset.card_univ, hm0]
   · intro b
     refine ⟨b.1, ?_⟩
-    have : 0 < (1 : ℝ) / m := one_div_pos.2 hm_pos
-    simpa using this
+    simp_all
 
 lemma replicate_pushforward_apply (m : ℕ) (hm : 0 < m) (p : Simplex α) (a : α) (i : Fin m) :
     ((replicate (α := α) m hm).pushforward p).p (a, i) = p.p a / m := by
@@ -56,9 +55,7 @@ lemma replicate_pushforward_apply (m : ℕ) (hm : 0 < m) (p : Simplex α) (a : �
 lemma replicate_pushforward_uniform [Nonempty α] (m : ℕ) (hm : 0 < m) :
     letI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
     letI : Nonempty (α × Fin m) := by
-        classical
-        rcases (inferInstance : Nonempty α) with ⟨a0⟩
-        exact ⟨(a0, ⟨0, hm⟩)⟩
+        simp_all
     (replicate (α := α) m hm).pushforward (Simplex.uniform (α := α))
       =
       Simplex.uniform (α := α × Fin m) := by

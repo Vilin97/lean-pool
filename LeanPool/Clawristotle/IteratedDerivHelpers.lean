@@ -39,10 +39,7 @@ lemma norm_iteratedFDeriv_one_clm {𝕜 : Type*} [NontriviallyNormedField 𝕜]
     {E F : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
     [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F) (x : E) :
     ‖iteratedFDeriv 𝕜 1 f x‖ = ‖f‖ := by
-  rw [show (1:ℕ) = 0 + 1 from rfl, iteratedFDeriv_succ_eq_comp_right]
-  simp only [Function.comp, show (fun y => fderiv 𝕜 (↑f) y) = fun _ => (f : E →L[𝕜] F) from
-    funext fun y => f.hasFDerivAt.fderiv, iteratedFDeriv_zero_eq_comp,
-    LinearIsometryEquiv.norm_map]
+  simp_all
 
 /-- `‖fderiv f v‖ = ‖iteratedFDeriv 1 f v‖`. Converts between the ContinuousLinearMap
     norm and the ContinuousMultilinearMap norm at order 1. -/

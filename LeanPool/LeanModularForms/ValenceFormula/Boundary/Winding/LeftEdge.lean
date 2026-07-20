@@ -258,9 +258,7 @@ private lemma mem_Ioo_of_uIoc_sdiff_endpoints {a b t : ℝ} (hab : a ≤ b)
     (ht_ne : t ∈ ({a, b} : Set ℝ)ᶜ) (ht_mem : t ∈ Set.uIoc a b) : a < t ∧ t < b := by
   rw [Set.uIoc_of_le hab] at ht_mem
   refine ⟨?_, ?_⟩
-  · rcases eq_or_lt_of_le (le_of_lt ht_mem.1) with h | h
-    · exact absurd (by simp only [mem_insert_iff, mem_singleton_iff]; left; linarith) ht_ne
-    · exact h
+  · simp_all
   · rcases eq_or_lt_of_le ht_mem.2 with h | h
     · exact absurd (by simp only [mem_insert_iff, mem_singleton_iff]; right; linarith) ht_ne
     · exact h
@@ -680,20 +678,11 @@ private lemma leftEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     exact leftEdge_h_near H hH_sqrt s hs_re α hα_pos hα_def t₀ ht₀_gt3 ht₀_lt4 ht₀_mul
       threshold hthresh_le_t₀m3α hthresh_le_4mt₀α ε hε_pos hε_lt
   · -- h_ftc: far integrals = E(ε)
-    intro ε hε_pos hε_lt
-    have h := (hftc ε hε_pos hε_lt).2.2
-    simp_rw [hd] at h
-    exact h
+    simp_all
   · -- hint_left
-    intro ε hε_pos hε_lt
-    have h := (hftc ε hε_pos hε_lt).1
-    simp_rw [hd] at h
-    exact h
+    simp_all
   · -- hint_right
-    intro ε hε_pos hε_lt
-    have h := (hftc ε hε_pos hε_lt).2.1
-    simp_rw [hd] at h
-    exact h
+    simp_all
   · -- h_limit: E(ε) → L
     -- E(ε) = log(h₃(t₀ - ε/α)) - log(h₃(t₀ + ε/α)) = -(π*I) constantly
     have hE_const : ∀ ε, 0 < ε → ε < threshold →
@@ -712,10 +701,6 @@ theorem gWN_fdBoundary_H_eq_neg_half_of_leftEdge (H : ℝ) (hH_sqrt : Real.sqrt 
     generalizedWindingNumber' (fdBoundaryH H) 0 5 s = -1/2 := by
   apply ContourIntegral.gWN_eq_neg_half_of_pv_tendsto
   have h_tendsto := leftEdge_winding_aux H hH_sqrt s hs_re hs_norm hs_im_lower hs_im
-  have hd : ∀ t, deriv (fun u => fdBoundaryH H u - s) t = deriv (fdBoundaryH H) t :=
-    fun t => deriv_sub_const (f := fdBoundaryH H) _
-  simp_rw [hd]
-  convert h_tendsto using 3
-  simp [sub_zero, gt_iff_lt]
+  simp_all
 
 end

@@ -68,8 +68,7 @@ noncomputable def chainToWalk (l : List (Lattice R)) (hl : l ≠ []) (hc : l.IsB
       have p : BTgraph.Adj ⟦L₁⟧ ⟦L₂⟧ := by
         apply isNeighbour_of_isStandardNeighbour
         have := hc.isStandardNeighbour
-        rw [List.isChain_cons_cons] at this
-        exact this.1
+        simp_all
       let q : BTgraph.Walk ⟦L₂⟧ ⟦(L₁ :: L₂ :: l).getLast hl⟧ :=
         chainToWalk (L₂ :: l) (by simp) (isChain_of_cons_isChain (List.cons_ne_nil L₂ l) hc)
       q.cons p
@@ -90,13 +89,7 @@ lemma isSimpleChain_of_isTrail_aux {x y : Vertices R} (p : BTgraph.Walk x y)
       simp only [List.tail_cons, List.zipWith₃, List.forall_cons, id_eq, List.Forall, and_true]
       intro h
       have : (⟦M⟧ : Vertices R) = ⟦Q⟧ := Quotient.sound h
-      simp only [SimpleGraph.Walk.isTrail_cons, SimpleGraph.Walk.IsTrail.nil,
-        SimpleGraph.Walk.edges_nil, List.not_mem_nil, not_false_eq_true, and_self,
-        SimpleGraph.Walk.edges_cons, List.mem_singleton, Sym2.eq, Sym2.rel_iff', Prod.mk.injEq,
-        Prod.swap_prod_mk, and_true, not_or, not_and, true_and] at hp
-      apply hp.right
-      rw [← hfirst, ← hthird]
-      exact this
+      simp_all
   | .cons' _ v₂ _ adj (.cons' _ v₁ _ adj' <| .cons' _ _ _ adj'' q),
       (L₁ :: L₂ :: L₃ :: l) =>
       simp only [List.map_cons, SimpleGraph.Walk.support_cons] at hl
@@ -115,8 +108,7 @@ lemma isSimpleChain_of_isTrail_aux {x y : Vertices R} (p : BTgraph.Walk x y)
           exact Quotient.sound h
         exact hp.2.1.2 hx
       · apply isSimpleChain_of_isTrail_aux (.cons adj' <| .cons adj'' q)
-        · simpa [SimpleGraph.Walk.isTrail_cons, SimpleGraph.Walk.edges_cons, List.mem_cons,
-            Sym2.eq, Sym2.rel_iff', Prod.mk.injEq, Prod.swap_prod_mk, not_or, not_and] using hp.1
+        · simp_all
         · exact htail
 
 /-- If `p` is a trail in the Bruhat-Tits graph, it is representable by
@@ -162,8 +154,7 @@ lemma length_eq_inv_of_isStandard {x y : Vertices R} {p : BTgraph.Walk x y} (h :
       exact hl.ne_nil (List.map_eq_nil_iff.mp hnil)
     have hlast_eq := List.getLast_congr hmap_ne_nil p.support_ne_nil hleq
     simpa [Vertices, List.getLast_map] using (hlast_eq.trans p.getLast_support).symm
-  subst this
-  assumption
+  simp_all
 
 /-- Given two vertices and a trail `p` from `x` to `y`, there exists a `g : GL₂(K)`
 such that `g • p` is a standard walk. -/

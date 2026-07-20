@@ -103,15 +103,7 @@ private lemma edgeCorrSum_cast_eq_sum_corrEdge (f : Coloring n) :
         ∑ e : Edge n,
           ((signOfColoring f (Edge.src e) : Int) : Q) *
             ((signOfColoring f (Edge.dst e) : Int) : Q) := by
-    change
-        (Int.castRingHom Q)
-            (∑ e : Edge n,
-              signOfColoring f (Edge.src e) * signOfColoring f (Edge.dst e) : Int)
-          =
-          ∑ e : Edge n,
-            ((signOfColoring f (Edge.src e) : Int) : Q) *
-              ((signOfColoring f (Edge.dst e) : Int) : Q)
-    simp [map_sum]
+    simp_all
   -- Rewrite the RHS summand as `corrEdge`.
   -- (The order `src/dst` matches; `corr` is commutative anyway.)
   simp [corrEdge, corr_eq_sign, hcast]
@@ -151,8 +143,7 @@ private lemma orbitProdStabilizerEquivGroup_smul_fst
     simpa [Subgroup.groupEquivQuotientProdSubgroup] using hfst
   -- Convert to the orbit element via `orbitEquivQuotientStabilizer`.
   have hx_orbit : (MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) = x := by
-    have hx := (MulAction.orbitEquivQuotientStabilizer G b).left_inv x
-    rwa [hmk]
+    simp_all
   have hx_val :
       ((MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) : Emb4) = x := by
     exact congrArg Subtype.val hx_orbit
@@ -175,8 +166,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
     simpa using (MulAction.orbit_eq_univ (M := G) (a := b))
   letI : Fintype (↑(MulAction.orbit G b)) := Fintype.ofFinite _
   have hbmem : ∀ x : Emb4, x ∈ MulAction.orbit G b := by
-    intro x
-    simp [hpre]
+    simp_all
   let hOrbitEquiv : (↑(MulAction.orbit G b)) ≃ Emb4 :=
     Equiv.subtypeUnivEquiv hbmem
   have hsumOrbit :
@@ -214,9 +204,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
       _ =
           ∑ x : ↑(MulAction.orbit G b),
             (Fintype.card (MulAction.stabilizer G b) : Q) * corrEmb f x.1 := by
-            refine Fintype.sum_congr _ _ ?_
-            intro x
-            simp [Finset.sum_const, nsmul_eq_mul, mul_comm]
+            simp_all
       _ =
           (Fintype.card (MulAction.stabilizer G b) : Q) *
             ∑ x : ↑(MulAction.orbit G b), corrEmb f x.1 := by

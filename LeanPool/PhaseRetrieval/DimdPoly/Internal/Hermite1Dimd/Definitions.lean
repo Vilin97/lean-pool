@@ -143,8 +143,7 @@ def totalDegreePiece {d : ℕ} (n : ℕ) (G : FiniteHermiteSum d) : FiniteHermit
     (fun α => if totalDegree α = n then G.coeff α else 0) ?_⟩
   intro α hα
   have hdeg : totalDegree α = n := by
-    by_contra hne
-    simp [hne] at hα
+    simp_all
   have hsupp : α ∈ G.support := Finsupp.mem_support_iff.mpr (by simpa [hdeg] using hα)
   exact Finset.mem_filter.mpr ⟨hsupp, hdeg⟩
 
@@ -194,8 +193,7 @@ def blockPart {d : ℕ} (ℓ : MultiIndex d) (G : FiniteHermiteSum d) : FiniteHe
     (fun α => if α ∈ squareBlock ℓ then G.coeff α else 0) ?_⟩
   intro α hα
   have hblock : α ∈ squareBlock ℓ := by
-    by_contra hne
-    simp [hne] at hα
+    simp_all
   have hsupp : α ∈ G.support := Finsupp.mem_support_iff.mpr (by simpa [hblock] using hα)
   exact Finset.mem_filter.mpr ⟨hsupp, hblock⟩
 
@@ -217,8 +215,7 @@ def localPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
     (fun α => if blockDistance j (blockIndexMulti α) ≤ M then G.coeff α else 0) ?_⟩
   intro α hα
   have hlocal : blockDistance j (blockIndexMulti α) ≤ M := by
-    by_contra hne
-    simp [hne] at hα
+    simp_all
   have hsupp : α ∈ G.support := Finsupp.mem_support_iff.mpr (by simpa [hlocal] using hα)
   exact Finset.mem_filter.mpr ⟨hsupp, hlocal⟩
 
@@ -230,8 +227,7 @@ def remainderPart {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d
     (fun α => if M < blockDistance j (blockIndexMulti α) then G.coeff α else 0) ?_⟩
   intro α hα
   have hfar : M < blockDistance j (blockIndexMulti α) := by
-    by_contra hne
-    simp [hne] at hα
+    simp_all
   have hsupp : α ∈ G.support := Finsupp.mem_support_iff.mpr (by simpa [hfar] using hα)
   exact Finset.mem_filter.mpr ⟨hsupp, hfar⟩
 

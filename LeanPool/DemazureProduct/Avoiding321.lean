@@ -50,8 +50,7 @@ theorem is_asp_of_is_321a (τ : ℤ → ℤ) (h_bij : Function.Bijective τ)
       contrapose! h
       constructor <;> linarith
     · use 0
-      push Not at h
-      exact h
+      simp_all
   obtain ⟨u, h_src⟩ := ex_src
   have ex_snk : ∃ v : ℤ, ∀ n : ℤ, ⟨v,n⟩ ∉ invSet τ := by
     by_cases h : ∃ v : ℤ, ⟨0,v⟩ ∈ invSet τ
@@ -64,8 +63,7 @@ theorem is_asp_of_is_321a (τ : ℤ → ℤ) (h_bij : Function.Bijective τ)
       contrapose! h
       constructor <;> linarith
     · use 0
-      push Not at h
-      exact h
+      simp_all
   obtain ⟨v, h_snk⟩ := ex_snk
   have se_empty : (southeastSet τ (τ v) v) = ∅ := by
     apply Set.eq_empty_of_forall_notMem
@@ -78,8 +76,7 @@ theorem is_asp_of_is_321a (τ : ℤ → ℤ) (h_bij : Function.Bijective τ)
     simp only [Set.mem_setOf_eq, not_and, not_lt] at h_snk
     have : v ≠ n := by
       intro heq
-      rw [heq] at τ_n_lt_v
-      linarith
+      simp_all
     have := h_snk (lt_of_le_of_ne v_le_n this)
     linarith
   have se_finite : (southeastSet τ (τ v) v).Finite := by simp only [se_empty, Set.finite_empty]
@@ -95,8 +92,7 @@ theorem is_asp_of_is_321a (τ : ℤ → ℤ) (h_bij : Function.Bijective τ)
     have n_le_u : n ≤ u := by linarith
     have : n ≠ u := by
       intro heq
-      rw [heq] at τ_n_ge_u_plus_1
-      linarith
+      simp_all
     have n_lt_u : n < u := lt_of_le_of_ne n_le_u this
     have := h_src n_lt_u
     linarith
@@ -279,8 +275,7 @@ lemma snk_lt {v x : ℤ} (v_snk : isSnk τ v) (v_lt_x : v < x) :
     refine lt_of_le_of_ne h ?_
     intro heq
     apply τ.injective at heq
-    rw [heq] at v_lt_x
-    exact lt_irrefl v v_lt_x
+    simp_all
   rcases v_snk with ⟨u, _⟩
   have := tfree_of_is_321a τ h_321a u v x
   rcases this <;> contradiction
@@ -301,8 +296,7 @@ lemma src_gt {u x : ℤ} (u_src : isSrc τ u) (x_lt_u : x < u) :
     refine lt_of_le_of_ne h ?_
     intro heq
     apply τ.injective at heq
-    rw [heq] at x_lt_u
-    exact lt_irrefl x x_lt_u
+    simp_all
   rcases u_src with ⟨v, _⟩
   have := tfree_of_is_321a τ h_321a x u v
   rcases this <;> contradiction
@@ -347,8 +341,7 @@ lemma between_inv {u x v : ℤ}
         by_contra! h
         have neq : u ≠ x := by
           intro heq
-          rw [heq] at h
-          exact lt_irrefl (τ x) h
+          simp_all
         have u_lt_x : u < x := lt_of_le_of_ne u_le_x neq
         have : ⟨u, x⟩ ∈ invSet τ := ⟨u_lt_x, h⟩
         contradiction
@@ -356,8 +349,7 @@ lemma between_inv {u x v : ℤ}
         linarith [uv_inv.2]
       have neq : x ≠ v := by
         intro heq
-        rw [heq] at τ_x_gt_v
-        exact lt_irrefl (τ v) τ_x_gt_v
+        simp_all
       have x_lt_v : x < v := lt_of_le_of_ne x_le_v neq
       exact ⟨x_lt_v, τ_x_gt_v⟩
     have x_src : isSrc τ x := src_of_inv h_xv
@@ -386,8 +378,7 @@ lemma split_s {u v : ℤ} {a b : ℤ}
     constructor
     · rintro ⟨n_ge_b, τn_lt_a⟩
       by_cases n_v : n ≥ v
-      · left
-        exact ⟨n_v, τn_lt_a⟩
+      · simp_all
       · right
         push Not at n_v
         suffices τ n < τ v by exact ⟨n_ge_b, this⟩
@@ -429,8 +420,7 @@ lemma uv_duality {u : ℤ} {a b : ℤ}
   let τv_lt_a : τ (τ.v b m_pos) < a := τ.τv_lt b m_pos s_ge_m
   constructor
   · suffices τ.s a (τ.v b m_pos) = m' by
-      simp only [AspPerm.inv_mul_cancel_eval, inv_inv]
-      exact this
+      simp_all
     have split := split_s h_321a u_lt_b b_le_v τv_lt_a τu_ge_a
     have : τ.s (τ (τ.v b m_pos)) b = m - 1 := by
       exact ((τ.v_crit b m_pos (τ.v b m_pos)).mp rfl).1
@@ -455,8 +445,7 @@ lemma uv_duality_ge {a b : ℤ}
     · intro h
       simpa using snk_le h_321a τiw_snk h
   suffices τ v ≥ w by
-    rw [← equiv]
-    exact ⟨this, this⟩
+    simp_all
   by_contra! τv_lt_w
   let A := τ.seFinset (τ v) b
   let B := τ.seFinset a (τ⁻¹ w)
@@ -660,26 +649,16 @@ lemma between_inv_lel
     have x_snk_β : ¬ isSnk β x := not_imp_not.mpr
       (snk_of_snk h_L) x_snk
     refine ⟨bp, bpβ, ?_, ?_, ?_, ?_⟩
-    · constructor
-      · intro h
-        exact (h_ux_β h).elim
-      · intro h
-        exact (h_ux h).elim
+    · simp_all
     · constructor
       · intro h
         exact h_L h
-      · intro _
-        exact h_xv
+      · simp_all
     · constructor
       · intro _
         exact src_of_src h_L h_src
-      · intro _
-        exact x_src
-    · constructor
-      · intro h
-        exact (x_snk_β h).elim
-      · intro h
-        exact (x_snk h).elim
+      · simp_all
+    · simp_all
   · have h_snk : isSnk β x := by
       have := bpβ.src_or_snk
       exact this.resolve_left h_src
@@ -695,23 +674,13 @@ lemma between_inv_lel
     · constructor
       · intro h
         exact h_L h
-      · intro _
-        exact h_ux
-    · constructor
-      · intro h
-        exact (h_xv_β h).elim
-      · intro h
-        exact (h_xv h).elim
-    · constructor
-      · intro h
-        exact (h_src h).elim
-      · intro h
-        exact (x_src h).elim
+      · simp_all
+    · simp_all
+    · simp_all
     · constructor
       · intro _
         exact snk_of_snk h_L h_snk
-      · intro _
-        exact x_snk
+      · simp_all
 
 /-- The interval-subordination relation on inversion boxes. -/
 def intervalSub (i₁ i₂ : (ℤ × ℤ)) : Prop :=
@@ -1090,8 +1059,7 @@ lemma excess_of_not_isolated {u v₁ v₂ : ℤ} (v₁_lt_v₂ : v₁ < v₂)
     by_contra!
     have n_sum : n + n' ≥ τ⁻¹.s b a + 3 := by linarith
     have : n + n' = τ⁻¹.s b a + 2 := by linarith [n']
-    rw [this] at n_sum
-    linarith [n_sum]
+    simp_all
   rcases n_bounds with (n_le | n'_le)
   · left
     have u_lt_b : u < b := by linarith [u_lt_v₁]
@@ -1262,9 +1230,7 @@ lemma not_isolated_of_excess {a b : ℤ} (h_s : α.dprodValGe β a b (τ.s a b +
     have icc : M ∈ Set.Icc 1 M := ⟨M_pos, le_refl M⟩
     have icc' : N ∈ Set.Icc 1 N := ⟨N_pos, le_refl N⟩
     have options := legos M icc N icc'
-    rcases options with (hβ | hα)
-    · exfalso; exact corner_nramp hβ
-    · simpa using hα
+    simp_all
   have domino : ∃ m ∈ Set.Icc 1 M, ∃ n ∈ Set.Icc 1 N,
       ⟨M + 1 - m, N + 1 - n⟩ ∈ α.lamp a ∧
         ((⟨m - 1, n⟩ ∈ β.ramp b ∧ m ≥ 2) ∨
@@ -1357,11 +1323,9 @@ lemma not_isolated_of_excess {a b : ℤ} (h_s : α.dprodValGe β a b (τ.s a b +
       apply h_nest.2
       apply Prod.ext
       · apply τ⁻¹.injective
-        have h := congrArg Prod.snd h_eq
-        simpa [τ.inv_mul_cancel_eval] using h.symm
+        simp_all
       · apply τ⁻¹.injective
-        have h := congrArg Prod.fst h_eq
-        simpa [τ.inv_mul_cancel_eval] using h.symm
+        simp_all
   · exact not_isolated_of_domino h_321a h_L h_R a b m (M+1-m)
       (n-1) (N+1-n) m_Icc.1 (by linarith [m_Icc.2])
       (by linarith [n_ge_2]) (by linarith [n_Icc.2])
@@ -1404,8 +1368,7 @@ theorem dprod_le_iff_isolated : α ⋆ β ≤ τ
     · have v_lt_v' : v < v' := by
         by_contra!
         have v_eq_v' : v = v' := le_antisymm v_le_v' this
-        subst v_eq_v' u_eq_u'
-        exact I_ne_J rfl
+        simp_all
       rw [← u_eq_u'] at J_mem
       have excess := excess_of_not_isolated h_321a h_L h_R h_χ v_lt_v' I_mem.1 J_mem.2
       use τ v + 1, v+1
@@ -1493,18 +1456,14 @@ theorem dprod_eq_iff : τ = α ⋆ β
   · rintro ⟨h_χ, ⟨h_union, h_isol⟩⟩
     have h_L : β ≤L τ := by
       intro x hx
-      rw [h_union]
-      exact Or.inr hx
+      simp_all
     have h_R : α ≤R τ := by
       rintro ⟨u, v⟩ hx
       have sr := (τ.sr_crit α (τ⁻¹ v) (τ⁻¹ u)).mpr
       simp only [τ.mul_inv_cancel_eval] at sr
       apply sr at hx
       have := τ.inv_set_inverse (τ⁻¹ v) (τ⁻¹ u)
-      simp only [τ.mul_inv_cancel_eval] at this
-      rw [← this]
-      rw [h_union]
-      exact Or.inl hx
+      simp_all
     rw [AspPerm.eq_star_iff]
     constructor
     · rw [← τ.le_star_iff]

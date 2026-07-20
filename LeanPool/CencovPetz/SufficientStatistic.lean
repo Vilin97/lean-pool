@@ -134,12 +134,5 @@ theorem fisherBilin_pushforward_le (g : α → β) (hg : Function.Surjective g)
       fisherBilin p u u = ∑ a : α, (((u : α → ℝ) a) ^ 2) / p.p a := by
     simp [fisherBilin.apply, pow_two]
   -- Assemble.
-  calc
-    fisherBilin (Simplex.pushforward (α := α) (β := β) g hg p)
-          (tangentPushforward (α := α) (β := β) g u)
-          (tangentPushforward (α := α) (β := β) g u)
-        = ∑ b : β, ((∑ a with g a = b, ((u : α → ℝ) a)) ^ 2) / (∑ a with g a = b, p.p a) := hL
-    _ ≤ ∑ b : β, ∑ a with g a = b, (((u : α → ℝ) a) ^ 2) / p.p a := hsum
-    _ = ∑ a : α, (((u : α → ℝ) a) ^ 2) / p.p a := hfib_sq
-    _ = fisherBilin p u u := hR.symm
+  simp_all
 end LeanPool.CencovPetz

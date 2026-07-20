@@ -548,9 +548,7 @@ variable {α : Type*} [LinearOrder α]
 namespace List
 
 lemma «maximam?_some_of_not_nil» {l : List α} (h : l ≠ []) : l.max?.isSome := by
-  cases l
-  case nil => simp at h
-  case cons l => simp [List.max?_cons]
+  simp_all
 
 lemma «maximam?_eq_some» {l : List α} {a} (h : l.max? = some a) : ∀ x ∈ l, x ≤ a :=
   (List.max?_le_iff h (x := a)).mp le_rfl
@@ -611,9 +609,7 @@ lemma lMap_rel {k} (r : L₁.Rel k) (v : Fin k → Semiterm L₁ ξ n) :
   cases i using Fin.cases with
   | zero => rfl
   | succ i =>
-    cases i using Fin.cases with
-    | zero => rfl
-    | succ i => exact Fin.elim0 i
+    simp_all
 
 lemma lMap_nrel {k} (r : L₁.Rel k) (v : Fin k → Semiterm L₁ ξ n) :
     lMap Φ (nrel r v) = nrel (Φ.rel r) (fun i => (v i).lMap Φ) := rfl
@@ -633,9 +629,7 @@ lemma lMap_nrel {k} (r : L₁.Rel k) (v : Fin k → Semiterm L₁ ξ n) :
   cases i using Fin.cases with
   | zero => rfl
   | succ i =>
-    cases i using Fin.cases with
-    | zero => rfl
-    | succ i => exact Fin.elim0 i
+    simp_all
 
 @[simp] lemma lMap_all (φ : Semiformula L₁ ξ (n + 1)) :
     lMap Φ (∀' φ) = ∀' lMap Φ φ := rfl

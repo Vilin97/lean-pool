@@ -28,8 +28,7 @@ lemma not_acc_iff {x : α} : ¬Acc r x ↔ ∃ y, y ≺ x ∧ ¬Acc r y :=
     intro hx
     by_contra h
     exact hx <| Acc.intro x (fun y hy => by
-      by_contra hy'
-      exact h ⟨y, hy, hy'⟩),
+      simp_all),
   by
     rintro ⟨y, hy, hy'⟩ hx
     exact hy' (Acc.inv hx hy)⟩

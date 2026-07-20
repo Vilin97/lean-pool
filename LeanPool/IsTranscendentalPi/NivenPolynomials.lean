@@ -70,9 +70,7 @@ lemma rootMultiplicity_Fp (T : ℤ[X]) (p : ℕ) (a : ℂ) (hT : T ≠ 0) :
   have hmap : (T.map (algebraMap ℤ ℂ)) ≠ 0 :=
     (Polynomial.map_ne_zero_iff (f := algebraMap ℤ ℂ) (hf := Int.cast_injective (α := ℂ))).2 hT
   have hFp : (X^(p - 1) * (T.map (algebraMap ℤ ℂ))^p : ℂ[X]) ≠ 0 := by
-    apply mul_ne_zero
-    · exact pow_ne_zero _ X_ne_zero
-    · exact pow_ne_zero _ hmap
+    simp_all
   by_cases hzero : a = 0
   · subst hzero
     have hXpow : rootMultiplicity (0 : ℂ) (X^(p - 1) : ℂ[X]) = p - 1 := by
@@ -83,8 +81,7 @@ lemma rootMultiplicity_Fp (T : ℤ[X]) (p : ℕ) (a : ℂ) (hT : T ≠ 0) :
       (x := (0 : ℂ)) hFp, hXpow, rootMultiplicity_npow T (0 : ℂ) p hT]
     simp
   · have hXpow : rootMultiplicity a (X^(p - 1) : ℂ[X]) = 0 := by
-      apply rootMultiplicity_eq_zero
-      simpa [IsRoot, eval_X_pow] using (pow_ne_zero (p - 1) hzero)
+      simp_all
     rw [if_neg hzero, Fp, Polynomial.map_mul, Polynomial.map_pow]
     simp only [Polynomial.map_X, Polynomial.map_pow]
     rw [rootMultiplicity_mul (p := (X^(p - 1) : ℂ[X])) (q := (T.map (algebraMap ℤ ℂ))^p)

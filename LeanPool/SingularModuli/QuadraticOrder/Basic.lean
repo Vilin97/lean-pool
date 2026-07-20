@@ -100,8 +100,7 @@ lemma tau_minimal_poly :
     tau ^ 2 - d • tau + ((d ^ 2 - d) / 4 : ℤ) • (1 : QuadraticOrder d) = 0 := by
   have h : Polynomial.aeval (tau (d := d)) (poly d) = 0 := by
     unfold tau
-    rw [AdjoinRoot.aeval_eq]
-    exact AdjoinRoot.mk_self
+    simp_all
   simp only [poly, map_sub, map_add, map_mul, map_pow,
              Polynomial.aeval_X, Polynomial.aeval_C,
              Algebra.algebraMap_eq_smul_one, smul_mul_assoc, one_mul] at h
@@ -111,8 +110,7 @@ lemma tau_minimal_poly :
 @[simp] lemma poly_aeval_tau :
     Polynomial.aeval (tau (d := d)) (poly d) = 0 := by
   unfold tau
-  rw [AdjoinRoot.aeval_eq]
-  exact AdjoinRoot.mk_self
+  simp_all
 
 /-- `QuadraticOrder d` has a `ℤ`-module power basis `{1, τ}` of rank 2. -/
 noncomputable def basis : PowerBasis ℤ (QuadraticOrder d) :=
@@ -164,7 +162,6 @@ lemma basis_repr_tau_one :
     rw [Polynomial.modByMonic_eq_self_iff (poly_monic d), poly_degree,
         Polynomial.degree_X]
     decide
-  rw [hX_mod]
-  exact Polynomial.coeff_X_one
+  simp_all
 
 end QuadraticOrder

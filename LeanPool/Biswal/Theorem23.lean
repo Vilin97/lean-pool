@@ -168,12 +168,9 @@ lemma pow_mul_pow_inv_cancel (K : Type*) [Field K] (P : PowerSeries K) (t e : �
     show e = t + (e - t) from (Nat.add_sub_cancel' hte).symm, pow_add, ← mul_assoc,
     show P ^ t * P⁻¹ ^ t = 1 from by
       rw [← ps_inv_pow_eq K P t]
-      exact PowerSeries.mul_inv_cancel _ (by
-        rw [map_pow]
-        exact pow_ne_zero _ hP),
+      simp_all,
     one_mul]
-  congr 1
-  omega
+  simp_all
 
 theorem genFun_eq_reduced (K : Type*) [Field K] (m μ : ℕ) {s : ℕ}
     (ξ : Nat.Partition s) (_hm : 2 ≤ m) (h_parts : ∀ i ∈ ξ.parts, i ≤ m)
@@ -215,9 +212,7 @@ private lemma polyP_coeff_step_pos (R : Type*) [CommRing R] (m : ℕ) (j : ℕ) 
         (-1 : R) ^ (j - 1) * (Nat.choose (m - (j - 1)) (j - 1) : ℕ) =
         (-1 : R) ^ j * (Nat.choose (m + 1 - j) j + Nat.choose (m + 1 - j) (j - 1) : ℕ) := by
       grind
-    rw [h5]
-    congr 1
-    exact congrArg Nat.cast h4
+    simp_all
   · simp only [show m + 1 - j = 0 by omega, show m + 2 - j = 0 by omega,
       show m - (j - 1) = 0 by omega,
       Nat.choose_eq_zero_iff.mpr (by omega : 0 < j),
@@ -242,10 +237,7 @@ theorem polyP_coeff (R : Type*) [CommRing R] (n j : ℕ) :
           show m + 1 - (j + 1) = m - j by omega,
           show m + 2 - (j + 1) = m + 1 - j by omega]
         have key := polyP_coeff_step_pos R m (j + 1) (by omega)
-        simp only [Nat.add_sub_cancel,
-          show m + 1 - (j + 1) = m - j by omega,
-          show m + 2 - (j + 1) = m + 1 - j by omega] at key
-        exact key
+        simp_all
 
 theorem D_coeff_mk (K : Type*) [Field K] (m a b : ℕ) :
     (↑(polyP K a * polyP K b) : PowerSeries K) * ((↑(polyP K m) : PowerSeries K))⁻¹ =
@@ -343,11 +335,7 @@ lemma cauchy_product_as_fin_prod (m μ : ℕ) {s : ℕ}
   have hmerge : (∏ i : Fin L1, (↑(polyP ℚ (αs.getD i.val 0)) : PowerSeries ℚ)) *
       ((↑(polyP ℚ m) : PowerSeries ℚ)⁻¹) ^ k = ∏ j : Fin (L1 + k), F j := by
     simp only [F, Fin.prod_univ_add]
-    congr 1
-    · exact Finset.prod_congr rfl fun i _ => by simp [Fin.addCases_left]
-    · rw [show ((↑(polyP ℚ m) : PowerSeries ℚ)⁻¹) ^ k =
-        ∏ _ν : Fin k, ((↑(polyP ℚ m) : PowerSeries ℚ)⁻¹) from (Fin.prod_const k _).symm]
-      exact Finset.prod_congr rfl fun i _ => by simp [Fin.addCases_right]
+    simp_all
   rw [hmerge, coeff_fin_prod_eq_antidiag_sum' (L1 + k) r F]
   exact Finset.sum_congr rfl fun f _ => inner_prod_eq αs m k f
 
@@ -550,8 +538,7 @@ private lemma double_submatrix_eq_stripMatrix (n : ℕ) (j₀ : Fin (n + 2)) (hj
     (by simp only [Fin.succAbove_last]
         have : j.castSucc.castSucc < j₀ := by
           rw [Fin.lt_def]
-          simp [Fin.val_castSucc]
-          omega
+          simp_all
         simp only [Fin.succAbove, this, ite_true, Fin.val_castSucc])
 
 private lemma neg_one_pow_double (n : ℕ) : (-1 : PowerSeries ℚ) ^ (n + n) = 1 :=
@@ -687,8 +674,7 @@ private lemma md_middle_block_upper_entry_zero (n : ℕ) (a j : Fin (n + 1))
         (by simp only [Fin.lt_def, Fin.val_castSucc]; exact x.prop.2),
       Fin.succAbove_of_le_castSucc _ _
         (by simp only [Fin.le_def, Fin.val_castSucc]; exact y.prop.1)]
-  simp [Fin.val_castSucc, Fin.val_succ]
-  omega
+  simp_all
 
 private lemma md_middle_block_B_lower_triangular (n : ℕ) (a j : Fin (n + 1)) :
     let M := (stripMatrix (n + 1)).submatrix j.succAbove a.succAbove
@@ -726,8 +712,7 @@ private lemma md_nested_subtype_card (n : ℕ) (a j : Fin (n + 1)) :
         (Finset.mem_Ico.mp hk).1, (Finset.mem_Ico.mp hk).2⟩
       left_inv := fun ⟨x, hx⟩ => by simp_all
       right_inv := fun ⟨k, hk⟩ => by simp_all }
-  rw [this]
-  simp [Nat.card_Ico]
+  simp_all
 
 private lemma md_minor_middle_block_det (n : ℕ) (a j : Fin (n + 1)) :
     let M := (stripMatrix (n + 1)).submatrix j.succAbove a.succAbove
@@ -760,8 +745,7 @@ private noncomputable def md_finSubtypeEquiv (n : ℕ) (j : Fin (n + 1)) :
     simp
     omega
   right_inv y := by
-    ext
-    simp
+    simp_all
 
 private noncomputable def md_rightBlockEquiv (n : ℕ) (a j : Fin (n + 1)) (haj : a.val ≤ j.val) :
     {x : {z : Fin n // ¬(z.val < a.val)} // ¬(x.val.val < j.val)} ≃
@@ -956,10 +940,7 @@ private lemma sum_stripMatrix_split (m : ℕ) (v : Fin m → PowerSeries ℚ) (i
   · by_cases h2 : j.val = i.val + 1
     · simp [h1, h2]
       omega
-    · by_cases h3 : i.val = j.val + 1
-      · simp [h1, h3]
-        simp_all
-      · simp [h1, h2, h3]
+    · simp_all
 
 private lemma sum_superdiag (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m) :
     ∑ j : Fin m, (if j.val = i.val + 1 then -(v j) else 0) =
@@ -969,8 +950,7 @@ private lemma sum_superdiag (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m
     have : ∀ j : Fin m, (j.val = i.val + 1) = (j = ⟨i.val + 1, hm⟩) := by
       intro j
       simp [Fin.ext_iff]
-    simp_rw [this]
-    simp [Finset.sum_ite_eq', Finset.mem_univ]
+    simp_all
   · simp only [hm, dite_false]
     exact Finset.sum_eq_zero fun j _ => if_neg (by omega)
 
@@ -984,10 +964,8 @@ private lemma sum_subdiag (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m)
       intro j
       simp [Fin.ext_iff]
       omega
-    simp_rw [this]
-    exact Fintype.sum_ite_eq' ⟨i.val - 1, pf h⟩ (fun j => -(PowerSeries.X * v j))
-  · simp only [h, dite_false]
-    exact Fintype.sum_eq_zero _ fun j => if_neg (by omega)
+    simp_all
+  · simp_all
 
 private lemma mulVec_three_terms (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : Fin m) :
     (stripMatrix m).mulVec v i =
@@ -997,8 +975,7 @@ private lemma mulVec_three_terms (m : ℕ) (v : Fin m → PowerSeries ℚ) (i : 
   simp only [Matrix.mulVec, dotProduct]
   rw [sum_stripMatrix_split, sum_superdiag,
     show ∑ j : Fin m, (if i = j then v j else 0) = v i from by
-      rw [Finset.sum_ite_eq]
-      simp [Finset.mem_univ],
+      simp_all,
     sum_subdiag m v i (by omega)]
 
 private lemma coeff_three_terms_eq (m : ℕ) (target i : Fin m) (u : ℕ) :

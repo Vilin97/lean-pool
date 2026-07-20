@@ -166,10 +166,7 @@ theorem num_injective : Function.Injective numP := by
       have h3 : tri (n₁ + m₁) ≤ num n₁ m₁ := by unfold num; omega
       omega
   have hbase : tri (n₁ + m₁) + m₁ = tri (n₂ + m₂) + m₂ := h'
-  rw [hs] at hbase
-  have hm : m₁ = m₂ := by omega
-  have hn : n₁ = n₂ := by omega
-  subst hm; subst hn; rfl
+  simp_all
 
 /-! ### The inverse: walking the diagonals -/
 
@@ -230,13 +227,7 @@ def setCongr (e : α ≃ β) : Set α ≃o Set β where
   left_inv := e.symm_image_image
   right_inv := e.symm.symm_image_image
   map_rel_iff' := by
-    intro a b
-    constructor
-    · intro h x hx
-      obtain ⟨y, hy, hey⟩ := h ⟨x, hx, rfl⟩
-      rwa [e.injective hey] at hy
-    · rintro h _ ⟨x, hx, rfl⟩
-      exact ⟨x, h hx, rfl⟩
+    simp_all
 
 /-- `P N ≅ P(N × N)` — induced by the pairing bijection `numEquiv`. -/
 def pnOrderIsoPNN : Set ℕ ≃o Set (ℕ × ℕ) := setCongr numEquiv.symm

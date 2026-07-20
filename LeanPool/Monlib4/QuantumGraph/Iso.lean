@@ -84,9 +84,7 @@ open scoped Matrix
 
 private theorem innerAutStarAlg_symm_eq_star (U : unitaryGroup n ℂ) :
     (innerAutStarAlg U).symm = innerAutStarAlg (star U) := by
-  ext1
-  simp_rw [innerAutStarAlg_symm_apply, innerAutStarAlg_apply, Unitary.star_eq_inv,
-    UnitaryGroup.inv_apply, star_star]
+  simp_all
 
 theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
     (U : unitaryGroup n ℂ) :
@@ -232,8 +230,7 @@ theorem StarAlgEquiv.commutes_with_mul' (f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Ma
       f.toLinearMap ∘ₗ LinearMap.mul' ℂ (Matrix n n ℂ) := by
   classical
   rw [commutes_with_mul'_iff]
-  intro x y
-  simp only [StarAlgEquiv.toLinearMap_apply, _root_.map_mul]
+  simp_all
 
 theorem StarAlgEquiv.IsIsometry.commutes_with_mul'_adjoint
   [hφ : φ.IsFaithfulPosMap] [Nontrivial n] {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)}

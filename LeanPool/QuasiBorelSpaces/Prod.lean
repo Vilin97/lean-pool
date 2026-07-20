@@ -70,8 +70,7 @@ lemma isHom_mk
     {g : A → C} (hg : IsHom g)
     : IsHom (fun x ↦ (f x, g x)) := by
   rw [QuasiBorelSpace.isHom_def] at ⊢ hf hg
-  simp only [isHom_def]
-  grind
+  simp_all
 
 @[simp]
 lemma isHom_iff (f : A → B × C) : IsHom f ↔ IsHom (fun x ↦ (f x).1) ∧ IsHom (fun x ↦ (f x).2) := by

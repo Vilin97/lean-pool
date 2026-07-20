@@ -36,8 +36,7 @@ private lemma sum_prod_eq_pow {J : Type*} [Fintype J]
     ∑ x : Fin ℓ → J, ∏ k : Fin ℓ, w (x k) = (∑ j : J, w j) ^ ℓ := by
   have h := @Finset.prod_univ_sum (Fin ℓ) ℝ _ _ (fun _ => J) _ (fun _ => Finset.univ) (fun _ j => w
     j)
-  simp [Fintype.piFinset_univ] at h
-  linarith
+  simp_all
 
 /-! ## Two-set deficit intersection inequality -/
 
@@ -179,8 +178,7 @@ lemma WeightedCollection.productInter_avgDeficit
         apply Finset.sum_bij (fun x _ => fun i _ => x i) <;>
           simp +decide only [univ_pi_univ, mem_univ, exists_const, forall_const, mul_ite,
             mul_one, prod_attach_univ]
-        · intro a
-          trivial
+        · simp_all
         · intro a₁ a₂ h
           exact funext fun i => congrFun (congrFun h i) (Finset.mem_univ i)
         · intro b
@@ -195,9 +193,7 @@ lemma WeightedCollection.productInter_avgDeficit
               if j = k then C.weight (x j) * deficit f M (C.sets (x j)) else C.weight (x j)) =
               ∏ j ∈ Finset.univ.erase k, C.weight (x j) := by
             apply Finset.prod_congr rfl
-            intro j hj
-            have hj_ne : j ≠ k := (Finset.mem_erase.mp hj).1
-            simp [hj_ne]
+            simp_all
           rw [h_erase]
           simp +decide only [if_true]
           ring_nf
@@ -213,9 +209,7 @@ lemma WeightedCollection.productInter_avgDeficit
             C.weight x) =
           ∏ x ∈ Finset.univ.erase k, ∑ x : C.J, C.weight x := by
         apply Finset.prod_congr rfl
-        intro x hx
-        have hx_ne : x ≠ k := (Finset.mem_erase.mp hx).1
-        simp [hx_ne]
+        simp_all
       rw [h_erase, Finset.prod_const, Finset.card_erase_of_mem (Finset.mem_univ k),
         Finset.card_univ, Fintype.card_fin]
       rw [show C.totalWeight = ∑ x : C.J, C.weight x from rfl]
@@ -249,8 +243,7 @@ lemma WeightedCollection.productInter_avgDeficit
         mul_left_comm,
         ne_of_gt (show 0 < C.totalWeight from C.totalWeight_pos)]
     cases ℓ
-    · simp +decide
-      ring
+    · simp_all
     · simp +decide [pow_succ']
       ring
 

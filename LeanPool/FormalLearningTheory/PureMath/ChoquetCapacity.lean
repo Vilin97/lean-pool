@@ -193,8 +193,7 @@ private lemma cyl_inter_eq_cyl_update (N : ℕ → ℕ) (n k : ℕ) :
 
 private lemma cyl_ext (N N' : ℕ → ℕ) (n : ℕ) (h : ∀ i, i ≤ n → N i = N' i) :
     Cyl N n = Cyl N' n := by
-  ext g; simp only [Cyl, Set.mem_setOf_eq]
-  exact ⟨fun hg i hi => h i hi ▸ hg i hi, fun hg i hi => (h i hi).symm ▸ hg i hi⟩
+  ext g; simp_all
 
 /-- Truncation: replace g(i) by min(g(i), N(i)) to bring any g into bounded set. -/
 private noncomputable def truncate (N : ℕ → ℕ) (g : ℕ → ℕ) : ℕ → ℕ :=
@@ -249,9 +248,7 @@ private lemma iInter_closure_image_cyl_eq
       simp only [nhds_discrete, Filter.tendsto_pure]
       have hg'_ev : ∀ᶠ n in atTop, g' (φ n) i = g_star i := by
         rw [tendsto_pi_nhds] at hg'_conv
-        have := hg'_conv i
-        simp only [nhds_discrete, Filter.tendsto_pure] at this
-        exact this
+        simp_all
       have hφ_ev : ∀ᶠ n in atTop, i ≤ φ n :=
         (hφ_strict.tendsto_atTop).eventually (Filter.eventually_ge_atTop i)
       filter_upwards [hg'_ev, hφ_ev] with n h1 h2
@@ -368,9 +365,7 @@ theorem MeasureTheory.AnalyticSet.cap_eq_iSup_isCompact
           by_cases heq : i = m + 1
           · subst heq; rfl
           · have him : i ≤ m := by omega
-            change N_seq i i = N_seq (m + 1) i
-            rw [hN_seq_consistent m i him]
-            exact ih i him
+            simp_all
       -- Cyl N n = Cyl (N_seq n) n
       have hcyl_eq : ∀ n, Cyl N n = Cyl (N_seq n) n :=
         fun n => cyl_ext N (N_seq n) n (hN_agree n)

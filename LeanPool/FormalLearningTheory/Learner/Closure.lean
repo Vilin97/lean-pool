@@ -111,10 +111,7 @@ theorem measurableBatchLearner_interp
   · change Measurable (fun p : X × (Fin 2 → Bool) => if p.1 ∈ A then p.2 0 else p.2 1)
     exact Measurable.ite (measurable_fst hA) ((measurable_pi_apply 0).comp measurable_snd)
       ((measurable_pi_apply 1).comp measurable_snd)
-  · intro i
-    fin_cases i
-    · simpa using h₁
-    · simpa using h₂
+  · simp_all
 
 /-! ## Part 5: Uniform measurability for indexed families -/
 

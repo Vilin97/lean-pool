@@ -69,9 +69,7 @@ lemma transition_preserves_compat
     AddMonoidHom.coe_comp, Function.comp_apply]
   change ConcreteCategory.hom (β.app (op W) ≫ (Y'.obj j').map φ.op) _ =
     ConcreteCategory.hom ((Y'.obj j).map φ.op ≫ β.app (op (U ⊓ V))) _
-  rw [show β.app (op W) ≫ (Y'.obj j').map φ.op =
-    (Y'.obj j).map φ.op ≫ β.app (op (U ⊓ V))
-    from (β.naturality φ.op).symm]
+  simp_all
 
 /-- A section of a sheaf that restricts to 0 on a finite open cover is 0. -/
 theorem sheaf_section_zero_of_zero_on_cover
@@ -346,8 +344,7 @@ theorem colimit_exists_gluing_of_compatible_finite_subcover
     from ((c.ι.app j₁).naturality (Opens.leSupr U k).op).symm]
   change ConcreteCategory.hom ((c.ι.app j₁).app (op (U k)))
     (ConcreteCategory.hom ((P.obj j₁).map (Opens.leSupr U k).op) s₀) = sf k
-  rw [hs₀ k hk]
-  exact hx'' ⟨k, hk⟩
+  simp_all
 
 /-- If a section on `iSup U` agrees with a compatible family on a finite subcover,
     then it restricts to that family on every `U i`. -/

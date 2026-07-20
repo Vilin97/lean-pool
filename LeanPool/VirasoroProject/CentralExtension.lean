@@ -180,8 +180,7 @@ def _root_.VirasoroProject.LieOneCochain.bdryHom :
   map_smul' c Z := by
     ext
     · rfl
-    · change c • Z.2 + β (c • Z.1) = c • (Z.2 + β Z.1)
-      simp only [LinearMapClass.map_smul, smul_add]
+    · simp_all
   map_lie' := by
     intro Z W
     ext <;> rfl

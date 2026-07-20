@@ -100,9 +100,7 @@ lemma starRingEnd_iteratedFDeriv_norm_eq (g : TestFunctionℂ) (n : ℕ) (x : Sp
   -- Use the fact that starRingEnd ℂ = Complex.conjLIE (as functions)
   have h : (fun x => starRingEnd ℂ (g x)) = Complex.conjLIE ∘ g := by
     ext y
-    rw [Function.comp_apply]
-    -- Use the fact that conjLIE and starRingEnd are the same
-    exact congr_fun (@RCLike.conjLIE_apply ℂ _) (g y)
+    simp_all
   rw [h]
   -- Now apply the norm preservation lemma for LinearIsometryEquiv
   exact LinearIsometryEquiv.norm_iteratedFDeriv_comp_left Complex.conjLIE g x n

@@ -30,8 +30,7 @@ lemma sub_existsUnique (a b : V) : ∃! c, (a ≥ b → a = b + c) ∧ (a < b �
     have : ∃ c, a = b + c := exists_add_of_le hxy
     rcases this with ⟨c, rfl⟩
     exact ExistsUnique.intro c rfl (fun a h => (add_left_cancel h).symm)
-  · simp only [ge_iff_le, isEmpty_Prop, not_le, hxy, IsEmpty.forall_iff, forall_const,
-      true_and, existsUnique_eq]
+  · simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def sub (a b : V) : V := Classical.choose! (sub_existsUnique a b)
@@ -135,9 +134,7 @@ lemma zero_or_succ (a : V) : a = 0 ∨ ∃ a', a = a' + 1 := by
   · right; exact ⟨a - 1, by rw [sub_add_self_of_le]; exact pos_iff_one_le.mp pos⟩
 
 lemma pred_lt_self_of_pos (h : 0 < a) : a - 1 < a := by
-  rcases zero_or_succ a with (rfl | ⟨a, rfl⟩)
-  · simp_all
-  · simp
+  simp_all
 
 lemma tsub_lt_iff_left (h : b ≤ a) : a - b < c ↔ a < c + b :=
   AddLECancellable.tsub_lt_iff_right (add_le_cancel b) h
@@ -176,9 +173,7 @@ lemma le_mul_self_of_pos_right (hy : 0 < b) : a ≤ a * b := by
 
 lemma dvd_iff_bounded {a b : V} : a ∣ b ↔ ∃ c ≤ b, b = a * c := by
   by_cases hx : a = 0
-  · simp only [hx, zero_dvd_iff, zero_mul, exists_and_right, iff_and_self]
-    rintro rfl
-    exact ⟨0, by simp⟩
+  · simp_all
   · constructor
     · rintro ⟨c, rfl⟩; exact ⟨c, le_mul_self_of_pos_left (pos_iff_ne_zero.mpr hx), rfl⟩
     · rintro ⟨c, hz, rfl⟩; exact dvd_mul_right a c

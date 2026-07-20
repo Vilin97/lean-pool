@@ -114,8 +114,7 @@ private theorem norm_smul_pkappa_wip
       refine Finset.sum_congr rfl ?_
       intro alpha halpha
       simp [Finsupp.smul_apply, mul_pow]
-    rw [hsum, Real.sqrt_mul (sq_nonneg ‖c‖), Real.sqrt_sq_eq_abs]
-    simp [abs_of_nonneg (norm_nonneg _)]
+    simp_all
 
 private theorem orthogonalToPk_smul_right_wip
     (hd : 0 < d) {kappa : MultiIndex d}
@@ -214,8 +213,7 @@ private lemma integrable_oneDimPhi_cross_gaussian_wip
           (HermitekLEAN.integrable_weightedCross k m n)
       refine h.congr ?_
       filter_upwards with z
-      have he : (MeasurableEquiv.funUnique (Fin 1) ℂ) z = z 0 := rfl
-      simp only [Function.comp_apply, he, mul_assoc]
+      simp_all
     have hsmul :
         Integrable
           (fun z : Cd 1 =>
@@ -244,10 +242,7 @@ private lemma integrable_oneDimPhi_cross_gaussian_wip
     calc
       (Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2)) • X =
           (((Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) : ℝ) : ℂ) * X) := by
-            change
-              (((Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) : ℝ) : ℂ) * X) =
-                (((Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) : ℝ) : ℂ) * X)
-            rfl
+            simp_all
       _ = (1 / Real.pi : ℂ) * (Real.exp (-‖z 0‖ ^ 2) • X) := by
             simp [Algebra.smul_def, one_div, mul_assoc]
   · unfold gaussianDensity
@@ -351,9 +346,7 @@ private theorem evalPkappa_lpNorm_eq_norm_wip
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
                 ∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d := by
-            congr 1
-            ext z
-            exact Real.rpow_natCast ‖evalPkappa kappa F z‖ 2
+            simp_all
           rw [hpow, evalPkappa_total_mass hd kappa F, Real.sqrt_sq_eq_abs]
           exact abs_of_nonneg (norm_nonneg_pkappa_wip hd F)
 
@@ -406,8 +399,7 @@ private theorem memLp_two_defectFunctionPkappa_wip
           2 * ‖evalPkappa kappa (F + G) z‖ ^ 2 + 2 * ‖evalPkappa kappa F z‖ ^ 2 := by
         nlinarith [sq_nonneg (‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖)]
       simpa [sq_abs] using this
-    have hnonneg : 0 ≤ defectFunctionPkappa_wip kappa F G z ^ 2 := by positivity
-    simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hsqz
+    simp_all
   simpa [Real.norm_eq_abs, abs_of_nonneg] using
     MeasureTheory.Integrable.mono' hsq hmeasSq hbound
 
@@ -494,8 +486,7 @@ private theorem norm_le_defect_add_two_wip
             rw [MeasureTheory.lpNorm_const_smul]
             norm_num
       _ = 2 * MeasureTheory.lpNorm (evalPkappa kappa F) 2 (gammaD d) := by
-            rw [hnormEq]
-            norm_num
+            simp_all
       _ = 2 * ‖F‖ := by rw [evalPkappa_lpNorm_eq_norm_wip hd kappa F]
       _ = 2 := by simp [hF_norm]
   calc
@@ -577,8 +568,7 @@ theorem orthogonal_coercivity
             lowAnnulusMass J (ofPkappa kappa H) + highAnnulusMass J (ofPkappa kappa H) ≤ 1 / 2 := by
           linarith
         have hnorm_sq : ‖H‖ ^ 2 = 1 := by
-          rw [hH_norm]
-          norm_num
+          simp_all
         linarith
       · have hdelta_inv_le : delta⁻¹ ≤ C_F_perp := by
           dsimp [C_F_perp]

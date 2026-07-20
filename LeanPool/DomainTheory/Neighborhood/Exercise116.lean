@@ -65,8 +65,7 @@ def ofExcluded (E : Set ℕ) : cofiniteSystem.Element where
   sub h := h.1
   master_mem := by
     change (Set.univ : Set ℕ)ᶜ.Finite ∧ (Set.univ : Set ℕ)ᶜ ⊆ E
-    rw [Set.compl_univ]
-    exact ⟨Set.finite_empty, Set.empty_subset E⟩
+    simp_all
   inter_mem := by
     rintro Y1 Y2 ⟨hf1, hs1⟩ ⟨hf2, hs2⟩
     rw [Set.compl_inter]
@@ -86,8 +85,7 @@ def toExcluded (x : cofiniteSystem.Element) : Set ℕ := {n | x.mem ({n}ᶜ)}
 
 /-- Each `{n}ᶜ` is a neighbourhood (its complement `{n}` is finite). -/
 theorem mem_compl_singleton (n : ℕ) : cofiniteSystem.mem (({n} : Set ℕ)ᶜ) := by
-  rw [cofiniteSystem_mem, compl_compl]
-  exact Set.finite_singleton n
+  simp_all
 
 /-- **Reconstruction lemma.** For finite `F` of points each of whose
 single-deletion `{n}ᶜ`
@@ -104,15 +102,11 @@ theorem mem_compl_of_finite (x : cofiniteSystem.Element) {F : Set ℕ} (hF : F.F
 
 /-- For `n ∉ Y`, the neighbourhood `Y` is contained in `{n}ᶜ`. -/
 theorem subset_compl_singleton {Y : Set ℕ} {n : ℕ} (hn : n ∈ Yᶜ) : Y ⊆ ({n} : Set ℕ)ᶜ := by
-  intro m hm
-  rw [Set.mem_compl_iff, Set.mem_singleton_iff]
-  rintro rfl
-  exact hn hm
+  simp_all
 
 theorem toExcluded_ofExcluded (E : Set ℕ) : toExcluded (ofExcluded E) = E := by
   ext n
-  rw [mem_toExcluded, mem_ofExcluded]
-  simp [compl_compl, Set.finite_singleton, Set.singleton_subset_iff]
+  simp_all
 
 theorem ofExcluded_toExcluded (x : cofiniteSystem.Element) :
     ofExcluded (toExcluded x) = x := by

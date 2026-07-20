@@ -178,9 +178,7 @@ lemma eq_quantile_volume
     have lemma₂ : {r : I | r ≤ cdf μ i} = Set.Iic (cdf μ i) := by
       ext ⟨_, _⟩
       simp only [Set.mem_setOf_eq, Set.mem_Iic]
-    simp only [
-      lemma₂, unitInterval.volume_Iic, cdf_apply_val, ne_eq,
-      measure_ne_top, not_false_eq_true, ENNReal.ofReal_toReal]
+    simp_all
   · apply measurable_quantile
     · fun_prop
     · fun_prop

@@ -58,9 +58,7 @@ theorem card_availFrom (s : Nat) : Fintype.card (AvailFrom (s := s)) = n - s := 
           simpa using this⟩
       left_inv := by
         intro i
-        apply Fin.ext
-        dsimp
-        exact Nat.add_sub_cancel_left s i.1
+        simp_all
       right_inv := by
         intro x
         apply Subtype.ext

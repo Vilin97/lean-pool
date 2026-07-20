@@ -80,8 +80,7 @@ private lemma partition_filter_card_lt_left (P : Finset ℝ) {a' b' c : ℝ}
     exact ⟨ht.1, ht.2.1, lt_trans ht.2.2 hcb⟩
   · intro hsub
     have hcmem := hsub (Finset.mem_filter.mpr ⟨hc_part, hac, hcb⟩)
-    simp only [Finset.mem_filter] at hcmem
-    exact lt_irrefl c hcmem.2.2
+    simp_all
 
 private lemma partition_filter_card_lt_right (P : Finset ℝ) {a' b' c : ℝ}
     (hc_part : c ∈ P) (hac : a' < c) (hcb : c < b') :
@@ -94,8 +93,7 @@ private lemma partition_filter_card_lt_right (P : Finset ℝ) {a' b' c : ℝ}
     exact ⟨ht.1, lt_trans hac ht.2.1, ht.2.2⟩
   · intro hsub
     have hcmem := hsub (Finset.mem_filter.mpr ⟨hc_part, hac, hcb⟩)
-    simp only [Finset.mem_filter] at hcmem
-    exact lt_irrefl c hcmem.2.1
+    simp_all
 
 private lemma ftc_inductive_step {F : ℂ → ℂ} {f : ℂ → ℂ}
     (γ : PiecewiseC1Curve) (m : ℕ) (a' b' c : ℝ)

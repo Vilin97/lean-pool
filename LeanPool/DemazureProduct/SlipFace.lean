@@ -49,8 +49,7 @@ instance : CoeFun SlipFace (fun _ => ℤ → ℤ → ℤ) :=
 
 lemma SF_ext (s t : SlipFace) : s = t ↔ ∀ a b, s a b = t a b := by
   constructor
-  · rintro rfl
-    simp
+  · simp_all
   · intro h
     have hχ : s.χ = t.χ := by
       obtain ⟨As, hAs⟩ := s.large_a 0
@@ -176,10 +175,8 @@ lemma eq_iff_nonspecial (a b : ℤ) : sf a b = max 0 (a - b + sf.χ)
     · right; exact le_antisymm (h hs) (sf.dual.nonneg b a)
     · left; exact le_antisymm (le_of_not_gt hs) (sf.nonneg a b)
   · rintro (h | h) ⟨hs, hdual⟩
-    · rw [h] at hs
-      exact (lt_irrefl 0 hs).elim
-    · rw [h] at hdual
-      exact (lt_irrefl 0 hdual).elim
+    · simp_all
+    · simp_all
 
 /-- The one-sided monotonicity and vanishing conditions providing a simplified
 criterion for slipfaces.
@@ -336,9 +333,7 @@ noncomputable def SlipValley (s t : SlipFace) (a b : ℤ) : Valley where
     let R := b + m - t.χ
     suffices {n : ℤ | s a n + t n b ≤ m} ⊆ Finset.Icc L R by
       apply Set.Finite.subset _ this
-      apply Set.Finite.ofFinset (Finset.Icc L R)
-      intro x
-      simp only [Finset.mem_Icc, Finset.coe_Icc, Set.mem_Icc]
+      simp_all
     intro n hn
     simp only [Set.mem_setOf_eq] at hn
     suffices n ≥ L ∧ n ≤ R by simpa
@@ -527,8 +522,7 @@ comparison lemmas relating that order to the product `⋆`.
 instance : PartialOrder SlipFace where
   le (s t : SlipFace) := ∀ a b, s a b ≤ t a b
   le_refl := by
-    intro s a b
-    exact le_refl <| s a b
+    simp_all
   le_trans := by
     intro s t u hst htu a b
     exact le_trans (hst a b) (htu a b)
@@ -572,8 +566,7 @@ lemma le_star_val_iff (r s t : SlipFace) (a b : ℤ) :
     let l := starWit s t a b
     have : (s ⋆ t) a b = s a l + t l b := by
       exact star_wit_spec s t a b
-    rw [this]
-    exact h l
+    simp_all
 
 /-- An upper bound for `(s ⋆ t) a b` is equivalent to exhibiting a single
 witness `l` that realizes it. -/
@@ -629,12 +622,9 @@ def id : SlipFace := {
       intro a b
       by_cases hb : a - (b + 1) ≥ 0 <;> omega
     nonneg := by
-      intro a b
-      exact le_max_right (a - b) 0
+      simp_all
     ge_diff := by
-      intro a b
-      rw [add_zero]
-      exact le_max_left (a - b) 0
+      simp_all
     small_a := by
       intro b
       use b
@@ -790,8 +780,7 @@ lemma lres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ lresFunc s t a b := 
   have hs0 : s a l = 0 := hU₁ l (le_max_left _ _)
   have ht0 : t.dual b l = 0 := hU₂ l (le_max_right _ _)
   have hmax := lres_val_ge s t a b l
-  rw [hs0, ht0] at hmax
-  omega
+  simp_all
 
 private lemma D_props_of_lres_func (s t : SlipFace) : D_props (lresFunc s t) := by
   -- Proof written by GPT 5.5.
@@ -995,8 +984,7 @@ lemma rres_func_nonneg (s t : SlipFace) (a b : ℤ) : 0 ≤ rresFunc s t a b := 
   have ht0 : t l b = 0 := hA₁ l (min_le_left _ _)
   have hs0 : s.dual l a = 0 := hA₂ l (min_le_right _ _)
   have hmax := rres_val_ge s t a b l
-  rw [ht0, hs0] at hmax
-  omega
+  simp_all
 
 private lemma D_props_of_rres_func (s t : SlipFace) : D_props (rresFunc s t) := by
   -- Proof written by GPT 5.5.
@@ -1242,9 +1230,7 @@ lemma rres_eq_max (s t : SlipFace) (a b : ℤ) :
 [An extended Demazure product](https://arxiv.org/abs/2206.14227), part 4/6.* -/
 @[simp] lemma chi_rres (s t : SlipFace) : (s ▹ t).χ = s.χ + t.χ := by
   dsimp [rres, SlipFace.dual]
-  rw [chi_lres]
-  dsimp [SlipFace.dual]
-  omega
+  simp_all
 
 /-- The stated left/right residual duality.
 *Proposition 3.9 (`prop:sfAlgebraDefined`) of
@@ -1291,17 +1277,14 @@ private lemma bend_set_witness_helper (s t : SlipFace) (a b l : ℤ) (hl : t l b
   by_cases h : t (l-1) b = t l b
   · use l
   have hl' : t (l-1) b ≠ t ((l-1)+1) b := by
-    contrapose! h with hl'
-    rw [hl']
-    simp only [sub_add_cancel]
+    simp_all
   obtain ⟨m, ⟨teq, tneq, sumle⟩⟩ := bend_set_witness_helper s t a b (l-1) hl'
   use m, teq, tneq
   apply le_trans sumle
   have hs_step := s.b_step a (l-1)
   have ht_step := t.a_step (l-1) b
   have hs_le : s a (l-1) ≤ s a l + 1 := by
-    apply le_of_le_of_eq hs_step.2
-    congr; omega
+    simp_all
   have ht_eq : t l b = t (l-1) b + 1 := by
     have hpred_succ : l - 1 + 1 = l := sub_add_cancel l 1
     rw [hpred_succ] at ht_step
@@ -1361,9 +1344,7 @@ private lemma bend_set_witness_lres_right_helper (s t : SlipFace) (a b l : ℤ)
       omega
     have hmax_next :
         ∀ n, s a n - t.dual b n ≤ s a (l+1) - t.dual b (l+1) := by
-      intro n
-      have hn := hmax n
-      omega
+      simp_all
     obtain ⟨m, hm_right, hm_le⟩ :=
       bend_set_witness_lres_right_helper s t a b (l+1) hmax_next
     use m, hm_right
@@ -1383,9 +1364,7 @@ private lemma bend_set_witness_lres_helper (s t : SlipFace) (a b l : ℤ)
   by_cases h : t (l-1) b = t l b
   · use l, h, hl
   have hl' : t (l-1) b ≠ t ((l-1)+1) b := by
-    contrapose! h with hl'
-    rw [hl']
-    simp only [sub_add_cancel]
+    simp_all
   obtain ⟨m, hm_left, hm_right, hm_le⟩ :=
     bend_set_witness_lres_helper s t a b (l-1) hl'
   use m, hm_left, hm_right
@@ -1399,12 +1378,9 @@ private lemma bend_set_witness_lres_helper (s t : SlipFace) (a b l : ℤ)
     rw [t.s'_eq b (l-1), t.s'_eq b l, ht_eq]
     omega
   have hs_le : s a l ≤ s a (l-1) := by
-    have hpred_succ : l - 1 + 1 = l := sub_add_cancel l 1
-    rw [hpred_succ] at hs_step
-    exact hs_step.1
+    simp_all
   have hcurr_prev : s a l - t.dual b l ≤ s a (l-1) - t.dual b (l-1) := by
-    rw [hdual]
-    omega
+    simp_all
   exact le_trans hcurr_prev hm_le
 termination_by (t l b).toNat
 decreasing_by
@@ -1461,14 +1437,11 @@ def iotaSf (n : ℤ) : SlipFace  := {
       simp [h']
       omega
     · have h' : a - (b+1) + n ≤ 0 := by omega
-      simp [h']
-      omega
+      simp_all
   nonneg := by
-    intro a b
-    apply Int.le_max_right (a-b+n) 0
+    simp_all
   ge_diff := by
-    intro a b
-    apply Int.le_max_left (a-b+n) 0
+    simp_all
   small_a := by
     intro a
     use a - n
@@ -1504,8 +1477,7 @@ private lemma bend_set_iota (n b : ℤ) : bendSet (iotaSf n) b = {b - n} := by
       by_contra!
       rw [show iotaSf n (m-1) b = m -1 - b + n  by exact max_eq_left (by omega)] at h1
       rw [show iotaSf n m b = m - b + n by exact max_eq_left (by omega)] at h1 h2
-      rw [show iotaSf n (m+1) b = m + 1 - b + n by exact max_eq_left (by omega)] at h2
-      omega
+      simp_all
     have mge : b - n ≤ m := by
       by_contra!
       rw [show iotaSf n (m-1) b = 0 by exact max_eq_right (by omega)] at h1
@@ -1730,8 +1702,7 @@ lemma Δ_zero_of_s_zero (a b : ℤ) (h0 : sf (a + 1) b = 0) : sf.Δ a b = 0 := b
     apply sf.zero_below (a' := a+1) (b' := b)
     repeat linarith
   dsimp [Δ]
-  rw [h0, h1, h2, h3]
-  norm_num
+  simp_all
 
 lemma sum_a {a₁ a₂ : ℤ} (ha : a₁ ≤ a₂) (b : ℤ) :
   ∑ a ∈ Finset.Ico a₁ a₂, sf.Δ a b
@@ -1885,8 +1856,7 @@ lemma ess_step (s t : SlipFace) (a b : ℤ) (wit : s a b > t a b) :
         norm_num at this
         apply le_antisymm
         · have := (s.b_step a (b-1)).1
-          norm_num at this
-          exact this
+          simp_all
         · omega
     exact ⟨h1, h2, h3, h4⟩
 

@@ -146,8 +146,7 @@ theorem prepend_cone (σ ρ : Str) : prepend σ (cone ρ) = cone (σ ++ ρ) := b
   ext w
   simp only [mem_prepend, mem_cone]
   constructor
-  · rintro ⟨τ, hτ, rfl⟩
-    exact (List.prefix_append_right_inj σ).mpr hτ
+  · simp_all
   · rintro ⟨t, ht⟩
     exact ⟨ρ ++ t, List.prefix_append ρ t, by rw [← ht, List.append_assoc]⟩
 
@@ -156,8 +155,7 @@ theorem prepend_univ (σ : Str) : prepend σ Set.univ = cone σ := by
   ext w
   simp only [mem_prepend, Set.mem_univ, true_and, mem_cone]
   constructor
-  · rintro ⟨τ, rfl⟩
-    exact List.prefix_append σ τ
+  · simp_all
   · rintro ⟨t, ht⟩
     exact ⟨t, ht.symm⟩
 

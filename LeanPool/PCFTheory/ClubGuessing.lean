@@ -182,8 +182,7 @@ theorem contradiction : False := by
       unfold f
       generalize_proofs pf
       exact (hS α α.2) ▸ Classical.choose_spec pf
-    rw [card_ord, this, Cardinal.lift_lift, Cardinal.lift_lt]
-    exact lt_succ κ
+    simp_all
   apply not_exists_ssubset_chain_lift (isSuccLimit_ord (hκ.trans (lt_succ κ)).le) this
   use fun x ↦ restrict (F' x) α
   constructor

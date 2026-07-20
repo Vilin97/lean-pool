@@ -180,14 +180,7 @@ lemma B_dij_dij_eq_zero_of_disjoint (i j k l : Fin n)
   have hEq' :
       -B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) k l)
         = B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) k l) := by
-    calc
-      -B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) k l)
-          = B (G := G) (n := n) (dij (n := n) i j) (-dij (n := n) k l) := by
-              exact
-                (LinearMap.BilinForm.neg_right (B₁ := B (G := G) (n := n)) (dij (n := n) i j)
-                  (dij (n := n) k l)).symm
-      _ = B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) l k) := by simp [hneg]
-      _ = B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) k l) := hEq
+    simp_all
   linarith
 
 lemma B_dij_dij_eq_neg_half_self (i j k : Fin n) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
@@ -223,20 +216,7 @@ lemma B_dij_dij_eq_neg_half_self (i j k : Fin n) (hij : i ≠ j) (hjk : j ≠ k)
     have hj' : dij (n := n) j i = -dij (n := n) i j := by
       simpa using (Basis.dij_neg (n := n) j i)
     -- `B (-u) (-u) = B u u` for a bilinear form.
-    have hnegneg :
-        B (G := G) (n := n) (-dij (n := n) i j) (-dij (n := n) i j) =
-          B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j) := by
-      simp [LinearMap.BilinForm.neg_right]
-    calc
-      B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) j k)
-          = B (G := G) (n := n)
-              ((κ (n := n) (Equiv.swap i k)).tangentPushforward (dij (n := n) j k))
-              ((κ (n := n) (Equiv.swap i k)).tangentPushforward (dij (n := n) j k)) := by
-                symm
-                simpa using h
-      _ = B (G := G) (n := n) (dij (n := n) j i) (dij (n := n) j i) := by simp [hj]
-      _ = B (G := G) (n := n) (-dij (n := n) i j) (-dij (n := n) i j) := by simp [hj']
-      _ = B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j) := hnegneg
+    simp_all
   -- Use `dij i k = dij i j + dij j k` and expand `B (u+v) (u+v)`.
   have hdij : dij (n := n) i k = dij (n := n) i j + dij (n := n) j k := by
     simpa using (Basis.dij_add (n := n) i j k)
@@ -247,40 +227,7 @@ lemma B_dij_dij_eq_neg_half_self (i j k : Fin n) (hij : i ≠ j) (hjk : j ≠ k)
           + (B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) i j)
             + B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) j k)) := by
     -- Bilinearity: expand in the left and right argument once.
-    rw [hdij]
-    calc
-      B (G := G) (n := n)
-            (dij (n := n) i j + dij (n := n) j k)
-            (dij (n := n) i j + dij (n := n) j k)
-          =
-            B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j + dij (n := n) j k)
-            + B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) i j + dij (n := n) j k) := by
-              exact
-                (LinearMap.BilinForm.add_left (B := B (G := G) (n := n)) (dij (n := n) i j)
-                  (dij (n := n) j k) (dij (n := n) i j + dij (n := n) j k))
-      _ =
-            (B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j)
-              + B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k))
-            + (B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) i j)
-              + B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) j k)) := by
-              -- Expand `B _ (u+v)` on the right.
-              have hu :
-                  B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j + dij (n := n) j k)
-                    =
-                      B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j)
-                      + B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k) := by
-                exact
-                  (LinearMap.BilinForm.add_right (B := B (G := G) (n := n)) (dij (n := n) i j)
-                    (dij (n := n) i j) (dij (n := n) j k))
-              have hv :
-                  B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) i j + dij (n := n) j k)
-                    =
-                      B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) i j)
-                      + B (G := G) (n := n) (dij (n := n) j k) (dij (n := n) j k) := by
-                exact
-                  (LinearMap.BilinForm.add_right (B := B (G := G) (n := n)) (dij (n := n) j k)
-                    (dij (n := n) i j) (dij (n := n) j k))
-              rw [hu, hv]
+    simp_all
   -- Combine invariance + symmetry to solve for the cross term.
   have hEq :
       B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j)
@@ -317,20 +264,7 @@ lemma B_dij_dij_eq_half_self (i j k : Fin n) (hij : i ≠ j) (hjk : j ≠ k) (hi
       B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i k)
         = a + B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k) := by
     -- `B u (u+v) = B u u + B u v`.
-    have ha' :
-        B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j) = a := by
-      simpa using ha.symm
-    rw [hdij]
-    calc
-      B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j + dij (n := n) j k)
-          =
-            B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) i j)
-            + B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k) :=
-              LinearMap.BilinForm.add_right (B := B (G := G) (n := n)) (dij (n := n) i j)
-                (dij (n := n) i j) (dij (n := n) j k)
-      _ =
-            a + B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k) := by
-              simp [ha']
+    simp_all
   have hx :
       B (G := G) (n := n) (dij (n := n) i j) (dij (n := n) j k) = -(1 / 2 : ℝ) * a := by
     -- Apply the main `(-1/2)` lemma and rewrite `a`.

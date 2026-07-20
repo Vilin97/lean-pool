@@ -169,8 +169,7 @@ lemma tensorHom_eq_right
   have hf := tensorHom_eq a f
   simp only [htake, hdrop, Vector.get, Vector.append,
     Fin.val_cast, Fin.val_castAdd, Fin.val_natAdd] at hf ⊢
-  rw [Array.getElem_append_right (by omega)]
-  congr 1; omega
+  simp_all
 
 lemma tensorHom_get
     {X₁ Y₁ X₂ Y₂ : CombinationalCircuitCategory V G}
@@ -429,8 +428,7 @@ lemma rightUnitor_naturality
     whiskerRight f tensorUnit ≫ (rightUnitor Y).hom = (rightUnitor X).hom ≫ f := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
   simp only [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  congr 1
-  simp
+  simp_all
 
 open MonoidalCategory
 
@@ -507,8 +505,7 @@ lemma braiding_hom_lt
     {X Y : CombinationalCircuitCategory V G}
     {j : Fin Y.obj} :
     X.obj + ↑j < (X ⊗ Y).obj := by
-  change X.obj + j.val < X.obj + Y.obj
-  omega
+  simp_all
 
 lemma braiding_hom_ge
     {X Y : CombinationalCircuitCategory V G}

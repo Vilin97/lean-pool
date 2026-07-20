@@ -77,10 +77,7 @@ theorem commuting_least_common_fixed {f g : ApproximableMap V V} (hcomm : f.comp
   have hfx : f.toElementMap x = x := by
     apply le_antisymm
     · rw [hx_def, fixAbove, toElementMap_iSupDirected]
-      apply NeighborhoodSystem.iSupDirected_le
-      intro n
-      rw [hfix_each n]
-      exact NeighborhoodSystem.le_iSupDirected (g.iterFrom a) _ n
+      simp_all
     · rw [hx_def, fixAbove]
       apply NeighborhoodSystem.iSupDirected_le
       intro n

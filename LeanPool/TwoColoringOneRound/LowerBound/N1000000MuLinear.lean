@@ -154,16 +154,13 @@ private theorem corrAvg_tgt_eq_xFromColoring
       simpa [aIdx, bIdx] using congrArg Fin.val hIdx⟩
   let tgtEmb : Fin t ↪ Sym n :=
     ⟨fun j => symOfNat (pm.tgtSyms.get ⟨j.1, by
-        have : j.1 < pm.srcSyms.length := by simp [t]
-        exact lt_of_lt_of_eq this hlen⟩), by
+        simp_all⟩), by
       intro a b hab
       apply Fin.ext
       let aIdx : Fin pm.tgtSyms.length := ⟨a.1, by
-        have : a.1 < pm.srcSyms.length := by simp [t]
-        exact lt_of_lt_of_eq this hlen⟩
+        simp_all⟩
       let bIdx : Fin pm.tgtSyms.length := ⟨b.1, by
-        have : b.1 < pm.srcSyms.length := by simp [t]
-        exact lt_of_lt_of_eq this hlen⟩
+        simp_all⟩
       have haLt : pm.tgtSyms.get aIdx < n := htgtLtMem _ (List.get_mem _ _)
       have hbLt : pm.tgtSyms.get bIdx < n := htgtLtMem _ (List.get_mem _ _)
       have hGet : pm.tgtSyms.get aIdx = pm.tgtSyms.get bIdx :=
@@ -195,11 +192,7 @@ private theorem corrAvg_tgt_eq_xFromColoring
     have hj :
         σ (symOfNat (pm.srcSyms.get ⟨k, hkSrc⟩)) = symOfNat (pm.tgtSyms.get ⟨k, hkTgt⟩) := by
       simpa [srcEmb, tgtEmb] using hσ_apply ⟨k, hk⟩
-    have hsrc : pm.srcSyms.getD k 0 = pm.srcSyms.get ⟨k, hkSrc⟩ := by
-      simpa using (List.getD_eq_get pm.srcSyms 0 ⟨k, hkSrc⟩)
-    have htgt : pm.tgtSyms.getD k 0 = pm.tgtSyms.get ⟨k, hkTgt⟩ := by
-      simpa using (List.getD_eq_get pm.tgtSyms 0 ⟨k, hkTgt⟩)
-    rwa [hsrc, htgt]
+    simp_all
   -- Rewrite the `getD` identities in the bracketed `get?` form used by the simplifications below.
   have hsrcU0' : pm.srcSyms[0]?.getD 0 = pm.srcU.1 := by simpa using hsrcU0
   have hsrcU1' : pm.srcSyms[1]?.getD 0 = pm.srcU.2.1 := by simpa using hsrcU1
@@ -306,20 +299,7 @@ private lemma aDot_eq_box (f : Coloring n) (k : Mu) (hk : muBoxCoeff[k.1]! ≠ 0
   have hCoeff : ∀ i : Var, aCoeff k i = if i = boxVar k then boxCoeff k else 0 := by
     intro i
     simpa using aCoeff_eq_boxCoeff (k := k) (hk := hk) (i := i)
-  calc
-    (∑ i : Var, aCoeff k i * xFromColoring f i) =
-        ∑ i : Var, (if i = boxVar k then boxCoeff k else 0) * xFromColoring f i := by
-          refine Finset.sum_congr rfl ?_
-          intro i _hi
-          simp [hCoeff i]
-    _ = ∑ i : Var, if i = boxVar k then (boxCoeff k * xFromColoring f i) else 0 := by
-          refine Finset.sum_congr rfl ?_
-          intro i _hi
-          by_cases h : i = boxVar k <;> simp [h]
-    _ = boxCoeff k * xFromColoring f (boxVar k) := by
-          exact
-            (Fintype.sum_ite_eq' (ι := Var) (M := Q) (i := boxVar k)
-              (f := fun j => boxCoeff k * xFromColoring f j))
+  simp_all
 
 private lemma muBoxCoeff_eq_one_or_eq_neg_one (k : Mu) (hk : muBoxCoeff[k.1]! ≠ 0) :
     muBoxCoeff[k.1]! = 1 ∨ muBoxCoeff[k.1]! = -1 := by
@@ -470,16 +450,12 @@ private lemma aDot_eq_triLinear (f : Coloring n) (k : Mu) (hk : muBoxCoeff[k.1]!
       simp [triCoeff, huv, huw, hvw, add_mul, add_assoc, add_left_comm, add_comm]
   calc
     (∑ i : Var, aCoeff k i * xFromColoring f i) = ∑ i : Var, triCoeff k i * xFromColoring f i := by
-        refine Finset.sum_congr rfl ?_
-        intro i _hi
-        simp [hCoeff i]
+        simp_all
     _ = ∑ i : Var,
           ((if i = uvVar k then cuv k * xFromColoring f i else 0) +
             (if i = uwVar k then cuw k * xFromColoring f i else 0) +
               (if i = vwVar k then cvw k * xFromColoring f i else 0)) := by
-        refine Finset.sum_congr rfl ?_
-        intro i _hi
-        simp [hpoint i]
+        simp_all
     _ =
         (∑ i : Var, if i = uvVar k then cuv k * xFromColoring f i else 0) +
             (∑ i : Var, if i = uwVar k then cuw k * xFromColoring f i else 0) +

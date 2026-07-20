@@ -48,9 +48,7 @@ def prodCongrOrderIso {A B C D : Type*} [Preorder A] [Preorder B] [Preorder C] [
   left_inv p := by simp
   right_inv q := by simp
   map_rel_iff' := by
-    rintro ⟨a, c⟩ ⟨a', c'⟩
-    change (e₀ a, e₁ c) ≤ (e₀ a', e₁ c') ↔ (a, c) ≤ (a', c')
-    rw [Prod.mk_le_mk, Prod.mk_le_mk, e₀.le_iff_le, e₁.le_iff_le]
+    simp_all
 
 /-- For a `Unique` second factor, `A × C ≃o A` (forget the constant component). -/
 def prodUniqueOrderIso (A C : Type*) [Preorder A] [Preorder C] [Unique C] : A × C ≃o A where
@@ -61,9 +59,7 @@ def prodUniqueOrderIso (A C : Type*) [Preorder A] [Preorder C] [Unique C] : A ×
     simp [this]
   right_inv _ := rfl
   map_rel_iff' := by
-    rintro ⟨a, c⟩ ⟨a', c'⟩
-    simp only [Prod.mk_le_mk]
-    exact ⟨fun h => ⟨h, le_of_eq (Subsingleton.elim c c')⟩, And.left⟩
+    simp_all
 
 /-- For a `Unique` first factor, `C × A ≃o A` (forget the constant component). -/
 def uniqueProdOrderIso (A C : Type*) [Preorder A] [Preorder C] [Unique C] : C × A ≃o A where
@@ -74,9 +70,7 @@ def uniqueProdOrderIso (A C : Type*) [Preorder A] [Preorder C] [Unique C] : C ×
     simp [this]
   right_inv _ := rfl
   map_rel_iff' := by
-    rintro ⟨c, a⟩ ⟨c', a'⟩
-    simp only [Prod.mk_le_mk]
-    exact ⟨fun h => ⟨le_of_eq (Subsingleton.elim c c'), h⟩, And.right⟩
+    simp_all
 
 /-! ### (i) Commutativity. -/
 

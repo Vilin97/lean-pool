@@ -105,8 +105,7 @@ lemma partitionPoly_eq_one_of_parts_le_one (K : Type*) [Field K] {s : ℕ}
       have := ξ.parts_pos hi
       omega, polyP_one]
   unfold partitionPoly
-  rw [Multiset.map_congr rfl (fun x hx => h₁ x hx)]
-  simp
+  simp_all
 
 private lemma partitionPoly_split_aux (K : Type*) [CommRing K] (m : ℕ) {s : ℕ}
     (ξ : Nat.Partition s) :
@@ -132,8 +131,7 @@ private lemma poly_mul_pow_inv_cancel (K : Type*) [Field K]
       ((↑P : PowerSeries K) ^ e)⁻¹ =
     ↑(A * P ^ (t - e)) := by
   have hPe : PowerSeries.constantCoeff ((↑P : PowerSeries K) ^ e) ≠ 0 := by
-    rw [map_pow]
-    exact pow_ne_zero _ hP
+    simp_all
   conv_lhs => rw [show t = (t - e) + e from (Nat.sub_add_cancel hte).symm]
   rw [pow_add, mul_assoc (↑A : PowerSeries K) _ _, mul_assoc _ ((↑P : PowerSeries K) ^ e) _,
     PowerSeries.mul_inv_cancel _ hPe, mul_one, Polynomial.coe_mul, Polynomial.coe_pow]
@@ -194,9 +192,7 @@ private lemma pow_cancel_eq_inv_remaining (φ : PowerSeries ℚ) (t k : ℕ)
   have h2 : (φ ^ k)⁻¹ = (φ ^ (k - t))⁻¹ * (φ ^ t)⁻¹ := by
     rw [h1, PowerSeries.mul_inv_rev]
   have h5 : φ ^ t * (φ ^ t)⁻¹ = 1 := by
-    apply PowerSeries.mul_inv_cancel
-    rw [map_pow]
-    exact pow_ne_zero _ hφ
+    simp_all
   grind
 
 private lemma genFun_rewrite_with_split
@@ -289,8 +285,7 @@ private lemma chebyshev_S_eval_pos_at_cos (m : ℕ) (hm : 2 ≤ m) (j : ℕ) (hj
   have ⟨hangle_pos, hangle_lt⟩ := angle_pos_lt_pi m hm j hj
   have hsin_jθ : 0 < Real.sin ((↑j + 1) * θ) := Real.sin_pos_of_pos_of_lt_pi hangle_pos hangle_lt
   have hprod : 0 < Polynomial.eval (2 * Real.cos θ) (Polynomial.Chebyshev.S ℝ ↑j) * Real.sin θ := by
-    rw [hcheb]
-    exact hsin_jθ
+    simp_all
   exact (mul_pos_iff.mp hprod).elim (fun h => h.1)
     (fun h => absurd hsin_θ (not_lt.mpr (le_of_lt h.2)))
 
@@ -336,8 +331,7 @@ lemma polyP_roots_positive (m : ℕ) (hm : 2 ≤ m) :
       rw [show (↑(↑m : ℤ) + 1) * (Real.pi / (↑m + 1)) = Real.pi from by
         have : (m : ℝ) + 1 ≠ 0 := by positivity
         field_simp
-        push_cast
-        ring, Real.sin_pi] at h_formula
+        simp_all, Real.sin_pi] at h_formula
       exact (mul_eq_zero.mp h_formula).resolve_right (ne_of_gt (sin_pi_div_succ_pos m hm))
     rw [polyP_map (algebraMap ℚ ℝ), polyP_eval_eq_chebyshev_S m y₀ hy₀_ne, this]
     ring
@@ -355,22 +349,16 @@ lemma remainder_positive_at_roots
   have h_main : (↑A : PowerSeries ℚ) = (S * D + R : Polynomial ℚ) := by
     have key := congr_arg (· * (↑D : PowerSeries ℚ)) hdiv
     simp only [add_mul, mul_assoc, PowerSeries.inv_mul_cancel _ hD_ne, mul_one] at key
-    simp only [Polynomial.coe_add, Polynomial.coe_mul] at key ⊢
-    exact key
+    simp_all
   have h_poly : A = S * D + R := by exact_mod_cast h_main
-  linarith [show Polynomial.eval ρ (Polynomial.map (algebraMap ℚ ℝ) A) =
-    Polynomial.eval ρ (Polynomial.map (algebraMap ℚ ℝ) R) by
-    rw [h_poly, Polynomial.map_add, Polynomial.map_mul, Polynomial.eval_add,
-      Polynomial.eval_mul, hρ, mul_zero, zero_add]]
+  simp_all
 
 lemma pos_coeff_transfer_R_to_Q
     (f : PowerSeries ℚ) (N : ℕ) (h : ∀ r, N < r →
       (0 : ℝ) < (PowerSeries.coeff r) ((PowerSeries.map (algebraMap ℚ ℝ)) f)) :
     ∀ r, N < r → (0 : ℚ) < (PowerSeries.coeff r) f :=
   fun r hr => by
-    have := h r hr
-    rw [PowerSeries.coeff_map, eq_ratCast] at this
-    exact_mod_cast this
+    simp_all
 
 lemma map_algebraMap_inv_comm
     (f : PowerSeries ℚ) (hf : PowerSeries.constantCoeff f ≠ 0) :
@@ -476,8 +464,7 @@ lemma candidate_is_root (m : ℕ) (hm : 2 ≤ m) (j : Fin (m / 2)) :
   have h2z_pos : 0 < 2 * z := by linarith
   have h2z_pow_ne : (2 * z) ^ m ≠ 0 := pow_ne_zero _ (ne_of_gt h2z_pos)
   suffices h_U_zero : Polynomial.eval z (Polynomial.Chebyshev.U ℝ ↑m) = 0 by
-    rw [h_U_zero] at h_rescale
-    exact mul_right_cancel₀ h2z_pow_ne (by linarith)
+    simp_all
   have h_SU : Polynomial.eval z (Polynomial.Chebyshev.U ℝ ↑m) =
       Polynomial.eval (2 * z) (Polynomial.Chebyshev.S ℝ ↑m) := by
     rw [← Polynomial.Chebyshev.S_comp_two_mul_X]
@@ -512,8 +499,7 @@ lemma candidate_strictMono (m : ℕ) (hm : 2 ≤ m) :
   simp only
   have h_angle_lt : (↑(j : ℕ) + 1) * Real.pi / (↑m + 1) < (↑(k : ℕ) + 1) * Real.pi / (↑m + 1) := by
     have := angle_strict_mono m (↑j + 1) (↑k + 1) hm (by omega)
-    push_cast at this ⊢
-    exact this
+    simp_all
   have hcos_j := cos_angle_pos m hm j
   have hcos_k := cos_angle_pos m hm k
   have h_cos_lt := Real.strictAntiOn_cos
@@ -601,13 +587,9 @@ lemma splits_of_distinct_pos_roots_and_deg_le {p : Polynomial ℝ} {d : ℕ}
   have hg_ne : (∏ j : Fin d, (Polynomial.X - Polynomial.C (r j))) ≠ 0 :=
     Finset.prod_ne_zero_iff.mpr fun j _ => Polynomial.X_sub_C_ne_zero (r j)
   have hq_ne : q ≠ 0 := by
-    rintro rfl
-    rw [mul_zero] at hpq
-    exact hp hpq
+    simp_all
   have hdeg_g : (∏ j : Fin d, (Polynomial.X - Polynomial.C (r j))).natDegree = d := by
-    trans (∑ j : Fin d, (Polynomial.X - Polynomial.C (r j)).natDegree)
-    · exact Polynomial.natDegree_prod _ _ (fun j _ => Polynomial.X_sub_C_ne_zero (r j))
-    · simp
+    simp_all
   have hdeg_pq : p.natDegree = d + q.natDegree := by
     rw [hpq, Polynomial.natDegree_mul hg_ne hq_ne, hdeg_g]
   have hq_const : q = Polynomial.C (q.coeff 0) :=
@@ -643,8 +625,7 @@ lemma cos_pos_angle_bound (m : ℕ) (hm : 2 ≤ m) (j : ℕ) (hj : j < m)
           _ ≤ Real.pi := by
             have h₆ : (m : ℝ) / (m + 1 : ℝ) ≤ 1 := by
               apply (div_le_one (by positivity)).mpr
-              norm_cast
-              omega
+              simp_all
             calc
               (m : ℝ) * Real.pi / (m + 1 : ℝ) = ((m : ℝ) / (m + 1 : ℝ)) * Real.pi := by ring
               _ ≤ 1 * Real.pi := by gcongr
@@ -675,10 +656,7 @@ lemma chebyshev_root_parametrize (m : ℕ) (hm : 2 ≤ m) (z : ℝ) (hz_pos : 0 
   obtain ⟨j, hj_lt, hj_eq⟩ := hz_mem
   refine ⟨j + 1, Nat.succ_le_succ (Nat.zero_le j), ?_, ?_⟩
   · exact cos_pos_angle_bound m hm j hj_lt (hj_eq ▸ hz_pos)
-  · rw [show (↑(j + 1) : ℝ) = ↑j + 1 from by
-      push_cast
-      ring]
-    exact hj_eq.symm
+  · simp_all
 
 lemma polyP_root_parametrize (m : ℕ) (hm : 2 ≤ m) (r : ℝ) (hr_pos : 0 < r)
     (hr_root : Polynomial.eval r (polyP ℝ m) = 0) :
@@ -712,8 +690,7 @@ lemma angle_gt_pi (m k : ℕ) (hm : 2 ≤ m) (hk : 2 ≤ k) (_hk_bound : 2 * k <
   rw [one_lt_div hm1_pos]
   have h := nat_ineq_div_mul m k hk
   have h' : (↑(m + 1) : ℝ) < ↑(((m + 1) / k + 1) * k) := Nat.cast_lt.mpr h
-  simp only [Nat.cast_mul, Nat.cast_add, Nat.cast_one] at h'
-  linarith
+  simp_all
 
 lemma angle_lt_two_pi (m k : ℕ) (hm : 2 ≤ m) (hk : 2 ≤ k) (hk_bound : 2 * k < m + 1) :
     (↑((m + 1) / k) + 1) * (↑k * Real.pi / (↑m + 1)) < 2 * Real.pi := by
@@ -864,9 +841,7 @@ lemma eval_deriv_eq_neg_inv_rho_mul_eval_S (m : ℕ) (ρ : ℝ) (hρ_pos : 0 < �
     simp [Polynomial.derivative_sub, Polynomial.derivative_one]
   have h₂ : Polynomial.eval ρ (1 - Polynomial.C (1/ρ) * Polynomial.X : Polynomial ℝ) = 0 :=
     L_eval_at_rho ρ hρ_pos
-  simp only [Polynomial.eval_add, Polynomial.eval_mul, h₁, h₂,
-    Polynomial.eval_neg, Polynomial.eval_C]
-  ring
+  simp_all
 
 /-! ## Derivative Convolution Identity -/
 
@@ -890,8 +865,7 @@ lemma polyP_deriv_recurrence (R : Type*) [CommRing R] (n : ℕ) :
       = Polynomial.derivative (polyP R (n + 1) - Polynomial.X * polyP R n) := rfl
     _ = Polynomial.derivative (polyP R (n + 1)) -
         (1 * polyP R n + Polynomial.X * Polynomial.derivative (polyP R n)) := by
-      rw [Polynomial.derivative_sub, Polynomial.derivative_mul]
-      simp [Polynomial.derivative_X]
+      simp_all
     _ = Polynomial.derivative (polyP R (n + 1)) - polyP R n -
         Polynomial.X * Polynomial.derivative (polyP R n) := by ring_nf
 
@@ -905,8 +879,7 @@ lemma inner_sum_recurrence (R : Type*) [CommRing R] (n : ℕ) :
     apply Finset.sum_congr rfl
     intro j hj
     have hj' : j ≤ n := by
-      simp [Finset.mem_range] at hj
-      omega
+      simp_all
     rw [show n + 2 - j = (n - j) + 2 from by omega, show n + 1 - j = (n - j) + 1 from by omega]
     simp only [polyP]
     ring
@@ -967,9 +940,7 @@ lemma eval_deriv_polyP_neg (m : ℕ) (hm : 2 ≤ m) (ρ : ℝ) (_hρ_pos : 0 < �
       ∑ j ∈ Finset.range (m - 1),
         Polynomial.eval ρ (polyP ℝ j) * Polynomial.eval ρ (polyP ℝ (m - 2 - j)) := by
     rw [hconv, Polynomial.eval_finsetSum]
-    congr 1
-    ext j
-    exact Polynomial.eval_mul
+    simp_all
   rw [Polynomial.eval_neg] at heval
   have hpos : 0 < ∑ j ∈ Finset.range (m - 1),
       Polynomial.eval ρ (polyP ℝ j) * Polynomial.eval ρ (polyP ℝ (m - 2 - j)) := by
@@ -996,8 +967,7 @@ lemma S_constantCoeff_from_fact (m : ℕ) (ρ : ℝ) (S : Polynomial ℝ)
     (hfact : polyP ℝ m = (1 - Polynomial.C (1 / ρ) * Polynomial.X) * S) :
     S.coeff 0 = 1 := by
   have h₁ : (polyP ℝ m).coeff 0 = 1 := polyP_constantCoeff ℝ m
-  simp [hfact, Polynomial.coeff_mul, Polynomial.coeff_sub, Polynomial.coeff_one] at h₁
-  linarith
+  simp_all
 
 lemma S_splits (m : ℕ) (hm : 2 ≤ m) (ρ : ℝ) (S : Polynomial ℝ)
     (hfact : polyP ℝ m = (1 - Polynomial.C (1 / ρ) * Polynomial.X) * S) :
@@ -1036,8 +1006,7 @@ lemma roots_of_S_gt_rho_v2 (m : ℕ) (hm : 2 ≤ m) (ρ : ℝ) (hρ_pos : 0 < ρ
   have hx_ne : x ≠ ρ := by
     intro h
     have := rho_not_root_of_S m hm ρ hρ_pos hρ_root hρ_lower S hfact
-    rw [← h] at this
-    exact this hx
+    simp_all
   exact root_is_smallest m hm ρ hρ_pos hρ_root hρ_lower x hx_root hx_ne
 
 lemma S_eval_pos (m : ℕ) (hm : 2 ≤ m) (ρ : ℝ) (hρ_pos : 0 < ρ)
@@ -1048,8 +1017,7 @@ lemma S_eval_pos (m : ℕ) (hm : 2 ≤ m) (ρ : ℝ) (hρ_pos : 0 < ρ)
   eval_pos_from_splits_and_roots_gt S ρ hρ_pos
     (by intro h
         have := S_constantCoeff_from_fact m ρ S hfact
-        rw [h, Polynomial.coeff_zero] at this
-        exact one_ne_zero this.symm)
+        simp_all)
     (S_splits m hm ρ S hfact)
     (by rw [← Polynomial.coeff_zero_eq_eval_zero]; exact S_constantCoeff_from_fact m ρ S hfact)
     (roots_of_S_gt_rho_v2 m hm ρ hρ_pos hρ_root hρ_lower S hfact)
@@ -1183,21 +1151,12 @@ lemma bezout_fraction_split (m : ℕ) (_hm : 2 ≤ m) (R_rem : Polynomial ℝ) (
       have : Polynomial.eval ρ b * (Polynomial.eval ρ S) ^ k ≤ 0 :=
         mul_nonpos_of_nonpos_of_nonneg h (le_of_lt hSk_pos)
       linarith
-    rw [Polynomial.eval_mul]
-    exact mul_pos hR_pos hb_pos
+    simp_all
 
 lemma L_coe_eq_rescale_one_sub_X (ρ : ℝ) :
     let L : Polynomial ℝ := 1 - Polynomial.C (1/ρ) * Polynomial.X
     (↑L : PowerSeries ℝ) = PowerSeries.rescale (1/ρ) (1 - PowerSeries.X) := by
-  intro L
-  have h1 : (↑L : PowerSeries ℝ) = 1 - PowerSeries.C (1 / ρ) * PowerSeries.X := by
-    simp [L, Polynomial.coe_sub, Polynomial.coe_one, Polynomial.coe_mul, Polynomial.coe_C,
-      Polynomial.coe_X]
-  have h2 : PowerSeries.rescale (1 / ρ) (1 - PowerSeries.X)
-      = 1 - PowerSeries.C (1 / ρ) * PowerSeries.X := by
-    ext n
-    simp [map_sub, map_one]
-  grind
+  simp_all
 
 lemma one_sub_X_pow_constantCoeff_ne_zero (k : ℕ) :
     PowerSeries.constantCoeff ((1 - PowerSeries.X : PowerSeries ℝ) ^ k) ≠ 0 := by
@@ -1485,9 +1444,7 @@ lemma inv_one_pow_coeff_bound (k : ℕ) (_hk : 0 < k) (ρ₁ : ℝ) (hρ₁_pos 
   refine ⟨1, 0, one_pos, fun r => ?_⟩
   rw [h₁, PowerSeries.coeff_one]
   split_ifs with hr
-  · subst hr
-    rw [abs_one]
-    norm_num
+  · simp_all
   · rw [abs_zero]
     positivity
 
@@ -1595,9 +1552,7 @@ lemma poly_mul_coeff_bound
       ≤ ∑ p ∈ antidiagonal r, |(PowerSeries.coeff p.1) ↑P * (PowerSeries.coeff p.2) f| :=
         abs_sum_le_sum_abs _ _
     _ = ∑ p ∈ antidiagonal r, |P.coeff p.1| * |(PowerSeries.coeff p.2) f| := by
-        congr 1
-        ext p
-        rw [abs_mul, Polynomial.coeff_coe]
+        simp_all
     _ ≤ C * (∑ i ∈ range (P.natDegree + 1), |P.coeff i| * q⁻¹ ^ i) *
         (↑r + 1) ^ D * q ^ r :=
         antidiag_sum_bound P f C D q hC hq hbound r
@@ -1617,9 +1572,7 @@ lemma poly_mul_preserves_bound
       _ ≤ C * (M + 1) * (↑r + 1) ^ D * q ^ r := by
           apply mul_le_mul_of_nonneg_right
           · apply mul_le_mul_of_nonneg_right
-            · apply mul_le_mul_of_nonneg_left
-              · linarith
-              · exact le_of_lt hC
+            · simp_all
             · positivity
           · positivity
 
@@ -1770,9 +1723,7 @@ lemma multiset_prod_inv_bound
     have hbound_a' : ∀ r, |(PowerSeries.coeff r)
         (((↑(1 - Polynomial.C (1/a) * Polynomial.X : Polynomial ℝ) : PowerSeries ℝ) ^ k)⁻¹)| ≤
         1 * (↑r + 1) ^ (k - 1) * (1/ρ₁) ^ r := by
-      intro r
-      simp only [one_mul]
-      exact hbound_a r
+      simp_all
     have hq_pos : (0 : ℝ) < 1 / ρ₁ := by positivity
     obtain ⟨C', D', hC', hbound'⟩ := ps_mul_coeff_bound _ _ 1 C_s (k - 1) D_s (1/ρ₁)
       one_pos hC_s hq_pos hbound_a' hbound_s
@@ -1781,8 +1732,7 @@ lemma multiset_prod_inv_bound
     change |(PowerSeries.coeff r) (Multiset.map (fun α =>
       (((↑(1 - Polynomial.C (1/α) * Polynomial.X : Polynomial ℝ) : PowerSeries ℝ) ^ k)⁻¹))
       (a ::ₘ s)).prod| ≤ _
-    rw [Multiset.map_cons, Multiset.prod_cons]
-    exact hbound' r
+    simp_all
 
 lemma X_sub_C_eq_neg_C_mul_L (α : ℝ) (hα : 0 < α) :
     Polynomial.X - Polynomial.C α =
@@ -1812,12 +1762,8 @@ lemma prod_neg_C_eq_C_prod_neg (roots : Multiset ℝ) :
     induction roots using Multiset.induction with
     | empty => simp
     | cons a s ih =>
-      simp only [Multiset.map_cons, Multiset.prod_cons]
-      rw [ih]
-      simp [map_neg, map_mul]
-  rw [show (roots.map (fun α => -Polynomial.C α)) = (roots.map (fun α => Polynomial.C (-α))) from
-    Multiset.map_congr rfl (fun x _ => by simp)]
-  exact h2
+      simp_all
+  simp_all
 
 lemma leadingCoeff_mul_prod_neg_roots_eq_one (S : Polynomial ℝ) (_hS_ne : S ≠ 0)
     (hS_splits : S.Splits) (hS_const : Polynomial.eval 0 S = 1) :
@@ -1903,8 +1849,7 @@ lemma inv_splits_pow_coeff_bound
         rwa [Polynomial.mem_roots hS_ne] at hα
       linarith [hρ₁_le α this]
     have hroots_ge : ∀ α ∈ S.roots, ρ₁ ≤ α := by
-      intro α hα
-      exact hρ₁_le α (by rwa [Polynomial.mem_roots hS_ne] at hα)
+      simp_all
     obtain ⟨P, hP_eq⟩ := splits_inv_pow_eq_multiset_prod S k hk hS_ne hS_splits hS_const
       hroots_pos hS_deg_pos
     obtain ⟨C_prod, D_prod, hC_prod, hprod_bound⟩ :=
@@ -1933,9 +1878,7 @@ lemma exists_min_root_gt
       (hS_roots_larger _ (eval_eq_zero_of_mem_roots_toFinset S hS_ne (Finset.min'_mem _ hne)))
   · intro x hx
     exact Finset.min'_le _ _ (Multiset.mem_toFinset.mpr (by
-      rw [Polynomial.mem_roots]
-      · simp_all
-      · simp_all))
+      simp_all))
 
 lemma S_part_coeff_bound
     (ρ : ℝ) (hρ_pos : 0 < ρ) (k : ℕ) (hk : 0 < k) (M_poly S : Polynomial ℝ)
@@ -2019,10 +1962,7 @@ theorem scaled_coeff_poly_degree_ge
           (↑(PowerSeries.invOneSubPow ℝ k) : PowerSeries ℝ)) from by
       rw [← PowerSeries.coeff_rescale, map_mul, ← N_scaled_coe_eq_rescale,
         rescale_inv _ _ (by
-          have : PowerSeries.constantCoeff
-              ((↑(1 - Polynomial.C (1/ρ) * Polynomial.X : Polynomial ℝ) : PowerSeries ℝ)) = 1 := by
-            simp
-          simp [map_pow]), map_pow,
+          simp_all), map_pow,
         rescale_rho_L_eq_one_sub_X ρ hρ_pos, inv_one_sub_pow_eq_invOneSubPow]]
     exact Polynomial.coeff_mul_invOneSubPow_eq_hilbertPoly_eval k hr_deg
   have hroot : Polynomial.rootMultiplicity 1 (nScaled ρ N_poly) = 0 := by
@@ -2085,8 +2025,7 @@ lemma poly_eventually_lower_bound_of_deg_ge_one (q : Polynomial ℝ) (hq : 0 < q
   refine ⟨q.leadingCoeff / 2, N₀, half_pos hq, fun r hr => ?_⟩
   have hr1 : (1 : ℝ) ≤ (r : ℝ) := by
     have : (0 : ℝ) < ↑N₀ := by
-      calc (0 : ℝ) ≤ max (2 * S / q.leadingCoeff) 0 := le_max_right _ _
-      _ < ↑N₀ := hN₀
+      simp_all
     have : 0 < r := by omega
     exact Nat.one_le_cast.mpr this
   have hrS : 2 * S / q.leadingCoeff < (r : ℝ) := by
@@ -2149,8 +2088,7 @@ lemma bound_transfer
       C * (↑r + 1 : ℝ) ^ D * (ρ / ρ₂ : ℝ) ^ r * (1 / ρ : ℝ) ^ r := by
     rw [show C * (↑r + 1 : ℝ) ^ D * (ρ / ρ₂ : ℝ) ^ r * (1 / ρ : ℝ) ^ r =
         C * (↑r + 1 : ℝ) ^ D * ((ρ / ρ₂ : ℝ) ^ r * (1 / ρ : ℝ) ^ r) from by ring, h_key]
-  rw [this]
-  exact mul_lt_mul_of_pos_right h (by positivity)
+  simp_all
 
 lemma tendsto_add_one_pow_mul_geometric
     (D : ℕ) (q : ℝ) (hq_pos : 0 ≤ q) (hq_lt : q < 1) :
@@ -2277,8 +2215,7 @@ lemma proper_fraction_coeff_pos_over_R
     sum_parts_eventually_pos ρ hρ_pos k hk N_poly M_poly S
       hN_pos hS_pos hS_const hS_roots hS_splits
   exact ⟨N₀, fun r hr => by
-    rw [hdecomp]
-    exact hN₀ r hr⟩
+    simp_all⟩
 
 lemma map_genFun_comm (R_poly : Polynomial ℚ) (m k : ℕ) :
     (PowerSeries.map (algebraMap ℚ ℝ))

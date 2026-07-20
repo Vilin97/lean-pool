@@ -46,8 +46,7 @@ private lemma hasDerivAt_remainder_bound
   simpa only [Real.norm_eq_abs] using h_bound
 
 private lemma norm_real_smul (x : ℝ) (L : ℂ) : ‖x • L‖ = |x| * ‖L‖ := by
-  haveI : NormSMulClass ℝ ℂ := NormedSpace.toNormSMulClass
-  rw [norm_smul, Real.norm_eq_abs]
+  simp_all
 
 /-- The increment norm is within `M` of the linear part `|t - t₀| * ‖L‖`. -/
 private lemma abs_norm_gamma_sub_smul_le {γ : ℝ → ℂ} {t₀ : ℝ} {L : ℂ} {M : ℝ} {t : ℝ}
@@ -94,14 +93,7 @@ lemma integrand_times_t_tendsto_one
         (t - t₀)⁻¹ • (γ t - γ t₀) from fun t => by rw [Algebra.smul_def]; simp [mul_comm]]
       exact h_slope
     have h_recip := h_slope'.inv₀ hL
-    have h_inv_eq : ∀ t : ℝ, ((γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)⁻¹ =
-        (↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ := fun t => by
-      by_cases h : γ t - γ t₀ = 0
-      · simp [h]
-      · by_cases ht : (t : ℂ) - t₀ = 0
-        · simp [ht]
-        · field_simp
-    simp only [h_inv_eq] at h_recip; exact h_recip
+    simp_all
   have h_prod :
       Tendsto
         (fun t => (↑(t - t₀) : ℂ) *
@@ -109,8 +101,7 @@ lemma integrand_times_t_tendsto_one
         (𝓝[≠] t₀) (𝓝 (L⁻¹ * L)) :=
     Tendsto.mul h_ratio_tendsto
       (h_deriv_tendsto.mono_left nhdsWithin_le_nhds)
-  simp only [inv_mul_cancel₀ hL] at h_prod
-  exact h_prod
+  simp_all
 
 /-- Asymptotic control:
 ‖(γ-γ₀)⁻¹ * γ' - (t-t₀)⁻¹‖ ≤ ε / |t-t₀|. -/
@@ -261,9 +252,7 @@ lemma contAt_deriv_of_contDiffAt_two
   have h_cont_at_fderiv : ContinuousAt (fderiv ℝ γ) t₀ :=
     h_fderiv_cont.continuousAt (Metric.isOpen_ball.mem_nhds (Metric.mem_ball_self hε_pos))
   have h_deriv_eq : deriv γ = (fun t => fderiv ℝ γ t 1) := funext fun t => by
-    by_cases h : DifferentiableAt ℝ γ t
-    · rw [fderiv_apply_one_eq_deriv]
-    · simp [deriv_zero_of_not_differentiableAt h, fderiv_zero_of_not_differentiableAt h]
+    simp_all
   rw [h_deriv_eq]
   exact h_cont_at_fderiv.clm_apply continuousAt_const
 

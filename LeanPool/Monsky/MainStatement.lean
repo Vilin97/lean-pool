@@ -76,8 +76,7 @@ theorem monsky_theorem (n : ℕ) :
           apply Nat.not_odd_iff_even.2 (Even.zero (α := ℕ))
           convert hOdd
           rw [←Nat.cast_inj (R := ℝ)]
-          convert bla
-          exact AddMonoidWithOne.natCast_zero
+          simp_all
         · -- This is exactly the same as above so should be abstracted
           -- when refactoring isEqualAreaCover.
           -- We put it in for now.

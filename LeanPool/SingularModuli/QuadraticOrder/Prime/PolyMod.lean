@@ -100,8 +100,7 @@ lemma polyMod_natDegree [Fact p.Prime] : (polyMod d p).natDegree = 2 := by
   unfold polyMod
   rw [Polynomial.coeff_map]
   unfold poly
-  simp [Polynomial.coeff_X_pow,
-        Mathlib.Tactic.ComputeDegree.coeff_intCast_ite]
+  simp_all
 
 /-- Discriminant identity: when `d ≡ 0 ∨ 1 (mod 4)`, the (coefficient-level)
 discriminant of the monic-quadratic form of `polyMod d p` equals `d` in
@@ -118,8 +117,7 @@ lemma polyMod_discrim_eq (hd : d % 4 = 0 ∨ d % 4 = 1) :
     nlinarith [hcancel]
   have hcast := congrArg (fun z : ℤ => (z : ZMod p)) key
   push_cast at hcast
-  convert hcast using 1
-  ring
+  simp_all
 
 /-- Evaluation of `polyMod d p` at `x ∈ ZMod p`: a closed-form expansion.
 
@@ -251,8 +249,7 @@ theorem polyMod_eq_X_sq_of_p_dvd_d
     exact (hp_prime_int.dvd_mul.mp hp_dvd_sub).resolve_left hp_not_dvd_4
   have hq_zmod : (((d ^ 2 - d) / 4 : ℤ) : ZMod p) = 0 := by
     rwa [ZMod.intCast_zmod_eq_zero_iff_dvd]
-  rw [hd_zmod, hq_zmod]
-  simp
+  simp_all
 
 /-- The split case at the polynomial level: when `p` is an odd prime, `d ≡ 0 ∨ 1
 (mod 4)`, and the Legendre symbol `(d/p) = 1` (so `d` is a non-zero quadratic
@@ -276,16 +273,13 @@ theorem polyMod_exists_two_distinct_roots_of_legendreSym_eq_one
   have hd_ne_zero : (d : ZMod p) ≠ 0 := by
     intro hd0
     have : legendreSym p d = 0 := (legendreSym.eq_zero_iff p d).mpr hd0
-    rw [this] at h_split
-    exact absurd h_split (by decide)
+    simp_all
   have hsq : IsSquare (d : ZMod p) := (legendreSym.eq_one_iff p hd_ne_zero).mp h_split
   obtain ⟨t, ht⟩ := hsq
   -- `ht : (d : ZMod p) = t * t`
   -- Therefore `t ≠ 0` (else `d = 0 mod p`).
   have ht_ne_zero : t ≠ 0 := by
-    intro ht0
-    apply hd_ne_zero
-    rw [ht, ht0, mul_zero]
+    simp_all
   -- The discriminant equals `t * t`.
   have hdiscr : discrim (1 : ZMod p) (-(d : ZMod p)) (((d ^ 2 - d) / 4 : ℤ) : ZMod p)
       = t * t := by
@@ -310,19 +304,15 @@ theorem polyMod_exists_two_distinct_roots_of_legendreSym_eq_one
         congrArg (fun x => 2 * x) hrs
       rw [mul_div_cancel₀ _ hp_two_ne, mul_div_cancel₀ _ hp_two_ne] at hmul
       linear_combination hmul
-    rcases mul_eq_zero.mp h2t with h | h
-    · exact absurd h hp_two_ne
-    · exact h
+    simp_all
   · -- `((d+t)/2)` is a root.
     rw [hquad_iff]
     rw [quadratic_eq_zero_iff one_ne_zero hdiscr]
-    left
-    ring
+    simp_all
   · -- `((d-t)/2)` is a root.
     rw [hquad_iff]
     rw [quadratic_eq_zero_iff one_ne_zero hdiscr]
-    right
-    ring
+    simp_all
 
 /-- `polyMod d p` is irreducible in `(ZMod p)[X]` iff the Legendre symbol
 `(d/p) = -1`. Combines the monic-degree-two irreducibility characterisation

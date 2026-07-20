@@ -167,9 +167,7 @@ noncomputable def sheafHFilteredColimitSuccIotaCocone : Cocone Y' :=
         (sheafHFilteredColimitSuccEta Y').app j ≫
           (sheafHFilteredColimitSuccInjCocone Y').ι.app j
       naturality := fun j j' f ↦ by
-        rw [← Category.assoc, (sheafHFilteredColimitSuccEta Y').naturality f]
-        exact congrArg (fun t ↦ (sheafHFilteredColimitSuccEta Y').app j ≫ t)
-          ((sheafHFilteredColimitSuccInjCocone Y').w f) }
+        simp_all }
 
 /-- The induced map from the colimit of the original diagram to the colimit of its injective
 replacement. -/

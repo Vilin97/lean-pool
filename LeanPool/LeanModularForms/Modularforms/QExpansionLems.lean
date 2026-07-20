@@ -76,17 +76,14 @@ lemma iteratedDerivWithin_mul' (f g : ℂ → ℂ) (s : Set ℂ) (hs : IsOpen s)
     ∑ i ∈ Finset.range m.succ, (m.choose i) * (iteratedDerivWithin i f s x) *
     (iteratedDerivWithin (m - i) g s x) := by
   induction m generalizing f g with
-  | zero => simp only [iteratedDerivWithin_zero, Pi.mul_apply, Nat.succ_eq_add_one, zero_add,
-    Finset.range_one, zero_le, Nat.sub_eq_zero_of_le, Finset.sum_singleton, Nat.choose_self,
-    Nat.cast_one, one_mul]
+  | zero => simp_all
   | succ m hm =>
     have h1 :=
       derivWithin_mul2 f g s (hf.differentiableOn (by simp)) (hg.differentiableOn (by simp))
     have h2 : (fun y => f y * g y) = f * g := by ext y; simp
     rw [iteratedDerivWithin_succ']
     have hset : s.EqOn (derivWithin (f * g) s) (derivWithin f s * g + f * derivWithin g s) := by
-      intro z hz
-      aesop
+      simp_all
     rw [iteratedDerivWithin_congr hset hx, iteratedDerivWithin_add hx hs.uniqueDiffOn, hm _ _ hf,
       hm _ _ _ hg]
     · simp_rw [←iteratedDerivWithin_succ']
@@ -137,8 +134,7 @@ lemma IteratedDeriv_smul (a : ℂ) (f : ℂ → ℂ) (m : ℕ) :
   induction m with
   | zero => simp
   | succ m hm =>
-    ext x; rw [iteratedDeriv_succ, iteratedDeriv_succ, hm, Pi.smul_def]
-    exact deriv_const_smul_field a ..
+    ext x; simp_all
 
 
 lemma qExpansion_smul2 (a : ℂ) (f : ModularForm Γ(n) k) [NeZero n] :
@@ -155,8 +151,7 @@ lemma qExpansion_ext (f g : ℍ → ℂ) (h : f = g) : qExpansion 1 f =
 lemma cuspFunction_congr_funLike
     {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] (n : ℕ) (f : α) (g : β) (h : ⇑f = ⇑g) :
     cuspFunction n f = cuspFunction n g := by
-  ext z
-  by_cases hz : z = 0 <;> simp [cuspFunction, Periodic.cuspFunction, h, hz]
+  simp_all
 
 lemma qExpansion_ext2 {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] (f : α) (g : β) (h : ⇑f = ⇑g) :
     qExpansion 1 f = qExpansion 1 g := by

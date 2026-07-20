@@ -105,5 +105,4 @@ theorem SimpleGraph.adjMatrix_irreflexive
   simp only [map_sum, map_smul, TensorProduct.map_tmul, LinearMap.mul'_apply,
     Module.End.one_apply]
   ext i
-  simp [Matrix.mulVec, dotProduct, SimpleGraph.adjMatrix, Matrix.of_apply, Pi.single_apply,
-    SimpleGraph.irrefl]
+  simp_all

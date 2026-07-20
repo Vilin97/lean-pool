@@ -950,11 +950,7 @@ theorem gFun_iter_fixed (T : GExpr) (hT : T.RootedConst) :
     exact ⟨gIter T (max i j), ⟨max i j, rfl⟩,
       gIter_mono T hT (le_max_left i j), gIter_mono T hT (le_max_right i j)⟩
   have hU : ∀ v, v ∈ (⋃ n, gIter T n) ↔ ∃ S ∈ Set.range (gIter T), v ∈ S := by
-    intro v
-    constructor
-    · intro hv; rw [Set.mem_iUnion] at hv; obtain ⟨n, hn⟩ := hv
-      exact ⟨gIter T n, ⟨n, rfl⟩, hn⟩
-    · rintro ⟨S, ⟨n, rfl⟩, hv⟩; exact Set.mem_iUnion.mpr ⟨n, hv⟩
+    simp_all
   apply Set.ext; intro w
   rw [gFun_continuous T hdir hne hU w]
   constructor

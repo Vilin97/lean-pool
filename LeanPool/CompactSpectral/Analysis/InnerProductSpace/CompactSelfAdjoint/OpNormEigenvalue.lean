@@ -102,12 +102,9 @@ theorem exists_unit_norm_eq_opNorm_of_isCompactOperator
       ‖T (xMax : E)‖ := by
     have hne :
         (Set.image (fun x : E => ‖T x‖) (closedBall (α := E) (0 : E) (1 : ℝ))).Nonempty := by
-      refine ⟨‖T (0 : E)‖, ?_⟩
-      refine ⟨0, ?_, rfl⟩
-      exact Metric.mem_closedBall_self zero_le_one
+      simp_all
     refine csSup_le hne ?_
-    rintro y ⟨x, hx, rfl⟩
-    exact hxMax_bound x hx
+    simp_all
   have hle_sSup :
       ‖T (xMax : E)‖ ≤
         sSup (Set.image (fun x : E => ‖T x‖) (closedBall (α := E) (0 : E) (1 : ℝ))) := by
@@ -126,9 +123,7 @@ theorem exists_unit_norm_eq_opNorm_of_isCompactOperator
     have hxlt : ‖xe‖ < (1 : ℝ) := lt_of_le_of_ne hxMax_norm_le hne
     have hxpos : 0 < ‖xe‖ := by
       have hnormT_pos : 0 < ‖T‖ := by
-        refine lt_of_le_of_ne (ContinuousLinearMap.opNorm_nonneg T) ?_
-        intro h
-        exact hT0 ((ContinuousLinearMap.opNorm_zero_iff T).1 h.symm)
+        simp_all
       have : 0 < ‖T xe‖ := by rw [hTxMax]; exact hnormT_pos
       -- If `xMax = 0`, then `‖T xMax‖ = 0`, contradiction.
       have hxMax_ne0 : xe ≠ 0 := by
@@ -140,8 +135,7 @@ theorem exists_unit_norm_eq_opNorm_of_isCompactOperator
     have hy_norm : ‖y‖ = (1 : ℝ) := by
       simp [y, c, norm_smul, hxpos.ne']
     have hy_mem : y ∈ closedBall (α := E) (0 : E) (1 : ℝ) := by
-      refine (mem_closedBall_zero_iff (a := y) (r := (1 : ℝ))).2 ?_
-      simp [hy_norm]
+      simp_all
     have hTy :
         ‖T y‖ = (‖xe‖)⁻¹ * ‖T xe‖ := by
       simp [y, c, norm_smul, map_smul]
@@ -150,13 +144,9 @@ theorem exists_unit_norm_eq_opNorm_of_isCompactOperator
       have hinv : (1 : ℝ) < (‖xe‖)⁻¹ := (one_lt_inv₀ hxpos).2 hxlt
       have hTx_pos : 0 < ‖T xe‖ := by
         have hnormT_pos : 0 < ‖T‖ := by
-          refine lt_of_le_of_ne (ContinuousLinearMap.opNorm_nonneg T) ?_
-          intro h
-          exact hT0 ((ContinuousLinearMap.opNorm_zero_iff T).1 h.symm)
+          simp_all
         rw [hTxMax]; exact hnormT_pos
-      have : ‖T xe‖ < (‖xe‖)⁻¹ * ‖T xe‖ := by
-        simpa [one_mul] using (mul_lt_mul_of_pos_right hinv hTx_pos)
-      simpa [hTy, mul_comm, mul_left_comm, mul_assoc] using this
+      simp_all
     exact (not_lt_of_ge (hxMax_bound y hy_mem)) hgt
   refine ⟨xe, hxMax_norm_eq, ?_⟩
   exact hTxMax
@@ -170,19 +160,12 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
     obtain ⟨v, hv⟩ : ∃ v : E, v ≠ 0 := exists_ne (0 : E)
     refine ⟨0, v, ?_, by simp⟩
     refine Module.End.hasEigenvector_iff.mpr ?_
-    refine ⟨?_, hv⟩
-    rw [Module.End.mem_eigenspace_iff]
-    simp
+    simp_all
   obtain ⟨x0, hx0_norm, hTx0⟩ :=
     exists_unit_norm_eq_opNorm_of_isCompactOperator (𝕜 := 𝕜) (E := E) T hTc
   have hx0_ne0 : x0 ≠ 0 := by
     intro hx
-    have hx0_norm0 : (0 : ℝ) = 1 := by
-      calc
-        (0 : ℝ) = ‖(0 : E)‖ := by simp
-        _ = ‖x0‖ := by simp [hx]
-        _ = 1 := hx0_norm
-    exact (zero_ne_one : (0 : ℝ) ≠ 1) hx0_norm0
+    simp_all
   -- Apply Rayleigh calculus to `T ∘ T` at a maximiser for `‖T x‖`.
   let A : E →L[𝕜] E := T ∘L T
   have hA : IsSelfAdjoint A := by
@@ -213,9 +196,7 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
       have : ‖T y‖ * ‖T y‖ ≤ ‖T‖ * ‖T‖ :=
         mul_le_mul hle hle hy0 hT0
       simpa [pow_two] using this
-    have hx0_sq : ‖T‖ ^ 2 = ‖T x0‖ ^ 2 := by simp [hTx0]
-    -- Compare via `A.reApplyInnerSelf`.
-    simpa [hA_apply, hx0_sq] using hle_sq
+    simp_all
   have hsup : (⨆ x : { x : E // x ≠ 0 }, A.rayleighQuotient x) = ‖T‖ ^ 2 := by
     classical
     -- First show a uniform upper bound.
@@ -236,8 +217,7 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
           mul_le_mul hle hle hx0 hT0
         simpa [pow_two] using this
       have hx2_pos : 0 < ‖x‖ ^ 2 := by
-        have hxpos : 0 < ‖x‖ := (norm_pos_iff).2 hx
-        simpa using pow_pos hxpos 2
+        simp_all
       have := (div_le_div_of_nonneg_right hle_sq (le_of_lt hx2_pos))
       have hmul : (‖T‖ * ‖x‖) ^ 2 / (‖x‖ ^ 2) = ‖T‖ ^ 2 := by
         field_simp [pow_two, hxnorm, mul_assoc, mul_left_comm, mul_comm]
@@ -278,8 +258,7 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
   let a : 𝕜 := (‖T‖ : 𝕜)
   have ha_ne0 : a ≠ 0 := by
     have : (‖T‖ : ℝ) ≠ 0 := by
-      intro h
-      exact hT0 ((ContinuousLinearMap.opNorm_zero_iff T).1 h)
+      simp_all
     have : ((‖T‖ : ℝ) : 𝕜) ≠ 0 := by
       exact_mod_cast this
     simpa [a] using this
@@ -312,10 +291,7 @@ theorem exists_hasEigenvector_norm_eq_opNorm_of_isCompactOperator_of_isSelfAdjoi
       -- `x0 - u = 2 • x0`.
       have : x0 - u = (2 : 𝕜) • x0 := by
         simp [hu, two_smul]
-      intro h0
-      have : (2 : 𝕜) • x0 = 0 := by simpa [this] using h0
-      have h2 : (2 : 𝕜) ≠ 0 := by exact_mod_cast (two_ne_zero : (2 : ℝ) ≠ 0)
-      exact hx0_ne0 (by simpa [smul_eq_zero, h2] using this)
+      simp_all
     refine ⟨-a, x0 - u, ?_, by simp [a]⟩
     refine Module.End.hasEigenvector_iff.mpr ?_
     refine ⟨?_, hminus_ne0⟩

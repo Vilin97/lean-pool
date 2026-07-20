@@ -157,8 +157,7 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
   · suffices (n - m : 𝕜) • WittAlgebra.lgen 𝕜 (n + m) =
         (n - m : 𝕜) • (lgen 𝕜 (n + m)).1
           + (if n + m = 0 then ((n ^ 3 - n : 𝕜) / 12) • cgen 𝕜 else 0).1 by
-      simpa only [bracket_fst, toWittAlgebra_lgen, WittAlgebra.bracket_lgen_lgen, add_fst,
-        smul_fst] using this
+      simp_all
     split_ifs
     · simp [lgen_eq', cgen_eq']
     · simp only [lgen_eq']

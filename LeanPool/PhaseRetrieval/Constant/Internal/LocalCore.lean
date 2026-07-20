@@ -103,8 +103,7 @@ private lemma integral_fourier_eq_zero (n : ℤ) (hn : n ≠ 0) :
         (fourier 0 : C(AddCircle T, ℂ)) from rfl, fourierCoeff_fourier]
     simp [Pi.single, Function.update, hn]
   rw [fourierCoeff] at h
-  simp only [fourier_zero, smul_eq_mul, mul_one, neg_neg] at h
-  exact h
+  simp_all
 
 private lemma integral_polyEvalCircle_eq_zero {D : ℕ} (a : Fin D → ℂ) (r : ℝ) :
     ∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle = 0 := by
@@ -206,8 +205,7 @@ private lemma integral_const_add_polyEvalCircle_sq {D : ℕ}
         (fun t =>
           ‖c‖ ^ 2 + 2 * c.re * (polyEvalCircle a r t).re +
             2 * c.im * (polyEvalCircle a r t).im) := by
-      ext t
-      exact h_key t
+      simp_all
     rw [h_congr]
     have h_split1 :
         ∫ t : AddCircle T,
@@ -260,18 +258,14 @@ private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
   have hs : (-1 : ℝ) < (n : ℝ) := by exact_mod_cast (show -1 < (n : ℤ) by omega)
   have h := integrable_rpow_mul_exp_neg_mul_sq one_pos hs
-  refine h.congr ?_
-  filter_upwards with r
-  rw [rpow_natCast]
-  ring_nf
+  simp_all
 
 private lemma integrable_abs_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => |r| ^ n * Real.exp (-r ^ 2)) volume := by
   have :
       (fun r : ℝ => |r| ^ n * Real.exp (-r ^ 2)) =
         fun r => ‖r ^ n * Real.exp (-r ^ 2)‖ := by
-    ext r
-    rw [Real.norm_eq_abs, abs_mul, abs_pow, abs_of_pos (Real.exp_pos _)]
+    simp_all
   rw [this]
   exact (integrable_pow_mul_exp_neg_sq n).norm
 
@@ -283,16 +277,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
         ≤ ∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t‖ :=
           norm_sum_le _ _
     _ ≤ ∑ k : Fin D, ‖a k‖ * |r| ^ (k.val + 1) := by
-          apply Finset.sum_le_sum
-          intro k hk
-          rw [norm_mul, norm_mul, norm_pow, Complex.norm_real]
-          calc
-            ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖fourier ((k.val + 1 : ℕ) : ℤ) t‖
-                ≤ ‖a k‖ * ‖r‖ ^ (k.val + 1) *
-                    ‖(fourier ((k.val + 1 : ℕ) : ℤ) : C(AddCircle T, ℂ))‖ :=
-                  mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
-            _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by rw [fourier_norm]; ring
-            _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
+          simp_all
 
 private lemma norm_sq_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t : AddCircle T) :
     ‖polyEvalCircle a r t‖ ^ 2 ≤
@@ -618,8 +603,7 @@ private lemma integrableOn_polar_const (u : ℝ) :
           ‖r * (u ^ 2 * Real.exp (-r ^ 2))‖ =
           ∫ θ in Set.Icc (-Real.pi) Real.pi,
             ‖r * (u ^ 2 * Real.exp (-r ^ 2))‖ := by
-        intro r
-        exact (integral_Icc_eq_integral_Ioo).symm
+        simp_all
       simp_rw [hIoo_eq_Icc]
       exact hcont_int.aestronglyMeasurable.mono_measure Measure.restrict_le_self
     · apply (ae_restrict_iff' measurableSet_Ioi).mpr
@@ -729,13 +713,8 @@ private lemma radial_gaussian_integral (n : ℕ) :
     intro r _
     congr 1
     · rw [← rpow_natCast r (2 * n + 1)]
-      congr 1
-      push_cast
-      ring
-    · congr 1
-      congr 1
-      rw [← rpow_natCast r 2]
-      norm_num
+      simp_all
+    · simp_all
   rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
   rw [integral_rpow_mul_exp_neg_rpow hp hq]
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring
@@ -1045,8 +1024,7 @@ private lemma measurable_gaussianWeight : Measurable gaussianWeight := by
 
 private lemma gaussianWeight_ae_lt_top :
     ∀ᵐ z : ℂ ∂volume, ENNReal.ofReal (gaussianWeight z) < ∞ := by
-  filter_upwards with z
-  simp [gaussianWeight]
+  simp_all
 
 private lemma integrable_gaussianWeight :
     Integrable gaussianWeight volume := by
@@ -1325,8 +1303,7 @@ private lemma scalar_raw_bound {D : ℕ} (a : Fin D → ℂ) {u x2 q2 : ℝ}
     _ ≤ ∫ z, |‖(1 : ℂ) + G z‖ ^ 2 - 1| ∂gaussianMeasure := by
           have h := norm_integral_le_integral_norm (μ := gaussianMeasure)
             (f := fun z : ℂ => ‖(1 : ℂ) + G z‖ ^ 2 - 1)
-          simp only [Real.norm_eq_abs] at h
-          exact h
+          simp_all
     _ = ∫ z, rho (G z) * (‖(1 : ℂ) + G z‖ + 1) ∂gaussianMeasure := by
           apply integral_congr_ae
           filter_upwards with z
@@ -1345,10 +1322,7 @@ private lemma s2_le_aux {N B : ℂ → ℝ} {x2 : ℝ}
   haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   have hrhs_int : Integrable (fun z => 4 + 4 * N z + N z ^ 2) gaussianMeasure := by
     have h := (MeasureTheory.integrable_const (4 : ℝ)).add ((hN_int.const_mul 4).add hN2_int)
-    refine h.congr ?_
-    filter_upwards with z
-    simp only [Pi.add_apply]
-    ring
+    simp_all
   have hmono : ∫ z, B z ^ 2 ∂gaussianMeasure ≤
       ∫ z, (4 + 4 * N z + N z ^ 2) ∂gaussianMeasure := by
     refine MeasureTheory.integral_mono_ae hB2_int hrhs_int
