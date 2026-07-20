@@ -15,6 +15,13 @@ name: Proof Profile
 # cache exists) the comparison is skipped and modified files fall back to
 # the absolute profile.
 #
+# Modified files also get a textual statement-change report (statements.py,
+# the same parser physlib's /check-golf uses): how many declarations — and
+# which — changed their *statement* rather than only their proof/body. This
+# needs no build, so it renders even when the compile-cost comparison is
+# skipped; it is the reassurance a refactor wants that no theorem was quietly
+# restated.
+#
 # Speed (same approach as physlib's /check-golf): measurement only needs the
 # measured files' *imports* built, never the whole library, so `lake build`
 # targets just the changed modules. Both sides of a comparison are elaborated
@@ -523,6 +530,13 @@ jobs:
             fi
           done
           git show origin/main:scripts/proof-profile/render.py > "$RUNNER_TEMP/render.py"
+          # render.py imports statements.py as a sibling module (both fetched
+          # to $RUNNER_TEMP, which is render.py's script dir and so on
+          # sys.path). Fall back to the checkout while it has not landed on
+          # the default branch yet.
+          git show origin/main:scripts/proof-profile/statements.py \
+            > "$RUNNER_TEMP/statements.py" \
+            || cp scripts/proof-profile/statements.py "$RUNNER_TEMP/statements.py"
           python3 "$RUNNER_TEMP/render.py"
 
       # A `pull_request` run from a fork gets a read-only GITHUB_TOKEN and

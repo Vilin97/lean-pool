@@ -4,9 +4,13 @@ applyTo: "**"
 
 # Lean Pool — review instructions
 
-When reviewing a pull request to this repository, follow the rules in
-[`.github/REVIEW_RULES.md`](../REVIEW_RULES.md). Summary below for
-convenience; the rules doc is authoritative.
+Reviews split by PR kind, the same way `/profile` does. A PR that adds a
+**new project** is reviewed for fit and significance — follow
+[`.github/REVIEW_RULES.md`](../REVIEW_RULES.md) (summarized below). A
+**refactor** PR (proof golf, tactic rewrites, reorganizations of projects
+already in the pool) is reviewed for tech debt and maintainability instead —
+follow [`.github/REFACTOR_REVIEW_RULES.md`](../REFACTOR_REVIEW_RULES.md). The
+rules docs are authoritative; the summary below covers the new-project case.
 
 ## Your job
 
