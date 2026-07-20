@@ -4638,3 +4638,54 @@ projects:
       - "11R06"
       - "11C08"
       - "20F55"
+  - slug: cut-and-project
+    title: Period Lengths of Rational Cut-and-Project Gap Sequences
+    summary: >-
+      Formalizes the minimal period lengths of one-dimensional cut-and-project gap
+      sequences. For coprime α, β ∈ ℕ and a window parameter ω ≥ 0, the accepted lattice
+      points project onto the line of slope α/β and, once sorted, produce a periodic
+      sequence of consecutive gaps. Writing N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and D = α² + β², the
+      multiset gap sequence has minimal period N/D when D ∣ N and N otherwise, while the
+      set gap sequence (multiplicities flattened to {0,1}) has minimal period 1 when
+      N ≥ D and N otherwise. The whole reduction runs through counting N consecutive
+      residue classes modulo D under the geometric multiplier −αβ⁻¹. Complementing the
+      rational case, it also proves the irrational case: for positive irrational slope
+      and ω > 0 the projected gap sequence has no finite period, via injectivity of the
+      physical projection on ℤ² and Kronecker density of the internal image.
+    branch: number theory
+    entry_module: LeanPool.CutAndProject
+    authors:
+      - Dirk Kunert
+    source:
+      title: "Period lengths of one-dimensional rational cut-and-project sequences"
+      authors:
+        - Dirk Kunert
+      url: "https://doi.org/10.1017/CBO9781139025256"
+      github_repo: dkunert/cut-and-project
+    license: MIT
+    status: verified
+    provenance: mix
+    main_declarations:
+      - CutAndProject.main_theorem_geometric_concrete
+    main_results:
+      - declaration: CutAndProject.main_theorem_geometric_concrete
+        informal: >-
+          The multiset gap sequence of the rational cut-and-project set has minimal
+          period N/D if D divides N and N otherwise, where N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and
+          D = α² + β².
+      - declaration: CutAndProject.set_main_theorem_geometric_concrete
+        informal: >-
+          The set gap sequence (multiplicities flattened to {0,1}) has minimal period
+          1 if N ≥ D and N otherwise.
+      - declaration: CutAndProject.Irrational.prop_irrational
+        informal: >-
+          For positive irrational slope and window parameter ω > 0, the projected gap
+          sequence has no finite period.
+    tags:
+      - number-theory
+      - aperiodic-order
+      - cut-and-project
+      - quasicrystals
+    msc:
+      - "52C23"
+      - "11K06"

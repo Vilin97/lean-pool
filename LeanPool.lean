@@ -470,6 +470,9 @@ import LeanPool.CriticalPortraits.Forward
 import LeanPool.CriticalPortraits.Injectivity
 import LeanPool.CriticalPortraits.Portraits
 import LeanPool.CriticalPortraits.Surjectivity
+import LeanPool.CutAndProject
+import LeanPool.CutAndProject.Basic
+import LeanPool.CutAndProject.Irrational
 import LeanPool.DeadEnds
 import LeanPool.DeadEnds.Basic
 import LeanPool.DeadEnds.CRT
