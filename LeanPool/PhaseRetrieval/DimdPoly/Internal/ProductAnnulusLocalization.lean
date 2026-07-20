@@ -123,16 +123,8 @@ private lemma sum_indicator_productAnnulus_le_wip
       Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
         have hjz : z ∉ productAnnulus j := fun hjz => hjne (productAnnulus_eq_of_mem_wip hjz hj0z)
         simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hjs
-      by_contra hjz
-      exact hs ⟨j, hjs, hjz⟩
-    rw [Finset.sum_eq_zero]
-    · linarith
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
+    simp_all
+  · simp_all
 
 private theorem integrable_evalPkappa_sq_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
@@ -151,9 +143,7 @@ private theorem integrable_evalPkappa_sq_wip
         (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = ‖F‖ ^ 2 :=
       evalPkappa_total_mass hd kappa F
     have hnorm_ne : ‖F‖ ≠ 0 := norm_ne_zero_of_ne_zero_pkappa_wip hd hF
-    have hpos : 0 < ‖F‖ ^ 2 :=
-      pow_pos (lt_of_le_of_ne (norm_nonneg_pkappa_wip hd F) hnorm_ne.symm) 2
-    linarith
+    simp_all
 
 private theorem finite_sum_annulusMass_le_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -534,8 +524,7 @@ private theorem norm_sq_farPart_le_wip
           simp [Hfar, farPart_apply_wip kappa E H alpha, hnotE]
     _ ≤ Finset.sum H.support (fun alpha => ‖H alpha‖ ^ 2) := by
           exact Finset.sum_le_sum_of_subset_of_nonneg hsubset (by
-            intro alpha hα _
-            positivity)
+            simp_all)
     _ = ‖H‖ ^ 2 := by rw [← norm_sq_eq_sum_wip H]
 
 private theorem remainderPart_eq_self_of_support_far_wip
@@ -548,10 +537,8 @@ private theorem remainderPart_eq_self_of_support_far_wip
   congr
   ext alpha
   by_cases hα : alpha ∈ F.support
-  · have hdist := hfar alpha hα
-    simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support, hdist]
-  · simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support,
-      Finsupp.notMem_support_iff.mp hα]
+  · simp_all
+  · simp_all
 
 theorem annulusMassPartition
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)

@@ -116,11 +116,7 @@ theorem embPair_inter (P Q P' Q' : Set (List Bool × α)) :
 theorem embZero_inter_embPair (X : Set α) (P Q : Set (List Bool × α)) :
     embZero X ∩ embPair P Q = ∅ := by
   ext ⟨p, a⟩
-  simp only [Set.mem_inter_iff, mem_embZero, mem_embPair, Set.mem_empty_iff_false, iff_false,
-    not_and, not_or]
-  rintro ⟨rfl, -⟩
-  exact ⟨by rintro ⟨p', hp', -⟩; exact absurd hp' (by simp), by
-    rintro ⟨q', hq', -⟩; exact absurd hq' (by simp)⟩
+  simp_all
 
 /-! ### Subset / injectivity. -/
 
@@ -139,15 +135,11 @@ theorem embPair_subset {P Q P' Q' : Set (List Bool × α)} :
     · obtain ⟨p', a⟩ := t
       have hmem : ((true :: p', a) : List Bool × α) ∈ embPair P' Q' :=
         h (Or.inl ⟨p', rfl, ht⟩)
-      rcases hmem with ⟨p'', hp'', hP'⟩ | ⟨q'', hq'', -⟩
-      · simp only [List.cons.injEq, true_and] at hp''; exact hp'' ▸ hP'
-      · exact absurd hq'' (by simp)
+      simp_all
     · obtain ⟨q', a⟩ := t
       have hmem : ((false :: q', a) : List Bool × α) ∈ embPair P' Q' :=
         h (Or.inr ⟨q', rfl, ht⟩)
-      rcases hmem with ⟨p'', hp'', -⟩ | ⟨q'', hq'', hQ'⟩
-      · exact absurd hp'' (by simp)
-      · simp only [List.cons.injEq, true_and] at hq''; exact hq'' ▸ hQ'
+      simp_all
   · rintro ⟨hP, hQ⟩ t ht
     rcases ht with ⟨p', hp', hPmem⟩ | ⟨q', hq', hQmem⟩
     · exact Or.inl ⟨p', hp', hP hPmem⟩
@@ -538,9 +530,7 @@ def fromS (s : (sumSys D hD).Element) : (Dsharp D hD).Element where
         exfalso
         obtain ⟨a, ha⟩ := hD X hX
         have hmem : (([], a) : List Bool × α) ∈ embPair P' Q' := hsub ⟨rfl, ha⟩
-        rcases hmem with ⟨p', hp', -⟩ | ⟨q', hq', -⟩
-        · simp at hp'
-        · simp at hq'
+        simp_all
     · cases hW' with
       | gamma => exact Or.inl rfl
       | @zero X' hX' =>
@@ -578,9 +568,7 @@ theorem embZero_ne_embPair {X : Set α} (hX : D.mem X) (P Q : Set (List Bool × 
   intro h
   obtain ⟨a, ha⟩ := hD X hX
   have hmem : (([], a) : List Bool × α) ∈ embPair P Q := h ▸ (⟨rfl, ha⟩ : ([], a) ∈ embZero X)
-  rcases hmem with ⟨p', hp', -⟩ | ⟨q', hq', -⟩
-  · simp at hp'
-  · simp at hq'
+  simp_all
 
 @[simp] theorem fromS_mem_embZero {s : (sumSys D hD).Element} {X : Set α} (hX : D.mem X) :
     (fromS D hD s).mem (embZero X) ↔ s.mem (inj₀ X) := by
@@ -699,9 +687,7 @@ def inSharp (x : D.Element) : (Dsharp D hD).Element where
         exfalso
         obtain ⟨a, ha⟩ := hD X (x.sub hX)
         have hmem : (([], a) : List Bool × α) ∈ embPair P Q := hsub ⟨rfl, ha⟩
-        rcases hmem with ⟨p', hp', -⟩ | ⟨q', hq', -⟩
-        · simp at hp'
-        · simp at hq'
+        simp_all
 
 /-- **Example 6.1 (Scott 1981, PRG-19).** `λx. x^§` is an *isomorphic injection*:
 `x^§ ⊑ x'^§ ↔

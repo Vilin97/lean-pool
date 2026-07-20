@@ -123,8 +123,7 @@ theorem toSet_ofSet (S : Set ℕ) : toSet (ofSet S) = S := by
   simp only [mem_toSet]
   constructor
   · rintro ⟨_, hsub⟩
-    rw [compl_compl] at hsub
-    exact hsub (Set.mem_singleton n)
+    simp_all
   · intro hn
     exact ⟨mem_compl_singleton n, by rw [compl_compl]; exact Set.singleton_subset_iff.mpr hn⟩
 
@@ -179,8 +178,7 @@ def succMap : ApproximableMap powerSet powerSet where
   rel_dom h := h.1
   rel_cod h := h.2.1
   master_rel := by
-    refine ⟨powerSet.master_mem, powerSet.master_mem, ?_⟩
-    rw [powerSet_master, Set.compl_univ]; exact Set.empty_subset _
+    simp_all
   inter_right := by
     rintro X Z Z' ⟨hX, hZ, hsub⟩ ⟨_, hZ', hsub'⟩
     refine ⟨hX, powerSet_inter_mem hZ hZ', ?_⟩
@@ -197,8 +195,7 @@ def predMap : ApproximableMap powerSet powerSet where
   rel_dom h := h.1
   rel_cod h := h.2.1
   master_rel := by
-    refine ⟨powerSet.master_mem, powerSet.master_mem, ?_⟩
-    rw [powerSet_master, Set.compl_univ]; exact Set.empty_subset _
+    simp_all
   inter_right := by
     rintro X Z Z' ⟨hX, hZ, hsub⟩ ⟨_, hZ', hsub'⟩
     refine ⟨hX, powerSet_inter_mem hZ hZ', ?_⟩
@@ -236,11 +233,7 @@ theorem toSet_predMap (x : powerSet.Element) :
     exact x.up_mem hxX (mem_compl_singleton (k + 1)) (Set.subset_compl_singleton_iff.mpr hk)
   · intro hk
     refine ⟨{k + 1}ᶜ, hk, mem_compl_singleton (k + 1), mem_compl_singleton k, ?_⟩
-    rw [compl_compl]
-    intro a ha
-    rw [Set.mem_singleton_iff] at ha; subst ha
-    rw [mem_predSet, compl_compl]
-    exact Set.mem_singleton (a + 1)
+    simp_all
 
 /-! ### Union and intersection as two-variable approximable maps. -/
 

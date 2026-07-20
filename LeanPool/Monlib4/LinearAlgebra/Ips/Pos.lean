@@ -301,8 +301,7 @@ theorem _root_.LinearMap.complex_isPositive' {V : Type _} [NormedAddCommGroup V]
     ← inner_conj_symm (T _), @RCLike.nonneg_def' ℂ,
     RCLike.re_to_complex, Complex.conj_eq_iff_re,
     ← forall_and]
-  exact ⟨fun h v => ⟨(h v).1, (h v).2.2⟩,
-    fun h v => ⟨(h v).1, (h v).1, (h v).2⟩⟩
+  simp_all
 
 end Complex
 
@@ -360,17 +359,14 @@ theorem _root_.LinearMap.invertibleIff_inner_map_self_pos
     rcases (isPositive'_iff_exists_adjoint_hMul_self T).mp hT with ⟨S, hS⟩
     rw [hS, mul_apply, adjoint_inner_left, inner_self_eq_norm_sq_to_K]
     suffices S v ≠ 0 by
-      rw [← norm_ne_zero_iff] at this
-      rw [← RCLike.ofReal_pow, RCLike.zero_lt_real]
-      exact sq_pos_iff.mpr this
+      simp_all
     by_contra hSv
     rw [LinearMap.ext_iff] at hS
     specialize hS v
     rw [mul_apply, hSv, map_zero] at hS
     apply hv
     apply_fun T
-    · rw [map_zero]
-      exact hS
+    · simp_all
     · exact h.1
   · intro h
     by_contra hbij
@@ -379,8 +375,7 @@ theorem _root_.LinearMap.invertibleIff_inner_map_self_pos
     push Not at hbij
     rcases hbij with ⟨a, ha⟩
     specialize h a ha.2
-    rw [ha.1, inner_zero_left, lt_self_iff_false] at h
-    exact h
+    simp_all
 
 theorem _root_.LinearMap.invertiblePos (T : E →ₗ[𝕜] E) [hTi : Invertible T]
     (hT : T.IsPositive') : IsPositive' (⅟ T) := by
@@ -414,8 +409,7 @@ theorem _root_.LinearMap.IsSymmetric.rePow_eq_rankOne {𝕜 E : Type _} [RCLike 
     ContinuousLinearMap.toLinearMap_sum, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.sum_apply, LinearMap.smul_apply,
     ContinuousLinearMap.coe_coe]
-  intros
-  rfl
+  simp_all
 
 theorem _root_.LinearMap.IsSymmetric.invertible (hT : T.IsSymmetric) [Invertible T] :
     (⅟ T).IsSymmetric := by
@@ -463,9 +457,7 @@ theorem _root_.LinearMap.IsPositive'.sum {𝕜 E : Type _} [RCLike 𝕜]
   | succ d hd =>
     simp_rw [Fin.sum_univ_castSucc]
     apply LinearMap.IsPositive'.add
-    · apply hd
-      intro i
-      exact hT _
+    · simp_all
     · exact hT _
 
 theorem _root_.LinearMap.IsPositive'.smulNonneg {𝕜 E : Type _} [RCLike 𝕜]
@@ -501,8 +493,7 @@ theorem LinearMap.IsPositive'.nonneg_eigenvalue {E : Type _} [NormedAddCommGroup
     (hα : Module.End.HasEigenvalue T α) : 0 ≤ α := by
   have this := ((spec_subseteq_nonneg _).mp (LinearMap.IsPositive'.nonneg_spectrum T hT)) α
     (Module.End.hasEigenvalue_iff_mem_spectrum.mp hα)
-  rw [zero_le_real] at this
-  exact this
+  simp_all
 
 open scoped BigOperators
 

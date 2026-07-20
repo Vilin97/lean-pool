@@ -161,9 +161,7 @@ private lemma tsum_pnat_eq_r_times (r : ℝ) :
   have h1 : ∑' (n : ℕ+), (↑↑n : ℝ) * r ^ (n : ℕ) =
       ∑' (m : ℕ), (↑(m + 1) : ℝ) * r ^ (m + 1) := by
     rw [← Equiv.tsum_eq Equiv.pnatEquivNat]
-    congr 1; ext n; simp only [Equiv.pnatEquivNat, Equiv.coe_fn_mk]
-    rw [show (↑↑n : ℝ) = (↑(n.natPred + 1) : ℝ) from by rw [n.natPred_add_one.symm],
-        show (n : ℕ) = n.natPred + 1 from n.natPred_add_one.symm]
+    simp_all
   rw [h1, ← tsum_mul_left]; congr 1; ext m; ring
 
 private lemma norm_term_le_two_mul {q : ℂ} (hq : ‖q‖ ≤ 1 / 2) (n : ℕ+) :
@@ -202,8 +200,7 @@ private lemma summable_norm_E2_terms {q : ℂ} (hq : ‖q‖ ≤ 1 / 2) :
 private lemma tsum_succ_mul_pow {r : ℝ} (hr : ‖r‖ < 1) :
     ∑' m : ℕ, (↑(m + 1) : ℝ) * r ^ m = 1 / (1 - r) ^ 2 := by
   have := tsum_choose_mul_geometric_of_norm_lt_one 1 hr
-  simp only [Nat.choose_one_right, one_div] at this
-  rw [one_div]; convert this using 2
+  simp_all
 
 private lemma tsum_two_mul_pnat_pow {r : ℝ} (hr : ‖r‖ < 1) :
     ∑' (n : ℕ+), 2 * (↑↑n : ℝ) * r ^ (n : ℕ) = 2 * (r / (1 - r) ^ 2) := by

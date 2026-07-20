@@ -42,28 +42,12 @@ private theorem Maintenance.neg_aux
   cases p
   · intro hl hhl
     rcases h_maintenance (-hl) (by simp [moves_neg, hhl]) with hopt | hreply
-    · rcases hopt with ⟨ngl, hngl, hge⟩
-      left
-      refine ⟨-ngl, ?_, ?_⟩
-      · simpa [moves_neg] using hngl
-      · exact (ClosedUnderNeg.neg_ge_neg_iff (-ngl) hl).mp (by simpa using hge)
-    · rcases hreply with ⟨nhlr, hnhlr, hge⟩
-      right
-      refine ⟨-nhlr, ?_, ?_⟩
-      · simpa [moves_neg] using hnhlr
-      · exact (ClosedUnderNeg.neg_ge_neg_iff g (-nhlr)).mp (by simpa using hge)
+    · simp_all
+    · simp_all
   · intro gr hgr
     rcases h_maintenance (-gr) (by simp [moves_neg, hgr]) with hopt | hreply
-    · rcases hopt with ⟨nhr, hnhr, hge⟩
-      left
-      refine ⟨-nhr, ?_, ?_⟩
-      · simpa [moves_neg] using hnhr
-      · exact (ClosedUnderNeg.neg_ge_neg_iff gr (-nhr)).mp (by simpa using hge)
-    · rcases hreply with ⟨ngrl, hngrl, hge⟩
-      right
-      refine ⟨-ngrl, ?_, ?_⟩
-      · simpa [moves_neg] using hngrl
-      · exact (ClosedUnderNeg.neg_ge_neg_iff (-ngrl) h).mp (by simpa using hge)
+    · simp_all
+    · simp_all
 
 protected theorem Maintenance.neg_iff
     {A : G → Prop} [ClosedUnderNeg A] {g h : G} (p : Player) :
@@ -176,8 +160,7 @@ private theorem auxCases {h x : G} {p : Player} (h1 : MiserePlayerOutcome (h + x
     ∨ (∃ hl ∈ moves p h, MiserePlayerOutcome (hl + x) (-p) = p)
     ∨ (IsEndLike p (h + x)) := by
   apply Or.elim ((winsGoingFirst_iff _ _).mp (miserePlayerOutcome_eq_iff_winsGoingFirst.mp h1))
-  · intro h1
-    exact (Or.inr (Or.inr h1))
+  · simp_all
   · intro ⟨hxl, h1, h2⟩
     simp only [moves_add, Set.mem_union, Set.mem_image] at h1 h2
     apply Or.elim h1
@@ -216,9 +199,7 @@ private theorem auxR (A : G → Prop) [Hereditary A]
         (aux A h2 h3 h4 h5
           (Hereditary.has_option hx (IsOption.of_mem_moves h7))) .left
     have h10 : MiserePlayerOutcome (h + xr) .left = .right := by
-      have h11 : MiserePlayerOutcome (h + xr) .left ≤ .right := by
-        simpa [h8] using h9
-      exact Player.le_right_eq _ h11
+      simp_all
     -- and hence oR(H + X) = R.
     exact miserePlayerOutcome_of_rightMoves (add_left_mem_moves_add h7 h) h10
   · -- 2. o^L(G^R + X) = R for some G^R.
@@ -233,9 +214,7 @@ private theorem auxR (A : G → Prop) [Hereditary A]
         exact misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (h10 x hx) .left
       -- and hence o^R(H + X) = R.
       have h12 : MiserePlayerOutcome (hr + x) .left = .right := by
-        have h13 : MiserePlayerOutcome (hr + x) .left ≤ .right := by
-          simpa [h8] using h11
-        exact Player.le_right_eq _ h13
+        simp_all
       exact miserePlayerOutcome_of_rightMoves (add_right_mem_moves_add h9 x) h12
     · -- or else there exists some G^RL with G^RL ≥A H
       intro ⟨grl, h9, h10⟩
@@ -245,8 +224,7 @@ private theorem auxR (A : G → Prop) [Hereditary A]
           imp_false] at h8
         rw [not_winsGoingFirst_iff] at h8
         have h8 := h8.right (grl + x) (add_right_mem_moves_add h9 x)
-        rw [Player.neg_left, <-miserePlayerOutcome_eq_iff_winsGoingFirst] at h8
-        exact h8
+        simp_all
       -- and so o^R(H + X) ≤ o(G^RL + X) = R.
       have h12 := misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (h10 x hx) .right
       rw [h11] at h12
@@ -283,9 +261,7 @@ private theorem auxL (A : G → Prop) [Hereditary A]
         (aux A h2 h3 h4 h5
           (Hereditary.has_option hx (IsOption.of_mem_moves h7))) .right
     have h10 : MiserePlayerOutcome (g + xl) .right = .left := by
-      have h11 : .left ≤ MiserePlayerOutcome (g + xl) .right := by
-        simpa [h8] using h9
-      exact Player.le_left_eq _ h11
+      simp_all
     -- and hence oL(G + X) = L.
     exact miserePlayerOutcome_of_leftMoves (add_left_mem_moves_add h7 g) h10
   · -- 2. o^R(H^L + X) = L for some H^L.
@@ -300,8 +276,7 @@ private theorem auxL (A : G → Prop) [Hereditary A]
         exact misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (h10 x hx) .right
       -- and hence o^L(G + X) = L.
       refine miserePlayerOutcome_of_leftMoves (add_right_mem_moves_add h9 x) ?_
-      simp [h8] at h11
-      simp [h11]
+      simp_all
     · -- or else there exists some H^LR with G ≥A H^LR
       intro ⟨hlr, h9, h10⟩
       -- In the latter, we observe that o^L(H^LR + X) = L (since o^R(H^L + X) = L ),
@@ -310,8 +285,7 @@ private theorem auxL (A : G → Prop) [Hereditary A]
           imp_false] at h8
         rw [not_winsGoingFirst_iff] at h8
         have h8 := h8.right (hlr + x) (add_right_mem_moves_add h9 x)
-        rw [Player.neg_right, <-miserePlayerOutcome_eq_iff_winsGoingFirst] at h8
-        exact h8
+        simp_all
       -- and so o^L(G + X) ≥ o(H^LR + X) = L.
       have h12 := misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (h10 x hx) .left
       rw [h11] at h12
@@ -394,13 +368,9 @@ theorem _root_.MisereGames.Form.Hereditary.misereGE_of_moves
     : g ≥m A h := by
   refine misereGE_of_maintenance_proviso A ?_ ?_ ?_ ?_
   · intro gr h1
-    apply Or.inl
-    have ⟨hr, h3, h4⟩ := hr1 gr h1
-    use hr, h3
+    simp_all
   · intro hl h1
-    apply Or.inl
-    have ⟨hr, h3, h4⟩ := hl2 hl h1
-    use hr, h3
+    simp_all
   · intro h2 y hy h1
     rw [GameForm.isEndLike_iff_isEnd] at h2 h1
     refine winsGoingFirst_add_of_isEnd (isEnd_of_not_mem ?_) h1

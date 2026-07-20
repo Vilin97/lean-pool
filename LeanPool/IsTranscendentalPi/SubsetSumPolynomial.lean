@@ -388,8 +388,7 @@ lemma RescaledOf_nonZero
     (T : ℤ[X]) (T' : ℚ[X]) (c : ℤ) (hc : c ≠ 0) (hT' : T' ≠ 0)
     (hT : T.map (algebraMap ℤ ℚ) = C (c : ℚ) * T') : T ≠ 0 := by
   intro h0
-  exact
-    mul_ne_zero (C_ne_zero.mpr (by simpa using hc : (c : ℚ) ≠ 0)) hT' (by simpa [h0] using hT.symm)
+  simp_all
 
 /-- If `c ≠ 0` and `c * T' = T ∈ ℤ[X]`, then `deg(T) = deg(T')`. -/
 lemma RescaledOf_natDegree
@@ -420,6 +419,5 @@ lemma aeval_zero_ne_zero_of_T
     (ha : nonzeroSubsetSums (valuesFin r) = valuesFin a) :
     aeval (0 : ℂ) T ≠ 0 :=
   RescaledOf_nonZero_at_Zero T T' c hc
-    (by rw [← smul_eq_C_mul]
-        exact hT)
+    (by simp_all)
     (aeval_zero_ne_zero_of_T' T' d n r a hT' ha)

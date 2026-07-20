@@ -157,9 +157,7 @@ theorem rootedAdjoint_mem_of_isAmbient (h_root : A r) (h_sub : A ≤ IsAmbient)
     {g : G} (hg : IsAmbient g) :
     A (rootedAdjoint r g) := by
   have h_root_mem : ∀ a ∈ ({r} : Set G), A a := by
-    intro a ha
-    rw [Set.mem_singleton_iff.mp ha]
-    exact h_root
+    simp_all
   have h_root_nonempty : ({r} : Set G).Nonempty := Set.singleton_nonempty r
   have hAdjAmbient := Ambient.isAmbient_rootedAdjoint (h_sub r h_root) hg
   have hAdjRange : ∀ p, ∀ a ∈ Set.range (fun gp : moves p g => rootedAdjoint r (gp : G)), A a := by
@@ -228,8 +226,7 @@ private theorem rightSeparatorCandidate_mem (h_root : A r) (h_sub : A ≤ IsAmbi
   unfold rightSeparatorCandidate
   apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
   · exact rightSeparatorLeftSet_mem h_root h_sub hh
-  · intro c hc
-    rwa [Set.mem_singleton_iff.mp hc]
+  · simp_all
   · exact ⟨r, Or.inl rfl⟩
   · exact Set.singleton_nonempty x
   · exact Ambient.isAmbient_rightSeparatorCandidate (h_sub r h_root) hh (h_sub x hx)
@@ -249,8 +246,7 @@ private theorem leftSeparatorCandidate_mem (h_root : A r) (h_sub : A ≤ IsAmbie
     A (leftSeparatorCandidate r g x) := by
   unfold leftSeparatorCandidate
   apply ClosedUnderDicotic.closed_dicotic (IsAmbient := IsAmbient)
-  · intro c hc
-    rwa [Set.mem_singleton_iff.mp hc]
+  · simp_all
   · exact leftSeparatorRightSet_mem h_root h_sub hg
   · exact Set.singleton_nonempty x
   · exact ⟨r, Or.inl rfl⟩
@@ -267,9 +263,7 @@ private theorem downlinkOptions_mem (h_root : A r) (h_sub : A ≤ IsAmbient)
   · exact hzA ⟨hp, hhp⟩
   · exact rootedAdjoint_mem_of_isAmbient h_root h_sub
       (Hereditary.has_option hg (IsOption.of_mem_moves hgp))
-  · by_cases hz : IsEnd (-p) g ∧ IsEnd (-p) h
-    · simpa [hz, ha0] using h_root
-    · simp [hz] at ha0
+  · simp_all
 
 private theorem downlinkWitness_mem (h_root : A r) (h_sub : A ≤ IsAmbient)
     {g h : G} {x : moves .left g → G} {y : moves .right h → G}
@@ -422,8 +416,7 @@ private lemma not_misereGE_of_right_left_outcomes
     (hgt : MiserePlayerOutcome (g + t) p = .right)
     (hht : MiserePlayerOutcome (h + t) p = .left) : False := by
   have h_cmp := misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (hge t ht) p
-  rw [hgt, hht] at h_cmp
-  exact Player.left_le_right h_cmp
+  simp_all
 
 /--
 Comparison forbids downlinking to options: if `g ≥m A h`, then `g` is not
@@ -471,20 +464,16 @@ private lemma maintenance_of_misereGE_downlinking
     have h_downlinked : Downlinked A g hl := by
       apply Downlinking.downlinked_of_not_exists_moves_misereGE hg
         (Hereditary.has_option hh (IsOption.of_mem_moves hhl))
-      · intro h_exists
-        exact h_not (Or.inl h_exists)
-      · intro h_exists
-        exact h_not (Or.inr h_exists)
+      · simp_all
+      · simp_all
     exact not_downlinked_left_option_of_misereGE hge hhl h_downlinked
   · intro gr hgr
     by_contra h_not
     have h_downlinked : Downlinked A gr h := by
       apply Downlinking.downlinked_of_not_exists_moves_misereGE
         (Hereditary.has_option hg (IsOption.of_mem_moves hgr)) hh
-      · intro h_exists
-        exact h_not (Or.inr h_exists)
-      · intro h_exists
-        exact h_not (Or.inl h_exists)
+      · simp_all
+      · simp_all
     exact not_downlinked_right_option_of_misereGE hge hgr h_downlinked
 
 /--

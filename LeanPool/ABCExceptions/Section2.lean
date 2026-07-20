@@ -417,10 +417,8 @@ theorem Finset.abcExceptionsBelow_subset_union_dyadicPoints (ε : ℝ) (X : ℕ)
     rw [← Real.rpow_natCast_mul (by norm_num)]
     have : n * (Nat.log 2 (radical a) / n : ℝ) = Nat.log 2 (radical a) := by
       rw [mul_div_cancel₀]
-      simp [n]
-      norm_cast
-    rw [this]
-    simp
+      simp_all
+    simp_all
   have hc2 : 2 ≤ c := by omega
   simp_rw [this]
   have radical_similar {a : ℕ} : (radical a : ℕ) ~ 2 ^ (Nat.log 2 (radical a)) :=
@@ -610,12 +608,8 @@ private theorem prod_y_pow_eq_n_subset {s : Finset ℕ}
   · apply Finset.prod_congr rfl
     intro k hk
     apply Finset.prod_congr rfl
-    simp only [Finset.mem_filter, Nat.mem_primeFactors, ne_eq, and_imp]
-    rintro _ _ _ _ rfl
-    rfl
-  · simp only [Nat.mem_primeFactors, ne_eq, and_imp]
-    intro p hp hpn hn'
-    apply hs p hp hpn
+    simp_all
+  · simp_all
 
 private theorem prod_y_pow_eq_n : ∏ m ∈ Finset.Icc 1 d ∪ Finset.Ioc d n, y m ^ m = n := by
   apply prod_y_pow_eq_n_subset
@@ -643,8 +637,7 @@ private theorem hy_cop (i j : ℕ) (hij : i ≠ j) : Nat.Coprime (y i) (y j) := 
   intro p hp hpi hpj
   apply p_dvd_y_iff _ _ hp at hpi
   apply p_dvd_y_iff _ _ hp at hpj
-  subst hpi hpj
-  exact hij rfl
+  simp_all
 
 open Function in
 omit data in
@@ -770,8 +763,7 @@ private theorem x_pairwise_coprime (i j : Fin d) (hij : i ≠ j) : Nat.gcd (x i)
   simp_rw [x]
   rw [← Nat.coprime_iff_gcd_eq_one]
   split_ifs with hik hjk
-  · rw [← hik] at hjk
-    exact (hij''.symm hjk).elim
+  · simp_all
   · rw [Nat.coprime_mul_iff_left, mul_one]
     refine ⟨hy_cop _ _ hij'', ?_⟩
     rw [Nat.coprime_prod_left_iff]
@@ -1076,8 +1068,7 @@ private theorem X_pow_mul_prod_le_radical : (X : ℝ)^(-ε) * ∏ j, x j ≤ (ra
     _ ≤ ∏ m ∈ Finset.Icc 1 d ∪ Finset.Ioc d n, y m := by
       norm_cast
       apply Finset.prod_le_prod_of_subset_of_one_le'
-      · intro x
-        simp +contextual
+      · simp_all
       · simp only [Finset.mem_union, Finset.mem_Icc, not_and]
         intro i _ _
         apply hy_pos
@@ -1136,8 +1127,7 @@ theorem exists_nice_factorization
     rw [hn]
     apply Dvd.dvd.mul_left
     trans x i ^ (i.val + 1)
-    · apply dvd_pow (dvd_rfl)
-      omega
+    · simp_all
     apply Finset.dvd_prod_of_mem
     exact Finset.mem_univ i
   have hx_pos (i : Fin ProofData.d) : 0 < x i := by
@@ -1147,10 +1137,7 @@ theorem exists_nice_factorization
       apply Finset.prod_eq_zero (Finset.mem_univ i)
       simp [h]
     have hn_zero : ProofData.n = 0 := by
-      calc
-        ProofData.n = c * (∏ j : Fin ProofData.d, x j ^ (j.val + 1)) := hn
-        _ = c * 0 := by rw [hprod]
-        _ = 0 := by rw [mul_zero]
+      simp_all
     exact (Nat.ne_of_gt (lt_of_lt_of_le Nat.zero_lt_one ProofData.h1n)) hn_zero
   exact ⟨x, c, hn, hc, hcop, h_le_rad, h_rad_le, hc_pos, hx_pos, x_le_X⟩
 
@@ -1369,8 +1356,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
           · simp only [Real.rpow_one]
             trans 2 * (c₂ *(∏ i, (w i : ℝ) ^ (i.val + 1)))
             · norm_cast
-              rw [← c_eq_c_mul_prod]
-              apply hxc
+              simp_all
             · rw [← mul_assoc, mul_comm 2, mul_assoc]
               gcongr
           · apply Real.rpow_pos_of_pos
@@ -1416,8 +1402,7 @@ theorem B_to_triple_surjOn {α β γ : ℝ} (x : ℕ) (ε : ℝ)
     · apply fun i ↦ (similar_pow_log (hu_pos i))
     · apply fun i ↦ (similar_pow_log (hv_pos i))
     · apply fun i ↦ (similar_pow_log (hw_pos i))
-    · rw [←a_eq_c_mul_prod, ←b_eq_c_mul_prod, ←c_eq_c_mul_prod]
-      exact habc
+    · simp_all
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ b_eq_c_mul_prod ▸ hab) <;> omega
     · apply coprime_mul_prod_aux _ _ (a_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hac) <;> omega
     · apply coprime_mul_prod_aux _ _ (b_eq_c_mul_prod ▸ c_eq_c_mul_prod ▸ hbc) <;> omega
@@ -1613,8 +1598,7 @@ theorem refinedCountTriplesStar_isBigO_B
   · intro i
     calc
       (c i : ℝ) ≤ (⌊(x:ℝ) ^ (ε / 4)⌋₊ : ℝ) := by
-        norm_cast
-        apply (hc i).2
+        simp_all
       _ ≤ (x : ℝ)^(ε/4) := by
         apply Nat.floor_le
         positivity

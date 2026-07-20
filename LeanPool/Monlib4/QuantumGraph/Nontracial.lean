@@ -135,10 +135,7 @@ theorem sig_comp_eq_iff [hφ : φ.IsFaithfulPosMap] (t : ℝ) (A B : ℍ →ₗ[
 
 theorem stdBasisMatrix_squash (i j k l : n) (x : Matrix n n ℂ) :
     e_{i,j} * x * e_{k,l} = x j k • e_{i,l} := by
-  ext i_1 j_1
-  simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.stdBasisMatrix, Matrix.single,
-    smul_eq_mul, ite_and]
-  split_ifs <;> rfl
+  simp_all
 
 open scoped ComplexOrder
 theorem map_sig_mulLeft_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :

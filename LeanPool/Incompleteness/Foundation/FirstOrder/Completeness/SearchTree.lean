@@ -99,8 +99,7 @@ lemma rank_of_lt {τ₁ τ₂ : SearchTree T Γ} (h : Lt T Γ τ₂ τ₁) : τ�
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
 lemma seq_of_lt {τ₁ τ₂ : SearchTree T Γ} (h : Lt T Γ τ₂ τ₁) : τ₂.seq ≺⟨τ₁.rank⟩ τ₁.seq := by
   cases h
-  simp only [rank, seq]
-  assumption
+  simp_all
 
 instance : Top (SearchTree T Γ) := ⟨⟨0, Γ, SearchTreeAux.zero⟩⟩
 

@@ -18,8 +18,7 @@ theorem _root_.ext_inner_left_iff {𝕜 E : Type _} [RCLike 𝕜] [NormedAddComm
     [InnerProductSpace 𝕜 E] (x y : E) :
     x = y ↔ ∀ v : E, inner 𝕜 x v = inner 𝕜 y v := by
   constructor
-  · intro h v
-    simp_rw [h]
+  · simp_all
   · rw [← sub_eq_zero, ← @inner_self_eq_zero 𝕜, inner_sub_left, sub_eq_zero]
     intro h; exact h _
 
@@ -41,8 +40,7 @@ variable {E : Type*} [NormedAddCommGroup E]
 theorem LinearMap.ext_iff_inner_map [InnerProductSpace ℂ E] (p q : E →ₗ[ℂ] E) :
     p = q ↔ ∀ x : E, inner ℂ (p x) x = inner ℂ (q x) x := by
   constructor
-  · intro h
-    simp_rw [h, forall_const]
+  · simp_all
   · intro h
     rw [← sub_eq_zero, ← inner_map_self_eq_zero]
     simp_rw [LinearMap.sub_apply, inner_sub_left, h, sub_self, forall_const]
@@ -87,8 +85,7 @@ theorem IsSelfAdjoint.inner_re_eq {E : Type _} [NormedAddCommGroup E]
     (re ⟪a x,x⟫ : 𝕜) = ⟪a x,x⟫ := by
   rcases@I_mul_I_ax 𝕜 _ with (h | _)
   · rw [← re_add_im ⟪a x,x⟫]
-    simp_rw [h, MulZeroClass.mul_zero, add_zero]
-    norm_cast
+    simp_all
   · simp_rw [← conj_eq_iff_re, inner_conj_symm]
     have ha' := ha
     simp_rw [isSelfAdjoint_iff',

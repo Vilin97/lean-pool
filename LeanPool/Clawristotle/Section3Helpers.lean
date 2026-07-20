@@ -292,11 +292,7 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
       have key := hc (Pi.single i 1 + Pi.single j 1)
       rw [map_add, hc, hc] at key
       have hi := congr_fun key i
-      have hj := congr_fun key j
-      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.single_eq_same,
-        Pi.single_eq_of_ne hij, Pi.single_eq_of_ne hij.symm, mul_one, mul_zero,
-        add_zero, zero_add] at hi hj
-      linarith [hi, hj]
+      simp_all
     use c (Pi.single 0 1)
     intro w
     rw [hc]
@@ -365,14 +361,8 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
           rw [fderiv_pi hDiff_comp_j]; simp only [ContinuousLinearMap.pi_apply]
         rw [h_pi_comp]
         by_cases hij : i = j
-        · subst hij
-          simp only [ite_true, mul_one]
-          rw [show (fun v => (fderiv ℝ g v) (Pi.single i 1) i) = c from
-            funext fun v => by rw [hc_partial]; simp]
-        · simp only [hij, ite_false, mul_zero]
-          rw [show (fun v => (fderiv ℝ g v) (Pi.single j 1) i) = fun _ => (0:ℝ) from
-            funext fun v => by rw [hc_partial]; simp [hij]]
-          simp
+        · simp_all
+        · simp_all
       have h_zero_deriv : ∀ v : Fin 3 → ℝ, ∀ k : Fin 3, (fderiv ℝ c v) (Pi.single k 1) = 0 := by
         intro v k
         obtain ⟨i, hi⟩ : ∃ i : Fin 3, i ≠ k := by fin_cases k <;> trivial

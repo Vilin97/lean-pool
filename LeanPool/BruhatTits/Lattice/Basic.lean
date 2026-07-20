@@ -197,10 +197,8 @@ lemma toGL_toSubmodule {M : Submodule R (ι → K)} [IsLattice M] (b : Basis ι 
       simp only [bs, Matrix.mulVec, dotProduct]
       rw [Finset.sum_eq_single i]
       · simp
-      · intro x _ hx
-        simp [Pi.single_eq_of_ne hx]
-      · intro hi
-        simp at hi
+      · simp_all
+      · simp_all
     · simp
     · intro y z _ _ hym hzm
       simpa only [Subtype.val_comp_add, Matrix.mulVec_add] using
@@ -241,18 +239,10 @@ instance IsLattice.free (M : Submodule R (ι → K)) [IsLattice M] : Module.Free
   letI : SMul R M := M.smul
   have : NoZeroSMulDivisors R (ι → K) := by
     constructor
-    intro c x hcx
-    by_cases hc : c = 0
-    · exact Or.inl hc
-    · right
-      ext i
-      have hcxi : (c : K) * x i = 0 := by
-        simpa [Pi.smul_apply, Subring.smul_def] using congrFun hcx i
-      exact (mul_eq_zero.mp hcxi).resolve_left (fun hcK ↦ hc (Subtype.ext hcK))
+    simp_all
   have : NoZeroSMulDivisors R M :=
     Function.Injective.noZeroSMulDivisors Subtype.val Subtype.val_injective rfl (by
-      intro c x
-      rfl)
+      simp_all)
   Module.free_of_finite_type_torsion_free'
 
 variable [Fintype ι]

@@ -108,8 +108,7 @@ lemma eq_standardNeighbour_of_isStandardNeighbour {L : Lattice R} {y : Vertices 
   apply le_of_lt at h2
   rw [b.twist₂_le_twist₂_iff] at h1 h2
   have : n = 0 := by omega
-  rw [this]
-  simp
+  simp_all
 
 open IsLocalRing
 

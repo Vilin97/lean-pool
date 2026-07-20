@@ -106,8 +106,7 @@ lemma integral_inv_symm
     simp only [show 2 * t₀ - (t₀ + ε₂) = t₀ - ε₂ from by ring,
       show 2 * t₀ - (t₀ + ε₁) = t₀ - ε₁ from by ring,
       show ∀ x, 2 * t₀ - x - t₀ = -(x - t₀) from fun x => by ring, h_odd] at h1
-    rw [intervalIntegral.integral_neg] at h1
-    exact h1.symm
+    simp_all
   rw [h_reflect, neg_add_cancel]
 
 /-- The base integral `∫ η/u` over `[c₁, c₂]` evaluates to `η log(c₂/c₁)`. -/
@@ -179,11 +178,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
           ∫ t in (t₀ - c₂)..(t₀ - c₁),
             η / (t₀ - t) =
           ∫ u in c₁..c₂, η / u := by
-        have h :=
-          intervalIntegral.integral_comp_sub_left
-            (fun u => η / u) t₀
-            (a := t₀ - c₂) (b := t₀ - c₁)
-        simp only [sub_sub_cancel] at h; exact h
+        simp_all
       rw [h_subst, integral_const_div_eq_log hc₁_pos hc₂_pos]
     rw [h_g_eq] at h_bound; exact h_bound
   have h_right :
@@ -226,12 +221,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
           ∫ t in (t₀ + c₁)..(t₀ + c₂),
             η / (t - t₀) =
           ∫ u in c₁..c₂, η / u := by
-        have h :=
-          intervalIntegral.integral_comp_sub_right
-            (fun u => η / u) t₀
-            (a := t₀ + c₁) (b := t₀ + c₂)
-        simp only [add_sub_cancel_left] at h
-        exact h
+        simp_all
       rw [h_subst, integral_const_div_eq_log hc₁_pos hc₂_pos]
     rw [h_g_eq] at h_bound; exact h_bound
   calc ‖∫ t in (t₀ - c₂)..(t₀ - c₁), r t‖ +
@@ -798,9 +788,7 @@ lemma annulus_implies_t_local
     (t : ℝ) (ht_ab : t ∈ Set.Icc a b)
     (hγ_bound : ‖γ t - γ t₀‖ ≤ ε₁) :
     |t - t₀| < δ₀ ∧ |t - t₀| < δ₁ := by
-  have h := h_localize t ht_ab hγ_bound
-  exact ⟨lt_of_lt_of_le h (min_le_left _ _),
-    lt_of_lt_of_le h (min_le_right _ _)⟩
+  simp_all
 
 /-- Bracket ε between dyadic points: for ε ∈ (0, δ], find n with δ/2^(n+1) < ε ≤ δ/2^n. -/
 lemma exists_dyadic_bracket {δ ε : ℝ}
@@ -860,8 +848,7 @@ lemma telescoping_sum_bound {X : Type*} [SeminormedAddCommGroup X]
     rw [(sub_add_sub_cancel (I (N + d' + 2)) (I (N + d' + 1)) (I N)).symm]
     have h_step_d' : ‖I (N + d' + 2) - I (N + d' + 1)‖ ≤
         K * δ / 2 ^ (N + d' + 1) := by
-      conv_lhs => rw [show N + d' + 2 = (N + d' + 1) + 1 from by omega]
-      exact h_step (N + d' + 1)
+      simp_all
     calc ‖(I (N + d' + 2) - I (N + d' + 1)) + (I (N + d' + 1) - I N)‖
         ≤ ‖I (N + d' + 2) - I (N + d' + 1)‖ +
           ‖I (N + d' + 1) - I N‖ := norm_add_le _ _

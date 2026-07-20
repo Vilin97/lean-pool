@@ -106,8 +106,7 @@ lemma inv_smul_smul_eq_inv (g : GL (Fin 2) K) (x y : Vertices R) :
     inv (g • x) (g • y) = inv x y := by
   refine Quotient.inductionOn₂ x y (fun L M ↦ ?_)
   rw [Vertices.smul_def, smulGL_mk, Vertices.smul_def, smulGL_mk]
-  change dist (g • L) (g • M) = dist L M
-  simp
+  simp_all
 
 lemma adj_smul_smul_iff_adj (g : GL (Fin 2) K) (x y : Vertices R) :
     BTgraph.Adj (g • x) (g • y) ↔ BTgraph.Adj x y := by
@@ -242,8 +241,7 @@ lemma stabilizer_standard_eq_range_map_subtype :
       rw [map_mul, ← mul_one ((Matrix.GeneralLinearGroup.map R.subtype) k₁),
         ← cartanDiag_zero hϖ]
       exact h
-    · intro i j
-      fin_cases i <;> fin_cases j <;> simp [hdist]
+    · simp_all
   · rintro ⟨k, rfl⟩
     rw [map_subtype_smul_standard_eq_standard]
 

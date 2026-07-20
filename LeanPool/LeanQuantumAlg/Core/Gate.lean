@@ -101,15 +101,12 @@ theorem one_applyVec (ψ : StateVector n) : applyVec (1 : HilbertOperator n) ψ 
 theorem mul_applyVec (A B : HilbertOperator n) (ψ : StateVector n) :
     applyVec (A * B) ψ = applyVec A (applyVec B ψ) := by
   unfold applyVec
-  rw [show (WithLp.toLp 2 (B.mulVec ψ.ofLp)).ofLp = B.mulVec ψ.ofLp from rfl,
-    Matrix.mulVec_mulVec]
+  simp_all
 
 /-- A Hilbert operator sends a basis ket to its corresponding column. -/
 theorem applyVec_ket (A : HilbertOperator n) (x : Fin (2 ^ n)) (i : Fin (2 ^ n)) :
     applyVec A (PureState.ket x : StateVector n) i = A i x := by
-  rw [applyVec_apply]
-  simp only [PureState.ket_apply, mul_ite, mul_one, mul_zero]
-  exact Fintype.sum_ite_eq' x (fun j => A i j)
+  simp_all
 
 /-- A unitary Hilbert operator preserves inner products on raw state vectors. -/
 theorem inner_applyVec_applyVec_of_mem_unitaryGroup {U : HilbertOperator n}
@@ -155,10 +152,7 @@ theorem norm_applyVec_of_mem_unitaryGroup {U : HilbertOperator n}
   have h := inner_applyVec_applyVec_of_mem_unitaryGroup hU ψ ψ
   rw [inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K] at h
   have h2 : ‖applyVec U ψ‖ ^ 2 = ‖ψ‖ ^ 2 := by exact_mod_cast h
-  calc ‖applyVec U ψ‖ = √(‖applyVec U ψ‖ ^ 2) :=
-        (Real.sqrt_sq (norm_nonneg _)).symm
-    _ = √(‖ψ‖ ^ 2) := by rw [h2]
-    _ = ‖ψ‖ := Real.sqrt_sq (norm_nonneg _)
+  simp_all
 
 end
 
@@ -197,8 +191,7 @@ theorem ext {G K : Gate n} (h : ∀ i j, G i j = K i j) : G = K := by
       have hGK : G = K := by
         ext i j
         exact h i j
-      subst hGK
-      rfl
+      simp_all
 
 /-- Build a gate from a unitary Hilbert operator. -/
 def ofUnitary (U : HilbertOperator n)
@@ -333,9 +326,7 @@ theorem mul_apply (G K : Gate n) (ψ : PureState n) :
 /-- A gate sends the basis ket `|x⟩` to its `x`-th column. -/
 theorem apply_ket (G : Gate n) (x : Fin (2 ^ n)) (i : Fin (2 ^ n)) :
     G.apply (PureState.ket x) i = G i x := by
-  rw [apply_apply]
-  simp only [PureState.ket_apply, mul_ite, mul_one, mul_zero]
-  exact Fintype.sum_ite_eq' x (fun j => G i j)
+  simp_all
 
 /-! ## Permutation gates -/
 
@@ -350,9 +341,7 @@ def ofPerm (σ : Equiv.Perm (Fin (2 ^ n))) : Gate n :=
 theorem ofPerm_apply (σ : Equiv.Perm (Fin (2 ^ n))) (ψ : PureState n)
     (i : Fin (2 ^ n)) : (ofPerm σ).apply ψ i = ψ (σ i) := by
   change HilbertOperator.applyVec (σ.permMatrix ℂ) (ψ : StateVector n) i = ψ (σ i)
-  unfold HilbertOperator.applyVec
-  rw [Matrix.permMatrix_mulVec]
-  rfl
+  simp_all
 
 theorem ofPerm_apply_ket (σ : Equiv.Perm (Fin (2 ^ n))) (x : Fin (2 ^ n)) :
     (ofPerm σ).apply (PureState.ket x) = PureState.ket (σ⁻¹ x) := by

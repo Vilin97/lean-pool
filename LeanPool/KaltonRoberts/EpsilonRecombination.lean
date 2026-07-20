@@ -122,8 +122,7 @@ lemma emptyCount_le_card (N : ℕ) :
         rw [← Finset.mul_sum]
         rw [show (∑ j : C.J, C.weight j) = C.totalWeight from rfl]
         field_simp [ne_of_gt C.totalWeight_pos]
-      rw [hsum]
-      norm_cast
+      simp_all
     _ ≤ Fintype.card C.J := h_residual_le_card
 
 /-- Approximate index type: sigma type for set copies plus empty copies. -/
@@ -343,8 +342,7 @@ theorem two_sided_recombination_core_eps
   have hf_neg := IsApproxAdditive_neg f hf
   have hM_neg : ∀ S : Finset U, |(fun S => -f S) S| ≤ M :=
     fun S => by
-      simp only [abs_neg]
-      exact hM S
+      simp_all
   have hsur_as_def : C_sur.avgDeficit (fun S => -f S) M ≤ S_val := by
     rw [show C_sur.avgDeficit (fun S => -f S) M = C_sur.avgSurplus f M by
       simp [WeightedCollection.avgDeficit, WeightedCollection.avgSurplus, deficit, surplus]]

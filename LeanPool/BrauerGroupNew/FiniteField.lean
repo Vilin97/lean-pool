@@ -23,8 +23,7 @@ lemma BrauerTrivial (A : CSA K) : ∃ n ≠ 0, Nonempty (A ≃ₐ[K] Matrix (Fin
   have eq1 := is_central_of_wdb K A n D hn iso |>.center_eq_bot
   have eq2 : Subalgebra.center K D = ⊤ := SetLike.ext fun x ↦
     ⟨fun _ ↦ by trivial, fun _ ↦ by
-      rw [Subalgebra.mem_center_iff]
-      simp [mul_comm]⟩
+      simp_all⟩
   have e : D ≃ₐ[K] K := Subalgebra.topEquiv.symm.trans <| Subalgebra.equivOfEq ⊤ ⊥
     (eq2.symm.trans eq1) |>.trans <| Algebra.botEquiv K D
   exact ⟨n, hn, ⟨iso.trans e.mapMatrix⟩⟩

@@ -170,31 +170,27 @@ lemma collectUnitPairs_unitPair_rec {nᵢ nₒ : g.NT} {p : g.NT × g.NT} {l : L
     p ∈ x ∨ ∃ v, (nₒ, v) ∈ l ∧ p = (nᵢ, v) := by
   induction l generalizing x with
   | nil =>
-    left
-    exact hp
+    simp_all
   | cons a l ih =>
     simp only [addUnitPair, List.foldr_cons] at hp
     split at hp <;> rename_i ha
     · simp only [Finset.mem_insert] at hp
       cases hp with
       | inl hpd =>
-        right
-        exact ⟨a.2, ha ▸ List.mem_cons_self, hpd⟩
+        simp_all
       | inr hpl =>
         specialize ih hpl
         cases ih with
         | inl => left; assumption
         | inr hlp =>
           obtain ⟨v, hvl, hpv⟩ := hlp
-          right
-          exact ⟨v, List.mem_cons_of_mem a hvl, hpv ▸ rfl⟩
+          simp_all
     · specialize ih hp
       cases ih with
       | inl => left; assumption
       | inr hlp =>
         obtain ⟨v, hvl, hpv⟩ := hlp
-        right
-        exact ⟨v, List.mem_cons_of_mem a hvl, hpv ▸ rfl⟩
+        simp_all
 
 lemma collectUnitPairs_unitPair {r : ContextFreeRule T g.NT} {l : List (g.NT × g.NT)}
     (hrg : r ∈ g.rules) (hp : ∀ p ∈ l, UnitPair p.1 p.2) :
@@ -236,8 +232,7 @@ lemma collectUnitPairs_subset_generatorsProd {r : ContextFreeRule T g.NT} (l : F
     · exact input_mem_generators hrg
     · rw [Finset.mem_toList] at hvl
       specialize hlg hvl
-      rw [Finset.mem_product] at hlg
-      exact hlg.2
+      simp_all
   | [] => simp [heq] at hp
   | [Symbol.terminal _] => simp [heq] at hp
   | _ :: _ :: _ => simp [heq] at hp
@@ -292,9 +287,7 @@ lemma mem_addUnitPairs_unitPair (l : Finset (g.NT × g.NT)) (hl : ∀ p ∈ l, U
   unfold addUnitPairs
   induction g.rules.toList.attach with
   | nil =>
-    intro p
-    simp only [List.pure_def, List.bind_eq_flatMap, List.flatMap_nil, List.foldr_nil]
-    exact hl p
+    simp_all
   | cons a _ ih =>
     intro p hpl
     simp only [List.pure_def, List.bind_eq_flatMap, List.flatMap_cons, Finset.mem_toList,
@@ -303,13 +296,9 @@ lemma mem_addUnitPairs_unitPair (l : Finset (g.NT × g.NT)) (hl : ∀ p ∈ l, U
     cases hpl with
     | inl hpdl =>
       apply collectUnitPairs_unitPair (Finset.mem_toList.1 a.2) _ _ hpdl
-      intro p hp'
-      simp only [Finset.mem_toList] at hp'
-      exact hl p hp'
+      simp_all
     | inr hpl =>
-      apply ih
-      convert hpl
-      simp
+      simp_all
 
 lemma mem_addUnitPairIter_unitPair (l : Finset (g.NT × g.NT))
     (hlg : l ⊆ g.generators ×ˢ g.generators) (hl : ∀ p ∈ l, UnitPair p.1 p.2) :
@@ -378,8 +367,7 @@ lemma mem_addUnitPairs {l : Finset (g.NT × g.NT)} {n₁ n₂ n₃ : g.NT} (hl :
   revert hgnn n₂ l
   induction g.rules.toList.attach with
   | nil =>
-    intro _ n₂ _ hg h
-    contradiction
+    simp_all
   | cons r t ih =>
     intro _ _ hl hg hrt
     cases hrt
@@ -404,11 +392,7 @@ lemma unitPair_mem_addUnitPairsIter {l : Finset (g.NT × g.NT)} {n₁ n₂ : g.N
     apply Finset.mem_of_subset hgl
     unfold generators at hvg
     unfold generatorsProdDiag
-    rw [List.mem_toFinset, List.mem_map] at hvg ⊢
-    obtain ⟨r, hrg, hr⟩ := hvg
-    use r
-    rw [hr]
-    exact ⟨hrg, rfl⟩
+    simp_all
   | trans hur hp ih =>
     rw [addUnitPairsIter_fixpoint]
     exact mem_addUnitPairs ih hur

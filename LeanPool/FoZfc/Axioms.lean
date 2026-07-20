@@ -71,8 +71,7 @@ theorem liftAt_zero {n m : ℕ}
     rcases i with k | k
     · simp
     · simp
-  rw [h1]
-  apply FirstOrder.Language.Term.relabel_id
+  simp_all
 
 end Term
 
@@ -97,8 +96,7 @@ theorem liftAt_zero {n m : ℕ}
     rw [_f₁_ih, _f₂_ih]
   | all _f _f_ih =>
     unfold mapTermRel
-    simp only [Nat.add_zero, castLE_rfl, all.injEq]
-    apply _f_ih
+    simp_all
 
 end BoundedFormula
 
@@ -118,12 +116,8 @@ theorem realize_fixedSnoc_makeTsN_1 [ModelSets V] {n : ℕ} {s : ℕ → V}
   funext k
   unfold makeTsN replaceInitialValues
   by_cases h_k_0 : k = 0
-  · rw [h_k_0]
-    simp
-  · rw [if_neg (by omega)]
-    simp only [Term.realize_var, Sum.elim_inl, zero_add, Nat.lt_one_iff, Nat.reduceAdd,
-      Fin.ofNat_eq_cast, Matrix.cons_val_fin_one, right_eq_ite_iff]
-    omega
+  · simp_all
+  · simp_all
 
 /-- Specialization of `makeTsN` to two arbitrary terms `t₁, t₂`. -/
 theorem realize_fixedSnoc_makeTsN_2 [ModelSets V] {n : ℕ} {s : ℕ → V}
@@ -142,8 +136,7 @@ theorem realize_fixedSnoc_makeTsN_2 [ModelSets V] {n : ℕ} {s : ℕ → V}
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
     rw [if_neg (by omega)]
-    simp
-    omega
+    simp_all
 
 /-- Specialization of `makeTsN` to `![bv'' n, bv'' (n+1)]` with three snocs. -/
 theorem realize_fixedSnoc_makeTsN_3 [ModelSets V] {n : ℕ} {s : ℕ → V}
@@ -161,8 +154,7 @@ theorem realize_fixedSnoc_makeTsN_3 [ModelSets V] {n : ℕ} {s : ℕ → V}
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
     rw [if_neg (by omega)]
-    simp
-    omega
+    simp_all
 
 /-- General `makeTsN` realization in terms of `replaceInitialValues`. -/
 theorem realize_fixedSnoc_makeTsN [ModelSets V] {n m : ℕ} {s : ℕ → V}
@@ -189,13 +181,10 @@ theorem realize_fixedSnoc_0 [ModelSets V] {n : ℕ} {s : ℕ → V}
       = replaceInitialValues s ![a] := by
     funext k
     by_cases h_k_0 : k = 0
-    · rw [h_k_0]
-      simp
+    · simp_all
     · rw [if_neg h_k_0]
       unfold replaceInitialValues
-      simp only [Term.realize_var, Sum.elim_inl, zero_add, Nat.lt_one_iff, Nat.reduceAdd,
-        Fin.ofNat_eq_cast, Matrix.cons_val_fin_one, right_eq_ite_iff]
-      omega
+      simp_all
 
 end Term
 
@@ -303,8 +292,7 @@ theorem realize_is_singleton' [ModelPairing V] {n : ℕ} (s : ℕ → V)
     (intIsSingleton' t₁ t₂).Realize s xs ↔
     ExtIsSingleton (t₁.realize (Sum.elim s xs)) (t₂.realize (Sum.elim s xs)) := by
   rw [intIsSingleton']
-  unfold makeTsN
-  simp
+  simp_all
 
 @[simp]
 theorem realize_is_pair [ModelPairing V] {n : ℕ} (s : ℕ → V)
@@ -357,17 +345,10 @@ theorem ext_pairing_inj [ModelPairing V] {a b a' b' c : V} :
   by_cases h_a_eq_a' : a = a'
   · by_cases h_b_eq_b' : b = b'
     · exact Or.inl ⟨h_a_eq_a', h_b_eq_b'⟩
-    · have h1 : b = a' := Or.resolve_right h0_b h_b_eq_b'
-      have h2 : b' = a := Or.resolve_right h0_b' (Ne.symm h_b_eq_b')
-      absurd h_b_eq_b'
-      rw [h1, h_a_eq_a'.symm, h2.symm]
+    · simp_all
   · by_cases h_b_eq_b' : b = b'
-    · have h1 : a = b' := Or.resolve_left h0_a h_a_eq_a'
-      have h2 : a' = b := Or.resolve_left h0_a' (Ne.symm h_a_eq_a')
-      absurd h_a_eq_a'
-      rw [h1, h_b_eq_b'.symm, h2.symm]
-    · exact Or.inr ⟨(Or.resolve_right h0_b' (Ne.symm h_b_eq_b')).symm,
-        Or.resolve_right h0_b h_b_eq_b'⟩
+    · simp_all
+    · simp_all
 
 /-- Every element has a singleton. -/
 theorem ext_singleton [ModelPairing V] : ∀ (a : V), ∃ (b : V), ExtIsSingleton a b := by
@@ -622,8 +603,7 @@ theorem realize_is_powerset' [ModelPowerset V] {n : ℕ} (s : ℕ → V)
     (intIsPowerset' t₁ t₂).Realize s xs ↔
     ExtIsPowerset (t₁.realize (Sum.elim s xs)) (t₂.realize (Sum.elim s xs)) := by
   rw [intIsPowerset']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- Every set is a subset of itself. -/
 theorem subset_self [ModelEPUP V] : ∀ (a : V), a ⊆ a := by
@@ -693,8 +673,7 @@ theorem realize_is_successor' [ModelPowerset V] {n : ℕ} (s : ℕ → V)
     ExtIsSuccessor (Term.realize (Sum.elim s xs) t₁)
     (Term.realize (Sum.elim s xs) t₂) := by
   rw [intIsSuccessor']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- Make a formula for fv 0 is inductive, i.e., ∅∈fv 0 and x∈fv 0 implies S(x)∈fv 0. -/
 def intIsInductive {n : ℕ} : LZFC.BoundedFormula ℕ n :=
@@ -723,8 +702,7 @@ theorem realize_is_inductive' [ModelEPUP V] {n : ℕ} (s : ℕ → V)
     (intIsInductive' t).Realize s xs ↔
     (ExtIsInductive (Term.realize (Sum.elim s xs) t)) := by
   rw [intIsInductive']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- ∅ belongs to every inductive set. -/
 theorem ext_emp_in_inductive [ModelEPUP V] {emp a : V} :
@@ -786,8 +764,7 @@ theorem no_loop [ModelEPUPIR V] (a : V) : a ∉ a := by
   obtain ⟨a_sing, h_a_sing⟩ := ext_singleton a
   obtain ⟨b, h_b⟩ := ExtRegularity a_sing ⟨a, (h_a_sing a).mpr rfl⟩
   have h1 : b = a := (h_a_sing b).mp h_b.left
-  rw [← h1]
-  exact h_b.right b ((h_a_sing b).mpr h1)
+  simp_all
 
 /-- No set satisfies a∈a internally. -/
 theorem int_no_loop [ModelEPUPIR V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V) :
@@ -845,14 +822,7 @@ theorem realize_separation'_lift [ModelSets V] {n : ℕ}
   rw [realize_liftAt' (n' := n' + 1) (h_n_prime_nezero := by omega)
         (fixedSnoc xs x) (le_refl n),
       realize_liftAt' (h_n_prime_nezero := h_n') xs (le_refl n)]
-  have hctx : (fixedSnoc xs x ∘ fun (i : Fin n) ↦
-        if ↑i < n then Fin.castAdd (n' + 1) i else i.addNat (n' + 1)) =
-      (xs ∘ fun (i : Fin n) ↦
-        if ↑i < n then Fin.castAdd n' i else i.addNat n') := by
-    funext i
-    have h_lt : (i : ℕ) < n := i.is_lt
-    simp only [if_pos h_lt, castAdd_to_castSucc, Function.comp_apply, snoc_init]
-  rw [hctx]
+  simp_all
 
 /-- A lifted `ExtIsSeparation` is equivalent to the unlifted one with restricted context. -/
 theorem lift_ExtIsSeparation [ModelSets V] {n n' : ℕ} {h_n' : n' > 0}
@@ -908,16 +878,14 @@ def ExtIsOmega [ModelEPUPI V] (a : V) := ExtIsInductive a ∧
 theorem realize_is_omega [ModelEPUPI V] {n : ℕ} {s : ℕ → V}
     {xs : Fin n → V} : intIsOmega.Realize s xs ↔ ExtIsOmega (s 0)  := by
   rw [intIsOmega, ExtIsOmega]
-  unfold makeTsN
-  simp
+  simp_all
 
 @[simp]
 theorem realize_is_omega' [ModelEPUPI V] {n : ℕ} {s : ℕ → V}
     {xs : Fin n → V} (t : LZFC.Term (ℕ ⊕ Fin n)) :
     (intIsOmega' t).Realize s xs ↔ ExtIsOmega (t.realize (Sum.elim s xs)) := by
   unfold intIsOmega'
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- ω exists. -/
 theorem ext_omega_exists [ModelEPUPIC V] {n : ℕ} {s : ℕ → V}
@@ -935,9 +903,7 @@ theorem ext_omega_exists [ModelEPUPIC V] {n : ℕ} {s : ℕ → V}
     unfold ϕ
     simp
   have h_b' : ∀ (x : V), x ∈ b ↔ x ∈ a ∧ ∀ (c : V), ExtIsInductive c → x ∈ c := by
-    intro x
-    rw [h_b]
-    exact and_congr_right fun _ ↦ h_realize_ϕ x
+    simp_all
   unfold ExtIsOmega
   constructor
   · unfold ExtIsInductive
@@ -1021,8 +987,7 @@ theorem ext_induction [ModelEPUPIC V] {n : ℕ} {s : ℕ → V} {xs : Fin n → 
         unfold ExtIsInductive at h_omega
         apply h_omega.left.left _emp _h_emp
       · have h_emp_eq : _emp = emp := ext_emptyset_unique _h_emp h_emp
-        rw [h_emp_eq]
-        exact h_basis
+        simp_all
     · intro x h_xb y h1
       unfold ExtIsSeparation at h_b
       apply (h_b y).mpr

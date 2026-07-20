@@ -160,8 +160,7 @@ theorem zeroAmplitude_of_balanced (f : Oracle n) (hf : IsBalanced f) :
     zeroAmplitude f = 0 := by
   rw [zeroAmplitude, zeroAmplitudeNumerator_eq_card_sub]
   unfold IsBalanced at hf
-  rw [hf]
-  ring
+  simp_all
 
 /-- Constant oracles have final `|0^n⟩` amplitude exactly `1` or `-1`,
 depending on the constant value. -/

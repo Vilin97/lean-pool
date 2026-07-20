@@ -132,8 +132,7 @@ private theorem poleOrderNat_pos_of_neg_order (f : ℂ → ℂ) (s : ℂ)
     cases h : (meromorphicOrderAt f s) with
     | top => exact absurd h h_neg.ne_top
     | coe v =>
-      simp only [WithTop.untop₀, WithTop.untopD, WithTop.recTopCoe]
-      rw [h] at h_neg; exact_mod_cast h_neg
+      simp_all
   omega
 
 /-! ### The regular part is analytic
@@ -227,8 +226,7 @@ theorem meromorphicAt_sub_principalPart_eventually (f : ℂ → ℂ) (s : ℂ)
     simp only [smul_eq_mul] at hf_z hH_z ⊢
     rw [hf_z, hpp_z]; simp only [h_ord_eq]
     rw [← mul_sub, hH_z]
-    rw [← mul_assoc, ← zpow_natCast (z - s) N, ← zpow_add₀ hne, neg_add_cancel,
-      zpow_zero, one_mul]
+    simp_all
   · have h_pp : meromorphicPrincipalPart f s = fun _ => 0 := by
       unfold meromorphicPrincipalPart
       rw [dif_neg (not_and_of_not_right _ h_neg)]
@@ -366,12 +364,7 @@ private theorem residueAt_zpow_sum (s : ℂ) (N : ℕ) (hN : 0 < N) (c : ℕ →
       if k = N - 1 then c (N - 1) * (2 * ↑Real.pi * I) else 0 := by
     intro k
     by_cases hk : k = N - 1
-    · subst hk; simp only [↓reduceIte]
-      have h_exp : ((N - 1 : ℕ) : ℤ) - (N : ℤ) = -1 := by omega
-      have h_fn_eq : (fun z => c (N - 1) * (z - s) ^ (((N - 1 : ℕ) : ℤ) - (N : ℤ))) =
-          fun z => c (N - 1) * (z - s)⁻¹ := by ext z; rw [h_exp, zpow_neg_one]
-      conv_lhs => rw [h_fn_eq]
-      rw [circleIntegral.integral_const_mul, circleIntegral.integral_sub_center_inv s hr_ne]
+    · simp_all
     · simp only [hk, ↓reduceIte]
       conv_lhs => rw [show (fun z => c k * (z - s) ^ ((k : ℤ) - (N : ℤ))) =
         fun z => c k * (z - s) ^ ((k : ℤ) - (N : ℤ)) from rfl]

@@ -142,16 +142,14 @@ lemma TensorProduct.assoc_symm_comp_rTensor {A B C D : Type*}
     (rT _ (rT _ x))
       ∘ₗ (LinearEquiv.symm (ϰ A B C)).toLinearMap := by
   apply TensorProduct.ext_threefold'
-  intro a b c
-  simp only [coe_comp, LinearEquiv.coe_coe, Function.comp_apply, rTensor_tmul, assoc_symm_tmul]
+  simp_all
 lemma TensorProduct.assoc_symm_comp_lTensor_lTensor {A B C D : Type*}
   [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
   [Module R A] [Module R B] [Module R C] [Module R D] (x : A →ₗ[R] D) :
   (ϰ B C D).symm.toLinearMap ∘ₗ (lT _ (lT _ x)) =
     (lT _ x) ∘ₗ (ϰ B C A).symm.toLinearMap := by
   apply TensorProduct.ext_threefold'
-  intro b c a
-  rfl
+  simp_all
 
 lemma TensorProduct.rTensor_lTensor_comp_assoc_symm {A B C D : Type*}
   [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
@@ -164,8 +162,7 @@ lemma TensorProduct.assoc_comp_rTensor_rTensor {A B C D : Type*}
   [Module R A] [Module R B] [Module R C] [Module R D] (x : A →ₗ[R] D) :
   (ϰ D B C).toLinearMap ∘ₗ (rT _ (rT _ x)) = (rT _ x) ∘ₗ (ϰ _ _ _).toLinearMap := by
   apply TensorProduct.ext_threefold
-  intro a b c
-  rfl
+  simp_all
 
 lemma TensorProduct.ext_fourfold_right {A B C D E : Type*}
   [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
@@ -184,9 +181,7 @@ lemma TensorProduct.assoc_comp_rTensor_assoc_symm_comp_assoc_symm_comp_lTensor_a
   (ϰ _ _ _).toLinearMap ∘ₗ (rT _ (ϰ _ _ _).symm.toLinearMap) ∘ₗ (ϰ _ _ _).symm.toLinearMap
     ∘ₗ (lT _ (ϰ _ _ _).symm.toLinearMap) = (ϰ A B (C ⊗[R] D)).symm.toLinearMap := by
   apply TensorProduct.ext_fourfold_right
-  intro x y z w
-  simp only [coe_comp, LinearEquiv.coe_coe, Function.comp_apply, lTensor_tmul, assoc_symm_tmul,
-    rTensor_tmul, assoc_tmul]
+  simp_all
 
 lemma TensorProduct.rTensor_comp_rTensor {A B C D : Type*}
   [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
@@ -260,18 +255,14 @@ theorem lTensor_mul_comp_rTensor_comul_of
         simp_rw [← LinearMap.comp_assoc]
         congr 1
         apply TensorProduct.ext_fourfold'
-        intro a b c d
-        simp only [coe_comp, LinearEquiv.coe_coe, Function.comp_apply, rTensor_tmul, lid_tmul,
-          assoc_symm_tmul, mul'_apply, Algebra.smul_mul_assoc, assoc_tmul, LinearMapClass.map_smul]
+        simp_all
     _ = (rT _ ((τ _).toLinearMap ∘ₗ ((lT _ (m A)) ∘ₗ (rT _ counit)) ∘ₗ (ϰ _ _ _).toLinearMap))
       ∘ₗ (ϰ _ _ _).symm.toLinearMap
       ∘ₗ (comul ⊗ₘ comul) := by
         simp_rw [← LinearMap.comp_assoc]
         congr 5
         apply TensorProduct.ext'
-        intro a b
-        simp only [coe_comp, LinearEquiv.coe_coe, Function.comp_apply, lid_tmul,
-          LinearMapClass.map_smul, lTensor_tmul]
+        simp_all
     _ = (rT _ ((τ _).toLinearMap ∘ₗ ((rT _ counit) ∘ₗ (lT _ (m A))) ∘ₗ (ϰ _ _ _).toLinearMap))
       ∘ₗ (ϰ _ _ _).symm.toLinearMap
       ∘ₗ (comul ⊗ₘ comul) := by
@@ -397,9 +388,7 @@ theorem lTensor_mul_comp_rTensor_comul_of
         simp_rw [comp_assoc]
     _ = comul ∘ₗ (m A) := by
         apply ext'
-        intro a b
-        simp only [coe_comp, LinearEquiv.coe_coe, Function.comp_apply, rTensor_tmul, lid_symm_apply,
-          assoc_tmul, lTensor_tmul, mul'_apply, lid_tmul, one_smul]
+        simp_all
 
 theorem counit_comp_mul_comp_rTensor_unit_eq_counit :
   counit ∘ₗ (m A) ∘ₗ (rT _ (Algebra.linearMap R A)) = counit ∘ₗ (τ _).toLinearMap := by

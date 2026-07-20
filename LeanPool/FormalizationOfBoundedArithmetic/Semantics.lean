@@ -474,8 +474,7 @@ by
       | inl y => simp
       | inr y => exact Fin.elim0 y
     refine ⟨x, ?_, hphi⟩
-    simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr, Term.realize_relabel,
-      Sum.elim_map, henv] using hxle
+    simp_all
   · intro h
     rcases h with ⟨x, hxle, hphi⟩
     have henv :
@@ -487,8 +486,7 @@ by
       | inl y => simp
       | inr y => exact Fin.elim0 y
     refine ⟨x, ⟨?_, hphi⟩⟩
-    simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr, Term.realize_relabel,
-      Sum.elim_map, henv] using hxle
+    simp_all
 
 namespace realize_iBdAll'
 

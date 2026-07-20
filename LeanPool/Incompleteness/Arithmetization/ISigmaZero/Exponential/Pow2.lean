@@ -43,10 +43,7 @@ lemma _root_.LO.Arith.Pow2.dvd {a : V} (h : Pow2 a) {r} (hr : r ≤ a) :
   h.2 r hr
 
 @[simp] lemma pow2_one : Pow2 (1 : V) := ⟨by simp, by
-  intro r hr hhr hd
-  rcases show r = 0 ∨ r = 1 from le_one_iff_eq_zero_or_one.mp hr with (rfl | rfl)
-  · simp
-  · simp at hhr⟩
+  simp_all⟩
 
 @[simp] lemma not_pow2_zero : ¬Pow2 (0 : V) := by intro h; have := h.pos; simp at this
 
@@ -65,9 +62,7 @@ lemma _root_.LO.Arith.Pow2.of_dvd {a b : V} (h : b ∣ a) : Pow2 a → Pow2 b :=
   intro ha
   have : 0 < b := by
     by_contra e
-    have : a = 0 := by simpa [show b = 0 from by simpa using e] using h
-    rcases this with rfl
-    simpa using ha.pos
+    simp_all
   exact ⟨this, fun r hr ltr hb ↦
     ha.dvd (show r ≤ a from le_trans hr (le_of_dvd ha.pos h)) ltr (dvd_trans hb h)⟩
 
@@ -150,11 +145,7 @@ lemma _root_.LO.Arith.LenBit.one (a : V) : LenBit 1 a ↔ ¬2 ∣ a := by simp [
 
 lemma _root_.LO.Arith.LenBit.iff_rem {i a : V} : LenBit i a ↔ (a / i) % 2 = 1 := by
   simp only [LenBit, ←mod_eq_zero_iff_dvd]
-  rcases mod_two (a / i) with (h | h)
-  · rw [h]
-    simp only [not_true_eq_false, zero_ne_one]
-  · rw [h]
-    simp only [one_ne_zero, not_false_eq_true]
+  simp_all
 
 lemma not_lenbit_iff_rem {i a : V} : ¬LenBit i a ↔ (a / i) % 2 = 0 := by
   simp [LenBit, ←mod_eq_zero_iff_dvd]
@@ -315,8 +306,7 @@ lemma sq_or_dsq {a : V} (pa : Pow2 a) : ∃ b, a = b ^ 2 ∨ a = 2 * b ^ 2 := by
       rcases IH a (lt_mul_of_one_lt_left this one_lt_two) pa' with ⟨b, _, (rfl | rfl)⟩
       · exact ⟨b, le_trans (by simp) le_two_mul_left, by right; rfl⟩
       · exact ⟨2 * b, by
-        simp only [zero_lt_two, mul_le_mul_iff_right₀]
-        exact le_trans (by simp) le_two_mul_left,
+        simp_all,
         by left; simp [_root_.sq, mul_assoc, mul_left_comm]⟩
 
 lemma sqrt {a : V} (h : Pow2 a) (hsq : (√a) ^ 2 = a) : Pow2 (√a) := by rw [←hsq] at h; simpa using h
@@ -450,9 +440,7 @@ lemma lenbit_sub_pow2_iff_of_lenbit {a i j : V} (pi : Pow2 i) (pj : Pow2 j) (h :
   constructor
   · intro hi
     exact Or.inr ⟨by rintro rfl; exact h' hi, hi⟩
-  · rintro (⟨hij, hij'⟩ | ⟨_, hi⟩)
-    · contradiction
-    · exact hi
+  · simp_all
 
 end «lp_section_3»
 

@@ -64,8 +64,7 @@ lemma mem_span_iff_exists_fin (s : Set R) (x : R) :
   suffices eq1 : span s = span' s by
     rw [eq1]
     simp only [span']
-    generalize_proofs h1 h2 h3 h4 h5
-    simp_all only [mem_mk', Set.mem_setOf_eq]
+    simp_all
   rw [span, RingCon.ringConGen_eq]
   apply ringCon_injective
   refine sInf_eq_of_forall_ge_of_forall_gt_exists_lt ?_ ?_
@@ -95,14 +94,10 @@ lemma mem_span_ideal_iff_exists_fin (s : Ideal R) (x : R) :
     exact ⟨n, fin, 1, xR, y, by simp⟩
 
 lemma coe_bot_set : ((⊥ : TwoSidedIdeal R) : Set R) = {0} := by
-  ext x
-  simp only [SetLike.mem_coe, Set.mem_singleton_iff]
-  rfl
+  simp_all
 
 lemma coe_top_set : ((⊤ : TwoSidedIdeal R) : Set R) = Set.univ := by
-  ext x
-  simp only [SetLike.mem_coe, Set.mem_univ]
-  rfl
+  simp_all
 
 section IsSimpleOrder
 
@@ -112,13 +107,7 @@ variable (A : Type u) [Ring A]
 
 instance [Nontrivial A] : Nontrivial (TwoSidedIdeal A) :=
 ⟨⊥, ⊤, by
-      apply_fun (fun I => I.ringCon 0 1)
-      convert false_ne_true
-      · -- Change after https://github.com/leanprover-community/mathlib4/pull/12860
-        simp only [iff_false]
-        exact zero_ne_one
-      · simp only [TwoSidedIdeal.top_ringCon, iff_true]
-        trivial⟩
+      simp_all⟩
 
 lemma _root_.IsSimpleRing.iff_eq_zero_or_injective'
     (k : Type*) [CommRing k] [Algebra k A] [Nontrivial A] :
@@ -164,16 +153,13 @@ lemma _root_.IsSimpleRing.iff_eq_zero_or_injective'
       rintro x -
       simp only at h
       have mem : x ∈ TwoSidedIdeal.ker I.ringCon.mk' := by erw [h]; trivial
-      rw [mem_ker] at mem
-      change _ = I.ringCon.mk' 0 at mem
-      exact I.ringCon.eq.mp mem
+      simp_all
     · left
       rw [injective_iff_ker_eq_bot] at h
       rw [eq_bot_iff, le_iff]
       intro x hx
       have mem : x ∈ TwoSidedIdeal.ker I.ringCon.mk' := by
-        rw [mem_ker]
-        exact I.ringCon.eq.mpr hx
+        simp_all
       erw [h] at mem
       exact mem
 

@@ -64,9 +64,7 @@ lemma periodicLift_periodic (f : Torus3 → ℝ) (x : Fin 3 → ℝ) (i : Fin 3)
   ext j
   simp only [torusMk, Pi.add_apply]
   by_cases h : j = i
-  · subst h; simp only [Pi.single_eq_same]
-    rw [QuotientAddGroup.eq]
-    exact ⟨-1, by simp⟩
+  · simp_all
   · simp [Pi.single_eq_of_ne h]
 
 -- ============================================================================
@@ -86,12 +84,7 @@ lemma periodicLift_shift (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   have hi : (fun i => QuotientAddGroup.mk (x i) : Torus3) i =
             (fun i => QuotientAddGroup.mk (y i) : Torus3) i :=
     congr_fun h i
-  simp only at hi
-  rw [QuotientAddGroup.eq] at hi ⊢
-  obtain ⟨n, hn⟩ := hi
-  refine ⟨n, ?_⟩
-  simp at hn ⊢
-  linarith
+  simp_all
 
 /-- fderiv of the lift at two points that map to the same torus point are equal.
     This follows because f(x) = f(x + n) for integer n, so the 1-jets agree. -/
@@ -106,11 +99,7 @@ lemma periodicLift_fderiv_eq (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   have h1 : fderiv ℝ (fun z => periodicLift f (z + (x - y))) y =
              fderiv ℝ (periodicLift f) (y + (x - y)) := fderiv_comp_add_right (x - y)
   -- y + (x - y) = x
-  have h2 : y + (x - y) = x := by ext i; simp [Pi.add_apply, Pi.sub_apply]
-  rw [h2] at h1
-  -- But also fderiv (fun z => f(z + (x-y))) = fderiv f (by hshift)
-  rw [hshift] at h1
-  exact h1.symm
+  simp_all
 
 -- ============================================================================
 -- Differential operators on T³ via the periodic lift
@@ -165,8 +154,7 @@ lemma fderiv_const_mul_always {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     (c : ℝ) (g : E → ℝ) (x : E) :
     fderiv ℝ (fun y => c * g y) x = c • fderiv ℝ g x := by
   by_cases hc : c = 0
-  · have : (fun y => c * g y) = fun _ => (0 : ℝ) := by ext y; simp [hc]
-    rw [this]; simp [hc]
+  · simp_all
   by_cases hg : DifferentiableAt ℝ g x
   · exact fderiv_const_smul hg c
   · have hcg : ¬ DifferentiableAt ℝ (fun y => c * g y) x := by
@@ -209,10 +197,7 @@ theorem clairaut_fderiv {n : ℕ} (g : (Fin n → ℝ) → ℝ) (x : Fin n → �
   have key : ∀ v w, fderiv ℝ (fun y => fderiv ℝ g y v) x w = fderiv ℝ (fderiv ℝ g) x w v := by
     intro v w
     have h1 := fderiv_clm_apply hd (differentiableAt_const v)
-    simp only [show fderiv ℝ (fun _ : Fin n → ℝ => v) x = 0 from by
-      exact congr_fun (fderiv_const (𝕜 := ℝ) (E := Fin n → ℝ) v) x,
-      ContinuousLinearMap.comp_zero, zero_add] at h1
-    exact congr_fun (congr_arg DFunLike.coe h1) w
+    simp_all
   rw [key, key]; exact hsymm.eq (Pi.single i 1) (Pi.single j 1)
 
 -- ============================================================================
@@ -227,8 +212,7 @@ theorem torus_hGradConst (φ : Torus3 → ℝ) (hconst : ∀ x y, φ x = φ y) :
   simp only [torusGradX, Pi.zero_apply]
   have : periodicLift φ = fun _ => φ x :=
     funext (fun y => by simp only [periodicLift, Function.comp_apply]; exact hconst _ _)
-  rw [this, hasFDerivAt_const (φ x) _ |>.fderiv]
-  rfl
+  simp_all
 
 /-- hGradAdd: gradient additivity for C¹ functions. -/
 theorem torus_hGradAdd' (f g : Torus3 → ℝ)

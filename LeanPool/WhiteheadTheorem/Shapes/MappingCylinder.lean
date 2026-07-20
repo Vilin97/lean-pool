@@ -180,8 +180,7 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
     change ((ConcreteCategory.hom (Limits.pushout.inl f (Cyl.i₀ X) ≫
         Limits.pushout.desc (PathSpace.homToConstPaths (inl f)) _ _)) y) t = _
     rw [Limits.pushout.inl_desc]
-    simp only [PathSpace.homToConstPaths, hom_ofHom, ContinuousMap.curry_apply,
-      ContinuousMap.coe_mk]
+    simp_all
   · rw [deformRetrEvalAt, Limits.pushout.inr_desc]
     ext z
     simp only [hom_comp, ContinuousMap.comp_apply, hom_ofHom, ContinuousMap.prodMap_apply,

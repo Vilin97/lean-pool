@@ -99,12 +99,7 @@ lemma gaussian_complex_pairing_abs_sq_integrable
     -- Final simplification: a + (-0) = a
     simp only [neg_zero, add_zero]
   -- Finish by using integrability of the individual squares
-  have h_sum : Integrable
-      (fun ω => (distributionPairing ω φRe) ^ 2 + (distributionPairing ω φIm) ^ 2)
-        (gaussianFreeFieldFree m).toMeasure :=
-    hRe_sq.add hIm_sq
-  simpa [h_pointwise]
-    using h_sum
+  simp_all
 
 end GaussianMoments
 
@@ -232,8 +227,7 @@ theorem gaussian_pairing_product_integrable_free_2point
       distributionPairing ω φIm * distributionPairing ω ψIm : ℂ)) =
                   (fun ω => ↑(distributionPairing ω φRe * distributionPairing ω ψRe -
                      distributionPairing ω φIm * distributionPairing ω ψIm)) := by
-      funext ω
-      simp only [Complex.ofReal_sub, Complex.ofReal_mul]
+      simp_all
     rw [h_cast]
     exact Integrable.ofReal h_ac_bd
   have h_imag_part : Integrable (fun ω => Complex.I * (distributionPairing ω φRe *
@@ -246,8 +240,7 @@ theorem gaussian_pairing_product_integrable_free_2point
       distributionPairing ω φIm * distributionPairing ω ψRe : ℂ)) =
                   (fun ω => ↑(distributionPairing ω φRe * distributionPairing ω ψIm +
                      distributionPairing ω φIm * distributionPairing ω ψRe)) := by
-      funext ω
-      simp only [Complex.ofReal_add, Complex.ofReal_mul]
+      simp_all
     rw [h_cast]
     exact Integrable.ofReal h_ad_bc
   exact Integrable.add h_real_part h_imag_part

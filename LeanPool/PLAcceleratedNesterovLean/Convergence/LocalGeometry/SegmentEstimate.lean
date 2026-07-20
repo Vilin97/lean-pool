@@ -142,8 +142,7 @@ theorem fiber_path_second_deriv {d : ℕ} (f : E d → ℝ) (m v : E d)
   -- Relate fderiv ℝ G to hessianQuadForm via eventual equality
   have hval_eq : (fderiv ℝ G (ψ t)) v = hessianQuadForm f (ψ t) v := by
     have hG_inner_ev : G =ᶠ[𝓝 (ψ t)] fun x => @inner ℝ (E d) _ (gradient f x) v := by
-      filter_upwards [hf_diff_ev] with y hy
-      exact (inner_gradient_left (𝕜 := ℝ) (f := f) (x := y) (y := v)).symm
+      simp_all
     rw [hG_inner_ev.fderiv_eq]
     have hgrad_diffAt : DifferentiableAt ℝ (gradient f) (ψ t) := by
       have hle := (InnerProductSpace.toDual ℝ (E d)).symm.toContinuousLinearEquiv.differentiable

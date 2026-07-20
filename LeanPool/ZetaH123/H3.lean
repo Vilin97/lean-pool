@@ -196,9 +196,7 @@ private lemma Tset_nonempty_aux (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f)
     have h2 : 0 < p ^ (f * (L + i.val)) := by positivity
     exact Nat.mul_pos (by omega) h2
   · -- divisibility by q - 1 = p ^ f - 1
-    intro i
-    rw [hq]
-    exact Dvd.intro _ rfl
+    simp_all
   · -- NoCarry
     intro t
     rw [getD_eq_dig hp2]
@@ -237,11 +235,7 @@ private lemma Tset_nonempty_aux (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f)
         · intro h'; simp at h'
       · have hz : ∑ i : Fin d,
             (if f * (L + i.val) ≤ t ∧ t < f * (L + i.val) + f then p - 1 else 0) = 0 := by
-          apply Finset.sum_eq_zero
-          intro i _
-          rw [if_neg]
-          rintro ⟨h1, h2⟩
-          exact h ⟨i, h1, h2⟩
+          simp_all
         rw [hz]; omega
     -- combine with the j-digit term
     rcases lt_or_ge t L with htL | htL
@@ -265,8 +259,7 @@ private lemma Tset_nonempty_aux (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f)
           rw [List.getD_eq_default]; omega
         rw [getD_eq_dig hp2] at hgd
         exact hgd
-      rw [hj0, zero_add]
-      exact hsum
+      simp_all
 
 -- Main Statement(s)
 
@@ -323,8 +316,7 @@ theorem Md_attained (p q d j f : ℕ) (hp : p.Prime) (hf : 1 ≤ f) (hq : q = p 
   have hne : (Tset p q d j).Nonempty := Tset_nonempty_aux p q d j f hp hf hq hd
   have himg : (objective d '' Tset p q d j).Nonempty := hne.image _
   have hmem : Md p q d j ∈ objective d '' Tset p q d j := Nat.sInf_mem himg
-  obtain ⟨m, hm, hval⟩ := hmem
-  exact ⟨m, hm, hval⟩
+  simp_all
 
 /-- `M_d(j)` is a lower bound for the objective on `T_{d,j}`. -/
 theorem Md_le (p q d j f : ℕ) (_hp : p.Prime) (_hf : 1 ≤ f) (_hq : q = p ^ f)

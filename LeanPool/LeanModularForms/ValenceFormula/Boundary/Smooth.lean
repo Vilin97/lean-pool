@@ -122,8 +122,7 @@ private lemma hasDerivAt_seg1_fun (H : ℝ) (t : ℝ) :
         ((0 - 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t := by
       apply HasDerivAt.mul_const
       exact (hasDerivAt_const t (↑H : ℂ)).sub ((hasDerivAt_id t).ofReal_comp.mul_const _)
-    simp only [zero_sub, one_mul] at h2
-    exact h2
+    simp_all
   exact h1.const_add ((1 : ℂ) / 2)
 
 lemma fdBoundary_H_hasDerivAt_seg1' (H : ℝ) (t : ℝ)
@@ -161,10 +160,7 @@ lemma fdBoundary_H_hasDerivAt_seg4' (H : ℝ) (t : ℝ)
     have h_timesI : HasDerivAt (fun s : ℝ =>
         (↑(Real.sqrt 3) / 2 + ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2)) * I)
         ((0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t := h_shifted.mul_const _
-    have h_final : HasDerivAt (fun s : ℝ => (-1 : ℂ) / 2 +
-        (↑(Real.sqrt 3) / 2 + ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2)) * I)
-        (0 + (0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t := (hasDerivAt_const t _).add h_timesI
-    simp only [zero_add, one_mul] at h_final; exact h_final
+    simp_all
   exact hd.congr_of_eventuallyEq heq
 
 private lemma hasDerivAt_seg5_fun (H : ℝ) (t : ℝ) :
@@ -484,8 +480,7 @@ lemma fdBoundary_H_not_differentiableAt_3 {H : ℝ} (_hH : Real.sqrt 3 / 2 < H) 
   have hsin : Real.sin (Real.pi * 4 / 6) = Real.sqrt 3 / 2 := by
     rw [show Real.pi * 4 / 6 = Real.pi - Real.pi / 3 from by ring,
       Real.sin_pi_sub, Real.sin_pi_div_three]
-  rw [hsin] at hre
-  nlinarith [Real.pi_pos, Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+  simp_all
 
 private lemma seg1_eventuallyEq_left_1 (H : ℝ) :
     fdBoundarySeg1H H =ᶠ[𝓝[≤] 1] fdBoundaryH H :=
@@ -540,8 +535,7 @@ lemma fdBoundary_H_not_differentiableAt_1 {H : ℝ} (_hH : Real.sqrt 3 / 2 < H) 
       I_mul_re, exp_ofReal_mul_I_im]; ring
   rw [hre_lhs, hre_rhs] at hre
   rw [show Real.pi * 2 / 6 = Real.pi / 3 from by ring] at hre
-  rw [Real.sin_pi_div_three] at hre
-  nlinarith [Real.pi_pos, Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+  simp_all
 
 lemma fdBoundary_H_right_deriv_limit (H : ℝ)
     (hH : Real.sqrt 3 / 2 < H)

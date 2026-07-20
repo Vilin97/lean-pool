@@ -78,8 +78,7 @@ theorem entropyNat_eq_zero_iff {α : Type} [Fintype α]
     · rw [haa, ha₀]; exact Real.negMulLog_one
     · have hrest : ∑ b ∈ Finset.univ.erase a₀, p b = 0 := by
         have h1 := prob_sum_eq_one p
-        rw [← Finset.add_sum_erase _ _ (Finset.mem_univ a₀)] at h1
-        linarith
+        simp_all
       have : p a = 0 := le_antisymm
         ((Finset.sum_eq_zero_iff_of_nonneg (fun b _ => prob_nonneg p b)).mp
           hrest a (Finset.mem_erase.mpr ⟨haa, Finset.mem_univ a⟩)).le
@@ -136,8 +135,7 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
     rw [entropyNat_eq_sum_negMulLog]
     simp_rw [hunif, Finset.sum_const, Finset.card_univ]
     unfold Real.negMulLog
-    rw [Real.log_div one_ne_zero hcard_ne, Real.log_one, zero_sub]
-    simp [nsmul_eq_mul]
+    simp_all
 
 /-! ## Property 3: Subadditivity -/
 

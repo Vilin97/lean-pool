@@ -261,17 +261,7 @@ lemma freeCovarianceFormR_reflection_expansion
     have h_negneg :
         freeCovarianceFormR m (-θg) (-θg)
           = freeCovarianceFormR m θg θg := by
-      have h₁ := h_neg_left θg (-θg)
-      have h₂ := h_neg_right θg θg
-      have h₁' : freeCovarianceFormR m (-θg) (-θg) = -freeCovarianceFormR m θg (-θg) := by
-        simpa [θg] using h₁
-      have h₂' : freeCovarianceFormR m θg (-θg) = -freeCovarianceFormR m θg θg := by
-        simpa [θg] using h₂
-      calc
-        freeCovarianceFormR m (-θg) (-θg)
-            = -freeCovarianceFormR m θg (-θg) := h₁'
-        _ = -(-freeCovarianceFormR m θg θg) := neg_inj.mpr h₂'
-        _ = freeCovarianceFormR m θg θg := by simp
+      simp_all
     calc
       freeCovarianceFormR m (-θg) (f - θg)
           = freeCovarianceFormR m (f - θg) (-θg) := freeCovarianceFormR_symm m (-θg) (f - θg)
@@ -319,9 +309,7 @@ lemma gaussianFreeField_real_generating_re
       (Complex.exp (-(1 / 2 : ℂ) * (freeCovarianceFormR m h h : ℝ))).re
         = Real.exp r := by
     simpa [h_arg, r] using (Complex.exp_ofReal_re r)
-  have h_char' := h_char
-  rw [h_exp_rewrite] at h_char'
-  simpa [r] using h_char'
+  simp_all
 
 /-- Factorisation of OS3 matrix entries in the purely real setting. -/
 lemma gaussianFreeField_real_entry_factor
@@ -461,16 +449,7 @@ lemma gaussianFreeField_OS3_matrix_real
     classical
     simp [Matrix.mulVec, dotProduct, Finset.mul_sum, mul_comm, mul_assoc]
   have hy_nonneg : 0 ≤ y ⬝ᵥ (E.mulVec y) := h_E_psd.dotProduct_mulVec_nonneg y
-  have h_goal :
-      0 ≤ (∑ i, ∑ j, c i * c j *
-        (GJGeneratingFunctional (gaussianFreeFieldFree m)
-          ((f i).val - QFT.compTimeReflectionReal (f j).val)).re) := by
-    have h₁ : 0 ≤ ∑ i, ∑ j, y i * y j * E i j := by
-      simpa [h_quad_sum] using hy_nonneg
-    have h₂ : 0 ≤ ∑ i, ∑ j, c i * c j * (Z i * Z j * E i j) := by
-      simpa [h_sum₂] using h₁
-    simpa [h_sum₁] using h₂
-  exact h_goal
+  simp_all
 
 /-- Main theorem: the Gaussian free field satisfies OS3_real (reflection positivity,
 real version). -/
@@ -752,8 +731,7 @@ private lemma entrywiseExp_IsRePSD
     apply posSemidef_sum
     intro k _
     have hcoeff : (0 : ℂ) ≤ (↑(Nat.factorial k : ℕ) : ℂ)⁻¹ := by
-      rw [← Complex.ofReal_natCast, ← Complex.ofReal_inv]
-      exact Complex.zero_le_real.mpr (inv_nonneg.mpr (Nat.cast_nonneg _))
+      simp_all
     exact (hHP_psd k).smul hcoeff
   -- S N i j = ∑_{k=0}^N (k!)⁻¹ * (M i j)^k
   have hS_entry : ∀ N i j, S N i j =
@@ -786,8 +764,7 @@ private lemma entrywiseExp_IsRePSD
         (Complex.exp (M i j)) := by
       rw [Complex.exp_eq_exp_ℂ]
       have h' := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) (M i j)
-      simp only [smul_eq_mul] at h'
-      convert h' using 1
+      simp_all
     rw [HasSum] at h
     exact h.comp (Filter.tendsto_finset_range.comp (Filter.tendsto_atTop_atTop_of_monotone
       (fun a b hab => Nat.add_le_add_right hab 1) (fun b => ⟨b, Nat.le_succ b⟩)))

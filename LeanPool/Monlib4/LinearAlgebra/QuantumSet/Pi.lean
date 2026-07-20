@@ -120,10 +120,7 @@ theorem piInnerProductAlgebra.inner_apply (a b : PiQ A) :
 noncomputable instance Pi.quantumSet [Fact (∀ i, (hQ i).k = 0)] : QuantumSet (PiQ A) where
   modAut_isSymmetric r x y := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
-    apply Finset.sum_congr rfl
-    intro i _
-    rw [piStarAlgebra_modAut_apply, piStarAlgebra_modAut_apply,
-      QuantumSet.modAut_isSymmetric]
+    simp_all
   k := 0
   inner_star_left x y z := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
@@ -132,9 +129,7 @@ noncomputable instance Pi.quantumSet [Fact (∀ i, (hQ i).k = 0)] : QuantumSet (
     rw [PiLp.mul_apply_quantum, PiLp.mul_apply_quantum, piStarAlgebra_modAut_apply,
       PiLp.star_apply]
     have hk : (hQ i).k = 0 := (Fact.out : ∀ i, (hQ i).k = 0) i
-    have h := (hQ i).inner_star_left (x i) (y i) (z i)
-    rw [hk] at h
-    exact h
+    simp_all
   inner_conj_left x y z := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
     apply Finset.sum_congr rfl

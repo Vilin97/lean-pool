@@ -61,8 +61,7 @@ noncomputable def conjState (ψ : PureState n) : PureState n :=
       ‖WithLp.toLp 2 (fun i => starRingEnd ℂ (ψ i))‖
           = ‖(ψ : StateVector n)‖ := by
             rw [EuclideanSpace.norm_eq, EuclideanSpace.norm_eq]
-            congr 1
-            exact Finset.sum_congr rfl fun i _ => by simp
+            simp_all
       _ = 1 := ψ.norm_eq_one)
 
 @[simp]
@@ -108,8 +107,7 @@ theorem quantumKernel_self (φ : X → PureState n) (x : X) :
   have hself : inner ℂ (φ x) (φ x) = (1 : ℂ) := by
     change inner ℂ ((φ x : PureState n) : StateVector n) ((φ x : PureState n) : StateVector n)
       = (1 : ℂ)
-    rw [inner_self_eq_norm_sq_to_K, (φ x).norm_eq_one]
-    norm_num
+    simp_all
   rw [quantumKernel, hself, map_one, mul_one]
 
 open scoped ComplexOrder

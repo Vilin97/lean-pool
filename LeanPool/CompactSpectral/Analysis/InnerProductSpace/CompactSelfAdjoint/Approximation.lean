@@ -45,12 +45,7 @@ lemma largeEigenspace_mem_invtSubmodule_of_isCompactOperator_of_isSelfAdjoint
     intro i
     change t.eigenspace i.1 ≤ (t.eigenspace i.1).comap t
     intro x hx
-    have hx' : t x = (i.1 : 𝕜) • x := by
-      simpa using (Module.End.mem_eigenspace_iff (f := t) (μ := i.1) (x := x)).1 hx
-    refine (Module.End.mem_eigenspace_iff (f := t) (μ := i.1) (x := t x)).2 ?_
-    calc
-      t (t x) = t ((i.1 : 𝕜) • x) := by simp [hx']
-      _ = (i.1 : 𝕜) • t x := by simp
+    simp_all
   have h_sup : (Finset.univ.sup fun i : s.Elem => t.eigenspace i.1) ∈ t.invtSubmodule := by
     classical
     refine Finset.induction_on (Finset.univ : Finset s.Elem) ?_ ?_
@@ -99,11 +94,7 @@ lemma finiteDimensional_range_comp_largeEigenspaceProjector
     simp [P, largeEigenspaceProjector, U]
   have hrange_le : LinearMap.range ((T ∘L P : E →L[𝕜] E) : E →ₗ[𝕜] E) ≤ U := by
     rintro y ⟨x, rfl⟩
-    have hxP : P x ∈ U := by
-      -- `P = U.starProjection` and star projection lands in the submodule.
-      rw [hPdef]
-      exact Submodule.starProjection_apply_mem (U := U) x
-    simpa [ContinuousLinearMap.comp_apply] using hU_forall (P x) hxP
+    simp_all
   -- A submodule of a finite-dimensional submodule is finite-dimensional.
   exact Submodule.finiteDimensional_of_le
     (S₁ := LinearMap.range ((T ∘L P : E →L[𝕜] E) : E →ₗ[𝕜] E)) (S₂ := U) hrange_le

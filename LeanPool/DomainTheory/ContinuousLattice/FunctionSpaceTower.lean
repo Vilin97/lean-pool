@@ -481,9 +481,7 @@ theorem projInfInf_embInfInf_eq (x : DInf D₀ j₀) :
   have g_mono_n (m : ℕ) : Monotone (fun n => g n m) :=
     monotone_nat_of_le_succ (g_mono_n_succ m)
   have hin : (⨆ n, jInfTerm D₀ j₀ n (embInfInf D₀ j₀ x)) = ⨆ n, ⨆ m, g n m := by
-    congr 1
-    funext n
-    exact hinner n
+    simp_all
   rw [hin, iSup₂_monotone_eq_diagonal g g_mono_m g_mono_n]
   congr 1
   funext n
@@ -554,8 +552,7 @@ theorem embInfInf_comp_projInfInf :
   have hrw : ∀ n (w : DInf D₀ j₀), r n w
       = embInf (towerType D₀) (towerProj D₀ j₀) n
           (projInf (towerType D₀) (towerProj D₀ j₀) n w) := by
-    intro n w
-    simp only [hr, ScottMap.comp_apply]
+    simp_all
   have hr_mono : ∀ (w : DInf D₀ j₀), Monotone (fun m => r m w) := by
     intro w
     refine monotone_nat_of_le_succ (fun m => ?_)

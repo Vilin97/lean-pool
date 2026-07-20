@@ -65,8 +65,7 @@ theorem evalPkappa_sub
     evalPkappa kappa (F - G) = fun z => evalPkappa kappa F z - evalPkappa kappa G z := by
   let _ := hd
   have hneg : -G = (-1 : ℂ) • G := by
-    ext alpha
-    simp
+    simp_all
   rw [sub_eq_add_neg, hneg, evalPkappa_add hd kappa F ((-1 : ℂ) • G),
     evalPkappa_smul hd kappa (-1 : ℂ) G]
   ext z
@@ -100,9 +99,7 @@ theorem exact_truncate_coeff_energy
     · simp [h, Finsupp.single_apply]
   have hsupp : (truncateFinset E F).support ⊆ E := by
     intro alpha halpha
-    by_contra hnot
-    have hzero : truncateFinset E F alpha = 0 := by simp [hcoeff alpha, hnot]
-    exact (Finsupp.mem_support_iff.mp halpha) hzero
+    simp_all
   change
     (Real.sqrt (Finset.sum (truncateFinset E F).support
       (fun alpha => ‖truncateFinset E F alpha‖ ^ 2))) ^ 2 =
@@ -113,13 +110,9 @@ theorem exact_truncate_coeff_energy
           (fun alpha => ‖truncateFinset E F alpha‖ ^ 2)
           = Finset.sum E (fun alpha => ‖truncateFinset E F alpha‖ ^ 2) := by
             exact Finset.sum_subset hsupp fun alpha _E hsupport => by
-              have hzero : truncateFinset E F alpha = 0 :=
-                Finsupp.notMem_support_iff.mp hsupport
-              simp [hzero]
+              simp_all
       _ = Finset.sum E (fun alpha => ‖coeffSkappa F alpha‖ ^ 2) := by
-            refine Finset.sum_congr rfl ?_
-            intro alpha halpha
-            simp [hcoeff alpha, halpha]
+            simp_all
   · positivity
 
 private theorem phi1D_eq_oneDimPhi
@@ -224,8 +217,7 @@ theorem Phi_rotate_one_exp
             (Complex.exp (Complex.I * t) * z q0)) := by
     funext q
     by_cases hq : q = q0
-    · subst hq
-      simp
+    · simp_all
     · simp [Function.update, hq]
   rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs =>
@@ -257,8 +249,7 @@ theorem Phi_rotateCoord_circle_phase
       have hone :
         Complex.exp (Complex.I * ((1 : ℤ) : ℂ) * θ) =
             Complex.exp (Complex.I * θ) := by
-        congr 1
-        ring_nf
+        simp_all
       rw [hone, Phi_rotate_one_exp]
       have hphase :
           Complex.exp (Complex.I * (((kappa q0 : Nat) : Int) : ℂ) * θ) *
@@ -565,9 +556,7 @@ theorem tendsto_box_atTop
   · intro alpha
     refine ⟨alpha, ?_⟩
     rw [box, Fintype.mem_piFinset]
-    intro q
-    rw [Finset.mem_range]
-    exact Nat.lt_succ_self (alpha q)
+    simp_all
 
 /-!
 ## Representative bridge stubs
@@ -672,8 +661,7 @@ theorem integrable_evalPkappa_sq
       have hsum_zero : Finset.sum F.support (fun beta => ‖F beta‖ ^ 2) = 0 :=
         (Real.sqrt_eq_zero (by positivity)).mp hnorm
       nlinarith
-    have hnorm_pos : 0 < ‖F‖ := lt_of_le_of_ne (Real.sqrt_nonneg _) hnorm_ne.symm
-    nlinarith
+    simp_all
 
 theorem memLp_two_evalPkappa
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
@@ -762,11 +750,7 @@ theorem evalPkappaL2_single
   have hsingle :
       (Finsupp.single alpha c : Pkappa d kappa) =
         c • (Finsupp.single alpha 1 : Pkappa d kappa) := by
-    ext beta
-    by_cases h : beta = alpha
-    · subst h
-      simp
-    · simp [Finsupp.single_eq_of_ne h]
+    simp_all
   rw [hsingle, evalPkappaL2_smul hd kappa c]
   rfl
 
@@ -887,11 +871,8 @@ private lemma choose_partial_sum_le_pow_two (k n : ℕ) :
     Finset.sum (Finset.range (min k n + 1)) (fun j => (Nat.choose k j : ℝ))
         ≤ Finset.sum (Finset.range (k + 1)) (fun j => (Nat.choose k j : ℝ)) := by
           apply Finset.sum_le_sum_of_subset_of_nonneg
-          · intro x hx
-            simp at hx ⊢
-            omega
-          · intro j _ _
-            positivity
+          · simp_all
+          · simp_all
     _ = (2 : ℝ) ^ k := by exact_mod_cast Nat.sum_range_choose k
 
 private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
@@ -1163,8 +1144,7 @@ private theorem uniformCauchySeqOn_of_summable_bound
       have hsum :=
         Finset.sum_sdiff (s₁ := box J0) (s₂ := box N) (f := term) hsubset
       dsimp [term] at hsum ⊢
-      rw [← hsum]
-      abel
+      simp_all
     have hdisj : Disjoint (box N \ box J0) E0 := by
       rw [Finset.disjoint_left]
       intro alpha halpha hαE0
@@ -1277,9 +1257,7 @@ theorem l2_tsum_represents_toFun
     have hpartial_lim_S :
         Filter.Tendsto (fun n : ℕ => partialSum kappa U (ns n) z) Filter.atTop
           (nhds (S z)) := by
-      convert hSlim using 1
-      funext n
-      exact (hpartial n).symm
+      simp_all
     have hpartial_lim_toFun :
         Filter.Tendsto (fun n : ℕ => partialSum kappa U (ns n) z) Filter.atTop
           (nhds (toFun kappa U z)) :=
@@ -1398,10 +1376,8 @@ theorem coeff_recovery
             simp only [coeffPkappa, coeffSkappa, truncateFinset]
             rw [Finsupp.finsetSum_apply, Finset.sum_eq_single beta]
             · simp
-            · intro alpha halpha hne
-              simp [Finsupp.single_eq_of_ne hne.symm]
-            · intro hnot
-              exact False.elim (hnot hbetaJ)
+            · simp_all
+            · simp_all
   have hlim_coeff :
       Filter.Tendsto
         (fun J : MultiIndex d =>

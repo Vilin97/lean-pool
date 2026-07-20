@@ -81,26 +81,20 @@ instance fromModuleCatOverMatrix.moduleΑ (M : Type*) [AddCommGroup M] [Module M
     refine ⟨(single default default a : M[ι, R]) • y, hy ▸ ?_⟩
     simp only
     rw [← SemigroupAction.mul_smul, ← SemigroupAction.mul_smul]
-    congr 1
-    ext i j
-    simp
+    simp_all
   one_smul := by
     rintro ⟨_, x, rfl⟩
     ext
     change single _ _ _ • _ = single _ _ _ • _
     rw [← SemigroupAction.mul_smul]
-    congr 1
-    ext i j
-    simp
+    simp_all
   mul_smul := by
     rintro a a' ⟨_, x, rfl⟩
     ext
     change single _ _ _ • _ = single _ _ _ • (single _ _ _ • _)
     dsimp only [id_eq, eq_mpr_eq_cast, cast_eq]
     rw [← SemigroupAction.mul_smul, ← SemigroupAction.mul_smul, ← SemigroupAction.mul_smul]
-    congr 1
-    ext i j
-    simp
+    simp_all
   smul_zero a := by
     ext
     change single _ _ _ • 0 = 0
@@ -109,9 +103,7 @@ instance fromModuleCatOverMatrix.moduleΑ (M : Type*) [AddCommGroup M] [Module M
     rintro a ⟨_, x, rfl⟩ ⟨_, ⟨y, rfl⟩⟩
     ext
     change single _ _ _ • _ = single _ _ _ • _ + single _ _ _ • _
-    dsimp only [AddSubgroup.coe_add]
-    rw [← SemigroupAction.mul_smul, ← SemigroupAction.mul_smul, ← smul_add, ← smul_add,
-      ← SemigroupAction.mul_smul]
+    simp_all
   add_smul := by
     rintro a b ⟨_, x, rfl⟩
     ext
@@ -138,11 +130,7 @@ def fromModuleCatOverMatrix : ModuleCat M[ι, R] ⥤ ModuleCat R where
       refine ⟨f y, ?_⟩
       rw [← hy, f.hom.map_smul]
     map_add' := by
-      rintro ⟨_, x, rfl⟩ ⟨_, ⟨y, rfl⟩⟩
-      refine Subtype.ext ?_
-      change f ((single _ _ _ • x) + (single _ _ _ • y)) =
-        f (single _ _ _ • x) + f (single _ _ _ • y)
-      rw [map_add]
+      simp_all
     map_smul' := by
       rintro r ⟨_, x, rfl⟩
       simp only [RingHom.id_apply, LinearMapClass.map_smul]
@@ -182,13 +170,7 @@ def matrix.unitIsoHom :
           · exact Finset.mem_univ _
           · intro j _ hj
             simp [single, of_apply, hj.symm]
-        · have hzeroR : ∀ j : ι, single default default r i j • x j = 0 := by
-            intro j
-            simp [single, of_apply, hi]
-          have hzero1 : ∀ j : ι, single default default (1 : R) i j • x j = 0 := by
-            intro j
-            simp [single, of_apply, hi]
-          simp [hzeroR, hzero1] }
+        · simp_all }
   naturality {X Y} f := by
     simp only [Functor.id_obj, Functor.comp_map, Functor.id_map]
     ext ⟨_, x, rfl⟩
@@ -200,9 +182,7 @@ def matrix.unitIsoHom :
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [map_sum, _root_.map_smul]
     change f.hom (∑ _, _) = _
-    rw [map_sum]
-    refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [_root_.map_smul]
+    simp_all
 
 /-- The inverse unit map for `toModuleCatOverMatrix ⋙ fromModuleCatOverMatrix`. -/
 @[simps]
@@ -218,8 +198,7 @@ def matrix.unitIsoInv :
         simp only [single, of_apply, ite_smul, one_smul, zero_smul, Function.update,
           eq_rec_constant, Pi.zero_apply, dite_eq_ite]
         split_ifs with h
-        · subst h
-          simp only [true_and, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
+        · simp_all
         · apply Finset.sum_eq_zero
           intro j _
           rw [if_neg]
@@ -239,8 +218,7 @@ def matrix.unitIsoInv :
         simp only [Function.update, eq_rec_constant, Pi.zero_apply, dite_eq_ite, smul_ite,
           smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
         split_ifs with h
-        · subst h
-          simp only [single_apply_same]
+        · simp_all
         · rw [single_apply_of_row_ne, zero_smul]
           exact Ne.symm h }
   naturality {X Y} f := by
@@ -275,12 +253,8 @@ def matrix.unitIso :
       subst h
       simp only [single, of_apply, ite_smul, one_smul, zero_smul, true_and]
       split_ifs with h
-      · subst h
-        simp only [true_and, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
-      · apply Finset.sum_eq_zero
-        intro j _
-        rw [if_neg]
-        tauto
+      · simp_all
+      · simp_all
     · symm
       apply Finset.sum_eq_zero
       intro j _
@@ -334,11 +308,8 @@ noncomputable def matrix.counitIsoHomMap (M : ModuleCat M[ι, R]) :
           ext
           simp only [sum_apply, single, one_apply]
           split_ifs with h
-          · subst h
-            simp only [of_apply, and_self, Finset.sum_ite_eq', Finset.mem_univ,
-              ↓reduceIte]
+          · simp_all
           · apply Finset.sum_eq_zero
-            intro k _
             simp_all]; rw [one_smul]]
       refine Submodule.sum_mem _ fun i _ => ?_
       rw [show (single i i 1 : M[ι, R]) =
@@ -377,14 +348,7 @@ noncomputable def matrix.counitIsoHomMap (M : ModuleCat M[ι, R]) :
         pick_goal 2
         · exact Ne.symm hij
         change Subtype.val (∑ _, _) = 0
-        simp only [AddSubmonoidClass.coe_finsetSum]
-        change ∑ k : ι,
-            (single default default (single i default (1 : R) j k) : M[ι, R]) •
-              (single default k 1 • (v i : M)) = 0
-        apply Finset.sum_eq_zero
-        intro k _
-        rw [single_apply_of_ne, single_zero, zero_smul]
-        tauto⟩
+        simp_all⟩
 
 /-- The counit map from the reconstructed matrix-module to the original matrix-module. -/
 @[simps]
@@ -527,8 +491,7 @@ lemma isSimpleModule_iff_injective_or_eq_zero
     · rw [ModuleCat.hom_ext_iff] at h
       simp only [ModuleCat.of_coe, ModuleCat.hom_zero, ModuleCat.hom_ofHom] at h
       rw [← Submodule.ker_mkQ p, LinearMap.ker_eq_top, h]
-    · rw [map_zero]
-      exact Submodule.Quotient.mk_eq_zero _ |>.2 hx
+    · simp_all
 
 open ZeroObject
 

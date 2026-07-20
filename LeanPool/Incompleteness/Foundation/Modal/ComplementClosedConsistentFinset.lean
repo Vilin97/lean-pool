@@ -32,14 +32,12 @@ abbrev Inconsistent (𝓢 : S) (Φ : FormulaFinset α) : Prop := ¬(Consistent �
 
 omit [DecidableEq α] in
 lemma iff_theory_consistent_formulae_consistent {Φ : FormulaFinset α} :
-    FormulaSet.Consistent 𝓢 Φ ↔ FormulaFinset.Consistent 𝓢 Φ := by classical
-  simp [Consistent, FormulaSet.Consistent]
+    FormulaSet.Consistent 𝓢 Φ ↔ FormulaFinset.Consistent 𝓢 Φ := by simp_all
 
 omit [DecidableEq α] in
 lemma iff_inconsistent_inconsistent {Φ : FormulaFinset α} :
     FormulaSet.Inconsistent 𝓢 Φ ↔ FormulaFinset.Inconsistent 𝓢 Φ := by
-  classical
-  simp [Inconsistent, FormulaSet.Inconsistent]
+  simp_all
 
 section «lp_section_1»
 
@@ -134,8 +132,7 @@ lemma next_consistent [Entailment.Classical 𝓢]
     have h₂ : ↑Φ *⊢[𝓢]! ∼-φ :=
       @FormulaFinset.neg_provable_iff_insert_not_consistent α _ (𝓢 := 𝓢) _ _ (Φ := Φ)
         (-φ) |>.mp <| by
-      unfold FormulaFinset.Inconsistent;
-      simpa using hC;
+      simp_all
     have : ↑Φ *⊢[𝓢]! ⊥ := neg_complement_derive_bot h₁ h₂;
     contradiction;
 
@@ -205,17 +202,11 @@ lemma existsConsistentComplementaryClosed
     rcases subset hp with (h | h | ⟨ψ, hq₁, hq₂⟩);
     · replace h := h_sub h;
       simp only [complementary, Finset.mem_union, Finset.mem_image] at h;
-      rcases h with (_ | ⟨a, b, rfl⟩);
-      · tauto;
-      · right;
-        use a;
-    · left;
-      exact Finset.mem_toList.mp h;
+      simp_all
+    · simp_all
     · right;
       use ψ;
-      constructor;
-      · exact Finset.mem_toList.mp hq₁;
-      · assumption;
+      simp_all
   · intro φ hp;
     exact either (by simpa);
 

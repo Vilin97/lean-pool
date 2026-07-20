@@ -248,9 +248,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
     simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
-    rw [h_terminated]
-    rw [h_terminated] at pre
-    simp [h_curr, h_label, pre]
+    simp_all
 
 
 theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String) (L : Set UInt64) :
@@ -293,9 +291,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
     simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
-    rw [h_terminated]
-    rw [h_terminated] at pre
-    simp [h_curr, h_label, pre]
+    simp_all
 
 
 theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2 : UInt64) (s : String)
@@ -413,9 +409,7 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
       MState.incPc_increments_pc, MState.getRegisterAt_def, gt_iff_lt, decide_eq_true_eq, h_curr]
     rw [← h_pc, h_terminated]
     simp only [h_cond_false]
-    simp only [Bool.false_eq_true, ↓reduceIte, and_true]
-    simp only [MState.incPc_increments_pc, h_terminated] at pre
-    exact pre
+    simp_all
 
 
 theorem specification_JumpLe_true (P : Assertion) (pc newPc reg1 reg2 : UInt64) (s : String)

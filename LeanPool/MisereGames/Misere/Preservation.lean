@@ -203,10 +203,8 @@ instance closedUnderDicoticClosure_closedUnderNeg {IsAmbient A : G → Prop}
         · intro b hb
           rw [Set.mem_neg] at hb
           simpa [B'] using hB (-b) hb
-        · rcases hCne with ⟨c, hc⟩
-          exact ⟨-c, by rw [Set.mem_neg]; simpa using hc⟩
-        · rcases hBne with ⟨b, hb⟩
-          exact ⟨-b, by rw [Set.mem_neg]; simpa using hb⟩
+        · simp_all
+        · simp_all
         · simpa [neg_ofSets] using ClosedUnderNeg.neg_of hAmbient
     }
     have hAB : A ≤ B' := by
@@ -248,10 +246,8 @@ private theorem mem_of_mem_closedUnderDicoticClosure_of_isEndLike {IsAmbient A :
         intro hEnd
         rw [ofSets_isEndLike_iff, isEnd_def] at hEnd
         cases p
-        · rw [leftMoves_ofSets] at hEnd
-          exact absurd hBne (Set.not_nonempty_iff_eq_empty.mpr hEnd)
-        · rw [rightMoves_ofSets] at hEnd
-          exact absurd hCne (Set.not_nonempty_iff_eq_empty.mpr hEnd)
+        · simp_all
+        · simp_all
   }
   have hAB : A ≤ B' := by
     intro g hg
@@ -609,8 +605,7 @@ private theorem mem_universeClosure_endLikePart_of_mem_universe {p : Player}
         intro q
         rcases eq_or_ne q p with rfl | hq
         · exact hp
-        · rw [Player.ne_iff_eq_neg.mp hq]
-          exact hnp
+        · simp_all
       -- `g` isn't end-like, so rebuild it from its options and apply dicotic
       -- closure.
       have hEq : !{fun q => moves q g} = g := ofSets_moves_of_not_isEndLike hNo

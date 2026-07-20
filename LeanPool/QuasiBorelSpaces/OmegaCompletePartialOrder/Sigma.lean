@@ -35,11 +35,7 @@ instance instSigmaLeanPool : OmegaCompletePartialOrder ((i : I) × P i) where
     cases h0
     change Sigma.map id (fun _ ↦ ωSup) ⟨x, d⟩ ≤ ⟨x, y⟩
     simp only [Sigma.map_mk, id_eq, Sigma.mk_le_mk_iff]
-    refine ωSup_le _ _ ?_
-    intro i
-    have := h i
-    rw [Chain.Sigma.inj_coe] at this
-    exact (Sigma.mk_le_mk_iff.mp this)
+    simp_all
 
 @[simp]
 lemma ωSup_inj {i} (c : Chain (P i)) : ωSup (Chain.Sigma.inj c) = ⟨i, ωSup c⟩ := rfl

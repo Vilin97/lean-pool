@@ -123,8 +123,7 @@ theorem hasSimplePoleAt_logDeriv_of_zero_full (s : ℍ) (hs : f s = 0) :
   have h_analytic := analyticAt_modform f (s : ℂ) s.im_pos
   have h_order_ne_zero : analyticOrderAt (modularFormCompOfComplex f) (s : ℂ) ≠ 0 := by
     rw [h_analytic.analyticOrderAt_ne_zero]
-    simp only [modularFormCompOfComplex, Function.comp_apply,
-      UpperHalfPlane.ofComplex_apply]; exact hs
+    simp_all
   obtain ⟨g, hg_analytic, hg_ne_zero, hg_eq⟩ :=
     h_analytic.analyticOrderAt_ne_top.mp (modform_not_locally_zero f hf s)
   set n : ℕ := analyticOrderNatAt (modularFormCompOfComplex f) (s : ℂ) with hn_def
@@ -186,8 +185,7 @@ theorem hasSimplePoleAt_logDeriv_of_zero' (s : ℍ) (hs : f s = 0) :
   obtain ⟨n, g, _, hg_analytic, hg_ne_zero, _, h_formula⟩ :=
     hasSimplePoleAt_logDeriv_of_zero_full f hf s hs
   exact ⟨(n : ℂ), logDeriv g, hg_analytic.deriv.fun_div hg_analytic hg_ne_zero, by
-    rw [eventually_nhdsWithin_iff]; simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
-    exact h_formula⟩
+    rw [eventually_nhdsWithin_iff]; simp_all⟩
 
 omit hf in
 /-- `HasSimplePoleAt` of logDeriv at a non-zero point (trivial: c = 0, g = logDeriv f). -/
@@ -243,8 +241,7 @@ theorem residueSimplePole_logDeriv_eq_order (s : ℍ) (hs : f s = 0) :
     hg_analytic.deriv.fun_div hg_analytic hg_ne_zero
   have h_decomp : ∀ᶠ z in 𝓝[≠] (s : ℂ),
       logDeriv (modularFormCompOfComplex f) z = (n : ℂ) / (z - (s : ℂ)) + logDeriv g z := by
-    rw [eventually_nhdsWithin_iff]; simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
-    exact h_formula
+    rw [eventually_nhdsWithin_iff]; simp_all
   rw [residue_simple_pole_eq_laurent _ (s : ℂ) (n : ℂ) (logDeriv g)
     h_logDeriv_g_analytic h_decomp, hn_eq]
   exact_mod_cast (orderOfVanishingAt'_eq_analyticOrderNatAt f hf s hs).symm
@@ -568,8 +565,7 @@ lemma ftc_integral_zero_of_closed_slit {γ : ℝ → ℂ} {z₀ : ℂ} {ω : ℂ
   have hFTC := MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le F F'
     (by norm_num : (0 : ℝ) ≤ 5) fdBoundaryFullPartition.countable_toSet
     hF_cont hF_deriv hF'_int
-  rw [hFTC]; change F 5 - F 0 = 0
-  simp only [hF_def, hγ_closed]; ring
+  simp_all
 
 include hf in
 /-- Winding number = 0 for points in `fdBox` but NOT in the fundamental domain. -/

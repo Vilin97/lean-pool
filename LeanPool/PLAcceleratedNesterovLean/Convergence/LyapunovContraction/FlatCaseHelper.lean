@@ -27,9 +27,7 @@ theorem proj_orth_inner (P : E d →L[ℝ] E d)
     (hP_self_adj : ∀ x y : E d, @inner ℝ _ _ (P x) y = @inner ℝ _ _ x (P y))
     (hP_idem : ∀ x : E d, P (P x) = P x) (v : E d) :
     @inner ℝ _ _ (P v) (v - P v) = (0 : ℝ) := by
-  rw [hP_self_adj]
-  have : P (v - P v) = P v - P (P v) := map_sub P v (P v)
-  rw [this, hP_idem, sub_self, inner_zero_right]
+  simp_all
 
 /-! ## Pythagorean decomposition -/
 
@@ -51,10 +49,7 @@ theorem cross_term_Pg_b (P : E d →L[ℝ] E d)
     (hP_idem : ∀ x : E d, P (P x) = P x)
     (g v : E d) :
     @inner ℝ _ _ (P g) (v - P v) = (0 : ℝ) := by
-  rw [inner_sub_right]
-  have h : @inner ℝ _ _ (P g) (P v) = @inner ℝ _ _ (P g) v := by
-    rw [hP_self_adj g (P v), hP_idem, ← hP_self_adj g v]
-  linarith
+  simp_all
 
 theorem cross_term_Pperpg_Pv (P : E d →L[ℝ] E d)
     (hP_self_adj : ∀ x y : E d, @inner ℝ _ _ (P x) y = @inner ℝ _ _ x (P y))
@@ -62,10 +57,7 @@ theorem cross_term_Pperpg_Pv (P : E d →L[ℝ] E d)
     (g v : E d) :
     @inner ℝ _ _ (g - P g) (P v) = (0 : ℝ) := by
   rw [inner_sub_left]
-  have h1 : @inner ℝ _ _ (P g) v = @inner ℝ _ _ g (P v) := hP_self_adj g v
-  have h2 : @inner ℝ _ _ (P g) (P v) = @inner ℝ _ _ g (P v) := by
-    rw [hP_self_adj g (P v), hP_idem]
-  linarith
+  simp_all
 
 /-! ## Inner product decomposition -/
 
@@ -79,11 +71,7 @@ theorem inner_proj_decomp (P : E d →L[ℝ] E d)
       @inner ℝ _ _ g v - @inner ℝ _ _ g (P v) -
       @inner ℝ _ _ (P g) v + @inner ℝ _ _ (P g) (P v) := by
     rw [inner_sub_left, inner_sub_right, inner_sub_right]; ring
-  have h_sa : @inner ℝ _ _ (P g) v = @inner ℝ _ _ g (P v) :=
-    hP_self_adj g v
-  have h_idem : @inner ℝ _ _ (P g) (P v) = @inner ℝ _ _ g (P v) := by
-    rw [hP_self_adj g (P v), hP_idem]
-  linarith [h_expand, h_sa, h_idem]
+  simp_all
 
 /-! ## Norm of wn = (1-a)•b + √μ'•en - √η•P⊥g -/
 

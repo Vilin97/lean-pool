@@ -168,14 +168,11 @@ instance instCoreReal : InnerProductSpace.Core ℝ (BooleanFunc n) where
     simp only [expectation, one_div, inv_pow, LinearMap.coe_mk, AddHom.coe_mk, Pi.mul_apply,
       mul_eq_zero, inv_eq_zero] at hf
     have hsum : ∑ i, f i * f i = 0 := by
-      rcases hf with hf | hf
-      · exact absurd hf (pow_ne_zero _ (by norm_num))
-      · exact hf
+      simp_all
     have hzero := (Finset.sum_eq_zero_iff_of_nonneg
       (fun i _ ↦ mul_self_nonneg (f i))).mp hsum
     funext i
-    have := hzero i (Finset.mem_univ i)
-    exact mul_self_eq_zero.mp this
+    simp_all
 
 instance (priority := 10000) instNormedAddCommGroupReal : NormedAddCommGroup (BooleanFunc n) :=
   InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℝ) (F := BooleanFunc n)
@@ -234,8 +231,7 @@ theorem walsh_mul_eq : χ S * χ S' = χ (symmDiff S S') := by
   · rfl
   · simp only [disjoint_iff_ne, mem_sdiff, ne_eq, and_imp]
     intro _ ha _ _ _ _ h
-    rw [h] at ha
-    contradiction
+    simp_all
 
 lemma inner_eq_expectation : ⟪f, g⟫ = 𝐄 (f * g) := rfl
 
@@ -261,9 +257,7 @@ lemma flipAt_unflipped {i i₀ : Fin n} {x : Fin n → Fin 2} (h : i ≠ i₀) :
 lemma flipAt_flipAt_eq {i₀ : Fin n} {x : Fin n → Fin 2} : flipAt i₀ (flipAt i₀ x) = x := by
   unfold flipAt
   funext i
-  split_ifs
-  · rw [sub_sub_cancel]
-  · rfl
+  simp_all
 
 /-- Flipping a bit is an involution on `Fin n → Fin 2`. -/
 theorem flipAt_involutive {i₀ : Fin n} : Function.Involutive (flipAt i₀) := fun _ ↦ flipAt_flipAt_eq
@@ -293,8 +287,7 @@ theorem expectation_walsh_eq_zero (hS : S.Nonempty) : 𝐄 (χ S) = 0 := by
     rw [← Finset.prod_erase_mul S _ hi₀]
     refine congr_arg (· * _) ?_
     apply Finset.prod_congr rfl
-    intro i hi
-    rw [hv_other i (Finset.ne_of_mem_erase hi), add_zero]
+    simp_all
   have h_sum := e.sum_comp (χ S)
   simp_rw [hneg, Finset.sum_neg_distrib] at h_sum
   linarith
@@ -302,8 +295,7 @@ theorem expectation_walsh_eq_zero (hS : S.Nonempty) : 𝐄 (χ S) = 0 := by
 theorem walsh_orthogonal {S S' : Finset (Fin n)} (h : S ≠ S') : ⟪χ S, χ S'⟫ = 0 := by
   change 𝐄 _ = 0
   rw [walsh_mul_eq]
-  apply expectation_walsh_eq_zero
-  rwa [symmDiff_nonempty, ne_eq]
+  simp_all
 
 theorem walsh_inner_eq : ⟪χ S, χ S'⟫ = oneOn (S = S') := by
   unfold oneOn
@@ -337,11 +329,7 @@ theorem inner_eq_sum_fourier : ⟪f, g⟫ = ∑ S : Finset (Fin n), (𝓕 f S) *
   refine Finset.sum_congr rfl fun S _ ↦ ?_
   rw [inner_smul_left, inner_sum, RCLike.conj_to_real]
   simp_rw [inner_smul_right, walsh_inner_eq]
-  rw [Finset.sum_eq_single S]
-  · rw [oneOn_true rfl]; ring
-  · intros b _ hb
-    rw [oneOn_false (fun h => hb h.symm)]; ring
-  · intro h; exact absurd (Finset.mem_univ S) h
+  simp_all
 
 /-- Plancherel/Parseval theorem for Boolean functions. -/
 theorem walsh_plancherel : ‖f‖^2 = ∑ S : Finset (Fin n), |𝓕 f S|^2 := by
@@ -374,15 +362,11 @@ lemma walsh_setAt_eq_ite {v : Fin 2} :
   split_ifs with h
   · rw [← mul_prod_erase S _ h, setAt_it, erase_eq]
     congr! 4 with j hj
-    rw [setAt_other]
-    rw [mem_sdiff, mem_singleton] at hj
-    symm
-    exact hj.right
+    simp_all
   · congr! 3 with j hj
     rw [setAt_other]
     by_contra hc
-    rw [hc] at h
-    exact h hj
+    simp_all
 
 theorem dderiv_walsh (i : Fin n) (S : Finset (Fin n)) :
     dderiv i (χ S) = ite (i ∈ S) (χ (S \ {i})) 0 := by
@@ -406,10 +390,7 @@ def laplace (i : Fin n) : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
 
 lemma setAt_eq_id {v : Fin 2} (h : x i = v) : setAt i v x = x := by
   funext j
-  unfold setAt
-  split_ifs with hj
-  · rw [hj]; symm; assumption
-  · rfl
+  simp_all
 
 lemma setAt_eq_flipAt {v : Fin 2} (h : x i ≠ v) : setAt i v x = flipAt i x := by
   funext j
@@ -505,10 +486,7 @@ theorem variance_le_totalInfluence (f : BooleanFunc n) : variance f ≤ totalInf
   · nth_rewrite 1 [← one_mul ((𝓕 f S)^2)]
     gcongr
     simp only [Nat.one_le_cast, one_le_card, h]
-  · rw [← zero_mul 0]
-    gcongr
-    · simp only [Nat.cast_nonneg]
-    · exact sq_nonneg (𝓕 f S)
+  · simp_all
 
 /-- The `k`th Fourier weight is the sum of squares of degree `k` Fourier coefficients -/
 abbrev fourierWeight (k : ℕ) (f : BooleanFunc n) : ℝ := ∑ S ∈ {S | S.card = k}, |𝓕 f S| ^ 2
@@ -525,9 +503,7 @@ lemma fourier_eq_zero_iff_fourier_weight_eq {k : ℕ} {f : BooleanFunc n} :
   constructor
   · intro h
     have h : ∀ S, S.card ≠ k → |𝓕 f S|^2 = 0 := by
-      intro S hS
-      simp only [sq_abs, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff]
-      exact h S hS
+      simp_all
     symm
     rw [walsh_plancherel]
     calc
@@ -548,9 +524,7 @@ lemma fourier_eq_zero_iff_fourier_weight_eq {k : ℕ} {f : BooleanFunc n} :
         _ = ∑ S ∈ {S | S.card ≠ k}, |𝓕 f S|^2       := by
               rw [add_comm, add_sub_assoc, sub_self, add_zero]
     have := (sum_eq_zero_iff_of_nonneg <| by intro S _; apply pow_two_nonneg).mp this
-    specialize this S (by simp [hS])
-    rw [sq_abs, pow_eq_zero_iff (by trivial)] at this
-    assumption
+    simp_all
 
 lemma eq_sum_fourier_of_fourier_weight {k : ℕ} {f : BooleanFunc n}
     (h : fourierWeight k f = ‖f‖ ^ 2) :
@@ -574,8 +548,7 @@ lemma eq_sum_degree_one_of_fourier_weight_one {f : BooleanFunc n}
   intro
   nth_rewrite 1 [eq_sum_fourier_of_fourier_weight h, Finset.sum_apply]
   apply sum_singletons
-  intro
-  simp only [Pi.smul_apply, prod_singleton, smul_eq_mul]
+  simp_all
 
 lemma eq_sum_degree_one_of_fourier_eq_zero {f : BooleanFunc n}
     (h : ∀ S, S.card ≠ 1 → 𝓕 f S = 0) :

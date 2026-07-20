@@ -132,8 +132,7 @@ number with potential `0` is already low in base `q`. -/
 theorem badCountQ_eq_zero_iff_lowDigits {q n : ℕ} :
     badCountQ q n = 0 ↔ LowDigits q n := by
   unfold badCountQ badDigitsQ LowDigits
-  rw [List.length_eq_zero_iff, List.filter_eq_nil_iff]
-  simp only [decide_eq_true_eq, not_lt]
+  simp_all
 
 /-! ## The reduction: ALIGN from the repair step, by strong induction on the potential
 

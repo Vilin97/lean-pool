@@ -38,15 +38,13 @@ theorem conj_exp_I (φ : ℝ) :
     starRingEnd ℂ (Complex.exp (φ * Complex.I)) =
       Complex.exp (-(φ * Complex.I)) := by
   rw [← Complex.exp_conj]
-  congr 1
-  simp
+  simp_all
 
 theorem conj_exp_neg_I (φ : ℝ) :
     starRingEnd ℂ (Complex.exp (-(φ * Complex.I))) =
       Complex.exp (φ * Complex.I) := by
   rw [← Complex.exp_conj]
-  congr 1
-  simp
+  simp_all
 
 theorem exp_I_mul_exp_neg_I (φ : ℝ) :
     Complex.exp (φ * Complex.I) * Complex.exp (-(φ * Complex.I)) = 1 := by
@@ -58,9 +56,7 @@ theorem exp_neg_I_mul_exp_I (φ : ℝ) :
 
 theorem exp_pi_div_two_mul_I :
     Complex.exp ((Real.pi : ℂ) / 2 * Complex.I) = Complex.I := by
-  rw [show ((Real.pi : ℂ) / 2) = ((Real.pi / 2 : ℝ) : ℂ) by push_cast; ring,
-    exp_ofReal_mul_I, Real.cos_pi_div_two, Real.sin_pi_div_two]
-  simp
+  simp_all
 
 theorem exp_neg_pi_div_two_mul_I :
     Complex.exp (-((Real.pi : ℂ) / 2 * Complex.I)) = -Complex.I := by
@@ -75,8 +71,7 @@ theorem sq_sqrt_one_sub_sq {x : ℝ} (hx : x ∈ Set.Icc (-1 : ℝ) 1) :
     ((Real.sqrt (1 - x ^ 2) : ℂ)) ^ 2 = 1 - (x : ℂ) ^ 2 := by
   rw [← Complex.ofReal_pow,
     Real.sq_sqrt (by nlinarith [hx.1, hx.2] : (0 : ℝ) ≤ 1 - x ^ 2)]
-  push_cast
-  ring
+  simp_all
 
 /-- A phase factor solving the degree-reduction equation `e^{2iφ} q = p`,
 available whenever `|p| = |q| ≠ 0` [Lin22, hermfunc.tex:1226]. -/
@@ -93,8 +88,7 @@ theorem exists_exp_sq_eq {p q : ℂ} (hq : q ≠ 0)
     rw [norm_div, h2, div_self (norm_ne_zero_iff.mpr hq)]
   have harg : Complex.exp ((p / q).arg * Complex.I) = p / q := by
     have h := Complex.norm_mul_exp_arg_mul_I (p / q)
-    rw [hnorm] at h
-    simpa using h
+    simp_all
   have hsq : Complex.exp (((p / q).arg / 2 : ℝ) * Complex.I) ^ 2
       = Complex.exp ((p / q).arg * Complex.I) := by
     rw [← Complex.exp_nat_mul]
@@ -163,9 +157,7 @@ theorem exp_I_injOn_Ioo :
       have hmul : (1 : ℝ) * (2 * Real.pi) ≤ (n : ℝ) * (2 * Real.pi) :=
         mul_le_mul_of_nonneg_right hle (by linarith)
       linarith [hs.2, ht.1]
-  rw [hn0] at hreal
-  push_cast at hreal
-  linarith
+  simp_all
 
 /-- `z·z* = ‖z‖²` in `ℂ`. -/
 theorem mul_conj_eq_norm_sq (z : ℂ) :
@@ -201,8 +193,7 @@ theorem exists_unit_mul {p q : ℂ} (hpq : ¬(p = 0 ∧ q = 0)) :
   · have hsum : p * starRingEnd ℂ p + q * starRingEnd ℂ q
         = ((r ^ 2 : ℝ) : ℂ) := by
       rw [mul_conj_eq_norm_sq, mul_conj_eq_norm_sq, hr2]
-      push_cast
-      ring
+      simp_all
     calc c * p * starRingEnd ℂ (c * p) + c * q * starRingEnd ℂ (c * q)
         = (c * starRingEnd ℂ c)
             * (p * starRingEnd ℂ p + q * starRingEnd ℂ q) := by
@@ -219,8 +210,7 @@ theorem exists_unit_mul {p q : ℂ} (hpq : ¬(p = 0 ∧ q = 0)) :
       rw [show (μ : ℂ) * Complex.I + (μ : ℂ) * Complex.I
           + ((p * q).arg : ℂ) * Complex.I
           = ((μ + μ + (p * q).arg : ℝ) : ℂ) * Complex.I by push_cast; ring]
-      rw [show (μ + μ + (p * q).arg : ℝ) = 0 by rw [hμdef]; ring]
-      simp
+      simp_all
     have hprod : c * p * (c * q) = ((r⁻¹ ^ 2 * ‖p * q‖ : ℝ) : ℂ) := by
       calc c * p * (c * q) = c * c * (p * q) := by ring
         _ = ((r⁻¹ : ℝ) : ℂ) * ((r⁻¹ : ℝ) : ℂ) * ((‖p * q‖ : ℝ) : ℂ)

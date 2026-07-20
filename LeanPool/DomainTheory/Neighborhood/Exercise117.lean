@@ -71,8 +71,7 @@ theorem inter_mem' {X Y : Set ℝ} (hX : ratIntervalMem X) (hY : ratIntervalMem 
       have had : a < d := by exact_mod_cast hza.trans hzd
       have hcb : c < b := by exact_mod_cast hzc.trans hzb
       have hlt : max a c < min b d := by
-        simp only [max_lt_iff, lt_min_iff]
-        exact ⟨⟨hab, hcb⟩, had, hcd⟩
+        simp_all
       have hset : Set.Ioo (a : ℝ) b ∩ Set.Ioo (c : ℝ) d
           = Set.Ioo ((max a c : ℚ) : ℝ) ((min b d : ℚ) : ℝ) := by
         rw [Set.Ioo_inter_Ioo, Rat.cast_max, Rat.cast_min]

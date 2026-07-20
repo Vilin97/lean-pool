@@ -160,11 +160,7 @@ private lemma circle_linfty_bound {L : ℕ} (_hL : 1 ≤ L) {E : Finset ℕ}
     have hcs := Real.sum_sqrt_mul_sqrt_le (s := E)
       (f := fun _ => (1 : ℝ)) (g := fun n => ‖b n‖ ^ 2)
       (fun _ => zero_le_one) (fun n => sq_nonneg _)
-    simp only [Real.sqrt_one, one_mul] at hcs
-    calc ∑ n ∈ E, ‖b n‖
-        = ∑ n ∈ E, Real.sqrt (‖b n‖ ^ 2) := by congr 1; ext n; rw [Real.sqrt_sq (norm_nonneg _)]
-      _ ≤ Real.sqrt (∑ n ∈ E, 1) * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := hcs
-      _ = Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := by congr 1; simp [hE]
+    simp_all
   have h3 : ∑ n ∈ E, ‖b n‖ ^ 2 = circleNormSq P := by rw [hP]; exact (parseval_finite b).symm
   calc ‖P t‖ ≤ ∑ n ∈ E, ‖b n‖ := h1
     _ ≤ Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := h2
@@ -355,9 +351,7 @@ private lemma small_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
     have h_add := integral_add
       (real_cont_integrable ((Complex.continuous_re.comp hP_cont).pow 2))
       (real_cont_integrable ((Complex.continuous_im.comp hP_cont).pow 2))
-    trans (∫ t, ((P t).re ^ 2 + (P t).im ^ 2) ∂AddCircle.haarAddCircle)
-    · congr 1; ext t; exact h_norm_sq t
-    · exact h_add
+    simp_all
   have h_re_half :
       ∫ t : AddCircle T, (P t).re ^ 2 ∂AddCircle.haarAddCircle =
         cns / 2 := by linarith
@@ -561,8 +555,7 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
       (h_int_norm_sq.sub (integrable_const 1))
       (real_cont_integrable (h_1pP_cont.norm.pow 2 |>.sub continuous_const |>.abs))
       (fun t => le_abs_self _))
-    apply le_of_eq
-    congr 1; ext t; exact (h_rho_factor (P t)).symm
+    simp_all
   -- Step 4: Cauchy-Schwarz: (∫ ρ·g)² ≤ (∫ ρ²)·(∫ g²)
   have h_cs : (∫ t : AddCircle T,
       rho (P t) * (‖(1 : ℂ) + P t‖ + 1) ∂AddCircle.haarAddCircle) ^ 2 ≤

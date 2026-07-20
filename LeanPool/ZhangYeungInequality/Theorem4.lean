@@ -300,8 +300,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
         norm_num at h1
       have hFull : S ≠ Finset.univ := by
         intro h
-        rw [h] at h1
-        norm_num at h1
+        simp_all
       have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
       simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h1, hPair, hFull,
         hNonempty]
@@ -314,8 +313,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
       · by_cases h2 : S.card = 2
         · have hFull : S ≠ Finset.univ := by
             intro h
-            rw [h] at h2
-            norm_num at h2
+            simp_all
           have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
           have hPairLit : S ≠ ({0, 1} : Finset (Fin 4)) := by simpa [pair01] using hPair
           simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h2, hPair,
@@ -327,8 +325,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
           | inl h3 =>
               have hFull : S ≠ Finset.univ := by
                 intro h
-                rw [h] at h3
-                norm_num at h3
+                simp_all
               have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
               have hPairLit : S ≠ ({0, 1} : Finset (Fin 4)) := by simpa [pair01] using hPair
               simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h3, hPair,
@@ -356,9 +353,7 @@ private lemma nonemptyBonus_submodular (α β : Finset (Fin 4)) :
     · have hUnion : (α ∪ β).Nonempty := Finset.union_nonempty.2 (Or.inl hα)
       by_cases hInter : (α ∩ β).Nonempty <;>
         simp [nonemptyBonus, hα, hβ, hUnion, hInter]
-    · have hβ' : β = ∅ := Finset.not_nonempty_iff_eq_empty.mp hβ
-      rw [hβ']
-      simp [nonemptyBonus, hα]
+    · simp_all
   · have hα' : α = ∅ := Finset.not_nonempty_iff_eq_empty.mp hα
     rw [hα']
     simp [nonemptyBonus]
@@ -368,8 +363,7 @@ private lemma fullBonus_supermodular (α β : Finset (Fin 4)) :
   by_cases hα : α = Finset.univ
   · subst hα
     by_cases hβ : β = Finset.univ
-    · subst hβ
-      simp [fullBonus]
+    · simp_all
     · simp [fullBonus, hβ]
   · by_cases hβ : β = Finset.univ
     · subst hβ
@@ -409,37 +403,29 @@ private lemma pairBonus_submodular_left_pair (β : Finset (Fin 4)) :
   by_cases hSub : β ⊆ pair01
   · by_cases hSup : pair01 ⊆ β
     · have hβ : β = pair01 := Finset.Subset.antisymm hSub hSup
-      subst hβ
-      simp [pairBonus]
+      simp_all
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : pair01 ⊆ β := by simp [h]
-        exact hSup hEqSub
+        simp_all
       have hUnion : pair01 ∪ β = pair01 := Finset.union_eq_left.mpr hSub
       have hInter : pair01 ∩ β ≠ pair01 := by
-        intro h
-        exact hSup (Finset.inter_eq_left.mp h)
+        simp_all
       simp [pairBonus, hUnion, hInter, hβ]
   · by_cases hSup : pair01 ⊆ β
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : β ⊆ pair01 := by simp [h]
-        exact hSub hEqSub
+        simp_all
       have hUnion : pair01 ∪ β ≠ pair01 := by
-        intro h
-        exact hSub (Finset.union_eq_left.mp h)
+        simp_all
       have hInter : pair01 ∩ β = pair01 := Finset.inter_eq_left.mpr hSup
       simp [pairBonus, hUnion, hInter, hβ]
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : β ⊆ pair01 := by simp [h]
-        exact hSub hEqSub
+        simp_all
       have hUnion : pair01 ∪ β ≠ pair01 := by
-        intro h
-        exact hSub (Finset.union_eq_left.mp h)
+        simp_all
       have hInter : pair01 ∩ β ≠ pair01 := by
-        intro h
-        exact hSup (Finset.inter_eq_left.mp h)
+        simp_all
       simp [pairBonus, hUnion, hInter, hβ]
 
 private lemma pairBonus_submodular_outside_exceptional :
@@ -612,8 +598,7 @@ lemma entropyFn_empty : entropyFn X μ ∅ = 0 := by
         (fun j : (∅ : Finset (Fin 4)) => X j.1 (Classical.arbitrary Ω)) := by
     funext ω
     exact Subsingleton.elim _ _
-  rw [h_eq]
-  exact entropy_const _
+  simp_all
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -1092,8 +1077,7 @@ private lemma preimage_singleton_castLE {n : ℕ} (hn : 4 ≤ n) (i : Fin 4) :
     ({Fin.castLE hn i} : Finset (Fin n)).preimage (Fin.castLE hn)
         (Fin.castLE_injective hn).injOn = ({i} : Finset (Fin 4)) := by
   ext j
-  simp [Finset.mem_preimage, Finset.mem_singleton,
-    (Fin.castLE_injective hn).eq_iff]
+  simp_all
 
 /--
 Restricting the lifted witness back to the first four coordinates recovers the base

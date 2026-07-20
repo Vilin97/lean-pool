@@ -191,9 +191,7 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
             | inl iₜ => exact P.hAj ⟨j, ⟨iₛ, hjs⟩, ⟨iₜ, hjt⟩⟩
             | inr => exact P.hAc ⟨j, ⟨iₛ, hjs⟩, hjt⟩
           | inr =>
-            cases t with
-            | inl iₜ => exact P.hcA ⟨j, ⟨iₜ, hjt⟩, hjs⟩
-            | inr => simp_all
+            simp_all
         )
         (by
           intro ⟨i, ⟨j, hij⟩, hi⟩
@@ -220,10 +218,7 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
               simp at contr
         )
         (by
-          intro ⟨i, ⟨j, hij⟩, hi⟩
-          cases i with
-          | inl i' => exact P.hbA ⟨i', ⟨j, hij⟩, hi⟩
-          | inr => exact hc ⟨j, hij⟩
+          simp_all
         )
       )
   constructor
@@ -318,10 +313,7 @@ lemma EF.smul_lt_smul_left {k : F≥0} (hk : 0 < k) (r s : F∞) :
       · simp
       rfl
     | ⊤ =>
-      convert_to False ↔ False
-      · apply lt_self_iff_false
-      · apply lt_self_iff_false
-      rfl
+      simp_all
     | (_ : F) =>
       convert_to True ↔ True
       · rw [EF.pos_smul_top hk, iff_true]
@@ -362,7 +354,6 @@ lemma EF.smul_neg {k : F≥0} {r : F∞} (hkr : k = 0 → r ≠ ⊥ ∧ r ≠ �
       rewrite [EF.pos_smul_top hk]
       rfl
     else
-      exfalso
       simp_all
   | ⊤ =>
     rw [EF.neg_top]
@@ -370,7 +361,6 @@ lemma EF.smul_neg {k : F≥0} {r : F∞} (hkr : k = 0 → r ≠ ⊥ ∧ r ≠ �
       rewrite [EF.pos_smul_top hk, EF.neg_top]
       rfl
     else
-      exfalso
       simp_all
   | (f : F) =>
     rw [←EF.coe_neg]
@@ -381,8 +371,7 @@ lemma EF.pos_smul_neg {k : F≥0} (hk : 0 < k) (r : F∞) :
     k • (-r) = -(k • r) := by
   apply EF.smul_neg
   intro h0
-  exfalso
-  exact (h0 ▸ hk).false
+  simp_all
 
 lemma EF.smul_smul {k : F≥0} (hk : 0 < k) (l : F≥0) (r : F∞) :
     l • (k • r) = k • (l • r) := by
@@ -396,8 +385,7 @@ lemma EF.smul_smul {k : F≥0} (hk : 0 < k) (l : F≥0) (r : F∞) :
     else if hl0 : l = 0 then
       rw [hl0, EF.zero_smul_nonbot top_ne_bot, smul_zero]
     else
-      exfalso
-      simp_all only [not_lt, nonpos_iff_eq_zero]
+      simp_all
   | (f : F) =>
     exact EF.coe_eq_coe_iff.← (mul_left_comm l.val k.val f)
 
@@ -524,8 +512,7 @@ section dotWeig_EF_properties
 omit [IsStrictOrderedRing F] in
 lemma zero_dotWeig [Fintype J] (w : J → F≥0) : (0 : J → F∞) ᵥ⬝ w = 0 := by
   apply Finset.sum_eq_zero
-  intro j _
-  exact smul_zero (w j)
+  simp_all
 
 lemma dotWeig_add [Fintype J] (x : J → F∞) (v w : J → F≥0) :
     x ᵥ⬝ (v + w) = x ᵥ⬝ v + x ᵥ⬝ w := by
@@ -560,8 +547,7 @@ lemma Matrix.EF_neg_zero : -(0 : Matrix I J F∞) = 0 := by
 
 omit [IsStrictOrderedRing F] in
 lemma Matrix.EF_neg_neg (M : Matrix I J F∞) : -(-M) = M := by
-  ext
-  apply neg_neg
+  simp_all
 
 omit [IsStrictOrderedRing F] in
 lemma Matrix.zero_mulWeig [Fintype J] (v : J → F≥0) : (0 : Matrix I J F∞) ₘ* v = 0 := by
@@ -739,8 +725,7 @@ lemma ValidELP.unbounded_of_feasible_of_infeasible (P : ValidELP I J F)
     | (f : F) =>
       change hbi to P.b i = toE f
       have hf : -(toE f) ≠ (⊥ : F∞) := by
-        rw [←EF.coe_neg]
-        apply EF.coe_neq_bot
+        simp_all
       rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi, EF.zero_smul_nonbot hf, add_zero]
       exact hAx ⟨i, hbi ▸ EF.coe_neq_top f⟩
 
@@ -861,8 +846,7 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
   have z_pos : 0 < z := by
     by_contra contr
     have z_eq_0 : z = 0 := by
-      push Not at contr
-      exact nonpos_iff_eq_zero.→ contr
+      simp_all
     rw [z_eq_0] at hx hy
     clear contr z_eq_0 z
     if hxc : P.c ᵥ⬝ x < 0 then

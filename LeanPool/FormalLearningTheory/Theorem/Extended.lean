@@ -709,26 +709,11 @@ private theorem adviceGoodFull_subset_goal {X : Type u} [MeasurableSpace X]
         (fun i : Fin m₁ =>
           (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩,
            c (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩))) := by
-    intro xs'
-    have ht : ∀ i : Fin m₁,
-        ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).1 i,
-         c ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).1 i)) =
-        (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩,
-         c (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩)) := by
-      intro i; simp only [h_composed_fst]
-    have hv : ∀ j : Fin m₂,
-        ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).2 j,
-         c ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).2 j)) =
-        (xs' ⟨m₁ + ↑j, by have := Nat.add_le_pair m₁ m₂; omega⟩,
-         c (xs' ⟨m₁ + ↑j, by have := Nat.add_le_pair m₁ m₂; omega⟩)) := by
-      intro j; simp only [h_composed_snd]
-    simp only [funext ht, funext hv]
+    simp_all
   intro xs hxs
   have hxGP : splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs) ∈ GoodPair := hxs
   have hxSP := hGP_sub_SP hxGP
-  simp only [Set.mem_setOf_eq] at hxSP ⊢
-  rw [← h_full_hyp xs]
-  exact hxSP
+  simp_all
 
 /-- Advice elimination (Ben-David & Dichterman 1998):
     If C is PAC-learnable with concept-dependent advice from a FINITE set A
@@ -906,8 +891,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
           μ₂ (Prod.mk xs₁ ⁻¹' BadVal) ≤ ENNReal.ofReal (δ / 2) := by
         intro xs₁
         have : Prod.mk xs₁ ⁻¹' BadVal = {xs₂ | (xs₁, xs₂) ∈ BadVal} := by ext; simp
-        rw [this]
-        exact hval_uniform xs₁
+        simp_all
       calc ∫⁻ xs₁, μ₂ (Prod.mk xs₁ ⁻¹' BadVal) ∂μ₁
           ≤ ∫⁻ _, ENNReal.ofReal (δ / 2) ∂μ₁ :=
             MeasureTheory.lintegral_mono h_fiber
@@ -932,9 +916,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
               apply add_le_add _ hBadVal_prod
               have hrect : {p : (Fin m₁ → X) × (Fin m₂ → X) | p.1 ∉ GoodTrain} =
                   GoodTrainᶜ ×ˢ Set.univ := by ext p; simp
-              rw [hrect, MeasureTheory.Measure.prod_prod,
-                  MeasureTheory.IsProbabilityMeasure.measure_univ, mul_one]
-              exact htrain_compl
+              simp_all
           _ = ENNReal.ofReal δ := by
               rw [← ENNReal.ofReal_add (by linarith) (by linarith)]
               congr 1; ring
@@ -1102,9 +1084,7 @@ theorem vcdim_not_implies_hardness :
       push Not at h
       -- h : (1 : WithTop ℕ) < ↑S.card
       have hcard : 1 < S.card := by
-        by_contra hle
-        push Not at hle
-        exact not_lt.mpr (WithTop.coe_le_coe.mpr hle) h
+        simp_all
       obtain ⟨a, ha, b, hb, hab⟩ := Finset.one_lt_card.mp hcard
       -- The all-true labeling: every point gets label `true`.
       obtain ⟨c, hcC, hcall⟩ := hS (fun _ => true)
@@ -1112,8 +1092,7 @@ theorem vcdim_not_implies_hardness :
       have ha' := hcall ⟨a, ha⟩
       have hb' := hcall ⟨b, hb⟩
       -- c = fun x => decide (x = n), so c a = true means a = n, c b = true means b = n
-      simp only [hn, decide_eq_true_eq] at ha' hb'
-      exact hab (ha'.trans hb'.symm)
+      simp_all
     exact lt_of_le_of_lt hle (WithTop.coe_lt_top 1)
   · -- SQDimension C D τ = ⊤ at D = Dirac at 0, τ = 1.
     -- For the Dirac measure δ₀ on ℕ and τ = 1:

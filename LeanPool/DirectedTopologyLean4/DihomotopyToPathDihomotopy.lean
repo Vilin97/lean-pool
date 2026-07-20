@@ -62,14 +62,11 @@ def SourceToPath : Dihomotopy (Dipath.refl x).toDirectedMap γ.toDirectedMap whe
   toDirectedMap := γ.toDirectedMap.comp MinDirected
   map_zero_left := fun t => by
     change γ (min 0 t) = _
-    have : min 0 t = 0 := min_eq_left t.2.1
-    rw [this, γ.source]
-    rfl
+    simp_all
   map_one_left := fun t => by
     change γ (min 1 t) = _
     have : min 1 t = t := min_eq_right t.2.2
-    rw [this]
-    rfl
+    simp_all
 
 lemma sourceToPath_apply (s t : I) : SourceToPath γ (s, t) = γ (min s t) := rfl
 
@@ -91,14 +88,11 @@ def PathToTarget : Dihomotopy γ.toDirectedMap (Dipath.refl y).toDirectedMap whe
   toDirectedMap := γ.toDirectedMap.comp MaxDirected
   map_zero_left := fun t => by
     change γ (max 0 t) = _
-    have : max 0 t = t := max_eq_right t.2.1
-    rw [this]
-    rfl
+    simp_all
   map_one_left := fun t => by
     change γ (max 1 t) = _
     have : max 1 t = 1 := max_eq_left t.2.2
-    rw [this, γ.target]
-    rfl
+    simp_all
 
 lemma pathToTarget_apply (s t : I) : PathToTarget γ (s, t) = γ (max s t) := rfl
 
@@ -164,8 +158,7 @@ def dihomToPathDihom (F : Dihomotopy f g) : Dipath.Dihomotopy
           change (Dihomotopy.hcomp' _ _ _) (s, 1) = _
           rw [Dihomotopy.hcomp'_apply_one_right]
           change F (s, _ ) = F ((max s 0), 1)
-          rw [max_eq_left]
-          exact s.2.1
+          simp_all
       )
   prop' := fun t x hx => by
     cases hx
@@ -175,9 +168,7 @@ def dihomToPathDihom (F : Dihomotopy f g) : Dipath.Dihomotopy
       rw [Dihomotopy.hcomp'_apply_zero_right, Dihomotopy.hcomp'_apply_zero_right]
       simp only [Dipath.coe_toDirectedMap, Dipath.source]
       change F (min t 0, 0) = f 0
-      rw [min_eq_right]
-      · simp
-      exact t.2.1
+      simp_all
     case inr hx =>
       rw [Set.mem_singleton_iff] at hx
       subst hx

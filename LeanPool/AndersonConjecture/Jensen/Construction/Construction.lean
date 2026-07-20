@@ -164,8 +164,7 @@ private def jensen_construction_p0_uncountable_proof
         exact ⟨0, by
           change Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ y
           rw [Ideal.Quotient.eq, show IsLocalRing.maximalIdeal T ^ 0 = ⊤ from by
-            rw [pow_zero]
-            exact Ideal.one_eq_top]
+            simp_all]
           exact Submodule.mem_top⟩
       | succ n _ih =>
         -- Inductive step: lift the mod-M^n approximation to mod-M^{n+1}
@@ -240,9 +239,7 @@ private def jensen_construction_p0_uncountable_proof
       have hmem_n1 := Ideal.pow_le_pow_right (Nat.le_succ n)
         (Ideal.Quotient.eq.mp (hr (n + 1)))
       have h1 := sub_mem hmem_n hmem_n1
-      rw [sub_sub_sub_cancel_right] at h1
-      change A.carrier.subtype (r n - r (n + 1)) ∈ _
-      rwa [map_sub]
+      simp_all
     -- Package the Cauchy sequence into an element of Â and verify φ maps it to t
     let seq := AdicCompletion.AdicCauchySequence.mk _ _ (fun n => r n) h_cauchy
     let xhat := AdicCompletion.mkₐ (IsLocalRing.maximalIdeal A.carrier) seq
@@ -282,8 +279,7 @@ private def jensen_construction_p0_uncountable_proof
       intro x hx
       have hfx : φ_equiv x ∈ Q := Ideal.mem_map_of_mem _ hx
       rw [h, Ideal.mem_bot] at hfx
-      rw [Ideal.mem_bot]
-      exact φ_equiv.injective (by rw [hfx, map_zero])
+      simp_all
     -- The transfinite construction guarantees Q ∩ A ≠ 0 for any nonzero prime Q of T
     obtain ⟨t, ht_mem, ht_ne⟩ := hA_primes Q inferInstance hQ_ne
     have h_alg_eq : algebraMap A.carrier
@@ -295,16 +291,14 @@ private def jensen_construction_p0_uncountable_proof
     have h_symm_mem : φ_equiv.symm (A.carrier.subtype t) ∈ P := by
       have h_in_map : φ_equiv (φ_equiv.symm (A.carrier.subtype t)) ∈
           Ideal.map φ_equiv.toRingHom P := by
-        rw [RingEquiv.apply_symm_apply]
-        exact ht_mem
+        simp_all
       obtain ⟨y, hy_mem, hy_eq⟩ := (Ideal.mem_map_iff_of_surjective _
         φ_equiv.surjective).mp h_in_map
       have := φ_equiv.injective hy_eq
       rwa [this] at hy_mem
     rw [← h_alg_eq] at h_symm_mem
     have h_bot := hP_comap ▸ (Ideal.mem_comap.mpr h_symm_mem)
-    rw [Ideal.mem_bot] at h_bot
-    exact ht_ne (congrArg A.carrier.subtype h_bot)
+    simp_all
   exact ⟨↥A.carrier, inferInstance, inferInstance, inferInstance, inferInstance,
     hA_noeth, ⟨φ_equiv⟩, hA_tgff⟩
 ⟩

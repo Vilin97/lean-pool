@@ -187,51 +187,20 @@ theorem area_translation (a : ℝ²) (A : Set ℝ²)
 -- the open hull operation, in which we use the following lemma
 lemma lincom_commutes (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²)
     : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
-  rw [map_sum L (fun i ↦ a i • f i) univ]
-  exact Fintype.sum_congr _ _ fun i ↦ (LinearMap.CompatibleSMul.map_smul L (a i) (f i)).symm
+  simp_all
 
 theorem openHull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²))
     : openHull (L ∘ f ) = Set.image L (openHull f) := by
   unfold openHull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
-  ext x
-  constructor
-  · rintro ⟨ a ,h1 , h2⟩
-    dsimp at h2
-    use a
-    constructor
-    · exact h1
-    · have h3 : (⇑L ∘ fun a ↦ ∑ i : Fin n, a i • f i) a = L  (∑ i : Fin n, a i • f i) :=by rfl
-      rw[ h3, ← lincom_commutes L a f, h2]
-  · rintro ⟨ a ,h1 , h2⟩
-    dsimp at h2
-    use a
-    constructor
-    · exact h1
-    · have h3 : (fun α ↦ ∑ i : Fin n, α i • (⇑L ∘ f) i) a =  (∑ i : Fin n, a i • L (f i)) := by rfl
-      rw[ h3, lincom_commutes L a f, h2]
+  simp_all
 
 --Now also for the closed version, whose proof is almost identical
 theorem closedHull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²))
     : closedHull (L ∘ f ) = Set.image L (closedHull f) := by
   unfold closedHull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
-  ext x
-  constructor
-  · rintro ⟨ a ,h1 , h2⟩
-    dsimp at h2
-    use a
-    constructor
-    · exact h1
-    · have h3 : (⇑L ∘ fun a ↦ ∑ i : Fin n, a i • f i) a = L  (∑ i : Fin n, a i • f i) :=by rfl
-      rw[ h3, ← lincom_commutes L a f, h2]
-  · rintro ⟨ a ,h1 , h2⟩
-    dsimp at h2
-    use a
-    constructor
-    · exact h1
-    · have h3 : (fun α ↦ ∑ i : Fin n, α i • (⇑L ∘ f) i) a =  (∑ i : Fin n, a i • L (f i)) := by rfl
-      rw[ h3, lincom_commutes L a f, h2]
+  simp_all
 
 --Again we have a similar lemma
 lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²}
@@ -347,9 +316,7 @@ theorem unitTriangle_to_triangle (T : Triangle) : Set.image (triangleTranslation
 -- We are allmost ready to show that the volume of triangles scale the way we want them to, but we
 -- just need a silly lemma first
 lemma half_is_half : (2⁻¹ : ENNReal) = ENNReal.ofReal (2⁻¹ : ℝ ) := by
-  have h1: (2:ℝ)  > 0 := by norm_num
-  rw[ENNReal.ofReal_inv_of_pos h1]
-  norm_num
+  simp_all
 
 theorem volume_open_triangle' (T : Triangle)
     : (MeasureTheory.volume (openHull T)) =  ENNReal.ofReal (|det (T : Triangle)|/2) := by
@@ -409,9 +376,7 @@ theorem volume_closed_unitSegment : MeasureTheory.volume (closedHull unitSegment
     rw[Fin.sum_univ_two, unitSegment_def] at h1
     have h1 := congrArg (fun z => z.ofLp 1) h1
     simp at h1
-  rw[h] at h3
-  apply h3
-  trivial
+  simp_all
 
 --Now for segments we also need linear maps and translations
 /-- The edge vector of a segment together with the zero vector. -/
@@ -454,13 +419,7 @@ theorem unitSegment_toSegment (L : Segment) : Set.image (segmentTranslation L)
 theorem volume_closed_segment (L : Segment) : (MeasureTheory.volume (closedHull L)) = 0 := by
   rw[←  unitSegment_toSegment L ,segmentTranslation_def]
   rw[ area_translation, area_lin_map, volume_closed_unitSegment]
-  rw[← Matrix.toLin_toMatrix ourBasis ourBasis  ( linearTransformSegment L ) ]
-  rw[LinearMap.det_toLin ourBasis
-    ((LinearMap.toMatrix ourBasis ourBasis) (linearTransformSegment L))]
-  rw[Matrix.det_fin_two]
-  rw[linearTransformSegment_def, basisTransformSegment_def, ourBasis_def ]
-  repeat rw[LinearMap.toMatrix_apply]
-  simp
+  simp_all
 
 
 -- We also in the end need that the unit square has volume 1. The unit square is equal to the square
@@ -524,8 +483,7 @@ theorem box_equal_to_pare : parallelepiped ourBasisOrtho = closedHull unitSquare
       rw [ourBasisOrtho_zero, ourBasisOrtho_one]
       ext i
       fin_cases i
-      · simp only [Fin.isValue, v, Fin.zero_eta, PiLp.add_apply, PiLp.smul_apply,
-          Matrix.cons_val_zero, smul_eq_mul, mul_zero, mul_one, zero_add, add_zero]
+      · simp_all
       · simp only [Fin.isValue, v, Fin.mk_one, PiLp.add_apply, PiLp.smul_apply,
           Matrix.cons_val_one, Matrix.cons_val_fin_one, smul_eq_mul, mul_zero, add_zero, mul_one,
           zero_add]
@@ -668,19 +626,12 @@ theorem closed_triangle_is_union (T : Triangle)
       dsimp
       constructor
       · constructor
-        · intro i
-          -- would have liked if this could have been done without fin_cases
-          -- but it did not seem to work
-          fin_cases i
-          · dsimp; exact h1 1
-          · exact h1 2
+        · simp_all
         · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
           linarith
       · dsimp at h3
         rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
-        rw[ha0] at h3 h2
-        simp only [Fin.isValue, zero_smul, zero_add] at *
-        exact h3
+        simp_all
     · by_cases ha1 : a 1 = 0
       · right
         left
@@ -690,12 +641,7 @@ theorem closed_triangle_is_union (T : Triangle)
         dsimp
         constructor
         · constructor
-          · intro i
-            -- would have liked if this could have been done without fin_cases
-            -- but it did not seem to work
-            fin_cases i
-            · dsimp; exact h1 2
-            · exact h1 0
+          · simp_all
           · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
             linarith
         · dsimp at h3
@@ -712,19 +658,12 @@ theorem closed_triangle_is_union (T : Triangle)
           dsimp
           constructor
           · constructor
-            · intro i
-              -- would have liked if this could have been done without fin_cases
-              -- but it did not seem to work
-              fin_cases i
-              · dsimp; exact h1 0
-              · exact h1 1
+            · simp_all
             · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
               linarith
           · dsimp at h3
             rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
-            rw[ha2] at h3 h2
-            simp only [Fin.isValue, zero_smul, add_zero] at *
-            exact h3
+            simp_all
         · left
           use a
           constructor
@@ -788,8 +727,7 @@ theorem union_of_edges_zero_vol (S : Finset Triangle)
     ext x
     unfold f
     exact allEdgesTriangleHull_area x
-  rw[h5]
-  exact ENNReal.tsum_eq_zero.mpr (congrFun rfl)
+  simp_all
 
 -- This theorem shows that whenever you have a cover by triangles, the measure theoretic area of the
 -- triangles add up to the measure theoretic area of what they cover
@@ -821,8 +759,7 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle)
       unfold Pairwise
       intro i j hij
       apply Disjoint.aedisjoint
-      specialize h6 _ i.2 _ j.2 (Subtype.coe_ne_coe.mpr hij)
-      exact h6
+      simp_all
     erw[MeasureTheory.measure_iUnion₀ hd h, tsum_fintype,]
     simp only [SetLike.coe_sort_coe, univ_eq_attach, Set.restrict_apply, f]
     rw [Finset.sum_attach S (fun x ↦ volume (openHullT x))]
@@ -830,8 +767,7 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle)
         = (⋃ i, (↑S : Set Triangle).restrict allEdgesTriangleHull i) :=
       Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict allEdgesTriangleHull))
     have h5 := union_of_edges_zero_vol S
-    rw[ h4] at h5
-    exact h5
+    simp_all
 
 
 

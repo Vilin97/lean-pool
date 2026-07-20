@@ -40,20 +40,13 @@ instance instFiniteCanonical (d m : ℕ) :
       simp only
       apply Finset.card_eq_zero.mp
       rcases Nat.eq_zero_or_pos d with hd0 | hdpos
-      · have hd1 : d - 1 = 0 := by omega
-        rw [hd1] at hcard; exact hcard
+      · simp_all
       · have hm0 : m = 0 := by
           rcases Nat.eq_zero_or_pos m with h | h
           · exact h
           · exfalso; have : 0 < d * m := Nat.mul_pos hdpos h; omega
         have hLC0 := hLC 0 hdpos
-        have hfilter : (S.filter (fun i => i.val / m ≤ 0)) = S := by
-          apply Finset.filter_true_of_mem
-          intro i _
-          have hdiv : i.val / m = 0 := (congrArg (i.val / ·) hm0).trans (Nat.div_zero i.val)
-          rw [hdiv]
-        rw [hfilter] at hLC0
-        exact Nat.le_zero.mp hLC0
+        simp_all
     exact Finite.of_injective (fun _ => (0 : Unit)) (by
       intro a b _; exact Subtype.ext ((hsub a).trans (hsub b).symm))
   · haveI : NeZero (d * m) := ⟨hpos.ne'⟩
@@ -148,18 +141,13 @@ lemma prefix_cnt {d m : ℕ} (S : Finset (ZMod (d * m))) (j : ℕ) :
     (f := fun i => i.val / m) (s := S.filter (fun i => i.val / m ≤ j))
     (t := Finset.range (j + 1))
     (by intro i hi
-        rw [Finset.mem_coe, Finset.mem_filter] at hi
-        change i.val / m ∈ Finset.range (j + 1)
-        exact Finset.mem_range.mpr (by omega))]
+        simp_all)]
   apply Finset.sum_congr rfl
   intro l hl
   rw [Finset.mem_range] at hl
   congr 1
   ext i
-  simp only [Finset.mem_filter]
-  constructor
-  · rintro ⟨⟨hiS, _⟩, hil⟩; exact ⟨hiS, hil⟩
-  · rintro ⟨hiS, hil⟩; exact ⟨⟨hiS, by omega⟩, hil⟩
+  simp_all
 
 /-! ## Part 3: the rotation `rhoPow` and the count-shift. -/
 
@@ -200,9 +188,7 @@ lemma mem_rhoPow {d m : ℕ} (t : ℕ) (S : Finset (ZMod (d * m))) (x : ZMod (d 
     x ∈ rhoPow t S ↔ ∃ y ∈ S, y + ((t * m : ℕ) : ZMod (d * m)) = x := by
   unfold rhoPow
   rw [Finset.mem_map]
-  constructor
-  · rintro ⟨y, hy, rfl⟩; exact ⟨y, hy, by rw [Equiv.coe_toEmbedding, Equiv.coe_addRight]⟩
-  · rintro ⟨y, hy, rfl⟩; exact ⟨y, hy, by rw [Equiv.coe_toEmbedding, Equiv.coe_addRight]⟩
+  simp_all
 
 /-- Composing rotations: `rhoPow t (rhoPow u S) = rhoPow (t + u) S`. -/
 lemma rhoPow_add {d m : ℕ} (t u : ℕ) (S : Finset (ZMod (d * m))) :
@@ -337,10 +323,7 @@ lemma Q_bSeq_d {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (S : Finset (ZMod (d * m)))
 lemma Q_bSeq_d_one {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (S : Finset (ZMod (d * m)))
     (hcard : S.card = d - 1) : Q (bSeq S) d = 1 := by
   rw [Q_bSeq_d hd hm S, hcard]
-  have h1 : ((d - 1 : ℕ) : ℤ) = (d : ℤ) - 1 := by
-    have hle : 1 ≤ d := hd
-    rw [Nat.cast_sub hle, Nat.cast_one]
-  rw [h1]; ring
+  simp_all
 
 /-- The integer partial sum `Q (bSeq S) k = k - (∑_{l<k} aP S l)`. -/
 lemma Q_bSeq_eq {d m : ℕ} (S : Finset (ZMod (d * m))) (k : ℕ) :
@@ -526,8 +509,7 @@ theorem canonical_unique {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (S : Finset (ZMod
     have hgood_idx : (d - t) % d = i0 := hi0uniq ((d - t) % d) ⟨sigma_lt hd t, htLC⟩
     -- t = σ ((d-t)%d) = σ i0 = (d - i0) % d
     have := sigma_invol hd htd
-    rw [hgood_idx] at this
-    omega
+    simp_all
 
 /-! ## Part 8: the bijection `{(d-1)-subsets} ≃ {canonical} × Fin d`. -/
 
@@ -646,8 +628,7 @@ theorem card_levelCanonical_mul (d m : ℕ) (hd : 0 < d) (hm : 0 < m) :
   rw [Fintype.card_prod, Fintype.card_fin] at hbij
   -- card Asub = C(d*m, d-1)
   have hA : Fintype.card (Asub d m) = (d * m).choose (d - 1) := by
-    unfold Asub
-    rw [card_kSubsets (d * m) (d - 1)]
+    simp_all
   -- combine
   rw [hA] at hbij
   -- hbij : C(d*m,d-1) = card Csub * d

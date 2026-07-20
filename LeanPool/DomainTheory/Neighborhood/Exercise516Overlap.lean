@@ -134,11 +134,8 @@ theorem no_overlap (p : ℕ) : ∀ i, ¬ Overlap i p := by
           rw [tm_of_eq_two_mul_add_one (show 2 * a + 3 = 2 * (a + 1) + 1 by omega),
             tm_of_eq_two_mul (show 2 * a + (2 * q + 1) + 3 = 2 * (a + q + 2) by omega)] at r3
           refine no_three_consec (a + q) ⟨?_, ?_⟩
-          · revert r0 r1; cases tm a <;> cases tm (a + q) <;> cases tm (a + q + 1) <;>
-              simp_all
-          · revert r1 r2 r3
-            cases tm (a + 1) <;> cases tm (a + q + 1) <;> cases tm (a + q + 2) <;> cases tm a <;>
-              simp_all
+          · simp_all
+          · simp_all
         · -- `i = 2a+1`.
           subst hi
           rcases Nat.eq_or_lt_of_le hq1 with hq2 | hq2
@@ -158,8 +155,7 @@ theorem no_overlap (p : ℕ) : ∀ i, ¬ Overlap i p := by
             rw [tm_of_eq_two_mul (show 2 * a + 1 + 3 = 2 * (a + 2) by omega),
               tm_of_eq_two_mul_add_one
                 (show 2 * a + 1 + (2 * 1 + 1) + 3 = 2 * (a + 3) + 1 by omega)] at r3
-            revert r0 r1 r2 r3
-            cases tm a <;> cases tm (a + 1) <;> cases tm (a + 2) <;> cases tm (a + 3) <;> simp_all
+            simp_all
           · -- `q ≥ 2`, i.e. `p ≥ 5`: relations at `k = 1,2,3,4` give a run of three at `a+q+1`.
             have r1 := hrel 1 (by omega)
             have r2 := hrel 2 (by omega)
@@ -178,10 +174,8 @@ theorem no_overlap (p : ℕ) : ∀ i, ¬ Overlap i p := by
               tm_of_eq_two_mul
                 (show 2 * a + 1 + (2 * q + 1) + 4 = 2 * (a + q + 3) by omega)] at r4
             refine no_three_consec (a + q + 1) ⟨?_, ?_⟩
-            · revert r1 r2; cases tm (a + 1) <;> cases tm (a + q + 1) <;> cases tm (a + q + 2) <;>
-                simp_all
-            · revert r3 r4; cases tm (a + 2) <;> cases tm (a + q + 2) <;> cases tm (a + q + 3) <;>
-                simp_all
+            · simp_all
+            · simp_all
 
 /-! ### Cube-freeness — Scott's literal form `t ≠ u·a·a·a·v`. -/
 
@@ -253,8 +247,6 @@ theorem tElt_cube_free (u a : Str) (ha : a ≠ []) :
     show u.length + a.length + k - u.length = k + a.length by omega] at e2
   -- Period: `(a++(a++a))[k]? = (a++(a++a))[k+|a|]?`.
   have hper := append_three_period a k (by omega)
-  have : some (tm (u.length + k)) = some (tm (u.length + a.length + k)) := by
-    rw [← e1, hper, e2]
-  exact Option.some.inj this
+  simp_all
 
 end Domain.Neighborhood.Exercise516

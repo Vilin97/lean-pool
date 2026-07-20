@@ -25,6 +25,7 @@ projects:
       github_repo: AxiomMath/Biswal
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - Biswal.Theorem23.thm_manifest_coeff_nonneg
     main_results:
@@ -46,6 +47,39 @@ projects:
       - demazure
     msc:
       - "05E10"
+  - slug: bannai-bannai-stanton
+    title: The Bannai-Bannai-Stanton Bound on Distance Sets
+    summary: >-
+      Formalizes the Bannai-Bannai-Stanton theorem: a distance set `S` in `ℝ^d`
+      realizing `s` distinct distances has size at most `Nat.choose (d + s) s`.
+      Follows the short polynomial-method proof of Petrov and Pohoata via a
+      generalized Croot-Lev-Pach rank lemma, with auxiliary results on the
+      diagonal linear-independence argument for polynomials, monomial counting
+      of bounded degree, and a rank bound for sums of matrices.
+    branch: combinatorics
+    entry_module: LeanPool.BannaiBannaiStanton
+    authors:
+      - Antoine du Fresne von Hohenesche
+    source:
+      github_repo: AntoineduFresne/Bannai-Bannai-Stanton_Theorem
+      url: https://github.com/AntoineduFresne/Bannai-Bannai-Stanton_Theorem
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - BannaiBannaiStanton.bannai_bannai_stanton_bound
+    main_results:
+      - declaration: BannaiBannaiStanton.bannai_bannai_stanton_bound
+        informal: >-
+          A distance set `S` in Euclidean space `ℝ^d` realizing `s` distinct
+          distances satisfies `S.encard ≤ Nat.choose (d + s) s`.
+    tags:
+      - combinatorics
+      - distance-sets
+      - polynomial-method
+    msc:
+      - "52C10"
+      - "05B30"
   - slug: pythagorean-polynomial-parametrization
     title: Polynomial parametrizations of Pythagorean triples
     summary: Formalizes Frisch and Vaserstein's result that Pythagorean triples are not parametrizable by one triple of integer-coefficient polynomials in any number of variables, but are parametrizable by a single triple of integer-valued rational polynomials, including the positive and sixteen-parameter variants.
@@ -63,6 +97,7 @@ projects:
       github_repo: epfl-lara/AutoformalizedProjects
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.PythagoreanPolynomialParametrization.exists_int_valued_parametrization
     main_results:
@@ -102,6 +137,7 @@ projects:
       github_repo: Lemmy00/lean-pool
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.CramerWold.euclideanSpace_measure_eq_of_forall_inner_map_eq
     main_results:
@@ -141,6 +177,7 @@ projects:
       github_repo: abenenson/cencov-petz
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.CencovPetz.MonotoneMetricFamily.eq_smul_fisher_of_continuous
     main_results:
@@ -180,6 +217,7 @@ projects:
       github_repo: bolito2/DemazureOperatorsLean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Demazure.Dem
       - CoxeterSystem.strongExchangeProperty
@@ -224,6 +262,7 @@ projects:
       github_repo: npflueger/demazure
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - LeanPool.DemazureProduct.AspPerm.star
     main_results:
@@ -270,6 +309,7 @@ projects:
       github_repo: ahhwuhu/zeta_3_irrational
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.Zeta3Irrational.zeta3_irrational
     main_results:
@@ -309,6 +349,7 @@ projects:
       github_repo: AxiomMath/zeta-h123
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - ZetaH123.H1.main_theorem
       - ZetaH123.Lem41.main
@@ -345,6 +386,7 @@ projects:
       github_repo: chrisflav/bruhat-tits
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - BruhatTits.BTtree
       - BruhatTits.BTlaplace_surjective
@@ -378,6 +420,7 @@ projects:
       github_repo: AxiomMath/ramanujan-tau-misses-primes
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - main_theorem
       - reduction_lemma
@@ -413,6 +456,7 @@ projects:
       github_repo: AxiomMath/fel-polynomial
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - fels_conjecture
     main_results:
@@ -441,6 +485,7 @@ projects:
       github_repo: AxiomMath/dead-ends
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.DeadEnds.baseBDeadEnd_density_formula
     main_results:
@@ -463,6 +508,7 @@ projects:
       github_repo: Zetetic-Dhruv/formal-learning-theory-kernel
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - fundamental_theorem
       - littlestone_characterization
@@ -504,6 +550,7 @@ projects:
       github_repo: ShangtongZhang/rl-theory-in-lean
     license: MIT
     status: verified
+    provenance: mix
     main_declarations:
       - StochasticMatrix.stationary_distribution_exists
     main_results:
@@ -529,6 +576,7 @@ projects:
       github_repo: Vilin97/forward_euler
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - ODE.EulerMethod.dist_path_le
       - ODE.EulerMethod.tendsto_path
@@ -558,6 +606,7 @@ projects:
       github_repo: Vilin97/Clawristotle
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - VML.Theorem42
       - VML.CoulombConcreteTheorem42
@@ -590,6 +639,7 @@ projects:
       github_repo: AxiomMath/partial-regularity
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
     main_results:
@@ -613,6 +663,7 @@ projects:
       github_repo: vbeffara/RMT4
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - RMT
       - main
@@ -646,6 +697,7 @@ projects:
       github_repo: frenzymath/Archon-FirstProof-Results
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - Problem4.harmonic_mean_inequality_full
       - Problem6.exists_eps_light_subset
@@ -676,6 +728,7 @@ projects:
       github_repo: math-inc/Erdos1196
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - PrimitiveSetsAboveX.mainTheorem
       - Erdos1196.erdos_1196
@@ -710,6 +763,7 @@ projects:
       github_repo: gotrevor/erdos-403
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - Erdos403.erdos_403_sharp
       - Erdos403.erdos_403_finite
@@ -748,6 +802,7 @@ projects:
       github_repo: scottdhughes/erdos137
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Erdos137.erdos137_finite
       - Erdos137.erdos137_eventually_not_powerful
@@ -788,6 +843,7 @@ projects:
       github_repo: AxiomMath/lattice-triangle
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - analyticEngine_lower_bound
     main_results:
@@ -813,6 +869,7 @@ projects:
       github_repo: Vilin97/Clawristotle
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - GrothendieckVanishing
     main_results:
@@ -838,6 +895,7 @@ projects:
       github_repo: SamuelSchlesinger/sensitivity-conjecture
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
     main_results:
@@ -864,6 +922,7 @@ projects:
       github_repo: hojonathanho/isoperimetric
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - prekopa_leindler
       - brunn_minkowski
@@ -895,6 +954,7 @@ projects:
       github_repo: seb488/LeanComplexAnalysis
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - LeanPool.LeanComplexAnalysis.harnack_ineq
     main_results:
@@ -930,6 +990,7 @@ projects:
       github_repo: andrejbauer/partial-combinatory-algebras
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.PartialCombinatoryAlgebras.PCA
     main_results:
@@ -961,6 +1022,7 @@ projects:
       github_repo: madvorak/duality
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - extendedFarkas
       - StandardLP.strongDuality
@@ -996,6 +1058,7 @@ projects:
       github_repo: pitmonticone/SumsThreeSquares
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
     main_results:
@@ -1025,6 +1088,7 @@ projects:
       github_repo: ruplet/formalization-of-bounded-arithmetic
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - V0Model.ind_strengthened_v0
       - str_add_assoc_strengthened_v0
@@ -1069,6 +1133,7 @@ projects:
       github_repo: siddhartha-gadgil/Polylean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.Polylean.P.torsionFree
       - LeanPool.Polylean.Gardam.GardamTheorem
@@ -1100,6 +1165,7 @@ projects:
       github_repo: Dominique-Lawson/Directed-Topology-Lean-4
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - DirectedSpace
       - Dipath
@@ -1137,6 +1203,7 @@ projects:
       github_repo: amellendijk/selberg-sieve4
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - fundamental_theorem_simple
       - primeCounting_isBigO_atTop
@@ -1177,6 +1244,7 @@ projects:
       github_repo: b-mehta/ABC-Exceptions
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - abcConjecture_iff_countTriples
       - thm_4_point_3
@@ -1207,6 +1275,7 @@ projects:
       github_repo: roos-j/lean-booleanfun
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
     main_results:
@@ -1232,6 +1301,7 @@ projects:
       github_repo: Luka-O/polya-enumeration-theorem
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.PolyaEnumerationTheorem.polya_theorem
     main_results:
@@ -1258,6 +1328,7 @@ projects:
       github_repo: nasqret/fineqs
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - LeanPool.Fineqs.theorem_1
       - LeanPool.Fineqs.prop_1
@@ -1294,6 +1365,7 @@ projects:
       github_repo: kkytola/VirasoroProject
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - VirasoroProject.VirasoroAlgebra
       - VirasoroProject.sugawaraRepresentation
@@ -1332,6 +1404,7 @@ projects:
       github_repo: LieLean/LowDimSolvClassification
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LieAlgebra.Dim3.classification
     main_results:
@@ -1361,6 +1434,7 @@ projects:
       github_repo: JobPetrovcic/ArtinWedderburn
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.ArtinWedderburn.ArtinWedderburnForPrime
     main_results:
@@ -1386,6 +1460,7 @@ projects:
       github_repo: wupr/order-p-q
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
     main_results:
@@ -1418,6 +1493,7 @@ projects:
       github_repo: ivankobe/FactorizationSystems
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - CategoryTheory.FactorizationSystemCharacterization
     main_results:
@@ -1448,6 +1524,7 @@ projects:
       github_repo: SamuelSchlesinger/shannon-1948-formalization
     license: MIT
     status: verified
+    provenance: mix
     main_declarations:
       - LeanPool.Shannon1948Formalization.entropyNat_unique
     main_results:
@@ -1481,6 +1558,7 @@ projects:
       github_repo: b-mehta/AharoniKorman
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.AharoniKorman.aharoni_korman_false
     main_results:
@@ -1505,6 +1583,7 @@ projects:
       github_repo: YnirPaz/PCF-Theory
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - Ordinal.exists_isClubGuessing_of_cof_uncountable
     main_results:
@@ -1535,6 +1614,7 @@ projects:
       github_repo: lua-vr/pointwise-birkhoff
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
     main_results:
@@ -1564,6 +1644,7 @@ projects:
       github_repo: ishiut/fo_zfc
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - FirstOrder.ZFC.ModelZF
       - FirstOrder.ZFC.ext_induction
@@ -1592,6 +1673,7 @@ projects:
       paper: http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - dimH_image_le_sardMoreiraBound_of_finrank_le
     main_results:
@@ -1621,6 +1703,7 @@ projects:
       github_repo: suomela/2-coloring-1-round
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - Distributed2Coloring.pStar_ge_23879
       - Distributed2Coloring.pStar_lt_24118
@@ -1650,6 +1733,7 @@ projects:
       github_repo: BarinderBanwait/ramanujan_nagell
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - ramanujanNagellExact
     main_results:
@@ -1676,6 +1760,7 @@ projects:
       github_repo: sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - GaleStewartGame.borel_determinacy
       - GaleStewartGame.Games.borel_determinacy
@@ -1705,6 +1790,7 @@ projects:
       github_repo: Jun2M/Main-theorem-of-polytopes
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - MainTheoremOfPolytopes
     main_results:
@@ -1733,6 +1819,7 @@ projects:
       github_repo: seewoo5/lean-poly-abc
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPolyABC.Polynomial.abc
       - LeanPolyABC.Polynomial.flt
@@ -1765,6 +1852,7 @@ projects:
       github_repo: jcpaik/erdos-tuza-valtr
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - ErdosTuzaValtr.main
       - Config.main_lemma
@@ -1793,6 +1881,7 @@ projects:
       github_repo: jzxia/WhiteheadTheorem
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - WhiteheadTheorem
     main_results:
@@ -1827,6 +1916,7 @@ projects:
       github_repo: Antoine-dSG/frieze_patterns
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - main3
       - FluteBounded
@@ -1863,6 +1953,7 @@ projects:
       github_repo: wwylele/PentagonalNumberTheorem
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - pentagonalNumberTheorem_powerSeries
       - Nat.Partition.sum_partition
@@ -1894,6 +1985,7 @@ projects:
       github_repo: jjdishere/neukirch
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - NumberField.ramificationIdx_mul_inertiaDegOfIsGalois
     main_results:
@@ -1940,6 +2032,7 @@ projects:
       github_repo: KisaraBlue/ec-tate-lean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Model
       - Model.Field.isSingularPoint_singularPoint
@@ -1985,6 +2078,7 @@ projects:
       github_repo: dhyan-aranha/Monsky
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.Monsky.monsky_theorem
     main_results:
@@ -2009,6 +2103,7 @@ projects:
       github_repo: dwrensha/Rupert.lean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Cube.rupert
       - Tetrahedron.rupert
@@ -2042,6 +2137,7 @@ projects:
       github_repo: VTrelat/ZFLean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - ZFSet.isIso_of_biembedding
       - ZFSet.ZFNat.induction
@@ -2072,6 +2168,7 @@ projects:
       github_repo: FredRaj3/SemicircleLaw
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
     main_results:
@@ -2109,6 +2206,7 @@ projects:
       github_repo: themathqueen/monlib4
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Matrix.aut_mat_inner
       - QuantumSet
@@ -2175,6 +2273,7 @@ projects:
       github_repo: Whysoserioushah/BrauerGroup
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - BrauerGroup.BruaerGroup
       - BrauerGroupHom.Br
@@ -2217,6 +2316,7 @@ projects:
       github_repo: cboone/zhang-yeung-inequality
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - ZhangYeung.zhangYeung
     main_results:
@@ -2245,6 +2345,7 @@ projects:
       github_repo: mdbrnowski/apportionmentlib
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Apportionment.balinski_young
     main_results:
@@ -2268,6 +2369,7 @@ projects:
       github_repo: frenzymath/Anderson-Conjecture
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - anderson_main_theorem
     main_results:
@@ -2293,6 +2395,7 @@ projects:
       github_repo: YellPika/quasi-borel-spaces
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - QuasiBorelSpace
       - OmegaQuasiBorelSpace
@@ -2327,6 +2430,7 @@ projects:
       github_repo: mgignoux/lean4-gl-coalgebras
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Lean4GlCoalgebras.interpolation
     main_results:
@@ -2353,6 +2457,7 @@ projects:
       github_repo: CBirkbeck/LeanModularForms
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - generalizedResidueTheorem
       - valence_formula_textbook_orbit_finsum
@@ -2388,6 +2493,7 @@ projects:
       github_repo: Parcly-Taxel/Redhill
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - not_ramaekersConjecture_ge_six
       - le_quality_nConjectureTuples
@@ -2429,6 +2535,7 @@ projects:
       github_repo: ah1112/synthetic_euclid_4
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - SyntheticEuclid4.pythagoras
       - SyntheticEuclid4.pythagoras_converse
@@ -2462,6 +2569,7 @@ projects:
       github_repo: josephmckinsey/flean
     license: Apache-2.0
     status: verified
+    provenance: human
     msc:
       - "65G50"
       - "65G30"
@@ -2501,6 +2609,7 @@ projects:
       github_repo: samuelborza/IsTranscendentalPi
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - IsTranscendentalPi
       - IsTranscendentalPiReal
@@ -2533,6 +2642,7 @@ projects:
       github_repo: math-xmum/Brouwer
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - ExistsNashEq
       - Brouwer
@@ -2580,6 +2690,7 @@ projects:
       github_repo: SamuelSchlesinger/circuit-complexity
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - CircuitComplexity.shannon_lower_bound_circuit
     main_results:
@@ -2617,6 +2728,7 @@ projects:
       github_repo: tannerduve/computability
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - Computability.RecursiveIn
       - Computability.TuringDegree
@@ -2655,6 +2767,7 @@ projects:
       github_repo: AlexLoitzl/pumping_cfg
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Language.IsContextFree.pumping
       - ChomskyNormalFormGrammar.pumping
@@ -2682,6 +2795,7 @@ projects:
       github_repo: verse-lab/Lentil
     license: Apache-2.0
     status: verified
+    provenance: human
     msc:
       - "03B44"
       - "68Q60"
@@ -2720,6 +2834,7 @@ projects:
       github_repo: FormalizedFormalLogic/Incompleteness
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - LeanPool.Incompleteness.goedelFirst
       - LeanPool.Incompleteness.goedelSecond
@@ -2753,6 +2868,7 @@ projects:
       github_repo: susannabertolini/PhaseRetrieval
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - DimdPolyShowcaseChallenge.stable_phase_retrieval
     main_results:
@@ -2791,6 +2907,7 @@ projects:
       github_repo: ro-gut/turan3
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Turan3.turans
       - Turan3.finale_bound
@@ -2827,6 +2944,7 @@ projects:
       github_repo: znssong/SetTheory
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - SetTheory.kunen_inconsistency_V
       - NontrivialElementaryEmbedding
@@ -2862,6 +2980,7 @@ projects:
       github_repo: mit-plv/lean4-itree
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - Lean4Itree.ITree
       - Lean4Itree.ITree.ieq_iff_eq
@@ -2908,6 +3027,7 @@ projects:
       github_repo: kuruczgy/lean-model-checking
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
     main_results:
@@ -2947,6 +3067,7 @@ projects:
       github_repo: Timeroot/computableReal
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - ComputableℝSeq
       - Computableℝ
@@ -2983,6 +3104,7 @@ projects:
       github_repo: matthunz/circuitlib
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Circuit.SequentialCircuitCategory.instSymmetricCategory
     main_results:
@@ -3021,6 +3143,7 @@ projects:
       github_repo: mrdouglasny/OSforGFF
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
     main_results:
@@ -3051,6 +3174,7 @@ projects:
       github_repo: oneofvalts/desargues
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Basic.ProjectiveGeometry
       - Basic.centralProjection
@@ -3082,6 +3206,7 @@ projects:
       github_repo: JulsDE/MRiscX
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - hoareTripleUp
       - S_SEQ
@@ -3127,6 +3252,7 @@ projects:
       github_repo: provables/special-numbers
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - SpecialNumbers.sylvester
       - SpecialNumbers.eulerian
@@ -3171,6 +3297,7 @@ projects:
       github_repo: Antoine-dSG/root_system
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - An.rootPairing
       - BCn.rootPairing
@@ -3206,6 +3333,7 @@ projects:
       github_repo: vikraman/event-structures
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - EventStructures.EventStructure
       - EventStructures.Conf
@@ -3247,6 +3375,7 @@ projects:
       github_repo: NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - ANR_polynomial_method
       - cauchy_davenport
@@ -3295,6 +3424,7 @@ projects:
       github_repo: lyfar/egrs75-lean
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - Egrs75.MuFinish.egrs_two_prime_mu
       - Egrs75.Finish.egrs_two_prime_finish
@@ -3333,6 +3463,7 @@ projects:
       github_repo: M1ngXU/PL-Accelerated-Nesterov-Lean
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - PLAcceleratedNesterovLean.nesterov_pl_accelerated_rate
     main_results:
@@ -3370,6 +3501,7 @@ projects:
       github_repo: ldct/lean-monorepo
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - FiveEighths.commProb_le_five_eighths
     main_results:
@@ -3385,6 +3517,60 @@ projects:
       - commuting-probability
     msc:
       - "20P05"
+  - slug: spectral-positivity
+    title: Spectral positivity
+    summary: >-
+      Perron-Frobenius theory, Jentzsch's theorem, and matrix/operator positivity
+      in Lean 4. At the matrix level it proves that nonnegative matrices have
+      nonnegative powers, the Metzler decomposition and positivity of the matrix
+      exponential of a Metzler matrix, M-matrix inverse positivity, and the
+      Perron-Frobenius theorem for irreducible nonnegative matrices (a positive
+      dominant eigenvalue with a strictly positive eigenvector). At the operator
+      level it proves Jentzsch's theorem for compact self-adjoint
+      positivity-improving operators on L2 — a simple, strictly positive ground
+      state with a spectral gap — together with a kernel positivity criterion.
+    branch: linear algebra
+    entry_module: LeanPool.SpectralPositivity
+    authors:
+      - Michael R. Douglas
+    source:
+      title: "spectral-positivity: Perron-Frobenius, Jentzsch, and matrix positivity in Lean 4"
+      authors:
+        - Michael R. Douglas
+      url: "https://github.com/mrdouglasny/spectral-positivity"
+      github_repo: mrdouglasny/spectral-positivity
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - allpos_has_pos_eigenvec
+      - perron_frobenius
+      - ground_state_strictly_positive
+    main_results:
+      - declaration: allpos_has_pos_eigenvec
+        informal: >-
+          A matrix with all strictly positive entries has a positive eigenvalue
+          with a strictly positive eigenvector (Perron-Frobenius for positive
+          matrices, via the Collatz-Wielandt characterization).
+      - declaration: perron_frobenius
+        informal: >-
+          An irreducible (primitive) nonnegative matrix has a positive eigenvalue
+          with a strictly positive eigenvector.
+      - declaration: ground_state_strictly_positive
+        informal: >-
+          The ground eigenfunction of a compact self-adjoint positivity-improving
+          operator on L2 is strictly positive almost everywhere (Jentzsch).
+      - declaration: SpectralPositivity.Matrix.MMatrix.inverse_pos
+        informal: >-
+          The inverse of a nonsingular irreducible M-matrix is entrywise strictly
+          positive.
+    tags:
+      - linear-algebra
+      - perron-frobenius
+      - positivity
+    msc:
+      - "15B48"
+      - "15A18"
   - slug: unconditional-schauder-basis
     title: Unconditional Schauder Bases
     summary: >-
@@ -3407,6 +3593,7 @@ projects:
       github_repo: SmaniaD/UnconditionalSchauderBasis
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - UnconditionalCriterion.exists_unconditionalSchauderBasis_of_finiteSignBound
     main_results:
@@ -3450,6 +3637,7 @@ projects:
       github_repo: abenenson/compact-spectral
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - CompactSelfAdjoint.exists_hasEigenvector_iSup_or_iInf_of_isCompactOperator
     main_results:
@@ -3500,6 +3688,7 @@ projects:
       github_repo: makoto-yamashita/proof-on-a-homogeneous-self-dual-interior-point-method-for-linear-programming
     license: MIT
     status: verified
+    provenance: human
     main_declarations:
       - HSDInteriorPointLP.YTM_fixed_local_theory_from_paper
     main_results:
@@ -3537,6 +3726,7 @@ projects:
       github_repo: karlesmarin/connes-kreimer-lean
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - CK.instCKHopf
       - CK.instHabHopf
@@ -3583,6 +3773,7 @@ projects:
       github_repo: SmaniaD/Burkholder
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - MeasureTheory.Lp_Burkholder_inequality_martingaleTransform
     main_results:
@@ -3621,6 +3812,7 @@ projects:
       github_repo: scottdhughes/erdos367
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - Erdos367.erdos_367_k3
       - RFullOdd.erdos367_iv
@@ -3671,6 +3863,7 @@ projects:
       github_repo: no-way-labs/lean-critical-portraits
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - CriticalPortraits.card_portraits
       - CriticalPortraits.Cycle.cycle_lemma
@@ -3713,6 +3906,7 @@ projects:
       github_repo: catskillsresearch/domain_theory
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - InfoSys
       - Domain.Neighborhood.NeighborhoodSystem
@@ -3750,6 +3944,7 @@ projects:
       github_repo: QudeLeap/Lean-QuantumAlg
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - QuantumAlg.GroverSearch.main_success_probability
     main_results:
@@ -3803,6 +3998,7 @@ projects:
       github_repo: ElVec1o/five-distance-sharp
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - ThreeGap.LinftyRecords3.nine_attained
     main_results:
@@ -3847,6 +4043,7 @@ projects:
       github_repo: t4ccer/misere-games
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - MisereGames.Form.Promain.of_universe
     main_results:
@@ -3880,6 +4077,7 @@ projects:
       github_repo: math-inc/FrontierMathOpen-Hypergraphs
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - HypergraphLowerBound.thm_main_H_lower_bound
     main_results:
@@ -3923,6 +4121,7 @@ projects:
       github_repo: linzialessandro/FundamentalInequality
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - Valuation.fundamentalInequality
       - Valuation.ramificationIndex
@@ -3961,6 +4160,7 @@ projects:
       github_repo: pachterlab/P_2026_2
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - PebblingLean.Hypercube.Paper.optimalPebblingNumber_theta
     main_results:
@@ -3994,6 +4194,7 @@ projects:
       github_repo: ElNando888/KrafftSieve
     license: Apache-2.0
     status: verified
+    provenance: AI
     main_declarations:
       - KrafftSieve.mu_min_lt_one_implies_tpc
     main_results:
@@ -4024,6 +4225,7 @@ projects:
       url: https://github.com/ElodinLaarz/lean-thesis
     license: Apache-2.0
     status: verified
+    provenance: mix
     main_declarations:
       - QuadraticOrder.prime_inert_iff
       - QuadraticOrder.prime_split_iff
@@ -4073,6 +4275,7 @@ projects:
       github_repo: AxiomMath/AgreeToDisagree
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - AgreeToDisagree.agreeToDisagree
       - AgreeToDisagree.agreeToDisagree_beliefs
@@ -4115,6 +4318,7 @@ projects:
       github_repo: boonsuan/KaltonRoberts
     license: MIT
     status: verified
+    provenance: AI
     main_declarations:
       - KaltonRoberts.KR_constant_lt
     main_results:
@@ -4132,6 +4336,182 @@ projects:
       - "46B20"
       - "28A12"
       - "05C35"
+  - slug: chudnovsky
+    title: A Detailed Proof of the Chudnovsky Formula
+    summary: >-
+      Formalizes the Chudnovsky brothers' rapidly convergent series for 1/π,
+      proving Mathlib's `chudnovskySum = π⁻¹`. Follows Milla's elementary
+      complex-analytic proof: Weierstrass and Eisenstein theory, Liouville and
+      parallelogram-residue calculus, the Kummer hypergeometric bridge and the
+      main modular identity relating the j-invariant to the lattice periods,
+      Baker's division-value machinery, and the singular-moduli inputs at the CM
+      point τ = (1 + √-163)/2 — integrality of j(τ) via modular polynomials and
+      Kronecker's congruence, and rationality of the Weierstrass s₂ invariant
+      via Masser's Appendix A.1.
+    branch: number theory
+    entry_module: LeanPool.Chudnovsky
+    authors:
+      - Xuanji Li
+    source:
+      title: A Detailed Proof of the Chudnovsky Formula
+      authors:
+        - Lorenz Milla
+      arxiv: "1809.00533"
+      github_repo: ldct/lean-eval-chudnovsky
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Chudnovsky.chudnovskySum_eq_pi_inv
+    main_results:
+      - declaration: Chudnovsky.chudnovskySum_eq_pi_inv
+        informal: >-
+          Proves the Chudnovsky series identity, i.e. Mathlib's
+          `chudnovskySum = π⁻¹`: the series
+          (12 / 640320^(3/2)) · ∑ₙ (-1)ⁿ (6n)! (545140134 n + 13591409)
+          / ((3n)! (n!)³ 640320^(3n)) sums to 1/π.
+    tags:
+      - number-theory
+      - pi
+      - chudnovsky
+      - modular-forms
+      - complex-multiplication
+    msc:
+      - "11Y60"
+      - "11F03"
+      - "33C05"
+  - slug: rellich-kondrachov
+    title: Rellich–Kondrachov compact embedding theorem
+    summary: >-
+      Formalizes the Rellich–Kondrachov compact embedding theorem: the Sobolev embedding H¹ → L²
+      is a compact operator on compact Riemannian manifolds. The proof builds the Euclidean core
+      (compactness of the H¹ → L² inclusion on a fixed compact support via the Fréchet–Kolmogorov
+      criterion and the H¹ translation estimate ‖τₐu − u‖₂ ≤ ‖a‖ · ‖∇u‖₂), glues chart
+      contributions over a finite atlas, and specializes to the Levi-Civita Riemannian volume
+      measure.
+    branch: analysis
+    entry_module: LeanPool.RellichKondrachov
+    authors:
+      - Adam Benenson
+    source:
+      title: "Rellich–Kondrachov compact Sobolev embedding theorem"
+      authors:
+        - Adam Benenson
+      url: "https://github.com/abenenson/rellich-kondrachov"
+      github_repo: abenenson/rellich-kondrachov
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData
+    main_results:
+      - declaration: RellichKondrachov.Geometry.Manifold.Sobolev.RiemannianFiniteChartData.isCompactOperator_h1ToL2_riemannianVolume
+        informal: >-
+          On a compact Riemannian manifold, the Sobolev inclusion H¹ → L² for the Levi-Civita
+          volume measure is a compact operator.
+      - declaration: RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean.isCompactOperator_h1OnToL2
+        informal: >-
+          Euclidean Rellich–Kondrachov compactness: on a fixed compact support K, the H¹ → L²
+          inclusion restricted to functions supported in K is a compact operator.
+      - declaration: RellichKondrachov.Geometry.Manifold.Sobolev.exists_riemannianFiniteChartData
+        informal: >-
+          On a compact Riemannian manifold there exists finite chart data equipped with explicit
+          Lipschitz neighborhoods and a subordinate partition of unity, the input to the manifold
+          Rellich glue.
+    tags:
+      - analysis
+      - pde
+      - sobolev-embedding
+    msc:
+      - "46E35"
+  - slug: semicircle-catalan
+    title: Genus-Zero Pairings and Catalan Numbers
+    summary: >-
+      Formalizes the finite combinatorics behind the genus-zero term of the
+      Wigner semicircle law: a pairing of Fin (2n), viewed as a fixed-point-free
+      involution, has genus zero (total cycle count of the rotation product
+      maximal) exactly when it is noncrossing, and these genus-zero pairings are
+      counted by the Catalan number Cₙ. The Catalan recurrence is obtained from
+      an explicit equivalence decomposing a noncrossing pairing by the partner of
+      vertex 0 into independent inside and outside pairings.
+    branch: combinatorics
+    entry_module: LeanPool.SemicircleCheck
+    authors:
+      - Wondermonger-daydreaming
+    source:
+      title: "semicircle-catalan: genus-zero pairings and the Catalan moments of the Wigner semicircle law"
+      authors:
+        - Wondermonger-daydreaming
+      url: "https://github.com/Wondermonger-daydreaming/semicircle-catalan"
+      github_repo: Wondermonger-daydreaming/semicircle-catalan
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - card_noncrossingPairing_eq_catalan
+      - Pairing.genus_zero_count
+    main_results:
+      - declaration: card_noncrossingPairing_eq_catalan
+        informal: >-
+          The number of noncrossing pairings on 2n points equals the Catalan
+          number catalan n.
+      - declaration: Pairing.genus_zero_count
+        informal: >-
+          The number of genus-zero pairings of Fin (2n) equals the Catalan
+          number catalan n.
+      - declaration: Pairing.genus_zero_iff_noncrossing
+        informal: >-
+          A pairing has genus zero if and only if it is noncrossing.
+    tags:
+      - combinatorics
+      - catalan-numbers
+      - noncrossing-partitions
+    msc:
+      - "05A15"
+      - "05A18"
+  - slug: kuramoto
+    title: Finite-N Kuramoto Synchronization
+    summary: >-
+      Formalizes the finite-N Kuramoto model of coupled phase oscillators: the order
+      parameter and its unit bound, the potential/force gradient identities, smoothness
+      and local Lipschitz continuity of the vector field with ODE existence and
+      uniqueness, Lyapunov descent along trajectories, pairwise and semicircle
+      contraction estimates, Hebbian phase/weight dynamics, and full convergence to
+      synchrony under all-to-all coupling from initial phases in an open semicircle.
+    branch: dynamical systems
+    entry_module: LeanPool.Kuramoto
+    authors:
+      - Ben Cassie
+    source:
+      title: "Finite-N Kuramoto synchronization: order-parameter bounds and Lyapunov descent"
+      authors:
+        - Ben Cassie
+      url: "https://github.com/velvetmonkey/kuramoto-lean"
+      github_repo: velvetmonkey/kuramoto-lean
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - kuramotoR_norm_le_one
+      - weighted_lyapunov_descent
+    main_results:
+      - declaration: kuramotoR_norm_le_one
+        informal: >-
+          The Kuramoto order parameter has norm at most one for any phase configuration.
+      - declaration: weighted_lyapunov_descent
+        informal: >-
+          The weighted Kuramoto potential is non-increasing along the gradient flow, since
+          the sum of force times potential-derivative over all oscillators is at most zero.
+      - declaration: allToAll_convergence_to_synchrony
+        informal: >-
+          Under all-to-all coupling with positive strength and initial phases in an open
+          semicircle, the order parameter norm tends to one, i.e. the oscillators synchronize.
+    tags:
+      - dynamical-systems
+      - synchronization
+      - kuramoto
+    msc:
+      - "34D06"
   - slug: johnson-lindenstrauss-lean
     title: The Johnson–Lindenstrauss Lemma and Quantized JL
     summary: >-
@@ -4151,6 +4531,7 @@ projects:
       github_repo: claytomode/johnson-lindenstrauss-lean
     license: Apache-2.0
     status: verified
+    provenance: human
     main_declarations:
       - JL.johnson_lindenstrauss
       - JL.johnson_lindenstrauss_pointset

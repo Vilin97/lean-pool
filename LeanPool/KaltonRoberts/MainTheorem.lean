@@ -269,8 +269,7 @@ theorem boolean_KR_bound_C₂_delta (α : Type*) [BooleanAlgebra α]
           le_antisymm hle (abs_nonneg _)
         have hz : f A + f B - f (A ⊔ B) = 0 := abs_eq_zero.mp habs
         linarith
-    · intro A
-      simp
+    · simp_all
   · have hΔpos : 0 < Δ := lt_of_le_of_ne hΔ (Ne.symm hΔ0)
     let g : α → ℝ := fun A => Δ⁻¹ * f A
     have hg : IsApproxAdditiveBA g 1 := by

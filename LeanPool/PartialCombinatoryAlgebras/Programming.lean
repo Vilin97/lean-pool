@@ -145,10 +145,7 @@ theorem eq_fst_pair (u v : Part A) (hu : u ⇓) (hv : v ⇓) : fst ⬝ (pair ⬝
     _ = u := eq_K _ _ hu hv
 
 theorem eq_snd_pair (u v : Part A) (hu : u ⇓) (hv : v ⇓) : snd ⬝ (pair ⬝ u ⬝ v) = v := by
-  calc
-    _ = pair ⬝ u ⬝ v ⬝ K' := eq_snd _ (df_pair_app_app u v hu hv)
-    _ = K' ⬝ u ⬝ v := eq_pair u v K' hu hv df_K'
-    _ = v := eq_K' u v hu hv
+  simp_all
 
 /-- Conditional statements -/
 def ite : Part A := I

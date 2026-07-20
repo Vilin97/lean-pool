@@ -148,8 +148,7 @@ private lemma logDeriv_integrable_congr {g h : ℝ → ℂ} {a b : ℝ} (hab : a
       (show Integrable _ (volume.restrict (Ioc a b)) from hint_h.1)
       ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
         (h_congr.mono (fun t ht hm => (ht (uIoc_of_le hab ▸ hm)).symm)))
-  · rw [show Ioc b a = ∅ from Set.Ioc_eq_empty (not_lt.mpr hab)]
-    exact MeasureTheory.integrableOn_empty
+  · simp_all
 
 lemma ftc_log_piece_upper {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     (hh_cont : ContinuousOn h (Icc a b)) (hh_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ h t)
@@ -184,9 +183,7 @@ lemma ftc_log_piece_lower {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
       Complex.log (-(g b)) - Complex.log (-(g a)) := by
   have hnh_log_cont : ContinuousOn (fun t => Complex.log (-(h t))) (Icc a b) := by
     apply ContinuousOn.comp continuousOn_clog_im_nonneg hh_cont.neg
-    intro t ht; constructor
-    · simp only [Complex.neg_im, Left.nonneg_neg_iff]; exact hh_im_np t ht
-    · exact neg_ne_zero.mpr (hh_ne t ht)
+    intro t ht; simp_all
   obtain ⟨hint_h, h_congr, hint_g⟩ :=
     logDeriv_integrable_congr hab hh_cont hh_deriv_cont hh_ne heq
   have hnh_slit : ∀ t ∈ Ioo a b, (-(h t)) ∈ slitPlane := by
@@ -196,8 +193,7 @@ lemma ftc_log_piece_lower {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     hnh_log_cont (fun t ht => by
       have hda := (hh_diff t ht).hasDerivAt.neg
       have := hda.clog_real (hnh_slit t ht)
-      have goal_eq : -deriv h t / -h t = deriv h t / h t := by simp only [neg_div_neg_eq]
-      exact goal_eq ▸ this) hint_h
+      simp_all) hint_h
   exact ⟨hint_g, by
     calc ∫ t in a..b, deriv g t / g t
         = ∫ t in a..b, deriv h t / h t := intervalIntegral.integral_congr_ae h_congr

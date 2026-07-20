@@ -78,8 +78,7 @@ lemma Discriminant_T_invariant : (Δ ∣[(12 : ℤ)] ModularGroup.T) = Δ := by
   apply tprod_congr
   intro b
   have := exp_periodo z (b+1)
-  simp only [Nat.cast_add, Nat.cast_one] at this
-  rw [this]
+  simp_all
 
 
 /-This is the hard one. -/
@@ -158,9 +157,7 @@ lemma atImInfy_pnat_mono (S : Set ℍ) (hS : S ∈ atImInfty) (B : ℝ) : ∃ A 
         exact one_le
       exact ⟨le_trans hs2.1 ((le_mul_iff_one_le_left s.2).mpr hn),
         le_trans hs2.2 ((le_mul_iff_one_le_left s.2).mpr hn)⟩
-    refine ⟨?_, K⟩
-    simp only [sup_le_iff] at K
-    apply hA _ K.1
+    simp_all
   · simp only [ inter_mem_iff, hS2, true_and]
     apply I_in_atImInfty
 
@@ -257,8 +254,7 @@ theorem Delta_boundedfactor :
       refine ⟨hAmem, ?_⟩
       intro b hb k
       let K : ℕ+ := ⟨k+1, Nat.zero_lt_succ k⟩
-      have haa := ha (K • b) (by have h8 := hA K b hb; simp only [inf_eq_inter, sup_le_iff,
-        mem_inter_iff, mem_setOf_eq] at h8; exact h8.1.1)
+      have haa := ha (K • b) (by have h8 := hA K b hb; simp_all)
       simp only [natPosSMul_apply, PNat.mk_coe, Nat.cast_add, Nat.cast_one, K] at haa
       have := Complex.norm_log_one_add_half_le_self (z := -cexp (2 * ↑π * Complex.I * (↑k + 1) * b))
       rw [sub_eq_add_neg]
@@ -453,8 +449,7 @@ def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1)
         have hAeq : (Matrix.SpecialLinearGroup.mapGL ℝ) A'
             = Matrix.SpecialLinearGroup.toGL
               ((Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)) A') := rfl
-        rw [hAeq]
-        simpa [SL_slash, Pi.div_apply] using hkey
+        simp_all
       rw [this]
       simp only [Complex.norm_div, ge_iff_le]
       have he1e2 : e1 / e2 = (e1 * rexp (-(2 * π * z.im))) / (e2 * rexp (-(2 * π * z.im))) := by
@@ -462,11 +457,9 @@ def CuspFormDivDiscriminant (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1)
       rw [he1e2]
       apply div_le_div₀
       · positivity
-      · apply hA2
-        apply hz.1
+      · simp_all
       · positivity
-      · apply hB3
-        apply hz.2
+      · simp_all
 
 lemma CuspForm_div_Discriminant_apply (k : ℤ) (f : CuspForm (CongruenceSubgroup.Gamma 1) k)
     (z : ℍ) : (CuspFormDivDiscriminant k f) z = f z / Δ z := rfl
@@ -503,9 +496,7 @@ lemma Complex.im_finset_prod_eq_zero_of_im_eq_zero {ι : Type*} (s : Finset ι)
     (f : ι → ℂ) (h : ∀ i ∈ s, (f i).im = 0) :
     (∏ i ∈ s, f i).im = 0 := by
   classical
-  revert h; refine Finset.induction_on s (fun _ => by simp) ?_; intro a s ha ih h
-  simp [Finset.prod_insert, ha, Complex.mul_im, h a (by simp),
-    ih (fun i hi => h i (by simp [hi]))]
+  revert h; refine Finset.induction_on s (fun _ => by simp) ?_; simp_all
 
 lemma Complex.im_pow_eq_zero_of_im_eq_zero {z : ℂ} (hz : z.im = 0) (m : ℕ) :
     (z ^ m).im = 0 := by induction m with

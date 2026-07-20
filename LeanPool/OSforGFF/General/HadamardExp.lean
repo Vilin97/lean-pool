@@ -148,8 +148,7 @@ lemma entrywiseExp_eq_hadamardSeries (R : Matrix ι ι ℝ) :
     simpa [Complex.ofReal_re] using congrArg Complex.re hpt
   -- Combine: real parts of both sides of h_seriesC give the real series identity
   have hx_sum : ∑' n : ℕ, fR n = Real.exp x := by
-    have := congrArg Complex.re h_seriesC
-    simpa [h_re_tsum, h_re_exp, h_re_terms] using this
+    simp_all
   -- Massaging coefficients and finishing
   have hx_sum' : Real.exp x = ∑' n : ℕ, (1 / (Nat.factorial n : ℝ)) * x ^ n := by
     simpa [fR, one_div, div_eq_mul_inv, mul_comm] using hx_sum.symm
@@ -177,10 +176,7 @@ lemma hadamardPow_posDef_of_posDef
     rw [hEq]; exact hR
   | succ k ih =>
     -- n = (k+1)+1 = k+2
-    have hPD_k1 : (hadamardPow R (k+1)).PosDef := ih (Nat.succ_pos _)
-    -- Schur product with R preserves PD
-    simpa [hadamardPow_succ] using
-      schur_product_posDef (A := hadamardPow R (k+1)) (B := R) hPD_k1 hR
+    simp_all
 
 /-- The quadratic form of the Hadamard series equals the sum of quadratic forms of individual terms.
     This lemma handles the complex interchange of summation and quadratic form evaluation.
@@ -223,16 +219,14 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
       HasSum (fun n => ∑ j, (1 / (Nat.factorial n : ℝ)) * (x i * hadamardPow R n i j * x j))
              (∑ j, x i * ((entrywiseExpHadamardSeries R) i j) * x j) := by
     apply hasSum_sum
-    intro j _
-    exact hHas_ij_rewrite i j
+    simp_all
   -- Combine over i (finite) similarly
   have hHas_sum_i :
       HasSum (fun n => ∑ i, ∑ j,
         (1 / (Nat.factorial n : ℝ)) * (x i * hadamardPow (ι:=ι) R n i j * x j))
              (∑ i, ∑ j, x i * ((entrywiseExpHadamardSeries (ι:=ι) R) i j) * x j) := by
     apply hasSum_sum
-    intro i _
-    exact hHas_sum_j i
+    simp_all
   -- Take tsum of hHas_sum_i
   have htsum_eq := hHas_sum_i.tsum_eq
   -- Expand the RHS to x ⬝ᵥ (...) ⬝ᵥ x
@@ -248,8 +242,7 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
     simp only [Matrix.mulVec, dotProduct, Finset.mul_sum]
     congr 1; ext i; congr 1; ext j; ring
   -- Put it all together
-  rw [← hrhs_expand, ← htsum_eq]
-  simp only [hlhs_identify]
+  simp_all
 
 /-- Summability of the scalar quadratic-form coefficients appearing in the
     Hadamard exponential series.
@@ -420,10 +413,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
     -- This uses: (1) R + εI is Hermitian, (2) quadratic form is x^T R x + ε ||x||^2 > 0 for x ≠ 0
     have hR_herm := hR.isHermitian
     have h_add_herm : (R + ε • (1 : Matrix ι ι ℝ)).IsHermitian := by
-      apply Matrix.IsHermitian.add hR_herm
-      -- ε • 1 is Hermitian since 1 is Hermitian and ε is real
-      rw [Matrix.IsHermitian, Matrix.conjTranspose_smul, Matrix.conjTranspose_one]
-      simp
+      simp_all
     apply Matrix.PosDef.of_dotProduct_mulVec_pos h_add_herm
     intro x hx_ne_zero
     have hR_nonneg := hR.dotProduct_mulVec_nonneg x
@@ -438,9 +428,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
       rw [Matrix.add_mulVec, dotProduct_add]
       -- Need to show: x ⬝ᵥ ε • x = ε * x ⬝ᵥ x
       rw [Matrix.smul_mulVec, Matrix.one_mulVec]
-      rw [dotProduct_smul]
-      -- Now need: ε • (x ⬝ᵥ x) = ε * x ⬝ᵥ x
-      rw [smul_eq_mul]
+      simp_all
     -- Goal has star x, but for real vectors star x = x
     have : star x ⬝ᵥ (R + ε • 1).mulVec x = x ⬝ᵥ (R + ε • 1).mulVec x := by simp [star]
     rw [this, h_expand]

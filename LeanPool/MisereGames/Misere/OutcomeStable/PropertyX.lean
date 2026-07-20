@@ -226,8 +226,7 @@ private theorem lemma317_p1b [HasInt A] {g h : GameForm}
     have h1 : LTippingPoint hsh = NTippingPoint hsh + 1 :=
       LTippingPoint_eq_NTippingPoint_add_one_of_isEnd_right hAh hsh hend
     have h2 : NTippingPoint hsh = 0 := NTippingPoint_eq_zero_of_N hsh hNh
-    rw [h2] at h1
-    omega
+    simp_all
   obtain ⟨hr, hr_mem, hRhr, hnhr⟩ :
       ∃ hr, ∃ (hr_mem : hr ∈ moves .right h), MisereOutcome hr = .R ∧
         NTippingPoint (Short.of_mem_moves hsh hr_mem) = LTippingPoint hsh := by
@@ -335,8 +334,7 @@ private theorem lemma317_p4a_gr {g h : GameForm}
       rw [add_comm] at hN; exact hN.ge
     · have hbd : birthday h + birthday gr < birthday g + birthday h := by
         have hlt' := birthday_lt_of_mem_moves hgr
-        calc birthday h + birthday gr < birthday h + birthday g := by gcongr
-          _ = birthday g + birthday h := add_comm _ _
+        simp_all
       have hN := (IH h gr hsh (Short.of_mem_moves hsg hgr) hAh hAgr hbd).p2b
         hRh hgrN he
       rw [add_comm] at hN; exact hN.ge

@@ -241,9 +241,7 @@ theorem Theorem42
       -(1 / 2) * ∫ v, ∫ w, dotProduct (vGrad (Real.log ∘ f x) v - vGrad (Real.log ∘ f x) w)
         (mulVec (landauMatrix Ψ (v - w))
           (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) := by
-    intro x
-    rw [hIBP x, hFubiniSym x]
-    ring
+    simp_all
   -- Step 2: Derive D(f) = 0 from the Vlasov equation.
   have hD_zero : ∀ x, entropyDissipation Ψ (f x) = 0 := by
     have hD_nonpos : ∀ x, entropyDissipation Ψ (f x) ≤ 0 := by
@@ -253,8 +251,7 @@ theorem Theorem42
     have hD_neg : ∀ y, 0 ≤ -(entropyDissipation Ψ (f y)) := fun y => neg_nonneg.mpr (hD_nonpos y)
     have hD_neg_int : FlatTorus3.spatialIntegral (fun y => -(entropyDissipation Ψ (f y))) = 0 := by
       have h := FlatTorus3.hSpatialMul (fun y => entropyDissipation Ψ (f y)) (-1)
-      simp only [mul_neg_one] at h
-      linarith [hTransportEntropy]
+      simp_all
     linarith [FlatTorus3.hSpatialNonnegZero _ hDecay.hD_cont.neg hD_neg hD_neg_int x]
   -- Step 3: Apply the main theorem via VMLInput.
   have result := main_from_physics {

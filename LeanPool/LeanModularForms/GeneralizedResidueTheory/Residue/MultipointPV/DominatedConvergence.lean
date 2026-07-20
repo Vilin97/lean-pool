@@ -86,8 +86,7 @@ private lemma dominated_convergence_empty_case (f g_reg : ℂ → ℂ) (γ : Pie
     simp only [cauchyPrincipalValueIntegrandOn, Finset.notMem_empty, false_and,
       exists_false, ↓reduceIte]
   have hf_eq_g : ∀ z, f z = g_reg z := by
-    intro z; have h := hg_decomp z (Finset.notMem_empty z)
-    simp only [Finset.sum_empty, add_zero] at h; exact h
+    simp_all
   have hM_eq_G : ∀ ε > 0, M ε = G := by
     intro ε hε; rw [hM_eq ε hε]
     apply intervalIntegral.integral_congr; intro t _; simp only [hf_eq_g (γ.toFun t)]
@@ -142,9 +141,7 @@ private lemma pointwise_ae_limit_off_crossing (S0 : Finset ℂ) (f g_reg : ℂ �
               f (γ.toFun t) * deriv γ.toFun t := by
             simp only [cauchyPrincipalValueIntegrandOn]; rw [if_neg]; push Not; exact hall_far
           rw [hM_eval, residue_sum_ifs_eq_mul_deriv hall_far, ← sub_mul]
-          have hdecomp := hg_decomp (γ.toFun t) hγt_not_in_S0
-          rw [show f (γ.toFun t) - ∑ s ∈ S0, residueSimplePole f s / (γ.toFun t - s) =
-            g_reg (γ.toFun t) from by rw [hdecomp]; ring]
+          simp_all
     _ = 0 := h_crossing_null
 
 /-! ## Dominated Convergence: Norm Bounds -/
@@ -233,10 +230,7 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
         then residueSimplePole f s / (γ.toFun t - s) * deriv γ.toFun t else 0) =
       (∑ s ∈ S0, if ‖γ.toFun t - s‖ > ε
         then residueSimplePole f s / (γ.toFun t - s) else 0) * deriv γ.toFun t := by
-    rw [Finset.sum_mul]; apply Finset.sum_congr rfl; intro s _
-    by_cases h : ‖γ.toFun t - s‖ > ε
-    · simp only [h, ↓reduceIte]
-    · simp only [h, ↓reduceIte, zero_mul]
+    rw [Finset.sum_mul]; simp_all
   rw [h_factor]
   let singularBound := 2 * (S0.card : ℝ) * Mc / δ
   have h_sum_bound : ‖∑ s ∈ S0, if ‖γ.toFun t - s‖ > ε
@@ -257,8 +251,7 @@ private lemma norm_A_int_bound_some_near (S0 : Finset ℂ) (f : ℂ → ℂ) (γ
         (norm_mul_le _ _).trans (mul_le_mul h_sum_bound h_γ'_bound (norm_nonneg _) h_sb_nonneg)
     _ ≤ max 0 singularBound * max 0 Mγ' := by
         have h0_le_Mγ' : 0 ≤ Mγ' := le_trans (norm_nonneg _) h_γ'_bound
-        exact mul_le_mul (le_max_right 0 singularBound) (le_max_right 0 Mγ')
-          h0_le_Mγ' (le_max_left 0 singularBound)
+        simp_all
     _ ≤ B := hB
 
 private lemma A_int_norm_bound (S0 : Finset ℂ) (f g_reg : ℂ → ℂ) (γ : PiecewiseC1Immersion)
@@ -424,10 +417,7 @@ private lemma A_eq_integral_A_int (S0 : Finset ℂ) (f g_reg : ℂ → ℂ) (γ 
       intro S; induction S using Finset.induction_on with
       | empty => intro _; simp only [Finset.sum_empty]; exact intervalIntegrable_const
       | insert s' S'' hs'' ih =>
-        intro h_all; simp only [Finset.sum_insert hs'']
-        apply IntervalIntegrable.add
-        · exact h_all s' (Finset.mem_insert_self s' S'')
-        · exact ih (fun s hs => h_all s (Finset.mem_insert_of_mem hs))
+        intro h_all; simp_all
     exact this S0 hS_int
   rw [h_sum_eq, ← intervalIntegral.integral_sub hM_int hSum_int]
 

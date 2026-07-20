@@ -127,12 +127,7 @@ lemma _root_.Partrec.projection {f : α → β →. γ} (hf : Partrec₂ f) (uni
     simp only [Part.mem_bind_iff, Part.mem_ofOption, Option.mem_def, decode₂_eq_some,
       Part.mem_map_iff, Prod.exists, encode_prod_val, Nat.pair_eq_pair, ↓existsAndEq,
       and_true, exists_and_left] at H
-    intro c a; constructor
-    · intro h
-      rcases (H c a).mp h with ⟨a', ha, b, c', hc, hcenc⟩
-      exact ⟨a', b, ha, c', hc, hcenc⟩
-    · rintro ⟨a', b, ha, c', hc, hcenc⟩
-      exact (H c a).mpr ⟨a', ha, b, c', hc, hcenc⟩
+    simp_all
   intro c a
   constructor
   · intro hcga
@@ -423,10 +418,7 @@ private lemma models_codeAux {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc :
       Matrix.comp_vecCons', Semiterm.val_fvar, Matrix.vecCons_zero, Semiterm.val_bvar,
       Matrix.vecCons_succ]
     constructor
-    · rintro ⟨e, hf, hg⟩
-      have hf : f (List.Vector.ofFn e) = Part.some y := (ihf _ _).mp hf
-      have hg : ∀ i, g i (List.Vector.ofFn v) = Part.some (e i) := fun i => (ihg i _ _).mp (hg i)
-      simp [hg, hf]
+    · simp_all
     · intro h
       have : ∃ w, (∀ i, List.Vector.get w i ∈ g i (List.Vector.ofFn v)) ∧ y ∈ f w := by
         simpa using Part.eq_some_iff.mp h

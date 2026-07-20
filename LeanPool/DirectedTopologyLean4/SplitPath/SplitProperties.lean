@@ -70,15 +70,7 @@ lemma firstPart_image (γ : Dipath x₀ x₁) (T a b : I) (h_ab : a ≤ b) :
     · exact ht
   · rintro ⟨t, t_Ta_Tb, ht⟩
     by_cases h : T = 0
-    · use a
-      constructor
-      · simp only [mem_Icc, Std.le_refl, true_and]; exact h_ab
-      · change γ (T * a) = z
-        rw [h] at t_Ta_Tb
-        simp only [zero_mul, mem_Icc, ← Subtype.coe_le_coe] at t_Ta_Tb
-        rw [h, zero_mul]
-        have ht0 : t = 0 := le_antisymm (by exact_mod_cast t_Ta_Tb.2) (by exact_mod_cast t_Ta_Tb.1)
-        exact ht0 ▸ ht
+    · simp_all
     have hT : 0 < T := lt_of_le_of_ne unitInterval.nonneg' (show T ≠ 0 by exact h).symm
     have h₁ : (a : ℝ) ≤ (t / T : ℝ) :=
       (le_div_iff₀ (Subtype.coe_lt_coe.mpr hT)).mpr <|
@@ -164,13 +156,7 @@ lemma secondPart_image (γ : Dipath x₀ x₁) (T a b : I) (h_ab : a ≤ b) :
     exact ⟨⟨unitIAux.interp_left_le_of_le T t_a_b.1, unitIAux.interp_left_le_of_le T t_a_b.2⟩, ht⟩
   · rintro ⟨t, t_Ta_Tb, ht⟩
     by_cases h : T = 1
-    · use a
-      constructor
-      · simp only [mem_Icc, Std.le_refl, true_and]; exact h_ab
-      · change γ (_) = z
-        simp [h] at t_Ta_Tb
-        simp [t_Ta_Tb] at ht
-        simp [h, ht]
+    · simp_all
     have hT : T < 1 := lt_of_le_of_ne unitInterval.le_one' (show T ≠ 1 by exact h)
     have : (T : ℝ) < 1 := Subtype.coe_lt_coe.mpr hT
     have : (σ T : ℝ) > 0 := show (1 - T : ℝ) > 0 by linarith
@@ -678,8 +664,7 @@ lemma trans_image_inv_eq_first (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x
     (γ₁.trans γ₂) (Fraction.ofPos (Nat.succ_pos (n + n).succ)) =
       γ₁ (Fraction.ofPos (Nat.succ_pos n)) := by
   have := trans_first_part γ₁ γ₂ n 1
-  rw [SplitDipath.first_part_apply, SplitDipath.first_part_apply] at this
-  convert this using 2 <;> simp
+  simp_all
 
 /-- If `γ₁` and `γ₂` are two paths, then `γ₁.trans γ₂` --> `[1/(2n+4), 1]` evaluated at
 `(2n+2)/(2n+3)` is the same as

@@ -75,13 +75,7 @@ theorem exists_list_image (S : Set AugmentedForm.{u}) (hfin : S.Finite)
   choose f hf using h_ext
   refine ⟨hfin.toFinset.attach.toList.map (fun y => f y.val (hfin.mem_toFinset.mp y.prop)), ?_⟩
   ext y
-  simp only [Set.mem_image, Set.mem_setOf_eq, List.mem_map, Finset.mem_toList,
-    Finset.mem_attach, true_and, Subtype.exists, hfin.mem_toFinset]
-  constructor
-  · rintro ⟨t, ⟨z, hz, rfl⟩, rfl⟩; rw [hf z hz]
-    exact hz
-  · intro hy
-    exact ⟨f y hy, ⟨y, hy, rfl⟩, hf y hy⟩
+  simp_all
 
 /--
 Every short augmented form is in the range of `toForm`.

@@ -59,8 +59,7 @@ theorem ScottOpen.isUpperSet {U : Set D} (h : ScottOpen U) : IsUpperSet U := h.1
 
 theorem scottOpen_univ : ScottOpen (Set.univ : Set D) := by
   refine ⟨isUpperSet_univ, fun S hS _ _ => ?_⟩
-  obtain ⟨s, hs⟩ := hS
-  exact ⟨s, hs, Set.mem_univ s⟩
+  simp_all
 
 theorem scottOpen_inter {U V : Set D} (hU : ScottOpen U) (hV : ScottOpen V) :
     ScottOpen (U ∩ V) := by

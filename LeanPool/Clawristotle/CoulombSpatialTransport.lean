@@ -231,9 +231,7 @@ lemma spatial_transport_joint_integrable
         (fun x => (spatial_transport_integrable hf_pos hf_smooth_v hf_smooth_x hSchwartz
           ⟨C_log, K_log, hLB⟩ x).norm.aestronglyMeasurable)
         (fun x => Filter.Eventually.of_forall fun v => by
-          change ‖‖g x v‖‖ ≤ C_total / (1 + ‖v‖) ^ 4
-          rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _), Real.norm_eq_abs]
-          exact h_bound x v)
+          simp_all)
         (inverse_poly_integrable C_total)
         (Filter.Eventually.of_forall fun v => (hg_cont v).norm)).aestronglyMeasurable
     · filter_upwards with x
@@ -244,8 +242,7 @@ lemma spatial_transport_joint_integrable
             · exact Filter.Eventually.of_forall (fun v => norm_nonneg _)
             · exact inverse_poly_integrable C_total
             · exact Filter.Eventually.of_forall (fun v => by
-                change ‖g x v‖ ≤ C_total / (1 + ‖v‖) ^ 4
-                rw [Real.norm_eq_abs]; exact h_bound x v)
+                simp_all)
         _ = C_total * ∫ v, (1 + ‖v‖)⁻¹ ^ 4 := by
             simp_rw [div_eq_mul_inv, inv_pow]; exact integral_const_mul _ _
 

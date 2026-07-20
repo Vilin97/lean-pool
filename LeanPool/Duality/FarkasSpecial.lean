@@ -114,52 +114,20 @@ lemma Multiset.sum_eq_EF_bot_iff (s : Multiset F∞) : s.sum = (⊥ : F∞) ↔ 
   constructor <;> intro hs
   · induction s using Multiset.induction with
     | empty =>
-      exfalso
-      rw [Multiset.sum_zero] at hs
-      exact EF.zero_neq_bot hs
+      simp_all
     | cons a m ih =>
       rw [Multiset.mem_cons]
       rw [Multiset.sum_cons] at hs
       match a with
       | ⊥ =>
-        left
-        rfl
+        simp_all
       | ⊤ =>
-        match hm : m.sum with
-        | ⊥ =>
-          right
-          exact ih hm
-        | ⊤ =>
-          exfalso
-          rw [hm] at hs
-          change hs to ⊤ + ⊤ = ⊥
-          rw [EF.top_add_top] at hs
-          exact top_ne_bot hs
-        | (f : F) =>
-          exfalso
-          rw [hm] at hs
-          change hs to ⊤ + toE f = ⊥
-          rw [EF.top_add_coe] at hs
-          exact top_ne_bot hs
+        simp_all
       | (f : F) =>
-        match hm : m.sum with
-        | ⊥ =>
-          right
-          exact ih hm
-        | ⊤ =>
-          exfalso
-          rw [hm] at hs
-          change hs to toE f + ⊤ = ⊥
-          rw [EF.coe_add_top] at hs
-          exact top_ne_bot hs
-        | (_ : F) =>
-          exfalso
-          rw [hm] at hs
-          exact EF.coe_neq_bot _ hs
+        simp_all
   · induction s using Multiset.induction with
     | empty =>
-      exfalso
-      exact Multiset.notMem_zero ⊥ hs
+      simp_all
     | cons a m ih =>
       rw [Multiset.sum_cons]
       rw [Multiset.mem_cons] at hs
@@ -171,8 +139,7 @@ lemma Multiset.sum_eq_EF_top {s : Multiset F∞} (htop : ⊤ ∈ s) (hbot : ⊥ 
     s.sum = (⊤ : F∞) := by
   induction s using Multiset.induction with
   | empty =>
-    exfalso
-    exact Multiset.notMem_zero ⊤ htop
+    simp_all
   | cons a m ih =>
     rw [Multiset.sum_cons]
     rw [Multiset.mem_cons] at htop
@@ -266,8 +233,7 @@ lemma no_bot_has_top_dotWeig_pos {v : I → F∞} (hv : ∀ a, v a ≠ ⊥) {i :
   · rw [Multiset.mem_map]
     use i
     constructor
-    · rw [Finset.mem_val]
-      apply Finset.mem_univ
+    · simp_all
     · rw [hvi]
       exact EF.pos_smul_top hwi
   · intro contr
@@ -410,8 +376,7 @@ private lemma extendedFarkas.bwd_solution {A : Matrix I J F∞} {b : I → F∞}
   else
     push Not at hi
     if hbi : b i = ⊤ then
-      rw [hbi]
-      apply le_top
+      simp_all
     else
       obtain ⟨j, hAij⟩ := hi hbi
       convert_to ⊥ ≤ b i
@@ -447,8 +412,7 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
       have impos : b ᵥ⬝ y = ⊤ := by
         push Not at hbot
         exact no_bot_has_top_dotWeig_pos hbot bi_top y hyi
-      rw [impos] at sharpine
-      exact not_top_lt sharpine
+      simp_all
     else
       push Not at i_not_I'
       obtain ⟨j, Aij_eq_bot⟩ := i_not_I' bi_top
@@ -457,8 +421,7 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
         intro k hk
         exact hAj ⟨j, ⟨i, Aij_eq_bot⟩, ⟨k, by simpa using hk⟩⟩
       have ineqality : ((-Aᵀ) j) ᵥ⬝ y ≤ 0 := ineqalities j
-      rw [htop, top_le_iff] at ineqality
-      exact EF.zero_neq_top ineqality
+      simp_all
   constructor
   · have hnb : ∀ i : I, ¬ (b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) → ∀ j : J, (-Aᵀ) j i ≠ ⊥ := by
       intro i i_not_I' j contr
@@ -495,8 +458,7 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
     · intro i hi
       rw [h0 i hi]
       apply EF.zero_smul_nonbot
-      apply hnb
-      exact hi
+      simp_all
   · unfold dotWeig at sharpine
     rw [Finset.univ_sum_of_zero_when_not
       (fun i : I => b i ≠ ⊤ ∧ ∀ (j : J), A i j ≠ ⊥)] at sharpine
@@ -518,8 +480,7 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
     · intro i hi
       rw [h0 i hi]
       apply EF.zero_smul_nonbot
-      intro contr
-      exact hbot ⟨i, contr⟩
+      simp_all
 
 private lemma extendedFarkas.bwd_witness {A : Matrix I J F∞} {b : I → F∞}
     (hbot : ¬ ∃ i : I, b i = ⊥)
@@ -539,9 +500,7 @@ private lemma extendedFarkas.bwd_witness {A : Matrix I J F∞} {b : I → F∞}
         · apply Finset.sum_eq_zero
           intro i _
           apply EF.zero_smul_nonbot
-          intro contr
-          rw [Matrix.neg_apply, EF.neg_eq_bot_iff] at contr
-          exact hj i contr
+          simp_all
         · simp only [Matrix.mulVec, dotProduct, Matrix.neg_apply, Matrix.transpose_apply]
           rw [Finset.sum_toE]
           apply Finset.subtype_univ_sum_eq_subtype_univ_sum

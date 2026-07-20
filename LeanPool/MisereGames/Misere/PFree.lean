@@ -49,15 +49,11 @@ private theorem IsPFree.neg {g : G} (h1 : IsPFree g) : IsPFree (-g) := by
     cases h3 : MiserePlayerOutcome g .left <;> cases h4 : MiserePlayerOutcome g .right
     <;> simp only [reduceCtorEq, not_false_eq_true, not_true_eq_false]
     refine h1 (misereOutcome_P_of_miserePlayerOutcome_neg ?_)
-    intro p
-    cases p
-    · exact h3
-    · exact h4
+    simp_all
   · intro p gp h3
     simp only [moves_neg, Set.mem_neg] at h3
     have h4 := (h2 (-p) (-gp) h3).neg
-    rw [neg_neg] at h4
-    exact h4
+    simp_all
 termination_by birthday g
 decreasing_by
   simpa only [Form.birthday_neg] using Form.birthday_lt_of_mem_moves h3
@@ -78,8 +74,7 @@ theorem isPFree_of_isOption {g g' : G} (h1 : IsPFree g) (h2 : Moves.IsOption g' 
 @[simp]
 theorem isPFree_zero : IsPFree (0 : G) := by
   unfold IsPFree
-  apply And.intro (by simp)
-  simp only [moves_zero (G := G), Set.mem_empty_iff_false, IsEmpty.forall_iff, implies_true]
+  simp_all
 
 @[simp]
 theorem isPFree_natCast (n : ℕ) : IsPFree (n : G) := by
@@ -129,8 +124,7 @@ private lemma not_winsGoingFirst_right_of_isSpecial {g : GameForm} (h1 : IsSpeci
     unfold IsSpecial at h1
     cases h1.2 gr hgr_mem with
     | inl h_outcome_L =>
-      rw [misereOutcome_L_iff_winsGoingFirst] at h_outcome_L
-      exact hgr_win h_outcome_L.left
+      simp_all
     | inr h_left_special =>
       obtain ⟨grl, hgrl_mem, hgrl_special⟩ := h_left_special
       have h4 := not_winsGoingFirst_right_of_isSpecial hgrl_special
@@ -174,12 +168,7 @@ private lemma isSpecial_of_isPFree_not_winsGoingFirst_right_succ {g : GameForm} 
       fun h_end => h2 (winsGoingFirst_of_isEnd h_end)
     -- If g were a Right end, then g+1 would also be a Right end (since 1 is a
     -- Right end)
-    intro h_g_right_end
-    apply h_g_plus_one_not_right_end
-    rw [isEnd_def] at h_g_right_end ⊢
-    rw [moves_add, rightMoves_one, Set.image_empty, Set.union_empty]
-    simp only [Set.image_eq_empty]
-    exact h_g_right_end
+    simp_all
   · -- for each right move gr of g, show either gr has outcome L or ∃ special
     -- left move
     intro gr h_gr_mem
@@ -197,8 +186,7 @@ private lemma isSpecial_of_isPFree_not_winsGoingFirst_right_succ {g : GameForm} 
       apply h2
       apply winsGoingFirst_of_moves
       use gr + 1, h_gr_plus_one_mem
-      simp only [Player.neg_right]
-      exact h_left_not_wins
+      simp_all
     -- 5. Since 1 is not a Left end, gr+1 is not a Left end, so there must
     -- exist some winning move for Left from gr+1
     -- 6. This winning move is either to gr (by playing on 1), or to some
@@ -206,12 +194,7 @@ private lemma isSpecial_of_isPFree_not_winsGoingFirst_right_succ {g : GameForm} 
     rw [winsGoingFirst_iff] at h_left_wins_gr_plus_one
     cases h_left_wins_gr_plus_one with
     | inl h_gr1_left_end =>
-      have h_gr_is_left_move : gr ∈ moves .left (gr + 1) := by
-        rw [moves_add, leftMoves_one]
-        right; simp
-      absurd h_gr_is_left_move
-      rw [isEndLike_iff_isEnd] at h_gr1_left_end
-      apply not_mem_moves_of_isEnd h_gr1_left_end
+      simp_all
     | inr h_left_has_winning_move =>
       obtain ⟨winning_move, h_winning_mem, h_winning_wins⟩ := h_left_has_winning_move
       rw [moves_add] at h_winning_mem
@@ -259,10 +242,7 @@ private lemma isSpecial_of_isPFree_not_winsGoingFirst_right_succ {g : GameForm} 
         | inr h_rest =>
           cases h_rest with
           | inl h_R =>
-            exfalso
-            rw [misereOutcome_R_iff_winsGoingFirst] at h_R
-            obtain ⟨h_right_wins_gr, _⟩ := h_R
-            exact h_right_not_wins_gr h_right_wins_gr
+            simp_all
           | inr h_N =>
             exfalso
             have h_right_wins_gr : WinsGoingFirst .right gr := by
@@ -303,8 +283,7 @@ private theorem add_one_misereOutcome_ne_P_of_isPFree {g : GameForm} (h1 : IsPFr
   -- 4. We will now show that Left wins g+1 going first.
   -- 5. Left can play on g+1 to g (by playing on 1)
   have h_g_is_left_move : g ∈ moves .left (g + 1) := by
-    rw [moves_add, leftMoves_one]
-    right; simp
+    simp_all
   -- 6. Since Right doesn't win g going first, Left wins g+1 going first
   have h_left_wins_g_plus_one : WinsGoingFirst .left (g + 1) := by
     apply winsGoingFirst_of_moves
@@ -421,8 +400,7 @@ private theorem not_winsGoingFirst_add_one_of_isPFree_not_winsGoingFirst_left {g
   intro h2
   rw [winsGoingFirst_iff] at h2
   obtain h2 | ⟨gl, h2, h3⟩ := h2
-  · have h3 := (IsEndLike.add_iff.mp h2).right
-    simp at h3
+  · simp_all
   · rw [Player.neg_left] at h3
     simp only [moves_add, leftMoves_one, Set.image_singleton, add_zero, Set.union_singleton,
       Set.mem_insert_iff, Set.mem_image] at h2
@@ -434,10 +412,7 @@ private theorem not_winsGoingFirst_add_one_of_isPFree_not_winsGoingFirst_left {g
       have h5 : IsPFree gll := isPFree_ofMoves h0 h2
       have h6 := not_winsGoingFirst_add_one_of_isPFree_not_winsGoingFirst_right h5 (by
         rw [winsGoingFirst_iff] at h1
-        simp only [isEndLike_iff_isEnd, Player.neg_left, not_or, not_exists, not_and,
-          not_not] at h1
-        obtain ⟨h1, h6⟩ := h1
-        exact h6 gll h2)
+        simp_all)
       exact h3 h6
 termination_by g
 decreasing_by form_wf
@@ -446,8 +421,7 @@ private theorem not_winsGoingFirst_add_one_of_isPFree_not_winsGoingFirst_right {
     (h0 : IsPFree g) (h1 : WinsGoingFirst .right g) : WinsGoingFirst .right (g + 1) := by
   rw [winsGoingFirst_iff] at h1
   obtain h1 | ⟨gr, h1, h2⟩ := h1
-  · refine winsGoingFirst_add_of_isEnd (isEndLike_iff_isEnd.mp h1) ?_
-    simp [isEnd_def]
+  · simp_all
   · refine winsGoingFirst_of_moves ⟨gr + 1, add_right_mem_moves_add h1 1, ?_⟩
     rw [Player.neg_right] at ⊢ h2
     exact not_winsGoingFirst_add_one_of_isPFree_not_winsGoingFirst_left (isPFree_ofMoves h0 h1) h2
@@ -483,8 +457,7 @@ private theorem not_winsGoingFirst_sub_one_of_not_winsGoingFirst_right {g : Game
   intro h2
   rw [winsGoingFirst_iff] at h2
   obtain h2 | ⟨gl, h2, h3⟩ := h2
-  · have h3 := (IsEnd.add_iff.mp (isEndLike_iff_isEnd.mp h2)).right
-    simp [isEnd_def] at h3
+  · simp_all
   · rw [Player.neg_right] at h3
     simp only [moves_add, moves_neg, Player.neg_right, leftMoves_one, Set.neg_singleton,
       neg_zero, Set.image_singleton, add_zero, Set.union_singleton, Set.mem_insert_iff,
@@ -497,10 +470,7 @@ private theorem not_winsGoingFirst_sub_one_of_not_winsGoingFirst_right {g : Game
       have h5 : IsPFree gll := isPFree_of_mem_moves h0 h2
       have h6 := not_winsGoingFirst_sub_one_of_not_winsGoingFirst_left h5 (by
         rw [winsGoingFirst_iff] at h1
-        simp only [isEndLike_iff_isEnd, Player.neg_right, not_or, not_exists, not_and,
-          not_not] at h1
-        obtain ⟨h1, h6⟩ := h1
-        exact h6 gll h2)
+        simp_all)
       exact h3 h6
 termination_by g
 decreasing_by form_wf
@@ -509,8 +479,7 @@ private theorem not_winsGoingFirst_sub_one_of_not_winsGoingFirst_left {g : GameF
     (h0 : IsPFree g) (h1 : WinsGoingFirst .left g) : WinsGoingFirst .left (g + (-1)) := by
   rw [winsGoingFirst_iff] at h1
   obtain h1 | ⟨gr, h1, h2⟩ := h1
-  · refine winsGoingFirst_add_of_isEnd (isEndLike_iff_isEnd.mp h1) ?_
-    simp [isEnd_def]
+  · simp_all
   · refine winsGoingFirst_of_moves ⟨gr + (-1), add_right_mem_moves_add h1 (-1), ?_⟩
     rw [Player.neg_left] at ⊢ h2
     exact not_winsGoingFirst_sub_one_of_not_winsGoingFirst_right (isPFree_of_mem_moves h0 h1) h2
@@ -611,8 +580,7 @@ theorem _root_.MisereGames.PFree.isStrongTest_right {g : GameForm} (h_isPFree : 
   apply (IsStrongTest.neg_iff (p := .left) (g := g)).mp
   apply isStrongTest_left
   · exact ClosedUnderNeg.neg_of h_isPFree
-  · rw [Ne, misereOutcome_neg_R_iff_misereOutcome]
-    exact h_outcome
+  · simp_all
 
 end PFree
 

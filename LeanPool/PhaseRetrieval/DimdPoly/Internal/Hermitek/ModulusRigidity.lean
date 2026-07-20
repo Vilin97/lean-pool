@@ -76,14 +76,8 @@ private theorem hermiteSeries_finiteCoeffSeq {k d : ℕ} (a : Fin (d + 1) → �
     have hsum :=
       Fin.sum_univ_eq_sum_range
         (fun x : ℕ => (if h : x < d + 1 then a ⟨x, h⟩ else 0) * Phi k x z) (d + 1)
-    calc
-      ∑ x ∈ Finset.range (d + 1), (if h : x < d + 1 then a ⟨x, h⟩ else 0) * Phi k x z =
-          ∑ x : Fin (d + 1), if (x : ℕ) ≤ d then a x * Phi k x.1 z else 0 := by
-            simpa [Nat.lt_succ_iff] using hsum.symm
-      _ = ∑ n : Fin (d + 1), a n * Phi k n.1 z := hleft
-  · intro n hn
-    have hnot : ¬ n < d + 1 := by simpa [Finset.mem_range] using hn
-    simp [hnot]
+    simp_all
+  · simp_all
 
 private theorem qkn_eventual_upper_bound (k n : ℕ) :
     ∃ R C : ℝ,
@@ -251,8 +245,7 @@ private theorem qkn_self_ratio_tendsto_one {k d : ℕ} :
   have hEq :
       (fun r : ℝ => ((qkn k d r : ℂ) / (qkn k d r : ℂ))) =ᶠ[Filter.atTop] fun _ => (1 : ℂ) := by
     filter_upwards [Filter.eventually_ge_atTop R0] with r hr
-    have hne : (qkn k d r : ℂ) ≠ 0 := by exact_mod_cast hnonzero r hr
-    field_simp [hne]
+    simp_all
   exact hEq.tendsto
 
 /-- A product of two vanishing `qkn` ratios vanishes. -/
@@ -279,8 +272,7 @@ private lemma sum_ite_index_eq {d J : ℕ} (hJ : J < d + 1) (f : Fin (d + 1) →
   · simp
   · intro i _ hi
     rw [if_neg fun h => hi (Fin.ext h)]
-  · intro hi
-    exact absurd (Finset.mem_univ _) hi
+  · simp_all
 
 private theorem pair_coeff_normalized_tendsto
     {k d : ℕ} (a : Fin (d + 1) → ℂ) (n : Fin (d + 1)) :
@@ -343,9 +335,7 @@ private theorem pair_coeff_normalized_tendsto
             ext <;> simp [topPair, hdi, hj])
         have hnot_n : p.2.1 ≠ n.1 := by
           intro hjn
-          have hdi : p.1.1 = d := by omega
-          exact htop (by
-            ext <;> simp [topPair, hdi, hjn])
+          simp_all
         have h1 : p.1.1 < d := lt_of_le_of_ne (Nat.le_of_lt_succ p.1.2) hnot_d
         have h2le : p.2.1 ≤ n.1 := by omega
         have h2 : p.2.1 < n.1 := lt_of_le_of_ne h2le hnot_n
@@ -481,11 +471,9 @@ theorem growth_forces_finite :
       simpa using qkn_eventual_upper_bound k i.1
     choose R_i C_i hR_i hC_i hqi using hq
     have hnonemptyR : (Finset.univ.image R_i).Nonempty := by
-      refine ⟨R_i ⟨d, Nat.lt_succ_self d⟩, ?_⟩
-      exact Finset.mem_image_of_mem _ (Finset.mem_univ _)
+      simp_all
     have hnonemptyC : (Finset.univ.image C_i).Nonempty := by
-      refine ⟨C_i ⟨d, Nat.lt_succ_self d⟩, ?_⟩
-      exact Finset.mem_image_of_mem _ (Finset.mem_univ _)
+      simp_all
     let Rbar : ℝ := (Finset.univ.image R_i).max' hnonemptyR
     let Cmax : ℝ := (Finset.univ.image C_i).max' hnonemptyC
     have hRbar_ge : ∀ i : Fin (d + 1), R_i i ≤ Rbar := by
@@ -528,9 +516,7 @@ theorem growth_forces_finite :
             ≤ ∑ i : Fin (d + 1), ‖a i * (qkn k i.1 r : ℂ) * fourier (i.1 : ℤ) t‖ :=
               norm_sum_le _ _
         _ = ∑ i : Fin (d + 1), ‖a i‖ * ‖(qkn k i.1 r : ℂ)‖ * ‖(fourier (i.1 : ℤ)) t‖ := by
-              refine Finset.sum_congr rfl ?_
-              intro i hi
-              rw [norm_mul, norm_mul]
+              simp_all
         _ ≤ ∑ i : Fin (d + 1), ‖a i‖ * Cmax * r ^ d := by
               refine Finset.sum_le_sum ?_
               intro i hi
@@ -729,10 +715,7 @@ private lemma finite_modulus_coeff_rel {k d : ℕ} (a b : Fin (d + 1) → ℂ)
         pairSum_ratio_mul_den (k := k) b m n.1 hd hn
     have hD : ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) ≠ 0 := mul_ne_zero hd hn
     apply mul_right_cancel₀ hD
-    calc
-      Fa r * ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) = rawA r := hmulA
-      _ = rawB r := hraw
-      _ = Fb r * ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) := hmulB.symm
+    simp_all
   have hFa_tendsto : Filter.Tendsto Fa Filter.atTop (𝓝 (topA * star (a n))) := by
     rw [htopA]
     exact pair_coeff_normalized_tendsto (k := k) (d := d) (a := a) (n := n)
@@ -782,8 +765,7 @@ theorem finite_modulus_rigidity :
     have hb_norm : ‖topB‖ ≠ 0 := by
       have ha_norm : ‖topA‖ ≠ 0 := norm_ne_zero_iff.mpr htopA
       simpa [hnorm] using ha_norm
-    rw [norm_div, hnorm]
-    field_simp [hb_norm]
+    simp_all
   have hw_conj : w * star w = 1 := by simpa [hw_norm] using (RCLike.mul_conj w)
   have hb_coeff : ∀ n : Fin (d + 1), b n = w * a n := by
     intro n
@@ -824,16 +806,14 @@ theorem modulus_rigidity :
     unfold finiteCoeffSeq
     by_cases hn : n < d + 1
     · simp [hn, b]
-    · have hnd : d < n := by omega
-      simp [hn, hvanish n hnd]
+    · simp_all
   have hG_eq : G = finiteHermiteSum k b := by
     calc
       G = hermiteSeries k (hermiteCoeff k G) := hermiteCoeff_expansion (k := k) (G := G) hG
       _ = hermiteSeries k (finiteCoeffSeq b) := by rw [hcoeffs]
       _ = finiteHermiteSum k b := hermiteSeries_finiteCoeffSeq (k := k) (d := d) b
   have hmod' : ∀ z : ℂ, ‖finiteHermiteSum k b z‖ = ‖finiteHermiteSum k a z‖ := by
-    intro z
-    simpa [hG_eq] using hmod z
+    simp_all
   obtain ⟨w, hw, hwb⟩ := finite_modulus_rigidity (k := k) (d := d) (a := a) (b := b) hTop hmod'
   refine ⟨w, hw, ?_⟩
   simpa [hG_eq] using hwb
@@ -1000,9 +980,7 @@ private theorem fourierCoeff_circleSeries_mul_star_finiteCirclePoly_nat
   have hcoeff :=
     circleSeries_fourierCoeff_hermiteCoeff
       (k := k) (G := G) hG (r := r) hr (ell + i.1)
-  simpa [Int.ofNat_eq_natCast, mul_assoc, mul_left_comm, mul_comm, add_assoc, add_left_comm,
-    add_comm]
-    using congrArg (fun z => star (a i) * (qkn k i.1 r : ℂ) * z) hcoeff
+  simp_all
 
 /-- The normalized circle series has no negative Fourier coefficients. -/
 private lemma circleSeries_neg_fourierCoeff_eq_zero
@@ -1019,8 +997,7 @@ private lemma circleSeries_neg_fourierCoeff_eq_zero
   have hsummable_neg : Summable (fun n : ℕ => s (-(n + 1 : ℤ))) := by
     have hneginj : Function.Injective (fun n : ℕ => (-(n + 1 : ℤ))) := by
       intro x y h
-      have h' : Int.negSucc x = Int.negSucc y := by simpa [Int.negSucc] using h
-      exact Int.negSucc.inj h'
+      simp_all
     exact hsummable.comp_injective hneginj
   have hparseval :
       ∑' n : ℤ, s n = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
@@ -1159,8 +1136,7 @@ private theorem circleSeries_star_finiteCirclePoly_add_star_eq_zero
     scalar_factorization c f s p hc hf
   have hfact : (c * c) * (s * star p) + (c * c) * star (s * star p) = 0 := by
     have hrew : star ((c * c) * (s * star p)) = (c * c) * star (s * star p) := by
-      rw [star_mul, hcc]
-      simp [mul_comm, mul_assoc]
+      simp_all
     rw [hx, hrew] at hmain
     exact hmain
   have hcz : c ≠ 0 := circleLeadingFactor_ne_zero k hr
@@ -1212,8 +1188,7 @@ private theorem positive_mode_mixed_eq_zero
     have hEq : (fun t : Circle => finiteCirclePoly k r a t) = F := by
       funext t
       simp [F, finiteCirclePoly_sum (k := k) (a := a) (r := r) hr t]
-    rw [hEq]
-    exact hF
+    simp_all
   have hcontf : Continuous f :=
     (continuous_circleSeries_hermiteCoeff hG r hr).mul hp.star
   have hf : Integrable f AddCircle.haarAddCircle := integrable_circle_of_continuous hcontf
@@ -1400,14 +1375,12 @@ private theorem high_coeff_vanish
             field_simp [hd, hn]
           · simp [h]
       exact hNorm.trans hraw
-    have hdenom : ((qkn k d r : ℂ) * (qkn k (d + ell) r : ℂ)) ≠ 0 := mul_ne_zero hd hn
-    exact (mul_eq_zero.mp hEq).resolve_left hdenom
+    simp_all
   have hzero_tendsto : Filter.Tendsto F Filter.atTop (𝓝 (0 : ℂ)) := by simpa using hFzero.tendsto
   have hlim : star (topCoeff a) * hermiteCoeff k G (d + ell) = 0 := by
     simpa [zero_add] using
       (tendsto_nhds_unique (f := F) (l := Filter.atTop) hFtendsto hzero_tendsto)
-  have htopstar : star (topCoeff a) ≠ 0 := mt star_eq_zero.mp hTop
-  exact (mul_eq_zero.mp hlim).resolve_left htopstar
+  simp_all
 
 /-- For finite Hermite sums, the positive mode `d - n` isolates the mixed top/lower coefficient
 relation. -/
@@ -1665,8 +1638,7 @@ private theorem finite_positive_mode_relation
                   rw [finitePositiveModeMainSum_mul_den (k := k) (d := d) (a := a) (b := b) n hd hn,
                     finitePositiveModeErrorSum_mul_den (k := k) (d := d) (a := a) (b := b) n hd hn]
         _ = 0 := hraw0
-    have hdenom : ((qkn k d r : ℂ) * (qkn k n.1 r : ℂ)) ≠ 0 := mul_ne_zero hd hn
-    exact (mul_eq_zero.mp hEq).resolve_left hdenom
+    simp_all
   have hzero_tendsto : Filter.Tendsto F Filter.atTop (𝓝 (0 : ℂ)) := by simpa using hFzero.tendsto
   simpa [zero_add] using (tendsto_nhds_unique (f := F) (l := Filter.atTop) hFtendsto hzero_tendsto)
 
@@ -1749,11 +1721,7 @@ theorem real_part_rigidity :
       (high_coeff_vanish (k := k) (d := d) (ell := n - d) (a := a) hEll hTop hG hzero)
   have htrunc : G = truncate k d G := by
     apply truncate_unique (k := k) (J := d) (G := G) (H := G) hG
-    intro n
-    by_cases hn : n < d + 1
-    · simp [hn]
-    · have hnd : d < n := by omega
-      simp [hn, hvanish n hnd]
+    simp_all
   have hG_eq : G = finiteHermiteSum k b :=
     htrunc.trans (by simp [truncate_eq_finiteHermiteSum, b])
   have hzero' :

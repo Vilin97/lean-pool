@@ -79,9 +79,7 @@ lemma bold_sigma_one_completeness {n} {φ : Semiformula ℒₒᵣ ξ n} (hp : Hi
   case hLT => intro n t₁ t₂ e; simp [val_numeral]
   case hNLT => intro n t₁ t₂ e; simp [val_numeral]
   case hAnd =>
-    simp only [LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq, and_imp]
-    intro n φ ψ _ _ ihp ihq e hp hq
-    exact ⟨ihp hp, ihq hq⟩
+    simp_all
   case hOr =>
     simp only [LogicalConnective.HomClass.map_or, LogicalConnective.Prop.or_eq]
     rintro n φ ψ _ _ ihp ihq e (hp | hq)

@@ -27,11 +27,7 @@ lemma conjI_ccf_zero (f : MvPowerSeries (Fin 3) ℂ)
     (hf : f ∈ conjI) : MvPowerSeries.constantCoeff f = 0 := by
   have hle : conjI ≤ RingHom.ker MvPowerSeries.constantCoeff := by
     apply Ideal.span_le.mpr
-    intro g hg
-    simp only [Set.mem_singleton_iff] at hg
-    subst hg
-    simp [RingHom.mem_ker, map_sub, map_pow, map_mul,
-          MvPowerSeries.constantCoeff_X]
+    simp_all
   exact RingHom.mem_ker.mp (hle hf)
 
 lemma mk_mem_maxIdeal (f : MvPowerSeries (Fin 3) ℂ)
@@ -42,13 +38,10 @@ lemma mk_mem_maxIdeal (f : MvPowerSeries (Fin 3) ℂ)
   obtain ⟨g, hg⟩ := Ideal.Quotient.mk_surjective u.inv
   have hmul : f * g - 1 ∈ conjI := by
     rw [← Ideal.Quotient.mk_eq_mk_iff_sub_mem, map_mul, map_one]
-    calc Ideal.Quotient.mk conjI f * Ideal.Quotient.mk conjI g
-        = ↑u * u.inv := by rw [← hu, ← hg]
-      _ = 1 := u.val_inv
+    simp_all
   have h0 : MvPowerSeries.constantCoeff (f * g - 1) = 0 :=
     conjI_ccf_zero _ hmul
-  simp only [map_sub, map_mul, map_one, hf, zero_mul, zero_sub] at h0
-  exact one_ne_zero (neg_eq_zero.mp h0)
+  simp_all
 
 lemma coeff_conjI_zero_of_deg_le_one
     (m : Fin 3 →₀ ℕ)
@@ -112,16 +105,12 @@ lemma mk_X1_ne_zero :
       = 1 := by
     simp [coeff_X]
   have h2 := coeff_conjI_zero_of_deg_le_one _ (fun _ => le_refl _) _ hf
-  rw [h1] at h2
-  exact one_ne_zero h2
+  simp_all
 
 lemma T_smulRegular_of_ne_zero (a : T) (ha : a ≠ 0) :
     IsSMulRegular T a := by
   intro x y h
-  have : a * (x - y) = 0 := by
-    rw [mul_sub]
-    exact sub_eq_zero.mpr h
-  exact sub_eq_zero.mp ((mul_eq_zero.mp this).resolve_left ha)
+  simp_all
 
 /-!
 ## Verify T conditions
@@ -166,17 +155,7 @@ lemma coeff_lhs (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
     change f d = shiftX1'App f (d - Finsupp.single 1 1)
     simp only [shiftX1'App]
     rw [tsub_add_cancel_of_le hle]
-  · have hd1 : d 1 = 0 := by
-      by_contra h
-      apply hle
-      intro i
-      simp only [Finsupp.single_apply]
-      by_cases hi : i = 1
-      · subst hi
-        simp
-        omega
-      · simp [show (1 : Fin 3) ≠ i from fun h => hi h.symm]
-    simp [hle, hd1]
+  · simp_all
 
 /-- RHS coefficient: (X₀² · divR'App f)(d) = f(d) when d₀≥2 and d₁=0, else 0. -/
 lemma coeff_rhs (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
@@ -188,9 +167,7 @@ lemma coeff_rhs (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
   rw [MvPowerSeries.coeff_monomial_mul]
   by_cases hle : Finsupp.single (0 : Fin 3) 2 ≤ d
   · have hd0 : 2 ≤ d 0 := by
-      have := hle 0
-      simp only [Finsupp.single_eq_same] at this
-      exact this
+      simp_all
     simp only [hle, ite_true, one_mul]
     by_cases hd1 : d 1 = 0
     · simp only [hd0, hd1, true_and, ite_true]
@@ -207,19 +184,9 @@ lemma coeff_rhs (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
     · simp only [hd1, and_false, ite_false]
       change divR'App f (d - Finsupp.single 0 2) = 0
       unfold divR'App
-      set d' := (d - Finsupp.single (0 : Fin 3) 2 : Fin 3 →₀ ℕ) with hd'_def
-      have hsub1 : d' 1 = d 1 := by
-        simp [hd'_def, Finsupp.tsub_apply]
-      simp [hsub1, hd1]
+      simp_all
   · have hd0 : ¬ (2 ≤ d 0) := by
-      intro h
-      apply hle
-      intro i
-      simp only [Finsupp.single_apply]
-      by_cases hi : i = 0
-      · subst hi
-        simpa only [Fin.isValue, ↓reduceIte] using h
-      · simp [show (0 : Fin 3) ≠ i from fun h => hi h.symm]
+      simp_all
     simp [hle, hd0]
 
 /-- Coefficient of the generator at a monomial with a₀ < 2 and a₁ = 0. -/
@@ -230,19 +197,12 @@ lemma coeff_gen_zero (a : Fin 3 →₀ ℕ) (ha0 : a 0 < 2) (ha1 : a 1 = 0) :
     rw [MvPowerSeries.coeff_X_pow]
     simp only [Fin.isValue, ite_eq_right_iff, one_ne_zero, imp_false]
     intro h
-    subst h
-    simp only [Finsupp.single_eq_same] at ha0
-    omega
+    simp_all
   have hX1X2 : coeff a ((X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) * X 2) = 0 := by
     rw [show (X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
       MvPowerSeries.monomial (R := ℂ) (Finsupp.single 1 1) 1 from rfl]
     rw [MvPowerSeries.coeff_monomial_mul]
-    split_ifs with hle
-    · exfalso
-      have := hle 1
-      simp [Finsupp.single_eq_same] at this
-      omega
-    · rfl
+    simp_all
   rw [hX0sq, hX1X2]
 
 /-- gen * k vanishes at d when d₀ < 2 and d₁ = 0. -/
@@ -273,15 +233,9 @@ lemma coeff_f_vanish (f g : MvPowerSeries (Fin 3) ℂ)
   have he0 : e 0 = d 0 := by simp [he_def, Finsupp.add_apply]
   have he1 : e 1 = 0 := by simp [he_def, Finsupp.add_apply, hd1]
   have hle2 : Finsupp.single (2 : Fin 3) 1 ≤ e := by
-    intro i
-    simp only [he_def, Finsupp.add_apply, Finsupp.single_apply]
-    split_ifs <;> omega
+    simp_all
   have hnle1 : ¬ Finsupp.single (1 : Fin 3) 1 ≤ e := by
-    intro h
-    have h1 := h 1
-    simp only [Finsupp.single_apply, ite_true] at h1
-    rw [he1] at h1
-    omega
+    simp_all
   have hlhs : coeff e (X 2 * f - X 1 * g) = coeff d f := by
     rw [map_sub]
     rw [show (X (2 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
@@ -289,15 +243,10 @@ lemma coeff_f_vanish (f g : MvPowerSeries (Fin 3) ℂ)
     rw [show (X (1 : Fin 3) : MvPowerSeries (Fin 3) ℂ) =
       MvPowerSeries.monomial (R := ℂ) (Finsupp.single 1 1) 1 from rfl]
     rw [MvPowerSeries.coeff_monomial_mul, MvPowerSeries.coeff_monomial_mul]
-    simp only [hle2, ite_true, hnle1, ite_false, one_mul, sub_zero]
-    change f (e - Finsupp.single 2 1) = f d
-    congr 1
-    simp [he_def, add_tsub_cancel_right]
+    simp_all
   have hrhs : coeff e ((X (0 : Fin 3) ^ 2 - X 1 * X 2) * k) = 0 :=
     coeff_gen_mul_zero k e (he0 ▸ hd0) he1
-  have he := congr_arg (coeff e) hk
-  rw [hlhs, hrhs] at he
-  exact he
+  simp_all
 
 /-- The coefficient identity: when X₂f − X₁g ∈ conjI, the "X₁=0 restriction" of f
     is divisible by X₀², yielding f − X₁·(shift) = X₀²·(quotient).
@@ -355,8 +304,7 @@ theorem T_depth_ge_two :
     obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective t
     have hmem : X 2 * f - X 1 * g ∈ conjI := by
       have : Ideal.Quotient.mk conjI (X 2 * f - X 1 * g) = 0 := by
-        simp only [map_sub, map_mul]
-        exact sub_eq_zero.mpr ht.symm
+        simp_all
       rwa [Ideal.Quotient.eq_zero_iff_mem] at this
     refine ⟨Ideal.Quotient.mk conjI (shiftX1'App f + X 2 * divR'App f), Submodule.mem_top, ?_⟩
     change Ideal.Quotient.mk conjI (X 1) *
@@ -382,11 +330,7 @@ theorem T_no_integer_zerodivisor
     (algebraMap ℤ (MvPowerSeries (Fin 3) ℂ) n) ≠ 0
   have hunit : IsUnit (algebraMap ℤ (MvPowerSeries (Fin 3) ℂ) n) := by
     rw [MvPowerSeries.isUnit_iff_constantCoeff]
-    have : (MvPowerSeries.constantCoeff (σ := Fin 3) (R := ℂ))
-        (algebraMap ℤ (MvPowerSeries (Fin 3) ℂ) n) = (n : ℂ) := by
-      simp [map_intCast]
-    rw [this]
-    exact isUnit_iff_ne_zero.mpr (Int.cast_ne_zero.mpr hn)
+    simp_all
   exact (hunit.map (Ideal.Quotient.mk conjI)).ne_zero
 
 /-- All primes P ≠ M in T have height ≤ 1.
@@ -410,13 +354,7 @@ theorem T_prime_height_le_one (P : Ideal T) [hP : P.IsPrime]
     rw [T_ringKrullDim] at h
     rw [show (2 : WithBot ℕ∞) = ↑(2 : ℕ∞) from by norm_cast] at h
     exact WithBot.coe_injective h
-  rw [hmaxht] at hstrict
-  cases h : P.height with
-  | top => rw [h] at hstrict
-           exact absurd hstrict (by decide)
-  | coe m => rw [h] at hstrict
-             norm_cast at hstrict ⊢
-             omega
+  simp_all
 
 /-!
 ## The main result
@@ -443,8 +381,7 @@ theorem jensen_special_case_proof :
     T_depth_ge_two T_card_eq_residue_card
     (fun n hn => by
       convert T_no_integer_zerodivisor n hn using 1
-      congr 1
-      exact Subsingleton.elim _ _)
+      simp_all)
     hT_aleph0
     (fun P hP hne => @T_prime_height_le_one P hP hne)
 

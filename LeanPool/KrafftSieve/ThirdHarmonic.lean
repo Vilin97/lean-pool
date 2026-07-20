@@ -212,8 +212,7 @@ lemma plancherel_hit_expansion (n : ℕ) (hn : n ≥ 1) (W : ZMod (q n) → ℝ)
     unfold sum2; norm_num [Finset.sum_mul _ _ _]; ring_nf
     convert sum_W_eq_S1 n hn (fun x => W x * ∑ i, g n i x) _ using 1
     · norm_cast
-    · intro x a
-      simp_all only [ge_iff_le, not_false_eq_true, zero_mul]
+    · simp_all
   · simp +decide only [wHat, one_div, neg_mul, Nat.cast_mul, ZMod.natCast_val,
     Finset.mul_sum _ _ _, gHat, map_sum, map_mul, map_inv₀, map_natCast, Complex.conj_ofReal,
     Finset.sum_mul]
@@ -279,8 +278,7 @@ private lemma dirac_comb_nonzero_sum_simplified (n : ℕ) (i : Fin (w n)) (k : F
       have h_prime' := Finset.mem_filter.mp h_in_P
       exact Finset.dvd_prod_of_mem _ (Finset.mem_filter.mpr ⟨
         Finset.mem_range.mpr (by
-          have h_range := Finset.mem_range.mp h_prime'.1
-          aesop),
+          simp_all),
         by
           exact ⟨h_prime'.2.1, h_prime'.2.2⟩⟩)
     · have h_in_P := p_mem_P_n n i
@@ -425,8 +423,7 @@ lemma dirac_comb_nonzero (n : ℕ) (i : Fin (w n)) (k : Fin (p n i)) :
         · have h_in_P := p_mem_P_n n i
           have h_prime := Finset.mem_filter.mp h_in_P
           apply Finset.dvd_prod_of_mem
-          apply Finset.mem_filter.mpr
-          exact ⟨Finset.mem_range.mpr (by aesop), h_prime.2⟩
+          simp_all
         · have h_in_P := p_mem_P_n n i
           exact p_ne_zero n i
       · refine lt_of_lt_of_le (mul_lt_mul_of_pos_right k.is_lt (Nat.div_pos ?_ ?_)) ?_
@@ -444,8 +441,7 @@ lemma dirac_comb_nonzero (n : ℕ) (i : Fin (w n)) (k : Fin (p n i)) :
       · have h_in_P := p_mem_P_n n i
         have h_prime := Finset.mem_filter.mp h_in_P
         apply Finset.dvd_prod_of_mem
-        apply Finset.mem_filter.mpr
-        exact ⟨Finset.mem_range.mpr (by aesop), h_prime.2⟩
+        simp_all
     · have h_in_P := p_mem_P_n n i
       exact (p_prime n i).pos
     · exact Nat.mul_div_le _ _
@@ -481,9 +477,7 @@ private lemma dirac_comb_zero_geo_series (n : ℕ) (i : Fin (w n)) (h : ZMod (q 
         have h_in_P := p_mem_P_n n i
         have h_div : p n i ∣ q n := by
           apply Finset.dvd_prod_of_mem
-          exact Finset.mem_filter.mpr ⟨Finset.mem_range.mpr <| by
-            linarith [p_lt_range n i],
-            Finset.mem_filter.mp h_in_P |>.2⟩
+          simp_all
         rwa [Nat.div_mul_cancel h_div]
       use ⟨k % p n i, by
         have h_in_P := p_mem_P_n n i
@@ -502,11 +496,7 @@ private lemma dirac_comb_zero_geo_series (n : ℕ) (i : Fin (w n)) (h : ZMod (q 
         · have h_in_P := p_mem_P_n n i
           have h_prime := Finset.mem_filter.mp h_in_P
           apply Finset.dvd_prod_of_mem
-          apply Finset.mem_filter.mpr
-          constructor
-          · apply Finset.mem_range.mpr
-            linarith [Finset.mem_range.mp h_prime.1, show p n i ≤ 6 * n + 1 from by grind]
-          · exact h_prime.2
+          simp_all
     rw [ Ne.eq_def, Complex.exp_eq_one_iff ]
     field_simp
     exact fun ⟨k, hk⟩ => h_not_div <| Int.natCast_dvd_natCast.mp <| ⟨-k, by
@@ -526,11 +516,7 @@ private lemma dirac_comb_zero_geo_series (n : ℕ) (i : Fin (w n)) (h : ZMod (q 
         · have h_in_P := p_mem_P_n n i
           have h_prime := Finset.mem_filter.mp h_in_P
           apply Finset.dvd_prod_of_mem
-          apply Finset.mem_filter.mpr
-          constructor
-          · apply Finset.mem_range.mpr
-            linarith [Finset.mem_range.mp h_prime.1]
-          · exact h_prime.2
+          simp_all
         · have h_in_P : p n i ∈ primeWindow n := by
             exact mem_P_n_iff_exists_index n _ |>.2 ⟨i, rfl⟩
           exact p_ne_zero n i
@@ -632,8 +618,7 @@ lemma dirac_comb_zero (n : ℕ) (i : Fin (w n)) (h : ZMod (q n))
     exact Or.inl ( by rw [ Finset.sum_filter ]; congr; ext; aesop )
   · rw [Finset.sum_eq_zero]
     · norm_num
-    · intro x hx
-      exact h_factor x <| Finset.mem_range.mp <| Finset.mem_filter.mp hx |>.1
+    · simp_all
 
 /--
 The Resonant Sieve Equation
@@ -657,8 +642,7 @@ private lemma resonant_sieve_split (n : ℕ) (W : ZMod (q n) → ℝ) :
         h = (((k : ℕ) * (q n / p n i) : ℕ) : ZMod (q n)) := by
     intro h hh; contrapose! hh; simp_all only [Finset.mem_range, Nat.cast_mul, ne_eq]
     convert dirac_comb_zero n i h _
-    intro k
-    simp_all only [Nat.cast_mul, ne_eq, Fin.is_lt, not_false_eq_true]
+    simp_all
   rw [← Finset.sum_subset (Finset.subset_univ (Finset.image
     (fun k : ℕ => (k * (q n / p n i) : ℕ) : ℕ → ZMod (q n))
     (Finset.range (p n i))))]

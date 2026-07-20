@@ -763,10 +763,7 @@ private theorem buildHilbertianFamily_hs
     f c hc_nn hc_sum hf_le_r
     (fun x => by
       -- r(n) ≤ sup(r(n), q₀(n+1)) = p ≤ Σ|fₖ|cₖ
-      have hsup : buildHilbertianFamily hPN q₀ hq₀_cont n x ≤
-          (buildInput hPN q₀ hq₀_cont n) x := by
-        simp only [buildInput, Seminorm.sup_apply]; exact le_max_left _ _
-      exact le_trans hsup (hp_nuc x))
+      simp_all)
 
 /-- The Hilbertian family generates the same topology as `q₀`.
 

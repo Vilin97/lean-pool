@@ -83,10 +83,8 @@ theorem exists_uniform_labeling_types
     convert hf.2 ( eB j ) using 1;
     rw [ Finset.card_filter, Finset.card_filter ];
     refine Finset.sum_bij (fun i _ => eA i) ?_ ?_ ?_ ?_
-    · intro i hi
-      exact Finset.mem_univ _
-    · intro a₁ _ a₂ _ h
-      exact eA.injective h
+    · simp_all
+    · simp_all
     · intro b hb
       exact ⟨eA.symm b, Finset.mem_univ _, by simp⟩
     · intro i hi
@@ -228,8 +226,7 @@ theorem one_sided_recombination_uniform_core
         (#{v | i ∈ C (lab v)} : ℚ) =
             (#{j | i ∈ C j} : ℚ) *
               ((Fintype.card E.V / Fintype.card I : ℕ) : ℚ) := by
-          rw [hsource_count]
-          norm_num
+          simp_all
         _ ≤ (α_val * (Fintype.card I : ℚ)) *
               ((Fintype.card E.V / Fintype.card I : ℕ) : ℚ) := by
           exact mul_le_mul_of_nonneg_right hfreq (Nat.cast_nonneg _)
@@ -297,9 +294,7 @@ theorem one_sided_recombination_uniform_core
       refine Finset.card_bij (fun w hw => ⟨w⟩) ?_ ?_ ?_
       · intro w hw
         simpa [T_lifted] using hw
-      · intro w₁ _ w₂ _ h
-        cases h
-        rfl
+      · simp_all
       · intro w hw
         exact ⟨w.down, by simpa [T_lifted] using hw, by cases w; rfl⟩
     rw [ hitemFreq, div_le_div_iff₀ ] <;> norm_cast at *;
@@ -322,8 +317,7 @@ theorem one_sided_recombination_uniform_core
     congr 1
     exact Fintype.sum_equiv (Equiv.ulift) _ _ (fun ⟨w⟩ => rfl)
   · -- Recombination inequality
-    rw [hratio] at hT_ineq
-    exact hT_ineq
+    simp_all
 
 end
 

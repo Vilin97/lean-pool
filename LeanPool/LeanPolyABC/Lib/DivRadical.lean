@@ -73,15 +73,13 @@ Proof uses `induction_on_coprime` of `UniqueFactorizationMonoid`.
 theorem divRadical_dvd_derivative (a : k[X]) : divRadical a ∣ derivative a := by
   induction a using induction_on_coprime with
   | h0 =>
-    rw [derivative_zero]
-    apply dvd_zero
+    simp_all
   | @h1 a ha =>
     exact (divRadical_isUnit ha).dvd
   | @hpr p i hp =>
     cases i with
     | zero =>
-      rw [pow_zero, derivative_one]
-      apply dvd_zero
+      simp_all
     | succ i =>
       rw [← mul_dvd_mul_iff_left (radical_ne_zero (p ^ i.succ)), hMul_radical_divRadical,
         radical_prime_pow hp i.succ_pos, derivative_pow_succ, ← mul_assoc]

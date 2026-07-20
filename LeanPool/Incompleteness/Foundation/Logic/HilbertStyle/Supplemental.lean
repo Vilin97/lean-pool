@@ -1083,11 +1083,9 @@ lemma «imply_left_concat_conj!» : 𝓢 ⊢! ⋀(Γ ++ Δ) ==> ⋀Γ ⋏ ⋀Δ 
   have d := iff_provable_list_conj.mp this;
   apply and₃'!;
   · apply iff_provable_list_conj.mpr;
-    intro φ hp;
-    exact d φ (by simpa only [List.mem_append] using Or.inl hp);
+    simp_all
   · apply iff_provable_list_conj.mpr;
-    intro φ hp;
-    exact d φ (by simpa only [List.mem_append] using Or.inr hp);
+    simp_all
 
 @[simp]
 lemma «forthback_conj_remove!» : 𝓢 ⊢! ⋀(Γ.remove φ) ⋏ φ ==> ⋀Γ := by
@@ -1185,8 +1183,7 @@ lemma «iff_concact_disj!» [HasAxiomEFQ 𝓢] : 𝓢 ⊢! ⋁(Γ ++ Δ) <=> ⋁
     exact iff_trans''! (by
       apply or_replace_right_iff!;
       exact iff_trans''! (@ihp (ψ :: qs)) (by
-        apply or_replace_right_iff!;
-        simp_all;
+        simp_all
       )
     ) or_assoc!;
 

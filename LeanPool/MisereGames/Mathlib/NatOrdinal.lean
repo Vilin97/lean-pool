@@ -422,12 +422,7 @@ protected theorem succ_one : succ (1 : NatOrdinal) = 2 := by
   exact one_add_one_eq_two
 
 theorem natCast_image_Iio' (n : ℕ) : Nat.cast '' Iio n = Iio (n : Ordinal) := by
-  ext o
-  simp only [Set.mem_image, Set.mem_Iio]
-  constructor
-  · rintro ⟨m, hm, rfl⟩; exact Nat.cast_lt.mpr hm
-  · intro h; obtain ⟨m, rfl⟩ := NatOrdinal.eq_natCast_of_le_natCast h.le
-    exact ⟨m, Nat.cast_lt.mp h, rfl⟩
+  simp_all
 
 @[simp]
 theorem natCast_image_Iio (n : ℕ) : Nat.cast '' Iio n = Iio (n : NatOrdinal) :=

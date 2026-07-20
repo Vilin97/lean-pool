@@ -112,8 +112,7 @@ theorem hasDerivAt_neg_entropy_scaled_deriv (r x : ℝ) (hx : 0 < x) (hx1 : x < 
         (HasDerivAt.log (hasDerivAt_id' x |> HasDerivAt.const_sub 1) (by linarith))) using 1
   · rfl
   · rfl
-  · ext y
-    rfl
+  · simp_all
   · ring_nf
 
 /-! ## Derivative of Phi -/
@@ -241,8 +240,7 @@ theorem convexOn_Phi_of_Phi''_nonneg {r θ δ α : ℝ}
           · exact ContinuousOn.sub continuousOn_const
               (ContinuousOn.mul continuousOn_id
                 (Real.continuousOn_log.mono (by
-                  intro x hx
-                  exact ne_of_gt (by linarith [hx.1]))))
+                  simp_all)))
           · exact ContinuousOn.mul (continuousOn_const.sub continuousOn_id)
               (ContinuousOn.log (continuousOn_const.sub continuousOn_id) fun x hx => by
                 linarith [hx.1, hx.2])
@@ -250,8 +248,7 @@ theorem convexOn_Phi_of_Phi''_nonneg {r θ δ α : ℝ}
           · exact ContinuousOn.sub continuousOn_const
               (ContinuousOn.mul continuousOn_id
                 (Real.continuousOn_log.mono (by
-                  intro x hx
-                  exact ne_of_gt (by linarith [hx.1]))))
+                  simp_all)))
           · exact ContinuousOn.mul (continuousOn_const.sub continuousOn_id)
               (ContinuousOn.log (continuousOn_const.sub continuousOn_id) fun x hx => by
                 linarith [hx.1, hx.2])

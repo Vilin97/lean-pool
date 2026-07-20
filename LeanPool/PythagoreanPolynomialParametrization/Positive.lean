@@ -171,12 +171,10 @@ theorem positive_triples_parametrization :
       have habpos : 0 < a * b := by exact_mod_cast habqpos
       have ha_ne : a ≠ 0 := by
         intro ha
-        subst a
-        norm_num at habpos
+        simp_all
       have hb_ne : b ≠ 0 := by
         intro hb
-        subst b
-        norm_num at habpos
+        simp_all
       have hapos : 0 < |a| := abs_pos.mpr ha_ne
       have hbpos : 0 < |b| := abs_pos.mpr hb_ne
       have hcxprod_pos : (0 : ℚ) < (c : ℚ) * ((a : ℚ) ^ 2 - (b : ℚ) ^ 2) := by
@@ -430,21 +428,9 @@ theorem exists_16_param_parametrization :
       fin_cases i <;> simp [lift16ToPosInput, mkRatPolyInput4, a, hxsum, hysum, hzsum,
         hwsum]
     refine ⟨a, ?_, ?_, ?_⟩
-    · calc
-        ratPolyEval f16Param a = ratPolyEval fPosParam (lift16ToPosInput a) :=
-          hf_eval a
-        _ = ratPolyEval fPosParam (mkRatPolyInput4 x' y' z' w') := by rw [hinput]
-        _ = (x : ℚ) := hf
-    · calc
-        ratPolyEval g16Param a = ratPolyEval gPosParam (lift16ToPosInput a) :=
-          hg_eval a
-        _ = ratPolyEval gPosParam (mkRatPolyInput4 x' y' z' w') := by rw [hinput]
-        _ = (y : ℚ) := hg
-    · calc
-        ratPolyEval h16Param a = ratPolyEval hPosParam (lift16ToPosInput a) :=
-          hh_eval a
-        _ = ratPolyEval hPosParam (mkRatPolyInput4 x' y' z' w') := by rw [hinput]
-        _ = (z : ℚ) := hh
+    · simp_all
+    · simp_all
+    · simp_all
   · rintro ⟨a, hf, hg, hh⟩
     let x' : ℤ := a (0 : Fin 16) ^ 2 + a (1 : Fin 16) ^ 2 + a (2 : Fin 16) ^ 2 +
       a (3 : Fin 16) ^ 2 + 1
@@ -474,20 +460,8 @@ theorem exists_16_param_parametrization :
       funext i
       fin_cases i <;> simp [lift16ToPosInput, mkRatPolyInput4, x', y', z', w']
     refine ⟨x', y', z', w', hxpos, hypos, hzpos, hwnonneg, ?_, ?_, ?_⟩
-    · calc
-        ratPolyEval fPosParam (mkRatPolyInput4 x' y' z' w') =
-            ratPolyEval fPosParam (lift16ToPosInput a) := by rw [hinput]
-        _ = ratPolyEval f16Param a := (hf_eval a).symm
-        _ = (x : ℚ) := hf
-    · calc
-        ratPolyEval gPosParam (mkRatPolyInput4 x' y' z' w') =
-            ratPolyEval gPosParam (lift16ToPosInput a) := by rw [hinput]
-        _ = ratPolyEval g16Param a := (hg_eval a).symm
-        _ = (y : ℚ) := hg
-    · calc
-        ratPolyEval hPosParam (mkRatPolyInput4 x' y' z' w') =
-            ratPolyEval hPosParam (lift16ToPosInput a) := by rw [hinput]
-        _ = ratPolyEval h16Param a := (hh_eval a).symm
-        _ = (z : ℚ) := hh
+    · simp_all
+    · simp_all
+    · simp_all
 
 end LeanPool.PythagoreanPolynomialParametrization

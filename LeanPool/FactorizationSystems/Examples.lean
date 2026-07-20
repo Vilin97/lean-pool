@@ -42,8 +42,7 @@ lemma epimorphismsContainsIsos : containsIsos (MorphismProperty.epimorphisms C) 
 lemma epimorphismsClosedUnderComp : is_closed_comp (MorphismProperty.epimorphisms C) where
     precomp := by exact epi_comp
     postcomp := by
-        intro _ _ _ f hf g hg
-        exact epi_comp g f
+        simp_all
 
 /- Every iso is a mono -/
 lemma isIsoIsMono : {X Y : C} → (f : X ⟶ Y) →
@@ -61,8 +60,7 @@ lemma monomorphismsContainsIsos : containsIsos (MorphismProperty.monomorphisms C
 lemma monomorphismsClosedUnderComp : is_closed_comp (MorphismProperty.monomorphisms C) where
     precomp := by exact mono_comp
     postcomp := by
-        intro _ _ _ f hf g hg
-        exact mono_comp g f
+        simp_all
 
 /- The image of a function of sets -/
 /-- Imported FactorizationSystems declaration. -/

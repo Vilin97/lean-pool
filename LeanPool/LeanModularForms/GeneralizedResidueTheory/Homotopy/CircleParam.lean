@@ -46,9 +46,7 @@ lemma circleParam_closed (z₀ : ℂ) (r : ℝ) (a b : ℝ) (hab : a < b) :
   simp only [circleParam]
   have hne : (b : ℂ) - a ≠ 0 := by
     simp only [sub_ne_zero, Complex.ofReal_inj, ne_eq]; exact ne_of_gt hab
-  have ha : ((a : ℂ) - a) / ((b : ℂ) - a) = 0 := by simp only [sub_self, zero_div]
-  have hb : ((b : ℂ) - a) / ((b : ℂ) - a) = 1 := div_self hne
-  simp only [ha, hb, mul_zero, exp_zero, mul_one, exp_two_pi_mul_I]
+  simp_all
 
 lemma circleParam_dist (z₀ : ℂ) (r : ℝ) (hr : 0 ≤ r)
     (a b : ℝ) (_hab : a < b) (t : ℝ) :
@@ -369,11 +367,7 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
   have hint_const : ∀ ε > 0, ε < 1 →
       (∫ t in a..b, if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0) =
       2 * Real.pi * I * n := by
-    intro ε _ hε_lt
-    have h_cond : ∀ t, ‖γ t - z₀‖ > ε := fun t => by rw [h_S1]; exact hε_lt
-    have : (fun t => if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0) =
-        fun t => (γ t - z₀)⁻¹ * deriv γ t := by ext t; simp only [h_cond t, ↓reduceIte]
-    rw [this, h_integral]
+    simp_all
   have hlim : Tendsto (fun ε =>
       ∫ t in a..b, if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0)
       (𝓝[>] (0 : ℝ)) (𝓝 (2 * Real.pi * I * n)) :=

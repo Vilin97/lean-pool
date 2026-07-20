@@ -118,8 +118,7 @@ private abbrev Edge0110 : Type := {e : Edge n // pat0110 e}
 private lemma card_edge0000 : Fintype.card Edge0000 = 24 := by
   have h : Fintype.card Edge0000 = (Fintype.card Small9).descFactorial 4 :=
     EdgePatterns.card_pat0000 (n := n) (two := two9)
-  rw [h, card_Small9]
-  decide
+  simp_all
 
 private lemma card_edge1111 : Fintype.card Edge1111 = 120 := by
   have h : Fintype.card Edge1111 = (Fintype.card Big9).descFactorial 4 :=
@@ -372,8 +371,7 @@ private lemma monoCount_le_bound :
                   * (Fintype.card (Small (n := n) hn)).descFactorial 2
                 + (Fintype.card (Big (n := n) hn)).descFactorial 2
                   * (Fintype.card (Small (n := n) hn)).descFactorial 2)) := by
-    simpa [h0000, h1111, h1001, h0110, Nat.add_assoc, Nat.add_left_comm, Nat.add_comm,
-      Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using hMono
+    simp_all
   -- Turn `x + x` into `2 * x`.
   simpa [two_mul, Nat.add_assoc, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using this
 
@@ -509,16 +507,9 @@ theorem monoFraction_f_le_one_quarter : monoFraction (f (n := n) hn) ≤ (1 : �
         rw [← two_mul m]
         simp
       have hSmall : Fintype.card (Small (n := m + m) hn) = m := by
-        calc
-          Fintype.card (Small (n := m + m) hn) = (m + m) / 2 := by simp [Small, two]
-          _ = m := hDiv
+        simp_all
       have hBig : Fintype.card (Big (n := m + m) hn) = m := by
-        have hCard : Fintype.card (Big (n := m + m) hn) = (m + m) - (m + m) / 2 := by
-          simp [Big, two]
-        calc
-          Fintype.card (Big (n := m + m) hn) = (m + m) - (m + m) / 2 := hCard
-          _ = (m + m) - m := by simp [hDiv]
-          _ = m := by simp
+        simp_all
       have hEdgeQ : (edgeCount (m + m) : ℚ) = ((m + m).descFactorial 4 : ℚ) := by
         exact_mod_cast (edgeCount_eq_descFactorial (n := m + m))
       rw [hEdgeQ]
@@ -532,36 +523,19 @@ theorem monoFraction_f_le_one_quarter : monoFraction (f (n := n) hn) ≤ (1 : �
       have hm : 2 ≤ m := by
         -- if `m ≤ 1` then `2*m + 1 ≤ 3`, contradicting `hn : 5 ≤ 2*m + 1`
         by_contra h
-        have hmLt : m < 2 := Nat.lt_of_not_ge h
-        have hmLe1 : m ≤ 1 := Nat.lt_succ_iff.mp hmLt
-        have hmul : 2 * m ≤ 2 := by
-          have := Nat.mul_le_mul_left 2 hmLe1
-          simpa [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using this
-        have hsum : 2 * m + 1 ≤ 3 := by
-          have := Nat.succ_le_succ hmul
-          simpa [Nat.succ_eq_add_one, Nat.add_assoc] using this
-        have : 5 ≤ 3 := le_trans hn hsum
-        exact (by decide : ¬ 5 ≤ 3) this
+        simp_all
       have hDiv : (2 * m + 1) / 2 = m := by
         have : (1 + 2 * m) / 2 = m := by
           simpa using (Nat.add_mul_div_left 1 m (y := 2) (by decide : 0 < 2))
         simpa [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using this
       have hSmall : Fintype.card (Small (n := 2 * m + 1) hn) = m := by
-        calc
-          Fintype.card (Small (n := 2 * m + 1) hn) = (2 * m + 1) / 2 := by simp [Small, two]
-          _ = m := hDiv
+        simp_all
       have hBig : Fintype.card (Big (n := 2 * m + 1) hn) = m + 1 := by
         have hCard :
             Fintype.card (Big (n := 2 * m + 1) hn) = (2 * m + 1) - (2 * m + 1) / 2 := by
           simp [Big, two]
         have hRewrite : 2 * m + 1 = m + (m + 1) := by simpa [two_mul] using (Nat.add_assoc m m 1)
-        calc
-          Fintype.card (Big (n := 2 * m + 1) hn) = (2 * m + 1) - (2 * m + 1) / 2 := hCard
-          _ = (2 * m + 1) - m := by simp [hDiv]
-          _ = m + 1 := by
-            calc
-              (2 * m + 1) - m = (m + (m + 1)) - m := by simp [hRewrite]
-              _ = m + 1 := by simp
+        simp_all
       have hEdgeQ : (edgeCount (2 * m + 1) : ℚ) = ((2 * m + 1).descFactorial 4 : ℚ) := by
         exact_mod_cast (edgeCount_eq_descFactorial (n := 2 * m + 1))
       rw [hEdgeQ]

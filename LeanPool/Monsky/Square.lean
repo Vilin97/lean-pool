@@ -153,19 +153,14 @@ lemma open_unitSquare_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ openHull unit
   -- The constant we will choose is of order 1/ y, so we have to make an exception for y =0
   by_cases h : ∀ i, (y i = 0) -- this formulation was slightly easier for me
   · use 1
-    rw [show y = 0 by ext i; exact h i]
-    refine ⟨by norm_num, fun n => ?_⟩
-    simpa using hx
+    simp_all
   -- I would prefer to define the epsilon with an infinum over i, rather than doing it explicitly,
   -- but I could not find the right api to show this infinum is bigger than zero
   -- (as it is only a infinum over a finite index)
   · use ((1/(max |y 0| |y 1|))*(1/2) )* min (min (x 0) (1- x 0)) (min (x 1) (1 - x 1))
     have h2 : (max |y 0| |y 1|) > 0 := by
       push Not at h
-      rcases h with ⟨ i, h2⟩
-      fin_cases i
-      · exact lt_sup_of_lt_left (abs_pos.mpr (h2))
-      · exact lt_sup_of_lt_right (abs_pos.mpr h2)
+      simp_all
     have h1: ∀ (i: Fin 2), 0 < (1- x i) := (fun i ↦  by linarith [hx i] )
     have h8: 0 <  (2* (|y 0| ⊔ |y 1|)) :=  (mul_pos (by norm_num) h2)
     have hxbound :  0 < x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1)) := by
@@ -181,13 +176,9 @@ lemma open_unitSquare_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ openHull unit
         have hle : |-y i| ≤ max |y 0| |y 1| := by fin_cases i <;> simp
         linarith [hle, h2]
       have h4: ∀ i, x i ≥  (x 0 ⊓ (1 - x 0)) ⊓ (x 1 ⊓ (1 - x 1)) := by
-        intro i; fin_cases i
-        · apply inf_le_of_left_le; apply inf_le_of_left_le; rfl
-        · apply inf_le_of_right_le; apply inf_le_of_left_le; rfl
+        simp_all
       have h5 : ∀ i, 1 - x i ≥  (x 0 ⊓ (1 - x 0)) ⊓ (x 1 ⊓ (1 - x 1)) := by
-        intro i; fin_cases i
-        · apply inf_le_of_left_le; apply inf_le_of_right_le; rfl
-        · apply inf_le_of_right_le; apply inf_le_of_right_le; rfl
+        simp_all
       intro n i; simp only [one_div, Fin.isValue, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul]
       -- mathematically, n should be at least 1, but because 1/ 0 = 0, the
       -- statement still holds for n = 0, but just requires a different proof
@@ -285,10 +276,7 @@ lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unitSquar
                   ))
         · exact square_side_det₂_ne hx hArea' hΔ'P hSide'
       · exact square_side_det₂_ne hx hArea hΔP hSide
-    · push Not at hΔ
-      use (1 : ℝ), by simp
-      intro Δ hArea hΔP ⟨i,hSide⟩
-      exact False.elim (hΔ Δ hArea hΔP i hSide)
+    · simp_all
 
 lemma boundary_leave_dir {x : ℝ²} (hx : x ∈ boundary unitSquare) :
     ∃ σ ∈ ({1, -1} : Finset ℝ), ∀ ε > 0, x + (σ * ε) • (v 1 1) ∉ closedHull unitSquare := by
@@ -339,8 +327,7 @@ lemma segment_triangle_pairing_int
         intro n
         have this := (open_sub_closed _ (hn n))
         rw [hCover.1, Set.mem_iUnion₂] at this
-        have ⟨T,hT,hT'⟩ := this
-        exact ⟨T,hT,hT'⟩
+        simp_all
       choose f hfS hfCl using hfS
       -- This means that there is a triangle with infinitely many vectors of the
       -- form x + (1 / (n : ℝ)) • ε • -σ • y
@@ -417,8 +404,7 @@ lemma segment_triangle_pairing_int
       rw [←hTL]
       exact nondegen_triangle_imp_nondegen_side _ (hArea T TS)
   · intro i Δ hΔ hxΔ
-    rw [hxΔ] at hLx
-    exact hv Δ hΔ i hLx
+    simp_all
 
 
 open Classical in

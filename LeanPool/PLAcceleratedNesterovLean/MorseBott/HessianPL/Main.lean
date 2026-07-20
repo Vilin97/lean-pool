@@ -54,8 +54,7 @@ lemma muPL_norm_sq_bound (f : E → ℝ) (μ : ℝ) (x₀ v : E)
   -- Gradient approximation: fderiv ℝ f (x₀ + h) - H h =o[𝓝 0] h
   have hgrad_o : (fun h => fderiv ℝ f (x₀ + h) - H h) =o[𝓝 (0 : E)] fun h => h := by
     have := hasFDerivAt_iff_isLittleO_nhds_zero.mp hhess_deriv
-    simp only [hdf0, sub_zero] at this
-    exact this
+    simp_all
   -- Compose with ray t ↦ t • v
   have hray_tend : Tendsto (fun t : ℝ => t • v) (𝓝 0) (𝓝 (0 : E)) := by
     rw [show (0 : E) = (0 : ℝ) • v from (zero_smul ℝ v).symm]
@@ -70,8 +69,7 @@ lemma muPL_norm_sq_bound (f : E → ℝ) (μ : ℝ) (x₀ v : E)
     have htend : Tendsto (fun t : ℝ => x₀ + t • v) (𝓝 0) (𝓝 x₀) := by
       have key : Tendsto (fun t : ℝ => x₀ + t • v) (𝓝 0) (𝓝 (x₀ + (0 : ℝ) • v)) :=
         tendsto_const_nhds.add (tendsto_id.smul tendsto_const_nhds)
-      simp only [zero_smul, add_zero] at key
-      exact key
+      simp_all
     exact (htend.eventually hPL).filter_mono nhdsWithin_le_nhds
   -- Taylor bound
   have hTaylor := taylor_ray_isLittleO_pl f x₀ v hf hmin
@@ -197,8 +195,7 @@ theorem hessian_coercive_on_orthogonal_of_MuPL_impl (f : E → ℝ) (μ : ℝ) (
   intro v hv
   -- Case v = 0: trivial
   by_cases hv0 : v = 0
-  · simp only [hv0, map_zero, norm_zero, ne_eq, OfNat.ofNat_ne_zero,
-    not_false_eq_true, zero_pow, mul_zero, ge_iff_le, le_refl]
+  · simp_all
   -- Case v ≠ 0: use Rayleigh quotient minimizer
   set H := hessian f x₀ with hH_def
   set K := hessianKer f x₀ with hK_def
@@ -213,8 +210,7 @@ theorem hessian_coercive_on_orthogonal_of_MuPL_impl (f : E → ℝ) (μ : ℝ) (
     apply IsCompact.of_isClosed_subset (isCompact_sphere 0 1)
     · exact IsClosed.inter K.isClosed_orthogonal (isClosed_eq continuous_norm continuous_const)
     · intro w hw
-      simp only [Metric.mem_sphere, dist_zero_right] at hw ⊢
-      exact hw.2
+      simp_all
   -- Step 2: H(w,w) attains its minimum c on S
   have hH_cont : ContinuousOn (fun w => H w w) S :=
     (H.cont.clm_apply continuous_id).continuousOn.mono (Set.subset_univ _)
@@ -387,19 +383,13 @@ theorem hessian_coercive_on_orthogonal_of_MuPL_impl (f : E → ℝ) (μ : ℝ) (
     have h_ker : H w₀ e_K = 0 := by
       rw [hessian_symmetric f x₀ hf w₀ e_K]
       have hmem : (hessian f x₀).toLinearMap e_K = 0 := LinearMap.mem_ker.mp heK_mem
-      simp only [ContinuousLinearMap.coe_coe,
-        ContinuousLinearMap.ext_iff,
-        zero_apply] at hmem
-      exact hmem w₀
+      simp_all
     -- H(w₀, z) = 0 by first-order condition
     have h_foc_z : H w₀ z = 0 := h_foc z hz_orth hz_perp
     -- H(w₀, eN) = α · c where eN = α • w₀ + z
     have h_eN : H w₀ e_Korth = α * c := by
       have : e_Korth = α • w₀ + z := by simp only [add_sub_cancel, z]
-      rw [this]
-      simp only [map_add, map_smul, smul_eq_mul]
-      rw [h_foc_z, hc_def]
-      ring
+      simp_all
     -- H(w₀, e) = H(w₀, e_K) + H(w₀, e_Korth) = 0 + α·c = α·c
     rw [show e = e_K + e_Korth from he_decomp]
     simp only [map_add]

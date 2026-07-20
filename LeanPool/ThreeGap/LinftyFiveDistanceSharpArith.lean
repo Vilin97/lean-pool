@@ -74,8 +74,7 @@ theorem delta_astar (d n₀ n₁ r₀ r₁ M : ℤ)
     have : (0 : ℝ) ≤ (M : ℝ) := by exact_mod_cast h
     positivity
   have normcoord : ∀ z : ℤ, ‖((z : ℝ)) / 47‖ = ((|z| : ℤ) : ℝ) / 47 := by
-    intro z
-    rw [Real.norm_eq_abs, abs_div, abs_of_pos (show (0 : ℝ) < 47 by norm_num), ← Int.cast_abs]
+    simp_all
   have c0 : ∀ p : Fin 2 → ℤ, (rem astar d p) 0 = ((4 * d - 47 * p 0 : ℤ) : ℝ) / 47 := by
     intro p
     simp only [rem, astar, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Matrix.cons_val_zero]

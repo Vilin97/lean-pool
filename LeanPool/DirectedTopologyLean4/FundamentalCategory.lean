@@ -60,8 +60,7 @@ lemma transAssocReparamAux_directed : DirectedMap.Directed
     nlinarith
   · linarith
   · linarith
-  · apply (mul_le_mul_iff_of_pos_left (show 0 < (2⁻¹ : ℝ) by norm_num)).mpr
-    linarith
+  · simp_all
 
 /-- The directed self-map of the unit interval used to associate triple concatenations of
 dipaths. -/

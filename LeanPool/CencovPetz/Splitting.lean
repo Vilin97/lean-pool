@@ -60,18 +60,13 @@ noncomputable def split : MarkovMorphism α (SplitTarget (α := α) m) := by
             -- Only the fiber over `a` contributes.
             simp [eq_comm]
       _ = (m a : ℝ) * ((1 : ℝ) / (m a : ℝ)) := by
-            classical
-            -- Sum a constant over `Fin (m a)`.
-            simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+            simp_all
       _ = 1 := by
             -- Cancel `m a`.
             field_simp [hm_ne]
   · intro b
     refine ⟨b.1, ?_⟩
-    have hpos : 0 < (1 : ℝ) / (m b.1 : ℝ) := by
-      have hm' : 0 < (m b.1 : ℝ) := by exact_mod_cast (hm b.1)
-      simpa using (one_div_pos.2 hm')
-    simpa using hpos
+    simp_all
 
 /-- Fiberwise merge: forget the fiber index. -/
 noncomputable def merge : MarkovMorphism (SplitTarget (α := α) m) α := by
@@ -120,22 +115,7 @@ lemma merge_pushforward_split (p : Simplex α) :
           then ∑ i : Fin (m x),
             ((split (α := α) m hm).pushforward p).p ⟨x, i⟩
           else 0 := by
-          refine
-            (Fintype.sum_congr
-              (f := fun x : α =>
-                ∑ i : Fin (m x),
-                  ((split (α := α) m hm).pushforward p).p ⟨x, i⟩ *
-                    if x = a then (1 : ℝ) else 0)
-              (g := fun x : α =>
-                if x = a
-                then ∑ i : Fin (m x),
-                  ((split (α := α) m hm).pushforward p).p ⟨x, i⟩
-                else 0) ?_)
-          intro x
-          by_cases hx : x = a
-          · subst hx
-            simp
-          · simp [hx]
+          simp_all
     _ = ∑ i : Fin (m a), ((split (α := α) m hm).pushforward p).p ⟨a, i⟩ := by
           -- Only the `x = a` term survives.
           simp [eq_comm]
@@ -180,26 +160,7 @@ lemma merge_tangentPushforward_split (u : tangentSpace (α := α)) :
             (((split (α := α) m hm).tangentPushforward u :
               SplitTarget (α := α) m → ℝ) ⟨x, i⟩)
           else 0 := by
-          refine
-            (Fintype.sum_congr
-              (f := fun x : α =>
-                ∑ i : Fin (m x),
-                  (((split (α := α) m hm).tangentPushforward
-                    u : SplitTarget (α := α) m → ℝ)
-                    ⟨x, i⟩) *
-                    if x = a then (1 : ℝ) else 0)
-              (g := fun x : α =>
-                if x = a
-                then ∑ i : Fin (m x),
-                  (((split (α := α) m hm).tangentPushforward
-                    u : SplitTarget (α := α) m → ℝ)
-                    ⟨x, i⟩)
-                else 0) ?_)
-          intro x
-          by_cases hx : x = a
-          · subst hx
-            simp
-          · simp [hx]
+          simp_all
     _ = ∑ i : Fin (m a),
           ((split (α := α) m hm).tangentPushforward u :
             SplitTarget (α := α) m → ℝ) ⟨a, i⟩ := by

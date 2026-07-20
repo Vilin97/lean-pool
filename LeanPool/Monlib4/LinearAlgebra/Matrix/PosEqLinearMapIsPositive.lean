@@ -374,9 +374,7 @@ theorem existsUnique_trace [Fintype n] [DecidableEq n] [Nontrivial n] :
           φ = (1 / Fintype.card n : 𝕜) • traceLinearMap n 𝕜 𝕜 := by
     intro φ
     have hcard_inv : (↑(Fintype.card n) : 𝕜)⁻¹ * ↑(@Finset.univ n _).card = 1 := by
-      rw [inv_mul_eq_one₀]
-      · rfl
-      · simp [Fintype.card_ne_zero]
+      simp_all
     constructor
     · intro h
       rw [LinearMap.ext_iff]
@@ -397,10 +395,7 @@ theorem existsUnique_trace [Fintype n] [DecidableEq n] [Nontrivial n] :
               ite (j = i) (φ (∑ k, single k k 1)) 0 := ?_
           _ = (1 / (Fintype.card n : 𝕜)) • ite (j = i) (φ 1) 0 := ?_
           _ = (1 / (Fintype.card n : 𝕜)) • ite (j = i) 1 0 := ?_
-        · simp_rw [single_mul_single_same, one_mul]
-          simp only [one_div, Finset.sum_const, nsmul_eq_mul, smul_eq_mul]
-          rw [← mul_assoc]
-          simp_rw [hcard_inv, one_mul]
+        · simp_all
         · simp_rw [h.1]
         · simp_rw [single_hMul, one_mul, _root_.map_smul, smul_eq_mul, boole_mul,
             Finset.sum_ite_irrel, Finset.sum_const_zero, map_sum]
@@ -417,8 +412,7 @@ theorem existsUnique_trace [Fintype n] [DecidableEq n] [Nontrivial n] :
         _ = ∑ x_1, x x_1 x_1 • (1 / Fintype.card n : 𝕜) := ?_
         _ = (1 / Fintype.card n : 𝕜) • x.trace := ?_
       · simp_rw [← hsingle]
-      · simp_rw [smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true,
-          smul_eq_mul, mul_one]
+      · simp_all
       · simp_rw [← Finset.sum_smul, Matrix.trace_iff' x, smul_eq_mul, mul_comm]
     · rintro rfl
       simp_rw [LinearMap.smul_apply, traceLinearMap_apply, Matrix.trace_iff' 1, one_apply_eq,
@@ -430,8 +424,7 @@ theorem existsUnique_trace [Fintype n] [DecidableEq n] [Nontrivial n] :
 theorem Matrix.single.trace [Fintype n] [DecidableEq n] (i j : n) (a : 𝕜) :
     (single i j a).trace = ite (i = j) a 0 := by
   by_cases h : i = j
-  · subst h
-    simp [Matrix.trace_single_eq_same]
+  · simp_all
   · simp [Matrix.trace_single_eq_of_ne i j a h, h]
 
 theorem Matrix.single_eq {R n m : Type*} [Semiring R] [DecidableEq n] [DecidableEq m]
@@ -440,12 +433,7 @@ theorem Matrix.single_eq {R n m : Type*} [Semiring R] [DecidableEq n] [Decidable
   rfl
 
 theorem vecMulVec_eq_zero_iff (x : n → 𝕜) : vecMulVec x (star x) = 0 ↔ x = 0 := by
-  constructor
-  · intro h
-    by_contra hx
-    exact Matrix.vecMulVec_ne_zero hx (by simpa using hx) h
-  · intro h
-    simp [h]
+  simp_all
 
 lemma norm_ite {α : Type*} [Norm α] (P : Prop) [Decidable P] (a b : α) :
     ‖(ite P a b : α)‖ = (ite P ‖a‖ ‖b‖) := by
@@ -518,8 +506,7 @@ theorem _root_.Matrix.PosDef.trace_conjTranspose_hMul_self_eq_zero {m : Type*}
     have hxT : xᴴ = 0 :=
       (Matrix.mul_right_injective_of_invertible (A := Q)) (by simpa using hQx)
     rwa [← Matrix.conjTranspose_eq_zero]
-  · intro h
-    rw [h, conjTranspose_zero, Matrix.mul_zero]
+  · simp_all
 
 alias _root_.Matrix.Nontracial.trace_conjTranspose_hMul_self_eq_zero :=
   _root_.Matrix.PosDef.trace_conjTranspose_hMul_self_eq_zero

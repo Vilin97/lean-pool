@@ -318,8 +318,7 @@ lemma gff_second_moment_eq_covariance
         have h_mean : (gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal)[fun x => x] = 0 := by
           simp [integral_id_gaussianReal]
         exact variance_of_integral_eq_zero (by fun_prop) h_mean
-      rw [← h_var_eq]
-      exact variance_fun_id_gaussianReal
+      simp_all
     _ = freeCovarianceFormR m φ φ := by
       simp [Real.coe_toNNReal', freeCovarianceFormR_pos]
 
@@ -423,9 +422,7 @@ theorem gaussianFreeField_pairing_expSq_integrable
   -- Convert ‖x‖² to x² for ℝ (they are equal for real numbers)
   convert hC_int using 2
   -- Goal: exp (C * y²) = exp (C * ‖y‖²) where y : ℝ
-  simp only [Function.comp_apply]
-  congr 1
-  rw [Real.norm_eq_abs, sq_abs]
+  simp_all
 
 /-- For real test functions, the square of the Gaussian pairing is integrable under the
     free Gaussian Free Field measure. This is the diagonal (f = g) case needed for

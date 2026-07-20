@@ -146,8 +146,7 @@ lemma BrauerOverR (A : CSA.{0, 0} ℝ) :
         rw [Algebra.ofId_apply, Algebra.algebraMap_eq_smul_one, map_smul, map_one] at eq
         simp only [Complex.real_smul, _root_.mul_one] at eq
         rw [Complex.ext_iff] at eq
-        obtain ⟨_, fal⟩ := eq
-        simp only [Complex.ofReal_im, Complex.I_im, zero_ne_one] at fal⟩⟩⟩
+        simp_all⟩⟩⟩
     tauto
   · have : IsBrauerEquivalent A ⟨.of ℝ ℝ⟩ :=
       ⟨1, n, one_ne_zero, hn, ⟨dimOneIso A|>.trans <| e.trans hD2.some.mapMatrix⟩⟩

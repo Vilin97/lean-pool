@@ -233,12 +233,7 @@ noncomputable def sheafHSuccMap {X : TopCat.{u}}
     AddMonoidHom.mk'
       (fun y ↦ y.comp hS.extClass rfl)
       (by
-        intro a b
-        change (a + b).comp hS.extClass rfl = a.comp hS.extClass rfl + b.comp hS.extClass rfl
-        change (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) (a + b) =
-          (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) a +
-            (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) b
-        exact (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)).map_add a b)
+        simp_all)
 
 private theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -320,8 +315,7 @@ theorem stalk_zero_of_ses_g_iso
         (congrArg (fun h ↦ T.map h) hzero).trans
           (Functor.map_zero T S.X₁.obj S.X₃.obj)
       simpa [Functor.map_comp] using hcomp_map
-    rw [show T.map S.f.hom = (T.map S.f.hom ≫ T.map S.g.hom) ≫ inv (T.map S.g.hom) by simp,
-      this, zero_comp]
+    simp_all
   exact (AddCommGrpCat.mono_iff_injective _).mp hTf_mono
     (show ConcreteCategory.hom (T.map S.f.hom) a = ConcreteCategory.hom (T.map S.f.hom) 0 by
       simp [hf0])

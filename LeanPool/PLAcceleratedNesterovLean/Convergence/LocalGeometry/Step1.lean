@@ -69,13 +69,7 @@ theorem hessian_psd_at_minimizer {d : ℕ}
   -- ψ has derivative ξ at every point
   have hψ_da : ∀ t, HasDerivAt ψ ξ t := fun t => by
     have := ((hasDerivAt_id t).smul_const ξ).const_add m
-    convert this using 1
-    · rfl
-    · rfl
-    · rfl
-    · funext s
-      simp [hψ_def]
-    · simp
+    simp_all
   -- ψ(0) = m
   have hψ0 : ψ 0 = m := by simp only [hψ_def, zero_smul, add_zero]
   -- ψ is smooth (affine map)
@@ -138,8 +132,7 @@ theorem hessian_psd_at_minimizer {d : ℕ}
   -- By Filter.EventuallyEq.fderiv_eq, their fderivs at m are equal.
   have hval_eq : (fderiv ℝ G m) ξ = hessianQuadForm f m ξ := by
     have hG_eq_ev : G =ᶠ[nhds m] (fun x => @inner ℝ (E d) _ (gradient f x) ξ) := by
-      filter_upwards [hf_diff_ev] with x hx
-      exact (inner_gradient_left (𝕜 := ℝ) (f := f) (x := x) (y := ξ)).symm
+      simp_all
     -- gradient f is differentiable at m (f C² at m ⟹ fderiv C¹ at m ⟹ toDual⁻¹ ∘ fderiv diff at m)
     have hgrad_diffAt : DifferentiableAt ℝ (gradient f) m := by
       set e := (InnerProductSpace.toDual ℝ (E d)).symm.toContinuousLinearEquiv
@@ -173,8 +166,7 @@ theorem hessian_psd_at_minimizer {d : ℕ}
       ‖(G ∘ ψ) t - c * t‖ ≤ -c / 2 * ‖t‖ ∧
       DifferentiableAt ℝ f (ψ t) ∧
       DifferentiableAt ℝ φ t := by
-    filter_upwards [hev, hf_diff_along, hφ_diff_ev] with t h1 h2 h3
-    exact ⟨h1, h2, h3⟩
+    simp_all
   rw [Metric.eventually_nhds_iff] at hcombined
   obtain ⟨δ, hδ_pos, hδ_bound⟩ := hcombined
   -- For t with dist t 0 < δ: (G ∘ ψ) t = deriv φ t (by chain rule using differentiability of f)

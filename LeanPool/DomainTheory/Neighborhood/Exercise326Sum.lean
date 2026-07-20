@@ -148,8 +148,7 @@ theorem whichGuard_left {W : Set (Option (α ⊕ β))} {C : Set Example12.Token}
   · exact hc
   · refine absurd (hW.symm.trans hWY) ?_
     intro h; exact not_inj₀_subset_inj₁ hX h.subset
-  · refine absurd (hW.symm.trans hWsm) ?_
-    intro h; exact none_mem_inj₀ (h ▸ none_mem_sumMaster)
+  · simp_all
 
 theorem whichGuard_right {W : Set (Option (α ⊕ β))} {C : Set Example12.Token} {Y : Set β}
     (hg : whichGuard V₀ V₁ W C) (hW : W = inj₁ Y) (hY : Y.Nonempty) :
@@ -158,8 +157,7 @@ theorem whichGuard_right {W : Set (Option (α ⊕ β))} {C : Set Example12.Token
   · refine absurd (hW.symm.trans hWX) ?_
     intro h; exact not_inj₁_subset_inj₀ hY h.subset
   · exact hc
-  · refine absurd (hW.symm.trans hWsm) ?_
-    intro h; exact none_mem_inj₁ (h ▸ none_mem_sumMaster)
+  · simp_all
 
 theorem whichGuard_masterC {W : Set (Option (α ⊕ β))} {C : Set Example12.Token}
     (hg : whichGuard V₀ V₁ W C) (hW : W = sumMaster V₀ V₁) : C = Example12.master := by
@@ -193,9 +191,7 @@ def whichMap (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
       · rw [h]; exact Example12.mem_master
       · rw [h]; exact Example12.mem_one
     · have hc' := whichGuard_masterC hg' rfl
-      subst hc; subst hc'
-      rw [Set.inter_self]
-      exact ⟨Or.inl rfl, Example12.mem_master, Or.inr (Or.inr ⟨rfl, rfl⟩)⟩
+      simp_all
   mono := by
     rintro W W₂ C C₂ ⟨hW, hC, hg⟩ hW₂W hCC₂ hW₂ hC₂
     refine ⟨hW₂, hC₂, ?_⟩

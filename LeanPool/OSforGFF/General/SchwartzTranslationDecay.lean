@@ -84,10 +84,8 @@ lemma kernel_decomposition (K : E → ℝ) (R₀ : ℝ) :
   ext x
   simp only [kernelSingular, kernelTail]
   by_cases hx : x ∈ closedBall (0 : E) R₀
-  · rw [indicator_of_mem hx, indicator_of_notMem (by simp [hx])]
-    ring
-  · rw [indicator_of_notMem hx, indicator_of_mem (mem_compl hx)]
-    ring
+  · simp_all
+  · simp_all
 
 omit [MeasurableSpace E] [BorelSpace E] in
 /-- K_tail vanishes at infinity when K has polynomial decay. -/
@@ -115,8 +113,7 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
       have hbound := hK_decay z hz.le
       have : |K z| ≤ 0 := le_trans hbound (div_nonpos_of_nonpos_of_nonneg hC (Real.rpow_nonneg
         (norm_nonneg z) α))
-      simp only [abs_nonpos_iff] at this
-      simp [this, hε]
+      simp_all
   · -- C > 0 case
     push Not at hC
     let R := max R₀ ((C / ε) ^ (1 / α) + 1)
@@ -131,15 +128,12 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
       by_cases hz_R₀ : ‖z‖ ≤ R₀
       · -- Inside R₀ ball: kernelTail z = 0
         simp only [kernelTail]
-        rw [indicator_of_notMem (by simp [hz_R₀] : z ∉ (closedBall (0 : E) R₀)ᶜ), mul_zero,
-            norm_zero]
-        exact hε
+        simp_all
       · -- Outside R₀ ball: use decay bound
         push Not at hz_R₀
         simp only [kernelTail]
         have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
-          simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
-          exact hz_R₀
+          simp_all
         rw [indicator_of_mem hmem, mul_one]
         have hbound := hK_decay z hz_R₀.le
         have hz_large : ‖z‖ > (C / ε) ^ (1 / α) := by
@@ -203,8 +197,7 @@ lemma bounded_of_continuous_tendsto_zero
   by_cases hx : x ∈ K
   · have : ‖g x‖ ∈ Set.image (‖g ·‖) K := ⟨x, hx, rfl⟩
     have hle : ‖g x‖ ∈ closedBall (0 : ℝ) M := hM this
-    simp only [mem_closedBall, dist_zero_right, Real.norm_eq_abs, abs_norm] at hle
-    exact le_sup_of_le_left hle
+    simp_all
   · exact le_trans (le_of_lt (hK x hx)) (le_max_right _ _)
 
 /-- For integrable f and ε > 0, there exists a compact set K with small tail integral.
@@ -326,9 +319,7 @@ theorem convolution_vanishes_of_integrable_and_C0
       have hg_meas : AEStronglyMeasurable (fun x => ‖g (x - y)‖) volume :=
         (hg_cont.comp (continuous_id.sub continuous_const)).norm.aestronglyMeasurable
       refine Integrable.mul_bdd (c := max B 1) hf_int.norm hg_meas ?_
-      filter_upwards with x
-      rw [Real.norm_of_nonneg (norm_nonneg _)]
-      exact hg_bdd x
+      simp_all
     -- Split integral over K and Kᶜ
     have hK_meas : MeasurableSet K := hK_cpct.isClosed.measurableSet
     -- Bound on K using setIntegral_mono_on (which gives us the membership hypothesis)
@@ -525,8 +516,7 @@ theorem schwartz_bilinear_prod_integrable
       Function.uncurry (fun x y => f x * (K_tail (x - y) : ℂ) * g (y - a)) := by
     ext ⟨x, y⟩
     simp only [Function.uncurry, Pi.add_apply, h_split]
-  rw [h_eq]
-  exact Integrable.add h_sing_int h_tail_int
+  simp_all
 
 /-! ## Main theorem -/
 
@@ -572,9 +562,7 @@ private lemma schwartz_bilinear_kernelSingular_vanish
         simp only [mem_closedBall, dist_zero_right, not_le] at h
         have : K_sing (x - y) = 0 := by
           simp only [K_sing, kernelSingular]
-          rw [indicator_of_notMem]
-          · ring
-          · simp [mem_closedBall, dist_zero_right, not_le.mpr h]
+          simp_all
         exact hK_ne this
       have h1 : ‖x - y‖ ≤ R₀ := by simpa [mem_closedBall, dist_zero_right] using hxy_in_ball
       have h2 : ‖x‖ ≤ R_L := by simpa [mem_closedBall, dist_zero_right] using hR_L hx_in_L
@@ -647,9 +635,7 @@ private lemma schwartz_bilinear_kernelTail_vanish
             apply div_le_div_of_nonneg_left hC.le (Real.rpow_pos_of_pos hR₀ α)
             exact Real.rpow_le_rpow hR₀.le hz' hα.le
         _ ≤ max (C / R₀ ^ α) 1 := le_max_left _ _
-    · rw [indicator_of_notMem hz, mul_zero]
-      simp only [norm_zero]
-      exact le_of_lt (lt_max_of_lt_right one_pos)
+    · simp_all
   obtain ⟨M, hM_pos, hM⟩ := hK_tail_bdd
   rw [Metric.tendsto_nhds]
   intro ε hε
@@ -689,9 +675,7 @@ private lemma schwartz_bilinear_kernelTail_vanish
     have hKt_small_on_K : ∀ x ∈ K_set, ‖(K_tail (x - y) : ℂ)‖ < η := by
       intro x hxK
       have : x - y ∈ S := hL_sub (hxy_outside x hxK)
-      have h := hS (x - y) this
-      simp only [dist_zero_right] at h
-      rwa [Complex.norm_real]
+      simp_all
     have hKt_y_meas : AEStronglyMeasurable (fun x => (K_tail (x - y) : ℂ)) volume := by
       have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
         measurable_const.indicator isClosed_closedBall.measurableSet.compl
@@ -701,9 +685,7 @@ private lemma schwartz_bilinear_kernelTail_vanish
       exact (measurable_ofReal.comp h2).aestronglyMeasurable
     have h_int : Integrable (fun x => ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖) volume := by
       refine Integrable.mul_bdd (c := M) hf_int.norm hKt_y_meas.norm ?_
-      filter_upwards with x
-      simp only [Real.norm_of_nonneg (norm_nonneg _)]
-      exact hM (x - y)
+      simp_all
     have hK_meas : MeasurableSet K_set := hK_cpct.isClosed.measurableSet
     have hK_bound : ∫ x in K_set, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ η * If := by
       have h1 : ∫ x in K_set, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ ∫ x in K_set, ‖f x‖ * η := by
@@ -788,9 +770,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
       ext y
       simp only [H_sing]
       rw [← integral_add_right_eq_self (fun x => f x * (K_sing (x - y) : ℂ)) y]
-      congr 1
-      ext x
-      simp only [add_sub_cancel_right]
+      simp_all
     rw [hH_sing_eq]
     have hKs_meas : Measurable K_sing :=
       hK_meas.mul (measurable_const.indicator isClosed_closedBall.measurableSet)
@@ -822,8 +802,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
       simp only [norm_mul, Complex.norm_real]
       calc ‖f x‖ * |kernelTail K R₀ (x - y)| ≤ ‖f x‖ * M_tail := by
             apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-            have h := hM_tail (x - y)
-            rwa [Complex.norm_real] at h
+            simp_all
         _ = M_tail * ‖f x‖ := mul_comm _ _
     · exact hf_int.norm.const_mul M_tail
     · by_cases hnt : Nontrivial E
@@ -848,9 +827,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
           rw [mem_singleton_iff]
           exact sub_eq_zero.mp h
         have hxy_not_sphere : ‖x - y₀‖ ≠ R₀ := by
-          intro h
-          apply hx_sphere
-          rwa [Metric.mem_sphere, dist_eq_norm]
+          simp_all
         apply ContinuousAt.comp (g := Complex.ofReal)
         · exact Complex.continuous_ofReal.continuousAt
         · unfold kernelTail
@@ -883,20 +860,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
         apply Tendsto.comp Complex.continuous_ofReal.continuousAt
         have h_sub_zero : ∀ y : E, x - y = 0 := fun y => by
           exact Subsingleton.eq_zero (x - y)
-        have hK_tail_zero : kernelTail K R₀ (0 : E) = 0 := by
-          unfold kernelTail
-          rw [indicator_of_notMem]
-          · ring
-          · simp only [mem_compl_iff, mem_closedBall, dist_zero_right, norm_zero, not_not]
-            exact hR₀.le
-        have hK_tail_const : ∀ y, kernelTail K R₀ (x - y) = 0 := fun y => by
-          rw [h_sub_zero y, hK_tail_zero]
-        have hK_tail_xy₀ : K_tail (x - y₀) = 0 := hK_tail_const y₀
-        have h_eq : (fun y => K_tail (x - y)) = fun _ => (0 : ℝ) := by
-          ext y
-          exact hK_tail_const y
-        rw [h_eq, hK_tail_xy₀]
-        exact tendsto_const_nhds
+        simp_all
 
 /-- **Clustering decay for Schwartz bilinear forms** (proof version)
 
@@ -1050,9 +1014,7 @@ theorem schwartz_bilinear_translation_decay_proof
             apply div_le_div_of_nonneg_left hC.le (Real.rpow_pos_of_pos hR₀ α)
             exact Real.rpow_le_rpow hR₀.le hz' hα.le
         _ ≤ max (C / R₀ ^ α) 1 := le_max_left _ _
-    · rw [indicator_of_notMem hz, mul_zero]
-      simp only [norm_zero]
-      exact le_of_lt (lt_max_of_lt_right one_pos)
+    · simp_all
   obtain ⟨M_tail, hM_tail_pos, hM_tail⟩ := hK_tail_bdd
   -- Step 10a: H is continuous (convolution of Schwartz with locally integrable kernel)
   have hH_cont : Continuous H := by
@@ -1072,8 +1034,7 @@ theorem schwartz_bilinear_translation_decay_proof
     refine ⟨-K, hK_cpct.neg, ?_⟩
     intro a ha
     apply hK_sub
-    simp only [mem_compl_iff, Set.mem_neg] at ha ⊢
-    exact ha
+    simp_all
   -- Step 10d: Compose to get decay in -a
   have h_composed : Tendsto (fun a => ∫ w : E, g w * H (w - (-a))) (cocompact E) (nhds 0) :=
     h_decay.comp h_neg_cocompact
@@ -1123,9 +1084,6 @@ theorem schwartz_bilinear_translation_decay_proof
       rw [integral_add_right_eq_self (fun y => g (y - a) * H y) a]
     simpa only [add_sub_cancel_right] using this
   -- Step 10e-iii: Rewrite w + a = w - (-a)
-  have h_neg : ∫ w : E, g w * H (w + a) = ∫ w : E, g w * H (w - (-a)) := by
-    congr 1; ext w; congr 1; simp only [sub_neg_eq_add]
-  -- Chain: ∫ g(w) H(w-(-a)) = h_neg.symm = h_translate.symm = h_fubini.symm = ∫∫ f K g
-  rw [h_neg.symm, h_translate.symm, h_fubini.symm]
+  simp_all
 
 end

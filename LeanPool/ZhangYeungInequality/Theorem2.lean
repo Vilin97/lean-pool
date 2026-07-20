@@ -470,8 +470,7 @@ private lemma measureReal_map_pair_le_map_fst
       map_measureReal_apply hf (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact hω.1
+  simp_all
 
 /--
 **Marginal bound (pair, second).** The pair mass is bounded by the second projection.
@@ -488,8 +487,7 @@ private lemma measureReal_map_pair_le_map_snd
       map_measureReal_apply hg (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact hω.2
+  simp_all
 
 /-- **Marginal bound (triple, forget third).** `p(a, b, c) ≤ p(a, b)`. -/
 private lemma measureReal_map_triple_le_map_pair_12
@@ -506,8 +504,7 @@ private lemma measureReal_map_triple_le_map_pair_12
       map_measureReal_apply (hf.prodMk hg) (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact ⟨hω.1, hω.2.1⟩
+  simp_all
 
 /-- **Marginal bound (triple, forget second).** `p(a, b, c) ≤ p(a, c)`. -/
 private lemma measureReal_map_triple_le_map_pair_13
@@ -524,8 +521,7 @@ private lemma measureReal_map_triple_le_map_pair_13
       map_measureReal_apply (hf.prodMk hh) (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact ⟨hω.1, hω.2.2⟩
+  simp_all
 
 /--
 **IndepFun product formula.** If `f, g` are independent under `μ`, the joint singleton
@@ -609,16 +605,12 @@ private lemma sum_filter_map_real_eq_map_comp
   have hUnion : (fun ω => proj (F ω)) ⁻¹' {b}
       = ⋃ t ∈ (Finset.univ.filter (fun t : α => proj t = b) : Finset α), F ⁻¹' {t} := by
     ext ω
-    simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_iUnion,
-               Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨fun h => ⟨F ω, h, rfl⟩, fun ⟨_, ht, hωt⟩ => hωt ▸ ht⟩
+    simp_all
   rw [hUnion]
   refine (measureReal_biUnion_finset ?_ ?_).symm
   · rintro t₁ - t₂ - hne
     rw [Function.onFun, Set.disjoint_left]
-    intro ω hω₁ hω₂
-    simp only [Set.mem_preimage, Set.mem_singleton_iff] at hω₁ hω₂
-    exact hne (hω₁.symm.trans hω₂)
+    simp_all
   · exact fun _ _ => hF (measurableSet_singleton _)
 
 /-! ### Marginal structure of `ptilde`
@@ -658,9 +650,7 @@ private lemma ptilde_fibre_sum
   change ∑ x, ∑ y, Fx x * Fy y / c = c
   simp_rw [div_eq_mul_inv, ← Finset.sum_mul]
   rw [← Finset.sum_mul_sum, hSumFx, hSumFy]
-  by_cases hc : c = 0
-  · simp [hc]
-  · field_simp
+  simp_all
 
 omit [Fintype S₁] [Fintype S₃] [Fintype S₄] in
 /--
@@ -878,8 +868,7 @@ private lemma ptilde_sum_eq_one
     fun z u => ptilde_fibre_sum hX hY hZ hU μ z u
   simp_rw [hFibre]
   have hSingletonSum : (∑ p : S₃ × S₄, (μ.map (fun ω => (Z ω, U ω))).real {p}) = 1 := by
-    rw [sum_measureReal_singleton (Finset.univ : Finset (S₃ × S₄))]
-    simp
+    simp_all
   have hCollapse :
       (∑ z : S₃, ∑ u : S₄, (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}) = 1 := by
     rw [show (∑ z : S₃, ∑ u : S₄, (μ.map (fun ω => (Z ω, U ω))).real {(z, u)})
@@ -1119,19 +1108,15 @@ private lemma phat_sum_eq_one
         le_antisymm (hX_zero ▸ measureReal_map_pair_le_map_fst hX hU μ x u) measureReal_nonneg
       have h_phat_zero : ∀ z, phat X Y Z U μ (x, y, z, u) = 0 := by
         intro z; unfold phat; simp [hX_zero]
-      rw [Finset.sum_congr rfl (fun z _ => h_phat_zero z), Finset.sum_const_zero, hXU_zero,
-        zero_mul, zero_div]
+      simp_all
     by_cases hY_zero : (μ.map Y).real {y} = 0
     · have hYU_zero : (μ.map (fun ω => (Y ω, U ω))).real {(y, u)} = 0 :=
         le_antisymm (hY_zero ▸ measureReal_map_pair_le_map_fst hY hU μ y u) measureReal_nonneg
       have h_phat_zero : ∀ z, phat X Y Z U μ (x, y, z, u) = 0 := by
         intro z; unfold phat; simp [hY_zero]
-      rw [Finset.sum_congr rfl (fun z _ => h_phat_zero z), Finset.sum_const_zero, hYU_zero,
-        mul_zero, zero_div]
+      simp_all
     have h_denom_ne : (μ.map U).real {u} * (μ.map X).real {x} * (μ.map Y).real {y} ≠ 0 := by
-      intro heq; simp only [mul_eq_zero] at heq
-      rcases heq with (h | h) | h
-      exacts [hU_zero h, hX_zero h, hY_zero h]
+      simp_all
     have h' : ∑ z, phat X Y Z U μ (x, y, z, u)
             = (μ.map (fun ω => (X ω, U ω))).real {(x, u)}
               * (μ.map (fun ω => (Y ω, U ω))).real {(y, u)}
@@ -1166,8 +1151,7 @@ private lemma phat_sum_eq_one
     field_simp
   simp_rw [h_sum_y, sum_map_pair_first hX hU μ]
   haveI : IsProbabilityMeasure (μ.map U) := Measure.isProbabilityMeasure_map hU.aemeasurable
-  rw [sum_measureReal_singleton (Finset.univ : Finset S₄)]
-  simp
+  simp_all
 
 /-! ### Δ-to-log-ratio identities -/
 
@@ -1501,13 +1485,10 @@ private lemma ptilde_filter_sum_eq_reindex
         (fun t => proj t = c), ptilde X Y Z U μ t)
       = ∑ d : δ, ptilde X Y Z U μ (embed d) := by
   refine (Finset.sum_nbij' embed extract ?_ ?_ ?_ ?_ ?_).symm
-  · intro d _
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h_proj_embed d⟩
+  · simp_all
   · intro _ _; exact Finset.mem_univ _
   · intro d _; exact h_extract_embed d
-  · intro t ht
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ht
-    exact h_embed_extract t ht
+  · simp_all
   · intro _ _; rfl
 
 /-!
@@ -2049,12 +2030,7 @@ private lemma theorem2_delta_le_zero
     Real.sum_mul_log_div_leq h_ptilde_nn h_phat_nn h_abs
   have h_kl_nonneg : 0 ≤ ∑ t ∈ s,
       ptilde X Y Z U μ t * Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-    have : (1 : ℝ) * Real.log (1 / 1) ≤
-        ∑ t ∈ s, ptilde X Y Z U μ t *
-          Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-      rw [h_ptilde_sum, h_phat_sum] at h_log_sum
-      exact h_log_sum
-    simpa using this
+    simp_all
   have h_delta_eq : delta Z U X Y μ
       = ∑ t ∈ s, pJoint X Y Z U μ t *
           Real.log (phat X Y Z U μ t / ptilde X Y Z U μ t) :=

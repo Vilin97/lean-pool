@@ -288,8 +288,7 @@ def subIso (E : NeighborhoodSystem α) :
     constructor
     · intro hsub
       refine (Subsystem.subsystem_iff_subset_of_common a.2 b.2).mpr ?_
-      intro X hX
-      exact hsub hX
+      simp_all
     · intro hsub X hX
       exact hsub.sub hX
 

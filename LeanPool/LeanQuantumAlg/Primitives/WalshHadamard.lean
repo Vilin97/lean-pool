@@ -253,10 +253,7 @@ theorem sum_walshSign_mul_walshSign_eq (y s : Fin (2 ^ n)) :
     ∑ x, walshSign y x * walshSign s x =
       if y = s then ((2 ^ n : ℕ) : ℂ) else 0 := by
   by_cases hys : y = s
-  · subst hys
-    rw [if_pos rfl]
-    simp only [walshSign_mul_self, Finset.sum_const, Finset.card_univ,
-      Fintype.card_fin, nsmul_eq_mul, mul_one]
+  · simp_all
   · rw [if_neg hys, sum_walshSign_mul_walshSign hys]
 
 @[simp]
@@ -300,8 +297,7 @@ theorem hadamardLayerOp_mem_unitaryGroup (n : ℕ) :
     _ = (1 : HilbertOperator n) y s := by
           by_cases hys : y = s
           · subst s
-            rw [if_pos rfl, Matrix.one_apply_eq]
-            exact inv_mul_cancel₀ (Nat.cast_ne_zero.mpr (pow_ne_zero n two_ne_zero))
+            simp_all
           · rw [if_neg hys, Matrix.one_apply_ne hys, mul_zero]
 
 /-- The `n`-qubit Hadamard layer as a unitary gate. -/
@@ -315,12 +311,7 @@ def uniformStateVec (n : ℕ) : StateVector n :=
 /-- The uniform input-register vector has unit norm. -/
 theorem norm_uniformStateVec (n : ℕ) : ‖uniformStateVec n‖ = 1 := by
   rw [uniformStateVec, EuclideanSpace.norm_eq]
-  have hsum :
-      ∑ i : Fin (2 ^ n), ‖invSqrtCard n‖ ^ 2 = 1 := by
-    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
-      norm_sq_invSqrtCard]
-    norm_num
-  rw [hsum, Real.sqrt_one]
+  simp_all
 
 /-- The uniform input-register state produced by the first Hadamard layer. -/
 def uniformState (n : ℕ) : PureState n :=
@@ -366,18 +357,7 @@ def afterPhaseQueryVec (f : Oracle n) : StateVector n :=
 /-- The phase-query vector has unit norm. -/
 theorem norm_afterPhaseQueryVec (f : Oracle n) : ‖afterPhaseQueryVec f‖ = 1 := by
   rw [afterPhaseQueryVec, EuclideanSpace.norm_eq]
-  have hsum :
-      ∑ x : Fin (2 ^ n), ‖invSqrtCard n * phaseSign f x‖ ^ 2 = 1 := by
-    calc
-      ∑ x : Fin (2 ^ n), ‖invSqrtCard n * phaseSign f x‖ ^ 2
-          = ∑ _x : Fin (2 ^ n), ‖invSqrtCard n‖ ^ 2 := by
-              refine Finset.sum_congr rfl fun x _ => ?_
-              rw [norm_mul, norm_phaseSign, mul_one]
-      _ = 1 := by
-              rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-                nsmul_eq_mul, norm_sq_invSqrtCard]
-              norm_num
-  rw [hsum, Real.sqrt_one]
+  simp_all
 
 /-- The input register after the XOR oracle has been converted into a phase query. -/
 def afterPhaseQuery (f : Oracle n) : PureState n :=

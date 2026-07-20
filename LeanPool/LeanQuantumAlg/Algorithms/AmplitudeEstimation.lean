@@ -42,8 +42,7 @@ theorem AmplitudeEstimation.main_exact_dyadic (t : Nat) (j : Fin (2 ^ t)) (theta
   · rw [amplitudeAmplificationState_good_probability]
     have hang : amplitudeAmplificationAngle theta 0 = theta := by
       unfold amplitudeAmplificationAngle
-      push_cast
-      ring
+      simp_all
     rw [hang, htheta]
 
 /-- Trusted resource profile for exact amplitude estimation in the decoupled

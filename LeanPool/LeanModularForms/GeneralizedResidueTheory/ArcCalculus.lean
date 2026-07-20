@@ -62,9 +62,7 @@ theorem unitArc_at_end (θ₁ θ₂ a b : ℝ) (hab : a ≠ b) :
     unitArc θ₁ θ₂ a b b = exp (↑θ₂ * I) := by
   simp only [unitArc]
   have hba : b - a ≠ 0 := sub_ne_zero.mpr (Ne.symm hab)
-  congr 1
-  field_simp
-  ring
+  simp_all
 
 /-- The unit arc is continuous. -/
 theorem unitArc_continuous (θ₁ θ₂ a b : ℝ) : Continuous (unitArc θ₁ θ₂ a b) := by
@@ -136,7 +134,6 @@ theorem abs_cos_le_half_of_mem_Icc {θ : ℝ} (hθ : θ ∈ Icc (π / 3) (2 * π
     linarith
   · have : Real.cos θ ≤ Real.cos (π / 3) :=
       Real.cos_le_cos_of_nonneg_of_le_pi (by linarith) (by linarith) h1
-    rw [Real.cos_pi_div_three] at this
-    linarith
+    simp_all
 
 end ArcCalculus

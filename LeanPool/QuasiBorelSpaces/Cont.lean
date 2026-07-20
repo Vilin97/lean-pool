@@ -29,8 +29,7 @@ variable {R A B : Type*} [OmegaQuasiBorelSpace R] [OmegaQuasiBorelSpace A]
 @[ext]
 lemma ext {x y : Cont R A} (h : x.apply = y.apply) : x = y := by
   cases x
-  cases y
-  simp_all only
+  simp_all
 
 instance : PartialOrder (Cont R A) :=
   PartialOrder.lift apply (by

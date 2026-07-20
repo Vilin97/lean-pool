@@ -435,22 +435,12 @@ def prodTokNbhd (X Y : Set Str) : Set Str := insert [] (embBit false X ∪ embBi
 @[simp] theorem mem_prodTokNbhd_false {X Y : Set Str} {w' : Str} :
     (false :: w') ∈ prodTokNbhd X Y ↔ w' ∈ X := by
   simp only [prodTokNbhd, Set.mem_insert_iff, Set.mem_union, mem_embBit]
-  constructor
-  · rintro (h | ⟨u, hu, hX⟩ | ⟨u, hu, hY⟩)
-    · exact absurd h (by simp)
-    · rw [List.cons.injEq] at hu; rw [hu.2]; exact hX
-    · rw [List.cons.injEq] at hu; exact absurd hu.1 (by decide)
-  · intro h; exact Or.inr (Or.inl ⟨w', rfl, h⟩)
+  simp_all
 
 @[simp] theorem mem_prodTokNbhd_true {X Y : Set Str} {w' : Str} :
     (true :: w') ∈ prodTokNbhd X Y ↔ w' ∈ Y := by
   simp only [prodTokNbhd, Set.mem_insert_iff, Set.mem_union, mem_embBit]
-  constructor
-  · rintro (h | ⟨u, hu, hX⟩ | ⟨u, hu, hY⟩)
-    · exact absurd h (by simp)
-    · rw [List.cons.injEq] at hu; exact absurd hu.1 (by decide)
-    · rw [List.cons.injEq] at hu; rw [hu.2]; exact hY
-  · intro h; exact Or.inr (Or.inr ⟨w', rfl, h⟩)
+  simp_all
 
 /-- `prodTokNbhd D₀.master D₁.master` is exactly the sum master `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`. -/
 theorem prodTokNbhd_master_eq : prodTokNbhd D₀.master D₁.master = sumTokMaster D₀ D₁ := rfl

@@ -359,16 +359,10 @@ theorem memC_embBit_inv {b : Bool} {W : Set Str} (h : C.mem (embBit b W)) : C.me
 
 theorem singleton_nil_inter_embBit (b : Bool) (X : Set Str) :
     (({[]} : Set Str) ∩ embBit b X) = ∅ := by
-  ext w
-  simp only [Set.mem_inter_iff, Set.mem_singleton_iff, mem_embBit, Set.mem_empty_iff_false,
-    iff_false, not_and]
-  rintro rfl ⟨w', heq, -⟩
-  exact absurd heq (by simp)
+  simp_all
 
 theorem singleton_nil_ne_univ : ({[]} : Set Str) ≠ Set.univ := by
-  intro h
-  have hmem : ([true] : Str) ∈ ({[]} : Set Str) := h ▸ Set.mem_univ _
-  rw [Set.mem_singleton_iff] at hmem; exact absurd hmem (by simp)
+  simp_all
 
 theorem singleton_nil_ne_embBit (b : Bool) (X : Set Str) : ({[]} : Set Str) ≠ embBit b X := by
   intro h
@@ -422,8 +416,7 @@ def toCC (x : C.Element) : CC.Element where
     · exact Or.inr (Or.inr (Or.inl ⟨X', hX', master3_inter_j1 hX', hzF'⟩))
     · exact Or.inr (Or.inr (Or.inr ⟨Y', hY', master3_inter_j2 hY', hzT'⟩))
     · exact Or.inr (Or.inl ⟨by rw [Set.inter_comm, master3_inter_j0 rfl], hzU⟩)
-    · refine Or.inr (Or.inl ⟨?_, hzU⟩)
-      rw [j0_inter_j0, Set.inter_self]
+    · simp_all
     · exfalso
       have hx := x.inter_mem hzU hzF'
       rw [singleton_nil_inter_embBit] at hx
@@ -579,8 +572,7 @@ def fromCC (s : CC.Element) : C.Element where
       · exact Or.inl rfl
       · exfalso
         obtain ⟨a, ha⟩ := C_nonempty X hX
-        have hm := hsub (⟨a, rfl, ha⟩ : (false :: a) ∈ embBit false X)
-        rw [Set.mem_singleton_iff] at hm; exact absurd hm (by simp)
+        simp_all
       · refine Or.inr (Or.inr (Or.inl ⟨X', hX', rfl, ?_⟩))
         exact s.up_mem hsF (Or.inr (Or.inr (Or.inl ⟨X', hX', rfl⟩)))
           (j1_subset_j1.mpr (embBit_subset.mp hsub))
@@ -592,8 +584,7 @@ def fromCC (s : CC.Element) : C.Element where
       · exact Or.inl rfl
       · exfalso
         obtain ⟨a, ha⟩ := C_nonempty Y hY
-        have hm := hsub (⟨a, rfl, ha⟩ : (true :: a) ∈ embBit true Y)
-        rw [Set.mem_singleton_iff] at hm; exact absurd hm (by simp)
+        simp_all
       · exfalso
         obtain ⟨a, ha⟩ := C_nonempty Y hY
         obtain ⟨w', he, -⟩ := hsub (⟨a, rfl, ha⟩ : (true :: a) ∈ embBit true Y)

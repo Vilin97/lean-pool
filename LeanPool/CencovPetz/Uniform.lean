@@ -40,9 +40,6 @@ def IsUniform {α : Type u} [Fintype α] (p : α → ℝ) : Prop :=
 /-- The uniform distribution sums to `1`. -/
 lemma uniformDistribution_sum_one {α : Type u} [Fintype α] [Nonempty α] :
     (∑ a : α, uniformDistribution (α := α) a) = 1 := by
-  classical
-  have hcard : (Fintype.card α : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt Fintype.card_pos)
-  simp [uniformDistribution, Finset.sum_const, Finset.card_univ, hcard]
+  simp_all
 
 end LeanPool.CencovPetz

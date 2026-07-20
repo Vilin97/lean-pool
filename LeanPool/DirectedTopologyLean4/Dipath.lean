@@ -61,8 +61,7 @@ end Dipath
 
 @[ext]
 protected lemma Dipath.ext : ∀ {γ₁ γ₂ : Dipath x y}, (γ₁ : I → X) = γ₂ → γ₁ = γ₂ := by
-  rintro ⟨⟨⟨x, h10⟩, h11, h12⟩, h13⟩ ⟨⟨⟨y, h20⟩, h21, h22⟩, h23⟩ rfl
-  rfl
+  simp_all
 
 namespace Dipath
 

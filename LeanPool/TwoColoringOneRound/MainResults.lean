@@ -39,8 +39,7 @@ theorem le_pStar_of_forall_le {c : ENNReal} (hc : ∀ alg : ClassicalAlgorithm, 
     c ≤ ClassicalAlgorithm.pStar := by
   -- `c ≤ sInf (range p)` since `c` is a lower bound for every element of the range.
   refine le_sInf ?_
-  rintro _ ⟨alg, rfl⟩
-  exact hc alg
+  simp_all
 
 /--
 If there exists an algorithm achieving `p ≤ c`, then `pStar ≤ c`.

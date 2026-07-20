@@ -359,8 +359,7 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
       rcases Nat.eq_zero_or_pos d with rfl | hd
       · simp [h1, h2]
       · have h3 : Q.coeff (d - 1) = 0 := h.parQ.coeff_eq_zero (by omega)
-        have hlt : ¬ (d + 1 < 2) := by omega
-        simp [h1, h2, h3, hlt]
+        simp_all
     · rcases Nat.lt_or_ge m (d + 3) with hm3 | hm3
       · have hmeq : m = d + 2 := by omega
         subst hmeq
@@ -373,8 +372,7 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
       · have h1 : P.coeff (m - 1) = 0 := h.coeff_P_eq_zero (by omega)
         have h2 : Q.coeff m = 0 := h.coeff_Q_eq_zero (by omega)
         have h3 : Q.coeff (m - 2) = 0 := h.coeff_Q_eq_zero (by omega)
-        have hlt : ¬ (m < 2) := by omega
-        simp [h1, h2, h3, hlt]
+        simp_all
   · rw [unstepQ, Polynomial.coeff_sub, Polynomial.coeff_C_mul,
       Polynomial.coeff_C_mul, coeff_X_mul']
     rcases Nat.lt_or_ge m (d + 1) with hm1 | hm1
@@ -385,8 +383,7 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
         simp [h1]
       · have h1 : P.coeff m = 0 := h.parP.coeff_eq_zero (by omega)
         have h2 : Q.coeff (m - 1) = 0 := h.parQ.coeff_eq_zero (by omega)
-        have hne : ¬ (m = 0) := by omega
-        simp [h1, h2, hne]
+        simp_all
     · rcases Nat.lt_or_ge m (d + 2) with hm2 | hm2
       · have hmeq : m = d + 1 := by omega
         subst hmeq
@@ -395,8 +392,7 @@ private theorem isQSPPair_unstep {d : ℕ} {P Q : ℂ[X]} (h : IsQSPPair (d + 1)
         linear_combination (-(v * Q.coeff d)) * hvw
       · have h1 : P.coeff m = 0 := h.coeff_P_eq_zero (by omega)
         have h2 : Q.coeff (m - 1) = 0 := h.coeff_Q_eq_zero (by omega)
-        have hne : ¬ (m = 0) := by omega
-        simp [h1, h2, hne]
+        simp_all
   · exact ((h.parP.X_mul.congr (by omega)).C_mul w).add
       (((h.parQ.one_sub_X_sq_mul).congr (by omega)).C_mul v)
   · exact ((h.parQ.X_mul.congr (by omega)).C_mul v).sub (h.parP.C_mul w)
@@ -488,11 +484,7 @@ theorem qspO_converse (d : ℕ) (P Q : ℂ[X]) (h : IsQSPPair d P Q) :
     · -- Both leading coefficients vanish: drop two levels and pad.
       have hp : P.coeff (n + 1) = 0 := by
         have hrel := h.leading_coeff_rel
-        rw [hq] at hrel
-        simp only [zero_mul] at hrel
-        rcases mul_eq_zero.mp hrel with h' | h'
-        · exact h'
-        · simpa using congrArg (starRingEnd ℂ) h'
+        simp_all
       rcases n with - | m
       · -- `d = 1` with vanishing leading coefficients is impossible.
         exfalso
@@ -510,8 +502,7 @@ theorem qspO_converse (d : ℕ) (P Q : ℂ[X]) (h : IsQSPPair d P Q) :
           | 1 => exact hp
           | (k' + 2) => exact h.coeff_P_eq_zero (by omega)
         have hnorm := h.norm
-        rw [hP0, hQ0] at hnorm
-        simp at hnorm
+        simp_all
       · -- `IsQSPPair (m+2) → IsQSPPair m`, then pad with `(π/2, -π/2)`.
         have hpair : IsQSPPair m P Q := by
           refine isQSPPair_of_coeff (fun k hk => ?_) (fun k hk => ?_)
@@ -520,8 +511,7 @@ theorem qspO_converse (d : ℕ) (P Q : ℂ[X]) (h : IsQSPPair d P Q) :
             · exact h.parP.coeff_eq_zero (by omega)
             · rcases Nat.lt_or_ge k (m + 3) with hk3 | hk3
               · have : k = m + 2 := by omega
-                subst this
-                exact hp
+                simp_all
               · exact h.coeff_P_eq_zero (by omega)
           · rcases Nat.lt_or_ge k (m + 1) with hk1 | hk1
             · have : k = m := by omega
@@ -529,8 +519,7 @@ theorem qspO_converse (d : ℕ) (P Q : ℂ[X]) (h : IsQSPPair d P Q) :
               exact h.parQ.coeff_eq_zero (by omega)
             · rcases Nat.lt_or_ge k (m + 2) with hk2 | hk2
               · have : k = m + 1 := by omega
-                subst this
-                exact hq
+                simp_all
               · exact h.coeff_Q_eq_zero (by omega)
         obtain ⟨φ₀, φs, hlen, hmat⟩ := ih m (by omega) P Q hpair
         refine ⟨φ₀, Real.pi / 2 :: -(Real.pi / 2) :: φs, by simp [hlen],
@@ -569,12 +558,7 @@ private theorem qspMat_inj {P Q P' Q' : ℂ[X]}
       nlinarith [hx.1, hx.2]
     have h := congrArg (fun M : HilbertOperator 1 => M 0 1) (hmat x hx')
     simp only [qspMat] at h
-    have h' : Q.eval (x : ℂ) * (Real.sqrt (1 - x ^ 2) : ℂ)
-        = Q'.eval (x : ℂ) * (Real.sqrt (1 - x ^ 2) : ℂ) := by
-      have := h
-      simp only [neg_mul] at this
-      exact neg_injective this
-    exact mul_right_cancel₀ hs h'
+    simp_all
 
 /-- The polynomial normalization identity is equivalent to the pointwise
 normalization `|P(x)|² + (1-x²)|Q(x)|² = 1` on `[-1,1]`
@@ -615,8 +599,7 @@ theorem ReflectionBasedQuantumSignalProcessing.main (d : ℕ) (P Q : ℂ[X]) :
     have hPQ : ∀ x ∈ Set.Icc (-1 : ℝ) 1, qspMat P Q x = qspMat P' Q' x :=
       fun x hx => by rw [← hmat x hx, hmat' x hx]
     obtain ⟨hP, hQ⟩ := qspMat_inj hPQ
-    rw [hP, hQ]
-    exact hpair
+    simp_all
 
 /-! ### The Wx-convention (XZX form)
 

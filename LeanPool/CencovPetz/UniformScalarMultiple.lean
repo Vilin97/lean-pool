@@ -137,8 +137,7 @@ private lemma B_dij_anchor_self_eq (i0 i1 i : Fin n) (hi01 : i0 ≠ i1) (hi : i 
       B (G := G) (n := n) (dij (n := n) i0 i1) (dij (n := n) i0 i1) := by
   classical
   by_cases hi1 : i = i1
-  · subst hi1
-    rfl
+  · simp_all
   · have hi0i : i0 ≠ i := by
       intro h
       exact hi h.symm
@@ -147,8 +146,7 @@ private lemma B_dij_anchor_self_eq (i0 i1 i : Fin n) (hi01 : i0 ≠ i1) (hi : i 
         (i := i0) (j := i1) (k := i0) (l := i1)
     have hσi0 : (Equiv.swap i1 i) i0 = i0 := by
       simp [Equiv.swap_apply_of_ne_of_ne hi01 hi0i]
-    have hσi1 : (Equiv.swap i1 i) i1 = i := by simp [Equiv.swap_apply_left]
-    simpa [hσi0, hσi1] using hperm
+    simp_all
 
 private lemma B_dij_i_i0_pair (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
     (hc : c = B (G := G) (n := n) (dij (n := n) i0 i1) (dij (n := n) i0 i1)) :
@@ -157,11 +155,9 @@ private lemma B_dij_i_i0_pair (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
         if i = i0 ∨ j = i0 then 0 else if i = j then c else (1 / 2 : ℝ) * c := by
   intro i j
   by_cases hi : i = i0
-  · subst hi
-    simp [Basis.dij_self]
+  · simp_all
   by_cases hj : j = i0
-  · subst hj
-    simp [Basis.dij_self]
+  · simp_all
   have hneg_i : dij (n := n) i i0 = -dij (n := n) i0 i := by
     simpa using (Basis.dij_neg (n := n) i i0)
   have hneg_j : dij (n := n) j i0 = -dij (n := n) i0 j := by
@@ -172,10 +168,7 @@ private lemma B_dij_i_i0_pair (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
         B (G := G) (n := n) (dij (n := n) i0 i) (dij (n := n) i0 i) = c := by
       simpa [hc] using
         (B_dij_anchor_self_eq (G := G) (n := n) (i0 := i0) (i1 := i1) (i := i) hi01 hi)
-    have hself :
-        B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) i i0) = c := by
-      simpa [hneg_i] using hself0
-    simpa [hi, hj] using hself
+    simp_all
   · have hi0i : i0 ≠ i := by
       intro h
       exact hi h.symm
@@ -193,18 +186,7 @@ private lemma B_dij_i_i0_pair (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
         B (G := G) (n := n) (dij (n := n) i0 i) (dij (n := n) i0 i) = c := by
       simpa [hc] using
         (B_dij_anchor_self_eq (G := G) (n := n) (i0 := i0) (i1 := i1) (i := i) hi01 hi)
-    have :
-        B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) =
-          (1 / 2 : ℝ) * c := by
-      calc
-        B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0)
-            = B (G := G) (n := n) (-dij (n := n) i0 i) (-dij (n := n) i0 j) := by
-                  simp [hneg_i, hneg_j]
-        _ = B (G := G) (n := n) (dij (n := n) i0 i) (dij (n := n) i0 j) := by
-                  simp
-        _ = (1 / 2 : ℝ) * c := by
-                  simpa [hself] using hhalf
-    simpa [hi, hj, hij] using this
+    simp_all
 
 private lemma B_double_sum_erase (u : V n) (i0 : Fin n) :
     (∑ i : Fin n, ∑ j : Fin n,
@@ -215,75 +197,7 @@ private lemma B_double_sum_erase (u : V n) (i0 : Fin n) :
         ∑ j ∈ (Finset.univ : Finset (Fin n)).erase i0,
           (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
             B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) := by
-  classical
-  let S : Finset (Fin n) := (Finset.univ : Finset (Fin n)).erase i0
-  change
-    (∑ i : Fin n, ∑ j : Fin n,
-        (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-          B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0))
-      =
-      ∑ i ∈ S, ∑ j ∈ S,
-        (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-          B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0)
-  let g : Fin n → ℝ := fun i : Fin n =>
-    ∑ j : Fin n,
-      (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-        B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0)
-  have h_outer : (∑ i : Fin n, g i) = g i0 + ∑ i ∈ S, g i := by
-    have h :
-        (∑ i : Fin n, g i) = (∑ i ∈ S, g i) + g i0 := by
-      exact
-        (Finset.sum_erase_add (s := (Finset.univ : Finset (Fin n))) (f := g) (a := i0)
-          (Finset.mem_univ i0)).symm
-    calc
-      (∑ i : Fin n, g i) = (∑ i ∈ S, g i) + g i0 := h
-      _ = g i0 + ∑ i ∈ S, g i := by
-            ac_rfl
-  have hg0 : g i0 = 0 := by
-    simp [g, Basis.dij_self]
-  have h_outer' : (∑ i : Fin n, g i) = ∑ i ∈ S, g i := by
-    calc
-      (∑ i : Fin n, g i) = g i0 + ∑ i ∈ S, g i := h_outer
-      _ = ∑ i ∈ S, g i := by
-            simp [hg0]
-  have h_inner :
-      (∑ i ∈ S, g i) =
-        ∑ i ∈ S, ∑ j ∈ S,
-          (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-            B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) := by
-    refine Finset.sum_congr rfl (fun i hiS => ?_)
-    have h0 :
-        (u : Fin n → ℝ) i * (u : Fin n → ℝ) i0 *
-            B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) i0 i0) = 0 := by
-      simp [Basis.dij_self]
-    have h :
-        (∑ j : Fin n,
-              (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-                B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0)) =
-            (∑ j ∈ S,
-                (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-                  B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0))
-              + (u : Fin n → ℝ) i * (u : Fin n → ℝ) i0 *
-                  B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) i0 i0) := by
-      exact
-        (Finset.sum_erase_add (s := (Finset.univ : Finset (Fin n)))
-            (f := fun j : Fin n =>
-              (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-                B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0))
-            (a := i0) (Finset.mem_univ i0)).symm
-    have h' := h
-    rw [h0] at h'
-    simpa [g, add_assoc, add_comm, add_left_comm] using h'
-  calc
-    (∑ i : Fin n, ∑ j : Fin n,
-        (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-          B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0))
-        = ∑ i : Fin n, g i := by
-              rfl
-    _ = ∑ i ∈ S, g i := h_outer'
-    _ = ∑ i ∈ S, ∑ j ∈ S,
-            (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-              B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) := h_inner
+  simp_all
 
 omit G [Nonempty (Fin n)] in
 private lemma kernel_sum_expand (u : V n) (S : Finset (Fin n)) (c : ℝ) :
@@ -297,8 +211,7 @@ private lemma kernel_sum_expand (u : V n) (S : Finset (Fin n)) (c : ℝ) :
   have hsplit (i j : Fin n) :
       (if i = j then c else (1 / 2 : ℝ) * c) = (c / 2) + (if i = j then c / 2 else 0) := by
     by_cases h : i = j
-    · subst h
-      simp
+    · simp_all
     · simp [h]
       ring
   have hsumSq_factor :
@@ -340,18 +253,7 @@ private lemma kernel_sum_expand (u : V n) (S : Finset (Fin n)) (c : ℝ) :
           (u : Fin n → ℝ) i * (u : Fin n → ℝ) j * (if i = j then c / 2 else 0))
         =
         (c / 2) * (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i) := by
-    have :
-        (∑ i ∈ S, ∑ j ∈ S,
-            (u : Fin n → ℝ) i * (u : Fin n → ℝ) j * (if i = j then c / 2 else 0))
-          =
-          (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i * (c / 2)) := by
-      simp
-    calc
-      (∑ i ∈ S, ∑ j ∈ S,
-            (u : Fin n → ℝ) i * (u : Fin n → ℝ) j * (if i = j then c / 2 else 0))
-          =
-          (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i * (c / 2)) := this
-      _ = (c / 2) * (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i) := hsumSq_factor
+    simp_all
   calc
     (∑ i ∈ S, ∑ j ∈ S,
         (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
@@ -360,9 +262,7 @@ private lemma kernel_sum_expand (u : V n) (S : Finset (Fin n)) (c : ℝ) :
         ∑ i ∈ S, ∑ j ∈ S,
           (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
             ((c / 2) + (if i = j then c / 2 else 0)) := by
-              refine Finset.sum_congr rfl (fun i hiS => ?_)
-              refine Finset.sum_congr rfl (fun j hjS => ?_)
-              rw [hsplit i j]
+              simp_all
     _ =
         (∑ i ∈ S, ∑ j ∈ S,
             (u : Fin n → ℝ) i * (u : Fin n → ℝ) j * (c / 2))
@@ -373,8 +273,7 @@ private lemma kernel_sum_expand (u : V n) (S : Finset (Fin n)) (c : ℝ) :
     _ =
         (c / 2) * ((∑ i ∈ S, (u : Fin n → ℝ) i) * (∑ j ∈ S, (u : Fin n → ℝ) j))
           + (c / 2) * (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i) := by
-              rw [hconst]
-              rw [hdiag]
+              simp_all
     _ =
         (c / 2) *
           (((∑ i ∈ S, (u : Fin n → ℝ) i) * (∑ j ∈ S, (u : Fin n → ℝ) j))
@@ -425,21 +324,12 @@ private lemma B_quadratic_dij_sum (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
     refine Finset.sum_congr rfl (fun j hjS => ?_)
     have hi0 : i ≠ i0 := h_pairS i hiS
     have hj0 : j ≠ i0 := h_pairS j hjS
-    have hb :
-        B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) =
-          (if i = j then c else (1 / 2 : ℝ) * c) := by
-      simpa [hi0, hj0] using h_pair i j
-    simp [hb, mul_assoc, mul_left_comm]
+    simp_all
   have h_expandS := kernel_sum_expand (n := n) (u := u) (S := S) (c := c)
   have hSsq :
       (∑ i ∈ S, (u : Fin n → ℝ) i) * (∑ j ∈ S, (u : Fin n → ℝ) j) =
         (u : Fin n → ℝ) i0 * (u : Fin n → ℝ) i0 := by
-    calc
-      (∑ i ∈ S, (u : Fin n → ℝ) i) * (∑ j ∈ S, (u : Fin n → ℝ) j) =
-          (-(u : Fin n → ℝ) i0) * (-(u : Fin n → ℝ) i0) := by
-            simp [hsum_erase]
-      _ = (u : Fin n → ℝ) i0 * (u : Fin n → ℝ) i0 := by
-            ring
+    simp_all
   have hsq_split :
       (∑ k : Fin n, (u : Fin n → ℝ) k * (u : Fin n → ℝ) k) =
         (u : Fin n → ℝ) i0 * (u : Fin n → ℝ) i0 +
@@ -462,30 +352,7 @@ private lemma B_quadratic_dij_sum (i0 i1 : Fin n) (hi01 : i0 ≠ i1) (c : ℝ)
           (u : Fin n → ℝ) i0 * (u : Fin n → ℝ) i0 +
             ∑ k ∈ S, (u : Fin n → ℝ) k * (u : Fin n → ℝ) k := by
             ac_rfl
-  calc
-    B (G := G) (n := n) u u =
-        ∑ i : Fin n, ∑ j : Fin n,
-          (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-            B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) := hB_sum
-    _ =
-        ∑ i ∈ S, ∑ j ∈ S,
-          (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-            B (G := G) (n := n) (dij (n := n) i i0) (dij (n := n) j i0) := h_erase
-    _ =
-        ∑ i ∈ S, ∑ j ∈ S,
-          (u : Fin n → ℝ) i * (u : Fin n → ℝ) j *
-            (if i = j then c else (1 / 2 : ℝ) * c) := hkernel
-    _ =
-        (c / 2) *
-          (((∑ i ∈ S, (u : Fin n → ℝ) i) * (∑ j ∈ S, (u : Fin n → ℝ) j))
-            + (∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i)) := h_expandS
-    _ =
-        (c / 2) *
-          ((u : Fin n → ℝ) i0 * (u : Fin n → ℝ) i0 +
-            ∑ i ∈ S, (u : Fin n → ℝ) i * (u : Fin n → ℝ) i) := by
-          simp [hSsq]
-    _ = (c / 2) * (∑ k : Fin n, (u : Fin n → ℝ) k * (u : Fin n → ℝ) k) := by
-          simp [hsq_split]
+  simp_all
 
 lemma B_eq_smul_fisherBilin_uniform (i0 i1 : Fin n) (hi01 : i0 ≠ i1) :
   B (G := G) (n := n)
@@ -530,20 +397,7 @@ lemma B_eq_smul_fisherBilin_uniform (i0 i1 : Fin n) (hi01 : i0 ≠ i1) :
         exact mul_div_mul_right (a := c) (b := (2 : ℝ)) (c := (Fintype.card (Fin n) : ℝ)) hm
       rw [← mul_assoc]
       rw [hscale]
-    calc
-      B (G := G) (n := n) u u
-          = (c / 2) *
-              (∑ k : Fin n,
-                (u : Fin n → ℝ) k * (u : Fin n → ℝ) k) :=
-            hB_quadratic
-      _ = (c / (2 * (Fintype.card (Fin n) : ℝ))) *
-            fisherBilin (Simplex.uniform (α := Fin n)) u u := by
-            symm
-            exact hscaled_fisher
-      _ =
-          (((c / (2 * (Fintype.card (Fin n) : ℝ))) •
-            fisherBilin (Simplex.uniform (α := Fin n))) u) u := by
-            rfl
+    simp_all
   have hEq :=
     LinearMap.BilinForm.ext_of_isSymm hSymm₁ hSymm₂ hdiag
   simpa [c, hc] using hEq

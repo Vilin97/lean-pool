@@ -57,8 +57,7 @@ theorem freeCovarianceℂ_bilinear_agrees_on_reals
   have h : ∀ (x y : SpaceTime),
     ((f x : ℂ)) * ((freeCovariance m x y : ℂ)) * ((g y : ℂ))
     = (((f x) * (freeCovariance m x y) * (g y) : ℝ) : ℂ) := by
-    intro x y
-    simp only [ofReal_mul]
+    simp_all
   simp_rw [h]
   have step1 : ∫ x, ∫ y, ((f x * freeCovariance m x y * g y : ℝ) : ℂ)
              = ∫ x, ((∫ y, f x * freeCovariance m x y * g y : ℝ) : ℂ) := by
@@ -82,10 +81,7 @@ private lemma schwartz_real_smul_eq_complex (c : ℝ) (f : SchwartzMap SpaceTime
 private lemma lp_real_smul_eq_complex (c : ℝ) (g : Lp ℂ 2 (volume : Measure SpaceTime)) :
     c • g = (c : ℂ) • g := by
   ext1; filter_upwards [Lp.coeFn_smul c g, Lp.coeFn_smul (c : ℂ) g] with x h1 h2
-  rw [h1, h2]
-  have : c • (g : SpaceTime → ℂ) x = (c : ℂ) • (g : SpaceTime → ℂ) x := by
-    rw [Complex.real_smul, smul_eq_mul]
-  exact this
+  simp_all
 
 /-- ℝ-linear view of the complex Fourier transform on Schwartz space.
 
@@ -98,12 +94,7 @@ noncomputable def fourierTransformCLMReal :
     { toFun := SchwartzMap.fourierTransformCLM ℂ
       map_add' := fun x y => map_add _ x y
       map_smul' := fun c x => by
-        change SchwartzMap.fourierTransformCLM ℂ (c • x) = c • SchwartzMap.fourierTransformCLM ℂ x
-        have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
-        have hmap : SchwartzMap.fourierTransformCLM ℂ ((c : ℂ) • x) =
-            (c : ℂ) • SchwartzMap.fourierTransformCLM ℂ x :=
-          ContinuousLinearMap.map_smul _ _ _
-        rw [hcx, hmap, ← schwartz_real_smul_eq_complex] }
+        simp_all }
   cont := (SchwartzMap.fourierTransformCLM ℂ).continuous
 
 /-- ℝ-linear view of the Schwartz-to-`L²` embedding. -/
@@ -114,13 +105,7 @@ noncomputable def schwartzToL2CLMReal (_m : ℝ) :
       { toFun := SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)
         map_add' := fun x y => map_add _ x y
         map_smul' := fun c x => by
-          change SchwartzMap.toLpCLM ℂ ℂ 2 volume (c • x) =
-            c • SchwartzMap.toLpCLM ℂ ℂ 2 volume x
-          have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
-          have hmap : SchwartzMap.toLpCLM ℂ ℂ 2 volume ((c : ℂ) • x) =
-              (c : ℂ) • SchwartzMap.toLpCLM ℂ ℂ 2 volume x :=
-            ContinuousLinearMap.map_smul _ _ _
-          rw [hcx, hmap, ← lp_real_smul_eq_complex] }
+          simp_all }
     cont := (SchwartzMap.toLpCLM ℂ ℂ 2 volume).continuous }
 
 /-! ## The Embedding Map -/
@@ -156,8 +141,7 @@ lemma sqrtPropagatorMap_sq_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
     (Continuous.comp_aestronglyMeasurable (by fun_prop) h_map_meas).pow 2
   have h_dom_integrable : Integrable (fun k => (1 / m) ^ 2 * ‖F k‖ ^ 2) volume := by
     have := Integrable.const_mul hF_sq ((1 / m) ^ 2)
-    simpa [pow_two, mul_comm, mul_left_comm, mul_assoc]
-      using this
+    simp_all
   have h_dom_pointwise : ∀ᵐ k ∂volume,
       ‖‖sqrtPropagatorMap m f k‖ ^ 2‖ ≤ ‖(1 / m) ^ 2 * ‖F k‖ ^ 2‖ := by
     have hmpos : 0 < m := Fact.out
@@ -248,9 +232,7 @@ lemma freeCovarianceℂ_eq_bilinear_on_reals (m : ℝ) (f g : TestFunction) :
     freeCovarianceℂ m (toComplex f) (toComplex g)
       = freeCovarianceℂBilinear m (toComplex f) (toComplex g) := by
   unfold freeCovarianceℂ freeCovarianceℂBilinear
-  congr 1 with x
-  congr 1 with y
-  rw [toComplex_star]
+  simp_all
 
 /-- Key lemma: The squared norm equals the covariance form. -/
 lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
@@ -272,8 +254,7 @@ lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFun
         ‖sqrtPropagatorMap m f k‖ = ‖F k * momentumWeightSqrtMathlib m k‖ := rfl
         _ = ‖F k‖ * ‖(momentumWeightSqrtMathlib m k : ℂ)‖ := by simp
         _ = ‖F k‖ * momentumWeightSqrtMathlib m k := by
-          have h := congrArg (fun t : ℝ => ‖F k‖ * t) h_abs
-          simpa using h
+          simp_all
     have h_sq : ‖sqrtPropagatorMap m f k‖ ^ 2
         = ‖F k‖ ^ 2 * (momentumWeightSqrtMathlib m k) ^ 2 := by
       simp [pow_two, h_norm, mul_comm, mul_left_comm, mul_assoc]
@@ -305,13 +286,8 @@ lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFun
                 freeCovarianceℂ_eq_bilinear_on_reals m f f
         _ = (freeCovarianceFormR m f f : ℂ) :=
                 freeCovarianceℂ_bilinear_agrees_on_reals m f f
-    have := congrArg (fun z : ℂ => z.re) h_complex
-    simpa using this
-  calc
-    sqrtPropagatorMapNormSq m f
-        = ∫ k, ‖F k‖ ^ 2 * momentumWeightMathlib m k ∂volume := h_norm_int
-    _ = (freeCovarianceℂ m (toComplex f) (toComplex f)).re := h_integral_eq
-    _ = freeCovarianceFormR m f f := h_real_cov
+    simp_all
+  simp_all
 
 /-! ## The Proof of sqrtPropagatorEmbedding -/
 
@@ -401,13 +377,7 @@ private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fac
     { toFun := momentumWeightSqrtMathlibMulCLM m
       map_add' := fun x y => map_add _ x y
       map_smul' := fun c x => by
-        change momentumWeightSqrtMathlibMulCLM m (c • x)
-            = c • momentumWeightSqrtMathlibMulCLM m x
-        have hcx : c • x = (c : ℂ) • x := lp_real_smul_eq_complex c x
-        have hmap : momentumWeightSqrtMathlibMulCLM m ((c : ℂ) • x) =
-            (c : ℂ) • momentumWeightSqrtMathlibMulCLM m x :=
-          ContinuousLinearMap.map_smul _ _ _
-        rw [hcx, hmap, ← lp_real_smul_eq_complex] }
+        simp_all }
   cont := (momentumWeightSqrtMathlibMulCLM m).continuous
 
 /-- Continuous linear map obtained by composing the proven building blocks. -/
@@ -432,8 +402,7 @@ lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
   have h_weight : (fun k => (momentumWeightSqrtMathlib m k : ℂ) * A k)
       =ᵐ[volume] fun k => (momentumWeightSqrtMathlib m k : ℂ) * g k := by
     refine h_A.mono ?_
-    intro k hk
-    simp [hk]
+    simp_all
   have h_mul'' : embeddingMapCLM m f =ᵐ[volume]
       fun k => (momentumWeightSqrtMathlib m k : ℂ) * g k :=
     h_mul'.trans h_weight
@@ -507,8 +476,7 @@ theorem freeCovarianceFormR_pos (m : ℝ) [Fact (0 < m)] :
     freeCovarianceℂ_eq_bilinear_on_reals m f f
   have h3 : 0 ≤ (freeCovarianceℂ m (toComplex f) (toComplex f)).re :=
     freeCovarianceℂ_positive m (toComplex f)
-  rw [h2, h1] at h3
-  simpa using h3
+  simp_all
 
 /-- Symmetry of the real covariance bilinear form. -/
 theorem freeCovarianceFormR_symm (m : ℝ) [Fact (0 < m)] (f g : TestFunction) :
@@ -562,16 +530,7 @@ lemma freeCovarianceFormR_smul_left (m : ℝ) [Fact (0 < m)] (c : ℝ) (f g : Te
       (freeCovarianceFormR m f g : ℂ)
         = freeCovarianceℂBilinear m (toComplex f) (toComplex g) :=
     (freeCovarianceℂ_bilinear_agrees_on_reals m f g).symm
-  have h' :
-      (freeCovarianceFormR m (c • f) g : ℂ)
-        = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-    calc
-      (freeCovarianceFormR m (c • f) g : ℂ)
-          = freeCovarianceℂBilinear m ((c : ℂ) • toComplex f) (toComplex g) := hL
-      _ = (c : ℂ) * freeCovarianceℂBilinear m (toComplex f) (toComplex g) := h
-      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-            rw [hR]
-  simpa [Complex.ofReal_mul] using h'
+  simp_all
 
 /-- Addition in the second argument of the real covariance bilinear form. -/
 lemma freeCovarianceFormR_add_right (m : ℝ) [Fact (0 < m)] (f g₁ g₂ : TestFunction) :
@@ -613,24 +572,13 @@ lemma freeCovarianceFormR_smul_right (m : ℝ) [Fact (0 < m)] (c : ℝ) (f g : T
       (freeCovarianceFormR m f g : ℂ)
         = freeCovarianceℂBilinear m (toComplex f) (toComplex g) :=
     (freeCovarianceℂ_bilinear_agrees_on_reals m f g).symm
-  have h' :
-      (freeCovarianceFormR m f (c • g) : ℂ)
-        = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-    calc
-      (freeCovarianceFormR m f (c • g) : ℂ)
-          = freeCovarianceℂBilinear m (toComplex f) ((c : ℂ) • toComplex g) := hL
-      _ = (c : ℂ) * freeCovarianceℂBilinear m (toComplex f) (toComplex g) := h
-      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-            rw [hR]
-  simpa [Complex.ofReal_mul] using h'
+  simp_all
 
 /-- Zero in the first argument gives zero. -/
 lemma freeCovarianceFormR_zero_left (m : ℝ) [Fact (0 < m)] (g : TestFunction) :
     freeCovarianceFormR m 0 g = 0 := by
   have h := freeCovarianceFormR_smul_left m (0 : ℝ) 0 g
-  simp only [zero_smul] at h
-  rw [h]
-  simp only [zero_mul]
+  simp_all
 
 /-- Zero in the second argument gives zero. -/
 lemma freeCovarianceFormR_zero_right (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
@@ -681,22 +629,7 @@ lemma freeCovarianceFormR_reflection_invariant
           =
         ∫ x, ∫ y,
             fc x * (freeCovariance m x y : ℂ) * gc y ∂volume ∂volume := by
-      calc
-        ∫ x, ∫ y,
-            (QFT.compTimeReflection fc) x * (freeCovariance m x y : ℂ)
-              * (QFT.compTimeReflection gc) y ∂volume ∂volume
-          = ∫ x, ∫ y,
-              fc x * (freeCovariance m x y : ℂ)
-                * (QFT.compTimeReflection (QFT.compTimeReflection gc)) y ∂volume ∂volume :=
-                  h_double'
-        _ = ∫ x, ∫ y,
-                fc x * (freeCovariance m x y : ℂ) * gc y ∂volume ∂volume := by
-              exact
-                congrArg
-                  (fun h : TestFunctionℂ =>
-                    ∫ x, ∫ y,
-                        fc x * (freeCovariance m x y : ℂ) * h y ∂volume ∂volume)
-                  (h_comp_invol gc)
+      simp_all
     unfold freeCovarianceℂBilinear
     exact h_double''
   have h₁ :
@@ -710,16 +643,7 @@ lemma freeCovarianceFormR_reflection_invariant
       freeCovarianceℂBilinear m fc gc
         = (freeCovarianceFormR m f g : ℂ) :=
     (freeCovarianceℂ_bilinear_agrees_on_reals (m := m) f g)
-  have h_complex_eq :
-      (freeCovarianceFormR m (QFT.compTimeReflectionReal f) (QFT.compTimeReflectionReal g) : ℂ)
-        = (freeCovarianceFormR m f g : ℂ) := by
-    calc
-      (freeCovarianceFormR m (QFT.compTimeReflectionReal f) (QFT.compTimeReflectionReal g) : ℂ)
-          = freeCovarianceℂBilinear m (QFT.compTimeReflection fc) (QFT.compTimeReflection gc) :=
-            h₁.symm
-      _ = freeCovarianceℂBilinear m fc gc := h_complex
-      _ = (freeCovarianceFormR m f g : ℂ) := h₂
-  exact ofReal_inj.mp h_complex_eq
+  simp_all
 
 /-- Mixed-time-reflection identity for the real free covariance. -/
 lemma freeCovarianceFormR_reflection_cross

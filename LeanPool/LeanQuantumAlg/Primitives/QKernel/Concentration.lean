@@ -124,8 +124,7 @@ theorem variance_ryKernel (n : ℕ) :
 theorem variance_ryKernel_le (n : ℕ) :
     variance (ryKernel n) (ryMeasure n) ≤ (3 / 8) ^ n := by
   rw [variance_ryKernel]
-  have : (0 : ℝ) ≤ (1 / 4) ^ n := by positivity
-  linarith
+  simp_all
 
 /-- **The tensor-product RY quantum kernel concentrates exponentially** (Thanasilp 2022),
 with NO Haar assumption. -/

@@ -27,16 +27,14 @@ theorem LinearMap.mulLeft_conj_of_mulEquivClass_apply
   {Fn : Type*} [EquivLike Fn E F] [MulEquivClass Fn E F]
   (f : Fn) (x : E) (y : F) :
     f (LinearMap.mulLeft R x (EquivLike.inv f y))  = LinearMap.mulLeft R (f x) y := by
-  simp_rw [LinearMap.mulLeft_apply, map_mul]
-  simp only [EquivLike.apply_inv_apply]
+  simp_all
 
 omit [SMulCommClass R E E] [SMulCommClass R F F] in
 theorem LinearMap.mulRight_conj_of_mulEquivClass_apply
   {Fn : Type*} [EquivLike Fn E F] [MulEquivClass Fn E F]
   (f : Fn) (x : E) (y : F) :
     f (LinearMap.mulRight R x (EquivLike.inv f y)) = LinearMap.mulRight R (f x) y := by
-  simp_rw [LinearMap.mulRight_apply, map_mul]
-  simp only [EquivLike.apply_inv_apply]
+  simp_all
 
 end
 
@@ -181,8 +179,7 @@ theorem LinearMap.mulLeft_eq_one_or_zero_iff_mulRight_tfae {H₁ : Type _} [Semi
   by_cases h : p
   · simp_rw [h, if_true, LinearMap.mulLeft_eq_one_iff, LinearMap.mulRight_eq_one_iff]
     tfae_finish
-  · simp_rw [h, if_false, LinearMap.mulLeft_eq_zero_iff, LinearMap.mulRight_eq_zero_iff]
-    tfae_finish
+  · simp_all
 
 theorem LinearMap.mulLeft_eq_one_or_zero_iff_mulRight {H₁ : Type _} [Semiring H₁] [Algebra R H₁]
     (x : H₁) (p : Prop) [Decidable p] :
@@ -204,8 +201,7 @@ theorem LinearMap.mulLeft_comp_inj {H₁ H₂ : Type _} [Semiring H₁] [Module 
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, LinearMap.mulLeft_apply]
   intro h y
   specialize h (⅟ x * y)
-  simp_rw [← mul_assoc, mul_invOf_self, one_mul] at h
-  exact h
+  simp_all
 
 theorem LinearMap.mulLeft_apply_inj {H₁ : Type _} [Semiring H₁] [Module R H₁]
     [SMulCommClass R H₁ H₁]

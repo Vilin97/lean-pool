@@ -267,15 +267,8 @@ theorem pow_two_sub_eq_mul_half_pow {rOut i : ℕ} (hi : i ≤ rOut) :
     (2 ^ (rOut - i) : ℝ) = (2 ^ rOut : ℝ) * ((1 : ℝ) / 2) ^ i := by
   have hpow : (2 : ℝ) ^ rOut = (2 : ℝ) ^ (rOut - i) * (2 : ℝ) ^ i := by
     rw [← pow_add]
-    congr
-    omega
-  calc
-    (2 ^ (rOut - i) : ℝ)
-        = ((2 : ℝ) ^ (rOut - i) * ((2 : ℝ) ^ i * ((1 : ℝ) / 2) ^ i)) := by
-          rw [← mul_pow]
-          norm_num
-    _ = (((2 : ℝ) ^ (rOut - i) * (2 : ℝ) ^ i) * ((1 : ℝ) / 2) ^ i) := by ring
-    _ = (2 ^ rOut : ℝ) * ((1 : ℝ) / 2) ^ i := by rw [← hpow]
+    simp_all
+  simp_all
 
 theorem annulusMean_eq_real_sum (n rIn rOut : ℕ) :
     (annulusMean n rIn rOut : ℝ) =
@@ -306,14 +299,7 @@ theorem annulusMean_le_fullWeightedMean (n rIn rOut : ℕ) :
     · have hpow : (2 ^ (rOut - i) : ℝ) =
           (2 ^ rOut : ℝ) * ((1 : ℝ) / 2) ^ i :=
         pow_two_sub_eq_mul_half_pow hbounds.2
-      calc
-        ((Nat.choose n i *
-            if rIn ≤ i ∧ i ≤ rOut then 2 ^ (rOut - i) else 0 : ℕ) : ℝ)
-            = (Nat.choose n i : ℝ) * (2 ^ (rOut - i) : ℝ) := by
-              simp [hbounds]
-        _ ≤ (Nat.choose n i : ℝ) *
-              ((2 ^ rOut : ℝ) * ((1 : ℝ) / 2) ^ i) := by
-              rw [hpow]
+      simp_all
     · calc
         ((Nat.choose n i *
             if rIn ≤ i ∧ i ≤ rOut then 2 ^ (rOut - i) else 0 : ℕ) : ℝ)
@@ -379,16 +365,13 @@ theorem annulusWeightedTerm_eq_fullFactor_mul_binomialTerm
         ((((1 : ℝ) / 3) ^ i) * (((2 : ℝ) / 3) ^ (n - i))) := by
   have hpow_r : (2 : ℝ) ^ rOut = (2 : ℝ) ^ (rOut - i) * (2 : ℝ) ^ i := by
     rw [← pow_add]
-    congr
-    omega
+    simp_all
   have hpow_n : (2 : ℝ) ^ n = (2 : ℝ) ^ (n - i) * (2 : ℝ) ^ i := by
     rw [← pow_add]
-    congr
-    omega
+    simp_all
   have hpow3_n : (3 : ℝ) ^ n = (3 : ℝ) ^ (n - i) * (3 : ℝ) ^ i := by
     rw [← pow_add]
-    congr
-    omega
+    simp_all
   have hfour_n :
       (4 : ℝ) ^ n = (2 : ℝ) ^ (i * 2) * (2 : ℝ) ^ ((n - i) * 2) := by
     calc
@@ -611,12 +594,7 @@ theorem binomialLeftTailProbThird_le_chernoff (n rIn : ℕ) {lam : ℝ}
           mul_nonneg hlam (sub_nonneg.mpr hle_real)
         have heq : lam * (rIn : ℝ) + (i : ℝ) * -lam =
             lam * ((rIn : ℝ) - i) := by ring
-        have hexp_le :
-            Real.exp 0 ≤ Real.exp (lam * (rIn : ℝ) + (i : ℝ) * -lam) := by
-          apply Real.exp_le_exp.mpr
-          rw [heq]
-          exact harg
-        simpa using hexp_le
+        simp_all
       calc
         (if i < rIn then binomialMassThird n i else 0)
             = binomialMassThird n i := by simp [hleft]
@@ -671,12 +649,7 @@ theorem binomialRightTailProbThird_le_chernoff (n rOut : ℕ) {lam : ℝ}
           mul_nonneg hlam (sub_nonneg.mpr hle_real)
         have heq : -(lam * (rOut : ℝ)) + (i : ℝ) * lam =
             lam * ((i : ℝ) - rOut) := by ring
-        have hexp_le :
-            Real.exp 0 ≤ Real.exp (-(lam * (rOut : ℝ)) + (i : ℝ) * lam) := by
-          apply Real.exp_le_exp.mpr
-          rw [heq]
-          exact harg
-        simpa using hexp_le
+        simp_all
       calc
         (if rOut < i then binomialMassThird n i else 0)
             = binomialMassThird n i := by simp [hright]
@@ -1327,8 +1300,7 @@ theorem targetLowerTailExponentialMoment_le_exp_chord
   have hq_nonneg : 0 ≤ 1 - Real.exp (-(lam * B)) := by
     have harg : -(lam * B) ≤ 0 := by
       nlinarith [mul_nonneg hlam_nonneg hB_nonneg]
-    have hexp : Real.exp (-(lam * B)) ≤ Real.exp 0 := Real.exp_le_exp.mpr harg
-    simpa using hexp
+    simp_all
   have hmoment_chord :
       oneCenterNegativeExponentialMoment rIn rOut target lam ≤ 1 - u := by
     simpa [B, m, u] using

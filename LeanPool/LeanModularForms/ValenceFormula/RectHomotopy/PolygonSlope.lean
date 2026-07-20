@@ -109,8 +109,7 @@ lemma slope_fdPolygon_seg5 (s t : ℝ) (hs : s > 4) (ht : t > 4) (hst : s ≠ t)
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
     simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
-  simp only [Complex.ofReal_inv, Complex.ofReal_sub]
-  field_simp [hne]; ring
+  simp_all
 
 private lemma HHeight_sub_sqrt3_half : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
   simp only [HHeight]; push_cast; ring
@@ -119,13 +118,7 @@ lemma fdPolygon_deriv_ne_at_t1 : (-I : ℂ) ≠ (iPoint - rho') := by
   simp only [rho', iPoint]
   intro heq
   have h_lhs : (-I : ℂ).re = 0 := by simp only [Complex.neg_re, Complex.I_re, neg_zero]
-  have h_rhs : (I - (1/2 + ↑(Real.sqrt 3) / 2 * I)).re = -1/2 := by
-    simp only [Complex.sub_re, Complex.I_re, Complex.add_re,
-      Complex.one_re, Complex.div_ofNat_re, Complex.mul_re,
-      Complex.ofReal_re, Complex.I_re, mul_zero,
-      Complex.I_im, mul_one]
-    norm_num
-  rw [heq] at h_lhs; rw [h_rhs] at h_lhs; linarith
+  simp_all
 
 lemma fdPolygon_deriv_ne_at_t2 : (iPoint - rho' : ℂ) ≠ (rho - iPoint) := by
   simp only [rho', iPoint, rho]
@@ -161,8 +154,7 @@ lemma fdPolygon_deriv_ne_at_t3 : (rho - iPoint : ℂ) ≠ I := by
 lemma fdPolygon_deriv_ne_at_t4 : (I : ℂ) ≠ (1 : ℂ) := by
   intro heq
   have h_lhs : (I : ℂ).im = 1 := Complex.I_im
-  have h_rhs : (1 : ℂ).im = 0 := Complex.one_im
-  rw [heq] at h_lhs; rw [h_rhs] at h_lhs; linarith
+  simp_all
 
 lemma slope_fdPolygon_at_t1_left (s : ℝ) (hs : s < 1) :
     slope fdPolygon 1 s =

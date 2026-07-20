@@ -113,15 +113,13 @@ private lemma arg_approach_i_right (hδ : 0 < δ) (hδ_small : δ < 1) :
   have hw_arg : w.arg = δ * Real.pi / 12 := by
     have hw_eq : w = ↑(1 : ℝ) * (Complex.cos ↑(δ * Real.pi / 12) +
         Complex.sin ↑(δ * Real.pi / 12) * I) := by
-      simp only [hw_def, ← Complex.ofReal_cos, ← Complex.ofReal_sin,
-        Complex.ofReal_one, one_mul]
+      simp_all
     rw [hw_eq]
     exact Complex.arg_mul_cos_add_sin_mul_I (by norm_num : (0 : ℝ) < 1)
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
   have hrw_im_pos : 0 < (↑(2 * Real.sin (δ * Real.pi / 12)) * w).im := by
     rw [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im]
-    simp only [zero_mul, add_zero]
-    exact mul_pos (mul_pos (by norm_num) h_sin_pos) hw_im_pos
+    simp_all
   rw [Complex.arg_neg_eq_arg_sub_pi_of_im_pos hrw_im_pos,
       Complex.arg_real_mul w (mul_pos (by norm_num : (0 : ℝ) < 2) h_sin_pos),
       hw_arg]
@@ -186,10 +184,7 @@ private lemma g_i_norm_ge_seg0 {t : ℝ} (_ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     1 / 2 ≤ ‖fdBoundaryH H t - I‖ := by
   have hre : (fdBoundaryH H t - I).re = 1 / 2 := by
     rw [fdBoundary_H_seg0 H ht1]
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-      Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.one_re, Complex.div_ofNat_re,
-      mul_zero, sub_zero, zero_mul, mul_one]
-    norm_num
+    simp_all
   calc (1 : ℝ) / 2 = |1 / 2| := (abs_of_pos (by norm_num)).symm
     _ = |(fdBoundaryH H t - I).re| := by rw [hre]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_re_le_norm _
@@ -199,14 +194,9 @@ private lemma g_i_norm_ge_seg4 (H : ℝ) (hH : 1 < H) {t : ℝ} (ht4 : 4 ≤ t) 
   have him : (fdBoundaryH H t - I).im = H - 1 := by
     rcases eq_or_lt_of_le ht4 with rfl | ht4'
     · rw [fdBoundary_H_at_four H]
-      simp only [Complex.neg_im, Complex.div_ofNat_im, Complex.one_im, Complex.add_im,
-        Complex.ofReal_im, Complex.mul_im, Complex.I_re, Complex.I_im, Complex.sub_im,
-        Complex.ofReal_re]
-      ring
+      simp_all
     · rw [fdBoundary_H_seg4 H (by linarith) (by linarith) (by linarith) (by linarith)]
-      simp only [Complex.add_im, Complex.sub_im, Complex.ofReal_im, Complex.mul_im,
-        Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.div_ofNat_im, Complex.im_ofNat]
-      ring
+      simp_all
   calc H - 1 = |H - 1| := (abs_of_pos (by linarith)).symm
     _ = |(fdBoundaryH H t - I).im| := by rw [him]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_im_le_norm _
@@ -216,10 +206,7 @@ private lemma g_i_slitPlane_left {t : ℝ} (_ht0 : 0 ≤ t) (ht2 : t < 2) :
   rw [Complex.mem_slitPlane_iff]; left
   rcases le_or_gt t 1 with ht1 | ht1
   · rw [fdBoundary_H_seg0 H ht1]
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-      Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.one_re, Complex.div_ofNat_re,
-      mul_zero, sub_zero, zero_mul, mul_one]
-    norm_num
+    simp_all
   · rw [fdBoundary_H_seg1 H (by linarith) (by linarith)]
     set θ := Real.pi / 3 + (t - 1) * (Real.pi / 2 - Real.pi / 3) with hθ_def
     rw [show (↑Real.pi / 3 + (↑t - 1) * (↑Real.pi / 2 - ↑Real.pi / 3)) * I =
@@ -254,9 +241,7 @@ private lemma g_i_norm_ge_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) :
         Complex.I_re, Complex.I_im, mul_zero, sub_zero]
       norm_num
     · rw [g_i_seg3_value ht3' ht4]
-      simp only [Complex.add_re, Complex.neg_re, Complex.div_ofNat_re, Complex.one_re,
-        Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-        mul_zero, sub_zero, add_zero, zero_mul]
+      simp_all
   calc 1 / 2 = |(-1 : ℝ) / 2| := by norm_num
     _ = |(fdBoundaryH H t - I).re| := by rw [hre]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_re_le_norm _
@@ -360,10 +345,7 @@ private lemma g_i_ne_zero_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) :
       Complex.I_re, Complex.I_im, mul_zero, sub_zero] at this
     norm_num at this
   · rw [g_i_seg3_value ht3' ht4] at this
-    simp only [Complex.add_re, Complex.neg_re, Complex.div_ofNat_re, Complex.one_re,
-      Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-      mul_zero, sub_zero, add_zero, zero_mul] at this
-    norm_num at this
+    simp_all
 
 private lemma log_neg_eq_add_pi_I {z : ℂ} (_hz_ne : z ≠ 0) (hz_im : z.im < 0) :
     Complex.log (-z) = Complex.log z + ↑Real.pi * I := by
@@ -578,10 +560,7 @@ private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 
     rcases eq_or_lt_of_le ht3 with rfl | ht3'
     · exact le_of_lt (h2_at_three_im_neg H)
     · rcases eq_or_lt_of_le ht_t0 with rfl | ht_t0'
-      · change (h₂ t₀).im ≤ 0
-        rw [← hg_eq_h₂ t₀ (by linarith [t₀_i_gt_three hH]) (by linarith [t₀_i_lt_four hH]),
-          hgt₀_val]
-        norm_num
+      · simp_all
       · change (h₂ t).im ≤ 0
         rw [← hg_eq_h₂ t ht3' (by linarith)]
         exact le_of_lt (g_i_seg3_im_neg ht3' ht_t0' hH)
@@ -831,9 +810,7 @@ private lemma i_ftc_integrability (H : ℝ) (hH : 1 < H) {ε : ℝ}
     have hd : deriv (fun s => fdBoundaryH H s - I) t = deriv (fdBoundaryH H) t :=
       deriv_sub_const (f := fdBoundaryH H) _
     rw [hd, div_eq_mul_inv, mul_comm]
-  refine ⟨(intervalIntegrable_congr (fun t _ => h_congr t)).mpr hL,
-          (intervalIntegrable_congr (fun t _ => h_congr t)).mpr hR, ?_⟩
-  simp_rw [h_congr]; exact hsum
+  simp_all
 
 -- Helper: the log-difference E(ε) tends to -(I·π).
 private lemma i_E_tendsto (H : ℝ) (_ : 1 < H) (threshold : ℝ) (hthresh_pos : 0 < threshold)
@@ -933,19 +910,7 @@ theorem pv_integral_at_i_tendsto (H : ℝ) (hH : 1 < H) :
         then (fdBoundaryH H t - I)⁻¹ * deriv (fdBoundaryH H) t
         else 0)
       (𝓝[>] 0) (𝓝 (-(I * ↑Real.pi))) by
-    have heq : ∀ ε, (∫ t in (0 : ℝ)..5,
-          if ‖fdBoundaryH H t - I‖ > ε
-          then (fdBoundaryH H t - I)⁻¹ * deriv (fun s => fdBoundaryH H s - I) t
-          else 0) =
-        (∫ t in (0 : ℝ)..5,
-          if ‖fdBoundaryH H t - I‖ > ε
-          then (fdBoundaryH H t - I)⁻¹ * deriv (fdBoundaryH H) t
-          else 0) := fun ε =>
-      intervalIntegral.integral_congr fun t _ => by
-        split_ifs with h
-        · congr 1; exact deriv_sub_const (f := fdBoundaryH H) _
-        · rfl
-    simp_rw [heq]; exact h
+    simp_all
   apply ContourIntegral.pv_tendsto_of_crossing_limit
     (t₀ := 2) (ht₀ := by norm_num)
     (threshold := threshold) (hthresh := hthresh_pos)

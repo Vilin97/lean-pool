@@ -49,9 +49,7 @@ variable (p : Simplex α)
 
 @[ext] lemma ext {p q : Simplex α} (h : p.p = q.p) : p = q := by
   cases p
-  cases q
-  cases h
-  rfl
+  simp_all
 
 lemma p_ne_zero (a : α) : p.p a ≠ 0 :=
   ne_of_gt (p.pos a)
@@ -130,11 +128,7 @@ lemma pos (u : tangentSpace (α := α)) (hu : u ≠ 0) :
   classical
   -- Pick an index where `u` is nonzero.
   have hu_fun : (u : α → ℝ) ≠ (0 : α → ℝ) := by
-    intro h0
-    apply hu
-    ext a
-    have := congrArg (fun f => f a) h0
-    simpa using this
+    simp_all
   have h_not_forall : ¬ ∀ a : α, ((u : α → ℝ) a) = 0 := by
     intro hforall
     apply hu_fun

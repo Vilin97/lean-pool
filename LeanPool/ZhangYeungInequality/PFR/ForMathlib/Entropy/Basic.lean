@@ -264,8 +264,7 @@ lemma prob_ge_exp_neg_entropy [MeasurableSingletonClass S] (X : Ω → S) (μ : 
     use Classical.arbitrary (α := S)
     simp [h_norm_zero]
   rcases exists_or_forall_not (fun s ↦ μ.map X {s} = ∞) with h_infty | h_finite
-  · obtain ⟨s, h_s⟩ := h_infty
-    use s; rw [h_s] ; exact le_top
+  · simp_all
   rcases eq_zero_or_neZero μ with h_zero_measure | _
   · use Classical.arbitrary (α := S)
     rw [h_zero_measure, show (0 : Measure Ω) _ = 0 from rfl, zero_mul]
@@ -274,11 +273,9 @@ lemma prob_ge_exp_neg_entropy [MeasurableSingletonClass S] (X : Ω → S) (μ : 
     rw [h_norm, Measure.measure_univ_pos]
     exact NeZero.ne μ
   have h_norm_finite : norm < ∞ := by
-    rw [rw_norm, ← sum_measure_singleton]
-    exact ENNReal.sum_lt_top.2 (fun s _ ↦ Ne.lt_top (h_finite s))
+    simp_all
   have h_invinvnorm_finite : norm⁻¹⁻¹ ≠ ∞ := by
-    rw [inv_inv]
-    exact LT.lt.ne_top h_norm_finite
+    simp_all
   have h_invnorm_ne_zero : norm⁻¹ ≠ 0 := ENNReal.inv_ne_top.mp h_invinvnorm_finite
   have h_invnorm_finite : norm⁻¹ ≠ ∞ := by
     rw [← ENNReal.inv_ne_zero, inv_inv]
@@ -346,8 +343,7 @@ lemma const_of_nonpos_entropy [MeasurableSingletonClass S]
     rcases prob_ge_exp_neg_entropy' (μ := μ) X hX with ⟨ s, hs ⟩
     use s
     apply LE.le.antisymm
-    · rw [← probReal_univ (μ := μ)]
-      exact measureReal_mono (subset_univ _) (by finiteness)
+    · simp_all
     refine le_trans ?_ hs
     simp [hent]
 
@@ -562,8 +558,7 @@ lemma _root_.ProbabilityTheory.condEntropy_of_injective
       have : {a | ¬Y a = y} = (Y ⁻¹' {y})ᶜ := by ext; simp
       rw [this, Set.inter_compl_self, measure_empty, mul_zero]
     filter_upwards [this] with ω hω
-    rw [hω]
-    simp
+    simp_all
   simp_rw [this]
   congr with y
   rw [entropy_comp_of_injective _ hX (f y) (hf y)]
@@ -698,10 +693,7 @@ lemma _root_.ProbabilityTheory.entropy_comp_le (μ : Measure Ω) [IsZeroOrProbab
     H[f ∘ X; μ] ≤ H[X; μ] := by
   have hfX : Measurable (f ∘ X) := by fun_prop
   have : H[X; μ] = H[⟨X, f ∘ X⟩; μ] := by
-    refine (entropy_comp_of_injective μ hX (fun x ↦ (x, f x)) ?_).symm
-    intro x y hxy
-    simp only [Prod.mk.injEq] at hxy
-    exact hxy.1
+    simp_all
   rw [this, chain_rule _ hX hfX]
   simp only [le_add_iff_nonneg_right]
   exact condEntropy_nonneg X (f ∘ X) μ
@@ -998,8 +990,7 @@ lemma _root_.ProbabilityTheory.condMutualInfo_eq_sum'
   intro z _ hz
   have : Z ⁻¹' {z} = ∅ := by
     ext ω
-    simp at hz
-    simp [hz]
+    simp_all
   simp [this]
 
 section

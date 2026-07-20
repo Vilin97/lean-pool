@@ -50,14 +50,7 @@ def nn (t : ℕ) : ℕ := (Gpoly t / N) ^ 3
 
 theorem rFullPart_ne_zero (r M : ℕ) : rFullPart r M ≠ 0 := by
   unfold rFullPart
-  apply Finsupp.prod_ne_zero_iff.mpr
-  intro p hp
-  have hsupp : p ∈ M.factorization.support := by
-    have h := Finsupp.support_filter (p := fun p => r ≤ M.factorization p) (f := M.factorization)
-    rw [h] at hp
-    exact Finset.mem_of_mem_filter p hp
-  have hp2 : p.Prime := Nat.prime_of_mem_primeFactors (by rwa [Nat.support_factorization] at hsupp)
-  exact pow_ne_zero _ hp2.pos.ne'
+  simp_all
 
 /-- A perfect cube of a positive number is `3`-full: its `rFullPart 3` is itself. -/
 theorem rFullPart_cube_eq (a : ℕ) (ha : 1 ≤ a) : rFullPart 3 (a^3) = a^3 := by
@@ -68,12 +61,7 @@ theorem rFullPart_cube_eq (a : ℕ) (ha : 1 ≤ a) : rFullPart 3 (a^3) = a^3 := 
     apply Finsupp.ext
     intro p
     rw [Finsupp.filter_apply]
-    by_cases hp : (a^3).factorization p = 0
-    · simp
-    · rw [if_pos]
-      rw [Nat.factorization_pow] at hp ⊢
-      simp only [Finsupp.smul_apply, smul_eq_mul] at hp ⊢
-      omega
+    simp_all
   rw [hfilter]
   exact Nat.prod_factorization_pow_eq_self hne
 
@@ -86,10 +74,7 @@ theorem rFullPart_factorization (r M : ℕ) (q : ℕ) :
   unfold rFullPart
   rw [Nat.prod_pow_factorization_eq_self]
   · rw [Finsupp.filter_apply]
-  · intro p hp
-    have hp_support : p ∈ M.factorization.support := Finset.mem_of_mem_filter p hp
-    exact Nat.prime_of_mem_primeFactors (by
-      rwa [Nat.support_factorization] at hp_support)
+  · simp_all
 
 /-
 If `d ^ 3 ∣ M` (and `M > 0`), then `d ^ 3 ∣ rFullPart 3 M`.

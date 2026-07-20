@@ -38,8 +38,7 @@ theorem TensorProduct.map_apply_map_apply {R : Type _} [CommSemiring R] {A B C D
   revert x
   simp_rw [← LinearMap.comp_apply, ← LinearMap.ext_iff]
   apply TensorProduct.ext'
-  intro x y
-  simp only [LinearMap.comp_apply, TensorProduct.map_tmul]
+  simp_all
 
 /-- Tensor two algebra equivalences. -/
 noncomputable def AlgEquiv.TensorProduct.map {R : Type _} [CommSemiring R] {A B C D : Type _}

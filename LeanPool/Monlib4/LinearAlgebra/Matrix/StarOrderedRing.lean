@@ -302,9 +302,7 @@ lemma StarAlgEquiv.map_pow {R A₁ A₂ : Type _} [CommSemiring R] [Semiring A�
     [Semiring A₂] [Algebra R A₁] [Algebra R A₂] [Star A₁] [Star A₂]
     (e : A₁ ≃⋆ₐ[R] A₂) (x : A₁) (n : ℕ) :
     e (x ^ n) = e x ^ n := by
-  induction n with
-  | zero => simp
-  | succ n ih => rw [pow_succ', map_mul, ih, ← pow_succ']
+  simp_all
 
 lemma Matrix.innerAut.map_pow {n : Type _} [Fintype n] [DecidableEq n] {𝕜 : Type _}
     [RCLike 𝕜] (U : unitaryGroup n 𝕜) (x : Matrix n n 𝕜) (n : ℕ) :

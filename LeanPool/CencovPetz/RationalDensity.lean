@@ -151,9 +151,7 @@ private lemma approxDenom_upper (p : Simplex α) (n : ℕ) :
           (Finset.sum_mul (s := (Finset.univ : Finset α))
             (f := fun a => p.p a) (a := (n + 1 : ℝ))).symm
       simp [this, p.sum_eq_one]
-    have hsum2 : (∑ a : α, (1 : ℝ)) = Fintype.card α := by
-      simp
-    simpa [this, hsum1, hsum2, add_assoc, add_left_comm, add_comm]
+    simp_all
   have hleft : (∑ a : α, (approxWeight (p := p) n a : ℝ)) = (approxDenom (p := p) n : ℝ) := by
     simp [approxDenom]
   simpa [hleft, hright] using hsum

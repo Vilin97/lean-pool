@@ -242,12 +242,7 @@ theorem isFlasqueSheaf_zeroOutsideInt_top (X : TopCat.{u}) [IrreducibleSpace X] 
     epi_comp' inferInstance hconst'
   have hcomp : Epi (((TopCat.Sheaf.zeroOutsideInt (⊤ : Opens X)).obj.map i.op) ≫
       eP.hom.app (op U)) := by
-    change Epi
-      (((sheafToPresheaf J AddCommGrpCat.{u}).obj
-          ((presheafToSheaf J AddCommGrpCat.{u}).obj
-            (TopCat.Presheaf.zeroOutside ⊤ TopCat.Presheaf.constZ))).map i.op ≫
-        eP.hom.app (op U))
-    rwa [eP.hom.naturality i.op]
+    simp_all
   change Epi
     (((sheafToPresheaf J AddCommGrpCat.{u}).obj
         ((presheafToSheaf J AddCommGrpCat.{u}).obj

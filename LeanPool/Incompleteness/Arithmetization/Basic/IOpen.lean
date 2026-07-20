@@ -47,10 +47,8 @@ lemma open_leastNumber {P : V → Prop}
     · exact hP
     case zero => exact zero
     case succ n ih =>
-      push Not at A
-      exact A n ih
-  have : P a := this a
-  contradiction
+      simp_all
+  simp_all
 
 lemma div_exists_unique_pos (a : V) {b} (pos : 0 < b) : ∃! u, b * u ≤ a ∧ a < b * (u + 1) := by
   have : ∃ u, b * u ≤ a ∧ a < b * (u + 1) := by
@@ -596,12 +594,7 @@ prefix: 80 "π₂" => pi₂
   · change ⟪√a, a - √a * √a - √a⟫ = a
     rw [pair]
     have : a - √a * √a - √a ≤ √a := by simp [add_comm (2 * √a), ←two_mul]
-    simp only [not_lt.mpr this, ↓reduceIte]
-    have :√a ≤ a - √a * √a := by simpa using h
-    calc
-      √a * √a + √a + (a - √a * √a - √a) = √a * √a + (√a + (a - √a * √a - √a)) := by rw [add_assoc]
-      _ = √a * √a + (a - √a * √a) := by rw [add_tsub_cancel_of_le this]
-      _                                 = a                       := add_tsub_self_of_le (by simp)
+    simp_all
 
 @[simp] lemma unpair_pair (a b : V) : unpair ⟪a, b⟫ = (a, b) := by
   simp only [pair]; split_ifs with h
@@ -799,9 +792,7 @@ lemma pair₄_defined : Sg0-Function₄ ((⟪·, ·, ·, ·⟫) : V → V → V 
     Matrix.cons_val_fin_one, Matrix.constant_eq_singleton, pair_defined_iff, Matrix.cons_app_four,
     Matrix.cons_app_five, Matrix.cons_app_six, LogicalConnective.Prop.and_eq, ↓existsAndEq,
     and_true, le_pair_right, true_and, iff_and_self]
-  intro h
-  rw [h]
-  exact le_pair_right _ _
+  simp_all
 
 @[simp] lemma eval_pair₄Def (v) :
     Semiformula.Evalbm V v pair₄Def.val ↔ v 0 = ⟪v 1, v 2, v 3, v 4⟫ := pair₄_defined.df.iff v
@@ -817,9 +808,7 @@ lemma pair₅_defined : Sg0.DefinedFunction (fun v :
     Matrix.cons_app_four, Matrix.cons_val_fin_one, Matrix.constant_eq_singleton, pair_defined_iff,
     Matrix.cons_app_five, Matrix.cons_app_six, Matrix.cons_app_seven, Matrix.cons_app_eight,
     LogicalConnective.Prop.and_eq, ↓existsAndEq, and_true, le_pair_right, true_and, iff_and_self]
-  intro h
-  rw [h]
-  exact le_pair_right _ _
+  simp_all
 
 @[simp] lemma eval_pair₅Def (v) :
     Semiformula.Evalbm V v pair₅Def.val ↔ v 0 = ⟪v 1, v 2, v 3, v 4, v 5⟫ := pair₅_defined.df.iff v
@@ -835,9 +824,7 @@ lemma pair₆_defined : Sg0.DefinedFunction (fun v :
     Matrix.cons_app_six, Matrix.cons_val_fin_one, Matrix.cons_app_seven,
     Matrix.constant_eq_singleton, eval_pair₅Def, Matrix.cons_val_one, Matrix.cons_app_two,
     pair_defined_iff, LogicalConnective.Prop.and_eq, ↓existsAndEq, true_and, iff_and_self]
-  intro h
-  rw [h]
-  exact le_pair_right _ _
+  simp_all
 
 @[simp] lemma eval_pair₆Def (v) :
     Semiformula.Evalbm V v pair₆Def.val ↔ v 0 = ⟪v 1, v 2, v 3, v 4, v 5, v 6⟫ :=

@@ -214,8 +214,7 @@ lemma H₃_S_action : (H₃ ∣[(2 : ℤ)] S) = -H₃ := by
   ring_nf!
   rw [← mul_inv, cpow_ofNat, sq, ← mul_assoc, zpow_two]
   ring_nf!
-  rw [inv_pow, inv_I, even_two.neg_pow, I_sq, mul_neg_one, inv_inv, neg_mul, inv_mul_cancel₀]
-  exact pow_ne_zero _ hx'
+  simp_all
 
 lemma H₄_S_action : (H₄ ∣[(2 : ℤ)] S) = - H₂ := by
   rw [← neg_eq_iff_eq_neg.mpr H₂_S_action, neg_slash, ← slash_mul, modular_S_sq,
@@ -415,9 +414,7 @@ theorem isBoundedAtImInfty_H₂ : IsBoundedAtImInfty H₂ := by
       apply tsum_congr fun b ↦ ?_
       have (z : ℂ) : ‖cexp z‖ = ‖cexp z.re‖ := by
         nth_rw 1 [← Complex.re_add_im z, Complex.exp_add, norm_mul, norm_exp_ofReal_mul_I, mul_one]
-      rw [this, mul_comm (π : ℂ), mul_assoc, I_mul_re, ← ofReal_exp,
-        norm_real, Real.norm_eq_abs, im_ofReal_mul, neg_mul]
-      simp
+      simp_all
     _ = ∑' (n : ℤ), ‖rexp (-π * ((n + 1 / 2) ^ 2 : ℝ) * z.im)‖ := by
       simp_rw [im_ofReal_mul, UpperHalfPlane.im, ← mul_assoc]
     _ ≤ _ := Summable.tsum_le_tsum (fun b ↦ ?_) ?_ ?_
@@ -473,9 +470,7 @@ lemma isBoundedAtImInfty_H₃_aux (z : ℍ) (hz : 1 ≤ z.im) :
     _ = ∑' (n : ℤ), ‖cexp (π * (n : ℂ) ^ 2 * z * I)‖ := by simp_rw [Θ₃Term, mul_right_comm _ I]
     _ = ∑' (n : ℤ), rexp (-π * (n : ℂ) ^ 2 * z).im := by simp_rw [Complex.norm_exp_mul_I]; simp
     _ = ∑' (n : ℤ), rexp (-π * (n : ℝ) ^ 2 * z.im) := by
-      congr with n
-      rw [← ofReal_neg, ← coe_im, ← im_ofReal_mul]
-      simp
+      simp_all
     _ ≤ _ := Summable.tsum_le_tsum (fun b ↦ ?_) ?_ ?_
   · apply exp_monotone
     simpa only [neg_mul, neg_le_neg_iff] using le_mul_of_one_le_right (by positivity) hz
@@ -766,8 +761,7 @@ theorem jacobiTheta₂_zero_apply_tendsto_atImInfty :
   · exact summable_ofReal.mp summable_ofReal_exp_neg_pi_sq
   · intro k
     split_ifs with hk
-    · subst hk
-      simp
+    · simp_all
     · rw [tendsto_zero_iff_norm_tendsto_zero]
       simp_rw [mul_right_comm _ I, norm_exp_mul_I, mul_assoc, im_ofReal_mul, ← ofReal_intCast,
         ← ofReal_pow, im_ofReal_mul, ← mul_assoc]
@@ -793,8 +787,7 @@ theorem jacobiTheta₂_half_apply_tendsto_atImInfty :
   · exact summable_ofReal.mp summable_ofReal_exp_neg_pi_sq
   · intro k
     split_ifs with hk
-    · subst hk
-      simp
+    · simp_all
     · rw [tendsto_zero_iff_norm_tendsto_zero]
       simp_rw [hnorm]
       have hk2_pos : 0 < (k : ℝ) ^ 2 := sq_pos_of_ne_zero (Int.cast_ne_zero.mpr hk)
@@ -1056,8 +1049,7 @@ lemma Θ₄_term_imag_axis_real (n : ℤ) (t : ℝ) (ht : 0 < t) :
       (-(Real.pi * (n : ℝ) ^ 2 * t) : ℝ) := by
     push_cast
     ring_nf
-    simp only [I_sq]
-    ring
+    simp_all
   rw [hexpr]
   simp only [Complex.mul_im, neg_one_zpow_im_eq_zero n, exp_ofReal_im, mul_zero, zero_mul, add_zero]
 
@@ -1140,8 +1132,7 @@ theorem H₂_imag_axis_pos : ResToImagAxis.Pos H₂ := by
       have hz_eq : z = (z.re : ℂ) := Complex.ext (by simp) (by simp [hΘ₂_im])
       rw [hz_eq]
       norm_cast
-    rw [hpow]
-    exact pow_pos hΘ₂_re_pos 4
+    simp_all
 
 /--
 `H₄(it)` is real for all `t > 0`.
@@ -1182,16 +1173,14 @@ theorem H₄_imag_axis_pos : ResToImagAxis.Pos H₄ := by
       simp only [Function.resToImagAxis_apply, ResToImagAxis, h1t_pos, ↓reduceDIte, Pi.neg_apply]
     rw [hNeg, hI_neg2, h1t_neg2, h1_div_1t] at hSlash
     have hEq : H₂.resToImagAxis (1 / t) = (t : ℂ) ^ 2 * H₄.resToImagAxis t := by
-      simp only [neg_mul, one_mul] at hSlash
-      exact neg_inj.mp hSlash
+      simp_all
     have hH₂_pos := H₂_imag_axis_pos.2 (1 / t) h1t_pos
     have hH₄_real := H₄_imag_axis_real t ht
     have hProd_re : ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re =
         (t : ℝ) ^ 2 * (H₄.resToImagAxis t).re := by
       simp only [Function.resToImagAxis_apply, ResToImagAxis, ht, ↓reduceDIte] at hH₄_real ⊢
       simp only [sq, Complex.mul_re, ofReal_re, ofReal_im, zero_mul, sub_zero]
-      ring_nf
-      simp only [hH₄_real, mul_zero, sub_zero]
+      simp_all
     rw [hEq, hProd_re, mul_comm] at hH₂_pos
     exact pos_of_mul_pos_left hH₂_pos (le_of_lt (sq_pos_of_pos ht))
 

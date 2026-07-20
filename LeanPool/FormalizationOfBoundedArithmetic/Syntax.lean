@@ -165,9 +165,7 @@ theorem ex {α β} (g : α ≃ β) {k} (φ : L.BoundedFormula α (k + 1)) :
     φ.ex.relabelEquiv g = (φ.relabelEquiv g).ex := by
   simp only [BoundedFormula.ex, BoundedFormula.not]
   simp only [relabelEquiv.imp, all, imp.injEq, all.injEq, true_and, Bot.bot]
-  constructor
-  · simp only [relabelEquiv.falsum]
-  · simp only [relabelEquiv.falsum]
+  simp_all
 
 
 @[simp]
@@ -234,24 +232,19 @@ theorem relabel_relabelSum [enum : IsEnum β] (g : α ≃ γ) :
           ((g.sumCongr (_root_.Equiv.refl β)).sumCongr (_root_.Equiv.refl (Fin n)))) := by
       funext x
       exact relabelAux_sumCongr g n x
-    simpa only [Term.relabelEquiv_apply, Term.relabel_relabel] using
-      congrArg (fun h => Term.relabel h t) hfun
+    simp_all
   induction φ with
   | falsum => rfl
   | equal t1 t2 =>
       dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
-      congr 1
-      · exact hterm t1
-      · exact hterm t2
+      simp_all
   | rel R ts =>
       dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
-      congr 1
-      funext i
-      exact hterm (ts i)
+      simp_all
   | imp φ ψ ihφ ihψ =>
       simpa only [relabel_imp, imp, imp.injEq] using ⟨ihφ, ihψ⟩
   | all φ ih =>

@@ -159,9 +159,7 @@ lemma round_near_eq_of (q : ℚ) (z : ℤ) :
       linarith
     have fract_eq : Int.fract q = q - (z - 1) := by
       rw [Int.fract]
-      suffices (⌊q⌋ : ℚ) = z - 1 by
-        linarith
-      norm_cast
+      simp_all
     rw [roundNearInt, fract_eq]
     have : 1/2 < q - (z - 1) := by
       linarith
@@ -194,8 +192,7 @@ lemma round_near_int_le (q : ℚ) :
   rw [abs_of_nonneg (by linarith [Int.le_ceil q])]
   rw [fract_eq_ceil_of_pos] at this
   · linarith
-  rw [this]
-  norm_num
+  simp_all
 
 lemma round_near_int_of_int (z : ℤ) :
   roundNearInt z = z := by

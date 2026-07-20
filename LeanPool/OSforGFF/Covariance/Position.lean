@@ -116,8 +116,7 @@ lemma double_integral_timeReflection_covariance
   -- Now goal is: ∫∫ f(Θx) * C(x,y) * g(y) = ∫∫ f(x) * C(Θx, Θy) * g(Θy)
   -- timeReflection is an involution: Θ ∘ Θ = id
   have hinv : ∀ z, QFT.timeReflection (QFT.timeReflection z) = z := by
-    intro z
-    exact QFT.timeReflectionLE.left_inv z
+    simp_all
   -- Transform RHS using double_integral_timeReflection (in reverse direction)
   -- After substitution x' = Θx, y' = Θy: RHS = ∫∫ f(Θx') * C(x', y') * g(y')
   rw [← double_integral_timeReflection (fun x y => f (QFT.timeReflection x) * (freeCovariance m x y
@@ -213,15 +212,13 @@ lemma integrable_real_covariance_kernel
       ‖((QFT.compTimeReflectionReal f) p.1 : ℂ) * ((freeCovariance m p.1 p.2 : ℝ) : ℂ)
           * ((f p.2 : ℝ) : ℂ)‖
       = ‖(QFT.compTimeReflectionReal f) p.1 * freeCovariance m p.1 p.2 * f p.2‖ := by
-    intro p
-    simp only [Complex.norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_mul]
+    simp_all
   -- The .re of distributed casts ↑a * ↑b * ↑c equals a * b * c
   have h_re_eq : ∀ p : SpaceTime × SpaceTime,
       (((QFT.compTimeReflectionReal f) p.1 : ℂ) * ((freeCovariance m p.1 p.2 : ℝ) : ℂ)
           * ((f p.2 : ℝ) : ℂ)).re
       = (QFT.compTimeReflectionReal f) p.1 * freeCovariance m p.1 p.2 * f p.2 := by
-    intro p
-    simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
+    simp_all
   -- Transfer integrability using norm equivalence via Integrable.mono'
   -- The real integrand is the .re of the complex integrand (which is real-valued)
   apply Integrable.mono' h_complex.norm
@@ -229,8 +226,7 @@ lemma integrable_real_covariance_kernel
     convert h_complex.aestronglyMeasurable.re using 2 with p
     exact (h_re_eq p).symm
   · -- ‖real_integrand‖ ≤ ‖complex_integrand‖ a.e. (actually equal)
-    filter_upwards with p
-    rw [← h_norm_eq p]
+    simp_all
 
 /-- Fubini helper: rewrite the real kernel double integral over the product measure. -/
 lemma integral_prod_real_covariance_kernel
@@ -285,8 +281,7 @@ lemma real_integral_eq_complex_re
       (QFT.compTimeReflection (toComplex f)) p.1 * (freeCovariance m p.1 p.2 : ℂ)
           * (toComplex f) p.2
       = ((QFT.compTimeReflectionReal f) p.1 * freeCovariance m p.1 p.2 * f p.2 : ℂ) := by
-    intro p
-    exact h_eq p.1 p.2
+    simp_all
   simp_rw [h_eq_prod]
   -- Now RHS is (∫ p, (r(p) : ℂ)).re where r is real
   -- But the cast is distributed: ↑a * ↑b * ↑c, need to convert to ↑(a*b*c)
@@ -308,9 +303,7 @@ lemma toComplex_star_eq
   (f : TestFunction) (x : SpaceTime) :
   starRingEnd ℂ ((toComplex f) x) = (toComplex f) x := by
   -- toComplex f x = (f x : ℂ) by definition
-  simp only [toComplex_apply]
-  -- The conjugate of a real number (lifted to ℂ) is itself
-  exact Complex.conj_ofReal (f x)
+  simp_all
 
 /-- The time-reflected complexification of a real test function remains real-valued. -/
 lemma compTimeReflection_toComplex_star_eq
@@ -452,9 +445,7 @@ theorem freeCovarianceℂ_bilinear_smul_left
   rw [add_zero] at h
   have zero_bilinear : freeCovarianceℂBilinear m 0 g = 0 := by
     unfold freeCovarianceℂBilinear
-    simp_rw [show ∀ x y, (0 : TestFunctionℂ) x * (freeCovariance m x y : ℂ) * g y = 0 from
-      fun x y => by simp only [show (0 : TestFunctionℂ) x = 0 from rfl, zero_mul]]
-    rw [integral_zero, integral_zero]
+    simp_all
   rwa [zero_bilinear, add_zero] at h
 
 /-- Symmetry of the complex bilinear form: swapping arguments gives the same result. -/

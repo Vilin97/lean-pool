@@ -52,8 +52,7 @@ theorem annulusContribution_eq_zero_of_notMem {n rIn rOut : ℕ}
     (hmem : center ∉ annulus n rIn rOut target) :
     annulusContribution rIn rOut target center = 0 := by
   have hnot : ¬ (rIn ≤ dist center target ∧ dist center target ≤ rOut) := by
-    intro h
-    exact hmem (mem_annulus.mpr h)
+    simp_all
   simp [annulusContribution, hnot]
 
 /-- One annulus contribution is bounded by the stack size `2^rOut`. -/

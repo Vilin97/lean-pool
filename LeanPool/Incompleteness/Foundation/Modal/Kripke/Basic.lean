@@ -240,8 +240,7 @@ protected lemma axiomK : M ⊧ (Axioms.K φ ψ)  := by
   apply Satisfies.imp_def.mpr;
   intro hp x Rxy;
   replace hpq := Satisfies.imp_def.mp <| hpq x Rxy;
-  replace hp := hp x Rxy;
-  exact hpq hp;
+  simp_all
 
 end ValidOnModel
 
@@ -411,15 +410,9 @@ instance definedBy_inter
   · intro h;
     constructor;
     · apply h₁.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      left;
-      assumption;
+      simp_all
     · apply h₂.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      right;
-      assumption;
+      simp_all
 ⟩
 
 instance definedByFormula_inter

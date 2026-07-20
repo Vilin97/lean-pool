@@ -254,10 +254,7 @@ instance faithfulSMulTensor [Module.Projective R A] [Module.Projective R B]
       TensorProduct.smul_tmul'] at eq
     have := Algebra.TensorProduct.includeLeft_injective (R := R) (S := R)
       (fun r1 r2 h ↦ by
-        rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one] at h
-        exact eq_of_smul_eq_smul (M := R) (α := B) (m₁ := r1) (m₂ := r2) (by
-          intro b
-          rw [← one_mul b, ← smul_mul_assoc, h, smul_mul_assoc, one_mul])) eq
+        simp_all) eq
     exact eq_of_smul_eq_smul (M := R) (α := A) (m₁ := r1) (m₂ := r2) <|
       fun a ↦ by rw [← one_mul a, ← smul_mul_assoc, this, smul_mul_assoc, one_mul]
 
@@ -283,9 +280,7 @@ lemma top_square_comm'' (A B : Azumaya R) :
     = (AlgHom.mulLeftRight R (A ⊗[R] B)).toLinearMap ∘ₗ
     (e (R := R) (A := A) (B := B)).toLinearEquiv.toLinearMap := by
   ext a b c d a' b'
-  dsimp
-  simp [AlgHom.mulLeftRight_apply, Algebra.TensorProduct.tmul_mul_tmul,
-    TensorProduct.homTensorHomMap_apply, unop_op]
+  simp_all
 
 lemma top_square_comm (A B : Azumaya R) :
     (TensorProduct.homTensorHomMap _ A B A B) ∘ (Algebra.TensorProduct.congr
@@ -356,8 +351,7 @@ instance : FaithfulSMul R Rᵐᵒᵖ where
   eq_of_smul_eq_smul {r1 r2} hr := by
     specialize hr 1
     change op _ = op _ at hr
-    simp only [unop_one, smul_eq_mul, mul_one, op_inj] at hr
-    exact hr
+    simp_all
 
 /--
 A ⊗ Aᵐᵒᵖ  ------------> B ⊗ Bᵐᵒᵖ

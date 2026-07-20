@@ -98,9 +98,7 @@ private lemma filter_map_neg_inv (p : ℂ) (hp : p ≠ 0)
   exact (tendsto_nhdsWithin_iff.mpr
     ⟨hφ_an.continuousAt.continuousWithinAt,
       by rw [eventually_nhdsWithin_iff]
-         filter_upwards [univ_mem] with z _ hz
-         simp only [mem_compl_iff, mem_singleton_iff] at hz
-         exact fun h => hz (inv_injective (neg_inj.mp h))⟩).eventually hQ
+         simp_all⟩).eventually hQ
 
 private lemma neg_inv_finite_order_witness (g : ℂ → ℂ) (p : ℂ) (hp : p ≠ 0)
     (n : ℤ) (h : ℂ → ℂ) (hh_an : AnalyticAt ℂ h (-p⁻¹)) (hh_ne : h (-p⁻¹) ≠ 0)
@@ -151,9 +149,7 @@ lemma ord_add_one_eq (p : ℍ) :
     have h_period := SlashInvariantForm.vAdd_width_periodic 1 k 1 f.toSlashInvariantForm z₀
     have h_vadd_coe : ((1 : ℝ) +ᵥ z₀ : ℍ) = ⟨z, hz⟩ :=
       by ext; change (↑(1 : ℝ) : ℂ) + (z - 1) = z; push_cast; ring
-    simp only [Nat.cast_one, mul_one, Int.cast_one, h_vadd_coe,
-      ModularForm.toSlashInvariantForm_coe] at h_period
-    exact h_period
+    simp_all
   rw [meromorphicOrderAt_congr hG_eq_near, meromorphicOrderAt_comp_sub_const]
 
 /-- T-invariance at ρ: `ord(f, ρ+1) = ord(f, ρ)`. -/

@@ -92,10 +92,7 @@ lemma ω_re_decompose_linear
           + s.re * Complex.re (g x) - s.im * Complex.im (g x)
     simpa using re_of_complex_combination t s (f x) (g x)
   -- Apply ω (a real-linear functional) to both sides
-  have := congrArg (fun (φ : TestFunction) => ω φ) h_sum_re_eq
-  -- Simplify using linearity of ω over ℝ
-  simpa [map_add, map_sub, map_smul]
-    using this
+  simp_all
 
 /-- ω-linearity of the imaginary component of the complex test-function decomposition under
     complex linear combinations.
@@ -128,10 +125,7 @@ lemma ω_im_decompose_linear
           + s.re * Complex.im (g x) + s.im * Complex.re (g x)
     simpa using im_of_complex_combination t s (f x) (g x)
   -- Apply ω (a real-linear functional) to both sides
-  have := congrArg (fun (φ : TestFunction) => ω φ) h_sum_im_eq
-  -- Simplify using linearity of ω over ℝ
-  simpa [map_add, map_smul]
-    using this
+  simp_all
 
 /-- Linearity of the complex pairing in the test-function argument. -/
 lemma pairing_linear_combo
@@ -163,8 +157,7 @@ lemma pairing_linear_combo
     -- Use ω-linearity identity on the LHS
     have hre := ω_re_decompose_linear ω f g t s
     -- Finish by rewriting both sides to the same expression
-    simpa [hre_rhs, add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
-      using hre
+    simp_all
   · -- Imag parts
     simp only [distributionPairingℂReal, add_im, mul_im]
     have him_rhs :
@@ -182,8 +175,7 @@ lemma pairing_linear_combo
         ((ω ((complexTestFunctionDecompose g).1) : ℂ) + I * (ω ((complexTestFunctionDecompose
             g).2) : ℂ))
     have him := ω_im_decompose_linear ω f g t s
-    simpa [him_rhs, add_comm, add_left_comm, add_assoc]
-      using him
+    simp_all
 
 
 /-! ## Helper lemmas for real→complex Schwartz embedding -/
@@ -205,8 +197,7 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
       _ = ‖m‖ := by rw [Complex.norm_ofRealCLM, one_mul]
   · refine ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg _) (fun v => ?_)
     rw [show ‖m v‖ = ‖(Complex.ofRealCLM.compContinuousMultilinearMap m) v‖ from by
-      simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
-      exact (Complex.norm_real (m v)).symm]
+      simp_all]
     exact (Complex.ofRealCLM.compContinuousMultilinearMap m).le_opNorm v
 
 /-- The norm of the n-th iterated derivative of a Schwartz function composed with
@@ -277,9 +268,7 @@ noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
   SchwartzMap.mkCLM (𝕜 := ℝ) (𝕜' := ℝ) (G := ℂ) (σ := RingHom.id ℝ) (fun f x => (f x : ℂ))
     (fun f g x => by simp only [add_apply]; exact Complex.ofReal_add _ _)
     (fun c f x => by
-      simp only [smul_apply, RingHom.id_apply]
-      change (((c • f x : ℝ) : ℂ)) = c • ((f x : ℝ) : ℂ)
-      rw [smul_eq_mul, Complex.ofReal_mul, ← Complex.real_smul])
+      simp_all)
     (fun f => ContDiff.comp Complex.ofRealCLM.contDiff f.smooth')
     (fun ⟨k, n⟩ => by
       use {(k, n)}, 1, zero_le_one
@@ -381,18 +370,9 @@ lemma distributionPairingℂ_real_conj (ω : FieldConfiguration) (f : TestFuncti
   have h_conj_re : (complexTestFunctionDecompose (conjSchwartz f)).1 =
       (complexTestFunctionDecompose f).1 := by
     ext x
-    simp only [complex_testfunction_decompose_fst_apply]
-    change (starRingEnd ℂ (f x)).re = (f x).re
-    exact Complex.conj_re (f x)
+    simp_all
   have h_conj_im : (complexTestFunctionDecompose (conjSchwartz f)).2 =
       -(complexTestFunctionDecompose f).2 := by
     ext x
-    simp only [complex_testfunction_decompose_snd_apply, neg_apply]
-    change (starRingEnd ℂ (f x)).im = -(f x).im
-    exact Complex.conj_im (f x)
-  rw [h_conj_re, h_conj_im]
-  simp only [map_neg, Complex.ofReal_neg]
-  -- Now: conj(⟨ω, f_re⟩ + i⟨ω, f_im⟩) = ⟨ω, f_re⟩ - i⟨ω, f_im⟩
-  apply Complex.ext
-  · simp [Complex.add_re, Complex.mul_re]
-  · simp [Complex.add_im, Complex.mul_im]
+    simp_all
+  simp_all

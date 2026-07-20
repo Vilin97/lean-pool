@@ -363,8 +363,7 @@ noncomputable def normalizeOfNeZero {E : Type*}
   { x : E // ‖x‖ = 1 } := by
   use ((1 / ‖a‖) : ℂ) • a
   rw [norm_smul, norm_div]
-  simp only [norm_one, Complex.norm_real, norm_norm, one_div]
-  exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr ha)
+  simp_all
 
 theorem Module.Dual.IsFaithfulPosMap.norm_sq_dualMatrix_inv :
   withMatrixQuantum[φ]
@@ -519,8 +518,7 @@ theorem Matrix.traceLinearMap_dualMatrix_eq
   {n : Type*} [DecidableEq n] [Fintype n] :
   Module.Dual.matrix (Matrix.traceLinearMap n ℂ ℂ) = 1 := by
   refine Eq.symm (Module.Dual.apply_eq_of _ 1 (fun _ => ?_))
-  simp only [one_mul]
-  rfl
+  simp_all
 
 theorem QuantumGraph.Real.ofNormOneMatrix_eq_ofNormOneMatrix_iff
   {x y : { x : Matrix n n ℂ // ‖x‖ = 1 }} :
@@ -588,8 +586,7 @@ theorem QuantumGraph.Real.reflexive_matrix_numOfEdges_eq_one_iff_eq_trivialGraph
     simp only [QuantumSetDeltaForm.delta, this,
       Matrix.traceLinearMap_dualMatrix_eq, inv_one,
       hφ.inner_eq', one_mul, conjTranspose_one]
-    rw [inv_mul_cancel₀]
-    simp only [trace_one, ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true]
+    simp_all
 
 theorem counit_eq_traceLinearMap_of_counit_eq_piMat_traceLinearMap
   {ι : Type*} [DecidableEq ι] [Fintype ι] {p : ι → Type*} [Π i, Fintype (p i)]
@@ -859,8 +856,7 @@ theorem
   calc
     LinearMap.adjoint (p i) ∘ₗ p i + ∑ j ∈ Finset.univ \ {i}, LinearMap.adjoint (p j) ∘ₗ p j
       = ∑ j, LinearMap.adjoint (p j) ∘ₗ p j := by
-          simp only [Finset.subset_univ, Finset.sum_sdiff_eq_sub, Fin.sum_univ_two, Fin.isValue,
-            Finset.sum_singleton, add_sub_cancel, p]
+          simp_all
     _ = 1 := by
           rw [Module.End.one_eq_id, ← LinearMap.sum_single_comp_proj]
           simp only [p, LinearMap.proj_adjoint]
@@ -878,8 +874,7 @@ theorem
         + ∑ j ∈ Finset.univ \ {i},
           (LinearMap.adjoint (p i) ∘ₗ (p i) ∘ₗ A ∘ₗ LinearMap.adjoint (p i) ∘ₗ (p i))
           •ₛ (LinearMap.adjoint (p j) ∘ₗ 1 ∘ₗ p j) := by
-          simp only [schurMul_apply_apply, Fin.sum_univ_two, Fin.isValue, Finset.subset_univ,
-            Finset.sum_sdiff_eq_sub, Finset.sum_singleton, add_sub_cancel,]
+          simp_all
     _ = LinearMap.adjoint (p i) ∘ₗ p i := by
           simp only [p, schurMul_proj_adjoint_comp]
           simp only [← LinearMap.comp_assoc, schurMul_comp_proj]

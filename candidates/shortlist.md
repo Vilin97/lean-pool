@@ -648,3 +648,20 @@ Classified `include=true` and recorded in [`decisions.jsonl`](decisions.jsonl) /
 - [alexfleetcommander/lean-proofs](https://github.com/alexfleetcommander/lean-proofs) — economics, social choice, mechanism design, game theory and decision theory batch (Apache-2.0, v4.16.0, 6,121 LOC) — real proofs, but broad batch with no single source-anchored headline.
 - [arij-aziz/selberg-parity-obstruction](https://github.com/Arij-Aziz/Selberg-Parity-Obstruction) — Selberg parity-obstruction formalization (Apache-2.0, v4.28.0, 4,968 LOC) — on-topic but unfinished.
 - [catskillsresearch/avg_case_mls](https://github.com/catskillsresearch/avg_case_mls) — average-case complexity of multilevel syllogistic decision procedures (Apache-2.0, v4.30.0, 3,783 LOC) — on-topic but still has explicit axioms.
+
+
+## July 2026 refresh - stale-candidate pass
+
+Curated 2026-07-03. A second, wider sweep run after the June refresh. The daily
+discovery bot filters only on GitHub `created:`, so this pass added a `pushed:`
+window and raised the per-query result cap, surfacing about 1,200 additional
+untracked Lean repos. Those were deep-classified (clone, read, license +
+own-LOC + real-`sorry` count + domain fit, with an adversarial pass for the
+large 2026 AI-slop tail); 556 new `include`/exclude decisions are recorded in
+[`decisions.jsonl`](decisions.jsonl).
+
+For shortlist purposes, this pass now uses the stricter staleness discipline:
+a project must have no GitHub activity after 2026-05-04, at least two months
+before the 2026-07-04 review date. Every import-worthy project surfaced so far
+by the July pushed-window sweep was active after that cutoff, so this refresh
+adds no new shortlist rows.

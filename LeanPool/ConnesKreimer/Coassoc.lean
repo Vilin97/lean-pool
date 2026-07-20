@@ -110,9 +110,7 @@ open List in
 /-- `flatMap` of a constantly-empty function is empty. -/
 theorem _root_.CK.Coassoc.flatMap_const_nil {α β} (l : List α) :
     l.flatMap (fun _ => ([] : List β)) = [] := by
-  induction l with
-  | nil => rfl
-  | cons a as ih => simp [List.flatMap_cons, ih]
+  simp_all
 
 /-- `flatMap` of a singleton-valued function is a `map`. -/
 theorem _root_.CK.Coassoc.flatMap_singleton_eq_map {α β} (g : α → β) (l : List α) :

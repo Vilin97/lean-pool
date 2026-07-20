@@ -76,8 +76,7 @@ theorem euclid_prod_finset_add_one {n : ℕ} :
     · simp only [Nat.pow_two, le_add_iff_nonneg_left, zero_le, Finset.prod_Icc_succ_top,
         Nat.add_right_cancel_iff]
       rw [← Nat.sub_one_mul]
-      congr
-      simp [ih]
+      simp_all
     · simp
 
 /--

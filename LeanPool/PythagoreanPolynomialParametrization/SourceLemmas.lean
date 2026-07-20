@@ -127,9 +127,7 @@ private lemma rat_half_int_iff_even (n : ℤ) :
     simp [hInt]
   · intro hn
     rcases hn with ⟨k, hk⟩
-    refine ⟨k, ?_⟩
-    rw [hk]
-    norm_num
+    simp_all
 
 private lemma even_sq_iff_even_int (n : ℤ) : Even (n ^ 2) ↔ Even n := by
   simpa [pow_two] using (Int.even_mul (m := n) (n := n))
@@ -226,18 +224,15 @@ theorem positive_T_parameters_parametrized (a b c : ℤ) :
     rcases hpar with hcEven | habEven
     · rcases hcEven with ⟨x, hx⟩
       have hxpos : 0 < x := by
-        rw [hx] at hcpos
-        nlinarith
+        simp_all
       refine ⟨x, b, a - b, 0, hxpos, hb, ?_, by norm_num, ?_, rfl, ?_⟩
       · nlinarith
       · ring
-      · rw [hx]
-        ring
+      · simp_all
     · rcases habEven with ⟨z, hz⟩
       have hzpos : 0 < z := by
         have hdiffpos : 0 < a - b := by nlinarith
-        rw [hz] at hdiffpos
-        nlinarith
+        simp_all
       refine ⟨c, b, z, 1, hcpos, hb, hzpos, by norm_num, ?_, rfl, ?_⟩
       · nlinarith [hz]
       · ring
@@ -247,15 +242,13 @@ theorem positive_T_parameters_parametrized (a b c : ℤ) :
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
     · rw [haeq]
       nlinarith
-    · rw [hbeq]
-      exact hypos
+    · simp_all
     · rw [hceq]
       have hsq_nonneg : 0 ≤ ((1 : ℤ) - w) ^ 2 := sq_nonneg ((1 : ℤ) - w)
       have hmul_nonneg : 0 ≤ ((1 : ℤ) - w) ^ 2 * x :=
         mul_nonneg hsq_nonneg (le_of_lt hxpos)
       nlinarith
-    · rw [haeq, hbeq]
-      nlinarith
+    · simp_all
     · dsimp [PaperParityCondition]
       rcases Int.even_or_odd w with hw | hw
       · left
@@ -263,11 +256,7 @@ theorem positive_T_parameters_parametrized (a b c : ℤ) :
         rw [hceq, hk]
         use x * (1 - 2 * k + 2 * k ^ 2)
         ring
-      · right
-        rcases hw with ⟨k, hk⟩
-        rw [haeq, hbeq, hk]
-        use (k + 1) * z
-        ring
+      · simp_all
 
 /-- Lagrange four-square handoff: every nonnegative integer is a sum of four squares. -/
 theorem int_nonneg_iff_four_squares (n : ℤ) :

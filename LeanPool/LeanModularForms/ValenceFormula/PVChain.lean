@@ -48,8 +48,7 @@ theorem pv_chain_identity (S : Finset UpperHalfPlane) (hS : ∀ p ∈ S, p ∈ �
       (h_res (le_trans (le_max_left _ _) hH))
       (h_mod (le_trans (le_max_right _ _) hH))
   have hpi : (2 : ℂ) * ↑Real.pi * I ≠ 0 := by
-    simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, not_false_eq_true,
-      ofReal_eq_zero, Real.pi_ne_zero, I_ne_zero, or_self]
+    simp_all
   rw [show -(2 * ↑Real.pi * I * ((k : ℂ) / 12 - (orderAtCusp' f : ℂ))) =
     2 * ↑Real.pi * I * (-((k : ℂ) / 12 - (orderAtCusp' f : ℂ))) from by ring] at h_eq
   exact mul_left_cancel₀ hpi h_eq

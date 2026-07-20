@@ -50,8 +50,7 @@ lemma star_right_witness (α β : AspPerm) :
   obtain ⟨h_mul, h_star, h_leχ⟩ := star_left_witness β⁻¹ α⁻¹
   simp only [inv_inv] at h_mul h_star h_leχ
   refine ⟨?_, ?_, ?_⟩
-  · simpa only [mul_inv_rev, AspPerm.inverse_star, inv_inv] using
-      congrArg (fun τ : AspPerm => τ⁻¹) h_mul
+  · simp_all
   · simpa only [AspPerm.inverse_star, mul_inv_rev, inv_inv] using
       congrArg (fun τ : AspPerm => τ⁻¹) h_star
   · simpa only [mul_inv_rev, AspPerm.inverse_star, inv_inv] using
@@ -326,8 +325,7 @@ theorem reduceList :
       -- Base case: γ ≤ id and γ.χ = 0, hence γ = id.
       simp only [List.map_nil, List.sum_nil, DProd_nil] at hχ h
       have hγ : γ = AspPerm.id := eq_id_of_le_id_chi_zero h hχ.symm
-      exact ⟨[], List.Forall₂.nil, by simp only [DProd_nil, hγ],
-        by simp only [OrdProd_nil, hγ]⟩
+      simp_all
   | (α :: αs), γ, hχ, h => by
       -- Proof written by Claude Opus 4.7.
       -- Inductive step: apply `reduce` to split off `α` from the suffix.

@@ -54,10 +54,8 @@ lemma covered_of_covered_trans {x₂ : X} {γ₁ : Dipath x₀ x₁} {γ₂ : Di
   unfold covered at *
   rw [Dipath.trans_range _ _] at hγ
   rcases hγ with h | h
-  · exact ⟨Or.inl <| subset_trans (subset_union_left (s := range γ₁) (t := range γ₂)) h,
-      Or.inl <| subset_trans (subset_union_right (s := range γ₁) (t := range γ₂)) h⟩
-  · exact ⟨Or.inr <| subset_trans (subset_union_left (s := range γ₁) (t := range γ₂)) h,
-      Or.inr <| subset_trans (subset_union_right (s := range γ₁) (t := range γ₂)) h⟩
+  · simp_all
+  · simp_all
 
 lemma covered_subparam_of_covered {γ : Dipath x₀ x₁} {hX : X₀ ∪ X₁ = univ} (hγ : covered hX γ)
     (f : D(I,I)) :
@@ -300,8 +298,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
   have h₁ : d'.succ < n'.succ := by
     rw [n_def, hd_eq_k, ←(Nat.pred_eq_sub_one (n := (n + 1) * k)),
       Nat.succ_pred_eq_of_pos prod_pos]
-    nth_rewrite 1 [←one_mul k]
-    exact Nat.mul_lt_mul_of_pos_right (by linarith) hk
+    simp_all
   have : Fraction (Nat.succ_pos n') (le_of_lt h₁) = Fraction.ofPos (Nat.succ_pos n) := by
     apply Subtype.ext
     rw [Fraction.Fraction_coe, Fraction.ofPos_coe]
@@ -317,13 +314,11 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       ← (Nat.pred_eq_sub_one (n := n * k))]
     rw [Nat.succ_pred_eq_of_pos (Nat.mul_pos hn hk), n_def, d_def, Nat.sub_sub, add_comm 1 (k-1)]
     rw [Nat.add_one (k-1), Nat.sub_one k, Nat.succ_pred_eq_of_pos hk, add_mul, one_mul]
-    rw [Nat.add_sub_assoc (le_refl k), Nat.sub_self]
-    rfl
+    simp_all
   by_cases h : i < k
   · -- Use the covering of the first part of γ
     have h₂ : i < d'.succ := by
-      rw [d_def, ←(Nat.pred_eq_sub_one (n := k)), Nat.succ_pred_eq_of_pos hk]
-      exact h
+      simp_all
     rw [←SplitProperties.firstPart_range_interval_partial_coe γ h₁ h₂]
     convert (covered_by_intervals_of_covered_partwise (k-1) hγ_first i (by linarith))
   · push Not at h
@@ -334,8 +329,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       apply (tsub_lt_tsub_iff_right this).mpr _
       exact hi
     have : i = i' + d'.succ := by
-      rw [i_def, Nat.sub_add_cancel]
-      exact hd_eq_k.symm ▸ h
+      simp_all
     rw [this]
     have : i - k < n * k - 1 + 1 := by
       rw [Nat.sub_one (n * k), Nat.add_one (n * k).pred, Nat.succ_pred_eq_of_pos (mul_pos hn hk)]

@@ -435,8 +435,7 @@ variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
   induction t
   · rename_i x
     cases x using Fin.cases
-    · simp only [q_bvar_zero, Semiterm.Positive.bvar]
-      rfl
+    · simp_all
     · simp only [q_bvar_succ, bShift_positive, Semiterm.Positive.bvar]
       exact ⟨fun _ ↦ Nat.succ_pos _, fun _ ↦ trivial⟩
   · simp only [q_fvar, bShift_positive, Semiterm.Positive.fvar]
@@ -1181,8 +1180,7 @@ variable {S : ℕ → Type*} [LCWQ S] [SyntacticRewriting L S S] [LawfulSyntacti
     ℕ) a) = embedding (ξ := ℕ) a by simp [shifts, Function.comp_def, ← comp_app]
   intro j hj
   unfold embedding shift
-  rw [←comp_app]; congr 2
-  ext x <;> simp
+  rw [←comp_app]; simp_all
 
 end Rewriting
 

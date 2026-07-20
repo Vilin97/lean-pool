@@ -33,20 +33,7 @@ theorem isUnit_comm (K E : Type _) [DivisionRing K] [AddCommGroup E] [Module K E
   · exact Invertible.mk (x * z) hz2 hz1
 
 theorem isUnit_neg {α : Type _} [Monoid α] [HasDistribNeg α] (x : α) : IsUnit (-x) ↔ IsUnit x := by
-  constructor
-  all_goals
-    intro h
-    rw [← nonempty_invertible_iff_isUnit] at h ⊢
-    refine Nonempty.intro ?_
-    obtain ⟨z, hz1, hz2⟩ := Nonempty.some h
-  any_goals
-    rw [neg_mul_comm] at hz2
-    rw [← neg_mul_comm] at hz1
-    exact ⟨-z, hz1, hz2⟩
-  any_goals
-    rw [← neg_mul_neg] at hz2
-    rw [← neg_mul_neg] at hz1
-    exact ⟨-z, hz1, hz2⟩
+  simp_all
 
 theorem spectrum.comm {K E : Type _} [Field K] [AddCommGroup E] [Module K E] [FiniteDimensional K E]
     (x y : E →ₗ[K] E) : spectrum K (x ∘ₗ y) = spectrum K (y ∘ₗ x) := by

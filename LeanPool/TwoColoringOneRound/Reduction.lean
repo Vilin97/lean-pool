@@ -196,9 +196,7 @@ lemma monoCount_eq_sum_edgeEvent_indicator {n : ℕ} (alg : ClassicalAlgorithm) 
           if LowerBound.Edge.monochromatic (coloringOfSeeds alg S) e then (1 : ENNReal) else
             0) := by
     unfold LowerBound.monoCount LowerBound.monoEdges
-    exact Finset.natCast_card_filter (R := ENNReal)
-      (s := (Finset.univ : Finset (LowerBound.Edge n)))
-      (p := LowerBound.Edge.monochromatic (coloringOfSeeds alg S))
+    simp_all
   refine hcard.trans (Finset.sum_congr rfl fun e _ => ?_)
   by_cases hme : LowerBound.Edge.monochromatic (coloringOfSeeds alg S) e
   · simp [hme, Set.indicator_of_mem, (edgeMonochromatic_iff (alg := alg) S e).1 hme]

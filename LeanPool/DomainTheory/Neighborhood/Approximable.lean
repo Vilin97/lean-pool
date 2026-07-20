@@ -458,8 +458,7 @@ theorem exists_principal_eq_apply_principal (e : V₀.Element ≃o V₁.Element)
       rwa [e.apply_symm_apply] at this
     exact h2 Y ⟨hY, subset_rfl⟩
   have hX_le_z : V₀.principal hX ≤ z := by
-    have : e.symm w ≤ e.symm (e z) := e.symm.monotone hw_le_ez
-    rwa [hsymm_w, e.symm_apply_apply] at this
+    simp_all
   -- Hence `z = ↑X`, so `X ∈ z` lands in some member `e⁻¹(↑Y)`.
   have hz_eq : z = V₀.principal hX := le_antisymm hz_le hX_le_z
   have hXz : z.mem X := hz_eq ▸ ⟨hX, subset_rfl⟩

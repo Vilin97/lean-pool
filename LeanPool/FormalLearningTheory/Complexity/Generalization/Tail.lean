@@ -29,12 +29,7 @@ lemma block_extract_disjoint (k m : ℕ) (j₁ j₂ : Fin k) (hne : j₁ ≠ j�
       (Finset.image (fun i : Fin m => finProdFinEquiv (j₁, i)) Finset.univ)
       (Finset.image (fun i : Fin m => finProdFinEquiv (j₂, i)) Finset.univ) := by
   rw [Finset.disjoint_iff_ne]
-  intro a ha b hb
-  simp only [Finset.mem_image, Finset.mem_univ, true_and] at ha hb
-  obtain ⟨i₁, rfl⟩ := ha
-  obtain ⟨i₂, rfl⟩ := hb
-  intro heq
-  exact hne (congr_arg Prod.fst (finProdFinEquiv.injective heq))
+  simp_all
 
 /-- Block extraction is measurable: extracting block j from a pi-type is measurable. -/
 lemma block_extract_measurable {X : Type*} [MeasurableSpace X]
@@ -127,9 +122,7 @@ theorem shatters_hard_labeling {X : Type u} {C : ConceptClass X Bool} {T : Finse
   obtain ⟨f, hf⟩ := exists_many_disagreements h hcard'
   obtain ⟨c, hcC, hcf⟩ := shatters_realize hT f
   refine ⟨c, hcC, ?_⟩
-  convert hf using 2
-  · exact (Fintype.card_coe T).symm
-  · congr 1; ext x; simp [hcf x]
+  simp_all
 
 /-- NFL per-sample lemma for shattered sets: for ANY fixed sample xs and
     ANY hypothesis h, there exists c ∈ C agreeing with h on sample points

@@ -62,8 +62,7 @@ theorem IsInjectiveSpace.pi {ι : Type w} (D : ι → Type v) [∀ i, Topologica
   choose g hg using fun i =>
     h i e he ⟨fun x => f x i, (continuous_apply i).comp f.continuous⟩
   refine ⟨⟨fun y i => g i y, continuous_pi fun i => (g i).continuous⟩, fun x => ?_⟩
-  funext i
-  exact hg i x
+  simp_all
 
 theorem proposition_1_3 {ι : Type w} (D : ι → Type v) [∀ i, TopologicalSpace (D i)]
     (h : ∀ i, IsInjectiveSpace.{u} (D i)) : IsInjectiveSpace.{u} (∀ i, D i) :=
@@ -77,9 +76,7 @@ theorem IsInjectiveSpace.of_retract {D : Type v} {D' : Type v}
   intro X Y _ _ e he f
   obtain ⟨g, hg⟩ := hD e he (s.comp f)
   refine ⟨r.comp g, fun x => ?_⟩
-  change r (g (e x)) = f x
-  rw [hg x]
-  exact hrs (f x)
+  simp_all
 
 theorem proposition_1_4 {D : Type v} {D' : Type v} [TopologicalSpace D] [TopologicalSpace D']
     (hD : IsInjectiveSpace.{u} D) (s : C(D', D)) (r : C(D, D')) (hrs : ∀ d, r (s d) = d) :

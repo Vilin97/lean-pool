@@ -165,10 +165,7 @@ where
 lemma realize_leq_to_leq {M} [h : zambella.Structure M] {a} {env : a → M}
     {k} (t u : zambella.Term (a ⊕ (Fin k))) {xs} :
   (t.le u).Realize env xs = (t.realize (Sum.elim env xs) <= u.realize (Sum.elim env xs)) := by
-  simp only [LE.le, Term.le, Relations.boundedFormula₂]
-  rw [← @BoundedFormula.realize_rel₂]
-  unfold Relations.boundedFormula₂
-  rfl
+  simp_all
 
 @[simp] lemma realize_leq_to_leq' {M} [h : zambella.Structure M] {a} {env : a → M}
     {k} (t u : zambella.Term (a ⊕ (Fin k))) {xs} :

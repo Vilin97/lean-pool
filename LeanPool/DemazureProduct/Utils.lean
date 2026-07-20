@@ -32,11 +32,7 @@ noncomputable abbrev oneIf (P : Prop) : ℤ := by
 lemma oneIf_congr {P Q : Prop} (h : P ↔ Q) :
     oneIf P = oneIf Q := by
   -- Proof written by GPT 5.5.
-  by_cases hP : P
-  · have hQ : Q := h.mp hP
-    simp only [oneIf, hP, hQ, if_true]
-  · have hQ : ¬ Q := fun hQ => hP (h.mpr hQ)
-    simp only [oneIf, hP, hQ, if_false]
+  simp_all
 
 /-- On an integer interval, membership is the difference of two initial
 segments. -/
@@ -51,19 +47,7 @@ counts `A`. -/
 lemma sum_oneIf_mem_of_subset {ι : Type*} {A U : Finset ι} (hAU : A ⊆ U) :
     (∑ k ∈ U, oneIf (k ∈ A)) = (A.card : ℤ) := by
   -- Proof written by GPT 5.5.
-  classical
-  have hfilter : U.filter (fun k => k ∈ A) = A := by
-    ext k
-    simp only [Finset.mem_filter]
-    exact ⟨fun hk => hk.2, fun hk => ⟨hAU hk, hk⟩⟩
-  have hsum_eq :
-      (∑ k ∈ U, oneIf (k ∈ A)) = ∑ k ∈ U, if k ∈ A then (1 : ℤ) else 0 := by
-    apply Finset.sum_congr rfl
-    intro k _
-    by_cases hkA : k ∈ A
-    · simp only [oneIf, hkA, if_true]
-    · simp only [oneIf, hkA, if_false]
-  rw [hsum_eq, Finset.sum_boole, hfilter]
+  simp_all
 
 /-- The difference of the cardinalities of two finite sets is equal to the
 difference of the cardinalities of their set-theoretic differences. -/
@@ -101,8 +85,7 @@ lemma min_helper {m n : ℤ} (m_pos : m ≥ 1) (n_pos : n ≥ 1)
       linarith [h h1]
     exact min_helper m_pos (n := n-1) (n_pos := by omega) mem_n_dec nmem
   have n_one : n = 1 := le_antisymm (by omega) n_pos
-  subst n_one
-  exfalso; exact nmem mem
+  simp_all
 termination_by (m+n).toNat
 decreasing_by
   all_goals

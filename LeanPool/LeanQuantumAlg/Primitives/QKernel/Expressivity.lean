@@ -76,9 +76,7 @@ theorem trace_offDiagEmb_mul (v w : Fin r → ℂ) :
   rw [h1, h2]
   have hconj : (∑ k, v k * starRingEnd ℂ (w k))
       = starRingEnd ℂ (∑ k, starRingEnd ℂ (v k) * w k) := by
-    rw [map_sum]
-    refine Finset.sum_congr rfl fun k _ => ?_
-    simp only [map_mul, Complex.conj_conj]
+    simp_all
   rw [hconj, add_comm, Complex.add_conj]
   push_cast
   ring
@@ -192,8 +190,6 @@ theorem eqk_nonempty :
     fin_cases i <;>
       simp [Matrix.cons_val_zero, Matrix.cons_val_one]
   · rw [densityOf_mul_trace, densityOf_mul_trace]
-    simp only [Fin.sum_univ_one, Matrix.cons_val_zero, Matrix.cons_val_one, map_one, mul_zero,
-      mul_one]
-    norm_num
+    simp_all
 
 end QuantumAlg

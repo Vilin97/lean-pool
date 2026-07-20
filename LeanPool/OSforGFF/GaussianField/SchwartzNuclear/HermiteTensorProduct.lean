@@ -78,11 +78,9 @@ noncomputable def schwartzDomCongr {D E F : Type*}
     (compCLMOfContinuousLinearEquiv ℝ g)
     (compCLMOfContinuousLinearEquiv ℝ g.symm)
     (fun f => SchwartzMap.ext fun x => by
-      simp only [compCLMOfContinuousLinearEquiv_apply, Function.comp_def]
-      exact congr_arg f (g.apply_symm_apply x))
+      simp_all)
     (fun f => SchwartzMap.ext fun x => by
-      simp only [compCLMOfContinuousLinearEquiv_apply, Function.comp_def]
-      exact congr_arg f (g.symm_apply_apply x))
+      simp_all)
 
 /-- `EuclideanSpace ℝ (Fin 1)` is continuously linearly equivalent to `ℝ`. -/
 noncomputable def euclideanFin1Equiv : EuclideanSpace ℝ (Fin 1) ≃L[ℝ] ℝ :=
@@ -395,8 +393,7 @@ private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [No
             ContDiff.sum (fun i _ => contDiff_const.mul (h_contDiff i l))
           have hcoe_r : (⇑r : E → ℝ) = fun y =>
               (∑' n, a.val n * b n y) - ∑ i ∈ s, G i y := by
-            ext y; simp only [hr_def, sub_apply, hg_apply]
-            exact congrArg ((∑' n, a.val n * b n y) - ·) (hsum_coe y)
+            ext y; simp_all
           rw [hcoe_r]
           set h_sum := fun y => ∑ i ∈ s, G i y with h_sum_def
           have h_neg_cd : ContDiff ℝ l (-h_sum) := hg_cd.neg
@@ -410,9 +407,7 @@ private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [No
             rw [h_sum_def]
             have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := G) (u := s) (i := l)
               (fun i _ => contDiff_const.mul (h_contDiff i l))
-            calc iteratedFDeriv ℝ l (fun y => ∑ i ∈ s, G i y) x
-                = (∑ j ∈ s, iteratedFDeriv ℝ l (G j)) x := congr_fun h_eq x
-              _ = ∑ i ∈ s, iteratedFDeriv ℝ l (G i) x := Finset.sum_apply x s _
+            simp_all
           rw [h_iFD_h, ← h_summ_iFD.sum_add_tsum_compl (s := s)]
           abel
         have h_norm_summ : Summable (fun (i : ↥(↑s : Set ℕ)ᶜ) =>
@@ -448,10 +443,7 @@ private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [No
               set t' := t.map ⟨Subtype.val, Subtype.val_injective⟩ with ht'_def
               have h_disj : Disjoint t' s := by
                 rw [Finset.disjoint_left]
-                intro n hn hn_s
-                rw [Finset.mem_map] at hn
-                obtain ⟨⟨m, hm⟩, _, rfl⟩ := hn
-                exact hm hn_s
+                simp_all
               have h_lt := hs₀ t' (Disjoint.mono_right hs h_disj)
               rw [Real.norm_of_nonneg (Finset.sum_nonneg fun i _ =>
                 mul_nonneg (abs_nonneg _) (apply_nonneg _ _))] at h_lt
@@ -570,9 +562,7 @@ noncomputable def schwartzRapidDecayEquiv1D :
         hermiteCoeff1D_basis_kronecker]
       -- ∑' m, a.val m * if n = m then 1 else 0 = a.val n
       -- Convert `if n = m` to `if m = n` for tsum_ite_eq
-      simp_rw [show ∀ m, (if n = m then (1 : ℝ) else 0) = if m = n then 1 else 0 from
-        fun m => by split_ifs <;> simp_all]
-      simp [mul_ite, mul_one, mul_zero, tsum_ite_eq])
+      simp_all)
 
 /-- The inverse of `schwartzRapidDecayEquiv1D` evaluates pointwise as the 1D Hermite series
 reconstruction: `(equiv.symm a) t = ∑' n, a_n * ψ_n(t)`.
@@ -661,8 +651,7 @@ lemma multiIndexEquiv_growth (d : ℕ) :
     suffices h : (α default : ℝ) ≤ (MultiIndex.abs α : ℝ) by linarith
     gcongr
     change α default ≤ ∑ i, α i
-    rw [Fin.default_eq_zero]
-    exact Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ 0)
+    simp_all
   | succ d ih =>
     -- d + 1: Cantor pairing with IH
     obtain ⟨C₁, hC₁, k₁, hbound₁⟩ := ih
@@ -721,8 +710,7 @@ lemma multiIndexEquiv_symm_growth (d : ℕ) :
     -- d = 0: multiIndexEquiv 0 = Equiv.funUnique (Fin 1) ℕ
     refine ⟨1, one_pos, 1, fun n => ?_⟩
     simp only [multiIndexEquiv, one_mul, pow_one, MultiIndex.abs]
-    change (1 : ℝ) + ↑((Equiv.funUnique (Fin 1) ℕ).symm n 0) ≤ 1 + ↑n
-    simp [Equiv.funUnique]
+    simp_all
   | succ d ih =>
     -- d + 1: unpairing with IH
     obtain ⟨C₁, hC₁, k₁, hbound₁⟩ := ih
@@ -791,9 +779,7 @@ private lemma hermiteFunction_schwartz_seminorm_bound (n k m : ℕ) :
   have hcoe : (fun t => hermiteFunction n t) = ⇑φ := (funext hφ).symm
   refine ⟨SchwartzMap.seminorm ℝ k m φ, apply_nonneg _ _, fun t => ?_⟩
   have hle := SchwartzMap.le_seminorm ℝ k m φ t
-  rw [Real.norm_eq_abs] at hle
-  rwa [show iteratedFDeriv ℝ m (⇑φ) t = iteratedFDeriv ℝ m (hermiteFunction n) t from
-    congr_arg (iteratedFDeriv ℝ m · t) hcoe.symm] at hle
+  simp_all
 
 -- The projection ‖EuclideanSpace.proj i‖ ≤ 1.
 private lemma euclidean_proj_norm_le_one (d : ℕ) (i : Fin d) :
@@ -820,9 +806,7 @@ private lemma euclidean_norm_le_l1 (d : ℕ) (x : EuclideanSpace ℝ (Fin (d + 1
 private lemma euclidean_norm_pow_le (d k : ℕ) (x : EuclideanSpace ℝ (Fin (d + 1))) :
     ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
   rcases k with _ | k
-  · simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-      nsmul_eq_mul, mul_one]
-    exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
+  · simp_all
   have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
   calc ‖x‖ ^ (k + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k + 1) :=
         pow_le_pow_left₀ (norm_nonneg _) (euclidean_norm_le_l1 d x) _
@@ -1377,10 +1361,7 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     apply ih
     intro β
     have := hermiteCoeffNd_fubini d' f (Fin.snoc β n)
-    simp only [Fin.snoc_last] at this
-    rw [h] at this
-    convert this.symm using 1
-    congr 1; funext i; simp [Fin.snoc_castSucc]
+    simp_all
   -- Step 2: All 1D slices are zero (by 1D completeness)
   have h_slice : ∀ y, schwartzSlice d' f y = 0 := by
     intro y
@@ -1397,8 +1378,7 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
   -- Step 3: f is zero everywhere
   ext x
   have h_zero : ∀ y t, (schwartzSlice d' f y) t = 0 := by
-    intro y t
-    exact congr_fun (congrArg SchwartzMap.toFun (h_slice y)) t
+    simp_all
   have h_val := h_zero (euclideanInit (d' + 1) x) (x (Fin.last (d' + 1)))
   rw [schwartz_slice_eq] at h_val
   rw [zero_apply]
@@ -1649,8 +1629,7 @@ private lemma schwartzHermiteBasisNd_weighted_product_bound (d k l : ℕ)
           rw [Finset.prod_const]
       _ ≤ (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
           have hcard : ((Finset.univ : Finset (Fin (d + 1))).erase j₀).card = d := by
-            rw [Finset.card_erase_of_mem (Finset.mem_univ j₀),
-              Finset.card_univ, Fintype.card_fin]; omega
+            simp_all
           rw [hcard, pow_succ']
   intro α x p
   calc ‖x‖ ^ k *
@@ -2350,11 +2329,7 @@ private lemma hermiteCoeffNd_rapidDecay_schwartzMapNd (d' : ℕ) (a : RapidDecay
   simp only [hermiteCoeffNdCLM_apply, map_smul, smul_eq_mul,
     flatBasisNd, hermiteCoeffNd_basisNd_kronecker]
   -- Use injectivity of multiIndexEquiv.symm to simplify the if-condition
-  simp_rw [(multiIndexEquiv d').symm.injective.eq_iff]
-  -- Flip `if n = m` to `if m = n` for tsum_ite_eq
-  simp_rw [show ∀ m, (if n = m then (1 : ℝ) else 0) = if m = n then 1 else 0 from
-    fun m => by split_ifs <;> simp_all]
-  simp [mul_ite, mul_one, mul_zero, tsum_ite_eq]
+  simp_all
 
 /-- **Completeness of the multi-d Hermite expansion in Schwartz topology.**
 Proved purely algebraically! The series converges to `S_f := from(to(f))`.

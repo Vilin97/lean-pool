@@ -217,7 +217,6 @@ theorem trivialNonZeroElem_trivial_nonzero {R G : Type _} [Ring R] [Group G]
   conv =>
     enter [a, 2, 1, a, 1, g, 1]
     rw [Quotient.eq]
-  intro a
-  rfl
+  simp_all
 
 end LeanPool.Polylean

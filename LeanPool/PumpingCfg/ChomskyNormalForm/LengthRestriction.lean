@@ -279,8 +279,7 @@ lemma left_not_mem_computeRulesRec {n : g.NT} {r : ContextFreeRule T g.NT}
     split
     · simp only [List.mem_singleton]
       intro hr'
-      rw [hr'] at hrn
-      simp at hrn
+      simp_all
     · exact List.not_mem_nil
   | succ _ ih =>
     unfold computeRulesRec
@@ -288,8 +287,7 @@ lemma left_not_mem_computeRulesRec {n : g.NT} {r : ContextFreeRule T g.NT}
     · simp only [List.mem_cons, not_or]
       constructor
       · intro h
-        rw [h] at hrn
-        simp at hrn
+        simp_all
       · apply ih
     · exact List.not_mem_nil
 
@@ -347,12 +345,8 @@ lemma mem_computeRules_left {n : g.NT} {r : ContextFreeRule T g.NT}
         rw [← List.singleton_append, projectString_append]
         simp only [projectString, projectSymbol, List.map_cons, List.map_nil, List.flatten_cons,
           List.flatten_nil, List.singleton_append, List.append_nil]
-        rw [heq2]
-        congr
-        simp
-      · rw [hrr] at hrn
-        simp only [ChomskyNormalFormRule.input, Sum.inl.injEq] at hrn
-        exact hrn.symm
+        simp_all
+      · simp_all
     · exfalso
       exact left_not_mem_computeRulesRec hrn hrr
   · contradiction
@@ -445,14 +439,11 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
             ← List.map_drop]
           apply ChomskyNormalFormGrammar.Derives.append_left
           have hrₒ : r.output.length - 2 - (n + 1) + 1 = r.output.length - 2 - n := by omega
-          rw [hrₒ]
-          exact ih _ hx₂
+          simp_all
       · omega
     · rename_i hn
       obtain ⟨n₁, hn₁⟩ := hr.mem_nonterminal ⟨r.output.length - 2 - (n + 1), by omega⟩ (by omega)
-      simp only [Fin.getElem_fin] at hn₁
-      exfalso
-      apply hn _ hn₁
+      simp_all
 
 lemma computeRules_derives_embedString [DecidableEq T] [DecidableEq g.NT]
     {r : ContextFreeRule T g.NT} {n : g.NT'} {x : List (ChomskyNormalFormRule T g.NT')}
@@ -495,9 +486,7 @@ lemma computeRules_derives_embedString [DecidableEq T] [DecidableEq g.NT]
       have heq :
         (embedSymbol s₁ :: embedSymbol s₂ :: u.map embedSymbol =
           embedString (List.drop (r.output.length - 2 - (r.output.length - 3)) r.output)) := by
-        change embedString (s₁ :: s₂ :: u) = _
-        congr
-        simp [hrn]
+        simp_all
       rw [heq]
       exact computeRulesRec_derives hx₂ hr
   · rename_i hrn' ht

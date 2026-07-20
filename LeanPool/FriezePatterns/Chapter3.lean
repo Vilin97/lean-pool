@@ -281,11 +281,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
     | zero => simp [friezeF, hn, g.hd]
     | succ m ih =>
       have : ¬ 1 ≥ n+1 := by omega
-      unfold friezeF; simp only [one_ne_zero, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff,
-        and_false, Nat.reduceAdd, add_tsub_cancel_right, tsub_self, ih, div_one, add_eq_right,
-        mul_eq_zero]
-      right
-      exact topBordZeros (m+1)
+      unfold friezeF; simp_all
   have botBordOnes_n : ∀ m, friezeF g (n, m) = 1 := by
     intro m
     induction m with
@@ -297,10 +293,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
       exact this.symm
     | succ m ih =>
       have : ¬ n ≥ n+1 := by omega
-      unfold friezeF; simp only [hn, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff,
-        one_ne_zero, and_false, add_tsub_cancel_right, ih, div_one, add_eq_right, mul_eq_zero]
-      left
-      exact botBordZeros_n (n+1) m (by rfl)
+      unfold friezeF; simp_all
   have positive: ∀ i, ∀ m, 1 ≤ i → i ≤ n → friezeF g (i,m) > 0 := by
     intro i m
     induction m generalizing i with
@@ -375,8 +368,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
           have : friezeF g (2, m) * friezeF g (m + 1, 0) = ↑k * friezeF g (m + 1, 0) := by
             rw [hkey, hk]; ring
           exact mul_right_cancel₀ hne this
-        rw [hfrac]
-        norm_cast
+        simp_all
       have : n+1-(n-1)=2 := by omega
       by_cases hm₃ : m = n-1
       · have key := glideSymm ℚ (friezeF g) n (n-1) (by omega) 0
@@ -422,8 +414,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (friezeF g
       simp +arith only at key₂
       rw [key₂]
       have h₁ : (friezeF g (2, i+m+1)).den = 1 := by
-        have := key (m+(i+1))
-        convert this using 2; ring_nf
+        simp_all
       have h₂ := ih (i+1) (by omega) m
       have h₃ := ih (i+2) (by omega) m
       rw [Rat.sub_eq_add_neg, Rat.add_num_den, Rat.neg_den, Rat.mul_den, h₁, h₂, h₃]
@@ -509,10 +500,7 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
       have h₄ : ¬ j ≥ 2 * j + 1 := by omega
       unfold aEven
       simp [h₄]
-    choose w hw using h₁
-    use w
-    rw [hj]
-    assumption
+    simp_all
   -- odd case
   · use friezeF (fibFluteOdd k)
     let temp := fluteToFrieze (fibFluteOdd k) (by omega)
@@ -536,10 +524,7 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
       have h₅ : 1 + 4 * k - 2 * k = 2 * k + 1 := by omega
       unfold aOdd
       simp [h₂, h₄, h₅]
-    choose w hw using h₁
-    use w
-    rw [hk]
-    assumption
+    simp_all
 
 theorem main3 (n : ℕ) (hn : n ≠ 0) : ∃ (g : ℕ × ℕ → ℚ) (_ : arith_fp g n),
     ∃ (b : ℕ × ℕ), (∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∀ (a : ℕ × ℕ),

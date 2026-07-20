@@ -201,8 +201,7 @@ theorem nesterov_convergence_at_base_point_position_params
   have hψ_zero : (f mstar - fStar f) + μ' / 2 * ‖mstar - π mstar‖ ^ 2 = 0 := by
     have h1 : f mstar = fStar f :=
       le_antisymm (le_ciInf (fun x => hmin x)) (ciInf_le hbdd mstar)
-    rw [h1, sub_self, hπ_fix mstar hmstar, sub_self, norm_zero]
-    simp
+    simp_all
   have hlyap_eq_psi : ∀ x₀ : E d,
       lyapunovOfState P μ' π f η ⟨x₀, 0⟩ =
         (f x₀ - fStar f) + μ' / 2 * ‖x₀ - π x₀‖ ^ 2 := by
@@ -327,8 +326,7 @@ theorem nesterov_convergence_at_base_point_position_params
     · have hseq_eq :
           (fun k => (nesterovSeqGen f (1 / ↑L) ρ ⟨x₀, 0⟩ k).x) =
             fun k => (nesterovSeqGen f η ρ s₀ k).x := by
-        funext k
-        simp only [hη_def, hs₀_def]
+        simp_all
       rw [hseq_eq]
       exact hasAcceleratedRate_of_geometric_decay f _ ↑L μ (L₀ + 1) r
         (by linarith) hr_pos hr_lt1 hr_le_exp h_bound

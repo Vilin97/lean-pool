@@ -110,9 +110,7 @@ lemma inducedLaplacian_eq_graphLaplacian_inducedSubgraph
   · simp only [hij, ↓reduceIte]
     have h_iff : (inducedSubgraph G S).Adj i j ↔ G.Adj i j ∧ i ∈ S ∧ j ∈ S :=
       inducedSubgraph_adj G S i j
-    by_cases h : G.Adj i j ∧ i ∈ S ∧ j ∈ S
-    · rw [if_pos h, if_pos (h_iff.mpr h)]
-    · rw [if_neg h, if_neg (mt h_iff.mp h)]
+    simp_all
 
 /-- The graph Laplacian equals the Mathlib lapMatrix (degree minus adjacency). -/
 lemma graphLaplacian_eq_lapMatrix (G : SimpleGraph V) [DecidableRel G.Adj] :
@@ -199,9 +197,7 @@ lemma lapMatrix_loewner_mono {H₁ H₂ : SimpleGraph V}
       · rintro (h1 | ⟨h2, _⟩)
         · exact h h1
         · exact h2
-    have hcard := Finset.card_union_of_disjoint h_disj
-    rw [← h_union] at hcard
-    push_cast [hcard]; ring
+    simp_all
   · simp only [hij, ↓reduceIte]
     by_cases h2 : H₂.Adj i j
     · by_cases h1 : H₁.Adj i j

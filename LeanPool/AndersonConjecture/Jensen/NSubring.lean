@@ -107,8 +107,7 @@ theorem initial_NSubring
   set p : Ideal ℤ := (IsLocalRing.maximalIdeal T).comap (algebraMap ℤ T) with hp_def
   have hp : p.IsPrime := (IsLocalRing.maximalIdeal.isMaximal T).isPrime.comap (algebraMap ℤ T)
   have hunits : ∀ (y : p.primeCompl), IsUnit ((algebraMap ℤ T) ↑y) := by
-    intro ⟨y, hy⟩
-    exact (IsLocalRing.notMem_maximalIdeal).mp (fun hmem => hy (Ideal.mem_comap.mpr hmem))
+    simp_all
   let φ : Localization.AtPrime p →+* T := IsLocalization.lift hunits
   have hinj_T : Function.Injective (algebraMap ℤ T) := by
     intro a b hab
@@ -192,7 +191,6 @@ def NSubring.subtype (N : NSubring T) : N.carrier →+* T :=
 /-- Two N-subrings are equal if their carriers are equal. -/
 theorem NSubring.ext {N₁ N₂ : NSubring T} (h : N₁.carrier = N₂.carrier) : N₁ = N₂ := by
   cases N₁
-  cases N₂
-  congr
+  simp_all
 
 end

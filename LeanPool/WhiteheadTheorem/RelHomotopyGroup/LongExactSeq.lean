@@ -263,9 +263,7 @@ theorem kerBdSubsetImJStar (f : π_rel (n + 1) X A a) :
       map_zero_left y := by  -- G₀ = g'
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
           kerBdSubsetImJStar.G'', g', kerBdSubsetImJStar.g', kerBdSubsetImJStar.g'']
-        by_cases hyn : (Cube.splitAtLast y).fst.val ≤ 1 / 2
-        repeat {simp only [Function.comp_apply, coe_mk, dite_eq_ite, Set.Icc.coe_zero, add_zero,
-          one_div, div_one, f']}
+        simp_all
       map_one_left y := by  -- G₁ = f'
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
           kerBdSubsetImJStar.G'']
@@ -423,8 +421,7 @@ theorem ker_iStar_subset_im_bd (f : π_ n A a) :
   simp only [Cube.inclToTop, coe_mk, comp_apply,
     Homeomorph.apply_symm_apply, Homotopy.coe_toContinuousMap, Homotopy.apply_one,
     Function.comp_apply, H]
-  apply Subtype.ext_iff.mp
-  rfl
+  simp_all
 
 /-- `Ker i* = Im ∂` in
 `⋯ πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ---i*ₙ--> πₙ(X, a) ⋯` -/

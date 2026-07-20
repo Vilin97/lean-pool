@@ -124,15 +124,12 @@ theorem bold_sigma₁_complete {n} {φ : Semisentence ℒₒᵣ n} (hp : Hierarc
   apply sigma₁_induction' hp
   case hVerum => intro n; simp
   case hFalsum =>
-    intro n
-    simp only [LogicalConnective.HomClass.map_bot, Prop.bot_eq_false,
-      Semiformula.codeIn'_falsum, Language.Semiformula.substs_falsum, false_implies, implies_true]
+    simp_all
   case hEQ =>
     intro n t₁ t₂ e h
     have : t₁.valbm V e = t₂.valbm V e := by simpa using h
     suffices T ⊢! ⌜Rew.embs t₁⌝^ᵗ/[toNumVec e] =' ⌜Rew.embs t₂⌝^ᵗ/[toNumVec e] by
-      simpa only [Semiformula.rew_rel2, Semiformula.codeIn'_eq, Fin.isValue, Matrix.cons_val_zero,
-        Matrix.cons_val_one, Matrix.vecHead, Matrix.cons_val_fin_one, substs_equals] using this
+      simp_all
     refine eq_ext T _ _ _ _ ⨀ ?_ ⨀ ?_ ⨀ eq_complete! T this
     · exact eq_symm'! _ <| termEq_complete! T e t₁
     · exact eq_symm'! _ <| termEq_complete! T e t₂
@@ -140,8 +137,7 @@ theorem bold_sigma₁_complete {n} {φ : Semisentence ℒₒᵣ n} (hp : Hierarc
     intro n t₁ t₂ e h
     have : t₁.valbm V e ≠ t₂.valbm V e := by simpa using h
     suffices T ⊢! ⌜Rew.embs t₁⌝^ᵗ/[toNumVec e] ≠' ⌜Rew.embs t₂⌝^ᵗ/[toNumVec e] by
-      simpa only [Semiformula.rew_nrel2, Semiformula.codeIn'_neq, Fin.isValue, Matrix.cons_val_zero,
-        Matrix.cons_val_one, Matrix.vecHead, Matrix.cons_val_fin_one, substs_notEquals] using this
+      simp_all
     refine ne_ext T _ _ _ _ ⨀ ?_ ⨀ ?_ ⨀ ne_complete! T this
     · exact eq_symm'! _ <| termEq_complete! T e t₁
     · exact eq_symm'! _ <| termEq_complete! T e t₂
@@ -149,8 +145,7 @@ theorem bold_sigma₁_complete {n} {φ : Semisentence ℒₒᵣ n} (hp : Hierarc
     intro n t₁ t₂ e h
     have : t₁.valbm V e < t₂.valbm V e := by simpa using h
     suffices T ⊢! ⌜Rew.embs t₁⌝^ᵗ/[toNumVec e] <' ⌜Rew.embs t₂⌝^ᵗ/[toNumVec e] by
-      simpa only [Semiformula.rew_rel2, Semiformula.codeIn'_lt, Fin.isValue, Matrix.cons_val_zero,
-        Matrix.cons_val_one, Matrix.vecHead, Matrix.cons_val_fin_one, substs_lessThan] using this
+      simp_all
     refine lt_ext! T _ _ _ _ ⨀ ?_ ⨀ ?_ ⨀ lt_complete! T this
     · exact eq_symm'! _ <| termEq_complete! T e t₁
     · exact eq_symm'! _ <| termEq_complete! T e t₂
@@ -158,8 +153,7 @@ theorem bold_sigma₁_complete {n} {φ : Semisentence ℒₒᵣ n} (hp : Hierarc
     intro n t₁ t₂ e h
     have : t₂.valbm V e ≤ t₁.valbm V e := by simpa using h
     suffices T ⊢! ⌜Rew.embs t₁⌝^ᵗ/[toNumVec e] </' ⌜Rew.embs t₂⌝^ᵗ/[toNumVec e] by
-      simpa only [Semiformula.rew_nrel2, Semiformula.codeIn'_nlt, Fin.isValue, Matrix.cons_val_zero,
-        Matrix.cons_val_one, Matrix.vecHead, Matrix.cons_val_fin_one, substs_notLessThan] using this
+      simp_all
     refine nlt_ext T _ _ _ _ ⨀ ?_ ⨀ ?_ ⨀ nlt_complete T this
     · exact eq_symm'! _ <| termEq_complete! T e t₁
     · exact eq_symm'! _ <| termEq_complete! T e t₂
@@ -186,11 +180,7 @@ theorem bold_sigma₁_complete {n} {φ : Semisentence ℒₒᵣ n} (hp : Hierarc
     apply ball_intro!
     intro x hx
     suffices T ⊢! ⌜Rew.embs ▹ φ⌝^/[toNumVec (x :> e)] by simpa [Language.TSemifromula.substs_substs]
-    have : Semiformula.Evalbm V (x :> e) φ := by
-      simp only [Semiformula.eval_ball, Nat.succ_eq_add_one, Semiformula.eval_operator₂,
-        Semiterm.val_bvar, Matrix.vecCons_zero, Semiterm.val_bShift, Structure.LT.lt] at h
-      exact h x hx
-    exact ihp this
+    simp_all
   case hEx =>
     intro n φ _ ihp e h
     simp only [Rewriting.app_ex, Rew.q_emb, Semiformula.codeIn'_ex, Language.Semiformula.substs_ex]

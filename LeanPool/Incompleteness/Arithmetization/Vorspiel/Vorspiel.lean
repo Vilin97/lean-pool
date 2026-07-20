@@ -231,11 +231,7 @@ lemma «mem_fvarList_iff_fvar?» [DecidableEq ξ] {t : Semiterm L ξ n} :
     simp only [fvarList, List.mem_singleton, fvar?_fvar, eq_comm]
   | func _ v ih =>
     simp only [fvarList, List.mem_flatten, Matrix.mem_toList_iff, fvar?_func]
-    constructor
-    · rintro ⟨_, ⟨i, rfl⟩, hx⟩
-      exact ⟨i, (ih i).mp hx⟩
-    · rintro ⟨i, hx⟩
-      exact ⟨(v i).fvarList, ⟨i, rfl⟩, (ih i).mpr hx⟩
+    simp_all
 
 end Semiterm
 

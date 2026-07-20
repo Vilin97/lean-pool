@@ -147,10 +147,7 @@ lemma zero_smul_HeckeModule (z : HeckeModule P Z) : (0 : 𝕋 P Z) • z = 0 := 
 /-- Any Hecke ring element acts as zero on the zero module element. -/
 lemma smul_zero_HeckeModule (T : 𝕋 P Z) : T • (0 : HeckeModule P Z) = 0 := by
   simp only [smul_eq_sum]
-  have : ∀ D (b : Z), (0 : HeckeModule P Z).sum (fun m c =>
-      ∑ i ∈ smulOrbit P (HeckeCoset.rep D) (HeckeLeftCoset.rep m),
-        Finsupp.single i (b * c)) = 0 := fun _ _ => Finsupp.sum_zero_index
-  simp_rw [this]; simp [Finsupp.sum]
+  simp_all
 
 /-- The module action is additive in the module argument. -/
 lemma smul_add_right (T : 𝕋 P Z) (m₁ m₂ : HeckeModule P Z) :
@@ -170,8 +167,7 @@ lemma smul_add_right (T : 𝕋 P Z) (m₁ m₂ : HeckeModule P Z) :
     exact Finsupp.sum_add_index'
       (fun m => by simp [mul_zero, Finsupp.single_zero, Finset.sum_const_zero])
       (fun m c₁ c₂ => by simp only [← Finset.sum_add_distrib, mul_add, Finsupp.single_add])
-  simp_rw [inner_split]
-  exact Finsupp.sum_add
+  simp_all
 
 /-- The smul orbits of distinct double cosets acting on the same left coset are disjoint. -/
 lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)

@@ -113,9 +113,7 @@ def extensions : PointedTrees ⥤ Type* where
     change concat (_ ≫ _) a.prop = concat _ _
     apply concat_uniq
     simp_rw [CategoryTheory.comp_apply, concat_spec']
-    congr!
-    rw [← PointedLenHom.hp]
-    rfl
+    simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=

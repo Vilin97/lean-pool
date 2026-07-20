@@ -152,8 +152,7 @@ lemma scaled_time_average_pointwise_bound (A : ℝ → Ω → ℂ) (T : ℝ) (hT
   -- Combine: (1/T)² * T * ∫ = (1/T) * ∫
   calc (1/T)^2 * ‖∫ s in Icc 0 T, A s ω‖ ^ 2
     ≤ (1/T)^2 * (T * ∫ s in Icc 0 T, ‖A s ω‖ ^ 2) := by
-        apply mul_le_mul_of_nonneg_left h_cs
-        positivity
+        simp_all
     _ = (1/T) * ∫ s in Icc 0 T, ‖A s ω‖^2 := by field_simp
 
 /-! ### Main Theorem: L² Time Average Bound
@@ -322,18 +321,9 @@ theorem memLp_prod_of_uniform_slicewise_bound (μ : Measure Ω) [SFinite μ]
       filter_upwards with s
       have h := (h_memLp s).integrable_norm_rpow
         (by simp : (2 : ℝ≥0∞) ≠ 0) (by simp : (2 : ℝ≥0∞) ≠ ⊤)
-      convert h using 2
-      simp [ENNReal.toReal_ofNat]
+      simp_all
     · -- Integral of slices is constant, hence integrable on bounded [0,T]
-      have h_eq : (fun s => ∫ (ω : Ω), ‖‖A s ω‖ ^ 2‖ ∂μ) =
-          fun _ => ∫ ω, ‖A 0 ω‖ ^ 2 ∂μ := by
-        ext s
-        simp only [Real.norm_of_nonneg (sq_nonneg _)]
-        exact h_uniform s
-      rw [h_eq]
-      have h_vol : (volume : Measure ℝ) (Icc 0 T) ≠ ⊤ := by
-        simp [Real.volume_Icc, ENNReal.ofReal_ne_top]
-      exact integrableOn_const h_vol
+      simp_all
   -- Now use the integrability to get MemLp 2
   rwa [memLp_two_iff_integrable_sq_norm h_meas]
 
@@ -549,8 +539,7 @@ theorem double_integral_polynomial_decay_bound_proved (α : ℝ) (hα : α > 1) 
     ≤ ∫ s in Icc 0 T, (∫ t, g t) := by
         apply integral_mono_of_nonneg
         · filter_upwards with s; exact integral_nonneg (fun u => h_nonneg _)
-        · exact integrableOn_const (show volume (Icc (0:ℝ) T) ≠ ⊤ from by
-            simp [Real.volume_Icc, ENNReal.ofReal_ne_top])
+        · simp_all
         · filter_upwards with s; exact h_inner s
     _ = (∫ t, g t) * T := by
         rw [setIntegral_const, Measure.real, Real.volume_Icc, sub_zero,

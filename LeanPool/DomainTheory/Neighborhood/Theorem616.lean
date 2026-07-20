@@ -208,11 +208,7 @@ theorem trianglelefteq_of_isInitial
         change (toStrictMap (Opk.iterElem 0)).1.rel P Q ↔ _
         rw [iterElem_zero]; exact botStrict_rel
       constructor
-      · rintro ⟨Y, hG, hHr⟩
-        rw [hG0] at hG; rw [hH0] at hHr
-        obtain ⟨hEX, rfl⟩ := hG
-        obtain ⟨_, rfl⟩ := hHr
-        rw [hK0]; exact ⟨hEX, rfl⟩
+      · simp_all
       · intro hK
         rw [hK0] at hK
         obtain ⟨hEX, rfl⟩ := hK

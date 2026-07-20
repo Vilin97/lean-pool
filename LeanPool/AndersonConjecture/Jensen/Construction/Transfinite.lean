@@ -587,9 +587,7 @@ private def transfinite_construction_proof
           exact hp
         have prime_transport' : ∀ (S₁ S₂ : NSubring T) (h : S₂ = S₁) (x : T) (hx : x ∈ S₁.carrier),
             Prime (⟨x, hx⟩ : S₁.carrier) → Prime (⟨x, h ▸ hx⟩ : S₂.carrier) := by
-          intro S₁ S₂ h x hx hp
-          cases h
-          exact hp
+          simp_all
         have hmem_prevF_carrier : (r : T) ∈ (prevF α (fun γ hγ => data γ)).carrier := by
           rwa [← h_nsub_eq]
         have hprime_prevF : Prime (⟨(r : T), hmem_prevF_carrier⟩ :

@@ -107,9 +107,7 @@ theorem two_le_centralizer_index [Finite G] {g : G} (hg : g ∉ Subgroup.center 
     2 ≤ (Subgroup.centralizer {g} : Subgroup G).index := by
   have h0 : (Subgroup.centralizer {g} : Subgroup G).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hne_top : (Subgroup.centralizer {g} : Subgroup G) ≠ ⊤ := by
-    intro hc
-    exact hg (Subgroup.mem_center_iff.mpr fun k =>
-      Subgroup.mem_centralizer_singleton_iff.mp (hc ▸ Subgroup.mem_top k))
+    simp_all
   have h1 : (Subgroup.centralizer {g} : Subgroup G).index ≠ 1 := fun h1 =>
     hne_top (Subgroup.index_eq_one.mp h1)
   omega

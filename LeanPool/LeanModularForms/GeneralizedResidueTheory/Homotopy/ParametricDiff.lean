@@ -615,7 +615,6 @@ theorem hasDerivAt_homotopy_integral_zero
     rw [← h_ftc]
     exact hasDerivAt_homotopy_param f H a b s hab hH_smooth hf_diff hfH_cont hs
       hf_differentiable (fun t ht => h_schwarz t ht)
-  rw [h_boundary] at h_deriv
-  exact h_deriv
+  simp_all
 
 end
