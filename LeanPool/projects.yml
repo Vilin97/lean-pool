@@ -4556,3 +4556,48 @@ projects:
     msc:
       - "11B75"
       - "05D99"
+  - slug: boolean-isoperimetry
+    title: Harper's Vertex-Isoperimetric Theorem for the Boolean Cube
+    summary: >-
+      Formalizes Harper's vertex-isoperimetric theorem: among all subsets of the n-dimensional
+      Boolean cube of a fixed size, the simplicial initial segment has the smallest closed
+      Hamming-1 neighborhood. The proof follows the short Frankl-Furedi argument, passing an
+      arbitrary family to a canonical compressed form by paired coordinate compressions and
+      controlling the boundary via Kruskal-Katona and Macaulay cascade shadow estimates.
+    branch: combinatorics
+    entry_module: LeanPool.BooleanIsoperimetry
+    authors:
+      - Alexey Milovanov
+    source:
+      title: A short proof for a theorem of Harper about Hamming-spheres
+      authors:
+        - Peter Frankl
+        - Zoltan Furedi
+      doi: "10.1016/0012-365X(81)90009-1"
+      github_repo: AlexeyMilovanov/BooleanIsoperimetry
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - BooleanIsoperimetry.harper_theorem
+      - BooleanIsoperimetry.harper_vertex_iso
+    main_results:
+      - declaration: BooleanIsoperimetry.harper_theorem
+        informal: >-
+          Among all subsets of the n-cube of a fixed cardinality, the simplicial initial segment
+          has the smallest closed Hamming-1 neighborhood.
+      - declaration: BooleanIsoperimetry.simplicialInitSeg_neighborhood_card_min
+        informal: >-
+          Every finite family of cube vertices has a closed 1-neighborhood at least as large as
+          that of the simplicial initial segment of the same size.
+      - declaration: BooleanIsoperimetry.harper_vertex_iso
+        informal: >-
+          Master family-level form: the Harper boundary function H N A.card lower-bounds the
+          closed 1-neighborhood cardinality of any family A in the N-cube.
+    tags:
+      - combinatorics
+      - isoperimetry
+      - boolean-cube
+      - kruskal-katona
+    msc:
+      - "05D05"
