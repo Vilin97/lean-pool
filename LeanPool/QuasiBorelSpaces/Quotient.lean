@@ -54,9 +54,7 @@ lemma isHom_mk : IsHom (fun x ↦ (⟦x⟧ : Quotient S)) := by
   simp only [isHom_def, Quotient.eq]
   intro φ hφ
   use φ
-  simp only [hφ, true_and]
-  intro r
-  rfl
+  simp_all
 
 @[simp, local fun_prop]
 lemma isHom_lift

@@ -119,8 +119,7 @@ theorem embBit_not_subset_cross {b b' : Bool} (h : b ≠ b') {X Y : Set Str} (hX
     (hsub : embBit b X ⊆ embBit b' Y) : False := by
   obtain ⟨t, ht⟩ := hX
   obtain ⟨w', he, -⟩ := hsub ⟨t, rfl, ht⟩
-  simp only [List.cons.injEq] at he
-  exact h he.1
+  simp_all
 
 /-! ## The functorial action of sum on maps -/
 
@@ -656,9 +655,7 @@ def singletonSys (Γ : Set Str) (h : Γ.Nonempty) : ScottSys where
       master := Γ
       master_mem := rfl
       inter_mem := by
-        intro X Y Z hX hY _ _
-        show X ∩ Y = Γ
-        rw [hX, hY, Set.inter_self]
+        simp_all
       sub_master := by intro X hX; rw [show X = Γ from hX] }
   ne := by intro X hX; rw [show X = Γ from hX]; exact h
 
@@ -727,11 +724,9 @@ theorem insertTag_continuous {ℱ : Set (Set Str)} {U : Set Str} (hne : ℱ.None
   · rintro (rfl | hw | hw)
     · obtain ⟨Γ, hΓ⟩ := hne; exact ⟨Γ, hΓ, Or.inl rfl⟩
     · obtain ⟨w', rfl, hw'⟩ := hw
-      obtain ⟨Γ, hΓ, hpΓ⟩ := (hp w').mp hw'
-      exact ⟨Γ, hΓ, Or.inr (Or.inl ⟨w', rfl, hpΓ⟩)⟩
+      simp_all
     · obtain ⟨w', rfl, hw'⟩ := hw
-      obtain ⟨Γ, hΓ, hqΓ⟩ := (hq w').mp hw'
-      exact ⟨Γ, hΓ, Or.inr (Or.inr ⟨w', rfl, hqΓ⟩)⟩
+      simp_all
   · rintro ⟨Γ, hΓ, (rfl | hw | hw)⟩
     · exact Or.inl rfl
     · obtain ⟨w', rfl, hw'⟩ := hw
@@ -815,11 +810,7 @@ theorem mFun_iter_fixed (T : FExpr) (hT : T.RootedConst) :
     exact ⟨mIter T (max i j), ⟨max i j, rfl⟩,
       mIter_mono T hT (le_max_left i j), mIter_mono T hT (le_max_right i j)⟩
   have hU : ∀ v, v ∈ (⋃ n, mIter T n) ↔ ∃ S ∈ Set.range (mIter T), v ∈ S := by
-    intro v
-    constructor
-    · intro hv; rw [Set.mem_iUnion] at hv; obtain ⟨n, hn⟩ := hv
-      exact ⟨mIter T n, ⟨n, rfl⟩, hn⟩
-    · rintro ⟨S, ⟨n, rfl⟩, hv⟩; exact Set.mem_iUnion.mpr ⟨n, hv⟩
+    simp_all
   apply Set.ext; intro w
   rw [mFun_continuous T hdir hne hU w]
   constructor

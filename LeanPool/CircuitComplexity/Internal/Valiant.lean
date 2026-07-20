@@ -124,11 +124,7 @@ private lemma not_acyclic_of_cycle_witness
   have h_a_lt : k.val % (m - iv.val) < m - iv.val := Nat.mod_lt _ hL_pos
   have h_add_mod : (k.val + 1) % (m - iv.val) =
       (k.val % (m - iv.val) + 1) % (m - iv.val) := by
-    have hdm := Nat.div_add_mod k.val (m - iv.val)
-    have heq : k.val + 1 =
-        (k.val % (m - iv.val) + 1) + (m - iv.val) * (k.val / (m - iv.val)) := by
-      omega
-    rw [heq, Nat.add_mul_mod_self_left]
+    simp_all
   by_cases hwrap : k.val % (m - iv.val) + 1 = m - iv.val
   · have h_next : (k.val + 1) % (m - iv.val) = 0 := by
       rw [h_add_mod, hwrap, Nat.mod_self]
@@ -158,10 +154,7 @@ private lemma not_acyclic_of_cycle_witness
       apply Fin.ext
       change iv.val + (k.val + 1) % (m - iv.val) = iv.val + k.val % (m - iv.val) + 1
       omega
-    change G.Adj (p ⟨iv.val + k.val % (m - iv.val), h_bnd k.val⟩)
-               (p ⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩)
-    rw [h_target]
-    exact step
+    simp_all
 
 omit [Fintype V] in
 /-- **Extending a simple path by an edge.** In an acyclic digraph, a
@@ -192,8 +185,7 @@ private lemma extend_simple_path (G : Digraph V) (hac : IsAcyclic G)
     · exact absurd hab (hv_notin ⟨a, h₁⟩)
     · exact absurd hab.symm (hv_notin ⟨b, h₃⟩)
     · apply Fin.ext; change a = b; omega
-  · change (if h : (Fin.last (n + 1)).val < n + 1 then _ else v) = v
-    simp [Fin.last]
+  · simp_all
 
 /-- **Canonical labeling is legal in acyclic graphs.** Any simple path
 ending at `u` followed by the edge `(u,v)` is a strictly longer simple
@@ -224,8 +216,7 @@ private lemma legal_label_add_le
   intro k
   induction k with
   | zero =>
-    intro a _ _
-    rfl
+    simp_all
   | succ k ih =>
     intro a h₁ h₂
     have hak : a + k < m := by omega
@@ -291,9 +282,7 @@ leftmost (MSB) bit at which they first disagree. -/
 private lemma testBit_eq_of_xor_testBit_false
     {x y m : ℕ} (hxor_m : (x ^^^ y).testBit m = false) :
     x.testBit m = y.testBit m := by
-  rw [Nat.testBit_xor] at hxor_m
-  cases hxb : x.testBit m <;> cases hyb : y.testBit m <;>
-    simp [hxb, hyb] at hxor_m <;> rfl
+  simp_all
 
 /-- `firstDifferBit k a b` is the 1-indexed MSB position at which the
 `k`-bit binary representations of `a` and `b` first disagree, or `0`
@@ -401,12 +390,7 @@ private lemma exists_r_subset_sum_le
   intro n
   induction n with
   | zero =>
-    intro s hs r hr
-    have hr0 : r = 0 := Nat.le_zero.mp hr
-    subst hr0
-    have : s = ∅ := Finset.card_eq_zero.mp hs
-    subst this
-    exact ⟨∅, Finset.empty_subset _, rfl, by simp⟩
+    simp_all
   | succ n' ih =>
     intro s hs r hr
     by_cases hr_eq : r = n' + 1
@@ -451,8 +435,7 @@ lemma exists_r_levels_small
     exists_r_subset_sum_le (fun i => (levelEdges G k i).card)
       k (Finset.Ioc 0 k) hcard r hrk
   refine ⟨I, hI_sub, hI_card, ?_⟩
-  rw [hsum] at hI_le
-  exact hI_le
+  simp_all
 
 /-- Restrict `x` to its `k` low bits, then zero out the bits at MSB
 positions `i ∈ I` (1-indexed; equivalently, LSB positions `k - i`). -/
@@ -519,8 +502,7 @@ private lemma maskOutI_sum_below_lt
     · split_ifs
       · rfl
       · exact Nat.zero_le _
-    · simp only [Finset.mem_filter, Finset.mem_Ioc] at hi ⊢
-      exact ⟨hi.2, (Finset.mem_Ioc.mp (Finset.mem_sdiff.mp hi.1).1).2⟩
+    · simp_all
   have h2 : (∑ i ∈ Finset.Ioc j k, (2 : ℕ) ^ (k - i)) = 2 ^ (k - j) - 1 := by
     rw [show (∑ i ∈ Finset.Ioc j k, (2:ℕ) ^ (k - i)) =
             ∑ m ∈ Finset.range (k - j), (2:ℕ) ^ m from ?_, sum_range_pow_two]
@@ -599,8 +581,7 @@ private lemma maskOutI_image_card_le
       (fun i => if (f v).testBit (k - i) then 2 ^ (k - i) else 0)).symm
   calc (Finset.univ.image (fun v => maskOutI k I (f v))).card
       = (Finset.univ.image (fun v => φ (gbar v))).card := by
-          apply congrArg Finset.card
-          exact Finset.image_congr (fun v _ => heq v)
+          simp_all
     _ = ((Finset.univ.image gbar).image φ).card := by
           rw [show (fun v => φ (gbar v)) = φ ∘ gbar from rfl, ← Finset.image_image]
     _ ≤ (Finset.univ.image gbar).card := Finset.card_image_le

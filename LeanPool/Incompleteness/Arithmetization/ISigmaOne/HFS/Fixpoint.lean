@@ -131,16 +131,11 @@ lemma succ_defined : Sg1.DefinedFunction (fun v :
     Matrix.cons_app_two, Matrix.vecCons_succ, c.eval_formula, LogicalConnective.Prop.and_eq,
     LogicalConnective.Prop.arrow_eq, c.defined.proper.iff', forall_and_index]
   constructor
-  · intro h x hx
-    constructor
-    · exact (h x hx).mp
-    · intro hle hphi
-      exact (h x hx).mpr ⟨hle, hphi⟩
+  · simp_all
   · intro h x hx
     constructor
     · exact (h x hx).1
-    · rintro ⟨hle, hphi⟩
-      exact (h x hx).2 hle hphi
+    · simp_all
 
 lemma eval_succDef (v) :
     Semiformula.Evalbm V v φ.succDef.val ↔ v 0 = c.succ (v ·.succ.succ.succ) (v 2) (v 1) :=
@@ -283,8 +278,7 @@ theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
       rcases this with ⟨s, hs⟩
       have : c.Φ v {z | z ∈ c.limSeq v s} x :=
         c.monotone (by
-          simp only [Set.setOf_subset_setOf, and_imp]
-          intro z hz hzm; exact hs z hzm hz)
+          simp_all)
           hm
       exact ⟨max s x + 1,
         c.mem_limSeq_succ_iff.mpr <| ⟨by simp,

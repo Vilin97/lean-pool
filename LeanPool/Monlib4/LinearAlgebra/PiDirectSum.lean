@@ -304,8 +304,7 @@ def LinearMap.rsum (R : Type _) {M : Type _} {ι : Type _} [Semiring R] (φ : ι
     simp only [LinearMap.pi_apply, Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
   left_inv f := by ext i x; simp only [LinearMap.proj_pi]
   right_inv f := by
-    ext; simp only [LinearMap.comp_apply, LinearMap.pi_apply]
-    rfl
+    simp_all
 
 /-- Combine `piPiProd`, `piProdSwap`, `lsum`, and `rsum` into a two-sided reindexing equivalence. -/
 @[simps!]

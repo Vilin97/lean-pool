@@ -149,10 +149,7 @@ private noncomputable def rmulMapLmul_apply_Upsilon_apply_aux :
     map_add' := fun _ _ => by simp only [LinearEquiv.trans_symm, map_add, LinearEquiv.trans_apply,
       LinearEquiv.TensorProduct.map_symm_apply, LinearEquiv.symm_symm, QuantumSet.Psi_symm_apply,
       schurMul_apply_apply, QuantumSet.Psi_apply, LinearEquiv.TensorProduct.map_apply]
-    map_smul' := fun _ _ => by simp only [LinearEquiv.trans_symm, LinearMapClass.map_smul,
-      LinearEquiv.trans_apply, LinearEquiv.TensorProduct.map_symm_apply, LinearEquiv.symm_symm,
-      QuantumSet.Psi_symm_apply, schurMul_apply_apply, QuantumSet.Psi_apply,
-      LinearEquiv.TensorProduct.map_apply, RingHom.id_apply] }
+    map_smul' := fun _ _ => by simp_all }
   map_add' _ _ := by
     simp_rw [map_add, LinearMap.add_apply, map_add]; rfl
   map_smul' _ _ := by
@@ -203,9 +200,7 @@ theorem QuantumSet.comm_op_modAut_map_comul_one_eq_Psi (r : ℝ) (f : A →ₗ[�
       (Psi 0 (k A + 1 - r) f))) := ?_
     _ = Psi 0 (k A + 1 - r) f := ?_
   · rw [← tenSwap_lTensor_comul_one_eq_Psi, tenSwap_apply_tenSwap]
-    simp_rw [LinearMap.lTensor, TensorProduct.map_apply_map_apply]
-    simp only [LinearMap.comp_id, ← LinearMap.comp_assoc,
-      unop_comp_op, LinearMap.one_comp]
+    simp_all
   · congr 1
     simp_rw [AlgEquiv.op_toLinearMap, tenSwap_apply_lTensor,
       ← LinearMap.comp_apply,
@@ -223,11 +218,7 @@ theorem QuantumSet.comm_op_modAut_map_comul_one_eq_Psi (r : ℝ) (f : A →ₗ[�
     nth_rw 2 [← LinearMap.id_apply (R := ℂ) x]
     revert x
     rw [← LinearMap.ext_iff, TensorProduct.ext_iff']
-    intro a b
-    simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, LinearMap.id_coe,
-      id_eq, tenSwap_apply, TensorProduct.map_tmul,
-      TensorProduct.comm_tmul]
-    rfl
+    simp_all
 
 open scoped TensorProduct
 
@@ -300,10 +291,7 @@ theorem real_Upsilon_toBimodule {f : A →ₗ[ℂ] B} (gns₁ : hA.k = 0)
       LinearEquiv.lTensor_tmul, rmulMapLmul_apply,
       rmul_adjoint, QuantumSet.modAut_star, QuantumSet.modAut_apply_modAut,
       lmul_adjoint,]
-    ring_nf
-    simp only [star_star, LinearEquiv.coe_coe, unop_apply,
-      MulOpposite.unop_op, starAlgebra.modAut_zero, AlgEquiv.one_apply, op_apply,
-      MulOpposite.op_star, MulOpposite.unop_star, gns₁, gns₂, neg_zero]
+    simp_all
   obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
   simp only [map_sum, LinearMap.real_sum, Submodule.coe_sum, this]
 
@@ -387,8 +375,7 @@ noncomputable def InnerProductAlgebra.mulOpposite {A :
     change dist x.unop y.unop = ‖-x.unop + y.unop‖
     exact InnerProductAlgebra.dist_eq x.unop y.unop
   conj_symm x y := by
-    simp only [MulOpposite.inner_eq]
-    exact InnerProductAlgebra.conj_symm x.unop y.unop
+    simp_all
   add_left x y z := by
     simp only [MulOpposite.inner_eq, MulOpposite.unop_add]
     exact InnerProductAlgebra.add_left x.unop y.unop z.unop
@@ -495,8 +482,7 @@ theorem Coalgebra.comul_mul (a b : A) :
   rw [QuantumSet.toSubset_onb 0]
   simp only [zero_div, neg_zero, add_zero]
   rw [← QuantumSet.toSubsetAlgEquiv_isReal]
-  simp only [← map_mul, TensorProduct.map_tmul, AlgEquiv.toLinearMap_apply,
-    AlgEquiv.symm_apply_apply]
+  simp_all
 
 open scoped ComplexOrder
 theorem schurProjection.isPosMap [PartialOrder A] [PartialOrder B]
@@ -1031,12 +1017,7 @@ theorem Upsilon_apply_comp {C D : Type*} [starAlgebra C] [QuantumSet C]
     rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
     congr
     rw [TensorProduct.ext_iff']
-    intro _ _
-    simp only [LinearEquiv.coe_coe, LinearEquiv.coe_lTensor, LinearMap.map_comp_lTensor,
-      LinearMap.coe_comp, Function.comp_apply, LinearEquiv.TensorProduct.map_apply,
-      TensorProduct.map_tmul, unop_apply, op_apply, MulOpposite.coe_opLinearEquiv_symm,
-      MulOpposite.unop_op, symmMap_symm_apply, LinearMap.op_apply, LinearMap.real_apply,
-      MulOpposite.op_star, MulOpposite.unop_star, LinearMap.lTensor_tmul]
+    simp_all
   · simp only [starAlgebra.modAut_zero, AlgEquiv.one_toLinearMap]; rfl
   · rw [hcd] at h; exact h
 

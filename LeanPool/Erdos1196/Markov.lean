@@ -45,12 +45,10 @@ lemma tsum_eq_sum_divisors_of_dvd_and {α : Type*} [AddCommMonoid α] [Topologic
     (∑' q : ℕ, if q ∣ n ∧ P q then f q else 0) =
         n.divisors.sum (fun q => if q ∣ n ∧ P q then f q else 0) := by
           refine tsum_eq_sum_divisors_of_nondivisors_zero (n := n) hn _ ?_
-          intro q hq
-          simp [hq]
+          simp_all
     _ = n.divisors.sum (fun q => if P q then f q else 0) := by
           refine Finset.sum_congr rfl ?_
-          intro q hq
-          grind only [= Nat.mem_divisors]
+          simp_all
 
 /-- Rewriting `R_Y(m)` as `log m` times the tail sum isolates the input from `tailEstimate`. -/
 private lemma ryEqLogMulTailSum (Y m : ℕ) :
@@ -418,9 +416,7 @@ lemma visitProbabilityFormula {x Y : ℕ} (chain : MarkovLayer x Y) (hx : 2 ≤ 
   have hlt : n / q < n := by
     have hq_gt_one : 1 < q := by omega
     exact Nat.div_lt_self hn_pos hq_gt_one
-  have hcast_div : ((n / q : ℕ) : ℝ) = (n : ℝ) / q :=
-    Nat.cast_div (Nat.dvd_of_mem_divisors hq) (by exact_mod_cast hq_ne_zero)
-  simpa [hcast_div] using ih (n / q) hlt hqx.2
+  simp_all
 
 /-- Under the standing hypotheses `2 ≤ x` and `B_x > 0`, the visiting probabilities are
 nonnegative on the state space `n ≥ x`. -/

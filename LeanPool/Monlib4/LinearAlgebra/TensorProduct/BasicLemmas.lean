@@ -63,9 +63,7 @@ theorem assoc_comp_map {R : Type _} [CommSemiring R] {M N M₂ N₂ P Q : Type _
       TensorProduct.map f (TensorProduct.map t s) ∘ₗ
         (TensorProduct.assoc R M N M₂).toLinearMap := by
   apply TensorProduct.ext_threefold
-  intro x y z
-  simp_rw [LinearMap.comp_apply, LinearEquiv.coe_coe, TensorProduct.map_apply,
-    TensorProduct.assoc_tmul, TensorProduct.map_apply]
+  simp_all
 
 theorem assoc_symm_comp_map {R : Type _} [CommSemiring R] {M N M₂ N₂ P Q : Type _}
     [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid M₂] [AddCommMonoid N₂]
@@ -77,9 +75,7 @@ theorem assoc_symm_comp_map {R : Type _} [CommSemiring R] {M N M₂ N₂ P Q : T
       TensorProduct.map (TensorProduct.map f t) s ∘ₗ
         (TensorProduct.assoc R M N M₂).symm.toLinearMap := by
   apply TensorProduct.ext_threefold'
-  intro x y z
-  simp_rw [LinearMap.comp_apply, LinearEquiv.coe_coe, TensorProduct.map_apply,
-    TensorProduct.assoc_symm_tmul, TensorProduct.map_apply]
+  simp_all
 
 theorem comm_map {R : Type _} [CommSemiring R] {M N P Q : Type _} [AddCommMonoid M]
     [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q] [Module R M] [Module R N]
@@ -143,15 +139,13 @@ protected theorem map_zero {R : Type _} [CommSemiring R] {M₁ N₁ M₂ N₂ : 
     [AddCommMonoid M₁] [AddCommMonoid N₁] [AddCommMonoid M₂] [AddCommMonoid N₂]
     [Module R M₁] [Module R N₁] [Module R M₂] [Module R N₂] (x : M₁ →ₗ[R] N₁) :
     TensorProduct.map x (0 : M₂ →ₗ[R] N₂) = 0 := by
-  simp_rw [TensorProduct.ext_iff', TensorProduct.map_tmul, LinearMap.zero_apply,
-    TensorProduct.tmul_zero, forall₂_true_iff]
+  simp_all
 
 protected theorem zero_map {R : Type _} [CommSemiring R] {M₁ N₁ M₂ N₂ : Type _}
     [AddCommMonoid M₁] [AddCommMonoid N₁] [AddCommMonoid M₂] [AddCommMonoid N₂]
     [Module R M₁] [Module R N₁] [Module R M₂] [Module R N₂] (x : M₁ →ₗ[R] N₁) :
     TensorProduct.map (0 : M₂ →ₗ[R] N₂) x = 0 := by
-  simp_rw [TensorProduct.ext_iff', TensorProduct.map_tmul, LinearMap.zero_apply,
-    TensorProduct.zero_tmul, forall₂_true_iff]
+  simp_all
 
 theorem tmul_eq_zero {R : Type _} [Field R] {M N : Type _} [AddCommGroup M]
     [AddCommGroup N] [Module R M] [Module R N] {x : M} {y : N} :

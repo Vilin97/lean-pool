@@ -149,8 +149,7 @@ lemma prime_mul_span_insert_le {R₀ : Type*} [CommRing R₀]
         exact Ideal.subset_span (Finset.mem_coe.mpr
           (Finset.mem_insert_of_mem hxo)))
     (by
-       rw [mul_zero]
-       exact zero_mem _)
+       simp_all)
     (fun x y _ _ hx hy => by
       change q' * (x + y) ∈ _
       rw [mul_add]
@@ -215,11 +214,8 @@ lemma nzd_element_in_span_prime
     have hmem : (a : T) ∈ ⋃ p ∈ associatedPrimes T (T ⧸ Ideal.span {(q : T)}),
         (p : Set T) := by
       rw [biUnion_associatedPrimes_eq_compl_regular]
-      simp only [Set.mem_compl_iff] at h_not_reg ⊢
-      exact h_not_reg
-    rw [Set.mem_iUnion₂] at hmem
-    obtain ⟨P, hP, ha_P⟩ := hmem
-    exact ha_not_in_P P hP ha_P
+      simp_all
+    simp_all
   have h_quot_zero : (a : T) • Ideal.Quotient.mk (Ideal.span {(q : T)}) t_val = 0 := by
     change Ideal.Quotient.mk _ ((a : T) * t_val) = 0
     exact Ideal.Quotient.eq_zero_iff_mem.mpr h_at_mem

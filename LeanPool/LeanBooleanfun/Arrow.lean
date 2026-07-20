@@ -245,16 +245,12 @@ theorem probabilityCondorcetWinner_eq :
       = 6^n * noiseStability (-1/3) f := by
     calc
       _ = 3^n * (1/3)^n * ∑ x, f x * ∑ y, f y * ∑ z, oneOn (VoteConsistent x y z) := by
-            simp only [one_div, inv_pow, isUnit_iff_ne_zero, ne_eq,
-              pow_eq_zero_iff', OfNat.ofNat_ne_zero, false_and, not_false_eq_true,
-              IsUnit.mul_inv_cancel, one_mul]
+            simp_all
       _ = 3^n * ∑ x, f x * T f x := by
             rw [mul_assoc, mul_sum];
             conv => {enter [1, 2, 2, x]; rw [← mul_assoc, mul_comm _ (f x), mul_assoc]}; rfl
       _ = 3^n * 2^n * (1/2)^n * ∑ x, f x * T f x := by
-            simp only [LinearMap.coe_mk, one_div, inv_pow, sum_boole, AddHom.coe_mk,
-              isUnit_iff_ne_zero, ne_eq, pow_eq_zero_iff', OfNat.ofNat_ne_zero, false_and,
-              not_false_eq_true, IsUnit.mul_inv_cancel_right]
+            simp_all
       _ = 6^n * (1/2)^n * ∑ x, f x * T f x := by congr; rw [← mul_pow]; congr; norm_num
       _ = 6^n * ⟪f, T f⟫ := by rw [mul_assoc]; rfl
       _ = 6^n * ⟪f, noiseOperator (-1/3) f⟫ := by rw [_eq_noise_operator]
@@ -321,9 +317,7 @@ theorem dictator_of_condorcet_and_unanimous (h : IsUnanimous f) :
   have : ∀ S, S.card ≠ 1 → 𝓕 f S = 0 := by
     intro S hS
     have := hmz S (by simp)
-    have := eq_zero_of_ne_zero_of_mul_left_eq_zero (hnez S.card hS) this
-    simp at this
-    assumption
+    simp_all
   have := fourier_eq_zero_iff_fourier_weight_eq.mp this
   rw [norm_sq_eq_one] at this
   obtain ⟨i, ⟨c, hfeq⟩⟩ := eq_character_of_fourier_weight_one_eq_one hn this

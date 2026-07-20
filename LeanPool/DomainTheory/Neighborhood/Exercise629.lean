@@ -130,8 +130,7 @@ theorem FinSupp.inter {X X' : ∀ i, Set (α i)}
   -- fully constructive,
   -- no case split on the undecidable proposition `X i = master`.
   refine ⟨l ++ l', fun i hi => ?_⟩
-  rw [List.mem_append, not_or] at hi
-  simp only [hl i hi.1, hl' i hi.2, Set.inter_self]
+  simp_all
 
 variable (D) in
 /-- **Exercise 6.29 — the indexed product `∏_i D_i`.** Neighbourhoods are
@@ -327,9 +326,7 @@ theorem z_mem_of_slices (z : (iprod D).Element) {X : ∀ i, Set (α i)}
   have heq : restrictTo D l X = X := by
     funext j
     rw [restrictTo]
-    by_cases h : j ∈ l
-    · rw [if_pos h]
-    · rw [if_neg h]; exact (hl j h).symm
+    simp_all
   rwa [heq] at key
 
 theorem fromPi_toPi (z : (iprod D).Element) : fromPi D (fun i => proj z i) = z := by
@@ -396,16 +393,14 @@ theorem none_not_mem_injI {i : ι} {X : Set (α i)} : (none : Option (Σ i, α i
     (some ⟨i, a⟩ : Option (Σ i, α i)) ∈ injI i X ↔ a ∈ X := by
   constructor
   · rintro ⟨b, hb, heq⟩
-    simp only [Option.some.injEq, Sigma.mk.injEq, heq_eq_eq, true_and] at heq
-    rwa [heq] at hb
+    simp_all
   · intro ha; exact ⟨a, ha, rfl⟩
 
 /-- A tagged token determines its summand index. -/
 theorem index_of_some_mem_injI {i k : ι} {a : α k} {X : Set (α i)}
     (hmem : (some ⟨k, a⟩ : Option (Σ i, α i)) ∈ injI i X) : k = i := by
   obtain ⟨b, _, heq⟩ := hmem
-  simp only [Option.some.injEq] at heq
-  exact (congrArg Sigma.fst heq).symm
+  simp_all
 
 theorem injI_nonempty {i : ι} {X : Set (α i)} (hX : X.Nonempty) : (injI i X).Nonempty := by
   obtain ⟨a, ha⟩ := hX; exact ⟨some ⟨i, a⟩, some_mem_injI.mpr ha⟩
@@ -427,8 +422,7 @@ theorem injI_inter_same (i : ι) (X Y : Set (α i)) : injI i X ∩ injI i Y = in
       exact some_mem_injI.mpr ⟨some_mem_injI.mp hx, some_mem_injI.mp hy⟩
     · intro h
       obtain rfl := index_of_some_mem_injI h
-      have h' := some_mem_injI.mp h
-      exact ⟨some_mem_injI.mpr h'.1, some_mem_injI.mpr h'.2⟩
+      simp_all
 
 theorem injI_inter_ne {i j : ι} (h : i ≠ j) (X : Set (α i)) (Y : Set (α j)) :
     injI i X ∩ injI j Y = ∅ := by

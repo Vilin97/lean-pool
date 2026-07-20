@@ -85,9 +85,7 @@ def Coalgebra.ofFiniteDimensionalHilbertAlgebra
     rw [← LinearMap.rTensor_adjoint, ← LinearMap.lTensor_adjoint,
       ← TensorProduct.assoc_symm_adjoint]
     simp_rw [← LinearMap.adjoint_comp, Algebra.mul_comp_rTensor_mul, LinearMap.comp_assoc]
-    simp only [LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
-      LinearEquiv.refl_toLinearMap]
-    rfl
+    simp_all
   rTensor_counit_comp_comul := by
     rw [← LinearMap.rTensor_adjoint, ← LinearMap.adjoint_comp, Algebra.mul_comp_rTensor_unit,
       TensorProduct.lid_adjoint]
@@ -243,12 +241,10 @@ theorem LinearMap.isAlgHom_iff_adjoint_isCoalgHom :
   simp_rw [isAlgHom_iff, isCoalgHom_iff, Coalgebra.counit_eq_unit_adjoint,
     Coalgebra.comul_eq_mul_adjoint, ← TensorProduct.map_adjoint, ← LinearMap.adjoint_comp]
   constructor
-  · rintro ⟨h1, h2⟩
-    simp_rw [h1, h2, and_self]
+  · simp_all
   · rintro ⟨h1, h2⟩
     apply_fun adjoint at h1 h2
-    simp_rw [adjoint_adjoint] at h1 h2
-    exact ⟨h1, h2⟩
+    simp_all
 
 theorem LinearMap.isCoalgHom_iff_adjoint_isAlgHom :
   x.IsCoalgHom ↔ (LinearMap.adjoint x).IsAlgHom := by

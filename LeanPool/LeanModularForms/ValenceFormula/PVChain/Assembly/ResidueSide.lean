@@ -53,10 +53,7 @@ private lemma fd_point_mem_fdBox
       rw [UpperHalfPlane.coe_re, UpperHalfPlane.coe_im] at this
       linarith [h_fd.1]
     nlinarith [(abs_le.mp h_fd.2).1, (abs_le.mp h_fd.2).2, p.im_pos]
-  · have h_mfcc_eq : modularFormCompOfComplex f (↑p : ℂ) = f p := by
-      simp only [modularFormCompOfComplex, Function.comp_apply]
-      congr 1; exact UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos
-    rw [h_mfcc_eq]; exact hp_zero
+  · simp_all
 
 omit f hf in
 private lemma exists_height_above_sqrt3_and_S
@@ -208,11 +205,7 @@ private lemma cpv_residue_side_eventually_eq
         Sbox hSbox S_on hS_on s hs
       filter_upwards [Ioo_mem_nhdsGT hδ_pos] with ε hε
       intro t ht; exact lt_of_lt_of_le hε.2 (hδ_bound t ht)
-    have h_all : ∀ᶠ ε in 𝓝[>] (0 : ℝ),
-        ∀ (s : ((Sbox \ S_on : Finset ℂ) : Set ℂ)),
-          ∀ t ∈ Icc (0 : ℝ) 5, ε < ‖γ t - (s : ℂ)‖ := by
-      rw [Filter.eventually_all]; intro ⟨s, hs⟩; exact this s hs
-    exact h_all.mono (fun ε hε s hs => hε ⟨s, hs⟩)
+    simp_all
   filter_upwards [h_finite_family] with ε hε t ht
   rw [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 5)] at ht
   simp only [cauchyPrincipalValueIntegrandOn]
@@ -229,11 +222,7 @@ private lemma cpv_residue_side_eventually_eq
       · exact ⟨s, h_on, h_norm⟩
     · rintro ⟨s, hs, h_norm⟩
       exact ⟨s, hS0 ▸ Finset.mem_union.mpr (Or.inr hs), h_norm⟩
-  split_ifs with h1 h2 h2
-  · rfl
-  · exact absurd (h_iff.mp h1) h2
-  · exact absurd (h_iff.mpr h2) h1
-  · rfl
+  simp_all
 
 include hf in
 /-- The on-curve singular points that are not box-zeros contribute zero to the

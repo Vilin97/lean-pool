@@ -43,8 +43,7 @@ lemma bijective_of_dim_eq_of_isCentralSimple
       constructor
       symm at h
       rw [finrank_zero_iff_forall_zero] at h
-      intro a b
-      rw [h a, h b]
+      simp_all
     rw [Function.bijective_iff_existsUnique]
     intro b
     refine ⟨0, Subsingleton.elim _ _, fun _ _ => Subsingleton.elim _ _⟩
@@ -58,8 +57,7 @@ lemma bijective_of_dim_eq_of_isCentralSimple
         rw [finrank_zero_iff_forall_zero]
         rintro ⟨x, hx⟩
         rw [LinearMap.ker_eq_bot (f := f.toLinearMap) |>.2 H] at hx
-        ext
-        exact hx, add_zero, h] at this
+        simp_all, add_zero, h] at this
       rw [← LinearMap.range_eq_top]
       apply Submodule.eq_top_of_finrank_eq
       exact this
@@ -80,17 +78,7 @@ lemma bijective_of_surj_of_isCentralSimple
 
 instance CSA_op_is_CSA [hA : Algebra.IsCentral K A] : Algebra.IsCentral K Aᵐᵒᵖ where
   out z hz:= by
-    let z': A := z.unop
-    have hz' : ∀ (x : A), x * z' = z' * x := by
-      rw [Subalgebra.mem_center_iff] at hz
-      intro x; specialize hz (MulOpposite.op x)
-      have z'_eq : MulOpposite.op z'= z := rfl
-      rw [← z'_eq, ← MulOpposite.op_mul, ← MulOpposite.op_mul] at hz
-      have : (MulOpposite.op (z' * x)).unop = z' * x := rfl
-      simp_all only [MulOpposite.op_mul, MulOpposite.op_unop, MulOpposite.unop_mul,
-          MulOpposite.unop_op, z']
-    obtain ⟨k, hk⟩ := hA.out <| Subalgebra.mem_center_iff.mpr hz'
-    exact ⟨k, MulOpposite.unop_inj.mp hk⟩
+    simp_all
 
 namespace tensorSelfOp
 
@@ -323,13 +311,10 @@ lemma matrixEquivForward_surjective
       ∀ (i j : m × n), ∃ a, (matrixEquivForward m n) a = Matrix.single i j (x i j) by
     choose a ha using H
     use ∑ i : m × n, ∑ j : m × n, a i j
-    rw [map_sum]
-    simp_rw [map_sum]
-    simp_rw [ha]
+    simp_all
   intro i j
   rw [show Matrix.single i j (x i j) = (x i j) • Matrix.single i j 1 by
-    rw [Matrix.smul_single, Algebra.smul_def,  mul_one]
-    rfl]
+    simp_all]
   use (x i j) • ((Matrix.single i.1 j.1 1) ⊗ₜ (Matrix.single i.2 j.2 1))
   rw [_root_.map_smul (f := (matrixEquivForward (K := K) m n)) (x i j)]
   congr 1
@@ -346,11 +331,9 @@ lemma matrixEquivForward_surjective
   · rfl
   · simp only [not_and, ne_eq] at h3
     refine h3 ?_ ?_ |>.elim <;> ext <;> aesop
-  · simp only [not_and] at h2
-    refine h2 ?_ ?_ |>.elim <;> aesop
+  · simp_all
   · rfl
-  · simp only [not_and] at h1
-    refine h1 ?_ ?_ |>.elim <;> aesop
+  · simp_all
   · rfl
 
 /-- The tensor product of matrix algebras is a matrix algebra on the product index type. -/
@@ -637,13 +620,7 @@ def e2 :
         rw [Matrix.sum_apply]
         by_cases h : i = j
         · subst h; simp [Matrix.single]
-        · rw [Matrix.one_apply_ne h]
-          apply Finset.sum_eq_zero
-          intros k
-          simp only [Finset.mem_univ, Matrix.single, Matrix.of_apply, ite_eq_right_iff,
-            one_ne_zero, imp_false, not_and, forall_const]
-          rintro rfl
-          exact h }
+        · simp_all }
 
 /-- Reassociates a tensor product after base change along `K → E`. -/
 def e3 :

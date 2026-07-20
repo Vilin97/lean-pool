@@ -59,9 +59,7 @@ theorem help_I_pre'' : ∀ (p k c l: UInt64),
   unfold iPre' at h_I
   rcases h_I with ⟨-, h_kc, -⟩
   by_contra heq
-  rw [UInt64.add_cancel_right_iff] at heq
-  rw [heq] at h_kc
-  exact UInt64.lt_irrefl k h_kc
+  simp_all
 
 
 theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
@@ -79,11 +77,8 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
       apply UInt64.add_lt_add
       · exact ⟨h_kc, hlx⟩
       · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat) _ h_noOverfl
-        simp only [Nat.add_le_add_iff_left]
-        rw [UInt64.toNat_sub_of_le _ _ hxLeL, ← Nat.add_le_add_iff_right (n := x.toNat)]
-        simp
-  rw [neq] at this
-  apply UInt64.lt_asymm <;> try assumption
+        simp_all
+  simp_all
 
 
 theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
@@ -102,11 +97,8 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
     apply UInt64.add_lt_add
     · exact ⟨h_pc, hlx⟩
     · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat) _ h_noOverfl
-      simp only [Nat.add_le_add_iff_left]
-      rw [UInt64.toNat_sub_of_le _ _ hxLeL, ← Nat.add_le_add_iff_right (n := x.toNat)]
-      simp
-  rw [neq] at this
-  exact UInt64.lt_irrefl (p + i) this
+      simp_all
+  simp_all
 
 
 
@@ -195,15 +187,11 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           rw [t_update_neq]
           · rw [t_update_neq]
             · rw [t_update_neq]
-              · rw [←h_x3] at h_i
-                rw [←h_x3] at v
-                apply h_I
-                exact v
+              · simp_all
               · exact help_I_pre''' p k c l i x h_I_pre' v (h_x3 ▸ h_x3LtL)
             · exact help_I_pre'''' p k c l i x h_I_pre' v (h_x3 ▸ h_x3LtL)
           · apply help_I_pre''''' (p:=p) (k:=k) <;> try assumption
-            rw [←h_x3]
-            exact h_x3LtL
+            simp_all
         | inr v =>
           rw [h_x3] at h_x0 h_x1 h_x2
           rw [v]
@@ -212,15 +200,12 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           rw [←h_x7]
           rw [t_update_neq]
           · rw [t_update_neq]
-            · rw [←h_x5, ←h_x6]
-              exact h_x7
+            · simp_all
             · rw [h_x2, h_x1]
               simp only [ne_eq, UInt64.add_left_inj]
               intros neq
               unfold iPre' at h_I_pre'
-              rcases h_I_pre' with ⟨_, h_kc, _⟩
-              rw [←neq] at h_kc
-              exact UInt64.lt_irrefl c h_kc
+              simp_all
           · rw [h_x0, h_x2]
             unfold iPre' at h_I_pre'
             rcases h_I_pre' with ⟨h_pk, h_kc, _⟩
@@ -246,9 +231,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               simp only [ne_eq, UInt64.add_left_inj]
               intros neq
               unfold iPre' at h_I_pre'
-              rcases h_I_pre' with ⟨pk, kc, _⟩
-              rw [←neq] at kc
-              apply UInt64.lt_irrefl c kc
+              simp_all
           · repeat (constructor <;> try assumption)
 
 
@@ -292,11 +275,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · repeat (constructor <;> try assumption)
       · simp at *
         grind
-      · repeat (constructor <;> try assumption)
-        · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def,
-            MState.addRegister_unfold, t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
-          exact h_x5
-        · repeat (constructor <;> try assumption)
+      · simp_all
 
 
 
@@ -349,10 +328,8 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
       repeat (constructor <;> try assumption)
       · rw [h_x1, h_x3]
         apply UInt64.add_sub_assoc
-        · rw [←h_x3]
-          exact h_x3LtL
-        · rw [←h_x3]
-          simpa only [gt_iff_lt] using h_cond
+        · simp_all
+        · simp_all
       · repeat (constructor <;> try assumption)
 
 theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
@@ -402,10 +379,8 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
       repeat (constructor <;> try assumption)
       · rw [h_x2, h_x3]
         apply UInt64.add_sub_assoc
-        · rw [←h_x3]
-          exact h_x3LtL
-        · rw [←h_x3]
-          simpa only [gt_iff_lt] using h_cond
+        · simp_all
+        · simp_all
       · repeat (constructor <;> try assumption)
 
 
@@ -452,8 +427,7 @@ theorem dec_otp : ∀ (p k c l : UInt64),
       · intros i h_I'
         have: i ≤ l - TMap.get s.registers 3  := by
           grind
-        specialize h_I i this
-        exact h_I
+        simp_all
       · repeat (constructor <;> try assumption)
         · grind only
         · repeat (constructor <;> try assumption)
@@ -552,9 +526,7 @@ theorem j_otp : ∀ (p k c l : UInt64),
     · simpCurrInstr
     · assumption
     · repeat (constructor <;> try assumption)
-      unfold MState.getLabelAt
-      rw [h_code']
-      simp
+      simp_all
   · (repeat constructor <;> try assumption)
 
 

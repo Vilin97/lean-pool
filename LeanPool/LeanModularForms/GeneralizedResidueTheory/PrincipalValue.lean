@@ -79,9 +79,7 @@ lemma measurableSet_pv_support (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ)
     · intro ⟨hx_U, hx_Icc⟩
       exact ⟨by
         have : (⟨x, hx_Icc⟩ : ↑(Icc a b)) ∈ Subtype.val ⁻¹' U := hx_U
-        rw [hU_eq] at this
-        simp only [mem_preimage, restrict_apply, mem_Ioi] at this
-        exact this, hx_Icc⟩
+        simp_all, hx_Icc⟩
   rw [h_eq]
   exact hU_open.measurableSet.inter isClosed_Icc.measurableSet
 
@@ -253,8 +251,7 @@ theorem cauchyPrincipalValueExists_of_continuous
         exact ⟨Ioo 0 ‖γ t - z₀‖,
           Ioo_mem_nhdsGT (norm_pos_iff.mpr (sub_ne_zero.mpr h)),
           fun ε hε => by
-            simp only [cauchyPrincipalValueIntegrand',
-              hε.2, ite_true]⟩) tendsto_const_nhds⟩
+            simp_all⟩) tendsto_const_nhds⟩
   · filter_upwards [self_mem_nhdsWithin] with ε _
     exact (aEStronglyMeasurable_pv_integrand
       (hg.mono sdiff_subset) hγ hγ').mono_measure

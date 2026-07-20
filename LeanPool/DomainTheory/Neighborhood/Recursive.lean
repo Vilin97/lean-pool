@@ -187,22 +187,7 @@ choice-free `sqrt`. -/
 
 /-- **`unpair ∘ pair = id` (choice-free).** Mirrors `Nat.unpair_pair`. -/
 theorem unpair_pair (a b : ℕ) : Nat.unpair (Nat.pair a b) = (a, b) := by
-  rw [Nat.pair]
-  if h : a < b then
-    rw [if_pos h]
-    show Nat.unpair (b * b + a) = (a, b)
-    have be : Nat.sqrt (b * b + a) = b := sqrt_add_eq b a (by omega)
-    simp only [Nat.unpair, be, Nat.add_sub_cancel_left, if_pos h]
-  else
-    rw [if_neg h]
-    show Nat.unpair (a * a + a + b) = (a, b)
-    have ae : Nat.sqrt (a * a + a + b) = a := by
-      have e : a * a + a + b = a * a + (a + b) := by omega
-      rw [e]; exact sqrt_add_eq a (a + b) (by omega)
-    have e1 : a * a + a + b - a * a = a + b := by omega
-    have e2 : ¬ a + b < a := by omega
-    have e3 : a + b - a = b := by omega
-    simp only [Nat.unpair, ae, e1, if_neg e2, e3]
+  simp_all
 
 /-- First projection of the pairing round-trip. -/
 theorem unpair_pair_fst (a b : ℕ) : (Nat.pair a b).unpair.1 = a := by rw [unpair_pair]
@@ -219,22 +204,7 @@ theorem sqrt_le_add (n : ℕ) : n ≤ Nat.sqrt n * Nat.sqrt n + Nat.sqrt n + Nat
 
 /-- **`pair ∘ unpair = id` (choice-free).** Mirrors `Nat.pair_unpair`. -/
 theorem pair_unpair (n : ℕ) : Nat.pair (Nat.unpair n).1 (Nat.unpair n).2 = n := by
-  have sm : Nat.sqrt n * Nat.sqrt n + (n - Nat.sqrt n * Nat.sqrt n) = n :=
-    Nat.add_sub_cancel' (sqrt_le _)
-  have hadd := sqrt_le_add n
-  rw [Nat.unpair]
-  if h : n - Nat.sqrt n * Nat.sqrt n < Nat.sqrt n then
-    rw [if_pos h]
-    change Nat.pair (n - Nat.sqrt n * Nat.sqrt n) (Nat.sqrt n) = n
-    rw [Nat.pair, if_pos h]
-    omega
-  else
-    rw [if_neg h]
-    have hge : Nat.sqrt n ≤ n - Nat.sqrt n * Nat.sqrt n := Nat.le_of_not_lt h
-    have hlt : ¬ Nat.sqrt n < n - Nat.sqrt n * Nat.sqrt n - Nat.sqrt n := by omega
-    change Nat.pair (Nat.sqrt n) (n - Nat.sqrt n * Nat.sqrt n - Nat.sqrt n) = n
-    rw [Nat.pair, if_neg hlt]
-    omega
+  simp_all
 
 /-! ## Choice-free primitive-recursive arithmetic
 
@@ -477,9 +447,7 @@ theorem RecDecidable.or {p q : ℕ → Prop} (hp : RecDecidable p) (hq : RecDeci
   · intro h
     rcases hp.em n with hp' | hp'
     · exact Or.inl hp'
-    · rcases hq.em n with hq' | hq'
-      · exact Or.inr hq'
-      · exact absurd ⟨hp', hq'⟩ h
+    · simp_all
 
 /-! ## "Recursively enumerable" predicates (Scott's notion, Definition 7.2)
 
@@ -517,8 +485,7 @@ variable `i`); the
 witness `i = 0` makes the projection trivial. -/
 theorem RecDecidable.re {p : ℕ → Prop} (hp : RecDecidable p) : REPred p := by
   refine ⟨fun t => p t.unpair.2, hp.comp Nat.Primrec.right, fun n => ?_⟩
-  simp only [unpair_pair_snd]
-  exact ⟨fun h => ⟨0, h⟩, fun ⟨_, h⟩ => h⟩
+  simp_all
 
 /-- A recursively decidable binary relation is recursively enumerable. -/
 theorem RecDecidable₂.re {r : ℕ → ℕ → Prop} (hr : RecDecidable₂ r) : REPred₂ r :=
@@ -553,8 +520,7 @@ theorem REPred.comp {p : ℕ → Prop} (hp : REPred p) {g : ℕ → ℕ} (hg : N
   obtain ⟨q, hq, hqe⟩ := hp
   refine ⟨fun t => q (Nat.pair t.unpair.1 (g t.unpair.2)),
     hq.comp (Nat.Primrec.left.pair (hg.comp Nat.Primrec.right)), fun n => ?_⟩
-  simp only [unpair_pair_fst, unpair_pair_snd]
-  exact hqe (g n)
+  simp_all
 
 /-- **Conjunction.** Recursive enumerability is closed under `∧`: combine the two
 decidable
@@ -706,10 +672,7 @@ theorem foldStep_pos (stp : ℕ → ℕ) (params a t acc : ℕ) :
     foldStep stp params (Nat.pair (Nat.pair a t + 1) acc)
       = Nat.pair t (stp (Nat.pair a (Nat.pair acc params))) := by
   unfold foldStep
-  simp only [unpair_pair_fst, unpair_pair_snd]
-  have h1 : 1 - (Nat.pair a t + 1) = 0 := by omega
-  have h2 : Nat.pair a t + 1 - 1 = Nat.pair a t := by omega
-  rw [h1, h2, selectFn_zero, unpair_pair_fst, unpair_pair_snd]
+  simp_all
 
 /-- Fold the list coded by `c`, threading accumulator `z` and parameter `params`.
 Implemented as
@@ -739,10 +702,7 @@ theorem foldStep_iterate (stp : ℕ → ℕ) (params : ℕ) :
   intro k
   induction k with
   | zero =>
-    intro l acc hlen
-    cases l with
-    | nil => simp only [Function.iterate_zero_apply, encodeList, unpair_pair_snd, List.foldl_nil]
-    | cons a l' => simp only [List.length_cons] at hlen; omega
+    simp_all
   | succ k ih =>
     intro l acc hlen
     rw [Function.iterate_succ_apply]
@@ -1095,9 +1055,7 @@ theorem reForallF_foldl_eq_one_iff (qc : ℕ → ℕ) :
   intro l
   induction l with
   | nil =>
-    intro w flag _
-    simp only [List.foldl_nil, unpair_pair_snd, List.length_nil, Nat.not_lt_zero,
-      false_implies, implies_true, and_true]
+    simp_all
   | cons x l ih =>
     intro w flag hflag
     have hi : (decodeList w).getD 0 0 = (w - 1).unpair.1 := by
@@ -1232,8 +1190,7 @@ theorem REPred.forall_mem_decodeList {p : ℕ → Prop} (hp : REPred p) :
         refine ⟨j :: iws, fun k hk => ?_⟩
         rcases k with _ | k'
         · rw [List.getD_cons_zero, List.getD_cons_zero]; exact hj
-        · rw [List.getD_cons_succ, List.getD_cons_succ]
-          exact hiws k' (by simp only [List.length_cons] at hk; omega)
+        · simp_all
     obtain ⟨iws, hiws⟩ := hwit (decodeList c) (fun e he => (hpe e).mp (hall e he))
     refine ⟨encodeList iws, (reForallChar_eq_one_iff qc _ c).mpr (fun k hk => ?_)⟩
     rw [decodeList_encodeList]; exact hiws k hk
@@ -1317,13 +1274,6 @@ theorem REPred.forall_mem_decodeList₂ {p : ℕ → ℕ → Prop} (hp : REPred�
     hp'.forall_mem_decodeList
   refine REPred.of_iff (fun t => ?_) (hbase.comp primrec_mapPairCode)
   rw [decodeList_mapPairCode]
-  simp only [List.mem_reverse, List.mem_map]
-  constructor
-  · rintro hall e' ⟨e, he, rfl⟩
-    simp only [unpair_pair_fst, unpair_pair_snd]
-    exact hall e he
-  · intro hall e he
-    simpa only [unpair_pair_fst, unpair_pair_snd]
-      using hall (Nat.pair t.unpair.1 e) ⟨e, he, rfl⟩
+  simp_all
 
 end Domain.Recursive

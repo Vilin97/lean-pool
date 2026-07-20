@@ -280,10 +280,7 @@ lemma Matrix.IsHermitian.sqSqrt_isPosSemidef {x : Matrix n n ℂ} (hx : x.IsHerm
   hx.sqSqrt.PosSemidef := by
   rw [sqSqrt_eq]
   apply (innerAut_posSemidef_iff _).mpr
-  apply (diagonal_posSemidef_iff _).mpr
-  intro
-  rw [Function.comp_apply, Pi.zero_apply, RCLike.ofReal_nonneg, Pi.abs_apply]
-  exact abs_nonneg _
+  simp_all
 
 /-- the square of the positive square root of a Hermitian matrix is equal to the square of the
   matrix -/
@@ -585,9 +582,7 @@ theorem LinearMap.isPosMap_iff_star_mul_self_nonneg {A K : Type*}
   {F : Type*} [FunLike F A K] {f : F} :
   LinearMap.IsPosMap f ↔ ∀ a : A, 0 ≤ f (star a * a) := by
   refine ⟨fun h a => h (star_mul_self_nonneg _), fun h a => ?_⟩
-  · rw [hA]
-    rintro ⟨b, rfl⟩
-    exact h _
+  · simp_all
 
 theorem LinearMap.isPosMap_iff_comp_starAlgEquiv
   {K A B : Type*}
@@ -797,8 +792,7 @@ theorem selfAdjointDecompositionRight_of
     Complex.star_def, Complex.conj_I, neg_smul, sub_eq_add_neg,
     neg_add, add_add_add_comm, add_neg_cancel, zero_add, ← two_smul ℂ]
   simp only [smul_smul, smul_neg]
-  simp only [RCLike.I_to_complex, one_div, isUnit_iff_ne_zero, ne_eq, OfNat.ofNat_ne_zero,
-    not_false_eq_true, IsUnit.inv_mul_cancel_left, Complex.I_mul_I, neg_smul, one_smul, neg_neg]
+  simp_all
 
 theorem complex_decomposition_mul_decomposition
   {B : Type*} [Ring B] [StarRing B]
@@ -938,8 +932,7 @@ theorem LinearMap.IsPositive'.add_ker_eq_inf_ker
     (hS.2 x)
   obtain ⟨f, rfl⟩ := (LinearMap.isPositive'_iff_exists_adjoint_hMul_self _).mp hS
   simp only [Module.End.mul_apply, LinearMap.adjoint_inner_right, inner_self_eq_zero] at this
-  simp only [Module.End.mul_apply, this, map_zero, zero_eq_neg] at h
-  exact h
+  simp_all
 
 theorem mem_unitary_iff_isStarNormal_and_decomposition_left_sq_add_right_sq_eq_one
   {B : Type*} [Ring B] [StarRing B]
@@ -1008,8 +1001,7 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero
     fun i j => by
       split_ifs with h'
       · simp only [h', inner_self_eq_norm_sq_to_K]
-      · apply h
-        simp only [orthonormal_iff_ite.mp (e.orthonormal), h', reduceIte]
+      · simp_all
     have this' := fun i j => h _ _ (this i j)
     simp only [map_add, map_sub, inner_add_left, inner_sub_right, h',
       reduceIte, add_ite, ite_add, eq_comm, ite_sub_ite] at this'
@@ -1044,16 +1036,9 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero
         simp_rw [h, zero_mul, norm_eq_zero] at this
         ext x
         simp only [LinearMap.zero_apply, this]
-      · intro h
-        simp only [h, LinearMap.zero_apply, norm_zero, @eq_comm _ (0 : ℝ),
-          mul_eq_zero, norm_eq_zero] at this
-        obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := by exact exists_ne 0
-        specialize this x
-        simp only [hx, or_false] at this
-        exact this
+      · simp_all
     simp only [hT, iff_false, ← ne_eq] at hα'
-    have hα'' : (α : 𝕜) ≠ 0 := by simp only [ne_eq, algebraMap.coe_eq_zero_iff, hα',
-      not_false_iff]
+    have hα'' : (α : 𝕜) ≠ 0 := by simp_all
     use ((Units.mk0 α hα'')⁻¹ : 𝕜ˣ)
     rw [isometry_iff_norm]
     intro x
@@ -1091,8 +1076,7 @@ theorem LinearMap.exists_scalar_isometry_iff_preserves_ortho
         obtain ⟨α, hα⟩ :=
           (LinearMap.exists_scalar_isometry_iff_preserves_ortho_of_ne_zero this hT).mpr h
         use (α⁻¹ : 𝕜ˣ), ⟨((α : 𝕜) • T), (isometry_iff_norm _).mp hα⟩
-        simp only [Units.val_inv_eq_inv_val, ne_eq, Units.ne_zero, not_false_eq_true,
-          inv_smul_smul₀]
+        simp_all
 
 theorem LinearMap.isSymmetric_adjoint_mul_self'
   {𝕜 V W : Type*} [RCLike 𝕜] [NormedAddCommGroup V] [InnerProductSpace 𝕜 V]

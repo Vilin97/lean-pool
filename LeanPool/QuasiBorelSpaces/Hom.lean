@@ -39,8 +39,7 @@ instance [QuasiBorelSpace A] [QuasiBorelSpace B] : FunLike (A →𝒒 B) A B whe
   coe := toFun
   coe_injective f g := by
     cases f
-    cases g
-    simp only [mk.injEq, imp_self]
+    simp_all
 
 namespace Simps
 

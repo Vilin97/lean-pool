@@ -42,24 +42,19 @@ abbrev T : NeighborhoodSystem Example12.Token := Example12.neighborhoodSystem
 private theorem one_ne_zero : (Example12.one) ≠ Example12.zero := by
   intro h
   rw [Example12.one, Example12.zero, Set.ext_iff] at h
-  have h1 : (1 : Example12.Token) = 0 := (h 1).mp rfl
-  exact absurd h1 (by decide)
+  simp_all
 
 /-- `{1} ≠ Δ` as tokens. -/
 private theorem one_ne_master : (Example12.one) ≠ Example12.master := by
   intro h
   rw [Example12.one, Example12.master, Set.ext_iff] at h
-  have h0 : (0 : Example12.Token) ∈ ({1} : Set Example12.Token) := (h 0).mpr (Set.mem_univ 0)
-  simp only [Set.mem_singleton_iff] at h0
-  exact absurd h0 (by decide)
+  simp_all
 
 /-- `{0} ≠ Δ` as tokens. -/
 private theorem zero_ne_master : (Example12.zero) ≠ Example12.master := by
   intro h
   rw [Example12.zero, Example12.master, Set.ext_iff] at h
-  have h1 : (1 : Example12.Token) ∈ ({0} : Set Example12.Token) := (h 1).mpr (Set.mem_univ 1)
-  simp only [Set.mem_singleton_iff] at h1
-  exact absurd h1 (by decide)
+  simp_all
 
 /-- The two total elements are incomparable: `elemOne ⋢ elemZero`. -/
 theorem elemOne_not_le_elemZero : ¬ elemOne ≤ elemZero := by

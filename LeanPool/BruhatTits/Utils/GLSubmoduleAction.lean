@@ -50,9 +50,7 @@ lemma smul_le_iff {M L : Submodule R (ι → K)} (g : GL ι K) : g • M ≤ g �
 
 lemma smul_eq_iff (g : GL ι K) (M L : Submodule R (ι → K)) :
     g • M = g • L ↔ M = L := by
-  refine ⟨fun h ↦ le_antisymm ?_ ?_, by rintro rfl; rfl⟩ <;>
-  · rw [← smul_le_iff g]
-    first | exact le_of_eq h | exact ge_of_eq h
+  simp_all
 
 lemma smul_lt_iff (g : GL ι K) (M L : Submodule R (ι → K)) : g • M < g • L ↔ M < L := by
   constructor
@@ -62,7 +60,6 @@ lemma smul_lt_iff (g : GL ι K) (M L : Submodule R (ι → K)) : g • M < g •
   · intro h
     by_contra hnotlt
     have := eq_of_le_of_not_lt ((smul_le_iff g).mpr (le_of_lt h)) hnotlt
-    rw [smul_eq_iff] at this
-    simp [this] at h
+    simp_all
 
 end BruhatTits

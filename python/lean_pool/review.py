@@ -1,10 +1,14 @@
 """LLM-driven pull request review for Lean Pool.
 
-Reads the rules from ``.github/REVIEW_RULES.md``, fetches the PR diff via the
-GitHub CLI, asks the configured OpenAI model to evaluate the contribution,
-and posts or updates a sticky PR comment with the reviewed head SHA, a
-one-paragraph summary, a structured assessment table (fit / level / branch /
-mode / code-quality / etc.), a verdict, and any specific findings.
+Detects whether the PR adds a new project or refactors projects already in
+the pool — the same added-vs-modified split ``/profile`` uses — and reviews
+it under the matching rules. New-project PRs are judged on fit and
+significance (``.github/REVIEW_RULES.md``); refactor PRs are judged on tech
+debt and maintainability (``.github/REFACTOR_REVIEW_RULES.md``). Either way
+it fetches the PR diff via the GitHub CLI, asks the configured OpenAI model
+to evaluate the contribution, and posts or updates a sticky PR comment with
+the reviewed head SHA, a one-paragraph summary, a structured assessment
+table, a verdict, and any specific findings.
 
 The reviewer prefers OpenAI's ``flex`` tier (cheaper, slower, occasionally
 unavailable). When flex returns 429 Resource Unavailable, the request is
@@ -44,7 +48,8 @@ from typing import Any
 from openai import APIStatusError, OpenAI, RateLimitError
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
+PROJECT_RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
+REFACTOR_RULES_PATH = REPO_ROOT / ".github" / "REFACTOR_REVIEW_RULES.md"
 DEFAULT_MODEL = "gpt-5.5"
 # Flex tier requests can take longer than the default 10-minute timeout.
 REQUEST_TIMEOUT_SECONDS = 6000.0
@@ -74,8 +79,22 @@ FIT_ICON = {
     "borderline": "🟡",
     "not_a_fit": "🛑",
 }
+# Refactor-assessment icons. Both maintainability and brittleness read
+# "green = better after the refactor, red = worse."
+DEBT_ICON = {True: "🛑", False: "✅"}
+MAINTAINABILITY_ICON = {
+    "improved": "✅",
+    "unchanged": "➖",
+    "regressed": "🛑",
+}
+BRITTLENESS_ICON = {
+    "more_robust": "✅",
+    "unchanged": "➖",
+    "more_brittle": "🛑",
+}
+RISK_ICON = {"low": "✅", "medium": "🟡", "high": "🛑"}
 
-SYSTEM_PROMPT = dedent(
+SYSTEM_PROMPT_PROJECT = dedent(
     """\
     You are a senior mathematician and Lean engineer reviewing pull
     requests to Lean Pool, a curated repository of formal-mathematics
@@ -94,6 +113,35 @@ SYSTEM_PROMPT = dedent(
     that is what tells the maintainer whether to bother reading the PR.
     `findings` is for actual specific suggestions; an empty list is
     fine and often correct.
+    """
+)
+
+SYSTEM_PROMPT_REFACTOR = dedent(
+    """\
+    You are a senior Lean engineer reviewing a refactor pull request to
+    Lean Pool. This PR modifies projects that are ALREADY in the pool —
+    proof golf, tactic rewrites, module reorganizations, API renames. It
+    does not add a new project, so mathematical fit and significance are
+    NOT in question and you must not assess them.
+
+    The maintainer's question is narrower: does this refactor leave the
+    code better or worse to maintain? Focus on tech debt — proofs made
+    more brittle (e.g. a structured proof collapsed into an opaque
+    `simp_all` / `aesop` / `grind` that will break on the next Mathlib
+    bump and is hard to debug), lost proof structure, compile-cost
+    regressions, reusability lost, dead leftovers — and on any other
+    issue a maintainer would regret later.
+
+    Write to a colleague: direct, no encouragement, no "nice cleanup."
+    For a refactor, `simp` vs `simp only` and heavy-automation brittleness
+    ARE in scope. Do NOT flag things other CI already covers: sorry /
+    axioms, headers, naming, line length, maxHeartbeats, or whether any
+    statement changed (the /profile comment reports that separately).
+
+    Always respond with a single JSON object matching the schema in the
+    rules document. The `assessment` block is the core deliverable.
+    `findings` is for specific, actionable concerns; an empty list is
+    fine and correct for a clean mechanical golf.
     """
 )
 
@@ -188,8 +236,74 @@ def fetch_head_sha(pr_number: str, repo_full_name: str) -> str:
     )
 
 
-def request_review(model: str, rules: str, diff: str) -> tuple[dict, Any, str]:
-    """Ask the model to apply ``rules`` to ``diff``.
+def fetch_pr_files(pr_number: str, repo_full_name: str) -> list[tuple[str, str]]:
+    """Return ``(filename, status)`` for every file in ``pr_number``.
+
+    ``status`` is GitHub's file status: ``added``, ``modified``,
+    ``removed``, ``renamed``, ``changed``, or ``copied``. The endpoint
+    paginates, so this is safe on PRs that touch thousands of files.
+    """
+    raw = run_gh(
+        "api",
+        f"repos/{repo_full_name}/pulls/{pr_number}/files",
+        "--paginate",
+        "--jq",
+        ".[] | [.filename, .status] | @tsv",
+    )
+    files: list[tuple[str, str]] = []
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        name, _, status = line.partition("\t")
+        files.append((name, status))
+    return files
+
+
+def project_of(path: str) -> str | None:
+    """Return the pooled project a Lean file belongs to, or ``None``.
+
+    Project content lives at ``LeanPool/<Project>/...``; the auto-generated
+    root ``LeanPool.lean`` and non-project files return ``None``.
+    """
+    parts = path.split("/")
+    if len(parts) > 2 and parts[0] == "LeanPool":
+        return parts[1]
+    return None
+
+
+def classify_pr(files: list[tuple[str, str]]) -> str:
+    """Classify a PR as ``"refactor"`` or ``"project"``.
+
+    Mirrors ``/profile``'s added-vs-modified split lifted to the PR level: a
+    PR that adds a *new project* (a project directory that appears only
+    through added ``.lean`` files) is a ``"project"`` PR and gets the full
+    fit/significance review. A PR that only changes files in projects
+    already in the pool — the pure-golf / reorganization case — is a
+    ``"refactor"`` and gets the tech-debt review. When no project files are
+    touched at all, default to ``"project"`` (the conservative review).
+    """
+    added_projects: set[str] = set()
+    existing_projects: set[str] = set()
+    for name, status in files:
+        if not name.endswith(".lean"):
+            continue
+        project = project_of(name)
+        if project is None:
+            continue
+        if status == "added":
+            added_projects.add(project)
+        else:  # modified / removed / renamed / changed / copied
+            existing_projects.add(project)
+    new_projects = added_projects - existing_projects
+    if not new_projects and existing_projects:
+        return "refactor"
+    return "project"
+
+
+def request_review(
+    model: str, rules: str, diff: str, system_prompt: str
+) -> tuple[dict, Any, str]:
+    """Ask the model to apply ``rules`` to ``diff`` under ``system_prompt``.
 
     Tries the ``flex`` service tier first; if OpenAI returns 429 Resource
     Unavailable, retries with ``service_tier="auto"`` (standard tier).
@@ -202,7 +316,7 @@ def request_review(model: str, rules: str, diff: str) -> tuple[dict, Any, str]:
     client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
     user_content = f"## Review rules\n\n{rules}\n\n## PR diff\n\n```diff\n{diff}\n```"
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_content},
     ]
 
@@ -256,8 +370,8 @@ def render_usage(usage: Any, model: str, tier: str) -> str:
     return " · ".join(parts)
 
 
-def render_assessment(payload: dict) -> str:
-    """Render the structured assessment block as a Markdown table."""
+def render_project_assessment(payload: dict) -> str:
+    """Render a new-project assessment block as a Markdown table."""
     a = payload.get("assessment") or {}
     if not a:
         return ""
@@ -285,19 +399,66 @@ def render_assessment(payload: dict) -> str:
     return table
 
 
+def render_refactor_assessment(payload: dict) -> str:
+    """Render a refactor assessment block as a Markdown table."""
+    a = payload.get("assessment") or {}
+    if not a:
+        return ""
+
+    debt = a.get("introduces_tech_debt")
+    debt_cell = (
+        f"{DEBT_ICON.get(bool(debt), '•')} {'yes' if debt else 'no'}"
+        if debt is not None
+        else "?"
+    )
+    maint = a.get("maintainability", "")
+    maint_cell = f"{MAINTAINABILITY_ICON.get(maint, '•')} `{maint}`" if maint else "?"
+    brit = a.get("brittleness", "")
+    brit_cell = f"{BRITTLENESS_ICON.get(brit, '•')} `{brit}`" if brit else "?"
+    risk = a.get("risk", "")
+    risk_cell = f"{RISK_ICON.get(risk, '•')} `{risk}`" if risk else "?"
+
+    rows = [
+        ("Scope", a.get("scope", "?")),
+        ("Introduces tech debt", debt_cell),
+        ("Maintainability", maint_cell),
+        ("Brittleness", brit_cell),
+        ("Risk", risk_cell),
+    ]
+    table = "| Aspect | Value |\n|---|---|\n"
+    for k, v in rows:
+        table += f"| {k} | {v} |\n"
+
+    sentence = (a.get("assessment_one_sentence") or "").strip()
+    if sentence:
+        table += f"\n_{sentence}_"
+    return table
+
+
 def render_comment(
     payload: dict,
     model: str,
     usage: Any,
     tier: str,
     reviewed_head_sha: str,
+    kind: str = "project",
 ) -> str:
-    """Render the model's payload as a Markdown PR comment body."""
+    """Render the model's payload as a Markdown PR comment body.
+
+    ``kind`` is ``"project"`` (fit/significance review) or ``"refactor"``
+    (tech-debt review); it selects the header, the assessment table, and
+    the rules doc linked in the footer.
+    """
     summary = (payload.get("summary") or "").strip()
     verdict = (payload.get("verdict") or "").strip()
     findings = payload.get("findings") or []
 
-    lines = [LLM_REVIEW_MARKER, f"## 🤖 LLM review (`{model}`)", ""]
+    heading = (
+        f"## 🤖 LLM review — refactor (`{model}`)"
+        if kind == "refactor"
+        else f"## 🤖 LLM review (`{model}`)"
+    )
+    lines = [LLM_REVIEW_MARKER, heading, ""]
 
     if reviewed_head_sha:
         lines.extend([f"**Reviewed head:** `{reviewed_head_sha}`", ""])
@@ -309,7 +470,11 @@ def render_comment(
     if summary:
         lines.extend([summary, ""])
 
-    assessment = render_assessment(payload)
+    assessment = (
+        render_refactor_assessment(payload)
+        if kind == "refactor"
+        else render_project_assessment(payload)
+    )
     if assessment:
         lines.extend([assessment, ""])
 
@@ -335,9 +500,10 @@ def render_comment(
     usage_line = render_usage(usage, model, tier)
     if usage_line:
         lines.append(usage_line)
+    rules_doc = "REFACTOR_REVIEW_RULES.md" if kind == "refactor" else "REVIEW_RULES.md"
     lines.append(
         "_Automated review against "
-        "[`.github/REVIEW_RULES.md`](../blob/main/.github/REVIEW_RULES.md). "
+        f"[`.github/{rules_doc}`](../blob/main/.github/{rules_doc}). "
         "Disagree? Reply on the PR; rules can be updated in a PR of their own._"
     )
     return "\n".join(lines)
@@ -393,7 +559,18 @@ def main() -> int:
 
     model = os.environ.get("REVIEW_MODEL", DEFAULT_MODEL)
     repo_full_name = resolve_repo_full_name().strip()
-    rules = RULES_PATH.read_text(encoding="utf-8")
+
+    # Detect whether this is a new-project PR or a refactor of projects
+    # already in the pool, and review it under the matching rules.
+    kind = classify_pr(fetch_pr_files(pr_number, repo_full_name))
+    if kind == "refactor":
+        rules = REFACTOR_RULES_PATH.read_text(encoding="utf-8")
+        system_prompt = SYSTEM_PROMPT_REFACTOR
+    else:
+        rules = PROJECT_RULES_PATH.read_text(encoding="utf-8")
+        system_prompt = SYSTEM_PROMPT_PROJECT
+    print(f"Reviewing PR #{pr_number} as a {kind} PR.", file=sys.stderr)
+
     diff = fetch_diff(pr_number, repo_full_name)
 
     if not diff.strip():
@@ -404,13 +581,16 @@ def main() -> int:
         os.environ.get("REVIEW_HEAD_SHA")
         or fetch_head_sha(pr_number, repo_full_name).strip()
     )
-    payload, usage, tier = request_review(model=model, rules=rules, diff=diff)
+    payload, usage, tier = request_review(
+        model=model, rules=rules, diff=diff, system_prompt=system_prompt
+    )
     comment = render_comment(
         payload,
         model=model,
         usage=usage,
         tier=tier,
         reviewed_head_sha=reviewed_head_sha,
+        kind=kind,
     )
     post_comment(pr_number, comment, repo_full_name=repo_full_name)
     return 0

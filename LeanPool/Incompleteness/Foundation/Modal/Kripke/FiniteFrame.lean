@@ -158,15 +158,9 @@ instance definedBy_inter
   · intro h;
     constructor;
     · apply h₁.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      left;
-      assumption;
+      simp_all
     · apply h₂.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      right;
-      assumption;
+      simp_all
 ⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/

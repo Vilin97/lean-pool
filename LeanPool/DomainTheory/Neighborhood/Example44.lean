@@ -61,10 +61,7 @@ open Domain.Neighborhood NeighborhoodSystem ApproximableMap ExampleB
 concatenation. -/
 theorem prepend_singleton (σ τ : Str) : prepend σ {τ} = {σ ++ τ} := by
   ext w
-  simp only [mem_prepend, Set.mem_singleton_iff]
-  constructor
-  · rintro ⟨t, rfl, rfl⟩; rfl
-  · rintro rfl; exact ⟨τ, rfl, rfl⟩
+  simp_all
 
 /-- Prepending is monotone in its set argument. -/
 theorem prepend_mono (σ : Str) {X X' : Set Str} (h : X' ⊆ X) : prepend σ X' ⊆ prepend σ X := by
@@ -89,12 +86,7 @@ theorem singleton_cone_nd (σ τ : Str) :
     ({τ} : Set Str) ⊆ cone σ ∨ cone σ ⊆ {τ} ∨ ({τ} : Set Str) ∩ cone σ = ∅ := by
   by_cases h : σ <+: τ
   · exact Or.inl (singleton_subset_cone.mpr h)
-  · refine Or.inr (Or.inr ?_)
-    ext w
-    simp only [Set.mem_inter_iff, Set.mem_singleton_iff, mem_cone, Set.mem_empty_iff_false,
-      iff_false, not_and]
-    rintro rfl hτ
-    exact h hτ
+  · simp_all
 
 /-- Any two neighbourhoods of `C` are nested or disjoint. -/
 theorem nestedOrDisjoint : NestedOrDisjoint memC := by
@@ -110,12 +102,7 @@ theorem nestedOrDisjoint : NestedOrDisjoint memC := by
     · exact Or.inr (Or.inr h)
   · by_cases h : σ = τ
     · subst h; exact Or.inl (Set.Subset.refl _)
-    · refine Or.inr (Or.inr ?_)
-      ext w
-      simp only [Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false,
-        not_and]
-      rintro rfl h2
-      exact h h2
+    · simp_all
 
 /-- **Example 4.4 (Scott 1981, PRG-19).** The neighbourhood system `C` of finite
 or infinite binary

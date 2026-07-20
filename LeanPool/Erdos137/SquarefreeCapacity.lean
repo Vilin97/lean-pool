@@ -136,9 +136,7 @@ lemma blockDvdIndices_card_le {k n p : ℕ} (hn : 1 ≤ n) (hp : 1 ≤ p) :
   have hsub : BlockDvdIndices k n p ⊆ D := by
     intro i hi
     unfold BlockDvdIndices SqfreeBlockIndices at hi
-    rw [Finset.mem_filter, Finset.mem_filter, Finset.mem_range] at hi
-    rw [hD, Finset.mem_filter, Finset.mem_range]
-    exact ⟨hi.1.1, hi.2⟩
+    simp_all
   have hcardle : #(BlockDvdIndices k n p) ≤ #D := Finset.card_le_card hsub
   -- `#D = #{x ∈ (n-1, n-1+k] | p ∣ x}` via the bijection `i ↦ n + i`.
   have hbij : #D = #{x ∈ Finset.Ioc (n - 1) (n - 1 + k) | p ∣ x} := by
@@ -179,8 +177,7 @@ lemma sqfreeBlockProduct_factorization_le_count {k n p : ℕ} (hn : 1 ≤ n) :
         · rw [if_neg hpi, Nat.factorization_eq_zero_of_not_dvd hpi]
     _ = #(BlockDvdIndices k n p) := by
         unfold BlockDvdIndices
-        rw [Finset.sum_boole]
-        simp
+        simp_all
 
 /-- **Factorization of the capacity.** For prime `p < k`, `v_p(SmoothCapacity k) = ⌊k/p⌋ + 1`;
 for `p ∉ primesBelow k`, it is `0`. -/
@@ -246,8 +243,7 @@ theorem powerful_sqfree_product_dvd_smooth_capacity {k n : ℕ} (hn : 1 ≤ n)
         rw [Finset.mem_filter, Finset.mem_range] at hi
         exact sqfree_term_no_large_prime hn hPow hi.1 hi.2 hpp hkp
       have := sqfreeBlockProduct_factorization_le_count (k := k) (n := n) (p := p) hn
-      rw [hcount0] at this
-      omega
+      simp_all
     · -- non-prime ⟹ valuation 0.
       rw [Nat.factorization_eq_zero_of_not_prime _ hpp]
 

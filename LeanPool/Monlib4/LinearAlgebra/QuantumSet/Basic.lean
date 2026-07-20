@@ -220,9 +220,7 @@ noncomputable instance Complex.quantumSet : QuantumSet ℂ where
   nIsDecidableEq := inferInstance
   onb := by
     refine (Module.Basis.singleton (Fin 1) ℂ).toOrthonormalBasis (orthonormal_iff_ite.mpr ?_)
-    intro i j
-    simp_rw [Fin.fin_one_eq_zero, Module.Basis.singleton_apply,
-      RCLike.inner_apply, map_one, mul_one, if_true]
+    simp_all
 
 theorem RCLike.inner_tmul {𝕜 : Type*} [RCLike 𝕜] (x y z w : 𝕜) :
     ⟪x ⊗ₜ[𝕜] y, z ⊗ₜ[𝕜] w⟫_𝕜 = ⟪x * y, z * w⟫_𝕜 := by
@@ -306,9 +304,7 @@ lemma QuantumSet.inner_eq_counit [QuantumSet B] (x y : B) :
     ⟪x, y⟫_ℂ = Coalgebra.counit (star x * modAut (k B) y) := by
   simp_rw [← inner_eq_counit']
   nth_rw 2 [← inner_conj_symm]
-  rw [inner_star_left, star_star, inner_conj_symm, mul_one,
-    modAut_isSymmetric, modAut_apply_modAut, neg_add_cancel, hb.modAut_zero,
-    AlgEquiv.one_apply]
+  simp_all
 
 open Coalgebra in
 theorem counit_mul_modAut_symm' [hA : QuantumSet A] (a b : A) (r : ℝ) :
@@ -344,8 +340,7 @@ theorem counit_comp_mul_comp_rTensor_modAut [QuantumSet A] :
   simp only [LinearMap.comp_apply, LinearMap.rTensor_tmul, LinearEquiv.coe_coe,
     TensorProduct.comm_tmul, LinearMap.mul'_apply, AlgEquiv.toLinearMap_apply]
   have := counit_mul_modAut_symm' y x 0
-  rw [zero_add, ha.modAut_zero, AlgEquiv.one_apply] at this
-  exact this.symm
+  simp_all
 
 theorem counit_comp_mul_comp_lTensor_modAut [QuantumSet A] :
     Coalgebra.counit ∘ₗ LinearMap.mul' ℂ A ∘ₗ LinearMap.lTensor A (modAut (-1)).toLinearMap
@@ -427,8 +422,7 @@ theorem Psi_right_inv [hA : QuantumSet A] [hB : QuantumSet B]
         (PsiInvFun (A := B) (B := A) t r (x ⊗ₜ[ℂ] y)) =
       x ⊗ₜ[ℂ] y := by
   rw [PsiInvFun_apply, PsiToFun_apply]
-  simp_rw [modAut_apply_modAut, add_neg_cancel, starAlgebra.modAut_zero]
-  simp only [AlgEquiv.one_apply, star_star, MulOpposite.op_unop]
+  simp_all
 
 /-- The linear equivalence between maps and tensors used in the quantum-set formalism. -/
 @[simps]
@@ -444,8 +438,7 @@ noncomputable def Psi [hA : QuantumSet A] [hB : QuantumSet B]
     simp only [Psi_right_inv, map_sum]
   map_add' x y := by simp_rw [map_add]
   map_smul' r x := by
-    simp_rw [_root_.map_smul]
-    rfl
+    simp_all
 
 end QuantumSet
 
@@ -675,8 +668,7 @@ theorem lmul_toMatrix_apply {n : Type*} [Fintype n] [DecidableEq n]
     (x : n → ℂ) (i j : n) :
     LinearMap.toMatrix' (LinearMap.mulLeft ℂ x) i j = ite (i = j) (x i) 0 := by
   by_cases h : i = j
-  · subst j
-    simp [LinearMap.toMatrix'_apply, LinearMap.mulLeft_apply]
+  · simp_all
   · simp [LinearMap.toMatrix'_apply, LinearMap.mulLeft_apply, h]
 
 theorem rankOne_trace {𝕜 A : Type*} [RCLike 𝕜] [NormedAddCommGroup A]
@@ -895,12 +887,8 @@ theorem _root_.tenSwap_apply_lTensor {R A B C : Type*}
       (LinearMap.rTensor _ f) (tenSwap R x) := by
   refine x.induction_on ?_ ?_ ?_
   · simp only [map_zero]
-  · intro a b
-    simp only [LinearMap.lTensor_tmul, LinearMap.op_apply, tenSwap_apply,
-      LinearMap.rTensor_tmul]
-    rfl
-  · intro x y hx hy
-    simp only [map_add, hx, hy]
+  · simp_all
+  · simp_all
 
 theorem Psi_inv_comp_swap_lTensor_op_comp_comul_eq_rmul [QuantumSet A] :
     (Psi 0 (k A + 1)).symm.toLinearMap

@@ -210,10 +210,7 @@ lemma subtype_compL_ker [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
   (f : E →L[𝕜] U) :
     (U.subtypeL ∘L f).ker = f.ker := by
   ext x
-  change U.subtypeL (f x) = 0 ↔ f x = 0
-  refine ⟨fun h => Subtype.ext h, fun h => ?_⟩
-  rw [h]
-  simp
+  simp_all
 
 
 lemma orthogonalProjection.isOrthogonalProjection [InnerProductSpace 𝕜 E]
@@ -362,8 +359,7 @@ theorem LinearMap.IsPositive'.hasLe {E : Type _} [NormedAddCommGroup E] [InnerPr
 noncomputable instance IsSymmetric.hasZero {E : Type _} [NormedAddCommGroup E]
     [InnerProductSpace ℂ E] : Zero ↥{x : E →ₗ[ℂ] E | x.IsSymmetric} :=
   ⟨⟨0, by
-    simp_rw [Set.mem_setOf_eq, LinearMap.IsSymmetric, LinearMap.zero_apply, inner_zero_left,
-      inner_zero_right, forall_const]⟩⟩
+    simp_all⟩⟩
 
 /-- saying `p` is positive is the same as saying `0 ≤ p` -/
 theorem LinearMap.IsPositive'.is_nonneg {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
@@ -592,8 +588,7 @@ theorem Submodule.le_finrank_one
   · intro h
     rcases h with (⟨rfl, rfl⟩ | h)
     · exact le_refl U
-    · rw [h]
-      exact bot_le
+    · simp_all
 
 /-- for orthogonal projections `Pᵤ,Pᵥ`,
   if `Pᵤ` is a minimal orthogonal projection, then
@@ -614,12 +609,7 @@ theorem orthogonalProjection.isMinimalProjection_of
   have hUW : U ≤ W := by
     rcases hcases with hW1 | hW2
     · rw [hW1]
-    · exfalso
-      apply h
-      ext x
-      have hxmem : (↥P W x) ∈ W := Submodule.starProjection_apply_mem W x
-      have hxzero : (↥P W x) ∈ (0 : Submodule ℂ E) := hW2 ▸ hxmem
-      simpa using hxzero
+    · simp_all
   exact (orthogonalProjection.is_le_iff_subset).mpr hUW
 
 /-- any rank one operator given by a norm one vector is a minimal projection -/
@@ -630,13 +620,11 @@ theorem rankOne_self_isMinimalProjection [InnerProductSpace ℂ E] [CompleteSpac
     use ⟨x, Submodule.mem_span_singleton_self x⟩
     constructor
     · intro hw
-      have hx : x ≠ 0 := norm_ne_zero_iff.mp (by rw [h]; exact one_ne_zero)
-      exact hx (congrArg Subtype.val hw)
+      simp_all
     · intro w
       rcases Submodule.mem_span_singleton.mp (SetLike.coe_mem w) with ⟨r, hr⟩
       use r
-      ext
-      simp [hr]
+      simp_all
   · apply LinearMap.IsProj.mk
     · intro z
       rw [rankOne_apply]
@@ -663,10 +651,7 @@ theorem rankOne_self_isMinimalProjection' [InnerProductSpace ℂ E] [CompleteSpa
     IsMinimalProjection ((1 / ‖x‖ ^ 2) • rankOne ℂ x x) (Submodule.span ℂ {x}) := by
   rcases normalize_op x with ⟨y, r, ⟨hy, hx⟩⟩
   · have : r ^ 2 ≠ 0 := by
-      intro d
-      rw [pow_eq_zero_iff two_ne_zero] at d
-      rw [d, Complex.coe_smul, zero_smul] at hx
-      contradiction
+      simp_all
     simp_rw [hx, Complex.coe_smul, one_div, ← Complex.coe_smul, map_smulₛₗ, LinearMap.smul_apply,
       RingHom.id_apply, Complex.conj_ofReal,
       norm_smul, mul_pow, Complex.norm_real, mul_inv, smul_smul, hy,
@@ -676,9 +661,7 @@ theorem rankOne_self_isMinimalProjection' [InnerProductSpace ℂ E] [CompleteSpa
     rw [inv_mul_cancel₀ this, one_smul]
     have : Submodule.span ℂ {((r : ℝ) : ℂ) • y} = Submodule.span ℂ {y} := by
       rw [Submodule.span_singleton_smul_eq _]
-      refine Ne.isUnit ?_
-      rw [ne_eq, ← pow_eq_zero_iff two_ne_zero]
-      norm_cast
+      simp_all
     rw [← Complex.coe_smul, this]
     exact rankOne_self_isMinimalProjection hy
   · contradiction
@@ -786,8 +769,7 @@ theorem Submodule.isOrtho_iff_inner_eq' {𝕜 E : Type _} [RCLike 𝕜] [NormedA
     [InnerProductSpace 𝕜 E] {U W : Submodule 𝕜 E} :
     U ⟂ W ↔ ∀ (u : ↥U) (w : ↥W), inner 𝕜 (u : E) (w : E) = 0 := by
   rw [Submodule.isOrtho_iff_inner_eq]
-  exact ⟨fun h u w => h _ (SetLike.coe_mem _) _ (SetLike.coe_mem _),
-    fun h x hx y hy => h ⟨x, hx⟩ ⟨y, hy⟩⟩
+  simp_all
 
 -- moved from `ips.lean`
 /-- `U` and `W` are mutually orthogonal if and only if `(P U).comp (P W) = 0`,
@@ -875,8 +857,7 @@ lemma lmul_isIdempotentElem_iff {R A : Type*} [CommSemiring R]
   refine ⟨fun h => ?_, fun h => by rw [h]⟩
   rw [LinearMap.ext_iff] at h
   specialize h 1
-  simp_rw [LinearMap.mulLeft_apply, mul_one] at h
-  exact h
+  simp_all
 
 lemma lmul_tmul {R A B : Type*} [CommSemiring R]
   [Semiring A] [Semiring B] [Module R A] [Module R B] [SMulCommClass R A A]
@@ -944,10 +925,7 @@ lemma ContinuousLinearMap.eq_comp_orthogonalProjection_ker_ortho
   constructor
   · ext x
     have hx : x - orthogonalProjection' ((T.ker)ᗮ) x ∈ T.ker := by
-      have hmem := Submodule.sub_starProjection_mem_orthogonal (K := (T.ker)ᗮ) x
-      change x - ((T.ker)ᗮ).starProjection x ∈ T.ker
-      rw [Submodule.orthogonal_orthogonal] at hmem
-      exact hmem
+      simp_all
     have hzero : T (x - orthogonalProjection' ((T.ker)ᗮ) x) = 0 := hx
     rwa [map_sub, sub_eq_zero] at hzero
   · ext x

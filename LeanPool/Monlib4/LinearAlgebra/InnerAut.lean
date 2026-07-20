@@ -138,8 +138,7 @@ variable [Field 𝕜] [StarRing 𝕜]
 theorem _root_.Matrix.unitaryGroup.coe_hMul_star_self [DecidableEq n]
     (a : Matrix.unitaryGroup n 𝕜) :
     (HMul.hMul a (star a) : Matrix n n 𝕜) = (1 : Matrix n n 𝕜) := by
-  simp only [Unitary.mul_star_self]
-  rfl
+  simp_all
 
 theorem _root_.Matrix.unitaryGroup.star_coe_eq_coe_star [DecidableEq n]
     (U : unitaryGroup n 𝕜) :
@@ -343,8 +342,7 @@ theorem exists_innerAut_iff_exists_innerAut_inv {P : Matrix n n 𝕜 → Prop}
     (∃ U : unitaryGroup n 𝕜, P (innerAut U x)) ↔
       ∃ U : unitaryGroup n 𝕜, P (innerAut U⁻¹ x) := by
   constructor <;> rintro ⟨U, hU⟩ <;> use U⁻¹
-  simp_rw [inv_inv]
-  exact hU
+  simp_all
 
 theorem _root_.Matrix.innerAut.is_injective (U : unitaryGroup n 𝕜) :
     Function.Injective (innerAut U) := by
@@ -469,8 +467,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
   have hcomm : ∀ x : Matrix n n 𝕜, Commute x (yᴴ * y) := by
     intro x
     specialize hcomm_star xᴴ
-    simp_rw [conjTranspose_conjTranspose] at hcomm_star
-    exact hcomm_star
+    simp_all
   obtain ⟨α, hα⟩ := commutes_with_all_iff.mp hcomm
   have hpos_semidef : (yᴴ * y).PosSemidef := Matrix.posSemidef_conjTranspose_mul_self y
   have hy_unit : IsUnit y := ⟨⟨y, yinv, Hy.1, Hy.2⟩, rfl⟩
@@ -481,8 +478,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     have hdiag := IsHermitian.coe_re_diag hpos_semidef.1
     simp_rw [hα, diag_smul, diag_one, Pi.smul_apply, Pi.one_apply, smul_eq_mul, mul_one] at hdiag
     have hone_ne_zero : (1 : n → 𝕜) ≠ 0 := by
-      simp_rw [ne_eq, funext_iff, Pi.one_apply, Pi.zero_apply, one_ne_zero]
-      simp only [Classical.not_forall, not_false_iff, exists_const]
+      simp_all
     have hsmul : (RCLike.re α : 𝕜) • (1 : n → 𝕜) = α • 1 := by
       rw [← hdiag]
       ext1
@@ -539,8 +535,7 @@ lemma _root_.StarAlgEquiv.eq_innerAut
     innerAutStarAlg f.ofMatrixUnitary = f := by
   rw [StarAlgEquiv.ofMatrixUnitary]
   generalize_proofs
-  expose_names
-  exact pf_1
+  simp_all
 
 /-- Spectral theorem in Monlib's inner-automorphism notation. -/
 theorem _root_.Matrix.IsHermitian.spectral_theorem'' {x : Matrix n n 𝕜}
@@ -569,10 +564,8 @@ theorem _root_.Matrix.diagonal.spectrum {𝕜 n : Type _} [Field 𝕜] [Fintype 
     constructor
     · intro j
       by_cases h : j = i
-      · left
-        rw [h, hi]
-      · right
-        exact h
+      · simp_all
+      · simp_all
     · use i
 
 theorem _root_.Matrix.IsHermitian.spectrum {x : Matrix n n 𝕜}
@@ -621,8 +614,7 @@ theorem _root_.Matrix.innerAutStarAlg_equiv_symm_toLinearMap (U : unitaryGroup n
     (innerAutStarAlg U).symm.toAlgEquiv.toLinearMap = innerAut U⁻¹ := by
   ext1
   simp only [innerAut_apply, inv_inv]
-  rw [UnitaryGroup.inv_apply]
-  rfl
+  simp_all
 
 theorem _root_.Matrix.innerAut_commutes_with_map_lid_symm (U : Matrix.unitaryGroup n 𝕜) :
     TensorProduct.map 1 (innerAut U) ∘ₗ
@@ -631,8 +623,7 @@ theorem _root_.Matrix.innerAut_commutes_with_map_lid_symm (U : Matrix.unitaryGro
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply,
     LinearEquiv.coe_coe, TensorProduct.lid_symm_apply, TensorProduct.map_tmul,
     Module.End.one_apply]
-  intro x
-  rfl
+  simp_all
 
 theorem _root_.Matrix.innerAut_commutes_with_lid_comm (U : Matrix.unitaryGroup n 𝕜) :
     (TensorProduct.lid 𝕜 (Matrix n n 𝕜)).toLinearMap ∘ₗ
@@ -648,17 +639,12 @@ theorem _root_.Matrix.innerAut_commutes_with_lid_comm (U : Matrix.unitaryGroup n
 theorem _root_.Matrix.innerAut_comp_inj (U : Matrix.unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :
     S = T ↔ innerAut U ∘ₗ S = innerAut U ∘ₗ T := by
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, innerAut_eq_iff,
-    innerAut_inv_apply_innerAut_self]
+  simp_all
 
 theorem _root_.Matrix.innerAut_inj_comp (U : unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :
     S = T ↔ S ∘ₗ innerAut U = T ∘ₗ innerAut U := by
-  refine ⟨fun h => by rw [h], fun h => ?_⟩
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply] at h ⊢
-  intro x
-  nth_rw 1 [← innerAut_apply_innerAut_inv_self U x]
-  rw [h, innerAut_apply_innerAut_inv_self]
+  simp_all
 
 theorem _root_.Matrix.innerAut.comp_inj (U : Matrix.unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :

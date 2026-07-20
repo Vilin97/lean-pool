@@ -109,9 +109,7 @@ theorem add_U_lowDigits_p {p : ℕ} (hp : 2 ≤ p) {n m U : ℕ}
   obtain ⟨H, hH⟩ := hdvd            -- n = p^m * H
   -- High block H = n / p^m is positive (n > 0).
   have hHpos : 0 < H := by
-    rcases Nat.eq_zero_or_pos H with h0 | hpos
-    · rw [h0, Nat.mul_zero] at hH; omega
-    · exact hpos
+    simp_all
   have hHlow : LowDigits p H := by
     have : H = n / p ^ m := by
       rw [hH, Nat.mul_div_cancel_left _ (pow_pos (by omega) m)]

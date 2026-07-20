@@ -37,9 +37,7 @@ lemma contDiffAt_one_deriv_of_contDiffAt_two
     ContDiffAt ℝ 1 (deriv γ) t₀ := by
   have h_apply := (show ContDiffAt ℝ (1 + 1) γ t₀ from hγ_C2).fderiv_right_succ.clm_apply
     (contDiffAt_const (c := (1 : ℝ)))
-  rw [show (fun t => (fderiv ℝ γ t) 1) = deriv γ from by
-    ext t; exact fderiv_apply_one_eq_deriv.symm] at h_apply
-  exact h_apply
+  simp_all
 
 /-- Lipschitz-type bound on `deriv γ` deviation from C². -/
 lemma deriv_deviation_bound_of_C2
@@ -276,8 +274,7 @@ lemma remainder_bounded_of_C2
           mul_le_mul_of_nonneg_right h (abs_nonneg _)
   have h_denom_pos :
       0 < ‖(γ t - γ t₀) * (↑(t - t₀))‖ := by
-    rw [norm_mul, Complex.norm_real]
-    exact mul_pos (norm_pos_iff.mpr h_Δγ_ne) ht_pos
+    simp_all
   have h_sq_pos : 0 < |t - t₀| ^ 2 := sq_pos_of_pos ht_pos
   have h_d_pos : 0 < (‖L‖ / 2) * |t - t₀| ^ 2 := mul_pos (half_pos hL_norm_pos) h_sq_pos
   calc ‖(↑(t - t₀) : ℂ) * deriv γ t -

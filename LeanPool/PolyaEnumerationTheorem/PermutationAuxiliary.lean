@@ -225,9 +225,7 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
           perm_perm_val_lt_of_perm_val_eq h1⟩ : Fin n))).1 = n := by
         rw [hl, f_inv_apply_self]; exact h1
       rw [contractFwd_pos f⁻¹ _ h2]
-      simp only
-      rw [hl, f_inv_apply_self, f_inv_apply_self]
-      rfl
+      simp_all
     · rw [contractFwd_neg f i h1]
       have hl : liftFin (⟨(f (liftFin i)).1,
           lt_of_lt_succ_of_neq (f (liftFin i)).2 h1⟩ : Fin n) = f (liftFin i) :=
@@ -237,8 +235,7 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
         rw [hl, f_inv_apply_self, liftFin_val]
         omega
       rw [contractFwd_neg f⁻¹ _ h2]
-      simp only
-      rw [hl, f_inv_apply_self, liftFin_val]
+      simp_all
   right_inv := by
     intro i
     apply Fin.ext
@@ -251,9 +248,7 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
           perm_perm_val_lt_of_perm_val_eq (f := f⁻¹) h1⟩ : Fin n))).1 = n := by
         rw [hl, f_apply_inv_self]; exact h1
       rw [contractFwd_pos f _ h2]
-      simp only
-      rw [hl, f_apply_inv_self, f_apply_inv_self]
-      rfl
+      simp_all
     · rw [contractFwd_neg f⁻¹ i h1]
       have hl : liftFin (⟨(f⁻¹ (liftFin i)).1,
           lt_of_lt_succ_of_neq (f⁻¹ (liftFin i)).2 h1⟩ : Fin n) = f⁻¹ (liftFin i) :=
@@ -263,8 +258,7 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
         rw [hl, f_apply_inv_self, liftFin_val]
         omega
       rw [contractFwd_neg f _ h2]
-      simp only
-      rw [hl, f_apply_inv_self, liftFin_val]
+      simp_all
 
 /-- The forward direction of `permExpand`. -/
 private def expandFwd (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Fin (n + 1) :=
@@ -299,10 +293,7 @@ def permExpand (f : Equiv.Perm (Fin n)) : Equiv.Perm (Fin (n + 1)) where
       have h2 : (liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1 ≠ n := by
         rw [liftFin_val]; exact Nat.ne_of_lt (f _).2
       rw [expandFwd_neg f⁻¹ _ h2, liftFin_val]
-      have he : (⟨(liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1,
-          lt_of_lt_succ_of_neq (liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).2 h2⟩ : Fin n)
-          = f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩ := Fin.ext rfl
-      rw [he, f_inv_apply_self']
+      simp_all
   right_inv := by
     intro x
     apply Fin.ext
@@ -313,10 +304,7 @@ def permExpand (f : Equiv.Perm (Fin n)) : Equiv.Perm (Fin (n + 1)) where
       have h2 : (liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1 ≠ n := by
         rw [liftFin_val]; exact Nat.ne_of_lt (f⁻¹ _).2
       rw [expandFwd_neg f _ h2, liftFin_val]
-      have he : (⟨(liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1,
-          lt_of_lt_succ_of_neq (liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).2 h2⟩ : Fin n)
-          = f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩ := Fin.ext rfl
-      rw [he, f_apply_inv_self']
+      simp_all
 
 end ContractExpand
 

@@ -42,8 +42,7 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
     rw [eq_c2, show (x :: c2') ++ [r] = x :: (c2' ++ [r]) by simp,
       List.dropLast_cons_of_ne_nil (by simp), List.head?_cons]; rfl
   have hc1t_last : x ∈ c1.tail.getLast? := by
-    rw [eq_c1, show (p :: c1') ++ [x] = p :: (c1' ++ [x]) by simp, List.tail_cons,
-      List.getLast?_concat]; rfl
+    simp_all
   refine ⟨p, x, x, r, ⟨p_lt_x, le_refl x, x_lt_r⟩, ?_, ?_⟩
   · -- HasLaced (n+2) S p x
     have hp : C.NCup 1 [p] := by simp
@@ -76,13 +75,11 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
     · exfalso
       apply cup_free
       refine ⟨cy1 ++ [x], cy1_cup.extend_right lyx hxy x_in_S cy1_in_S cy1_last, ?_⟩
-      rw [List.append_in, List.cons_in]
-      exact ⟨cy1_in_S, x_in_S, List.nil_in⟩
+      simp_all
     · exfalso
       apply cup_free
       refine ⟨y :: cx1, cx1_cup.extend_left lyx y_in_S hxy cx1_in_S cx1_head, ?_⟩
-      rw [List.cons_in]
-      exact ⟨y_in_S, cx1_in_S⟩
+      simp_all
   -- Case x ≤ y
   rcases cx1_cup.take_head_last with ⟨x', cx1', z, eq_cx1, cx1'_cup⟩
   rw [eq_cx1, List.cons_append, List.head?_cons, Option.mem_some_iff] at cx1_head
@@ -105,14 +102,12 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
       apply C.join_n2_n2_interweaved cxw_cup ?_ cy1_cup cy1_in_S w
       · rw [List.getLast?_concat]; rfl
       · rw [eq_cy1, List.cons_append, List.head?_cons]; rfl
-      · rw [List.append_in, List.cons_in]
-        exact ⟨cx_in_S, w_in_S, List.nil_in⟩
+      · simp_all
     · exfalso
       apply cup_free
       refine ⟨x :: cy1, cy1_cup.extend_left lxw x_in_S hwx cy1_in_S ?_, ?_⟩
       · rw [eq_cy1, List.cons_append, List.head?_cons]; rfl
-      · rw [List.cons_in]
-        exact ⟨x_in_S, cy1_in_S⟩
+      · simp_all
   -- w < x
   rcases lt_trichotomy z y with (hyz | hyz | hyz);
   swap
@@ -127,8 +122,7 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
       apply cup_free
       have cx1_last : z ∈ cx1.getLast? := by rw [eq_cx1, List.getLast?_concat]; rfl
       refine ⟨cx1 ++ [y], cx1_cup.extend_right lzy hyz y_in_S cx1_in_S cx1_last, ?_⟩
-      rw [List.append_in, List.cons_in]
-      exact ⟨cx1_in_S, y_in_S, List.nil_in⟩
+      simp_all
     · have zcy_cup : C.NCup (n + 3) (z :: cy) :=
         cy_cup.extend_left lzy z_in_S hyz cy_in_S cy_head
       apply C.join_n2_n2_interweaved cx1_cup ?_ zcy_cup ?_ z

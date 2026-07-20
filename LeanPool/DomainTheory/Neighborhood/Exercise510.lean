@@ -282,16 +282,12 @@ theorem principal_master_eq_bot {X : Set α} (hX : V₀.mem X) (hXm : X = V₀.m
 /-- A `⊥` left factor collapses the strict pairing to `⊥` (choice-free). -/
 theorem smashPair_bot_left (y : V₁.Element) : smashPair V₀.bot y = (smash V₀ V₁).bot := by
   apply eq_bot_of_no_proper
-  rintro W (rfl | ⟨X, Y, hxX, hXne, hyY, hYne, rfl⟩)
-  · rfl
-  · rw [NeighborhoodSystem.mem_bot] at hxX; exact absurd hxX hXne
+  simp_all
 
 /-- A `⊥` right factor collapses the strict pairing to `⊥` (choice-free). -/
 theorem smashPair_bot_right (x : V₀.Element) : smashPair x V₁.bot = (smash V₀ V₁).bot := by
   apply eq_bot_of_no_proper
-  rintro W (rfl | ⟨X, Y, hxX, hXne, hyY, hYne, rfl⟩)
-  · rfl
-  · rw [NeighborhoodSystem.mem_bot] at hyY; exact absurd hyY hYne
+  simp_all
 
 /-! ### The strict function space `(𝒟₀ →⊥ 𝒟₁)`.
 
@@ -336,8 +332,7 @@ theorem isStrict_iff_apply_bot {f : ApproximableMap V₀ V₁} :
       exact ⟨V₀.master, V₀.bot.master_mem, f.master_rel⟩
   · intro h Y hrel
     have : (f.toElementMap V₀.bot).mem Y := ⟨V₀.master, V₀.bot.master_mem, hrel⟩
-    rw [h, NeighborhoodSystem.mem_bot] at this
-    exact this
+    simp_all
 
 /-- Strictness is downward closed: a map below a strict map is strict. -/
 theorem IsStrict.mono {f g : ApproximableMap V₀ V₁} (hf : IsStrict f) (hgf : g ≤ f) : IsStrict g :=
@@ -377,12 +372,7 @@ def sstepFun (L : List (Set α × Set β)) : Set (StrictMap V₀ V₁) :=
 theorem sstepFun_cons (p : Set α × Set β) (L : List (Set α × Set β)) :
     (sstepFun (p :: L) : Set (StrictMap V₀ V₁)) = sstep p.1 p.2 ∩ sstepFun L := by
   ext f
-  simp only [mem_sstepFun, List.mem_cons, Set.mem_inter_iff, mem_sstep]
-  constructor
-  · intro h; exact ⟨h p (Or.inl rfl), fun q hq => h q (Or.inr hq)⟩
-  · rintro ⟨hp, hrest⟩ q (rfl | hq)
-    · exact hp
-    · exact hrest q hq
+  simp_all
 
 theorem sstepFun_append (L L' : List (Set α × Set β)) :
     (sstepFun (L ++ L') : Set (StrictMap V₀ V₁)) = sstepFun L ∩ sstepFun L' := by
@@ -493,10 +483,7 @@ theorem mem_sstepFun_iff (φ : (strictFun V₀ V₁).Element) {L : List (Set α 
       have hne : (sstep p.1 p.2 ∩ sstepFun L).Nonempty := (φ.sub hmem).2
       have htail : φ.mem (sstepFun L) :=
         φ.up_mem hmem ⟨⟨L, hLtail, rfl⟩, hne.mono Set.inter_subset_right⟩ Set.inter_subset_right
-      intro q hq
-      rcases List.mem_cons.mp hq with rfl | hq
-      · exact hstep
-      · exact (ih hLtail).mp htail q hq
+      simp_all
     · intro hall
       have hstep : φ.mem (sstep p.1 p.2) := hall p (List.mem_cons.mpr (Or.inl rfl))
       have htail : φ.mem (sstepFun L) :=
@@ -694,10 +681,7 @@ theorem rel_sstepFun_iff (h : ApproximableMap V₀ (strictFun V₁ V₂)) {X : S
       have htail : h.rel X (sstepFun L) :=
         h.mono hmem subset_rfl Set.inter_subset_right hX
           ⟨⟨L, hLtail, rfl⟩, hne.mono Set.inter_subset_right⟩
-      intro q hq
-      rcases List.mem_cons.mp hq with rfl | hq
-      · exact hstep
-      · exact (ih hLtail).mp htail q hq
+      simp_all
     · intro hall
       have hstep : h.rel X (sstep p.1 p.2) := hall p (List.mem_cons.mpr (Or.inl rfl))
       have htail : h.rel X (sstepFun L) :=

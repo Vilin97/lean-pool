@@ -184,8 +184,7 @@ theorem versionSpaceLearner_measurableBatchLearner
         = ((fun p : (Fin m → X × Bool) × X =>
           (versionSpaceLearner enum).learn p.1 p.2) ⁻¹' {true})ᶜ := by
       ext ⟨S, x⟩
-      simp only [mem_preimage, mem_singleton_iff, mem_compl_iff]
-      cases (versionSpaceLearner enum).learn S x <;> simp
+      simp_all
     rw [this]
     exact (measurableSet_versionSpace_true enum h_meas m).compl
   · -- b = true: countable union of measurable rectangles

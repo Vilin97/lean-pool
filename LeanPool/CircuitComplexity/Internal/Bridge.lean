@@ -214,8 +214,7 @@ theorem shannon_lower_bound_circuit (N : Nat) [NeZero N] (hN : 6 ≤ N) :
     let d' := padDesc d (2 ^ N / (5 * N)) hG1 hsize
     have h1 : evalD hspos d' = evalD hG1 d := evalD_padDesc d hG1 hsize hspos
     have h2 : (fun x => (c.eval x) 0) = evalD hG1 d := circuit_eval_eq_evalD c
-    have h3 : evalD hspos d' = f := by rw [h1, ← h2, habs]
-    exact hf d' h3⟩
+    simp_all⟩
 
 /-- **Schnorr's lower bound for circuits**: any fan-in-2 AND/OR circuit
     computing XOR_N (or its complement) has at least 2(N-1) internal gates,

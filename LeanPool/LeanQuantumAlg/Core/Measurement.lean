@@ -55,10 +55,8 @@ theorem probOutcome_ket (x y : Fin (2 ^ n)) :
     probOutcome (PureState.ket x : StateVector n) y = if y = x then 1 else 0 := by
   rw [probOutcome, PureState.ket_apply]
   by_cases h : y = x
-  · rw [if_pos h, if_pos h]
-    simp
-  · rw [if_neg h, if_neg h]
-    simp
+  · simp_all
+  · simp_all
 
 /-- Probability that measuring qubit 0 of a `1 + n`-qubit raw state vector
 yields `b`, leaving the other qubits unobserved. -/

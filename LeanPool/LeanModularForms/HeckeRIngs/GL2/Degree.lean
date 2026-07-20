@@ -108,13 +108,11 @@ theorem deg_T_sum_prime_pow (k : ℕ) :
   rw [T_sum_ppow_expansion p hp k, map_sum]
   match k with
   | 0 =>
-    simp only [Nat.zero_div, Nat.zero_add, Finset.sum_range_one, Nat.sub_zero]
-    exact deg_ppow_term_eq' p hp 0 0 rfl
+    simp_all
   | 1 =>
     simp only [show (1 : ℕ) / 2 = 0 from rfl, Nat.zero_add, Finset.sum_range_one, Nat.sub_zero]
     convert deg_ppow_term_lt' p hp 0 1 (by omega) using 1
-    simp only [Finset.sum_range_succ, Finset.sum_range_zero, zero_add, pow_zero, pow_one]
-    push_cast; ring
+    simp_all
   | k + 2 =>
     have hdiv : (k + 2) / 2 = k / 2 + 1 := by omega
     rw [hdiv, Finset.sum_range_succ']
@@ -138,11 +136,7 @@ theorem deg_T_sum_prime_pow (k : ℕ) :
 /-- `deg(TSum(1)) = 1`, used as base case for deg_T_sum. -/
 private lemma deg_T_sum_one : deg (GLPair 2) (TSum 1) = 1 := by
   change deg (GLPair 2) (∑ a ∈ Nat.divisors 1, TAd a (1 / a)) = 1
-  simp only [Nat.divisors_one, Finset.sum_singleton, Nat.div_self one_pos]
-  rw [deg_T_ad_of_pos' 1 1 one_pos one_pos (dvd_refl 1),
-    show TDiag (![1, 1] : Fin 2 → ℕ) = TDiag (fun _ => 1) from by
-      congr 1; exact funext fun j => by fin_cases j <;> rfl]
-  exact deg_T_diag_scalar 1 Nat.one_pos
+  simp_all
 
 /-- Theorem 3.24(7): `deg(T(m)) = σ₁(m)`.
     By prime factorization + coprime multiplicativity + prime-power case. -/
@@ -159,8 +153,7 @@ theorem deg_T_sum (m : ℕ+) :
   | @prime_pow p k hp hk =>
     intro hn
     rw [deg_T_sum_prime_pow p hp k]; simp only [ArithmeticFunction.sigma_one_apply]
-    have h := @Nat.sum_divisors_prime_pow ℕ _ k p id hp; simp only [id] at h
-    exact_mod_cast h.symm
+    simp_all
   | @coprime a b ha hb hcop iha ihb =>
     intro hn
     rw [show TSum ⟨a * b, hn⟩ = TSum ⟨a, by omega⟩ * TSum ⟨b, by omega⟩ from

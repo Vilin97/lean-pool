@@ -66,9 +66,7 @@ lemma logDeriv_modform_S_transform (z : ℂ) (hz : 0 < z.im) (hz_ne : z ≠ 0)
     exact modform_comp_ofComplex_S_identity f w hw
   have h_neg_inv_im : 0 < (-(1 : ℂ)/z).im := by
     rw [show -(1 : ℂ)/z = (-z)⁻¹ from by field_simp]
-    rw [Complex.inv_im]; apply div_pos
-    · simp [hz]
-    · exact Complex.normSq_pos.mpr (neg_ne_zero.mpr hz_ne)
+    rw [Complex.inv_im]; simp_all
   have h_diffOn_g : DifferentiableOn ℂ g {w | 0 < w.im} :=
     UpperHalfPlane.mdifferentiable_iff.mp f.holo'
   have h_logDeriv_comp : logDeriv (fun w => g (-(1 : ℂ)/w)) z =
@@ -76,11 +74,7 @@ lemma logDeriv_modform_S_transform (z : ℂ) (hz : 0 < z.im) (hz_ne : z ≠ 0)
     logDeriv_comp (h_diffOn_g.differentiableAt (h_uhp_open.mem_nhds h_neg_inv_im))
       (DifferentiableAt.div (differentiableAt_const _) differentiableAt_id hz_ne)
   have h_deriv_S : deriv (fun w => -(1 : ℂ)/w) z = 1 / z ^ 2 := by
-    have h1 : HasDerivAt (fun w : ℂ => w⁻¹) (-(z ^ 2)⁻¹) z := hasDerivAt_inv hz_ne
-    have h2 : HasDerivAt (fun w : ℂ => -(1 : ℂ) / w) (1 / z ^ 2) z := by
-      have h3 : HasDerivAt (fun w : ℂ => -w⁻¹) (-((-(z ^ 2)⁻¹))) z := h1.neg
-      convert h3 using 1 <;> [ext w; skip] <;> field_simp
-    exact h2.deriv
+    simp_all
   have h_zpow_ne : z ^ k ≠ 0 := zpow_ne_zero k hz_ne
   have h_diff_zpow : DifferentiableAt ℂ (· ^ k) z := differentiableAt_zpow.mpr (.inl hz_ne)
   have h_diff_g_at_z : DifferentiableAt ℂ g z :=
@@ -138,12 +132,9 @@ private lemma arc_indicator_symmetric_of_sArcOfS
     have h_norm_s := h_S_unit s₀ hs₀
     calc ‖fdBoundaryH H t - (-(1 : ℂ)/s₀)‖
         = ‖-(1 : ℂ)/fdBoundaryH H t - (-(1 : ℂ)/(-(1 : ℂ)/s₀))‖ :=
-          (S_isometry_unit_circle _ _ h_norm_t (by rw [norm_div, norm_neg, norm_one, h_norm_s,
-            div_one])).symm
+          (S_isometry_unit_circle _ _ h_norm_t (by simp_all)).symm
       _ = ‖-(1 : ℂ)/fdBoundaryH H t - s₀‖ := by
-          congr 1; congr 1
-          have hne : s₀ ≠ 0 := by intro h; rw [h, norm_zero] at h_norm_s; norm_num at h_norm_s
-          field_simp
+          simp_all
       _ = ‖fdBoundaryH H (4 - t) - s₀‖ := by rw [← h_arc_rev]
       _ ≤ ε := h_le
   · rintro ⟨s₁, hs₁, h_le⟩
@@ -233,8 +224,7 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     intro t ⟨_, h_not_near⟩
     change cauchyPrincipalValueIntegrandOn (↑S_arc) (logDeriv g) γ ε t = _
     simp only [cauchyPrincipalValueIntegrandOn]
-    simp only [Finset.mem_coe] at h_not_near
-    exact if_neg h_not_near
+    simp_all
   have h_int_K : MeasureTheory.IntegrableOn F K :=
     (MeasureTheory.IntegrableOn.mono_set h_int hK_subset_K').congr_fun hF_K.symm hK_meas
   have h_compl_zero : EqOn F 0 (Set.uIoc (1 : ℝ) 3 \ K) := by
@@ -243,8 +233,7 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     simp only [cauchyPrincipalValueIntegrandOn]
     have h_near : ∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε := by
       by_contra h_far; exact h_not_K ⟨ht_uioc, h_far⟩
-    simp only [Finset.mem_coe] at h_near
-    exact if_pos h_near
+    simp_all
   have hcompl_meas : MeasurableSet (Set.uIoc (1 : ℝ) 3 \ K) :=
     measurableSet_uIoc.diff hK_meas
   have h_int_compl : MeasureTheory.IntegrableOn F (Set.uIoc (1 : ℝ) 3 \ K) :=
@@ -446,8 +435,7 @@ lemma arc_non_excluded_measure_tendsto (S : Finset UpperHalfPlane) (H : ℝ) :
       have ht_ioo : t ∈ Set.Ioo (1 : ℝ) 3 :=
         ⟨ht_mem.1, lt_of_le_of_ne ht_mem.2 h_ne_3⟩
       have h_not_in_S : (fdBoundaryH H t : ℂ) ∉ (↑(sArcOfS S) : Set ℂ) := by
-        rw [Finset.mem_coe]; intro h_mem
-        exact h_pre _ h_mem ht_ioo rfl
+        simp_all
       obtain ⟨δ, hδ_pos, hδ_le⟩ := arc_min_dist_pos S H ht_ioo h_not_in_S
       apply tendsto_const_nhds.congr'
       filter_upwards [Ioo_mem_nhdsGT hδ_pos] with ε hε
@@ -570,11 +558,7 @@ private lemma arc_svert_combined_dist (H : ℝ) (S : Finset UpperHalfPlane) :
           rcases Finset.mem_insert.mp hs with rfl | h
           · exact le_trans (min_le_right _ _) (hδ₂_bound t ht)
           · exact le_trans (min_le_left _ _) (hδ₁_bound s h h_sv h_na t ht)⟩
-      · push Not at ha_need
-        exact ⟨δ₁, hδ₁_pos, fun s hs h_sv h_na t ht => by
-          rcases Finset.mem_insert.mp hs with rfl | h
-          · exact absurd (ha_need h_sv) h_na
-          · exact hδ₁_bound s h h_sv h_na t ht⟩
+      · simp_all
 
 omit f hf in
 lemma arc_cpv_eventually_eq_union (S : Finset UpperHalfPlane)

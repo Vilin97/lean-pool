@@ -57,9 +57,7 @@ def inj₁ (Y : Set β) : Set (Option (α ⊕ β)) := ir '' Y
 
 @[simp] theorem il_mem_inj₀ {X : Set α} {a : α} : (il a : Option (α ⊕ β)) ∈ inj₀ X ↔ a ∈ X := by
   simp only [inj₀, Set.mem_image, il]
-  constructor
-  · rintro ⟨a', ha', hb⟩; simp only [Option.some.injEq, Sum.inl.injEq] at hb; exact hb ▸ ha'
-  · intro ha; exact ⟨a, ha, rfl⟩
+  simp_all
 
 @[simp] theorem ir_mem_inj₀ {X : Set α} {b : β} : (ir b : Option (α ⊕ β)) ∉ inj₀ X := by
   rintro ⟨a, _, hb⟩; exact absurd hb (by simp [il, ir])
@@ -69,9 +67,7 @@ def inj₁ (Y : Set β) : Set (Option (α ⊕ β)) := ir '' Y
 
 @[simp] theorem ir_mem_inj₁ {Y : Set β} {b : β} : (ir b : Option (α ⊕ β)) ∈ inj₁ Y ↔ b ∈ Y := by
   simp only [inj₁, Set.mem_image, ir]
-  constructor
-  · rintro ⟨b', hb', hb⟩; simp only [Option.some.injEq, Sum.inr.injEq] at hb; exact hb ▸ hb'
-  · intro hb; exact ⟨b, hb, rfl⟩
+  simp_all
 
 @[simp] theorem il_mem_inj₁ {Y : Set β} {a : α} : (il a : Option (α ⊕ β)) ∉ inj₁ Y := by
   rintro ⟨b, _, hb⟩; exact absurd hb (by simp [il, ir])
@@ -264,16 +260,12 @@ theorem rightPart_mono (V₁ : NeighborhoodSystem β) {W W' : Set (Option (α �
 @[simp] theorem leftPart_inj₀ (V₀ : NeighborhoodSystem α) (X : Set α) :
     leftPart V₀ (inj₀ X : Set (Option (α ⊕ β))) = X := by
   ext a
-  simp only [mem_leftPart, il_mem_inj₀, ir_mem_inj₀, none_mem_inj₀, exists_false, or_self,
-    and_false]
-  exact ⟨fun h => h.resolve_right (by simp), fun h => Or.inl h⟩
+  simp_all
 
 @[simp] theorem rightPart_inj₁ (V₁ : NeighborhoodSystem β) (Y : Set β) :
     rightPart V₁ (inj₁ Y : Set (Option (α ⊕ β))) = Y := by
   ext b
-  simp only [mem_rightPart, ir_mem_inj₁, il_mem_inj₁, none_mem_inj₁, exists_false, or_self,
-    and_false]
-  exact ⟨fun h => h.resolve_right (by simp), fun h => Or.inl h⟩
+  simp_all
 
 theorem leftPart_sumMaster (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     leftPart V₀ (sumMaster V₀ V₁) = V₀.master := by
@@ -284,9 +276,7 @@ theorem leftPart_sumMaster (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSy
     · have : (il a : Option (α ⊕ β)) ∈ sumMaster V₀ V₁ := h
       rcases Set.mem_insert_iff.mp this with h' | h'
       · exact absurd h' (by simp [il])
-      · rcases h' with h'' | h''
-        · exact (il_mem_inj₀).mp h''
-        · exact absurd h'' (by simp)
+      · simp_all
     · exact h
   · intro ha; exact Or.inr ha
 
@@ -307,9 +297,7 @@ theorem rightPart_sumMaster (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodS
     · have : (ir b : Option (α ⊕ β)) ∈ sumMaster V₀ V₁ := h
       rcases Set.mem_insert_iff.mp this with h' | h'
       · exact absurd h' (by simp [ir])
-      · rcases h' with h'' | h''
-        · exact absurd h'' (by simp)
-        · exact (ir_mem_inj₁).mp h''
+      · simp_all
     · exact h
   · intro hb; exact Or.inr hb
 

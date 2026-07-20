@@ -93,8 +93,7 @@ private theorem soa_predict_spec {X : Type} (C : ConceptClass X Bool)
     LittlestoneDim X {c ∈ V | c x = !b} := by
   simp only [SOA]
   split
-  · simp only [Bool.not_true, ge_iff_le]
-    assumption
+  · simp_all
   · simp only [Bool.not_false, ge_iff_le]
     rename_i h
     exact le_of_lt (not_le.mp h)
@@ -135,9 +134,7 @@ private theorem exists_shattered_of_ldim_ge {X : Type} {C : ConceptClass X Bool}
     have hle : LittlestoneDim X C ≤ ⊥ := by
       apply iSup₂_le; intro n ⟨T, hT⟩
       exact absurd (T.nonempty_of_isShattered hT) hne
-    have : LittlestoneDim X C = ⊥ := le_antisymm hle bot_le
-    rw [this] at h
-    exact absurd h (by simp)
+    simp_all
   | d + 1 =>
     by_contra hall; push Not at hall
     -- All trees of depth d+1 are not shattered. So Ldim ≤ d.
@@ -242,8 +239,7 @@ private theorem ldim_strict_decrease_on_mistake {X : Type}
       ext c'; simp only [Set.mem_sep_iff]; exact ⟨fun ⟨h, _⟩ => h, fun h => ⟨h, hagree c' h⟩⟩
     have h_notcx_empty : ¬ ({c' ∈ V | c' x = !(c x)}).Nonempty := by
       intro ⟨c', hc'V, hc'x⟩
-      have := hagree c' hc'V
-      cases hcx : c x <;> simp_all
+      simp_all
     have h_notcx_ldim : LittlestoneDim X {c' ∈ V | c' x = !(c x)} = ⊥ := by
       apply le_antisymm _ bot_le
       apply iSup₂_le; intro n ⟨T, hT⟩
@@ -276,10 +272,7 @@ private theorem ldim_strict_decrease_on_mistake {X : Type}
       -- But Ldim(false) = ⊥ < Ldim(true) ≥ 0. Contradiction.
       push Not at hlt_contra
       rw [h_notcx_ldim] at hlt_contra
-      have : LittlestoneDim X {c' ∈ V | c' x = true} ≥ ↑(↑0 : WithTop ℕ) := by
-        rw [h_cx_side_eq_V]
-        exact le_iSup₂_of_le 0 ⟨.leaf, hne⟩ le_rfl
-      exact absurd hlt_contra not_lt_bot
+      simp_all
   | succ d' =>
   -- d ≥ 1. Use suffices + by_contra + both-side extraction.
   rw [hd0] at hd -- hd : LittlestoneDim X V = ↑(↑(d' + 1) : WithTop ℕ)
@@ -320,8 +313,7 @@ private theorem cons_history_append {X : Type} {c : X → Bool} {history : List 
   intro p hp
   cases List.mem_append.mp hp with
   | inl h => exact hcons p h
-  | inr h => have hp_eq : p = (x, c x) := by simpa using h
-             rw [hp_eq]
+  | inr h => simp_all
 
 /-- The Ldim of the version space is monotone under appending to the history. -/
 private theorem ldim_versionSpace_append_le {X : Type} {C : ConceptClass X Bool}

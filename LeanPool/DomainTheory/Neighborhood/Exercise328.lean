@@ -55,17 +55,12 @@ theorem Element.mem_interYs_of (z : V₁.Element) {L : List (Set α × Set β)} 
       fun q hq => hall q (List.mem_cons.mpr (Or.inr hq))
     by_cases hXp : X ⊆ p.1
     · have heq : interYs V₁.master (p :: L) X = p.2 ∩ interYs V₁.master L X := by
-        rw [interYs_cons]; ext w
-        simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
-        exact ⟨fun ⟨h1, h2⟩ => ⟨h1 hXp, h2⟩, fun ⟨h1, h2⟩ => ⟨fun _ => h1, h2⟩⟩
+        rw [interYs_cons]; simp_all
       rw [heq]
       exact z.inter_mem (hall p (List.mem_cons.mpr (Or.inl rfl)) hXp) (ih htail)
     · have heq : interYs V₁.master (p :: L) X = interYs V₁.master L X := by
-        rw [interYs_cons]; ext w
-        simp only [Set.mem_inter_iff, Set.mem_setOf_eq]
-        exact ⟨fun h => h.2, fun h => ⟨fun hc => absurd hc hXp, h⟩⟩
-      rw [heq]
-      exact ih htail
+        rw [interYs_cons]; simp_all
+      simp_all
 
 /-- **Exercise 3.28 — the active values.** The set `{ ↑Yᵢ ∣ x ∈ [Xᵢ] }` of
 principal filters whose

@@ -107,8 +107,7 @@ theorem scan_append {σ : Str} {b : Bool} (h : scan σ = some b) (t : Str) :
       simp only [List.cons_append, scan_false] at h ⊢
       rw [Option.map_eq_some_iff] at h
       obtain ⟨a, ha, rfl⟩ := h
-      rw [ih ha]
-      rfl
+      simp_all
 
 /-- **Monotonicity of the parity value.** A longer prefix `σ <+: σ'` yields a
 (weakly) more defined

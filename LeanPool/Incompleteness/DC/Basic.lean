@@ -194,10 +194,7 @@ lemma goedel_spec : T₀ ⊢!. γ <=> ∼𝔅 γ := by
     change ∼(Rew.substs ![_] ▹ 𝔅.prov) = Rew.substs ![_] ▹ (∼(Rew.substs ![#0] ▹ 𝔅.prov));
     rw [LogicalConnective.HomClass.map_neg (Rewriting.app (Rew.substs ![_]))];
     rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
-    congr 3;
-    apply congrArg;
-    funext i;
-    simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+    simp_all
   case e'_3 => unfold goedel; rfl;
 
 variable [T₀ wkn T]
@@ -344,9 +341,7 @@ lemma _root_.LO.FirstOrder.DerivabilityCondition.kreisel_spec
     rw [LogicalConnective.HomClass.map_imply (Rewriting.app (Rew.substs ![_]))];
     rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
     congr 1;
-    · congr 3;
-      funext i;
-      simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+    · simp_all
     · rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
       simp only [Matrix.empty_eq, Rew.substs_zero, ReflectiveRewriting.id_app];
   case e'_3 => unfold kreisel; rfl;

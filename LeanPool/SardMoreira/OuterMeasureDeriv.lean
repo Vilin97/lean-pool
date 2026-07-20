@@ -129,8 +129,7 @@ instance instClosedBallCoveringMeasureOfIsUnifLocDoublingMeasure
       rcases em (x ∈ Prod.fst '' u) with ⟨y, hy, rfl⟩ | hx'
       · rw [hgoodR_fst_u y hy]
         exact (hus hy).2.1.1
-      · rw [hgoodR_not_u x hx']
-        exact hrf _ (hx.resolve_left hx')
+      · simp_all
     · intro x hxs
       simp only [mem_iUnion, exists_prop, mem_union, mem_image]
       by_cases hx : x ∈ ⋃ a ∈ u, closedBall a.1 a.2

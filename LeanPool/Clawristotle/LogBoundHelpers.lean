@@ -32,8 +32,7 @@ lemma op_norm_bound_from_basis (L : (Fin 3 → ℝ) →L[ℝ] ℝ) {C : ℝ}
       simp_rw [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
       rw [Finset.sum_eq_single j]
       · simp
-      · intro b _ hneq
-        simp [Pi.single_eq_of_ne hneq.symm]
+      · simp_all
       · intro hj; exfalso; exact hj (Finset.mem_univ j)
     have eq1 : L x = ∑ i : Fin 3, x i * L (Pi.single i 1 : Fin 3 → ℝ) := by
       calc L x = L (∑ i : Fin 3, x i • (Pi.single i 1 : Fin 3 → ℝ)) := by conv_lhs => rw [hx]

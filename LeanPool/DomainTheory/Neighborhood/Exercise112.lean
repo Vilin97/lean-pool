@@ -60,8 +60,7 @@ theorem tail_subset_iff {n m : ℕ} : tail n ⊆ tail m ↔ m ≤ n := by
 shorter one). -/
 theorem tail_inter (n m : ℕ) : tail n ∩ tail m = tail (max n m) := by
   ext k
-  simp only [Set.mem_inter_iff, mem_tail]
-  omega
+  simp_all
 
 /-- Membership in the final-segment system: `X` is a neighbourhood iff `X = tail
 n` for some `n`. -/
@@ -159,9 +158,7 @@ theorem element_eq (x : neighborhoodSystem.Element) :
       · exact hp
     have hspec : ¬ x.mem (tail (Nat.find h')) := Nat.find_spec h'
     have hmin : ∀ j, j < Nat.find h' → x.mem (tail j) := by
-      intro j hj
-      by_contra hc
-      exact Nat.find_min h' hj hc
+      simp_all
     have hn₀ : 0 < Nat.find h' := hpos _ hspec
     refine ⟨Nat.find h' - 1, ?_⟩
     apply Element.ext

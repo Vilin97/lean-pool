@@ -135,10 +135,7 @@ lemma eq_vecCons (s : Fin (n + 1) → C) : s = s 0 :> s ∘ Fin.succ :=
 
 @[simp 1100] lemma vecCons_ext (a₁ a₂ : α) (s₁ s₂ : Fin n → α) :
     a₁ :> s₁ = a₂ :> s₂ ↔ a₁ = a₂ ∧ s₁ = s₂ :=
-  ⟨by intros h
-      constructor
-      · exact congrFun h 0
-      · exact funext (fun i => by simpa using congrFun h (Fin.castSucc i + 1)),
+  ⟨by simp_all,
    by intros h; simp [h]⟩
 
 lemma vecCons_assoc (a b : α) (s : Fin n → α) :
@@ -601,10 +598,7 @@ end «lp_section_6»
 
 lemma ofFn_get_eq_map_cast {n} (g : α → β) (as : List α) {h} :
     ofFn (fun i => g (as.get (i.cast h)) : Fin n → β) = as.map g := by
-  ext i b; simp
-  by_cases hi : i < n
-  · simp [hi, List.getElem?_eq_getElem (h ▸ hi)]
-  · simp [hi, List.getElem?_eq_none (le_of_not_gt <| h ▸ hi)]
+  simp_all
 
 variable {m : Type _ → Type _} {α : Type _} {β : Type _} [Monad m]
 

@@ -92,9 +92,7 @@ private lemma downlinkOptions_short {r : G} {p : Player} {g h : G} {z : moves (-
   rcases ha with (⟨hp, hhp, rfl⟩ | ⟨gp, hgp, rfl⟩) | ha0
   · exact hz ⟨hp, hhp⟩
   · exact Adjoint.short_rootedAdjoint h_root_short (Short.of_mem_moves hg hgp)
-  · by_cases hend : IsEnd (-p) g ∧ IsEnd (-p) h
-    · simpa [hend, ha0] using h_root_short
-    · simp [hend] at ha0
+  · simp_all
 
 instance : Ambient IsShort (G := G) where
   isAmbient_rootedAdjoint h_root_short hg := Adjoint.short_rootedAdjoint h_root_short hg
@@ -104,8 +102,7 @@ instance : Ambient IsShort (G := G) where
     · exact rightSeparatorLeftSet_finite h_h
     · exact rightSeparatorLeftSet_short h_root_short h_h
     · exact Set.finite_singleton x
-    · intro y hy
-      rwa [Set.mem_singleton_iff.mp hy]
+    · simp_all
   isAmbient_downlinkWitness := by
     intro r g h x y _ _ h_root_short h_g h_h hx hy
     let L : Set G := Separation.downlinkLeftSet r g h y

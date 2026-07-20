@@ -93,13 +93,7 @@ variable {T V}
 
 instance tDef_defined : (T.codeIn V).Defined T.tDef where
   defined := ⟨by
-    intro v
-    rw [show v = ![v 0] from Matrix.constant_eq_singleton']
-    have :=
-      (consequence_iff (T := 𝐈Sg1)).mp (sound! <|
-          FirstOrder.Theory.Delta1Definable.isDelta1 (T := T)) V inferInstance
-    simp [models_iff] at this ⊢
-    simp [Theory.tDef, this, Matrix.constant_eq_singleton],
+    simp_all,
   by intro v; simp [FirstOrder.Semiformula.curve, Theory.codeIn, ←Matrix.constant_eq_singleton']⟩
 
 variable (T V)

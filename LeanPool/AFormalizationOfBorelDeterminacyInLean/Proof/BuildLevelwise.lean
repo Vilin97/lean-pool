@@ -270,8 +270,7 @@ lemma strategy_body (f : Strategy T p) : y ∈ body f.pre.subtree ↔ y ∈ body
   constructor
   · rintro ⟨hy, h⟩
     exact ⟨hy, fun x hp hx ↦ congrArg Subtype.val (h x hp hx)⟩
-  · rintro ⟨hy, h⟩
-    exact ⟨hy, fun x hp hx ↦ Subtype.ext (h x hp hx)⟩
+  · simp_all
 end «Section2»
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def consistent (x : bodySystem.obj T) (S : StrategySystem T p) :=
@@ -299,12 +298,7 @@ lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   (bodyEquivSystem.inv.app _ x).val ∈ body (strategyEquivSystem.symm S).pre.subtree
   ↔ consistent x S := by
   rw [bodyEquivSystem_strat]
-  have hpoint : (bodyEquivSystem.hom.app T) ((bodyEquivSystem.inv.app T) x) = x := by
-    change ((bodyEquivSystem.inv.app T ≫ bodyEquivSystem.hom.app T) x) = x
-    rw [← NatTrans.comp_app]
-    rw [bodyEquivSystem.inv_hom_id]
-    rfl
-  rw [hpoint]
+  simp_all
 lemma bodyEquivSystem_strat'' {x} (S : Strategy T.2 p) :
   x.val ∈ body S.pre.subtree
   ↔ consistent (bodyEquivSystem.hom.app T x) (strategyEquivSystem S) :=

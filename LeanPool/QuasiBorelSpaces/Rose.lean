@@ -109,8 +109,7 @@ lemma isHom_fold
     induction t with | mk label children ih =>
     simp only [Rose.fold.eq_1, Rose.Encoding.encode_mk, Rose.Encoding.fold_mk, List.map_map]
     congr 1
-    simp only [List.map_inj_left, Function.comp_apply]
-    grind
+    simp_all
   rw [this]
   fun_prop
 
@@ -138,9 +137,7 @@ private lemma fold_pointwise
           = List.map ((fun k : A →𝒒 C ↦ k a) ∘
               Rose.Encoding.fold (A := B) (mk := foldAlgHom mk hmk) ∘
               Rose.Encoding.encode (A := B)) children := by
-        simp only [List.map_inj_left, Function.comp_apply]
-        intro child hmem
-        simpa using ih child hmem
+        simp_all
       simp [Rose.fold.eq_1, Rose.Encoding.encode_mk, Rose.Encoding.fold_mk,
         foldAlgHom, List.map_map, this]
 
@@ -200,9 +197,7 @@ private lemma fold_children_eq
                 ∘ Rose.Encoding.encode (A := C))
               children
             = List.map (fun child ↦ (child, child.children)) children := by
-        refine List.map_congr_left ?_
-        intro child hmem
-        simpa using ih child hmem
+        simp_all
       have hchildren :
           List.map (Prod.fst ∘ fun child ↦ (child, child.children)) children
             = children := by

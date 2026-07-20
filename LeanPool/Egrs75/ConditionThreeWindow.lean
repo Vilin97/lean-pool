@@ -121,9 +121,7 @@ theorem cond3_of_tail_small {p q : ℕ} (hq : 3 ≤ q)
     q ^ i < p ^ m := by
   -- `q` odd ⟹ `q - 1` even ⟹ `2·((q-1)/2) = q - 1`.
   have hqhalf : 2 * ((q - 1) / 2) = q - 1 := by
-    obtain ⟨a, ha⟩ := hqo; subst ha
-    have : 2 * a + 1 - 1 = 2 * a := by omega
-    rw [this, Nat.mul_div_cancel_left _ (by norm_num)]
+    obtain ⟨a, ha⟩ := hqo; simp_all
   -- `p^m` odd ⟹ `p^m + 1` even ⟹ `2·((p^m+1)/2) = p^m + 1`.
   have hpodd : Odd (p ^ m) := hpo.pow
   have hph : 2 * ((p ^ m + 1) / 2) = p ^ m + 1 := by

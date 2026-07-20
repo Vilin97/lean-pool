@@ -293,14 +293,10 @@ instance : Structure.Monotone ℒₒᵣ M := ⟨
 @[simp] lemma zero_ne_add_one (x : M) : 0 ≠ x + (1 : M) := ne_of_lt (by simp)
 
 @[simp] lemma nat_cast_inj {n m : ℕ} : (n : M) = (m : M) ↔ n = m := by
-  induction n with
-  | zero => cases m <;> simp
-  | succ n ih => cases m <;> simp
+  simp_all
 
 @[simp] lemma coe_coe_lt {n m : ℕ} : (n : M) < (m : M) ↔ n < m := by
-  induction n with
-  | zero => cases m <;> simp
-  | succ n ih => cases m <;> simp
+  simp_all
 
 /-- TODO: move -/
 lemma coe_succ (x : ℕ) : ((x + 1 : ℕ) : M) = (x : M) + 1 := by simp

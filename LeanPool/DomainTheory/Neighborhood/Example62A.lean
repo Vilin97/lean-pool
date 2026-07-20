@@ -283,8 +283,7 @@ theorem memA_inter (hn : 0 < n) :
   intro X hX
   induction hX with
   | univ =>
-    intro Y hY Z _ _
-    rw [Set.univ_inter]; exact hY
+    simp_all
   | @tuple i X hX ih =>
     intro Y hY Z hZ hsub
     cases hY with
@@ -301,9 +300,7 @@ theorem memA_inter (hn : 0 < n) :
           have hZsub := embTuple_subset.mp hsub
           exact MemA.tuple i' (fun j => ih j (hX' j) (hZW j) (hZsub j))
       · rw [embTuple_inter_ne hii] at hsub ⊢
-        exfalso
-        obtain ⟨z, hz⟩ := memA_nonempty hn hZ
-        exact Set.notMem_empty z (hsub hz)
+        simp_all
 
 /-- **Scott's domain `A`** packaged as a neighbourhood system over `{0,1}*` (needs
 `0 < n`). -/

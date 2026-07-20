@@ -80,8 +80,7 @@ theorem IsQuasiComplete.quotient_isWeaklyQuasiComplete
     obtain ⟨r, hr, rfl⟩ :=
       (Ideal.mem_map_iff_of_surjective mk
         Ideal.Quotient.mk_surjective).mp hx
-    rw [IsLocalRing.mem_maximalIdeal] at hr ⊢
-    exact fun hu => hr (isUnit_of_map_unit mk r hu)
+    simp_all
   intro B hB hBint k
   set A : ℕ → Ideal R := fun n => Ideal.comap mk (B n)
   have hA_anti : Antitone A :=

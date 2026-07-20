@@ -59,9 +59,7 @@ on `sSupDirected` over the range. -/
 def iSupDirected {α : Type*} {V : NeighborhoodSystem α} {I : Type*} [Nonempty I]
     (a : I → V.Element) (hdir : ∀ i j, ∃ k, a i ≤ a k ∧ a j ≤ a k) : V.Element :=
   V.sSupDirected (Set.range a) (Set.range_nonempty a) (by
-    rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
-    obtain ⟨k, hik, hjk⟩ := hdir i j
-    exact ⟨a k, ⟨k, rfl⟩, hik, hjk⟩)
+    simp_all)
 
 theorem mem_iSupDirected {α : Type*} {V : NeighborhoodSystem α} {I : Type*} [Nonempty I]
     (a : I → V.Element) (hdir : ∀ i j, ∃ k, a i ≤ a k ∧ a j ≤ a k) {Z : Set α} :

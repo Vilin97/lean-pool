@@ -255,10 +255,7 @@ theorem carryCount_eq_zero_iff {b : ℕ} (_hb : 2 ≤ b) (ds : List ℕ) :
               simpa [doubleCarryCountAux] using h
             omega
           rwa [hstep] at this
-        intro e he
-        rcases List.mem_cons.mp he with he | he
-        · subst he; exact hhead
-        · exact (ih.mp htail0) e he
+        simp_all
       · intro h
         have hhead : 2 * d < b := h d List.mem_cons_self
         have htail : ∀ e ∈ ds, 2 * e < b := fun e he => h e (List.mem_cons_of_mem d he)

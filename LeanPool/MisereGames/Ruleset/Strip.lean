@@ -171,12 +171,7 @@ theorem shiftDown_gt (b : ℕ → Piece) {start n i : ℕ} (h : n < i) :
   finite_support := by
     obtain ⟨N, hN⟩ := s.finite_support
     refine ⟨max N (n + 1), fun m hm => ?_⟩
-    unfold shiftDown
-    split_ifs with h1 h2 h3
-    · exact hN _ (by omega)
-    · exact hN _ (by omega)
-    · rfl
-    · exact hN _ (by omega)
+    simp_all
 
 @[simp]
 theorem shiftDownB_board (s : Board) (start n : ℕ) :
@@ -340,9 +335,7 @@ theorem rightmost_of_stride_pos {p : Player} {s : Board}
     (hs : s.stride p ≠ 0) :
     s.board s.rightmostPos = .ofPlayer p ∧ s.rightmostPos + 1 = s.stride p := by
   unfold Strip.Board.stride at ⊢ hs
-  simp only [ne_eq, ite_eq_right_iff, Nat.add_eq_zero_iff, one_ne_zero, and_false, imp_false,
-             not_not] at hs
-  simp only [hs, ↓reduceIte, and_self]
+  simp_all
 
 theorem neg_push_below_rightmost {s : Board} {p : Player} {m : ℕ}
     (hrm : s.board s.rightmostPos = .ofPlayer p)
@@ -632,8 +625,7 @@ theorem stride_neg_zero_of_p_move {s : R} (p : Player) {m : ℕ}
   have h_rightmost : m ≤ (‹Strip R›.rightmostPos s) := by
     rw [rightmostPos_def]
     refine Board.rightmostPos_greatest ?_
-    rw [← board_def, hm]
-    exact Piece.ofPlayer_ne_none p
+    simp_all
   cases lt_or_eq_of_le h_rightmost <;> simp_all +decide only [board_def]
   · apply Board.stride_neg_eq_zero
     have h_rightmost :
@@ -694,8 +686,7 @@ theorem stride_zero_of_push {s : R} {p : Player} {m : ℕ}
     (hs : stride s p = 0) (hm : board s m ≠ .none) :
     stride (push s m) p = 0 := by
   have := stride_push_le p hm
-  rw [hs] at this
-  exact Nat.le_zero.mp this
+  simp_all
 
 theorem push_to_empty_is_neg {s : R} {p : Player} {m : ℕ}
     (hs : stride s p = 0)
@@ -829,8 +820,7 @@ theorem toGameForm_hasStride (s : R) (p : Player) :
         · have hm_eq : m = rightmostPos s := by
             refine le_antisymm ?_ (Nat.not_lt.mp hm_lt)
             apply rightmostPos_greatest
-            rw [hm_p]
-            exact Piece.ofPlayer_ne_none p
+            simp_all
           have := stride_push_eq_rightmostPos p hm_ne hm_eq
           omega
       exact ⟨stride (push s m) p, h_stride_ge, ih_push m p hm_ne⟩
@@ -911,8 +901,7 @@ theorem mk_with_stride (p : Player) (n : ℕ) :
       refine ⟨?_, ?_, ?_⟩
       · by_contra h; push Not at h
         have := b.finite_support.choose_spec n (le_of_lt h)
-        rw [hbn] at this
-        exact Piece.ofPlayer_ne_none p this
+        simp_all
       · intro _; rw [hbn]; exact Piece.ofPlayer_ne_none p
       · intro j hj _ hcontra; exact hcontra (hb_other j (by omega))
     have h_stride_p : stride (ofBoard (R := R) b) p = n + 1 := by

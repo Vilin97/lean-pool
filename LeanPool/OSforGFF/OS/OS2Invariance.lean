@@ -41,8 +41,7 @@ variable (m : ℝ) [Fact (0 < m)]
 lemma euclidean_action_apply (g : E) (f : TestFunctionℂ) (x : SpaceTime) :
     euclideanAction g f x = f (euclideanPullback g x) := by
   unfold euclideanAction
-  simp only [SchwartzMap.compCLM_apply]
-  rfl
+  simp_all
 
 /-- The Euclidean pullback satisfies euclideanPullback g x = g⁻¹ • x = act g⁻¹ x. -/
 lemma euclidean_pullback_eq_inv_act (g : E) (x : SpaceTime) :

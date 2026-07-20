@@ -268,7 +268,6 @@ theorem bracket_spec {X : Dom} {A : Dom} (t : Poly X A) (x : X.sys.Element) :
   | @app A B f a ihf iha =>
       simp only [bracket, CL.denote, Poly.denote]
       have hS := Selem_apply X A B (CL.denote (bracket f)) (CL.denote (bracket a)) x
-      rw [ihf, iha] at hS
-      exact hS
+      simp_all
 
 end Domain.Neighborhood.Exercise508

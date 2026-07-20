@@ -59,11 +59,7 @@ theorem close_up_aux_factor_dvd_a
           (span (↑(insert a rest) : Set R.carrier)) := by
   classical
   have hq'_dvd_all : ∀ x ∈ insert a rest, q' ∣ x := by
-    intro x hx
-    rw [Finset.mem_insert] at hx
-    rcases hx with rfl | hx'
-    · exact hq'a
-    · exact hq'_dvd x hx'
+    simp_all
   have h_sl : span (↑(insert a rest) : Set R.carrier) ≤ span {q'} :=
     Ideal.span_le.mpr fun x hx =>
       Ideal.mem_span_singleton.mpr (hq'_dvd_all x (Finset.mem_coe.mp hx))
@@ -223,9 +219,7 @@ theorem close_up_aux_factor_dvd_c
   obtain ⟨c_n', hcc_n'⟩ := hq'c
   have hq'_ne : (q' : T) ≠ 0 := fun h => hq'.ne_zero (Subtype.val_injective h)
   have hq'c_val : (c_n : T) = (q' : T) * (c_n' : T) := by
-    have := congr_arg Subtype.val hcc_n'
-    simp only [Subring.coe_mul] at this
-    exact this
+    simp_all
   let div_q_b : R.carrier → R.carrier :=
     fun x => if h : q' ∣ x then Classical.choose h else x
   have hdiv_b : ∀ x ∈ rest, x = q' * div_q_b x := by

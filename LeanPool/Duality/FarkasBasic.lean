@@ -72,8 +72,7 @@ theorem basicLinearAlgebra_lt (A : Matrix I J F) (b : I → F) :
           ←Matrix.mulVec_add, ←sub_eq_add_neg]
         have hxx : x⁺ - x⁻ = x := by
           funext j
-          simp only [Pi.sub_apply, Pi.posPart_apply, Pi.negPart_apply]
-          exact posPart_sub_negPart (x j)
+          simp_all
         rwa [hxx]
     · intro ⟨x, _, hAx⟩
       use x ∘ Sum.inl - x ∘ Sum.inr

@@ -59,16 +59,12 @@ theorem elem_idempotent_iff_ker_and_range_invariantUnder_commutant (M : VonNeuma
       ⟨fun x hx => by
         have hxy := congrArg (fun f : H →L[ℂ] H => f x) this
         change e (y x) = y (e x) at hxy
-        change e x = 0 at hx
-        change e (y x) = 0
-        rw [hxy, hx, map_zero],
+        simp_all,
       fun u ⟨v, hv⟩ => by
         refine ⟨y v, ?_⟩
         have hxy := congrArg (fun f : H →L[ℂ] H => f v) this
         change e (y v) = y (e v) at hxy
-        change e v = u at hv
-        change e (y v) = y u
-        rw [hxy, hv]⟩
+        simp_all⟩
   · intro H'
     rw [← VonNeumannAlgebra.commutant_commutant M]
     intro m hm; ext x
@@ -90,15 +86,13 @@ theorem elem_idempotent_iff_ker_and_range_invariantUnder_commutant (M : VonNeuma
       rw [IsIdempotentElem.eq h]
     calc
       (m * e) x = m (e ((v : H) + w)) := by
-        rw [← hvw]
-        rfl
+        simp_all
       _ = m (w : H) := by
         rw [map_add, hv_ker, hw_fixed, zero_add]
       _ = e (m ((v : H) + w)) := by
         rw [map_add, map_add, hmv_ker, hmw_fixed, zero_add]
       _ = (e * m) x := by
-        rw [hvw]
-        rfl
+        simp_all
 
 /-- The algebra of all bounded linear operators on a Hilbert space as a von Neumann algebra. -/
 def ofHilbertSpace : VonNeumannAlgebra H

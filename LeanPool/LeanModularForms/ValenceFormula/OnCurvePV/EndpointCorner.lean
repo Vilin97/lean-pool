@@ -40,10 +40,7 @@ private lemma integral_inv_eq_log_sub (a : ℝ) (ha : 0 < a) (ha1 : a ≤ 1) :
     intro t ht; rw [Set.uIcc_of_le ha1] at ht
     exact Real.hasDerivAt_log (by linarith [ht.1] : t ≠ 0)
   have hint : IntervalIntegrable (fun t : ℝ => t⁻¹) MeasureTheory.volume a 1 := by
-    apply ContinuousOn.intervalIntegrable
-    apply ContinuousOn.inv₀ continuousOn_id
-    intro t ht; rw [Set.uIcc_of_le ha1, Set.mem_Icc] at ht
-    simp only [id]; linarith [ht.1]
+    simp_all
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint, Real.log_one,
     Complex.ofReal_one, Complex.log_one, ← Complex.ofReal_log ha.le]
   push_cast; ring
@@ -62,10 +59,7 @@ private lemma integral_shifted_inv_eq_log (η : ℝ) (hη : 0 < η) (hη1 : η <
     have h1 := (Real.hasDerivAt_log this).comp t ((hasDerivAt_id t).sub_const 5)
     simp only [Function.comp_def, mul_one] at h1; exact h1
   have hint : IntervalIntegrable (fun t => (t - 5)⁻¹) MeasureTheory.volume 4 (5 - η) := by
-    apply ContinuousOn.intervalIntegrable
-    apply ContinuousOn.inv₀ (continuousOn_id.sub continuousOn_const)
-    intro t ht; rw [Set.uIcc_of_le h5η, Set.mem_Icc] at ht
-    simp only [id]; exact ne_of_lt (by linarith [ht.2])
+    simp_all
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint]
   simp only [show 5 - η - 5 = -η from by ring, show (4 : ℝ) - 5 = -(1 : ℝ) from by ring]
   rw [Real.log_neg_eq_log, Real.log_neg_eq_log, Real.log_one, sub_zero]
@@ -210,8 +204,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     have := min_le_right c (min 1 δ); have := min_le_right 1 δ; linarith
   suffices h_formula : ∀ η, 0 < η → η < c → η < 1 → η < δ →
       F η = ↑(Real.log c) + C by
-    rw [h_formula ε hε hε_c hε_1 hε_δ,
-      h_formula (ε₀/2) hε₀2_pos hε₀2_c hε₀2_1 hε₀2_δ]
+    simp_all
   intro η hη hη_c hη_1 hη_δ
   have hη_div_c_pos : 0 < η / c := div_pos hη hc
   have hη_div_c_lt_1 : η / c < 1 := (div_lt_one hc).mpr hη_c
@@ -390,8 +383,7 @@ private lemma corner_cpv_03 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
       subst ht3_eq
       rw [fdBoundary_H_at_three] at habs
       have him_s : s.im = H := by
-        simp [hs_def, Complex.add_im, Complex.neg_im, Complex.ofReal_im, Complex.mul_im,
-          Complex.I_re, Complex.I_im, Complex.ofReal_re]
+        simp_all
       rw [← habs] at him_s
       have him_rho : (ellipticPointRho : ℂ).im = Real.sqrt 3 / 2 := by
         simp [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk,
@@ -403,8 +395,7 @@ private lemma integral_inv_shift_four (a b : ℝ) :
     (∫ t in a..b, (↑(t - 4) : ℂ)⁻¹) = ∫ u in (a - 4)..(b - 4), (↑u : ℂ)⁻¹ := by
   simp_rw [← Complex.ofReal_inv]
   rw [intervalIntegral.integral_ofReal, intervalIntegral.integral_ofReal]
-  congr 1
-  exact intervalIntegral.integral_comp_sub_right (fun u : ℝ => u⁻¹) (4 : ℝ)
+  simp_all
 
 private lemma integral_inv_neg_axis (r : ℝ) :
     (∫ u in (-1 : ℝ)..(-r), (↑u : ℂ)⁻¹) = -(∫ u in r..1, (↑u : ℂ)⁻¹) := by
@@ -413,10 +404,7 @@ private lemma integral_inv_neg_axis (r : ℝ) :
     ← Complex.ofReal_neg, Complex.ofReal_inj]
   have key : (∫ x in r..(1 : ℝ), (-x)⁻¹) = ∫ x in (-1 : ℝ)..-r, x⁻¹ :=
     intervalIntegral.integral_comp_neg (fun u : ℝ => u⁻¹) (a := r) (b := 1)
-  rw [show (∫ x in r..(1 : ℝ), (-x)⁻¹) = ∫ x in r..(1 : ℝ), -(x⁻¹) from by
-      apply intervalIntegral.integral_congr; intro x _; exact neg_inv.symm] at key
-  rw [intervalIntegral.integral_neg] at key
-  linarith
+  simp_all
 
 lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     CauchyPrincipalValueExists' (fun z => (z - (-(1/2 : ℂ) + ↑H * I))⁻¹)

@@ -128,9 +128,7 @@ theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f 
   have h_ord_ne : meromorphicOrderAt
       (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (↑p) ≠ (0 : WithTop ℤ) := by
     intro h0; apply h_nf.meromorphicOrderAt_eq_zero_iff.mp h0
-    split_ifs with h
-    · exact_mod_cast hp
-    · exact absurd p.im_pos h
+    simp_all
   have h_top := (WithTop.untop₀_eq_zero.mp h_untop_eq).resolve_left h_ord_ne
   rw [meromorphicOrderAt_eq_top_iff] at h_top
   have h_analOn : AnalyticOnNhd ℂ (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0)
@@ -224,9 +222,7 @@ theorem finite_support_ordOrbit_nonEll (hf : f ≠ 0) :
   apply Set.Finite.subset ((finite_support_ordOrbit f hf).preimage
       (fun (a : NonEllOrbit) _ (b : NonEllOrbit) _ h =>
         Subtype.val_injective h))
-  intro ⟨q, hq_ne⟩ hq_ord
-  simp only [Set.mem_preimage, Set.mem_setOf_eq] at hq_ord ⊢
-  exact hq_ord
+  simp_all
 
 /-- The canonical finite set of zeros (with nonzero order) in `𝒟`. -/
 noncomputable def s₀ (hf : f ≠ 0) : Finset ℍ := (finite_zeros_in_fd f hf).toFinset

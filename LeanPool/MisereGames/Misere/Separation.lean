@@ -99,12 +99,7 @@ theorem misereGE_iff_not_separating {A : G → Prop} {g h : G} :
     · rintro ⟨x, hx, h1, h2⟩
       have hcmp := misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (hge x hx) .left
       rw [miserePlayerOutcome_eq_iff_winsGoingFirst.mpr h2] at hcmp
-      have hg : MiserePlayerOutcome (g + x) .left = .right := by
-        cases hgx : MiserePlayerOutcome (g + x) .left with
-        | left => exact absurd (miserePlayerOutcome_eq_iff_winsGoingFirst.mp hgx) h1
-        | right => rfl
-      rw [hg] at hcmp
-      exact Player.left_le_right hcmp
+      simp_all
     · rintro ⟨x, hx, h1, h2⟩
       have hcmp := misereOutcome_ge_iff_miserePlayerOutcome_ge.mp (hge x hx) .right
       have hh : MiserePlayerOutcome (h + x) .right = .left := by
@@ -132,8 +127,7 @@ theorem misereGE_iff_not_separating {A : G → Prop} {g h : G} :
         refine ⟨x, hx, ?_, ?_⟩
         · intro h_win
           have h_out := miserePlayerOutcome_eq_iff_winsGoingFirst.mpr h_win
-          rw [hg] at h_out
-          cases h_out
+          simp_all
         · exact miserePlayerOutcome_eq_iff_winsGoingFirst.mp hh
     | inr h_right =>
         absurd h2
@@ -144,8 +138,7 @@ theorem misereGE_iff_not_separating {A : G → Prop} {g h : G} :
         · exact miserePlayerOutcome_eq_iff_winsGoingFirst.mp hg
         · intro h_win
           have h_out := miserePlayerOutcome_eq_iff_winsGoingFirst.mpr h_win
-          rw [hh] at h_out
-          cases h_out
+          simp_all
 
 /--
 Negation of `misereGE_iff_not_separating`.
@@ -214,9 +207,7 @@ theorem leftSeparatorCandidate_eq_neg (r g x : G) :
     · exact neg_inj.symm
     · rw [Adjoint.rootedAdjoint_neg]
       exact neg_inj.symm
-  have hx : ({x} : Set G) = -{-x} := by rw [Set.neg_singleton, neg_neg]
-  unfold leftSeparatorCandidate rightSeparatorCandidate
-  simp only [neg_ofSets, hx, hset]
+  simp_all
 
 /--
 $\def\form<#1>[#2]{\left\{#1 \mid #2\right\}}$
@@ -238,9 +229,7 @@ lemma rightSeparating_of_leftSeparating_of_rightSeparatorCandidate_mem
     refine ⟨g + x, ?_, ?_⟩
     · apply add_left_mem_moves_add
       change x ∈ moves .right (rightSeparatorCandidate r h x)
-      unfold rightSeparatorCandidate
-      rw [rightMoves_ofSets (s := rightSeparatorLeftSet r h) (t := {x})]
-      simp only [Set.mem_singleton_iff]
+      simp_all
     · exact hgx
   · rw [not_winsGoingFirst_iff]
     constructor
@@ -267,11 +256,7 @@ lemma rightSeparating_of_leftSeparating_of_rightSeparatorCandidate_mem
       | inr h_y_move =>
           obtain ⟨yr, hyr, rfl⟩ := h_y_move
           change yr ∈ moves .right (rightSeparatorCandidate r h x) at hyr
-          unfold rightSeparatorCandidate at hyr
-          rw [rightMoves_ofSets (s := rightSeparatorLeftSet r h) (t := {x})] at hyr
-          simp only [Set.mem_singleton_iff] at hyr
-          rw [hyr]
-          exact hhx
+          simp_all
 
 /--
 $\def\form<#1>[#2]{\left\{#1 \mid #2\right\}}$
@@ -315,18 +300,12 @@ lemma leftSeparating_of_rightSeparating_of_leftSeparatorCandidate_mem
       | inr h_y_move =>
           obtain ⟨yl, hyl, rfl⟩ := h_y_move
           change yl ∈ moves .left (leftSeparatorCandidate r g x) at hyl
-          unfold leftSeparatorCandidate at hyl
-          rw [leftMoves_ofSets (s := {x}) (t := leftSeparatorRightSet r g)] at hyl
-          simp only [Set.mem_singleton_iff] at hyl
-          rw [hyl]
-          exact hgx
+          simp_all
   · apply winsGoingFirst_of_moves
     refine ⟨h + x, ?_, ?_⟩
     · apply add_left_mem_moves_add
       change x ∈ moves .left (leftSeparatorCandidate r g x)
-      unfold leftSeparatorCandidate
-      rw [leftMoves_ofSets (s := {x}) (t := leftSeparatorRightSet r g)]
-      simp only [Set.mem_singleton_iff]
+      simp_all
     · exact hhx
 
 attribute [local instance] Classical.propDecidable
@@ -362,8 +341,7 @@ lemma downlinkOptions_nonempty
     | inr hh =>
         obtain ⟨hp, hhp⟩ := not_isEnd_exists_move hh
         exact ⟨z ⟨hp, hhp⟩, by
-          simp only [downlinkOptions, Set.mem_union, Set.mem_range]
-          exact Or.inl (Or.inl ⟨⟨hp, hhp⟩, rfl⟩)⟩
+          simp_all⟩
 
 /--
 $\def\form<#1>[#2]{\left\{#1 \mid #2\right\}}$
@@ -432,10 +410,7 @@ lemma downlinked_of_downlinkWitness_mem
           add_right_mem_moves_add hgr (rootedAdjoint r gr),
           not_winsGoingFirst_of_misereOutcome_P
             (misereOutcome_add_rootedAdjoint_eq_P h_isRoot (Hereditary.of_mem_moves hg hgr))⟩
-      · by_cases hz : IsEnd .right g ∧ IsEnd .right h
-        all_goals simp [hz] at htl_zero
-        have hwin : WinsGoingFirst .right (g + r) := h_isRoot hg hz.left
-        simpa [htl_zero] using hwin
+      · simp_all
   · intro hEnd
     apply hRnonempty.ne_empty
     simpa [t, R, ofSets_isEndLike_iff, isEnd_def] using
@@ -454,10 +429,7 @@ lemma downlinked_of_downlinkWitness_mem
           add_right_mem_moves_add hhl (rootedAdjoint r hl),
           not_winsGoingFirst_of_misereOutcome_P
             (misereOutcome_add_rootedAdjoint_eq_P h_isRoot (Hereditary.of_mem_moves hh hhl))⟩
-      · by_cases hz : IsEnd .left h ∧ IsEnd .left g
-        all_goals simp [hz] at htr_zero
-        have hwin : WinsGoingFirst .left (h + r) := h_isRoot hh hz.left
-        simpa [htr_zero] using hwin
+      · simp_all
 
 /--
 If $G$ and $H$ are `RightSeparating`, then $\overline{H}$ and $\overline{G}$

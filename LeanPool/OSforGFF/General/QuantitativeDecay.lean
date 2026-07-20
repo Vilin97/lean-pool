@@ -79,16 +79,14 @@ def schwartzHasPolynomialDecay (f : SchwartzMap E ℂ) (k : ℕ) :
   -- h : ∀ x, (1 + ‖x‖)^k * ‖iteratedFDeriv ℝ 0 f x‖ ≤ 2^k * sup_seminorm f
   set C := 2^k * ((Finset.Iic (k, 0)).sup fun m => SchwartzMap.seminorm ℂ m.1 m.2) f with hC_def
   have hC_nonneg : 0 ≤ C := by
-    apply mul_nonneg (pow_nonneg (by norm_num : (0:ℝ) ≤ 2) k)
-    exact apply_nonneg _ _
+    simp_all
   refine ⟨C + 1, by linarith, ?_⟩
   intro x
   have h1 : 0 < 1 + ‖x‖ := by positivity
   have hx := h x
   -- Convert ‖iteratedFDeriv ℝ 0 f x‖ to ‖f x‖
   have h_norm_eq : ‖iteratedFDeriv ℝ 0 (⇑f) x‖ = ‖f x‖ := by
-    simp only [iteratedFDeriv_zero_eq_comp]
-    exact ContinuousMultilinearMap.norm_constOfIsEmpty ℝ (fun _ : Fin 0 => E) (f x)
+    simp_all
   rw [h_norm_eq] at hx
   -- hx : (1 + ‖x‖)^k * ‖f x‖ ≤ C
   have h_rearrange : ‖f x‖ ≤ C / (1 + ‖x‖)^(k : ℝ) := by
@@ -190,8 +188,7 @@ def normExpDecayImpliesPolynomialDecay {F : Type*} [NormedAddCommGroup F]
     calc ‖g z‖
         ≤ C_exp * Real.exp (-m * ‖z‖) := hg_decay z hz
       _ ≤ C_exp * (C_poly * (1 + ‖z‖)^(-α)) := by
-          gcongr
-          exact hC_poly ‖z‖ (norm_nonneg z)
+          simp_all
       _ = (C_exp * C_poly) * (1 + ‖z‖)^(-α) := by ring
       _ ≤ C * (1 + ‖z‖)^(-α) := by
           gcongr
@@ -263,8 +260,7 @@ lemma one_add_half_pow_le (x : ℝ) (hx : x ≥ 0) (N : ℝ) (hN : N > 0) :
   have h2_rpow_pos : 0 < (1 + x) ^ N := Real.rpow_pos_of_pos h2 N
   have h_two_rpow_pos : 0 < (2:ℝ) ^ N := Real.rpow_pos_of_pos h2_pos N
   rw [inv_eq_one_div, inv_eq_one_div, mul_one_div, div_le_div_iff₀ h1_rpow_pos h2_rpow_pos]
-  calc 1 * (1 + x) ^ N = (1 + x) ^ N := by ring
-    _ ≤ (2:ℝ) ^ N * (1 + x / 2) ^ N := h_rpow_le
+  simp_all
 
 /-- Core lemma: If u, v both have polynomial decay of order N > dim(E),
     then their convolution also has polynomial decay of order N.
@@ -473,10 +469,7 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
   have hK_sing_supp : ∀ z, kernelSingular K R₀ z ≠ 0 → ‖z‖ ≤ R₀ := by
     intro z hz
     unfold kernelSingular at hz
-    by_contra h_not
-    push Not at h_not
-    have : z ∉ closedBall (0 : E) R₀ := by simp [mem_closedBall, dist_zero_right, not_le.mpr h_not]
-    simp [indicator_of_notMem this] at hz
+    simp_all
   -- Key step: Peetre's inequality
   -- If K_sing(x-y) ≠ 0, then ‖x-y‖ ≤ R₀, so:
   -- (1 + ‖y‖) ≤ (1 + ‖x‖) * (1 + ‖x-y‖) ≤ (1 + ‖x‖) * (1 + R₀)
@@ -637,18 +630,14 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
       by_cases h_boundary : ‖z‖ = R₀
       · -- Boundary case: z ∈ closedBall, so kernelTail = 0
         have hmem : z ∈ closedBall (0 : E) R₀ := by
-          simp [mem_closedBall, dist_zero_right]
-          linarith
+          simp_all
         have hnotmem : z ∉ (closedBall (0 : E) R₀)ᶜ := by simp [hmem]
         rw [indicator_of_notMem hnotmem]
         simp only [mul_zero, norm_zero, neg_mul, ge_iff_le]
         exact mul_nonneg hC_K.le (Real.exp_nonneg _)
       · -- Interior case: ‖z‖ > R₀
         have h_strict : ‖z‖ > R₀ := lt_of_le_of_ne hz (Ne.symm h_boundary)
-        have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
-          simpa only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] using h_strict
-        rw [indicator_of_mem hmem, mul_one]
-        exact hK_decay z hz
+        simp_all
     · exact ⟨M, fun z => by rw [Complex.norm_real]; exact hM z⟩
     · exact hN
   -- f has polynomial decay
@@ -716,16 +705,13 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
     congr 1
     ext x
     simp only [K_refl]
-    congr 1
-    rw [neg_sub]
+    simp_all
   -- Apply convolutionPolynomialDecay
   have h_conv := convolutionPolynomialDecay hN_dim hf_poly hK_refl_poly hf_int hK_refl_int
   -- Transfer the bound
   obtain ⟨C_conv, hC_conv_pos, h_conv_bound⟩ := h_conv
   refine ⟨C_conv, hC_conv_pos, ?_⟩
-  intro y
-  rw [h_conv_eq y]
-  exact h_conv_bound y
+  simp_all
 
 /-- Convolution of a Schwartz function with the exponentially decaying kernel tail has polynomial
 decay at any rate above the dimension. -/
@@ -791,8 +777,7 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
         _ ≤ C_K * Real.exp 0 := by gcongr; nlinarith [norm_nonneg z]
         _ = C_K := by simp
         _ ≤ max C_K 1 := le_max_left _ _
-    · rw [indicator_of_notMem hz, mul_zero, abs_zero]
-      exact le_of_lt (lt_max_of_lt_right one_pos)
+    · simp_all
   -- Step 4: Build H(y) = ∫ f(x) K(x-y) dx and show it has polynomial decay
   -- For the full proof, we need:
   -- 1. H_sing has polynomial decay (convolutionCompactSupportDecay)
@@ -883,8 +868,7 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
           (fun x => (kernelTail K R₀ (x - y) : ℂ)) volume :=
         hK_tail_shift_meas.complex_ofReal.aestronglyMeasurable
       have hK_tail_shift_bdd : ∀ x, ‖(kernelTail K R₀ (x - y) : ℂ)‖ ≤ M_tail := fun x => by
-        rw [Complex.norm_real, Real.norm_eq_abs]
-        exact hM_tail (x - y)
+        simp_all
       exact hf_int.mul_bdd (c := M_tail) hK_tail_shift_aesm
         (Eventually.of_forall hK_tail_shift_bdd)
     have hbound1 : ‖∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)‖ ≤ C_Hsing / (1 + ‖y‖)^N := by

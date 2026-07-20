@@ -266,9 +266,7 @@ lemma partialBlock_subset_Ico (M X : ℕ) (hM : 0 < M) :
 lemma partialBlock_injOn_mod (M X : ℕ) :
     Set.InjOn (fun x => x % M) ↑(partialBlock M X) := by
   rcases eq_or_lt_of_le (Nat.zero_le M) with rfl | hM
-  · intro x _ y _ hxy
-    simp only [Nat.mod_zero] at hxy
-    exact hxy
+  · simp_all
   · exact (Nat.mod_injOn_Ico (X / M * M) M).mono (partialBlock_subset_Ico M X hM)
 
 lemma partialBlock_validMapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :

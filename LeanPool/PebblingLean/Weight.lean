@@ -49,8 +49,7 @@ theorem sum_moveDistribution_mul [Fintype V] [DecidableEq V] (D : Pebbling V)
       = (∑ x, (D x : ℚ) * w x) - 2 * w u + w v := by
   classical
   have hcast : ((D u - 2 : ℕ) : ℚ) = (D u : ℚ) - 2 := by
-    rw [Nat.cast_sub hD]
-    norm_num
+    simp_all
   have hpoint :
       ∀ x : V,
         ((moveDistribution D u v x : ℕ) : ℚ) * w x =
@@ -69,8 +68,7 @@ theorem sum_moveDistribution_mul [Fintype V] [DecidableEq V] (D : Pebbling V)
         ring_nf
       · have hxu : x ≠ u := fun h => hux h.symm
         have hxv : x ≠ v := fun h => hvx h.symm
-        simp [moveDistribution, hxu, hxv]
-        simp [hux, hvx]
+        simp_all
   calc
     (∑ x, ((moveDistribution D u v x : ℕ) : ℚ) * w x)
         = ∑ x, ((D x : ℚ) * w x +
@@ -92,20 +90,12 @@ theorem sum_moveDistribution_mul [Fintype V] [DecidableEq V] (D : Pebbling V)
                     by_cases hux : u = x
                     · have hvx_false : ¬ v = x := fun hvx => huv (hux.trans hvx.symm)
                       simp [hux, hvx_false]
-                    · by_cases hvx : v = x
-                      · simp [hux, hvx]
-                      · simp [hux, hvx]
+                    · simp_all
               _ = (∑ x : V, if u = x then -2 * w u else 0) +
                     (∑ x : V, if v = x then w v else 0) := by
                     exact Finset.sum_add_distrib
               _ = -2 * w u + w v := by
-                    have hu_sum :
-                        (∑ x : V, if u = x then -2 * w u else 0) = -2 * w u := by
-                      simp
-                    have hv_sum :
-                        (∑ x : V, if v = x then w v else 0) = w v := by
-                      simp
-                    rw [hu_sum, hv_sum]
+                    simp_all
           rw [hdelta]
           ring_nf
 

@@ -26,8 +26,7 @@ lemma ofHom_smul {R S : Type*} [Ring R] [Semiring S] {M N : ModuleCat R}
     [Module S N] [SMulCommClass R S N] (r : S) (f : M →ₗ[R] N) :
     ofHom (r • f) = r • ofHom f := by
   apply hom_ext
-  simp only [hom_ofHom]
-  exact ((homLinearEquiv (R := R) (S := S) (M := M) (N := N)).map_smul r (ofHom f)).symm
+  simp_all
 
 end ModuleCat
 
@@ -52,8 +51,7 @@ noncomputable abbrev aux0 (N : ModuleCat A) : Module.End A N →ₐ[R] Module.En
   map_one' := by ext; simp [Module.End.one_eq_id]
   map_mul' f1 f2 := by ext; simp [Module.End.mul_eq_comp]
   map_zero' := by ext; simp [show ModuleCat.ofHom 0 = 0 from rfl]
-  map_add' f1 f2 := by simp [show ModuleCat.ofHom (f1 + f2) = ModuleCat.ofHom f1 +
-    ModuleCat.ofHom f2 from rfl]
+  map_add' f1 f2 := by simp_all
   commutes' r := by
     ext n
     simp [Algebra.algebraMap_eq_smul_one, Module.End.one_eq_id]
@@ -285,8 +283,7 @@ abbrev e01 (M : TensorModule R A C) :
     · exact congrFun rfl)) fun c ↦ by
       ext m
       change moduleAux R A C M ((1 : A) ⊗ₜ[R] c) m = (M.morphism c) m
-      rw [moduleAux_apply]
-      simp
+      simp_all
 
 /-- Naturality of the tensor-module unit comparison. -/
 lemma e01_naturality {X Y : TensorModule R A C} (f : X ⟶ Y) :
@@ -383,8 +380,7 @@ abbrev toBCfunctor (F : ModuleCat A ⥤ ModuleCat B) [F.Additive] [F.Linear R] :
       simp_rw [ModuleCat.of_coe, AlgHom.coe_mk, RingHom.coe_mk,
         MonoidHom.coe_mk, OneHom.coe_mk, ModuleCat.ofHom_hom]
       rw [← Functor.map_comp, ← Functor.map_comp]
-      congr 1
-      exact f.commutes c
+      simp_all
   }
   map_id M := by ext : 1; exact F.map_id M.1
   map_comp f g := by ext1; exact F.map_comp f.hom g.hom

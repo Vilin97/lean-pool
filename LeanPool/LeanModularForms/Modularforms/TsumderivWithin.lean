@@ -107,11 +107,7 @@ private lemma summable_two_pi_pow_geometric (r : ℝ) (hr : ‖r‖ < 1) (K : �
   apply Summable.congr _ heq
   rw [summable_mul_left_iff]
   · exact summable_norm_pow_mul_geometric_of_norm_lt_one K hr
-  norm_cast
-  apply pow_ne_zero
-  apply mul_ne_zero
-  · linarith [Real.pi_pos]
-  apply Real.pi_ne_zero
+  simp_all
 
 theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact K) (k : ℕ) :
     ∃ u : ℕ → ℝ,
@@ -162,8 +158,7 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       simpa [ctsExpTwoPiN] using this
     apply mul_le_mul
     · simp
-    · simp only [Real.norm_eq_abs] at ineqe
-      convert ineqe
+    · simp_all
     · positivity
     positivity
 
@@ -242,7 +237,6 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
     simpa [ctsExpTwoPiN] using this
   apply mul_le_mul
   · simp
-  · simp only [Real.norm_eq_abs] at ineqe
-    convert ineqe
+  · simp_all
   · positivity
   positivity

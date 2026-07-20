@@ -42,8 +42,7 @@ def relIsoNatOmega0 : ℕ ≃o Iio ω where
   toFun n := ⟨n, natCast_lt_omega0 n⟩
   invFun n := Classical.choose (lt_omega0.1 n.2)
   left_inv n := by
-    have h : ∃ m : ℕ, n = (m : Ordinal) := ⟨n, rfl⟩
-    exact (Nat.cast_inj.1 (Classical.choose_spec h)).symm
+    simp_all
   right_inv n := Subtype.ext (Classical.choose_spec (lt_omega0.1 n.2)).symm
   map_rel_iff' := by simp
 
@@ -117,8 +116,7 @@ def boundedLimitRec' {l : Ordinal} (lLim : IsSuccLimit l) {motive : Iio l → So
 theorem boundedLimitRec'_zero {l} (lLim : IsSuccLimit l) {motive} (H₁ H₂ H₃) :
     @boundedLimitRec' l lLim motive ⟨0, lLim.bot_lt⟩ H₁ H₂ H₃ = H₁ := by
   unfold boundedLimitRec'
-  dsimp
-  rw [limitRecOn_zero]
+  simp_all
 
 theorem boundedLimitRec'_succ {l} (lLim : IsSuccLimit l) {motive} (o H₁ H₂ H₃) :
     @boundedLimitRec' l lLim motive ⟨Order.succ o.1, lLim.succ_lt o.2⟩ H₁ H₂ H₃ = H₂ o

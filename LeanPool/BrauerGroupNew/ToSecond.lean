@@ -57,9 +57,7 @@ lemma centralizerιRange : Subalgebra.centralizer F A.ι.range = A.ι.range := b
       rintro _ ⟨x, rfl⟩ hx
       refine ⟨A.ι x⁻¹, by simp, ?_⟩
       simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, ← map_mul]
-      rw [mul_inv_cancel₀, map_one]
-      rintro rfl
-      simp at hx }
+      simp_all }
   change Subalgebra.centralizer F (L.toSubalgebra : Set A) = L.toSubalgebra
   apply cor_two_3to1
   apply cor_two_2to3
@@ -614,10 +612,7 @@ lemma conjFactor_linearIndependent (x_ : Π σ, A.conjFactor σ) :
   obtain ⟨J, LI, maximal⟩ := exists_maximal_linearIndepOn K (fun (i : Gal(K, F)) => (x_ i).1.1)
   have ne : J ≠ Set.univ := by
     rintro rfl
-    refine rid ?_
-    let e : (Set.univ : Set Gal(K, F)) ≃ Gal(K, F) := Equiv.Set.univ Gal(K, F)
-    have := linearIndependent_equiv e.symm |>.2 LI
-    exact this
+    simp_all
   rw [Set.ne_univ_iff_exists_notMem] at ne
   obtain ⟨σ, hσ⟩ := ne
   obtain ⟨c, c_ne_zero, hc⟩ := maximal σ hσ
@@ -693,8 +688,7 @@ lemma conjFactor_linearIndependent (x_ : Π σ, A.conjFactor σ) :
     refine eq6.recOn Eq.symm fun rid ↦ ?_
     simp only [Finsupp.mem_support_iff, ne_eq] at τ_mem
     contradiction
-  subst eq7
-  exact hσ τ.2
+  simp_all
 
 variable [IsGalois F K] in
 /-- The basis of a good representative obtained from conjugating units. -/
@@ -714,12 +708,7 @@ omit [FiniteDimensional F K] in
 private lemma crossProduct_F_smul_eq_K_smul (f : Gal(K, F) × Gal(K, F) → Kˣ)
     [Fact (IsMulCocycle₂ f)] (c : F) (a : CrossProductAlgebra f) :
     c • a = algebraMap F K c • a := by
-  apply CrossProductAlgebra.val_injective
-  change c • a.val = (algebraMap F K c) • a.val
-  induction a.val using Finsupp.induction_linear with
-  | zero => simp
-  | add f g _ _ => simp_all
-  | single σ k => simp
+  simp_all
 
 variable [IsGalois F K] [DecidableEq Gal(K, F)] in
 /-- Build a relative Brauer class from a two-cocycle via the cross-product algebra. -/
@@ -978,12 +967,7 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
     CrossProductAlgebra.basis.equiv (A.conjFactorBasis A.arbitraryConjFactor) (.refl _)
   haveI : LinearMap.CompatibleSMul (CrossProductAlgebra f) A F K := by
     constructor
-    have eq (c : F) (a : A) : c • a = algebraMap F K c • a := by
-      simp only [algebraMap_smul]
-    have eq' (c : F) (a : CrossProductAlgebra f) : c • a = algebraMap F K c • a :=
-      crossProduct_F_smul_eq_K_smul f c a
-    intro l c a
-    rw [eq, eq', map_smul]
+    simp_all
   let φ1 : CrossProductAlgebra f ≃ₗ[F] A := φ0.restrictScalars F
   refine AlgEquiv.ofLinearEquiv φ1 ?_ ?_
   · change φ0 1 = 1

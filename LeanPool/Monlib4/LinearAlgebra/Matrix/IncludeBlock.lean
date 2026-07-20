@@ -292,14 +292,12 @@ theorem coe_sum {k : Type _} [DecidableEq k] {s : k → Type _} {n : Type _} [Fi
   let σ : Fin (Fintype.card n) ≃ n := (Fintype.equivFin n).symm
   have : ∑ i : n, x i = ∑ i : Fin (Fintype.card n), x (σ i) := by
     apply Fintype.sum_equiv σ.symm
-    intro i
-    simp only [Equiv.apply_symm_apply]
+    simp_all
   rw [this]
   have : ∑ i : n, (x i : Matrix (Σ i, s i) (Σ i, s i) R) = ∑ i : Fin (Fintype.card n), x (σ i) := by
     simp_rw [IsBlockDiagonal.coe_sum_aux]
     apply Fintype.sum_equiv σ.symm
-    intro i
-    simp only [Equiv.apply_symm_apply]
+    simp_all
   rw [this]
 
 end IsBlockDiagonal
@@ -356,11 +354,7 @@ def singleBlockDiagonal {k : Type _} [DecidableEq k] {s : k → Type _}
     · intro h
       congr
       simp only [cast_heq]
-    · intro h
-      symm
-      apply single_apply_of_ne
-      rintro ⟨⟨rfl, h2⟩, ⟨rfl, h4⟩⟩
-      contradiction⟩
+    · simp_all⟩
 
 theorem includeBlock_conjTranspose {R k : Type _} [CommSemiring R] [StarRing R] [DecidableEq k]
     {s : k → Type _} {i : k}
@@ -417,9 +411,7 @@ theorem includeBlock_apply_single {R k : Type _} [CommSemiring R] [DecidableEq k
   split_ifs with h
   · simp only [eq_mp_eq_cast, single]
     aesop
-  · symm
-    apply single_apply_of_ne
-    simp only [Sigma.mk.inj_iff, h, false_and, and_self, not_false_eq_true]
+  · simp_all
 
 theorem includeBlock_hMul_includeBlock {R k : Type _} [CommSemiring R] [DecidableEq k]
     {s : k → Type _} [∀ i, Fintype (s i)] {i j : k}
@@ -521,8 +513,7 @@ def semiring {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
   mul_one x := by ext; simp only [IsBlockDiagonal.coe_mul, IsBlockDiagonal.coe_one, mul_one]
   natCast n := n • 1
   natCast_zero := by
-    ext
-    simp only [IsBlockDiagonal.coe_zero, zero_smul]
+    simp_all
   natCast_succ a := by
     ext
     simp only [IsBlockDiagonal.coe_nsmul, IsBlockDiagonal.coe_one, IsBlockDiagonal.coe_add,
@@ -584,8 +575,7 @@ def isBlockDiagonalPiAlgEquiv {k : Type _} [Fintype k] [DecidableEq k] {s : k �
     ext
     simp only [IsBlockDiagonal.coe_blockDiagonal'_blockDiag']
   right_inv x := by
-    ext
-    simp only [blockDiag'_blockDiagonal']
+    simp_all
   map_add' x y := by
     change blockDiag' ((x : Matrix (Σ i, s i) (Σ i, s i) R) +
         (y : Matrix (Σ i, s i) (Σ i, s i) R)) =
@@ -754,6 +744,4 @@ theorem TensorProduct.assoc_includeBlock {k : Type _} [DecidableEq k] {s : k →
         ↑(TensorProduct.assoc R (Matrix (s i) (s i) R) (Matrix (s j) (s j) R)
               (Matrix (s j) (s j) R)).symm := by
   apply TensorProduct.ext_threefold'
-  intro x y z
-  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, TensorProduct.assoc_symm_tmul,
-    TensorProduct.map_tmul]
+  simp_all

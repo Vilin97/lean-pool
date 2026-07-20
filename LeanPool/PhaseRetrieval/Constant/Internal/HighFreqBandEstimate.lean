@@ -622,16 +622,13 @@ private lemma poincare_per_interval {N L : ℕ} (hN : 1 ≤ N)
       (↑N / (T : ℂ)) •
         ∫ t in a..iLeft N (k.val + 1),
           Q (↑t : AddCircle T) from by
-      rw [show (↑N / (T : ℂ)) = ((↑N / T : ℝ) : ℂ)
-        from by push_cast; field_simp]
-      exact (Complex.coe_smul _ _).symm]
+      simp_all]
   have h_mean_inv :
       h⁻¹ • ∫ x in (0 : ℝ)..h, f x =
         qAvg b N k := by simpa only [one_div] using h_mean_smul
   have hp := FockSPR.MissingMathlib.poincare_interval
     hh_pos hf_deriv hf_cont hf'_cont
-  simp only [one_div] at hp
-  rwa [h_mean_inv] at hp
+  simp_all
 
 /-- 4.1a: Poincaré bound with (L−1)² derivative bound. -/
 private lemma poincare_bound {N L : ℕ} (hN : 1 ≤ N)
@@ -775,11 +772,7 @@ private lemma frozen_rotation {N L : ℕ} (hN : 1 ≤ N)
       _ = T * ∫ t : AddCircle T, (rho (fourier (1 : ℤ) t * q)) ^ 2
           ∂AddCircle.haarAddCircle := by
         -- ∫ f = T * ∫ f ∂haar  <==  ∫ f ∂haar = T⁻¹ • ∫ f
-        rw [h_haar, smul_eq_mul]
-        set V := ∫ t : AddCircle T, (rho (fourier (1 : ℤ) t * q)) ^ 2
-        -- Goal: V = T * (T⁻¹ * V)
-        rw [mul_comm T (T⁻¹ * V), mul_assoc, mul_comm V T, ← mul_assoc,
-          inv_mul_cancel₀ hT_ne, one_mul]
+        simp_all
   -- Step B: ∫ ρ(fourier(1)·q)² d(haar) ≥ ‖q‖²/8
   -- Use rotation invariance: fourier(1)(t) * q = ‖q‖ * fourier(1)(t + s)
   -- where s is chosen so that fourier(1)(s) = q/‖q‖
@@ -814,8 +807,7 @@ private lemma frozen_rotation {N L : ℕ} (hN : 1 ≤ N)
           exact hα_norm⟩
       rw [AddCircle.homeomorphCircle_apply] at hs
       have hα_eq : (fourier (1 : ℤ) s : ℂ) = α := by
-        simp only [fourier_apply, one_zsmul]
-        exact congr_arg Subtype.val hs
+        simp_all
       -- fourier(1)(t) * α = fourier(1)(t + s)
       have h_shift : ∀ t : AddCircle T,
           fourier (1 : ℤ) t * α = fourier (1 : ℤ) (t + s) := by
@@ -936,14 +928,7 @@ private lemma assembly {N L : ℕ} (hN : 1 ≤ N)
         ((1/2) * (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 -
           ‖slowFactor b (↑t : AddCircle T) - qAvg b N k‖ ^ 2) =
       (1/2) * A - B := by
-      have h1 := intervalIntegral.integral_sub (hi_rho.const_mul (1/2)) hi_norm
-      have h2 : ∫ t in iLeft N k.val..iLeft N (k.val + 1),
-          (1/2) * (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 =
-        (1/2) * ∫ t in iLeft N k.val..iLeft N (k.val + 1),
-          (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 :=
-        intervalIntegral.integral_const_mul _ _
-      simp only [hA_def, hB_def] at h1 h2 ⊢
-      linarith
+      simp_all
     rw [h_split] at h_int_bound
     -- Multiply by 1/T
     have h_mul := mul_le_mul_of_nonneg_left h_int_bound hT_inv_pos.le

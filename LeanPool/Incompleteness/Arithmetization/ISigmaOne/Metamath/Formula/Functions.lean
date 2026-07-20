@@ -1055,8 +1055,7 @@ lemma neg_nlt {t u : V} (ht : ⌜ℒₒᵣ⌝.IsUTerm t) (hu : ⌜ℒₒᵣ⌝.I
 
 lemma substs_eq {t u : V} (ht : ⌜ℒₒᵣ⌝.IsUTerm t) (hu : ⌜ℒₒᵣ⌝.IsUTerm u) :
     ⌜ℒₒᵣ⌝.substs w (t ^= u) = (⌜ℒₒᵣ⌝.termSubst w t) ^= (⌜ℒₒᵣ⌝.termSubst w u) := by
-  simp only [qqEQ]; rw [substs_rel (by simp) (by simp [ht, hu])]
-  rw [termSubstVec_cons₂ ht hu]
+  simp only [qqEQ]; simp_all
 
 
 end Formalized

@@ -41,8 +41,7 @@ lemma unprovable_AxiomP : (Hilbert.Ver) ⊬ Axioms.P := by
   apply Hilbert.Ver.classical_reducible.not.mpr;
   apply IntProp.Hilbert.Cl.unprovable_of_exists_classicalValuation;
   dsimp [VerTranslation, toPropFormula, IntProp.Formula.Kripke.Satisfies];
-  use (fun _ => True);
-  simp;
+  simp_all
 
 end Ver
 

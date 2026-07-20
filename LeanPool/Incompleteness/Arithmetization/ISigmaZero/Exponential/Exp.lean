@@ -176,8 +176,7 @@ def seqX₀ : V := 4
 def seqY₀ : V := 2 * 4
 
 lemma one_lt_four : (1 : V) < 4 := by
-  rw [←three_add_one_eq_four]
-  exact lt_add_of_pos_left 1 three_pos
+  simp_all
 
 lemma two_lt_three : (2 : V) < 3 := by rw [←two_add_one_eq_three]; exact lt_add_one 2
 
@@ -676,8 +675,7 @@ lemma exponential_succ {x y : V} : Exponential (x + 1) y ↔ ∃ z, y = 2 * z �
             mul_left_comm y 2] using this.bit_zero
 
 lemma exponential_succ_mul_two {x y : V} : Exponential (x + 1) (2 * y) ↔ Exponential x y :=
-  ⟨by intro h; rcases exponential_succ.mp h with ⟨y', e, h⟩; simpa [show y =
-    y' from by simpa using e] using h,
+  ⟨by intro h; rcases exponential_succ.mp h with ⟨y', e, h⟩; simp_all,
    by intro h; exact exponential_succ.mpr ⟨y, rfl, h⟩⟩
 
 alias ⟨of_succ_two_mul, succ⟩ := exponential_succ_mul_two
@@ -745,12 +743,8 @@ protected lemma inj {x₁ x₂ y : V} : Exponential x₁ y → Exponential x₂ 
     intro x₁ _ x₂ _ h₁ h₂
     rcases zero_or_succ x₁ with (rfl | ⟨x₁, rfl⟩) <;> rcases zero_or_succ x₂ with (rfl | ⟨x₂, rfl⟩)
     · rfl
-    · rcases h₁.zero_uniq
-      rcases exponential_succ.mp h₂ with ⟨z, hz⟩
-      simp at hz
-    · rcases h₂.zero_uniq
-      rcases exponential_succ.mp h₁ with ⟨z, hz⟩
-      simp at hz
+    · simp_all
+    · simp_all
     · rcases exponential_succ.mp h₁ with ⟨y, rfl, hy₁⟩
       have hy₂ : Exponential x₂ y := h₂.of_succ_two_mul
       have : x₁ = x₂ :=
@@ -819,8 +813,7 @@ lemma add_mul {x₁ x₂ y₁ y₂ : V} (h₁ : Exponential x₁ y₁) (h₂ : E
   induction x₂ using induction_sigma0
   · definability
   case zero =>
-    intro y₂ _ h₂
-    simpa [show y₂ = 1 from h₂.zero_uniq] using h₁
+    simp_all
   case succ x₂ IH =>
     intro y₂ hy h₂
     rcases exponential_succ.mp h₂ with ⟨y₂, rfl, H₂⟩

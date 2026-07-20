@@ -69,8 +69,7 @@ theorem Module.Dual.tensorMul_matrix (φ₁ : Module.Dual ℂ (Matrix n n ℂ))
   symm
   apply Module.Dual.apply_eq_of
   simp_rw [← Module.Dual.tensorMul_apply'' φ₁ φ₂]
-  intros
-  trivial
+  simp_all
 
 /-- Tensor products of faithful positive matrix functionals are faithful and positive. -/
 theorem Module.Dual.IsFaithfulPosMap.tensorMul {φ₁ : Module.Dual ℂ (Matrix n n ℂ)}

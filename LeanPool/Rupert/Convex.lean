@@ -74,9 +74,7 @@ lemma subset_interior_hull' {n : ℕ} {X : Set (E n)} {ε ℓ : ℝ}
   let seg2 := (1/(1-ℓ)) • (u - ix)
   have seg1_in_X : seg1 ∈ X := by -- "outer x" is still in X
       obtain ⟨w, winx, ix_eq_lw⟩ := hix
-      simp only [seg1, ← ix_eq_lw]; rw [smul_smul]; field_simp
-      simp only [one_smul]
-      exact winx
+      simp only [seg1, ← ix_eq_lw]; rw [smul_smul]; simp_all
   have seg2_in_X : seg2 ∈ X := by
     refine h0 (move_scale olgz ?_)
     rw [smul_ball (ne_of_gt olgz) 0 ε, smul_zero,

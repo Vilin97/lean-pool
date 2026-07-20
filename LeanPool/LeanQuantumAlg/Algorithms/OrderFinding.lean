@@ -38,19 +38,14 @@ theorem main_recovery {t s r : ℕ} (hr : 0 < r) (hrt : r ∣ 2 ^ t)
   obtain ⟨m, hm⟩ := hrt
   have hmpos : 0 < m := by
     rcases Nat.eq_zero_or_pos m with hm0 | hm0
-    · exfalso
-      have h2 : 0 < 2 ^ t := pow_pos (by norm_num) t
-      rw [hm, hm0, Nat.mul_zero] at h2
-      exact (Nat.lt_irrefl 0) h2
+    · simp_all
     · exact hm0
   have hdiv : 2 ^ t / r = m := by
-    rw [hm]
-    exact Nat.mul_div_cancel_left m hr
+    simp_all
   have hsr1 : Nat.gcd s r = 1 := hsr
   have hgcd : Nat.gcd (s * (2 ^ t / r)) (2 ^ t) = m := by
     rw [hdiv, hm, Nat.gcd_mul_right, hsr1, Nat.one_mul]
-  rw [hgcd, hm]
-  exact Nat.mul_div_cancel r hmpos
+  simp_all
 
 end OrderFinding
 
@@ -200,17 +195,13 @@ theorem main_output_with_resources {N x t r s : ℕ}
   obtain ⟨q, hq⟩ := hrt
   have hqpos : 0 < q := by
     rcases Nat.eq_zero_or_pos q with hzero | hpos
-    · exfalso
-      have hpow : 0 < 2 ^ t := pow_pos (by norm_num) t
-      rw [hq, hzero, Nat.mul_zero] at hpow
-      exact (Nat.lt_irrefl 0) hpow
+    · simp_all
     · exact hpos
   have hdiv : 2 ^ t / r = q := by
     rw [hq]
     exact Nat.mul_div_cancel_left q hinput.order_pos
   have hlt : s * q < 2 ^ t := by
-    rw [hq]
-    exact Nat.mul_lt_mul_of_pos_right hs hqpos
+    simp_all
   refine ⟨⟨s * q, hlt⟩, ?_, ?_⟩
   · rw [hdiv]
   · exact orderFindingExactResourceProfile_exact t

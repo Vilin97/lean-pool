@@ -110,8 +110,7 @@ instance uniqueBoundaryJarOne : Unique (⊔I^1) where
 def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.last _ } :=
   Homeomorph.piCongr
     { toFun i := ⟨i.castSucc, by
-        simp only [ne_eq]
-        exact Fin.lt_last_iff_ne_last.mp i.2 ⟩
+        simp_all ⟩
       invFun i := ⟨i, by
         have := i.2
         simp only [ne_eq] at this
@@ -300,8 +299,7 @@ lemma mem_boundaryJar {n : ℕ} (y : I^Fin n) : inclToBot y ∈ ⊔I^(n + 1) := 
   · exact mem_boundary y
   · intro h; exfalso
     have : inclToBot y (Fin.last n) = (0 : ℝ) := by simp [inclToBot]
-    refine (by norm_num : (0 : ℝ) ≠ (1 : ℝ)) <| this.symm.trans ?_
-    rw [h, Set.Icc.coe_one]
+    simp_all
 
 end inclToBot
 

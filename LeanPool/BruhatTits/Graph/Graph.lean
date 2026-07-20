@@ -47,8 +47,7 @@ lemma reachable (M L : Vertices R) {n : ℕ} : (h : inv M L = n) → BTgraph.Rea
   | zero =>
     intro M L h
     rw [← eq_iff] at h
-    subst h
-    rfl
+    simp_all
   | succ k ih =>
     intro M L h
     obtain ⟨T, hLT, hTM⟩ := exists_intermediate_vertex _ M L h

@@ -55,11 +55,9 @@ private theorem lcuProj_sandwich (V : Gate a) (i : Fin (2 ^ a)) :
   change (((V : HilbertOperator a).conjTranspose * lcuProj i * (V : HilbertOperator a)) 0 0)
       = star (V i 0) * V i 0
   have hsum : (∑ k, star (V k 0) * (if k = i then (1 : ℂ) else 0)) = star (V i 0) := by
-    simp only [mul_ite, mul_one, mul_zero]
-    exact Fintype.sum_ite_eq' i (fun k => star (V k 0))
+    simp_all
   have hsum2 : (∑ c, (if c = i then (1 : ℂ) else 0) * V c 0) = V i 0 := by
-    simp only [ite_mul, one_mul, zero_mul]
-    exact Fintype.sum_ite_eq' i (fun c => V c 0)
+    simp_all
   have key : ∀ c, ((V : HilbertOperator a).conjTranspose * lcuProj i) 0 c
       = star (V i 0) * (if c = i then (1 : ℂ) else 0) := by
     intro c
@@ -67,15 +65,7 @@ private theorem lcuProj_sandwich (V : Gate a) (i : Fin (2 ^ a)) :
     simp only [lcuProj, Matrix.of_apply, Matrix.conjTranspose_apply, ← mul_assoc]
     rw [← Finset.sum_mul, hsum]
   rw [Matrix.mul_apply]
-  calc
-    ∑ c, (((V : HilbertOperator a).conjTranspose * lcuProj i) 0 c) * V c 0
-        = ∑ c, (star (V i 0) * (if c = i then (1 : ℂ) else 0)) * V c 0 := by
-          refine Finset.sum_congr rfl fun c _ => by rw [key c]
-    _ = ∑ c, star (V i 0) * ((if c = i then (1 : ℂ) else 0) * V c 0) := by
-          refine Finset.sum_congr rfl fun c _ => by ring
-    _ = star (V i 0) * (∑ c, (if c = i then (1 : ℂ) else 0) * V c 0) := by
-          rw [Finset.mul_sum]
-    _ = star (V i 0) * V i 0 := by rw [hsum2]
+  simp_all
 
 /-- The LCU walk operator expands into a control-block sum. -/
 theorem lcuWalk_eq_sum (V : Gate a) (U : Fin (2 ^ a) → Gate n) :
@@ -100,9 +90,7 @@ theorem LinearCombinationOfUnitaries.main (V : Gate a) (U : Fin (2 ^ a) → Gate
       (y y' : Fin (2 ^ n)),
       (HilbertOperator.tensor G K) (prodEquiv (x, y)) (prodEquiv (x', y'))
         = G x x' * K y y' := by
-    intro G K x x' y y'
-    rw [HilbertOperator.tensor_apply]
-    simp only [Equiv.symm_apply_apply]
+    simp_all
   rw [lcuWalk_eq_sum, Matrix.sum_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [tprod, lcuProj_sandwich]

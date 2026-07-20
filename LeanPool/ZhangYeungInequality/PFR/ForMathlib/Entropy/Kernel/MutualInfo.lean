@@ -92,16 +92,7 @@ lemma compProd_assoc' (ξ : Kernel T S) [IsSFiniteKernel ξ]
 lemma _root_.ProbabilityTheory.Kernel.Measure.compProd_compProd (μ : Measure T)
     (ξ : Kernel T S) [IsSFiniteKernel ξ] (κ : Kernel (T × S) U) [IsSFiniteKernel κ] :
     μ ⊗ₘ (ξ ⊗ₖ κ) = (μ ⊗ₘ ξ ⊗ₘ κ).map MeasurableEquiv.prodAssoc := by
-  by_cases hμ : SFinite μ; swap
-  · simp [Measure.compProd_of_not_sfinite _ _ hμ]
-  ext s hs
-  rw [Measure.compProd_apply hs, Measure.map_apply MeasurableEquiv.prodAssoc.measurable hs,
-    Measure.compProd_apply (MeasurableEquiv.prodAssoc.measurable hs),
-    Measure.lintegral_compProd]
-  swap; · exact measurable_kernel_prodMk_left (MeasurableEquiv.prodAssoc.measurable hs)
-  congr with a
-  rw [compProd_apply (measurable_prodMk_left hs)]
-  congr
+  simp_all
 
 lemma _root_.ProbabilityTheory.Kernel.Measure.compProd_compProd' (μ : Measure T)
     (ξ : Kernel T S) [IsSFiniteKernel ξ] (κ : Kernel (T × S) U) [IsSFiniteKernel κ] :
@@ -418,8 +409,7 @@ lemma _root_.ProbabilityTheory.Kernel.entropy_triple_add_entropy_le'
   have hκ : Hk[κ, μ] = Hk[κ', μ] := by
     rw [hκ'_def, entropy_map_of_injective _ _ _ (by fun_prop)]
     exact MeasurableEquiv.prodAssoc.symm.injective
-  rw [h_right, h_middle, hκ, ← h_compProd_triple_eq, fst_compProd]
-  · exact h
+  simp_all
 
 /-- The submodularity inequality:
 $$ H[X,Y,Z] + H[Z] \leq H[X,Z] + H[Y,Z].$$ -/

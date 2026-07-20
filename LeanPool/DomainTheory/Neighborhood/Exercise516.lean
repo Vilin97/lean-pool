@@ -155,8 +155,7 @@ theorem tail_hsing {σ τ : Str} (h : σ <+: τ) : strBot σ.tail ≤ tailSing �
     cases σ with
     | nil => exact List.nil_prefix
     | cons b σ' =>
-      obtain ⟨rfl, h'⟩ := List.cons_prefix_cons.mp h
-      exact h'
+      simp_all
 
 /-- **Exercise 5.16 / Example 4.4 — `tail : C → C`.** Built with the head-test
 combinator `liftC`:

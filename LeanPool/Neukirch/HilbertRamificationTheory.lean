@@ -105,10 +105,7 @@ theorem isIntegralClosure_root_eq_ofMonic {p : R[X]} (hp : p.Monic) :
     rw [← h, count_map_eq_count' _ _ hi _]
     rw [count_roots, count_roots, hc, ← map_map, ← eq_rootMultiplicity_map hi]
   · have h : count x ((p.map (algebraMap R S)).roots.map (algebraMap S L)) = 0 := by
-      simp only [mem_map, mem_roots', ne_eq, IsRoot.def, not_exists,
-        not_and, and_imp, count_eq_zero]
-      intro y _ _ h
-      exact hx ⟨y, h⟩
+      simp_all
     rw [h]
     exact Decidable.byContradiction fun h ↦ hx <| IsIntegralClosure.isIntegral_iff.mp
       ⟨p, hp, (eval₂_eq_eval_map (algebraMap R L)).trans <|
@@ -150,8 +147,7 @@ theorem prod_mem {R ι : Type*} [CommSemiring R] {p : Ideal R} [hp : p.IsPrime]
     rw [Finset.prod_insert nns] at h
     rcases IsPrime.mem_or_mem hp h with h | h
     · exact ⟨⟨n, Finset.mem_insert_self n s⟩, h⟩
-    · rcases hn h with ⟨i, hi⟩
-      exact ⟨⟨i, Finset.mem_insert_of_mem i.2⟩, hi⟩
+    · simp_all
 
 end IsPrime
 
@@ -250,11 +246,7 @@ instance extension_ringOfIntegers_isNoetherian [NumberField K] [NumberField L] :
 /-- The kernel of the algebraMap between ring of integers is `⊥`. -/
 theorem algebraMap_ker_eq_bot :
     RingHom.ker (algebraMap (𝓞 K) (𝓞 L)) = ⊥ := by
-  apply (RingHom.ker_eq_bot_iff_eq_zero (algebraMap (𝓞 K) (𝓞 L))).mpr
-  intro x hx
-  have h: (algebraMap K L) x = (algebraMap (𝓞 K) (𝓞 L)) x := rfl
-  simp only [hx, map_zero, map_eq_zero, RingOfIntegers.coe_eq_zero_iff] at h
-  exact h
+  simp_all
 
 /-- The algebraMap between ring of integers is injective. -/
 theorem algebraMap_injective_of_ringOfIntegers : Function.Injective (algebraMap (𝓞 K) (𝓞 L)) :=
@@ -817,8 +809,7 @@ theorem DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg [IsGalois K L]
       simp only [Finset.univ_eq_attach, Finset.mem_attach, true_iff, MulAction.mem_orbit_iff]
       rcases IsMaximal_conjugates p P Q.1 with ⟨σ, hs⟩
       exact ⟨σ, by rw [← Subtype.val_inj, ← hs]; rfl⟩
-  · congr
-    exact Subsingleton.elim (fun _ ↦ _) (fun _ ↦ _)
+  · simp_all
 
 open Classical in
 theorem Extension_degree_over_DecompositionField_eq_ramificationIdx_mul_inertiaDeg
@@ -944,8 +935,7 @@ theorem InertiaGroup_le_DecompositionGroup : InertiaGroup K P ≤ DecompositionG
   refine fun σ hs ↦ (DecompositionGroup_mem p P σ).mpr <|
     le_antisymm (map_le_of_le_comap (fun x hx ↦ ?_)) (fun x hx ↦ ?_)
   · have h := add_mem (Ideal.Quotient.eq.mp (hs x)) hx
-    rw [sub_add_cancel] at h
-    exact mem_comap.mpr h
+    simp_all
   · rw [← GalRingHom_mul_inv_cancel_mem σ x]
     have h := add_mem (Ideal.Quotient.eq.mp (((InertiaGroup K P).inv_mem hs) x)) hx
     rw [sub_add_cancel] at h
@@ -1048,8 +1038,7 @@ theorem ResidueGaloisHom_surjective [hn : Normal K L] :
       rfl
     _ = _ := by
       change (e.liftEquiv σ.toAlgHom).1 = σ (ϕP a)
-      rw [ha]
-      exact PowerBasis.liftEquiv_apply_coe e σ.toAlgHom
+      simp_all
 
 
 
@@ -1243,9 +1232,7 @@ theorem InertiaGroup_eq :
   rw [Subgroup.mem_map]
   refine ⟨fun ⟨τ, ht, he⟩ x ↦ by rw [← he, ← Subgroup.mem_subgroupOf.mp ht x]; rfl, fun hs ↦ ?_⟩
   refine ⟨(subgroupEquivAut (DecompositionGroup p P)).toFun σ, fun x ↦ by rw [← hs x]; rfl, ?_⟩
-  rw [MulEquiv.toEquiv_eq_coe]
-  simp only [Equiv.toFun_as_coe, MulEquiv.coe_toEquiv, MulEquiv.coe_toMonoidHom,
-    MulEquiv.symm_apply_apply]
+  simp_all
 
 /-- The inertia group of `P` over the decomposition field is isomorphic to the inertia group
 of `P` over `K`. -/

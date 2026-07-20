@@ -16,6 +16,7 @@ from lean_pool.pr_advisory import (
     UpstreamMetadata,
     fetch_upstream_metadata,
     list_open_pr_numbers,
+    main,
     post_sticky_comment,
     project_changes,
     render_comment,
@@ -224,3 +225,35 @@ def test_update_pr_advisory_skips_pr_without_project_changes(
 
     assert action == "skipped"
     assert not posted
+
+
+def test_main_treats_comment_post_failure_as_nonblocking(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """GitHub comment-write failures should not fail the advisory workflow."""
+
+    def fake_update(
+        repo_full_name: str,
+        pr_number: int,
+        *,
+        metadata_cache: dict[str, UpstreamMetadata] | None = None,
+        dry_run: bool = False,
+    ) -> str:
+        assert repo_full_name == "acme/pool"
+        assert pr_number == 7
+        assert not dry_run
+        raise subprocess.CalledProcessError(
+            1,
+            ["gh", "api"],
+            stderr="Resource not accessible by integration\n",
+        )
+
+    monkeypatch.setattr(pr_advisory, "update_pr_advisory", fake_update)
+
+    assert main(["--repo", "acme/pool", "--pr-number", "7"]) == 0
+
+    captured = capsys.readouterr()
+    assert "PR #7: comment-failed" in captured.out
+    assert "continuing because this workflow is non-blocking" in captured.err
+    assert "Resource not accessible by integration" in captured.err

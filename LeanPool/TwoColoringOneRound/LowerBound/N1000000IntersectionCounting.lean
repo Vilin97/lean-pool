@@ -119,8 +119,7 @@ theorem card_availFor {k : DirIdx} (u : BaseOrbit k) :
         = Fintype.card SymN - Fintype.card (↑used) := by
     simpa [AvailFor,
       used] using (Fintype.card_subtype_compl (α := SymN) (p := fun x : SymN => x ∈ used))
-  have hSym : Fintype.card SymN = n := by simp [SymN, Sym]
-  rw [hcompl, hSym, Fintype.card_coe, husedCard]
+  simp_all
 
 theorem card_embedding_freeCoord_availFor {k a d : DirIdx} (u : BaseOrbit k) :
     Fintype.card (FreeCoord a d ↪ AvailFor u) =
@@ -193,8 +192,7 @@ private lemma u_coord_mem_usedSet {k : DirIdx} (u : BaseOrbit k) (j : Fin 3) :
       simpa using (base_eq_of_colMatch (k := k) (u := u) (j := j) (i := i) (h := hi))
     have hmem : baseVertex.1 i ∈ baseSet := by
       fin_cases i <;> simp [baseVertex, baseTuple, baseSet, s0, s1, s2]
-    have : u.1.1 j ∈ baseSet := by simpa [hEq] using hmem
-    exact Finset.mem_union_left _ this
+    simp_all
 
 private lemma availFor_ne_u_coord {k : DirIdx} (u : BaseOrbit k) (x : AvailFor u) (j : Fin 3) :
     x.1 ≠ u.1.1 j := by
@@ -479,14 +477,11 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                   (h := u.2) (i := ib) (j := l) hk
               simp [hv0, hubase]
         by_cases hj : j = l
-        · subst hj
-          simp [hvEq]
+        · simp_all
         · have hne : v.1 i ≠ u.1.1 j := by
             intro hEq
             have : u.1.1 l = u.1.1 j := by
-              calc
-                u.1.1 l = v.1 i := by simp [hvEq]
-                _ = u.1.1 j := hEq
+              simp_all
             have : l = j := u.1.2 this
             exact hj this.symm
           have hj' : l ≠ j := by simpa [eq_comm] using hj
@@ -521,8 +516,7 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                 ne_of_dirMask_rowMatch_none (u := baseVertex) (v := u.1) (d := k)
                   (h := u.2) (i := ib) hkNone j'
               simpa [hv0, eq_comm] using hne
-        have : decide (v.1 i = u.1.1 j) = false := (decide_eq_false_iff_not).2 (hneAll j)
-        simp [this]
+        simp_all
   have hvRel : dirMask v u.1 = maskAt d := by
     classical
     apply Nat.eq_of_testBit_eq
@@ -547,16 +541,7 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
           (maskAt d).testBit (i.1 * 3 + j.1) = decide (rowMatch (maskAt d) i = some j) := by
         simpa using (maskAt_testBit_eq_decide_rowMatch (d := d) (i := i) (j := j))
       -- Prove `decide (v_i = u_j)` matches `rowMatch`.
-      have hDec :
-          decide (v.1 i = u.1.1 j) = decide (rowMatch (maskAt d) i = some j) :=
-        hDecide i j
-      calc
-        Nat.testBit (dirMask v u.1) t
-            = Nat.testBit (dirMask v u.1) (i.1 * 3 + j.1) := by simp [htDecomp]
-        _ = decide (v.1 i = u.1.1 j) := by simp [hL]
-        _ = decide (rowMatch (maskAt d) i = some j) := hDec
-        _ = Nat.testBit (maskAt d) (i.1 * 3 + j.1) := by simp [hR]
-        _ = Nat.testBit (maskAt d) t := by simp [htDecomp]
+      simp_all
     · -- `t ≥ 9`: both sides are `< 2^9`.
       have h9t : 9 ≤ t := Nat.le_of_not_gt ht
       have hPow : (2 : Nat) ^ 9 ≤ (2 : Nat) ^ t :=

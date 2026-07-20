@@ -130,14 +130,12 @@ end ProvedBound
 theorem splitFirst {l : Letter} {w : Word} (ps : ProvedSplit l w) :
           ps.fst.length + 1 ≤ w.length := by
   have h := congr_arg List.length ps.proof
-  simp [List.length_append] at h
-  omega
+  simp_all
 
 theorem splitSecond {l : Letter} {w : Word} (ps : ProvedSplit l w) :
           ps.snd.length + 1 ≤ w.length := by
   have h := congr_arg List.length ps.proof
-  simp [List.length_append] at h
-  omega
+  simp_all
 
 -- bound with proof for words
 /-- Compute a certified length bound for a word. -/

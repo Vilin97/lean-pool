@@ -161,9 +161,7 @@ noncomputable def invLimRetr (y : ∀ n, D n) : InverseLimit D P :=
 
 theorem le_coe_invLimRetr (y : ∀ n, D n) : y ≤ (invLimRetr D P y).1 := by
   rw [invLimRetr, coe_sInf]
-  refine le_sInf ?_
-  rintro _ ⟨x, hx, rfl⟩
-  exact hx
+  simp_all
 
 /-- `r ⊣ incl`: the retraction is left adjoint to the inclusion. -/
 theorem invLimRetr_galoisConnection :
@@ -187,8 +185,7 @@ theorem invLimRetr_incl (x : InverseLimit D P) : invLimRetr D P x.1 = x := by
   refine le_antisymm ?_ ?_
   · exact sInf_le (show x ∈ {x' : InverseLimit D P | (x.1 : ∀ n, D n) ≤ x'.1} from le_refl x.1)
   · refine le_sInf ?_
-    intro x' hx'
-    exact Subtype.coe_le_coe.mp hx'
+    simp_all
 
 /-- `D_∞` is a Scott-continuous retract of the product `∏ Dₙ`. -/
 noncomputable def inverseLimitRetraction :

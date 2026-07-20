@@ -93,9 +93,7 @@ theorem dual_shatters_imp_original_shatters {d : ℕ}
     have hlabel_eq : ∀ s : ↥S, label j s = label k s := by
       intro s
       have hj := hx j s
-      have hk := hx k s
-      rw [hjk] at hj
-      rwa [hj] at hk
+      simp_all
     let b0 : Fin (d + 1) → Bool := fun i => i == j
     have hlabel_j_b0 : label j (embed b0) = true := by
       simp only [label]
@@ -108,9 +106,7 @@ theorem dual_shatters_imp_original_shatters {d : ℕ}
       cases hkj : (k == j)
       · rfl
       · exact absurd (beq_iff_eq.mp hkj).symm hjk_ne
-    have := hlabel_eq (embed b0)
-    rw [hlabel_j_b0, hlabel_k_b0] at this
-    exact Bool.noConfusion this
+    simp_all
   have hT_card : T.card = d + 1 := by
     simp only [T, card_image_of_injective _ hx_inj, card_univ, Fintype.card_fin]
   -- `C` shatters `T`: realise labeling `f` by the concept `embed g`, where `g j = f (x j)`.

@@ -104,9 +104,7 @@ lemma volume_restrict_normalize : volume.restrict (Set.Ico 0 (1 : I)) = volume :
   ext s hs
   simp only [hs, restrict_apply]
   apply MeasureTheory.measure_inter_conull
-  simp only [
-    measurableSet_Ico, MeasurableSet.nullMeasurableSet, prob_compl_eq_zero_iff₀,
-    unitInterval.volume_Ico, Set.Icc.coe_one, Set.Icc.coe_zero, sub_zero, ENNReal.ofReal_one]
+  simp_all
 
 private noncomputable def packI [StandardBorelSpace A] : A → I := unpack ∘ pack
 private noncomputable def unpackI [StandardBorelSpace A] [Nonempty A] : I → A := unpack ∘ pack
@@ -128,10 +126,7 @@ private lemma unpackI_packI
     [StandardBorelSpace A] [Nonempty A] {x : A}
     : unpackI (packI x) = x := by
   unfold unpackI packI
-  simp only [
-    Function.comp_apply, Set.countable_coe_iff,
-    Cardinal.Real.Icc_countable_iff, not_le,
-    zero_lt_one, pack_unpack, unpack_pack]
+  simp_all
 
 private instance [StandardBorelSpace A]
     {μ : Measure A} [IsProbabilityMeasure μ]
@@ -200,8 +195,7 @@ lemma eq_detf_volume
   wlog! hμ : μ ≠ 0
   · subst hμ
     have hIE : IsEmpty (Set.Ico (0 : ℝ) ((0 : Measure A) Set.univ).toReal) := by
-      simp only [Measure.coe_zero, Pi.zero_apply, ENNReal.toReal_zero, Set.Ico_self]
-      exact Set.isEmpty_coe_sort.mpr rfl
+      simp_all
     have : (volume : Measure (Set.Ico (0 : ℝ) ((0 : Measure A) Set.univ).toReal)) = 0 := by
       ext s _
       simp only [Measure.coe_zero, Pi.zero_apply]

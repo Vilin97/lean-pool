@@ -44,14 +44,11 @@ private lemma mul_modform_ne_zero_of_coeff_one {k₁ k₂ : ℤ}
   intro h
   have hcoeff : (qExpansion 1 (f.mul g)).coeff 0 = 1 := by
     have := qExpansion_mul_coeff 1 k₁ k₂ f g
-    simp only [Nat.cast_one] at this; rw [this]
-    simp only [PowerSeries.coeff_mul, Finset.antidiagonal_zero, Finset.sum_singleton, hf, hg,
-      mul_one]
+    simp_all
   have hcoe : (⇑(f.mul g) : ℍ → ℂ) = 0 := by rw [h]; ext z; simp only [zero_apply, Pi.zero_apply]
   rw [show qExpansion 1 (f.mul g) = qExpansion 1 (0 : ℍ → ℂ) from
     congr_arg (qExpansion 1) hcoe, qExpansion_zero] at hcoeff
-  simp only [PowerSeries.coeff_zero_eq_constantCoeff, PowerSeries.constantCoeff_zero,
-    zero_ne_one] at hcoeff
+  simp_all
 
 private lemma mul_Delta_map_eq_DirectSum_mul (n : ℕ) (_hn : 12 ≤ n)
     (h : ModularForm Γ(1) (↑n - 12)) :
@@ -162,9 +159,7 @@ private lemma surj_inductive_step (n : ℕ) (hn12 : 12 ≤ n) (hk_even : Even n)
     have hQmn : Q mn = qExpansion 1 mn := rfl
     have : (Q (f - c • mn)).coeff 0 =
         (qExpansion 1 (f : ℍ → ℂ)).coeff 0 - c * (qExpansion 1 (mn : ℍ → ℂ)).coeff 0 := by
-      rw [show Q (f - c • mn) = Q f - Q (c • mn) from map_sub Q f (c • mn),
-        hQ_smul, hQf, hQmn]
-      simp [map_sub, map_smul, smul_eq_mul]
+      simp_all
     rw [show (qExpansion 1 (f - c • mn : ModularForm Γ(1) ↑n)).coeff 0 =
       (Q (f - c • mn)).coeff 0 from rfl, this, hmn_coeff, mul_one, sub_self]
   set g := f - c • mn

@@ -337,12 +337,10 @@ private lemma card_cycleMonoPairs_eq (f : Coloring9) :
           simpa [CycleMonoPairs, P] using (hEdge ▸ q.2)⟩
         left_inv := by
           intro p
-          apply Subtype.ext
-          simp
+          simp_all
         right_inv := by
           intro q
-          apply Subtype.ext
-          simp }
+          simp_all }
   have hreassoc :
       Fintype.card {q : EdgeExtraK // P q}
         = Fintype.card (Σ e : {e : Edge n // Edge.monochromatic f e}, Extra e.1 × Fin 5) := by
@@ -429,18 +427,10 @@ private noncomputable def rotEdge : Edge n ≃ Edge n where
     exact (Equiv.injective rotIndex⁻¹) this⟩
   left_inv := by
     intro e
-    apply Subtype.ext
-    funext i
-    -- `rotIndex (rotIndex⁻¹ i) = i`.
-    have := congrArg e.1 (rotIndex.apply_symm_apply i)
-    exact this
+    simp_all
   right_inv := by
     intro e
-    apply Subtype.ext
-    funext i
-    -- `rotIndex⁻¹ (rotIndex i) = i`.
-    have := congrArg e.1 (rotIndex.symm_apply_apply i)
-    exact this
+    simp_all
 
 private lemma edge_src_rotEdge (e : Edge n) : Edge.src (rotEdge e) = Edge.dst e := by
   apply Subtype.ext
@@ -468,8 +458,7 @@ private lemma monoCount_zmod2_eq_edgeCount_zmod2 (f : Coloring9) :
     let s : Finset (Edge n) := (Finset.univ : Finset (Edge n)).filter p
     have hNat : s.card = s.sum (fun _ => (1 : Nat)) := by exact Finset.card_eq_sum_ones (s := s)
     have hCast : (s.card : ZMod 2) = s.sum (fun _ => (1 : ZMod 2)) := by
-      convert congrArg (fun m : Nat => (m : ZMod 2)) hNat using 1
-      · simp
+      simp_all
     -- rewrite `monoCount` in terms of `s`
     have hs : monoCount f = s.card := by simp [monoCount, monoEdges, s, p]
     -- rewrite the sum over the filter

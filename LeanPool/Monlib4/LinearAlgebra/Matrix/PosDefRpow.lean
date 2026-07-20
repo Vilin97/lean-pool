@@ -142,8 +142,7 @@ theorem _root_.Matrix.PosDef.rpow_neg_one_eq_inv_self {Q : Matrix n n 𝕜}
 theorem _root_.Matrix.IsHermitian.rpow_zero {Q : Matrix n n 𝕜} (hQ : Q.IsHermitian) :
     hQ.rpow 0 = 1 := by
   rw [IsHermitian.rpow, innerAut_eq_iff, innerAut_apply_one]
-  ext i j
-  by_cases h : i = j <;> simp [diagonal, h, Matrix.one_apply]
+  simp_all
 
 theorem _root_.Matrix.PosSemidef.rpow_zero {Q : Matrix n n 𝕜} (hQ : Q.PosSemidef) :
     hQ.rpow 0 = 1 :=

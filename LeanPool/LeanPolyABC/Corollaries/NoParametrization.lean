@@ -33,8 +33,7 @@ theorem associates_pow_eq_pow_iff {A B : Associates k[X]} {n : ℕ} (hn : n ≠ 
   · subst hA
     rw [zero_pow hn, eq_comm, pow_eq_zero_iff hn, eq_comm]
   by_cases hB : B = 0
-  · subst hB
-    rw [zero_pow hn, pow_eq_zero_iff hn]
+  · simp_all
   · constructor
     swap
     · intro h; subst h; rfl

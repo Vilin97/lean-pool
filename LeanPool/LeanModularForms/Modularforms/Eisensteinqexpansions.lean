@@ -166,16 +166,12 @@ theorem q_exp_iden_2 (k : ℕ) (hk : 3 ≤ k) (hk2 : Even k) (z : ℍ) :
       simp only [PNat.pow_coe, Nat.cast_pow]
       rw [zeta_nat_eq_tsum_of_gt_one hkk, ← tsum_pNat _ (by simp; omega)]
       simp only [one_div]
-    · intro n
-      simp only [Int.cast_neg, inv_inj]
-      rw [Even.neg_pow hk2]
+    · simp_all
     have := (Complex.summable_one_div_nat_cpow (p := k)).mpr (by simp [hkk])
     simp only [one_div] at *
     norm_cast at *
     apply Summable.of_nat_of_neg_add_one
-    · apply this.congr
-      intro b
-      simp
+    · simp_all
     rw [← summable_nat_add_iff 1] at this
     apply this.congr
     intro b
@@ -215,9 +211,7 @@ theorem q_exp_iden_2 (k : ℕ) (hk : 3 ≤ k) (hk2 : Even k) (z : ℍ) :
 lemma EQ0 (k : ℕ) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
     1 / (x 0 * (z : ℂ) + x 1) ^ ↑k = ∑' x : ℤ × ℤ, 1 / ((x.1 : ℂ) * z + x.2) ^ k := by
   rw [← (piFinTwoEquiv fun _ => ℤ).tsum_eq]
-  apply tsum_congr
-  intro x
-  rfl
+  simp_all
 
 lemma EQ1 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
     1 / (x 0 * (z : ℂ) + x 1) ^ ↑k = 2 * riemannZeta ↑k +
@@ -310,8 +304,7 @@ lemma EQ22 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) :
     apply (EisensteinSeries.summable_norm_eisSummand hk z).subtype
   have := (GammaSetOneEquiv.symm.summable_iff ( f := fun v => eisSummand k v z)).mpr ?_
   · apply this.congr
-    intro b
-    simp
+    simp_all
   exact (EisensteinSeries.summable_norm_eisSummand hk z).of_norm
 
 lemma EQ2 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
@@ -319,8 +312,7 @@ lemma EQ2 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) : ∑' (x : Fin 2 → ℤ),
     1 / ((c.1 0) * (z : ℂ) + (c.1 1)) ^ k := by
   have := EQ22 k hk z
   simp_rw [eisSummand] at this
-  simp only [Nat.ofNat_le_cast, Fin.isValue, zpow_neg, zpow_natCast, one_div] at *
-  convert this
+  simp_all
 
 
 /-This result is already proven in the modular forms repo and being PRed (slowly) into mathlib, so

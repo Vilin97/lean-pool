@@ -146,8 +146,7 @@ private lemma isZeroAtImInfty_of_coeffZero {k : ℤ}
   obtain ⟨m, hm⟩ := Function.Periodic.qParam_left_inv_mod_period (h := 1)
     (Ne.symm (zero_ne_one' ℝ)) y
   have := (periodic_comp_ofComplex (h := 1) f (by simp)).int_mul m y
-  simp only [comp_apply, ofReal_one, mul_one, ofComplex_apply] at *
-  rwa [hm]
+  simp_all
 
 /-- Build a `CuspForm` from a modular form whose q-expansion has vanishing constant term. -/
 noncomputable def cuspFormOfCoeffZero {k : ℤ}

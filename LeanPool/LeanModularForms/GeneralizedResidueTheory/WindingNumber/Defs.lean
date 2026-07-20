@@ -105,9 +105,7 @@ theorem windingNumber_corner_crossing
       (singleton_at_crossing γ t₀ z₀ hcross) =
     α / (2 * Real.pi) := by
   simp only [windingNumberWithAngles']
-  rw [Fintype.sum_unique]
-  simp only [Finset.default_singleton]
-  rw [hangle]
+  simp_all
 
 /-- When γ avoids z₀, the PV cutoff is trivial below minimum distance. -/
 theorem cauchyPrincipalValue_eq_classical_off_curve'
@@ -158,8 +156,7 @@ def PiecewiseC1Immersion.translate
   deriv_continuous_off_partition := by
     intro t ht hnp
     have := γ.deriv_continuous_off_partition t ht hnp
-    convert this using 1
-    exact funext fun x => by rw [deriv_add_const]
+    simp_all
   deriv_ne_zero := by
     intro t ht ht'
     rw [deriv_add_const]
@@ -168,16 +165,12 @@ def PiecewiseC1Immersion.translate
     intro p hp hp'
     obtain ⟨L, hL_ne, hL⟩ := γ.left_deriv_limit p hp hp'
     exact ⟨L, hL_ne, by
-      have h : deriv (fun t => γ.toFun t + c) =
-          deriv γ.toFun := funext fun _ => deriv_add_const c
-      rwa [h]⟩
+      simp_all⟩
   right_deriv_limit := by
     intro p hp hp'
     obtain ⟨L, hL_ne, hL⟩ := γ.right_deriv_limit p hp hp'
     exact ⟨L, hL_ne, by
-      have h : deriv (fun t => γ.toFun t + c) =
-          deriv γ.toFun := funext fun _ => deriv_add_const c
-      rwa [h]⟩
+      simp_all⟩
 
 /-- The angle at a crossing is invariant under translation. -/
 theorem angleAtCrossing_translate

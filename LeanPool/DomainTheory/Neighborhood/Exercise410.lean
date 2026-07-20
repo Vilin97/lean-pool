@@ -165,8 +165,7 @@ def relMap (f : ApproximableMap V V) {a : V.Element} (ha : f.toElementMap a = a)
     have hmemfX : (f.toElementMap (V.principal hVX)).mem Y := (f.rel_iff_mem_principal hVX).mp hXY
     have hle : f.toElementMap (V.principal hVX) ≤ f.toElementMap a := f.toElementMap_mono hpr
     have : (f.toElementMap a).mem Y := hle Y hmemfX
-    rw [ha] at this
-    exact this
+    simp_all
   master_rel := ⟨a.master_mem, f.master_rel⟩
   inter_right := by
     rintro X Y Y' ⟨haX, hXY⟩ ⟨_, hXY'⟩
@@ -229,13 +228,7 @@ theorem relMap_unique_fixed (f : ApproximableMap V V)
   have h1 : restrict f.fixElement (embed f.fixElement g) (embed_le f.fixElement g) = g :=
     restrict_embed f.fixElement g
   -- both restricts agree because their underlying elements agree.
-  have h2 : restrict f.fixElement (embed f.fixElement g) (embed_le f.fixElement g)
-      = restrict f.fixElement f.fixElement (le_refl _) := by
-    apply Element.ext
-    intro X
-    change (embed f.fixElement g).mem X ↔ f.fixElement.mem X
-    rw [heq]
-  rw [← h1, h2]
+  simp_all
 
 end ApproximableMap
 

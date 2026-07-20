@@ -105,9 +105,7 @@ lemma units_pm_one (u : Rˣ) : u = 1 ∨ u = -1 := by
     have hy : y = 0 := by nlinarith [sq_nonneg y, sq_nonneg (2 * x + y)]
     have hx2 : x ^ 2 = 1 := by nlinarith
     have hx : x = 1 ∨ x = -1 := by
-      rcases mul_eq_zero.mp (show (x - 1) * (x + 1) = 0 by linarith [hx2]) with h | h
-      · exact Or.inl (by omega)
-      · exact Or.inr (by omega)
+      simp_all
     rcases hx with hx1 | hx1
     · exact Or.inl (Units.ext (by rw [hcoord, hx1, hy]; rfl))
     · exact Or.inr (Units.ext (by rw [hcoord, hx1, hy]; rfl))
@@ -252,15 +250,9 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
     have h := N_mul_norm_rem_eq a b (⟨m, n⟩ : R) hb
     rw [h]
     have hre : (a * star b - ((N : ℤ) : R) * (⟨m, n⟩ : R)).re = u := by
-      change s.re - (((N : ℤ) : R) * (⟨m, n⟩ : R)).re = u
-      push_cast [hu_def]
-      change s.re - (N * m + (-2) * 0 * n) = s.re - N * m
-      ring
+      simp_all
     have him : (a * star b - ((N : ℤ) : R) * (⟨m, n⟩ : R)).im = v := by
-      change s.im - (((N : ℤ) : R) * (⟨m, n⟩ : R)).im = v
-      push_cast [hv_def]
-      change s.im - (N * n + 0 * m + 1 * 0 * n) = s.im - N * n
-      ring
+      simp_all
     rw [QuadraticAlgebra.norm_def, hre, him]; ring
   have h_bd : 16 * (u ^ 2 + u * v + 2 * v ^ 2) ≤ 11 * N ^ 2 := by
     nlinarith [hv_bd, huv_bd]
@@ -383,8 +375,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
     have h_eq := h_cancel
     rw [hδ, mul_assoc] at h_eq
     have h_δβ : δ * β = 1 := by
-      conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-      exact mul_left_cancel₀ hθ'm_ne h_eq
+      simp_all
     exact hβ (IsUnit.of_mul_eq_one δ (by rw [mul_comm]; exact h_δβ))
   have h_dvd_prod : θ' ^ m ∣ γ * β := h_cancel ▸ dvd_refl (θ' ^ m)
   have h_θ'_dvd_β : θ' ^ m ∣ β :=
@@ -393,8 +384,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
   have h_eq := h_cancel
   rw [hε, ← mul_assoc, mul_comm γ (θ' ^ m), mul_assoc] at h_eq
   have h_γε : γ * ε = 1 := by
-    conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-    exact mul_left_cancel₀ hθ'm_ne h_eq
+    simp_all
   have hγ_unit : IsUnit γ := IsUnit.of_mul_eq_one ε h_γε
   rw [hγ]
   exact associated_mul_unit_left (θ ^ m) γ hγ_unit
@@ -425,8 +415,7 @@ lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
     have h_eq := h_cancel
     rw [hδ, ← mul_assoc, mul_comm α (θ' ^ m), mul_assoc] at h_eq
     have h_αδ : α * δ = 1 := by
-      conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-      exact mul_left_cancel₀ hθ'm_ne h_eq
+      simp_all
     exact hα (IsUnit.of_mul_eq_one δ h_αδ)
   have h_dvd_prod : θ' ^ m ∣ α * γ := h_cancel ▸ dvd_refl (θ' ^ m)
   have h_θ'_dvd_α : θ' ^ m ∣ α :=
@@ -435,8 +424,7 @@ lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
   have h_eq := h_cancel
   rw [hε, mul_assoc] at h_eq
   have h_εγ : ε * γ = 1 := by
-    conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-    exact mul_left_cancel₀ hθ'm_ne h_eq
+    simp_all
   have hε_unit : IsUnit ε := IsUnit.of_mul_eq_one γ h_εγ
   rw [hε]
   exact associated_mul_unit_left (θ' ^ m) ε hε_unit

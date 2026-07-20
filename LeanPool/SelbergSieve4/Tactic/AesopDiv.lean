@@ -65,8 +65,7 @@ attribute [aesop safe forward (rule_sets := [Divisibility])] not_squarefree_zero
 
 @[aesop forward safe (rule_sets := [Divisibility])]
 theorem eq_zero_of_zero_myDvd (a : ℕ) : MyDvd 0 a → a = 0 := by
-  intro h
-  exact eq_zero_of_zero_dvd ((myDvd_iff 0 a).mp h)
+  simp_all
 
 attribute [aesop safe (rule_sets := [Divisibility])] Nat.pos_of_ne_zero
 

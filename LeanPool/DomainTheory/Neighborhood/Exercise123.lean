@@ -136,9 +136,7 @@ theorem acc_eq_interUpTo : ∀ n, acc V enum n = V.interUpTo (Y V enum) (n + 1) 
     by_cases h : cond V enum n
     · rw [acc_succ_pos V enum h, Y_succ_pos V enum h]
     · rw [acc_succ_neg V enum h, Y_succ_neg V enum h]
-      have hsub : acc V enum n ⊆ Y V enum n := by
-        rw [ih]; exact V.interUpTo_subset (Y V enum) (Nat.lt_succ_self n)
-      rw [Set.inter_eq_left.mpr hsub]
+      simp_all
 
 variable (henum : ∀ n, V.mem (enum n))
 include henum
@@ -264,8 +262,7 @@ theorem filters_sequence_determined (x : V.Element) :
       obtain ⟨k, hk⟩ := hsurj (x.sub hZ)
       have hxk : x.mem (enum k) := by rw [hk]; exact hZ
       refine ⟨x.sub hZ, k, ?_⟩
-      change (if x.mem (enum k) then enum k else V.master) ⊆ Z
-      rw [if_pos hxk]; exact hk.subset
+      simp_all
     · rintro ⟨hZmem, n, hn⟩
       have hsx : x.mem (if x.mem (enum n) then enum n else V.master) := by
         by_cases h : x.mem (enum n)

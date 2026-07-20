@@ -119,11 +119,8 @@ lemma floatrep_of_false₂ (P : FloatRep C → FloatRep C → Prop)
   apply floatrep_of_false₁ (f := f2)
   · apply h2
   apply floatrep_of_false₁ (f := f1)
-  · intro f h e m
-    apply h1
-    apply h
-  intro e m e' m'
-  apply h3
+  · simp_all
+  simp_all
 
 lemma coe_q_of_Cprec (b : Bool) (e : ℤ) :
   coeQ (⟨b, e, C.prec⟩ : FloatRep C) = (if b then -1 else 1) * 2^(e + 1) := by
@@ -211,8 +208,7 @@ lemma normal_range' (m : ℕ) (e : ℤ) (vm : m < C.prec) (ve2 : e ≤ C.emax) :
     suffices m + 1 < C.prec + 1 by
       norm_cast
     linarith [vm]
-  rw [abs_of_nonneg (by positivity)]
-  rwa [zpow_le_zpow_iff_right₀ (by norm_num)]
+  simp_all
 
 /-- The largest finite rational representable in the format `C`. -/
 def maxFloatQ (C : FloatCfg) : ℚ := (2 - (1 : ℚ) / C.prec) * 2^C.emax
@@ -247,9 +243,7 @@ lemma floatrep_pos_equiv (f1 f2 : FloatRep C) :
     · refine ⟨le_of_lt h, ?_⟩
       intro h
       linarith
-    refine ⟨le_of_eq h.1, ?_⟩
-    intro _
-    exact h.2
+    simp_all
   intro h
   by_cases h' : f1.e = f2.e
   · right; tauto

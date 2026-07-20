@@ -192,9 +192,7 @@ lemma level_eq (n : ℕ) : level n = {x | (ofHollom x).2.2 = n} := by
 lemma induction_on_level {n : ℕ} {p : (x : Hollom) → x ∈ level n → Prop}
     (h : ∀ x y, p h(x, y, n) (by simp)) :
     ∀ {x : Hollom}, (h : x ∈ level n) → p x h := by
-  simp +contextual only [«forall», toHollom_mem_level_iff, Prod.forall]
-  rintro x y _ rfl
-  exact h _ _
+  simp_all
 
 /--
 For each `n`, there is an order embedding from ℕ × ℕ (which has the product order) to the Hollom
@@ -401,8 +399,7 @@ theorem exists_finite_intersection (hC : IsChain (· ≤ ·) C) :
     -- ...and `C ∩ level (n + 1)` is infinite (by assumption).
     specialize hC' (n + 1) (by omega)
     rw [← (C ∩ level (n + 1)).inter_union_sdiff D, Set.infinite_union] at hC'
-    refine hC'.resolve_left ?_
-    simpa using this
+    simp_all
   -- In fact, we only need it to be nonempty, and find a point.
   obtain ⟨x, hxy⟩ := this.nonempty
   induction hxy.1.2 using induction_on_level with | h x y =>
@@ -1197,8 +1194,7 @@ theorem not_S_mapsTo_previous (hC : IsChain (· ≤ ·) C)
   have line_F_mapsTo : Set.MapsTo (line ∘ f) F (range (2 * a)) := line_mapsTo.comp F_mapsTo
   -- which is a contradiction by cardinality arguments.
   have := card_le_card_of_injOn _ line_F_mapsTo (line_inj.comp F_inj F_mapsTo)
-  simp only [Finset.card_range] at this
-  omega
+  simp_all
 
 /-- The Hollom partial order has no spinal maps. -/
 theorem no_spinalMap (hC : IsChain (· ≤ ·) C) (f : SpinalMap C) : False := by

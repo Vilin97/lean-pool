@@ -110,8 +110,7 @@ def PMorphism (F : Frame) (r : F) : F.TreeUnravelling r →ₚ F where
       rw [←hz]
       simp
     have hcy := List.getLast?_eq_getLast_of_ne_nil (l := cy.1) (by aesop)
-    have hlast : cy.1.getLast (by aesop) = z := by simpa [hcy] using hlast?
-    simpa [hlast] using h (cx.1.getLast (by aesop)) hx z hy
+    simp_all
   back {cx y} h := by
     simp_all only [Set.mem_setOf_eq];
     use ⟨cx.1 ++ [y], ?_⟩;
@@ -142,9 +141,7 @@ namespace Frame
 namespace TransitiveTreeUnravelling
 
 lemma not_nil {c : (F.TransitiveTreeUnravelling r).World} : c.1 ≠ [] := by
-  by_contra;
-  have := c.2.1;
-  simp_all;
+  simp_all
 
 lemma rel_length {x y : (F.TransitiveTreeUnravelling r).World} (Rxy : x ≺ y) :
     x.1.length < y.1.length := by

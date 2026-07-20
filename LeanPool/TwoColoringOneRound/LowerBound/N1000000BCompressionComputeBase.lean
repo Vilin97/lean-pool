@@ -131,17 +131,7 @@ theorem div_by_D_eq_div_by_div_gcd (s : Int) :
     _ = Rat.divInt (s / (g : Int)) (Int.ofNat (D / g)) := hRat
     _ = ((s / (g : Int)) : Q) / ((D / g : Nat) : Q) := by
       simp only [Rat.divInt_eq_div]
-      have hs_cast : ((s / (g : Int) : Int) : Q) = (s : Q) / (g : Q) := by
-        exact Int.cast_div_charZero (k := Q) (m := s) (n := (g : Int)) hs_dvd
-      have hD_cast : (((D : Int) / (g : Int) : Int) : Q) = ((D / g : Nat) : Q) := by
-        have hZ : ((D : Int) / (g : Int) : Int) = (D / g : Nat) := by
-          exact Int.ofNat_ediv_ofNat (a := D) (b := g)
-        have hQ1 :
-            (((D : Int) / (g : Int) : Int) : Q) = (((D / g : Nat) : Int) : Q) :=
-          congrArg (fun z : Int => (z : Q)) hZ
-        have hQ2 : (((D / g : Nat) : Int) : Q) = ((D / g : Nat) : Q) := by rfl
-        exact hQ1.trans hQ2
-      simp [hs_cast, hD_cast]
+      simp_all
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def compBasisIntEntry (r : Block) (d : DirIdx) (p q : Fin 3) : Int :=
@@ -192,11 +182,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
         (Finset.univ.sum fun k : DirIdx =>
           Finset.univ.sum fun a : DirIdx =>
             ((num k a : Int) : Q) / (den * den)) := by
-    refine Finset.sum_congr rfl ?_
-    intro k hk
-    refine Finset.sum_congr rfl ?_
-    intro a ha
-    simpa using hterm k a
+    simp_all
   have hinner (k : DirIdx) :
       (Finset.univ.sum fun a : DirIdx => ((num k a : Int) : Q) / (den * den)) =
         (Finset.univ.sum fun a : DirIdx => ((num k a : Int) : Q)) / (den * den) := by
@@ -214,9 +200,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
           =
           (Finset.univ.sum fun k : DirIdx =>
             (Finset.univ.sum fun a : DirIdx => ((num k a : Int) : Q)) / (den * den)) := by
-            refine Finset.sum_congr rfl ?_
-            intro k hk
-            simpa using hinner k
+            simp_all
       _ =
           (Finset.univ.sum fun k : DirIdx =>
               Finset.univ.sum fun a : DirIdx => ((num k a : Int) : Q)) / (den * den) := by

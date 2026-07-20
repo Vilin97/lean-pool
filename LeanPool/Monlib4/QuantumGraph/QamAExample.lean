@@ -66,14 +66,11 @@ open scoped ComplexOrder
 theorem Matrix.smul_stdBasisMatrix {R α n m : Type _} [DecidableEq n] [DecidableEq m]
     [Zero R] [SMulZeroClass α R] (a : α) (i : n) (j : m) (x : R) :
     a • stdBasisMatrix i j x = stdBasisMatrix i j (a • x) := by
-  ext k l
-  by_cases hki : k = i <;> by_cases hlj : l = j <;>
-    simp [stdBasisMatrix, Matrix.single, hki, hlj]
+  simp_all
 
 theorem Matrix.stdBasisMatrix.transpose {R n m : Type _} [DecidableEq n] [DecidableEq m]
     [Semiring R] (i : n) (j : m) : (stdBasisMatrix i j (1 : R))ᵀ = stdBasisMatrix j i (1 : R) := by
-  ext k l
-  simp [transpose_apply, stdBasisMatrix, Matrix.single, and_comm]
+  simp_all
 
 open scoped TensorProduct
 
@@ -159,8 +156,7 @@ theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
   · intro hA
     apply hconj_injective
     rwa [hconj_const]
-  · intro hA
-    rw [hA, hconj_const]
+  · simp_all
 
 /-- a function `f : A → B` is _almost injective_ if for all $x, y \in A$,
   if $f(x)=f(y)$ then there exists some $0\neq\alpha \in \mathbb{C}$ such that
@@ -205,31 +201,15 @@ theorem spectra_fin_two_ext_aux {A : Type _} (α β γ : A) :
     rcases h with (h1 | ⟨_, cs, ⟨hcs₁, _⟩, ⟨hcs₃, _⟩⟩)
     · exact h1
     · exact ⟨hcs₁, hcs₃.symm⟩
-  · rintro ⟨rfl, rfl⟩
-    rfl
+  · simp_all
 
 theorem spectra_fin_two_ext {α : Type _} (α₁ α₂ β₁ β₂ : α) :
     ({α₁, α₂} : Multiset α) = {β₁, β₂} ↔ α₁ = β₁ ∧ α₂ = β₂ ∨ α₁ = β₂ ∧ α₂ = β₁ := by
   by_cases H₁ : α₁ = α₂
   · rw [H₁, spectra_fin_two_ext_aux]
-    constructor
-    · rintro ⟨h1, h2⟩
-      left
-      exact ⟨h1, h2⟩
-    · rintro (⟨h1, h2⟩ | ⟨h1, h2⟩)
-      · exact ⟨h1, h2⟩
-      · exact ⟨h2, h1⟩
+    simp_all
   by_cases h' : α₁ = β₁
-  · simp_rw [h', true_and, Multiset.insert_eq_cons, Multiset.cons_inj_right,
-      Multiset.singleton_inj]
-    constructor
-    · intro hi
-      left
-      exact hi
-    rintro (h | ⟨_, h2⟩)
-    · exact h
-    · rw [← h', eq_comm] at h2
-      contradiction
+  · simp_all
   simp_rw [Multiset.insert_eq_cons, Multiset.cons_eq_cons, Multiset.singleton_inj,
     Multiset.singleton_eq_cons_iff, ne_eq, h', false_and, false_or, not_false_iff,
     true_and]
@@ -309,9 +289,7 @@ theorem Matrix.IsAlmostHermitian.eigenvalues_eq_zero_iff {x : Matrix n n ℂ}
     · intro h
       ext i
       exact RCLike.ofReal_inj.mp (congrFun h i)
-    · intro h
-      ext i
-      simp [h]
+    · simp_all
   rw [hcomp, hx.matrix_isHermitian.eigenvalues_eq_zero_iff]
 
 omit [Fintype n] in
@@ -348,29 +326,23 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
   rw [Matrix.IsAlmostHermitian.spectral_theorem Hx, Matrix.IsAlmostHermitian.spectral_theorem Hy]
   have HX : diagonal Hx.eigenvalues = of ![![-Hx.eigenvalues 1, 0], ![0, Hx.eigenvalues 1]] := by
     rw [← hx2, ← Matrix.ext_iff]
-    simp only [Fin.forall_fin_two, diagonal_apply, of_apply, if_true, one_ne_zero,
-      if_false, zero_ne_one, cons_val_zero, cons_val_one, and_self_iff]
+    simp_all
   have HY : diagonal Hy.eigenvalues = of ![![-Hy.eigenvalues 1, 0], ![0, Hy.eigenvalues 1]] := by
     rw [← hy2, ← Matrix.ext_iff]
-    simp only [Fin.forall_fin_two, diagonal_apply, of_apply, if_true, one_ne_zero,
-      if_false, zero_ne_one, cons_val_zero, cons_val_one, and_self_iff]
+    simp_all
   simp_rw [HY, HX, innerAut_apply_innerAut]
   have hx₁ : Hx.eigenvalues 1 ≠ 0 := by
     intro hx₁
     have : diagonal Hx.eigenvalues = 0 := by
       rw [HX, hx₁, neg_zero, ← Matrix.ext_iff]
-      simp_rw [Fin.forall_fin_two]
-      simp only [of_apply, cons_val_zero, cons_val_one]
-      aesop
+      simp_all
     rw [Matrix.diagonal_eq_zero_iff, Matrix.IsAlmostHermitian.eigenvalues_eq_zero_iff] at this
     exact (Subtype.mem x) this
   have hy₁ : Hy.eigenvalues 1 ≠ 0 := by
     intro hy₁
     have : diagonal Hy.eigenvalues = 0 := by
       rw [HY, hy₁, neg_zero, ← Matrix.ext_iff]
-      simp_rw [Fin.forall_fin_two]
-      simp only [of_apply, cons_val_zero, cons_val_one]
-      aesop
+      simp_all
     rw [Matrix.diagonal_eq_zero_iff, Matrix.IsAlmostHermitian.eigenvalues_eq_zero_iff] at this
     exact (Subtype.mem y) this
   use Units.mk0 (Hx.eigenvalues 1 * (Hy.eigenvalues 1)⁻¹) (mul_ne_zero hx₁ (inv_ne_zero hy₁))
@@ -379,10 +351,7 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
   have :
     (Hx.eigenvalues 1 * (Hy.eigenvalues 1)⁻¹) • diagonal Hy.eigenvalues = diagonal Hx.eigenvalues :=
     by
-    rw [HX, HY]
-    simp only [smul_of, smul_cons, smul_eq_mul, mul_neg, MulZeroClass.mul_zero,
-      smul_empty, EmbeddingLike.apply_eq_iff_eq]
-    simp only [inv_mul_cancel_right₀ hy₁]
+    simp_all
   simp_rw [Matrix.unitaryGroup.star_mul_cancel_right, Units.val_mk0,
     ← _root_.map_smul, ← HY, ← HX, this]
 

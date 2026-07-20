@@ -51,8 +51,7 @@ instance ℤFree : AddFreeGroup ℤ Unit where
   inducedHom := fun A _ f => (zmultiplesHom A).toFun (f ())
   induced_extends := by
     intro A _ f
-    funext u; cases u
-    simp [one_zsmul]
+    funext u; simp_all
   unique_extension := by
     intro A abg f g hyp
     let hyp' := congrFun hyp ()

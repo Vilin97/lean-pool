@@ -260,9 +260,7 @@ theorem DNF.term_mentions_all (φ : DNF N)
     simp only [DNF.eval, List.any_eq_true]
     exact ⟨term, hterm, hsat'⟩
   -- But f flips, so f x ≠ f (flip x i)
-  have := hflip x i
-  rw [← hcomp, ← hcomp, hx_true, hx'_true] at this
-  simp at this
+  simp_all
 
 /-- If a term mentions all N variables, it is satisfied by at most one assignment. -/
 theorem full_term_unique {term : List (Literal N)}
@@ -292,9 +290,7 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
   -- flip0 is self-inverse
   have flip0_inv : ∀ x, flip0 (flip0 x) = x := by
     intro x; ext j; simp only [flip0]
-    by_cases h : j = ⟨0, hN'⟩
-    · subst h; simp
-    · simp [Function.update_of_ne h]
+    simp_all
   -- flip0 maps true-set to false-set
   have flip0_tf : ∀ x, f x = true → f (flip0 x) = false := by
     intro x hx; have := hflip x ⟨0, hN'⟩; rw [hx] at this; simpa using this
@@ -364,8 +360,7 @@ theorem DNF.flip_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     intro x hx
     simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_setOf, true_and] at hx
     simp only [Finset.coe_range, Set.mem_Iio, DNF.complexity]
-    rw [List.findIdx_lt_length]
-    exact hfind x hx
+    simp_all
   · -- InjOn: two true assignments with same findIdx must be equal
     intro x₁ hx₁ x₂ hx₂ heq
     simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_setOf, true_and] at hx₁ hx₂

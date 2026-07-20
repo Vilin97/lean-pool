@@ -45,8 +45,7 @@ lemma hasDerivAt_inv_log_mul {c t : ℝ} (hc : 0 < c) (hct : 1 < c * t) :
   have hlog_ne : Real.log (c * t) ≠ 0 :=
     Real.log_ne_zero.mpr ⟨by linarith, by constructor <;> linarith⟩
   have ht_ne : t ≠ 0 := by
-    have : 0 < t := by nlinarith [hct]
-    exact ne_of_gt this
+    simp_all
   have hval : -((c * t)⁻¹ * c) / Real.log (c * t) ^ 2
       = -(1 / (t * Real.log (c * t) ^ 2)) := by field_simp
   rw [← hval]
@@ -63,8 +62,7 @@ lemma hasDerivAt_inv_log_sq_mul {c t : ℝ} (hc : 0 < c) (hct : 1 < c * t) :
   have hlog_ne : Real.log (c * t) ≠ 0 :=
     Real.log_ne_zero.mpr ⟨by linarith, by constructor <;> linarith⟩
   have ht_ne : t ≠ 0 := by
-    have : 0 < t := by nlinarith [hct]
-    exact ne_of_gt this
+    simp_all
   have hval : (↑2 * (Real.log (c * t))⁻¹ ^ (2 - 1) * -(1 / (t * Real.log (c * t) ^ 2)))
       = -(2 / (t * Real.log (c * t) ^ 3)) := by
     push_cast

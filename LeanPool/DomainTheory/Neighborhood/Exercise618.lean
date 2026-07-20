@@ -117,11 +117,7 @@ theorem iterProdIso_symm_pair (a : V.Element) (b : (iterSys V).Element) :
     (iterProdIso V).symm (pair a b) = ofSeq (consSeq a b) := by
   have hkey : iterProdIso V (ofSeq (consSeq a b)) = pair a b := by
     rw [iterProdIso_apply]
-    congr 1
-    · rw [component_ofSeq, consSeq_zero]
-    · have : (fun n => component (ofSeq (consSeq a b)) (n + 1)) = fun n => component b n := by
-        funext n; rw [component_ofSeq, consSeq_succ]
-      rw [this, ofSeq_component]
+    simp_all
   rw [← hkey, OrderIso.symm_apply_apply]
 
 /-! ## Bottom-element computations -/
@@ -150,13 +146,7 @@ theorem iterBot_eq : (iterSys V).bot = ofSeq (fun _ : ℕ => V.bot) := by
 theorem pair_bot {α β : Type*} {V₀ : NeighborhoodSystem α} {V₁ : NeighborhoodSystem β} :
     pair V₀.bot V₁.bot = (prod V₀ V₁).bot := by
   apply Element.ext
-  intro W
-  rw [mem_bot, prod_master]
-  constructor
-  · rintro ⟨X, Y, hX, hY, rfl⟩
-    rw [mem_bot] at hX hY; subst hX; subst hY; rfl
-  · rintro rfl
-    exact ⟨V₀.master, V₁.master, V₀.bot.master_mem, V₁.bot.master_mem, rfl⟩
+  simp_all
 
 /-! ## The structure isomorphism `i, j` as approximable maps -/
 
@@ -356,8 +346,7 @@ theorem descMap_strict (k : ApproximableMap (prod V E) E) (hk : IsStrict k) :
   · rintro ⟨n, hn⟩
     have hs := descSeq_strict k hk n
     rw [isStrict_iff_apply_bot] at hs
-    rw [hs, mem_bot] at hn
-    exact hn
+    simp_all
   · rintro rfl
     have hs := descSeq_strict k hk 0
     rw [isStrict_iff_apply_bot] at hs
@@ -404,15 +393,9 @@ theorem rho_apply (n : ℕ) (z : (iterSys V).Element) :
     funext j
     cases j with
     | zero =>
-      change component z 0 = if (0 : ℕ) < n + 1 then component z 0 else V.bot
-      rw [if_pos (Nat.zero_lt_succ n)]
+      simp_all
     | succ k =>
-      rw [consSeq_succ, component_ofSeq, component_ofSeq]
-      show (if k < n then component z (k + 1) else V.bot)
-         = if k + 1 < n + 1 then component z (k + 1) else V.bot
-      by_cases h : k < n
-      · rw [if_pos h, if_pos (Nat.succ_lt_succ h)]
-      · rw [if_neg h, if_neg (fun hc => h (Nat.lt_of_succ_lt_succ hc))]
+      simp_all
 
 /-- **`⋃ₙ ρₙ = I`.** Every `z` is the directed union of its truncations: the
 cofinite-`Δ` structure

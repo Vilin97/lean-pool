@@ -164,13 +164,11 @@ theorem misereOutcome_h_add_g : MisereOutcome (h + g) = Outcome.N := by
   constructor <;> apply winsGoingFirst_of_moves
   · use g + g
     constructor
-    · apply add_right_mem_moves_add
-      exact moves_h Player.left ▸ Set.mem_insert _ _
+    · simp_all
     · exact not_winsGoingFirst_of_misereOutcome_P misereOutcome_g_add_g
   · use g + g
     constructor
-    · apply add_right_mem_moves_add
-      exact moves_h Player.right ▸ Set.mem_insert _ _
+    · simp_all
     · exact not_winsGoingFirst_of_misereOutcome_P misereOutcome_g_add_g
 
 theorem g_misereEQ_h_short (A : AugmentedForm.{u} → Prop) (h_short : ∀ x, A x → IsShort x) :

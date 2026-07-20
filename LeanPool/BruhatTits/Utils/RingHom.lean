@@ -57,27 +57,17 @@ lemma GL.map_det (g : GL α R) : Matrix.GeneralLinearGroup.det (GL.map f g) =
 
 lemma GL.map_mul_map_inv (g : GL α R) : GL.map f g * GL.map f g⁻¹ = 1 := by
   apply Units.ext
-  simp only [map, RingHom.mapMatrix_apply, Units.inv_eq_val_inv, Matrix.coe_units_inv, inv_inv,
-    Units.val_mul, Units.val_one]
-  change f.mapMatrix g.val * f.mapMatrix g.val⁻¹ = 1
-  rw [← _root_.map_mul]
-  simp
+  simp_all
 
 lemma GL.map_inv_mul_map (g : GL α R) : GL.map f g⁻¹ * GL.map f g = 1 := by
   apply Units.ext
-  simp only [map, RingHom.mapMatrix_apply, Units.inv_eq_val_inv, Matrix.coe_units_inv, inv_inv,
-    Units.val_mul, Units.val_one]
-  change f.mapMatrix g.val⁻¹ * f.mapMatrix g.val = 1
-  rw [← _root_.map_mul]
-  simp
+  simp_all
 
 lemma GL.coe_map_mul_map_inv (g : GL α R) : g.val.map f * g.val⁻¹.map f = 1 := by
-  rw [← Matrix.map_mul]
-  simp
+  simp_all
 
 lemma GL.coe_map_inv_mul_map (g : GL α R) : g.val⁻¹.map f * g.val.map f = 1 := by
-  rw [← Matrix.map_mul]
-  simp
+  simp_all
 
 lemma GL_map_eq {ι : Type*} [DecidableEq ι] [Fintype ι]
     {R S : Type*} [CommRing R] [CommRing S] (g : GL ι R) (f : R →+* S) :

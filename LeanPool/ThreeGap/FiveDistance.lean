@@ -212,8 +212,7 @@ theorem angle_eq_of_opp_side (v0 vi vj : EuclideanSpace ℝ (Fin 2)) (h0 : v0 �
   refine Real.injOn_cos ⟨InnerProductGeometry.angle_nonneg _ _,
     InnerProductGeometry.angle_le_pi _ _⟩ ⟨?_, ?_⟩ hcos
   · rw [sub_nonneg, abs_le]; constructor <;> linarith
-  · have : 0 ≤ |π - x| := abs_nonneg _
-    linarith
+  · simp_all
 
 open RealInnerProductSpace in
 /-- **Step B (flanking wedge).** If `vᵢ, vⱼ` are on opposite sides of `v₀` with angle sum
@@ -349,9 +348,7 @@ theorem not_six_vectors_pairwise
   set b := o.oangle (w 0) (w j) with hb
   -- oriented angle ∠(wᵢ,wⱼ) = b − a, so its toReal is the reduced (b.toReal − a.toReal)
   have hadd : o.oangle (w i) (w j) = b - a := by
-    have h1 := o.oangle_add (hw i) (hw 0) (hw j)
-    rw [o.oangle_rev (w 0) (w i)] at h1
-    rw [← h1, ha, hb]; abel
+    simp_all
   have hcoe : o.oangle (w i) (w j) = ((b.toReal - a.toReal : ℝ) : Real.Angle) := by
     rw [hadd, Real.Angle.coe_sub, Real.Angle.coe_toReal, Real.Angle.coe_toReal]
   have hang : InnerProductGeometry.angle (w i) (w j)
@@ -388,8 +385,7 @@ theorem card_le_five_of_pairwise
   have hmem : ∀ i, w i ∈ s := fun i => hts (e i).2
   have hinj : Function.Injective w := fun i j hij => e.injective (Subtype.ext hij)
   refine not_six_vectors_pairwise o w (fun i => h0 _ (hmem i)) ?_
-  intro i j hij
-  exact hsep _ (hmem i) _ (hmem j) (fun he => hij (hinj he))
+  simp_all
 
 /-- **Distinct-value count `≤ 5` from a separated record assignment (HM direct-route interface).**
 If each value `val i` (`i ∈ s`) is assigned a *record vector* `rec (val i)` that is nonzero, and
@@ -418,10 +414,7 @@ theorem card_image_le_five_of_record_assignment {ι : Type*} (s : Finset ι) (va
   have hcard_eq : (T.image rec).card = T.card := Finset.card_image_of_injOn hrec_inj
   have hle : (T.image rec).card ≤ 5 := by
     refine card_le_five_of_pairwise o _ ?_ ?_
-    · intro v hv
-      obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hv
-      obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp ha
-      exact hne i hi
+    · simp_all
     · intro v hv u hu hvu
       obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hv
       obtain ⟨i, hi, rfl⟩ := Finset.mem_image.mp ha
@@ -429,8 +422,7 @@ theorem card_image_le_five_of_record_assignment {ι : Type*} (s : Finset ι) (va
       obtain ⟨j, hj, rfl⟩ := Finset.mem_image.mp hb
       refine hsep i hi j hj (fun h => hvu ?_)
       rw [h]
-  rw [hcard_eq] at hle
-  exact hle
+  simp_all
 
 open RealInnerProductSpace in
 /-- **Step A: at most 3 vectors can be on one side of `v₀` and pairwise `> π/3`.** Four nonzero
@@ -489,20 +481,14 @@ theorem antiparallel_unique (v0 wi wj : EuclideanSpace ℝ (Fin 2)) (h0 : v0 ≠
     have hs := abs_det2_eq v0 w h0 hw
     rw [hdet, abs_zero] at hs
     have hsin : Real.sin (InnerProductGeometry.angle v0 w) = 0 := by
-      have hpos : (0 : ℝ) < ‖v0‖ * ‖w‖ := mul_pos (norm_pos_iff.mpr h0) (norm_pos_iff.mpr hw)
-      have he : ‖v0‖ * ‖w‖ * Real.sin (InnerProductGeometry.angle v0 w) = 0 := hs.symm
-      rcases mul_eq_zero.mp he with h | h
-      · exact absurd h hpos.ne'
-      · exact h
+      simp_all
     rcases InnerProductGeometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi.mp hsin with h | h
     · linarith [Real.pi_pos]
     · exact h
   obtain ⟨_, ri, hri, hwi_eq⟩ := InnerProductGeometry.angle_eq_pi_iff.mp (hang wi hwi hi0 hbi)
   obtain ⟨_, rj, hrj, hwj_eq⟩ := InnerProductGeometry.angle_eq_pi_iff.mp (hang wj hwj hj0 hbj)
   have h0' : InnerProductGeometry.angle wi wj = 0 := by
-    rw [hwi_eq, hwj_eq, InnerProductGeometry.angle_smul_left_of_neg _ _ hri,
-      InnerProductGeometry.angle_smul_right_of_neg _ _ hrj,
-      InnerProductGeometry.angle_self (neg_ne_zero.mpr h0)]
+    simp_all
   linarith [Real.pi_pos]
 
 open RealInnerProductSpace in
@@ -667,8 +653,7 @@ theorem angle_antiparallel {v0 w : EuclideanSpace ℝ (Fin 2)} (u : EuclideanSpa
     · exact absurd (hc.trans (by rw [h, zero_smul])) hw
     · exfalso
       have hz : InnerProductGeometry.angle v0 w = 0 := by
-        rw [hc, InnerProductGeometry.angle_smul_right_of_pos _ _ h,
-          InnerProductGeometry.angle_self h0]
+        simp_all
       rw [hz] at hbeta; linarith [Real.pi_pos]
   rw [hc, InnerProductGeometry.angle_smul_left_of_neg _ _ hcneg,
     InnerProductGeometry.angle_neg_left]
@@ -699,10 +684,7 @@ theorem angle_eq_pi_of_det2_zero {v0 w : EuclideanSpace ℝ (Fin 2)} (h0 : v0 �
   have hs := abs_det2_eq v0 w h0 hw
   rw [hdet, abs_zero] at hs
   have hsin : Real.sin (InnerProductGeometry.angle v0 w) = 0 := by
-    have hpos : (0 : ℝ) < ‖v0‖ * ‖w‖ := mul_pos (norm_pos_iff.mpr h0) (norm_pos_iff.mpr hw)
-    rcases mul_eq_zero.mp hs.symm with h | h
-    · exact absurd h hpos.ne'
-    · exact h
+    simp_all
   rcases InnerProductGeometry.sin_eq_zero_iff_angle_eq_zero_or_angle_eq_pi.mp hsin with h | h
   · linarith [Real.pi_pos]
   · exact h

@@ -62,8 +62,7 @@ private lemma gradIntZero_component (g : X → ℝ) (hg : IsSpatiallySmooth 1 g)
   simp only [one_mul] at h
   have hc : ∀ x : X, gradX (fun _ : X => (1 : ℝ)) x = 0 :=
     hGradConst (fun _ : X => (1 : ℝ)) (fun _ _ => rfl)
-  simp only [hc, Pi.zero_apply, mul_zero, integral_zero, neg_zero] at h
-  linarith
+  simp_all
 
 /-- Gradient integral vanishes (Stokes for 0-forms: ∫_M dg = 0).
     Derived from hIBP_spatial + hGradConst + hGradIntegrable. -/
@@ -114,9 +113,7 @@ lemma hGradAddConst (f : X → ℝ) (hf : IsSpatiallySmooth 1 f) (c : ℝ) :
 lemma hLaplacianMinNonneg (φ : X → ℝ) (hφ : IsSpatiallySmooth 2 φ) (x₀ : X)
     (hmin : ∀ x, φ x₀ ≤ φ x) : 0 ≤ divX (gradX φ) x₀ := by
   have hmax : ∀ x, (fun y => (-1) * φ y) x ≤ (fun y => (-1) * φ y) x₀ := by
-    intro x
-    simp
-    linarith [hmin x]
+    simp_all
   have h := hLaplacianMaxNonpos (fun y => (-1) * φ y) x₀ (hDiff_smul 2 (-1) φ hφ) hmax
   have h2 : divX (gradX (fun y => (-1) * φ y)) x₀ =
       (-1) * divX (gradX φ) x₀ := by

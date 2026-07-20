@@ -60,18 +60,10 @@ lemma has_T_half {t₀ t₁ : I} (γ : Path t₀ t₁) (ht₀ : ↑t₀ < (2⁻�
   use T
   have hT₀ : 0 ≠ T := by
     rintro ⟨rfl⟩
-    apply lt_irrefl (t₀ : ℝ)
-    calc (t₀ : ℝ)
-        _ < 2⁻¹       := ht₀
-        _ = (γ 0 : ℝ) := Subtype.coe_inj.mpr hT.symm
-        _ = ↑t₀       := Subtype.coe_inj.mpr γ.source'
+    simp_all
   have hT₁ : T ≠ 1 := by
     rintro ⟨rfl⟩
-    apply lt_irrefl (t₁ : ℝ)
-    calc (t₁ : ℝ)
-      _ = (γ 1 : ℝ) := Subtype.coe_inj.mpr γ.target'.symm
-      _ = halfI    := Subtype.coe_inj.mpr hT
-      _ < ↑t₁       := ht₁
+    simp_all
   exact ⟨lt_iff_le_and_ne.mpr ⟨T.2.1, hT₀⟩, lt_iff_le_and_ne.mpr ⟨T.2.2, hT₁⟩, hT⟩
 end
 

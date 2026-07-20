@@ -117,8 +117,7 @@ theorem LinearEquiv.refl_conj {R E : Type _} [CommSemiring R] [AddCommMonoid E]
     [Module R E] :
     (LinearEquiv.refl R E).conj = 1 := by
   ext
-  simp only [LinearEquiv.conj_apply_apply, LinearEquiv.refl_apply, LinearEquiv.refl_symm]
-  rfl
+  simp_all
 
 theorem LinearEquiv.conj_hMul {R E F : Type _} [CommSemiring R] [AddCommMonoid E]
     [AddCommMonoid F] [Module R E] [Module R F] (f : E ≃ₗ[R] F)

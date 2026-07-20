@@ -505,8 +505,7 @@ private lemma smul_assoc_key (g₁ g₂ : P.Δ) (β₀ : P.Δ) :
     rw [← Finsupp.sum_finsetSum_index
       (h_zero := fun a => by simp)
       (h_add := fun a b₁ b₂ => by split_ifs <;> simp [*])]
-    congr 1; ext j
-    exact Finsupp.sum_single_index (by simp)
+    simp_all
   rw [h_rhs]
   by_cases h_ex : ∃ D₀ ∈ (m P g₂ g₁).support, x₀ ∈ smulOrbit P (HeckeCoset.rep D₀) β₀
   · obtain ⟨D₀, hD₀, hx₀⟩ := h_ex
@@ -551,10 +550,7 @@ private lemma smul_assoc_singles (D₁ D₂ : HeckeCoset P) (a₁ a₂ : ℤ)
           Finsupp.single i (b * b₂)) =
       ∑ i ∈ smulOrbit P (HeckeCoset.rep D) (HeckeLeftCoset.rep m₀),
         Finsupp.single i (b * c₀) := by
-    intro D b
-    rw [Finsupp.sum_single_index (by
-      simp [mul_zero, Finsupp.single_zero,
-        Finset.sum_const_zero])]
+    simp_all
   simp_rw [hsi]
   rw [Finsupp.sum_single_index (by simp [zero_mul, Finsupp.single_zero, Finset.sum_const_zero])]
   apply Finsupp.ext; intro x₀
@@ -618,8 +614,7 @@ private lemma smul_assoc_singles (D₁ D₂ : HeckeCoset P) (a₁ a₂ : ℤ)
     rw [← Finsupp.sum_finsetSum_index
       (h_zero := fun a => by simp)
       (h_add := fun a b₁ b₂ => by split_ifs <;> simp [*])]
-    congr 1; ext j
-    exact Finsupp.sum_single_index (by simp)
+    simp_all
   rwa [h_rhs2] at key_pt
 
 /-- The module action satisfies the scalar tower property `(x * y) • z = y • (x • z)`,

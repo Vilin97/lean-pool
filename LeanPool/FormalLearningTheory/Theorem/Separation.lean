@@ -370,9 +370,7 @@ private lemma chebyshev_seven_twelfths_bound
   -- Step 2: S counts the number of events that hold
   have hS_count : ∀ ω, S ω = ((univ.filter (fun j => ω ∈ events j)).card : ℝ) := by
     intro ω; simp only [S, X, Set.indicator_apply]
-    conv_lhs => arg 2; ext j; rw [show (if ω ∈ events j then (1 : ℝ) else 0) =
-      (if ω ∈ events j then 1 else 0 : ℕ) from by split_ifs <;> simp]
-    rw [← Nat.cast_sum, Finset.sum_boole]; rfl
+    simp_all
   -- Step 3: The indicator functions are independent
   have hindep_fun : iIndepFun (m := fun _ => inferInstance)
       (fun j => (events j).indicator (fun _ => (1 : ℝ))) μ :=
@@ -540,15 +538,11 @@ private lemma majority_error_le_seven_rate_of_good_fraction
       cases hcx : c x with
       | false =>
         have hmaj : boosted_majority k (fun j => hs j x) = true := by
-          by_contra h
-          simp [Bool.not_eq_true] at h
-          simp [h, hcx] at hx
+          simp_all
         change decide (k < 2 * (Finset.univ.filter (fun j : Fin k => hs j x)).card) =
           true at hmaj
         have hmaj_lt : k < 2 * (Finset.univ.filter (fun j : Fin k => hs j x = true)).card := by
-          have hmaj_bool : k < 2 * (Finset.univ.filter (fun j : Fin k => hs j x)).card :=
-            of_decide_eq_true hmaj
-          rwa [hfilt_id] at hmaj_bool
+          simp_all
         have hfilt_ne : (Finset.univ.filter (fun j : Fin k => hs j x ≠ c x))
             = (Finset.univ.filter (fun j : Fin k => hs j x = true)) := by
           ext j; simp [hcx]
@@ -556,17 +550,11 @@ private lemma majority_error_le_seven_rate_of_good_fraction
         omega
       | true =>
         have hmaj : boosted_majority k (fun j => hs j x) = false := by
-          by_contra h
-          simp [Bool.not_eq_false] at h
-          simp [h, hcx] at hx
+          simp_all
         change decide (k < 2 * (Finset.univ.filter (fun j : Fin k => hs j x)).card) =
           false at hmaj
         have hmaj_le : 2 * (Finset.univ.filter (fun j : Fin k => hs j x = true)).card ≤ k := by
-          have hmaj_not : ¬ k < 2 * (Finset.univ.filter (fun j : Fin k => hs j x)).card :=
-            decide_eq_false_iff_not.mp hmaj
-          have hmaj_bool : 2 * (Finset.univ.filter (fun j : Fin k => hs j x)).card ≤ k := by
-            omega
-          rwa [hfilt_id] at hmaj_bool
+          simp_all
         have hfilt_ne : (Finset.univ.filter (fun j : Fin k => hs j x ≠ c x))
             = (Finset.univ.filter (fun j : Fin k => hs j x = false)) := by
           ext j; simp [hcx]
@@ -987,8 +975,7 @@ private theorem threshold_not_shatter_pair {S : Finset ℕ} (hcard : 2 ≤ S.car
     have hcb : decide (b ≤ n) = false := by
       convert hc ⟨b, hb⟩ using 1; simp
     have hca : decide (a ≤ n) = true := by
-      convert hc ⟨a, ha⟩ using 1
-      simp only [show (a : ℕ) ≠ b from hab, ite_false]
+      simp_all
     simp only [decide_eq_false_iff_not, not_le] at hcb
     simp only [decide_eq_true_eq] at hca
     omega
@@ -1099,12 +1086,7 @@ theorem pac_not_implies_online :
       intro D _ c m ε
       have hmeas_singleton_pi : ∀ (f : Fin m → ℕ),
           @MeasurableSet _ (@MeasurableSpace.pi (Fin m) (fun _ => ℕ) (fun _ => ⊤)) {f} := by
-        intro f
-        have : ({f} : Set (Fin m → ℕ)) = ⋂ i : Fin m, (fun g => g i) ⁻¹' {f i} := by
-          ext g; simp [funext_iff]
-        rw [this]
-        exact MeasurableSet.iInter (fun i =>
-          measurable_pi_apply i (MeasurableSpace.measurableSet_top))
+        simp_all
       have hprod_top : (inferInstance : MeasurableSpace ((Fin m → ℕ) × (Fin m → ℕ))) = ⊤ := by
         apply le_antisymm le_top
         intro s _
@@ -1181,11 +1163,7 @@ theorem ex_not_implies_pac :
         by simp [htmap x hxfin]⟩
     | false =>
       -- x not in support, never appears in T
-      simp only [List.any_map, Bool.not_eq_true, List.any_eq_false,
-        List.mem_range, Function.comp_def]
-      intro i _
-      simp only [decide_eq_false_iff_not]
-      exact fun h => never_seen x (by simp [hcxb]) i h
+      simp_all
   · -- ¬PACLearnable: VCDim = ⊤, then apply vcdim_infinite_not_pac
     apply vcdim_infinite_not_pac
     -- Show VCDim ℕ C = ⊤ where C = { f | Set.Finite { n | f n = true } }
@@ -1206,8 +1184,7 @@ theorem ex_not_implies_pac :
         by_contra hx'
         simp [hx'] at hx
       · -- ∀ x : ↥S, c x = f x
-        intro ⟨x, hx⟩
-        simp [hx]
+        simp_all
     · -- n < (Finset.range (n+1)).card as WithTop ℕ
       simp only [Finset.card_range]
       exact WithTop.coe_lt_coe.mpr (Nat.lt_succ_self n)

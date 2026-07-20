@@ -67,57 +67,9 @@ def Matrix.centerEquivBase (n : ℕ) (hn : 0 < n) (R : Type*) [Ring R] :
     rintro ⟨A, hA⟩ ⟨B, hB⟩
     rw [Matrix.mem_center_iff] at hA hB
     obtain ⟨a, rfl⟩ := hA
-    obtain ⟨b, rfl⟩ := hB
-    apply Subtype.ext
-    simp only [smul_apply, one_apply_eq]
-    have ha_center : a • (1 : R) ∈ Subring.center R := by
-      change (a : R) * 1 ∈ Subring.center R
-      rw [mul_one]
-      exact a.2
-    have hb_center : b • (1 : R) ∈ Subring.center R := by
-      change (b : R) * 1 ∈ Subring.center R
-      rw [mul_one]
-      exact b.2
-    rw [show ((⟨a • 1, hA⟩ * ⟨b • 1, hB⟩ :
-        Subring.center (Matrix (Fin n) (Fin n) R)) : Matrix (Fin n) (Fin n) R) =
-        (a • 1 : Matrix (Fin n) (Fin n) R) *
-          (b • 1 : Matrix (Fin n) (Fin n) R) from rfl]
-    rw [show ((⟨a • (1 : R), ha_center⟩ * ⟨b • (1 : R), hb_center⟩ :
-        Subring.center R) : R) = (a • (1 : R)) * (b • (1 : R)) from rfl]
-    change (((a : R) • (1 : Matrix (Fin n) (Fin n) R)) *
-        ((b : R) • (1 : Matrix (Fin n) (Fin n) R))) ⟨0, hn⟩ ⟨0, hn⟩ =
-      (a • (1 : R)) * (b • (1 : R))
-    rw [Matrix.mul_apply]
-    rw [Fintype.sum_eq_single ⟨0, hn⟩]
-    · rfl
-    · intro x hx
-      simp [show (⟨0, hn⟩ : Fin n) ≠ x from fun h => hx h.symm]
+    simp_all
   map_add' := by
-    rintro ⟨A, hA⟩ ⟨B, hB⟩
-    rw [Matrix.mem_center_iff] at hA hB
-    obtain ⟨a, rfl⟩ := hA
-    obtain ⟨b, rfl⟩ := hB
-    apply Subtype.ext
-    simp only [smul_apply, one_apply_eq]
-    have ha_center : a • (1 : R) ∈ Subring.center R := by
-      change (a : R) * 1 ∈ Subring.center R
-      rw [mul_one]
-      exact a.2
-    have hb_center : b • (1 : R) ∈ Subring.center R := by
-      change (b : R) * 1 ∈ Subring.center R
-      rw [mul_one]
-      exact b.2
-    rw [show ((⟨a • 1, hA⟩ + ⟨b • 1, hB⟩ :
-        Subring.center (Matrix (Fin n) (Fin n) R)) : Matrix (Fin n) (Fin n) R) =
-        (a • 1 : Matrix (Fin n) (Fin n) R) +
-          (b • 1 : Matrix (Fin n) (Fin n) R) from rfl]
-    rw [show ((⟨a • (1 : R), ha_center⟩ + ⟨b • (1 : R), hb_center⟩ :
-        Subring.center R) : R) = (a • (1 : R)) + (b • (1 : R)) from rfl]
-    change (((a : R) • (1 : Matrix (Fin n) (Fin n) R)) +
-        ((b : R) • (1 : Matrix (Fin n) (Fin n) R))) ⟨0, hn⟩ ⟨0, hn⟩ =
-      (a • (1 : R)) + (b • (1 : R))
-    change ((a : R) * 1) + ((b : R) * 1) = (a • (1 : R)) + (b • (1 : R))
-    rfl
+    simp_all
 
 end RingEquiv
 

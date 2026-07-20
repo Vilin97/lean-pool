@@ -98,13 +98,29 @@ def run_gh(*args: str, stdin: str | None = None) -> str:
     Returns:
         The command's stdout.
     """
+    command = ["gh", *args]
     result = subprocess.run(
-        ["gh", *args],
-        check=True,
+        command,
         capture_output=True,
         text=True,
         input=stdin,
     )
+    if result.returncode != 0:
+        print(
+            f"GitHub CLI command failed with exit code {result.returncode}: "
+            f"{' '.join(command)}",
+            file=sys.stderr,
+        )
+        if result.stdout:
+            print(result.stdout, file=sys.stderr)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr)
+        raise subprocess.CalledProcessError(
+            result.returncode,
+            command,
+            output=result.stdout,
+            stderr=result.stderr,
+        )
     return result.stdout
 
 
@@ -366,12 +382,22 @@ def main(argv: list[str] | None = None) -> int:
 
     metadata_cache: dict[str, UpstreamMetadata] = {}
     for pr_number in pr_numbers:
-        action = update_pr_advisory(
-            repo_full_name,
-            pr_number,
-            metadata_cache=metadata_cache,
-            dry_run=args.dry_run,
-        )
+        try:
+            action = update_pr_advisory(
+                repo_full_name,
+                pr_number,
+                metadata_cache=metadata_cache,
+                dry_run=args.dry_run,
+            )
+        except subprocess.CalledProcessError as error:
+            print(
+                f"PR #{pr_number}: advisory comment failed; "
+                "continuing because this workflow is non-blocking.",
+                file=sys.stderr,
+            )
+            if error.stderr:
+                print(error.stderr, file=sys.stderr)
+            action = "comment-failed"
         print(f"PR #{pr_number}: {action}")
     return 0
 

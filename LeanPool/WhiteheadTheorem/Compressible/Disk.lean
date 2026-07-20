@@ -137,9 +137,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   replace Hfj := (ContinuousMap.Homotopy.refl fj).comp Hfj.some
   simp only [ContinuousMap.comp_id, ContinuousMap.comp_const] at Hfj
   let a₀ : A := ⟨fj y₀, by
-    change f y₀ ∈ A
-    apply hf
-    exact Cube.boundaryJar_subset_boundary _ y₀.property ⟩
+    simp_all ⟩
   use a₀
   let fb' : C(∂𝕀 (n + 1), A) := fb.comp ⟨ULift.down.{u}, continuous_uliftDown⟩
   let Hfj' : C((⊔𝕀 (n + 1)) × I, A) := Hfj.toContinuousMap.argSwap.comp <|
@@ -346,8 +344,7 @@ noncomputable def _root_.TopCat.Cyl.stretchToWall :
     have t1 : 1 ≤ ((2 : ℝ) - t.val) := by linarith only [t.property.right]
     constructor
     · constructor
-      · have := mem_closedBall_iff_norm.mp hx
-        simp_all only [Metric.mem_closedBall, dist_zero_right, sub_zero]
+      · simp_all
       · exact t.property.left
     · by_cases hxt : 2 * ‖x‖ ≥ 2 - t
       · simp only [hxt, sup_of_le_left]
@@ -401,8 +398,7 @@ lemma _root_.TopCat.Cyl.stretchToWall_eq_zero_of_norm_eq_one
   unfold Cyl.stretchToWall
   simp only [ContinuousMap.coe_mk, hx1, mul_one, Prod.mk.injEq]
   have : 2 ≥ 2 - t.val := by linarith only [t.property.left]
-  simp only [this, sup_of_le_left, sub_self, Set.Icc.mk_zero, ne_eq, OfNat.ofNat_ne_zero,
-    not_false_eq_true, div_self, one_smul, and_self]
+  simp_all
 
 /-- Suppose `n ≥ 1` and `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`.
 If `f` is as a map of pairs homotopic to a map into `A`,
@@ -439,9 +435,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
       have : diskBoundaryIncl.{u} (n + 1) ⟨‖x‖⁻¹ • x, xmem⟩ = ⟨⟨‖x‖⁻¹ • x, pf2⟩⟩ := rfl
       rw [← this]
       have := H.prop' ⟨2 - 2 * ‖x‖, pf1⟩ ⟨⟨‖x‖⁻¹ • x, xmem⟩⟩
-      simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap,
-        ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
-      exact this
+      simp_all
     · replace hx1 := le_of_not_ge hx1
       simp only [hx1, sup_of_le_right, div_one, (by norm_num : (2 : ℝ) - 1 = 1)]
       change H (1, _) ∈ A
@@ -456,11 +450,8 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
             Set.Icc.coe_zero, sub_zero, ContinuousMap.Homotopy.coe_toContinuousMap,
             ContinuousMap.HomotopyWith.coe_toHomotopy]
           have : 2 * ‖x‖ ≤ 2 := by
-            have := Metric.mem_closedBall.mp hx
-            rw [dist_eq_norm, sub_zero] at this
-            linarith only [this]
-          simp only [this, sup_of_le_right, sub_self, Set.Icc.mk_zero, ne_eq, OfNat.ofNat_ne_zero,
-            not_false_eq_true, div_self, one_smul, ContinuousMap.HomotopyWith.apply_zero]
+            simp_all
+          simp_all
         map_one_left x := by unfold l; rfl
         prop' t x hy := by
           unfold H'
@@ -506,8 +497,7 @@ theorem isCompressible_subtype_val_of_unique_pi
     have F_pair : disk.IsMapOfPairs X A F.hom := fun x ↦ by
       change (diskBoundaryIncl (n + 1) ≫ F) x ∈ A
       rw [← sq.w]
-      simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
-        Subtype.coe_prop]
+      simp_all
     obtain ⟨l, lA, H⟩ := disk.homotopicRel_boundary_of_unique_pi X A F.hom F_pair hpi
     replace lA := Set.range_subset_iff.mp lA
     let l' :  C(disk.{u} (n + 1), A) := ⟨fun x ↦ ⟨l x, lA x⟩, by
@@ -556,8 +546,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   let a : X := H ⟨1, ![]⟩
   have aA : a ∈ A := by
     unfold a
-    rw [H.apply_one ![]]
-    simp_all only [ContinuousMap.coe_mk, Function.comp_apply, Subtype.coe_prop, α', β', x]
+    simp_all
   let l : C(disk.{u} 0, A) := ContinuousMap.const _ ⟨a, aA⟩
   constructor
   refine ⟨ofHom l, ?_, ?_⟩
@@ -627,8 +616,7 @@ theorem isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
       all_goals rw [Category.assoc]
       all_goals unfold inv MapCyl.domInclToTop
       all_goals ext x : 1
-      all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
-        Homeomorph.symm_apply_apply]
+      simp_all
     · convert l.H using 2
       rw [Category.assoc]
       congr 1

@@ -348,9 +348,7 @@ lemma fubini_double_pointwise_bound
           le_trans (abs_nonneg _) (h_score v i)
         apply mul_le_mul (h_score v i) _ (abs_nonneg _) h_nn
         by_cases hvw : v - w = 0
-        · have : v = w := sub_eq_zero.mp hvw; subst this
-          simp [dotProduct, landauMatrix, innerLandauMatrix, normSq, vecMulVec,
-            eucNorm, coulombKernel]
+        · have : v = w := sub_eq_zero.mp hvw; simp_all
         · calc |∑ j, landauMatrix coulombKernel (v - w) i j *
                 (f w • vGrad f v - f v • vGrad f w) j|
               ≤ ∑ j, |landauMatrix coulombKernel (v - w) i j *

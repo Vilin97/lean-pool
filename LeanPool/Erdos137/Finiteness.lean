@@ -71,8 +71,7 @@ def F (k n : ℕ) : ℕ := ∏ i ∈ Finset.range k, (n + i)
 /-- Every element of the factorization support is a prime. -/
 lemma prime_of_mem_factorization_support {m p : ℕ} (hp : p ∈ m.factorization.support) :
     Nat.Prime p := by
-  rw [Nat.support_factorization, Nat.mem_primeFactors] at hp
-  exact hp.1
+  simp_all
 
 /-
 rad(m) ≥ 1 for all m.
@@ -173,8 +172,7 @@ theorem powerful_B2_eq {N : ℕ} (hN : N ≠ 0) (hP : Powerful N) : B2 N = N := 
     intro p hp
     have hpprime : p.Prime := prime_of_mem_factorization_support hp
     have hpdvd : p ∣ N := by
-      rw [Nat.support_factorization, Nat.mem_primeFactors] at hp
-      exact hp.2.1
+      simp_all
     have h2 : p ^ 2 ∣ N := hP p hpprime hpdvd
     exact (Nat.Prime.pow_dvd_iff_le_factorization hpprime hN).mp h2
   rw [hfilter]
@@ -222,8 +220,7 @@ theorem erdos137_eventually_not_powerful (k : ℕ) (hk : 3 ≤ k) (hRadLB : RadL
     have h1 : (rad (F k n) : ℝ) ^ 2 ≤ (F k n : ℝ) := by exact_mod_cast hradsq
     have h2 : (F k n : ℝ) ≤ ((k : ℝ) * (n : ℝ)) ^ k := by
       have := (Nat.cast_le (α := ℝ)).mpr hFle
-      rw [Nat.cast_pow, Nat.cast_mul] at this
-      exact this
+      simp_all
     exact le_trans h1 h2
   have hlowbase : C * (n : ℝ) ^ ((k : ℝ) - 1 - ε) ≤ (rad (F k n) : ℝ) := hrad
   have hlowpos : (0 : ℝ) ≤ C * (n : ℝ) ^ ((k : ℝ) - 1 - ε) := by
@@ -242,8 +239,7 @@ theorem erdos137_eventually_not_powerful (k : ℕ) (hk : 3 ≤ k) (hRadLB : RadL
     ring_nf
   have hRHS : ((k : ℝ) * (n : ℝ)) ^ k = (k : ℝ) ^ k * (n : ℝ) ^ (k : ℝ) := by
     rw [mul_pow]
-    congr 1
-    rw [Real.rpow_natCast]
+    simp_all
   rw [hLHS, hRHS] at hcombine
   have hnk_pos : (0 : ℝ) < (n : ℝ) ^ (k : ℝ) := Real.rpow_pos_of_pos hnpos _
   have hsplit : (n : ℝ) ^ (2 * ((k : ℝ) - 1 - ε)) = (n : ℝ) ^ δ * (n : ℝ) ^ (k : ℝ) := by
@@ -277,8 +273,7 @@ theorem erdos137_finite (k : ℕ) (hk : 3 ≤ k) (hRadLB : RadLB k) :
   simp only [Set.mem_setOf_eq] at hn
   simp only [Set.mem_Iio]
   by_contra hcontra
-  push Not at hcontra
-  exact hN₀ n hcontra hn.2
+  simp_all
 
 end  -- noncomputable section
 

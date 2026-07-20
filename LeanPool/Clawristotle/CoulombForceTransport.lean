@@ -241,8 +241,7 @@ lemma force_ibp_f_dg_integrable_coulomb
     simp only [_root_.sub_apply, _root_.add_apply,
       _root_.smul_apply, smul_eq_mul]
     have hfv_ne : f x v ≠ 0 := ne_of_gt (hf_pos x v)
-    rw [← mul_assoc, mul_inv_cancel₀ hfv_ne, one_mul]
-    ring
+    simp_all
   -- Rewrite integrand using the chain rule
   have heq : (fun v => (E x + cross v (B x)) i *
       fderiv ℝ (fun w => f x w * Real.log (f x w) - f x w) v (Pi.single i 1)) =

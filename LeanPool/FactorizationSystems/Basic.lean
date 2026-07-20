@@ -78,9 +78,7 @@ lemma factorization_iso_is_unique' {L R : MorphismProperty C} (F : Factorization
     rw [← comm₂']
     simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc, i'.inv_hom_id_assoc, α.snd.right]
   let ψ := F.factorization_iso_is_unique f E s hs p hp fact (α.fst ≪≫ Iso.symm i') c₁' c₂'
-  let χ : α.fst ≪≫ i.symm = α.fst ≪≫ i'.symm := by calc
-    α.fst ≪≫ i.symm = (F.factorizationIso f E s hs p hp fact).fst := φ
-    _ = α.fst ≪≫ i'.symm := by rw [← ψ ]
+  let χ : α.fst ≪≫ i.symm = α.fst ≪≫ i'.symm := by simp_all
   have ξ : Iso.symm i' = Iso.symm i := by
     have := congrArg (α.fst.symm ≪≫ ·) χ.symm
     simpa using this
@@ -117,8 +115,7 @@ namespace Over
 lemma forget_map_comp :
     {X : C} → {p q r : Over X} → (F : p ⟶ q) → (G : q ⟶ r) → (H : p ⟶ r) →
     (hyp : F ≫ G = H) → (F.left ≫ G.left = H.left) := by
-  intro X p q r F G H hyp
-  simpa using congrArg (fun K : p ⟶ r => K.left) hyp
+  simp_all
 
 /-- The forgetful functor C/X ⟶ X preserves isomorphisms -/
 def forgetPreservesIsos : {X : C} → {f g : Over X} → (i : f ≅ g) → f.left ≅ g.left := by
@@ -222,8 +219,7 @@ lemma factorization_iso_is_unique_slice : {X : C} → {L R : MorphismProperty C}
     (factorizationIsoSlice F ⟨φ,_,u⟩ ⟨C,_,h⟩ ⟨l,_,v⟩ p ⟨r,_,w⟩ q fact).fst.hom.left := by
     unfold factorizationIsoSlice
     aesop_cat
-  rw [←coh']
-  aesop_cat
+  simp_all
 
 /-- A factorization system in C descends to a factorization system in the slice -/
 def FactorizationSystemSlice : {X : C} → {L R : MorphismProperty C} →

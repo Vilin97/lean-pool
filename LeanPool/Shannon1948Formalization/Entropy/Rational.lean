@@ -164,8 +164,7 @@ def workedQ : (b : Bool) → ProbDist (workedFib b)
         by_cases hi : i = 0
         · simp only [hi, ↓reduceIte]
           positivity
-        · simp only [hi, ↓reduceIte]
-          norm_num
+        · simp_all
       · norm_num [Fin.sum_univ_two]
 
 /-- The composed distribution in the worked `(1/2, 1/3, 1/6)` example. -/

@@ -43,8 +43,7 @@ theorem davenport [CharZero k] {a b : k[X]}
   have ha3 : -a ^ 3 ≠ 0 := neg_ne_zero.mpr <| pow_ne_zero 3 <| ne_zero_of_natDegree_gt_0 ha
   have hb2 : b ^ 2 ≠ 0 := pow_ne_zero 2 <| ne_zero_of_natDegree_gt_0 hb
   rcases Polynomial.abc'_char0 ha3 hb2 hnz (by ring_nf) with heq | hineq
-  · simp only [natDegree_neg, natDegree_pow] at heq
-    omega
+  · simp_all
   · rw [Nat.succ_le_iff] at hineq
     simp only [Nat.max₃, natDegree_neg, natDegree_pow,
       radical_neg, Nat.ofNat_pos, radical_pow, max_lt_iff] at hineq

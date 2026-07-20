@@ -179,8 +179,7 @@ def wonLift (h : ∀ n, (takeLift y n).Winnable) : body R.pre.subtree :=
   ⟨(h k).toWLift'.liftVal.take k, ⟨take_mem ⟨_, (bodyTake y k).wLift_mem_tree _ _⟩, by
     rw [List.length_take, min_eq_left]
     change k ≤ (h k).toWLift'.toWLLift.liftVal.length
-    rw [WLLift.liftVal_length]
-    simp⟩⟩, fun k ↦
+    simp_all⟩⟩, fun k ↦
     ((Lift.wLift_liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))).take k).trans (by
       convert List.take_prefix k (List.take (k + 1) (takeLift y (k + 1)).toWLift.liftVal)
         using 1

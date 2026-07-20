@@ -326,8 +326,7 @@ theorem coefficientAtZero
     simp [productBasisOrthonormal, hne]
   · intro h0
     simp only [FiniteHermiteSum.support, Finsupp.mem_support_iff, ne_eq, Decidable.not_not] at h0
-    rw [h0]
-    simp
+    simp_all
 
 /-- Orthogonality to `ν_κ` is equivalent to vanishing zero coefficient. -/
 theorem orthogonalToNu_iff_coeff_zero
@@ -514,8 +513,7 @@ private lemma annulusInner_finite_sum_basis
   rw [hsum, MeasureTheory.integral_finsetSum]
   · refine Finset.sum_congr rfl fun α _ => ?_
     rw [← MeasureTheory.integral_const_mul]
-    refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
-    by_cases hz : z ∈ productAnnulus j <;> simp [hz]
+    simp_all
   · intro α hα
     simpa [indicatorMul, Set.indicator, mul_assoc] using
       ((integrable_productBasis_cross κ α β).indicator (measurableSet_productAnnulus j)).const_mul
@@ -570,8 +568,7 @@ private lemma annulusInner_finite_sum
   rw [hrewrite, MeasureTheory.integral_finsetSum]
   · refine Finset.sum_congr rfl fun β _ => ?_
     rw [← MeasureTheory.integral_const_mul]
-    refine integral_congr_ae (Filter.Eventually.of_forall fun z => ?_)
-    by_cases hz : z ∈ productAnnulus j <;> simp [hz]
+    simp_all
   · intro β hβ
     have hsum :
         (fun z : CSpace d =>
@@ -622,8 +619,7 @@ private def mulCircleLIE (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ := by
     · intro z
       refine ⟨((ω⁻¹ : _root_.Circle) : ℂ) * z, ?_⟩
       simp []
-  · intro z
-    simp []
+  · simp_all
 
 /-- A measure-preserving (for volume), measurable-embedding, density-preserving map
 preserves the Gaussian measure. -/
@@ -782,8 +778,7 @@ private lemma rotate_one_gaussian_preserving
       refine Finset.sum_congr rfl ?_
       intro q hq
       by_cases h : q = q0
-      · subst h
-        simp [Function.update]
+      · simp_all
       · simp [Function.update, h]
     simp [f, gaussianDensity, hsum]
   exact ⟨hmeas.measurable, gaussianMeasure_map_eq_of_density hvol hmeas hdens⟩
@@ -804,8 +799,7 @@ private lemma PhiKappaAlpha_rotate_one
           (oneDimPhi (κ q0) (α q0) (Complex.exp (Complex.I * t) * z q0)) := by
     funext q
     by_cases hq : q = q0
-    · subst hq
-      simp
+    · simp_all
     · simp [Function.update, hq]
   rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs => rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by
@@ -861,9 +855,7 @@ theorem annulusRotationAveraging
                   (fun q => ((AddCircle.toCircle t : _root_.Circle) : ℂ) * z q) ∈
                     productAnnulus j := by simpa [fourier_one] using hrot
               simp only [G]
-              split_ifs with hmem
-              · rfl
-              · exact (hmem hrot').elim
+              simp_all
             · have hzero :
                 ∫⁻ t : Hermite1DimdLEAN.Circle,
                     G (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q)
@@ -875,14 +867,8 @@ theorem annulusRotationAveraging
                           productAnnulus j := fun hz' =>
                       hz ((annulusRotationInvariantCircle (j := j) (t := t) (z := z)).mpr hz')
                     simp only [G, Pi.zero_apply]
-                    split_ifs with hmem
-                    · exact (hrot hmem).elim
-                    · rfl
-              have hzero' :
-                  ∫⁻ t : Hermite1DimdLEAN.Circle,
-                      G (fun q => ((AddCircle.toCircle t : _root_.Circle) : ℂ) * z q)
-                    ∂ AddCircle.haarAddCircle = 0 := by simpa [fourier_one] using hzero
-              simpa [hz, fourier_one] using hzero'.symm
+                    simp_all
+              simp_all
     _ = ∫⁻ t : Hermite1DimdLEAN.Circle,
           ∫⁻ z : CSpace d,
               G (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q)
@@ -903,8 +889,7 @@ theorem annulusRotationAveraging
           simpa [fourier_one] using
             (gaussian_lintegral_rotate_eq (ω := AddCircle.toCircle t) (g := G))
     _ = ∫⁻ z : CSpace d, G z ∂ gaussianMeasure d := by
-          rw [lintegral_const]
-          simp []
+          simp_all
     _ = ∫⁻ z : CSpace d, if h : z ∈ productAnnulus j then F z else 0 ∂ gaussianMeasure d := by rfl
 
 /-- Annulus orthogonality of distinct basis vectors. -/

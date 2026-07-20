@@ -38,8 +38,7 @@ private lemma seg2_deriv_eq (s t : ℝ) (ht1 : 1 < t) (ht2 : t < 2) :
     have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - 1) 1 t :=
       Complex.ofRealCLM.hasDerivAt.sub_const 1
     have h_mul := h_shift.mul_const ((Real.pi : ℂ) / 6)
-    simp only [one_mul] at h_mul
-    exact h_mul.const_add ((Real.pi : ℂ) / 3)
+    simp_all
   have h_arc : HasDerivAt (fun t' : ℝ =>
       Complex.exp ((Real.pi / 3 + (t' - 1) * (Real.pi / 6)) * I))
       ((Real.pi / 6) * I * Complex.exp ((Real.pi / 3 + (t - 1) * (Real.pi / 6)) * I)) t := by
@@ -85,8 +84,7 @@ private lemma seg3_deriv_eq (s t : ℝ) (ht2 : 2 < t) (ht3 : t < 3) :
     have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - 2) 1 t :=
       Complex.ofRealCLM.hasDerivAt.sub_const 2
     have h_mul := h_shift.mul_const ((Real.pi : ℂ) / 6)
-    simp only [one_mul] at h_mul
-    exact h_mul.const_add ((Real.pi : ℂ) / 2)
+    simp_all
   have h_arc : HasDerivAt (fun t' : ℝ =>
       Complex.exp ((Real.pi / 2 + (t' - 2) * (Real.pi / 6)) * I))
       ((Real.pi / 6) * I * Complex.exp ((Real.pi / 2 + (t - 2) * (Real.pi / 6)) * I)) t := by
@@ -204,8 +202,7 @@ private lemma deriv_cont_seg4 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
       have h4 : HasDerivAt (fun t' : ℝ =>
             (Real.sqrt 3 / 2 : ℂ) + ((↑t' : ℂ) - 3) * ((HHeight : ℂ) - Real.sqrt 3 / 2))
           ((HHeight : ℂ) - Real.sqrt 3 / 2) q.1 := by
-        have := (hasDerivAt_const q.1 (Real.sqrt 3 / 2 : ℂ)).add h3
-        simp only [zero_add] at this; exact this
+        simp_all
       have h6 := (hasDerivAt_const q.1 ((-1/2 : ℂ))).add (h4.mul_const I)
       simp only [zero_add] at h6; exact h6.deriv
     apply ContinuousOn.congr continuousOn_const hconst

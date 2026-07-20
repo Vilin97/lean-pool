@@ -239,12 +239,7 @@ theorem ofSetsWithTombs_ff_TombstoneFree
     (h1 : ∀ p, ∀ gp ∈ st p,
       TombstoneFree gp) : TombstoneFree (ofSetsWithTombs st (fun _ => False)) := by
   unfold TombstoneFree
-  constructor
-  · simp only [hasTombstone_ofSetsWithTombs, forall_const, not_false_eq_true]
-  · intro p gp h2
-    refine h1 p gp ?_
-    rw [moves_ofSetsWithTombs] at h2
-    exact h2
+  simp_all
 
 /--
 Convert a `TombstoneFree` `AugmentedForm` to a `GameForm` by 'forgetting' about
@@ -261,9 +256,7 @@ theorem ofGameForm_tombstoneFree (g : GameForm) : TombstoneFree (ofGameForm g) :
   | mk g ih =>
     unfold ofGameForm
     apply ofSetsWithTombs_ff_TombstoneFree
-    intro p gp ⟨h3, h4⟩
-    rw [<-h4]
-    exact ih p h3 (Subtype.coe_prop h3)
+    simp_all
 
 @[simp]
 theorem not_hasTombstone_ofGameForm (g : GameForm) (p : Player)
@@ -451,15 +444,7 @@ theorem ofGameForm_exists_preimage {a : AugmentedForm} (h1 : TombstoneFree a)
   constructor
   · intro p
     refine Eq.symm (Set.ext ?_)
-    intro al
-    constructor <;> intro h2
-    · simp only [Set.mem_range, Subtype.exists, moves_ofSets, exists_prop]
-      use (toGameForm al (TombstoneFree.moves h1 p al h2))
-      simp only [ofGameForm_toGameForm, and_true]
-      use al, h2
-    · simp only [Set.mem_range, Subtype.exists, moves_ofSets, exists_prop] at h2
-      obtain ⟨g1, ⟨g2, h6, h7⟩, h5⟩ := h2
-      simp only [<-h5, <-h7, ofGameForm_toGameForm, h6]
+    simp_all
   · simp only [h1, hasTombstone_ofSetsWithTombs, TombstoneFree.not_hasTombstone, implies_true]
 
 theorem mem_moves_ofGameForm {g : GameForm} {ap : AugmentedForm} {p : Player}
@@ -550,8 +535,7 @@ private theorem neg_neg' (x : AugmentedForm) : -(-x) = x := by
   · obtain ⟨yp, h1, h2⟩ := h1
     have h3 : neg' (neg' yp) = -(-yp) := rfl
     rw [<-h2, h3, neg_neg' yp]
-    rw [neg_neg] at h1
-    exact h1
+    simp_all
   · use xp
     rw [neg_neg p]
     apply And.intro h1

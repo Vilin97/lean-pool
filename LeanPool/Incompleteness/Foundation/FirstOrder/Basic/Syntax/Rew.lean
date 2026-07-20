@@ -36,8 +36,7 @@ lemma biUnion_eq_empty [DecidableEq β] {s : Finset α} {f : α → Finset β} :
     have := by simpa using congrFun (congrArg Membership.mem h) b
     simpa using this a ha
   · intro h; ext b
-    simp only [mem_biUnion, Collection.not_mem_empty, iff_false, not_exists, not_and]
-    intro a ha; simpa using congrFun (congrArg Membership.mem (h a ha)) b
+    simp_all
 
 end Finset
 
@@ -105,9 +104,7 @@ lemma nrel' (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} {r : L.Rel k} {v : Fin k → 
       cases i using Fin.cases with
       | zero => rfl
       | succ i =>
-        cases i using Fin.cases with
-        | zero => rfl
-        | succ i => exact Fin.elim0 i
+        simp_all
 
 @[simp] lemma rew_rel3 (ω : Rew L ξ₁ n₁ ξ₂ n₂) {r : L.Rel 3} {t₁ t₂ t₃ : Semiterm L ξ₁ n₁} :
     ω ▹ rel r ![t₁, t₂, t₃] = rel r ![ω t₁, ω t₂, ω t₃] := by
@@ -120,9 +117,7 @@ lemma nrel' (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} {r : L.Rel k} {v : Fin k → 
     cases i using Fin.cases with
     | zero => rfl
     | succ i =>
-      cases i using Fin.cases with
-      | zero => rfl
-      | succ i => exact Fin.elim0 i
+      simp_all
 
 @[simp] lemma rew_nrel0 (ω : Rew L ξ₁ n₁ ξ₂ n₂) {r : L.Rel 0} {v : Fin 0 → Semiterm L ξ₁ n₁} :
     ω ▹ nrel r v = nrel r ![] := by simp [rew_nrel, Matrix.empty_eq]
@@ -138,9 +133,7 @@ lemma nrel' (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} {r : L.Rel k} {v : Fin k → 
       cases i using Fin.cases with
       | zero => rfl
       | succ i =>
-        cases i using Fin.cases with
-        | zero => rfl
-        | succ i => exact Fin.elim0 i
+        simp_all
 
 @[simp] lemma rew_nrel3 (ω : Rew L ξ₁ n₁ ξ₂ n₂) {r : L.Rel 3} {t₁ t₂ t₃ : Semiterm L ξ₁ n₁} :
     ω ▹ nrel r ![t₁, t₂, t₃] = nrel r ![ω t₁, ω t₂, ω t₃] := by
@@ -153,9 +146,7 @@ lemma nrel' (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} {r : L.Rel k} {v : Fin k → 
     cases i using Fin.cases with
     | zero => rfl
     | succ i =>
-      cases i using Fin.cases with
-      | zero => rfl
-      | succ i => exact Fin.elim0 i
+      simp_all
 
 private lemma map_inj {b : Fin n₁ → Fin n₂} {f : ξ₁ → ξ₂}
     (hb : Function.Injective b) (hf : Function.Injective f) : Function.Injective fun φ :
@@ -298,19 +289,15 @@ lemma eq_ball_iff {φ : Semiformula L ξ₁ n₁} {ψ₁ ψ₂ : Semiformula L �
     (ω ▹ φ = ∀[ψ₁] ψ₂) ↔ ∃ φ₁ φ₂ : Semiformula L ξ₁ (n₁ + 1), ω.q ▹ φ₁ = ψ₁ ∧ ω.q ▹ φ₂ = ψ₂ ∧ φ =
         ∀[φ₁] φ₂ := by
   simp only [ball, eq_all_iff, eq_neg_iff, exists_and_left, existsAndEq, and_true]; constructor
-  · rintro ⟨φ₁, φ₂, ⟨h₁, h₂⟩, hφ⟩
-    exact ⟨φ₁, h₁, φ₂, h₂, hφ⟩
-  · rintro ⟨φ₁, h₁, φ₂, h₂, hφ⟩
-    exact ⟨φ₁, φ₂, ⟨h₁, h₂⟩, hφ⟩
+  · simp_all
+  · simp_all
 
 lemma eq_bex_iff {φ : Semiformula L ξ₁ n₁} {ψ₁ ψ₂ : Semiformula L ξ₂ (n₂ + 1)} :
     (ω ▹ φ = ∃[ψ₁] ψ₂) ↔ ∃ φ₁ φ₂ : Semiformula L ξ₁ (n₁ + 1), ω.q ▹ φ₁ = ψ₁ ∧ ω.q ▹ φ₂ = ψ₂ ∧ φ =
         ∃[φ₁] φ₂ := by
   simp only [bex, eq_ex_iff, eq_and_iff, exists_and_left, existsAndEq, and_true]; constructor
-  · rintro ⟨φ₁, φ₂, ⟨h₁, h₂⟩, hφ⟩
-    exact ⟨φ₁, h₁, φ₂, h₂, hφ⟩
-  · rintro ⟨φ₁, h₁, φ₂, h₂, hφ⟩
-    exact ⟨φ₁, φ₂, ⟨h₁, h₂⟩, hφ⟩
+  · simp_all
+  · simp_all
 
 end «lp_section_1»
 
@@ -500,11 +487,7 @@ private lemma «not_fvar?_fixitr_fvSup» (φ : SyntacticFormula L) :
 
 @[simp 1100] lemma substs_comp_fixitr (φ : SyntacticFormula L) :
     (Rew.fixitr 0 φ.fvSup ▹ φ)<~(fun x ↦ (&x : SyntacticTerm L)) = φ := by
-  unfold Rewriting.substitute; rw [← TransitiveRewriting.comp_app]
-  apply rew_eq_self_of
-  · simp
-  · intro x hx
-    simp [Rew.comp_app, Rew.fixitr_fvar, Semiformula.lt_fvSup_of_fvar? hx]
+  simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def close (φ : SyntacticFormula L) : SyntacticFormula L := ∀* (@Rew.fixitr L 0 φ.fvSup ▹ φ)
@@ -541,15 +524,11 @@ def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
   | ⊤,        _ => ⊤
   | ⊥,        _ => ⊥
   | φ ⋏ ψ,    h =>
-    φ.toEmpty (by simp [show φ.freeVariables = ∅ ∧ ψ.freeVariables =
-      ∅ by simpa [Finset.union_eq_empty] using h]) ⋏
-    ψ.toEmpty (by simp [show φ.freeVariables = ∅ ∧ ψ.freeVariables =
-      ∅ by simpa [Finset.union_eq_empty] using h])
+    φ.toEmpty (by simp_all) ⋏
+    ψ.toEmpty (by simp_all)
   | φ ⋎ ψ,    h =>
-    φ.toEmpty (by simp [show φ.freeVariables = ∅ ∧ ψ.freeVariables =
-      ∅ by simpa [Finset.union_eq_empty] using h]) ⋎
-    ψ.toEmpty (by simp [show φ.freeVariables = ∅ ∧ ψ.freeVariables =
-      ∅ by simpa [Finset.union_eq_empty] using h])
+    φ.toEmpty (by simp_all) ⋎
+    ψ.toEmpty (by simp_all)
   | ∀' φ,     h => ∀' φ.toEmpty (by simpa using h)
   | ∃' φ,     h => ∃' φ.toEmpty (by simpa using h)
 

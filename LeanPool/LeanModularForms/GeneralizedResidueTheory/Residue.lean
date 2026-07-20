@@ -180,8 +180,7 @@ lemma piecewiseC1Immersion_deriv_bounded
         ‖deriv γ.toFun t‖ ≤ M := by
     intro S hS
     induction S using Finset.induction with
-    | empty => exact ⟨0, fun pq hpq =>
-        (Finset.notMem_empty pq hpq).elim⟩
+    | empty => simp_all
     | insert pq S' _ ih =>
       obtain ⟨M_S', hM_S'⟩ := ih (Finset.insert_subset_iff.mp hS).2
       have hpq_in := (Finset.insert_subset_iff.mp hS).1
@@ -208,8 +207,7 @@ lemma piecewiseC1_deriv_intervalIntegrable (γ : PiecewiseC1Curve)
   obtain ⟨M, hM⟩ := h_bdd
   rw [intervalIntegrable_iff]
   refine MeasureTheory.IntegrableOn.of_bound ?_ ?_ M ?_
-  · simp only [Set.uIoc, Real.volume_Ioc]
-    exact ENNReal.ofReal_lt_top
+  · simp_all
   · exact (aestronglyMeasurable_deriv γ.toFun _).restrict
   · rw [MeasureTheory.ae_restrict_iff' measurableSet_uIoc]
     apply Filter.Eventually.of_forall
@@ -344,8 +342,7 @@ private lemma continuousAt_g_at_pole
                fun hx => by rcases hx with ⟨hx1, _⟩ | ⟨hx1, _⟩ <;> exact hx1⟩
       · exact Finset.disjoint_filter.mpr fun x _ hxz hx_ne_z => hx_ne_z hxz
     have hfilter_eq : S0.filter (· = z) = {z} := by
-      ext x; simp only [Finset.mem_filter, Finset.mem_singleton]
-      exact ⟨fun ⟨_, hxz⟩ => hxz, fun hxz => ⟨hxz ▸ hs, hxz⟩⟩
+      ext x; simp_all
     have hsingleton : ∑ s ∈ S0.filter (· = z), residueSimplePole f s / (w - s) =
         residueSimplePole f z / (w - z) := by rw [hfilter_eq, Finset.sum_singleton]
     rw [hsum_split, hsingleton]; ring
@@ -364,9 +361,7 @@ private lemma diff_punctured_of_diff_off_poles
       (fun h => (Set.mem_compl_singleton_iff.mp hw_ne)
         (Set.mem_singleton_iff.mp (h_S0_singleton h)))⟩
   · have h_S0_non : ∃ s' ∈ S0, s' ≠ z := by
-      by_contra h_all; push Not at h_all
-      exact h_S0_singleton fun x hx => by
-        rw [Set.mem_singleton_iff]; exact h_all x (Finset.mem_coe.mp hx)
+      simp_all
     obtain ⟨s', hs'_in, hs'_ne⟩ := h_S0_non
     have h_ne : (S0.filter (· ≠ z)).Nonempty :=
       ⟨s', Finset.mem_filter.mpr ⟨hs'_in, hs'_ne⟩⟩
@@ -514,8 +509,7 @@ lemma cauchyPrincipalValueIntegrandOn_empty
     cauchyPrincipalValueIntegrandOn ∅ f γ ε t =
       f (γ t) * deriv γ t := by
   unfold cauchyPrincipalValueIntegrandOn
-  rw [if_neg]; push Not
-  intro s hs; exact absurd hs (Finset.notMem_empty s)
+  simp_all
 
 lemma cauchyPrincipalValueIntegrandOn_singleton
     (f : ℂ → ℂ) (γ : ℝ → ℂ) (z₀ : ℂ) (ε : ℝ) (t : ℝ) :
@@ -524,11 +518,8 @@ lemma cauchyPrincipalValueIntegrandOn_singleton
       else 0 := by
   unfold cauchyPrincipalValueIntegrandOn
   by_cases h : ‖γ t - z₀‖ ≤ ε
-  · rw [if_pos ⟨z₀, Finset.mem_singleton_self z₀, h⟩,
-      if_neg (not_lt.mpr h)]
-  · push Not at h; rw [if_neg, if_pos h]; push Not
-    intro s hs
-    simp only [Finset.mem_singleton] at hs; rw [hs]; linarith
+  · simp_all
+  · simp_all
 
 lemma cauchyPrincipalValueOn_empty
     (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) :
@@ -677,8 +668,7 @@ theorem pv_integral_simple_pole
           then (·⁻¹) ((fun s => γ.toFun s - z₀) t) *
             deriv (fun s => γ.toFun s - z₀) t
           else 0)).symm]
-    apply intervalIntegral.integral_congr
-    intro t _; exact h_integrand' ε t
+    simp_all
   simp_rw [h_integral']
   obtain ⟨L, hL⟩ := hPV
   exact (hL.mul_const c).limUnder_eq ▸

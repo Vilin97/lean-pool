@@ -130,7 +130,4 @@ lemma casesQPlane (P : ℚ → ℚ → Prop)
     exact h3 q1 h' q2 h''
   · rcases (h q2 q2_nezero) with h'' | h''
     · exact h2 q1 h' q2 h''
-    apply h4 q2 h'' q1 h'
-    apply h1
-    · exact Left.neg_pos_iff.mpr h''
-    exact Left.neg_pos_iff.mpr h'
+    simp_all

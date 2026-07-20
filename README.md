@@ -12,7 +12,7 @@
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and [`merely-true`](https://github.com/merely-true/merely-true), preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, it relies on deterministic linters and LLM judgment, so it can grow faster while staying `sorry`-free and pinned to the latest Mathlib. See [`MOTIVATION.md`](MOTIVATION.md) for the why, and browse the API docs at <https://vilin97.github.io/lean-pool/>.
 
 <!-- BEGIN STATS -->
-**103** formalization projects · **775,619** lines of Lean
+**123** formalization projects · **870,302** lines of Lean
 <!-- END STATS -->
 
 <sub>(stats above are refreshed automatically by [`readme-stats.yml`](.github/workflows/readme-stats.yml) — edit [`python/lean_pool/stats.py`](python/lean_pool/stats.py), not the numbers)</sub>
@@ -37,3 +37,10 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ### Credits
 
 Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io/) by [Vasily Ilin](https://github.com/Vilin97) and [Justin Asher](https://github.com/justincasher).
+
+### Difference from similar projects
+
+[Tau Ceti](https://github.com/TauCetiProject/TauCeti) is another approach to solve the same problem. The differences are:
+- Lean Pool accepts human-written projects, not just AI projects.
+- Lean Pool is not a unified library like mathlib. Most projects are independent of each other.
+- Lean Pool only accepts completed formalization projects.

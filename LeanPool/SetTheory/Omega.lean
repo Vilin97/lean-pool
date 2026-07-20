@@ -41,8 +41,7 @@ namespace SetTheory
     (∀ y : Set x, p y) ↔ (∀ y ⊆ x, p {z : x | z.1 ∈ y}) := by
   refine ⟨fun h _ _ => h _, fun h y => ?_⟩
   convert h y.toZFSet ?_
-  · ext z
-    simp
+  · simp_all
   · intro z
     simpa using fun hz _ => hz
 
@@ -174,8 +173,7 @@ def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
     simp only [Bijective, Injective, Surjective, toZFSet_simps, Subtype.forall,
       Subtype.mk.injEq, toZFSet_strictMono.injective.eq_iff]
     refine ⟨fun m n eq => ?_, fun α hα => ?_⟩
-    · apply_fun (·.card.toNat) at eq
-      simpa using eq
+    · simp_all
     · replace hα : ⇓α ∈ ωₛ := MemOmega.toZFSet _ |>.mp (ωₘ.spec _ |>.mp hα)
       simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
 

@@ -98,9 +98,7 @@ private theorem curl_div_harmonic_rn' {n : ℕ} (F : (Fin n → ℝ) → (Fin n 
         fderiv ℝ (fun y => fderiv ℝ (fun z => F z j) y (Pi.single i 1)) x (Pi.single i 1) = 0 := by
   have hcurl_fun : ∀ i, (fun y => fderiv ℝ (fun z => F z j) y (Pi.single i 1)) =
       (fun y => fderiv ℝ (fun z => F z i) y (Pi.single j 1)) := by
-    intro i
-    ext y
-    exact hcurl y i j
+    simp_all
   simp_rw [hcurl_fun]
   simp_rw [clairaut_fderiv (fun z => F z _) x _ j (hF _)]
   have hdiff_comp : ∀ i,
@@ -118,9 +116,7 @@ private theorem curl_div_harmonic_rn' {n : ℕ} (F : (Fin n → ℝ) → (Fin n 
   have hfsum : (∑ i : Fin n, fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x) =
       fderiv ℝ (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x := by
     rw [fderiv_fun_sum (fun i _ => hdiff_comp i)]
-  rw [hfsum, show (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) =
-      fun _ => 0 from funext hdiv]
-  simp
+  simp_all
 
 -- ============================================================================
 

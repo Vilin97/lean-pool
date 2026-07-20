@@ -172,8 +172,7 @@ lemma no_inf_chain_from_prover (g : ℕ → GamePos)
         have this := by simpa [Function.swap] using this
         grind)
     unfold f
-    simp only [g0_def] at this
-    exact this
+    simp_all
   let sequents : (n : ℕ) → List Sequent := Nat.rec [] (fun n ih => f n :: ih)
   have seq_prop : ∀ n, sequents n ++ Γs = (g (2 * n)).2.1 := by
     intro n

@@ -110,9 +110,7 @@ private lemma fderiv_entropy_potential (g : (Fin 3 → ℝ) → ℝ) (v : Fin 3 
   have hlog_diff : DifferentiableAt ℝ (fun w => Real.log (g w)) v :=
     (Real.differentiableAt_log hg_ne).comp v hg_diff
   have hlog_fderiv : fderiv ℝ (fun w => Real.log (g w)) v = (g v)⁻¹ • fderiv ℝ g v := by
-    have h := ((Real.hasDerivAt_log hg_ne).comp_hasFDerivAt v hg_diff.hasFDerivAt).fderiv
-    convert h using 1
-    rfl
+    simp_all
   have h1 : fderiv ℝ (fun w => g w * Real.log (g w)) v =
       g v • fderiv ℝ (fun w => Real.log (g w)) v + Real.log (g v) • fderiv ℝ g v := by
     have h_eq : (fun w => g w * Real.log (g w)) = g * (fun w => Real.log (g w)) := by
@@ -122,9 +120,7 @@ private lemma fderiv_entropy_potential (g : (Fin 3 → ℝ) → ℝ) (v : Fin 3 
   have h_sub : HasFDerivAt (fun w => g w * Real.log (g w) - g w)
       (fderiv ℝ (fun w => g w * Real.log (g w)) v - fderiv ℝ g v) v :=
     (hg_diff.mul hlog_diff).hasFDerivAt.sub hg_diff.hasFDerivAt
-  rw [h_sub.fderiv, h1]; ext x
-  simp
-  field_simp; ring
+  rw [h_sub.fderiv, h1]; simp_all
 
 /-- The diagonal partial derivative ∂(E + v×B)_i/∂v_i = 0 for each i.
     This is because cross product component i depends on v_j, v_k (j,k ≠ i) but not v_i. -/
@@ -218,8 +214,7 @@ private lemma spatial_transport_log_zero {X : Type*} [FlatTorus3 X]
   rw [h_lhs] at h_ibp
   have h_grad_int : (∫ x, FlatTorus3.gradX (fun y => f y v) x i) = 0 := by
     have := FlatTorus3.hGradIntZero (fun y => f y v) (hDiff_fv.of_le (by decide)) (Pi.single i 1)
-    simp [dotProduct, Fin.sum_univ_three] at this
-    fin_cases i <;> simp_all [Pi.single, Function.update]
+    simp_all
   rw [h_grad_int] at h_ibp
   have h_comm : (∫ x, Real.log (f x v) * FlatTorus3.gradX (fun y => f y v) x i) = 0 := by
     linarith
@@ -304,8 +299,7 @@ lemma transport_entropy_from_vlasov
   -- For each v, spatial integral vanishes
   suffices h_v : ∀ v : Fin 3 → ℝ, (∫ x,
       v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v)) = 0 by
-    simp_rw [h_v]
-    exact integral_zero (Fin 3 → ℝ) ℝ
+    simp_all
   -- Expand dotProduct v (gradX (f · v)) * log f = ∑_i v_i * gradX(f·v)_i * log f
   -- Then use integral_add + integral_mul_left + spatial_transport_log_zero
   intro v

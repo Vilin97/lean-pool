@@ -85,8 +85,7 @@ lemma decompQuot_coset_diff (g : P.Δ)
   simp_rw [← Set.singleton_mul_singleton] at h
   have := conjAct_mem_of_leftCoset_eq P.H P.Δ g i.out j.out h
   rw [← @QuotientGroup.leftRel_apply, ← @Quotient.eq''] at this
-  simp only [Quotient.out_eq'] at this
-  exact hij this.symm
+  simp_all
 
 /-- Two left cosets that are not disjoint must be equal. -/
 lemma leftCoset_eq_of_not_disjoint (f g : G)
@@ -165,8 +164,7 @@ lemma set_singleton_mul_left_cancel (a : G) {S T : Set G}
   · intro hx
     have hax : a * x ∈ ({a} : Set G) * T := by
       rw [← h]; exact Set.mul_mem_mul (Set.mem_singleton a) hx
-    obtain ⟨b, hb, y, hy, heq⟩ := hax
-    rw [Set.mem_singleton_iff.mp hb] at heq; exact mul_left_cancel heq ▸ hy
+    simp_all
   · intro hx
     have hax : a * x ∈ ({a} : Set G) * S := by
       rw [h]; exact Set.mul_mem_mul (Set.mem_singleton a) hx
@@ -530,10 +528,7 @@ lemma mul_singleton_𝕋 (D1 D2 : HeckeCoset P) (a b : ℤ) :
     TSingle P ℤ D1 a * TSingle P ℤ D2 b =
       a • b • m P (HeckeCoset.rep D1) (HeckeCoset.rep D2) := by
   simp_rw [TSingle, mul_def]
-  rw [Finsupp.sum_single_index, Finsupp.sum_single_index, m]
-  · simp only [zero_smul, smul_zero]
-  · ext a; simp only [m, zero_smul, Finsupp.sum_fun_zero, Finsupp.coe_zero,
-      Pi.zero_apply]
+  simp_all
 
 open Finsupp
 
@@ -648,8 +643,7 @@ noncomputable instance instNonUnitalNonAssocSemiring :
     right_distrib := fun f g h => by
       simp only [mul_def]
       refine Eq.trans (Finsupp.sum_add_index' ?_ ?_) ?_
-      · intro a; change (h.sum fun D2 b₂ ↦ (0 : ℤ) • b₂ • m P a.rep D2.rep) = 0
-        simp only [zero_smul, Finsupp.sum_fun_zero]
+      · simp_all
       · intro D1 a b
         change (h.sum fun D2 b₂ ↦ (a + b) • b₂ • m P D1.rep D2.rep) =
           (h.sum fun D2 b₂ ↦ a • b₂ • m P D1.rep D2.rep) +
@@ -662,7 +656,6 @@ noncomputable instance instNonUnitalNonAssocSemiring :
       simpa only [mul_def] using Finsupp.sum_zero_index
     mul_zero := fun f => by
       simp only [mul_def]
-      exact Eq.trans (congr_arg (sum f)
-        (funext₂ fun a₁ b₁ => sum_zero_index)) (sum_fun_zero f) }
+      simp_all }
 
 end HeckeRing

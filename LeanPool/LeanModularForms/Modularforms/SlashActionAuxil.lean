@@ -268,8 +268,7 @@ theorem slashaction_generators'
     (f : ℍ → ℂ) {G : Subgroup SL(2, ℤ)} (s : Set G) (hG : ⊤ = Subgroup.closure s) (k : ℤ) :
     (∀ γ : G, f ∣[k] γ.1 = f) ↔ (∀ γ ∈ s, f ∣[k] γ.1 = f) := by
   constructor <;> intro h
-  · intro γ _
-    exact h _
+  · simp_all
   · intro ⟨γ, hγ⟩
     -- key idea: this lemma allows induction on the "words" of the group
     apply Subgroup.closure_induction (G := G) (p := fun γ _ ↦ f ∣[k] γ.1 = f) (k := s) ?_ ?_
@@ -279,8 +278,7 @@ theorem slashaction_generators'
       rw [← hf, ← SlashAction.slash_mul]
       simp [hf]
     · simp [← hG]
-    · intro γ hγ
-      exact h γ hγ
+    · simp_all
     · exact SlashAction.slash_one k f
 
 theorem slashaction_generators_SL2Z
@@ -288,8 +286,7 @@ theorem slashaction_generators_SL2Z
     (∀ γ : SL(2, ℤ), f ∣[k] γ = f) := by
   intro γ
   refine (slashaction_generators f ⊤ _ SL2Z_generate k).mpr ?_ ⟨γ, by simp⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 theorem slashaction_generators_GL2R
     (f : ℍ → ℂ) (k : ℤ) (hS : f ∣[k] S = f) (hT : f ∣[k] T = f) :
@@ -301,8 +298,7 @@ theorem slashaction_generators_GL2R
   rw [←hA₂]
   change f ∣[k] A = f
   refine (slashaction_generators f ⊤ _ SL2Z_generate k).mpr ?_ ⟨A, by simp⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 theorem slashaction_generators_Γ2
     (f : ℍ → ℂ) (k : ℤ) (hα : f ∣[k] α.1 = f) (hβ : f ∣[k] β.1 = f) (hnegI : f ∣[k] negI.1 = f) :
@@ -313,7 +309,6 @@ theorem slashaction_generators_Γ2
   rw [←hA₂]
   change f ∣[k] A = f
   refine (slashaction_generators' f {α, β, negI} Γ2_generate k).mpr ?_ ⟨_, hA₁⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 end slashaction_generators

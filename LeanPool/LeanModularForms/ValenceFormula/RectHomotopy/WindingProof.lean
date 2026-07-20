@@ -155,8 +155,7 @@ lemma rc_integral_eq_neg_two_pi_I_ref_p₀ :
       have hnorm_pos : (0 : ℝ) < ‖fdPolygon t' - refP₀‖ := norm_pos_iff.mpr hw_ne
       have hrc_sub : rc t' - refP₀ = (fdPolygon t' - refP₀) / ↑‖fdPolygon t' - refP₀‖ := by
         simp only [hrc, fdPolygonRadialCircle, polygonToCircleRadial]
-        simp only [sub_self, zero_mul, zero_add, add_sub_cancel_left, div_eq_mul_inv]
-        exact one_smul ℝ _
+        simp_all
       have hnorm_one : ‖rc t' - refP₀‖ = 1 :=
         fdPolygonRadialCircle_dist refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im t' ht'
       rw [Complex.log]
@@ -305,8 +304,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
               refP₀ + exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
             (exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) * (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ)))
             t := by
-          have := (hasDerivAt_const t refP₀).add ((hasDerivAt_exp _).comp t (h2.const_mul I))
-          simp only [zero_add] at this; exact this
+          simp_all
         exact h5.deriv
       rw [h_deriv]
       have hexp_ne : exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) ≠ 0 := exp_ne_zero _
@@ -338,8 +336,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
       (fun t => if ‖rc t - refP₀‖ > ε then (rc t - refP₀)⁻¹ * deriv rc t else 0)
       (fun t => (rc t - refP₀)⁻¹ * deriv rc t) (Set.uIcc 0 5) := by
     intro t ht
-    have ht' : t ∈ Icc (0 : ℝ) 5 := by rwa [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 5)] at ht
-    exact if_pos (h_cutoff ε hε_pos hε_lt1 t ht')
+    simp_all
   rw [intervalIntegral.integral_congr h_if_eq]
   exact rc_integral_eq_neg_two_pi_I_ref_p₀
 

@@ -96,8 +96,7 @@ def lengthNodes (w : Wrd) : IO Float := do
         rw [Array.size_pop, h]
         rfl
       have _ : ys.size < w.size := by
-        rw [ysize, h]
-        exact Nat.lt_succ_self m
+        simp_all
       let base := 1 + (← lengthNodes ys)
       let derived ←  (ys.splits x⁻¹).mapM fun ⟨(fst, snd), hfst_snd⟩ => do
         have hsplit : fst.size + snd.size < w.size := by

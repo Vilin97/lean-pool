@@ -148,15 +148,11 @@ lemma _root_.VML.VMLInput.hKilling (p : VMLInput X) :
       dotProduct v (FlatTorus3.gradX p.aLoc x) +
       dotProduct (p.E x) (p.bLoc x) +
       dotProduct v ((2 * p.cLoc x) • p.E x + cross (p.B x) (p.bLoc x)) = 0 := by
-    intro v; have := hpoly v
-    rw [hgrad_c, dotProduct_zero, zero_mul, zero_add] at this
-    exact this
+    simp_all
   -- C = 0: substitute v = 0
   have hC : dotProduct (p.E x) (p.bLoc x) = 0 := by
     have := hred 0
-    simp only [Pi.zero_apply, mul_zero, zero_mul, sum_const_zero, zero_dotProduct, add_zero,
-      zero_add, dotProduct_add, dotProduct_smul, smul_eq_mul] at this
-    exact this
+    simp_all
   -- Q(v) + L(v) = 0
   have hQL : ∀ v : Fin 3 → ℝ,
       (∑ i : Fin 3, ∑ j : Fin 3, v i * v j *
@@ -263,8 +259,7 @@ lemma _root_.VML.VMLInput.hb₀_zero (p : VMLInput X) : p.b₀ = 0 := by
     exact dotProduct_smul_self (p.ρ x) u₀
   -- Step 3: ∫ ρ * |u₀|² = |u₀|² * ∫ ρ = 0
   have h3 : FlatTorus3.spatialIntegral (fun x => p.ρ x * normSq u₀) = 0 := by
-    rwa [show (fun x => p.ρ x * normSq u₀) =
-      (fun x => dotProduct u₀ (FlatTorus3.curlX p.B x)) from funext (fun x => (h2 x).symm)]
+    simp_all
   have h4 : FlatTorus3.spatialIntegral p.ρ * normSq u₀ = 0 := by
     rwa [← FlatTorus3.hSpatialMul]
   -- Step 4: ∫ ρ > 0, so |u₀|² = 0, hence u₀ = 0

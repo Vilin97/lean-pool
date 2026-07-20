@@ -90,8 +90,7 @@ theorem walshSign_comm (x y : Fin (2 ^ n)) : walshSign x y = walshSign y x := by
 /-- A Walsh sign squares to `1`. -/
 theorem walshSign_mul_self (x y : Fin (2 ^ n)) :
     walshSign x y * walshSign x y = 1 := by
-  unfold WalshHadamard.walshSign
-  by_cases h : dotParity x y <;> simp [h]
+  simp_all
 
 /-! ### Bit-flip involution -/
 
@@ -229,12 +228,7 @@ theorem finalState_oracle (s : Fin (2 ^ n)) :
   simp only [hterm]
   rw [← Finset.mul_sum]
   by_cases hys : y = s
-  · subst hys
-    rw [if_pos rfl]
-    simp only [walshSign_mul_self, Finset.sum_const, Finset.card_univ,
-      Fintype.card_fin, nsmul_eq_mul, mul_one]
-    push_cast
-    exact inv_mul_cancel₀ (pow_ne_zero n two_ne_zero)
+  · simp_all
   · rw [if_neg hys, sum_walshSign_mul_walshSign hys, mul_zero]
 
 /-- The final Bernstein-Vazirani joint state, annotated with one oracle query. -/

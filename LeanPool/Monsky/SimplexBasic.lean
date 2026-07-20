@@ -308,9 +308,7 @@ lemma openHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
     by_contra h
     unfold openHull at ho
     rw [openSimplex_zero_empty] at ho
-    simp only [univ_eq_empty, sum_empty, Set.image_empty] at ho
-    symm at ho
-    exact Set.singleton_ne_empty P ho
+    simp_all
   · by_contra hc; push Not at hc
     have hP : P ∈ openHull f := by
       rw [ho, Set.mem_singleton_iff]
@@ -319,8 +317,7 @@ lemma openHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
     rw [ho, Set.mem_singleton_iff, add_comm, ←eq_sub_iff_add_eq] at this
     nth_rw 1 [←(one_smul (M := ℝ) P), ←sub_smul] at this
     ring_nf at this
-    apply hi
-    rwa [IsUnit.smul_left_cancel (by norm_num)] at this
+    simp_all
 
 end Monsky
 end LeanPool

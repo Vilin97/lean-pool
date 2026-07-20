@@ -125,8 +125,7 @@ lemma portrait_eq_empty_of_degenerate (d m : ℕ) (h0 : d * m = 0)
       apply Finset.sum_pos'
       · intro i _; exact Nat.zero_le _
       · exact ⟨S, hS, by omega⟩
-    rw [hw] at hpos
-    omega
+    simp_all
 
 instance instFinitePortrait (d m : ℕ) :
     Finite {P : Finset (Finset (ZMod (d * m))) // Portrait d m P} := by
@@ -258,8 +257,7 @@ theorem minVal_lt_survivor {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
   have hxS : x ∈ S := eraseMin_subset S hx
   have hxne : x ≠ minVal S h := by
     unfold eraseMin at hx
-    rw [dif_pos h] at hx
-    exact (Finset.mem_erase.mp hx).1
+    simp_all
   have hsame : (minVal S h).val % m = x.val % m := by
     rw [hfib _ (minVal_mem S h), hfib _ hxS]
   have hle : (minVal S h).val / m ≤ x.val / m :=

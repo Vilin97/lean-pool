@@ -30,8 +30,7 @@ private lemma measurable_ofReal_gaussianDensity (d : ℕ) :
 
 private lemma gaussianDensity_ofReal_lt_top (d : ℕ) :
     ∀ᵐ x : CSpace d, ENNReal.ofReal (gaussianDensity d x) < ⊤ := by
-  filter_upwards with x
-  simp
+  simp_all
 
 private lemma toReal_gaussianDensity_one (z : CSpace 1) :
     (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
@@ -61,10 +60,8 @@ private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
   · intro n hn
     obtain ⟨hlo, hhi⟩ := Finset.mem_Icc.mp hn
     refine ⟨⟨n - N, by omega⟩, Finset.mem_univ _, ?_⟩
-    change N + (n - N) = n
-    omega
-  · intro _ _
-    rfl
+    simp_all
+  · simp_all
 
 private def bandCoeff (N L : ℕ) (c : Fin L → ℂ) : ℕ → ℂ :=
   fun n => if h : N ≤ n ∧ n < N + L then c ⟨n - N, by omega⟩ else 0
@@ -489,8 +486,7 @@ theorem oneVariableFiniteParseval
                 fin_cases q
                 simpa using h0
               simp [oneVariableBasisOrthonormal, hne0]
-            · intro hnotin
-              exact False.elim (hnotin hβ)
+            · simp_all
         _ = Finset.sum G.support (fun α => G.coeff α * conj (G.coeff α)) := by
             refine Finset.sum_congr rfl ?_
             intro α hα
@@ -690,8 +686,7 @@ theorem localizationIncludingZero
               nlinarith [hcle, sq_nonneg (posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)))]
         _ = C * Real.exp (-c *
               max (|((j : ℕ) : ℝ) - Real.sqrt ((0 : ℕ) : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 ^ 2) := by
-              rw [hexact]
-              ring_nf
+              simp_all
     · have hn1 : 1 ≤ n := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hn)
       have hbase := hloc1 n j hn1
       have hCle : C1 ≤ C := le_max_left _ _

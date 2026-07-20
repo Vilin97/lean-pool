@@ -293,8 +293,7 @@ protected lemma wlem : Confluent M.Rel → M ⊧ Axioms.WeakLEM φ := by
   · rintro w Ryw;
     by_contra Rzw;
     have : w ⊧ φ := formula_hereditary Ryw hyφ;
-    have : ¬w ⊧ φ := hz w Rzw;
-    contradiction;
+    simp_all
 
 end ValidOnModel
 

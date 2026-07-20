@@ -1,0 +1,149 @@
+/-
+Copyright (c) 2026 Michael R. Douglas. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Michael R. Douglas
+-/
+
+import LeanPool.SpectralPositivity.Matrix.NonnegPower
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
+import Mathlib.Topology.Algebra.InfiniteSum.Basic
+import Mathlib.Topology.Algebra.InfiniteSum.Module
+import Mathlib.Topology.Algebra.InfiniteSum.Order
+import Mathlib.Topology.Order.OrderClosed
+import Mathlib.Analysis.SpecialFunctions.Exponential
+
+/-!
+# Metzler Matrix Exponential Positivity
+
+A Metzler matrix (nonneg off-diagonal) generates a positive semigroup:
+e^{tL} ≥ 0 for all t ≥ 0.
+
+## Proof strategy
+
+Decompose L = -cI + N where c = max_i |L_{ii}| and N ≥ 0 (nonneg entries).
+Then e^{tL} = e^{-ct} e^{tN}, and e^{tN} ≥ 0 follows from `truncated_exp_nonneg`
+(in NonnegPower.lean) plus a limit argument using the entrywise convergence
+of partial sums to the matrix exponential.
+
+## References
+
+- Berman–Plemmons, *Nonnegative Matrices*, SIAM, 1994, Ch. 6
+- Horn–Johnson, *Matrix Analysis*, Cambridge, 2013, Thm 8.5.5
+-/
+
+open Matrix BigOperators Finset
+
+noncomputable section
+
+variable {n : Type*} [Fintype n] [DecidableEq n]
+
+-- Use linfty_op norm so NormedSpace.exp is defined on Matrix n n ℝ
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup Matrix.linftyOpNormedAlgebra
+  Matrix.linftyOpNormedRing
+
+/-- Metzler decomposition: a Metzler matrix L can be written as L = -cI + N
+where c ≥ 0 and N has all nonneg entries. -/
+theorem metzler_decomp {n : Type*} [Finite n] [DecidableEq n]
+    (L : Matrix n n ℝ) (hL : L.NonnegOffDiag) :
+    ∃ (c : ℝ) (N : Matrix n n ℝ), 0 ≤ c ∧ N.Nonneg ∧ L = -c • (1 : Matrix n n ℝ) + N := by
+  have : Fintype n := Fintype.ofFinite n
+  by_cases hne : Nonempty n
+  · -- Take c = max_i |L_{ii}|
+    set c := Finset.univ.sup' univ_nonempty (fun i => |L i i|)
+    refine ⟨c, L + c • 1, ?_, ?_, ?_⟩
+    · -- c ≥ 0: |L_{ii}| ≥ 0 for any i
+      exact le_trans (abs_nonneg _)
+        (Finset.le_sup' (fun i => |L i i|) (Finset.mem_univ (Classical.arbitrary n)))
+    · -- N = L + cI is nonneg
+      intro i j
+      simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
+      by_cases hij : i = j
+      · -- Diagonal: L_{ii} + c ≥ 0 since c ≥ |L_{ii}|
+        subst hij
+        simp only [ite_true, mul_one]
+        have h1 : |L i i| ≤ c := Finset.le_sup' (fun k => |L k k|) (Finset.mem_univ i)
+        linarith [neg_abs_le (L i i)]
+      · -- Off-diagonal: L_{ij} ≥ 0 by Metzler condition
+        simp only [if_neg hij, mul_zero, add_zero]
+        exact hL i j hij
+    · -- L = -c • 1 + N: trivial algebra
+      ext i j; simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
+  · -- n is empty: vacuously true
+    exact ⟨0, L, le_refl 0, (fun i => absurd ⟨i⟩ hne), by simp⟩
+
+/-- Helper: each term of the exp power series with ℚ coefficients has nonneg entries
+when the matrix is nonneg. -/
+private theorem exp_term_nonneg {N : Matrix n n ℝ} (hN : N.Nonneg) {t : ℝ} (ht : 0 ≤ t)
+    (k : ℕ) : ((k.factorial⁻¹ : ℚ) • (t • N) ^ k).Nonneg := by
+  -- Convert from ℚ-smul to ℝ-smul: they agree on inverses of naturals
+  rw [inv_natCast_smul_eq ℚ ℝ k.factorial ((t • N) ^ k)]
+  exact Matrix.Nonneg.smul ((hN.smul ht).pow k) (inv_nonneg.mpr (Nat.cast_nonneg' k.factorial))
+
+/-- The matrix exponential of a nonneg matrix is nonneg: if N ≥ 0 then
+exp(tN) ≥ 0 for all t ≥ 0. This follows from `truncated_exp_nonneg`
+and entrywise convergence of the power series. -/
+theorem nonneg_matrix_exp_nonneg {N : Matrix n n ℝ} (hN : N.Nonneg) {t : ℝ} (ht : 0 ≤ t) :
+    (NormedSpace.exp (t • N) : Matrix n n ℝ).Nonneg := by
+  -- The power series HasSum for the matrix exponential
+  have hexp : HasSum (fun k : ℕ => (k.factorial⁻¹ : ℚ) • (t • N) ^ k)
+      (NormedSpace.exp (t • N) : Matrix n n ℝ) :=
+    NormedSpace.exp_series_hasSum_exp' (t • N)
+  -- Each term is nonneg
+  have hterm : ∀ k : ℕ, ((k.factorial⁻¹ : ℚ) • (t • N) ^ k).Nonneg :=
+    exp_term_nonneg hN ht
+  -- Show each entry is nonneg by extracting entry-wise convergence
+  intro i j
+  -- Evaluation at (i,j) is a continuous AddMonoidHom
+  -- First evaluate at row i, then at column j
+  have heval_i : Continuous (Pi.evalAddMonoidHom (fun _ : n => n → ℝ) i) :=
+    continuous_apply i
+  have heval_j : Continuous (Pi.evalAddMonoidHom (fun _ : n => ℝ) j) :=
+    continuous_apply j
+  -- The entry-wise HasSum
+  have hij_hasSum : HasSum
+      (fun k => ((k.factorial⁻¹ : ℚ) • (t • N) ^ k) i j)
+      ((NormedSpace.exp (t • N) : Matrix n n ℝ) i j) := by
+    have h1 := hexp.map (Pi.evalAddMonoidHom (fun _ : n => n → ℝ) i) heval_i
+    exact h1.map (Pi.evalAddMonoidHom (fun _ : n => ℝ) j) heval_j
+  -- Each partial sum entry is nonneg, so the limit is nonneg
+  exact le_hasSum_of_le_sum hij_hasSum (fun s => by
+    apply Finset.sum_nonneg
+    intro k _
+    exact hterm k i j)
+
+/-- Main theorem: if L is Metzler (nonneg off-diagonal entries), then
+e^{tL} ≥ 0 for all t ≥ 0. The semigroup generated by a Metzler matrix
+is a positive semigroup. -/
+theorem metzler_exp_nonneg {L : Matrix n n ℝ} (hL : L.NonnegOffDiag) {t : ℝ} (ht : 0 ≤ t) :
+    (NormedSpace.exp (t • L) : Matrix n n ℝ).Nonneg := by
+  -- Step 1: Decompose L = -cI + N with c ≥ 0, N ≥ 0
+  obtain ⟨c, N, hc, hN, hL_eq⟩ := metzler_decomp L hL
+  -- Step 2: t • L = -(tc) • 1 + t • N
+  have htL : t • L = -(t * c) • (1 : Matrix n n ℝ) + t • N := by
+    subst hL_eq
+    ext i j; simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
+    split <;> ring
+  rw [htL]
+  -- Step 3: The scalar part commutes with tN (scalar matrices commute with everything)
+  have hcomm : Commute (-(t * c) • (1 : Matrix n n ℝ)) (t • N) := by
+    rw [← Algebra.algebraMap_eq_smul_one]
+    exact Algebra.commute_algebraMap_left (-(t * c)) (t • N)
+  -- Step 4: exp(-(tc)•1 + tN) = exp(-(tc)•1) * exp(tN)
+  rw [Matrix.exp_add_of_commute _ _ hcomm]
+  -- Step 5: exp(-(tc)•1) = algebraMap(exp(-tc)) = exp(-tc) • 1
+  have hscalar : NormedSpace.exp (-(t * c) • (1 : Matrix n n ℝ)) =
+      NormedSpace.exp (-(t * c)) • (1 : Matrix n n ℝ) := by
+    rw [← Algebra.algebraMap_eq_smul_one (-(t * c)),
+        ← Algebra.algebraMap_eq_smul_one (NormedSpace.exp (-(t * c)))]
+    exact (NormedSpace.algebraMap_exp_comm (-(t * c))).symm
+  rw [hscalar]
+  -- Step 6: (exp(-tc) • 1) * exp(tN) = exp(-tc) • (1 * exp(tN)) = exp(-tc) • exp(tN)
+  rw [Algebra.smul_mul_assoc, one_mul]
+  -- Now need: (NormedSpace.exp(-(t*c)) • exp(tN)).Nonneg
+  -- NormedSpace.exp on ℝ equals Real.exp, which is always positive
+  have hexp_pos : 0 ≤ (NormedSpace.exp (-(t * c)) : ℝ) := by
+    rw [← Real.exp_eq_exp_ℝ]
+    exact le_of_lt (Real.exp_pos _)
+  exact Matrix.Nonneg.smul (nonneg_matrix_exp_nonneg hN ht) hexp_pos
+
+end

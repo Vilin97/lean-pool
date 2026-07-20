@@ -74,9 +74,7 @@ lemma ae_eq_zero_of_charfun_eq_one {Ω : Type*} [MeasurableSpace Ω]
       have : @inner ℝ ℝ _ (X ω) t = t * X ω := by
         change t * starRingEnd ℝ (X ω) = t * X ω; simp
       rw [this]; push_cast; ring_nf
-    simp_rw [h_inner]
-    rw [hcf t]
-    simp [Complex.ofReal_zero, zero_mul, Complex.exp_zero]
+    simp_all
   -- Step 2: Deduce X = 0 a.e.
   have h_ae : ∀ᵐ y ∂(ν.map X), y = 0 := by
     rw [h_eq]; exact ae_dirac_iff (measurableSet_singleton 0) |>.mpr rfl
@@ -104,9 +102,7 @@ lemma cf_norm_le_one
   calc ‖∫ ω, exp (I * ↑(ω x)) ∂ν‖
       ≤ ∫ ω, ‖exp (I * ↑(ω x))‖ ∂ν := norm_integral_le_integral_norm _
     _ = ∫ ω, 1 ∂ν := by
-        congr 1; ext ω; rw [Complex.norm_exp]
-        simp [Complex.mul_re, Complex.I_re, Complex.I_im,
-              Complex.ofReal_re, Complex.ofReal_im]
+        simp_all
     _ = 1 := by simp
 
 /-- `1 - Re(z) ≤ 2` when `‖z‖ ≤ 1`. -/
@@ -298,10 +294,7 @@ lemma linear_combination_ae
       rw [show ∑ j : Fin k, -t * β j * ω' (e j) =
           -(t * ∑ j, β j * ω' (e j)) from by
         rw [Finset.mul_sum, ← Finset.sum_neg_distrib]; congr 1; ext j; ring]
-    rw [h_sum_x, h_normalized] at h
-    rwa [show (fun ω' => exp (I * ↑(t * X ω'))) =
-      (fun ω' => exp (I * ↑(∑ i : Fin (k + 1), s' i * ω' (x' i)))) from by
-      funext ω'; congr 2; exact_mod_cast (h_sum_ω ω').symm]
+    simp_all
   have := ae_eq_zero_of_charfun_eq_one hX_meas hX_cf
   filter_upwards [this] with ω hω
   linarith [show X ω = 0 from hω]
@@ -382,8 +375,7 @@ lemma kernel_eval_ae_zero
   apply ae_eq_zero_of_charfun_eq_one (measurable_pi_apply z)
   intro t
   have h := h_cf_joint 1 (fun _ => t) (fun _ => z)
-  simp only [Fin.sum_univ_one] at h
-  rw [h_cf_kernel t] at h; exact h
+  simp_all
 
 
 /-! ## ℚ-linearity for all Finsupp simultaneously -/
@@ -878,8 +870,7 @@ private lemma joint_kernel_bound_finite
         cexp (↑(∑ j : Fin (n + 1), v j * ω (z j)) * I) =
         cexp (I * ↑(∑ j, v j * ω (z j))) := by
       intro ω; congr 1; ring
-    simp_rw [h_eq]
-    exact h_cf_joint (n + 1) (fun j => v j) z
+    simp_all
   -- Step 4: CF bound on V: 1 - Re(charFun μ' v) ≤ ε_q for all v
   have h_cf_re_bound : ∀ v : V, 1 - (charFun μ'.toMeasure v).re ≤ ε_q := by
     intro v; rw [h_cf]; exact h_cf_bound (fun j => v j)
@@ -926,8 +917,7 @@ private lemma joint_kernel_bound_finite
     constructor
     · rintro ⟨i, hi⟩
       exact Finset.sum_pos' (fun j _ => sq_nonneg _) ⟨i, Finset.mem_univ _, by positivity⟩
-    · intro hS; by_contra h_all; push Not at h_all
-      exact absurd (Finset.sum_eq_zero (fun i _ => by rw [h_all i, sq, mul_zero])) (ne_of_gt hS)
+    · intro hS; by_contra h_all; simp_all
   have h_union : {ω : E → ℝ | 0 < S ω} =
       ⋃ m : ℕ, {ω | (1 : ℝ) / (↑m + 1) ≤ S ω} := by
     ext ω; simp only [Set.mem_setOf_eq, Set.mem_iUnion]
@@ -969,11 +959,7 @@ private lemma joint_kernel_bound_finite
       have h_exp_int : Integrable (fun ω : E → ℝ => Real.exp (-(σ ^ 2 * (S ω) / 2))) ν := by
         apply (integrable_const (1 : ℝ)).mono'
         · exact ((measurable_const.mul h_S_meas |>.div_const 2 |>.neg).exp.aestronglyMeasurable)
-        · filter_upwards with ω
-          simp only [Real.norm_eq_abs, abs_of_nonneg (Real.exp_nonneg _)]
-          exact Real.exp_le_one_iff.mpr (by
-            nlinarith [sq_nonneg σ,
-              Finset.sum_nonneg (fun i (_ : i ∈ Finset.univ) => sq_nonneg (ω (z i)))])
+        · simp_all
       have h_f_int : Integrable (fun ω : E → ℝ => 1 - Real.exp (-(σ ^ 2 * (S ω) / 2))) ν :=
         (integrable_const 1).sub h_exp_int
       calc c_σ * (ν {ω | δ ≤ S ω}).toReal
@@ -1114,12 +1100,7 @@ private lemma kernel_concentration_bound
   have h_lin_all : ∀ᵐ ω ∂ν, ∀ c : ℕ →₀ ℚ, c.support ⊆ Finset.range N →
       ω (x_c c) = ω (z c) + ∑ j, α_map c j * ω (e j) := by
     rw [eventually_countable_forall]
-    intro c
-    by_cases hc : c.support ⊆ Finset.range N
-    · filter_upwards [h_lin_ae c hc] with ω hω _
-      exact hω
-    · filter_upwards with ω hc'
-      exact absurd hc' hc
+    simp_all
   have h_sub : bad_set ⊆ z_bad ∪ {ω | ¬∀ c : ℕ →₀ ℚ, c.support ⊆ Finset.range N →
       ω (x_c c) = ω (z c) + ∑ j, α_map c j * ω (e j)} := by
     intro ω hω
@@ -1128,8 +1109,7 @@ private lemma kernel_concentration_bound
     · left
       obtain ⟨c, hc_supp, hc_bad⟩ := hω
       refine ⟨c, hc_supp, ?_⟩
-      rw [h_all c hc_supp] at hc_bad
-      intro hz; apply hc_bad; linarith
+      simp_all
     · right; exact h_all
   have h_null : ν {ω | ¬∀ c : ℕ →₀ ℚ, c.support ⊆ Finset.range N →
       ω (x_c c) = ω (z c) + ∑ j, α_map c j * ω (e j)} = 0 :=
@@ -1220,8 +1200,7 @@ private lemma kernel_concentration_bound
         · rintro ⟨j, hne⟩
           exact ⟨good.equivFin.symm j, (good.equivFin.symm j).2,
             by rwa [show f (good.equivFin.symm j) = c_list j from rfl]⟩
-      rw [h_set_eq]
-      exact h_finite_bound n c_list h_c_supp
+      simp_all
     rw [h_union]
     exact le_of_tendsto' (tendsto_measure_iUnion_atTop h_mono) h_S_bound
   -- Step 6: Combine
@@ -1414,24 +1393,14 @@ private lemma tail_bound_uniform_gaussian_average
       have h_single_left : ∀ (v : V),
           @inner ℝ V _ (EuclideanSpace.single j 1) v = v j := by
         intro v; erw [PiLp.inner_apply]
-        simp only [real_inner_eq_mul]
-        simp [PiLp.single_apply]
+        simp_all
       have h_single_right : ∀ (v : V),
           @inner ℝ V _ v (EuclideanSpace.single l 1) = v l := by
         intro v; erw [PiLp.inner_apply]
-        simp only [real_inner_eq_mul]
-        simp [PiLp.single_apply]
-      simp only [h_single_left, h_single_right, PiLp.single_apply] at key
-      exact key.symm.symm
+        simp_all
+      simp_all
     suffices h_suff : ∑ j, Mij j j ≤ C_HS by
-      apply le_trans _ h_suff
-      apply le_of_eq
-      apply Finset.sum_congr rfl; intro j _
-      have h_collapse_j : ∀ l, Mij j l * (∑ i, (b i) j * (b i) l) =
-          if j = l then Mij j l else 0 := by
-        intro l; rw [h_parseval j l]; split_ifs <;> simp [*]
-      simp only [h_collapse_j]
-      simp
+      simp_all
     simp_rw [show ∀ j : Fin (k + 1), Mij j j = p_inner (e j) ^ 2 from
       fun j => Seminorm.innerProd_self p_inner (e j)]
     exact h_HS (k + 1) e he
@@ -1555,11 +1524,7 @@ private lemma tail_bound_uniform
     have h_exp_int : Integrable (fun ω : E → ℝ => Real.exp (-(σ₀ ^ 2 * (T ω) / 2))) ν := by
       apply (integrable_const (1 : ℝ)).mono'
       · exact ((measurable_const.mul h_T_meas |>.div_const 2 |>.neg).exp.aestronglyMeasurable)
-      · filter_upwards with ω
-        simp only [Real.norm_eq_abs, abs_of_nonneg (Real.exp_nonneg _)]
-        exact Real.exp_le_one_iff.mpr (by
-          nlinarith [sq_nonneg σ₀,
-            Finset.sum_nonneg (fun i (_ : i ∈ Finset.univ) => sq_nonneg (ω (e i)))])
+      · simp_all
     have h_f_int : Integrable (fun ω : E → ℝ => 1 - Real.exp (-(σ₀ ^ 2 * (T ω) / 2))) ν :=
       (integrable_const 1).sub h_exp_int
     calc c * (ν {ω | R ^ 2 < T ω}).toReal

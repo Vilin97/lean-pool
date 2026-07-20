@@ -72,8 +72,7 @@ theorem parity_flipBit (x : Fin n → Bool) (i : Fin n) :
     have hS : Finset.univ.filter (fun j : Fin n => flipBit x i j) =
               insert i (Finset.univ.filter (fun j : Fin n => x j)) := by
       ext j; simp [flipBit]; by_cases h : j = i <;> simp [h, hxi, Function.update]
-    have hni : i ∉ Finset.univ.filter (fun j : Fin n => x j) := by simp [hxi]
-    rw [hS, Finset.card_insert_of_notMem hni]
+    simp_all
   · left
     have hS : Finset.univ.filter (fun j : Fin n => flipBit x i j) =
               (Finset.univ.filter (fun j : Fin n => x j)).erase i := by
@@ -126,8 +125,7 @@ private theorem indicator_filter_true (x : Fin n → Bool) :
 /-- The "true bits" map is a left inverse to indicator. -/
 private theorem filter_true_indicator (T : Finset (Fin n)) :
     Finset.univ.filter (fun i => indicator T i = true) = T := by
-  ext i
-  simp [indicator]
+  simp_all
 
 /-- Key identity: the parity-weighted sum recovers the top Möbius coefficient,
 `∑_x f_pm(x) · parity(x) = 2 · (-1)^n · c_univ(f)`. -/
@@ -166,8 +164,7 @@ theorem moebius_parity_sum (f : BoolFun n) (hn : 0 < n) :
   rw [show
         (-1 : ℤ) ^ T.card * boolToInt (f (indicator T)) =
           boolToInt (f (indicator T)) * (-1) ^ T.card from by ring]
-  congr 2
-  exact hcard.symm
+  simp_all
 
 /-- If `f` has full multilinear degree (`c_univ(f) ≠ 0`), then the
 parity-weighted sum is nonzero. -/
@@ -175,9 +172,7 @@ theorem fullDegree_paritySigned_sum_ne_zero (f : BoolFun n) (hn : 0 < n)
     (h : f.moebius Finset.univ ≠ 0) :
     ∑ x : Fin n → Bool, f.paritySigned x ≠ 0 := by
   rw [moebius_parity_sum _ hn]
-  refine mul_ne_zero (mul_ne_zero ?_ ?_) h
-  · omega
-  · positivity
+  simp_all
 
 /-- **Parity imbalance.** If `f` has full multilinear degree, then one of the
 two parity-sign classes contains more than `2^{n-1}` inputs. -/
@@ -234,7 +229,6 @@ theorem fullDegree_imbalance (f : BoolFun n) (hn : 0 < n)
     have hA_eq : A.card = 2 ^ (n - 1) := by
       set p := 2 ^ (n - 1)
       omega
-    apply hne
-    rw [hsum, hA_eq, heq]; push_cast; omega
+    simp_all
 
 end LeanPoolSensitivity

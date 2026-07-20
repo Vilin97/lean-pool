@@ -91,8 +91,7 @@ lemma integral_equality (s t : ℝ) (s0 : 0 < s) (s1 : s < 1) (t0 : 0 < t) (t1 :
       ← intervalIntegral.integral_const_mul, ← mul_assoc,
       show s * s⁻¹  = 1 by field_simp, one_mul, eq3_3] at eq3_2
     simp_rw [← div_eq_mul_inv] at eq3_2
-    simp only [mul_zero, zero_mul, mul_one, one_mul, smul_eq_mul] at comm1 comm2
-    rw [eq3_1, comm1, ← comm2, eq3_2, ← Real.log_inv, ← one_div]
+    simp_all
   have eq4 : ∫ (x : ℝ) in (0)..1, (1 - t) / (1 - (1 - t) * x) = - t.log := by
     rw[← sub_pos] at t1
     have eq4_1 := intervalIntegral.integral_comp_mul_left (a := 0) (b := 1)
@@ -104,9 +103,7 @@ lemma integral_equality (s t : ℝ) (s0 : 0 < s) (s1 : s < 1) (t0 : 0 < t) (t1 :
     nth_rewrite 2 [intervalIntegral.integral_const_mul] at eq4_1
     rw[← mul_assoc, show (1 - t)⁻¹ * (1 - t) = 1 by field_simp, one_mul] at eq4_1
     simp_rw [← div_eq_mul_inv] at eq4_1
-    rw [eq4_1, ← Real.log_inv, ← one_div, ← eq4_3]
-    simp_rw [one_mul, sub_zero, ← sub_add, sub_self, zero_add] at eq4_2
-    exact eq4_2
+    simp_all
   rw[integral_equality_help , intervalIntegral.integral_const_mul, h3,
     intervalIntegral.integral_add, eq3, eq4, ← neg_add, ← Real.log_mul]
   · field_simp
@@ -114,8 +111,7 @@ lemma integral_equality (s t : ℝ) (s0 : 0 < s) (s1 : s < 1) (t0 : 0 < t) (t1 :
   · positivity
   · have hs_rewrite : ∀ x : ℝ,
         s / (1 - (1 - x) * s) = s * 1 / (1 - (1 - x) * s) := by
-      intro x
-      simp
+      simp_all
     simp_rw [hs_rewrite]
     apply IntervalIntegrable.continuousOn_mul (hg := continuousOn_const)
     apply intervalIntegral.intervalIntegrable_inv

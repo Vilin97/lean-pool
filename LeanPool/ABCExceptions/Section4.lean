@@ -118,8 +118,7 @@ lemma FourierBound.special' (j : ℕ) (hj : j ∈ Set.Ioc 1 d) :
     ν < 1/2 * (1 + δ + ∑ i ≤ d with i ≠ j, max (a i) (b i)) := by
   refine (hfab.special j hj).trans_eq ?_
   rw [add_sub_assoc, Finset.filter_ne', Finset.sum_erase_eq_sub]
-  simp only [Set.mem_Ioc] at hj
-  simp [hj]
+  simp_all
 
 lemma FourierBound.two (hd : 2 ≤ d) :
     ν < 1/2 * (1 + δ + ∑ i ≤ d, max (a i) (b i) - max (a 2) (b 2)) :=
@@ -232,8 +231,7 @@ lemma ThueBound.very_special (p : ℕ) (hp : p ∈ Set.Ioc 1 d) :
   · simp only [Finset.mem_filter, Finset.mem_Iic, and_imp]
     intro i hi _
     exact add_nonneg (ha.nonneg i) (hb.nonneg i)
-  · simp only [Set.mem_Ioc] at hp
-    simp [hp]
+  · simp_all
 
 lemma ThueBound.special_two (hd : 4 ≤ d) :
     ν < 1 + δ - (a 2 + a 4 + (b 2 + b 4)) := by
@@ -979,8 +977,7 @@ lemma two_bound (hd : 6 ≤ d) :
     _ ≤ ∑ i ≤ 6, i * a i + ∑ i ∈ Finset.Icc 7 d, i * a i := by
       gcongr with i hi
       · exact ha.nonneg i
-      · simp only [Finset.mem_Icc] at hi
-        exact mod_cast hi.1
+      · simp_all
     _ = ∑ i ≤ d, i * a i := by rw [test hd]
     _ ≤ 1 := ha.sum_bound
 
@@ -1139,14 +1136,10 @@ lemma GeometryBound.s21_application_basic
     simp only [Finset.sum_add_distrib]
     simp [sum_range, Fin.sum_univ_five, hb.zero, hc.zero] at h₁ h₂
     ring_nf at h₁ h₂ ⊢
-    constructor
-    · exact h₁
-    · exact h₂
+    simp_all
   obtain h4 | h4 := le_total (b 4) (c 4)
-  · rw [min_eq_left h4, max_eq_right h4]
-    exact this.2
-  · rw [min_eq_right h4, max_eq_left h4]
-    exact this.1
+  · simp_all
+  · simp_all
 
 lemma min_le_half_add {x y : ℝ} : min x y ≤ (x + y) / 2 := by
   linarith [min_le_left x y, min_le_right x y]

@@ -114,8 +114,7 @@ theorem isGen_mono (hji : j.comp i = idMap D) {X X' : Set α} {Z W : Set β}
   have hiXW : i.rel X W :=
     i.mono hiXZ subset_rfl hZW (i.rel_dom hiXZ) (j.rel_dom hjWX')
   have hrel : (j.comp i).rel X X' := ⟨W, hiXW, hjWX'⟩
-  rw [hji] at hrel
-  exact hrel.2.2
+  simp_all
 
 /-- **The generator correspondence is monotone, other direction** (uses `i ∘ j ⊆
 I_E`): if `Z, W`

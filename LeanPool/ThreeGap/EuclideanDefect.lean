@@ -32,10 +32,7 @@ variable {n : ℕ}
 theorem euclNorm_eq (x : Fin n → ℝ) : euclNorm n x = Real.sqrt (∑ i, (x i) ^ 2) := by
   unfold euclNorm
   rw [EuclideanSpace.norm_eq]
-  congr 1
-  refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [Real.norm_eq_abs, sq_abs]
-  rfl
+  simp_all
 
 /-- Each coordinate is bounded by the Euclidean norm: `|x k| ≤ euclNorm n x`. -/
 theorem abs_le_euclNorm (x : Fin n → ℝ) (k : Fin n) : |x k| ≤ euclNorm n x := by

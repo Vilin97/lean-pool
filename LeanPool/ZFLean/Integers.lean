@@ -27,8 +27,7 @@ protected theorem zrel_eq : Equivalence ZFSet.zrel where
     unfold ZFSet.zrel
     intro x y h
     rw [add_comm, add_comm y.2]
-    symm
-    assumption
+    simp_all
   trans := by
     unfold ZFSet.zrel
     intro x y z hxy hyz
@@ -491,13 +490,7 @@ instance : IsOrderedAddMonoid ZFInt where
       change (x₁ + z₁) + (y₂ + z₂) < (x₂ + z₂) + (y₁ + z₁)
       ac_change (x₁ + y₂) + (z₁ + z₂) <  (x₂ + y₁) + (z₁ + z₂)
       rwa [ZFNat.add_lt_add_iff_right]
-    · rw [eq, ZFSet.zrel] at h
-      dsimp at h
-      right
-      rw [add_eq, add_eq, eq, ZFSet.zrel]
-      dsimp
-      ac_change (x₁ + y₂) + (z₁ + z₂) =  (x₂ + y₁) + (z₁ + z₂)
-      rw [h]
+    · simp_all
 lemma ind {P : ZFNat → ZFNat → Prop} (n m : ZFNat) (zero : P 0 0)
   (succ_l : ∀ n m, P n m → P (n + 1) m) (succ_r : ∀ n m, P n m → P n (m + 1)) : P n m := by
   induction n using ZFNat.induction with
@@ -527,9 +520,7 @@ lemma induction_pos {P : ZFInt → Prop} (n : ZFInt) (n_pos : 0 ≤ n)
       nomatch ZFNat.lt_irrefl <| ZFNat.lt_trans h n_pos
     · rw [ZFInt.mk_eq] at eq
       rcases ZFInt.mk_eq_zero_iff.mp eq.symm with rfl
-      rw [eq] at h
-      change n + n < n + n at h
-      nomatch ZFNat.lt_irrefl h
+      simp_all
   · subst m
     rcases n_pos with n_pos | eq
     · rw [ZFInt.zero_eq] at n_pos
@@ -551,9 +542,7 @@ lemma induction_pos {P : ZFInt → Prop} (n : ZFInt) (n_pos : 0 ≤ n)
       rw [←ZFNat.add_one_eq_succ, ZFNat.add_comm, ZFNat.add_assoc]
       specialize succ <| ZFInt.mk (m+k,m)
       rw [ZFInt.one_eq, ZFInt.add_eq] at succ
-      dsimp at succ
-      rw [ZFNat.add_zero, ←ZFInt.mk_eq] at succ
-      exact succ ih
+      simp_all
 lemma induction_neg {P : ZFInt → Prop} (n : ZFInt) (n_neg : n ≤ 0)
   (zero : P 0) (succ : ∀ k, P k → P (k - 1)) : P n := by
   have  : 0 ≤ -n := by rwa [← ZFInt.neg_zero, ZFInt.le_neg_iff, neg_neg n, neg_neg 0]
@@ -573,8 +562,7 @@ theorem induction {P : ZFInt → Prop} (n : ZFInt)
   rcases (Std.Trichotomous.rel_or_eq_or_rel_swap
       (r := (· < · : ZFInt → ZFInt → Prop)) (a := n) (b := 0)) with h | h | h
   · exact induction_neg n (Or.inl h) zero neg
-  · subst n
-    exact zero
+  · simp_all
   · exact induction_pos n (Or.inl h) zero pos
 @[cases_eliminator]
 theorem sign_cases {P : ZFInt → Prop} (n : ZFInt)
@@ -639,9 +627,7 @@ theorem lt_succ_of_le_iff (n m : ZFInt) : n ≤ m ↔ n < m + 1 where
 theorem _root_.ZFSet.ZFInt.intLe.dest {n m : ZFInt} : n ≤ m → ∃ k, 0 ≤ k ∧ n + k = m := by
   intro h
   exists m - n
-  and_intros
-  · exact sub_nonneg_of_le h
-  · exact _root_.add_sub_cancel n m
+  simp_all
 theorem mul_pos_pos_pos (a b : ZFInt) (ha : 0 < a) (hb : 0 < b) : 0 < a * b := by
   induction a using Quotient.ind
   induction b using Quotient.ind
@@ -662,18 +648,11 @@ theorem mul_pos_pos_pos (a b : ZFInt) (ha : 0 < a) (hb : 0 < b) : 0 < a * b := b
   · exact ZFNat.pos_of_ne_zero (ZFNat.sub_ne_zero_of_lt hb).symm
   · exact ha
 theorem neg_one_mul (a : ZFInt) : (-1 : ZFInt) * a = -a := by
-  induction a using Quotient.ind
-  rename_i a
-  obtain ⟨a, b⟩ := a
-  rw [mk_eq, one_eq, neg_eq, mul_eq, neg_eq]
-  dsimp
-  rw [ZFNat.zero_mul, ZFNat.zero_mul, ZFNat.one_mul, ZFNat.one_mul, ZFNat.zero_add, ZFNat.zero_add]
+  simp_all
 theorem neg_one_mul_neg_one : (-1 : ZFInt) * (-1) = 1 := by
-  rw [one_eq, neg_eq, mul_eq, ZFNat.mul_zero, ZFNat.zero_mul, ZFNat.zero_add, ZFNat.zero_add,
-    ZFNat.one_mul, ZFNat.one_mul]
+  simp_all
 theorem mul_neg_neg (a b : ZFInt) : a * b = -a * -b := by
-  rw [←one_mul (a*b), ←neg_one_mul_neg_one, ←mul_assoc, mul_comm, mul_assoc, mul_comm, mul_assoc,
-    mul_comm (-1), mul_assoc, mul_comm b, neg_one_mul, neg_one_mul]
+  simp_all
 theorem neg_mul_distrib (a b : ZFInt) : -(a * b) = -a * b := neg_mul_eq_neg_mul a b
 theorem mul_neg_neg_pos (a b : ZFInt) (ha : a < 0) (hb : b < 0) : 0 < a * b := by
   rw [mul_neg_neg]
@@ -690,12 +669,9 @@ theorem mul_nonneg_nonneg_nonneg (a b : ZFInt) (ha : 0 ≤ a) (hb : 0 ≤ b) : 0
   rcases ha with ha | rfl <;> rcases hb with hb | rfl
   · left
     exact mul_pos_pos_pos a b ha hb
-  · right
-    rw [mul_zero]
-  · right
-    rw [zero_mul]
-  · right
-    rw [zero_mul]
+  · simp_all
+  · simp_all
+  · simp_all
 theorem mul_nonpos_nonneg_nonpos (a b : ZFInt) (ha : a ≤ 0) (hb : 0 ≤ b) : a * b ≤ 0 := by
   rw [neg_flip_le, neg_mul_eq_neg_mul]
   exact mul_nonneg_nonneg_nonneg _ _ (neg_nonneg.mpr ha) hb
@@ -726,8 +702,7 @@ theorem pos_of_mul_pos {a b : ZFInt} (h : 0 < a * b) (ha : 0 < a) : 0 < b := by
   by_contra hb
   rw [not_lt_iff_eq_or_lt] at hb
   rcases hb with rfl | hb
-  · rw [mul_zero] at h
-    exact lt_irrefl h
+  · simp_all
   · rcases (Std.Trichotomous.rel_or_eq_or_rel_swap
       (r := (· < · : ZFInt → ZFInt → Prop)) (a := a) (b := b)) with h' | h' | h'
     · nomatch lt_irrefl <| lt_trans (lt_trans ha h') hb
@@ -747,8 +722,7 @@ theorem mul_pos_iff {a b : ZFInt} : 0 < a * b ↔ (0 < a ∧ 0 < b) ∨ (a < 0 �
         and_intros
         · exact pos
         · exact pos_of_mul_pos h pos
-      · rw [zero_mul] at h
-        nomatch lt_irrefl h
+      · simp_all
     | neg neg =>
       right
       and_intros
@@ -762,8 +736,7 @@ theorem mul_pos_iff {a b : ZFInt} : 0 < a * b ↔ (0 < a ∧ 0 < b) ∨ (a < 0 �
     · exact mul_neg_neg_pos a b l r
 theorem eq_le_iff {a b : ZFInt} : a = b ↔ a ≤ b ∧ b ≤ a := by
   constructor
-  · rintro rfl
-    exact ⟨le_refl _, le_refl _⟩
+  · simp_all
   · rintro ⟨h₁, h₂⟩
     rcases h₁ with h₁ | rfl <;> rcases h₂ with h₂ | h₂
     · nomatch lt_irrefl <| lt_trans h₁ h₂
@@ -786,8 +759,7 @@ theorem mul_eq_zero_iff {a b : ZFInt} : a * b = 0 ↔ a = 0 ∨ b = 0 := by
         rw [ZFNat.sub_eq_zero_imp_le] at contr
         rcases contr with contr | eq
         · nomatch ZFNat.lt_irrefl <| ZFNat.lt_trans contr h'
-        · rw [eq] at h'
-          nomatch ZFNat.lt_irrefl h'
+        · simp_all
       left
       exact ZFNat.mul_right_cancel_iff b₁b₂_ne_0 |>.mp this
     · right; assumption
@@ -798,8 +770,7 @@ theorem mul_eq_zero_iff {a b : ZFInt} : a * b = 0 ↔ a = 0 ∨ b = 0 := by
         rw [ZFNat.sub_eq_zero_imp_le] at contr
         rcases contr with contr | eq
         · nomatch ZFNat.lt_irrefl <| ZFNat.lt_trans contr h'
-        · rw [eq] at h'
-          nomatch ZFNat.lt_irrefl h'
+        · simp_all
       left
       exact ZFNat.mul_right_cancel_iff b₁b₂_ne_0 |>.mp this
   · rintro (h | h)
@@ -874,23 +845,15 @@ def PInt' : PSet := ⟨ULift ℤ, fun n => ofInt' n.down⟩
 /-- Imported ZFLean declaration. -/
 def Int' : ZFSet := ZFSet.mk PInt'
 theorem _root_.ZFSet.ZFNat.mem_lift_lift_Nat (n : ℕ) : ↑(↑n : ZFNat) ∈ Nat := by
-  induction n with
-  | zero => simp only [Nat.cast_zero, ZFNat.natZero_eq, ZFNat.zero_in_Nat]
-  | succ n ih =>
-    simp only [Nat.cast_succ, ZFNat.add_one_eq_succ, ZFNat.succ]
-    exact ZFNat.succ_mem_Nat' ih
+  simp_all
 theorem mem_ofInt_Int (n : ℤ) : ofInt n ∈ Int := by
   induction n using Int.recOn with
   | ofNat n =>
     rw [Int, mem_union, ofInt]
-    right
-    rw [pair_mem_prod]
-    exact ⟨singleton_subset_mem_iff.mp fun _ => id, ZFNat.mem_lift_lift_Nat n⟩
+    simp_all
   | negSucc n =>
     rw [Int, mem_union, ofInt]
-    left
-    rw [pair_mem_prod]
-    exact ⟨ZFNat.mem_lift_lift_Nat (n+1), singleton_subset_mem_iff.mp fun _ => id⟩
+    simp_all
 theorem sub_ofInt_singleton_Int (n : ℤ) : {ofInt n} ⊆ Int := by
   intro
   rw [mem_singleton]
@@ -912,26 +875,13 @@ noncomputable def π₂ (x : ZFSet) : ZFSet :=
   unfold π₁ pair
   ext
   rw [sInter_pair, mem_sUnion]
-  constructor
-  · rintro ⟨w, l, r⟩
-    rw [mem_inter, mem_singleton, mem_pair] at l
-    rw [l.1] at r
-    assumption
-  · intro h
-    exists x
-    rw [mem_inter, mem_singleton, mem_pair]
-    exact ⟨⟨rfl, .inl rfl⟩, h⟩
+  simp_all
 @[simp] theorem pair_inter {x y : ZFSet} : {x} ∩ {x, y} = ({x} : ZFSet) := by
     ext
-    rw [mem_inter, mem_singleton, mem_pair]
-    constructor
-    · rintro ⟨rfl, _ | rfl⟩ <;> rfl
-    · rintro rfl
-      exact ⟨rfl, .inl rfl⟩
+    simp_all
 @[simp] theorem pair_union {x y : ZFSet} : {x} ∪ {x, y} = ({x, y} : ZFSet) := by
     ext
-    rw [mem_union, mem_singleton, mem_pair]
-    exact or_self_left
+    simp_all
 @[simp] theorem pair_minus {x y : ZFSet} : x ≠ y → {x, y} \ {x} = ({y} : ZFSet) := by
   intro x_ne_y
   ext z
@@ -950,9 +900,7 @@ noncomputable def π₂ (x : ZFSet) : ZFSet :=
     unfold pair at h
     rw [sUnion_pair, pair_union, sInter_pair, pair_inter] at h
     rw [ZFSet.ext_iff] at h
-    specialize h y
-    simpa only [mem_sdiff, mem_insert_iff, mem_singleton, eq_self,
-      or_true, true_and, notMem_empty, iff_false, not_not, eq_comm] using h
+    simp_all
   · unfold pair at *
     rw [sUnion_pair, pair_union, sInter_pair, pair_inter] at h ⊢
     rw [pair_minus]
@@ -975,10 +923,8 @@ theorem mem_Int_proj' {x : ZFSet} :
   x ∈ Int → (x.π₁ = ∅ ∧ x.π₂ ∈ Nat) ∨ (x.π₁ ∈ Nat ∧ x.π₂ = ∅) := by
   intro h
   rcases mem_Int_proj h with ⟨n, hn, ⟨l, r⟩ | ⟨l, r⟩⟩
-  · left
-    exact ⟨l, r ▸ hn⟩
-  · right
-    exact ⟨l ▸ hn, r⟩
+  · simp_all
+  · simp_all
 namespace ZFInt
 
 open Classical in
@@ -1034,19 +980,9 @@ theorem _root_.ZFSet.ZFInt.outof_inj (x y : {x // x ∈ Int}) : outof x = outof 
 end ZFInt
 
 theorem _root_.ZFSet.ZFNat.mem_Nat_sub_one {n : ZFNat} : (n - 1).1 ∈ Nat := by
-  induction n with
-  | zero => rw [ZFNat.zero_sub]; exact ZFNat.zero_in_Nat
-  | succ n _ =>
-    rw [ZFNat.sub_one_eq_pred, ZFNat.add_one_eq_succ, ZFNat.pred_succ]
-    exact n.2
+  simp_all
 theorem _root_.ZFSet.ZFNat.mem_Nat_sub {n m : ZFNat} : (n - m).1 ∈ Nat := by
-  induction m with
-  | zero =>
-    rw [ZFNat.sub_zero]
-    exact n.2
-  | succ m _ =>
-    rw [ZFNat.sub_add_distrib]
-    exact ZFNat.mem_Nat_sub_one
+  simp_all
 theorem mem_Int_empty_not_mem {x : ZFSet} {h : x ∈ Int} : ∅ ∉ x := by
   intro contr
   simp_rw [mem_union, mem_prod] at h
@@ -1108,10 +1044,7 @@ theorem _root_.ZFSet.ZFInt.into_inj_aux (x y : ZFInt) : into x = into y → x.ou
     subst this
     rw [eq₁] at eq₂
     apply ZFNat.eq_add_of_sub_eq (.inl h₁) at eq₂
-    rw [ZFNat.add_comm, ← ZFNat.add_sub_assoc h₂] at eq₂
-    symm at eq₂
-    apply ZFNat.eq_add_of_sub_eq (h := eq₂)
-    exact ZFNat.le_add_left c a
+    simp_all
   · rw [not_lt] at h₁
     obtain ⟨eq₁, eq₂⟩ := eq
     replace eq₁ : a - b = 0 := Subtype.ext eq₁
@@ -1175,10 +1108,7 @@ theorem _root_.ZFSet.ZFInt.exists_mono_bij :
   · intro x y
     unfold f
     dsimp [LT.lt, instLTSubtypeMemInt, intLt]
-    apply Eq.to_iff
-    congr
-    · exact Equiv.symm_apply_apply (Classical.choice _) x
-    · exact Equiv.symm_apply_apply (Classical.choice _) y
+    simp_all
 theorem _root_.ZFSet.ZFInt.exists_mono_bij_zero_eq :
   Nonempty {f : ZFInt.{u} → {x // x ∈ Int.{u}} //
     Function.Bijective f ∧ (∀ x y, f x < f y ↔ x < y) ∧ f 0 = ⟨ofInt 0, mem_ofInt_Int 0⟩}
@@ -1203,8 +1133,7 @@ theorem _root_.ZFSet.ZFInt.exists_mono_bij_zero_eq :
     unfold f'
     rw [mono _ _, add_lt_add_iff_right]
   · unfold f' at this
-    rw [zero_add] at this
-    contradiction
+    simp_all
 
 end ZFInt
 

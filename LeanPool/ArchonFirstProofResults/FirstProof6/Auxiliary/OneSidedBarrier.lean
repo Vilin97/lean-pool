@@ -94,8 +94,7 @@ lemma one_sided_barrier
             calc U⁻¹ * (U * B * U) * U⁻¹
                 = U⁻¹ * U * B * (U * U⁻¹) := by simp only [Matrix.mul_assoc]
               _ = B := by rw [hUU, hUU', one_mul, mul_one]
-          rw [hUBU_zero, Matrix.mul_zero, Matrix.zero_mul] at h1
-          exact h1.symm
+          simp_all
         rw [hB_zero, add_zero]; linarith
       · have htrBU_lt : trBU < 1 := lt_of_le_of_ne htrBU_le htrBU_eq
         linarith [barrier_smw_trace_bound M B u u' hu hM_bound hB htrBU_lt htrBU_nn htrBU2_nn,

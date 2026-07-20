@@ -102,9 +102,7 @@ theorem nullspace_sufficiency (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
   -- The flux function is identically zero, so its divergence is zero
   rw [show (fun v' => ∫ w, mulVec (landauMatrix Ψ (v' - w))
       (f w • vGrad f v' - f v' • vGrad f w)) = fun _ => 0 from
-    funext fun v' => by simp [show (fun w => mulVec (landauMatrix Ψ (v' - w))
-      (f w • vGrad f v' - f v' • vGrad f w)) = fun _ => 0 from
-        funext fun w => hFluxZero v' w]]
+    funext fun v' => by simp_all]
   unfold vDiv
   simp
 

@@ -94,12 +94,10 @@ theorem bestDenom_hbsad (α : Fin d → ℝ) (hr : RecordsContinue (deltaCost α
   have hmnat : (m.toNat : ℤ) = m := Int.toNat_of_nonneg hpos.le
   have hj1 : 1 ≤ m.toNat := by omega
   have hj2 : m.toNat < bestDenom (deltaCost α) hr k := by
-    have : (m.toNat : ℤ) < (bestDenom (deltaCost α) hr k : ℤ) := by rw [hmnat]; exact hlt
-    exact_mod_cast this
+    simp_all
   have := bestDenom_strict_floor (deltaCost α) hr k hj1 hj2
   simp only [deltaCost] at this
-  rw [← hmnat]
-  exact this
+  simp_all
 
 /-- **The sup-norm growth inequality for the defect record denominators (unconditional).** With the
 defect cost `r q = delta α q` and `RecordsContinue` (irrationality), the record denominators

@@ -93,8 +93,7 @@ lemma entropyNat_approxProb
   · intro a
     exact approxCount_pos p N a
   · simp [approxTotal]
-  · intro a
-    simp [approxProb_apply]
+  · simp_all
 
 lemma approxCount_mul_bounds
     {α : Type} [Fintype α]
@@ -131,9 +130,7 @@ lemma approxTotal_bounds
   have hupper :
       (∑ a, ((approxCount p N a : ℝ) - M * p a)) ≤ ∑ _a : α, (1 : ℝ) :=
     Finset.sum_le_sum fun a _ => (approxCount_mul_bounds p N a).2
-  rw [hsumDelta] at hnonneg hupper
-  simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one] at hupper
-  exact ⟨hnonneg, hupper⟩
+  simp_all
 
 lemma approxProb_error_bound
     {α : Type} [Fintype α]

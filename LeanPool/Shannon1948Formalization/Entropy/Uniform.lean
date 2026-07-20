@@ -64,8 +64,7 @@ lemma Apos_one_zero
     (hH : ShannonEntropyAxioms H) :
     Apos H 1 = 0 := by
   have h11 := Apos_mul H hH 1 1
-  have : Apos H 1 = Apos H 1 + Apos H 1 := by simpa using h11
-  linarith
+  simp_all
 
 lemma Apos_pow
     (H : {α : Type} → [Fintype α] → ProbDist α → ℝ)

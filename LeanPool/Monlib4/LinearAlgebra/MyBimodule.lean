@@ -206,12 +206,10 @@ theorem LinearMap.isBimoduleMap_iff_ltensor_lsmul_rtensor_rsmul {R H₁ H₂ : T
     false_or]
   have hy : y ≠ 0 := by
     intro hy
-    rw [hy, TensorProduct.map_zero_right] at h
-    contradiction
+    simp_all
   have hx : x ≠ 0 := by
     intro hx
-    rw [hx, TensorProduct.map_zero_left] at h
-    contradiction
+    simp_all
   simp_rw [ne_eq, LinearMap.ext_iff, LinearMap.zero_apply, Classical.not_forall] at hx hy
   refine ⟨fun hxy => ?_, fun hxy a b c d => by rw [hxy.1, hxy.2]⟩
   obtain ⟨a, ha⟩ := hx
