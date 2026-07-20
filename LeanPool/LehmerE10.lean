@@ -8,6 +8,17 @@ import LeanPool.LehmerE10.Defs
 import LeanPool.LehmerE10.Main
 
 /-!
+# Lehmer's Polynomial and the E10 Coxeter Element
+
+Source: url:https://github.com/dillon-11/lehmer-E10
+Authors: Dillon Ryan
+Status: verified
+Main declarations: `LehmerE10.main_theorem`
+Tags: number-theory, mahler-measure, salem-numbers, coxeter-groups
+MSC: 11R06, 11C08, 20F55
+-/
+
+/-!
 # Lehmer's polynomial and the E10 Coxeter element
 
 The root module: `LehmerE10.main_theorem` — Lehmer's polynomial is
@@ -24,7 +35,5 @@ Publ. Math. IHÉS 95, 2002). -/
 theorem main_theorem :
     Irreducible lehmerPolynomial ∧ coxeterE10.charpoly = lehmerPolynomial :=
   ⟨lehmer_irreducible, coxeter_charpoly_lehmer⟩
-
-#print axioms main_theorem
 
 end LehmerE10

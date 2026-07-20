@@ -32,7 +32,6 @@ open Polynomial
 
 instance : Fact (Nat.Prime 1291) := ⟨witness_1291_prime⟩
 
-set_option maxRecDepth 40000 in
 /-- 2 has order exactly 1290 = 2·3·5·43 in (ℤ/1291)ˣ — certified by Fermat plus the
     four maximal-divisor refusals (kernel bignum arithmetic). -/
 theorem orderOf_two_mod_1291 : orderOf (2 : ZMod 1291) = 1290 := by
@@ -58,10 +57,10 @@ theorem orderOf_two_mod_1291 : orderOf (2 : ZMod 1291) = 1290 := by
       · exact Or.inr (Or.inr (Or.inl ((Nat.prime_dvd_prime_iff_eq hp (by norm_num)).mp h)))
       · exact Or.inr (Or.inr (Or.inr ((Nat.prime_dvd_prime_iff_eq hp (by norm_num)).mp h)))
     rcases hcase with rfl | rfl | rfl | rfl
-    · decide  -- p = 2 : 2^645 ≠ 1
-    · decide  -- p = 3 : 2^430 ≠ 1
-    · decide  -- p = 5 : 2^258 ≠ 1
-    · decide  -- p = 43 : 2^30 ≠ 1
+    · decide +kernel  -- p = 2 : 2^645 ≠ 1
+    · decide +kernel  -- p = 3 : 2^430 ≠ 1
+    · decide +kernel  -- p = 5 : 2^258 ≠ 1
+    · decide +kernel  -- p = 43 : 2^30 ≠ 1
 
 /-! ### LEG (a): the uniform cyclotomic kill. -/
 
@@ -111,8 +110,7 @@ theorem no_cyclotomic_divisor {k : ℕ} (hk : 1 ≤ k) :
   -- totient divisibility: 336 = φ(1290) ∣ φ(k) ≤ 10
   have h336 : (336 : ℕ) ∣ k.totient := by
     have := Nat.totient_dvd_of_dvd hord
-    rwa [show Nat.totient 1290 = 336 from by
-      set_option maxRecDepth 40000 in decide] at this
+    rwa [show Nat.totient 1290 = 336 from by decide +kernel] at this
   have hpos : 0 < k.totient := Nat.totient_pos.mpr (by omega)
   have := Nat.le_of_dvd hpos h336
   omega

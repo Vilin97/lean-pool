@@ -88,6 +88,3 @@ theorem orderOf_coxeterE8 : orderOf coxeterE8 = 30 := by
       | exact absurd hp (by decide)
 
 end LehmerE10
-
-#print axioms LehmerE10.coxeterE8_pow_thirty
-#print axioms LehmerE10.orderOf_coxeterE8

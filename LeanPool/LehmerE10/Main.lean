@@ -585,13 +585,12 @@ theorem coxeterE10_eq :
           0, 0, 1, 0, 0, 0, 0, 0,  0, -1] := by
   decide
 
-set_option maxRecDepth 1000000 in
 /-- Lehmer's polynomial annihilates the Coxeter element (kernel computation). -/
 theorem coxeter_annihilation :
     coxeterE10 ^ 10 + coxeterE10 ^ 9 - coxeterE10 ^ 7 - coxeterE10 ^ 6 - coxeterE10 ^ 5 -
       coxeterE10 ^ 4 - coxeterE10 ^ 3 + coxeterE10 + 1 = 0 := by
   rw [coxeterE10_eq]
-  decide
+  decide +kernel
 
 /-- The annihilation, restated through `aeval`. -/
 theorem aeval_coxeterE10_lehmer :

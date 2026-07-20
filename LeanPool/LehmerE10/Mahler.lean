@@ -162,9 +162,3 @@ theorem coxeterE10_infinite_order {n : ℕ} (hn : 0 < n) : coxeterE10 ^ n ≠ 1 
   linarith [hμnR ▸ this]
 
 end LehmerE10
-
-#print axioms LehmerE10.lehmer_mahlerMeasure
-#print axioms LehmerE10.one_lt_lehmer_mahlerMeasure
-#print axioms LehmerE10.lehmer_mahlerMeasure_lt
-#print axioms LehmerE10.lehmerConjecture_of_minimal
-#print axioms LehmerE10.coxeterE10_infinite_order
