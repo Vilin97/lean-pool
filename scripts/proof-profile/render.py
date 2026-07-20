@@ -13,6 +13,14 @@ import re
 import subprocess
 from pathlib import Path
 
+# statements.py is fetched from origin/main alongside this script (see the
+# report job in proof-profile.yml). Import defensively so an older cached
+# workflow that has not fetched it yet still renders the rest of the profile.
+try:
+    import statements as statements_mod
+except ImportError:  # pragma: no cover - only when the fetch step is missing
+    statements_mod = None
+
 log_path = Path("proof-profile.log")
 heartbeat_log_path = Path("proof-profile-heartbeats.log")
 base_heartbeat_log_path = Path("proof-profile-base-heartbeats.log")
@@ -200,6 +208,52 @@ def changed_line_stats(files: list[str]) -> dict[str, tuple[int, int]]:
         if additions.isdigit() and deletions.isdigit() and path in stats:
             stats[path] = (int(additions), int(deletions))
     return stats
+
+
+def git_show(ref: str, path: str) -> str | None:
+    """Return a file's contents at ``ref``, or ``None`` if it is absent."""
+
+    try:
+        return subprocess.check_output(
+            ["git", "show", f"{ref}:{path}"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except subprocess.CalledProcessError:
+        return None
+
+
+def statement_changes(files: list[str]) -> dict[str, "statements_mod.StatementDiff"]:
+    """Map each modified file to its base→head statement diff.
+
+    Compares against the merge base (what the PR actually changed) using the
+    same textual parser physlib's `/check-golf` uses; no build is needed.
+    Files that cannot be read on either side are skipped.
+    """
+
+    if statements_mod is None or not files:
+        return {}
+    base_sha = os.environ.get("BASE_SHA")
+    head_sha = os.environ.get("HEAD_SHA", "HEAD")
+    if not base_sha:
+        return {}
+    try:
+        merge_base = subprocess.check_output(
+            ["git", "merge-base", base_sha, head_sha],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except subprocess.CalledProcessError:
+        merge_base = ""
+    base_ref = merge_base or base_sha
+    result: dict[str, statements_mod.StatementDiff] = {}
+    for path in files:
+        base_src = git_show(base_ref, path)
+        head_src = git_show(head_sha, path)
+        if base_src is None or head_src is None:
+            continue
+        result[path] = statements_mod.compare_statements(base_src, head_src)
+    return result
 
 
 added_files = os.environ.get("ADDED_FILES", "").split()
@@ -696,6 +750,101 @@ if all_files or compared:
     )
 
 
+# ---------------------------------------------------------------------------
+# Statement-change section: for every modified file, report whether any
+# declaration changed its *statement* (signature / type) rather than only its
+# proof or definition body — the reassurance a maintainer wants from a
+# refactor ("no theorem was quietly restated"). Independent of the heartbeat
+# comparison (pure text, no build), so it renders even when the compare was
+# skipped. Absent for new-project PRs, which have no modified files.
+# ---------------------------------------------------------------------------
+STATEMENT_LIST_CAP = 50
+statement_diffs = statement_changes(modified_files)
+
+
+def build_statement_section(cap: int | None) -> list[str]:
+    """Render the statement-change subsection; empty when nothing to say."""
+
+    if not statement_diffs:
+        return []
+    changed = [
+        (p, n) for p, d in statement_diffs.items() for n in d.statement_changed
+    ]
+    renamed = [
+        (p, n) for p, d in statement_diffs.items() for n in d.binder_renamed
+    ]
+    added = [(p, n) for p, d in statement_diffs.items() for n in d.added]
+    removed = [(p, n) for p, d in statement_diffs.items() for n in d.removed]
+    total_decls = sum(d.head_decl_count for d in statement_diffs.values())
+    n_files = len(statement_diffs)
+    changed_files = len({p for p, _ in changed})
+
+    s = ["### Statement changes\n\n"]
+    if changed:
+        s.append(
+            f"⚠️ **{format_int(len(changed))} declaration"
+            f"{'' if len(changed) == 1 else 's'} changed their statement** "
+            f"across {format_int(changed_files)} file"
+            f"{'' if changed_files == 1 else 's'} — a statement change is more "
+            "than a refactor. Confirm each one is intended.\n\n"
+        )
+    else:
+        s.append(
+            f"✅ **No statements changed** — all {format_int(total_decls)} "
+            f"tracked declaration{'' if total_decls == 1 else 's'} across "
+            f"{format_int(n_files)} modified file{'' if n_files == 1 else 's'} "
+            "kept their type; only proofs / definition bodies "
+            f"{'(and binder names) ' if renamed else ''}changed.\n\n"
+        )
+
+    def detail_block(title: str, items: list[tuple[str, str]], open_: bool) -> None:
+        if not items:
+            return
+        shown = items if cap is None else items[:cap]
+        s.append(
+            f"<details{' open' if open_ else ''}><summary>{title} "
+            f"({format_int(len(items))})</summary>\n\n"
+        )
+        for path, name in sorted(shown):
+            s.append(f"- `{name}` — `{path}`\n")
+        if cap is not None and len(items) > cap:
+            s.append(f"- _… +{format_int(len(items) - cap)} more_\n")
+        s.append("\n</details>\n\n")
+
+    detail_block("⚠️ Statements changed", changed, open_=True)
+    if renamed:
+        s.append(
+            f"_{format_int(len(renamed))} declaration"
+            f"{'' if len(renamed) == 1 else 's'} had only a binder renamed "
+            "(most often a hypothesis marked unused as `_h…`); the proposition "
+            "is unchanged, so these are not statement changes._\n\n"
+        )
+        detail_block("✍️ Binder renamed (proposition unchanged)", renamed, open_=False)
+    if added or removed:
+        s.append(
+            f"_Also: {format_int(len(added))} declaration"
+            f"{'' if len(added) == 1 else 's'} added, "
+            f"{format_int(len(removed))} removed. A reorganization moves "
+            "declarations between files, which shows up here as an add in one "
+            "file and a remove in another._\n\n"
+        )
+        detail_block("➕ Declarations added", added, open_=False)
+        detail_block("➖ Declarations removed", removed, open_=False)
+
+    s.append(
+        "_Statements are compared textually against the merge base (comments "
+        "and whitespace ignored; `by` proof terms embedded in a type are "
+        "treated as proof-irrelevant), the same method as physlib's "
+        "`/check-golf`. Anonymous instances and `example`s are not tracked._"
+        "\n\n"
+    )
+    return s
+
+
+statement_out_full = build_statement_section(None)
+statement_out_capped = build_statement_section(STATEMENT_LIST_CAP)
+
+
 def bound_comment(text, limit):
     """Trim a rendered profile to fit GitHub's comment size cap.
 
@@ -766,9 +915,11 @@ def bound_comment(text, limit):
     return out_text
 
 
-rendered_full = "".join(out + comparison_full + absolute_out + out_comment_extra)
+rendered_full = "".join(
+    out + statement_out_full + comparison_full + absolute_out + out_comment_extra
+)
 rendered_comment = "".join(
-    out + comparison_capped + absolute_out + out_comment_extra
+    out + statement_out_capped + comparison_capped + absolute_out + out_comment_extra
 )
 
 # The full render always goes to the job step summary (~1 MB limit)
