@@ -204,8 +204,8 @@ lemma mvPowerSeries_fin_isNoetherianRing {n : ℕ} {R : Type*} [CommRing R]
       mvPowerSeriesFinSuccRingEquiv'.symm
 
 lemma mvPowerSeries_fin3_isNoetherianRing :
-    IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) := by
-  exact mvPowerSeries_fin_isNoetherianRing
+    IsNoetherianRing (MvPowerSeries (Fin 3) ℂ) :=
+  mvPowerSeries_fin_isNoetherianRing
 
 -- T is Noetherian as a quotient of a Noetherian ring
 instance T_isNoetherianRing : IsNoetherianRing T :=
@@ -370,8 +370,7 @@ lemma mem_MPS_pow_of_coeff_vanish
         have hd₁_0 : d₁ 0 = 0 := by
           change (m - single (1 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
           rw [tsub_val 1 0 hm1, single_apply]
-          simp only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero]
-          exact hm0v
+          simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
         change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
         rw [if_pos hd₁_0, hd₁_add, coeff_apply]
         have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
@@ -392,13 +391,11 @@ lemma mem_MPS_pow_of_coeff_vanish
           have hd₂_0 : d₂ 0 = 0 := by
             change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
             rw [tsub_val 2 0 hm2, single_apply]
-            simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero]
-            exact hm0v
+            simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm0v
           have hd₂_1 : d₂ 1 = 0 := by
             change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 = 0
             rw [tsub_val 2 1 hm2, single_apply]
-            simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero]
-            exact hm1v
+            simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
           change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
           rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
         · -- All exponents zero: m = 0, so coeff 0 f = constantCoeff f = 0
@@ -452,9 +449,8 @@ lemma T_isPrecomplete : IsPrecomplete (IsLocalRing.maximalIdeal T) T := by
     intro n
     have h := hcauchy (Nat.le_succ n)
     rwa [SModEq.sub_mem, smul_eq_mul, Ideal.mul_top] at h
-  have : ∀ n, ∃ δ, δ ∈ MPS ^ n ∧ Ideal.Quotient.mk conjI δ = f n - f (n + 1) := by
-    intro n
-    exact lift_mem _ n (diff_mem n)
+  have : ∀ n, ∃ δ, δ ∈ MPS ^ n ∧ Ideal.Quotient.mk conjI δ = f n - f (n + 1) :=
+    fun n => lift_mem _ n (diff_mem n)
   choose δ hδ_mem hδ_eq using this
   -- Define g by accumulating lifts: g n = g0 - ∑_{i<n} δ i
   let g : ℕ → MvPowerSeries (Fin 3) ℂ := fun n => g0 - ∑ i ∈ Finset.range n, δ i
@@ -570,8 +566,7 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
       have hd₁_0 : d₁ 0 = 0 := by
         change (m - single (1 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
         rw [tsub_val 1 0 hm1, single_apply]
-        simp only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero]
-        exact hm0v
+        simpa only [Fin.isValue, one_ne_zero, ↓reduceIte, tsub_zero] using hm0v
       change f m = (if d₁ 0 = 0 then coeff (d₁ + single 1 1) f else 0) + _
       rw [if_pos hd₁_0, hd₁_add, coeff_apply]
       have h1_ne : ∀ h2 : single (2 : Fin 3) 1 ≤ m,
@@ -593,13 +588,11 @@ lemma mvPS_mem_span_X_of_constantCoeff_zero {k : Type*} [CommRing k]
         have hd₂_0 : d₂ 0 = 0 := by
           change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 0 = 0
           rw [tsub_val 2 0 hm2, single_apply]
-          simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero]
-          exact hm0v
+          simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm0v
         have hd₂_1 : d₂ 1 = 0 := by
           change (m - single (2 : Fin 3) 1 : Fin 3 →₀ ℕ) 1 = 0
           rw [tsub_val 2 1 hm2, single_apply]
-          simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero]
-          exact hm1v
+          simpa only [Fin.isValue, Fin.reduceEq, ↓reduceIte, tsub_zero] using hm1v
         change f m = if d₂ 0 = 0 ∧ d₂ 1 = 0 then coeff (d₂ + single 2 1) f else 0
         rw [if_pos ⟨hd₂_0, hd₂_1⟩, hd₂_add, coeff_apply]
       · rw [if_neg hm2]

@@ -71,10 +71,8 @@ variable {T : Type u}
 
 lemma slice_append (α : FinWord T) (β : InfWord T) :
     (α.append β).slice α.length = α := by
-  have hfun : (fun i : Fin α.length => (α.append β) i)
-      = fun i : Fin α.length => α[i] := by
-    funext i
-    simp [FinWord.append, i.2]
+  have hfun : (fun i : Fin α.length => (α.append β) i) = fun i : Fin α.length => α[i] := by
+    funext i; simp [FinWord.append, i.2]
   simp [InfWord.slice, hfun]
 
 lemma append_slice_eq_self (σ : InfWord T) (n : ℕ) :
@@ -103,16 +101,11 @@ theorem safety_liveness_decomposition
       simpa [A] using hσ
     obtain ⟨i, hi⟩ := not_forall.mp hnot
     have hforall : ∀ β : InfWord T, (σ.slice i).append β ∉ P := not_exists.mp hi
-    refine ⟨i, ?_⟩
-    intro β
+    refine ⟨i, fun β hAβ => ?_⟩
     have hslice : ((σ.slice i).append β).slice i = σ.slice i := by
       simpa [slice_length] using slice_append (σ.slice i) β
-    refine fun hAβ => ?_
     obtain ⟨γ, hγ⟩ := hAβ i
-    have hγ' : (σ.slice i).append γ ∈ P := by
-      convert hγ using 1
-      simp [hslice]
-    exact (hforall γ) hγ'
+    exact hforall γ (by convert hγ using 1; simp [hslice])
   · -- `B` is a liveness property
     intro α
     by_cases h : ∃ β : InfWord T, α.append β ∈ P
@@ -120,26 +113,16 @@ theorem safety_liveness_decomposition
       exact ⟨β, Or.inl hβ⟩
     · have hforall : ∀ β : InfWord T, α.append β ∉ P := not_exists.mp h
       obtain ⟨t⟩ := t_nonempty
-      refine ⟨fun _ => t, Or.inr ?_⟩
+      refine ⟨fun _ => t, Or.inr fun hA => ?_⟩
       have hslice : (α.append (fun _ => t)).slice α.length = α := slice_append α _
-      refine fun hA => ?_
       obtain ⟨γ, hγ⟩ := hA α.length
-      have hγ' : α.append γ ∈ P := by
-        convert hγ using 1
-        simp [hslice]
-      exact (hforall γ) hγ'
+      exact hforall γ (by convert hγ using 1; simp [hslice])
   · -- intersection equals `P`
     ext σ; constructor
     · intro hσ
-      have hA : σ ∈ A := hσ.1
-      have hB : σ ∈ B := hσ.2
-      cases hB with
-      | inl h => exact h
-      | inr h => exact False.elim (h hA)
+      exact hσ.2.resolve_right (fun h => h hσ.1)
     · intro hσ
-      refine ⟨?_, Or.inl hσ⟩
-      intro n
-      refine ⟨fun k => σ (k + n), ?_⟩
+      refine ⟨fun n => ⟨fun k => σ (k + n), ?_⟩, Or.inl hσ⟩
       convert hσ using 1
       simp [append_slice_eq_self]
 

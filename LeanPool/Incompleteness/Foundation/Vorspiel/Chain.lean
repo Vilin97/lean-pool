@@ -25,9 +25,7 @@ lemma _root_.List.IsChain.nodup_of_trans_irreflex
   replace ⟨d, hC⟩ := List.exists_duplicate_iff_not_nodup.mpr hC
   have hsub := List.duplicate_iff_sublist.mp hC
   rw [List.isChain_iff_pairwise] at h_chain
-  have hpair := h_chain.sublist hsub
-  have hdd : R d d := by simpa using hpair
-  exact R_irrefl.irrefl d hdd
+  exact R_irrefl.irrefl d (by simpa using h_chain.sublist hsub)
 
 instance finiteNodupList [Finite α] : Finite { l : List α // l.Nodup } := by
   classical
@@ -41,10 +39,7 @@ lemma chains_finite [Finite α] (R_trans : IsTrans α R) (R_irrefl : Std.Irrefl 
       (⟨l.1, List.IsChain.nodup_of_trans_irreflex R_trans R_irrefl l.2⟩ :
         { l : List α // l.Nodup }))
     (by
-      intro a b h
-      cases a
-      cases b
-      simp at h
-      simp [h])
+      rintro ⟨a, _⟩ ⟨b, _⟩ h
+      simpa using h)
 
 end List

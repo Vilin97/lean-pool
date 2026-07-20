@@ -67,8 +67,8 @@ theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by
   have em_inr : Topology.IsOpenEmbedding (pushoutInr' f (Cyl.i₀ X)) := by
     apply isOpenEmbedding_pushoutInr'
     apply Cyl.isClosed_range_i₀
-  have em_i₁ : Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) := by
-    apply Cyl.isClosedEmbedding_i₁ToComplRangeI₀
+  have em_i₁ : Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) :=
+    Cyl.isClosedEmbedding_i₁ToComplRangeI₀ X
   convert em_inr.toIsEmbedding.comp em_i₁.toIsEmbedding using 2
   · rfl
   · rfl
@@ -180,8 +180,7 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
     change ((ConcreteCategory.hom (Limits.pushout.inl f (Cyl.i₀ X) ≫
         Limits.pushout.desc (PathSpace.homToConstPaths (inl f)) _ _)) y) t = _
     rw [Limits.pushout.inl_desc]
-    simp only [PathSpace.homToConstPaths, hom_ofHom, ContinuousMap.curry_apply,
-      ContinuousMap.coe_mk]
+    simp_all
   · rw [deformRetrEvalAt, Limits.pushout.inr_desc]
     ext z
     simp only [hom_comp, ContinuousMap.comp_apply, hom_ofHom, ContinuousMap.prodMap_apply,

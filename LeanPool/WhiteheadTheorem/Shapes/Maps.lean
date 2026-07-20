@@ -24,15 +24,13 @@ lemma mulRight_one (X : Type*) [TopologicalSpace X]
     [mulOne : MulOneClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 1 = ContinuousMap.id X := by
   ext x
-  simp only [coe_mulRight, id_apply]
-  exact mulOne.mul_one x
+  simpa only [coe_mulRight, id_apply] using mulOne.mul_one x
 
 lemma mulRight_zero (X : Type*) [TopologicalSpace X]
     [mulOne : MulZeroClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 0 = ContinuousMap.const X 0 := by
   ext x
-  simp only [coe_mulRight]
-  exact mulOne.mul_zero x
+  simp_all
 
 lemma prodMap_id_id (X Y : Type u) [TopologicalSpace X] [TopologicalSpace Y] :
     ContinuousMap.prodMap (ContinuousMap.id X) (ContinuousMap.id Y) = ContinuousMap.id _ :=
@@ -94,11 +92,8 @@ def i₁ToComplRangeI₀ (X : TopCat.{u}) :
     C(X, (Set.range (Cyl.i₀ X)).compl) where
   toFun x := ⟨Cyl.i₁ _ x, by
       rw [(by rfl: (Set.range (Cyl.i₀ X)).compl = {z | z ∉ Set.range (Cyl.i₀ X)})]
-      simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range, not_exists, Set.mem_setOf_eq,
-        Prod.mk.injEq, zero_ne_one, and_false, not_false_eq_true, implies_true] ⟩
-  continuous_toFun := by
-    apply Continuous.subtype_mk
-    apply ContinuousMap.continuous
+      simp_all ⟩
+  continuous_toFun := (ContinuousMap.continuous _).subtype_mk _
 
 lemma isClosed_range_i₀ (X : TopCat.{u}) :
     IsClosed <| Set.range (Cyl.i₀ X) := by
@@ -108,9 +103,7 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     ext ⟨fst, t⟩
     simp only [Set.mem_compl_iff, Set.mem_setOf_eq]
   rw [← this]
-  apply isClosed_eq
-  · exact continuous_snd
-  · exact continuous_const
+  exact isClosed_eq continuous_snd continuous_const
 
 lemma isClosedEmbedding_i₁ToComplRangeI₀ (X : TopCat.{u}) :
     Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) := by
@@ -137,10 +130,8 @@ lemma isClosedEmbedding_i₁ToComplRangeI₀ (X : TopCat.{u}) :
       simp_all only [Prod.mk.injEq, existsAndEq, true_and, and_congr_right_iff]
       intro a
       apply Iff.intro
-      · intro a_1
-        simp_all only
-      · intro a_1
-        simp_all only
+      · simp_all
+      · simp_all
     have : IsClosed (Subtype.val '' ((Cyl.i₁ToComplRangeI₀ X) '' s)) := by
       rw [this]
       exact IsClosed.prod hs isClosed_singleton
@@ -154,9 +145,7 @@ noncomputable instance decidableInRangeI₀ :
     · intro hz
       simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range]
       obtain ⟨fst, snd⟩ := z
-      obtain ⟨val, property⟩ := snd
-      obtain ⟨w, h⟩ := hz
-      simp_all only [Prod.mk.injEq]
+      simp_all
     · intro hz
       simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range]
       apply Exists.intro

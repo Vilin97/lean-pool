@@ -99,19 +99,10 @@ theorem nullspace_sufficiency (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
   unfold LandauOperator
   -- The Landau flux vanishes for a Maxwellian (Gap 8)
   have hFluxZero := maxwellian_landau_flux_zero Ψ f a₀ b c₀ hf
-  -- The integrand vanishes pointwise, so the integral is zero
-  have hIntZero : ∀ v', ∫ w, mulVec (landauMatrix Ψ (v' - w))
-      (f w • vGrad f v' - f v' • vGrad f w) = 0 := by
-    intro v'
-    have : (fun w => mulVec (landauMatrix Ψ (v' - w))
-        (f w • vGrad f v' - f v' • vGrad f w)) = fun _ => 0 :=
-      funext (fun w => hFluxZero v' w)
-    simp [this]
   -- The flux function is identically zero, so its divergence is zero
-  have hFluxFn : (fun v' => ∫ w, mulVec (landauMatrix Ψ (v' - w))
-      (f w • vGrad f v' - f v' • vGrad f w)) = fun _ => 0 :=
-    funext hIntZero
-  rw [hFluxFn]
+  rw [show (fun v' => ∫ w, mulVec (landauMatrix Ψ (v' - w))
+      (f w • vGrad f v' - f v' • vGrad f w)) = fun _ => 0 from
+    funext fun v' => by simp_all]
   unfold vDiv
   simp
 
@@ -121,10 +112,9 @@ theorem nullspace_sufficiency (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
 lemma density_positive_of_integral
     (f : (Fin 3 → ℝ) → ℝ) (hf_pos : ∀ v, 0 < f v) (hf_int : Integrable f) :
     0 < ∫ v, f v := by
-  rw [MeasureTheory.integral_pos_iff_support_of_nonneg (fun v => le_of_lt (hf_pos v)) hf_int]
-  have hsup : Function.support f = Set.univ := Set.eq_univ_of_forall (fun v => ne_of_gt (hf_pos v))
-  rw [hsup]
-  rw [MeasureTheory.Measure.measure_univ_pos]
+  rw [MeasureTheory.integral_pos_iff_support_of_nonneg (fun v => le_of_lt (hf_pos v)) hf_int,
+    show Function.support f = Set.univ from Set.eq_univ_of_forall (fun v => ne_of_gt (hf_pos v)),
+    MeasureTheory.Measure.measure_univ_pos]
   exact NeZero.ne volume
 
 -- ============================================================================

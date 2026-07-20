@@ -170,8 +170,7 @@ private lemma exists_testBit_encode (N : Nat) (x : BitString N) :
         simp only [Bool.false_or]
         split <;> rename_i h
         · simp [Nat.testBit_two_pow_self, h]
-        · simp [Nat.zero_testBit]
-          cases hx : x (Fin.last n) <;> simp_all)
+        · cases hx : x (Fin.last n) <;> simp_all [Nat.zero_testBit])
       (fun k => by
         simp only [Fin.val_castSucc]
         rw [hm' k]
@@ -203,8 +202,7 @@ theorem AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
           intro j; rw [← AONFor_wireValue_input f x j]; exact hi j
         have : f x = f (fun j => i.val.testBit j.val) := congr_arg f (funext hxeq)
         rw [this]; exact hfi
-      · have hfi' : f (fun j => i.val.testBit j.val) = false := by
-          cases h : f (fun j => i.val.testBit j.val) <;> simp_all
+      · have hfi' : f (fun j => i.val.testBit j.val) = false := Bool.not_eq_true _ |>.mp hfi
         exact absurd (mkGate_eval_false f i _ hfi' ▸ hi) Bool.false_ne_true
     · -- f x = true → some gate fires
       intro hfx
@@ -384,9 +382,7 @@ theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
           (congr_arg f (funext hxeq))
         rw [this]; exact hfk
       · have hfk' : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
-            (AONForM_j (AONForM_idx j k)) = false := by
-          cases h : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
-            (AONForM_j (AONForM_idx j k)) <;> simp_all
+            (AONForM_j (AONForM_idx j k)) = false := Bool.not_eq_true _ |>.mp hfk
         exact absurd (AONForM_mkGate_eval_false f _ _ hfk' ▸ hk) Bool.false_ne_true
     · -- f x j = true → some gate fires
       intro hfx

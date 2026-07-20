@@ -36,14 +36,10 @@ lemma mid_point_Icc {i n : ℕ} (hn : n > 0) :
 lemma mid_point_I {i n : ℕ} (hi : i < n) : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ I := by
   have n_cast_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr (lt_of_le_of_lt (Nat.zero_le i) hi)
   have hbound : 2 * i + 1 ≤ 2 * n := by linarith
-  refine ⟨?_, ?_⟩
-  · apply div_nonneg
-    · exact add_nonneg (mul_nonneg (by norm_num) (Nat.cast_nonneg i)) (by norm_num)
-    · exact mul_nonneg (by norm_num) (Nat.cast_nonneg n)
-  · refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
-    have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
-    push_cast at hcast
-    linarith
+  refine ⟨div_nonneg (by positivity) (by positivity), ?_⟩
+  refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
+  have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
+  simp_all
 
 namespace UnitIntervalSub
 
@@ -75,14 +71,13 @@ theorem lebesgue_number_lemma_unit_interval {ι : Sort u} {c : ι → Set ℝ}
   rcases Real.instArchimedean.arch 2 δ_pos with ⟨n, hn⟩
   use n
   have n_pos : 0 < n := by
-    by_contra
-    have : n = 0 := by linarith
-    rw [this] at hn
-    have : (2 : ℝ) ≤ 0 := hn
-    linarith
+    rcases Nat.eq_zero_or_pos n with h | h
+    · rw [h] at hn
+      simp at hn
+      linarith
+    · exact h
   have n_cast_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr n_pos
-  constructor
-  · exact n_pos
+  refine ⟨n_pos, ?_⟩
   intros i hi
   have mid_point_I : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ I := mid_point_I hi
   have mid_point_Icc : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ Set.Icc ((i :ℝ)/(n :ℝ)) ((i+1 :ℝ)/(n :ℝ))
@@ -175,16 +170,14 @@ theorem lebesgue_number_lemma_unitSquare {ι : Sort u} {c : ι → Set (I × I)}
       rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
     · have := hx.2.2
       rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
-      push_cast at this ⊢
-      linarith
+      simp_all
   have hx1_mem : (x.1 : ℝ) ∈ Set.Icc ((i : ℝ) / n.succ) ((i + 1) / n.succ) := by
     refine ⟨?_, ?_⟩
     · have := hx.1.1
       rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
     · have := hx.1.2
       rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
-      push_cast at this ⊢
-      linarith
+      simp_all
   have hsub_v : ((j + 1 : ℝ) / n.succ) - ((j : ℝ) / n.succ) = 1 / n.succ := by
     rw [div_sub_div_same]; ring_nf
   have hsub_h : ((i + 1 : ℝ) / n.succ) - ((i : ℝ) / n.succ) = 1 / n.succ := by

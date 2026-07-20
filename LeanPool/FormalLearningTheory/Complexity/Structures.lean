@@ -123,8 +123,7 @@ theorem DSDim_le_NatarajanDim (X : Type u) (Y : Type v) [Nontrivial Y]
       ∀ (h : X → Bool), ∃ c ∈ C, ∀ x ∈ S,
         c x = if h x then f₀ x else f₁ x := by
     refine ⟨fun _ => y₀, fun _ => y₁, fun _ _ => hne, fun h => ?_⟩
-    obtain ⟨c, hcC, hcS⟩ := hDS (fun x => if h x then y₀ else y₁)
-    exact ⟨c, hcC, fun x hxS => hcS x hxS⟩
+    simp_all
   exact le_iSup₂_of_le S hNat (le_refl _)
 
 /-- Pseudodimension: real-valued generalization of VC dimension.

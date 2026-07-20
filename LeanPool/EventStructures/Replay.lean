@@ -94,10 +94,8 @@ lemma downset_compatible_with_log {l : Set es.Event} {e x : es.Event}
     (hl_conflict_free : ∀ {e₁ e₂}, e₁ ∈ l → e₂ ∈ l → ¬(e₁ # e₂)) :
     ∀ e' ∈ l, ¬(x # e') := by
   intro e' he' hconf
-  have hconf_symm := es.conflict_symm hconf
-  have : e' # e := es.conflict_hereditary hconf_symm hxe
-  have : e # e' := es.conflict_symm this
-  exact hl_conflict_free he he' this
+  exact hl_conflict_free he he'
+    (es.conflict_symm (es.conflict_hereditary (es.conflict_symm hconf) hxe))
 
 /-- The minimum replay set is compatible with the log. -/
 lemma minReplaySet_compatible_with_log {l : Set es.Event}
@@ -114,17 +112,13 @@ lemma minReplaySet_is_minimal_replay {l : Set es.Event} {σ : Computations es}
     (h_conf : (conf es σ).1 = minReplaySet es l)
     (h_compat : σ ⊨ l) :
     isMinReplay es l σ := by
-  constructor
-  · exact h_compat
-  · intro σ' h'_compat
-    rw [h_conf]
-    intro x hx
-    simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hx
-    obtain ⟨e, he, hxe⟩ := hx
-    -- x ≤ e and e ∈ l
-    -- σ' ⊨ l means all events in l are in σ'
-    have : e ∈ (conf es σ').1 := h'_compat.1 e he
-    exact (conf es σ').2.2 this hxe
+  refine ⟨h_compat, fun σ' h'_compat => ?_⟩
+  rw [h_conf]
+  intro x hx
+  simp only [minReplaySet, downset, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop] at hx
+  obtain ⟨e, he, hxe⟩ := hx
+  -- x ≤ e and e ∈ l; σ' ⊨ l puts e ∈ σ', then downward closure gives x ∈ σ'.
+  exact (conf es σ').2.2 (h'_compat.1 e he) hxe
 
 /-- The maximum replay set is the largest configuration compatible with a log.
     Any computation with configuration equal to maxReplaySet is a maximal replay. -/
@@ -132,58 +126,38 @@ lemma maxReplaySet_is_maximal_replay {l : Set es.Event} {σ : Computations es}
     (h_conf : (conf es σ).1 = maxReplaySet es l)
     (h_compat : σ ⊨ l) :
     isMaxReplay es l σ := by
-  constructor
-  · exact h_compat
-  · intro σ' h'_compat
-    rw [h_conf]
-    intro x hx
-    -- hx : x ∈ (conf es σ').1, need to show: x ∈ maxReplaySet es l
-    by_cases hconflict : ∃ e', x # e'
-    · -- Case 1: x conflicts with something, so by compatibility x ∈ l ⊆ minReplaySet
-      obtain ⟨e', hc⟩ := hconflict
-      have x_in_l : x ∈ l := h'_compat.2.2 x hx e' hc
-      left
-      exact minReplaySet_contains_log es x_in_l
-    · -- Case 2: x has no conflicts, show it's in the forced set
-      right
-      intro e₁ e₂ ⟨hmc, hle⟩
-      -- e₁ ## e₂ and e₁ ≤ x
-      -- Since x ∈ conf(σ') and configurations are downward-closed, e₁ ∈ conf(σ')
-      have he₁_in : e₁ ∈ (conf es σ').1 := (conf es σ').2.2 hx hle
-      -- From e₁ ## e₂, we have e₁ # e₂ (minimalConflict.1)
-      have hconf_e₁_e₂ : e₁ # e₂ := hmc.1
-      -- By compatibility of σ': e₁ ∈ conf(σ') and e₁ # e₂ implies e₁ ∈ l
-      exact h'_compat.2.2 e₁ he₁_in e₂ hconf_e₁_e₂
+  refine ⟨h_compat, fun σ' h'_compat => ?_⟩
+  rw [h_conf]
+  intro x hx
+  -- hx : x ∈ (conf es σ').1, need to show: x ∈ maxReplaySet es l
+  by_cases hconflict : ∃ e', x # e'
+  · -- Case 1: x conflicts with something, so by compatibility x ∈ l ⊆ minReplaySet
+    obtain ⟨e', hc⟩ := hconflict
+    exact Or.inl (minReplaySet_contains_log es (h'_compat.2.2 x hx e' hc))
+  · -- Case 2: x has no conflicts, show it's in the forced set
+    right
+    intro e₁ e₂ ⟨hmc, hle⟩
+    -- e₁ ## e₂ and e₁ ≤ x; configurations are downward-closed, so e₁ ∈ conf(σ'),
+    -- and e₁ # e₂ (from hmc.1) with compatibility of σ' gives e₁ ∈ l.
+    exact h'_compat.2.2 e₁ ((conf es σ').2.2 hx hle) e₂ hmc.1
 
 /-- Any two minimal replays of a log have equal configurations.
     Since both are minimal, each configuration is a subset of the other by definition. -/
 lemma minReplay_unique_config {l : Set es.Event} {σ₁ σ₂ : Computations es}
     (h₁ : isMinReplay es l σ₁) (h₂ : isMinReplay es l σ₂) :
     (conf es σ₁).1 = (conf es σ₂).1 := by
+  -- By minimality of each, each configuration is a subset of the other.
   ext x
-  constructor
-  · intro hx
-    -- By minimality of σ₁: (conf es σ₁).1 ⊆ (conf es σ₂).1 (since σ₂ ⊨ l)
-    exact h₁.2 σ₂ h₂.1 hx
-  · intro hx
-    -- By minimality of σ₂: (conf es σ₂).1 ⊆ (conf es σ₁).1 (since σ₁ ⊨ l)
-    exact h₂.2 σ₁ h₁.1 hx
+  exact ⟨fun hx => h₁.2 σ₂ h₂.1 hx, fun hx => h₂.2 σ₁ h₁.1 hx⟩
 
 /-- Any two maximal replays of a log have equal configurations.
     Since both are maximal, each configuration is a superset of the other by definition. -/
 lemma maxReplay_unique_config {l : Set es.Event} {σ₁ σ₂ : Computations es}
     (h₁ : isMaxReplay es l σ₁) (h₂ : isMaxReplay es l σ₂) :
     (conf es σ₁).1 = (conf es σ₂).1 := by
+  -- By maximality of each, each configuration is a superset of the other.
   ext x
-  constructor
-  · intro hx
-    -- hx : x ∈ (conf es σ₁).1, need: x ∈ (conf es σ₂).1
-    -- By maximality of σ₂: (conf es σ₁).1 ⊆ (conf es σ₂).1 (since σ₁ ⊨ l)
-    exact h₂.2 σ₁ h₁.1 hx
-  · intro hx
-    -- hx : x ∈ (conf es σ₂).1, need: x ∈ (conf es σ₁).1
-    -- By maximality of σ₁: (conf es σ₂).1 ⊆ (conf es σ₁).1 (since σ₂ ⊨ l)
-    exact h₁.2 σ₂ h₂.1 hx
+  exact ⟨fun hx => h₂.2 σ₁ h₁.1 hx, fun hx => h₁.2 σ₂ h₂.1 hx⟩
 
 /-- Conditional existence of the minimal replay: *if* some computation
     compatible with the log reaches the minimum replay set, then a minimal

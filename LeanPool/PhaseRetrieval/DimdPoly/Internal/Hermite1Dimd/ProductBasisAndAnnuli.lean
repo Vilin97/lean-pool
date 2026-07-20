@@ -34,8 +34,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -61,8 +60,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     convert hsmul.const_mul (1 / Real.pi) using 1
     case e'_5 => rfl
     funext z
-    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by
-      positivity
+    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero, Fin.isValue,
       sum_singleton, hnonneg, ENNReal.toReal_ofReal, real_smul, ofReal_exp, ofReal_neg, ofReal_pow]
     have hleft :
@@ -118,17 +116,7 @@ private lemma gaussianInner_finite_sum_basis
   unfold gaussianInner
   simp_rw [Finset.sum_mul, mul_assoc]
   rw [MeasureTheory.integral_finsetSum]
-  · refine Finset.sum_congr rfl ?_
-    intro α hα
-    have hconst :
-        (∫ z : CSpace d, c α * (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z))
-            ∂gaussianMeasure d) =
-          c α * ∫ z : CSpace d, PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)
-            ∂gaussianMeasure d := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (c α)
-          (fun z : CSpace d => PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)))
-    rw [hconst]
+  · simp_rw [MeasureTheory.integral_const_mul]
   · intro α hα
     simpa [mul_assoc] using (integrable_productBasis_cross κ α β).const_mul (c α)
 
@@ -161,22 +149,7 @@ private lemma gaussianInner_finite_sum
     intro β hβ
     simp [mul_assoc, mul_comm]
   rw [hfun, MeasureTheory.integral_finsetSum]
-  · refine Finset.sum_congr rfl ?_
-    intro β hβ
-    have hconst :
-        (∫ z : CSpace d,
-            conj (b β) *
-              ((Finset.sum s (fun α => a α * PhiKappaAlpha κ α z)) * conj (PhiKappaAlpha κ β z))
-            ∂gaussianMeasure d) =
-          conj (b β) *
-            ∫ z : CSpace d,
-              (Finset.sum s (fun α => a α * PhiKappaAlpha κ α z)) * conj (PhiKappaAlpha κ β z)
-              ∂gaussianMeasure d := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (conj (b β))
-          (fun z : CSpace d =>
-            (Finset.sum s (fun α => a α * PhiKappaAlpha κ α z)) * conj (PhiKappaAlpha κ β z)))
-    rw [hconst]
+  · simp_rw [MeasureTheory.integral_const_mul]
   · intro β hβ
     have hsumInt :
         Integrable
@@ -184,19 +157,9 @@ private lemma gaussianInner_finite_sum
             (Finset.sum s (fun α => a α * PhiKappaAlpha κ α z)) *
               conj (PhiKappaAlpha κ β z))
           (gaussianMeasure d) := by
-      rw [show (fun z : CSpace d =>
-            (Finset.sum s (fun α => a α * PhiKappaAlpha κ α z)) *
-              conj (PhiKappaAlpha κ β z)) =
-          (fun z : CSpace d =>
-            Finset.sum s (fun α => a α * (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)))) by
-            funext z
-            rw [Finset.sum_mul]
-            refine Finset.sum_congr rfl ?_
-            intro α hα
-            ring]
-      refine MeasureTheory.integrable_finsetSum _ ?_
-      intro α hα
-      simpa [mul_assoc] using (integrable_productBasis_cross κ α β).const_mul (a α)
+      simp_rw [Finset.sum_mul, mul_assoc]
+      exact MeasureTheory.integrable_finsetSum _ fun α _ =>
+        (integrable_productBasis_cross κ α β).const_mul (a α)
     simpa [mul_assoc] using (hsumInt.const_mul (conj (b β)))
 
 private lemma measurableSet_productAnnulus
@@ -208,14 +171,10 @@ private lemma measurableSet_productAnnulus
     refine MeasurableSet.iInter (f := fun q : Fin d => {z : CSpace d | (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ <
         (j q : ℝ) + 1}) ?_
     intro q
-    have hge :
-        MeasurableSet {z : CSpace d | (j q : ℝ) ≤ ‖z q‖} := by
-      exact measurableSet_le measurable_const
-        (measurable_norm.comp (continuous_apply q).measurable)
-    have hlt :
-        MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
-        (measurable_norm.comp (continuous_apply q).measurable) measurable_const
+    have hge : MeasurableSet {z : CSpace d | (j q : ℝ) ≤ ‖z q‖} :=
+      measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
+    have hlt : MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} :=
+      measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
     simpa [Set.setOf_and] using hge.inter hlt
   simpa [productAnnulus, Set.setOf_forall] using h
 
@@ -226,44 +185,9 @@ private lemma productAnnulus_eq_of_mem
   funext q
   rcases hj q with ⟨hj_lower, hj_upper⟩
   rcases hℓ q with ⟨hℓ_lower, hℓ_upper⟩
-  refine le_antisymm ?_ ?_
-  · by_contra hlt
-    have hlt' : ℓ q + 1 ≤ j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((ℓ q : ℕ) : ℝ) + 1 ≤ j q := by
-      exact_mod_cast hlt'
-    linarith
-  · by_contra hlt
-    have hlt' : j q + 1 ≤ ℓ q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : ℕ) : ℝ) + 1 ≤ ℓ q := by
-      exact_mod_cast hlt'
-    linarith
-
-private lemma sum_indicator_productAnnulus_le
-    {d : ℕ} (s : Finset (MultiIndex d)) (z : CSpace d) (a : ℝ)
-    (ha : 0 ≤ a) :
-    ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : CSpace d => a) z ≤ a := by
-  classical
-  by_cases hs : ∃ j ∈ s, z ∈ productAnnulus j
-  · rcases hs with ⟨j0, hj0s, hj0z⟩
-    have hsum :
-        ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : CSpace d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : CSpace d => a) z := by
-      exact Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := by
-          intro hjz
-          have heq := productAnnulus_eq_of_mem hjz hj0z
-          exact hjne heq
-        simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hjs
-      by_contra hjz
-      exact hs ⟨j, hjs, hjz⟩
-    rw [Finset.sum_eq_zero]
-    · linarith
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
+  have h1 : j q < ℓ q + 1 := by exact_mod_cast lt_of_le_of_lt hj_lower hℓ_upper
+  have h2 : ℓ q < j q + 1 := by exact_mod_cast lt_of_le_of_lt hℓ_lower hj_upper
+  omega
 
 private lemma integrable_evalHermiteSum_cross
     {d : ℕ} (κ : MultiIndex d) (G H : FiniteHermiteSum d) :
@@ -283,15 +207,9 @@ private lemma integrable_evalHermiteSum_cross
                 (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z))) := by
     funext z
     rw [Finset.sum_mul]
-    refine Finset.sum_congr rfl ?_
-    intro α hα
-    have hconjsum :
-        conj (∑ β ∈ H.support, H.coeff β * PhiKappaAlpha κ β z) =
-          ∑ β ∈ H.support, conj (H.coeff β * PhiKappaAlpha κ β z) := by
-      simp
-    rw [hconjsum, mul_sum]
-    refine Finset.sum_congr rfl ?_
-    intro β hβ
+    refine Finset.sum_congr rfl fun α hα => ?_
+    rw [map_sum, mul_sum]
+    refine Finset.sum_congr rfl fun β hβ => ?_
     simp [mul_assoc, mul_left_comm, mul_comm]
   rw [hrewrite]
   refine MeasureTheory.integrable_finsetSum _ ?_
@@ -327,19 +245,15 @@ theorem productBasisOrthonormal
       have hcoord :
           ∀ q : Fin d,
             gaussianInner (d := 1) (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0))
-              (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0)) = 1 := by
-        intro q
+              (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0)) = 1 := fun q => by
         have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := α q)
-        rw [if_pos rfl] at hov
-        exact hov
+        rwa [if_pos rfl] at hov
       simp [hcoord]
-    · obtain ⟨q, hq⟩ : ∃ q : Fin d, α q ≠ β q := by
-        simpa [funext_iff] using h
+    · obtain ⟨q, hq⟩ : ∃ q : Fin d, α q ≠ β q := by simpa [funext_iff] using h
       rw [if_neg h, Finset.prod_eq_zero_iff]
       refine ⟨q, Finset.mem_univ q, ?_⟩
       have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := β q)
-      rw [if_neg hq] at hov
-      exact hov
+      rwa [if_neg hq] at hov
   exact hfactor.2.trans hprod
 
 /-- The distinguished basis vector has Gaussian norm one. -/
@@ -349,16 +263,9 @@ theorem nuKappa_norm_one
   have hinner : gaussianInner (nuKappa κ) (nuKappa κ) = 1 := by
     simpa [nuKappa] using
       (productBasisOrthonormal (κ := κ) (α := 0) (β := 0))
-  have hsq : gaussianL2NormSq (nuKappa κ) = 1 := by
-    apply Complex.ofReal_injective
-    calc
-      (((gaussianL2NormSq (nuKappa κ) : ℝ)) : ℂ)
-          = gaussianInner (nuKappa κ) (nuKappa κ) := by
-              symm
-              exact gaussianInner_self (F := nuKappa κ)
-      _ = 1 := hinner
-  unfold gaussianL2Norm
-  rw [hsq, Real.sqrt_one]
+  have hsq : gaussianL2NormSq (nuKappa κ) = 1 :=
+    Complex.ofReal_injective (by rw [← gaussianInner_self, hinner, Complex.ofReal_one])
+  rw [gaussianL2Norm, hsq, Real.sqrt_one]
 
 /-- Finite Parseval for a finite several-variable Hermite sum. -/
 theorem finiteParseval
@@ -389,32 +296,17 @@ theorem finiteParseval
                   intro β hβ
                   rw [gaussianInner_finite_sum_basis (κ := κ) (β := β)
                     (s := G.support) (c := G.coeff)]
-      _ = ∑ β ∈ G.support, conj (G.coeff β) * G.coeff β := by
-            refine Finset.sum_congr rfl ?_
-            intro β hβ
+      _ = ∑ α ∈ G.support, G.coeff α * conj (G.coeff α) := by
+            refine Finset.sum_congr rfl fun β hβ => ?_
             rw [Finset.sum_eq_single β]
-            · simp [productBasisOrthonormal]
+            · simp [productBasisOrthonormal, mul_comm]
             · intro α hα hne
               simp [productBasisOrthonormal, hne]
-            · intro hnotin
-              exact False.elim (hnotin hβ)
-      _ = ∑ α ∈ G.support, G.coeff α * conj (G.coeff α) := by
-            refine Finset.sum_congr rfl ?_
-            intro α hα
-            ring
+            · exact fun hnotin => absurd hβ hnotin
   unfold hermiteNormSq
-  have hsq : gaussianL2NormSq (evalHermiteSum κ G) = Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2
-      := by
-    apply Complex.ofReal_injective
-    calc
-      (((gaussianL2NormSq (evalHermiteSum κ G) : ℝ)) : ℂ)
-          = gaussianInner (evalHermiteSum κ G) (evalHermiteSum κ G) := by
-              symm
-              exact gaussianInner_self (F := evalHermiteSum κ G)
-      _ = ∑ α ∈ G.support, G.coeff α * conj (G.coeff α) := hinner
-      _ = (((Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 : ℝ)) : ℂ) := by
-            simp [Complex.mul_conj']
-  simpa using hsq
+  apply Complex.ofReal_injective
+  rw [← gaussianInner_self, hinner]
+  simp [Complex.mul_conj']
 
 /-- Coefficient extraction against the distinguished vector `ν_κ`. -/
 theorem coefficientAtZero
@@ -427,76 +319,19 @@ theorem coefficientAtZero
   -/
   classical
   unfold hermiteInnerNu evalHermiteSum nuKappa
-  rw [gaussianInner_finite_sum_basis (κ := κ) (β := 0) (s := G.support) (c := G.coeff)]
-  rw [Finset.sum_eq_single 0]
+  rw [gaussianInner_finite_sum_basis (κ := κ) (β := 0) (s := G.support) (c := G.coeff),
+    Finset.sum_eq_single 0]
   · simp [productBasisOrthonormal]
   · intro α hα hne
     simp [productBasisOrthonormal, hne]
   · intro h0
     simp only [FiniteHermiteSum.support, Finsupp.mem_support_iff, ne_eq, Decidable.not_not] at h0
-    rw [h0]
-    simp
+    simp_all
 
 /-- Orthogonality to `ν_κ` is equivalent to vanishing zero coefficient. -/
 theorem orthogonalToNu_iff_coeff_zero
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
-    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by
-  simp [coefficientAtZero (κ := κ) (G := G)]
-
-private lemma circle_pow_factor
-    (ω : _root_.Circle) {j k p : ℕ} (hjk : j ≤ k) (hjp : j ≤ p) :
-    (ω : ℂ) ^ (p - j) * star (ω : ℂ) ^ (k - j) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k := by
-  have hωconj : (ω : ℂ) * star (ω : ℂ) = 1 := by
-    rw [star_def]
-    rw [show (starRingEnd ℂ) (ω : ℂ) = ↑(ω⁻¹ : _root_.Circle) from
-      (_root_.Circle.coe_inv_eq_conj ω).symm]
-    rw [← _root_.Circle.coe_mul, mul_inv_cancel, _root_.Circle.coe_one]
-  have key : ((ω : ℂ) * star (ω : ℂ)) ^ j = 1 := by
-    rw [hωconj]
-    simp
-  rw [mul_pow] at key
-  conv_rhs => rw [← Nat.sub_add_cancel hjp, ← Nat.sub_add_cancel hjk, pow_add, pow_add]
-  rw [show (ω : ℂ) ^ (p - j) * (ω : ℂ) ^ j * (star (ω : ℂ) ^ (k - j) * star (ω : ℂ) ^ j) =
-      (ω : ℂ) ^ (p - j) * star (ω : ℂ) ^ (k - j) * ((ω : ℂ) ^ j * star (ω : ℂ) ^ j) by
-    ring]
-  rw [key, mul_one]
-
-private lemma Phi_rotation_equivariant
-    (ω : _root_.Circle) (z : ℂ) (k p : ℕ) :
-    oneDimPhi k p ((ω : ℂ) * z) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k * oneDimPhi k p z := by
-  unfold oneDimPhi
-  simp only [mul_pow, star_mul]
-  suffices h : ∀ j ∈ Finset.range (min k p + 1),
-      (-1 : ℂ) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-        ((ω : ℂ) ^ (p - j) * z ^ (p - j)) * (star z ^ (k - j) * star (ω : ℂ) ^ (k - j)) =
-      (ω : ℂ) ^ p * star (ω : ℂ) ^ k *
-        ((-1) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-          z ^ (p - j) * star z ^ (k - j)) by
-    have hsum := Finset.sum_congr rfl h
-    rw [← Finset.mul_sum] at hsum
-    linear_combination
-      (1 / ↑(Real.sqrt (↑k.factorial * ↑p.factorial))) * hsum
-  intro j hj
-  have hjk : j ≤ k := by
-    simp [Finset.mem_range] at hj
-    omega
-  have hjp : j ≤ p := by
-    simp [Finset.mem_range] at hj
-    omega
-  have key := circle_pow_factor ω hjk hjp
-  calc
-    (-1 : ℂ) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-        ((ω : ℂ) ^ (p - j) * z ^ (p - j)) * (star z ^ (k - j) * star (ω : ℂ) ^ (k - j))
-      = ((ω : ℂ) ^ (p - j) * star (ω : ℂ) ^ (k - j)) *
-          ((-1) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-            z ^ (p - j) * star z ^ (k - j)) := by
-          ring
-    _ = ((ω : ℂ) ^ p * star (ω : ℂ) ^ k) *
-          ((-1) ^ j * ↑(k.choose j) * (↑p.factorial / ↑(p - j).factorial) *
-            z ^ (p - j) * star z ^ (k - j)) := by
-          rw [key]
+    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by simp [coefficientAtZero (κ := κ) (G := G)]
 
 private lemma oneDimPhi_phaseLaw
     (k n : ℕ) (t : ℝ) (z : ℂ) :
@@ -508,45 +343,26 @@ private lemma oneDimPhi_phaseLaw
   have hrot :
       Complex.exp (Complex.I * t) * z =
         ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
-    calc
-      Complex.exp (Complex.I * t) * z =
-          Complex.exp (Complex.I * t) * ((‖z‖ : ℂ) * Complex.exp (Complex.I * z.arg)) := by
-            rw [hz]
-      _ = ((‖z‖ : ℂ) * Complex.exp (Complex.I * t)) * Complex.exp (Complex.I * z.arg) := by
-            ring
-      _ = (‖z‖ : ℂ) * (Complex.exp (Complex.I * t) * Complex.exp (Complex.I * z.arg)) := by
-            rw [mul_assoc]
-      _ = ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
-            rw [← Complex.exp_add]
-            congr 1
-            ring
+    rw [mul_add, Complex.exp_add]
+    conv_lhs => rw [← hz]
+    ring
   have hleft :
       oneDimPhi k n ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa using hradial ‖z‖ (t + z.arg)
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa using hradial ‖z‖ (t + z.arg)
   have hright :
       oneDimPhi k n z =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * z.arg)) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by
-    simpa [hz] using hradial ‖z‖ z.arg
+          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := by simpa [hz] using hradial ‖z‖ z.arg
   have hexp :
       Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) =
         Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * t)) *
           Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * z.arg)) := by
-    rw [show Complex.I * ((((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) =
-        Complex.I * ((((n : ℤ) - (k : ℤ) : ℂ) * t)) +
-          Complex.I * ((((n : ℤ) - (k : ℤ) : ℂ) * z.arg)) by ring]
-    rw [Complex.exp_add]
-  calc
-    oneDimPhi k n (Complex.exp (Complex.I * t) * z) =
-        oneDimPhi k n ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
-          rw [hrot]
-    _ = Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * (t + z.arg))) *
-          radial.eval₂ (algebraMap ℝ ℂ) ‖z‖ := hleft
-    _ = Complex.exp (Complex.I * (((n : ℤ) - (k : ℤ) : ℂ) * t)) * oneDimPhi k n z := by
-          rw [hexp, hright]
-          ring
+    rw [← Complex.exp_add]
+    congr 1
+    ring
+  rw [hrot, hleft, hexp, hright]
+  ring
 
 /-- Global phase law on the product basis. -/
 theorem productBasisPhaseLaw
@@ -569,8 +385,8 @@ theorem productBasisPhaseLaw
     | empty =>
         simp
     | @insert a s ha ih =>
-        rw [Finset.prod_insert ha, Finset.sum_insert ha, Finset.sum_insert ha, ih]
-        rw [← Complex.exp_add]
+        rw [Finset.prod_insert ha, Finset.sum_insert ha, Finset.sum_insert ha, ih,
+          ← Complex.exp_add]
         congr 1
         push_cast
         ring
@@ -613,15 +429,12 @@ theorem partitionOfGaussianNorm
   have hcover : (⋃ j : MultiIndex d, productAnnulus j) = Set.univ := by
     ext z
     simp only [Set.mem_iUnion, Set.mem_univ, iff_true]
-    refine ⟨fun q => Nat.floor ‖z q‖, ?_⟩
-    intro q
-    constructor
+    refine ⟨fun q => Nat.floor ‖z q‖, fun q => ⟨?_, ?_⟩⟩
     · exact_mod_cast Nat.floor_le (show 0 ≤ ‖z q‖ by positivity)
     · exact_mod_cast Nat.lt_floor_add_one ‖z q‖
   have hfi :
       IntegrableOn (fun z : CSpace d => ‖F z‖ ^ 2)
-        (⋃ j : MultiIndex d, productAnnulus j) (gaussianMeasure d) := by
-    simpa [hcover] using hF
+        (⋃ j : MultiIndex d, productAnnulus j) (gaussianMeasure d) := by simpa [hcover] using hF
   calc
     gaussianL2NormSq F
         = ∫ z in ⋃ j : MultiIndex d, productAnnulus j, ‖F z‖ ^ 2 ∂ gaussianMeasure d := by
@@ -659,10 +472,7 @@ private theorem annulusInner_self
       (fun z : CSpace d => if z ∈ productAnnulus j then F z * conj (F z) else 0) =
         fun z : CSpace d => ((if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0 : ℝ) : ℂ) := by
     funext z
-    by_cases hz : z ∈ productAnnulus j
-    · simp [hz]
-      simpa using Complex.mul_conj' (F z)
-    · simp [hz]
+    split_ifs with hz <;> simp [Complex.mul_conj']
   rw [hfun, integral_complex_ofReal]
 
 private lemma annulusInner_finite_sum_basis
@@ -701,24 +511,9 @@ private lemma annulusInner_finite_sum_basis
       simp [hz, mul_assoc]
     · simp [hz]
   rw [hsum, MeasureTheory.integral_finsetSum]
-  · refine Finset.sum_congr rfl ?_
-    intro α hα
-    have hconst :
-        (∫ z : CSpace d,
-            if z ∈ productAnnulus j then
-              c α * (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z))
-            else 0 ∂ gaussianMeasure d) =
-          c α * ∫ z : CSpace d,
-            if z ∈ productAnnulus j then
-              PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)
-            else 0 ∂ gaussianMeasure d := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (c α)
-          (fun z : CSpace d =>
-            if z ∈ productAnnulus j then
-              PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)
-            else 0))
-    rw [hconst]
+  · refine Finset.sum_congr rfl fun α _ => ?_
+    rw [← MeasureTheory.integral_const_mul]
+    simp_all
   · intro α hα
     simpa [indicatorMul, Set.indicator, mul_assoc] using
       ((integrable_productBasis_cross κ α β).indicator (measurableSet_productAnnulus j)).const_mul
@@ -766,39 +561,14 @@ private lemma annulusInner_finite_sum
             else 0) := by
     funext z
     by_cases hz : z ∈ productAnnulus j
-    · rw [if_pos hz]
-      have hconjsum :
-          conj (Finset.sum t fun β => b β * PhiKappaAlpha κ β z) =
-            Finset.sum t fun β => conj (b β * PhiKappaAlpha κ β z) := by
-        simp
-      rw [hconjsum, Finset.mul_sum]
-      refine Finset.sum_congr rfl ?_
-      intro β hβ
+    · rw [if_pos hz, map_sum, Finset.mul_sum]
+      refine Finset.sum_congr rfl fun β _ => ?_
       simp [hz, mul_assoc, mul_comm]
     · simp [hz]
   rw [hrewrite, MeasureTheory.integral_finsetSum]
-  · refine Finset.sum_congr rfl ?_
-    intro β hβ
-    have hconst :
-        (∫ z : CSpace d,
-            if z ∈ productAnnulus j then
-              conj (b β) *
-                ((Finset.sum s fun α => a α * PhiKappaAlpha κ α z) *
-                  conj (PhiKappaAlpha κ β z))
-            else 0 ∂ gaussianMeasure d) =
-          conj (b β) * ∫ z : CSpace d,
-            if z ∈ productAnnulus j then
-              (Finset.sum s fun α => a α * PhiKappaAlpha κ α z) *
-                conj (PhiKappaAlpha κ β z)
-            else 0 ∂ gaussianMeasure d := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (conj (b β))
-          (fun z : CSpace d =>
-            if z ∈ productAnnulus j then
-              (Finset.sum s fun α => a α * PhiKappaAlpha κ α z) *
-                conj (PhiKappaAlpha κ β z)
-            else 0))
-    rw [hconst]
+  · refine Finset.sum_congr rfl fun β _ => ?_
+    rw [← MeasureTheory.integral_const_mul]
+    simp_all
   · intro β hβ
     have hsum :
         (fun z : CSpace d =>
@@ -834,8 +604,7 @@ theorem annulusRotationInvariant
     {d : ℕ} (j : MultiIndex d) (t : ℝ) (z : CSpace d) :
     z ∈ productAnnulus j ↔
       (fun q => Complex.exp (Complex.I * t) * z q) ∈ productAnnulus j := by
-  have hnorm : ‖Complex.exp (Complex.I * t)‖ = 1 := by
-    simp []
+  have hnorm : ‖Complex.exp (Complex.I * t)‖ = 1 := by simp []
   simp [productAnnulus, hnorm]
 
 private def mulCircleLIE (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ := by
@@ -850,49 +619,52 @@ private def mulCircleLIE (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ := by
     · intro z
       refine ⟨((ω⁻¹ : _root_.Circle) : ℂ) * z, ?_⟩
       simp []
-  · intro z
-    simp []
+  · simp_all
+
+/-- A measure-preserving (for volume), measurable-embedding, density-preserving map
+preserves the Gaussian measure. -/
+private lemma gaussianMeasure_map_eq_of_density
+    {d : ℕ} {f : CSpace d → CSpace d}
+    (hvol : MeasurePreserving f (volume : Measure (CSpace d)) (volume : Measure (CSpace d)))
+    (hmeas : MeasurableEmbedding f)
+    (hdens : ∀ z : CSpace d,
+      ENNReal.ofReal (gaussianDensity d (f z)) = ENNReal.ofReal (gaussianDensity d z)) :
+    Measure.map f (gaussianMeasure d) = gaussianMeasure d := by
+  classical
+  let dens : CSpace d → ENNReal := fun z => ENNReal.ofReal (gaussianDensity d z)
+  change Measure.map f (volume.withDensity dens) = volume.withDensity dens
+  ext s hs
+  have hs' : MeasurableSet (f ⁻¹' s) := measurableSet_preimage hmeas.measurable hs
+  rw [Measure.map_apply_of_aemeasurable hmeas.measurable.aemeasurable hs,
+    withDensity_apply _ hs', withDensity_apply _ hs]
+  rw [← MeasureTheory.lintegral_indicator (hs := hs'),
+    ← MeasureTheory.lintegral_indicator (hs := hs)]
+  simpa [Set.preimage, Set.indicator, Set.mem_setOf_eq, dens, hdens] using
+    (hvol.lintegral_comp_emb hmeas (fun x => if x ∈ s then dens x else 0))
 
 private lemma gaussian_lintegral_rotate_eq
     {d : ℕ} (ω : _root_.Circle) (g : CSpace d → ENNReal) :
     ∫⁻ z : CSpace d, g (fun q => (ω : ℂ) * z q) ∂ gaussianMeasure d =
       ∫⁻ z : CSpace d, g z ∂ gaussianMeasure d := by
   classical
-  let dens : CSpace d → ENNReal := fun z => ENNReal.ofReal (gaussianDensity d z)
   let f : CSpace d → CSpace d := fun z q => (ω : ℂ) * z q
-  have hvol : MeasurePreserving f (volume : Measure (CSpace d)) (volume : Measure (CSpace d)) := by
-    have h := MeasureTheory.volume_preserving_pi (f := fun _ : Fin d => mulCircleLIE ω)
-        (fun _ => (mulCircleLIE ω).measurePreserving)
-    have hfeq : (fun (a : CSpace d) (i : Fin d) => (mulCircleLIE ω) (a i)) = f := by
-      funext z q
-      rfl
-    rw [hfeq] at h
-    exact h
+  have hvol : MeasurePreserving f (volume : Measure (CSpace d)) (volume : Measure (CSpace d)) :=
+    MeasureTheory.volume_preserving_pi (f := fun _ : Fin d => mulCircleLIE ω)
+      (fun _ => (mulCircleLIE ω).measurePreserving)
   have hmeas : MeasurableEmbedding f := by
     let inv : CSpace d → CSpace d := fun z q => (((ω⁻¹ : _root_.Circle) : ℂ) * z q)
     have hinv : Function.LeftInverse inv f := by
       intro z
       funext q
       simp [f, inv]
-    have hcont : Continuous f := by
-      fun_prop
+    have hcont : Continuous f := by fun_prop
     exact hcont.measurableEmbedding hinv.injective
-  have hdens : ∀ z : CSpace d, dens (f z) = dens z := by
+  have hdens : ∀ z : CSpace d,
+      ENNReal.ofReal (gaussianDensity d (f z)) = ENNReal.ofReal (gaussianDensity d z) := by
     intro z
-    simp [dens, f, gaussianDensity]
-  have hmap : Measure.map f (gaussianMeasure d) = gaussianMeasure d := by
-    change Measure.map f (volume.withDensity dens) = volume.withDensity dens
-    ext s hs
-    have hs' : MeasurableSet (f ⁻¹' s) := by
-      exact measurableSet_preimage hmeas.measurable hs
-    rw [Measure.map_apply_of_aemeasurable hmeas.measurable.aemeasurable hs,
-      withDensity_apply _ hs', withDensity_apply _ hs]
-    rw [← MeasureTheory.lintegral_indicator (hs := hs')]
-    rw [← MeasureTheory.lintegral_indicator (hs := hs)]
-    simpa [Set.preimage, Set.indicator, Set.mem_setOf_eq, dens, f, hdens] using
-      (hvol.lintegral_comp_emb hmeas (fun x => if x ∈ s then dens x else 0))
-  have hgauss : MeasurePreserving f (gaussianMeasure d) (gaussianMeasure d) := by
-    exact ⟨hmeas.measurable, hmap⟩
+    simp [f, gaussianDensity]
+  have hgauss : MeasurePreserving f (gaussianMeasure d) (gaussianMeasure d) :=
+    ⟨hmeas.measurable, gaussianMeasure_map_eq_of_density hvol hmeas hdens⟩
   simpa [f] using hgauss.lintegral_comp_emb hmeas g
 
 private lemma fourier_mk_eq_exp
@@ -941,13 +713,12 @@ private lemma rotate_one_volume_preserving
     intro i
     by_cases h : i = q0
     · subst h
-      have hmp := (mulCircleLIE ω).measurePreserving
       have hfeq : ⇑(mulCircleLIE ω) = f i := by
         funext z
         simp only [f, dite_true]
         rfl
-      rw [hfeq] at hmp
-      exact hmp
+      rw [← hfeq]
+      exact (mulCircleLIE ω).measurePreserving
     · simpa [f, h] using
         (show MeasurePreserving (id : ℂ → ℂ) (volume : Measure ℂ) (volume : Measure ℂ) from
           ⟨measurable_id, by simp⟩)
@@ -974,10 +745,8 @@ private lemma rotate_one_measurableEmbedding
   classical
   let f : CSpace d → CSpace d := fun z => Function.update z q0 ((ω : ℂ) * z q0)
   let g : CSpace d → CSpace d := fun z => Function.update z q0 (((ω⁻¹ : _root_.Circle) : ℂ) * z q0)
-  have hf : Measurable f := by
-    fun_prop
-  have hcont : Continuous f := by
-    fun_prop
+  have hf : Measurable f := by fun_prop
+  have hcont : Continuous f := by fun_prop
   have hgf : Function.LeftInverse g f := by
     intro z
     funext q
@@ -996,12 +765,12 @@ private lemma rotate_one_gaussian_preserving
       (fun z : CSpace d => Function.update z q0 ((ω : ℂ) * z q0))
       (gaussianMeasure d) (gaussianMeasure d) := by
   classical
-  let dens : CSpace d → ENNReal := fun z => ENNReal.ofReal (gaussianDensity d z)
   let f : CSpace d → CSpace d := fun z => Function.update z q0 ((ω : ℂ) * z q0)
   have hvol : MeasurePreserving f (volume : Measure (CSpace d)) (volume : Measure (CSpace d)) := by
     simpa [f] using (rotate_one_volume_preserving (q0 := q0) (ω := ω))
   have hmeas : MeasurableEmbedding f := rotate_one_measurableEmbedding (q0 := q0) (ω := ω)
-  have hdens : ∀ z : CSpace d, dens (f z) = dens z := by
+  have hdens : ∀ z : CSpace d,
+      ENNReal.ofReal (gaussianDensity d (f z)) = ENNReal.ofReal (gaussianDensity d z) := by
     intro z
     have hsum :
         ∑ q : Fin d, ‖Function.update z q0 ((ω : ℂ) * z q0) q‖ ^ 2 =
@@ -1009,22 +778,10 @@ private lemma rotate_one_gaussian_preserving
       refine Finset.sum_congr rfl ?_
       intro q hq
       by_cases h : q = q0
-      · subst h
-        simp [Function.update]
+      · simp_all
       · simp [Function.update, h]
-    simp [dens, f, gaussianDensity, hsum]
-  have hmap : Measure.map f (gaussianMeasure d) = gaussianMeasure d := by
-    change Measure.map f (volume.withDensity dens) = volume.withDensity dens
-    ext s hs
-    have hs' : MeasurableSet (f ⁻¹' s) := by
-      exact measurableSet_preimage hmeas.measurable hs
-    rw [Measure.map_apply_of_aemeasurable hmeas.measurable.aemeasurable hs,
-      withDensity_apply _ hs', withDensity_apply _ hs]
-    rw [← MeasureTheory.lintegral_indicator (hs := hs')]
-    rw [← MeasureTheory.lintegral_indicator (hs := hs)]
-    simpa [Set.preimage, Set.indicator, Set.mem_setOf_eq, dens, f, hdens] using
-      (hvol.lintegral_comp_emb hmeas (fun x => if x ∈ s then dens x else 0))
-  exact ⟨hmeas.measurable, hmap⟩
+    simp [f, gaussianDensity, hsum]
+  exact ⟨hmeas.measurable, gaussianMeasure_map_eq_of_density hvol hmeas hdens⟩
 
 /-- Rotating one coordinate contributes exactly the corresponding phase factor. -/
 private lemma PhiKappaAlpha_rotate_one
@@ -1042,49 +799,12 @@ private lemma PhiKappaAlpha_rotate_one
           (oneDimPhi (κ q0) (α q0) (Complex.exp (Complex.I * t) * z q0)) := by
     funext q
     by_cases hq : q = q0
-    · subst hq
-      simp
+    · simp_all
     · simp [Function.update, hq]
-  rw [hupdate]
-  rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
-  rw [oneDimPhi_phaseLaw]
+  rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs => rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by
       simp)]
   ring
-
-private lemma finite_sum_annulusMass_le
-    {d : ℕ} (F : CSpace d → ℂ)
-    (hF : Integrable (fun z : CSpace d => ‖F z‖ ^ 2) (gaussianMeasure d))
-    (s : Finset (MultiIndex d)) :
-    ∑ j ∈ s, annulusMass j F ≤ gaussianL2NormSq F := by
-  classical
-  have hInt :
-      Integrable
-        (fun z : CSpace d =>
-          ∑ j ∈ s, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0)
-        (gaussianMeasure d) := by
-    refine MeasureTheory.integrable_finsetSum _ ?_
-    intro j hj
-    refine (hF.indicator (measurableSet_productAnnulus j)).congr ?_
-    filter_upwards with z
-    simp only [Set.indicator]
-  calc
-    ∑ j ∈ s, annulusMass j F
-      = ∫ z : CSpace d,
-          ∑ j ∈ s, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0
-          ∂ gaussianMeasure d := by
-            rw [MeasureTheory.integral_finsetSum]
-            · simp [annulusMass]
-            · intro j hj
-              refine (hF.indicator (measurableSet_productAnnulus j)).congr ?_
-              filter_upwards with z
-              simp only [Set.indicator]
-    _ ≤ ∫ z : CSpace d, ‖F z‖ ^ 2 ∂ gaussianMeasure d := by
-          refine MeasureTheory.integral_mono_ae hInt hF ?_
-          filter_upwards with z
-          exact sum_indicator_productAnnulus_le s z (‖F z‖ ^ 2) (by positivity)
-    _ = gaussianL2NormSq F := by
-          simp [gaussianL2NormSq]
 
 /-- Rotation averaging on a product annulus for nonnegative measurable functions. -/
 theorem annulusRotationAveraging
@@ -1103,8 +823,7 @@ theorem annulusRotationAveraging
         ∫⁻ z : CSpace d, if _h : z ∈ productAnnulus j then F z else 0 ∂ gaussianMeasure d := by
   classical
   let G : CSpace d → ENNReal := fun z => if z ∈ productAnnulus j then F z else 0
-  have hG : Measurable G := by
-    refine hF.piecewise (measurableSet_productAnnulus j) measurable_const
+  have hG : Measurable G := hF.piecewise (measurableSet_productAnnulus j) measurable_const
   letI : MeasureTheory.SFinite (gaussianMeasure d) := by
     change MeasureTheory.SFinite
       ((volume : Measure (CSpace d)).withDensity (fun z => ENNReal.ofReal (gaussianDensity d z)))
@@ -1134,42 +853,22 @@ theorem annulusRotationAveraging
                 (annulusRotationInvariantCircle (j := j) (t := t) (z := z)).mp hz
               have hrot' :
                   (fun q => ((AddCircle.toCircle t : _root_.Circle) : ℂ) * z q) ∈
-                    productAnnulus j := by
-                      simpa [fourier_one] using hrot
+                    productAnnulus j := by simpa [fourier_one] using hrot
               simp only [G]
-              split_ifs with hmem
-              · rfl
-              · exact (hmem hrot').elim
+              simp_all
             · have hzero :
                 ∫⁻ t : Hermite1DimdLEAN.Circle,
                     G (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q)
                   ∂ AddCircle.haarAddCircle = 0 := by
-                    calc
-                      ∫⁻ t : Hermite1DimdLEAN.Circle,
-                          G (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q)
-                        ∂ AddCircle.haarAddCircle
-                        = ∫⁻ t : Hermite1DimdLEAN.Circle, (0 : ENNReal) ∂ AddCircle.haarAddCircle
-                            := by
-                            refine lintegral_congr_ae ?_
-                            filter_upwards with t
-                            have hrot :
-                                (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q) ∉
-                                  productAnnulus j := by
-                                    intro hz'
-                                    exact hz
-                                      ((annulusRotationInvariantCircle
-                                        (j := j) (t := t) (z := z)).mpr hz')
-                            simp only [G]
-                            split_ifs with hmem
-                            · exact (hrot hmem).elim
-                            · rfl
-                      _ = 0 := by simp
-              have hzero' :
-                  ∫⁻ t : Hermite1DimdLEAN.Circle,
-                      G (fun q => ((AddCircle.toCircle t : _root_.Circle) : ℂ) * z q)
-                    ∂ AddCircle.haarAddCircle = 0 := by
-                simpa [fourier_one] using hzero
-              simpa [hz, fourier_one] using hzero'.symm
+                    refine lintegral_eq_zero_of_ae_eq_zero ?_
+                    filter_upwards with t
+                    have hrot :
+                        (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q) ∉
+                          productAnnulus j := fun hz' =>
+                      hz ((annulusRotationInvariantCircle (j := j) (t := t) (z := z)).mpr hz')
+                    simp only [G, Pi.zero_apply]
+                    simp_all
+              simp_all
     _ = ∫⁻ t : Hermite1DimdLEAN.Circle,
           ∫⁻ z : CSpace d,
               G (fun q => (fourier (T := Hermite1DimdLEAN.T) (1 : ℤ) t : ℂ) * z q)
@@ -1190,18 +889,15 @@ theorem annulusRotationAveraging
           simpa [fourier_one] using
             (gaussian_lintegral_rotate_eq (ω := AddCircle.toCircle t) (g := G))
     _ = ∫⁻ z : CSpace d, G z ∂ gaussianMeasure d := by
-          rw [lintegral_const]
-          simp []
-    _ = ∫⁻ z : CSpace d, if h : z ∈ productAnnulus j then F z else 0 ∂ gaussianMeasure d := by
-          rfl
+          simp_all
+    _ = ∫⁻ z : CSpace d, if h : z ∈ productAnnulus j then F z else 0 ∂ gaussianMeasure d := by rfl
 
 /-- Annulus orthogonality of distinct basis vectors. -/
 theorem annulusOrthogonality
     {d : ℕ} (κ j α β : MultiIndex d) (hαβ : α ≠ β) :
     annulusInner j (PhiKappaAlpha κ α) (PhiKappaAlpha κ β) = 0 := by
   classical
-  obtain ⟨q0, hq0⟩ : ∃ q0 : Fin d, α q0 ≠ β q0 := by
-    simpa [funext_iff] using hαβ
+  obtain ⟨q0, hq0⟩ : ∃ q0 : Fin d, α q0 ≠ β q0 := by simpa [funext_iff] using hαβ
   let n : ℤ := (α q0 : ℤ) - (β q0 : ℤ)
   have hn : n ≠ 0 := sub_ne_zero.mpr (by exact_mod_cast hq0)
   let t : ℝ := Real.pi / (n : ℝ)
@@ -1212,8 +908,7 @@ theorem annulusOrthogonality
     if z ∈ productAnnulus j then
       PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)
     else 0
-  have hω : (ω : ℂ) = Complex.exp (Complex.I * t) := by
-    simp [ω, _root_.Circle.coe_exp, mul_comm]
+  have hω : (ω : ℂ) = Complex.exp (Complex.I * t) := by simp [ω, _root_.Circle.coe_exp, mul_comm]
   have hpres :
       MeasurePreserving rot (gaussianMeasure d) (gaussianMeasure d) := by
     simpa [rot, hω] using rotate_one_gaussian_preserving (q0 := q0) (ω := ω)
@@ -1241,8 +936,7 @@ theorem annulusOrthogonality
           conj (Complex.exp (Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)))) =
             Complex.exp (-Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) := by
         rw [← Complex.exp_conj]
-        congr 1
-        simp
+        simp [mul_comm]
       rw [map_mul, hconj]
       have hphase :
           Complex.exp (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
@@ -1250,42 +944,25 @@ theorem annulusOrthogonality
             (-1 : ℂ) := by
         have hnR : (n : ℝ) ≠ 0 := by exact_mod_cast hn
         have hnt : ((n : ℂ) * t) = (Real.pi : ℂ) := by
-          have hntR : (n : ℝ) * (Real.pi / (n : ℝ)) = Real.pi := by
-            field_simp [hnR]
+          have hntR : (n : ℝ) * (Real.pi / (n : ℝ)) = Real.pi := by field_simp [hnR]
           simpa [t] using congrArg Complex.ofReal hntR
         have hntI : Complex.I * ((n : ℂ) * t) = (Real.pi : ℂ) * Complex.I := by
           simpa [mul_comm] using congrArg (fun x : ℂ => Complex.I * x) hnt
-        calc
-          Complex.exp (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
-              Complex.exp (-Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)))
-              =
-            Complex.exp
-              (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)) +
-                -Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) := by
-                  rw [← Complex.exp_add]
-          _ = Complex.exp (Complex.I * ((n : ℂ) * t)) := by
-                congr 1
-                simp [n]
-                ring
-          _ = Complex.exp ((Real.pi : ℂ) * Complex.I) := by rw [hntI]
-          _ = -1 := by simpa [mul_comm] using Complex.exp_pi_mul_I
+        have hexpsum :
+            Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)) +
+                -Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)) =
+              Complex.I * ((n : ℂ) * t) := by
+          simp only [n]
+          push_cast
+          ring
+        rw [← Complex.exp_add, hexpsum, hntI]
+        simpa [mul_comm] using Complex.exp_pi_mul_I
       have hneg_core :
           Complex.exp (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) * PhiKappaAlpha κ α z *
               (Complex.exp (-Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
                 conj (PhiKappaAlpha κ β z)) =
             -(PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)) := by
-              calc
-                Complex.exp (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
-                    PhiKappaAlpha κ α z *
-                    (Complex.exp (-Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
-                      conj (PhiKappaAlpha κ β z))
-                    =
-                  (Complex.exp (Complex.I * ((((α q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t))) *
-                      Complex.exp (-Complex.I * ((((β q0 : ℤ) - (κ q0 : ℤ) : ℂ) * t)))) *
-                    (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)) := by ring
-                _ = (-1 : ℂ) * (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)) := by
-                      rw [hphase]
-                _ = -(PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)) := by ring
+        linear_combination (PhiKappaAlpha κ α z * conj (PhiKappaAlpha κ β z)) * hphase
       simpa [H, hz] using hneg_core
     · have hzrot : rot z ∉ productAnnulus j := by
         intro hzrot
@@ -1296,28 +973,10 @@ theorem annulusOrthogonality
   have hneg_int :
       ∫ z : CSpace d, H (rot z) ∂ gaussianMeasure d
         = - ∫ z : CSpace d, H z ∂ gaussianMeasure d := by
-    calc
-      ∫ z : CSpace d, H (rot z) ∂ gaussianMeasure d
-          = ∫ z : CSpace d, -H z ∂ gaussianMeasure d := by
-              refine MeasureTheory.integral_congr_ae ?_
-              filter_upwards with z
-              exact hneg_point z
-      _ = - ∫ z : CSpace d, H z ∂ gaussianMeasure d := by
-            simpa using MeasureTheory.integral_neg (f := H)
-  have hzero_int : ∫ z : CSpace d, H z ∂ gaussianMeasure d = 0 := by
-    have hEq :
-        ∫ z : CSpace d, H z ∂ gaussianMeasure d
-          = - ∫ z : CSpace d, H z ∂ gaussianMeasure d := by
-      calc
-        ∫ z : CSpace d, H z ∂ gaussianMeasure d
-            = ∫ z : CSpace d, H (rot z) ∂ gaussianMeasure d := by simpa using hcomp.symm
-        _ = - ∫ z : CSpace d, H z ∂ gaussianMeasure d := hneg_int
-    have htwo :
-        (2 : ℂ) * ∫ z : CSpace d, H z ∂ gaussianMeasure d = 0 := by
-      have hsum :=
-        congrArg (fun w : ℂ => w + ∫ z : CSpace d, H z ∂ gaussianMeasure d) hEq
-      simpa [two_mul, add_assoc] using hsum
-    exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
+    rw [MeasureTheory.integral_congr_ae (Filter.Eventually.of_forall hneg_point),
+      MeasureTheory.integral_neg]
+  have hzero_int : ∫ z : CSpace d, H z ∂ gaussianMeasure d = 0 :=
+    CharZero.eq_neg_self_iff.mp (hcomp.symm.trans hneg_int)
   simpa [annulusInner, H] using hzero_int
 
 /-- Annulus Parseval for finite Hermite sums. -/
@@ -1347,32 +1006,16 @@ theorem annulusParseval
                   intro β hβ
                   rw [annulusInner_finite_sum_basis (j := j) (κ := κ) (β := β)
                     (s := G.support) (c := G.coeff)]
-      _ = ∑ β ∈ G.support,
-            conj (G.coeff β) *
-              (G.coeff β * ((annulusMass j (PhiKappaAlpha κ β) : ℝ) : ℂ)) := by
-                refine Finset.sum_congr rfl ?_
-                intro β hβ
-                rw [Finset.sum_eq_single β]
-                · simp [annulusInner_self]
-                · intro α hα hne
-                  simp [annulusOrthogonality, hne]
-                · intro hnotin
-                  exact False.elim (hnotin hβ)
       _ = ∑ α ∈ G.support,
             G.coeff α * conj (G.coeff α) * ((annulusMass j (PhiKappaAlpha κ α) : ℝ) : ℂ) := by
-              refine Finset.sum_congr rfl ?_
-              intro α hα
-              ring
+              refine Finset.sum_congr rfl fun β hβ => ?_
+              rw [Finset.sum_eq_single β]
+              · simp [annulusInner_self, mul_comm, mul_left_comm]
+              · intro α hα hne
+                simp [annulusOrthogonality, hne]
+              · exact fun hnotin => absurd hβ hnotin
   apply Complex.ofReal_injective
-  calc
-    (((annulusMass j (evalHermiteSum κ G) : ℝ)) : ℂ)
-        = annulusInner j (evalHermiteSum κ G) (evalHermiteSum κ G) := by
-            symm
-            exact annulusInner_self (j := j) (F := evalHermiteSum κ G)
-    _ = ∑ α ∈ G.support,
-          G.coeff α * conj (G.coeff α) * ((annulusMass j (PhiKappaAlpha κ α) : ℝ) : ℂ) := hinner
-    _ = (((Finset.sum G.support
-          fun α => ‖G.coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α) : ℝ)) : ℂ) := by
-            simp [Complex.mul_conj', mul_comm]
+  rw [← annulusInner_self, hinner]
+  simp [Complex.mul_conj', mul_comm]
 
 end Hermite1DimdLEAN

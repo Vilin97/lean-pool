@@ -51,8 +51,7 @@ lemma rec_eq {α : Sort*} (a : α) (f₁ f₂ : ℕ → α → α) (n : ℕ) (H 
   induction n with
   | zero => simp
   | succ n ih =>
-    simp
-    have : (n.rec a f₁ : α) = n.rec a f₂ := ih (fun m hm a =>  H m (Nat.lt_succ_of_lt hm) a)
+    have : (n.rec a f₁ : α) = n.rec a f₂ := ih (fun m hm a => H m (Nat.lt_succ_of_lt hm) a)
     simpa [this] using H n (Nat.lt_add_one n) (n.rec a f₂)
 
 lemma least_number (P : ℕ → Prop) (hP : ∃ x, P x) : ∃ x, P x ∧ ∀ z < x, ¬P z := by
@@ -64,8 +63,7 @@ def toFin (n : ℕ) : ℕ → Option (Fin n) := fun x => if hx : x < n then some
 
 end Nat
 
-lemma eq_finZeroElim {α : Sort u} (x : Fin 0 → α) :
-    x = finZeroElim :=
+lemma eq_finZeroElim {α : Sort u} (x : Fin 0 → α) : x = finZeroElim :=
   funext (by rintro ⟨_, _⟩; contradiction)
 
 namespace Matrix
@@ -93,8 +91,7 @@ def vecConsLast {n : ℕ} (t : Fin n → α) (h : α) : Fin n.succ → α :=
 
 @[simp] lemma cons_app_two {n : ℕ} (a : α) (s : Fin n.succ.succ → α) : (a :> s) 2 = s 1 := rfl
 
-@[simp] lemma cons_app_three {n : ℕ} (a : α) (s : Fin n.succ.succ.succ → α) :
-    (a :> s) 3 = s 2 :=
+@[simp] lemma cons_app_three {n : ℕ} (a : α) (s : Fin n.succ.succ.succ → α) : (a :> s) 3 = s 2 :=
   rfl
 
 section «lp_section_2»
@@ -138,10 +135,7 @@ lemma eq_vecCons (s : Fin (n + 1) → C) : s = s 0 :> s ∘ Fin.succ :=
 
 @[simp 1100] lemma vecCons_ext (a₁ a₂ : α) (s₁ s₂ : Fin n → α) :
     a₁ :> s₁ = a₂ :> s₂ ↔ a₁ = a₂ ∧ s₁ = s₂ :=
-  ⟨by intros h
-      constructor
-      · exact congrFun h 0
-      · exact funext (fun i => by simpa using congrFun h (Fin.castSucc i + 1)),
+  ⟨by simp_all,
    by intros h; simp [h]⟩
 
 lemma vecCons_assoc (a b : α) (s : Fin n → α) :
@@ -201,12 +195,9 @@ lemma vecTail_comp (f : α → β) (v : Fin (n + 1) → α) : vecTail (f ∘ v) 
 
 lemma vecConsLast_vecEmpty {s : Fin 0 → α} (a : α) : s <: a = ![a] :=
   funext (fun x => by
-    have : 0 = Fin.last 0 := by rfl
     cases x using Fin.cases with
-    | zero => rw [this, rightConcat_last, cons_val_fin_one]
-    | succ i =>
-      have := i.isLt
-      contradiction )
+    | zero => rw [show (0 : Fin 1) = Fin.last 0 from rfl, rightConcat_last, cons_val_fin_one]
+    | succ i => exact absurd i.isLt (by simp))
 
 lemma constant_eq_singleton {a : α} : (fun _ => a) = ![a] := by funext x; simp
 
@@ -271,8 +262,7 @@ lemma getM_pure [LawfulMonad m] {n} {β : Fin n → Type u} (v : (i : Fin n) →
     getM (fun i => (some (v i) : Option (β i))) = some v := getM_pure v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def appendr {n m} (v : Fin n → α) (w : Fin m → α) :
-    Fin (m + n) → α :=
+def appendr {n m} (v : Fin n → α) (w : Fin m → α) : Fin (m + n) → α :=
   Matrix.vecAppend (add_comm m n) v w
 
 @[simp] lemma appendr_nil {m} (w : Fin m → α) : appendr ![] w = w := by funext i; simp [appendr]
@@ -290,7 +280,7 @@ def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
 
 open Encodable
 
-@[simp] lemma vecToNat_empty (v : Fin 0 → ℕ) : vecToNat v = 0 := by rfl
+@[simp] lemma vecToNat_empty (v : Fin 0 → ℕ) : vecToNat v = 0 := rfl
 
 @[simp] lemma encode_succ {n} (x : ℕ) (v : Fin n → ℕ) :
     vecToNat (x :> v) = Nat.pair x (vecToNat v) + 1 := by
@@ -561,8 +551,8 @@ variable [DecidableEq α] [DecidableEq β]
 lemma toFinset_map {f : α → β} (l : List α) : (l.map f).toFinset = Finset.image f l.toFinset := by
   induction l <;> simp [*]
 
-lemma toFinset_mono {l l' : List α} (h : l ⊆ l') : l.toFinset ⊆ l'.toFinset := by
-  intro a; simp only [mem_toFinset]; intro ha; exact h ha
+lemma toFinset_mono {l l' : List α} (h : l ⊆ l') : l.toFinset ⊆ l'.toFinset :=
+  fun _ ha => mem_toFinset.mpr (h (mem_toFinset.mp ha))
 
 end «lp_section_5»
 
@@ -608,10 +598,7 @@ end «lp_section_6»
 
 lemma ofFn_get_eq_map_cast {n} (g : α → β) (as : List α) {h} :
     ofFn (fun i => g (as.get (i.cast h)) : Fin n → β) = as.map g := by
-  ext i b; simp
-  by_cases hi : i < n
-  · simp [hi, List.getElem?_eq_getElem (h ▸ hi)]
-  · simp [hi, List.getElem?_eq_none (le_of_not_gt <| h ▸ hi)]
+  simp_all
 
 variable {m : Type _ → Type _} {α : Type _} {β : Type _} [Monad m]
 
@@ -637,14 +624,12 @@ lemma eq_remove_cons {l : List α} :
 
 @[simp]
 lemma remove_singleton_of_ne {φ ψ : α} (h : φ ≠ ψ) :
-    [φ].remove ψ = [φ] := by
-  simp_all [List.remove];
+    [φ].remove ψ = [φ] := by simp_all [List.remove]
 
-lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by
-  simp [List.remove]
+lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by simp [List.remove]
 
-lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l := by
-  rw [mem_remove_iff] at h; exact h.1
+lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l :=
+  (mem_remove_iff.mp h).1
 
 lemma remove_cons_self (l : List α) (a) :
   (a :: l).remove a = l.remove a := by simp [remove]
@@ -653,9 +638,7 @@ lemma remove_cons_of_ne (l : List α) {a b} (ne : a ≠ b) :
   (a :: l).remove b = a :: l.remove b := by simp_all [remove];
 
 lemma remove_subset (a) (l : List α) :
-    l.remove a ⊆ l := by
-  simp only [subset_def, mem_remove_iff, ne_eq, and_imp]
-  intros; simp [*]
+    l.remove a ⊆ l := fun _ h => (mem_remove_iff.mp h).1
 
 lemma remove_subset_remove (a) {l₁ l₂ : List α} (h : l₁ ⊆ l₂) :
     l₁.remove a ⊆ l₂.remove a := by
@@ -792,8 +775,7 @@ namespace Part
         exact h 0
       refine ⟨w.head, hhead, w.tail, ?_, (List.Vector.cons_head_tail w).symm⟩
       intro i
-      have htail : w.tail.get i = w.get i.succ := by
-        exact List.Vector.get_tail_succ w i
+      have htail : w.tail.get i = w.get i.succ := List.Vector.get_tail_succ w i
       exact htail.symm ▸ h i.succ
 
 end Part

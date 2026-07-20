@@ -40,20 +40,10 @@ def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
     -- Continuity from the decay bound at k = 0:
     -- |cₙ(f)| ≤ C · sup-seminorm(f)
     obtain ⟨C, q, hC, hbound⟩ := hermiteCoeff1D_decay (0 : ℝ)
-    -- At k=0: |cₙ(f)| * 1 ≤ C * sup-seminorm(f)
-    have h0 : ∀ f, |hermiteCoeff1D n f| ≤
-        C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-      intro f
-      have := hbound f n
-      simp only [rpow_zero, mul_one] at this
-      exact this
-    -- Use norm from the decay bound
+    -- Use norm from the decay bound (at k=0: |cₙ(f)| * 1 ≤ C * sup-seminorm(f))
     have key : ∀ f, ‖hermiteCoeff1D n f‖ ≤
         C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-      intro f
-      calc ‖hermiteCoeff1D n f‖
-          = |hermiteCoeff1D n f| := Real.norm_eq_abs _
-        _ ≤ C * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := h0 f
+      simp_all
     -- Apply continuous_of_isBounded
     -- The linear map is: {toFun := hermiteCoeff1D n, ...}
     -- and we show it's bounded by Schwartz seminorms
@@ -89,11 +79,7 @@ theorem schwartz_hermite_expansion_CLF
   -- h states: inner 1 (φ f) = ∑' n, hermiteCoeff1D n f * inner 1 (φ (schwartzHermiteBasis1D n))
   -- On ℝ, RCLike.inner_apply tells us: inner x y = y * conj x
   -- For real numbers, conj x = x, so inner 1 x = x * 1 = x
-  have key : ∀ x : ℝ, @inner ℝ ℝ _ 1 x = x := fun x => by
-    rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real]
-    simp
-  simp only [key] at h
-  exact h
+  simp_all
 
 /-! ## Seminorm Bounds
 
@@ -106,28 +92,6 @@ We show this sup is controlled by a single seminorm using:
 Key fact: Mathlib's Schwartz seminorms use ‖x‖^k (NOT (1+‖x‖)^k), so they are
 NOT individually monotone in k. The bound goes through the (1+‖x‖) framework.
 -/
-
-/-- Each individual Schwartz seminorm in `Finset.Iic q` is bounded by
-    `2^q.1` times the sup over the same finite set. Combined with
-    `finset_sup_apply_le`, this gives the sup bounded by itself (with constant),
-    which then allows us to bound by any element with a larger constant.
--/
-private theorem seminorm_le_sup_of_mem {q : ℕ × ℕ} {k' l' : ℕ}
-    (hk : k' ≤ q.1) (hl : l' ≤ q.2) (f : SchwartzMap ℝ ℝ) :
-    SchwartzMap.seminorm ℝ k' l' f ≤
-      2 ^ q.1 * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f := by
-  apply SchwartzMap.seminorm_le_bound ℝ k' l' f (by positivity)
-  intro x
-  have hx_le : ‖x‖ ^ k' ≤ (1 + ‖x‖) ^ q.1 :=
-    calc ‖x‖ ^ k'
-        ≤ (1 + ‖x‖) ^ k' :=
-          pow_le_pow_left₀ (norm_nonneg x) (le_add_of_nonneg_left zero_le_one) k'
-      _ ≤ (1 + ‖x‖) ^ q.1 :=
-          pow_le_pow_right₀ (le_add_of_nonneg_right (norm_nonneg x)) hk
-  calc ‖x‖ ^ k' * ‖iteratedFDeriv ℝ l' f x‖
-      ≤ (1 + ‖x‖) ^ q.1 * ‖iteratedFDeriv ℝ l' f x‖ := by gcongr
-    _ ≤ 2 ^ q.1 * (Finset.Iic q).sup (fun m => SchwartzMap.seminorm ℝ m.1 m.2) f :=
-        SchwartzMap.one_add_le_sup_seminorm_apply le_rfl hl f x
 
 /-- Coefficient decay with a finset-sup seminorm bound. This is the natural form
     that follows directly from `hermiteCoeff1D_decay`.

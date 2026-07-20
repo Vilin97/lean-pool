@@ -30,8 +30,7 @@ class QuantumSetDeltaForm (A : Type*) [starAlgebra A] [QuantumSet A] [CoalgebraS
 @[reducible, instance]
 noncomputable def QuantumSet.DeltaForm.mulCompComulIsInvertible {A : Type*} [starAlgebra A]
   [QuantumSet A] [CoalgebraStruct ℂ A] [FiniteDimensional ℂ A] [hA2 : QuantumSetDeltaForm A] :
-  Invertible (LinearMap.mul' ℂ A ∘ₗ Coalgebra.comul) :=
-by
+  Invertible (LinearMap.mul' ℂ A ∘ₗ Coalgebra.comul) := by
   apply IsUnit.invertible
   rw [LinearMap.isUnit_iff_ker_eq_bot, hA2.mul_comp_comul_eq, LinearMap.ker_smul,
     Module.End.one_eq_id, LinearMap.ker_id]

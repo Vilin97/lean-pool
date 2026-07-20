@@ -38,8 +38,7 @@ noncomputable def _root_.LO.FirstOrder.Derivation.completenessOfEncodable
   exact syntacticMainLemmaTop this
 
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
-lemma completenessOfEncodable {φ : SyntacticFormula L} :
-    T ⊨ φ → T ⊢! φ := by
+lemma completenessOfEncodable {φ : SyntacticFormula L} : T ⊨ φ → T ⊢! φ := by
   classical
   exact fun h ↦
     ⟨Derivation.completenessOfEncodable (T :=
@@ -52,8 +51,7 @@ instance : Complete T (Semantics.models (SmallStruc L) T) := by
 
 end «lp_section_1»
 
-theorem complete {φ : SyntacticFormula L} :
-    T ⊨ φ → T ⊢! φ := fun h ↦ by
+theorem complete {φ : SyntacticFormula L} : T ⊨ φ → T ⊢! φ := fun h ↦ by
   classical
   have : ∃ u : Finset (SyntacticFormula L), ↑u ⊆ insert (∼∀∀φ) T ∧ ¬Satisfiable (u : Theory L) := by
     simpa using compact.not.mp (consequence_iff_unsatisfiable.mp h)
@@ -79,14 +77,12 @@ theorem complete {φ : SyntacticFormula L} :
   have : Entailment.Inconsistent (insert (∼∀∀φ) T) := this.of_supset ssu
   exact Derivation.provable_iff_inconsistent.mpr this
 
-theorem complete_iff : T ⊨ φ ↔ T ⊢! φ :=
-  ⟨fun h ↦ complete h, sound!⟩
+theorem complete_iff : T ⊨ φ ↔ T ⊢! φ := ⟨fun h ↦ complete h, sound!⟩
 
 instance (T : Theory L) : Complete T (Semantics.models (SmallStruc L) T) := ⟨complete⟩
 
 lemma satisfiable_of_consistent' (h : Entailment.Consistent T) :
-    Semantics.Satisfiable (SmallStruc L) T :=
-  Complete.satisfiable_of_consistent h
+    Semantics.Satisfiable (SmallStruc L) T := Complete.satisfiable_of_consistent h
 
 lemma satisfiable_of_consistent (h : Entailment.Consistent T) :
     Semantics.Satisfiable (Struc.{max u w} L) T := by
@@ -99,8 +95,7 @@ lemma satisfiable_iff_consistent' :
   ⟨consistent_of_satidfiable, satisfiable_of_consistent.{u, w}⟩
 
 lemma satisfiable_iff_consistent :
-    Satisfiable T ↔ Entailment.Consistent T :=
-  satisfiable_iff_consistent'.{u, u}
+    Satisfiable T ↔ Entailment.Consistent T := satisfiable_iff_consistent'.{u, u}
 
 lemma satidfiable_iff_satisfiable :
     Semantics.Satisfiable (Struc.{max u w} L) T ↔ Satisfiable T := by

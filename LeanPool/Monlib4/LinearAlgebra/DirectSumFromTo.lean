@@ -25,16 +25,12 @@ def directSumFromTo {R : Type*} [Semiring R] {ι₁ : Type*} [DecidableEq ι₁]
 
 theorem directSumFromTo_apply_same {R : Type _} [Semiring R] {ι₁ : Type _} [DecidableEq ι₁]
     {M₁ : ι₁ → Type _} [∀ i₁ : ι₁, AddCommGroup (M₁ i₁)] [∀ i₁ : ι₁, Module R (M₁ i₁)] (i : ι₁) :
-    directSumFromTo i i = (1 : M₁ i →ₗ[R] M₁ i) :=
-  by
+    directSumFromTo i i = (1 : M₁ i →ₗ[R] M₁ i) := by
   ext1 x
-  simp only [directSumFromTo, LinearMap.comp_apply]
-  simp
+  simp [directSumFromTo]
 
 theorem directSumFromTo_apply_ne_same {R : Type _} [Semiring R] {ι₁ : Type _} [DecidableEq ι₁]
     {M₁ : ι₁ → Type _} [∀ i₁ : ι₁, AddCommGroup (M₁ i₁)] [∀ i₁ : ι₁, Module R (M₁ i₁)] {i j : ι₁}
-    (h : j ≠ i) : directSumFromTo i j = (0 : M₁ i →ₗ[R] M₁ j) :=
-  by
+    (h : j ≠ i) : directSumFromTo i j = (0 : M₁ i →ₗ[R] M₁ j) := by
   ext1 x
-  simp only [directSumFromTo, LinearMap.comp_apply]
-  simp [h]
+  simp [directSumFromTo, h]

@@ -81,8 +81,7 @@ def empiricalPMF {α : Type*} [Fintype α] [DecidableEq α]
     have hfib := Finset.card_eq_sum_card_fiberwise
       (f := rs) (s := univ) (t := univ)
       (fun t _ => mem_univ (rs t))
-    simp only [card_univ, Fintype.card_fin] at hfib
-    exact_mod_cast hfib.symm
+    simp_all
 
 /-! ## Boolean Game Payoff -/
 
@@ -101,11 +100,8 @@ lemma boolGamePayoff_le_one {R C : Type*} [Fintype R]
     (M : R → C → Bool) (p : FinitePMF R) (c : C) :
     boolGamePayoff M p c ≤ 1 := by
   calc boolGamePayoff M p c
-      ≤ ∑ r : R, p.prob r := Finset.sum_le_sum fun r _ => by
-        calc p.prob r * (if M r c then (1 : ℝ) else 0)
-            ≤ p.prob r * 1 := mul_le_mul_of_nonneg_left
-              (by split_ifs <;> norm_num) (p.prob_nonneg r)
-          _ = p.prob r := mul_one _
+      ≤ ∑ r : R, p.prob r := Finset.sum_le_sum fun r _ =>
+        mul_le_of_le_one_right (p.prob_nonneg r) (by split_ifs <;> norm_num)
     _ = 1 := p.prob_sum_one
 
 /-- Point mass payoff equals the game value at that row-column pair. -/
@@ -113,7 +109,6 @@ lemma boolGamePayoff_pointMass {R C : Type*} [Fintype R] [DecidableEq R]
     (M : R → C → Bool) (r₀ : R) (c : C) :
     boolGamePayoff M (pointMassPMF r₀) c = if M r₀ c then 1 else 0 := by
   simp only [boolGamePayoff, pointMassPMF]
-  -- Goal: Σ_r (if r = r₀ then 1 else 0) * (if M r c then 1 else 0) = if M r₀ c then 1 else 0
   conv_lhs =>
     arg 2; ext r
     rw [show (if r = r₀ then (1 : ℝ) else 0) * (if M r c then (1 : ℝ) else 0) =
@@ -148,23 +143,16 @@ lemma exists_covering_row {R C : Type*} [Fintype C]
   intro c₀
   obtain ⟨r, hr⟩ := hrow (pointMassPMF c₀)
   refine ⟨r, ?_⟩
-  -- hr says: v ≤ Σ_c δ_{c₀}(c) · M(r,c)
-  -- The point mass makes this: v ≤ M(r, c₀)
   by_contra h
-  -- M r c₀ ≠ true means M r c₀ = false
   have hf : M r c₀ = false := Bool.eq_false_iff.mpr h
-  -- Simplify hr: each term in the sum is 0
   have : (∑ c : C, (pointMassPMF c₀).prob c *
       (if M r c then (1 : ℝ) else 0)) ≤ 0 := by
     apply Finset.sum_nonpos
     intro c _
     simp only [pointMassPMF]
     split_ifs with h1 h2
-    · -- c = c₀ and M r c = true: impossible since M r c₀ = false
-      subst h1; rw [hf] at h2; exact absurd h2 Bool.false_ne_true
-    · simp
-    · simp
-    · simp
+    · subst h1; rw [hf] at h2; exact absurd h2 Bool.false_ne_true
+    all_goals simp
   linarith
 
 /-! ## Covering Minimax Theorem -/
@@ -454,7 +442,6 @@ private lemma mwuHitCount_eq_sum_indicator
       rw [mwuHitCount_eq_sum_indicator M η hη1 v hrow T c]
       rw [Fin.sum_univ_castSucc]
       simp only [Fin.snoc_last, Fin.snoc_castSucc]
-      try ring
 
 /-- Specialized empirical-payoff identity for ApproxMinimax
     (avoids cyclic import with FiniteVCApprox). -/
@@ -476,8 +463,7 @@ private lemma boolGamePayoff_empirical_eq_avg
       · congr 1; ext t; simp
       · intro r₁ _ r₂ _ hne
         simp only [Function.onFun, Finset.disjoint_filter]
-        intro t _ ht1 ht2
-        exact hne (ht1.symm.trans ht2)]
+        simp_all]
   congr 1
   ext r
   rw [Finset.sum_congr rfl (fun t ht => by

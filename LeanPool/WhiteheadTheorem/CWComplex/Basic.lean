@@ -15,7 +15,6 @@ import Mathlib.CategoryTheory.Functor.OfSequence
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.CWComplex.Basic`.
 -/
--- import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
 # CW-complexes
@@ -100,13 +99,11 @@ So the abbreviation is temporarily replaced with the full definition.) -/
 noncomputable abbrev pushoutInl (att : AttachCells.{u} n X X') :=
   Limits.pushout.inl att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
---  Limits.pushout.inl att.sigmaAttachMaps att.sigmaDiskBoundaryIncl
 
 /-- The bottom side of the pushout square -/
 noncomputable abbrev pushoutInr (att : AttachCells n X X') :=
   Limits.pushout.inr att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
--- Limits.pushout.inr att.sigmaAttachMaps att.sigmaDiskBoundaryIncl
 
 /-- The pushout square is a pushout. -/
 lemma pushout_isPushout (att : AttachCells n X X') :
@@ -127,12 +124,6 @@ $(m-1)$-skeleton) of a relative CW-complex -/
 noncomputable def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤ m) :
     X.sk n ⟶ X.sk m :=
   (Functor.ofSequence X.skInclSucc).map (homOfLE hnm)
-  -- Functor.OfSequence.map X.skInclSucc n m hnm
-
--- def sigmaAttachMaps (X : RelativeCWComplex.{u}) (n : ℕ) := (X.attachCells n).sigmaAttachMaps
-
--- def sigmaDiskBoundaryIncl (X : RelativeCWComplex.{u}) (n : ℕ) :=
---   (X.attachCells n).sigmaDiskBoundaryIncl
 
 /-- The topology on a relative CW-complex -/
 noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
@@ -170,8 +161,8 @@ noncomputable abbrev pushoutInr :=
   Limits.pushout.inr (Limits.Sigma.desc att.attachMaps) (Limits.Sigma.map fun _ ↦ f)
 
 lemma attachMaps_apply_eq_ι_desc : att.attachMaps α =
-    Limits.Sigma.ι (fun _ ↦ S) α ≫ Limits.Sigma.desc att.attachMaps := by
-  exact (Limits.Sigma.ι_desc _ _).symm
+    Limits.Sigma.ι (fun _ ↦ S) α ≫ Limits.Sigma.desc att.attachMaps :=
+  (Limits.Sigma.ι_desc _ _).symm
 
 /--
 ```

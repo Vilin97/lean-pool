@@ -27,63 +27,37 @@ namespace MState
 
 @[simp] theorem incPc_increments_pc : ∀ (ms:MState),
   ms.incPc = {ms with pc := ms.pc + 1} := by
-  intros ms
-  unfold MState.incPc
-  simp
+  simp [MState.incPc]
 
 theorem setReg_incPc_symm : ∀(ms:MState) (r:Registers),
   (ms.setRegister r).incPc = ms.incPc.setRegister r := by
-  intros ms r
-  unfold MState.setRegister MState.incPc
-  simp
+  simp [MState.setRegister, MState.incPc]
 
 theorem addReg_incPc_comm : ∀(ms:MState) (r v: UInt64),
   (ms.addRegister r v).incPc = ms.incPc.addRegister r v:= by
-  intros ms r
-  unfold MState.addRegister MState.incPc
-  simp
+  simp [MState.addRegister, MState.incPc]
 
 theorem addMem_incPc_comm : ∀(ms:MState) (r v: UInt64),
   (ms.addMemory r v).incPc = ms.incPc.addMemory r v:= by
-  intros ms r
-  unfold MState.addMemory MState.incPc
-  simp
+  simp [MState.addMemory, MState.incPc]
 
 theorem incPc_terminated : ∀(ms:MState),
   ms.incPc.terminated = ms.terminated := by
-  intros ms
-  unfold MState.incPc
-  simp
+  simp [MState.incPc]
 
 
 @[simp] theorem setPc_terminated : ∀(ms:MState) (p:UInt64),
   (ms.setPc p).terminated = ms.terminated := by
-  intros ms p
-  unfold MState.setPc
-  simp
+  simp [MState.setPc]
 
 theorem addReg_terminated : ∀(ms:MState) (r v: UInt64),
   (ms.addRegister r v).terminated = ms.terminated := by
-  intros ms r v
-  unfold MState.addRegister
-  simp
+  simp [MState.addRegister]
 
 theorem addMem_terminated : ∀(ms:MState) (r v: UInt64),
   (ms.addMemory r v).terminated = ms.terminated := by
-  intros ms r v
-  unfold MState.addMemory
-  simp
+  simp [MState.addMemory]
 
-
--- @[simp] theorem setReg_setMem_symm: ∀(ms:MState) (r:Registers) (m:Memory),
---  ((ms.setRegister r).setMemory m).incPc = (ms.setRegister r).incPc.setMemory m ∧
---   (ms.setRegister r).incPc.setMemory m = (ms.incPc.setRegister r).setMemory m ∧
---   (ms.incPc.setRegister r).setMemory m = (ms.incPc.setMemory m).setRegister r ∧
---   (ms.incPc.setMemory m).setRegister r = ((ms.setMemory m).setRegister r).incPc ∧
---   ((ms.setMemory m).setRegister r).incPc = (ms.setMemory m).incPc.setRegister r := by
---   intros ms r m
---   unfold MState.setMemory MState.setRegister MState.incPc
---   simp
 
 theorem addRegister_getRegister_neq :
   ∀(ms:MState) (r1 r2 v : UInt64),
@@ -92,8 +66,7 @@ theorem addRegister_getRegister_neq :
   := by
   intros ms r1 r2 v H
   unfold MState.addRegister MState.getRegisterAt
-  rw [t_update_neq]; simp at H
-  simp [H]
+  simp_all
 
 theorem addRegister_getRegister_eq :
   ∀(ms:MState) (r1 r2 v : UInt64),
@@ -109,50 +82,38 @@ theorem setPc_getRegister_indep :
   ∀(ms:MState) (i : UInt64) (r : UInt64),
   ((ms.setPc i).getRegisterAt r) = (ms.getRegisterAt r)
   := by
-  intros ms i r
-  unfold MState.setPc MState.getRegisterAt
-  simp
+  simp [MState.setPc, MState.getRegisterAt]
 
 theorem setPc_getRegisterAt_def_indep :
   ∀(ms:MState) (r l: UInt64),
   TMap.get ms.registers r = TMap.get (ms.setPc l).registers r
   := by
-  intros ms r l
-  unfold MState.setPc
-  simp
+  simp [MState.setPc]
 
 theorem setPc_getMemory_indep :
   ∀(ms:MState) (i : UInt64) (r : UInt64),
   ((ms.setPc i).getMemoryAt r) = (ms.getMemoryAt r)
   := by
-  intros ms i r
-  unfold MState.setPc MState.getMemoryAt
-  simp
+  simp [MState.setPc, MState.getMemoryAt]
 
 theorem setPc_getMemoryAt_def_indep :
   ∀(ms:MState) (m l: UInt64),
   TMap.get ms.memory m = TMap.get (ms.setPc l).memory m
   := by
-  intros ms i r
-  unfold MState.setPc
-  simp
+  simp [MState.setPc]
 
 
 @[simp] theorem set_pc :
   ∀(ms:MState) (i : UInt64) ,
   (ms.setPc i).pc = i
   := by
-  intros ms i
-  unfold MState.setPc
-  simp
+  simp [MState.setPc]
 
 theorem incPc_getRegister_indep :
   ∀(ms:MState) (r : UInt64),
   ((ms.incPc).getRegisterAt r) = (ms.getRegisterAt r)
   := by
-  intros ms r
-  unfold MState.incPc MState.getRegisterAt
-  simp
+  simp [MState.incPc, MState.getRegisterAt]
 
 
 @[simp] theorem jump_set_pc : ∀ (ms:MState) (s:String) (i:UInt64),
@@ -164,15 +125,11 @@ theorem incPc_getRegister_indep :
 
 @[simp] theorem currInstruction_unfold : ∀ (ms:MState),
   ms.currInstruction = ms.code.instructionMap.get (ms.pc) := by
-  intros ms
-  unfold MState.currInstruction
-  simp
+  simp [MState.currInstruction]
 
 theorem runNSteps_currInstruction : ∀ (ms:MState) (n:Nat),
   (ms.runNSteps n).currInstruction = (ms.runNSteps n).code.instructionMap.get ((ms.runNSteps n).pc)
   := by
-  intros ms n
-  unfold MState.runNSteps
   simp
 
 
@@ -181,16 +138,12 @@ theorem runNSteps_currInstruction : ∀ (ms:MState) (n:Nat),
 @[simp] theorem addRegister_unfold (ms : MState) : ∀ (i1 i2:UInt64),
   ms.addRegister i1 i2 = {ms with registers :=
     ((i1) ↦ i2; ms.registers)} := by
-  intros i1 i2
-  unfold MState.addRegister
-  simp
+  simp [MState.addRegister]
 
 @[simp] theorem addMemory_unfold (ms : MState) : ∀ (i1 i2:UInt64),
   ms.addMemory i1 i2 = {ms with memory :=
     ((i1) ↦ i2; ms.memory)} := by
-  intros i1 i2
-  unfold MState.addMemory
-  simp
+  simp [MState.addMemory]
 
 @[simp] theorem run_zero_steps (ms : MState) :
   ms.runNSteps 0 = ms := by
@@ -218,10 +171,7 @@ theorem run_n_run_one_comm : ∀ (ms:MState) (n:Nat),
   revert ms
   induction n
   case zero =>
-    intros ms
-    rw [MState.run_zero_steps]
-    unfold MState.runNSteps
-    rfl
+    simp_all
   case succ n' IHN' =>
     intros ms
     unfold MState.runNSteps
@@ -239,8 +189,7 @@ theorem run_N_comm : ∀ (ms:MState) (n m:Nat),
   revert ms
   induction n
   case zero =>
-    intro ms m
-    rw [MState.run_zero_steps, MState.run_zero_steps]
+    simp_all
   case succ n IHN' =>
     intros ms m
     rw [<- MState.run_n_run_one, <- MState.run_n_run_one]
@@ -253,9 +202,7 @@ theorem run_N_comm : ∀ (ms:MState) (n m:Nat),
   revert ms
   induction n
   case zero =>
-    intros m
-    rw [MState.run_zero_steps]
-    simp
+    simp_all
   case succ n' IHN' =>
     intros ms m
     rw [<- MState.run_n_run_one, Nat.add_assoc, <- IHN', Nat.add_comm,
@@ -263,27 +210,19 @@ theorem run_N_comm : ∀ (ms:MState) (n m:Nat),
 
 theorem add_reg_code_no_change : ∀ (ms:MState) (r v:UInt64),
   (ms.addRegister r v).code = ms.code := by
-  intros ms r v
-  unfold MState.addRegister
-  simp
+  simp [MState.addRegister]
 
 theorem add_mem_code_no_change : ∀ (ms:MState) (r v:UInt64),
   (ms.addMemory r v).code = ms.code := by
-  intros ms r v
-  unfold MState.addMemory
-  simp
+  simp [MState.addMemory]
 
 @[simp] theorem set_pc_code_no_change : ∀ (ms:MState) (v:UInt64),
   (ms.setPc v).code = ms.code := by
-  intros ms v
-  unfold MState.setPc
-  simp
+  simp [MState.setPc]
 
 @[simp] theorem set_termianted_code_no_change : ∀ (ms:MState) (v:Bool),
   (ms.setTerminated v).code = ms.code := by
-  intros ms v
-  unfold MState.setTerminated
-  simp
+  simp [MState.setTerminated]
 
 @[simp] theorem jump_register_indep : ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (s:String),
   ({ms with registers := r, memory := m, code := c}.jump s).pc
@@ -300,56 +239,42 @@ theorem get_register_only_register :
   {registers := r, memory := m, code := c, pc := p,
     terminated := terminated : MState}.getRegisterAt i =
   TMap.get r i := by
-  intros r m _ terminated i p
-  unfold MState.getRegisterAt
-  simp
+  simp [MState.getRegisterAt]
 
 theorem get_register_only_register' :
     ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
   {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getRegisterAt
     i =
   {ms with registers := r}.getRegisterAt i := by
-  intros ms r m _ terminated i p
-  unfold MState.getRegisterAt
-  simp
+  simp [MState.getRegisterAt]
 
 theorem get_register_only_memory :
     ∀ (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
   {registers := r, memory := m, code := c, pc := p,
     terminated := terminated : MState}.getMemoryAt i =
   TMap.get m i := by
-  intros r m _ terminated i p
-  unfold MState.getMemoryAt
-  simp
+  simp [MState.getMemoryAt]
 
 theorem get_register_only_memory' :
     ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
   {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getMemoryAt
     i =
   {ms with memory := m}.getMemoryAt i := by
-  intros ms r m _ terminated i p
-  unfold MState.getMemoryAt
-  simp
+  simp [MState.getMemoryAt]
 
 
 @[simp] theorem get_label_from_code : ∀(ms : MState) (s : String) (l : UInt64),
   (ms.getLabelAt s = l) = (PMap.get ms.code.labels s = l)
   := by
-  intros ms s l
-  unfold MState.getLabelAt
-  simp
+  simp [MState.getLabelAt]
 
 @[simp] theorem getRegisterAt_def : ∀ (ms : MState) (l : UInt64),
   ms.getRegisterAt l = TMap.get ms.registers l := by
-  intros ms l
-  unfold MState.getRegisterAt
-  simp
+  simp [MState.getRegisterAt]
 
 @[simp] theorem getMemoryAt_def : ∀ (ms : MState) (l : UInt64),
   ms.getMemoryAt l = TMap.get ms.memory l := by
-  intros ms l
-  unfold MState.getMemoryAt
-  simp
+  simp [MState.getMemoryAt]
 
 theorem TMap_register_le_zero_eq_zero : ∀(ms:MState) (l : UInt64),
     (TMap.get ms.registers l ≤ 0) = (TMap.get ms.registers l = 0) := by
@@ -416,7 +341,7 @@ theorem runNSteps_diff : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt64),
   (s.runNSteps n).pc ∉ L2
   := by
   intros s n L1 L2 HSub H
-  apply Set.notMem_subset (t := L1) <;> try assumption
+  exact Set.notMem_subset HSub H
 
 theorem runNSteps_pc_in_superset : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt64),
   L2 ⊆ L1 →
@@ -424,7 +349,7 @@ theorem runNSteps_pc_in_superset : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt6
   (s.runNSteps n).pc ∈ L1
   := by
   intros s n L1 L2 HSub H
-  apply Set.mem_of_subset_of_mem <;> try assumption
+  exact Set.mem_of_subset_of_mem HSub H
 
 theorem runNSteps_add : ∀ (s s' s'':MState) (n n' : Nat),
   s.runNSteps n = s' →
@@ -442,20 +367,8 @@ theorem runNSteps_pc_nin : ∀ (s s' s'': MState) (n n' : Nat) (L : Set UInt64),
   (s.runNSteps (n + n')).pc ∉ L
   := by
   intros s s' s'' n n' L HRun HRun' _ HNin'
-  rw [runNSteps_add s s' s'' n n', ← HRun']
-  repeat assumption
-
--- theorem runNSteps_min_1_pc_nin_extra_plus_one : ∀ (s s' : MState) (n n': Nat) (L : Set UInt64),
---   s.runNSteps n = s' →
---   s'.pc ∉ L →
---   0 < n' ∧ n' = n - 1 →
---   (s.runNSteps n').pc ∉ L →
---   (s.runNSteps n').runOneStep.pc ∉ L
---   := by
---   intros s s' n n' L HRun HPc HN' HRunLTNin
---   rcases HN' with ⟨HnGtZ, HnMinusOne⟩
-
-
+  rw [runNSteps_add s s' s'' n n' HRun HRun', ← HRun']
+  exact HNin'
 
 theorem runNSteps_pc_nin_extra_step : ∀ (s s' : MState) (n : Nat) (L : Set UInt64),
   s.runNSteps n = s' →
@@ -468,13 +381,23 @@ theorem runNSteps_pc_nin_extra_step : ∀ (s s' : MState) (n : Nat) (L : Set UIn
   rw [← HRun] at HPc
   cases Nat.lt_or_eq_of_le HN''LeN' with
   | inl hlt =>
-    apply HRunLTNin
-    constructor <;> assumption
+    simp_all
   | inr heq =>
-    rw [heq]
-    exact HPc
+    simp_all
 
 
+
+/-- For `m < n'' < m + m'` and `s.runNSteps m = s'`, the `n''`-step run of `s`
+equals an `n'`-step run of `s'` for some `0 < n' < m'`. -/
+private theorem exists_tail_run (s s' : MState) (m m' n'' : Nat)
+    (h_eq : s.runNSteps m = s') (h : m < n'') (hnlt : n'' < m + m') :
+    ∃ n', (0 < n' ∧ n' < m') ∧ s.runNSteps n'' = s'.runNSteps n' := by
+  refine ⟨n'' - m, ⟨Nat.sub_pos_of_lt h, ?_⟩, ?_⟩
+  · exact Nat.lt_sub_left _ _ _ h hnlt
+  · rw [← h_eq]
+    simp only [run_n_m_steps_comp]
+    rw [← Nat.add_sub_assoc, Nat.add_comm, Nat.add_sub_cancel]
+    apply Nat.le_of_lt h
 
 theorem run_n_plus_m_pc_not_in_set :
   ∀ (s s' : MState) (m m' : Nat) (set : Set UInt64),
@@ -485,30 +408,10 @@ theorem run_n_plus_m_pc_not_in_set :
   intros s s' m m' set h_eq hL_b hL_b' n'' hn
   rcases hn with ⟨hn0, hnlt⟩
   by_cases h : n'' ≤ m
-  · have hcond : 0 < n'' ∧ n'' ≤ m := ⟨hn0, h⟩
-    specialize hL_b n'' hcond
-    exact hL_b
-  -- m < n'' < m + m' → n'' = m + n' for some 0 < n' < m'
+  · exact hL_b n'' ⟨hn0, h⟩
   · push Not at h
-    -- n'' > m ⇒ ∃ n' such that n'' = m + n'
-    let n' := n'' - m
-    have h_pos : 0 < n' := by
-      apply Nat.sub_pos_of_lt h
-    have hn'_lt : n' < m' := by
-      -- n'' < m + m' ⇒ n' = n'' - m < m'
-      dsimp only [n']
-      apply Nat.lt_sub_left <;> try assumption
-    have h_run_eq : s.runNSteps n'' = s'.runNSteps n' := by
-      dsimp only [n']
-      rw [← h_eq]
-      simp only [run_n_m_steps_comp]
-      rw [← Nat.add_sub_assoc, Nat.add_comm, Nat.add_sub_cancel]
-      apply Nat.le_of_lt h
-    rw [h_run_eq]
-    have hn'_pre : 0 < n' ∧ n' < m' := by
-      constructor <;> try assumption
-    specialize hL_b' n' hn'_pre
-    exact hL_b'
+    obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_eq h hnlt
+    simp_all
 
 theorem run_n_plus_m_diff_set :
   ∀ (s s' : MState) (m m' : Nat) (L_b L_b' : Set UInt64),
@@ -520,32 +423,10 @@ theorem run_n_plus_m_diff_set :
   intros s s' m m' L_b L_b' h_eq hL_b hL_b' n'' hn
   rcases hn with ⟨hn0, hnlt⟩
   by_cases h : n'' ≤ m
-  · have hcond : 0 < n'' ∧ n'' ≤ m := ⟨hn0, h⟩
-    specialize hL_b n'' hcond
-    intro h_in
-    exact hL_b (Set.mem_of_mem_inter_left h_in)
-  -- m < n'' < m + m' → n'' = m + n' for some 0 < n' < m'
+  · simp_all
   · push Not at h
-    -- n'' > m ⇒ ∃ n' such that n'' = m + n'
-    let n' := n'' - m
-    have h_pos : 0 < n' := by
-      apply Nat.sub_pos_of_lt h
-    have hn'_lt : n' < m' := by
-      -- n'' < m + m' ⇒ n' = n'' - m < m'
-      dsimp only [n']
-      apply Nat.lt_sub_left <;> try assumption
-    have h_run_eq : s.runNSteps n'' = s'.runNSteps n' := by
-      dsimp only [n']
-      rw [← h_eq]
-      simp only [run_n_m_steps_comp]
-      rw [← Nat.add_sub_assoc, Nat.add_comm, Nat.add_sub_cancel]
-      apply Nat.le_of_lt h
-    rw [h_run_eq]
-    have hn'_pre : 0 < n' ∧ n' < m' := by
-      constructor <;> try assumption
-    specialize hL_b' n' hn'_pre
-    intro h_in
-    exact hL_b' (Set.mem_of_mem_inter_right h_in)
+    obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_eq h hnlt
+    simp_all
 
 
 theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' L_b' : Set UInt64),
@@ -573,49 +454,19 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
         rw [Set.mem_union]
         simp only [not_or]
         rw [Set.mem_union] at h_safe1
-        simp only [
-          not_or] at h_safe1
+        simp only [not_or] at h_safe1
         rcases h_safe1 with ⟨_, h_safe1_r⟩
-        constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b)
-          repeat assumption
-        · exact h_safe1_r
-      intros h_in
-      exact h_safe1_NinLw' (Set.mem_of_mem_inter_left h_in)
+        exact ⟨Set.notMem_subset h_Lw'SubL_b h_safe1_r, h_safe1_r⟩
+      simp_all
     | inr heq =>
+      have h_pc_not_b' : (s.runNSteps m).pc ∉ L_b := h_run1 ▸ h_pc_not_b
       have h_safe1_m: (s.runNSteps n'').pc ∉ L_w' ∪ L_b := by
-        rw [heq]
-        rw [Set.mem_union]
-        simp only [not_or]
-        constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps m).pc) (s := L_w') (t := L_b)
-          · exact h_Lw'SubL_b
-          · rw [h_run1]
-            exact h_pc_not_b
-        · rw [h_run1]
-          exact h_pc_not_b
-      intros h_in
-      exact h_safe1_m (Set.mem_of_mem_inter_left h_in)
+        rw [heq, Set.mem_union]
+        simpa only [not_or]
+          using ⟨Set.notMem_subset h_Lw'SubL_b h_pc_not_b', h_pc_not_b'⟩
+      simp_all
   · push Not at h
-    -- n'' > m ⇒ ∃ n' such that n'' = m + n'
-    let n' := n'' - m
-    have h_pos : 0 < n' := by
-      apply Nat.sub_pos_of_lt h
-    have hn'_lt : n' < m' := by
-      -- n'' < m + m' ⇒ n' = n'' - m < m'
-      dsimp only [n']
-      apply Nat.lt_sub_left <;> try assumption
-    have h_run_eq : s.runNSteps n'' = s'.runNSteps n' := by
-      dsimp only [n']
-      rw [← h_run1]
-      simp only [run_n_m_steps_comp]
-      rw [← Nat.add_sub_assoc, Nat.add_comm, Nat.add_sub_cancel]
-      apply Nat.le_of_lt h
-    rw [h_run_eq]
-    have hn'_pre : 0 < n' ∧ n' < m' := by
-      constructor <;> try assumption
-    specialize h_safe2 n' hn'_pre
-    intro h_in
-    exact h_safe2 (Set.mem_of_mem_inter_right h_in)
+    obtain ⟨n', hn'_pre, h_run_eq⟩ := exists_tail_run s s' m m' n'' h_run1 h h_lt
+    simp_all
 
 end MState

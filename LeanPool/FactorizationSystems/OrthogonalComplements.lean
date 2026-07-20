@@ -116,26 +116,17 @@ def sourceLimitConeArrowLimitCone {J : Type u} [Category.{v} J] (f : J ⥤ Arrow
             · have hcomm :
                   (m ≫ Cf.cone.pt.hom) ≫ (Cf.cone.π.app j).right =
                     (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom := by
-                calc
-                  (m ≫ Cf.cone.pt.hom) ≫ (Cf.cone.π.app j).right =
-                      m ≫ (Cf.cone.pt.hom ≫ (Cf.cone.π.app j).right) := by
-                    rw [Category.assoc]
-                  _ = m ≫ ((Cf.cone.π.app j).left ≫ (f.obj j).hom) := by
-                    exact congrArg (fun h => m ≫ h) (Cf.cone.π.app j).w.symm
-                  _ = (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom := by
-                    rw [← Category.assoc]
+                rw [Category.assoc, Category.assoc]
+                exact congrArg (m ≫ ·) (Cf.cone.π.app j).w.symm
               have hp :
                   (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom =
-                    s.π.app j ≫ (f.obj j).hom := by
-                exact congrArg (fun h => h ≫ (f.obj j).hom) (p j)
+                    s.π.app j ≫ (f.obj j).hom :=
+                congrArg (· ≫ (f.obj j).hom) (p j)
               change (m_triv ≫ Cf.cone.π.app j).right = s.π.app j ≫ (f.obj j).hom
               simp only [Arrow.comp_right]
               exact hcomm.trans hp
         have uniq' := Cf.isLimit.uniq (coneSourceTrivConeArrow f s) m_triv p'
-        calc
-          m = m_triv.left := by rfl
-          _ = (Cf.isLimit.lift (coneSourceTrivConeArrow f s)).left := by
-            exact congrArg (fun h : Arrow.mk (𝟙 s.pt) ⟶ Cf.cone.pt => h.left) uniq'
+        exact congrArg (fun h : Arrow.mk (𝟙 s.pt) ⟶ Cf.cone.pt => h.left) uniq'
     }
   }
 
@@ -208,8 +199,7 @@ def targetLimitConeArrowLimitCone {J : Type u} [Category.{v} J]
         calc
           m = (mapTrivMapArrowTarget Cf.cone.pt s.pt m).right := by rfl
           _ = (Cf.isLimit.lift (coneTargetTrivConeArrow f s)).right := by
-            exact congrArg (fun h : Arrow.mk (Limits.initial.to s.pt) ⟶ Cf.cone.pt => h.right)
-              uniq'}
+            simp_all}
   }
 
 /- We now proceed to prove that the right orthogonal complement of a class of morphisms is closed
@@ -241,19 +231,9 @@ def squareCompletionIsClosedUnderLimitsROrtComplement
   (i : J) → squareCompletion m (f.obj i).hom := fun i => {
     top := sq_lim.top ≫ (s.cone.π.app i).left
     bot := sq_lim.bot ≫ (s.cone.π.app i).right
-    comm := by calc
-      m ≫ sq_lim.bot ≫ (s.cone.π.app i).right = (m ≫ sq_lim.bot) ≫ (s.cone.π.app i).right
-        := by simp
-    _ =  (sq_lim.top ≫ s.cone.pt.hom) ≫ (s.cone.π.app i).right := by rw [sq_lim.comm]
-    _ = (sq_lim.top ≫ (s.cone.π.app i).left) ≫ (f.obj i).hom := by
-      calc
-        (sq_lim.top ≫ s.cone.pt.hom) ≫ (s.cone.π.app i).right =
-            sq_lim.top ≫ (s.cone.pt.hom ≫ (s.cone.π.app i).right) := by
-          rw [Category.assoc]
-        _ = sq_lim.top ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-          exact congrArg (fun h => sq_lim.top ≫ h) (s.cone.π.app i).w.symm
-        _ = (sq_lim.top ≫ (s.cone.π.app i).left) ≫ (f.obj i).hom := by
-          rw [← Category.assoc]
+    comm := by
+      rw [reassoc_of% sq_lim.comm, Category.assoc]
+      exact congrArg (sq_lim.top ≫ ·) (s.cone.π.app i).w.symm
   }
 
 /- Given a square (*) as above, we construct a cone over (U ∘ f) with apex B. -/
@@ -276,6 +256,7 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
         let m_ort_fj : orthogonal m (f.obj j).hom := homOrthogonalImpliesOrthogonal ((p j) m Wm)
         let sq_j := squareCompletionIsClosedUnderLimitsROrtComplement f s m sq_lim j
         simp only [Functor.comp_map, leftFunc_map]
+        have nat_eq : s.cone.π.app i ≫ f.map α = s.cone.π.app j := s.cone.w α
         let d : diagonalFiller sq_j := {
           map := (m_ort_fj.diagonal sq_j).map
           comm_top := (m_ort_fj.diagonal sq_j).comm_top
@@ -284,26 +265,17 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
           map := (m_ort_fi.diagonal sq_i).map ≫ (f.map α).left
           comm_top := by calc
             m ≫ (m_ort_fi.diagonal sq_i).map ≫ (f.map α).left =
-              (m ≫ (m_ort_fi.diagonal sq_i).map) ≫ (f.map α).left := by simp
-            _ = (sq_lim.top ≫ (s.cone.π.app i).left) ≫ (f.map α).left :=
-              by rw [(m_ort_fi.diagonal sq_i).comm_top]
+              (sq_lim.top ≫ (s.cone.π.app i).left) ≫ (f.map α).left :=
+              by rw [reassoc_of% (m_ort_fi.diagonal sq_i).comm_top]
             _ = sq_lim.top ≫ ((s.cone.π.app i).left ≫ (f.map α).left) := by simp
             _ = sq_lim.top ≫ (s.cone.π.app j).left := by
-              have naturality := s.cone.π.naturality α
-              have naturality' : s.cone.π.app i ≫ f.map α = s.cone.π.app j := by
-                have hid :
-                    ((Functor.const J).obj s.cone.pt).map α ≫ s.cone.π.app j =
-                      s.cone.π.app j :=
-                      Category.id_comp (s.cone.π.app j)
-                exact naturality.symm.trans hid
               calc
                 sq_lim.top ≫ (leftFunc.map (s.cone.π.app i) ≫ leftFunc.map (f.map α)) =
                   sq_lim.top ≫ leftFunc.map (s.cone.π.app i ≫ f.map α) := by
                     exact congrArg (fun h => sq_lim.top ≫ h)
                       (leftFunc.map_comp (s.cone.π.app i) (f.map α)).symm
                 _ = sq_lim.top ≫ leftFunc.map (s.cone.π.app j) := by
-                  exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.top ≫ leftFunc.map h)
-                    naturality'
+                  simp_all
             _ = sq_j.top := by rfl
           comm_bot := by calc
             ((m_ort_fi.diagonal sq_i).map ≫ (f.map α).left) ≫ (f.obj j).hom =
@@ -312,21 +284,13 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
               by rw [(m_ort_fi.diagonal sq_i).comm_bot]
             _ = sq_lim.bot ≫ ((s.cone.π.app i).right ≫ (f.map α).right) := by simp
             _ = sq_lim.bot ≫ (s.cone.π.app j).right := by
-              have naturality := s.cone.π.naturality α
-              have naturality' : s.cone.π.app i ≫ f.map α = s.cone.π.app j := by
-                have hid :
-                    ((Functor.const J).obj s.cone.pt).map α ≫ s.cone.π.app j =
-                      s.cone.π.app j :=
-                      Category.id_comp (s.cone.π.app j)
-                exact naturality.symm.trans hid
               calc
                 sq_lim.bot ≫ (rightFunc.map (s.cone.π.app i) ≫ rightFunc.map (f.map α)) =
                   sq_lim.bot ≫ rightFunc.map (s.cone.π.app i ≫ f.map α) := by
                     exact congrArg (fun h => sq_lim.bot ≫ h)
                       (rightFunc.map_comp (s.cone.π.app i) (f.map α)).symm
                 _ = sq_lim.bot ≫ rightFunc.map (s.cone.π.app j) := by
-                  exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.bot ≫ rightFunc.map h)
-                    naturality'
+                  simp_all
             _ = sq_j.bot := by rfl}
         have hunique : d.map = d'.map := (m_ort_fj.diagonal_unique sq_j) d d'
         calc
@@ -395,12 +359,8 @@ lemma diagonal_comm_bot_limit_is_closed_under_limits_r_ort_complement (W : Morph
   have hleft :
       (d ≫ s.cone.pt.hom) ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i =
         d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-    calc
-      (d ≫ s.cone.pt.hom) ≫ (s.cone.π.app i).right =
-          d ≫ (s.cone.pt.hom ≫ (s.cone.π.app i).right) := by
-        rw [Category.assoc]
-      _ = d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-        exact congrArg (fun h => d ≫ h) (s.cone.π.app i).w.symm
+    rw [Category.assoc]
+    exact congrArg (d ≫ ·) (s.cone.π.app i).w.symm
   rw [hleft]
   change d ≫ ((sourceLimitConeArrowLimitCone f s).cone.π.app i ≫ (f.obj i).hom) =
     sq_lim.bot ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i
@@ -446,25 +406,14 @@ def diagonalPostcompIsDiagonal {J : Type u}
   {A B : C} (m : A ⟶ B) (S : squareCompletion m s.cone.pt.hom) (d : diagonalFiller S) (i : J) :
   diagonalFiller (squareCompletionIsClosedUnderLimitsROrtComplement f s m S i) := {
     map := d.map ≫ (s.cone.π.app i).left
-    comm_top := by
-      calc
-        m ≫ d.map ≫ (s.cone.π.app i).left = (m ≫ d.map) ≫ (s.cone.π.app i).left := by
-          simp
-        _ = S.top ≫ (s.cone.π.app i).left := by rw [d.comm_top]
-        _ = (squareCompletionIsClosedUnderLimitsROrtComplement f s m S i).top := by
-          rfl
+    comm_top := by rw [reassoc_of% d.comm_top]
     comm_bot := by
       calc
         (d.map ≫ (s.cone.π.app i).left) ≫ (f.obj i).hom =
-            d.map ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-          simp
+            d.map ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by simp
         _ = d.map ≫ (s.cone.pt.hom ≫ (s.cone.π.app i).right) := by
-          exact congrArg (fun h => d.map ≫ h) (s.cone.π.app i).w
-        _ = (d.map ≫ s.cone.pt.hom) ≫ (s.cone.π.app i).right := by
-          simp
-        _ = S.bot ≫ (s.cone.π.app i).right := by rw [d.comm_bot]
-        _ = (squareCompletionIsClosedUnderLimitsROrtComplement f s m S i).bot := by
-          rfl
+          exact congrArg (d.map ≫ ·) (s.cone.π.app i).w
+        _ = S.bot ≫ (s.cone.π.app i).right := by rw [reassoc_of% d.comm_bot]
   }
 
 lemma diagonal_unique_limit_is_closed_under_limits_r_ort_complement (W : MorphismProperty C)
@@ -517,13 +466,7 @@ lemma is_closed_under_comp_r_ort_complement (W : MorphismProperty C) {X Y Z : C}
       exact {
         map := d'.map
         comm_top := d'.comm_top
-        comm_bot := by
-          let comm_bot' := d'.comm_bot
-          let comm_bot'' := d.comm_bot
-          calc
-            d'.map ≫ r ≫ r' = (d'.map ≫ r) ≫ r' := by simp
-            _ = d.map ≫ r' := by rw [comm_bot']
-            _ = b := comm_bot''}
+        comm_bot := by rw [reassoc_of% d'.comm_bot, d.comm_bot]}
     diagonal_unique := fun S d d' => by
       let a := S.top
       let b := S.bot
@@ -533,25 +476,18 @@ lemma is_closed_under_comp_r_ort_complement (W : MorphismProperty C) {X Y Z : C}
         comm := by have comm' := S.comm; aesop_cat}
       let D : diagonalFiller S' := {
         map := d.map ≫ r
-        comm_top := by calc
-          l ≫ d.map ≫ r = S.top ≫ r := by rw [←d.comm_top]; simp
-          _ = a ≫ r := by rfl
+        comm_top := by rw [reassoc_of% d.comm_top]
         comm_bot := by have comm_bot' := d.comm_bot; aesop_cat}
       let D' : diagonalFiller S' := {
         map := d'.map ≫ r
-        comm_top := by calc
-          l ≫ d'.map ≫ r = S.top ≫ r := by rw [←d'.comm_top]; simp
-          _ = a ≫ r := by rfl
+        comm_top := by rw [reassoc_of% d'.comm_top]
         comm_bot := by have comm_bot' := d'.comm_bot; aesop_cat}
       let eq : d.map ≫ r = d'.map ≫ r :=
         (homOrthogonalImpliesOrthogonal (hr' l hl)).diagonal_unique S' D D'
       let S'' : l □ r := {
         top := a
         bot := d.map ≫ r
-        comm := by calc
-          l ≫ d.map ≫ r = (l ≫ d.map) ≫ r := by simp
-          _ = S'.top := by rw [d.comm_top]
-          _ = a ≫ r := by rfl}
+        comm := by rw [reassoc_of% d.comm_top]}
       let Δ : diagonalFiller S'' := {
         map := d.map
         comm_top := d.comm_top
@@ -606,9 +542,7 @@ lemma is_closed_under_comp_l_ort_complement (W : MorphismProperty C) {D E F : C}
       let S'' : l' □ r := {
         top := l' ≫ d.map
         bot := b
-        comm := by calc
-          l' ≫ b = l' ≫ d.map ≫ r := by rw [d.comm_bot]
-          _ = (l' ≫ d.map) ≫ r := by simp }
+        comm := by rw [Category.assoc, d.comm_bot] }
       let Δ : diagonalFiller S'' := {
         map := d.map
         comm_top := by rfl
@@ -632,10 +566,7 @@ lemma left_cancellation_r_ort_complement (W : MorphismProperty C) {X Y Z : C} (r
       let S' : l □ r ≫ r' := {
         top := a
         bot := b ≫ r'
-        comm := by calc
-          l ≫ b ≫ r' = (l ≫ b) ≫ r' := by simp
-          _ = (a ≫ r) ≫ r' := by rw [S.comm]
-          _ = a ≫ r ≫ r' := by simp}
+        comm := by rw [reassoc_of% S.comm]}
       let d := (homOrthogonalImpliesOrthogonal (hr'r l hl)).diagonal S'
       exact {
         map := d.map
@@ -647,10 +578,7 @@ lemma left_cancellation_r_ort_complement (W : MorphismProperty C) {X Y Z : C} (r
             comm := by have comm' := S'.comm; aesop_cat}
           let D : diagonalFiller S'' := {
             map := d.map ≫ r
-            comm_top := by calc
-              l ≫ d.map ≫ r = (l ≫ d.map) ≫ r := by simp
-              _ = S'.top ≫ r := by rw [d.comm_top]
-              _ = S''.top := by rfl
+            comm_top := by rw [reassoc_of% d.comm_top]
             comm_bot := by have comm_bot' := d.comm_bot; aesop_cat}
           let D' : diagonalFiller S'' := {
             map := S.bot
@@ -663,22 +591,15 @@ lemma left_cancellation_r_ort_complement (W : MorphismProperty C) {X Y Z : C} (r
       let S' : l □ r ≫ r' := {
         top := a
         bot := b ≫ r'
-        comm := by calc
-          l ≫ b ≫ r' = (l ≫ b) ≫ r' := by simp
-          _ = (a ≫ r) ≫ r' := by rw [S.comm]
-          _ = a ≫ r ≫ r' := by simp}
+        comm := by rw [reassoc_of% S.comm]}
       let Δ : diagonalFiller S' := {
         map := d.map
         comm_top := d.comm_top
-        comm_bot := by calc
-          d.map ≫ r ≫ r' = (d.map ≫ r) ≫ r' := by simp
-          _ = b ≫ r' := by rw [d.comm_bot]}
+        comm_bot := by rw [reassoc_of% d.comm_bot]}
       let Δ' : diagonalFiller S' := {
         map := d'.map
         comm_top := d'.comm_top
-        comm_bot := by calc
-          d'.map ≫ r ≫ r' = (d'.map ≫ r) ≫ r' := by simp
-          _ = b ≫ r' := by rw [d'.comm_bot]}
+        comm_bot := by rw [reassoc_of% d'.comm_bot]}
       exact (homOrthogonalImpliesOrthogonal (hr'r l hl)).diagonal_unique S' Δ Δ'
   }
 
@@ -707,16 +628,8 @@ lemma base_change_r_ort_complement [Limits.HasPullbacks C] (W : MorphismProperty
         map := Limits.pullback.lift d.map b comm'
         comm_top := by
           apply Limits.pullback.hom_ext
-          · calc
-            (l ≫ Limits.pullback.lift d.map b comm') ≫ Limits.pullback.fst r' f =
-              l ≫ (Limits.pullback.lift d.map b comm' ≫ Limits.pullback.fst r' f) := by simp
-            _ = l ≫ d.map := by rw [Limits.pullback.lift_fst]
-            _ = a ≫ Limits.pullback.fst r' f := d.comm_top
-          · calc
-            (l ≫ Limits.pullback.lift d.map b comm') ≫ Limits.pullback.snd r' f =
-              l ≫ (Limits.pullback.lift d.map b comm' ≫ Limits.pullback.snd r' f) := by simp
-            _ = l ≫ b := by rw [Limits.pullback.lift_snd]
-            _ = a ≫ r := S.comm
+          · rw [Category.assoc, Limits.pullback.lift_fst, d.comm_top]
+          · rw [Category.assoc, Limits.pullback.lift_snd, S.comm]
         comm_bot := by apply Limits.pullback.lift_snd}
     diagonal_unique := fun S d d' => by
       apply Limits.pullback.hom_ext
@@ -732,32 +645,16 @@ lemma base_change_r_ort_complement [Limits.HasPullbacks C] (W : MorphismProperty
             _ = (a ≫ Limits.pullback.fst r' f) ≫ r' := by simp}
         let D : diagonalFiller S' := {
           map := d.map ≫ Limits.pullback.fst r' f
-          comm_top := by calc
-            l ≫ d.map ≫ Limits.pullback.fst r' f = (l ≫ d.map) ≫ Limits.pullback.fst r' f :=
-              by simp
-            _ = a ≫ Limits.pullback.fst r' f := by rw [d.comm_top]
-          comm_bot := by calc
-            (d.map ≫ Limits.pullback.fst r' f) ≫ r' = d.map ≫ (Limits.pullback.fst r' f ≫ r') :=
-              by simp
-            _ = d.map ≫ (r ≫ f) := by rw [Limits.pullback.condition]
-            _ = (d.map ≫ r) ≫ f := by simp
-            _ = b ≫ f := by rw [d.comm_bot]}
+          comm_top := by rw [reassoc_of% d.comm_top]
+          comm_bot := by
+            rw [Category.assoc, Limits.pullback.condition, reassoc_of% d.comm_bot]}
         let D' : diagonalFiller S' := {
           map := d'.map ≫ Limits.pullback.fst r' f
-          comm_top := by calc
-            l ≫ d'.map ≫ Limits.pullback.fst r' f = (l ≫ d'.map) ≫ Limits.pullback.fst r' f :=
-              by simp
-            _ = a ≫ Limits.pullback.fst r' f := by rw [d'.comm_top]
-          comm_bot := by calc
-            (d'.map ≫ Limits.pullback.fst r' f) ≫ r' = d'.map ≫ (Limits.pullback.fst r' f ≫ r')
-              := by simp
-            _ = d'.map ≫ (r ≫ f) := by rw [Limits.pullback.condition]
-            _ = (d'.map ≫ r) ≫ f := by simp
-            _ = b ≫ f := by rw [d'.comm_bot]}
+          comm_top := by rw [reassoc_of% d'.comm_top]
+          comm_bot := by
+            rw [Category.assoc, Limits.pullback.condition, reassoc_of% d'.comm_bot]}
         exact (homOrthogonalImpliesOrthogonal (hr' l hl)).diagonal_unique S' D D'
-      · calc
-        d.map ≫ Limits.pullback.snd r' f = S.bot := d.comm_bot
-        _ = d'.map ≫ Limits.pullback.snd r' f := by rw [←d'.comm_bot]}
+      · rw [d.comm_bot, ← d'.comm_bot]}
 
 /- The left orthogonal complement of any class of maps contains isomorphisms -/
 lemma contains_isos_left_ort_complement (R : MorphismProperty C) :
@@ -768,16 +665,12 @@ lemma contains_isos_left_ort_complement (R : MorphismProperty C) :
     diagonal := fun S => by exact {
       map := f.inv ≫ S.top
       comm_top := by have c := f.hom_inv_id; aesop_cat
-      comm_bot := by calc
-        (f.inv ≫ S.top) ≫ g = f.inv ≫ S.top ≫ g := by simp
-        _ = f.inv ≫ f.hom ≫ S.bot := by rw [ S.comm ]
-        _ = (f.inv ≫ f.hom) ≫ S.bot := by simp
-        _ = S.bot := by rw [ f.inv_hom_id ]; simp }
-    diagonal_unique := fun S d d' => by calc
-      d.map = f.inv ≫ f.hom ≫ d.map := by have c := f.inv_hom_id; aesop_cat
-    _ = f.inv ≫ S.top := by rw [ d.comm_top ]
-    _ = f.inv ≫ f.hom ≫ d'.map := by rw [ d'.comm_top ]
-    _ = d'.map := by have c := f.inv_hom_id; aesop_cat }
+      comm_bot := by
+        rw [Category.assoc, ← S.comm]
+        simp }
+    diagonal_unique := fun S d d' => by
+      have h := d.comm_top.trans d'.comm_top.symm
+      simpa using congrArg (f.inv ≫ ·) h }
 
 /- The right orthogonal complement of any class of maps contains isomorphisms -/
 lemma contains_isos_right_ort_complement (L : MorphismProperty C) :
@@ -788,17 +681,14 @@ lemma contains_isos_right_ort_complement (L : MorphismProperty C) :
       diagonal := fun S => by
         exact {
           map := S.bot ≫ g.inv
-          comm_top := by calc
-            f ≫ S.bot ≫ g.inv = (f ≫ S.bot) ≫ g.inv := by simp
-            _ = (S.top ≫ g.hom) ≫ g.inv := by rw [ S.comm ]
-            _ = S.top := by have c := g.hom_inv_id; aesop_cat
+          comm_top := by
+            rw [← Category.assoc, S.comm]
+            simp
           comm_bot := by have c := g.inv_hom_id; aesop_cat
         }
-      diagonal_unique := fun S d d' => by calc
-        d.map = (d.map ≫ g.hom) ≫ g.inv := by have c := g.hom_inv_id; aesop_cat
-        _ = S.bot ≫ g.inv := by rw [ d.comm_bot ]
-        _ = (d'.map ≫ g.hom) ≫ g.inv := by rw [ d'.comm_bot ]
-        _ = d'.map := by have c := g.hom_inv_id; aesop_cat }
+      diagonal_unique := fun S d d' => by
+        have h := d.comm_bot.trans d'.comm_bot.symm
+        simpa using congrArg (· ≫ g.inv) h }
 
 end Arrow
 

@@ -34,13 +34,8 @@ theorem pentagonal_nonneg (k : ℤ) : 0 ≤ k * (3 * k - 1) / 2 := by
 
 theorem two_pentagonal_inj {x y : ℤ} (h : x * (3 * x - 1) = y * (3 * y - 1)) : x = y := by
   simp_rw [mul_sub_one] at h
-  rw [sub_eq_sub_iff_sub_eq_sub] at h
-  rw [mul_left_comm x, mul_left_comm y] at h
-  rw [← mul_sub] at h
-  rw [mul_self_sub_mul_self] at h
-  rw [← mul_assoc] at h
-  rw [← sub_eq_zero, ← sub_one_mul] at h
-  rw [mul_eq_zero] at h
+  rw [sub_eq_sub_iff_sub_eq_sub, mul_left_comm x, mul_left_comm y, ← mul_sub,
+    mul_self_sub_mul_self, ← mul_assoc, ← sub_eq_zero, ← sub_one_mul, mul_eq_zero] at h
   obtain h | h := h
   · obtain h' := Int.eq_of_mul_eq_one <| eq_of_sub_eq_zero h
     simp [← h'] at h
@@ -115,8 +110,7 @@ theorem mem_kSet_iff {n k : ℤ} :
     _ ↔ (-k) * 6 ≤ (1 + 24 * n).sqrt - 1 ∧ k * 6 ≤ (1 + 24 * n).sqrt + 1 := by
       grind
     _ ↔ -k ≤ ((1 + 24 * n).sqrt - 1) / 6 ∧ k ≤ ((1 + 24 * n).sqrt + 1) / 6 := by
-      rw [Int.le_ediv_iff_mul_le (by simp)]
-      rw [Int.le_ediv_iff_mul_le (by simp)]
+      rw [Int.le_ediv_iff_mul_le (by simp), Int.le_ediv_iff_mul_le (by simp)]
     _ ↔ - (((1 + 24 * n).sqrt - 1) / 6) ≤ k ∧ k ≤ ((1 + 24 * n).sqrt + 1) / 6 := by
       grind
     _ ↔ k ∈ kSet n := by

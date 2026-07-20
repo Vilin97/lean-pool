@@ -75,8 +75,7 @@ lemma condKernel_compProd_apply' (κ : Kernel T S) [IsFiniteKernel κ]
     Kernel.compProd_apply, lintegral_eq_single _ x.2, lintegral_eq_single _ x.2]
   · simp [Set.preimage_preimage, mul_comm]
     simp [← mul_assoc, ENNReal.inv_mul_cancel hx (measure_ne_top (κ x.1) {x.2})]
-  · intro b hb
-    rw [Set.eq_empty_of_forall_notMem (s := _ ⁻¹' _) (by simp [hb]), measure_empty]
+  · simp_all
   · intro b hb
     simp [hb, Set.preimage_preimage]
   · measurability
@@ -112,10 +111,7 @@ lemma disintegration (κ : Kernel T (S × U)) [IsFiniteKernel κ] :
   · intro a a' haa'
     rw [Function.onFun, Set.disjoint_iff]
     intro su
-    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq,
-      Set.mem_empty_iff_false, and_imp]
-    intro h1 _ h1' _
-    exact haa' (h1.symm.trans h1')
+    simp_all
   · refine fun _ ↦ (measurable_fst (.singleton _)).inter ?_
     exact measurable_prodMk_left.comp measurable_snd hs
 
@@ -136,8 +132,7 @@ lemma condKernel_compProd_ae_eq
   rw [← Prod.eta x, ← Set.singleton_prod_singleton, Set.mk_preimage_prod_right_eq_if] at hy
   simp only [ne_eq, Set.mem_singleton_iff] at hy
   by_cases hyx1 : y = x.1
-  · simp only [hyx1, ite_true] at hy
-    exact hy.2
+  · simp_all
   · simp [hyx1] at hy
 
 lemma compProd_swapLeft_prodMkLeft {α β γ : Type*} {mα : MeasurableSpace α} {mβ :
@@ -207,8 +202,7 @@ lemma condKernel_map_prodMk_left {V : Type*} [Nonempty V] [MeasurableSpace V]
   simp only [Set.singleton_prod, Set.mem_preimage, Set.mem_image, Prod.mk.injEq,
     exists_eq_right_right, Set.mem_setOf_eq]
   refine ⟨fun h ↦ ⟨p.2, ?_, ?_⟩, fun ⟨p2, h_mem, h_eq⟩ ↦ ?_⟩
-  · rw [h.2, Prod.mk.eta]
-    exact h.1
+  · simp_all
   · rw [h.2, Prod.mk.eta]
   · rw [← h_eq]
     simp [h_mem]
@@ -337,9 +331,7 @@ lemma _root_.ProbabilityTheory.condKernel_condDistrib_ae_eq [Nonempty S]
   simp_rw [this]
   have : (fun a ↦ (X a, Y a)) ⁻¹' ({x.2} ×ˢ A) = X ⁻¹' {x.2} ∩ Y ⁻¹' A := by
     ext y;
-    simp only [Set.singleton_prod, Set.mem_preimage, Set.mem_image, Prod.mk.injEq,
-      exists_eq_right_right, Set.mem_inter_iff, Set.mem_singleton_iff]
-    tauto
+    simp_all
   simp_rw [this]
   have : (fun a ↦ (Z a, X a)) ⁻¹' {x} = Z ⁻¹' {x.1} ∩ X ⁻¹' {x.2} := by
     ext y
@@ -406,9 +398,7 @@ lemma _root_.ProbabilityTheory.condDistrib_unit_right [Nonempty S]
     condDistrib X (fun _ ↦ ()) μ = Kernel.const Unit (μ.map X) := by
   ext x s hs
   rw [condDistrib_apply' hX measurable_const _ _ _ hs]
-  · simp only [Set.mem_singleton_iff, Set.preimage_const_of_mem, measure_univ, inv_one,
-      Set.univ_inter, one_mul]
-    rw [Kernel.const_apply, Measure.map_apply hX hs]
+  · simp_all
   · simp
 
 lemma _root_.ProbabilityTheory.map_compProd_condDistrib
@@ -438,9 +428,7 @@ lemma _root_.ProbabilityTheory.map_compProd_condDistrib
     refine Disjoint.mono Set.inter_subset_left Set.inter_subset_left ?_
     rw [Set.disjoint_iff]
     intro z
-    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false,
-      and_imp]
-    exact fun hi hj ↦ hij (hi.symm.trans hj)
+    simp_all
   intro u
   exact (hZ (.singleton _)).inter (measurable_const.prodMk hX hA)
 
@@ -498,9 +486,7 @@ lemma _root_.ProbabilityTheory.condDistrib_eq_prod_of_indepFun [Nonempty S]
   · intro i j hij
     rw [Function.onFun, Set.disjoint_iff]
     intro y
-    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false,
-      and_imp]
-    exact fun _ _ h3 _ _ _ h7 _ ↦ hij (h3.symm.trans h7)
+    simp_all
   · intro b
     refine ((hZ (.singleton _)).inter (hW (.singleton _))).inter ?_
     exact (hX (.singleton _)).inter (hY (measurable_prodMk_left hs))
@@ -557,9 +543,7 @@ lemma _root_.MeasureTheory.Measure.compProd_apply_singleton
       suffices Prod.mk a ⁻¹' {(t, s)} = ∅ by simp [this]
       ext y
       simp [ha]
-  simp_rw [this]
-  rw [lintegral_indicator (.singleton _)]
-  simp
+  simp_all
 
 lemma _root_.MeasureTheory.Measure.ae_of_compProd_eq_zero {α β : Type*}
     {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
@@ -698,8 +682,7 @@ instance _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.isZeroOrMarkovKer
     {κ : Kernel T S} [IsZeroOrMarkovKernel κ] (hκ : AEFiniteKernelSupport κ μ) :
     IsZeroOrMarkovKernel hκ.mk := by
   rcases eq_zero_or_isMarkovKernel κ with rfl | hκ'
-  · simp only [AEFiniteKernelSupport.mk_zero]
-    infer_instance
+  · simp_all
   · infer_instance
 
 instance _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.isSFiniteKernel_mk
@@ -732,10 +715,7 @@ lemma _root_.ProbabilityTheory.Kernel.local_support_of_finiteKernelSupport
   set B := (h t).choose
   refine measure_mono_null ?_ (h t).choose_spec
   intro s
-  simp only [Finset.coe_biUnion, SetLike.mem_coe, Set.compl_iUnion, Set.mem_iInter,
-    Set.mem_compl_iff]
-  contrapose!; intro h
-  use t
+  simp_all
 
 /-- Finite range implies finite kernel support. -/
 lemma _root_.ProbabilityTheory.Kernel.finiteKernelSupport_of_finite_range
@@ -904,9 +884,7 @@ lemma _root_.ProbabilityTheory.Kernel.FiniteKernelSupport.prod {κ : Kernel T S}
   use A ×ˢ B
   rw [Kernel.prod_apply' _ _ _ (by measurability)]
   apply lintegral_eq_zero_of_ae_zero hA _ (by measurability)
-  intro s hs
-  refine measure_mono_null ?_ hB
-  intro u; simp; tauto
+  simp_all
 
 lemma _root_.ProbabilityTheory.Kernel.AEFiniteKernelSupport.prod {κ : Kernel T S} {η : Kernel T U}
     [IsMarkovKernel κ] [IsMarkovKernel η] {μ : Measure T}

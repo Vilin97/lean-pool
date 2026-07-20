@@ -162,20 +162,13 @@ lemma isHom_getElem_opt
     generalize g x = n
     induction f x generalizing n with
     | nil =>
-      simp only [
-        List.length_nil, not_lt_zero, not_false_eq_true, getElem?_neg,
-        List.foldr_nil, QuasiBorelHom.coe_mk]
+      simp_all
     | cons head tail ih =>
       cases n with
       | zero =>
-        simp only [
-          List.length_cons, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
-          or_true, getElem?_pos, List.getElem_cons_zero, List.foldr_cons,
-          QuasiBorelHom.coe_mk, Nat.rec_zero]
+        simp_all
       | succ n =>
-        simp only [
-          List.getElem?_cons_succ, ih,
-          List.foldr_cons, QuasiBorelHom.coe_mk]
+        simp_all
   simp only [this]
   fun_prop
 
@@ -184,9 +177,7 @@ lemma isHom_getElem_opt
 lemma isHom_length : IsHom (List.length : List A → ℕ) := by
   have : (List.length : List A → ℕ) = List.foldr (fun _ n ↦ n.succ) 0 := by
     funext xs
-    induction xs with
-    | nil => rfl
-    | cons _ _ ih => simp only [List.length_cons, List.foldr_cons, ih]
+    simp_all
   rw [this]
   fun_prop
 
@@ -200,10 +191,7 @@ lemma isHom_get
   by_cases hB : Nonempty B
   · have : Inhabited B := ⟨hB.some⟩
     have : (fun x ↦ (f x)[g x]'(h x)) = fun x ↦ ((f x)[g x]?).getD default := by
-      funext x
-      rw [List.getElem?_eq_getElem]
-      · simp only [Option.getD_some]
-      · apply h
+      simp_all
     simp only [this]
     exact QuasiBorelSpace.Option.isHom_getD (isHom_getElem_opt hf hg) (by fun_prop)
   · rw [isHom_def]
@@ -284,10 +272,7 @@ lemma isHom_insert
     {f : A → B} (hf : IsHom f)
     {g : A → List B} (hg : IsHom g)
     : IsHom (fun x ↦ insert (f x) (g x)) := by
-  apply Prop.isHom_ite
-  · fun_prop
-  · fun_prop
-  · fun_prop
+  apply Prop.isHom_ite <;> fun_prop
 
 /-- List `union` is a homomorphism. -/
 @[fun_prop]
@@ -320,9 +305,7 @@ lemma isHom_erase
       by_cases h : head = x
       · simp only [h, List.foldr_cons, ↓reduceIte, ih, List.erase_cons_head, and_self]
       · have h' : x ≠ head := by grind
-        simp only [
-          List.foldr_cons, h', ↓reduceIte, ih, beq_iff_eq,
-          h, not_false_eq_true, List.erase_cons_tail, and_self]
+        simp_all
   simp only [Prod.ext_iff] at this
   simp only [this.1]
   fun_prop

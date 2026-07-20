@@ -43,8 +43,7 @@ In both of the following results, `b` is a natural number greater than `1`.
 open scoped BigOperators
 
 /-- `(∑ i, x i) % a = (∑ i, (x i % a)) % a` -/
-theorem Int.sum_mod {n : ℕ} (x : Fin n → ℤ) (a : ℤ) : (∑ i, x i) % a = (∑ i, x i % a) % a :=
-  by
+theorem Int.sum_mod {n : ℕ} (x : Fin n → ℤ) (a : ℤ) : (∑ i, x i) % a = (∑ i, x i % a) % a := by
   induction n generalizing a with
   | zero => rfl
   | succ d hd =>
@@ -52,19 +51,15 @@ theorem Int.sum_mod {n : ℕ} (x : Fin n → ℤ) (a : ℤ) : (∑ i, x i) % a =
     have hx' : ∀ i, x' i = x i.succ := fun i => rfl
     simp_rw [Fin.sum_univ_succ]
     rw [Int.add_emod]
-    simp_rw [← hx', Int.emod_add_cancel_left]
-    rw [hd]
-    simp_rw [Int.emod_emod]
+    simp_all
 
 -- `n.succ % n = 1` if `1 < n`
-theorem Fin.succ_mod_self {n : ℕ} (hn : 1 < n) : n.succ % n = 1 :=
-  by
+theorem Fin.succ_mod_self {n : ℕ} (hn : 1 < n) : n.succ % n = 1 := by
   rw [Nat.succ_eq_add_one, Nat.add_mod, Nat.mod_self, zero_add, Nat.mod_mod]
   exact Nat.mod_eq_of_lt hn
 
 /-- `a.succ ^ n % a = 1` when `1 < a` -/
-theorem Fin.succ_pow_mod_self {n a : ℕ} (ha : 1 < a) : a.succ ^ n % a = 1 :=
-  by
+theorem Fin.succ_pow_mod_self {n a : ℕ} (ha : 1 < a) : a.succ ^ n % a = 1 := by
   induction n generalizing a ha with
   | zero =>
     rw [pow_zero]
@@ -85,8 +80,7 @@ theorem Int.hMul_nat_succ_pow_mod_nat (a : ℤ) {b n : ℕ} (hb : 1 < b) :
 /-- `(∑ i, (x i * a.succ ^ i)) % a = (∑ i, x i) % a`
 -/
 theorem nat_repr_mod_eq_sum_repr_mod {a n : ℕ} (x : Fin n → ℤ) (ha : 1 < a) :
-    (∑ i, x i * (a.succ : ℕ) ^ (i : ℕ)) % a = (∑ i, x i) % a :=
-  by
+    (∑ i, x i * (a.succ : ℕ) ^ (i : ℕ)) % a = (∑ i, x i) % a := by
   induction n with
   | zero => rfl
   | succ d hd =>

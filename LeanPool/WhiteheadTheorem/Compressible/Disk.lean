@@ -92,11 +92,6 @@ lemma inducedPointedHom_subtype_val_eq_iStar
       iStar n X A a :=
   rfl
 
--- lemma inducedPointedHom_domInclFromTop_eq_iStar :
---     ⇑(inducedPointedHom n (MapCyl.domInclToTop f x₀) (MapCyl.domInclFromTop f)) =
---     iStar n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
---   apply inducedPointedHom_subtype_val_eq_iStar
-
 /-- If the map `πₙ(X, x₀) ⟶ πₙ(Y, f x₀)` induced by `f` is an isomorphism,
 then the map `iStar : πₙ(X, MapCyl.top f) → πₙ(MapCyl f, ⋯)` is bijective. -/
 lemma bijective_iStar_mapCyl_of_isIso
@@ -142,9 +137,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   replace Hfj := (ContinuousMap.Homotopy.refl fj).comp Hfj.some
   simp only [ContinuousMap.comp_id, ContinuousMap.comp_const] at Hfj
   let a₀ : A := ⟨fj y₀, by
-    change f y₀ ∈ A
-    apply hf
-    exact Cube.boundaryJar_subset_boundary _ y₀.property ⟩
+    simp_all ⟩
   use a₀
   let fb' : C(∂𝕀 (n + 1), A) := fb.comp ⟨ULift.down.{u}, continuous_uliftDown⟩
   let Hfj' : C((⊔𝕀 (n + 1)) × I, A) := Hfj.toContinuousMap.argSwap.comp <|
@@ -351,13 +344,11 @@ noncomputable def _root_.TopCat.Cyl.stretchToWall :
     have t1 : 1 ≤ ((2 : ℝ) - t.val) := by linarith only [t.property.right]
     constructor
     · constructor
-      · have := mem_closedBall_iff_norm.mp hx
-        simp_all only [Metric.mem_closedBall, dist_zero_right, sub_zero]
+      · simp_all
       · exact t.property.left
     · by_cases hxt : 2 * ‖x‖ ≥ 2 - t
       · simp only [hxt, sup_of_le_left]
-        have h2 := t1.trans hxt
-        linarith only [h2]
+        linarith only [t1, hxt]
       · replace hxt := le_of_not_ge hxt
         simp only [hxt, sup_of_le_right, ge_iff_le]
         linarith only [t1]
@@ -407,8 +398,7 @@ lemma _root_.TopCat.Cyl.stretchToWall_eq_zero_of_norm_eq_one
   unfold Cyl.stretchToWall
   simp only [ContinuousMap.coe_mk, hx1, mul_one, Prod.mk.injEq]
   have : 2 ≥ 2 - t.val := by linarith only [t.property.left]
-  simp only [this, sup_of_le_left, sub_self, Set.Icc.mk_zero, ne_eq, OfNat.ofNat_ne_zero,
-    not_false_eq_true, div_self, one_smul, and_self]
+  simp_all
 
 /-- Suppose `n ≥ 1` and `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`.
 If `f` is as a map of pairs homotopic to a map into `A`,
@@ -445,12 +435,9 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
       have : diskBoundaryIncl.{u} (n + 1) ⟨‖x‖⁻¹ • x, xmem⟩ = ⟨⟨‖x‖⁻¹ • x, pf2⟩⟩ := rfl
       rw [← this]
       have := H.prop' ⟨2 - 2 * ‖x‖, pf1⟩ ⟨⟨‖x‖⁻¹ • x, xmem⟩⟩
-      simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap,
-        ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
-      exact this
+      simp_all
     · replace hx1 := le_of_not_ge hx1
-      simp only [hx1, sup_of_le_right, div_one]
-      simp only [(by norm_num : (2 : ℝ) - 1 = 1)]
+      simp only [hx1, sup_of_le_right, div_one, (by norm_num : (2 : ℝ) - 1 = 1)]
       change H (1, _) ∈ A
       rw [H.apply_one]
       apply gA
@@ -463,11 +450,8 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
             Set.Icc.coe_zero, sub_zero, ContinuousMap.Homotopy.coe_toContinuousMap,
             ContinuousMap.HomotopyWith.coe_toHomotopy]
           have : 2 * ‖x‖ ≤ 2 := by
-            have := Metric.mem_closedBall.mp hx
-            rw [dist_eq_norm, sub_zero] at this
-            linarith only [this]
-          simp only [this, sup_of_le_right, sub_self, Set.Icc.mk_zero, ne_eq, OfNat.ofNat_ne_zero,
-            not_false_eq_true, div_self, one_smul, ContinuousMap.HomotopyWith.apply_zero]
+            simp_all
+          simp_all
         map_one_left x := by unfold l; rfl
         prop' t x hy := by
           unfold H'
@@ -497,14 +481,7 @@ theorem homotopicRel_boundary_of_unique_pi
       Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl _)) := by
   obtain ⟨a, H⟩ := homotopicWith_const_isMapOfPairs_of_unique_pi X A f hf hpi
   let g : C(disk.{u} (n + 1), X) := ContinuousMap.const (𝔻 (n + 1)) a
-  have gr : Set.range g ⊆ A := by
-    unfold g
-    intro x hx
-    obtain ⟨y, hy⟩ := Set.mem_range.mp hx
-    simp only [ContinuousMap.const_apply] at hy
-    subst hy
-    simp_all only [ContinuousMap.coe_const, Set.mem_range, Function.const_apply, exists_const_iff,
-      and_true, Subtype.coe_prop]
+  have gr : Set.range g ⊆ A := Set.range_subset_iff.mpr fun _ ↦ a.property
   apply homotopicRel_boundary_of_homotopicWith_isMapOfPairs X A
   use g
 
@@ -520,8 +497,7 @@ theorem isCompressible_subtype_val_of_unique_pi
     have F_pair : disk.IsMapOfPairs X A F.hom := fun x ↦ by
       change (diskBoundaryIncl (n + 1) ≫ F) x ∈ A
       rw [← sq.w]
-      simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
-        Subtype.coe_prop]
+      simp_all
     obtain ⟨l, lA, H⟩ := disk.homotopicRel_boundary_of_unique_pi X A F.hom F_pair hpi
     replace lA := Set.range_subset_iff.mp lA
     let l' :  C(disk.{u} (n + 1), A) := ⟨fun x ↦ ⟨l x, lA x⟩, by
@@ -556,7 +532,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   constructor
   intro F f sq
   have xD0 : 0 ∈ Metric.closedBall (0 : EuclideanSpace ℝ (Fin 0)) 1 := by
-    simp only [Metric.mem_closedBall, dist_self, zero_le_one]
+    simp
   let x : X := F.hom ⟨0, xD0⟩
   let β' : GenLoop (Fin 0) X pt :=
     ⟨ContinuousMap.const _ x, fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ∂I^0)⟩
@@ -570,8 +546,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   let a : X := H ⟨1, ![]⟩
   have aA : a ∈ A := by
     unfold a
-    rw [H.apply_one ![]]
-    simp_all only [ContinuousMap.coe_mk, Function.comp_apply, Subtype.coe_prop, α', β', x]
+    simp_all
   let l : C(disk.{u} 0, A) := ContinuousMap.const _ ⟨a, aA⟩
   constructor
   refine ⟨ofHom l, ?_, ?_⟩
@@ -585,9 +560,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
         map_zero_left y := by
           simp only [ContinuousMap.const_apply, ContinuousMap.HomotopyWith.apply_zero, β', x]
           congr
-          have u : Unique <| EuclideanSpace ℝ (Fin 0) := by infer_instance
-          convert u.uniq 0
-          exact u.uniq _
+          apply Subsingleton.elim
         map_one_left y := by
           unfold l a
           simp only [
@@ -643,8 +616,7 @@ theorem isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
       all_goals rw [Category.assoc]
       all_goals unfold inv MapCyl.domInclToTop
       all_goals ext x : 1
-      all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
-        Homeomorph.symm_apply_apply]
+      simp_all
     · convert l.H using 2
       rw [Category.assoc]
       congr 1

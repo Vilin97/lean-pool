@@ -99,8 +99,7 @@ theorem contourIntegralCycle_eq_zero_of_nullHomologous
     {U : Set ℂ} (hU : IsOpen U) {f : ℂ → ℂ} (hf : DifferentiableOn ℂ f U)
     (Γ : ContourCycle) (h_null : IsNullHomologousCycle Γ U) :
     contourIntegralCycle f Γ = 0 := by
-  simp only [contourIntegralCycle, Finsupp.sum]
-  exact Finset.sum_eq_zero fun γ hγ => by
+  simpa only [contourIntegralCycle, Finsupp.sum] using Finset.sum_eq_zero fun γ hγ => by
     rw [contourIntegral_eq_zero_of_nullHomologous hU hf γ (h_null γ hγ), mul_zero]
 
 /-- Winding number of a null-homologous cycle is zero outside `U`. -/
@@ -109,8 +108,7 @@ theorem windingNumberCycle_eq_zero_outside
     {z : ℂ} (hz : z ∉ U) :
     windingNumberCycle Γ z = 0 := by
   simp only [windingNumberCycle, Finsupp.sum]
-  exact Finset.sum_eq_zero fun γ hγ => by
-    rw [(h_null γ hγ).winding_zero z hz, mul_zero]
+  exact Finset.sum_eq_zero fun γ hγ => by rw [(h_null γ hγ).winding_zero z hz, mul_zero]
 
 /-! ### Residue theorem for cycles (simple poles) -/
 

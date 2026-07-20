@@ -39,17 +39,13 @@ lemma coeffs_nonempty [Nonempty n] [Nonempty m] (g : Matrix n m R) : g.coeffs.No
 
 lemma finite_coeffs [Finite n] [Finite m] (g : Matrix n m R) :
     (coeffs g).Finite := by
-  simp only [coeffs]
-  exact Set.toFinite (Set.image2 g Set.univ Set.univ)
+  simpa only [coeffs] using Set.toFinite (Set.image2 g Set.univ Set.univ)
 
 @[simp]
 lemma transpose_coeffs (g : Matrix n m R) : g.transpose.coeffs = g.coeffs := by
   ext a
   simp only [coeffs, transpose_apply]
-  constructor
-  · rintro ⟨i, -, j, -, hij⟩
-    simp only [Set.mem_image2, Set.mem_univ, true_and]
-    use j, i
+  constructor <;>
   · rintro ⟨i, -, j, -, hij⟩
     simp only [Set.mem_image2, Set.mem_univ, true_and]
     use j, i
@@ -399,8 +395,7 @@ lemma _root_.Matrix.GL.conj_diagonal_apply {ι : Type*} [Fintype ι]
     · ext; simp
   simp only [MulAut.conj_apply, Units.val_mul, Matrix.GL.val_diagonal, Matrix.coe_units_inv]
   rw [Matrix.inv_diagonal, Matrix.mul_diagonal, Matrix.diagonal_mul, heq]
-  have hdj : (fun j ↦ (d j).inv) j = (((d j)⁻¹ : Rˣ) : R) := by
-    exact Units.inv_eq_val_inv (d j)
+  have hdj : (fun j ↦ (d j).inv) j = (((d j)⁻¹ : Rˣ) : R) := Units.inv_eq_val_inv (d j)
   rw [hdj]
   ring
 
@@ -423,8 +418,7 @@ lemma apply_ne_zero_of_isDiag [Nontrivial R] (g : GL n R) (h : g.val.IsDiag)
   apply Matrix.det_eq_zero_of_column_eq_zero j
   intro i
   by_cases hij : i = j
-  · subst hij
-    exact hzero
+  · simp_all
   · exact h hij
 
 lemma coe_mul_inv (g : GL n R) : g.val * g.val⁻¹ = 1 := by
@@ -451,13 +445,10 @@ lemma toBasis_coe_apply (g : GL ι K) (i : ι) : g.toBasis i = (fun j ↦ g j i)
     simp only [Units.inv_eq_val_inv, coe_units_inv]
     rw [show (fun j ↦ g j i) = g.val *ᵥ Pi.single i 1 from by ext; simp]
     have : Nonempty ι := ⟨ i ⟩
-    rw [mulVec_mulVec, coe_inv_mul]
-    rw [one_mulVec]
+    rw [mulVec_mulVec, coe_inv_mul, one_mulVec]
   rw [h]
   erw [← toLin_apply g]
-  rw [toLin_apply g, ← h]
-  ext
-  simp
+  simp_all
 
 /-- From an invertible matrix over `K`, we obtain an `R` submodule by taking
 the span of the columns. -/
@@ -501,8 +492,7 @@ lemma mem_toSubmodule (g : GL ι K) (x : ι → K) :
       change _ = g.val *ᵥ (Subtype.val ∘ Pi.single i 1)
       ext
       simp
-    · simp only [Pi.comp_zero, ZeroMemClass.coe_zero, Function.const_zero, mulVec_zero,
-        Submodule.zero_mem]
+    · simp_all
     · intro v w _ _ hv hw
       rw [Subtype.val_comp_add, mulVec_add]
       exact Submodule.add_mem _ hv hw
@@ -541,8 +531,7 @@ instance instMulActionSubmoduleSubtypeMemSubringForallLeanPool :
     MulAction (GL ι K) (Submodule R (ι → K)) where
   one_smul M := by
     rw [smul_def]
-    ext
-    simp
+    simp_all
   mul_smul g h M := by
     simp_rw [smul_def]
     ext

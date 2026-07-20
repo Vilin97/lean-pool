@@ -64,8 +64,7 @@ lemma induction
   | nil =>
     simp only [List.not_mem_nil, false_implies, implies_true]
   | cons label children ih tail_ih =>
-    simp only [List.mem_cons, forall_eq_or_imp, ih, true_and]
-    exact tail_ih
+    simpa only [List.mem_cons, forall_eq_or_imp, ih, true_and] using tail_ih
 
 lemma induction'
     (motive : Rose A → Prop)
@@ -82,8 +81,7 @@ lemma bind_pure (t : Rose A) : bind (fun x ↦ ⟨x, []⟩) t = t := by
   induction t with | mk label children ih =>
   simp only [bind, List.nil_append, mk.injEq, true_and]
   nth_rw 2 [← List.map_id' children]
-  simp only [List.map_inj_left]
-  exact ih
+  simpa only [List.map_inj_left] using ih
 
 @[simp]
 lemma bind_pure_fun : bind (A := A) (fun x ↦ ⟨x, []⟩) = id := by
@@ -168,8 +166,7 @@ lemma fold_map
   induction t with | mk label children ih =>
   simp only [map_mk, fold.eq_1, List.map_map]
   congr 1
-  simp only [List.map_inj_left, Function.comp_apply]
-  exact ih
+  simpa only [List.map_inj_left, Function.comp_apply] using ih
 
 @[simp]
 lemma bind_eq {B} (t : Rose A) (f : A → Rose B) : Bind.bind t f = bind f t := rfl
@@ -266,17 +263,14 @@ lemma le_mk
 instance [Preorder A] : Preorder (Rose A) where
   le_refl x := by
     induction x with | mk label children ih =>
-    simp only [le_mk, le_refl, List.forall₂_same, true_and]
-    exact ih
+    simpa only [le_mk, le_refl, List.forall₂_same, true_and] using ih
   le_trans t u v h₁ h₂ := by
     induction t generalizing u v with | mk _ xs ih =>
     cases u with | mk _ ys =>
     cases v with | mk _ zs =>
     simp only [le_mk] at ⊢ h₁ h₂
     apply And.intro
-    · trans
-      · apply h₁.1
-      · apply h₂.1
+    · exact h₁.1.trans h₂.1
     · induction xs generalizing ys zs with
       | nil =>
         simp_all only [

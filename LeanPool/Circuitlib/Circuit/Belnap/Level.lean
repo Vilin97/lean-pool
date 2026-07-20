@@ -42,40 +42,10 @@ def le : BelnapLevel → BelnapLevel → Prop
   | _, _ => false
 
 lemma le_refl : ∀ (a : BelnapLevel), a.le a := by
-  intro a
-  cases a with
-  | none => trivial
-  | some a =>
-    cases a with
-    | top => trivial
-    | coe b => cases b <;> trivial
+  rintro (_ | (_ | (_ | _))) <;> trivial
 
 lemma le_trans : ∀ (a b c : BelnapLevel), a.le b → b.le c → a.le c := by
-  intro a b c hab hbc
-  cases a with
-  | none => trivial
-  | some a => cases a with
-    | top =>
-      cases b with
-      | none => simp_all [le]
-      | some b => cases b with
-        | top => exact hbc
-        | coe bv => cases bv <;> simp_all [le]
-    | coe av => cases c with
-      | none =>
-        cases b with
-        | none => cases av <;> simp_all [le]
-        | some b => cases b with
-          | top => simp_all [le]
-          | coe bv => cases bv <;> simp_all [le]
-      | some c => cases c with
-        | top => trivial
-        | coe cv =>
-          cases b with
-          | none => cases av <;> simp_all [le]
-          | some b => cases b with
-            | top => cases cv <;> simp_all [le]
-            | coe bv => cases av <;> cases bv <;> cases cv <;> simp_all [le]
+  rintro (_ | (_ | a)) (_ | (_ | b)) (_ | (_ | c)) hab hbc <;> simp_all [le]
 
 instance : Preorder BelnapLevel where
   le
@@ -83,25 +53,7 @@ instance : Preorder BelnapLevel where
   le_trans
 
 lemma le_antisymm : ∀ (a b : BelnapLevel), a ≤ b → b ≤ a → a = b := by
-  intro a b hab hba
-  cases a with
-  | none =>
-    cases b with
-    | none => rfl
-    | some _ => cases hba
-  | some a => cases a with
-    | top =>
-      cases b with
-      | none => cases hab
-      | some b => cases b with
-        | top => rfl
-        | coe _ => cases hab
-    | coe av =>
-      cases b with
-      | none => cases hab
-      | some b => cases b with
-        | top => cases hba
-        | coe bv => cases av <;> cases bv <;> first | rfl | cases hab
+  rintro (_ | (_ | a)) (_ | (_ | b)) hab hba <;> simp_all [LE.le, le]
 
 /-- The join (least upper bound) on Belnap levels in the information order. -/
 def sup : BelnapLevel → BelnapLevel → BelnapLevel
@@ -112,61 +64,14 @@ def sup : BelnapLevel → BelnapLevel → BelnapLevel
   | .some (.some x), .some (.some y) => if x == y then .some (.some x) else .some .none
 
 lemma le_sup_left : ∀ (a b : BelnapLevel), a ≤ a.sup b:= by
-  intro a b
-  cases a with
-  | none => trivial
-  | some a => cases a with
-    | top =>
-      cases b with
-      | none => trivial
-      | some b => cases b with
-        | top => trivial
-        | coe bv => cases bv <;> trivial
-    | coe av =>
-      cases b with
-      | none => cases av <;> trivial
-      | some b => cases b with
-        | top => trivial
-        | coe bv => cases av <;> cases bv <;> trivial
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> simp_all [LE.le, le, sup]
 
 lemma le_sup_right : ∀ (a b : BelnapLevel), b ≤ a.sup b := by
-  intro a b
-  cases a with
-  | none => trivial
-  | some a => cases a with
-    | top =>
-      cases b with
-      | none => trivial
-      | some b => cases b with
-        | top => trivial
-        | coe bv => cases bv <;> trivial
-    | coe av =>
-      cases b with
-      | none => cases av <;> trivial
-      | some b => cases b with
-        | top => trivial
-        | coe bv => cases av <;> cases bv <;> trivial
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> simp_all [LE.le, le, sup]
 
 lemma sup_le : ∀ (a b c : BelnapLevel), a ≤ c → b ≤ c → a.sup b ≤ c  := by
-  intro a b c hac hbc
-  cases a with
-  | none => exact hbc
-  | some a => cases a with
-    | top => cases b <;> exact hac
-    | coe av =>
-      cases b with
-      | none => exact hac
-      | some b => cases b with
-        | top => exact hbc
-        | coe bv =>
-          cases av <;> cases bv <;>
-            first
-            | exact hac
-            | cases c with
-                | none => cases hac
-                | some c => cases c with
-                  | top => trivial
-                  | coe cv => cases cv <;> first | cases hbc; done | cases hac
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) hac hbc <;>
+    simp_all [LE.le, le, sup]
 
 instance : SemilatticeSup BelnapLevel where
   le_antisymm

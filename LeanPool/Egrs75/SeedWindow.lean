@@ -79,9 +79,7 @@ theorem walk_hits {δ w₁ w₂ start : ℝ} (hδ0 : 0 < δ) (hδw : δ < w₂ -
     exact Nat.find_min hex (by omega)
   push Not at hprev
   have hcast : ((t : ℕ) : ℝ) = ((t - 1 : ℕ) : ℝ) + 1 := by
-    have h : (t - 1) + 1 = t := by omega
-    calc ((t : ℕ) : ℝ) = (((t - 1) + 1 : ℕ) : ℝ) := by rw [h]
-      _ = ((t - 1 : ℕ) : ℝ) + 1 := by push_cast; ring
+    simp_all
   refine ⟨t, ht1, ht, ?_⟩
   have hstep : start + (t : ℝ) * δ = (start + ((t - 1 : ℕ) : ℝ) * δ) + δ := by
     rw [hcast]; ring
@@ -114,8 +112,7 @@ theorem exists_small_step {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hpq : p ≠
   have hnR1 : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hnpos
   have hsmall : Real.log q / ((n : ℝ) + 1) < ε := by
     have hn0R : Real.log q / ε < (n : ℝ) := by
-      have h : (n₀ : ℝ) ≤ (n : ℝ) := by exact_mod_cast le_max_left n₀ 1
-      linarith
+      simp_all
     have h1 : Real.log q < ε * (n : ℝ) := by
       have := (div_lt_iff₀ hε).mp hn0R
       linarith
@@ -261,8 +258,7 @@ theorem seed_window {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hq3 : 3 ≤ q)
       have hδw : δ < w₂ - w₁ := habs2.2
       have hstart : -((β₀ : ℝ) * Real.log q) < w₁ := by
         have h1 : (0 : ℝ) < (β₀ : ℝ) := by
-          have : (0 : ℕ) < β₀ := by omega
-          exact_mod_cast this
+          simp_all
         have h2 : 0 < (β₀ : ℝ) * Real.log q := mul_pos h1 hM
         linarith
       obtain ⟨t, ht1, hlo, hhi⟩ := walk_hits hpos hδw hstart
@@ -296,9 +292,7 @@ theorem seed_window {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (hq3 : 3 ≤ q)
     have h2 : c₁ * (q : ℝ) ^ βe < (p : ℝ) ^ α :=
       lt_of_log_lt (by positivity) (by positivity) h1
     have h3 : (((q - 1) / 2 * q ^ βe : ℕ) : ℝ) < ((p ^ α : ℕ) : ℝ) := by
-      push_cast
-      rw [hc₁def] at h2
-      linarith
+      simp_all
     exact_mod_cast h3
   · -- right bound
     rw [hee]

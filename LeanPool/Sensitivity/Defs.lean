@@ -55,25 +55,20 @@ theorem flipBit_apply_ne (x : Fin n → Bool) (i : Fin n) {j : Fin n} (h : j ≠
 theorem flipBit_flipBit_same (x : Fin n → Bool) (i : Fin n) :
     flipBit (flipBit x i) i = x := by
   ext j
-  by_cases h : j = i
-  · subst h; simp [flipBit, Bool.not_not]
-  · simp [flipBit, Function.update_of_ne h]
+  by_cases h : j = i <;> simp [flipBit, Function.update_of_ne, h, Bool.not_not]
 
 /-- `flipBit x i` is never equal to `x` itself: the `i`-th coordinate
 differs. -/
 theorem flipBit_ne_self (x : Fin n → Bool) (i : Fin n) :
     flipBit x i ≠ x := by
-  intro h
-  have := congr_fun h i
-  simp [flipBit] at this
+  intro h; simp [flipBit] at h
 
 /-- Different coordinates produce different bit flips of `x`. -/
 theorem flipBit_injective (x : Fin n → Bool) : Function.Injective (flipBit x) := by
   intro i j hij
   by_contra h
-  have h1 : flipBit x i i = !x i := flipBit_apply_same x i
-  have h2 : flipBit x j i = x i := flipBit_apply_ne x j h
-  rw [congr_fun hij i, h2] at h1
+  have h1 := flipBit_apply_same x i
+  rw [congr_fun hij i, flipBit_apply_ne x j h] at h1
   simp at h1
 
 namespace BoolFun
@@ -102,9 +97,7 @@ theorem sensitivity_le (f : BoolFun n) : f.sensitivity ≤ n := by
   apply Finset.sup_le
   intro x _
   unfold localSensitivity
-  calc (Finset.univ.filter fun i => f.sensitiveAt x i).card
-      ≤ Finset.univ.card := Finset.card_filter_le _ _
-    _ = n := Finset.card_fin n
+  exact (Finset.card_filter_le _ _).trans (by simp)
 
 /-- The local sensitivity at any specific input is bounded above by the
 sensitivity of `f`. -/

@@ -107,10 +107,8 @@ def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
   (∀ k : Mu, aDot k x ≤ (1 : Q)) ∧ ∀ r : Block, (S x r).PosSemidef
 
 theorem muVal_nonneg (k : Mu) : 0 ≤ muVal k := by
-  have hDpos : 0 < (D : Q) := by
-    exact_mod_cast (show 0 < D by decide)
-  have hnum : 0 ≤ muNumD k := by
-    fin_cases k <;> decide
+  have hDpos : 0 < (D : Q) := by exact_mod_cast (show 0 < D by decide)
+  have hnum : 0 ≤ muNumD k := by fin_cases k <;> decide
   simpa [muVal, div_eq_mul_inv] using
     mul_nonneg (show (0 : Q) ≤ muNumD k by exact_mod_cast hnum) (inv_nonneg.2 (le_of_lt hDpos))
 
@@ -137,8 +135,7 @@ private theorem muCoeff_eq_num (i : Var) :
     muCoeff i = ((muCoeffNumD i : Q) / (D : Q)) := by
   classical
   -- Everything has denominator `D`.
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   -- Expand both sides and factor out `1/D`.
   simp [muCoeff,
     muCoeffNumD,
@@ -170,22 +167,12 @@ private theorem fintype_sum_div_const {α : Type*} [Fintype α] (f : α → Q) (
 private theorem zCoeff_eq_num (i : Var) :
     zCoeff i = ((zCoeffNumD2 i : Q) / ((D : Q) * (D : Q))) := by
   classical
-  -- Each term has denominator `D^2`; pull the constant denominator out of the finite sum.
-  let den : Q := (D : Q) * (D : Q)
-  have hcast :
-      (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) = (zCoeffNumD2 i : Q) := by
-    simp [zCoeffNumD2]
-  calc
-    zCoeff i
-        = ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q) / den := by
-            simp [zCoeff, Z, Si, frobInner_toMat3Scaled, den]
-    _ = (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) / den := by
-            simpa using (fintype_sum_div_const
-              (f := fun r : Block => (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) (c := den))
-    _ = (zCoeffNumD2 i : Q) / den := by
-            simpa using congrArg (fun t : Q => t / den) hcast
-    _ = (zCoeffNumD2 i : Q) / ((D : Q) * (D : Q)) := by
-            simp [den]
+  have hstep :
+      zCoeff i =
+        ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q) / ((D : Q) * (D : Q)) := by
+    simp [zCoeff, Z, Si, frobInner_toMat3Scaled]
+  rw [hstep, fintype_sum_div_const]
+  simp [zCoeffNumD2]
 
 private theorem zCoeffNumD2_eq_psdNumD2 (i : Var) : zCoeffNumD2 i = psdNumD2 i.1 := by
   fin_cases i <;> decide
@@ -200,26 +187,17 @@ private def zSum0NumD2 : Int :=
 private theorem zSum0_eq_num :
     zSum0 = ((zSum0NumD2 : Q) / ((D : Q) * (D : Q))) := by
   classical
-  let den : Q := (D : Q) * (D : Q)
-  have hcast :
-      (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) = (zSum0NumD2 : Q) := by
-    simp [zSum0NumD2]
-  calc
-    zSum0 = ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q) / den := by
-            simp [zSum0, Z, S0, frobInner_toMat3Scaled, den]
-    _ = (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) / den := by
-            simpa using (fintype_sum_div_const
-              (f := fun r : Block => (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) (c := den))
-    _ = (zSum0NumD2 : Q) / den := by
-            simpa using congrArg (fun t : Q => t / den) hcast
-    _ = (zSum0NumD2 : Q) / ((D : Q) * (D : Q)) := by
-            simp [den]
+  have hstep :
+      zSum0 =
+        ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q) / ((D : Q) * (D : Q)) := by
+    simp [zSum0, Z, S0, frobInner_toMat3Scaled]
+  rw [hstep, fintype_sum_div_const]
+  simp [zSum0NumD2]
 
 private def psdSumD2 : Int :=
   ∑ r : Block, innerD2 (S0Blocks.getD r.1 #[]) (ZBlocks.getD r.1 #[])
 
-private theorem zSum0NumD2_eq_psdSumD2 : zSum0NumD2 = psdSumD2 := by
-  decide
+private theorem zSum0NumD2_eq_psdSumD2 : zSum0NumD2 = psdSumD2 := by decide
 
 private theorem psdSumD2_eq_psdSumD2_cert :
     psdSumD2 =
@@ -243,14 +221,12 @@ private theorem muSum_eq_num :
 private def muSumD_fold : Int :=
   muSupport.foldl (fun acc t => acc + t.2.2) 0
 
-private theorem muSumNumD_eq_muSumD_fold : muSumNumD = muSumD_fold := by
-  decide
+private theorem muSumNumD_eq_muSumD_fold : muSumNumD = muSumD_fold := by decide
 
 private theorem dualObjective_eq_expression :
     dualObjective = -muSum - zSum0 := by
   classical
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   -- Unfold and clear denominators; the remaining goal is exactly the definition of
   -- `dualObjectiveComputedD2`.
   unfold dualObjective
@@ -271,8 +247,7 @@ private theorem stationarity (i : Var) :
   -- Integer stationarity is checked coordinatewise; convert and rewrite the coefficients.
   have hInt : stationarityLHSD2 i.1 = -(c i.1) * ((D : Int) * (D : Int)) := by
     fin_cases i <;> decide
-  have hDne : (D : Q) ≠ 0 := by
-    exact_mod_cast (show (D : Nat) ≠ 0 by decide)
+  have hDne : (D : Q) ≠ 0 := by exact_mod_cast (show (D : Nat) ≠ 0 by decide)
   have hD2ne : ((D : Q) * (D : Q)) ≠ 0 := by simp [hDne]
   have hQ :
       ((linNumD i.1 : Q) * (D : Q) - (psdNumD2 i.1 : Q)) =
@@ -304,8 +279,7 @@ private theorem stationarity (i : Var) :
             -- Reassociate so that `hDiv` rewrites the parenthesized difference.
             have := congrArg (fun t : Q => (if i.1 = edgeVar then (1 : Q) else 0) + t) hDiv
             simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using this
-    _ = 0 := by
-            by_cases h : i.1 = edgeVar <;> simp [h]
+    _ = 0 := by by_cases h : i.1 = edgeVar <;> simp [h]
 
 theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     dualObjective ≤ xEdge x := by
@@ -329,8 +303,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
           apply Fin.ext
           exact hEq
         simp [this]
-      · intro he
-        simp at he
+      · simp_all
       · simp [e]
     simpa [xEdge, e] using this
   -- Commute the finite sums for the μ term.
@@ -354,25 +327,11 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
       _ = ∑ k : Mu, muVal k * ∑ i : Var, aCoeff k i * x i := by
               refine Finset.sum_congr rfl ?_
               intro k _
-              -- pull `muVal k` out of the inner sum
-              have :
-                  (∑ i : Var, x i * (muVal k * aCoeff k i))
-                    = muVal k * ∑ i : Var, aCoeff k i * x i := by
-                  -- reorder multiplication inside the sum, then factor
-                  calc
-                    (∑ i : Var, x i * (muVal k * aCoeff k i))
-                        = ∑ i : Var, muVal k * (aCoeff k i * x i) := by
-                            refine Finset.sum_congr rfl ?_
-                            intro i _
-                            ring
-                    _ = muVal k * ∑ i : Var, aCoeff k i * x i := by
-                            simpa using
-                              (Finset.mul_sum (a := muVal k)
-                                (s := (Finset.univ : Finset Var))
-                                (f := fun i : Var => aCoeff k i * x i)).symm
-              simpa [mul_assoc, mul_comm, mul_left_comm] using this
-      _ = ∑ k : Mu, muVal k * aDot k x := by
-              simp [aDot]
+              rw [Finset.mul_sum]
+              refine Finset.sum_congr rfl ?_
+              intro i _
+              ring
+      _ = ∑ k : Mu, muVal k * aDot k x := by simp [aDot]
   -- Commute the finite sums for the Z term.
   have hZComm :
       (∑ i : Var, x i * zCoeff i) = ∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i) := by
@@ -420,9 +379,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     have h0 :
         xEdge x + (∑ i : Var, x i * muCoeff i) - (∑ i : Var, x i * zCoeff i) = 0 := by
       -- Rewrite the edge-indicator sum to `xEdge x` without letting `simp` change its shape first.
-      have h := h0'
-      rw [hedge] at h
-      simpa using h
+      simp_all
     have :
         xEdge x = - (∑ i : Var, x i * muCoeff i) + (∑ i : Var, x i * zCoeff i) := by
       linarith
@@ -460,8 +417,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
     have : (∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i))
         ≥ ∑ r : Block, (-frobInner (Z r) (S0 r)) := by
       refine Finset.sum_le_sum ?_
-      intro r _
-      exact hblock r
+      simp_all
     simpa [Finset.sum_neg_distrib] using this
   -- Combine and rewrite the dual objective.
   have hDual : dualObjective = -muSum - zSum0 := dualObjective_eq_expression
@@ -470,8 +426,7 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
   -- Use `hxEdge` to rewrite `xEdge x` and apply the two bounds.
   have : xEdge x ≥ -muSum - zSum0 := by
     -- Rewrite `muSum` and `zSum0` as sums to match the inequalities.
-    have h1 : - (∑ k : Mu, (muVal k) * aDot k x) ≥ -muSum := by
-      simpa [muSum] using hMuIneq
+    have h1 : - (∑ k : Mu, (muVal k) * aDot k x) ≥ -muSum := by simpa [muSum] using hMuIneq
     have h2 :
         (∑ r : Block, frobInner (Z r) (∑ i : Var, x i • Si r i)) ≥ -zSum0 := by
       simpa [zSum0] using hPsdIneq

@@ -18,8 +18,7 @@ open OrderDual
 variable {α : Type _} [LinearOrder α] {C : Config α}
 
 theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
-    C.Mirror.HasLaced n S.Mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q :=
-  by
+    C.Mirror.HasLaced n S.Mirror (toDual q) (toDual p) ↔ C.HasLaced n S p q := by
   constructor
   · intro h; rcases h with ⟨b, a, cqm, cm, cpm, hcqm, hcm, hcpm, h⟩
     rw [← @List.ofMirrorMirror _ cpm] at hcpm h
@@ -37,9 +36,7 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
       EmbeddingLike.apply_eq_iff_eq, exists_eq_right, List.Mirror_head] at h
     rcases h with ⟨hIn, ⟨eq_ab, h⟩⟩
     rw [add_comm] at eq_ab
-    refine ⟨(by tauto), eq_ab, ?_⟩
-    simp only [Option.mem_def]
-    tauto
+    simp_all
   · intro h; rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩
     use b, a, cq.Mirror, c.Mirror, cp.Mirror
     refine ⟨?_, ?_, ?_, ?_⟩ <;> try rw [Mirror.ncup] <;> tauto
@@ -48,8 +45,7 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
 
 theorem Mirror.hasInterweavedLaced {n : ℕ} {S : Finset α} (p q r s : α) :
     C.Mirror.HasInterweavedLaced n S.Mirror (toDual s) (toDual r) (toDual q) (toDual p) ↔
-      C.HasInterweavedLaced n S p q r s :=
-  by
+      C.HasInterweavedLaced n S p q r s := by
   simp [Config.HasInterweavedLaced, Mirror.hasLaced]
   tauto
 
@@ -73,5 +69,4 @@ theorem Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirr
   · intro h; rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, ⟨cr_cup, cr_in, cr_last⟩⟩
     use toDual p, cr.Mirror, cl.Mirror
     rw [List.Mirror_mem_getLast, List.Mirror_mem_head]
-    simp only [List.Mirror_in, Mirror.ncup, Option.mem_def]
-    tauto
+    simp_all

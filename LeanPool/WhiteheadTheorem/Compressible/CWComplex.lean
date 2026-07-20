@@ -106,12 +106,13 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     let L := Limits.Sigma.desc fun c ↦ (l c).l
     let h c := (l c).H.some.toContinuousMap.argSwap.curry
     let H := Limits.Sigma.desc fun c ↦ ofHom (h c)
+    have hmap c : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
+        i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
+    have hιH c : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk L ?_ H ?_ ?_ fun t ↦ ?_⟩
     · apply Limits.Sigma.hom_ext
       intro c
       have hfac := (l c).fac_left
-      have hmap : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
-          i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
       change Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫ L = _
       rw [← Category.assoc, hmap, Category.assoc]
       change i ≫ Limits.Sigma.ι (fun _ ↦ X) c ≫ Limits.Sigma.desc (fun c ↦ (l c).l) = _
@@ -120,13 +121,11 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     · apply Limits.Sigma.hom_ext
       intro c
       have h0 := (l c).curriedH_apply_zero
-      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
       change Limits.Sigma.ι (fun _ ↦ X) c ≫ H ≫ PathSpace.eval₀ Y = _
       rw [← Category.assoc, hιH, h0]
     · apply Limits.Sigma.hom_ext
       intro c
       have h1 := (l c).curriedH_apply_one
-      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
       have hιL : Limits.Sigma.ι (fun _ ↦ X) c ≫ L = (l c).l := Limits.Sigma.ι_desc _ _
       change Limits.Sigma.ι (fun _ ↦ X) c ≫ H ≫ PathSpace.eval₁ Y =
         Limits.Sigma.ι (fun _ ↦ X) c ≫ L ≫ j
@@ -134,9 +133,6 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     · apply Limits.Sigma.hom_ext
       intro c
       have hp := (l c).curriedH_prop t
-      have hmap : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
-          i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
-      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
       change Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫
           H ≫ PathSpace.evalAt Y t =
         Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫ F
@@ -148,12 +144,7 @@ lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
       rw [show (i ≫ Limits.Sigma.ι (fun _ ↦ X) c) ≫ H ≫ PathSpace.evalAt Y t =
           i ≫ (Limits.Sigma.ι (fun _ ↦ X) c ≫ H) ≫ PathSpace.evalAt Y t by
         rw [Category.assoc, Category.assoc]]
-      rw [hιH]
-      rw [show Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ : cells ↦ i) ≫ F =
-          (Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map fun _ ↦ i) ≫ F
-        from (Category.assoc _ _ _).symm]
-      rw [hmap, Category.assoc]
-      exact hp
+      simp_all
 
 /--
 Suppose the left square in the diagram below is a pushout square.
@@ -185,11 +176,7 @@ lemma pushout {A' A B X' X Y : TopCat.{u}}
       change (φ ≫ i ≫ F) _ = _
       rw [po.w_assoc]
       have := l'.curriedH_prop' t (ι a') (Set.mem_range_self a')
-      simp only [ContinuousMap.argSwap, ContinuousMap.coe_mk, ContinuousMap.comp_apply,
-        ContinuousMap.prodSwap_apply, ContinuousMap.uncurry_apply, Function.uncurry_apply_pair,
-        hom_comp] at this
-      convert this.symm using 1
-      simp only [hom_comp, ContinuousMap.comp_apply]
+      simp_all
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk l ?_ G ?_ ?_ fun t ↦ ?_⟩
     · apply po.inl_desc
     · apply po.hom_ext
@@ -240,10 +227,7 @@ private noncomputable def F : ∀ n : ℕ, FStruct X j n
       let sq' : CommSq f₀ (X.skInclSucc 0) j (X.skIncl 1 ≫ F₀) :=
         ⟨by
           rw [sq.w, ← Category.assoc]
-          congr 1
-          apply Eq.symm
-          exact Limits.colimit.w (Functor.ofSequence fun n ↦ (X.attachCells n).incl) <|
-            homOfLE (by omega : 0 ≤ 1) ⟩
+          simp_all ⟩
       let l' := jcom_sk 0 |>.sq_hasLift sq' |>.hasLift.some
       have hep_sq : CommSq l'.curriedH (X.skIncl 1) (PathSpace.eval₀ Y) F₀ :=
         ⟨l'.curriedH_apply_zero⟩
@@ -376,11 +360,10 @@ theorem relCWComplex_of_diskBoundaryIncl
     (jcom : ∀ n, IsCompressible (diskBoundaryIncl n) j) :
     IsCompressible (X.skIncl 0) j where
   sq_hasLift := fun {F₀ f₀} sq ↦ by
-    have jcom_sk n : IsCompressible (X.skInclSucc n) j := by
-      apply IsCompressible.of_comp_iso_left
-      apply IsCompressible.pushout (X.attachCells n).pushout_isPushout
-      apply IsCompressible.coprod
-      exact jcom n
+    have jcom_sk n : IsCompressible (X.skInclSucc n) j :=
+      IsCompressible.of_comp_iso_left <|
+        IsCompressible.pushout (X.attachCells n).pushout_isPushout <|
+          IsCompressible.coprod (jcom n) _
     let F := IsCompressible.relCWComplex.F jcom_sk sq
     let H n := IsCompressible.relCWComplex.H jcom_sk sq n 0 n (by omega)
     let ccL : Limits.Cocone (Functor.ofSequence X.skInclSucc) :=

@@ -20,13 +20,11 @@ variable {𝓢 : S} [Entailment.Grz 𝓢]
 namespace Grz
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def lemmaAxiomFourAxiomT :
-    𝓢 ⊢ □φ ==> (φ ⋏ (□φ ==> □□φ)) :=
+noncomputable def lemmaAxiomFourAxiomT : 𝓢 ⊢ □φ ==> (φ ⋏ (□φ ==> □□φ)) :=
   impTrans'' (lemmaGrz₁ (φ := φ)) axiomGrz
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable def axiomFour :
-    𝓢 ⊢ □φ ==> □□φ :=
+protected noncomputable def axiomFour : 𝓢 ⊢ □φ ==> □□φ :=
   ppq <| impTrans'' lemmaAxiomFourAxiomT and₂
 noncomputable instance : HasAxiomFour 𝓢 := ⟨fun _ ↦ Grz.axiomFour⟩
 

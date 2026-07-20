@@ -84,8 +84,7 @@ end FiniteTransitiveTree
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.FiniteTransitiveTreeModel.SimpleExtension (M :
-    FiniteTransitiveTreeModel) :
-    Kripke.FiniteTransitiveTreeModel where
+    FiniteTransitiveTreeModel) : Kripke.FiniteTransitiveTreeModel where
   toFiniteTransitiveTree := M.toFiniteTransitiveTree↧
   Val x a :=
     match x with
@@ -103,8 +102,7 @@ variable {M : FiniteTransitiveTreeModel}
 instance : Coe (M.World) (M↧.World) := ⟨Sum.inr⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pMorphism :
-    M.toModel →ₚ (M↧.toModel) :=
+def pMorphism : M.toModel →ₚ (M↧.toModel) :=
   Model.PseudoEpimorphism.ofAtomic (FiniteTransitiveTree.SimpleExtension.pMorphism) <| by
   simp [FiniteTransitiveTree.SimpleExtension.pMorphism];
 

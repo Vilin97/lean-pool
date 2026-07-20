@@ -37,20 +37,13 @@ noncomputable def t1 : Rand :=
 noncomputable def t2 : Rand :=
   (⟨(17 / 32 : ℝ), by constructor <;> norm_num⟩ : I)
 
-lemma t1_lt_t2 : (t1 : ℝ) < t2 := by
-  simp [t1, t2]
-  norm_num
+lemma t1_lt_t2 : (t1 : ℝ) < t2 := by norm_num [t1, t2]
 
-lemma t2_lt_t : (t2 : ℝ) < t := by
-  simp [t2, t]
-  norm_num
+lemma t2_lt_t : (t2 : ℝ) < t := by norm_num [t2, t]
 
-lemma t_lt_one : (t : ℝ) < 1 := by
-  simp [t]
-  norm_num
+lemma t_lt_one : (t : ℝ) < 1 := by norm_num [t]
 
-lemma zero_lt_t : (0 : ℝ) < t := by
-  simp [t]
+lemma zero_lt_t : (0 : ℝ) < t := by simp [t]
 
 lemma t1_le_t2 : (t1 : ℝ) ≤ t2 := (t1_lt_t2).le
 lemma t2_le_t : (t2 : ℝ) ≤ t := (t2_lt_t).le
@@ -170,8 +163,7 @@ lemma measurable_g : Measurable fun xyz : Rand × Rand × Rand => g xyz.1 xyz.2.
   have mz : Measurable fun xyz : Rand × Rand × Rand => (xyz.2.2 : ℝ) := by
     exact measurable_subtype_coe.comp (measurable_snd.comp measurable_snd)
   let xy : Rand × Rand × Rand → Rand × Rand := fun xyz => (xyz.1, xyz.2.1)
-  have mxy : Measurable xy := by
-    exact measurable_fst.prodMk (measurable_fst.comp measurable_snd)
+  have mxy : Measurable xy := by exact measurable_fst.prodMk (measurable_fst.comp measurable_snd)
   have mcut : Measurable fun xyz : Rand × Rand × Rand => z0 (xy xyz).1 (xy xyz).2 := by
     exact measurable_z0.comp mxy
   have hset :

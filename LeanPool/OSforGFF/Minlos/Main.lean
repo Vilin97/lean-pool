@@ -166,8 +166,7 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
     simp only [marginalCF]
     congr 1
     -- Goal: ∑ k, ξ k • finsetTestVectors J k = ∑ i, s i • x i
-    have h_tv : ∀ i : Fin n, (J.equivFin.symm (fi i) : E) = x i := by
-      intro i; simp [fi_def]
+    have h_tv : ∀ i : Fin n, (J.equivFin.symm (fi i) : E) = x i := by intro i; simp [fi_def]
     -- Expand ξ and reduce to ∑ i, s i • x i
     -- Goal after marginalCF/congr: ∑ k, ξ k • testVec k = ∑ i, s i • x i
     -- Convert to a form where we can compute ξ k directly

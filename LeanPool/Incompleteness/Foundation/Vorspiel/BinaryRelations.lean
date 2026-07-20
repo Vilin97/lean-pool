@@ -68,93 +68,59 @@ variable {α : Type u}
 variable {rel : α → α → Prop}
 
 
-lemma serial_of_refl (hRefl : ∀ x, rel x x) : Serial rel := by
-  rintro w;
-  existsi w;
-  exact hRefl w;
+lemma serial_of_refl (hRefl : ∀ x, rel x x) : Serial rel := fun w => ⟨w, hRefl w⟩
 
 lemma eucl_of_symm_trans (hSymm : IsSymmetric rel)
     (hTrans : ∀ ⦃x y z⦄, rel x y → rel y z → rel x z) :
-    Euclidean rel := by
-  intro x y z Rxy Rxz;
-  have Ryx := hSymm Rxy;
-  exact hSymm <| hTrans Ryx Rxz;
+    Euclidean rel := fun _ _ _ Rxy Rxz => hSymm <| hTrans (hSymm Rxy) Rxz
 
 lemma trans_of_symm_eucl (hSymm : IsSymmetric rel) (hEucl : Euclidean rel) :
-    ∀ ⦃x y z⦄, rel x y → rel y z → rel x z := by
-  rintro x y z Rxy Ryz;
-  exact hSymm <| hEucl (hSymm Rxy) Ryz;
+    ∀ ⦃x y z⦄, rel x y → rel y z → rel x z :=
+  fun _ _ _ Rxy Ryz => hSymm <| hEucl (hSymm Rxy) Ryz
 
 lemma symm_of_refl_eucl (hRefl : ∀ x, rel x x) (hEucl : Euclidean rel) :
-    IsSymmetric rel := by
-  intro x y Rxy;
-  exact hEucl (hRefl x) Rxy;
+    IsSymmetric rel := fun {x} {_} Rxy => hEucl (hRefl x) Rxy
 
 lemma trans_of_refl_eucl (hRefl : ∀ x, rel x x) (hEucl : Euclidean rel) :
-    ∀ ⦃x y z⦄, rel x y → rel y z → rel x z := by
-  have hSymm := symm_of_refl_eucl hRefl hEucl;
-  exact trans_of_symm_eucl hSymm hEucl;
+    ∀ ⦃x y z⦄, rel x y → rel y z → rel x z :=
+  trans_of_symm_eucl (symm_of_refl_eucl hRefl hEucl) hEucl
 
 lemma refl_of_symm_serial_eucl (hSymm : IsSymmetric rel) (hSerial : Serial rel) (hEucl :
     Euclidean rel) :
     ∀ x, rel x x := by
   rintro x;
   obtain ⟨y, Rxy⟩ := hSerial x;
-  have Ryx := hSymm Rxy;
-  exact trans_of_symm_eucl hSymm hEucl Rxy Ryx;
+  exact trans_of_symm_eucl hSymm hEucl Rxy (hSymm Rxy);
 
 lemma corefl_of_refl_assym_eucl (hRefl : ∀ x, rel x x)
     (hAntisymm : ∀ ⦃x y⦄, rel x y → rel y x → x = y) (hEucl : Euclidean rel) :
-    Coreflexive rel := by
-  intro x y Rxy;
-  have Ryx := hEucl (hRefl x) Rxy;
-  exact hAntisymm Rxy Ryx;
+    Coreflexive rel := fun {x} {_} Rxy => hAntisymm Rxy (hEucl (hRefl x) Rxy)
 
 lemma equality_of_refl_corefl (hRefl : ∀ x, rel x x) (hCorefl : Coreflexive rel) :
-    Equality rel := by
-  intro x y;
-  constructor;
-  · apply hCorefl;
-  · rintro rfl; apply hRefl;
+    Equality rel := fun {x} {_} => ⟨fun Rxy => hCorefl Rxy, by rintro rfl; exact hRefl x⟩
 
 lemma equality_of_refl_assym_eucl (hRefl : ∀ x, rel x x)
     (hAntisymm : ∀ ⦃x y⦄, rel x y → rel y x → x = y) (hEucl : Euclidean rel) :
-    Equality rel := by
-  apply equality_of_refl_corefl;
-  · assumption;
-  · exact corefl_of_refl_assym_eucl hRefl hAntisymm hEucl;
+    Equality rel :=
+  equality_of_refl_corefl hRefl (corefl_of_refl_assym_eucl hRefl hAntisymm hEucl)
 
-lemma refl_of_equality (h : Equality rel) : ∀ x, rel x x := by
-  intro x;
-  exact h.mpr rfl;
+lemma refl_of_equality (h : Equality rel) : ∀ x, rel x x := fun _ => h.mpr rfl
 
-lemma corefl_of_equality (h : Equality rel) : Coreflexive rel := by
-  intro x y Rxy;
-  apply h.mp Rxy;
+lemma corefl_of_equality (h : Equality rel) : Coreflexive rel := fun {_} {_} Rxy => h.mp Rxy
 
-lemma irreflexive_of_assymetric (hAssym : Assymetric rel) : ∀ x, ¬ rel x x := by
-  intro x Rxx;
-  have := hAssym Rxx;
-  contradiction;
+lemma irreflexive_of_assymetric (hAssym : Assymetric rel) : ∀ x, ¬ rel x x :=
+  fun _ Rxx => hAssym Rxx Rxx
 
-lemma refl_of_universal (h : Universal rel) : ∀ x, rel x x := by
-  intro x; exact @h x x;
+lemma refl_of_universal (h : Universal rel) : ∀ x, rel x x := fun x => @h x x
 
-lemma eucl_of_universal (h : Universal rel) : Euclidean rel := by
-  rintro x y z _ _; exact @h z y;
+lemma eucl_of_universal (h : Universal rel) : Euclidean rel := fun {_} {_} {_} _ _ => @h _ _
 
 lemma confluent_of_refl_connected (hRefl : ∀ x, rel x x) (hConfl : Connected rel) :
     Confluent rel := by
   rintro x y z ⟨Rxy, Rxz⟩;
   rcases @hConfl x y z ⟨Rxy, Rxz⟩ with (Ryz | Rzy);
-  · use z;
-    constructor;
-    · assumption;
-    · apply hRefl;
-  · use y;
-    constructor;
-    · apply hRefl;
-    · assumption;
+  · exact ⟨z, Ryz, hRefl z⟩;
+  · exact ⟨y, hRefl y, Rzy⟩;
 
 section «lp_section_3»
 
@@ -181,10 +147,8 @@ end «lp_section_3»
 
 
 @[simp]
-lemma WellFounded.trivial_wellfounded : WellFounded (α := α) (fun _ _ => False) := by
-  constructor; intro _;
-  constructor; intro _ _;
-  contradiction;
+lemma WellFounded.trivial_wellfounded : WellFounded (α := α) (fun _ _ => False) :=
+  ⟨fun a => ⟨a, fun _ h => h.elim⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Relation.IrreflGen (R : α → α → Prop) := fun x y => x ≠ y ∧ R x y
@@ -214,10 +178,10 @@ lemma Finite.exists_ne_map_eq_of_infinite_lt {α β} [LinearOrder α] [Infinite 
   : ∃ x y : α, (x < y) ∧ f x = f y
   := by
     obtain ⟨i, j, hij, e⟩ := Finite.exists_ne_map_eq_of_infinite f;
-    rcases lt_trichotomy i j with (hij | _ | hij);
-    · use i, j;
+    rcases lt_trichotomy i j with (hij | rfl | hij);
+    · exact ⟨i, j, hij, e⟩;
     · contradiction;
-    · use j, i; simp [hij, e];
+    · exact ⟨j, i, hij, e.symm⟩;
 
 lemma antisymm_of_WCWF {R : α → α → Prop} : WCWF R → ∀ ⦃x y⦄, R x y → R y x → x = y := by
   contrapose;
@@ -255,8 +219,7 @@ lemma WCWF_of_finite_trans_antisymm {R : α → α → Prop} (hFin : Finite α)
       induction hij with
       | refl => exact hf i |>.2;
       | step _ ih => exact R_trans ih <| hf _ |>.2;
-    have := H (i + 1) j this;
-    simpa [e];
+    simp_all
 
 end «lp_section_4»
 

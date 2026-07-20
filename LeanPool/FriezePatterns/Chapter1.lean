@@ -44,8 +44,7 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
     intro _ m
     have h₀ : f (0, m) = 0 := pattern_n.topBordZeros n m
     have h₁ : f (1, m) = 1 := pattern_n.topBordOnes n m
-    rw [h₀, h₁]
-    simp
+    simp_all
   | succ k ih =>
     intro h m
     have h' : 1 ≤ k + 1 ∧ k + 1 ≤ n := by omega
@@ -61,8 +60,7 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
         _ = f ((k + 1) + 1, m) * f ((k + 1) + 1, m + 1) - 1 := by
               rw [← pattern_n.diamond (k + 1) m h]
         _ = f ((k + 1) + 1, m) * f (k + 2, m + 1) - 1 := by simp
-        _ = f (k + 2, m) * (f (2, m + 1 + k) * f (k + 1, m + 1) - f (k, m + 1)) - 1 := by
-              rw [ih₁]
+        _ = f (k + 2, m) * (f (2, m + 1 + k) * f (k + 1, m + 1) - f (k, m + 1)) - 1 := by rw [ih₁]
         _ = f (k + 2, m) * (f (2, m + k + 1) * f (k + 1, m + 1) - f (k, m + 1)) - 1 := by
               rw [add_right_comm]
         _ = f (k + 2, m) * (f (2, m + k + 1) * f (k + 1, m + 1))
@@ -77,8 +75,7 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
         _ = f (k + 2, m) * f (2, m + k + 1) * f (k + 1, m + 1)
               - f (k + 1, m) * f (k + 1, m + 1) := by
               rw [add_comm_sub, sub_self, add_zero]
-        _ = (f (k + 2, m) * f (2, m + k + 1) - f (k + 1, m)) * f (k + 1, m + 1) := by
-              rw [← sub_mul]
+        _ = (f (k + 2, m) * f (2, m + k + 1) - f (k + 1, m)) * f (k + 1, m + 1) := by rw [← sub_mul]
     change f (k + 1 + 2, m) = f (2, m + (k + 1)) * f (k + 1 + 1, m) - f (k + 1, m)
     have hgoal : f (k + 3, m) = f (2, m + (k + 1)) * f (k + 2, m) - f (k + 1, m) :=
       mul_right_cancel₀ h₂ (by rw [h₃]; ring_nf)
@@ -106,9 +103,8 @@ lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
     induction i with
     | zero =>
       intro m
-      have hₙ : f (n, m + 1) = 1 ∧ f (n + 1, m) = 0 := by
-        refine ⟨pattern_n.botBordOnes_n (m + 1), ?_⟩
-        exact pattern_n.botBordZeros_n (n := n) (n + 1) m (le_refl _)
+      have hₙ : f (n, m + 1) = 1 ∧ f (n + 1, m) = 0 :=
+        ⟨pattern_n.botBordOnes_n (m + 1), pattern_n.botBordZeros_n (n := n) (n + 1) m (le_refl _)⟩
       simp [hₙ.2, hₙ.1, sub_zero, mul_one]
     | succ k ih =>
       intro m
@@ -159,10 +155,8 @@ lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ
               - f (n - (k + 1) - 1 + 2, m) * f (n - (k + 1) - 1 + 2, m + 1)
               * (f (n - (k + 1) - 1 + 2, m + 1))⁻¹ := by rw [a₁₁, a₁]
         _ = f (n - 1, m + 2) * f (n - (k + 1), m + 1) - f (n - (k + 1) - 1 + 2, m) := by
-              rw [mul_inv_cancel_right₀ h₂ (f (n - 1, m + 2) * f (n - (k + 1), m + 1)),
-                mul_inv_cancel_right₀ h₂ (f (n - (k + 1) - 1 + 2, m))]
-        _ = f (n - 1, m + 2) * f (n - (k + 1), m + 1) - f (n - (k + 1) + 1, m) := by
-              rw [a₁₂]
+              simp_all
+        _ = f (n - 1, m + 2) * f (n - (k + 1), m + 1) - f (n - (k + 1) + 1, m) := by rw [a₁₂]
   · -- Have proved it in the case 1 ≤ n; now do n = 0
     have n_eq_zero : n = 0 := by linarith
     intro i h m
@@ -209,8 +203,7 @@ theorem glideSymm (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPatt
     rw [e₃]
     symm
     calc f (i + 2, m)
-        = f (2, m + i) * f (i + 1, m) - f (i, m) := by
-          rw [pattern_nContinuant1 F f n i h₁ m]
+        = f (2, m + i) * f (i + 1, m) - f (i, m) := by rw [pattern_nContinuant1 F f n i h₁ m]
       _ = f (n - 1, m + i + 2) * f (n - i, m + i + 1) - f (n + 1 - i, m + i) := by
           rw [h₂, h₃, ih₁ (by linarith) m]
       _ = f (n - i - 1, m + i + 2) := by rw [h₅]
@@ -267,9 +260,7 @@ lemma imageFinite (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPatt
             specialize ih (m - (n + 1)) (by omega)
             have key := translationInvariance F f n i (by linarith) (m - (n + 1))
             have hsum : m - (n + 1) + n + 1 = m := by omega
-            rw [hsum] at key
-            rw [← key] at hx
-            exact ih hx
+            simp_all
       · -- if i > n, then f (i, n) = 0, so we can use (0, 0)
         refine ⟨⟨0, 0⟩, ⟨by simp, ?_⟩⟩
         rw [@pattern_n.topBordZeros F _ f n _ 0, ← hx,

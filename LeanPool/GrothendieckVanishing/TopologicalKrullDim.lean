@@ -8,15 +8,7 @@ import Mathlib.Topology.KrullDimension
 import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.Sets.Opens
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # Topological Krull Dimension
 
@@ -111,8 +103,8 @@ theorem topologicalKrullDim_lt_nat_of_lt_of_lt_nat_succ {X Y : Type u}
     [TopologicalSpace X] [TopologicalSpace Y] {n : ℕ}
     (hYX : topologicalKrullDim Y < topologicalKrullDim X)
     (hXn : topologicalKrullDim X < ↑↑(n + 1 : ℕ)) :
-    topologicalKrullDim Y < ↑↑(n : ℕ) := by
-  exact lt_of_lt_of_le hYX ((ENat.WithBot.lt_add_one_iff).mp (by simpa using hXn))
+    topologicalKrullDim Y < ↑↑(n : ℕ) :=
+  lt_of_lt_of_le hYX ((ENat.WithBot.lt_add_one_iff).mp (by simpa using hXn))
 
 namespace TopologicalSpace
 namespace IrreducibleCloseds
@@ -181,8 +173,7 @@ theorem topologicalKrullDim_add_one_eq_iSup_height_add_one (X : Type u) [Topolog
   cases isEmpty_or_nonempty (IrreducibleCloseds X) with
   | inl h =>
       rw [topologicalKrullDim_eq_iSup_height]
-      letI := h
-      simp
+      simp_all
   | inr h =>
       letI := h
       rw [topologicalKrullDim_eq_iSup_height]
@@ -237,8 +228,7 @@ private theorem topologicalKrullDim_lt_of_add_one_le_of_lt_top {X Y : Type u}
       rw [hYdim] at hfin
       have hy_coe_ne_top : (((ydim : ℕ∞) : WithBot ℕ∞)) ≠ ⊤ := ne_top_of_lt hfin
       have hy_ne_top : ydim ≠ ⊤ := by
-        intro hy_top
-        exact hy_coe_ne_top (by simp [hy_top])
+        simp_all
       have hy_lt : ydim < ydim + 1 := (ENat.lt_add_one_iff hy_ne_top).mpr le_rfl
       have hy_lt' :
           (((ydim : ℕ∞) : WithBot ℕ∞) < (((ydim + 1 : ℕ∞) : WithBot ℕ∞))) := by
@@ -253,8 +243,8 @@ strictly smaller Krull dimension. The finiteness hypothesis excludes the case wh
 theorem topologicalKrullDim_lt_of_isIrreducible_of_isClosed {X : Type u} [TopologicalSpace X]
     [IrreducibleSpace X] {Y : Set X} (hY : IsClosed Y) (hne : Y ≠ Set.univ)
     (hfin : topologicalKrullDim Y < ⊤) :
-    topologicalKrullDim Y < topologicalKrullDim X := by
-  exact topologicalKrullDim_lt_of_add_one_le_of_lt_top
+    topologicalKrullDim Y < topologicalKrullDim X :=
+  topologicalKrullDim_lt_of_add_one_le_of_lt_top
     (topologicalKrullDim_add_one_le_of_isIrreducible_of_isClosed hY hne) hfin
 
 /-- On an irreducible space, positive topological Krull dimension is equivalent to the

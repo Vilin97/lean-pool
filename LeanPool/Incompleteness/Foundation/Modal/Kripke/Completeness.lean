@@ -79,9 +79,7 @@ lemma multirel_def_multibox : Ω₁ ≺^[n] Ω₂ ↔ ∀ {φ}, □^[n]φ ∈ Ω
         contradiction;
       use Ω;
       constructor;
-      · intro φ hp;
-        apply hΩ;
-        simp_all;
+      · simp_all
       · apply ih.mpr;
         apply multibox_multidia.mpr;
         intro φ hp;
@@ -93,12 +91,10 @@ lemma multirel_def_multibox' : Ω₁ ≺^[n] Ω₂ ↔ ∀ {φ}, φ ∈ (□''�
   · intro h φ hp; exact multirel_def_multibox.mp h hp;
   · intro h; apply multirel_def_multibox.mpr; assumption;
 
-lemma multirel_def_multidia :
-    Ω₁ ≺^[n] Ω₂ ↔ ∀ {φ}, (φ ∈ Ω₂.1 → ◇^[n]φ ∈ Ω₁.1) :=
+lemma multirel_def_multidia : Ω₁ ≺^[n] Ω₂ ↔ ∀ {φ}, (φ ∈ Ω₂.1 → ◇^[n]φ ∈ Ω₁.1) :=
   Iff.trans multirel_def_multibox multibox_multidia
 
-lemma rel_def_dia :
-    Ω₁ ≺ Ω₂ ↔ ∀ {φ}, φ ∈ Ω₂.1 → ◇φ ∈ Ω₁.1 := by
+lemma rel_def_dia : Ω₁ ≺ Ω₂ ↔ ∀ {φ}, φ ∈ Ω₂.1 → ◇φ ∈ Ω₁.1 := by
   rw [rel_def_box]
   have h := multibox_multidia (n := 1) (Ω₁ := Ω₁) (Ω₂ := Ω₂)
   simp only [Function.iterate_one] at h
@@ -113,8 +109,7 @@ abbrev canonicalModel (𝓢 : S) [Entailment.Consistent 𝓢] [Entailment.K 𝓢
   Val Ω a := (atom a) ∈ Ω.1
 
 @[reducible]
-instance :
-    Semantics (Formula ℕ) (canonicalModel 𝓢).World :=
+instance : Semantics (Formula ℕ) (canonicalModel 𝓢).World :=
   Formula.Kripke.Satisfies.semantics (M := canonicalModel 𝓢)
 
 

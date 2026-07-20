@@ -59,14 +59,10 @@ lemma enables_extension {c : Set es.Event} {e : es.Event} (h : c ⊢ e) :
     · obtain h₂ | h₂ := h₂
       · exact hConflictFree h₁ h₂
       · rw [Set.mem_singleton_iff] at h₂
-        rw [h₂]
-        intro hConf
-        exact hConsistent e₁ h₁ (es.conflict_symm hConf)
+        exact h₂ ▸ fun hConf => hConsistent e₁ h₁ (es.conflict_symm hConf)
     · rw [Set.mem_singleton_iff] at h₁
       obtain h₂ | h₂ := h₂
-      · rw [h₁]
-        intro hConf
-        exact hConsistent e₂ h₂ hConf
+      · exact h₁ ▸ fun hConf => hConsistent e₂ h₂ hConf
       · rw [Set.mem_singleton_iff] at h₂
         rw [h₁, h₂]
         exact es.conflict_irrefl e

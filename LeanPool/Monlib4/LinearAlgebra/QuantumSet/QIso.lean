@@ -84,13 +84,12 @@ lemma QFun.adjoint_eq
       ∘ₗ (TensorProduct.assoc ℂ _ _ _).toLinearMap
       ∘ₗ (rT _ ((TensorProduct.assoc ℂ _ _ _).toLinearMap
         ∘ₗ (rT _ (Coalgebra.comul ∘ₗ Algebra.linearMap ℂ _))
-        ∘ₗ (TensorProduct.lid ℂ _).symm.toLinearMap)) :=
-by
+        ∘ₗ (TensorProduct.lid ℂ _).symm.toLinearMap)) := by
   simp_rw [Coalgebra.comul_eq_mul_adjoint, Coalgebra.counit_eq_unit_adjoint]
   nth_rw 1 [← LinearMap.adjoint_adjoint (LinearMap.mul' ℂ B₂)]
   nth_rw 1 [← LinearMap.adjoint_adjoint (Algebra.linearMap ℂ B₁)]
-  simp_rw [← LinearMap.adjoint_comp, ← LinearMap.lTensor_adjoint, ← LinearMap.rTensor_adjoint]
-  simp_rw [← TensorProduct.lid_adjoint, ← TensorProduct.assoc_adjoint]
+  simp_rw [← LinearMap.adjoint_comp, ← LinearMap.lTensor_adjoint, ← LinearMap.rTensor_adjoint,
+    ← TensorProduct.lid_adjoint, ← TensorProduct.assoc_adjoint]
   nth_rw 4 [← TensorProduct.assoc_symm_adjoint]
   nth_rw 3 [← TensorProduct.assoc_symm_adjoint]
   simp_rw [← LinearMap.adjoint_comp, ← LinearMap.rTensor_adjoint]
@@ -154,8 +153,7 @@ theorem LinearMap.rTensor_lid_symm_comp_eq_assoc_symm_comp_lTensor_comp_lid_symm
   [Module R M₁] [Module R M₂] [Module R M₃] [Module R M₄]
   (f : M₁ ⊗[R] M₂ →ₗ[R] M₃ ⊗[R] M₄) :
   (rT M₄ (τ _).symm.toLinearMap) ∘ₗ f
-    = (ϰ _ _ _).symm.toLinearMap ∘ₗ (lT _ f) ∘ₗ (τ _).symm.toLinearMap :=
-by
+    = (ϰ _ _ _).symm.toLinearMap ∘ₗ (lT _ f) ∘ₗ (τ _).symm.toLinearMap := by
   ext a b
   obtain ⟨S, hS⟩ := TensorProduct.exists_finset (R := R) (f (a ⊗ₜ[R] b))
   simp [hS, TensorProduct.tmul_sum]
@@ -167,8 +165,7 @@ theorem LinearMap.rTensor_tensor_eq_assoc_comp_rTensor_rTensor_comp_assoc_symm
   rT (B ⊗[R] C) x =
   (ϰ _ _ _).toLinearMap
     ∘ₗ rT C (rT B x)
-    ∘ₗ (ϰ A B C).symm.toLinearMap :=
-by
+    ∘ₗ (ϰ A B C).symm.toLinearMap := by
   rw [← TensorProduct.assoc_symm_comp_rTensor, ← LinearMap.comp_assoc,
     LinearEquiv.comp_coe, LinearEquiv.symm_trans_self]
   rfl
@@ -176,8 +173,7 @@ theorem LinearMap.rTensor_rTensor_eq_assoc_symm_comp_rTensor_comp_assoc
   {A B C D : Type*} [AddCommMonoid A]
   [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
   [Module R A] [Module R B] [Module R C] [Module R D] (x : A →ₗ[R] D) :
-  rT C (rT B x) = (ϰ _ _ _).symm.toLinearMap ∘ₗ (rT _ x) ∘ₗ (ϰ _ _ _).toLinearMap :=
-by
+  rT C (rT B x) = (ϰ _ _ _).symm.toLinearMap ∘ₗ (rT _ x) ∘ₗ (ϰ _ _ _).toLinearMap := by
   rw [rTensor_tensor_eq_assoc_comp_rTensor_rTensor_comp_assoc_symm]
   ext
   simp
@@ -204,8 +200,7 @@ theorem FrobeniusAlgebra.snake_equation_2 {A : Type*} [Semiring A] [FrobeniusAlg
   (τ' _).toLinearMap ∘ₗ (lT _ (Coalgebra.counit ∘ₗ LinearMap.mul' R _))
     ∘ₗ (ϰ _ _ _).toLinearMap ∘ₗ (rT _ (Coalgebra.comul ∘ₗ Algebra.linearMap R _))
     ∘ₗ (τ A).symm.toLinearMap
-  = 1 :=
-by
+  = 1 := by
   nth_rw 2 [← LinearMap.comp_assoc]
   nth_rw 2 [← LinearMap.comp_assoc]
   nth_rw 2 [LinearMap.comp_assoc]
@@ -223,8 +218,7 @@ local notation "η" => Algebra.linearMap ℂ
 theorem QFun.self_comp_adjoint_eq_id_of_map_comul
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P)
   (h : QFun.mapComul' P = (ϰ _ _ _).symm.toLinearMap ∘ₗ (lT H Coalgebra.comul) ∘ₗ P) :
-  P ∘ₗ LinearMap.adjoint P = 1 :=
-by
+  P ∘ₗ LinearMap.adjoint P = 1 := by
   rw [QFun.adjoint_eq hp]
   simp only [← LinearMap.comp_assoc]
   rw [LinearMap.comp_rid_eq_rid_comp_rTensor]
@@ -273,14 +267,12 @@ by
     LinearEquiv.coe_coe, TensorProduct.comm_tmul, Algebra.linearMap_apply,
     Algebra.algebraMap_eq_smul_one] at this
   specialize this 1
-  simp only [one_smul] at this
-  simp [this]
+  simp_all
 
 theorem QFun.adjoint_comp_self_eq_id_of_map_counit
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P)
   (h : QFun.mapCounit' P = (τ H).toLinearMap ∘ₗ (rT H Coalgebra.counit)) :
-  LinearMap.adjoint P ∘ₗ P = 1 :=
-by
+  LinearMap.adjoint P ∘ₗ P = 1 := by
   rw [QFun.adjoint_eq hp]
   simp only [LinearMap.rTensor_comp, LinearMap.lTensor_comp, LinearMap.comp_assoc]
   rw [LinearMap.rTensor_lid_symm_comp_eq_assoc_symm_comp_lTensor_comp_lid_symm,
@@ -298,11 +290,9 @@ by
     (ϰ B₁ (B₁ ⊗[ℂ] H) B₂).toLinearMap
         ∘ₗ rT B₂ (ϰ B₁ B₁ H).toLinearMap
         ∘ₗ (ϰ (B₁ ⊗[ℂ] B₁) H B₂).symm.toLinearMap
-    = lT _ (ϰ _ _ _).symm.toLinearMap ∘ₗ (ϰ _ _ _).toLinearMap :=
-  by
+    = lT _ (ϰ _ _ _).symm.toLinearMap ∘ₗ (ϰ _ _ _).toLinearMap := by
     apply TensorProduct.ext_fourfold'
-    intro a b c d
-    simp
+    simp_all
   calc (τ' (B₁ ⊗[ℂ] H)).toLinearMap ∘ₗ lT (B₁ ⊗[ℂ] H) Coalgebra.counit
         ∘ₗ lT (B₁ ⊗[ℂ] H) (LinearMap.mul' ℂ B₂)
         ∘ₗ (ϰ B₁ H (B₂ ⊗[ℂ] B₂)).symm.toLinearMap
@@ -320,8 +310,7 @@ by
           ∘ₗ (lT _ (ϰ _ _ _).symm.toLinearMap ∘ₗ (ϰ _ _ _).toLinearMap)
           ∘ₗ lT _ P
         ∘ₗ rT (B₁ ⊗[ℂ] H) Coalgebra.comul
-        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         rw [TensorProduct.assoc_symm_comp_lTensor_lTensor, ← this]
         simp only [LinearMap.lTensor_comp, LinearMap.comp_assoc]
     _ = (τ' (B₁ ⊗[ℂ] H)).toLinearMap ∘ₗ lT (B₁ ⊗[ℂ] H) Coalgebra.counit
@@ -330,8 +319,7 @@ by
           ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ (lT _ (lT _ P) ∘ₗ (ϰ _ _ _).toLinearMap)
         ∘ₗ rT (B₁ ⊗[ℂ] H) Coalgebra.comul
-        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         rw [TensorProduct.lTensor_lTensor_comp_assoc]
         simp only [LinearMap.lTensor_comp, LinearMap.comp_assoc]
     _ = (τ' (B₁ ⊗[ℂ] H)).toLinearMap ∘ₗ lT (B₁ ⊗[ℂ] H) Coalgebra.counit
@@ -340,32 +328,28 @@ by
           ∘ₗ (ϰ _ _ _).symm.toLinearMap ∘ₗ lT _ P)
         ∘ₗ (ϰ _ _ _).toLinearMap
         ∘ₗ rT (B₁ ⊗[ℂ] H) Coalgebra.comul
-        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         simp only [LinearMap.lTensor_comp, LinearMap.comp_assoc]
     _ = (τ' (B₁ ⊗[ℂ] H)).toLinearMap ∘ₗ (lT (B₁ ⊗[ℂ] H) Coalgebra.counit
         ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ lT _ (P ∘ₗ (rT _ (LinearMap.mul' ℂ B₁)) ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ (ϰ _ _ _).toLinearMap
         ∘ₗ rT (B₁ ⊗[ℂ] H) Coalgebra.comul
-        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ rT (B₁ ⊗[ℂ] H) (η B₁) ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         simp only [hp.map_mul, LinearMap.comp_assoc]
     _ = lT _ (τ' _).toLinearMap ∘ₗ ((ϰ _ _ _).toLinearMap ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ lT _ (lT _ Coalgebra.counit ∘ₗ P ∘ₗ (rT _ (LinearMap.mul' ℂ B₁))
           ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ (ϰ _ _ _).toLinearMap
         ∘ₗ rT (B₁ ⊗[ℂ] H) (Coalgebra.comul ∘ₗ η B₁)
-        ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         simp only [← TensorProduct.assoc_symm_comp_lTensor_lTensor, rid_tensor,
           LinearMap.lTensor_comp, LinearMap.rTensor_comp, LinearMap.comp_assoc]
     _ = lT _ (((τ' _).toLinearMap ∘ₗ lT _ Coalgebra.counit ∘ₗ P)
           ∘ₗ (rT _ (LinearMap.mul' ℂ B₁)) ∘ₗ (ϰ _ _ _).symm.toLinearMap)
         ∘ₗ (ϰ _ _ _).toLinearMap
         ∘ₗ rT (B₁ ⊗[ℂ] H) (Coalgebra.comul ∘ₗ η B₁)
-        ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap :=
-      by
+        ∘ₗ (τ (B₁ ⊗[ℂ] H)).symm.toLinearMap := by
         simp only [LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
           LinearEquiv.refl_toLinearMap, LinearMap.id_comp, LinearMap.lTensor_comp,
           LinearMap.comp_assoc]
@@ -377,8 +361,7 @@ by
       by simp [h]
     _ = rT H ((τ' _).toLinearMap ∘ₗ (lT _ (Coalgebra.counit ∘ₗ LinearMap.mul' ℂ _))
         ∘ₗ (ϰ _ _ _).toLinearMap ∘ₗ (rT _ (Coalgebra.comul ∘ₗ η _))
-        ∘ₗ (τ _).symm.toLinearMap) :=
-      by
+        ∘ₗ (τ _).symm.toLinearMap) := by
         ext
         obtain ⟨S, hS⟩ := TensorProduct.exists_finset (R := ℂ) (Coalgebra.comul (1 : B₁))
         simp only [TensorProduct.AlgebraTensorModule.curry_apply, LinearMap.restrictScalars_self,
@@ -387,8 +370,7 @@ by
           Algebra.linearMap_apply, map_one]
         rw [hS]
         simp [TensorProduct.sum_tmul, map_sum, TensorProduct.smul_tmul]
-    _ = rT H 1 :=
-      by
+    _ = rT H 1 := by
         convert congrArg (rT H) (@FrobeniusAlgebra.snake_equation_2 ℂ _ B₁ _
           (QuantumSet.isFrobeniusAlgebra (A := B₁))) using 2 <;>
           first
@@ -398,8 +380,7 @@ by
 
 theorem QFun.map_counit_of_adjoint_comp_self_eq_id
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P) (h : LinearMap.adjoint P ∘ₗ P = 1) :
-  mapCounit' P = (τ H).toLinearMap ∘ₗ (rT H Coalgebra.counit) :=
-by
+  mapCounit' P = (τ H).toLinearMap ∘ₗ (rT H Coalgebra.counit) := by
   have :=
     calc LinearMap.adjoint P ∘ₗ (lT H (η B₂) ∘ₗ (τ' H).symm.toLinearMap)
           = LinearMap.adjoint P ∘ₗ (P ∘ₗ rT H (η _) ∘ₗ (τ H).symm.toLinearMap) :=
@@ -427,8 +408,7 @@ by ext; simp
 theorem QFun.map_comul_of_inv_eq_adjoint
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P) (h₁ : P ∘ₗ LinearMap.adjoint P = 1)
   (h₂ : LinearMap.adjoint P ∘ₗ P = 1) :
-    mapComul' P = (ϰ _ _ _).symm.toLinearMap ∘ₗ (lT H Coalgebra.comul) ∘ₗ P :=
-by
+    mapComul' P = (ϰ _ _ _).symm.toLinearMap ∘ₗ (lT H Coalgebra.comul) ∘ₗ P := by
   have : LinearMap.adjoint P ∘ₗ mapMul' P ∘ₗ (lT B₁ (LinearMap.adjoint P))
     ∘ₗ (ϰ _ _ _).toLinearMap ∘ₗ (rT B₂ (LinearMap.adjoint P)) = LinearMap.adjoint (mapComul' P) :=
   by
@@ -490,22 +470,19 @@ rfl
 theorem QFun.qBijective_iso_id
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} [hp : QFun H P] (h : hp.qBijective) :
     h.toLinearEquiv.toLinearMap ∘ₗ
-      (rT _ 1) ∘ₗ h.toLinearEquiv.symm.toLinearMap = lT _ 1 :=
-by
+      (rT _ 1) ∘ₗ h.toLinearEquiv.symm.toLinearMap = lT _ 1 := by
   ext
   simp [LinearMap.rTensor_one, LinearMap.lTensor_one]
 
 theorem rankOne_one_one_eq :
-  ContinuousLinearMap.toLinearMap (rankOne ℂ (1 : B₁) (1 : B₂)) = η B₁ ∘ₗ Coalgebra.counit :=
-by
+  ContinuousLinearMap.toLinearMap (rankOne ℂ (1 : B₁) (1 : B₂)) = η B₁ ∘ₗ Coalgebra.counit := by
   rw [Coalgebra.counit_eq_bra_one]
   ext
   simp [Algebra.algebraMap_eq_smul_one]
 
 lemma QFun.mapUnit'' {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} (hp : QFun H P) :
   P ∘ₗ rT H (η B₁) = lT H (η B₂) ∘ₗ (TensorProduct.comm ℂ _ _).toLinearMap :=
-calc P ∘ₗ rT H (η B₁) = lT H (η B₂) ∘ₗ ((τ' _).symm.toLinearMap ∘ₗ (τ _).toLinearMap) :=
-    by
+calc P ∘ₗ rT H (η B₁) = lT H (η B₂) ∘ₗ ((τ' _).symm.toLinearMap ∘ₗ (τ _).toLinearMap) := by
       rw [← LinearMap.comp_assoc, ← hp.map_unit, mapUnit']
       simp only [LinearMap.comp_assoc, LinearEquiv.comp_coe, LinearEquiv.self_trans_symm]
       rfl
@@ -515,15 +492,13 @@ lemma QFun.counit_map_adjoint {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B�
   (rT _ Coalgebra.counit) ∘ₗ LinearMap.adjoint P
     = (TensorProduct.comm ℂ _ _).symm.toLinearMap ∘ₗ lT _ Coalgebra.counit :=
 calc (rT _ Coalgebra.counit) ∘ₗ LinearMap.adjoint P
-    = LinearMap.adjoint (P ∘ₗ (rT _ (η B₁))) :=
-      by
+    = LinearMap.adjoint (P ∘ₗ (rT _ (η B₁))) := by
         rw [Coalgebra.counit_eq_unit_adjoint, ← LinearMap.rTensor_adjoint,
           LinearMap.adjoint_comp]
         congr; ext; rfl
   _ = LinearMap.adjoint (lT H (η B₂) ∘ₗ (TensorProduct.comm ℂ _ _).toLinearMap) :=
       by rw [hp.mapUnit'']
-  _ = (TensorProduct.comm ℂ _ _).symm.toLinearMap ∘ₗ lT _ Coalgebra.counit :=
-      by
+  _ = (TensorProduct.comm ℂ _ _).symm.toLinearMap ∘ₗ lT _ Coalgebra.counit := by
         rw [LinearMap.adjoint_comp, LinearMap.lTensor_adjoint,
           Coalgebra.counit_eq_unit_adjoint, TensorProduct.comm_adjoint]
         congr; ext; rfl
@@ -534,8 +509,7 @@ theorem QFun.qBijective_iso_rankOne_one_one
   {P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)} [hp : QFun H P] (h : hp.qBijective) :
     h.toLinearEquiv.toLinearMap ∘ₗ (rT _ (rankOne ℂ (1 : B₁) (1 : B₁)))
       ∘ₗ h.toLinearEquiv.symm.toLinearMap
-      = lT _ (rankOne ℂ (1 : B₂) (1 : B₂)) :=
-by
+      = lT _ (rankOne ℂ (1 : B₂) (1 : B₂)) := by
   rw [rankOne_one_one_eq, LinearMap.rTensor_comp,
     h.toLinearEquiv_toLinearMap, h.toLinearEquiv_symm_toLinearMap,
     LinearMap.comp_assoc, hp.counit_map_adjoint, ← LinearMap.comp_assoc, hp.mapUnit'']

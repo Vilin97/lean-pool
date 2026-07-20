@@ -19,8 +19,7 @@ open Semiformula
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.LT.le :
-    Operator L 2 :=
-  Semiformula.Operator.Eq.eq.or Semiformula.Operator.LT.lt
+    Operator L 2 := Semiformula.Operator.Eq.eq.or Semiformula.Operator.LT.lt
 
 lemma le_eq (t₁ t₂ : Semiterm L μ n) : LT.le.operator ![t₁, t₂] = “!!t₁ = !!t₂ ∨ !!t₁ < !!t₂” := by
   simp [Operator.operator, Operator.or, LT.le, ←TransitiveRewriting.comp_app]
@@ -30,8 +29,7 @@ variable {T : Theory L} [𝐄𝐐 wkn T]
 
 omit [𝐄𝐐 wkn T] in
 /-- Imported declaration from the Incompleteness formalization. -/
-lemma leIffEqOrLt : T ⊢! “∀ x y, x ≤ y ↔ x = y ∨ x < y” :=
-  complete
+lemma leIffEqOrLt : T ⊢! “∀ x y, x ≤ y ↔ x = y ∨ x < y” := complete
     (consequence_iff.mpr <| fun _ _ _ _ =>
       by simp[models_def, Semiformula.Operator.LE.def_of_Eq_of_LT])
 

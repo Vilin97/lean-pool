@@ -33,7 +33,6 @@ theorem for_any_LTL_formula_exists_an_equivalent_NBW :
   constructor
   · haveI := qfin
     exact inferInstanceAs (Finite ((Set Q) × (Set Q)))
-  · rw [lang_eq]
-    rw [ABW.toNBW.lang_eq]
+  · rw [lang_eq, ABW.toNBW.lang_eq]
 
 end LeanModelChecking

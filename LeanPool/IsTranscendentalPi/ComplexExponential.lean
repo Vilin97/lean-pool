@@ -36,8 +36,8 @@ lemma cexp_mul_cexp_neg (x : ℂ) : cexp x * cexp (-x) = 1 := by
 
 /-- For `x ∈ ℂ`, the map `t ↦ exp(-(t * x))` is continuous on `[0, 1]` at `t`. -/
 lemma continuousWithinAt_exp_neg_mul (x : ℂ) (t : ℝ) :
-  ContinuousWithinAt (fun t : ℝ => cexp (-(t * x))) (uIcc (0:ℝ) 1) t := by
-  exact (differentiableAt_exp_neg_mul x t).continuousAt.continuousWithinAt
+  ContinuousWithinAt (fun t : ℝ => cexp (-(t * x))) (uIcc (0:ℝ) 1) t :=
+  (differentiableAt_exp_neg_mul x t).continuousAt.continuousWithinAt
 
 /-- For `t ∈ ℝ` and `x ∈ ℂ`, it holds that `d/dt exp(-(t * x)) = -x * exp(-(t * x))`. -/
 lemma deriv_exp_neg_mul_real (x : ℂ) (t : ℝ) :
@@ -65,12 +65,10 @@ lemma norm_cexp_neg_mul_le_exp_norm (a : ℂ) :
 lemma prod_one_add_cexp_aroots_eq_zero
     (P : ℚ[X]) (hP : P ≠ 0) (hroot : aeval (π * I) P = 0) :
     (map (fun x : ℂ => 1 + cexp x) (P.aroots ℂ)).prod = 0 := by
-  have hIpi_mem : π * I ∈ P.aroots ℂ := by
-    exact (Polynomial.mem_aroots (p := P) (a := π * I)).2 ⟨hP, hroot⟩
+  have hIpi_mem : π * I ∈ P.aroots ℂ :=
+    (Polynomial.mem_aroots (p := P) (a := π * I)).2 ⟨hP, hroot⟩
   have hfactor_zero : 1 + cexp (π * I) = 0 := by simp [Complex.exp_pi_mul_I]
-  have hzero_mem : (0 : ℂ) ∈ map (fun x : ℂ => 1 + cexp x) (P.aroots ℂ) := by
-    exact mem_map.2 ⟨π * I, hIpi_mem, hfactor_zero⟩
-  exact (prod_eq_zero_iff).2 hzero_mem
+  exact prod_eq_zero_iff.2 (mem_map.2 ⟨π * I, hIpi_mem, hfactor_zero⟩)
 
 /-- The map `t ↦ e^(∑_{x ∈ t} x)` on multisets of complex numbers. -/
 def cexpMultisetSum : Multiset ℂ → ℂ := fun t ↦ cexp t.sum
@@ -118,12 +116,8 @@ lemma mem_nonzeroSubsetSums_of_mem_of_ne_zero {α : Type*} [AddCommMonoid α] [D
     {s : Multiset α} {x : α} (hx : x ∈ s) (hx0 : x ≠ 0) :
     x ∈ nonzeroSubsetSums s := by
   rw [nonzeroSubsetSums, subsetSums]
-  refine Multiset.mem_filter.2 ?_
-  refine ⟨?_, hx0⟩
-  refine Multiset.mem_map.2 ?_
-  refine ⟨{x}, ?_, by simp⟩
-  rw [Multiset.mem_powerset]
-  simpa using hx
+  exact Multiset.mem_filter.2
+    ⟨Multiset.mem_map.2 ⟨{x}, Multiset.mem_powerset.2 (by simpa using hx), by simp⟩, hx0⟩
 
 /-- If `t ⊆ s` and `∑_{x ∈ t} x = 0`, then `e^(∑_{x ∈ t} x) = 1`. -/
 lemma cexpMultisetSum_eq_one_of_mem_zeroSumPowerset {s t : Multiset ℂ}

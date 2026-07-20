@@ -11,6 +11,8 @@ Run with ``uv run python -m lean_pool.aggregator <subcommand>`` from
 - ``render``: regenerate the candidates README table from those files.
 - ``discover``: query GitHub and arXiv for recent untracked Lean
   projects and add them to ``candidates/discovered.yml``.
+- ``triage``: LLM-triage the newly discovered repos into keep/skip
+  verdicts written back into ``candidates/discovered.yml``.
 """
 
 import json
@@ -49,6 +51,12 @@ from lean_pool.aggregator.reservoir import (
     MANIFEST_URL,
     fetch_manifest,
     save_manifest,
+)
+from lean_pool.aggregator.triage import (
+    DEFAULT_MODEL as DEFAULT_TRIAGE_MODEL,
+)
+from lean_pool.aggregator.triage import (
+    triage_discovered_file,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -409,6 +417,53 @@ def discover(
     click.echo(
         f"Updated {discovered_path}: {update.added_github} new GitHub repos, "
         f"{update.added_arxiv} new arXiv papers."
+    )
+
+
+@cli.command("triage")
+@click.option(
+    "--discovered",
+    "discovered_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=DEFAULT_DISCOVERED,
+    show_default=True,
+    help="YAML file whose untriaged GitHub entries should be triaged.",
+)
+@click.option(
+    "--model",
+    default=DEFAULT_TRIAGE_MODEL,
+    show_default=True,
+    help="OpenAI model used for triage.",
+)
+@click.option(
+    "--limit",
+    type=int,
+    default=None,
+    help="Cap the number of records triaged this run.",
+)
+@click.option(
+    "--retriage",
+    is_flag=True,
+    default=False,
+    help="Re-triage records that already carry a verdict.",
+)
+def triage(
+    discovered_path: Path,
+    model: str,
+    limit: int | None,
+    retriage: bool,
+) -> None:
+    """LLM-triage newly discovered repos into keep/skip verdicts."""
+    update = triage_discovered_file(
+        discovered_path,
+        model=model,
+        limit=limit,
+        retriage=retriage,
+    )
+    click.echo(
+        f"Triaged {update.triaged} repos with {model}: "
+        f"{update.kept} keep, {update.skipped} skip "
+        f"({update.prompt_tokens:,} in / {update.completion_tokens:,} out tokens)."
     )
 
 

@@ -31,18 +31,16 @@ lemma fdPolygon_at_t2 : fdPolygon 2 = iPoint := by
   simp only [fdPolygon,
     show ¬(2 : ℝ) ≤ 1 from by norm_num,
     show (2 : ℝ) ≤ 2 from le_refl 2, ↓reduceIte]
-  simp only [chordSegment, iPoint]
-  simp only [show (2 : ℝ) - 1 = 1 by ring]
-  simp only [sub_self]; simp
+  simp only [chordSegment, iPoint, show (2 : ℝ) - 1 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_at_t3 : fdPolygon 3 = rho := by
   simp only [fdPolygon,
     show ¬(3 : ℝ) ≤ 1 from by norm_num,
     show ¬(3 : ℝ) ≤ 2 from by norm_num,
     show (3 : ℝ) ≤ 3 from le_refl 3, ↓reduceIte]
-  simp only [chordSegment, rho]
-  simp only [show (3 : ℝ) - 2 = 1 by ring]
-  simp only [sub_self]; simp
+  simp only [chordSegment, rho, show (3 : ℝ) - 2 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_at_t4 :
     fdPolygon 4 = -1/2 + HHeight * I := by
@@ -73,45 +71,38 @@ noncomputable def fdPolygonSeg4 : ℝ → ℂ := fun t =>
 noncomputable def fdPolygonSeg5 : ℝ → ℂ := fun t => (t - 9/2) + HHeight * I
 
 lemma fdPolygon_seg1_continuous :
-    Continuous fdPolygonSeg1 := by
-  unfold fdPolygonSeg1; continuity
+    Continuous fdPolygonSeg1 := by unfold fdPolygonSeg1; continuity
 
 lemma fdPolygon_seg2_continuous :
-    Continuous fdPolygonSeg2 := by
-  unfold fdPolygonSeg2 chordSegment; continuity
+    Continuous fdPolygonSeg2 := by unfold fdPolygonSeg2 chordSegment; continuity
 
 lemma fdPolygon_seg3_continuous :
-    Continuous fdPolygonSeg3 := by
-  unfold fdPolygonSeg3 chordSegment; continuity
+    Continuous fdPolygonSeg3 := by unfold fdPolygonSeg3 chordSegment; continuity
 
 lemma fdPolygon_seg4_continuous :
-    Continuous fdPolygonSeg4 := by
-  unfold fdPolygonSeg4; continuity
+    Continuous fdPolygonSeg4 := by unfold fdPolygonSeg4; continuity
 
 lemma fdPolygon_seg5_continuous :
-    Continuous fdPolygonSeg5 := by
-  unfold fdPolygonSeg5; continuity
+    Continuous fdPolygonSeg5 := by unfold fdPolygonSeg5; continuity
 
 lemma fdPolygon_match_t1 :
     fdPolygonSeg1 1 = fdPolygonSeg2 1 := by
   simp only [fdPolygonSeg1, fdPolygonSeg2,
-    chordSegment, HHeight, rho']
-  simp only [sub_self]; simp
+    chordSegment, HHeight, rho', sub_self]
+  simp
 
 lemma fdPolygon_match_t2 :
     fdPolygonSeg2 2 = fdPolygonSeg3 2 := by
   simp only [fdPolygonSeg2, fdPolygonSeg3,
-    chordSegment, iPoint]
-  simp only [show (2 : ℝ) - 1 = 1 by ring,
-    show (2 : ℝ) - 2 = 0 by ring]
-  simp only [sub_self]; simp
+    chordSegment, iPoint, show (2 : ℝ) - 1 = 1 by ring,
+    show (2 : ℝ) - 2 = 0 by ring, sub_self]
+  simp
 
 lemma fdPolygon_match_t3 :
     fdPolygonSeg3 3 = fdPolygonSeg4 3 := by
   simp only [fdPolygonSeg3, fdPolygonSeg4,
-    chordSegment, rho, HHeight]
-  simp only [show (3 : ℝ) - 2 = 1 by ring]
-  simp only [sub_self]; simp
+    chordSegment, rho, HHeight, show (3 : ℝ) - 2 = 1 by ring, sub_self]
+  simp
 
 lemma fdPolygon_match_t4 :
     fdPolygonSeg4 4 = fdPolygonSeg5 4 := by
@@ -119,65 +110,7 @@ lemma fdPolygon_match_t4 :
   push_cast; ring
 
 lemma fdPolygon_continuous : Continuous fdPolygon := by
-  have hf1 : frontier {x : ℝ | x ≤ 1} = {1} :=
-    frontier_Iic
-  have hf2 : frontier {x : ℝ | x ≤ 2} = {2} :=
-    frontier_Iic
-  have hf3 : frontier {x : ℝ | x ≤ 3} = {3} :=
-    frontier_Iic
-  have hf4 : frontier {x : ℝ | x ≤ 4} = {4} :=
-    frontier_Iic
-  have h12 : Continuous (fun t =>
-      if t ≤ 1 then fdPolygonSeg1 t
-      else fdPolygonSeg2 t) := by
-    apply Continuous.if
-    · intro t ht; rw [hf1] at ht
-      simp only [mem_singleton_iff] at ht; rw [ht]
-      exact fdPolygon_match_t1
-    · exact fdPolygon_seg1_continuous
-    · exact fdPolygon_seg2_continuous
-  have h123 : Continuous (fun t =>
-      if t ≤ 1 then fdPolygonSeg1 t
-      else if t ≤ 2 then fdPolygonSeg2 t
-      else fdPolygonSeg3 t) := by
-    apply Continuous.if
-    · intro t ht; rw [hf1] at ht
-      simp only [mem_singleton_iff] at ht; rw [ht]
-      simp only [show (1 : ℝ) ≤ 2 from by norm_num,
-        ↓reduceIte]
-      exact fdPolygon_match_t1
-    · exact fdPolygon_seg1_continuous
-    · apply Continuous.if
-      · intro t ht; rw [hf2] at ht
-        simp only [mem_singleton_iff] at ht; rw [ht]
-        exact fdPolygon_match_t2
-      · exact fdPolygon_seg2_continuous
-      · exact fdPolygon_seg3_continuous
-  have h1234 : Continuous (fun t =>
-      if t ≤ 1 then fdPolygonSeg1 t
-      else if t ≤ 2 then fdPolygonSeg2 t
-      else if t ≤ 3 then fdPolygonSeg3 t
-      else fdPolygonSeg4 t) := by
-    apply Continuous.if
-    · intro t ht; rw [hf1] at ht
-      simp only [mem_singleton_iff] at ht; rw [ht]
-      simp only [show (1 : ℝ) ≤ 2 from by norm_num,
-        ↓reduceIte]
-      exact fdPolygon_match_t1
-    · exact fdPolygon_seg1_continuous
-    · apply Continuous.if
-      · intro t ht; rw [hf2] at ht
-        simp only [mem_singleton_iff] at ht; rw [ht]
-        simp only [show (2 : ℝ) ≤ 3 from by norm_num,
-          ↓reduceIte]
-        exact fdPolygon_match_t2
-      · exact fdPolygon_seg2_continuous
-      · apply Continuous.if
-        · intro t ht; rw [hf3] at ht
-          simp only [mem_singleton_iff] at ht; rw [ht]
-          exact fdPolygon_match_t3
-        · exact fdPolygon_seg3_continuous
-        · exact fdPolygon_seg4_continuous
+  have hf : ∀ a : ℝ, frontier {x : ℝ | x ≤ a} = {a} := fun _ => frontier_Iic
   have h_full : Continuous (fun t =>
       if t ≤ 1 then fdPolygonSeg1 t
       else if t ≤ 2 then fdPolygonSeg2 t
@@ -185,81 +118,55 @@ lemma fdPolygon_continuous : Continuous fdPolygon := by
       else if t ≤ 4 then fdPolygonSeg4 t
       else fdPolygonSeg5 t) := by
     apply Continuous.if
-    · intro t ht; rw [hf1] at ht
-      simp only [mem_singleton_iff] at ht; rw [ht]
-      simp only [show (1 : ℝ) ≤ 2 from by norm_num,
-        ↓reduceIte]
-      exact fdPolygon_match_t1
+    · intro t ht; rw [hf 1, mem_singleton_iff] at ht; rw [ht]
+      simpa only [show (1 : ℝ) ≤ 2 from by norm_num, ↓reduceIte] using fdPolygon_match_t1
     · exact fdPolygon_seg1_continuous
     · apply Continuous.if
-      · intro t ht; rw [hf2] at ht
-        simp only [mem_singleton_iff] at ht; rw [ht]
-        simp only [show (2 : ℝ) ≤ 3 from by norm_num,
-          ↓reduceIte]
-        exact fdPolygon_match_t2
+      · intro t ht; rw [hf 2, mem_singleton_iff] at ht; rw [ht]
+        simpa only [show (2 : ℝ) ≤ 3 from by norm_num, ↓reduceIte] using fdPolygon_match_t2
       · exact fdPolygon_seg2_continuous
       · apply Continuous.if
-        · intro t ht; rw [hf3] at ht
-          simp only [mem_singleton_iff] at ht; rw [ht]
-          simp only [show (3 : ℝ) ≤ 4 from by norm_num,
-            ↓reduceIte]
-          exact fdPolygon_match_t3
+        · intro t ht; rw [hf 3, mem_singleton_iff] at ht; rw [ht]
+          simpa only [show (3 : ℝ) ≤ 4 from by norm_num, ↓reduceIte] using fdPolygon_match_t3
         · exact fdPolygon_seg3_continuous
         · apply Continuous.if
-          · intro t ht; rw [hf4] at ht
-            simp only [mem_singleton_iff] at ht; rw [ht]
+          · intro t ht; rw [hf 4, mem_singleton_iff] at ht; rw [ht]
             exact fdPolygon_match_t4
           · exact fdPolygon_seg4_continuous
           · exact fdPolygon_seg5_continuous
   exact h_full
 
 lemma fdPolygon_closed : fdPolygon 0 = fdPolygon 5 := by
-  simp only [fdPolygon]
-  simp only [show ¬(5 : ℝ) ≤ 1 from by norm_num,
-    show ¬(5 : ℝ) ≤ 2 from by norm_num,
-    show ¬(5 : ℝ) ≤ 3 from by norm_num,
-    show ¬(5 : ℝ) ≤ 4 from by norm_num,
-    show (0 : ℝ) ≤ 1 from by norm_num, ↓reduceIte]
-  simp only [HHeight]; push_cast; ring
+  simp only [fdPolygon, show ¬(5 : ℝ) ≤ 1 from by norm_num, show ¬(5 : ℝ) ≤ 2 from by norm_num,
+    show ¬(5 : ℝ) ≤ 3 from by norm_num, show ¬(5 : ℝ) ≤ 4 from by norm_num,
+    show (0 : ℝ) ≤ 1 from by norm_num, ↓reduceIte, HHeight]
+  push_cast; ring
 
 lemma Complex.deriv_ofReal' :
-    deriv (fun t : ℝ => (↑t : ℂ)) = fun _ => 1 := by
-  ext t
-  exact (Complex.ofRealCLM.hasDerivAt (x := t)).deriv
+    deriv (fun t : ℝ => (↑t : ℂ)) = fun _ => 1 :=
+  funext fun t => (Complex.ofRealCLM.hasDerivAt (x := t)).deriv
 
 lemma deriv_affine_mul (a b : ℂ) :
     deriv (fun t : ℝ => a + ↑t * b) = fun _ => b := by
   ext t
-  have h_id : HasDerivAt (fun t : ℝ => (↑t : ℂ)) 1 t :=
-    Complex.ofRealCLM.hasDerivAt
-  have h_mul : HasDerivAt (fun t : ℝ => (↑t : ℂ) * b) (1 * b) t := h_id.mul_const b
   have h_add : HasDerivAt (fun t : ℝ => a + ↑t * b) (0 + 1 * b) t :=
-    (hasDerivAt_const t a).add h_mul
-  simp only [zero_add, one_mul] at h_add
-  exact h_add.deriv
+    (hasDerivAt_const t a).add (Complex.ofRealCLM.hasDerivAt.mul_const b)
+  simpa using h_add.deriv
 
 lemma deriv_affine_shifted_mul (a b : ℂ) (c : ℝ) :
-    deriv (fun t : ℝ => a + (↑t - ↑c) * b) =
-      fun _ => b := by
+    deriv (fun t : ℝ => a + (↑t - ↑c) * b) = fun _ => b := by
   ext t
-  have h_id : HasDerivAt (fun t : ℝ => (↑t : ℂ)) 1 t :=
-    Complex.ofRealCLM.hasDerivAt
   have h_sub : HasDerivAt (fun t : ℝ => (↑t : ℂ) - ↑c) (1 - 0) t :=
-    h_id.sub (hasDerivAt_const t (↑c : ℂ))
-  simp only [sub_zero] at h_sub
-  have h_mul : HasDerivAt (fun t : ℝ => ((↑t : ℂ) - ↑c) * b)
-      (1 * b) t := h_sub.mul_const b
+    Complex.ofRealCLM.hasDerivAt.sub (hasDerivAt_const t (↑c : ℂ))
   have h_add : HasDerivAt (fun t : ℝ => a + (↑t - ↑c) * b) (0 + 1 * b) t :=
-    (hasDerivAt_const t a).add h_mul
-  simp only [zero_add, one_mul] at h_add
-  exact h_add.deriv
+    (hasDerivAt_const t a).add (by simpa using h_sub.mul_const b)
+  simpa using h_add.deriv
 
 lemma fdPolygon_deriv_seg1 :
     deriv fdPolygonSeg1 =
       fun _ => -(HHeight - Real.sqrt 3 / 2) * I := by
   have hrw : fdPolygonSeg1 = fun (t : ℝ) => ((1 : ℂ)/2 + HHeight * I) + ↑t *
-        (-(HHeight - Real.sqrt 3 / 2) * I) := by
-    ext t; simp only [fdPolygonSeg1]; ring
+        (-(HHeight - Real.sqrt 3 / 2) * I) := by ext t; simp only [fdPolygonSeg1]; ring
   rw [hrw, deriv_affine_mul]
 
 lemma fdPolygon_deriv_seg2 :
@@ -301,14 +208,22 @@ lemma fdPolygon_deriv_seg5 :
     push_cast; ring
   rw [hrw, deriv_affine_mul]
 
+/-- An affine map `t ↦ a + ↑t * b` is `ℝ`-differentiable. -/
+private lemma differentiable_affine_mul (a b : ℂ) :
+    Differentiable ℝ (fun t : ℝ => a + ↑t * b) :=
+  (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul (differentiable_const _))
+
+/-- A shifted affine map `t ↦ a + (↑t - c) * b` is `ℝ`-differentiable. -/
+private lemma differentiable_affine_shifted_mul (a b c : ℂ) :
+    Differentiable ℝ (fun t : ℝ => a + (↑t - c) * b) :=
+  (differentiable_const _).add
+    ((Complex.ofRealCLM.differentiable.sub (differentiable_const _)).mul (differentiable_const _))
+
 lemma fdPolygon_seg1_differentiable :
     Differentiable ℝ fdPolygonSeg1 := by
   have h : fdPolygonSeg1 = fun (t : ℝ) => ((1 : ℂ)/2 + HHeight * I) + ↑t *
-        (-(HHeight - Real.sqrt 3 / 2) * I) := by
-    ext t; simp only [fdPolygonSeg1]; ring
-  rw [h]
-  exact (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul
-      (differentiable_const _))
+        (-(HHeight - Real.sqrt 3 / 2) * I) := by ext t; simp only [fdPolygonSeg1]; ring
+  rw [h]; exact differentiable_affine_mul _ _
 
 lemma fdPolygon_seg2_differentiable :
     Differentiable ℝ fdPolygonSeg2 := by
@@ -319,10 +234,7 @@ lemma fdPolygon_seg2_differentiable :
       iPoint, Complex.real_smul, Complex.ofReal_sub,
       Complex.ofReal_one]
     ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg3_differentiable :
     Differentiable ℝ fdPolygonSeg3 := by
@@ -333,10 +245,7 @@ lemma fdPolygon_seg3_differentiable :
       iPoint, Complex.real_smul, Complex.ofReal_sub,
       Complex.ofReal_ofNat, Complex.ofReal_one]
     ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg4_differentiable :
     Differentiable ℝ fdPolygonSeg4 := by
@@ -344,19 +253,14 @@ lemma fdPolygon_seg4_differentiable :
         ((HHeight - Real.sqrt 3 / 2) * I) := by
     ext t; simp only [fdPolygonSeg4, HHeight]
     push_cast; ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg5_differentiable :
     Differentiable ℝ fdPolygonSeg5 := by
   have h : fdPolygonSeg5 = fun (t : ℝ) => (-(9 : ℂ)/2 + HHeight * I) + ↑t * (1 : ℂ) := by
     ext t; simp only [fdPolygonSeg5, HHeight]
     push_cast; ring
-  rw [h]
-  exact (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_mul _ _
 
 lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
     (ht_not_P : t ∉ ({1, 2, 3, 4} : Finset ℝ)) :
@@ -427,8 +331,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
           exact fdPolygon_seg5_differentiable.differentiableAt.congr_of_eventuallyEq heq
 
 lemma fdPolygon_seg1_deriv_val :
-    -(HHeight - Real.sqrt 3 / 2) * I = -I := by
-  simp only [HHeight]; push_cast; ring
+    -(HHeight - Real.sqrt 3 / 2) * I = -I := by simp only [HHeight]; push_cast; ring
 
 lemma fdPolygon_seg4_deriv_val : (HHeight - Real.sqrt 3 / 2) * I = I := by
   simp only [HHeight]; push_cast; ring

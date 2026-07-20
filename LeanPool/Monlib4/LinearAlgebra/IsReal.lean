@@ -29,9 +29,7 @@ def LinearMap.IsReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
 @[simp]
 theorem starHomClass.linearMap_isReal {M₁ M₂ : Type*} {F : Type*} [FunLike F M₁ M₂]
     [Star M₁] [Star M₂] [StarHomClass F M₁ M₂] (φ : F) :
-    LinearMap.IsReal φ := by
-  intro
-  simp only [map_star]
+    LinearMap.IsReal φ := fun _ => map_star _ _
 
 section Sec
 
@@ -137,14 +135,7 @@ theorem LinearMap.real_starAlgEquiv_conj_iff
       f ∘ₗ φ.symm.toAlgEquiv.toLinearMap) ↔
     LinearMap.IsReal f := by
   rw [LinearMap.isReal_iff, LinearMap.isReal_iff, LinearMap.real_starAlgEquiv_conj]
-  constructor
-  · intro h
-    ext x
-    have hx := LinearMap.congr_fun h (φ x)
-    simpa using φ.injective hx
-  · intro h
-    ext x
-    simp [h]
+  simp_all
 
 /-- Star-conjugation as a ring equivalence of linear endomorphisms. -/
 def LinearMap.realRingEquiv {R E : Type _} [Semiring R] [AddCommMonoid E]
@@ -162,16 +153,14 @@ theorem LinearMap.mulRight_real {E K : Type _} [CommSemiring K] [NonUnitalSemiri
     [IsScalarTower K E E] (x : E) :
     (mulRight K x).real = mulLeft K (star x) := by
   ext u
-  simp_rw [LinearMap.real_apply, LinearMap.mulRight_apply, LinearMap.mulLeft_apply, star_mul,
-    star_star]
+  simp_all
 
 theorem LinearMap.mulLeft_real {E K : Type _} [CommSemiring K] [NonUnitalSemiring E]
     [InvolutiveStar K] [StarRing E] [Module K E] [StarModule K E] [SMulCommClass K E E]
     [IsScalarTower K E E] (x : E) :
     (mulLeft K x).real = mulRight K (star x) := by
   ext u
-  simp_rw [LinearMap.real_apply, LinearMap.mulRight_apply, LinearMap.mulLeft_apply, star_mul,
-    star_star]
+  simp_all
 
 end Sec
 
@@ -188,8 +177,7 @@ theorem LinearMap.real.spectrum [FiniteDimensional 𝕜 E]
   constructor <;> rintro ⟨v, ⟨h, hv⟩⟩
   · exact ⟨star v, h.symm, star_ne_zero.mpr hv⟩
   · refine ⟨star v, ?_, star_ne_zero.mpr hv⟩
-    rw [star_star]
-    exact h.symm
+    simp_all
 
 theorem LinearMap.real.eigenspace {E : Type _} [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] [StarAddMonoid E] [StarModule 𝕜 E]

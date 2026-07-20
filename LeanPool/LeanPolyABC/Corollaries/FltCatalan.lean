@@ -70,16 +70,14 @@ theorem derivative_pow_eq_zero_iff {n : ℕ} (chn : ¬ringChar k ∣ n) {a : k[X
     rcases apd with (nz | powz) | goal
     · rw [← C_eq_natCast, C_eq_zero] at nz
       exact absurd (ringChar.dvd nz) chn
-    · have az : a = 0 := (pow_eq_zero_iff'.mp powz).1
-      rw [az, map_zero]
+    · simp_all
     · exact goal
   · intro hd; rw [derivative_pow, hd, MulZeroClass.mul_zero]
 
 theorem mul_eq_zero_left_iff
     {M₀ : Type*} [MulZeroClass M₀] [NoZeroDivisors M₀]
     {a : M₀} {b : M₀} (ha : a ≠ 0) : a * b = 0 ↔ b = 0 := by
-  rw [mul_eq_zero]
-  tauto
+  simp_all
 
 namespace Polynomial
 
@@ -117,20 +115,16 @@ theorem flt_catalan_deriv
   · rw [Nat.add_one_le_iff] at ineq
     exfalso; apply Nat.not_lt_of_le _ ineq
     -- work on lhs
-    rw [radical_hMul habcp, radical_hMul habp]
-    rw [radical_mul_unit_left (Ne.isUnit_C hu),
-        radical_mul_unit_left (Ne.isUnit_C hv),
-        radical_mul_unit_left (Ne.isUnit_C hw)]
-    rw [radical_pow a hp, radical_pow b hq, radical_pow c hr]
-    rw [← radical_hMul hab, ← radical_hMul (hca.symm.mul_left hbc)]
+    rw [radical_hMul habcp, radical_hMul habp, radical_mul_unit_left (Ne.isUnit_C hu),
+        radical_mul_unit_left (Ne.isUnit_C hv), radical_mul_unit_left (Ne.isUnit_C hw),
+        radical_pow a hp, radical_pow b hq, radical_pow c hr, ← radical_hMul hab,
+        ← radical_hMul (hca.symm.mul_left hbc)]
     apply le_trans <| radical_natDegree_le _
-    rw [natDegree_mul (mul_ne_zero ha hb) hc]
-    rw [natDegree_mul ha hb]
+    rw [natDegree_mul (mul_ne_zero ha hb) hc, natDegree_mul ha hb]
     -- work on rhs
     rw [mul_ne_zero_iff] at hap hbp hcp
-    rw [natDegree_mul hap.left hap.right]
-    rw [natDegree_mul hbp.left hbp.right]
-    rw [natDegree_mul hcp.left hcp.right]
+    rw [natDegree_mul hap.left hap.right, natDegree_mul hbp.left hbp.right,
+      natDegree_mul hcp.left hcp.right]
     simp only [natDegree_C, natDegree_pow, zero_add]
     have hpqr : 0 < p * q * r := Nat.mul_le_mul (Nat.mul_le_mul hp hq) hr
     apply Nat.le_of_mul_le_mul_left _ hpqr
@@ -156,15 +150,7 @@ private theorem expand_dvd {a b : k[X]} {n : ℕ} (_hn : n ≠ 0) (h : a ∣ b) 
 omit [DecidableEq k] in
 private theorem is_coprime_of_expand {a b : k[X]} {n : ℕ} (hn : n ≠ 0) :
     IsCoprime (expand k n a) (expand k n b) → IsCoprime a b := by
-  classical
-  simp_rw [← EuclideanDomain.gcd_isUnit_iff]
-  rw [← not_imp_not]; intro h
-  obtain ⟨ha, hb⟩ := EuclideanDomain.gcd_dvd a b
-  have hh := EuclideanDomain.dvd_gcd (expand_dvd hn ha) (expand_dvd hn hb)
-  intro h'; apply h; have tt := isUnit_of_dvd_unit hh h'
-  rw [Polynomial.isUnit_iff] at tt ⊢
-  obtain ⟨zz, yy⟩ := tt; rw [eq_comm, expand_eq_C (zero_lt_iff.mpr hn), eq_comm] at yy
-  exact ⟨zz, yy⟩
+  simp_all
 
 namespace Polynomial
 
@@ -185,8 +171,7 @@ theorem flt_catalan_aux
     have ii : CharZero k := by
       apply charZero_of_inj_zero; intro n; rw [ringChar.spec]
       rw [ch0]; exact zero_dvd_iff.mp
-    have tt := eq_C_of_derivative_eq_zero da
-    rw [tt]; exact natDegree_C _
+    simp_all
   /- Characteristic ch ≠ 0, where we use infinite descent.
     We use proof by contradiction (`by_contra`) combined with strong induction
     (`Nat.case_strong_induction_on`) to formalize the proof.
@@ -256,8 +241,7 @@ theorem flt
   simp_rw [hneg_one, hone] at heq
   apply Polynomial.flt_catalan hn' hn' hn' _
     chn chn chn ha hb hc hab one_ne_zero one_ne_zero (neg_ne_zero.mpr one_ne_zero) heq
-  have eq_lhs : n * n + n * n + n * n = 3 * n * n := by ring_nf
-  rw [eq_lhs]; rw [mul_assoc, mul_assoc]
+  rw [show n * n + n * n + n * n = 3 * n * n by ring_nf, mul_assoc, mul_assoc]
   exact Nat.mul_le_mul_right (n * n) hn
 
 end Polynomial

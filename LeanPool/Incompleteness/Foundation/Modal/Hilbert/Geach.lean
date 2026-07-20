@@ -26,61 +26,43 @@ instance : HasK (Hilbert.Geach G) where p := 0; q := 1
 instance : Entailment.K (Hilbert.Geach G) where
 
 lemma _root_.LO.Modal.Hilbert.K4.eq_Geach :
-    Hilbert.K4   = Hilbert.Geach {⟨0, 2, 1, 0⟩} := by
-  aesop;
+    Hilbert.K4   = Hilbert.Geach {⟨0, 2, 1, 0⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.K45.eq_Geach :
-    Hilbert.K45  = Hilbert.Geach {⟨0, 2, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.K45  = Hilbert.Geach {⟨0, 2, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.K5.eq_Geach :
-    Hilbert.K5   = Hilbert.Geach {⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.K5   = Hilbert.Geach {⟨1, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KB.eq_Geach :
-    Hilbert.KB   = Hilbert.Geach {⟨0, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KB   = Hilbert.Geach {⟨0, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KB4.eq_Geach :
-    Hilbert.KB4  = Hilbert.Geach {⟨0, 1, 0, 1⟩, ⟨0, 2, 1, 0⟩} := by
-  aesop;
+    Hilbert.KB4  = Hilbert.Geach {⟨0, 1, 0, 1⟩, ⟨0, 2, 1, 0⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KB5.eq_Geach :
-    Hilbert.KB5  = Hilbert.Geach {⟨0, 1, 0, 1⟩, ⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KB5  = Hilbert.Geach {⟨0, 1, 0, 1⟩, ⟨1, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KD.eq_Geach :
-    Hilbert.KD   = Hilbert.Geach {⟨0, 0, 1, 1⟩} := by
-  aesop;
+    Hilbert.KD   = Hilbert.Geach {⟨0, 0, 1, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KD4.eq_Geach :
-    Hilbert.KD4  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 2, 1, 0⟩} := by
-  aesop;
+    Hilbert.KD4  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 2, 1, 0⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KD45.eq_Geach :
-    Hilbert.KD45 = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 2, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KD45 = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 2, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KD5.eq_Geach :
-    Hilbert.KD5  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KD5  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨1, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KDB.eq_Geach :
-    Hilbert.KDB  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KDB  = Hilbert.Geach {⟨0, 0, 1, 1⟩, ⟨0, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KT.eq_Geach :
-    Hilbert.KT   = Hilbert.Geach {⟨0, 0, 1, 0⟩} := by
-  aesop;
+    Hilbert.KT   = Hilbert.Geach {⟨0, 0, 1, 0⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.KTB.eq_Geach :
-    Hilbert.KTB  = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KTB  = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 1, 0, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.S4.eq_Geach :
-    Hilbert.S4   = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩} := by
-  aesop;
+    Hilbert.S4   = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.S5.eq_Geach :
-    Hilbert.S5   = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.S5   = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨1, 1, 0, 1⟩} := by aesop;
 
 lemma _root_.LO.Modal.Hilbert.KT4B.eq_Geach :
-    Hilbert.KT4B = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩, ⟨0, 1, 0, 1⟩} := by
-  aesop;
+    Hilbert.KT4B = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩, ⟨0, 1, 0, 1⟩} := by aesop;
 
 lemma _root_.LO.Modal.Hilbert.S4Dot2.eq_Geach :
-    Hilbert.S4Dot2 = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩, ⟨1, 1, 1, 1⟩} := by
-  aesop;
+    Hilbert.S4Dot2 = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 2, 1, 0⟩, ⟨1, 1, 1, 1⟩} := by aesop;
 lemma _root_.LO.Modal.Hilbert.Triv.eq_Geach :
-    Hilbert.Triv = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 1, 0, 0⟩} := by
-  aesop;
+    Hilbert.Triv = Hilbert.Geach {⟨0, 0, 1, 0⟩, ⟨0, 1, 0, 0⟩} := by aesop;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]

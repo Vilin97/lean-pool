@@ -28,8 +28,7 @@ namespace complement
 
 variable {φ ψ : Formula α}
 
-@[simp] lemma neg_def : -(∼φ) = φ := by
-  induction φ using Formula.rec' <;> simp_all [complement]
+@[simp] lemma neg_def : -(∼φ) = φ := by induction φ using Formula.rec' <;> simp_all [complement]
 
 @[simp] lemma bot_def : -(⊥ : Formula α) = ∼(⊥) := by simp only [complement]
 
@@ -114,32 +113,17 @@ variable {𝓢 : S} [Entailment.ModusPonens 𝓢]
 lemma complement_derive_bot (hp : 𝓢 ⊢! φ) (hcp : 𝓢 ⊢! -φ) : 𝓢 ⊢! ⊥ := by
   classical
   induction φ using Formula.casesNeg with
-  | hfalsum => assumption;
-  | hatom a => unfold Formula.complement at hcp; exact hcp ⨀ hp;
-  | hneg => unfold Formula.complement at hcp; exact hp ⨀ hcp;
-  | hbox φ => unfold Formula.complement at hcp; exact hcp ⨀ hp;
-  | himp φ ψ h =>
-    simp only [Formula.complement.imp_def₁ h] at hcp;
-    exact hcp ⨀ hp;
+  | hfalsum => assumption
+  | hatom a | hbox φ => unfold Formula.complement at hcp; exact hcp ⨀ hp
+  | hneg => unfold Formula.complement at hcp; exact hp ⨀ hcp
+  | himp φ ψ h => simp only [Formula.complement.imp_def₁ h] at hcp; exact hcp ⨀ hp
 
 lemma neg_complement_derive_bot (hp : 𝓢 ⊢! ∼φ) (hcp : 𝓢 ⊢! ∼(-φ)) : 𝓢 ⊢! ⊥ := by
   classical
   induction φ using Formula.casesNeg with
-  | hfalsum =>
-    unfold Formula.complement at hcp;
-    exact hcp ⨀ hp;
-  | hatom a =>
-    unfold Formula.complement at hcp;
-    exact hcp ⨀ hp;
-  | hneg =>
-    unfold Formula.complement at hcp;
-    exact hp ⨀ hcp;
-  | himp φ ψ h =>
-    simp only [Formula.complement.imp_def₁ h] at hcp;
-    exact hcp ⨀ hp;
-  | hbox φ =>
-    unfold Formula.complement at hcp;
-    exact hcp ⨀ hp;
+  | hfalsum | hatom a | hbox φ => unfold Formula.complement at hcp; exact hcp ⨀ hp
+  | hneg => unfold Formula.complement at hcp; exact hp ⨀ hcp
+  | himp φ ψ h => simp only [Formula.complement.imp_def₁ h] at hcp; exact hcp ⨀ hp
 
 end «lp_section_1»
 

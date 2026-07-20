@@ -115,7 +115,7 @@ noncomputable instance QuantumSet.tensorProduct
   n := _
   nIsFintype := _
   onb := hA.onb.tensorProduct hB.onb
-  nIsDecidableEq := by infer_instance
+  nIsDecidableEq := inferInstance
 
 theorem QuantumSet.tensorProduct.k_eq₁ [hA : QuantumSet A] [hB : QuantumSet B]
     [Fact (hA.k = hB.k)] :

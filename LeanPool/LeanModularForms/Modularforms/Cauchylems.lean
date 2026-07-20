@@ -42,24 +42,18 @@ lemma cc (f : ℤ → ℂ) (hc : CauchySeq fun N : ℕ => ∑ m ∈ Finset.Icc (
   · rw [trex f n.natAbs] at H3
     · simp only [dist_eq_norm, Order.add_one_le_iff, Nat.cast_natAbs, Int.cast_abs, Int.cast_eq,
       neg_sub, Int.cast_sub, Int.cast_one, gt_iff_lt] at *
-      have h1 : |n| = n := by
-        simp
-        linarith
+      have h1 : |n| = n := by simp; linarith
       simp_rw [h1] at H3
-      have h2 : |n - 1| = n - 1 := by
-        simp
-        linarith
+      have h2 : |n - 1| = n - 1 := by simp; linarith
       simp_rw [h2] at H3
       simp only [neg_sub, add_sub_cancel_right] at H3
       rw [← hs n] at H3
       rw [show f n + f n = 2 * f n by ring] at H3
       simp only [Complex.norm_mul, norm_ofNat] at H3
       have HN := hN N (by rfl)
-      have hgn : g N ≤ |g N| := by
-        exact le_abs_self (g N)
+      have hgn : g N ≤ |g N| := le_abs_self (g N)
       have := le_trans H3 hgn
-      have hgnn : 2 * ‖(f n)‖ < 2 * ε := by
-        exact lt_of_le_of_lt this HN
+      have hgnn : 2 * ‖(f n)‖ < 2 * ε := lt_of_le_of_lt this HN
       nlinarith
     omega
   · omega
@@ -70,9 +64,8 @@ lemma sum_Icc_eq_sum_Ico_succ {α : Type*} [AddCommMonoid α] (f : ℤ → α)
     {l u : ℤ} (h : l ≤ u) :
     ∑ m ∈ Finset.Icc l u, f m = (∑ m ∈ Finset.Ico l u, f m) + f u := by
   rw [Finset.Icc_eq_cons_Ico h]
-  simp only [Finset.cons_eq_insert, Finset.mem_Ico, lt_self_iff_false, and_false, not_false_eq_true,
-    Finset.sum_insert]
-  rw [add_comm]
+  simp only [Finset.cons_eq_insert, Finset.mem_Ico, lt_self_iff_false, and_false,
+    not_false_eq_true, Finset.sum_insert, add_comm]
 
 lemma CauchySeq_Icc_iff_CauchySeq_Ico (f : ℤ → ℂ) (hs : ∀ n, f n = f (-n))
   (hc : CauchySeq (fun N : ℕ => ∑ m ∈ Finset.Icc (-N : ℤ) N, f m) ) :
@@ -82,28 +75,18 @@ lemma CauchySeq_Icc_iff_CauchySeq_Ico (f : ℤ → ℂ) (hs : ∀ n, f n = f (-n
     apply Filter.Tendsto.cauchySeq (x := 0)
     rw [Metric.tendsto_atTop] at *
     intro ε hε
-    have hf3 := h0 ε hε
-    obtain ⟨N, hN⟩ := hf3
-    use N.natAbs
-    simp only [gt_iff_lt, ge_iff_le, dist_zero_right] at *
-    intro n hn
-    have hy := hN n
-    apply hy
-    omega
+    obtain ⟨N, hN⟩ := h0 ε hε
+    exact ⟨N.natAbs, fun n hn => by
+      simp only [gt_iff_lt, ge_iff_le, dist_zero_right] at *
+      exact hN n (by omega)⟩
   have h1 := Filter.Tendsto.mul_const 2 h0
   have hff : Tendsto (fun n : ℕ => 2 * ‖f n‖) atTop (𝓝 0) := by
     rw [Metric.tendsto_atTop] at *
     simp only [gt_iff_lt, ge_iff_le, dist_eq_norm, sub_zero, zero_mul, norm_ofNat, norm_mul,
       Real.norm_ofNat, norm_norm] at *
     intro ε hε
-    have hf3 := h1 ε hε
-    obtain ⟨N, hN⟩ := hf3
-    use N.natAbs
-    intro n hn
-    have hy := hN n
-    rw [mul_comm]
-    apply hy
-    omega
+    obtain ⟨N, hN⟩ := h1 ε hε
+    exact ⟨N.natAbs, fun n hn => by rw [mul_comm]; exact hN n (by omega)⟩
   simp_rw [cauchySeq_iff_le_tendsto_0] at *
   obtain ⟨b, hb, H, hbb⟩ := hc
   obtain ⟨a, ha, H2, haa⟩ := this
@@ -163,36 +146,26 @@ theorem telescope_aux (z : ℍ) (m : ℤ) (b : ℕ) :
       ring
     · omega
     · omega
-    · simp only [neg_add_rev, Int.reduceNeg, Finset.disjoint_insert_right, Finset.mem_Ico,
-      le_add_iff_nonneg_left, Left.nonneg_neg_iff, Int.reduceLE, add_neg_lt_iff_lt_add, false_and,
-      not_false_eq_true, Finset.disjoint_singleton_right, neg_le_self_iff, Nat.cast_nonneg,
-      lt_self_iff_false, and_false, and_self]
-    · simp only [neg_add_rev, Int.reduceNeg, Finset.disjoint_insert_right, Finset.mem_Ico,
-      le_add_iff_nonneg_left, Left.nonneg_neg_iff, Int.reduceLE, add_neg_lt_iff_lt_add, false_and,
-      not_false_eq_true, Finset.disjoint_singleton_right, neg_le_self_iff, Nat.cast_nonneg,
-      lt_self_iff_false, and_false, and_self]
+    · simp_all
+    · simp_all
 
 theorem extracted_3 (z : ℍ) (b : ℤ) : CauchySeq fun N : ℕ ↦
   ∑ n ∈ Finset.Ico (-↑N : ℤ) ↑N, (1 / ((b : ℂ) * ↑z + ↑n) - 1 / (↑b * ↑z + ↑n + 1)) := by
-  conv =>
-      enter [1]
-      intro d
-      rw [telescope_aux ]
+  conv => enter [1]; intro d; rw [telescope_aux]
   apply Filter.Tendsto.cauchySeq (x := 0)
   have h1 : Tendsto (fun d : ℕ ↦ 1 / ((b : ℂ) * ↑z - ↑d)) atTop (𝓝 0) := by
     have := tendsto_zero_inv_linear z (-b)
-    rw [← tendsto_const_smul_iff₀ (c := (-1 : ℂ) ) ] at this
+    rw [← tendsto_const_smul_iff₀ (c := (-1 : ℂ))] at this
     · simp only [Int.cast_neg, neg_mul, one_div, smul_eq_mul, one_mul, mul_zero] at *
-      · apply this.congr
-        intro x
-        rw [neg_inv]
-        congr
-        ring
+      apply this.congr
+      intro x
+      rw [neg_inv]
+      congr
+      ring
     · norm_cast
-  have h2 : Tendsto (fun d : ℕ ↦ 1 / ((b : ℂ) * ↑z + ↑d)) atTop (𝓝 0) := by
-    apply tendsto_zero_inv_linear z b
-  have := Filter.Tendsto.sub h1 h2
-  simpa using this
+  have h2 : Tendsto (fun d : ℕ ↦ 1 / ((b : ℂ) * ↑z + ↑d)) atTop (𝓝 0) :=
+    tendsto_zero_inv_linear z b
+  simpa using Filter.Tendsto.sub h1 h2
 
 
 theorem extracted_4 (z : ℍ) (b : ℤ) :
@@ -206,8 +179,7 @@ theorem extracted_4 (z : ℍ) (b : ℤ) :
 theorem extracted_5 (z : ℍ) (b : ℤ) :
   CauchySeq fun N : ℕ ↦ ∑ n ∈ Finset.Ico (-↑N : ℤ) ↑N, (1 / ((b : ℂ) * ↑z - ↑n) ^ 2 ) := by
   apply Filter.Tendsto.cauchySeq (x := ∑' (x : ℤ), ((((b : ℂ) * ↑z - ↑x) ^ 2)⁻¹))
-  have haa := summable_neg _ (G2_summable_aux b z 2 (by norm_num))
-  have hA:= (haa).hasSum
+  have hA := (summable_neg _ (G2_summable_aux b z 2 (by norm_num))).hasSum
   have ht := hA.comp verga
   simp only [Int.cast_neg, one_div] at *
   have := ht.congr' (f₂ := fun N : ℕ ↦ ∑ n ∈ Finset.Ico (-↑N : ℤ) ↑N, (1 / ((b : ℂ) * ↑z - ↑n) ^ 2
@@ -219,28 +191,23 @@ theorem extracted_5 (z : ℍ) (b : ℤ) :
   simp
   congr
 
-lemma CauchySeq.congr (f g : ℕ → ℂ) (hf : f = g) (hh : CauchySeq g) : CauchySeq f := by
-  rw [hf]
-  exact hh
+lemma CauchySeq.congr (f g : ℕ → ℂ) (hf : f = g) (hh : CauchySeq g) : CauchySeq f := hf ▸ hh
 
 lemma cauchy_seq_mul_const (f : ℕ → ℂ) (c : ℂ) (hc : c ≠ 0) :
   CauchySeq f → CauchySeq (c • f) := by
   intro hf
-  rw [Metric.cauchySeq_iff' ] at *
+  rw [Metric.cauchySeq_iff'] at *
   simp only [ne_eq, gt_iff_lt, ge_iff_le, Pi.smul_apply, smul_eq_mul] at *
   intro ε hε
-  have hcc : 0 < ‖c‖ := by simp [ne_eq, hc, not_false_eq_true]
   have hC : 0 < ‖c‖ := by simp [ne_eq, hc, not_false_eq_true]
-  have H := hf (ε / ‖c‖) (by rw [lt_div_iff₀' hC]; simp [hε] )
-  obtain ⟨N, hN⟩ := H
-  use N
-  intro n hn
-  have h1 := hN n hn
-  simp only [dist_eq_norm, gt_iff_lt] at *
-  rw [← mul_sub]
-  simp only [Complex.norm_mul]
-  rw [lt_div_iff₀' (by simp [hc])] at h1
-  exact h1
+  obtain ⟨N, hN⟩ := hf (ε / ‖c‖) (by rw [lt_div_iff₀' hC]; simp [hε])
+  exact ⟨N, fun n hn => by
+    have h1 := hN n hn
+    simp only [dist_eq_norm, gt_iff_lt] at *
+    rw [← mul_sub]
+    simp only [Complex.norm_mul]
+    rw [lt_div_iff₀' (by simp [hc])] at h1
+    exact h1⟩
 
 
 lemma auxer (a c : ℂ) : a + 2*2*c - 2*c = a + 2*c := by ring
@@ -312,9 +279,7 @@ theorem G2_c_tendsto (z : ℍ) :
         rw [← this]
         have := (a4 2 z).prod_symm.prod
         apply Summable.mul_left
-        apply this.congr
-        intro b
-        congr
+        simp_all
     have := hf.hasSum
     have V := this.comp tendsto_finset_range
     simp only [neg_mul, even_two, Even.neg_pow, Nat.add_one_sub_one, Nat.factorial_one,

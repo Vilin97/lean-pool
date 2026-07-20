@@ -38,17 +38,13 @@ noncomputable instance instSumLeanPool : OmegaCompletePartialOrder (Sum α β) w
     | inl c =>
       cases x with
       | inl x =>
-        simp only [Chain.Sum.inl_coe, ge_iff_le, Sum.inl_le_inl_iff, Chain.Sum.distrib_inl,
-          Sum.map_inl, ωSup_le_iff] at ⊢ hx
-        exact hx
+        simp_all
       | inr x => simp only [Chain.Sum.inl_coe, ge_iff_le, Sum.not_inl_le_inr, forall_const] at hx
     | inr c =>
       cases x with
       | inl x => simp only [Chain.Sum.inr_coe, ge_iff_le, Sum.not_inr_le_inl, forall_const] at hx
       | inr x =>
-        simp only [Chain.Sum.inr_coe, ge_iff_le, Sum.inr_le_inr_iff, Chain.Sum.distrib_inr,
-          Sum.map_inr, ωSup_le_iff] at ⊢ hx
-        exact hx
+        simp_all
 
 @[simp]
 lemma ωSup_inl (c : Chain α) : ωSup (Chain.Sum.inl c : Chain (α ⊕ β)) = .inl (ωSup c) := by

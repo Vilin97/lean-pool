@@ -31,9 +31,10 @@ Current checks:
 - no Lean content file exceeds 10000 non-blank, non-comment code lines
 - no theorem/lemma proof body exceeds 200 non-blank, non-comment code lines, using the current text heuristic
 - `LeanPool/projects.yml` exists, is valid YAML, and contains a `projects` list
-- project entries have required fields: `slug`, `title`, `entry_module`, `authors`, `source`, `status`, `main_declarations`, and `tags`
+- project entries have required fields: `slug`, `title`, `entry_module`, `authors`, `source`, `status`, `provenance`, `main_declarations`, and `tags`
 - project entries also carry documentation metadata: `summary`, `branch`, `main_results`, and `msc`
 - project `status` is `verified`
+- project `provenance` records who wrote the Lean proofs and is one of `human`, `AI`, or `mix` (see [`candidates/provenance.md`](../candidates/provenance.md) for the rubric): `human` when the proofs were written by people, `AI` when they mostly came from an AI system, and `mix` when both contributed substantially
 - project `source` includes at least one recognized primary source key among `arxiv`, `doi`, and `url` (more than one is fine)
 - project authors, main declarations, and tags are nonempty string lists
 - project summaries and branches are nonempty strings, MSC codes are a nonempty string list, and `main_results` is a nonempty list of `declaration` / `informal` entries

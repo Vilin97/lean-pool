@@ -150,33 +150,31 @@ SwapVariablesFun i j (X k) = X k := by
 /- Some really specific and technical lemmas-/
 lemma fin_succ_ne_fin_castSucc (i : Fin n) : Fin.succ i ≠ Fin.castSucc i := by
   apply Fin.val_ne_iff.mp
-  dsimp
-  norm_num
+  simp [Fin.val_succ, Fin.val_castSucc]
 
 lemma wario_number_one {n : ℕ} {a : ℕ} {h : a < n} {a' : ℕ} {h' : a' < n} :
 ({ val := a, isLt := h } : Fin n) ≠ { val := a', isLt := h' } ↔ a ≠ a' := by
-  rw[ne_eq]
-  rw[ne_eq]
-  apply not_iff_not.mpr
-  exact Fin.mk_eq_mk
+  constructor
+  · intro h_ne haa
+    exact h_ne (Fin.ext haa)
+  · intro haa h_eq
+    exact haa (congrArg Fin.val h_eq)
 
 
 lemma i_ne_i_plus_1 {i : ℕ} {h : i < n + 1} {h' : i + 1 < n + 1} :
  ({ val := i, isLt := h } : Fin (n + 1)) ≠ { val := i + 1, isLt := h' } := by
-  rw[wario_number_one]
-  linarith
+  rw [wario_number_one]
+  omega
 
 lemma demazure_denominator_not_null (i : Fin n) :
     (X (Fin.castSucc i) : MvPolynomial (Fin (n + 1)) ℂ) - X (Fin.succ i) ≠ 0 := by
   apply MvPolynomial.ne_zero_iff.mpr
   use Finsupp.single (Fin.succ i) 1
-  rw[MvPolynomial.coeff_sub]
-  rw[MvPolynomial.coeff_X]
-  rw[MvPolynomial.coeff_X]
+  rw [MvPolynomial.coeff_sub, MvPolynomial.coeff_X, MvPolynomial.coeff_X]
   have h : Finsupp.single (Fin.castSucc i) 1 ≠ Finsupp.single (Fin.succ i) 1 := by
     apply Finsupp.ne_iff.mpr
     use Fin.succ i
-    simp[fin_succ_ne_fin_castSucc]
+    simp [fin_succ_ne_fin_castSucc]
   rw [if_neg h]
   simp
 
@@ -275,22 +273,20 @@ lemma poly_div_cancel {p q r : Polynomial (MvPolynomial (Fin n) ℂ)}
     p = q ↔ (p /ₘ r) = (q /ₘ r) := by
   constructor
   · intro h
-    exact congrArg (fun x => x /ₘ r) h
+    exact congrArg (· /ₘ r) h
   · intro h
-    have div_p : p %ₘ r + r * (p /ₘ r) = p := Polynomial.modByMonic_add_div p r
-    have div_q : q %ₘ r + r * (q /ₘ r) = q := Polynomial.modByMonic_add_div q r
-    rw[hp, zero_add] at div_p
-    rw[hq, zero_add] at div_q
-    rw[← div_p, ← div_q]
-    apply (poly_mul_cancel (Polynomial.Monic.ne_zero hr)).mp h
+    have div_p := Polynomial.modByMonic_add_div p r
+    have div_q := Polynomial.modByMonic_add_div q r
+    rw [hp, zero_add] at div_p
+    rw [hq, zero_add] at div_q
+    rw [← div_p, ← div_q]
+    exact (poly_mul_cancel (Polynomial.Monic.ne_zero hr)).mp h
 
 lemma poly_exact_div_mul_cancel {p q : Polynomial (MvPolynomial (Fin n) ℂ)}
  (_q_monic : Polynomial.Monic q) (exact_div : p %ₘ q = 0) : q * (p /ₘ q) = p := by
-  nth_rewrite 2 [← sub_zero p]
-  apply eq_sub_of_add_eq
-  rw[add_comm]
-  rw[← exact_div]
-  exact Polynomial.modByMonic_add_div p q
+  have := Polynomial.modByMonic_add_div p q
+  rw [exact_div, zero_add] at this
+  exact this
 
 -- since the division is exact, the quotient perfectly divides the numerator
 lemma demazure_division_exact' : ∀(i : Fin n), ∀(p : MvPolynomial (Fin (n + 1)) ℂ),
@@ -351,8 +347,7 @@ lemma one_of_div_by_monic_self : ∀ (p : Polynomial (MvPolynomial (Fin n) ℂ))
   have hmod : p %ₘ p = 0 := (Polynomial.modByMonic_eq_zero_iff_dvd hp).mpr (dvd_refl p)
   have h := Polynomial.modByMonic_add_div p p
   rw [hmod, zero_add] at h
-  apply (mul_left_cancel₀ hp.ne_zero)
-  simpa using h
+  exact mul_left_cancel₀ hp.ne_zero (by simpa using h)
 
 
 -- Example showing that the demazure operator doesn't respect the multiplication

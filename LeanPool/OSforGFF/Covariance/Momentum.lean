@@ -62,8 +62,8 @@ noncomputable section
 of the real integral. -/
 theorem integral_ofReal_eq {α} [MeasurableSpace α] (μ : Measure α) (h : α → ℝ)
   (_hf : Integrable h μ) :
-  ∫ x, (h x : ℂ) ∂μ = Complex.ofReal (∫ x, h x ∂μ) := by
-  exact integral_complex_ofReal
+  ∫ x, (h x : ℂ) ∂μ = Complex.ofReal (∫ x, h x ∂μ) :=
+  integral_complex_ofReal
 
 
 /-- Helper lemma: Schwartz functions are L²-integrable. -/
@@ -80,16 +80,14 @@ lemma schwartz_L2_integrable (f : TestFunctionℂ) :
 constant. -/
 theorem integral_const_mul {α} [MeasurableSpace α] (μ : Measure α) (c : ℝ)
   (f : α → ℝ) (hf : Integrable f μ) :
-  Integrable (fun x => c * f x) μ := by
-  exact MeasureTheory.Integrable.const_mul hf c
+  Integrable (fun x => c * f x) μ :=
+  MeasureTheory.Integrable.const_mul hf c
 
 /-- Helper theorem: Integral of a real constant multiple pulls out of the integral. -/
 theorem integral_const_mul_eq {α} [MeasurableSpace α] (μ : Measure α) (c : ℝ)
-  (f : α → ℝ) (hf : Integrable f μ) :
-  ∫ x, c * f x ∂ μ = c * ∫ x, f x ∂ μ := by
-  -- The integrability assumption ensures both integrals are well-defined
-  have := hf  -- Acknowledge we need integrability for the integral to be well-defined
-  exact MeasureTheory.integral_const_mul c f
+  (f : α → ℝ) (_hf : Integrable f μ) :
+  ∫ x, c * f x ∂ μ = c * ∫ x, f x ∂ μ :=
+  MeasureTheory.integral_const_mul c f
 
 /-- Helper theorem: Monotonicity of the real integral for pointwise ≤ between nonnegative functions,
     assuming the larger one is integrable.
@@ -97,8 +95,8 @@ theorem integral_const_mul_eq {α} [MeasurableSpace α] (μ : Measure α) (c : �
 theorem real_integral_mono_of_le
   {α} [MeasurableSpace α] (μ : Measure α) (f g : α → ℝ)
   (hg : Integrable g μ) (hf_nonneg : ∀ x, 0 ≤ f x) (hle : ∀ x, f x ≤ g x) :
-  ∫ x, f x ∂ μ ≤ ∫ x, g x ∂ μ := by
-  exact MeasureTheory.integral_mono_of_nonneg (ae_of_all _ hf_nonneg) hg (ae_of_all _ hle)
+  ∫ x, f x ∂ μ ≤ ∫ x, g x ∂ μ :=
+  MeasureTheory.integral_mono_of_nonneg (ae_of_all _ hf_nonneg) hg (ae_of_all _ hle)
 
 /-! ## Free Covariance in Euclidean QFT
 
@@ -128,8 +126,7 @@ def freePropagatorMomentum (m : ℝ) (k : SpaceTime) : ℝ :=
 /-- The free propagator is an even function: it depends only on ‖k‖. -/
 lemma freePropagator_even (m : ℝ) (k : SpaceTime) :
     freePropagatorMomentum m (-k) = freePropagatorMomentum m k := by
-  unfold freePropagatorMomentum
-  simp only [norm_neg]
+  simp [freePropagatorMomentum]
 
 /-- The propagator in "Mathlib momentum coordinates".
     When using Mathlib's Fourier transform convention, the propagator acquires (2π)² factors.
@@ -141,10 +138,8 @@ noncomputable def freePropagatorMomentumMathlib (m : ℝ) (k : SpaceTime) : ℝ 
 /-- The Mathlib propagator is positive for m > 0. -/
 lemma freePropagatorMomentum_mathlib_pos (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     0 < freePropagatorMomentumMathlib m k := by
-  simp only [freePropagatorMomentumMathlib]
-  apply div_pos one_pos
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
   have h2 : 0 < m^2 := sq_pos_of_pos hm
+  unfold freePropagatorMomentumMathlib
   positivity
 
 /-- The Mathlib propagator is non-negative. -/
@@ -211,10 +206,7 @@ lemma integral_exp_neg_mul_Ioi_eq_inv (a : ℝ) (ha : 0 < a) :
   -- Use integral_exp_mul_Ioi with -a < 0 and c = 0
   have hna : -a < 0 := neg_neg_of_pos ha
   have h := integral_exp_mul_Ioi hna 0
-  simp only [mul_zero, Real.exp_zero] at h
-  -- h : ∫ x in Set.Ioi 0, rexp (-a * x) = -1 / -a = 1 / a
-  rw [h]
-  field_simp
+  simp_all
 
 /-- The Schwinger representation: ∫₀^∞ exp(-t(k² + m²)) dt = 1/(k² + m²).
     This is valid when k² + m² > 0.
@@ -222,10 +214,8 @@ lemma integral_exp_neg_mul_Ioi_eq_inv (a : ℝ) (ha : 0 < a) :
 theorem schwinger_representation (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     ∫ t in Set.Ioi 0, schwingerIntegrand t m k = 1 / (‖k‖^2 + m^2) := by
   unfold schwingerIntegrand
-  have ha : 0 < ‖k‖^2 + m^2 := by positivity
-  have h : ∀ t : ℝ, -t * (‖k‖^2 + m^2) = -(‖k‖^2 + m^2) * t := fun t => by ring
-  simp_rw [h]
-  exact integral_exp_neg_mul_Ioi_eq_inv (‖k‖^2 + m^2) ha
+  simp_rw [show ∀ t : ℝ, -t * (‖k‖^2 + m^2) = -(‖k‖^2 + m^2) * t from fun t => by ring]
+  exact integral_exp_neg_mul_Ioi_eq_inv (‖k‖^2 + m^2) (by positivity)
 
 /-- The combined Gaussian factor for the Schwinger-regulated integral.
     This combines the propagator Schwinger factor with the UV regulator.
@@ -249,9 +239,7 @@ lemma heatKernelPositionSpace_4D (t : ℝ) (ht : 0 < t) (r : ℝ) :
   -- (4πt)^{-2} = 1/(16π²t²)
   have hpos : 0 < 4 * Real.pi * t := by positivity
   have h1 : (4 * Real.pi * t) ^ (-(4 : ℝ) / 2) = 1 / (16 * Real.pi^2 * t^2) := by
-    rw [show -(4 : ℝ) / 2 = -2 by norm_num]
-    rw [Real.rpow_neg (le_of_lt hpos)]
-    rw [Real.rpow_two]
+    rw [show -(4 : ℝ) / 2 = -2 by norm_num, Real.rpow_neg hpos.le, Real.rpow_two]
     field_simp
     ring
   rw [h1]
@@ -260,26 +248,18 @@ lemma heatKernelPositionSpace_4D (t : ℝ) (ht : 0 < t) (r : ℝ) :
 lemma heatKernelPositionSpace_nonneg (t : ℝ) (ht : 0 < t) (r : ℝ) :
     0 ≤ heatKernelPositionSpace t r := by
   unfold heatKernelPositionSpace
-  apply mul_nonneg
-  · apply Real.rpow_nonneg
-    positivity
-  · exact Real.exp_nonneg _
+  exact mul_nonneg (Real.rpow_nonneg (by positivity) _) (Real.exp_nonneg _)
 
 
 /-- The heat kernel is continuous in t for t > 0. -/
 lemma heatKernelPositionSpace_continuous_at (t : ℝ) (ht : 0 < t) (r : ℝ) :
     ContinuousAt (fun s => heatKernelPositionSpace s r) t := by
   unfold heatKernelPositionSpace
-  apply ContinuousAt.mul
-  · apply ContinuousAt.rpow
-    · exact continuousAt_const.mul continuousAt_id
-    · exact continuousAt_const
-    · left; positivity
-  · apply Real.continuous_exp.continuousAt.comp
-    apply ContinuousAt.div
-    · exact continuousAt_const
-    · exact continuousAt_const.mul continuousAt_id
-    · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
+  refine ContinuousAt.mul (ContinuousAt.rpow ?_ continuousAt_const (Or.inl (by positivity)))
+    (Real.continuous_exp.continuousAt.comp (ContinuousAt.div continuousAt_const ?_ ?_))
+  · exact continuousAt_const.mul continuousAt_id
+  · exact continuousAt_const.mul continuousAt_id
+  · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
 
 /-- The heat kernel is bounded by a constant depending only on r > 0.
     Maximum of H(s,r) = (4πs)^{-d/2} exp(-r²/(4s)) occurs at s = r²/(2d).
@@ -455,12 +435,10 @@ theorem covarianceSchwingerRep_eq_besselFormula (m r : ℝ) (hm : 0 < m) (hr : 0
               ∫ t in Set.Ioi 0, (1 / t^2) * Real.exp (-m^2 * t - r^2 / (4 * t)) := by
     apply setIntegral_congr_fun measurableSet_Ioi
     intro t _ht
-    simp only []
-    -- Rearrange: exp(a) * c * exp(b) = c * exp(a) * exp(b) = c * exp(a + b)
-    have h1 : Real.exp (-t * m^2) * (1 / t^2) * Real.exp (-r^2 / (4 * t)) =
-              (1 / t^2) * (Real.exp (-t * m^2) * Real.exp (-r^2 / (4 * t))) := by ring
-    rw [h1, ← Real.exp_add]
-    ring_nf
+    change Real.exp (-t * m^2) * (1 / t^2) * Real.exp (-r^2 / (4 * t)) =
+        (1 / t^2) * Real.exp (-m^2 * t - r^2 / (4 * t))
+    rw [show -m^2 * t - r^2 / (4 * t) = -t * m^2 + -r^2 / (4 * t) from by ring, Real.exp_add]
+    ring
   rw [h_eq, h_integral]
   ring
 
@@ -490,8 +468,7 @@ lemma freeCovarianceBessel_pos (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x
     0 < freeCovarianceBessel m x y := by
   unfold freeCovarianceBessel
   have hr : ‖x - y‖ ≠ 0 := by
-    simp only [ne_eq, norm_eq_zero, sub_eq_zero]
-    exact hxy
+    simpa only [ne_eq, norm_eq_zero, sub_eq_zero] using hxy
   simp only [hr, ↓reduceIte]
   apply mul_pos
   · apply div_pos hm
@@ -542,6 +519,26 @@ lemma integrableOn_exp_neg_mul_sq_const_Ioi (m : ℝ) (hm : 0 < m) (C : ℝ) :
     IntegrableOn (fun t => Real.exp (-t * m^2) * C) (Set.Ioi 0) :=
   (integrableOn_exp_neg_mul_sq_Ioi m hm).mul_const C
 
+/-- Continuity on `(0, ∞)` of `s ↦ exp(-s m²) · H(s, r)`. -/
+private lemma continuousOn_exp_mul_heatKernel (m r : ℝ) :
+    ContinuousOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r) (Set.Ioi 0) := by
+  refine ContinuousOn.mul
+    ((Real.continuous_exp.comp (continuous_neg.mul continuous_const)).continuousOn) ?_
+  intro s hs
+  exact (heatKernelPositionSpace_continuous_at s (Set.mem_Ioi.mp hs) r).continuousWithinAt
+
+/-- Integrability on `(0, ∞)` of `s ↦ exp(-s m²) · H(s, r)` for `m, r > 0`. -/
+private lemma integrableOn_exp_mul_heatKernel (m : ℝ) (hm : 0 < m) (r : ℝ) (hr : 0 < r) :
+    IntegrableOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r) (Set.Ioi 0) := by
+  obtain ⟨C, hCpos, hCbound⟩ := heatKernelPositionSpace_bounded r hr
+  refine Integrable.mono (integrableOn_exp_neg_mul_sq_const_Ioi m hm C)
+    ((continuousOn_exp_mul_heatKernel m r).aestronglyMeasurable measurableSet_Ioi) ?_
+  refine MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi fun s hs => ?_
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+    abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) (heatKernelPositionSpace_nonneg s hs r)),
+    abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) hCpos.le)]
+  exact mul_le_mul_of_nonneg_left (hCbound s hs) (Real.exp_nonneg _)
+
 /-- The Gaussian Fourier transform gives the heat kernel (times normalization).
     ∫_k e^{-s‖k‖²} e^{-ik·z} dk = (2π)^d H(s, ‖z‖)
 
@@ -583,10 +580,7 @@ lemma gaussianFT_eq_heatKernel_times_norm (s : ℝ) (hs : 0 < s) (z : SpaceTime)
   -- Simplify the exponential arguments
   have h_exp_eq : Complex.exp (-1 * ↑‖z‖ ^ 2 / (4 * ↑s)) =
       ↑(Real.exp (-‖z‖^2 / (4 * s))) := by
-    rw [Complex.ofReal_exp]
-    congr 1
-    push_cast
-    ring
+    simp_all
   rw [h_exp_eq]
   -- Goal: (π/s)^(4/2) * exp(-‖z‖²/(4s)) = (2π)^4 * (1/(16π²s²) * exp(-‖z‖²/(4s)))
   -- First simplify ↑4/2 = 2
@@ -614,14 +608,7 @@ lemma gaussianFT_eq_heatKernel_times_norm (s : ℝ) (hs : 0 < s) (z : SpaceTime)
   -- Combine: LHS = ↑(real) = ↑(a*b) = ↑a * ↑b = RHS
   -- Note: the exponent is (2:ℂ) after rewriting h_exp_four_two
   -- Convert cpow to npow: x^(2:ℂ) = x^(2:ℕ) for x ∈ ℂ
-  have h_pow_eq : (↑π / ↑s : ℂ) ^ (2 : ℂ) = (↑π / ↑s : ℂ) ^ (2 : ℕ) := by
-    rw [← Complex.cpow_natCast]
-    norm_cast
-  rw [h_pow_eq]
-  calc (↑π / ↑s : ℂ) ^ (2 : ℕ) * ↑(Real.exp (-‖z‖ ^ 2 / (4 * s)))
-      = ↑((π / s) ^ 2 * Real.exp (-‖z‖ ^ 2 / (4 * s))) := h_lhs
-    _ = ↑(a * b) := by rw [h_real]
-    _ = ↑a * ↑b := h_rhs.symm
+  simp_all
 
 /-- **THEOREM**: The integrand for fubini_schwinger_fourier is integrable on SpaceTime × (0,∞).
     This justifies using Tonelli's theorem.
@@ -659,8 +646,7 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
         simp only [Complex.ofReal_neg, Complex.ofReal_mul, Complex.ofReal_pow]
       rw [h_real, Complex.exp_ofReal_re]
     convert h_cplx.re using 1
-    ext v
-    exact (h_re_eq v).symm
+    simp_all
   -- Step 2: h is integrable (exponential decay on (0,∞), zero elsewhere)
   have hh_int : Integrable h volume := by
     -- h(t) = exp(-tm²) for t > 0, else 0
@@ -676,8 +662,7 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
     have h_eq_indicator : h = (Set.Ioi (0:ℝ)).indicator (fun t => Real.exp (-t * m^2)) := by
       ext t
       simp only [Set.indicator, Set.mem_Ioi, hh_def]
-    rw [h_eq_indicator]
-    exact h_indicator
+    rwa [h_eq_indicator]
   -- Step 3: The product g(k) * h(t) is integrable on the product measure
   have hgh_int : Integrable (fun p : SpaceTime × ℝ => g p.1 * h p.2) (volume.prod volume) := by
     exact Integrable.mul_prod hg_int hh_int
@@ -694,10 +679,7 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
         ring_nf
       rw [h1]
       have h2 : Real.exp (-t * ‖k‖^2) ≤ 1 := by
-        rw [Real.exp_le_one_iff]
-        apply mul_nonpos_of_nonpos_of_nonneg
-        · linarith
-        · positivity
+        simp_all
       calc Real.exp (-α * ‖k‖^2) * Real.exp (-t * ‖k‖^2) * Real.exp (-t * m^2)
           ≤ Real.exp (-α * ‖k‖^2) * 1 * Real.exp (-t * m^2) := by
             apply mul_le_mul_of_nonneg_right
@@ -799,8 +781,7 @@ theorem fubini_schwinger_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 <
   have h_set_to_full_lhs : (∫ k : SpaceTime, ∫ t in Set.Ioi 0, f (k, t)) =
       ∫ k : SpaceTime, ∫ t : ℝ, f (k, t) := by
     apply integral_congr_ae; filter_upwards with k
-    rw [MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; intro t ht
-    simp only [Set.mem_Ioi, not_lt] at ht; simp only [hf_def, not_lt.mpr ht, ↓reduceIte]
+    rw [MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; simp_all
   have h_set_to_full_rhs : (∫ t in Set.Ioi 0, ∫ k : SpaceTime, f (k, t)) =
       ∫ t : ℝ, ∫ k : SpaceTime, f (k, t) := by
     rw [MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; intro t ht
@@ -829,8 +810,7 @@ theorem fubini_schwinger_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 <
   rw [h_lhs, h_set_to_full_lhs, h_fubini, h_re_inside]
   rw [show (∫ t : ℝ, (∫ k : SpaceTime, f (k, t)).re) = ∫ t in Set.Ioi 0, (∫ k : SpaceTime, f (k,
     t)).re
-      from by rw [← MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; intro t ht
-              simp only [Set.mem_Ioi, not_lt] at ht; simp [h_factor, not_lt.mpr ht]]
+      from by rw [← MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; simp_all]
   exact setIntegral_congr_fun measurableSet_Ioi fun t ht => by simp [h_factor, Set.mem_Ioi.mp ht]
 
 /-- The regulated Fourier integral equals the Schwinger-regulated form via Fubini/Tonelli. -/
@@ -880,10 +860,7 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
         Complex.exp (-Complex.I * ⟪k, r⟫_ℝ) := by
     intro s hs
     have h := gaussianFT_eq_heatKernel_times_norm s hs r
-    have h_ne : (normalisation : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hnorm_ne
-    rw [← hnorm_def] at h
-    rw [h, one_div]
-    field_simp [h_ne]
+    simp_all
   -- Use proven integrability
   have h_int := integrable_schwinger_fourier_integrand α hα m hm
   simp only [hr_def] at *
@@ -914,14 +891,11 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
           ring
       _ = (↑(Real.exp (-t * m^2) / normalisation) : ℂ) *
             ∫ k : SpaceTime, ↑(Real.exp (-(α + t) * ‖k‖^2)) *
-              Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := by
-          exact MeasureTheory.integral_const_mul _ _
+              Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := MeasureTheory.integral_const_mul _ _
       _ = (↑(Real.exp (-t * m^2) / normalisation) : ℂ) *
             ∫ k : SpaceTime, Complex.exp (-↑(α + t) * ‖k‖^2) *
               Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := by
-          congr 2; ext k
-          rw [Complex.ofReal_exp]; congr 1
-          push_cast; ring
+          simp_all
       _ = (↑(Real.exp (-t * m^2) / normalisation) : ℂ) *
             (↑normalisation * ↑(heatKernelPositionSpace (α + t) ‖x - y‖)) := by
           rw [hnorm_def, gaussianFT_eq_heatKernel_times_norm (α + t) hαt (x - y)]
@@ -969,22 +943,9 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
       rw [abs_of_nonneg (mul_nonneg h_exp_nonneg h_heat_nonneg)]
       rw [abs_of_nonneg (mul_nonneg h_exp_nonneg (le_of_lt hCpos))]
       exact mul_le_mul_of_nonneg_left (hCbound (α + t) hαt) h_exp_nonneg
-  -- For the final equality, we use that both compute the same real integral
-  -- The LHS integral after Fubini equals ∫_t exp(-tm²) H(α+t, r) dt
-  -- This is exactly the RHS by definition
-  -- Due to the complexity of the formal Fubini manipulation,
-  -- we use the key mathematical ingredients established above
-  -- The proof follows from:
-  -- 1. h_schwinger gives the Schwinger representation
-  -- 2. h_combine shows exponent factorization
-  -- 3. h_gaussFT evaluates the k-integral
-  -- 4. h_int justifies Fubini
-  -- 5. h_inner_k combines these for each t
-  -- The formal Fubini step with complex integrals
-  -- involves showing the iterated integral matches
-  -- Since the inner k-integral (h_inner_k) gives a real-valued result,
-  -- and the t-integral matches covarianceSchwingerRegulated by definition,
-  -- the equality holds.
+  -- The LHS integral after Fubini equals ∫_t exp(-tm²) H(α+t, r) dt, which is the RHS.
+  -- Ingredients: h_schwinger (Schwinger rep), h_combine (exponent factorization),
+  -- h_gaussFT (k-integral), h_int (Fubini), h_inner_k (combination per t).
   -- Step 1: Substitute Schwinger representation
   have h_lhs_step1 : (∫ k : SpaceTime,
     ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / normalisation) *
@@ -992,9 +953,7 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
       (∫ k : SpaceTime, ↑(Real.exp (-α * ‖k‖^2) * (∫ t in Set.Ioi 0,
         schwingerIntegrand t m k) / normalisation) *
         Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ)).re := by
-    congr 2
-    ext k
-    rw [h_schwinger k]
+    simp_all
   rw [h_lhs_step1]
   -- Step 2: Combine exponents and prepare for Fubini
   -- exp(-α‖k‖²) * ∫_t schwinger = ∫_t exp(-α‖k‖²) * schwinger = ∫_t exp(-(α+t)‖k‖²) * exp(-tm²)
@@ -1112,13 +1071,11 @@ lemma covarianceSchwingerRegulated_tendsto (m : ℝ) (hm : 0 < m) (r : ℝ) (hr 
       exact (measurable_id.neg.mul measurable_const).exp
     · apply Measurable.mul
       · -- (4π(α+t))^{-d/2} is measurable in t (using MeasurablePow ℝ ℝ)
-        have h1 : Measurable (fun t : ℝ => 4 * Real.pi * (α + t)) :=
-          measurable_const.mul (measurable_const.add measurable_id)
-        exact h1.pow_const (-(STDimension : ℝ) / 2)
+        exact (measurable_const.mul (measurable_const.add measurable_id)).pow_const
+          (-(STDimension : ℝ) / 2)
       · -- exp(-r²/(4(α+t))) is measurable in t
-        have h2 : Measurable (fun t : ℝ => -r^2 / (4 * (α + t))) :=
-          measurable_const.div (measurable_const.mul (measurable_const.add measurable_id))
-        exact h2.exp
+        exact (measurable_const.div
+          (measurable_const.mul (measurable_const.add measurable_id))).exp
   -- 2. Bound: ‖F α t‖ ≤ bound t for α > 0 and a.e. t > 0
   · filter_upwards [self_mem_nhdsWithin] with α hα
     have hαpos : 0 < α := Set.mem_Ioi.mp hα
@@ -1273,28 +1230,7 @@ lemma covarianceSchwingerRegulated_le_const_mul (m : ℝ) (hm : 0 < m) (r : ℝ)
       ∫ s in Set.Ioi 0, Real.exp (-s * m^2) * heatKernelPositionSpace s r := by
     -- Use setIntegral_mono_set: ∫_s ≤ ∫_t when s ⊆ t and f ≥ 0
     apply MeasureTheory.setIntegral_mono_set
-    · -- IntegrableOn f (Ioi 0)
-      -- Bound heat kernel and use integrableOn_exp_neg_mul_sq_const_Ioi
-      obtain ⟨C, hCpos, hCbound⟩ := heatKernelPositionSpace_bounded r hr
-      have h_bound_int : IntegrableOn (fun s => Real.exp (-s * m^2) * C) (Set.Ioi 0) :=
-        integrableOn_exp_neg_mul_sq_const_Ioi m hm C
-      refine Integrable.mono h_bound_int ?_ ?_
-      · -- AEStronglyMeasurable
-        have h_cont : ContinuousOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r)
-          (Set.Ioi 0) := by
-          apply ContinuousOn.mul
-          · exact (Real.continuous_exp.comp (continuous_neg.mul continuous_const)).continuousOn
-          · intro s hs
-            exact (heatKernelPositionSpace_continuous_at s hs r).continuousWithinAt
-        exact h_cont.aestronglyMeasurable measurableSet_Ioi
-      · -- Pointwise bound
-        apply MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi
-        intro s hs
-        rw [Real.norm_eq_abs, Real.norm_eq_abs]
-        have h_nonneg : 0 ≤ Real.exp (-s * m^2) * heatKernelPositionSpace s r :=
-          mul_nonneg (Real.exp_nonneg _) (heatKernelPositionSpace_nonneg s hs r)
-        rw [abs_of_nonneg h_nonneg, abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) (le_of_lt hCpos))]
-        exact mul_le_mul_of_nonneg_left (hCbound s hs) (Real.exp_nonneg _)
+    · exact integrableOn_exp_mul_heatKernel m hm r hr
     · -- f ≥ 0 a.e. on Ioi 0
       apply MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi
       intro s hs
@@ -1305,9 +1241,7 @@ lemma covarianceSchwingerRegulated_le_const_mul (m : ℝ) (hm : 0 < m) (r : ℝ)
       exact Set.mem_Ioi.mpr (lt_of_lt_of_le hα (le_of_lt hs))
   -- Step 3: Bound the exponential prefactor
   have h_exp : Real.exp (α * m^2) ≤ Real.exp (m^2) := by
-    apply Real.exp_le_exp_of_le
-    calc α * m^2 ≤ 1 * m^2 := by apply mul_le_mul_of_nonneg_right hα1; exact sq_nonneg m
-      _ = m^2 := one_mul _
+    simp_all
   -- Step 4: Nonneg of the integral (for multiplication bound)
   have h_int_nonneg : 0 ≤ ∫ s in Set.Ioi 0, Real.exp (-s * m^2) * heatKernelPositionSpace s r := by
     apply MeasureTheory.setIntegral_nonneg measurableSet_Ioi
@@ -1357,12 +1291,7 @@ lemma gaussian_regulator_integrable' (α : ℝ) (hα : 0 < α) :
   have h := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add (V := SpaceTime) hα_re 0 0
   simp only [zero_mul, add_zero] at h
   have h' : Integrable (fun k : SpaceTime => (Real.exp (-α * ‖k‖^2) : ℂ)) volume := by
-    have heq : ∀ k : SpaceTime, Complex.exp (-↑α * ↑‖k‖ ^ 2) = ↑(Real.exp (-α * ‖k‖ ^ 2)) := by
-      intro k
-      simp only [← Complex.ofReal_neg, ← Complex.ofReal_mul, ← Complex.ofReal_pow,
-        Complex.ofReal_exp]
-    simp_rw [heq] at h
-    exact h
+    simp_all
   exact h'.re
 
 /-- The regulated covariance is uniformly bounded for all (x, y).
@@ -1524,8 +1453,7 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
             · apply mul_le_mul_of_nonneg_left h_prop_bound (Real.exp_nonneg _)
             · positivity
         _ = Real.exp (-α * ‖k‖ ^ 2) / (m^2 * (2 * Real.pi) ^ STDimension) := by ring
-    have h_bound_int : Integrable bound volume := by
-      exact (gaussian_regulator_integrable' α hα).div_const _
+    have h_bound_int : Integrable bound volume := (gaussian_regulator_integrable' α hα).div_const _
     have h_cont_k : ∀ᵐ k ∂volume, Continuous fun p => F p k := by
       apply Filter.Eventually.of_forall
       intro k
@@ -1567,10 +1495,7 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
       refine ⟨Set.univ, Filter.univ_mem, ?_⟩
       intro x _
       simp only [Set.diagonal, Set.preimage, Set.mem_setOf_eq, Pi.zero_apply]
-      have h_eq : {y : SpaceTime | x = y} = {x} := by
-        ext y; simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, eq_comm]
-      rw [h_eq]
-      exact measure_singleton x
+      simp_all
   -- Step 3: Helper lemma - AEStronglyMeasurable on a conull set implies full AEStronglyMeasurable
   have h_lift : ∀ {f : SpaceTime × SpaceTime → ℂ} {s : Set (SpaceTime × SpaceTime)},
       MeasurableSet s → (volume.prod volume) sᶜ = 0 →
@@ -1581,8 +1506,7 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
     refine ⟨g, hg_meas, ?_⟩
     rw [Filter.EventuallyEq, MeasureTheory.ae_restrict_iff' hs_meas] at hfg
     filter_upwards [hfg, compl_mem_ae_iff.mpr hs_null] with p hps hpnotin
-    simp only [Set.mem_compl_iff, not_not] at hpnotin
-    exact hps hpnotin
+    simp_all
   -- Step 4: Apply the lift with off-diagonal set
   apply h_lift hS_meas
   · rw [compl_compl]; exact h_diag_null
@@ -1603,8 +1527,7 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
         · intro r hr; simp only [Set.mem_Ioi] at hr
           exact mul_ne_zero (by positivity : (4 : ℝ) * Real.pi^2 ≠ 0) (ne_of_gt hr)
       · apply besselK1_continuousOn.comp (continuousOn_const.mul continuousOn_id)
-        intro r hr; simp only [Set.mem_Ioi] at hr
-        exact mul_pos hm hr
+        intro r hr; simp_all
     -- Show the composed function is continuous on S
     -- On S, the function equals the formula (since ‖p.1 - p.2‖ ≠ 0)
     have h_eq : Set.EqOn (fun p => freeCovariance m p.1 p.2)
@@ -1726,8 +1649,7 @@ lemma freeCovarianceKernel_integrable (m : ℝ) (hm : 0 < m) :
     have hr_ne : r ≠ 0 := ne_of_gt hr
     field_simp
   rw [integrableOn_congr_fun h_intgd measurableSet_Ioi]
-  have h_radial := radial_besselK1_integrable m hm
-  exact h_radial.const_mul (m / (4 * Real.pi^2))
+  exact (radial_besselK1_integrable m hm).const_mul (m / (4 * Real.pi^2))
 
 /-- **Polynomial decay bound for the free covariance kernel.**
 
@@ -1790,69 +1712,8 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
       push Not at hmr_small
       have hmr_ge : 1 ≤ m * ‖z‖ := le_of_lt hmr_small
       have h_bessel_bound := besselK1_asymptotic (m * ‖z‖) hmr_ge
-      -- For mr > 1, we have exp(-mr) < exp(-1), and we need to show
-      -- (m/(4π²r)) · (sinh(1) + 2) · exp(-mr) ≤ C/r²
-      -- Since exp(-mr) ≤ 1 and m/r ≤ m²/(mr) = m²/1 ≤ m² when r ≥ 1/m, we have
-      -- (m/(4π²r)) · (sinh(1) + 2) · exp(-mr) ≤ (sinh(1) + 2) · m · exp(-1) / (4π² r)
-      -- We need this ≤ C/r². This requires r ≤ (cosh(1)+2)/((sinh(1)+2) · m · e⁻¹)
-      -- But we can use a simpler bound: for r > 1/m, mr > 1 so exp(-mr) < 1/(mr)²
-      -- Actually, let's use: for any z ≥ 1, K₁(z) ≤ K₁(1) since K₁ is decreasing
-      -- And K₁(1) ≤ cosh(1) + 2 by besselK1_mul_self_le (z·K₁(z) ≤ cosh(1)+2 for z≤1)
-      -- Wait, we need a bound that works for all z. Let me use a simpler approach.
-      -- For z ≥ 1: K₁(z) ≤ (sinh(1)+2)·exp(-z) ≤ (sinh(1)+2)·exp(-1) < sinh(1)+2
-      -- So K₁(mr) ≤ (sinh(1)+2)·exp(-1) for mr ≥ 1
-      -- Then (m/(4π²r))·K₁(mr) ≤ (m/(4π²r))·(sinh(1)+2)·exp(-1) = (sinh(1)+2)·exp(-1)·m/(4π²r)
-      -- For r > 1/m: m/r < m² (since r > 1/m), so this ≤ (sinh(1)+2)·exp(-1)·m²/(4π²)
-      -- But we need ≤ C/r². Since r > 1/m, we have 1/r² < m²
-      -- So if (sinh(1)+2)·exp(-1)/(4π²) ≤ C = (cosh(1)+2)/(4π²), which needs
-      -- (sinh(1)+2)·exp(-1) ≤ cosh(1)+2. Since exp(-1) < 1 and sinh(1) < cosh(1), this holds.
-      -- But we need a tighter argument. Let's use the fact that for mr ≥ 1:
-      -- K₁(mr) ≤ (cosh(1)+2)/(mr) · (mr) · K₁(mr) / (cosh(1)+2)
-      -- Hmm, this is getting complicated. Let me just use: for mr ≥ 1,
-      -- exp(-(mr)) ≤ exp(-1) < 1, and (m/r) · exp(-mr) ≤ m · exp(-1) · (mr)/(mr·r) = exp(-1)/r
-      -- Wait, let me think more carefully.
-      -- We have K₁(mr) ≤ (sinh(1)+2) · exp(-mr)
-      -- So (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-mr) / (4π²r)
-      -- Now exp(-mr)/r = exp(-mr)/r. For r ≥ 1/m, mr ≥ 1.
-      -- The function f(r) = exp(-mr)/r for r ≥ 1/m has f(1/m) = exp(-1) · m
-      -- and is decreasing, so f(r) ≤ exp(-1) · m for all r ≥ 1/m.
-      -- Thus (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-1) · m / (4π²) = (sinh(1)+2) · m² ·
-      -- exp(-1) / (4π²)
-      -- But this gives a bound independent of r, not 1/r². We need 1/r².
-      -- Key insight: for r ≥ 1/m, we have 1/r ≤ m and 1/r² ≤ m². So the bound we computed
-      -- (sinh(1)+2) · m² · exp(-1) / (4π²) ≤ (sinh(1)+2) · exp(-1) / (4π² · (1/m)²) = (sinh(1)+2) ·
-      -- exp(-1) · m² / (4π²)
-      -- doesn't help directly. Let me try another approach.
-      --
-      -- For the 1/r² bound, we note that for r ≥ 1/m:
-      -- (m/r) · exp(-mr) / r = m · exp(-mr) / r²
-      -- The function g(r) = m · exp(-mr) achieves max at r = 0 where it's m, and at r = 1/m it's
-      -- m·exp(-1).
-      -- So m · exp(-mr) ≤ m for all r ≥ 0.
-      -- Thus (m/r) · (sinh(1)+2) · exp(-mr) / (4π²) = (sinh(1)+2) · m · exp(-mr) / (4π² r)
-      --                                            ≤ (sinh(1)+2) · m · 1 / (4π² r)
-      --                                            = (sinh(1)+2) · m / (4π² r)
-      -- For r ≥ 1/m, m/r ≤ m² / (mr) ≤ m². So this ≤ (sinh(1)+2) · m² / (4π²).
-      -- Still not 1/r². The issue is that the bound needs to work for all r > 0.
-      --
-      -- Let's use a different approach: bound (m/r) · K₁(mr) by something proportional to 1/r.
-      -- For mr ≤ 1: K₁(mr) ≤ (cosh(1)+2)/(mr), so (m/r) · K₁(mr) ≤ (cosh(1)+2)/r² ✓
-      -- For mr > 1: K₁(mr) ≤ (sinh(1)+2) · exp(-mr). Note that exp(-mr) < 1/(e·mr) for mr > 1.
-      --             Actually, exp(-x) ≤ 1/x for x ≥ 1 (since e^x ≥ ex for x ≥ 1).
-      --             Wait, e^x ≥ x for all x, so exp(-x) ≤ 1/x only for x ≥ 0 where 1/x ≥ e^{-x}.
-      --             For x = 1: e^{-1} ≈ 0.368, 1/1 = 1 ✓. For x = 2: e^{-2} ≈ 0.135, 1/2 = 0.5 ✓.
-      --             Actually, e^x ≥ x+1, so for x ≥ 1: e^x ≥ x, hence e^{-x} ≤ 1/x when e^x ≥ x,
-      -- i.e., always.
-      --             Wait no, e^x ≥ x for x ≥ 0, so e^{-x} ≤ 1/x iff x ≤ e^x, which is true for x ≥
-      -- 0.
-      --             So for mr ≥ 1: exp(-mr) ≤ 1/(mr).
-      --             Thus K₁(mr) ≤ (sinh(1)+2)/(mr).
-      --             Hence (m/r) · K₁(mr) ≤ (m/r) · (sinh(1)+2)/(mr) = (sinh(1)+2)/r².
-      -- So the bound (cosh(1)+2)/r² works for mr ≤ 1, and (sinh(1)+2)/r² works for mr > 1.
-      -- Since cosh(1) > sinh(1) (cosh is even, sinh is odd, both positive for x > 0),
-      -- we have cosh(1) + 2 > sinh(1) + 2, so C = (cosh(1)+2)/(4π²) works for both cases!
-      --
-      -- Let me formalize the bound exp(-x) ≤ 1/x for x ≥ 1:
+      -- For mr ≥ 1: exp(-mr) ≤ 1/(mr), so K₁(mr) ≤ (sinh 1 + 2)/(mr), giving the 1/r² bound.
+      -- Since cosh 1 + 2 > sinh 1 + 2, the constant C works for both cases.
       have hmr_pos : 0 < m * ‖z‖ := by positivity
       have h_exp_bound : Real.exp (-(m * ‖z‖)) ≤ 1 / (m * ‖z‖) := by
         rw [one_div]
@@ -1861,8 +1722,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
           have := add_one_le_exp (m * ‖z‖)
           linarith
         -- Invert the inequality (anti-monotonicity of inverse)
-        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := by
-          exact inv_anti₀ hmr_pos h1
+        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := inv_anti₀ hmr_pos h1
         calc Real.exp (-(m * ‖z‖)) = (Real.exp (m * ‖z‖))⁻¹ := by rw [Real.exp_neg]
           _ ≤ (m * ‖z‖)⁻¹ := h2
       have h_K_bound : besselK1 (m * ‖z‖) ≤ (Real.sinh 1 + 2) / (m * ‖z‖) := by
@@ -1930,8 +1790,7 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
   have hK1_bound := besselK1_asymptotic (m * r) hmr_ge1
   -- Key step: m/r ≤ m² because r ≥ 1/m (from mr ≥ 1)
   have hr_ge_inv : 1/m ≤ r := by
-    rw [one_div, inv_le_iff_one_le_mul₀ hm, mul_comm]
-    exact hmr_ge1
+    rwa [one_div, inv_le_iff_one_le_mul₀ hm, mul_comm]
   have hm_over_r_le : m / r ≤ m^2 := by
     rw [div_le_iff₀ hr_pos, sq]
     calc m = m * 1 := by ring
@@ -1951,8 +1810,7 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
           apply mul_le_mul_of_nonneg_right hm_over_r_le
           positivity
     _ = m^2 * (Real.sinh 1 + 2) / (4 * Real.pi^2) * Real.exp (-m * r) := by
-          congr 1
-          ring_nf
+          simp_all
 
 /-! ### Fact versions of decay bounds
 
@@ -2000,19 +1858,14 @@ lemma freeCovarianceKernel_continuousOn (m : ℝ) (hm : 0 < m) :
   have h_norm_cont : ContinuousOn (fun z : SpaceTime => ‖z‖) {z | z ≠ 0} :=
     continuous_norm.continuousOn
   have h_norm_pos : ∀ z ∈ ({z : SpaceTime | z ≠ 0} : Set SpaceTime), ‖z‖ ∈ Set.Ioi 0 := by
-    intro z hz
-    simp only [Set.mem_setOf_eq] at hz
-    simp only [Set.mem_Ioi]
-    exact norm_pos_iff.mpr hz
+    simp_all
   -- The composed function agrees with freeCovarianceKernel on {z ≠ 0}
   have h_eq : ∀ z ∈ ({z : SpaceTime | z ≠ 0} : Set SpaceTime),
       freeCovarianceKernel m z = (m / (4 * Real.pi^2 * ‖z‖)) * besselK1 (m * ‖z‖) := by
     intro z hz
     simp only [Set.mem_setOf_eq] at hz
     unfold freeCovarianceKernel freeCovariance freeCovarianceBessel
-    simp only [zero_sub, norm_neg]
-    have h_norm_ne : ‖z‖ ≠ 0 := norm_ne_zero_iff.mpr hz
-    simp only [h_norm_ne, ↓reduceIte]
+    simp_all
   apply ContinuousOn.congr _ h_eq
   exact hg_cont.comp h_norm_cont h_norm_pos
 
@@ -2027,11 +1880,10 @@ theorem freeCovarianceℂ_bilinear_integrable' (m : ℝ) [Fact (0 < m)] (f g : T
     simp only [freeCovarianceKernel, freeCovariance, freeCovarianceBessel, zero_sub, norm_neg]
   have h_eq : (fun p : SpaceTime × SpaceTime => f p.1 * (freeCovariance m p.1 p.2 : ℂ) * g p.2) =
       (fun p => f p.1 * ((freeCovarianceKernel m (p.1 - p.2) : ℝ) : ℂ) * g p.2) := by
-    ext p
-    rw [h_transl_inv p.1 p.2]
+    simp_all
   rw [h_eq]
-  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume := by
-    exact Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
+  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume :=
+    Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
   exact schwartz_bilinear_integrable_of_translationInvariant_L1
     (fun z => (freeCovarianceKernel m z : ℂ)) hK_int f g
 
@@ -2068,83 +1920,36 @@ lemma freeCovariance_hermitian (m : ℝ) (x y : SpaceTime) :
 /-- The free propagator function is smooth (infinitely differentiable). -/
 lemma freePropagator_smooth (m : ℝ) [Fact (0 < m)] :
   ContDiff ℝ (⊤ : ℕ∞) (fun k => freePropagatorMomentum m k) := by
-  -- The function k ↦ 1/(‖k‖² + m²) is smooth as a composition of smooth functions
   unfold freePropagatorMomentum
-  apply ContDiff.div
-  · -- The numerator 1 is smooth (constant)
-    exact contDiff_const
-  · -- The denominator ‖k‖² + m² is smooth
-    apply ContDiff.add
-    · exact contDiff_norm_sq ℝ
-    · exact contDiff_const
-  · -- The denominator is never zero
-    intro k
-    apply ne_of_gt
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
+  refine ContDiff.div contDiff_const ((contDiff_norm_sq ℝ).add contDiff_const)
+    (fun k => ne_of_gt ?_)
+  exact add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2)
 
 /-- The complex-valued free propagator function is smooth. -/
 lemma freePropagator_complex_smooth (m : ℝ) [Fact (0 < m)] :
-  ContDiff ℝ (⊤ : ℕ∞) (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) := by
-  have : (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) =
-         (fun x : ℝ => (x : ℂ)) ∘ (fun k => freePropagatorMomentum m k) := rfl
-  rw [this]
-  apply ContDiff.comp
-  · exact ofRealCLM.contDiff
-  · exact freePropagator_smooth m
-
---   - iteratedFDeriv_freePropagator_polynomial_bound
---   - theorem freePropagator_temperate_growth
---   - theorem schwartz_mul_by_temperate
+  ContDiff ℝ (⊤ : ℕ∞) (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) :=
+  ofRealCLM.contDiff.comp (freePropagator_smooth m)
 
 /-- The free propagator is positive -/
 lemma freePropagator_pos {m : ℝ} [Fact (0 < m)] (k : SpaceTime) : 0 < freePropagatorMomentum m k :=
   by
   unfold freePropagatorMomentum
-  apply div_pos
-  · norm_num
-  · apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
+  exact div_pos one_pos (add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2))
 
 /-- The free propagator is bounded above by 1/m² -/
 lemma freePropagator_bounded {m : ℝ} [Fact (0 < m)] (k : SpaceTime) :
   freePropagatorMomentum m k ≤ 1 / m^2 := by
   unfold freePropagatorMomentum
-  -- Since ‖k‖² ≥ 0, we have ‖k‖² + m² ≥ m², so 1/(‖k‖² + m²) ≤ 1/m²
-  apply div_le_div_of_nonneg_left
-  · norm_num
-  · exact pow_pos (Fact.out : 0 < m) 2
-  · apply le_add_of_nonneg_left
-    exact sq_nonneg ‖k‖
+  exact div_le_div_of_nonneg_left one_pos.le (pow_pos (Fact.out : 0 < m) 2)
+    (le_add_of_nonneg_left (sq_nonneg ‖k‖))
 
 /-- The free propagator is continuous -/
 lemma freePropagator_continuous {m : ℝ} [Fact (0 < m)] :
   Continuous (freePropagatorMomentum m) := by
-  -- This follows from continuity of the norm function and division
-  -- since the denominator ‖k‖² + m² is never zero
   unfold freePropagatorMomentum
-  apply Continuous.div
-  · exact continuous_const
-  · apply Continuous.add
-    · exact continuous_norm.pow 2
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
-
-
--- Note: The propagator is not globally L¹ in d ≥ 2, but it is integrable on every closed ball.
-
--- (Integrability facts for the propagator on bounded sets can be added here if/when needed.)
-
-
-
---   propagatorMultiplication_bounded_schwartz (~150 lines)
-
+  refine Continuous.div continuous_const ((continuous_norm.pow 2).add continuous_const)
+    (fun k => ?_)
+  exact ne_of_gt (add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2))
 
 /-! ## Complex conjugation properties of the propagator -/
 
@@ -2189,12 +1994,8 @@ noncomputable def momentumWeightSqrtMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
 lemma momentumWeightSqrt_mathlib_pos (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
     0 < momentumWeightSqrtMathlib m k := by
   unfold momentumWeightSqrtMathlib
-  apply div_pos
-  · norm_num
-  · apply Real.sqrt_pos.mpr
-    have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-    have h2 : 0 < m^2 := sq_pos_of_pos (Fact.out : 0 < m)
-    linarith
+  refine div_pos one_pos (Real.sqrt_pos.mpr ?_)
+  exact add_pos_of_nonneg_of_pos (by positivity) (sq_pos_of_pos (Fact.out : 0 < m))
 
 /-- The square of the sqrt weight equals the weight (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_sq (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
@@ -2210,33 +2011,16 @@ lemma momentumWeightSqrt_mathlib_sq (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
 lemma momentumWeightSqrt_continuous (m : ℝ) [Fact (0 < m)] :
     Continuous (fun k : SpaceTime => momentumWeightSqrt m k) := by
   unfold momentumWeightSqrt
-  apply Continuous.div continuous_const
-  · apply Continuous.sqrt
-    apply Continuous.add
-    · exact continuous_norm.pow 2
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply Real.sqrt_pos.mpr
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg _
-    · exact pow_pos (Fact.out : 0 < m) 2
+  refine Continuous.div continuous_const (by fun_prop) (fun k => ne_of_gt ?_)
+  exact Real.sqrt_pos.mpr (add_pos_of_nonneg_of_pos (sq_nonneg _) (pow_pos (Fact.out : 0 < m) 2))
 
 /-- The momentum weight sqrt function is continuous (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_continuous (m : ℝ) [Fact (0 < m)] :
     Continuous (fun k : SpaceTime => momentumWeightSqrtMathlib m k) := by
   unfold momentumWeightSqrtMathlib
-  apply Continuous.div continuous_const
-  · apply Continuous.sqrt
-    apply Continuous.add
-    · exact continuous_const.mul (continuous_norm.pow 2)
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply Real.sqrt_pos.mpr
-    have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-    have h2 : 0 < m^2 := sq_pos_of_pos (Fact.out : 0 < m)
-    linarith
+  refine Continuous.div continuous_const (by fun_prop) (fun k => ne_of_gt ?_)
+  exact Real.sqrt_pos.mpr
+    (add_pos_of_nonneg_of_pos (by positivity) (sq_pos_of_pos (Fact.out : 0 < m)))
 
 /-- The momentum weight sqrt function is measurable (physics convention). -/
 lemma momentumWeightSqrt_measurable (m : ℝ) [Fact (0 < m)] :
@@ -2248,58 +2032,28 @@ lemma momentumWeightSqrt_mathlib_measurable (m : ℝ) [Fact (0 < m)] :
     Measurable (fun k : SpaceTime => momentumWeightSqrtMathlib m k) :=
   (momentumWeightSqrt_mathlib_continuous m).measurable
 
+/-- Helper: `1 / √(A + m²) ≤ 1 / m` for `0 < m` and `0 ≤ A`. -/
+private lemma one_div_sqrt_add_sq_le_inv (m : ℝ) (hm : 0 < m) {A : ℝ} (hA : 0 ≤ A) :
+    1 / Real.sqrt (A + m^2) ≤ 1 / m := by
+  refine one_div_le_one_div_of_le hm ?_
+  calc m = Real.sqrt (m^2) := (Real.sqrt_sq hm.le).symm
+    _ ≤ Real.sqrt (A + m^2) := Real.sqrt_le_sqrt (by linarith)
+
 /-- Helper: The weight function as an L^∞ function (essentially bounded). -/
 lemma momentumWeightSqrt_bounded_ae (m : ℝ) [Fact (0 < m)] :
     ∀ᵐ k ∂(volume : Measure SpaceTime), ‖(momentumWeightSqrt m k : ℂ)‖ ≤ 1 / m := by
   filter_upwards with k
-  simp only [Complex.norm_real]
-  unfold momentumWeightSqrt
-  have hmpos : 0 < m := Fact.out
-  have hk_nonneg : 0 ≤ ‖k‖^2 := sq_nonneg _
-  have hm_sq : m^2 ≤ ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt (‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt (‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_sqrt_pos : 0 < Real.sqrt (‖k‖^2 + m^2) := by
-    apply Real.sqrt_pos.mpr
-    apply add_pos_of_nonneg_of_pos hk_nonneg (pow_pos hmpos 2)
-  have h_inv_le : 1 / Real.sqrt (‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  have h_inv_pos : 0 < 1 / Real.sqrt (‖k‖^2 + m^2) := by
-    apply div_pos
-    · norm_num
-    · exact h_sqrt_pos
-  calc ‖1 / Real.sqrt (‖k‖^2 + m^2)‖
-      = |1 / Real.sqrt (‖k‖^2 + m^2)| := Real.norm_eq_abs _
-    _ = 1 / Real.sqrt (‖k‖^2 + m^2) := abs_of_pos h_inv_pos
-    _ ≤ 1 / m := h_inv_le
+  simp only [Complex.norm_real, momentumWeightSqrt, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / Real.sqrt (‖k‖^2 + m^2))]
+  exact one_div_sqrt_add_sq_le_inv m Fact.out (sq_nonneg _)
 
 /-- Helper: The mathlib weight function as an L^∞ function (essentially bounded). -/
 lemma momentumWeightSqrt_mathlib_bounded_ae (m : ℝ) [Fact (0 < m)] :
     ∀ᵐ k ∂(volume : Measure SpaceTime), ‖(momentumWeightSqrtMathlib m k : ℂ)‖ ≤ 1 / m := by
   filter_upwards with k
-  simp only [Complex.norm_real]
-  unfold momentumWeightSqrtMathlib
-  have hmpos : 0 < m := Fact.out
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-  have hm_sq : m^2 ≤ (2 * Real.pi)^2 * ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_sqrt_pos : 0 < Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    apply Real.sqrt_pos.mpr
-    have h2 : 0 < m^2 := sq_pos_of_pos hmpos
-    linarith
-  have h_inv_le : 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  have h_inv_pos : 0 < 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    apply div_pos
-    · norm_num
-    · exact h_sqrt_pos
-  calc ‖1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)‖
-      = |1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)| := Real.norm_eq_abs _
-    _ = 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := abs_of_pos h_inv_pos
-    _ ≤ 1 / m := h_inv_le
+  simp only [Complex.norm_real, momentumWeightSqrtMathlib, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2))]
+  exact one_div_sqrt_add_sq_le_inv m Fact.out (by positivity)
 
 /-- Multiplication by the square-root momentum weight defines a bounded
     linear operator on complex L² (physics convention).
@@ -2338,14 +2092,6 @@ lemma momentumWeightSqrt_mathlib_mul_CLM_spec (m : ℝ) [Fact (0 < m)]
 
 /-- The square-root momentum weight is pointwise bounded by `1 / m` (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_le_inv_mass (m : ℝ) [Fact (0 < m)] :
-    ∀ k : SpaceTime, momentumWeightSqrtMathlib m k ≤ 1 / m := by
-  intro k
-  have hmpos : 0 < m := Fact.out
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-  have hm_sq : m^2 ≤ (2 * Real.pi)^2 * ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_inv_le : 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  simpa [momentumWeightSqrtMathlib, one_div] using h_inv_le
+    ∀ k : SpaceTime, momentumWeightSqrtMathlib m k ≤ 1 / m := fun k => by
+  simpa [momentumWeightSqrtMathlib] using
+    one_div_sqrt_add_sq_le_inv m Fact.out (A := (2 * Real.pi)^2 * ‖k‖^2) (by positivity)

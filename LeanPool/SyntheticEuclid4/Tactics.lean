@@ -23,37 +23,24 @@ open IncidenceGeometry
 
 variable [i : IncidenceGeometry] {a b c : Point}
 
-lemma ar132 : area a b c = area a c b := by exact (area_invariant a b c).2
+lemma ar132 : area a b c = area a c b := (area_invariant a b c).2
 
-lemma ar312 : area a b c = area c a b := by exact (area_invariant a b c).1
+lemma ar312 : area a b c = area c a b := (area_invariant a b c).1
 
 lemma ar231 : area a b c = area b c a :=
-  by rw [(area_invariant a b c).1]; rw [(area_invariant c a b).1]
+  by rw [(area_invariant a b c).1, (area_invariant c a b).1]
 
 lemma ar213 : area a b c = area b a c :=
-  by rw [(area_invariant a b c).2]; rw [(area_invariant a c b).1]
+  by rw [(area_invariant a b c).2, (area_invariant a c b).1]
 
 lemma ar321 : area a b c = area c b a :=
-  by rw [(area_invariant a b c).2]; rw [(area_invariant c b a).1]
+  by rw [(area_invariant a b c).2, (area_invariant c b a).1]
 
-lemma col213 : colinear a b c ↔ colinear b a c := by
-  constructor
-  all_goals
-    intro h
-    obtain ⟨ L, hL ⟩ := h
-    use L
-    exact and_left_comm.mp hL
+lemma col213 : colinear a b c ↔ colinear b a c :=
+  exists_congr fun _ => and_left_comm
 
-lemma col231 : colinear a b c ↔ colinear b c a := by
-  constructor
-  · intro h
-    obtain ⟨ L, hL ⟩ := h
-    use L
-    exact and_rotate.mp hL
-  · intro h
-    obtain ⟨ L, hL ⟩ := h
-    use L
-    exact and_rotate.mpr hL
+lemma col231 : colinear a b c ↔ colinear b c a :=
+  exists_congr fun _ => and_rotate
 
 lemma col132 : colinear a b c ↔ colinear a c b := by conv => rhs; rw [col213]; rw [col231]
 
@@ -80,22 +67,14 @@ lemma tr312 : triangle a b c ↔ triangle c a b := by
 lemma tr321 : triangle a b c ↔ triangle c b a := by
   constructor; all_goals dsimp [triangle]; rw [col321]; tauto
 
-lemma ss21 {a b : Point} {L : Line} : SameSide a b L ↔ SameSide b a L := by
-  constructor; repeat exact sameside_symm
+lemma ss21 {a b : Point} {L : Line} : SameSide a b L ↔ SameSide b a L :=
+  ⟨sameside_symm, sameside_symm⟩
 
-lemma ds21 {a b : Point} {L : Line} : diffside a b L ↔ diffside b a L := by
-  constructor
-  all_goals
-    intro h
-    obtain ⟨ naL, nbL, nss ⟩ := h
-    rw [ss21] at nss
-    exact ⟨ nbL, naL, nss ⟩
+lemma ds21 {a b : Point} {L : Line} : diffside a b L ↔ diffside b a L :=
+  ⟨fun ⟨naL, nbL, nss⟩ => ⟨nbL, naL, fun h => nss (sameside_symm h)⟩,
+   fun ⟨naL, nbL, nss⟩ => ⟨nbL, naL, fun h => nss (sameside_symm h)⟩⟩
 
-lemma para21 {L M : Line} : para L M ↔ para M L := by
-  constructor
-  all_goals
-    intros p e
-    rw [Or.comm]
-    exact p e
+lemma para21 {L M : Line} : para L M ↔ para M L :=
+  ⟨fun p e => (p e).symm, fun p e => (p e).symm⟩
 
 end SyntheticEuclid4

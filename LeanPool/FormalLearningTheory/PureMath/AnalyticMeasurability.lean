@@ -66,12 +66,9 @@ theorem MeasureTheory.AnalyticSet.exists_isCompact_measureReal_gt
   obtain ⟨r, ⟨K, hKc, hKs, rfl⟩, hlt⟩ := hmem
   refine ⟨K, hKc, hKs, ?_⟩
   have hKfin : μ K ≠ ⊤ := ne_top_of_le_ne_top hfin (measure_mono hKs)
-  -- Convert: μ s < μ K + ofReal ε  →  (μ s).toReal < (μ K).toReal + ε
-  have hadd_ne_top : μ K + ENNReal.ofReal ε ≠ ⊤ := by
-    exact ENNReal.add_ne_top.mpr ⟨hKfin, hε_ne_top⟩
   rw [Measure.real, Measure.real]
   calc (μ s).toReal < (μ K + ENNReal.ofReal ε).toReal :=
-        (ENNReal.toReal_lt_toReal hfin hadd_ne_top).mpr hlt
+        (ENNReal.toReal_lt_toReal hfin (ENNReal.add_ne_top.mpr ⟨hKfin, hε_ne_top⟩)).mpr hlt
     _ = (μ K).toReal + ε := by
         rw [ENNReal.toReal_add hKfin hε_ne_top, ENNReal.toReal_ofReal hε.le]
 
@@ -102,23 +99,12 @@ theorem analyticSet_nullMeasurableSet
     have hpos : 0 < μ.real (t \ s) := ENNReal.toReal_pos hne hfin_diff
     obtain ⟨K, hKc, hKs, hKapprox⟩ :=
       hs.exists_isCompact_measureReal_gt (μ := μ) (μ.real (t \ s) / 2) (by positivity)
-    have hKt : K ⊆ t := fun x hx => hst (hKs hx)
-    have hKmeas : MeasurableSet K := hKc.isClosed.measurableSet
-    -- μ.real(t \ K) = μ.real t - μ.real K (since K ⊆ t, K measurable)
     have hdiff_eq : μ.real (t \ K) = μ.real t - μ.real K :=
-      measureReal_sdiff hKt hKmeas
-    -- μ.real t = μ.real s (from ht_eq)
-    have ht_real : μ.real t = μ.real s := by
-      simp only [Measure.real]; rw [ht_eq]
-    -- t \ s ⊆ t \ K when K ⊆ s
-    have hsub : t \ s ⊆ t \ K := Set.sdiff_subset_sdiff_right hKs
+      measureReal_sdiff (fun x hx => hst (hKs hx)) hKc.isClosed.measurableSet
+    have ht_real : μ.real t = μ.real s := by simp only [Measure.real]; rw [ht_eq]
     have hle : μ.real (t \ s) ≤ μ.real (t \ K) :=
-      measureReal_mono hsub
-    -- Combine: μ.real(t \ s) ≤ μ.real t - μ.real K = μ.real s - μ.real K
-    -- But hKapprox: μ.real s < μ.real K + μ.real(t \ s)/2
-    -- So μ.real s - μ.real K < μ.real(t \ s)/2
-    -- And μ.real(t \ s) ≤ μ.real s - μ.real K < μ.real(t \ s)/2
-    -- Contradiction: μ.real(t \ s) < μ.real(t \ s)/2
+      measureReal_mono (Set.sdiff_subset_sdiff_right hKs)
+    -- Combine with hKapprox (μ.real s < μ.real K + μ.real(t \ s)/2) for the contradiction.
     linarith
   have h_ae : s =ᵐ[μ] t := by
     rw [Filter.eventuallyEq_comm, ae_eq_set]

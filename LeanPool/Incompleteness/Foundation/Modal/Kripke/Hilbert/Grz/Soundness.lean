@@ -25,8 +25,7 @@ open Kripke
 
 namespace Kripke
 
-instance :
-    ReflexiveTransitiveAntiSymmetricFiniteFrameClass.DefinedBy {Axioms.K (atom 0) (atom 1),
+instance : ReflexiveTransitiveAntiSymmetricFiniteFrameClass.DefinedBy {Axioms.K (atom 0) (atom 1),
     Axioms.Grz (atom 0)} :=
   FiniteFrameClass.definedBy_with_axiomK
     ReflexiveTransitiveAntiSymmetricFiniteFrameClass.definedByAxiomGrz

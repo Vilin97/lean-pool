@@ -124,8 +124,7 @@ def wireValue (c : Circuit B N M G) (input : BitString N)
 termination_by w.val
 decreasing_by
   have hacyc := c.acyclic ⟨w.val - N, hG⟩ k
-  have : (⟨w.val - N, hG⟩ : Fin G).val = w.val - N := rfl
-  omega
+  simp_all
 
 theorem wireValue_lt (c : Circuit B N M G) (input : BitString N)
     (w : Fin (N + G)) (h : w.val < N) :
@@ -138,8 +137,7 @@ theorem wireValue_ge (c : Circuit B N M G) (input : BitString N)
     c.wireValue input w =
       (c.gates ⟨w.val - N, by omega⟩).eval (c.wireValue input) := by
   unfold wireValue
-  simp only [h, dite_false]
-  rfl
+  simp only [h, dite_false, Gate.eval]
 
 /-- Depth of wire `w` in the circuit DAG.
 
@@ -155,8 +153,7 @@ def wireDepth (c : Circuit B N M G) (w : Fin (N + G)) : Nat :=
 termination_by w.val
 decreasing_by
   have hacyc := c.acyclic ⟨w.val - N, hG⟩ k
-  have : (⟨w.val - N, hG⟩ : Fin G).val = w.val - N := rfl
-  omega
+  simp_all
 
 /-- Primary input wires (index < N) have depth 0. -/
 @[simp] theorem inputWireDepth (c : Circuit B N M G)
@@ -232,7 +229,7 @@ private theorem size_complexity_set_nonempty [CompleteBasis B]
     {s | ∃ G, ∃ c : Circuit B N 1 G, c.size = s ∧ (fun x => (c.eval x) 0) = f}.Nonempty := by
   obtain ⟨G, c, hc⟩ := CompleteBasis.complete (B := B) (fun x => (fun _ : Fin 1 => f x))
   refine ⟨c.size, G, c, rfl, ?_⟩
-  funext x; have := congr_fun (congr_fun hc x) 0; exact this
+  simp_all
 
 /-- For a complete basis, circuit size complexity is always positive. -/
 theorem size_complexity_pos [CompleteBasis B]

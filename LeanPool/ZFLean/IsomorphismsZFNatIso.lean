@@ -61,8 +61,7 @@ theorem deletePointIsoMap_isFunc {k : ZFNat} {ℓ : ZFSet} :
         symm
         change (⟨x, hx⟩ + 1 : ZFNat) ≤ k
         change ⟨x, hx⟩ < k at x_mem_k
-        rw [lt_le_iff, ←add_one_eq_succ, add_comm, add_comm k, add_lt_add_iff_left]
-        exact x_mem_k
+        rwa [lt_le_iff, ←add_one_eq_succ, add_comm, add_comm k, add_lt_add_iff_left]
       · rintro rfl
         rw [mem_insert_iff, not_or] at x_mem_ℓ
         nomatch x_mem_ℓ.1 rfl
@@ -96,8 +95,7 @@ theorem deletePointIsoMap_bijective {k : ZFNat} {ℓ : ZFSet}
       rfl
     · subst x
       have Z_eq_succ_Y : Z = Y + 1 := by
-        rw [add_one_eq_succ, succ, Subtype.ext_iff]
-        exact z_eq'
+        rwa [add_one_eq_succ, succ, Subtype.ext_iff]
       change Z < L at x_mem_ℓ
       change ¬ Y < L at y_mem_ℓ
       rw [not_lt] at y_mem_ℓ
@@ -113,8 +111,7 @@ theorem deletePointIsoMap_bijective {k : ZFNat} {ℓ : ZFSet}
         exact le_succ
     · subst y
       have Z_eq_succ_X : Z = X + 1 := by
-        rw [add_one_eq_succ, succ, Subtype.ext_iff]
-        exact z_eq
+        rwa [add_one_eq_succ, succ, Subtype.ext_iff]
       change ¬ X < L at x_mem_ℓ
       change Z < L at y_lt_ℓ
       rw [not_lt] at x_mem_ℓ
@@ -263,8 +260,7 @@ theorem isIso_delete_singleton {k : ZFNat} {ℓ : ZFSet} (ℓ_mem_m : ℓ ∈ (�
 
 /-- Imported ZFLean declaration. -/
 theorem iso_eq_iff_proof {n m : ZFNat} : ↑n ≅ᶻ ↑m ↔ n = m where
-  mp := by classical
-    intro iso
+  mp iso := by classical
     induction n generalizing m with
     | zero =>
       obtain ⟨bij, isfunc, isbij⟩ := iso

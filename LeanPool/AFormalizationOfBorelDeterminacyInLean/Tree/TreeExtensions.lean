@@ -52,8 +52,7 @@ def extensionsRes T :
       rw [List.take_of_length_le (Nat.le_succ T.2.val.length)]
       exact a.prop
     · change (T.2.val.take (T.2.val.length + 1) ++ [a.val]).length ≤ T.2.val.length + 1
-      rw [List.take_of_length_le (Nat.le_succ T.2.val.length)]
-      simp only [List.length_append, List.length_singleton, le_refl]⟩
+      simp_all⟩
   invFun a := ⟨a.val, by
     have hbase : ((pointedRes (T.2.val.length + 1)).obj T).2.val = T.2.val := by
       change T.2.val.take (T.2.val.length + 1) = T.2.val
@@ -107,9 +106,7 @@ def extensionsEquiv (hx : Fixing (x.val.length + 1) f := by as_aux_lemma => synt
       (cast (by rw [hlen])
         (extensions.map (pointedResIso f x hx).hom (extensionsRes (mkPointed x) a)))) =
     (f a.valT').val
-  rw [extensionsRes_symm_val']
-  rw [cast_val' hlen]
-  rw [extensions_map_val']
+  rw [extensionsRes_symm_val', cast_val' hlen, extensions_map_val']
   change (f (res.val' (extensions.valT' (extensionsRes (mkPointed x) a)))).val =
     (f a.valT').val
   rw [extensionsRes_res_valT']
@@ -133,21 +130,18 @@ def pointedResIso' (hy : Fixing (y.val.length + 1) f := by as_aux_lemma => synth
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def extensionsEquiv' (hy : Fixing (y.val.length + 1) f := by as_aux_lemma => synthFixing) :
   ExtensionsAt y ≃ ExtensionsAt (pInv f y) := by
-  have hy' : Fixing ((pInv f y).val.length + 1) f := by
-    simpa [h_length_pInv] using hy
+  have hy' : Fixing ((pInv f y).val.length + 1) f := by simpa [h_length_pInv] using hy
   have hnode : f (pInv f y) = y := cancel_pInv_right f y (hy.mon (by simp))
   exact ((extensionsEquiv f (pInv f y) hy').trans
     (Equiv.cast (congrArg ExtensionsAt hnode))).symm
 @[simp] lemma extensionsEquiv'_symm_val'
   (hy : Fixing (y.val.length + 1) f) (a : ExtensionsAt (pInv f y)) :
   ((extensionsEquiv' f y hy).symm a).valT' = f a.valT' := by
-  have hy' : Fixing ((pInv f y).val.length + 1) f := by
-    simpa [h_length_pInv] using hy
+  have hy' : Fixing ((pInv f y).val.length + 1) f := by simpa [h_length_pInv] using hy
   have hnode : f (pInv f y) = y := cancel_pInv_right f y (hy.mon (by simp))
   change (cast (congrArg ExtensionsAt hnode) (extensionsEquiv f (pInv f y) hy' a)).valT' =
     f a.valT'
-  exact (ExtensionsAt.cast_valT' hnode (extensionsEquiv f (pInv f y) hy' a)).trans
-    (extensionsEquiv_val' f (pInv f y) a hy')
+  simp_all
 @[simp] lemma extensionsEquiv'_val' (a : ExtensionsAt y) (hy : Fixing (y.val.length + 1) f) :
   (extensionsEquiv' f y hy a).valT' = pInv f a.valT' := by
   obtain ⟨a, rfl⟩ := (extensionsEquiv' f y).symm.surjective a
@@ -161,10 +155,8 @@ lemma zero_fixing : Fixing 0 f ↔ ([] ∈ S.2 ↔ [] ∈ T.2) := by
     · rw [← LenHom.map_nil f hn]
       exact (SetLike.coe_mem _)
     · obtain ⟨x, _⟩ := surjective_of_epi ((res 0 ⋙ forget Trees).map f) ⟨[], hn, by rfl⟩
-      have hx : x.val = [] := val_res_zero x
       have hxmem := x.prop.1
-      rw [hx] at hxmem
-      exact hxmem
+      rwa [val_res_zero x] at hxmem
   intro ⟨_, h⟩; apply (isIso_iff_bijective _).mpr; constructor
   · intro x y _
     apply res_ext
@@ -172,8 +164,7 @@ lemma zero_fixing : Fixing 0 f ↔ ([] ∈ S.2 ↔ [] ∈ T.2) := by
   · intro y
     have hy : [] ∈ T.2 := by
       have hymem := y.prop.1
-      rw [val_res_zero y] at hymem
-      exact hymem
+      rwa [val_res_zero y] at hymem
     refine ⟨⟨[], h hy, by rfl⟩, ?_⟩
     apply res_ext
     exact (LenHom.map_nil f (h hy)).trans (val_res_zero y).symm

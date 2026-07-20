@@ -41,12 +41,10 @@ private lemma truncation_eq_mod_div {t m : ℕ} :
     ((t : ℝ) / m - ↑(t / m)) = ↑(t % m) / m := by
   rcases m.eq_zero_or_pos with rfl | hm
   · simp
-  · have hmR : (m : ℝ) ≠ 0 := by
-      exact_mod_cast hm.ne'
+  · have hmR : (m : ℝ) ≠ 0 := by exact_mod_cast hm.ne'
     apply (eq_div_iff hmR).2
     have hdecomp : (↑(t % m) : ℝ) + ↑(t / m) * m = t := by
-      have h : (↑(t % m + m * (t / m)) : ℝ) = t := by
-        exact_mod_cast (Nat.mod_add_div t m)
+      have h : (↑(t % m + m * (t / m)) : ℝ) = t := by exact_mod_cast (Nat.mod_add_div t m)
       simpa [Nat.cast_add, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc] using h
     grind only
 
@@ -66,31 +64,26 @@ private lemma sum_vonMangoldt_mul_div_eq_log_factorial (N : ℕ) :
   have hI : Finset.Icc 1 N = Finset.Ioc 0 N := by
     ext n
     simp [Finset.mem_Icc, Finset.mem_Ioc, Nat.succ_le_iff]
-  have hlogsum :
-      (Finset.Icc 1 N).sum (fun n => Real.log (n : ℝ)) =
-        Real.log (∏ n ∈ Finset.Icc 1 N, (n : ℝ)) := by
-    symm
-    refine Real.log_prod ?_
-    intro n hn
-    exact Nat.cast_ne_zero.mpr (Nat.ne_of_gt (Nat.succ_le_iff.mp (Finset.mem_Icc.mp hn).1))
-  have hprodRange : (∏ i ∈ Finset.range N, ((i + 1 : ℕ) : ℝ)) = Nat.factorial N := by
-    exact_mod_cast Finset.prod_range_add_one_eq_factorial N
   have hprod : (∏ n ∈ Finset.Icc 1 N, (n : ℝ)) = Nat.factorial N := by
     rw [← Finset.Ico_add_one_right_eq_Icc 1 N, Finset.prod_Ico_eq_prod_range]
-    simpa [Nat.succ_eq_add_one, add_comm] using hprodRange
+    simpa [Nat.succ_eq_add_one, add_comm] using
+      show (∏ i ∈ Finset.range N, ((i + 1 : ℕ) : ℝ)) = Nat.factorial N from
+        by exact_mod_cast Finset.prod_range_add_one_eq_factorial N
   calc
     (Finset.Icc 1 N).sum (fun m => Λ m * ((N / m : ℕ) : ℝ)) =
-        ∑ n ∈ Finset.Ioc 0 N, Λ n * ((N / n : ℕ) : ℝ) := by
-          rw [hI]
+        ∑ n ∈ Finset.Ioc 0 N, Λ n * ((N / n : ℕ) : ℝ) := by rw [hI]
     _ = ∑ n ∈ Finset.Ioc 0 N, (ArithmeticFunction.vonMangoldt * ArithmeticFunction.zeta) n := by
           simpa using
             (ArithmeticFunction.sum_Ioc_mul_zeta_eq_sum ArithmeticFunction.vonMangoldt N).symm
     _ = ∑ n ∈ Finset.Ioc 0 N, Real.log (n : ℝ) := by
           simp [ArithmeticFunction.vonMangoldt_mul_zeta, ArithmeticFunction.log]
-    _ = ∑ n ∈ Finset.Icc 1 N, Real.log (n : ℝ) := by
-          rw [← hI]
     _ = Real.log (Nat.factorial N) := by
-          rw [hlogsum, hprod]
+          rw [← hI]
+          rw [show (Finset.Icc 1 N).sum (fun n => Real.log (n : ℝ)) =
+            Real.log (∏ n ∈ Finset.Icc 1 N, (n : ℝ)) from
+            (Real.log_prod (fun n hn => Nat.cast_ne_zero.mpr
+              (Nat.ne_of_gt (Nat.succ_le_iff.mp (Finset.mem_Icc.mp hn).1)))).symm,
+            hprod]
 
 /-- Writing `N!` as a product of the integers `1, …, N` turns `log (N!)` into a sum of logs. -/
 private lemma log_factorial_eq_sum_range (N : ℕ) :
@@ -101,68 +94,49 @@ private lemma log_factorial_eq_sum_range (N : ℕ) :
 /-- The lower integral comparison `∫_1^N log t dt ≤ log N!`. -/
 private lemma integral_log_le_log_factorial {N : ℕ} (hN : 1 ≤ N) :
     ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x ≤ Real.log (Nat.factorial N) := by
-  have hmono : MonotoneOn Real.log (Set.Icc ((1 : ℕ) : ℝ) (N : ℝ)) := by
-    intro x hx y hy hxy
-    have hx1 : (0 : ℝ) < x :=
-      lt_of_lt_of_le (by norm_num : (0 : ℝ) < ((1 : ℕ) : ℝ)) hx.1
-    exact Real.log_le_log hx1 hxy
+  have hmono : MonotoneOn Real.log (Set.Icc ((1 : ℕ) : ℝ) (N : ℝ)) :=
+    fun x hx y _ hxy => Real.log_le_log (lt_of_lt_of_le (by norm_num) hx.1) hxy
   calc
     ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x
       ≤ ∑ i ∈ Finset.Ico 1 N, Real.log ((i + 1 : ℕ) : ℝ) :=
         MonotoneOn.integral_le_sum_Ico (f := Real.log) hN hmono
     _ = ∑ i ∈ Finset.range N, Real.log ((i + 1 : ℕ) : ℝ) := by
-        have hpred : N - 1 + 1 = N := Nat.sub_add_cancel hN
-        rw [Finset.sum_Ico_eq_sum_range]
-        rw [← hpred, Finset.sum_range_succ']
+        rw [Finset.sum_Ico_eq_sum_range, ← Nat.sub_add_cancel hN, Finset.sum_range_succ']
         simp [Nat.cast_add, add_left_comm, add_comm]
     _ = Real.log (Nat.factorial N) := (log_factorial_eq_sum_range N).symm
 
 /-- The upper integral comparison `log N! ≤ log N + ∫_1^N log t dt`. -/
 private lemma log_factorial_le_log_add_integral_log {N : ℕ} (hN : 1 ≤ N) :
     Real.log (Nat.factorial N) ≤ Real.log N + ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x := by
-  have hmono : MonotoneOn Real.log (Set.Icc ((1 : ℕ) : ℝ) (N : ℝ)) := by
-    intro x hx y hy hxy
-    have hx1 : (0 : ℝ) < x :=
-      lt_of_lt_of_le (by norm_num : (0 : ℝ) < ((1 : ℕ) : ℝ)) hx.1
-    exact Real.log_le_log hx1 hxy
-  have hsum :
-      ∑ i ∈ Finset.Ico 1 N, Real.log (i : ℝ) ≤ ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x :=
+  have hmono : MonotoneOn Real.log (Set.Icc ((1 : ℕ) : ℝ) (N : ℝ)) :=
+    fun x hx y _ hxy => Real.log_le_log (lt_of_lt_of_le (by norm_num) hx.1) hxy
+  have hsum : ∑ i ∈ Finset.Ico 1 N, Real.log (i : ℝ) ≤ ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x :=
     MonotoneOn.sum_le_integral_Ico (f := Real.log) hN hmono
   have hsum' : ∑ i ∈ Finset.Ico 1 N, Real.log (i : ℝ) = Real.log (Nat.factorial (N - 1)) := by
     rw [Finset.sum_Ico_eq_sum_range]
     simpa [Nat.cast_add, add_comm] using (log_factorial_eq_sum_range (N - 1)).symm
-  have hfacNat : Nat.factorial N = N * Nat.factorial (N - 1) := by
-    have hpred : N - 1 + 1 = N := Nat.sub_add_cancel hN
-    simpa [Nat.succ_eq_add_one, hpred] using (Nat.factorial_succ (N - 1))
-  have hfac :
-      Real.log (Nat.factorial N) = Real.log N + Real.log (Nat.factorial (N - 1)) := by
-    rw [hfacNat, Nat.cast_mul, Real.log_mul]
-    · exact_mod_cast Nat.ne_of_gt hN
-    · exact_mod_cast Nat.factorial_ne_zero (N - 1)
+  have hfac : Real.log (Nat.factorial N) = Real.log N + Real.log (Nat.factorial (N - 1)) := by
+    rw [show Nat.factorial N = N * Nat.factorial (N - 1) from by
+        simpa [Nat.succ_eq_add_one, Nat.sub_add_cancel hN] using Nat.factorial_succ (N - 1),
+      Nat.cast_mul, Real.log_mul (by exact_mod_cast Nat.ne_of_gt hN)
+        (by exact_mod_cast Nat.factorial_ne_zero (N - 1))]
   grind only
 
 /-- Elementary two-sided bounds for `log N! / N`. -/
 private lemma abs_log_factorial_div_sub_log_le_one {N : ℕ} (hN : 1 ≤ N) :
     |Real.log (Nat.factorial N) / N - Real.log N| ≤ 1 := by
   have hNpos : (0 : ℝ) < N := by exact_mod_cast hN
-  have hint :
-      ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x = (N : ℝ) * Real.log N - N + 1 := by
+  have hint : ∫ x in ((1 : ℕ) : ℝ)..N, Real.log x = (N : ℝ) * Real.log N - N + 1 := by
     simp [integral_log]
-  have hlower :
-      Real.log N - 1 ≤ Real.log (Nat.factorial N) / N := by
+  have hlower : Real.log N - 1 ≤ Real.log (Nat.factorial N) / N := by
     apply (le_div_iff₀ hNpos).2
-    have hcomp : (N : ℝ) * Real.log N - N + 1 ≤ Real.log (Nat.factorial N) := by
-      simpa [hint] using integral_log_le_log_factorial hN
-    linarith
-  have hupper :
-      Real.log (Nat.factorial N) / N ≤ Real.log N := by
+    linarith [show (N : ℝ) * Real.log N - N + 1 ≤ Real.log (Nat.factorial N) by
+      simpa [hint] using integral_log_le_log_factorial hN]
+  have hupper : Real.log (Nat.factorial N) / N ≤ Real.log N := by
     apply (div_le_iff₀ hNpos).2
-    have hcomp :
-        Real.log (Nat.factorial N) ≤ Real.log N + ((N : ℝ) * Real.log N - N + 1) := by
-      simpa [hint] using log_factorial_le_log_add_integral_log hN
-    have hlog : Real.log N ≤ N - 1 := by
-      simpa using Real.log_le_sub_one_of_pos hNpos
-    linarith
+    linarith [show Real.log (Nat.factorial N) ≤ Real.log N + ((N : ℝ) * Real.log N - N + 1) by
+        simpa [hint] using log_factorial_le_log_add_integral_log hN,
+      show Real.log N ≤ N - 1 by simpa using Real.log_le_sub_one_of_pos hNpos]
   grind only [= abs.eq_1, = max_def]
 
 /-- The factorial decomposition of the Mertens partial sums. -/
@@ -176,65 +150,47 @@ private lemma mertensPartialSum_eq_log_factorial_div_add_fractional (t : ℕ) :
       ∑ m ∈ Finset.Icc 1 t, Λ m / (m : ℝ) =
           ∑ m ∈ Finset.Icc 1 t,
             ((1 / (t : ℝ)) * (Λ m * (((t / m : ℕ) : ℝ))) +
-              (1 / (t : ℝ)) * (Λ m * ((t : ℝ) / m - ↑(t / m)))) := by
-            refine Finset.sum_congr rfl ?_
-            intro m hm
-            calc
-              Λ m / (m : ℝ) = (1 / (t : ℝ)) * (Λ m * ((t : ℝ) / m)) := by
-                symm
-                exact one_div_mul_mul_natCast_div (a := Λ m) ht
-              _ = (1 / (t : ℝ)) * (Λ m * (((t / m : ℕ) : ℝ))) +
-                    (1 / (t : ℝ)) * (Λ m * ((t : ℝ) / m - ↑(t / m))) := by
-                    ring
+              (1 / (t : ℝ)) * (Λ m * ((t : ℝ) / m - ↑(t / m)))) :=
+            Finset.sum_congr rfl fun m _ => by
+              rw [← one_div_mul_mul_natCast_div (a := Λ m) ht]
+              ring
       _ = (1 / (t : ℝ)) * ∑ m ∈ Finset.Icc 1 t, Λ m * (((t / m : ℕ) : ℝ)) +
-            (1 / (t : ℝ)) *
-              ∑ m ∈ Finset.Icc 1 t,
-                Λ m * ((t : ℝ) / m - ↑(t / m)) := by
+            (1 / (t : ℝ)) * ∑ m ∈ Finset.Icc 1 t, Λ m * ((t : ℝ) / m - ↑(t / m)) := by
             rw [Finset.sum_add_distrib, Finset.mul_sum, Finset.mul_sum]
       _ = Real.log (Nat.factorial t) / t + mertensFractionalError t := by
-            rw [sum_vonMangoldt_mul_div_eq_log_factorial]
-            rw [mertensFractionalError]
+            rw [sum_vonMangoldt_mul_div_eq_log_factorial, mertensFractionalError]
             ring_nf
 
 /-- The fractional correction term is nonnegative. -/
 private lemma mertensFractionalError_nonneg {t : ℕ} (ht : 1 ≤ t) :
     0 ≤ mertensFractionalError t := by
   rw [mertensFractionalError]
-  refine mul_nonneg ?_ (Finset.sum_nonneg ?_)
-  · exact one_div_nonneg.mpr (show (0 : ℝ) ≤ t by positivity)
-  · intro m hm
-    rw [truncation_eq_fract]
-    exact mul_nonneg
-      ArithmeticFunction.vonMangoldt_nonneg
-      (Int.fract_nonneg _)
+  exact mul_nonneg (one_div_nonneg.mpr (by positivity))
+    (Finset.sum_nonneg fun m _ => by
+      rw [truncation_eq_fract]
+      exact mul_nonneg ArithmeticFunction.vonMangoldt_nonneg (Int.fract_nonneg _))
 
 /-- The fractional correction term is uniformly bounded by Chebyshev's estimate. -/
 private lemma mertensFractionalError_le {t : ℕ} (ht : 2 ≤ t) :
     mertensFractionalError t ≤ Real.log 4 + 4 := by
   rw [mertensFractionalError]
-  have hsum :
-      ∑ m ∈ Finset.Icc 1 t, Λ m * ((t : ℝ) / m - ↑(t / m))
-        ≤ ∑ m ∈ Finset.Icc 1 t, Λ m := by
-    refine Finset.sum_le_sum ?_
-    intro m hm
-    rw [truncation_eq_fract]
-    nlinarith [ArithmeticFunction.vonMangoldt_nonneg (n := m), (Int.fract_lt_one ((t : ℝ) / m)).le]
-  have hcheb : Chebyshev.psi t ≤ (Real.log 4 + 4) * t := by
-    simpa using
-      Chebyshev.psi_le_const_mul_self (x := (t : ℝ)) (show 0 ≤ (t : ℝ) by positivity)
-  have hI : Finset.Icc 1 t = Finset.Ioc 0 t := by
-    ext n
-    simp [Finset.mem_Icc, Finset.mem_Ioc, Nat.succ_le_iff]
+  have hsum : ∑ m ∈ Finset.Icc 1 t, Λ m * ((t : ℝ) / m - ↑(t / m)) ≤
+      ∑ m ∈ Finset.Icc 1 t, Λ m :=
+    Finset.sum_le_sum fun m _ => by
+      rw [truncation_eq_fract]
+      have hfrac := (Int.fract_lt_one ((t : ℝ) / m)).le
+      nlinarith [ArithmeticFunction.vonMangoldt_nonneg (n := m)]
+  have hcheb : Chebyshev.psi t ≤ (Real.log 4 + 4) * t :=
+    by simpa using Chebyshev.psi_le_const_mul_self (x := (t : ℝ)) (by positivity)
+  have htR : 0 < (t : ℝ) := by positivity
   calc
     (1 / t : ℝ) * ∑ m ∈ Finset.Icc 1 t, Λ m * ((t : ℝ) / m - ↑(t / m))
       ≤ (1 / t : ℝ) * ∑ m ∈ Finset.Icc 1 t, Λ m :=
-        mul_le_mul_of_nonneg_left hsum
-          (one_div_nonneg.mpr (show (0 : ℝ) ≤ t by positivity))
+        mul_le_mul_of_nonneg_left hsum (one_div_nonneg.mpr (le_of_lt htR))
     _ = Chebyshev.psi t / t := by
-        simp [hI, Chebyshev.psi, Nat.floor_natCast, div_eq_mul_inv, mul_comm]
-    _ ≤ Real.log 4 + 4 := by
-        have htR : 0 < (t : ℝ) := by positivity
-        exact (div_le_iff₀ htR).mpr hcheb
+        simp [show Finset.Icc 1 t = Finset.Ioc 0 t from by ext n; simp; omega,
+          Chebyshev.psi, Nat.floor_natCast, div_eq_mul_inv, mul_comm]
+    _ ≤ Real.log 4 + 4 := (div_le_iff₀ htR).mpr hcheb
 
 /-- Bounded-error form of Mertens' estimate:
 `∑_{q ≤ t} Λ(q) / q = log t + O(1)` on the natural numbers. -/

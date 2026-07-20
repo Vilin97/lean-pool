@@ -66,18 +66,16 @@ theorem ContinuousLinearEquiv.finrank_comp_left {R M N N' : Type*} [Semiring R]
     [AddCommMonoid M] [Module R M] [TopologicalSpace M]
     [AddCommMonoid N] [Module R N] [TopologicalSpace N]
     [AddCommMonoid N'] [Module R N'] [TopologicalSpace N']
-    (e : N ≃L[R] N') (f : M →L[R] N) : (e ∘L f : M →L[R] N').finrank = f.finrank := by
-  apply ContinuousLinearMap.finrank_comp_eq_right_of_injective
-  exact e.injective
+    (e : N ≃L[R] N') (f : M →L[R] N) : (e ∘L f : M →L[R] N').finrank = f.finrank :=
+  ContinuousLinearMap.finrank_comp_eq_right_of_injective e.injective f
 
 @[simp]
 theorem ContinuousLinearEquiv.finrank_comp_right {R M M' N : Type*} [Semiring R]
     [AddCommMonoid M] [Module R M] [TopologicalSpace M]
     [AddCommMonoid N] [Module R N] [TopologicalSpace N]
     [AddCommMonoid M'] [Module R M'] [TopologicalSpace M']
-    (f : M →L[R] N) (e : M' ≃L[R] M) : (f ∘L e : M' →L[R] N).finrank = f.finrank := by
-  apply ContinuousLinearMap.finrank_comp_eq_left_of_surjective
-  exact e.surjective
+    (f : M →L[R] N) (e : M' ≃L[R] M) : (f ∘L e : M' →L[R] N).finrank = f.finrank :=
+  ContinuousLinearMap.finrank_comp_eq_left_of_surjective f e.surjective
 
 theorem LipschitzWith.hausdorffMeasure_image_null {X Y : Type*} [EMetricSpace X] [EMetricSpace Y]
     [MeasurableSpace X] [BorelSpace X] [MeasurableSpace Y] [BorelSpace Y] {K : NNReal} {f : X → Y}
@@ -92,8 +90,8 @@ from an `n`-dimensional space to an `m`-dimensional space.
 
 Note that the estimate does not depend on `m`. -/
 noncomputable def sardMoreiraBound (n k : ℕ) (α : I) (p : ℕ) : ℝ≥0 :=
-  ⟨(p : ℝ) + ((n - p : ℕ) : ℝ) / ((k : ℝ) + α), by
-    exact add_nonneg (by positivity) (div_nonneg (by positivity)
+  ⟨(p : ℝ) + ((n - p : ℕ) : ℝ) / ((k : ℝ) + α),
+    add_nonneg (by positivity) (div_nonneg (by positivity)
       (add_nonneg (by positivity) α.2.1))⟩
 
 theorem mul_sardMoreiraBound {n k p : ℕ} (hk : k ≠ 0) (hpn : p ≤ n) (α : I) :
@@ -141,8 +139,7 @@ theorem sardMoreiraBound_le_sardMoreiraBound {m n k l p q : ℕ} (hl : l ≠ 0) 
       have hmnp : ((m - p : ℕ) : ℝ) ≤ ((n - p : ℕ) : ℝ) := by
         exact_mod_cast Nat.sub_le_sub_right hmn p
       have hlk' : (l : ℝ) + α ≤ (k : ℝ) + α := by
-        have : (l : ℝ) ≤ k := by exact_mod_cast hlk
-        linarith
+        simp_all
       have hlpos : 0 < (l : ℝ) + α := by
         have hlpos : (0 : ℝ) < l := by exact_mod_cast Nat.pos_of_ne_zero hl
         exact add_pos_of_pos_of_nonneg hlpos α.2.1
@@ -315,8 +312,7 @@ protected theorem hausdorffMeasure_image_le_mul {X : Type*} [MetricSpace X]
       have hdim : dim E ≤ n := by omega
       change ((dim E : ℝ) + ((n - dim E : ℕ) : ℝ) / ((k : ℝ) + α)) - (dim E : ℝ) =
         ((n : ℝ) - (dim E : ℝ)) / ((k : ℝ) + α)
-      rw [Nat.cast_sub hdim]
-      ring
+      simp_all
     · positivity
     · finiteness
     · left; positivity
@@ -496,11 +492,7 @@ theorem hausdorffMeasure_image_piProd_fst_null_of_isBigO_isLittleO
       simpa [t, dist_eq_norm_sub] using hx.2
   have ht' : μH[d] (g '' (s \ t)) = 0 := by
     apply hausdorffMeasure_image_null_of_isBigO hk hn (fun x hx ↦ hcE x hx.1)
-    · intro x hx
-      refine .trans ?_ (h_isBigO x hx.1)
-      refine .of_norm_norm ?_
-      simp only [← dist_eq_norm_sub, hgf]
-      simp [Asymptotics.isBigO_refl]
+    · simp_all
     · refine measure_mono_null ?_ h_isLittleO
       rintro x ⟨hxs, hxt⟩ hxs'
       specialize hxs' hxs
@@ -703,8 +695,7 @@ theorem hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
         · exact e.toContinuousLinearMap.differentiableAt
         · exact (hf x hx).differentiableAt hk
       · infer_instance
-    · left
-      positivity
+    · simp_all
   -- Apply the Moreira2001 theorem to each of the sets where the rank is exactly `p' ≤ p`.
   have h_apply : ∀ p' ≤ p,
       μH[sardMoreiraBound (dim E) k α p'] (f '' {x ∈ s | dim (fderiv ℝ f x).range = p'}) = 0 := by

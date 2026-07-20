@@ -31,8 +31,7 @@ namespace PerfectRing
 variable {R : Type _} [CommSemiring R]
 
 lemma pth_power_bijective_of_char_nonzero [PerfectRing R] (h : ringChar R ≠ 0) :
-  Function.Bijective (fun x : R => x ^ (ringChar R)) :=
-Or.resolve_left pth_power_bijective h
+  Function.Bijective (fun x : R => x ^ (ringChar R)) := Or.resolve_left pth_power_bijective h
 
 /-- The inverse of the `p`-th power map on a perfect ring (the identity in
 characteristic zero). -/
@@ -41,14 +40,12 @@ def pthRoot [PerfectRing R] : R → R :=
 if h : ringChar R = 0 then id else Function.surjInv (pth_power_bijective_of_char_nonzero h).2
 
 lemma pthRoot_pow_char [PerfectRing R] (h : ringChar R ≠ 0) (x : R) :
-  pthRoot x ^ (ringChar R) = x :=
-by
+  pthRoot x ^ (ringChar R) = x := by
   simp only [pthRoot, h, dite_false]
   exact Function.rightInverse_surjInv (pth_power_bijective_of_char_nonzero h).2 x
 
 lemma pthRoot_pow_eq [PerfectRing R] (x : R) :
-  pthRoot x ^ n = x ^ (n / ringChar R) * pthRoot x ^ (n % ringChar R) :=
-by
+  pthRoot x ^ n = x ^ (n / ringChar R) * pthRoot x ^ (n % ringChar R) := by
   by_cases h : ringChar R = 0
   · simp [h]
   conv =>
@@ -58,8 +55,7 @@ by
 
 
 @[simp]
-lemma pthRoot_zero [PerfectRing R] : pthRoot (0 : R) = 0 :=
-by
+lemma pthRoot_zero [PerfectRing R] : pthRoot (0 : R) = 0 := by
   rw [pthRoot]
   split
   · simp

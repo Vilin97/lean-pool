@@ -210,11 +210,8 @@ private theorem cauchySeq_seminorm_bound
     apply Filter.mem_comap.mpr
     refine ⟨{x | rapidDecaySeminorm k x < ε}, ?_, ?_⟩
     · -- {x | seminorm k x < ε} ∈ nhds 0
-      have h0 : rapidDecaySeminorm k 0 = 0 := map_zero _
-      have : {x | rapidDecaySeminorm k x < ε} ∈ nhds (0 : RapidDecaySeq) :=
-        (rapidDecay_withSeminorms.continuous_seminorm k).continuousAt.preimage_mem_nhds
-          (by rw [h0]; exact Iio_mem_nhds hε)
-      exact this
+      exact (rapidDecay_withSeminorms.continuous_seminorm k).continuousAt.preimage_mem_nhds
+        (by rw [show rapidDecaySeminorm k 0 = 0 from map_zero _]; exact Iio_mem_nhds hε)
     · intro ⟨a, b⟩ (hx : rapidDecaySeminorm k (b - a) < ε)
       change rapidDecaySeminorm k (a - b) < ε
       rwa [show a - b = -(b - a) from (neg_sub b a).symm, map_neg_eq_map]
@@ -352,9 +349,7 @@ def basisVec (m : ℕ) : RapidDecaySeq where
   val n := if n = m then 1 else 0
   rapid_decay k := by
     apply summable_of_ne_finset_zero (s := {m})
-    intro n hn
-    simp only [Finset.mem_singleton] at hn
-    simp [hn]
+    simp_all
 
 @[simp] theorem basisVec_val_self (m : ℕ) : (basisVec m).val m = 1 := by
   simp [basisVec]
@@ -584,9 +579,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     change φ f = ∑' m, (equiv f).val m * φ (equiv.symm (RapidDecaySeq.basisVec m))
     have h := RapidDecaySeq.rapidDecay_expansion
       (φ.comp equiv.symm.toContinuousLinearMap) (equiv f)
-    simp only [ContinuousLinearMap.comp_apply] at h
-    rwa [show (↑equiv.symm : RapidDecaySeq →L[ℝ] E) (equiv f) = f from
-      equiv.symm_apply_apply f] at h
+    simp_all
   basis_growth i := by
     set q : Seminorm ℝ RapidDecaySeq := (p i).comp equiv.symm.toLinearMap
     have hq_cont : Continuous q :=
@@ -782,8 +775,7 @@ private theorem one_add_pair_le_sq (i j : ℕ) :
   calc (1 : ℝ) + Nat.pair i j
       ≤ 1 + (i + j + 1) ^ 2 := by linarith
     _ ≤ (i + j + 2) ^ 2 := by nlinarith
-    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := by
-        exact pow_le_pow_left₀ (by positivity) (by nlinarith) _
+    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := pow_le_pow_left₀ (by positivity) (by nlinarith) _
 
 /-- The pure tensor map: given `e₁ : E₁` and `e₂ : E₂` with DM structure,
 produces the sequence `m ↦ coeff(unpair(m).1, e₁) * coeff(unpair(m).2, e₂)`.
@@ -1346,12 +1338,11 @@ theorem lift_pure
   have h_inner : ∀ n, HasSum (fun k => c₂ k e₂ • B (ψ₁ n) (ψ₂ k))
       (B (ψ₁ n) e₂) := by
     intro n
-    have h := (DyninMityaginSpace.hasSum_basis e₂).map (B (ψ₁ n)) (hBn_cont n)
-    exact h.congr_fun (fun k => (map_smul (B (ψ₁ n)) (c₂ k e₂) (ψ₂ k)).symm)
+    exact ((DyninMityaginSpace.hasSum_basis e₂).map (B (ψ₁ n)) (hBn_cont n)).congr_fun
+      (fun k => (map_smul (B (ψ₁ n)) (c₂ k e₂) (ψ₂ k)).symm)
   -- Step 4: Outer HasSum: ∑ₙ c₁(n)(e₁) • B(ψ₁(n))(e₂) → B(e₁)(e₂)
   have h_outer : HasSum (fun n => c₁ n e₁ • B (ψ₁ n) e₂) (B e₁ e₂) := by
-    have h := (DyninMityaginSpace.hasSum_basis e₁).map (B.flip e₂) hBflip_cont
-    exact h.congr_fun (fun n => by
+    exact ((DyninMityaginSpace.hasSum_basis e₁).map (B.flip e₂) hBflip_cont).congr_fun (fun n => by
       simp only [Function.comp, LinearMap.flip_apply]
       exact (map_smul (B.flip e₂) (c₁ n e₁) (ψ₁ n)).symm)
   -- Step 5: Summability of the ℕ-indexed sum (from lift_summable via pure_val)
@@ -1509,9 +1500,7 @@ theorem _root_.GaussianField.NuclearTensorProduct.basisVec_eq_pure
         apply h
         rw [← Nat.pair_unpair n, ← Nat.pair_unpair m, h₁, h₂]
       · simp only [h₂, if_false]
-    · by_cases h₂ : (Nat.unpair n).2 = (Nat.unpair m).2
-      · simp only [h₁, h₂, if_false, if_true]
-      · simp only [h₁, h₂, if_false]
+    · simp_all
 
 end NuclearTensorProduct
 

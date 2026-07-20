@@ -79,31 +79,20 @@ lemma carry_pair_assoc : ∀ {X Y Z : str}, ∀ {i : num},
       have h0_xy_z : ¬ Carry (0 : num) (X + Y) Z :=
         (carry_rec (i := (0 : num)) (X := X + Y) (Y := Z)).1
       constructor
-      · constructor
-        · intro h
-          exact False.elim (h0_yz h.1)
-        · intro h
-          exact False.elim (h0_xy h.1)
+      · simp_all
       · simp [Xor, h0_yz, h0_x_yz, h0_xy, h0_xy_z]
     · intro j h_j
       rcases h_j with ⟨h_j_and, h_j_xor⟩
       have h_step :=
         carry_pair_step_bool (X := j ∈ X) (Y := j ∈ Y) (Z := j ∈ Z) h_j_and h_j_xor
-      constructor
-      · rw [(carry_rec (i := j) (X := Y) (Y := Z)).2]
-        rw [(carry_rec (i := j) (X := X) (Y := Y + Z)).2]
-        rw [(carry_rec (i := j) (X := X) (Y := Y)).2]
-        rw [(carry_rec (i := j) (X := X + Y) (Y := Z)).2]
-        rw [mem_add_iff_xor (X := Y) (Y := Z) (i := j)]
-        rw [mem_add_iff_xor (X := X) (Y := Y) (i := j)]
-        exact h_step.1
-      · rw [(carry_rec (i := j) (X := Y) (Y := Z)).2]
-        rw [(carry_rec (i := j) (X := X) (Y := Y + Z)).2]
-        rw [(carry_rec (i := j) (X := X) (Y := Y)).2]
-        rw [(carry_rec (i := j) (X := X + Y) (Y := Z)).2]
-        rw [mem_add_iff_xor (X := Y) (Y := Z) (i := j)]
-        rw [mem_add_iff_xor (X := X) (Y := Y) (i := j)]
-        exact h_step.2
+      unfold CarryAssocPred
+      rw [(carry_rec (i := j) (X := Y) (Y := Z)).2]
+      rw [(carry_rec (i := j) (X := X) (Y := Y + Z)).2]
+      rw [(carry_rec (i := j) (X := X) (Y := Y)).2]
+      rw [(carry_rec (i := j) (X := X + Y) (Y := Z)).2]
+      rw [mem_add_iff_xor (X := Y) (Y := Z) (i := j)]
+      rw [mem_add_iff_xor (X := X) (Y := Y) (i := j)]
+      exact ⟨h_step.1, h_step.2⟩
   exact hφ i
 
 

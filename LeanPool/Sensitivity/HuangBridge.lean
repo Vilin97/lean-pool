@@ -41,10 +41,8 @@ theorem huang_finset {m : ℕ} (H : Finset (Fin (m + 1) → Bool))
   have hmap : HQ.toFinset.map eEmb = H := by
     ext x
     simp [HQ, eEmb]
-  have hHQcard : HQ.toFinset.card = H.card := by
-    calc
-      HQ.toFinset.card = (HQ.toFinset.map eEmb).card := by simp
-      _ = H.card := by rw [hmap]
+  have hHQcard : HQ.toFinset.card = H.card := by rw [← hmap]
+                                                 simp
   have hHQ : HQ.toFinset.card ≥ 2 ^ m + 1 := by
     omega
   obtain ⟨q, hqH, hbound⟩ := Sensitivity.huang_degree_theorem HQ hHQ

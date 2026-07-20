@@ -76,11 +76,11 @@ theorem five_n_le_two_pow (N : Nat) (hN : 6 ≤ N) : 5 * N ≤ 2 ^ N := by
   | zero => omega
   | succ n ih =>
     by_cases h : 6 ≤ n
-    · have ihn := ih h
-      have h5 : 5 ≤ 2 ^ n :=
+    · have h5 : 5 ≤ 2 ^ n :=
         le_trans (by norm_num : 5 ≤ 2 ^ 3) (Nat.pow_le_pow_right (by omega) (by omega))
       have h2 : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by rw [Nat.pow_succ, Nat.mul_comm]; ring
-      linarith
+      have ihn := ih h
+      omega
     · interval_cases n <;> simp_all
 
 /-- The gate count `s = 2^N / (5N)` is positive for `N ≥ 6`. -/
@@ -98,8 +98,9 @@ theorem n_plus_s_lt (N : Nat) (hN : 6 ≤ N) :
   have h4 : 2 * (2 ^ N / 5) < 2 ^ N := by
     have hle := Nat.mul_div_le_mul_div_assoc 2 (2 ^ N) 5
     have hlt : 2 * 2 ^ N / 5 < 2 ^ N := by
-      rw [Nat.div_lt_iff_lt_mul (by omega : 0 < 5)]; linarith
-    linarith
+      rw [Nat.div_lt_iff_lt_mul (by omega : 0 < 5)]
+      linarith
+    omega
   omega
 
 /-- The exponent `(2N+3) * s` is less than `2^N`, which ensures the

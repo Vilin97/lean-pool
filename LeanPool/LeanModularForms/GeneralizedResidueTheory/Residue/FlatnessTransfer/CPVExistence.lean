@@ -141,8 +141,7 @@ private lemma continuousOn_cutoff_integral
         · rw [norm_mul, norm_inv]
           exact mul_le_mul (inv_anti₀ hε₀_half (le_of_lt (lt_trans hε.1 h)))
             (hM t ht) (norm_nonneg _) (inv_nonneg.mpr hε₀_half.le)
-        · simp only [norm_zero]
-          exact mul_nonneg (inv_nonneg.mpr hε₀_half.le) hM_nn)
+        · simp_all)
       ).aestronglyMeasurable.mono_measure (by
         rw [Set.uIoc_of_le γ.hab.le])
   · filter_upwards [Ioo_mem_nhds (by linarith : ε₀ / 2 < ε₀)
@@ -153,8 +152,7 @@ private lemma continuousOn_cutoff_integral
       rw [norm_mul, norm_inv]
       exact mul_le_mul (inv_anti₀ hε₀_half (le_of_lt (lt_trans hε.1 h)))
         (hM t (Ioc_subset_Icc_self ht)) (norm_nonneg _) (inv_nonneg.mpr hε₀_half.le)
-    · simp only [norm_zero]
-      exact mul_nonneg (inv_nonneg.mpr hε₀_half.le) hM_nn
+    · simp_all
   · exact intervalIntegrable_const
   · rw [Set.uIoc_of_le γ.hab.le]
     have h_ae : ∀ᵐ t ∂volume,
@@ -260,17 +258,14 @@ lemma cpv_exists_inv_sub_of_closed_unique
               Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos,
               Complex.norm_I, mul_one]
           have h_dist : dist (↑n * (2 * ↑Real.pi * I)) (↑m * (2 * ↑Real.pi * I)) =
-              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by
-            rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
+              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
           rw [h_dist, Complex.norm_intCast] at hz_ball
           have h_int_pos : (1 : ℝ) ≤ |(↑(n - m) : ℝ)| := by
             have h1 := Int.one_le_abs (sub_ne_zero.mpr (Ne.symm hmn))
             rw [← Int.cast_abs] at hz_ball ⊢
             exact_mod_cast h1
           linarith [mul_le_mul_of_nonneg_right h_int_pos (le_of_lt h2pi_pos)]
-        · intro heq
-          exact ⟨by rw [heq]; exact Metric.mem_ball_self h2pi_pos,
-            by rw [heq]; exact hy⟩
+        · simp_all
       intro ε₁ hε₁ ε₂ hε₂
       exact isPreconnected_Ioo.constant_of_mapsTo ⟨hT_disc⟩ h_phi_cont h_maps hε₁ hε₂
     have hη2 : η / 2 ∈ Ioo (0 : ℝ) η := ⟨by linarith, by linarith⟩

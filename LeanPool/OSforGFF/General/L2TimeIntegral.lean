@@ -91,8 +91,7 @@ theorem sq_setIntegral_le_measure_mul_setIntegral_sq_proved
   by_cases hf_aesm : AEStronglyMeasurable f (volume.restrict (Icc a b))
   · -- Use Hölder with p = q = 2
     have hpq : (2:ℝ).HolderConjugate 2 := ⟨by norm_num, by norm_num, by norm_num⟩
-    haveI : IsFiniteMeasure (volume.restrict (Icc a b)) := by
-      exact Real.isFiniteMeasure_restrict_Icc a b
+    haveI : IsFiniteMeasure (volume.restrict (Icc a b)) := Real.isFiniteMeasure_restrict_Icc a b
     have h_memLp1 : MemLp (fun (_ : ℝ) => (1:ℂ)) (ENNReal.ofReal 2)
         (volume.restrict (Icc a b)) := by
       rw [show ENNReal.ofReal 2 = (2 : ENNReal) from by norm_num]; exact memLp_const 1
@@ -129,8 +128,7 @@ lemma cauchy_schwarz_time_integral_pointwise (A : ℝ → Ω → ℂ) (T : ℝ) 
     ‖∫ s in Icc 0 T, A s ω‖ ^ 2 ≤ T * ∫ s in Icc 0 T, ‖A s ω‖ ^ 2 := by
   have hab : (0 : ℝ) ≤ T := le_of_lt hT
   have h := sq_setIntegral_le_measure_mul_setIntegral_sq_proved hab hf_sq
-  simp only [sub_zero] at h
-  exact h
+  simpa only [sub_zero] using h
 
 omit [MeasurableSpace Ω] in
 /-- The scaled time average satisfies a pointwise L² bound. -/
@@ -154,8 +152,7 @@ lemma scaled_time_average_pointwise_bound (A : ℝ → Ω → ℂ) (T : ℝ) (hT
   -- Combine: (1/T)² * T * ∫ = (1/T) * ∫
   calc (1/T)^2 * ‖∫ s in Icc 0 T, A s ω‖ ^ 2
     ≤ (1/T)^2 * (T * ∫ s in Icc 0 T, ‖A s ω‖ ^ 2) := by
-        apply mul_le_mul_of_nonneg_left h_cs
-        positivity
+        simp_all
     _ = (1/T) * ∫ s in Icc 0 T, ‖A s ω‖^2 := by field_simp
 
 /-! ### Main Theorem: L² Time Average Bound
@@ -229,9 +226,8 @@ theorem L2_time_average_bound (μ : Measure Ω) [SFinite μ]
   5. setIntegral_L2_bound: apply uniform bound
   -/
   -- Setup integrability for integral_mono
-  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ := by
-    have h_margin := h_prod_int.integral_prod_right
-    exact h_margin.const_mul (1/T)
+  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ :=
+    h_prod_int.integral_prod_right.const_mul (1/T)
   -- From product integrability, get a.e. slice integrability
   have h_sq_meas : AEStronglyMeasurable (fun p : ℝ × Ω => ‖A p.1 p.2‖^2)
       ((volume.restrict (Icc 0 T)).prod μ) := h_joint_meas.norm.pow 2
@@ -325,21 +321,11 @@ theorem memLp_prod_of_uniform_slicewise_bound (μ : Measure Ω) [SFinite μ]
       filter_upwards with s
       have h := (h_memLp s).integrable_norm_rpow
         (by simp : (2 : ℝ≥0∞) ≠ 0) (by simp : (2 : ℝ≥0∞) ≠ ⊤)
-      convert h using 2
-      simp [ENNReal.toReal_ofNat]
+      simp_all
     · -- Integral of slices is constant, hence integrable on bounded [0,T]
-      have h_eq : (fun s => ∫ (ω : Ω), ‖‖A s ω‖ ^ 2‖ ∂μ) =
-          fun _ => ∫ ω, ‖A 0 ω‖ ^ 2 ∂μ := by
-        ext s
-        simp only [Real.norm_of_nonneg (sq_nonneg _)]
-        exact h_uniform s
-      rw [h_eq]
-      have h_vol : (volume : Measure ℝ) (Icc 0 T) ≠ ⊤ := by
-        simp [Real.volume_Icc, ENNReal.ofReal_ne_top]
-      exact integrableOn_const h_vol
+      simp_all
   -- Now use the integrability to get MemLp 2
-  rw [memLp_two_iff_integrable_sq_norm h_meas]
-  exact h_sq_int
+  rwa [memLp_two_iff_integrable_sq_norm h_meas]
 
 /-! ## Time Average is in L² (Theorem 2)
 
@@ -370,9 +356,8 @@ theorem time_average_memLp_two (μ : Measure Ω) [SFinite μ]
       ((volume.restrict (Icc 0 T)).prod μ) :=
     (memLp_two_iff_integrable_sq_norm h_joint_meas).mp h_prod
   -- 2. The RHS bound (1/T) * ∫ ‖A_s ω‖² is integrable (marginal of product)
-  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ := by
-    have h_margin := h_prod_int.integral_prod_right
-    exact h_margin.const_mul (1/T)
+  have h_rhs_int : Integrable (fun ω => (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) μ :=
+    h_prod_int.integral_prod_right.const_mul (1/T)
   -- 3. Use Integrable.mono with the pointwise bound
   have h_meas_sq : AEStronglyMeasurable (fun ω => ‖(1/T : ℂ) * ∫ (s : ℝ) in Icc 0 T, A s ω‖^2) μ :=
     h_avg_meas.norm.pow 2
@@ -554,8 +539,7 @@ theorem double_integral_polynomial_decay_bound_proved (α : ℝ) (hα : α > 1) 
     ≤ ∫ s in Icc 0 T, (∫ t, g t) := by
         apply integral_mono_of_nonneg
         · filter_upwards with s; exact integral_nonneg (fun u => h_nonneg _)
-        · exact integrableOn_const (show volume (Icc (0:ℝ) T) ≠ ⊤ from by
-            simp [Real.volume_Icc, ENNReal.ofReal_ne_top])
+        · simp_all
         · filter_upwards with s; exact h_inner s
     _ = (∫ t, g t) * T := by
         rw [setIntegral_const, Measure.real, Real.volume_Icc, sub_zero,
@@ -919,8 +903,7 @@ private lemma l2cov_term_finite {Ω : Type*} [MeasurableSpace Ω]
   conv_lhs => rw [show (fun ω => ∫⁻ s, (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2 ∂ν) =
     (fun ω => ∫⁻ s, (fun z : Ω × ℝ => (↑‖A z.2 z.1 - c‖₊ : ℝ≥0∞) ^ 2) (ω, s) ∂ν)
     from rfl]
-  rw [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
-  exact h_both_finite
+  rwa [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
 
 /-- Term-by-term finiteness used in `L2_process_covariance_fubini_integrable` (factor out the
 first `ℝ`-coordinate via Tonelli).
@@ -939,8 +922,7 @@ private lemma l2cov_term2_finite {Ω : Type*} [MeasurableSpace Ω]
   conv_lhs => rw [show (fun ω => ∫⁻ u, (↑‖A u ω - c‖₊ : ℝ≥0∞) ^ 2 ∂ν) =
     (fun ω => ∫⁻ s, (fun z : Ω × ℝ => (↑‖A z.2 z.1 - c‖₊ : ℝ≥0∞) ^ 2) (ω, s) ∂ν)
     from rfl]
-  rw [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
-  exact h_both_finite
+  rwa [lintegral_lintegral hF_meas_swap.aemeasurable, ← lintegral_prod_swap]
 
 /-- Inner Tonelli rewrite for `L2_process_covariance_fubini_integrable`,
 factoring out the first coordinate. -/
@@ -1012,8 +994,7 @@ theorem _root_.OSforGFF.L2_process_covariance_fubini_integrable {Ω : Type*} [Me
   haveI : SFinite ν := inferInstance
   have hg_meas : ∀ ω, Measurable (fun s : ℝ => (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2) := fun ω =>
     ((h_cont_s ω).sub continuous_const).measurable.nnnorm.coe_nnreal_ennreal.pow_const _
-  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by
-    fun_prop
+  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by fun_prop
   calc ∫⁻ x, ↑‖(A x.2.1 x.1 - c) * starRingEnd ℂ (A x.2.2 x.1 - c)‖₊
         ∂(μ.prod (ν.prod ν))
       ≤ ∫⁻ x, (↑‖A x.2.1 x.1 - c‖₊ ^ 2 + ↑‖A x.2.2 x.1 - c‖₊ ^ 2)

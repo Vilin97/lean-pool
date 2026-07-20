@@ -85,9 +85,8 @@ theorem sylvester_strictMono : StrictMono sylvester := by
 theorem sylvester_mod_eq_one {m n : ℕ} (h1 : m < n) :
     sylvester n % sylvester m = 1 := by
   rw [sylvester_prod_finset_add_one]
-  have d : sylvester m ∣ ∏ i ∈ Finset.range n, sylvester i := by
-    apply Finset.dvd_prod_of_mem
-    exact Finset.mem_range.mpr h1
+  have d : sylvester m ∣ ∏ i ∈ Finset.range n, sylvester i :=
+    Finset.dvd_prod_of_mem _ (Finset.mem_range.mpr h1)
   rw [Nat.add_mod]
   simp only [add_mod_mod, Nat.dvd_iff_mod_eq_zero.mp d]
   have s1 : sylvester m > 1 := by linarith [sylvester_ge_two m]

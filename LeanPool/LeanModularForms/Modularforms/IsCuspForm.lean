@@ -52,14 +52,8 @@ lemma ModForm_mk_inj (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : CuspForm Γ k) (h
 def CuspFormToModularForm (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : CuspForm Γ k →ₗ[ℂ] ModularForm Γ k
   where
   toFun f := ModFormMk Γ k f
-  map_add' := by
-    intro f g
-    simp only [ModFormMk, CuspForm.coe_add]
-    rfl
-  map_smul' := by
-    intro m f
-    simp only [ModFormMk, RingHom.id_apply]
-    rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 /-- The submodule of modular forms that are cusp forms. -/
 def CuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : Submodule ℂ (ModularForm Γ k) :=
@@ -74,8 +68,7 @@ def CuspFormIsoCuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) :
   rw [CuspFormToModularForm] at hf
   simp only [ModFormMk, LinearMap.coe_mk, AddHom.coe_mk] at hf
   ext z
-  have := congr_fun (congr_arg (fun x => x.toFun) hf) z
-  simpa using this
+  simpa using congr_fun (congr_arg (fun x => x.toFun) hf) z
 
 lemma mem_CuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : ModularForm Γ k)
     (hf : f ∈ CuspFormSubmodule Γ k) :
@@ -110,10 +103,8 @@ lemma CuspForm_to_ModularForm_coe (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : Modu
   rw [IsCuspFormToCuspForm]
   rw [IsCuspForm, CuspFormSubmodule, LinearMap.mem_range] at hf
   have hg := hf.choose_spec
-  simp_rw [CuspFormToModularForm] at hg
-  have hgg := congr_arg (fun x ↦ x.toSlashInvariantForm) hg
-  simp only [ModFormMk, LinearMap.coe_mk, AddHom.coe_mk] at *
-  exact hgg
+  simp only [CuspFormToModularForm, ModFormMk, LinearMap.coe_mk, AddHom.coe_mk] at hg
+  exact congr_arg (fun x ↦ x.toSlashInvariantForm) hg
 
 lemma CuspForm_to_ModularForm_Fun_coe (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : ModularForm Γ k)
     (hf : IsCuspForm Γ k f) : (IsCuspFormToCuspForm Γ k f hf).toFun =
@@ -121,11 +112,8 @@ lemma CuspForm_to_ModularForm_Fun_coe (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : 
   rw [IsCuspFormToCuspForm]
   rw [IsCuspForm, CuspFormSubmodule, LinearMap.mem_range] at hf
   have hg := hf.choose_spec
-  simp_rw [CuspFormToModularForm] at hg
-  have hgg := congr_arg (fun x ↦ x.toFun) hg
-  simp only [ModFormMk, LinearMap.coe_mk, AddHom.coe_mk, SlashInvariantForm.toFun_eq_coe,
-    SlashInvariantForm.coe_mk, toSlashInvariantForm_coe, CuspForm.toSlashInvariantForm_coe] at *
-  exact hgg
+  simp only [CuspFormToModularForm, ModFormMk, LinearMap.coe_mk, AddHom.coe_mk] at hg
+  exact congr_arg (fun x ↦ x.toFun) hg
 
 /-- Build a `CuspForm` from a `SlashInvariantForm` that is holomorphic and tends to 0. -/
 noncomputable def cuspFormOfSIFTendstoZero {k : ℤ}
@@ -158,8 +146,7 @@ private lemma isZeroAtImInfty_of_coeffZero {k : ℤ}
   obtain ⟨m, hm⟩ := Function.Periodic.qParam_left_inv_mod_period (h := 1)
     (Ne.symm (zero_ne_one' ℝ)) y
   have := (periodic_comp_ofComplex (h := 1) f (by simp)).int_mul m y
-  simp only [comp_apply, ofReal_one, mul_one, ofComplex_apply] at *
-  rwa [hm]
+  simp_all
 
 /-- Build a `CuspForm` from a modular form whose q-expansion has vanishing constant term. -/
 noncomputable def cuspFormOfCoeffZero {k : ℤ}
@@ -190,7 +177,6 @@ lemma IsCuspForm_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
     exact ⟨cuspFormOfCoeffZero f h, by ext; rfl⟩
 
 lemma CuspFormSubmodule_mem_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
-    f ∈ CuspFormSubmodule Γ(1) k ↔ (qExpansion 1 f).coeff 0 = 0 := by
-  have := IsCuspForm_iff_coeffZero_eq_zero k f
-  apply this
+    f ∈ CuspFormSubmodule Γ(1) k ↔ (qExpansion 1 f).coeff 0 = 0 :=
+  IsCuspForm_iff_coeffZero_eq_zero k f
 

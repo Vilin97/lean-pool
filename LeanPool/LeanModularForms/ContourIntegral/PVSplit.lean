@@ -141,9 +141,6 @@ theorem pv_split_at_crossing {γ : ℝ → ℂ} {a b : ℝ} {s : ℂ} {ε δ : �
       ∫ t in (t₀ + δ)..b, (γ t - s)⁻¹ * deriv γ t :=
     integral_congr_ae hF_right
   -- Assemble
-  rw [show (∫ t in a..b, if ‖γ t - s‖ > ε then (γ t - s)⁻¹ * deriv γ t else 0) =
-      ∫ t in a..b, F t from rfl]
-  rw [h_split, h_mid_zero, h_eq_left, h_eq_right]
-  ring
+  simp_all
 
 end ContourIntegral

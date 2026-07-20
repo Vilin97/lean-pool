@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
 import LeanPool.AndersonConjecture.Jensen.Adjoin.Adjoin
+import LeanPool.AndersonConjecture.Jensen.CloseUp.NoCommonFactor
 import LeanPool.AndersonConjecture.Jensen.CloseUp.TwoGen
 
 /-!
@@ -394,50 +395,8 @@ private def close_up_avoidance_step_proof
                 simp only [Polynomial.coeff_map, Polynomial.coeff_zero] at h
                 exact Ideal.mem_comap.mpr (Ideal.Quotient.eq_zero_iff_mem.mp h)
               -- P is an associated prime of some T/(r₀)
-              obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ : ∃ r₀ : R.carrier,
-                  r₀ ∈ P.comap R.carrier.subtype ∧ r₀ ≠ 0 := by
-                by_contra h
-                push Not at h
-                exact hPR_ne ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
-              have hr₀T_ne : (r₀ : T) ≠ 0 :=
-                fun h => hr₀_ne (Subtype.val_injective h)
-              have hr₀_in_P : (r₀ : T) ∈ P := Ideal.mem_comap.mp hr₀_mem
-              have hP_minimal :
-                  P ∈ (Ideal.span {(r₀ : T)}).minimalPrimes := by
-                refine ⟨⟨hP_prime,
-                  Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hr₀_in_P)⟩, ?_⟩
-                intro Q ⟨hQ_prime, hQ_le_span⟩ hQ_le_P
-                by_contra hPQ
-                have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
-                have hQ_ne_bot : Q ≠ ⊥ := by
-                  intro h
-                  rw [h] at hQ_le_span
-                  exact hr₀T_ne (Ideal.mem_bot.mp
-                    (hQ_le_span (Ideal.subset_span (Set.mem_singleton _))))
-                have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
-                have h_bot_lt_Q : (⊥ : Ideal T) < Q :=
-                  bot_lt_iff_ne_bot.mpr hQ_ne_bot
-                have h2 := @Ideal.height_add_one_le_of_lt_of_isPrime T _
-                  Q P hQ_prime hP_prime hQ_lt_P
-                have h4 : (2 : ℕ∞) ≤ P.height :=
-                  calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
-                    _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-                        gcongr
-                        exact zero_le
-                    _ ≤ Q.height + 1 := by
-                        gcongr
-                        exact @Ideal.height_add_one_le_of_lt_of_isPrime T _
-                          ⊥ Q Ideal.isPrime_bot hQ_prime h_bot_lt_Q
-                    _ ≤ P.height := h2
-                exact not_lt.mpr h4
-                  (by exact_mod_cast hP_ht.trans_lt (by norm_num))
-              have hP_assoc : P ∈ associatedPrimes T
-                  (T ⧸ Ideal.span {(r₀ : T)}) := by
-                have hsub :=
-                  Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
-                    T (T ⧸ Ideal.span {(r₀ : T)})
-                rw [Ideal.annihilator_quotient] at hsub
-                exact hsub hP_minimal
+              obtain ⟨r₀, hr₀T_ne, hP_assoc⟩ :=
+                prime_height_le_one_mem_assoc P hP_prime hP_ht hPR_ne
               -- Show P ∈ C_good: need ¬(I_s' ≤ P).
               -- By hI_s'_not_le_assoc (from h_no_common): I_s' ⊄ P for all
               -- associated primes P with P ∩ R ≠ ⊥.

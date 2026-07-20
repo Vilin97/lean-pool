@@ -41,8 +41,7 @@ noncomputable def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player
           have hne : x.val.length ≠ 2 * k + 1 := by
             intro hEq
             rw [IsPosition] at hpos
-            rw [hEq] at hpos
-            norm_num at hpos
+            simp_all
           omega) hpL).extension hp (R.res hlen)
       else Classical.choice (hyp.pruned x)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -88,8 +87,7 @@ lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.t
     rw [IsPosition] at hp ⊢
     rw [pInv_treeHom_val]
     · change (pInvTreeHomMap hyp (List.take n H.x.val)).length % 2 = p.toNat
-      rw [pInvTreeHomMap_len]
-      exact hp
+      rwa [pInvTreeHomMap_len]
     · change (List.take n H.x.val).length ≤ 2 * k
       exact (List.length_take_le n H.x.val).trans h
 lemma pInv_fixing_short :
@@ -101,12 +99,10 @@ lemma pInv_isPosition_short :
       IsPosition
         ((pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
           H.pInv_fixing_short).val) Player.zero := by
-    rw [IsPosition]
-    rw [pInv_treeHom_val]
+    rw [IsPosition, pInv_treeHom_val]
     · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length % 2 =
         Player.zero.toNat
-      rw [pInvTreeHomMap_len]
-      simp [List.length_take, H.hlvl']
+      simp_all
     · simp [take_coe]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def take (n : ℕ) (hk : 2 * k < n) : TreeLift hyp where
@@ -134,8 +130,7 @@ lemma conShort : H.preLift.ConShort := by
         H.pInv_fixing_short).val.length = 2 * k := by
     rw [pInv_treeHom_val]
     · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length = 2 * k
-      rw [pInvTreeHomMap_len]
-      simp [List.length_take, H.hlvl']
+      simp_all
     · simp [take_coe]
   have hlast :
       ((H.R (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
@@ -155,8 +150,8 @@ lemma conShort : H.preLift.ConShort := by
               _ = 2 * k + 1 := by rw [hbaseLen']
           exact Nat.lt_of_lt_of_eq (Nat.lt_succ_self (2 * k)) htarget.symm)).1 =
         (H.R (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
-          H.pInv_fixing_short) H.pInv_isPosition_short).val.1 := by
-    exact congrArg Prod.fst (ExtensionsAt.val'_get_last_of_eq _ hbaseLen.symm)
+          H.pInv_fixing_short) H.pInv_isPosition_short).val.1 :=
+    congrArg Prod.fst (ExtensionsAt.val'_get_last_of_eq _ hbaseLen.symm)
   erw [hlast]
   have harg :
       pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
@@ -169,16 +164,10 @@ lemma conShort : H.preLift.ConShort := by
       · change pInvTreeHomMap hyp (List.take (2 * k) H.x.val) =
           pInvTreeHomMap hyp (List.take (2 * k) H.x.val)
         rfl
-      · change (List.take (2 * k) H.x.val).length ≤ 2 * k
-        exact List.length_take_le (2 * k) H.x.val
+      · simp_all
     · change (List.take (2 * k) H.x.val).length ≤ 2 * k
       exact List.length_take_le (2 * k) H.x.val
-  exact congrArg Prod.fst (Strategy.eval_val_congr H.R H.R rfl
-    (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
-      (H.pInv_fixing le_rfl))
-    (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
-      H.pInv_fixing_short)
-    harg _)
+  simp_all
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps toPreLift] def lift (h : 2 * k + 2 ≤ H.x.val.length) : Lift hyp where
   toPreLift := H.preLift
@@ -321,8 +310,7 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
           rfl
         · change (List.take (2 * k) H.x.val).length ≤ 2 * k
           exact List.length_take_le (2 * k) H.x.val
-      · change (List.take (2 * k) H.x.val).length ≤ 2 * k
-        exact List.length_take_le (2 * k) H.x.val
+      · simp_all
     have hval := Strategy.eval_val_congr H.R H.R rfl
       (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
       (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
@@ -360,8 +348,8 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
           ((H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
             H.preLift.pInv_take_position).val'[2 * k]'hindex) =
             (H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
-              H.preLift.pInv_take_position).val := by
-        exact ExtensionsAt.val'_get_last_of_eq _ H.preLift.pInv_take_length.symm
+              H.preLift.pInv_take_position).val :=
+        ExtensionsAt.val'_get_last_of_eq _ H.preLift.pInv_take_length.symm
       change ((H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.preLift.x))
         H.preLift.pInv_take_position).val'[2 * k]'hindex) =
         (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
@@ -454,13 +442,11 @@ lemma lift_mem_tree_short n (hn : n < 2 * k + 1) hp :
 lemma wLift'_eq_wLLift'_long {h} (hW : (H.lift h).Winnable) hp :
   (H.R (Tree.take n hW.toWLift'.lift) hp).val
   = (H.R (Tree.take n (H.wLLift' ⟨h, Or.inl hW⟩).lift)
-    (by as_aux_lemma => synthIsPosition)).val := by
-  simp_rw [wLift'_eq_wLLift']
+    (by as_aux_lemma => synthIsPosition)).val := by simp_rw [wLift'_eq_wLLift']
 lemma lLift'_eq_wLLift'_long {h} (hL : (H.lift h).Lost) hp :
   (H.R (Tree.take n hL.toLLift'.lift) hp).val
   = (H.R (Tree.take n (H.wLLift' ⟨h, Or.inr hL⟩).lift)
-    (by as_aux_lemma => synthIsPosition)).val := by
-  simp_rw [lLift'_eq_wLLift']
+    (by as_aux_lemma => synthIsPosition)).val := by simp_rw [lLift'_eq_wLLift']
 
 lemma get_eq_get_take (hn : n < H.x.val.length) (hk : 2 * k ≤ n) : H.x.val[n] =
   (H.take (n + 1) (by as_aux_lemma => omega)).x.val[
@@ -516,8 +502,7 @@ lemma lLift_mem_tree h (hL : (H.lift h).Lost) : hL.toLLift'.liftVal ∈ H.R.pre.
         simp (disch := omega) only [min_eq_left, min_eq_right] at prf
         change _ = ((H.lift h).extend' prf.1).toWLLift.liftVal.take n
         simp only [Lift.Lost.toLLift'_toWLLift]
-        have hnx : n < H.x.val.length := by
-          simpa [Lift.Lost.toLLift'_toWLLift] using hn
+        have hnx : n < H.x.val.length := by simpa [Lift.Lost.toLLift'_toWLLift] using hn
         convert (Lift.liftVal_extend' prf.1).symm using 2
         · ext1
           · simp [hnx]
@@ -554,8 +539,7 @@ lemma losable_subtree {h} (hL : (H.lift h).Losable) (hnL : ¬ ∃ h', ((H.dropLa
     · simp only [lift_toPreLift, preLift_x_coe, residual_tree, mem_subAt,
         List.drop_take_append_drop]
       exact hL.1
-    · intros
-      exact Set.mem_univ _)
+    · simp_all)
   intro n hn _ _ _
   conv at hn => simp
   conv => simp
@@ -575,8 +559,7 @@ lemma losable_subtree {h} (hL : (H.lift h).Losable) (hnL : ¬ ∃ h', ((H.dropLa
       conv => simp [dropLast]
       exact (Lift.take_le_take _ _ _).mpr (Or.inl (by
         rw [hL.2.prefix_num (by simp) (by simp) rfl]
-        have hbound : n + (2 * k + 1 + hL.2.num) < H.x.val.length := by
-          exact Nat.lt_sub_iff_add_lt.mp hn
+        have hbound : n + (2 * k + 1 + hL.2.num) < H.x.val.length := Nat.lt_sub_iff_add_lt.mp hn
         omega))
       ⟩
   · symm; unfold Lift.Losable.extension Lift.Losable.a Lift.Losable.x'

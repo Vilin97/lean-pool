@@ -293,11 +293,7 @@ theorem inter {Ϟ : Ordinal.{u}} (hCof : ℵ₀ < Ϟ.cof) {C D : Set Ordinal}
     (hC : IsClub C Ϟ) (hD : IsClub D Ϟ) : IsClub (C ∩ D) Ϟ := by
   rw [← sInter_pair C D]
   refine IsClub.sInter hCof ?_ ⟨C, mem_insert C _⟩ ?_
-  · intro E hE
-    rcases hE with hE | hE
-    · exact hE ▸ hC
-    · rcases hE with rfl
-      exact hD
+  · simp_all
   · by_cases h : C = D
     · subst h
       simp only [pair_eq_singleton, mk_singleton]
@@ -320,8 +316,7 @@ theorem iInter_Iio {Ϟ o : Ordinal.{u}} {p : Iio o} {f : Iio p → Set Ordinal}
   · have hp0 : p.1 = 0 := (eq_zero_or_pos p.1).resolve_right h
     have : IsEmpty (Iio p) := isEmpty_iff.mpr fun ⟨x, h'⟩ ↦ by
       have h'' : x.1 < p.1 := h'
-      rw [hp0] at h''
-      exact (bot_le (a := x.1)).not_gt h''
+      simp_all
     rw [iInter_of_empty]
     convert isClub_univ <| one_lt_cof_iff.mp (one_lt_aleph0.trans_le hϞ.le)
 

@@ -23,6 +23,18 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- For a unit-norm complex `s`, `s.re² + s.im² = 1`. -/
+private lemma unitArc_re_sq_add_im_sq {s : ℂ} (hs_norm : ‖s‖ = 1) :
+    s.re ^ 2 + s.im ^ 2 = 1 := by
+  have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
+  rw [Complex.norm_def, Real.sq_sqrt (Complex.normSq_nonneg s)] at h2
+  simp only [Complex.normSq_apply] at h2
+  nlinarith
+
+/-- For a unit-norm complex `s`, `s.im ≤ 1`. -/
+private lemma unitArc_im_le_one {s : ℂ} (hs_norm : ‖s‖ = 1) : s.im ≤ 1 := by
+  nlinarith [unitArc_re_sq_add_im_sq hs_norm, sq_nonneg s.re]
+
 /-- The crossing parameter `t₀ = 6·arccos(s.re)/π − 1` lies in `(1, 3)`. -/
 lemma unitArc_t₀_mem_Ioo (s : ℂ) (hs_re : |s.re| < 1 / 2) (_hs_im_pos : 0 < s.im) :
     6 * Real.arccos s.re / Real.pi - 1 ∈ Ioo (1 : ℝ) 3 := by
@@ -60,8 +72,7 @@ lemma unitArc_fdBoundary_eq (H : ℝ) (s : ℂ)
   intro t₀
   have ht₀_Ioo := unitArc_t₀_mem_Ioo s hs_re hs_im_pos
   rw [fdBoundary_H_eq_arc ht₀_Ioo.1 ht₀_Ioo.2]
-  have h_angle : Real.pi * (1 + t₀) / 6 = Real.arccos s.re := by
-    simp only [t₀]; field_simp; ring
+  have h_angle : Real.pi * (1 + t₀) / 6 = Real.arccos s.re := by simp only [t₀]; field_simp; ring
   rw [h_angle]
   rw [exp_real_angle_I]
   have hs_re_range : s.re ∈ Icc (-1 : ℝ) 1 := by
@@ -70,100 +81,17 @@ lemma unitArc_fdBoundary_eq (H : ℝ) (s : ℂ)
       linarith [(abs_le.mp (le_of_lt hs_re)).1]
     · linarith [(abs_lt.mp hs_re).2]
   rw [Real.cos_arccos hs_re_range.1 hs_re_range.2]
-  have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := by
-    have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
-    rw [Complex.norm_def, Real.sq_sqrt (Complex.normSq_nonneg s)] at h2
-    simp only [Complex.normSq_apply] at h2; nlinarith
+  have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := unitArc_re_sq_add_im_sq hs_norm
   have h_sin : Real.sin (Real.arccos s.re) = s.im := by
     rw [Real.sin_arccos]
     have h1m : 1 - s.re ^ 2 = s.im ^ 2 := by linarith
     rw [h1m, Real.sqrt_sq (le_of_lt hs_im_pos)]
-  rw [h_sin]
-  exact Complex.re_add_im s
+  simp_all
 
-private lemma unitArc_unique_crossing (H : ℝ) (hH : 1 < H) (s : ℂ)
-    (hs_norm : ‖s‖ = 1) (hs_re : |s.re| < 1 / 2) (hs_im_pos : 0 < s.im) :
-    let t₀ := 6 * Real.arccos s.re / Real.pi - 1
-    ∀ t ∈ Icc (0 : ℝ) 5, fdBoundaryH H t = s → t = t₀ := by
-  intro t₀ t ht hs_eq
-  have ht₀_Ioo := unitArc_t₀_mem_Ioo s hs_re hs_im_pos
-  have hH_sqrt : Real.sqrt 3 / 2 < H := by
-    have : Real.sqrt 3 < 2 := by nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]
-    linarith
-  by_cases h1 : t ≤ 1
-  · simp only [fdBoundaryH, h1, ↓reduceIte] at hs_eq
-    have hre := congr_arg Complex.re hs_eq
-    simp [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
-          Complex.I_re, Complex.I_im] at hre
-    have := (abs_lt.mp hs_re).2
-    linarith
-  · push Not at h1
-    by_cases h3 : t ≤ 3
-    · by_cases h1' : t = 1
-      · subst h1'
-        simp only [fdBoundaryH, show (1 : ℝ) ≤ 1 from le_refl _, ↓reduceIte] at hs_eq
-        have hre := congr_arg Complex.re hs_eq
-        simp only [add_re, mul_re, I_re, I_im, mul_zero, mul_one,
-          zero_sub] at hre
-        have := (abs_lt.mp hs_re).2
-        linarith
-      · have ht1 : 1 < t := lt_of_le_of_ne (le_of_lt h1) (Ne.symm h1')
-        have ht3 : t < 3 := lt_of_le_of_ne h3 (by
-          intro h3_eq; subst h3_eq
-          simp only [fdBoundaryH, show ¬((3 : ℝ) ≤ 1) from by norm_num, ↓reduceIte,
-            show ¬((3 : ℝ) ≤ 2) from by norm_num, show (3 : ℝ) ≤ 3 from le_refl _] at hs_eq
-          have hre := congr_arg Complex.re hs_eq
-          have h_angle : (↑Real.pi / 2 + (↑(3 : ℝ) - 2) * (2 * ↑Real.pi / 3 - ↑Real.pi / 2) : ℂ) =
-              ↑(2 * Real.pi / 3) := by push_cast; ring
-          rw [h_angle] at hre
-          rw [exp_real_angle_I, cos_two_pi_div_three] at hre
-          simp only [add_re, ofReal_re, mul_re, ofReal_im, I_re, I_im, mul_zero] at hre
-          have := (abs_lt.mp hs_re).1; linarith)
-        rw [fdBoundary_H_eq_arc ht1 ht3] at hs_eq
-        have h_s_eq : fdBoundaryH H t₀ = s := unitArc_fdBoundary_eq H s hs_norm hs_re hs_im_pos
-        rw [fdBoundary_H_eq_arc ht₀_Ioo.1 ht₀_Ioo.2] at h_s_eq
-        rw [← h_s_eq] at hs_eq
-        have hre := congr_arg Complex.re hs_eq
-        simp only [exp_real_angle_I, add_re, ofReal_re, mul_re, ofReal_im, I_re, I_im,
-                   mul_zero, zero_mul, sub_self, add_zero] at hre
-        set θ := Real.pi * (1 + t) / 6
-        set θ₀' := Real.pi * (1 + t₀) / 6
-        have hθ_range : θ ∈ Icc (0 : ℝ) Real.pi := by
-          constructor
-          · positivity
-          · simp only [θ]; nlinarith [Real.pi_pos, h3]
-        have hθ₀_range : θ₀' ∈ Icc (0 : ℝ) Real.pi := by
-          constructor
-          · simp only [θ₀']; nlinarith [Real.pi_pos, ht₀_Ioo.1]
-          · simp only [θ₀']; nlinarith [Real.pi_pos, ht₀_Ioo.2]
-        have hθ_eq : θ = θ₀' :=
-          Real.strictAntiOn_cos.injOn hθ_range hθ₀_range hre
-        simp only [θ, θ₀'] at hθ_eq
-        nlinarith [Real.pi_pos]
-    · push Not at h3
-      by_cases h4 : t ≤ 4
-      · rw [fdBoundary_H_eq_seg4_H h3 h4] at hs_eq
-        have hre := congr_arg Complex.re hs_eq
-        simp [fdBoundarySeg4H, Complex.add_re, Complex.mul_re, Complex.ofReal_re,
-          Complex.ofReal_im, Complex.I_re, Complex.I_im] at hre
-        have := (abs_lt.mp hs_re).1; linarith
-      · push Not at h4
-        rw [fdBoundary_H_eq_seg5_H h4] at hs_eq
-        have him := congr_arg Complex.im hs_eq
-        simp [fdBoundarySeg5H, Complex.add_im, Complex.mul_im, Complex.ofReal_re,
-          Complex.ofReal_im, Complex.I_re, Complex.I_im] at him
-        have hs_im_le : s.im ≤ 1 := by
-          have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := by
-            have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
-            rw [Complex.norm_def, Real.sq_sqrt (Complex.normSq_nonneg s)] at h2
-            simp only [Complex.normSq_apply] at h2; nlinarith
-          nlinarith [sq_nonneg s.re]
-        linarith
 private lemma unitArc_dist_from_seg1 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ)
     (hz_re : z.re = 1 / 2) : 1/2 - s.re ≤ ‖z - s‖ := by
   have hd : (z - s).re = 1/2 - s.re := by simp [Complex.sub_re, hz_re]
-  calc 1/2 - s.re = |(z - s).re| := by
-        rw [hd, abs_of_pos (by linarith [(abs_lt.mp hs_re).2])]
+  calc 1/2 - s.re = |(z - s).re| := by rw [hd, abs_of_pos (by linarith [(abs_lt.mp hs_re).2])]
     _ ≤ ‖z - s‖ := Complex.abs_re_le_norm _
 
 private lemma unitArc_dist_from_seg4 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ)
@@ -176,12 +104,7 @@ private lemma unitArc_dist_from_seg4 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ
 
 private lemma unitArc_dist_from_seg5 (s : ℂ) (hs_norm : ‖s‖ = 1) (H : ℝ) (hH : 1 < H)
     (z : ℂ) (hz_im : z.im = H) : H - 1 ≤ ‖z - s‖ := by
-  have hs_im_le : s.im ≤ 1 := by
-    have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := by
-      have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
-      rw [Complex.norm_def, Real.sq_sqrt (Complex.normSq_nonneg s)] at h2
-      simp only [Complex.normSq_apply] at h2; nlinarith
-    nlinarith [sq_nonneg s.re]
+  have hs_im_le : s.im ≤ 1 := unitArc_im_le_one hs_norm
   have hd : (z - s).im = H - s.im := by simp [Complex.sub_im, hz_im]
   calc H - 1 ≤ H - s.im := by linarith
     _ = |(z - s).im| := by rw [hd, abs_of_pos (by linarith)]
@@ -302,17 +225,7 @@ private lemma unitArc_neg_g_slitPlane_seg5 (s : ℂ)
   simp only [sub_im, add_im, ofReal_im, div_ofNat_im, im_ofNat, zero_div, sub_self, mul_im,
     ofReal_re, I_im, mul_one, I_re, mul_zero, add_zero, zero_add, ne_eq]
   intro h
-  have hs_im_le : s.im ≤ 1 := by
-    have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := by
-      have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
-      rw [Complex.norm_def] at h2
-      have hn : 0 ≤ Complex.normSq s := Complex.normSq_nonneg s
-      rw [Real.sq_sqrt hn] at h2
-      simp only [Complex.normSq_apply] at h2
-      convert h2 using 1
-      ring
-    nlinarith [sq_nonneg s.re]
-  linarith
+  linarith [unitArc_im_le_one hs_norm]
 /-- The ratio `g(t₀-δ) / (−g(t₀+δ)) = exp(−i·πδ/6)` on the arc. -/
 lemma unitArc_ratio_eq (t₀ δ : ℝ) (hδ_pos : 0 < δ) (hδ_small : δ < 6) :
     let g_minus :=
@@ -350,30 +263,20 @@ lemma unitArc_ratio_eq (t₀ δ : ℝ) (hδ_pos : 0 < δ) (hδ_small : δ < 6) :
   simp only [w]
   rw [show (↑(-φ) * I : ℂ) = -(↑φ * I) from by push_cast; ring, Complex.exp_neg]
 private lemma unitArc_far_endpoint_correction (H : ℝ) (hH : 1 < H) (s : ℂ)
-    (hs_norm : ‖s‖ = 1) (_hs_re : |s.re| < 1 / 2) (hs_im_pos : 0 < s.im) :
+    (hs_norm : ‖s‖ = 1) (_hs_re : |s.re| < 1 / 2) (_hs_im_pos : 0 < s.im) :
     Complex.log (-(fdBoundaryH H 0 - s)) =
     Complex.log (fdBoundaryH H 0 - s) - ↑Real.pi * I := by
   set g₀ := fdBoundaryH H 0 - s
   have hg₀_re : g₀.re = 1/2 - s.re := by
     simp [g₀, fdBoundaryH, Complex.sub_re, Complex.add_re, Complex.mul_re,
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
-  have hs_im_le : s.im ≤ 1 := by
-    have h_sq : s.re ^ 2 + s.im ^ 2 = 1 := by
-      have h2 : ‖s‖ ^ 2 = 1 := by rw [hs_norm]; norm_num
-      rw [Complex.norm_def] at h2
-      have hn : 0 ≤ Complex.normSq s := Complex.normSq_nonneg s
-      rw [Real.sq_sqrt hn] at h2
-      simp only [Complex.normSq_apply] at h2
-      convert h2 using 1
-      ring
-    nlinarith [sq_nonneg s.re]
+  have hs_im_le : s.im ≤ 1 := unitArc_im_le_one hs_norm
   have hg₀_im : g₀.im = H - s.im := by
     simp [g₀, fdBoundaryH, Complex.sub_im, Complex.add_im, Complex.mul_im,
       Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
   have hg₀_im_pos : 0 < g₀.im := by rw [hg₀_im]; linarith
   have hg₀_ne : g₀ ≠ 0 := by
-    intro h; have := congr_arg Complex.im h
-    simp only [Complex.zero_im] at this; linarith [hg₀_im_pos]
+    intro h; simp_all
   simp only [Complex.log]
   rw [norm_neg, arg_neg_eq_arg_sub_pi_iff.mpr (Or.inl hg₀_im_pos)]
   push_cast; ring

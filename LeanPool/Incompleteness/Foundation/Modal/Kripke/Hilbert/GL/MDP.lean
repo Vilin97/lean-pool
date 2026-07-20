@@ -71,8 +71,7 @@ def pMorphism₁ : F₁.toFrame →ₚ (MDPCounterexampleFrame F₁ F₂).toFram
 /-- Imported declaration from the Incompleteness formalization. -/
 def pMorphism₂ : F₂.toFrame →ₚ (MDPCounterexampleFrame F₁ F₂).toFrame where
   toFun x := .inr (.inr x)
-  forth := by
-    intro x y hxy; exact hxy;
+  forth := by intro x y hxy; exact hxy;
   back {x y} h := by
     match y with
     | .inr (.inr y) => use y;
@@ -83,8 +82,7 @@ lemma through_original_root {x : (MDPCounterexampleFrame F₁ F₂).World} (h :
       F₂.root ∨ (Sum.inr (Sum.inr F₂.root) ≺ x)) := by
   match x with
   | .inl x =>
-    have := (MDPCounterexampleFrame F₁ F₂).rel_irreflexive.irrefl _ h;
-    contradiction;
+    simp_all
   | .inr (.inl x) =>
     by_cases h : x = F₁.root;
     · subst h; left; tauto;
@@ -114,8 +112,7 @@ instance : Coe (M₁.World) (MDPCounterexampleModel M₁ M₂).World := ⟨Sum.i
 instance : Coe (M₂.World) (MDPCounterexampleModel M₁ M₂).World := ⟨Sum.inr ∘ Sum.inr⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pMorphism₁ :
-    M₁.toModel →ₚ (MDPCounterexampleModel M₁ M₂).toModel :=
+def pMorphism₁ : M₁.toModel →ₚ (MDPCounterexampleModel M₁ M₂).toModel :=
   Model.PseudoEpimorphism.ofAtomic (MDPCounterexampleFrame.pMorphism₁) <| by
   simp [MDPCounterexampleFrame.pMorphism₁];
 
@@ -124,8 +121,7 @@ lemma modal_equivalence_original_world₁ {x : M₁.toModel.World} :
   apply Kripke.Model.PseudoEpimorphism.modal_equivalence pMorphism₁;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def pMorphism₂ :
-    M₂.toModel →ₚ (MDPCounterexampleModel M₁ M₂).toModel :=
+def pMorphism₂ : M₂.toModel →ₚ (MDPCounterexampleModel M₁ M₂).toModel :=
   Model.PseudoEpimorphism.ofAtomic (MDPCounterexampleFrame.pMorphism₂) <| by
   simp [MDPCounterexampleFrame.pMorphism₂];
 

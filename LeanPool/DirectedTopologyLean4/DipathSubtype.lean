@@ -94,7 +94,7 @@ lemma subtype_trans {γ₁ : Dipath x y} {γ₂ : Dipath y z} (hγ : range (γ�
       SubtypeDipath (γ₁.trans γ₂) hγ := by
   ext t
   change _ = (γ₁.trans γ₂) t
-  rw [Dipath.trans_apply, Dipath.trans_apply,]
+  rw [Dipath.trans_apply, Dipath.trans_apply]
   split_ifs <;> rfl
 
 lemma subtype_reparam {γ : Dipath x y} (hγ : range γ ⊆ X₀) {f : D(I,I)}

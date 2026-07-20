@@ -19,8 +19,7 @@ lemma smul_support_subset_left {R M ι : Type*} [Semiring R]
   simp only [Function.support_subset_iff, ne_eq, Function.mem_support]
   intro i
   rw [not_imp_not]
-  intro hcf
-  simp [hcf]
+  simp_all
 
 lemma finsum_mem_span {ι R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
     (vs : ι → V) (cfs : ι → R) :
@@ -87,9 +86,7 @@ lemma finsum_repr_smul_basis {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
     ∑ᶠ i, B.repr v i • B i = v := by
   have obs : (Function.support fun i ↦ B.repr v i • B i).Finite := by
     apply (Finsupp.hasFiniteSupport (B.repr v)).subset
-    intro i hi
-    simp only [Function.support, ne_eq, smul_eq_zero, not_or, Set.mem_setOf_eq] at hi ⊢
-    exact hi.1
+    simp_all
   rw [finsum_eq_sum _ obs]
   apply B.repr.injective
   rw [map_sum]
@@ -98,8 +95,7 @@ lemma finsum_repr_smul_basis {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
   simp only [Finsupp.coe_finsetSum, Finset.sum_apply]
   rw [Finset.sum_eq_single i]
   · simp
-  · intro j _ j_ne_i
-    simp [j_ne_i]
+  · simp_all
   · simp only [Set.Finite.mem_toFinset, Function.mem_support, ne_eq, smul_eq_zero, not_or, not_and,
                not_not, Finsupp.single_eq_same]
     intro hi
@@ -112,9 +108,7 @@ lemma repr_finsum {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCancelMulZero 
   convert show B.repr (B.repr.symm cf) = cf by simp
   have aux_finite : (Function.support fun i ↦ cf i • B i).Finite := by
     apply (Finsupp.hasFiniteSupport cf).subset
-    intro i hi
-    simp only [Function.support, ne_eq, smul_eq_zero, not_or, Set.mem_setOf_eq] at hi ⊢
-    exact hi.1
+    simp_all
   rw [finsum_eq_sum _ aux_finite]
   simp only [Basis.repr_symm_apply, Finsupp.linearCombination, Finsupp.coe_lsum,
              LinearMap.coe_smulRight, LinearMap.id_coe, id_eq, Finsupp.sum]
@@ -193,8 +187,8 @@ lemma repr_finsum_mem_eq_ite {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
     map_add' x y := f.map_add x y
     map_smul' m x := LinearMap.CompatibleSMul.map_smul f m x
     invFun := g
-    left_inv := by exact congrFun gof
-    right_inv := by exact congrFun fog
+    left_inv := congrFun gof
+    right_inv := congrFun fog
   }⟩
 
 -- TODO: To Mathlib?

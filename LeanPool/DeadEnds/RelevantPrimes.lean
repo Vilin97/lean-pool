@@ -23,56 +23,19 @@ noncomputable def relevantNotInS (b X : ℕ) (S : Finset Nat.Primes) : Finset Na
   (primesBelow' (Nat.sqrt (b * X + b) + 1)).filter (· ∉ S)
 
 lemma primesBelow_succ_card_le (k : ℕ) : (k + 1).primesBelow.card ≤ k := by
-  have h₁ : (k + 1).primesBelow.card ≤ k := by
-    have h₂ : (k + 1).primesBelow ⊆ Finset.Icc 2 k := by
-      intro p hp
-      simp only [Finset.mem_Icc,
-        Finset.mem_Icc] at hp ⊢
-      have h₃ : p < k + 1 := by
-        simp_all [Nat.primesBelow]
-      have h₄ : Nat.Prime p := by
-        simp_all [Nat.primesBelow]
-      have h₅ : p ≥ 2 := Nat.Prime.two_le h₄
-      have h₆ : p ≤ k := by
-        omega
-      exact ⟨h₅, h₆⟩
-    have h₃ : (k + 1).primesBelow.card ≤ (Finset.Icc 2 k).card := Finset.card_le_card h₂
-    have h₄ : (Finset.Icc 2 k).card ≤ k := by
-      have h₅ : (Finset.Icc 2 k).card = k + 1 - 2 := by
-        simp
-      have h₆ : k + 1 - 2 ≤ k := by
-        cases k with
-        | zero => simp_all
-        | succ k' =>
-          simp_all [Nat.add_assoc]
-      omega
-    omega
-  exact h₁
+  have h₂ : (k + 1).primesBelow ⊆ Finset.Icc 2 k := by
+    intro p hp
+    simp only [Nat.mem_primesBelow] at hp
+    simpa only [Finset.mem_Icc] using ⟨hp.2.two_le, by omega⟩
+  have h₃ : (k + 1).primesBelow.card ≤ (Finset.Icc 2 k).card := Finset.card_le_card h₂
+  rw [Nat.card_Icc] at h₃
+  omega
 
 lemma primesBelow'_card (n : ℕ) : (primesBelow' n).card = n.primesBelow.card := by
-  have h1 : (primesBelow' n).card = ((n.primesBelow).subtype Nat.Prime).card := by rfl
-  have h2 : ((n.primesBelow).subtype Nat.Prime).card = (n.primesBelow.filter Nat.Prime).card := by
-    rw [Finset.card_subtype]
-  have h3 : n.primesBelow.filter Nat.Prime = n.primesBelow := by
-    apply Finset.filter_true_of_mem
-    intro p hp
-    have h₄ : p.Prime := by
-      have h₅ : p ∈ n.primesBelow := hp
-      have h₆ : p.Prime := by
-        have h₇ : p.Prime := by
-          simp only [Nat.mem_primesBelow] at h₅
-          exact h₅.2
-        exact h₇
-      exact h₆
-    exact h₄
-  have h4 : (n.primesBelow.filter Nat.Prime).card = n.primesBelow.card := by
-    rw [h3]
-  have h5 : (primesBelow' n).card = n.primesBelow.card := by
-    calc
-      (primesBelow' n).card = ((n.primesBelow).subtype Nat.Prime).card := by rw [h1]
-      _ = (n.primesBelow.filter Nat.Prime).card := by rw [h2]
-      _ = n.primesBelow.card := by rw [h4]
-  apply h5
+  have h3 : n.primesBelow.filter Nat.Prime = n.primesBelow :=
+    Finset.filter_true_of_mem fun p hp => (Nat.mem_primesBelow.mp hp).2
+  change ((n.primesBelow).subtype Nat.Prime).card = n.primesBelow.card
+  rw [Finset.card_subtype, h3]
 
 lemma relevantNotInS_card_le (b X : ℕ) (S : Finset Nat.Primes) :
     (relevantNotInS b X S).card ≤ Nat.sqrt (b * X + b) := by
@@ -84,23 +47,19 @@ lemma relevantNotInS_card_le (b X : ℕ) (S : Finset Nat.Primes) :
 
 lemma not_in_S_implies_gt_y (S : Finset Nat.Primes) (y : ℕ)
     (hy : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) (q : Nat.Primes) (hq : q ∉ S) :
-    (q : ℕ) > y := by
-  have h_main : (q : ℕ) > y := not_le.mp (fun h => hq (hy q h))
-  aesop
+    (q : ℕ) > y :=
+  not_le.mp (fun h => hq (hy q h))
 
 lemma relevantNotInS_gt_y (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)
     (hy : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) (q : Nat.Primes)
     (hq : q ∈ relevantNotInS b X S) :
     (q : ℕ) > y := by
-  have h_main : (q : ℕ) > y := by
-    by_contra h
-    have h₁ : (q : ℕ) ≤ y := by linarith
-    have h₂ : q ∈ S := hy q h₁
-    have h₃ : q ∉ S := by
-      simp only [relevantNotInS, primesBelow', Finset.mem_filter] at hq
-      simp_all
-    exact h₃ h₂
-  exact h_main
+  by_contra h
+  have h₁ : (q : ℕ) ≤ y := by linarith
+  have h₃ : q ∉ S := by
+    simp only [relevantNotInS, primesBelow', Finset.mem_filter] at hq
+    simp_all
+  exact h₃ (hy q h₁)
 
 lemma relevantNotInS_gt_b (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)
     (hy : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) (hyb : y ≥ b) (q : Nat.Primes)
@@ -108,63 +67,29 @@ lemma relevantNotInS_gt_b (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)
     (q : ℕ) > b := by
   have hq_not_in_S : q ∉ S := by
     simp only [relevantNotInS, Finset.mem_filter] at hq
-    have h₁ : q ∉ S := by aesop
-    exact h₁
-  have h_main : (q : ℕ) > b := by
-    by_cases hqy : (q : ℕ) ≤ y
-    · have hq_in_S : q ∈ S := hy q hqy
-      exact absurd hq_in_S hq_not_in_S
-    · have h₂ : (q : ℕ) > b := by omega
-      exact h₂
-  exact h_main
+    aesop
+  by_cases hqy : (q : ℕ) ≤ y
+  · exact absurd (hy q hqy) hq_not_in_S
+  · omega
 
 lemma prime_sq_bound_from_N_dvd (b X N : ℕ) (hb : 2 ≤ b) (q : Nat.Primes)
     (hN : N ∈ Finset.Icc 1 X) (hdvd : (q : ℕ) ^ 2 ∣ N) : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
   have hN' : N ≤ X := (Finset.mem_Icc.mp hN).2
   have hN'' : 1 ≤ N := (Finset.mem_Icc.mp hN).1
   have hq : (q : ℕ) ^ 2 ≤ N := Nat.le_of_dvd (by positivity) hdvd
-  have hq'' : (q : ℕ) ^ 2 ≤ b * X + b := by
-    have h₂ : X ≤ b * X := by
-      nlinarith
-    nlinarith
-  have hq''' : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
-    have h₁ : (q : ℕ) ^ 2 ≤ b * X + b := hq''
-    have h₂ : Nat.sqrt (b * X + b) ≥ q := by
-      apply Nat.le_sqrt.mpr
-      nlinarith [Nat.Prime.two_le q.prop]
-    have h₃ : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
-      omega
-    exact h₃
-  exact hq'''
+  have hq'' : (q : ℕ) ^ 2 ≤ b * X + b := by nlinarith
+  have h₂ : Nat.sqrt (b * X + b) ≥ q := Nat.le_sqrt.mpr (by nlinarith [Nat.Prime.two_le q.prop])
+  omega
 
 theorem prime_sq_bound_from_shifted_dvd (b X N d : ℕ) (hb : 2 ≤ b) (q : Nat.Primes)
     (hN : N ∈ Finset.Icc 1 X) (hd : d ∈ Finset.range b) (hdvd : (q : ℕ) ^ 2 ∣ b * N + d) :
     (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
-  have h₁ : (q : ℕ) ^ 2 ∣ b * N + d := hdvd
-  have h₂ : 1 ≤ N := by
-    simp [Finset.mem_Icc] at hN
-    linarith
-  have h₃ : N ≤ X := by
-    simp [Finset.mem_Icc] at hN
-    linarith
-  have h₄ : d < b := by
-    simp [Finset.mem_range] at hd
-    linarith
-  have h₅ : b * N + d < b * X + b := by
-    have h₅₁ : b * N ≤ b * X := by
-      nlinarith
-    nlinarith
-  have h₆ : (q : ℕ) ^ 2 ≤ b * N + d := Nat.le_of_dvd (by
-    have h₆₁ : 0 < b * N + d := by
-      nlinarith
-    linarith) h₁
-  have h₉ : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
-    have h₉₂ : (q : ℕ) ≤ Nat.sqrt (b * X + b) := by
-      apply Nat.le_sqrt.mpr; nlinarith
-    have h₉₃ : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
-      omega
-    exact h₉₃
-  exact h₉
+  rw [Finset.mem_Icc] at hN
+  rw [Finset.mem_range] at hd
+  have h₅ : b * N + d < b * X + b := by nlinarith [hN.1, hN.2, hd]
+  have h₆ : (q : ℕ) ^ 2 ≤ b * N + d := Nat.le_of_dvd (by nlinarith [hN.1]) hdvd
+  have h₉₂ : (q : ℕ) ≤ Nat.sqrt (b * X + b) := Nat.le_sqrt.mpr (by nlinarith)
+  omega
 
 lemma violation_subset_biUnion (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) :
@@ -240,51 +165,13 @@ lemma finsum_le_tsum_tail (y : ℕ) (Q : Finset Nat.Primes) (hQ : ∀ q ∈ Q, (
 lemma sum_expand (c : ℝ) (X : ℕ) (Q : Finset Nat.Primes) :
     (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1)))
     = c * X * (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2)) + c * Q.card := by
-  have h₁ : (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) = (∑ q ∈ Q, (c * ((X : ℝ) / (
-      (q : ℕ) : ℝ) ^ 2)) + ∑ _ ∈ Q, c) := by
-    calc
-      (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) = (∑ q ∈ Q, (c * ((X : ℝ) / (
-          (q : ℕ) : ℝ) ^ 2) + c)) := by
-        apply Finset.sum_congr rfl
-        intro q _
-        ring_nf
-      _ = (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) + ∑ _ ∈ Q, c) := by
-        rw [Finset.sum_add_distrib]
-  have h₂ : (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2))) = c * X * (∑ q ∈ Q, 1 / (
-      ((q : ℕ) : ℝ) ^ 2)) := by
-    calc
-      (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2))) = c * (∑ q ∈ Q, ((X : ℝ) / (
-          (q : ℕ) : ℝ) ^ 2)) := by
-        rw [Finset.mul_sum]
-      _ = c * (X * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2)) := by
-        have h₃ : (∑ q ∈ Q, ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) = X * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2) :=
-            by
-          calc
-            (∑ q ∈ Q, ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) = ∑ q ∈ Q, ((X : ℝ) * (1 / (
-                (q : ℕ) : ℝ) ^ 2)) := by
-              apply Finset.sum_congr rfl
-              intro q _
-              field_simp [Nat.cast_ne_zero]
-            _ = (X : ℝ) * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2) := by
-              rw [Finset.mul_sum]
-        rw [h₃]
-      _ = c * X * (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2)) := by
-        ring_nf
-  have h₃ : (∑ _ ∈ Q, c : ℝ) = c * Q.card := by
-    calc
-      (∑ _ ∈ Q, c : ℝ) = (Q.card : ℝ) * c := by
-        simp [Finset.sum_const]
-      _ = c * Q.card := by ring
-  have h₄ : (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) = c * X * (∑ q ∈ Q, 1 / (
-      ((q : ℕ) : ℝ) ^ 2)) + c * Q.card := by
-    calc
-      (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) = (∑ q ∈ Q, (c * ((X : ℝ) / (
-          (q : ℕ) : ℝ) ^ 2)) + ∑ _ ∈ Q, c) := by rw [h₁]
-      _ = (c * X * (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2)) + ∑ _ ∈ Q, c) := by
-        rw [h₂]
-      _ = (c * X * (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2)) + c * Q.card) := by
-        rw [h₃]
-  rw [h₄]
+  have hsplit : (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) =
+      ∑ q ∈ Q, (c * X * (1 / (((q : ℕ) : ℝ) ^ 2)) + c) := by
+    refine Finset.sum_congr rfl fun q _ => ?_
+    rw [div_eq_mul_one_div]
+    ring
+  rw [hsplit, Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_const, nsmul_eq_mul]
+  ring
 
 lemma sum_bound_real (T : Finset ℕ) (y : ℕ) (X : ℕ)
     (Q : Finset Nat.Primes) (hQ : ∀ q ∈ Q, (q : ℕ) > y) :
@@ -300,22 +187,12 @@ lemma sum_bound_real (T : Finset ℕ) (y : ℕ) (X : ℕ)
 lemma nat_div_floor_le_real_div (X : ℕ) (q : Nat.Primes) :
     ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
   have h₁ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ) ≤ (X : ℝ) := by
-    have h₂ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := by
-      have h₃ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := Nat.div_mul_le_self X ((q : ℕ) ^ 2)
-      exact h₃
+    have h₂ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := Nat.div_mul_le_self X ((q : ℕ) ^ 2)
     norm_cast at h₂ ⊢
-  have h₂ : 0 < ((q : ℕ) : ℝ) := by
-    norm_cast
-    exact Nat.Prime.pos q.property
-  have h₄ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
-    have h₆ : 0 < ((q : ℕ) ^ 2 : ℝ) := by positivity
-    calc
-      ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) = (((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ)) / (
-          (q : ℕ) ^ 2 : ℝ) := by
-        field_simp [h₆.ne']
-      _ ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
-        gcongr
-  exact h₄
+  have hq0 : (0 : ℝ) < (q : ℕ) := by exact_mod_cast q.property.pos
+  have h₆ : 0 < ((q : ℕ) ^ 2 : ℝ) := by positivity
+  rw [le_div_iff₀ h₆]
+  exact h₁
 
 lemma nat_sum_le_real_sum (T : Finset ℕ) (X : ℕ) (Q : Finset Nat.Primes) :
     ((∑ q ∈ Q, (T.card + 1) * (X / (q : ℕ) ^ 2 + 1) : ℕ) : ℝ)

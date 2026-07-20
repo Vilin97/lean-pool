@@ -86,11 +86,8 @@ theorem amalgClass_wellBehaved
     (merge : Θ₁ × Θ₂ → Concept X Bool)
     (hmerge : Measurable (fun p : (Θ₁ × Θ₂) × X => merge p.1 p.2)) :
     WellBehavedVCMeasTarget X (amalgClass π₁ π₂ merge) := by
-  -- Step 1: agreement relation is MeasurableSet
   have hmeas := measurableSet_agreementRel π₁ π₂ hπ₁ hπ₂
-  -- Step 2: subtype inherits StandardBorelSpace
   haveI := hmeas.standardBorel
-  -- Step 3: amalgClass = Set.range of restricted evaluator
   have hrange : amalgClass π₁ π₂ merge =
       Set.range (fun θ : ↥(agreementRel π₁ π₂) => merge θ.val) := by
     ext h
@@ -98,11 +95,9 @@ theorem amalgClass_wellBehaved
     constructor
     · rintro ⟨θ, hθ, rfl⟩; exact ⟨⟨θ, hθ⟩, rfl⟩
     · rintro ⟨⟨θ, hθ⟩, rfl⟩; exact ⟨θ, hθ, rfl⟩
-  -- Step 4: restricted merge is jointly measurable
   have he : Measurable (fun p : ↥(agreementRel π₁ π₂) × X =>
       (fun θ : ↥(agreementRel π₁ π₂) => merge θ.val) p.1 p.2) :=
     hmerge.comp ((measurable_subtype_coe.comp measurable_fst).prodMk measurable_snd)
-  -- Step 5: apply bridge theorem
   rw [hrange]
   exact borel_param_wellBehavedVCMeasTarget _ he
 

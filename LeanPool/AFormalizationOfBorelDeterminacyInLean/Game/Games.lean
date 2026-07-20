@@ -112,24 +112,16 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   p.payoff (G.residual x) = (body.append x)⁻¹' (p.residual x).payoff G := by
   by_cases h : x.length % 2 = 0
   · cases p
+    · simp_all
     · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
-    · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
+      rw [if_pos h, Game.residual_payoff_even G x h]
       ext y
       rfl
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
     cases p
+    · simp_all
     · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
-      ext y
-      rfl
-    · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
+      rw [if_neg h, Game.residual_payoff_odd G x hodd]
       exact compl_compl (body.append x ⁻¹' G.payoff)
 end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :
@@ -142,16 +134,7 @@ lemma PreStrategy.sub_winning {s t : PreStrategy G.tree p} (h : s ≤ t) (h' : t
 lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning)
   (x : s.subtree) : (s.residual x).IsWinning (G := G.residual x) := by
   have hpay : (p.residual x.val).payoff (G.residual x.val) = (body.append x.val)⁻¹' p.payoff G := by
-    by_cases hx : x.val.length % 2 = 0
-    · cases p
-      · simp [Player.payoff, Player.residual, Game.residual, hx]
-      · simp [Player.payoff, Player.residual, Game.residual, hx]
-        rfl
-    · have hx1 : x.val.length % 2 = 1 := Nat.mod_two_ne_zero.mp hx
-      cases p
-      · simp only [Player.payoff_residual, Player.residual_residual, List.length_append,
-          div_add_self, Player.residual_even, Player.payoff_zero]
-      · simp [Player.payoff, Player.residual, Game.residual, hx1]
+    simp_all
   rw [GaleStewartGame.PreStrategy.IsWinning, hpay]
   simpa [PreStrategy.residual, Game.residual, subAt_body, subAt_body_image] using
     Set.preimage_mono (f := fun a ↦ x.val ++ₛ a) h
@@ -203,12 +186,10 @@ lemma AllWinning.residual (hW : G.AllWinning p) x :
         Game.residual_payoff_even G x hx]
       ext a
       constructor
-      · intro _
-        exact Set.mem_univ a
+      · simp_all
       · intro _ hmem
         have hcompl : body.append x a ∈ G.payoffᶜ := by
-          rw [hW]
-          exact Set.mem_univ _
+          simp_all
         exact hcompl hmem
     · have hx1 : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp hx
       rw [Player.residual_odd x Player.one hx1, Player.swap_one, Player.payoff_zero,
@@ -217,11 +198,7 @@ lemma AllWinning.residual (hW : G.AllWinning p) x :
       constructor
       · intro _
         exact Set.mem_univ a
-      · intro _ hmem
-        have hcompl : body.append x a ∈ G.payoffᶜ := by
-          rw [hW]
-          exact Set.mem_univ _
-        exact hcompl hmem
+      · simp_all
 /-- a game is determined if some player has a winning strategy -/
 def IsDetermined (G : Game A) := ∃ p, G.ExistsWinning p
 end Game

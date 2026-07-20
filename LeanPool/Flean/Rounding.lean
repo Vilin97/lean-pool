@@ -129,8 +129,7 @@ lemma round0_neg :
 
 lemma round_down_neg (q : ℚ) (h : q ≠ 0) :
   roundDown (-q) = FloatRep.neg (roundDown q : FloatRep C) := by
-  rw [roundDown, <-round0_neg, roundf_neg, round0_neg]
-  exact h
+  rwa [roundDown, <-round0_neg, roundf_neg, round0_neg]
 
 lemma round_down_coe (f : FloatRep C) (h : f.validM) :
   roundDown (coeQ f) = f := roundf_coe round0 f h
@@ -161,8 +160,7 @@ lemma roundf_valid (r : IntRounder) [rh : ValidRounder r] (q : ℚ) (h : q ≠ 0
   apply roundf_almost_valid (r := r) (h := h)
 
 lemma round_down_valid (q : ℚ) (h : q ≠ 0) :
-  (roundDown q : FloatRep C).validM := by
-  apply roundf_valid (r := round0) (h := h)
+  (roundDown q : FloatRep C).validM := roundf_valid round0 q h
 
 lemma roundf_of_pos (r : IntRounder) [rh : ValidRounder r] (q : ℚ) (h : 0 < q) :
   0 < coeQ (roundf r q : FloatRep C) := by
@@ -292,10 +290,7 @@ instance (R : Rounding) : ValidRounder (roundFunction R) := by
 def roundRep [R : Rounding] (q : ℚ) : FloatRep C := roundf (roundFunction R) q
 
 lemma round_rep_coe [R : Rounding] (f : FloatRep C) (h : f.validM) :
-  roundRep (coeQ f) = f := by
-  rw [roundRep]
-  apply roundf_coe
-  exact h
+  roundRep (coeQ f) = f := roundf_coe (roundFunction R) f h
 
 lemma round_valid_m [R : Rounding] (q : ℚ) (q_nezero : q ≠ 0) :
   (roundRep q : FloatRep C).validM := roundf_valid (roundFunction R) q q_nezero
@@ -339,9 +334,8 @@ lemma round_min_e (r : IntRounder) [rh : ValidRounder r] {q : ℚ} (h : q ≠ 0)
   linarith
 
 lemma round_min_e' [R : Rounding] (q : ℚ) (h : q ≠ 0) :
-  Int.log 2 |q| ≤ (roundRep q : FloatRep C).e := by
-  rw [roundRep]
-  apply round_min_e (r := roundFunction R) (h := h)
+  Int.log 2 |q| ≤ (roundRep q : FloatRep C).e :=
+  round_min_e (roundFunction R) h
 
 lemma convert_rep_strict_mono (q : ℚ) :
   StrictMono (fun (x : ℚ) => (1 + x / C.prec)*(2 : ℚ)^Int.log 2 |q|) := by
@@ -369,8 +363,7 @@ theorem q_le_floatrep_ceil {q : ℚ} (h : q ≠ 0) :
   rw [mul_div_cancel_right₀ _ (ne_of_lt c_pos).symm] at this
   field_simp at this
   field_simp
-  rw [add_sub_cancel] at this -- why is this necessary?
-  exact this
+  simp_all
 
 theorem floatrep_floor_le_q {q : ℚ} (q_nezero : q ≠ 0) :
   (⌊(|q| * (2 ^ Int.log 2 |q|)⁻¹ - 1) * ↑C.prec⌋.natAbs / ↑C.prec + 1) * 2 ^ Int.log 2 |q|
@@ -402,8 +395,7 @@ lemma roundf_down_le {q : ℚ} (q_nezero : q ≠ 0) :
     simp only [rounddown, ↓reduceIte, roundinf_apply, Nat.cast_natAbs, Int.cast_abs]
     have := q_le_floatrep_ceil q_nezero (C := C)
     -- TODO: q_le_floatrep_ceil has the wrong form
-    simp only [Nat.cast_natAbs, Int.cast_abs] at this
-    exact this
+    simp_all
   simp only [h, decide_false, Bool.false_eq_true, ↓reduceIte, one_mul]
   simp only [not_lt] at h
   nth_rw 4 [<-abs_of_nonneg h]
@@ -423,16 +415,14 @@ lemma le_roundf_up {q : ℚ} (q_nezero : q ≠ 0) :
     rw [add_comm]
     -- TODO: floatrep_floor_le_q
     have := floatrep_floor_le_q q_nezero (C := C)
-    simp only [Nat.cast_natAbs, Int.cast_abs] at this
-    exact this
+    simp_all
   simp only [h, decide_false, Bool.false_eq_true, ↓reduceIte, one_mul]
   simp only [not_lt] at h
   nth_rw 1 [<-abs_of_nonneg h]
   simp only [roundup, Bool.false_eq_true, ↓reduceIte, roundinf_apply, Nat.cast_natAbs, Int.cast_abs]
   rw [add_comm]
   have := q_le_floatrep_ceil q_nezero (C := C)
-  simp only [Nat.cast_natAbs, Int.cast_abs] at this
-  exact this
+  simp_all
 
 lemma roundf_up_minus_down {q : ℚ} (q_nezero : q ≠ 0) :
   coeQ (roundf (C := C) roundup q) -
@@ -577,8 +567,7 @@ lemma roundf_near_close {q : ℚ} (q_nezero : q ≠ 0) :
       exact this
     simp only [not_lt] at h
     apply lt_of_le_of_ne
-    · rw [le_neg]
-      exact h
+    · simp_all
     exact negq.symm
   rw [roundf, coe_normalize _ (roundf_almost_valid roundnearest q q_nezero)]
   set e := Int.log 2 |q| with e_def

@@ -38,9 +38,8 @@ private lemma aestronglyMeasurable_fderiv_apply
     · rw [tendsto_pi_nhds]
       intro v
       have hc : Filter.Tendsto (fun n : ℕ => ‖((n : ℝ) + 1)‖) Filter.atTop Filter.atTop := by
-        have : (fun n : ℕ => ‖((n : ℝ) + 1)‖) = (fun n : ℕ => ((n : ℝ) + 1)) := by
-          ext n; exact Real.norm_of_nonneg (by positivity)
-        rw [this]
+        rw [show (fun n : ℕ => ‖((n : ℝ) + 1)‖) = fun n : ℕ => ((n : ℝ) + 1) from
+          funext fun n => Real.norm_of_nonneg (by positivity)]
         exact tendsto_natCast_atTop_atTop.atTop_add tendsto_const_nhds
       exact (hf v).hasFDerivAt.lim h hc
   exact h_meas.aestronglyMeasurable
@@ -217,19 +216,14 @@ lemma coulomb_flux_deriv_schwartz_decay
           have hCdj_v : ‖fderiv ℝ (fun v => fderiv ℝ f v (Pi.single j 1)) v‖ *
               (1 + ‖v‖) ^ N ≤ Cdj := by
             rw [norm_fderiv_eq_iteratedFDeriv_one]; exact hCdj v
-          -- Each term: one factor has Schwartz decay × P, the other is bounded
-          -- t1: |∂_j f(v)| * ‖DK(v)‖ * P ≤ (|∂_j f(v)| * P) * ‖DK(v)‖ ≤ Mdj_N * CKj
           have hMdj_N_v := hMdj_N v
           have t1 := mul_le_mul hMdj_N_v (hCKj v)
             (by positivity) (le_trans (by positivity) hMdj_N_v)
-          -- t2: |K(v)| * ‖D(∂_j f)(v)‖ * P ≤ |K(v)| * (‖D(∂_j f)(v)‖ * P) ≤ MKj * Cdj
           have t2 := mul_le_mul (hMKj v) hCdj_v
             (by positivity) (le_trans (abs_nonneg _) (hMKj v))
-          -- t3: |f(v)| * ‖DL(v)‖ * P ≤ (|f(v)| * P) * ‖DL(v)‖ ≤ Mf_N * CLj
           have hMf_N_v := hMf_N v
           have t3 := mul_le_mul hMf_N_v (hCLj v)
             (by positivity) (le_trans (by positivity) hMf_N_v)
-          -- t4: |L(v)| * ‖Df(v)‖ * P ≤ |L(v)| * (‖Df(v)‖ * P) ≤ MLj * Cf
           have t4 := mul_le_mul (hMLj v) hCf_v
             (by positivity) (le_trans (abs_nonneg _) (hMLj v))
           nlinarith [t1, t2, t3, t4]

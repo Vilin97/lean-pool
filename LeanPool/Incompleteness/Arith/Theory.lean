@@ -60,125 +60,10 @@ abbrev addCobhamR0' (T : Theory ℒₒᵣ) : Theory ℒₒᵣ := T + 𝐑₀'
 end Theory
 
 namespace Arith
-/-
-
-
-namespace CobhamR0'
-
-variable {M : Type*} [Nonempty M] [s : Structure ℒₒᵣ M] [M ⊧ₘ* 𝐑₀'] {a b c : M}
-
-abbrev eql (x y : M) : Prop := s.rel Language.Eq.eq ![x, y]
-
-abbrev add (x y : M) : M := s.func Language.Add.add ![x, y]
-
-abbrev mul (x y : M) : M := s.func Language.Mul.mul ![x, y]
-
-lemma operator_eq_eq (v : Fin 2 → M) :
-    (Semiformula.Operator.Eq.eq (L := ℒₒᵣ)).val v = eql (v 0) (v 1) := by
-  rw [Matrix.fun_eq_vec₂ (v := v)]; simp; rfl
-
-lemma operator_lt_eq :
-    (Semiformula.Operator.LT.lt (L :=
-  ℒₒᵣ)).val ![a, b] = s.rel Language.LT.lt ![a, b] := rfl
-
-@[simp] lemma eq_refl (a : M) : eql a a := by
-  have := by simpa using ModelsTheory.models M Theory.CobhamR0'.eq_refl (fun _ ↦ a)
-  exact this a
-
-lemma eq_symm {a b : M} : eql a b → eql b a := fun h ↦ by
-  have : ∀ x y, eql x y → eql x a → eql y a := by
-    simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. x =
-      &0”) (fun _ ↦ a)
-  exact this a b h (by simp)
-
-lemma eq_trans {a b c : M} : eql a b → eql b c → eql a c := fun hab hbc ↦ by
-  have := by
-    simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. &0 =
-      x”) (fun _ ↦ a)
-  exact this b c hbc hab
-
-lemma add_ext {a₁ a₂ b₁ b₂ : M} (ha : eql a₁ a₂) (hb : eql b₁ b₂) :
-    eql (s.func Language.Add.add ![a₁, b₁]) (s.func Language.Add.add ![a₂, b₂]) := by
-  have e : eql (s.func Language.Add.add ![a₁, b₁]) (s.func Language.Add.add ![a₂, b₁]) := by
-    have := by
-      simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. &0 + &1 =
-        x + &1”) (a₁ :>ₙ fun _ ↦ b₁)
-    exact this a₁ a₂ ha (by simp)
-  have := by
-    simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. &0 + &1 =
-      &2 + x”) (a₁ :>ₙ b₁ :>ₙ fun _ ↦ a₂)
-  exact this b₁ b₂ hb e
-
-lemma mul_ext {a₁ a₂ b₁ b₂ : M} (ha : eql a₁ a₂) (hb : eql b₁ b₂) :
-    eql (s.func Language.Mul.mul ![a₁, b₁]) (s.func Language.Mul.mul ![a₂, b₂]) := by
-  have e : eql (s.func Language.Mul.mul ![a₁, b₁]) (s.func Language.Mul.mul ![a₂, b₁]) := by
-    have := by
-      simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. &0 * &1 =
-        x * &1”) (a₁ :>ₙ fun _ ↦ b₁)
-    exact this a₁ a₂ ha (by simp)
-  have := by
-    simpa [operator_eq_eq] using ModelsTheory.models M (Theory.CobhamR0'.replace “x. &0 * &1 =
-      &2 * x”) (a₁ :>ₙ b₁ :>ₙ fun _ ↦ a₂)
-  exact this b₁ b₂ hb e
-
-noncomputable instance : 𝐄𝐐 wkn 𝐑₀' := Entailment.WeakerThan.ofAxm! <| by {
-  intro φ hp
-  cases hp
-  · apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-    simp [operator_eq_eq]
-  · apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-    simp [operator_eq_eq]; exact eq_symm
-  · apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-    simp [operator_eq_eq]; exact eq_trans
-  case funcExt k f =>
-    match k, f with
-    | _, Language.Zero.zero =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq]
-    | _, Language.One.one =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq]
-    | _, Language.Add.add =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq, Semiterm.val_func]
-      intro h; rw [Matrix.fun_eq_vec₂ (v :=
-        fun i : Fin 2 ↦ f i), Matrix.fun_eq_vec₂ (v := fun i : Fin 2 ↦ f (2 + i))]
-      apply add_ext (by simpa using h 0) (by simpa using h 1)
-    | _, Language.Mul.mul =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq, Semiterm.val_func]
-      intro h; rw [Matrix.fun_eq_vec₂ (v :=
-        fun i : Fin 2 ↦ f i), Matrix.fun_eq_vec₂ (v := fun i : Fin 2 ↦ f (2 + i))]
-      apply mul_ext (by simpa using h 0) (by simpa using h 1)
-  case relExt k R =>
-    match k, R with
-    | _, Language.Eq.eq =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq, Semiterm.val_func, Semiformula.eval_rel]
-      rw [Matrix.fun_eq_vec₂ (v :=
-        fun i : Fin 2 ↦ f i), Matrix.fun_eq_vec₂ (v := fun i : Fin 2 ↦ f (2 + i))]
-      intro hs h;
-      have e20 : eql (f 2) (f 0) := by simpa using eq_symm (hs 0)
-      have e01 : eql (f 0) (f 1) := by simpa using h
-      have e13 : eql (f 1) (f 3) := by simpa using (hs 1)
-      simpa using eq_trans (eq_trans e20 e01) e13
-    | _, Language.LT.lt =>
-      apply complete (consequence_iff.mpr fun M _ _ s f ↦ ?_)
-      simp [operator_eq_eq, Semiterm.val_func, Semiformula.eval_rel]
-      rw [Matrix.fun_eq_vec₂ (v :=
-        fun i : Fin 2 ↦ f i), Matrix.fun_eq_vec₂ (v := fun i : Fin 2 ↦ f (2 + i))]
-      intro hs h;
-
-
-
-}
-
--/
 
 open LO.Arith
 
-noncomputable instance _root_.LO.FirstOrder.Arith.CobhamR0'.subtheoryOfCobhamR0 :
-    𝐑₀' wkn 𝐑₀ :=
+noncomputable instance _root_.LO.FirstOrder.Arith.CobhamR0'.subtheoryOfCobhamR0 : 𝐑₀' wkn 𝐑₀ :=
   Entailment.WeakerThan.ofAxm! <| by
   intro φ hp
   rcases hp
@@ -225,16 +110,14 @@ variable {L : Language} [(k : ℕ) → Encodable (L.Func k)] [(k : ℕ) →
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def singleton (φ : SyntacticFormula L) :
-    Theory.Delta1Definable {φ} where
+def singleton (φ : SyntacticFormula L) : Theory.Delta1Definable {φ} where
   ch := .ofZero (.mkSigma “x. x = ↑⌜φ⌝” (by simp)) _
   mem_iff {ψ} := by simp
   isDelta1 :=
     Arith.HierarchySymbol.Semiformula.ProvablyProperOn.ofProperOn.{0} _ fun V _ _ ↦ by simp
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[simp] lemma singleton_toTDef_ch_val (φ : FirstOrder.SyntacticFormula L) :
-    letI := singleton φ
+@[simp] lemma singleton_toTDef_ch_val (φ : FirstOrder.SyntacticFormula L) : letI := singleton φ
     (Theory.Delta1Definable.toTDef {φ}).ch.val = “x. x = ↑⌜φ⌝” := rfl
 
 end «lp_section_2»
@@ -246,14 +129,12 @@ namespace CobhamR0'
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def eqRefl : FirstOrder.Theory.Delta1Definable {(“∀ x, x = x” :
-    SyntacticFormula ℒₒᵣ)} :=
+def eqRefl : FirstOrder.Theory.Delta1Definable {(“∀ x, x = x” : SyntacticFormula ℒₒᵣ)} :=
   singleton _
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def replace :
-    FirstOrder.Theory.Delta1Definable {“∀ x y, x =
+def replace : FirstOrder.Theory.Delta1Definable {“∀ x y, x =
       y → !φ x → !φ y” | φ : SyntacticSemiformula ℒₒᵣ 1} where
   ch := .mkDelta
     (.mkSigma
@@ -354,8 +235,7 @@ def replace :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₁ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m =
+def Ω₁ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m =
       ↑(n + m)”} where
   ch := .mkDelta
     (.mkSigma “p.
@@ -410,18 +290,7 @@ def Ω₁ :
         V))).df.iff, (Language.isSemiformula_defined (LOR (V := V))).proper.iff',
       (Language.substs_defined (LOR (V := V))).df.iff, (Language.imp_defined (LOR (V := V))).df.iff]
     -/
-    simp only [Fin.isValue, Nat.reduceAdd, Nat.succ_eq_add_one,
-      HierarchySymbol.Semiformula.sigma_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
-      Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_one, Matrix.vecHead,
-      Semiformula.eval_ex, LogicalConnective.HomClass.map_and, Semiformula.eval_substs,
-      Matrix.comp_vecCons', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_two,
-      Matrix.vecTail, Function.comp_apply, Fin.succ_zero_eq_one, Matrix.constant_eq_singleton,
-      eval_numeralDef, eval_qqAddDef, Semiterm.val_operator₂, Matrix.cons_app_five,
-      Matrix.cons_val_four, Fin.succ_one_eq_two, Matrix.cons_val_succ, Structure.Add.add,
-      Matrix.cons_app_six, eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left,
-      HierarchySymbol.Semiformula.pi_mkDelta, HierarchySymbol.Semiformula.val_mkPi,
-      Semiformula.eval_all, LogicalConnective.HomClass.map_imply, Semiformula.eval_operator₂,
-      Matrix.cons_app_seven, Structure.Eq.eq, LogicalConnective.Prop.arrow_eq, forall_eq]
+    simp_all
 
 private lemma Ω₁_set_mem_iff {φ : SyntacticFormula ℒₒᵣ} :
     φ ∈ {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n + ↑m = ↑(n + m)”} ↔
@@ -429,8 +298,7 @@ private lemma Ω₁_set_mem_iff {φ : SyntacticFormula ℒₒᵣ} :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₂ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n * ↑m =
+def Ω₂ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, φ = “↑n * ↑m =
       ↑(n * m)”} where
   ch := .mkDelta
     (.mkSigma “p.
@@ -485,23 +353,11 @@ def Ω₂ :
         V))).df.iff, (Language.isSemiformula_defined (LOR (V := V))).proper.iff',
       (Language.substs_defined (LOR (V := V))).df.iff, (Language.imp_defined (LOR (V := V))).df.iff]
     -/
-    simp only [Fin.isValue, Nat.reduceAdd, Nat.succ_eq_add_one,
-      HierarchySymbol.Semiformula.sigma_mkDelta, HierarchySymbol.Semiformula.val_mkSigma,
-      Semiformula.eval_bexLT, Semiterm.val_bvar, Matrix.cons_val_one, Matrix.vecHead,
-      Semiformula.eval_ex, LogicalConnective.HomClass.map_and, Semiformula.eval_substs,
-      Matrix.comp_vecCons', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_two,
-      Matrix.vecTail, Function.comp_apply, Fin.succ_zero_eq_one, Matrix.constant_eq_singleton,
-      eval_numeralDef, eval_qqMulDef, Semiterm.val_operator₂, Matrix.cons_app_five,
-      Matrix.cons_val_four, Fin.succ_one_eq_two, Matrix.cons_val_succ, Structure.Mul.mul,
-      Matrix.cons_app_six, eval_qqEQDef, LogicalConnective.Prop.and_eq, exists_eq_left,
-      HierarchySymbol.Semiformula.pi_mkDelta, HierarchySymbol.Semiformula.val_mkPi,
-      Semiformula.eval_all, LogicalConnective.HomClass.map_imply, Semiformula.eval_operator₂,
-      Matrix.cons_app_seven, Structure.Eq.eq, LogicalConnective.Prop.arrow_eq, forall_eq]
+    simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₃ :
-    FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, n ≠ m ∧ φ =
+def Ω₃ : FirstOrder.Theory.Delta1Definable {φ : SyntacticFormula ℒₒᵣ | ∃ n m : ℕ, n ≠ m ∧ φ =
       “↑n ≠ ↑m”} where
   ch := .mkDelta
     (.mkSigma “p. ∃ n < p, ∃ m < p, n ≠ m ∧
@@ -552,13 +408,11 @@ private lemma quote_disjLt_eq (n : ℕ) :
       Semiterm.quote_bvar, Fin.val_eq_zero, natCast_nat, quote_numeral_eq_numeral,
       substItr_succ, qqDisj_cons, qqOr_inj]
     rw [substs_eq (by simp) (by simp)]
-    simp only [Language.termSubst_bvar, nth_cons_one, nth_cons_zero, Fin.isValue, true_and]
-    exact ih
+    simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def Ω₄ :
-    FirstOrder.Theory.Delta1Definable {(“∀ x, x < ↑n ↔
+def Ω₄ : FirstOrder.Theory.Delta1Definable {(“∀ x, x < ↑n ↔
       ⋁ i < n, x = ↑i” : SyntacticFormula ℒₒᵣ) | n} where
   ch := .mkDelta
     (.mkSigma “p. ∃ n < p,
@@ -649,8 +503,7 @@ end Theory
 
 open Theory.CobhamR0'
 
-instance _root_.LO.Arith.Formalized.Theory.CobhamR0'Delta1Definable :
-    𝐑₀'.Delta1Definable :=
+instance _root_.LO.Arith.Formalized.Theory.CobhamR0'Delta1Definable : 𝐑₀'.Delta1Definable :=
   (eqRefl.add <| replace.add <| Ω₁.add <| Ω₂.add <| Ω₃.add Ω₄).ofEq <| by
     ext φ; constructor
     · rintro (hφ | hφ | hφ | hφ | hφ | hφ)
@@ -686,8 +539,7 @@ namespace CobhamR0'
 private lemma cobhamR0'_proof_block_boundary : True := by trivial
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Formalized.Theory.CobhamR0'.eqRefl.proof :
-    ⌜𝐑₀'⌝[V] ⊢ (#'0 =' #'0).all :=
+def _root_.LO.Arith.Formalized.Theory.CobhamR0'.eqRefl.proof : ⌜𝐑₀'⌝[V] ⊢ (#'0 =' #'0).all :=
   Language.Theory.TProof.byAxm <| by
   apply FirstOrder.Semiformula.curve_mem_left
   unfold eqRefl
@@ -755,9 +607,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₁.proof (n m : V) :
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₂.proof (n m : V) :
     ⌜𝐑₀'⌝[V] ⊢ (n * m : ⌜ℒₒᵣ⌝[V].Semiterm 0) =' ↑(n * m) := Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 3 apply FirstOrder.Semiformula.curve_mem_right
   apply FirstOrder.Semiformula.curve_mem_left
   unfold Ω₂
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,
@@ -780,10 +630,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₂.proof (n m : V) :
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₃.proof {n m : V} (ne : n ≠ m) :
     ⌜𝐑₀'⌝[V] ⊢ ↑n ≠' ↑m :=
   Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 4 apply FirstOrder.Semiformula.curve_mem_right
   apply FirstOrder.Semiformula.curve_mem_left
   unfold Ω₃
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,
@@ -804,11 +651,7 @@ def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₃.proof {n m : V} (ne : n �
 def _root_.LO.Arith.Formalized.Theory.CobhamR0'.Ω₄.proof (n :
     V) : ⌜𝐑₀'⌝[V] ⊢ (#'0 <' ↑n <=> (tSubstItr (#'0).sing (#'1 =' #'0) n).disj).all :=
   Language.Theory.TProof.byAxm <| by
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
-  apply FirstOrder.Semiformula.curve_mem_right
+  iterate 5 apply FirstOrder.Semiformula.curve_mem_right
   unfold Ω₄
   simp only [Semiformula.curve, Nat.succ_eq_add_one, Nat.reduceAdd, Theory.tDef,
     Fin.isValue, HierarchySymbol.Semiformula.sigma_mkDelta,
@@ -836,8 +679,7 @@ end CobhamR0'
 end Theory
 
 instance _root_.LO.Arith.Formalized.Theory.addCobhamR0'Delta1Definable (T : Theory ℒₒᵣ) [d :
-    T.Delta1Definable] :
-    (T + 𝐑₀').Delta1Definable :=
+    T.Delta1Definable] : (T + 𝐑₀').Delta1Definable :=
   d.add Theory.CobhamR0'Delta1Definable
 section «lp_section_3»
 
@@ -850,8 +692,7 @@ variable {T}
 
 @[simp] lemma R₀'_subset_AddR₀ : ⌜𝐑₀'⌝[V] ⊆ T.AddR₀TTheory := Set.subset_union_right
 
-@[simp] lemma theory_subset_AddR₀ :
-    T.tCodeIn V ⊆ T.AddR₀TTheory :=
+@[simp] lemma theory_subset_AddR₀ : T.tCodeIn V ⊆ T.AddR₀TTheory :=
   FirstOrder.Theory.Delta1Definable.add_subset_left _ _
 
 instance : R₀Theory (T.AddR₀TTheory (V := V)) where
@@ -895,13 +736,11 @@ lemma provableₐ_defined : Sg1-Predicate (T.Provableₐ : V → Prop) via T.pro
 @[simp] lemma eval_provableₐ (v) :
     Semiformula.Evalbm V v T.provableₐ.val ↔ T.Provableₐ (v 0) := (provableₐ_defined T).df.iff v
 
-instance provableₐ_definable : Sg1-Predicate (T.Provableₐ :
-    V → Prop) :=
+instance provableₐ_definable : Sg1-Predicate (T.Provableₐ : V → Prop) :=
   (provableₐ_defined T).to_definable
 
 /-- instance for definability tactic -/
-instance provableₐ_definable' : Sg-[0 + 1]-Predicate (T.Provableₐ :
-    V → Prop) :=
+instance provableₐ_definable' : Sg-[0 + 1]-Predicate (T.Provableₐ : V → Prop) :=
   provableₐ_definable T
 
 end «lp_section_5»

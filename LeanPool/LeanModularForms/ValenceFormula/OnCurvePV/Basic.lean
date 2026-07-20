@@ -82,12 +82,9 @@ lemma cpv_exists_on_smooth_subinterval (H : ℝ) (_hH : Real.sqrt 3 / 2 < H)
     (hγ_cont_deriv : ContinuousOn (deriv (fdBoundaryH H)) (Set.Icc a' b'))
     (h_inj : ∀ t ∈ Set.Icc a' b', fdBoundaryH H t = fdBoundaryH H t₀ → t = t₀) :
     CauchyPrincipalValueExists' (fun z => (z - s)⁻¹) (fdBoundaryH H) a' b' s := by
-  have hγ_meas : Measurable (fdBoundaryH H) := (fdBoundary_H_continuous H).measurable
-  have hγ_cont : ContinuousOn (fdBoundaryH H) (Set.Icc a' b') :=
-    (fdBoundary_H_continuous H).continuousOn
-  obtain ⟨limit, h_limit⟩ := pv_limit_via_dyadic hat₀ hL_ne hγ_C2
-    (show deriv (fdBoundaryH H) t₀ = deriv (fdBoundaryH H) t₀ from rfl)
-    hγ_cont_deriv hγ_meas hγ_cont h_inj
+  obtain ⟨limit, h_limit⟩ := pv_limit_via_dyadic hat₀ hL_ne hγ_C2 rfl
+    hγ_cont_deriv (fdBoundary_H_continuous H).measurable
+    (fdBoundary_H_continuous H).continuousOn h_inj
   exact ⟨limit, h_limit.congr (fun ε => intervalIntegral.integral_congr
     (fun t _ => by rw [hs]))⟩
 
@@ -145,9 +142,8 @@ lemma fdBoundary_H_cutout_ii (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
       volume 0 5 := by
   obtain ⟨C, hC⟩ := fdBoundary_H_cutout_bound H hH s ε hε
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le (by norm_num : (0 : ℝ) ≤ 5)]
-  have hmeas := fdBoundary_H_cutout_meas H s ε hε
   exact IntegrableOn.mono_set
-    ⟨hmeas, HasFiniteIntegral.of_bounded
+    ⟨fdBoundary_H_cutout_meas H s ε hε, HasFiniteIntegral.of_bounded
       (by filter_upwards [self_mem_ae_restrict measurableSet_Icc] with t ht
           exact hC t ht)⟩
     Ioc_subset_Icc_self

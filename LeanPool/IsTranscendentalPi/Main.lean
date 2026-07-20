@@ -39,8 +39,8 @@ lemma isAlgebraic_I_mul_pi_of_isAlgebraic_pi
 lemma exists_monic_rat_poly_aeval_Ipi_eq_zero
     (hpi : IsAlgebraic ℚ (Real.pi * I : ℂ)) :
     ∃ B : ℚ[X], B.Monic ∧ aeval (Real.pi * I) B = 0 := by
-  refine ⟨minpoly ℚ (Real.pi * I : ℂ), minpoly.monic hpi.isIntegral, ?_⟩
-  exact minpoly.aeval ℚ (Real.pi * I : ℂ)
+  exact ⟨minpoly ℚ (Real.pi * I : ℂ), minpoly.monic hpi.isIntegral,
+    minpoly.aeval ℚ (Real.pi * I : ℂ)⟩
 
 /-- The complex number `π` is transcendental over `ℚ`. -/
 theorem IsTranscendentalPi : Transcendental ℚ (Real.pi : ℂ) := by
@@ -56,26 +56,22 @@ theorem IsTranscendentalPi : Transcendental ℚ (Real.pi : ℂ) := by
   obtain ⟨T', hT'⟩ := polyOfNonzeroSubsetSums_as_poly B r hBmonic hr
   have hT'aroots := aroots_of_T' T' d n r a hT' (by simpa [hr] using ha)
   have hT'monic : T'.Monic := monic_of_T' T' d r hT'
-  have hT'deg : T'.natDegree = (nonzeroSubsetSums (valuesFin r)).card := by
-    rw [← Polynomial.Monic.natDegree_map hT'monic (algebraMap ℚ ℂ), hT',
-      polyOfNonzeroSubsetSums, polyOfMultiset, natDegree_multiset_prod_X_sub_C_eq_card]
-  have hT'deg : T'.natDegree = n := by
-    exact natDegree_of_T' T' d n r a hT' (by simpa [hr] using ha)
-  have hT'zero : aeval (0 : ℂ) T' ≠ 0 := by
-    exact aeval_zero_ne_zero_of_T' T' d n r a hT' (by simpa [hr] using ha)
+  have hT'deg : T'.natDegree = n := natDegree_of_T' T' d n r a hT' (by simpa [hr] using ha)
+  have hT'zero : aeval (0 : ℂ) T' ≠ 0 :=
+    aeval_zero_ne_zero_of_T' T' d n r a hT' (by simpa [hr] using ha)
   obtain ⟨T, c, hc, hT⟩ := ClearDenominatorOf T'
-  have hTaroots : T.aroots ℂ = valuesFin a := by
-    exact aroots_of_T T T' c d n r a hc hT hT' (by simpa [hr] using ha)
+  have hTaroots : T.aroots ℂ = valuesFin a :=
+    aroots_of_T T T' c d n r a hc hT hT' (by simpa [hr] using ha)
   have hroot : ∀ i : Fin n, a i ∈ T.aroots ℂ := by simp [hTaroots, valuesFin]
-  have hTzero : aeval (0 : ℂ) T ≠ 0 := by
-    exact aeval_zero_ne_zero_of_T T T' c d n r a hc hT hT' (by simpa [hr] using ha)
+  have hTzero : aeval (0 : ℂ) T ≠ 0 :=
+    aeval_zero_ne_zero_of_T T T' c d n r a hc hT hT' (by simpa [hr] using ha)
   have hn : 0 < n := by
     rw [← hcard]
     exact Multiset.card_pos_iff_exists_mem.2 ⟨Real.pi * I, mem_nonzeroSubsetSums_of_mem_of_ne_zero
             ((Polynomial.mem_aroots (p := B) (a := Real.pi * I)).2 ⟨hB, hBroot⟩)
             (by simp [Complex.I_ne_zero])⟩
   let k : ℕ := (subsetSums (B.aroots ℂ)).count 0
-  have hk : k ≠ 0 := by exact ne_of_gt <| by simpa [k, subsetSums] using
+  have hk : k ≠ 0 := ne_of_gt <| by simpa [k, subsetSums] using
     (Multiset.count_pos.mpr <| Multiset.mem_map.2 ⟨0, by simp, by simp⟩)
   have hsum := sum_weighted_cexp_nonzeroSubsetSums_eq_neg_count_zero_subsetSums
                 B hB hBroot a ha b (fun _ => rfl) k rfl
@@ -85,8 +81,7 @@ theorem IsTranscendentalPi : Transcendental ℚ (Real.pi : ℂ) := by
     else 0
   have hf : ∀ᶠ p : {p : ℕ // Nat.Prime p} in Filter.atTop,
     c ^ (p * n - 1) * (∑ i : Fin n, b i * aeval (a i) (Gp T (p : ℕ))) = (f (p : ℕ) : ℂ) := by
-    refine Filter.Eventually.of_forall ?_
-    intro p
+    refine Filter.Eventually.of_forall fun p => ?_
     simpa [f, b, p.property] using
       SumAevalGp_as_intSumAevalGp T T' c (p : ℕ) n a hc p.property.pos hT'monic hT'deg
       (by
@@ -115,6 +110,6 @@ theorem IsTranscendentalPi : Transcendental ℚ (Real.pi : ℂ) := by
         exact le_trans (le_max_right N (q : ℕ)) hp)
 
 /-- The real number `π` is transcendental over `ℚ`. -/
-theorem IsTranscendentalPiReal : Transcendental ℚ (Real.pi : ℝ) := by
-  exact (transcendental_algebraMap_iff
+theorem IsTranscendentalPiReal : Transcendental ℚ (Real.pi : ℝ) :=
+  (transcendental_algebraMap_iff
     (R := ℚ) (S := ℝ) (A := ℂ) Complex.ofReal_injective).1 IsTranscendentalPi

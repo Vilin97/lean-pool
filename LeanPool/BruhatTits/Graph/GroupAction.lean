@@ -86,10 +86,8 @@ instance : MulAction (GL (Fin 2) K) (Vertices R) where
     rw [Vertices.smul_def, smulGL_mk, one_smul]
   mul_smul g h x := by
     refine Quotient.inductionOn x (fun L ↦ ?_)
-    rw [Vertices.smul_def, smulGL_mk]
-    rw [mul_smul]
-    rw [← smulGL_mk, ← Vertices.smul_def]
-    rw [← smulGL_mk, ← Vertices.smul_def]
+    rw [Vertices.smul_def, smulGL_mk, mul_smul, ← smulGL_mk, ← Vertices.smul_def, ← smulGL_mk,
+      ← Vertices.smul_def]
 
 variable [IsDiscreteValuationRing R] [IsFractionRing R K]
 
@@ -107,10 +105,8 @@ instance : MulAction.IsPretransitive (GL (Fin 2) K) (Vertices R) where
 lemma inv_smul_smul_eq_inv (g : GL (Fin 2) K) (x y : Vertices R) :
     inv (g • x) (g • y) = inv x y := by
   refine Quotient.inductionOn₂ x y (fun L M ↦ ?_)
-  rw [Vertices.smul_def, smulGL_mk]
-  rw [Vertices.smul_def, smulGL_mk]
-  change dist (g • L) (g • M) = dist L M
-  simp
+  rw [Vertices.smul_def, smulGL_mk, Vertices.smul_def, smulGL_mk]
+  simp_all
 
 lemma adj_smul_smul_iff_adj (g : GL (Fin 2) K) (x y : Vertices R) :
     BTgraph.Adj (g • x) (g • y) ↔ BTgraph.Adj x y := by
@@ -121,8 +117,7 @@ lemma adj_smul_smul_iff_adj (g : GL (Fin 2) K) (x y : Vertices R) :
 def _root_.Matrix.GeneralLinearGroup.toGraphIso (g : GL (Fin 2) K) :
     BTgraph (R := R) ≃g BTgraph (R := R) where
   toEquiv := MulAction.toPerm g
-  map_rel_iff' {x y} := by
-    exact adj_smul_smul_iff_adj g x y
+  map_rel_iff' {x y} := adj_smul_smul_iff_adj g x y
 
 /-- The action of `GL₂(K)` on the Bruhat-Tits graph. -/
 instance : GraphAction (GL (Fin 2) K) (BTgraph (R:= R)) where
@@ -243,17 +238,10 @@ lemma stabilizer_standard_eq_range_map_subtype :
         · simpa [← hdist]
       subst this
       use k₁ * k₂
-      calc
-        (Matrix.GeneralLinearGroup.map R.subtype) (k₁ * k₂) =
-            (Matrix.GeneralLinearGroup.map R.subtype) k₁ *
-              (Matrix.GeneralLinearGroup.map R.subtype) k₂ := by rw [map_mul]
-        _ = (Matrix.GeneralLinearGroup.map R.subtype) k₁ * 1 *
-            (Matrix.GeneralLinearGroup.map R.subtype) k₂ := by rw [mul_one]
-        _ = (Matrix.GeneralLinearGroup.map R.subtype) k₁ * cartanDiag ϖ hϖ 0 *
-            (Matrix.GeneralLinearGroup.map R.subtype) k₂ := by rw [cartanDiag_zero hϖ]
-        _ = g := h
-    · intro i j
-      fin_cases i <;> fin_cases j <;> simp [hdist]
+      rw [map_mul, ← mul_one ((Matrix.GeneralLinearGroup.map R.subtype) k₁),
+        ← cartanDiag_zero hϖ]
+      exact h
+    · simp_all
   · rintro ⟨k, rfl⟩
     rw [map_subtype_smul_standard_eq_standard]
 

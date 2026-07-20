@@ -115,8 +115,7 @@ def eval [SMul R M] [LieRing M] (l : NF R M) : M :=
 @[simp] theorem eval_cons [SMul R M] [LieRing M] (p : R × V M) (l : NF R M) :
     (p ::ᵣ l).eval = p.1 • v p.2 + l.eval := by
   unfold eval cons
-  rw [List.map_cons]
-  rw [List.sum_cons]
+  simp_all
 
 theorem atom_eq_eval [LieRing M] (x : M) : x = NF.eval [(1,
   Sum.inl x)] := by simp [eval, v]
@@ -124,14 +123,12 @@ theorem atom_eq_evalD [LieRing M] (x y : M) : ⁅x,y⁆ = NF.eval ((1,
   Sum.inr ⟨x,y⟩) ::ᵣ []) := by
   simp only [eval, v]
   dsimp!
-  simp only [one_nsmul]
-  simp only [left_eq_add]
+  simp_all
 theorem atom_eq_evalD_skew [LieRing M] (x y : M) : ⁅x,y⁆ = NF.eval ((-1,
   Sum.inr ⟨y,x⟩) ::ᵣ []) := by
   simp only [eval, v]
   dsimp!
-  simp only [Int.reduceNeg, neg_smul, one_smul, add_zero]
-  rw [lie_skew]
+  simp_all
 
 variable (M) in
 theorem zero_eq_eval [LieRing M] : (0:M) = NF.eval (R := ℕ) (M := M) [] := rfl
@@ -250,14 +247,12 @@ theorem smul_eq_eval {R₀ : Type*} [LieRing M] [Semiring R] [Module R M] [Semir
 theorem eq_cons_cons [LieRing M] [SMul R M] {r₁ r₂ : R} (m : V M) {l₁ l₂ : NF R M} (h1 : r₁ = r₂)
     (h2 : l₁.eval = l₂.eval) :
     ((r₁, m) ::ᵣ l₁).eval = ((r₂, m) ::ᵣ l₂).eval := by
-  simp only [NF.eval, NF.cons] at *
-  simp [h1, h2]
+  simp_all
 
 theorem eq_cons_const [LieRing M] [Semiring R] [Module R M] {r : R} (m : V M) {n : V M}
     {l : NF R M} (h1 : r = 0) (h2 : l.eval = v n) :
     ((r, m) ::ᵣ l).eval = v n := by
-  simp only [NF.eval, NF.cons] at *
-  simp [h1, h2]
+  simp_all
 
 theorem eq_const_cons [LieRing M] [Semiring R] [Module R M] {r : R} (m : V M) {n : V M}
     {l : NF R M} (h1 : 0 = r) (h2 : v n = l.eval) :

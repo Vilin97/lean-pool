@@ -63,9 +63,8 @@ namespace OSforGFF
 theorem toComplex_injective : Function.Injective (toComplex : TestFunction → TestFunctionℂ) := by
   intro f g h
   ext x
-  have : toComplex f x = toComplex g x := congr_fun (congr_arg _ h) x
-  simp only [toComplex_apply, Complex.ofReal_inj] at this
-  exact this
+  have hx : toComplex f x = toComplex g x := congr_fun (congr_arg _ h) x
+  simpa only [toComplex_apply, Complex.ofReal_inj] using hx
 
 /-! ## Injectivity of the Fourier transform on Schwartz space -/
 
@@ -76,16 +75,12 @@ theorem fourierTransform_schwartz_injective :
     Function.Injective
       (SchwartzMap.fourierTransformCLM ℂ : TestFunctionℂ → TestFunctionℂ) := by
   intro f g h
-  -- SchwartzMap.fourierTransformCLM agrees with FourierTransform.fourier
-  have hf' : (SchwartzMap.fourierTransformCLM ℂ f : TestFunctionℂ) =
-    FourierTransform.fourier f := rfl
-  have hg' : (SchwartzMap.fourierTransformCLM ℂ g : TestFunctionℂ) =
-    FourierTransform.fourier g := rfl
-  rw [hf', hg'] at h
+  -- SchwartzMap.fourierTransformCLM agrees with FourierTransform.fourier, and
   -- FourierPair gives 𝓕⁻ ∘ 𝓕 = id on Schwartz space
+  have h' : FourierTransform.fourier f = FourierTransform.fourier g := h
   calc f = FourierTransform.fourierInv (FourierTransform.fourier f) :=
         (FourierTransform.fourierInv_fourier_eq f).symm
-    _ = FourierTransform.fourierInv (FourierTransform.fourier g) := by rw [h]
+    _ = FourierTransform.fourierInv (FourierTransform.fourier g) := by rw [h']
     _ = g := FourierTransform.fourierInv_fourier_eq g
 
 /-! ## Continuous functions that vanish a.e. vanish everywhere -/
@@ -102,14 +97,10 @@ private lemma eq_zero_of_continuous_ae_zero
     f = 0 := by
   funext x
   by_contra hx
-  have hU_open : IsOpen {y : SpaceTime | f y ≠ 0} :=
-    hcont.isOpen_preimage _ isOpen_compl_singleton
-  have hU_ne : Set.Nonempty {y : SpaceTime | f y ≠ 0} := ⟨x, hx⟩
   have hU_pos : 0 < volume {y : SpaceTime | f y ≠ 0} :=
-    hU_open.measure_pos volume hU_ne
+    (hcont.isOpen_preimage _ isOpen_compl_singleton).measure_pos volume ⟨x, hx⟩
   have hU_zero : volume {y : SpaceTime | f y ≠ 0} = 0 := by
-    rw [← ae_iff]
-    exact hae.mono fun y hy => by simpa using hy
+    rw [← ae_iff]; exact hae.mono fun y hy => by simpa using hy
   exact absurd hU_zero (ne_of_gt hU_pos)
 
 /-! ## Injectivity of the square-root propagator embedding -/
@@ -122,36 +113,24 @@ private lemma eq_zero_of_continuous_ae_zero
 -/
 theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     (∀ k : SpaceTime, sqrtPropagatorMap m f k = 0) ↔ f = 0 := by
+  have h_tc_0 : toComplex (0 : TestFunction) = 0 := by ext x; simp [toComplex_apply]
   constructor
   · intro h
     -- Each factor: 𝓕(toComplex f)(k) * w(k) = 0, and w(k) > 0, so 𝓕(toComplex f)(k) = 0
-    have h_ft_zero : ∀ k, (SchwartzMap.fourierTransformCLM ℂ (toComplex f)) k = 0 := by
-      intro k
-      have := h k
-      unfold sqrtPropagatorMap at this
-      have hw_pos : (momentumWeightSqrtMathlib m k : ℂ) ≠ 0 := by
-        simp only [Complex.ofReal_ne_zero]
-        exact ne_of_gt (momentumWeightSqrt_mathlib_pos m k)
-      exact (mul_eq_zero.mp this).resolve_right hw_pos
-    -- 𝓕(toComplex f) = 0 as a Schwartz function
     have h_ft_zero_fn : SchwartzMap.fourierTransformCLM ℂ (toComplex f) = 0 := by
-      ext k; exact h_ft_zero k
-    -- By Fourier injectivity, toComplex f = 0
-    have h_tc_zero : toComplex f = 0 := by
-      have : SchwartzMap.fourierTransformCLM ℂ (toComplex f) =
-             SchwartzMap.fourierTransformCLM ℂ 0 := by
-        rw [h_ft_zero_fn, map_zero]
-      exact fourierTransform_schwartz_injective this
-    -- By toComplex injectivity, f = 0
-    have h_tc_0 : toComplex (0 : TestFunction) = 0 := by ext x; simp [toComplex_apply]
+      ext k
+      have hk := h k
+      unfold sqrtPropagatorMap at hk
+      have hw_pos : (momentumWeightSqrtMathlib m k : ℂ) ≠ 0 :=
+        Complex.ofReal_ne_zero.mpr (momentumWeightSqrt_mathlib_pos m k).ne'
+      exact (mul_eq_zero.mp hk).resolve_right hw_pos
+    -- By Fourier injectivity then toComplex injectivity, f = 0
+    have h_tc_zero : toComplex f = 0 :=
+      fourierTransform_schwartz_injective (by rw [h_ft_zero_fn, map_zero])
     exact toComplex_injective (h_tc_zero.trans h_tc_0.symm)
   · intro h; subst h; intro k
     unfold sqrtPropagatorMap
-    have h1 : toComplex (0 : TestFunction) = 0 := by ext x; simp [toComplex_apply]
-    rw [h1]
-    have h2 : SchwartzMap.fourierTransformCLM ℂ (0 : TestFunctionℂ) = 0 :=
-      ContinuousLinearMap.map_zero _
-    simp only [h2, zero_apply, zero_mul]
+    simp_all
 
 /-- The embedding `T : S(ℝ⁴,ℝ) → L²(ℝ⁴,ℂ)` is injective.
 
@@ -164,33 +143,24 @@ theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
     Function.Injective (embeddingMap m) := by
   intro f g h
   suffices f - g = 0 from eq_of_sub_eq_zero this
-  -- T(f-g) = 0 in L²
-  have h_zero : embeddingMap m (f - g) = 0 := by
-    rw [map_sub, h, sub_self]
   -- ‖T(f-g)‖² = ∫ |sqrtPropagatorMap|² = 0
-  have h_norm_zero : ‖embeddingMap m (f - g)‖ = 0 := by rw [h_zero, norm_zero]
+  have h_norm_zero : ‖embeddingMap m (f - g)‖ = 0 := by rw [map_sub, h, sub_self, norm_zero]
   have h_int_zero : ∫ k, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 ∂volume = 0 := by
-    have := embeddingMap_norm_sq m (f - g)
-    rw [h_norm_zero, zero_pow (by norm_num : 2 ≠ 0)] at this
-    linarith
-  -- Nonneg continuous integrand with zero integral vanishes a.e.
-  have h_int := sqrtPropagatorMap_sq_integrable (m := m) (f := f - g)
-  have h_ae_zero : ∀ᵐ k ∂volume, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 = 0 := by
-    exact (integral_eq_zero_iff_of_nonneg_ae
-      (Filter.Eventually.of_forall fun k => sq_nonneg _) h_int).mp h_int_zero
-  -- ‖·‖² = 0 implies · = 0
+    have h_sq := embeddingMap_norm_sq m (f - g)
+    simp_all
+  -- Nonneg continuous integrand with zero integral vanishes a.e., hence (‖·‖²=0 ⟹ ·=0) a.e.
+  have h_ae_sq : ∀ᵐ k ∂volume, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 = 0 :=
+    (integral_eq_zero_iff_of_nonneg_ae (Filter.Eventually.of_forall fun k => sq_nonneg _)
+      (sqrtPropagatorMap_sq_integrable (m := m) (f := f - g))).mp h_int_zero
   have h_ae_zero' : ∀ᵐ k ∂volume, sqrtPropagatorMap m (f - g) k = 0 :=
-    h_ae_zero.mono fun k hk => by rwa [sq_eq_zero_iff, norm_eq_zero] at hk
+    h_ae_sq.mono fun k hk => by rwa [sq_eq_zero_iff, norm_eq_zero] at hk
   -- Continuous function zero a.e. is zero everywhere
   have h_cont : Continuous (fun k => sqrtPropagatorMap m (f - g) k) := by
     unfold sqrtPropagatorMap
     exact ((SchwartzMap.fourierTransformCLM ℂ (toComplex (f - g))).continuous).mul
       (continuous_ofReal.comp (momentumWeightSqrt_mathlib_continuous m))
-  have h_ptwise : ∀ k, sqrtPropagatorMap m (f - g) k = 0 := by
-    have h_eq := eq_zero_of_continuous_ae_zero h_cont
-      (h_ae_zero'.mono fun k hk => by simp [hk])
-    exact fun k => congr_fun h_eq k
-  exact (sqrtPropagatorMap_eq_zero_iff m (f - g)).mp h_ptwise
+  have h_eq := eq_zero_of_continuous_ae_zero h_cont (h_ae_zero'.mono fun k hk => by simp [hk])
+  exact (sqrtPropagatorMap_eq_zero_iff m (f - g)).mp fun k => congr_fun h_eq k
 
 /-! ## Strict positivity of the covariance -/
 
@@ -240,7 +210,7 @@ theorem gaussianFreeField_not_dirac (m : ℝ) [Fact (0 < m)] :
       φ.one_of_mem_closedBall (Metric.mem_closedBall_self φ.rIn_pos.le)
     have h2 : (φ.hasCompactSupport.toSchwartzMap φ.contDiff) (0 : SpaceTime) =
               φ (0 : SpaceTime) := rfl
-    rw [h] at h2; simp at h2; linarith
+    rw [h] at h2; simp only [zero_apply, h1] at h2; exact one_ne_zero h2.symm
   exact ⟨f, hf, gaussianFreeField_variance_pos m f hf⟩
 
 /-! ## UV divergence: pointwise covariance diverges at coincident points
@@ -272,12 +242,11 @@ theorem besselK1_tendsto_atTop_at_zero :
   -- Pick T so that T > M (T will be our integration range)
   set T := max M 1 + 1 with hT_def
   have hT_pos : (0 : ℝ) < T := by positivity
-  have hT_gt_M : M < T := by simp [hT_def]; linarith [le_max_left M 1]
+  have hT_gt_M : M < T := by simp only [hT_def]; linarith [le_max_left M 1]
   -- Integrability (from positivity: if not integrable, Bochner integral = 0, contradicting K₁ > 0)
   have h_int : ∀ z, 0 < z → IntegrableOn
-      (fun t => Real.exp (-z * Real.cosh t) * Real.cosh t) (Set.Ici 0) volume := by
-    intro z hz; by_contra h
-    exact absurd (integral_undef h) (ne_of_gt (besselK1_pos z hz))
+      (fun t => Real.exp (-z * Real.cosh t) * Real.cosh t) (Set.Ici 0) volume :=
+    fun z hz => not_not.mp fun h => absurd (integral_undef h) (besselK1_pos z hz).ne'
   -- Lower bound: K₁(z) ≥ exp(-z cosh T) * T for z > 0
   have h_lower : ∀ z, 0 < z → T * Real.exp (-z * Real.cosh T) ≤ besselK1 z := by
     intro z hz
@@ -287,34 +256,30 @@ theorem besselK1_tendsto_atTop_at_zero :
         Real.exp (-z * Real.cosh T) ≤ Real.exp (-z * Real.cosh t) * Real.cosh t := by
       intro t ht
       have h_ct : Real.cosh t ≤ Real.cosh T := by
-        rw [Real.cosh_le_cosh]
-        rw [abs_of_nonneg ht.1, abs_of_nonneg hT_pos.le]; exact ht.2
+        rw [Real.cosh_le_cosh, abs_of_nonneg ht.1, abs_of_nonneg hT_pos.le]; exact ht.2
       calc Real.exp (-z * Real.cosh T)
           ≤ Real.exp (-z * Real.cosh t) := by
             apply Real.exp_le_exp.mpr; nlinarith [Real.cosh_pos t]
-        _ = Real.exp (-z * Real.cosh t) * 1 := (mul_one _).symm
-        _ ≤ Real.exp (-z * Real.cosh t) * Real.cosh t :=
-            mul_le_mul_of_nonneg_left (Real.one_le_cosh t) (Real.exp_nonneg _)
-    have h_vol : volume.real (Set.Icc (0 : ℝ) T) = T := by
-      rw [Real.volume_real_Icc_of_le hT_pos.le]; ring
+        _ ≤ Real.exp (-z * Real.cosh t) * Real.cosh t := by
+            nlinarith [Real.one_le_cosh t, Real.exp_nonneg (-z * Real.cosh t)]
     have h_cont_integrand : Continuous (fun t : ℝ => Real.exp (-z * Real.cosh t) * Real.cosh t) :=
       (Real.continuous_exp.comp (continuous_const.mul Real.continuous_cosh)).mul
         Real.continuous_cosh
     calc T * Real.exp (-z * Real.cosh T)
-        = Real.exp (-z * Real.cosh T) * volume.real (Set.Icc 0 T) := by rw [h_vol]; ring
+        = Real.exp (-z * Real.cosh T) * volume.real (Set.Icc 0 T) := by
+          rw [Real.volume_real_Icc_of_le hT_pos.le]; ring
       _ ≤ ∫ t in Set.Icc 0 T, Real.exp (-z * Real.cosh t) * Real.cosh t :=
           setIntegral_ge_of_const_le_real measurableSet_Icc
             (by rw [Real.volume_Icc]; exact ENNReal.ofReal_ne_top)
             h_bound h_cont_integrand.integrableOn_Icc
-      _ ≤ ∫ t in Set.Ici 0, Real.exp (-z * Real.cosh t) * Real.cosh t := by
-          apply setIntegral_mono_set (h_int z hz)
-          · exact Filter.Eventually.of_forall fun t =>
-              mul_nonneg (Real.exp_nonneg _) (Real.cosh_pos t).le
-          · exact HasSubset.Subset.eventuallyLE (fun t (ht : t ∈ Set.Icc 0 T) => ht.1)
+      _ ≤ ∫ t in Set.Ici 0, Real.exp (-z * Real.cosh t) * Real.cosh t :=
+          setIntegral_mono_set (h_int z hz)
+            (Filter.Eventually.of_forall fun t =>
+              mul_nonneg (Real.exp_nonneg _) (Real.cosh_pos t).le)
+            (HasSubset.Subset.eventuallyLE fun t (ht : t ∈ Set.Icc 0 T) => ht.1)
   -- As z → 0⁺, T * exp(-z cosh T) → T > M, so eventually K₁(z) ≥ M
-  have h_cont : Continuous (fun z : ℝ => T * Real.exp (-z * Real.cosh T)) := by fun_prop
   have h_open : IsOpen {z : ℝ | M < T * Real.exp (-z * Real.cosh T)} :=
-    isOpen_lt continuous_const h_cont
+    isOpen_lt continuous_const (by fun_prop)
   have h_zero_mem : (0 : ℝ) ∈ {z : ℝ | M < T * Real.exp (-z * Real.cosh T)} := by
     simp only [Set.mem_setOf_eq, neg_zero, zero_mul, Real.exp_zero, mul_one]; exact hT_gt_M
   exact ((Filter.Eventually.filter_mono nhdsWithin_le_nhds
@@ -337,9 +302,8 @@ theorem freeCovariance_tendsto_atTop (m : ℝ) [Fact (0 < m)] (x₀ : SpaceTime)
     apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
     · have hc : ContinuousAt (fun x : SpaceTime => ‖x₀ - x‖) x₀ :=
         (continuous_norm.comp (continuous_const.sub continuous_id)).continuousAt
-      have h0 : (fun x : SpaceTime => ‖x₀ - x‖) x₀ = 0 := by simp
-      have := hc.tendsto; simp only [sub_self, norm_zero] at this
-      exact this.mono_left nhdsWithin_le_nhds
+      simp only [ContinuousAt, sub_self, norm_zero] at hc
+      exact hc.mono_left nhdsWithin_le_nhds
     · exact eventually_nhdsWithin_of_forall fun x hx =>
         norm_pos_iff.mpr (sub_ne_zero.mpr fun h => hx (Set.mem_singleton_iff.mpr h.symm))
   -- Step 2: m/(4π²) * r⁻¹ → ∞ as r → 0⁺
@@ -354,28 +318,20 @@ theorem freeCovariance_tendsto_atTop (m : ℝ) [Fact (0 < m)] (x₀ : SpaceTime)
     apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
     · have hc : ContinuousAt (fun r : ℝ => m * r) 0 :=
         (continuous_const.mul continuous_id).continuousAt
-      have := hc.tendsto; simp only [mul_zero] at this
-      exact this.mono_left nhdsWithin_le_nhds
+      simp only [ContinuousAt, mul_zero] at hc
+      exact hc.mono_left nhdsWithin_le_nhds
     · exact eventually_nhdsWithin_of_forall fun r hr => mul_pos hm hr
   -- Step 4: Product → ∞
   have h_prod := h_prefactor.atTop_mul_atTop₀ h_K1
   -- Step 5: Compose with norm and identify with freeCovarianceBessel
   rw [Filter.tendsto_atTop]; intro M
-  have h_ev := Filter.tendsto_atTop.mp (h_prod.comp h_norm) M
-  exact h_ev.mono fun x hx => by
-    -- Extract x ≠ x₀ from the nhdsWithin filter context
-    -- hx gives the bound on the product; we need to relate to freeCovarianceBessel
-    -- The eventually filter ensures x is in our neighborhood
-    -- We use the fact that for x in our filter, the product equals freeCovarianceBessel
-    suffices h : freeCovarianceBessel m x₀ x = m / (4 * Real.pi ^ 2) * ‖x₀ - x‖⁻¹ *
-        besselK1 (m * ‖x₀ - x‖) by rw [h]; exact hx
-    -- This equality holds when ‖x₀ - x‖ ≠ 0 (which follows from x being in our filter)
-    -- Since hx : M ≤ positive_thing, and the product = 0 when ‖x₀-x‖ = 0, we know ‖x₀-x‖ ≠ 0
-    -- when the product is ≥ M for large enough M
-    unfold freeCovarianceBessel
-    by_cases hr : ‖x₀ - x‖ = 0
-    · -- If r = 0: product is 0 (inv 0 = 0), and freeCovarianceBessel is 0
-      simp [hr]
-    · simp only [hr, ↓reduceIte]; field_simp
+  refine (Filter.tendsto_atTop.mp (h_prod.comp h_norm) M).mono fun x hx => ?_
+  -- For x in our filter, freeCovarianceBessel equals the product (m/(4π²)) r⁻¹ K₁(mr)
+  suffices h : freeCovarianceBessel m x₀ x = m / (4 * Real.pi ^ 2) * ‖x₀ - x‖⁻¹ *
+      besselK1 (m * ‖x₀ - x‖) by rw [h]; exact hx
+  unfold freeCovarianceBessel
+  by_cases hr : ‖x₀ - x‖ = 0
+  · simp [hr]
+  · simp only [hr, ↓reduceIte]; field_simp
 
 end OSforGFF

@@ -146,26 +146,6 @@ theorem expUb₀_ge_exp (x : ℚ) (n : ℕ) (hx : 0 ≤ x) : Real.exp x ≤ expU
         simp only [Int.ofNat_toNat, le_sup_left]
     simpa
 
--- theorem _root_.Real.mul_log_one_plus_div_lt {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
---     x * Real.log (1 + t / x) < t := by
---   suffices Real.log (1 + t / x) < t / x by
---     rwa [_root_.mul_comm, ← lt_div_iff₀ hx]
---   convert Real.log_lt_sub_one_of_pos (x := 1 + t / x) (by positivity) ?_ using 1
---   · ring_nf
---   · simpa using ⟨ht.ne', hx.ne'⟩
-
--- theorem _root_.Real.mul_log_one_plus_div_le {x t : ℝ} (hx : 0 < x) (ht : 0 ≤ t) :
---     x * Real.log (1 + t / x) ≤ t := by
---   cases eq_or_lt_of_le ht
---   · subst t; simp
---   · apply (Real.mul_log_one_plus_div_lt hx ‹_›).le
-
--- theorem _root_.Real.one_plus_div_pow_lt_exp {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
---     (1 + t / x) ^ x < Real.exp t := by
---   convert Real.exp_lt_exp_of_lt (x := x * Real.log (1 + t / x))
---     (Real.mul_log_one_plus_div_lt hx ht) using 1
---   rw [← Real.log_rpow (by positivity), Real.exp_log (by positivity)]
-
 theorem _root_.Real.one_plus_pow_lt_exp_mul {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
     (1 + x) ^ y < Real.exp (x * y) := by
   rw [Real.exp_mul, _root_.add_comm]
@@ -349,23 +329,6 @@ private lemma err_antitone_n (x : ℝ) :
   · exact Nat.cast_pos'.mpr (Nat.factorial_pos x)
   · exact Nat.cast_le.mpr (Nat.factorial_le h)
 
-private lemma err_monotone_x (n : ℕ) :
-    MonotoneOn (fun (x : ℝ) ↦ Real.exp x * (Real.exp (2 * x / n.factorial) - 1)) (Set.Ici 0) := by
-  apply MonotoneOn.mul (Real.exp_monotone.monotoneOn _) ?_  (fun _ ↦ Real.exp_nonneg ·) ?_
-  · simp_rw [sub_eq_add_neg]
-    apply Monotone.monotoneOn
-    apply Monotone.add_const
-    conv_rhs =>
-      equals ((Real.exp) ∘ (fun x ↦ (2 * x / n.factorial))) =>
-        ext x
-        rfl
-    refine Monotone.comp Real.exp_monotone ?_
-    simp_rw [_root_.mul_comm, ← mul_div]
-    exact Monotone.mul_const monotone_id (by positivity)
-  · intro x (hx : 0 ≤ x)
-    rw [sub_nonneg, Real.one_le_exp_iff]
-    positivity
-
 private lemma inverr_monotone_x (ε : ℝ) (hε : 0 < ε) :
     MonotoneOn (fun (x : ℝ) ↦ 2 * x / Real.log (1 + ε / Real.exp x)) (Set.Ici 0) := by
   apply MonotoneOn.mul ?_ ?_ ?_ ?_
@@ -390,8 +353,7 @@ private lemma inverr_monotone_x (ε : ℝ) (hε : 0 < ε) :
     apply AntitoneOn.const_add
     intro x (hx : 0 ≤ x) y (hy : 0 ≤ y) hxy
     refine div_le_div₀ hε.le le_rfl (Real.exp_pos _) (Real.exp_le_exp.mpr hxy)
-  · intro x (h : 0 ≤ x)
-    positivity
+  · simp_all
   · intros
     rw [inv_nonneg, Real.log_nonneg_iff]
     · rw [le_add_iff_nonneg_right]; positivity

@@ -18,16 +18,8 @@ theorem List.zipWith₃_map {α α' β β' γ γ' δ : Type*} (f : α' → β' �
       List.zipWith₃ (fun a b c ↦ f (fa a) (fb b) (fc c)) la lb lc := by
   match la, lb, lc with
   | [], _, _ => rfl
-  | _ :: _, [], _ =>
-      change ([] : List δ) = []
-      rfl
-  | _ :: _, _ :: _, [] =>
-      change ([] : List δ) = []
-      rfl
+  | _ :: _, [], _ => rfl
+  | _ :: _, _ :: _, [] => rfl
   | (a :: as), (b :: bs), (c :: cs) =>
-      change
-        f (fa a) (fb b) (fc c) :: List.zipWith₃ f (as.map fa) (bs.map fb) (cs.map fc) =
-          f (fa a) (fb b) (fc c) ::
-            List.zipWith₃ (fun a b c ↦ f (fa a) (fb b) (fc c)) as bs cs
       exact congrArg (List.cons (f (fa a) (fb b) (fc c)))
         (List.zipWith₃_map f fa fb fc as bs cs)

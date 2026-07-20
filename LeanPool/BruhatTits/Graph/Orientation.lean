@@ -144,9 +144,7 @@ def IsOdd (x : Vertices R) : Prop :=
   Quotient.lift Lattice.IsOdd (fun _ _ hML ↦ propext <| Lattice.isOdd_iff_of_isSimilar hML) x
 
 lemma isOdd_iff_notEven (x : Vertices R) : IsOdd x ↔ ¬ IsEven x := by
-  refine Quotient.inductionOn x ?_
-  intro L
-  exact L.isOdd_iff_notEven
+  exact Quotient.inductionOn x fun L ↦ L.isOdd_iff_notEven
 
 @[simp]
 lemma isEven_mk (L : Lattice R) : IsEven ⟦L⟧ ↔ L.IsEven := .rfl
@@ -180,8 +178,7 @@ lemma _root_.BruhatTits.Lattice.isEven_specialLinearGroup_smul_iff {L : Lattice 
 lemma isEven_specialLinearGroup_smul {x : Vertices R} (h : IsEven x)
     (g : Matrix.SpecialLinearGroup (Fin 2) K) : IsEven (g • x) := by
   revert h
-  refine Quotient.inductionOn x ?_
-  intro x h
+  refine Quotient.inductionOn x fun x h ↦ ?_
   change IsEven ⟦g • x⟧
   simpa
 

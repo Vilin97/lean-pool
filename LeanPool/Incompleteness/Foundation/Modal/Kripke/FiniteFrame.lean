@@ -83,15 +83,15 @@ instance : Semantics.Bot (Kripke.FiniteFrame) where
   realize_bot _ := ValidOnFrame.bot_def
 
 lemma iff_not_exists_valuation : (¬F ⊧ φ) ↔ (∃ V : Kripke.Valuation F.toFrame, ¬(⟨F.toFrame, V⟩ :
-    Kripke.Model) ⊧ φ) := by
-  exact ValidOnFrame.iff_not_exists_valuation;
+    Kripke.Model) ⊧ φ) :=
+  ValidOnFrame.iff_not_exists_valuation
 
 alias ⟨exists_valuation_of_not, not_of_exists_valuation⟩ := iff_not_exists_valuation
 
 lemma iff_not_exists_valuation_world : (¬F ⊧ φ) ↔ (∃ V : Kripke.Valuation F.toFrame, ∃ x :
     (⟨F.toFrame, V⟩ :
-    Kripke.Model).World, ¬Satisfies _ x φ) := by
-  exact ValidOnFrame.iff_not_exists_valuation_world;
+    Kripke.Model).World, ¬Satisfies _ x φ) :=
+  ValidOnFrame.iff_not_exists_valuation_world
 
 alias ⟨exists_valuation_world_of_not, not_of_exists_valuation_world⟩ :=
   iff_not_exists_valuation_world
@@ -158,15 +158,9 @@ instance definedBy_inter
   · intro h;
     constructor;
     · apply h₁.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      left;
-      assumption;
+      simp_all
     · apply h₂.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      right;
-      assumption;
+      simp_all
 ⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/

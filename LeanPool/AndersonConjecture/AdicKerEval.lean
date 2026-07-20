@@ -35,9 +35,7 @@ lemma smul_eq_zero_of_quotient (I : Ideal R) (n : ℕ)
       change Submodule.Quotient.mk (r • a) = 0
       rw [Submodule.Quotient.mk_eq_zero]
       exact Submodule.smul_mem_smul hr Submodule.mem_top
-  · intro a b ha hb
-    rw [ha, hb]
-    exact add_zero 0
+  · simp_all
 
 instance quotientIsHausdorff (I : Ideal R) (n : ℕ) :
     IsHausdorff I (R ⧸ (I ^ n • ⊤ : Submodule R R)) where
@@ -91,33 +89,24 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
       (I ^ k • ⊤ : Submodule R (R ⧸ p)).mkQ (p.mkQ (a.1 k)) from rfl]
     rw [show (eval I R n) (mk I R a) = p.mkQ (a.1 n) from rfl]
     simp only [Submodule.mkQ_apply]
-    rw [Submodule.Quotient.eq]
-    rw [show Submodule.Quotient.mk (p := p) (a.1 n) - Submodule.Quotient.mk (p := p) (a.1 k) =
-      Submodule.Quotient.mk (p := p) (a.1 n - a.1 k) from by
-      rw [← Submodule.Quotient.mk_sub]]
+    rw [Submodule.Quotient.eq, ← Submodule.Quotient.mk_sub]
     by_cases hkn : k ≤ n
     · have hc := a.property hkn
       rw [SModEq.sub_mem] at hc
-      rw [show a.1 n - a.1 k = -(a.1 k - a.1 n) from by ring,
-        show Submodule.Quotient.mk (p := p) (-(a.1 k - a.1 n)) =
-          -Submodule.Quotient.mk (p := p) (a.1 k - a.1 n) from by
-          rw [← Submodule.Quotient.mk_neg]]
+      rw [show a.1 n - a.1 k = -(a.1 k - a.1 n) from by ring, Submodule.Quotient.mk_neg]
       exact neg_mem (Submodule.smul_top_le_comap_smul_top (I ^ k) p.mkQ hc)
     · push Not at hkn
       have hc := a.property (le_of_lt hkn)
       rw [SModEq.sub_mem] at hc
-      rw [show Submodule.Quotient.mk (p := p) (a.1 n - a.1 k) = 0 from by
-        rw [Submodule.Quotient.mk_eq_zero]
-        exact hc]
+      rw [Submodule.Quotient.mk_eq_zero _ |>.mpr hc]
       exact zero_mem _
   -- Step 2: exact sequence gives x ∈ range(map I subtype)
   have h_exact : Function.Exact (map I p.subtype) (map I p.mkQ) :=
     map_exact Subtype.val_injective
       (LinearMap.exact_subtype_mkQ p)
       (Submodule.mkQ_surjective _)
-  have h_range : x ∈ LinearMap.range (map I p.subtype) := by
-    rw [LinearMap.mem_range]
-    exact ((h_exact x).mp h_ker)
+  have h_range : x ∈ LinearMap.range (map I p.subtype) :=
+    LinearMap.mem_range.mpr ((h_exact x).mp h_ker)
   -- Step 3: range(map I subtype) ⊆ I^n • ⊤ via ofTensorProduct naturality
   have aux : ∀ (a : AdicCompletion I R) (r : R), r ∈ I ^ n • (⊤ : Submodule R R) →
       a • of I R r ∈ I ^ n • (⊤ : Submodule R (AdicCompletion I R)) := by
@@ -127,10 +116,7 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
       rw [map_smul, smul_comm]
       exact Submodule.smul_mem_smul hc Submodule.mem_top
     · intro x y hx hy
-      have : a • of I R (x + y) = a • of I R x + a • of I R y := by
-        rw [map_add]
-        exact smul_add a _ _
-      rw [this]
+      rw [map_add, smul_add]
       exact Submodule.add_mem _ hx hy
   have h_smul : LinearMap.range ((map I p.subtype).restrictScalars R) ≤
       I ^ n • (⊤ : Submodule R (AdicCompletion I R)) := by
@@ -143,10 +129,9 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
             (LinearMap.id : AdicCompletion I R →ₗ[AdicCompletion I R] AdicCompletion I R)
             p.subtype) w) := by
       have nat := ofTensorProduct_naturality (N := R) I p.subtype
-      have : y = (ofTensorProductEquivOfFiniteNoetherian I ↥p) w :=
-        (LinearEquiv.apply_symm_apply _ y).symm
-      rw [this, ofTensorProductEquivOfFiniteNoetherian_apply]
-      rw [← LinearMap.comp_apply, nat, LinearMap.comp_apply]
+      rw [(LinearEquiv.apply_symm_apply (ofTensorProductEquivOfFiniteNoetherian I ↥p) y).symm,
+        ofTensorProductEquivOfFiniteNoetherian_apply, ← LinearMap.comp_apply, nat,
+        LinearMap.comp_apply]
     rw [key]
     induction w using TensorProduct.induction_on with
     | zero => simp
@@ -156,10 +141,7 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
       exact aux a m.1 m.2
     | add x y hx hy => simp only [map_add]
                        exact Submodule.add_mem _ hx hy
-  have h_range' : x ∈ LinearMap.range ((map I p.subtype).restrictScalars R) := by
-    rw [LinearMap.mem_range]
-    exact LinearMap.mem_range.mp h_range
-  exact h_smul h_range'
+  exact h_smul (LinearMap.mem_range.mpr (LinearMap.mem_range.mp h_range))
 
 /-! ### Main theorem: kernel of evalₐ is contained in the power of the extended maximal ideal -/
 
@@ -173,5 +155,4 @@ theorem mem_map_pow_of_evalₐ_eq_zero
       (IsLocalRing.maximalIdeal R)) ^ n := by
   rw [← Ideal.map_pow]
   have hmem := ker_evalₐ_le_smul_top (IsLocalRing.maximalIdeal R) n x hx
-  rw [Ideal.smul_top_eq_map] at hmem
-  exact hmem
+  simp_all

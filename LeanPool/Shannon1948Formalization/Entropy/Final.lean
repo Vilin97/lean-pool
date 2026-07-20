@@ -40,26 +40,16 @@ theorem entropyNat_unique
     {α : Type} [Fintype α]
     (p : ProbDist α) :
     H p = -K H * ∑ a, p a * Real.log (p a) := by
-  have hseq :
-      ∀ N : ℕ, H (approxProb p N) = K H * entropyNat (approxProb p N) := by
-    intro N
-    have hN := entropyNat_approxProb H hH p N
-    simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using hN
-  have hleft :
-      Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (H p)) := by
-    exact (hH.continuous (α := α)).continuousAt.tendsto.comp (tendsto_approxProb p)
+  have hseq : ∀ N : ℕ, H (approxProb p N) = K H * entropyNat (approxProb p N) := fun N => by
+    simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using entropyNat_approxProb H hH p N
+  have hleft : Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (H p)) :=
+    (hH.continuous (α := α)).continuousAt.tendsto.comp (tendsto_approxProb p)
   have hright :
-      Tendsto (fun N : ℕ => K H * entropyNat (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) := by
-    have hcont : Continuous (fun q : ProbDist α => K H * entropyNat q) :=
-      continuous_const.mul continuous_entropyNat
-    exact hcont.continuousAt.tendsto.comp (tendsto_approxProb p)
-  have hright' :
-      Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) := by
-    convert hright using 1
-    funext N
-    exact hseq N
-  have hlim : H p = K H * entropyNat p := tendsto_nhds_unique hleft hright'
-  simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using hlim
+      Tendsto (fun N : ℕ => K H * entropyNat (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) :=
+    (continuous_const.mul continuous_entropyNat).continuousAt.tendsto.comp (tendsto_approxProb p)
+  have hright' : Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) := by
+    simpa only [hseq] using hright
+  simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using tendsto_nhds_unique hleft hright'
 
 /--
 Base-parametric uniqueness:
@@ -74,36 +64,17 @@ theorem entropyBase_unique
     ∃ Kb : ℝ, 0 < Kb ∧
       ∀ {α : Type} [Fintype α] (p : ProbDist α),
         H p = -Kb * ∑ a, p a * Real.logb b (p a) := by
-  refine ⟨K H * Real.log b, ?_, ?_⟩
-  · exact mul_pos (K_pos H hH) (Real.log_pos hb)
-  · intro α _ p
-    have hb0 : b ≠ 0 := ne_of_gt (lt_trans (show (0 : ℝ) < 1 by norm_num) hb)
-    have hb1 : b ≠ 1 := ne_of_gt hb
-    have hb_pos : 0 < b := lt_trans (show (0 : ℝ) < 1 by norm_num) hb
-    have hlogb_ne : Real.log b ≠ 0 := Real.log_ne_zero_of_pos_of_ne_one hb_pos hb1
-    calc
-      H p = -K H * ∑ a, p a * Real.log (p a) := entropyNat_unique H hH p
-      _ = -(K H * Real.log b) * ∑ a, p a * Real.logb b (p a) := by
-            have hsum :
-                (∑ a, p a * Real.log (p a))
-                  = Real.log b * (∑ a, p a * Real.logb b (p a)) := by
-              calc
-                (∑ a, p a * Real.log (p a))
-                    = ∑ a, p a * (Real.log b * Real.logb b (p a)) := by
-                        refine Finset.sum_congr rfl ?_
-                        intro a _
-                        have hterm :
-                            Real.log (p a) = Real.log b * Real.logb b (p a) := by
-                          unfold Real.logb
-                          field_simp [hlogb_ne]
-                        rw [hterm]
-                _ = Real.log b * (∑ a, p a * Real.logb b (p a)) := by
-                      rw [Finset.mul_sum]
-                      refine Finset.sum_congr rfl ?_
-                      intro a _
-                      ring
-            rw [hsum]
-            ring
+  have hb_pos : 0 < b := lt_trans (by norm_num) hb
+  have hlogb_ne : Real.log b ≠ 0 := Real.log_ne_zero_of_pos_of_ne_one hb_pos (ne_of_gt hb)
+  refine ⟨K H * Real.log b, mul_pos (K_pos H hH) (Real.log_pos hb), fun {α} _ p => ?_⟩
+  have hsum : (∑ a, p a * Real.log (p a)) = Real.log b * (∑ a, p a * Real.logb b (p a)) := by
+    simp_rw [Finset.mul_sum]
+    congr 1
+    ext a
+    simp only [Real.logb, mul_div_assoc']
+    field_simp [hlogb_ne]
+  rw [entropyNat_unique H hH p, hsum]
+  ring
 
 
 end

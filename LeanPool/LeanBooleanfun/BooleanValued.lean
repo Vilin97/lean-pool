@@ -37,14 +37,10 @@ lemma eq_one_or_eq_neg_one : ∀ x, f x = 1 ∨ f x = -1 := hbv.one_or_neg_one
 
 lemma norm_sq_eq_one : ‖f‖^2 = 1 := by
   change √(𝐄 _) ^ 2 = 1
-  conv in f * f =>
-    ext x
-    dsimp
-    tactic =>
-      have : f x * f x = 1 := by
-        cases hbv.one_or_neg_one x with | _ => simp [*]
-    rw [this]
-  simp [expectation]
+  have : f * f = 1 := by
+    funext x
+    cases hbv.one_or_neg_one x with | _ => simp [*]
+  simp [this, expectation]
 
 lemma fourier_eq_one : ∑ S, |𝓕 f S|^2 = 1 := by
   rw [← walsh_plancherel]; exact norm_sq_eq_one
@@ -128,18 +124,12 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
             _ = _                         := by
                   rw [← sum_erase_add (a := i) (h := mem_univ i)]
                   ring
-        have : f 0 = n + 2 := by
+        have hf0n2 : f 0 = n + 2 := by
           rw [hf0eq]
           conv => enter [1, 2, i]; rw [this]
-          simp; ring
-        have : (1 : ℝ) ≥ 2 := by
-          calc
-            1 = f 0   := by symm; exact hf1
-            _ = n + 2 := by exact this
-            _ ≥ 0 + 2 := by gcongr; exact Nat.cast_nonneg n
-            _ = 2     := by simp
-        have : ¬(1 : ℝ) ≥ 2 := by simp
-        exact this (by assumption)
+          simp
+          ring
+        linarith [hf1.symm.trans hf0n2, Nat.cast_nonneg (α := ℝ) n]
       obtain ⟨i₀, hi₀⟩ := this
       have hFi0zero : 𝓕 f {i₀} = 0 := by
         symm
@@ -178,15 +168,18 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
           _ = 𝓕 f {i₀.succAbove i}                     := by
             (conv => enter [1, 2, i']; rw [walsh_inner_eq]); simp
       have hgeq' : ∀ x, g x = ∑ i, 𝓕 g {i} * (-1)^(x i).val := by
-        intro x; nth_rewrite 1 [hgeq]; rw [Finset.sum_apply]; apply sum_congr (by rfl); intro i _;
+        intro x
+        nth_rewrite 1 [hgeq]
+        rw [Finset.sum_apply]
+        apply sum_congr (by rfl)
+        intro i _
         simp [this]
       have : g 0 = 1 := by
         unfold g
-        simp only [isValue, insertNth_zero_right, Pi.single_zero]
-        exact hf1
+        simpa only [isValue, insertNth_zero_right, Pi.single_zero] using hf1
       have : BooleanValued g := BooleanValued.mk
         (by intro x; exact hbv.one_or_neg_one (Fin.insertNth i₀ 0 x))
-      have := hi (f := g) (Nat.succ_pos n) (by assumption) (by assumption)
+      have := hi (f := g) (Nat.succ_pos n) hgeq' (by assumption)
       obtain ⟨S, hS1, hS2⟩ := this
       obtain ⟨c, hc⟩ := hS2
       simp only [Set.mem_setOf_eq] at hS1
@@ -247,11 +240,11 @@ abbrev distance (f g : BooleanFunc n) : ℝ :=
 
 lemma oneOn_eq_of_one_or_neg_one {x y : ℝ} (hx : x = 1 ∨ x = -1) (hy : y = 1 ∨ y = -1) :
     oneOn (x = y) = (1/2) * (1 + x * y) := by
-  obtain ⟨hx|hx, hy|hy⟩ := And.intro hx hy <;> { rw [hx, hy]; norm_num }
+  obtain ⟨hx|hx, hy|hy⟩ := And.intro hx hy <;> simp [hx, hy] <;> norm_num
 
 lemma oneOn_ne_of_one_or_neg_one {x y : ℝ} (hx : x = 1 ∨ x = -1) (hy : y = 1 ∨ y = -1) :
     oneOn (x ≠ y) = (1/2) * (1 - x * y) := by
-  obtain ⟨hx|hx, hy|hy⟩ := And.intro hx hy <;> { rw [hx, hy]; norm_num }
+  obtain ⟨hx|hx, hy|hy⟩ := And.intro hx hy <;> simp [hx, hy] <;> norm_num
 
 lemma distance_eq : distance f g = 𝐄 (fun x ↦ (1/2) * (1 - (f x) * (g x))) := by
   simp_rw [distance, oneOn_ne_of_one_or_neg_one (hbv.one_or_neg_one _) (hbvg.one_or_neg_one _)]
@@ -280,10 +273,9 @@ abbrev acceptanceProbabilityBLR (f : BooleanFunc n) : ℝ :=
 
 lemma acceptanceProbabilityBLR_eq : acceptanceProbabilityBLR f =
     (𝐄 <| fun x ↦ 𝐄 <| fun y ↦ (1/2) * (1 + (f x) * (f y) * (f (x + y)))) := by
-  have hl : ∀ x y, (f x) * (f y) = 1 ∨ (f x) * (f y) = -1 := by
-    intro x y
+  have hl : ∀ x y, (f x) * (f y) = 1 ∨ (f x) * (f y) = -1 := fun x y ↦ by
     obtain ⟨hx|hx, hy|hy⟩ := And.intro (hbv.one_or_neg_one x) (hbv.one_or_neg_one y) <;>
-      { rw [hx, hy]; simp }
+      simp [hx, hy]
   simp_rw [acceptanceProbabilityBLR, oneOn_eq_of_one_or_neg_one (hl _ _) (hbv.one_or_neg_one _)]
 
 omit hbv in
@@ -309,19 +301,18 @@ private lemma _aux_lemma : (𝐄 <| fun x ↦ 𝐄 <| fun y ↦ (1/2) * (1 + (f 
 See [odonnell2014], Theorem 1.30. -/
 theorem almost_character {ε : ℝ} (h : acceptanceProbabilityBLR f ≥ 1 - ε) :
     ∃ S, distance f (χ S) ≤ ε := by
-  have : 1 - ε ≤ (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 f S)^2) := by
-    calc
-      _ ≤ acceptanceProbabilityBLR f := h
-      _ = (𝐄 <| fun x ↦ 𝐄 <| fun y ↦ (1/2) * (1 + (f x) * (f y) * (f (x + y)))) :=
-        acceptanceProbabilityBLR_eq
-      _ = (1/2) * (1 + (𝐄 <| fun x ↦ (f x) * (𝐄 <| fun y ↦ (f y) * (f (x + y))))) := _aux_lemma
-      _ = (1/2) * (1 + (𝐄 <| fun x ↦ (f x) * (f⋆f) x)) := rfl
-      _ = (1/2) * (1 + 𝐄 (f * (f⋆f))) := rfl
-      _ = (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 (f⋆f) S)) := by
-        rw [← inner_eq_expectation, inner_eq_sum_fourier]
-      _ = _ := by rw [fourier_convolution]; simp_rw [Pi.mul_apply, pow_two]
-  have : ∃ S₀, ∀ S, 𝓕 f S ≤ 𝓕 f S₀ := Finite.exists_max (𝓕 f ·)
-  obtain ⟨S₀, hS₀⟩ := this
+  have hbound : 1 - ε ≤ (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 f S)^2) := by
+    have : acceptanceProbabilityBLR f = (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 f S)^2) :=
+      calc acceptanceProbabilityBLR f
+          = (𝐄 <| fun x ↦ 𝐄 <| fun y ↦ (1/2) * (1 + (f x) * (f y) * (f (x + y)))) :=
+            acceptanceProbabilityBLR_eq
+        _ = (1/2) * (1 + 𝐄 (f * (f⋆f))) := by rw [_aux_lemma]; rfl
+        _ = (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 (f⋆f) S)) := by
+              rw [← inner_eq_expectation, inner_eq_sum_fourier]
+        _ = (1/2) * (1 + ∑ S, (𝓕 f S) * (𝓕 f S)^2) := by
+              rw [fourier_convolution]; simp_rw [Pi.mul_apply, pow_two]
+    linarith
+  obtain ⟨S₀, hS₀⟩ := Finite.exists_max (𝓕 f ·)
   have : 1 - 2 * ε ≤ 1 - 2 * distance f (χ S₀) := by
     calc
       _ ≤ ∑ S, (𝓕 f S) * (𝓕 f S)^2  := by linarith
@@ -330,8 +321,7 @@ theorem almost_character {ε : ℝ} (h : acceptanceProbabilityBLR f ≥ 1 - ε) 
       _ = 𝓕 f S₀                  := by rw [fourier_eq_one, mul_one]
       _ = ⟪f, χ S₀⟫                := by rw [fourier_eq_inner, real_inner_comm]
       _ = _                        := inner_eq_distance
-  use S₀
-  linarith
+  exact ⟨S₀, by linarith⟩
 
 end BV
 

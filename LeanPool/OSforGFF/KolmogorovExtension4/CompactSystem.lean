@@ -29,8 +29,7 @@ def IsCompactSystem.support (hp : IsCompactSystem p) (hC : ∀ i, p (C i)) (hC_e
 
 lemma IsCompactSystem.iInter_eq_empty (hp : IsCompactSystem p) (hC : ∀ i, p (C i))
     (hC_empty : ⋂ i, C i = ∅) :
-    ⋂ i ≤ hp.support hC hC_empty, C i = ∅ :=
-  (hp C hC hC_empty).choose_spec
+    ⋂ i ≤ hp.support hC hC_empty, C i = ∅ := (hp C hC hC_empty).choose_spec
 
 end definition
 
@@ -51,8 +50,7 @@ That is, the union of all indices in the bases of the cylinders.
 def allProj (hs : ∀ n, s n ∈ closedCompactCylinders α) : Set ι := ⋃ n, Js (hs n)
 
 theorem subset_allProj (hs : ∀ n, s n ∈ closedCompactCylinders α) (n : ℕ) :
-    ↑(Js (hs n)) ⊆ allProj hs :=
-  subset_iUnion (fun i ↦ (Js (hs i) : Set ι)) n
+    ↑(Js (hs n)) ⊆ allProj hs := subset_iUnion (fun i ↦ (Js (hs i) : Set ι)) n
 
 theorem exists_nat_proj (hs : ∀ n, s n ∈ closedCompactCylinders α) (i : ι) (hi : i ∈ allProj hs) :
     ∃ n, i ∈ Js (hs n) := by
@@ -214,8 +212,7 @@ theorem nonempty_iInter_projCylinder_inter_piCylinderSet (hs : ∀ n, s n ∈ cl
       congr
     rw [this]
     have hyi : y ∈ projCylinder hs i := by
-      suffices ⋂ j ≤ n, projCylinder hs j ⊆ projCylinder hs i by exact this hy
-      exact biInter_subset_of_mem hi
+      simp_all
     rwa [mem_projCylinder] at hyi
   · rw [mem_piCylinderSet]
     intro i
@@ -267,17 +264,13 @@ lemma exists_finset_iInter_projCylinder_eq_empty [∀ i, Nonempty (α i)]
     simp only [Finset.mem_singleton, iInter_iInter_eq_left] at h_nonempty
     rwa [nonempty_projCylinder_iff] at h_nonempty
   · specialize h_nonempty (Finset.range (n + 1))
-    simp only [Finset.mem_range, Nat.lt_succ_iff] at h_nonempty
-    exact h_nonempty
+    simpa only [Finset.mem_range, Nat.lt_succ_iff] using h_nonempty
 
 /-- The `closedCompactCylinders` are a compact system. -/
 theorem isCompactSystem_closedCompactCylinders : IsCompactSystem (closedCompactCylinders α) := by
   by_cases hα : ∀ i, Nonempty (α i)
   swap
-  · have : IsEmpty (Π i, α i) := isEmpty_pi.mpr (by simpa using hα)
-    refine fun s hs h ↦ ⟨0, ?_⟩
-    simp only [dissipate_zero_nat]
-    refine Set.eq_empty_of_isEmpty _
+  · simp_all
   refine IsCompactSystem.of_nonempty_iInter fun s hs h_nonempty ↦ ?_
   have h' n : (dissipate (projCylinder hs) n).Nonempty := by
     simp_rw [dissipate, ← preimage_projCylinder hs, ← preimage_iInter] at h_nonempty

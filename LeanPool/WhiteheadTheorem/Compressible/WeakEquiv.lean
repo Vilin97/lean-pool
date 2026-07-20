@@ -35,9 +35,7 @@ theorem _root_.TopCat.IsCompressible.relCWComplex_of_isWeakHomotopyEquiv
     (hf : IsWeakHomotopyEquiv f.hom) (X : RelCWComplex) :
     IsCompressible (X.skIncl 0) (MapCyl.domIncl f) := by
   apply IsCompressible.relCWComplex_of_diskBoundaryIncl
-  intro n
-  apply disk.isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
-  exact hf
+  exact fun n ↦ disk.isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv n f hf
 
 end TopCat
 
@@ -137,14 +135,7 @@ theorem CWComplex_induced_map_injective
           ((Hom.hom g₀).continuous.comp continuous_snd)
           ((Hom.hom g₁).continuous.comp continuous_snd)
           (continuous_subtype_val.comp continuous_fst) continuous_const ?_
-        intro x hx
-        simp_all only [Category.assoc, TopCat.hom_comp, ContinuousMap.comp_assoc, hom_ofHom,
-          one_div]
-        obtain ⟨⟨val, property⟩, snd⟩ := x
-        subst hx
-        dsimp only
-        simp_all only [Set.mem_insert_iff, inv_eq_zero, OfNat.ofNat_ne_zero,
-          Set.mem_singleton_iff, inv_eq_one, OfNat.ofNat_ne_one, or_self] }
+        simp_all }
   have sq : CommSq G₀₁ X.zeroOneProdInclIProd (MapCyl.domIncl f) G := ⟨by
     ext ⟨⟨tval, tprop⟩, x⟩
     unfold G₀₁ G
@@ -156,13 +147,11 @@ theorem CWComplex_induced_map_injective
     | inl h0 =>
         subst h0; simp only [↓reduceIte, Set.Icc.mk_zero]
         change _ = (Nonempty.some hg).toContinuousMap (0, x)
-        rw [ContinuousMap.Homotopy.coe_toContinuousMap, hg.some.apply_zero x]
-        rfl
+        simp_all
     | inr h1 =>
         subst h1; simp only [one_ne_zero, ↓reduceIte, Set.Icc.mk_one]
         change _ = (Nonempty.some hg).toContinuousMap (1, x)
-        rw [ContinuousMap.Homotopy.coe_toContinuousMap, hg.some.apply_one x]
-        rfl ⟩
+        simp_all ⟩
   have com := IsCompressible.of_arrow_iso_left (CWComplex.IProd.arrowIso X) <|
     IsCompressible.relCWComplex_of_isWeakHomotopyEquiv hf X.IProd
   let l := com.sq_hasLift sq |>.hasLift.some

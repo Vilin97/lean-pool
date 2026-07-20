@@ -181,8 +181,7 @@ theorem generalizedWindingNumber_eq_neg_angleContribution_single
       -((angleAtCrossing γ t₀ ht₀ : ℂ) /
         (2 * Real.pi)) := by
   have := generalizedWindingNumber_eq_external_sub_angle γ z₀ t₀ ht₀
-  rw [h_external, zero_sub] at this
-  exact this
+  simp_all
 
 /-- At a smooth crossing with zero external winding, contribution is -1/2. -/
 theorem generalizedWindingNumber_eq_neg_half_smooth_crossing
@@ -247,8 +246,7 @@ theorem externalWindingContribution_translate
     cauchyPrincipalValue' (·⁻¹)
       (fun t => γ.toFun t - z₀) γ.a γ.b 0
   have h_eq : (fun t => (γ.translate c).toFun t - (z₀ + c)) =
-      (fun t => γ.toFun t - z₀) := by
-    ext t; simp only [PiecewiseC1Immersion.translate]; ring
+      (fun t => γ.toFun t - z₀) := by ext t; simp only [PiecewiseC1Immersion.translate]; ring
   rw [h_eq]
 
 /-- Winding number with angles is additive over disjoint crossing sets. -/

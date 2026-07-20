@@ -75,8 +75,7 @@ theorem _root_.Matrix.PosSemidef.rpow_mul_rpow (r₁ r₂ : NNRealˣ) {Q : Matri
     simp [Real.zero_rpow, hr₁, hr₂, hsum]
   · rw [← Real.rpow_add]
     apply lt_of_le_of_ne (hQ.eigenvalues_nonneg _)
-    rw [ne_eq, eq_comm]
-    exact h
+    rwa [ne_eq, eq_comm]
 
 theorem _root_.Matrix.PosDef.rpow_mul_rpow (r₁ r₂ : ℝ) {Q : Matrix n n 𝕜}
     (hQ : PosDef Q) :
@@ -107,12 +106,12 @@ noncomputable def _root_.Matrix.PosDef.eigenvaluesInvertible {Q : Matrix n n �
     Invertible (IsHermitian.eigenvalues hQ.1) := by
   use (IsHermitian.eigenvalues hQ.1)⁻¹
   · ext i
-    simp_rw [Pi.mul_apply, Pi.inv_apply]
-    simp_rw [inv_mul_cancel₀ (NeZero.of_pos (hQ.pos_eigenvalues i)).out]
+    simp_rw [Pi.mul_apply, Pi.inv_apply,
+      inv_mul_cancel₀ (NeZero.of_pos (hQ.pos_eigenvalues i)).out]
     rfl
   · ext i
-    simp_rw [Pi.mul_apply, Pi.inv_apply]
-    simp_rw [mul_inv_cancel₀ (NeZero.of_pos (hQ.pos_eigenvalues i)).out]
+    simp_rw [Pi.mul_apply, Pi.inv_apply,
+      mul_inv_cancel₀ (NeZero.of_pos (hQ.pos_eigenvalues i)).out]
     rfl
 
 @[reducible, instance]
@@ -120,13 +119,10 @@ noncomputable def _root_.Matrix.PosDef.eigenvaluesInvertible' {Q : Matrix n n �
     (hQ : Q.PosDef) :
     Invertible (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1) : n → 𝕜) := by
   letI := hQ.eigenvaluesInvertible
-  use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜)
-  · ext i
-    simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
-      inv_mul_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
-  · ext i
-    simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
-      mul_inv_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
+  use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜) <;>
+    · ext i
+      simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
+        inv_mul_cancel_of_invertible, mul_inv_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
 
 theorem _root_.Matrix.PosDef.rpow_neg_one_eq_inv_self {Q : Matrix n n 𝕜}
     (hQ : Q.PosDef) :
@@ -146,8 +142,7 @@ theorem _root_.Matrix.PosDef.rpow_neg_one_eq_inv_self {Q : Matrix n n 𝕜}
 theorem _root_.Matrix.IsHermitian.rpow_zero {Q : Matrix n n 𝕜} (hQ : Q.IsHermitian) :
     hQ.rpow 0 = 1 := by
   rw [IsHermitian.rpow, innerAut_eq_iff, innerAut_apply_one]
-  ext i j
-  by_cases h : i = j <;> simp [diagonal, h, Matrix.one_apply]
+  simp_all
 
 theorem _root_.Matrix.PosSemidef.rpow_zero {Q : Matrix n n 𝕜} (hQ : Q.PosSemidef) :
     hQ.rpow 0 = 1 :=
@@ -209,8 +204,7 @@ theorem _root_.Matrix.PosDef.rpow_ne_zero [Nonempty n] {Q : Matrix n n ℂ}
 
 lemma _root_.Matrix.IsHermitian.rpow_cast {Q : Matrix n n 𝕜} (hQ : Q.IsHermitian) (r : ℝ)
     {S : Matrix n n 𝕜} (hQS : Q = S) :
-    hQ.rpow r = (by rw [← hQS]; exact hQ : IsHermitian S).rpow r := by
-  aesop
+    hQ.rpow r = (by rw [← hQS]; exact hQ : IsHermitian S).rpow r := by aesop
 
 lemma _root_.Matrix.PosDef.rpow_cast {Q : Matrix n n 𝕜} (hQ : Q.PosDef) (r : ℝ)
     {S : Matrix n n 𝕜} (hQS : Q = S) :
@@ -228,12 +222,11 @@ theorem _root_.Matrix.posDefOne_rpow (n : Type _) [Fintype n] [DecidableEq n] (r
   let hQ : PosDef (1 : Matrix n n 𝕜) := posDefOne
   have heig : hQ.1.eigenvalues = fun _ => 1 := by
     ext i
-    rw [hQ.1.eigenvalues_eq i, one_mulVec]
-    rw [dotProduct_comm, ← EuclideanSpace.inner_eq_star_dotProduct]
-    rw [inner_self_eq_norm_sq_to_K, hQ.1.eigenvectorBasis.orthonormal.norm_eq_one]
+    rw [hQ.1.eigenvalues_eq i, one_mulVec, dotProduct_comm,
+      ← EuclideanSpace.inner_eq_star_dotProduct, inner_self_eq_norm_sq_to_K,
+      hQ.1.eigenvectorBasis.orthonormal.norm_eq_one]
     simp
-  rw [PosDef.rpow_eq]
-  rw [heig]
+  rw [PosDef.rpow_eq, heig]
   simp_rw [Pi.pow_def, Real.one_rpow]
   have hdiag : (diagonal (RCLike.ofReal ∘ fun _ : n => (1 : ℝ)) : Matrix n n 𝕜) = 1 := by
     ext i j

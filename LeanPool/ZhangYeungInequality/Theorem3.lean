@@ -221,8 +221,7 @@ theorem _root_.ZhangYeung.zhangYeung
       ≤ (1 / 2) * (I[X : Y; μ] + I[X : ⟨Z, U⟩; μ]
         + I[Z : U | X; μ] - I[Z : U | Y; μ]) := by
   have h_int := zhangYeung_integer hX hY hZ hU μ
-  have h_delta := (delta_form21_iff Z U X Y μ).mpr h_int
-  linarith
+  linarith [(delta_form21_iff Z U X Y μ).mpr h_int]
 
 /-- **The `X ↔ Y` dual of Theorem 3** [@zhangyeung1998, §III, eq. 22]:
 
@@ -243,8 +242,7 @@ theorem _root_.ZhangYeung.zhangYeung_dual
         - I[Z : U | X; μ] + I[Z : U | Y; μ]) := by
   have h_int := zhangYeung_integer hY hX hZ hU μ
   rw [mutualInfo_comm hY hX] at h_int
-  have h_delta := (delta_form22_iff Z U X Y μ).mpr (by linarith [h_int])
-  linarith
+  linarith [(delta_form22_iff Z U X Y μ).mpr (by linarith [h_int])]
 
 /-- **The averaged symmetric form of Theorem 3** [@zhangyeung1998, §III, eq. 23]:
 

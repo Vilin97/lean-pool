@@ -38,8 +38,7 @@ def divRadical (a : k[X]) : k[X] :=
   a / radical a
 
 theorem hMul_radical_divRadical (a : k[X]) : radical a * divRadical a = a := by
-  rw [divRadical]
-  rw [← EuclideanDomain.mul_div_assoc _ (radical_dvd_self a)]
+  rw [divRadical, ← EuclideanDomain.mul_div_assoc _ (radical_dvd_self a)]
   exact mul_div_cancel_left₀ a (radical_ne_zero a)
 
 theorem divRadical_ne_zero {a : k[X]} (ha : a ≠ 0) : divRadical a ≠ 0 := by
@@ -65,8 +64,7 @@ theorem divRadical_hMul {a b : k[X]} (hc : IsCoprime a b) :
 
 theorem divRadical_dvd_self (a : k[X]) : divRadical a ∣ a := by
   rw [divRadical]
-  apply EuclideanDomain.div_dvd_of_dvd
-  exact radical_dvd_self a
+  exact EuclideanDomain.div_dvd_of_dvd (radical_dvd_self a)
 
 /- Main lemma: a / rad(a) ∣ a'.
 Proof uses `induction_on_coprime` of `UniqueFactorizationMonoid`.
@@ -75,15 +73,13 @@ Proof uses `induction_on_coprime` of `UniqueFactorizationMonoid`.
 theorem divRadical_dvd_derivative (a : k[X]) : divRadical a ∣ derivative a := by
   induction a using induction_on_coprime with
   | h0 =>
-    rw [derivative_zero]
-    apply dvd_zero
+    simp_all
   | @h1 a ha =>
     exact (divRadical_isUnit ha).dvd
   | @hpr p i hp =>
     cases i with
     | zero =>
-      rw [pow_zero, derivative_one]
-      apply dvd_zero
+      simp_all
     | succ i =>
       rw [← mul_dvd_mul_iff_left (radical_ne_zero (p ^ i.succ)), hMul_radical_divRadical,
         radical_prime_pow hp i.succ_pos, derivative_pow_succ, ← mul_assoc]
@@ -103,11 +99,8 @@ theorem divRadical_dvd_derivative (a : k[X]) : divRadical a ∣ derivative a := 
 
 theorem divRadical_dvd_wronskian_left (a b : k[X]) : divRadical a ∣ wronskian a b := by
   rw [wronskian]
-  apply dvd_sub
-  · apply dvd_mul_of_dvd_left
-    exact divRadical_dvd_self a
-  · apply dvd_mul_of_dvd_left
-    exact divRadical_dvd_derivative a
+  exact dvd_sub (dvd_mul_of_dvd_left (divRadical_dvd_self a) _)
+    (dvd_mul_of_dvd_left (divRadical_dvd_derivative a) _)
 
 theorem divRadical_dvd_wronskian_right (a b : k[X]) : divRadical b ∣ wronskian a b := by
   rw [wronskian_anticomm, dvd_neg]

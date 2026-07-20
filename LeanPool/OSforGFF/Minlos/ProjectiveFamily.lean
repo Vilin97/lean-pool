@@ -191,8 +191,7 @@ theorem marginalFamily_isProjective (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
       xi.ofLp (finsetIndexInj I J hJI k) = ξ.ofLp k := by
     intro k
     rw [xi_ofLp]
-    have hJ : (I.equivFin.symm (finsetIndexInj I J hJI k) : E) ∈ J := by
-      simp [finsetIndexInj]
+    have hJ : (I.equivFin.symm (finsetIndexInj I J hJI k) : E) ∈ J := by simp [finsetIndexInj]
     simp only [finsetIndexInj]
     simp
   -- Inner product identity: ⟪euclideanProject y, ξ⟫ = ⟪y, xi⟫

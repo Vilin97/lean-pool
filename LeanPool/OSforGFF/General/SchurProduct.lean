@@ -51,18 +51,15 @@ lemma diagEmbed_ne_zero_of_ne_zero {x : ι → ℝ} (hx : x ≠ 0) : diagEmbed (
 
 /-- Finite sum over pairs equals iterated double sum over coordinates (binderless sums). -/
 lemma sum_pairs_eq_double [Fintype ι] (g : ι × ι → ℝ) :
-  (∑ p, g p) = ∑ i, ∑ j, g (i, j) :=
-  Fintype.sum_prod_type g
+  (∑ p, g p) = ∑ i, ∑ j, g (i, j) := Fintype.sum_prod_type g
 
 /-- Over `ℝ`, the Hadamard product of Hermitian matrices is Hermitian. -/
 private lemma isHermitian_hadamard_real {A B : Matrix ι ι ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ∘ₕ B).IsHermitian := by
   rw [Matrix.IsHermitian]
   ext i j
-  have hAij : A i j = A j i := by
-    simpa using (Matrix.IsHermitian.apply hA i j).symm
-  have hBij : B i j = B j i := by
-    simpa using (Matrix.IsHermitian.apply hB i j).symm
+  have hAij : A i j = A j i := by simpa using (Matrix.IsHermitian.apply hA i j).symm
+  have hBij : B i j = B j i := by simpa using (Matrix.IsHermitian.apply hB i j).symm
   simp [Matrix.conjTranspose, Matrix.hadamard, hAij, hBij]
 
 /-- Schur product theorem (real case, finite index):
@@ -84,9 +81,8 @@ If A B are positive definite matrices over ℝ, then the Hadamard product is pos
     let y : ι × ι → ℝ := diagEmbed (ι:=ι) x
     have hy : y ≠ 0 := diagEmbed_ne_zero_of_ne_zero (ι:=ι) hx
     -- Built-in Kronecker product is PosDef
-    have hk : 0 < y ⬝ᵥ (A ⊗ₖ B).mulVec y := by
-      have hK : (A ⊗ₖ B).PosDef := Matrix.PosDef.kronecker hA hB
-      exact hK.dotProduct_mulVec_pos hy
+    have hk : 0 < y ⬝ᵥ (A ⊗ₖ B).mulVec y :=
+      (Matrix.PosDef.kronecker hA hB).dotProduct_mulVec_pos hy
     -- The quadratic forms coincide on diagonal-embedded vectors
     have hquad_eq : y ⬝ᵥ (A ⊗ₖ B).mulVec y = x ⬝ᵥ (A ∘ₕ B).mulVec x := by
       classical

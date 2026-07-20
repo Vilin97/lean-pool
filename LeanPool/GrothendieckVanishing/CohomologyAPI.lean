@@ -190,8 +190,7 @@ private lemma extClass_naturality {S₁ S₂ : ShortComplex C'} (hS₁ : S₁.Sh
       have := ha₁
       simp only [ShortComplex.ShortExact.singleTriangle_mor₁] at this
       exact (DerivedCategory.singleFunctor C' 0).map_injective <| by
-        rw [Functor.map_comp, Functor.map_comp]
-        exact this
+        rwa [Functor.map_comp, Functor.map_comp]
     haveI : Mono S₂.f := hS₂.mono_f
     exact (cancel_mono S₂.f).mp (by rw [← φ.comm₁₂.symm, h])
   rw [ha'] at ha₃
@@ -221,29 +220,20 @@ private theorem sheafH_comp_extClass_naturality {X : TopCat.{u}}
     (y : Sheaf.H S₁.X₃ n) :
     (y.comp hS₁.extClass rfl).comp (Ext.mk₀ φ.τ₁) (add_zero (n + 1)) =
       (y.comp (Ext.mk₀ φ.τ₃) (add_zero n)).comp hS₂.extClass rfl := by
-  have hcomp :
-      y.comp (hS₁.extClass.comp (Ext.mk₀ φ.τ₁) (add_zero 1)) rfl =
-        y.comp ((Ext.mk₀ φ.τ₃).comp hS₂.extClass (zero_add 1)) rfl := by
-    exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
   rw [Ext.comp_assoc_of_third_deg_zero, Ext.comp_assoc_of_second_deg_zero]
-  exact hcomp
+  exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
 
 /-- Successor connecting morphism attached to a short exact sequence of sheaves. -/
 noncomputable def sheafHSuccMap {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ) :
-    AddCommGrpCat.of (Sheaf.H S.X₃ n) ⟶ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) := by
-  exact AddCommGrpCat.ofHom <|
+    AddCommGrpCat.of (Sheaf.H S.X₃ n) ⟶ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) :=
+  AddCommGrpCat.ofHom <|
     AddMonoidHom.mk'
       (fun y ↦ y.comp hS.extClass rfl)
       (by
-        intro a b
-        change (a + b).comp hS.extClass rfl = a.comp hS.extClass rfl + b.comp hS.extClass rfl
-        change (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) (a + b) =
-          (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) a +
-            (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) b
-        exact (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)).map_add a b)
+        simp_all)
 
 private theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -263,15 +253,13 @@ theorem sheafH_succ_map_exists_preimage_of_subsingleton_middle {X : TopCat.{u}}
     ∃ y : Sheaf.H S.X₃ n, ConcreteCategory.hom (sheafHSuccMap hS n) y = x := by
   obtain ⟨y, hy⟩ := Ext.covariant_sequence_exact₁ _ hS x (@Subsingleton.elim _ h₂H _ _) rfl
   refine ⟨y, ?_⟩
-  rw [sheafH_succ_map_apply]
-  exact hy
+  rwa [sheafH_succ_map_apply]
 
 theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     (hstalk : ∀ (x : X)
       (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj F), a = 0) :
     IsZero ((⟨F, hF⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)) := by
-  let Fsh : TopCat.Sheaf AddCommGrpCat.{u} X := ⟨F, hF⟩
   have hZ : IsZero F := Functor.isZero F (fun ⟨U⟩ ↦
     @AddCommGrpCat.isZero_of_subsingleton _
       ⟨fun s t ↦ by
@@ -283,19 +271,31 @@ theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
         have hWU : W ≤ U := leOfHom iV
         rw [Subsingleton.elim iV (homOfLE hWU)] at hEq
         exact ⟨W, hWU, hxW, hEq⟩⟩)
-  have hFsh : IsZero Fsh := by
-    exact IsZero.mk
-      (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-        fun U ↦ (hZ.obj U).eq_zero_of_src (f.hom.app U))) }⟩)
-      (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-        fun U ↦ (hZ.obj U).eq_zero_of_tgt (f.hom.app U))) }⟩)
-  exact hFsh
+  exact IsZero.mk
+    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
+      fun U ↦ (hZ.obj U).eq_zero_of_src (f.hom.app U))) }⟩)
+    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
+      fun U ↦ (hZ.obj U).eq_zero_of_tgt (f.hom.app U))) }⟩)
 
 /-- If a bundled sheaf is zero, then its cohomology is subsingleton in every degree. -/
 theorem sheafH_subsingleton_of_isZero {X : TopCat.{u}}
     {F : TopCat.Sheaf AddCommGrpCat.{u} X} (hzero : IsZero F) (n : ℕ) :
     Subsingleton (Sheaf.H F n) :=
   ext_subsingleton_of_isZero_tgt hzero n
+
+/-- The stalk map of `S.f` at `x` is a monomorphism when `S` is short exact. -/
+private theorem stalkFunctor_map_f_mono {X : TopCat.{u}}
+    (S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)) (hS : S.ShortExact) (x : X) :
+    Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) := by
+  haveI : Mono S.f := (Sheaf.Hom.mono_iff_presheaf_mono
+    (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2
+    ((Sheaf.Hom.mono_iff_presheaf_mono
+      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f)
+  haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
+  exact show Mono ((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
+    TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f) from
+    Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
+      TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x) S.f
 
 /-- In a short exact sequence `X₁ → X₂ → X₃`, if the stalk map of `g` at `x` is an
 isomorphism, then the stalk of `X₁` at `x` vanishes. -/
@@ -307,16 +307,7 @@ theorem stalk_zero_of_ses_g_iso
     (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj S.X₁.obj) :
     a = 0 := by
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  have hf_mono : Mono S.f.hom := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
-  haveI : Mono S.f := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2 hf_mono
-  haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
-  have hTf_mono : Mono (T.map S.f.hom) := by
-    exact show Mono ((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ T).map S.f) from
-      Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ T) S.f
+  have hTf_mono : Mono (T.map S.f.hom) := stalkFunctor_map_f_mono S hS x
   have hf0 : T.map S.f.hom = 0 := by
     have : T.map S.f.hom ≫ T.map S.g.hom = 0 := by
       have hzero : S.f.hom ≫ S.g.hom = 0 := congrArg InducedCategory.Hom.hom S.zero
@@ -324,8 +315,7 @@ theorem stalk_zero_of_ses_g_iso
         (congrArg (fun h ↦ T.map h) hzero).trans
           (Functor.map_zero T S.X₁.obj S.X₃.obj)
       simpa [Functor.map_comp] using hcomp_map
-    rw [show T.map S.f.hom = (T.map S.f.hom ≫ T.map S.g.hom) ≫ inv (T.map S.g.hom) by simp,
-      this, zero_comp]
+    simp_all
   exact (AddCommGrpCat.mono_iff_injective _).mp hTf_mono
     (show ConcreteCategory.hom (T.map S.f.hom) a = ConcreteCategory.hom (T.map S.f.hom) 0 by
       simp [hf0])
@@ -340,16 +330,7 @@ theorem stalk_zero_of_shortExact_kernel
     (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj S.X₁.obj) :
     a = 0 := by
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  have hf_mono : Mono S.f.hom := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
-  haveI : Mono S.f := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2 hf_mono
-  haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
-  have hTf_mono : Mono (T.map S.f.hom) := by
-    exact show Mono ((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ T).map S.f) from
-      Functor.map_mono (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙ T) S.f
+  have hTf_mono : Mono (T.map S.f.hom) := stalkFunctor_map_f_mono S hS x
   exact (AddCommGrpCat.mono_iff_injective _).mp hTf_mono
     ((hX₂ _).trans (map_zero _).symm)
 
@@ -368,13 +349,12 @@ theorem stalk_zero_of_g_is_cokernel_of_stalk_epi
   haveI : ∀ U : Opens X, Decidable (x ∈ U) := fun _ ↦ Classical.dec _
   haveI : T.IsLeftAdjoint :=
     (stalkSkyscraperSheafAdjunction (C := AddCommGrpCat.{u}) (X := X) (p₀ := x)).isLeftAdjoint
-  haveI : Epi (T.map S.f) := by
-    exact show Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) from hepi
+  haveI : Epi (T.map S.f) :=
+    show Epi ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.f.hom) from hepi
   have hzero_map : T.map S.f ≫ T.map S.g = 0 := by
     rw [← T.map_comp, S.zero, Functor.map_zero]
-  have hcolim : IsColimit (CokernelCofork.ofπ (T.map S.g) hzero_map) := by
-    exact CokernelCofork.mapIsColimit _ hg T
-  have hzero : IsZero (T.obj S.X₃) := CokernelCofork.IsColimit.isZero_of_epi hcolim
+  have hzero : IsZero (T.obj S.X₃) :=
+    CokernelCofork.IsColimit.isZero_of_epi (CokernelCofork.mapIsColimit _ hg T)
   haveI := AddCommGrpCat.subsingleton_of_isZero hzero
   change T.obj S.X₃ at a
   change (a : T.obj S.X₃) = 0
@@ -571,8 +551,8 @@ theorem sheafH_subsingleton_H1_of_injective_of_epi_app_top {X : TopCat.{u}}
     (hS : S.ShortExact)
     [hI : Injective S.X₂]
     (hg : Epi (S.g.hom.app (op ⊤))) :
-    Subsingleton (Sheaf.H S.X₁ 1) := by
-  exact sheafH_subsingleton_H1_via_epi_app_top hS
+    Subsingleton (Sheaf.H S.X₁ 1) :=
+  sheafH_subsingleton_H1_via_epi_app_top hS
     (@sheafH_subsingleton_of_injective (Opens X) _ (Opens.grothendieckTopology X)
       _ _ S.X₂ hI 0) hg
 
@@ -670,10 +650,8 @@ theorem subsingleton_sheafH_of_shortExact_middle {X : TopCat.{u}}
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel f))
     inferInstance inferInstance
-  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by
-    exact h₁
-  have h₃' : Subsingleton (Sheaf.H S.X₃ n) := by
-    exact h₃
+  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := h₁
+  have h₃' : Subsingleton (Sheaf.H S.X₃ n) := h₃
   constructor
   intro a b
   obtain ⟨c, hc⟩ := Ext.covariant_sequence_exact₂ _ hS a
@@ -800,10 +778,6 @@ theorem sheafH_succ_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
       (sheafCohomologyFunctor X n).map φ.τ₃ ≫
         (sheafHSuccIsoOfSubsingletonMiddle hS₂ n h₂₂n h₂₂succ).hom := by
   ext y
-  have hcomp :
-      y.comp (hS₁.extClass.comp (Ext.mk₀ φ.τ₁) (add_zero 1)) rfl =
-        y.comp ((Ext.mk₀ φ.τ₃).comp hS₂.extClass (zero_add 1)) rfl := by
-    exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm
   rw [AddCommGrpCat.hom_comp]
   change
       (ConcreteCategory.hom ((sheafCohomologyFunctor X (n + 1)).map φ.τ₁)
@@ -816,4 +790,4 @@ theorem sheafH_succ_iso_of_subsingleton_middle_natural {X : TopCat.{u}}
     sheafCohomologyFunctor_map_apply, sheafCohomologyFunctor_map_apply,
     sheafH_succ_iso_of_subsingleton_middle_hom_apply]
   rw [Ext.comp_assoc_of_third_deg_zero, Ext.comp_assoc_of_second_deg_zero]
-  exact hcomp
+  exact congrArg (fun t ↦ y.comp t rfl) (extClass_naturality hS₁ hS₂ φ).symm

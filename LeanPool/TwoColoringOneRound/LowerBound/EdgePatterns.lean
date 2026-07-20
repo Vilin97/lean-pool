@@ -98,8 +98,7 @@ private lemma disjoint_range_big_small {n : Nat} {two : Sym n}
   intro x hx hy
   rcases hx with ⟨i, rfl⟩
   rcases hy with ⟨j, h⟩
-  have h' : (ad i).1 = (bc j).1 := by
-    simpa [bigValEmbedding, smallValEmbedding] using h.symm
+  have h' : (ad i).1 = (bc j).1 := by simpa [bigValEmbedding, smallValEmbedding] using h.symm
   exact (big_ne_small (two := two) (x := ad i) (y := bc j) h').elim
 
 private lemma disjoint_range_small_big {n : Nat} {two : Sym n}
@@ -109,8 +108,7 @@ private lemma disjoint_range_small_big {n : Nat} {two : Sym n}
   intro x hx hy
   rcases hx with ⟨i, rfl⟩
   rcases hy with ⟨j, h⟩
-  have h' : (bc i).1 = (ad j).1 := by
-    simpa [bigValEmbedding, smallValEmbedding] using h.symm
+  have h' : (bc i).1 = (ad j).1 := by simpa [bigValEmbedding, smallValEmbedding] using h.symm
   exact (small_ne_big (two := two) (x := bc i) (y := ad j) h').elim
 
 private def outerPos : Fin 2 ↪ Fin 4 where
@@ -223,9 +221,7 @@ theorem card_pat0000 :
       left_inv := by
         intro e
         apply Subtype.ext
-        apply Subtype.ext
-        funext i
-        rfl
+        exact Subtype.ext rfl
       right_inv := by
         intro x
         ext i
@@ -261,9 +257,7 @@ theorem card_pat1111 :
       left_inv := by
         intro e
         apply Subtype.ext
-        apply Subtype.ext
-        funext i
-        rfl
+        exact Subtype.ext rfl
       right_inv := by
         intro x
         ext i

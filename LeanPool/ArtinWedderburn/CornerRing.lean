@@ -59,8 +59,7 @@ def CornerSubringNonUnital (e : R) : NonUnitalSubring R where
   neg_mem' := by
     rintro x ⟨r, hr⟩
     use -r
-    rw [hr]
-    noncomm_ring
+    simp_all
   mul_mem' := by
     rintro x y ⟨r, hr⟩ ⟨s, hs⟩
     use r * e * e * s
@@ -75,8 +74,7 @@ theorem el_in_corner_ring (x : R) : x ∈ bothMul e e ↔ x ∈ CornerSubringNon
 -- reducing corner subring equality to set equality
 theorem eq_carrier_eq_corner (x y : R) (h : bothMul x x = bothMul y y) :
     CornerSubringNonUnital x = CornerSubringNonUnital y := by
-  apply NonUnitalSubring.ext
-  simp only [← el_in_corner_ring, h, implies_true]
+  simp_all
 
 /-- The corner subring `eRe` packaged as a `NonUnitalSubring`, tagged with the
 proof that `e` is idempotent. The proof argument lets later constructions
@@ -160,8 +158,7 @@ lemma e_in_corner_ring : e ∈ (CornerSubring idem_e) := by
 theorem both_mul_one_one_eq_R : bothMul (1 : R) 1 = ⊤ := by
   ext x
   constructor
-  · intro ⟨_, _⟩
-    trivial
+  · simp_all
   · intro _
     use x
     noncomm_ring
@@ -190,13 +187,7 @@ def isoCornerOne :
 -- a nonzero element in the corner subring is nonzero in R
 lemma nonzero (x : CornerSubring idem_e) :
     (x : CornerSubring idem_e) ≠ 0 ↔ x.val ≠ 0 := by
-  constructor
-  · intro hnz hz
-    apply hnz
-    exact Subtype.ext hz
-  · intro hnz hz
-    rw [Subtype.ext_iff] at hz
-    exact hnz hz
+  simp_all
 
 -- nonzero elements produces a non-zero corner subring
 lemma e_nonzero_corner_nontrivial (R : Type*) [Ring R] {e : R} (idem_e : IsIdempotentElem e)
@@ -255,9 +246,7 @@ def eqElIsoCorner (e f : R) (idem_e : IsIdempotentElem e) (idem_f : IsIdempotent
       have h : x = (f : R) * y * f := by rw [← e_eq_f]; exact hy
       exact ⟨y, h⟩⟩,
     invFun := fun x => ⟨x.val, by
-      let ⟨y, hy⟩ := x.property
-      have h : x = (e : R) * y * e := by rw [e_eq_f]; exact hy
-      exact ⟨y, h⟩⟩,
+      simp_all⟩,
     left_inv := fun _ => rfl,
     right_inv := fun _ => rfl,
     map_mul' := fun _ _ => rfl,
@@ -363,8 +352,7 @@ lemma el_push_smul_in_I (a y : R) (I : Ideal (CornerSubring idem_e)) :
   have h'' : v = w * r := by
     rw [Subtype.ext_iff]
     rw [NonUnitalSubring.val_mul]
-    simp only [v, w, elPush]
-    exact h
+    simpa only [v, w, elPush] using h
   rw [← h''] at h'
   exact h'
 
@@ -378,8 +366,7 @@ theorem ideal_push_pull_inclusion (I : Ideal (CornerSubring idem_e)) (x : R) :
       apply Subtype.ext
       change e * 0 * e = (0 : R)
       noncomm_ring
-    rw [h0]
-    exact I.zero_mem
+    simp_all
   | add y z _ _ hyp hyz =>
     rw [← add_el_push_eq_add]
     exact (Submodule.add_mem_iff_right I hyp).mpr hyz
@@ -495,8 +482,7 @@ theorem corner_ring_prime (hRP : IsPrimeRing R) : IsPrimeRing (CornerSubring ide
     rw [← both_mul_lift, congrArg (Set.image Subtype.val) h]
     exact Set.image_singleton
   have l := prime_ring_equiv.1 hRP _ _ h_lift
-  simp only [ZeroMemClass.coe_eq_zero] at l
-  exact l
+  simp_all
 
 -- if a cornersubring is a division subring then it is a division ring on its own
 theorem div_subring_to_div_ring (e : R) (idem_e : IsIdempotentElem e)

@@ -9,15 +9,6 @@ import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.RingTheory.LocalRing.Defs
 import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.BruhatTits.Utils.Misc
 -/
@@ -37,9 +28,7 @@ lemma exp_le_exp_of_pow_le_pow (a : Γ₀) (hlt : a < 1) (h₀ : a ≠ 0) {n m :
   rwa [zpow_le_zpow_iff_right_of_lt_one₀ (zero_lt_iff.mpr h₀) hlt] at hle
 
 lemma exp_zero_of_pow_eq_one_aux {n : ℕ} (ha : (0 : Γ₀) ^ n = 1) : n = 0 := by
-  induction n with
-  | zero => rfl
-  | succ n _ => simp at ha
+  simp_all
 
 lemma exp_zero_of_zpow_eq_one' {n : ℤ} (ha : (0 : Γ₀) ^ n = 1) : n = 0 := by
   have haux (n : ℤ) (ha : (0 : Γ₀) ^ n = 1) (hn : n ≥ 0) : n = 0 := by
@@ -60,9 +49,7 @@ lemma exp_zero_of_zpow_eq_one {a : Γ₀} (h : a < 1) {n : ℤ} (han : a ^ n = 1
   by_cases ha : a = 0
   · subst ha
     exact exp_zero_of_zpow_eq_one' han
-  · apply le_antisymm
-    · apply exp_le_exp_of_pow_le_pow a h ha
-      simp [han]
+  · refine le_antisymm ?_ ?_ <;>
     · apply exp_le_exp_of_pow_le_pow a h ha
       simp [han]
 
@@ -83,14 +70,12 @@ lemma Fin.rev_antitone (n : ℕ) : Antitone (Fin.rev (n := n)) := by match n wit
   | n + 1 =>
       apply Fin.antitone_iff_succ_le.mpr
       intro i
-      simp only [Fin.rev_le_rev]
-      exact Fin.le_of_lt i.castSucc_lt_succ
+      simpa only [Fin.rev_le_rev] using Fin.le_of_lt i.castSucc_lt_succ
 
 namespace Finset
 
 variable {ι α β : Type*} [CommGroupWithZero β]
 
---@[to_additive sum_zsmul_assoc]
 lemma prod_zpow_eq_zpow_sum (s : Finset ι) (f : ι → ℤ) (a : β) (ha : a ≠ 0) :
     ∏ i ∈ s, a ^ f i = a ^ ∑ i ∈ s, f i :=
   cons_induction (by simp) (fun _ _ _ h ↦ by simp [h, zpow_add₀ ha]) s
@@ -111,17 +96,13 @@ def Fin.succEquivUnit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
   left_inv j := by
     simp only
     split_ifs with h
-    · ext
-      simp
+    · simp_all
     · ext
       simp only [Sum.elim_inr, Fin.val_last]
       omega
   right_inv
     | Sum.inl i => by
-        simp only [Sum.elim_inl, Fin.val_castSucc]
-        split_ifs with h
-        · rw [Sum.inl.injEq]
-        · omega
+        simp_all
     | Sum.inr () => by simp
 
 lemma MulAction.stabilizer_fun_const {α : Type*} (ι G : Type*) [Nonempty ι] [Group G]

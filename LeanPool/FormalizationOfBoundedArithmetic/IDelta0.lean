@@ -71,16 +71,11 @@ by
     · rfl
 
 theorem ex_of_bdEx {a} [LE a] {t} {P : a -> Prop} : (∃ x ≤ t, P x) -> ∃ x, P x := by
-  intro h
-  obtain ⟨x, ⟨hx1, hx2⟩⟩ := h
-  exists x
+  rintro ⟨x, -, hx⟩; exact ⟨x, hx⟩
 
 lemma zero_add :
-  ∀ x : M, 0 + x = x :=
-by
-  intro x
-  rw [idelta0.add_comm]
-  exact B3 x
+  ∀ x : M, 0 + x = x := fun x => by
+  rw [idelta0.add_comm]; exact B3 x
 
 instance : AddZeroClass M where
   zero_add := zero_add
@@ -207,32 +202,18 @@ by
 
 -- D4. (x ≤ y ∧ y ≤ z) → x ≤ z  (Transitivity)
 theorem le_trans :
-  ∀ {x y z : M}, x ≤ y -> y ≤ z -> x ≤ z :=
-by
+  ∀ {x y z : M}, x ≤ y -> y ≤ z -> x ≤ z := by
   intro x y z hxy hyz
   rw [le_iff_exists_add] at hxy hyz ⊢
-  obtain ⟨diff_x_y, hdiff_x_y⟩ := hxy
-  obtain ⟨diff_y_z, hdiff_y_z⟩ := hyz
-  exists (diff_x_y + diff_y_z)
-  rw [<- idelta0.add_assoc]
-  rw [hdiff_x_y]
-  rw [hdiff_y_z]
+  obtain ⟨dxy, hdxy⟩ := hxy
+  obtain ⟨dyz, hdyz⟩ := hyz
+  exact ⟨dxy + dyz, by rw [← idelta0.add_assoc, hdxy, hdyz]⟩
 
 
 instance : Preorder M where
   le_refl := by apply @BASICModel.le_refl
   le_trans := by apply le_trans
-  lt_iff_le_not_ge := by
-    intro a b
-    constructor
-    · intro h
-      constructor
-      · exact h.1
-      · intro contr
-        apply h.2
-        exact contr
-    · intro h
-      exact h
+  lt_iff_le_not_ge := fun _ _ => Iff.rfl
 
 
 -- D5. x ≤ y ∨ y ≤ x  (Total order)
@@ -240,23 +221,14 @@ theorem le_total :
   ∀ x y : M, x ≤ y ∨ y ≤ x :=
 by
   intro x y
-  obtain ⟨diff, hdiff⟩ := add_diff_exists x y
-  cases hdiff with
-  | inl h =>
-    left
-    rw [le_iff_exists_add]
-    exists diff
-  | inr h =>
-    right
-    rw [le_iff_exists_add]
-    exists diff
+  obtain ⟨diff, hdiff | hdiff⟩ := add_diff_exists x y
+  · exact Or.inl ((le_iff_exists_add x y).mpr ⟨diff, hdiff⟩)
+  · exact Or.inr ((le_iff_exists_add y x).mpr ⟨diff, hdiff⟩)
 
 theorem add_rotate
-  : ∀ {a b c : M}, a + b + c = b + c + a :=
-by
+  : ∀ {a b c : M}, a + b + c = b + c + a := by
   intro a b c
-  rw [idelta0.add_assoc]
-  rw [idelta0.add_comm]
+  rw [idelta0.add_assoc, idelta0.add_comm]
 
 -- D6. x ≤ y ↔ x + z ≤ y + z
 theorem add_le_add_right :
@@ -279,22 +251,13 @@ by
     exists a
     apply add_cancel_right.mp
     conv at ha => rw [idelta0.add_assoc]; lhs; rhs; rw [idelta0.add_comm]
-    rw [idelta0.add_assoc]
-    exact ha
+    rwa [idelta0.add_assoc]
 
 theorem le_cancel_left :
-  ∀ {x y z : M}, x <= y -> z + x <= z + y :=
-by
-  conv =>
-    rhs
-    rhs
-    rhs
-    rhs
-    rw [idelta0.add_comm]
-    rhs
-    rw [idelta0.add_comm]
+  ∀ {x y z : M}, x <= y -> z + x <= z + y := by
   intro x y z h
-  apply add_le_add_right.mp h
+  rw [idelta0.add_comm z x, idelta0.add_comm z y]
+  exact add_le_add_right.mp h
 
 -- D7. x ≤ y → x * z ≤ y * z
 theorem le_mul_right :
@@ -399,61 +362,25 @@ noncomputable instance : LinearOrder M where
 theorem le_of_eq :
   ∀ {x y : M}, x = y -> x ≤ y :=
 by
-  intro x y hxy
-  rw [hxy]
-
--- theorem lt_of_not_ge :
---   ∀ {x y : M}, ¬ x <= y -> y < x :=
--- by
---   intro x y h
---   constructor
---   · cases le_total x y with
---     | inl x_le =>
---       contradiction
---     | inr y_le =>
---       exact y_le
---   · intro h_eq
---     apply h
---     apply le_of_eq
---     apply Eq.symm
---     exact h_eq
+  simp_all
 
 theorem zero_if_sum_zero :
-  ∀ {x y : M}, x + y = 0 -> x = 0 ∧ y = 0 :=
-by
+  ∀ {x y : M}, x + y = 0 -> x = 0 ∧ y = 0 := by
   intro x y h
-  constructor
-  · apply le_zero_eq
-    have t := @B8 _ _ x y
-    rw [h] at t
-    exact t
-  · apply le_zero_eq
-    have t := @B8 _ _ y x
-    rw [idelta0.add_comm] at t
-    rw [h] at t
-    exact t
+  exact ⟨le_zero_eq x (h ▸ @B8 _ _ x y),
+         le_zero_eq y (h ▸ idelta0.add_comm y x ▸ @B8 _ _ y x)⟩
 
 theorem lt_one_eq_zero :
   ∀ {x : M}, x < 1 -> x = 0 :=
 by
   intro x hx
-  rcases hx with ⟨h_x_le, h_x_neq⟩
+  obtain ⟨h_x_le, h_x_neq⟩ := hx
   rw [le_iff_exists_add] at h_x_le
-  rcases h_x_le with ⟨diff, hdiff⟩
+  obtain ⟨diff, hdiff⟩ := h_x_le
   by_cases h : x = 0
-  · trivial
-  · obtain ⟨pred, hp1, hp2⟩ := pred_exists h
-    rw [hp2] at hdiff
-    rw [idelta0.add_assoc] at hdiff
-    conv at hdiff => lhs; rhs; rw [idelta0.add_comm]
-    rw [<- idelta0.add_assoc] at hdiff
-    conv at hdiff => rhs; rw [<- idelta0.zero_add 1]
-    have hdiff := B2 _ _ hdiff
-    have pred_zero := (zero_if_sum_zero hdiff).left
-    rw [pred_zero, idelta0.zero_add] at hp2
-    exfalso
-    apply h_x_neq
-    rw [hp2]
+  · exact h
+  · obtain ⟨pred, _, hp2⟩ := pred_exists h
+    simp_all
 
 -- D9. x < y ↔ x + 1 ≤ y  (Discreteness 2)
 -- recall: x < y means x ≤ y ∧ x ≠ y
@@ -463,18 +390,14 @@ by
   intro x y
   constructor
   · intro h
-    rcases h with ⟨h1, h2⟩
+    obtain ⟨h1, h2⟩ := h
     rw [le_iff_exists_add] at h1
     obtain ⟨diff, hdiff⟩ := h1
     rw [<- hdiff]
     apply le_cancel_left
     by_contra not_one_le_diff
     apply h2
-    rw [<- hdiff]
-    conv => lhs; rw [<- B3 x]
-    have diff_lt_one := lt_of_not_ge not_one_le_diff
-    rw [lt_one_eq_zero diff_lt_one]
-    rw [@B3]
+    rw [<- hdiff, lt_one_eq_zero (lt_of_not_ge not_one_le_diff)]
     exact (B3 x).symm ▸ BASICModel.le_refl x
   · intro h
     rw [le_iff_exists_add] at h
@@ -482,20 +405,15 @@ by
     constructor
     · rw [le_iff_exists_add]
       exists (1 + diff)
-      rw [<- idelta0.add_assoc]
-      exact hdiff
+      rwa [<- idelta0.add_assoc]
     · intro absurd
-      rw [<- hdiff] at absurd
-      have aux : x + 1 + diff = x := by
-        have aux : x ≤ x + 1 + diff := by
-          refine le_add_of_le_left ?_
-          exact le_self_add
-        apply le_antisymm <;> assumption
-      conv at aux => lhs; rw [idelta0.add_assoc]
-      conv at aux => rhs; rw [<- B3 x]
-      rw [add_cancel_left] at aux
+      rw [<- hdiff, idelta0.add_assoc] at absurd
+      have aux : 1 + diff = 0 := by
+        have h := le_antisymm absurd ((B3 x).symm ▸ B8)
+        conv at h => rhs; rw [← B3 x]
+        exact add_cancel_left.mp h
       rw [idelta0.add_comm] at aux
-      exact (B1 (x := diff)) aux
+      exact B1 aux
 
 theorem mul_eq_zero_iff_left :
   ∀ {x y : M}, x ≠ 0 -> (x * y = 0 ↔ y = 0) :=
@@ -570,8 +488,7 @@ by
       rw [hx] at hass
       rw [idelta0.zero_mul] at hass
       rw [mul_eq_zero_iff_left] at hass
-      · apply hz
-        exact hass
+      · simp_all
       · apply @B1 M
     rcases pred_exists hx with ⟨xp, _, hxp_eq⟩
     rw [hxp_eq] at hass

@@ -38,8 +38,7 @@ def Graph₅ (f : α → β → γ → δ → ε → σ) :
 lemma _root_.Function.Graph.eq {f : α → σ} {y x} (h : Graph f y x) : f x = y := h.symm
 
 lemma _root_.Function.Graph.iff_left (f : α → σ) {y x} :
-    f x = y ↔ Graph f y x := by
-  simp [Graph, eq_comm]
+    f x = y ↔ Graph f y x := by simp [Graph, eq_comm]
 
 lemma _root_.Function.Graph.iff_right (f : α → σ) {y x} : y = f x ↔ Graph f y x := by simp [Graph]
 
@@ -48,23 +47,19 @@ lemma _root_.Function.Graph₂.eq {f : α → β → σ} {y x₁ x₂} (h : Grap
   h.symm
 
 lemma _root_.Function.Graph₂.iff_left (f : α → β → σ) {y x₁ x₂} :
-    f x₁ x₂ = y ↔ Graph₂ f y x₁ x₂ := by
-  simp [Graph₂, eq_comm]
+    f x₁ x₂ = y ↔ Graph₂ f y x₁ x₂ := by simp [Graph₂, eq_comm]
 
 lemma _root_.Function.Graph₂.iff_right (f : α → β → σ) {y x₁ x₂} :
-    y = f x₁ x₂ ↔ Graph₂ f y x₁ x₂ := by
-  simp [Graph₂]
+    y = f x₁ x₂ ↔ Graph₂ f y x₁ x₂ := by simp [Graph₂]
 
 lemma _root_.Function.Graph₃.eq {f : α → β → γ → σ} {y x₁ x₂ x₃} (h : Graph₃ f y x₁ x₂ x₃) :
     f x₁ x₂ x₃ = y :=
   h.symm
 
 lemma _root_.Function.Graph₃.iff_left (f : α → β → γ → σ) {y x₁ x₂ x₃} :
-    f x₁ x₂ x₃ = y ↔ Graph₃ f y x₁ x₂ x₃ := by
-  simp [Graph₃, eq_comm]
+    f x₁ x₂ x₃ = y ↔ Graph₃ f y x₁ x₂ x₃ := by simp [Graph₃, eq_comm]
 
 lemma _root_.Function.Graph₃.iff_right (f : α → β → γ → σ) {y x₁ x₂ x₃} :
-    y = f x₁ x₂ x₃ ↔ Graph₃ f y x₁ x₂ x₃ := by
-  simp [Graph₃]
+    y = f x₁ x₂ x₃ ↔ Graph₃ f y x₁ x₂ x₃ := by simp [Graph₃]
 
 end Function

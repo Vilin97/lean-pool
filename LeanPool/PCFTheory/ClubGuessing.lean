@@ -88,11 +88,8 @@ instance : Nonempty (Iio (succ κ).ord) := ⟨0,
 theorem isSuccLimit_of_mem_S {α : S} : IsSuccLimit α.1 :=
   one_lt_cof_iff.mp (one_lt_aleph0.trans_le (hS α α.2 ▸ hκ).le)
 
-theorem aleph0_lt_cof_Ϟ : ℵ₀ < Ϟ.cof := by
-    calc
-      ℵ₀ < κ := hκ
-      _ < succ κ := lt_succ _
-      _ < Ϟ.cof := hcof
+theorem aleph0_lt_cof_Ϟ : ℵ₀ < Ϟ.cof :=
+  hκ.trans ((lt_succ κ).trans hcof)
 
 /-- A first attempt at a club-guessing sequence: pick an arbitrary club of cardinality `κ`
 below each element of `S`. -/
@@ -185,8 +182,7 @@ theorem contradiction : False := by
       unfold f
       generalize_proofs pf
       exact (hS α α.2) ▸ Classical.choose_spec pf
-    rw [card_ord, this, Cardinal.lift_lift, Cardinal.lift_lt]
-    exact lt_succ κ
+    simp_all
   apply not_exists_ssubset_chain_lift (isSuccLimit_ord (hκ.trans (lt_succ κ)).le) this
   use fun x ↦ restrict (F' x) α
   constructor

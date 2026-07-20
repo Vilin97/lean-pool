@@ -42,9 +42,7 @@ noncomputable def chain
           | [y] =>
             have h : ¬evaluateSSeq (M, w_ih) (f (r 𝕏.α y)) := by
               have 𝕏h_x_ih := 𝕏.step x_ih
-              have 𝕏h_x_ih := by simpa [r_def, p_def, -Finset.union_singleton] using 𝕏h_x_ih
-              convert w_ih_prop using 2
-              rw [𝕏h_x_ih, r_def]
+              simp_all
               ⟨y, w_ih, h⟩
           | [] => False.elim (by have := 𝕏.step x_ih; simp [r_def, p_def] at this)
           | y :: z :: l => False.elim (by have := 𝕏.step x_ih; simp [r_def, p_def] at this)
@@ -434,73 +432,25 @@ lemma chain_proof_prop
     simp only
     split
     case h_1 Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_2 Δ φ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_3 Δ φ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_4 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_5 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_6 Δ in_Δ r_def =>
       exfalso
       apply w_ih_prop
@@ -538,85 +488,29 @@ lemma chain_proof_prop
       · apply w_ih_prop
         exact ⟨Sum.inr (na i), by simpa [f, r_def] using in_Δ.2, by simpa using h⟩
     case h_12 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_13 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_14 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_15 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_16 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_17 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
 
 /-- The right projection of `chain` makes progress in the model on box nodes. -/
 lemma chain_model_prop {𝕏 : Proof}

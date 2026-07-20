@@ -83,9 +83,7 @@ lemma i_nonzero_succ {n : ℕ} (i : Fin (n + 1)) (i_nonzero : i ≠ 0) :
 
 lemma bot_eq_span_zero (I : Ideal R) (e : R) (h_bot : I ≠ ⊥) (h_span : I = Ideal.span {e}) :
     e ≠ 0 := by
-  intro e_zero
-  rw [← Ideal.span_singleton_eq_bot, ← h_span] at e_zero
-  exact h_bot e_zero
+  simp_all
 
 -- If e is idempotent and (1-e)R(1-e) is OrtIdem then R is OrtIdemDiv
 /-- Prepend the idempotent `e` to an `OrtIdem` system on the corner ring of `1 - e`
@@ -133,8 +131,7 @@ def extensionOfOrtIdem (e : R) (idem_e : IsIdempotentElem e)
           have h2' : (idempotents e (fun i ↦ ↑(oi.f i)) j) = oi.f l := by rw [hl]; rfl
           rw [h2']
           have k_neq_l : k ≠ l := by
-            have k_neq_l' : k.succ ≠ l.succ := by rw [← hk, ← hl]; exact i_neq_j
-            exact fun a ↦ k_neq_l' (congrArg Fin.succ a)
+            simp_all
           let ort := oi.orthogonal k l k_neq_l
           apply orth_coercion
           exact ort }

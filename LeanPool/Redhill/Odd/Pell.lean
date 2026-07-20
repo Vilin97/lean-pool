@@ -26,11 +26,9 @@ variable {y k : ℕ}
 lemma pell_spec : y * (pell y k).1 ^ 2 + 1 = (y + 1) * (pell y k).2 ^ 2 := by
   induction k <;> grind [pell]
 
-lemma pell_snd_pos : 0 < (pell y k).2 := by
-  induction k <;> grind [pell]
+lemma pell_snd_pos : 0 < (pell y k).2 := by induction k <;> grind [pell]
 
-lemma pell_snd_le_pell_fst : (pell y k).2 ≤ (pell y k).1 := by
-  induction k <;> grind [pell]
+lemma pell_snd_le_pell_fst : (pell y k).2 ≤ (pell y k).1 := by induction k <;> grind [pell]
 
 lemma pell_fst_pos : 0 < (pell y k).1 := pell_snd_pos.trans_le pell_snd_le_pell_fst
 

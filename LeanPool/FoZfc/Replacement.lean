@@ -93,12 +93,8 @@ theorem replaceInitialValues_replaceInitialValues {n m : ℕ} {h : n ≤ m}
   funext k
   unfold replaceInitialValues
   by_cases h_k_le_m : k < m + 1
-  · rw [if_pos h_k_le_m]
-    rw [if_pos h_k_le_m]
-  · have h_k_gt_n : ¬ (k < n + 1) := by omega
-    rw [if_neg h_k_le_m]
-    rw [if_neg h_k_gt_n]
-    rw [if_neg h_k_le_m]
+  · rw [if_pos h_k_le_m, if_pos h_k_le_m]
+  · rw [if_neg h_k_le_m, if_neg (by omega : ¬ k < n + 1), if_neg h_k_le_m]
 
 @[simp]
 theorem realize_is_image [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V)
@@ -140,11 +136,10 @@ theorem ext_test [ModelPR V] (s : ℕ → V) (xs : Fin 0 → V) (a : V) :
     ∃ (b : V), ExtIsImage s xs intIsSingleton a b := by
   have h1 : ExtIsFunctFormula s xs intIsSingleton := by
     intro x y₁ y₂
-    unfold RelByFormula
-    simp only [realize_is_singleton, replaceInitialValues_2_0, replaceInitialValues_2_1]
+    simp only [RelByFormula, realize_is_singleton, replaceInitialValues_2_0,
+      replaceInitialValues_2_1]
     exact ext_singleton_unique
-  obtain ⟨b, hb⟩ := ext_replacement s xs intIsSingleton h1 a
-  exact ⟨b, hb⟩
+  exact ext_replacement s xs intIsSingleton h1 a
 
 /-- The image of `intIsSingleton` exists as a witness to replacement, internally. -/
 theorem int_test [ModelPR V] (s : ℕ → V) (xs : Fin 0 → V) :

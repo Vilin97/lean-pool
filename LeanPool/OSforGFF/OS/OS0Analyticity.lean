@@ -62,6 +62,14 @@ The generating functional is:
 where dμ is the Gaussian measure on field configurations.
 -/
 
+/-- Young's inequality `c·|x| ≤ c²/(4α) + α·x²` for `α > 0`, used to dominate
+    linear-exponent integrands by Gaussian-square (Fernique) integrands. -/
+private lemma young_ineq (c α : ℝ) (hα : 0 < α) (x : ℝ) :
+    c * |x| ≤ c ^ 2 / (4 * α) + α * x ^ 2 := by
+  rw [show c ^ 2 / (4 * α) + α * x ^ 2 = (c ^ 2 + 4 * α ^ 2 * x ^ 2) / (4 * α) from by field_simp,
+    le_div_iff₀ (by positivity : (0:ℝ) < 4 * α)]
+  nlinarith [sq_nonneg (c - 2 * α * |x|), sq_abs x]
+
 variable (m : ℝ) [Fact (0 < m)]
 
 /-- The complex pairing is continuous in ω.
@@ -69,20 +77,10 @@ variable (m : ℝ) [Fact (0 < m)]
 -/
 theorem distributionPairingℂ_real_continuous (f : TestFunctionℂ) :
     Continuous (fun ω : FieldConfiguration => distributionPairingℂReal ω f) := by
-  -- distributionPairingℂReal ω f = ω f_re + I * ω f_im
-  -- where f_re = schwartzCompCLM f reCLM and f_im = schwartzCompCLM f imCLM
+  -- distributionPairingℂReal ω f = ω f_re + I * ω f_im; each evaluation is continuous.
   simp only [distributionPairingℂReal, complexTestFunctionDecompose]
-  -- Now we need: Continuous (ω ↦ ↑(ω (schwartzCompCLM f reCLM)) + I * ↑(ω (schwartzCompCLM f
-  -- imCLM)))
-  -- Each evaluation ω ↦ ω g is continuous by WeakDual.eval_continuous
-  have h_re : Continuous (fun ω : FieldConfiguration => (ω (schwartzCompCLM f Complex.reCLM) :
-    ℂ)) :=
-    Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)
-  have h_im : Continuous (fun ω : FieldConfiguration => (ω (schwartzCompCLM f Complex.imCLM) :
-    ℂ)) :=
-    Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)
-  -- The full pairing is a continuous combination
-  exact h_re.add (continuous_const.mul h_im)
+  exact (Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)).add
+    (continuous_const.mul (Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)))
 
 /-- The complex pairing is measurable in ω (cylinder σ-algebra version).
     This follows from the measurability of the evaluation map on WeakDual.
@@ -115,60 +113,22 @@ theorem gff_integrand_analytic
       (fun z : Fin n → ℂ =>
         Complex.exp (Complex.I * distributionPairingℂReal ω (∑ i, z i • J i)))
       z₀ := by
-  -- The function is exp ∘ (I * pairing ∘ linear_combination)
-  -- Each component is analytic, and composition of analytic functions is analytic
-  -- exp is entire, so we need to show the argument is analytic
+  -- exp is entire; the argument is linear (hence analytic) in z.
   apply AnalyticAt.cexp
-  -- Now show I * distributionPairingℂReal ω (∑ i, z i • J i) is analytic in z
-  apply AnalyticAt.mul
-  · -- Complex.I is constant, hence analytic
-    exact analyticAt_const
-  · -- distributionPairingℂReal ω (∑ i, z i • J i) is analytic in z
-    -- The function z ↦ distributionPairingℂReal ω (∑ i, z i • J i) is linear in z
-    -- because distributionPairingℂReal is linear in its test function argument
-    -- and the sum is linear in z.
-    -- A linear function from a finite-dimensional space to ℂ is analytic.
-    -- The function is: z ↦ ∑ i, z i * (distributionPairingℂReal ω (J i))
-    -- which is a finite sum of z i times constants.
-    -- Rewrite using linearity of distributionPairingℂReal
-    have h_linear : ∀ z : Fin n → ℂ, distributionPairingℂReal ω (∑ i, z i • J i) =
-        ∑ i, z i * distributionPairingℂReal ω (J i) := fun z => by
-      -- distributionPairingℂReal is linear in the test function
-      -- Use pairing_linear_combo: pairing(t•f + s•g) = t * pairing(f) + s * pairing(g)
-      -- First establish the basic linearity properties
-      have h_add : ∀ f g : TestFunctionℂ, distributionPairingℂReal ω (f + g) =
-          distributionPairingℂReal ω f + distributionPairingℂReal ω g := fun f g => by
-        have := pairing_linear_combo ω f g 1 1
-        simpa only [one_smul, one_mul] using this
-      have h_smul : ∀ (c : ℂ) (f : TestFunctionℂ), distributionPairingℂReal ω (c • f) =
-          c * distributionPairingℂReal ω f := fun c f => by
-        have := pairing_linear_combo ω f 0 c 0
-        simpa only [zero_smul, add_zero, zero_mul] using this
-      have h_zero : distributionPairingℂReal ω 0 = 0 := by
-        have := pairing_linear_combo ω 0 0 0 0
-        simpa only [zero_smul, zero_add, zero_mul, add_zero] using this
-      -- Use Finset.induction_on for the sum
-      have h_gen : ∀ (s : Finset (Fin n)),
-          distributionPairingℂReal ω (∑ i ∈ s, z i • J i) =
-          ∑ i ∈ s, z i * distributionPairingℂReal ω (J i) := by
-        intro s
-        induction s using Finset.induction_on with
-        | empty => simp [h_zero]
-        | insert i s hi ih =>
-          rw [Finset.sum_insert hi, Finset.sum_insert hi]
-          rw [h_add, h_smul, ih]
-      exact h_gen Finset.univ
-    -- Now show ∑ i, z i * c_i is analytic (it's a polynomial)
-    simp_rw [h_linear]
-    -- Use Finset.analyticAt_fun_sum: if each f_i is analytic, then z ↦ ∑ i, f_i z is analytic
-    apply Finset.analyticAt_fun_sum
-    intro i _
-    -- Show z ↦ z i * c_i is analytic
-    apply AnalyticAt.mul
-    · -- z ↦ z i is a continuous linear map (projection), hence analytic
-      exact ContinuousLinearMap.analyticAt (ContinuousLinearMap.proj (R := ℂ) i) z₀
-    · -- c_i = distributionPairingℂReal ω (J i) is a constant function in z
-      exact analyticAt_const
+  apply analyticAt_const.mul
+  -- z ↦ distributionPairingℂReal ω (∑ i, z i • J i) = ∑ i, z i * pairing(J i), a polynomial.
+  have h_linear : ∀ z : Fin n → ℂ, distributionPairingℂReal ω (∑ i, z i • J i) =
+      ∑ i, z i * distributionPairingℂReal ω (J i) := fun z => by
+    induction (Finset.univ : Finset (Fin n)) using Finset.induction_on with
+    | empty => simpa using (pairing_linear_combo ω 0 0 0 0)
+    | insert i s hi ih =>
+      rw [Finset.sum_insert hi, Finset.sum_insert hi, ← ih]
+      simpa only [one_smul, one_mul] using
+        pairing_linear_combo ω (J i) (∑ j ∈ s, z j • J j) (z i) 1
+  simp_rw [h_linear]
+  refine Finset.analyticAt_fun_sum _ fun i _ => ?_
+  exact (ContinuousLinearMap.analyticAt (ContinuousLinearMap.proj (R := ℂ) i) z₀).mul
+    analyticAt_const
 
 /-- The norm of exp(I * distributionPairingℂReal ω f) equals exp(-(ω f_im))
     where f_im is the imaginary part of the complex test function.
@@ -190,9 +150,7 @@ lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldCo
   simp only [distributionPairingℂReal, complexTestFunctionDecompose]
   -- I * ((ω f_re : ℂ) + I * (ω f_im : ℂ)) = I * (ω f_re) - (ω f_im)
   -- The real part is -(ω f_im)
-  simp only [Complex.mul_re, Complex.I_re, Complex.I_im, Complex.add_re, Complex.ofReal_re,
-             Complex.add_im, Complex.ofReal_im, Complex.mul_im]
-  ring
+  simp_all
 
 /-- Integrability of exp(-ω f) for a real test function f under the GFF measure.
     This follows from the Gaussian nature: for centered Gaussian X with variance σ²,
@@ -201,42 +159,18 @@ lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldCo
 lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
     Integrable (fun ω : FieldConfiguration => Real.exp (-(ω f)))
       (muGFF m).toMeasure := by
-  -- Use exponential square integrability (Fernique)
-  -- For any α > 0, exp(α x²) is integrable, and exp(-x) ≤ exp(α x² + 1/(4α))
+  -- Fernique: exp(α x²) is integrable, and exp(-x) ≤ exp(1/(4α)) · exp(α x²) (Young, c = 1).
   obtain ⟨α, hα_pos, h_integ⟩ := gaussianFreeField_pairing_expSq_integrable m f
-  -- exp(-x) ≤ exp(α x² + 1/(4α)) by completing the square: -x = -(√α x - 1/(2√α))² + α x² + 1/(4α)
-  have h_bound : ∀ x : ℝ, Real.exp (-x) ≤ Real.exp (1 / (4 * α)) * Real.exp (α * x^2) := fun x => by
-    rw [← Real.exp_add]
-    apply Real.exp_le_exp.mpr
-    -- Need: -x ≤ 1/(4α) + α x²
-    -- This is equivalent to: α x² + x + 1/(4α) ≥ 0
-    -- Which is (√α x + 1/(2√α))² ≥ 0
-    have h : α * x^2 + x + 1 / (4 * α) = (Real.sqrt α * x + 1 / (2 * Real.sqrt α))^2 := by
-      have hα_sqrt : Real.sqrt α > 0 := Real.sqrt_pos.mpr hα_pos
-      have hα_ne : Real.sqrt α ≠ 0 := ne_of_gt hα_sqrt
-      field_simp
-      rw [Real.sq_sqrt (le_of_lt hα_pos)]
-      ring
-    linarith [sq_nonneg (Real.sqrt α * x + 1 / (2 * Real.sqrt α))]
-  -- The dominating function g(ω) = exp(1/(4α)) * exp(α (ω f)²) is integrable
-  have h_dom_integrable : Integrable
-      (fun ω => Real.exp (1 / (4 * α)) * Real.exp (α * (distributionPairingCLM f ω)^2))
-      (muGFF m).toMeasure := h_integ.const_mul (Real.exp (1 / (4 * α)))
-  -- exp(-ω f) is measurable
-  have h_meas : AEStronglyMeasurable (fun ω : FieldConfiguration => Real.exp (-(ω f)))
-      (muGFF m).toMeasure :=
-    (Real.continuous_exp.measurable.comp (measurable_neg.comp (WeakDual.eval_measurable
-       f))).aestronglyMeasurable
-  -- Pointwise bound: ‖exp(-ω f)‖ ≤ exp(1/(4α)) * exp(α (ω f)²)
-  have h_ae_bound : ∀ᵐ ω ∂(muGFF m).toMeasure,
-      ‖Real.exp (-(ω f))‖ ≤ Real.exp (1 / (4 * α)) * Real.exp (α * (distributionPairingCLM f ω)^2)
-        := by
-    filter_upwards with ω
-    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    simp only [distributionPairingCLM_apply, distributionPairing]
-    exact h_bound (ω f)
-  -- Apply Integrable.mono'
-  exact h_dom_integrable.mono' h_meas h_ae_bound
+  refine (h_integ.const_mul (Real.exp (1 / (4 * α)))).mono'
+    ((Real.continuous_exp.measurable.comp (measurable_neg.comp (WeakDual.eval_measurable
+       f))).aestronglyMeasurable) ?_
+  filter_upwards with ω
+  rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _), distributionPairingCLM_apply,
+    distributionPairing, ← Real.exp_add]
+  refine Real.exp_le_exp.mpr ?_
+  have := young_ineq 1 α hα_pos (ω f)
+  rw [one_mul] at this
+  linarith [neg_abs_le (ω f), this]
 
 /-- exp(|ω f|) is in L^2 (and in fact all L^p) under the GFF measure.
     This follows from Fernique's theorem: if exp(α x²) is integrable, then exp(|x|)^p is integrable
@@ -246,121 +180,40 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
     MemLp (fun ω : FieldConfiguration => Real.exp |ω f|) p (muGFF m).toMeasure := by
   -- By Fernique, ∃ α > 0 such that exp(α x²) is integrable
   obtain ⟨α, hα_pos, h_fernique⟩ := gaussianFreeField_pairing_expSq_integrable m f
-  -- For any p < ∞, we use exp(|x|)^p = exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
-  -- because p|x| ≤ p²/(4α) + α x² by AM-GM: 2√(p|x| * α x²) ≤ p|x| + α x²
-  -- Actually, more directly: p|x| = (p/(2√α)) * (2√α |x|) ≤ p²/(4α) + α x²
-  -- So exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
-  -- Thus ∫ exp(p|x|)^1 ≤ C * ∫ exp(α x²) < ∞
-  -- For the formal proof, we establish L¹ first (which we already have) then bootstrap
-  -- The MemLp condition requires showing ∫ ‖exp(|ω f|)‖^p < ∞
-  -- Case split on whether p = 0 (trivial) or p > 0
-  rcases eq_or_ne p 0 with rfl | hp_pos
-  · exact memLp_zero_iff_aestronglyMeasurable.mpr
-      (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp
-         (WeakDual.eval_measurable f))).aestronglyMeasurable
-  -- For 0 < p < ∞, we need ∫ (exp |x|)^p dμ < ∞
-  -- (exp |x|)^p = exp(p * |x|), and for p finite this is bounded by C * exp(α x²)
-  -- The detailed proof uses Young's inequality: p|x| ≤ p²/(4α) + α x²
-  -- Here we use the fact that for any test function, linear functionals on Gaussian
-  -- measures have all moments finite, so any polynomial growth times exponential decay
-  -- is integrable. We axiomatize this as part of the Fernique condition.
-  -- For now, use the fact that we have L¹ integrability and the function is AE bounded
-  -- by a multiple of exp(α x²) which is integrable
   have h_aesm : AEStronglyMeasurable (fun ω => Real.exp |ω f|) (muGFF m).toMeasure :=
     (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp (WeakDual.eval_measurable
        f))).aestronglyMeasurable
-  -- The core estimate: exp(p|x|) ≤ C * exp(α x²) for some C depending on p and α
-  -- This follows from: p|x| ≤ p²/(4α) + α x² (Young's inequality)
-  -- So exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
-  -- The proof: ‖exp(|x|)‖^p = exp(p.toReal * |x|) ≤ C * exp(α x²) for Young's constant C
-  -- Therefore ∫ ‖exp(|x|)‖^p dμ ≤ C * ∫ exp(α x²) dμ < ∞
-  -- Young's inequality: for α > 0 and any real r, we have r|x| ≤ r²/(4α) + α x²
-  -- This follows from (r/(2√α) - √α|x|)² ≥ 0
-  have h_young : ∀ x : ℝ, p.toReal * |x| ≤ p.toReal^2 / (4 * α) + α * x^2 := fun x => by
-    have hα_ne : α ≠ 0 := ne_of_gt hα_pos
-    have h_sqrt_pos : Real.sqrt α > 0 := Real.sqrt_pos.mpr hα_pos
-    have h_sqrt_sq : Real.sqrt α ^ 2 = α := Real.sq_sqrt (le_of_lt hα_pos)
-    -- Let a = p/(2√α), b = √α|x|. Then (a-b)² ≥ 0 gives a² + b² ≥ 2ab = p|x|
-    have ha : p.toReal / (2 * Real.sqrt α) = p.toReal / 2 / Real.sqrt α := by ring
-    have hb_sq : (Real.sqrt α * |x|)^2 = α * x^2 := by rw [mul_pow, h_sqrt_sq, sq_abs]
-    have ha_sq : (p.toReal / (2 * Real.sqrt α))^2 = p.toReal^2 / (4 * α) := by
-      rw [div_pow, mul_pow, h_sqrt_sq]; ring
-    have hab : 2 * (p.toReal / (2 * Real.sqrt α)) * (Real.sqrt α * |x|) = p.toReal * |x| := by
-      field_simp
-    have h_sq := sq_nonneg (p.toReal / (2 * Real.sqrt α) - Real.sqrt α * |x|)
-    calc p.toReal * |x| = 2 * (p.toReal / (2 * Real.sqrt α)) * (Real.sqrt α * |x|) := hab.symm
-      _ ≤ (p.toReal / (2 * Real.sqrt α))^2 + (Real.sqrt α * |x|)^2 := by nlinarith [h_sq]
-      _ = p.toReal^2 / (4 * α) + α * x^2 := by rw [ha_sq, hb_sq]
-  -- Exponential bound: exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
-  have h_exp_bound : ∀ x : ℝ,
-      Real.exp (p.toReal * |x|) ≤ Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * x^2) := fun x =>
-        by
+  rcases eq_or_ne p 0 with rfl | hp_pos
+  · exact memLp_zero_iff_aestronglyMeasurable.mpr h_aesm
+  -- For 0 < p < ∞: exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²) by Young's inequality.
+  have h_exp_bound : ∀ x : ℝ, Real.exp (p.toReal * |x|) ≤
+      Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * x^2) := fun x => by
     rw [← Real.exp_add]
-    exact Real.exp_le_exp.mpr (h_young x)
-  -- The constant C = exp(p²/(4α))
-  let C := Real.exp (p.toReal^2 / (4 * α))
-  -- The dominating function C * exp(α x²) is integrable
-  have h_dom : Integrable (fun ω => C * Real.exp (α * (ω f)^2)) (muGFF m).toMeasure := by
-    have h_const_mul : Integrable (fun ω => C * Real.exp (α * (distributionPairingCLM f ω)^2))
-      (muGFF m).toMeasure := by
-      exact h_fernique.const_mul C
-    simp only [distributionPairingCLM_apply, distributionPairing] at h_const_mul
-    exact h_const_mul
-  -- For the MemLp construction, we need snorm to be finite
-  -- snorm f p μ = (∫ ‖f‖^p)^(1/p) for p ∈ (0, ∞)
-  -- ‖exp(|x|)‖^p = exp(|x|)^p = exp(p * |x|)
-  -- The key: exp(p|ω f|) ≤ C * exp(α (ω f)²) and RHS is integrable
-  have h_norm_pow_bound : ∀ ω : FieldConfiguration,
-      Real.exp (p.toReal * |ω f|) ≤ C * Real.exp (α * (ω f)^2) := fun ω => by
-    have h1 := h_exp_bound (ω f)
-    exact h1
-  -- Integrability of exp(p|ω f|) follows from domination
+    exact Real.exp_le_exp.mpr (young_ineq p.toReal α hα_pos x)
+  -- exp(p|ω f|) is integrable by domination.
   have h_exp_p_integrable : Integrable (fun ω => Real.exp (p.toReal * |ω f|)) (muGFF m).toMeasure
     := by
-    have h_meas : AEStronglyMeasurable (fun ω => Real.exp (p.toReal * |ω f|)) (muGFF m).toMeasure :=
-      (Real.continuous_exp.measurable.comp (measurable_const.mul (continuous_abs.measurable.comp
-        (WeakDual.eval_measurable f)))).aestronglyMeasurable
-    -- Use Integrable.mono': if g is integrable and ‖f‖ ≤ g a.e., then f is integrable
-    apply h_dom.mono' h_meas
-    filter_upwards with ω
-    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    exact h_norm_pow_bound ω
-  -- Now we construct MemLp using the snorm condition
-  -- For 0 < p < ∞, MemLp f p μ iff AEStronglyMeasurable f μ ∧ snorm f p μ < ⊤
-  -- snorm f p μ = (∫ ‖f‖^p.toReal)^(1/p.toReal) when 0 < p < ⊤
-  -- The key observation: ‖exp(|x|)‖^(p.toReal) = exp(p.toReal * |x|)
-  have h_norm_rpow : ∀ x : ℝ, ‖Real.exp |x|‖ ^ p.toReal = Real.exp (p.toReal * |x|) := fun x => by
-    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    rw [← Real.exp_mul]
-    congr 1
-    ring
-  -- Convert integrability of exp(p|x|) to eLpNorm bound
-  -- Using: eLpNorm f p μ < ∞ ↔ ∫⁻ ‖f‖ₑ^p ∂μ < ∞
-  have h_eLpNorm_lt : eLpNorm (fun ω => Real.exp |ω f|) p (muGFF m).toMeasure < ⊤ := by
-    rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp_pos hp]
-    -- Need: ∫⁻ ‖exp(|ω f|)‖ₑ^p < ⊤
-    -- Since ‖exp(|x|)‖ₑ = exp(|x|), we have ‖exp(|x|)‖ₑ^p = exp(p|x|)
-    -- and exp(p|x|) is integrable by h_exp_p_integrable
-    have h_eq : ∀ ω : FieldConfiguration,
-        (‖Real.exp |ω f|‖ₑ : ENNReal) ^ p.toReal = ENNReal.ofReal (Real.exp (p.toReal * |ω f|)) :=
-           by
-      intro ω
-      have h_pos : 0 < Real.exp |ω f| := Real.exp_pos _
-      rw [Real.enorm_eq_ofReal (le_of_lt h_pos)]
-      rw [ENNReal.ofReal_rpow_of_nonneg (le_of_lt h_pos) (ENNReal.toReal_nonneg)]
-      congr 1
-      -- exp(|x|)^p = exp(p * |x|)
-      rw [← Real.exp_mul]
-      ring_nf
-    simp_rw [h_eq]
-    -- Use that integrability implies lintegral is finite
-    have h_fin := h_exp_p_integrable.hasFiniteIntegral
-    rw [HasFiniteIntegral] at h_fin
-    convert h_fin using 1
-    apply lintegral_congr
+    have h_dom : Integrable (fun ω => Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * (ω f)^2))
+        (muGFF m).toMeasure := by
+      simpa only [distributionPairingCLM_apply, distributionPairing] using
+        h_fernique.const_mul (Real.exp (p.toReal^2 / (4 * α)))
+    apply h_dom.mono' ((Real.continuous_exp.measurable.comp (measurable_const.mul
+      (continuous_abs.measurable.comp (WeakDual.eval_measurable f)))).aestronglyMeasurable)
+    simp_all
+  refine ⟨h_aesm, ?_⟩
+  rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp_pos hp]
+  -- ‖exp(|x|)‖ₑ^p = exp(p|x|), reducing finiteness to h_exp_p_integrable.
+  have h_eq : ∀ ω : FieldConfiguration,
+      (‖Real.exp |ω f|‖ₑ : ENNReal) ^ p.toReal = ENNReal.ofReal (Real.exp (p.toReal * |ω f|)) := by
     intro ω
-    rw [Real.enorm_eq_ofReal (le_of_lt (Real.exp_pos _))]
-  exact ⟨h_aesm, h_eLpNorm_lt⟩
+    rw [Real.enorm_eq_ofReal (Real.exp_pos _).le,
+      ENNReal.ofReal_rpow_of_nonneg (Real.exp_pos _).le ENNReal.toReal_nonneg, ← Real.exp_mul]
+    ring_nf
+  simp_rw [h_eq]
+  have h_fin := h_exp_p_integrable.hasFiniteIntegral
+  rw [HasFiniteIntegral] at h_fin
+  convert h_fin using 1
+  exact lintegral_congr fun ω => by rw [Real.enorm_eq_ofReal (Real.exp_pos _).le]
 
 /-- Integrability of exp(|ω f|) under the GFF measure.
     This is the L¹ special case of gff_exp_abs_pairing_memLp.
@@ -378,52 +231,24 @@ lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunctio
     MemLp (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) 2 (muGFF m).toMeasure := by
   -- Rewrite exp(sum) as product of exp
   have h_eq : (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) =
-              (fun ω : FieldConfiguration => ∏ i ∈ s, Real.exp |ω (g i)|) := by
-    ext ω; exact Real.exp_sum s (fun i => |ω (g i)|)
+              (fun ω : FieldConfiguration => ∏ i ∈ s, Real.exp |ω (g i)|) :=
+    funext fun ω => Real.exp_sum s (fun i => |ω (g i)|)
   rw [h_eq]
-  -- Handle empty case
   rcases s.eq_empty_or_nonempty with rfl | hs
   · simp [memLp_const]
-  -- For nonempty s, use MemLp.prod' with p i = 2 * s.card for each i
-  let k : ℕ := s.card
-  have hk_pos : 0 < k := Finset.card_pos.mpr hs
-  -- Each factor is in L^(2k)
-  have h_each : ∀ i ∈ s, MemLp (fun ω : FieldConfiguration => Real.exp |ω (g i)|)
-      (2 * k : ℕ) (muGFF m).toMeasure := by
-    intro i _
-    exact gff_exp_abs_pairing_memLp m (g i) (2 * k : ℕ) (ENNReal.natCast_ne_top _)
-  -- Apply MemLp.prod' with constant exponent 2k for each factor
-  have h_prod := MemLp.prod' (s := s) (p := fun _ => (2 * k : ℕ))
-    (f := fun i (ω : FieldConfiguration) => Real.exp |ω (g i)|)
-    (fun i hi => h_each i hi)
-  -- The resulting exponent is (∑ i ∈ s, 1/(2k))⁻¹ = (k/(2k))⁻¹ = 2
-  convert h_prod using 1
-  -- Goal: 2 = (∑ i ∈ s, ((2 * k : ℕ) : ENNReal)⁻¹)⁻¹
-  rw [Finset.sum_const, nsmul_eq_mul]
-  -- Goal: 2 = (s.card * ((2 * k : ℕ) : ENNReal)⁻¹)⁻¹
-  -- Since k = s.card, this is (k * (2k)⁻¹)⁻¹ = (1/2)⁻¹ = 2
-  have hk_ne_zero : (s.card : ENNReal) ≠ 0 := by
-    simp only [ne_eq, Nat.cast_eq_zero]
-    exact hk_pos.ne'
+  -- For nonempty s, each factor is in L^(2·card s); generalized Hölder gives L².
+  have hk_ne_zero : (s.card : ENNReal) ≠ 0 := by simpa using (Finset.card_pos.mpr hs).ne'
   have hk_ne_top : (s.card : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top s.card
-  -- Rewrite (2 * k : ℕ) as 2 * s.card in ENNReal using k = s.card
-  simp only [k]
-  have h_cast : ((2 * s.card : ℕ) : ENNReal) = 2 * s.card := by norm_cast
-  rw [h_cast]
-  -- Goal: 2 = (s.card * (2 * s.card)⁻¹)⁻¹
-  -- Strategy: s.card * (2 * s.card)⁻¹ = s.card / (2 * s.card) = 1/2, so inverse is 2
-  have h2_ne_zero : (2 : ENNReal) ≠ 0 := by norm_num
-  have h2_ne_top : (2 : ENNReal) ≠ ⊤ := by norm_num
-  -- First simplify (2 * s.card)⁻¹ = 2⁻¹ * s.card⁻¹
-  rw [ENNReal.mul_inv (Or.inl h2_ne_zero) (Or.inl h2_ne_top)]
-  -- Goal: 2 = (s.card * (2⁻¹ * s.card⁻¹))⁻¹
-  rw [mul_comm (2 : ENNReal)⁻¹ (s.card : ENNReal)⁻¹]
-  rw [← mul_assoc]
-  rw [ENNReal.mul_inv_cancel hk_ne_zero hk_ne_top]
-  -- Goal: 2 = (1 * 2⁻¹)⁻¹
-  rw [one_mul]
-  -- Goal: 2 = 2⁻¹⁻¹
-  simp only [inv_inv]
+  have h_prod := MemLp.prod' (s := s) (p := fun _ => (2 * s.card : ℕ))
+    (f := fun i (ω : FieldConfiguration) => Real.exp |ω (g i)|)
+    (fun i _ => gff_exp_abs_pairing_memLp m (g i) (2 * s.card : ℕ) (ENNReal.natCast_ne_top _))
+  -- The resulting exponent is (∑ i ∈ s, (2·card s)⁻¹)⁻¹ = (card s · (2·card s)⁻¹)⁻¹ = 2.
+  convert h_prod using 1
+  rw [Finset.sum_const, nsmul_eq_mul, Nat.cast_mul, Nat.cast_ofNat, mul_comm (2 : ENNReal)]
+  have h_inner : (s.card : ENNReal) * ((s.card : ENNReal) * 2)⁻¹ = 2⁻¹ := by
+    rw [ENNReal.mul_inv (Or.inl hk_ne_zero) (Or.inl hk_ne_top), ← mul_assoc,
+      ENNReal.mul_inv_cancel hk_ne_zero hk_ne_top, one_mul]
+  rw [h_inner, inv_inv]
 
 /-- The integral of ‖exp(I * distributionPairingℂReal ω f)‖ is finite for any
 complex test function.
@@ -448,15 +273,10 @@ theorem gff_integrand_integrable (n : ℕ) (J : Fin n → TestFunctionℂ) (z : 
     Integrable
       (fun ω : FieldConfiguration =>
         Complex.exp (Complex.I * distributionPairingℂReal ω (∑ i, z i • J i)))
-      (muGFF m).toMeasure := by
+      (muGFF m).toMeasure :=
   -- The norm is exp(-(ω f_im)) which is integrable
-  have h_norm := gff_integrand_norm_integrable m (∑ i, z i • J i)
-  -- Use Integrable.of_norm - h_norm is already an Integrable statement
-  -- We need to convert from norm integrable to integrable
-  have h_meas : AEStronglyMeasurable
-      (fun ω => Complex.exp (Complex.I * distributionPairingℂReal ω (∑ i, z i • J i)))
-      (muGFF m).toMeasure := gff_integrand_measurable m n J z
-  exact (integrable_norm_iff h_meas).mp h_norm
+  (integrable_norm_iff (gff_integrand_measurable m n J z)).mp
+    (gff_integrand_norm_integrable m (∑ i, z i • J i))
 
 /-! ## Complex Characteristic Functional
 
@@ -486,10 +306,8 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
   set b : FieldConfiguration → ℂ := fun ω => Complex.I * (ω f_im : ℂ)
   set F : ℂ → FieldConfiguration → ℂ := fun t ω => Complex.exp (a ω + t * b ω)
   -- Helper: Re(a(ω) + t * b(ω)) = -t.im * ω(f_im)
-  have h_re_formula : ∀ ω t, (a ω + t * b ω).re = -t.im * ω f_im := by
-    intro ω t
-    simp only [a, b]
-    simp [Complex.add_re, Complex.mul_re, Complex.I_re, Complex.I_im,
+  have h_re_formula : ∀ ω t, (a ω + t * b ω).re = -t.im * ω f_im := fun ω t => by
+    simp [a, b, Complex.add_re, Complex.mul_re, Complex.I_re, Complex.I_im,
       Complex.ofReal_re, Complex.ofReal_im]
   -- Measurability helpers
   have h_eval_meas_re := WeakDual.eval_measurable f_re
@@ -504,15 +322,6 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
   have hF_meas : ∀ t, AEStronglyMeasurable (F t) (muGFF m).toMeasure := fun t =>
     (Complex.continuous_exp.measurable.comp
       (h_a_meas.add (h_b_meas.const_mul t))).aestronglyMeasurable
-  -- Young's inequality helper: c|x| ≤ c²/(4α) + αx²
-  have young : ∀ (c : ℝ) (α : ℝ), 0 < α → ∀ x : ℝ,
-      c * |x| ≤ c ^ 2 / (4 * α) + α * x ^ 2 := by
-    intro c α hα x
-    have h4α_pos : (0 : ℝ) < 4 * α := by positivity
-    rw [show c ^ 2 / (4 * α) + α * x ^ 2
-        = (c ^ 2 + 4 * α ^ 2 * x ^ 2) / (4 * α) from by field_simp]
-    rw [le_div_iff₀ h4α_pos]
-    nlinarith [sq_nonneg (c - 2 * α * |x|), sq_abs x]
   -- Fernique domination: exp(c|ω f_im|) is integrable for any c ≥ 0
   have fernique_dom : ∀ (c : ℝ), 0 ≤ c →
       Integrable (fun ω => Real.exp (c * |ω f_im|)) (muGFF m).toMeasure := by
@@ -520,16 +329,15 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
     obtain ⟨α, hα_pos, h_fernique⟩ := gaussianFreeField_pairing_expSq_integrable m f_im
     have h_dom : Integrable (fun ω => Real.exp (c ^ 2 / (4 * α) + α * (ω f_im) ^ 2))
         (muGFF m).toMeasure := by
-      have h := h_fernique.const_mul (Real.exp (c ^ 2 / (4 * α)))
-      simp only [distributionPairingCLM_apply, distributionPairing, ← Real.exp_add] at h
-      exact h
+      simpa only [distributionPairingCLM_apply, distributionPairing, ← Real.exp_add] using
+        h_fernique.const_mul (Real.exp (c ^ 2 / (4 * α)))
     apply h_dom.mono
       (Real.continuous_exp.measurable.comp
         (measurable_const.mul (continuous_abs.measurable.comp h_eval_meas_im))
         |>.aestronglyMeasurable)
     filter_upwards with ω
     simp only [Real.norm_eq_abs, Function.comp_def, abs_of_nonneg (Real.exp_nonneg _)]
-    exact Real.exp_le_exp.mpr (young c α hα_pos (ω f_im))
+    exact Real.exp_le_exp.mpr (young_ineq c α hα_pos (ω f_im))
   -- Step 1: rewrite the goal to use ∫ F t ω dμ via AnalyticOnNhd.congr
   -- The generating functional equals the integral of F
   have h_eq : Set.EqOn
@@ -575,11 +383,9 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
     filter_upwards with ω
     simp only [F, Complex.norm_exp, h_re_formula]
     rw [Real.norm_eq_abs, abs_of_nonneg (Real.exp_nonneg _)]
-    apply Real.exp_le_exp.mpr
-    calc -t₀.im * ω f_im ≤ |t₀.im * ω f_im| := by
-            rw [neg_mul]; exact neg_le.mp (neg_abs_le _)
-      _ = |t₀.im| * |ω f_im| := abs_mul _ _
-      _ ≤ _ := le_refl _
+    refine Real.exp_le_exp.mpr ?_
+    rw [neg_mul, ← abs_mul]
+    exact neg_le_abs _
   -- Frechet derivative
   have h_fderiv : ∀ ω t, HasFDerivAt (F · ω)
       (ContinuousLinearMap.smulRight (1 : ℂ →L[ℂ] ℂ) (b ω * F t ω)) t :=
@@ -606,12 +412,10 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
       _ = |ω f_im| * Real.exp (-t.im * ω f_im) := by rw [h_re_formula]
       _ ≤ |ω f_im| * Real.exp ((|t₀.im| + 1) * |ω f_im|) := by
           apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-          apply Real.exp_le_exp.mpr
-          calc -t.im * ω f_im ≤ |t.im * ω f_im| := by
-                  rw [neg_mul]; exact neg_le.mp (neg_abs_le _)
-            _ = |t.im| * |ω f_im| := abs_mul _ _
-            _ ≤ (|t₀.im| + 1) * |ω f_im| := by
-                apply mul_le_mul_of_nonneg_right (h_im_bound t ht) (abs_nonneg _)
+          refine Real.exp_le_exp.mpr (le_trans ?_
+            (mul_le_mul_of_nonneg_right (h_im_bound t ht) (abs_nonneg _)))
+          rw [neg_mul, ← abs_mul]
+          exact neg_le_abs _
   -- Bound integrability via Fernique
   have h_bound_integrable : Integrable bound (muGFF m).toMeasure := by
     set c := |t₀.im| + 1
@@ -686,20 +490,16 @@ theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
   have hR_an : AnalyticOnNhd ℂ R Set.univ := by
     apply AnalyticOnNhd.cexp
     apply AnalyticOnNhd.mul analyticOnNhd_const
-    apply AnalyticOnNhd.add
-    · apply AnalyticOnNhd.add
-      · exact analyticOnNhd_const
-      · -- 2 * t * Q_ri is linear in t
-        have : AnalyticOnNhd ℂ (fun t : ℂ =>
-            (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) Set.univ :=
-          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-        have heq : (fun t : ℂ => 2 * t * (freeCovarianceFormR m f_re f_im : ℂ))
-            = (fun t : ℂ => (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) := by
-          funext t; ring
-        rw [heq]; exact this
-    · -- t^2 * Q_ii is polynomial in t
-      apply AnalyticOnNhd.mul _ analyticOnNhd_const
-      exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
+    refine AnalyticOnNhd.add (AnalyticOnNhd.add analyticOnNhd_const ?_)
+      (((analyticOnNhd_id (𝕜 := ℂ)).pow 2).mul analyticOnNhd_const)
+    -- 2 * t * Q_ri is linear in t
+    have : AnalyticOnNhd ℂ (fun t : ℂ =>
+        (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) Set.univ :=
+      AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+    have heq : (fun t : ℂ => 2 * t * (freeCovarianceFormR m f_re f_im : ℂ))
+        = (fun t : ℂ => (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) := by
+      funext t; ring
+    rw [heq]; exact this
   -- Step 3: L is entire (from parameter-dependent holomorphy)
   have hL_an : AnalyticOnNhd ℂ L Set.univ := gff_cf_slice_entire m f_re f_im
   -- Step 4: Identity theorem -- L = R on all of ℂ
@@ -749,14 +549,12 @@ C_ℂ(∑ᵢ zᵢ Jᵢ, ∑ⱼ zⱼ Jⱼ) = ∑ᵢ ∑ⱼ zᵢ zⱼ C_ℂ(Jᵢ, 
 /-- C_ℂ(f, 0) = 0, derived from smul_right with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_right (f : TestFunctionℂ) :
     freeCovarianceℂBilinear m f 0 = 0 := by
-  have h := freeCovarianceℂ_bilinear_smul_right m (0 : ℂ) f (0 : TestFunctionℂ)
-  simpa only [zero_smul, zero_mul] using h
+  simpa using freeCovarianceℂ_bilinear_smul_right m (0 : ℂ) f (0 : TestFunctionℂ)
 
 /-- C_ℂ(0, g) = 0, derived from smul_left with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_left (g : TestFunctionℂ) :
     freeCovarianceℂBilinear m 0 g = 0 := by
-  have h := freeCovarianceℂ_bilinear_smul_left m (0 : ℂ) (0 : TestFunctionℂ) g
-  simpa only [zero_smul, zero_mul] using h
+  simpa using freeCovarianceℂ_bilinear_smul_left m (0 : ℂ) (0 : TestFunctionℂ) g
 
 /-- Right linearity over finite sums for the complexified covariance. -/
 private lemma freeCovarianceℂ_sum_right (f : TestFunctionℂ)

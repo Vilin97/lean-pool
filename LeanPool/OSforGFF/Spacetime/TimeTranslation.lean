@@ -69,8 +69,7 @@ def timeShift (s : ℝ) (u : SpaceTime) : SpaceTime :=
 @[simp]
 lemma timeShift_time (s : ℝ) (u : SpaceTime) :
     getTime (timeShift s u) = getTime u + s := by
-  simp only [getTime, timeIndex, timeShift]
-  rfl
+  simp [getTime, timeIndex, timeShift]
 
 @[simp]
 lemma timeShift_spatial (s : ℝ) (u : SpaceTime) (i : Fin STDimension) (hi : i.val ≠ 0) :
@@ -156,16 +155,13 @@ lemma timeShift_hasTemperateGrowth (s : ℝ) : Function.HasTemperateGrowth (time
     have h_eq : fderiv ℝ (timeShift s) = fun _ => ContinuousLinearMap.id ℝ SpaceTime := by
       ext x v
       have h : timeShift s = fun u => u + timeShiftConst s := funext (timeShift_eq_add_const s)
-      rw [h]
-      simp only [fderiv_add_const, fderiv_fun_id, ContinuousLinearMap.id_apply]
-    rw [h_eq]
-    exact Function.HasTemperateGrowth.const _
+      simp_all
+    simp_all
   -- timeShift is differentiable
   have h_diff : Differentiable ℝ (timeShift s) := by
     intro x
     have h : timeShift s = fun u => u + timeShiftConst s := funext (timeShift_eq_add_const s)
-    rw [h]
-    exact differentiableAt_id.add_const _
+    simp_all
   -- Polynomial bound: ‖timeShift s x‖ ≤ C * (1 + ‖x‖)^k
   have h_bound : ∀ x : SpaceTime, ‖timeShift s x‖ ≤ (1 + ‖timeShiftConst s‖) * (1 + ‖x‖) ^ 1 := by
     intro x
@@ -325,16 +321,7 @@ lemma iteratedFDeriv_timeTranslationSchwartz (n : ℕ) (h : ℝ) (f : TestFuncti
   have h_shift_eq : timeShiftConst h = h • unitTimeDir := by
     ext i
     simp only [timeShiftConst, unitTimeDir, EuclideanSpace.single, timeIndex]
-    -- LHS: if i.val = 0 then h else 0
-    -- RHS: h * (Pi.single timeIndex 1) i = h * (if i = timeIndex then 1 else 0)
-    simp only [PiLp.smul_apply, smul_eq_mul, PiLp.ofLp_single, Pi.single_apply]
-    split_ifs with hi1 hi2
-    · ring
-    · -- hi1 : i.val = 0, hi2 : i ≠ ⟨0, _⟩ - contradiction
-      exfalso; apply hi2; ext; exact hi1
-    · -- hi1 : i.val ≠ 0, h✝ : i = ⟨0, _⟩ - contradiction
-      rename_i h_eq; simp only [h_eq] at hi1; exact absurd trivial hi1
-    · ring
+    simp_all
   have h_eq : ∀ z, timeTranslationSchwartz h f z = f (z + h • unitTimeDir) := by
     intro z
     rw [timeTranslationSchwartz_apply, timeShift_eq_add_const, h_shift_eq]
@@ -403,8 +390,7 @@ private lemma schwartz_timeTranslation_mvt_bound
       ≤ ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
             (iteratedFDeriv ℝ (n + 1) f (x + t • y))‖ * ‖y‖ :=
           ContinuousLinearMap.le_opNorm _ _
-      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by
-          rw [LinearIsometryEquiv.norm_map]
+      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by rw [LinearIsometryEquiv.norm_map]
       _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * |h| := by rw [hy]
       _ = |h| * D t := by ring
       _ ≤ |h| * ⨆ s ∈ Set.Icc (0 : ℝ) 1, D s := by
@@ -413,8 +399,7 @@ private lemma schwartz_timeTranslation_mvt_bound
             use (SchwartzMap.seminorm ℝ 0 (n + 1)) f
             rintro _ ⟨⟨s, _⟩, rfl⟩
             have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
-            simp only [pow_zero, one_mul] at this
-            exact this
+            simpa only [pow_zero, one_mul] using this
           haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
           have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
             simp only [Real.sSup_empty]
@@ -488,8 +473,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
   rw [h_diff]
   -- Step 2: Handle h = 0 case (trivial)
   by_cases hh : h = 0
-  · simp only [hh, zero_smul, add_zero, sub_self, norm_zero, mul_zero]
-    positivity
+  · simp_all
   -- Step 3: For h ≠ 0, apply Mean Value Theorem via line path
   -- Define the path g(t) = iteratedFDeriv ℝ n f (x + t • (h • unitTimeDir))
   -- g(0) = iteratedFDeriv ℝ n f x
@@ -573,8 +557,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
         rw [norm_smul, Real.norm_eq_abs, hy]
         have ht_bound : |t| ≤ 1 := by
           rw [abs_le]; constructor <;> linarith [ht.1, ht.2]
-        calc |t| * |h| ≤ 1 * |h| := by nlinarith [abs_nonneg t, abs_nonneg h]
-          _ = |h| := one_mul _
+        simp_all
       have h4 : (1 + ‖t • y‖) ^ k ≤ (1 + |h|) ^ k := by
         apply pow_le_pow_left₀ (by linarith [norm_nonneg (t • y)])
         linarith
@@ -593,8 +576,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
           have h1 : (1 + ‖w‖) ^ k ≤ 2 ^ k := by
             apply pow_le_pow_left₀ (by linarith [norm_nonneg w])
             linarith
-          simp only [max_eq_left (pow_le_one₀ (norm_nonneg w) hw), mul_one]
-          exact h1
+          simpa only [max_eq_left (pow_le_one₀ (norm_nonneg w) hw), mul_one] using h1
         · -- ‖w‖ > 1 case: (1 + ‖w‖)^k ≤ (2‖w‖)^k = 2^k * ‖w‖^k = 2^k * max(1, ‖w‖^k)
           push Not at hw
           have h1 : 1 + ‖w‖ ≤ 2 * ‖w‖ := by linarith
@@ -603,8 +585,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
             exact h1
           simp only [mul_pow] at h2
           have h3 : 1 ≤ ‖w‖ ^ k := one_le_pow₀ hw.le
-          simp only [max_eq_right h3]
-          exact h2
+          simpa only [max_eq_right h3] using h2
       -- Use seminorm bounds
       have h_S0 : ‖iteratedFDeriv ℝ (n + 1) f w‖ ≤ S_0 := by
         have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f w
@@ -740,31 +721,14 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
     ext u
     simp only [timeTranslationSchwartz_apply, timeTranslationSchwartzCLM,
       SchwartzMap.compCLMOfAntilipschitz_apply, Function.comp_apply]
-    -- Need: f(timeShift s u) = f(timeShift (s-s₀) (timeShift s₀ u))
-    -- By timeShift_add: timeShift (s-s₀) (timeShift s₀ u) = timeShift ((s-s₀)+s₀) u = timeShift s u
     congr 1
-    rw [← timeShift_add]
-    ring_nf
-  -- Rewrite using the group structure
-  have h_eq : (fun s => timeTranslationSchwartz s f) =
-      (fun s => timeTranslationSchwartzCLM s₀ (timeTranslationSchwartz (s - s₀) f)) :=
-    funext h_group
-  rw [h_eq]
-  -- Now use that T_{s₀} is continuous
-  have h_cont : Continuous (timeTranslationSchwartzCLM s₀) :=
-    (timeTranslationSchwartzCLM s₀).continuous
-  -- It suffices to show: T_{s-s₀} f → T_0 f = f as s → s₀
-  apply Filter.Tendsto.comp h_cont.continuousAt
-  -- Now prove: T_{s-s₀} f → f as s → s₀ (equivalently, T_h f → f as h → 0)
-  -- Goal: Filter.Tendsto (fun s => timeTranslationSchwartz (s - s₀) f) (𝓝 s₀) (𝓝 f)
-  -- Rewrite as composition: (fun h => T_h f) ∘ (fun s => s - s₀)
-  have h_comp : (fun s => timeTranslationSchwartz (s - s₀) f) =
-      (fun h => timeTranslationSchwartz h f) ∘ (fun s => s - s₀) := rfl
-  rw [h_comp]
-  -- Use that s - s₀ → 0 as s → s₀
-  have h_map : Filter.Tendsto (fun s => s - s₀) (nhds s₀) (nhds 0) :=
-    tendsto_sub_nhds_zero_iff.mpr Filter.tendsto_id
-  apply Filter.Tendsto.comp _ h_map
+    rw [← timeShift_add, sub_add_cancel]
+  -- Rewrite using the group structure; T_{s₀} is continuous, reducing to T_h f → f at h = 0.
+  rw [funext h_group]
+  apply Filter.Tendsto.comp (timeTranslationSchwartzCLM s₀).continuous.continuousAt
+  rw [show (fun s => timeTranslationSchwartz (s - s₀) f) =
+      (fun h => timeTranslationSchwartz h f) ∘ (fun s => s - s₀) from rfl]
+  apply Filter.Tendsto.comp _ (tendsto_sub_nhds_zero_iff.mpr Filter.tendsto_id)
   -- Now prove continuity at 0: T_h f → f as h → 0
   -- This uses the Mean Value estimate: ‖T_h f - f‖ ≤ |h| · C
   -- Use seminorm characterization: Schwartz topology = ⨅ seminorm topologies
@@ -797,15 +761,9 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
   intro h hh
   -- Goal: dist (T_h f) f < ε
   -- Distance = seminorm(T_h f - f) in the induced metric
-  have hdist : dist (timeTranslationSchwartz h f) f =
-      (schwartzSeminormFamily ℝ SpaceTime ℝ i) (timeTranslationSchwartz h f - f) := by
-    rw [dist_eq_norm]
-    rfl
-  rw [hdist]
-  -- Apply the Lipschitz bound
-  have h_seminorm_eq : schwartzSeminormFamily ℝ SpaceTime ℝ i =
-      SchwartzMap.seminorm ℝ i.1 i.2 := rfl
-  rw [h_seminorm_eq]
+  rw [show dist (timeTranslationSchwartz h f) f =
+      SchwartzMap.seminorm ℝ i.1 i.2 (timeTranslationSchwartz h f - f) from by
+    rw [dist_eq_norm]; rfl]
   have h_lip := schwartz_timeTranslation_lipschitz_seminorm k n f h
   -- From hh: dist h 0 < min 1 (ε / L), so |h| < 1 and |h| < ε / L
   rw [Real.dist_eq, sub_zero] at hh
@@ -815,25 +773,11 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
   have h_pow_bound : (1 + |h|) ^ k ≤ (2 : ℝ) ^ k := by
     apply pow_le_pow_left₀ (by linarith [abs_nonneg h])
     linarith
+  have h4 : (2 : ℝ) ^ k * (2 : ℝ) ^ k = (4 : ℝ) ^ k := by rw [← mul_pow]; norm_num
   calc (SchwartzMap.seminorm ℝ k n) (timeTranslationSchwartz h f - f)
     _ ≤ |h| * (1 + |h|) ^ k * (2 : ℝ) ^ k * C := h_lip
-    _ ≤ |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C := by
-        have h2k_pos : (0 : ℝ) < (2 : ℝ) ^ k := pow_pos (by norm_num) k
-        have h1 : (1 + |h|) ^ k * ((2 : ℝ) ^ k * C) ≤ (2 : ℝ) ^ k * ((2 : ℝ) ^ k * C) := by
-          apply mul_le_mul_of_nonneg_right h_pow_bound
-          exact mul_nonneg (le_of_lt h2k_pos) (le_of_lt hC_pos)
-        calc |h| * (1 + |h|) ^ k * (2 : ℝ) ^ k * C
-          = |h| * ((1 + |h|) ^ k * ((2 : ℝ) ^ k * C)) := by ring
-          _ ≤ |h| * ((2 : ℝ) ^ k * ((2 : ℝ) ^ k * C)) := by
-              apply mul_le_mul_of_nonneg_left h1 (abs_nonneg h)
-          _ = |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C := by ring
-    _ = |h| * (4 : ℝ) ^ k * C := by
-        have h2_eq : (2 : ℝ) ^ k * (2 : ℝ) ^ k = (4 : ℝ) ^ k := by
-          rw [← mul_pow]; norm_num
-        calc |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C
-          = |h| * ((2 : ℝ) ^ k * (2 : ℝ) ^ k) * C := by ring
-          _ = |h| * (4 : ℝ) ^ k * C := by rw [h2_eq]
-    _ = |h| * L := by simp only [L]; ring
+    _ ≤ |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C := by gcongr
+    _ = |h| * L := by simp only [L, ← h4]; ring
     _ < (ε / L) * L := by nlinarith [abs_nonneg h]
     _ = ε := by field_simp
 
@@ -887,7 +831,6 @@ lemma timeTranslationDistribution_add (s t : ℝ) (ω : FieldConfiguration) :
 lemma timeTranslationDistribution_zero (ω : FieldConfiguration) :
     timeTranslationDistribution 0 ω = ω := by
   apply DFunLike.ext
-  intro f
-  simp only [timeTranslationDistribution_apply, neg_zero, timeTranslationSchwartz_zero]
+  simp_all
 
 end TimeTranslation

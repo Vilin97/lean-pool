@@ -12,8 +12,7 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Arith.Hierarchy
 namespace Fin
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[inline] def addCast (m) : Fin n → Fin (m + n) :=
-  castLE <| Nat.le_add_left n m
+@[inline] def addCast (m) : Fin n → Fin (m + n) := castLE <| Nat.le_add_left n m
 
 @[simp] lemma addCast_val (i : Fin n) : (i.addCast m : ℕ) = i := rfl
 

@@ -194,10 +194,7 @@ lemma goedel_spec : T₀ ⊢!. γ <=> ∼𝔅 γ := by
     change ∼(Rew.substs ![_] ▹ 𝔅.prov) = Rew.substs ![_] ▹ (∼(Rew.substs ![#0] ▹ 𝔅.prov));
     rw [LogicalConnective.HomClass.map_neg (Rewriting.app (Rew.substs ![_]))];
     rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
-    congr 3;
-    apply congrArg;
-    funext i;
-    simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+    simp_all
   case e'_3 => unfold goedel; rfl;
 
 variable [T₀ wkn T]
@@ -274,20 +271,6 @@ lemma formalized_consistent_of_existance_unprovable :
     T₀ ⊢!. ∼(𝔅 σ) ==> 𝔅.con :=
   contra₀'! <| 𝔅.D2 ⨀ (D1 efq!)
 
-private lemma consistency_lemma_1 [T₀ wkn U] :
-    (U ⊢!. 𝔅.con ==> ∼(𝔅 σ)) ↔ (U ⊢!. (𝔅 σ) ==> 𝔅 (∼σ)) := by
-  constructor;
-  · intro H;
-    exact contra₃'! <| imp_trans''! (WeakerThan.pbl (𝓢 :=
-      T₀.alt) formalized_consistent_of_existance_unprovable) H;
-  · intro H
-    apply contra₀'!
-    have : T₀ ⊢!. (𝔅 σ) ⋏ 𝔅 (∼σ) ==> 𝔅 ⊥ :=
-      imp_trans''! prov_collect_and <| prov_distribute_imply lac!;
-    have : U ⊢!. (𝔅 σ) ==> 𝔅 (∼σ) ==> 𝔅 ⊥ :=
-      WeakerThan.pbl <| and_imply_iff_imply_imply'!.mp <| this;
-    exact this ⨀₁ H;
-
 omit [L.DecidableEq] in
 private lemma consistency_lemma_2 : T₀ ⊢!. ((𝔅 σ) ==> 𝔅 (∼σ)) ==> (𝔅 σ) ==> 𝔅 ⊥ := by
   have : T ⊢!. σ ==> ∼σ ==> ⊥ := and_imply_iff_imply_imply'!.mp lac!
@@ -358,9 +341,7 @@ lemma _root_.LO.FirstOrder.DerivabilityCondition.kreisel_spec
     rw [LogicalConnective.HomClass.map_imply (Rewriting.app (Rew.substs ![_]))];
     rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
     congr 1;
-    · congr 3;
-      funext i;
-      simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+    · simp_all
     · rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
       simp only [Matrix.empty_eq, Rew.substs_zero, ReflectiveRewriting.id_app];
   case e'_3 => unfold kreisel; rfl;
@@ -450,11 +431,7 @@ local notation "ρ" => 𝔅.rosser
 variable [Diagonalization T₀] [𝔅.Rosser]
 
 omit [𝔅.Rosser] in
-lemma _root_.LO.FirstOrder.DerivabilityCondition.rosser_spec : T₀ ⊢!. ρ <=> ∼(𝔅 ρ) :=
-  goedel_spec
-
-omit [𝔅.Rosser] in
-private lemma rosser_specAux₁ [T₀ wkn T] : T ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_specAux₁
+lemma _root_.LO.FirstOrder.DerivabilityCondition.rosser_spec : T₀ ⊢!. ρ <=> ∼(𝔅 ρ) := goedel_spec
 
 end «lp_section_8»
 
@@ -465,8 +442,7 @@ variable [L.DecidableEq] [Diagonalization T₀] [T₀ wkn T] [Entailment.Consist
 local notation "ρ" => 𝔅.rosser
 
 omit [L.DecidableEq] [𝔅.Rosser] in
-lemma _root_.LO.FirstOrder.DerivabilityCondition.unprovable_rosser : T ⊬. ρ :=
-  unprovable_goedel
+lemma _root_.LO.FirstOrder.DerivabilityCondition.unprovable_rosser : T ⊬. ρ := unprovable_goedel
 
 omit [L.DecidableEq] in
 theorem _root_.LO.FirstOrder.DerivabilityCondition.unrefutable_rosser : T ⊬. ∼ρ := by

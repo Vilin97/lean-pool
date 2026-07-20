@@ -14,9 +14,7 @@ converging to a real number, used in the construction of computable reals.
 
 theorem abs_ite_le [AddCommGroup α] [LinearOrder α] [IsOrderedAddMonoid α] (x : α) :
     abs x = if 0 ≤ x then x else -x := by
-  split_ifs <;> simp_all only [abs_eq_self, not_le, abs_eq_neg_self]
-  next h =>
-    exact LT.lt.le h
+  split_ifs <;> simp_all only [abs_eq_self, not_le, abs_eq_neg_self, le_of_lt]
 
 namespace CauSeq
 

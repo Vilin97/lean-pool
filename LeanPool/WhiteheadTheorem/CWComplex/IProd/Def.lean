@@ -139,10 +139,6 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
     exact hr2
   rw [h']
   congr 4
-  -- TODO: refactor
-  -- have : X.skIncl n ≫ iX = isk ≫ l X n := rfl
-  -- have : X.skIncl n =
-  --   (X.attachCells n).pushoutInl ≫ (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) := sorry
   have : (X.attachCells n).pushoutInl ≫ (X.attachCells n).isoPushout.inv ≫
       X.skIncl (n + 1) ≫ iX = isk ≫ l X n := by
     ext x
@@ -632,9 +628,7 @@ lemma coconeInl (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     change ((Limits.pushout.inl (xskl X n) (xskr X n) ≫
       Limits.pushout.desc (l' ..) (r' ..) (w' ..)).hom x) t = _
     rw [Limits.pushout.inl_desc]
-    unfold l'
-    simp only [TopCat.hom_comp, ContinuousMap.argSwap, ContinuousMap.coe_mk,
-      ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply, hom_ofHom]
+    simp_all
 
 lemma coconeInr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     (cocone X n).inr ≫ desc X n Z = Z.inr := by

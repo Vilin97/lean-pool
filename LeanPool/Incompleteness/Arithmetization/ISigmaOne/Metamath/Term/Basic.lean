@@ -75,12 +75,7 @@ lemma qqBvar_defined : Sg0-Function₁ (qqBvar : V → V) via qqBvarDef := by
   intro v
   suffices h : v 0 = ^#(v 1) ↔ ⟪0, v 1⟫ < v 0 ∧ v 0 = ⟪0, v 1⟫ + 1 by
     simpa [qqBvarDef] using h
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [qqBvar], by simp [qqBvar]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, qqBvar], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_qqBvarDef (v) :
     Semiformula.Evalbm V v qqBvarDef.val ↔ v 0 = ^#(v 1) := qqBvar_defined.df.iff v
@@ -93,12 +88,7 @@ lemma qqFvar_defined : Sg0-Function₁ (qqFvar : V → V) via qqFvarDef := by
   intro v
   suffices h : v 0 = ^&(v 1) ↔ ⟪1, v 1⟫ < v 0 ∧ v 0 = ⟪1, v 1⟫ + 1 by
     simpa [qqFvarDef] using h
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [qqFvar], by simp [qqFvar]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, qqFvar], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_qqFvarDef (v) :
     Semiformula.Evalbm V v qqFvarDef.val ↔ v 0 = ^&(v 1) := qqFvar_defined.df.iff v
@@ -141,10 +131,8 @@ private lemma phi_iff (C : V) (t : V) :
   mp := by
     rintro (⟨z, rfl⟩ | ⟨x, rfl⟩ | ⟨k, f, v, hkf, hk, hv, rfl⟩)
     · left; exact ⟨z, lt_succ_iff_le.mpr <| by simp, rfl⟩
-    · right; left
-      exact ⟨x, lt_succ_iff_le.mpr <| by simp, rfl⟩
-    · right; right
-      exact ⟨k, by simp, f, by simp, v, by simp, hkf, hk, hv, rfl⟩
+    · simp_all
+    · simp_all
   mpr := by
     unfold Phi
     rintro (⟨z, _, rfl⟩ | ⟨x, _, rfl⟩ | ⟨k, _, f, _, v, _, hkf, hk, hv, rfl⟩)
@@ -588,20 +576,16 @@ lemma graph_bvar_iff {z} :
     c.Graph param ^#z y ↔ y = c.bvar param z := by
   constructor
   · intro H
-    rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, rfl⟩ | ⟨_, h, _⟩ | ⟨_, _, _, _, _, h, _⟩)⟩
-    · simp only [qqBvar_inj] at h; rcases h; rfl
-    · simp [qqBvar, qqFvar] at h
-    · simp [qqBvar, qqFunc] at h
+    rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, rfl⟩ | ⟨_, h, _⟩ | ⟨_, _, _, _, _, h, _⟩)⟩ <;>
+      simp_all [qqBvar, qqFvar, qqFunc]
   · rintro rfl; exact Graph.case_iff.mpr ⟨by simp, Or.inl ⟨z, by simp⟩⟩
 
 lemma graph_fvar_iff (x) :
     c.Graph param ^&x y ↔ y = c.fvar param x := by
   constructor
   · intro H
-    rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, _⟩ | ⟨_, h, rfl⟩ | ⟨_, _, _, _, _, h, _⟩)⟩
-    · simp [qqFvar, qqBvar] at h
-    · simp only [qqFvar_inj] at h; rcases h; rfl
-    · simp [qqFvar, qqFunc] at h
+    rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, _⟩ | ⟨_, h, rfl⟩ | ⟨_, _, _, _, _, h, _⟩)⟩ <;>
+      simp_all [qqBvar, qqFvar, qqFunc]
   · rintro rfl; exact Graph.case_iff.mpr ⟨by simp, Or.inr <| Or.inl ⟨x, by simp⟩⟩
 
 lemma graph_func {k f v w} (hkr : L.Func k f) (hv : L.IsUTermVec k v)
@@ -614,11 +598,11 @@ lemma graph_func_inv {k f v y} :
       (k = len w ∧ ∀ i < k, c.Graph param v.[i] w.[i]) ∧
       y = c.func param k f v w := by
   intro H
-  rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, _⟩ | ⟨_, h, rfl⟩ | ⟨k, f, v, w, hw, h, rfl⟩)⟩
-  · simp [qqFunc, qqBvar] at h
-  · simp [qqFunc, qqFvar] at h
-  · simp only [qqFunc_inj] at h; rcases h with ⟨rfl, rfl, rfl⟩
-    exact ⟨w, hw, by rfl⟩
+  rcases Graph.case_iff.mp H with ⟨_, (⟨_, h, _⟩ | ⟨_, h, rfl⟩ | ⟨k, f, v, w, hw, h, rfl⟩)⟩ <;>
+    first
+    | (simp only [qqFunc_inj] at h; rcases h with ⟨rfl, rfl, rfl⟩
+       exact ⟨w, hw, by rfl⟩)
+    | simp_all [qqBvar, qqFvar, qqFunc]
 
 variable {c} (param n)
 
@@ -665,8 +649,7 @@ lemma graph_existsUnique_total (t : V) : ∃! y,
   by_cases ht : L.IsUTerm t
   · simp only [ht, forall_const, not_true_eq_false, IsEmpty.forall_iff, and_true]
     exact c.graph_existsUnique _ ht
-  · simp only [ht, IsEmpty.forall_iff, not_false_eq_true, forall_const, true_and,
-      existsUnique_eq]
+  · simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def result (c : Construction V L β) (param : Fin arity → V) (t : V) : V :=
@@ -710,8 +693,7 @@ lemma graph_existsUnique_vec {k w : V} (hw : L.IsUTermVec k w) :
   intro w'' ⟨hkw'', hw''⟩
   refine nth_ext (by simp [hw'k, ←hkw'']) (by
     intro i hi;
-    exact c.graph_unique param (hw'' i (by simpa [hkw''] using hi)) (hw' i (by simpa [hkw''] using
-      hi)))
+    exact c.graph_unique param (hw'' i (by simpa [hkw''] using hi)) (hw' i (by simp_all)))
 
 variable (c param)
 
@@ -721,8 +703,7 @@ lemma graph_existsUnique_vec_total (k w : V) : ∃! w',
   by_cases h : L.IsUTermVec k w
   · simp only [h, forall_const, not_true_eq_false, IsEmpty.forall_iff, and_true]
     exact c.graph_existsUnique_vec h
-  · simp only [h, IsEmpty.forall_iff, not_false_eq_true, forall_const, true_and,
-      existsUnique_eq]
+  · simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def resultVec (c : Construction V L β) (param : Fin arity → V) (k w : V) : V :=

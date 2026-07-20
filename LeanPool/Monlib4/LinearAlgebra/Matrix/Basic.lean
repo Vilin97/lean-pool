@@ -57,8 +57,7 @@ theorem vec_ne_zero {R n : Type _} [Semiring R] (a : n → R) :
   · intro h hentries
     apply h
     ext x
-    rw [Pi.zero_apply]
-    exact hentries x
+    simp_all
 
 /-- Two vectors are equal iff their entries are equal. -/
 theorem ext_vec {𝕜 n : Type _} (α β : n → 𝕜) :
@@ -70,8 +69,7 @@ theorem ext_vec {𝕜 n : Type _} (α β : n → 𝕜) :
 /-- The transpose of `vecMulVec x y` is `vecMulVec y x`. -/
 theorem vecMulVec_transpose {R n : Type _} [CommSemiring R] (x y : n → R) :
     (vecMulVec x y).transpose = vecMulVec y x := by
-  simp_rw [← Matrix.ext_iff, transpose_apply, vecMulVec, mul_comm, of_apply,
-    forall₂_true_iff]
+  simp_all
 
 theorem smul_mulVec_assoc {R m n : Type _} [Semiring R] [Fintype n]
     (r : R) (x : Matrix m n R) (y : n → R) :
@@ -188,8 +186,7 @@ theorem _root_.Matrix.kronecker.star {R n : Type _} [CommSemiring R] [StarRing R
 
 theorem kronecker_transpose {R n : Type _} [CommSemiring R] (x y : Matrix n n R) :
     (x ⊗ₖ y)ᵀ = xᵀ ⊗ₖ yᵀ := by
-  simp_rw [← Matrix.ext_iff]
-  intro i j
+  ext i j
   simp only [Matrix.transpose_apply, Matrix.kroneckerMap, of_apply]
 
 theorem _root_.Matrix.kronecker.transpose {R n : Type _} [CommSemiring R] (x y : Matrix n n R) :
@@ -243,18 +240,7 @@ variable {R n m : Type _} [Semiring R] [StarAddMonoid R] [DecidableEq n] [Decida
 
 theorem Matrix.single_conjTranspose (i : n) (j : m) (a : R) :
     (Matrix.single i j a)ᴴ = Matrix.single j i (star a) := by
-  ext x y
-  simp_rw [conjTranspose_apply, Matrix.single, ite_and]
-  by_cases h : j = x ∧ i = y
-  · simp_rw [h.1, h.2, of_apply, if_true]
-  by_cases h' : a = 0
-  · simp only [of_apply, h', star_zero, ite_self]
-  · simp_rw [← ite_and, of_apply, @and_comm _ (j = x),
-      (Ne.ite_eq_right_iff (star_ne_zero.mpr h')).mpr h, star_eq_iff_star_eq, star_zero]
-    symm
-    rw [ite_eq_right_iff]
-    intro H
-    exact False.elim (h H)
+  simp_all
 
 theorem Matrix.single.star_apply (i k : n) (j l : m) (a : R) :
     star (Matrix.single i j a k l) = Matrix.single j i (star a) l k := by
@@ -268,8 +254,7 @@ theorem Matrix.single.star_apply' (i : n) (j : m) (x : n × m) (a : R) :
 /-- The conjugate transpose of a standard matrix unit. -/
 theorem Matrix.single.star_one {R : Type _} [Semiring R] [StarRing R] (i : n) (j : m) :
     (Matrix.single i j (1 : R))ᴴ = Matrix.single j i (1 : R) := by
-  nth_rw 2 [← _root_.star_one]
-  exact Matrix.single_conjTranspose _ _ _
+  simp_all
 
 open scoped BigOperators
 
@@ -327,19 +312,15 @@ theorem Matrix.single.sum_star_hMul_self' {R : Type _} [Fintype n] [Semiring R] 
     · intro b _ hne
       have hcond : ¬(i = b.2 ∧ j = b.1) := by
         intro h
-        apply hne
-        ext <;> simp [h.1, h.2]
+        simp_all
       simp [Matrix.star_apply, Matrix.single, Matrix.of_apply, hcond]
-    · intro hnot
-      simp at hnot
+    · simp_all
   · intro b _ hne
     have hcond : ¬(i = b.1 ∧ j = b.2) := by
       intro h
-      apply hne
-      ext <;> simp [h.1, h.2]
+      simp_all
     simp [Matrix.single, Matrix.of_apply, hcond]
-  · intro hnot
-    simp at hnot
+  · simp_all
 
 theorem Matrix.single.hMul_stdBasisMatrix {R p : Type _} [Semiring R] [DecidableEq p]
     [Fintype m] (i x : n) (j k : m) (l y : p) (a b : R) :
@@ -362,8 +343,7 @@ theorem Matrix.single.hMul_stdBasis_matrix' {R p : Type _} [Fintype n] [Decidabl
 theorem Matrix.transposeAlgEquiv_symm_op_apply {n R α : Type _} [CommSemiring R]
     [CommSemiring α] [Fintype n] [DecidableEq n] [Algebra R α] (x : Matrix n n α) :
     (Matrix.transposeAlgEquiv n R α).symm (MulOpposite.op x) = xᵀ := by
-  rw [Matrix.transposeAlgEquiv_symm_apply]
-  rfl
+  simp_all
 
 open Matrix
 
@@ -383,28 +363,22 @@ theorem forall_left_hMul {n R : Type _} [Fintype n] [Semiring R]
     (x y : Matrix n n R) : x = y ↔ ∀ a : Matrix n n R, a * x = a * y := by
   classical
   refine ⟨fun h a => by rw [h], fun h => ?_⟩
-  specialize h 1
-  simp_rw [one_mul] at h
-  exact h
+  simpa only [one_mul] using h 1
 
 lemma _root_.Matrix.smul_one_eq_one_iff {𝕜 n : Type*} [DecidableEq n] [Field 𝕜] (c : 𝕜) :
     c • (1 : Matrix n n 𝕜) = (1 : Matrix n n 𝕜) ↔ c = 1 ∨ IsEmpty n := by
   simp_rw [← Matrix.ext_iff, Matrix.smul_apply, Matrix.one_apply, smul_ite, smul_zero,
     smul_eq_mul, mul_one]
   by_cases h : IsEmpty n
-  · simp only [h, or_true, iff_true]
-    intro i
-    exact h.elim i
+  · simp_all
   · simp only [h, or_false]
     constructor
     · rintro h1
       rw [not_isEmpty_iff] at h
       let i : n := h.some
       specialize h1 i i
-      simp only [↓reduceIte] at h1
-      exact h1
-    · rintro rfl i j
-      rfl
+      simp_all
+    · simp_all
 
 /-- A linear equivalence of `R^n` gives an invertible matrix. -/
 @[reducible]

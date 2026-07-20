@@ -15,52 +15,19 @@ namespace LeanPool.DeadEnds
 /-- The `k`-th complete block of positive integers of length `M`. -/
 def completeBlock (M k : ℕ) : Finset ℕ := Finset.Icc (k * M + 1) ((k + 1) * M)
 
-lemma primeSquareProduct_pos (S : Finset Nat.Primes) : 0 < primeSquareProduct S := by
-  have h₁ : ∀ p : Nat.Primes, 0 < (p : ℕ) ^ 2 := by
-    intro p
-    have h₂ : (p : ℕ) ≥ 2 := by
-      exact Nat.Prime.two_le p.prop
-    have h₄ : 0 < (p : ℕ) ^ 2 := by positivity
-    exact h₄
-  have h₂ : 0 < ∏ p ∈ S, (p : ℕ) ^ 2 := by
-    apply Finset.prod_pos
-    intro p _
-    exact h₁ p
-  exact h₂
+lemma primeSquareProduct_pos (S : Finset Nat.Primes) : 0 < primeSquareProduct S :=
+  Finset.prod_pos fun p _ => pow_pos p.prop.pos 2
 
-lemma completeBlocks_subset_Icc (M X : ℕ) (hM : 0 < M) (k : ℕ) (hk : k < X / M) :
+lemma completeBlocks_subset_Icc (M X : ℕ) (_hM : 0 < M) (k : ℕ) (hk : k < X / M) :
     completeBlock M k ⊆ Finset.Icc 1 X := by
-  have h₁ : completeBlock M k = Finset.Icc (k * M + 1) ((k + 1) * M) := rfl
-  rw [h₁]
-  have h₂ : (k + 1) * M ≤ X := by
-    have h₄ : (k + 1) * M ≤ X := by
-      have h₅ : (X / M) * M ≤ X := by
-        apply Nat.div_mul_le_self
-      calc
-        (k + 1) * M ≤ (X / M) * M := by
-          nlinarith
-        _ ≤ X := h₅
-    exact h₄
-  have h₃ : 1 ≤ k * M + 1 := by
-    have h₄ : 0 ≤ k * M := by positivity
-    omega
-  have h₄ : (k + 1) * M ≤ X := h₂
-  have h₆ : Finset.Icc (k * M + 1) ((k + 1) * M) ⊆ Finset.Icc 1 X := by
-    apply Finset.Icc_subset_Icc
-    · omega
-    · omega
-  exact h₆
+  apply Finset.Icc_subset_Icc
+  · omega
+  · calc (k + 1) * M ≤ (X / M) * M := by nlinarith
+      _ ≤ X := Nat.div_mul_le_self X M
 
 lemma completeBlock_card (M k : ℕ) (hM : 0 < M) : (completeBlock M k).card = M := by
-  have h₁ : (completeBlock M k) = Finset.Icc (k * M + 1) ((k + 1) * M) := rfl
-  rw [h₁]
-  have h₂ : (k * M + 1) ≤ ((k + 1) * M) := by
-    have h₄ : (k * M + 1) ≤ ((k + 1) * M) := by
-      ring_nf at *
-      nlinarith
-    exact h₄
-  rw [Finset.card_eq_sum_ones]
-  simp; ring_nf at *; simp_all
+  rw [completeBlock, Nat.card_Icc, Nat.succ_mul]
+  omega
 
 lemma completeBlock_mapsTo (M k : ℕ) (hM : 0 < M) :
     Set.MapsTo (· % M) (completeBlock M k : Set ℕ) (Finset.range M : Set ℕ) := by
@@ -104,48 +71,17 @@ lemma completeBlock_injOn (M k : ℕ) (hM : 0 < M) :
 
 lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
     Set.SurjOn (· % M) (completeBlock M k : Set ℕ) (Finset.range M : Set ℕ) := by
-  have h₁ : ∀ r ∈ (Finset.range M : Set ℕ), ∃ N ∈ (completeBlock M k : Set ℕ), N % M = r := by
-    intro r hr
-    have h₂ : r < M := Finset.mem_range.mp hr
-    have h₃ : r ≤ M := by linarith
-    by_cases h₄ : r = 0
-    · have h₅ : ((k + 1) * M : ℕ) ∈ (completeBlock M k : Set ℕ) := by
-        simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
-        constructor <;>
-        (try norm_num);
-        (try ring_nf);
-        (try nlinarith)
-      refine ⟨(k + 1) * M, h₅, ?_⟩
-      have h₆ : ((k + 1) * M : ℕ) % M = 0 := by
-        simp
-      rw [h₄] at *
-      omega
-    · have h₅ : (k * M + r : ℕ) ∈ (completeBlock M k : Set ℕ) := by
-        simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
-        constructor
-        · have h₆ : 1 ≤ r := by
-            by_contra h₆
-            have h₇ : r = 0 := by
-              omega
-            contradiction
-          nlinarith
-        · nlinarith
-      refine ⟨(k * M + r : ℕ), h₅, ?_⟩
-      have h₆ : (k * M + r : ℕ) % M = r % M := by
-        have h₇ : (k * M + r : ℕ) % M = r % M := by
-          simp [Nat.add_mod]
-        exact h₇
-      have h₇ : r % M = r := by
-        have h₈ : r < M := by
-          exact h₂
-        have h₉ : r % M = r := Nat.mod_eq_of_lt h₈
-        exact h₉
-      omega
   intro r hr
-  have h₂ : r ∈ (Finset.range M : Set ℕ) := hr
-  have h₃ : ∃ N ∈ (completeBlock M k : Set ℕ), N % M = r := h₁ r h₂
-  obtain ⟨N, hN, hN'⟩ := h₃
-  refine ⟨N, hN, ?_⟩; simp_all
+  have h₂ : r < M := Finset.mem_range.mp hr
+  by_cases h₄ : r = 0
+  · refine ⟨(k + 1) * M, ?_, ?_⟩
+    · simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
+      constructor <;> nlinarith
+    · simp [h₄]
+  · refine ⟨k * M + r, ?_, ?_⟩
+    · simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
+      constructor <;> nlinarith [Nat.one_le_iff_ne_zero.mpr h₄]
+    · simp [Nat.add_mod, Nat.mod_eq_of_lt h₂]
 
 /-- For N in the k-th complete block, N mod M takes each residue below M exactly once.
     This is because N ranges from kM+1 through (k+1)M, and:
@@ -195,20 +131,13 @@ lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
   simp only [Finset.coe_filter, Set.mem_setOf_eq] at hr
   obtain ⟨hr_range, hr_P⟩ := hr
   have hM : 0 < M := primeSquareProduct_pos S
-  have hsurj := completeBlock_surjOn M k hM
-  rw [Set.SurjOn] at hsurj
-  have hr_range' : r ∈ (Finset.range M : Set ℕ) := hr_range
-  obtain ⟨N, hN_block, hN_mod⟩ := hsurj hr_range'
-  have hr_lt : r < M := Finset.mem_range.mp hr_range
-  have hr_mod : r % M = r := Nat.mod_eq_of_lt hr_lt
-  have hmod_eq : N % M = r % M := by simp only [hN_mod, hr_mod]
-  have hP_equiv := condition_mod_invariant b T S N r hmod_eq
-  have hN_P : P N := hP_equiv.mpr hr_P
-  use N
-  constructor
-  · simp only [Finset.coe_filter, Set.mem_setOf_eq]
-    exact ⟨hN_block, hN_P⟩
-  · exact hN_mod
+  obtain ⟨N, hN_block, hN_mod⟩ := completeBlock_surjOn M k hM hr_range
+  have hmod_eq : N % M = r % M := by
+    have : N % M = r := hN_mod
+    rw [this, Nat.mod_eq_of_lt (Finset.mem_range.mp hr_range)]
+  refine ⟨N, ?_, hN_mod⟩
+  simp only [Finset.coe_filter, Set.mem_setOf_eq]
+  exact ⟨hN_block, (condition_mod_invariant b T S N r hmod_eq).mpr hr_P⟩
 
 lemma filter_card_eq_of_bijOn_filter (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) :
     let M := primeSquareProduct S
@@ -236,22 +165,10 @@ lemma completeBlock_valid_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prime
 
 lemma completeBlock_disjoint (M : ℕ) (_hM : 0 < M) (i j : ℕ) (hij : i < j) :
     Disjoint (completeBlock M i) (completeBlock M j) := by
-  have h₁ : (i + 1) * M < j * M + 1 := by
-    have h₃ : (i + 1) * M ≤ j * M := by
-      nlinarith
-    have h₄ : (i + 1) * M < j * M + 1 := by
-      nlinarith
-    exact h₄
-  have h₂ : ((completeBlock M i) : Set ℕ) ∩ ((completeBlock M j) : Set ℕ) = ∅ := by
-    apply Set.eq_empty_of_forall_notMem
-    intro x hx
-    simp only [Set.mem_inter_iff, completeBlock] at hx
-    have h₃ : x ∈ (Finset.Icc (i * M + 1) ((i + 1) * M) : Finset ℕ) := hx.1
-    have h₄ : x ∈ (Finset.Icc (j * M + 1) ((j + 1) * M) : Finset ℕ) := hx.2
-    simp only [Finset.mem_Icc] at h₃ h₄
-    linarith
-  rw [Finset.disjoint_iff_inter_eq_empty]
-  exact_mod_cast h₂
+  rw [Finset.disjoint_left]
+  intro x hx₁ hx₂
+  simp only [completeBlock, Finset.mem_Icc] at hx₁ hx₂
+  nlinarith
 
 /-- The complete blocks indexed by `Finset.range q` are pairwise disjoint.
     Block B_i = [iM+1, (i+1)M] and B_j = [jM+1, (j+1)M] are disjoint for i ≠ j
@@ -283,21 +200,12 @@ lemma sum_valid_from_blocks_le_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.
       (fun k => (completeBlock M k).filter P) := by
     intro i _ j _ hij
     simp only [Function.onFun, Finset.disjoint_iff_ne]
-    intro x hxi y hyj
-    have hblocks := completeBlocks_pairwise_disjoint M hM
+    intro x hxi y hyj heq
     have hdisj_ij : Disjoint (completeBlock M i : Set ℕ) (completeBlock M j : Set ℕ) :=
-      hblocks (Set.mem_univ i) (Set.mem_univ j) hij
-    have hxi' : x ∈ completeBlock M i := Finset.mem_of_mem_filter x hxi
-    have hyj' : y ∈ completeBlock M j := Finset.mem_of_mem_filter y hyj
-    intro heq
-    rw [heq] at hxi'
+      completeBlocks_pairwise_disjoint M hM (Set.mem_univ i) (Set.mem_univ j) hij
     rw [Set.disjoint_iff] at hdisj_ij
-    exact hdisj_ij ⟨hxi', hyj'⟩
-  have hsum : (Finset.range (X / M)).sum (fun k => ((completeBlock M k).filter P).card)
-      = ((Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)).card := by
-    rw [Finset.card_biUnion]
-    · exact hdisj
-  rw [hsum]
+    exact hdisj_ij ⟨heq ▸ Finset.mem_of_mem_filter x hxi, Finset.mem_of_mem_filter y hyj⟩
+  rw [← Finset.card_biUnion hdisj]
   have hsub : (Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)
       ⊆ (Finset.Icc 1 X).filter P := by
     rw [Finset.biUnion_subset]
@@ -333,10 +241,8 @@ def partialBlock (M X : ℕ) : Finset ℕ := Finset.Icc (X / M * M + 1) X
 
 lemma partialBlock_subset_Icc (M X : ℕ) (_hM : 0 < M) :
     partialBlock M X ⊆ Finset.Icc 1 X := by
-  dsimp [partialBlock]
-  apply Finset.Icc_subset_Icc
-  <;>
-  (try norm_num)
+  simp only [partialBlock]
+  apply Finset.Icc_subset_Icc <;> omega
 
 lemma partialBlock_subset_Ico (M X : ℕ) (hM : 0 < M) :
     (partialBlock M X : Set ℕ) ⊆ ↑(Finset.Ico (X / M * M) (X / M * M + M)) := by
@@ -360,9 +266,7 @@ lemma partialBlock_subset_Ico (M X : ℕ) (hM : 0 < M) :
 lemma partialBlock_injOn_mod (M X : ℕ) :
     Set.InjOn (fun x => x % M) ↑(partialBlock M X) := by
   rcases eq_or_lt_of_le (Nat.zero_le M) with rfl | hM
-  · intro x _ y _ hxy
-    simp only [Nat.mod_zero] at hxy
-    exact hxy
+  · simp_all
   · exact (Nat.mod_injOn_Ico (X / M * M) M).mono (partialBlock_subset_Ico M X hM)
 
 lemma partialBlock_validMapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
@@ -373,17 +277,12 @@ lemma partialBlock_validMapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes
     Set.MapsTo (fun x => x % M) ↑validBlock ↑A := by
   intro M A validBlock N hN
   rw [Finset.mem_coe] at hN ⊢
-  rw [Finset.mem_filter] at hN
-  obtain ⟨_, hvalid⟩ := hN
-  simp only at *
+  obtain ⟨_, hvalid⟩ := Finset.mem_filter.mp hN
   change N % M ∈ validResiduesMod b T S
   rw [validResiduesMod, Finset.mem_filter, Finset.mem_range]
-  constructor
-  · exact Nat.mod_lt N (primeSquareProduct_pos S)
-  · have hmodEq : (N % M) ≡ N [MOD M] := Nat.mod_modEq N M
-    have hmod : N % M = (N % M) % M := (Nat.ModEq.eq_1 M (N % M) N ▸ hmodEq).symm
-    rw [← condition_mod_invariant b T S N (N % M) hmod]
-    exact hvalid
+  refine ⟨Nat.mod_lt N (primeSquareProduct_pos S), ?_⟩
+  have hmod : N % M = (N % M) % M := (Nat.mod_mod_of_dvd N dvd_rfl).symm
+  exact (condition_mod_invariant b T S N (N % M) hmod).mp hvalid
 
 lemma partialBlock_valid_count_le (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     let M := primeSquareProduct S
@@ -402,147 +301,41 @@ lemma partialBlock_valid_count_le (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Pri
 
 lemma completeBlock_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) (k : ℕ) (hk : k < X / M) :
     Disjoint (completeBlock M k) (partialBlock M X) := by
-  have h₁ : (completeBlock M k) ∩ (partialBlock M X) = ∅ := by
-    apply Finset.eq_empty_of_forall_notMem
-    intro n hn
-    simp only [completeBlock, partialBlock, Finset.mem_inter, Finset.mem_Icc] at hn
-    have h₈ : (k + 1) * M ≤ (X / M) * M := by
-      have h₁₁ : (k + 1) * M ≤ (X / M) * M := by
-        nlinarith
-      exact h₁₁
-    have h₁₁ : n ≤ (X / M) * M := by
-      linarith
-    omega
-  exact Finset.disjoint_iff_inter_eq_empty.mpr h₁
+  rw [Finset.disjoint_left]
+  intro n hn₁ hn₂
+  simp only [completeBlock, partialBlock, Finset.mem_Icc] at hn₁ hn₂
+  nlinarith [Nat.mul_le_mul_right M (Nat.succ_le_of_lt hk)]
 
 lemma biUnion_completeBlocks_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) :
     Disjoint ((Finset.range (X / M)).biUnion (completeBlock M)) (partialBlock M X) := by
-  have h_main : Disjoint ((Finset.range (X / M)).biUnion (completeBlock M)) (partialBlock M X) := by
-    rw [Finset.disjoint_left]
-    intro x hx₁ hx₂
-    have h₁ : ∃ k, k ∈ Finset.range (X / M) ∧ x ∈ completeBlock M k := by
-      simpa [Finset.mem_biUnion] using hx₁
-    obtain ⟨k, hk₁, hk₂⟩ := h₁
-    have h₂ : x ∉ partialBlock M X := by
-      have h₃ : k < X / M := Finset.mem_range.mp hk₁
-      have h₄ : x ∈ completeBlock M k := hk₂
-      have h₅ : x ∈ Finset.Icc (k * M + 1) ((k + 1) * M) := by
-        simpa [completeBlock] using h₄
-      have h₇ : x ≤ (k + 1) * M := Finset.mem_Icc.mp h₅ |>.2
-      have h₈ : x ∉ partialBlock M X := by
-        intro h₉
-        have h₁₀ : x ∈ Finset.Icc (X / M * M + 1) X := by
-          simpa [partialBlock] using h₉
-        have h₁₁ : (X / M * M + 1 : ℕ) ≤ x := Finset.mem_Icc.mp h₁₀ |>.1
-        have h₁₄ : (k + 1 : ℕ) ≤ X / M := by
-          omega
-        have h₁₅ : (k + 1) * M ≤ X / M * M := by
-          have h₁₆ : (k + 1 : ℕ) ≤ X / M := h₁₄
-          have h₁₇ : (k + 1 : ℕ) * M ≤ (X / M) * M := by
-            exact Nat.mul_le_mul_right M h₁₆
-          exact h₁₇
-        have h₁₈ : (X / M * M + 1 : ℕ) ≤ (k + 1) * M := by
-          omega
-        omega
-      exact h₈
-    exact h₂ hx₂
-  exact h_main
-
-lemma mem_completeBlock_of_div_lt (M X n : ℕ) (hM : 0 < M) (hn_pos : 1 ≤ n) (hn_le : n ≤ X)
-    (hk : (n - 1) / M < X / M) : n ∈ completeBlock M ((n - 1) / M) := by
-  have h₁ : n - 1 < (n - 1) / M * M + M := by
-    have h₂ : (n - 1) % M < M := Nat.mod_lt (n - 1) hM
-    have h₃ : (n - 1) = (n - 1) / M * M + (n - 1) % M := by
-      have h₄ := Nat.div_add_mod (n - 1) M
-      linarith
-    linarith
-  have h₂ : (n - 1) / M * M + 1 ≤ n := by
-    have h₃ : n - 1 ≥ (n - 1) / M * M := by
-      have h₄ : (n - 1) / M * M ≤ n - 1 := by
-        have h₅ : (n - 1) / M * M ≤ n - 1 := by
-          have h₆ := Nat.div_mul_le_self (n - 1) M
-          linarith
-        exact h₅
-      omega
-    have h₄ : (n - 1) / M * M + 1 ≤ n := by
-      have h₅ : n ≥ 1 := by omega
-      have h₆ : (n - 1) / M * M + 1 ≤ n := by
-        cases n with
-        | zero => omega
-        | succ n =>
-          cases n with
-          | zero => omega
-          | succ n =>
-            simp at h₃ ⊢; ring_nf at h₃ ⊢; omega
-      exact h₆
-    exact h₄
-  have h₃ : n ≤ ((n - 1) / M + 1) * M := by
-    have h₄ : n ≤ ((n - 1) / M + 1) * M := by
-      by_cases h₅ : M = 0
-      · exfalso
-        linarith
-      · have h₇ : (n - 1) < ((n - 1) / M + 1) * M := by
-          have h₈ : (n - 1) < ((n - 1) / M + 1) * M := by
-            linarith
-          exact h₈
-        have h₈ : n ≤ ((n - 1) / M + 1) * M := by
-          have h₁₀ : n ≤ ((n - 1) / M + 1) * M := by
-            by_cases h₁₁ : n - 1 + 1 ≤ ((n - 1) / M + 1) * M
-            · have h₁₂ : n = n - 1 + 1 := by
-                omega
-              omega
-            · omega
-          exact h₁₀
-        exact h₈
-    exact h₄
-  have h₄ : n ∈ Finset.Icc ((n - 1) / M * M + 1) (((n - 1) / M + 1) * M) := by
-    rw [Finset.mem_Icc]
-    constructor <;>
-    (try omega)
-  simp only [completeBlock] at *
-  simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm, Nat.mul_add, Nat.add_mul] using h₄
+  rw [Finset.disjoint_left]
+  intro x hx₁ hx₂
+  obtain ⟨k, hk₁, hk₂⟩ := Finset.mem_biUnion.mp hx₁
+  simp only [completeBlock, partialBlock, Finset.mem_Icc, Finset.mem_range] at hk₁ hk₂ hx₂
+  nlinarith [Nat.mul_le_mul_right M (Nat.succ_le_of_lt hk₁)]
+lemma mem_completeBlock_of_div_lt (M X n : ℕ) (hM : 0 < M) (hn_pos : 1 ≤ n) (_hn_le : n ≤ X)
+    (_hk : (n - 1) / M < X / M) : n ∈ completeBlock M ((n - 1) / M) := by
+  simp only [completeBlock, Finset.mem_Icc]
+  have h₁ : (n - 1) / M * M + 1 ≤ n := by
+    have := Nat.div_mul_le_self (n - 1) M
+    omega
+  have h₂ : n ≤ ((n - 1) / M + 1) * M := by
+    have h : n - 1 < (n - 1) / M * M + M := Nat.lt_div_mul_add hM
+    rw [Nat.succ_mul]
+    omega
+  omega
 
 lemma mem_partialBlock_of_div_eq (M X n : ℕ) (_hM : 0 < M) (hn_pos : 1 ≤ n) (hn_le : n ≤ X)
     (hk : (n - 1) / M = X / M) : n ∈ partialBlock M X := by
-  have h₁ : X / M * M + 1 ≤ n := by
-    have h₂ : (n - 1) / M = X / M := hk
-    have h₃ : (n - 1) / M * M ≤ n - 1 := by
-      have h₄ : (n - 1) / M * M ≤ n - 1 := by
-        have h₅ : (n - 1) / M * M ≤ n - 1 := by
-          apply Nat.div_mul_le_self
-        exact h₅
-      exact h₄
-    have h₄ : X / M * M ≤ n - 1 := by
-      calc
-        X / M * M = (n - 1) / M * M := by rw [h₂]
-        _ ≤ n - 1 := h₃
-    have h₅ : X / M * M + 1 ≤ n := by
-      have h₈ : X / M * M + 1 ≤ n := by
-        have h₁₀ : n - 1 + 1 = n := by
-          have h₁₂ : n - 1 + 1 = n := by
-            omega
-          exact h₁₂
-        omega
-      exact h₈
-    exact h₅
-  have h₂ : n ≤ X := hn_le
-  have h₃ : n ∈ Finset.Icc (X / M * M + 1) X := by
-    apply Finset.mem_Icc.mpr
-    constructor
-    · exact h₁
-    · exact h₂
-  have h₄ : partialBlock M X = Finset.Icc (X / M * M + 1) X := rfl
-  rw [h₄] at *
-  exact h₃
+  simp only [partialBlock, Finset.mem_Icc]
+  refine ⟨?_, hn_le⟩
+  have h₁ := Nat.div_mul_le_self (n - 1) M
+  have h₂ : X / M * M = (n - 1) / M * M := by rw [hk]
+  omega
 
 lemma div_sub_one_le_div (M X n : ℕ) (hn_pos : 1 ≤ n) (hn_le : n ≤ X) :
-    (n - 1) / M ≤ X / M := by
-  have h : n - 1 ≤ X := by
-    omega
-  have h₁ : (n - 1) / M ≤ X / M := by
-    apply Nat.div_le_div_right; omega
-  exact h₁
-
+    (n - 1) / M ≤ X / M :=
+  Nat.div_le_div_right (by omega)
 /-- The interval [1,X] equals the disjoint union of complete blocks indexed by `Finset.range q` and
     the partial block V from `qM + 1` through `X`.
     Every n ∈ [1,X] falls into exactly one of:
@@ -568,28 +361,11 @@ theorem Icc_eq_biUnion_union_partialBlock (M X : ℕ) (hM : 0 < M) :
     · exact Finset.mem_Icc.mp (completeBlocks_subset_Icc M X hM k hk hn_block)
     · exact Finset.mem_Icc.mp (partialBlock_subset_Icc M X hM hn_partial)
 
-lemma filtered_biUnion_disjoint_filtered_partialBlock (M X : ℕ) (_hM : 0 < M)
+lemma filtered_biUnion_disjoint_filtered_partialBlock (M X : ℕ) (hM : 0 < M)
     (P : ℕ → Prop) [DecidablePred P] :
     Disjoint (((Finset.range (X / M)).biUnion (completeBlock M)).filter P)
-             ((partialBlock M X).filter P) := by
-  have h_disjoint_unfiltered : Disjoint ((Finset.range (X / M)).biUnion (completeBlock M)) (
-      partialBlock M X) := by
-    rw [Finset.disjoint_left]
-    intro x hx₁ hx₂
-    simp only [Finset.mem_biUnion, Finset.mem_range, completeBlock, partialBlock,
-        Finset.mem_Icc] at hx₁ hx₂
-    obtain ⟨k, hk₁, hk₂⟩ := hx₁
-    have h₈ : (k + 1) * M ≤ (X / M) * M := by
-      have h₈₂ : (k + 1) * M ≤ (X / M) * M := by
-        nlinarith
-      exact h₈₂
-    have h₉ : x ≤ (X / M) * M := by
-      nlinarith
-    omega
-  have h_main : Disjoint (((Finset.range (X / M)).biUnion (completeBlock M)).filter P) (
-      (partialBlock M X).filter P) := by
-    apply Finset.disjoint_filter_filter h_disjoint_unfiltered
-  exact h_main
+             ((partialBlock M X).filter P) :=
+  Finset.disjoint_filter_filter (biUnion_completeBlocks_disjoint_partialBlock M X hM)
 
 /-- Filtering preserves pairwise disjointness of Finsets: if the original Finsets are
     pairwise disjoint, then their filtered versions are too.

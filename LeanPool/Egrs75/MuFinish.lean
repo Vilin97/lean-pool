@@ -109,9 +109,7 @@ theorem muVal_lt_of {q : ℕ} (hq3 : 3 ≤ q) {n n' : ℕ} (hbad : 0 < badCountQ
   rcases h with hzero | ⟨hbad', hcase⟩
   · have hmn' : muVal q hq3 n' = 0 := by
       simp only [muVal, dif_neg (by omega : ¬ 0 < badCountQ q n')]
-    have hpos : 0 < leastGoodAbove hq3 hbad * q :=
-      Nat.mul_pos (by omega) (by omega)
-    rw [hmn, hmn']; omega
+    simp_all
   · have hmn' : muVal q hq3 n'
         = leastGoodAbove hq3 hbad' * q
           + ((q - 1) / 2 - n' / q ^ (leastGoodAbove hq3 hbad') % q) := by
@@ -222,8 +220,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
           · rw [hlow idx hlt, ← heqk]
             exact le_of_lt hkstrict
           · rw [hlow idx hlt, hkbet idx hgtk hlt]
-        · subst heqi
-          rw [hdig_i]; omega
+        · simp_all
         · rw [hhigh idx hgt]
           exact digit_good_above_top hq1 hbad (by omega)
       have htb' : topBadIndex q (n + U) < k :=
@@ -263,8 +260,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
         MoveDigits.topBad_lt_of_good_from hq1 hbad' hgoodi
       have hsgi : StrictGoodAt q i (n - S) := by
         unfold StrictGoodAt
-        rw [hfrozen i (le_refl i)]
-        exact hbi
+        rwa [hfrozen i (le_refl i)]
       have hi'le : leastGoodAbove hq3 hbad' ≤ i := Nat.find_min' _ ⟨htb', hsgi⟩
       rcases Nat.eq_or_lt_of_le hi'le with heq' | hlt'
       · -- index and digit frozen: μ unchanged, n strictly drops
@@ -274,8 +270,7 @@ theorem egrs_move {p q : ℕ} (hp : p.Prime) (_hq : q.Prime)
             = leastGoodAbove hq3 hbad' * q
               + ((q - 1) / 2 - (n - S) / q ^ (leastGoodAbove hq3 hbad') % q) := by
           simp only [muVal, dif_pos hbad']
-        rw [h1, hmun, heq']
-        rw [hfrozen i (le_refl i)]
+        simp_all
       · -- index dropped: μ strictly drops
         left
         exact muVal_lt_of hq3 hbad (Or.inr ⟨hbad', Or.inl (by omega)⟩)
@@ -402,9 +397,7 @@ theorem align_finish_mu {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     rcases Nat.lt_or_ge idx (e + 3) with h2 | h3
     · -- idx = e + 2
       have heq2 : idx = e + 2 := by omega
-      subst heq2
-      rw [hdiv2, Nat.mul_mod_left]
-      omega
+      simp_all
     · rcases Nat.lt_or_ge idx (e + 4) with h4 | h5
       · -- idx = e + 3
         have heq3 : idx = e + 3 := by omega
@@ -416,8 +409,7 @@ theorem align_finish_mu {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
           calc p ^ α < q ^ (e + 4) := hsmall
             _ ≤ q ^ idx := Nat.pow_le_pow_right (by omega) h5
         rw [hz]
-        simp only [Nat.zero_mod]
-        omega
+        simp_all
   rcases Nat.eq_zero_or_pos (badCountQ q (p ^ α)) with hz | hbads
   · -- the seed is already fully good
     exact ⟨p ^ α, hsN, hsp, badCountQ_eq_zero_iff_lowDigits.mp hz⟩

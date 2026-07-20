@@ -24,8 +24,7 @@ open scoped BigOperators
 theorem sum_rotate {α β γ ζ : Type _} [AddCommMonoid β] {s : Finset α} {t : Finset γ} {u : Finset ζ}
     {f : α → γ → ζ → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, f x y z =
-      ∑ z ∈ u, ∑ x ∈ s, ∑ y ∈ t, f x y z :=
-  by
+      ∑ z ∈ u, ∑ x ∈ s, ∑ y ∈ t, f x y z := by
   nth_rw 2 [Finset.sum_comm]
   congr
   ext x
@@ -34,8 +33,7 @@ theorem sum_rotate {α β γ ζ : Type _} [AddCommMonoid β] {s : Finset α} {t 
 theorem sum_3_comm {α β γ ζ : Type _} [AddCommMonoid β] {s : Finset α} {t : Finset γ} {u : Finset ζ}
     {f : α → γ → ζ → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, f x y z =
-      ∑ z ∈ u, ∑ y ∈ t, ∑ x ∈ s, f x y z :=
-  by
+      ∑ z ∈ u, ∑ y ∈ t, ∑ x ∈ s, f x y z := by
   rw [Finset.sum_rotate]
   congr
   ext
@@ -44,8 +42,7 @@ theorem sum_3_comm {α β γ ζ : Type _} [AddCommMonoid β] {s : Finset α} {t 
 theorem sum_4_rotate {α β γ ζ ε : Type _} [AddCommMonoid β] {s : Finset α} {t : Finset γ}
     {u : Finset ζ} {v : Finset ε} {f : α → γ → ζ → ε → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, f x y z w =
-      ∑ w ∈ v, ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, f x y z w :=
-  by
+      ∑ w ∈ v, ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, f x y z w := by
   nth_rw 2 [Finset.sum_comm]
   congr
   ext x
@@ -54,8 +51,7 @@ theorem sum_4_rotate {α β γ ζ ε : Type _} [AddCommMonoid β] {s : Finset α
 theorem sum_sum_comm_sum {α β γ ζ ε : Type _} [AddCommMonoid β] {s : Finset α} {t : Finset γ}
     {u : Finset ζ} {v : Finset ε} {f : α → γ → ζ → ε → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, f x y z w =
-      ∑ x ∈ s, ∑ y ∈ t, ∑ w ∈ v, ∑ z ∈ u, f x y z w :=
-  by
+      ∑ x ∈ s, ∑ y ∈ t, ∑ w ∈ v, ∑ z ∈ u, f x y z w := by
   congr
   ext x
   congr
@@ -65,8 +61,7 @@ theorem sum_sum_comm_sum {α β γ ζ ε : Type _} [AddCommMonoid β] {s : Finse
 theorem sum_sum_sum {β α γ ζ : Type _} [AddCommMonoid β] {s : Finset γ} {t : Finset α}
     {g : Finset ζ} {f : γ → α → ζ → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ g, f x y z =
-      ∑ z ∈ g, ∑ x ∈ s, ∑ y ∈ t, f x y z :=
-  by
+      ∑ z ∈ g, ∑ x ∈ s, ∑ y ∈ t, f x y z := by
   symm
   rw [Finset.sum_comm]
   congr
@@ -76,8 +71,7 @@ theorem sum_sum_sum {β α γ ζ : Type _} [AddCommMonoid β] {s : Finset γ} {t
 theorem sum_4_swap_2 {β α γ ζ ε : Type _} [AddCommMonoid β] {s : Finset γ} {t : Finset α}
     {u : Finset ζ} {v : Finset ε} {f : γ → α → ζ → ε → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, f x y z w =
-      ∑ z ∈ u, ∑ w ∈ v, ∑ x ∈ s, ∑ y ∈ t, f x y z w :=
-  by
+      ∑ z ∈ u, ∑ w ∈ v, ∑ x ∈ s, ∑ y ∈ t, f x y z w := by
   rw [Finset.sum_rotate]
   congr
   ext
@@ -86,8 +80,7 @@ theorem sum_4_swap_2 {β α γ ζ ε : Type _} [AddCommMonoid β] {s : Finset γ
 theorem sum_5_rotate {α β γ ζ ε κ : Type _} [AddCommMonoid β] {s : Finset α} {t : Finset γ}
     {u : Finset ζ} {v : Finset ε} {k : Finset κ} {f : α → γ → ζ → ε → κ → β} :
     ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, ∑ vz ∈ k, f x y z w vz =
-      ∑ vz ∈ k, ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, f x y z w vz :=
-  by
+      ∑ vz ∈ k, ∑ x ∈ s, ∑ y ∈ t, ∑ z ∈ u, ∑ w ∈ v, f x y z w vz := by
   nth_rw 2 [Finset.sum_comm]
   congr
   ext x

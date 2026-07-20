@@ -162,8 +162,7 @@ lemma f_mem_fixedBy_iff_forall_eq_to_eq (g : G) (f : X → Y) :
     rw [hpow]
     have h_fix_g : ∀ y, f (g • y) = f y := fun y => by
       have key := h (g • y)
-      rw [← mul_smul, inv_mul_cancel, one_smul] at key
-      exact key.symm
+      simp_all
     have h_fix : ∀ (k : ℤ) (y : X), f ((g ^ k) • y) = f y := by
       intro k y
       induction k with
@@ -179,9 +178,7 @@ lemma f_mem_fixedBy_iff_forall_eq_to_eq (g : G) (f : X → Y) :
     apply hyp
     apply Quotient.sound
     refine ⟨1, ?_⟩
-    rw [zpow_one]
-    change g • (g⁻¹ • x) = x
-    rw [← mul_smul, mul_inv_cancel, one_smul]
+    simp_all
 
 /-- A function that maps a coloring from fixed points of `g` to a coloring of cycles. Colorings
     that are fixed by `g` map all elements of a cycle of `g` to the same color by lemma
@@ -205,9 +202,7 @@ def fixedByColoringOfCycleColoring (g : G) (f : (CyclesOfGroup X g) → Y) :
     apply congrArg
     apply Quotient.sound
     refine ⟨1, ?_⟩
-    rw [zpow_one]
-    change g • (g⁻¹ • x) = x
-    rw [← mul_smul, mul_inv_cancel, one_smul]⟩
+    simp_all⟩
 
 /-- Functions `cycleColoringOfFixedByColoring` and `fixedByColoringOfCycleColoring` are
     inverses and form a bijection. -/
@@ -291,9 +286,7 @@ theorem numDistinctColorings_mul_card_group_eq_sum_numGroupOfNumCycles_mul_card_
       apply Finset.sum_congr
       · ext
         simp [Fin.ext_iff]
-      · intro _ hg
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
-        rw [hg]
+      · simp_all
     _ = ∑ i : Fin (Fintype.card X + 1),
           (numGroupOfNumCycles X G i.1) * (Fintype.card Y) ^ i.1 := by simp
 

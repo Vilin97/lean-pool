@@ -156,9 +156,7 @@ instance : PartialOrder Hollom where
 @[simp] lemma toHollom_le_toHollom_iff_fixed_right {a b c d n : ℕ} :
     h(a, b, n) ≤ h(c, d, n) ↔ a ≤ c ∧ b ≤ d := by
   refine ⟨?_, ?_⟩
-  · rintro (_ | _)
-    · omega
-    · omega
+  · rintro (_ | _) <;> omega
   · rintro ⟨h₁, h₂⟩
     exact .within h₁ h₂
 
@@ -194,9 +192,7 @@ lemma level_eq (n : ℕ) : level n = {x | (ofHollom x).2.2 = n} := by
 lemma induction_on_level {n : ℕ} {p : (x : Hollom) → x ∈ level n → Prop}
     (h : ∀ x y, p h(x, y, n) (by simp)) :
     ∀ {x : Hollom}, (h : x ∈ level n) → p x h := by
-  simp +contextual only [«forall», toHollom_mem_level_iff, Prod.forall]
-  rintro x y _ rfl
-  exact h _ _
+  simp_all
 
 /--
 For each `n`, there is an order embedding from ℕ × ℕ (which has the product order) to the Hollom
@@ -211,8 +207,7 @@ lemma embed_apply (n : ℕ) (x y : ℕ) : embed n (x, y) = h(x, y, n) := rfl
 
 lemma embed_strictMono {n : ℕ} : StrictMono (embed n) := (embed n).strictMono
 
-lemma level_eq_range (n : ℕ) : level n = Set.range (embed n) := by
-  simp [level, Set.range, embed]
+lemma level_eq_range (n : ℕ) : level n = Set.range (embed n) := by simp [level, Set.range, embed]
 
 lemma level_isPWO {n : ℕ} : (level n).IsPWO := by
   rw [level_eq_range, ← Set.image_univ]
@@ -404,8 +399,7 @@ theorem exists_finite_intersection (hC : IsChain (· ≤ ·) C) :
     -- ...and `C ∩ level (n + 1)` is infinite (by assumption).
     specialize hC' (n + 1) (by omega)
     rw [← (C ∩ level (n + 1)).inter_union_sdiff D, Set.infinite_union] at hC'
-    refine hC'.resolve_left ?_
-    simpa using this
+    simp_all
   -- In fact, we only need it to be nonempty, and find a point.
   obtain ⟨x, hxy⟩ := this.nonempty
   induction hxy.1.2 using induction_on_level with | h x y =>
@@ -654,8 +648,7 @@ theorem card_C_inter_Icc_eq [DecidablePred (· ∈ C)] (f : SpinalMap C) {n : �
   have int_eq : int = Set.Icc h(xl, yl, n) h(xh, yh, n) := by
     simp only [coe_image, coe_Icc, int, embed_image_Icc]
   have hI : IsChain (· ≤ ·) (I : Set Hollom) := hC.mono (by simp [Set.subset_def, I])
-  have hIn : (I : Set Hollom) ⊆ level n := by
-    simp +contextual [Set.subset_def, I, int, embed_apply]
+  have hIn : (I : Set Hollom) ⊆ level n := by simp +contextual [Set.subset_def, I, int, embed_apply]
   have : Set.MapsTo line int (Icc (xl + yl) (xh + yh)) := by
     rw [int_eq, coe_Icc]
     exact line_mapsTo rfl
@@ -1122,8 +1115,7 @@ lemma S_mapsTo_previous (f : SpinalMap C) (hC : IsChain (· ≤ ·) C) (hn : n �
     simp only [Set.mem_inter_iff, SpinalMap.mem, true_and] at this
     simp [← hp] at this
   -- Next `f (a, b, m) = (a, b, m) = f (x, y, n)`
-  have hp' : f h(a, b, m) = f h(x, y, n) := by
-    rw [hp, f.idempotent]
+  have hp' : f h(a, b, m) = f h(x, y, n) := by rw [hp, f.idempotent]
   -- But `(x, y, n) ≤ (a, b, m)` if `m + 2 ≤ n`, so this cannot hold
   have : ¬ m + 2 ≤ n := by
     intro h
@@ -1202,8 +1194,7 @@ theorem not_S_mapsTo_previous (hC : IsChain (· ≤ ·) C)
   have line_F_mapsTo : Set.MapsTo (line ∘ f) F (range (2 * a)) := line_mapsTo.comp F_mapsTo
   -- which is a contradiction by cardinality arguments.
   have := card_le_card_of_injOn _ line_F_mapsTo (line_inj.comp F_inj F_mapsTo)
-  simp only [Finset.card_range] at this
-  omega
+  simp_all
 
 /-- The Hollom partial order has no spinal maps. -/
 theorem no_spinalMap (hC : IsChain (· ≤ ·) C) (f : SpinalMap C) : False := by

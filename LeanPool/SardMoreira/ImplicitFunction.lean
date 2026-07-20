@@ -40,7 +40,6 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
   have hrange_eq : (hrange.choose ∘L f').range = ⊤ := by
     rw [LinearMap.range_eq_top]
     rintro ⟨_, x, rfl⟩
-    use x
     simp_all
   let φ := implicitFunctionDataOfComplemented (hrange.choose ∘ f) (hrange.choose ∘L f')
     (hrange.choose.hasStrictFDerivAt.comp a hf) hrange_eq (by rwa [hker_eq])
@@ -98,7 +97,6 @@ theorem implicitToOpenPartialHomeomorphOfComplementedKerRange_apply_fst {f : E �
     {a : E} (hf : HasStrictFDerivAt f f' a) (hker : f'.ker.ClosedComplemented)
     (hrange : f'.range.ClosedComplemented) (x : E) :
     (implicitToOpenPartialHomeomorphOfComplementedKerRange f f' hf hker hrange x).fst =
-      hrange.choose (f x) := by
-  simp [implicitToOpenPartialHomeomorphOfComplementedKerRange_apply]
+      hrange.choose (f x) := by simp [implicitToOpenPartialHomeomorphOfComplementedKerRange_apply]
 
 end HasStrictFDerivAt

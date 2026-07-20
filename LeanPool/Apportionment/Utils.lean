@@ -33,7 +33,6 @@ lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :
   constructor
   · contrapose!
     intro h_nonpos
-    have h_zero (i : Fin n) := nonpos_iff_eq_zero.mp (h_nonpos i)
     rw [nonpos_iff_eq_zero]
     unfold Vector.sum
     rw [← Array.sum_toList]
@@ -41,13 +40,12 @@ lemma sum_pos_iff_exists_pos {n : ℕ} {v : Vector ℕ n} :
     intro x hx
     obtain ⟨i, hi⟩ : ∃ i : Fin n, x = v[i] := by
       apply List.mem_iff_get.mp hx |> fun ⟨i, hi⟩ => ⟨⟨i, by grind⟩, by simp [← hi]⟩
-    exact hi.trans (h_zero i)
+    exact hi.trans (nonpos_iff_eq_zero.mp (h_nonpos i))
   · intro ⟨i, hi⟩
-    have h_sum_pos : v.sum ≥ v[i] := by
-      unfold Vector.sum
-      rw [← Array.sum_toList]
-      exact List.le_sum_of_mem (by simp)
-    omega
+    refine lt_of_lt_of_le hi ?_
+    unfold Vector.sum
+    rw [← Array.sum_toList]
+    exact List.le_sum_of_mem (by simp)
 
 /-- The sum of a length-4 vector equals the sum of its components. -/
 lemma Vector.sum_four (v : Vector ℕ 4) : v.sum = v[0] + v[1] + v[2] + v[3] := by

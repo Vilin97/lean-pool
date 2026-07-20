@@ -63,10 +63,7 @@ lemma congr_transpose_mul_mul_ne_zero
   have hcalc : U * (U.transpose * G * U) * U.transpose
       = (U * U.transpose) * G * (U * U.transpose) := by
     simp [Matrix.mul_assoc]
-  have hG_eq : G = U * (U.transpose * G * U) * U.transpose := by
-    simpa [hU_right, Matrix.one_mul, Matrix.mul_one] using hcalc.symm
-  have : G = 0 := by simpa [hH, Matrix.mul_zero, Matrix.zero_mul] using hG_eq
-  exact hG_ne_zero this
+  simp_all
 
 /-- Cauchy–Schwarz for the semi-inner product induced by a PSD real matrix.
 For all vectors x,y: (xᵀ H y)^2 ≤ (xᵀ H x) (yᵀ H y).
@@ -85,8 +82,7 @@ lemma psd_cauchy_schwarz
     calc
       a ⬝ᵥ (B.transpose * B).mulVec b
           = a ⬝ᵥ B.transpose.mulVec (B.mulVec b) := by rw [h1]
-      _ = (Matrix.vecMul a B.transpose) ⬝ᵥ (B.mulVec b) := by
-        exact dotProduct_mulVec a Bᵀ (B.mulVec b)
+      _ = (Matrix.vecMul a B.transpose) ⬝ᵥ (B.mulVec b) := dotProduct_mulVec a Bᵀ (B.mulVec b)
       _ = (B.mulVec a) ⬝ᵥ (B.mulVec b) := by
         have := (Matrix.vecMul_transpose (A := B) (x := a))
         simpa using congrArg (fun w => w ⬝ᵥ (B.mulVec b)) this
@@ -118,17 +114,7 @@ lemma psd_offdiag_zero_of_diag_zero
   -- Apply Cauchy–Schwarz with x = e_i, y = e_j
   have hcs := psd_cauchy_schwarz H hH_psd (Pi.single i (1 : ℝ)) (Pi.single j (1 : ℝ))
   -- Rewrite each quadratic form
-  have hx : (Pi.single i (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single i 1) = H i i := by simp
-  have hy : (Pi.single j (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H j j := by simp
-  have hxy : (Pi.single i (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H i j := by simp
-  -- Substitute and use hii, hjj
-  have : (H i j)^2 ≤ (H i i) * (H j j) := by simpa [hx, hy, hxy]
-    using hcs
-  -- Right side is 0, left is square ≥ 0, hence equality and H i j = 0 over ℝ
-  have : (H i j)^2 ≤ 0 := by simpa [hii, hjj]
-  have hsq_nonneg : 0 ≤ (H i j)^2 := by have := sq_nonneg (H i j); simpa using this
-  have : (H i j)^2 = 0 := le_antisymm this hsq_nonneg
-  exact sq_eq_zero_iff.mp this
+  simp_all
 
 /-- For a real PSD matrix, if it is nonzero then some diagonal entry is strictly positive. -/
 lemma posSemidef_diag_pos_exists_of_ne_zero
@@ -202,8 +188,7 @@ lemma frobenius_pos_of_psd_posdef
       -- Uu is a unitary group element, coerce to show membership
       rw [show U = Uu.val from rfl]
       exact Uu.property
-    have hU_unitary : U * U.conjTranspose = 1 := by
-      exact Matrix.mem_unitaryGroup_iff.mp hU_mem
+    have hU_unitary : U * U.conjTranspose = 1 := Matrix.mem_unitaryGroup_iff.mp hU_mem
     have hU_right : U * U.transpose = 1 := by
       simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using hU_unitary
     exact congr_transpose_mul_mul_ne_zero U G hU_right hG_ne_zero

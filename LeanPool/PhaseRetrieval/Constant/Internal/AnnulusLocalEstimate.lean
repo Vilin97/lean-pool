@@ -64,8 +64,7 @@ private lemma sum_ite_mem_biUnion (S : Finset ℕ) (n : ℕ) (c : ℂ) :
           (Finset.mem_coe.mpr hℓS) hne) h' hℓn)
       (fun habs => absurd hℓS habs)]
     simp only [hℓn, ite_true]
-  · exact Finset.sum_eq_zero (fun ℓ hℓ => if_neg (fun h' =>
-      h (Finset.mem_biUnion.mpr ⟨ℓ, hℓ, h'⟩)))
+  · simp_all
 
 /-- Sum of `2ℓ+1` over `Icc a b` plus `a²` equals `(b+1)²`. -/
 private lemma sum_odd_sq (a b : ℕ) (h : a ≤ b) :
@@ -90,31 +89,6 @@ private lemma card_biUnion_freqBlock (a b : ℕ) (h : a ≤ b) :
   omega
 
 /-! ## Private Lemma 6.1a: Monotonicity of `f(j) = 11(2j+1)/(j-5)^2` -/
-
-private lemma freq_ratio_decreasing {j₁ j₂ : ℕ} (hj₁ : 6 ≤ j₁) (hj₂ : 6 ≤ j₂)
-    (h : j₁ ≤ j₂) :
-    (11 * (2 * j₂ + 1) : ℝ) / ((j₂ - 5 : ℤ) : ℝ) ^ 2 ≤
-    (11 * (2 * j₁ + 1) : ℝ) / ((j₁ - 5 : ℤ) : ℝ) ^ 2 := by
-  have hj₁_sub : (j₁ - 5 : ℤ) = (j₁ : ℤ) - 5 := by omega
-  have hj₂_sub : (j₂ - 5 : ℤ) = (j₂ : ℤ) - 5 := by omega
-  rw [hj₁_sub, hj₂_sub]
-  have hd₁ : (0 : ℝ) < (((j₁ : ℤ) - 5 : ℤ) : ℝ) := by
-    exact_mod_cast (show (0 : ℤ) < (j₁ : ℤ) - 5 by omega)
-  have hd₂ : (0 : ℝ) < (((j₂ : ℤ) - 5 : ℤ) : ℝ) := by
-    exact_mod_cast (show (0 : ℤ) < (j₂ : ℤ) - 5 by omega)
-  rw [div_le_div_iff₀ (by positivity) (by positivity)]
-  have cast₁ : (((j₁ : ℤ) - 5 : ℤ) : ℝ) = (j₁ : ℝ) - 5 := by push_cast; ring
-  have cast₂ : (((j₂ : ℤ) - 5 : ℤ) : ℝ) = (j₂ : ℝ) - 5 := by push_cast; ring
-  rw [cast₁, cast₂]
-  nlinarith [sq_nonneg ((j₂ : ℝ) - j₁),
-    mul_nonneg (sub_nonneg.mpr (show (j₁ : ℝ) ≤ j₂ from by exact_mod_cast h))
-      (mul_nonneg (by linarith : (0 : ℝ) ≤ (j₁ : ℝ) - 5)
-        (by linarith : (0 : ℝ) ≤ (j₂ : ℝ) - 5))]
-
-/-! ## Private Lemma 6.1b: Numerical verification at j = 818 -/
-
-private lemma numerical_check_818 : 1343 * (11 * 1637) ^ 2 ≤ 813 ^ 4 := by
-  norm_num
 
 /-! ## Structural matching: localPoly as a Fourier sum -/
 
@@ -228,8 +202,7 @@ private lemma activeFreqSet_card_le {D : ℕ} (_hD : 1 ≤ D) {j : ℕ} (hj : j 
       rw [hmax]
       -- (min(Λ,j+5)+1)^2 - (j-5)^2 ≤ (j+6)^2 - (j-5)^2 = 11*(2j+1) ≤ 17985
       have h_ub : min (maxBlockIndex D) (j + 5) + 1 ≤ j + 6 := by omega
-      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by
-        nlinarith
+      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by nlinarith
       suffices (j + 6) ^ 2 - (j - 5) ^ 2 ≤ 17985 by omega
       suffices (j + 6) ^ 2 = (j - 5) ^ 2 + 11 * (2 * j + 1) by omega
       nlinarith [sq_nonneg (j - 5), Nat.sub_add_cancel (show 5 ≤ j by omega)]
@@ -237,8 +210,7 @@ private lemma activeFreqSet_card_le {D : ℕ} (_hD : 1 ≤ D) {j : ℕ} (hj : j 
       have hmax : max 1 (j - 5) = 1 := by omega
       rw [hmax]
       have h_ub : min (maxBlockIndex D) (j + 5) + 1 ≤ j + 6 := by omega
-      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by
-        nlinarith
+      have h_sq : (min (maxBlockIndex D) (j + 5) + 1) ^ 2 ≤ (j + 6) ^ 2 := by nlinarith
       have h_jsm : (j + 6) ^ 2 ≤ 11 ^ 2 := by nlinarith
       omega
   · -- Empty range

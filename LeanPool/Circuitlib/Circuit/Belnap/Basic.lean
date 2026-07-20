@@ -30,17 +30,14 @@ lemma and_leq
     (h0 : a₁ ≤ b₁)
     (h1 : a₂ ≤ b₂) :
     a₁.and a₂ ≤ b₁.and b₂ := by
-  cases a₁ <;> try (rename_i x; cases x <;> try (rename_i x; cases x))
-  all_goals (cases a₂ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (cases b₁ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (cases b₂ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (first | exact h0 | exact h1 | rfl)
+  revert a₁ a₂ b₁ b₂
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) h0 h1 <;>
+    first | exact h0 | exact h1 | rfl
 
 @[simp]
 lemma and_monotonic : Monotone and := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by ext; omega
   exact and_leq (hab 0) (hab 1)
 
 /-- The OR wire-function on a pair of Belnap-valued wires. -/
@@ -53,17 +50,14 @@ lemma or_leq
     (h0 : a₁ ≤ b₁)
     (h1 : a₂ ≤ b₂) :
     a₁.or a₂ ≤ b₁.or b₂ := by
-  cases a₁ <;> try (rename_i x; cases x <;> try (rename_i x; cases x))
-  all_goals (cases a₂ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (cases b₁ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (cases b₂ <;> try (rename_i x; cases x <;> try (rename_i x; cases x)))
-  all_goals (first | exact h0 | exact h1 | rfl)
+  revert a₁ a₂ b₁ b₂
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) h0 h1 <;>
+    first | exact h0 | exact h1 | rfl
 
 @[simp]
 lemma or_monotonic : Monotone or := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by ext; omega
   exact or_leq (hab 0) (hab 1)
 
 /-- The NOT wire-function on a single Belnap-valued wire. -/
@@ -72,23 +66,13 @@ def not (w : Wires BelnapLevel 1) : Wires BelnapLevel 1 := #v[ (w.get 0).not ]
 
 @[simp]
 lemma not_leq {x y : BelnapLevel} (h : x ≤ y) : x.not ≤ y.not := by
-  cases x with
-  | none => exact h
-  | some x => cases x with
-    | top =>
-      cases y with | none => exact h | some y => cases y <;> exact h
-    | coe xv =>
-      cases y with
-      | none => exact h
-      | some y => cases y with
-        | top => exact h
-        | coe yv => cases xv <;> cases yv <;> exact h
+  revert x y
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) h <;> exact h
 
 @[simp]
 lemma not_monotonic : Monotone not := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by ext; omega
   exact not_leq (hab 0)
 
 end Belnap

@@ -54,9 +54,7 @@ noncomputable def edgeEquivEmb : Edge n ≃ Emb4 where
   invFun := edgeOfEmb
   left_inv := by
     intro e
-    apply Subtype.ext
-    funext i
-    rfl
+    exact Subtype.ext rfl
   right_inv := by
     intro x
     ext i
@@ -79,16 +77,10 @@ private lemma sum_corrEdge_eq_sum_corrEmb (f : Coloring n) :
       (by intro e; rfl))
 
 private lemma edge_src_smul (σ : G) (e : Edge n) :
-    Edge.src (σ • e) = σ • Edge.src e := by
-  apply Subtype.ext
-  funext i
-  rfl
+    Edge.src (σ • e) = σ • Edge.src e := Subtype.ext rfl
 
 private lemma edge_dst_smul (σ : G) (e : Edge n) :
-    Edge.dst (σ • e) = σ • Edge.dst e := by
-  apply Subtype.ext
-  funext i
-  rfl
+    Edge.dst (σ • e) = σ • Edge.dst e := Subtype.ext rfl
 
 private lemma corrEdge_smul (f : Coloring n) (σ : G) (e : Edge n) :
     corrEdge f (σ • e) = corr f (σ • Edge.src e) (σ • Edge.dst e) := by
@@ -111,15 +103,7 @@ private lemma edgeCorrSum_cast_eq_sum_corrEdge (f : Coloring n) :
         ∑ e : Edge n,
           ((signOfColoring f (Edge.src e) : Int) : Q) *
             ((signOfColoring f (Edge.dst e) : Int) : Q) := by
-    change
-        (Int.castRingHom Q)
-            (∑ e : Edge n,
-              signOfColoring f (Edge.src e) * signOfColoring f (Edge.dst e) : Int)
-          =
-          ∑ e : Edge n,
-            ((signOfColoring f (Edge.src e) : Int) : Q) *
-              ((signOfColoring f (Edge.dst e) : Int) : Q)
-    simp [map_sum]
+    simp_all
   -- Rewrite the RHS summand as `corrEdge`.
   -- (The order `src/dst` matches; `corr` is commutative anyway.)
   simp [corrEdge, corr_eq_sign, hcast]
@@ -153,16 +137,13 @@ private lemma orbitProdStabilizerEquivGroup_smul_fst
     simp [g]
   have hfst :
       (Subgroup.groupEquivQuotientProdSubgroup (s := MulAction.stabilizer G b) g).1
-        = (MulAction.orbitEquivQuotientStabilizer G b) x := by
-    exact congrArg Prod.fst hgpair
+        = (MulAction.orbitEquivQuotientStabilizer G b) x := congrArg Prod.fst hgpair
   have hmk : QuotientGroup.mk g = (MulAction.orbitEquivQuotientStabilizer G b) x := by
     -- The first projection of `groupEquivQuotientProdSubgroup` is `QuotientGroup.mk`.
     simpa [Subgroup.groupEquivQuotientProdSubgroup] using hfst
   -- Convert to the orbit element via `orbitEquivQuotientStabilizer`.
   have hx_orbit : (MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) = x := by
-    have hx := (MulAction.orbitEquivQuotientStabilizer G b).left_inv x
-    rw [hmk]
-    exact hx
+    simp_all
   have hx_val :
       ((MulAction.orbitEquivQuotientStabilizer G b).symm (QuotientGroup.mk g) : Emb4) = x := by
     exact congrArg Subtype.val hx_orbit
@@ -185,8 +166,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
     simpa using (MulAction.orbit_eq_univ (M := G) (a := b))
   letI : Fintype (↑(MulAction.orbit G b)) := Fintype.ofFinite _
   have hbmem : ∀ x : Emb4, x ∈ MulAction.orbit G b := by
-    intro x
-    simp [hpre]
+    simp_all
   let hOrbitEquiv : (↑(MulAction.orbit G b)) ≃ Emb4 :=
     Equiv.subtypeUnivEquiv hbmem
   have hsumOrbit :
@@ -224,9 +204,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
       _ =
           ∑ x : ↑(MulAction.orbit G b),
             (Fintype.card (MulAction.stabilizer G b) : Q) * corrEmb f x.1 := by
-            refine Fintype.sum_congr _ _ ?_
-            intro x
-            simp [Finset.sum_const, nsmul_eq_mul, mul_comm]
+            simp_all
       _ =
           (Fintype.card (MulAction.stabilizer G b) : Q) *
             ∑ x : ↑(MulAction.orbit G b), corrEmb f x.1 := by
@@ -274,10 +252,8 @@ private lemma avg_corrEmb_eq_avg_corrEdge (f : Coloring n) :
     exact_mod_cast this
   calc
     (∑ x : Emb4, corrEmb f x) / (Fintype.card Emb4 : Q)
-        = (∑ e : Edge n, corrEdge f e) / (Fintype.card Emb4 : Q) := by
-            rw [hsum]
-    _ = (∑ e : Edge n, corrEdge f e) / (edgeCount n : Q) := by
-            rw [hcard]
+        = (∑ e : Edge n, corrEdge f e) / (Fintype.card Emb4 : Q) := by rw [hsum]
+    _ = (∑ e : Edge n, corrEdge f e) / (edgeCount n : Q) := by rw [hcard]
 
 theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
     xEdge (xFromColoring f) = edgeCorrelation f := by
@@ -304,10 +280,7 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
     simpa [hxEdge] using h0.trans h1
   -- Express the `corrAvg` as a group average, then convert it to an edge average.
   let b : Emb4 := ⟨edgeRep.1, edgeRep.2⟩
-  have hb : edgeOfEmb b = edgeRep := by
-    apply Subtype.ext
-    funext i
-    rfl
+  have hb : edgeOfEmb b = edgeRep := by exact Subtype.ext rfl
   have hAvgGroup :
       corrAvg f (Edge.src edgeRep) (Edge.dst edgeRep)
         = (∑ σ : G, corrEmb f (σ • b)) / (Fintype.card G : Q) := by
@@ -319,16 +292,12 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
       classical
       refine Finset.sum_congr rfl ?_
       intro σ _hσ
-      have h1 : edgeOfEmb (σ • b) = σ • edgeRep := by
-        apply Subtype.ext
-        funext i
-        rfl
+      have h1 : edgeOfEmb (σ • b) = σ • edgeRep := by exact Subtype.ext rfl
       calc
         corr f (σ • Edge.src edgeRep) (σ • Edge.dst edgeRep)
             = corrEdge f (σ • edgeRep) := by
                 simpa using (corrEdge_smul (f := f) (σ := σ) (e := edgeRep)).symm
-        _ = corrEmb f (σ • b) := by
-                simp [corrEmb, h1]
+        _ = corrEmb f (σ • b) := by simp [corrEmb, h1]
     -- Rewrite the numerator using `hnum`.
     simp [hnum]
   have hAvgAll :

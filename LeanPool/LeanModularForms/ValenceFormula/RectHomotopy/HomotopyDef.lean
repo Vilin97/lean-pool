@@ -61,20 +61,47 @@ noncomputable def HSeg4 (p : ℝ × ℝ) : ℂ :=
 /-- The homotopy on the fifth segment of the fundamental-domain boundary. -/
 noncomputable def HSeg5 (p : ℝ × ℝ) : ℂ := (p.1 - 9/2) + HHeight * I
 
-lemma H_seg1_continuous : Continuous HSeg1 := by
-  unfold HSeg1; continuity
+lemma H_seg1_continuous : Continuous HSeg1 := by unfold HSeg1; continuity
 
-lemma H_seg2_continuous : Continuous HSeg2 := by
-  unfold HSeg2 chordSegment; continuity
+lemma H_seg2_continuous : Continuous HSeg2 := by unfold HSeg2 chordSegment; continuity
 
-lemma H_seg3_continuous : Continuous HSeg3 := by
-  unfold HSeg3 chordSegment; continuity
+lemma H_seg3_continuous : Continuous HSeg3 := by unfold HSeg3 chordSegment; continuity
 
-lemma H_seg4_continuous : Continuous HSeg4 := by
-  unfold HSeg4; continuity
+lemma H_seg4_continuous : Continuous HSeg4 := by unfold HSeg4; continuity
 
-lemma H_seg5_continuous : Continuous HSeg5 := by
-  unfold HSeg5; continuity
+lemma H_seg5_continuous : Continuous HSeg5 := by unfold HSeg5; continuity
+
+/-- Derivative of an affine-angle complex exponential `t' ↦ exp((α + (t' - c)·β)·I)`. -/
+lemma hasDerivAt_arc_exp (α β c t : ℝ) :
+    HasDerivAt (fun t' : ℝ => Complex.exp (((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I))
+      ((β : ℂ) * I * Complex.exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)) t := by
+  have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - c) 1 t :=
+    Complex.ofRealCLM.hasDerivAt.sub_const (c : ℂ)
+  have h_inner : HasDerivAt (fun t' : ℝ => (α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) (β : ℂ) t := by
+    have h_mul := h_shift.mul_const (β : ℂ)
+    simp_all
+  have h := (Complex.hasDerivAt_exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)).comp t
+    (h_inner.mul_const I)
+  simp only [mul_comm (Complex.exp _)] at h
+  exact h
+
+/-- Derivative of the chord segment `t' ↦ chordSegment a b (t' - c)` is `b - a`. -/
+lemma hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
+    HasDerivAt (fun t' : ℝ => chordSegment a b (t' - c)) (b - a) t := by
+  simp only [chordSegment]
+  have h_shift : HasDerivAt (fun t' : ℝ => t' - c) (1 : ℝ) t := (hasDerivAt_id t).sub_const c
+  have h1 : HasDerivAt (fun t' : ℝ => (1 - (t' - c)) • a) (-a) t := by
+    have h_coef : HasDerivAt (fun t' : ℝ => (1 - (t' - c) : ℝ)) (-1 : ℝ) t := by
+      have := (hasDerivAt_const t (1 : ℝ)).sub h_shift
+      simp only [zero_sub] at this
+      exact this
+    have := h_coef.smul_const a
+    simpa only [neg_one_smul] using this
+  have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
+    have := h_shift.smul_const b
+    simpa only [one_smul] using this
+  rw [show b - a = -a + b from by ring]
+  exact h1.add h2
 
 lemma exp_pi_div_three_eq_rho' :
     Complex.exp (↑(Real.pi / 3) * I) = rho' := by
@@ -85,10 +112,7 @@ lemma exp_pi_div_three_eq_rho' :
 
 lemma exp_pi_div_two_eq_I :
     Complex.exp (↑(Real.pi / 2) * I) = I := by
-  rw [exp_real_angle_I, Real.cos_pi_div_two,
-    Real.sin_pi_div_two]
-  simp only [Complex.ofReal_zero, Complex.ofReal_one,
-    zero_add, one_mul]
+  simp_all
 
 lemma exp_two_pi_div_three_eq_rho :
     Complex.exp (↑(2 * Real.pi / 3) * I) = rho := by
@@ -114,8 +138,7 @@ lemma H_match_at_t1 (p : ℝ × ℝ) (hp : p.1 = 1) :
     simp only [Complex.ofReal_one, sub_self,
       zero_mul, add_zero]
   simp only [hangle]
-  have hpi3 : (↑Real.pi / 3 : ℂ) = ↑(Real.pi / 3) := by
-    push_cast; ring
+  have hpi3 : (↑Real.pi / 3 : ℂ) = ↑(Real.pi / 3) := by push_cast; ring
   rw [hpi3, exp_pi_div_three_eq_rho']
   simp only [sub_self, rho']
   simp only [Complex.real_smul,
@@ -158,67 +181,40 @@ lemma H_match_at_t4 (p : ℝ × ℝ) (hp : p.1 = 4) :
 lemma fdBoundaryToPolygonHomotopy_continuous :
     Continuous fdBoundaryToPolygonHomotopy := by
   have h45 : Continuous (fun p =>
-      if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
-    apply Continuous.if_le H_seg4_continuous
-      H_seg5_continuous continuous_fst continuous_const
-    intro p hp; exact H_match_at_t4 p hp
+      if p.1 ≤ 4 then HSeg4 p else HSeg5 p) :=
+    Continuous.if_le H_seg4_continuous H_seg5_continuous continuous_fst continuous_const
+      H_match_at_t4
   have h345 : Continuous (fun p =>
-      if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg3_continuous h45
-      continuous_fst continuous_const
+      if p.1 ≤ 3 then HSeg3 p else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg3_continuous h45 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 4 from
-      le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4),
-      if_true]
+    simp only [show p.1 ≤ 4 from le_trans (le_of_eq hp) (by norm_num : (3 : ℝ) ≤ 4), if_true]
     exact H_match_at_t3 p hp
   have h2345 : Continuous (fun p =>
-      if p.1 ≤ 2 then HSeg2 p
-      else if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg2_continuous h345
-      continuous_fst continuous_const
+      if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
+      else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg2_continuous h345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 3 from
-      le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3),
-      if_true]
+    simp only [show p.1 ≤ 3 from le_trans (le_of_eq hp) (by norm_num : (2 : ℝ) ≤ 3), if_true]
     exact H_match_at_t2 p hp
   have h12345 : Continuous (fun p =>
-      if p.1 ≤ 1 then HSeg1 p
-      else if p.1 ≤ 2 then HSeg2 p
-      else if p.1 ≤ 3 then HSeg3 p
-      else if p.1 ≤ 4 then HSeg4 p
-      else HSeg5 p) := by
-    apply Continuous.if_le H_seg1_continuous h2345
-      continuous_fst continuous_const
+      if p.1 ≤ 1 then HSeg1 p else if p.1 ≤ 2 then HSeg2 p else if p.1 ≤ 3 then HSeg3 p
+      else if p.1 ≤ 4 then HSeg4 p else HSeg5 p) := by
+    apply Continuous.if_le H_seg1_continuous h2345 continuous_fst continuous_const
     intro p hp
-    simp only [show p.1 ≤ 2 from
-      le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2),
-      if_true]
+    simp only [show p.1 ≤ 2 from le_trans (le_of_eq hp) (by norm_num : (1 : ℝ) ≤ 2), if_true]
     exact H_match_at_t1 p hp
   exact h12345
 
 lemma fdBoundaryToPolygonHomotopy_at_zero (t : ℝ) (_ht : t ∈ Icc 0 5) :
     fdBoundaryToPolygonHomotopy (t, 0) = fdBoundary t := by
   simp only [fdBoundaryToPolygonHomotopy, fdBoundary]
-  split_ifs with h1 h2 h3 h4
-  · rfl
-  · simp only [sub_zero]; simp
-  · simp only [sub_zero]; simp
-  · rfl
-  · rfl
+  simp_all
 
 lemma fdBoundaryToPolygonHomotopy_at_one (t : ℝ) (_ht : t ∈ Icc 0 5) :
     fdBoundaryToPolygonHomotopy (t, 1) = fdPolygon t := by
   simp only [fdBoundaryToPolygonHomotopy, fdPolygon]
-  split_ifs with h1 h2 h3 h4
-  · rfl
-  · simp only [sub_self]; simp
-  · simp only [sub_self]; simp
-  · rfl
-  · rfl
+  simp_all
 
 lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
     (hp_im : p.im < HHeight) (t : ℝ) (_ht : t ∈ Icc 0 5) (s : ℝ)
@@ -237,11 +233,8 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
         Complex.ofReal_im, Complex.div_ofNat_im,
         Complex.mul_im]
       norm_num
-    rw [heq] at hre
-    have : |p.re| = 1/2 := by rw [hre]; norm_num
-    linarith
-  · have ht2 : t - 1 ∈ Icc 0 1 := by
-      constructor <;> linarith [h1, h2]
+    simp_all
+  · have ht2 : t - 1 ∈ Icc 0 1 := by constructor <;> linarith [h1, h2]
     have h_arc_in := segment2_arc_in_closed_unit_ball t
     have h_chord_in := chord1_in_closed_unit_ball (t - 1) ht2
     have h_in_ball : (1 - s) • Complex.exp
@@ -252,8 +245,7 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
         h_arc_in h_chord_in s hs
     have hp_out := outside_closed_unit_ball p hp_norm
     exact fun h => hp_out (h ▸ h_in_ball)
-  · have ht3 : t - 2 ∈ Icc 0 1 := by
-      constructor <;> linarith [h2, h3]
+  · have ht3 : t - 2 ∈ Icc 0 1 := by constructor <;> linarith [h2, h3]
     have h_arc_in := segment3_arc_in_closed_unit_ball t
     have h_chord_in := chord2_in_closed_unit_ball (t - 2) ht3
     have h_in_ball : (1 - s) • Complex.exp
@@ -285,22 +277,16 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
         Complex.ofReal_im, Complex.div_ofNat_im,
         Complex.mul_im, Complex.ofReal_re, Complex.I_re,
         mul_zero, Complex.I_im, mul_one]
-      simp only [show (9 : ℂ).im = 0 from rfl,
-        add_zero, zero_div, sub_zero, zero_add]
+      simp_all
     rw [heq] at him; linarith
 
 lemma fdBoundaryToPolygonHomotopy_closed (s : ℝ) (_hs : s ∈ Icc 0 1) :
     fdBoundaryToPolygonHomotopy (0, s) =
       fdBoundaryToPolygonHomotopy (5, s) := by
-  simp only [fdBoundaryToPolygonHomotopy]
-  simp only [show (0 : ℝ) ≤ 1 from by norm_num,
-    ↓reduceIte,
-    show ¬(5 : ℝ) ≤ 1 from by norm_num,
-    show ¬(5 : ℝ) ≤ 2 from by norm_num,
-    show ¬(5 : ℝ) ≤ 3 from by norm_num,
-    show ¬(5 : ℝ) ≤ 4 from by norm_num]
-  simp only [HHeight]
-  simp only [Complex.ofReal_zero, zero_mul, sub_zero]
+  simp only [fdBoundaryToPolygonHomotopy, show (0 : ℝ) ≤ 1 from by norm_num, ↓reduceIte,
+    show ¬(5 : ℝ) ≤ 1 from by norm_num, show ¬(5 : ℝ) ≤ 2 from by norm_num,
+    show ¬(5 : ℝ) ≤ 3 from by norm_num, show ¬(5 : ℝ) ≤ 4 from by norm_num,
+    HHeight, Complex.ofReal_zero, zero_mul, sub_zero]
   norm_cast; ring
 
 /-- The counterclockwise circle of radius `ε` centred at `p`. -/
@@ -310,28 +296,16 @@ noncomputable def circleAround (p : ℂ) (ε : ℝ) :
 
 lemma circleAround_closed (p : ℂ) (ε : ℝ) :
     circleAround p ε 0 = circleAround p ε 5 := by
-  simp only [circleAround]
-  congr 1
-  have h0 : 2 * Real.pi * I * (0 : ℂ) / 5 = 0 := by ring
-  have h5 : 2 * Real.pi * I * (5 : ℂ) / 5 =
-      2 * Real.pi * I := by ring
-  simp only [Complex.ofReal_zero, mul_zero, zero_div,
-    Complex.ofReal_ofNat]
-  rw [h5, Complex.exp_zero, Complex.exp_two_pi_mul_I]
+  simp only [circleAround, Complex.ofReal_zero, mul_zero, zero_div, Complex.ofReal_ofNat]
+  simp_all
 
 lemma circleAround_continuous (p : ℂ) (ε : ℝ) :
-    Continuous (circleAround p ε) := by
-  unfold circleAround; continuity
+    Continuous (circleAround p ε) := by unfold circleAround; continuity
 
 lemma circleAround_dist (p : ℂ) (ε : ℝ) (hε : 0 ≤ ε) (t : ℝ) : ‖circleAround p ε t - p‖ = ε := by
   simp only [circleAround, add_sub_cancel_left]
-  rw [Complex.norm_mul]
-  have hform :
-      2 * Real.pi * I * (t : ℂ) / 5 =
-        ↑(2 * Real.pi * t / 5) * I := by
-    push_cast; ring
-  rw [hform, Complex.norm_exp_ofReal_mul_I, mul_one,
-    Complex.norm_real]
+  rw [Complex.norm_mul, show 2 * Real.pi * I * (t : ℂ) / 5 = ↑(2 * Real.pi * t / 5) * I from by
+    push_cast; ring, Complex.norm_exp_ofReal_mul_I, mul_one, Complex.norm_real]
   exact abs_of_nonneg hε
 
 /-- The homotopy contracting the boundary polygon onto a small circle around `p`. -/
@@ -368,11 +342,8 @@ theorem winding_number_one_summary (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p
     (hp_im : p.im < HHeight) : (∀ t ∈ Icc 0 5, ∀ s ∈ Icc (0 : ℝ) 1,
       fdBoundaryToPolygonHomotopy (t, s) ≠ p) ∧
     Continuous fdBoundaryToPolygonHomotopy ∧ (∀ s ∈ Icc (0 : ℝ) 1,
-      fdBoundaryToPolygonHomotopy (0, s) =
-        fdBoundaryToPolygonHomotopy (5, s)) :=
-  ⟨fdBoundaryToPolygon_homotopy_avoids_interior p
-      hp_norm hp_re hp_im,
-   fdBoundaryToPolygon_homotopy_continuous,
-   fdBoundaryToPolygon_homotopy_closed⟩
+      fdBoundaryToPolygonHomotopy (0, s) = fdBoundaryToPolygonHomotopy (5, s)) :=
+  ⟨fdBoundaryToPolygon_homotopy_avoids_interior p hp_norm hp_re hp_im,
+   fdBoundaryToPolygon_homotopy_continuous, fdBoundaryToPolygon_homotopy_closed⟩
 
 end RectHomotopyProof

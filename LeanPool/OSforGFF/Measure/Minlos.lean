@@ -74,24 +74,15 @@ lemma gaussian_positive_definite_via_embedding
   have hPD_H := gaussian_rbf_pd_innerProduct (H := H)
   intro m x c
   have repl : ∀ i j,
-      covariance_form (x i - x j) (x i - x j)
-      = (‖T (x i - x j)‖ ^ 2 : ℝ) := by
-    intro i j; simpa using h_eq (x i - x j)
+      covariance_form (x i - x j) (x i - x j) = (‖T (x i - x j)‖ ^ 2 : ℝ) :=
+    fun i j => by simpa using h_eq (x i - x j)
   have hPD_comp :
     0 ≤ (∑ i, ∑ j,
       (starRingEnd ℂ) (c i) * c j *
         Complex.exp (-(1/2 : ℂ) * ((‖T (x i) - T (x j)‖ ^ 2 : ℝ)))).re := by
     simpa using (GFF4D.isPositiveDefinite_precomp_linear
       (ψ := fun h : H => Complex.exp (-(1/2 : ℂ) * (‖h‖^2 : ℝ))) hPD_H T) m x c
-  have hPD_comp1 :
-    0 ≤ (∑ i, ∑ j,
-      (starRingEnd ℂ) (c i) * c j *
-        Complex.exp (-(1/2 : ℂ) * ((‖T (x i - x j)‖ ^ 2 : ℝ)))).re := by
-    simpa [LinearMap.map_sub] using hPD_comp
-  have : 0 ≤ (∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j *
-      Complex.exp (-(1/2 : ℂ) * (covariance_form (x i - x j) (x i - x j)))).re := by
-    simpa [repl] using hPD_comp1
-  exact this
+  simpa [repl, LinearMap.map_sub] using hPD_comp
 
 /-! ## Bridge lemmas: GFF4D PD → Bochner PD
 
@@ -178,8 +169,8 @@ theorem minlos_gaussian_construction
   : ∃ μ : ProbabilityMeasure (WeakDual ℝ E),
     (∀ f : E, gaussianCharacteristicFunctional covariance_form f =
               ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure) := by
-  have h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form) := by
-    exact continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp h_continuous))
+  have h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form) :=
+    continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp h_continuous))
   have h_cf_pd := gaussian_positive_definite_bochner T covariance_form h_eq h_symm
   have h_cf_norm : gaussianCharacteristicFunctional covariance_form 0 = 1 := by
     simp [gaussianCharacteristicFunctional, h_zero]

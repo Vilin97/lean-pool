@@ -63,20 +63,10 @@ instance : Repr Kodaira where
     | T m, _   => "T" ++ repr m
 
 lemma eq_I_Nat (m n : Nat) : m = n ↔ I m = I n := by
-  apply Iff.intro
-  · intro h
-    exact congrArg I h
-  · intro h
-    cases h
-    rfl
+  simp_all
 
 lemma eq_Is_Nat (m n : Nat) : m = n ↔ Is m = Is n := by
-  apply Iff.intro
-  · intro h
-    exact congrArg Is h
-  · intro h
-    cases h
-    rfl
+  simp_all
 
 /-- The coarse reduction type of an elliptic curve at a place: good, split or
 non-split multiplicative, or additive. -/

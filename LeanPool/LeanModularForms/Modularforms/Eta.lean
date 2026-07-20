@@ -83,14 +83,11 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
           simp
           ring_nf
         rw [h00] at E
-        rw [← mul_assoc, mul_comm, ← mul_assoc]
-        rw [E, add_mul, add_comm]
+        rw [← mul_assoc, mul_comm, ← mul_assoc, E, add_mul, add_comm]
         congr 1
         · have hzne := ne_zero z
           have hI : Complex.I ≠ 0 := I_ne_zero
-          have hpi : (π : ℂ) ≠ 0 := by
-            simp only [ne_eq, ofReal_eq_zero]
-            exact Real.pi_ne_zero
+          have hpi : (π : ℂ) ≠ 0 := by simp [Real.pi_ne_zero]
           field_simp
           ring
         rw [mul_comm]
@@ -102,10 +99,7 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
       (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := (z : ℂ)) z.2)
 
 lemma eta_logderivs : {z : ℂ | 0 < z.im}.EqOn (logDeriv (η ∘ (fun z : ℂ => -1/z)))
-  (logDeriv ((csqrt) * η)) := by
-  intro z hz
-  have := eta_logDeriv_eql ⟨z, hz⟩
-  exact this
+  (logDeriv ((csqrt) * η)) := fun z hz => eta_logDeriv_eql ⟨z, hz⟩
 
 lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   (z • ((csqrt) * η)) := by
@@ -115,8 +109,7 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
   · apply DifferentiableOn.comp
     pick_goal 4
     · use ({z : ℂ | 0 < z.im})
-    · rw [DifferentiableOn]
-      intro x hx
+    · intro x hx
       apply DifferentiableAt.differentiableWithinAt
       simpa [ModularForm.eta] using
         (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := x) hx)
@@ -131,21 +124,15 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
       have := UpperHalfPlane.im_inv_neg_coe_pos (⟨y, hy⟩ : ℍ)
       conv =>
         enter [2,1]
-        rw [neg_div]
-        rw [div_eq_mul_inv]
+        rw [neg_div, div_eq_mul_inv]
         simp
-      simp only [inv_neg, neg_im, inv_im, Left.neg_pos_iff] at *
-      exact this
+      simp_all
   · apply DifferentiableOn.mul
-    · simp only [DifferentiableOn, mem_setOf_eq]
-      intro x hx
-      apply (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
-    simp only [DifferentiableOn, mem_setOf_eq]
-    intro x hx
-    have hηx : DifferentiableAt ℂ η x := by
+    · intro x hx; exact (csqrt_differentiableAt ⟨x, hx⟩).differentiableWithinAt
+    · intro x hx
+      apply DifferentiableAt.differentiableWithinAt
       simpa [ModularForm.eta] using
         (ModularForm.differentiableAt_eta_of_mem_upperHalfPlaneSet (z := x) hx)
-    exact hηx.differentiableWithinAt
   · exact isOpen_lt continuous_const Complex.continuous_im
   · apply Convex.isPreconnected
     exact convex_halfSpace_im_gt 0
@@ -166,8 +153,7 @@ lemma eta_equality : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   obtain ⟨z, hz, h⟩ := h
   intro x hx
   have h2 := h hx
-  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by
-    simp only [mem_setOf_eq, Complex.I_im, zero_lt_one]
+  have hI : (Complex.I) ∈ {z : ℂ | 0 < z.im} := by simp [Complex.I_im]
   have h3 := h hI
   simp only [comp_apply, div_I, neg_mul, one_mul, neg_neg, Pi.smul_apply, Pi.mul_apply,
     smul_eq_mul] at h3
@@ -176,8 +162,6 @@ lemma eta_equality : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
     rw [← mul_assoc]
   have he : η Complex.I ≠ 0 := by
     simpa [ModularForm.eta] using (ModularForm.eta_ne_zero (z := (Complex.I : ℂ)) (by simp))
-  have hcd := (mul_eq_right₀ he).mp (_root_.id (Eq.symm h3))
-  rw [mul_eq_one_iff_inv_eq₀ hz] at hcd
-  rw [@inv_eq_iff_eq_inv] at hcd
-  rw [hcd] at h2
-  exact h2
+  have hcd := (mul_eq_right₀ he).mp h3.symm
+  rw [mul_eq_one_iff_inv_eq₀ hz, inv_eq_iff_eq_inv] at hcd
+  simp_all

@@ -44,13 +44,7 @@ theorem sum_intro {α M : Type _} [AddCommMonoid M] [DecidableEq α] (s : Finset
     {f : α → M} (d : α)
      (hd : d ∈ s) :
     f d = ∑ k ∈ s, if k = d then f k else 0 := by
-  trans (∑ k ∈ s, if k = d then f d else 0)
-  · rw [sum_eq_single_of_mem d hd]
-    · rw [if_pos rfl]
-    · intro _ _ h
-      rw [if_neg h]
-  apply sum_congr rfl; intro k _; apply if_ctx_congr Iff.rfl _ (fun _ => rfl)
-  intro h; rw [h]
+  simp_all
 
 theorem ite_sum_zero {p : Prop} [Decidable p] (s : Finset ℕ) (f : ℕ → ℝ) :
     (if p then (∑ x ∈ s, f x) else 0) = ∑ x ∈ s, if p then f x else 0 := by
@@ -74,21 +68,6 @@ theorem conv_lambda_sq_larger_sum (f : ℕ → ℕ → ℕ → ℝ) (n : ℕ) :
   rintro rfl
   exact ⟨Nat.dvd_lcm_left d1 d2, Nat.dvd_lcm_right d1 d2, rfl⟩
 
--- theorem dvd_iff_mul_of_dvds {P : ℕ} (k d l m : ℕ) (hd : d ∈ P.divisors) :
---     k = d / l ∧ l ∣ d ∧ d ∣ m ↔ d = k * l ∧ d ∣ m := by
---   constructor
---   · intro ⟨hk_eq, hld, hdm⟩
---     exact ⟨Nat.eq_mul_of_div_eq_left hld hk_eq.symm, hdm⟩
---   · intro ⟨hd_eq, hdm⟩
---     refine ⟨?_, ?_, hdm⟩
---     · apply (Nat.div_eq_of_eq_mul_left _ hd_eq).symm
---       apply Nat.pos_of_ne_zero
---       apply right_ne_zero_of_mul (a:=k)
---       rw [←hd_eq]
---       apply _root_.ne_of_gt
---       apply Nat.pos_of_mem_divisors hd
---     · use k; rw [hd_eq, mul_comm]
-
 theorem moebius_inv_dvd_lower_bound (l m : ℕ) (hm : Squarefree m) :
     (∑ d ∈ m.divisors, if l ∣ d then (μ d:ℤ) else 0) = if l = m then (μ l:ℤ) else 0 := by
   have hm_pos : 0 < m := Nat.pos_of_ne_zero <| Squarefree.ne_zero hm
@@ -105,9 +84,7 @@ theorem moebius_inv_dvd_lower_bound (l m : ℕ) (hm : Squarefree m) :
       apply coprime_of_squarefree_mul; rw [hmul]; exact hm
     · intro d _ hdl; rw[if_neg <| hdl.symm, smul_zero]
     · intro h; rw[mem_divisors] at h; exfalso; exact h ⟨hl, (Nat.ne_of_lt hm_pos).symm⟩
-  · rw [if_neg hl, sum_eq_zero]; intro d hd
-    rw [if_neg, smul_zero]
-    by_contra h; rw [←h] at hd; exact hl (dvd_of_mem_divisors hd)
+  · simp_all
 
 theorem moebius_inv_dvd_lower_bound' {P : ℕ} (hP : Squarefree P) (l m : ℕ)
     (hm : m ∣ P) :
@@ -124,9 +101,7 @@ theorem moebius_inv_dvd_lower_bound_real {P : ℕ} (hP : Squarefree P) (l m : �
   apply moebius_inv_dvd_lower_bound' hP l m hm
 
 theorem gcd_dvd_mul (m n : ℕ) : m.gcd n ∣ m * n := by
-  calc
-    m.gcd n ∣ m := Nat.gcd_dvd_left m n
-    _ ∣ m * n := ⟨n, rfl⟩
+  simp_all
 
 theorem multiplicative_zero_of_zero_dvd (f : ArithmeticFunction ℝ)
     (h_mult : IsMultiplicative f) {m n : ℕ}
@@ -259,10 +234,7 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
       card_finMulAntidiagonal <| hP.squarefree_of_dvd hd.1, if_pos hd.1]
     simp only [div_eq_mul_inv, nsmul_eq_mul, cast_pow, mul_ite, mul_zero]
   · rw [sum_comm]; apply sum_congr rfl; intro a _; rw [sum_eq_single (∏ i, a i)]
-    · apply if_ctx_congr _ _ (fun _ => rfl)
-      · rw [Iff.comm, iff_and_self]
-        exact fun _ => rfl
-      intro; rw [cast_prod, ← prod_inv_distrib]
+    · simp_all
     · exact fun d _ hd_ne ↦ if_neg fun h => hd_ne.symm h.1
     · exact fun h ↦ if_neg fun h' => h (mem_divisors.mpr ⟨h'.2, hP.ne_zero⟩)
   · apply sum_le_sum; intro a _

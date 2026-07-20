@@ -47,10 +47,7 @@ lemma eq_of_prime_le_prime_height_le_one
   have h0 : (⊥ : Ideal S).height < P.height :=
     @Ideal.height_strict_mono_of_isPrime S _ (⊥ : Ideal S) P Ideal.isPrime_bot
       hbot_lt_P hbot_fin
-  rw [Ideal.height_bot] at h0
-  rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hP_height
-  rw [hP_height] at h0
-  exact lt_irrefl _ h0
+  simp_all
 
 theorem close_up_principal
     (R : NSubring T) (y : R.carrier) (hy : Prime y) (c : R.carrier)
@@ -117,11 +114,7 @@ theorem close_up_dvd
   haveI : IsDomain R.carrier := NSubring.isDomain R
   revert c
   refine UniqueFactorizationMonoid.induction_on_prime y ?_ ?_ ?_
-  · intro c hc
-    simp only [ZeroMemClass.coe_zero] at hc
-    rw [Ideal.span_singleton_eq_bot.mpr rfl, Ideal.mem_bot] at hc
-    rw [Ideal.span_singleton_eq_bot.mpr rfl, Ideal.mem_bot]
-    exact Subtype.val_injective hc
+  · simp_all
   · intro y hu c _
     rw [Ideal.span_singleton_eq_top.mpr hu]
     exact Submodule.mem_top
@@ -142,15 +135,10 @@ theorem close_up_dvd
       obtain ⟨t, ht⟩ := hc
       have hp_ne : (p : T) ≠ 0 := fun h => hp.ne_zero (Subtype.val_injective h)
       have hpc : (c : T) = (p : T) * (c' : T) := by
-        have := congr_arg R.carrier.subtype hcc'
-        simp only [map_mul] at this
-        exact this
+        simp_all
       have hpa : (c : T) = (p : T) * (a : T) * t := by
-        rw [show ((p * a : R.carrier) : T) = (p : T) * (a : T) from
-          map_mul R.carrier.subtype p a] at ht
-        exact ht
-      have : (p : T) * (c' : T) = (p : T) * ((a : T) * t) := by
-        rw [← hpc, hpa, mul_assoc]
+        simp_all
+      have : (p : T) * (c' : T) = (p : T) * ((a : T) * t) := by rw [← hpc, hpa, mul_assoc]
       exact ⟨t, mul_left_cancel₀ hp_ne this⟩
     have hc'R : c' ∈ Ideal.span {a} := ih c' hc'_a
     rw [Ideal.mem_span_singleton] at hc'R ⊢

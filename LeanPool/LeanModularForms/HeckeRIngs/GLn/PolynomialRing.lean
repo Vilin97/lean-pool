@@ -66,9 +66,7 @@ lemma divChain_T_gen (k : Fin n) :
   intro i hi
   simp only [T_gen_diag_val]
   by_cases h1 : i < n - 1 - (k : ℕ)
-  · by_cases h2 : i + 1 < n - 1 - (k : ℕ)
-    · simp [h1, h2]
-    · simp [h1, h2]
+  · by_cases h2 : i + 1 < n - 1 - (k : ℕ) <;> simp [h1, h2]
   · have h2 : ¬ (i + 1 < n - 1 - (k : ℕ)) := by omega
     simp [h1, h2]
 
@@ -89,11 +87,7 @@ lemma T_gen_exp_monotone (k : Fin n) :
     Monotone (fun i : Fin n => if (i : ℕ) < n - 1 - (k : ℕ) then 0 else 1) := by
   intro i j hij
   simp only
-  split_ifs with h1 h2 h2
-  · exact le_rfl
-  · exact Nat.zero_le _
-  · omega
-  · exact le_rfl
+  split_ifs with h1 h2 h2 <;> omega
 
 include hp
 /-- The k-th generator of RP: `T(1,...,1,p,...,p)` with `k+1` entries of `p`. -/
@@ -121,8 +115,7 @@ def ppowWeight (e : Fin n → ℕ) : ℕ := ∑ i, e i
 
 /-- Weight is zero iff all exponents are zero. -/
 lemma ppowWeight_eq_zero_iff (e : Fin n → ℕ) :
-    ppowWeight n e = 0 ↔ ∀ i, e i = 0 := by
-  simp [ppowWeight, Finset.sum_eq_zero_iff]
+    ppowWeight n e = 0 ↔ ∀ i, e i = 0 := by simp [ppowWeight, Finset.sum_eq_zero_iff]
 
 end Weight
 
@@ -154,8 +147,7 @@ lemma T_scalar_pow (c : ℕ) (hc : 0 < c) (k : ℕ) :
   | succ k ih =>
     rw [pow_succ', ih, T_diag_scalar_mul n c hc (fun _ => c ^ k)
       (fun _ => pow_pos hc k) (divChain_const n _)]
-    exact T_elem_congr_diag n (funext fun _ => by
-      simp only [Pi.mul_apply]; ring)
+    exact T_elem_congr_diag n (funext fun _ => by simp only [Pi.mul_apply]; ring)
 
 /-- Each `TGen k` lies in the range of `evalHom`. -/
 lemma T_gen_mem_evalHom_range (k : Fin n) :
@@ -193,8 +185,7 @@ lemma T_gen_one_eq_T_pp (p : ℕ) (hp : p.Prime) :
 
 /-- `TSum(p) = TGen 0`: the sum T(p) is the first generator for p prime. -/
 lemma T_sum_p_eq_T_gen_zero (p : ℕ) (hp : p.Prime) :
-    TSum ⟨p, hp.pos⟩ = TGen 2 p (0 : Fin 2) := by
-  rw [T_gen_zero_eq_T_ad p hp, T_sum_prime p hp]
+    TSum ⟨p, hp.pos⟩ = TGen 2 p (0 : Fin 2) := by rw [T_gen_zero_eq_T_ad p hp, T_sum_prime p hp]
 
 /-! #### Step 3: TSum(p^k) in evalHom range by strong induction -/
 
@@ -207,8 +198,7 @@ private lemma X_one_mem_range (p : ℕ) :
   ⟨MvPolynomial.X 1, by unfold evalHom; exact MvPolynomial.eval₂Hom_X' _ _ 1⟩
 
 private lemma T_pp_mem_range (p : ℕ) (hp : p.Prime) :
-    TPp p ∈ (evalHom 2 p).range := by
-  rw [← T_gen_one_eq_T_pp p hp]; exact X_one_mem_range p
+    TPp p ∈ (evalHom 2 p).range := by rw [← T_gen_one_eq_T_pp p hp]; exact X_one_mem_range p
 
 /-- `TSum(p^k)` lies in the range of the evaluation homomorphism, for all `k`. -/
 lemma T_sum_ppow_in_range (p : ℕ) (hp : p.Prime) (k : ℕ) :
@@ -282,8 +272,7 @@ lemma T_elem_ppow_in_range (p : ℕ) (hp : p.Prime)
         (ppowDiag 2 p ![0, e 1 - e 0])
         (ppowDiag_pos 2 p hp _)
         (divChain_ppow 2 p _ (by
-          intro i j hij
-          fin_cases i <;> fin_cases j <;> simp_all))]
+          simp_all))]
     apply (evalHom 2 p).range.mul_mem
     · rw [← T_pp_pow p hp (e 0), ← T_gen_one_eq_T_pp p hp]
       exact (evalHom 2 p).range.pow_mem (X_one_mem_range p) _
@@ -316,8 +305,7 @@ open HeckeRing.GLn
 
 /-- For n=1, `TGenDiag 1 p 0 = fun _ => p`. -/
 private lemma T_gen_diag_one_eq (p : ℕ) :
-    TGenDiag 1 p (0 : Fin 1) = fun _ => p := by
-  funext i; simp [T_gen_diag_val]
+    TGenDiag 1 p (0 : Fin 1) = fun _ => p := by funext i; simp [T_gen_diag_val]
 
 /-- n=1 surjectivity: every element of RP is in the range of evalHom. -/
 theorem T_gen_generates_R_p_one (p : ℕ) (hp : p.Prime) :
@@ -424,12 +412,7 @@ theorem evalHom_injective_one (p : ℕ) (hp : p.Prime) :
       exact Finsupp.ext (fun i => by
         fin_cases i; exact Nat.pow_right_injective hp.one_lt (congr_fun this 0))
     · rintro rfl; rfl
-  simp only [D, mul_ite, mul_one, mul_zero]
-  simp_rw [show ∀ d, (if (TDiag (n := 1) (fun _ => p ^ d 0)) =
-    TDiag (fun _ => p ^ s 0) then R.coeff d else 0) =
-    if d = s then R.coeff d else 0 from fun d => if_congr (hTd d) rfl rfl]
-  rw [Finset.sum_ite_eq']
-  simp [MvPolynomial.mem_support_iff, hcoeff]
+  simp_all
 
 /-! #### Surjectivity of restricted evalHom -/
 

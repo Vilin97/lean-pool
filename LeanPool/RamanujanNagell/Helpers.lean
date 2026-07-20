@@ -100,24 +100,15 @@ lemma units_pm_one (u : Rˣ) : u = 1 ∨ u = -1 := by
     set y := (u : R).im
     have hcoord : (u : R) = ⟨x, y⟩ := by apply QuadraticAlgebra.ext <;> rfl
     have hn' : x ^ 2 + x * y + 2 * y ^ 2 = 1 := by
-      rw [show x = (⟨x, y⟩ : R).re from rfl, show y = (⟨x, y⟩ : R).im from rfl,
-          ← norm_eq]
-      rw [← hcoord]; exact hn
+      rw [← norm_eq, ← hcoord]; exact hn
     have h_csq : (2 * x + y) ^ 2 + 7 * y ^ 2 = 4 := by linarith
     have hy : y = 0 := by nlinarith [sq_nonneg y, sq_nonneg (2 * x + y)]
     have hx2 : x ^ 2 = 1 := by nlinarith
     have hx : x = 1 ∨ x = -1 := by
-      have hfact : (x - 1) * (x + 1) = 0 := by linarith [hx2]
-      rcases mul_eq_zero.mp hfact with h | h
-      · left; omega
-      · right; omega
+      simp_all
     rcases hx with hx1 | hx1
-    · left
-      apply Units.ext
-      rw [hcoord, hx1, hy]; rfl
-    · right
-      apply Units.ext
-      rw [hcoord, hx1, hy]; rfl
+    · exact Or.inl (Units.ext (by rw [hcoord, hx1, hy]; rfl))
+    · exact Or.inr (Units.ext (by rw [hcoord, hx1, hy]; rfl))
   · exfalso
     have := norm_nonneg (u : R)
     omega
@@ -126,14 +117,8 @@ lemma units_pm_one (u : Rˣ) : u = 1 ∨ u = -1 := by
 
 private lemma norm_factor_dichotomy {m n : ℤ} (hm : 0 ≤ m) (hn : 0 ≤ n) (hmn : m * n = 2) :
     m = 1 ∨ n = 1 := by
-  have hm_pos : 0 < m := by
-    rcases lt_or_eq_of_le hm with h | h
-    · exact h
-    · exfalso; rw [← h, zero_mul] at hmn; exact absurd hmn (by decide)
-  have hn_pos : 0 < n := by
-    rcases lt_or_eq_of_le hn with h | h
-    · exact h
-    · exfalso; rw [← h, mul_zero] at hmn; exact absurd hmn (by decide)
+  have hm_pos : 0 < m := by rcases hm.lt_or_eq with h | h; exacts [h, by simp [← h] at hmn]
+  have hn_pos : 0 < n := by rcases hn.lt_or_eq with h | h; exacts [h, by simp [← h] at hmn]
   have hm_le : m ≤ 2 := by nlinarith
   interval_cases m
   · left; rfl
@@ -143,31 +128,22 @@ private lemma isUnit_of_norm_one {a : R} (h : QuadraticAlgebra.norm a = 1) : IsU
   apply QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr
   rw [h]; exact isUnit_one
 
-lemma theta_irreducible : Irreducible θ := by
+private lemma irreducible_of_norm_two {z : R} (hz : QuadraticAlgebra.norm z = 2) :
+    Irreducible z := by
   refine ⟨?_, ?_⟩
   · intro hu
-    have h1 : IsUnit (QuadraticAlgebra.norm θ) := QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
-    have h2 : IsUnit (2 : ℤ) := h1
+    have h2 : IsUnit (2 : ℤ) := hz ▸ QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
     exact absurd (Int.isUnit_iff.mp h2) (by decide)
   · intro a b hab
     have hnab : QuadraticAlgebra.norm a * QuadraticAlgebra.norm b = 2 := by
-      rw [← map_mul, ← hab]; rfl
+      rw [← map_mul, ← hab]; exact hz
     rcases norm_factor_dichotomy (norm_nonneg a) (norm_nonneg b) hnab with h | h
     · exact Or.inl (isUnit_of_norm_one h)
     · exact Or.inr (isUnit_of_norm_one h)
 
-lemma theta'_irreducible : Irreducible θ' := by
-  refine ⟨?_, ?_⟩
-  · intro hu
-    have h1 : IsUnit (QuadraticAlgebra.norm θ') := QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
-    have h2 : IsUnit (2 : ℤ) := h1
-    exact absurd (Int.isUnit_iff.mp h2) (by decide)
-  · intro a b hab
-    have hnab : QuadraticAlgebra.norm a * QuadraticAlgebra.norm b = 2 := by
-      rw [← map_mul, ← hab]; rfl
-    rcases norm_factor_dichotomy (norm_nonneg a) (norm_nonneg b) hnab with h | h
-    · exact Or.inl (isUnit_of_norm_one h)
-    · exact Or.inr (isUnit_of_norm_one h)
+lemma theta_irreducible : Irreducible θ := irreducible_of_norm_two rfl
+
+lemma theta'_irreducible : Irreducible θ' := irreducible_of_norm_two rfl
 
 /-! ## EuclideanDomain instance via smart rounding
 
@@ -214,8 +190,7 @@ private lemma N_mul_norm_rem_eq (a b q : R) (hb : b ≠ 0) :
          (QuadraticAlgebra.norm b * QuadraticAlgebra.norm (a - b * q)) =
          QuadraticAlgebra.norm b *
          QuadraticAlgebra.norm (a * star b - ((QuadraticAlgebra.norm b : ℤ) : R) * q) := by
-    rw [← mul_assoc, ← h_sq]
-    exact h_norm
+    rwa [← mul_assoc, ← h_sq]
   exact mul_left_cancel₀ hN_ne this
 
 /-- Smart-rounded quotient. -/
@@ -236,6 +211,17 @@ noncomputable def rem (a b : R) : R := a - b * quot a b
 lemma quot_mul_add_rem_eq (a b : R) : b * quot a b + rem a b = a := by
   unfold rem; ring
 
+private lemma sq_le_of_round_eq {N w : ℤ} {r : ℚ} (h2N : (0 : ℚ) < 2 * N)
+    (habs : |r| ≤ 1 / 2) (heq : r * (2 * N) = ((w : ℤ) : ℚ)) : w ^ 2 ≤ N ^ 2 := by
+  have h_abs : |((w : ℤ) : ℚ)| ≤ N := by
+    rw [← heq, abs_mul, abs_of_pos h2N]
+    have := mul_le_mul_of_nonneg_right habs h2N.le
+    linarith
+  have h_sq : ((w : ℤ) : ℚ) ^ 2 ≤ (N : ℚ) ^ 2 := by
+    rw [(sq_abs ((w : ℤ) : ℚ)).symm]
+    exact sq_le_sq' (by linarith [abs_nonneg ((w : ℤ) : ℚ)]) h_abs
+  exact_mod_cast h_sq
+
 private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
     16 * QuadraticAlgebra.norm (rem a b) ≤ 11 * QuadraticAlgebra.norm b := by
   set N := QuadraticAlgebra.norm b with hN_def
@@ -252,55 +238,25 @@ private lemma sixteen_norm_rem_le (a b : R) (hb : b ≠ 0) :
   have hNq_pos : (0 : ℚ) < N := by exact_mod_cast hN_pos
   have hNq : (N : ℚ) ≠ 0 := hNq_pos.ne'
   have h2Nq_pos : (0 : ℚ) < 2 * N := by linarith
-  have hv_bd : (2 * v) ^ 2 ≤ N ^ 2 := by
-    have habs : |(s.im : ℚ) / N - n| ≤ 1 / 2 := abs_sub_round _
-    have heq : ((s.im : ℚ) / N - n) * (2 * N) = ((2 * v : ℤ) : ℚ) := by
-      push_cast [hv_def]; field_simp
-    have h_abs_2v : |((2 * v : ℤ) : ℚ)| ≤ N := by
-      rw [← heq, abs_mul, abs_of_pos h2Nq_pos]
-      have := mul_le_mul_of_nonneg_right habs h2Nq_pos.le
-      linarith
-    have h_sq : ((2 * v : ℤ) : ℚ) ^ 2 ≤ (N : ℚ) ^ 2 := by
-      have hsa : ((2 * v : ℤ) : ℚ) ^ 2 = |((2 * v : ℤ) : ℚ)| ^ 2 := (sq_abs _).symm
-      rw [hsa]
-      exact sq_le_sq' (by linarith [abs_nonneg ((2 * v : ℤ) : ℚ)]) h_abs_2v
-    exact_mod_cast h_sq
-  have huv_bd : (2 * u + v) ^ 2 ≤ N ^ 2 := by
-    have habs : |(2 * (s.re : ℚ) + s.im - N * n) / (2 * N) - m| ≤ 1 / 2 := abs_sub_round _
-    have heq : ((2 * (s.re : ℚ) + s.im - N * n) / (2 * N) - m) * (2 * N) =
-               ((2 * u + v : ℤ) : ℚ) := by
-      push_cast [hu_def, hv_def]; field_simp; ring
-    have h_abs : |((2 * u + v : ℤ) : ℚ)| ≤ N := by
-      rw [← heq, abs_mul, abs_of_pos h2Nq_pos]
-      have := mul_le_mul_of_nonneg_right habs h2Nq_pos.le
-      linarith
-    have h_sq : ((2 * u + v : ℤ) : ℚ) ^ 2 ≤ (N : ℚ) ^ 2 := by
-      have hsa : ((2 * u + v : ℤ) : ℚ) ^ 2 = |((2 * u + v : ℤ) : ℚ)| ^ 2 := (sq_abs _).symm
-      rw [hsa]
-      exact sq_le_sq' (by linarith [abs_nonneg ((2 * u + v : ℤ) : ℚ)]) h_abs
-    exact_mod_cast h_sq
+  have hv_bd : (2 * v) ^ 2 ≤ N ^ 2 :=
+    sq_le_of_round_eq h2Nq_pos (abs_sub_round ((s.im : ℚ) / N))
+      (by rw [← hn_def]; push_cast [hv_def]; field_simp)
+  have huv_bd : (2 * u + v) ^ 2 ≤ N ^ 2 :=
+    sq_le_of_round_eq h2Nq_pos (abs_sub_round ((2 * (s.re : ℚ) + s.im - N * n) / (2 * N)))
+      (by rw [← hm_def]; push_cast [hu_def, hv_def]; field_simp; ring)
   have h_chain : N * QuadraticAlgebra.norm (rem a b) = u ^ 2 + u * v + 2 * v ^ 2 := by
     unfold rem
     rw [hquot]
     have h := N_mul_norm_rem_eq a b (⟨m, n⟩ : R) hb
     rw [h]
     have hre : (a * star b - ((N : ℤ) : R) * (⟨m, n⟩ : R)).re = u := by
-      change s.re - (((N : ℤ) : R) * (⟨m, n⟩ : R)).re = u
-      push_cast [hu_def]
-      change s.re - (N * m + (-2) * 0 * n) = s.re - N * m
-      ring
+      simp_all
     have him : (a * star b - ((N : ℤ) : R) * (⟨m, n⟩ : R)).im = v := by
-      change s.im - (((N : ℤ) : R) * (⟨m, n⟩ : R)).im = v
-      push_cast [hv_def]
-      change s.im - (N * n + 0 * m + 1 * 0 * n) = s.im - N * n
-      ring
+      simp_all
     rw [QuadraticAlgebra.norm_def, hre, him]; ring
-  have h_alg : 16 * (u ^ 2 + u * v + 2 * v ^ 2) = 4 * (2 * u + v) ^ 2 + 7 * (2 * v) ^ 2 := by
-    ring
   have h_bd : 16 * (u ^ 2 + u * v + 2 * v ^ 2) ≤ 11 * N ^ 2 := by
-    rw [h_alg]; nlinarith [hv_bd, huv_bd]
-  have hN_sq : N ^ 2 = N * N := sq N
-  nlinarith [h_chain, h_bd, hN_pos]
+    nlinarith [hv_bd, huv_bd]
+  nlinarith [h_chain, h_bd, hN_pos, sq N]
 
 private noncomputable def normMeasure (a : R) : ℕ := Int.natAbs (QuadraticAlgebra.norm a)
 
@@ -312,8 +268,7 @@ private lemma natAbs_norm_rem_lt (a : R) {b : R} (hb : b ≠ 0) :
   have h_bd := sixteen_norm_rem_le a b hb
   have hr_lt : QuadraticAlgebra.norm (rem a b) < QuadraticAlgebra.norm b := by linarith
   zify
-  rw [abs_of_nonneg hr_nn, abs_of_nonneg hN_pos.le]
-  exact hr_lt
+  rwa [abs_of_nonneg hr_nn, abs_of_nonneg hN_pos.le]
 
 private lemma norm_mul_left_not_lt (a : R) {b : R} (hb : b ≠ 0) :
     ¬ normMeasure (a * b) < normMeasure a := by
@@ -363,13 +318,9 @@ the key dichotomy `α * β = θ^m · θ'^m ∧ IsCoprime α β → α = ±θ^m �
 
 lemma theta_theta'_not_associated : ¬ Associated θ θ' := by
   rintro ⟨u, hu⟩
-  rcases units_pm_one u with rfl | rfl
-  · -- θ = θ' · 1 = θ', compare re-components: 0 ≠ 1
-    have h := congrArg QuadraticAlgebra.re hu
-    simp [θ, θ'] at h
-  · -- θ = θ' · (-1) = -θ', compare re-components: 0 ≠ -1
-    have h := congrArg QuadraticAlgebra.re hu
-    simp [θ, θ'] at h
+  rcases units_pm_one u with rfl | rfl <;>
+    · have h := congrArg QuadraticAlgebra.re hu
+      simp [θ, θ'] at h
 
 lemma theta_not_dvd_theta' : ¬ (θ ∣ θ') := by
   intro h
@@ -424,8 +375,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
     have h_eq := h_cancel
     rw [hδ, mul_assoc] at h_eq
     have h_δβ : δ * β = 1 := by
-      conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-      exact mul_left_cancel₀ hθ'm_ne h_eq
+      simp_all
     exact hβ (IsUnit.of_mul_eq_one δ (by rw [mul_comm]; exact h_δβ))
   have h_dvd_prod : θ' ^ m ∣ γ * β := h_cancel ▸ dvd_refl (θ' ^ m)
   have h_θ'_dvd_β : θ' ^ m ∣ β :=
@@ -434,8 +384,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
   have h_eq := h_cancel
   rw [hε, ← mul_assoc, mul_comm γ (θ' ^ m), mul_assoc] at h_eq
   have h_γε : γ * ε = 1 := by
-    conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-    exact mul_left_cancel₀ hθ'm_ne h_eq
+    simp_all
   have hγ_unit : IsUnit γ := IsUnit.of_mul_eq_one ε h_γε
   rw [hγ]
   exact associated_mul_unit_left (θ ^ m) γ hγ_unit
@@ -466,8 +415,7 @@ lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
     have h_eq := h_cancel
     rw [hδ, ← mul_assoc, mul_comm α (θ' ^ m), mul_assoc] at h_eq
     have h_αδ : α * δ = 1 := by
-      conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-      exact mul_left_cancel₀ hθ'm_ne h_eq
+      simp_all
     exact hα (IsUnit.of_mul_eq_one δ h_αδ)
   have h_dvd_prod : θ' ^ m ∣ α * γ := h_cancel ▸ dvd_refl (θ' ^ m)
   have h_θ'_dvd_α : θ' ^ m ∣ α :=
@@ -476,8 +424,7 @@ lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
   have h_eq := h_cancel
   rw [hε, mul_assoc] at h_eq
   have h_εγ : ε * γ = 1 := by
-    conv at h_eq => rhs; rw [← mul_one (θ' ^ m)]
-    exact mul_left_cancel₀ hθ'm_ne h_eq
+    simp_all
   have hε_unit : IsUnit ε := IsUnit.of_mul_eq_one γ h_εγ
   rw [hε]
   exact associated_mul_unit_left (θ' ^ m) ε hε_unit

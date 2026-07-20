@@ -75,8 +75,7 @@ def injSubset {A B : M} (hsub : A ⊆ B) : A ↪ B := {
   inj' := by simp [Injective]
 }
 
-lemma card_le_of_sub {A B : M} (hsub : A ⊆ B) : #A ≤ #B :=
-  (Cardinal.le_def ..).mpr ⟨injSubset hsub⟩
+lemma card_le_of_sub {A B : M} (hsub : A ⊆ B) : #A ≤ #B := (Cardinal.le_def ..).mpr ⟨injSubset hsub⟩
 
 lemma bddAbove_ordinal_κ :
     BddAbove (Set.range fun n => (⟨κ n, isOrdinal_crit_iter _⟩ : Ordinals M)) := by
@@ -299,8 +298,7 @@ lemma coeSort_H_iff : (H : Sort _) = j '' (κω : Set M) := by
     exact ⟨y, hx, eq⟩
   · rintro ⟨y, hy, eq⟩
     refine hsep.mpr ⟨?_, y, eq⟩
-    rw [← eq, ← j_κω, Membership.mem.elementarity]
-    exact hy
+    rwa [← eq, ← j_κω, Membership.mem.elementarity]
 
 lemma crit_in_range_j_f : ∃ x ∈ Func ωₘ H, apply (j fSet) x = κ 0 := by
   have : IsOmegaJonssonFunc (j fSet) (j κω) := by

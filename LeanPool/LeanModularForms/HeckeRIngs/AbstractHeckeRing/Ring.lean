@@ -55,12 +55,12 @@ noncomputable instance instNonAssocSemiring : NonAssocSemiring (𝕋 P ℤ) :=
     one_mul := fun f => by
       simp only [one_def, mul_def]; rw [TSingle]; simp only [zero_smul, sum_fun_zero,
         sum_single_index, one_smul]
-      have := Finsupp.sum_single f; nth_rw 2 [← this]; congr; ext D z v
+      nth_rw 2 [← Finsupp.sum_single f]; congr; ext D z v
       have := one_mul_singleton_𝕋 P D z; simp_rw [TSingle] at *
       rw [← this, mul_singleton_𝕋]; simp only [one_smul]
     mul_one := fun f => by
       simp only [one_def, mul_def, zero_smul, smul_zero, sum_single_index, one_smul]
-      have := Finsupp.sum_single f; nth_rw 2 [← this]; congr; ext D z v
+      nth_rw 2 [← Finsupp.sum_single f]; congr; ext D z v
       have := singleton_one_mul_𝕋 P D z; simp_rw [TSingle] at this
       rw [← this, mul_singleton_𝕋]; simp only [one_smul] }
 
@@ -126,8 +126,8 @@ lemma T_single_neg (D : HeckeCoset P) (a : ℤ) :
 
 /-- Subtraction of two basis elements with the same double coset. -/
 lemma T_single_sub (D : HeckeCoset P) (a b : ℤ) :
-    TSingle P ℤ D a - TSingle P ℤ D b = TSingle P ℤ D (a - b) := by
-  rw [sub_eq_add_neg, T_single_neg, T_single_add, sub_eq_add_neg]
+    TSingle P ℤ D a - TSingle P ℤ D b = TSingle P ℤ D (a - b) :=
+  (Finsupp.single_sub D a b).symm
 
 /-- Scalar multiplication on a basis element. -/
 lemma T_single_smul (D : HeckeCoset P) (n a : ℤ) :
@@ -146,8 +146,7 @@ lemma T_single_mul_T_single (D₁ D₂ : HeckeCoset P) (a b : ℤ) :
 /-- The product of two unit-coefficient basis elements is the multiplication finsupp. -/
 @[simp] lemma T_single_one_mul_T_single_one (D₁ D₂ : HeckeCoset P) :
     TSingle P ℤ D₁ 1 * TSingle P ℤ D₂ 1 =
-      m P (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) := by
-  simp [T_single_mul_T_single]
+      m P (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) := by simp [T_single_mul_T_single]
 
 /-- Right multiplication by 1 is the identity. -/
 lemma T_single_mul_one (D : HeckeCoset P) (a : ℤ) :
@@ -190,8 +189,7 @@ lemma m_support (g₁ g₂ : P.Δ) :
 
 /-- The multiplicity `heckeMultiplicity` is nonneg since it is a natural number cast to `ℤ`. -/
 lemma heckeMultiplicity_nonneg (g₁ g₂ d : P.Δ) :
-    0 ≤ heckeMultiplicity P g₁ g₂ d := by
-  simp [heckeMultiplicity]
+    0 ≤ heckeMultiplicity P g₁ g₂ d := by simp [heckeMultiplicity]
 
 /-- Extensionality for Hecke ring elements. -/
 @[ext] lemma ext_𝕋 {f g : 𝕋 P ℤ}

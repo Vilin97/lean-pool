@@ -87,8 +87,7 @@ section «lp_section_1»
     length (wk d h) = d.length.succ := rfl
 
 @[simp] lemma _root_.LO.FirstOrder.Derivation.length_cut {φ} (dp : T ⟹ φ :: Δ) (dn :
-    T ⟹ (∼φ) :: Δ) :
-  length (cut dp dn) = (max (length dp) (length dn)).succ := rfl
+    T ⟹ (∼φ) :: Δ) : length (cut dp dn) = (max (length dp) (length dn)).succ := rfl
 
 end «lp_section_1»
 
@@ -164,8 +163,7 @@ def _root_.LO.FirstOrder.Derivation.axL' {k} (r : L.Rel k) (v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.all'
-    {φ} (h : ∀' φ ∈ Δ) (d : T ⟹ Rewriting.free φ :: Δ⁺) : T ⟹ Δ :=
-  d.all.wk (by simp [h])
+    {φ} (h : ∀' φ ∈ Δ) (d : T ⟹ Rewriting.free φ :: Δ⁺) : T ⟹ Δ := d.all.wk (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.ex' {φ} (h : ∃' φ ∈ Δ) (t) (d : T ⟹ φ/[t] :: Δ) : T ⟹ Δ :=
@@ -177,13 +175,9 @@ lemma _root_.LO.FirstOrder.Derivation.ne_step_max (n m : ℕ) : n ≠ max n m + 
 @[simp 1100] lemma _root_.LO.FirstOrder.Derivation.ne_step_max' (n m : ℕ) : n ≠ max m n + 1 :=
   ne_of_lt <| Nat.lt_succ_of_le <| by simp
 
-private lemma neg_ne_and {φ ψ : SyntacticFormula L} : ¬∼φ = φ ⋏ ψ :=
-  ne_of_ne_complexity (by simp)
-
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.em
-    {Δ : Sequent L} : {φ : SyntacticFormula L} → (hpos : φ ∈ Δ) → (hneg :
-    ∼φ ∈ Δ) → T ⟹ Δ
+    {Δ : Sequent L} : {φ : SyntacticFormula L} → (hpos : φ ∈ Δ) → (hneg : ∼φ ∈ Δ) → T ⟹ Δ
   | ⊤,         hpos, hneg => verum' hpos
   | ⊥,         hpos, hneg => verum' hneg
   | .rel R v,  hpos, hneg => axL' R v hpos hneg
@@ -235,25 +229,21 @@ def _root_.LO.FirstOrder.Derivation.provableOfDerivable {φ} (b : T ⟹. φ) : T
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.specialize {φ : SyntacticSemiformula L 1} (t :
-    SyntacticTerm L) :
-    T ⟹ (∀' φ) :: Γ → T ⟹ φ/[t] :: Γ := fun d ↦
+    SyntacticTerm L) : T ⟹ (∀' φ) :: Γ → T ⟹ φ/[t] :: Γ := fun d ↦
   have : T ⟹ ∼φ/[t] :: φ/[t] :: Γ := Tait.em (φ := φ/[t]) (by simp) (by simp)
   have dn : T ⟹ ∼(∀' φ) :: φ/[t] :: Γ := by
     simp only [neg_all, Nat.reduceAdd]
     exact Derivation.ex t (by simp only [LogicalConnective.HomClass.map_neg]; exact this)
-  have dp : T ⟹ (∀' φ) :: φ/[t] :: Γ :=
-    Derivation.wk d (List.cons_subset_cons _ <| by simp)
+  have dp : T ⟹ (∀' φ) :: φ/[t] :: Γ := Derivation.wk d (List.cons_subset_cons _ <| by simp)
   Derivation.cut dp dn
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.specializes
-    : {k : ℕ} → {φ : SyntacticSemiformula L k} → {Γ : Sequent L} → (v :
-    Fin k → SyntacticTerm L) →
+    : {k : ℕ} → {φ : SyntacticSemiformula L k} → {Γ : Sequent L} → (v : Fin k → SyntacticTerm L) →
     T ⟹ (∀* φ) :: Γ → T ⟹ (φ <~ v) :: Γ
   | 0,     φ, Γ, _, b => Derivation.cast b (by simp)
   | k + 1, φ, Γ, v, b =>
-    have :
-        T ⟹ (∀' (Rew.substs (v ·.succ)).q ▹ φ) :: Γ := by
+    have : T ⟹ (∀' (Rew.substs (v ·.succ)).q ▹ φ) :: Γ := by
       simpa using specializes (φ := ∀' φ) (v ·.succ) b
     Derivation.cast (specialize (v 0) this) (by
       simp only [Nat.reduceAdd, ← TransitiveRewriting.comp_app, List.cons.injEq, and_true]; congr 2
@@ -262,8 +252,7 @@ def _root_.LO.FirstOrder.Derivation.specializes
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.instances
-    : {k : ℕ} → {φ : SyntacticSemiformula L k} → {Γ : Sequent L} → {v :
-    Fin k → SyntacticTerm L} →
+    : {k : ℕ} → {φ : SyntacticSemiformula L k} → {Γ : Sequent L} → {v : Fin k → SyntacticTerm L} →
     T ⟹ (φ <~ v) :: Γ → T ⟹ (∃* φ) :: Γ
   | 0,     φ, Γ, _, b => Derivation.cast b (by simp)
   | k + 1, φ, Γ, v, b =>
@@ -309,8 +298,7 @@ def _root_.LO.FirstOrder.Derivation.rewrite {Δ} : T ⟹ Δ → ∀ (f :
       and (Derivation.cast (rewrite dp f) (by simp)) (Derivation.cast (rewrite dq f) (by simp))
     Derivation.cast this (by simp)
   | @all _ _ Δ φ d,       f =>
-    have :
-        T ⟹ ((Rewriting.free φ) :: Δ⁺).map fun φ ↦
+    have : T ⟹ ((Rewriting.free φ) :: Δ⁺).map fun φ ↦
           Rew.rewrite (&0 :>ₙ fun x => Rew.shift (f x)) ▹ φ :=
       rewrite d (&0 :>ₙ fun x => Rew.shift (f x))
     have : T ⟹ (∀' Rew.rewrite (Rew.bShift ∘ f) ▹ φ) :: Δ.map fun φ ↦ Rew.rewrite f ▹ φ :=
@@ -429,10 +417,9 @@ def _root_.LO.FirstOrder.Derivation.lMap (Φ : L₁ →ᵥ L₂) {Δ} : T₁ ⟹
   | axL Δ r v            =>
     .cast (axL (Δ.map (.lMap Φ)) (Φ.rel r) (fun i ↦ .lMap Φ (v i)))
     (by simp [Semiformula.lMap_rel, Semiformula.lMap_nrel])
-  | verum Δ              => by exact verum _
+  | verum Δ              => verum _
   | @or _ _ Δ φ ψ d      => by
-    have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋎ .lMap Φ ψ :: Δ.map (.lMap Φ) : Sequent L₂) :=
-      or (by exact lMap Φ d)
+    have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋎ .lMap Φ ψ :: Δ.map (.lMap Φ) : Sequent L₂) := or (lMap Φ d)
     exact Derivation.cast this (by simp)
   | @and _ _ Δ φ ψ dp dq =>
     have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋏ .lMap Φ ψ :: (Δ.map (.lMap Φ)) : Sequent L₂) :=
@@ -457,7 +444,7 @@ def _root_.LO.FirstOrder.Derivation.lMap (Φ : L₁ →ᵥ L₂) {Δ} : T₁ ⟹
 
 lemma _root_.LO.FirstOrder.Derivation.inconsistent_lMap (Φ : L₁ →ᵥ L₂) :
     Entailment.Inconsistent T₁ → Entailment.Inconsistent (T₁.lMap Φ) := by
-  simp only [Entailment.inconsistent_iff_provable_bot]; intro ⟨b⟩; exact ⟨by exact lMap Φ b⟩
+  simp only [Entailment.inconsistent_iff_provable_bot]; intro ⟨b⟩; exact ⟨lMap Φ b⟩
 
 end «lp_section_3»
 
@@ -478,8 +465,7 @@ private lemma map_rewriteMap_eq_shifts (Δ : Sequent L) (h : ∀ φ ∈ Δ, ¬φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.genelalizeByNewver
-    {φ : SyntacticSemiformula L 1} (hp : ¬φ.FVar? m) (hΔ :
-    ∀ ψ ∈ Δ, ¬ψ.FVar? m)
+    {φ : SyntacticSemiformula L 1} (hp : ¬φ.FVar? m) (hΔ : ∀ ψ ∈ Δ, ¬ψ.FVar? m)
     (d : T ⟹ φ/[&m] :: Δ) : T ⟹ (∀' φ) :: Δ := by
   have : T ⟹ (Rewriting.free φ) :: Δ⁺ :=
     Derivation.cast (Derivation.map d (fun x => if x = m then 0 else x + 1))

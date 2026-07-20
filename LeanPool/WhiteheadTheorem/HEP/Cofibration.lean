@@ -7,7 +7,6 @@ Authors: Jiazhen Xia
 import LeanPool.WhiteheadTheorem.Shapes.Jar
 import LeanPool.WhiteheadTheorem.Shapes.Maps
 import LeanPool.WhiteheadTheorem.CWComplex.Basic
--- import WhiteheadTheorem.Auxiliary
 import LeanPool.WhiteheadTheorem.Exponential
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 import Mathlib.CategoryTheory.LiftingProperties.Limits
@@ -22,9 +21,6 @@ open CategoryTheory TopCat
 open scoped Topology unitInterval
 
 
-
--- def HomotopyExtensionProperty' {A X : TopCat.{u}} (i : A ⟶ X) (Y : TopCat.{u}) : Prop :=
---   ∀ (f : X ⟶ Y) (h : A × I ⟶ Y), i ≫ f = (TopCat.ofHom (·, 0)) ≫ h
 
 /-- `HasHomotopyExtensionProperty` -/
 def HasHomotopyExtensionProperty {A X : Type u} [TopologicalSpace A] [TopologicalSpace X]
@@ -77,9 +73,6 @@ instance HasCurriedHEP.of_sigma_map {J : Type u} {A B : J → TopCat.{u}}
 variable {C : Type u} [Category.{v, u} C] {A Z Y : C}
   {X : ℕ → C} (i : ∀ n, X n ⟶ X (n + 1))
   [Limits.HasColimitsOfShape ℕ C]
-  -- [Limits.HasColimit (Functor.ofSequence i)]
-  -- [Limits.HasColimit (Functor.ofSequence fun n ↦ i (n + 1))]
-  -- [∀ m, Limits.HasColimit (Functor.ofSequence fun n ↦ i (m + n))]
   (p : Z ⟶ Y) [lp : ∀ n, HasLiftingProperty (i n) p]
 
 namespace Limits.Cocone.ofSequenceOfHasLiftingProperty
@@ -184,8 +177,7 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
           ccz.ι.app n ≫ p
       rw [← Category.assoc, hfac]
       rfl
-    rw [uniq_f]
-    exact uniq_desc_p ⟩
+    simp_all ⟩
 
 
 namespace Functor.ofSequence
@@ -220,12 +212,8 @@ noncomputable abbrev coconeUndropFirst
 noncomputable abbrev colimitCoconeUndropFirst :
     Limits.ColimitCocone <| Functor.ofSequence i := by
   let i' := fun n ↦ i (n + 1)
-  -- let Xlim := Limits.colimit (Functor.ofSequence i)
-  -- let Xlim' := Limits.colimit (Functor.ofSequence i')
-  -- change Xlim ≅ Xlim'
   let cc : Limits.Cocone (Functor.ofSequence i) :=
     Functor.ofSequence.coconeUndropFirst i <| Limits.colimit.cocone (Functor.ofSequence i')
-  -- have : cc.pt = Xlim' := rfl
   have lcc : Limits.IsColimit cc :=
     { desc cc' :=
         Limits.colimit.desc (Functor.ofSequence i') <| Functor.ofSequence.coconeDropFirst i cc'
@@ -335,9 +323,7 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
           change _ = h.hom.uncurry ⟨a, t⟩; rw [H2]; simp
         fac_right := by
           ext x
-          simp only [TopCat.hom_comp, ConcreteCategory.hom_ofHom, ContinuousMap.comp_apply,
-            ContinuousMap.coe_mk, ContinuousMap.curry_apply]
-          rw [H1]; simp } ⟩ ⟩ ⟩
+          simp_all } ⟩ ⟩ ⟩
 
 instance TopCat.diskBoundaryIncl_hasCurriedHEP (n : ℕ) (Y : TopCat.{u}) :
     HasCurriedHEP (diskBoundaryIncl.{u} n) Y :=

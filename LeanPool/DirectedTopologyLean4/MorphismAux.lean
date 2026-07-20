@@ -26,8 +26,7 @@ where b₀ = b₀, f₀ = f₁ and g₀ = g₁, then f₀ ≫ g₀ = f₁ ≫ g�
 lemma eq_of_morphism {a b₀ b₁ c : C} {f₀ : a ⟶ b₀} {f₁ : a ⟶ b₁} {g₀ : b₀ ⟶ c} {g₁ : b₁ ⟶ c}
   (hb : b₁ = b₀) (hf : f₀ = f₁ ≫ (eqToHom hb)) (hg : g₀ = (eqToHom hb.symm) ≫ g₁) :
     f₀ ≫ g₀ = f₁ ≫ g₁ := by
-  subst_vars
-  rw [eqToHom_refl, Category.comp_id, Category.id_comp]
+  simp_all
 
 /-- If two functors are equal, they map objects to the same image
 -/

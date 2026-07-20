@@ -36,11 +36,7 @@ lemma csqrt_deriv (z : ℍ) : deriv (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log 
   have : (fun a ↦ cexp (1 / 2 * Complex.log a)) = cexp ∘ (fun a ↦ (1 / 2 * Complex.log a)) := by
     ext z
     simp
-  have hzz : ↑z ∈ slitPlane := by
-    rw [@mem_slitPlane_iff]
-    right
-    have hz := z.2
-    exact Ne.symm (ne_of_lt hz)
+  have hzz : ↑z ∈ slitPlane := mem_slitPlane_iff.mpr (Or.inr (ne_of_lt z.2).symm)
   rw [this, deriv_comp]
   · simp only [one_div, Complex.deriv_exp, deriv_const_mul_field', neg_mul,
     smul_eq_mul]
@@ -54,37 +50,25 @@ lemma csqrt_deriv (z : ℍ) : deriv (fun a : ℂ => cexp ((1 / (2 : ℂ))* (log 
   · apply DifferentiableAt.const_mul
     refine Complex.differentiableAt_log hzz
 
-lemma csqrt_differentiableAt (z : ℍ) : DifferentiableAt ℂ csqrt z := by
-  unfold csqrt
-  apply DifferentiableAt.cexp
-  apply DifferentiableAt.const_mul
-  apply Complex.differentiableAt_log
-  rw [@mem_slitPlane_iff]
-  right
-  have hz := z.2
-  exact Ne.symm (ne_of_lt hz)
+lemma csqrt_differentiableAt (z : ℍ) : DifferentiableAt ℂ csqrt z :=
+  (Complex.differentiableAt_log (mem_slitPlane_iff.mpr (Or.inr (ne_of_lt z.2).symm))).const_mul
+    _ |>.cexp
 
 
 lemma csqrt_I : (csqrt (Complex.I)) ^ 24 = 1 := by
   unfold csqrt
   rw [← Complex.exp_nat_mul]
   conv =>
-    enter [1,1]
-    rw [← mul_assoc]
-    rw [show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by
-      field_simp; ring]
-  rw [Complex.exp_nat_mul]
-  rw [Complex.exp_log I_ne_zero]
-  have hi4 := Complex.I_pow_four
-  have : Complex.I ^ 12 = (.I ^ 4) ^ 3 := by rw [← @npow_mul]
-  simp [this, hi4]
+    enter [1, 1]
+    rw [← mul_assoc, show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by field_simp; ring]
+  rw [Complex.exp_nat_mul, Complex.exp_log I_ne_zero]
+  have : Complex.I ^ 12 = (.I ^ 4) ^ 3 := by rw [← npow_mul]
+  simp [this, Complex.I_pow_four]
 
 lemma csqrt_pow_24 (z : ℂ) (hz : z ≠ 0) : (csqrt z) ^ 24 = z ^ 12 := by
   unfold csqrt
   rw [← Complex.exp_nat_mul]
   conv =>
-    enter [1,1]
-    rw [← mul_assoc]
-    rw [show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by
-      field_simp; ring]
+    enter [1, 1]
+    rw [← mul_assoc, show ((24 : ℕ) : ℂ) * (1 / 2) = (12 : ℕ) by field_simp; ring]
   rw [Complex.exp_nat_mul, Complex.exp_log hz]

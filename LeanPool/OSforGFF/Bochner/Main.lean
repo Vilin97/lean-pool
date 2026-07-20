@@ -88,6 +88,20 @@ concentrates at ξ₀. Since φ̂ is continuous (Riemann-Lebesgue), the integral
 converges to φ̂(ξ₀) · (const), giving φ̂(ξ₀) ≥ 0.
 -/
 
+omit [FiniteDimensional ℝ V] in
+/-- On a finite measure, `x ↦ cexp (⟪x, v⟫ * I)` is integrable (it has norm 1). -/
+private lemma integrable_cexp_inner_mul_I (μ : Measure V) [IsFiniteMeasure μ] (v : V) :
+    Integrable (fun x : V => cexp (↑⟪x, v⟫_ℝ * I)) μ :=
+  (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
+    (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+
+/-- Gaussian x ↦ cexp(-t‖x‖²) is integrable for t > 0. -/
+private lemma gaussian_cexp_integrable (t : ℝ) (ht : 0 < t) :
+    Integrable (fun x : V => cexp (-(t : ℂ) * ↑(‖x‖ ^ 2))) := by
+  have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
+    (V := V) (b := (t : ℂ)) (show 0 < ((t : ℂ)).re from by simp [ht]) 0 (0 : V)
+  simp_all
+
 /-- The double sum ∑ᵢ ∑ⱼ conj(aᵢ) * aⱼ equals normSq(∑ₖ aₖ). -/
 private lemma sum_star_mul_eq_normSq {m : ℕ} (a : Fin m → ℂ) :
     ∑ i, ∑ j, starRingEnd ℂ (a i) * a j = ↑(Complex.normSq (∑ k, a k)) := by
@@ -115,8 +129,7 @@ omit [FiniteDimensional ℝ V] in
 lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     IsPositiveDefinite (fun t : V => charFun μ t) where
   hermitian t := by
-    rw [starRingEnd_apply, star_def]
-    exact charFun_neg t
+    simp_all
   nonneg m t c := by
     -- Step 1: Unfold charFun
     simp only [charFun_apply]
@@ -129,8 +142,7 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     -- Integrability of exponentials on a finite measure (norm ≤ 1)
     have hexp_int : ∀ v : V, Integrable (fun x : V =>
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
-      fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
-        (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+      fun v => integrable_cexp_inner_mul_I μ v
     -- Integrability of each summand cbarᵢcⱼ·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * cexp (↑⟪x, t i - t j⟫_ℝ * I)) μ :=
@@ -196,10 +208,7 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     -- hre_swap : ∫ reCLM ↑(normSq ...) = reCLM (∫ ↑(normSq ...))
     -- LHS simplifies: reCLM ↑r = r, so LHS = ∫ normSq ...
     -- RHS is reCLM applied to integral, which = (integral).re
-    change ∫ x, Complex.re (↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I)))) ∂μ =
-        Complex.re (∫ x, ↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I))) ∂μ) at hre_swap
-    simp only [Complex.ofReal_re] at hre_swap
-    exact hre_swap.symm
+    simp_all
 
 omit [FiniteDimensional ℝ V] in
 /-- Pointwise product of a PD function and the characteristic function of a
@@ -213,16 +222,13 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
   hermitian t := by
     change φ (-t) * charFun μ (-t) = (starRingEnd ℂ) (φ t * charFun μ t)
     rw [map_mul, ← hpd.hermitian t]
-    congr 1
-    rw [starRingEnd_apply, star_def]
-    exact charFun_neg t
+    simp_all
   nonneg m t c := by
     simp only [charFun_apply]
     -- Integrability of exponentials on a finite measure (norm ≤ 1)
     have hexp_int : ∀ v : V, Integrable (fun x : V =>
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
-      fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
-        (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+      fun v => integrable_cexp_inner_mul_I μ v
     -- Integrability of each summand cbarᵢcⱼφ(dᵢⱼ)·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
@@ -321,13 +327,8 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
   -- Define the measure
   set μ := volume.withDensity density
   -- Integrability of the complex Gaussian
-  have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) := by
-    have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-      (show 0 < ((a : ℂ)).re by simp [ha]) (0 : ℂ) (0 : V)
-    simp only [neg_mul] at this
-    convert this using 1
-    ext x
-    simp [Complex.ofReal_pow]
+  have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) :=
+    gaussian_cexp_integrable a ha
   -- The real Gaussian is integrable (derived from complex version)
   have hgauss_rint : Integrable (fun x : V => C * rexp (-a * ‖x‖ ^ 2)) := by
     apply Integrable.const_mul
@@ -420,8 +421,7 @@ lemma gaussianRegularize_pd (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
   hermitian x := by
     simp only [gaussianRegularize, norm_neg]
     rw [hpd.hermitian x, starRingEnd_apply, star_def, map_mul, ← Complex.exp_conj]
-    congr 1
-    simp [Complex.conj_ofReal]
+    simp_all
   nonneg m x c := by
     -- gaussianRegularize φ ε = fun t => φ t * cexp(...)
     -- By gaussian_eq_charFun, cexp(-ε‖t‖²) = charFun μ t for some Gaussian μ
@@ -440,13 +440,8 @@ lemma gaussianRegularize_integrable (φ : V → ℂ) (hpd : IsPositiveDefinite �
     (hcont : Continuous φ) (ε : ℝ) (hε : 0 < ε) :
     Integrable (gaussianRegularize φ ε) := by
   -- The Gaussian exp(-ε‖x‖²) is integrable
-  have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) := by
-    have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-      (show 0 < (↑ε : ℂ).re by simp [hε]) (0 : ℂ) (0 : V)
-    simp only [neg_mul] at this
-    convert this using 1
-    ext x
-    simp [Complex.ofReal_pow]
+  have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) :=
+    gaussian_cexp_integrable ε hε
   -- φ is bounded: ‖φ(x)‖ ≤ (φ 0).re
   -- So ‖φ(x) * exp(-ε‖x‖²)‖ = ‖φ(x)‖ * ‖exp(-ε‖x‖²)‖ ≤ (φ 0).re * ‖exp(-ε‖x‖²)‖
   -- The bound function (φ 0).re * ‖exp(-ε‖x‖²)‖ is integrable
@@ -504,46 +499,6 @@ theorem pd_l1_fourier_re_nonneg_ax
     (ξ : V) : 0 ≤ (𝓕 φ ξ).re :=
   pd_l1_fourier_re_nonneg_theorem φ hpd hint hcont ξ
 
-omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
-/-- 𝓕(φ_ε)(ξ) → 𝓕(φ)(ξ) as ε → 0⁺, by dominated convergence.
-    The integrand φ_ε(x)·e^{-2πi⟨x,ξ⟩} is dominated by |φ(x)|.
--/
-private lemma gaussianRegularize_norm_le (φ : V → ℂ) {ε : ℝ} (hε : 0 ≤ ε) (x : V) :
-    ‖gaussianRegularize φ ε x‖ ≤ ‖φ x‖ := by
-  simp only [gaussianRegularize, norm_mul]
-  calc ‖φ x‖ * ‖cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))‖
-      ≤ ‖φ x‖ * 1 := by
-        apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        rw [Complex.norm_exp, Real.exp_le_one_iff]
-        simp only [neg_mul, Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
-          mul_zero, sub_zero]
-        exact neg_nonpos_of_nonneg (mul_nonneg hε (by positivity))
-    _ = ‖φ x‖ := mul_one _
-
-private lemma ft_gaussianRegularize_tendsto (φ : V → ℂ) (hint : Integrable φ) (ξ : V) :
-    Tendsto (fun ε => 𝓕 (gaussianRegularize φ ε) ξ) (𝓝[>] 0) (𝓝 (𝓕 φ ξ)) := by
-  -- Unfold 𝓕 to VectorFourier.fourierIntegral and then to the integral definition
-  change Tendsto (fun ε => ∫ v, 𝐞 (-(innerₗ V) v ξ) • gaussianRegularize φ ε v) (𝓝[>] 0)
-    (𝓝 (∫ v, 𝐞 (-(innerₗ V) v ξ) • φ v))
-  apply tendsto_integral_filter_of_dominated_convergence (fun x => ‖φ x‖)
-  · -- AEStronglyMeasurable
-    apply eventually_nhdsWithin_of_forall; intro ε hε
-    have hεnn : (0 : ℝ) ≤ ε := le_of_lt hε
-    have : Integrable (gaussianRegularize φ ε) :=
-      hint.mono (hint.aestronglyMeasurable.mul (by fun_prop))
-        (ae_of_all _ (fun x => gaussianRegularize_norm_le φ hεnn x))
-    exact ((VectorFourier.fourierIntegral_convergent_iff
-      Real.continuous_fourierChar
-      (show Continuous fun p : V × V => (innerₗ V) p.1 p.2 from continuous_inner) ξ).mpr this).1
-  · -- Norm bound: ‖e(⟪x,ξ⟫) • φ_ε(x)‖ ≤ ‖φ(x)‖
-    apply eventually_nhdsWithin_of_forall; intro ε hε
-    exact ae_of_all _ (fun x => by
-      simp only [Circle.norm_smul]; exact gaussianRegularize_norm_le φ (le_of_lt hε) x)
-  · -- Bound integrable
-    exact hint.norm
-  · -- Pointwise convergence
-    exact ae_of_all _ (fun x => Tendsto.smul tendsto_const_nhds (gaussianRegularize_tendsto φ x))
-
 /-- The real part of the Fourier transform of an L¹ PD function is nonneg.
     Ref: Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8.
 -/
@@ -575,8 +530,7 @@ lemma pd_l1_fourier_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     -- Change variables: v → -v
     have hsub := integral_neg_eq_self
       (fun v => (↑(𝐞 (⟪v, ξ⟫_ℝ)) : ℂ) * φ (-v)) (volume : Measure V)
-    simp only [inner_neg_left, neg_neg] at hsub
-    exact hsub.symm
+    simp_all
   have him : (𝓕 φ ξ).im = 0 := by
     have := congr_arg Complex.im hft_conj
     simp only [Complex.conj_im] at this
@@ -681,8 +635,7 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       hψ_int.fourierInv_fourier_eq hψ_ft_int hψ_cont.continuousAt
     -- Step B: ψ(0) = φ(T 0) = φ(0) = 1
     have hψ0 : ψ 0 = 1 := by
-      change φ (T 0) = 1
-      simp [T, smul_zero, hnorm]
+      simp_all
     -- Step C: ∫ 𝓕ψ = ψ(0) = 1 via Fourier inversion at 0
     have hint_eq : ∫ x, 𝓕 ψ x = 1 := by
       -- Fourier inversion: 𝓕⁻(𝓕ψ) = ψ, evaluate at 0
@@ -691,15 +644,11 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       -- h0 : 𝓕⁻(𝓕ψ)(0) = ψ(0)
       -- Expand LHS: 𝓕⁻(𝓕ψ)(0) = ∫ 𝓕ψ
       rw [Real.fourierInv_eq'] at h0
-      simp only [inner_zero_right, mul_zero, Complex.ofReal_zero, zero_mul,
-        Complex.exp_zero, one_smul] at h0
-      -- h0 : ∫ 𝓕ψ v = ψ(0); need ∫ 𝓕ψ x = 1
-      convert h0.trans hψ0
+      simp_all
     -- Step D: ∫ Re(𝓕ψ) = Re(∫ 𝓕ψ) = 1
     have hre_eq : ∫ x, (𝓕 ψ x).re = 1 := by
       have h1 := Complex.reCLM.integral_comp_comm hψ_ft_int
-      change ∫ x, (𝓕 ψ x).re = (∫ x, 𝓕 ψ x).re at h1
-      rw [h1, hint_eq]; simp
+      simp_all
     rw [hre_eq]; simp
   -- Step 9: Package as ProbabilityMeasure
   have hfm : IsFiniteMeasure μ_raw := by
@@ -772,16 +721,7 @@ private lemma parseval_l1 (f g : V → ℂ) (hf : Integrable f) (hg : Integrable
     Real.continuous_fourierChar hL hf hg
     (ν := volume) (μ := volume) (F := ℂ)
   simp only [smul_eq_mul] at h
-  rw [flip_innerₗ] at h
-  exact h
-
-/-- Gaussian x ↦ cexp(-t‖x‖²) is integrable for t > 0. -/
-private lemma gaussian_cexp_integrable (t : ℝ) (ht : 0 < t) :
-    Integrable (fun x : V => cexp (-(t : ℂ) * ↑(‖x‖ ^ 2))) := by
-  have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-    (V := V) (b := (t : ℂ)) (show 0 < ((t : ℂ)).re from by simp [ht]) 0 (0 : V)
-  simp only [add_zero, zero_mul] at this
-  convert this using 1; ext x; push_cast; ring
+  rwa [flip_innerₗ] at h
 
 /-- The Fourier transform of a Gaussian is integrable (it's also a Gaussian). -/
 private lemma ft_gaussian_integrable (t : ℝ) (ht : 0 < t) :
@@ -826,10 +766,7 @@ private lemma integral_norm_ft_gaussian_eq_one (t : ℝ) (ht : 0 < t) :
   have hnorm_eq_re : ∀ w : V, ‖𝓕 g w‖ = (𝓕 g w).re := by
     intro w; have ⟨hre, him⟩ := hft_nonneg w
     rw [← RCLike.sqrt_normSq_eq_norm, RCLike.normSq_apply]
-    have : RCLike.im (𝓕 g w) = 0 := him
-    rw [this, mul_zero, add_zero]
-    have : RCLike.re (𝓕 g w) = (𝓕 g w).re := rfl
-    rw [this, Real.sqrt_mul_self hre]
+    simp_all
   -- ∫ ‖𝓕 g‖ = ∫ (𝓕 g).re = Re(∫ 𝓕 g) = Re(1) = 1
   simp_rw [hnorm_eq_re, show ∀ x : V, (𝓕 g x).re = RCLike.re (𝓕 g x) from fun _ => rfl]
   rw [integral_re hft_int]
@@ -1156,8 +1093,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
       calc 16 * ‖y‖ ^ 2 / δ
           ≤ Real.sqrt (16 * ‖y‖ ^ 2 / δ) ^ 2 :=
             le_of_eq (Real.sq_sqrt (by positivity)).symm
-        _ < r ^ 2 := by
-            exact pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
+        _ < r ^ 2 := pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
     rw [inv_pow, mul_inv_lt_iff₀ (sq_pos_of_pos hr_pos)]
     -- hr_sq: 16 * ‖y‖² / δ < r², i.e. 16 * ‖y‖² < δ * r²
     rw [div_lt_iff₀ hδ_pos] at hr_sq
@@ -1191,8 +1127,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
     -- μ.real {r < |⟪y,x⟫|} ≤ 2*(δ/4) + 8‖y‖²/r² = δ/2 + 8‖y‖²/r² < δ
     -- Convert from μ.real to μ (ENNReal)
     rw [show μ {x | r < |⟪y, x⟫_ℝ|} = ENNReal.ofReal (μ.real {x | r < |⟪y, x⟫_ℝ|}) from by
-      rw [Measure.real, ENNReal.ofReal_toReal]
-      exact measure_ne_top μ _]
+      simp_all]
     apply ENNReal.ofReal_le_ofReal
     linarith
   -- Step 5: Conclude iSup ≤ ENNReal.ofReal δ < a
@@ -1235,9 +1170,7 @@ private theorem bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
   -- So charFun(μ_seq (f n))(ξ) → charFun(μ)(ξ)
   have hcharfun_conv : Tendsto (fun n => charFun (μ_seq (f n) : Measure V) ξ) atTop
       (𝓝 (charFun (μ : Measure V) ξ)) := by
-    rwa [show (fun n => charFun (↑(μ_seq (f n))) ξ) =
-      (fun n => ∫ x, g_ξ x ∂(μ_seq (f n) : Measure V)) from funext (fun n => (hlhs n).symm),
-      show charFun (↑μ) ξ = ∫ x, g_ξ x ∂(μ : Measure V) from hrhs.symm]
+    simp_all
   -- Also charFun(μ_seq (f n))(ξ) = gaussianRegularize φ (1/(f n + 1)) ξ → φ ξ
   have hcharfun_vals : ∀ n, charFun (μ_seq (f n) : Measure V) ξ =
       gaussianRegularize φ (1 / (↑(f n) + 1)) ξ :=
@@ -1256,8 +1189,7 @@ private theorem bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
     (gaussianRegularize_tendsto φ ξ).comp heps_tendsto
   -- The same sequence also → charFun(μ)(ξ) by weak convergence
   have hgr_conv' : Tendsto (fun n => charFun (μ_seq (f n) : Measure V) ξ) atTop (𝓝 (φ ξ)) := by
-    rwa [show (fun n => charFun (↑(μ_seq (f n))) ξ) =
-      (fun n => gaussianRegularize φ (1 / (↑(f n) + 1)) ξ) from funext hcharfun_vals]
+    simp_all
   -- By uniqueness of limits: charFun μ ξ = φ ξ
   exact tendsto_nhds_unique hcharfun_conv hgr_conv'
 

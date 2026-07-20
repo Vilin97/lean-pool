@@ -30,10 +30,7 @@ protected def axiomFive : 𝓢 ⊢ ◇φ ==> □◇φ := axiomTc
 instance : HasAxiomFive 𝓢 := ⟨fun _ ↦ KTc.axiomFive⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def axiomDiaT : 𝓢 ⊢ ◇φ ==> φ := by
-  apply impTrans'' (and₁' diaDuality) ?_;
-  apply contra₂';
-  exact axiomTc;
+protected def axiomDiaT : 𝓢 ⊢ ◇φ ==> φ := impTrans'' (and₁' diaDuality) (contra₂' axiomTc)
 instance : HasAxiomDiaT 𝓢 := ⟨fun _ ↦ KTc.axiomDiaT⟩
 
 end KTc

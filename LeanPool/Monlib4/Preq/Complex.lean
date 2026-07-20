@@ -27,10 +27,8 @@ the real and imaginary parts of the `α i` are pairwise proportional.
 -/
 theorem norm_of_sum_sq_eq_sum_norm_sq_iff {n : Type _} [Fintype n] (α : n → ℂ) :
     ‖(∑ i : n, α i ^ 2)‖ = ∑ i : n, ‖(α i)‖ ^ 2 ↔
-      ∀ i j : n, (α i).re * (α j).im = (α j).re * (α i).im :=
-  by
-  have complex.abs_sq : ∀ x : ℂ, ‖x‖ ^ 2 = Complex.normSq x :=
-    by
+      ∀ i j : n, (α i).re * (α j).im = (α j).re * (α i).im := by
+  have complex.abs_sq : ∀ x : ℂ, ‖x‖ ^ 2 = Complex.normSq x := by
     intros
     simp_rw [norm_def, Real.sq_sqrt (normSq_nonneg _)]
   simp_rw [complex.abs_sq, norm_def]
@@ -59,8 +57,7 @@ theorem norm_of_sum_sq_eq_sum_norm_sq_iff {n : Type _} [Fintype n] (α : n → �
           2 *
             (((α x.snd).im * (α x.fst).re) ^ 2 -
                 2 * ((α x.snd).im * (α x.fst).re) * ((α x.fst).im * (α x.snd).re) +
-              ((α x.fst).im * (α x.snd).re) ^ 2) :=
-      by
+              ((α x.fst).im * (α x.snd).re) ^ 2) := by
       intros
       simp_rw [← pow_two, sub_sub, mul_comm, ← two_mul]
       ring_nf
@@ -76,22 +73,19 @@ theorem norm_of_sum_sq_eq_sum_norm_sq_iff {n : Type _} [Fintype n] (α : n → �
 
 theorem norm_of_sq_add_sq_eq_norm_sq_add_norm_sq_iff (α₁ α₂ : ℂ) :
     norm (α₁ ^ 2 + α₂ ^ 2) = norm α₁ ^ 2 + norm α₂ ^ 2 ↔
-      α₁.re * α₂.im = α₂.re * α₁.im :=
-  by
+      α₁.re * α₂.im = α₂.re * α₁.im := by
   let α := ![α₁, α₂]
   have h₀ : α 0 = α₁ := rfl
   have h₁ : α 1 = α₂ := rfl
   have hy :
     norm (∑ i : Fin 2, α i ^ 2) = norm (α 0 ^ 2 + α 1 ^ 2) ∧
-      ∑ i : Fin 2, norm (α i) ^ 2 = norm (α 0) ^ 2 + norm (α 1) ^ 2 :=
-    by
+      ∑ i : Fin 2, norm (α i) ^ 2 = norm (α 0) ^ 2 + norm (α 1) ^ 2 := by
     simp [Fin.sum_univ_two]
   simp_rw [← h₀, ← h₁, ← hy.1, ← hy.2, norm_of_sum_sq_eq_sum_norm_sq_iff,
     Fin.forall_fin_two, h₀, h₁, true_and, and_true, eq_comm, and_self_iff]
 
 theorem norm_of_sq_add_sq_norm_sq_add_norm_sq_iff' (α₁ α₂ : ℂ) :
-    norm (α₁ ^ 2 + α₂ ^ 2) = norm α₁ ^ 2 + norm α₂ ^ 2 ↔ α₁ * conj α₂ = conj α₁ * α₂ :=
-  by
+    norm (α₁ ^ 2 + α₂ ^ 2) = norm α₁ ^ 2 + norm α₂ ^ 2 ↔ α₁ * conj α₂ = conj α₁ * α₂ := by
   rw [norm_of_sq_add_sq_eq_norm_sq_add_norm_sq_iff, ← re_add_im α₁, ← re_add_im α₂]
   simp_rw [add_re, add_im, map_add, conj_ofReal, mul_I_im, mul_I_re, starRingEnd_apply, star_mul',
     ← starRingEnd_apply, conj_I, conj_ofReal, mul_add, add_mul]
@@ -111,16 +105,14 @@ The norm identity for a finite sum of squares is equivalent to saying that
 -/
 theorem norm_of_sum_sq_eq_sum_norm_sq_iff' {n : Type _} [Fintype n] (α : n → ℂ) :
     norm (∑ i : n, α i ^ 2) = ∑ i : n, norm (α i) ^ 2 ↔
-      ∀ i j : n, α i * conj (α j) = conj (α i) * α j :=
-  by
+      ∀ i j : n, α i * conj (α j) = conj (α i) * α j := by
   have := norm_of_sq_add_sq_norm_sq_add_norm_sq_iff'
   simp_rw [norm_of_sq_add_sq_eq_norm_sq_add_norm_sq_iff] at this
   simp_rw [norm_of_sum_sq_eq_sum_norm_sq_iff, this]
 
 theorem norm_of_sq_add_sq_norm_sq_add_norm_sq_iff'' (α₁ α₂ : ℂ) :
     norm (α₁ ^ 2 + α₂ ^ 2) = norm α₁ ^ 2 + norm α₂ ^ 2 ↔
-      ∃ (γ : ℂ) (β₁ β₂ : ℝ), α₁ = γ * β₁ ∧ α₂ = γ * β₂ :=
-  by
+      ∃ (γ : ℂ) (β₁ β₂ : ℝ), α₁ = γ * β₁ ∧ α₂ = γ * β₂ := by
   rw [norm_of_sq_add_sq_eq_norm_sq_add_norm_sq_iff]
   constructor
   · intro h
@@ -130,16 +122,12 @@ theorem norm_of_sq_add_sq_norm_sq_add_norm_sq_iff'' (α₁ α₂ : ℂ) :
       · rw [h1, h2, ofReal_zero, zero_add, MulZeroClass.zero_mul]
         use α₁
         use 1
-        use 0
-        simp_rw [re_add_im, ofReal_zero, MulZeroClass.mul_zero, ofReal_one, mul_one,
-          true_and]
+        simp_all
       have : α₂.re = 0 ∨ α₁.im = 0 := by rw [← mul_eq_zero, ← h, h1, MulZeroClass.mul_zero]
       rcases this with (this | this)
       · contradiction
       · use 1
-        use α₁.re
-        use α₂.re
-        simp_rw [h1, this, ofReal_zero, MulZeroClass.zero_mul, add_zero, one_mul, and_self_iff]
+        simp_all
     by_cases h2 : α₂.re = 0
     · have : α₁.re = 0 ∨ α₂.im = 0 := by rw [← mul_eq_zero, h, h2, MulZeroClass.zero_mul]
       rcases this with (this | this)
@@ -164,18 +152,14 @@ lying on a common complex line through the origin with real coefficients.
 -/
 theorem norm_of_sum_sq_eq_sum_norm_sq_iff'' {n : Type _} [Fintype n] (α : n → ℂ) :
     norm (∑ i : n, α i ^ 2) = ∑ i : n, norm (α i) ^ 2 ↔
-      ∃ γ : ℂ, ∀ i : n, ∃ β : ℝ, α i = γ * β :=
-  by
+      ∃ γ : ℂ, ∀ i : n, ∃ β : ℝ, α i = γ * β := by
   have := norm_of_sq_add_sq_norm_sq_add_norm_sq_iff''
   simp_rw [norm_of_sq_add_sq_eq_norm_sq_add_norm_sq_iff] at this
   simp_rw [norm_of_sum_sq_eq_sum_norm_sq_iff, this]
   constructor
   · intro h
     by_cases H : α = 0
-    · use 0
-      intros
-      use 0
-      simp_rw [H, Pi.zero_apply, MulZeroClass.zero_mul]
+    · simp_all
     · have : ∃ i : n, α i ≠ 0 := by simp_rw [ne_eq, ← not_forall, ← funext_iff]; exact H
       have := this
       rcases this with ⟨i, hi⟩
@@ -185,8 +169,7 @@ theorem norm_of_sum_sq_eq_sum_norm_sq_iff'' {n : Type _} [Fintype n] (α : n →
       intro k
       obtain ⟨γ₂, β₃, β₄, ⟨hβ₃, hβ₄⟩⟩ := h i k
       by_cases h' : β₃ = 0
-      · simp_rw [h', ofReal_zero, MulZeroClass.mul_zero] at hβ₃
-        contradiction
+      · simp_all
       · use β₁ * (β₄ / β₃)
         simp_rw [ofReal_mul, ← mul_assoc, ← hβ₁, hβ₃, mul_assoc, ← ofReal_mul,
           mul_div_cancel₀ _ h', hβ₄]

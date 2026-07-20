@@ -174,8 +174,7 @@ private theorem binop_wireValue_c₁ {N G₁ G₂ : Nat} [NeZero N]
         · exact ih _ hacyc1 (by omega) (by omega)
         · exact ih _ hacyc0 (by omega) (by omega)
         · exact ih _ hacyc1 (by omega) (by omega)
-  have := key w.val (by omega) hw
-  convert this using 2
+  simp_all
 
 private theorem binop_wireValue_c₂ {N G₁ G₂ : Nat} [NeZero N]
     (op : AONOp)
@@ -279,8 +278,7 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
     simp [gw, cb, binopCircuit]
   have hcb_gw1 : gw 1 (cb.outputs 0) = ⟨N + G₁ + G₂ + 1, by omega⟩ := by
     simp [gw, cb, binopCircuit]
-  rw [hcb_op, hcb_gn0, hcb_gn1, hcb_gw0, hcb_gw1, Bool.false_xor, Bool.false_xor]
-  exact congr_arg₂ (· || ·) hw1 hw2
+  simp_all
 
 /-! ## Arithmetic -/
 
@@ -347,10 +345,9 @@ private theorem two_n_plus_one_le (N : Nat) (hN : 4 ≤ N) : 2 * N + 1 ≤ 2 ^ N
     | inl h => interval_cases n <;> omega
     | inr h =>
       have := ih (by omega)
-      calc 2 * (n + 1) + 1 = 2 * n + 1 + 2 := by ring
-        _ ≤ 2 ^ n + 2 := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by nlinarith [@Nat.lt_pow_self n 2 (by omega)]
-        _ = 2 ^ (n + 1) := by ring
+      have := @Nat.lt_pow_self n 2 (by omega)
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 private theorem sq_le_pow (N : Nat) (hN : 16 ≤ N) : N * N ≤ 2 ^ N := by
   induction N with
@@ -361,23 +358,19 @@ private theorem sq_le_pow (N : Nat) (hN : 16 ≤ N) : N * N ≤ 2 ^ N := by
     | inr h =>
       have := ih (by omega)
       have := two_n_plus_one_le n (by omega)
-      calc (n + 1) * (n + 1) = n * n + 2 * n + 1 := by ring
-        _ ≤ 2 ^ n + (2 * n + 1) := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by omega
-        _ = 2 ^ (n + 1) := by ring
+      have hsq : (n + 1) * (n + 1) = n * n + 2 * n + 1 := by ring
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 /-! ### Term-by-term bounds -/
 
 private theorem term1 (N : Nat) (hN : 16 ≤ N) :
     4 * 2 ^ dataBits N * N ≤ 16 * 2 ^ N := by
   have hlt := n_lt_four_pow_addr N hN
-  calc 4 * 2 ^ dataBits N * N
-      ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N - 1) := by
-        apply Nat.mul_le_mul_left; omega
-    _ ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N) := by
-        apply Nat.mul_le_mul_left; omega
-    _ = 16 * (2 ^ dataBits N * 2 ^ addrBits N) := by ring
-    _ = 16 * 2 ^ N := by rw [pow_split N hN]
+  have hsplit := pow_split N hN
+  have : 4 * 2 ^ dataBits N * N ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N) :=
+    Nat.mul_le_mul_left _ (by omega)
+  nlinarith [this, hsplit]
 
 private theorem term2 (N : Nat) (hN : 16 ≤ N) :
     2 * 2 ^ addrBits N * N ≤ 2 ^ N := by
@@ -393,10 +386,9 @@ private theorem pow_ge_four_mul (k : Nat) (hk : 4 ≤ k) : 4 * k ≤ 2 ^ k := by
     | inl h => interval_cases n <;> omega
     | inr h =>
       have := ih (by omega)
-      calc 4 * (n + 1) = 4 * n + 4 := by ring
-        _ ≤ 2 ^ n + 4 := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by nlinarith [@Nat.lt_pow_self n 2 (by omega)]
-        _ = 2 ^ (n + 1) := by ring
+      have := @Nat.lt_pow_self n 2 (by omega)
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 private theorem log_le_quarter (N : Nat) (hN : 16 ≤ N) : 4 * Nat.log 2 N ≤ N := by
   have hlog4 : 4 ≤ Nat.log 2 N := Nat.le_log_of_pow_le (by omega) (by omega)
@@ -426,17 +418,10 @@ private theorem term3 (N : Nat) (hN : 16 ≤ N) :
   have hsplit : 2 ^ (2 ^ addrBits N + addrBits N) *
       2 ^ (N - (2 ^ addrBits N + addrBits N)) = 2 ^ N := by
     rw [← Nat.pow_add]; congr 1; omega
-  calc 2 ^ (2 ^ addrBits N + addrBits N) * N
-      ≤ 2 ^ (2 ^ addrBits N + addrBits N) *
-        (2 ^ (N - (2 ^ addrBits N + addrBits N)) - 1) := by
-        apply Nat.mul_le_mul_left; omega
-    _ ≤ 2 ^ (2 ^ addrBits N + addrBits N) *
-        2 ^ (N - (2 ^ addrBits N + addrBits N)) := by
-        apply Nat.mul_le_mul_left; omega
-    _ = 2 ^ N := hsplit
-
-private theorem n_le_pow (N : Nat) : N ≤ 2 ^ N := by
-  have := @Nat.lt_pow_self N 2 (by omega); omega
+  have : 2 ^ (2 ^ addrBits N + addrBits N) * N ≤
+      2 ^ (2 ^ addrBits N + addrBits N) * 2 ^ (N - (2 ^ addrBits N + addrBits N)) :=
+    Nat.mul_le_mul_left _ (by omega)
+  omega
 
 theorem shannon_arithmetic (N : Nat) (hN : 16 ≤ N) :
     (4 * 2 ^ dataBits N + 2 * 2 ^ addrBits N +
@@ -537,17 +522,12 @@ lemma treeParentIdx_lt_j (l m j : Nat) (hl : 2 ≤ l)
     (hm : m = treePos j l) (hbase : treeBase l ≤ j) :
     treeParentIdx l m < j := by
   unfold treeParentIdx treeBase treePos at *
-  have h4l : 4 ≤ 2^l := pow_ge_4 l hl
+  have h4l : 4 ≤ 2 ^ l := pow_ge_4 l hl
   have hlm1 : l - 1 + 1 = l := by omega
-  have h4lm1 : 4 ≤ 2^(l-1+1) := by rw [hlm1]; exact h4l
-  -- 2^(l-1) ≤ 2^l
-  have hpow_le : 2^(l-1) ≤ 2^l := Nat.pow_le_pow_right (by omega) (by omega)
-  -- 2^(l-1+1) = 2^l
-  have hpow_eq : 2^(l-1+1) = 2^l := by rw [hlm1]
-  have hmod : m % 2^l < 2^l := Nat.mod_lt _ (by positivity)
-  have h2l : 2^l ≤ 2^(l+1) := Nat.pow_le_pow_right (by omega) (by omega)
+  have hpow_eq : 2 ^ (l - 1 + 1) = 2 ^ l := by rw [hlm1]
+  have hmod : m % 2 ^ l < 2 ^ l := Nat.mod_lt _ (by positivity)
+  have h2l : 2 ^ l ≤ 2 ^ (l + 1) := Nat.pow_le_pow_right (by omega) (by omega)
   subst hm
-  -- Need: 2^(l-1+1) - 4 + (j - (2^(l+1) - 4)) % 2^l < j
   rw [hpow_eq]
   omega
 
@@ -568,8 +548,7 @@ private lemma treeLevel_parent (l m : Nat) (hl : 2 ≤ l) :
 
 private lemma treePos_parent (l m : Nat) (_hl : 2 ≤ l) :
     treePos (treeParentIdx l m) (l - 1) = m % 2 ^ l := by
-  change treeParentIdx l m - treeBase (l - 1) = m % 2 ^ l
-  change treeBase (l - 1) + m % 2 ^ l - treeBase (l - 1) = m % 2 ^ l
+  unfold treePos treeParentIdx
   omega
 
 /-! ### Column pattern encoding -/
@@ -616,39 +595,6 @@ theorem colPatIdx_lt (N : Nat) (f : BitString N → Bool)
     (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) :
     colPatIdx N f k q hkq y < 2^(2^k) :=
   encodeCol_lt k (colFun N f k q hkq y)
-
-/-- The sum Σ_{j < k} (if b j then 2^j else 0) has no overlap between
-    powers, so it is bounded by 2^k. -/
-private lemma sum_cond_pow_range_lt (k : Nat) (b : Nat → Bool) :
-    Finset.sum (Finset.range k) (fun j => if b j then 2^j else 0) < 2^k := by
-  induction k with
-  | zero => simp
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    have : (if b n then 2^n else 0) ≤ 2^n := by split_ifs <;> omega
-    calc _ < 2^n + 2^n := by omega
-      _ = 2^(n+1) := by ring
-
-/-- testBit of a sum of conditional powers of 2 (range version). -/
-private theorem testBit_sum_cond_pow_range (k : Nat) (b : Nat → Bool)
-    (i : Nat) (hi : i < k) :
-    Nat.testBit (Finset.sum (Finset.range k)
-      (fun j => if b j then 2^j else 0)) i = b i := by
-  induction k with
-  | zero => omega
-  | succ n ih =>
-    rw [Finset.sum_range_succ]
-    have hS_lt := sum_cond_pow_range_lt n b
-    by_cases hi_n : i < n
-    · split_ifs with hbn
-      · rw [Nat.add_comm, Nat.testBit_two_pow_add_gt (by omega)]; exact ih hi_n
-      · simp only [Nat.add_zero]; exact ih hi_n
-    · have hi_eq : i = n := by omega
-      subst hi_eq
-      split_ifs with hbn
-      · rw [Nat.add_comm, Nat.testBit_two_pow_add_eq, Nat.testBit_lt_two_pow hS_lt]; simp [hbn]
-      · simp only [Nat.add_zero]; rw [Nat.testBit_lt_two_pow hS_lt]
-        exact (Bool.eq_false_iff.mpr hbn).symm
 
 /-- Bound on conditional-power sum over Fin. -/
 private lemma sum_cond_pow_fin_lt (k : Nat) (b : BitString k) :
@@ -698,8 +644,7 @@ private theorem testBit_sum_cond_pow_fin (k : Nat) (b : BitString k) (i : Nat) (
         rw [hlast_eq] at hbn; exact hbn.symm
       · simp only [hbn, ite_false, Fin.val_last, Nat.add_zero, Bool.false_eq_true]
         rw [Nat.testBit_lt_two_pow hS_lt]
-        rw [hlast_eq] at hbn
-        exact (Bool.eq_false_iff.mpr hbn).symm
+        simp_all
 
 private theorem addrDataSum (N : Nat) (hN : 16 ≤ N) :
     addrBits N + dataBits N = N := by
@@ -934,8 +879,6 @@ private theorem lastWire_is_orChain_last (N : Nat) (hN : 16 ≤ N) :
     N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) := by
   have hq2 : 2 ≤ dataBits N := dataBits_ge_two N hN
   have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
-  change N + szSections (addrBits N) (dataBits N) - 1 =
-    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2)
   unfold szSections oF oE oD oC; omega
 
 private noncomputable def shannonCircuit (N : Nat) [NeZero N]
@@ -950,9 +893,6 @@ private noncomputable def shannonCircuit (N : Nat) [NeZero N]
   acyclic i k := (shannonGateArray N f hN i).property k
 
 /-! ### Correctness -/
-
-/-! #### Bit-vector testBit lemma -/
-
 
 /-! #### colFun reconstruction lemma -/
 
@@ -984,16 +924,9 @@ private theorem colFun_at_actual_bits (N : Nat) [NeZero N]
   · exact testBit_sum_cond_pow_fin k _ idx h
   · have hq_bound : idx - k < q := by omega
     rw [testBit_sum_cond_pow_fin q _ (idx - k) hq_bound]
-    dsimp only
-    congr 1; ext; simp; omega
+    simp_all
 
 /-! #### Circuit correctness -/
-
-/-! ##### Key identity -/
-
-/-! ##### Connecting the last wire to the OR chain -/
-
-/-! ##### Semantic decomposition of the circuit -/
 
 /-- The semantic value of each AND-layer wire (Section E). -/
 private noncomputable def andLayerSem (N : Nat)
@@ -1457,10 +1390,7 @@ private theorem colOutput_constFalse (N : Nat) [NeZero N]
   rw [dif_pos (show N - N = 0 from by omega)]
   simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
     Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
-  simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
-    show ¬((1 : Nat) = 0) from by omega, Bool.false_xor, Bool.true_xor]
-  rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from h0N)]
-  cases x ⟨0, h0N⟩ <;> rfl
+  simp_all
 
 private theorem wireValue_colOutput (N : Nat) [NeZero N]
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N)
@@ -1550,8 +1480,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
           simp [htb]]
         exact h
       · have h := colOutput_constFalse N f hN x (by linarith [hsel_bound pos hpos])
-        rw [show (Nat.testBit p pos && decide (pos = aSum)) = false from by simp [htb]]
-        exact h
+        simp_all
     induction r with
     | zero =>
       have h_ne0 : oD k q + p * (2 ^ k - 1) ≠ 0 := by
@@ -1595,10 +1524,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact colOutput_constFalse N f hN x _
     | succ r' ih =>
       have h_ne0' : oD k q + p * (2 ^ k - 1) + (r' + 1) ≠ 0 := by
-        change oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N)
-          (addrDataSum N hN)
-          ⟨y, hy⟩ * (2 ^ (addrBits N) - 1) + (r' + 1) ≠ 0
-        unfold oD oC; omega
+        simp_all
       have h_ge_oC' : ¬(oD k q + p * (2 ^ k - 1) + (r' + 1) < oC q) := by
         simp only [show k = addrBits N from rfl, show q = dataBits N from rfl] at *
         unfold oD oC; omega
@@ -1777,7 +1703,6 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     rw [show r' + 1 + 2 = (r' + 2) + 1 from by omega,
         List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
     have hr2 : r' + 2 < 2 ^ dataBits N := by omega
-    have hr2 : r' + 2 < 2 ^ dataBits N := by omega
     rw [show andLayerSem N f hN x (r' + 2) hr2 =
       (if h : r' + 2 < 2 ^ dataBits N then andLayerSem N f hN x (r' + 2) h else false) from
       by rw [dif_pos hr2]]
@@ -1824,8 +1749,6 @@ private theorem shannon_lastWire_correct (N : Nat) [NeZero N]
   have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
   have hW_or : N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) <
     N + szSections (addrBits N) (dataBits N) := by
-    show N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) <
-      N + szSections (addrBits N) (dataBits N)
     unfold szSections oF oE oD oC; omega
   have hfin_eq :
     (⟨N + szSections (addrBits N) (dataBits N) - 1,

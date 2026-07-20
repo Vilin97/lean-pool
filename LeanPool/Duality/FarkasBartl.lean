@@ -79,10 +79,7 @@ private lemma filter_yielding_singleton_attach_sum {m : ℕ} {R V : Type*} [Semi
     · have him := hi.right
       push Not at him
       exact le_antisymm (Nat.le_of_lt_succ i.isLt) him
-    · refine ⟨Finset.mem_univ i, ?_⟩
-      rw [hi]
-      push Not
-      rfl
+    · simp_all
   rw [singlet, Finset.sum_attach _ (fun j : Fin m.succ => f j • v), Finset.sum_singleton]
 
 private lemma impossible_index {m : ℕ} {i : Fin m.succ} (hi : ¬(i.val < m))
@@ -158,8 +155,7 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
       convert inv_mul_cancel₀ hAy'.ne
       simp [y]
     have hAA : ∀ w : W, A (w - (A w M • y)) M = 0 := by
-      intro w
-      simp [hAy]
+      simp_all
     have hbA : ∀ w : W, 0 ≤ withoutLastMap A (w - (A w M • y)) → 0 ≤ b (w - (A w M • y)) := by
       intro w hw
       apply hAb
@@ -183,8 +179,7 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
         clear * - hi hx'
         aesop
       else
-        have hAy'' : (A y' M)⁻¹ ≤ 0 := by
-          exact (inv_lt_zero.mpr hAy').le
+        have hAy'' : (A y' M)⁻¹ ≤ 0 := (inv_lt_zero.mpr hAy').le
         have hay : withoutLastMap A y ≤ 0 := by
           simpa [y] using smul_nonpos_of_nonpos_of_nonneg hAy'' hay'
         have hby : 0 ≤ b y := by
@@ -266,12 +261,10 @@ theorem almostFarkasBartl {J : Type*} [Fintype J]
     [AddCommGroup W] [Module R W]
     (A : W →ₗ[R] J → R) (b : W →ₗ[R] R) :
     (∃ x : J → R, 0 ≤ x ∧ ∀ w : W, ∑ j : J, A w j • x j = b w) ≠
-      (∃ y : W, 0 ≤ A y ∧ b y < 0) :=
-  fintypeFarkasBartl A b
+      (∃ y : W, 0 ≤ A y ∧ b y < 0) := fintypeFarkasBartl A b
 
 theorem coordinateFarkasBartl {I J : Type*} [Fintype J]
     [DivisionRing R] [LinearOrder R] [IsStrictOrderedRing R]
     (A : (I → R) →ₗ[R] J → R) (b : (I → R) →ₗ[R] R) :
     (∃ x : J → R, 0 ≤ x ∧ ∀ w : I → R, ∑ j : J, A w j • x j = b w) ≠
-      (∃ y : I → R, 0 ≤ A y ∧ b y < 0) :=
-  almostFarkasBartl A b
+      (∃ y : I → R, 0 ≤ A y ∧ b y < 0) := almostFarkasBartl A b

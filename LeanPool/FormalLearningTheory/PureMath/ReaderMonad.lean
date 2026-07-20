@@ -48,18 +48,15 @@ def ReaderSel.bind {ι : Type u} {α : Type v} {γ : Type w}
 theorem ReaderSel.left_unit {ι : Type u} {α : Type v} {γ : Type w}
     (i₀ : ι) (f : α → γ)
     (g : γ → ReaderSel ι α γ) (a : α) :
-    (ReaderSel.pure i₀ f |>.bind g).eval a = (g (f a)).eval a := by
-  rfl
+    (ReaderSel.pure i₀ f |>.bind g).eval a = (g (f a)).eval a := rfl
 
 /-- Right unit: bind r (fun v => pure (const v)) a = r.eval a -/
 theorem ReaderSel.right_unit {ι : Type u} {α : Type v} {γ : Type w}
     (r : ReaderSel ι α γ) (i₀ : ι) (a : α) :
-    (r.bind (fun v => ReaderSel.pure i₀ (fun _ => v))).eval a = r.eval a := by
-  rfl
+    (r.bind (fun v => ReaderSel.pure i₀ (fun _ => v))).eval a = r.eval a := rfl
 
 /-- Associativity: bind (bind r f) g = bind r (fun v => bind (f v) g) -/
 theorem ReaderSel.assoc {ι : Type u} {α : Type v} {γ : Type w}
     (r : ReaderSel ι α γ)
     (f : γ → ReaderSel ι α γ) (g : γ → ReaderSel ι α γ) (a : α) :
-    ((r.bind f).bind g).eval a = (r.bind (fun v => (f v).bind g)).eval a := by
-  rfl
+    ((r.bind f).bind g).eval a = (r.bind (fun v => (f v).bind g)).eval a := rfl

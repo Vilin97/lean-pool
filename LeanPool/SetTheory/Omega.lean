@@ -41,8 +41,7 @@ namespace SetTheory
     (∀ y : Set x, p y) ↔ (∀ y ⊆ x, p {z : x | z.1 ∈ y}) := by
   refine ⟨fun h _ _ => h _, fun h y => ?_⟩
   convert h y.toZFSet ?_
-  · ext z
-    simp
+  · simp_all
   · intro z
     simpa using fun hz _ => hz
 
@@ -83,11 +82,9 @@ instance instOfNatM {n} : OfNat M n where
 
 lemma ofNat_eq_natCast (n : ℕ) : (OfNat.ofNat n : M) = n := rfl
 
-lemma natCast_zero : (0 : M) = ∅ := by
-  simp [toZFSet_simps, ofNat_eq_natCast]
+lemma natCast_zero : (0 : M) = ∅ := by simp [toZFSet_simps, ofNat_eq_natCast]
 
-lemma natCast_succ {n : ℕ} : ((n + 1 : ℕ) : M) = succ (n : M) := by
-  simp [toZFSet_simps]
+lemma natCast_succ {n : ℕ} : ((n + 1 : ℕ) : M) = succ (n : M) := by simp [toZFSet_simps]
 
 lemma toZFSet_nat_mem_ωₛ {n : ℕ} : Ordinal.toZFSet n ∈ ωₛ := by
   simpa only [ωₛ] using toZFSet_mem_toZFSet_iff.mpr <| natCast_lt_omega0 _
@@ -147,8 +144,7 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   · refine ⟨↓ωₛ, ?_⟩
     intro y hy
     rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
-    rw [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
-    exact hy
+    rwa [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
 
 @[simp] lemma natCast_mem_ωₘ {n : ℕ} : (n : M₀) ∈ (ωₘ : M₀) := by
   simp only [ωₘ.spec, memOmega_natCast]
@@ -177,8 +173,7 @@ def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
     simp only [Bijective, Injective, Surjective, toZFSet_simps, Subtype.forall,
       Subtype.mk.injEq, toZFSet_strictMono.injective.eq_iff]
     refine ⟨fun m n eq => ?_, fun α hα => ?_⟩
-    · apply_fun (·.card.toNat) at eq
-      simpa using eq
+    · simp_all
     · replace hα : ⇓α ∈ ωₛ := MemOmega.toZFSet _ |>.mp (ωₘ.spec _ |>.mp hα)
       simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
 

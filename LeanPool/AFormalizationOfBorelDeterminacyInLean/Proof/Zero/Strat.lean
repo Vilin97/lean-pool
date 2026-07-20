@@ -65,33 +65,18 @@ lemma losable_of_losable_not_lost n (hL : (takeLift y n).Losable)
         2 * k + 2 + (2 * k + 1 + max 1 pnum - (2 * k + 2)) =
           min (2 * k + 2 + n) (2 * k + 1 + hL.2.num + (1 - pnum)) := by
       rw [hpnum_def]
-      by_cases hpzero : pnum = 0
-      · simp [hpzero]
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        have hpmax_eq : max 1 pnum = pnum := max_eq_right hpone
-        simp [hpmax_eq]
-        omega
+      omega
     have hW : (takeLift y m).Winnable := hW
     replace hW := hW.take (2 * k + 1 + max 1 pnum) (by omega)
-    replace hL := hL.take (n := 1 - pnum) (by
-      by_cases hpzero : pnum = 0
-      · simp [pnum, hpzero]
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega)
+    replace hL := hL.take (n := 1 - pnum) (by omega)
     simp_rw [takeLift] at hW hL
     rw [← TreeLift.lift_take _ (by omega) (by simp; omega)] at hW
     rw [← TreeLift.lift_take _ (by
       change 2 * k < 2 * k + 1 + pnum + (1 - pnum)
-      by_cases hpzero : pnum = 0
-      · omega
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega) (by
+      omega) (by
       conv => simp
       change 2 * k + 2 ≤ 2 * k + 1 + pnum + (1 - pnum)
-      by_cases hpzero : pnum = 0
-      · omega
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega)] at hL
+      omega)] at hL
     simp (disch := omega) only [bodyTake_take, min_eq_left] at hW hL
     cases hW (by
       convert hL.2 using 6
@@ -118,8 +103,7 @@ lemma body_lost_of_losable n (h : (takeLift y n).Losable) (h' : ∀ m, ¬ (takeL
     generalize_proofs at this
     conv => simp [Stream'.take_drop]
     generalize_proofs pf4 pf5
-    have hsub : pf3.strat.pre.subtree = pf1.strat.pre.subtree := by
-      exact pf1.prefix_strat_subtree
+    have hsub : pf3.strat.pre.subtree = pf1.strat.pre.subtree := pf1.prefix_strat_subtree
         (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
         (by as_aux_lemma => change _ = (takeLift y _).game; simp) rfl
     convert (hsub ▸ this) using 3
@@ -195,8 +179,7 @@ def wonLift (h : ∀ n, (takeLift y n).Winnable) : body R.pre.subtree :=
   ⟨(h k).toWLift'.liftVal.take k, ⟨take_mem ⟨_, (bodyTake y k).wLift_mem_tree _ _⟩, by
     rw [List.length_take, min_eq_left]
     change k ≤ (h k).toWLift'.toWLLift.liftVal.length
-    rw [WLLift.liftVal_length]
-    simp⟩⟩, fun k ↦
+    simp_all⟩⟩, fun k ↦
     ((Lift.wLift_liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))).take k).trans (by
       convert List.take_prefix k (List.take (k + 1) (takeLift y (k + 1)).toWLift.liftVal)
         using 1

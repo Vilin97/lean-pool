@@ -23,27 +23,6 @@ variable {V : Type*} [ORingStruc V] [V ⊧ₘ* 𝐈Sg1]
 
 variable {L : Arith.Language V} {pL : LDef} [Arith.Language.Defined L pL]
 
-/-
-section typed_fin
-
-structure TFin (n : V) where
-  val : V
-  prop : val < n
-
-attribute [simp] TFin.prop
-
-namespace TFin
-
-variable {n : V}
-
-lemma ext_iff {i j : TFin n} : i = j ↔ i.val = j.val := by rcases i; rcases j; simp
-
-@[ext] lemma ext {i j : TFin n} (h : i.val = j.val) : i = j := ext_iff.mpr h
-
-end TFin
-
-end typed_fin
--/
 
 section «lp_section_1»
 
@@ -70,8 +49,7 @@ abbrev _root_.LO.Arith.Language.Term := L.Semiterm 0
 lemma _root_.LO.Arith.Language.Semiterm.ext {t u : L.Semiterm n}
     (h : t.val = u.val) : t = u := by rcases t; rcases u; simpa using h
 
-@[simp] lemma _root_.LO.Arith.Language.Semiterm.isUTerm (t : L.Semiterm n) :
-    L.IsUTerm t.val :=
+@[simp] lemma _root_.LO.Arith.Language.Semiterm.isUTerm (t : L.Semiterm n) : L.IsUTerm t.val :=
   t.prop.isUTerm
 
 @[simp] lemma _root_.LO.Arith.Language.SemitermVec.isUTerm (v : L.SemitermVec k n) :
@@ -83,8 +61,7 @@ lemma _root_.LO.Arith.Language.SemitermVec.ext {v w : L.SemitermVec k n}
     (h : v.val = w.val) : v = w := by rcases v; rcases w; simpa using h
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Language.bvar {n : V} (z : V) (hz : z < n := by simp) :
-    L.Semiterm n :=
+def _root_.LO.Arith.Language.bvar {n : V} (z : V) (hz : z < n := by simp) : L.Semiterm n :=
   ⟨^#z, by simp [hz]⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -121,8 +98,7 @@ def _root_.LO.Arith.Language.Semiterm.cons {m n} (t : L.Semiterm n) (v : L.Semit
 scoped infixr:67 " ∷ᵗ " => Language.Semiterm.cons
 
 @[simp] lemma _root_.LO.Arith.Language.Semitermvec.val_cons {m n : V} (t : L.Semiterm n) (v :
-    L.SemitermVec m n) :
-    (t ∷ᵗ v).val = t.val ∷ v.val := by simp [Language.Semiterm.cons]
+    L.SemitermVec m n) : (t ∷ᵗ v).val = t.val ∷ v.val := by simp [Language.Semiterm.cons]
 
 variable (L)
 
@@ -135,8 +111,7 @@ variable {L}
     (Language.SemitermVec.nil L n).val = 0 := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Arith.Language.Semiterm.sing {n} (t : L.Semiterm n) :
-    L.SemitermVec (0 + 1) n :=
+abbrev _root_.LO.Arith.Language.Semiterm.sing {n} (t : L.Semiterm n) : L.SemitermVec (0 + 1) n :=
   t ∷ᵗ .nil L n
 
 namespace Language
@@ -187,24 +162,19 @@ def substs (v : L.SemitermVec k n) (w : L.SemitermVec n m) : L.SemitermVec k m :
     (v.substs w).val = L.termSubstVec k w.val v.val :=
   rfl
 
-@[simp] lemma bShift_nil (n : V) :
-    (nil L n).bShift = nil L (n + 1) := by
-  ext; simp [bShift]
+@[simp] lemma bShift_nil (n : V) : (nil L n).bShift = nil L (n + 1) := by ext; simp [bShift]
 
 @[simp] lemma bShift_cons (t : L.Semiterm n) (v : L.SemitermVec k n) :
     (t ∷ᵗ v).bShift = t.bShift ∷ᵗ v.bShift := by
   ext; simp [bShift, Language.Semiterm.bShift, termBShiftVec_cons t.prop.isUTerm v.prop.isUTerm]
 
-@[simp] lemma shift_nil (n : V) :
-    (nil L n).shift = nil L n := by
-  ext; simp [shift]
+@[simp] lemma shift_nil (n : V) : (nil L n).shift = nil L n := by ext; simp [shift]
 
 @[simp] lemma shift_cons (t : L.Semiterm n) (v : L.SemitermVec k n) :
     (t ∷ᵗ v).shift = t.shift ∷ᵗ v.shift := by
   ext; simp [shift, Language.Semiterm.shift, termShiftVec_cons t.prop.isUTerm v.prop.isUTerm]
 
-@[simp] lemma substs_nil (w : L.SemitermVec n m) :
-    (nil L n).substs w = nil L m := by
+@[simp] lemma substs_nil (w : L.SemitermVec n m) : (nil L n).substs w = nil L m := by
   ext; simp [substs]
 
 @[simp] lemma substs_cons (w : L.SemitermVec n m) (t : L.Semiterm n) (v : L.SemitermVec k n) :
@@ -219,8 +189,7 @@ def nth (t : L.SemitermVec k n) (i : V) (hi : i < k := by simp) : L.Semiterm n :
     (v.nth i hi).val = v.val.[i] := by
   simp [nth]
 
-@[simp] lemma nth_zero (t : L.Semiterm n) (v : L.SemitermVec k n) :
-    (t ∷ᵗ v).nth 0 = t := by
+@[simp] lemma nth_zero (t : L.Semiterm n) (v : L.SemitermVec k n) : (t ∷ᵗ v).nth 0 = t := by
   ext; simp [nth]
 
 @[simp] lemma nth_succ (t : L.Semiterm n) (v : L.SemitermVec k n) (i : V) (hi : i < k) :
@@ -230,8 +199,7 @@ def nth (t : L.SemitermVec k n) (i : V) (hi : i < k := by simp) : L.Semiterm n :
     (t ∷ᵗ v).nth 1 (by simp) = v.nth 0 (by simp) := by ext; simp [nth]
 
 lemma nth_of_pos (t : L.Semiterm n) (v : L.SemitermVec k n) (i : V) (ipos : 0 < i) (hi :
-    i < k + 1) :
-    (t ∷ᵗ v).nth i (by simp [hi]) =
+    i < k + 1) : (t ∷ᵗ v).nth i (by simp [hi]) =
         v.nth (i - 1) (tsub_lt_iff_left (one_le_of_zero_lt i ipos) |>.mpr hi) := by
   ext; simp only [nth, Semitermvec.val_cons]
   rcases zero_or_succ i with (rfl | ⟨i, rfl⟩)
@@ -259,8 +227,7 @@ lemma q_of_pos (w : L.SemitermVec k n) (i) (ipos : 0 < i) (hi : i < k + 1) :
   · simp at ipos
   · simp [q_succ w (by simpa using hi)]
 
-@[simp] lemma q_val_eq_qVec (w : L.SemitermVec k n) :
-    w.q.val = L.qVec w.val := by
+@[simp] lemma q_val_eq_qVec (w : L.SemitermVec k n) : w.q.val = L.qVec w.val := by
   simp [q, Language.qVec, Language.bvar, bShift, w.prop.lh]
 
 end SemitermVec
@@ -305,13 +272,11 @@ namespace Semiterm
     t.bShift.substs w.q = (t.substs w).bShift := by
   ext; simp only [substs, SemitermVec.q_val_eq_qVec, bShift, substs_qVec_bShift t.prop w.prop]
 
-@[simp] lemma bShift_substs_sing (t u : L.Term) :
-    t.bShift.substs u.sing = t := by
+@[simp] lemma bShift_substs_sing (t u : L.Term) : t.bShift.substs u.sing = t := by
   ext; simp only [val_substs, Semitermvec.val_cons, Semitermvec.val_nil, val_bShift]
   rw [substs_cons_bShift t.prop]; simp
 
-lemma bShift_shift_comm (t : L.Semiterm n) :
-    t.shift.bShift = t.bShift.shift := by
+lemma bShift_shift_comm (t : L.Semiterm n) : t.shift.bShift = t.bShift.shift := by
   ext; simp [termBShift_termShift t.prop]
 
 end Semiterm
@@ -405,8 +370,7 @@ variable {n : V}
 @[simp] lemma bShift_mul (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) : (t₁ * t₂).bShift = t₁.bShift * t₂.bShift := by
   ext; simp [qqMul, Language.Semiterm.bShift]
 
-@[simp] lemma fvFree_numeral (x : V) : (↑x :
-    ⌜ℒₒᵣ⌝.Semiterm n).FVFree := by
+@[simp] lemma fvFree_numeral (x : V) : (↑x : ⌜ℒₒᵣ⌝.Semiterm n).FVFree := by
   simp [Language.Semiterm.FVFree.iff]
 
 @[simp] lemma fvFree_add (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
@@ -415,39 +379,6 @@ variable {n : V}
 @[simp] lemma fvFree_mul (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
     (t₁ * t₂).FVFree ↔ t₁.FVFree ∧ t₂.FVFree := by simp [Language.Semiterm.FVFree.iff]
 
-/-
-lemma replace {P : α → Prop} {x y} (hx : P x) (h : x = y) : P y := h ▸ hx
-
-lemma semiterm_induction (Γ) {n : V} {P : ⌜ℒₒᵣ⌝.Semiterm n → Prop}
-    (hP : Γ-[1]-Predicate (fun x ↦ (h : ⌜ℒₒᵣ⌝.IsSemiterm n x) → P ⟨x, h⟩))
-    (hBvar : ∀ (z : V) (h : z < n), P (⌜ℒₒᵣ⌝.bvar z h))
-    (hFvar : ∀ x, P (⌜ℒₒᵣ⌝.fvar x))
-    (hZero : P ((0 : V) : ⌜ℒₒᵣ⌝.Semiterm n))
-    (hOne : P ((1 : V) : ⌜ℒₒᵣ⌝.Semiterm n))
-    (hAdd : ∀ t₁ t₂, P t₁ → P t₂ → P (t₁ + t₂))
-    (hMul : ∀ t₁ t₂, P t₁ → P t₂ → P (t₁ * t₂)) :
-    ∀ (t : ⌜ℒₒᵣ⌝[V].Semiterm n), P t := by
-  let Q := fun x ↦ (h : ⌜ℒₒᵣ⌝.IsSemiterm n x) → P ⟨x, h⟩
-  suffices ∀ t, ⌜ℒₒᵣ⌝.IsSemiterm n t → Q t by intro t; exact this t.val t.prop t.prop
-  apply Language.IsSemiterm.induction Γ hP
-  case hbvar => intro z hz _; exact hBvar z hz
-  case hfvar => intro x _; exact hFvar x
-  case hfunc =>
-    intro k f v hf hv ih _
-    rcases (by simpa [func_iff] using hf) with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-    · rcases (by simpa using hv)
-      exact replace hZero (by ext; simp [Formalized.zero, qqFunc_absolute])
-    · rcases (by simpa using hv)
-      exact replace hOne (by ext; simp [Formalized.one, qqFunc_absolute])
-    · rcases Language.IsSemitermVec.two_iff.mp hv with ⟨t₁, t₂, ht₁, ht₂, rfl⟩
-      exact hAdd ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
-        (by simpa using ih 0 (by simp) (by simp [ht₁]))
-        (by simpa using ih 1 (by simp) (by simp [ht₂]))
-    · rcases Language.IsSemitermVec.two_iff.mp hv with ⟨t₁, t₂, ht₁, ht₂, rfl⟩
-      exact hMul ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
-        (by simpa using ih 0 (by simp) (by simp [ht₁]))
-        (by simpa using ih 1 (by simp) (by simp [ht₂]))
--/
 
 end Formalized
 

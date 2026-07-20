@@ -38,9 +38,9 @@ namespace covered
 variable {x₀ x₁ : X}
 
 lemma covered_refl (x : X) (hX : X₀ ∪ X₁ = univ) : covered hX (Dipath.refl x) := by
-  cases ((Set.mem_union x X₀ X₁).mp (Filter.mem_top.mpr hX x))
-  case inl hx₀ => left; exact DiSubtype.range_refl_subset_of_mem hx₀
-  case inr hx₁ => right; exact DiSubtype.range_refl_subset_of_mem hx₁
+  rcases (Set.mem_union x X₀ X₁).mp (Filter.mem_top.mpr hX x) with hx₀ | hx₁
+  · exact Or.inl (DiSubtype.range_refl_subset_of_mem hx₀)
+  · exact Or.inr (DiSubtype.range_refl_subset_of_mem hx₁)
 
 lemma covered_of_extended_image_subset (γ : Dipath x₀ x₁) (hX : X₀ ∪ X₁ = univ)
     (hγ : γ.extend '' I ⊆ X₀ ∨ γ.extend '' I ⊆ X₁) :
@@ -53,24 +53,16 @@ lemma covered_of_covered_trans {x₂ : X} {γ₁ : Dipath x₀ x₁} {γ₂ : Di
     (covered hX γ₁ ∧ covered hX γ₂) := by
   unfold covered at *
   rw [Dipath.trans_range _ _] at hγ
-  cases hγ
-  case inl h =>
-    constructor
-    · exact Or.inl <| subset_trans (subset_union_left (s := range γ₁) (t := range γ₂)) h
-    · exact Or.inl <| subset_trans (subset_union_right (s := range γ₁) (t := range γ₂)) h
-  case inr h =>
-    constructor
-    · exact Or.inr <| subset_trans (subset_union_left (s := range γ₁) (t := range γ₂)) h
-    · exact Or.inr <| subset_trans (subset_union_right (s := range γ₁) (t := range γ₂)) h
+  rcases hγ with h | h
+  · simp_all
+  · simp_all
 
 lemma covered_subparam_of_covered {γ : Dipath x₀ x₁} {hX : X₀ ∪ X₁ = univ} (hγ : covered hX γ)
     (f : D(I,I)) :
     covered hX (γ.subparam f) := by
-  cases hγ
-  case inl hγ =>
-    exact Or.inl (subset_trans (Dipath.subparam_range γ f) hγ)
-  case inr hγ =>
-    exact Or.inr (subset_trans (Dipath.subparam_range γ f) hγ)
+  rcases hγ with hγ | hγ
+  · exact Or.inl (subset_trans (Dipath.subparam_range γ f) hγ)
+  · exact Or.inr (subset_trans (Dipath.subparam_range γ f) hγ)
 
 lemma covered_reparam_iff (γ : Dipath x₀ x₁) (hX : X₀ ∪ X₁ = univ) (f : D(I,I)) (hf₀ : f 0 = 0)
     (hf₁ : f 1 = 1) :
@@ -145,13 +137,9 @@ lemma covered_partwise_cast_iff (hX : X₀ ∪ X₁ = univ) {n : ℕ} :
     rw [SplitProperties.firstPart_cast, SplitProperties.secondPart_cast]
     constructor
     · rintro ⟨hγ₁, hγ₂⟩
-      constructor
-      · exact (covered_cast_iff _ _ _ _).mp hγ₁
-      · exact (ih _ _ _).mp hγ₂
+      exact ⟨(covered_cast_iff _ _ _ _).mp hγ₁, (ih _ _ _).mp hγ₂⟩
     · rintro ⟨hγ₁, hγ₂⟩
-      constructor
-      · exact (covered_cast_iff _ _ _ _).mpr hγ₁
-      · exact (ih _ _ _).mpr hγ₂
+      exact ⟨(covered_cast_iff _ _ _ _).mpr hγ₁, (ih _ _ _).mpr hγ₂⟩
 
 /-- A dipath γ that can be covered with n+1 intervals can satisfied `coveredPartwise _ γ n`.
  This is the converse of `covered_by_intervals_of_covered_partwise`.
@@ -310,8 +298,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
   have h₁ : d'.succ < n'.succ := by
     rw [n_def, hd_eq_k, ←(Nat.pred_eq_sub_one (n := (n + 1) * k)),
       Nat.succ_pred_eq_of_pos prod_pos]
-    nth_rewrite 1 [←one_mul k]
-    exact Nat.mul_lt_mul_of_pos_right (by linarith) hk
+    simp_all
   have : Fraction (Nat.succ_pos n') (le_of_lt h₁) = Fraction.ofPos (Nat.succ_pos n) := by
     apply Subtype.ext
     rw [Fraction.Fraction_coe, Fraction.ofPos_coe]
@@ -327,13 +314,11 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       ← (Nat.pred_eq_sub_one (n := n * k))]
     rw [Nat.succ_pred_eq_of_pos (Nat.mul_pos hn hk), n_def, d_def, Nat.sub_sub, add_comm 1 (k-1)]
     rw [Nat.add_one (k-1), Nat.sub_one k, Nat.succ_pred_eq_of_pos hk, add_mul, one_mul]
-    rw [Nat.add_sub_assoc (le_refl k), Nat.sub_self]
-    rfl
+    simp_all
   by_cases h : i < k
   · -- Use the covering of the first part of γ
     have h₂ : i < d'.succ := by
-      rw [d_def, ←(Nat.pred_eq_sub_one (n := k)), Nat.succ_pred_eq_of_pos hk]
-      exact h
+      simp_all
     rw [←SplitProperties.firstPart_range_interval_partial_coe γ h₁ h₂]
     convert (covered_by_intervals_of_covered_partwise (k-1) hγ_first i (by linarith))
   · push Not at h
@@ -344,8 +329,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       apply (tsub_lt_tsub_iff_right this).mpr _
       exact hi
     have : i = i' + d'.succ := by
-      rw [i_def, Nat.sub_add_cancel]
-      exact hd_eq_k.symm ▸ h
+      simp_all
     rw [this]
     have : i - k < n * k - 1 + 1 := by
       rw [Nat.sub_one (n * k), Nat.add_one (n * k).pred, Nat.succ_pred_eq_of_pos (mul_pos hn hk)]
@@ -420,30 +404,27 @@ lemma has_interval_division {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) 
     rw [c_def]
     by_cases i = 0
     case pos h =>
-      simp only [h, if_pos]
-      exact (Path.continuous_extend γ.toPath).isOpen_preimage X₁ X₁_open
+      simpa only [h, if_pos]
+        using (Path.continuous_extend γ.toPath).isOpen_preimage X₁ X₁_open
     case neg h =>
-      simp only [if_neg h]
-      exact (Path.continuous_extend γ.toPath).isOpen_preimage X₂ X₂_open
+      simpa only [if_neg h]
+        using (Path.continuous_extend γ.toPath).isOpen_preimage X₂ X₂_open
   have h₂ : I ⊆ ⋃ (i : ℕ), c i := by
     intros x _
     simp only [mem_iUnion]
     have hin : γ.extend x ∈ X₁ ∪ X₂ := hX.symm ▸ (Set.mem_univ <| γ.extend x)
     rcases hin with h | h
-    · refine ⟨0, ?_⟩; simp only [c_def, if_pos rfl, Set.mem_preimage]; exact h
-    · refine ⟨1, ?_⟩; simp only [c_def, if_neg one_ne_zero, Set.mem_preimage]; exact h
+    · exact ⟨0, by simp only [c_def, if_pos rfl, Set.mem_preimage]; exact h⟩
+    · exact ⟨1, by simp only [c_def, if_neg one_ne_zero, Set.mem_preimage]; exact h⟩
   rcases (lebesgue_number_lemma_unit_interval h₁ h₂) with ⟨n, n_pos, hn⟩
-  use n
-  constructor
-  · exact n_pos
-  · intros i hi
-    cases (hn i hi)
-    rename_i j hj
-    rw [c_def] at hj
-    change Icc _ _ ⊆ (if j = 0 then γ.extend ⁻¹' X₁ else γ.extend ⁻¹' X₂) at hj
-    by_cases j = 0
-    case pos h => left; convert hj; simp only [h, if_pos]
-    case neg h => right; convert hj; simp only [if_neg h]
+  refine ⟨n, n_pos, ?_⟩
+  intros i hi
+  obtain ⟨j, hj⟩ := hn i hi
+  rw [c_def] at hj
+  change Icc _ _ ⊆ (if j = 0 then γ.extend ⁻¹' X₁ else γ.extend ⁻¹' X₂) at hj
+  by_cases h : j = 0
+  · exact Or.inl (by convert hj; simp only [h, if_pos])
+  · exact Or.inr (by convert hj; simp only [if_neg h])
 
 /-- If `γ` is a dipath and a directed space `X` is covered by two opens `X₁` and `X₂`, then `γ` is
 n-covered for some `n`.

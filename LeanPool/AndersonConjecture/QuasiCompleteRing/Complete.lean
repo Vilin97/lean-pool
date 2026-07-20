@@ -26,8 +26,7 @@ lemma krull_intersection_sup (J : Ideal R) :
   · intro x hx
     simp only [Submodule.mem_iInf] at hx
     by_cases hJ : J = ⊤
-    · rw [hJ]
-      exact Submodule.mem_top
+    · simp_all
     haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
     haveI : IsLocalRing (R ⧸ J) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
     haveI : IsLocalHom (Ideal.Quotient.mk J) :=
@@ -87,12 +86,7 @@ lemma comap_map_algebraMap_adicCompletion [IsDomain R] (I : Ideal R) :
             Ideal.map ((AdicCompletion.evalₐ M n).toRingHom) (Ideal.map f I) :=
           Ideal.mem_map_of_mem _ hfr
         rwa [Ideal.map_map, hcomp, heval_r] at h1
-      obtain ⟨a, ha, haeq⟩ :=
-        (Ideal.mem_map_iff_of_surjective _ Ideal.Quotient.mk_surjective).mp hmk
-      have hdiff : r - a ∈ M ^ n := by
-        have := Ideal.Quotient.eq.mp haeq
-        rwa [show a - r = -(r - a) from by ring, neg_mem_iff] at this
-      exact Submodule.mem_sup.mpr ⟨a, ha, r - a, hdiff, by ring⟩
+      simp_all
     rw [← krull_intersection_sup I]
     exact (Submodule.mem_iInf _).mpr hmem
   · exact Ideal.le_comap_map
@@ -187,9 +181,7 @@ theorem anderson_complete_isQuasiComplete
     have bstep : ∀ n, ∀ z : {z : R // z ∈ A (σ (k + n))},
         ∃ (y' : {z : R // z ∈ A (σ (k + (n + 1)))}) (a' : {a : R // a ∈ M ^ (k + n + 1)}),
           z.val = y'.val + a'.val := by
-      intro n ⟨z, hz⟩
-      obtain ⟨y', hy', a', ha', heq⟩ := step n z hz
-      exact ⟨⟨y', hy'⟩, ⟨a', ha'⟩, heq⟩
+      simp_all
     choose yNext aNext hRec using bstep
     let yy : (n : ℕ) → {z : R // z ∈ A (σ (k + n))} :=
       fun n => Nat.rec ⟨x, hx⟩ (fun m ih => yNext m ih) n

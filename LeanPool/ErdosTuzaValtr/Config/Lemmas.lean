@@ -107,19 +107,15 @@ theorem head_lt_getLast {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l
     subst hp
     have l_nnil : l ≠ [] := by
       rintro rfl
-      simp only [List.length_cons, List.length_nil] at hl
-      omega
+      simp_all
     rcases List.takeLast l_nnil with ⟨q', l', eq_l⟩
     rw [eq_l, ← List.cons_append, List.getLast?_concat, Option.mem_some_iff] at hq
     have l_sorted := List.isChain_iff_pairwise.mp l_cup.left
-    rw [eq_l, ← List.cons_append, List.pairwise_append] at l_sorted
-    rw [← hq]
-    exact l_sorted.2.2 x (by simp) q' (by simp)
+    simp_all
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_lt_getLast?» {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l.length)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
-  head_lt_getLast l_cup p q hl hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q := head_lt_getLast l_cup p q hl hp hq
 
 end Cup
 
@@ -149,8 +145,7 @@ protected theorem dropLast_append_last {n : ℕ} {l : List α} (h : C.NCup (n + 
   have nnil : l ≠ [] := by
     rintro rfl
     rw [Config.NCup] at h
-    simp only [List.length_nil] at h
-    omega
+    simp_all
   exact ⟨l.dropLast, l.getLast nnil, (List.dropLast_append_getLast nnil).symm, h.dropLast⟩
 
 protected theorem tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) : C.NCup n l.tail :=
@@ -161,16 +156,14 @@ protected theorem cons_head_tail {n : ℕ} {l : List α} (h : C.NCup (n + 1) l) 
   cases l with
   | nil =>
     rw [Config.NCup] at h
-    simp only [List.length_nil] at h
-    omega
+    simp_all
   | cons a l => exact ⟨a, l, rfl, h.tail⟩
 
 protected theorem take_head_last {n : ℕ} {l : List α} (h : C.NCup (n + 2) l) :
     ∃ (a : α) (l' : List α) (b : α), l = (a::l') ++ [b] ∧ C.NCup n l' := by
   rcases h.cons_head_tail with ⟨a, l', eq_l, cup_l'⟩
   rcases cup_l'.dropLast_append_last with ⟨l'', b, eq_l', cup_l''⟩
-  refine ⟨a, l'', b, ?_, cup_l''⟩
-  rw [eq_l, eq_l', List.cons_append]
+  simp_all
 
 theorem take_left_with_head {n : ℕ} {l : List α} (h : C.NCup n l) (m : ℕ) (p : α) :
     1 ≤ m → m ≤ n → p ∈ l.head? → ∃ l' : List α, l' ⊆ l ∧ C.NCup m l' ∧ p ∈ l'.head? := by
@@ -184,9 +177,7 @@ theorem take_left_with_head {n : ℕ} {l : List α} (h : C.NCup n l) (m : ℕ) (
       rw [List.take_eq_nil_iff] at hnil
       rcases hnil with hm | hl
       · omega
-      · have hlen := h.right
-        rw [hl, List.length_nil] at hlen
-        omega
+      · simp_all
 
 theorem take_right_with_last {n : ℕ} {l : List α} (h : C.NCup n l) (m : ℕ) (p : α) :
     1 ≤ m → m ≤ n → p ∈ l.getLast? → ∃ l' : List α, l' ⊆ l ∧ C.NCup m l' ∧ p ∈ l'.getLast? := by
@@ -208,8 +199,7 @@ theorem head_lt_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_lt_getLast?» {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
-  head_lt_getLast l_ncup p q hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q := head_lt_getLast l_ncup p q hp hq
 
 theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q := by
@@ -221,18 +211,15 @@ theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
     subst hp
     cases rest with
     | nil =>
-      rw [List.getLast?_singleton, Option.mem_some_iff] at hq
-      rw [← hq]
+      simp_all
     | cons p' rest =>
       rw [List.getLast?_cons_cons] at hq
       rw [List.pairwise_cons] at l_sorted
-      apply le_of_lt
-      exact l_sorted.1 q (List.mem_of_mem_getLast? hq)
+      exact le_of_lt (l_sorted.1 q (List.mem_of_mem_getLast? hq))
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_le_getLast?» {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p ≤ q :=
-  head_le_getLast l_ncup p q hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p ≤ q := head_le_getLast l_ncup p q hp hq
 
 end NCup
 
@@ -255,18 +242,14 @@ theorem ncup_is_ngon {n : ℕ} {S : Finset α} (hn : 2 ≤ n) (h : C.HasNCup n S
     c_cup.head_lt_getLast x y (by rw [c_length]; omega) (by simp) (by simp)
   refine ⟨[x, y], (x :: c) ++ [y], ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩, ?_, ?_⟩
   · simp
-  · rw [Config.Cap]
-    exact ⟨by simpa using hxy, by simp [List.Chain3']⟩
-  · simp only [List.length_append, List.length_cons]
-    omega
+  · simp_all
+  · simp_all
   · exact c_cup
   · simp
   · simp
   · simp only [List.length_cons, List.length_append, List.length_nil] at c_length ⊢
     omega
-  · simp only [List.append_in, List.cons_in, List.nil_in, and_true] at c_in_S
-    simp only [List.cons_in, List.nil_in, and_true]
-    exact ⟨c_in_S.1.1, c_in_S.2⟩
+  · simp_all
   · exact c_in_S
 
 theorem hasNCap_supset {n : ℕ} {S1 S2 : Finset α} (h : S1 ⊆ S2) (h1 : C.HasNCap n S1) :
@@ -285,7 +268,6 @@ theorem hasNGon_supset {n : ℕ} {S1 S2 : Finset α} (h : S1 ⊆ S2) (h1 : C.Has
   exact ⟨c1, c2, gon, fun a a_c1 => h (c1_in a a_c1), fun a a_c2 => h (c2_in a a_c2)⟩
 
 theorem hasNCup_le {n m : ℕ} {S : Finset α} (h : n ≤ m) : C.HasNCup m S → C.HasNCup n S := by
-  intro ngon
-  rcases ngon with ⟨c, ⟨⟨c_cup, c_length⟩, c_in⟩⟩
+  rintro ⟨c, ⟨⟨c_cup, c_length⟩, c_in⟩⟩
   refine ⟨c.take n, ⟨c_cup.take n, ?_⟩, fun a ha => c_in a (List.take_subset _ _ ha)⟩
   rw [List.length_take, c_length, Nat.min_eq_left h]

@@ -131,16 +131,11 @@ lemma succ_defined : Sg1.DefinedFunction (fun v :
     Matrix.cons_app_two, Matrix.vecCons_succ, c.eval_formula, LogicalConnective.Prop.and_eq,
     LogicalConnective.Prop.arrow_eq, c.defined.proper.iff', forall_and_index]
   constructor
-  · intro h x hx
-    constructor
-    · exact (h x hx).mp
-    · intro hle hphi
-      exact (h x hx).mpr ⟨hle, hphi⟩
+  · simp_all
   · intro h x hx
     constructor
     · exact (h x hx).1
-    · rintro ⟨hle, hphi⟩
-      exact (h x hx).2 hle hphi
+    · simp_all
 
 lemma eval_succDef (v) :
     Semiformula.Evalbm V v φ.succDef.val ↔ v 0 = c.succ (v ·.succ.succ.succ) (v 2) (v 1) :=
@@ -163,8 +158,7 @@ variable {v}
 @[simp] lemma limSeq_zero : c.limSeq v 0 = ∅ := by simp [limSeq, prConstruction]
 
 lemma limSeq_succ (s : V) :
-    c.limSeq v (s + 1) = c.succ v s (c.limSeq v s) := by
-  simp [limSeq, prConstruction]
+    c.limSeq v (s + 1) = c.succ v s (c.limSeq v s) := by simp [limSeq, prConstruction]
 
 lemma termSet_defined : Sg1.DefinedFunction (fun v ↦ c.limSeq (v ·.succ) (v 0)) φ.limSeqDef :=
   fun v ↦ by simp [c.prConstruction.result_defined_iff, Blueprint.limSeqDef]; rfl
@@ -257,8 +251,7 @@ lemma finite_upperbound (m : V) : ∃ s, ∀ z < m, c.Fixpoint v z → z ∈ c.l
             (by definability)))
     exact finite_comprehension₁! this ⟨m, fun i hi ↦ hi.1⟩ |>.exists
   rcases this with ⟨F, hF⟩
-  have : ∀ x ∈ F, ∃ u, x ∈ c.limSeq v u := by
-    intro x hx; exact hF x |>.mp hx |>.2
+  have : ∀ x ∈ F, ∃ u, x ∈ c.limSeq v u := by intro x hx; exact hF x |>.mp hx |>.2
   have : ∃ f, IsMapping f ∧ domain f = F ∧ ∀ (x y : V), ⟪x, y⟫ ∈ f → x ∈ c.limSeq v y :=
     sigmaOne_skolem
     (by apply HierarchySymbol.Boldface.comp₂
@@ -285,8 +278,7 @@ theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
       rcases this with ⟨s, hs⟩
       have : c.Φ v {z | z ∈ c.limSeq v s} x :=
         c.monotone (by
-          simp only [Set.setOf_subset_setOf, and_imp]
-          intro z hz hzm; exact hs z hzm hz)
+          simp_all)
           hm
       exact ⟨max s x + 1,
         c.mem_limSeq_succ_iff.mpr <| ⟨by simp,

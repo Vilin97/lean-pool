@@ -109,8 +109,7 @@ theorem eq_single_of_eq_zero {n : ℕ} {x : Space n} {i : Fin n} (h : ∀ k, k �
   funext k
   rcases eq_or_ne k i with rfl | hk
   · rw [Pi.single_eq_same]
-  · rw [Pi.single_eq_of_ne hk]
-    exact h k hk
+  · rw [Pi.single_eq_of_ne hk, h k hk]
 
 theorem eq_single_add_single_of_eq_zero {n : ℕ} {x : Space n} {i j : Fin n} (hij : i ≠ j)
     (h : ∀ k, k ≠ i → k ≠ j → x k = 0) :
@@ -158,8 +157,7 @@ theorem isClassicalRoot_of_isReflective {n : ℕ} {x : Space n}
     omega
   have hex : ∃ i, x i ≠ 0 := by
     by_contra h
-    push Not at h
-    exact hq0 (Finset.sum_eq_zero fun k _ => by rw [h k, mul_zero])
+    simp_all
   have hzero : ∀ s : Finset (Fin n), ∑ k ∈ s, x k * x k = 0 → ∀ k ∈ s, x k = 0 := by
     intro s hs k hk
     exact mul_self_eq_zero.mp
@@ -188,8 +186,7 @@ theorem isClassicalRoot_of_isReflective {n : ℕ} {x : Space n}
     have hsmall : ∀ k, x k ≠ 0 → x k = 1 ∨ x k = -1 := by
       intro k hk
       have h1 := hcoord k
-      have h2 := hbig k
-      tauto
+      simp_all
     have hxi : x i * x i = 1 := by rcases hsmall i hi with h | h <;> rw [h] <;> norm_num
     have habs : |2 * x i| = 2 := by rcases hsmall i hi with h | h <;> rw [h] <;> norm_num
     have hle : (∑ k, x k * x k) ≤ 2 := by
@@ -211,8 +208,7 @@ theorem isClassicalRoot_of_isReflective {n : ℕ} {x : Space n}
       have hexj : ∃ j ∈ Finset.univ.erase i, x j ≠ 0 := by
         by_contra h
         push Not at h
-        rw [Finset.sum_eq_zero fun k hk => by rw [h k hk, mul_zero]] at htail
-        exact absurd htail (by norm_num)
+        simp_all
       obtain ⟨j, hjmem, hj⟩ := hexj
       have hij : i ≠ j := fun h => (Finset.mem_erase.mp hjmem).1 h.symm
       have hxj : x j * x j = 1 := by rcases hsmall j hj with h | h <;> rw [h] <;> norm_num

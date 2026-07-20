@@ -83,7 +83,6 @@ attribute [simp] DeMorgan.verum DeMorgan.falsum DeMorgan.and DeMorgan.or DeMorga
 /-- Introducing `∼φ` as an abbreviation of `φ ==> ⊥`. -/
 class NegAbbrev (F : Type*) [Tilde F] [Arrow F] [Bot F] where
   neg {φ : F} : ∼φ = φ ==> ⊥
--- attribute [simp] NegAbbrev.neg
 
 namespace LogicalConnective
 
@@ -180,11 +179,8 @@ variable {α β γ}
 instance : FunLike (α →ˡᶜ β) α β where
   coe := toTr
   coe_injective := by
-    intro f g h
-    rcases f
-    rcases g
-    simp only [mk.injEq]
-    exact h
+    rintro ⟨_⟩ ⟨_⟩ h
+    simpa only [mk.injEq] using h
 
 @[ext] lemma ext (f g : α →ˡᶜ β) (h : ∀ x, f x = g x) : f = g := DFunLike.ext f g h
 
@@ -510,7 +506,6 @@ variable [LogicalConnective α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def conj (s : Finset α) : α := s.toList.conj
--- prefix:80 "⋀" => Finset.conj
 
 lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.conj ↔ ∀ a ∈ s, f a := by
@@ -519,20 +514,11 @@ lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F
 lemma map_conj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.HomClass F α Prop]
     (f : F) (s₁ s₂ : Finset α) : f (s₁ ∪ s₂).conj ↔ f (s₁.conj ⋏ s₂.conj) := by
   simp only [Finset.mem_union, LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq,
-    map_conj];
-  constructor;
-  · intro h;
-    constructor;
-    · intro a ha;
-      exact h a (Or.inl ha);
-    · intro a ha;
-      exact h a (Or.inr ha);
-  · intro ⟨h₁, h₂⟩ a ha;
-    cases ha <;> simp_all;
+    map_conj]
+  aesop
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def disj (s : Finset α) : α := s.toList.disj
--- prefix:80 "⋁" => Finset.disj
 
 lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
     f s.disj ↔ ∃ a ∈ s, f a := by
@@ -541,14 +527,8 @@ lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F
 lemma map_disj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.HomClass F α Prop]
     (f : F) (s₁ s₂ : Finset α) : f (s₁ ∪ s₂).disj ↔ f (s₁.disj ⋎ s₂.disj) := by
   simp only [Finset.mem_union, LogicalConnective.HomClass.map_or, LogicalConnective.Prop.or_eq,
-    map_disj];
-  constructor;
-  · rintro ⟨a, h₁ | h₂, hb⟩;
-    · left; use a;
-    · right; use a;
-  · rintro (⟨a₁, h₁⟩ | ⟨a₂, h₂⟩);
-    · use a₁; simp_all;
-    · use a₂; simp_all;
+    map_disj]
+  aesop
 
 end «lp_section_8»
 

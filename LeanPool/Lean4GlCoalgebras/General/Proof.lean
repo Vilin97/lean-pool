@@ -141,19 +141,15 @@ lemma edge_in_FL {𝕏 : Proof} {x y : 𝕏.X} (x_y : (edge 𝕏.α) x y) :
   case and Δ φ ψ in_Δ =>
     apply @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) at x_y
     simp only [this, List.mem_cons, List.not_mem_nil, or_false] at x_y
-    rcases x_y with h|h <;> rw [h]
-    · simp only [Sequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
-      intro χ χ_cases
+    rcases x_y with h|h <;> rw [h] <;>
+      simp only [Sequent.FL, Finset.subset_iff,
+        Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion] <;>
+      intro χ χ_cases <;>
       rcases χ_cases with h|_ <;> subst_eqs
-      · exact ⟨χ, fₙ_sub_f h, Formula.FL_refl⟩
-      · exact ⟨φ & ψ, by simp [f, in_Δ], by simp [Formula.FL, Formula.FL_refl]⟩
-    · simp only [Sequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
-      intro χ χ_cases
-      rcases χ_cases with h|_ <;> subst_eqs
-      · exact ⟨χ, fₙ_sub_f h, Formula.FL_refl⟩
-      · exact ⟨φ & ψ, by simp [f, in_Δ], by simp [Formula.FL, Formula.FL_refl]⟩
+    · exact ⟨χ, fₙ_sub_f h, Formula.FL_refl⟩
+    · exact ⟨φ & ψ, by simp [f, in_Δ], by simp [Formula.FL, Formula.FL_refl]⟩
+    · exact ⟨χ, fₙ_sub_f h, Formula.FL_refl⟩
+    · exact ⟨φ & ψ, by simp [f, in_Δ], by simp [Formula.FL, Formula.FL_refl]⟩
   case or Δ φ ψ in_Δ =>
     apply @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) at x_y
     simp only [this, List.mem_singleton] at x_y

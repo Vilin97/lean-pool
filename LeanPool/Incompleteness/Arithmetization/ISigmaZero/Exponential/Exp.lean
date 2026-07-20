@@ -26,8 +26,7 @@ variable [V ⊧ₘ* 𝐈Sg0]
 /-- Imported declaration from the Incompleteness formalization. -/
 def ext (u z : V) : V := z / u % u
 
-lemma ext_graph (a b c : V) : a = ext b c ↔ ∃ x ≤ c, x = c / b ∧ a = x % b := by
-  simp [ext]
+lemma ext_graph (a b c : V) : a = ext b c ↔ ∃ x ≤ c, x = c / b ∧ a = x % b := by simp [ext]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.extDef : Sg0.Semisentence 3 :=
@@ -40,8 +39,7 @@ lemma ext_defined : Sg0-Function₂ (fun a b : V ↦ ext a b) via extDef := by
 
 instance ext_definable : Sg0-Function₂ (ext : V → V → V) := ext_defined.to_definable
 
-@[simp] lemma ext_le_add (u z : V) : ext u z ≤ z :=
-  le_trans (mod_le (z / u) u) (by simp [])
+@[simp] lemma ext_le_add (u z : V) : ext u z ≤ z := le_trans (mod_le (z / u) u) (by simp [])
 
 instance : Bounded₂ (ext : V → V → V) := ⟨#1, by intro v; simp⟩
 
@@ -56,8 +54,7 @@ lemma ext_add_of_dvd_sq_right {u z₁ z₂ : V} (pos : 0 < u) (h : u ^ 2 ∣ z�
   simp [div_add_mul_self, pos]
 
 lemma ext_add_of_dvd_sq_left {u z₁ z₂ : V} (pos : 0 < u) (h : u ^ 2 ∣ z₁) :
-    ext u (z₁ + z₂) = ext u z₂ := by
-  rw [add_comm]; exact ext_add_of_dvd_sq_right pos h
+    ext u (z₁ + z₂) = ext u z₂ := by rw [add_comm]; exact ext_add_of_dvd_sq_right pos h
 
 lemma ext_rem {i j z : V} (ppi : PPow2 i) (ppj : PPow2 j) (hij : i < j) :
     ext i (z % j) = ext i z := by
@@ -179,8 +176,7 @@ def seqX₀ : V := 4
 def seqY₀ : V := 2 * 4
 
 lemma one_lt_four : (1 : V) < 4 := by
-  rw [←three_add_one_eq_four]
-  exact lt_add_of_pos_left 1 three_pos
+  simp_all
 
 lemma two_lt_three : (2 : V) < 3 := by rw [←two_add_one_eq_three]; exact lt_add_one 2
 
@@ -189,8 +185,7 @@ lemma three_lt_four : (3 : V) < 4 := by rw [←three_add_one_eq_four]; exact lt_
 lemma two_lt_four : (2 : V) < 4 := lt_trans two_lt_three three_lt_four
 
 lemma seq₀_zero_two : Seq₀ (seqX₀ : V) (seqY₀ :
-    V) := by
-  simp [seqX₀, seqY₀, Seq₀, ext, two_lt_four]
+    V) := by simp [seqX₀, seqY₀, Seq₀, ext, two_lt_four]
 
 lemma _root_.LO.Arith.Exponential.Seq₀.rem {X Y i : V} (h : Seq₀ X Y) (ppi : PPow2 i) (hi : 4 < i) :
     Seq₀ (X % i) (Y % i) := by
@@ -318,8 +313,6 @@ lemma le_sq_ext_of_seq₀_of_seqₛ {y X Y : V} (h₀ : Exponential.Seq₀ X Y) 
         have : √i ≤ ext i Y := le_trans (le_mul_of_pos_left <| by simp) this
         simpa [ppi.sq_sqrt_eq ne2] using sq_le_sq.mpr this
 
-example {a b c : ℕ} : a * (b * c) = b * (a * c) := by exact Nat.mul_left_comm a b c
-
 lemma two_mul_ext_le_of_seq₀_of_seqₛ {y X Y : V} (h₀ : Exponential.Seq₀ X Y) (hₛ :
     Exponential.Seqₛ y X Y)
     {i} (ne2 : i ≠ 2) (hi : i ≤ y ^ 2) (ppi : PPow2 i) : 2 * ext i Y ≤ i := by
@@ -418,13 +411,11 @@ lemma bit_zero {x y : V} : Exponential x y → Exponential (2 * x) (y ^ 2) := by
           ext i (append (i ^ 2) Y (y ^ 2)) ^ 2
       constructor
       · calc
-          ext (i ^ 2) (append (i ^ 2) X (2 * x)) = 2 * x :=
-            ext_append_last (i ^ 2) X hxsqi
+          ext (i ^ 2) (append (i ^ 2) X (2 * x)) = 2 * x := ext_append_last (i ^ 2) X hxsqi
           _ = 2 * ext i (append (i ^ 2) X (2 * x)) := by
             rw [ext_append_of_lt ppi ppi.sq hiisq X (2 * x), hXx]
       · calc
-          ext (i ^ 2) (append (i ^ 2) Y (y ^ 2)) = y ^ 2 :=
-            ext_append_last (i ^ 2) Y hysqi
+          ext (i ^ 2) (append (i ^ 2) Y (y ^ 2)) = y ^ 2 := ext_append_last (i ^ 2) Y hysqi
           _ = ext i (append (i ^ 2) Y (y ^ 2)) ^ 2 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq Y (y ^ 2), hYy]
   have hseqₘ' : Seqₘ (2 * x) (y ^ 2) X' Y' :=
@@ -523,13 +514,11 @@ lemma bit_one {x y : V} : Exponential x y → Exponential (2 * x + 1) (2 * y ^ 2
           2 * ext i (append (i ^ 2) Y (2 * y ^ 2)) ^ 2
       constructor
       · calc
-          ext (i ^ 2) (append (i ^ 2) X (2 * x + 1)) = 2 * x + 1 :=
-            ext_append_last (i ^ 2) X hxsqi
+          ext (i ^ 2) (append (i ^ 2) X (2 * x + 1)) = 2 * x + 1 := ext_append_last (i ^ 2) X hxsqi
           _ = 2 * ext i (append (i ^ 2) X (2 * x + 1)) + 1 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq X (2 * x + 1), hXx]
       · calc
-          ext (i ^ 2) (append (i ^ 2) Y (2 * y ^ 2)) = 2 * y ^ 2 :=
-            ext_append_last (i ^ 2) Y hysqi
+          ext (i ^ 2) (append (i ^ 2) Y (2 * y ^ 2)) = 2 * y ^ 2 := ext_append_last (i ^ 2) Y hysqi
           _ = 2 * ext i (append (i ^ 2) Y (2 * y ^ 2)) ^ 2 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq Y (2 * y ^ 2), hYy]
   have hseqₘ' : Seqₘ (2 * x + 1) (2 * y ^ 2) X' Y' :=
@@ -663,8 +652,7 @@ lemma exponential_succ {x y : V} : Exponential (x + 1) y ↔ ∃ z, y = 2 * z �
           have : Exponential (2 * (x + 1)) y := by
             simpa [mul_add, add_assoc, one_add_one_eq_two] using H
           rcases exponential_even.mp this with ⟨y, rfl, H'⟩
-          have : 1 < y := by
-            simpa using (show 1 < y ^ 2 from lt_of_le_of_lt (by simp) hxy)
+          have : 1 < y := by simpa using (show 1 < y ^ 2 from lt_of_le_of_lt (by simp) hxy)
           have : Exponential (x + 1) y ↔ ∃ z ≤ y, y = 2 * z ∧ Exponential x z :=
             IH y (lt_square_of_lt <| this) (lt_trans (by simp) H'.lt)
           rcases this.mp H' with ⟨y, _, rfl, H''⟩
@@ -687,8 +675,7 @@ lemma exponential_succ {x y : V} : Exponential (x + 1) y ↔ ∃ z, y = 2 * z �
             mul_left_comm y 2] using this.bit_zero
 
 lemma exponential_succ_mul_two {x y : V} : Exponential (x + 1) (2 * y) ↔ Exponential x y :=
-  ⟨by intro h; rcases exponential_succ.mp h with ⟨y', e, h⟩; simpa [show y =
-    y' from by simpa using e] using h,
+  ⟨by intro h; rcases exponential_succ.mp h with ⟨y', e, h⟩; simp_all,
    by intro h; exact exponential_succ.mpr ⟨y, rfl, h⟩⟩
 
 alias ⟨of_succ_two_mul, succ⟩ := exponential_succ_mul_two
@@ -756,12 +743,8 @@ protected lemma inj {x₁ x₂ y : V} : Exponential x₁ y → Exponential x₂ 
     intro x₁ _ x₂ _ h₁ h₂
     rcases zero_or_succ x₁ with (rfl | ⟨x₁, rfl⟩) <;> rcases zero_or_succ x₂ with (rfl | ⟨x₂, rfl⟩)
     · rfl
-    · rcases h₁.zero_uniq
-      rcases exponential_succ.mp h₂ with ⟨z, hz⟩
-      simp at hz
-    · rcases h₂.zero_uniq
-      rcases exponential_succ.mp h₁ with ⟨z, hz⟩
-      simp at hz
+    · simp_all
+    · simp_all
     · rcases exponential_succ.mp h₁ with ⟨y, rfl, hy₁⟩
       have hy₂ : Exponential x₂ y := h₂.of_succ_two_mul
       have : x₁ = x₂ :=
@@ -830,8 +813,7 @@ lemma add_mul {x₁ x₂ y₁ y₂ : V} (h₁ : Exponential x₁ y₁) (h₂ : E
   induction x₂ using induction_sigma0
   · definability
   case zero =>
-    intro y₂ _ h₂
-    simpa [show y₂ = 1 from h₂.zero_uniq] using h₁
+    simp_all
   case succ x₂ IH =>
     intro y₂ hy h₂
     rcases exponential_succ.mp h₂ with ⟨y₂, rfl, H₂⟩

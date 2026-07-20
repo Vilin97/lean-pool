@@ -170,8 +170,7 @@ lemma znth_existsUnique (s i : V) :
   by_cases h : Seq s ∧ i < lh s
   · simp only [h, and_self, forall_const, not_true_eq_false, IsEmpty.forall_iff, and_true]
     exact h.1.nth_exists_uniq h.2
-  · simp only [h, IsEmpty.forall_iff, not_false_eq_true, forall_const, true_and,
-      existsUnique_eq]
+  · simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def znth (s i : V) : V := Classical.choose! (znth_existsUnique s i)
@@ -193,8 +192,7 @@ def _root_.LO.FirstOrder.Arith.znthDef : Sg0.Semisentence 3 := .mkSigma
 
 private lemma znth_graph {x s i : V} :
     x = znth s i ↔ ∃ l ≤ 2 * s, l = lh s ∧ (Seq s ∧ i < l → ⟪i, x⟫ ∈ s) ∧ (¬(Seq s ∧
-        i < l) → x = 0) := by
-  simp [znth, Classical.choose!_eq_iff]
+        i < l) → x = 0) := by simp [znth, Classical.choose!_eq_iff]
 
 lemma znth_defined : Sg0-Function₂ (znth : V → V → V) via znthDef := by
   intro v;
@@ -306,8 +304,7 @@ lemma domain_bitRemove_of_isMapping_of_mem {x y s : V} (hs : IsMapping s) (hxy :
   intro x₁
   constructor
   · rintro ⟨y₁, hy₁, hx₁y₁⟩; exact ⟨by rintro rfl; exact hy₁ rfl (hs.uniq hx₁y₁ hxy), y₁, hx₁y₁⟩
-  · intro ⟨hx, y₁, hx₁y₁⟩
-    exact ⟨y₁, by intro _; contradiction, hx₁y₁⟩
+  · simp_all
 
 lemma _root_.LO.Arith.Seq.eq_of_eq_of_subset {s₁ s₂ : V} (H₁ : Seq s₁) (H₂ : Seq s₂)
     (hl : lh s₁ = lh s₂) (h : s₁ ⊆ s₂) : s₁ = s₂ := by
@@ -322,8 +319,7 @@ lemma _root_.LO.Arith.Seq.eq_of_eq_of_subset {s₁ s₂ : V} (H₁ : Seq s₁) (
     have : ∃ y, ⟪π₁ u, y⟫ ∈ s₁ := H₁.exists this
     rcases this with ⟨y, hy⟩
     have : y = π₂ u := H₂.isMapping.uniq (h hy) (show ⟪π₁ u, π₂ u⟫ ∈ s₂ from by simpa using hu)
-    rcases this with rfl
-    simpa using hy
+    simp_all
 
 lemma subset_pair {s t : V} (h : ∀ i x, ⟪i, x⟫ ∈ s → ⟪i, x⟫ ∈ t) : s ⊆ t := by
   intro u hu
@@ -488,8 +484,7 @@ def vecToSeq : {n : ℕ} → (Fin n → V) → V
   induction n with
   | zero => simp [vecToSeq]
   | succ n ih =>
-    simp only [vecToSeq]
-    exact (ih _).seqCons _
+    simpa only [vecToSeq] using (ih _).seqCons _
 
 @[simp] lemma lh_vecToSeq {n} (v : Fin n → V) : lh (vecToSeq v) = n := by
   induction n with
@@ -537,9 +532,7 @@ lemma order_ball_induction_sigma1 {f : V → V → V} (hf : Sg1-Function₂ f) {
           (BoldfaceFunction.comp₁ (.var _)))
       apply Boldface.and
         (Boldface.comp₂ (.var 0) (by definability))
-      apply Boldface.ball_lt (.var _)
-      apply Boldface.ball_lt (.var _)
-      apply Boldface.ball_lt (.var _)
+      iterate 3 apply Boldface.ball_lt (.var _)
       apply Boldface.imp
         (Boldface.comp₂ (.var _) (BoldfaceFunction.comp₂ (.var _) (.var _)))
       apply Boldface.imp
@@ -566,8 +559,7 @@ lemma order_ball_induction_sigma1 {f : V → V → V} (hf : Sg1-Function₂ f) {
             simp only [mem_seqCons_iff, ←hkW, left_eq_add, one_ne_zero, false_and,
               false_or] at hm
             exact SW.isMapping.uniq hm (by simp [m₀])
-          have hm'm₁ : m' = m₁ := by simpa [SW, hkW, mem_seqCons_iff] using hm'
-          simpa [hm'm₁] using hm₁ x' hx' y' (by simp [←hmm₀, hy'])
+          simp_all
         · have Hm : ⟪l, m⟫ ∈ W := Seq.mem_seqCons_iff_of_lt (by simpa [←hkW]) |>.mp hm
           have Hm' : ⟪l + 1, m'⟫ ∈ W := Seq.mem_seqCons_iff_of_lt (by simpa [←hkW]) |>.mp hm'
           exact hWₛ l hl m (lt_of_mem_rng Hm) m' (lt_of_mem_rng Hm') Hm Hm' x' hx' y' hy'⟩
@@ -588,9 +580,7 @@ lemma order_ball_induction_sigma1 {f : V → V → V} (hf : Sg1-Function₂ f) {
       apply Boldface.ball_le (.var _)
       apply Boldface.comp₂ (.var _) (.var _)
     case zero =>
-      intro _ _ _ _ _ h y' _
-      rcases nonpos_iff_eq_zero.mp h
-      exact ind 0 y' (by simp)
+      simp_all
     case succ i ih' =>
       intro hi m _ hm x' hx' y' hy'
       have ih :

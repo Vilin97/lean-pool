@@ -64,9 +64,7 @@ lemma uIoo_eq_uIoc_sdiff_ends : uIoo a b = Ι a b \ {a, b} := by
   ext t
   constructor <;> intro hh
   · rw [mem_uIoo] at hh
-    cases hh with
-    | inl h => simp [uIoc, h, h.2.le, h.1.ne.symm, h.2.ne]
-    | inr h => simp [uIoc, h, h.2.le, h.1.ne.symm, h.2.ne]
+    rcases hh with h | h <;> simp [uIoc, h, h.2.le, h.1.ne.symm, h.2.ne]
   · simp_rw [uIoc, Set.mem_sdiff, mem_Ioc, mem_insert_iff, mem_singleton_iff] at hh
     push Not at hh
     refine ⟨hh.1.1, lt_of_le_of_ne hh.1.2 ?_⟩
@@ -130,9 +128,9 @@ theorem integral_eq_sub' (h : ContDiffOn ℝ 1 f (Icc a b)) (hab : a < b) :
 
 theorem integral_eq_sub (h : ContDiffOn ℝ 1 f (Icc a b)) (hab : a ≤ b) :
     ∫ y in a..b, derivWithin f (Icc a b) y = f b - f a := by
-  cases lt_or_eq_of_le hab
-  · case inl hab => exact h.integral_eq_sub' hab
-  · case inr hab => simp [hab]
+  rcases lt_or_eq_of_le hab with hab | hab
+  · exact h.integral_eq_sub' hab
+  · simp [hab]
 
 omit [CompleteSpace E] in
 theorem integral_derivWithin_smul_comp
@@ -166,20 +164,13 @@ theorem integral_eq_sub'' (h : ContDiffOn ℝ 1 f (Icc a b)) (hab : a ≤ b) (ht
   apply integral_congr_uIoo
   intro u hu
   have l3 : u ∈ uIoo a b := by
-    rw [mem_uIoo]
     rw [uIoo_eq_uIoc_sdiff_ends, Set.mem_sdiff, mem_uIoc, Set.mem_insert_iff,
       Set.mem_singleton_iff] at hu
-    obtain ⟨huoc, hua, hut⟩ : ((a < u ∧ u ≤ t) ∨ (t < u ∧ u ≤ a)) ∧ u ≠ a ∧ u ≠ t := by
-      refine ⟨hu.1, ?_, ?_⟩
-      · exact fun h => hu.2 (Or.inl h)
-      · exact fun h => hu.2 (Or.inr h)
-    cases huoc with
-    | inl hh =>
-      refine Or.inl ⟨hh.1, lt_of_le_of_ne (hh.2.trans ht.2) ?_⟩
-      intro hub
-      subst hub
-      exact hut (le_antisymm hh.2 ht.2)
-    | inr hh => linarith [ht.1]
+    rw [mem_uIoo]
+    rcases hu.1 with ⟨hau, hut⟩ | ⟨htu, hua⟩
+    · refine Or.inl ⟨hau, lt_of_le_of_ne (hut.trans ht.2) ?_⟩
+      exact fun h => hu.2 (Or.inr (le_antisymm hut (h ▸ ht.2)))
+    · linarith [ht.1]
   convert (derivWithin_of_mem_uIoo l3) using 2
   simp [uIcc, hab]
 

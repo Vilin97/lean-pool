@@ -48,8 +48,7 @@ variable {V}
 omit [L.DecidableEq] in
 @[simp] lemma _root_.LO.FirstOrder.Derivation2.Sequent.codeIn_empty
     : (⌜(∅ : Finset (SyntacticFormula L))⌝ :
-    V) = ∅ := by
-  simp [Sequent.codeIn_def, emptyset_def]
+    V) = ∅ := by simp [Sequent.codeIn_def, emptyset_def]
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff
     {Γ : Finset (SyntacticFormula L)} {φ} : ⌜φ⌝ ∈ (⌜Γ⌝ :
@@ -63,8 +62,7 @@ lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff
       rw [Sequent.codeIn_def]
     simp only [Sequent.codeIn_def, ha, not_false_eq_true, Finset.sum_insert,
       Finset.mem_insert]
-    rw [this]
-    simp [←ih]
+    simp_all
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.quote_inj
     {Γ Δ : Finset (SyntacticFormula L)} : (⌜Γ⌝ :
@@ -100,8 +98,7 @@ lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn
     have : x = ⌜a⌝ ∨ x ∈ (⌜Γ⌝ : V) := by simpa using hx
     rcases this with (rfl | hx)
     · exact ⟨a, by simp⟩
-    · rcases ih hx with ⟨p, hx, rfl⟩
-      exact ⟨p, by simp [*]⟩
+    · simp_all
 
 lemma _root_.LO.FirstOrder.Derivation2.Sequent.mem_codeIn_iff'
     {Γ : Finset (SyntacticFormula L)} : x ∈ (⌜Γ⌝ :
@@ -118,8 +115,7 @@ lemma setShift_quote [DefinableLanguage L] (Γ : Finset (SyntacticFormula L)) :
   · rintro ⟨x, hx, rfl⟩
     rcases Sequent.mem_codeIn hx with ⟨p, _, rfl⟩
     rw [←quote_shift, Sequent.mem_codeIn_iff]
-    simp only [Finset.mem_image]
-    exact ⟨p, by simpa [Sequent.mem_codeIn_iff] using hx, rfl⟩
+    simpa only [Finset.mem_image] using ⟨p, by simpa [Sequent.mem_codeIn_iff] using hx, rfl⟩
   · intro hx
     rcases Sequent.mem_codeIn hx with ⟨p', hp', rfl⟩
     rcases by simpa using hp' with ⟨p, hp, rfl⟩
@@ -149,8 +145,7 @@ lemma quote_derivation_def
   rfl
 
 @[simp] lemma fstidx_quote
-    {Γ : Finset (SyntacticFormula L)} (d : T ⊢₂ Γ) : fstIdx (⌜d⌝ : V) = ⌜Γ⌝ :=
-  by
+    {Γ : Finset (SyntacticFormula L)} (d : T ⊢₂ Γ) : fstIdx (⌜d⌝ : V) = ⌜Γ⌝ := by
   induction d <;> simp [quote_derivation_def, codeIn]
 
 end Derivation2
@@ -445,8 +440,7 @@ lemma _root_.LO.Arith.Language.Theory.Provable.sound2
   rcases h with ⟨d, hp, hd⟩
   rcases hd.sound with ⟨Γ, e, b⟩
   have : Γ = {φ} := Sequent.quote_inj (V := ℕ) <| by simp [e, hp]
-  rcases this
-  exact b
+  simp_all
 
 end «lp_section_3»
 

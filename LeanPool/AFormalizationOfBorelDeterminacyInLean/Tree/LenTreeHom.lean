@@ -46,9 +46,7 @@ instance : forgetPO.Faithful where
   map_injective {_ _} _ _ h := LenHom.ext (congr_arg (OrderHom.toFun ∘ PartOrd.Hom.hom) h)
 instance : FunLike (S ⟶ T) S T where
   coe f := f.toFun
-  coe_injective f g h := by
-    apply LenHom.ext
-    exact h
+  coe_injective _ _ h := LenHom.ext h
 instance : OrderHomClass (S ⟶ T) S.2 T.2 where
   map_rel f _ _ h := f.toOrderHom.monotone' h
 instance : ConcreteCategory Trees (fun S T ↦ S ⟶ T) (CC := fun S ↦ S.2) where
@@ -65,9 +63,7 @@ instance instPartialOrderTreeElement : PartialOrder S := inferInstance
 @[simp] lemma le_def_trees (x y : T) : x ≤ y ↔ x.val <+: y.val := Iff.rfl
 @[simp] lemma rem_toOrderHom (f : S ⟶ T) :
   DFunLike.coe (F := S →o T) f.toOrderHom = f := rfl
-lemma rem_toFun (f : S ⟶ T) (x : S) : f.toFun x = f x := by
-  change f.toFun x = f.toFun x
-  rfl
+lemma rem_toFun (f : S ⟶ T) (x : S) : f.toFun x = f x := rfl
 @[simp] lemma forget_map (f : S ⟶ T) : (forget Trees).map f = TypeCat.ofHom f := rfl
 
 namespace LenHom
@@ -77,10 +73,9 @@ lemma comp_toFun (f : S ⟶ T) (g : T ⟶ U) :
 instance {S T : Trees} (f : S ⟶ T) [IsIso f] : IsIso (TypeCat.ofHom f.toFun) := by
   simpa [forget_map] using inferInstanceAs (IsIso ((forget Trees).map f))
 lemma inv_toFun {S T : Trees} (f : S ⟶ T) [IsIso f] :
-  (inv f).toFun = inv (TypeCat.ofHom f.toFun) := by
-  have h := congrArg TypeCat.Fun.toFun <|
+  (inv f).toFun = inv (TypeCat.ofHom f.toFun) :=
+  congrArg TypeCat.Fun.toFun <|
     congrArg TypeCat.Hom.hom (IsIso.Iso.inv_hom ((forget Trees).mapIso (asIso f))).symm
-  exact h
 
 @[simp, simp_lengths] lemma h_length_simp (f : S ⟶ T) (x : S) :
   (f x).val.length (α := no_index _) = x.val.length (α := no_index _) := f.h_length x
@@ -88,8 +83,8 @@ lemma h_length_inv (f : S ⟶ T) [IsIso (TypeCat.ofHom f.toFun)] (x : T) :
   (inv (TypeCat.ofHom f.toFun) x).val.length = x.val.length := by
   have hlen :
       ((TypeCat.ofHom f.toFun) (inv (TypeCat.ofHom f.toFun) x)).val.length =
-        (inv (TypeCat.ofHom f.toFun) x).val.length := by
-    exact h_length_simp f (inv (TypeCat.ofHom f.toFun) x)
+        (inv (TypeCat.ofHom f.toFun) x).val.length :=
+    h_length_simp f (inv (TypeCat.ofHom f.toFun) x)
   have hcancel :
       ((TypeCat.ofHom f.toFun) (inv (TypeCat.ofHom f.toFun) x)).val.length = x.val.length :=
     congrArg (fun y : T ↦ y.val.length) (cancel_inv_right_types (TypeCat.ofHom f.toFun) x)

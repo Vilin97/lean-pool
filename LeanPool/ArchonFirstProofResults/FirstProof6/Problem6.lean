@@ -35,6 +35,35 @@ The BSS framework follows the informal proof's dynamic approach:
 3. Coloring with one-sided barrier tracking monochromatic matrix M_t
 4. Pullback: M_k ≤ u_k·I → each color class ε-light (via eps_light_of_loewner_bound) -/
 
+/-- For a real diagonal `f`, the unitary conjugate `U * diagonal f * U★` is Hermitian. -/
+private lemma unitary_diag_conj_isHermitian (U : Matrix V V ℝ) (f : V → ℝ) :
+    (U * diagonal f * (star U : Matrix V V ℝ)).IsHermitian := by
+  unfold Matrix.IsHermitian
+  rw [conjTranspose_mul, conjTranspose_mul, diagonal_conjTranspose, Matrix.mul_assoc,
+    star_eq_conjTranspose, conjTranspose_conjTranspose]
+  simp [star_trivial]
+
+/-- Product of unitary-diagonal-conjugate matrices:
+    (U * D(f) * U★) * (U * D(g) * U★) = U * D(f·g) * U★.
+    Used for spectral calculus (computing products via eigenvalue multiplication). -/
+lemma unitary_diag_mul
+    (U : Matrix V V ℝ) (hstarU : (star U : Matrix V V ℝ) * U = 1)
+    (f g : V → ℝ) :
+    (U * diagonal f * (star U : Matrix V V ℝ)) *
+    (U * diagonal g * (star U : Matrix V V ℝ)) =
+    U * diagonal (f * g) * (star U : Matrix V V ℝ) := by
+  have h1 : (U * diagonal f * (star U : Matrix V V ℝ)) *
+             (U * diagonal g * (star U : Matrix V V ℝ)) =
+      U * diagonal f * ((star U : Matrix V V ℝ) * U) *
+      diagonal g * (star U : Matrix V V ℝ) := by
+    simp only [Matrix.mul_assoc]
+  rw [h1, hstarU, Matrix.mul_one,
+      show U * diagonal f * diagonal g * (star U : Matrix V V ℝ) =
+           U * (diagonal f * diagonal g) * (star U : Matrix V V ℝ) by
+        simp only [Matrix.mul_assoc]]
+  congr 1; congr 1
+  exact diagonal_mul_diagonal f g
+
 /-- **Sub-lemma 1 (Spectral setup)**: For any graph G, there exists a Hermitian matrix
     Lhalf with Lhalf * Lhalf = graphLaplacian G (the PSD square root), constructed
     via the spectral theorem. This is Step 1 of the informal proof.
@@ -59,65 +88,17 @@ lemma spectral_sqrt_exists
   have hev_nn : ∀ i, 0 ≤ ev i := hL_psd.eigenvalues_nonneg
   set sqrtEv : V → ℝ := fun i => Real.sqrt (ev i) with hsqrtEv_def
   set Lhalf := (U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ) with hLhalf_def
-  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hL_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    rw [hL_def]; exact hspec
+  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) :=
+    hL_def ▸ realSpectralDecomp hL_herm
   refine ⟨Lhalf, ?_, ?_⟩
   · -- Lhalf is Hermitian
-    change Lhalfᴴ = Lhalf
-    rw [hLhalf_def]
-    have h_diag_herm : (diagonal sqrtEv)ᴴ = diagonal sqrtEv := by
-      ext i j; simp only [conjTranspose_apply, diagonal, Matrix.of_apply, star_trivial]
-      split_ifs with h1 h2 h2
-      · rw [h1]
-      · exact absurd h1.symm h2
-      · exact absurd h2.symm h1
-      · rfl
-    calc (U * diagonal sqrtEv * star U)ᴴ
-        = (star U)ᴴ * (diagonal sqrtEv)ᴴ * Uᴴ := by
-          rw [conjTranspose_mul, conjTranspose_mul, Matrix.mul_assoc]
-      _ = U * diagonal sqrtEv * star U := by
-          simp only [star_eq_conjTranspose, conjTranspose_conjTranspose, h_diag_herm]
+    rw [hLhalf_def]; exact unitary_diag_conj_isHermitian U sqrtEv
   · -- Lhalf * Lhalf = L
-    rw [hLhalf_def, hL_eq]
-    have h1 : (U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ) *
-              ((U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ)) =
-              (U : Matrix V V ℝ) * diagonal sqrtEv *
-              ((star U : Matrix V V ℝ) * (U : Matrix V V ℝ)) *
-              diagonal sqrtEv * (star U : Matrix V V ℝ) := by
-      simp only [Matrix.mul_assoc]
-    rw [h1, hUstarU, Matrix.mul_one]
-    have h_sq : diagonal sqrtEv * diagonal sqrtEv = diagonal ev := by
-      rw [diagonal_mul_diagonal]
-      congr 1; ext i
-      rw [hsqrtEv_def, ← Real.sqrt_mul (hev_nn i), Real.sqrt_mul_self (hev_nn i)]
-    rw [show (U : Matrix V V ℝ) * diagonal sqrtEv * diagonal sqrtEv * (star U : Matrix V V ℝ) =
-        (U : Matrix V V ℝ) * (diagonal sqrtEv * diagonal sqrtEv) * (star U : Matrix V V ℝ) by
-      simp only [Matrix.mul_assoc]]
+    rw [hLhalf_def, hL_eq, unitary_diag_mul U hUstarU sqrtEv sqrtEv]
+    have h_sq : sqrtEv * sqrtEv = ev := by
+      ext i
+      rw [Pi.mul_apply, hsqrtEv_def, ← Real.sqrt_mul (hev_nn i), Real.sqrt_mul_self (hev_nn i)]
     rw [h_sq]
-
-/-- Product of unitary-diagonal-conjugate matrices:
-    (U * D(f) * U★) * (U * D(g) * U★) = U * D(f·g) * U★.
-    Used for spectral calculus (computing products via eigenvalue multiplication). -/
-lemma unitary_diag_mul
-    (U : Matrix V V ℝ) (hstarU : (star U : Matrix V V ℝ) * U = 1)
-    (f g : V → ℝ) :
-    (U * diagonal f * (star U : Matrix V V ℝ)) *
-    (U * diagonal g * (star U : Matrix V V ℝ)) =
-    U * diagonal (f * g) * (star U : Matrix V V ℝ) := by
-  have h1 : (U * diagonal f * (star U : Matrix V V ℝ)) *
-             (U * diagonal g * (star U : Matrix V V ℝ)) =
-      U * diagonal f * ((star U : Matrix V V ℝ) * U) *
-      diagonal g * (star U : Matrix V V ℝ) := by
-    simp only [Matrix.mul_assoc]
-  rw [h1, hstarU, Matrix.mul_one,
-      show U * diagonal f * diagonal g * (star U : Matrix V V ℝ) =
-           U * (diagonal f * diagonal g) * (star U : Matrix V V ℝ) by
-        simp only [Matrix.mul_assoc]]
-  congr 1; congr 1
-  exact diagonal_mul_diagonal f g
 
 omit [DecidableEq V] in
 /-- For a Hermitian matrix M, there exists a Hermitian pseudo-inverse M_pinv satisfying
@@ -140,29 +121,12 @@ lemma hermitian_pseudo_inverse_exists
   set ev := hM.eigenvalues with hev_def
   have hUstarU : (star U : Matrix V V ℝ) * U = 1 :=
     Unitary.coe_star_mul_self hM.eigenvectorUnitary
-  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hM.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    exact hspec
+  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) := realSpectralDecomp hM
   -- Pseudo-inverse eigenvalues: invert nonzero, keep zero
   set pinvEv : V → ℝ := fun i => if ev i = 0 then 0 else (ev i)⁻¹ with hpinvEv_def
   refine ⟨U * diagonal pinvEv * (star U : Matrix V V ℝ), ?_, ?_, ?_, ?_, ?_⟩
   · -- M_pinv is Hermitian: U * diag(real) * U★ is Hermitian for real diagonal
-    change (U * diagonal pinvEv * (star U : Matrix V V ℝ))ᴴ =
-         U * diagonal pinvEv * (star U : Matrix V V ℝ)
-    have h_diag : (diagonal pinvEv)ᴴ = diagonal pinvEv := by
-      ext i j; simp only [conjTranspose_apply, diagonal, Matrix.of_apply, star_trivial]
-      split_ifs with h1 h2 h2
-      · rw [h1]
-      · exact absurd h1.symm h2
-      · exact absurd h2.symm h1
-      · rfl
-    calc (U * diagonal pinvEv * (star U : Matrix V V ℝ))ᴴ
-        = (star U : Matrix V V ℝ)ᴴ * (diagonal pinvEv)ᴴ * Uᴴ := by
-          rw [conjTranspose_mul, conjTranspose_mul, Matrix.mul_assoc]
-      _ = U * diagonal pinvEv * (star U : Matrix V V ℝ) := by
-          simp only [star_eq_conjTranspose, conjTranspose_conjTranspose, h_diag]
+    exact unitary_diag_conj_isHermitian U pinvEv
   · -- (1) M * M_pinv * M = M via eigenvalue identity ev * pinvEv * ev = ev
     rw [hM_eq, unitary_diag_mul U hUstarU ev pinvEv,
         unitary_diag_mul U hUstarU (ev * pinvEv) ev]
@@ -180,10 +144,8 @@ lemma hermitian_pseudo_inverse_exists
     · simp [h]
     · rw [inv_mul_cancel₀ h, one_mul]
   · -- (3) M * M_pinv is idempotent via (ev * pinvEv)² = ev * pinvEv
-    have hprod : M * (U * diagonal pinvEv * (star U : Matrix V V ℝ)) =
-        U * diagonal (ev * pinvEv) * (star U : Matrix V V ℝ) := by
-      rw [hM_eq]; exact unitary_diag_mul U hUstarU ev pinvEv
-    rw [hprod, unitary_diag_mul U hUstarU (ev * pinvEv) (ev * pinvEv)]
+    rw [hM_eq, unitary_diag_mul U hUstarU ev pinvEv,
+        unitary_diag_mul U hUstarU (ev * pinvEv) (ev * pinvEv)]
     suffices h : ev * pinvEv * (ev * pinvEv) = ev * pinvEv by rw [h]
     ext i; simp only [Pi.mul_apply, hpinvEv_def]
     split_ifs with h
@@ -389,44 +351,18 @@ lemma cross_edge_sum_le_graphLaplacian
   -- Abbreviate the double sum matrix
   set DS := ∑ v ∈ Finset.univ.filter (· ∉ pc.colored), ∑ γ : Fin r,
     (inducedLaplacian G (S γ ∪ {v}) - inducedLaplacian G (S γ)) with DS_def
-  -- Helper: graphLaplacian row sum = 0
+  -- Helper: graphLaplacian row sum = 0 (via mathlib's lapMatrix mulVec on the all-ones vector)
   have laplacian_row_sum : ∀ (H : SimpleGraph V) [DecidableRel H.Adj] (a : V),
       ∑ b, graphLaplacian H a b = 0 := by
     intro H _ a
-    simp only [graphLaplacian, Matrix.of_apply]
-    rw [Finset.sum_ite, Finset.sum_ite]
-    simp only [Finset.sum_const_zero, add_zero]
-    have hfilt_eq : Finset.univ.filter (fun x => a = x) = {a} := by ext x; simp [eq_comm]
-    rw [hfilt_eq, Finset.sum_singleton]
-    simp only [Finset.sum_const]
-    have : (Finset.univ.filter (fun x => ¬a = x)).filter (H.Adj a) =
-        Finset.univ.filter (H.Adj a) := by
-      ext b; simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨fun ⟨_, h⟩ => h, fun h => ⟨fun hab => H.loopless.irrefl a (hab ▸ h), h⟩⟩
-    rw [this]; simp [nsmul_eq_mul]
-  -- Helper: inducedLaplacian row sum = 0
+    have h := congrFun (SimpleGraph.lapMatrix_mulVec_const_eq_zero (R := ℝ) H) a
+    rw [graphLaplacian_eq_lapMatrix]
+    simpa [Matrix.mulVec, dotProduct] using h
+  -- Helper: inducedLaplacian row sum = 0 (induced subgraph is itself a graph Laplacian)
   have il_row_sum : ∀ (T : Finset V) (a : V), ∑ b, inducedLaplacian G T a b = 0 := by
     intro T a
-    simp only [inducedLaplacian, Matrix.of_apply]
-    rw [Finset.sum_ite, Finset.sum_ite]
-    simp only [Finset.sum_const_zero, add_zero]
-    have hfilt_eq : Finset.univ.filter (fun x => a = x) = {a} := by ext x; simp [eq_comm]
-    rw [hfilt_eq, Finset.sum_singleton]
-    -- Reconcile filter orders:
-    -- (a ∈ T ∧ k ∈ T ∧ G.Adj a k) vs (G.Adj a k ∧ a ∈ T ∧ k ∈ T)
-    have h_filt : Finset.univ.filter (fun k => a ∈ T ∧ k ∈ T ∧ G.Adj a k) =
-        Finset.univ.filter (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) := by
-      ext k; simp only [Finset.mem_filter, Finset.mem_univ, true_and]; tauto
-    rw [h_filt]
-    simp only [Finset.sum_const]
-    have : (Finset.univ.filter (fun x => ¬a = x)).filter
-        (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) =
-        Finset.univ.filter (fun k => G.Adj a k ∧ a ∈ T ∧ k ∈ T) := by
-      ext b; simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨fun ⟨_, h⟩ => h, fun ⟨h, _, _⟩ =>
-        ⟨fun hab => G.loopless.irrefl a (hab ▸ h),
-         h, ‹_›, ‹_›⟩⟩
-    rw [this]; simp [nsmul_eq_mul]
+    rw [inducedLaplacian_eq_graphLaplacian_inducedSubgraph]
+    exact laplacian_row_sum _ a
   -- Off-diagonal equality via cross_edge_off_diagonal
   have hG_same : ∀ a b, G_same.Adj a b ↔
       (G.Adj a b ∧ (a ∈ pc.colored ↔ b ∈ pc.colored)) :=
@@ -1262,8 +1198,8 @@ lemma coloring_induction_exists
     let k := n / 4
     ∃ (pc : PartialColoring V r),
       pc.colored.card = k ∧
-      ∀ γ : Fin r, IsEpsLight G ε (pc.colored.filter (fun v => pc.color v = γ)) := by
-  exact bss_coloring_eps_light G ε hε hε1 hn
+      ∀ γ : Fin r, IsEpsLight G ε (pc.colored.filter (fun v => pc.color v = γ)) :=
+  bss_coloring_eps_light G ε hε hε1 hn
 
 /-! ### Proof of the main theorem -/
 

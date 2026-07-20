@@ -134,8 +134,7 @@ lemma first_trans_second_reparam_eq_self_aux (γ : Path x₀ x₁) (t : I) {T : 
   · exfalso
     have hT_lt_t : ↑T < ↑t := by
       have h₂' : (2⁻¹ : ℝ) < ↑t / (2 * ↑T) := by
-        rw [show (2⁻¹ : ℝ) = 1 / 2 from by norm_num]
-        exact lt_of_not_ge h₂
+        simp_all
       have h2T : (0 : ℝ) < 2 * T := unitIAux.double_pos_of_pos hT₀
       calc (T : ℝ)
         _ = 1 * T                     := (one_mul (T : ℝ)).symm
@@ -150,8 +149,7 @@ lemma first_trans_second_reparam_eq_self_aux (γ : Path x₀ x₁) (t : I) {T : 
     have h2σT : (0 : ℝ) < 2 * (1 - T) := unitIAux.double_sigma_pos_of_lt_one hT₁
     have hle : (1 + (t : ℝ) - 2 * ↑T) ≤ (1 - ↑T) := by
       rw [div_le_iff₀ h2σT] at h₂
-      simp at h₂
-      simp [h₂]
+      simp_all
     apply h₁ (Subtype.coe_le_coe.mp _)
     linarith
   · congr

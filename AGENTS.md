@@ -13,6 +13,12 @@ This file is a concatenation of README.md and CONTRIBUTING.md.
 
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and [`merely-true`](https://github.com/merely-true/merely-true), preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, it relies on deterministic linters and LLM judgment, so it can grow faster while staying `sorry`-free and pinned to the latest Mathlib. See [`MOTIVATION.md`](MOTIVATION.md) for the why, and browse the API docs at <https://vilin97.github.io/lean-pool/>.
 
+<!-- BEGIN STATS -->
+**123** formalization projects · **882,817** lines of Lean
+<!-- END STATS -->
+
+<sub>(stats above are refreshed automatically by [`readme-stats.yml`](.github/workflows/readme-stats.yml) — edit [`python/lean_pool/stats.py`](python/lean_pool/stats.py), not the numbers)</sub>
+
 So far, projects have been added by hand: each is a suitable, permissively licensed (Apache-2.0 or MIT) Lean repository, bumped to the latest Lean and Mathlib, made to pass [CI](.github/workflows/lean_action_ci.yml) — it builds warning-free and clears Mathlib's linters, the style checker, and the repository quality gates (no `sorry`/`admit`, no axioms beyond `Classical.choice`/`propext`/`Quot.sound`, no `unsafe`/`partial`, file headers, size limits) — and an [LLM review](.github/REVIEW_RULES.md) of fit and significance, then merged.
 
 ### Getting started
@@ -20,8 +26,11 @@ So far, projects have been added by hand: each is a suitable, permissively licen
 Requires Lean (via [`elan`](https://leanprover-community.github.io/install/), with the toolchain pinned in [`lean-toolchain`](lean-toolchain)) and Python 3.13+ with [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-make setup    # pull Mathlib oleans, build LeanPool, install Python tooling
+make setup    # pull Mathlib oleans, build the whole pool (~1.5h), install Python tooling
 ```
+
+To work on a single project you don't need the whole pool built — see the
+[fast per-project build](CONTRIBUTING.md#dev-setup) in `CONTRIBUTING.md`.
 
 ### Contributing
 
@@ -35,24 +44,37 @@ Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io
 
 Lean Pool welcomes serious, medium- to large-scale formalizations of mathematics and related disciplines (see [`MOTIVATION.md`](MOTIVATION.md)). Browse [`LeanPool/`](LeanPool/) for examples and [`candidates/CRITERIA.txt`](candidates/CRITERIA.txt) for what we include.
 
+## Opt out
+
+If you would like to withdraw your project from Lean Pool, open an issue.
+
 ## Submitting a project
 
 There are two paths:
 
 - **Propose a repo.** Open an issue with the GitHub URL and a maintainer can import it. Repos that Reservoir does not index can be added to [`candidates/manual.txt`](candidates/manual.txt).
-- **Open a content PR.** Add your project under `LeanPool/<YourProject>/`, register it in [`LeanPool/projects.yml`](LeanPool/projects.yml), and regenerate the index with `lake exe mk_all`.
+- **Open a content PR.** Add your project under `LeanPool/<YourProject>/`, register it in [`LeanPool/projects.yml`](LeanPool/projects.yml) — the card must declare `provenance` (`human`, `AI`, or `mix`; see below) — and regenerate the index with `lake exe mk_all`.
 
-Either way the result must pass CI (build, linters, and quality checks — see [Linting and testing](#linting-and-testing)) and an [LLM review](.github/REVIEW_RULES.md) of fit and significance. Accepted projects must be `sorry`-free, introduce no axioms beyond `Classical.choice`/`propext`/`Quot.sound`, and avoid `unsafe`/`partial`. (Proof profiling via `/profile` is available but informational, not a gate.)
+Either way the result must pass CI (build, linters, and quality checks — see [Linting and testing](#linting-and-testing)) and an [LLM review](.github/REVIEW_RULES.md) of fit and significance. Accepted projects must be `sorry`-free, introduce no axioms beyond `Classical.choice`/`propext`/`Quot.sound`, and avoid `unsafe`/`partial`. Each project card must also declare its **provenance** — who wrote the Lean proofs — as `human` (written by people), `AI` (mostly produced by an AI system), or `mix` (both contributed substantially). (Proof profiling via `/profile` is available but informational, not a gate: added files get an absolute profile, while modified files get a base→head compile-cost comparison — useful for checking that a refactor doesn't regress compile time.)
 
 ## Dev setup
 
 Requires Lean (via [`elan`](https://leanprover-community.github.io/install/), with the toolchain pinned in [`lean-toolchain`](lean-toolchain)) and Python 3.13+ with [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-make setup            # pull Mathlib oleans, build LeanPool, install Python tooling
-lake build            # build the Lean library
-cd python && uv sync  # Python tooling; add `--group test` for pytest
+make setup            # pull Mathlib oleans, build the whole pool (~1.5h), install Python tooling
+cd python && uv sync  # Python tooling only; add `--group test` for pytest
 ```
+
+`make setup` builds every project in the pool, which takes about 1.5 hours from cold. **You almost never need that.** The projects are independent — none imports another — so to work on one project you only need Mathlib's prebuilt oleans plus your own project:
+
+```bash
+lake exe cache get                # prebuilt Mathlib oleans (fast)
+lake build LeanPool.YourProject   # builds only your project — minutes, not hours
+# or: make build-project P=YourProject
+```
+
+The whole-library checks (`lake exe runLinter LeanPool`, `lake exe lint-style LeanPool`, the quality checker) do need the full pool built, but CI runs them on your PR — you don't have to reproduce them locally.
 
 ## Pull requests
 

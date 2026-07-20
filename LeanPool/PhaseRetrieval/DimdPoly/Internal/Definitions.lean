@@ -138,9 +138,7 @@ def ofPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Skappa d ka
       classical
       refine summable_of_hasFiniteSupport ?_
       refine Set.Finite.subset F.support.finite_toSet ?_
-      intro alpha halpha
-      have hnorm : ‖F alpha‖ ≠ 0 := by simpa using halpha
-      exact F.mem_support_iff.mpr (by simpa using hnorm) }
+      simp_all }
 
 /-- `projFinset`: proj Finset. -/
 def projFinset {d : Nat} {kappa : MultiIndex d} (E : Finset (Idx d)) (F : Pkappa d kappa) :

@@ -27,6 +27,19 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- Half-angle factorization of `sin(δπ/6)` used across the i-point trig proofs. -/
+private lemma sin_delta_pi_six_factor (δ : ℝ) :
+    Real.sin (δ * Real.pi / 6) =
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
+  rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+
+/-- Half-angle factorization of `cos(δπ/6) - 1` used across the i-point trig proofs. -/
+private lemma cos_delta_pi_six_sub_one_factor (δ : ℝ) :
+    Real.cos (δ * Real.pi / 6) - 1 =
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
+  rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
+  nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+
 private lemma arg_approach_i_left (hδ : 0 < δ) (hδ_small : δ < 1) :
     (fdBoundaryH H (2 - δ) - I).arg = -(δ * Real.pi / 12) := by
   have h1 : 1 < 2 - δ := by linarith
@@ -35,17 +48,13 @@ private lemma arg_approach_i_left (hδ : 0 < δ) (hδ_small : δ < 1) :
   set θ := Real.pi / 2 - δ * Real.pi / 6 with hθ_def
   rw [show Real.pi * (1 + (2 - δ)) / 6 = θ from by simp only [hθ_def]; ring]
   rw [show (↑θ : ℂ) * I = ↑θ * I from rfl, exp_real_angle_I]
-  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.cos_pi_div_two_sub]
-  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.sin_pi_div_two_sub]
+  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
+  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
-      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := sin_delta_pi_six_factor δ
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -80,11 +89,10 @@ private lemma arg_approach_i_right (hδ : 0 < δ) (hδ_small : δ < 1) :
     rw [hθ_def, Real.sin_add, Real.sin_pi_div_two, Real.cos_pi_div_two]; ring
   have h_re_factor : -Real.sin (δ * Real.pi / 6) =
       -(2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+    rw [sin_delta_pi_six_factor]
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   set w := (↑(Real.cos (δ * Real.pi / 12)) : ℂ) +
@@ -105,15 +113,13 @@ private lemma arg_approach_i_right (hδ : 0 < δ) (hδ_small : δ < 1) :
   have hw_arg : w.arg = δ * Real.pi / 12 := by
     have hw_eq : w = ↑(1 : ℝ) * (Complex.cos ↑(δ * Real.pi / 12) +
         Complex.sin ↑(δ * Real.pi / 12) * I) := by
-      simp only [hw_def, ← Complex.ofReal_cos, ← Complex.ofReal_sin,
-        Complex.ofReal_one, one_mul]
+      simp_all
     rw [hw_eq]
     exact Complex.arg_mul_cos_add_sin_mul_I (by norm_num : (0 : ℝ) < 1)
       ⟨by nlinarith [Real.pi_pos], by nlinarith [Real.pi_pos]⟩
   have hrw_im_pos : 0 < (↑(2 * Real.sin (δ * Real.pi / 12)) * w).im := by
     rw [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im]
-    simp only [zero_mul, add_zero]
-    exact mul_pos (mul_pos (by norm_num) h_sin_pos) hw_im_pos
+    simp_all
   rw [Complex.arg_neg_eq_arg_sub_pi_of_im_pos hrw_im_pos,
       Complex.arg_real_mul w (mul_pos (by norm_num : (0 : ℝ) < 2) h_sin_pos),
       hw_arg]
@@ -125,17 +131,13 @@ private lemma g_i_norm_left {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
   rw [fdBoundary_H_eq_arc h1 h3, exp_real_angle_I]
   set θ := Real.pi / 2 - δ * Real.pi / 6 with hθ_def
   rw [show Real.pi * (1 + (2 - δ)) / 6 = θ from by simp only [hθ_def]; ring]
-  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.cos_pi_div_two_sub]
-  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.sin_pi_div_two_sub]
+  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
+  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
-      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := sin_delta_pi_six_factor δ
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -161,11 +163,10 @@ private lemma g_i_norm_right {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
     rw [hθ_def, Real.sin_add, Real.sin_pi_div_two, Real.cos_pi_div_two]; ring
   have h_re_factor : -Real.sin (δ * Real.pi / 6) =
       -(2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+    rw [sin_delta_pi_six_factor]
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -183,10 +184,7 @@ private lemma g_i_norm_ge_seg0 {t : ℝ} (_ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     1 / 2 ≤ ‖fdBoundaryH H t - I‖ := by
   have hre : (fdBoundaryH H t - I).re = 1 / 2 := by
     rw [fdBoundary_H_seg0 H ht1]
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-      Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.one_re, Complex.div_ofNat_re,
-      mul_zero, sub_zero, zero_mul, mul_one]
-    norm_num
+    simp_all
   calc (1 : ℝ) / 2 = |1 / 2| := (abs_of_pos (by norm_num)).symm
     _ = |(fdBoundaryH H t - I).re| := by rw [hre]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_re_le_norm _
@@ -196,14 +194,9 @@ private lemma g_i_norm_ge_seg4 (H : ℝ) (hH : 1 < H) {t : ℝ} (ht4 : 4 ≤ t) 
   have him : (fdBoundaryH H t - I).im = H - 1 := by
     rcases eq_or_lt_of_le ht4 with rfl | ht4'
     · rw [fdBoundary_H_at_four H]
-      simp only [Complex.neg_im, Complex.div_ofNat_im, Complex.one_im, Complex.add_im,
-        Complex.ofReal_im, Complex.mul_im, Complex.I_re, Complex.I_im, Complex.sub_im,
-        Complex.ofReal_re]
-      ring
+      simp_all
     · rw [fdBoundary_H_seg4 H (by linarith) (by linarith) (by linarith) (by linarith)]
-      simp only [Complex.add_im, Complex.sub_im, Complex.ofReal_im, Complex.mul_im,
-        Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.div_ofNat_im, Complex.im_ofNat]
-      ring
+      simp_all
   calc H - 1 = |H - 1| := (abs_of_pos (by linarith)).symm
     _ = |(fdBoundaryH H t - I).im| := by rw [him]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_im_le_norm _
@@ -213,10 +206,7 @@ private lemma g_i_slitPlane_left {t : ℝ} (_ht0 : 0 ≤ t) (ht2 : t < 2) :
   rw [Complex.mem_slitPlane_iff]; left
   rcases le_or_gt t 1 with ht1 | ht1
   · rw [fdBoundary_H_seg0 H ht1]
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
-      Complex.ofReal_im, Complex.I_re, Complex.I_im, Complex.one_re, Complex.div_ofNat_re,
-      mul_zero, sub_zero, zero_mul, mul_one]
-    norm_num
+    simp_all
   · rw [fdBoundary_H_seg1 H (by linarith) (by linarith)]
     set θ := Real.pi / 3 + (t - 1) * (Real.pi / 2 - Real.pi / 3) with hθ_def
     rw [show (↑Real.pi / 3 + (↑t - 1) * (↑Real.pi / 2 - ↑Real.pi / 3)) * I =
@@ -251,9 +241,7 @@ private lemma g_i_norm_ge_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) :
         Complex.I_re, Complex.I_im, mul_zero, sub_zero]
       norm_num
     · rw [g_i_seg3_value ht3' ht4]
-      simp only [Complex.add_re, Complex.neg_re, Complex.div_ofNat_re, Complex.one_re,
-        Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-        mul_zero, sub_zero, add_zero, zero_mul]
+      simp_all
   calc 1 / 2 = |(-1 : ℝ) / 2| := by norm_num
     _ = |(fdBoundaryH H t - I).re| := by rw [hre]
     _ ≤ ‖fdBoundaryH H t - I‖ := Complex.abs_re_le_norm _
@@ -295,38 +283,37 @@ private lemma g_i_norm_arc_left {t : ℝ} (ht1 : 1 < t) (ht2 : t < 2) :
 private noncomputable def t₀_i (H : ℝ) : ℝ :=
   3 + (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2)
 
+private lemma H_sub_sqrt3_div2_pos (hH : 1 < H) : 0 < H - Real.sqrt 3 / 2 :=
+  have := Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)
+  by nlinarith [sq_nonneg (2 - Real.sqrt 3)]
+
 private lemma t₀_i_gt_three (hH : 1 < H) : 3 < t₀_i H := by
   unfold t₀_i
-  have h_num_pos : 0 < 1 - Real.sqrt 3 / 2 := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
-  have h_den_pos : 0 < H - Real.sqrt 3 / 2 := by nlinarith
-  linarith [div_pos h_num_pos h_den_pos]
+  have h_num_pos : 0 < 1 - Real.sqrt 3 / 2 :=
+    by nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num), sq_nonneg (2 - Real.sqrt 3)]
+  linarith [div_pos h_num_pos (H_sub_sqrt3_div2_pos hH)]
 
 private lemma t₀_i_lt_four (hH : 1 < H) : t₀_i H < 4 := by
   unfold t₀_i
-  have h_den_pos : 0 < H - Real.sqrt 3 / 2 := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
+  have h_den_pos := H_sub_sqrt3_div2_pos hH
   rw [show (4 : ℝ) = 3 + 1 from by ring]
-  have : (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) < 1 := by
-    rw [div_lt_one h_den_pos]; linarith
+  have : (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) < 1 := by rw [div_lt_one h_den_pos]; linarith
   linarith
+
+private lemma t₀_i_im_eq_zero (hH : 1 < H) :
+    Real.sqrt 3 / 2 - 1 + (t₀_i H - 3) * (H - Real.sqrt 3 / 2) = 0 := by
+  have h_den_pos := H_sub_sqrt3_div2_pos hH
+  unfold t₀_i
+  rw [show 3 + (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) - 3 =
+    (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) from by ring,
+    div_mul_cancel₀ _ (ne_of_gt h_den_pos)]; ring
 
 private lemma g_i_at_t₀ (hH : 1 < H) :
     fdBoundaryH H (t₀_i H) - I = -1/2 := by
   have ht₀3 := t₀_i_gt_three hH
   have ht₀4 := t₀_i_lt_four hH
-  rw [g_i_seg3_value (by linarith) (by linarith)]
-  have h_den_pos : 0 < H - Real.sqrt 3 / 2 := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
-  have h_im_zero : Real.sqrt 3 / 2 - 1 + (t₀_i H - 3) * (H - Real.sqrt 3 / 2) = 0 := by
-    unfold t₀_i
-    rw [show 3 + (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) - 3 =
-      (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) from by ring]
-    rw [div_mul_cancel₀ _ (ne_of_gt h_den_pos)]; ring
-  rw [h_im_zero]; simp only [ofReal_zero, zero_mul, add_zero]
+  rw [g_i_seg3_value (by linarith) (by linarith), t₀_i_im_eq_zero hH]
+  simp only [ofReal_zero, zero_mul, add_zero]
 
 private lemma g_i_seg3_im_neg {t : ℝ} (ht3 : 3 < t) (ht_t0 : t < t₀_i H)
     (hH : 1 < H) : (fdBoundaryH H t - I).im < 0 := by
@@ -335,15 +322,7 @@ private lemma g_i_seg3_im_neg {t : ℝ} (ht3 : 3 < t) (ht_t0 : t < t₀_i H)
     Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
     mul_zero, add_zero, mul_one]
   norm_num
-  have h_den_pos : 0 < H - Real.sqrt 3 / 2 := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
-  have h_eq_zero : Real.sqrt 3 / 2 - 1 + (t₀_i H - 3) * (H - Real.sqrt 3 / 2) = 0 := by
-    unfold t₀_i
-    rw [show 3 + (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) - 3 =
-      (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) from by ring]
-    rw [div_mul_cancel₀ _ (ne_of_gt h_den_pos)]; ring
-  nlinarith
+  nlinarith [H_sub_sqrt3_div2_pos hH, t₀_i_im_eq_zero hH]
 
 private lemma g_i_seg3_im_pos {t : ℝ} (ht_t0 : t₀_i H < t) (ht4 : t ≤ 4)
     (hH : 1 < H) : 0 < (fdBoundaryH H t - I).im := by
@@ -352,15 +331,7 @@ private lemma g_i_seg3_im_pos {t : ℝ} (ht_t0 : t₀_i H < t) (ht4 : t ≤ 4)
     Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
     mul_zero, add_zero, mul_one]
   norm_num
-  have h_den_pos : 0 < H - Real.sqrt 3 / 2 := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
-  have h_eq_zero : Real.sqrt 3 / 2 - 1 + (t₀_i H - 3) * (H - Real.sqrt 3 / 2) = 0 := by
-    unfold t₀_i
-    rw [show 3 + (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) - 3 =
-      (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) from by ring]
-    rw [div_mul_cancel₀ _ (ne_of_gt h_den_pos)]; ring
-  nlinarith
+  nlinarith [H_sub_sqrt3_div2_pos hH, t₀_i_im_eq_zero hH]
 
 private lemma g_i_ne_zero_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) :
     fdBoundaryH H t - I ≠ 0 := by
@@ -374,10 +345,7 @@ private lemma g_i_ne_zero_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) :
       Complex.I_re, Complex.I_im, mul_zero, sub_zero] at this
     norm_num at this
   · rw [g_i_seg3_value ht3' ht4] at this
-    simp only [Complex.add_re, Complex.neg_re, Complex.div_ofNat_re, Complex.one_re,
-      Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-      mul_zero, sub_zero, add_zero, zero_mul] at this
-    norm_num at this
+    simp_all
 
 private lemma log_neg_eq_add_pi_I {z : ℂ} (_hz_ne : z ≠ 0) (hz_im : z.im < 0) :
     Complex.log (-z) = Complex.log z + ↑Real.pi * I := by
@@ -477,9 +445,7 @@ private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 
     ((∫ t in (0 : ℝ)..(2 - δ), deriv g t / g t) + (∫ t in (2 + δ)..(5 : ℝ), deriv g t / g t) =
     Complex.log (g (2 - δ)) - Complex.log (g (2 + δ)) - 2 * ↑Real.pi * I) := by
   intro g
-  have hH_sqrt : Real.sqrt 3 / 2 < H := by
-    nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
-              sq_nonneg (2 - Real.sqrt 3)]
+  have hH_sqrt : Real.sqrt 3 / 2 < H := by linarith [H_sub_sqrt3_div2_pos hH]
   set t₀ := t₀_i H with ht₀_def
   have ht₀3 := t₀_i_gt_three hH
   have ht₀4 := t₀_i_lt_four hH
@@ -594,10 +560,7 @@ private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 
     rcases eq_or_lt_of_le ht3 with rfl | ht3'
     · exact le_of_lt (h2_at_three_im_neg H)
     · rcases eq_or_lt_of_le ht_t0 with rfl | ht_t0'
-      · change (h₂ t₀).im ≤ 0
-        rw [← hg_eq_h₂ t₀ (by linarith [t₀_i_gt_three hH]) (by linarith [t₀_i_lt_four hH]),
-          hgt₀_val]
-        norm_num
+      · simp_all
       · change (h₂ t).im ≤ 0
         rw [← hg_eq_h₂ t ht3' (by linarith)]
         exact le_of_lt (g_i_seg3_im_neg ht3' ht_t0' hH)
@@ -672,6 +635,18 @@ private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 
     linear_combination h_branch_t₀
   rw [hg_closed, h_branch_3, h_branch_t₀']; ring
 
+-- Helper: for ε < threshold where threshold ≤ min(2sin(π/12), 1),
+-- the map δ(ε) = 12/π · arcsin(ε/2) satisfies δ < 1.
+private lemma i_delta_lt_one {ε : ℝ} (hε_pos : 0 < ε)
+    (hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12)) :
+    12 / Real.pi * Real.arcsin (ε / 2) < 1 := by
+  have hpi_pos : 0 < Real.pi := Real.pi_pos
+  have harcsin_lt := arcsin_eps_div_two_lt_pi_12 hε_pos hε_lt_2sin
+  calc 12 / Real.pi * Real.arcsin (ε / 2)
+      < 12 / Real.pi * (Real.pi / 12) :=
+        mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
+    _ = 1 := by field_simp
+
 private lemma i_h_far (H : ℝ) (hH : 1 < H) :
     let threshold := min (min (min (1/2 : ℝ) (H - 1)) (2 * Real.sin (Real.pi / 12))) 1
     ∀ ε, 0 < ε → ε < threshold →
@@ -681,8 +656,7 @@ private lemma i_h_far (H : ℝ) (hH : 1 < H) :
   intro threshold ε hε_pos hε_lt t ht_mem h_abs
   have hpi_pos : 0 < Real.pi := Real.pi_pos
   have hH1_pos : 0 < H - 1 := by linarith
-  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
-    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
+  have hsin_pos : 0 < Real.sin (Real.pi / 12) := sin_pi_12_pos
   have h2sin_pos : 0 < 2 * Real.sin (Real.pi / 12) := by positivity
   have hε_lt_half : ε < 1/2 := lt_of_lt_of_le hε_lt
     (le_trans (min_le_left _ _) (le_trans (min_le_left _ _) (min_le_left _ _)))
@@ -697,18 +671,7 @@ private lemma i_h_far (H : ℝ) (hH : 1 < H) :
   have harcsin_pos : 0 < Real.arcsin (ε / 2) := Real.arcsin_pos.mpr hε_half_pos
   set δ := 12 / Real.pi * Real.arcsin (ε / 2) with hδ_def
   have hδ_pos : 0 < δ := by rw [hδ_def]; positivity
-  have hδ_lt_one : δ < 1 := by
-    rw [hδ_def]
-    have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
-    have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 := by
-      calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-            Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-        _ = Real.pi / 12 :=
-            Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
-    calc 12 / Real.pi * Real.arcsin (ε / 2)
-        < 12 / Real.pi * (Real.pi / 12) :=
-          mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-      _ = 1 := by field_simp
+  have hδ_lt_one : δ < 1 := i_delta_lt_one hε_pos hε_lt_2sin
   have hδ_angle : δ * Real.pi / 12 = Real.arcsin (ε / 2) := by rw [hδ_def]; field_simp
   have h_norm_L : ‖fdBoundaryH H (2 - δ) - I‖ = ε := by
     rw [g_i_norm_left hδ_pos hδ_lt_one, hδ_angle,
@@ -766,20 +729,10 @@ private lemma i_h_near (H : ℝ) :
   have hε_half_neg : -1 ≤ ε / 2 := by linarith
   have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) := lt_of_lt_of_le hε_lt
     (le_trans (min_le_left _ _) (min_le_right _ _))
-  have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
   have harcsin_pos : 0 < Real.arcsin (ε / 2) := Real.arcsin_pos.mpr hε_half_pos
-  have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 :=
-    calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-          Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-      _ = Real.pi / 12 :=
-          Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
   set δ := 12 / Real.pi * Real.arcsin (ε / 2) with hδ_def
   have hδ_pos : 0 < δ := by rw [hδ_def]; positivity
-  have hδ_lt_one : δ < 1 :=
-    calc δ = 12 / Real.pi * Real.arcsin (ε / 2) := rfl
-      _ < 12 / Real.pi * (Real.pi / 12) :=
-          mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-      _ = 1 := by field_simp
+  have hδ_lt_one : δ < 1 := i_delta_lt_one hε_pos hε_lt_2sin
   have hδ_angle : δ * Real.pi / 12 = Real.arcsin (ε / 2) := by rw [hδ_def]; field_simp
   have hδpi12_le : δ * Real.pi / 12 ≤ Real.pi / 2 := by
     rw [hδ_angle]; exact le_of_lt (Real.arcsin_lt_pi_div_two.mpr (by linarith))
@@ -802,8 +755,7 @@ private lemma i_h_near (H : ℝ) :
                 hδpi12_le
                 (by nlinarith))
               (by norm_num)
-        _ = ε := by
-            rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
+        _ = ε := by rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
   · have ht3 : t < 3 := by linarith [h_abs.2]
     rw [g_i_norm_arc_right ht2 ht3]
     have ht2_le : t - 2 ≤ δ := by linarith [h_abs.2]
@@ -817,8 +769,7 @@ private lemma i_h_near (H : ℝ) :
               hδpi12_le
               (by nlinarith))
             (by norm_num)
-      _ = ε := by
-          rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
+      _ = ε := by rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
 
 private lemma i_angle_bound {δ ε : ℝ} (H : ℝ)
     (hδ_pos : 0 < δ) (hδ_lt_one : δ < 1)
@@ -833,27 +784,6 @@ private lemma i_angle_bound {δ ε : ℝ} (H : ℝ)
     rw [hx_def]
     linarith [g_i_norm_left (H := H) hδ_pos hδ_lt_one]
   linarith
-
--- Helper: for ε < threshold where threshold ≤ min(2sin(π/12), 1),
--- the map δ(ε) = 12/π · arcsin(ε/2) satisfies δ < 1.
-private lemma i_delta_lt_one {ε : ℝ} (hε_pos : 0 < ε)
-    (hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12)) :
-    12 / Real.pi * Real.arcsin (ε / 2) < 1 := by
-  have hpi_pos : 0 < Real.pi := Real.pi_pos
-  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
-    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
-  have hε_half_pos : 0 < ε / 2 := by linarith
-  have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
-  have hε_half_neg : -1 ≤ ε / 2 := by linarith
-  have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 :=
-    calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-          Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-      _ = Real.pi / 12 :=
-          Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
-  calc 12 / Real.pi * Real.arcsin (ε / 2)
-      < 12 / Real.pi * (Real.pi / 12) :=
-        mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-    _ = 1 := by field_simp
 
 -- Helper: integrability and FTC for the i-crossing, with integrand already in the
 -- form expected by pv_tendsto_of_crossing_limit (i.e. (γ t - I)⁻¹ * deriv γ t).
@@ -880,9 +810,7 @@ private lemma i_ftc_integrability (H : ℝ) (hH : 1 < H) {ε : ℝ}
     have hd : deriv (fun s => fdBoundaryH H s - I) t = deriv (fdBoundaryH H) t :=
       deriv_sub_const (f := fdBoundaryH H) _
     rw [hd, div_eq_mul_inv, mul_comm]
-  refine ⟨(intervalIntegrable_congr (fun t _ => h_congr t)).mpr hL,
-          (intervalIntegrable_congr (fun t _ => h_congr t)).mpr hR, ?_⟩
-  simp_rw [h_congr]; exact hsum
+  simp_all
 
 -- Helper: the log-difference E(ε) tends to -(I·π).
 private lemma i_E_tendsto (H : ℝ) (_ : 1 < H) (threshold : ℝ) (hthresh_pos : 0 < threshold)
@@ -940,15 +868,7 @@ private lemma i_E_tendsto (H : ℝ) (_ : 1 < H) (threshold : ℝ) (hthresh_pos :
         arg_approach_i_left (H := H) hδ_pos hδ_lt_one,
         arg_approach_i_right (H := H) hδ_pos hδ_lt_one, h_nL, h_nR]
     push_cast; ring
-  have h_dist :
-      dist (Complex.log (fdBoundaryH H (2 - 12 / Real.pi * Real.arcsin (ε / 2)) - I) -
-            Complex.log (fdBoundaryH H (2 + 12 / Real.pi * Real.arcsin (ε / 2)) - I) -
-            2 * ↑Real.pi * I)
-           (-(I * ↑Real.pi)) =
-      ‖Complex.log (fdBoundaryH H (2 - 12 / Real.pi * Real.arcsin (ε / 2)) - I) -
-        Complex.log (fdBoundaryH H (2 + 12 / Real.pi * Real.arcsin (ε / 2)) - I) -
-        2 * ↑Real.pi * I - -(I * ↑Real.pi)‖ := Complex.dist_eq _ _
-  rw [h_dist, h_E_eq, norm_neg, norm_mul, Complex.norm_real, Complex.norm_I, mul_one,
+  rw [Complex.dist_eq, h_E_eq, norm_neg, norm_mul, Complex.norm_real, Complex.norm_I, mul_one,
       Real.norm_eq_abs, abs_of_pos (by positivity)]
   linarith
 
@@ -966,8 +886,7 @@ theorem pv_integral_at_i_tendsto (H : ℝ) (hH : 1 < H) :
       else 0) (𝓝[>] 0) (𝓝 (-(I * ↑Real.pi))) := by
   have hpi_pos : 0 < Real.pi := Real.pi_pos
   have hH1_pos : 0 < H - 1 := by linarith
-  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
-    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
+  have hsin_pos : 0 < Real.sin (Real.pi / 12) := sin_pi_12_pos
   have h2sin_pos : 0 < 2 * Real.sin (Real.pi / 12) := by positivity
   set threshold := min (min (min (1/2 : ℝ) (H - 1)) (2 * Real.sin (Real.pi / 12))) 1
     with hthreshold_def
@@ -983,33 +902,15 @@ theorem pv_integral_at_i_tendsto (H : ℝ) (hH : 1 < H) :
   have hδ_small : ∀ ε, 0 < ε → ε < threshold →
       12 / Real.pi * Real.arcsin (ε / 2) < min (2 - 0) (5 - 2) := by
     intro ε hε_pos hε_lt
-    simp only [sub_zero]
-    apply lt_min
-    all_goals {
-      have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-        lt_of_lt_of_le hε_lt hthresh_le_2sin
-      have hδ1 : 12 / Real.pi * Real.arcsin (ε / 2) < 1 :=
-        i_delta_lt_one hε_pos hε_lt_2sin
-      linarith }
+    have hδ1 := i_delta_lt_one hε_pos (lt_of_lt_of_le hε_lt hthresh_le_2sin)
+    simp only [sub_zero]; exact lt_min (by linarith) (by linarith)
   -- reduce to the form without deriv (fun s => ...)
   suffices h : Tendsto (fun ε => ∫ t in (0 : ℝ)..5,
         if ‖fdBoundaryH H t - I‖ > ε
         then (fdBoundaryH H t - I)⁻¹ * deriv (fdBoundaryH H) t
         else 0)
       (𝓝[>] 0) (𝓝 (-(I * ↑Real.pi))) by
-    have heq : ∀ ε, (∫ t in (0 : ℝ)..5,
-          if ‖fdBoundaryH H t - I‖ > ε
-          then (fdBoundaryH H t - I)⁻¹ * deriv (fun s => fdBoundaryH H s - I) t
-          else 0) =
-        (∫ t in (0 : ℝ)..5,
-          if ‖fdBoundaryH H t - I‖ > ε
-          then (fdBoundaryH H t - I)⁻¹ * deriv (fdBoundaryH H) t
-          else 0) := fun ε =>
-      intervalIntegral.integral_congr fun t _ => by
-        split_ifs with h
-        · congr 1; exact deriv_sub_const (f := fdBoundaryH H) _
-        · rfl
-    simp_rw [heq]; exact h
+    simp_all
   apply ContourIntegral.pv_tendsto_of_crossing_limit
     (t₀ := 2) (ht₀ := by norm_num)
     (threshold := threshold) (hthresh := hthresh_pos)
@@ -1024,19 +925,13 @@ theorem pv_integral_at_i_tendsto (H : ℝ) (hH : 1 < H) :
   · intro ε hε_pos hε_lt; exact i_h_near H ε hε_pos hε_lt
   · -- h_ftc
     intro ε hε_pos hε_lt
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt hthresh_le_2sin
-    exact (i_ftc_integrability H hH hε_pos hε_lt_2sin).2.2
+    exact (i_ftc_integrability H hH hε_pos (lt_of_lt_of_le hε_lt hthresh_le_2sin)).2.2
   · -- hint_left
     intro ε hε_pos hε_lt
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt hthresh_le_2sin
-    exact (i_ftc_integrability H hH hε_pos hε_lt_2sin).1
+    exact (i_ftc_integrability H hH hε_pos (lt_of_lt_of_le hε_lt hthresh_le_2sin)).1
   · -- hint_right
     intro ε hε_pos hε_lt
-    have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) :=
-      lt_of_lt_of_le hε_lt hthresh_le_2sin
-    exact (i_ftc_integrability H hH hε_pos hε_lt_2sin).2.1
+    exact (i_ftc_integrability H hH hε_pos (lt_of_lt_of_le hε_lt hthresh_le_2sin)).2.1
   · -- h_limit
     exact i_E_tendsto H hH threshold hthresh_pos hthresh_le_2sin hthresh_le_one
 

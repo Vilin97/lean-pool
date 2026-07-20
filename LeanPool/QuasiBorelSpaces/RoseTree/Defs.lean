@@ -80,11 +80,7 @@ def decode [Encodable A] (n : ℕ) : Option (Rose A) :=
       have := Nat.right_le_pair head (Encodable.encode tail)
       cases i using Fin.cases with
       | zero =>
-        simp only [
-          List.length_cons, Fin.coe_ofNat_eq_mod, Nat.zero_mod,
-          List.getElem_cons_zero, Encodable.encode_list_cons,
-          Encodable.encode_nat, Nat.succ_eq_add_one, ge_iff_le]
-        grind
+        simp_all
       | succ i =>
         simp only [
           List.length_cons, Fin.val_succ, List.getElem_cons_succ,

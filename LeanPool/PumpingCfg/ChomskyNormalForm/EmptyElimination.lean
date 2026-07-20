@@ -159,8 +159,7 @@ lemma NullableWord.empty_of_append {u v w : List (Symbol T g.NT)}
   use m
 
 lemma NullableWord.empty_of_append_left {u v : List (Symbol T g.NT)} (huv : NullableWord (u ++ v)) :
-    NullableWord u :=
-  @NullableWord.empty_of_append _ _ [] _ _ huv
+    NullableWord u := @NullableWord.empty_of_append _ _ [] _ _ huv
 
 lemma NullableWord.empty_of_append_right {u v : List (Symbol T g.NT)}
     (huv : NullableWord (u ++ v)) : NullableWord v := by
@@ -185,8 +184,7 @@ lemma DerivesIn.mem_nullable {u : List (Symbol T g.NT)} {s : Symbol T g.NT} {m :
 
 lemma Derives.append_left_trans {u v w x : List (Symbol T g.NT)} (huv : g.Derives u v)
     (hwx : g.Derives w x) :
-    g.Derives (w ++ u) (x ++ v) :=
-  (huv.append_left _).trans (hwx.append_right _)
+    g.Derives (w ++ u) (x ++ v) := (huv.append_left _).trans (hwx.append_right _)
 
 lemma NullableWord.cons_terminal {t : T} {u : List (Symbol T g.NT)} :
     ¬ NullableWord (Symbol.terminal t :: u) := by
@@ -216,11 +214,7 @@ lemma symbols_nullable_nullableWord (u : List (Symbol T g.NT)) (hu : ∀ a ∈ u
     trans
     · apply Derives.append_right
       exact hu _ List.mem_cons_self
-    · apply ih
-      intro v hv
-      apply hu
-      right
-      exact hv
+    · simp_all
 
 lemma DerivesIn.nullable_mem_nonterminal {u : List (Symbol T g.NT)} {s : Symbol T g.NT} {m : ℕ}
     (hu : g.DerivesIn u [] m) (hsu : s ∈ u) :
@@ -351,8 +345,7 @@ lemma NullableRelated.append_split {u v w : List (Symbol T g.NT)}
           · apply Derives.append_right
             assumption
           · exact hvw.empty_nullableWord.empty_of_append_left
-      · rw [List.nil_eq, List.append_eq_nil_iff] at heq
-        exact heq.right ▸ hw
+      · simp_all
     | cons sᵤ u =>
       cases huvw with
       | cons_term huvw t =>
@@ -420,10 +413,8 @@ lemma input_mem_generators {r : ContextFreeRule T g.NT} (hrg : r ∈ g.rules) :
     simp only [List.mem_toFinset, List.mem_map, List.mem_cons, List.map_cons, List.toFinset_cons,
       Finset.mem_insert] at ih ⊢
     rintro (c1 | c2)
-    · left
-      rw [c1]
-    · right
-      exact ih c2
+    · simp_all
+    · simp_all
 
 lemma addIfNullable_subset_generators {r : ContextFreeRule T g.NT} {p : Finset g.NT}
     (hpg : p ⊆ g.generators) (hrg : r ∈ g.rules) :
@@ -536,8 +527,7 @@ lemma addIfNullable_monotone {r : ContextFreeRule T g.NT} {p₁ p₂ : Finset g.
   · split <;> rename_i hsr'
     · cases hv with
       | inl hvr =>
-        rw [hvr]
-        exact Finset.mem_insert_self r.input p₂
+        simp_all
       | inr hv =>
         exact Finset.mem_insert_of_mem (hpp hv)
     · cases hv with
@@ -548,9 +538,7 @@ lemma addIfNullable_monotone {r : ContextFreeRule T g.NT} {p₁ p₂ : Finset g.
         specialize hsr s
         cases s with
         | terminal =>
-          rw [Bool.false_eq_true, imp_false] at hsr
-          exfalso
-          exact hsr hsin
+          simp_all
         | nonterminal n =>
           rw [decide_eq_false_iff_not] at hs
           exfalso
@@ -768,8 +756,7 @@ lemma mem_eliminateEmpty [DecidableEq T] {r : ContextFreeRule T g.NT}
   rw [List.mem_flatten] at hrg'
   obtain ⟨l, hl, hrl⟩ := hrg'
   obtain ⟨r', hgr', rfl⟩ := List.mem_map.1 hl
-  refine ⟨r', Finset.mem_toList.1 hgr', ?_⟩
-  exact mem_removeNullableRule_nullableRelated (hrg := hrl)
+  exact ⟨r', Finset.mem_toList.1 hgr', mem_removeNullableRule_nullableRelated (hrg := hrl)⟩
 
 lemma eliminateEmpty_produces_to_derives [DecidableEq T] {u v : List (Symbol T g.NT)}
     (huv : g.eliminateEmpty.Produces u v) :
@@ -823,9 +810,7 @@ lemma nullableRelated_mem_removeNullable {p : Finset g.NT} {u v : List (Symbol T
         exact ⟨hu.empty_of_append_left, ih (NullableRelated.empty_left l hu.empty_of_append_right)⟩
       | cons_nterm_match hu'u => exact Or.inr ⟨_, ih hu'u, rfl⟩
       | cons_nterm_nullable hvu hnn =>
-        left
-        rw [hn]
-        exact ⟨hnn, ih hvu⟩
+        simp_all
 
 variable [DecidableEq T]
 
@@ -872,10 +857,8 @@ lemma produces_nullableRelated_to_derives {u v w : List (Symbol T g.NT)}
     refine ⟨w, ?_, by rfl⟩
     rw [hv, hw]
     apply nullable_related_append (nullable_related_append hw₁ _) hw₃
-    apply NullableRelated.empty_left
-    apply Produces.trans_derives
-    · apply Produces.input_output hrg
-    · exact hw₂.empty_nullableWord
+    exact NullableRelated.empty_left _
+      ((Produces.input_output hrg).trans_derives hw₂.empty_nullableWord)
   | cons d l =>
     exact ⟨w₁ ++ [Symbol.nonterminal r.input] ++ w₃,
       hv ▸ nullable_related_append (nullable_related_append hw₁ (by rfl)) hw₃,
@@ -927,14 +910,12 @@ theorem eliminateEmpty_correct : g.language \ {[]} = g.eliminateEmpty.language :
     exact hw'' rfl
   · replace hw : w ∈ g.eliminateEmpty.language := hw
     rw [mem_language_iff] at hw
-    refine ⟨?_, ?_⟩
-    · exact eliminateEmpty_derives_to_derives hw
-    · intro hw'
-      replace hw' : w = [] := hw'
-      apply eliminateEmpty_derives_not_empty hw
-      · exact List.cons_ne_nil _ []
-      · rw [hw']
-        exact List.map_nil
+    refine ⟨eliminateEmpty_derives_to_derives hw, fun hw' => ?_⟩
+    replace hw' : w = [] := hw'
+    apply eliminateEmpty_derives_not_empty hw
+    · exact List.cons_ne_nil _ []
+    · rw [hw']
+      exact List.map_nil
 
 end EliminateEmpty
 

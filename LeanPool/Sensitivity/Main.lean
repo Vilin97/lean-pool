@@ -72,8 +72,7 @@ theorem sensitivity_ge_sqrt_degree {n : ℕ} (f : BoolFun n) (hd : 1 ≤ f.degre
                toN_e j (hT hj)⟩⟩
     · intro U _
       congr 1
-      · congr 1
-        rw [Finset.card_univ, Fintype.card_fin, Finset.card_map]; omega
+      · simp_all
       · congr 1
         change f (fun j => if hj : j ∈ S then indicator U (e ⟨j, hj⟩) else false) =
                f (embed S (fun _ => false) (indicator (U.map ⟨toN, toN_inj⟩)))
@@ -113,8 +112,7 @@ theorem sensitivity_ge_sqrt_degree {n : ℕ} (f : BoolFun n) (hd : 1 ≤ f.degre
             flipBit_apply_same, flipBit_apply_same]
         have : embedQ (toN i) = q i := by
           change (if h : toN i ∈ S then q (e ⟨toN i, h⟩) else false) = q i
-          rw [dif_pos (toN_mem i)]
-          congr 1; exact e_toN i
+          simp_all
         rw [this]
       · have : e ⟨j, hj⟩ ≠ i := fun h => hji (by rw [← toN_e j hj, h])
         rw [flipBit_apply_ne _ _ this, flipBit_apply_ne _ _ hji]

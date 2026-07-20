@@ -27,7 +27,6 @@ protected theorem qrel_eq : Equivalence ZFSet.qrel where
   trans := by
     rintro ⟨p, q, hq⟩ ⟨u, v, hv⟩ ⟨s, t, ht⟩ hpq huv
     dsimp [ZFSet.qrel] at hpq huv ⊢
-    -- have : p * v * u * t = q * u * s * v := by
     have : p * t * u * v = q * s * u * v := by
       suffices p * v * u * t = q * u * s * v by
         rw [
@@ -455,8 +454,7 @@ theorem mul_inv' {a : ZFRat'} : a.1 * a⁻¹ = 1 := by
   simp only [mk_eq, ZFInt.mul_one, ne_eq]
   change ZFSet.qrel ⟨a.1, ⟨a.2.1, a.2.2⟩⟩ (mk a).out
   rw [←eq]
-  symm
-  apply mk_out
+  simp_all
 theorem mul_inv {a : ZFRat} (ha : a ≠ 0) : a * a⁻¹ = 1 := by
   rw [inv_eq ha, @mul_inv' (⟨a, ha⟩ : ZFRat')]
 
@@ -486,8 +484,7 @@ noncomputable instance : DivisionRing ZFRat where
     by_cases hb : b = 0
     · subst b
       dsimp [HDiv.hDiv, Div.div, div, Inv.inv]
-      iterate 2 rw [dite_cond_eq_false (eq_false (fun a ↦ a rfl))]
-      rw [mul_zero]
+      simp_all
     · rw [div_eq_mul_inv hb, ←inv_eq]
   qsmul := qsmul
   nnqsmul := nnqsmul

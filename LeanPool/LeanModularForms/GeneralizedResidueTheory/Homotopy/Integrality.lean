@@ -121,14 +121,10 @@ theorem ClosedCurvesHomotopicAvoiding.toPiecewise
     PiecewiseCurvesHomotopicAvoiding γ₀ γ₁ a b z₀ ∅ := by
   obtain ⟨H, hcont, hH0, hH1, hclosed, havoid, hdiff, hderiv_cont⟩ := h
   refine ⟨H, hcont, hH0, hH1, hclosed, havoid, ?_, ?_, ?_⟩
-  · -- Differentiability: P = ∅, so the hypothesis t ∉ P is always vacuously true
-    intro t ht _ht_not_in_empty s hs
-    exact hdiff t ht s hs
-  · -- Continuous deriv on sub-intervals: global continuity restricts to any subset
-    intro p₁ p₂ _hp _hvac _hI
+  · simp_all
+  · intro p₁ p₂ _hp _hvac _hI
     exact hderiv_cont.continuousOn.mono (Set.subset_univ _)
-  · -- Bound on deriv: compactness of Icc a b × Icc 0 1 + continuity gives a uniform bound
-    have hK : IsCompact (Set.Icc a b ×ˢ Set.Icc (0 : ℝ) 1) :=
+  · have hK : IsCompact (Set.Icc a b ×ˢ Set.Icc (0 : ℝ) 1) :=
       isCompact_Icc.prod isCompact_Icc
     have hf_cont : Continuous (fun p : ℝ × ℝ => ‖deriv (fun t' => H (t', p.2)) p.1‖) :=
       hderiv_cont.norm
@@ -191,6 +187,25 @@ private lemma bound_away_from_z₀
         ≤ dist z₀ (γ t) := Metric.infDist_le_dist_of_mem (mem_image_of_mem γ ht)
       _ = ‖γ t - z₀‖ := by rw [Complex.dist_eq, norm_sub_rev]⟩
 
+/-- Shared partition-avoiding sub-interval `(p₁, p₂)` around an interior point `t ∉ P`. -/
+private lemma exists_partition_free_subinterval
+    {a b : ℝ} {P : Finset ℝ} {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
+    ∃ p₁ p₂ : ℝ, p₁ < p₂ ∧ (∀ s ∈ Ioo p₁ p₂, s ∉ P) ∧
+      Ioo p₁ p₂ ⊆ Ioo a b ∧ t ∈ Ioo p₁ p₂ := by
+  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
+  refine ⟨max a (t - ε / 2), min b (t + ε / 2), ?_, ?_, ?_, ?_⟩
+  · simp only [lt_min_iff, max_lt_iff]
+    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
+           ⟨by linarith [ht.1, hε], by linarith⟩⟩
+  · intro s hs
+    apply hε_avoid s
+    simp only [mem_Ioo] at hs
+    exact ⟨by linarith [le_max_right a (t - ε / 2), hs.1],
+           by linarith [min_le_right b (t + ε / 2), hs.2]⟩
+  · intro x hx
+    simp_all
+  · simp_all
+
 private lemma logDeriv_integrand_bound
     {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {M δ : ℝ}
     (hδ : 0 < δ)
@@ -215,23 +230,8 @@ private lemma logDeriv_continuousOn_off_finset
   have ht_Ioo : t ∈ Ioo a b :=
     ⟨lt_of_le_of_ne ht_Icc.1 (Ne.symm ht_notP'.2.1),
      lt_of_le_of_ne ht_Icc.2 ht_notP'.2.2⟩
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP'.1
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht_Ioo.1 ht_Ioo.2, by linarith [ht_Ioo.2, hε]⟩,
-           ⟨by linarith [ht_Ioo.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2), hs.1],
-           by linarith [min_le_right b (t + ε / 2), hs.2]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1, lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht_Ioo.1, by linarith [hε]⟩, ⟨ht_Ioo.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht_Ioo ht_notP'.1
   exact ContinuousWithinAt.div
     ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousAt
       (Ioo_mem_nhds ht_in.1 ht_in.2)).continuousWithinAt
@@ -248,24 +248,8 @@ private lemma logDeriv_continuousAt_off_finset
     (hγ_avoids : ∀ t ∈ Icc a b, γ t ≠ z₀)
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     ContinuousAt (fun t => deriv γ t / (γ t - z₀)) t := by
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
-           ⟨by linarith [ht.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2)],
-           by linarith [min_le_right b (t + ε / 2)]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1,
-           lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht ht_notP
   exact ContinuousAt.div
     ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousAt
       (Ioo_mem_nhds ht_in.1 ht_in.2))
@@ -281,31 +265,14 @@ private lemma logDeriv_stronglyMeasurableAtFilter_off_finset
     (hγ_avoids : ∀ t ∈ Icc a b, γ t ≠ z₀)
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     StronglyMeasurableAtFilter (fun t => deriv γ t / (γ t - z₀)) (𝓝 t) volume := by
-  obtain ⟨ε, hε, hε_avoid⟩ := exists_ball_avoiding_finset ht_notP
-  let p₁ := max a (t - ε / 2)
-  let p₂ := min b (t + ε / 2)
-  have hp₁p₂ : p₁ < p₂ := by
-    simp only [p₁, p₂, lt_min_iff, max_lt_iff]
-    exact ⟨⟨lt_trans ht.1 ht.2, by linarith [ht.2, hε]⟩,
-           ⟨by linarith [ht.1, hε], by linarith⟩⟩
-  have h_avoid : ∀ s ∈ Ioo p₁ p₂, s ∉ P := fun s hs => hε_avoid s (by
-    simp only [p₁, p₂, mem_Ioo] at hs
-    exact ⟨by linarith [le_max_right a (t - ε / 2)],
-           by linarith [min_le_right b (t + ε / 2)]⟩)
-  have h_sub : Ioo p₁ p₂ ⊆ Ioo a b := fun x hx => by
-    simp only [p₁, p₂, mem_Ioo] at hx ⊢
-    exact ⟨lt_of_le_of_lt (le_max_left a _) hx.1,
-           lt_of_lt_of_le hx.2 (min_le_left b _)⟩
-  have ht_in : t ∈ Ioo p₁ p₂ := by
-    simp only [p₁, p₂, mem_Ioo, lt_min_iff, max_lt_iff]
-    exact ⟨⟨ht.1, by linarith [hε]⟩, ⟨ht.2, by linarith [hε]⟩⟩
+  obtain ⟨p₁, p₂, hp₁p₂, h_avoid, h_sub, ht_in⟩ :=
+    exists_partition_free_subinterval ht ht_notP
   have h_cont_on : ContinuousOn (fun t => deriv γ t / (γ t - z₀)) (Ioo p₁ p₂) := by
     intro x hx
     exact ContinuousWithinAt.div
       ((hγ_deriv_cont p₁ p₂ hp₁p₂ h_avoid h_sub).continuousWithinAt hx)
       (((hγ_cont.sub continuousOn_const).continuousWithinAt
-        (Ioo_subset_Icc_self (h_sub hx))).mono
-        ((Ioo_subset_Ioo (le_max_left _ _) (min_le_left _ _)).trans Ioo_subset_Icc_self))
+        (Ioo_subset_Icc_self (h_sub hx))).mono (h_sub.trans Ioo_subset_Icc_self))
       (sub_ne_zero.mpr (hγ_avoids _ (Ioo_subset_Icc_self (h_sub hx))))
   exact ContinuousAt.stronglyMeasurableAtFilter isOpen_Ioo
     (fun x hx => h_cont_on.continuousAt (Ioo_mem_nhds hx.1 hx.2)) t ht_in
@@ -322,8 +289,7 @@ private lemma logDeriv_integral_hasDerivAt_off_finset
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     HasDerivAt (fun t => ∫ s in a..t, deriv γ s / (γ s - z₀))
       (deriv γ t / (γ t - z₀)) t := by
-  have ht_in_uIcc : t ∈ Set.uIcc a b := by
-    rw [Set.uIcc_of_le hab.le]; exact Ioo_subset_Icc_self ht
+  have ht_in_uIcc : t ∈ Set.uIcc a b := by rw [Set.uIcc_of_le hab.le]; exact Ioo_subset_Icc_self ht
   exact intervalIntegral.integral_hasDerivAt_right
     (h_int.mono_set (Set.uIcc_subset_uIcc_left ht_in_uIcc))
     (logDeriv_stronglyMeasurableAtFilter_off_finset hγ_cont hγ_deriv_cont hγ_avoids ht ht_notP)
@@ -417,8 +383,7 @@ private lemma exp_neg_integral_eq_one_of_closed
       Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) = γ a - z₀ := by
     calc (γ a - z₀) * Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀)))
         = (γ b - z₀) *
-          Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) := by
-          rw [hγ_closed]
+          Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) := by rw [hγ_closed]
       _ = (γ a - z₀) * Complex.exp (-(∫ s in a..a, deriv γ s / (γ s - z₀))) :=
           hG_const b (right_mem_Icc.mpr hab.le)
       _ = γ a - z₀ := by simp [intervalIntegral.integral_same]
@@ -436,15 +401,13 @@ private lemma winding_integer_from_exp_one
   unfold generalizedWindingNumber'
   rw [pv_eq_integral_of_bound_away hab hδ hδ_bd]
   have h_eq : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t =
-      ∫ t in a..b, deriv γ t / (γ t - z₀) := by
-    congr 1; ext t; rw [mul_comm, div_eq_mul_inv]
+      ∫ t in a..b, deriv γ t / (γ t - z₀) := by congr 1; ext t; rw [mul_comm, div_eq_mul_inv]
   rw [h_eq]
   have hFb' : ∫ t in a..b, deriv γ t / (γ t - z₀) = -(↑n * (2 * Real.pi * I)) := by
     have h := hn; linear_combination -h
   rw [hFb']
   have hne : (2 : ℂ) * Real.pi * I ≠ 0 := by
-    simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, Complex.ofReal_eq_zero,
-      Real.pi_ne_zero, Complex.I_ne_zero, or_self, not_false_eq_true]
+    simp_all
   field_simp; simp [Int.cast_neg]
 
 private lemma windingNumber_integer_of_piecewise_with_bound
@@ -514,11 +477,9 @@ theorem exp_integral_eq_endpoint_ratio_piecewise
   have hGb' : (γ b - z₀) *
       Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) = γ a - z₀ := by
     have := hG_const b (right_mem_Icc.mpr hab.le)
-    simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
-    exact this
+    simp_all
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
-      (γ a - z₀) / (γ b - z₀) := by
-    rw [eq_div_iff hne_b, mul_comm]; exact hGb'
+      (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =
       (Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))))⁻¹ from by
     rw [Complex.exp_neg, inv_inv], h_neg, inv_div]
@@ -618,11 +579,9 @@ private lemma exp_endpoint_ratio_from_gFunc
   have hGb' : (γ b - z₀) *
       Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) = γ a - z₀ := by
     have := hG_const b (right_mem_Icc.mpr hab.le)
-    simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
-    exact this
+    simp_all
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
-      (γ a - z₀) / (γ b - z₀) := by
-    rw [eq_div_iff hne_b, mul_comm]; exact hGb'
+      (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =
       (Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))))⁻¹ from by
     rw [Complex.exp_neg, inv_inv], h_neg, inv_div]
@@ -675,22 +634,16 @@ theorem windingNumber_integer_of_closed_avoiding
     ∃ n : ℤ,
     generalizedWindingNumber' γ a b z₀ = n := by
   let τ := fun t => γ t - z₀
-  have hτ_closed : τ a = τ b := by
-    simp only [τ]; rw [hγ_closed]
-  have hτ_cont : ContinuousOn τ (Icc a b) :=
-    hγ_cont.sub continuousOn_const
-  have hτ_diff : ∀ t ∈ Ioo a b,
-      DifferentiableAt ℝ τ t := fun t ht =>
-    (hγ_diff t ht).sub (differentiableAt_const z₀)
+  have hτ_closed : τ a = τ b := by simp only [τ]; rw [hγ_closed]
+  have hτ_cont : ContinuousOn τ (Icc a b) := hγ_cont.sub continuousOn_const
+  have hτ_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ τ t :=
+    fun t ht => (hγ_diff t ht).sub (differentiableAt_const z₀)
   have hτ_avoid : ∀ t ∈ Icc a b, τ t ≠ 0 :=
     fun t ht => sub_ne_zero.mpr (hγ_avoid t ht)
-  have hτ'_cont : ContinuousOn (deriv τ) (Icc a b) := by
-    rw [show deriv τ = deriv γ from
-      funext fun t => deriv_sub_const z₀]
-    exact hγ'_cont
+  have hτ'_cont : ContinuousOn (deriv τ) (Icc a b) :=
+    deriv_sub_const_fun z₀ (f := γ) ▸ hγ'_cont
   obtain ⟨n, hn⟩ := integral_closed_curve_eq_two_pi_int
-    τ a b 0 hab hτ_closed hτ_cont hτ_diff hτ_avoid
-    hτ'_cont
+    τ a b 0 hab hτ_closed hτ_cont hτ_diff hτ_avoid hτ'_cont
   use n
   unfold generalizedWindingNumber'
   have h_eq : (fun t => deriv τ t / (τ t - 0)) = (fun t => deriv γ t / (γ t - z₀)) := by

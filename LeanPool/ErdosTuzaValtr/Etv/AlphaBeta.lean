@@ -22,7 +22,7 @@ noncomputable section
 variable {α : Type _} [LinearOrder α] {C : Config α} {S : Finset α} (l : C.Label S)
 
 private theorem mem_imply_nnil {α : Type _} (a : α) {l : List α} (ha : a ∈ l) : l ≠ [] := by
-  intro eq; subst eq; simp at ha
+  rintro rfl; simp at ha
 
 namespace Config
 namespace Label
@@ -87,17 +87,14 @@ def alphaCup {a : α} (ha : a ∈ S) :
   by
   have some := l.alphaCup'_isSome ha
   set c := Option.get _ some with def_c
-  rw [alpha]; rw [dif_pos ha]; rw [← def_c]
+  rw [alpha, dif_pos ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, alphaCup'] at h_argmax
   have c_alpha_cup := List.argmax_mem h_argmax
   simp only [alphaCups', IsAlphaCup, List.append_in, List.cons_in, List.nil_in, and_true,
     List.mem_filter, List.mem_sublists, decide_eq_true_eq] at c_alpha_cup
   use c ++ [a]
-  simp only [List.length_append, List.length_cons, List.length_nil, zero_add,
-    List.append_in, List.cons_in, List.nil_in, and_true,
-    List.getLast?_append, List.getLast?_singleton, Option.some_or, Option.mem_def, true_and]
-  tauto
+  simp_all
 
 -- Next, maximality of the cup with length alpha + 1
 theorem cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted : c.Pairwise (· < ·))
@@ -106,7 +103,7 @@ theorem cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted :
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := l.alphaCup'_isSome ha
   set d := Option.get _ some with def_d
-  rw [alpha]; rw [dif_pos ha]; rw [← def_d]
+  rw [alpha, dif_pos ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, alphaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩
@@ -134,15 +131,10 @@ theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In
   rcases List.takeLast' d_last with ⟨d', eq_d⟩
   rcases List.takeHead' c_head with ⟨c', eq_c⟩
   have alpha_eq : d'.length = l.alpha a := by
-    rw [eq_d, List.length_append, List.length_singleton] at d_length
-    omega
+    simp_all
   refine ⟨d' ++ a::c', ?_, ?_⟩
   swap
-  · intro x hx
-    rw [List.mem_append] at hx
-    rcases hx with hxd | hxc
-    · exact d_in_S x (by rw [eq_d, List.mem_append]; exact Or.inl hxd)
-    · exact c_in_S x (by rw [eq_c]; exact hxc)
+  · simp_all
   cases c' with
   | nil =>
     rw [Config.NCup, ← eq_d]
@@ -153,12 +145,7 @@ theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In
     omega
   | cons q c'' =>
     rcases List.eq_nil_or_concat d' with hd' | ⟨d'', p, eq_d'⟩
-    · rw [hd', List.nil_append, ← eq_c]
-      rw [Config.NCup]
-      refine ⟨c_cup.left, ?_⟩
-      rw [hd', List.length_nil] at alpha_eq
-      rw [c_cup.right]
-      omega
+    · simp_all
     · rw [Config.NCup]
       rw [eq_d', List.concat_eq_append,
         show (d'' ++ [p]) ++ a :: q :: c'' = d'' ++ p :: a :: q :: c'' by simp]
@@ -222,7 +209,7 @@ def betaCup {a : α} (ha : a ∈ S) :
   by
   have some := C.betaCup'_isSome S ha
   set c := Option.get _ some with def_c
-  rw [beta]; rw [dif_pos ha]; rw [← def_c]
+  rw [beta, dif_pos ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, betaCup'] at h_argmax
   have c_beta_cup := List.argmax_mem h_argmax
@@ -245,7 +232,7 @@ theorem cup_length_le_beta {a : α} {c : List α} (c_in_S : c.In S) (c_cup : C.C
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := C.betaCup'_isSome S ha
   set d := Option.get _ some with def_d
-  rw [beta]; rw [dif_pos ha]; rw [← def_d]
+  rw [beta, dif_pos ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, betaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩
@@ -273,8 +260,7 @@ theorem Config.Label.alpha_le_beta {a : α} (ha : a ∈ S) : l.alpha a ≤ C.bet
   rcases l.alphaCup ha with ⟨c, c_length, c_in, c_sorted, c_chain, c_last⟩
   have c_cup := l.alphaCup_is_cup _ c_in c_sorted c_chain
   have ineq := C.cup_length_le_beta S c_in c_cup c_last
-  rw [c_length] at ineq
-  omega
+  simp_all
 
 variable {l}
 
@@ -291,16 +277,8 @@ theorem slope_ff_inc_alpha {a b : α} (sab : ¬l.Slope a b) (ha : a ∈ S) (hb :
   · rw [def_d]; simp; tauto
   · rw [def_d, ← List.isChain_iff_pairwise]
     apply (List.isChain_iff_pairwise.mpr c_sorted).append (List.isChain_singleton b)
-    intro x hx y hy
-    rw [List.head?_singleton, Option.mem_some_iff] at hy
-    rw [c_eq, List.getLast?_concat, Option.mem_some_iff] at hx
-    rw [← hx, ← hy]; exact a_le_b
-  · rw [def_d, c_eq]
-    simp only [List.append_assoc, List.cons_append, List.nil_append,
-      List.isChain_append_cons_cons, Pi.compl_apply, compl_iff_not, List.IsChain.singleton,
-      and_true]
-    rw [← c_eq]
-    exact ⟨c_chain, sab⟩
+    simp_all
+  · simp_all
   · rw [def_d]; simp
 
 theorem slope_tt_inc_beta {a b : α} (sab : l.Slope a b) (ha : a ∈ S) (hb : b ∈ S) (a_le_b : a < b) :
@@ -313,12 +291,10 @@ theorem slope_tt_inc_beta {a b : α} (sab : l.Slope a b) (ha : a ∈ S) (hb : b 
     rw [def_d, List.length_append, List.length_singleton, c_length]
   rw [← d_length]
   apply C.cup_length_le_beta S
-  · rw [def_d, List.append_in, List.cons_in]
-    exact ⟨c_in, hb, List.nil_in⟩
+  · simp_all
   · rw [def_d]
     exact c_cup.extend_right sab a_le_b hb c_in c_last
-  · rw [def_d, List.getLast?_append, List.getLast?_singleton]
-    rfl
+  · simp_all
 
 variable (C)
 
@@ -329,8 +305,7 @@ theorem Config.alpha_eq_beta_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S) (h : l
     by_cases hl : l.Slope a b
     · exact slope_tt_inc_beta hl ha hb hab
     · have h' := slope_ff_inc_alpha hl ha hb hab
-      rw [h] at h'
-      exact absurd h' (lt_irrefl _)
+      simp_all
   · intro hab
     rcases lt_trichotomy a b with (a_lt_b | a_eq_b | b_lt_a)
     · exact a_lt_b
@@ -340,8 +315,7 @@ theorem Config.alpha_eq_beta_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S) (h : l
       · have h' := slope_tt_inc_beta hl hb ha b_lt_a
         exact absurd (lt_trans h' hab) (lt_irrefl _)
       · have h' := slope_ff_inc_alpha hl hb ha b_lt_a
-        rw [h] at h'
-        exact absurd h' (lt_irrefl _)
+        simp_all
 
 variable {C} (l)
 
@@ -351,8 +325,7 @@ theorem Config.Label.beta_eq_alpha_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S)
   · intro hab
     by_cases hl : l.Slope a b
     · have h' := slope_tt_inc_beta hl ha hb hab
-      rw [h] at h'
-      exact absurd h' (lt_irrefl _)
+      simp_all
     · exact slope_ff_inc_alpha hl ha hb hab
   · intro hab
     rcases lt_trichotomy a b with (a_lt_b | a_eq_b | b_lt_a)
@@ -361,7 +334,6 @@ theorem Config.Label.beta_eq_alpha_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S)
     · exfalso
       by_cases hl : l.Slope b a
       · have h' := slope_tt_inc_beta hl hb ha b_lt_a
-        rw [h] at h'
-        exact absurd h' (lt_irrefl _)
+        simp_all
       · have h' := slope_ff_inc_alpha hl hb ha b_lt_a
         exact absurd (lt_trans h' hab) (lt_irrefl _)

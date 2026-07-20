@@ -29,8 +29,7 @@ inductive Code (L : Language.{u})
   | id : SyntacticFormula L → Code L
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Entailment.Code.equiv (L : Language.{u}) :
-    Code L ≃
+def _root_.LO.FirstOrder.Entailment.Code.equiv (L : Language.{u}) : Code L ≃
     ((k : ℕ) × (L.Rel k) × (Fin k → SyntacticTerm L)) ⊕
     Unit ⊕
     (SyntacticFormula L × SyntacticFormula L) ⊕
@@ -60,8 +59,7 @@ def _root_.LO.FirstOrder.Entailment.Code.equiv (L : Language.{u}) :
   right_inv := fun x => by
     rcases x with (⟨_, _, _⟩ | ⟨⟩ | ⟨_, _⟩ | ⟨_, _⟩ | _ | ⟨_, _⟩ | _) <;> simp
 
-instance [∀ k, Encodable (L.Func k)] [∀ k, Encodable (L.Rel k)] :
-    Encodable (Code L) :=
+instance [∀ k, Encodable (L.Func k)] [∀ k, Encodable (L.Rel k)] : Encodable (Code L) :=
   haveI : Encodable Empty := IsEmpty.toEncodable
   Encodable.ofEquiv _ (Code.equiv L)
 

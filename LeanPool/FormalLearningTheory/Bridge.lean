@@ -171,24 +171,18 @@ theorem shatters_iff_finset_shatters {X : Type u} [Fintype X] [DecidableEq X]
     intro ⟨x, hxS⟩
     -- From hSu: S ∩ conceptToFinset c = t
     -- x ∈ S, so: c x = true ↔ x ∈ t ↔ f ⟨x, hxS⟩ = true
-    have hx_in_inter : x ∈ S ∩ conceptToFinset c ↔ x ∈ t := by
-      constructor <;> intro h
-      · exact (Finset.ext_iff.mp hSu x).mp h
-      · exact (Finset.ext_iff.mp hSu x).mpr h
+    have hx_in_inter : x ∈ S ∩ conceptToFinset c ↔ x ∈ t :=
+      Finset.ext_iff.mp hSu x
     have hx_in_t : x ∈ t ↔ f ⟨x, hxS⟩ = true := by
       simp only [t, Finset.mem_map, Finset.mem_filter, Finset.mem_attach, true_and,
         Function.Embedding.coeFn_mk]
-      constructor
-      · rintro ⟨⟨y, hyS⟩, hfy, rfl⟩; exact hfy
-      · intro hfx; exact ⟨⟨x, hxS⟩, hfx, rfl⟩
+      simp_all
     have hx_cx : x ∈ S ∩ conceptToFinset c ↔ c x = true := by
       simp only [Finset.mem_inter, conceptToFinset, Finset.mem_filter, Finset.mem_univ,
         true_and]
       exact ⟨fun h => h.2, fun h => ⟨hxS, h⟩⟩
     -- Combine: c x = true ↔ f ⟨x, hxS⟩ = true
-    have key : c x = true ↔ f ⟨x, hxS⟩ = true := by
-      rw [← hx_cx, hx_in_inter, hx_in_t]
-    cases hfx : f ⟨x, hxS⟩ <;> cases hcx : c x <;> simp_all
+    simp_all
 
 /-!
 ## B₄: VCDim Bridge (ours ↔ Mathlib's Finset.vcDim)
@@ -244,8 +238,7 @@ theorem vcdim_eq_finset_vcdim {X : Type u} [Fintype X] [DecidableEq X]
     · -- shatterer is empty, so sup = 0 = ⊥ ≤ anything
       rw [Finset.not_nonempty_iff_eq_empty] at h
       change (↑(𝒜.shatterer.sup Finset.card) : WithTop ℕ) ≤ _
-      rw [h, Finset.sup_empty]
-      exact bot_le
+      simp_all
 
 /-- VCDim is finite for finite concept classes over finite domains.
     This is a consequence of the bridge: Finset.vcDim is always finite (it's ℕ). -/
@@ -286,8 +279,8 @@ def restrictConceptClass {X : Type u}
     This lemma connects GrowthFunction to the restriction operation. -/
 theorem growthFunction_le_card_restrict {X : Type u}
     (C : Finset (X → Bool)) (S : Finset X) :
-    (restrictConceptClass C S).card ≤ C.card := by
-  exact Finset.card_image_le
+    (restrictConceptClass C S).card ≤ C.card :=
+  Finset.card_image_le
 
 /-- Sauer-Shelah via Mathlib: |C|_S| ≤ Σ_{i ≤ d} C(|S|, i).
     The proof chain:
@@ -340,10 +333,8 @@ private theorem restrict_shatters_lift {X : Type u} [Fintype X] [DecidableEq X]
   simp only [Finset.mem_inter, Finset.mem_map, Function.Embedding.coeFn_mk,
     conceptToFinset, Finset.mem_filter, Finset.mem_univ, true_and]
   -- Key helper: membership in T ∩ filter ↔ membership in t'
-  have mem_iff : ∀ (z : ↥S), z ∈ T ∩ Finset.univ.filter (fun x => c ↑x = true) ↔ z ∈ t' := by
-    intro z; constructor
-    · intro h; exact hTA ▸ h
-    · intro h; exact hTA ▸ h
+  have mem_iff : ∀ (z : ↥S), z ∈ T ∩ Finset.univ.filter (fun x => c ↑x = true) ↔ z ∈ t' :=
+    fun z => Finset.ext_iff.mp hTA z
   constructor
   · -- y ∈ (T.map val) ∩ {x | c x = true} → y ∈ t
     rintro ⟨⟨⟨x, hxS⟩, hxT, rfl⟩, hcx⟩
@@ -362,10 +353,7 @@ private theorem restrict_shatters_lift {X : Type u} [Fintype X] [DecidableEq X]
       exact hxS
     have hyT : (⟨y, hyS⟩ : ↥S) ∈ T := by
       have := ht hyt
-      simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at this
-      obtain ⟨⟨z, hzS⟩, hzT, hzy⟩ := this
-      have : (⟨y, hyS⟩ : ↥S) = ⟨z, hzS⟩ := Subtype.ext hzy.symm
-      rw [this]; exact hzT
+      simp_all
     constructor
     · exact ⟨⟨y, hyS⟩, hyT, rfl⟩
     · have hy_t' : (⟨y, hyS⟩ : ↥S) ∈ t' := by
@@ -520,10 +508,8 @@ theorem withTopNatToOrdinal_mono :
   intro a b hab
   match a, b with
   | some n, some m =>
-    simp only [withTopNatToOrdinal]
     exact Nat.cast_le.mpr (WithTop.coe_le_coe.mp hab)
   | some n, none =>
-    simp only [withTopNatToOrdinal]
     exact le_of_lt (Ordinal.natCast_lt_omega0 n)
   | none, none =>
     exact le_refl _
@@ -546,9 +532,7 @@ theorem vcdim_to_ordinal_vcdim (X : Type u)
       (↑m) (WithTop.coe_lt_top m)
     have hS_shat : Shatters X C S := by
       by_contra hns
-      exact absurd hS_lt (not_lt.mpr (by
-        haveI : IsEmpty (Shatters X C S) := ⟨hns⟩
-        simp))
+      simp_all
     rw [iSup_pos hS_shat] at hS_lt
     calc (↑m : Ordinal) ≤ ↑S.card :=
           Nat.cast_le.mpr (le_of_lt (by exact_mod_cast hS_lt))
@@ -578,8 +562,7 @@ theorem vcdim_to_ordinal_vcdim (X : Type u)
           omega
         have hbound : VCDim X C ≤ ↑(n - 1) := by
           apply iSup₂_le
-          intro S hS
-          exact WithTop.coe_le_coe.mpr (this S hS)
+          simp_all
         rw [hv] at hbound
         have : n ≤ n - 1 := WithTop.coe_le_coe.mp hbound
         omega
@@ -659,9 +642,7 @@ theorem compression_bounds_vcdim (X : Type u)
     refine ⟨c, hcC, ?_⟩
     intro ⟨x, hx⟩
     have hxS : x ∈ S := hT_sub hx
-    have := hcg ⟨x, hxS⟩
-    simp only [g, hx, dite_true] at this
-    exact this
+    simpa only [g, hx, dite_true] using hcg ⟨x, hxS⟩
   set n := T.card with hn_def
   have hn_eq : n = N := hT_card
   -- Enumerate T injectively
@@ -679,8 +660,7 @@ theorem compression_bounds_vcdim (X : Type u)
     refine ⟨c, hcC, fun i => ?_⟩
     have := hcf' (eqv i)
     simp only [f', pts] at this ⊢
-    rw [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
-    exact this
+    rwa [show T.equivFin (eqv i) = i from T.equivFin.apply_symm_apply i] at this
   -- compress ∘ mkSample is injective
   have h_inj : Function.Injective (cs.compress ∘ mkSample) := by
     intro f g hfg
@@ -715,9 +695,7 @@ theorem compression_bounds_vcdim (X : Type u)
         ≤ (Finset.range (k + 1)).sum (fun j => (A.powersetCard j).card) := by
           have : target ⊆ (Finset.range (k + 1)).biUnion (fun j => A.powersetCard j) := by
             intro S' hS'
-            simp only [htarget_def, Finset.mem_filter, Finset.mem_powerset] at hS'
-            simp only [Finset.mem_biUnion, Finset.mem_range]
-            exact ⟨S'.card, by omega, Finset.mem_powersetCard.mpr ⟨hS'.1, rfl⟩⟩
+            simp_all
           exact (Finset.card_le_card this).trans Finset.card_biUnion_le
       _ = (Finset.range (k + 1)).sum (fun j => (2 * n).choose j) := by
           simp [Finset.card_powersetCard, hA_card]

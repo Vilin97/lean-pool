@@ -44,8 +44,7 @@ def bar (g : G) : G := (ι.toFun g).unop
 @[simp] lemma bar_bar (g : G) : ι.bar (ι.bar g) = g := ι.involutive g
 
 /-- The anti-involution reverses multiplication: `bar(ab) = bar(b) * bar(a)`. -/
-lemma bar_mul (a b : G) : ι.bar (a * b) = ι.bar b * ι.bar a := by
-  simp only [bar, map_mul, unop_mul]
+lemma bar_mul (a b : G) : ι.bar (a * b) = ι.bar b * ι.bar a := by simp only [bar, map_mul, unop_mul]
 
 /-- The anti-involution fixes the identity. -/
 lemma bar_one : ι.bar 1 = 1 := by simp [bar]
@@ -150,8 +149,7 @@ private lemma inverse_product_mem_doubleCoset
   obtain ⟨w, hw, k, hk, hprod⟩ := hmem
   rw [Set.mem_singleton_iff] at hw
   have hprod' : g_D * k =
-      (rep : G) * g₁ * ((j_rep : G) * (HeckeCoset.rep D₂ : G)) := by
-    rw [← hw]; exact hprod
+      (rep : G) * g₁ * ((j_rep : G) * (HeckeCoset.rep D₂ : G)) := by rw [← hw]; exact hprod
   refine ⟨(j_rep : G), j_rep.2, k⁻¹, P.H.inv_mem hk, ?_⟩
   calc g₁⁻¹ * (rep : G)⁻¹ * g_D
       = g₁⁻¹ * (rep : G)⁻¹ *
@@ -182,8 +180,7 @@ private lemma bar_quotient_diff_mem_H
       b₁⁻¹ * (g₂⁻¹ * a₁⁻¹ * a₂ * g₂) * b₂ := by rw [hbarx₁, hbarx₂]; group
   have hbar_diff_H : (ι.bar x₁)⁻¹ * ι.bar x₂ ∈ P.H := by
     rw [hbar_diff]; exact P.H.mul_mem (P.H.mul_mem (P.H.inv_mem hb₁) hconj) hb₂
-  have hbar_factor : (ι.bar x₁)⁻¹ * ι.bar x₂ = ι.bar (x₂ * x₁⁻¹) := by
-    rw [← ι.bar_inv, ← ι.bar_mul]
+  have hbar_factor : (ι.bar x₁)⁻¹ * ι.bar x₂ = ι.bar (x₂ * x₁⁻¹) := by rw [← ι.bar_inv, ← ι.bar_mul]
   have hbar_mem := hbar_factor ▸ hbar_diff_H
   have := ι.bar_bar (x₂ * x₁⁻¹); rw [← this]; exact ι.bar_mem_H hbar_mem
 
@@ -283,8 +280,7 @@ private lemma fwd_pair_mem (g₁ : P.Δ) (g₂ g_D q₀_val : G)
   obtain ⟨n₁, hn₁_eq⟩ := QuotientGroup.mk_out_eq_mul
     ((ConjAct.toConjAct ((g₁ : G)) • P.H).subgroupOf P.H) c
   have hn₁_coe : ((⟦c⟧ : decompQuot P g₁).out : G) = (c : G) * (n₁ : G) := by
-    have := congr_arg (Subtype.val : ↥P.H → G) hn₁_eq
-    simpa [Subgroup.coe_mul] using this
+    simpa [Subgroup.coe_mul] using congr_arg (Subtype.val : ↥P.H → G) hn₁_eq
   have hn₁_conj : ((g₁ : G))⁻¹ * (n₁ : G) * ((g₁ : G)) ∈ P.H :=
     conj_mem_of_stabilizer ((g₁ : G)) n₁
   apply leftCoset_eq_of_not_disjoint; rw [@not_disjoint_iff]
@@ -298,8 +294,7 @@ private lemma fwd_pair_mem (g₁ : P.Δ) (g₂ g_D q₀_val : G)
   have : q₀_val * g_D * d_val⁻¹ =
       j'_val * g₂ * ((c : G) * ((g₁ : G))) := by
     calc q₀_val * g_D * d_val⁻¹
-        = j'_val * g₂ * ((c : G) * ((g₁ : G)) * d_val) * d_val⁻¹ := by
-          rw [← h_prod_eq]
+        = j'_val * g₂ * ((c : G) * ((g₁ : G)) * d_val) * d_val⁻¹ := by rw [← h_prod_eq]
       _ = _ := by group
   calc q₀_val * g_D * (d_val⁻¹ * (((g₁ : G))⁻¹ * (n₁ : G) *
         ((g₁ : G))))

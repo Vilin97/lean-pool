@@ -277,47 +277,6 @@ private lemma prob_ge_one_sub_compl {Ω : Type*} [MeasurableSpace Ω]
     _ ≤ μ S + μ Sᶜ := MeasureTheory.measure_union_le S Sᶜ
     _ ≤ μ S + δ := add_le_add_right h (μ S)
 
-/-- Product-space complement bound: on a product measure μ × ν (both probability),
-    if the first-coordinate failure has μ-probability ≤ δ₁, and the second-coordinate
-    failure (uniformly in the first) has ν-probability ≤ δ₂, then the joint success
-    event has probability ≥ 1 - (δ₁ + δ₂). -/
-private lemma product_complement_bound {Ω₁ Ω₂ : Type*}
-    [MeasurableSpace Ω₁] [MeasurableSpace Ω₂]
-    (μ : MeasureTheory.Measure Ω₁) [MeasureTheory.IsProbabilityMeasure μ]
-    (ν : MeasureTheory.Measure Ω₂) [MeasureTheory.IsProbabilityMeasure ν]
-    [MeasureTheory.SFinite ν]
-    (GoodTrain : Set Ω₁) (GoodVal : Set (Ω₁ × Ω₂))
-    (δ₁ δ₂ : ENNReal)
-    (h_train : μ GoodTrainᶜ ≤ δ₁)
-    (h_val : ∀ x₁ : Ω₁, ν {x₂ | (x₁, x₂) ∉ GoodVal} ≤ δ₂)
-    (h_val_meas : MeasurableSet GoodVal) :
-    μ.prod ν {p | p.1 ∈ GoodTrain ∧ p ∈ GoodVal} ≥ 1 - (δ₁ + δ₂) := by
-  have hIPM : MeasureTheory.IsProbabilityMeasure (μ.prod ν) := inferInstance
-  -- Step 1: Bound validation failure
-  have h_badval : μ.prod ν GoodValᶜ ≤ δ₂ := by
-    rw [MeasureTheory.Measure.prod_apply h_val_meas.compl]
-    calc ∫⁻ x₁, ν (Prod.mk x₁ ⁻¹' GoodValᶜ) ∂μ
-        ≤ ∫⁻ _x₁, δ₂ ∂μ := MeasureTheory.lintegral_mono fun x₁ => by
-          change ν (Prod.mk x₁ ⁻¹' GoodValᶜ) ≤ δ₂; exact h_val x₁
-      _ = δ₂ := by simp [MeasureTheory.lintegral_const,
-                          MeasureTheory.IsProbabilityMeasure.measure_univ]
-  -- Step 2: Bound training failure
-  have h_badtrain : μ.prod ν {p | p.1 ∉ GoodTrain} ≤ δ₁ := by
-    have heq : {p : Ω₁ × Ω₂ | p.1 ∉ GoodTrain} = GoodTrainᶜ ×ˢ Set.univ := by
-      ext p; simp [Set.mem_prod]
-    rw [heq, MeasureTheory.Measure.prod_prod,
-        MeasureTheory.IsProbabilityMeasure.measure_univ, mul_one]
-    exact h_train
-  -- Step 3: Complement inclusion and union bound
-  have h_sub : {p : Ω₁ × Ω₂ | p.1 ∈ GoodTrain ∧ p ∈ GoodVal}ᶜ ⊆
-      {p | p.1 ∉ GoodTrain} ∪ GoodValᶜ := by
-    intro p hp; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_and_or] at hp
-    exact hp.imp id id
-  have h_compl_le : μ.prod ν {p | p.1 ∈ GoodTrain ∧ p ∈ GoodVal}ᶜ ≤ δ₁ + δ₂ :=
-    le_trans ((μ.prod ν).mono h_sub)
-      (le_trans (MeasureTheory.measure_union_le _ _) (add_le_add h_badtrain h_badval))
-  exact prob_ge_one_sub_compl (μ.prod ν) _ (δ₁ + δ₂) h_compl_le
-
 /-- Cylinder set measure on product: if an event depends only on the first coordinates
     (those satisfying predicate p), then its measure under D^ι equals D^{p}(event).
     Uses piEquivPiSubtypeProd: D^ι ≃ D^{p} × D^{¬p}, and
@@ -349,66 +308,6 @@ private lemma pi_cylinder_set_eq {ι : Type*} [Fintype ι]
       MeasureTheory.Measure.prod_prod,
       MeasureTheory.IsProbabilityMeasure.measure_univ, mul_one]
 
-/-- Uniform conditional bound implies marginal bound: if for all "first" coordinates x₁,
-    the conditional probability of event S over "second" coordinates is ≤ δ,
-    then the marginal (joint) probability is ≤ δ.
-    Uses piEquivPiSubtypeProd to decompose, then prod_apply + lintegral bound. -/
-private lemma pi_uniform_conditional_bound {ι : Type*} [Fintype ι]
-    {X : Type u} [MeasurableSpace X]
-    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
-    [MeasureTheory.SigmaFinite D]
-    (p : ι → Prop) [DecidablePred p]
-    (S : Set (ι → X)) (hS_meas : MeasurableSet S)
-    (δ : ENNReal)
-    (h_unif : ∀ xs₁ : ({i // p i} → X),
-      MeasureTheory.Measure.pi (fun _ : {i // ¬p i} => D)
-        {xs₂ : {i // ¬p i} → X |
-          (fun i : ι => if h : p i then xs₁ ⟨i, h⟩ else xs₂ ⟨i, h⟩) ∈ S} ≤ δ) :
-    MeasureTheory.Measure.pi (fun _ : ι => D) S ≤ δ := by
-  set e := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => X) p
-  set μ := MeasureTheory.Measure.pi (fun _ : ι => D)
-  set μ_p := MeasureTheory.Measure.pi (fun _ : {i // p i} => D)
-  set μ_np := MeasureTheory.Measure.pi (fun _ : {i // ¬p i} => D)
-  have h_mp := MeasureTheory.measurePreserving_piEquivPiSubtypeProd (fun _ : ι => D) p
-  -- Use the measure-preserving equivalence and product structure
-  -- μ S = (μ_p × μ_np)(e(S)) = ∫ μ_np(fiber(x₁)) dμ_p(x₁) ≤ δ
-  --
-  -- Key fact: e.symm (x₁, x₂) = fun i => if p i then x₁ ⟨i, _⟩ else x₂ ⟨i, _⟩
-  -- So the fiber of e '' S at x₁ equals {x₂ | e.symm(x₁,x₂) ∈ S}
-  --   = {x₂ | (combine x₁ x₂) ∈ S}
-  -- which is exactly what h_unif bounds.
-  --
-  -- Transport: μ S = (μ_p × μ_np)(e '' S) via measure_preimage_equiv
-  calc μ S
-      = μ_p.prod μ_np (e '' S) := by
-        rw [← h_mp.measure_preimage_equiv (e '' S)]; congr 1
-        exact (Set.preimage_image_eq S e.injective).symm
-    _ ≤ ∫⁻ x₁, μ_np (Prod.mk x₁ ⁻¹' (e '' S)) ∂μ_p :=
-        MeasureTheory.Measure.prod_apply_le (e.measurableSet_image.mpr hS_meas)
-    _ ≤ ∫⁻ _x₁, δ ∂μ_p := by
-        apply MeasureTheory.lintegral_mono; intro x₁
-        -- Show the fiber at x₁ is bounded by δ
-        -- Approach: show fiber ⊆ h_unif's set, then apply h_unif
-        apply le_trans _ (h_unif x₁)
-        apply μ_np.mono
-        intro xs₂ hxs₂
-        simp only [Set.mem_preimage, Set.mem_image] at hxs₂
-        obtain ⟨xs, hxs, hxse⟩ := hxs₂
-        simp only [Set.mem_setOf_eq]
-        -- xs ∈ S and e xs = (x₁, xs₂)
-        -- So e.symm (x₁, xs₂) = xs, meaning xs i = dite (p i) (x₁ ⟨i, _⟩) (xs₂ ⟨i, _⟩)
-        -- (by definition of piEquivPiSubtypeProd.symm)
-        convert hxs using 1
-        ext i
-        -- xs = e.symm (e xs) = e.symm (x₁, xs₂)
-        have h1 : xs = e.symm (x₁, xs₂) := by rw [← hxse, e.symm_apply_apply]
-        rw [h1]
-        -- e.symm (x₁, xs₂) i = dite (p i) ...
-        -- This is the definition of piEquivPiSubtypeProd.symm
-        rfl
-    _ = δ := by simp [MeasureTheory.lintegral_const,
-                       MeasureTheory.IsProbabilityMeasure.measure_univ]
-
 /-- Extract the first m₁ + m₂ coordinates from a sample of size Nat.pair m₁ m₂. -/
 private def usedPrefix {X : Type u} [MeasurableSpace X]
     (m₁ m₂ : ℕ) (xs : Fin (Nat.pair m₁ m₂) → X) : Fin (m₁ + m₂) → X :=
@@ -420,16 +319,6 @@ private def splitUsedEquiv {X : Type u} [MeasurableSpace X]
     (Fin (m₁ + m₂) → X) ≃ᵐ ((Fin m₁ → X) × (Fin m₂ → X)) :=
   (MeasurableEquiv.piCongrLeft (fun _ : Fin m₁ ⊕ Fin m₂ => X) finSumFinEquiv.symm).trans
     (MeasurableEquiv.sumPiEquivProdPi (fun _ : Fin m₁ ⊕ Fin m₂ => X))
-
-/-- The hypothesis selected by the advice-elimination learner on a prefix sample. -/
-private noncomputable def adviceSelectedHypothesisPrefix {X : Type u} [MeasurableSpace X]
-    {A : Type*} [Fintype A] [Nonempty A]
-    (LA : LearnerWithAdvice X Bool A) (c : Concept X Bool)
-    (m₁ m₂ : ℕ) (xs : Fin (m₁ + m₂) → X) : Concept X Bool :=
-  let train : Fin m₁ → X × Bool := fun i => (xs (Fin.castAdd m₂ i), c (xs (Fin.castAdd m₂ i)))
-  let val : Fin m₂ → X × Bool := fun j => (xs (Fin.natAdd m₁ j), c (xs (Fin.natAdd m₁ j)))
-  let cand : A → Concept X Bool := fun a => LA.learnWithAdvice a train
-  cand (bestAdvice cand val)
 
 /-- Sampling Nat.pair m₁ m₂ coordinates and taking the first m₁+m₂ gives the
     same measure as sampling m₁+m₂ coordinates directly. The extra junk
@@ -661,28 +550,15 @@ private theorem probability_compl_le_of_ge_one_sub_half {Ω : Type*} [Measurable
     {S : Set Ω} (hS_meas : MeasurableSet S) {δ : ℝ}
     (h_ge : μ S ≥ ENNReal.ofReal (1 - δ / 2)) :
     μ Sᶜ ≤ ENNReal.ofReal (δ / 2) := by
-  by_cases hδ2 : δ ≥ 2
-  · calc μ Sᶜ
-        ≤ μ Set.univ := MeasureTheory.measure_mono (Set.subset_univ _)
-      _ = 1 := MeasureTheory.IsProbabilityMeasure.measure_univ
-      _ ≤ ENNReal.ofReal (δ / 2) := by
-          rw [← ENNReal.ofReal_one]
-          exact ENNReal.ofReal_le_ofReal (by linarith)
-  · push Not at hδ2
-    have h_ne_top : μ S ≠ ⊤ := by
-      intro h_top
-      have : μ S ≤ μ Set.univ := MeasureTheory.measure_mono (Set.subset_univ S)
-      rw [h_top, MeasureTheory.IsProbabilityMeasure.measure_univ] at this
-      exact absurd this (not_le.mpr ENNReal.one_lt_top)
-    rw [MeasureTheory.measure_compl hS_meas h_ne_top,
-      MeasureTheory.IsProbabilityMeasure.measure_univ]
-    calc (1 : ENNReal) - μ S
-        ≤ 1 - ENNReal.ofReal (1 - δ / 2) := tsub_le_tsub_left h_ge 1
-      _ = ENNReal.ofReal (δ / 2) := by
-          have : (1 : ℝ) - (1 - δ / 2) = δ / 2 := by ring
-          rw [← ENNReal.ofReal_one,
-            ← ENNReal.ofReal_sub 1 (by linarith : (0 : ℝ) ≤ 1 - δ / 2),
-            this]
+  rw [MeasureTheory.measure_compl hS_meas (MeasureTheory.measure_ne_top _ _),
+    MeasureTheory.IsProbabilityMeasure.measure_univ]
+  refine le_trans (tsub_le_tsub_left h_ge 1) ?_
+  by_cases hδ2 : 2 ≤ δ
+  · exact le_trans tsub_le_self
+      (by rw [← ENNReal.ofReal_one]; exact ENNReal.ofReal_le_ofReal (by linarith))
+  · rw [← ENNReal.ofReal_one,
+      ← ENNReal.ofReal_sub _ (by linarith : (0 : ℝ) ≤ 1 - δ / 2)]
+    exact ENNReal.ofReal_le_ofReal (by linarith)
 
 private lemma adviceValidationUniformBound {X : Type u} [MeasurableSpace X]
     {A : Type*} [Fintype A] [Nonempty A]
@@ -833,26 +709,11 @@ private theorem adviceGoodFull_subset_goal {X : Type u} [MeasurableSpace X]
         (fun i : Fin m₁ =>
           (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩,
            c (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩))) := by
-    intro xs'
-    have ht : ∀ i : Fin m₁,
-        ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).1 i,
-         c ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).1 i)) =
-        (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩,
-         c (xs' ⟨↑i, by have := Nat.left_le_pair m₁ m₂; omega⟩)) := by
-      intro i; simp only [h_composed_fst]
-    have hv : ∀ j : Fin m₂,
-        ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).2 j,
-         c ((splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs')).2 j)) =
-        (xs' ⟨m₁ + ↑j, by have := Nat.add_le_pair m₁ m₂; omega⟩,
-         c (xs' ⟨m₁ + ↑j, by have := Nat.add_le_pair m₁ m₂; omega⟩)) := by
-      intro j; simp only [h_composed_snd]
-    simp only [funext ht, funext hv]
+    simp_all
   intro xs hxs
   have hxGP : splitUsedEquiv (X := X) m₁ m₂ (usedPrefix (X := X) m₁ m₂ xs) ∈ GoodPair := hxs
   have hxSP := hGP_sub_SP hxGP
-  simp only [Set.mem_setOf_eq] at hxSP ⊢
-  rw [← h_full_hyp xs]
-  exact hxSP
+  simp_all
 
 /-- Advice elimination (Ben-David & Dichterman 1998):
     If C is PAC-learnable with concept-dependent advice from a FINITE set A
@@ -893,7 +754,6 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
   -- The core probabilistic argument uses the proved infrastructure:
   -- finite_validation_family_bound (Hoeffding + union over A)
   -- trueErrorReal_le_of_bestAdvice (deterministic selection bound)
-  -- product_complement_bound (train-validate independence)
   refine ⟨⟨Set.univ,
     fun {m} S =>
       let m₁ := (Nat.unpair m).1
@@ -1031,8 +891,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
           μ₂ (Prod.mk xs₁ ⁻¹' BadVal) ≤ ENNReal.ofReal (δ / 2) := by
         intro xs₁
         have : Prod.mk xs₁ ⁻¹' BadVal = {xs₂ | (xs₁, xs₂) ∈ BadVal} := by ext; simp
-        rw [this]
-        exact hval_uniform xs₁
+        simp_all
       calc ∫⁻ xs₁, μ₂ (Prod.mk xs₁ ⁻¹' BadVal) ∂μ₁
           ≤ ∫⁻ _, ENNReal.ofReal (δ / 2) ∂μ₁ :=
             MeasureTheory.lintegral_mono h_fiber
@@ -1057,9 +916,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
               apply add_le_add _ hBadVal_prod
               have hrect : {p : (Fin m₁ → X) × (Fin m₂ → X) | p.1 ∉ GoodTrain} =
                   GoodTrainᶜ ×ˢ Set.univ := by ext p; simp
-              rw [hrect, MeasureTheory.Measure.prod_prod,
-                  MeasureTheory.IsProbabilityMeasure.measure_univ, mul_one]
-              exact htrain_compl
+              simp_all
           _ = ENNReal.ofReal δ := by
               rw [← ENNReal.ofReal_add (by linarith) (by linarith)]
               congr 1; ring
@@ -1227,9 +1084,7 @@ theorem vcdim_not_implies_hardness :
       push Not at h
       -- h : (1 : WithTop ℕ) < ↑S.card
       have hcard : 1 < S.card := by
-        by_contra hle
-        push Not at hle
-        exact not_lt.mpr (WithTop.coe_le_coe.mpr hle) h
+        simp_all
       obtain ⟨a, ha, b, hb, hab⟩ := Finset.one_lt_card.mp hcard
       -- The all-true labeling: every point gets label `true`.
       obtain ⟨c, hcC, hcall⟩ := hS (fun _ => true)
@@ -1237,8 +1092,7 @@ theorem vcdim_not_implies_hardness :
       have ha' := hcall ⟨a, ha⟩
       have hb' := hcall ⟨b, hb⟩
       -- c = fun x => decide (x = n), so c a = true means a = n, c b = true means b = n
-      simp only [hn, decide_eq_true_eq] at ha' hb'
-      exact hab (ha'.trans hb'.symm)
+      simp_all
     exact lt_of_le_of_lt hle (WithTop.coe_lt_top 1)
   · -- SQDimension C D τ = ⊤ at D = Dirac at 0, τ = 1.
     -- For the Dirac measure δ₀ on ℕ and τ = 1:

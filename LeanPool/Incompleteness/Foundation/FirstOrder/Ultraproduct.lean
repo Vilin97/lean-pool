@@ -35,8 +35,7 @@ instance UprodStruc : Structure L (Uprod A 𝓤) where
   rel  := fun _ r v => {i | (s i).rel r (fun x ↦ (v x).val i)} ∈ 𝓤
 
 instance [Nonempty I] [(i : I) → Nonempty (A i)] :
-    Nonempty (Uprod A 𝓤) :=
-  Nonempty.map (⟨·⟩) inferInstance
+    Nonempty (Uprod A 𝓤) := Nonempty.map (⟨·⟩) inferInstance
 
 @[simp] lemma func_Uprod {k} (f : L.Func k) (v : Fin k → Uprod A 𝓤) :
     Structure.func f v = ⟨fun i ↦ (s i).func f (fun x ↦ (v x).val i)⟩ := rfl

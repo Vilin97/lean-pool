@@ -84,8 +84,7 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
       simp only [mem_prod, dite_else_false, mem_sep, pair_inj, exists_eq_right_right', π₁_pair,
         π₂_pair, and_exists_self]
       constructor
-      · rintro ⟨_, _, hX⟩
-        exact hX
+      · simp_all
       · intro hX
         obtain ⟨Y, Y_def, X_unq⟩ := hf.2 a ha
         have YB := hf.1 Y_def |> pair_mem_prod.mp |>.2
@@ -109,10 +108,7 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
         apply fapply_mem_range
       · apply fapply.def
       · rw [lambda_spec]
-        and_intros
-        · apply fapply_mem_range
-        · rw [mem_funs]
-          exact hf
+        refine ⟨fapply_mem_range _ _, mem_funs.mpr hf, ?_⟩
         · conv_lhs => rw [lambda_eta hf]
           rw [lambda_ext_iff ?_]
           · intro a ha
@@ -126,18 +122,12 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
                   π₁_pair, π₂_pair, and_exists_self]
                 have zB : z ∈ B := mem_powerset.mp (fapply_mem_range _ (ha_f_dom ha)) hz
                 exact ⟨zB, ⟨ha, zB⟩, hz⟩
-              · intro hz
-                simp only [mem_prod, dite_else_false, mem_sep, pair_inj, exists_eq_right_right',
-                  π₁_pair, π₂_pair, and_exists_self] at hz
-                obtain ⟨-, _, z_mem⟩ := hz
-                exact z_mem
+              · simp_all
             · intro X hX
               rw [dite_cond_eq_true (eq_true <| mem_funs.mp hX)]
               apply sep_mem_powerset
               rw [mem_powerset]
-          · intro a ha
-            rw [dite_cond_eq_true (eq_true ha)]
-            apply fapply_mem_range
+          · simp_all
 
 theorem funsToPowRel_right_inverse {A B : ZFSet} :
     funsToPowRelF A B ∘ᶻ funsToPowRelG A B = 𝟙((A.prod B).powerset) := by
@@ -161,8 +151,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
     · rintro ⟨⟨a, ha, b, hb, rfl⟩, b_mem⟩
       simp only [π₁_pair, π₂_pair] at b_mem
       rw [fapply_lambda] at b_mem
-      · rw [ite_cond_eq_true (h := eq_true ha), mem_sep] at b_mem
-        exact b_mem.2
+      · simp_all
       · intro x hx
         rw [ite_cond_eq_true (h := eq_true hx)]
         apply sep_mem_powerset
@@ -173,8 +162,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
       simp only [π₁_pair, π₂_pair, pair_inj, exists_eq_right_right']
       use ⟨ha, hb⟩
       rw [fapply_lambda]
-      · rw [ite_cond_eq_true (h := eq_true ha), mem_sep]
-        exact ⟨hb, hab⟩
+      · simp_all
       · intro x hx
         rw [ite_cond_eq_true (h := eq_true hx)]
         apply sep_mem_powerset
@@ -194,8 +182,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
           and_intros
           · exact sep_subset_self
           · rfl
-          · rintro _ ⟨_, rfl⟩
-            rfl
+          · simp_all
         · intros
           apply mem_funs_of_lambda
           intro _ ha
@@ -205,9 +192,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
         · rwa [mem_powerset]
       · apply fapply.def
       · rw [lambda_spec]
-        and_intros
-        · apply fapply_mem_range
-        · rwa [mem_powerset]
+        refine ⟨fapply_mem_range _ _, by rwa [mem_powerset], ?_⟩
         · rw [dite_cond_eq_true (eq_true ?_)]
           · ext1 ab
             simp only [mem_prod, dite_else_false, mem_sep, and_exists_self]
@@ -237,8 +222,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
               generalize_proofs choose₃
               have choose₃_spec := Classical.choose_spec choose₃
               rw [lambda_spec] at choose₃_spec
-              rw [choose₃_spec.2.2.2, dite_cond_eq_true (eq_true ha), mem_sep]
-              exact ⟨hb, hab⟩
+              simp_all
             · rintro ⟨⟨a, ha, b, hb, rfl⟩, h⟩
               simp only [π₁_pair, π₂_pair] at h
               simp only [fapply, mem_powerset, mem_funs] at h
@@ -250,8 +234,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
                 enter [2,1]
                 rw [choose₁_eq]
               rw [lambda_spec, dite_cond_eq_true (eq_true ha)] at choose₂_spec
-              rw [choose₂_spec.2.2.2, mem_sep] at h
-              exact h.2
+              simp_all
           · rw [fapply_lambda]
             · apply lambda_isFunc
               intro a ha
@@ -266,9 +249,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
               rw [mem_powerset]
             · rwa [mem_powerset]
 
-theorem isIso_funs_to_pow_rel {A B : ZFSet} : A.funs B.powerset ≅ᶻ (A.prod B).powerset := by
-  apply isIso_of_two_sided_inverse
-  · exact funsToPowRel_left_inverse
-  · exact funsToPowRel_right_inverse
+theorem isIso_funs_to_pow_rel {A B : ZFSet} : A.funs B.powerset ≅ᶻ (A.prod B).powerset :=
+  isIso_of_two_sided_inverse funsToPowRel_left_inverse funsToPowRel_right_inverse
 
 end ZFSet

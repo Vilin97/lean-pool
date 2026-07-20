@@ -40,6 +40,24 @@ variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 def distinctSumSet (A : Finset (ZMod p)) (s : ℕ) : Finset (ZMod p) :=
   (A.powerset.filter (fun B => B.card = s)).image (fun B => ∑ x ∈ B, x)
 
+/-- The restricted sumset of `n + 1` copies of `A` embeds into the set of sums of `n + 1`
+distinct elements of `A`. -/
+private lemma restrictedSumSet_subset_distinctSumSet (A : Finset (ZMod p)) (n : ℕ) :
+    restrictedSumSet n (fun _ => A) ⊆ distinctSumSet A (n + 1) := by
+  intro x hx
+  unfold restrictedSumSet at hx
+  unfold distinctSumSet
+  simp_all only [ne_eq, mem_image, mem_filter, Fintype.mem_piFinset, mem_powerset]
+  obtain ⟨w, ⟨left, right_1⟩, right⟩ := hx
+  subst right
+  have hinj : ∀ i j, w i = w j → i = j := fun i j hij =>
+    le_antisymm
+      (le_of_not_gt fun hi => right_1 _ _ hi hij.symm)
+      (le_of_not_gt fun hj => right_1 _ _ hj hij)
+  refine ⟨Finset.image w Finset.univ, ⟨Finset.image_subset_iff.mpr fun i _ => left i, ?_⟩, ?_⟩
+  · rw [Finset.card_image_of_injective _ hinj, Finset.card_fin]
+  · rw [Finset.sum_image fun i _ j _ => hinj i j]
+
 /--
 Theorem 3.3 (Dias da Silva and Hamidoune):
 Let p be a prime and let A be a nonempty subset of Z_p.
@@ -87,10 +105,7 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
   by_cases hs : s = 0
   · subst hs
     suffices h : (distinctSumSet A 0).Nonempty by
-      rw [ge_iff_le]
-      calc min p (0 * #A - 0 ^ 2 + 1)
-          ≤ 1 := by omega
-        _ ≤ _ := Finset.one_le_card.mpr h
+      simp_all
     exact ⟨ 0, Finset.mem_image.mpr ⟨ ∅, by aesop ⟩ ⟩
   · -- Apply Theorem 3.2 with k = s - 1 and A_i = A for all i.
     have h_theorem : ∀ (A : Finset (ZMod p)) (k : ℕ) (hk : k + 1 ≤ A.card),
@@ -139,50 +154,5 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     simp_all only [Order.add_one_le_iff, Nat.add_eq_zero_iff, one_ne_zero, and_false,
         not_false_eq_true, add_tsub_cancel_right, Nat.add_one_sub_one, ge_iff_le, inf_le_iff,
         forall_const]
-    cases h_theorem with
-    | inl h => ?_
-    | inr h_1 => ?_
-    · -- By definition of $restricted\_sum\_set$, we have $restricted\_sum\_set n (fun _ => A)
-      -- \subseteq distinct\_sum\_set A (n + 1)$.
-      have h_subset : restrictedSumSet n (fun _ => A) ⊆ distinctSumSet A (n + 1) := by
-        intro x hx; unfold restrictedSumSet at hx; unfold distinctSumSet
-        simp_all only [ne_eq, mem_image, mem_filter, Fintype.mem_piFinset, mem_powerset]
-        obtain ⟨w, h_1⟩ := hx
-        obtain ⟨left, right⟩ := h_1
-        obtain ⟨left, right_1⟩ := left
-        subst right
-        use Finset.image w Finset.univ;
-        exact ⟨ ⟨ Finset.image_subset_iff.mpr fun i _ => left i,
-            by
-              rw [ Finset.card_image_of_injective _ fun i j hij =>
-                    le_antisymm
-                      ( le_of_not_gt fun hi => right_1 _ _ hi hij.symm )
-                      ( le_of_not_gt fun hj => right_1 _ _ hj hij ),
-                  Finset.card_fin ] ⟩,
-          by
-            rw [ Finset.sum_image <| fun i _ j _ hij =>
-                  le_antisymm
-                    ( le_of_not_gt fun hi => right_1 _ _ hi hij.symm )
-                    ( le_of_not_gt fun hj => right_1 _ _ hj hij ) ] ⟩;
-      exact Or.inl ( le_trans h ( Finset.card_le_card h_subset ) );
-    · refine Or.inr (lt_of_lt_of_le h_1 ?_);
-      refine Finset.card_le_card ?_;
-      intro x hx;
-      unfold restrictedSumSet at hx; unfold distinctSumSet
-      simp_all only [ne_eq, mem_image, mem_filter, Fintype.mem_piFinset, mem_powerset]
-      obtain ⟨w, h_1⟩ := hx
-      obtain ⟨left, right⟩ := h_1
-      obtain ⟨left, right_1⟩ := left
-      subst right
-      exact ⟨ Finset.image w Finset.univ, ⟨ Finset.image_subset_iff.mpr fun i _ => left i,
-          by
-            rw [ Finset.card_image_of_injective _ fun i j hij =>
-                  le_antisymm
-                    ( le_of_not_gt fun hi => right_1 _ _ hi hij.symm )
-                    ( le_of_not_gt fun hj => right_1 _ _ hj hij ),
-                Finset.card_fin ] ⟩,
-        by
-          rw [ Finset.sum_image <| fun i _ j _ hij =>
-                le_antisymm
-                  ( le_of_not_gt fun hi => right_1 _ _ hi hij.symm )
-                  ( le_of_not_gt fun hj => right_1 _ _ hj hij ) ] ⟩
+    have hsub := Finset.card_le_card (restrictedSumSet_subset_distinctSumSet A n)
+    exact h_theorem.imp (le_trans · hsub) (lt_of_lt_of_le · hsub)

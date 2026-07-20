@@ -78,8 +78,7 @@ private lemma contourIntegral_eq_of_agree_on_curve (f g : ℂ → ℂ)
   apply intervalIntegral.integral_congr
   intro t ht
   rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht
-  dsimp only
-  rw [h_agree t ht]
+  simp_all
 
 private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s : ℂ)
     (hf : MeromorphicAt f s) (U : Set ℂ) (hf_diff : DifferentiableOn ℂ f (U \ {s}))
@@ -98,8 +97,7 @@ private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s
   have h_decomp : ∀ t ∈ Set.uIcc γ.a γ.b,
       f (γ.toFun t) * deriv γ.toFun t =
       pp (γ.toFun t) * deriv γ.toFun t +
-        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by
-    intro t _; ring
+        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by intro t _; ring
   rw [intervalIntegral.integral_congr h_decomp]
   have h_pp_int : IntervalIntegrable
       (fun t => pp (γ.toFun t) * deriv γ.toFun t) volume γ.a γ.b :=
@@ -251,9 +249,7 @@ private theorem analytic_correction_differentiableOn (S : Finset ℂ) (f : ℂ �
     · have h_ev : (fun w => if w ∈ (S : Set ℂ) then
           limUnder (𝓝[≠] w) g else g w) =ᶠ[𝓝 z] g := by
         apply Filter.Eventually.mono (S.finite_toSet.isClosed.isOpen_compl.mem_nhds hzS)
-        intro w hw
-        have : w ∉ (S : Set ℂ) := hw
-        simp only [this, if_false]
+        simp_all
       exact (h_ev.differentiableAt_iff.mpr
         ((h_g_diff_off z ⟨hz, hzS⟩).differentiableAt
           ((hU.sdiff S.finite_toSet.isClosed).mem_nhds ⟨hz, hzS⟩))).differentiableWithinAt
@@ -416,8 +412,7 @@ theorem conditionsAB_imply_higherOrderCancel_nh (U : Set ℂ) (hU : IsOpen U)
       exact intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
         U S0 _ hfres_cont γ h_null.image_subset ε hε
     rw [← intervalIntegral.integral_sub h_int_f h_int_fres]
-    congr 1; ext t
-    exact h_integrand_eq ε t
+    simp_all
   exact higherOrderCancel_assembly_nh U hU S0 f hf γ h_null
     hMero hCondA hCondB hγ_meas h_no_endpt h_unique_cross hS0_in_U
 
@@ -480,8 +475,6 @@ lemma pv_res_tendsto_of_immersion_nullHomologous (U : Set ℂ) (S : Set ℂ)
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s := by
     have hL_eq : L = cauchyPrincipalValueOn S0 f_res γ.toFun γ.a γ.b :=
       hL.limUnder_eq.symm
-    rw [hL_eq, h_value]; congr 1; apply Finset.sum_congr rfl
-    intro s hs; rw [h_res_eq s hs]
-  rw [← h_limit_eq]
-  exact hL
+    simp_all
+  simp_all
 

@@ -24,8 +24,7 @@ variable {X : Type*} (V : Set (Set X)) (PO : Set (Set X))
 def chainTree : tree V where
     val := {x | x.IsChain (· ≥ ·)}
     property _ _ := List.IsChain.left_of_append
-lemma def_chainTree (x : List V) : x ∈ chainTree V ↔ x.IsChain (· ≥ ·) := by
-    simp [chainTree]
+lemma def_chainTree (x : List V) : x ∈ chainTree V ↔ x.IsChain (· ≥ ·) := by simp [chainTree]
 lemma nil_mem_chainTree : [] ∈ chainTree V := by simp [chainTree]
 lemma concat_mem_chainTree {x A} :
     x ++ [A] ∈ chainTree V ↔ x ∈ chainTree V ∧ ∀ hx, A ≤ x.getLast hx := by

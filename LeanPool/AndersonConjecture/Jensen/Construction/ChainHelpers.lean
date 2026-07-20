@@ -190,13 +190,9 @@ theorem chain_union_card_lt
     rw [Ideal.height_le_iff]
     intro q hq_prime hq_lt
     -- Any prime q strictly below P ∩ U must be zero (height ≤ 1 forces this)
-    suffices q = ⊥ by rw [this, Ideal.height_bot]
-                      norm_cast
+    suffices q = ⊥ by simp_all
     by_contra hq_ne
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨αs, hαs⟩ := hU_mem s
     obtain ⟨αx, hαx⟩ := hU_mem x
@@ -210,8 +206,7 @@ theorem chain_union_card_lt
     have hs'_q : s' ∈ Ideal.comap inclγ q :=
       show inclγ s' ∈ q from (show inclγ s' = s from Subtype.ext rfl) ▸ hs_q
     have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := fun h => by
-      rw [h] at hs'_q
-      exact hs'_ne (Ideal.mem_bot.mp hs'_q)
+      simp_all
     set x' : (chain.ring γ).carrier :=
       ⟨(x : T), chain.mono (le_max_right ..) hαx⟩
     have hx'_nq : x' ∉ Ideal.comap inclγ q := fun h => by
@@ -230,10 +225,7 @@ theorem chain_union_card_lt
       ((chain.ring γ).height_bound t ht P hP) _ inferInstance hq'_lt
     haveI : IsDomain (chain.ring γ).carrier := inferInstance
     exact absurd ((Ideal.height_le_iff (n := 0)).mp (by
-      lift (Ideal.comap inclγ q).height to ℕ using ne_top_of_lt hq'_ht with n hn
-      simp only [Nat.cast_lt] at hq'_ht
-      simp only [Nat.cast_le]
-      omega
+      simp_all
     ) ⊥ Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hq'_ne)) not_lt_bot
   let S : NSubring T :=
     { carrier := U

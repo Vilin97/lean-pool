@@ -108,15 +108,15 @@ private theorem G_eval_eq_f (p : ℍ) :
 theorem orderOfVanishingAt'_eq_zero_of_ne_zero' (p : ℍ) (hp : f p ≠ 0) :
     orderOfVanishingAt' f p = 0 := by
   unfold orderOfVanishingAt'
-  have h_nf : MeromorphicNFAt _ (p : ℂ) := AnalyticAt.meromorphicNFAt (G_analyticAt f p)
-  have hGp : (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (p : ℂ) ≠ 0 := by
-    rw [G_eval_eq_f]; exact hp
+  have h_nf : MeromorphicNFAt _ (p : ℂ) := (G_analyticAt f p).meromorphicNFAt
+  have hGp : (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (p : ℂ) ≠ 0 :=
+    G_eval_eq_f f p ▸ hp
   rw [h_nf.meromorphicOrderAt_eq_zero_iff.mpr hGp]; rfl
 
 /-- `orderOfVanishingAt' f p ≠ 0` implies `f p = 0`. -/
 theorem eq_zero_of_orderOfVanishingAt'_ne_zero' (p : ℍ)
-    (hp : orderOfVanishingAt' (⇑f) p ≠ 0) : f p = 0 := by
-  by_contra h; exact hp (orderOfVanishingAt'_eq_zero_of_ne_zero' f p h)
+    (hp : orderOfVanishingAt' (⇑f) p ≠ 0) : f p = 0 :=
+  by_contra fun h => hp (orderOfVanishingAt'_eq_zero_of_ne_zero' f p h)
 
 /-- `f ≠ 0` and `f p = 0` implies `orderOfVanishingAt' f p ≠ 0`. -/
 theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f p = 0) :
@@ -128,9 +128,7 @@ theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f 
   have h_ord_ne : meromorphicOrderAt
       (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0) (↑p) ≠ (0 : WithTop ℤ) := by
     intro h0; apply h_nf.meromorphicOrderAt_eq_zero_iff.mp h0
-    split_ifs with h
-    · exact_mod_cast hp
-    · exact absurd p.im_pos h
+    simp_all
   have h_top := (WithTop.untop₀_eq_zero.mp h_untop_eq).resolve_left h_ord_ne
   rw [meromorphicOrderAt_eq_top_iff] at h_top
   have h_analOn : AnalyticOnNhd ℂ (fun w : ℂ => if h : 0 < w.im then f ⟨w, h⟩ else 0)
@@ -145,8 +143,7 @@ theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f 
 
 private theorem modularFormCompOfComplex_eq' (p : ℍ) :
     modularFormCompOfComplex f (p : ℂ) = f p := by
-  simp only [modularFormCompOfComplex, Function.comp_apply]
-  congr 1; rw [UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
+  simp [modularFormCompOfComplex, UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
 
 theorem fd_im_gt_half (p : ℍ) (hp : p ∈ 𝒟) : (1 : ℝ)/2 < (p : ℂ).im := by
   by_contra h_le; push Not at h_le
@@ -158,8 +155,7 @@ theorem fd_im_gt_half (p : ℍ) (hp : p ∈ 𝒟) : (1 : ℝ)/2 < (p : ℂ).im :
   have h_re_sq : (p : ℂ).re * (p : ℂ).re ≤ 1/4 := by
     have hre := abs_le.mp habs_re
     nlinarith [mul_self_nonneg (p : ℂ).re, hre_bridge]
-  have him_sq : (p : ℂ).im * (p : ℂ).im ≤ 1/4 := by
-    nlinarith [p.im_pos, him_bridge]
+  have him_sq : (p : ℂ).im * (p : ℂ).im ≤ 1/4 := by nlinarith [p.im_pos, him_bridge]
   linarith
 
 private theorem no_zeros_above_height' (hf : f ≠ 0) :
@@ -172,11 +168,9 @@ private theorem no_zeros_above_height' (hf : f ≠ 0) :
   have h_qParam_mem : Function.Periodic.qParam (1 : ℝ) (↑p : ℂ) ∈
       Metric.closedBall (0 : ℂ) (Real.exp (-2 * Real.pi * H₀)) := by
     rw [Metric.mem_closedBall, dist_zero_right, Function.Periodic.norm_qParam]
-    simp only [div_one]
-    exact Real.exp_le_exp.mpr (by nlinarith [Real.pi_pos])
+    simpa only [div_one] using Real.exp_le_exp.mpr (by nlinarith [Real.pi_pos])
   have h_qParam_ne : Function.Periodic.qParam (1 : ℝ) (↑p : ℂ) ≠ 0 := by
-    simp only [Function.Periodic.qParam, ne_eq]
-    exact Complex.exp_ne_zero _
+    simpa only [Function.Periodic.qParam, ne_eq] using Complex.exp_ne_zero _
   exact hH₀_nonvan _ h_qParam_mem h_qParam_ne (h_eq ▸ hfp)
 
 /-- The set of zeros (with nonzero order) in `𝒟` is finite. -/
@@ -228,9 +222,7 @@ theorem finite_support_ordOrbit_nonEll (hf : f ≠ 0) :
   apply Set.Finite.subset ((finite_support_ordOrbit f hf).preimage
       (fun (a : NonEllOrbit) _ (b : NonEllOrbit) _ h =>
         Subtype.val_injective h))
-  intro ⟨q, hq_ne⟩ hq_ord
-  simp only [Set.mem_preimage, Set.mem_setOf_eq] at hq_ord ⊢
-  exact hq_ord
+  simp_all
 
 /-- The canonical finite set of zeros (with nonzero order) in `𝒟`. -/
 noncomputable def s₀ (hf : f ≠ 0) : Finset ℍ := (finite_zeros_in_fd f hf).toFinset
@@ -248,12 +240,9 @@ theorem s₀_complete (hf : f ≠ 0) :
 theorem orb_rho_plus_one_eq_orb_rho :
     orb ellipticPointRhoPlusOne' = (orho : Orbit) := by
   change Quotient.mk'' ellipticPointRhoPlusOne' = Quotient.mk'' ellipticPointRho'
-  rw [Quotient.eq'']
-  rw [MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
+  rw [Quotient.eq'', MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
   exact ⟨ModularGroup.T, by
-    rw [UpperHalfPlane.modular_T_smul]
-    ext
-    simp [ellipticPointRho', ellipticPointRhoPlusOne', UpperHalfPlane.coe_vadd]
-    ring⟩
+    rw [UpperHalfPlane.modular_T_smul]; ext
+    simp [ellipticPointRho', ellipticPointRhoPlusOne', UpperHalfPlane.coe_vadd]; ring⟩
 
 end

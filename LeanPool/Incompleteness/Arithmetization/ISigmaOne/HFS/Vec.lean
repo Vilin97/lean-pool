@@ -88,12 +88,7 @@ lemma cons_defined : Sg0-Function₂ (cons : V → V → V) via consDef := by
     Semiformula.eval_operator₂, Semiterm.val_operator₂, Semiterm.val_const,
     Structure.numeral_eq_numeral, ORingStruc.one_eq_one, Structure.Add.add, Structure.Eq.eq,
     LogicalConnective.Prop.and_eq, ↓existsAndEq, true_and]
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [cons_def], by simp [cons_def]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, cons_def], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_cons (v) :
     Semiformula.Evalbm V v consDef.val ↔ v 0 = v 1 ∷ v 2 := cons_defined.df.iff v
@@ -128,8 +123,7 @@ lemma mkVec₂_defined : Sg1-Function₂ (fun x y : V ↦ ?[x, y]) via mkVec₂D
 
 instance mkVec₂_definable : Sg1-Function₂ (fun x y : V ↦ ?[x, y]) := mkVec₂_defined.to_definable
 
-instance mkVec₂_definable' (Γ m) : Γ-[m + 1]-Function₂ (fun x y :
-    V ↦ ?[x, y]) :=
+instance mkVec₂_definable' (Γ m) : Γ-[m + 1]-Function₂ (fun x y : V ↦ ?[x, y]) :=
   mkVec₂_definable.of_sigmaOne
 
 end «lp_section_2»
@@ -148,8 +142,7 @@ namespace Nth
 def Phi (C : Set V) (pr : V) : Prop :=
   (∃ v, pr = ⟪v, 0, fstIdx v⟫) ∨ (∃ v i x, pr = ⟪v, i + 1, x⟫ ∧ ⟪sndIdx v, i, x⟫ ∈ C)
 
-private lemma phi_iff (C pr : V) :
-    Phi {x | x ∈ C} pr ↔
+private lemma phi_iff (C pr : V) : Phi {x | x ∈ C} pr ↔
     (∃ v ≤ pr, ∃ fst ≤ v, fst = fstIdx v ∧ pr = ⟪v, 0, fst⟫) ∨
     (∃ v ≤ pr, ∃ i ≤ pr, ∃ x ≤ pr, pr = ⟪v, i + 1, x⟫ ∧ ∃ snd ≤ v, snd =
         sndIdx v ∧ ∃ six < C, six = ⟪snd, i, x⟫ ∧ six ∈ C) := by
@@ -196,8 +189,7 @@ section «lp_section_3»
 /-- Imported declaration from the Incompleteness formalization. -/
 def graphDef : Sg1.Semisentence 1 := blueprint.fixpointDef
 
-lemma graph_defined : Sg1-Predicate (Graph : V → Prop) via graphDef :=
-  construction.fixpoint_defined
+lemma graph_defined : Sg1-Predicate (Graph : V → Prop) via graphDef := construction.fixpoint_defined
 
 instance graph_definable : Sg1-Predicate (Graph : V → Prop) := graph_defined.to_definable
 
@@ -208,32 +200,18 @@ end «lp_section_3»
 /-- TODO: move -/
 @[simp 1100] lemma zero_ne_add_one (x : V) : 0 ≠ x + 1 := ne_of_lt (by simp)
 
-lemma graph_case {pr : V} :
-    Graph pr ↔
+lemma graph_case {pr : V} : Graph pr ↔
     (∃ v, pr = ⟪v, 0, fstIdx v⟫) ∨ (∃ v i x, pr = ⟪v, i + 1, x⟫ ∧ Graph ⟪sndIdx v, i, x⟫) :=
   construction.case
 
-lemma graph_zero {v x : V} :
-    Graph ⟪v, 0, x⟫ ↔ x = fstIdx v := by
-  constructor
-  · intro h
-    rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, _⟩)
-    · simp only [pair_ext_iff, true_and] at h
-      rcases h with ⟨rfl, rfl⟩
-      rfl
-    · simp at h
-  · rintro rfl; exact graph_case.mpr <| Or.inl ⟨v, rfl⟩
+lemma graph_zero {v x : V} : Graph ⟪v, 0, x⟫ ↔ x = fstIdx v := by
+  refine ⟨fun h ↦ ?_, fun h ↦ h ▸ graph_case.mpr (Or.inl ⟨v, rfl⟩)⟩
+  rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, _⟩) <;> simp_all [pair_ext_iff]
 
-lemma graph_succ {v i x : V} :
-    Graph ⟪v, i + 1, x⟫ ↔ Graph ⟪sndIdx v, i, x⟫ := by
-  constructor
-  · intro h
-    rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, hv⟩)
-    · simp at h
-    · simp only [pair_ext_iff, add_left_inj] at h
-      rcases h with ⟨rfl, rfl, rfl⟩
-      exact hv
-  · intro h; exact graph_case.mpr <| Or.inr ⟨v, i, x, rfl, h⟩
+lemma graph_succ {v i x : V} : Graph ⟪v, i + 1, x⟫ ↔ Graph ⟪sndIdx v, i, x⟫ := by
+  refine ⟨fun h ↦ ?_, fun h ↦ graph_case.mpr (Or.inr ⟨v, i, x, rfl, h⟩)⟩
+  rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, hv⟩) <;>
+    simp_all [pair_ext_iff, add_left_inj]
 
 lemma graph_exists (v i : V) : ∃ x, Graph ⟪v, i, x⟫ := by
   suffices ∀ i' ≤ i, ∀ v' ≤ v, ∃ x, Graph ⟪v', i', x⟫ from this i (by simp) v (by simp)
@@ -274,27 +252,21 @@ def nth (v i : V) : V := Classical.choose! (graph_existsUnique v i)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped notation:max v:max ".[" i "]" => nth v i
 
-lemma nth_graph (v i : V) : Graph ⟪v, i, v.[i]⟫ :=
-  Classical.choose!_spec (graph_existsUnique v i)
+lemma nth_graph (v i : V) : Graph ⟪v, i, v.[i]⟫ := Classical.choose!_spec (graph_existsUnique v i)
 
-lemma nth_eq_of_graph {v i x : V} (h : Graph ⟪v, i, x⟫) :
-    nth v i = x :=
+lemma nth_eq_of_graph {v i x : V} (h : Graph ⟪v, i, x⟫) : nth v i = x :=
   graph_unique (nth_graph v i) h
 
 lemma nth_zero (v : V) : v.[0] = fstIdx v := nth_eq_of_graph (graph_zero.mpr rfl)
 
-lemma nth_succ (v i : V) :
-    v.[i + 1] = (sndIdx v).[i] :=
+lemma nth_succ (v i : V) : v.[i + 1] = (sndIdx v).[i] :=
   nth_eq_of_graph (graph_succ.mpr <| nth_graph _ _)
 
-@[simp] lemma nth_cons_zero (x v : V) : (x ∷ v).[0] = x := by
-  simp [nth_zero]
+@[simp] lemma nth_cons_zero (x v : V) : (x ∷ v).[0] = x := by simp [nth_zero]
 
-@[simp] lemma nth_cons_succ (x v i : V) : (x ∷ v).[i + 1] = v.[i] := by
-  simp [nth_succ]
+@[simp] lemma nth_cons_succ (x v i : V) : (x ∷ v).[i + 1] = v.[i] := by simp [nth_succ]
 
-@[simp] lemma nth_cons_one (x v : V) : (x ∷ v).[1] = v.[0] := by
-  simpa using nth_cons_succ x v 0
+@[simp] lemma nth_cons_one (x v : V) : (x ∷ v).[1] = v.[0] := by simpa using nth_cons_succ x v 0
 
 @[simp] lemma nth_cons_two (x v : V) : (x ∷ v).[2] = v.[1] := by
   simpa [-nth_cons_succ, one_add_one_eq_two] using nth_cons_succ x v 1
@@ -454,8 +426,7 @@ variable {arity : ℕ} {β : Blueprint arity} (c : Construction V β)
 def Phi (param : Fin arity → V) (C : Set V) (pr : V) : Prop :=
   pr = ⟪0, c.nil param⟫ ∨ (∃ x xs ih, pr = ⟪x ∷ xs, c.cons param x xs ih⟫ ∧ ⟪xs, ih⟫ ∈ C)
 
-private lemma phi_iff (param : Fin arity → V) (C pr : V) :
-    c.Phi param {x | x ∈ C} pr ↔
+private lemma phi_iff (param : Fin arity → V) (C pr : V) : c.Phi param {x | x ∈ C} pr ↔
     pr = ⟪0, c.nil param⟫ ∨ (∃ x < pr, ∃ xs < pr, ∃ ih < C, pr =
         ⟪x ∷ xs, c.cons param x xs ih⟫ ∧ ⟪xs, ih⟫ ∈ C) := by
   constructor
@@ -496,48 +467,36 @@ section «lp_section_6»
 lemma graph_defined : Sg1.Defined (fun v ↦ c.Graph (v ·.succ) (v 0)) β.graphDef :=
   c.construction.fixpoint_defined
 
-instance graph_definable :
-    Sg1.Boldface (fun v ↦ c.Graph (v ·.succ) (v 0)) :=
+instance graph_definable : Sg1.Boldface (fun v ↦ c.Graph (v ·.succ) (v 0)) :=
   c.graph_defined.to_definable
 
 instance graph_definable' (param) : Sg1-Predicate (c.Graph param) := by
   simpa using HierarchySymbol.Boldface.retractiont (n :=
     1) c.graph_definable (#0 :> fun i ↦ &(param i))
 
-instance graph_definable'' (param) :
-    Sg-[0 + 1]-Predicate (c.Graph param) :=
+instance graph_definable'' (param) : Sg-[0 + 1]-Predicate (c.Graph param) :=
   c.graph_definable' param
 
 end «lp_section_6»
 
 variable {param}
 
-lemma graph_case {pr : V} :
-    c.Graph param pr ↔ pr = ⟪0, c.nil param⟫ ∨ (∃ x xs ih, pr =
+lemma graph_case {pr : V} : c.Graph param pr ↔ pr = ⟪0, c.nil param⟫ ∨ (∃ x xs ih, pr =
       ⟪x ∷ xs, c.cons param x xs ih⟫ ∧ c.Graph param ⟪xs, ih⟫) :=
   c.construction.case
 
-lemma graph_nil {l : V} :
-    c.Graph param ⟪0, l⟫ ↔ l = c.nil param := by
-  constructor
-  · intro h
-    rcases c.graph_case.mp h with (h | ⟨x, xs, ih, h, _⟩)
-    · simp only [pair_ext_iff, true_and] at h
-      rcases h with rfl
-      rfl
-    · simp at h
-  · rintro rfl; exact c.graph_case.mpr <| Or.inl rfl
+lemma graph_nil {l : V} : c.Graph param ⟪0, l⟫ ↔ l = c.nil param := by
+  refine ⟨fun h ↦ ?_, fun h ↦ h ▸ c.graph_case.mpr (Or.inl rfl)⟩
+  rcases c.graph_case.mp h with (h | ⟨x, xs, ih, h, _⟩) <;> simp_all [pair_ext_iff]
 
 lemma graph_cons {x xs y : V} :
     c.Graph param ⟪x ∷ xs, y⟫ ↔ ∃ y', y = c.cons param x xs y' ∧ c.Graph param ⟪xs, y'⟫ := by
-  constructor
-  · intro h
-    rcases c.graph_case.mp h with (h | ⟨x, xs, y, h, hg⟩)
-    · simp at h
-    · simp only [pair_ext_iff, cons_inj] at h
-      rcases h with ⟨⟨rfl, rfl⟩, rfl⟩
-      exact ⟨y, rfl, hg⟩
-  · rintro ⟨y, rfl, h⟩; exact c.graph_case.mpr <| Or.inr ⟨x, xs, y, rfl, h⟩
+  refine ⟨fun h ↦ ?_, fun ⟨y, hy, hg⟩ ↦ hy ▸ c.graph_case.mpr (Or.inr ⟨x, xs, y, rfl, hg⟩)⟩
+  rcases c.graph_case.mp h with (h | ⟨x, xs, y, h, hg⟩)
+  · simp at h
+  · simp only [pair_ext_iff, cons_inj] at h
+    rcases h with ⟨⟨rfl, rfl⟩, rfl⟩
+    exact ⟨y, rfl, hg⟩
 
 variable (param)
 
@@ -577,8 +536,7 @@ lemma result_graph (xs : V) : c.Graph param ⟪xs, c.result param xs⟫ :=
 lemma result_eq_of_graph {xs y : V} (h : c.Graph param ⟪xs, y⟫) : c.result param xs = y :=
   c.graph_unique (c.result_graph param xs) h
 
-@[simp] lemma result_nil : c.result param (0 :
-    V) = c.nil param :=
+@[simp] lemma result_nil : c.result param (0 : V) = c.nil param :=
   c.result_eq_of_graph param (c.graph_nil.mpr rfl)
 
 @[simp] lemma result_cons (x xs : V) :
@@ -682,8 +640,7 @@ lemma nth_lt_len {v i : V} (hl : len v ≤ i) : v.[i] = 0 := by
   case nil => simp
   case cons x v ih =>
     simp only [len_cons]
-    simp only [cons, add_le_add_iff_right]
-    exact le_trans ih (le_pair_right x v)
+    simpa only [cons, add_le_add_iff_right] using le_trans ih (le_pair_right x v)
 
 end «lp_section_8»
 
@@ -701,8 +658,7 @@ lemma nth_ext {v₁ v₂ : V} (hl : len v₁ = len v₂) (H : ∀ i < len v₁, 
     simp [hx, hv]
 
 lemma nth_ext' (l : V) {v₁ v₂ : V} (hl₁ : len v₁ = l) (hl₂ : len v₂ = l) (H :
-    ∀ i < l, v₁.[i] = v₂.[i]) :
-    v₁ = v₂ := by
+    ∀ i < l, v₁.[i] = v₂.[i]) : v₁ = v₂ := by
   rcases hl₂; exact nth_ext hl₁ (by simpa [hl₁] using H)
 
 lemma le_of_nth_le_nth {v₁ v₂ : V} (hl : len v₁ = len v₂) (H : ∀ i < len v₁, v₁.[i] ≤ v₂.[i]) :
@@ -788,8 +744,7 @@ def listMax (v : V) : V := construction.result ![] v
 
 @[simp] lemma listMax_nil : listMax (0 : V) = 0 := by simp [listMax, construction]
 
-@[simp] lemma listMax_cons (x v : V) :
-    listMax (x ∷ v) = max x (listMax v) := by
+@[simp] lemma listMax_cons (x v : V) : listMax (x ∷ v) = max x (listMax v) := by
   simp [listMax, construction]
 
 section «lp_section_11»
@@ -797,8 +752,7 @@ section «lp_section_11»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.listMaxDef : Sg1.Semisentence 2 := blueprint.resultDef
 
-lemma listMax_defined : Sg1-Function₁ (listMax :
-    V → V) via listMaxDef :=
+lemma listMax_defined : Sg1-Function₁ (listMax : V → V) via listMaxDef :=
   construction.result_defined
 
 @[simp] lemma eval_listMaxDef (v) :
@@ -806,8 +760,7 @@ lemma listMax_defined : Sg1-Function₁ (listMax :
 
 instance listMax_definable : Sg1-Function₁ (listMax : V → V) := listMax_defined.to_definable
 
-instance listMax_definable' (Γ m) : Γ-[m + 1]-Function₁ (listMax :
-    V → V) :=
+instance listMax_definable' (Γ m) : Γ-[m + 1]-Function₁ (listMax : V → V) :=
   listMax_definable.of_sigmaOne
 
 end «lp_section_11»
@@ -835,15 +788,6 @@ lemma listMaxss_le_iff {v z : V} : listMax v ≤ z ↔ ∀ i < len v, v.[i] ≤ 
   constructor
   · intro h i hi; exact le_trans (nth_le_listMax hi) h
   · exact listMaxss_le
-
-/-
-lemma nth_le_listMaxs (v : V) (hv : v ≠ 0) : ∃ i < len v, v.[i] = listMax v := by
-  induction v using cons_induction_sigma1
-  · definability
-  case nil => simp at hv
-  case cons x v ih =>
-    simp
--/
 
 end «lp_section_10»
 
@@ -896,17 +840,15 @@ def takeLast (v k : V) : V := construction.result ![k] v
 
 @[simp] lemma takeLast_nil : takeLast (0 : V) k = 0 := by simp [takeLast, construction]
 
-lemma takeLast_cons (x v : V) :
-    takeLast (x ∷ v) k = if len v < k then x ∷ v else takeLast v k := by
-      simp [takeLast, construction]
+lemma takeLast_cons (x v : V) : takeLast (x ∷ v) k = if len v < k then x ∷ v else takeLast v k := by
+  simp [takeLast, construction]
 
 section «lp_section_13»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.takeLastDef : Sg1.Semisentence 3 := blueprint.resultDef
 
-lemma takeLast_defined : Sg1-Function₂ (takeLast :
-    V → V → V) via takeLastDef :=
+lemma takeLast_defined : Sg1-Function₂ (takeLast : V → V → V) via takeLastDef :=
   construction.result_defined
 
 @[simp] lemma eval_takeLastDef (v) :
@@ -914,8 +856,7 @@ lemma takeLast_defined : Sg1-Function₂ (takeLast :
 
 instance takeLast_definable : Sg1-Function₂ (takeLast : V → V → V) := takeLast_defined.to_definable
 
-instance takeLast_definable' (Γ m) : Γ-[m + 1]-Function₂ (takeLast :
-    V → V → V) :=
+instance takeLast_definable' (Γ m) : Γ-[m + 1]-Function₂ (takeLast : V → V → V) :=
   takeLast_definable.of_sigmaOne
 
 end «lp_section_13»
@@ -938,8 +879,7 @@ lemma len_takeLast {v k : V} (h : k ≤ len v) : len (takeLast v k) = k := by
   rcases nil_or_cons v with (rfl | ⟨x, v, rfl⟩) <;> simp [takeLast_cons]
 
 /-- TODO: move -/
-@[simp] lemma add_sub_add (a b c : V) :
-    (a + c) - (b + c) = a - b :=
+@[simp] lemma add_sub_add (a b c : V) : (a + c) - (b + c) = a - b :=
   add_tsub_add_eq_tsub_right a c b
 
 @[simp] lemma takeLast_zero (v : V) : takeLast v 0 = 0 := by
@@ -983,8 +923,7 @@ def construction : VecRec.Construction V blueprint where
   nil param := ?[param 0]
   cons (_ x _ ih) := x ∷ ih
   nil_defined := by intro v; simp [blueprint]
-  cons_defined := by
-    intro v; simp [blueprint, Fin.isValue]
+  cons_defined := by intro v; simp [blueprint, Fin.isValue]
 
 end Concat
 
@@ -997,8 +936,7 @@ def concat (v z : V) : V := construction.result ![z] v
 
 @[simp] lemma concat_nil (z : V) : concat 0 z = ?[z] := by simp [concat, construction]
 
-@[simp] lemma concat_cons (x v z : V) :
-    concat (x ∷ v) z = x ∷ concat v z := by
+@[simp] lemma concat_cons (x v z : V) : concat (x ∷ v) z = x ∷ concat v z := by
   simp [concat, construction]
 
 section «lp_section_15»
@@ -1006,8 +944,7 @@ section «lp_section_15»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.concatDef : Sg1.Semisentence 3 := blueprint.resultDef
 
-lemma concat_defined : Sg1-Function₂ (concat :
-    V → V → V) via concatDef :=
+lemma concat_defined : Sg1-Function₂ (concat : V → V → V) via concatDef :=
   construction.result_defined
 
 @[simp] lemma eval_concatDef (v) :
@@ -1015,8 +952,7 @@ lemma concat_defined : Sg1-Function₂ (concat :
 
 instance concat_definable : Sg1-Function₂ (concat : V → V → V) := concat_defined.to_definable
 
-instance concat_definable' (Γ m) : Γ-[m + 1]-Function₂ (concat :
-    V → V → V) :=
+instance concat_definable' (Γ m) : Γ-[m + 1]-Function₂ (concat : V → V → V) :=
   concat_definable.of_sigmaOne
 
 end «lp_section_15»
@@ -1042,8 +978,7 @@ lemma concat_nth_lt (v z : V) {i} (hi : i < len v) : (concat v z).[i] = v.[i] :=
   case nil => simp
   case cons x v ih => simp [ih]
 
-lemma concat_nth_len' (v z : V) {i} (hi : len v = i) : (concat v z).[i] = z := by
-  rcases hi; simp
+lemma concat_nth_len' (v z : V) {i} (hi : len v = i) : (concat v z).[i] = z := by rcases hi; simp
 
 end «lp_section_14»
 
@@ -1078,8 +1013,7 @@ lemma nth_mem_memVec {i v : V} (h : i < len v) : v.[i] ∈ᵥ v := ⟨i, by simp
     · rcases hx with ⟨i, hi, rfl⟩
       exact ⟨i + 1, by simp [hi]⟩
 
-lemma le_of_memVec {x v : V} (h : x ∈ᵥ v) : x ≤ v := by
-  rcases h with ⟨i, _, rfl⟩; simp
+lemma le_of_memVec {x v : V} (h : x ∈ᵥ v) : x ≤ v := by rcases h with ⟨i, _, rfl⟩; simp
 
 section «lp_section_17»
 
@@ -1096,8 +1030,7 @@ lemma memVec_defined : Dlt1-Relation (MemVec : V → V → Prop) via memVecDef :
 
 instance memVec_definable : Dlt1-Relation (MemVec : V → V → Prop) := memVec_defined.to_definable
 
-instance memVec_definable' (Γ m) : Γ-[m + 1]-Relation (MemVec :
-    V → V → Prop) :=
+instance memVec_definable' (Γ m) : Γ-[m + 1]-Relation (MemVec : V → V → Prop) :=
   memVec_definable.of_deltaOne
 
 end «lp_section_17»
@@ -1147,12 +1080,10 @@ lemma subsetVec_defined : Dlt1-Relation (SubsetVec : V → V → Prop) via subse
 @[simp] lemma eval_subsetVecDef (v) :
     Semiformula.Evalbm V v subsetVecDef.val ↔ v 0 ⊆ᵥ v 1 := subsetVec_defined.df.iff v
 
-instance subsetVec_definable : Dlt1-Relation (SubsetVec :
-    V → V → Prop) :=
+instance subsetVec_definable : Dlt1-Relation (SubsetVec : V → V → Prop) :=
   subsetVec_defined.to_definable
 
-instance subsetVec_definable' (Γ m) : Γ-[m + 1]-Relation (SubsetVec :
-    V → V → Prop) :=
+instance subsetVec_definable' (Γ m) : Γ-[m + 1]-Relation (SubsetVec : V → V → Prop) :=
   subsetVec_definable.of_deltaOne
 
 end «lp_section_19»
@@ -1182,19 +1113,16 @@ def _root_.LO.Arith.repeatVec.construction : PR.Construction V repeatVec.bluepri
 /-- `repeatVec x k = x ∷ x ∷ x ∷ ... k times ... ∷ 0` -/
 def repeatVec (x k : V) : V := repeatVec.construction.result ![x] k
 
-@[simp] lemma repeatVec_zero (x : V) :
-    repeatVec x 0 = 0 := by
+@[simp] lemma repeatVec_zero (x : V) : repeatVec x 0 = 0 := by
   simp [repeatVec, repeatVec.construction]
 
-@[simp] lemma repeatVec_succ (x k : V) :
-    repeatVec x (k + 1) = x ∷ repeatVec x k := by
+@[simp] lemma repeatVec_succ (x k : V) : repeatVec x (k + 1) = x ∷ repeatVec x k := by
   simp [repeatVec, repeatVec.construction]
 
 section «lp_section_21»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Arith.repeatVecDef :
-    Sg1.Semisentence 3 :=
+def _root_.LO.FirstOrder.Arith.repeatVecDef : Sg1.Semisentence 3 :=
   repeatVec.blueprint.resultDef |>.rew (Rew.substs ![#0, #2, #1])
 
 lemma repeatVec_defined : Sg1-Function₂ (repeatVec : V → V → V) via repeatVecDef :=
@@ -1204,12 +1132,10 @@ lemma repeatVec_defined : Sg1-Function₂ (repeatVec : V → V → V) via repeat
     Semiformula.Evalbm V v repeatVecDef.val ↔ v 0 = repeatVec (v 1) (v 2) :=
       repeatVec_defined.df.iff v
 
-instance repeatVec_definable : Sg1-Function₂ (repeatVec :
-    V → V → V) :=
+instance repeatVec_definable : Sg1-Function₂ (repeatVec : V → V → V) :=
   repeatVec_defined.to_definable
 
-instance repeatVec_definable' (Γ) : Γ-[m + 1]-Function₂ (repeatVec :
-    V → V → V) :=
+instance repeatVec_definable' (Γ) : Γ-[m + 1]-Function₂ (repeatVec : V → V → V) :=
   repeatVec_definable.of_sigmaOne
 
 end «lp_section_21»
@@ -1220,8 +1146,7 @@ end «lp_section_21»
   case zero => simp
   case succ k ih => simp [ih]
 
-@[simp] lemma le_repaetVec (x k : V) : k ≤ repeatVec x k := by
-  simpa using len_le (repeatVec x k)
+@[simp] lemma le_repaetVec (x k : V) : k ≤ repeatVec x k := by simpa using len_le (repeatVec x k)
 
 lemma nth_repeatVec (x k : V) {i} (h : i < k) : (repeatVec x k).[i] = x := by
   induction k using induction_sigma1 generalizing i
@@ -1276,8 +1201,7 @@ section «lp_section_23»
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.vecToSetDef : Sg1.Semisentence 2 := blueprint.resultDef
 
-lemma vecToSet_defined : Sg1-Function₁ (vecToSet :
-    V → V) via vecToSetDef :=
+lemma vecToSet_defined : Sg1-Function₁ (vecToSet : V → V) via vecToSetDef :=
   construction.result_defined
 
 @[simp] lemma eval_vecToSetDef (v) :
@@ -1285,8 +1209,7 @@ lemma vecToSet_defined : Sg1-Function₁ (vecToSet :
 
 instance vecToSet_definable : Sg1-Function₁ (vecToSet : V → V) := vecToSet_defined.to_definable
 
-instance vecToSet_definable' (Γ) : Γ-[m + 1]-Function₁ (vecToSet :
-    V → V) :=
+instance vecToSet_definable' (Γ) : Γ-[m + 1]-Function₁ (vecToSet : V → V) :=
   vecToSet_definable.of_sigmaOne
 
 end «lp_section_23»

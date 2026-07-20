@@ -31,16 +31,14 @@ theorem TensorProduct.assoc_tmul_coe (a : E) (b : F) (c : G) :
   rfl
 
 theorem TensorProduct.assoc_coe_coe (a : (E ⊗[R] F) ⊗[R] G) :
-    a = ↑(a : E ⊗[R] (F ⊗[R] G)) := by
-  simp only [LinearEquiv.symm_apply_apply]
+    a = ↑(a : E ⊗[R] (F ⊗[R] G)) := by simp only [LinearEquiv.symm_apply_apply]
 
 theorem TensorProduct.tmul_assoc_coe (a : E) (b : F) (c : G) :
     a ⊗ₜ[R] (b ⊗ₜ[R] c) = ↑((a ⊗ₜ[R] b) ⊗ₜ[R] c) :=
   rfl
 
 theorem TensorProduct.coe_coe_assoc (a : E ⊗[R] (F ⊗[R] G)) :
-    a = ↑(a : (E ⊗[R] F) ⊗[R] G) := by
-  simp only [LinearEquiv.apply_symm_apply]
+    a = ↑(a : (E ⊗[R] F) ⊗[R] G) := by simp only [LinearEquiv.apply_symm_apply]
 
 @[reducible, instance]
 noncomputable def TensorProduct.lidHasCoe :
@@ -83,9 +81,7 @@ theorem TensorProduct.rid_coe' (x : E) (r : R) : x ⊗ₜ[R] r = r • x := by
     mul_one]
 
 theorem TensorProduct.lid_coe_rid_coe (x : E) :
-  (x : R ⊗[R] E) = (x : E ⊗[R] R) :=
-  by
-  simp only [LinearEquiv.apply_symm_apply]
+  (x : R ⊗[R] E) = (x : E ⊗[R] R) := by simp only [LinearEquiv.apply_symm_apply]
 
 @[reducible, instance]
 noncomputable def funTensorProductAssocHasCoe {A : Type _} :
@@ -176,5 +172,4 @@ theorem LinearMap.rid_symm_coe {A : Type _} [AddCommMonoid A] [Module R A] (f : 
     LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, LinearMap.comp_id]
 
 example {A : Type _} (f : E ⊗[R] (F ⊗[R] G) → A) :
-    f = ↑(↑f : (E ⊗[R] F) ⊗[R] G → A) := by
-  simp only [LinearEquiv.apply_symm_apply]
+    f = ↑(↑f : (E ⊗[R] F) ⊗[R] G → A) := by simp only [LinearEquiv.apply_symm_apply]

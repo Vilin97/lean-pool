@@ -87,10 +87,7 @@ instance : IsClosed (Simplex S) := by
   have : {x : l1Space | StochasticVec x.ofLp} =
     {x | (∀ s, 0 ≤ x.ofLp s) ∧ (∑ s, x.ofLp s = 1)} := by
     ext1
-    simp only [Set.mem_setOf_eq]
-    constructor
-    · intro h; exact ⟨h.nonneg, h.rowsum⟩
-    · intro h; exact ⟨h.1, h.2⟩
+    exact ⟨fun h => ⟨h.nonneg, h.rowsum⟩, fun h => ⟨h.1, h.2⟩⟩
   unfold Simplex
   rw [this]
   exact h
@@ -135,12 +132,11 @@ class RowStochastic (P : Matrix S S ℝ) where
 lemma sum_svec_mul_smat_eq_one
   (μ : S → ℝ) [StochasticVec μ] (P : Matrix S S ℝ) [RowStochastic P]
   : ∑ i, ∑ j, μ i * P i j = 1 := by
-  have hμ := (inferInstance : StochasticVec μ)
   have hP := (inferInstance : RowStochastic P).stochastic
   have hrow : ∀ i, ∑ j, μ i * P i j = μ i := by
     intro i
     rw [← mul_sum, (hP i).rowsum, mul_one]
-  rw [sum_congr rfl (fun i _ => hrow i), hμ.rowsum]
+  rw [sum_congr rfl (fun i _ => hrow i), StochasticVec.rowsum]
 
 instance svec_mul_smat_is_svec
   (μ : S → ℝ) [StochasticVec μ] (P : Matrix S S ℝ) [RowStochastic P] :
@@ -150,10 +146,8 @@ instance svec_mul_smat_is_svec
   constructor
   case nonneg =>
     intro j
-    have : 0 ≤ ∑ i, μ i * P i j := by
-      refine sum_nonneg ?_
-      intro i _
-      exact mul_nonneg (hμ.nonneg i) ((hP i).nonneg j)
+    have : 0 ≤ ∑ i, μ i * P i j :=
+      sum_nonneg fun i _ => mul_nonneg (hμ.nonneg i) ((hP i).nonneg j)
     simpa [Matrix.vecMul, dotProduct] using this
   case rowsum =>
     simp only [Matrix.vecMul, dotProduct]
@@ -168,43 +162,34 @@ instance smat_mul_smat_is_smat
   constructor; intro i; constructor
   case nonneg =>
     intro j
-    have : 0 ≤ ∑ k, P i k * Q k j := by
-      refine sum_nonneg ?_
-      intro k _
-      exact mul_nonneg ((hP i).nonneg k) ((hQ k).nonneg j)
+    have : 0 ≤ ∑ k, P i k * Q k j :=
+      sum_nonneg fun k _ => mul_nonneg ((hP i).nonneg k) ((hQ k).nonneg j)
     simpa [Matrix.mul_apply] using this
   case rowsum =>
     calc
       ∑ j, (P * Q) i j
     _ = ∑ j, ∑ k, P i k * Q k j := by
         simp [Matrix.mul_apply]
-    _ = ∑ k, ∑ j, P i k * Q k j := by
-        simpa [mul_comm] using
-          (sum_comm :
-            ∑ j, ∑ k, P i k * Q k j = ∑ k, ∑ j, P i k * Q k j)
     _ = ∑ k, P i k * (∑ j, Q k j) := by
-        simp [Finset.mul_sum]
-    _ = ∑ k, P i k * 1 := by
+        rw [Finset.sum_comm]; simp [Finset.mul_sum]
+    _ = ∑ k, P i k := by
         apply sum_congr rfl
-        intro j _; simp [(inferInstance : StochasticVec (Q j)).rowsum]
-    _ = ∑ k, P i k := by simp
-    _ = 1 := (inferInstance : StochasticVec (P i)).rowsum
+        intro j _; simp [(hQ j).rowsum]
+    _ = 1 := (hP i).rowsum
 
 instance smat_pow_is_smat [DecidableEq S]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ) :
   RowStochastic (P ^ n) := by
   induction n with
   | zero =>
-    have hI : RowStochastic (1 : Matrix S S ℝ) := by
-      constructor; intro i; constructor
-      case nonneg =>
-        intro j
-        by_cases h : i = j
-        · rw [h]; simp
-        · exact (Matrix.one_apply_ne (α := ℝ) h).ge
-      case rowsum =>
-        simp [Matrix.one_apply]
-    exact hI
+    constructor; intro i; constructor
+    case nonneg =>
+      intro j
+      by_cases h : i = j
+      · rw [h]; simp
+      · exact (Matrix.one_apply_ne (α := ℝ) h).ge
+    case rowsum =>
+      simp [Matrix.one_apply]
   | succ n ih =>
     simp_rw [pow_add, pow_one]
     exact smat_mul_smat_is_smat (P ^ n) P
@@ -220,11 +205,8 @@ lemma chapman_kolmogorov_eq_ge [DecidableEq S]
   rw [add_sub_cancel_right]
   apply sum_nonneg
   intro l _
-  apply mul_nonneg
-  · have hP := RowStochastic.stochastic (P := P ^ m)
-    exact (hP i).nonneg l
-  · have hP := RowStochastic.stochastic (P := P ^ n)
-    exact (hP l).nonneg j
+  exact mul_nonneg ((RowStochastic.stochastic (P := P ^ m) i).nonneg l)
+    ((RowStochastic.stochastic (P := P ^ n) l).nonneg j)
 
 section minorization
 
@@ -307,25 +289,18 @@ theorem smat_minorizable_with_large_pow
   have : (Finset.univ (α := S × S)).Nonempty := by simp
   let δij := fun ij : S × S => (P ^ n₁) ij.1 ij.2
   let δ := inf' (Finset.univ (α := S × S)) this δij
-  have hδinf : ∀ ij, δ ≤ δij ij := by
-    intro ij
-    have : ij ∈ Finset.univ (α := S × S) := by simp
-    have := inf'_le (f := δij) this
-    exact this
+  have hδinf : ∀ ij, δ ≤ δij ij := fun ij => inf'_le (f := δij) (by simp)
   have hδrange : 0 < δ ∧ δ ≤ 1 := by
     obtain ⟨ij, hij, hijinf⟩ := exists_mem_eq_inf' this δij
     have hδdef : δ = δij ij := by unfold δ; simp [hijinf]
     have := hnij ij
-    constructor
-    case left => linarith
-    case right =>
-      obtain ⟨nonneg, rowsum⟩ := RowStochastic.stochastic (P := P ^ n₁) (ij.1)
-      rw [hδdef, ←rowsum, ←sum_erase_add (a := ij.2) (h := by simp)]
-      unfold δij
-      apply sub_nonneg.mp
-      rw [add_sub_cancel_right]
-      apply sum_nonneg
-      · intro j hj; exact nonneg j
+    refine ⟨by linarith, ?_⟩
+    obtain ⟨nonneg, rowsum⟩ := RowStochastic.stochastic (P := P ^ n₁) (ij.1)
+    rw [hδdef, ←rowsum, ←sum_erase_add (a := ij.2) (h := by simp)]
+    unfold δij
+    apply sub_nonneg.mp
+    rw [add_sub_cancel_right]
+    exact sum_nonneg fun j _ => nonneg j
   let δ' := δ * 1 / 2 * 1 / Fintype.card S
   refine ⟨n₁, ?hNpos, ?hN⟩
   case hNpos => unfold n₁; simp
@@ -340,26 +315,20 @@ theorem smat_minorizable_with_large_pow
     case hν =>
       constructor
       case nonneg => intro s; simp [ν]
-      case rowsum =>
-      simp [ν, Finset.sum_const, Finset.card_univ]
+      case rowsum => simp [ν, Finset.sum_const, Finset.card_univ]
     case hP =>
       intro i j
       have hδle : δ ≤ (P ^ n₁) i j := hδinf (i, j)
-      have hcard : (0 : ℝ) < Fintype.card S := by
-        have : 0 < Fintype.card S := Fintype.card_pos_iff.mpr inferInstance
-        exact_mod_cast this
-      have hνj : ν j = 1 / Fintype.card S := rfl
+      have hcard1 : (1 : ℝ) ≤ Fintype.card S := by
+        exact_mod_cast Nat.one_le_iff_ne_zero.mpr Fintype.card_ne_zero
       have hcoll : δ' * Fintype.card S * ν j = δ' := by
-        rw [hνj]
+        rw [show ν j = 1 / Fintype.card S from rfl]
         field_simp
       have hδ'le : δ' ≤ δ := by
         have hδ0 : 0 ≤ δ := hδrange.1.le
-        have hcard1 : (1 : ℝ) ≤ Fintype.card S := by
-          exact_mod_cast Nat.one_le_iff_ne_zero.mpr Fintype.card_ne_zero
-        have h1 : δ * 1 / 2 * 1 / Fintype.card S ≤ δ * 1 / 2 * 1 := by
-          apply div_le_self (by positivity) hcard1
-        have h2 : δ * 1 / 2 * 1 ≤ δ := by nlinarith
-        exact h1.trans h2
+        have h1 : δ * 1 / 2 * 1 / Fintype.card S ≤ δ * 1 / 2 * 1 :=
+          div_le_self (by positivity) hcard1
+        nlinarith [hδ0]
       rw [ge_iff_le, hcoll]
       linarith
 
@@ -491,28 +460,17 @@ theorem smat_contraction_in_simplex
         _ = (1 - ε) * a := by rw [sub_mul]
         _ = 1 := by unfold a; simp [hnonzero]
     let K : ℝ≥0 := ⟨1 - ε, hε0⟩
-    refine ⟨?K, ?hKpos, ?hK⟩
-    case K => exact K
-    case hKpos =>
-      unfold K;
-      have : 0 < 1 - ε := by linarith
-      exact_mod_cast this
+    refine ⟨K, by unfold K; exact_mod_cast show (0:ℝ) < 1 - ε by linarith, ?hK⟩
     case hK =>
-      unfold ContractingWith
-      unfold LipschitzWith
-      unfold smatAsOperator
+      unfold ContractingWith LipschitzWith smatAsOperator
       refine ⟨?hKlt1, ?hLip⟩
       case hLip =>
         intro x y
         simp only [Set.coe_setOf, Set.mem_setOf_eq]
-        have hx_sum : ∑ i, x.val.ofLp i = 1 := (x.property).rowsum
-        have hy_sum : ∑ i, y.val.ofLp i = 1 := (y.property).rowsum
         have hxB : x.val.ofLp ᵥ* broadcast ν = ν := by
-          funext j
-          simp [vecMul_broadcast, hx_sum]
+          funext j; simp [vecMul_broadcast, (x.property).rowsum]
         have hyB : y.val.ofLp ᵥ* broadcast ν = ν := by
-          funext j
-          simp [vecMul_broadcast, hy_sum]
+          funext j; simp [vecMul_broadcast, (y.property).rowsum]
         have hxP : x.val.ofLp ᵥ* P =
           ε • (x.val.ofLp ᵥ* broadcast ν) + (1 - ε) • (x.val.ofLp ᵥ* Q) := by
           rw [h_decomp]
@@ -542,9 +500,7 @@ theorem smat_contraction_in_simplex
               simp only [diff_eq, ← WithLp.toLp_smul]
             rw [h, nnnorm_smul]
             have hK : ‖(1 - ε : ℝ)‖₊ = K := by
-              apply NNReal.eq
-              rw [coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hε0]
-              rfl
+              apply NNReal.eq; rw [coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg hε0]; rfl
             rw [hK]
             have hLipQ := @smat_nonexpansive_in_l1 S _ Q hQ x.val.ofLp y.val.ofLp
             exact mul_le_mul_right hLipQ K
@@ -560,8 +516,7 @@ theorem smat_contraction_in_simplex
         _ = K * edist x y := by rfl
       case hKlt1 =>
         unfold K
-        have : 1 - ε < 1 := by linarith
-        exact this
+        exact show 1 - ε < 1 by linarith
 
 end contraction
 
@@ -580,11 +535,9 @@ lemma multi_step_stationary
   Stationary μ (P ^ n) := by
   constructor
   induction n with
-  | zero =>
-    simp [Matrix.vecMul_one]
+  | zero => simp [Matrix.vecMul_one]
   | succ n ih =>
-    have := (inferInstance : Stationary μ P).stationary
-    rw [pow_succ, ←vecMul_vecMul, ih, this]
+    rw [pow_succ, ←vecMul_vecMul, ih, (inferInstance : Stationary μ P).stationary]
 
 theorem pos_of_stationary
   (μ : S → ℝ) [StochasticVec μ]
@@ -596,7 +549,6 @@ theorem pos_of_stationary
   obtain ⟨s, hsle⟩ := h
   rw [not_lt] at hsle
   have hμ := (inferInstance : StochasticVec μ)
-  have hPn_nonneg : ∀ n, RowStochastic (P ^ n) := fun n => inferInstance
   have hs : μ s = 0 := le_antisymm hsle (hμ.nonneg s)
   have hμ0 : ∀ s', μ s' = 0 := by
     intro s'
@@ -606,9 +558,8 @@ theorem pos_of_stationary
       have := congrFun hPn s
       rw [Matrix.vecMul, dotProduct] at this
       simpa [hs] using this
-    have hterm : ∀ i ∈ Finset.univ, 0 ≤ μ i * (P ^ n) i s := by
-      intro i _
-      exact mul_nonneg (hμ.nonneg i) (((hPn_nonneg n).stochastic i).nonneg s)
+    have hterm : ∀ i ∈ Finset.univ, 0 ≤ μ i * (P ^ n) i s := fun i _ =>
+      mul_nonneg (hμ.nonneg i) ((RowStochastic.stochastic (P := P ^ n) i).nonneg s)
     have := (Finset.sum_eq_zero_iff_of_nonneg hterm).mp hsum s' (Finset.mem_univ s')
     rcases mul_eq_zero.mp this with h0 | h0
     · exact h0
@@ -629,12 +580,12 @@ lemma cesaro_average_is_svec
   (x₀ : S → ℝ) [StochasticVec x₀]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ)
   : StochasticVec (cesaroAverage x₀ P n) := by
+  have hval : ∀ i, (cesaroAverage x₀ P n) i
+      = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := fun i => by
+    simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
   constructor
   case nonneg =>
     intro i
-    have hval : (cesaroAverage x₀ P n) i
-        = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
-      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [hval]
     apply mul_nonneg
     · exact inv_nonneg.mpr (by linarith)
@@ -642,10 +593,6 @@ lemma cesaro_average_is_svec
       intro k _
       exact (svec_mul_smat_is_svec x₀ (P ^ k)).nonneg i
   case rowsum =>
-    have hval : ∀ i, (cesaroAverage x₀ P n) i
-        = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
-      intro i
-      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [Finset.sum_congr rfl (fun i _ => hval i), ← mul_sum, Finset.sum_comm]
     have hsum : ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i = n + 1 := by
       calc ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i
@@ -746,20 +693,11 @@ theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
     rw [WithLp.ofLp_toLp]
     exact cesaro_average_is_svec x₀ P n
   obtain ⟨μ, hμ, hstationary⟩ := IsCompact.tendsto_subseq hs hx
-  refine ⟨?μ, ?hμ, ?hstationary⟩
-  case μ => exact μ.ofLp
-  case hμ => exact hμ
-  case hstationary =>
-    constructor
+  refine ⟨μ.ofLp, hμ, ?_⟩
+  · constructor
     obtain ⟨nk, hn_increasing, hn_lim⟩ := hstationary
-    have ha : Tendsto (fun n => ‖xn (nk n) - μ‖) atTop (𝓝 0) := by
-      have := tendsto_iff_norm_sub_tendsto_zero.mp hn_lim
-      convert this using 2 with n
-      rfl
-    have halmostinv : ∀ n, ‖WithLp.toLp 1 ((xn n).ofLp ᵥ* P - (xn n).ofLp)‖₁ ≤ 2 / (n + 1) := by
-      intro n
-      unfold xn
-      exact cesaro_average_almost_invariant x₀ P n
+    have halmostinv : ∀ n, ‖WithLp.toLp 1 ((xn n).ofLp ᵥ* P - (xn n).ofLp)‖₁ ≤ 2 / (n + 1) :=
+      fun n => cesaro_average_almost_invariant x₀ P n
     have hb : Tendsto (fun n => ‖WithLp.toLp 1 ((xn (nk n)).ofLp ᵥ* P - (xn (nk n)).ofLp)‖₁)
       atTop (𝓝 0) := by
       apply tendsto_of_tendsto_of_tendsto_of_le_of_le
@@ -803,41 +741,34 @@ theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
     have hd : Tendsto (fun n => ‖f (xn (nk n)) - xn (nk n)‖) atTop (𝓝 0) := by
       have hcoe : ∀ n, ‖f (xn (nk n)) - xn (nk n)‖ =
           (‖WithLp.toLp 1 ((xn (nk n)).ofLp ᵥ* P - (xn (nk n)).ofLp)‖₁ : ℝ) := fun n => by
-        simp only [f]
-        rfl
+        simp only [f]; rfl
       simp_rw [hcoe]
       exact NNReal.tendsto_coe.mpr hb
-    have he : ‖f μ - μ‖ = 0 := by
-      have := tendsto_nhds_unique (continuous_norm.tendsto _|>.comp hc) hd
-      exact this
+    have he : ‖f μ - μ‖ = 0 :=
+      tendsto_nhds_unique (continuous_norm.tendsto _|>.comp hc) hd
     have : f μ = μ := by rwa [norm_eq_zero, sub_eq_zero] at he
     simp only [f] at this
-    have := (WithLp.toLp_injective 1).eq_iff.mp this
-    exact this
+    exact (WithLp.toLp_injective 1).eq_iff.mp this
 
 theorem stationary_distribution_uniquely_exists
   (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   : ∃! μ : S → ℝ, StochasticVec μ ∧ Stationary μ P := by
   obtain ⟨μ, hμ, hμstationary⟩ := stationary_distribution_exists P
-  refine ⟨μ, ?hμ, ?huniq⟩
-  case hμ => exact ⟨hμ, hμstationary⟩
-  case huniq =>
-    intro ν hν
-    obtain ⟨hν, hνstationary⟩ := hν
-    obtain ⟨N, _, hN⟩ := smat_minorizable_with_large_pow P
-    let f := smatAsOperator (P ^ N)
-    obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
-    have : IsFixedPt f ⟨WithLp.toLp 1 μ, hμ⟩ := by
-      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-      exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P N).stationary
-    have hμfixed := fixedPoint_unique hf this
-    have : IsFixedPt f ⟨WithLp.toLp 1 ν, hν⟩ := by
-      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
-      exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary ν P N).stationary
-    have hνfixed := fixedPoint_unique hf this
-    have := hνfixed.trans hμfixed.symm
-    simp only [Subtype.mk.injEq] at this
-    exact (WithLp.toLp_injective 1).eq_iff.mp this
+  refine ⟨μ, ⟨hμ, hμstationary⟩, ?_⟩
+  rintro ν ⟨hν, hνstationary⟩
+  obtain ⟨N, _, hN⟩ := smat_minorizable_with_large_pow P
+  let f := smatAsOperator (P ^ N)
+  obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
+  have fixed : ∀ (σ : S → ℝ) (hσ : StochasticVec σ), Stationary σ P →
+      IsFixedPt f ⟨WithLp.toLp 1 σ, hσ⟩ := fun σ hσ hσst => by
+    haveI := hσst
+    simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
+    exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary σ P N).stationary
+  have hμfixed := fixedPoint_unique hf (fixed μ hμ hμstationary)
+  have hνfixed := fixedPoint_unique hf (fixed ν hν hνstationary)
+  have := hνfixed.trans hμfixed.symm
+  simp only [Subtype.mk.injEq] at this
+  exact (WithLp.toLp_injective 1).eq_iff.mp this
 
 /-- Geometric convergence to stationarity in total variation/L¹ distance. -/
 class GeometricMixing
@@ -862,10 +793,8 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   have hKle1 := NNReal.coe_le_coe.mpr hf.1.le
   conv_rhs at hKle1 => simp
   constructor
-  refine ⟨?C, ?ρ, ?μ, ?hCpos, ?hρpos, ?hρlt1, ?hμ, ?hμstationary, ?hmixing⟩
-  case C => exact 2 / K / (1 - K)
-  case ρ => exact K ^ (1 / (N : ℝ))
-  case μ => exact μ
+  refine ⟨2 / K / (1 - K), K ^ (1 / (N : ℝ)), μ, ?hCpos, ?hρpos, ?hρlt1, hμ,
+    hμstationary, ?hmixing⟩
   case hCpos =>
     have h₁ : 0 < 1 - (K : ℝ) := by simp [hf.1]
     have h₂ : 0 < 2 / (K : ℝ) := by simp [hKpos]
@@ -876,8 +805,6 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
     · simp
     · simp [hf.1]
     · simp [hNpos]
-  case hμ => exact hμ
-  case hμstationary => exact hμstationary
   case hmixing =>
     intro x₀ hx₀ n
     have hrate := apriori_dist_iterate_fixedPoint_le hf

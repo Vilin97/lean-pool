@@ -51,11 +51,8 @@ def symOfNat (k : Nat) : SymN :=
 lemma symOfNat_injective_of_lt {a b : Nat} (ha : a < n) (hb : b < n) :
     symOfNat a = symOfNat b → a = b := by
   intro hab
-  have hval : a % n = b % n := by
-    simpa [symOfNat] using congrArg Fin.val hab
-  have ha' : a % n = a := Nat.mod_eq_of_lt ha
-  have hb' : b % n = b := Nat.mod_eq_of_lt hb
-  simpa [ha', hb'] using hval
+  have hval : a % n = b % n := by simpa [symOfNat] using congrArg Fin.val hab
+  rwa [Nat.mod_eq_of_lt ha, Nat.mod_eq_of_lt hb] at hval
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def labelGet (t : LabelTriple) (i : Fin 3) : SymN :=
@@ -105,34 +102,18 @@ lemma labelGetNat_lt (t : LabelTriple) (hr : LabelsInRange (t := t)) (i : Fin 3)
 lemma labelGetNat_injective_of_labelsDistinct (t : LabelTriple) (h : LabelsDistinct t) :
     Function.Injective (labelGetNat t) := by
   intro i j hij
-  fin_cases i <;> fin_cases j
-  · rfl
-  · exact (h.1 (by simpa [labelGetNat] using hij)).elim
-  · exact (h.2.1 (by simpa [labelGetNat] using hij)).elim
-  · have hij' : t.2.1 = t.1 := by
-      simpa [labelGetNat] using hij
-    exact (h.1 hij'.symm).elim
-  · rfl
-  · exact (h.2.2 (by simpa [labelGetNat] using hij)).elim
-  · have hij' : t.2.2 = t.1 := by
-      simpa [labelGetNat] using hij
-    exact (h.2.1 hij'.symm).elim
-  · have hij' : t.2.2 = t.2.1 := by
-      simpa [labelGetNat] using hij
-    exact (h.2.2 hij'.symm).elim
-  · rfl
+  obtain ⟨h1, h2, h3⟩ := h
+  fin_cases i <;> fin_cases j <;>
+    simp_all [labelGetNat, eq_comm]
 
 lemma tupleOfLabels_injective_of_labelsDistinct (t : LabelTriple) (h : LabelsDistinct t)
     (hr : LabelsInRange (t := t)) :
     Function.Injective (tupleOfLabels t) := by
   intro i j hij
-  have hi : labelGetNat t i < n := labelGetNat_lt (t := t) hr i
-  have hj : labelGetNat t j < n := labelGetNat_lt (t := t) hr j
   have hijSym : symOfNat (labelGetNat t i) = symOfNat (labelGetNat t j) := by
     simpa [tupleOfLabels, labelGet_eq_symOfNat_labelGetNat] using hij
-  have hijNat : labelGetNat t i = labelGetNat t j :=
-    symOfNat_injective_of_lt (a := labelGetNat t i) (b := labelGetNat t j) hi hj hijSym
-  exact labelGetNat_injective_of_labelsDistinct (t := t) h hijNat
+  exact labelGetNat_injective_of_labelsDistinct (t := t) h
+    (symOfNat_injective_of_lt (labelGetNat_lt (t := t) hr i) (labelGetNat_lt (t := t) hr j) hijSym)
 
 theorem varRepU_injective : ∀ i : Var, Function.Injective (tupleOfLabels (varRepU[i.1]!)) := by
   intro i
@@ -156,11 +137,9 @@ theorem varRepUAt_labelsDistinct (i : Var) : LabelsDistinct (varRepUAt i) := by
 theorem varRepVAt_labelsDistinct (i : Var) : LabelsDistinct (varRepVAt i) := by
   fin_cases i <;> decide
 
-theorem varRepUAt_labelsInRange (i : Var) : LabelsInRange (varRepUAt i) := by
-  fin_cases i <;> decide
+theorem varRepUAt_labelsInRange (i : Var) : LabelsInRange (varRepUAt i) := by fin_cases i <;> decide
 
-theorem varRepVAt_labelsInRange (i : Var) : LabelsInRange (varRepVAt i) := by
-  fin_cases i <;> decide
+theorem varRepVAt_labelsInRange (i : Var) : LabelsInRange (varRepVAt i) := by fin_cases i <;> decide
 
 theorem varRepUAt_injective : ∀ i : Var, Function.Injective (tupleOfLabels (varRepUAt i)) := by
   intro i
@@ -202,13 +181,10 @@ lemma edgeRepTuple_injective : Function.Injective edgeRepTuple := by
   have hmod1 : (1 : Nat) % n = 1 := Nat.mod_eq_of_lt (by decide : (1 : Nat) < n)
   have hmod2 : (2 : Nat) % n = 2 := Nat.mod_eq_of_lt (by decide : (2 : Nat) < n)
   have hmod3 : (3 : Nat) % n = 3 := Nat.mod_eq_of_lt (by decide : (3 : Nat) < n)
-  fin_cases i <;> fin_cases j <;> try rfl
-  all_goals
-    have hval := congrArg Fin.val hij
-    have : False := by
-      -- Reduce to an absurd equality between distinct numerals.
-      simp [edgeRepTuple, symOfNat, hmod0, hmod1, hmod2, hmod3] at hval
-    cases this
+  fin_cases i <;> fin_cases j <;> first
+    | rfl
+    | (exact absurd (congrArg Fin.val hij)
+        (by simp [edgeRepTuple, symOfNat, hmod0, hmod1, hmod2, hmod3]))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def edgeRep : Edge n :=

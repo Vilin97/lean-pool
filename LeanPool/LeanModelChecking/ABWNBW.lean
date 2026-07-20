@@ -79,9 +79,7 @@ theorem ABW.toNBW.lang_sub {S Q} {A : ABW S Q} {w : Nat → S} :
   · grind
 
 lemma lemma1 {α : Type} {a b c : Set α} {h : Disjoint a b} : a = (a ∪ (b ∩ c)) \ b := by
-  rw [Set.union_sdiff_distrib]
-  rw [Disjoint.sdiff_eq_right h.symm]
-  rw [←Set.sdiff_inter_right_comm]
+  rw [Set.union_sdiff_distrib, Disjoint.sdiff_eq_right h.symm, ← Set.sdiff_inter_right_comm]
   simp
 
 /-- The set of states occupying level `i` of the run DAG `G`. -/
@@ -137,13 +135,9 @@ lemma ancestor_1 {i j} (hij : i ≤ j) (v : G.level (j + 1)) :
 lemma ancestor_trans {i j k} (hij : i ≤ j) (hjk : j ≤ k) (v : G.level k) :
     ancestor hij (ancestor hjk v) = ancestor (hij.trans hjk) v := by
   induction k
-  · have i0 : i = 0 := by omega
-    have j0 : j = 0 := by omega
-    subst i0
-    subst j0
-    unfold ancestor
-    simp only [↓reduceDIte]
-    apply ancestor_refl
+  · obtain rfl : i = 0 := by omega
+    obtain rfl : j = 0 := by omega
+    simp [ancestor]
   next k IH =>
     by_cases jeq : j = k + 1
     · subst jeq
@@ -318,8 +312,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
   specialize W_not_F (n + j)
   rw [←Set.disjoint_iff_inter_eq_empty] at W_not_F
   rw [Set.disjoint_left] at W_not_F
-  specialize W_not_F (bad_path_f j).prop
-  contradiction
+  simp_all
 
 theorem ABW.toNBW.lang_eq {S Q} (A : ABW S Q) [Finite Q] : A.language = (ABW.toNBW A).language := by
   funext; apply propext

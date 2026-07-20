@@ -98,9 +98,7 @@ private lemma filter_map_neg_inv (p : ℂ) (hp : p ≠ 0)
   exact (tendsto_nhdsWithin_iff.mpr
     ⟨hφ_an.continuousAt.continuousWithinAt,
       by rw [eventually_nhdsWithin_iff]
-         filter_upwards [univ_mem] with z _ hz
-         simp only [mem_compl_iff, mem_singleton_iff] at hz
-         exact fun h => hz (inv_injective (neg_inj.mp h))⟩).eventually hQ
+         simp_all⟩).eventually hQ
 
 private lemma neg_inv_finite_order_witness (g : ℂ → ℂ) (p : ℂ) (hp : p ≠ 0)
     (n : ℤ) (h : ℂ → ℂ) (hh_an : AnalyticAt ℂ h (-p⁻¹)) (hh_ne : h (-p⁻¹) ≠ 0)
@@ -151,9 +149,7 @@ lemma ord_add_one_eq (p : ℍ) :
     have h_period := SlashInvariantForm.vAdd_width_periodic 1 k 1 f.toSlashInvariantForm z₀
     have h_vadd_coe : ((1 : ℝ) +ᵥ z₀ : ℍ) = ⟨z, hz⟩ :=
       by ext; change (↑(1 : ℝ) : ℂ) + (z - 1) = z; push_cast; ring
-    simp only [Nat.cast_one, mul_one, Int.cast_one, h_vadd_coe,
-      ModularForm.toSlashInvariantForm_coe] at h_period
-    exact h_period
+    simp_all
   rw [meromorphicOrderAt_congr hG_eq_near, meromorphicOrderAt_comp_sub_const]
 
 /-- T-invariance at ρ: `ord(f, ρ+1) = ord(f, ρ)`. -/
@@ -164,9 +160,7 @@ lemma ord_rho_plus_one_eq_ord_rho :
     UpperHalfPlane.ext (by
       change (((1 : ℝ) : ℂ) + ↑ellipticPointRho') = ↑ellipticPointRhoPlusOne'
       simp only [ellipticPointRho', ellipticPointRhoPlusOne']
-      change (1 : ℂ) + (-1 / 2 + ↑(Real.sqrt 3) / 2 * I) =
-        1 / 2 + ↑(Real.sqrt 3) / 2 * I
-      ring)
+      push_cast; ring)
   rw [← h]; exact ord_add_one_eq f ellipticPointRho'
 
 /-- S-identity for modular forms: `f(-1/z) = z^k · f(z)`. -/
@@ -185,8 +179,7 @@ lemma modform_comp_ofComplex_S_identity (z : ℂ) (hz : 0 < z.im) :
       rw [UpperHalfPlane.modular_S_smul]
       change -(1 : ℂ)/z = (-z)⁻¹; field_simp)
   rw [h_eq]
-  have hS : ModularGroup.S ∈ Gamma 1 := by
-    rw [Gamma_one_top]; exact Subgroup.mem_top _
+  have hS : ModularGroup.S ∈ Gamma 1 := Gamma_one_top ▸ Subgroup.mem_top _
   have h := SlashInvariantForm.slash_action_eqn_SL'' f hS z_uhp
   rw [ModularGroup.denom_S] at h; exact h
 
@@ -262,8 +255,7 @@ lemma ord_S_eq (p : ℍ) :
 /-- An open box containing the truncated fundamental domain. -/
 def fdBox (M : ℝ) : Set ℂ := {z : ℂ | -1 < z.re ∧ z.re < 1 ∧ (1 : ℝ)/2 < z.im ∧ z.im < M}
 
-lemma fdBox_im_pos {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by
-  linarith [hz.2.2.1]
+lemma fdBox_im_pos {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by linarith [hz.2.2.1]
 
 /-- A nonzero modular form has finitely many zeros in `fdBox M`. -/
 theorem modularForm_finitely_many_zeros_in_fdBox (hf : f ≠ 0) {M : ℝ} (hM : (1 : ℝ) / 2 < M) :
@@ -282,7 +274,7 @@ theorem modularForm_finitely_many_zeros_in_fdBox (hf : f ≠ 0) {M : ℝ} (hM : 
       ((sep_subset _ _).trans subset_closure)
   have hz₀_im : (1 : ℝ)/2 ≤ z₀.im := closure_minimal (fun z hz => le_of_lt hz.2.2.1)
     (isClosed_le continuous_const Complex.continuous_im) hz₀K
-  have hz₀_pos : 0 < z₀.im := by linarith [hz₀_im]
+  have hz₀_pos : 0 < z₀.im := by linarith
   have h_freq : ∃ᶠ y in 𝓝[≠] z₀, modularFormCompOfComplex f y = 0 :=
     (accPt_iff_frequently_nhdsNE.mp hz₀_acc).mono fun y hy => hy.2
   let U := {z : ℂ | 0 < z.im}
@@ -353,8 +345,7 @@ theorem exists_height_cusp_nonvanishing (hf : f ≠ 0) :
   obtain ⟨r, hr_pos, hr_nonvan⟩ := exists_radius_cusp_nonvanishing f hf
   let H₀ := max (heightOfRadius r) (Real.sqrt 3 / 2 + 1)
   refine ⟨H₀, ?_, ?_⟩
-  · calc Real.sqrt 3 / 2 < Real.sqrt 3 / 2 + 1 := by linarith
-      _ ≤ H₀ := le_max_right _ _
+  · exact lt_of_lt_of_le (by linarith) (le_max_right _ _)
   · intro q hq hq_ne
     apply hr_nonvan q _ hq_ne
     apply Metric.closedBall_subset_closedBall _ hq

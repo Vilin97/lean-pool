@@ -67,8 +67,7 @@ lemma exp_le_of_mem {i a : V} (h : i ∈ a) : exp i ≤ a := LenBit.le h
 
 lemma lt_of_mem {i a : V} (h : i ∈ a) : i < a := lt_of_lt_of_le (lt_exp i) (exp_le_of_mem h)
 
-lemma not_mem_of_lt_exp {i a : V} (h : a < exp i) :
-    i ∉ a :=
+lemma not_mem_of_lt_exp {i a : V} (h : a < exp i) : i ∉ a :=
   fun H ↦ by have := lt_of_le_of_lt (exp_le_of_mem H) h; simp at this
 
 section «lp_section_1»
@@ -118,13 +117,11 @@ lemma operator_mem_def : Semiformula.Operator.Mem.mem.sentence = bitDef.val := b
   simp [Semiformula.Operator.Mem.mem]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ballIn (t : Semiterm ℒₒᵣ ξ n) (p : Semiformula ℒₒᵣ ξ (n + 1)) :
-    Semiformula ℒₒᵣ ξ n :=
+def ballIn (t : Semiterm ℒₒᵣ ξ n) (p : Semiformula ℒₒᵣ ξ (n + 1)) : Semiformula ℒₒᵣ ξ n :=
   “∀ x < !!t, x ∈ !!(Rew.bShift t) → !p x ⋯”
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def bexIn (t : Semiterm ℒₒᵣ ξ n) (p : Semiformula ℒₒᵣ ξ (n + 1)) :
-    Semiformula ℒₒᵣ ξ n :=
+def bexIn (t : Semiterm ℒₒᵣ ξ n) (p : Semiformula ℒₒᵣ ξ (n + 1)) : Semiformula ℒₒᵣ ξ n :=
   “∃ x < !!t, x ∈ !!(Rew.bShift t) ∧ !p x ⋯”
 
 @[simp] lemma _root_.LO.FirstOrder.Arith.Hierarchy.bit {t u : Semiterm ℒₒᵣ μ n} :
@@ -404,16 +401,14 @@ lemma bitRemove_lt_of_mem {i a : V} (h : i ∈ a) : bitRemove i a < a := by
 
 lemma pos_of_nonempty {i a : V} (h : i ∈ a) : 0 < a := by
   exact pos_iff_ne_zero.mpr (fun ha ↦ by
-    rw [ha] at h
-    exact not_mem_zero i h)
+    simp_all)
 
 @[simp 1100] lemma mem_insert (i a : V) : i ∈ insert i a := by simp
 
 lemma insert_eq_self_of_mem {i a : V} (h : i ∈ a) : insert i a = a := by
   simp [insert_eq, bitInsert, h]
 
-lemma log_mem_of_pos {a : V} (h : 0 < a) : log a ∈ a :=
-  mem_iff_mul_exp_add_exp_add.mpr
+lemma log_mem_of_pos {a : V} (h : 0 < a) : log a ∈ a := mem_iff_mul_exp_add_exp_add.mpr
     ⟨0, a - exp log a,
       (tsub_lt_iff_left (exp_log_le_self h)).mpr
         (by rw [←two_mul]; exact lt_two_mul_exponential_log h),
@@ -421,8 +416,7 @@ lemma log_mem_of_pos {a : V} (h : 0 < a) : log a ∈ a :=
         simp only [zero_mul, zero_add]
         exact Eq.symm <| add_tsub_self_of_le (exp_log_le_self h)⟩
 
-lemma le_log_of_mem {i a : V} (h : i ∈ a) :
-    i ≤ log a :=
+lemma le_log_of_mem {i a : V} (h : i ∈ a) : i ≤ log a :=
   (exp_le_iff_le_log (pos_of_nonempty h)).mp (exp_le_of_mem h)
 
 lemma succ_mem_iff_mem_div_two {i a : V} :
@@ -589,13 +583,11 @@ lemma eq_empty_or_nonempty (a : V) : a = ∅ ∨ ∃ i, i ∈ a := by
 
 lemma nonempty_iff {s : V} : s ≠ ∅ ↔ ∃ x, x ∈ s := by
   rcases eq_empty_or_nonempty s with rfl | hs
-  · exact iff_of_false (by exact not_not_intro rfl)
-      (by rintro ⟨x, hx⟩; exact not_mem_zero x hx)
+  · simp_all
   · exact iff_of_true
       (by
         rintro rfl
-        rcases hs with ⟨x, hx⟩
-        exact not_mem_zero x hx)
+        simp_all)
       hs
 
 lemma isempty_iff {s : V} : s = ∅ ↔ ∀ x, x ∉ s := by
@@ -615,8 +607,7 @@ lemma lt_of_lt_log {a b : V} (pos : 0 < b) (h : ∀ i ∈ a, i < log b) : a < b 
   wlog lt : i < j
   · exact this (Eq.symm h) (Ne.symm ne) (lt_of_le_of_ne (by simpa using lt) (Ne.symm ne))
   have : i ∉ under i := by simp
-  have : i ∈ under i := by rw [h]; simp [mem_under_iff, lt]
-  contradiction, by rintro rfl; simp⟩
+  simp_all, by rintro rfl; simp⟩
 
 @[simp] lemma under_zero : under (0 : V) = ∅ := mem_ext (by simp [mem_under_iff])
 
@@ -728,18 +719,6 @@ theorem «finite_comprehension₁!» {P : V → Prop} (hP : Γ-[1]-Predicate P) 
       fun h ↦ (Hs i (mh i h)).mpr h⟩
   exact ExistsUnique.intro s H (fun s' H' ↦ mem_ext <| fun i ↦ by simp [H, H'])
 
-/-
-def setExt {Γ} (p : Dlt1.Semisentence (n + 1)) : Γ.Semisentence (n + 1) :=
-  match Γ with
-  | (Sg, m) => .mkSigma “u | ∀ x < u, x ∈ u ↔ !p x ⋯” (by {  })
-
-lemma set_iff {n} {f : (Fin n → V) → V} {R : (Fin (n + 1) → V) → Prop}
-    (hf : ∀ v x, x ∈ f v ↔ R (x :> v)) {Γ} (p : (Γ,
-        1).Semisentence (n + 1)) : DefinedFunction ℒₒᵣ (Γ, 1) f p := by
-      {
-
-     }
--/
 
 end «lp_section_7»
 

@@ -35,6 +35,11 @@ section SpaceTime
 
 -- No namespace needed, TestFunctionℂ and SpaceTime are top-level
 
+/-- `‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖` via the curry isometry. -/
+private lemma norm_iteratedFDeriv_one_eq (f : TestFunctionℂ) (y : SpaceTime) :
+    ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := by
+  simp_all
+
 /-- For a Schwartz function vanishing on {x₀ ≤ 0}, the linear bound ‖f(x)‖ ≤ C · x₀ holds.
     Follows from mean value theorem + global derivative bounds on Schwartz functions.
 -/
@@ -51,13 +56,7 @@ theorem schwartz_vanishing_linear_bound (f : TestFunctionℂ)
     simp only [pow_zero, one_mul] at this
     exact this
   -- Use C_deriv + 1 to ensure positivity
-  use C_deriv + 1
-  constructor
-  · -- C_deriv + 1 > 0 because C_deriv ≥ 0 (it bounds a norm)
-    have h_nonneg : 0 ≤ C_deriv := by
-      have := h_deriv_bound 0
-      exact le_trans (norm_nonneg _) this
-    linarith
+  refine ⟨C_deriv + 1, by linarith [le_trans (norm_nonneg _) (h_deriv_bound 0)], ?_⟩
   -- Step 2: For each x with x₀ > 0, show ‖f x‖ ≤ (C_deriv + 1) * x₀
   intro x hx_pos
   -- Construct the boundary point: x with time component set to 0
@@ -80,10 +79,7 @@ theorem schwartz_vanishing_linear_bound (f : TestFunctionℂ)
   have h_dist : ‖x - x₀_bdy‖ = |x 0| := by
     have h1 : x - x₀_bdy = (x 0) • e₀ := by simp only [x₀_bdy]; abel
     rw [h1, norm_smul, Real.norm_eq_abs]
-    have h_e₀_norm : ‖e₀‖ = 1 := by
-      simp only [e₀]
-      rw [PiLp.norm_single, norm_one]
-    rw [h_e₀_norm, mul_one]
+    rw [show ‖e₀‖ = 1 from by simp only [e₀]; rw [PiLp.norm_single, norm_one], mul_one]
   -- Since x 0 > 0, we have |x 0| = x 0
   rw [abs_of_pos hx_pos] at h_dist
   -- SpaceTime is convex
@@ -95,17 +91,7 @@ theorem schwartz_vanishing_linear_bound (f : TestFunctionℂ)
     exact f.differentiableAt.hasFDerivAt.hasFDerivWithinAt
   -- Connection: ‖fderiv ℝ f y‖ = ‖iteratedFDeriv ℝ 1 f y‖ (via curry isomorphism)
   have h_fderiv_bound : ∀ y ∈ (Set.univ : Set SpaceTime), ‖fderiv ℝ f y‖ ≤ C_deriv := by
-    intro y _
-    -- Use: ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖
-    -- This follows from iteratedFDeriv 1 f = curryLeftEquiv.symm ∘ fderiv f ∘ iteratedFDeriv 0 f
-    -- where curryLeftEquiv is an isometry
-    have h_norm_eq : ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := by
-      -- iteratedFDeriv_succ_eq_comp_left gives:
-      -- iteratedFDeriv ℝ 1 f = curryLeftEquiv.symm ∘ fderiv ℝ (iteratedFDeriv ℝ 0 f)
-      -- And iteratedFDeriv ℝ 0 f = f via continuousMultilinearCurryFin0
-      rw [← iteratedFDerivWithin_univ, ← fderivWithin_univ]
-      exact norm_iteratedFDerivWithin_one f uniqueDiffWithinAt_univ
-    linarith [h_deriv_bound y]
+    simp_all
   -- Apply the Mean Value Theorem (Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le)
   -- Note: The lemma gives ‖f y - f x‖ ≤ C * ‖y - x‖, so we need to swap x and x₀_bdy
   have h_mvt := h_convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
@@ -221,15 +207,10 @@ noncomputable def timeOrigin (t : ℝ) : SpaceTime :=
 
 /-- spacetimeOfTimeSpace is continuous in the spatial argument for fixed time. -/
 lemma continuous_spacetimeOfTimeSpace_right (t : ℝ) : Continuous (spacetimeOfTimeSpace t) := by
-  -- spacetimeOfTimeSpace t x = timeOrigin t + spatialEmbedCLM x
-  -- The first term is constant, the second is a CLM applied to x
-  have h_decompose : ∀ x, spacetimeOfTimeSpace t x = timeOrigin t + spatialEmbedCLM x := by
-    intro x
-    rw [spacetimeOfTimeSpace_decompose]
-    rfl
-  have h_cont : Continuous (fun x => timeOrigin t + spatialEmbedCLM x) :=
-    continuous_const.add spatialEmbedCLM.continuous
-  exact (continuous_congr h_decompose).mpr h_cont
+  -- spacetimeOfTimeSpace t x = timeOrigin t + spatialEmbedCLM x (constant + CLM)
+  have h_decompose : ∀ x, spacetimeOfTimeSpace t x = timeOrigin t + spatialEmbedCLM x :=
+    fun x => by rw [spacetimeOfTimeSpace_decompose]; rfl
+  exact (continuous_congr h_decompose).mpr (continuous_const.add spatialEmbedCLM.continuous)
 
 /-- A Schwartz function restricted to a fixed time slice is integrable over ℝ³.
     Uses decay transfer: 4D Schwartz decay implies 3D integrability via norm comparison.
@@ -246,8 +227,7 @@ lemma schwartz_time_slice_integrable (f : TestFunctionℂ) (t : ℝ) :
   --
   -- Use Schwartz decay bound from FunctionalAnalysis
   have hST_dim : Module.finrank ℝ SpaceTime < 5 := by
-    simp only [SpaceTime, finrank_euclideanSpace, Fintype.card_fin]
-    norm_num
+    simp_all
   obtain ⟨C, hC_pos, hf_decay⟩ := schwartz_integrable_decay f 5 hST_dim
   -- Note: SpatialCoords3 has dimension 3, and we need N > dim, so N = 5 > 3 works
   -- The dominator function: x ↦ C / (1 + ‖x‖)^5
@@ -362,10 +342,7 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
   -- Key bound: ‖fderiv ℝ f y‖ ≤ C / (1 + ‖y‖)^4
   have h_fderiv_decay : ∀ y : SpaceTime, ‖fderiv ℝ f y‖ ≤ C / (1 + ‖y‖)^4 := by
     intro y
-    -- Convert iteratedFDeriv to fderiv
-    have h_norm_eq : ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := by
-      rw [← iteratedFDerivWithin_univ, ← fderivWithin_univ]
-      exact norm_iteratedFDerivWithin_one f uniqueDiffWithinAt_univ
+    have h_norm_eq : ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := norm_iteratedFDeriv_one_eq f y
     have h1y : 0 < 1 + ‖y‖ := by linarith [norm_nonneg y]
     have h1y_pow : 0 < (1 + ‖y‖)^4 := pow_pos h1y 4
     by_cases hy_large : 1 ≤ ‖y‖
@@ -413,11 +390,7 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
             apply div_le_div_of_nonneg_right _ (le_of_lt h1y_pow)
             simp only [C]; linarith
   -- Use C as the constant
-  use C
-  constructor
-  · exact hC_pos
-  -- Introduce t and x_sp
-  intro t ht x_sp
+  refine ⟨C, hC_pos, fun t ht x_sp => ?_⟩
   -- Step 2: Segment bound - on path from (0, x_sp) to (t, x_sp), use spacetimeOfTimeSpace_norm_ge
   -- ‖(s, x_sp)‖² = s² + ‖x_sp‖² ≥ ‖x_sp‖², so (1+‖(s,x_sp)‖)^4 ≥ (1+‖x_sp‖)^4
   -- Therefore ‖fderiv f (s, x_sp)‖ ≤ C / (1+‖x_sp‖)^4 for all s ∈ [0,t]
@@ -466,8 +439,7 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
         0 1
       have h3 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 3 = 0 := spacetimeOfTimeSpace_spatial t
         0 2
-      simp only [h0, h1, h2, h3, Real.norm_eq_abs, abs_zero, sq_abs]
-      ring
+      simp_all
     have hnorm : 0 ≤ ‖spacetimeOfTimeSpace t 0‖ := norm_nonneg _
     nlinarith [sq_nonneg ‖spacetimeOfTimeSpace t 0‖, sq_nonneg t, hsq, ht]
   -- Apply 1D MVT via parameterization F(s) = f(spacetimeOfTimeSpace s x_sp)
@@ -586,57 +558,27 @@ theorem spatialNormIntegral_linear_bound (f : TestFunctionℂ)
   -- K is nonnegative (integral of nonnegative function)
   have hK_nonneg : 0 ≤ K := integral_nonneg (fun x => by positivity)
   -- Use C = C_pt * (K + 1) to ensure positivity
-  use C_pt * (K + 1)
-  constructor
-  · apply mul_pos hC_pt_pos; linarith
-  intro t ht
+  refine ⟨C_pt * (K + 1), mul_pos hC_pt_pos (by linarith), fun t ht => ?_⟩
   -- Step 4: Apply integral monotonicity
   -- First, show the integrand is bounded pointwise
   have h_pointwise : ∀ x : SpatialCoords3,
       ‖f (spacetimeOfTimeSpace t x)‖ ≤ C_pt * t / (1 + ‖x‖)^4 := fun x => h_pt_bound t ht x
   -- The bound function is integrable (scale of polynomial_decay_integrable_3d)
+  have h_div_eq : (fun x : SpatialCoords3 => C_pt * t / (1 + ‖x‖)^4) =
+      (fun x : SpatialCoords3 => (C_pt * t) * (1 / (1 + ‖x‖)^4)) := by ext x; ring
   have h_bound_int : Integrable (fun x : SpatialCoords3 => C_pt * t / (1 + ‖x‖)^4) volume := by
-    have h1 : Integrable (fun x : SpatialCoords3 => 1 / (1 + ‖x‖)^4) volume := h_decay_int
-    -- C_pt * t / (1 + ‖x‖)^4 = (C_pt * t) * (1 / (1 + ‖x‖)^4)
-    have h_eq : (fun x : SpatialCoords3 => C_pt * t / (1 + ‖x‖)^4) =
-                (fun x : SpatialCoords3 => (C_pt * t) * (1 / (1 + ‖x‖)^4)) := by
-      ext x; ring
-    rw [h_eq]
-    exact h1.const_mul (C_pt * t)
-  -- The integrand ‖f ...‖ is integrable (bounded by integrable function)
-  have h_f_int : Integrable (fun x : SpatialCoords3 => ‖f (spacetimeOfTimeSpace t x)‖) volume := by
-    -- Use Integrable.mono: need AEStronglyMeasurable and pointwise norm bound
-    apply h_bound_int.mono
-    · -- AEStronglyMeasurable of norm of Schwartz composition
-      exact (f.continuous.comp (continuous_spacetimeOfTimeSpace_right t)).aestronglyMeasurable.norm
-    · -- ‖‖f(...)‖‖ = ‖f(...)‖ ≤ bound
-      filter_upwards with x
-      rw [norm_norm]
-      have h1x : 0 < 1 + ‖x‖ := by linarith [norm_nonneg x]
-      have h1x_pow : 0 < (1 + ‖x‖)^4 := pow_pos h1x 4
-      have hCt : 0 ≤ C_pt * t := mul_nonneg (le_of_lt hC_pt_pos) (le_of_lt ht)
-      calc ‖f (spacetimeOfTimeSpace t x)‖
-          ≤ C_pt * t / (1 + ‖x‖)^4 := h_pointwise x
-        _ ≤ |C_pt * t / (1 + ‖x‖)^4| := le_abs_self _
-        _ = ‖C_pt * t / (1 + ‖x‖)^4‖ := (Real.norm_eq_abs _).symm
-  -- Convert pointwise bound to ae bound
-  have h_ae_bound : ∀ᵐ x ∂(volume : Measure SpatialCoords3),
-      ‖f (spacetimeOfTimeSpace t x)‖ ≤ C_pt * t / (1 + ‖x‖)^4 :=
-    ae_of_all _ h_pointwise
-  -- Apply integral monotonicity
+    rw [h_div_eq]; exact h_decay_int.const_mul (C_pt * t)
+  -- Apply integral monotonicity:
   -- integral_mono_of_nonneg : 0 ≤ᵐ f → Integrable g → f ≤ᵐ g → ∫ f ≤ ∫ g
   have h_mono := integral_mono_of_nonneg
     (f := fun x => ‖f (spacetimeOfTimeSpace t x)‖)
     (g := fun x => C_pt * t / (1 + ‖x‖)^4)
-    (ae_of_all _ (fun x => norm_nonneg _))  -- 0 ≤ᵐ ‖f ...‖
+    (ae_of_all _ (fun x => norm_nonneg _))
     h_bound_int
-    h_ae_bound
+    (ae_of_all _ h_pointwise)
   -- Pull out constants: ∫ (C_pt * t) / (1 + ‖x‖)^4 = (C_pt * t) * ∫ 1 / (1 + ‖x‖)^4
   have h_factor : ∫ x : SpatialCoords3, C_pt * t / (1 + ‖x‖)^4 = C_pt * t * K := by
-    have h_eq : (fun x : SpatialCoords3 => C_pt * t / (1 + ‖x‖)^4) =
-                (fun x : SpatialCoords3 => (C_pt * t) * (1 / (1 + ‖x‖)^4)) := by ext x; ring
-    rw [h_eq]
-    -- Use integral_smul: ∫ c * f = c * ∫ f
+    rw [h_div_eq]
     simp only [← smul_eq_mul, integral_smul]
     rfl
   -- Combine inequalities

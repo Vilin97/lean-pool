@@ -225,6 +225,71 @@ appears.
   survived, not the lower-bound formalization.
 - `misaka10987/archimedes` — PR #51; elementary coordinate-geometry API, no
   graduate/research headline result.
+- `alainchmt/RingOfIntegersProject` — PR #124; the full DedekindProject4 port
+  was green, but at ~98k lines / 639 files it exceeded the LLM-review context
+  window and the proof-profile/comment budget; closed for now as too large for
+  the current Lean Pool import gates.
+- `kckennylau/EllipticCurve` — PR #66; only a small lemmas/equalizer slice
+  ported, while the Grassmannian/Proj algebraic-geometry stack carrying the
+  elliptic-curve content was omitted and needs a substantial Mathlib-bump port.
+- `dagurtomas/LeanCondensed` — PR #71; the imported fragment was coherent
+  condensed-mathematics infrastructure, but lacked a substantive named theorem
+  from the upstream project.
+
+Dropped before opening an import PR:
+
+- `mckoen/quasicategory` — upstream remains on topic and Apache-2.0, but as of
+  2026-06-28 its advertised internal-hom/quasi-category theorem still depends
+  on unresolved `sorry`s in `Quasicategory/Main.lean`,
+  `Quasicategory/MorphismProperty.lean`, `Quasicategory/PushoutProduct/Basic.lean`,
+  and `Quasicategory/_007F/Nondegenerate.lean`; not a complete project under
+  Lean Pool's `sorry`-free gate.
+- `singerng/steinberg-formalization` — Apache-2.0 and `sorry`-free, with a
+  substantive O'Donnell-Singer Steinberg-relations endpoint, but the current
+  v4.15 source is not gate-compliant: it relies on forbidden `set_option`
+  waivers for `quotPrecheck`, `hygiene`, and unbounded `maxHeartbeats`, has a
+  `partial def` in macro support, and includes diagnostic `#check` commands.
+  Revisit after the project builds without these waivers and diagnostics.
+- `Whysoserioushah/BrauerGroup_new` — now redirects to
+  `Whysoserioushah/BrauerGroup`; the 2026-06-28 triage found the current
+  default branch actively pushed that day and still not gate-compliant:
+  active files contain unresolved `sorry`s (for example
+  `BrauerGroup/CSA/ReducedCharPoly.lean` and
+  `BrauerGroup/Azumaya/Group.lean`), and the project relies on repeated
+  forbidden `set_option` waivers for heartbeats, synthesis depth, and linter
+  settings. Revisit only after upstream is `sorry`-free and waiver-free.
+- `jamesj64/lean-modal-logic` — MIT and the propositional K/S5 files are
+  close enough to build as a partial extraction, but the current upstream root
+  imports `Modal/Boxdot.lean`, where `BoxdotConjecture` is still `sorry`, and
+  the quantified modal-logic branch uses forbidden `set_option quotPrecheck
+  false` while the README describes it as ongoing work. Revisit after upstream
+  is `sorry`-free and waiver-free, or after the K/S5 subset is split as a
+  complete standalone project.
+- `Arij-Aziz/Selberg_improvement_general` — Apache-2.0 and mathematically
+  interesting, but the current upstream still documents a deferred
+  `optimalWeight_quadForm_eq` proof in
+  `RequestProject/Core/MultiPrime/OptimalWeights.lean`; `Challenge.lean` is a
+  statement-only mirror with many intentional `sorry`s, and `Future/` is
+  scaffolding outside the proof chain. Revisit when the general optimal-weight
+  theorem is sorry-free or the Möbius-weight subchain is released as a complete
+  standalone project.
+- `Phylliida/lean-quadratic-extension` — MIT and the one-level positive-cone
+  closure theorem is real, but the hard proof currently uses forbidden
+  `set_option maxHeartbeats` overrides, and the README says the dynamic tower
+  / ring-structure part is not complete. Revisit after the proof is
+  waiver-free and the tower target is finished.
+- `SamuelSchlesinger/complexitylib` — substantive computational-complexity
+  theory, but a 2026-06-28 GitHub metadata check still reports no license.
+  Lean Pool cannot redistribute it under Apache-2.0 without an explicit
+  permissive grant.
+- `LarsenClose/fixed-point-formalization` — substantive fixed-point work in
+  monoidal closed categories, but a 2026-06-28 GitHub metadata check still
+  reports no license. Revisit if upstream adds Apache-2.0, MIT, BSD, ISC,
+  0BSD, or Zlib licensing.
+- `duckki/GraphCoQL.lean` — substantial GraphQL semantics/conformance
+  formalization, but a 2026-06-28 GitHub metadata check still reports no
+  license. It is not importable into Lean Pool without an explicit permissive
+  grant.
 
 Closed import PRs superseded by later accepted imports:
 
@@ -460,6 +525,28 @@ Substantive and on-topic, but ship no explicit permissive license — not import
 | [arhaan2/formalizing-online-prediction-from-halving-to-hedge-in-lean](https://github.com/Arhaan2/Formalizing-Online-Prediction-From-Halving-to-Hedge-in-Lean) | Online learning: Halving mistake bound, Hoeffding log-MGF, Weighted Majority & Hedge regret | *none* | v4.28.0 | 721 | 2026-05-08 |
 | [nyxfoundation/goldfish-fv](https://github.com/NyxFoundation/goldfish-fv) | Safety/liveness of the Goldfish Ethereum consensus protocol (synchronous sleepy model) | *none* | v4.29.0 | 713 | 2026-05-27 |
 
+### Dropped during import triage
+
+- [xiangyazi24/invitation-to-qseries-lean](https://github.com/xiangyazi24/invitation-to-qseries-lean) — Apache-2.0 and mathematically strong, but the 2026-06-28 triage found the current import surface too large for a content PR: the repository advertises about 255k Lean lines / 26.5k theorems, the root library imports many `Pending` modules, and active library files use forbidden Lean Pool constructs including `set_option`, `native_decide`, and bare `import Mathlib`. Revisit only after a focused gate-clean subset or upstream cleanup narrows the import target.
+- [axiommath/andrews_dhar_problem](https://github.com/AxiomMath/andrews_dhar_problem) — MIT and proof-complete in its `solution.lean` files, but the 2026-06-28 triage found the current generated proof layout outside Lean Pool gates: `thm2_split4/solution.lean` is 16,199 lines, exceeding the 10,000-code-line file limit, and the solutions also use bare `import Mathlib`, linter-disabling `set_option`s, and repeated heartbeat waivers. Revisit after a refactor into smaller files/proofs that build without waivers.
+- [jamesj64/lean-modal-logic](https://github.com/jamesj64/lean-modal-logic) — MIT and the propositional K/S5 core can be ported to current Mathlib, but the 2026-06-28 triage found the repository is not proof-complete as a whole (`Modal/Boxdot.lean` still contains `sorry`) and also uses a forbidden `set_option quotPrecheck false` in the quantified embedding. A scoped K/S5-only port built locally after repairs, but still emitted 253 build warnings, so it would be a partial import and fail Lean Pool's warning gate. Revisit after the full upstream project is `sorry`-free and warning-clean.
+- [mathlib-initiative/sum_product](https://github.com/mathlib-initiative/sum_product) — Apache-2.0 and mathematically important, but the 2026-06-28 triage found the current Lake project is not Lean Pool clean: `Challenge.lean`, registered as its own library for comparator, still proves the trusted challenge theorem with `sorry`; many active files use bare `import Mathlib`; and the library relies on forbidden local options including large `maxHeartbeats` settings and `set_option backward.isDefEq.respectTransparency false`. Revisit after the comparator challenge is separated or completed and the library builds without waivers.
+- [logical-intelligence/erdos-unit-distance](https://github.com/logical-intelligence/erdos-unit-distance) — Apache-2.0 and proof-complete in the current grep audit, but the 2026-06-28 triage found it is not a direct Lean Pool content import: the Lake project depends on the external `PrimeNumberTheoremAnd` package, several proof files rely on forbidden `set_option` waivers (large heartbeats, `synthInstance.maxHeartbeats`, and `linter.unusedSectionVars false`), and multiple internal modules still use bare `import Mathlib`. Revisit after the dependency is upstreamed or vendored inside the candidate and the proof scripts are warning/waiver-clean.
+- [elnando888/poissonviacrt](https://github.com/ElNando888/PoissonViaCRT) — Apache-2.0, but the 2026-06-28 triage found the project is not proof-complete: `Challenge.lean` contains multiple `sorry`s, active files such as `PoissonViaCRT/L2DeviationSynthesis.lean` still contain a mathematical `sorry`, and `PoissonViaCRT/AnalyticInputs.lean` uses `admit` placeholders for analytic inputs. The repository also includes many `_retired` Lean files with additional gaps and uses repeated `set_option linter.unusedVariables false` / heartbeat waivers. Revisit after the active and retired Lean tree is either completed or removed and the build is waiver-free.
+- [axiommath/partitionpolynomial](https://github.com/AxiomMath/PartitionPolynomial) — MIT and the generated `solution.lean` files are within Lean Pool's file-size gate, but the 2026-06-28 triage found the repository is not proof-complete as imported: every included `problem.lean` file still contains `sorry`, all modules use bare `import Mathlib`, and several solution files rely on linter-disabling `set_option`s (`unusedVariables`, `unusedSimpArgs`, `unusedTactic`, `unnecessarySeqFocus`, `unnecessarySimpa`, `unreachableTactic`). Revisit after the problem files are removed/completed and the solutions build warning-clean without waivers.
+- [wangfrankie/quadraticnumberfields](https://github.com/WangFrankie/QuadraticNumberFields) — Apache-2.0 and substantial, but the 2026-06-28 triage found the current repository is not proof-complete or gate-clean: active files including `ImaginaryClassNumberOne/WeberData/FormsProvider.lean`, `FormClassGroup/Computed.lean`, and `QuadraticNumberFields/Euclidean/Basic.lean` contain `sorry`; several files use `nolint` attributes or `set_option linter.hashCommand false`; and the tree includes `scripts/runLinter.lean` with `unsafe` definitions. Revisit after the incomplete/example/script material is either completed or excluded upstream and the library builds without waivers.
+- [elvec1o/kravitz-lonely-runner-n3](https://github.com/ElVec1o/kravitz-lonely-runner-n3) — Apache-2.0 and `sorry`-free, but the 2026-06-28 triage found the current proof depends on trust outside Lean Pool's allowed axiom set: `KravitzPieceA.lean` and `D3Classify.lean` use `native_decide` for finite enumerations, the source contains `#print axioms` diagnostics, and `D3Classify.lean` sets `maxHeartbeats 4000000`. Revisit after the finite checks are kernel-checked or reflected without `native_decide`, diagnostics are removed, and the project builds without options.
+- [arij-aziz/selberg_improvement_general](https://github.com/Arij-Aziz/Selberg_improvement_general) — Apache-2.0, but the 2026-06-28 triage found the project is not proof-complete or gate-clean: `Challenge.lean` intentionally imports only Mathlib and contains many `sorry` placeholders, `RequestProject/Core/MultiPrime/OptimalWeights.lean` still has a theorem marked as a formalization gap with `sorry`, and `RequestProject/Audit.lean` contains many forbidden `#print axioms` diagnostics. Revisit after the challenge/future/audit material is separated or completed and the core library is `sorry`-free without diagnostics.
+- [karlesmarin/godsil-gutman-lean](https://github.com/karlesmarin/godsil-gutman-lean) — Apache-2.0 and mathematically substantial, but the 2026-06-28 triage found the current active Lake project is not Lean Pool gate-clean: it now includes many strands beyond the original Godsil-Gutman row, active targets contain a committed `#print axioms` diagnostic, several bare `import Mathlib` modules, and heartbeat/linter `set_option` waivers in `MSS`, `Ihara`, `Dilog`, and `QSL`. Revisit after upstream narrows or separates the import target and builds without diagnostics, broad imports, or local options.
+- [smaniad/besovspacesgoodgrid](https://github.com/SmaniaD/BesovSpacesGoodGrid) — Apache-2.0 and on-topic, but the 2026-06-28 triage found it is not a self-contained Lean Pool import target: its Lake project depends on `LaminarFamiliesMaximalBinaryTrees`, `UnconditionalSchauderBasis`, and `UnbalancedHaarWavelet`, while Lean Pool projects are kept independent rather than importing other pool projects. The active tree also contains linter-option waivers (`set_option linter.dupNamespace false`). Revisit after the dependency stack is upstreamed or vendored cleanly and the project builds without local options.
+- [raphaelrrcoelho/formal-mathfin](https://github.com/raphaelrrcoelho/formal-mathfin) — Apache-2.0 and substantial, but the 2026-06-28 triage found it is not a self-contained, gate-clean Lean Pool import target: the active Lake project depends on `LeanArchitect` and `brownian-motion`, builds every `MathFin` submodule including generated/audit modules, and contains many `#guard_msgs in #print axioms` diagnostics, many `public import Mathlib` modules, and a linter `set_option` waiver. Revisit after the external dependencies and audit/generated surfaces are separated or vendored gate-cleanly.
+- [robby955/formalslt](https://github.com/Robby955/FormalSLT) — MIT and proof-complete by grep audit, but the 2026-06-28 triage found the active root is not Lean Pool gate-clean: it imports diagnostic test modules with `#check`, `FormalSLT/Covering/DudleyToRademacher.lean` contains committed `#print axioms` diagnostics, and active proofs use linter waivers plus `set_option maxHeartbeats 0` for the finite Bernoulli KL moment case split. Revisit after the diagnostics are removed and the proofs build without local options.
+- [smaniad/unbalancedhaarwavelet](https://github.com/SmaniaD/UnbalancedHaarWavelet) — Apache-2.0 and on-topic, but the 2026-06-28 triage found it is not self-contained for Lean Pool: its Lake project depends on `LaminarFamiliesMaximalBinaryTrees`, `Burkholder`, and `UnconditionalSchauderBasis`, and active files use style/linter `set_option` waivers. Revisit after the dependencies are upstreamed or vendored gate-cleanly and the project builds without local options.
+- [mrdouglasny/bochner](https://github.com/mrdouglasny/bochner) — Apache-2.0 and on-topic, but the 2026-06-28 triage found it is not a self-contained, gate-clean Lean Pool import target: the Lake project depends on the external `kolmogorov_extension4` repository, Bochner files use heartbeat `set_option` waivers, and the repository includes a `Test` Lean library with explicit axioms for white-noise examples. Revisit after the dependency and axiom/test surfaces are separated and the core builds without local options.
+- [frenzymath/qrcp-bounded-coherence-obstruction](https://github.com/frenzymath/qrcp-bounded-coherence-obstruction) — Apache-2.0 and on-topic, but the 2026-06-28 triage found the repository is not proof-complete or gate-clean: the separate `Challenge` library contains a committed `sorry`, while active proof files use bare `import Mathlib` and many heartbeat/style/linter `set_option` waivers. Revisit after the challenge statement is separated or completed and the proof library builds without broad imports or local options.
+- [phylliida/lean-quadratic-extension](https://github.com/Phylliida/lean-quadratic-extension) — MIT, proof-complete one-level positive-cone closure for a quadratic extension, but only 264 Lean lines and the README explicitly leaves the dynamic tower / ring-structure endpoint unfinished.
+- [mrdouglasny/gibbs-variational](https://github.com/mrdouglasny/gibbs-variational) — Apache-2.0 and on-topic, but current `GibbsVariational/Variational.lean` still contains a `sorry`; the README also flags the stated Donsker-Varadhan equality as false as written.
+
 ### Near-misses — active mathlib-bound work
 
 On-topic and often permissively licensed, but being pushed toward mathlib upstream (or by a mathlib maintainer), so importing into lean-pool would duplicate or conflict with that pipeline.
@@ -561,3 +648,20 @@ Classified `include=true` and recorded in [`decisions.jsonl`](decisions.jsonl) /
 - [alexfleetcommander/lean-proofs](https://github.com/alexfleetcommander/lean-proofs) — economics, social choice, mechanism design, game theory and decision theory batch (Apache-2.0, v4.16.0, 6,121 LOC) — real proofs, but broad batch with no single source-anchored headline.
 - [arij-aziz/selberg-parity-obstruction](https://github.com/Arij-Aziz/Selberg-Parity-Obstruction) — Selberg parity-obstruction formalization (Apache-2.0, v4.28.0, 4,968 LOC) — on-topic but unfinished.
 - [catskillsresearch/avg_case_mls](https://github.com/catskillsresearch/avg_case_mls) — average-case complexity of multilevel syllogistic decision procedures (Apache-2.0, v4.30.0, 3,783 LOC) — on-topic but still has explicit axioms.
+
+
+## July 2026 refresh - stale-candidate pass
+
+Curated 2026-07-03. A second, wider sweep run after the June refresh. The daily
+discovery bot filters only on GitHub `created:`, so this pass added a `pushed:`
+window and raised the per-query result cap, surfacing about 1,200 additional
+untracked Lean repos. Those were deep-classified (clone, read, license +
+own-LOC + real-`sorry` count + domain fit, with an adversarial pass for the
+large 2026 AI-slop tail); 556 new `include`/exclude decisions are recorded in
+[`decisions.jsonl`](decisions.jsonl).
+
+For shortlist purposes, this pass now uses the stricter staleness discipline:
+a project must have no GitHub activity after 2026-05-04, at least two months
+before the 2026-07-04 review date. Every import-worthy project surfaced so far
+by the July pushed-window sweep was active after that cutoff, so this refresh
+adds no new shortlist rows.

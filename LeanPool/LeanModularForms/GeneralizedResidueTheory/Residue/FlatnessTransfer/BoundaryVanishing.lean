@@ -39,8 +39,7 @@ theorem hasDerivAt_zpow_comp_sub
       (↑n * (γ t - s) ^ (n - 1) * L) t := by
   have h_comp := (hasDerivAt_zpow n (γ t - s) (Or.inl (sub_ne_zero.mpr hne))).comp t
     (hγ.sub_const s)
-  refine h_comp.congr_deriv ?_
-  ring
+  exact h_comp.congr_deriv (by ring)
 
 /-- ContinuousOn for `t ↦ (γ(t) - s)^n` on a set where `γ(t) ≠ s`. -/
 theorem continuousOn_zpow_comp_sub
@@ -116,6 +115,20 @@ theorem exists_unique_crossing_neighborhood
     _root_.exists_isolated_crossing_interval γ s t₀ ht₀ hcross
   exact ⟨a', b', ⟨ha'_lt, ht₀_lt_b'⟩, h_sub, h_unique⟩
 
+private lemma tendsto_add_nhdsGT (t₀ : ℝ) :
+    Tendsto (fun ε : ℝ => t₀ + ε) (𝓝[>] (0 : ℝ)) (𝓝[>] t₀) := by
+  apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
+  · simpa using ((continuous_const_add t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
+  · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
+    exact lt_add_of_pos_right t₀ hε
+
+private lemma tendsto_sub_nhdsLT (t₀ : ℝ) :
+    Tendsto (fun ε : ℝ => t₀ - ε) (𝓝[>] (0 : ℝ)) (𝓝[<] t₀) := by
+  apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
+  · simpa using ((continuous_sub_left t₀).tendsto (0 : ℝ)).mono_left nhdsWithin_le_nhds
+  · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
+    exact sub_lt_self t₀ hε
+
 private lemma slope_tendsto_right_of_deriv
     (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ)
     (ht₀ : t₀ ∈ Ioo γ.a γ.b) (hcross : γ.toFun t₀ = s)
@@ -147,15 +160,7 @@ private lemma slope_tendsto_right_of_deriv
     hasDerivWithinAt_Ici_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsGT hδ_gt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope] at h_deriv
   rw [show (Ici t₀ \ {t₀} : Set ℝ) = Ioi t₀ from Ici_sdiff_left] at h_deriv
-  have h_map : Tendsto (fun ε : ℝ => t₀ + ε) (𝓝[>] (0 : ℝ)) (𝓝[>] t₀) := by
-    apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-    · have : Tendsto (fun ε : ℝ => t₀ + ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
-        have := (continuous_const_add t₀).tendsto (0 : ℝ)
-        simpa using this
-      exact this.mono_left nhdsWithin_le_nhds
-    · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-      exact lt_add_of_pos_right t₀ hε
-  refine (h_deriv.comp h_map).congr (fun ε => ?_)
+  refine (h_deriv.comp (tendsto_add_nhdsGT t₀)).congr (fun ε => ?_)
   simp only [Function.comp, slope, vsub_eq_sub, hcross, add_sub_cancel_left]
 
 private lemma direction_of_slope_tendsto
@@ -231,15 +236,7 @@ private lemma slope_tendsto_left_of_deriv
     hasDerivWithinAt_Iic_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsLT hδ_lt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope, show (Iic t₀ \ {t₀} : Set ℝ) = Iio t₀ from
     Iic_sdiff_right] at h_deriv
-  have h_map : Tendsto (fun ε : ℝ => t₀ - ε) (𝓝[>] (0 : ℝ)) (𝓝[<] t₀) := by
-    apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-    · have : Tendsto (fun ε : ℝ => t₀ - ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
-        have := (continuous_sub_left t₀).tendsto (0 : ℝ)
-        simpa using this
-      exact this.mono_left nhdsWithin_le_nhds
-    · filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-      exact sub_lt_self t₀ hε
-  have h_comp := h_deriv.comp h_map
+  have h_comp := h_deriv.comp (tendsto_sub_nhdsLT t₀)
   have h_neg : Tendsto (fun ε : ℝ => -((-ε)⁻¹ • (γ.toFun (t₀ - ε) - s)))
       (𝓝[>] 0) (𝓝 (-L)) := h_comp.neg.congr (fun ε => by
     simp only [Function.comp, slope, vsub_eq_sub]
@@ -258,9 +255,8 @@ theorem crossing_direction_left_tendsto
     (hL_lim : Tendsto (deriv γ.toFun) (𝓝[<] t₀) (𝓝 L_left)) :
     Tendsto (fun ε => (γ.toFun (t₀ - ε) - s) / ‖γ.toFun (t₀ - ε) - s‖)
       (𝓝[>] 0) (𝓝 (-L_left / ‖L_left‖)) := by
-  have h_dir := direction_of_slope_tendsto _ (-L_left) (neg_ne_zero.mpr hL)
+  simpa [norm_neg] using direction_of_slope_tendsto _ (-L_left) (neg_ne_zero.mpr hL)
     (slope_tendsto_left_of_deriv γ s t₀ ht₀ hcross L_left hL_lim)
-  rwa [norm_neg] at h_dir
 
 /-! ## L3: Boundary term vanishing under angle condition (with flatness rate)
 
@@ -340,8 +336,7 @@ theorem zpow_boundary_diff_tendsto_zero
       =o[𝓝[>] 0] (fun ε => (ε : ℝ) ^ (n - 1 : ℕ)) := by
     have h_eq : (fun ε => (wR ε / ↑‖wR ε‖) ^ k - (wL ε / ↑‖wL ε‖) ^ k) =
         fun ε => ((wR ε / ↑‖wR ε‖) ^ k - uR ^ k) -
-          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by
-      ext ε; rw [h_angle]; ring
+          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by ext ε; rw [h_angle]; ring
     rw [h_eq]; exact h_oR.sub h_oL
   rw [Metric.tendsto_nhds]
   intro η hη
@@ -428,6 +423,10 @@ theorem norm_sub_le_tangentDeviation_of_unit (u v : ℂ)
       _ = ‖u - v‖ := mul_one _
   linarith [h_smul_norm, h_sq_le, h_tri]
 
+private lemma eq_exp_arg_mul_I_of_norm_one (z : ℂ) (hz : ‖z‖ = 1) :
+    z = exp (↑(arg z) * I) := by
+  simpa [hz] using (norm_mul_exp_arg_mul_I z).symm
+
 /-- For unit vectors `z₁, z₂` and integer exponent `k`, if
 `k · (arg z₁ - arg z₂) ∈ 2πℤ`, then `z₁^k = z₂^k`. -/
 lemma unit_zpow_eq_of_angle_multiple
@@ -435,15 +434,8 @@ lemma unit_zpow_eq_of_angle_multiple
     (hz₁ : ‖z₁‖ = 1) (hz₂ : ‖z₂‖ = 1)
     (h : ∃ n : ℤ, (↑k : ℝ) * (arg z₁ - arg z₂) = ↑n * (2 * Real.pi)) :
     z₁ ^ k = z₂ ^ k := by
-  have h₁ : z₁ = exp (↑(arg z₁) * I) := by
-    have := norm_mul_exp_arg_mul_I z₁
-    rw [hz₁, ofReal_one, one_mul] at this
-    exact this.symm
-  have h₂ : z₂ = exp (↑(arg z₂) * I) := by
-    have := norm_mul_exp_arg_mul_I z₂
-    rw [hz₂, ofReal_one, one_mul] at this
-    exact this.symm
-  rw [h₁, h₂, ← exp_int_mul, ← exp_int_mul]
+  rw [eq_exp_arg_mul_I_of_norm_one z₁ hz₁, eq_exp_arg_mul_I_of_norm_one z₂ hz₂,
+    ← exp_int_mul, ← exp_int_mul]
   rw [exp_eq_exp_iff_exists_int]
   obtain ⟨n, hn⟩ := h
   refine ⟨n, ?_⟩
@@ -451,8 +443,7 @@ lemma unit_zpow_eq_of_angle_multiple
   have h_eq : ↑k * (↑(arg z₁) * I) -
       (↑k * (↑(arg z₂) * I) + ↑n * (2 * ↑Real.pi * I)) =
       ↑((↑k : ℝ) * (arg z₁ - arg z₂) -
-        (↑n : ℝ) * (2 * Real.pi)) * I := by
-    push_cast; ring
+        (↑n : ℝ) * (2 * Real.pi)) * I := by push_cast; ring
   rw [h_eq, mul_eq_zero]
   left
   rw [ofReal_eq_zero]
@@ -548,6 +539,42 @@ lemma direction_rate_final_calc
           rw [← pow_succ, Nat.sub_add_cancel (by omega : 1 ≤ m)]
         rw [hpow, mul_div_cancel_right₀ _ (ne_of_gt hε_pos)]
 
+/-- The real-part identity `(t-t₀) · (slope·conj C).re = ((γ t - s)·conj C).re`
+holds whenever `γ t₀ = s`, for any direction `C`. -/
+private lemma slope_re_key
+    (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ) (hcross : γ.toFun t₀ = s)
+    (C : ℂ) (t : ℝ) :
+    (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ C).re =
+      ((γ.toFun t - s) * starRingEnd ℂ C).re := by
+  have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ :=
+    sub_smul_slope _ _ _
+  rw [vsub_eq_sub, hcross] at hsub
+  have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ C) =
+      (γ.toFun t - s) * starRingEnd ℂ C := by rw [← mul_assoc, ← Complex.real_smul, hsub]
+  simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
+
+/-- Near an interior crossing, `γ` is eventually differentiable along any filter `l`
+that approaches `t₀` (`l ≤ 𝓝 t₀`) while staying away from `t₀` (`t ≠ t₀` eventually). -/
+private lemma eventually_differentiableAt_of_filter
+    (γ : PiecewiseC1Immersion) (t₀ : ℝ) (ht₀ : t₀ ∈ Ioo γ.a γ.b)
+    (l : Filter ℝ) (hl : l ≤ 𝓝 t₀) (hne : ∀ᶠ t in l, t ≠ t₀) :
+    ∀ᶠ t in l, DifferentiableAt ℝ γ.toFun t := by
+  have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
+    (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
+  filter_upwards [hl (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
+    hl (Icc_mem_nhds ht₀.1 ht₀.2), hne] with t ht₁ ht₂ ht₃
+  exact γ.smooth_off_partition t ht₂ fun hm => ht₁ ⟨hm, ht₃⟩
+
+/-- Common closing step of `re_pos_{right,left}_of_slope`: if `(t - t₀)·(slope·conj C).re`
+is eventually positive on `l`, then so is `((γ t - s)·conj C).re`, via `slope_re_key`. -/
+private lemma re_pos_of_slope_sign
+    (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ) (hcross : γ.toFun t₀ = s)
+    (C : ℂ) (l : Filter ℝ)
+    (h_sign : ∀ᶠ t in l, 0 < (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ C).re) :
+    ∀ᶠ t in l, 0 < ((γ.toFun t - s) * starRingEnd ℂ C).re := by
+  filter_upwards [h_sign] with t ht
+  rwa [← slope_re_key γ s t₀ hcross C t]
+
 lemma re_pos_right_of_slope
     (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ)
     (ht₀ : t₀ ∈ Ioo γ.a γ.b) (hcross : γ.toFun t₀ = s)
@@ -556,44 +583,23 @@ lemma re_pos_right_of_slope
     ∀ᶠ t in 𝓝[>] t₀, 0 < ((γ.toFun t - s) * starRingEnd ℂ L_R).re := by
   have hcont : ContinuousAt γ.toFun t₀ :=
     γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
-  have hdiff_right : ∀ᶠ t in 𝓝[>] t₀, DifferentiableAt ℝ γ.toFun t := by
-    have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-      (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
-    filter_upwards [nhdsWithin_le_nhds
-        (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
-      nhdsWithin_le_nhds (Icc_mem_nhds ht₀.1 ht₀.2),
-      self_mem_nhdsWithin] with t ht₁ ht₂ ht₃
-    exact γ.smooth_off_partition t ht₂
-      fun hm => ht₁ ⟨hm, ne_of_gt (Set.mem_Ioi.mp ht₃)⟩
-  obtain ⟨s_set, hs_mem, hs_diff⟩ := hdiff_right.exists_mem
+  obtain ⟨s_set, hs_mem, hs_diff⟩ := (eventually_differentiableAt_of_filter γ t₀ ht₀ _
+    nhdsWithin_le_nhds
+    (by filter_upwards [self_mem_nhdsWithin] with t ht using ne_of_gt (Set.mem_Ioi.mp ht))
+    ).exists_mem
   have hderiv : HasDerivWithinAt γ.toFun L_R (Ioi t₀) t₀ :=
     hasDerivWithinAt_Ioi_iff_Ici.mpr (hasDerivWithinAt_Ici_of_tendsto_deriv
       (fun t ht => (hs_diff t ht).differentiableWithinAt)
       hcont.continuousWithinAt hs_mem htend_R)
   have hReLR : 0 < (L_R * starRingEnd ℂ L_R).re := by
-    rw [Complex.mul_conj]; simp only [Complex.ofReal_re]
-    exact Complex.normSq_pos.mpr hL_R_ne
+    simp [Complex.mul_conj, Complex.normSq_pos.mpr hL_R_ne]
   have h_slope : Tendsto (slope γ.toFun t₀) (𝓝[>] t₀) (𝓝 L_R) :=
     (hasDerivWithinAt_iff_tendsto_slope' Set.self_notMem_Ioi).mp hderiv
-  have h_slope_re : Tendsto (fun t => (slope γ.toFun t₀ t * starRingEnd ℂ L_R).re)
-      (𝓝[>] t₀) (𝓝 (L_R * starRingEnd ℂ L_R).re) :=
-    (continuous_re.comp (continuous_mul_const _)).continuousAt.tendsto.comp h_slope
-  have h_ev := h_slope_re (Ioi_mem_nhds hReLR)
+  refine re_pos_of_slope_sign γ s t₀ hcross L_R _ ?_
+  have h_ev := ((continuous_re.comp (continuous_mul_const (starRingEnd ℂ L_R))
+    ).continuousAt.tendsto.comp h_slope) (Ioi_mem_nhds hReLR)
   filter_upwards [h_ev, self_mem_nhdsWithin] with t ht ht_pos
-  have ht_gt : t₀ < t := Set.mem_Ioi.mp ht_pos
-  have h_pos_factor : (0 : ℝ) < t - t₀ := sub_pos.mpr ht_gt
-  have h_slope_pos : 0 < (slope γ.toFun t₀ t * starRingEnd ℂ L_R).re :=
-    Set.mem_Ioi.mp (Set.mem_preimage.mp ht)
-  have h_key : (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ L_R).re =
-      ((γ.toFun t - s) * starRingEnd ℂ L_R).re := by
-    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ :=
-      sub_smul_slope _ _ _
-    rw [vsub_eq_sub, hcross] at hsub
-    have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ L_R) =
-        (γ.toFun t - s) * starRingEnd ℂ L_R := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
-    simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
-  linarith [mul_pos h_pos_factor h_slope_pos]
+  exact mul_pos (sub_pos.mpr (Set.mem_Ioi.mp ht_pos)) (Set.mem_Ioi.mp (Set.mem_preimage.mp ht))
 
 lemma re_pos_left_of_slope
     (γ : PiecewiseC1Immersion) (s : ℂ) (t₀ : ℝ)
@@ -603,45 +609,24 @@ lemma re_pos_left_of_slope
     ∀ᶠ t in 𝓝[<] t₀, 0 < ((γ.toFun t - s) * starRingEnd ℂ (-L_L)).re := by
   have hcont : ContinuousAt γ.toFun t₀ :=
     γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
-  have hdiff_left : ∀ᶠ t in 𝓝[<] t₀, DifferentiableAt ℝ γ.toFun t := by
-    have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-      (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
-    filter_upwards [nhdsWithin_le_nhds
-        (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
-      nhdsWithin_le_nhds (Icc_mem_nhds ht₀.1 ht₀.2),
-      self_mem_nhdsWithin] with t ht₁ ht₂ ht₃
-    exact γ.smooth_off_partition t ht₂
-      fun hm => ht₁ ⟨hm, ne_of_lt (Set.mem_Iio.mp ht₃)⟩
-  obtain ⟨s_set, hs_mem, hs_diff⟩ := hdiff_left.exists_mem
+  obtain ⟨s_set, hs_mem, hs_diff⟩ := (eventually_differentiableAt_of_filter γ t₀ ht₀ _
+    nhdsWithin_le_nhds
+    (by filter_upwards [self_mem_nhdsWithin] with t ht using ne_of_lt (Set.mem_Iio.mp ht))
+    ).exists_mem
   have hderiv : HasDerivWithinAt γ.toFun L_L (Iio t₀) t₀ :=
     hasDerivWithinAt_Iio_iff_Iic.mpr (hasDerivWithinAt_Iic_of_tendsto_deriv
       (fun t ht => (hs_diff t ht).differentiableWithinAt)
       hcont.continuousWithinAt hs_mem htend_L)
   have hReLLneg : (L_L * starRingEnd ℂ (-L_L)).re < 0 := by
-    rw [map_neg, mul_neg, Complex.neg_re, neg_neg_iff_pos, Complex.mul_conj]
-    simp only [Complex.ofReal_re]
-    exact Complex.normSq_pos.mpr hL_L_ne
+    simp [map_neg, mul_neg, Complex.mul_conj, Complex.normSq_pos.mpr hL_L_ne]
   have h_slope : Tendsto (slope γ.toFun t₀) (𝓝[<] t₀) (𝓝 L_L) :=
     (hasDerivWithinAt_iff_tendsto_slope' Set.self_notMem_Iio).mp hderiv
-  have h_slope_re : Tendsto (fun t => (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)).re)
-      (𝓝[<] t₀) (𝓝 (L_L * starRingEnd ℂ (-L_L)).re) :=
-    (continuous_re.comp (continuous_mul_const _)).continuousAt.tendsto.comp h_slope
-  have h_ev := h_slope_re (Iio_mem_nhds hReLLneg)
+  refine re_pos_of_slope_sign γ s t₀ hcross (-L_L) _ ?_
+  have h_ev := ((continuous_re.comp (continuous_mul_const (starRingEnd ℂ (-L_L)))
+    ).continuousAt.tendsto.comp h_slope) (Iio_mem_nhds hReLLneg)
   filter_upwards [h_ev, self_mem_nhdsWithin] with t ht ht_neg
-  have ht_lt : t < t₀ := Set.mem_Iio.mp ht_neg
-  have h_neg_factor : t - t₀ < 0 := sub_neg.mpr ht_lt
-  have h_slope_neg : (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)).re < 0 :=
-    Set.mem_Iio.mp (Set.mem_preimage.mp ht)
-  have h_key : (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)).re =
-      ((γ.toFun t - s) * starRingEnd ℂ (-L_L)).re := by
-    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ :=
-      sub_smul_slope _ _ _
-    rw [vsub_eq_sub, hcross] at hsub
-    have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)) =
-        (γ.toFun t - s) * starRingEnd ℂ (-L_L) := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
-    simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
-  linarith [mul_pos_of_neg_of_neg h_neg_factor h_slope_neg]
+  exact mul_pos_of_neg_of_neg (sub_neg.mpr (Set.mem_Iio.mp ht_neg))
+    (Set.mem_Iio.mp (Set.mem_preimage.mp ht))
 
 lemma tangentDeviation_scale_eq
     (w L : ℂ) (_hw_ne : ‖w‖ ≠ 0) (hL_ne : ‖L‖ ≠ 0) :
@@ -654,6 +639,5 @@ lemma tangentDeviation_scale_eq
     tangentDeviation_real_smul_right _ (inv_ne_zero hL_ne),
     tangentDeviation_real_smul_left, norm_smul, Real.norm_eq_abs,
     abs_of_nonneg (inv_nonneg.mpr (norm_nonneg _)), inv_mul_eq_div]
-
 
 end GeneralizedResidueTheory

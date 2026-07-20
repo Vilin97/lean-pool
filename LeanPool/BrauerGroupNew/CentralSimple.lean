@@ -24,17 +24,6 @@ algebras in this case according to our definition.
 -/
 universe u v w
 open Module
--- class IsCentralSimple
---     (K : Type u) [Field K] (D : Type v) [Ring D] [Algebra K D] : Prop where
---   is_central : Subalgebra.center K D ≤ ⊥
---   [is_simple : IsSimpleRing D]
--- lemma IsCentralSimple.center_eq
---     (K D : Type*) [Field K] [Ring D] [Algebra K D] [IsCentralSimple K D] :
---     Subalgebra.center K D = ⊥ :=
---   le_antisymm IsCentralSimple.is_central <| by
---     rintro _ ⟨x, rfl⟩
---     rw [Subalgebra.mem_center_iff]
---     exact (Algebra.commutes' x · |>.symm)
 variable (K : Type u) [Field K]
 open Matrix in
 instance MatrixRing.isCentral (ι : Type) [Fintype ι] [Nonempty ι] [DecidableEq ι] :
@@ -139,8 +128,7 @@ lemma _root_.IsCentralSimple.TensorProduct.submodule_tensor_inf_tensor_submodule
     have hz2 : v' (β z) = 0 := by
       rw [← LinearMap.mem_ker]
       rw [LinearMap.exact_iff] at exactu'v'
-      rw [exactu'v']
-      exact hz.1
+      simp_all
     rw [hz2] at hz1
     have hz3 : v z ∈ LinearMap.ker γ := by rw [LinearMap.mem_ker]; exact hz1.symm
     replace hz3 : v z = 0 := by
@@ -186,10 +174,7 @@ lemma center_tensorProduct
     Subalgebra.toSubmodule (Algebra.TensorProduct.map (Subalgebra.center K B).val
       (Subalgebra.center K C).val).range by
     apply_fun Subalgebra.toSubmodule using Subalgebra.toSubmodule_injective
-    rw [← eq]
-    ext x
-    simp only [Algebra.inf_toSubmodule, Submodule.mem_inf, Subalgebra.mem_toSubmodule,
-      AlgHom.mem_range]
+    simp_all
   have eq1 :
       Subalgebra.toSubmodule (Algebra.TensorProduct.map (Subalgebra.center K B).val (.id K C)).range
         = LinearMap.range (TensorProduct.map (Subalgebra.center K B).val.toLinearMap .id) := rfl
@@ -213,8 +198,7 @@ lemma center_tensorProduct
   rw [eq4] at this
   have eq5 : (Subalgebra.toSubmodule (Subalgebra.center K C)).subtype =
     (Subalgebra.center K C).val.toLinearMap := by rfl
-  rw [eq5] at this
-  rw [this]
+  simp_all
 
 /-- Linear map from the tensor product of centers into the tensor product algebra. -/
 noncomputable def centerTensorCenter (B C : Type v) [Ring B] [Algebra K B] [Ring C] [Algebra K C] :
@@ -271,8 +255,7 @@ instance _root_.IsCentralSimple.TensorProduct.isCentral
       Subalgebra.coe_val, ← ha, ← hb]
     rw [Algebra.ofId_apply, Algebra.ofId_apply, Algebra.TensorProduct.algebraMap_apply',
       Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.tmul_mul_tmul]
-    simp only [one_mul, mul_one]
-    rw [← Algebra.ofId_apply, ← Algebra.ofId_apply]
+    simp_all
   | add x y hx hy =>
     obtain ⟨kx, hx⟩ := hx
     obtain ⟨ky, hy⟩ := hy
@@ -290,8 +273,7 @@ instance _root_.IsCentralSimple.TensorProduct.nontrivial
   have r' : f 0 = f 1 := by rw [map_zero, map_one]; exact r
   specialize hf r'
   apply_fun Algebra.TensorProduct.lid K B at hf
-  simp only [map_zero, map_one] at hf
-  exact zero_ne_one hf
+  simp_all
 variable {K} in
 /--
 a non-zero element in an ideal that can be represented as a sum of tensor products of `n`-terms.
@@ -315,9 +297,7 @@ lemma _root_.IsCentralSimple.is_obtainable_by_sum_tmul.exists_minimal_element
   push Not at this
   obtain ⟨x, ⟨hx0, hx1⟩|⟨hx0, hx1⟩⟩ := this
   pick_goal 2
-  · change x = 0 at hx1
-    subst hx1
-    exact hx0 I.zero_mem |>.elim
+  · simp_all
   obtain ⟨s, rfl⟩ := TensorProduct.eq_repr_basis_left 𝒜 x
   let n := @Nat.find (fun n => ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n) _
     ⟨s.support.card, ∑ i ∈ s.support, 𝒜 i ⊗ₜ[K] s i, ⟨hx0, hx1, s.support, rfl, s, rfl⟩⟩
@@ -329,8 +309,7 @@ lemma _root_.IsCentralSimple.is_obtainable_by_sum_tmul.exists_minimal_element
   simp only [not_le] at r
   have := @Nat.find_min (fun n => ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n) _
       ⟨s.support.card, ∑ i ∈ s.support, 𝒜 i ⊗ₜ[K] s i, ⟨hx0, hx1, s.support, rfl, s, rfl⟩⟩ m r
-  simp only [not_exists] at this
-  exact this y hy
+  simp_all
 lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentralSimple
     {A B : Type v} [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [isSimple_A : IsSimpleOrder <| TwoSidedIdeal A]
@@ -354,20 +333,14 @@ lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentr
     rcases h with ⟨i, h1, h2⟩
     specialize H (n - 1) (∑ i ∈ s, 𝒜 i ⊗ₜ[K] b i) ⟨x_mem, x_ne_zero, ⟨s.erase i,
       by rw [Finset.card_erase_of_mem, card_s]; exact h1, b, by
-      symm
-      fapply Finset.sum_subset
-      · exact Finset.erase_subset i s
-      · intro x hx1 hx2
-        simp only [Finset.mem_erase, ne_eq, not_and] at hx2
-        rw [show x = i by tauto, h2, TensorProduct.tmul_zero]⟩⟩
+      simp_all⟩⟩
     have ineq1 : 0 < n := by
       rw [← card_s, Finset.card_pos]
       exact ⟨i, h1⟩
     omega
   if s_ne_empty : s = ∅
   then
-    subst s_ne_empty
-    simp only [Finset.card_empty, Finset.sum_empty, ne_eq, not_true_eq_false] at *
+    simp_all
   else
     obtain ⟨i₀, hi₀⟩ := Finset.nonempty_iff_ne_empty.mpr s_ne_empty
     have ineq1 : 0 < n := by
@@ -377,20 +350,7 @@ lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentr
         ∑ i ∈ s, 𝒜 i ⊗ₜ[K] b i =
         𝒜 i₀ ⊗ₜ[K] b i₀ +
         ∑ i ∈ s.erase i₀, 𝒜 i ⊗ₜ[K] b i := by
-      rw [show 𝒜 i₀ ⊗ₜ[K] b i₀ = ∑ i ∈ {i₀}, 𝒜 i ⊗ₜ[K] b i by rw [Finset.sum_singleton],
-        ← Finset.sum_disjUnion]
-      pick_goal 2
-      · rw [← Finset.disjoint_erase_comm]
-        simp only [Finset.erase_singleton, Finset.disjoint_empty_left]
-      refine Finset.sum_congr ?_ fun _ _ => rfl
-      ext x
-      simp only [Finset.disjUnion_eq_union, Finset.mem_union, Finset.mem_singleton,
-        Finset.mem_erase, ne_eq]
-      constructor
-      · intro hx
-        if hx' : x = i₀ then left; exact hx'
-        else right; exact ⟨hx', hx⟩
-      · rintro (rfl|⟨_, hx2⟩) <;> assumption
+      simp_all
     have span_bi₀ : TwoSidedIdeal.span {b i₀} = ⊤ := isSimple_B.1.2 _ |>.resolve_left fun r ↦ by
       have mem : b i₀ ∈ (⊥ : TwoSidedIdeal B) := by
         rw [← r]
@@ -543,8 +503,7 @@ instance _root_.IsCentralSimple.TensorProduct.simple
       refine TwoSidedIdeal.finsetSum_mem _ _ _ fun i _ => ?_
       have := (y i).2
       simp only [Set.mem_singleton_iff] at this
-      rw [this, mul_zero, zero_mul]
-      rfl
+      simp_all
     · right
       rw [h, TwoSidedIdeal.coe_top_set] at eq1
       rw [eq1, eq_top_iff, TwoSidedIdeal.le_iff]

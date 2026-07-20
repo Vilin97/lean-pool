@@ -61,8 +61,7 @@ end Dipath
 
 @[ext]
 protected lemma Dipath.ext : ∀ {γ₁ γ₂ : Dipath x y}, (γ₁ : I → X) = γ₂ → γ₁ = γ₂ := by
-  rintro ⟨⟨⟨x, h10⟩, h11, h12⟩, h13⟩ ⟨⟨⟨y, h20⟩, h21, h22⟩, h23⟩ rfl
-  rfl
+  simp_all
 
 namespace Dipath
 
@@ -293,14 +292,7 @@ def dipathProduct (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipath
   toFun := fun t => (γ₁ t, γ₂ t)
   source' := by simp
   target' := by simp
-  dipath_toPath := by
-      constructor
-      { convert γ₁.dipath_toPath
-        ext t
-        rfl }
-      { convert γ₂.dipath_toPath
-        ext t
-        rfl }
+  dipath_toPath := ⟨γ₁.dipath_toPath, γ₂.dipath_toPath⟩
 
 /-- Given a directed path in a product space, we can project it to its first coordinate to
 obtain a directed path -/

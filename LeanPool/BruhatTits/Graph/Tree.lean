@@ -47,10 +47,7 @@ lemma _root_.SimpleGraph.Walk.exists_repr_isChain {x y : Vertices R} (p : BTgrap
     refine ⟨[L], singleton_isChain L, by rfl⟩
   | @cons u v w hadj p ih =>
     obtain ⟨l, hchain, hl⟩ := ih
-    have lnenil : l ≠ [] := by
-      intro hnil
-      rw [hnil] at hchain
-      exact hchain.ne_nil rfl
+    have lnenil : l ≠ [] := hchain.ne_nil
     match l with
     | (L :: l) =>
     have hLv : ⟦L⟧ = v := by
@@ -71,8 +68,7 @@ noncomputable def chainToWalk (l : List (Lattice R)) (hl : l ≠ []) (hc : l.IsB
       have p : BTgraph.Adj ⟦L₁⟧ ⟦L₂⟧ := by
         apply isNeighbour_of_isStandardNeighbour
         have := hc.isStandardNeighbour
-        rw [List.isChain_cons_cons] at this
-        exact this.1
+        simp_all
       let q : BTgraph.Walk ⟦L₂⟧ ⟦(L₁ :: L₂ :: l).getLast hl⟧ :=
         chainToWalk (L₂ :: l) (by simp) (isChain_of_cons_isChain (List.cons_ne_nil L₂ l) hc)
       q.cons p
@@ -93,13 +89,7 @@ lemma isSimpleChain_of_isTrail_aux {x y : Vertices R} (p : BTgraph.Walk x y)
       simp only [List.tail_cons, List.zipWith₃, List.forall_cons, id_eq, List.Forall, and_true]
       intro h
       have : (⟦M⟧ : Vertices R) = ⟦Q⟧ := Quotient.sound h
-      simp only [SimpleGraph.Walk.isTrail_cons, SimpleGraph.Walk.IsTrail.nil,
-        SimpleGraph.Walk.edges_nil, List.not_mem_nil, not_false_eq_true, and_self,
-        SimpleGraph.Walk.edges_cons, List.mem_singleton, Sym2.eq, Sym2.rel_iff', Prod.mk.injEq,
-        Prod.swap_prod_mk, and_true, not_or, not_and, true_and] at hp
-      apply hp.right
-      rw [← hfirst, ← hthird]
-      exact this
+      simp_all
   | .cons' _ v₂ _ adj (.cons' _ v₁ _ adj' <| .cons' _ _ _ adj'' q),
       (L₁ :: L₂ :: L₃ :: l) =>
       simp only [List.map_cons, SimpleGraph.Walk.support_cons] at hl
@@ -113,16 +103,12 @@ lemma isSimpleChain_of_isTrail_aux {x y : Vertices R} (p : BTgraph.Walk x y)
       simp only [List.tail_cons, List.zipWith₃, List.forall_cons, id_eq]
       refine ⟨?_, ?_⟩
       · intro h
-        have h' : (⟦L₁⟧ : Vertices R) = ⟦L₃⟧ := by
-          apply Quotient.sound
-          exact h
         have hx : x = v₁ := by
           rw [← hfirst, ← hthird]
-          exact h'
+          exact Quotient.sound h
         exact hp.2.1.2 hx
       · apply isSimpleChain_of_isTrail_aux (.cons adj' <| .cons adj'' q)
-        · simpa [SimpleGraph.Walk.isTrail_cons, SimpleGraph.Walk.edges_cons, List.mem_cons,
-            Sym2.eq, Sym2.rel_iff', Prod.mk.injEq, Prod.swap_prod_mk, not_or, not_and] using hp.1
+        · simp_all
         · exact htail
 
 /-- If `p` is a trail in the Bruhat-Tits graph, it is representable by
@@ -168,8 +154,7 @@ lemma length_eq_inv_of_isStandard {x y : Vertices R} {p : BTgraph.Walk x y} (h :
       exact hl.ne_nil (List.map_eq_nil_iff.mp hnil)
     have hlast_eq := List.getLast_congr hmap_ne_nil p.support_ne_nil hleq
     simpa [Vertices, List.getLast_map] using (hlast_eq.trans p.getLast_support).symm
-  subst this
-  assumption
+  simp_all
 
 /-- Given two vertices and a trail `p` from `x` to `y`, there exists a `g : GL₂(K)`
 such that `g • p` is a standard walk. -/
@@ -213,11 +198,9 @@ lemma BTgraph_isAcyclic : (BTgraph (R := R)).IsAcyclic := by
   intro x c h
   -- then `c` is a trail, but the length of such a chain is the distance
   -- of the endpoints, which yields a contradiction
-  have : c.length = inv x x := length_eq_inv h.isCircuit.isTrail
-  rw [inv_self] at this
-  have : 3 ≤ 0 := by
-    rw [← this]
-    exact SimpleGraph.Walk.IsCycle.three_le_length h
+  have hlen : c.length = inv x x := length_eq_inv h.isCircuit.isTrail
+  rw [inv_self] at hlen
+  have : 3 ≤ 0 := hlen ▸ SimpleGraph.Walk.IsCycle.three_le_length h
   contradiction
 
 end «Acyclic»

@@ -163,10 +163,8 @@ theorem forall_inner_eq_zero (x : E ⊗[𝕜] F) :
   constructor
   · intro h
     rw [TensorProduct.inner_ext_iff' x 0]
-    intro a b
-    simp [h a b]
-  · intro hx a b
-    simp [hx]
+    simp_all
+  · simp_all
 
 omit [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
   [FiniteDimensional 𝕜 G] [FiniteDimensional 𝕜 H] in
@@ -176,8 +174,7 @@ theorem inner_ext_fourfold_iff' (x y : (E ⊗[𝕜] F) ⊗[𝕜] (G ⊗[𝕜] H)
       inner 𝕜 x ((a ⊗ₜ[𝕜] b) ⊗ₜ[𝕜] (c ⊗ₜ[𝕜] d)) =
         inner 𝕜 y ((a ⊗ₜ[𝕜] b) ⊗ₜ[𝕜] (c ⊗ₜ[𝕜] d)) := by
   constructor
-  · intro h a b c d
-    rw [h]
+  · simp_all
   · intro h
     rw [TensorProduct.ext_iff_inner_right]
     intro p q
@@ -199,9 +196,7 @@ theorem forall_fourfold_inner_eq_zero (x : (E ⊗[𝕜] F) ⊗[𝕜] (G ⊗[𝕜
   constructor
   · intro h
     rw [TensorProduct.inner_ext_fourfold_iff']
-    intro a b c d
-    simp [h]
-  · intro hx a b c d
-    simp [hx]
+    simp_all
+  · simp_all
 
 end TensorProduct

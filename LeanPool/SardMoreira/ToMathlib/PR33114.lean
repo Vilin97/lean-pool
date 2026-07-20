@@ -93,8 +93,7 @@ theorem surjective_val : Surjective (val : WithRPowDist X α hα₀ hα₁ → X
 theorem surjective_mk : Surjective (mk :  X → WithRPowDist X α hα₀ hα₁) :=
   equiv _ _ _ _ |>.symm |>.surjective
 
-theorem injective_mk : Injective (mk : X → WithRPowDist X α hα₀ hα₁) := by
-  simp [Injective]
+theorem injective_mk : Injective (mk : X → WithRPowDist X α hα₀ hα₁) := by simp [Injective]
 
 /-!
 ### Topological space structure
@@ -160,8 +159,7 @@ theorem _root_.WithRPowDist.isBounded_image_val_iff {s : Set (WithRPowDist X α 
 
 @[simp]
 theorem _root_.WithRPowDist.isBounded_preimage_mk_iff {s : Set (WithRPowDist X α hα₀ hα₁)} :
-    IsBounded (mk ⁻¹' s) ↔ IsBounded s := by
-  rw [← image_val_eq_preimage, isBounded_image_val_iff]
+    IsBounded (mk ⁻¹' s) ↔ IsBounded s := by rw [← image_val_eq_preimage, isBounded_image_val_iff]
 
 @[simp]
 theorem _root_.WithRPowDist.isBounded_image_mk_iff {s : Set X} :
@@ -231,8 +229,7 @@ theorem _root_.WithRPowDist.edist_mk_mk (x y : X) :
 
 @[simp]
 theorem _root_.WithRPowDist.edist_val_val (x y : WithRPowDist X α hα₀ hα₁) :
-    edist x.val y.val = edist x y ^ α⁻¹ := by
-  rw [edist_def, ENNReal.rpow_rpow_inv hα₀.ne']
+    edist x.val y.val = edist x y ^ α⁻¹ := by rw [edist_def, ENNReal.rpow_rpow_inv hα₀.ne']
 
 end EDist
 
@@ -313,8 +310,7 @@ theorem _root_.WithRPowDist.ediam_image_val (s : Set (WithRPowDist X α hα₀ h
 
 @[simp]
 theorem _root_.WithRPowDist.ediam_preimage_mk (s : Set (WithRPowDist X α hα₀ hα₁)) :
-    ediam (mk ⁻¹' s) = ediam s ^ α⁻¹ := by
-  rw [← image_val_eq_preimage, ediam_image_val]
+    ediam (mk ⁻¹' s) = ediam s ^ α⁻¹ := by rw [← image_val_eq_preimage, ediam_image_val]
 
 @[simp]
 theorem _root_.WithRPowDist.ediam_preimage_val (s : Set X) :
@@ -402,8 +398,7 @@ theorem _root_.WithRPowDist.preimage_mk_ball
 @[simp]
 theorem _root_.WithRPowDist.image_val_ball
     (x : WithRPowDist X α hα₀ hα₁) {r : ℝ} (hr : 0 ≤ r) :
-    val '' ball x r = ball x.val (r ^ α⁻¹) := by
-  rw [image_val_eq_preimage, preimage_mk_ball _ hr]
+    val '' ball x r = ball x.val (r ^ α⁻¹) := by rw [image_val_eq_preimage, preimage_mk_ball _ hr]
 
 @[simp]
 theorem _root_.WithRPowDist.preimage_val_closedBall (x : X) {r : ℝ} (hr : 0 ≤ r) :
