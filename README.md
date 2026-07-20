@@ -37,3 +37,10 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ### Credits
 
 Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io/) by [Vasily Ilin](https://github.com/Vilin97) and [Justin Asher](https://github.com/justincasher).
+
+### Difference from similar projects
+
+[Tau Ceti](https://github.com/TauCetiProject/TauCeti) is another approach to solve the same problem. The differences are:
+- Lean Pool accepts human-written projects, not just AI projects.
+- Lean Pool is not a unified library like mathlib. Most projects are independent of each other.
+- Lean Pool only accepts completed formalization projects.
