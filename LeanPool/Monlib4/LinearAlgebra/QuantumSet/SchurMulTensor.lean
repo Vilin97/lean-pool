@@ -23,8 +23,7 @@ lemma TensorProduct.AlgebraTensorModule.tensorTensorTensorComm_eq_swapMiddleTens
   [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
   [Module R A] [Module R B] [Module R C] [Module R D] :
   (TensorProduct.AlgebraTensorModule.tensorTensorTensorComm R R R R A B C D) =
-    swapMiddleTensor R A B C D :=
-by
+    swapMiddleTensor R A B C D := by
   rw [← LinearEquiv.toLinearMap_inj]
   apply TensorProduct.ext_fourfold'
   simp
@@ -41,8 +40,7 @@ theorem TensorProduct.map_schurMul {A B C D : Type*}
   [IsScalarTower ℂ B B]
   [IsScalarTower ℂ D D]
   {f h : A →ₗ[ℂ] B} {g k : C →ₗ[ℂ] D} :
-  (map f g) •ₛ (map h k) = map (f •ₛ h) (g •ₛ k) :=
-by
+  (map f g) •ₛ (map h k) = map (f •ₛ h) (g •ₛ k) := by
   rw [schurMul_apply_apply, TensorProduct.comul_def, LinearMap.mul'_tensorProduct,
     TensorProduct.AlgebraTensorModule.tensorTensorTensorComm_eq_swapMiddleTensor]
   simp only [LinearMap.comp_assoc]

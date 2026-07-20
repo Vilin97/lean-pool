@@ -46,16 +46,11 @@ theorem bulk_velocity_zero {X : Type*} [FlatTorus3 X] (ss : VMLSteadyState X) :
     exact dotProduct_smul_self (ss.ρ x) ss.b₀
   -- Step 3: ∫ ρ * |b₀|² dx = |b₀|² * ∫ ρ = 0
   have h3 : FlatTorus3.spatialIntegral (fun x => ss.ρ x * normSq ss.b₀) = 0 := by
-    rwa [show (fun x => ss.ρ x * normSq ss.b₀) =
-      (fun x => dotProduct ss.b₀ (FlatTorus3.curlX ss.B x)) from funext (fun x => (h2 x).symm)]
+    simp_all
   have h4 : FlatTorus3.spatialIntegral ss.ρ * normSq ss.b₀ = 0 := by
     rwa [← FlatTorus3.hSpatialMul]
   -- Step 4: Since ∫ ρ > 0, we get |b₀|² = 0, hence b₀ = 0
   have h5 : 0 < FlatTorus3.spatialIntegral ss.ρ := FlatTorus3.hSpatialPos ss.ρ ss.hρ_cont ss.hρ_pos
-  have h6 : normSq ss.b₀ = 0 := by
-    rcases mul_eq_zero.mp h4 with h | h
-    · linarith
-    · exact h
-  exact normSq_eq_zero.mp h6
+  exact normSq_eq_zero.mp ((mul_eq_zero.mp h4).resolve_left (ne_of_gt h5))
 
 end VML

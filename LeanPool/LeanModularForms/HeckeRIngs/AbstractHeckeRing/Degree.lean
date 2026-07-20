@@ -71,35 +71,26 @@ private lemma smulOrbit_map_inj (g : P.Δ) (β : P.Δ) :
         delta_mul_mem P.H P.Δ i.out β g P.h₀⟩⟧ : HeckeLeftCoset P)) := by
   intro i₁ i₂ heq
   by_contra hne
-  have hset : ({(β : G) * (i₁.out : G) *
-      (g : G)} : Set G) * (P.H : Set G) =
-    {(β : G) * (i₂.out : G) *
-      (g : G)} * P.H := Quotient.exact heq
-  have hmem : (β : G) * (i₁.out : G) * (g : G) ∈
-      ({(β : G) * (i₂.out : G) * (g : G)} : Set G) *
-      (P.H : Set G) := by
-    rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
-  obtain ⟨_, ha, k, hk, hkk⟩ := hmem
+  obtain ⟨_, ha, k, hk, hkk⟩ : (β : G) * (i₁.out : G) * (g : G) ∈
+      ({(β : G) * (i₂.out : G) * (g : G)} : Set G) * (P.H : Set G) := by
+    rw [← Quotient.exact heq]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
   rw [Set.mem_singleton_iff] at ha; subst ha
-  have cancel : (i₂.out : G) * (g : G) * k =
-      (i₁.out : G) * (g : G) := by
-    apply mul_left_cancel (a := (β : G))
-    have := hkk; group at this ⊢; exact this
+  have cancel : (i₂.out : G) * (g : G) * k = (i₁.out : G) * (g : G) :=
+    mul_left_cancel (a := (β : G)) (by have := hkk; group at this ⊢; exact this)
   exact decompQuot_coset_diff P g i₁ i₂ hne
     (leftCoset_eq_of_not_disjoint (H := P.H) _ _ (by
       rw [@not_disjoint_iff]
       exact ⟨(i₁.out : G) * (g : G),
-        ⟨1, P.H.one_mem, mul_one _⟩,
-        ⟨k, hk, cancel⟩⟩))
+        ⟨1, P.H.one_mem, mul_one _⟩, ⟨k, hk, cancel⟩⟩))
 
 /-- The cardinality of a smul orbit equals the degree of the acting double coset. -/
 lemma smulOrbit_card (g : P.Δ) (β : P.Δ) :
     (smulOrbit P g β).card = Fintype.card (decompQuot P g) := by
   classical
-  have hinj := smulOrbit_map_inj P g β
   change (Finset.image _ ⊤).card = _
   rw [Finset.top_eq_univ]
-  convert (Finset.card_image_of_injective Finset.univ hinj).trans Finset.card_univ using 2
+  convert (Finset.card_image_of_injective Finset.univ (smulOrbit_map_inj P g β)).trans
+    Finset.card_univ using 2
   · rfl
   · apply heq_of_eq
     congr 1
@@ -197,7 +188,7 @@ lemma deg_fun_mul (f g : 𝕋 P ℤ) :
   have h := (instIsScalarTower P).smul_assoc g f (1 : HeckeModule P ℤ)
   simp only [smul_def] at h
   rw [deg_fun_eq_coeffSum_smul_one P (f * g), h, coeffSum_smul_eq,
-    ← deg_fun_eq_coeffSum_smul_one P f]; ring
+      ← deg_fun_eq_coeffSum_smul_one P f]; ring
 
 /-- The degree ring homomorphism `deg : 𝕋 P ℤ →+* ℤ`, sending each double coset to the
 number of left cosets it contains (Shimura Proposition 3.3). -/
@@ -228,8 +219,7 @@ lemma deg_add (f g : 𝕋 P ℤ) :
     deg P (f + g) = deg P f + deg P g := (deg P).map_add f g
 
 /-- The degree of an integer cast is the integer itself. -/
-lemma deg_intCast (n : ℤ) : deg P (n : 𝕋 P ℤ) = n := by
-  simp [deg, degFun, HeckeCoset_deg_T_one]
+lemma deg_intCast (n : ℤ) : deg P (n : 𝕋 P ℤ) = n := by simp [deg, degFun, HeckeCoset_deg_T_one]
 
 end API
 

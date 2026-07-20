@@ -71,8 +71,7 @@ theorem liftAt_zero {n m : ℕ}
     rcases i with k | k
     · simp
     · simp
-  rw [h1]
-  apply FirstOrder.Language.Term.relabel_id
+  simp_all
 
 end Term
 
@@ -97,8 +96,7 @@ theorem liftAt_zero {n m : ℕ}
     rw [_f₁_ih, _f₂_ih]
   | all _f _f_ih =>
     unfold mapTermRel
-    simp only [Nat.add_zero, castLE_rfl, all.injEq]
-    apply _f_ih
+    simp_all
 
 end BoundedFormula
 
@@ -116,17 +114,10 @@ theorem realize_fixedSnoc_makeTsN_1 [ModelSets V] {n : ℕ} {s : ℕ → V}
     (Sum.elim s (fixedSnoc xs x)) (makeTsN ![bv'' n] k))
     = replaceInitialValues s ![x] := by
   funext k
-  unfold makeTsN
-  unfold replaceInitialValues
+  unfold makeTsN replaceInitialValues
   by_cases h_k_0 : k = 0
-  · rw [h_k_0]
-    simp
-  · rw [if_neg]
-    · simp only [Term.realize_var, Sum.elim_inl, zero_add, Nat.lt_one_iff, Nat.reduceAdd,
-      Fin.ofNat_eq_cast, Matrix.cons_val_fin_one, right_eq_ite_iff]
-      intro h
-      contradiction
-    · omega
+  · simp_all
+  · simp_all
 
 /-- Specialization of `makeTsN` to two arbitrary terms `t₁, t₂`. -/
 theorem realize_fixedSnoc_makeTsN_2 [ModelSets V] {n : ℕ} {s : ℕ → V}
@@ -138,19 +129,14 @@ theorem realize_fixedSnoc_makeTsN_2 [ModelSets V] {n : ℕ} {s : ℕ → V}
   by_cases h_k_lt_2 : k < 2
   · rw [realize_makeTsN]
     · simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.ofNat_eq_cast]
-      by_cases h_k_0 : k = 0
-      · rw [h_k_0]
-        simp
-      · have h_k_1 : k = 1 := by omega
-        · rw [h_k_1]
-          simp
+      obtain rfl | rfl : k = 0 ∨ k = 1 := by omega
+      · simp
+      · simp
     · omega
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
-    rw [if_neg]
-    · simp
-      omega
-    · omega
+    rw [if_neg (by omega)]
+    simp_all
 
 /-- Specialization of `makeTsN` to `![bv'' n, bv'' (n+1)]` with three snocs. -/
 theorem realize_fixedSnoc_makeTsN_3 [ModelSets V] {n : ℕ} {s : ℕ → V}
@@ -161,19 +147,14 @@ theorem realize_fixedSnoc_makeTsN_3 [ModelSets V] {n : ℕ} {s : ℕ → V}
   by_cases h_k_lt_2 : k < 2
   · rw [realize_makeTsN]
     · simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.ofNat_eq_cast]
-      by_cases h_k_0 : k = 0
-      · rw [h_k_0]
-        simp
-      · have h_k_1 : k = 1 := by omega
-        · rw [h_k_1]
-          simp
+      obtain rfl | rfl : k = 0 ∨ k = 1 := by omega
+      · simp
+      · simp
     · omega
   · unfold makeTsN replaceInitialValues
     simp only [Nat.succ_eq_add_one, zero_add, Nat.reduceAdd, Fin.ofNat_eq_cast]
-    rw [if_neg]
-    · simp
-      omega
-    · omega
+    rw [if_neg (by omega)]
+    simp_all
 
 /-- General `makeTsN` realization in terms of `replaceInitialValues`. -/
 theorem realize_fixedSnoc_makeTsN [ModelSets V] {n m : ℕ} {s : ℕ → V}
@@ -185,12 +166,8 @@ theorem realize_fixedSnoc_makeTsN [ModelSets V] {n m : ℕ} {s : ℕ → V}
   unfold makeTsN replaceInitialValues
   simp only [Fin.ofNat_eq_cast, Fin.val_natCast]
   by_cases h_k_le_m : k < m + 1
-  · rw [if_pos h_k_le_m]
-    rw [if_pos h_k_le_m]
-    rw [Nat.mod_eq_of_lt h_k_le_m]
-    rw [if_pos h_k_le_m]
-  · rw [if_neg h_k_le_m]
-    rw [if_neg h_k_le_m]
+  · rw [if_pos h_k_le_m, if_pos h_k_le_m, Nat.mod_eq_of_lt h_k_le_m, if_pos h_k_le_m]
+  · rw [if_neg h_k_le_m, if_neg h_k_le_m]
     simp
 
 namespace Term
@@ -204,14 +181,10 @@ theorem realize_fixedSnoc_0 [ModelSets V] {n : ℕ} {s : ℕ → V}
       = replaceInitialValues s ![a] := by
     funext k
     by_cases h_k_0 : k = 0
-    · rw [h_k_0]
-      simp
+    · simp_all
     · rw [if_neg h_k_0]
       unfold replaceInitialValues
-      simp only [Term.realize_var, Sum.elim_inl, zero_add, Nat.lt_one_iff, Nat.reduceAdd,
-        Fin.ofNat_eq_cast, Matrix.cons_val_fin_one, right_eq_ite_iff]
-      intro h
-      omega
+      simp_all
 
 end Term
 
@@ -264,15 +237,7 @@ theorem ext_emptyset_exists [ModelEmptyset V] : ∃ (emp : V), ExtIsEmptyset emp
 theorem ext_emptyset_unique [ModelEmptyset V] {a b : V} :
     ExtIsEmptyset a → ExtIsEmptyset b → a = b := by
   intro h_a h_b
-  apply ModelSets.extensionality
-  intro z
-  constructor
-  · intro h_za
-    absurd h_za
-    apply h_a z
-  · intro h_zb
-    absurd h_zb
-    apply h_b z
+  exact ModelSets.extensionality fun z ↦ iff_of_false (h_a z) (h_b z)
 
 /-- The emptyset is unique internally. -/
 theorem int_emptyset_unique [ModelEmptyset V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V} :
@@ -319,8 +284,6 @@ theorem realize_is_singleton [ModelPairing V] {n : ℕ} (s : ℕ → V)
     (xs : Fin n → V) : intIsSingleton.Realize s xs ↔
     ExtIsSingleton (s 0) (s 1) := by
   rw [intIsSingleton, ExtIsSingleton]
-  apply forall_congr'
-  intro x
   simp
 
 @[simp]
@@ -329,8 +292,7 @@ theorem realize_is_singleton' [ModelPairing V] {n : ℕ} (s : ℕ → V)
     (intIsSingleton' t₁ t₂).Realize s xs ↔
     ExtIsSingleton (t₁.realize (Sum.elim s xs)) (t₂.realize (Sum.elim s xs)) := by
   rw [intIsSingleton']
-  unfold makeTsN
-  simp
+  simp_all
 
 @[simp]
 theorem realize_is_pair [ModelPairing V] {n : ℕ} (s : ℕ → V)
@@ -349,102 +311,58 @@ theorem ext_pairing [ModelPairing V] (a b : V) :
 theorem ext_singleton_unique [ModelPairing V] {a b b' : V} :
     ExtIsSingleton a b → ExtIsSingleton a b' → b = b' := by
   intro h_b h_b'
-  apply ModelSets.extensionality
-  intro z
-  apply Iff.trans (h_b z) (h_b' z).symm
+  exact ModelSets.extensionality fun z ↦ (h_b z).trans (h_b' z).symm
 
 /-- {a} = {b} implies a = b. -/
 theorem ext_singleton_inj [ModelPairing V] {a a' b : V} :
     ExtIsSingleton a b → ExtIsSingleton a' b → a = a' := by
-  rw [ExtIsSingleton, ExtIsSingleton]
   intro h_a h_a'
-  have h1 : a = a ↔ a = a' := by
-    apply Iff.trans (h_a a).symm (h_a' a)
-  apply h1.mp rfl
+  exact ((h_a a).symm.trans (h_a' a)).mp rfl
 
 /-- {a, a} = {a}. -/
 theorem singleton_by_pair [ModelPairing V] {a b : V} :
     ExtIsSingleton a b ↔ ExtIsPair a a b := by
-  constructor
-  · intro h_singleton
-    rw [ExtIsSingleton] at h_singleton
-    rw [ExtIsPair]
-    intro x
-    rw [h_singleton x]
-    apply or_self_iff.symm
-  · rw [ExtIsSingleton, ExtIsPair]
-    intro h_pair x
-    rw [h_pair]
-    apply or_self_iff
+  unfold ExtIsSingleton ExtIsPair
+  exact forall_congr' fun x ↦ by rw [or_self]
 
 /-- The unordered pair is unique. -/
 theorem ext_pair_unique [ModelPairing V] {a b c c' : V} :
     (ExtIsPair a b c) → (ExtIsPair a b c') → c = c' := by
   intro h_c h_c'
-  rw [ExtIsPair] at h_c
-  rw [ExtIsPair] at h_c'
-  apply ModelSets.extensionality
-  intro z
-  apply Iff.trans (h_c z) (h_c' z).symm
+  exact ModelSets.extensionality fun z ↦ (h_c z).trans (h_c' z).symm
 
 /-- Pairing is injective up to ordering. -/
 theorem ext_pairing_inj [ModelPairing V] {a b a' b' c : V} :
     (ExtIsPair a b c) → (ExtIsPair a' b' c) →
     (a = a' ∧ b = b') ∨ (a = b' ∧ b = a') := by
   intro h_abc h_abc'
-  have h0 : ∀ x, x = a ∨ x = b ↔ x = a' ∨ x = b' := by
-    intro x
-    apply Iff.trans (h_abc x).symm (h_abc' x)
-  have h0_a : a = a' ∨ a = b' := by
-    apply (h0 a).mp (Or.inl rfl)
-  have h0_a' : a' = a ∨ a' = b := by
-    apply (h0 a').mpr (Or.inl rfl)
-  have h0_b : b = a' ∨ b = b' := by
-    apply (h0 b).mp (Or.inr rfl)
-  have h0_b' : b' = a ∨ b' = b := by
-    apply (h0 b').mpr (Or.inr rfl)
+  have h0 : ∀ x, x = a ∨ x = b ↔ x = a' ∨ x = b' :=
+    fun x ↦ (h_abc x).symm.trans (h_abc' x)
+  have h0_a : a = a' ∨ a = b' := (h0 a).mp (Or.inl rfl)
+  have h0_a' : a' = a ∨ a' = b := (h0 a').mpr (Or.inl rfl)
+  have h0_b : b = a' ∨ b = b' := (h0 b).mp (Or.inr rfl)
+  have h0_b' : b' = a ∨ b' = b := (h0 b').mpr (Or.inr rfl)
   by_cases h_a_eq_a' : a = a'
   · by_cases h_b_eq_b' : b = b'
-    · left
-      apply And.intro h_a_eq_a' h_b_eq_b'
-    · have h1 : b = a' := by
-        apply Or.resolve_right h0_b h_b_eq_b'
-      have h2 : b' = a := by
-        apply Or.resolve_right h0_b' (Ne.symm h_b_eq_b')
-      absurd h_b_eq_b'
-      rw [h1, h_a_eq_a'.symm, h2.symm]
+    · exact Or.inl ⟨h_a_eq_a', h_b_eq_b'⟩
+    · simp_all
   · by_cases h_b_eq_b' : b = b'
-    · have h1 : a = b' := by
-        apply Or.resolve_left h0_a h_a_eq_a'
-      have h2 : a' = b := by
-        apply Or.resolve_left h0_a' (Ne.symm h_a_eq_a')
-      absurd h_a_eq_a'
-      rw [h1, h_b_eq_b'.symm, h2.symm]
-    · right
-      constructor
-      · apply symm
-        apply Or.resolve_right h0_b' (Ne.symm h_b_eq_b')
-      · apply Or.resolve_right h0_b h_b_eq_b'
+    · simp_all
+    · simp_all
 
 /-- Every element has a singleton. -/
 theorem ext_singleton [ModelPairing V] : ∀ (a : V), ∃ (b : V), ExtIsSingleton a b := by
   intro a
-  have h_pick : ∃ (b : V), ExtIsPair a a b := by
-    apply ext_pairing
-  obtain ⟨b, hb⟩ := h_pick
-  use b
-  rw [singleton_by_pair]
-  exact hb
+  obtain ⟨b, hb⟩ := ext_pairing a a
+  exact ⟨b, singleton_by_pair.mpr hb⟩
 
 /-- {a} = {b, c} implies a=b=c. -/
 theorem singleton_eq_pair [ModelPairing V] {a b c x : V} :
     ExtIsSingleton a x → ExtIsPair b c x → a = b ∧ a = c := by
   intro h_a h_bc
-  have h1 : (a = b ∧ a = c) ∨ (a = c ∧ a = b) :=
-    ext_pairing_inj (singleton_by_pair.mp h_a) h_bc
-  rcases h1 with h1l | h1r
-  · exact h1l
-  · exact h1r.symm
+  rcases ext_pairing_inj (singleton_by_pair.mp h_a) h_bc with h | h
+  · exact h
+  · exact h.symm
 
 /-- Describe fv 2 is an ordered pair of fv 0 and fv 1. -/
 def intIsOrderedPair {n : ℕ} : LZFC.BoundedFormula ℕ n :=
@@ -469,35 +387,19 @@ theorem ext_ordered_pair [ModelPairing V] (a b : V) :
   obtain ⟨d1, h_d1⟩ := ext_singleton a
   obtain ⟨d2, h_d2⟩ := ext_pairing a b
   obtain ⟨c, h_c⟩ := ext_pairing d1 d2
-  use c
-  rw [ExtIsOrderedPair]
-  intro x
+  refine ⟨c, fun x ↦ ?_⟩
   rw [h_c x]
-  have h_d1' : x = d1 ↔ ExtIsSingleton a x := by
-    constructor
-    · intro h1
-      rw [h1]
-      exact h_d1
-    · intro h1
-      apply ext_singleton_unique h1 h_d1
-  have h_d2' : x = d2 ↔ ExtIsPair a b x := by
-    constructor
-    · intro h1
-      rw [h1]
-      exact h_d2
-    · intro h1
-      apply ext_pair_unique h1 h_d2
+  have h_d1' : x = d1 ↔ ExtIsSingleton a x :=
+    ⟨fun h1 ↦ h1 ▸ h_d1, fun h1 ↦ ext_singleton_unique h1 h_d1⟩
+  have h_d2' : x = d2 ↔ ExtIsPair a b x :=
+    ⟨fun h1 ↦ h1 ▸ h_d2, fun h1 ↦ ext_pair_unique h1 h_d2⟩
   rw [h_d1', h_d2']
 
 /-- The ordered pair is unique. -/
 theorem ext_ordered_pair_unique [ModelPairing V] (a b c c' : V) :
     ExtIsOrderedPair a b c → ExtIsOrderedPair a b c' → c = c' := by
   intro h_c h_c'
-  apply ModelSets.extensionality
-  intro z
-  rw [ExtIsOrderedPair] at h_c
-  rw [ExtIsOrderedPair] at h_c'
-  apply Iff.trans (h_c z) (h_c' z).symm
+  exact ModelSets.extensionality fun z ↦ (h_c z).trans (h_c' z).symm
 
 /-- The ordered pair is injective. -/
 theorem ext_ordered_pair_inj [ModelPairing V] (a b a' b' c : V) :
@@ -505,63 +407,42 @@ theorem ext_ordered_pair_inj [ModelPairing V] (a b a' b' c : V) :
   rw [ExtIsOrderedPair, ExtIsOrderedPair]
   intro h_ab h_ab'
   have h0 : ∀ (x : V), ExtIsSingleton a x ∨ ExtIsPair a b x ↔
-      ExtIsSingleton a' x ∨ ExtIsPair a' b' x := by
-    intro x
-    apply Iff.trans (h_ab x).symm (h_ab' x)
+      ExtIsSingleton a' x ∨ ExtIsPair a' b' x :=
+    fun x ↦ (h_ab x).symm.trans (h_ab' x)
   by_cases h_a_eq_b : a = b
   · rw [h_a_eq_b]
     rw [h_a_eq_b] at h0
     obtain ⟨sb, h_sb⟩ := ext_singleton b
-    have h0_sb : ExtIsSingleton a' sb ∨ ExtIsPair a' b' sb := by
-      apply (h0 sb).mp
-      apply Or.inl h_sb
+    have h0_sb : ExtIsSingleton a' sb ∨ ExtIsPair a' b' sb := (h0 sb).mp (Or.inl h_sb)
     rcases h0_sb with h0_sbl | h0_sbr
-    · have h1 : b = a' := by
-        apply ext_singleton_inj h_sb h0_sbl
+    · have h1 : b = a' := ext_singleton_inj h_sb h0_sbl
       rw [h1.symm] at h0_sbl
       rw [h1.symm] at h0
-      constructor
-      · exact h1
-      · obtain ⟨pbb', h_pbb'⟩ := ext_pairing b b'
-        have h2 : ExtIsSingleton b pbb' ∨ ExtIsPair b b pbb' := by
-          apply (h0 pbb').mpr
-          apply Or.inr h_pbb'
-        rcases h2 with h2l | h2r
-        · have h3 : b = b ∧ b = b' := by
-            apply singleton_eq_pair h2l h_pbb'
-          apply h3.right
-        · have h3 : ((b = b) ∧ (b = b')) ∨ (b = b' ∧ b = b) := by
-            apply ext_pairing_inj h2r h_pbb'
-          rcases h3 with h3l | h3r
-          · apply h3l.right
-          · apply h3r.left
-    · apply singleton_eq_pair h_sb h0_sbr
+      refine ⟨h1, ?_⟩
+      obtain ⟨pbb', h_pbb'⟩ := ext_pairing b b'
+      have h2 : ExtIsSingleton b pbb' ∨ ExtIsPair b b pbb' := (h0 pbb').mpr (Or.inr h_pbb')
+      rcases h2 with h2l | h2r
+      · exact (singleton_eq_pair h2l h_pbb').right
+      · rcases ext_pairing_inj h2r h_pbb' with h3 | h3
+        · exact h3.right
+        · exact h3.left
+    · exact singleton_eq_pair h_sb h0_sbr
   · obtain ⟨sa, h_sa⟩ := ext_singleton a
-    have h0_sa : ExtIsSingleton a' sa ∨ ExtIsPair a' b' sa := by
-      apply (h0 sa).mp
-      apply Or.inl h_sa
+    have h0_sa : ExtIsSingleton a' sa ∨ ExtIsPair a' b' sa := (h0 sa).mp (Or.inl h_sa)
     have h1 : a = a' := by
       rcases h0_sa with h0_sa_l | h0_sa_r
-      · apply ext_singleton_inj h_sa h0_sa_l
-      · have h1 : a = a' ∧ a = b' := by
-          apply singleton_eq_pair h_sa h0_sa_r
-        apply h1.left
-    constructor
-    · exact h1
-    · obtain ⟨pab, h_pab⟩ := ext_pairing a b
-      have h0_pab : ExtIsSingleton a' pab ∨ ExtIsPair a' b' pab := by
-        apply (h0 pab).mp
-        apply Or.inr h_pab
-      rcases h0_pab with h0_pab_l | h0_pab_r
-      · absurd h_a_eq_b
-        have h2 : a' = a ∧ a' = b := by
-          apply singleton_eq_pair h0_pab_l h_pab
-        rw [h2.left.symm, h2.right]
-      · have h3 : (a = a' ∧ b = b') ∨ (a = b' ∧ b = a') := by
-          apply ext_pairing_inj h_pab h0_pab_r
-        rcases h3 with h3l | h3r
-        · apply h3l.right
-        · rw [h3r.right, h1.symm, h3r.left]
+      · exact ext_singleton_inj h_sa h0_sa_l
+      · exact (singleton_eq_pair h_sa h0_sa_r).left
+    refine ⟨h1, ?_⟩
+    obtain ⟨pab, h_pab⟩ := ext_pairing a b
+    have h0_pab : ExtIsSingleton a' pab ∨ ExtIsPair a' b' pab := (h0 pab).mp (Or.inr h_pab)
+    rcases h0_pab with h0_pab_l | h0_pab_r
+    · absurd h_a_eq_b
+      have h2 : a' = a ∧ a' = b := singleton_eq_pair h0_pab_l h_pab
+      rw [h2.left.symm, h2.right]
+    · rcases ext_pairing_inj h_pab h0_pab_r with h3 | h3
+      · exact h3.right
+      · rw [h3.right, h1.symm, h3.left]
 
 /-- The ordered pair is injective internally. -/
 theorem int_ordered_pair_inj [ModelPairing V] (s : ℕ → V) (xs : Fin 0 → V) :
@@ -581,9 +462,8 @@ class ModelEP (V : Type u) extends ModelEmptyset V, ModelPairing V
 /-- A singleton can be formed for any emptyset element. -/
 theorem ext_singleton_of_emptyset [ModelEP V] : ∀ (e : V),
     ExtIsEmptyset e → ∃ (a : V), ExtIsSingleton e a := by
-  intro e he
-  obtain ⟨a, ha⟩ := ext_singleton e
-  use a
+  intro e _he
+  exact ext_singleton e
 
 /-- A singleton can be formed for the emptyset internally. -/
 theorem int_singleton_of_emptyset [ModelEP V] (s : ℕ → V) (xs : Fin 0 → V) :
@@ -592,8 +472,7 @@ theorem int_singleton_of_emptyset [ModelEP V] (s : ℕ → V) (xs : Fin 0 → V)
   suffices h : ∀ e : V, ExtIsEmptyset e → ∃ a : V, ExtIsSingleton e a by
     simpa [realize_liftAt', fixedSnoc] using h
   intro e he
-  obtain ⟨a, ha⟩ := ext_singleton_of_emptyset e he
-  use a
+  exact ext_singleton_of_emptyset e he
 
 /-- Describe fv 1 is the union of fv 0 (in the set-theoretic sense). -/
 def intIsUnion {n : ℕ} : LZFC.BoundedFormula ℕ n :=
@@ -625,42 +504,19 @@ theorem realize_is_union [ModelUnion V] {n : ℕ} (s : ℕ → V)
 /-- The union of `(a, b)` equals `{a, b}`. -/
 theorem union_of_ordered_pair [ModelEPU V] {a b c d : V} :
     ExtIsOrderedPair a b c → ExtIsUnion c d → ExtIsPair a b d := by
-  intro h_abc h_cd
-  rw [ExtIsPair]
-  rw [ExtIsUnion] at h_cd
-  rw [ExtIsOrderedPair] at h_abc
-  intro x
+  intro h_abc h_cd x
   constructor
   · intro h_xd
-    have h1 : ∃ y, x ∈ y ∧ y ∈ c := by
-      apply (h_cd x).mp
-      exact h_xd
-    obtain ⟨y, h_y⟩ := h1
-    have h2 : ExtIsSingleton a y ∨ ExtIsPair a b y := by
-      apply (h_abc y).mp h_y.right
-    rcases h2 with h2l | h2r
-    · rw [ExtIsSingleton] at h2l
-      left
-      apply (h2l x).mp h_y.left
-    · rw [ExtIsPair] at h2r
-      apply (h2r x).mp h_y.left
+    obtain ⟨y, h_y⟩ := (h_cd x).mp h_xd
+    rcases (h_abc y).mp h_y.right with h2 | h2
+    · exact Or.inl ((h2 x).mp h_y.left)
+    · exact (h2 x).mp h_y.left
   · intro h_xab
     rcases h_xab with h_a | h_b
-    · apply (h_cd x).mpr
-      obtain ⟨y, h_y⟩ := ext_singleton a
-      use y
-      constructor
-      · rw [h_a]
-        rw [ExtIsSingleton] at h_y
-        apply (h_y a).mpr rfl
-      · apply (h_abc y).mpr (Or.inl h_y)
-    · apply (h_cd x).mpr
-      obtain ⟨y, h_y⟩ := ext_pairing a b
-      use y
-      constructor
-      · rw [ExtIsPair] at h_y
-        apply (h_y x).mpr (Or.inr h_b)
-      · apply (h_abc y).mpr (Or.inr h_y)
+    · obtain ⟨y, h_y⟩ := ext_singleton a
+      exact (h_cd x).mpr ⟨y, h_a ▸ (h_y a).mpr rfl, (h_abc y).mpr (Or.inl h_y)⟩
+    · obtain ⟨y, h_y⟩ := ext_pairing a b
+      exact (h_cd x).mpr ⟨y, (h_y x).mpr (Or.inr h_b), (h_abc y).mpr (Or.inr h_y)⟩
 
 /-- The union of `(a, b)` equals `{a, b}` internally. -/
 theorem int_union_of_ordered_pair [ModelEPU V] {s : ℕ → V} {xs : Fin 0 → V} :
@@ -747,15 +603,12 @@ theorem realize_is_powerset' [ModelPowerset V] {n : ℕ} (s : ℕ → V)
     (intIsPowerset' t₁ t₂).Realize s xs ↔
     ExtIsPowerset (t₁.realize (Sum.elim s xs)) (t₂.realize (Sum.elim s xs)) := by
   rw [intIsPowerset']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- Every set is a subset of itself. -/
 theorem subset_self [ModelEPUP V] : ∀ (a : V), a ⊆ a := by
-  intro a
-  rw [ExtIsSubset]
-  intro x
-  simp
+  intro a x h
+  exact h
 
 /-- Every set is a subset of itself internally. -/
 theorem int_subset_self [ModelEPUP V] {s : ℕ → V} {xs : Fin 0 → V} :
@@ -820,8 +673,7 @@ theorem realize_is_successor' [ModelPowerset V] {n : ℕ} (s : ℕ → V)
     ExtIsSuccessor (Term.realize (Sum.elim s xs) t₁)
     (Term.realize (Sum.elim s xs) t₂) := by
   rw [intIsSuccessor']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- Make a formula for fv 0 is inductive, i.e., ∅∈fv 0 and x∈fv 0 implies S(x)∈fv 0. -/
 def intIsInductive {n : ℕ} : LZFC.BoundedFormula ℕ n :=
@@ -850,22 +702,19 @@ theorem realize_is_inductive' [ModelEPUP V] {n : ℕ} (s : ℕ → V)
     (intIsInductive' t).Realize s xs ↔
     (ExtIsInductive (Term.realize (Sum.elim s xs) t)) := by
   rw [intIsInductive']
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- ∅ belongs to every inductive set. -/
 theorem ext_emp_in_inductive [ModelEPUP V] {emp a : V} :
     ExtIsEmptyset emp → ExtIsInductive a → emp ∈ a := by
   intro h_emp h_a
-  unfold ExtIsInductive at h_a
-  apply h_a.left emp h_emp
+  exact h_a.left emp h_emp
 
 /-- If a is inductive and x∈a, then S(x)∈a. -/
 theorem ext_inductive_one_step [ModelEPUP V] {a y : V} (x : V) :
     ExtIsInductive a → x ∈ a → ExtIsSuccessor x y → y ∈ a := by
   intro h_a h_xa h_xy
-  unfold ExtIsInductive at h_a
-  apply h_a.right x h_xa y h_xy
+  exact h_a.right x h_xa y h_xy
 
 /-- Model with the Infinity axiom. -/
 class ModelInfinity (V : Type u) extends ModelSets V where
@@ -913,17 +762,9 @@ theorem ExtRegularity [ModelEPUPIR V] (a : V) : (∃ (b : V), b ∈ a) →
 /-- No set satisfies a∈a. -/
 theorem no_loop [ModelEPUPIR V] (a : V) : a ∉ a := by
   obtain ⟨a_sing, h_a_sing⟩ := ext_singleton a
-  unfold ExtIsSingleton at h_a_sing
-  have a_sing_nonempty : ∃ (b : V), b ∈ a_sing := by
-    use a
-    apply (h_a_sing a).mpr rfl
-  obtain ⟨b, h_b⟩ := ExtRegularity a_sing a_sing_nonempty
-  have h1 : b = a := by
-    apply (h_a_sing b).mp h_b.left
-  rw [← h1]
-  apply h_b.right b
-  apply (h_a_sing b).mpr
-  exact h1
+  obtain ⟨b, h_b⟩ := ExtRegularity a_sing ⟨a, (h_a_sing a).mpr rfl⟩
+  have h1 : b = a := (h_a_sing b).mp h_b.left
+  simp_all
 
 /-- No set satisfies a∈a internally. -/
 theorem int_no_loop [ModelEPUPIR V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V) :
@@ -977,23 +818,11 @@ theorem realize_separation'_lift [ModelSets V] {n : ℕ}
     Term.realize_liftAt, Fin.is_lt, ↓reduceIte, castAdd_to_castSucc, Nat.add_zero,
     Fin.castAdd_zero, Fin.cast_eq_self, sum_fixedSnoc_castSucc, realize_and,
     BoundedFormula.realize_replaceFV, realize_fixedSnoc_makeTsN_1]
-  apply forall_congr'
-  intro x
-  apply iff_congr
-  · rfl
-  · apply and_congr
-    · rfl
-    · rw [realize_liftAt' (n' := n' + 1) (h_n_prime_nezero := by omega)
-            (fixedSnoc xs x) (le_refl n),
-          realize_liftAt' (h_n_prime_nezero := h_n') xs (le_refl n)]
-      have hctx : (fixedSnoc xs x ∘ fun (i : Fin n) ↦
-            if ↑i < n then Fin.castAdd (n' + 1) i else i.addNat (n' + 1)) =
-          (xs ∘ fun (i : Fin n) ↦
-            if ↑i < n then Fin.castAdd n' i else i.addNat n') := by
-        funext i
-        have h_lt : (i : ℕ) < n := i.is_lt
-        simp only [if_pos h_lt, castAdd_to_castSucc, Function.comp_apply, snoc_init]
-      rw [hctx]
+  refine forall_congr' fun x ↦ iff_congr Iff.rfl (and_congr_right fun _ ↦ ?_)
+  rw [realize_liftAt' (n' := n' + 1) (h_n_prime_nezero := by omega)
+        (fixedSnoc xs x) (le_refl n),
+      realize_liftAt' (h_n_prime_nezero := h_n') xs (le_refl n)]
+  simp_all
 
 /-- A lifted `ExtIsSeparation` is equivalent to the unlifted one with restricted context. -/
 theorem lift_ExtIsSeparation [ModelSets V] {n n' : ℕ} {h_n' : n' > 0}
@@ -1001,17 +830,12 @@ theorem lift_ExtIsSeparation [ModelSets V] {n n' : ℕ} {h_n' : n' > 0}
     {a b : V} : ExtIsSeparation s xs (ϕ.liftAt n' n) a b ↔
     ExtIsSeparation s (fun (k : Fin n) ↦ xs (k.castAdd n')) ϕ a b := by
   unfold ExtIsSeparation
-  apply forall_congr'
-  intro x
-  apply iff_congr
-  · rfl
-  · apply and_congr
-    · rfl
-    · rw [realize_liftAt']
-      · simp
-        rfl
-      · omega
-      · omega
+  refine forall_congr' fun x ↦ iff_congr Iff.rfl (and_congr_right fun _ ↦ ?_)
+  rw [realize_liftAt']
+  · simp
+    rfl
+  · omega
+  · omega
 
 /-- Model with the Comprehension schema. -/
 class ModelComprehension (V : Type u) extends ModelSets V where
@@ -1054,16 +878,14 @@ def ExtIsOmega [ModelEPUPI V] (a : V) := ExtIsInductive a ∧
 theorem realize_is_omega [ModelEPUPI V] {n : ℕ} {s : ℕ → V}
     {xs : Fin n → V} : intIsOmega.Realize s xs ↔ ExtIsOmega (s 0)  := by
   rw [intIsOmega, ExtIsOmega]
-  unfold makeTsN
-  simp
+  simp_all
 
 @[simp]
 theorem realize_is_omega' [ModelEPUPI V] {n : ℕ} {s : ℕ → V}
     {xs : Fin n → V} (t : LZFC.Term (ℕ ⊕ Fin n)) :
     (intIsOmega' t).Realize s xs ↔ ExtIsOmega (t.realize (Sum.elim s xs)) := by
   unfold intIsOmega'
-  unfold makeTsN
-  simp
+  simp_all
 
 /-- ω exists. -/
 theorem ext_omega_exists [ModelEPUPIC V] {n : ℕ} {s : ℕ → V}
@@ -1081,11 +903,7 @@ theorem ext_omega_exists [ModelEPUPIC V] {n : ℕ} {s : ℕ → V}
     unfold ϕ
     simp
   have h_b' : ∀ (x : V), x ∈ b ↔ x ∈ a ∧ ∀ (c : V), ExtIsInductive c → x ∈ c := by
-    intro x
-    rw [h_b]
-    apply and_congr
-    · rfl
-    · apply h_realize_ϕ
+    simp_all
   unfold ExtIsOmega
   constructor
   · unfold ExtIsInductive
@@ -1126,9 +944,7 @@ theorem ext_omega_minus_emptyset [ModelEPUPIC V] :
   let xs := ![emp, omega]
   let ϕ : LZFC.BoundedFormula ℕ 2 := ∼ (fv' 0 =' (bv' 0))
   obtain ⟨b, h_b⟩ := ext_comprehension s xs ϕ omega
-  use b
-  unfold ExtIsSeparation at h_b
-  exact h_b
+  exact ⟨b, h_b⟩
 
 /-- ω minus the emptyset internally. -/
 theorem int_omega_minus_emptyset [ModelEPUPIC V] {n : ℕ} (s : ℕ → V)
@@ -1140,16 +956,14 @@ theorem int_omega_minus_emptyset [ModelEPUPIC V] {n : ℕ} (s : ℕ → V)
     snoc_last, realize_ex, realize_iff, realize_in, realize_and, FixedSnoc_n_3_0, realize_neq,
     FixedSnoc_n_4_0, ne_eq]
   intro emp omega h_emp h_omega
-  obtain ⟨b, h_b⟩ := ext_omega_minus_emptyset emp h_emp omega h_omega
-  use b
+  exact ext_omega_minus_emptyset emp h_emp omega h_omega
 
 /-- ω is closed under the successor operation. -/
 theorem omega_closed_under_succ [ModelEPUPIC V] : ∀ (omega : V),
     ExtIsOmega omega → ∀ (x y : V), (x ∈ omega → ExtIsSuccessor x y →
     y ∈ omega) := by
   intro omega h_omega x y h_x_omega h_xy
-  unfold ExtIsOmega ExtIsInductive at h_omega
-  apply h_omega.left.right x h_x_omega y h_xy
+  exact h_omega.left.right x h_x_omega y h_xy
 
 /-- The principle of mathematical induction for ω. -/
 theorem ext_induction [ModelEPUPIC V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
@@ -1173,8 +987,7 @@ theorem ext_induction [ModelEPUPIC V] {n : ℕ} {s : ℕ → V} {xs : Fin n → 
         unfold ExtIsInductive at h_omega
         apply h_omega.left.left _emp _h_emp
       · have h_emp_eq : _emp = emp := ext_emptyset_unique _h_emp h_emp
-        rw [h_emp_eq]
-        exact h_basis
+        simp_all
     · intro x h_xb y h1
       unfold ExtIsSeparation at h_b
       apply (h_b y).mpr

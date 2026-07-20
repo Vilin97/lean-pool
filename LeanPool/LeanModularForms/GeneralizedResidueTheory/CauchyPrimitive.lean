@@ -40,22 +40,9 @@ private instance instContinuousSMulRealComplex : ContinuousSMul ℝ ℂ :=
 
 private lemma segment_subset_convex {S : Set ℂ} (hS : Convex ℝ S)
     {c z : ℂ} (hc : c ∈ S) (hz : z ∈ S) :
-    ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S := by
-  intro t ht
-  have heq : c + t • (z - c) = (1 - t) • c + t • z := by
-    module
-  rw [heq]
+    ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S := fun t ht => by
+  rw [show c + t • (z - c) = (1 - t) • c + t • z from by module]
   exact hS hc hz (by linarith [ht.2]) ht.1 (by linarith [ht.1])
-
-private lemma segmentIntegrand_continuousOn {f : ℂ → ℂ} {S : Set ℂ}
-    {c z : ℂ} (hf : ContinuousOn f S)
-    (h_seg : ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S) :
-    ContinuousOn (fun t : ℝ => f (c + t • (z - c)) * (z - c))
-      (Icc 0 1) := by
-  apply ContinuousOn.mul _ continuousOn_const
-  apply ContinuousOn.comp hf _ (fun t ht => h_seg t ht)
-  exact (continuous_const.add
-    (continuous_ofReal.smul continuous_const)).continuousOn
 
 private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
     {c z : ℂ} (hS_open : IsOpen S)
@@ -74,12 +61,9 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
   have hu_cont : ContinuousOn u (Set.uIcc 0 1) :=
     continuous_ofReal.continuousOn
   have hv_cont : ContinuousOn v (Set.uIcc 0 1) := by
-    have : v = f ∘ γ := rfl
-    rw [this]
     apply ContinuousOn.comp hf.continuousOn hγ_cont.continuousOn
     intro t ht
-    rw [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1)] at ht
-    exact h_seg t ht
+    exact h_seg t (Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1) ▸ ht)
   have hu_deriv : ∀ x ∈ Set.Ioo (min 0 1) (max 0 1),
       HasDerivAt u (u' x) x := by
     intro x _
@@ -102,17 +86,13 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
       HasDerivAt v (v' x) x := by
     intro t ht
     simp only [v, v']
-    simp only [min_eq_left, max_eq_right,
-      (by norm_num : (0 : ℝ) ≤ 1)] at ht
-    have ht' : t ∈ Icc (0 : ℝ) 1 := Ioo_subset_Icc_self ht
-    have h_in_S : γ t ∈ S := h_seg t ht'
-    have h_diff_at : DifferentiableAt ℂ f (γ t) :=
-      hf.differentiableAt (hS_open.mem_nhds h_in_S)
-    have h_chain : HasDerivAt (f ∘ γ)
-        ((z - c) • deriv f (γ t)) t :=
-      h_diff_at.hasDerivAt.scomp t (hγ_deriv t)
+    simp only [min_eq_left, max_eq_right, (by norm_num : (0 : ℝ) ≤ 1)] at ht
+    have h_in_S : γ t ∈ S := h_seg t (Ioo_subset_Icc_self ht)
+    have h_chain := (hf.differentiableAt (hS_open.mem_nhds h_in_S)).hasDerivAt.scomp
+      t (hγ_deriv t)
     simp only [smul_eq_mul] at h_chain
     convert h_chain using 1
+    · rfl
     · rfl
     · ring
   have hu'_int : IntervalIntegrable u' MeasureTheory.volume 0 1 :=
@@ -120,23 +100,13 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
   have hv'_int : IntervalIntegrable v' MeasureTheory.volume 0 1 := by
     apply ContinuousOn.intervalIntegrable
     rw [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 1)]
-    apply ContinuousOn.mul _ continuousOn_const
-    have hContDiff : ContDiffOn ℂ 1 f S :=
-      hf.contDiffOn hS_open
-    have hderiv_cont : ContinuousOn (deriv f) S :=
-      hContDiff.continuousOn_deriv_of_isOpen hS_open le_rfl
-    exact hderiv_cont.comp hγ_cont.continuousOn
-      (fun t ht => h_seg t ht)
+    exact ((hf.contDiffOn hS_open).continuousOn_deriv_of_isOpen hS_open le_rfl).mul_const _
+      |>.comp hγ_cont.continuousOn (fun t ht => h_seg t ht)
   have h_parts :=
     intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
       hu_cont hv_cont hu_deriv hv_deriv hu'_int hv'_int
   simp only [u, v, u', v'] at h_parts
-  simp only [ofReal_one, ofReal_zero, one_mul, zero_mul,
-    sub_zero] at h_parts
-  have hv1 : f (c + (1 : ℝ) • (z - c)) = f z := by
-    simp
-  rw [hv1] at h_parts
-  exact h_parts
+  simp_all
 
 private lemma continuous_segmentMap (c w : ℂ) :
     Continuous (fun t : ℝ => c + t • (w - c)) :=
@@ -221,8 +191,7 @@ private lemma segmentIntegrand_lipschitzOnWith {f : ℂ → ℂ}
   have hgy : c + t • (y - c) ∈ S :=
     segment_subset_convex hS_convex hc (hε_ball hy) t ht
   have h_diff :
-      (c + t • (x - c)) - (c + t • (y - c)) = t • (x - y) := by
-    module
+      (c + t • (x - c)) - (c + t • (y - c)) = t • (x - y) := by module
   have hconv_seg : Convex ℝ
       (segment ℝ (c + t • (x - c)) (c + t • (y - c))) :=
     convex_segment _ _
@@ -260,13 +229,11 @@ private lemma segmentIntegrand_lipschitzOnWith {f : ℂ → ℂ}
     _ ≤ M * ‖(c + t • (x - c)) - (c + t • (y - c))‖ :=
         h_bound
     _ = M * ‖t • (x - y)‖ := by rw [h_diff]
-    _ = M * (|t| * ‖x - y‖) := by
-        rw [norm_smul]; simp only [Real.norm_eq_abs]
+    _ = M * (|t| * ‖x - y‖) := by rw [norm_smul]; simp only [Real.norm_eq_abs]
     _ = |t| * M * ‖x - y‖ := by ring
     _ = |t| * M * dist x y := by rw [dist_eq_norm]
     _ ≤ Real.toNNReal (|t| * M) * dist x y := by
-        apply mul_le_mul_of_nonneg_right _ dist_nonneg
-        exact Real.le_coe_toNNReal _
+        simp_all
 
 private lemma hasDerivAt_segmentIntegral_aux {f : ℂ → ℂ}
     {S : Set ℂ} {c z : ℂ} {ε : ℝ}
@@ -391,8 +358,7 @@ private lemma hasDerivAt_segmentIntegral {f : ℂ → ℂ}
         f (c + t • (w - c)) * (w - c)) =
       H w * (w - c) := by
     intro w
-    simp only [H]
-    exact intervalIntegral.integral_mul_const (𝕜 := ℂ) _ _
+    simpa only [H] using intervalIntegral.integral_mul_const (𝕜 := ℂ) _ _
   suffices HasDerivAt (fun w => H w * (w - c)) (f z) z by
     convert this using 1
     ext w; exact hF_eq w
@@ -412,9 +378,7 @@ private lemma hasDerivAt_segmentIntegral {f : ℂ → ℂ}
   suffices hH : HasDerivAt H (H' z) z by
     have h_prod := hH.mul h1
     refine h_prod.congr_deriv ?_
-    calc H' z * (z - c) + H z * 1 = H' z * (z - c) + H z := by ring
-      _ = (f z - H z) + H z := by rw [h_key]
-      _ = f z := by ring
+    simp_all
   exact hasDerivAt_segmentIntegral_aux hε_pos hS_convex
     hS_open hc hz hf hε_ball
 

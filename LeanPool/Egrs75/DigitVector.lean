@@ -68,11 +68,7 @@ theorem badCount_filter_append (q : ℕ) (L₁ L₂ : List ℕ) :
 never oversized for `q ≥ 1`). -/
 theorem badCount_filter_replicate_zero (q k : ℕ) :
     ((List.replicate k 0).filter (fun d => bigQ q d)).length = 0 := by
-  rw [List.length_eq_zero_iff, List.filter_eq_nil_iff]
-  intro d hd
-  rw [List.mem_replicate] at hd
-  simp only [bigQ, hd.2, decide_eq_true_eq, not_lt]
-  exact Nat.zero_le _
+  simp_all
 
 /-! ## High/low split of the base-`q` digit list and bad count
 
@@ -97,8 +93,7 @@ and the high block's bad counts. -/
 theorem badCountQ_split {q k Lo Hi : ℕ} (hq : 1 < q) (hLo : Lo < q ^ k) (hHi : 0 < Hi) :
     badCountQ q (Lo + q ^ k * Hi) = badCountQ q Lo + badCountQ q Hi := by
   rw [badCountQ_eq, badCountQ_eq, badCountQ_eq, digits_split hq hLo hHi]
-  rw [badCount_filter_append, badCount_filter_append, badCount_filter_replicate_zero]
-  ring
+  simp_all
 
 /-! ## Disjoint-support `LowDigits p` addition (KERNEL-CLEAN)
 
@@ -156,10 +151,7 @@ theorem badIndexSet_nonempty {q n : ℕ} (_hq : 1 < q) (hbad : 0 < badCountQ q n
   obtain ⟨i, hilt, hget⟩ := List.mem_iff_getElem.mp hdmem
   refine ⟨i, ?_⟩
   simp only [badIndexSet, Finset.mem_filter, Finset.mem_range]
-  refine ⟨hilt, ?_⟩
-  have : (Nat.digits q n).getD i 0 = d := by
-    rw [List.getD_eq_getElem (Nat.digits q n) 0 hilt, hget]
-  rw [this]; exact hdbig
+  simp_all
 
 /-- The highest oversized base-`q` index of `n` (defined when the bad count is
 positive; otherwise junk `0`). -/
@@ -200,16 +192,11 @@ theorem digit_good_above_top {q n i : ℕ} (hq : 1 < q) (hbad : 0 < badCountQ q 
     push Not at hcon
     have hibad : i ∈ badIndexSet q n := by
       simp only [badIndexSet, Finset.mem_filter, Finset.mem_range]
-      refine ⟨hlen, ?_⟩
-      rw [← hval]
-      simp only [bigQ, decide_eq_true_eq]
-      omega
+      simp_all
     have := le_topBadIndex hq hbad hibad
     omega
   · -- out of range: the digit reads as the default `0`.
-    push Not at hlen
-    rw [hval, List.getD_eq_default _ 0 hlen]
-    exact Nat.zero_le _
+    simp_all
 
 /-- **High block is `LowDigits q` (KERNEL-CLEAN).**  With `k = topBadIndex q n + 1`,
 the high block `Hi = n / q^k` has no oversized base-`q` digit. -/

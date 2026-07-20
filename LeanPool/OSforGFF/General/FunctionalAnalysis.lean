@@ -4,22 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
-
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.MeasureTheory.Function.Holder
 import Mathlib.Analysis.Fourier.Inversion
 import Mathlib.Analysis.Calculus.BumpFunction.Normed
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
-
-
-
-
-
-
-
-
-
 
 /-!
 ## Functional Analysis for AQFT
@@ -87,7 +77,6 @@ The following L∞ × L² multiplication theorems are fully proven (2025-12-13):
 
 open MeasureTheory.Measure
 
-
 variable {d : ℕ} [NeZero d]
 
 -- Add inner product space structure
@@ -124,20 +113,13 @@ instance instMeasurableSpaceLpComplexTwoLeanPool (μ : Measure α) : MeasurableS
 instance instBorelSpaceLpComplexTwoLeanPool (μ : Measure α) : BorelSpace (Lp ℂ 2 μ) := ⟨rfl⟩
 
 -- Check if Complex.ofRealCLM is an isometry
-lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) := by
-  -- Complex.ofRealCLM is defined as ofRealLI.toContinuousLinearMap,
-  -- where ofRealLI is a linear isometry
-  have h : ⇑(Complex.ofRealCLM : ℝ →L[ℝ] ℂ) = ⇑Complex.ofRealLI := rfl
-  rw [Isometry, h]
-  -- The coercion to function is the same for both
-  exact Complex.ofRealLI.isometry.edist_eq
+lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) :=
+  Complex.ofRealLI.isometry
 
--- Use this to prove our specific case
+/-- The lift `φ ↦ ofRealCLM.compLp φ` to `Lp` is continuous. -/
 lemma Complex.ofRealCLM_continuous_compLp {α : Type*} [MeasurableSpace α] {μ : Measure α} :
-  Continuous (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) := by
-  -- The function φ ↦ L.compLp φ is the application of the continuous linear map
-  -- ContinuousLinearMap.compLpL p μ L, which is continuous
-  exact (ContinuousLinearMap.compLpL 2 μ Complex.ofRealCLM).continuous
+  Continuous (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
+  (ContinuousLinearMap.compLpL 2 μ Complex.ofRealCLM).continuous
 
 /--
 Compose an Lp function with a continuous linear map.
@@ -184,8 +166,6 @@ noncomputable def liftMeasureRealToComplex
 
 end LiftMeasure
 
-
-
 /-! ## Fourier Transform as Linear Isometry on L² Spaces
 
 The key challenge in defining the Fourier transform on L² spaces is that the Fourier integral
@@ -212,7 +192,6 @@ abbrev SchwartzRd (d : ℕ) := SchwartzMap (EuclideanRd d) ℂ
 abbrev L2Complex (d : ℕ) := Lp ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-! ### Core construction components (using Mathlib APIs) -/
-
 
 /-- Embedding Schwartz functions into L² space using Mathlib's toLpCLM.
     This is a continuous linear map from Schwartz space to L²(ℝᵈ, ℂ).
@@ -327,9 +306,7 @@ lemma integrableOn_ball_of_radial {E F : Type*}
       indicator (Ioo 0 r) (fun y => y ^ (Module.finrank ℝ E - 1) • f y) y := by
     intro y hy
     simp only [indicator, mem_Ioo, mem_Iio, mem_Ioi] at hy ⊢
-    by_cases hyr : y < r
-    · simp only [hyr, hy, and_self, ↓reduceIte]
-    · simp only [hyr, hy, and_false, ↓reduceIte, smul_zero]
+    simp_all
   rw [integrableOn_congr_fun h_supp measurableSet_Ioi]
   -- IntegrableOn (indicator (Ioo 0 r) g) (Ioi 0) ← IntegrableOn g (Ioo 0 r) since Ioo 0 r ⊆ Ioi 0
   have : Integrable (indicator (Ioo 0 r) (fun y => y ^ (Module.finrank ℝ E - 1) • f y)) volume :=
@@ -381,9 +358,7 @@ lemma integrableOn_ball_of_rpow_decay {d : ℕ} (hd : d ≥ 1)
   -- h_bound : IntegrableOn (fun x => C * ‖x‖^(-α)) (ball 0 r) volume
   -- Show f is dominated by the bound
   apply Integrable.mono' h_bound h_meas.restrict
-  filter_upwards with x
-  simp only [Real.norm_eq_abs]
-  exact h_decay x
+  simp_all
 
 /-- Integrability away from the origin for bounded functions on compact sets. -/
 lemma integrableOn_compact_diff_ball {d : ℕ}
@@ -406,8 +381,7 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
       intro x hx
       have hx_in_K : x ∈ K := hx.1
       have hx_norm_lower : δ ≤ ‖x‖ := by
-        simp only [Set.mem_sdiff, Metric.mem_ball, dist_zero_right, not_lt] at hx
-        exact hx.2
+        simp_all
       have hx_norm_upper : ‖x‖ ≤ R := hR x hx_in_K
       have hx_norm_pos : 0 < ‖x‖ := hδ.trans_le hx_norm_lower
       calc |f x| ≤ C * ‖x‖ ^ (-α) := h_decay x
@@ -429,11 +403,10 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
               linarith
             exact le_max_of_le_right h1
     have hM_bound : ∀ x ∈ K \ Metric.ball 0 δ, ‖f x‖ ≤ M := fun x hx => by
-      rw [Real.norm_eq_abs]
-      exact h_bound x hx
+      simp_all
     have h_const : IntegrableOn (fun _ => M) (K \ Metric.ball 0 δ) volume :=
       MeasureTheory.integrableOn_const (μ := volume) (s := K \ Metric.ball 0 δ)
-        (by exact ne_top_of_lt h_finite)
+        (ne_top_of_lt h_finite)
     have h_ae : ∀ᵐ x ∂(volume.restrict (K \ Metric.ball 0 δ)), ‖f x‖ ≤ M := by
       rw [ae_restrict_iff' (hK.diff Metric.isOpen_ball).measurableSet]
       exact ae_of_all _ hM_bound
@@ -499,8 +472,7 @@ lemma polynomial_decay_integrable_3d :
   ext x
   have h_pos : 0 < 1 + ‖x‖ := by linarith [norm_nonneg x]
   simp only [Real.rpow_neg (le_of_lt h_pos), one_div]
-  congr 1
-  exact (Real.rpow_natCast (1 + ‖x‖) 4).symm
+  simp_all
 
 /-! ## Bilinear Integrability for L¹ Translation-Invariant Kernels
 
@@ -577,8 +549,7 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
           ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖) = (fun p => ‖K₀ p.1‖ * ‖g p.2‖) ∘ e := by
         ext p
         rfl
-      rw [heq, he_preserves.integrable_comp_emb e.measurableEmbedding]
-      exact hprod
+      rwa [heq, he_preserves.integrable_comp_emb e.measurableEmbedding]
     -- Multiply by constant Cf
     exact hchange.const_mul Cf
   · -- AEStronglyMeasurable of the integrand
@@ -653,8 +624,7 @@ lemma SchwartzMap.integrable_conj (f : SchwartzMap E ℂ) :
   have hf_star_meas : AEStronglyMeasurable (fun y => starRingEnd ℂ (f y)) μ :=
     hf_int.aestronglyMeasurable.star
   have h_norm_eq : ∀ᵐ y ∂μ, ‖f y‖ = ‖starRingEnd ℂ (f y)‖ := by
-    filter_upwards with y
-    exact (RCLike.norm_conj (f y)).symm
+    simp_all
   exact hf_int.congr' hf_star_meas h_norm_eq
 
 end SchwartzBounded
@@ -671,8 +641,7 @@ lemma norm_exp_I_mul_real (r : ℝ) : ‖Complex.exp (Complex.I * r)‖ = 1 :=
 /-- Complex exponential of negative pure imaginary argument has norm 1. -/
 lemma norm_exp_neg_I_mul_real (r : ℝ) : ‖Complex.exp (-Complex.I * r)‖ = 1 := by
   rw [Complex.norm_exp]
-  simp only [neg_mul, Complex.neg_re, Complex.mul_re, Complex.I_re, Complex.ofReal_re,
-    zero_mul, Complex.I_im, Complex.ofReal_im, mul_zero, sub_zero, neg_zero, Real.exp_zero]
+  simp_all
 
 /-! ## Linear Vanishing Bound for Schwartz Functions
 
@@ -714,11 +683,7 @@ theorem schwartz_vanishing_linear_bound_general
     exact f.differentiableAt.hasFDerivAt.hasFDerivWithinAt
   -- Connection: ‖fderiv ℝ f y‖ = ‖iteratedFDeriv ℝ 1 f y‖
   have h_fderiv_bound : ∀ y ∈ (Set.univ : Set (ℝ × E)), ‖fderiv ℝ f y‖ ≤ C_deriv := by
-    intro y _
-    have h_norm_eq : ‖iteratedFDeriv ℝ 1 f y‖ = ‖fderiv ℝ f y‖ := by
-      rw [← iteratedFDerivWithin_univ, ← fderivWithin_univ]
-      exact norm_iteratedFDerivWithin_one f uniqueDiffWithinAt_univ
-    linarith [h_deriv_bound y]
+    simp_all
   use C_deriv
   intro t ht x
   -- 2. The reference point: (0, x) where f vanishes
@@ -739,11 +704,8 @@ theorem schwartz_vanishing_linear_bound_general
   -- Compute ‖B - A‖ = ‖(t, x) - (0, x)‖ = ‖(t, 0)‖ = |t| = t
   have h_dist : ‖B - A‖ = t := by
     simp only [B, A, Prod.mk_sub_mk, sub_zero]
-    rw [Prod.norm_def]
-    simp only [_root_.sub_self, norm_zero, max_eq_left (norm_nonneg t)]
-    rw [Real.norm_eq_abs, abs_of_nonneg ht]
-  rw [h_dist] at h_mvt
-  exact h_mvt
+    simp_all
+  rwa [h_dist] at h_mvt
 
 end SchwartzLinearBound
 
@@ -840,8 +802,7 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     intro k hk
     -- Use the bound for each term
     -- We need to know ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖
-    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := by
-       rw [norm_iteratedFDeriv_zero]
+    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := norm_iteratedFDeriv_zero
     -- Rearrange to match hC
     have h_rearrange : ‖f x‖ * ((N.choose k : ℝ) * ‖x‖^k) = (N.choose k : ℝ) * (‖x‖^k *
       ‖iteratedFDeriv ℝ 0 f x‖) := by
@@ -893,8 +854,7 @@ lemma bumpSelfConv_integral (φ : ContDiffBump (0 : E)) :
   rw [integral_convolution (L := ContinuousLinearMap.lsmul ℝ ℝ)]
   · simp only [ContinuousLinearMap.lsmul_apply, smul_eq_mul]
     have h1 := φ.integral_normed (μ := volume)
-    simp only [h1]
-    norm_num
+    simp_all
   · exact φ.integrable_normed
   · exact φ.integrable_normed
 
@@ -911,12 +871,10 @@ lemma bumpSelfConv_support_subset (φ : ContDiffBump (0 : E)) :
   obtain ⟨y, hy, z, hz, hyz⟩ := hx'
   have hy_ball : y ∈ Metric.ball (0 : E) φ.rOut := by
     have := φ.support_normed_eq (μ := volume)
-    rw [this] at hy
-    exact hy
+    rwa [this] at hy
   have hz_ball : z ∈ Metric.ball (0 : E) φ.rOut := by
     have := φ.support_normed_eq (μ := volume)
-    rw [this] at hz
-    exact hz
+    rwa [this] at hz
   rw [Metric.mem_ball] at hy_ball hz_ball ⊢
   rw [dist_zero_right] at hy_ball hz_ball ⊢
   rw [← hyz]
@@ -941,8 +899,7 @@ lemma bumpSelfConv_support_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
   rw [Metric.mem_ball, dist_zero_right] at hx_ball ⊢
   calc ‖x‖ < 2 * (φ i).rOut := hx_ball
     _ < 2 * (ε / 2) := by
-        apply mul_lt_mul_of_pos_left hi
-        norm_num
+        simp_all
     _ = ε := by ring
 
 /-- **Main theorem: Double mollifier convergence via associativity.**
@@ -985,16 +942,12 @@ theorem double_mollifier_convergence
   have hmC : AEStronglyMeasurable C volume := by
     have h_ae : ∀ᵐ (x : E) ∂volume, x ∈ {x : E | x ≠ 0} := by
       rw [ae_iff]
-      simp only [mem_setOf_eq, not_not]
-      have : ({x : E | x = 0} : Set E) = {0} := by ext; simp
-      rw [this]
-      exact measure_singleton 0
+      simp_all
     have h_restrict : (volume : Measure E).restrict {x | x ≠ 0} = volume :=
       Measure.restrict_eq_self_of_ae_mem h_ae
     have h_meas : MeasurableSet {x : E | x ≠ 0} := isOpen_ne.measurableSet
     have h := hC.aestronglyMeasurable (μ := volume) h_meas
-    rw [h_restrict] at h
-    exact h
+    rwa [h_restrict] at h
   -- Step 2: C converges to C(a) at a (since C is continuous at a)
   have hCconv : Tendsto (uncurry fun _ : ι => C) (l ×ˢ 𝓝 a) (𝓝 (C a)) := by
     have h : uncurry (fun _ : ι => C) = C ∘ Prod.snd := by
@@ -1086,11 +1039,9 @@ theorem double_mollifier_convergence
            rw [Function.mem_support] at h
            dsimp [F] at h
            have hv : ψ v ≠ 0 := by
-             intro zero
-             rw [zero] at h; simp at h
+             simp_all
            have htv : ψ (t - v) ≠ 0 := by
-             intro zero
-             rw [zero] at h; simp at h
+             simp_all
            rw [← Function.mem_support] at hv htv
            have h_supp_psi : support ψ = Metric.ball 0 (φ i).rOut := by
              dsimp [ψ]
@@ -1123,8 +1074,7 @@ theorem double_mollifier_convergence
                 rw [← h_ta] at htv
                 have hr : (φ i).rOut < ‖a‖ / 3 := by
                    rw [mem_preimage, Metric.mem_ball, dist_zero_right] at hi
-                   rw [Real.norm_of_nonneg (le_of_lt (φ i).rOut_pos)] at hi
-                   exact hi
+                   rwa [Real.norm_of_nonneg (le_of_lt (φ i).rOut_pos)] at hi
                 have : ‖a‖ < ‖a‖ := by
                    rcases htv with ⟨ht, _⟩
                    calc ‖a‖ ≤ 2 * (φ i).rOut := ht

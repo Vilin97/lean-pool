@@ -41,13 +41,6 @@ where
       else
         go (idx + 1) xs
 
--- private def closeWithTemporalHyp (hyps goal : Expr) (idx : Nat) : TacticM Unit := do
---   let thm ← mkAppM ``Entails_assumption #[hyps, goal, toExpr idx]
---   let g ← getMainGoal
---   let gs ← g.apply thm
---   replaceMainGoal gs
---   evalTactic <| ← `(tactic| all_goals rfl)
-
 elab_rules : tactic
   | `(tactic| tla_assumption) => withMainContext do
     (evalTactic <| ← `(tactic| assumption)) <|> do

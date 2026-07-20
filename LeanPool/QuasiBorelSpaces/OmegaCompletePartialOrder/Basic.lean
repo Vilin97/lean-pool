@@ -58,22 +58,18 @@ lemma ωScottContinuous_fst
     {f : A → B × C} (hf : ωScottContinuous f)
     : ωScottContinuous (fun x ↦ (f x).1) := by
   rw [ωScottContinuous_iff_monotone_map_ωSup]
-  refine ⟨?_, fun c ↦ ?_⟩
-  · apply Monotone.comp ?_ hf.monotone
-    apply monotone_fst
-  · rw [hf.map_ωSup]
-    rfl
+  refine ⟨monotone_fst.comp hf.monotone, fun c ↦ ?_⟩
+  rw [hf.map_ωSup]
+  rfl
 
 @[fun_prop]
 lemma ωScottContinuous_snd
     {f : A → B × C} (hf : ωScottContinuous f)
     : ωScottContinuous (fun x ↦ (f x).2) := by
   rw [ωScottContinuous_iff_monotone_map_ωSup]
-  refine ⟨?_, fun c ↦ ?_⟩
-  · apply Monotone.comp ?_ hf.monotone
-    apply monotone_snd
-  · rw [hf.map_ωSup]
-    rfl
+  refine ⟨monotone_snd.comp hf.monotone, fun c ↦ ?_⟩
+  rw [hf.map_ωSup]
+  rfl
 
 @[simp]
 lemma ωSup_const (x : A) : ωSup (Chain.const x) = x := by

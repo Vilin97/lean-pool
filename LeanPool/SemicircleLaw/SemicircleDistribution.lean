@@ -103,22 +103,15 @@ lemma support_semicirclePDFReal_subset (μ : ℝ) (v : ℝ≥0) :
   have h_abs : 2 * √v ≤ |x - μ| := by
     rcases not_and_or.mp (mt mem_Icc.mpr hxI) with h | h
     · push Not at h
-      have : 2 * √v ≤ μ - x := by linarith
-      have h2 : 0 ≤ μ - x := by
-        have : (0 : ℝ) ≤ √v := Real.sqrt_nonneg _
-        linarith
+      have h2 : 0 ≤ μ - x := by linarith [Real.sqrt_nonneg (v : ℝ)]
       rw [show |x - μ| = μ - x by rw [abs_sub_comm]; exact abs_of_nonneg h2]
-      exact this
+      linarith
     · push Not at h
-      have : 2 * √v ≤ x - μ := by linarith
-      have h2 : 0 ≤ x - μ := by
-        have : (0 : ℝ) ≤ √v := Real.sqrt_nonneg _
-        linarith
+      have h2 : 0 ≤ x - μ := by linarith [Real.sqrt_nonneg (v : ℝ)]
       rw [abs_of_nonneg h2]
-      exact this
+      linarith
   have h_sq : 4 * (v : ℝ) ≤ (x - μ) ^ 2 := by
-    have h_sq_abs : (2 * √v) ^ 2 ≤ |x - μ| ^ 2 :=
-      pow_le_pow_left₀ (by positivity) h_abs 2
+    have h_sq_abs : (2 * √v) ^ 2 ≤ |x - μ| ^ 2 := pow_le_pow_left₀ (by positivity) h_abs 2
     rw [mul_pow, Real.sq_sqrt (NNReal.coe_nonneg v), sq_abs] at h_sq_abs
     linarith
   have h_nonpos : 4 * (v : ℝ) - (x - μ) ^ 2 ≤ 0 := by linarith
@@ -181,8 +174,7 @@ lemma integral_sqrt_semicircle_interval (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) 
           intro y hy
           have hy' : y ∈ Icc (-1 : ℝ) 1 := by simpa using hy
           simp [c, sqrt_semicircle_affine v hy']
-    _ = c * (c * ∫ y in (-1 : ℝ)..1, √(1 - y ^ 2)) := by
-          rw [intervalIntegral.integral_const_mul]
+    _ = c * (c * ∫ y in (-1 : ℝ)..1, √(1 - y ^ 2)) := by rw [intervalIntegral.integral_const_mul]
     _ = 2 * π * (v : ℝ) := by
           rw [integral_sqrt_one_sub_sq]
           dsimp [c]
@@ -207,8 +199,7 @@ lemma integral_semicirclePDFReal_eq_one (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) 
           √(4 * (v : ℝ) - (x - μ) ^ 2)
         = ∫ x in μ - 2 * √(v : ℝ)..μ + 2 * √(v : ℝ),
           √(4 * (v : ℝ) - (x - μ) ^ 2) := by
-    have hle : μ - 2 * √(v : ℝ) ≤ μ + 2 * √(v : ℝ) := by
-      linarith [Real.sqrt_nonneg (v : ℝ)]
+    have hle : μ - 2 * √(v : ℝ) ≤ μ + 2 * √(v : ℝ) := by linarith [Real.sqrt_nonneg (v : ℝ)]
     rw [integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hle]
   rw [← h_support]
   simp only [semicirclePDFReal]
@@ -449,10 +440,7 @@ lemma semicircleReal_map_const_mul (c : ℝ) :
   simp only [e, Homeomorph.mulLeft₀, Equiv.mulLeft₀_symm_apply,
     Homeomorph.toMeasurableEquiv_coe, Homeomorph.homeomorph_mk_coe_symm,
     semicirclePDFReal_inv_mul hc]
-  congr with x
-  suffices |c⁻¹| * |c| = 1 by rw [← mul_assoc, this, one_mul]
-  rw [abs_inv, inv_mul_cancel₀]
-  rwa [ne_eq, abs_eq_zero]
+  simp_all
 
 /-- The map of a semicircle distribution by multiplication by a constant is semicircular. -/
 lemma semicircleReal_map_mul_const (c : ℝ) :
@@ -471,8 +459,7 @@ lemma semicircleReal_map_div_const (c : ℝ) :
       semicircleReal (μ / c) (v / .mk (c ^ 2) (sq_nonneg _)) := by
   simp_rw [div_eq_mul_inv]
   convert semicircleReal_map_mul_const (μ := μ) (v := v) c⁻¹ using 2 <;> rw [mul_comm]
-  ext
-  simp
+  simp_all
 
 lemma semicircleReal_map_sub_const (y : ℝ) :
     (semicircleReal μ v).map (· - y) = semicircleReal (μ - y) v := by
@@ -549,8 +536,7 @@ lemma ae_abs_id_le_semicircleReal :
     ∀ᵐ x ∂semicircleReal μ v, |id x| ≤ |μ| + 2 * √(v : ℝ) := by
   by_cases hv : v = 0
   · simp [hv, semicircleReal_zero_var]
-  rw [semicircleReal_of_var_ne_zero μ hv]
-  rw [ae_withDensity_iff (measurable_semicirclePDF μ v)]
+  rw [semicircleReal_of_var_ne_zero μ hv, ae_withDensity_iff (measurable_semicirclePDF μ v)]
   filter_upwards [] with x hx
   have hxI := support_semicirclePDF_subset μ v hx
   have hx_abs_sub : |x - μ| ≤ 2 * √(v : ℝ) := by
@@ -590,13 +576,10 @@ lemma support_semicirclePDF (hv : v ≠ 0) :
       · exact h2
       · exact absurd h2 (not_lt.mpr (Real.sqrt_nonneg _))
     have h_arg_pos : 0 < 4 * (v : ℝ) - (x - μ) ^ 2 := by
-      by_contra h
-      rw [Real.sqrt_eq_zero_of_nonpos (not_lt.mp h)] at h_sqrt_pos
-      exact lt_irrefl _ h_sqrt_pos
+      simp_all
     have h_lt : (x - μ) ^ 2 < (2 * √(v : ℝ)) ^ 2 := by
       rw [mul_pow, Real.sq_sqrt hv_nonneg]; linarith
-    have h_abs : |x - μ| < 2 * √(v : ℝ) :=
-      abs_lt_of_sq_lt_sq h_lt (by positivity)
+    have h_abs : |x - μ| < 2 * √(v : ℝ) := abs_lt_of_sq_lt_sq h_lt (by positivity)
     rw [abs_lt] at h_abs
     exact ⟨by linarith [h_abs.1], by linarith [h_abs.2]⟩
   · intro ⟨h1, h2⟩
@@ -845,9 +828,7 @@ lemma integral_id_semicircleReal : ∫ x, x ∂semicircleReal μ v = μ := by
         ∫ y, -(1 / (2 * π * (v : ℝ)) * √(4 * (v : ℝ) - y ^ 2) * y) := by
       conv_lhs => rw [← integral_neg_eq_self
         (fun y => 1 / (2 * π * (v : ℝ)) * √(4 * (v : ℝ) - y ^ 2) * y)]
-      apply integral_congr_ae
-      filter_upwards [] with y
-      rw [neg_sq]; ring
+      simp_all
     rw [integral_neg] at h_odd
     linarith
   rw [h_symm, zero_add]

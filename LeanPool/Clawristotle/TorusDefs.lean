@@ -60,15 +60,11 @@ def periodicLift (f : Torus3 → ℝ) : (Fin 3 → ℝ) → ℝ := f ∘ torusMk
 lemma periodicLift_periodic (f : Torus3 → ℝ) (x : Fin 3 → ℝ) (i : Fin 3) :
     periodicLift f (x + Pi.single i 1) = periodicLift f x := by
   simp only [periodicLift, Function.comp_apply]
-  congr 1; ext j
+  congr 1
+  ext j
   simp only [torusMk, Pi.add_apply]
   by_cases h : j = i
-  · subst h; simp only [Pi.single_eq_same]
-    -- (x j + 1 : ℝ) maps to same class as (x j : ℝ) in AddCircle 1
-    -- because 1 generates the subgroup we quotient by
-    change QuotientAddGroup.mk (x j + 1) = QuotientAddGroup.mk (x j)
-    rw [QuotientAddGroup.eq]
-    exact ⟨-1, by simp⟩
+  · simp_all
   · simp [Pi.single_eq_of_ne h]
 
 -- ============================================================================
@@ -86,14 +82,9 @@ lemma periodicLift_shift (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   simp only [torusMk, Pi.add_apply, Pi.sub_apply]
   -- x i - y i is an integer, so adding it doesn't change the equivalence class
   have hi : (fun i => QuotientAddGroup.mk (x i) : Torus3) i =
-            (fun i => QuotientAddGroup.mk (y i) : Torus3) i := by
-    exact congr_fun h i
-  simp only at hi
-  rw [QuotientAddGroup.eq] at hi ⊢
-  obtain ⟨n, hn⟩ := hi
-  refine ⟨n, ?_⟩
-  simp at hn ⊢
-  linarith
+            (fun i => QuotientAddGroup.mk (y i) : Torus3) i :=
+    congr_fun h i
+  simp_all
 
 /-- fderiv of the lift at two points that map to the same torus point are equal.
     This follows because f(x) = f(x + n) for integer n, so the 1-jets agree. -/
@@ -108,11 +99,7 @@ lemma periodicLift_fderiv_eq (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   have h1 : fderiv ℝ (fun z => periodicLift f (z + (x - y))) y =
              fderiv ℝ (periodicLift f) (y + (x - y)) := fderiv_comp_add_right (x - y)
   -- y + (x - y) = x
-  have h2 : y + (x - y) = x := by ext i; simp [Pi.add_apply, Pi.sub_apply]
-  rw [h2] at h1
-  -- But also fderiv (fun z => f(z + (x-y))) = fderiv f (by hshift)
-  rw [hshift] at h1
-  exact h1.symm
+  simp_all
 
 -- ============================================================================
 -- Differential operators on T³ via the periodic lift
@@ -167,16 +154,14 @@ lemma fderiv_const_mul_always {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     (c : ℝ) (g : E → ℝ) (x : E) :
     fderiv ℝ (fun y => c * g y) x = c • fderiv ℝ g x := by
   by_cases hc : c = 0
-  · have : (fun y => c * g y) = fun _ => (0 : ℝ) := by ext y; simp [hc]
-    rw [this]; simp [hc]
-  · by_cases hg : DifferentiableAt ℝ g x
-    · exact fderiv_const_smul hg c
-    · have hcg : ¬ DifferentiableAt ℝ (fun y => c * g y) x := by
-        intro h; apply hg
-        have : (fun y => c⁻¹ * (c * g y)) = g := by ext y; field_simp
-        exact this ▸ h.const_mul c⁻¹
-      rw [fderiv_zero_of_not_differentiableAt hg, fderiv_zero_of_not_differentiableAt hcg]
-      simp
+  · simp_all
+  by_cases hg : DifferentiableAt ℝ g x
+  · exact fderiv_const_smul hg c
+  · have hcg : ¬ DifferentiableAt ℝ (fun y => c * g y) x := by
+      intro h; apply hg
+      exact (show (fun y => c⁻¹ * (c * g y)) = g from by ext y; field_simp) ▸ h.const_mul c⁻¹
+    rw [fderiv_zero_of_not_differentiableAt hg, fderiv_zero_of_not_differentiableAt hcg]
+    simp
 
 /-- fderiv(exp ∘ g) x = exp(g x) • fderiv g x unconditionally.
     When g is differentiable: by fderiv_exp.
@@ -212,11 +197,7 @@ theorem clairaut_fderiv {n : ℕ} (g : (Fin n → ℝ) → ℝ) (x : Fin n → �
   have key : ∀ v w, fderiv ℝ (fun y => fderiv ℝ g y v) x w = fderiv ℝ (fderiv ℝ g) x w v := by
     intro v w
     have h1 := fderiv_clm_apply hd (differentiableAt_const v)
-    have hconst : fderiv ℝ (fun _ : Fin n → ℝ => v) x = 0 := by
-      have : (fun _ : Fin n → ℝ => v) = Function.const _ v := rfl
-      rw [this]; exact congr_fun (fderiv_const (𝕜 := ℝ) (E := Fin n → ℝ) v) x
-    simp only [hconst, ContinuousLinearMap.comp_zero, zero_add] at h1
-    exact congr_fun (congr_arg DFunLike.coe h1) w
+    simp_all
   rw [key, key]; exact hsymm.eq (Pi.single i 1) (Pi.single j 1)
 
 -- ============================================================================
@@ -229,13 +210,9 @@ theorem torus_hGradConst (φ : Torus3 → ℝ) (hconst : ∀ x y, φ x = φ y) :
   intro x
   ext i
   simp only [torusGradX, Pi.zero_apply]
-  have : periodicLift φ = fun _ => φ x := by
-    ext y
-    simp only [periodicLift, Function.comp_apply]
-    exact hconst _ _
-  rw [this]
-  rw [hasFDerivAt_const (φ x) _ |>.fderiv]
-  rfl
+  have : periodicLift φ = fun _ => φ x :=
+    funext (fun y => by simp only [periodicLift, Function.comp_apply]; exact hconst _ _)
+  simp_all
 
 /-- hGradAdd: gradient additivity for C¹ functions. -/
 theorem torus_hGradAdd' (f g : Torus3 → ℝ)
@@ -245,13 +222,10 @@ theorem torus_hGradAdd' (f g : Torus3 → ℝ)
   intro x
   ext i
   simp only [torusGradX, Pi.add_apply]
-  have hlift : periodicLift (fun y => f y + g y) =
-      fun y => periodicLift f y + periodicLift g y := by
+  have hlift : periodicLift (fun y => f y + g y) = periodicLift f + periodicLift g := by
     ext y; simp [periodicLift]
-  rw [hlift]
-  rw [show (fun y => periodicLift f y + periodicLift g y) = (periodicLift f + periodicLift g)
-    from rfl, fderiv_add (hf.differentiable one_ne_zero).differentiableAt
-      (hg.differentiable one_ne_zero).differentiableAt]
+  rw [hlift, fderiv_add (hf.differentiable one_ne_zero).differentiableAt
+    (hg.differentiable one_ne_zero).differentiableAt]
   rfl
 
 -- ============================================================================
@@ -262,8 +236,8 @@ theorem torus_hGradAdd' (f g : Torus3 → ℝ)
     Uses SigmaFinite (from CompactSpace + IsFiniteMeasure). -/
 theorem torus_hSpatialVelocityFubini (F : Torus3 → (Fin 3 → ℝ) → ℝ)
     (hF_joint : Integrable (Function.uncurry F) (volume.prod volume)) :
-    (∫ x, ∫ v, F x v) = ∫ v, ∫ x, F x v := by
-  exact integral_integral_swap hF_joint
+    (∫ x, ∫ v, F x v) = ∫ v, ∫ x, F x v :=
+  integral_integral_swap hF_joint
 
 -- ============================================================================
 -- Compact manifold axioms
@@ -282,13 +256,13 @@ theorem torus_hSpatialPos (g : Torus3 → ℝ) (hg_pos : ∀ x, 0 < g x)
 theorem torus_hSpatialNonnegZero (g : Torus3 → ℝ)
     (hg_nn : ∀ x, 0 ≤ g x) (hg_int : (∫ x, g x) = 0)
     (hg_cont : Continuous g) :
-    ∀ x, g x = 0 := by
-  have h1 : Integrable g :=
-    hg_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace g)
-  have h2 : g =ᵐ[volume] 0 := (integral_eq_zero_iff_of_nonneg hg_nn h1).mp hg_int
-  have h3 : g = 0 :=
-    (Continuous.ae_eq_iff_eq (volume : Measure Torus3) hg_cont continuous_const).mp h2
-  exact fun x => congr_fun h3 x
+    ∀ x, g x = 0 :=
+  fun x => congr_fun
+    ((Continuous.ae_eq_iff_eq (volume : Measure Torus3) hg_cont continuous_const).mp
+      ((integral_eq_zero_iff_of_nonneg hg_nn
+        (hg_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace g))).mp
+        hg_int))
+    x
 
 -- ============================================================================
 -- Helper lemmas for torus IBP

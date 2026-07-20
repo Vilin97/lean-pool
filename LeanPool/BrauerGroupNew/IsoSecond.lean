@@ -21,52 +21,6 @@ open scoped TensorProduct
 universe u
 variable (K F : Type) [Field K] [Field F] [Algebra F K]
 
--- namespace map_one_proof
--- section map_one
-
--- variable [FiniteDimensional F K] [IsGalois F K] [DecidableEq Gal(K, F)]
-
--- -- def φ0 :
---     CrossProduct (F := F) (K := K) (a := 1)
---       (ha := isMulCocycle₂_of_mem_cocycles₂ 0 <| Submodule.zero_mem _) →ₗ[K]
---     Module.End F K :=
---   (CrossProductAlgebra.x_AsBasis (F := F) (K := K) (a := 1)
---     (ha := isMulCocycle₂_of_mem_cocycles₂ 0 <| Submodule.zero_mem _)).constr F
---     fun σ => σ.toLinearMap
-
--- def φ1 :
---     CrossProductAlgebra (F := F) (K := K) (a := 1) (ha := isMulCocycle₂_of_cocycles₂ 0) →ₗ[F]
---     Module.End F K :=
---   φ0 K F |>.restrictScalars F
-
--- def φ3 :
---     CrossProductAlgebra (F := F) (K := K) (a := 1) (ha := isMulCocycle₂_of_cocycles₂ 0) ≃ₐ[F]
---     Module.End F K :=
---   AlgEquiv.ofBijective (φ2 K F) (bijective_of_dim_eq_of_isCentralSimple _ _ _ _ <| by
---     rw [CrossProductAlgebra.dim_eq_sq]
---     rw [Module.finrank_linearMap, pow_two])
-
--- def φ4 :
---     CrossProductAlgebra (F := F) (K := K) (a := 1) (ha := isMulCocycle₂_of_cocycles₂ 0) ≃ₐ[F]
---     Matrix (Fin <| Module.finrank F K) (Fin <| Module.finrank F K) F :=
---   φ3 K F |>.trans <| LinearMap.toMatrixAlgEquiv <| Module.finBasis F K
-
--- lemma map_one' : RelativeBrGroup.fromCocycles₂ (F := F) (K := K) (a := 0) = 1 := by
---   ext1
---   change Quotient.mk'' _ = Quotient.mk'' _
---   erw [Quotient.eq'']
---   have : 0 < Module.finrank F K := Module.finrank_pos
---   haveI : NeZero (Module.finrank F K) := ⟨by omega⟩
---   change IsBrauerEquivalent _ _
---   refine ⟨1, Module.finrank F K, AlgEquiv.trans ?_ <| φ4 K F⟩
---   exact dimOneIso (CSA.mk (CrossProductAlgebra.asCSA _).carrier).carrier
-
--- lemma fromSnd_zero : RelativeBrGroup.fromSnd (F := F) (K := K) 0 = 1 := map_one' K F
-
--- end map_one
-
--- end map_one_proof
-
 namespace mapMulProof
 
 open groupCohomology
@@ -87,8 +41,7 @@ def S : Set (A ⊗[F] B) :=
 @[simp]
 lemma mem_S (x : A ⊗[F] B) :
     x ∈ S α β ↔ ∃ (k : K) (a : A) (b : B), x = (k • a) ⊗ₜ b - a ⊗ₜ (k • b) := by
-  simp only [S, Set.mem_range, Prod.exists]
-  aesop
+  simp only [S, Set.mem_range, Prod.exists, eq_comm]
 
 variable (α β) in
 /-- The balanced tensor-product module used in the multiplicativity proof. -/
@@ -208,6 +161,16 @@ open CrossProductAlgebra TensorProduct
 
 lemma F_smul_mul_compatible (f : F) (a a' : A) : (f • a) * a' = a * (f • a') := by
   simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
+
+private lemma finrank_mop_eq (V : Type*) [AddCommGroup V] [Module F V] :
+    Module.finrank F Vᵐᵒᵖ = Module.finrank F V :=
+  LinearEquiv.finrank_eq
+    { toFun := MulOpposite.unop
+      map_add' _ _ := rfl
+      map_smul' _ _ := rfl
+      invFun := MulOpposite.op
+      left_inv := MulOpposite.unop_op
+      right_inv _ := rfl }
 
 variable [FiniteDimensional F K]
 
@@ -781,14 +744,7 @@ open MulOpposite
 lemma dim_endCSM : (finrank F K)^2 =
   (Fintype.card ι) ^ 2 * finrank F (Module.End C SM) := by
   have eq1 := (CIsoAux' (α := α) (β := β)).toLinearEquiv.finrank_eq
-  rw [show finrank F Cᵐᵒᵖ = finrank F C by
-    refine LinearEquiv.finrank_eq
-      { toFun := unop
-        map_add' _ _ := rfl
-        map_smul' _ _ := rfl
-        invFun := op
-        left_inv := unop_op
-        right_inv _ := rfl }, CrossProductAlgebra.dim_eq_sq] at eq1
+  rw [finrank_mop_eq C, CrossProductAlgebra.dim_eq_sq] at eq1
   rw [eq1, matrixEquivTensor (Fin (Fintype.card ι)) F (Module.End C SM) |>.toLinearEquiv.finrank_eq,
     finrank_tensorProduct, finrank_matrix]
   simp only [Fintype.card_fin, finrank_self, _root_.mul_one, pow_two]
@@ -967,14 +923,7 @@ open MulOpposite in
 /-- The opposite tensor product algebra as endomorphisms of the balanced quotient. -/
 def φ1 : (A ⊗[F] B)ᵐᵒᵖ ≃ₐ[F] Module.End C (M α β) :=
   .ofBijective φ0 <| bijective_of_dim_eq_of_isCentralSimple _ _ _ _ <| by
-    rw [dim_endCM, show finrank F (A ⊗[F] B)ᵐᵒᵖ = finrank F (A ⊗[F] B) by
-      refine LinearEquiv.finrank_eq
-        { toFun := unop
-          map_add' _ _ := rfl
-          map_smul' _ _ := rfl
-          invFun := op
-          left_inv := unop_op
-          right_inv _ := rfl }, finrank_tensorProduct, CrossProductAlgebra.dim_eq_sq,
+    rw [dim_endCM, finrank_mop_eq (A ⊗[F] B), finrank_tensorProduct, CrossProductAlgebra.dim_eq_sq,
       CrossProductAlgebra.dim_eq_sq, pow_two, pow_succ]
     group
 
@@ -1021,46 +970,6 @@ end mapMulProof
 namespace RelativeBrGroup
 
 variable [FiniteDimensional F K] [IsGalois F K] [DecidableEq Gal(K, F)]
-
--- @[simps]
--- def fromSndAddMonoidHom :
---     H2 (galAct F K) →+ Additive (RelativeBrGroup K F) where
---   toFun := Additive.ofMul ∘ RelativeBrGroup.fromSnd _ _
---   map_zero' := by
---     simpa only [Function.comp_apply, ofMul_eq_zero] using map_one_proof.fromSnd_zero K F
---   map_add' := by
---     intro x y
---     induction x using Quotient.inductionOn' with | h x =>
---     induction y using Quotient.inductionOn' with | h y =>
---     simp only [Function.comp_apply]
---     rcases x with ⟨x, hx'⟩
---     have hx := isMulCocycle₂_of_cocycles₂ ⟨x, hx'⟩
---     rcases y with ⟨y, hy'⟩
---     have hy := isMulCocycle₂_of_cocycles₂ ⟨y, hy'⟩
---     rw [fromSnd_wd, fromSnd_wd]
---     erw [fromSnd_wd]
---     apply_fun Additive.toMul
---     simp only [AddMemClass.mk_add_mk, toMul_ofMul, toMul_add, MulMemClass.mk_mul_mk,
---       Subtype.mk.injEq]
---     change _ = Quotient.mk'' _
---     rw [Quotient.eq'']
---     exact mapMulProof.isBrauerEquivalent hx hy |>.symm
-
--- def toSndAddMonoidHom : Additive (RelativeBrGroup K F) →+ H2 (galAct F K) where
---   toFun := RelativeBrGroup.toSnd ∘ Additive.toMul
---   map_zero' := by
---     simp only [Function.comp_apply, toMul_zero]
---     apply_fun fromSnd F K using equivSnd.symm.injective
---     rw [map_one_proof.fromSnd_zero]
---     exact congr_fun fromSnd_toSnd 1
---   map_add' := by
---     intro x y
---     dsimp only
---     apply_fun fromSndAddMonoidHom K F using equivSnd.symm.injective
---     rw [map_add]
---     simp only [Function.comp_apply, toMul_add, fromSndAddMonoidHom_apply,
---       show ∀ x, fromSnd F K (toSnd x) = x by intro x; exact congr_fun fromSnd_toSnd x, ofMul_mul,
---       ofMul_toMul]
 
 open groupCohomology in
 /-- The additive form of the isomorphism between the relative Brauer group and second cohomology. -/

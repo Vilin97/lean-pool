@@ -30,14 +30,10 @@ noncomputable def tryAndElse (planA planB : PreStrategy T p) :
 variable {planA planB planB' : PreStrategy T p}
 @[gcongr] lemma tryAndElse_mono (hB : planB ≤ planB') :
   tryAndElse planA planB ≤ tryAndElse planA planB' := by
-  intro _ _; unfold tryAndElse; split_ifs
-  · rfl
-  · apply hB
+  intro _ _; unfold tryAndElse; split_ifs <;> [rfl; apply hB]
 lemma quasi_of_planB (h : planB.IsQuasi) :
   (planA.tryAndElse planB).IsQuasi := by
-  dsimp [IsQuasi, tryAndElse]; intros; split_ifs
-  · assumption
-  · apply h
+  dsimp [IsQuasi, tryAndElse]; intros; split_ifs <;> [assumption; apply h]
 lemma planA_sub : planA ≤ planA.tryAndElse planB := by
   intro _ _ _ h'; dsimp [tryAndElse]; split_ifs with h
   · exact h'
@@ -79,8 +75,7 @@ variable (A p) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def emptyStrategy : Strategy (A := A) ⊥ p := fun x _ ↦ x.prop.elim
 @[simp] lemma emptyStrategy_subtree : (emptyStrategy A p).pre.subtree = ⊥ := by
-  ext x
-  simp [emptyStrategy, PreStrategy.subtree]
+  simp_all
 lemma existsWinning_empty : ExistsWinning (A := A) ⟨⊥, ∅⟩ p :=
   ⟨emptyStrategy A p, by simp [PreStrategy.IsWinning]⟩
 
@@ -270,8 +265,7 @@ lemma wonPosition_iff_disjoint' {x} :
   simp only [Set.eq_univ_iff_forall, Set.eq_empty_iff_forall_notMem, Set.mem_inter_iff,
     Set.mem_range]
   constructor
-  · intro h z hz
-    rcases hz with ⟨⟨a, rfl⟩, hpay⟩
+  · rintro h z ⟨⟨a, rfl⟩, hpay⟩
     rw [Player.payoff_swap_residual] at hpay
     have hpre := h a
     rw [Player.payoff_residual] at hpre
@@ -281,11 +275,9 @@ lemma wonPosition_iff_disjoint' {x} :
     have hpay' : body.append x a ∉ (Player.residual x p).payoff G := by
       intro hp
       apply hpay
-      rw [Player.payoff_residual]
-      exact hp
+      rwa [Player.payoff_residual]
     exact h (body.append x a) ⟨⟨a, rfl⟩, by
-      rw [Player.payoff_swap_residual]
-      exact hpay'⟩
+      simp_all⟩
 lemma wonPosition_iff_disjoint {x} :
   G.WonPosition x p ↔ principalOpen x ∩ (p.swap.residual x).payoff G = ∅ := by
   simpa [← Set.image_val_inj, Set.inter_assoc, ← Set.inter_sdiff_assoc] using
@@ -319,9 +311,7 @@ lemma subtree_induction_body {f g : PreStrategy T p} {x} (h : x ∈ body f.subtr
   apply mem_body_of_take 0; intro n _; apply f.subtree_induction (by apply h; simp)
   intro m hm hx hp; simp at hm
   have hnode : take m (f.subtreeIncl ⟨Stream'.take n x, by apply h; simp⟩) =
-      f.subtreeIncl (body.take m ⟨x, h⟩) := by
-    ext
-    simp [hm.le]
+      f.subtreeIncl (body.take m ⟨x, h⟩) := by ext; simp [hm.le]
   intro ha
   let hp' : IsPosition (f.subtreeIncl (body.take m ⟨x, h⟩)).val p := by
     simpa [← hnode] using hp
@@ -348,9 +338,7 @@ lemma followUntilWon_body : body S.followUntilWon.subtree ≤ body S.subtree ∪
     have hmem := Set.eq_univ_iff_forall.mp h' (body.drop n ⟨x, hx'⟩)
     simpa [body.append] using hmem
   · left; apply subtree_induction_body hx
-    intros _ _ _; unfold followUntilWon; split_ifs
-    · tauto
-    · exact id
+    intros _ _ _; unfold followUntilWon; simp_all
 @[simp] lemma followUntilWon_isWinning : S.followUntilWon.IsWinning ↔ S.IsWinning :=
   ⟨sub_winning S.le_followUntilWon, fun h ↦ subset_trans S.followUntilWon_body (by simpa)⟩
 end «followUntilWon»

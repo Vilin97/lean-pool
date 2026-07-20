@@ -41,13 +41,11 @@ noncomputable def schurMul {B C : Type*}
   map_add' x y := by
     simp only [TensorProduct.map_add_left, LinearMap.add_comp, LinearMap.comp_add,
       LinearMap.ext_iff, LinearMap.add_apply, LinearMap.coe_mk]
-    intro _ _
-    rfl
+    simp_all
   map_smul' r x := by
     simp only [TensorProduct.map_smul_left, LinearMap.smul_comp, LinearMap.comp_smul,
       LinearMap.ext_iff, LinearMap.smul_apply, LinearMap.coe_mk, RingHom.id_apply]
-    intro _ _
-    rfl
+    simp_all
 
 @[inherit_doc schurMul]
 notation3:80 (name := schurMulNotation) x:81 " •ₛ " y:80 => schurMul x y
@@ -58,15 +56,12 @@ theorem nonUnitalAlgHom_comp_mul {R A B : Type*} [CommSemiring R] [Semiring A]
       (LinearMap.mul' R B) ∘ₗ
         ((LinearMapClass.linearMap f) ⊗ₘ (LinearMapClass.linearMap f)) := by
   rw [TensorProduct.ext_iff']
-  intro a b
-  simp only [LinearMap.comp_apply, LinearMap.mul'_apply, TensorProduct.map_tmul]
-  exact NonUnitalAlgHom.map_mul f a b
+  simp_all
 
 theorem algHom_comp_mul {R A B : Type*} [CommSemiring R] [Semiring A]
     [Semiring B] [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) :
     f.toLinearMap ∘ₗ LinearMap.mul' R A =
-      (LinearMap.mul' R B) ∘ₗ (f.toLinearMap ⊗ₘ f.toLinearMap) :=
-  by
+      (LinearMap.mul' R B) ∘ₗ (f.toLinearMap ⊗ₘ f.toLinearMap) := by
   change (LinearMapClass.linearMap f.toNonUnitalAlgHom) ∘ₗ LinearMap.mul' R A =
     (LinearMap.mul' R B) ∘ₗ
       ((LinearMapClass.linearMap f.toNonUnitalAlgHom) ⊗ₘ
@@ -105,9 +100,7 @@ theorem schurMul.apply_ket (a b : B) :
     (ket ℂ a) •ₛ (ket ℂ b) = (ket ℂ (a * b)).toLinearMap := by
   simp only [schurMul_apply_apply, QuantumSet.complex_comul]
   ext
-  simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-    TensorProduct.lid_symm_apply, TensorProduct.map_tmul, ContinuousLinearMap.coe_coe,
-    ket_apply_apply, one_smul, LinearMap.mul'_apply]
+  simp_all
 
 section TensorRankOne
 
@@ -121,11 +114,7 @@ theorem bra_tmul (a : B) (b : C) :
       (TensorProduct.lid 𝕜 _).toLinearMap ∘ₗ
         TensorProduct.map (bra 𝕜 a).toLinearMap (bra 𝕜 b).toLinearMap := by
   ext
-  simp only [TensorProduct.AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
-    LinearMap.coe_restrictScalars, TensorProduct.map_tmul, ContinuousLinearMap.coe_coe,
-    innerSL_apply_apply, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
-    TensorProduct.inner_tmul, TensorProduct.lid_tmul]
-  rfl
+  simp_all
 
 omit [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C] in
 theorem bra_map_bra (a : B) (b : C) :
@@ -133,8 +122,7 @@ theorem bra_map_bra (a : B) (b : C) :
       (TensorProduct.lid 𝕜 _).symm.toLinearMap ∘ₗ
         (bra 𝕜 (a ⊗ₜ[𝕜] b)).toLinearMap := by
   rw [bra_tmul, ← LinearMap.comp_assoc]
-  simp only [LinearEquiv.comp_coe, LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap,
-    LinearMap.id_comp]
+  simp_all
 
 omit [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C] in
 theorem ket_tmul (a : B) (b : C) :
@@ -177,8 +165,7 @@ theorem linearMap_comp_ket {𝕜 E₁ E₂ : Type*} [RCLike 𝕜]
     [InnerProductSpace 𝕜 E₂] (x : E₁) (f : E₁ →ₗ[𝕜] E₂) :
     f ∘ₗ (ket 𝕜 x).toLinearMap = (ket 𝕜 (f x)).toLinearMap := by
   ext
-  simp only [LinearMap.coe_comp, ContinuousLinearMap.coe_coe, Function.comp_apply,
-    ket_apply_apply, one_smul]
+  simp_all
 
 theorem mul_comp_lid_symm {R : Type*} [CommSemiring R] :
     LinearMap.mul' R R ∘ₗ (TensorProduct.lid R R).symm.toLinearMap = LinearMap.id := by
@@ -304,17 +291,12 @@ theorem Psi.schurMul {A B : Type*} [starAlgebra A] [starAlgebra B]
     obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne f
     obtain ⟨γ, δ, rfl⟩ := LinearMap.exists_sum_rankOne g
     simp only [map_sum, LinearMap.sum_apply, Finset.mul_sum, Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    intro i _
-    apply Finset.sum_congr rfl
-    intro j _
-    exact this (α j) (γ i) (β j) (δ i)
+    simp_all
   intro a c b d
   rw [schurMul.apply_rankOne]
   repeat rw [QuantumSet.Psi_apply]
   repeat rw [QuantumSet.PsiToFun_apply]
-  simp only [Algebra.TensorProduct.tmul_mul_tmul, map_mul, star_mul]
-  rfl
+  simp_all
 
 theorem schurMul_assoc {A B : Type*} [starAlgebra A] [starAlgebra B]
     [hA : QuantumSet A] [QuantumSet B] (f g h : A →ₗ[ℂ] B) :

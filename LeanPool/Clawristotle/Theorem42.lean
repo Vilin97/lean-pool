@@ -241,22 +241,17 @@ theorem Theorem42
       -(1 / 2) * ∫ v, ∫ w, dotProduct (vGrad (Real.log ∘ f x) v - vGrad (Real.log ∘ f x) w)
         (mulVec (landauMatrix Ψ (v - w))
           (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) := by
-    intro x
-    rw [hIBP x, hFubiniSym x]
-    ring
+    simp_all
   -- Step 2: Derive D(f) = 0 from the Vlasov equation.
   have hD_zero : ∀ x, entropyDissipation Ψ (f x) = 0 := by
     have hD_nonpos : ∀ x, entropyDissipation Ψ (f x) ≤ 0 := by
       intro x
       exact H_theorem Ψ (f x) (fun r => le_of_lt (hΨ r)) (hf_pos x) (hf_smooth x) (hSWF_all x)
-    have hD_int_zero : FlatTorus3.spatialIntegral (fun x => entropyDissipation Ψ (f x)) = 0 :=
-      hTransportEntropy
     intro x
     have hD_neg : ∀ y, 0 ≤ -(entropyDissipation Ψ (f y)) := fun y => neg_nonneg.mpr (hD_nonpos y)
     have hD_neg_int : FlatTorus3.spatialIntegral (fun y => -(entropyDissipation Ψ (f y))) = 0 := by
       have h := FlatTorus3.hSpatialMul (fun y => entropyDissipation Ψ (f y)) (-1)
-      simp only [mul_neg_one] at h
-      linarith [hD_int_zero]
+      simp_all
     linarith [FlatTorus3.hSpatialNonnegZero _ hDecay.hD_cont.neg hD_neg hD_neg_int x]
   -- Step 3: Apply the main theorem via VMLInput.
   have result := main_from_physics {
@@ -297,8 +292,8 @@ theorem Theorem42
       show J x = ρ x • ((-1 / (2 * c₀)) • b_func x)
       simp only [J, ρ]
       ext i
-      simp only [Pi.smul_apply, smul_eq_mul]
-      exact current_density_of_gaussian (f x) (hf_pos x) (hf_int x) a₀ (b_func x) c₀ ha₀ i
+      simpa only [Pi.smul_apply, smul_eq_mul] using
+        current_density_of_gaussian (f x) (hf_pos x) (hf_int x) a₀ (b_func x) c₀ ha₀ i
     xMax := xMax
     hmax := hmax
     xMin := xMin
@@ -306,10 +301,8 @@ theorem Theorem42
     hPB_eq := hPB
     hNormalization := fun a₀ c₀ hc₀ hf_form hdens => by
       intro x v
-      have h_int : ∫ w : Fin 3 → ℝ, f x w = ρIon := by
-        rw [← hdens x]
       exact gaussian_normalization_maxwellian ρIon a₀ c₀ hρ_ion hc₀
-        (f x) (hf_form x) h_int v
+        (f x) (hf_form x) (by rw [← hdens x]) v
   }
   obtain ⟨eq, hf_eq, hE, hB⟩ := result
   exact ⟨eq.T, eq.B₀, eq.hT, hf_eq, hE, hB⟩

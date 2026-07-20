@@ -32,6 +32,120 @@ lemma Iio_one_ae_eq_univ : (Set.Iio (1 : Rand) : Set Rand) =ᵐ[μ] (Set.univ : 
   -- `Iio 1` and `univ` differ by a singleton, hence are a.e. equal.
   simp [μ]
 
+/-- Outside the recursion square, `z0` reduces to `zBase`. -/
+private lemma z0_eq_zBase {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))) :
+    z0 b c = zBase b c := by
+  classical
+  unfold z0
+  simp only [if_neg hsq]
+
+/-- `zBase b c = t` when `b ≤ t ≤ c` (the base surface on the upper-right wedge with `b ≤ c`). -/
+private lemma z0_eq_t_of_le_t_le {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)))
+    (hb : ¬ (b : ℝ) < t) (hc : (t : ℝ) ≤ c) : z0 b c = (t : ℝ) := by
+  have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using hc
+  have hxt : ¬ (b : ℝ) ∈ Set.Iio (t : ℝ) := by simpa [Set.mem_Iio] using hb
+  simp [z0_eq_zBase hsq, zBase, hyt, hxt]
+
+/-- `zBase b c = 0` when `c < t ≤ b` (the lower-right "all-zero" wedge). -/
+private lemma z0_eq_zero_of_lt_t_le {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)))
+    (hc : (c : ℝ) < t) (hb : (t : ℝ) ≤ b) : z0 b c = 0 := by
+  have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hc
+  have hxt : (b : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using hb
+  simp [z0_eq_zBase hsq, zBase, hyt, hxt]
+
+/-- `zBase b c = 1` when `b < t ≤ c` (the upper-left "all-one" wedge). -/
+private lemma z0_eq_one_of_lt_t_le {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)))
+    (hb : (b : ℝ) < t) (hc : (t : ℝ) ≤ c) : z0 b c = 1 := by
+  have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using hc
+  have hxt : (b : ℝ) ∈ Set.Iio (t : ℝ) := by simpa [Set.mem_Iio] using hb
+  simp [z0_eq_zBase hsq, zBase, hyt, hxt]
+
+/-- On the lower wedge `b, c < t` with `c < b`, the base surface equals `c`. -/
+private lemma z0_eq_c_of_lt_t {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)))
+    (hc : (c : ℝ) < t) (hb : (b : ℝ) < t) (hcb : (c : ℝ) < b) : z0 b c = (c : ℝ) := by
+  have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hc
+  have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
+  have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
+    simpa [Set.mem_setOf_eq] using not_le_of_gt hcb
+  simp [z0_eq_zBase hsq, zBase, hyt, hxt, hle]
+
+/-- On the lower wedge `b, c < t` with `b ≤ c`, the base surface equals `t`. -/
+private lemma z0_eq_t_of_lt_t_le {b c : Rand}
+    (hsq : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)))
+    (hc : (c : ℝ) < t) (hb : (b : ℝ) < t) (hbc : (b : ℝ) ≤ c) : z0 b c = (t : ℝ) := by
+  have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hc
+  have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
+  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_setOf_eq] using hbc
+  simp [z0_eq_zBase hsq, zBase, hyt, hxt, hle]
+
+/-- Inside the square, `c < t2 ≤ b`: the recursive surface equals `t1`. -/
+private lemma z0_inSquare_eq_t1 {b c : Rand}
+    (hsq : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))
+    (hc : (c : ℝ) < t2) (hb : (t2 : ℝ) ≤ b) : z0 b c = (t1 : ℝ) := by
+  have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc
+  have hx : (b : ℝ) ∈ Set.Ici (t2 : ℝ) := hb
+  simp [z0, hsq, hy, hx]
+
+/-- Inside the square, `t2 ≤ c` and `t2 ≤ b`: the recursive surface equals `t2`. -/
+private lemma z0_inSquare_eq_t2_right {b c : Rand}
+    (hsq : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))
+    (hc : (t2 : ℝ) ≤ c) (hb : (t2 : ℝ) ≤ b) : z0 b c = (t2 : ℝ) := by
+  have hy : ¬ (c : ℝ) ∈ Set.Iio (t2 : ℝ) := by simp [Set.mem_Iio, not_lt.2 hc]
+  have hx : ¬ (b : ℝ) ∈ Set.Iio (t2 : ℝ) := by simp [Set.mem_Iio, not_lt.2 hb]
+  simp [z0, hsq, hy, hx]
+
+/-- Inside the square, `c < t2`, `b < t2`, `c < b`: the recursive surface equals `c`. -/
+private lemma z0_inSquare_eq_c {b c : Rand}
+    (hsq : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))
+    (hc : (c : ℝ) < t2) (hb : (b : ℝ) < t2) (hcb : (c : ℝ) < b) : z0 b c = (c : ℝ) := by
+  have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc
+  have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
+  have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
+    simpa [Set.mem_setOf_eq] using not_le_of_gt hcb
+  simp [z0, hsq, hy, hx, hle]
+
+/-- Inside the square, `c < t2`, `b < t2`, `b ≤ c`: the recursive surface equals `t2`. -/
+private lemma z0_inSquare_eq_t2_diag {b c : Rand}
+    (hsq : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))
+    (hc : (c : ℝ) < t2) (hb : (b : ℝ) < t2) (hbc : (b : ℝ) ≤ c) : z0 b c = (t2 : ℝ) := by
+  have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc
+  have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
+  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_setOf_eq] using hbc
+  simp [z0, hsq, hy, hx, hle]
+
+/-- Inside the square, `t2 ≤ c` and `b < t2`: the recursive surface equals `t`. -/
+private lemma z0_inSquare_eq_t {b c : Rand}
+    (hsq : (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ))
+    (hc : (t2 : ℝ) ≤ c) (hb : (b : ℝ) < t2) : z0 b c = (t : ℝ) := by
+  have hy : ¬ (c : ℝ) ∈ Set.Iio (t2 : ℝ) := by simp [Set.mem_Iio, not_lt.2 hc]
+  have hx : (b : ℝ) ∈ Set.Iio (t2 : ℝ) := hb
+  simp [z0, hsq, hy, hx]
+
+/-- `Iio b ∩ Iio a = Iio a` for `a ≤ b`. -/
+private lemma Iio_inter_Iio_eq {a b : Rand} (hab : a ≤ b) :
+    (Set.Iio b ∩ Set.Iio a : Set Rand) = Set.Iio a :=
+  Set.inter_eq_right.2 (Set.Iio_subset_Iio hab)
+
+/-- `Iio b \ Iio a = Ico a b` for `a ≤ b`. -/
+private lemma Iio_diff_Iio_eq {a b : Rand} (_hab : a ≤ b) :
+    (Set.Iio b \ Set.Iio a : Set Rand) = Set.Ico a b := by
+  simp_all
+
+/-- `Ico a b ∩ Iio c = Ico a c` for `c ≤ b`. -/
+private lemma Ico_inter_Iio_eq {a b c : Rand} (hcb : c ≤ b) :
+    (Set.Ico a b ∩ Set.Iio c : Set Rand) = Set.Ico a c := by
+  simp_all
+
+/-- `Ico a b \ Iio c = Ico c b` for `a ≤ c`. -/
+private lemma Ico_diff_Iio_eq {a b c : Rand} (hac : a ≤ c) :
+    (Set.Ico a b \ Set.Iio c : Set Rand) = Set.Ico c b := by
+  simp_all
+
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def constAboveT : ℝ≥0∞ :=
   ENNReal.ofReal (t : ℝ) * ENNReal.ofReal (t : ℝ) +
@@ -67,101 +181,46 @@ noncomputable def gT2B (b : Rand) : ℝ≥0∞ :=
   ENNReal.ofReal (t2 : ℝ) * ENNReal.ofReal (b : ℝ) +
     ENNReal.ofReal (1 - (t2 : ℝ)) * ENNReal.ofReal (1 - (b : ℝ))
 
+/-- Generic linearization of an affine `ofReal`-product expression in one variable. -/
+private lemma ofReal_affine_linear {x T : ℝ} (hx0 : 0 ≤ x) (h1x0 : 0 ≤ 1 - x)
+    (hT0 : 0 ≤ T) (h1T0 : 0 ≤ 1 - T) (hA0 : 0 ≤ 2 * T - 1) :
+    ENNReal.ofReal x * ENNReal.ofReal T + ENNReal.ofReal (1 - x) * ENNReal.ofReal (1 - T) =
+      ENNReal.ofReal ((2 * T - 1) * x) + ENNReal.ofReal (1 - T) := by
+  rw [← ENNReal.ofReal_mul hx0, ← ENNReal.ofReal_mul h1x0,
+    ← ENNReal.ofReal_add (mul_nonneg hx0 hT0) (mul_nonneg h1x0 h1T0),
+    ← ENNReal.ofReal_add (mul_nonneg hA0 hx0) h1T0]
+  congr 1
+  ring
+
 lemma gCt_eq_linear (c : Rand) :
     gCt c =
       ENNReal.ofReal ((2 * (t : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have hc0 : 0 ≤ (c : ℝ) := c.property.1
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h1c0 : 0 ≤ (1 - (c : ℝ)) := sub_nonneg.2 c.property.2
-  have hA0 : 0 ≤ (2 * (t : ℝ) - 1) := by
-    simp [t]
-    norm_num
-  have hprod0 : 0 ≤ (2 * (t : ℝ) - 1) * (c : ℝ) := mul_nonneg hA0 hc0
-  calc
-    gCt c =
-        ENNReal.ofReal ((c : ℝ) * (t : ℝ)) + ENNReal.ofReal ((1 - (c : ℝ)) * (1 - (t : ℝ))) := by
-          -- turn each product into a single `ofReal`.
-          simp [gCt, ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul h1c0]
-    _ = ENNReal.ofReal ((c : ℝ) * (t : ℝ) + (1 - (c : ℝ)) * (1 - (t : ℝ))) := by
-          rw [← ENNReal.ofReal_add (mul_nonneg hc0 ht0) (mul_nonneg h1c0 h1t0)]
-    _ = ENNReal.ofReal ((2 * (t : ℝ) - 1) * (c : ℝ) + (1 - (t : ℝ))) := by
-          congr 1
-          ring
-    _ = ENNReal.ofReal ((2 * (t : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-          exact ENNReal.ofReal_add hprod0 h1t0
+  rw [gCt, ofReal_affine_linear (x := (c : ℝ)) (T := (t : ℝ)) c.property.1
+    (sub_nonneg.2 c.property.2) t.property.1 (sub_nonneg.2 (le_of_lt t_lt_one))
+    (by simp only [t]; norm_num)]
 
 lemma gCt2_eq_linear (c : Rand) :
     gCt2 c =
       ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-  have ht0 : 0 ≤ (t2 : ℝ) := t2.property.1
-  have hc0 : 0 ≤ (c : ℝ) := c.property.1
-  have h1t0 : 0 ≤ (1 - (t2 : ℝ)) := sub_nonneg.2 t2.property.2
-  have h1c0 : 0 ≤ (1 - (c : ℝ)) := sub_nonneg.2 c.property.2
-  have hA0 : 0 ≤ (2 * (t2 : ℝ) - 1) := by
-    simp [t2]
-    norm_num
-  have hprod0 : 0 ≤ (2 * (t2 : ℝ) - 1) * (c : ℝ) := mul_nonneg hA0 hc0
-  calc
-    gCt2 c =
-        ENNReal.ofReal ((c : ℝ) * (t2 : ℝ)) + ENNReal.ofReal ((1 - (c : ℝ)) * (1 - (t2 : ℝ))) := by
-          simp [gCt2, ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul h1c0]
-    _ = ENNReal.ofReal ((c : ℝ) * (t2 : ℝ) + (1 - (c : ℝ)) * (1 - (t2 : ℝ))) := by
-          rw [← ENNReal.ofReal_add (mul_nonneg hc0 ht0) (mul_nonneg h1c0 h1t0)]
-    _ = ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (c : ℝ) + (1 - (t2 : ℝ))) := by
-          congr 1
-          ring
-    _ =
-        ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-          exact ENNReal.ofReal_add hprod0 h1t0
+  rw [gCt2, ofReal_affine_linear (x := (c : ℝ)) (T := (t2 : ℝ)) c.property.1
+    (sub_nonneg.2 c.property.2) t2.property.1 (sub_nonneg.2 t2.property.2)
+    (by simp only [t2]; norm_num)]
 
 lemma gTB_eq_linear (b : Rand) :
     gTB b =
       ENNReal.ofReal ((2 * (t : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have hb0 : 0 ≤ (b : ℝ) := b.property.1
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h1b0 : 0 ≤ (1 - (b : ℝ)) := sub_nonneg.2 b.property.2
-  have hA0 : 0 ≤ (2 * (t : ℝ) - 1) := by
-    simp [t]
-    norm_num
-  have hprod0 : 0 ≤ (2 * (t : ℝ) - 1) * (b : ℝ) := mul_nonneg hA0 hb0
-  calc
-    gTB b =
-        ENNReal.ofReal ((t : ℝ) * (b : ℝ)) + ENNReal.ofReal ((1 - (t : ℝ)) * (1 - (b : ℝ))) := by
-          simp [gTB, ← ENNReal.ofReal_mul ht0, ← ENNReal.ofReal_mul h1t0]
-    _ = ENNReal.ofReal ((t : ℝ) * (b : ℝ) + (1 - (t : ℝ)) * (1 - (b : ℝ))) := by
-          rw [← ENNReal.ofReal_add (mul_nonneg ht0 hb0) (mul_nonneg h1t0 h1b0)]
-    _ = ENNReal.ofReal ((2 * (t : ℝ) - 1) * (b : ℝ) + (1 - (t : ℝ))) := by
-          congr 1
-          ring
-    _ = ENNReal.ofReal ((2 * (t : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-          exact ENNReal.ofReal_add hprod0 h1t0
+  rw [gTB, mul_comm (ENNReal.ofReal (t : ℝ)), mul_comm (ENNReal.ofReal (1 - (t : ℝ))),
+    ofReal_affine_linear (x := (b : ℝ)) (T := (t : ℝ)) b.property.1
+    (sub_nonneg.2 b.property.2) t.property.1 (sub_nonneg.2 (le_of_lt t_lt_one))
+    (by simp only [t]; norm_num)]
 
 lemma gT2B_eq_linear (b : Rand) :
     gT2B b =
       ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-  have ht0 : 0 ≤ (t2 : ℝ) := t2.property.1
-  have hb0 : 0 ≤ (b : ℝ) := b.property.1
-  have h1t0 : 0 ≤ (1 - (t2 : ℝ)) := sub_nonneg.2 t2.property.2
-  have h1b0 : 0 ≤ (1 - (b : ℝ)) := sub_nonneg.2 b.property.2
-  have hA0 : 0 ≤ (2 * (t2 : ℝ) - 1) := by
-    simp [t2]
-    norm_num
-  have hprod0 : 0 ≤ (2 * (t2 : ℝ) - 1) * (b : ℝ) := mul_nonneg hA0 hb0
-  calc
-    gT2B b =
-        ENNReal.ofReal ((t2 : ℝ) * (b : ℝ)) +
-          ENNReal.ofReal ((1 - (t2 : ℝ)) * (1 - (b : ℝ))) := by
-          simp [gT2B, ← ENNReal.ofReal_mul ht0, ← ENNReal.ofReal_mul h1t0]
-    _ = ENNReal.ofReal ((t2 : ℝ) * (b : ℝ) + (1 - (t2 : ℝ)) * (1 - (b : ℝ))) := by
-          rw [← ENNReal.ofReal_add (mul_nonneg ht0 hb0) (mul_nonneg h1t0 h1b0)]
-    _ = ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (b : ℝ) + (1 - (t2 : ℝ))) := by
-          congr 1
-          ring
-    _ =
-        ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-          exact ENNReal.ofReal_add hprod0 h1t0
+  rw [gT2B, mul_comm (ENNReal.ofReal (t2 : ℝ)), mul_comm (ENNReal.ofReal (1 - (t2 : ℝ))),
+    ofReal_affine_linear (x := (b : ℝ)) (T := (t2 : ℝ)) b.property.1
+    (sub_nonneg.2 b.property.2) t2.property.1 (sub_nonneg.2 t2.property.2)
+    (by simp only [t2]; norm_num)]
 
 lemma innerBC_eq_constAboveT_of_t_lt_b {b c : Rand} (hb : t < b) (htc : t ≤ c)
     (hc1 : c ∈ (Set.Iio (1 : Rand) : Set Rand)) : innerBC b c = constAboveT := by
@@ -169,41 +228,16 @@ lemma innerBC_eq_constAboveT_of_t_lt_b {b c : Rand} (hb : t < b) (htc : t ≤ c)
   have hct : ¬ c < t := by exact not_lt.2 htc
   have haSlice : aSlice b c = Set.Iio t := by
     simp [aSlice_eq_of_t_lt_b (b := b) (c := c) hb, hct, hc1']
-  have hz0 : z0 b c = (t : ℝ) := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hb) h.1.2
-    -- Outside the square: `z0 = zBase`. Since `c ≥ t` and `b ≥ t`, the base surface is `t`.
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using htc
-    have hxt : ¬ (b : ℝ) ∈ Set.Iio (t : ℝ) := by
-      simpa [Set.mem_Iio] using (not_lt.2 hb.le)
-    simp [hz0', zBase, hyt, hxt]
+  have hz0 : z0 b c = (t : ℝ) :=
+    z0_eq_t_of_le_t_le (fun h => (not_le_of_gt hb) h.1.2) (not_lt.2 hb.le) htc
   -- Now unfold `innerBC` and compute all measures.
   simp [innerBC, constAboveT, z0I, hz0, haSlice]
 
 lemma innerBC_eq_zero_of_t_lt_b_of_c_lt_t {b c : Rand} (hb : t < b) (hc : c < t) :
     innerBC b c = 0 := by
-  have haSlice : aSlice b c = Set.univ := by
-    simp [aSlice_eq_of_t_lt_b (b := b) (c := c) hb, hc]
-  have hz0 : z0 b c = 0 := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hb) h.1.2
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-      simpa [Set.mem_Ici] using (not_le_of_gt hc)
-    have hxt : (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-      simpa [Set.mem_Ici] using hb.le
-    simp [hz0', zBase, hyt, hxt]
+  have haSlice : aSlice b c = Set.univ := by simp [aSlice_eq_of_t_lt_b (b := b) (c := c) hb, hc]
+  have hz0 : z0 b c = 0 :=
+    z0_eq_zero_of_lt_t_le (fun h => (not_le_of_gt hb) h.1.2) hc hb.le
   simp [innerBC, z0I, hz0, haSlice]
 
 lemma innerBC_eq_gCt_of_t2_le_b_lt_t_of_c_lt_t1 {b c : Rand} (hb1 : t2 ≤ b) (hb2 : b < t)
@@ -211,41 +245,17 @@ lemma innerBC_eq_gCt_of_t2_le_b_lt_t_of_c_lt_t1 {b c : Rand} (hb1 : t2 ≤ b) (h
   have hc2 : c < t2 := lt_trans hc t1_lt_t2
   have haSlice : aSlice b c = Set.Iic t := by
     simp [aSlice_eq_of_t2_le_b_lt_t (b := b) (c := c) hb1 hb2, hc2]
-  have hz0 : z0 b c = (c : ℝ) := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hc) h.2.1
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have : ¬ (t : ℝ) ≤ c := not_le_of_gt (lt_trans hc (lt_trans t1_lt_t2 t2_lt_t))
-      simpa [Set.mem_Ici] using this
-    have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have : ¬ (t : ℝ) ≤ b := not_le_of_gt hb2
-      simpa [Set.mem_Ici] using this
-    have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      have hcb : (c : ℝ) < b := lt_of_lt_of_le (lt_trans hc t1_lt_t2) hb1
-      have : ¬ (b : ℝ) ≤ c := not_le_of_gt hcb
-      simpa [Set.mem_setOf_eq] using this
-    simp [hz0', zBase, hyt, hxt, hle]
+  have hz0 : z0 b c = (c : ℝ) :=
+    z0_eq_c_of_lt_t (fun h => (not_le_of_gt hc) h.2.1)
+      (lt_trans hc (lt_trans t1_lt_t2 t2_lt_t)) hb2 (lt_of_lt_of_le (lt_trans hc t1_lt_t2) hb1)
   simp [innerBC, gCt, z0I, hz0, haSlice]
 
 lemma innerBC_eq_constT1T_of_t2_le_b_lt_t_of_t1_le_c_of_c_lt_t2 {b c : Rand} (hb1 : t2 ≤ b)
     (hb2 : b < t) (hc1 : t1 ≤ c) (hc2 : c < t2) : innerBC b c = constT1T := by
   have haSlice : aSlice b c = Set.Iic t := by
     simp [aSlice_eq_of_t2_le_b_lt_t (b := b) (c := c) hb1 hb2, hc2]
-  have hz0 : z0 b c = (t1 : ℝ) := by
-    -- Inside the square and `c < t2`, with `b ≥ t2`, the recursive surface equals `t1`.
-    have hsq :
-        (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := by
-      refine ⟨⟨le_trans t1_le_t2 hb1, hb2.le⟩, ?_⟩
-      exact ⟨hc1, le_trans hc2.le t2_le_t⟩
-    have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc2
-    have hx : (b : ℝ) ∈ Set.Ici (t2 : ℝ) := hb1
-    simp [z0, hsq, hy, hx]
+  have hz0 : z0 b c = (t1 : ℝ) :=
+    z0_inSquare_eq_t1 ⟨⟨le_trans t1_le_t2 hb1, hb2.le⟩, hc1, le_trans hc2.le t2_le_t⟩ hc2 hb1
   simp [innerBC, constT1T, z0I, hz0, haSlice]
 
 lemma innerBC_eq_constT2T2_of_t2_le_b_lt_t_of_t2_le_c_of_c_lt_t {b c : Rand} (hb1 : t2 ≤ b)
@@ -253,17 +263,9 @@ lemma innerBC_eq_constT2T2_of_t2_le_b_lt_t_of_t2_le_c_of_c_lt_t {b c : Rand} (hb
   have haSlice : aSlice b c = Set.Iio t2 := by
     have : ¬ c < t2 := not_lt.2 hc1
     simp [aSlice_eq_of_t2_le_b_lt_t (b := b) (c := c) hb1 hb2, this, hc2]
-  have hz0 : z0 b c = (t2 : ℝ) := by
-    -- Inside the square and `c ≥ t2`, with `b ≥ t2`, the recursive surface equals `t2`.
-    have hsq :
-        (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := by
-      refine ⟨⟨le_trans t1_le_t2 hb1, hb2.le⟩, ?_⟩
-      exact ⟨le_trans t1_le_t2 hc1, hc2.le⟩
-    have hy : ¬ (c : ℝ) ∈ Set.Iio (t2 : ℝ) := by
-      simp [Set.mem_Iio, hc1]
-    have hx : ¬ (b : ℝ) ∈ Set.Iio (t2 : ℝ) := by
-      simp [Set.mem_Iio, hb1]
-    simp [z0, hsq, hy, hx]
+  have hz0 : z0 b c = (t2 : ℝ) :=
+    z0_inSquare_eq_t2_right ⟨⟨le_trans t1_le_t2 hb1, hb2.le⟩, le_trans t1_le_t2 hc1, hc2.le⟩
+      hc1 hb1
   simp [innerBC, constT2T2, z0I, hz0, haSlice]
 
 /-!
@@ -275,28 +277,11 @@ and can be integrated explicitly.
 
 lemma innerBC_eq_gCt_of_b_lt_t1_of_c_lt_b {b c : Rand} (hb : b < t1) (hc : c < b) :
     innerBC b c = gCt c := by
-  have haSlice : aSlice b c = Set.Iio t := by
-    simp [aSlice_eq_of_b_lt_t1 (b := b) (c := c) hb, hc]
-  have hz0 : z0 b c = (c : ℝ) := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hb) h.1.1
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hct : (c : ℝ) < t := lt_trans (lt_trans hc hb) (lt_trans t1_lt_t2 t2_lt_t)
-    have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-      simpa [Set.mem_Ici] using (not_le_of_gt hct)
-    have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have hbt : (b : ℝ) < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
-      simpa [Set.mem_Ici] using (not_le_of_gt hbt)
-    have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      have hcb : (c : ℝ) < b := hc
-      have : ¬ (b : ℝ) ≤ c := not_le_of_gt hcb
-      simpa [Set.mem_setOf_eq] using this
-    simp [hz0', zBase, hyt, hxt, hle]
+  have haSlice : aSlice b c = Set.Iio t := by simp [aSlice_eq_of_b_lt_t1 (b := b) (c := c) hb, hc]
+  have hz0 : z0 b c = (c : ℝ) :=
+    z0_eq_c_of_lt_t (fun h => (not_le_of_gt hb) h.1.1)
+      (lt_trans (lt_trans hc hb) (lt_trans t1_lt_t2 t2_lt_t))
+      (lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)) hc
   simp [innerBC, gCt, z0I, hz0, haSlice]
 
 lemma innerBC_eq_gTB_of_b_lt_t1_of_b_le_c_of_c_lt_t {b c : Rand} (hb : b < t1) (hc1 : b ≤ c)
@@ -304,72 +289,30 @@ lemma innerBC_eq_gTB_of_b_lt_t1_of_b_le_c_of_c_lt_t {b c : Rand} (hb : b < t1) (
   have hcb : ¬ c < b := not_lt_of_ge hc1
   have haSlice : aSlice b c = Set.Iic b := by
     simp [aSlice_eq_of_b_lt_t1 (b := b) (c := c) hb, hcb, hc2]
-  have hz0 : z0 b c = (t : ℝ) := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hb) h.1.1
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-      simpa [Set.mem_Ici] using (not_le_of_gt hc2)
-    have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have hbt : (b : ℝ) < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
-      simpa [Set.mem_Ici] using (not_le_of_gt hbt)
-    have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      simpa [Set.mem_setOf_eq] using hc1
-    simp [hz0', zBase, hyt, hxt, hle]
+  have hz0 : z0 b c = (t : ℝ) :=
+    z0_eq_t_of_lt_t_le (fun h => (not_le_of_gt hb) h.1.1) hc2
+      (lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)) hc1
   simp [innerBC, gTB, z0I, hz0, haSlice]
 
 lemma innerBC_eq_zero_of_b_lt_t1_of_t_le_c {b c : Rand} (hb : b < t1) (hc : t ≤ c) :
     innerBC b c = 0 := by
   have hbt : (b : ℝ) < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
-  have hcb : ¬ c < b := by
-    have : (b : ℝ) < c := lt_of_lt_of_le hbt hc
-    exact not_lt_of_gt this
+  have hcb : ¬ c < b := not_lt_of_gt (lt_of_lt_of_le hbt hc)
   have hct : ¬ c < t := not_lt.2 hc
   have haSlice : aSlice b c = (∅ : Set Rand) := by
     simp [aSlice_eq_of_b_lt_t1 (b := b) (c := c) hb, hcb, hct]
-  have hz0 : z0 b c = 1 := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hb) h.1.1
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using hc
-    have hxt : (b : ℝ) ∈ Set.Iio (t : ℝ) := by simpa [Set.mem_Iio] using hbt
-    simp [hz0', zBase, hyt, hxt]
+  have hz0 : z0 b c = 1 :=
+    z0_eq_one_of_lt_t_le (fun h => (not_le_of_gt hb) h.1.1) hbt hc
   simp [innerBC, z0I, hz0, haSlice]
 
 lemma innerBC_eq_gCt_of_t1_le_b_lt_t2_of_c_lt_t1 {b c : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2)
     (hc : c < t1) : innerBC b c = gCt c := by
   have haSlice : aSlice b c = Set.Iic t := by
     simp [aSlice_eq_of_t1_le_b_lt_t2 (b := b) (c := c) hb1 hb2, hc]
-  have hz0 : z0 b c = (c : ℝ) := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hc) h.2.1
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have hct : (c : ℝ) < t := lt_trans hc (lt_trans t1_lt_t2 t2_lt_t)
-      simpa [Set.mem_Ici] using (not_le_of_gt hct)
-    have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by
-      have hbt : (b : ℝ) < t := lt_trans hb2 t2_lt_t
-      simpa [Set.mem_Ici] using (not_le_of_gt hbt)
-    have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      have hcb : (c : ℝ) < b := lt_of_lt_of_le hc hb1
-      have : ¬ (b : ℝ) ≤ c := not_le_of_gt hcb
-      simpa [Set.mem_setOf_eq] using this
-    simp [hz0', zBase, hyt, hxt, hle]
+  have hz0 : z0 b c = (c : ℝ) :=
+    z0_eq_c_of_lt_t (fun h => (not_le_of_gt hc) h.2.1)
+      (lt_trans hc (lt_trans t1_lt_t2 t2_lt_t)) (lt_trans hb2 t2_lt_t)
+      (lt_of_lt_of_le hc hb1)
   simp [innerBC, gCt, z0I, hz0, haSlice]
 
 lemma innerBC_eq_gCt2_of_t1_le_b_lt_t2_of_t1_le_c_of_c_lt_b {b c : Rand} (hb1 : t1 ≤ b)
@@ -378,19 +321,9 @@ lemma innerBC_eq_gCt2_of_t1_le_b_lt_t2_of_t1_le_c_of_c_lt_b {b c : Rand} (hb1 : 
   have haSlice : aSlice b c = Set.Iio t2 := by
     have : c < b := hc2
     simp [aSlice_eq_of_t1_le_b_lt_t2 (b := b) (c := c) hb1 hb2, hc1, this]
-  have hz0 : z0 b c = (c : ℝ) := by
-    have hsq :
-        (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := by
-      refine ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, ?_⟩
-      exact ⟨hc1, le_trans hc2'.le t2_le_t⟩
-    have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc2'
-    have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by
-      simpa [Set.mem_Ici] using (not_le_of_gt hb2)
-    have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      have hcb : (c : ℝ) < b := hc2
-      have : ¬ (b : ℝ) ≤ c := not_le_of_gt hcb
-      simpa [Set.mem_setOf_eq] using this
-    simp [z0, hsq, hy, hx, hle]
+  have hz0 : z0 b c = (c : ℝ) :=
+    z0_inSquare_eq_c ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, hc1, le_trans hc2'.le t2_le_t⟩
+      hc2' hb2 hc2
   simp [innerBC, gCt2, z0I, hz0, haSlice]
 
 lemma innerBC_eq_gT2B_of_t1_le_b_lt_t2_of_b_le_c_of_c_lt_t2 {b c : Rand} (hb1 : t1 ≤ b)
@@ -399,65 +332,35 @@ lemma innerBC_eq_gT2B_of_t1_le_b_lt_t2_of_b_le_c_of_c_lt_t2 {b c : Rand} (hb1 : 
   have haSlice : aSlice b c = Set.Iic b := by
     have : ¬ c < b := not_lt_of_ge hc1
     simp [aSlice_eq_of_t1_le_b_lt_t2 (b := b) (c := c) hb1 hb2, hct1, hc2, this]
-  have hz0 : z0 b c = (t2 : ℝ) := by
-    have hsq :
-        (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := by
-      refine ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, ?_⟩
-      exact ⟨le_trans hb1 hc1, le_trans hc2.le t2_le_t⟩
-    have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc2
-    have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by
-      simpa [Set.mem_Ici] using (not_le_of_gt hb2)
-    have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-      simpa [Set.mem_setOf_eq] using hc1
-    simp [z0, hsq, hy, hx, hle]
+  have hz0 : z0 b c = (t2 : ℝ) :=
+    z0_inSquare_eq_t2_diag
+      ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, le_trans hb1 hc1, le_trans hc2.le t2_le_t⟩ hc2 hb2 hc1
   simp [innerBC, gT2B, z0I, hz0, haSlice]
 
 lemma innerBC_eq_constT1T_of_t1_le_b_lt_t2_of_t2_le_c_of_c_lt_t {b c : Rand} (hb1 : t1 ≤ b)
     (hb2 : b < t2) (hc1 : t2 ≤ c) (hc2 : c < t) : innerBC b c = constT1T := by
   have hct1 : ¬ c < t1 := not_lt_of_ge (le_trans t1_le_t2 hc1)
-  have hcb : ¬ c < b := by
-    exact not_lt_of_gt (lt_of_lt_of_le hb2 hc1)
+  have hcb : ¬ c < b := by exact not_lt_of_gt (lt_of_lt_of_le hb2 hc1)
   have haSlice : aSlice b c = Set.Iio t1 := by
     have : ¬ c < t2 := not_lt.2 hc1
     simp [aSlice_eq_of_t1_le_b_lt_t2 (b := b) (c := c) hb1 hb2, hct1, hcb, this, hc2]
-  have hz0 : z0 b c = (t : ℝ) := by
-    have hsq :
-        (b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) := by
-      refine ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, ?_⟩
-      exact ⟨le_trans t1_le_t2 hc1, hc2.le⟩
-    have hy : ¬ (c : ℝ) ∈ Set.Iio (t2 : ℝ) := by
-      simp [Set.mem_Iio, hc1]
-    have hx : (b : ℝ) ∈ Set.Iio (t2 : ℝ) := hb2
-    simp [z0, hsq, hy, hx]
+  have hz0 : z0 b c = (t : ℝ) :=
+    z0_inSquare_eq_t ⟨⟨hb1, le_trans hb2.le t2_le_t⟩, le_trans t1_le_t2 hc1, hc2.le⟩ hc1 hb2
   simp [innerBC, constT1T, z0I, hz0, haSlice]
   ac_rfl
 
 lemma innerBC_eq_zero_of_t1_le_b_lt_t2_of_t_lt_c {b c : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2)
     (hc : t < c) : innerBC b c = 0 := by
-  have hc2 : ¬ c < t2 := by
-    exact not_lt_of_ge (le_trans t2_le_t (le_of_lt hc))
-  have hct1 : ¬ c < t1 := by
-    exact not_lt_of_ge (le_trans t1_le_t2 (le_trans t2_le_t (le_of_lt hc)))
+  have hc2 : ¬ c < t2 := by exact not_lt_of_ge (le_trans t2_le_t (le_of_lt hc))
+  have hct1 : ¬ c < t1 := by exact not_lt_of_ge (le_trans t1_le_t2 (le_trans t2_le_t (le_of_lt hc)))
   have hcb : ¬ c < b := by
     -- `b < t2 < t < c`.
     exact not_lt_of_gt (lt_trans (lt_trans hb2 t2_lt_t) hc)
   have haSlice : aSlice b c = (∅ : Set Rand) := by
     have : ¬ c < t := not_lt.2 (le_of_lt hc)
     simp [aSlice_eq_of_t1_le_b_lt_t2 (b := b) (c := c) hb1 hb2, hct1, hcb, hc2, this]
-  have hz0 : z0 b c = 1 := by
-    have hsq :
-        ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-      intro h
-      exact (not_le_of_gt hc) h.2.2
-    have hz0' : z0 b c = zBase b c := by
-      classical
-      unfold z0
-      simp only [if_neg hsq]
-    have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using hc.le
-    have hxt : (b : ℝ) ∈ Set.Iio (t : ℝ) := by
-      have hbt : (b : ℝ) < t := lt_trans hb2 t2_lt_t
-      simpa [Set.mem_Iio] using hbt
-    simp [hz0', zBase, hyt, hxt]
+  have hz0 : z0 b c = 1 :=
+    z0_eq_one_of_lt_t_le (fun h => (not_le_of_gt hc) h.2.2) (lt_trans hb2 t2_lt_t) hc.le
   simp [innerBC, z0I, hz0, haSlice]
 
 /-!
@@ -507,23 +410,15 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           funext c
           by_cases hc : c < b <;> simp [F, hb, hc, Set.indicator, Set.mem_Iio]
         -- compute the `lintegral` of the indicator
-        calc
-          (∫⁻ c : Rand, F b c ∂μ) = ∫⁻ c : Rand, (Set.Iio b).indicator f c ∂μ := by
-            simp [hFc]
-          _ = ∫⁻ c in Set.Iio b, f c ∂μ := by
-            exact (MeasureTheory.lintegral_indicator (μ := μ) hIo f)
-      have hbmem : b ∈ (Set.Iio B : Set Rand) := by simpa [Set.mem_Iio] using hb
-      rw [this]
-      simp [Set.indicator_of_mem hbmem]
+        simp_all
+      simp_all
     · have :
           (∫⁻ c : Rand, F b c ∂μ) = 0 := by
         have hFc : (fun c : Rand => F b c) = 0 := by
           funext c
           simp [F, hb]
         simp [hFc]
-      have hbmem : b ∉ (Set.Iio B : Set Rand) := by simpa [Set.mem_Iio] using hb
-      rw [this]
-      simp [Set.indicator_of_notMem hbmem]
+      simp_all
   have hR :
       (∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ) =
         ∫⁻ c in Set.Iio B, f c * μ (Set.Ioo c B) ∂μ := by
@@ -538,14 +433,11 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           funext b
           by_cases hb : b < B <;> by_cases hcb : c < b <;>
             simp [F, hb, hcb, Set.indicator, Set.mem_Ioo]
-        have hIoo : MeasurableSet (Set.Ioo c B : Set Rand) := by simp
-        -- `lintegral` of an indicator of a constant function.
-        simp [hEq, MeasureTheory.lintegral_indicator, hIoo, hcB]
+        simp_all
       · have hEq : (fun b : Rand => F b c) = 0 := by
           funext b
           by_cases hb : b < B
-          · have : ¬ c < b := by
-              exact not_lt_of_ge (le_trans (le_of_lt hb) (le_of_not_gt hcB))
+          · have : ¬ c < b := not_lt_of_ge (le_trans (le_of_lt hb) (le_of_not_gt hcB))
             simp [F, hb, this]
           · simp [F, hb]
         -- Here `c ≥ B`, so the set `{b | b < B ∧ c < b}` is empty.
@@ -554,21 +446,9 @@ lemma lintegral_triangle_Iio (B : Rand) (f : Rand → ℝ≥0∞) (hf : Measurab
           simpa using (MeasureTheory.lintegral_zero_fun (μ := μ) (α := Rand))
         simp [hcB, this]
     -- Use the pointwise formula and rewrite the outer integral as a set integral.
-    have :
-        (∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ) =
-          ∫⁻ c : Rand, (Set.Iio B).indicator (fun c => f c * μ (Set.Ioo c B)) c ∂μ := by
-      refine MeasureTheory.lintegral_congr fun c => ?_
-      simpa using congrArg (fun g => g c) hinner
-    rw [this]
-    exact
-      (MeasureTheory.lintegral_indicator (μ := μ) (by simp)
-        (f := fun c => f c * μ (Set.Ioo c B)))
+    simp_all
   -- Put it together.
-  calc
-    (∫⁻ b in Set.Iio B, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) =
-        ∫⁻ b : Rand, ∫⁻ c : Rand, F b c ∂μ ∂μ := hL
-    _ = ∫⁻ c : Rand, ∫⁻ b : Rand, F b c ∂μ ∂μ := hswap
-    _ = ∫⁻ c in Set.Iio B, f c * μ (Set.Ioo c B) ∂μ := hR
+  simp_all
 
 lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
@@ -578,23 +458,10 @@ lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
   have hsplit :=
     (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
-  have hIio : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      have hc1 : (c : ℝ) < 1 := lt_trans (show (c : ℝ) < t from hc) t_lt_one
-      exact ⟨by simpa using hc1, hc⟩
-  have hdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) := by
-    ext c
-    constructor
-    · rintro ⟨hc1, hct⟩
-      have hct' : t ≤ c := le_of_not_gt hct
-      exact ⟨hct', hc1⟩
-    · intro hc
-      refine ⟨hc.2, ?_⟩
-      exact not_lt_of_ge hc.1
+  have hIio : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t :=
+    Iio_inter_Iio_eq t_lt_one.le
+  have hdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) :=
+    Iio_diff_Iio_eq t_lt_one.le
   have hzero :
       (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t, innerBC b c ∂μ) = 0 := by
     have :
@@ -613,32 +480,12 @@ lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
       exact innerBC_eq_constAboveT_of_t_lt_b (b := b) (c := c) hb hc.1 hc.2
     calc
       (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t, innerBC b c ∂μ) =
-          ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ := by
-            simp [hdiff]
+          ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ := by simp [hdiff]
       _ = ∫⁻ _c in Set.Ico t (1 : Rand), constAboveT ∂μ := by
             exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs this
-      _ = constAboveT * μ (Set.Ico t (1 : Rand)) := by
-            simp
+      _ = constAboveT * μ (Set.Ico t (1 : Rand)) := by simp
   -- Use the splitting identity.
-  have hsplit' :
-      (∫⁻ c in Set.Iio t, innerBC b c ∂μ) +
-          ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ =
-        ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ := by
-    simpa [hIio, hdiff] using hsplit
-  -- Replace terms.
-  have hco :
-      (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) =
-        constAboveT * μ (Set.Ico t (1 : Rand)) := by
-    simpa [hdiff] using hconst
-  have hio : (∫⁻ c in Set.Iio t, innerBC b c ∂μ) = 0 := by
-    -- restrict `hzero` to `Iio t` (since it equals `A ∩ B`)
-    simpa [hIio] using hzero
-  -- Solve.
-  have :
-      ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ =
-        0 + constAboveT * μ (Set.Ico t (1 : Rand)) := by
-    simpa [hio, hco] using hsplit'.symm
-  simpa using this
+  simp_all
 
 lemma lintegral_b_above_t :
     (∫⁻ b in Set.Ico t (1 : Rand), ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -669,8 +516,7 @@ lemma lintegral_b_above_t :
           ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
         (∫⁻ _b in Set.Ioo t (1 : Rand), constAboveT * μ (Set.Ico t (1 : Rand)) ∂μ) := by
     exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hconst
-  rw [this]
-  simp [mul_assoc]
+  simp_all
 
 private lemma lintegral_innerBC_Ico_t_one_eq_zero_of_t2_le_b_lt_t {b : Rand}
     (hb1 : t2 ≤ b) (hb2 : b < t) :
@@ -679,31 +525,16 @@ private lemma lintegral_innerBC_Ico_t_one_eq_zero_of_t2_le_b_lt_t {b : Rand}
     simpa [μ] using
       (MeasureTheory.Ioo_ae_eq_Ico (μ := (μ : Measure Rand)) (a := t) (b := (1 : Rand)))
   have hIoo0 : (∫⁻ c in Set.Ioo t (1 : Rand), innerBC b c ∂μ) = 0 := by
-    have hs : MeasurableSet (Set.Ioo t (1 : Rand) : Set Rand) := by
-      simp
+    have hs : MeasurableSet (Set.Ioo t (1 : Rand) : Set Rand) := by simp
     have hEq :
         Set.EqOn (fun c : Rand => innerBC b c) 0 (Set.Ioo t (1 : Rand) : Set Rand) := by
       intro c hc
-      have hc2 : ¬ c < t2 := by
-        exact not_lt_of_ge (le_trans t2_le_t (le_of_lt hc.1))
+      have hc2 : ¬ c < t2 := by exact not_lt_of_ge (le_trans t2_le_t (le_of_lt hc.1))
       have haSlice : aSlice b c = (∅ : Set Rand) := by
         have : ¬ c < t := not_lt.2 (le_of_lt hc.1)
         simp [aSlice_eq_of_t2_le_b_lt_t (b := b) (c := c) hb1 hb2, hc2, this]
-      have hz0 : z0 b c = 1 := by
-        have hsq :
-            ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ) ∧ (c : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-          intro h
-          exact (not_le_of_gt hc.1) h.2.2
-        have hz0' : z0 b c = zBase b c := by
-          classical
-          unfold z0
-          simp only [if_neg hsq]
-        have hyt : (c : ℝ) ∈ Set.Ici (t : ℝ) := by
-          have : (t : ℝ) < c := hc.1
-          simpa [Set.mem_Ici] using this.le
-        have hxt : (b : ℝ) ∈ Set.Iio (t : ℝ) := by
-          simpa [Set.mem_Iio] using hb2
-        simp [hz0', zBase, hyt, hxt]
+      have hz0 : z0 b c = 1 :=
+        z0_eq_one_of_lt_t_le (fun h => (not_le_of_gt hc.1) h.2.2) hb2 hc.1.le
       simp [innerBC, z0I, hz0, haSlice]
     simpa using (MeasureTheory.setLIntegral_eq_zero (μ := μ) hs hEq)
   simpa using
@@ -716,8 +547,7 @@ lemma lintegral_b_t2_t :
           constT1T * μ (Set.Ico t1 t2) +
           constT2T2 * μ (Set.Ico t2 t)) := by
   classical
-  have hbmeas : MeasurableSet (Set.Ico t2 t : Set Rand) := by
-    simp
+  have hbmeas : MeasurableSet (Set.Ico t2 t : Set Rand) := by simp
   -- On `b ∈ [t2,t)`, the inner integral depends only on `c` and can be written explicitly.
   have hinner :
       Set.EqOn
@@ -731,26 +561,14 @@ lemma lintegral_b_t2_t :
     have hb1 : t2 ≤ b := hb.1
     have hb2 : b < t := hb.2
     -- Split `c ∈ Iio 1` into `c < t` and `t ≤ c < 1`. The second part is 0.
-    have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by
-      simp
+    have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by simp
     have hsplit :=
       (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
-    have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
-      ext c
-      constructor
-      · intro hc
-        exact hc.2
-      · intro hc
-        have hc1 : (c : ℝ) < 1 := lt_trans (show (c : ℝ) < t from hc) t_lt_one
-        exact ⟨by simpa using hc1, hc⟩
-    have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) := by
-      ext c
-      constructor
-      · rintro ⟨hc1, hct⟩
-        exact ⟨le_of_not_gt hct, hc1⟩
-      · intro hc
-        exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t :=
+      Iio_inter_Iio_eq t_lt_one.le
+    have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) :=
+      Iio_diff_Iio_eq t_lt_one.le
     have hzero :
         (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t, innerBC b c ∂μ) = 0 := by
       have hIco0 : (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) = 0 := by
@@ -761,48 +579,22 @@ lemma lintegral_b_t2_t :
       (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Iio t : Set Rand)) (B := (Set.Iio t1 : Set Rand))
         (by simp))
-    have hIio_t1 : (Set.Iio t ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by
-      ext c
-      constructor
-      · intro hc
-        exact hc.2
-      · intro hc
-        have : c < t := lt_trans (show (c : ℝ) < t1 from hc) (lt_trans t1_lt_t2 t2_lt_t)
-        exact ⟨this, hc⟩
-    have hIco_t1_t : (Set.Iio t \ Set.Iio t1 : Set Rand) = Set.Ico t1 t := by
-      ext c
-      constructor
-      · rintro ⟨hc, hct1⟩
-        exact ⟨le_of_not_gt hct1, hc⟩
-      · intro hc
-        refine ⟨hc.2, ?_⟩
-        exact not_lt_of_ge hc.1
+    have hIio_t1 : (Set.Iio t ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 :=
+      Iio_inter_Iio_eq (lt_trans t1_lt_t2 t2_lt_t).le
+    have hIco_t1_t : (Set.Iio t \ Set.Iio t1 : Set Rand) = Set.Ico t1 t :=
+      Iio_diff_Iio_eq (lt_trans t1_lt_t2 t2_lt_t).le
     have hsplit_t2 :=
       (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Ico t1 t : Set Rand)) (B := (Set.Iio t2 : Set Rand))
         (by simp))
-    have hIco_t1_t2 : (Set.Ico t1 t ∩ Set.Iio t2 : Set Rand) = Set.Ico t1 t2 := by
-      ext c
-      constructor
-      · intro hc
-        exact ⟨hc.1.1, hc.2⟩
-      · intro hc
-        refine ⟨?_, hc.2⟩
-        exact ⟨hc.1, lt_trans hc.2 t2_lt_t⟩
-    have hIco_t2_t : (Set.Ico t1 t \ Set.Iio t2 : Set Rand) = Set.Ico t2 t := by
-      ext c
-      constructor
-      · rintro ⟨hc, hct2⟩
-        have hct2' : t2 ≤ c := le_of_not_gt hct2
-        exact ⟨hct2', hc.2⟩
-      · intro hc
-        refine ⟨⟨le_trans t1_le_t2 hc.1, hc.2⟩, ?_⟩
-        exact not_lt_of_ge hc.1
+    have hIco_t1_t2 : (Set.Ico t1 t ∩ Set.Iio t2 : Set Rand) = Set.Ico t1 t2 :=
+      Ico_inter_Iio_eq t2_lt_t.le
+    have hIco_t2_t : (Set.Ico t1 t \ Set.Iio t2 : Set Rand) = Set.Ico t2 t :=
+      Ico_diff_Iio_eq t1_le_t2
     -- Evaluate on each `c`-region.
     have h_on_t1 :
         (∫⁻ c in Set.Iio t1, innerBC b c ∂μ) = ∫⁻ c in Set.Iio t1, gCt c ∂μ := by
-      have hs : MeasurableSet (Set.Iio t1 : Set Rand) := by
-        simp
+      have hs : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
       have :
           Set.EqOn (fun c : Rand => innerBC b c) (fun c => gCt c) (Set.Iio t1 : Set Rand) := by
         intro c hc
@@ -810,8 +602,7 @@ lemma lintegral_b_t2_t :
       exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs this
     have h_on_t1_t2 :
         (∫⁻ c in Set.Ico t1 t2, innerBC b c ∂μ) = constT1T * μ (Set.Ico t1 t2) := by
-      have hs : MeasurableSet (Set.Ico t1 t2 : Set Rand) := by
-        simp
+      have hs : MeasurableSet (Set.Ico t1 t2 : Set Rand) := by simp
       have :
           Set.EqOn
             (fun c : Rand => innerBC b c)
@@ -827,8 +618,7 @@ lemma lintegral_b_t2_t :
         _ = constT1T * μ (Set.Ico t1 t2) := by simp
     have h_on_t2_t :
         (∫⁻ c in Set.Ico t2 t, innerBC b c ∂μ) = constT2T2 * μ (Set.Ico t2 t) := by
-      have hs : MeasurableSet (Set.Ico t2 t : Set Rand) := by
-        simp
+      have hs : MeasurableSet (Set.Ico t2 t : Set Rand) := by simp
       have :
           Set.EqOn
             (fun c : Rand => innerBC b c)
@@ -873,23 +663,9 @@ lemma lintegral_b_t2_t :
               simp [h_on_t1, h_on_t1_t2, h_on_t2_t]
               ac_rfl
     -- Now conclude the full `Iio 1` integral.
-    have hA :
-        (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
-          (∫⁻ c in Set.Iio t, innerBC b c ∂μ) + 0 := by
-      have hAB :
-          (∫⁻ c in Set.Iio t, innerBC b c ∂μ) +
-              ∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ =
-            ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ := by
-        simpa [hAint, hAdiff] using hsplit
-      -- The `Ico t 1` part is zero.
-      have hIco0 : (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) = 0 := by
-        -- rewrite the set and use `hzero`
-        simpa [hAdiff] using hzero
-      simpa [hIco0, add_comm] using hAB.symm
-    simp [hA, h_t]
+    simp_all
   -- Finally, integrate over `b ∈ [t2,t)` (constant function).
-  have hs : MeasurableSet (Set.Ico t2 t : Set Rand) := by
-    simp
+  have hs : MeasurableSet (Set.Ico t2 t : Set Rand) := by simp
   have :
       (∫⁻ b in Set.Ico t2 t,
           ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -902,100 +678,39 @@ lemma lintegral_b_t2_t :
   simp
   ac_rfl
 
+/-- Merge a product-sum of `ofReal`s into a single `ofReal`. -/
+private lemma ofReal_prodSum {x y : ℝ} (hx0 : 0 ≤ x) (h1x0 : 0 ≤ 1 - x)
+    (hy0 : 0 ≤ y) (h1y0 : 0 ≤ 1 - y) :
+    ENNReal.ofReal x * ENNReal.ofReal y + ENNReal.ofReal (1 - x) * ENNReal.ofReal (1 - y) =
+      ENNReal.ofReal (x * y + (1 - x) * (1 - y)) := by
+  rw [← ENNReal.ofReal_mul hx0, ← ENNReal.ofReal_mul h1x0,
+    ← ENNReal.ofReal_add (mul_nonneg hx0 hy0) (mul_nonneg h1x0 h1y0)]
+
 /-- Exact value of the constant `constAboveT = t^2 + (1-t)^2`. -/
 lemma constAboveT_eq : constAboveT = ENNReal.ofReal (17 / 32 : ℝ) := by
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h25 : 0 ≤ (25 / 64 : ℝ) := by norm_num
-  have h9 : 0 ≤ (9 / 64 : ℝ) := by norm_num
-  calc
-    constAboveT =
-        ENNReal.ofReal ((t : ℝ) * (t : ℝ)) +
-          ENNReal.ofReal ((1 - (t : ℝ)) * (1 - (t : ℝ))) := by
-          -- turn each `ofReal` product into a single `ofReal`.
-          have ht :
-              ENNReal.ofReal (t : ℝ) * ENNReal.ofReal (t : ℝ) =
-                ENNReal.ofReal ((t : ℝ) * (t : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul ht0).symm
-          have h1t :
-              ENNReal.ofReal (1 - (t : ℝ)) * ENNReal.ofReal (1 - (t : ℝ)) =
-                ENNReal.ofReal ((1 - (t : ℝ)) * (1 - (t : ℝ))) := by
-            simpa using (ENNReal.ofReal_mul h1t0).symm
-          simp [constAboveT, ht, h1t]
-    _ = ENNReal.ofReal (25 / 64 : ℝ) + ENNReal.ofReal (9 / 64 : ℝ) := by
-          simp [t]
-          norm_num
-    _ = ENNReal.ofReal ((25 / 64 : ℝ) + (9 / 64 : ℝ)) := by
-          symm
-          exact ENNReal.ofReal_add h25 h9
-    _ = ENNReal.ofReal (17 / 32 : ℝ) := by norm_num
+  rw [constAboveT, ofReal_prodSum t.property.1 (sub_nonneg.2 (le_of_lt t_lt_one))
+    t.property.1 (sub_nonneg.2 (le_of_lt t_lt_one))]
+  norm_num [t]
 
 /-- Exact value of the constant `constT1T = t1*t + (1-t1)*(1-t)`. -/
 lemma constT1T_eq : constT1T = ENNReal.ofReal (15 / 32 : ℝ) := by
-  have ht10 : 0 ≤ (t1 : ℝ) := t1.property.1
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have h1t10 : 0 ≤ (1 - (t1 : ℝ)) := sub_nonneg.2 t1.property.2
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h15 : 0 ≤ (15 / 64 : ℝ) := by norm_num
-  calc
-    constT1T =
-        ENNReal.ofReal ((t1 : ℝ) * (t : ℝ)) +
-          ENNReal.ofReal ((1 - (t1 : ℝ)) * (1 - (t : ℝ))) := by
-          have ht :
-              ENNReal.ofReal (t1 : ℝ) * ENNReal.ofReal (t : ℝ) =
-                ENNReal.ofReal ((t1 : ℝ) * (t : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul ht10).symm
-          have h1t :
-              ENNReal.ofReal (1 - (t1 : ℝ)) * ENNReal.ofReal (1 - (t : ℝ)) =
-                ENNReal.ofReal ((1 - (t1 : ℝ)) * (1 - (t : ℝ))) := by
-            simpa using (ENNReal.ofReal_mul h1t10).symm
-          simp [constT1T, ht, h1t]
-    _ = ENNReal.ofReal (15 / 64 : ℝ) + ENNReal.ofReal (15 / 64 : ℝ) := by
-          simp [t1, t]
-          norm_num
-    _ = ENNReal.ofReal ((15 / 64 : ℝ) + (15 / 64 : ℝ)) := by
-          symm
-          exact ENNReal.ofReal_add h15 h15
-    _ = ENNReal.ofReal (15 / 32 : ℝ) := by norm_num
+  rw [constT1T, ofReal_prodSum t1.property.1 (sub_nonneg.2 t1.property.2)
+    t.property.1 (sub_nonneg.2 (le_of_lt t_lt_one))]
+  norm_num [t1, t]
 
 /-- Exact value of the constant `constT2T2 = t2^2 + (1-t2)^2`. -/
 lemma constT2T2_eq : constT2T2 = ENNReal.ofReal (257 / 512 : ℝ) := by
-  have ht20 : 0 ≤ (t2 : ℝ) := t2.property.1
-  have h1t20 : 0 ≤ (1 - (t2 : ℝ)) := sub_nonneg.2 t2.property.2
-  have h289 : 0 ≤ (289 / 1024 : ℝ) := by norm_num
-  have h225 : 0 ≤ (225 / 1024 : ℝ) := by norm_num
-  calc
-    constT2T2 =
-        ENNReal.ofReal ((t2 : ℝ) * (t2 : ℝ)) +
-          ENNReal.ofReal ((1 - (t2 : ℝ)) * (1 - (t2 : ℝ))) := by
-          have ht :
-              ENNReal.ofReal (t2 : ℝ) * ENNReal.ofReal (t2 : ℝ) =
-                ENNReal.ofReal ((t2 : ℝ) * (t2 : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul ht20).symm
-          have h1t :
-              ENNReal.ofReal (1 - (t2 : ℝ)) * ENNReal.ofReal (1 - (t2 : ℝ)) =
-                ENNReal.ofReal ((1 - (t2 : ℝ)) * (1 - (t2 : ℝ))) := by
-            simpa using (ENNReal.ofReal_mul h1t20).symm
-          simp [constT2T2, ht, h1t]
-    _ = ENNReal.ofReal (289 / 1024 : ℝ) + ENNReal.ofReal (225 / 1024 : ℝ) := by
-          simp [t2]
-          norm_num
-    _ = ENNReal.ofReal ((289 / 1024 : ℝ) + (225 / 1024 : ℝ)) := by
-          symm
-          exact ENNReal.ofReal_add h289 h225
-    _ = ENNReal.ofReal (257 / 512 : ℝ) := by norm_num
+  rw [constT2T2, ofReal_prodSum t2.property.1 (sub_nonneg.2 t2.property.2)
+    t2.property.1 (sub_nonneg.2 t2.property.2)]
+  norm_num [t2]
 
 lemma lintegral_gCt_Iio_t1 :
     (∫⁻ c in Set.Iio t1, gCt c ∂μ) = ENNReal.ofReal (81 / 512 : ℝ) := by
   have ha0 : 0 ≤ (1 / 4 : ℝ) := by norm_num
   have hb0 : 0 ≤ (3 / 8 : ℝ) := by norm_num
   have hs : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
-  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by
-    simp [t]
-    norm_num
-  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by
-    simp [t]
-    norm_num
+  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by norm_num [t]
+  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by norm_num [t]
   have hEq :
       Set.EqOn (fun c : Rand => gCt c)
         (fun c : Rand =>
@@ -1011,16 +726,14 @@ lemma lintegral_gCt_Iio_t1 :
       (∫⁻ c in Set.Iio t1, gCt c ∂μ) =
         ∫⁻ c in Set.Iio t1,
           (ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) +
-            ENNReal.ofReal (3 / 8 : ℝ)) ∂μ := by
-    exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
+            ENNReal.ofReal (3 / 8 : ℝ)) ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
   rw [hcongr]
   -- Split the integral into affine and constant parts.
   have hmeas1 : Measurable fun c : Rand => ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) := by
     measurability
   rw [MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Iio t1)) hmeas1]
   -- Pull out the constant `ofReal (1/4)`.
-  have hmeas_id : Measurable fun c : Rand => ENNReal.ofReal (c : ℝ) := by
-    measurability
+  have hmeas_id : Measurable fun c : Rand => ENNReal.ofReal (c : ℝ) := by measurability
   rw [MeasureTheory.lintegral_const_mul
     (μ := μ.restrict (Set.Iio t1))
     (r := ENNReal.ofReal (1 / 4 : ℝ))
@@ -1030,8 +743,7 @@ lemma lintegral_gCt_Iio_t1 :
       (∫⁻ c in Set.Iio t1, ENNReal.ofReal (c : ℝ) ∂μ) =
         ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
     simpa [μ] using (setLIntegral_ofReal_id_Iio (b := t1))
-  have ht1 : μ (Set.Iio t1) = ENNReal.ofReal (3 / 8 : ℝ) := by
-    simp [μ, t1]
+  have ht1 : μ (Set.Iio t1) = ENNReal.ofReal (3 / 8 : ℝ) := by simp [μ, t1]
   -- Now finish by straightforward arithmetic.
   rw [h_id]
   have hconstInt :
@@ -1040,41 +752,14 @@ lemma lintegral_gCt_Iio_t1 :
     simp [MeasureTheory.lintegral_const]
   rw [hconstInt, ht1]
   -- Rewrite the products and sum as a single `ofReal`, then do real arithmetic.
-  have hmul1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) =
-        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
-    exact (ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4)).symm
-  have hmul2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-        ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    exact (ENNReal.ofReal_mul hb0).symm
   have hnonneg1 : 0 ≤ (1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-    have : 0 ≤ (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-      have ht1sq : 0 ≤ ((t1 : ℝ) ^ 2) := sq_nonneg _
-      nlinarith
+    have ht1sq : 0 ≤ ((t1 : ℝ) ^ 2) := sq_nonneg _
+    have : 0 ≤ (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by nlinarith
     exact mul_nonneg (by norm_num) this
-  have hnonneg2 : 0 ≤ (3 / 8 : ℝ) * (3 / 8 : ℝ) := mul_nonneg hb0 hb0
-  have hadd :
-      ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) +
-          ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) =
-        ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    symm
-    exact ENNReal.ofReal_add hnonneg1 hnonneg2
-  calc
-    ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) +
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) +
-          ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          rw [hmul1, hmul2]
-    _ =
-        ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          simpa using hadd
-    _ = ENNReal.ofReal (81 / 512 : ℝ) := by
-          -- Evaluate the real expression at `t1 = 3/8`.
-          simp [t1]
-          norm_num
+  rw [← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4), ← ENNReal.ofReal_mul hb0,
+    ← ENNReal.ofReal_add hnonneg1 (mul_nonneg hb0 hb0)]
+  simp only [t1]
+  norm_num
 
 /-- Evaluate the `b ≥ t` region as an explicit rational value. -/
 lemma lintegral_b_above_t_value :
@@ -1084,27 +769,10 @@ lemma lintegral_b_above_t_value :
   have h3 : 0 ≤ (3 / 8 : ℝ) := by norm_num
   rw [lintegral_b_above_t]
   rw [constAboveT_eq]
-  have hμ : μ (Set.Ico t (1 : Rand)) = ENNReal.ofReal (3 / 8 : ℝ) := by
-    simp [μ, t]
-    norm_num
+  have hμ : μ (Set.Ico t (1 : Rand)) = ENNReal.ofReal (3 / 8 : ℝ) := by norm_num [μ, t]
   -- Fold the product into a single `ofReal`.
-  calc
-    ENNReal.ofReal (17 / 32 : ℝ) * μ (Set.Ico t (1 : Rand)) * μ (Set.Ico t (1 : Rand)) =
-        ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) := by
-          simp [hμ]
-    _ = ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          -- merge `ofReal` factors
-          have h1 :
-              ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul h17).symm
-          have h2 :
-              ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal (((17 / 32 : ℝ) * (3 / 8 : ℝ)) * (3 / 8 : ℝ)) := by
-            have h173 : 0 ≤ ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := mul_nonneg h17 h3
-            simpa [mul_assoc] using (ENNReal.ofReal_mul h173).symm
-          simp [h1, h2, mul_assoc]
-    _ = ENNReal.ofReal (153 / 2048 : ℝ) := by norm_num
+  rw [hμ, ← ENNReal.ofReal_mul h17, ← ENNReal.ofReal_mul (mul_nonneg h17 h3)]
+  norm_num
 
 lemma lintegral_b_t2_t_value :
     (∫⁻ b in Set.Ico t2 t, ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -1115,63 +783,15 @@ lemma lintegral_b_t2_t_value :
   have h257 : 0 ≤ (257 / 512 : ℝ) := by norm_num
   rw [lintegral_b_t2_t]
   -- Replace each term by its explicit value.
-  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by
-    simp [μ, t2, t]
-    norm_num
-  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by
-    simp [μ, t1, t2]
-    norm_num
+  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by norm_num [μ, t2, t]
+  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by norm_num [μ, t1, t2]
   rw [hμt2t, lintegral_gCt_Iio_t1, constT1T_eq, constT2T2_eq, hμt1t2]
-  -- Fold all products/sums into a single `ofReal`.
-  have hA :
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) =
-        ENNReal.ofReal (75 / 1024 : ℝ) := by
-    have : (15 / 32 : ℝ) * (5 / 32 : ℝ) = (75 / 1024 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (5 / 32 : ℝ)) h15).symm
-  have hB :
-      ENNReal.ofReal (257 / 512 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) =
-        ENNReal.ofReal (771 / 16384 : ℝ) := by
-    have : (257 / 512 : ℝ) * (3 / 32 : ℝ) = (771 / 16384 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (257 / 512 : ℝ)) (q := (3 / 32 : ℝ)) h257).symm
-  -- First combine the inner sum.
-  have hS1 :
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) =
-        ENNReal.ofReal (237 / 1024 : ℝ) := by
-    have h75 : 0 ≤ (75 / 1024 : ℝ) := by norm_num
-    have : (81 / 512 : ℝ) + (75 / 1024 : ℝ) = (237 / 1024 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h81 h75).symm
-  have hS :
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
-          ENNReal.ofReal (771 / 16384 : ℝ) =
-        ENNReal.ofReal (4563 / 16384 : ℝ) := by
-    have h237 : 0 ≤ (237 / 1024 : ℝ) := by norm_num
-    have h771 : 0 ≤ (771 / 16384 : ℝ) := by norm_num
-    have hS2 :
-        ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) =
-          ENNReal.ofReal (4563 / 16384 : ℝ) := by
-      have : (237 / 1024 : ℝ) + (771 / 16384 : ℝ) = (4563 / 16384 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h237 h771).symm
-    -- rewrite using `hS1` and reassociate
-    calc
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
-            ENNReal.ofReal (771 / 16384 : ℝ) =
-          (ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ)) +
-            ENNReal.ofReal (771 / 16384 : ℝ) := by simp [add_assoc]
-      _ = ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) := by
-          simp [hS1]
-      _ = ENNReal.ofReal (4563 / 16384 : ℝ) := hS2
-  -- Multiply by `3/32`.
-  have hFin :
-      ENNReal.ofReal (3 / 32 : ℝ) * ENNReal.ofReal (4563 / 16384 : ℝ) =
-        ENNReal.ofReal (13689 / 524288 : ℝ) := by
-    have h4563 : 0 ≤ (4563 / 16384 : ℝ) := by norm_num
-    have : (3 / 32 : ℝ) * (4563 / 16384 : ℝ) = (13689 / 524288 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (3 / 32 : ℝ)) (q := (4563 / 16384 : ℝ)) h3).symm
-  -- Put everything together.
-  simp [hA, hB, hS, hFin]
+  -- Fold all products/sums into a single `ofReal`, then evaluate.
+  rw [← ENNReal.ofReal_mul h15, ← ENNReal.ofReal_mul h257,
+    ← ENNReal.ofReal_add h81 (mul_nonneg h15 (by norm_num)),
+    ← ENNReal.ofReal_add (by positivity) (mul_nonneg h257 h3),
+    ← ENNReal.ofReal_mul h3]
+  norm_num
 
 end Recursive3Param
 end UpperBound

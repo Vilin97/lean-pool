@@ -155,7 +155,7 @@ theorem entropyFnN_restrictFirstFour
   ext α
   let e : Fin 4 ↪ Fin n := Fin.castLEEmb hn
   let π : (∀ j : α.map e, S j.1) → (∀ i : α, S (e i.1)) :=
-    fun g i => g ⟨e i.1, by exact (Finset.mem_map' e).2 i.2⟩
+    fun g i => g ⟨e i.1, (Finset.mem_map' e).2 i.2⟩
   have hπ : Function.Injective π := by
     intro g₁ g₂ hMapEq
     funext j
@@ -163,17 +163,14 @@ theorem entropyFnN_restrictFirstFour
     have hValueEq : g₁ ⟨e i, by simpa using (Finset.mem_map' e).2 hi⟩ =
         g₂ ⟨e i, by simpa using (Finset.mem_map' e).2 hi⟩ :=
       congrFun hMapEq ⟨i, hi⟩
-    have hj : j = ⟨e i, by simpa using (Finset.mem_map' e).2 hi⟩ := by
-      apply Subtype.ext
-      exact hij.symm
+    have hj : j = ⟨e i, by simpa using (Finset.mem_map' e).2 hi⟩ := Subtype.ext hij.symm
     cases hj
     simpa using hValueEq
   have h_meas : Measurable (fun ω : Ω => fun j : α.map e => X j.1 ω) :=
     measurable_pi_lambda _ (fun j => hX j.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
   change H[(fun ω : Ω => fun j : α.map e => X j.1 ω); μ] =
     H[(fun ω : Ω => fun i : α => X (e i.1) ω); μ]
-  simpa [π, Function.comp_def] using h_ent.symm
+  simpa [π, Function.comp_def] using (entropy_comp_of_injective μ h_meas π hπ).symm
 
 /-- Entropic points remain entropic after restriction to the first four coordinates. -/
 theorem restrictFirstFour_mem_entropyRegionN
@@ -188,10 +185,9 @@ theorem restrictFirstFour_mem_entropyRegionN
   letI : ∀ i, MeasurableSingletonClass (S i) := hMSC
   refine ⟨Ω, inferInstance, μ, inferInstance, (fun i : Fin 4 => S (Fin.castLE hn i)),
     inferInstance,
-    inferInstance, inferInstance, (fun i : Fin 4 => X (Fin.castLE hn i)), ?_, ?_⟩
-  · intro i
-    exact hX (Fin.castLE hn i)
-  · simpa using entropyFnN_restrictFirstFour hX μ hn
+    inferInstance, inferInstance, (fun i : Fin 4 => X (Fin.castLE hn i)),
+    fun i => hX (Fin.castLE hn i), ?_⟩
+  simpa using entropyFnN_restrictFirstFour hX μ hn
 
 /--
 Almost-entropic points remain almost entropic after restriction to the first four

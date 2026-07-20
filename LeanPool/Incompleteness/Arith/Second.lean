@@ -69,8 +69,7 @@ def _root_.LO.FirstOrder.Arith.ssnum : Sg1.Semisentence 3 := .mkSigma
   “y p x. ∃ n, !numeralDef n x ∧ !p⌜ℒₒᵣ⌝.substs₁Def y n p” (by simp)
 
 lemma _root_.LO.Arith.Formalized.substNumeral_defined : Sg1-Function₂ (substNumeral :
-    V → V → V) via ssnum := by
-  intro v; simp [ssnum, ⌜ℒₒᵣ⌝.substs₁_defined.df.iff, substNumeral]
+    V → V → V) via ssnum := by intro v; simp [ssnum, ⌜ℒₒᵣ⌝.substs₁_defined.df.iff, substNumeral]
 
 @[simp] lemma _root_.LO.Arith.Formalized.eval_ssnum (v) :
     Semiformula.Evalbm V v ssnum.val ↔ v 0 = substNumeral (v 1) (v 2) :=

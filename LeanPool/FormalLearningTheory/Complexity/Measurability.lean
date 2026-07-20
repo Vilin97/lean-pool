@@ -281,9 +281,9 @@ lemma empiricalError_mem_empErrGrid
       simp_rw [this, Finset.sum_boole]
     rw [hsum]
     have hk : k < m + 1 := by
-      calc k ≤ Finset.univ.card := Finset.card_filter_le _ _
-        _ = m := Finset.card_fin m
-        _ < m + 1 := Nat.lt_succ_iff.mpr le_rfl
+      have := (Finset.card_filter_le (Finset.univ : Finset (Fin m))
+        (fun i => h (S i).1 ≠ (S i).2)).trans_eq (Finset.card_fin m)
+      omega
     exact Finset.mem_image.mpr ⟨k, Finset.mem_range.mpr hk, rfl⟩
 
 lemma oneSidedGhostGap_mem_grid
@@ -348,9 +348,7 @@ theorem KrappWirthWellBehaved.toWellBehavedVC
         EmpiricalError X Bool h_1 (fun i => (p.2 i, c (p.2 i))) (zeroOneLoss Bool) -
         EmpiricalError X Bool h_1 (fun i => (p.1 i, c (p.1 i))) (zeroOneLoss Bool) ≥ ε / 2}
       = ghostGapSup C c m ⁻¹' Set.Ici (ε / 2) := by
-      have := wellBehaved_event_eq_preimage_gapSup C c m ε hC
-      simp only [oneSidedGhostGap] at this
-      exact this
+      simpa only [oneSidedGhostGap] using wellBehaved_event_eq_preimage_gapSup C c m ε hC
     rw [hEq]
     exact (hV measurableSet_Ici).nullMeasurableSet
   · -- C empty → event is empty → NullMeasurableSet
@@ -358,7 +356,7 @@ theorem KrappWirthWellBehaved.toWellBehavedVC
       EmpiricalError X Bool h (fun i => (p.2 i, c (p.2 i))) (zeroOneLoss Bool) -
       EmpiricalError X Bool h (fun i => (p.1 i, c (p.1 i))) (zeroOneLoss Bool) ≥ ε / 2} = ∅ := by
       ext p; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-      push Not; intro h hh; exact absurd ⟨h, hh⟩ hC
+      rintro ⟨h, hh, -⟩; exact hC ⟨h, hh⟩
     rw [this]; exact MeasureTheory.nullMeasurableSet_empty
 
 /-- KrappWirthWellBehaved → MeasurableConceptClass. -/

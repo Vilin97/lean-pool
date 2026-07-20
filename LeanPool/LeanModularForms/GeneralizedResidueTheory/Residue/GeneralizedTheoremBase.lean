@@ -59,17 +59,10 @@ private lemma cpv_crossing_null
       ⋃ s ∈ (↑S0 : Set ℂ),
         {t | t ∈ Icc γ.a γ.b ∧ γ.toFun t = s} := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion,
-      Finset.mem_coe]
-    constructor
-    · intro ⟨hin, hmem⟩
-      exact ⟨γ.toFun t, hmem, hin, rfl⟩
-    · intro ⟨s, hs, hin, heq⟩
-      exact ⟨hin, heq ▸ hs⟩
+    simp_all
   rw [h_eq, MeasureTheory.measure_biUnion_null_iff
     (Set.Finite.countable (Finset.finite_toSet S0))]
-  intro s hs
-  exact h_single_null s hs
+  simp_all
 
 private lemma finset_min_sep (S0 : Finset ℂ)
     (hS0_nonempty : S0.Nonempty) :
@@ -79,10 +72,7 @@ private lemma finset_min_sep (S0 : Finset ℂ)
   · use 1, one_pos
     intro s hs s' hs' hne
     obtain ⟨s₀, hs₀⟩ := Finset.card_eq_one.mp h_card_one
-    subst hs₀
-    simp only [Finset.mem_singleton] at hs hs'
-    rw [hs, hs'] at hne
-    exact (hne rfl).elim
+    simp_all
   · have h_pos : ∀ s ∈ S0, ∀ s' ∈ S0,
         s ≠ s' → (0 : ℝ) < ‖s' - s‖ :=
       fun _ _ _ _ hne =>
@@ -149,8 +139,7 @@ private lemma cpv_cauchy_of_sum_and_regular (S0 : Finset ℂ) (f : ℂ → ℂ)
             (residueSimplePole f s.val / (γ.toFun t - s.val)) * deriv γ.toFun t
           else 0) (𝓝[>] 0) (𝓝 L) := by
     apply tendsto_finsetSum
-    intro ⟨s, hs⟩ _
-    exact hL_fn s hs
+    simp_all
   let M := fun ε => ∫ t in γ.a..γ.b,
     cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t
   let S' := fun ε => ∑ s ∈ S0.attach,
@@ -170,8 +159,7 @@ private lemma cpv_cauchy_of_sum_and_regular (S0 : Finset ℂ) (f : ℂ → ℂ)
     exact multipointPV_diff_tendsto S0 f γ (cpv_crossing_null S0 γ)
       g_reg hg_decomp hg_reg_cont hS0_sep
   have h_M_tendsto : Tendsto M (𝓝[>] 0) (𝓝 (L + G)) := by
-    have h_eq : M = fun ε => S' ε + A ε := by
-      ext ε; simp [M, A, S']
+    have h_eq : M = fun ε => S' ε + A ε := by ext ε; simp [M, A, S']
     rw [h_eq]
     exact h_sum_tendsto.add h_A_tendsto
   exact h_M_tendsto.cauchy_map
@@ -189,15 +177,7 @@ lemma cauchyPrincipalValueOn_singular_sum (S0 : Finset ℂ) (f : ℂ → ℂ)
   · subst hS0_empty
     unfold CauchyPrincipalValueExistsOn
       cauchyPrincipalValueIntegrandOn
-    use ∫ t in γ.a..γ.b, f (γ.toFun t) *
-      deriv γ.toFun t
-    apply Filter.Tendsto.congr' _ tendsto_const_nhds
-    rw [Filter.EventuallyEq]
-    filter_upwards [self_mem_nhdsWithin] with ε _
-    apply intervalIntegral.integral_congr
-    intro t _
-    simp only [Finset.notMem_empty, false_and,
-      exists_false, ↓reduceIte]
+    simp_all
   · have hS0_nonempty : S0.Nonempty :=
       Finset.nonempty_iff_ne_empty.mpr hS0_empty
     unfold CauchyPrincipalValueExistsOn
@@ -232,8 +212,7 @@ private lemma holomorphic_closed_integral_zero (U : Set ℂ) (hU : IsOpen U)
   have h_deriv' :
       ∀ t ∈ Ioo γ.a γ.b \ (↑γ.partition ∩ Ioo γ.a γ.b),
         HasDerivAt (F ∘ γ.toFun) (g (γ.toFun t) * deriv γ.toFun t) t := by
-    intro t ⟨ht, hp⟩
-    exact h_deriv t ht (fun h => hp ⟨h, ht⟩)
+    simp_all
   have h_int :
       IntervalIntegrable (fun t => g (γ.toFun t) * deriv γ.toFun t)
         MeasureTheory.volume γ.a γ.b := by
@@ -294,13 +273,11 @@ private lemma single_pole_pv_base_exists
         if ‖γ.toFun t - s‖ > ε
         then (γ.toFun t - s)⁻¹ * deriv γ.toFun t
         else 0) := by
-    intro ε; apply intervalIntegral.integral_congr; intro t _
-    simp only [sub_zero, deriv_sub_const]
+    simp_all
   simp only [h_int_eq]
   have hL' : Tendsto (fun ε => c * ∫ t in γ.a..γ.b,
       if ‖γ.toFun t - s‖ > ε then (γ.toFun t - s)⁻¹ * deriv γ.toFun t else 0)
-      (𝓝[>] 0) (𝓝 L) := by
-    convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
+      (𝓝[>] 0) (𝓝 L) := by convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
   convert hL'.const_mul c⁻¹ using 1
   · ext ε; simp only [inv_mul_cancel_left₀ hc]
   · congr 1; field_simp [hc]
@@ -346,8 +323,7 @@ private lemma cpv_eq_sum_single_pole_cpvs
       exact hLs.limUnder_eq
     rw [h_eq_L]; exact hLs
   have hg_decomp : ∀ z, z ∉ (S0 : Set ℂ) →
-      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by
-    intro z _; simp only [g]; ring
+      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by intro z _; simp only [g]; ring
   have hS0_sep :
       ∃ δ' > 0, ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' → δ' ≤ ‖s' - s‖ := by
     by_cases hS0_card : S0.card ≤ 1
@@ -392,11 +368,7 @@ private lemma generalizedResidueTheorem'_crossing_formula
       unfold cauchyPrincipalValue'
       simp only [zero_mul]
       apply limUnder_eventually_eq_const
-      filter_upwards with ε
-      have h_zero : ∀ t, (if ‖γ.toFun t - s‖ > ε then (0 : ℂ) else 0) = 0 := by
-        intro t; split_ifs <;> rfl
-      simp_rw [h_zero]
-      simp only [intervalIntegral.integral_const, smul_zero]
+      simp_all
     · exact pv_integral_simple_pole γ.toPiecewiseC1Curve s (residueSimplePole f s)
         (single_pole_pv_base_exists γ s (residueSimplePole f s) hc (hPV_singular s hs))
   have h_multipoint_eq_sum :
@@ -412,8 +384,7 @@ private lemma generalizedResidueTheorem'_crossing_formula
     _ = ∑ s ∈ S0, (2 * Real.pi * I *
           generalizedWindingNumber' γ.toFun γ.a γ.b s *
           residueSimplePole f s) := by
-        apply Finset.sum_congr rfl
-        intro s hs; exact h_single_pole_formula s hs
+        simp_all
     _ = 2 * Real.pi * I *
           ∑ s ∈ S0, generalizedWindingNumber' γ.toFun γ.a γ.b s *
             residueSimplePole f s := by
@@ -533,12 +504,12 @@ theorem residueSimplePole_eq_of_decomposition (f : ℂ → ℂ) (z₀ c : ℂ) (
   have h_g : Tendsto g (𝓝[≠] z₀) (𝓝 (g z₀)) :=
     hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
   have h_prod : Tendsto (fun z => (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 0) := by
-    have := h_sub.mul h_g; simp only [zero_mul] at this; exact this
+    simpa only [zero_mul] using h_sub.mul h_g
   have h_ev : ∀ᶠ z in 𝓝[≠] z₀, (z - z₀) * f z = c + (z - z₀) * g z := by
     filter_upwards [hf_eq, self_mem_nhdsWithin] with z hz hne
     rw [hz, mul_add, mul_div_cancel₀ _ (sub_ne_zero.mpr hne)]
   have h_tend : Tendsto (fun z => c + (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 c) := by
-    have := (tendsto_const_nhds (x := c)).add h_prod; rwa [add_zero] at this
+    simpa only [add_zero] using (tendsto_const_nhds (x := c)).add h_prod
   exact h_tend.congr' (h_ev.mono fun _ hz => hz.symm)
 
 /-- The contour integral `(2πi)⁻¹ ∮_{|z-z₀|=r} f(z)dz = c` for small `r`,
@@ -563,10 +534,8 @@ private lemma residueAt_eq_of_simple_pole_decomp (f : ℂ → ℂ) (z₀ c : ℂ
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
   have h_eq_on : Set.EqOn f (fun z => c * (z - z₀)⁻¹ + g z) (Metric.sphere z₀ r) := by
     intro z hz
-    have h_ne : z ≠ z₀ := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z z₀ < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ z₀ := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z z₀ < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     have h_mem : z ∈ Metric.ball z₀ rf ∩ {z₀}ᶜ :=
       ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
     have := hrf_eq h_mem
@@ -613,19 +582,28 @@ These lemmas establish properties of the "pure residue function"
 `f_res(z) = Σ_{s ∈ S0} c(s) / (z - s)`, which is used to reduce the
 higher-order residue theorem to the simple-pole case. -/
 
+/-- The remainder `∑ s' ∈ S0.erase s, c(s') / (z - s')` is analytic at `s`,
+since each term with `s' ≠ s` is. -/
+private lemma analyticAt_erase_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (s : ℂ) :
+    AnalyticAt ℂ (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s')) s :=
+  (S0.erase s).analyticAt_fun_sum fun _s' hs' =>
+    analyticAt_const.div (analyticAt_id.sub analyticAt_const)
+      (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
+
+/-- The decomposition `∑ s' ∈ S0, c(s')/(z-s') = c(s)/(z-s) + ∑ s' ∈ S0.erase s, …`
+holds near `s` (on a punctured neighborhood). -/
+private lemma sum_div_sub_decomp (S0 : Finset ℂ) (c : ℂ → ℂ) (s : ℂ) (hs : s ∈ S0) :
+    ∀ᶠ z in 𝓝[≠] s, (fun z => ∑ s' ∈ S0, c s' / (z - s')) z =
+      c s / (z - s) + ∑ s' ∈ S0.erase s, c s' / (z - s') := by
+  simp_all
+
 /-- The sum `∑ s ∈ S0, c(s) / (z - s)` has a simple pole at each `s ∈ S0`,
 with coefficient `c(s)` and analytic remainder `∑ s' ∈ S0.erase s, c(s') / (z - s')`. -/
 lemma hasSimplePoleAt_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ)
     (s : ℂ) (hs : s ∈ S0) :
-    HasSimplePoleAt (fun z => ∑ s' ∈ S0, c s' / (z - s')) s := by
-  refine ⟨c s, fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'), ?_, ?_⟩
-  · -- Remainder is analytic at s: each c(s')/(z-s') with s' ≠ s is analytic at s
-    exact (S0.erase s).analyticAt_fun_sum fun s' hs' =>
-      analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-        (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
-  · -- Decomposition: Σ_{S0} = c(s)/(z-s) + Σ_{S0.erase s}
-    filter_upwards [self_mem_nhdsWithin] with z _hz
-    exact (Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs).symm
+    HasSimplePoleAt (fun z => ∑ s' ∈ S0, c s' / (z - s')) s :=
+  ⟨c s, fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'),
+    analyticAt_erase_sum_div_sub S0 c s, sum_div_sub_decomp S0 c s hs⟩
 
 /-- The sum `∑ s ∈ S0, c(s) / (z - s)` is differentiable on `U \ S0`. -/
 lemma differentiableOn_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (U : Set ℂ) :
@@ -640,14 +618,10 @@ lemma differentiableOn_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ) (U : Set 
 This follows from the HasSimplePoleAt decomposition. -/
 lemma residueSimplePole_sum_div_sub (S0 : Finset ℂ) (c : ℂ → ℂ)
     (s : ℂ) (hs : s ∈ S0) :
-    residueSimplePole (fun z => ∑ s' ∈ S0, c s' / (z - s')) s = c s := by
-  apply residueSimplePole_eq_of_decomposition _ s (c s)
+    residueSimplePole (fun z => ∑ s' ∈ S0, c s' / (z - s')) s = c s :=
+  residueSimplePole_eq_of_decomposition _ s (c s)
     (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s'))
-  · exact (S0.erase s).analyticAt_fun_sum fun s' hs' =>
-      analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-        (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))
-  · filter_upwards [self_mem_nhdsWithin] with z _hz
-    exact (Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs).symm
+    (analyticAt_erase_sum_div_sub S0 c s) (sum_div_sub_decomp S0 c s hs)
 
 /-- `ContinuousAt` of the remainder `(∑ c(s')/(z-s')) - c(s)/(z-s)` at `s`.
 This is the `hf_ext` condition needed by the simple-pole theorem. -/
@@ -660,9 +634,7 @@ lemma continuousAt_sum_remainder (S0 : Finset ℂ) (c : ℂ → ℂ)
       (fun z => ∑ s' ∈ S0.erase s, c s' / (z - s')) := by
     funext z; rw [← Finset.add_sum_erase S0 (fun s' => c s' / (z - s')) hs]; ring
   rw [h_rem]
-  exact ((S0.erase s).analyticAt_fun_sum (𝕜 := ℂ) fun s' hs' =>
-    analyticAt_const.div (analyticAt_id.sub analyticAt_const)
-      (sub_ne_zero.mpr (Ne.symm (Finset.ne_of_mem_erase hs')))).continuousAt
+  exact (analyticAt_erase_sum_div_sub S0 c s).continuousAt
 
 /-- CPV(f) = CPV(f_res) when the PV difference `M_f(ε) - M_res(ε)` tends to 0 and
 the PV of f_res exists. This is the limit-arithmetic core of the higher-order reduction. -/
@@ -682,8 +654,7 @@ lemma cpv_eq_of_cancel_and_exists
     (fun ε =>
       ((∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t) -
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) +
-      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by
-    ext ε; ring
+      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by ext ε; ring
   have h_f_tendsto : Tendsto
       (fun ε => ∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t)
       (𝓝[>] 0) (𝓝 L_res) := by
@@ -723,8 +694,7 @@ theorem generalizedResidueTheorem_higher_order_tendsto
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
          (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) +
       (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
-         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by
-    ext ε; ring
+         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by ext ε; ring
   rw [h_eq, show (2 * Real.pi * I * ∑ s ∈ S0,
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s) =
     0 + (2 * Real.pi * I * ∑ s ∈ S0,

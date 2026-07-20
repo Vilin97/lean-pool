@@ -32,8 +32,7 @@ lemma op_norm_bound_from_basis (L : (Fin 3 → ℝ) →L[ℝ] ℝ) {C : ℝ}
       simp_rw [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
       rw [Finset.sum_eq_single j]
       · simp
-      · intro b _ hneq
-        simp [Pi.single_eq_of_ne hneq.symm]
+      · simp_all
       · intro hj; exfalso; exact hj (Finset.mem_univ j)
     have eq1 : L x = ∑ i : Fin 3, x i * L (Pi.single i 1 : Fin 3 → ℝ) := by
       calc L x = L (∑ i : Fin 3, x i • (Pi.single i 1 : Fin 3 → ℝ)) := by conv_lhs => rw [hx]
@@ -80,10 +79,8 @@ lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g)
     · exact convex_segment 0 v
     · exact left_mem_segment ℝ 0 v
     · exact right_mem_segment ℝ 0 v
-  have h_norm_g : |g v - g 0| = ‖g v - g 0‖ := by rfl
-  rw [← h_norm_g] at H
-  have h_norm_v : ‖v - 0‖ = ‖v‖ := by simp
-  rw [h_norm_v] at H
+  simp only [sub_zero] at H
+  change |g v - g 0| ≤ _ at H
   have h1 : |g v| - |g 0| ≤ |g v - g 0| := abs_sub_abs_le_abs_sub (g v) (g 0)
   calc |g v| ≤ |g 0| + |g v - g 0| := by linarith
        _ ≤ |g 0| + Cg * (1 + ‖v‖)^Kg * ‖v‖ := by linarith
@@ -99,15 +96,11 @@ lemma log_f_zero_bound (f : Torus3 → (Fin 3 → ℝ) → ℝ)
     ∃ C > 0, ∀ x, |Real.log (f x 0)| ≤ C := by
   have h_diff : FlatTorus3.IsSpatiallySmooth 2 (fun x => f x 0) := hf_smooth_x 0
   have h_cont : Continuous (fun x => f x 0) := FlatTorus3.hDiff_continuous 1 _ h_diff
-  have h_log_cont : Continuous (fun x => Real.log (f x 0)) := by
-    apply Continuous.log h_cont
-    intro x
-    exact ne_of_gt (hf_pos x 0)
-  have h_comp : IsCompact (univ : Set Torus3) := isCompact_univ
-  have h_ne : (univ : Set Torus3).Nonempty := univ_nonempty
+  have h_log_cont : Continuous (fun x => Real.log (f x 0)) :=
+    h_cont.log fun x => ne_of_gt (hf_pos x 0)
   -- Extreme value theorem
-  obtain ⟨xMin, _, h_min⟩ := h_comp.exists_isMinOn h_ne h_log_cont.continuousOn
-  obtain ⟨xMax, _, h_max⟩ := h_comp.exists_isMaxOn h_ne h_log_cont.continuousOn
+  obtain ⟨xMin, _, h_min⟩ := isCompact_univ.exists_isMinOn univ_nonempty h_log_cont.continuousOn
+  obtain ⟨xMax, _, h_max⟩ := isCompact_univ.exists_isMaxOn univ_nonempty h_log_cont.continuousOn
   use |Real.log (f xMin 0)| + |Real.log (f xMax 0)| + 1
   constructor
   · positivity
@@ -125,14 +118,8 @@ lemma log_f_zero_bound (f : Torus3 → (Fin 3 → ℝ) → ℝ)
       · calc Real.log (f x 0) ≤ Real.log (f xMax 0) := h2
           _ ≤ |Real.log (f xMax 0)| := le_abs_self _
           _ ≤ max |Real.log (f xMin 0)| |Real.log (f xMax 0)| := le_max_right _ _
-    apply le_trans h3
-    have h_max_le : max |Real.log (f xMin 0)| |Real.log (f xMax 0)| ≤
-        |Real.log (f xMin 0)| + |Real.log (f xMax 0)| :=
-      max_le_add_of_nonneg (abs_nonneg _) (abs_nonneg _)
-    calc max |Real.log (f xMin 0)| |Real.log (f xMax 0)|
-        ≤ |Real.log (f xMin 0)| + |Real.log (f xMax 0)| :=
-          h_max_le
-      _ ≤ |Real.log (f xMin 0)| + |Real.log (f xMax 0)| + 1 := by linarith
+    refine le_trans h3 (le_trans (max_le_add_of_nonneg (abs_nonneg _) (abs_nonneg _)) ?_)
+    linarith
 
 lemma log_bound_from_grad (f : Torus3 → (Fin 3 → ℝ) → ℝ)
     (hf_pos : ∀ x v, 0 < f x v)
@@ -147,19 +134,13 @@ lemma log_bound_from_grad (f : Torus3 → (Fin 3 → ℝ) → ℝ)
   use C0 + Cg', Kg + 1
   intro x v
   have h_diff_f : Differentiable ℝ (f x) := (hf_smooth_v x).differentiable (by decide)
-  have hg_diff : Differentiable ℝ (fun v => log (f x v)) := by
-    apply Differentiable.log h_diff_f
-    intro w
-    exact (hf_pos x w).ne'
+  have hg_diff : Differentiable ℝ (fun v => log (f x v)) :=
+    h_diff_f.log fun w => (hf_pos x w).ne'
   have h_fderiv : ∀ w, ‖fderiv ℝ (fun v => log (f x v)) w‖ ≤ Cg' * (1 + ‖w‖) ^ Kg := by
     intro w
     have hw_pos : 0 < f x w := hf_pos x w
-    have h1 : HasFDerivAt (f x) (fderiv ℝ (f x) w) w := (h_diff_f w).hasFDerivAt
-    have h2 : HasDerivAt log (f x w)⁻¹ (f x w) := hasDerivAt_log hw_pos.ne'
-    have h3 : HasFDerivAt (fun v => log (f x v)) ((f x w)⁻¹ • fderiv ℝ (f x) w) w :=
-      HasDerivAt.comp_hasFDerivAt w h2 h1
     have h_fderiv_eq : fderiv ℝ (fun v => log (f x v)) w = (f x w)⁻¹ • fderiv ℝ (f x) w :=
-      h3.fderiv
+      (HasDerivAt.comp_hasFDerivAt w (hasDerivAt_log hw_pos.ne') (h_diff_f w).hasFDerivAt).fderiv
     rw [h_fderiv_eq, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hw_pos]
     have hC_nonneg : 0 ≤ max 0 Cg * (1 + ‖w‖) ^ Kg * f x w := by
       positivity
@@ -181,10 +162,8 @@ lemma log_bound_from_grad (f : Torus3 → (Fin 3 → ℝ) → ℝ)
       _ = Cg' * (1 + ‖w‖) ^ Kg := by
         rw [inv_mul_cancel₀ hw_pos.ne', one_mul]
   have h_mvt := mvt_test (fun v => log (f x v)) hg_diff Cg' Kg (by positivity) h_fderiv v
-  have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ (Kg + 1) := by
-    calc (1 : ℝ) = 1 ^ (Kg + 1) := by ring
-      _ ≤ (1 + ‖v‖) ^ (Kg + 1) := by
-        gcongr; exact le_add_of_nonneg_right (norm_nonneg v)
+  have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ (Kg + 1) :=
+    one_le_pow₀ (le_add_of_nonneg_right (norm_nonneg v))
   calc
     |log (f x v)|
       ≤ |log (f x 0)| + Cg' * (1 + ‖v‖) ^ (Kg + 1) :=

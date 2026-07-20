@@ -57,17 +57,14 @@ lemma tendsto_nat (a : ℕ → ℂ) (ha : Summable fun n : ℕ ↦ ‖a n‖ * r
       sub_zero, coe_re, zero_mul, add_zero, coe_im, natCast_im, natCast_re, neg_mul]
     gcongr
     have hz2 : (2 : ℝ) ≤ 2 * z.im := by nlinarith [hz]
-    have hbase : 2 * π ≤ 2 * z.im * π := by
-      exact mul_le_mul_of_nonneg_right hz2 (by positivity)
-    have hk : (0 : ℝ) ≤ (k : ℝ) := by positivity
-    have hmul : 2 * π * (k : ℝ) ≤ (2 * z.im * π) * (k : ℝ) := by
-      exact mul_le_mul_of_nonneg_right hbase hk
+    have hbase : 2 * π ≤ 2 * z.im * π := mul_le_mul_of_nonneg_right hz2 (by positivity)
+    have hmul : 2 * π * (k : ℝ) ≤ (2 * z.im * π) * (k : ℝ) :=
+      mul_le_mul_of_nonneg_right hbase (by positivity)
     simpa [mul_assoc, mul_comm, mul_left_comm, add_assoc, add_left_comm, add_comm] using hmul
 
 lemma tendsto_int (a : ℤ → ℂ) (ha : Summable fun n : ℤ ↦ ‖a n‖ * rexp (-2 * π * n))
     (ha' : ∀ n, n < 0 → a n = 0) :
     Tendsto (fun z : ℍ ↦ ∑' n, a n * cexp (2 * π * I * z * n)) atImInfty (𝓝 (a 0)) := by
-  -- ∑' (n : ℕ), f ↑n + ∑' (n : ℕ), f (-(↑n + 1))
   have : Tendsto
     (fun z : ℍ ↦ (∑' n : ℕ, (a n * cexp (2 * π * I * z * n)
       + a (-(n + 1 : ℤ)) * cexp (2 * π * I * z * (-(n + 1) : ℤ))))) atImInfty (𝓝 (a 0)) := by
@@ -89,11 +86,8 @@ lemma tendsto_int (a : ℤ → ℂ) (ha : Summable fun n : ℤ ↦ ‖a n‖ * r
     simp
   · apply ha.of_nonneg_of_le (fun _ ↦ by positivity) fun b ↦ ?_
     by_cases hb : 0 ≤ b
-    · have : z.im * -2 * π * b ≤ -2 * π * b := by
-        gcongr
-        simp [hz]
-      gcongr
-    · norm_num at hb
-      simp [ha' _ hb]
+    · gcongr
+      simp [hz]
+    · simp_all
 
 end QExp

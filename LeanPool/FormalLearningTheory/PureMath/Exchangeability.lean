@@ -121,8 +121,6 @@ noncomputable def SplitMeasure (m : ℕ) : MeasureTheory.Measure (ValidSplit m) 
 def splitFirst {X : Type u} {m : ℕ} (z : MergedSample X m) (vs : ValidSplit m) :
     Fin m → X := by
   let _validSplit := vs.card_true
-  -- The first group consists of the m indices where assign = true
-  -- We need to enumerate them and index into z
   exact fun i => z (Fin.castAdd m i |>.cast (two_mul m).symm)
 
 /-- Given a merged sample z and a valid split, extract the second group (ghost sample). -/

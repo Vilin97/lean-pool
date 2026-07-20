@@ -49,10 +49,7 @@ theorem chain3'_split {a b : α} :
       Chain3' R (l1 ++ a :: b :: l2) ↔ Chain3' R (l1 ++ [a, b]) ∧ Chain3' R (a :: b :: l2)
   | [], l2 => (and_iff_right (chain3'_pair a b)).symm
   | [c], l2 => by simp
-  |-- todo
-      c ::
-      d :: l1,
-    l2 => chain3_split
+  | c :: d :: l1, l2 => chain3_split
 
 @[simp]
 theorem chain3'_append_cons3 {a b c : α} {l1 l2 : List α} :
@@ -72,9 +69,7 @@ theorem left_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R 
       cases l1 with
       | nil => simp only [chain3'_pair]
       | cons c l1 =>
-        rw [cons_append, cons_append, cons_append, chain3'_cons] at h
-        rw [chain3'_cons]
-        exact ⟨h.1, ih h.2⟩
+        simp_all
 
 theorem right_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R l2 := by
   induction l1 generalizing l2 with
@@ -88,23 +83,16 @@ theorem right_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R
         cases l2 with
         | nil => simp only [chain3'_singleton]
         | cons d l2 =>
-          rw [cons_append, nil_append, chain3'_cons] at h
-          exact h.right
+          simp_all
     | cons b l1 =>
       cases l1 with
       | nil =>
         cases l2 with
         | nil => simp only [chain3'_nil]
         | cons d l2 =>
-          cases l2 with
-          | nil => simp only [chain3'_singleton]
-          | cons e l2 =>
-            rw [cons_append, cons_append, nil_append, chain3'_cons, chain3'_cons] at h
-            exact h.right.right
+          simp_all
       | cons c l1 =>
-        apply ih
-        rw [cons_append, cons_append, cons_append, chain3'_cons] at h
-        exact h.right
+        simp_all
 
 theorem «infix» {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <:+: l) : Chain3' R l₁ := by
   rcases h' with ⟨l₂, l₃, rfl⟩; exact h.left_of_append.right_of_append
@@ -134,8 +122,7 @@ theorem tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail := by
       cases l with
       | nil => simp only [List.tail_cons, chain3'_singleton]
       | cons c l =>
-        rw [chain3'_cons] at h
-        exact h.right
+        simp_all
 
 end Chain3'
 

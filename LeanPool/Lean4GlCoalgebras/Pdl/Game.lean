@@ -59,8 +59,7 @@ theorem Player.not_i_eq_other {i} : ¬ i = other i := by cases i <;> simp
 theorem Player.not_other_i_eq_i {i} : ¬ other i = i := by cases i <;> simp
 
 @[simp]
-theorem other_other {i} : other (other i) = i := by
-  cases i <;> simp [other]
+theorem other_other {i} : other (other i) = i := by cases i <;> simp [other]
 
 /-- Two-player game with
 - perfect information
@@ -153,9 +152,7 @@ theorem good_or_other {g : Game} (p : g.Pos) : good (g.turn p) p ∨ good (other
   case pos E =>
     apply Or.inl
     unfold good
-    apply Or.inl
-    simp only [exists_prop, true_and]
-    exact E
+    simp_all
   case neg A =>
     apply Or.inr
     unfold good
@@ -209,8 +206,7 @@ theorem good_cone {i} {g : Game} {p r : g.Pos} (W : good i p) (h : inMyCone (goo
       unfold good at hq
       have E := And.right <| hq.resolve_right (not_and_of_not_left _ <| not_eq_other_eq_i.mpr turn)
       exact E.choose_spec.choose_spec
-    · simp only [hq, ↓reduceDIte]
-      contradiction
+    · simp_all
 
 /-! ## Zermelo's Theorem -/
 

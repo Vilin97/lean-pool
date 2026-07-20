@@ -37,13 +37,12 @@ private lemma ZMod_inv_mul_cancel (p : ℕ) (hp : Nat.Prime p) (a : ℤ)
   rw [isCoprime_comm, Int.isCoprime_iff_gcd_eq_one]
   change Nat.Coprime p a.natAbs
   rw [hp.coprime_iff_not_dvd]
-  intro hdvd
-  exact h ((ZMod.intCast_zmod_eq_zero_iff_dvd a p).mpr
+  exact fun hdvd => h ((ZMod.intCast_zmod_eq_zero_iff_dvd a p).mpr
     (dvd_trans (Int.natCast_dvd_natCast.mpr hdvd) (Int.natAbs_dvd.mpr (dvd_refl a))))
 
 private lemma SL2_entry_mul (A B : SL(2, ℤ)) (i j : Fin 2) :
     (A * B).1 i j = A.1 i 0 * B.1 0 j + A.1 i 1 * B.1 1 j := by
-  change (A.1 * B.1) i j = _; rw [Matrix.mul_apply, Fin.sum_univ_two]
+  change (A.1 * B.1) i j = _; simp [Matrix.mul_apply, Fin.sum_univ_two]
 
 private lemma TjS_inv_10 (j : ℤ) : ((T ^ j * S)⁻¹).1 1 0 = -1 := by
   simp [coe_T_zpow, coe_S, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]
@@ -51,19 +50,16 @@ private lemma TjS_inv_10 (j : ℤ) : ((T ^ j * S)⁻¹).1 1 0 = -1 := by
 private lemma TjS_inv_11 (j : ℤ) : ((T ^ j * S)⁻¹).1 1 1 = j := by
   simp [coe_T_zpow, coe_S, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]
 
-private lemma TjS_00 (j : ℤ) : (T ^ j * S).1 0 0 = j := by
-  simp [coe_T_zpow, coe_S]
+private lemma TjS_00 (j : ℤ) : (T ^ j * S).1 0 0 = j := by simp [coe_T_zpow, coe_S]
 
-private lemma TjS_10 (j : ℤ) : (T ^ j * S).1 1 0 = 1 := by
-  simp [coe_S]
+private lemma TjS_10 (j : ℤ) : (T ^ j * S).1 1 0 = 1 := by simp [coe_S]
 
 private lemma TjS_inv_mul_10 (j : ℤ) (σ : SL(2, ℤ)) :
     ((T ^ j * S)⁻¹ * σ).1 1 0 = j * σ.1 1 0 - σ.1 0 0 := by
   rw [SL2_entry_mul, TjS_inv_10, TjS_inv_11]; ring
 
 private lemma rep_diff_10 (i j : ℤ) :
-    ((T ^ j * S)⁻¹ * (T ^ i * S)).1 1 0 = j - i := by
-  rw [TjS_inv_mul_10, TjS_10, TjS_00]; ring
+    ((T ^ j * S)⁻¹ * (T ^ i * S)).1 1 0 = j - i := by rw [TjS_inv_mul_10, TjS_10, TjS_00]; ring
 
 section BaseCase
 
@@ -86,18 +82,13 @@ private lemma Gamma0_prime_index_inj :
     have hk0 : k = 0 := by
       by_contra hk_ne
       rcases Ne.lt_or_gt hk_ne with hk_neg | hk_pos
-      · have : (p : ℤ) * k ≤ -(p : ℤ) := by nlinarith [hp.pos]
-        linarith [Int.natCast_nonneg j₁]
-      · have : (p : ℤ) ≤ (p : ℤ) * k := by nlinarith [hp.pos]
-        linarith [show (j₂ : ℤ) < p from by exact_mod_cast h2]
+      · linarith [show (p : ℤ) * k ≤ -(p : ℤ) from by nlinarith [hp.pos], Int.natCast_nonneg j₁]
+      · linarith [show (p : ℤ) ≤ (p : ℤ) * k from by nlinarith [hp.pos],
+          show (j₂ : ℤ) < p from by exact_mod_cast h2]
     subst hk0; simp only [Fin.mk.injEq]; omega
-  · simp only [mul_one] at hf
-    rw [TjS_inv_10] at hf
-    simp only [Int.cast_neg, Int.cast_one, neg_eq_zero] at hf
+  · simp only [mul_one, TjS_inv_10, Int.cast_neg, Int.cast_one, neg_eq_zero] at hf
     exact absurd hf one_ne_zero
-  · simp only [inv_one, one_mul] at hf
-    rw [TjS_10] at hf
-    simp only [Int.cast_one] at hf
+  · simp only [inv_one, one_mul, TjS_10, Int.cast_one] at hf
     exact absurd hf one_ne_zero
   · simp only [Fin.mk.injEq]; omega
 
@@ -108,22 +99,19 @@ private lemma Gamma0_prime_index_surj :
   intro x
   obtain ⟨σ, rfl⟩ := QuotientGroup.mk_surjective x
   by_cases h : ((σ 1 0 : ℤ) : ZMod p) = 0
-  · refine ⟨⟨p, Nat.lt_succ_iff.mpr le_rfl⟩, ?_⟩
-    rw [QuotientGroup.eq, Gamma0_mem]
-    simp only [Gamma0Rep, show ¬(p < p) from lt_irrefl p, ite_false, inv_one, one_mul]
-    exact h
+  · exact ⟨⟨p, Nat.lt_succ_iff.mpr le_rfl⟩, by
+      rw [QuotientGroup.eq, Gamma0_mem]
+      simp only [Gamma0Rep, show ¬(p < p) from lt_irrefl p, ite_false, inv_one, one_mul]
+      exact h⟩
   · set j₀ := ((σ.1 0 0 : ℤ) : ZMod p) * ((σ.1 1 0 : ℤ) : ZMod p)⁻¹ with hj₀_def
     set j := ZMod.val j₀ with hj_def
     have hj_lt : j < p := ZMod.val_lt j₀
     refine ⟨⟨j, by omega⟩, ?_⟩
     rw [QuotientGroup.eq, Gamma0_mem]
-    simp only [Gamma0Rep, show j < p from hj_lt, ite_true]
-    rw [TjS_inv_mul_10]
+    simp only [Gamma0Rep, show j < p from hj_lt, ite_true, TjS_inv_mul_10]
     push_cast
-    simp only [hj_def]
-    rw [ZMod.natCast_zmod_val, hj₀_def]
-    have h_inv := ZMod_inv_mul_cancel p hp (σ.1 1 0) h
-    simp only [mul_assoc, h_inv, mul_one, sub_self]
+    simp only [hj_def, ZMod.natCast_zmod_val, hj₀_def,
+      mul_assoc, ZMod_inv_mul_cancel p hp (σ.1 1 0) h, mul_one, sub_self]
 
 /-- `[SL₂(ℤ) : Γ₀(p)] = p + 1` for prime `p`. -/
 theorem Gamma0_prime_index : (Gamma0 p).index = p + 1 := by
@@ -144,25 +132,22 @@ private def lowerTriRep (k : ℕ) (c : Fin p) : SL(2, ℤ) :=
 omit hp in
 private lemma lowerTriRep_mem_Gamma0 (k : ℕ) (_hk : 0 < k) (c : Fin p) :
     (lowerTriRep p k c : SL(2, ℤ)) ∈ Gamma0 (p ^ k) := by
-  rw [Gamma0_mem]
-  have h10 : (lowerTriRep p k c) 1 0 = (c : ℤ) * (p : ℤ) ^ k := by simp [lowerTriRep]
-  rw [h10, ZMod.intCast_zmod_eq_zero_iff_dvd]
+  rw [Gamma0_mem, show (lowerTriRep p k c) 1 0 = (c : ℤ) * (p : ℤ) ^ k from by
+    simp [lowerTriRep], ZMod.intCast_zmod_eq_zero_iff_dvd]
   exact_mod_cast dvd_mul_left (p ^ k : ℕ) (c.val)
 
 omit hp in
 private lemma lowerTriRep_diff_entry (k : ℕ) (c₁ c₂ : Fin p) :
     ((lowerTriRep p k c₁)⁻¹ * lowerTriRep p k c₂).1 1 0 =
     ((c₂ : ℤ) - (c₁ : ℤ)) * (p : ℤ) ^ k := by
-  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]
-  ring
+  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]; ring
 
 omit hp in
 private lemma lowerTriRep_inv_mul_10 (k : ℕ) (c : Fin p) (σ : SL(2, ℤ)) :
     ((lowerTriRep p k c)⁻¹ * σ).1 1 0 =
     σ.1 1 0 - (c : ℤ) * (p : ℤ) ^ k * σ.1 0 0 := by
   rw [SL2_entry_mul]
-  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]
-  ring
+  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]; ring
 
 private noncomputable def relindexRep (k : ℕ) (hk : 0 < k) (c : Fin p) :
     ↥(Gamma0 (p ^ k)) :=
@@ -181,21 +166,20 @@ private lemma Gamma0_relindex_step_inj (k : ℕ) (hk : 0 < k) :
       ((lowerTriRep p k ⟨c₁, hc₁⟩)⁻¹ * lowerTriRep p k ⟨c₂, hc₂⟩).1 1 0 from rfl,
     lowerTriRep_diff_entry p, ZMod.intCast_zmod_eq_zero_iff_dvd] at hf
   have hpk_ne : (p : ℤ) ^ k ≠ 0 := pow_ne_zero k (by exact_mod_cast hp.ne_zero)
-  have hpk1 : (↑(p ^ (k + 1)) : ℤ) = (p : ℤ) ^ k * (p : ℤ) := by push_cast; rw [pow_succ]
-  rw [hpk1,
-    show ((↑c₂ : ℤ) - ↑c₁) * (p : ℤ) ^ k =
-      (p : ℤ) ^ k * ((↑c₂ : ℤ) - ↑c₁) from mul_comm _ _,
-    mul_dvd_mul_iff_left hpk_ne] at hf
+  rw [show (↑(p ^ (k + 1)) : ℤ) = (p : ℤ) ^ k * (p : ℤ) from by push_cast; rw [pow_succ],
+    show ((↑c₂ : ℤ) - ↑c₁) * (p : ℤ) ^ k = (p : ℤ) ^ k * ((↑c₂ : ℤ) - ↑c₁) from
+      mul_comm _ _, mul_dvd_mul_iff_left hpk_ne] at hf
   obtain ⟨m, hm⟩ := hf
   have hm0 : m = 0 := by
     by_contra hm_ne
     rcases Ne.lt_or_gt hm_ne with hm_neg | hm_pos
     · linarith [show (p : ℤ) * m ≤ -(p : ℤ) from by nlinarith [hp.pos],
-        Int.natCast_nonneg c₂, show (c₁ : ℤ) < p from by exact_mod_cast hc₁]
+          Int.natCast_nonneg c₂, show (c₁ : ℤ) < p from by exact_mod_cast hc₁]
     · linarith [show (p : ℤ) ≤ (p : ℤ) * m from by nlinarith [hp.pos],
-        Int.natCast_nonneg c₁, show (c₂ : ℤ) < p from by exact_mod_cast hc₂]
-  subst hm0; simp only [mul_zero, sub_eq_zero] at hm
-  simp only [Fin.mk.injEq]; exact_mod_cast hm.symm
+          Int.natCast_nonneg c₁, show (c₂ : ℤ) < p from by exact_mod_cast hc₂]
+  subst hm0
+  simp only [Fin.mk.injEq, mul_zero, sub_eq_zero] at hm ⊢
+  exact_mod_cast hm.symm
 
 private lemma Gamma0_relindex_step_surj (k : ℕ) (hk : 0 < k) :
     Function.Surjective (fun c : Fin p =>
@@ -214,12 +198,11 @@ private lemma Gamma0_relindex_step_surj (k : ℕ) (hk : 0 < k) :
   have h00_ne : ((σ.1 0 0 : ℤ) : ZMod p) ≠ 0 := by
     intro h_zero
     have h00_dvd := (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp h_zero
-    have h10_dvd : (p : ℤ) ∣ σ.1 1 0 := by
-      have : (p : ℕ) ∣ p ^ k := dvd_pow dvd_rfl (by omega)
-      exact dvd_trans (by exact_mod_cast this) ⟨q, hq⟩
-    have h1_dvd : (p : ℤ) ∣ 1 :=
-      hdet ▸ dvd_sub (dvd_mul_of_dvd_left h00_dvd _) (dvd_mul_of_dvd_right h10_dvd _)
-    linarith [Int.le_of_dvd one_pos h1_dvd, show (1 : ℤ) < p from by exact_mod_cast hp.one_lt]
+    have h10_dvd : (p : ℤ) ∣ σ.1 1 0 :=
+      dvd_trans (by exact_mod_cast dvd_pow dvd_rfl (by omega : k ≠ 0)) ⟨q, hq⟩
+    linarith [Int.le_of_dvd one_pos
+      (hdet ▸ dvd_sub (dvd_mul_of_dvd_left h00_dvd _) (dvd_mul_of_dvd_right h10_dvd _)),
+      show (1 : ℤ) < p from by exact_mod_cast hp.one_lt]
   set c₀ := ((q : ℤ) : ZMod p) * ((σ.1 0 0 : ℤ) : ZMod p)⁻¹ with hc₀_def
   set c := ZMod.val c₀ with hc_def
   have hc_lt : c < p := ZMod.val_lt c₀
@@ -228,16 +211,12 @@ private lemma Gamma0_relindex_step_surj (k : ℕ) (hk : 0 < k) :
   simp only [InvMemClass.coe_inv, MulMemClass.coe_mul]
   rw [Gamma0_mem]
   have h_p_dvd : (p : ℤ) ∣ (q - ↑c * σ.1 0 0) := by
-    rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
-    push_cast
-    simp only [hc_def]
-    rw [ZMod.natCast_zmod_val, hc₀_def]
-    have h_inv := ZMod_inv_mul_cancel p hp (σ.1 0 0) h00_ne
-    simp only [mul_assoc, h_inv, mul_one, sub_self]
+    rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]; push_cast
+    simp only [hc_def, ZMod.natCast_zmod_val, hc₀_def,
+      mul_assoc, ZMod_inv_mul_cancel p hp (σ.1 0 0) h00_ne, mul_one, sub_self]
   change (((lowerTriRep p k ⟨c, hc_lt⟩)⁻¹ * σ).1 1 0 : ZMod (p ^ (k + 1))) = 0
-  rw [lowerTriRep_inv_mul_10 p k ⟨c, hc_lt⟩ σ, hq', ZMod.intCast_zmod_eq_zero_iff_dvd]
-  push_cast
-  rw [pow_succ]
+  rw [lowerTriRep_inv_mul_10 p k ⟨c, hc_lt⟩ σ, hq', ZMod.intCast_zmod_eq_zero_iff_dvd,
+    pow_succ]; push_cast
   calc (p : ℤ) ^ k * (p : ℤ)
       ∣ (p : ℤ) ^ k * (q - ↑c * σ.1 0 0) := mul_dvd_mul_left _ h_p_dvd
     _ = ((p : ℤ) ^ k * q - ↑c * (p : ℤ) ^ k * σ.1 0 0) := by ring
@@ -264,8 +243,7 @@ theorem Gamma0_prime_power_index (p : ℕ) (hp : Nat.Prime p) (k : ℕ) (hk : 0 
         intro σ hσ; rw [Gamma0_mem] at hσ ⊢
         rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at hσ ⊢
         exact dvd_trans (by exact_mod_cast pow_dvd_pow p (Nat.le_succ m)) hσ
-      have hpm : p * p ^ (m - 1) = p ^ m := by
-        rw [mul_comm, ← pow_succ]; congr 1; omega
+      have hpm : p * p ^ (m - 1) = p ^ m := by rw [mul_comm, ← pow_succ]; congr 1; omega
       rw [← Subgroup.relIndex_mul_index h_le,
         Gamma0_relindex_step p hp m hm', ih hm', ← mul_assoc, hpm]
 

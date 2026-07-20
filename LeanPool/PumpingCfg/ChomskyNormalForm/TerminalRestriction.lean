@@ -87,8 +87,7 @@ lemma projectString_terminals {u : List T} :
     exact ⟨rfl, ih⟩
 
 lemma projectSymbol_nonterminal {n : N} :
-    projectSymbol (@Symbol.nonterminal T (N ⊕ T) (Sum.inl n)) = Symbol.nonterminal n :=
-  rfl
+    projectSymbol (@Symbol.nonterminal T (N ⊕ T) (Sum.inl n)) = Symbol.nonterminal n := rfl
 
 lemma embedString_preserves_nonempty {u : List (Symbol T N)} (hu : u ≠ []) :
     embedString u ≠ [] := by
@@ -101,13 +100,11 @@ lemma embedString_terminals {u : List T} :
   | cons => simp [embedString, embedSymbol]
 
 lemma embedString_append {u v : List (Symbol T N)} :
-    embedString (u ++ v) = embedString u ++ embedString v :=
-  List.map_append
+    embedString (u ++ v) = embedString u ++ embedString v := List.map_append
 
 lemma rightEmbed_string_nonUnit {u : List (Symbol T N)} (hu : ContextFreeGrammar.NonUnit u)
     (hut : ∀ t, u ≠ [Symbol.terminal t]) :
-    ContextFreeGrammar.NonUnit (rightEmbedString u) :=
-  match u with
+    ContextFreeGrammar.NonUnit (rightEmbedString u) := match u with
   | [] => trivial
   | [Symbol.nonterminal _] => hu
   | [Symbol.terminal t] => hut t rfl
@@ -164,8 +161,7 @@ lemma restrictTerminalRule_right_terminal_output {t : T} {r : ContextFreeRule T 
     obtain ⟨s, _, hsr⟩ := hrr
     cases s <;> simp only [Option.some.injEq, reduceCtorEq] at hsr
     rw [← hsr] at hrt ⊢
-    simp only [Sum.inr.injEq, List.cons.injEq, Symbol.terminal.injEq, and_true] at hrt ⊢
-    exact hrt
+    simp_all
 
 lemma restrictTerminalRules_right_terminal_output [DecidableEq T] [DecidableEq g.NT] {t : T}
     {r : ContextFreeRule T (g.NT ⊕ T)} (hrg : r ∈ restrictTerminalRules g.rules.toList)
@@ -248,9 +244,7 @@ lemma restrictTerminals_derives_rightEmbedString_embedString {u : List (Symbol T
     simp only [List.mem_cons, List.map_cons] at hu ⊢
     rw [← List.singleton_append, ← @List.singleton_append _ (embedSymbol a)]
     apply Derives.append_left_trans
-    · apply ih
-      intro t ht
-      exact hu t (Or.inr ht)
+    · simp_all
     · cases a with
       | nonterminal => rfl
       | terminal t =>
@@ -303,10 +297,7 @@ lemma derives_restrictTerminals_derives_embedString {u v : List (Symbol T g.NT)}
               List.mem_map.2 ⟨r, Finset.mem_toList.2 hrg, rfl⟩, ?_⟩)
             unfold restrictTerminalRule
             split <;> rename_i heq
-            · rename_i t'
-              exfalso
-              apply hrt
-              use t'
+            · simp_all
             · exact List.mem_cons_self
           exact hmem
         · unfold embedString embedSymbol

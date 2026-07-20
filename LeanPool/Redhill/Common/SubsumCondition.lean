@@ -57,8 +57,7 @@ lemma SSC.ne_zero (ha : SSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 := by
     exact Nat.zero_lt_sub_of_lt hn
   · rwa [sum_singleton]
 
-lemma StrongSSC.ne_zero (ha : StrongSSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 :=
-  ha.SSC.ne_zero hn
+lemma StrongSSC.ne_zero (ha : StrongSSC a) (hn : 2 ≤ n) {i : Fin n} : a i ≠ 0 := ha.SSC.ne_zero hn
 
 lemma StrongSSC.perm (h : StrongSSC a) (e : Equiv.Perm (Fin n)) : StrongSSC (a ∘ e) := fun b hs ↦ by
   have : b = (b ∘ e.symm) ∘ e := by simp [Function.comp_assoc]
@@ -200,10 +199,7 @@ theorem pair_of_sum_natAbs_lt (hi : ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (a i).na
       b₁ ≠ b₂ → ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (b₁ * a i + b₂ * a j).natAbs by
     apply this
     contrapose! ncb
-    refine ⟨b 0, fun i ↦ ?_⟩
-    obtain rfl | rfl : i = 0 ∨ i = 1 := by lia
-    · rfl
-    · exact ncb.symm
+    simp_all
   intro b₁ b₂ hb
   cases b₁ <;> cases b₂ <;> simp at hb
   case zero.neg => simpa using hj

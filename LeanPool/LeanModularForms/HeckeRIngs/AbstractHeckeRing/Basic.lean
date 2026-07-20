@@ -130,20 +130,18 @@ lemma mem_toSet_mk (g : P.Δ) (x : G) :
 
 /-- If two `HeckeCoset`s have the same `toSet`, they are equal. -/
 lemma ext_toSet {D₁ D₂ : HeckeCoset P} (h : HeckeCoset.toSet D₁ = HeckeCoset.toSet D₂) :
-    D₁ = D₂ := by
-  exact Quotient.ind₂ (fun g₁ g₂ => by intro h; exact Quotient.sound h) D₁ D₂ h
+    D₁ = D₂ := Quotient.ind₂ (fun g₁ g₂ => by intro h; exact Quotient.sound h) D₁ D₂ h
 
 /-- The carrier set equals the double coset of the representative. -/
 lemma toSet_eq_rep (D : HeckeCoset P) :
-    HeckeCoset.toSet D = DoubleCoset.doubleCoset (HeckeCoset.rep D : G) P.H P.H := by
-  refine Quotient.inductionOn D fun g => ?_
-  simp only [toSet_mk]
-  have h := Quotient.out_eq (⟦g⟧ : HeckeCoset P)
-  exact (Quotient.exact h).symm
+    HeckeCoset.toSet D = DoubleCoset.doubleCoset (HeckeCoset.rep D : G) P.H P.H :=
+  Quotient.inductionOn D fun g => by
+    simp only [toSet_mk]
+    exact (Quotient.exact (Quotient.out_eq (⟦g⟧ : HeckeCoset P))).symm
 
 /-- The representative lies in its double coset. -/
-lemma rep_mem (D : HeckeCoset P) : (HeckeCoset.rep D : G) ∈ HeckeCoset.toSet D := by
-  rw [toSet_eq_rep]; exact DoubleCoset.mem_doubleCoset_self P.H P.H _
+lemma rep_mem (D : HeckeCoset P) : (HeckeCoset.rep D : G) ∈ HeckeCoset.toSet D :=
+  toSet_eq_rep D ▸ DoubleCoset.mem_doubleCoset_self P.H P.H _
 
 /-- If `x ∈ HgH`, then `HxH = HgH`. The fundamental double coset absorption lemma. -/
 lemma doubleCoset_eq_of_mem {g : P.Δ} {x : G}
@@ -179,12 +177,10 @@ protected lemma ind₂ {motive : HeckeCoset P → HeckeCoset P → Prop}
 
 /-- The representative of `HeckeCoset.one` belongs to `H`. -/
 lemma one_rep_mem_H (P : HeckePair G) : ((one P).rep : G) ∈ P.H := by
-  have hm := rep_mem (one P)
-  rw [toSet_eq_rep] at hm
+  have hm := rep_mem (one P); rw [toSet_eq_rep] at hm
   have h2 := @Quotient.exact _ (dcSetoid P) (rep (one P)) ⟨(1 : G), P.Δ.one_mem⟩
     (Quotient.out_eq (⟦⟨(1 : G), P.Δ.one_mem⟩⟧ : HeckeCoset P))
-  change _ = _ at h2
-  rw [h2, mem_doubleCoset] at hm
+  change _ = _ at h2; rw [h2, mem_doubleCoset] at hm
   obtain ⟨a, ha, b, hb, hab⟩ := hm
   rw [show (⟨(1 : G), P.Δ.one_mem⟩ : P.Δ).1 = (1 : G) from rfl, mul_one] at hab
   rw [hab]; exact P.H.mul_mem ha hb
@@ -271,13 +267,12 @@ lemma conjAct_mul_self_eq_self (g : G) :
 /-- The intersection `H ∩ gHg⁻¹` acts trivially on `gHg⁻¹` by left multiplication. -/
 lemma inter_mul_conjAct_eq_conjAct (g : G) :
     ((H : Set G) ∩ (ConjAct.toConjAct g • H)) * (ConjAct.toConjAct g • H) =
-    (ConjAct.toConjAct g • H) := by
-  have := Set.inter_mul_subset (s₁ := (H : Set G))
-    (s₂ := (ConjAct.toConjAct g • H)) (t := (ConjAct.toConjAct g • H))
-  refine Subset.antisymm ?_ ?_
-  · exact le_trans this (by simp [conjAct_mul_self_eq_self])
-  · exact subset_mul_right _ ⟨Subgroup.one_mem H,
-      Subgroup.one_mem (ConjAct.toConjAct g • H)⟩
+    (ConjAct.toConjAct g • H) :=
+  Subset.antisymm
+    (le_trans (Set.inter_mul_subset (s₁ := (H : Set G))
+      (s₂ := (ConjAct.toConjAct g • H)) (t := (ConjAct.toConjAct g • H)))
+      (by simp [conjAct_mul_self_eq_self]))
+    (subset_mul_right _ ⟨Subgroup.one_mem H, Subgroup.one_mem (ConjAct.toConjAct g • H)⟩)
 
 /-- Right multiplication by a singleton is cancellative. -/
 lemma mul_singleton_right_cancel (g : G) (K L : Set G)
@@ -351,8 +346,7 @@ lemma doubleCoset_mul_eq_iUnion_doubleCoset (g h : G) :
       show (H : Set G) * {g} * ({↑(Quotient.out i) * h} * ↑H) =
         H * {g} * {↑(Quotient.out i) * h} * ↑H by simp_rw [← mul_assoc],
       ← Set.singleton_mul_singleton, ← Set.singleton_mul_singleton,
-      ← Set.singleton_mul_singleton]
-    simp_rw [← mul_assoc]
+      ← Set.singleton_mul_singleton]; simp_rw [← mul_assoc]
 
 /-- The double coset `HhH` is a constant union indexed by the trivial quotient. -/
 lemma DoubleCoset.doubleCoset_one_mul (h : G) :

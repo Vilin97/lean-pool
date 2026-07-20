@@ -35,12 +35,12 @@ lemma lorentz_component_bound (E₀ B₀ : Fin 3 → ℝ) :
         cases abs_cases (v 1 * B₀ 2) <;>
         cases abs_cases (v 2 * B₀ 1) <;> linarith
     have h_triangle2 :
-        |E₀ 0| ≤ ‖E₀‖ ∧ |v 1 * B₀ 2| ≤ ‖v‖ * |B₀ 2| ∧ |v 2 * B₀ 1| ≤ ‖v‖ * |B₀ 1| := by
-      exact ⟨ by simpa using norm_le_pi_norm E₀ 0,
-               by simpa [ abs_mul ] using
-                 mul_le_mul_of_nonneg_right (norm_le_pi_norm v 1) (abs_nonneg _),
-               by simpa [ abs_mul ] using
-                 mul_le_mul_of_nonneg_right (norm_le_pi_norm v 2) (abs_nonneg _) ⟩
+        |E₀ 0| ≤ ‖E₀‖ ∧ |v 1 * B₀ 2| ≤ ‖v‖ * |B₀ 2| ∧ |v 2 * B₀ 1| ≤ ‖v‖ * |B₀ 1| :=
+      ⟨ by simpa using norm_le_pi_norm E₀ 0,
+        by simpa [ abs_mul ] using
+          mul_le_mul_of_nonneg_right (norm_le_pi_norm v 1) (abs_nonneg _),
+        by simpa [ abs_mul ] using
+          mul_le_mul_of_nonneg_right (norm_le_pi_norm v 2) (abs_nonneg _) ⟩
     -- `ring_nf` left the goal with `E₀ 0 + v 1 * B₀ 2 - v 2 * B₀ 1` (left-assoc);
     -- reassociate so the `|·|` term matches `h_triangle`.
     rw [add_sub_assoc]
@@ -52,14 +52,10 @@ lemma lorentz_component_bound (E₀ B₀ : Fin 3 → ℝ) :
                 mul_nonneg (abs_nonneg (B₀ 1)) (norm_nonneg v),
                 mul_nonneg (abs_nonneg (B₀ 2)) (norm_nonneg v) ]
   · have h_triangle :
-        |E₀ 1| ≤ ‖E₀‖ ∧ |v 2 * B₀ 0| ≤ ‖v‖ * |B₀ 0| ∧ |v 0 * B₀ 2| ≤ ‖v‖ * |B₀ 2| := by
-      exact ⟨ by simpa using norm_le_pi_norm E₀ 1,
-               by
-                 rw [ abs_mul ]
-                 exact mul_le_mul_of_nonneg_right (norm_le_pi_norm v 2) (abs_nonneg _),
-               by
-                 rw [ abs_mul ]
-                 exact mul_le_mul_of_nonneg_right (norm_le_pi_norm v 0) (abs_nonneg _) ⟩
+        |E₀ 1| ≤ ‖E₀‖ ∧ |v 2 * B₀ 0| ≤ ‖v‖ * |B₀ 0| ∧ |v 0 * B₀ 2| ≤ ‖v‖ * |B₀ 2| :=
+      ⟨ by simpa using norm_le_pi_norm E₀ 1,
+        by simpa [ abs_mul ] using mul_le_mul_of_nonneg_right (norm_le_pi_norm v 2) (abs_nonneg _),
+        by simpa [ abs_mul ] using mul_le_mul_of_nonneg_right (norm_le_pi_norm v 0) (abs_nonneg _) ⟩
     exact abs_le.mpr ⟨
       by nlinarith [ abs_le.mp h_triangle.1, abs_le.mp h_triangle.2.1, abs_le.mp h_triangle.2.2,
                      abs_nonneg (B₀ 0), abs_nonneg (B₀ 1), abs_nonneg (B₀ 2), norm_nonneg v ],

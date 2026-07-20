@@ -50,21 +50,18 @@ class AddTorsionFree (A : Type _) [AddGroup A] where
 
 /-- ℤ is torsion-free, since it is an integral domain. -/
 instance : AddTorsionFree ℤ where
-  torsionFree := by
-    intro a n (h : n.succ * a = 0)
+  torsionFree := fun a n (h : n.succ * a = 0) => by
     cases Int.mul_eq_zero.mp h with
     | inl hyp => injection hyp; contradiction
-    | inr _ => assumption
+    | inr h => exact h
 
 /-- The product of torsion-free additive groups is torsion-free. -/
 instance {A B : Type _} [AddGroup A] [AddGroup B] [AddTorsionFree A]
     [AddTorsionFree B] : AddTorsionFree (A × B) where
-  torsionFree := by
-    intro (a, b) n
-    rw [show n.succ • (a, b) = (n.succ • a, n.succ • b) from rfl,
-      Prod.ext_iff, Prod.ext_iff]
-    intro ⟨_, _⟩; refine ⟨?_, ?_⟩ <;>
-      (apply AddTorsionFree.torsionFree; assumption)
+  torsionFree := fun (a, b) n h => by
+    have h' : (n.succ • a, n.succ • b) = 0 := h
+    simp only [Prod.mk.injEq, Prod.zero_eq_mk] at h'
+    exact Prod.ext (AddTorsionFree.torsionFree a n h'.1) (AddTorsionFree.torsionFree b n h'.2)
 /-! ### **Step 1:** Defining the square of an element of `P`. -/
 
 /-- The function taking an element of `P` to its square, which lies in the kernel `K`. -/
@@ -113,12 +110,10 @@ lemma add_twice_eq_mul_two {a : ℤ} : a + a = a * 2 := by
 attribute [local simp] add_twice_eq_mul_two
 
 /-- No odd integer is zero. -/
-lemma odd_ne_zero : ∀ a : ℤ, ¬(a + a + 1 = 0) := by
-  omega
+lemma odd_ne_zero : ∀ a : ℤ, ¬(a + a + 1 = 0) := by omega
 
 /-- If the sum of an integer with itself is zero, then the integer is itself zero. -/
-lemma zero_of_twice_zero : ∀ a : ℤ, a + a = 0 → a = 0 := by
-  omega
+lemma zero_of_twice_zero : ∀ a : ℤ, a + a = 0 → a = 0 := by omega
 
 end Int
 
@@ -165,12 +160,8 @@ theorem square_free : ∀ {g : P}, g * g = (1 : P) → g = (1 : P)
 
 /-- If `g` is a torsion element of a group, then so is `g ^ 2`. -/
 lemma torsion_implies_square_torsion {G : Type _} [Group G] (g : G) (n : ℕ)
-    (g_tor : g ^ n = 1) : (g ^ 2) ^ n = 1 :=
-  calc (g ^ 2) ^ n = g ^ (2 * n) := by rw [← pow_mul]
-              _ = g ^ (n * 2) := by rw [mul_comm]
-              _ = (g ^ n) ^ 2 := by rw [pow_mul]
-              _ = (1 : G) ^ 2 := by rw [← g_tor]
-              _ = (1 : G) := by rw [one_pow]
+    (g_tor : g ^ n = 1) : (g ^ 2) ^ n = 1 := by
+  rw [← pow_mul, mul_comm, pow_mul, g_tor, one_pow]
 
 /-! ### **Step 5:** Putting the facts together. -/
 

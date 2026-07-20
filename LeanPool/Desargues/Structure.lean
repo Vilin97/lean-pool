@@ -50,12 +50,8 @@ theorem subspace_l2
   (pq_neq : p ≠ q) :
     ell' a b p := by
   rw [restriction]
-  rw [restriction] at apq_col
-  rw [restriction] at bpq_col
-  apply PG.l2 a b p q apq_col bpq_col
-  intro ppqq_eq
-  have pq_eq : p = q := by { exact SetCoe.ext ppqq_eq }
-  contradiction
+  rw [restriction] at apq_col bpq_col
+  exact PG.l2 a b p q apq_col bpq_col (fun ppqq_eq => pq_neq (SetCoe.ext ppqq_eq))
 
 variable [DecidableEq G]
 variable {E : Set G}
@@ -146,8 +142,7 @@ instance
     case neg =>
       have xy_ab_eq :=
         by apply p_8 (ell := ell) x y a b x_in_ab y_in_ab xy_neq
-      rw [<- xy_ab_eq]
-      exact z_in_xy
+      rwa [<- xy_ab_eq]
     case pos =>
       rw [xy_neq] at z_in_xy
       simp only [Basic.star, ↓reduceIte, setOf_eq_eq_singleton, mem_singleton_iff] at z_in_xy

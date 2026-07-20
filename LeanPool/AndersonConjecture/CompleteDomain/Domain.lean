@@ -29,10 +29,7 @@ open MvPowerSeries in
 theorem conjI_ne_top : conjI ≠ ⊤ := by
   apply Ideal.span_singleton_ne_top
   rw [MvPowerSeries.isUnit_iff_constantCoeff]
-  change ¬IsUnit (MvPowerSeries.constantCoeff (σ := Fin 3) (R := ℂ)
-      ((X 0) ^ 2 - (X 1) * (X 2)))
-  simp only [map_sub, map_pow, map_mul, MvPowerSeries.constantCoeff_X]
-  norm_num
+  simp_all
 
 section T_isDomain_proof
 
@@ -92,8 +89,7 @@ lemma anderson_gen_ne_zero : (X (0 : Fin 3) : MvPowerSeries (Fin 3) ℂ) ^ 2 -
         simp [ha, hb, Finsupp.add_apply] at h0
       · simp [hb]
     · simp [ha]
-  rw [Finset.sum_eq_zero this] at h1
-  norm_num at h1
+  simp_all
 
 /-- The factored map ψbar : T → ℂ[[u,v]]. -/
 noncomputable def ψBar : T →+* MvPowerSeries (Fin 2) ℂ :=
@@ -116,9 +112,6 @@ lemma mkFin3_ext (n : Fin 3 →₀ ℕ) : n = mkFin3 (n 0) (n 1) (n 2) := by
 def mkFin2 (a b : ℕ) : Fin 2 →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm ![a, b]
 
-@[simp] private lemma mkFin2_zero : mkFin2 a b 0 = a := rfl
-@[simp] private lemma mkFin2_one : mkFin2 a b 1 = b := rfl
-
 /-- Explicit quotient: given f, define q so that f = q * (X₀² - X₁X₂) when ψ(f)=0.
   q(n₀,n₁,n₂) = Σ_{k=0}^{min(n₁,n₂)} f(n₀+2+2k, n₁-k, n₂-k). -/
 def divQ (f : MvPowerSeries (Fin 3) ℂ) : MvPowerSeries (Fin 3) ℂ :=
@@ -134,9 +127,7 @@ lemma ψMap_prod_eq (d : Fin 3 →₀ ℕ) :
       (ψMap 0 ^ (d 0)) * (ψMap 1 ^ (d 1)) * (ψMap 2 ^ (d 2)) := by
     rw [Finsupp.prod]
     rw [Finset.prod_subset (Finset.subset_univ _) (fun i _ hi => by
-      simp only [Finsupp.mem_support_iff, ne_eq, not_not] at hi
-      rw [hi]
-      simp)]
+      simp_all)]
     have huniv : (Finset.univ : Finset (Fin 3)) = {0, 1, 2} := by decide
     rw [huniv]
     rw [Finset.prod_insert (show (0 : Fin 3) ∉ ({1, 2} : Finset (Fin 3)) by decide)]
@@ -166,8 +157,7 @@ lemma mkFin2_inj {a b c d : ℕ} : mkFin2 a b = mkFin2 c d ↔ a = c ∧ b = d :
   constructor
   · intro h
     exact ⟨congr_fun (congr_arg DFunLike.coe h) 0, congr_fun (congr_arg DFunLike.coe h) 1⟩
-  · rintro ⟨rfl, rfl⟩
-    rfl
+  · simp_all
 
 lemma mkFin3_inj {a b c d e f : ℕ} :
     mkFin3 a b c = mkFin3 d e f ↔ a = d ∧ b = e ∧ c = f := by
@@ -176,8 +166,7 @@ lemma mkFin3_inj {a b c d e f : ℕ} :
     exact ⟨congr_fun (congr_arg DFunLike.coe h) 0,
            congr_fun (congr_arg DFunLike.coe h) 1,
            congr_fun (congr_arg DFunLike.coe h) 2⟩
-  · rintro ⟨rfl, rfl, rfl⟩
-    rfl
+  · simp_all
 
 -- Fiber characterization: preimages under ψ are {mkFin3(m₀+2k)(m₁-k)(m₂-k) : k ≤ min(m₁,m₂)}
 lemma ψ_fiber_char (m₀ m₁ m₂ : ℕ) (hm₀ : m₀ ≤ 1) (d : Fin 3 →₀ ℕ) :
@@ -302,12 +291,9 @@ lemma ψBar_injective : Function.Injective ψBar := by
   by_cases hm0 : 2 ≤ m 0
   · -- m 0 ≥ 2: telescoping
     rw [if_pos (hd₀_iff.mpr hm0)]
-    have sub0 : (m - d₀) 0 = m 0 - 2 := by rw [Finsupp.tsub_apply]
-                                           simp [d₀]
-    have sub1 : (m - d₀) 1 = m 1 := by rw [Finsupp.tsub_apply]
-                                       simp [d₀]
-    have sub2 : (m - d₀) 2 = m 2 := by rw [Finsupp.tsub_apply]
-                                       simp [d₀]
+    have sub0 : (m - d₀) 0 = m 0 - 2 := by simp [Finsupp.tsub_apply, d₀]
+    have sub1 : (m - d₀) 1 = m 1 := by simp [Finsupp.tsub_apply, d₀]
+    have sub2 : (m - d₀) 2 = m 2 := by simp [Finsupp.tsub_apply, d₀]
     have hdivQ0 : MvPowerSeries.coeff (m - d₀) (divQ f) =
         ∑ k ∈ Finset.range (min (m 1) (m 2) + 1),
         f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) := by
@@ -316,15 +302,9 @@ lemma ψBar_injective : Function.Injective ψBar := by
     rw [hdivQ0]
     by_cases hm12 : 1 ≤ m 1 ∧ 1 ≤ m 2
     · rw [if_pos (hd₁₂_iff.mpr hm12)]
-      have s0' : (m - d₁₂) 0 = m 0 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
-      have s1' : (m - d₁₂) 1 = m 1 - 1 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
-      have s2' : (m - d₁₂) 2 = m 2 - 1 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
+      have s0' : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
+      have s1' : (m - d₁₂) 1 = m 1 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
+      have s2' : (m - d₁₂) 2 = m 2 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
       have hdivQ12 : MvPowerSeries.coeff (m - d₁₂) (divQ f) =
           ∑ k ∈ Finset.range (min (m 1 - 1) (m 2 - 1) + 1),
           f (mkFin3 (m 0 + 2 + 2 * k) (m 1 - 1 - k) (m 2 - 1 - k)) := by
@@ -350,13 +330,11 @@ lemma ψBar_injective : Function.Injective ψBar := by
       ring
     · push Not at hm12
       rw [if_neg (fun h => by
-                    rw [hd₁₂_iff] at h
-                    exact absurd h.2 (not_le.mpr (hm12 h.1)))]
+                    simp_all)]
       simp only [sub_zero]
       have hmin0 : min (m 1) (m 2) = 0 := by
         by_cases h : 1 ≤ m 1
-        · have := hm12 h
-          omega
+        · simp_all
         · omega
       rw [hmin0, show (0 : ℕ) + 1 = 1 from rfl]
       simp only [Finset.sum_range_one, mul_zero, add_zero, Nat.sub_zero]
@@ -365,8 +343,7 @@ lemma ψBar_injective : Function.Injective ψBar := by
   · -- m 0 < 2 (m 0 ≤ 1)
     have hm0' : m 0 ≤ 1 := by omega
     rw [if_neg (fun h => by
-                  rw [hd₀_iff] at h
-                  omega)]
+                  simp_all)]
     simp only [zero_sub]
     have hψ_sum : ∑ k ∈ Finset.range (min (m 1) (m 2) + 1),
         f (mkFin3 (m 0 + 2 * k) (m 1 - k) (m 2 - k)) = 0 := by
@@ -375,15 +352,9 @@ lemma ψBar_injective : Function.Injective ψBar := by
     · rw [if_pos (hd₁₂_iff.mpr hm12)]
       change f m = -(divQ f (m - d₁₂))
       simp only [divQ]
-      have s0 : (m - d₁₂) 0 = m 0 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
-      have s1 : (m - d₁₂) 1 = m 1 - 1 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
-      have s2 : (m - d₁₂) 2 = m 2 - 1 := by
-        rw [Finsupp.tsub_apply]
-        simp [d₁₂, Finsupp.add_apply]
+      have s0 : (m - d₁₂) 0 = m 0 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
+      have s1 : (m - d₁₂) 1 = m 1 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
+      have s2 : (m - d₁₂) 2 = m 2 - 1 := by simp [Finsupp.tsub_apply, d₁₂, Finsupp.add_apply]
       rw [s0, s1, s2]
       rw [show min (m 1 - 1) (m 2 - 1) + 1 = min (m 1) (m 2) from by omega]
       -- From hψ_sum, peel off first term
@@ -400,13 +371,11 @@ lemma ψBar_injective : Function.Injective ψBar := by
       refine ⟨by ring, ?_, ?_⟩ <;> omega
     · push Not at hm12
       rw [if_neg (fun h => by
-                    rw [hd₁₂_iff] at h
-                    exact absurd h.2 (not_le.mpr (hm12 h.1)))]
+                    simp_all)]
       simp only [neg_zero]
       have : min (m 1) (m 2) = 0 := by
         by_cases h : 1 ≤ m 1
-        · have := hm12 h
-          omega
+        · simp_all
         · omega
       rw [this, show (0 : ℕ) + 1 = 1 from rfl] at hψ_sum
       simp only [Finset.sum_range_one, mul_zero, add_zero, Nat.sub_zero] at hψ_sum

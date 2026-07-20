@@ -52,14 +52,7 @@ instance isEmpty_diskBoundary_zero : IsEmpty (diskBoundary.{u} 0) := by
   simp_all only [isEmpty_ulift, Set.isEmpty_coe_sort]
   apply Set.subset_empty_iff.mp
   intro x hx
-  have u : Unique <| EuclideanSpace ℝ (Fin 0) := by infer_instance
-  have x0' := (u.uniq x).trans (u.uniq 0).symm
-  have x0 : ‖x‖ = 0 := by rw [x0', norm_zero]
-  have x1 : ‖x‖ = 1 := by
-    have := mem_sphere_iff_norm.mp hx
-    rwa [sub_zero] at this
-  have : (1 : ℝ) = (0 : ℝ) := x1.symm.trans x0
-  exfalso
-  exact (by norm_num : (1 : ℝ) ≠ (0 : ℝ)) this
+  have x0 : ‖x‖ = 0 := by rw [Subsingleton.elim x 0, norm_zero]
+  simp_all
 
 end TopCat

@@ -39,8 +39,7 @@ instance [QuasiBorelSpace A] [QuasiBorelSpace B] : FunLike (A →𝒒 B) A B whe
   coe := toFun
   coe_injective f g := by
     cases f
-    cases g
-    simp only [mk.injEq, imp_self]
+    simp_all
 
 namespace Simps
 
@@ -100,17 +99,14 @@ lemma isHom_eval : IsHom (fun p : (A →𝒒 B) × A => p.1 p.2) := by
   simp only [Prod.isHom_iff, isHom_def, and_imp]
   intro φ hφ₁ hφ₂
   apply @hφ₁ fun r ↦ (r, (φ r).2)
-  simp only [Prod.isHom_iff, isHom_id', true_and]
-  exact hφ₂
+  simpa only [Prod.isHom_iff, isHom_id', true_and] using hφ₂
 
 @[fun_prop]
 lemma isHom_eval'
     {f : A → B →𝒒 C} (hf : IsHom f)
     {g : A → B} (hg : IsHom g)
     : IsHom (fun x ↦ f x (g x)) := by
-  apply isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x))
-  · simp only [isHom_eval]
-  · fun_prop
+  exact isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x)) isHom_eval (by fun_prop)
 
 @[fun_prop]
 lemma isHom_mk

@@ -22,64 +22,126 @@ namespace UpperBound
 namespace Recursive3Param
 
 
+/-- Turn an affine `(2T-1)·x + (1-T)` `ofReal` formula into the evaluated-coefficient form. -/
+private lemma g_eq_affine_aux {x : Rand} {slope const : ℝ} {g : ℝ≥0∞} (hslope : 0 ≤ slope)
+    (hg : g = ENNReal.ofReal (slope * (x : ℝ)) + ENNReal.ofReal const) :
+    g = ENNReal.ofReal slope * ENNReal.ofReal (x : ℝ) + ENNReal.ofReal const := by
+  rw [hg, ENNReal.ofReal_mul hslope]
+
 lemma gCt_eq_affine (c : Rand) :
     gCt c =
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 4 : ℝ) := by norm_num
-  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by
-    simp [t]
-    norm_num
-  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by
-    simp [t]
-    norm_num
-  have hlin : gCt c = ENNReal.ofReal ((1 / 4 : ℝ) * (c : ℝ)) + ENNReal.ofReal (3 / 8 : ℝ) := by
-    simpa [ht, hconst] using (gCt_eq_linear c)
-  -- rewrite `ofReal ((1/4) * c)` as `ofReal (1/4) * ofReal c`
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) :=
+  g_eq_affine_aux (by norm_num) (by
+    have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by norm_num [t]
+    have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by norm_num [t]
+    simpa [ht, hconst] using gCt_eq_linear c)
 
 lemma gTB_eq_affine (b : Rand) :
     gTB b =
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 4 : ℝ) := by norm_num
-  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by
-    simp [t]
-    norm_num
-  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by
-    simp [t]
-    norm_num
-  have hlin : gTB b = ENNReal.ofReal ((1 / 4 : ℝ) * (b : ℝ)) + ENNReal.ofReal (3 / 8 : ℝ) := by
-    simpa [ht, hconst] using (gTB_eq_linear b)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) :=
+  g_eq_affine_aux (by norm_num) (by
+    have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by norm_num [t]
+    have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by norm_num [t]
+    simpa [ht, hconst] using gTB_eq_linear b)
 
 lemma gCt2_eq_affine (c : Rand) :
     gCt2 c =
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
-  have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hlin :
-      gCt2 c = ENNReal.ofReal ((1 / 16 : ℝ) * (c : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
-    simpa [ht, hconst] using (gCt2_eq_linear c)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) :=
+  g_eq_affine_aux (by norm_num) (by
+    have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by norm_num [t2]
+    have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by norm_num [t2]
+    simpa [ht, hconst] using gCt2_eq_linear c)
 
 lemma gT2B_eq_affine (b : Rand) :
     gT2B b =
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
-  have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hlin :
-      gT2B b = ENNReal.ofReal ((1 / 16 : ℝ) * (b : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
-    simpa [ht, hconst] using (gT2B_eq_linear b)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) :=
+  g_eq_affine_aux (by norm_num) (by
+    have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by norm_num [t2]
+    have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by norm_num [t2]
+    simpa [ht, hconst] using gT2B_eq_linear b)
+
+/-- Measurability of an affine `slope · ofReal(coe ·) + ofReal const` function. -/
+private lemma measurable_affine_ofReal (slope const : ℝ) :
+    Measurable fun x : Rand =>
+      ENNReal.ofReal slope * ENNReal.ofReal (x : ℝ) + ENNReal.ofReal const :=
+  (measurable_const.mul (ENNReal.measurable_ofReal.comp measurable_subtype_coe)).add
+    measurable_const
+
+private lemma measurable_gCt : Measurable gCt := by
+  simpa only [funext gCt_eq_affine] using measurable_affine_ofReal (1 / 4) (3 / 8)
+
+private lemma measurable_gTB : Measurable gTB := by
+  simpa only [funext gTB_eq_affine] using measurable_affine_ofReal (1 / 4) (3 / 8)
+
+private lemma measurable_gCt2 : Measurable gCt2 := by
+  simpa only [funext gCt2_eq_affine] using measurable_affine_ofReal (1 / 16) (15 / 32)
+
+private lemma measurable_gT2B : Measurable gT2B := by
+  simpa only [funext gT2B_eq_affine] using measurable_affine_ofReal (1 / 16) (15 / 32)
+
+private lemma mu_Ico_eq (a r : Rand) : μ (Set.Ico a r) = ENNReal.ofReal ((r : ℝ) - (a : ℝ)) := by
+  simp [μ]
+
+private lemma Iio_inter_Iio_left {a b : Rand} (hab : a ≤ b) :
+    (Set.Iio a ∩ Set.Iio b : Set Rand) = Set.Iio a := by
+  simp_all
+
+private lemma Iio_diff_Iio {a b : Rand} (_hab : a ≤ b) :
+    (Set.Iio b \ Set.Iio a : Set Rand) = Set.Ico a b := by
+  simp_all
+
+private lemma Ico_inter_Iio {a b c : Rand} (hcb : c ≤ b) :
+    (Set.Ico a b ∩ Set.Iio c : Set Rand) = Set.Ico a c := by
+  simp_all
+
+private lemma Ico_diff_Iio {a b c : Rand} (hac : a ≤ c) :
+    (Set.Ico a b \ Set.Iio c : Set Rand) = Set.Ico c b := by
+  simp_all
+
+private lemma measurable_mul_Ico_measure {g : Rand → ℝ≥0∞} (hg : Measurable g) (r : Rand) :
+    Measurable fun b : Rand => g b * μ (Set.Ico b r) := by
+  have hmeas : Measurable fun b : Rand => ENNReal.ofReal ((r : ℝ) - (b : ℝ)) :=
+    ENNReal.measurable_ofReal.comp (measurable_const.sub measurable_subtype_coe)
+  simpa [μ] using hg.mul hmeas
+
+/-- Merge a product of `ofReal`s into a single `ofReal` of the (evaluated) product. -/
+private lemma ofReal_mul_eq {p q r : ℝ} (hp : 0 ≤ p) (hpq : p * q = r) :
+    ENNReal.ofReal p * ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_mul hp, hpq]
+
+/-- Merge a sum of `ofReal`s into a single `ofReal` of the (evaluated) sum. -/
+private lemma ofReal_add_eq {p q r : ℝ} (hp : 0 ≤ p) (hq : 0 ≤ q) (hpq : p + q = r) :
+    ENNReal.ofReal p + ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_add hp hq, hpq]
+
+/-- Split `∫ (affine `g`) · (length `R - x`)` over a set `S` into the moment and length integrals.
+Used to evaluate each linear "rectangle/triangle" region integral. -/
+private lemma lintegral_affine_mul_length {g : Rand → ℝ≥0∞} {slope const R : ℝ}
+    (hg : ∀ x : Rand, g x = ENNReal.ofReal slope * ENNReal.ofReal (x : ℝ) + ENNReal.ofReal const)
+    (S : Set Rand) :
+    (∫⁻ x in S, g x * ENNReal.ofReal (R - (x : ℝ)) ∂μ) =
+      ENNReal.ofReal slope * (∫⁻ x in S, ENNReal.ofReal ((x : ℝ) * (R - (x : ℝ))) ∂μ) +
+        ENNReal.ofReal const * (∫⁻ x in S, ENNReal.ofReal (R - (x : ℝ)) ∂μ) := by
+  have hrewrite :
+      (fun x : Rand => g x * ENNReal.ofReal (R - (x : ℝ))) =
+        fun x : Rand =>
+          ENNReal.ofReal slope * ENNReal.ofReal ((x : ℝ) * (R - (x : ℝ))) +
+            ENNReal.ofReal const * ENNReal.ofReal (R - (x : ℝ)) := by
+    funext x
+    have hprod :
+        ENNReal.ofReal (x : ℝ) * ENNReal.ofReal (R - (x : ℝ)) =
+          ENNReal.ofReal ((x : ℝ) * (R - (x : ℝ))) :=
+      (ENNReal.ofReal_mul x.property.1).symm
+    simp [hg, add_mul, mul_assoc, hprod]
+  rw [hrewrite]
+  have mx : Measurable fun x : Rand => (x : ℝ) := measurable_subtype_coe
+  have mMoment : Measurable fun x : Rand => ENNReal.ofReal ((x : ℝ) * (R - (x : ℝ))) :=
+    ENNReal.measurable_ofReal.comp (mx.mul (measurable_const.sub mx))
+  have mLength : Measurable fun x : Rand => ENNReal.ofReal (R - (x : ℝ)) :=
+    ENNReal.measurable_ofReal.comp (measurable_const.sub mx)
+  rw [MeasureTheory.lintegral_add_left (μ := μ.restrict S) (measurable_const.mul mMoment),
+    MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mMoment,
+    MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mLength]
 
 lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
@@ -90,20 +152,9 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
     (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
   have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      have hc1 : (c : ℝ) < 1 := lt_trans (show (c : ℝ) < t from hc) t_lt_one
-      exact ⟨by simpa using hc1, hc⟩
-  have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) := by
-    ext c
-    constructor
-    · rintro ⟨hc1, hct⟩
-      exact ⟨le_of_not_gt hct, hc1⟩
-    · intro hc
-      exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left t_lt_one.le
+  have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) :=
+    Iio_diff_Iio t_lt_one.le
   have hzero :
       (∫⁻ c in Set.Ico t (1 : Rand), innerBC b c ∂μ) = 0 := by
     have hs : MeasurableSet (Set.Ico t (1 : Rand) : Set Rand) := by simp
@@ -118,8 +169,7 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
   have hA :
       (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
         ∫⁻ c in Set.Iio t, innerBC b c ∂μ := by
-    have := hsplit'.symm
-    simpa [hzero] using this
+    simp_all
   -- Now split the `c < t` integral at `b`.
   have hb_lt_t : b < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
   have hbmeas : MeasurableSet (Set.Iio b : Set Rand) := by simp
@@ -127,19 +177,9 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
     (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t : Set Rand)) (B := (Set.Iio b : Set Rand)) hbmeas)
   have hBint : (Set.Iio t ∩ Set.Iio b : Set Rand) = Set.Iio b := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      exact ⟨lt_trans hc hb_lt_t, hc⟩
-  have hBdiff : (Set.Iio t \ Set.Iio b : Set Rand) = Set.Ico b t := by
-    ext c
-    constructor
-    · rintro ⟨hct, hcb⟩
-      exact ⟨le_of_not_gt hcb, hct⟩
-    · intro hc
-      exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left hb_lt_t.le
+  have hBdiff : (Set.Iio t \ Set.Iio b : Set Rand) = Set.Ico b t :=
+    Iio_diff_Iio hb_lt_t.le
   have hIo :
       (∫⁻ c in Set.Iio b, innerBC b c ∂μ) = ∫⁻ c in Set.Iio b, gCt c ∂μ := by
     have hs : MeasurableSet (Set.Iio b : Set Rand) := by simp
@@ -156,40 +196,14 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
       exact innerBC_eq_gTB_of_b_lt_t1_of_b_le_c_of_c_lt_t (b := b) (c := c) hb hc.1 hc.2
     calc
       (∫⁻ c in Set.Ico b t, innerBC b c ∂μ) =
-          ∫⁻ _c in Set.Ico b t, gTB b ∂μ := by
-            exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
+          ∫⁻ _c in Set.Ico b t, gTB b ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
       _ = gTB b * μ (Set.Ico b t) := by simp
-  have hsplit2' :
-      (∫⁻ c in Set.Iio t, innerBC b c ∂μ) =
-        (∫⁻ c in Set.Iio b, innerBC b c ∂μ) + ∫⁻ c in Set.Ico b t, innerBC b c ∂μ := by
-    have := hsplit2.symm
-    simpa [hBint, hBdiff, add_comm] using this
-  -- Put everything together.
-  calc
-    (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
-        ∫⁻ c in Set.Iio t, innerBC b c ∂μ := hA
-    _ = (∫⁻ c in Set.Iio b, innerBC b c ∂μ) + ∫⁻ c in Set.Ico b t, innerBC b c ∂μ := hsplit2'
-    _ = (∫⁻ c in Set.Iio b, gCt c ∂μ) + gTB b * μ (Set.Ico b t) := by simp [hIo, hIco]
+  simp_all
 
 private lemma lintegral_b_below_t1_triangle_value :
     (∫⁻ b in Set.Iio t1, ∫⁻ c in Set.Iio b, gCt c ∂μ ∂μ) =
       ENNReal.ofReal (117 / 4096 : ℝ) := by
-  have hgCt : Measurable gCt := by
-    have mc : Measurable fun c : Rand => (c : ℝ) := measurable_subtype_coe
-    have m_ofReal_c : Measurable fun c : Rand => ENNReal.ofReal (c : ℝ) :=
-      ENNReal.measurable_ofReal.comp mc
-    have m_gCt_expr :
-        Measurable fun c : Rand =>
-          ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-      exact (measurable_const.mul m_ofReal_c).add measurable_const
-    have hfun :
-        (fun c : Rand => gCt c) =
-          fun c : Rand =>
-            ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-      funext c
-      simp [gCt_eq_affine]
-    simpa [hfun] using m_gCt_expr
-  have htri := lintegral_triangle_Iio (B := t1) (f := gCt) hgCt
+  have htri := lintegral_triangle_Iio (B := t1) (f := gCt) measurable_gCt
   have htri' :
       (∫⁻ b in Set.Iio t1, ∫⁻ c in Set.Iio b, gCt c ∂μ ∂μ) =
         ∫⁻ c in Set.Iio t1, gCt c * ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) ∂μ := by
@@ -204,8 +218,7 @@ private lemma lintegral_b_below_t1_triangle_value :
         (hbr := (le_rfl : (t1 : ℝ) ≤ t1)))
     have hr :
         ((t1 : ℝ) * (t1 : ℝ) ^ 2 / 2 - (t1 : ℝ) ^ 3 / 3) = (9 / 1024 : ℝ) := by
-      simp [t1]
-      norm_num
+      norm_num [t1]
     simpa [μ, hr] using h
   have hsub_int :
       (∫⁻ c in Set.Iio t1, ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) ∂μ) =
@@ -215,92 +228,13 @@ private lemma lintegral_b_below_t1_triangle_value :
         (hbr := (le_rfl : (t1 : ℝ) ≤ t1)))
     have hr :
         ((t1 : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (9 / 128 : ℝ) := by
-      simp [t1]
-      norm_num
+      norm_num [t1]
     simpa [μ, hr] using h
-  have hrewrite :
-      (fun c : Rand => gCt c * ENNReal.ofReal ((t1 : ℝ) - (c : ℝ))) =
-        fun c : Rand =>
-          ENNReal.ofReal (1 / 4 : ℝ) *
-              ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) +
-            ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) := by
-    funext c
-    have hc0 : 0 ≤ (c : ℝ) := c.property.1
-    have hprod :
-        ENNReal.ofReal (c : ℝ) * ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) =
-          ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) := by
-      simpa using (ENNReal.ofReal_mul hc0).symm
-    simp [gCt_eq_affine, add_mul, mul_assoc, hprod]
-  rw [htri', hrewrite]
-  have hmeas1 :
-      Measurable fun c : Rand =>
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) := by
-    have mc : Measurable fun c : Rand => (c : ℝ) := measurable_subtype_coe
-    have mpoly : Measurable fun c : Rand => (c : ℝ) * ((t1 : ℝ) - (c : ℝ)) :=
-      mc.mul (measurable_const.sub mc)
-    exact measurable_const.mul (ENNReal.measurable_ofReal.comp mpoly)
-  rw [MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Iio t1)) hmeas1]
-  have hA :
-      (∫⁻ c in Set.Iio t1,
-          ENNReal.ofReal (1 / 4 : ℝ) *
-            ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) ∂μ) =
-        ENNReal.ofReal (1 / 4 : ℝ) *
-          (∫⁻ c in Set.Iio t1,
-              ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) ∂μ) := by
-    have mc :
-        Measurable fun c : Rand => ENNReal.ofReal ((c : ℝ) * ((t1 : ℝ) - (c : ℝ))) := by
-      exact
-        ENNReal.measurable_ofReal.comp
-          ((measurable_subtype_coe).mul (measurable_const.sub measurable_subtype_coe))
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
-        (r := ENNReal.ofReal (1 / 4 : ℝ)) mc)
-  have hB :
-      (∫⁻ c in Set.Iio t1,
-          ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) ∂μ) =
-        ENNReal.ofReal (3 / 8 : ℝ) *
-          (∫⁻ c in Set.Iio t1, ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) ∂μ) := by
-    have mc : Measurable fun c : Rand => ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) := by
-      exact ENNReal.measurable_ofReal.comp (measurable_const.sub measurable_subtype_coe)
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
-        (r := ENNReal.ofReal (3 / 8 : ℝ)) mc)
-  rw [hA, hB, hmul_int, hsub_int]
-  have h1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-        ENNReal.ofReal (9 / 4096 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (9 / 1024 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 4 : ℝ)) (q := (9 / 1024 : ℝ)) ha0).symm
-    have hr : (1 / 4 : ℝ) * (9 / 1024 : ℝ) = (9 / 4096 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (9 / 1024 : ℝ)) := hmul
-      _ = ENNReal.ofReal (9 / 4096 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-        ENNReal.ofReal (27 / 1024 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (9 / 128 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (3 / 8 : ℝ)) (q := (9 / 128 : ℝ)) hb0).symm
-    have hr : (3 / 8 : ℝ) * (9 / 128 : ℝ) = (27 / 1024 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (9 / 128 : ℝ)) := hmul
-      _ = ENNReal.ofReal (27 / 1024 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (9 / 4096 : ℝ) + ENNReal.ofReal (27 / 1024 : ℝ) =
-        ENNReal.ofReal (117 / 4096 : ℝ) := by
-    have h9 : 0 ≤ (9 / 4096 : ℝ) := by norm_num
-    have h27 : 0 ≤ (27 / 1024 : ℝ) := by norm_num
-    have : (9 / 4096 : ℝ) + (27 / 1024 : ℝ) = (117 / 4096 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h9 h27).symm
-  rw [h1, h2]
-  exact hsum
+  rw [htri', lintegral_affine_mul_length gCt_eq_affine, hmul_int, hsub_int,
+    ofReal_mul_eq ha0 (by norm_num : (1 / 4 : ℝ) * (9 / 1024 : ℝ) = 9 / 4096),
+    ofReal_mul_eq hb0 (by norm_num : (3 / 8 : ℝ) * (9 / 128 : ℝ) = 27 / 1024)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (9 / 4096 : ℝ) + (27 / 1024 : ℝ) = 117 / 4096)
 
 private lemma lintegral_b_below_t1_gTB_value :
     (∫⁻ b in Set.Iio t1, gTB b * μ (Set.Ico b t) ∂μ) =
@@ -315,101 +249,21 @@ private lemma lintegral_b_below_t1_gTB_value :
     have h :=
       (setLIntegral_ofReal_mul_sub_Iio (r := t) (b := t1) (hbr := ht1))
     have hr : ((t : ℝ) * (t1 : ℝ) ^ 2 / 2 - (t1 : ℝ) ^ 3 / 3) = (27 / 1024 : ℝ) := by
-      simp [t1, t]
-      norm_num
+      norm_num [t1, t]
     simpa [hr] using h
   have hsub_int :
       (∫⁻ b in Set.Iio t1, ENNReal.ofReal ((t : ℝ) - (b : ℝ)) ∂(volume : Measure Rand)) =
           ENNReal.ofReal (21 / 128 : ℝ) := by
     have h :=
       (setLIntegral_ofReal_sub_id_Iio (r := t) (b := t1) (hbr := ht1))
-    have hr : ((t : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (21 / 128 : ℝ) := by
-      simp [t1, t]
-      norm_num
+    have hr : ((t : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (21 / 128 : ℝ) := by norm_num [t1, t]
     simpa [hr] using h
-  have hrewrite :
-      (fun b : Rand => gTB b * μ (Set.Ico b t)) =
-        fun b : Rand =>
-          ENNReal.ofReal (1 / 4 : ℝ) *
-              ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) +
-            ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal ((t : ℝ) - (b : ℝ)) := by
-    funext b
-    have hb0' : 0 ≤ (b : ℝ) := b.property.1
-    have hprod :
-        ENNReal.ofReal (b : ℝ) * ENNReal.ofReal ((t : ℝ) - (b : ℝ)) =
-          ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) := by
-      simpa using (ENNReal.ofReal_mul hb0').symm
-    simp [μ, gTB_eq_affine, add_mul, mul_assoc, hprod]
-  rw [hrewrite]
-  have hmeas1 :
-      Measurable fun b : Rand =>
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) := by
-    have mb : Measurable fun b : Rand => (b : ℝ) := measurable_subtype_coe
-    have mpoly : Measurable fun b : Rand => (b : ℝ) * ((t : ℝ) - (b : ℝ)) :=
-      mb.mul (measurable_const.sub mb)
-    exact measurable_const.mul (ENNReal.measurable_ofReal.comp mpoly)
-  rw [MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Iio t1)) hmeas1]
-  have hA :
-      (∫⁻ b in Set.Iio t1,
-          ENNReal.ofReal (1 / 4 : ℝ) *
-            ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) ∂μ) =
-        ENNReal.ofReal (1 / 4 : ℝ) *
-          (∫⁻ b in Set.Iio t1,
-              ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) ∂μ) := by
-    have mb :
-        Measurable fun b : Rand => ENNReal.ofReal ((b : ℝ) * ((t : ℝ) - (b : ℝ))) := by
-      exact
-        ENNReal.measurable_ofReal.comp
-          ((measurable_subtype_coe).mul (measurable_const.sub measurable_subtype_coe))
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
-        (r := ENNReal.ofReal (1 / 4 : ℝ)) mb)
-  have hB :
-      (∫⁻ b in Set.Iio t1,
-          ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal ((t : ℝ) - (b : ℝ)) ∂μ) =
-        ENNReal.ofReal (3 / 8 : ℝ) *
-          (∫⁻ b in Set.Iio t1, ENNReal.ofReal ((t : ℝ) - (b : ℝ)) ∂μ) := by
-    have mb : Measurable fun b : Rand => ENNReal.ofReal ((t : ℝ) - (b : ℝ)) := by
-      exact ENNReal.measurable_ofReal.comp (measurable_const.sub measurable_subtype_coe)
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
-        (r := ENNReal.ofReal (3 / 8 : ℝ)) mb)
-  rw [hA, hB, hmul_int, hsub_int]
-  have h1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-        ENNReal.ofReal (27 / 4096 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (27 / 1024 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 4 : ℝ)) (q := (27 / 1024 : ℝ)) ha0).symm
-    have hr : (1 / 4 : ℝ) * (27 / 1024 : ℝ) = (27 / 4096 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (27 / 1024 : ℝ)) := hmul
-      _ = ENNReal.ofReal (27 / 4096 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-        ENNReal.ofReal (63 / 1024 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (21 / 128 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (3 / 8 : ℝ)) (q := (21 / 128 : ℝ)) hb0).symm
-    have hr : (3 / 8 : ℝ) * (21 / 128 : ℝ) = (63 / 1024 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (21 / 128 : ℝ)) := hmul
-      _ = ENNReal.ofReal (63 / 1024 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (27 / 4096 : ℝ) + ENNReal.ofReal (63 / 1024 : ℝ) =
-        ENNReal.ofReal (279 / 4096 : ℝ) := by
-    have h27 : 0 ≤ (27 / 4096 : ℝ) := by norm_num
-    have h63 : 0 ≤ (63 / 1024 : ℝ) := by norm_num
-    have : (27 / 4096 : ℝ) + (63 / 1024 : ℝ) = (279 / 4096 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h27 h63).symm
-  rw [h1, h2]
-  exact hsum
+  simp_rw [mu_Ico_eq]
+  rw [lintegral_affine_mul_length gTB_eq_affine, hmul_int, hsub_int,
+    ofReal_mul_eq ha0 (by norm_num : (1 / 4 : ℝ) * (27 / 1024 : ℝ) = 27 / 4096),
+    ofReal_mul_eq hb0 (by norm_num : (3 / 8 : ℝ) * (21 / 128 : ℝ) = 63 / 1024)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (27 / 4096 : ℝ) + (63 / 1024 : ℝ) = 279 / 4096)
 
 lemma lintegral_b_below_t1_value :
     (∫⁻ b in Set.Iio t1, ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -431,24 +285,8 @@ lemma lintegral_b_below_t1_value :
     exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs hEq
   rw [hcongr]
   -- Split into the `gTB` part (measurable) and the triangle part.
-  have hmeasTB : Measurable fun b : Rand => gTB b * μ (Set.Ico b t) := by
-    have mb : Measurable fun b : Rand => (b : ℝ) := measurable_subtype_coe
-    have m_ofReal_b : Measurable fun b : Rand => ENNReal.ofReal (b : ℝ) :=
-      ENNReal.measurable_ofReal.comp mb
-    have m_ofReal_sub : Measurable fun b : Rand => ENNReal.ofReal ((t : ℝ) - (b : ℝ)) :=
-      ENNReal.measurable_ofReal.comp (measurable_const.sub mb)
-    have m_gTB_expr :
-        Measurable fun b : Rand =>
-          ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-      exact (measurable_const.mul m_ofReal_b).add measurable_const
-    have hfun :
-        (fun b : Rand => gTB b) =
-          fun b : Rand =>
-            ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-      funext b
-      simp [gTB_eq_affine]
-    -- `μ (Ico b t)` is the interval length `t - b` (as an `ofReal`).
-    simpa [μ, hfun] using m_gTB_expr.mul m_ofReal_sub
+  have hmeasTB : Measurable fun b : Rand => gTB b * μ (Set.Ico b t) :=
+    measurable_mul_Ico_measure measurable_gTB t
   have hsplit :
       (∫⁻ b in Set.Iio t1,
           (∫⁻ c in Set.Iio b, gCt c ∂μ) + gTB b * μ (Set.Ico b t) ∂μ) =
@@ -459,9 +297,7 @@ lemma lintegral_b_below_t1_value :
             gTB b * μ (Set.Ico b t) + (∫⁻ c in Set.Iio b, gCt c ∂μ) ∂μ) =
           (∫⁻ b in Set.Iio t1, gTB b * μ (Set.Ico b t) ∂μ) +
             ∫⁻ b in Set.Iio t1, (∫⁻ c in Set.Iio b, gCt c ∂μ) ∂μ := by
-      simpa using
-        (MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Iio t1)) hmeasTB
-          (fun b : Rand => ∫⁻ c in Set.Iio b, gCt c ∂μ))
+      simp_all
     simpa [add_comm, add_left_comm, add_assoc] using this
   rw [hsplit]
   have htri_val :
@@ -472,15 +308,9 @@ lemma lintegral_b_below_t1_value :
       (∫⁻ b in Set.Iio t1, gTB b * μ (Set.Ico b t) ∂μ) =
         ENNReal.ofReal (279 / 4096 : ℝ) :=
     lintegral_b_below_t1_gTB_value
-  have hsum :
-      ENNReal.ofReal (279 / 4096 : ℝ) + ENNReal.ofReal (117 / 4096 : ℝ) =
-        ENNReal.ofReal (99 / 1024 : ℝ) := by
-    have h279 : 0 ≤ (279 / 4096 : ℝ) := by norm_num
-    have h117 : 0 ≤ (117 / 4096 : ℝ) := by norm_num
-    have : (279 / 4096 : ℝ) + (117 / 4096 : ℝ) = (99 / 1024 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h279 h117).symm
   rw [hTB_val, htri_val]
-  exact hsum
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (279 / 4096 : ℝ) + (117 / 4096 : ℝ) = 99 / 1024)
 
 /-!
 ### `t1 ≤ b < t2` region
@@ -500,20 +330,9 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
     MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas
   have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      have hc1 : (c : ℝ) < 1 := lt_trans (show (c : ℝ) < t from hc) t_lt_one
-      exact ⟨by simpa using hc1, hc⟩
-  have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) := by
-    ext c
-    constructor
-    · rintro ⟨hc1, hct⟩
-      exact ⟨le_of_not_gt hct, hc1⟩
-    · intro hc
-      exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left t_lt_one.le
+  have hAdiff : ((Set.Iio (1 : Rand) : Set Rand) \ Set.Iio t) = Set.Ico t (1 : Rand) :=
+    Iio_diff_Iio t_lt_one.le
   -- On `t ≤ c < 1`, the contribution is `0` a.e. (we use `Ioc` to get `t < c`).
   have hIco : (Set.Ico t (1 : Rand) : Set Rand) =ᵐ[μ] (Set.Ioc t (1 : Rand) : Set Rand) := by
     simpa using (MeasureTheory.Ico_ae_eq_Ioc (μ := μ) (a := t) (b := (1 : Rand)))
@@ -536,27 +355,16 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   have hA :
       (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
         ∫⁻ c in Set.Iio t, innerBC b c ∂μ := by
-    have := hsplit'.symm
-    simpa [hzero] using this
+    simp_all
   -- Split `c < t` at `t2`.
   have ht2meas : MeasurableSet (Set.Iio t2 : Set Rand) := by simp
   have hsplit2 :=
     MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t : Set Rand)) (B := (Set.Iio t2 : Set Rand)) ht2meas
   have hBint : (Set.Iio t ∩ Set.Iio t2 : Set Rand) = Set.Iio t2 := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      exact ⟨lt_trans hc t2_lt_t, hc⟩
-  have hBdiff : (Set.Iio t \ Set.Iio t2 : Set Rand) = Set.Ico t2 t := by
-    ext c
-    constructor
-    · rintro ⟨hct, hc2⟩
-      exact ⟨le_of_not_gt hc2, hct⟩
-    · intro hc
-      exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left t2_lt_t.le
+  have hBdiff : (Set.Iio t \ Set.Iio t2 : Set Rand) = Set.Ico t2 t :=
+    Iio_diff_Iio t2_lt_t.le
   have hconst :
       (∫⁻ c in Set.Ico t2 t, innerBC b c ∂μ) = constT1T * μ (Set.Ico t2 t) := by
     have hs' : MeasurableSet (Set.Ico t2 t : Set Rand) := by simp
@@ -572,27 +380,16 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   have hsplit2' :
       (∫⁻ c in Set.Iio t, innerBC b c ∂μ) =
         (∫⁻ c in Set.Iio t2, innerBC b c ∂μ) + constT1T * μ (Set.Ico t2 t) := by
-    have := hsplit2.symm
-    simpa [hBint, hBdiff, hconst, add_comm, add_left_comm, add_assoc] using this
+    simp_all
   -- Split `c < t2` at `t1`.
   have ht1meas : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
   have hsplit3 :=
     MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t2 : Set Rand)) (B := (Set.Iio t1 : Set Rand)) ht1meas
   have hCint : (Set.Iio t2 ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by
-    ext c
-    constructor
-    · intro hc
-      exact hc.2
-    · intro hc
-      exact ⟨lt_trans hc t1_lt_t2, hc⟩
-  have hCdiff : (Set.Iio t2 \ Set.Iio t1 : Set Rand) = Set.Ico t1 t2 := by
-    ext c
-    constructor
-    · rintro ⟨hc2, hc1⟩
-      exact ⟨le_of_not_gt hc1, hc2⟩
-    · intro hc
-      exact ⟨hc.2, not_lt_of_ge hc.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left t1_lt_t2.le
+  have hCdiff : (Set.Iio t2 \ Set.Iio t1 : Set Rand) = Set.Ico t1 t2 :=
+    Iio_diff_Iio t1_lt_t2.le
   have hPartC :
       (∫⁻ c in Set.Iio t1, innerBC b c ∂μ) = ∫⁻ c in Set.Iio t1, gCt c ∂μ := by
     have hs' : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
@@ -606,22 +403,10 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   have hsplit4 :=
     MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Ico t1 t2 : Set Rand)) (B := (Set.Iio b : Set Rand)) hbmeas
-  have hDint : (Set.Ico t1 t2 ∩ Set.Iio b : Set Rand) = Set.Ico t1 b := by
-    ext c
-    constructor
-    · rintro ⟨hcA, hcb⟩
-      exact ⟨hcA.1, hcb⟩
-    · intro hc
-      refine ⟨?_, hc.2⟩
-      exact ⟨hc.1, lt_trans hc.2 hb2⟩
-  have hDdiff : (Set.Ico t1 t2 \ Set.Iio b : Set Rand) = Set.Ico b t2 := by
-    ext c
-    constructor
-    · rintro ⟨hcA, hcb⟩
-      exact ⟨le_of_not_gt hcb, hcA.2⟩
-    · intro hc
-      refine ⟨?_, not_lt_of_ge hc.1⟩
-      exact ⟨le_trans hb1 hc.1, hc.2⟩
+  have hDint : (Set.Ico t1 t2 ∩ Set.Iio b : Set Rand) = Set.Ico t1 b :=
+    Ico_inter_Iio hb2.le
+  have hDdiff : (Set.Ico t1 t2 \ Set.Iio b : Set Rand) = Set.Ico b t2 :=
+    Ico_diff_Iio hb1
   have hPartD1 :
       (∫⁻ c in Set.Ico t1 b, innerBC b c ∂μ) = ∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ := by
     have hs' : MeasurableSet (Set.Ico t1 b : Set Rand) := by simp
@@ -639,20 +424,17 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
       exact innerBC_eq_gT2B_of_t1_le_b_lt_t2_of_b_le_c_of_c_lt_t2 (b := b) hb1 hb2 hc.1 hc.2
     calc
       (∫⁻ c in Set.Ico b t2, innerBC b c ∂μ) =
-          ∫⁻ _c in Set.Ico b t2, gT2B b ∂μ := by
-            exact MeasureTheory.setLIntegral_congr_fun (μ := μ) hs' hEq
+          ∫⁻ _c in Set.Ico b t2, gT2B b ∂μ := MeasureTheory.setLIntegral_congr_fun (μ := μ) hs' hEq
       _ = gT2B b * μ (Set.Ico b t2) := by simp
   have hsplit4' :
       (∫⁻ c in Set.Ico t1 t2, innerBC b c ∂μ) =
         (∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ) + gT2B b * μ (Set.Ico b t2) := by
-    have := hsplit4.symm
-    simpa [hDint, hDdiff, hPartD1, hPartD2, add_comm, add_left_comm, add_assoc] using this
+    simp_all
   have hsplit3' :
       (∫⁻ c in Set.Iio t2, innerBC b c ∂μ) =
         (∫⁻ c in Set.Iio t1, gCt c ∂μ) +
           ((∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ) + gT2B b * μ (Set.Ico b t2)) := by
-    have := hsplit3.symm
-    simpa [hCint, hCdiff, hPartC, hsplit4', add_comm, add_left_comm, add_assoc] using this
+    simp_all
   -- Put everything together.
   calc
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
@@ -673,10 +455,8 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
 private lemma lintegral_gT2B_rect_t1_t2_value :
     (∫⁻ b in Set.Ico t1 t2, gT2B b * μ (Set.Ico b t2) ∂μ) =
       ENNReal.ofReal (19025 / 3145728 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by
-    norm_num
-  have hb0 : 0 ≤ (15 / 32 : ℝ) := by
-    norm_num
+  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
+  have hb0 : 0 ≤ (15 / 32 : ℝ) := by norm_num
   have hpoly1 :
       (∫⁻ x in Set.Ico t1 t2, ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) ∂μ) =
         ENNReal.ofReal (1025 / 196608 : ℝ) := by
@@ -687,8 +467,7 @@ private lemma lintegral_gT2B_rect_t1_t2_value :
         ((t2 : ℝ) * ((t2 : ℝ) ^ 2 - (t1 : ℝ) ^ 2) / 2 -
             (((t2 : ℝ) ^ 3 - (t1 : ℝ) ^ 3) / 3)) =
           (1025 / 196608 : ℝ) := by
-      simp [t1, t2]
-      norm_num
+      norm_num [t1, t2]
     simpa [μ, hr] using h
   have hpoly2 :
       (∫⁻ x in Set.Ico t1 t2, ENNReal.ofReal ((t2 : ℝ) - x) ∂μ) =
@@ -699,90 +478,14 @@ private lemma lintegral_gT2B_rect_t1_t2_value :
     have hr :
         ((t2 : ℝ) * ((t2 : ℝ) - (t1 : ℝ)) - (((t2 : ℝ) ^ 2 - (t1 : ℝ) ^ 2) / 2)) =
           (25 / 2048 : ℝ) := by
-      simp [t1, t2]
-      norm_num
+      norm_num [t1, t2]
     simpa [μ, hr] using h
-  have hrewrite :
-      (fun x : Rand => gT2B x * μ (Set.Ico x t2)) =
-        fun x : Rand =>
-          ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) +
-            ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal ((t2 : ℝ) - x) := by
-    funext x
-    have hx0 : 0 ≤ (x : ℝ) := x.property.1
-    have hprod :
-        ENNReal.ofReal (x : ℝ) * ENNReal.ofReal ((t2 : ℝ) - x) =
-          ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) := by
-      simpa using (ENNReal.ofReal_mul hx0).symm
-    simp [μ, gT2B_eq_affine, add_mul, mul_assoc, hprod]
-  rw [hrewrite]
-  have hmeas1 :
-      Measurable fun x : Rand =>
-        ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) := by
-    have mx : Measurable fun x : Rand => (x : ℝ) := measurable_subtype_coe
-    have mpoly : Measurable fun x : Rand => (x : ℝ) * ((t2 : ℝ) - x) :=
-      mx.mul (measurable_const.sub mx)
-    exact measurable_const.mul (ENNReal.measurable_ofReal.comp mpoly)
-  rw [MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Ico t1 t2)) hmeas1]
-  have hA :
-      (∫⁻ x in Set.Ico t1 t2,
-          ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) ∂μ) =
-        ENNReal.ofReal (1 / 16 : ℝ) *
-          (∫⁻ x in Set.Ico t1 t2,
-              ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) ∂μ) := by
-    have mx :
-        Measurable fun x : Rand => ENNReal.ofReal ((x : ℝ) * ((t2 : ℝ) - x)) := by
-      exact
-        ENNReal.measurable_ofReal.comp
-          ((measurable_subtype_coe).mul (measurable_const.sub measurable_subtype_coe))
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Ico t1 t2))
-        (r := ENNReal.ofReal (1 / 16 : ℝ)) mx)
-  have hB :
-      (∫⁻ x in Set.Ico t1 t2,
-          ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal ((t2 : ℝ) - x) ∂μ) =
-        ENNReal.ofReal (15 / 32 : ℝ) *
-          (∫⁻ x in Set.Ico t1 t2, ENNReal.ofReal ((t2 : ℝ) - x) ∂μ) := by
-    have mx : Measurable fun x : Rand => ENNReal.ofReal ((t2 : ℝ) - x) := by
-      exact ENNReal.measurable_ofReal.comp (measurable_const.sub measurable_subtype_coe)
-    simpa using
-      (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Ico t1 t2))
-        (r := ENNReal.ofReal (15 / 32 : ℝ)) mx)
-  rw [hA, hB, hpoly1, hpoly2]
-  have h1 :
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-        ENNReal.ofReal (1025 / 3145728 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-          ENNReal.ofReal ((1 / 16 : ℝ) * (1025 / 196608 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 16 : ℝ)) (q := (1025 / 196608 : ℝ)) ha0).symm
-    have hr : (1 / 16 : ℝ) * (1025 / 196608 : ℝ) = (1025 / 3145728 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-          ENNReal.ofReal ((1 / 16 : ℝ) * (1025 / 196608 : ℝ)) := hmul
-      _ = ENNReal.ofReal (1025 / 3145728 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-        ENNReal.ofReal (18000 / 3145728 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-          ENNReal.ofReal ((15 / 32 : ℝ) * (25 / 2048 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (25 / 2048 : ℝ)) hb0).symm
-    have hr : (15 / 32 : ℝ) * (25 / 2048 : ℝ) = (18000 / 3145728 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-          ENNReal.ofReal ((15 / 32 : ℝ) * (25 / 2048 : ℝ)) := hmul
-      _ = ENNReal.ofReal (18000 / 3145728 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (1025 / 3145728 : ℝ) + ENNReal.ofReal (18000 / 3145728 : ℝ) =
-        ENNReal.ofReal (19025 / 3145728 : ℝ) := by
-    have h1' : 0 ≤ (1025 / 3145728 : ℝ) := by norm_num
-    have h2' : 0 ≤ (18000 / 3145728 : ℝ) := by norm_num
-    have : (1025 / 3145728 : ℝ) + (18000 / 3145728 : ℝ) = (19025 / 3145728 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h1' h2').symm
-  rw [h1, h2]
-  exact hsum
+  simp_rw [mu_Ico_eq]
+  rw [lintegral_affine_mul_length gT2B_eq_affine, hpoly1, hpoly2,
+    ofReal_mul_eq ha0 (by norm_num : (1 / 16 : ℝ) * (1025 / 196608 : ℝ) = 1025 / 3145728),
+    ofReal_mul_eq hb0 (by norm_num : (15 / 32 : ℝ) * (25 / 2048 : ℝ) = 18000 / 3145728)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (1025 / 3145728 : ℝ) + (18000 / 3145728 : ℝ) = 19025 / 3145728)
 
 private lemma lintegral_gCt2_triangle_t1_t2_value :
     (∫⁻ b in Set.Ico t1 t2, ∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ ∂μ) =
@@ -790,25 +493,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
 := by
   -- Use the indicator trick and the `Iio` triangle swap.
   let f : Rand → ℝ≥0∞ := (Set.Ici t1).indicator gCt2
-  have hf : Measurable f := by
-    have hg : Measurable gCt2 := by
-      have mc : Measurable fun c : Rand => (c : ℝ) := measurable_subtype_coe
-      have m_ofReal_c : Measurable fun c : Rand => ENNReal.ofReal (c : ℝ) :=
-        ENNReal.measurable_ofReal.comp mc
-      have m_expr :
-          Measurable fun c : Rand =>
-            ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (c : ℝ) +
-              ENNReal.ofReal (15 / 32 : ℝ) := by
-        exact (measurable_const.mul m_ofReal_c).add measurable_const
-      have hfun :
-          (fun c : Rand => gCt2 c) =
-            fun c : Rand =>
-              ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (c : ℝ) +
-                ENNReal.ofReal (15 / 32 : ℝ) := by
-        funext c
-        simp [gCt2_eq_affine]
-      simpa [hfun] using m_expr
-    simpa [f] using hg.indicator (by simp)
+  have hf : Measurable f := by simpa [f] using measurable_gCt2.indicator (by simp)
   have htriIio := lintegral_triangle_Iio (B := t2) (f := f) hf
   -- Reduce the `b`-domain from `Iio t2` to `Ico t1 t2` by splitting at `t1`.
   have ht1meas : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
@@ -817,19 +502,9 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
       (f := fun b : Rand => ∫⁻ c in Set.Iio b, f c ∂μ)
       (A := (Set.Iio t2 : Set Rand)) (B := (Set.Iio t1 : Set Rand)) ht1meas
   have hBint : (Set.Iio t2 ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by
-    ext x
-    constructor
-    · intro hx
-      exact hx.2
-    · intro hx
-      exact ⟨lt_trans hx t1_lt_t2, hx⟩
-  have hBdiff : (Set.Iio t2 \ Set.Iio t1 : Set Rand) = Set.Ico t1 t2 := by
-    ext x
-    constructor
-    · rintro ⟨hx2, hx1⟩
-      exact ⟨le_of_not_gt hx1, hx2⟩
-    · intro hx
-      exact ⟨hx.2, not_lt_of_ge hx.1⟩
+    rw [Set.inter_comm]; exact Iio_inter_Iio_left t1_lt_t2.le
+  have hBdiff : (Set.Iio t2 \ Set.Iio t1 : Set Rand) = Set.Ico t1 t2 :=
+    Iio_diff_Iio t1_lt_t2.le
   have hzero :
       (∫⁻ b in Set.Iio t1, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) = 0 := by
     have hs' : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
@@ -840,17 +515,14 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
       have hEq0 : Set.EqOn f 0 (Set.Iio b : Set Rand) := by
         intro c hc
         have hct1 : (c : ℝ) < t1 := lt_trans hc hb
-        have : c ∉ Set.Ici t1 := by
-          simpa [Set.mem_Ici] using (not_le_of_gt hct1)
+        have : c ∉ Set.Ici t1 := by simpa [Set.mem_Ici] using (not_le_of_gt hct1)
         simp [f, this]
       simpa using (MeasureTheory.setLIntegral_eq_zero (μ := μ) hsIb hEq0)
     simpa using (MeasureTheory.setLIntegral_eq_zero (μ := μ) hs' hEq)
   have hsplitb' :
       (∫⁻ b in Set.Iio t2, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) =
         (∫⁻ b in Set.Ico t1 t2, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) := by
-    have := hsplitb.symm
-    -- `A ∩ B = Iio t1`, `A \ B = Ico t1 t2`, and the `Iio t1` part is zero.
-    simpa [hBint, hBdiff, hzero, add_zero] using this
+    simp_all
   -- Convert the inner integral on `Iio b` to one on `Ico t1 b` (since `f` vanishes below `t1`).
   have hinner :
       (fun b : Rand => ∫⁻ c in Set.Iio b, f c ∂μ) =
@@ -894,19 +566,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
     have hset : (Set.Ici t1 ∩ Set.Iio t2 : Set Rand) = Set.Ico t1 t2 := by
       ext c
       simp [Set.mem_Ici, Set.mem_Iio, Set.mem_Ico]
-    have hInd' :
-        (∫⁻ c in Set.Iio t2,
-              (Set.Ici t1).indicator (fun c : Rand => gCt2 c * μ (Set.Ioo c t2)) c ∂μ) =
-            ∫⁻ c in Set.Ico t1 t2, gCt2 c * μ (Set.Ioo c t2) ∂μ := by
-      -- rewrite the target set and reuse `hInd`
-      rw [← hset]
-      exact hInd
-    calc
-      (∫⁻ c in Set.Iio t2, f c * μ (Set.Ioo c t2) ∂μ) =
-          ∫⁻ c in Set.Iio t2,
-              (Set.Ici t1).indicator (fun c : Rand => gCt2 c * μ (Set.Ioo c t2)) c ∂μ := by
-                simp_rw [hind]
-      _ = ∫⁻ c in Set.Ico t1 t2, gCt2 c * μ (Set.Ioo c t2) ∂μ := hInd'
+    simp_all
   have hEqIntegrand :
       (fun c : Rand => gCt2 c * μ (Set.Ioo c t2)) =
         fun c : Rand => gT2B c * μ (Set.Ico c t2) := by
@@ -915,15 +575,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
   have hSwap_to_Rect :
       (∫⁻ c in Set.Ico t1 t2, gCt2 c * μ (Set.Ioo c t2) ∂μ) =
         (∫⁻ b in Set.Ico t1 t2, gT2B b * μ (Set.Ico b t2) ∂μ) := by
-    have hsIco : MeasurableSet (Set.Ico t1 t2 : Set Rand) := by simp
-    have hEqOn :
-        Set.EqOn (fun c : Rand => gCt2 c * μ (Set.Ioo c t2))
-          (fun c : Rand => gT2B c * μ (Set.Ico c t2)) (Set.Ico t1 t2 : Set Rand) := by
-      intro c _hc
-      simpa using congrArg (fun f => f c) hEqIntegrand
-    have hcongr :=
-      (MeasureTheory.setLIntegral_congr_fun (μ := μ) hsIco hEqOn)
-    simpa using hcongr
+    simp_all
   calc
     (∫⁻ b in Set.Ico t1 t2, ∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ ∂μ) =
         (∫⁻ b in Set.Iio t2, ∫⁻ c in Set.Iio b, f c ∂μ ∂μ) := this
@@ -939,92 +591,36 @@ private lemma lintegral_t1_t2_main_value :
       ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) := by
   have hConstC : (∫⁻ c in Set.Iio t1, gCt c ∂μ) = ENNReal.ofReal (81 / 512 : ℝ) := by
     simpa using lintegral_gCt_Iio_t1
-  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by
-    simp [μ, t1, t2]
-    norm_num
-  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by
-    simp [μ, t2, t]
-    norm_num
+  have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by norm_num [μ, t1, t2]
+  have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by norm_num [μ, t2, t]
   -- Split off the rectangle term; the rest is constant.
   have hconst :
       (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =
         ENNReal.ofReal (207 / 1024 : ℝ) := by
     have h45 :
         constT1T * μ (Set.Ico t2 t) = ENNReal.ofReal (45 / 1024 : ℝ) := by
-      have h15 : 0 ≤ (15 / 32 : ℝ) := by norm_num
-      have hmul :
-          ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) =
-            ENNReal.ofReal ((15 / 32 : ℝ) * (3 / 32 : ℝ)) := by
-        exact
-          (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (3 / 32 : ℝ)) h15).symm
-      have hr : (15 / 32 : ℝ) * (3 / 32 : ℝ) = (45 / 1024 : ℝ) := by norm_num
-      calc
-        constT1T * μ (Set.Ico t2 t) =
-            ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) := by
-              simp [constT1T_eq, hμt2t]
-        _ = ENNReal.ofReal ((15 / 32 : ℝ) * (3 / 32 : ℝ)) := hmul
-        _ = ENNReal.ofReal (45 / 1024 : ℝ) := by rw [hr]
-    have h81 : 0 ≤ (81 / 512 : ℝ) := by norm_num
-    have h45' : 0 ≤ (45 / 1024 : ℝ) := by norm_num
-    have hsum :
-        ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (45 / 1024 : ℝ) =
-          ENNReal.ofReal (207 / 1024 : ℝ) := by
-      have : (81 / 512 : ℝ) + (45 / 1024 : ℝ) = (207 / 1024 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h81 h45').symm
-    calc
-      (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =
-          ENNReal.ofReal (81 / 512 : ℝ) + constT1T * μ (Set.Ico t2 t) := by
-            rw [hConstC]
-      _ = ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (45 / 1024 : ℝ) := by
-            rw [h45]
-      _ = ENNReal.ofReal (207 / 1024 : ℝ) := hsum
+      rw [constT1T_eq, hμt2t]
+      exact ofReal_mul_eq (by norm_num) (by norm_num : (15 / 32 : ℝ) * (3 / 32 : ℝ) = 45 / 1024)
+    rw [hConstC, h45]
+    exact ofReal_add_eq (by norm_num) (by norm_num)
+      (by norm_num : (81 / 512 : ℝ) + (45 / 1024 : ℝ) = 207 / 1024)
   -- Integral of the constant part.
   have hconstInt :
       (∫⁻ _b in Set.Ico t1 t2,
           (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) ∂μ) =
         ENNReal.ofReal (49680 / 1572864 : ℝ) := by
-    have hμ : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := hμt1t2
-    have h207 : 0 ≤ (207 / 1024 : ℝ) := by norm_num
-    have hmul :
-        ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) =
-          ENNReal.ofReal ((207 / 1024 : ℝ) * (5 / 32 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (207 / 1024 : ℝ)) (q := (5 / 32 : ℝ)) h207).symm
-    have hr : (207 / 1024 : ℝ) * (5 / 32 : ℝ) = (49680 / 1572864 : ℝ) := by norm_num
     calc
       (∫⁻ _b in Set.Ico t1 t2,
           (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) ∂μ) =
           ((∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t)) * μ (Set.Ico t1 t2) := by
             simp
-      _ = ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) := by
-            have hconst' :
-                (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =
-                  ENNReal.ofReal (207 / 1024 : ℝ) := hconst
-            rw [hconst', hμ]
-      _ = ENNReal.ofReal ((207 / 1024 : ℝ) * (5 / 32 : ℝ)) := hmul
-      _ = ENNReal.ofReal (49680 / 1572864 : ℝ) := by rw [hr]
+      _ = ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) := by rw [hconst, hμt1t2]
+      _ = ENNReal.ofReal (49680 / 1572864 : ℝ) :=
+            ofReal_mul_eq (by norm_num)
+              (by norm_num : (207 / 1024 : ℝ) * (5 / 32 : ℝ) = 49680 / 1572864)
   -- Combine constant and rectangle.
-  have hmeasRect : Measurable fun b : Rand => gT2B b * μ (Set.Ico b t2) := by
-    -- same as `m_rect` above
-    have mb : Measurable fun b : Rand => (b : ℝ) := measurable_subtype_coe
-    have m_ofReal_b : Measurable fun b : Rand => ENNReal.ofReal (b : ℝ) :=
-      ENNReal.measurable_ofReal.comp mb
-    have m_ofReal_sub :
-        Measurable fun b : Rand => ENNReal.ofReal ((t2 : ℝ) - (b : ℝ)) :=
-      ENNReal.measurable_ofReal.comp (measurable_const.sub mb)
-    have m_expr :
-        Measurable fun b : Rand =>
-          ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) +
-            ENNReal.ofReal (15 / 32 : ℝ) := by
-      exact (measurable_const.mul m_ofReal_b).add measurable_const
-    have hfun :
-        (fun b : Rand => gT2B b) =
-          fun b : Rand =>
-            ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) +
-              ENNReal.ofReal (15 / 32 : ℝ) := by
-      funext b
-      simp [gT2B_eq_affine]
-    simpa [μ, hfun] using m_expr.mul m_ofReal_sub
+  have hmeasRect : Measurable fun b : Rand => gT2B b * μ (Set.Ico b t2) :=
+    measurable_mul_Ico_measure measurable_gT2B t2
   have hsplitMain :
       (∫⁻ b in Set.Ico t1 t2,
           gT2B b * μ (Set.Ico b t2) +
@@ -1032,10 +628,7 @@ private lemma lintegral_t1_t2_main_value :
         (∫⁻ b in Set.Ico t1 t2, gT2B b * μ (Set.Ico b t2) ∂μ) +
           ∫⁻ _b in Set.Ico t1 t2,
             (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) ∂μ := by
-    exact
-      (MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Ico t1 t2)) hmeasRect
-        (fun _b : Rand =>
-          (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t)))
+    simp_all
   -- Finish by rewriting `a + rect(b) + c` as `rect(b) + (a + c)` and applying computed values.
   have hrew :
       (fun b : Rand =>
@@ -1081,28 +674,9 @@ lemma lintegral_b_t1_t2_value :
         (∫⁻ c in Set.Iio t1, gCt c ∂μ) +
           gT2B b * μ (Set.Ico b t2) +
           constT1T * μ (Set.Ico t2 t) := by
-    have mb : Measurable fun b : Rand => (b : ℝ) := measurable_subtype_coe
-    have m_ofReal_b : Measurable fun b : Rand => ENNReal.ofReal (b : ℝ) :=
-      ENNReal.measurable_ofReal.comp mb
-    have m_ofReal_sub : Measurable fun b : Rand => ENNReal.ofReal ((t2 : ℝ) - (b : ℝ)) :=
-      ENNReal.measurable_ofReal.comp (measurable_const.sub mb)
-    have m_gT2B :
-        Measurable fun b : Rand =>
-          ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) := by
-      exact (measurable_const.mul m_ofReal_b).add measurable_const
-    have hfun :
-        (fun b : Rand => gT2B b) =
-          fun b : Rand =>
-            ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) +
-              ENNReal.ofReal (15 / 32 : ℝ) := by
-      funext b
-      simp [gT2B_eq_affine]
-    have m_rect : Measurable fun b : Rand => gT2B b * μ (Set.Ico b t2) := by
-      simpa [μ, hfun] using m_gT2B.mul m_ofReal_sub
-    -- sum with constants
-    have m_const : Measurable fun _b : Rand => (∫⁻ c in Set.Iio t1, gCt c ∂μ) := measurable_const
-    have m_const2 : Measurable fun _b : Rand => constT1T * μ (Set.Ico t2 t) := measurable_const
-    simpa [add_assoc, add_left_comm, add_comm] using (m_const.add (m_rect.add m_const2))
+    have m_rect : Measurable fun b : Rand => gT2B b * μ (Set.Ico b t2) :=
+      measurable_mul_Ico_measure measurable_gT2B t2
+    exact ((measurable_const.add m_rect).add measurable_const)
   have hsplit :=
     MeasureTheory.lintegral_add_left (μ := μ.restrict (Set.Ico t1 t2)) hmeasMain
       (fun b : Rand => ∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ)
@@ -1145,24 +719,18 @@ lemma lintegral_b_t1_t2_value :
                 constT1T * μ (Set.Ico t2 t) ∂μ) =
           ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) := hMain
     rw [hMainVal, hTri]
-    have h19025 : 0 ≤ (19025 / 3145728 : ℝ) := by norm_num
     have h2J :
         ENNReal.ofReal (19025 / 3145728 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) =
-          ENNReal.ofReal (19025 / 1572864 : ℝ) := by
-      have : (19025 / 3145728 : ℝ) + (19025 / 3145728 : ℝ) = (19025 / 1572864 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h19025 h19025).symm
+          ENNReal.ofReal (19025 / 1572864 : ℝ) :=
+      ofReal_add_eq (by norm_num) (by norm_num)
+        (by norm_num : (19025 / 3145728 : ℝ) + (19025 / 3145728 : ℝ) = 19025 / 1572864)
     have hsum :
         ENNReal.ofReal (49680 / 1572864 : ℝ) +
             (ENNReal.ofReal (19025 / 3145728 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ)) =
           ENNReal.ofReal (68705 / 1572864 : ℝ) := by
-      have h49680 : 0 ≤ (49680 / 1572864 : ℝ) := by norm_num
-      have h19025' : 0 ≤ (19025 / 1572864 : ℝ) := by norm_num
-      have : (49680 / 1572864 : ℝ) + (19025 / 1572864 : ℝ) = (68705 / 1572864 : ℝ) := by norm_num
-      have :
-          ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 1572864 : ℝ) =
-            ENNReal.ofReal (68705 / 1572864 : ℝ) := by
-        simpa [this] using (ENNReal.ofReal_add h49680 h19025').symm
-      simpa [h2J, add_assoc] using this
+      rw [h2J]
+      exact ofReal_add_eq (by norm_num) (by norm_num)
+        (by norm_num : (49680 / 1572864 : ℝ) + (19025 / 1572864 : ℝ) = 68705 / 1572864)
     simpa [add_assoc, add_left_comm, add_comm] using hsum
   exact htotal
 

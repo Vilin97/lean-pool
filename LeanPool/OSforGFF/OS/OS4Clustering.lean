@@ -118,11 +118,8 @@ lemma gff_generating_sum_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunct
 
 /-- The inverse of the identity linear isometry is itself. -/
 lemma LinearIsometry_inv_one : LinearIsometry.inv (1 : O4) = 1 := by
-  -- Use comp_inv: R.comp (inv R) = 1
-  -- For R = 1: 1.comp (inv 1) = 1, so inv 1 = 1 (since 1.comp x = x)
   have h := LinearIsometry.comp_inv (1 : O4)
-  simp only [LinearIsometry.one_comp] at h
-  exact h
+  simpa only [LinearIsometry.one_comp] using h
 
 /-! ## Translation Invariance from OS2 -/
 
@@ -132,8 +129,7 @@ lemma generating_euclidean_invariant
     (h_inv : os2EuclideanInvariance dμ_config)
     (g : E) (f : TestFunctionℂ) :
     GJGeneratingFunctionalℂ dμ_config (euclideanAction g f) =
-    GJGeneratingFunctionalℂ dμ_config f := by
-  exact (h_inv g f).symm
+    GJGeneratingFunctionalℂ dμ_config f := (h_inv g f).symm
 
 /-! ## GFF Generating Functional Norm Bound -/
 
@@ -163,15 +159,11 @@ lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction
   have heq : freeCovarianceℂBilinear m (toComplex f) (toComplex f) =
              freeCovarianceℂ m (toComplex f) (toComplex f) := by
     unfold freeCovarianceℂBilinear freeCovarianceℂ
-    congr 1; ext x; congr 1; ext y
-    have : starRingEnd ℂ (toComplex f y) = toComplex f y := by simp [toComplex_apply]
-    rw [this]
+    simp_all
   rw [heq]
   have h_nonneg : 0 ≤ (freeCovarianceℂ m (toComplex f) (toComplex f)).re :=
     freeCovarianceℂ_positive m (toComplex f)
-  calc Real.exp (-(1/2) * (freeCovarianceℂ m (toComplex f) (toComplex f)).re)
-      ≤ Real.exp 0 := by apply Real.exp_le_exp.mpr; nlinarith
-    _ = 1 := Real.exp_zero
+  simp_all
 
 /-! ## Technical Lemma for OS4 (Real Test Functions) -/
 
@@ -264,8 +256,7 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
       -- fC = toComplex f and T_a_gC = toComplex (g.translate a)
       change distributionPairingℂReal ω (toComplex f) * distributionPairingℂReal ω (toComplex
         (g.translate a)) = _
-      rw [distributionPairingℂ_real_toComplex, distributionPairingℂ_real_toComplex,
-        Complex.ofReal_mul]
+      simp_all
     rw [h_fun_eq]
     exact integral_complex_ofReal
   have h_S2_norm : ‖S₂ fC T_a_gC‖ = |SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate
@@ -282,18 +273,13 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
       = ‖Z fC * Z gC * (Complex.exp (-S₂ fC T_a_gC) - 1)‖ := by rw [h_diff]
     _ = ‖Z fC‖ * ‖Z gC‖ * ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by rw [norm_mul, norm_mul]
     _ ≤ 1 * 1 * ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by
-        apply mul_le_mul
-        · exact mul_le_mul h_Zf_le h_Zg_le (norm_nonneg _) (by linarith)
-        · exact le_refl _
-        · exact norm_nonneg _
-        · exact mul_self_nonneg 1
+        gcongr
     _ = ‖Complex.exp (-S₂ fC T_a_gC) - 1‖ := by ring
     _ ≤ 2 * ‖-S₂ fC T_a_gC‖ := Complex.norm_exp_sub_one_le h_S2_small
     _ = 2 * |SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)| := by
         simp [norm_neg, h_S2_norm]
     _ < 2 * δ := by
-        apply mul_lt_mul_of_pos_left h_decay
-        norm_num
+        simp_all
 
 /-! ## Main Theorem: OS4 for Gaussian Free Field -/
 
@@ -392,8 +378,7 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
         have h_schwinger : SchwingerFunction₂ (gaussianFreeFieldFree m) f (g.translate a)
             = freeCovarianceFormR m f (g.translate a) := by
           rw [h_schwinger1]
-          simp only [distributionPairing]
-          exact h_schwinger2
+          simpa only [distributionPairing] using h_schwinger2
         -- Step 6c: freeCovarianceFormR uses freeCovariance = freeCovarianceKernel (x - y)
         -- freeCovarianceFormR m f h = ∫∫ f(x) freeCovariance(x,y) h(y) dx dy
         -- and (g.translate a)(y) = g(y - a)
@@ -660,8 +645,7 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
     -- The RHS is exactly the form of the decay lemma with a = timeShiftConst(t)
     have h_norm_bound := hBound (TimeTranslation.timeShiftConst t)
     -- ‖timeShiftConst(t)‖ = |t| = t for t ≥ 0
-    rw [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
-    exact h_norm_bound
+    rwa [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
   -- Step 6: Construct the final constant
   -- The bound is: |LHS - Ef·Eg| ≤ |Ef| · |Eg| · |e^{S₂} - 1|
   --             ≤ |Ef| · |Eg| · |S₂| · e^{|S₂|}  (by exp bound)

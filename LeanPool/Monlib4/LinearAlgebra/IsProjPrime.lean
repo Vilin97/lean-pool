@@ -85,7 +85,6 @@ theorem orthogonalProjection'_eq_linear_proj'
     {K : Submodule 𝕜 E} [K.HasOrthogonalProjection] (x : E) :
     (orthogonalProjection' K : E →ₗ[𝕜] E) x =
       (K.subtype).comp
-        (K.projectionOnto Kᗮ K.isCompl_orthogonal) x :=
-  by
+        (K.projectionOnto Kᗮ K.isCompl_orthogonal) x := by
   rw [← orthogonal_projection'_eq_linear_proj]
   rfl

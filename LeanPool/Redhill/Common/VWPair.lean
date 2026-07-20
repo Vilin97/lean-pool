@@ -80,8 +80,7 @@ lemma nonempty_double_not_dvd_four : Finset.Nonempty {i : Fin 4 | ¬4 ∣ v + i 
 def fourAndOddPrimes (m : ℕ) : Finset ℕ :=
   insert 4 {p ∈ Icc 3 m | p.Prime}
 
-lemma zero_notMem_fourAndOddPrimes : 0 ∉ fourAndOddPrimes m := by
-  simp [fourAndOddPrimes]
+lemma zero_notMem_fourAndOddPrimes : 0 ∉ fourAndOddPrimes m := by simp [fourAndOddPrimes]
 
 lemma fourAndOddPrimes_pairwise_coprime : Set.Pairwise (fourAndOddPrimes m) Coprime := by
   rw [fourAndOddPrimes, coe_insert, coe_filter, Set.pairwise_insert_of_symm]
@@ -118,8 +117,7 @@ def crtShift (v w m : ℕ) : ℕ :=
     (by simp [zero_notMem_fourAndOddPrimes]) fourAndOddPrimes_pairwise_coprime
 
 lemma crtShift_modEq (mi : p ∈ fourAndOddPrimes m) :
-    crtShift v w m ≡ nonDividingShift v w p [MOD p] :=
-  (chineseRemainderOfFinset ..).2 _ mi
+    crtShift v w m ≡ nonDividingShift v w p [MOD p] := (chineseRemainderOfFinset ..).2 _ mi
 
 lemma crtShift_not_dvd {k : ℕ} (hk : k ∈ Icc 3 m) :
     ¬k ∣ v + crtShift v w m ∧ ¬k ∣ w + crtShift v w m := by

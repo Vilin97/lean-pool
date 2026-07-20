@@ -375,9 +375,7 @@ lemma entropy_prodMkRight' [Countable S] [MeasurableSingletonClass S] [Countable
     Hk[prodMkRight S η, μ.prod ν] = Hk[η, μ] := by
   rw [← entropy_prodMkRight (μ :=
     μ) ((finiteKernelSupport_of_const ν).aefiniteKernelSupport _)]
-  congr
-  ext s hs
-  simp_rw [Measure.prod_apply hs, Measure.compProd_apply hs, Kernel.const_apply]
+  simp_all
 
 @[simp]
 lemma entropy_prodMkLeft [Countable S] [MeasurableSingletonClass S] [Countable T]
@@ -417,8 +415,7 @@ lemma entropy_map_le
   have : Hk[κ, μ] = Hk[map κ (fun x ↦ (x, f x)), μ] := by
     refine (entropy_map_of_injective κ μ (f := fun x ↦ (x, f x)) ?_ (by fun_prop)).symm
     intro x y hxy
-    simp only [Prod.mk.injEq] at hxy
-    exact hxy.1
+    simp_all
   rw [this, chain_rule' hκ.map]
   simp_rw [snd_map_prod κ measurable_id', le_add_iff_nonneg_right]
   exact entropy_nonneg _ _

@@ -148,15 +148,11 @@ lemma _root_.VML.VMLInput.hKilling (p : VMLInput X) :
       dotProduct v (FlatTorus3.gradX p.aLoc x) +
       dotProduct (p.E x) (p.bLoc x) +
       dotProduct v ((2 * p.cLoc x) • p.E x + cross (p.B x) (p.bLoc x)) = 0 := by
-    intro v; have := hpoly v
-    rw [hgrad_c, dotProduct_zero, zero_mul, zero_add] at this
-    exact this
+    simp_all
   -- C = 0: substitute v = 0
   have hC : dotProduct (p.E x) (p.bLoc x) = 0 := by
     have := hred 0
-    simp only [Pi.zero_apply, mul_zero, zero_mul, sum_const_zero, zero_dotProduct, add_zero,
-      zero_add, dotProduct_add, dotProduct_smul, smul_eq_mul] at this
-    exact this
+    simp_all
   -- Q(v) + L(v) = 0
   have hQL : ∀ v : Fin 3 → ℝ,
       (∑ i : Fin 3, ∑ j : Fin 3, v i * v j *
@@ -245,8 +241,7 @@ lemma _root_.VML.VMLInput.hJ_def' (p : VMLInput X) :
   have hform' : ∀ x, ∃ a₀, ∀ v,
       p.f x v = Real.exp (a₀ + dotProduct ((fun _ => p.b₀) x) v + p.c₀ * normSq v) :=
     hform
-  have := p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
-  exact this
+  exact p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
 
 /-- The drift parameter b₀ vanishes.
     Proof: Ampère + Stokes on T³ gives |u₀|² ∫ ρ = 0, and ∫ ρ > 0,
@@ -264,16 +259,12 @@ lemma _root_.VML.VMLInput.hb₀_zero (p : VMLInput X) : p.b₀ = 0 := by
     exact dotProduct_smul_self (p.ρ x) u₀
   -- Step 3: ∫ ρ * |u₀|² = |u₀|² * ∫ ρ = 0
   have h3 : FlatTorus3.spatialIntegral (fun x => p.ρ x * normSq u₀) = 0 := by
-    rwa [show (fun x => p.ρ x * normSq u₀) =
-      (fun x => dotProduct u₀ (FlatTorus3.curlX p.B x)) from funext (fun x => (h2 x).symm)]
+    simp_all
   have h4 : FlatTorus3.spatialIntegral p.ρ * normSq u₀ = 0 := by
     rwa [← FlatTorus3.hSpatialMul]
   -- Step 4: ∫ ρ > 0, so |u₀|² = 0, hence u₀ = 0
   have h5 : 0 < FlatTorus3.spatialIntegral p.ρ := FlatTorus3.hSpatialPos p.ρ p.hρ_cont p.hρ_pos
-  have h6 : normSq u₀ = 0 := by
-    rcases mul_eq_zero.mp h4 with h | h
-    · linarith
-    · exact h
+  have h6 : normSq u₀ = 0 := (mul_eq_zero.mp h4).resolve_left (by linarith)
   have hu₀ : u₀ = 0 := normSq_eq_zero.mp h6
   -- Step 5: (-1/(2c₀)) • b₀ = 0 and c₀ ≠ 0, so b₀ = 0
   have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by
@@ -412,38 +403,22 @@ noncomputable def _root_.VML.VMLInput.toSteadyState (p : VMLInput X) : VMLSteady
     rw [p.hb_const x]
     ext i
     simp [Pi.smul_apply, smul_eq_mul]
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    field_simp
+    field_simp [ne_of_lt p.hc₀_neg]
   hForceBalance := fun x => by
     -- ∇a = -(2c₀)E + b₀ × B, and VMLSteadyState expects -(2c₀)(E + drift × B)
     -- where drift = (-1/(2c₀))b₀. These are equal since -(2c₀)*(-1/(2c₀)) = 1.
-    have hfb := p.hForceBalance x
-    rw [hfb]
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    rw [smul_add, cross_smul_left, smul_smul]
+    rw [p.hForceBalance x, smul_add, cross_smul_left, smul_smul]
     have h1 : -(2 * p.c₀) * (-1 / (2 * p.c₀)) = 1 := by
-      field_simp
+      field_simp [ne_of_lt p.hc₀_neg]
     rw [h1, one_smul]
-  hJ_def := fun x => by
-    exact p.hJ_def' x
+  hJ_def := p.hJ_def'
   hDensityConst := p.hDensityConst
-  hGradA_zero := fun hb0 hdens => by
-    -- (-1/(2c₀)) • b₀ = 0 implies b₀ = 0 (since c₀ ≠ 0)
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by
-      apply div_ne_zero (by norm_num)
-      exact mul_ne_zero two_ne_zero hc₀_ne
-    have hb₀_zero : p.b₀ = 0 :=
-      (smul_eq_zero.mp hb0).resolve_left hcoeff_ne
-    exact p.hGradA_zero hb₀_zero hdens
-  hNormalization := fun hb0 hdens => by
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by
-      apply div_ne_zero (by norm_num)
-      exact mul_ne_zero two_ne_zero hc₀_ne
-    have hb₀_zero : p.b₀ = 0 :=
-      (smul_eq_zero.mp hb0).resolve_left hcoeff_ne
-    exact p.hNorm hb₀_zero hdens
+  hGradA_zero := fun hb0 hdens => p.hGradA_zero
+    ((smul_eq_zero.mp hb0).resolve_left
+      (div_ne_zero (by norm_num) (mul_ne_zero two_ne_zero (ne_of_lt p.hc₀_neg)))) hdens
+  hNormalization := fun hb0 hdens => p.hNorm
+    ((smul_eq_zero.mp hb0).resolve_left
+      (div_ne_zero (by norm_num) (mul_ne_zero two_ne_zero (ne_of_lt p.hc₀_neg)))) hdens
 
 /-- Main theorem (honest version): From physical inputs alone,
     any smooth steady state (f, E, B) on T³ × ℝ³ with ν > 0 is:

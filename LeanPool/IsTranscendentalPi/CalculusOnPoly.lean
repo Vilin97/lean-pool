@@ -33,8 +33,7 @@ lemma iteratedDeriv_aeval_fun (T : ℤ[X]) (k : ℕ) :
     iteratedDeriv k (fun z : ℂ => aeval z T) = fun z => aeval z (derivative^[k] T) := by
   induction k with
   | zero =>
-      funext z
-      simp
+      simp_all
   | succ k ih =>
       rw [iteratedDeriv_succ, ih]
       funext z
@@ -44,8 +43,8 @@ lemma iteratedDeriv_aeval_fun (T : ℤ[X]) (k : ℕ) :
 lemma int_exp_neg_mul_poly
   (T : ℤ[X]) (x : ℂ) :
     intExpNegPoly T x = aeval 0 (sumDeriv T) - cexp (-x) * aeval x (sumDeriv T) := by
-  have hderiv_zero : derivative^[T.natDegree + 1] T = 0 := by
-    exact iterate_derivative_eq_zero (p := T) (x := T.natDegree + 1) (Nat.lt_succ_self _)
+  have hderiv_zero : derivative^[T.natDegree + 1] T = 0 :=
+    iterate_derivative_eq_zero (p := T) (x := T.natDegree + 1) (Nat.lt_succ_self _)
   have hderiv_zero' : derivative^[1 + T.natDegree] T = 0 := by
     simpa [Nat.add_comm] using hderiv_zero
   have hderiv : ∀ k ≤ T.natDegree + 1, ∀ t ∈ Set.uIcc (0:ℝ) 1,
@@ -68,8 +67,8 @@ lemma aeval_sumDeriv_eq_sum_Icc
   · intro i hi
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le (Finset.mem_Icc.mp hi).2)
   · intro i hi hnot
-    have hi_lt_root : i < rootMultiplicity a (T.map (algebraMap ℤ ℂ)) := by
-      exact lt_of_not_ge fun him =>
+    have hi_lt_root : i < rootMultiplicity a (T.map (algebraMap ℤ ℂ)) :=
+      lt_of_not_ge fun him =>
         hnot (Finset.mem_Icc.mpr ⟨hm.trans him, Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)⟩)
     have hroot : ((derivative^[i]) (T.map (algebraMap ℤ ℂ))).IsRoot a :=
       isRoot_iterate_derivative_of_lt_rootMultiplicity hi_lt_root
@@ -84,6 +83,4 @@ lemma T_bounded
     exact T.continuous_aeval.comp hmul
   obtain ⟨M, hM⟩ := (isCompact_uIcc : IsCompact (Set.uIcc (0 : ℝ) 1)).exists_bound_of_continuousOn
       hcont.continuousOn
-  refine ⟨M, ?_⟩
-  intro t ht
-  exact hM t (Set.uIoc_subset_uIcc ht)
+  exact ⟨M, fun t ht => hM t (Set.uIoc_subset_uIcc ht)⟩

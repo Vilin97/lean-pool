@@ -153,15 +153,10 @@ lemma not_valid_axiomFour_in_cresswellModel :
     | n♭ => simp [Satisfies];
   · apply Satisfies.box_def.not.mpr
     push Not;
-    use 1♯;
-    constructor;
-    · exact sharp_to_sharp.mpr (by omega);
-    · apply Satisfies.box_def.not.mpr;
-      push Not;
-      use 0♯;
-      constructor;
-      · exact sharp_to_sharp.mpr (by omega);
-      · tauto;
+    refine ⟨1♯, sharp_to_sharp.mpr (by omega), ?_⟩;
+    apply Satisfies.box_def.not.mpr;
+    push Not;
+    exact ⟨0♯, sharp_to_sharp.mpr (by omega), by tauto⟩;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.cresswellModel.truthset (φ : Formula _) := { x :
@@ -171,9 +166,9 @@ local notation "‖" φ "‖" => cresswellModel.truthset φ
 namespace cresswellModel
 namespace truthset
 
-lemma infinite_of_all_flat (h : ∀ n, n♭ ∈ ‖φ‖) : (‖φ‖.Infinite) := by
-  apply Set.infinite_coe_iff.mp;
-  exact Infinite.of_injective (fun n => ⟨n♭, h n⟩) <| by simp [Function.Injective]
+lemma infinite_of_all_flat (h : ∀ n, n♭ ∈ ‖φ‖) : (‖φ‖.Infinite) :=
+  Set.infinite_coe_iff.mp <|
+    Infinite.of_injective (fun n => ⟨n♭, h n⟩) <| by simp [Function.Injective]
 
 -- TODO: need golf
 lemma exists_max_sharp (h₁ : ∀ n, n♭ ∈ ‖φ‖) (h₂ : ‖φ‖ᶜ.Finite) (h₃ : ‖φ‖ᶜ.Nonempty) :
@@ -187,20 +182,11 @@ lemma exists_max_sharp (h₁ : ∀ n, n♭ ∈ ‖φ‖) (h₂ : ‖φ‖ᶜ.Fin
   use (s.max' se);
   constructor;
   · have hmem := (@hs _).mp (Finset.max'_mem _ se)
-    rcases hmem with ⟨⟨n, i⟩, hx, hxfst⟩
-    cases i using Fin.cases with
-    | zero =>
-      simpa [cresswellFrame.sharp, ←hxfst] using hx
-    | succ i =>
-      cases i using Fin.cases with
-      | zero => exact False.elim (hx (h₁ n))
-      | succ i => exact Fin.elim0 i
+    simp_all
   · intro m hm;
     by_contra hC;
     have : m < m := Finset.max'_lt_iff (H := se) |>.mp hm m (by
-      apply hs m |>.mpr;
-      use m♯;
-      simpa;
+      simp_all
     );
     simp at this;
 
@@ -235,9 +221,7 @@ lemma either_finite_cofinite : (‖φ‖.Finite) ∨ (‖φ‖ᶜ.Finite) := by
     rcases ihφ with (_ | _) <;> rcases ihψ with (_ | _);
     · right; apply Set.Finite.inter_of_left; assumption;
     · right; apply Set.Finite.inter_of_left; assumption;
-    · left;
-      rw [Set.finite_union];
-      constructor <;> assumption;
+    · simp_all
     · right; apply Set.Finite.inter_of_right; assumption;
   | hbox φ ihφ =>
     by_cases h : ∀ n, n♭ ∈ ‖φ‖;
@@ -255,8 +239,7 @@ lemma either_finite_cofinite : (‖φ‖.Finite) ∨ (‖φ‖ᶜ.Finite) := by
           | m♭, k♯ => simp at Rxy;
           | m♯, k♭ => apply h;
           | m♭, k♭ => apply h;
-        rw [this];
-        simp;
+        simp_all
       obtain ⟨n, hn, hn_max⟩ := exists_max_sharp h tsφc_finite tsφc_ne;
       right;
       apply @Set.Finite.subset (s := (·♯) '' Set.Icc 0 (n + 1));
@@ -325,19 +308,14 @@ lemma valid_axiomH_in_cresswellModel : cresswellModel ⊧ □(□φ <=> φ) ==> 
         left;
         apply Satisfies.box_def.not.mpr;
         push Not;
-        use (n + 1)♯;
-        constructor;
-        · exact sharp_to_sharp.mpr (by omega);
-        · have : Satisfies cresswellModel (n + 1)♯ φ := hn_max (n + 1) (by omega);
-          have : ¬Satisfies cresswellModel (n + 1)♯ (□φ) := by
-            apply Satisfies.box_def.not.mpr;
-            push Not;
-            use n♯;
-            constructor;
-            · exact sharp_to_sharp.mpr (by omega);
-            · apply hn;
-          apply Satisfies.iff_def.not.mpr;
-          tauto;
+        refine ⟨(n + 1)♯, sharp_to_sharp.mpr (by omega), ?_⟩;
+        have : Satisfies cresswellModel (n + 1)♯ φ := hn_max (n + 1) (by omega);
+        have : ¬Satisfies cresswellModel (n + 1)♯ (□φ) := by
+          apply Satisfies.box_def.not.mpr;
+          push Not;
+          exact ⟨n♯, sharp_to_sharp.mpr (by omega), hn⟩;
+        apply Satisfies.iff_def.not.mpr;
+        tauto;
   · push Not at h;
     obtain ⟨n, hn, hn_max⟩ := truthset.exists_min_flat h;
     have hn₁ : Satisfies cresswellModel n♭ (□φ) := by
@@ -354,10 +332,7 @@ lemma valid_axiomH_in_cresswellModel : cresswellModel ⊧ □(□φ <=> φ) ==> 
       left;
       apply Satisfies.box_def.not.mpr;
       push Not;
-      use n♭;
-      constructor;
-      · exact sharp_to_flat;
-      · assumption;
+      exact ⟨n♭, sharp_to_flat, hn₂⟩;
     | m♭ =>
       by_cases hmn : m > n;
       · intro h;

@@ -54,15 +54,10 @@ namespace OS0Alt
 lemma bilin_sum_sum {E : Type*} [AddCommMonoid E] [Module ℂ E]
   (B : LinearMap.BilinMap ℂ E ℂ) (n : ℕ) (J : Fin n → E) (z : Fin n → ℂ) :
   B (∑ i, z i • J i) (∑ j, z j • J j) = ∑ i, ∑ j, z i * z j * B (J i) (J j) := by
-  -- Use bilinearity: B is linear in both arguments
   simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply]
-  -- Swap order of summation: ∑ x, z x * ∑ x_1, ... = ∑ i, ∑ j, ...
   rw [Finset.sum_comm]
-  -- Convert smul to multiplication and use distributivity
   simp only [smul_eq_mul]
-  -- Use distributivity for multiplication over sums
   congr 1; ext x; rw [Finset.mul_sum]
-  -- Rearrange multiplication: z x * (z i * B ...) = z i * z x * B ...
   congr 1; ext i; ring
 
 end OS0Alt
@@ -94,10 +89,6 @@ def gjCovBilin (dμ_config : ProbabilityMeasure FieldConfiguration)
         exact (h_bilinear a x 0 y).1)
     (by intro x y y'  -- additivity in the 2nd arg
         have h := (h_bilinear 1 x y y').2.2.2
-        -- h: SchwingerFunctionℂ₂ dμ_config x (y' + y) = SchwingerFunctionℂ₂ dμ_config x y' +
-        -- SchwingerFunctionℂ₂ dμ_config x y
-        -- We need: SchwingerFunctionℂ₂ dμ_config x (y + y') = SchwingerFunctionℂ₂ dμ_config x y +
-        -- SchwingerFunctionℂ₂ dμ_config x y'
         simp only [add_comm y' y, add_comm (SchwingerFunctionℂ₂ dμ_config x y') _] at h
         exact h)
     (by intro a x y   -- homogeneity in the 2nd arg
@@ -118,8 +109,7 @@ theorem gaussian_satisfies_OS0
   have h_rewrite : (fun z : Fin n → ℂ => GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) =
                    (fun z => Complex.exp (-(1/2 : ℂ) * SchwingerFunctionℂ₂ dμ_config (∑ i,
                      z i • J i) (∑ i, z i • J i))) := by
-    funext z
-    exact h_form (∑ i, z i • J i)
+    simp_all
   rw [h_rewrite]
   -- Show exp(-½ * quadratic_form) is analytic
   apply AnalyticOn.cexp
@@ -143,46 +133,22 @@ theorem gaussian_satisfies_OS0
     have h_sum_analytic : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ i, ∑ j,
       z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
       -- Each term z_i * z_j * constant is analytic
+      have h_coord : ∀ i, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i) Set.univ :=
+        fun i => (ContinuousLinearMap.proj i : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
       have h_monomial : ∀ i j, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i * z j *
-        SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
-        intro i j
-        -- Rewrite as constant times polynomial
-        have h_factor : (fun z : Fin n → ℂ => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J
-          j)) =
-                        (fun z => SchwingerFunctionℂ₂ dμ_config (J i) (J j) * (z i * z j)) := by
-          funext z; ring
-        rw [h_factor]
-        apply AnalyticOnNhd.mul
-        · exact analyticOnNhd_const
-        · -- z_i * z_j is analytic as product of coordinate projections
-          have coord_i : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i) Set.univ := by
-            exact (ContinuousLinearMap.proj i : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
-          have coord_j : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z j) Set.univ := by
-            exact (ContinuousLinearMap.proj j : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
-          exact AnalyticOnNhd.mul coord_i coord_j
-      -- Apply finite sum analyticity twice by decomposing the sum
-      -- First for outer sum
+        SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := fun i j =>
+        ((h_coord i).mul (h_coord j)).mul analyticOnNhd_const
       have h_outer_sum : ∀ i, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ j,
-        z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
-        intro i
-        -- Apply sum analyticity to inner sum over j
-        have : (fun z : Fin n → ℂ => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
-               (∑ j : Fin n, fun z => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
-          ext z; simp [Finset.sum_apply]
-        rw [this]
-        apply Finset.analyticOnNhd_sum
-        intro j _
-        exact h_monomial i j
-      -- Now apply for the outer sum
-      have : (fun z : Fin n → ℂ => ∑ i, ∑ j,
-        z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
-             (∑ i : Fin n, fun z => ∑ j,
-               z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
-        ext z; simp [Finset.sum_apply]
-      rw [this]
-      apply Finset.analyticOnNhd_sum
-      intro i _
-      exact h_outer_sum i
+        z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := fun i => by
+        rw [show (fun z : Fin n → ℂ => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
+            (∑ j : Fin n, fun z => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) from by
+          ext z; simp [Finset.sum_apply]]
+        exact Finset.analyticOnNhd_sum _ fun j _ => h_monomial i j
+      rw [show (fun z : Fin n → ℂ => ∑ i, ∑ j,
+          z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
+          (∑ i : Fin n, fun z => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) from by
+        ext z; simp [Finset.sum_apply]]
+      exact Finset.analyticOnNhd_sum _ fun i _ => h_outer_sum i
     -- Convert from AnalyticOnNhd to AnalyticOn
     exact h_sum_analytic.analyticOn
 

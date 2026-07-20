@@ -44,18 +44,12 @@ noncomputable instance instOptionLeanPool : OmegaCompletePartialOrder (Option A)
       cases x with
       | none =>
         specialize h i
-        simp only [
-          Chain.Option.some_coe, lt_self_iff_false, ↓reduceIte,
-          Nat.sub_self, Option.le_none, reduceCtorEq] at h
+        simp_all
       | some x =>
         simp only [Option.some_le_some, ωSup_le_iff]
         intro j
         specialize h (j + i)
-        have : ¬j + i < i := by grind
-        simp only [
-          Chain.Option.some_coe, this, ↓reduceIte,
-          Nat.add_sub_cancel, Option.some_le_some] at h
-        exact h
+        simp_all
 
 variable {B C : Type*} [OmegaCompletePartialOrder B] [OmegaCompletePartialOrder C]
 
@@ -101,8 +95,7 @@ lemma ωScottContinuous_elim
         simp only [hfx, Option.elim_some, hgx]
         refine hh.monotone (⟨?_, ?_⟩ : (x, z) ≤ (y, w))
         · simp only [hxy]
-        · simp only [hfx, hgx, Option.some_le_some] at this
-          simp only [this]
+        · simp_all
   · simp only [hf.map_ωSup, ωSup]
     let c' := c.map ⟨f, hf.monotone⟩
     change (Option.map ωSup (Chain.Option.distrib c')).elim ⊥ (h (ωSup c)) = _
@@ -114,10 +107,7 @@ lemma ωScottContinuous_elim
       symm
       simp only [Chain.Option.distrib_none, Option.map_none, Option.elim_none]
       rw [eq_bot_iff, ωSup_le_iff]
-      intro i
-      simp only [
-        Chain.coe_map, OrderHom.coe_mk, Function.comp_apply,
-        hc', Option.elim_none, le_refl]
+      simp_all
     | some i c'' =>
       simp only [
         Chain.ext_iff, Chain.coe_map, OrderHom.coe_mk, funext_iff,
@@ -141,10 +131,7 @@ lemma ωScottContinuous_elim
         apply le_ωSup_of_le j
         specialize hc' j
         by_cases hji : j < i
-        · simp only [hji, ↓reduceIte] at hc'
-          simp only [
-            hc', Option.elim_none, Chain.coe_map, OrderHom.coe_mk,
-            Function.comp_apply, Chain.zip_apply, bot_le]
+        · simp_all
         · simp only [hji, ↓reduceIte] at hc'
           simp only [
             hc', Option.elim_some, Chain.coe_map, OrderHom.coe_mk,
@@ -162,10 +149,7 @@ lemma ωScottContinuous_map
   have {x} : Option.map (f x) (g x) = Option.elim (g x) .none (.some ∘ f x) := by
     cases g x <;> rfl
   simp only [this]
-  apply ωScottContinuous_elim
-  · apply hg
-  · rfl
-  · fun_prop
+  exact ωScottContinuous_elim hg rfl (by fun_prop)
 
 @[fun_prop]
 lemma ωScottContinuous_bind
@@ -175,10 +159,7 @@ lemma ωScottContinuous_bind
   have {x} : Option.bind (g x) (f x) = Option.elim (g x) .none (f x) := by
     cases g x <;> rfl
   simp only [this]
-  apply ωScottContinuous_elim
-  · apply hg
-  · rfl
-  · fun_prop
+  exact ωScottContinuous_elim hg rfl (by fun_prop)
 
 @[fun_prop]
 lemma ωScottContinuous_bind'

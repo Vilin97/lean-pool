@@ -43,8 +43,7 @@ def projl [hA : Inhabited A] (c : Chain (A ⊕ B)) : Chain A where
     | inl x =>
       cases hn₁ : c (n + 1) with
       | inl y =>
-        simp only [hn, hn₁, Sum.inl_le_inl_iff] at hc
-        simp only [Sum.elim_inl, id_eq, hc]
+        simp_all
       | inr y => simp only [hn, hn₁, Sum.not_inl_le_inr] at hc
     | inr x =>
       cases hn₁ : c (n + 1) with
@@ -62,9 +61,7 @@ def projr [hB : Inhabited B] (c : Chain (A ⊕ B)) : Chain B :=
     ⟨ Sum.swap
     , by
       intro x y h
-      cases h with
-      | inl h => simp only [Sum.swap_inl, ge_iff_le, Sum.inr_le_inr_iff, h]
-      | inr h => simp only [Sum.swap_inr, ge_iff_le, Sum.inl_le_inl_iff, h]
+      simp_all
     ⟩)
 
 @[simp]
@@ -116,18 +113,12 @@ lemma distrib_cases
   | inl x =>
     cases hₙ : c n with
     | inl y =>
-      simp only [h₀, hₙ, Sum.inl_le_inl_iff] at this
-      simp only [Sum.elim_inl]
-      rw [inl_coe]
-      simp only [projl_coe, hₙ, Sum.elim_inl, id_eq]
+      simp_all
     | inr y => simp only [h₀, hₙ, Sum.not_inl_le_inr] at this
   | inr x =>
     cases hₙ : c n with
     | inl y => simp only [h₀, hₙ, Sum.not_inr_le_inl] at this
     | inr y =>
-      simp only [h₀, hₙ] at this
-      simp only [Sum.elim_inr]
-      rw [inr_coe]
-      simp only [projr_coe, hₙ, Sum.elim_inr, id_eq]
+      simp_all
 
 end OmegaCompletePartialOrder.Chain.Sum

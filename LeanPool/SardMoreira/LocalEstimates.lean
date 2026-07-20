@@ -129,8 +129,7 @@ theorem sub_isLittleO_norm_rpow_add_one_of_fderiv_of_density_point [FiniteDimens
           .of_norm_le fun _ ↦ ContinuousLinearMap.opNorm_comp_le _ _
         _ =O[𝓝 a] fderiv ℝ f := by
           refine .of_norm_right <| .const_mul_left (isBigO_refl _ _) _
-        _ =O[𝓝 a] (‖· - a‖ ^ r) := by
-          exact hderiv
+        _ =O[𝓝 a] (‖· - a‖ ^ r) := hderiv
     have hg₀ : fderiv ℝ g =ᶠ[𝓝[s] a] 0 := by
       filter_upwards [mem_nhdsWithin_of_mem_nhds hdg_eq, hs] with x hx₁ hx₂
       simp [hx₁, hx₂]
@@ -182,8 +181,7 @@ theorem sub_isLittleO_norm_rpow_add_one_of_fderiv_of_density_point [FiniteDimens
   use min ε ε', by positivity
   intro y hy
   rcases eq_or_ne y a with rfl | hya
-  · simp only [sub_self, norm_zero, Real.norm_eq_abs]
-    positivity
+  · simp_all
   obtain ⟨z, hz_mem, hzy, hz_vol⟩ : ∃ z ∈ sphere a ‖y - a‖, dist z y < ↑(c / C / 2) * ‖y - a‖ ∧
       volume {t : ℝ | 0 ≤ t ∧ lineMap a z t ∈ sᶜ ∩ ball a ‖y - a‖} < ↑(c / C / 2) := by
     refine hδ ‖y - a‖ (by simpa [sub_eq_zero]) a (sᶜ ∩ ball a ‖y - a‖) ?_ y (by simp)

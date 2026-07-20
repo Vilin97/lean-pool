@@ -39,45 +39,25 @@ theorem _root_.ZFSet.Sum.inl.injEq
   constructor
   · intro heq
     injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+    simp_all
+  · simp_all
 
 theorem _root_.ZFSet.Sum.inr.injEq
     {A B : ZFSet} {x y : {x // x ∈ B}} : (inr x : A ⊎ B) = inr y ↔ x = y := by
   constructor
   · intro heq
     injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+    simp_all
+  · simp_all
 
 theorem cases {A B : ZFSet} (x : A ⊎ B) : x.val.π₂ ∈ A ∨ x.val.π₂ ∈ B := by
   let ⟨x, hx⟩ := x
   rw [mem_union, mem_prod] at hx
   obtain ⟨a, ha, b, hb, rfl⟩ | hx := hx
-  · rw [mem_union, pair_mem_prod] at hx
-    obtain ⟨ha, bA⟩ | hb := hx
-    · rw [mem_singleton] at ha
-      left
-      rwa [π₂_pair]
-    · rw [pair_mem_prod, mem_singleton] at hb
-      right
-      rw [π₂_pair]
-      exact hb.2
+  · simp_all
   · rw [mem_prod] at hx
     obtain ⟨a, ha, b, hb, rfl⟩ := hx
-    rw [mem_union, pair_mem_prod] at hx
-    obtain ⟨ha, aB⟩ | hb := hx
-    · rw [mem_singleton] at ha
-      left
-      rwa [π₂_pair]
-    · rw [pair_mem_prod, mem_singleton] at hb
-      right
-      rw [π₂_pair]
-      exact hb.2
+    simp_all
 /-- Imported ZFLean declaration. -/
 @[cases_eliminator]
 noncomputable def casesOn {A B : ZFSet.{u}} {motive : A ⊎ B → Sort v} (x : A ⊎ B)
@@ -99,8 +79,7 @@ noncomputable def casesOn {A B : ZFSet.{u}} {motive : A ⊎ B → Sort v} (x : A
       · rw [π₁_pair] at h
         subst a
         congr 2
-        dsimp
-        rw [π₂_pair]
+        simp_all
       · rw [pair_eta hx, pair_mem_prod, mem_singleton, h] at hx
         nomatch zftrue_ne_zffalse hx.1.symm
     rw [this]
@@ -109,41 +88,24 @@ noncomputable def casesOn {A B : ZFSet.{u}} {motive : A ⊎ B → Sort v} (x : A
       have := Subtype.property x
       rw [mem_union, mem_prod] at this
       obtain ⟨a, ha, b, hb, eq⟩ | hx := this
-      · rw [eq, π₁_pair] at h
-        rw [mem_singleton] at ha
-        contradiction
+      · simp_all
       · rw [pair_eta hx, pair_mem_prod, mem_singleton] at hx
         exact hx.1
     have : x.val.π₂ ∈ B := by
       obtain ⟨x, hx⟩ := x
       rw [mem_union, mem_prod] at hx
       obtain ⟨a, ha, b, hb, rfl⟩ | hx := hx
-      · rw [mem_union, pair_mem_prod, mem_singleton] at hx
-        obtain ⟨rfl, -⟩ | hb := hx
-        · rw [π₁_pair] at x₁_eq_true
-          nomatch zftrue_ne_zffalse x₁_eq_true.symm
-        · rw [pair_mem_prod] at hb
-          rw [π₂_pair]
-          exact hb.2
+      · simp_all
       · rw [pair_eta hx, pair_mem_prod, mem_singleton] at hx
         exact hx.2
     have : x = Sum.inr ⟨x.val.π₂, this⟩ := by
       obtain ⟨x, hx⟩ := x
       rw [mem_union, mem_prod] at hx
       obtain ⟨a, ha, b, hb, rfl⟩ | hx := hx
-      · rw [mem_union, pair_mem_prod, mem_singleton] at hx
-        obtain ⟨rfl, -⟩ | hb := hx
-        · rw [π₁_pair] at x₁_eq_true
-          nomatch zftrue_ne_zffalse x₁_eq_true.symm
-        · congr 2
-          · dsimp
-            rwa [π₁_pair] at x₁_eq_true
-          · dsimp
-            rw [π₂_pair]
+      · simp_all
       · congr
         conv_lhs => rw [pair_eta hx]
-        rw [pair_inj]
-        exact ⟨x₁_eq_true, rfl⟩
+        simp_all
     rw [this]
     apply inr
 
@@ -231,15 +193,7 @@ theorem casesOn {S : ZFSet} (x : Option S) : x = none ∨ (∃ y, x = some y) :=
     rw [mem_union, pair_mem_prod] at hx)
   · left
     unfold none Sum.inl
-    congr
-    rcases hx with hx | hx
-    · exact mem_singleton.mp hx.right
-    · rw [pair_mem_prod, mem_singleton] at hx
-      absurd hx.left
-      unfold ZFBool.false ZFBool.true zftrue zffalse
-      intro contr
-      simp_rw [ZFSet.ext_iff, notMem_empty, false_iff, mem_singleton] at contr
-      nomatch contr ∅
+    simp_all
   · right
     rcases hx with hx | hx
     · rw [mem_singleton] at hx
@@ -251,9 +205,6 @@ theorem casesOn {S : ZFSet} (x : Option S) : x = none ∨ (∃ y, x = some y) :=
     · rw [pair_mem_prod] at hx
       unfold some Sum.inr
       exists ⟨val, hx.right⟩
-
--- theorem ZFInt.into.injective : Function.Injective into := into_inj
--- theorem ZFInt.outof.injective : Function.Injective outof := outof_inj
 
 open Classical in
 /-- Imported ZFLean declaration. -/
@@ -273,18 +224,15 @@ theorem _root_.ZFSet.Option.some.injEq
   constructor
   · intro heq
     injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+    simp_all
+  · simp_all
 
 theorem some_val_injEq {T : ZFSet} {x y : {x // x ∈ T}} :
     (some x).val = (some y).val ↔ x = y := by
   constructor
   · intro heq
     exact some.injEq.mp (Subtype.ext heq)
-  · intro heq
-    rw [heq]
+  · simp_all
 
 theorem ne_none_is_some {T : ZFSet} (x : Option T) : x ≠ none → ∃ y, x = some y := by
   intro h
@@ -311,8 +259,7 @@ theorem _root_.ZFSet.Option.into.surj {T : ZFSet} :
   unfold into
   cases y with
   | none =>
-    exists none
-    split_ifs <;> trivial
+    simp_all
   | some v =>
     exists (some v)
     split_ifs with h
@@ -365,9 +312,7 @@ theorem _root_.ZFSet.Option.outof.inj {T : ZFSet} :
     rw [ZFSet.ext_iff] at contr
     exact (notMem_empty ∅) <| (mem_singleton.eq ▸ contr ∅).mp rfl
   · injection heq with heq
-    rw [pair_inj] at heq
-    have := Subtype.val_inj.mp <| Subtype.mk_eq_mk.mp <| Subtype.val_inj.mp heq.2
-    congr
+    simp_all
 
 theorem _root_.ZFSet.Option.outof.surj {T : ZFSet} :
     Function.Surjective (outof : _root_.Option {x // x ∈ T} → Option T) := by
@@ -521,8 +466,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
             have hpair := fapply.def (is_func_is_pfunc hf) hdom
             dsimp [ZFSet.Option.some, Sum.inr] at eq
             rw [pair_inj] at eq
-            rw [eq.2]
-            exact hpair
+            rwa [eq.2]
           have chosen_eq : (Classical.choose issome).val = x :=
             x_unq _ ⟨(Classical.choose issome).property, chosen_pair⟩
           trans (ZFSet.Option.some (Classical.choose issome)).val

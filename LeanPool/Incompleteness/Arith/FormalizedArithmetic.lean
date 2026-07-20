@@ -66,14 +66,6 @@ abbrev oneAbbrev {n} : ⌜ℒₒᵣ⌝[V].Semiterm n := (1 : V)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped notation "^1" => oneAbbrev
 
-/-
-section «lp_nc_section_2»
-
-def _root_.LO.FirstOrder.Arith.eqTheory : Sg1.Semisentence 0 := .mkSigma
-  “(∃ b0, !qqBvarDef b0 0 ∧ !qqAllDef )” (by simp)
-
-end «lp_nc_section_2»
--/
 
 variable (T : LOR.TTheory (V := V))
 
@@ -182,8 +174,7 @@ noncomputable def eqExt (t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Term) :
   apply deduct
   apply deduct
   let Γ := [t₁ =' u₁, u₁ =' u₂, t₁ =' t₂]
-  have e1 : Γ ⊢[T] t₂ =' t₁ := by
-    refine (of <| eqSymm T t₁ t₂) ⨀ FiniteContext.byAxm (by simp [Γ])
+  have e1 : Γ ⊢[T] t₂ =' t₁ := (of <| eqSymm T t₁ t₂) ⨀ FiniteContext.byAxm (by simp [Γ])
   have e2 : Γ ⊢[T] t₁ =' u₁ := FiniteContext.byAxm (by simp [Γ])
   have e3 : Γ ⊢[T] u₁ =' u₂ := FiniteContext.byAxm (by simp [Γ])
   exact (of <| eqTrans T t₂ u₁ u₂) ⨀ ((of <| eqTrans T t₂ t₁ u₁) ⨀ e1 ⨀ e2) ⨀ e3
@@ -202,8 +193,7 @@ noncomputable def neExt (t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Term) :
   have bu : Γ ⊢[T] u₁ =' u₂ := FiniteContext.byAxm <| by simp [Γ]
   have bl : Γ ⊢[T] t₁ ≠' u₁ := FiniteContext.byAxm <| by simp [Γ]
   have : T ⊢ t₁ =' t₂ ==> t₁ ≠' u₁ ==> t₂ ≠' u₁ := by
-    have := replace T (#'0 ≠' u₁.bShift) t₁ t₂
-    simpa using this
+    simpa using replace T (#'0 ≠' u₁.bShift) t₁ t₂
   have b : Γ ⊢[T] t₂ ≠' u₁ := of (Γ := Γ) this ⨀ bt ⨀ bl
   have : T ⊢ u₁ =' u₂ ==> t₂ ≠' u₁ ==> t₂ ≠' u₂ := by
     simpa using replace T (t₂.bShift ≠' #'0) u₁ u₂

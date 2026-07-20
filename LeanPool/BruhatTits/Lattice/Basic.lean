@@ -197,17 +197,15 @@ lemma toGL_toSubmodule {M : Submodule R (ι → K)} [IsLattice M] (b : Basis ι 
       simp only [bs, Matrix.mulVec, dotProduct]
       rw [Finset.sum_eq_single i]
       · simp
-      · intro x _ hx
-        simp [Pi.single_eq_of_ne hx]
-      · intro hi
-        simp at hi
+      · simp_all
+      · simp_all
     · simp
     · intro y z _ _ hym hzm
-      simp only [Subtype.val_comp_add, Matrix.mulVec_add]
-      exact Submodule.add_mem _ hym hzm
+      simpa only [Subtype.val_comp_add, Matrix.mulVec_add] using
+        Submodule.add_mem _ hym hzm
     · intro a y _ hym
-      simp only [Subtype.val_comp_smul, Matrix.mulVec_smul]
-      exact Submodule.smul_mem _ a hym
+      simpa only [Subtype.val_comp_smul, Matrix.mulVec_smul] using
+        Submodule.smul_mem _ a hym
   · intro hx
     rw [Basis.mem_submodule_iff' b] at hx
     obtain ⟨c, rfl⟩ := hx
@@ -241,26 +239,17 @@ instance IsLattice.free (M : Submodule R (ι → K)) [IsLattice M] : Module.Free
   letI : SMul R M := M.smul
   have : NoZeroSMulDivisors R (ι → K) := by
     constructor
-    intro c x hcx
-    by_cases hc : c = 0
-    · exact Or.inl hc
-    · right
-      ext i
-      have hcxi : (c : K) * x i = 0 := by
-        simpa [Pi.smul_apply, Subring.smul_def] using congrFun hcx i
-      exact (mul_eq_zero.mp hcxi).resolve_left (fun hcK ↦ hc (Subtype.ext hcK))
+    simp_all
   have : NoZeroSMulDivisors R M :=
     Function.Injective.noZeroSMulDivisors Subtype.val Subtype.val_injective rfl (by
-      intro c x
-      rfl)
-  Module.free_of_finite_type_torsion_free' --inferInstance
+      simp_all)
+  Module.free_of_finite_type_torsion_free'
 
 variable [Fintype ι]
 
 /-- Any lattice has the cardinality of `ι` as `R`-rank. -/
 theorem IsLattice.rank' (M : Submodule R (ι → K)) [IsLattice M] :
     Module.rank R M = Fintype.card ι := by
-  --have : Module.Free R M := IsLattice.free M
   let b := Module.Free.chooseBasis R M
   have hli : LinearIndependent K (fun i ↦ (b i).val) :=
     Basis.linearIndependent_of_submodule b
@@ -324,13 +313,9 @@ lemma IsLattice.intersection (M N : Submodule R (ι → K)) [Finite ι]
     [IsLattice M] [IsLattice N] :
     IsLattice (M ⊓ N) where
   isFG := by
-    have aux : M.FG := IsLattice.isFG
-    have : IsNoetherian R M := isNoetherian_of_fg_of_noetherian M aux
-    have g : (M ⊓ N) ≤ M := inf_le_left
-    have : IsNoetherian R ↥(M ⊓ N) := isNoetherian_of_le g
-    have h: Module.Finite R ↥(M ⊓ N):= Module.IsNoetherian.finite R ↥(M ⊓ N)
-    apply Module.Finite.iff_fg.mp
-    exact h
+    have : IsNoetherian R M := isNoetherian_of_fg_of_noetherian M IsLattice.isFG
+    have : IsNoetherian R ↥(M ⊓ N) := isNoetherian_of_le inf_le_left
+    exact Module.Finite.iff_fg.mp (Module.IsNoetherian.finite R ↥(M ⊓ N))
   spans := by
     letI : Fintype ι := Fintype.ofFinite ι
     apply Submodule.span_eq_top_of_rank
@@ -418,19 +403,16 @@ lemma _root_.BruhatTits.Lattice.IsSimilar.equivalence : Equivalence (IsSimilar R
   refl M := ⟨1, MulAction.one_smul M⟩
   symm {M N} h := by
     obtain ⟨a, ha⟩ := h
-    use a⁻¹
-    rw [← ha, inv_smul_smul]
+    exact ⟨a⁻¹, by rw [← ha, inv_smul_smul]⟩
   trans {M N P} h1 h2 := by
     obtain ⟨a, ha⟩ := h1
     obtain ⟨b, hb⟩ := h2
-    use b * a
-    rw [← hb, ← ha, mul_smul]
+    exact ⟨b * a, by rw [← hb, ← ha, mul_smul]⟩
 
 lemma isSimilar_smul (L : Lattice R) (a : Kˣ) : IsSimilar R L (a • L) := ⟨a, rfl⟩
 
-lemma smul_isSimilar (L : Lattice R) (a : Kˣ) : IsSimilar R (a • L) L := by
-  apply (IsSimilar.equivalence R).symm
-  apply isSimilar_smul
+lemma smul_isSimilar (L : Lattice R) (a : Kˣ) : IsSimilar R (a • L) L :=
+  (IsSimilar.equivalence R).symm (isSimilar_smul R L a)
 
 instance _root_.BruhatTits.Lattice.IsSimilar.setoid : Setoid (Lattice R) where
   r := IsSimilar R

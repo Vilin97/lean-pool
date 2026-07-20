@@ -54,16 +54,14 @@ lemma sign_mul_pos {a b : ℝ} (ha : 0 < a) : Real.sign (a * b) = Real.sign b :=
 lemma sign_pos' {a : ℝ} (h : Real.sign a = 1) : 0 < a := by
   by_contra hnonpos; simp only [not_lt] at hnonpos
   by_cases h0 : a = 0
-  · rw [Real.sign_eq_zero_iff.mpr h0] at h
-    linarith
+  · simp_all
   · rw [Real.sign_of_neg (lt_of_le_of_ne hnonpos h0 )] at h
     linarith
 
 lemma sign_neg' {a : ℝ} (h : Real.sign a = -1) : a < 0 := by
   by_contra hnonneg; simp only [not_lt] at hnonneg
   by_cases h0 : a = 0
-  · rw [Real.sign_eq_zero_iff.mpr h0] at h
-    linarith
+  · simp_all
   · rw [Real.sign_of_pos (lt_of_le_of_ne hnonneg (fun a_1 ↦ h0 a_1.symm))] at h
     linarith
 
@@ -108,13 +106,8 @@ lemma mul_cancel {a b c : ℝ} (h : a ≠ 0) (h2 : a * b = a * c) :
         b = c := by simp_all only [ne_eq, mul_eq_mul_left_iff, or_false]
 
 lemma smul_cancel {a : ℝ} {b c : ℝ²} (h₁ : a ≠ 0) (h₂ : a • b = a • c)
-    : b = c := by
-  refine PiLp.ext ?_
-  intro i
-  rw [PiLp.ext_iff] at h₂
-  have l := h₂ i
-  simp [PiLp.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, h₁] at l
-  assumption
+    : b = c :=
+  smul_right_injective ℝ² h₁ h₂
 
 
 lemma fin2_im {α : Type} [DecidableEq α] {f : Fin 2 → α}
@@ -147,11 +140,7 @@ lemma forall_exists_pos_swap {α : Type} [Finite α] {P : ℝ → α → Prop}
       have hS : (image fδ univ).Nonempty := by rwa [image_nonempty, univ_nonempty_iff]
       use min' (image fδ univ) hS
       refine ⟨?_,?_⟩
-      · rw [gt_iff_lt, Finset.lt_min'_iff]
-        intro y hy
-        have ⟨x,_,hx⟩ := mem_image.1 hy
-        rw [←hx]
-        exact (hfδ x).1
+      · simp_all
       · intro x
         apply h (fδ x) x (hfδ x).2
         exact min'_le _ _ (mem_image_of_mem fδ (mem_univ x))
@@ -178,7 +167,6 @@ lemma real_interval_δ {x : ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a|
 /- Pigeonhole lemma of the form that I have not been able to find. -/
 lemma finset_infinite_pigeonhole {α β : Type} [Infinite α] {f : α → β} {B : Finset β}
     (hf : ∀ a, f a ∈ B) : ∃ b ∈ B, Set.Infinite (f⁻¹' {b}) := by
-  have : Finite B := by exact Finite.of_fintype { x // x ∈ B }
   let f_B := fun (a : α) => (⟨f a, hf a⟩ : B)
   have ⟨b, hb⟩ := Finite.exists_infinite_fiber f_B
   use b

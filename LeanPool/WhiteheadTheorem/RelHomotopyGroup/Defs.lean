@@ -134,8 +134,7 @@ def iStar : π_ n A a → π_ n X a :=
             ContinuousMap.Homotopy.coe_toContinuousMap,
             ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
           change ((Nonempty.some H) (t, y) : X) = _
-          rw [this]
-          rfl }
+          simp_all }
 
 /-- `jStar'` -/
 def jStar' (f : Ω^ (Fin n) X a) : π_rel n X A a :=
@@ -207,8 +206,6 @@ The induced maps `iStar`, `jStar`, and `bd` preserve the distinguished point,
 i.e., they map (the homotopy class of) the constant loop to the constant loop.
 -/
 
--- noncomputable example [Nonempty (Fin n)] : π_ n A a := (1 : HomotopyGroup (Fin n) A a)
-
 private lemma iStar'_const : iStar' n X A a GenLoop.const = ⟦GenLoop.const⟧ :=
   Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, fun _ _ _ ↦ rfl⟩⟩
 private lemma jStar'_const : jStar' n X A a GenLoop.const = ⟦RelGenLoop.const⟧ :=
@@ -216,10 +213,6 @@ private lemma jStar'_const : jStar' n X A a GenLoop.const = ⟦RelGenLoop.const�
     ⟨fun _ _ ↦ Set.mem_of_eq_of_mem rfl (Subtype.coe_prop a), fun _ _ ↦ rfl ⟩ ⟩⟩
 private lemma bd'_const : bd' n X A a RelGenLoop.const = ⟦GenLoop.const⟧ :=
   Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, fun _ _ _ ↦ rfl⟩⟩
-
--- lemma iStar_const : iStar n X A a default = default := by apply iStar'_const
--- lemma jStar_const : jStar n X A a default = default := by apply jStar'_const
--- lemma bd_const : bd n X A a default = default := by apply bd'_const
 
 instance iStar_isPointedMap : IsPointedMap (iStar n X A a) := ⟨by apply iStar'_const⟩
 instance jStar_isPointedMap : IsPointedMap (jStar n X A a) := ⟨by apply jStar'_const⟩
@@ -246,7 +239,7 @@ def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
     fun y hy ↦ (H.map_one_left y).symm.trans (H.prop' 1 y hy)
   ⟨g, ⟨ fun y hy ↦ by rw [g_bd y hy]; exact f.property.left y hy,
         fun y hy ↦ by
-          rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)];
+          rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)]
           exact f.property.right y hy ⟩⟩
 
 namespace ofHomotopyRel

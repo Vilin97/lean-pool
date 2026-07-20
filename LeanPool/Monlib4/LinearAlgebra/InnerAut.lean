@@ -28,8 +28,8 @@ Hermitian-preservation lemmas.
 open scoped ComplexOrder
 
 lemma RCLike.neg_ofReal {𝕜 : Type*} [RCLike 𝕜] (a : ℝ) :
-    (a : 𝕜) < 0 ↔ a < 0 := by
-  exact RCLike.ofReal_lt_zero
+    (a : 𝕜) < 0 ↔ a < 0 :=
+  RCLike.ofReal_lt_zero
 
 instance Pi.coe {k : Type _} {s r : k → Type _} [∀ i, CoeTC (s i) (r i)] :
     CoeTC (Π i, s i) (Π i, r i) :=
@@ -67,7 +67,7 @@ theorem innerAutStarAlg_apply {K R : Type _} [Semiring R] [StarMul R]
 
 theorem innerAutStarAlg_apply' {K R : Type _} [Semiring R] [StarMul R]
     [SMul K R] [IsScalarTower K R R] [SMulCommClass K R R] (U : unitary R) (x : R) :
-    innerAutStarAlg K U x = U * x * (U⁻¹ : unitary R) := by
+    innerAutStarAlg K U x = U * x * (U⁻¹ : unitary R) :=
   rfl
 
 theorem innerAutStarAlg_apply'' {K R : Type _} [Semiring R] [StarMul R]
@@ -82,7 +82,7 @@ theorem innerAutStarAlg_symm_apply {K R : Type _} [Semiring R] [StarMul R]
 
 theorem innerAutStarAlg_symm_apply' {K R : Type _} [Semiring R] [StarMul R]
     [SMul K R] [IsScalarTower K R R] [SMulCommClass K R R] (U : unitary R) (x : R) :
-    (innerAutStarAlg K U).symm x = (U⁻¹ : unitary R) * x * U := by
+    (innerAutStarAlg K U).symm x = (U⁻¹ : unitary R) * x * U :=
   rfl
 
 theorem innerAutStarAlg_symm_apply'' {K R : Type _} [Semiring R] [StarMul R]
@@ -138,8 +138,7 @@ variable [Field 𝕜] [StarRing 𝕜]
 theorem _root_.Matrix.unitaryGroup.coe_hMul_star_self [DecidableEq n]
     (a : Matrix.unitaryGroup n 𝕜) :
     (HMul.hMul a (star a) : Matrix n n 𝕜) = (1 : Matrix n n 𝕜) := by
-  simp only [Unitary.mul_star_self]
-  rfl
+  simp_all
 
 theorem _root_.Matrix.unitaryGroup.star_coe_eq_coe_star [DecidableEq n]
     (U : unitaryGroup n 𝕜) :
@@ -343,8 +342,7 @@ theorem exists_innerAut_iff_exists_innerAut_inv {P : Matrix n n 𝕜 → Prop}
     (∃ U : unitaryGroup n 𝕜, P (innerAut U x)) ↔
       ∃ U : unitaryGroup n 𝕜, P (innerAut U⁻¹ x) := by
   constructor <;> rintro ⟨U, hU⟩ <;> use U⁻¹
-  simp_rw [inv_inv]
-  exact hU
+  simp_all
 
 theorem _root_.Matrix.innerAut.is_injective (U : unitaryGroup n 𝕜) :
     Function.Injective (innerAut U) := by
@@ -359,14 +357,9 @@ theorem innerAut_isHermitian_iff (U : unitaryGroup n 𝕜) (x : Matrix n n 𝕜)
 
 theorem _root_.Matrix.unitaryGroup.injective_hMul (U : unitaryGroup n 𝕜) (x y : Matrix n n 𝕜) :
     x = y ↔ x * (U : Matrix n n 𝕜) = y * (U : Matrix n n 𝕜) := by
-  constructor
-  · intro h
-    rw [h]
-  · intro h
-    have h' : x * (U : Matrix n n 𝕜) * (U⁻¹ : unitaryGroup n 𝕜) =
-        y * (U : Matrix n n 𝕜) * (U⁻¹ : unitaryGroup n 𝕜) :=
-      congrArg (fun z : Matrix n n 𝕜 => z * (U⁻¹ : unitaryGroup n 𝕜)) h
-    simpa [Matrix.mul_assoc, UnitaryGroup.inv_apply] using h'
+  refine ⟨fun h => by rw [h], fun h => ?_⟩
+  have h' := congrArg (fun z : Matrix n n 𝕜 => z * (U⁻¹ : unitaryGroup n 𝕜)) h
+  simpa [Matrix.mul_assoc, UnitaryGroup.inv_apply] using h'
 
 lemma unitaryGroup_conjTranspose (U : unitaryGroup n 𝕜) :
     (↑U)ᴴ = (↑(U⁻¹ : unitaryGroup n 𝕜) : Matrix n n 𝕜) :=
@@ -387,14 +380,13 @@ theorem _root_.Matrix.innerAut_posSemidef_iff (U : unitaryGroup n 𝕜) {a : Mat
   · intro h
     rw [← Matrix.nonneg_iff_posSemidef] at h ⊢
     rcases CStarAlgebra.nonneg_iff_eq_star_mul_self.mp h with ⟨b, hb⟩
-    rw [← innerAut_inv_apply_innerAut_self U a, hb, Matrix.innerAut.map_mul]
-    rw [← Matrix.innerAut.map_star]
+    rw [← innerAut_inv_apply_innerAut_self U a, hb, Matrix.innerAut.map_mul,
+      ← Matrix.innerAut.map_star]
     exact CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨innerAut U⁻¹ b, rfl⟩
   · intro h
     rw [← Matrix.nonneg_iff_posSemidef] at h ⊢
     rcases CStarAlgebra.nonneg_iff_eq_star_mul_self.mp h with ⟨b, hb⟩
-    rw [hb, Matrix.innerAut.map_mul]
-    rw [← Matrix.innerAut.map_star]
+    rw [hb, Matrix.innerAut.map_mul, ← Matrix.innerAut.map_star]
     exact CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨innerAut U b, rfl⟩
 
 theorem _root_.Matrix.posSemidef_innerAut {a : Matrix n n 𝕜} (ha : a.PosSemidef)
@@ -414,12 +406,10 @@ theorem _root_.Matrix.innerAut_isUnit_iff (U : unitaryGroup n 𝕜) {x : Matrix 
 /-- A unitary inner automorphism preserves positive definite matrices. -/
 theorem _root_.Matrix.innerAut_posDef_iff (U : unitaryGroup n 𝕜) {x : Matrix n n 𝕜} :
     (innerAut U x).PosDef ↔ x.PosDef := by
-  constructor
-  · intro h
-    exact ((innerAut_posSemidef_iff U).mp h.posSemidef).posDef_iff_isUnit.mpr
+  constructor <;> intro h
+  · exact ((innerAut_posSemidef_iff U).mp h.posSemidef).posDef_iff_isUnit.mpr
       ((innerAut_isUnit_iff U).mp h.isUnit)
-  · intro h
-    exact ((innerAut_posSemidef_iff U).mpr h.posSemidef).posDef_iff_isUnit.mpr
+  · exact ((innerAut_posSemidef_iff U).mpr h.posSemidef).posDef_iff_isUnit.mpr
       ((innerAut_isUnit_iff U).mpr h.isUnit)
 
 theorem _root_.Matrix.posDef_innerAut {a : Matrix n n 𝕜} (ha : a.PosDef)
@@ -477,8 +467,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
   have hcomm : ∀ x : Matrix n n 𝕜, Commute x (yᴴ * y) := by
     intro x
     specialize hcomm_star xᴴ
-    simp_rw [conjTranspose_conjTranspose] at hcomm_star
-    exact hcomm_star
+    simp_all
   obtain ⟨α, hα⟩ := commutes_with_all_iff.mp hcomm
   have hpos_semidef : (yᴴ * y).PosSemidef := Matrix.posSemidef_conjTranspose_mul_self y
   have hy_unit : IsUnit y := ⟨⟨y, yinv, Hy.1, Hy.2⟩, rfl⟩
@@ -489,8 +478,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     have hdiag := IsHermitian.coe_re_diag hpos_semidef.1
     simp_rw [hα, diag_smul, diag_one, Pi.smul_apply, Pi.one_apply, smul_eq_mul, mul_one] at hdiag
     have hone_ne_zero : (1 : n → 𝕜) ≠ 0 := by
-      simp_rw [ne_eq, funext_iff, Pi.one_apply, Pi.zero_apply, one_ne_zero]
-      simp only [Classical.not_forall, not_false_iff, exists_const]
+      simp_all
     have hsmul : (RCLike.re α : 𝕜) • (1 : n → 𝕜) = α • 1 := by
       rw [← hdiag]
       ext1
@@ -498,8 +486,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     rw [(smul_left_injective _ hone_ne_zero).eq_iff] at hsmul
     rw [hsmul]
   have hdiag_pos : (diagonal fun _ : n => α).PosDef := by
-    rw [← Matrix.smul_one_eq_diagonal α, ← hα]
-    exact hpos_def
+    rwa [← Matrix.smul_one_eq_diagonal α, ← hα]
   have hpositive : 0 < RCLike.re α := by
     have hαpos : 0 < α := (Matrix.posDef_diagonal_iff.mp hdiag_pos) h.some
     rw [hα_re, RCLike.ofReal_pos] at hαpos
@@ -548,8 +535,7 @@ lemma _root_.StarAlgEquiv.eq_innerAut
     innerAutStarAlg f.ofMatrixUnitary = f := by
   rw [StarAlgEquiv.ofMatrixUnitary]
   generalize_proofs
-  expose_names
-  exact pf_1
+  simp_all
 
 /-- Spectral theorem in Monlib's inner-automorphism notation. -/
 theorem _root_.Matrix.IsHermitian.spectral_theorem'' {x : Matrix n n 𝕜}
@@ -578,10 +564,8 @@ theorem _root_.Matrix.diagonal.spectrum {𝕜 n : Type _} [Field 𝕜] [Fintype 
     constructor
     · intro j
       by_cases h : j = i
-      · left
-        rw [h, hi]
-      · right
-        exact h
+      · simp_all
+      · simp_all
     · use i
 
 theorem _root_.Matrix.IsHermitian.spectrum {x : Matrix n n 𝕜}
@@ -630,8 +614,7 @@ theorem _root_.Matrix.innerAutStarAlg_equiv_symm_toLinearMap (U : unitaryGroup n
     (innerAutStarAlg U).symm.toAlgEquiv.toLinearMap = innerAut U⁻¹ := by
   ext1
   simp only [innerAut_apply, inv_inv]
-  rw [UnitaryGroup.inv_apply]
-  rfl
+  simp_all
 
 theorem _root_.Matrix.innerAut_commutes_with_map_lid_symm (U : Matrix.unitaryGroup n 𝕜) :
     TensorProduct.map 1 (innerAut U) ∘ₗ
@@ -640,8 +623,7 @@ theorem _root_.Matrix.innerAut_commutes_with_map_lid_symm (U : Matrix.unitaryGro
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply,
     LinearEquiv.coe_coe, TensorProduct.lid_symm_apply, TensorProduct.map_tmul,
     Module.End.one_apply]
-  intro x
-  rfl
+  simp_all
 
 theorem _root_.Matrix.innerAut_commutes_with_lid_comm (U : Matrix.unitaryGroup n 𝕜) :
     (TensorProduct.lid 𝕜 (Matrix n n 𝕜)).toLinearMap ∘ₗ
@@ -657,17 +639,12 @@ theorem _root_.Matrix.innerAut_commutes_with_lid_comm (U : Matrix.unitaryGroup n
 theorem _root_.Matrix.innerAut_comp_inj (U : Matrix.unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :
     S = T ↔ innerAut U ∘ₗ S = innerAut U ∘ₗ T := by
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, innerAut_eq_iff,
-    innerAut_inv_apply_innerAut_self]
+  simp_all
 
 theorem _root_.Matrix.innerAut_inj_comp (U : unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :
     S = T ↔ S ∘ₗ innerAut U = T ∘ₗ innerAut U := by
-  refine ⟨fun h => by rw [h], fun h => ?_⟩
-  simp_rw [LinearMap.ext_iff, LinearMap.comp_apply] at h ⊢
-  intro x
-  nth_rw 1 [← innerAut_apply_innerAut_inv_self U x]
-  rw [h, innerAut_apply_innerAut_inv_self]
+  simp_all
 
 theorem _root_.Matrix.innerAut.comp_inj (U : Matrix.unitaryGroup n 𝕜)
     (S T : Matrix n n 𝕜 →ₗ[𝕜] Matrix n n 𝕜) :

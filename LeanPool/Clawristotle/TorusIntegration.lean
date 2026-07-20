@@ -99,6 +99,23 @@ lemma integral_torus_eq_integral_box (g : Torus3 → ℝ) (hg : Continuous g) :
       · exact measurable_id.aemeasurable
       · exact hg.aestronglyMeasurable
 
+private lemma insertNth_continuous (i : Fin 3) :
+    Continuous (fun p : ℝ × (Fin 2 → ℝ) => i.insertNth (α := fun _ => ℝ) p.1 p.2) := by
+  apply continuous_pi_iff.mpr
+  intro j
+  fin_cases i <;> fin_cases j <;>
+    simp only [Fin.zero_eta, Fin.isValue, Nat.reduceAdd, Fin.mk_one,
+      Fin.reduceFinMk, Fin.insertNth, Fin.succAboveCases, ↓reduceDIte, Fin.reduceLT,
+      Fin.castPred_zero, Fin.castPred_one, Fin.not_lt_zero, Fin.pred_one, Fin.reduceEq]
+  all_goals first
+    | exact continuous_fst
+    | exact continuous_apply 0 |>.comp continuous_snd
+    | exact continuous_apply 1 |>.comp continuous_snd
+
+private lemma insertNth_measurable (i : Fin 3) :
+    Measurable (fun p : ℝ × (Fin 2 → ℝ) => i.insertNth (α := fun _ => ℝ) p.1 p.2) :=
+  (insertNth_continuous i).measurable
+
 /-- Fubini decomposition of the unit-box integral along the `i`-th coordinate. -/
 private lemma box3_fubini_slice (i : Fin 3) (g : (Fin 3 → ℝ) → ℝ) (hg : Continuous g) :
     (∫ y in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)), g y) =
@@ -132,26 +149,7 @@ private lemma box3_fubini_slice (i : Fin 3) (g : (Fin 3 → ℝ) → ℝ) (hg : 
                   fin_cases i <;> simp [ Fin.forall_fin_succ ]
                   · tauto
                   · tauto
-              · refine measurable_pi_iff.mpr ?_
-                intro a
-                fin_cases a <;>
-                  simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
-                    Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue]
-                · fin_cases i <;>
-                    simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                      ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
-                      Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
-                  · exact measurable_fst
-                  · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-                  · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-                · fin_cases i <;> simp [ Fin.succAboveCases ] <;> measurability
-                · fin_cases i <;>
-                    simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                      Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
-                      Fin.lt_one_iff, Fin.reduceFinMk]
-                  · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-                  · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-                  · exact measurable_fst
+              · exact insertNth_measurable i
               · exact MeasurableSet.univ_pi hs
             rw [ h_iso, MeasureTheory.integral_map ]
             · simp only [Set.indicator, Nat.reduceAdd, Set.mem_pi, Set.mem_univ, Set.mem_Ioc,
@@ -171,33 +169,7 @@ private lemma box3_fubini_slice (i : Fin 3) (g : (Fin 3 → ℝ) → ℝ) (hg : 
                 congr
                 ext
                 split_ifs <;> tauto
-            · refine Measurable.aemeasurable ?_
-              refine measurable_pi_iff.mpr ?_
-              intro a
-              fin_cases a <;>
-                simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
-                  Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
-                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
-                · exact measurable_fst
-                · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-                · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
-                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
-                · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-                · exact measurable_fst
-                · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
-                    Fin.lt_one_iff, Fin.reduceFinMk]
-                · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-                · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-                · exact measurable_fst
+            · exact (insertNth_measurable i).aemeasurable
             · refine Measurable.aestronglyMeasurable ?_
               exact Measurable.indicator (hg.measurable)
                 (MeasurableSet.univ_pi fun _ => measurableSet_Ioc)
@@ -206,30 +178,8 @@ private lemma box3_fubini_slice (i : Fin 3) (g : (Fin 3 → ℝ) → ℝ) (hg : 
         erw [ h_fubini, MeasureTheory.setIntegral_prod ]
         have h_integrable : ContinuousOn
             (fun y : ℝ × (Fin 2 → ℝ) => g (Fin.insertNth i y.1 y.2))
-            (Set.Icc 0 1 ×ˢ Set.pi Set.univ (fun _ => Set.Icc 0 1)) := by
-          refine hg.comp_continuousOn ?_
-          refine Continuous.continuousOn ?_
-          fin_cases i <;>
-            simp only [Fin.zero_eta, Fin.isValue, Fin.insertNth_zero', Nat.reduceAdd, Fin.mk_one,
-              Fin.reduceFinMk]
-          · exact continuous_pi_iff.mpr fun i => by
-              fin_cases i <;>
-              [exact continuous_fst;
-               exact continuous_apply 0 |> Continuous.comp <| continuous_snd;
-               exact continuous_apply 1 |> Continuous.comp <| continuous_snd]
-          · refine continuous_pi_iff.mpr ?_
-            intro i
-            fin_cases i <;>
-              simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
-                Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.insertNth_apply_same, Fin.reduceFinMk]
-            · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-            · exact continuous_fst
-            · exact continuous_apply 1 |> Continuous.comp <| continuous_snd
-          · exact continuous_pi_iff.mpr fun i => by
-              fin_cases i <;>
-              [exact continuous_pi_iff.mp continuous_snd 0;
-               exact continuous_pi_iff.mp continuous_snd 1;
-               exact continuous_fst]
+            (Set.Icc 0 1 ×ˢ Set.pi Set.univ (fun _ => Set.Icc 0 1)) :=
+          hg.comp_continuousOn (insertNth_continuous i).continuousOn
         exact (h_integrable.integrableOn_compact
             (isCompact_Icc.prod (isCompact_univ_pi fun _ => CompactIccSpace.isCompact_Icc)))
           |> fun h => h.mono_set
@@ -252,8 +202,7 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
                 fun y : ℝ => (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ) + y • Pi.single i 1 := by
               funext y; funext j
               by_cases hji : j = i
-              · subst hji
-                simp [Fin.insertNth_apply_same, Pi.single_eq_same]
+              · simp_all
               · rcases lt_or_gt_of_ne hji with h | h
                 · rw [Fin.insertNth_apply_below h]
                   simp [Fin.insertNth_apply_below h, Pi.single_eq_of_ne hji]
@@ -268,20 +217,15 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
               simpa using hsmul.const_add (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ)
             exact (hF.contDiffAt.differentiableAt one_ne_zero).hasFDerivAt.comp_hasDerivAt x hg
           · apply_rules [ Continuous.intervalIntegrable ]
-            have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) := by
-              exact hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
+            have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) :=
+              hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
                 continuous_pi_iff.mpr fun j => by fin_cases i <;> fin_cases j <;> continuity
             exact h_cont.clm_apply continuous_const
         convert h_ftc using 1 <;> norm_num [ intervalIntegral.integral_of_le zero_le_one ]
         rw [ eq_comm, sub_eq_zero ]
         convert hper (Fin.insertNth i 0 z) using 2
         ext j
-        fin_cases i <;> fin_cases j <;> simp [ Fin.insertNth ]
-        · rfl
-        · rfl
-        · rfl
-        · rfl
-        · rfl
+        fin_cases i <;> fin_cases j <;> simp [Fin.insertNth] <;> rfl
 
 
 /-- ∫ ∂F/∂xᵢ over [0,1]³ = 0 for periodic F (FTC + periodicity). -/
@@ -296,39 +240,8 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
       rw [ MeasureTheory.integral_integral_swap ]
       · simp_rw [h_ftc]; simp
       · have h_cont : Continuous
-            (fun p : ℝ × (Fin 2 → ℝ) => (fderiv ℝ F (i.insertNth p.1 p.2)) (Pi.single i 1)) := by
-          have h_cont : Continuous
-              (fun p : ℝ × (Fin 2 → ℝ) => fderiv ℝ F (i.insertNth p.1 p.2)) := by
-            have h_cont : Continuous (fun p : Fin 3 → ℝ => fderiv ℝ F p) := by
-              exact hF.continuous_fderiv one_ne_zero
-            refine h_cont.comp ?_
-            refine continuous_pi_iff.mpr ?_
-            intro j
-            fin_cases j <;>
-              simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
-                Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
-            · fin_cases i <;>
-                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                  ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
-                  Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
-              · exact continuous_fst
-              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-            · fin_cases i <;>
-                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                  one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
-                  Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
-              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-              · exact continuous_fst
-              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-            · fin_cases i <;>
-                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                  Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
-                  Fin.lt_one_iff, Fin.reduceFinMk]
-              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-              · exact continuous_fst
-          exact Continuous.eval_const h_cont (Pi.single i 1)
+            (fun p : ℝ × (Fin 2 → ℝ) => (fderiv ℝ F (i.insertNth p.1 p.2)) (Pi.single i 1)) :=
+          ((hF.continuous_fderiv one_ne_zero).comp (insertNth_continuous i)).eval_const _
         rw [ MeasureTheory.Measure.prod_restrict ]
         exact ContinuousOn.integrableOn_compact
             (isCompact_Icc.prod (isCompact_univ_pi fun _ => CompactIccSpace.isCompact_Icc))
@@ -361,14 +274,11 @@ lemma torusGradX_mul (φ ψ : Torus3 → ℝ) (i : Fin 3)
       φ x * torusGradX ψ x i + ψ x * torusGradX φ x i := by
   intro x
   simp only [torusGradX]
-  have hlift : periodicLift (fun z => φ z * ψ z) = periodicLift φ * periodicLift ψ := by
-    ext y; simp [periodicLift, Pi.mul_apply]
-  rw [hlift]
-  let x₀ := (torusMk_surjective x).choose
-  have hx₀ := (torusMk_surjective x).choose_spec
+  rw [show periodicLift (fun z => φ z * ψ z) = periodicLift φ * periodicLift ψ from
+    by ext y; simp [periodicLift, Pi.mul_apply]]
   rw [fderiv_mul hφ.differentiableAt hψ.differentiableAt]
   simp only [_root_.add_apply, periodicLift, Function.comp_apply]
-  rw [show torusMk x₀ = x from hx₀]
+  rw [show torusMk (torusMk_surjective x).choose = x from (torusMk_surjective x).choose_spec]
   simp [smul_eq_mul]
 
 private lemma integrable_mul_torusGradX (φ ψ : Torus3 → ℝ) (i : Fin 3)
@@ -388,11 +298,10 @@ theorem torus_hIBP_spatial (φ ψ : Torus3 → ℝ) (i : Fin 3)
     simp_rw [torusGradX_mul φ ψ i (hφ.differentiable one_ne_zero) (hψ.differentiable one_ne_zero)]
     exact integral_add (integrable_mul_torusGradX φ ψ i hφ hψ)
       (integrable_mul_torusGradX ψ φ i hψ hφ)
-  have hzero : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i = 0 := by
-    apply torus_gradX_integral_zero
-    have : periodicLift (fun z => φ z * ψ z) = fun y => periodicLift φ y * periodicLift ψ y := by
-      ext y; simp [periodicLift]
-    rw [this]; exact hφ.mul hψ
+  have hzero : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i = 0 :=
+    torus_gradX_integral_zero _ i (by
+      rw [show periodicLift (fun z => φ z * ψ z) = fun y => periodicLift φ y * periodicLift ψ y
+        from by ext y; simp [periodicLift]]; exact hφ.mul hψ)
   linarith [hprod ▸ hzero]
 
 /-- ∫ u · (∇×F) = 0 on T³. Each gradient integral vanishes by periodicity. -/
@@ -404,43 +313,34 @@ theorem torus_hCurlIntZero (F : Torus3 → Fin 3 → ℝ) (u : Fin 3 → ℝ)
     fun j i =>
       (continuous_torusGradX (fun z => F z j) i (hF_diff j)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
-  -- Key: torusCurlX F x k = torusGradX difference (by rfl, same choose)
-  have hcurl0 : ∀ x, torusCurlX F x 0 =
-      torusGradX (fun z => F z 2) x 1 - torusGradX (fun z => F z 1) x 2 := fun _ => rfl
-  have hcurl1 : ∀ x, torusCurlX F x 1 =
-      torusGradX (fun z => F z 0) x 2 - torusGradX (fun z => F z 2) x 0 := fun _ => rfl
-  have hcurl2 : ∀ x, torusCurlX F x 2 =
-      torusGradX (fun z => F z 1) x 0 - torusGradX (fun z => F z 0) x 1 := fun _ => rfl
-  -- Rewrite integrand
+  -- Rewrite integrand using torusCurlX = torusGradX differences (by rfl)
   have key : (fun x => dotProduct u (torusCurlX F x)) = fun x =>
       u 0 * (torusGradX (fun z => F z 2) x 1 - torusGradX (fun z => F z 1) x 2) +
       (u 1 * (torusGradX (fun z => F z 0) x 2 - torusGradX (fun z => F z 2) x 0) +
        u 2 * (torusGradX (fun z => F z 1) x 0 - torusGradX (fun z => F z 0) x 1)) := by
     ext x
-    simp only [dotProduct, Fin.sum_univ_three, hcurl0, hcurl1, hcurl2]
+    have hc0 : torusCurlX F x 0 =
+        torusGradX (fun z => F z 2) x 1 - torusGradX (fun z => F z 1) x 2 := rfl
+    have hc1 : torusCurlX F x 1 =
+        torusGradX (fun z => F z 0) x 2 - torusGradX (fun z => F z 2) x 0 := rfl
+    have hc2 : torusCurlX F x 2 =
+        torusGradX (fun z => F z 1) x 0 - torusGradX (fun z => F z 0) x 1 := rfl
+    simp only [dotProduct, Fin.sum_univ_three, hc0, hc1, hc2]
     ring
   rw [key]
-  have h₀ : ∫ x : Torus3, u 0 * (torusGradX (fun z => F z 2) x 1 -
-      torusGradX (fun z => F z 1) x 2) = 0 := by
-    rw [integral_const_mul, integral_sub (hint 2 1) (hint 1 2),
-        hzero 2 1, hzero 1 2, sub_self, mul_zero]
-  have h₁ : ∫ x : Torus3, u 1 * (torusGradX (fun z => F z 0) x 2 -
-      torusGradX (fun z => F z 2) x 0) = 0 := by
-    rw [integral_const_mul, integral_sub (hint 0 2) (hint 2 0),
-        hzero 0 2, hzero 2 0, sub_self, mul_zero]
-  have h₂ : ∫ x : Torus3, u 2 * (torusGradX (fun z => F z 1) x 0 -
-      torusGradX (fun z => F z 0) x 1) = 0 := by
-    rw [integral_const_mul, integral_sub (hint 1 0) (hint 0 1),
-        hzero 1 0, hzero 0 1, sub_self, mul_zero]
+  have int_zero : ∀ j₁ j₂ k₁ k₂ : Fin 3,
+      ∫ x : Torus3, (torusGradX (fun z => F z j₁) x k₁ -
+        torusGradX (fun z => F z j₂) x k₂) = 0 := fun j₁ j₂ k₁ k₂ =>
+    integral_sub (hint j₁ k₁) (hint j₂ k₂) |>.trans (by rw [hzero j₁ k₁, hzero j₂ k₂]; simp)
   have hA := (hint 2 1).sub (hint 1 2) |>.const_mul (u 0)
   have hB := (hint 0 2).sub (hint 2 0) |>.const_mul (u 1)
   have hC := (hint 1 0).sub (hint 0 1) |>.const_mul (u 2)
   refine (integral_add hA (hB.add hC)).trans ?_
-  simp only [Pi.sub_apply, Pi.add_apply]
-  rw [h₀, zero_add]
+  simp only [Pi.sub_apply, Pi.add_apply,
+    integral_const_mul, int_zero 2 1 1 2, mul_zero, zero_add]
   refine (integral_add hB hC).trans ?_
-  simp only [Pi.sub_apply]
-  rw [h₁, h₂, add_zero]
+  simp only [Pi.sub_apply, integral_const_mul,
+    int_zero 0 2 2 0, int_zero 1 0 0 1, mul_zero, add_zero]
 
 /-- Harmonic → constant on T³. Energy method using IBP. -/
 theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
@@ -448,14 +348,9 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
     (hharmonic : ∀ x, torusDivX (torusGradX φ) x = 0) :
     ∀ x y, φ x = φ y := by
   -- Smoothness of gradient components (C¹ suffices for IBP)
-  have hgrad_pl : ∀ i, periodicLift (fun x => torusGradX φ x i) =
-      fun y => fderiv ℝ (periodicLift φ) y (Pi.single i 1) :=
-    fun i => funext (periodicLift_torusGradX φ i)
-  have hgrad_c1 : ∀ i, ContDiff ℝ 1 (periodicLift (fun x => torusGradX φ x i)) := by
-    intro i
-    rw [hgrad_pl]
-    exact ((hd.fderiv_right
-      (show (1 : WithTop ℕ∞) + 1 ≤ 2 by decide)).clm_apply
+  have hgrad_c1 : ∀ i, ContDiff ℝ 1 (periodicLift (fun x => torusGradX φ x i)) := fun i => by
+    rw [funext (periodicLift_torusGradX φ i)]
+    exact ((hd.fderiv_right (show (1 : WithTop ℕ∞) + 1 ≤ 2 by decide)).clm_apply
       contDiff_const).of_le le_rfl
   have hφ_cont : Continuous φ :=
     isOpenQuotientMap_torusMk.isQuotientMap.continuous_iff.mpr
@@ -463,9 +358,8 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
   -- IBP: ∫ (∂φ/∂xᵢ)² = -∫ φ·∂²φ/∂xᵢ²
   have hIBP_i : ∀ i, ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i =
       -(∫ x : Torus3, φ x * torusGradX (fun y => torusGradX φ y i) x i) :=
-    fun i => torus_hIBP_spatial (fun y => torusGradX φ y i)
-      φ i (hgrad_c1 i)
-      (hd.of_le (show 1 ≤ 2 by decide))
+    fun i => torus_hIBP_spatial (fun y => torusGradX φ y i) φ i
+      (hgrad_c1 i) (hd.of_le (show 1 ≤ 2 by decide))
   -- Each φ * ∂²φ/∂xᵢ² is integrable (continuous on compact)
   have hint : ∀ i, Integrable (fun x : Torus3 =>
       φ x * torusGradX (fun y => torusGradX φ y i) x i) :=
@@ -482,29 +376,29 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
   -- Each ∫ (∂φ/∂xᵢ)² = 0 (nonneg + sum = 0)
   have h_nonneg : ∀ i, 0 ≤ ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i :=
     fun i => integral_nonneg (fun x => mul_self_nonneg _)
-  have hgrad_sq_zero : ∀ i, ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i = 0 := by
-    intro i; apply le_antisymm _ (h_nonneg i)
-    have h := Finset.single_le_sum (fun j (_ : j ∈ Finset.univ) => h_nonneg j) (Finset.mem_univ i)
-    linarith [hsum_zero]
+  have hgrad_sq_zero : ∀ i, ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i = 0 :=
+    fun i => le_antisymm
+      (by linarith [hsum_zero,
+        Finset.single_le_sum (fun j (_ : j ∈ Finset.univ) => h_nonneg j) (Finset.mem_univ i)])
+      (h_nonneg i)
   -- ∂φ/∂xᵢ = 0 everywhere (nonneg continuous, integral = 0, compact space)
-  have hgrad_zero : ∀ i x, torusGradX φ x i = 0 := by
-    intro i x
+  have hgrad_zero : ∀ i x, torusGradX φ x i = 0 := fun i x => by
     have hcont := continuous_torusGradX φ i (hd.of_le (by decide))
-    have hae : (fun x => torusGradX φ x i * torusGradX φ x i) =ᵐ[volume] 0 :=
-      (integral_eq_zero_iff_of_nonneg (fun x => mul_self_nonneg _)
+    have hae : (fun x => torusGradX φ x i) =ᵐ[volume] 0 := by
+      filter_upwards [(integral_eq_zero_iff_of_nonneg (fun x => mul_self_nonneg _)
         ((hcont.mul hcont).integrable_of_hasCompactSupport
-          (HasCompactSupport.of_compactSpace _))).mp (hgrad_sq_zero i)
-    have hae' : (fun x => torusGradX φ x i) =ᵐ[volume] 0 := by
-      filter_upwards [hae] with x hx; exact mul_self_eq_zero.mp hx
-    exact congr_fun (MeasureTheory.Measure.eq_of_ae_eq hae' hcont continuous_const) x
+          (HasCompactSupport.of_compactSpace _))).mp (hgrad_sq_zero i)] with x hx
+      exact mul_self_eq_zero.mp hx
+    exact congr_fun (MeasureTheory.Measure.eq_of_ae_eq hae hcont continuous_const) x
   -- fderiv of periodicLift φ is zero everywhere
-  have hfderiv_zero : ∀ y, fderiv ℝ (periodicLift φ) y = 0 := by
-    intro y; ext v
-    have hv : v = ∑ i : Fin 3, v i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) := by
-      ext j; simp [Finset.sum_apply, Pi.single_apply]
-    rw [hv, map_sum, _root_.zero_apply]
+  have hfderiv_zero : ∀ y, fderiv ℝ (periodicLift φ) y = 0 := fun y => by
+    ext v
+    conv_lhs => rw [show v = ∑ i : Fin 3, v i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) from
+      by ext j; simp [Finset.sum_apply, Pi.single_apply]]
+    rw [map_sum, _root_.zero_apply]
     apply Finset.sum_eq_zero; intro i _
-    rw [map_smul, smul_eq_mul, show (fderiv ℝ (periodicLift φ) y) (Pi.single i 1) =
+    rw [map_smul, smul_eq_mul,
+      show (fderiv ℝ (periodicLift φ) y) (Pi.single i 1) =
         torusGradX φ (torusMk y) i from (periodicLift_torusGradX φ i y).symm,
       hgrad_zero, mul_zero]
   -- φ is constant via periodicLift constant

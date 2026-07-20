@@ -103,16 +103,7 @@ private lemma integral_fourier_eq_zero (n : ℤ) (hn : n ≠ 0) :
         (fourier 0 : C(AddCircle T, ℂ)) from rfl, fourierCoeff_fourier]
     simp [Pi.single, Function.update, hn]
   rw [fourierCoeff] at h
-  simp only [fourier_zero, smul_eq_mul, mul_one, neg_neg] at h
-  exact h
-
-private lemma integral_fourier_interval_eq_zero (n : ℤ) (hn : n ≠ 0) :
-    ∫ θ in Set.Ioo (-Real.pi) Real.pi,
-      (fourier n (QuotientAddGroup.mk θ : AddCircle T) : ℂ) = 0 := by
-  have h :=
-    integral_Ioo_eq_T_smul_haar (fun t : AddCircle T => (fourier n t : ℂ))
-  simp only [integral_fourier_eq_zero n hn] at h
-  simpa using h
+  simp_all
 
 private lemma integral_polyEvalCircle_eq_zero {D : ℕ} (a : Fin D → ℂ) (r : ℝ) :
     ∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle = 0 := by
@@ -156,77 +147,18 @@ private lemma integral_re_polyEvalCircle_eq_zero {D : ℕ} (a : Fin D → ℂ) (
   have hint : Integrable (polyEvalCircle a r) AddCircle.haarAddCircle :=
     cont_integrable_circle (continuous_polyEvalCircle a r)
   have hre := integral_re (μ := AddCircle.haarAddCircle) (f := polyEvalCircle a r) hint
-  calc
-    ∫ t : AddCircle T, (polyEvalCircle a r t).re ∂AddCircle.haarAddCircle
-        = (∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle).re := by
-            simpa using hre
-    _ = 0 := by simp [integral_polyEvalCircle_eq_zero a r]
+  rw [show (∫ t : AddCircle T, (polyEvalCircle a r t).re ∂AddCircle.haarAddCircle) =
+    (∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle).re by simpa using hre]
+  simp [integral_polyEvalCircle_eq_zero a r]
 
 private lemma integral_im_polyEvalCircle_eq_zero {D : ℕ} (a : Fin D → ℂ) (r : ℝ) :
     ∫ t : AddCircle T, (polyEvalCircle a r t).im ∂AddCircle.haarAddCircle = 0 := by
   have hint : Integrable (polyEvalCircle a r) AddCircle.haarAddCircle :=
     cont_integrable_circle (continuous_polyEvalCircle a r)
   have him := integral_im (μ := AddCircle.haarAddCircle) (f := polyEvalCircle a r) hint
-  calc
-    ∫ t : AddCircle T, (polyEvalCircle a r t).im ∂AddCircle.haarAddCircle
-        = (∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle).im := by
-            simpa using him
-    _ = 0 := by simp [integral_polyEvalCircle_eq_zero a r]
-
-private lemma integral_real_const_add_polyEvalCircle_sq {D : ℕ}
-    (a : Fin D → ℂ) (r u : ℝ) :
-    ∫ t : AddCircle T, ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2
-      ∂AddCircle.haarAddCircle =
-      u ^ 2 + ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2
-        ∂AddCircle.haarAddCircle := by
-  have hcont : Continuous (polyEvalCircle a r) := continuous_polyEvalCircle a r
-  have h_int1 :
-      Integrable (fun t : AddCircle T => ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2)
-        AddCircle.haarAddCircle :=
-    real_cont_integrable_circle ((continuous_const.add hcont).norm.pow 2)
-  have h_int2 :
-      Integrable (fun t : AddCircle T => ‖polyEvalCircle a r t‖ ^ 2)
-        AddCircle.haarAddCircle :=
-    real_cont_integrable_circle (hcont.norm.pow 2)
-  have h_key : ∀ t : AddCircle T,
-      ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2 - ‖polyEvalCircle a r t‖ ^ 2 =
-        u ^ 2 + 2 * u * (polyEvalCircle a r t).re := by
-    intro t
-    rw [Complex.sq_norm, Complex.normSq_apply, Complex.add_re, Complex.add_im,
-      Complex.sq_norm, Complex.normSq_apply]
-    simp
-    ring
-  have h_int3 :
-      Integrable (fun t : AddCircle T => u ^ 2 + 2 * u * (polyEvalCircle a r t).re)
-        AddCircle.haarAddCircle := by
-    refine (real_cont_integrable_circle continuous_const).add ?_
-    exact real_cont_integrable_circle ((Complex.continuous_re.comp hcont).const_mul (2 * u))
-  have h_diff :
-      ∫ t : AddCircle T, ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2
-        ∂AddCircle.haarAddCircle -
-      ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2
-        ∂AddCircle.haarAddCircle = u ^ 2 := by
-    rw [← integral_sub h_int1 h_int2]
-    have h_congr :
-        (fun t : AddCircle T =>
-          ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2 - ‖polyEvalCircle a r t‖ ^ 2) =
-        (fun t => u ^ 2 + 2 * u * (polyEvalCircle a r t).re) := by
-      ext t
-      exact h_key t
-    rw [h_congr]
-    have h_split :
-        ∫ t : AddCircle T, u ^ 2 + 2 * u * (polyEvalCircle a r t).re
-          ∂AddCircle.haarAddCircle =
-        ∫ t : AddCircle T, u ^ 2 ∂AddCircle.haarAddCircle +
-        ∫ t : AddCircle T, 2 * u * (polyEvalCircle a r t).re
-          ∂AddCircle.haarAddCircle := by
-      exact integral_add
-        (real_cont_integrable_circle continuous_const)
-        (real_cont_integrable_circle ((Complex.continuous_re.comp hcont).const_mul (2 * u)))
-    rw [h_split]
-    rw [integral_const, integral_const_mul, integral_re_polyEvalCircle_eq_zero]
-    simp
-  linarith
+  rw [show (∫ t : AddCircle T, (polyEvalCircle a r t).im ∂AddCircle.haarAddCircle) =
+    (∫ t : AddCircle T, polyEvalCircle a r t ∂AddCircle.haarAddCircle).im by simpa using him]
+  simp [integral_polyEvalCircle_eq_zero a r]
 
 private lemma integral_const_add_polyEvalCircle_sq {D : ℕ}
     (a : Fin D → ℂ) (r : ℝ) (c : ℂ) :
@@ -273,8 +205,7 @@ private lemma integral_const_add_polyEvalCircle_sq {D : ℕ}
         (fun t =>
           ‖c‖ ^ 2 + 2 * c.re * (polyEvalCircle a r t).re +
             2 * c.im * (polyEvalCircle a r t).im) := by
-      ext t
-      exact h_key t
+      simp_all
     rw [h_congr]
     have h_split1 :
         ∫ t : AddCircle T,
@@ -327,18 +258,14 @@ private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
   have hs : (-1 : ℝ) < (n : ℝ) := by exact_mod_cast (show -1 < (n : ℤ) by omega)
   have h := integrable_rpow_mul_exp_neg_mul_sq one_pos hs
-  refine h.congr ?_
-  filter_upwards with r
-  rw [rpow_natCast]
-  ring_nf
+  simp_all
 
 private lemma integrable_abs_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => |r| ^ n * Real.exp (-r ^ 2)) volume := by
   have :
       (fun r : ℝ => |r| ^ n * Real.exp (-r ^ 2)) =
         fun r => ‖r ^ n * Real.exp (-r ^ 2)‖ := by
-    ext r
-    rw [Real.norm_eq_abs, abs_mul, abs_pow, abs_of_pos (Real.exp_pos _)]
+    simp_all
   rw [this]
   exact (integrable_pow_mul_exp_neg_sq n).norm
 
@@ -350,16 +277,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
         ≤ ∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t‖ :=
           norm_sum_le _ _
     _ ≤ ∑ k : Fin D, ‖a k‖ * |r| ^ (k.val + 1) := by
-          apply Finset.sum_le_sum
-          intro k hk
-          rw [norm_mul, norm_mul, norm_pow, Complex.norm_real]
-          calc
-            ‖a k‖ * ‖r‖ ^ (k.val + 1) * ‖fourier ((k.val + 1 : ℕ) : ℤ) t‖
-                ≤ ‖a k‖ * ‖r‖ ^ (k.val + 1) *
-                    ‖(fourier ((k.val + 1 : ℕ) : ℤ) : C(AddCircle T, ℂ))‖ :=
-                  mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
-            _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by rw [fourier_norm]; ring
-            _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
+          simp_all
 
 private lemma norm_sq_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t : AddCircle T) :
     ‖polyEvalCircle a r t‖ ^ 2 ≤
@@ -530,21 +448,16 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
                   ((1 + r ^ (D - 1)) * C) ^ 2 :=
                 sq_le_sq' (by linarith) hsum_le
               have hsq2 : ((1 + r ^ (D - 1)) * C) ^ 2 ≤
-                  2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2 := by
-                nlinarith [sq_nonneg (1 - r ^ (D - 1))]
+                  2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2 := by nlinarith [sq_nonneg (1 - r ^ (D - 1))]
               have hpow_eq : r ^ 3 * (r ^ (D - 1)) ^ 2 = r * r ^ (D * 2) := by
-                have hexp_eq : 3 + (D - 1) * 2 = 1 + D * 2 := by
-                  have := Nat.sub_add_cancel (show 1 ≤ D from hD_pos)
-                  nlinarith
+                have hexp_eq : 3 + (D - 1) * 2 = 1 + D * 2 := by omega
                 rw [← pow_mul, ← pow_add, hexp_eq, pow_add, pow_one]
               calc r ^ 3 * (∑ x, r ^ x.val * ‖a x‖) ^ 2
                   ≤ r ^ 3 * (2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2) := by
                     exact mul_le_mul_of_nonneg_left
                       (le_trans hsq hsq2) (pow_nonneg hr_nn 3)
-                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by
-                    ring
-                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by
-                    rw [hpow_eq]
+                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by ring
+                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by rw [hpow_eq]
                 _ ≤ r * r ^ (D * 2) * C ^ 2 * 4 + r ^ 3 * C ^ 2 * 4 := by
                     nlinarith [pow_nonneg hr_nn 3,
                       mul_nonneg hr_nn (pow_nonneg hr_nn (D * 2)),
@@ -585,8 +498,7 @@ private lemma gaussian_integral_eq_pi :
   rw [hcomp, hprod]
   have hgauss : ∫ x : ℝ, Real.exp (-(1 : ℝ) * x ^ 2) = Real.sqrt Real.pi := by
     simpa using integral_gaussian (1 : ℝ)
-  have hgauss' : ∫ x : ℝ, Real.exp (-x ^ 2) = Real.sqrt Real.pi := by
-    simpa [one_mul] using hgauss
+  have hgauss' : ∫ x : ℝ, Real.exp (-x ^ 2) = Real.sqrt Real.pi := by simpa [one_mul] using hgauss
   calc
     (∫ x : ℝ, Real.exp (-x ^ 2)) * ∫ y : ℝ, Real.exp (-y ^ 2)
         = Real.sqrt Real.pi * Real.sqrt Real.pi := by simp [hgauss']
@@ -652,8 +564,7 @@ private lemma integral_cauchy_schwarz {α : Type*} [MeasurableSpace α]
     simp [hB_zero, hA_zero]
   · have hA_pos : 0 < A := lt_of_le_of_ne hA_nn (Ne.symm hA_zero)
     have h_opt := h_quad (B / A)
-    have h_simp : (B / A) ^ 2 * A - 2 * (B / A) * B + C = C - B ^ 2 / A := by
-      field_simp; ring
+    have h_simp : (B / A) ^ 2 * A - 2 * (B / A) * B + C = C - B ^ 2 / A := by field_simp; ring
     rw [h_simp] at h_opt
     rwa [sub_nonneg, div_le_iff₀ hA_pos, mul_comm] at h_opt
 
@@ -672,8 +583,7 @@ private lemma integrableOn_polar_const (u : ℝ) :
   · apply (ae_restrict_iff' measurableSet_Ioi).mpr
     apply Filter.Eventually.of_forall
     intro r hr
-    have hcont_theta : Continuous (fun θ : ℝ => r * (u ^ 2 * Real.exp (-r ^ 2))) := by
-      continuity
+    have hcont_theta : Continuous (fun θ : ℝ => r * (u ^ 2 * Real.exp (-r ^ 2))) := by continuity
     exact (hcont_theta.continuousOn.integrableOn_compact isCompact_Icc).mono_set
       Set.Ioo_subset_Icc_self
   · set bound := fun r : ℝ => T * (u ^ 2 * (|r| ^ 1 * Real.exp (-r ^ 2)))
@@ -693,8 +603,7 @@ private lemma integrableOn_polar_const (u : ℝ) :
           ‖r * (u ^ 2 * Real.exp (-r ^ 2))‖ =
           ∫ θ in Set.Icc (-Real.pi) Real.pi,
             ‖r * (u ^ 2 * Real.exp (-r ^ 2))‖ := by
-        intro r
-        exact (integral_Icc_eq_integral_Ioo).symm
+        simp_all
       simp_rw [hIoo_eq_Icc]
       exact hcont_int.aestronglyMeasurable.mono_measure Measure.restrict_le_self
     · apply (ae_restrict_iff' measurableSet_Ioi).mpr
@@ -713,8 +622,8 @@ private lemma integrableOn_polar_const (u : ℝ) :
         intro y hy
         exact hnorm_eq y)]
       have hnn :
-          0 ≤ r * (u ^ 2 * Real.exp (-r ^ 2)) := by
-        exact mul_nonneg (le_of_lt hr) (mul_nonneg (sq_nonneg u) (le_of_lt (Real.exp_pos _)))
+          0 ≤ r * (u ^ 2 * Real.exp (-r ^ 2)) :=
+        mul_nonneg (le_of_lt hr) (mul_nonneg (sq_nonneg u) (le_of_lt (Real.exp_pos _)))
       calc
         ∫ θ in Set.Ioo (-Real.pi) Real.pi, r * (u ^ 2 * Real.exp (-r ^ 2))
             = T * (r * (u ^ 2 * Real.exp (-r ^ 2))) := by
@@ -729,64 +638,6 @@ private lemma integrableOn_polar_const (u : ℝ) :
             ring_nf
             exact le_rfl
 
-private lemma integrableOn_polar_real_const_add {D : ℕ} (a : Fin D → ℂ) (u : ℝ) :
-    IntegrableOn
-      (fun p : ℝ × ℝ =>
-        p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2)))
-      (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
-      (volume.prod volume) := by
-  rw [IntegrableOn]
-  let μ : Measure (ℝ × ℝ) :=
-    (volume.prod volume).restrict (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
-  have hconst :
-      Integrable (fun p : ℝ × ℝ => p.1 * (u ^ 2 * Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_const u
-  have hnorm :
-      Integrable (fun p : ℝ × ℝ =>
-        p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_norm a
-  set g : ℝ × ℝ → ℝ := fun p =>
-    2 * (p.1 * (u ^ 2 * Real.exp (-p.1 ^ 2))) +
-      2 * (p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-        Real.exp (-p.1 ^ 2)))
-  have hg : Integrable g μ := by
-    refine (hconst.const_mul 2).add ?_
-    exact hnorm.const_mul 2
-  have hcont : Continuous (fun p : ℝ × ℝ =>
-      p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-        Real.exp (-p.1 ^ 2))) :=
-    Continuous.mul continuous_fst (Continuous.mul
-      ((continuous_const.add (continuous_polyEvalCircle_comp a)).norm.pow 2)
-      (Real.continuous_exp.comp (Continuous.neg (continuous_fst.pow 2))))
-  refine Integrable.mono' hg ?_ ?_
-  · exact hcont.aestronglyMeasurable.mono_measure Measure.restrict_le_self
-  · apply (ae_restrict_iff' (measurableSet_Ioi.prod measurableSet_Ioo)).mpr
-    apply Filter.Eventually.of_forall
-    intro p hp
-    rcases hp with ⟨hr, hθ⟩
-    simp only [Set.mem_Ioi, Set.mem_Ioo] at hr hθ
-    rw [Real.norm_of_nonneg]
-    · set q := polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)
-      have hbase : ‖(u : ℂ) + q‖ ^ 2 ≤ 2 * u ^ 2 + 2 * ‖q‖ ^ 2 := by
-        simpa [q, Complex.norm_real, sq_abs] using norm_add_sq_le (u : ℂ) q
-      have hmul :
-          p.1 * (‖(u : ℂ) + q‖ ^ 2 * Real.exp (-p.1 ^ 2))
-            ≤ p.1 * ((2 * u ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := by
-        exact mul_le_mul_of_nonneg_left
-          (mul_le_mul_of_nonneg_right hbase (le_of_lt (Real.exp_pos _)))
-          (le_of_lt hr)
-      calc
-        p.1 * (‖(u : ℂ) + q‖ ^ 2 * Real.exp (-p.1 ^ 2))
-            ≤ p.1 * ((2 * u ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := hmul
-        _ = g p := by
-            unfold g q
-            ring
-    · exact mul_nonneg (le_of_lt hr)
-        (mul_nonneg (sq_nonneg ‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖)
-          (le_of_lt (Real.exp_pos _)))
-
 private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : ℂ) :
     IntegrableOn
       (fun p : ℝ × ℝ =>
@@ -798,13 +649,12 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
   let μ : Measure (ℝ × ℝ) :=
     (volume.prod volume).restrict (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
   have hconst :
-      Integrable (fun p : ℝ × ℝ => p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_const ‖c‖
+      Integrable (fun p : ℝ × ℝ => p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) μ :=
+    integrableOn_polar_const ‖c‖
   have hnorm :
       Integrable (fun p : ℝ × ℝ =>
         p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2))) μ := by
-    exact integrableOn_polar_norm a
+          Real.exp (-p.1 ^ 2))) μ := integrableOn_polar_norm a
   set g : ℝ × ℝ → ℝ := fun p =>
     2 * (p.1 * (‖c‖ ^ 2 * Real.exp (-p.1 ^ 2))) +
       2 * (p.1 * (‖polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
@@ -827,12 +677,10 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
     simp only [Set.mem_Ioi, Set.mem_Ioo] at hr hθ
     rw [Real.norm_of_nonneg]
     · set q := polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)
-      have hbase : ‖c + q‖ ^ 2 ≤ 2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2 := by
-        simpa [q] using norm_add_sq_le c q
+      have hbase : ‖c + q‖ ^ 2 ≤ 2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2 := by simpa [q] using norm_add_sq_le c q
       have hmul :
           p.1 * (‖c + q‖ ^ 2 * Real.exp (-p.1 ^ 2))
-            ≤ p.1 * ((2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := by
-        exact mul_le_mul_of_nonneg_left
+            ≤ p.1 * ((2 * ‖c‖ ^ 2 + 2 * ‖q‖ ^ 2) * Real.exp (-p.1 ^ 2)) := mul_le_mul_of_nonneg_left
           (mul_le_mul_of_nonneg_right hbase (le_of_lt (Real.exp_pos _)))
           (le_of_lt hr)
       calc
@@ -845,25 +693,28 @@ private lemma integrableOn_polar_const_add {D : ℕ} (a : Fin D → ℂ) (c : �
         (mul_nonneg (sq_nonneg ‖c + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖)
           (le_of_lt (Real.exp_pos _)))
 
+private lemma integrableOn_polar_real_const_add {D : ℕ} (a : Fin D → ℂ) (u : ℝ) :
+    IntegrableOn
+      (fun p : ℝ × ℝ =>
+        p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
+          Real.exp (-p.1 ^ 2)))
+      (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
+      (volume.prod volume) :=
+  integrableOn_polar_const_add a (u : ℂ)
+
 private lemma radial_gaussian_integral (n : ℕ) :
     2 * ∫ r in Set.Ioi (0 : ℝ), r ^ (2 * n + 1) * Real.exp (-r ^ 2) =
       (n.factorial : ℝ) := by
   have hp : (0 : ℝ) < 2 := two_pos
-  have hq : (-1 : ℝ) < (2 * (n : ℝ) + 1) := by
-    linarith [Nat.cast_nonneg (α := ℝ) n]
+  have hq : (-1 : ℝ) < (2 * (n : ℝ) + 1) := by linarith [Nat.cast_nonneg (α := ℝ) n]
   have pow_eq : ∀ (r : ℝ), r ∈ Set.Ioi (0 : ℝ) →
       r ^ (2 * n + 1) * Real.exp (-r ^ 2) =
       r ^ (2 * (n : ℝ) + 1) * Real.exp (-r ^ (2 : ℝ)) := by
     intro r _
     congr 1
     · rw [← rpow_natCast r (2 * n + 1)]
-      congr 1
-      push_cast
-      ring
-    · congr 1
-      congr 1
-      rw [← rpow_natCast r 2]
-      norm_num
+      simp_all
+    · simp_all
   rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
   rw [integral_rpow_mul_exp_neg_rpow hp hq]
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring
@@ -872,8 +723,7 @@ private lemma radial_gaussian_integral (n : ℕ) :
 
 private lemma norm_polyEval_eq_norm_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r θ : ℝ) :
     ‖polyEval a (Complex.polarCoord.symm (r, θ))‖ =
-      ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by
-  rw [polyEval_polar_eq_polyEvalCircle]
+      ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by rw [polyEval_polar_eq_polyEvalCircle]
 
 private lemma fockNorm_polar_local {D : ℕ} (a : Fin D → ℂ) :
     (1 / Real.pi) * ∫ z : ℂ, ‖polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) =
@@ -933,178 +783,6 @@ private lemma fockNorm_polar_local {D : ℕ} (a : Fin D → ℂ) :
     simp only [T]
     field_simp
   rw [← mul_assoc, hT_eq]
-
-private lemma gaussian_integral_real_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (u : ℝ) :
-    (1 / Real.pi) * ∫ z : ℂ, ‖(u : ℂ) + polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) =
-      u ^ 2 + fockNormSq a := by
-  rw [show (∫ z : ℂ, ‖(u : ℂ) + polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)) =
-    (∫ p in polarCoord.target, p.1 • (‖(u : ℂ) + polyEval a (Complex.polarCoord.symm p)‖ ^ 2 *
-      Real.exp (-‖Complex.polarCoord.symm p‖ ^ 2))
-    ) from (Complex.integral_comp_polarCoord_symm _).symm]
-  rw [polarCoord_target]
-  have integrand_rw : ∀ p : ℝ × ℝ,
-      p.1 • (‖(u : ℂ) + polyEval a (Complex.polarCoord.symm p)‖ ^ 2 *
-        Real.exp (-‖Complex.polarCoord.symm p‖ ^ 2)) =
-      p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-        Real.exp (-p.1 ^ 2)) := by
-    intro ⟨r, θ⟩
-    simp only [smul_eq_mul, polyEval_polar_eq_polyEvalCircle, Complex.norm_polarCoord_symm, sq_abs]
-  simp_rw [integrand_rw]
-  have hint : IntegrableOn
-      (fun p : ℝ × ℝ =>
-        p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2)))
-      (Set.Ioi 0 ×ˢ Set.Ioo (-Real.pi) Real.pi)
-      (volume.prod volume) := integrableOn_polar_real_const_add a u
-  rw [show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
-  rw [setIntegral_prod _ hint]
-  simp only []
-  have inner_eq : ∀ r : ℝ,
-      (∫ θ in Set.Ioo (-Real.pi) Real.pi,
-        r * (‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2 * Real.exp (-r ^ 2))) =
-      T * (r * Real.exp (-r ^ 2) *
-        ∫ t : AddCircle T, ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle) := by
-    intro r
-    have h1 : ∀ θ : ℝ,
-        r * (‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2 * Real.exp (-r ^ 2)) =
-          (r * Real.exp (-r ^ 2)) *
-            ‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2 := by
-      intro θ
-      ring
-    simp_rw [h1]
-    rw [MeasureTheory.integral_const_mul]
-    have := integral_Ioo_eq_T_smul_haar (fun t : AddCircle T =>
-      ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2)
-    simp only [smul_eq_mul] at this
-    rw [show (∫ θ in Set.Ioo (-Real.pi) Real.pi,
-          ‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2) =
-        (∫ θ in Set.Ioo (-Real.pi) Real.pi,
-          (fun t : AddCircle T => ‖(u : ℂ) + polyEvalCircle a r t‖ ^ 2)
-            (QuotientAddGroup.mk θ))
-        from by rfl]
-    rw [this]
-    ring
-  simp_rw [inner_eq, integral_real_const_add_polyEvalCircle_sq]
-  set whole : ℝ → ℝ := fun r =>
-    T * (r * Real.exp (-r ^ 2) *
-      (u ^ 2 + ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle))
-  set first : ℝ → ℝ := fun r => T * (r * Real.exp (-r ^ 2) * u ^ 2)
-  set second : ℝ → ℝ := fun r =>
-    T * (r * Real.exp (-r ^ 2) *
-      ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle)
-  have hwhole_eq : whole = fun r : ℝ =>
-      ∫ θ in Set.Ioo (-Real.pi) Real.pi,
-        r * (‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk θ)‖ ^ 2 *
-          Real.exp (-r ^ 2)) := by
-    funext r
-    rw [inner_eq]
-    unfold whole
-    rw [integral_real_const_add_polyEvalCircle_sq]
-  have hwhole_int : Integrable whole (volume.restrict (Set.Ioi 0)) := by
-    have hcont_add : Continuous (fun p : ℝ × ℝ =>
-        p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
-          Real.exp (-p.1 ^ 2))) :=
-      Continuous.mul continuous_fst (Continuous.mul
-        ((continuous_const.add (continuous_polyEvalCircle_comp a)).norm.pow 2)
-        (Real.continuous_exp.comp (Continuous.neg (continuous_fst.pow 2))))
-    have hint' := integrableOn_polar_real_const_add a u
-    rw [IntegrableOn, ← Measure.prod_restrict (Set.Ioi 0) (Set.Ioo (-Real.pi) Real.pi)] at hint'
-    rw [integrable_prod_iff hcont_add.aestronglyMeasurable] at hint'
-    refine hint'.2.congr ?_
-    apply (ae_restrict_iff' measurableSet_Ioi).mpr
-    filter_upwards with r hr
-    have hnorm_eq : ∀ y : ℝ,
-        ‖(r, y).1 * (‖(u : ℂ) + polyEvalCircle a (r, y).1 (↑(r, y).2)‖ ^ 2 *
-          Real.exp (-(r, y).1 ^ 2))‖ =
-          r * (‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk y)‖ ^ 2 *
-            Real.exp (-r ^ 2)) := by
-      intro y
-      rw [Real.norm_of_nonneg]
-      exact mul_nonneg (le_of_lt hr)
-        (mul_nonneg (sq_nonneg ‖(u : ℂ) + polyEvalCircle a r (QuotientAddGroup.mk y)‖)
-          (le_of_lt (Real.exp_pos _)))
-    rw [setIntegral_congr_fun measurableSet_Ioo (by
-      intro y hy
-      exact hnorm_eq y)]
-    exact (congrFun hwhole_eq r).symm
-  have hfirst_int : Integrable first (volume.restrict (Set.Ioi 0)) := by
-    unfold first
-    have : IntegrableOn (fun r : ℝ => (T * u ^ 2) * (r ^ 1 * Real.exp (-r ^ 2)))
-        (Set.Ioi 0) volume := by
-      exact (integrable_pow_mul_exp_neg_sq 1).integrableOn.const_mul (T * u ^ 2)
-    simpa [IntegrableOn, mul_assoc, mul_left_comm, mul_comm, pow_one] using this
-  have hsum : whole = first + second := by
-    funext r
-    simp [whole, first, second]
-    ring
-  have hsecond_int : Integrable second (volume.restrict (Set.Ioi 0)) := by
-    rw [show second = whole - first by
-      funext r
-      simp [whole, first, second]
-      ring]
-    exact hwhole_int.sub hfirst_int
-  rw [show (∫ r in Set.Ioi (0 : ℝ), whole r) =
-      ∫ r in Set.Ioi (0 : ℝ), (first + second) r by rw [hsum]]
-  rw [show (∫ r in Set.Ioi (0 : ℝ), (first + second) r) =
-      ∫ r in Set.Ioi (0 : ℝ), first r + second r by rfl]
-  rw [integral_add hfirst_int hsecond_int]
-  have hfirst_eval :
-      (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), first r = u ^ 2 := by
-    unfold first
-    rw [show (fun r : ℝ => T * (r * Real.exp (-r ^ 2) * u ^ 2)) =
-      fun r => (T * (r * Real.exp (-r ^ 2))) * u ^ 2 by
-        ext r
-        ring]
-    rw [MeasureTheory.integral_mul_const]
-    have hT_eq : (1 / Real.pi) * T = 2 := by
-      simp only [T]
-      field_simp
-    have hrad : 2 * ∫ r in Set.Ioi (0 : ℝ), r * Real.exp (-r ^ 2) = 1 := by
-      simpa using radial_gaussian_integral 0
-    calc
-      (1 / Real.pi) * ((∫ r in Set.Ioi (0 : ℝ), T * (r * Real.exp (-r ^ 2)) ∂volume) * u ^ 2)
-          = (((1 / Real.pi) * T) *
-            (∫ r in Set.Ioi (0 : ℝ), r * Real.exp (-r ^ 2) ∂volume)) * u ^ 2 := by
-              rw [integral_const_mul]
-              ring
-      _ = 2 * (∫ r in Set.Ioi (0 : ℝ), r * Real.exp (-r ^ 2) ∂volume) * u ^ 2 := by rw [hT_eq]
-      _ = u ^ 2 := by
-          nlinarith
-  have hsecond_eval :
-      (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r = fockNormSq a := by
-    unfold second
-    rw [MeasureTheory.integral_const_mul]
-    have hT_eq : (1 / Real.pi) * T = 2 := by
-      simp only [T]
-      field_simp
-    calc
-      (1 / Real.pi) * (T * ∫ r in Set.Ioi (0 : ℝ),
-          r * Real.exp (-r ^ 2) *
-            ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle)
-          = ((1 / Real.pi) * T) *
-              ∫ r in Set.Ioi (0 : ℝ),
-                r * Real.exp (-r ^ 2) *
-                  ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2
-                    ∂AddCircle.haarAddCircle := by ring
-      _ = 2 * ∫ r in Set.Ioi (0 : ℝ),
-            r * Real.exp (-r ^ 2) *
-              ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2
-                ∂AddCircle.haarAddCircle := by rw [hT_eq]
-      _ = (1 / Real.pi) * ∫ z : ℂ, ‖polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-            simpa using (fockNorm_polar_local a).symm
-      _ = fockNormSq a := fockNorm_eq_gaussian_integral a
-  have hfinal :
-      (1 / Real.pi) * (∫ r in Set.Ioi (0 : ℝ), first r) +
-        (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r = u ^ 2 + fockNormSq a := by
-    rw [hfirst_eval, hsecond_eval]
-  have hparen2 :
-      (1 / Real.pi) *
-          ((∫ r in Set.Ioi (0 : ℝ), first r) +
-            ∫ r in Set.Ioi (0 : ℝ), second r) =
-        (1 / Real.pi) * (∫ r in Set.Ioi (0 : ℝ), first r) +
-          (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r := by
-    ring
-  exact hparen2.trans hfinal
 
 lemma gaussian_integral_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (c : ℂ) :
     (1 / Real.pi) * ∫ z : ℂ, ‖c + polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) =
@@ -1202,8 +880,7 @@ lemma gaussian_integral_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (c : �
   have hfirst_int : Integrable first (volume.restrict (Set.Ioi 0)) := by
     unfold first
     have : IntegrableOn (fun r : ℝ => (T * ‖c‖ ^ 2) * (r ^ 1 * Real.exp (-r ^ 2)))
-        (Set.Ioi 0) volume := by
-      exact (integrable_pow_mul_exp_neg_sq 1).integrableOn.const_mul (T * ‖c‖ ^ 2)
+        (Set.Ioi 0) volume := (integrable_pow_mul_exp_neg_sq 1).integrableOn.const_mul (T * ‖c‖ ^ 2)
     simpa [IntegrableOn, mul_assoc, mul_left_comm, mul_comm, pow_one] using this
   have hsum : whole = first + second := by
     funext r
@@ -1240,8 +917,7 @@ lemma gaussian_integral_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (c : �
               rw [integral_const_mul]
               ring
       _ = 2 * (∫ r in Set.Ioi (0 : ℝ), r * Real.exp (-r ^ 2) ∂volume) * ‖c‖ ^ 2 := by rw [hT_eq]
-      _ = ‖c‖ ^ 2 := by
-          nlinarith
+      _ = ‖c‖ ^ 2 := by nlinarith
   have hsecond_eval :
       (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r = fockNormSq a := by
     unfold second
@@ -1274,9 +950,12 @@ lemma gaussian_integral_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (c : �
           ((∫ r in Set.Ioi (0 : ℝ), first r) +
             ∫ r in Set.Ioi (0 : ℝ), second r) =
         (1 / Real.pi) * (∫ r in Set.Ioi (0 : ℝ), first r) +
-          (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r := by
-    ring
+          (1 / Real.pi) * ∫ r in Set.Ioi (0 : ℝ), second r := by ring
   exact hparen2.trans hfinal
+
+private lemma gaussian_integral_real_const_add_polyEval {D : ℕ} (a : Fin D → ℂ) (u : ℝ) :
+    (1 / Real.pi) * ∫ z : ℂ, ‖(u : ℂ) + polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) =
+      u ^ 2 + fockNormSq a := by simpa using gaussian_integral_const_add_polyEval a (u : ℂ)
 
 private lemma integrable_gaussian_sq_real_const_add_polyEval {D : ℕ}
     (a : Fin D → ℂ) (u : ℝ) :
@@ -1333,10 +1012,6 @@ private lemma integrable_gaussian_sq_real_const_add_polyEval {D : ℕ}
         (le_of_lt (Real.exp_pos _)))
   exact ((MeasureTheory.hasFiniteIntegral_iff_ofReal hG_nonneg).1 hG_int.hasFiniteIntegral).ne
 
-private lemma integrable_gaussian_sq_polyEval {D : ℕ} (a : Fin D → ℂ) :
-    Integrable (fun z : ℂ => ‖polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)) volume := by
-  simpa using integrable_gaussian_sq_real_const_add_polyEval a 0
-
 private def gaussianWeight (z : ℂ) : ℝ :=
   (1 / Real.pi) * Real.exp (-‖z‖ ^ 2)
 
@@ -1349,8 +1024,7 @@ private lemma measurable_gaussianWeight : Measurable gaussianWeight := by
 
 private lemma gaussianWeight_ae_lt_top :
     ∀ᵐ z : ℂ ∂volume, ENNReal.ofReal (gaussianWeight z) < ∞ := by
-  filter_upwards with z
-  simp [gaussianWeight]
+  simp_all
 
 private lemma integrable_gaussianWeight :
     Integrable gaussianWeight volume := by
@@ -1387,8 +1061,7 @@ private lemma integral_gaussianMeasure_eq (f : ℂ → ℝ) :
             filter_upwards with z
             unfold gaussianWeight
             ring
-    _ = (1 / Real.pi) * ∫ z : ℂ, f z * Real.exp (-‖z‖ ^ 2) := by
-          rw [integral_const_mul]
+    _ = (1 / Real.pi) * ∫ z : ℂ, f z * Real.exp (-‖z‖ ^ 2) := by rw [integral_const_mul]
 
 private lemma integral_one_gaussianMeasure :
     ∫ _ : ℂ, (1 : ℝ) ∂gaussianMeasure = 1 := by
@@ -1414,10 +1087,6 @@ private lemma integrable_sq_gaussianMeasure_real_const_add_polyEval {D : ℕ}
   rw [show (ENNReal.ofReal (gaussianWeight z)).toReal = gaussianWeight z by simp [hgw]]
   simp [gaussianWeight, smul_eq_mul]
   ring_nf
-
-private lemma integrable_sq_gaussianMeasure_polyEval {D : ℕ} (a : Fin D → ℂ) :
-    Integrable (fun z : ℂ => ‖polyEval a z‖ ^ 2) gaussianMeasure := by
-  simpa using integrable_sq_gaussianMeasure_real_const_add_polyEval a 0
 
 private lemma integrable_sq_gaussianMeasure_rho_real_const_add_polyEval {D : ℕ}
     (a : Fin D → ℂ) (u : ℝ) :
@@ -1473,8 +1142,7 @@ private lemma integrable_of_sq_gaussian {f : ℂ → ℝ}
     ((MeasureTheory.integrable_const (1 : ℝ)).add hf2) hfm ?_
   filter_upwards with z
   rw [Real.norm_eq_abs]
-  have hbound : |f z| ≤ |f z| ^ 2 + 1 := by
-    nlinarith [sq_nonneg (|f z| - (1 / 2 : ℝ))]
+  have hbound : |f z| ≤ |f z| ^ 2 + 1 := by nlinarith [sq_nonneg (|f z| - (1 / 2 : ℝ))]
   simpa [sq_abs, add_comm, add_left_comm, add_assoc] using hbound
 
 private lemma integrable_mul_of_sq_gaussian {f g : ℂ → ℝ}
@@ -1486,8 +1154,7 @@ private lemma integrable_mul_of_sq_gaussian {f g : ℂ → ℝ}
   filter_upwards with z
   rw [Real.norm_eq_abs]
   rw [abs_mul]
-  have hbound : |f z| * |g z| ≤ |f z| ^ 2 + |g z| ^ 2 := by
-    nlinarith [sq_nonneg (|f z| - |g z|)]
+  have hbound : |f z| * |g z| ≤ |f z| ^ 2 + |g z| ^ 2 := by nlinarith [sq_nonneg (|f z| - |g z|)]
   simpa [sq_abs] using hbound
 
 private lemma gaussian_l1_sq_le {f : ℂ → ℝ}
@@ -1501,8 +1168,7 @@ private lemma gaussian_l1_sq_le {f : ℂ → ℝ}
     simpa only [one_pow] using h1
   have hfg : Integrable (fun z => f z * 1) gaussianMeasure := by simpa using hf
   have hcs := integral_cauchy_schwarz hf h1 hf2 h1sq hfg
-  have hmass : gaussianMeasure.real Set.univ = 1 := by
-    simpa using integral_one_gaussianMeasure
+  have hmass : gaussianMeasure.real Set.univ = 1 := by simpa using integral_one_gaussianMeasure
   simpa [hmass] using hcs
 
 private lemma rho_factor (w : ℂ) :
@@ -1553,8 +1219,7 @@ private lemma rho_centered_integral_bound
       ((hRm.const_add |u|).pow 2) ?_
     filter_upwards with z
     rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
-    have hmul : 2 * |u| * R z ≤ |u| ^ 2 + R z ^ 2 := by
-      nlinarith [sq_nonneg (|u| - R z)]
+    have hmul : 2 * |u| * R z ≤ |u| ^ 2 + R z ^ 2 := by nlinarith [sq_nonneg (|u| - R z)]
     have hsq : (|u| + R z) ^ 2 ≤ 2 * |u| ^ 2 + 2 * R z ^ 2 := by nlinarith [hmul]
     exact hsq
   have hmono : rq2 ≤ ∫ z, (|u| + R z) ^ 2 ∂gaussianMeasure := by
@@ -1567,8 +1232,7 @@ private lemma rho_centered_integral_bound
   have hsum_eval :
       ∫ z, (|u| + R z) ^ 2 ∂gaussianMeasure =
         |u| ^ 2 + 2 * |u| * ∫ z, R z ∂gaussianMeasure + m ^ 2 := by
-    have hmass : gaussianMeasure.real Set.univ = 1 := by
-      simpa using integral_one_gaussianMeasure
+    have hmass : gaussianMeasure.real Set.univ = 1 := by simpa using integral_one_gaussianMeasure
     have habs_sq : |u| ^ 2 = u ^ 2 := by rw [sq_abs]
     have hsplit1 :
         ∫ z, (u ^ 2 + 2 * |u| * R z + R z ^ 2) ∂gaussianMeasure =
@@ -1639,8 +1303,7 @@ private lemma scalar_raw_bound {D : ℕ} (a : Fin D → ℂ) {u x2 q2 : ℝ}
     _ ≤ ∫ z, |‖(1 : ℂ) + G z‖ ^ 2 - 1| ∂gaussianMeasure := by
           have h := norm_integral_le_integral_norm (μ := gaussianMeasure)
             (f := fun z : ℂ => ‖(1 : ℂ) + G z‖ ^ 2 - 1)
-          simp only [Real.norm_eq_abs] at h
-          exact h
+          simp_all
     _ = ∫ z, rho (G z) * (‖(1 : ℂ) + G z‖ + 1) ∂gaussianMeasure := by
           apply integral_congr_ae
           filter_upwards with z
@@ -1659,16 +1322,12 @@ private lemma s2_le_aux {N B : ℂ → ℝ} {x2 : ℝ}
   haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   have hrhs_int : Integrable (fun z => 4 + 4 * N z + N z ^ 2) gaussianMeasure := by
     have h := (MeasureTheory.integrable_const (4 : ℝ)).add ((hN_int.const_mul 4).add hN2_int)
-    refine h.congr ?_
-    filter_upwards with z
-    simp only [Pi.add_apply]
-    ring
+    simp_all
   have hmono : ∫ z, B z ^ 2 ∂gaussianMeasure ≤
       ∫ z, (4 + 4 * N z + N z ^ 2) ∂gaussianMeasure := by
     refine MeasureTheory.integral_mono_ae hB2_int hrhs_int
       (Filter.Eventually.of_forall fun z => ?_)
-    have htri_sq : B z ^ 2 ≤ (2 + N z) ^ 2 := by
-      nlinarith [hB_le z, hB_nonneg z]
+    have htri_sq : B z ^ 2 ≤ (2 + N z) ^ 2 := by nlinarith [hB_le z, hB_nonneg z]
     nlinarith [htri_sq]
   have hsplit1 :
       ∫ z, (4 + 4 * N z + N z ^ 2) ∂gaussianMeasure =
@@ -1731,16 +1390,14 @@ private lemma local_fock_closing_arith
   have hu_bound_delta : |u| ≤ ((2 + (1 / 4601 : ℝ)) / 2) * m + x ^ 2 / 2 := by
     nlinarith [hu_bound, hx_le_delta, hx_sq, hx_nonneg]
   have hy_le : y ≤ 4600 * (|u| + m) := by
-    have h_rhs_nonneg : 0 ≤ 4600 * (|u| + m) := by
-      nlinarith [hm_nonneg, abs_nonneg u]
+    have h_rhs_nonneg : 0 ≤ 4600 * (|u| + m) := by nlinarith [hm_nonneg, abs_nonneg u]
     have hq2_le : y ^ 2 ≤ (4600 * (|u| + m)) ^ 2 := by
       rw [hy_sq]
       calc
         q2 ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := by
           calc
             q2 ≤ (4600 : ℝ) ^ 2 * rq2 := by simpa using hq_basic
-            _ ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := by
-              exact mul_le_mul_of_nonneg_left hrq2_le (by positivity)
+            _ ≤ (4600 : ℝ) ^ 2 * (|u| + m) ^ 2 := mul_le_mul_of_nonneg_left hrq2_le (by positivity)
         _ = (4600 * (|u| + m)) ^ 2 := by ring
     exact le_of_sq_le_sq hq2_le h_rhs_nonneg
   have hx_le_uy : x ≤ |u| + y := by
@@ -1749,22 +1406,19 @@ private lemma local_fock_closing_arith
       rw [hx_sq]
       calc
         x2 = u ^ 2 + y ^ 2 := by rw [hx2_eq, ← hy_sq]
-        _ ≤ |u| ^ 2 + 2 * |u| * y + y ^ 2 := by
-            nlinarith [abs_nonneg u, hy_nonneg, sq_abs u]
+        _ ≤ |u| ^ 2 + 2 * |u| * y + y ^ 2 := by nlinarith [abs_nonneg u, hy_nonneg, sq_abs u]
         _ = (|u| + y) ^ 2 := by ring
     exact le_of_sq_le_sq hx2_le h_rhs_nonneg
   have hpre :
       x ≤ (4600 + 4601 * ((2 + (1 / 4601 : ℝ)) / 2)) * m + (4601 / 2) * x ^ 2 := by
     nlinarith [hx_le_uy, hy_le, hu_bound_delta]
-  have hx_sq_small : x ^ 2 ≤ (1 / 4601 : ℝ) * x := by
-    nlinarith [hx_le_delta, hx_nonneg]
+  have hx_sq_small : x ^ 2 ≤ (1 / 4601 : ℝ) * x := by nlinarith [hx_le_delta, hx_nonneg]
   have habsorb :
       x ≤ (4600 + 4601 * ((2 + (1 / 4601 : ℝ)) / 2)) * m + (1 / 2 : ℝ) * x := by
     nlinarith [hpre, hx_sq_small]
   have hx_final : x ≤ 23003 * m := by
     have hconst :
-        2 * (4600 + 4601 * ((2 + (1 / 4601 : ℝ)) / 2)) ≤ (23003 : ℝ) := by
-      norm_num
+        2 * (4600 + 4601 * ((2 + (1 / 4601 : ℝ)) / 2)) ≤ (23003 : ℝ) := by norm_num
     nlinarith
   have hsq : x ^ 2 ≤ (23003 * m) ^ 2 := pow_le_pow_left₀ hx_nonneg hx_final 2
   calc
@@ -1783,11 +1437,9 @@ theorem LocalFockSPR_of_small_norm
         ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
   haveI : IsFiniteMeasure gaussianMeasure := gaussianMeasure_isFinite
   set u : ℝ := (p.eval 0).re
-  have hp0 : p.eval 0 = (u : ℂ) := by
-    apply Complex.ext <;> simp [u, hp_real]
+  have hp0 : p.eval 0 = (u : ℂ) := by apply Complex.ext <;> simp [u, hp_real]
   set q : Polynomial ℂ := p - Polynomial.C (u : ℂ)
-  have hq0 : q.eval 0 = 0 := by
-    simp [q, hp0]
+  have hq0 : q.eval 0 = 0 := by simp [q, hp0]
   have hcoeff0 : q.coeff 0 = 0 := by
     rw [coeff_zero_eq_eval_zero]
     exact hq0
@@ -1825,22 +1477,17 @@ theorem LocalFockSPR_of_small_norm
   let s2 : ℝ := ∫ z, B z ^ 2 ∂gaussianMeasure
   have hq2_eq_fock : q2 = fockNormSq a := by
     simpa [q2, hq_eval] using fockNorm_eq_gaussian_integral a
-  have hq2_nonneg : 0 ≤ q2 := by
-    rw [hq2_eq_fock]; unfold fockNormSq; positivity
+  have hq2_nonneg : 0 ≤ q2 := by rw [hq2_eq_fock]; unfold fockNormSq; positivity
   have hm2_nonneg : 0 ≤ m2 := by
     unfold m2; refine mul_nonneg (by positivity) ?_
     exact integral_nonneg (fun z => mul_nonneg (sq_nonneg _) (le_of_lt (Real.exp_pos _)))
   have hx2_eq : x2 = u ^ 2 + q2 := by
     rw [hq2_eq_fock]
     simpa [x2, hp_eval] using gaussian_integral_real_const_add_polyEval a u
-  have hx2_nonneg : 0 ≤ x2 := by
-    rw [hx2_eq]; positivity
-  have hx_sq : x ^ 2 = x2 := by
-    unfold x; rw [Real.sq_sqrt hx2_nonneg]
-  have hm_sq : m ^ 2 = m2 := by
-    unfold m; rw [Real.sq_sqrt hm2_nonneg]
-  have hy_sq : y ^ 2 = q2 := by
-    unfold y; rw [Real.sq_sqrt hq2_nonneg]
+  have hx2_nonneg : 0 ≤ x2 := by rw [hx2_eq]; positivity
+  have hx_sq : x ^ 2 = x2 := by unfold x; rw [Real.sq_sqrt hx2_nonneg]
+  have hm_sq : m ^ 2 = m2 := by unfold m; rw [Real.sq_sqrt hm2_nonneg]
+  have hy_sq : y ^ 2 = q2 := by unfold y; rw [Real.sq_sqrt hq2_nonneg]
   have hx_mu : ∫ z, N z ^ 2 ∂gaussianMeasure = x2 := by
     simpa [N, x2] using integral_gaussianMeasure_eq (fun z : ℂ => ‖p.eval z‖ ^ 2)
   have hm_mu : ∫ z, R z ^ 2 ∂gaussianMeasure = m2 := by
@@ -1897,8 +1544,7 @@ theorem LocalFockSPR_of_small_norm
   have hR_l1_sq :
       (∫ z, R z ∂gaussianMeasure) ^ 2 ≤ m2 := by
     simpa [hm_mu] using gaussian_l1_sq_le hR_meas hR2_int
-  have hN_l1_nonneg : 0 ≤ ∫ z, N z ∂gaussianMeasure := by
-    exact integral_nonneg (fun z => norm_nonneg _)
+  have hN_l1_nonneg : 0 ≤ ∫ z, N z ∂gaussianMeasure := integral_nonneg (fun z => norm_nonneg _)
   have hR_l1_nonneg : 0 ≤ ∫ z, R z ∂gaussianMeasure := by
     exact integral_nonneg (fun z => by unfold R; exact abs_nonneg _)
   have hx_nonneg : 0 ≤ x := Real.sqrt_nonneg _
@@ -1918,8 +1564,7 @@ theorem LocalFockSPR_of_small_norm
       _ = 2 + ‖p.eval z‖ := by ring
   have hs2_le_aux : s2 ≤ 4 + 4 * ∫ z, N z ∂gaussianMeasure + x2 :=
     s2_le_aux hB2_int hN_int hN2_int hx_mu hB_le hB_nonneg
-  have hs2_le : s2 ≤ (2 + x) ^ 2 := by
-    nlinarith [hs2_le_aux, hN_l1_le, hx_sq]
+  have hs2_le : s2 ≤ (2 + x) ^ 2 := by nlinarith [hs2_le_aux, hN_l1_le, hx_sq]
   have hscalar_raw :
       |2 * u + x2| ≤ ∫ z, R z * B z ∂gaussianMeasure := by
     refine le_trans (scalar_raw_bound a hq2_eq_fock hx2_eq) (le_of_eq ?_)

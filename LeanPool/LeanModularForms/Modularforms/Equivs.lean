@@ -28,16 +28,16 @@ open TopologicalSpace Set
 def negEquiv : ℤ ≃ ℤ where
   toFun n := -n
   invFun n := -n
-  left_inv := by apply neg_neg
-  right_inv := by apply neg_neg
+  left_inv := neg_neg
+  right_inv := neg_neg
 
 
 /-- The successor map as an equivalence `ℤ ≃ ℤ`. -/
 def succEquiv : ℤ ≃ ℤ where
   toFun n := n.succ
   invFun n := n.pred
-  left_inv := by apply Int.pred_succ
-  right_inv := by apply Int.succ_pred
+  left_inv := Int.pred_succ
+  right_inv := Int.succ_pred
 
 
 
@@ -55,5 +55,4 @@ lemma swap_involutive {α : Type*} (b : Fin 2 → α) : swap (swap b) = b := by
 
 /-- Swapping the two entries of a length-2 vector as an equivalence. -/
 def swapEquiv {α : Type*} : Equiv (Fin 2 → α) (Fin 2 → α) := Equiv.mk swap swap
-  (by rw [Function.LeftInverse]; apply swap_involutive)
-  (by rw [Function.RightInverse]; apply swap_involutive)
+  swap_involutive swap_involutive

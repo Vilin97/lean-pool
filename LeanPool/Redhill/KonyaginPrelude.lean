@@ -256,8 +256,7 @@ lemma log_radical_tup_le : log (radical (∏ i, tup k i) : ℤ) ≤ 2 * 2 ^ k * 
   push_cast
   have : 0 < (6 : ℤ) ^ (2 * 2 ^ k) - 1 := six_pow_pos (by positivity)
   apply (Int.le_of_dvd (by positivity) (radical_tup_dvd k)).trans
-  gcongr
-  lia
+  simp_all
 
 lemma maxAbs_tup : maxAbs (tup k) = (6 ^ 2 ^ k + 1) ^ 3 := by
   simp_rw [maxAbs_eq_foldr, List.ofFn_succ, List.ofFn_zero, Fin.reduceSucc, List.foldr_cons,

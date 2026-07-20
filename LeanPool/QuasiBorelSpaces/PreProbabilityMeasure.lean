@@ -120,14 +120,8 @@ instance setoid (A : Type*) [QuasiBorelSpace A] : Setoid (PreProbabilityMeasure 
   r μ₁ μ₂ := ∀⦃f⦄, IsHom f → μ₁.lintegral f = μ₂.lintegral f
   iseqv := {
     refl _ _ _ := rfl
-    symm h₁ _ h₂ := by
-      symm
-      apply h₁
-      apply h₂
-    trans h₁ h₂ _ h₃ := by
-      trans
-      · apply h₁ h₃
-      · apply h₂ h₃
+    symm h₁ _ h₂ := (h₁ h₂).symm
+    trans h₁ h₂ _ h₃ := (h₁ h₃).trans (h₂ h₃)
   }
 
 lemma lintegral_mul_left
@@ -160,10 +154,7 @@ lemma lintegral_mono
     {f g : A → ENNReal} (h : f ≤ g) (μ : PreProbabilityMeasure A)
     : lintegral f μ ≤ lintegral g μ := by
   rcases μ with ⟨eval, base⟩
-  simp only [lintegral_mk]
-  apply MeasureTheory.lintegral_mono
-  intro a
-  apply h
+  simpa only [lintegral_mk] using MeasureTheory.lintegral_mono fun a ↦ h _
 
 lemma lintegral_iSup
     (f : ℕ → A → ENNReal) (hf₁ : Monotone f) (hf₂ : ∀ n, IsHom (f n)) (μ : PreProbabilityMeasure A)
@@ -172,10 +163,8 @@ lemma lintegral_iSup
   simp only [lintegral_mk, iSup_apply]
   rw [MeasureTheory.lintegral_iSup]
   · intro n
-    have := isHom_comp' (hf₂ n) eval.isHom_coe
-    simpa only [isHom_ofMeasurableSpace] using this
-  · intro i j h x
-    apply hf₁ h
+    simpa only [isHom_ofMeasurableSpace] using isHom_comp' (hf₂ n) eval.isHom_coe
+  · exact fun i j h x ↦ hf₁ h _
 
 lemma lintegral_finset_sum {A}
     (s : Finset A) {f : A → B → ENNReal}
@@ -185,9 +174,7 @@ lemma lintegral_finset_sum {A}
   simp only [lintegral_mk]
   rw [MeasureTheory.lintegral_finsetSum]
   intro b hb
-  have := isHom_comp' (hf b hb) eval.isHom_coe
-  simp only [isHom_ofMeasurableSpace] at this
-  apply this
+  simpa only [isHom_ofMeasurableSpace] using isHom_comp' (hf b hb) eval.isHom_coe
 
 lemma lintegral_sub_le
     (f : A → ENNReal)
@@ -222,9 +209,7 @@ lemma measureOf_mono (μ : PreProbabilityMeasure B) : Monotone (measureOf μ) :=
   intro p q h
   rcases μ
   simp only [measureOf_mk, ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
-  apply measure_mono
-  intro r
-  apply h
+  exact measure_mono fun r hr ↦ h hr
 
 lemma measureOf_iUnion_le {ι : Type*} [Countable ι]
     (μ : PreProbabilityMeasure A) (s : ι → Set A)

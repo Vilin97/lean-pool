@@ -213,13 +213,11 @@ theorem range_patchEval_sub_interpClass
   rintro h ⟨⟨θ₁, θ₂, ρ⟩, rfl⟩
   simp only [interpClass, Set.mem_setOf_eq]
   refine ⟨{x | R.eval ρ x = true}, ?_, e₁ θ₁, ⟨θ₁, rfl⟩, e₂ θ₂, ⟨θ₂, rfl⟩, ?_⟩
-  · -- MeasurableSet {x | R.eval ρ x = true}
-    letI := R.instMeasΡ
+  · letI := R.instMeasΡ
     have hm : Measurable (fun x => R.eval ρ x) :=
       R.eval_meas.comp (Measurable.prodMk measurable_const measurable_id)
     exact hm (measurableSet_singleton true)
-  · -- patchEval = piecewiseConcept
-    funext x
+  · funext x
     simp only [patchEval, piecewiseConcept, Set.mem_setOf_eq]
     split <;> rfl
 

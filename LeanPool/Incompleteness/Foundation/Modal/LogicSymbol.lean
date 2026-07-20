@@ -50,22 +50,15 @@ attribute [aesop safe 5 forward] Subclosed.box_closed
 variable {φ ψ : F} {n : ℕ}
 
 @[simp]
-lemma box_injective' : □φ = □ψ ↔ φ = ψ := by
-  constructor;
-  · apply box_injective;
-  · simp_all;
+lemma box_injective' : □φ = □ψ ↔ φ = ψ := box_injective.eq_iff
 
 @[simp] lemma multibox_succ : □^[(n + 1)]φ = □(□^[n]φ) := by apply iterate_succ_apply'
 
-@[simp] lemma multibox_injective : Function.Injective (□^[n] · :
-    F → F) := by
+@[simp] lemma multibox_injective : Function.Injective (□^[n] · : F → F) := by
   apply Function.Injective.iterate (by simp);
 
 @[simp]
-lemma multimop_injective' : □^[n]φ = □^[n]ψ ↔ φ = ψ := by
-  constructor;
-  · apply multibox_injective;
-  · simp_all;
+lemma multimop_injective' : □^[n]φ = □^[n]ψ ↔ φ = ψ := multibox_injective.eq_iff
 
 end Box
 
@@ -107,22 +100,15 @@ attribute [aesop safe 5 forward] Subclosed.dia_closed
 variable {φ ψ : F} {n : ℕ}
 
 @[simp]
-lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := by
-  constructor;
-  · apply dia_injective;
-  · simp_all;
+lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := dia_injective.eq_iff
 
 @[simp] lemma multidia_succ : ◇^[(n + 1)]φ = ◇(◇^[n]φ) := by apply iterate_succ_apply'
 
-@[simp] lemma multidia_injective : Function.Injective (◇^[n] · :
-    F → F) := by
+@[simp] lemma multidia_injective : Function.Injective (◇^[n] · : F → F) := by
   apply Function.Injective.iterate (by simp);
 
 @[simp]
-lemma multidia_injective' : ◇^[n]φ = ◇^[n]ψ ↔ φ = ψ := by
-  constructor;
-  · apply multidia_injective;
-  · simp_all;
+lemma multidia_injective' : ◇^[n]φ = ◇^[n]ψ ↔ φ = ψ := multidia_injective.eq_iff
 
 end Dia
 
@@ -139,7 +125,6 @@ class _root_.LO.BasicModalLogicConnective.Subclosed [BasicModalLogicalConnective
 /-- Imported declaration from the Incompleteness formalization. -/
 class DiaAbbrev (F : Type*) [Box F] [Dia F] [Tilde F] where
   dia_abbrev {φ : F} : ◇φ =  ∼(□(∼φ))
--- attribute [aesop safe 5 forward] DiaAbbrev.dia_abbrev
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class ModalDeMorgan (F : Type*) [LogicalConnective F] [Box F] [Dia F] extends DeMorgan F where
@@ -211,19 +196,16 @@ variable [Box F]
 @[simp 1100] lemma eq_prebox_premultibox_one : □''⁻¹s = □''⁻¹^[1]s := by rfl
 
 
-@[simp 1100] lemma multibox_subset_mono (h : s ⊆ t) :
-    □''^[n]s ⊆ □''^[n]t := by
+@[simp 1100] lemma multibox_subset_mono (h : s ⊆ t) : □''^[n]s ⊆ □''^[n]t := by
   simp_all [Set.subset_def];
 
 lemma box_subset_mono (h : s ⊆ t) : □''s ⊆ □''t := by simpa using multibox_subset_mono (n := 1) h;
 
 
-@[simp 1100] lemma premultibox_subset_mono (h : s ⊆ t) :
-    □''⁻¹^[n]s ⊆ □''⁻¹^[n]t := by
+@[simp 1100] lemma premultibox_subset_mono (h : s ⊆ t) : □''⁻¹^[n]s ⊆ □''⁻¹^[n]t := by
   simp_all [Set.subset_def];
 
-lemma prebox_subset_mono (h : s ⊆ t) :
-    □''⁻¹s ⊆  □''⁻¹t := by
+lemma prebox_subset_mono (h : s ⊆ t) : □''⁻¹s ⊆  □''⁻¹t := by
   simpa using premultibox_subset_mono (n := 1) h;
 
 
@@ -233,41 +215,32 @@ lemma prebox_subset_mono (h : s ⊆ t) :
 
 
 lemma subset_premulitibox_iff_multibox_subset (h : s ⊆ □''⁻¹^[n]t) :  □''^[n]s ⊆ t := by
-  intro φ hp;
-  obtain ⟨_, _, rfl⟩ := multibox_subset_mono h hp;
-  assumption;
+  simp_all
 
-lemma subset_prebox_iff_box_subset (h : s ⊆ □''⁻¹t) :
-    □''s ⊆ t := by
+lemma subset_prebox_iff_box_subset (h : s ⊆ □''⁻¹t) : □''s ⊆ t := by
   simpa using subset_premulitibox_iff_multibox_subset (n := 1) h
 
 lemma subset_multibox_iff_premulitibox_subset (h : s ⊆ □''^[n]t) : □''⁻¹^[n]s ⊆ t := by
   intro φ hp;
   have := premultibox_subset_mono h hp;
   simp_all;
-lemma subset_box_iff_prebox_subset (h : s ⊆ □''t) :
-    □''⁻¹s ⊆ t := by
+lemma subset_box_iff_prebox_subset (h : s ⊆ □''t) : □''⁻¹s ⊆ t := by
   simpa using subset_multibox_iff_premulitibox_subset (n := 1) h
 
 lemma forall_multibox_of_subset_multibox (h : s ⊆ □''^[n]t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = □^[n]ψ := by
   intro φ hp;
   obtain ⟨ψ, _, rfl⟩ := h hp;
   use ψ;
-lemma forall_box_of_subset_box (h : s ⊆ □''t) :
-    ∀ φ ∈ s, ∃ ψ ∈ t, φ = □ψ := by
+lemma forall_box_of_subset_box (h : s ⊆ □''t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = □ψ := by
   simpa using forall_multibox_of_subset_multibox (n := 1) h
 
-lemma eq_premultibox_multibox_of_subset_premultibox (h : s ⊆ □''^[n]t) :
-     □''^[n]□''⁻¹^[n]s = s := by
+lemma eq_premultibox_multibox_of_subset_premultibox (h : s ⊆ □''^[n]t) : □''^[n]□''⁻¹^[n]s = s := by
   apply Set.eq_of_subset_of_subset;
-  · intro φ hp;
-    obtain ⟨_, _, rfl⟩ := hp;
-    simp_all [Set.premultibox];
+  · simp_all
   · intro φ hp;
     obtain ⟨ψ, _, rfl⟩ := forall_multibox_of_subset_multibox h φ hp;
     simp_all [Set.premultibox];
-lemma eq_prebox_box_of_subset_prebox (h : s ⊆ □''t) :
-    □''□''⁻¹s = s := by
+lemma eq_prebox_box_of_subset_prebox (h : s ⊆ □''t) : □''□''⁻¹s = s := by
   simpa using eq_premultibox_multibox_of_subset_premultibox (n := 1) h
 
 end «lp_section_2»
@@ -282,19 +255,16 @@ variable [Dia F]
 @[simp 1100] lemma eq_predia_premultidia_one : ◇''⁻¹s = ◇''⁻¹^[1]s := by rfl
 
 
-@[simp 1100] lemma multidia_subset_mono (h : s ⊆ t) :
-    ◇''^[n]s ⊆ ◇''^[n]t := by
+@[simp 1100] lemma multidia_subset_mono (h : s ⊆ t) : ◇''^[n]s ⊆ ◇''^[n]t := by
   simp_all [Set.subset_def];
 
 lemma dia_subset_mono (h : s ⊆ t) : ◇''s ⊆ ◇''t := by simpa using multidia_subset_mono (n := 1) h;
 
 
-@[simp 1100] lemma premultidia_subset_mono (h : s ⊆ t) :
-    ◇''⁻¹^[n]s ⊆ ◇''⁻¹^[n]t := by
+@[simp 1100] lemma premultidia_subset_mono (h : s ⊆ t) : ◇''⁻¹^[n]s ⊆ ◇''⁻¹^[n]t := by
   simp_all [Set.subset_def];
 
-lemma predia_subset_mono (h : s ⊆ t) :
-    ◇''⁻¹s ⊆ ◇''⁻¹t := by
+lemma predia_subset_mono (h : s ⊆ t) : ◇''⁻¹s ⊆ ◇''⁻¹t := by
   simpa using premultidia_subset_mono (n := 1) h;
 
 
@@ -303,12 +273,9 @@ lemma predia_subset_mono (h : s ⊆ t) :
 @[simp 1100] lemma iff_mem_multidia : ◇^[n]φ ∈ ◇''^[n]s ↔ φ ∈ s := by simp;
 
 lemma subset_premultidia_iff_multidia_subset (h : s ⊆ ◇''⁻¹^[n]t) :  ◇''^[n]s ⊆ t := by
-  intro φ hp;
-  obtain ⟨_, _, rfl⟩ := multidia_subset_mono h hp;
-  assumption;
+  simp_all
 
-lemma subset_predia_iff_dia_subset (h : s ⊆ ◇''⁻¹t) :
-    ◇''s ⊆ t := by
+lemma subset_predia_iff_dia_subset (h : s ⊆ ◇''⁻¹t) : ◇''s ⊆ t := by
   simpa using subset_premultidia_iff_multidia_subset (n := 1) h
 
 lemma subset_multidia_iff_premultidia_subset (h : s ⊆ ◇''^[n]t) : ◇''⁻¹^[n]s ⊆ t := by
@@ -316,29 +283,23 @@ lemma subset_multidia_iff_premultidia_subset (h : s ⊆ ◇''^[n]t) : ◇''⁻¹
   have := premultidia_subset_mono h hp;
   simp_all;
 
-lemma subset_dia_iff_predia_subset (h : s ⊆ ◇''t) :
-    ◇''⁻¹s ⊆ t := by
+lemma subset_dia_iff_predia_subset (h : s ⊆ ◇''t) : ◇''⁻¹s ⊆ t := by
   simpa using subset_multidia_iff_premultidia_subset (n := 1) h
 
 lemma forall_multidia_of_subset_multidia (h : s ⊆ ◇''^[n]t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇^[n]ψ := by
   intro φ hp;
   obtain ⟨ψ, _, rfl⟩ := h hp;
   use ψ;
-lemma forall_dia_of_subset_dia (h : s ⊆ ◇''t) :
-    ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇ψ := by
+lemma forall_dia_of_subset_dia (h : s ⊆ ◇''t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇ψ := by
   simpa using forall_multidia_of_subset_multidia (n := 1) h
 
-lemma eq_premultidia_multidia_of_subset_premultidia (h : s ⊆ ◇''^[n]t) :
-     ◇''^[n]◇''⁻¹^[n]s = s := by
+lemma eq_premultidia_multidia_of_subset_premultidia (h : s ⊆ ◇''^[n]t) : ◇''^[n]◇''⁻¹^[n]s = s := by
   apply Set.eq_of_subset_of_subset;
-  · intro φ hp;
-    obtain ⟨_, _, rfl⟩ := hp;
-    simp_all [Set.premultidia];
+  · simp_all
   · intro φ hp;
     obtain ⟨ψ, _, rfl⟩ := forall_multidia_of_subset_multidia h φ hp;
     simp_all [Set.premultidia];
-lemma eq_predia_dia_of_subset_predia (h : s ⊆ ◇''t) :
-    ◇''◇''⁻¹s = s := by
+lemma eq_predia_dia_of_subset_predia (h : s ⊆ ◇''t) : ◇''◇''⁻¹s = s := by
   simpa using eq_premultidia_multidia_of_subset_premultidia (n := 1) h
 
 end «lp_section_3»
@@ -364,23 +325,19 @@ protected abbrev Finset.dia [Dia F] : Finset F → Finset F := Finset.multidia (
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev Finset.premultibox [Box F] (n : ℕ) :
-    Finset F → Finset F :=
+protected noncomputable abbrev Finset.premultibox [Box F] (n : ℕ) : Finset F → Finset F :=
   fun s => Finset.preimage s (□·)^[n] (by simp [Set.InjOn])
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev Finset.premultidia [Dia F] (n : ℕ) :
-    Finset F → Finset F :=
+protected noncomputable abbrev Finset.premultidia [Dia F] (n : ℕ) : Finset F → Finset F :=
   fun s => Finset.preimage s (◇·)^[n] (by simp [Set.InjOn])
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev Finset.prebox [Box F] :
-    Finset F → Finset F :=
+protected noncomputable abbrev Finset.prebox [Box F] : Finset F → Finset F :=
   Finset.premultibox (n := 1)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev Finset.predia [Dia F] :
-    Finset F → Finset F :=
+protected noncomputable abbrev Finset.predia [Dia F] : Finset F → Finset F :=
   Finset.premultidia (n := 1)
 
 end «lp_section_4»
@@ -401,8 +358,7 @@ lemma multibox_coe [DecidableEq F] : (s.multibox n) = □''^[n](s : Set F) := by
 
 lemma box_coe [DecidableEq F] : s.modalBox = □''(s : Set F) := by simpa using multibox_coe (n := 1)
 
-lemma multibox_mem_coe [DecidableEq F] : φ ∈ s.multibox n ↔ φ ∈ □''^[n](↑s :
-    Set F) := by
+lemma multibox_mem_coe [DecidableEq F] : φ ∈ s.multibox n ↔ φ ∈ □''^[n](↑s : Set F) := by
   constructor <;> simp_all
 
 lemma box_mem_coe [DecidableEq F] : φ ∈ s.modalBox ↔ φ ∈ □''(↑s : Set F) := by simp;
@@ -437,8 +393,7 @@ lemma multidia_coe [DecidableEq F] : (s.multidia n) = ◇''^[n](s : Set F) := by
 
 lemma dia_coe [DecidableEq F] : s.dia = ◇''(s : Set F) := by simpa using multidia_coe (n := 1)
 
-lemma multidia_mem_coe [DecidableEq F] : φ ∈ s.multidia n ↔ φ ∈ ◇''^[n](↑s :
-    Set F) := by
+lemma multidia_mem_coe [DecidableEq F] : φ ∈ s.multidia n ↔ φ ∈ ◇''^[n](↑s : Set F) := by
   constructor <;> simp_all
 
 lemma dia_mem_coe [DecidableEq F] : φ ∈ s.dia ↔ φ ∈ ◇''(↑s : Set F) := by simp;
@@ -469,15 +424,13 @@ section «lp_section_7»
 variable [DecidableEq F]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev List.multibox [Box F] (n : ℕ) :
-    List F → List F :=
+protected noncomputable abbrev List.multibox [Box F] (n : ℕ) : List F → List F :=
   fun l => Finset.multibox n l.toFinset |>.toList
 /-- Imported declaration from the Incompleteness formalization. -/
 notation "□'^[" n:90 "]" l:80 => List.multibox n l
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev List.multidia [Dia F] (n : ℕ) :
-    List F → List F :=
+protected noncomputable abbrev List.multidia [Dia F] (n : ℕ) : List F → List F :=
   fun l => Finset.multidia n l.toFinset |>.toList
 /-- Imported declaration from the Incompleteness formalization. -/
 notation "◇'^[" n:90 "]" l:80 => List.multidia n l
@@ -494,15 +447,13 @@ prefix:80 "◇'" => List.dia
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev List.premultibox [Box F] (n : ℕ) :
-    List F → List F :=
+protected noncomputable abbrev List.premultibox [Box F] (n : ℕ) : List F → List F :=
   fun l => Finset.premultibox n l.toFinset |>.toList
 /-- Imported declaration from the Incompleteness formalization. -/
 notation "□'⁻¹^[" n:90 "]" l:80 => List.premultibox n l
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected noncomputable abbrev List.premultidia [Dia F] (n : ℕ) :
-    List F → List F :=
+protected noncomputable abbrev List.premultidia [Dia F] (n : ℕ) : List F → List F :=
   fun l => Finset.premultidia n l.toFinset |>.toList
 /-- Imported declaration from the Incompleteness formalization. -/
 notation "◇'⁻¹^[" n:90 "]" l:80 => List.premultidia n l

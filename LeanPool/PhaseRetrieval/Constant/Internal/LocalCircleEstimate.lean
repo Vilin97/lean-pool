@@ -154,22 +154,14 @@ private lemma circle_linfty_bound {L : ℕ} (_hL : 1 ≤ L) {E : Finset ℕ}
     rw [hP]; simp only
     calc ‖∑ n ∈ E, b n * (fourier (n : ℤ)) t‖
         ≤ ∑ n ∈ E, ‖b n * (fourier (n : ℤ)) t‖ := norm_sum_le _ _
-      _ = ∑ n ∈ E, ‖b n‖ := by
-          congr 1; ext n; rw [norm_mul, fourier_apply]; simp
+      _ = ∑ n ∈ E, ‖b n‖ := by congr 1; ext n; rw [norm_mul, fourier_apply]; simp
   have h2 : (∑ n ∈ E, ‖b n‖) ≤
       Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := by
     have hcs := Real.sum_sqrt_mul_sqrt_le (s := E)
       (f := fun _ => (1 : ℝ)) (g := fun n => ‖b n‖ ^ 2)
       (fun _ => zero_le_one) (fun n => sq_nonneg _)
-    simp only [Real.sqrt_one, one_mul] at hcs
-    calc ∑ n ∈ E, ‖b n‖
-        = ∑ n ∈ E, Real.sqrt (‖b n‖ ^ 2) := by
-          congr 1; ext n; rw [Real.sqrt_sq (norm_nonneg _)]
-      _ ≤ Real.sqrt (∑ n ∈ E, 1) * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := hcs
-      _ = Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := by
-          congr 1; simp [hE]
-  have h3 : ∑ n ∈ E, ‖b n‖ ^ 2 = circleNormSq P := by
-    rw [hP]; exact (parseval_finite b).symm
+    simp_all
+  have h3 : ∑ n ∈ E, ‖b n‖ ^ 2 = circleNormSq P := by rw [hP]; exact (parseval_finite b).symm
   calc ‖P t‖ ≤ ∑ n ∈ E, ‖b n‖ := h1
     _ ≤ Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := h2
     _ = Real.sqrt L * Real.sqrt (circleNormSq P) := by rw [h3]
@@ -226,8 +218,7 @@ private lemma equal_l2_masses {L : ℕ} (_hL : 1 ≤ L) {E : Finset ℕ}
   have hP_int : Integrable (fun t => (P t) ^ 2) AddCircle.haarAddCircle :=
     by rw [hP]; exact cont_integrable ((P_continuous b).pow 2)
   have h_re_sq : ∀ t : AddCircle T,
-      (P t).re ^ 2 - (P t).im ^ 2 = ((P t) ^ 2).re := by
-    intro t; simp [sq, Complex.mul_re]
+      (P t).re ^ 2 - (P t).im ^ 2 = ((P t) ^ 2).re := by intro t; simp [sq, Complex.mul_re]
   have h_re_zero :
       ∫ t : AddCircle T, ((P t).re ^ 2 - (P t).im ^ 2)
         ∂AddCircle.haarAddCircle = 0 := by
@@ -360,9 +351,7 @@ private lemma small_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
     have h_add := integral_add
       (real_cont_integrable ((Complex.continuous_re.comp hP_cont).pow 2))
       (real_cont_integrable ((Complex.continuous_im.comp hP_cont).pow 2))
-    trans (∫ t, ((P t).re ^ 2 + (P t).im ^ 2) ∂AddCircle.haarAddCircle)
-    · congr 1; ext t; exact h_norm_sq t
-    · exact h_add
+    simp_all
   have h_re_half :
       ∫ t : AddCircle T, (P t).re ^ 2 ∂AddCircle.haarAddCircle =
         cns / 2 := by linarith
@@ -420,8 +409,7 @@ private lemma integral_one_plus_P_sq {E : Finset ℕ}
     have h_congr :
         (fun t : AddCircle T =>
           ‖(1 : ℂ) + P t‖ ^ 2 - ‖P t‖ ^ 2) =
-        (fun t => (1 : ℝ) + (2 : ℝ) * (P t).re) := by
-      ext t; exact key t
+        (fun t => (1 : ℝ) + (2 : ℝ) * (P t).re) := by ext t; exact key t
     rw [h_congr]
     -- ∫ (1 + 2Re(P)) = ∫ 1 + 2·∫ Re(P) = 1 + 0 = 1
     have h1_int : Integrable (fun _ : AddCircle T => (1 : ℝ))
@@ -500,8 +488,7 @@ private lemma integral_cauchy_schwarz {α : Type*} [MeasurableSpace α]
     simp [hB_zero, hA_zero]
   · have hA_pos : 0 < A := lt_of_le_of_ne hA_nn (Ne.symm hA_zero)
     have h_opt := h_quad (B / A)
-    have h_simp : (B / A) ^ 2 * A - 2 * (B / A) * B + C = C - B ^ 2 / A := by
-      field_simp; ring
+    have h_simp : (B / A) ^ 2 * A - 2 * (B / A) * B + C = C - B ^ 2 / A := by field_simp; ring
     rw [h_simp] at h_opt
     rwa [sub_nonneg, div_le_iff₀ hA_pos, mul_comm] at h_opt
 
@@ -561,16 +548,14 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
       real_cont_integrable (h_1pP_cont.norm.pow 2)
     have h_sub : cns = ∫ t : AddCircle T, (‖(1 : ℂ) + P t‖ ^ 2 - 1)
         ∂AddCircle.haarAddCircle := by
-      have h1 : ∫ t : AddCircle T, (1 : ℝ) ∂AddCircle.haarAddCircle = 1 := by
-        simp [integral_const]
+      have h1 : ∫ t : AddCircle T, (1 : ℝ) ∂AddCircle.haarAddCircle = 1 := by simp [integral_const]
       rw [integral_sub h_int_norm_sq (integrable_const (1 : ℝ)), h_int_1pP, h1]; ring
     rw [h_sub]
     apply le_trans (integral_mono
       (h_int_norm_sq.sub (integrable_const 1))
       (real_cont_integrable (h_1pP_cont.norm.pow 2 |>.sub continuous_const |>.abs))
       (fun t => le_abs_self _))
-    apply le_of_eq
-    congr 1; ext t; exact (h_rho_factor (P t)).symm
+    simp_all
   -- Step 4: Cauchy-Schwarz: (∫ ρ·g)² ≤ (∫ ρ²)·(∫ g²)
   have h_cs : (∫ t : AddCircle T,
       rho (P t) * (‖(1 : ℂ) + P t‖ + 1) ∂AddCircle.haarAddCircle) ^ 2 ≤
@@ -587,8 +572,7 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
       ∂AddCircle.haarAddCircle ≤ 2 * cns + 4 := by
     have h_pw : ∀ t : AddCircle T,
         (‖(1 : ℂ) + P t‖ + 1) ^ 2 ≤
-        2 * ‖(1 : ℂ) + P t‖ ^ 2 + 2 := by
-      intro t; nlinarith [sq_nonneg (‖(1 : ℂ) + P t‖ - 1)]
+        2 * ‖(1 : ℂ) + P t‖ ^ 2 + 2 := by intro t; nlinarith [sq_nonneg (‖(1 : ℂ) + P t‖ - 1)]
     calc ∫ t, (‖(1 : ℂ) + P t‖ + 1) ^ 2 ∂AddCircle.haarAddCircle
         ≤ ∫ t, (2 * ‖(1 : ℂ) + P t‖ ^ 2 + 2) ∂AddCircle.haarAddCircle :=
           integral_mono
@@ -617,8 +601,7 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
   -- Equivalently: 144L·y ≥ cns.
   -- Since cns² ≤ y(2cns+4) and 144L·cns ≥ 2cns+4 (proved below), we get
   -- cns² ≤ y·(144L·cns), so cns ≤ 144L·y (for cns > 0).
-  rw [ge_iff_le]
-  rw [div_le_iff₀ (by positivity : (0 : ℝ) < 144 * ↑L)]
+  rw [ge_iff_le, div_le_iff₀ (by positivity : (0 : ℝ) < 144 * ↑L)]
   -- Need: cns ≤ 144 * L * y
   have hL_ge : (1 : ℝ) ≤ (↑L : ℝ) := Nat.one_le_cast.mpr hL
   have h_key : 2 * cns + 4 ≤ 144 * ↑L * cns := by
@@ -641,8 +624,7 @@ theorem local_circle_estimate {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
     circleNormSq P ≤ 144 * L *
       (∫ t : AddCircle T, (rho (P t)) ^ 2
         ∂AddCircle.haarAddCircle) := by
-  have hcns : 0 ≤ circleNormSq P := by
-    unfold circleNormSq; apply integral_nonneg; intro; positivity
+  have hcns : 0 ≤ circleNormSq P := by unfold circleNormSq; apply integral_nonneg; intro; positivity
   by_cases hx : Real.sqrt (circleNormSq P) ≤ 1 / (4 * Real.sqrt L)
   · have h := small_amplitude hL hE hE_pos b P hP hx
     have hL_real : (1 : ℝ) ≤ (L : ℝ) := Nat.one_le_cast.mpr hL

@@ -12,11 +12,8 @@ import LeanPool.WhiteheadTheorem.Shapes.Disk
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Jar`.
 -/
--- import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
--- import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 
--- open CategoryTheory
 open TopCat
 open scoped Topology unitInterval
 
@@ -216,8 +213,7 @@ lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type*} [TopologicalSpace 
   have hp : (p, 0) ∈ closedCover n 0 := by
     obtain ⟨x, hx⟩ := p
     change ‖x‖ ≤ 1 - 0 / 2
-    rw [zero_div, sub_zero]
-    exact mem_closedBall_zero_iff.mp hx
+    simp_all
   conv_rhs => equals (proj n f H 0) ⟨(p, 0), hp⟩ => apply ContinuousMap.liftCoverClosed_coe'
   simp only [proj, Fin.succ_zero_eq_one, Fin.cons_zero,
     ContinuousMap.comp_apply]

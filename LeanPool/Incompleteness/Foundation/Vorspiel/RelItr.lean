@@ -38,25 +38,16 @@ lemma forward : (R.iterate (n + 1) x y) ↔ ∃ z, R.iterate n x z ∧ R z y := 
     constructor;
     · rintro ⟨z, Rxz, Rzy⟩;
       obtain ⟨w, Rzw, Rwy⟩ := ih.mp Rzy;
-      use w;
-      constructor;
-      · use z;
-      · assumption;
+      exact ⟨w, ⟨z, Rxz, Rzw⟩, Rwy⟩;
     · rintro ⟨z, ⟨w, Rxw, Rwz⟩, Rzy⟩;
-      use w;
-      constructor;
-      · assumption;
-      · apply ih.mpr;
-        use z;
+      exact ⟨w, Rxw, ih.mpr ⟨z, Rwz, Rzy⟩⟩;
 
 lemma true_any (h : x = y) : Rel.iterate (fun _ _ => True) n x y := by
   induction n with
   | zero => simpa;
   | succ n ih => use x;
 
-lemma congr (h : R.iterate n x y) (he : n = m) : R.iterate m x y := by
-  subst he;
-  exact h;
+lemma congr (h : R.iterate n x y) (he : n = m) : R.iterate m x y := he ▸ h
 
 lemma comp : (∃ z, R.iterate n x z ∧ R.iterate m z y) ↔ R.iterate (n + m) x y := by
   constructor;
@@ -66,21 +57,14 @@ lemma comp : (∃ z, R.iterate n x z ∧ R.iterate m z y) ↔ R.iterate (n + m) 
     | succ n ih =>
       suffices R.iterate (n + m + 1) x y by apply congr this (by omega);
       obtain ⟨w, hxw, hwz⟩ := hzx;
-      use w;
-      constructor;
-      · exact hxw;
-      · exact @ih w hwz;
+      exact ⟨w, hxw, @ih w hwz⟩;
   · rintro h;
     induction n generalizing x with
     | zero => simp_all;
     | succ n ih =>
-      have rxy : R.iterate (n + m + 1) x y := congr h (by omega);
-      obtain ⟨w, rxw, rwy⟩ := rxy;
+      obtain ⟨w, rxw, rwy⟩ := congr h (by omega : n + 1 + m = n + m + 1);
       obtain ⟨u, rwu, ruy⟩ := @ih w rwy;
-      use u;
-      constructor;
-      · use w;
-      · assumption;
+      exact ⟨u, ⟨w, rxw, rwu⟩, ruy⟩;
 
 end iterate
 end Rel

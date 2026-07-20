@@ -26,10 +26,7 @@ instance _root_.LO.IntProp.Kripke.EuclideanFrameClass.definedByLEM :
   rintro F;
   constructor;
   · rintro hEucl _ ⟨_, rfl⟩;
-    apply ValidOnFrame.lem;
-    apply symm_of_refl_eucl;
-    · exact F.rel_refl.refl;
-    · assumption;
+    exact ValidOnFrame.lem <| symm_of_refl_eucl F.rel_refl.refl hEucl
   · rintro h x y z Rxy Rxz;
     let V : Kripke.Valuation F := ⟨fun {v a} => z ≺ v, by
       intro w v Rwv a Rzw;
@@ -41,9 +38,7 @@ instance _root_.LO.IntProp.Kripke.EuclideanFrameClass.definedByLEM :
     have hx := (ValidOnFrame.models_iff.mp hlem) V x;
     simp only [Semantics.Realize, Satisfies, imp_false, or_iff_not_imp_right, not_forall,
       not_not, forall_exists_index, V] at hx;
-    apply hx z;
-    · exact Rxz;
-    · exact F.rel_refl.refl z;
+    exact hx z Rxz (F.rel_refl.refl z)
 ⟩
 
 instance : Kripke.EuclideanFrameClass.IsNonempty := ⟨by
@@ -58,14 +53,12 @@ namespace Hilbert
 namespace Cl
 namespace Kripke
 
-instance :
-    EuclideanFrameClass.DefinedBy (Hilbert.Cl.axioms) :=
+instance : EuclideanFrameClass.DefinedBy (Hilbert.Cl.axioms) :=
   FrameClass.definedBy_with_axiomEFQ inferInstance
 
 instance sound : Sound Hilbert.Cl EuclideanFrameClass := inferInstance
 
-instance consistent :
-    Entailment.Consistent Hilbert.Cl :=
+instance consistent : Entailment.Consistent Hilbert.Cl :=
   Kripke.Hilbert.consistent_of_FrameClass EuclideanFrameClass
 
 end Kripke

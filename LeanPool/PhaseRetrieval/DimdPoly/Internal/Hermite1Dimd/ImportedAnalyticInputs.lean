@@ -23,6 +23,30 @@ namespace Hermite1DimdLEAN
 /-- `oneDimLift`: one Dim Lift. -/
 def oneDimLift (f : ℂ → ℂ) : CSpace 1 → ℂ := fun z => f (z 0)
 
+private lemma measurable_ofReal_gaussianDensity (d : ℕ) :
+    Measurable (fun z : CSpace d => ENNReal.ofReal (gaussianDensity d z)) := by
+  unfold gaussianDensity
+  fun_prop
+
+private lemma gaussianDensity_ofReal_lt_top (d : ℕ) :
+    ∀ᵐ x : CSpace d, ENNReal.ofReal (gaussianDensity d x) < ⊤ := by
+  simp_all
+
+private lemma toReal_gaussianDensity_one (z : CSpace 1) :
+    (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
+      (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
+  have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by positivity
+  simp [gaussianDensity, hnonneg]
+
+private lemma integral_funUnique_one {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (φ : ℂ → E) :
+    ∫ z : CSpace 1, φ (z 0) ∂(volume : Measure (CSpace 1)) =
+      ∫ z : ℂ, φ z ∂(volume : Measure ℂ) := by
+  have hEq0 :=
+    ((MeasureTheory.volume_preserving_funUnique (Fin 1) ℂ).integral_comp'
+      (f := MeasurableEquiv.funUnique (Fin 1) ℂ) φ)
+  exact hEq0
+
 private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
     (N L : ℕ) (hL : 1 ≤ L) (f : ℕ → α) :
     ∑ n ∈ Finset.Icc N (N + L - 1), f n =
@@ -36,10 +60,8 @@ private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
   · intro n hn
     obtain ⟨hlo, hhi⟩ := Finset.mem_Icc.mp hn
     refine ⟨⟨n - N, by omega⟩, Finset.mem_univ _, ?_⟩
-    change N + (n - N) = n
-    omega
-  · intro _ _
-    rfl
+    simp_all
+  · simp_all
 
 private def bandCoeff (N L : ℕ) (c : Fin L → ℂ) : ℕ → ℂ :=
   fun n => if h : N ≤ n ∧ n < N + L then c ⟨n - N, by omega⟩ else 0
@@ -56,15 +78,16 @@ private theorem positiveBandEq (N L : ℕ) (hL : 1 ≤ L) (c : Fin L → ℂ) :
 private lemma circleL2NormSq_const_mul (a : ℂ) (P : Circle → ℂ) :
     circleL2NormSq (fun t => a * P t) = ‖a‖ ^ 2 * circleL2NormSq P := by
   unfold circleL2NormSq
-  calc
-    ∫ t, ‖a * P t‖ ^ 2 ∂AddCircle.haarAddCircle
-        = ∫ t, (‖a‖ ^ 2) * ‖P t‖ ^ 2 ∂AddCircle.haarAddCircle := by
-            apply integral_congr_ae
-            filter_upwards with t
-            simp
-            ring
-    _ = ‖a‖ ^ 2 * ∫ t, ‖P t‖ ^ 2 ∂AddCircle.haarAddCircle := by
-          rw [MeasureTheory.integral_const_mul]
+  rw [← MeasureTheory.integral_const_mul]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun t => ?_)
+  simp [mul_pow]
+
+private lemma circleL2NormSq_real_const_mul (b : ℝ) (f : Circle → ℝ) :
+    circleL2NormSq (fun t => b * f t) = b ^ 2 * circleL2NormSq f := by
+  unfold circleL2NormSq
+  rw [← MeasureTheory.integral_const_mul]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun t => ?_)
+  simp [mul_pow, sq_abs]
 
 private lemma rho_mul_right (a u : ℂ) :
     rho a (a * u) = ‖a‖ * rho 1 u := by
@@ -73,37 +96,20 @@ private lemma rho_mul_right (a u : ℂ) :
     simp [rho]
   · have hnn : 0 ≤ ‖a‖ := norm_nonneg _
     rw [rho, rho]
-    have h1 : a + a * u = a * (1 + u) := by
-      ring
+    have h1 : a + a * u = a * (1 + u) := by ring
     rw [h1, norm_mul]
     calc
-      |‖a‖ * ‖1 + u‖ - ‖a‖| = |‖a‖ * (‖1 + u‖ - 1)| := by
-          ring_nf
-      _ = ‖a‖ * |‖1 + u‖ - 1| := by
-          rw [abs_mul, abs_of_nonneg hnn]
-      _ = ‖a‖ * rho 1 u := by
-          simp [rho]
-
-private lemma measurableSet_oneDimAnnulus
-    (j : ℕ) :
-    MeasurableSet (productAnnulus (d := 1) (fun _ => j)) := by
-  have hge :
-      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := by
-    exact measurableSet_le measurable_const
-      (measurable_norm.comp (continuous_apply 0).measurable)
-  have hlt :
-      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt
-      (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
-  simpa [productAnnulus, Set.setOf_forall, Set.setOf_and] using hge.inter hlt
+      |‖a‖ * ‖1 + u‖ - ‖a‖| = |‖a‖ * (‖1 + u‖ - 1)| := by ring_nf
+      _ = ‖a‖ * |‖1 + u‖ - 1| := by rw [abs_mul, abs_of_nonneg hnn]
+      _ = ‖a‖ * rho 1 u := by simp [rho]
 
 private lemma measurableSet_complex_annulus
     (j : ℕ) :
     MeasurableSet (HermiteLEAN.annulus j) := by
-  have hge : MeasurableSet {z : ℂ | (j : ℝ) ≤ ‖z‖} := by
-    exact measurableSet_le measurable_const measurable_norm
-  have hlt : MeasurableSet {z : ℂ | ‖z‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt measurable_norm measurable_const
+  have hge : MeasurableSet {z : ℂ | (j : ℝ) ≤ ‖z‖} :=
+    measurableSet_le measurable_const measurable_norm
+  have hlt : MeasurableSet {z : ℂ | ‖z‖ < (j : ℝ) + 1} :=
+    measurableSet_lt measurable_norm measurable_const
   simpa [HermiteLEAN.annulus, Set.setOf_and] using hge.inter hlt
 
 private lemma integrable_oneDimPhi_cross_gaussian
@@ -115,8 +121,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -145,26 +150,9 @@ private lemma integrable_oneDimPhi_cross_gaussian
     have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero, Fin.isValue,
       sum_singleton, hnonneg, ENNReal.toReal_ofReal, real_smul, ofReal_exp, ofReal_neg, ofReal_pow]
-    have hleft :
-        (π⁻¹ * rexp (-‖z 0‖ ^ 2)) •
-            (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) =
-          (((π⁻¹ * rexp (-‖z 0‖ ^ 2) : ℝ) : ℂ) *
-            (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))) := by
-      simp [Algebra.smul_def]
-    calc
-      (π⁻¹ * rexp (-‖z 0‖ ^ 2)) •
-          (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) =
-        (((π⁻¹ * rexp (-‖z 0‖ ^ 2) : ℝ) : ℂ) *
-          (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))) := hleft
-      _ = (↑π)⁻¹ * (cexp (-↑‖z 0‖ ^ 2) *
-            (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))) := by
-          simp [mul_assoc, mul_left_comm]
-  · change
-      Measurable
-        (fun z : CSpace 1 =>
-          ENNReal.ofReal ((1 / Real.pi ^ 1) * Real.exp (-(∑ q : Fin 1, ‖z q‖ ^ 2))))
-    fun_prop
-  · simp
+    simp [mul_assoc]
+  · exact measurable_ofReal_gaussianDensity 1
+  · exact gaussianDensity_ofReal_lt_top 1
 
 private theorem gaussianInner_oneDimPhi_eq_weightedInner
     (k m n : ℕ) :
@@ -177,31 +165,7 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
   unfold gaussianInner HermitekLEAN.weightedInner HermiteLEAN.weightedInner
   rw [gaussianMeasure]
   rw [integral_withDensity_eq_integral_toReal_smul
-    (show Measurable (fun z : CSpace 1 => ENNReal.ofReal (gaussianDensity 1 z)) by
-      unfold gaussianDensity
-      fun_prop)
-    (show ∀ᵐ x : CSpace 1, ENNReal.ofReal (gaussianDensity 1 x) < ⊤ by
-      filter_upwards with x
-      simp)]
-  have hEq :
-      ∫ (x : CSpace 1),
-          HermitekLEAN.Phi k m ((MeasurableEquiv.funUnique (Fin 1) ℂ) x) *
-            ((Real.exp (-‖(MeasurableEquiv.funUnique (Fin 1) ℂ) x‖ ^ 2) : ℂ) *
-              conj (HermitekLEAN.Phi k n ((MeasurableEquiv.funUnique (Fin 1) ℂ) x)))
-            ∂(volume : Measure (CSpace 1)) =
-        ∫ z : ℂ,
-          HermitekLEAN.Phi k m z *
-            ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))
-            ∂(volume : Measure ℂ) := by
-    let e : CSpace 1 ≃ᵐ ℂ := MeasurableEquiv.funUnique (Fin 1) ℂ
-    have hEq0 :=
-      ((MeasureTheory.volume_preserving_funUnique (Fin 1) ℂ).integral_comp'
-        (f := e)
-        (fun z : ℂ =>
-          HermitekLEAN.Phi k m z *
-            ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))))
-    convert hEq0 using 1
-    rfl
+    (measurable_ofReal_gaussianDensity 1) (gaussianDensity_ofReal_lt_top 1)]
   have hcomp :
         ∫ z : CSpace 1,
             HermitekLEAN.Phi k m (z 0) *
@@ -210,9 +174,9 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
           ∫ z : ℂ,
             HermitekLEAN.Phi k m z *
               ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))
-              ∂(volume : Measure ℂ) := by
-    convert hEq using 1
-    rfl
+              ∂(volume : Measure ℂ) :=
+    integral_funUnique_one (fun z : ℂ =>
+      HermitekLEAN.Phi k m z * ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z)))
   calc
     ∫ z : CSpace 1,
         (ENNReal.ofReal (gaussianDensity 1 z)).toReal •
@@ -225,51 +189,16 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
             (Real.exp (-‖z 0‖ ^ 2) : ℂ))) ∂(volume : Measure (CSpace 1)) := by
           apply integral_congr_ae
           filter_upwards with z
-          have hdens :
-              (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
-                (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
-            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-              positivity
-            simp [gaussianDensity, hnonneg]
-          rw [Algebra.smul_def, hdens]
-          have hcast :
-              (algebraMap ℝ ℂ) ((1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2)) =
-                ((1 / Real.pi : ℂ) * (Real.exp (-‖z 0‖ ^ 2) : ℂ)) := by
-            simp
-          calc
-            (algebraMap ℝ ℂ) ((1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2)) *
-                (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
-                =
-              ((1 / Real.pi : ℂ) * (Real.exp (-‖z 0‖ ^ 2) : ℂ)) *
-                (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) := by
-                  rw [hcast]
-            _ =
-              (1 / Real.pi : ℂ) *
-                ((HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                  (Real.exp (-‖z 0‖ ^ 2) : ℂ)) := by
-                    ring
+          rw [Algebra.smul_def, toReal_gaussianDensity_one z,
+            show (algebraMap ℝ ℂ) ((1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2)) =
+                ((1 / Real.pi : ℂ) * (Real.exp (-‖z 0‖ ^ 2) : ℂ)) by simp]
+          ring
     _ =
       (1 / Real.pi : ℂ) *
         ∫ z : CSpace 1,
           (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-            (Real.exp (-‖z 0‖ ^ 2) : ℂ) ∂(volume : Measure (CSpace 1)) := by
-            have hconst :
-                ∫ z : CSpace 1,
-                  (1 / Real.pi : ℂ) *
-                    ((HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                      (Real.exp (-‖z 0‖ ^ 2) : ℂ)) =
-                (1 / Real.pi : ℂ) *
-                  ∫ z : CSpace 1,
-                    (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                      (Real.exp (-‖z 0‖ ^ 2) : ℂ) := by
-                exact
-                  (MeasureTheory.integral_const_mul
-                    (μ := (volume : Measure (CSpace 1)))
-                    (1 / Real.pi : ℂ)
-                    (fun z : CSpace 1 =>
-                      (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                        (Real.exp (-‖z 0‖ ^ 2) : ℂ)))
-            simpa using hconst
+            (Real.exp (-‖z 0‖ ^ 2) : ℂ) ∂(volume : Measure (CSpace 1)) :=
+            MeasureTheory.integral_const_mul _ _
     _ = (1 / Real.pi : ℂ) *
         ∫ z : ℂ,
           (HermitekLEAN.Phi k m z * conj (HermitekLEAN.Phi k n z)) *
@@ -280,45 +209,17 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
               ∫ z : ℂ,
                 (HermitekLEAN.Phi k m z * conj (HermitekLEAN.Phi k n z)) *
                   (Real.exp (-‖z‖ ^ 2) : ℂ) ∂(volume : Measure ℂ) := by
-            have hleft :
-                ∫ z : CSpace 1,
+            rw [show (fun z : CSpace 1 =>
                   (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                    (Real.exp (-‖z 0‖ ^ 2) : ℂ) ∂(volume : Measure (CSpace 1)) =
-                  ∫ z : CSpace 1,
-                    HermitekLEAN.Phi k m (z 0) *
-                      ((Real.exp (-‖z 0‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n (z 0)))
-                      ∂(volume : Measure (CSpace 1)) := by
-                  apply integral_congr_ae
-                  filter_upwards with z
-                  ring
-            have hright :
-                ∫ z : ℂ,
-                  (HermitekLEAN.Phi k m z * conj (HermitekLEAN.Phi k n z)) *
-                    (Real.exp (-‖z‖ ^ 2) : ℂ) ∂(volume : Measure ℂ) =
-                  ∫ z : ℂ,
-                    HermitekLEAN.Phi k m z *
-                      ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))
-                      ∂(volume : Measure ℂ) := by
-                  apply integral_congr_ae
-                  filter_upwards with z
-                  ring
-            calc
-              ∫ z : CSpace 1,
-                  (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                    (Real.exp (-‖z 0‖ ^ 2) : ℂ) ∂(volume : Measure (CSpace 1))
-                  =
-                ∫ z : CSpace 1,
+                    (Real.exp (-‖z 0‖ ^ 2) : ℂ)) =
+                fun z : CSpace 1 =>
                   HermitekLEAN.Phi k m (z 0) *
-                    ((Real.exp (-‖z 0‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n (z 0)))
-                    ∂(volume : Measure (CSpace 1)) := hleft
-              _ = ∫ z : ℂ,
-                    HermitekLEAN.Phi k m z *
-                      ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))
-                      ∂(volume : Measure ℂ) := hcomp
-              _ =
-                ∫ z : ℂ,
-                  (HermitekLEAN.Phi k m z * conj (HermitekLEAN.Phi k n z)) *
-                    (Real.exp (-‖z‖ ^ 2) : ℂ) ∂(volume : Measure ℂ) := hright.symm
+                    ((Real.exp (-‖z 0‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n (z 0))) from
+                by funext z; ring,
+              hcomp]
+            apply integral_congr_ae
+            filter_upwards with z
+            ring
           rw [hcomp']
 
 private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
@@ -332,12 +233,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
   unfold annulusMass HermitekLEAN.annulusIntegralSq HermiteLEAN.annulusIntegralSq
   rw [gaussianMeasure,
     integral_withDensity_eq_integral_toReal_smul
-      (show Measurable (fun z : CSpace 1 => ENNReal.ofReal (gaussianDensity 1 z)) by
-        unfold gaussianDensity
-        fun_prop)
-      (show ∀ᵐ x : CSpace 1, ENNReal.ofReal (gaussianDensity 1 x) < ⊤ by
-        filter_upwards with x
-        simp)]
+      (measurable_ofReal_gaussianDensity 1) (gaussianDensity_ofReal_lt_top 1)]
   calc
     ∫ z : CSpace 1,
         (ENNReal.ofReal (gaussianDensity 1 z)).toReal •
@@ -350,13 +246,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
           ∂(volume : Measure (CSpace 1)) := by
           apply integral_congr_ae
           filter_upwards with z
-          have hdens :
-              (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
-                (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
-            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-              positivity
-            simp [gaussianDensity, hnonneg]
-          rw [hdens]
+          rw [toReal_gaussianDensity_one z]
           simp [smul_eq_mul]
     _ =
       (1 / Real.pi) *
@@ -379,26 +269,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
                 filter_upwards with z
                 by_cases hz : z ∈ productAnnulus (d := 1) (fun _ => j) <;> simp [hz,
                     mul_left_comm, mul_comm]
-          have hconst :
-              ∫ z : CSpace 1,
-                (1 / Real.pi) *
-                  (if z ∈ productAnnulus (d := 1) (fun _ => j) then
-                    ‖HermitekLEAN.Phi k n (z 0)‖ ^ 2 * Real.exp (-‖z 0‖ ^ 2)
-                  else 0) =
-              (1 / Real.pi) *
-                ∫ z : CSpace 1,
-                  if z ∈ productAnnulus (d := 1) (fun _ => j) then
-                    ‖HermitekLEAN.Phi k n (z 0)‖ ^ 2 * Real.exp (-‖z 0‖ ^ 2)
-                  else 0 ∂(volume : Measure (CSpace 1)) := by
-                exact
-                  (MeasureTheory.integral_const_mul
-                    (μ := (volume : Measure (CSpace 1)))
-                    (1 / Real.pi)
-                    (fun z : CSpace 1 =>
-                      if z ∈ productAnnulus (d := 1) (fun _ => j) then
-                        ‖HermitekLEAN.Phi k n (z 0)‖ ^ 2 * Real.exp (-‖z 0‖ ^ 2)
-                      else 0))
-          exact hrew.trans hconst
+          exact hrew.trans (MeasureTheory.integral_const_mul _ _)
     _ =
       (1 / Real.pi) *
         ∫ z : ℂ,
@@ -423,17 +294,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
         ∫ z in HermiteLEAN.annulus j,
           ‖HermitekLEAN.Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ) := by
           congr 1
-          show (∫ z : ℂ, if z ∈ HermiteLEAN.annulus j then
-              ‖HermitekLEAN.Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) else 0 ∂(volume : Measure ℂ)) =
-            ∫ z in HermiteLEAN.annulus j,
-              ‖HermitekLEAN.Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)
-          rw [show (∫ z in HermiteLEAN.annulus j,
-              ‖HermitekLEAN.Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) ∂(volume : Measure ℂ)) =
-            ∫ z : ℂ, Set.indicator (HermiteLEAN.annulus j)
-              (fun z => ‖HermitekLEAN.Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)) z
-              ∂(volume : Measure ℂ) by
-                symm
-                rw [MeasureTheory.integral_indicator (measurableSet_complex_annulus j)]]
+          rw [← MeasureTheory.integral_indicator (measurableSet_complex_annulus j)]
           simp [Set.indicator]
 
 private theorem gaussianInner_self
@@ -471,20 +332,10 @@ private lemma gaussianInner_finite_sum_basis_one
   rw [MeasureTheory.integral_finsetSum]
   · refine Finset.sum_congr rfl ?_
     intro α hα
-    have hconst :
-        (∫ z : CSpace 1,
-            c α *
-              (oneDimLift (oneDimPhi k (α 0)) z * conj (oneDimLift (oneDimPhi k (β 0)) z))
-            ∂gaussianMeasure 1) =
-          c α *
-            ∫ z : CSpace 1,
-              oneDimLift (oneDimPhi k (α 0)) z * conj (oneDimLift (oneDimPhi k (β 0)) z)
-              ∂gaussianMeasure 1 := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (c α)
-          (fun z : CSpace 1 =>
-            oneDimLift (oneDimPhi k (α 0)) z * conj (oneDimLift (oneDimPhi k (β 0)) z)))
-    rw [hconst]
+    simpa [mul_assoc] using
+      (MeasureTheory.integral_const_mul (c α)
+        (fun z : CSpace 1 =>
+          oneDimLift (oneDimPhi k (α 0)) z * conj (oneDimLift (oneDimPhi k (β 0)) z)))
   · intro α hα
     simpa [mul_assoc] using (integrable_oneDimBasis_cross k α β).const_mul (c α)
 
@@ -519,23 +370,11 @@ private lemma gaussianInner_finite_sum_one
   rw [hfun, MeasureTheory.integral_finsetSum]
   · refine Finset.sum_congr rfl ?_
     intro β hβ
-    have hconst :
-        (∫ z : CSpace 1,
-            conj (b β) *
-              ((Finset.sum s (fun α => a α * oneDimLift (oneDimPhi k (α 0)) z)) *
-                conj (oneDimLift (oneDimPhi k (β 0)) z))
-            ∂gaussianMeasure 1) =
-          conj (b β) *
-            ∫ z : CSpace 1,
-              (Finset.sum s (fun α => a α * oneDimLift (oneDimPhi k (α 0)) z)) *
-                conj (oneDimLift (oneDimPhi k (β 0)) z)
-              ∂gaussianMeasure 1 := by
-      simpa [mul_assoc] using
-        (MeasureTheory.integral_const_mul (conj (b β))
-          (fun z : CSpace 1 =>
-            (Finset.sum s (fun α => a α * oneDimLift (oneDimPhi k (α 0)) z)) *
-              conj (oneDimLift (oneDimPhi k (β 0)) z)))
-    rw [hconst]
+    simpa [mul_assoc] using
+      (MeasureTheory.integral_const_mul (conj (b β))
+        (fun z : CSpace 1 =>
+          (Finset.sum s (fun α => a α * oneDimLift (oneDimPhi k (α 0)) z)) *
+            conj (oneDimLift (oneDimPhi k (β 0)) z)))
   · intro β hβ
     have hsumInt :
         Integrable
@@ -647,26 +486,19 @@ theorem oneVariableFiniteParseval
                 fin_cases q
                 simpa using h0
               simp [oneVariableBasisOrthonormal, hne0]
-            · intro hnotin
-              exact False.elim (hnotin hβ)
+            · simp_all
         _ = Finset.sum G.support (fun α => G.coeff α * conj (G.coeff α)) := by
             refine Finset.sum_congr rfl ?_
             intro α hα
             ring
   unfold hermiteNormSq
-  have hsq :
-      gaussianL2NormSq (evalHermiteSum (fun _ => k) G) =
-        Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 := by
-    apply Complex.ofReal_injective
-    calc
-      (((gaussianL2NormSq (evalHermiteSum (fun _ => k) G) : ℝ)) : ℂ)
-          = gaussianInner (evalHermiteSum (fun _ => k) G) (evalHermiteSum (fun _ => k) G) := by
-              symm
-              exact gaussianInner_self (F := evalHermiteSum (fun _ => k) G)
-      _ = Finset.sum G.support (fun α => G.coeff α * conj (G.coeff α)) := hinner
-      _ = (((Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 : ℝ)) : ℂ) := by
-            simp [Complex.mul_conj']
-  exact hsq
+  apply Complex.ofReal_injective
+  calc
+    (((gaussianL2NormSq (evalHermiteSum (fun _ => k) G) : ℝ)) : ℂ)
+        = gaussianInner (evalHermiteSum (fun _ => k) G) (evalHermiteSum (fun _ => k) G) :=
+          (gaussianInner_self (F := evalHermiteSum (fun _ => k) G)).symm
+    _ = Finset.sum G.support (fun α => G.coeff α * conj (G.coeff α)) := hinner
+    _ = (((Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 : ℝ)) : ℂ) := by simp [Complex.mul_conj']
 
 /-- Imported one-variable localization estimate for `n ≥ 1`. -/
 theorem oneVariableLocalization
@@ -722,10 +554,8 @@ private lemma zero_shift_exp_compare
     rw [hx, hy, ← Real.exp_add]
     apply Real.exp_le_exp.mpr
     let y : ℝ := (j : ℝ) - ((k + 5 : ℕ) : ℝ)
-    have hybound : 2 * y ≤ y ^ 2 + 1 := by
-      nlinarith [sq_nonneg (y - 1)]
-    have hsq : (y + 1) ^ 2 ≤ 4 * (y ^ 2 + 1) := by
-      nlinarith
+    have hybound : 2 * y ≤ y ^ 2 + 1 := by nlinarith [sq_nonneg (y - 1)]
+    have hsq : (y + 1) ^ 2 ≤ 4 * (y ^ 2 + 1) := by nlinarith
     have hsq' :
         ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) ^ 2 ≤
           4 * (((j : ℝ) - ((k + 5 : ℕ) : ℝ)) ^ 2 + 1) := by
@@ -779,12 +609,8 @@ theorem highFrequencyBandEstimate
       probReal_univ, smul_eq_mul, one_mul, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left]
     positivity
   · have hL : 1 ≤ L := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hL0)
-    have hNsqpos : 0 < N ^ 2 := by
-      have hpos : 0 < 1343 * L ^ 2 := by positivity
-      exact lt_of_lt_of_le hpos hgap
-    have hNpos : 0 < N := by
-      exact Nat.pos_of_ne_zero (by intro hN0; rw [hN0] at hNsqpos; simp at hNsqpos)
-    have hN : 1 ≤ N := Nat.succ_le_of_lt hNpos
+    have hNsqpos : 0 < N ^ 2 := lt_of_lt_of_le (by positivity) hgap
+    have hN : 1 ≤ N := Nat.one_le_iff_ne_zero.mpr fun h => by simp [h] at hNsqpos
     have hBandEq := positiveBandEq N L hL c
     calc
       circleL2NormSq (bandLimitedPolynomial N L c)
@@ -796,8 +622,7 @@ theorem highFrequencyBandEstimate
       _ ≤ 32 * HermiteLEAN.circleRhoNormSq
             (HermiteLEAN.positiveTrigonometricPolynomial
               (HermiteLEAN.frequencyBand N L) (bandCoeff N L c)) := by
-            have hgap_real : 1343 * (L : ℝ) ^ 2 ≤ (N : ℝ) ^ 2 := by
-              exact_mod_cast hgap
+            have hgap_real : 1343 * (L : ℝ) ^ 2 ≤ (N : ℝ) ^ 2 := by exact_mod_cast hgap
             simpa using
               HermitekLEAN.high_frequency_circle_estimate N L hN hL (bandCoeff N L c)
                 hgap_real
@@ -826,22 +651,14 @@ theorem localizationIncludingZero
   let C : ℝ := max C1 (C0 * Real.exp c0)
   let c : ℝ := min c1 (c0 / 4)
   refine ⟨C, c, ?_, ?_, ?_⟩
-  · dsimp [C]
-    exact lt_of_lt_of_le hC1 (le_max_left _ _)
-  · dsimp [c]
-    have hc04 : 0 < c0 / 4 := by positivity
-    exact lt_min hc1 hc04
+  · exact lt_of_lt_of_le hC1 (le_max_left _ _)
+  · exact lt_min hc1 (by positivity)
   · intro n j
     by_cases hn : n = 0
     · subst hn
       have hexact :
           max (|((j : ℕ) : ℝ) - Real.sqrt ((0 : ℕ) : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 =
-            posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) := by
-        simp [Real.sqrt_zero, posPart]
-      have hexact_sq :
-          max (|((j : ℕ) : ℝ) - Real.sqrt ((0 : ℕ) : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 ^ 2 =
-            (posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ))) ^ 2 := by
-        exact congrArg (fun x : ℝ => x ^ 2) hexact
+            posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) := by simp [Real.sqrt_zero, posPart]
       rw [annulusMass_oneDimPhi_eq_annulusIntegralSq]
       have hphi0 :
           HermitekLEAN.annulusIntegralSq (HermitekLEAN.Phi k 0) j ≤
@@ -849,12 +666,8 @@ theorem localizationIncludingZero
         simpa [oneDimPhi, HermitekLEAN.phi0, HermitekLEAN.posPart, HermiteLEAN.posPart,
           _root_.posPart_def] using hloc0 j
       have hcompare := zero_shift_exp_compare k j c0 hc0
-      have hCle : C0 * Real.exp c0 ≤ C := by
-        dsimp [C]
-        exact le_max_right _ _
-      have hcle : c ≤ c0 / 4 := by
-        dsimp [c]
-        exact min_le_right _ _
+      have hCle : C0 * Real.exp c0 ≤ C := le_max_right _ _
+      have hcle : c ≤ c0 / 4 := min_le_right _ _
       calc
         HermitekLEAN.annulusIntegralSq (HermitekLEAN.Phi k 0) j
             ≤ C0 * Real.exp (-c0 * (posPart ((j : ℝ) - ((k + 5 : ℕ) : ℝ))) ^ 2) := hphi0
@@ -870,21 +683,14 @@ theorem localizationIncludingZero
         _ ≤ C * Real.exp (-(c * (posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ))) ^ 2)) := by
               refine mul_le_mul_of_nonneg_left ?_ (by positivity)
               apply Real.exp_le_exp.mpr
-              have hxnonneg :
-                  0 ≤ (posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ))) ^ 2 := by positivity
-              nlinarith
+              nlinarith [hcle, sq_nonneg (posPart ((j : ℝ) - ((k + 4 : ℕ) : ℝ)))]
         _ = C * Real.exp (-c *
               max (|((j : ℕ) : ℝ) - Real.sqrt ((0 : ℕ) : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 ^ 2) := by
-              rw [hexact_sq]
-              ring_nf
+              simp_all
     · have hn1 : 1 ≤ n := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hn)
       have hbase := hloc1 n j hn1
-      have hCle : C1 ≤ C := by
-        dsimp [C]
-        exact le_max_left _ _
-      have hcle : c ≤ c1 := by
-        dsimp [c]
-        exact min_le_left _ _
+      have hCle : C1 ≤ C := le_max_left _ _
+      have hcle : c ≤ c1 := min_le_left _ _
       calc
         annulusMass (d := 1) (fun _ => j) (oneDimLift (oneDimPhi k n))
             ≤ C1 *
@@ -907,11 +713,8 @@ theorem localizationIncludingZero
                   max (|((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 ^ 2) := by
               refine mul_le_mul_of_nonneg_left ?_ (by positivity)
               apply Real.exp_le_exp.mpr
-              have hxnonneg :
-                  0 ≤
-                    max (|((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0 ^ 2 := by
-                positivity
-              nlinarith
+              nlinarith [hcle,
+                sq_nonneg (max (|((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ)) 0)]
 
 /-- Scalar-rescaled positive-frequency estimate for an arbitrary background `a`. -/
 theorem scaledPositiveFrequencyCircleEstimate
@@ -934,17 +737,12 @@ theorem scaledPositiveFrequencyCircleEstimate
         unfold circleL2NormSq
         positivity
       have hcard : 0 < E.card := Finset.card_pos.mpr (Finset.nonempty_iff_ne_empty.mpr hE)
-      have hcardR : (0 : ℝ) < E.card := by
-        exact_mod_cast hcard
-      have honeR : (1 : ℝ) ≤ E.card := by
-        exact_mod_cast (Nat.succ_le_of_lt hcard)
-      have hfac : (1 : ℝ) ≤ 144 * (E.card : ℝ) := by
-        nlinarith
+      have honeR : (1 : ℝ) ≤ E.card := by exact_mod_cast (Nat.succ_le_of_lt hcard)
+      have hfac : (1 : ℝ) ≤ 144 * (E.card : ℝ) := by nlinarith
       calc
         circleL2NormSq (positiveFrequencyPolynomial E b)
-            = 1 * circleL2NormSq (positiveFrequencyPolynomial E b) := by ring
-        _ ≤ 144 * E.card * circleL2NormSq (positiveFrequencyPolynomial E b) := by
-              exact mul_le_mul_of_nonneg_right hfac hnonneg
+            ≤ 144 * E.card * circleL2NormSq (positiveFrequencyPolynomial E b) :=
+              le_mul_of_one_le_left hnonneg hfac
         _ =
           144 * E.card *
             circleL2NormSq (fun t => rho 0 (positiveFrequencyPolynomial E b t)) := by
@@ -956,8 +754,7 @@ theorem scaledPositiveFrequencyCircleEstimate
       positiveFrequencyCircleEstimate E (fun n => a⁻¹ * b n) hpos hQ
     have hbaseQ :
         circleL2NormSq Q ≤
-          144 * E.card * circleL2NormSq (fun t => rho 1 (Q t)) := by
-      simpa [Q] using hbase
+          144 * E.card * circleL2NormSq (fun t => rho 1 (Q t)) := by simpa [Q] using hbase
     have hmulP : (fun t => a * Q t) = positiveFrequencyPolynomial E b := by
       funext t
       simp only [Q, positiveFrequencyPolynomial, Finset.mul_sum]
@@ -967,38 +764,18 @@ theorem scaledPositiveFrequencyCircleEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hconstR :
         circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) =
-          ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) := by
-      unfold circleL2NormSq
-      calc
-        ∫ t, ‖‖a‖ * rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle
-            = ∫ t, (‖a‖ ^ 2) * ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
-                apply integral_congr_ae
-                filter_upwards with t
-                have hrho_nn : 0 ≤ rho 1 (Q t) := by
-                  exact abs_nonneg _
-                have hnorm : ‖‖a‖ * rho 1 (Q t)‖ = ‖a‖ * rho 1 (Q t) := by
-                  apply abs_of_nonneg
-                  exact mul_nonneg (norm_nonneg _) hrho_nn
-                rw [hnorm]
-                have hrhonorm : ‖rho 1 (Q t)‖ = rho 1 (Q t) := by
-                  simpa [Real.norm_eq_abs] using abs_of_nonneg hrho_nn
-                rw [hrhonorm]
-                ring
-        _ = ‖a‖ ^ 2 * ∫ t, ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
-              rw [MeasureTheory.integral_const_mul]
+          ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) :=
+      circleL2NormSq_real_const_mul ‖a‖ (fun t => rho 1 (Q t))
     calc
       ‖a‖ ^ 2 * circleL2NormSq Q ≤
           144 * E.card * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) := by
             have hscaled := mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖)
             simpa [mul_assoc, mul_left_comm, mul_comm] using hscaled
-      _ = 144 * E.card * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by
-            rw [hconstR]
-      _ = 144 * E.card * circleL2NormSq (fun t => rho a (a * Q t)) := by
-            rw [hmulR]
+      _ = 144 * E.card * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by rw [hconstR]
+      _ = 144 * E.card * circleL2NormSq (fun t => rho a (a * Q t)) := by rw [hmulR]
 
 /-- Scalar-rescaled high-frequency estimate for an arbitrary background `a`. -/
 theorem scaledHighFrequencyBandEstimate
@@ -1012,10 +789,8 @@ theorem scaledHighFrequencyBandEstimate
       unfold circleL2NormSq
       positivity
     calc
-      circleL2NormSq P ≤ 32 * circleL2NormSq P := by
-        nlinarith
-      _ = 32 * circleL2NormSq (fun t => rho 0 (P t)) := by
-        simp [circleL2NormSq, rho]
+      circleL2NormSq P ≤ 32 * circleL2NormSq P := by nlinarith
+      _ = 32 * circleL2NormSq (fun t => rho 0 (P t)) := by simp [circleL2NormSq, rho]
   · rcases hP with ⟨c, rfl⟩
     let Q : Circle → ℂ := bandLimitedPolynomial N L (fun m => a⁻¹ * c m)
     have hQ : HasBandlimitedSupport Q N L := ⟨fun m => a⁻¹ * c m, rfl⟩
@@ -1031,39 +806,17 @@ theorem scaledHighFrequencyBandEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
-    have hscaled :=
-      mul_le_mul_of_nonneg_left hbase (sq_nonneg ‖a‖)
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hconstR :
         circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) =
-          ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) := by
-      unfold circleL2NormSq
-      calc
-        ∫ t, ‖‖a‖ * rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle
-            = ∫ t, (‖a‖ ^ 2) * ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
-                apply integral_congr_ae
-                filter_upwards with t
-                have hrho_nn : 0 ≤ rho 1 (Q t) := by
-                  exact abs_nonneg _
-                have hnorm : ‖‖a‖ * rho 1 (Q t)‖ = ‖a‖ * rho 1 (Q t) := by
-                  apply abs_of_nonneg
-                  exact mul_nonneg (norm_nonneg _) hrho_nn
-                rw [hnorm]
-                have hrhonorm : ‖rho 1 (Q t)‖ = rho 1 (Q t) := by
-                  simpa [Real.norm_eq_abs] using abs_of_nonneg hrho_nn
-                rw [hrhonorm]
-                ring
-        _ = ‖a‖ ^ 2 * ∫ t, ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
-              rw [MeasureTheory.integral_const_mul]
+          ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) :=
+      circleL2NormSq_real_const_mul ‖a‖ (fun t => rho 1 (Q t))
     calc
       ‖a‖ ^ 2 * circleL2NormSq Q ≤
-          32 * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) := by
-            exact mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖) |>.trans_eq (by ring)
-      _ = 32 * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by
-            rw [hconstR]
-      _ = 32 * circleL2NormSq (fun t => rho a (a * Q t)) := by
-            rw [hmulR]
+          32 * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) :=
+            mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖) |>.trans_eq (by ring)
+      _ = 32 * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by rw [hconstR]
+      _ = 32 * circleL2NormSq (fun t => rho a (a * Q t)) := by rw [hmulR]
 
 /-- One-variable angular factorization used in the annulus orthogonality argument. -/
 private lemma oneVariableAngularFactorization_termwise
@@ -1084,22 +837,16 @@ private lemma oneVariableAngularFactorization_termwise
       (r : ℂ) ^ (k - j) * (r : ℂ) ^ (n - j) =
         (r : ℂ) ^ (n + k - j * 2) := by
     rw [← pow_add]
-    have hpow : (k - j) + (n - j) = n + k - j * 2 := by
-      omega
-    rw [hpow]
+    congr 1
+    omega
   have hphase :
       Complex.exp (Complex.I * (t : ℂ)) ^ (n - j) *
           Complex.exp (-(Complex.I * (t : ℂ))) ^ (k - j) =
         Complex.exp (Complex.I * (↑t * (↑n - ↑k))) := by
     rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
     congr 1
-    have hsub : (↑(n - j) : ℂ) - (↑(k - j) : ℂ) = (n : ℂ) - k := by
-      norm_num [Nat.cast_sub hjn, Nat.cast_sub hjk]
-    calc
-      (↑(n - j) : ℂ) * (Complex.I * (t : ℂ)) + (↑(k - j) : ℂ) * (-(Complex.I * (t : ℂ)))
-          = Complex.I * (t : ℂ) * ((↑(n - j) : ℂ) - (↑(k - j) : ℂ)) := by ring
-      _ = Complex.I * (t : ℂ) * ((n : ℂ) - k) := by rw [hsub]
-      _ = Complex.I * (↑t * (↑n - ↑k)) := by ring
+    rw [Nat.cast_sub hjn, Nat.cast_sub hjk]
+    ring
   calc
     (r : ℂ) ^ (k - j) *
         ((r : ℂ) ^ (n - j) *
@@ -1113,22 +860,19 @@ private lemma oneVariableAngularFactorization_termwise
             Complex.exp (-(Complex.I * (t : ℂ))) ^ (k - j)) *
           ((Nat.choose k j : ℂ) *
             ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
-              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by
-          ring
+              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by ring
     _ =
       (↑r : ℂ) ^ (n + k - j * 2) *
         (Complex.exp (Complex.I * (↑t * (↑n - ↑k))) *
           ((Nat.choose k j : ℂ) *
             ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
-              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by
-          rw [hrpow, hphase]
+              ((-1 : ℂ) ^ j * ((↑√↑k.factorial)⁻¹ * (↑√↑n.factorial)⁻¹))))) := by rw [hrpow, hphase]
     _ =
       Complex.exp (Complex.I * (↑t * (↑n - ↑k))) *
         ((Nat.choose k j : ℂ) *
           ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ) *
             ((-1 : ℂ) ^ j * ((↑r : ℂ) ^ (n + k - j * 2) * ((↑√↑k.factorial)⁻¹ *
-                (↑√↑n.factorial)⁻¹))))) := by
-          ring
+                (↑√↑n.factorial)⁻¹))))) := by ring
 
 theorem oneVariableAngularFactorization
     (k n : ℕ) :
@@ -1165,25 +909,14 @@ theorem oneVariableAngularFactorization
   have hstar_z :
       star ((r : ℂ) * Complex.exp (Complex.I * t)) =
         (r : ℂ) * Complex.exp (-(Complex.I * t)) := by
-    calc
-      star ((r : ℂ) * Complex.exp (Complex.I * t)) =
-          star (r : ℂ) * star (Complex.exp (Complex.I * t)) := by
-            simp
-      _ = (r : ℂ) * star (Complex.exp (Complex.I * t)) := by simp
-      _ = (r : ℂ) * Complex.exp (star (Complex.I * t)) := by
-            simpa using
-              congrArg (fun z : ℂ => (r : ℂ) * z) (Complex.exp_conj (Complex.I * t)).symm
-      _ = (r : ℂ) * Complex.exp (-(Complex.I * t)) := by simp
+    rw [Complex.star_def, map_mul, ← Complex.exp_conj]
+    simp
   have hphaseCast :
       Complex.exp (Complex.I * ((((n : ℤ) - (k : ℤ)) : ℂ) * t)) =
         Complex.exp (Complex.I * (↑t * (↑n - ↑k))) := by
     congr 1
-    calc
-      Complex.I * ((((n : ℤ) - (k : ℤ)) : ℂ) * t) =
-          Complex.I * (t : ℂ) * ((n : ℂ) - k) := by
-            norm_num
-            ring
-      _ = Complex.I * (↑t * (↑n - ↑k)) := by ring
+    push_cast
+    ring
   unfold oneDimPhi
   rw [hphaseCast, hnorm, Finset.mul_sum]
   have hsum :
@@ -1207,12 +940,8 @@ theorem oneVariableAngularFactorization
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro j hj
-    have hjk : j ≤ k := by
-      simp at hj
-      omega
-    have hjn : j ≤ n := by
-      simp at hj
-      omega
+    simp only [Finset.mem_range, Nat.lt_add_one_iff, le_min_iff] at hj
+    obtain ⟨hjk, hjn⟩ := hj
     rw [hstar_z, mul_pow, mul_pow]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       oneVariableAngularFactorization_termwise r t k n j hjk hjn
@@ -1261,9 +990,7 @@ private lemma gaussianDensity_eq_prod
   | zero =>
       simp [gaussianDensity]
   | succ d ih =>
-      rw [gaussianDensity_succ_split]
-      rw [ih]
-      rw [Fin.prod_univ_succ]
+      rw [gaussianDensity_succ_split, ih, Fin.prod_univ_succ]
 
 private lemma integrable_weighted_coord_of_integrable_gaussian
     (f g : ℂ → ℂ)
@@ -1285,12 +1012,7 @@ private lemma integrable_weighted_coord_of_integrable_gaussian
     rw [gaussianMeasure] at hfg
     exact
       (integrable_withDensity_iff_integrable_smul'
-        (show Measurable (fun z : CSpace 1 => ENNReal.ofReal (gaussianDensity 1 z)) by
-          unfold gaussianDensity
-          fun_prop)
-        (show ∀ᵐ x : CSpace 1, ENNReal.ofReal (gaussianDensity 1 x) < ⊤ by
-          filter_upwards with x
-          simp)).1 hfg
+        (measurable_ofReal_gaussianDensity 1) (gaussianDensity_ofReal_lt_top 1)).1 hfg
   let e : ℂ ≃ᵐ CSpace 1 := (MeasurableEquiv.funUnique (Fin 1) ℂ).symm
   have hcomp :
       Integrable
@@ -1312,8 +1034,7 @@ private lemma integrable_weighted_coord_of_integrable_gaussian
   have hdens :
       (ENNReal.ofReal (gaussianDensity 1 (e z))).toReal =
         (1 / Real.pi) * Real.exp (-‖z‖ ^ 2) := by
-    have hnonneg' : 0 ≤ π⁻¹ * Real.exp (-‖z‖ ^ 2) := by
-      positivity
+    have hnonneg' : 0 ≤ π⁻¹ * Real.exp (-‖z‖ ^ 2) := by positivity
     simpa [e, gaussianDensity] using (ENNReal.toReal_ofReal hnonneg')
   rw [hdens]
   simp [e, Algebra.smul_def, mul_assoc, mul_left_comm]
@@ -1328,13 +1049,7 @@ private theorem gaussianInner_oneDim_eq_weighted_coord
   unfold gaussianInner
   rw [gaussianMeasure]
   rw [integral_withDensity_eq_integral_toReal_smul
-    (show Measurable (fun z : CSpace 1 => ENNReal.ofReal (gaussianDensity 1 z)) by
-      unfold gaussianDensity
-      fun_prop)
-    (show ∀ᵐ x : CSpace 1, ENNReal.ofReal (gaussianDensity 1 x) < ⊤ by
-      filter_upwards with x
-      simp)]
-  let e : CSpace 1 ≃ᵐ ℂ := MeasurableEquiv.funUnique (Fin 1) ℂ
+    (measurable_ofReal_gaussianDensity 1) (gaussianDensity_ofReal_lt_top 1)]
   have hEq :
       ∫ x : CSpace 1,
           (((1 / Real.pi) * Real.exp (-‖x 0‖ ^ 2) : ℝ) : ℂ) *
@@ -1343,15 +1058,9 @@ private theorem gaussianInner_oneDim_eq_weighted_coord
         ∫ z : ℂ,
           (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
             (f z * conj (g z))
-          ∂(volume : Measure ℂ) := by
-    have hEq0 :=
-      ((MeasureTheory.volume_preserving_funUnique (Fin 1) ℂ).integral_comp'
-        (f := e)
-        (fun z : ℂ =>
-          (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
-            (f z * conj (g z))))
-    convert hEq0 using 1
-    rfl
+          ∂(volume : Measure ℂ) :=
+    integral_funUnique_one (fun z : ℂ =>
+      (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) * (f z * conj (g z)))
   calc
     ∫ z : CSpace 1,
         (ENNReal.ofReal (gaussianDensity 1 z)).toReal •
@@ -1363,13 +1072,7 @@ private theorem gaussianInner_oneDim_eq_weighted_coord
         ∂(volume : Measure (CSpace 1)) := by
           apply integral_congr_ae
           filter_upwards with z
-          have hnonneg : 0 ≤ π⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-            positivity
-          have hdens :
-              (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
-                (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
-            simpa [gaussianDensity] using (ENNReal.toReal_ofReal hnonneg)
-          rw [hdens]
+          rw [toReal_gaussianDensity_one z]
           simp [Algebra.smul_def, mul_assoc, mul_left_comm]
     _ = ∫ z : ℂ,
         (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
@@ -1385,6 +1088,19 @@ private lemma density_prod_identity
           (F q (z q) * conj (G q (z q)))) := by
   rw [gaussianDensity_eq_prod]
   simp [gaussianDensity, Finset.prod_mul_distrib, mul_assoc, mul_left_comm]
+
+private lemma density_smul_prod_identity
+    (d : ℕ) (F G : Fin d → ℂ → ℂ) (z : CSpace d) :
+    (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ) *
+        ∏ q : Fin d, F q (z q) * conj (G q (z q))) =
+      ∏ q : Fin d,
+        ((((1 / Real.pi) * Real.exp (-‖z q‖ ^ 2) : ℝ) : ℂ) *
+          (F q (z q) * conj (G q (z q)))) := by
+  have hnonneg : 0 ≤ gaussianDensity d z := by
+    unfold gaussianDensity
+    positivity
+  rw [ENNReal.toReal_ofReal hnonneg, Finset.prod_mul_distrib, ← map_prod]
+  exact density_prod_identity d F G z
 
 /-- Tensor-product factorization over the Gaussian product measure. -/
 theorem tensorGaussianFactorization
@@ -1423,43 +1139,19 @@ theorem tensorGaussianFactorization
       Integrable
         (fun z : CSpace d => ∏ q : Fin d, F q (z q) * conj (G q (z q)))
         (gaussianMeasure d) := by
-    rw [gaussianMeasure]
-    rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+    rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
     · convert hprod_volume using 1
       case e'_5 => rfl
       funext z
-      have hnonneg : 0 ≤ gaussianDensity d z := by
-        unfold gaussianDensity
-        positivity
-      calc
-        (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ) *
-            ∏ q : Fin d, F q (z q) * conj (G q (z q))) =
-          (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ) *
-            ((∏ q : Fin d, F q (z q)) * conj (∏ q : Fin d, G q (z q)))) := by
-              simp [Finset.prod_mul_distrib]
-        _ = (gaussianDensity d z : ℂ) *
-              ((∏ q : Fin d, F q (z q)) * conj (∏ q : Fin d, G q (z q))) := by
-              rw [show (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ)) =
-                  gaussianDensity d z by
-                simp [ENNReal.toReal_ofReal hnonneg]]
-        _ = ∏ q : Fin d,
-              ((((1 / Real.pi) * Real.exp (-‖z q‖ ^ 2) : ℝ) : ℂ) *
-                (F q (z q) * conj (G q (z q)))) := density_prod_identity d F G z
-    · unfold gaussianDensity
-      fun_prop
-    · filter_upwards with x
-      simp
+      exact density_smul_prod_identity d F G z
+    · exact measurable_ofReal_gaussianDensity d
+    · exact gaussianDensity_ofReal_lt_top d
   constructor
   · exact hintegrable
   · unfold gaussianInner
     rw [gaussianMeasure]
     rw [integral_withDensity_eq_integral_toReal_smul
-      (show Measurable (fun z : CSpace d => ENNReal.ofReal (gaussianDensity d z)) by
-        unfold gaussianDensity
-        fun_prop)
-      (show ∀ᵐ x : CSpace d, ENNReal.ofReal (gaussianDensity d x) < ⊤ by
-        filter_upwards with x
-        simp)]
+      (measurable_ofReal_gaussianDensity d) (gaussianDensity_ofReal_lt_top d)]
     calc
       ∫ z : CSpace d,
           (ENNReal.ofReal (gaussianDensity d z)).toReal •
@@ -1481,37 +1173,7 @@ theorem tensorGaussianFactorization
           ∂(volume : Measure (CSpace d)) := by
             apply integral_congr_ae
             filter_upwards with z
-            have hnonneg : 0 ≤ gaussianDensity d z := by
-              unfold gaussianDensity
-              positivity
-            calc
-              (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ) *
-                  ∏ q : Fin d, F q (z q) * conj (G q (z q))) =
-                (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ) *
-                  ((∏ q : Fin d, F q (z q)) * conj (∏ q : Fin d, G q (z q)))) := by
-                    simp [Finset.prod_mul_distrib]
-              _ = (gaussianDensity d z : ℂ) *
-                    ((∏ q : Fin d, F q (z q)) * conj (∏ q : Fin d, G q (z q))) := by
-                    rw [show (((ENNReal.ofReal (gaussianDensity d z)).toReal : ℂ)) =
-                        gaussianDensity d z by
-                      simp [ENNReal.toReal_ofReal hnonneg]]
-              _ = ∏ q : Fin d,
-                    ((((1 / Real.pi) * Real.exp (-‖z q‖ ^ 2) : ℝ) : ℂ) *
-                      (F q (z q) * conj (G q (z q)))) := density_prod_identity d F G z
-      _ =
-        ∫ z : CSpace d,
-          ∏ q : Fin d,
-            ((((1 / Real.pi) * Real.exp (-‖z q‖ ^ 2) : ℝ) : ℂ) *
-              (F q (z q) * conj (G q (z q))))
-          ∂(volume : Measure (CSpace d)) := by
-            rfl
-      _ = ∫ z : CSpace d,
-            ∏ q : Fin d,
-              (fun q : Fin d => fun z : ℂ =>
-                ((((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
-                  (F q z * conj (G q z)))) q (z q)
-            ∂(volume : Measure (CSpace d)) := by
-              rfl
+            exact density_smul_prod_identity d F G z
       _ = ∏ q : Fin d,
             ∫ z : ℂ,
               (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *

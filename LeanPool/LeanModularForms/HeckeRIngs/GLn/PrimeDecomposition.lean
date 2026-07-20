@@ -55,11 +55,8 @@ lemma ppowDiag_pos (p : ℕ) (hp : p.Prime) (e : Fin n → ℕ) :
 
 /-- DivChain for p-power diagonals when exponents are monotone. -/
 lemma divChain_ppow (p : ℕ) (e : Fin n → ℕ) (hmono : Monotone e) :
-    DivChain n (ppowDiag n p e) := by
-  intro i hi
-  simp only [ppowDiag]
-  exact Nat.pow_dvd_pow p (hmono (show (⟨i, by omega⟩ : Fin n) ≤ ⟨i + 1, hi⟩ by
-    exact Fin.mk_le_mk.mpr (by omega)))
+    DivChain n (ppowDiag n p e) := fun i hi => by
+  simpa only [ppowDiag] using Nat.pow_dvd_pow p (hmono (Fin.mk_le_mk.mpr (by omega)))
 
 /-- Extract the p-component of each entry in a positive diagonal. -/
 def pComponent (p : ℕ) (a : Fin n → ℕ) : Fin n → ℕ :=
@@ -68,8 +65,7 @@ def pComponent (p : ℕ) (a : Fin n → ℕ) : Fin n → ℕ :=
 /-- The p-component of a divisibility chain is monotone. -/
 lemma pComponent_monotone (a : Fin n → ℕ)
     (ha_pos : ∀ i, 0 < a i) (ha : DivChain n a) (p : ℕ) :
-    Monotone (pComponent n p a) := by
-  intro i j hij
+    Monotone (pComponent n p a) := fun i j hij => by
   simp only [pComponent]
   exact (Nat.factorization_le_iff_dvd (ha_pos i).ne' (ha_pos j).ne').mpr
     (divChain_dvd (n := n) ha hij) p
@@ -91,13 +87,11 @@ lemma removePrime_pos (p : ℕ) (a : Fin n → ℕ) (ha_pos : ∀ i, 0 < a i) :
 
 /-- The p-free part preserves divisibility chains. -/
 lemma removePrime_divChain (p : ℕ) (a : Fin n → ℕ) (ha : DivChain n a) :
-    DivChain n (removePrime n p a) := by
-  intro i hi
+    DivChain n (removePrime n p a) := fun i hi => by
   simp only [removePrime]
   obtain ⟨k, hk⟩ := ha i hi
   conv_rhs => rw [show a ⟨i + 1, hi⟩ = a ⟨i, by omega⟩ * k from hk]
-  rw [Nat.ordCompl_mul]
-  exact dvd_mul_right _ _
+  rw [Nat.ordCompl_mul]; exact dvd_mul_right _ _
 
 /-- Recovery: the pointwise product of p-part and p-free part equals the original. -/
 lemma mul_ppow_remove_eq (p : ℕ) (a : Fin n → ℕ) :
@@ -114,17 +108,15 @@ section Coprimality
 
 /-- The determinant of a p-power diagonal is a power of `p`. -/
 lemma prod_ppow (p : ℕ) (e : Fin n → ℕ) :
-    ∏ i, (ppowDiag n p e) i = p ^ (∑ i, e i) := by
-  simp only [ppowDiag, Finset.prod_pow_eq_pow_sum]
+    ∏ i, (ppowDiag n p e) i = p ^ (∑ i, e i) := by simp only [ppowDiag, Finset.prod_pow_eq_pow_sum]
 
 /-- The p-part and p-free part determinants are coprime. -/
 lemma prod_ppow_remove_coprime (p : ℕ) (hp : p.Prime)
     (a : Fin n → ℕ) (ha_pos : ∀ i, 0 < a i) :
     Nat.Coprime (∏ i, (ppowDiag n p (pComponent n p a) i))
                (∏ i, (removePrime n p a) i) := by
-  rw [prod_ppow]
-  apply Nat.Coprime.pow_left
-  exact Nat.Coprime.prod_right fun i _ => (Nat.coprime_ordCompl hp (ha_pos i).ne')
+  rw [prod_ppow]; apply Nat.Coprime.pow_left
+  exact Nat.Coprime.prod_right fun i _ => Nat.coprime_ordCompl hp (ha_pos i).ne'
 
 end Coprimality
 
@@ -180,11 +172,8 @@ lemma T_elem_ppow_mem_R_p (p : ℕ) (hp : p.Prime) (e : Fin n → ℕ) (hmono : 
 /-- The identity `T(1,...,1)` is in every RP (as the zero-exponent element). -/
 lemma one_mem_R_p (p : ℕ) (hp : p.Prime) :
     TElem (fun _ : Fin n => 1) ∈ RP n p hp := by
-  have h : TElem (fun _ : Fin n => 1) =
-      TElem (ppowDiag n p (fun _ => 0)) := by
-    congr
-  rw [h]
-  exact T_elem_ppow_mem_R_p n p hp (fun _ => 0) monotone_const
+  have h : TElem (fun _ : Fin n => 1) = TElem (ppowDiag n p (fun _ => 0)) := by congr
+  rw [h]; exact T_elem_ppow_mem_R_p n p hp (fun _ => 0) monotone_const
 
 end RpSubring
 
@@ -224,18 +213,15 @@ theorem T_elem_mem_closure_ppow (a : Fin n → ℕ) (ha_pos : ∀ i, 0 < a i) (h
       exact Nat.eq_one_of_dvd_one (h_det ▸ h_dvd)
     have h_eq : a = fun _ => 1 := funext h_all_one
     subst h_eq
-    have h_ppow : TElem (fun _ : Fin n => 1) =
-        TElem (ppowDiag n 2 (fun _ => 0)) := by congr
-    rw [h_ppow]
-    exact Subring.subset_closure ⟨2, Nat.prime_two, _, monotone_const, rfl⟩
+    have h_ppow : TElem (fun _ : Fin n => 1) = TElem (ppowDiag n 2 (fun _ => 0)) := by congr
+    rw [h_ppow]; exact Subring.subset_closure ⟨2, Nat.prime_two, _, monotone_const, rfl⟩
   | succ m ih =>
     intro a ha_pos ha hcard
     by_cases h_empty : (∏ i, a i).factorization.support = ∅
     · exact ih a ha_pos ha (by rw [Finset.card_eq_zero.mpr h_empty]; exact Nat.zero_le _)
     obtain ⟨p, hp_mem⟩ := Finset.nonempty_of_ne_empty h_empty
     have hp : p.Prime := by
-      rw [Nat.support_factorization] at hp_mem
-      exact Nat.prime_of_mem_primeFactors hp_mem
+      rw [Nat.support_factorization] at hp_mem; exact Nat.prime_of_mem_primeFactors hp_mem
     rw [T_elem_split_prime n a ha_pos ha p hp]
     apply Subring.mul_mem
     · exact Subring.subset_closure
@@ -248,8 +234,7 @@ theorem T_elem_mem_closure_ppow (a : Fin n → ℕ) (ha_pos : ∀ i, 0 < a i) (h
           intro h_zero
           apply hq
           have h_dvd : ∏ i, (removePrime n p a) i ∣ ∏ i, a i :=
-            Finset.prod_dvd_prod_of_dvd _ _ fun i _ =>
-              Nat.ordCompl_dvd (a i) p
+            Finset.prod_dvd_prod_of_dvd _ _ fun i _ => Nat.ordCompl_dvd (a i) p
           have h_le := (Nat.factorization_le_iff_dvd
             (prod_pos_of_pos n _ (removePrime_pos n p a ha_pos)).ne'
             (prod_pos_of_pos n a ha_pos).ne').mpr h_dvd q
@@ -278,12 +263,9 @@ section Generation
 /-- Every element of the Hecke algebra is in the subring generated by all p-local pieces. -/
 theorem HeckeAlgebra_generated_by_R_p :
     (⊤ : Subring (HeckeAlgebra n)) ≤ Subring.closure (ppowClosureSet n) := by
-  intro f _
-  obtain ⟨S, c, hf⟩ := T_diag_span n f
-  rw [hf]
-  apply Subring.sum_mem
-  intro s _
-  exact Subring.zsmul_mem _ (T_elem_mem_closure_ppow n s.1.1 s.1.2.1 s.1.2.2) _
+  intro f _; obtain ⟨S, c, hf⟩ := T_diag_span n f; rw [hf]
+  exact Subring.sum_mem _ fun s _ =>
+    Subring.zsmul_mem _ (T_elem_mem_closure_ppow n s.1.1 s.1.2.1 s.1.2.2) _
 
 end Generation
 

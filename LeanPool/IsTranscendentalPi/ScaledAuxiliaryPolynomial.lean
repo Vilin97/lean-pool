@@ -32,8 +32,7 @@ lemma aeval_MvPolynomialSumX
     MvPolynomial.aeval (σ := Fin n) (R := R) (S₁ := S) a (MvPolynomialSumX T n) =
       ∑ i : Fin n, Polynomial.aeval (a i) T := by
   rw [MvPolynomialSumX, map_sum]
-  refine Finset.sum_congr rfl ?_
-  intro i hi
+  refine Finset.sum_congr rfl fun i hi => ?_
   simpa using
     (Polynomial.map_aeval_eq_aeval_map (S := MvPolynomial (Fin n) R) (T := R) (U := S)
     (φ := RingHom.id R) (ψ := (MvPolynomial.aeval (σ := Fin n) (R := R) (S₁ := S) a).toRingHom)
@@ -55,9 +54,9 @@ lemma eval_MvPolynomialSumX_at_roots_eq_int
     ∃ Q : MvPolynomial (Fin n) ℤ,
       MvPolynomial.aeval (σ := Fin n) (R := ℤ) (S₁ := S) a (MvPolynomialSumX T n)
         = algebraMap R S (MvPolynomial.aeval (σ := Fin n) (R := ℤ) (S₁ := R)
-            (fun i : Fin n => (-1) ^ (i.1 + 1) * B.coeff (n - (i.1 + 1))) Q) := by
-  exact symmetric_poly_at_roots_eq_poly_of_esymm B a hmonic hroots
-          (MvPolynomialSumX T n) (MvPolynomialSumX_isSymmetric T n)
+            (fun i : Fin n => (-1) ^ (i.1 + 1) * B.coeff (n - (i.1 + 1))) Q) :=
+  symmetric_poly_at_roots_eq_poly_of_esymm B a hmonic hroots
+    (MvPolynomialSumX T n) (MvPolynomialSumX_isSymmetric T n)
 
 /-- For `P = ∑ₖ₌₀ⁿ⁻¹ cₖ Xᵏ`, this defines `∑ₖ (cₖ / cᵏ) (x₁ᵏ + ⋯ + xₙᵏ)`. -/
 def scaledMvPolynomial {R K : Type*} [CommSemiring R] [Semifield K] [Algebra R K]
@@ -75,10 +74,8 @@ lemma aeval_scaledMvPolynomial
     MvPolynomial.aeval_eq_eval, map_mul, MvPolynomial.eval_C, map_pow, MvPolynomial.eval_X,
     Polynomial.aeval_eq_sum_range (p := P)]
   rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl ?_
-  intro i hi
-  refine Finset.sum_congr rfl ?_
-  intro k hk
+  refine Finset.sum_congr rfl fun i hi => ?_
+  refine Finset.sum_congr rfl fun k hk => ?_
   calc
     _ = ((algebraMap R K (P.coeff k)) / c ^ k) * (c ^ k * (a i) ^ k) := by simp [mul_pow]
     _ = (algebraMap R K (P.coeff k)) * (a i) ^ k := by field_simp
@@ -93,8 +90,7 @@ lemma sum_aeval_Gp_eq_one_div_factorial_sum_iterate_derivative_Fp
           ∑ j : Fin n, aeval (a j) ((derivative^[i]) (Fp Q p))) := by
   field_simp [Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero p)]
   rw [mul_comm, Finset.sum_comm, Finset.mul_sum]
-  refine Finset.sum_congr rfl ?_
-  intro j hj
+  refine Finset.sum_congr rfl fun j hj => ?_
   simpa [sumStartpDerivFp] using
     congrArg (fun P : R[X] => aeval (a j) P)
       (factorise_sumIteratedDerivPoly Q p).symm
@@ -134,14 +130,12 @@ lemma aeval_RpolyFp_derivative_Fp
   rw [RpolyFp, map_sum]
   simp_rw [map_mul, MvPolynomial.aeval_C, MvPolynomial.psum, map_sum, Finset.mul_sum]
   rw [Finset.sum_comm]
-  refine Finset.sum_congr rfl ?_
-  intro m hm
+  refine Finset.sum_congr rfl fun m hm => ?_
   rw [Polynomial.aeval_eq_sum_range' (p := (derivative^[i]) (Fp T p))
     (n := (Fp T p).natDegree + 1) (x := a m)]
   · simp_rw [Algebra.smul_def, map_pow, MvPolynomial.aeval_X, mul_pow]
     rw [Finset.mul_sum]
-    refine Finset.sum_congr rfl ?_
-    intro k hk
+    refine Finset.sum_congr rfl fun k hk => ?_
     by_cases hks : k ≤ s
     · rw [← ScaledCoeffDerivFp_from_Sp (K := ℂ) T c p s i k hpi, pow_sub₀ _ (by exact_mod_cast hc)
         hks]
@@ -178,14 +172,14 @@ lemma RpolyFp_at_c_mul_eq_poly_of_monicRescaleOf
       MvPolynomial.aeval (σ := Fin d) (R := ℤ) (S₁ := ℂ)
         (fun j : Fin d => (c : ℂ) * a j) (RpolyFp T c p s i d)
       = algebraMap ℤ ℂ (MvPolynomial.aeval (σ := Fin d) (R := ℤ) (S₁ := ℤ)
-        (fun j : Fin d => (-1) ^ (j.1 + 1) * (monicRescaleOf T d c).coeff (d - (j.1 + 1))) Q) := by
-  exact symmetric_poly_at_roots_eq_poly_of_esymm
-          (B := monicRescaleOf T d c)
-          (a := fun j : Fin d => (c : ℂ) * a j)
-          (hmonic := monic_monicRescaleOf T d c)
-          (hroots := aroots_monicRescaleOf T T' d c a hc hmonic hd hT hroots')
-          (P := RpolyFp T c p s i d)
-          (hP := RpolyFp_isSymmetric T c p s i d)
+        (fun j : Fin d => (-1) ^ (j.1 + 1) * (monicRescaleOf T d c).coeff (d - (j.1 + 1))) Q) :=
+  symmetric_poly_at_roots_eq_poly_of_esymm
+    (B := monicRescaleOf T d c)
+    (a := fun j : Fin d => (c : ℂ) * a j)
+    (hmonic := monic_monicRescaleOf T d c)
+    (hroots := aroots_monicRescaleOf T T' d c a hc hmonic hd hT hroots')
+    (P := RpolyFp T c p s i d)
+    (hP := RpolyFp_isSymmetric T c p s i d)
 
 /-- The integer witness for evaluating
 `∑ₖ₌₀^deg(Fₚ) cˢ⁻ᵏ · (i! / p!) · (k-Coeff of Sₚ) · (X₀ᵏ + ⋯ + X_{d-1}ᵏ)`
@@ -219,11 +213,9 @@ lemma SumAevalGp_as_intSumAevalGp
     (hroots' : T'.aroots ℂ = valuesFin a) :
     ((c : ℂ) ^ (p * d - 1)) * (∑ m : Fin d, aeval (a m) (Gp T p)) =
       (intSumAevalGp T T' c d a hc hmonic hd hT hroots' p : ℂ) := by
-  rw [intSumAevalGp]
-  rw [sum_aeval_Gp_eq_one_div_factorial_sum_iterate_derivative_Fp T p d a]
-  rw [← mul_assoc, Finset.mul_sum, Int.cast_sum]
-  refine Finset.sum_congr rfl ?_
-  intro i hi
+  rw [intSumAevalGp, sum_aeval_Gp_eq_one_div_factorial_sum_iterate_derivative_Fp T p d a,
+    ← mul_assoc, Finset.mul_sum, Int.cast_sum]
+  refine Finset.sum_congr rfl fun i hi => ?_
   have hpi : p ≤ i := (Finset.mem_Icc.mp hi).1
   have hT0 : T ≠ 0 := RescaledOf_nonZero T T' c hc hmonic.ne_zero hT
   have hs' := natDegree_iterate_derivative_Fp_le T p i hT0

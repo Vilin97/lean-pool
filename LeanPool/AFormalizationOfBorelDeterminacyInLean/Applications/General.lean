@@ -17,8 +17,7 @@ Auxiliary declarations for the Borel determinacy formalization.
 -/
 
 
-lemma diff_subset_union {I} {A B C : Set I} : A \ C ⊆ (A \ B) ∪ (B \ C) := by
-  tauto_set
+lemma diff_subset_union {I} {A B C : Set I} : A \ C ⊆ (A \ B) ∪ (B \ C) := by tauto_set
 lemma projection_formula {α β} (f : α → β) (X : Set α) (Y : Set β) :
   Disjoint X (f⁻¹' Y) ↔ Disjoint (f '' X) Y := by --exists?
   constructor <;> intro h

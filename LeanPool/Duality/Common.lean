@@ -20,9 +20,7 @@ lemma Finset.subtype_univ_sum_eq_subtype_univ_sum {p q : α → Prop} (hpq : p =
     Finset.univ.sum f = Finset.univ.sum g := by
   subst hpq
   convert rfl
-  rename_i x _
-  obtain ⟨a, ha⟩ := x
-  exact (hfg a ha ha).symm
+  simp_all
 
 lemma Finset.univ_sum_of_zero_when_not [Fintype α] [AddCommMonoid β]
     {f : α → β} (p : α → Prop) [DecidablePred p] (hpf : ∀ a : α, ¬(p a) → f a = 0) :
@@ -33,8 +31,7 @@ lemma Finset.univ_sum_of_zero_when_not [Fintype α] [AddCommMonoid β]
     apply Finset.sum_subset_zero_on_sdiff
     · apply Finset.subset_univ
     · simpa
-    · intros
-      rfl
+    · simp_all
   · apply Finset.sum_subtype
     simp
 
@@ -44,17 +41,13 @@ end finset_sums
 section logic_with_neq
 variable {P Q : Prop}
 
-lemma or_of_neq (hpq : P ≠ Q) : P ∨ Q := by
-  tauto
+lemma or_of_neq (hpq : P ≠ Q) : P ∨ Q := by tauto
 
-lemma not_and_of_neq (hpq : P ≠ Q) : ¬(P ∧ Q) := by
-  tauto
+lemma not_and_of_neq (hpq : P ≠ Q) : ¬(P ∧ Q) := by tauto
 
-lemma neq_of_iff_neg (hpq : P ↔ ¬Q) : P ≠ Q := by
-  tauto
+lemma neq_of_iff_neg (hpq : P ↔ ¬Q) : P ≠ Q := by tauto
 
-lemma neg_iff_neg (hpq : P ↔ Q) : ¬P ↔ ¬Q := by
-  tauto
+lemma neg_iff_neg (hpq : P ↔ Q) : ¬P ↔ ¬Q := by tauto
 
 end logic_with_neq
 
@@ -77,8 +70,7 @@ end notations
 section miscellaneous
 
 lemma le_of_nneg_add {α : Type*} [AddCommGroup α] [PartialOrder α] [IsOrderedAddMonoid α]
-    {a b c : α} (habc : a + b = c) (ha : 0 ≤ a) : b ≤ c := by
-  aesop
+    {a b c : α} (habc : a + b = c) (ha : 0 ≤ a) : b ≤ c := by aesop
 
 /-- `change h to t` rewrites the hypothesis `h` to the definitionally equal type `t`. -/
 macro "change " h:ident " to " t:term : tactic => `(tactic| change $t at $h:ident)

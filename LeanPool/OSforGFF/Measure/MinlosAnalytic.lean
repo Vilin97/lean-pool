@@ -108,55 +108,29 @@ lemma integral_neg_invariance
     -- Use eval_measurable for the integrand
     have h_inner_meas : Measurable (fun ω : FieldConfiguration => distributionPairing ω g) :=
       WeakDual.eval_measurable g
-    have h_cont_mulI : Continuous (fun x : ℝ => (Complex.I : ℂ) * (x : ℂ)) :=
-      continuous_const.mul continuous_ofReal
-    have h_cont_exp : Continuous (fun z : ℂ => Complex.exp z) := Complex.continuous_exp
-    have h_outer_meas : Measurable (fun x : ℝ => Complex.exp ((Complex.I : ℂ) * (x : ℂ))) :=
-      (h_cont_exp.comp h_cont_mulI).measurable
     have h_aestrongly_measurable : AEStronglyMeasurable (fun ω => Complex.exp (Complex.I *
       (distributionPairing ω g))) μneg :=
-      (h_outer_meas.comp h_inner_meas).aestronglyMeasurable
+      ((Complex.continuous_exp.comp (continuous_const.mul continuous_ofReal)).measurable.comp
+        h_inner_meas).aestronglyMeasurable
     rw [integral_map (Measurable.aemeasurable negMap_measurable) h_aestrongly_measurable]
-    have h_neg_pairing : (fun ω => Complex.exp (Complex.I * (distributionPairing (negMap ω) g))) =
-                         (fun ω => Complex.exp (Complex.I * (distributionPairing (-ω) g))) := by
-      simp [negMap]
-    rw [h_neg_pairing]
-    have h_neg_eq : ∀ ω : FieldConfiguration, distributionPairing (-ω) g = -distributionPairing ω g
-      := by
+    have h_neg_eq : ∀ ω : FieldConfiguration,
+        distributionPairing (-ω) g = -distributionPairing ω g := by
       intro ω
       change (-ω) g = -(ω g)
       rfl
-    have h_lhs_eq : (fun ω => Complex.exp (Complex.I * (distributionPairing (-ω) g : ℂ))) =
-                    (fun ω => Complex.exp (-(Complex.I * (distributionPairing ω g : ℂ)))) := by
+    have h_integrand_conj :
+        (fun ω => Complex.exp (Complex.I * (distributionPairing (negMap ω) g : ℂ))) =
+        (fun ω => starRingEnd ℂ (Complex.exp (Complex.I * (distributionPairing ω g : ℂ)))) := by
       funext ω
-      rw [h_neg_eq]
-      simp only [ofReal_neg, mul_neg]
-    conv_lhs => rw [h_lhs_eq]
-    have h_exp_neg_conj : ∀ x : ℝ, Complex.exp (-(Complex.I * (x : ℂ))) = starRingEnd ℂ
-      (Complex.exp (Complex.I * (x : ℂ))) := by
-      intro x
-      rw [← Complex.exp_conj]
-      congr 1
-      simp only [map_mul, Complex.conj_I, Complex.conj_ofReal]
-      ring
-    have h_integrand_conj : (fun ω => Complex.exp (-(Complex.I * (distributionPairing ω g : ℂ)))) =
-                            (fun ω => starRingEnd ℂ (Complex.exp (Complex.I * (distributionPairing
-                               ω g : ℂ)))) := by
-      funext ω
-      exact h_exp_neg_conj (distributionPairing ω g)
+      rw [negMap, h_neg_eq, ← Complex.exp_conj]
+      simp_all
     conv_lhs => rw [h_integrand_conj]
-    have h_pull_conj : ∫ ω : FieldConfiguration, (starRingEnd ℂ)
-        (Complex.exp (Complex.I * (distributionPairing ω g : ℂ))) ∂μ.toMeasure
-        = (starRingEnd ℂ) (∫ ω,
-          Complex.exp (Complex.I * (distributionPairing ω g : ℂ)) ∂μ.toMeasure) :=
-      integral_conj
-    rw [h_pull_conj]
+    rw [integral_conj]
     simp only [distributionPairing] at *
     rw [h_realCF g]
     have h_CF_is_real : (Complex.exp (-(1/2 : ℂ) * (C.Q g g : ℂ))).im = 0 := by
       have h_eq : (-(1/2 : ℂ) * (C.Q g g : ℂ)) = ((-(1/2 : ℝ) * C.Q g g : ℝ) : ℂ) := by
-        push_cast
-        ring
+        simp_all
       rw [h_eq]
       exact Complex.exp_ofReal_im (-(1/2) * C.Q g g)
     rw [Complex.conj_eq_iff_im.mpr h_CF_is_real]
@@ -172,9 +146,8 @@ lemma integral_neg_invariance
     simp only [distributionPairing] at hCF_equal h_realCF
     exact minlos_gaussian_uniqueness h_cf_cont C.gaussian_cf_pd h_cf_norm
       (fun g => (hCF_equal g).trans (h_realCF g)) h_realCF
-  have hμeq : μneg = μ.toMeasure := by
-    have h := congrArg ProbabilityMeasure.toMeasure hμeq_prob
-    exact h
+  have hμeq : μneg = μ.toMeasure :=
+    congrArg ProbabilityMeasure.toMeasure hμeq_prob
   -- Step 4: Use the equality of measures to get the integral identity
   have hf_aestrongly_measurable : AEStronglyMeasurable f μneg := by
     rw [hμeq]

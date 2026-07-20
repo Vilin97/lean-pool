@@ -64,51 +64,24 @@ lemma factorization_iso_is_unique' {L R : MorphismProperty C} (F : Factorization
   (i i' : E ≅ E') (comm₁ : s ≫ i.hom = s') (comm₂ : i.hom ≫ p' = p) (comm₁' : s ≫ i'.hom = s')
   (comm₂' : i'.hom ≫ p' = p) : i = i' := by
   let α := F.factorizationIso f E' s' hs' p' hp' fact'
-  let c₁ : F.leftMap f ≫ (α.fst ≪≫ i.symm).hom = s := by calc
-      F.leftMap f ≫ (α.fst ≪≫ i.symm).hom =
-        F.leftMap f ≫ (α.fst.hom ≫ i.symm.hom) := by aesop_cat
-      _ = (F.leftMap f ≫ α.fst.hom) ≫ i.symm.hom := by simp
-      _ = s' ≫ i.symm.hom := by rw [α.snd.left]
-      _ = (s ≫ i.hom) ≫ i.symm.hom := by rw [← comm₁]
-      _ = (s ≫ i.hom) ≫ i.inv := by aesop_cat
-      _ = s ≫ i.hom ≫ i.inv := by simp
-      _ = s := by rw [i.hom_inv_id]; simp
-  let c₂ : (α.fst ≪≫ i.symm).hom ≫ p = F.rightMap f := by calc
-      (α.fst ≪≫ i.symm).hom ≫ p =
-        (α.fst.hom ≫ i.symm.hom) ≫ p := by aesop_cat
-      _ = (α.fst.hom ≫ i.symm.hom) ≫ (i.hom ≫ p') := by rw [← comm₂]
-      _ = α.fst.hom ≫ (i.symm.hom ≫ i.hom) ≫ p' := by simp
-      _ = α.fst.hom ≫ (i.inv ≫ i.hom) ≫ p' := by aesop_cat
-      _ = α.fst.hom ≫ p' := by rw [i.inv_hom_id]; simp
-      _ = F.rightMap f := α.snd.right
+  let c₁ : F.leftMap f ≫ (α.fst ≪≫ i.symm).hom = s := by
+    simp only [Iso.trans_hom, Iso.symm_hom, ← Category.assoc, α.snd.left, ← comm₁]
+    simp
+  let c₂ : (α.fst ≪≫ i.symm).hom ≫ p = F.rightMap f := by
+    rw [← comm₂]
+    simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc, i.inv_hom_id_assoc, α.snd.right]
   let φ := F.factorization_iso_is_unique f E s hs p hp fact (α.fst ≪≫ Iso.symm i) c₁ c₂
-  let c₁' : F.leftMap f ≫ (α.fst ≪≫ i'.symm).hom = s := by calc
-      F.leftMap f ≫ (α.fst ≪≫ i'.symm).hom =
-        F.leftMap f ≫ (α.fst.hom ≫ i'.symm.hom) := by aesop_cat
-      _ = (F.leftMap f ≫ α.fst.hom) ≫ i'.symm.hom := by simp
-      _ = s' ≫ i'.symm.hom := by rw [α.snd.left]
-      _ = (s ≫ i'.hom) ≫ i'.symm.hom := by rw [← comm₁']
-      _ = (s ≫ i'.hom) ≫ i'.inv := by aesop_cat
-      _ = s ≫ i'.hom ≫ i'.inv := by simp
-      _ = s := by rw [i'.hom_inv_id]; simp
-  let c₂' : (α.fst ≪≫ i'.symm).hom ≫ p = F.rightMap f := by calc
-      (α.fst ≪≫ i'.symm).hom ≫ p =
-        (α.fst.hom ≫ i'.symm.hom) ≫ p := by aesop_cat
-      _ = (α.fst.hom ≫ i'.symm.hom) ≫ (i'.hom ≫ p') := by rw [← comm₂']
-      _ = α.fst.hom ≫ (i'.symm.hom ≫ i'.hom) ≫ p' := by simp
-      _ = α.fst.hom ≫ (i'.inv ≫ i'.hom) ≫ p' := by aesop_cat
-      _ = α.fst.hom ≫ p' := by rw [i'.inv_hom_id]; simp
-      _ = F.rightMap f := α.snd.right
+  let c₁' : F.leftMap f ≫ (α.fst ≪≫ i'.symm).hom = s := by
+    simp only [Iso.trans_hom, Iso.symm_hom, ← Category.assoc, α.snd.left, ← comm₁']
+    simp
+  let c₂' : (α.fst ≪≫ i'.symm).hom ≫ p = F.rightMap f := by
+    rw [← comm₂']
+    simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc, i'.inv_hom_id_assoc, α.snd.right]
   let ψ := F.factorization_iso_is_unique f E s hs p hp fact (α.fst ≪≫ Iso.symm i') c₁' c₂'
-  let χ : α.fst ≪≫ i.symm = α.fst ≪≫ i'.symm := by calc
-    α.fst ≪≫ i.symm = (F.factorizationIso f E s hs p hp fact).fst := φ
-    _ = α.fst ≪≫ i'.symm := by rw [← ψ ]
-  let ξ : Iso.symm i' = Iso.symm i := by calc
-    Iso.symm i' = (α.fst.symm ≪≫ α.fst) ≪≫ Iso.symm i' := by simp
-    _ = α.fst.symm ≪≫ (α.fst ≪≫ Iso.symm i') := by simp
-    _ = α.fst.symm ≪≫ (α.fst ≪≫ Iso.symm i) := by rw [ χ ]
-    _ = (α.fst.symm ≪≫ α.fst) ≪≫ Iso.symm i := by simp
-    _ = Iso.symm i := by simp
+  let χ : α.fst ≪≫ i.symm = α.fst ≪≫ i'.symm := by simp_all
+  have ξ : Iso.symm i' = Iso.symm i := by
+    have := congrArg (α.fst.symm ≪≫ ·) χ.symm
+    simpa using this
   exact Iso.symm_eq_iff.mp (Eq.symm ξ)
 
 /-- A class of morphisms in C defines a class of morphism in the slice C/X for every X ∈ C -/
@@ -142,18 +115,17 @@ namespace Over
 lemma forget_map_comp :
     {X : C} → {p q r : Over X} → (F : p ⟶ q) → (G : q ⟶ r) → (H : p ⟶ r) →
     (hyp : F ≫ G = H) → (F.left ≫ G.left = H.left) := by
-  intro X p q r F G H hyp
-  simpa using congrArg (fun K : p ⟶ r => K.left) hyp
+  simp_all
 
 /-- The forgetful functor C/X ⟶ X preserves isomorphisms -/
 def forgetPreservesIsos : {X : C} → {f g : Over X} → (i : f ≅ g) → f.left ≅ g.left := by
   rintro X _ _ i
   exact
   {
-    hom := by exact i.hom.left,
-    inv := by exact i.inv.left,
-    hom_inv_id := by exact forget_map_comp _ _ _ i.hom_inv_id,
-    inv_hom_id := by exact forget_map_comp _ _ _ i.inv_hom_id
+    hom := i.hom.left,
+    inv := i.inv.left,
+    hom_inv_id := forget_map_comp _ _ _ i.hom_inv_id,
+    inv_hom_id := forget_map_comp _ _ _ i.inv_hom_id
   }
 
 end Over
@@ -247,8 +219,7 @@ lemma factorization_iso_is_unique_slice : {X : C} → {L R : MorphismProperty C}
     (factorizationIsoSlice F ⟨φ,_,u⟩ ⟨C,_,h⟩ ⟨l,_,v⟩ p ⟨r,_,w⟩ q fact).fst.hom.left := by
     unfold factorizationIsoSlice
     aesop_cat
-  rw [←coh']
-  aesop_cat
+  simp_all
 
 /-- A factorization system in C descends to a factorization system in the slice -/
 def FactorizationSystemSlice : {X : C} → {L R : MorphismProperty C} →
@@ -295,16 +266,15 @@ lemma fact_fact_iso_comm_left : (F : FactorizationSystem L R) → {X Y : C} → 
     (E' : C) → (l' : X ⟶ E') → (p' : L l') → (r' : E' ⟶ Y) → (q' : R r') → (fact' : l' ≫ r' = f) →
     l ≫ (factFactIso F f E l p r q fact E' l' p' r' q' fact').hom = l' := by
   intro F X Y f E l p r q fact E' l' p' r' q' fact'
-  let comm_left := (F.factorizationIso f E l p r q fact).snd.left
-  let comm_right := (F.factorizationIso f E l p r q fact).snd.right
   let comm_left' := (F.factorizationIso f E' l' p' r' q' fact').snd.left
-  let comm_right' := (F.factorizationIso f E' l' p' r' q' fact').snd.right
   let inv := (F.factorizationIso f E l p r q fact).fst.inv
   let hom := (F.factorizationIso f E l p r q fact).fst.hom
   let hom' := (F.factorizationIso f E' l' p' r' q' fact').fst.hom
-  have duh : l = F.leftMap f ≫ hom := by aesop_cat
+  have duh : l = F.leftMap f ≫ hom := (F.factorizationIso f E l p r q fact).snd.left.symm
   calc
-    l ≫ inv ≫ hom' = F.leftMap f ≫ hom' := by rw [duh]; simp; aesop
+    l ≫ inv ≫ hom' = F.leftMap f ≫ hom' := by
+      rw [duh]
+      simp [inv, hom, hom']
     _ = l' := comm_left'
 
 /- the isomorphisms commutes with right maps -/
@@ -313,9 +283,7 @@ lemma fact_fact_iso_comm_right : (F : FactorizationSystem L R) → {X Y : C} →
     (E' : C) → (l' : X ⟶ E') → (p' : L l') → (r' : E' ⟶ Y) → (q' : R r') → (fact' : l' ≫ r' = f) →
     (factFactIso F f E l p r q fact E' l' p' r' q' fact').hom ≫ r' = r := by
   intro F X Y f E l p r q fact E' l' p' r' q' fact'
-  let comm_left := (F.factorizationIso f E l p r q fact).snd.left
   let comm_right := (F.factorizationIso f E l p r q fact).snd.right
-  let comm_left' := (F.factorizationIso f E' l' p' r' q' fact').snd.left
   let comm_right' := (F.factorizationIso f E' l' p' r' q' fact').snd.right
   unfold factFactIso
   simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc]
@@ -325,9 +293,9 @@ lemma fact_fact_iso_comm_right : (F : FactorizationSystem L R) → {X Y : C} →
   calc
     inv ≫ hom' ≫ r' = inv ≫ F.rightMap f := by rw [comm_right']
     _ = inv ≫ hom ≫ r := by rw [comm_right]
-    _ = (inv ≫ hom) ≫ r := by simp
-    _ = (𝟙 _) ≫ r := by rw [(F.factorizationIso f E l p r q fact).fst.inv_hom_id]
-    _ = r := by simp
+    _ = r := by
+      rw [← Category.assoc, (F.factorizationIso f E l p r q fact).fst.inv_hom_id,
+        Category.id_comp]
 
 namespace MorphismProperty
 
@@ -397,19 +365,17 @@ lemma right_cancellation_left_class :
     (F.right_map_in_right_class v) (by aesop_cat) Z w Lw (𝟙 Z)
     (F.contains_isos_right_class (Iso.refl Z)) (by aesop_cat)
   )
-  have fact': i.hom ≫ (𝟙 Z) = p := by exact (
+  have fact': i.hom ≫ (𝟙 Z) = p :=
     fact_fact_iso_comm_right F w E (u ≫ s)
     (F.is_closed_comp_left_class.precomp _ Lu _ (F.left_map_in_left_class v)) p
     (F.right_map_in_right_class v) (by aesop_cat) Z w Lw (𝟙 Z)
     (F.contains_isos_right_class (Iso.refl Z)) (by aesop_cat)
-  )
   have Lp' : L (i.hom ≫ (𝟙 Z)) := F.is_closed_comp_left_class.postcomp
     (𝟙 Z) (F.contains_isos_left_class (Iso.refl Z))
     i.hom (F.contains_isos_left_class _)
   have Lp : L p := by rw [←fact']; exact Lp'
   have Lsp := F.is_closed_comp_left_class.precomp s (F.left_map_in_left_class v) p Lp
-  rw [←fact]
-  exact Lsp
+  rwa [←fact]
 
 lemma left_cancellation_right_class :
     (F : FactorizationSystem L R) → MorphismProperty.leftCancellation R := by
@@ -420,31 +386,22 @@ lemma left_cancellation_right_class :
   let q := F.rightMap u
   let fact := F.factorization u
   let comm : t ≫ q ≫ v = w := by
-    calc
-      t ≫ q ≫ v = (t ≫ q) ≫ v := by simp
-      _ = u ≫ v := by rw [fact]
-      _ = w := by rfl
+    rw [← Category.assoc, fact]
   let i := (
     factFactIso F w E t (F.left_map_in_left_class u) (q ≫ v)
     (F.is_closed_comp_right_class.precomp _ (F.right_map_in_right_class u) _ Rv) comm X (𝟙 X)
     (F.contains_isos_left_class (Iso.refl X)) w Rw (by aesop_cat)
   )
-  have fact' : t ≫ i.hom = 𝟙 X := by exact (
+  have fact' : t ≫ i.hom = 𝟙 X :=
     fact_fact_iso_comm_left F w E t (F.left_map_in_left_class u) (q ≫ v)
     (F.is_closed_comp_right_class.precomp _ (F.right_map_in_right_class u) _ Rv) comm X (𝟙 X)
     (F.contains_isos_left_class (Iso.refl X)) w Rw (by aesop_cat)
-  )
   have eq : t = i.inv := by
-    calc
-      t = t ≫ 𝟙 E := by rw [Category.comp_id]
-      _ = t ≫ i.hom ≫ i.inv := by rw [i.hom_inv_id]
-      _ = (t ≫ i.hom) ≫ i.inv := by simp
-      _ = i.inv := by rw [fact']; simp
+    rw [← Category.id_comp i.inv, ← fact', Category.assoc, i.hom_inv_id, Category.comp_id]
   have Riinv : R i.inv := F.contains_isos_right_class (asIso i.inv)
   have Rt : R t := by rw [eq]; exact Riinv
   have Rqt : R (t ≫ q) := by
     exact F.is_closed_comp_right_class.precomp t Rt q (F.right_map_in_right_class u)
-  rw [←fact]
-  exact Rqt
+  rwa [←fact]
 
 end CategoryTheory

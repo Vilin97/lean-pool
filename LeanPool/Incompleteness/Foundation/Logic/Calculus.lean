@@ -129,8 +129,7 @@ def and' {φ ψ : F} (h : φ ⋏ ψ ∈ Γ) (dp : 𝓚 ⟹ φ :: Γ) (dq : 𝓚 
   wk (and dp dq) (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def or' {φ ψ : F} (h : φ ⋎ ψ ∈ Γ) (dpq : 𝓚 ⟹ φ :: ψ :: Γ) : 𝓚 ⟹ Γ :=
-  wk (or dpq) (by simp [h])
+def or' {φ ψ : F} (h : φ ⋎ ψ ∈ Γ) (dpq : 𝓚 ⟹ φ :: ψ :: Γ) : 𝓚 ⟹ Γ := wk (or dpq) (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def wkTail (d : 𝓚 ⟹ Γ) : 𝓚 ⟹ φ :: Γ := wk d (by simp)
@@ -197,20 +196,6 @@ instance [Tait.Axiomatized F K] : Entailment.StrongCut K K where
 instance [Tait.Cut F K] : DeductiveExplosion K where
   dexp {𝓚 b φ} := wk (Tait.Cut.cut b (by simpa using verum _ _)) (by simp)
 
-/-
-instance : Entailment.Deduction K where
-  ofInsert {φ ψ 𝓚 b} := by {  }
-  inv {φ ψ 𝓚 b} :=
-    let h : cons φ 𝓚 ⟹ [∼φ ⋎ ψ, ψ] :=
-      wk (show cons φ 𝓚 ⟹ [∼φ ⋎ ψ] from ofEq (ofAxiomSubset (by simp) b) (by simp [DeMorgan.imply]))
-      (by simp)
-    let n : cons φ 𝓚 ⟹ [∼(∼φ ⋎ ψ), ψ] :=
-      let hp : cons φ 𝓚 ⟹ [φ, ψ] := wk (show cons φ 𝓚 ⊢ φ from byAxm (by simp)) (by simp)
-      let hq : cons φ 𝓚 ⟹ [∼ψ, ψ] := em (φ := ψ) (by simp) (by simp)
-      ofEq (and hp hq) (by simp)
-    cut h n
--/
-
 lemma inconsistent_iff_provable [Tait.Cut F K] :
     Inconsistent 𝓚 ↔ 𝓚 ⟹! [] :=
   ⟨fun b ↦ ⟨cut (inconsistent_iff_provable_bot.mp b).get (by simpa using verum _ _)⟩,
@@ -219,27 +204,6 @@ lemma inconsistent_iff_provable [Tait.Cut F K] :
 lemma consistent_iff_unprovable [Tait.Axiomatized F K] [Tait.Cut F K] :
     Consistent 𝓚 ↔ IsEmpty (𝓚 ⟹ []) :=
   not_iff_not.mp <| by simp [not_consistent_iff_inconsistent, inconsistent_iff_provable]
-
-/-
-lemma provable_iff_inconsistent {φ} :
-    𝓚 ⊢! φ ↔ Inconsistent (cons (∼φ) 𝓚) := by
-  simp [inconsistent_iff_provable, deduction_iff, DeMorgan.imply]
-  constructor
-  · intro h; exact cut! (of_axiom_subset (by simp) h) (root! <| by simp)
-  · rintro ⟨b⟩
-    exact ⟨by simpa using Tait.Axiomatized.proofOfContra b⟩
-
-lemma refutable_iff_inconsistent {φ} :
-    𝓚 ⊢! ∼φ ↔ Inconsistent (cons φ 𝓚) := by simpa using provable_iff_inconsistent (𝓚 := 𝓚) (φ := ∼φ)
-
-lemma consistent_insert_iff_not_refutable {φ}  :
-    Entailment.Consistent (cons φ 𝓚) ↔ 𝓚 ⊬ ∼φ := by
-  simp [Entailment.Unprovable, refutable_iff_inconsistent,
-    Entailment.not_inconsistent_iff_consistent]
-
-lemma inconsistent_of_provable_and_refutable {φ} (bp : 𝓚 ⊢! φ) (br : 𝓚 ⊢! ∼φ) : Inconsistent 𝓚 :=
-  inconsistent_iff_provable.mpr <| cut! bp br
--/
 
 instance [Tait.Cut F K] : Entailment.Classical 𝓚 where
   mdp {φ ψ dpq dp} :=

@@ -58,9 +58,7 @@ theorem mul_ne_zero_imply_set_ne_zero (I J : Ideal R) (h : I * J ≠ ⊥) :
     not_subset.mp ((not_iff_not.mpr Ideal.span_eq_bot).mp h)
   obtain ⟨z, ⟨⟨x, ⟨hx, ⟨y, ⟨hy, hz⟩⟩⟩⟩, hnz⟩⟩ := hnzz
   refine ⟨x, hx, y, hy, ?_⟩
-  simp only at hz
-  rw [hz]
-  exact hnz
+  simp_all
 
 -- if I*I is nonzero, then there is y in I, such that Iy is nonzero
 theorem ideal_sq_ne_bot_imply_subideal_ne_bot (I : Ideal R) (h : I * I ≠ ⊥) :
@@ -76,17 +74,14 @@ theorem ideal_sq_ne_bot_imply_subideal_ne_bot2 (I : Ideal R) (h : I * I ≠ ⊥)
   obtain ⟨x, hx, y, hy, hxy⟩ := mul_ne_zero_imply_set_ne_zero I I h
   refine ⟨y, hy, ?_, ?_⟩
   · intro hc
-    apply hxy
-    rw [hc]
-    simp
+    simp_all
   · refine (Submodule.ne_bot_iff (subIdeal I y)).mpr ?_
     refine ⟨x * y, ⟨x, hx, rfl⟩, hxy⟩
 
 -- if I <= J and not I < J, then I = J
 theorem le_and_not_lt_eq (I J : Ideal R) (h1 : I ≤ J) (h2 : ¬ (I < J)) : I = J := by
   rw [lt_iff_le_and_ne] at h2
-  push Not at h2
-  exact h2 h1
+  simp_all
 
 -- if I is an atom, then there exists a nonzero element y in I, such that subIdeal I y = I
 theorem minimal_ideal_I_sq_nonzero_exists_el (hI : IsAtom I) (hII : I * I ≠ ⊥) :
@@ -167,9 +162,7 @@ theorem strict_contain (I J : Ideal R) (hleq : I ≤ J) (hneq : ∃ x, x ∈ J �
 
 theorem ideal_neq_bot_if_has_nonzero_el (I : Ideal R) (h : ∃ x ∈ I, x ≠ 0) : I ≠ ⊥ := by
   by_contra hI
-  obtain ⟨x, hx, xnz⟩ := h
-  rw [hI] at hx
-  contradiction
+  simp_all
 
 theorem nonzero_ideal_in_min_ideal (I J : Ideal R) (atom_I : IsAtom I) (Jnz : J ≠ ⊥)
     (hJsubI : J ≤ I) : J = I := by

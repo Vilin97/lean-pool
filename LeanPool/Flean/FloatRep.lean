@@ -54,9 +54,6 @@ def coeQ : FloatRep C → ℚ
   let s := if b then -1 else 1
   s * (m / C.prec + 1) * 2^e
 
---instance : Coe (FloatRep C) ℚ where
-  --coe := coeQ
-
 lemma coe_q_false_pos {e : ℤ} {m : ℕ} :
   0 < coeQ (⟨false, e, m⟩ : FloatRep C) := by
   simp only [coeQ, Bool.false_eq_true, ↓reduceIte, one_mul]
@@ -85,9 +82,7 @@ lemma neg_valid_m {f : FloatRep C} :
 
 lemma coe_q_of_neg (f : FloatRep C) :
   coeQ (FloatRep.neg f) = -coeQ f:= by
-  by_cases h : f.s <;> simp [coeQ, h, FloatRep.neg]
-  · ring
-  ring
+  by_cases h : f.s <;> simp [coeQ, h, FloatRep.neg] <;> ring
 
 
 lemma neg_false (e : ℤ) (m : ℕ) : ⟨true, e, m⟩ = (FloatRep.neg ⟨false, e, m⟩ : FloatRep C) := rfl
@@ -124,11 +119,8 @@ lemma floatrep_of_false₂ (P : FloatRep C → FloatRep C → Prop)
   apply floatrep_of_false₁ (f := f2)
   · apply h2
   apply floatrep_of_false₁ (f := f1)
-  · intro f h e m
-    apply h1
-    apply h
-  intro e m e' m'
-  apply h3
+  · simp_all
+  simp_all
 
 lemma coe_q_of_Cprec (b : Bool) (e : ℤ) :
   coeQ (⟨b, e, C.prec⟩ : FloatRep C) = (if b then -1 else 1) * 2^(e + 1) := by
@@ -216,9 +208,7 @@ lemma normal_range' (m : ℕ) (e : ℤ) (vm : m < C.prec) (ve2 : e ≤ C.emax) :
     suffices m + 1 < C.prec + 1 by
       norm_cast
     linarith [vm]
-  rw [abs_of_nonneg (by positivity)]
-  rw [zpow_le_zpow_iff_right₀ (by norm_num)]
-  exact ve2
+  simp_all
 
 /-- The largest finite rational representable in the format `C`. -/
 def maxFloatQ (C : FloatCfg) : ℚ := (2 - (1 : ℚ) / C.prec) * 2^C.emax
@@ -253,9 +243,7 @@ lemma floatrep_pos_equiv (f1 f2 : FloatRep C) :
     · refine ⟨le_of_lt h, ?_⟩
       intro h
       linarith
-    refine ⟨le_of_eq h.1, ?_⟩
-    intro _
-    exact h.2
+    simp_all
   intro h
   by_cases h' : f1.e = f2.e
   · right; tauto
@@ -297,8 +285,7 @@ lemma floatrep_le_pos_coe_q (f1 f2 : FloatRep C) (vm1 : f1.m ≤ C.prec) :
           apply le_of_lt
           exact mantissa_lt_two this
       _ ≤ 2^e' := by
-        rw [mul_comm, <-zpow_add_one₀ (by norm_num), zpow_le_zpow_iff_right₀ (by norm_num)]
-        exact h
+        rwa [mul_comm, <-zpow_add_one₀ (by norm_num), zpow_le_zpow_iff_right₀ (by norm_num)]
       _ ≤ ((m' : ℚ) / C.prec + 1) * 2^e' := by
         rw [le_mul_iff_one_le_left (by positivity)]
         exact mantissa_ge_one

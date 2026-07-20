@@ -178,13 +178,11 @@ variable {L : Language} [L.LT] [L.Zero] [L.One] [L.Add]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ballLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  φ.ballLT ‘!!t + 1’
+    Semiformula L ξ n := φ.ballLT ‘!!t + 1’
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def bexLTSucc (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  φ.bexLT ‘!!t + 1’
+    Semiformula L ξ n := φ.bexLT ‘!!t + 1’
 
 variable {M : Type*} {s : Structure L M} [LT M] [One M] [Add M] [Structure.LT L M]
 variable [Structure.One L M] [Structure.Add L M]

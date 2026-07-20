@@ -54,11 +54,8 @@ lemma isCover_iff (X : Set ℝ²) (S : Set Triangle)
   simp only [isDisjointCover, isCover, isDisjointPolygonSet, ne_eq, covers, disjointSet,
     and_congr_right_iff]
   intro _
-  constructor
-  · intro h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq
-    exact h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq
-  · intro h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq
-    exact h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq
+  exact ⟨fun h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq ↦ h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq,
+    fun h Δ₁ hΔ₁ Δ₂ hΔ₂ hneq ↦ h Δ₁ Δ₂ hΔ₁ hΔ₂ hneq⟩
 
 lemma disjoint_aux {α β : Type} (S₁ S₂ : Set α) (f : α → Set β) (h₁ : disjointSet S₁ f)
     (h₂ : disjointSet S₂ f)
@@ -433,8 +430,7 @@ theorem monsky_easy_direction' {n : ℕ} (hn : Even n) (hnneq : n ≠ 0)
     refine ⟨?_,?_⟩
     · convert zig_zag_covers_square (n := m) ?_
       · simp only [coe_union]
-      · intro h; apply hnneq
-        rw [hm,h,add_zero]
+      · simp_all
     · convert disjoint_aux (S₁ := zigPartCover m) (S₂ := (zagPartCover m : Set Triangle))
         (f := openHull) zig_open_disjoint zag_open_disjoint zig_zag_open_disjoint
       exact coe_union (zigPartCover m) (zagPartCover m)

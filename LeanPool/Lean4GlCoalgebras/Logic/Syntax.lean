@@ -118,27 +118,13 @@ def isBox : Formula → Bool
 lemma neg_eq {φ ψ : Formula} : (~φ) = (~ψ) → φ = ψ := by
   intro mpp
   cases φ <;> cases ψ <;> simp [Formula.neg] at mpp <;> try grind
-  case and.and φ₁ φ₂ φ₃ φ₄ =>
-    have := neg_eq mpp.1
-    have := neg_eq mpp.2
-    grind
-  case or.or φ₁ φ₂ φ₃ φ₄ =>
-    have := neg_eq mpp.1
-    have := neg_eq mpp.2
-    grind
-  case box.box φ₁ φ₂ =>
-    have := neg_eq mpp
-    grind
-  case diamond.diamond φ₁ φ₂ =>
-    have := neg_eq mpp
-    grind
+  case and.and | or.or => grind [neg_eq mpp.1, neg_eq mpp.2]
+  case box.box | diamond.diamond => grind [neg_eq mpp]
 
 /-- Negation is involutive. -/
 @[simp]
 lemma neg_neg_eq (φ : Formula) : (~~φ) = φ := by
-  induction φ <;> simp_all [Formula.neg]
-  · rfl
-  · rfl
+  induction φ <;> simp_all [Formula.neg] <;> rfl
 
 /-- Length of a BML Formula. -/
 def length : Formula → Nat
@@ -211,41 +197,24 @@ def FL : Formula → Sequent
 
 /-- Fischer-Ladner closure is reflexive. -/
 lemma FL_refl {φ : Formula} : φ ∈ FL φ := by
-  cases φ <;> simp [FL]
-  · rfl
-  · rfl
+  cases φ <;> simp [FL] <;> rfl
 
 /-- Fischer-Ladner closure is monotone. -/
 lemma FL_mon {φ ψ : Formula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ := by
   cases φ <;>
     simp only [FL, Finset.mem_singleton, Finset.mem_union, Finset.subset_iff] at ψ_sub_φ ⊢
-  · intro x x_in
+  case bottom | top | atom | negAtom =>
+    intro x x_in
     subst ψ
     simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
+  case and | or =>
+    intro x x_in
     rcases ψ_sub_φ with (rfl | ψ_sub) | ψ_sub
     · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
     · exact Or.inl (Or.inr (FL_mon ψ_sub x_in))
     · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
-    rcases ψ_sub_φ with (rfl | ψ_sub) | ψ_sub
-    · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
-    · exact Or.inl (Or.inr (FL_mon ψ_sub x_in))
-    · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
-    rcases ψ_sub_φ with rfl | ψ_sub
-    · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
-    · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
+  case box | diamond =>
+    intro x x_in
     rcases ψ_sub_φ with rfl | ψ_sub
     · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
     · exact Or.inr (FL_mon ψ_sub x_in)
@@ -281,10 +250,7 @@ def freshVar (Γ : Finset Formula) : Nat :=
 def D (Γ : Sequent) : Sequent := Finset.filter (
   fun x => decide (Formula.isDiamond x)) Γ
        ∪ Finset.filterMap Formula.opUnDi Γ (by
-  intro A B C C_in_A C_in_B
-  cases A <;> cases B
-  all_goals
-  simp_all [Formula.opUnDi])
+  simp_all)
 
 lemma form_in_seq_size_le {A : Formula} {Δ : Sequent} : A ∈ Δ → A.length ≤ Δ.length :=
   fun A_in ↦ Finset.sum_le_sum_of_subset_of_nonneg (Finset.singleton_subset_iff.2 A_in) (by simp)
@@ -392,11 +358,7 @@ lemma in_FL_of_in_FL_SplitFormula_right {φ : Formula} {ψ : SplitFormula}
 
 /-- Fischer-Ladner Closure is reflexive. -/
 lemma FL_refl {φ : SplitFormula} : φ ∈ FL φ := by
-  rcases φ with φ | φ <;> cases φ <;> simp [FL]
-  · rfl
-  · rfl
-  · rfl
-  · rfl
+  rcases φ with φ | φ <;> cases φ <;> simp [FL] <;> rfl
 
 /-- Fischer-Ladner Closure is monotone. -/
 lemma FL_mon {φ ψ : SplitFormula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ := by
@@ -408,12 +370,10 @@ lemma FL_mon {φ ψ : SplitFormula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ
       exact Finset.mem_map.mpr
         ⟨χ, Formula.FL_mon (in_FL_of_in_FL_SplitFormula_left ψ_sub_φ) χ_in, rfl⟩
     · have is_left := in_FL_SplitFormula_left ψ_sub_φ
-      change false = true at is_left
-      cases is_left
+      simp_all
   · rcases ψ with ψ | ψ
     · have is_right := in_FL_SplitFormula_right ψ_sub_φ
-      change false = true at is_right
-      cases is_right
+      simp_all
     · rw [FL_SplitFormula_right_eq_FL_Formula_map φ, FL_SplitFormula_right_eq_FL_Formula_map ψ]
       intro x x_in
       rcases Finset.mem_map.mp x_in with ⟨χ, χ_in, rfl⟩
@@ -534,9 +494,7 @@ lemma single_iff (n : Nat) (C D E : Formula) :
 
 @[simp]
 lemma single_identity (n : ℕ) (φ : Formula) : (single n (at n) φ) = φ := by
-  induction φ <;> simp_all [single]
-  · rfl
-  · rfl
+  induction φ <;> simp_all [single] <;> rfl
 
 /-- Simultaneous substitution for `p` meeting criteria `c`. -/
 def partial_ {c : Nat → Prop} [DecidablePred c] (σ : Subtype c → Formula) : Formula → Formula
@@ -572,8 +530,7 @@ decreasing_by
   induction φ <;> simp_all [Formula.vocab]
 
 lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
-  m ∉ φ.vocab → (m ≠ n → m ∉ ψ.vocab) → n ∉ φ.vocab → m ∉ (single n φ ψ).vocab
-  := by
+  m ∉ φ.vocab → (m ≠ n → m ∉ ψ.vocab) → n ∉ φ.vocab → m ∉ (single n φ ψ).vocab := by
     intro mp
     induction ψ <;>
       simp_all only [single, Formula.vocab, Finset.notMem_empty, Finset.mem_singleton,
@@ -581,8 +538,7 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
     case atom k =>
       intro hψ hn m_in
       by_cases hk : k = n
-      · subst k
-        exact mp (by simpa only [if_true] using m_in)
+      · simp_all
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
@@ -592,8 +548,7 @@ lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
     case negAtom k =>
       intro hψ hn m_in
       by_cases hk : k = n
-      · subst k
-        exact mp (by simpa only [if_true, in_neg_voc_iff] using m_in)
+      · simp_all
       · by_cases hm : m = n
         · subst m
           exact (Ne.symm hk) (by
@@ -610,15 +565,13 @@ lemma not_in_single_voc (n : Nat) (φ ψ : Formula) :
 lemma not_in_single_top_voc (n : ℕ) (φ : Formula) : n ∉ (single n ⊤ φ).vocab := by
   apply in_single_voc n n ⊤ φ
   · simpa only [Formula.instTop, Formula.vocab] using Finset.notMem_empty n
-  · intro h
-    exact False.elim (h rfl)
+  · simp_all
   · simpa only [Formula.instTop, Formula.vocab] using Finset.notMem_empty n
 
 lemma not_in_single_bot_voc (n : ℕ) (φ : Formula) : n ∉ (single n ⊥ φ).vocab := by
   apply in_single_voc n n ⊥ φ
   · simpa only [Formula.instBot, Formula.vocab] using Finset.notMem_empty n
-  · intro h
-    exact False.elim (h rfl)
+  · simp_all
   · simpa only [Formula.instBot, Formula.vocab] using Finset.notMem_empty n
 
 lemma in_single_voc' {m n : ℕ} {φ ψ : Formula} :

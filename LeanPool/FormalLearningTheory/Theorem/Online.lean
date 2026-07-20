@@ -68,13 +68,6 @@ private theorem WithBot_WithTop_lt_succ_le {a : WithBot (WithTop ℕ)} {n : ℕ}
 -- INFRASTRUCTURE LEMMAS (all compile)
 -- ============================================================
 
-/-- Restricting C can only decrease Ldim. -/
-private theorem ldim_restriction_le {X : Type} {C : ConceptClass X Bool}
-    {x : X} {y : Bool} :
-    LittlestoneDim X {c ∈ C | c x = y} ≤ LittlestoneDim X C := by
-  apply iSup₂_le; intro n ⟨T, hT⟩
-  exact le_iSup₂_of_le n ⟨T, T.isShattered_mono (fun _ hm => hm.1) hT⟩ le_rfl
-
 /-- Build a tree of depth k+1 from shattered subtrees on both sides.
     Parametrized over b : Bool so we don't need to case-split in the caller. -/
 private theorem ldim_branch_lower_bound {X : Type} {V : ConceptClass X Bool}
@@ -100,8 +93,7 @@ private theorem soa_predict_spec {X : Type} (C : ConceptClass X Bool)
     LittlestoneDim X {c ∈ V | c x = !b} := by
   simp only [SOA]
   split
-  · simp only [Bool.not_true, ge_iff_le]
-    assumption
+  · simp_all
   · simp only [Bool.not_false, ge_iff_le]
     rename_i h
     exact le_of_lt (not_le.mp h)
@@ -142,9 +134,7 @@ private theorem exists_shattered_of_ldim_ge {X : Type} {C : ConceptClass X Bool}
     have hle : LittlestoneDim X C ≤ ⊥ := by
       apply iSup₂_le; intro n ⟨T, hT⟩
       exact absurd (T.nonempty_of_isShattered hT) hne
-    have : LittlestoneDim X C = ⊥ := le_antisymm hle bot_le
-    rw [this] at h
-    exact absurd h (by simp)
+    simp_all
   | d + 1 =>
     by_contra hall; push Not at hall
     -- All trees of depth d+1 are not shattered. So Ldim ≤ d.
@@ -249,8 +239,7 @@ private theorem ldim_strict_decrease_on_mistake {X : Type}
       ext c'; simp only [Set.mem_sep_iff]; exact ⟨fun ⟨h, _⟩ => h, fun h => ⟨h, hagree c' h⟩⟩
     have h_notcx_empty : ¬ ({c' ∈ V | c' x = !(c x)}).Nonempty := by
       intro ⟨c', hc'V, hc'x⟩
-      have := hagree c' hc'V
-      cases hcx : c x <;> simp_all
+      simp_all
     have h_notcx_ldim : LittlestoneDim X {c' ∈ V | c' x = !(c x)} = ⊥ := by
       apply le_antisymm _ bot_le
       apply iSup₂_le; intro n ⟨T, hT⟩
@@ -283,10 +272,7 @@ private theorem ldim_strict_decrease_on_mistake {X : Type}
       -- But Ldim(false) = ⊥ < Ldim(true) ≥ 0. Contradiction.
       push Not at hlt_contra
       rw [h_notcx_ldim] at hlt_contra
-      have : LittlestoneDim X {c' ∈ V | c' x = true} ≥ ↑(↑0 : WithTop ℕ) := by
-        rw [h_cx_side_eq_V]
-        exact le_iSup₂_of_le 0 ⟨.leaf, hne⟩ le_rfl
-      exact absurd hlt_contra not_lt_bot
+      simp_all
   | succ d' =>
   -- d ≥ 1. Use suffices + by_contra + both-side extraction.
   rw [hd0] at hd -- hd : LittlestoneDim X V = ↑(↑(d' + 1) : WithTop ℕ)
@@ -320,6 +306,23 @@ private theorem ldim_strict_decrease_on_mistake {X : Type}
 -- BACKWARD DIRECTION (M-Potential)
 -- ============================================================
 
+/-- Extending a consistent history by `(x, c x)` keeps it consistent with `c`. -/
+private theorem cons_history_append {X : Type} {c : X → Bool} {history : List (X × Bool)}
+    {x : X} (hcons : ∀ p ∈ history, c p.1 = p.2) :
+    ∀ p ∈ history ++ [(x, c x)], c p.1 = p.2 := by
+  intro p hp
+  cases List.mem_append.mp hp with
+  | inl h => exact hcons p h
+  | inr h => simp_all
+
+/-- The Ldim of the version space is monotone under appending to the history. -/
+private theorem ldim_versionSpace_append_le {X : Type} {C : ConceptClass X Bool}
+    {history : List (X × Bool)} {p : X × Bool} :
+    LittlestoneDim X (versionSpace C (history ++ [p])) ≤
+    LittlestoneDim X (versionSpace C history) := by
+  apply iSup₂_le; intro n ⟨T, hT⟩
+  exact le_iSup₂_of_le n ⟨T, T.isShattered_mono versionSpace_append hT⟩ le_rfl
+
 /-- SOA mistakes from a given state are bounded by the Ldim of the version space.
     This is the core M-Potential argument. -/
 private theorem soa_mistakes_bounded {X : Type} {C : ConceptClass X Bool}
@@ -340,13 +343,7 @@ private theorem soa_mistakes_bounded {X : Type} {C : ConceptClass X Bool}
       rw [if_pos hmistake]
       have hc_vs : c ∈ versionSpace C history := target_in_versionSpace hcC hcons
       have hdecrease := ldim_strict_decrease_on_mistake hc_vs hmistake hfin
-      have hcons' : ∀ p ∈ history ++ [(x, c x)], c p.1 = p.2 := by
-        intro p hp
-        cases List.mem_append.mp hp with
-        | inl h => exact hcons p h
-        | inr h =>
-          have hp_eq : p = (x, c x) := by simpa using h
-          rw [hp_eq]
+      have hcons' := cons_history_append (c := c) (x := x) hcons
       -- d must be ≥ 1 (Ldim decreases, so d > 0)
       cases d with
       | zero =>
@@ -370,27 +367,16 @@ private theorem soa_mistakes_bounded {X : Type} {C : ConceptClass X Bool}
         omega
     · -- SOA predicts correctly: no mistake, φ doesn't decrease but bound holds
       rw [if_neg hmistake]; simp only [Nat.zero_add]
-      have hcons' : ∀ p ∈ history ++ [(x, c x)], c p.1 = p.2 := by
-        intro p hp
-        cases List.mem_append.mp hp with
-        | inl h => exact hcons p h
-        | inr h =>
-          have hp_eq : p = (x, c x) := by simpa using h
-          rw [hp_eq]
+      have hcons' := cons_history_append (c := c) (x := x) hcons
       have hle_new : LittlestoneDim X (versionSpace C (history ++ [(x, c x)])) ≤
-          ↑(↑d : WithTop ℕ) := by
-        calc LittlestoneDim X (versionSpace C (history ++ [(x, c x)]))
-            ≤ LittlestoneDim X (versionSpace C history) := by
-              apply iSup₂_le; intro n ⟨T, hT⟩
-              exact le_iSup₂_of_le n ⟨T, T.isShattered_mono versionSpace_append hT⟩ le_rfl
-          _ ≤ ↑(↑d : WithTop ℕ) := hd
-      have hfin_new : LittlestoneDim X (versionSpace C (history ++ [(x, c x)])) < ⊤ := by
-        calc LittlestoneDim X (versionSpace C (history ++ [(x, c x)]))
-            ≤ LittlestoneDim X (versionSpace C history) := by
-              apply iSup₂_le; intro n ⟨T, hT⟩
-              exact le_iSup₂_of_le n ⟨T, T.isShattered_mono versionSpace_append hT⟩ le_rfl
-          _ < ⊤ := hfin
+          ↑(↑d : WithTop ℕ) := ldim_versionSpace_append_le.trans hd
+      have hfin_new : LittlestoneDim X (versionSpace C (history ++ [(x, c x)])) < ⊤ :=
+        lt_of_le_of_lt ldim_versionSpace_append_le hfin
       exact ih (history ++ [(x, c x)]) hcons' d hle_new hfin_new
+
+/-- The version space on the empty history is all of `C`. -/
+private theorem versionSpace_nil {X : Type} (C : ConceptClass X Bool) :
+    versionSpace C [] = C := by ext c'; simp [versionSpace]
 
 /-- Backward direction: LittlestoneDim < ⊤ → OnlineLearnable. -/
 theorem backward_direction (X : Type) (C : ConceptClass X Bool) :
@@ -407,12 +393,10 @@ theorem backward_direction (X : Type) (C : ConceptClass X Bool) :
   refine ⟨d, SOA X C, fun c hcC seq => ?_⟩
   -- SOA makes at most d mistakes (M-Potential)
   have hle : LittlestoneDim X (versionSpace C []) ≤ ↑(↑d : WithTop ℕ) := by
-    have : versionSpace C [] = C := by
-      ext c'; simp [versionSpace]
-    rw [this]; exact hd
+    rw [versionSpace_nil]; exact hd
   have hfin : LittlestoneDim X (versionSpace C []) < ⊤ := by
-    have : versionSpace C [] = C := by ext c'; simp [versionSpace]
-    rw [this]; exact lt_of_le_of_lt hd (WithBot.coe_lt_coe.mpr (WithTop.coe_lt_top (a := d)))
+    rw [versionSpace_nil]
+    exact lt_of_le_of_lt hd (WithBot.coe_lt_coe.mpr (WithTop.coe_lt_top (a := d)))
   have hmf := soa_mistakes_bounded c hcC [] (by simp) d hle hfin seq
   rwa [show (SOA X C).mistakesFrom [] c seq = (SOA X C).mistakesFrom (SOA X C).init c seq
     from by rw [SOA_init_eq],
@@ -461,34 +445,15 @@ theorem optimal_mistake_bound_eq_ldim (X : Type)
       cases v with
       | top => -- Ldim = ⊤ → ↑OptimalMistakeBound ≤ ↑⊤ = ⊤
         exact le_top
-      | coe d => -- Ldim = ↑↑d
-        -- backward_direction gives: OnlineLearnable, i.e., ∃ M, MistakeBounded M
+      | coe d => -- Ldim = ↑↑d; use SOA directly (mistake bound d)
         have hfin : LittlestoneDim X C < ⊤ := by
           rw [hc]; exact WithBot.coe_lt_coe.mpr (WithTop.coe_lt_top (a := d))
-        obtain ⟨M, hMB⟩ := backward_direction X C hfin
-        -- OptimalMistakeBound ≤ M (since MistakeBounded M)
-        have : OptimalMistakeBound X C ≤ ↑M := iInf₂_le M hMB
-        -- M ≤ d (from the proof structure: backward_direction uses Ldim ≤ d)
-        -- Actually we just need OptimalMistakeBound ≤ ↑d, and hc says Ldim = ↑↑d
-        -- backward_direction gives MistakeBounded for some M. Need M ≤ d to close.
-        -- Actually, backward_direction refines M = d from the proof. Let's check:
-        -- backward_direction uses SOA with bound d, so M = d and hMB = MistakeBounded d
-        -- But backward_direction doesn't guarantee M ≤ d from the statement alone.
-        -- We need: OptimalMistakeBound ≤ Ldim. Ldim = ↑↑d. So need OptimalMistakeBound ≤ ↑d.
-        -- From backward_direction: MistakeBounded M holds. So OptimalMistakeBound ≤ ↑M.
-        -- We need M ≤ d. But backward_direction's M comes from the ∃ inside OnlineLearnable.
-        -- The construction in backward_direction sets M = d, so this works.
-        -- Let me check: backward_direction says refine ⟨d, SOA X C, ...⟩ so M = d.
-        -- The type only gives ∃ M, MistakeBounded M. We need MistakeBounded d specifically.
-        -- Invoke soa_mistakes_bounded directly instead of going through backward_direction.
         have hMB_d : MistakeBounded X Bool C d := by
           refine ⟨SOA X C, fun c' hc'C seq => ?_⟩
           have hle : LittlestoneDim X (versionSpace C []) ≤ ↑(↑d : WithTop ℕ) := by
-            have : versionSpace C [] = C := by ext c''; simp [versionSpace]
-            rw [this]; exact le_of_eq hc
+            rw [versionSpace_nil]; exact le_of_eq hc
           have hfin' : LittlestoneDim X (versionSpace C []) < ⊤ := by
-            have : versionSpace C [] = C := by ext c''; simp [versionSpace]
-            rw [this]; exact hfin
+            rw [versionSpace_nil]; exact hfin
           have hmf := soa_mistakes_bounded c' hc'C [] (by simp) d hle hfin' seq
           rwa [show (SOA X C).mistakesFrom [] c' seq = (SOA X C).mistakesFrom (SOA X C).init c' seq
             from by rw [SOA_init_eq], mistakesFrom_init_eq] at hmf

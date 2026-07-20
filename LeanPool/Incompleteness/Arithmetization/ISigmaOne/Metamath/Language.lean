@@ -53,12 +53,10 @@ lemma _root_.LO.Arith.Language.Defined.eval_func (v) :
 lemma _root_.LO.Arith.Language.Defined.eval_rel_iff (v) :
     Semiformula.Evalbm V v pL.rel.val ↔ L.Rel (v 0) (v 1) := Defined.rel.df.iff v
 
-instance _root_.LO.Arith.Language.Defined.func_definable :
-    Sg0-Relation L.Func :=
+instance _root_.LO.Arith.Language.Defined.func_definable : Sg0-Relation L.Func :=
   Defined.func.to_definable
 
-instance _root_.LO.Arith.Language.Defined.rel_definable :
-    Sg0-Relation L.Rel :=
+instance _root_.LO.Arith.Language.Defined.rel_definable : Sg0-Relation L.Rel :=
   Defined.rel.to_definable
 
 @[simp, definability] instance _root_.LO.Arith.Language.Defined.func_definable' (ℌ) :
@@ -79,12 +77,10 @@ variable {L₀ : Language} [L₀.ORing]
 
 variable {L : Language} [(k : ℕ) → Encodable (L.Func k)] [(k : ℕ) → Encodable (L.Rel k)]
 
-instance (k) :
-    Semiterm.Operator.GoedelNumber L₀ (L.Func k) :=
+instance (k) : Semiterm.Operator.GoedelNumber L₀ (L.Func k) :=
   ⟨fun f ↦ Semiterm.Operator.numeral L₀ (Encodable.encode f)⟩
 
-instance (k) :
-    Semiterm.Operator.GoedelNumber L₀ (L.Rel k) :=
+instance (k) : Semiterm.Operator.GoedelNumber L₀ (L.Rel k) :=
   ⟨fun r ↦ Semiterm.Operator.numeral L₀ (Encodable.encode r)⟩
 
 variable (L)
@@ -206,10 +202,8 @@ instance : DefinableLanguage ℒₒᵣ where
   func :=
     .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k = 2 ∧ f = 1)” (by simp)
   rel  := .mkSigma “k r. (k = 2 ∧ r = 0) ∨ (k = 2 ∧ r = 1)” (by simp)
-  func_iff {k c} := by
-    exact Language.ORing.of_mem_range_encode_func
-  rel_iff {k c} := by
-    exact Language.ORing.of_mem_range_encode_rel
+  func_iff {k c} := by exact Language.ORing.of_mem_range_encode_func
+  rel_iff {k c} := by exact Language.ORing.of_mem_range_encode_rel
 
 namespace Formalized
 
@@ -256,23 +250,18 @@ def eqIndex : ℕ := Encodable.encode (Language.Eq.eq : (ℒₒᵣ : FirstOrder.
 /-- Imported declaration from the Incompleteness formalization. -/
 def ltIndex : ℕ := Encodable.encode (Language.LT.lt : (ℒₒᵣ : FirstOrder.Language).Rel 2)
 
-@[simp] lemma LOR_func_zeroIndex : ⌜ℒₒᵣ⌝.Func 0 (zeroIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Zero.zero
-
-@[simp] lemma LOR_func_oneIndex : ⌜ℒₒᵣ⌝.Func 0 (oneIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.One.one
-
-@[simp] lemma LOR_func_addIndex : ⌜ℒₒᵣ⌝.Func 2 (addIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Add.add
-
-@[simp] lemma LOR_func_mulIndex : ⌜ℒₒᵣ⌝.Func 2 (mulIndex : V) := by
-  exact codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Mul.mul
-
-@[simp] lemma LOR_rel_eqIndex : ⌜ℒₒᵣ⌝.Rel 2 (eqIndex : V) := by
-  exact codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.Eq.eq
-
-@[simp] lemma LOR_rel_ltIndex : ⌜ℒₒᵣ⌝.Rel 2 (ltIndex : V) := by
-  exact codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.LT.lt
+@[simp] lemma LOR_func_zeroIndex : ⌜ℒₒᵣ⌝.Func 0 (zeroIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Zero.zero
+@[simp] lemma LOR_func_oneIndex : ⌜ℒₒᵣ⌝.Func 0 (oneIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.One.one
+@[simp] lemma LOR_func_addIndex : ⌜ℒₒᵣ⌝.Func 2 (addIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Add.add
+@[simp] lemma LOR_func_mulIndex : ⌜ℒₒᵣ⌝.Func 2 (mulIndex : V) :=
+  codeIn_func_quote (V := V) (L := ℒₒᵣ) Language.Mul.mul
+@[simp] lemma LOR_rel_eqIndex : ⌜ℒₒᵣ⌝.Rel 2 (eqIndex : V) :=
+  codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.Eq.eq
+@[simp] lemma LOR_rel_ltIndex : ⌜ℒₒᵣ⌝.Rel 2 (ltIndex : V) :=
+  codeIn_rel_quote (V := V) (L := ℒₒᵣ) Language.LT.lt
 
 lemma _root_.LO.Arith.Formalized.lDef.func_def :
     (ℒₒᵣ).lDef.func = .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k =

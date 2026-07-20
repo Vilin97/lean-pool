@@ -33,9 +33,4 @@ elab "reduce_goal" tpc:ident : tactic => do
       |     _      => panic! "Unknown transparency mode"
   reduceGoal transparency
 
-private abbrev reduceGoalAll := reduceGoal .all
-private abbrev reduceGoalDefault := reduceGoal .default
-private abbrev reduceGoalReducible := reduceGoal .reducible
-private abbrev reduceGoalInstances := reduceGoal .instances
-
 end LeanPool.Polylean

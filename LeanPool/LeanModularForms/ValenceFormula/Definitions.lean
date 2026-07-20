@@ -37,8 +37,7 @@ abbrev ellipticPointI : ℂ := (ellipticPointI' : ℂ)
 /-- The elliptic point ρ = e^{2πi/3} = -1/2 + (√3/2)i as an element of ℍ. -/
 def ellipticPointRho' : UpperHalfPlane :=
   ⟨-1/2 + (Real.sqrt 3 / 2) * I, by
-    simp only [add_im, neg_im, one_im, div_im, mul_im, I_re, I_im]
-    norm_num⟩
+    simp_all⟩
 
 /-- The elliptic point `ρ` as a complex number. -/
 abbrev ellipticPointRho : ℂ := (ellipticPointRho' : ℂ)
@@ -46,8 +45,7 @@ abbrev ellipticPointRho : ℂ := (ellipticPointRho' : ℂ)
 /-- The T-translate ρ+1 = e^{πi/3} = 1/2 + (√3/2)i. -/
 def ellipticPointRhoPlusOne' : UpperHalfPlane :=
   ⟨1/2 + (Real.sqrt 3 / 2) * I, by
-    simp only [add_im, one_im, div_im, mul_im, I_re, I_im]
-    norm_num⟩
+    simp_all⟩
 
 /-- The T-translate `ρ + 1` as a complex number. -/
 abbrev ellipticPointRhoPlusOne : ℂ := (ellipticPointRhoPlusOne' : ℂ)
@@ -56,26 +54,27 @@ theorem ellipticPointRho_add_one_eq :
     ellipticPointRho + 1 = ellipticPointRhoPlusOne := by
   change (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) + 1 = 1/2 + (Real.sqrt 3 / 2) * I; ring
 
+private lemma normSq_half_add_sqrt3_half_I (a : ℝ) (ha : a ^ 2 = 1 / 4) :
+    Complex.normSq ((a : ℂ) + (Real.sqrt 3 / 2) * I) = 1 := by
+  have h1 : ((a : ℝ) : ℂ) + (Real.sqrt 3 / 2) * I =
+      ((a : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I := by push_cast; ring
+  rw [h1, Complex.normSq_add_mul_I, ha,
+    show (Real.sqrt 3 / 2) ^ 2 = 3 / 4 from by
+      rw [div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]; norm_num]
+  ring
+
 private lemma rho_normSq_eq_one : Complex.normSq (ellipticPointRho' : ℂ) = 1 := by
   change Complex.normSq (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) = 1
-  have h1 : (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
-      ((-1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I := by push_cast; ring
-  rw [h1, Complex.normSq_add_mul_I]
-  have h2 : (-1/2 : ℝ)^2 = 1/4 := by ring
-  have h3 : (Real.sqrt 3 / 2)^2 = 3/4 := by
-    rw [div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]; norm_num
-  rw [h2, h3]; ring
+  rw [show (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) = ((-1/2 : ℝ) : ℂ) + (Real.sqrt 3 / 2) * I from by
+    push_cast; ring]
+  exact normSq_half_add_sqrt3_half_I (-1/2) (by norm_num)
 
 private lemma rho_plus_one_normSq_eq_one :
     Complex.normSq (ellipticPointRhoPlusOne' : ℂ) = 1 := by
   change Complex.normSq (1/2 + (Real.sqrt 3 / 2) * I : ℂ) = 1
-  have h1 : (1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
-      ((1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I := by push_cast; ring
-  rw [h1, Complex.normSq_add_mul_I]
-  have h2 : (1/2 : ℝ)^2 = 1/4 := by ring
-  have h3 : (Real.sqrt 3 / 2)^2 = 3/4 := by
-    rw [div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]; norm_num
-  rw [h2, h3]; ring
+  rw [show (1/2 + (Real.sqrt 3 / 2) * I : ℂ) = ((1/2 : ℝ) : ℂ) + (Real.sqrt 3 / 2) * I from by
+    push_cast; ring]
+  exact normSq_half_add_sqrt3_half_I (1/2) (by norm_num)
 
 theorem ellipticPointRhoPlusOne_norm : ‖ellipticPointRhoPlusOne‖ = 1 := by
   change Real.sqrt (Complex.normSq _) = 1; rw [rho_plus_one_normSq_eq_one, Real.sqrt_one]
@@ -85,9 +84,7 @@ theorem ellipticPointRho_norm : ‖ellipticPointRho‖ = 1 := by
 
 theorem ellipticPointI_mem_fd : ellipticPointI' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointI', mem_setOf_eq]
-  constructor
-  · simp [Complex.normSq_I]
-  · simp only [UpperHalfPlane.re]; norm_num
+  simp_all
 
 theorem ellipticPointRho_mem_fd : ellipticPointRho' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointRho', mem_setOf_eq]

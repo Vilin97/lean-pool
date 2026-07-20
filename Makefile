@@ -1,8 +1,15 @@
-.PHONY: build setup lint lint-fix check test docs update agent-docs
+.PHONY: build build-project setup lint lint-fix check test docs update agent-docs
 
 # Build the Lean project.
 build:
 	lake build LeanPool
+
+# Build a single project against the Mathlib cache, e.g.
+# `make build-project P=Rupert`. Projects are independent, so this needs
+# only `lake exe cache get`, not the whole pool — minutes instead of ~1.5h.
+build-project:
+	@test -n "$(P)" || { echo "usage: make build-project P=YourProject"; exit 1; }
+	lake build LeanPool.$(P)
 
 # First-time setup: pull the Mathlib oleans cache, build the Lean
 # library at the pinned version, and install Python tooling.

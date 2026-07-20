@@ -24,25 +24,25 @@ noncomputable section
 
 /-- Given `x ∈ ℂ`, the map `t ↦ t * x` is differentiable at `t`. -/
 lemma differentiableAt_mul_const_ofReal (x : ℂ) (t : ℝ) :
-    DifferentiableAt ℝ (fun t : ℝ => t * x) t := by
-  exact (Complex.ofRealCLM.differentiableAt (x := t)).mul_const x
+    DifferentiableAt ℝ (fun t : ℝ => t * x) t :=
+  (Complex.ofRealCLM.differentiableAt (x := t)).mul_const x
 
 /-- `d/dt (t * x) = x`. -/
 lemma deriv_mul_const_ofReal (x : ℂ) (t : ℝ) :
   deriv (fun t : ℝ => t * x) t = x := by
-  simpa using (deriv_smul_const (hc := differentiableAt_id (x := t)) (f := x))
+  simpa using deriv_smul_const (hc := differentiableAt_id (x := t)) (f := x)
 
 /-- If `f` is differentiable at `t * x`, then `u ↦ f(u * x)` is differentiable at `t`. -/
 lemma differentiableAt_comp_mul_real
   (f : ℂ → ℂ) (x : ℂ) (t : ℝ)
   (hf : DifferentiableAt ℂ f (t * x)) :
-    DifferentiableAt ℝ (fun t : ℝ => f (t * x)) t := by
-  exact ((hf.hasDerivAt.comp (t : ℂ) (hasDerivAt_mul_const x)).comp_ofReal).differentiableAt
+    DifferentiableAt ℝ (fun t : ℝ => f (t * x)) t :=
+  ((hf.hasDerivAt.comp (t : ℂ) (hasDerivAt_mul_const x)).comp_ofReal).differentiableAt
 
 /-- For `x ∈ ℂ`, the map `t ↦ e^(-(t * x))` is differentiable at `t`. -/
 lemma differentiableAt_exp_neg_mul (x : ℂ) (t : ℝ) :
-    DifferentiableAt ℝ (fun t : ℝ => cexp (-(t * x))) t := by
-  exact (differentiableAt_mul_const_ofReal x t).neg.cexp
+    DifferentiableAt ℝ (fun t : ℝ => cexp (-(t * x))) t :=
+  (differentiableAt_mul_const_ofReal x t).neg.cexp
 
 /-- If `f^(n)` is differentiable at `t * x`, then `t ↦ f^(n)(t * x)` is continuous on
 `[0, 1]` at `t`. -/
@@ -50,16 +50,16 @@ lemma continuousWithinAt_iteratedDeriv_comp_mul
   (f : ℂ → ℂ) (x : ℂ) (n : ℕ) (t : ℝ)
   (hderiv : DifferentiableAt ℂ (iteratedDeriv n f) (t * x)) :
     ContinuousWithinAt (fun t : ℝ => iteratedDeriv n f (t * x))
-      (Set.uIcc (0 : ℝ) 1) t := by
-  exact ContinuousAt.continuousWithinAt
+      (Set.uIcc (0 : ℝ) 1) t :=
+  ContinuousAt.continuousWithinAt
     ((differentiableAt_comp_mul_real (f := iteratedDeriv n f) x t hderiv).continuousAt)
 
 /-- If `f⁽ᵏ⁾` is differentiable at `t * x`, then `t ↦ f⁽ᵏ⁾(t * x)` is differentiable at `t`. -/
 lemma differentiableAt_iteratedDeriv_comp_mul
   (f : ℂ → ℂ) (x : ℂ) (k : ℕ) (t : ℝ)
   (hderiv : DifferentiableAt ℂ (iteratedDeriv k f) (t * x)) :
-    DifferentiableAt ℝ (fun t : ℝ => iteratedDeriv k f (t * x)) t := by
-  exact (differentiableAt_comp_mul_real (f := iteratedDeriv k f) x t hderiv)
+    DifferentiableAt ℝ (fun t : ℝ => iteratedDeriv k f (t * x)) t :=
+  differentiableAt_comp_mul_real (f := iteratedDeriv k f) x t hderiv
 
 /-- If `f⁽ⁱ⁾` is differentiable at `t * x`, then `d/dt f⁽ᵏ⁾(t * x)) = x * f⁽ᵏ⁺¹⁾(t * x)`. -/
 lemma deriv_iteratedDeriv_comp_mul
@@ -89,9 +89,8 @@ lemma differentiableAt_sum_iteratedDeriv
     (u := Finset.range (n + 1))
     (A := fun k t => iteratedDeriv k f (t * x)) ?_
   intro k hk
-  have hk' : k ≤ n := by
-    simpa [Finset.mem_range, Nat.lt_succ_iff] using hk
-  exact differentiableAt_iteratedDeriv_comp_mul f x k t (hderiv k hk')
+  exact differentiableAt_iteratedDeriv_comp_mul f x k t
+    (hderiv k (by simpa [Finset.mem_range, Nat.lt_succ_iff] using hk))
 
 /-- If `f⁽ᵏ⁾` is differentiable at `t * x` for every `k ≤ n`, then
 `d/dt ∑ᵢ₌₀ⁿ f⁽ⁱ⁾(t * x)) = ∑ᵢ₌₀ⁿ x * f⁽ⁱ⁺¹⁾(t * x)`. -/
@@ -104,10 +103,8 @@ lemma sum_deriv_iteratedDeriv_comp_mul
   rw [deriv_fun_sum]
   · refine Finset.sum_congr rfl ?_
     intro i hi
-    have hi' : i ≤ n := by
-      simpa [Finset.mem_range, Nat.lt_succ_iff] using hi
-    simpa using (deriv_iteratedDeriv_comp_mul f x i t (hderiv i hi'))
+    simpa using deriv_iteratedDeriv_comp_mul f x i t
+      (hderiv i (by simpa [Finset.mem_range, Nat.lt_succ_iff] using hi))
   · intro k hk
-    have hk' : k ≤ n := by
-      simpa [Finset.mem_range, Nat.lt_succ_iff] using hk
-    simpa using (differentiableAt_iteratedDeriv_comp_mul f x k t (hderiv k hk'))
+    simpa using differentiableAt_iteratedDeriv_comp_mul f x k t
+      (hderiv k (by simpa [Finset.mem_range, Nat.lt_succ_iff] using hk))

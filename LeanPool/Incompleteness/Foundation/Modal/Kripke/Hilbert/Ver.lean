@@ -43,8 +43,7 @@ instance _root_.LO.Modal.Hilbert.Ver.Kripke.consistent : Entailment.Consistent (
   have := FrameClass.definedBy_with_axiomK IsolatedFrameClass.DefinedByAxiomVer;
   Kripke.Hilbert.consistent_of_FrameClass IsolatedFrameClass
 
-instance _root_.LO.Modal.Hilbert.Ver.Kripke.complete :
-    Complete (Hilbert.Ver) IsolatedFrameClass :=
+instance _root_.LO.Modal.Hilbert.Ver.Kripke.complete : Complete (Hilbert.Ver) IsolatedFrameClass :=
   inferInstance
 
 end Ver

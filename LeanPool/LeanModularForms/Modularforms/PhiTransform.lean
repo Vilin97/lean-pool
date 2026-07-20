@@ -69,46 +69,28 @@ theorem φ₀_S_transform (z : ℍ) :
   have hI : Complex.I ≠ 0 := Complex.I_ne_zero
   unfold φ₀ φ₂' φ₄'
   rw [E₂_S_transform, E₄_S_transform, E₆_S_transform, Δ_S_transform]
-  -- Let A = E₂ z * E₄ z - E₆ z (the key expression)
   set A := E₂ z * E₄ z - E₆ z with hA
-  -- The numerator E₂(S•z) * E₄(S•z) - E₆(S•z) simplifies to z⁶ * (A + 6E₄/(πIz))
   have h_numer : (z : ℂ) ^ 2 * (E₂ z + 6 / (π * Complex.I * z)) * (z ^ 4 * E₄ z) -
                  z ^ 6 * E₆ z = z ^ 6 * (A + 6 * E₄ z / (π * Complex.I * z)) := by
     ring_nf; rw [hA]; ring
-  -- The main algebraic simplification
-  rw [h_numer]
-  -- Now we have: (z⁶ * (A + 6E₄/(πIz)))² / (z¹² * Δ z)
-  -- = z¹² * (A + 6E₄/(πIz))² / (z¹² * Δ z) = (A + 6E₄/(πIz))² / Δ z
-  have h_sq : (z ^ 6 * (A + 6 * E₄ z / (π * Complex.I * z))) ^ 2 =
-              z ^ 12 * (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 := by
-    rw [mul_pow, sq (z ^ 6 : ℂ), ← pow_add]
-  rw [h_sq]
-  -- Simplify z¹² * X / (z¹² * Δ z) = X / Δ z
-  have h_div : z ^ 12 * (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 / (z ^ 12 * Δ z) =
-               (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 / Δ z := by
-    rw [mul_comm (z ^ 12 : ℂ) (Δ z)]; field_simp
-  rw [h_div]
-  -- Expand (A + 6E₄/(πIz))² = A² + 12AE₄/(πIz) + 36E₄²/(π²I²z²)
-  -- Since I² = -1, we get: A² + 12AE₄/(πIz) - 36E₄²/(π²z²)
-  have hI2 : Complex.I ^ 2 = -1 := Complex.I_sq
-  -- Expand the square and simplify
   have h_expand : (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 / Δ z =
                   A ^ 2 / Δ z + 12 * A * E₄ z / (π * Complex.I * z * Δ z) +
                   36 * (E₄ z) ^ 2 / (π ^ 2 * Complex.I ^ 2 * z ^ 2 * Δ z) := by
     have hπIz : π * Complex.I * z ≠ 0 := mul_ne_zero (mul_ne_zero hπ hI) hz
     field_simp; ring
-  rw [h_expand, hI2]
-  -- Transform 12/(πIz) to -12I/(πz) using I⁻¹ = -I
   have h_I_factor : (12 : ℂ) / (π * Complex.I * z) = -12 * Complex.I / (π * z) := by
     field_simp [Complex.inv_I]; simp [Complex.I_sq]
-  have h_final : A ^ 2 / Δ z + 12 * A * E₄ z / (π * Complex.I * z * Δ z) +
-       36 * (E₄ z) ^ 2 / (π ^ 2 * (-1) * z ^ 2 * Δ z) =
-       A ^ 2 / Δ z - 12 * Complex.I / (π * z) * (E₄ z * A / Δ z) -
-       36 / (π ^ 2 * z ^ 2) * ((E₄ z) ^ 2 / Δ z) := by
-    have h1 : 12 * A * E₄ z / (π * Complex.I * z * Δ z) =
-              12 / (π * Complex.I * z) * (E₄ z * A / Δ z) := by field_simp
-    rw [h1, h_I_factor]; ring
-  -- The goal now matches h_final applied to the expanded expression
-  rw [h_final]
+  rw [h_numer,
+      show (z ^ 6 * (A + 6 * E₄ z / (π * Complex.I * z))) ^ 2 =
+        z ^ 12 * (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 by
+          rw [mul_pow, sq (z ^ 6 : ℂ), ← pow_add],
+      show z ^ 12 * (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 / (z ^ 12 * Δ z) =
+        (A + 6 * E₄ z / (π * Complex.I * z)) ^ 2 / Δ z by
+          rw [mul_comm (z ^ 12 : ℂ) (Δ z)]; field_simp,
+      h_expand, Complex.I_sq,
+      show 12 * A * E₄ z / (π * Complex.I * z * Δ z) =
+        12 / (π * Complex.I * z) * (E₄ z * A / Δ z) by field_simp,
+      h_I_factor]
+  ring
 
 end

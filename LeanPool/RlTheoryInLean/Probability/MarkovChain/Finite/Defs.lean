@@ -86,11 +86,7 @@ lemma integral_fintype_kernel_iter
   | zero =>
     simp only [pow_zero, Matrix.one_apply]
     have hiter0 : (M.kernel.iter 0) s = Measure.dirac s := Kernel.id_apply s
-    rw [hiter0, integral_dirac]
-    symm
-    simp only [ite_smul, one_smul, zero_smul]
-    rw [sum_ite_eq]
-    simp
+    simp_all
   | succ n ih =>
     simp only [pow_succ']
     -- iter (n+1) = (iter n).comp κ = iter n ∘ₖ κ

@@ -62,26 +62,10 @@ lemma freeCovarianceFormR_bilinear_expand (f g : TestFunction) (t s : ℝ) :
     freeCovarianceFormR m (t • f + s • g) (t • f + s • g) =
       t^2 * freeCovarianceFormR m f f + 2 * t * s * freeCovarianceFormR m f g +
       s^2 * freeCovarianceFormR m g g := by
-  -- Expand using add_left/right and smul_left/right
-  calc freeCovarianceFormR m (t • f + s • g) (t • f + s • g)
-    _ = freeCovarianceFormR m (t • f) (t • f + s • g) +
-        freeCovarianceFormR m (s • g) (t • f + s • g) := by
-          rw [freeCovarianceFormR_add_left]
-    _ = freeCovarianceFormR m (t • f) (t • f) + freeCovarianceFormR m (t • f) (s • g) +
-        (freeCovarianceFormR m (s • g) (t • f) + freeCovarianceFormR m (s • g) (s • g)) := by
-          rw [freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    _ = t * freeCovarianceFormR m f (t • f) + t * freeCovarianceFormR m f (s • g) +
-        (s * freeCovarianceFormR m g (t • f) + s * freeCovarianceFormR m g (s • g)) := by
-          simp only [freeCovarianceFormR_smul_left]
-    _ = t * (t * freeCovarianceFormR m f f) + t * (s * freeCovarianceFormR m f g) +
-        (s * (t * freeCovarianceFormR m g f) + s * (s * freeCovarianceFormR m g g)) := by
-          simp only [freeCovarianceFormR_smul_right]
-    _ = t^2 * freeCovarianceFormR m f f + 2 * t * s * freeCovarianceFormR m f g +
-        s^2 * freeCovarianceFormR m g g := by
-          -- Use symmetry: Q(g,f) = Q(f,g)
-          have hsym : freeCovarianceFormR m g f = freeCovarianceFormR m f g :=
-            freeCovarianceFormR_symm m g f
-          rw [hsym]; ring
+  simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+    freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
+    freeCovarianceFormR_symm m g f]
+  ring
 
 /-- The Gaussian CF formula for two test functions. -/
 lemma gff_cf_two_testfunctions (f g : TestFunction) (t s : ℝ) :
@@ -90,8 +74,7 @@ lemma gff_cf_two_testfunctions (f g : TestFunction) (t s : ℝ) :
         2 * t * s * freeCovarianceFormR m f g + s^2 * freeCovarianceFormR m g g)) := by
   have h := gff_real_characteristic m (t • f + s • g)
   rw [freeCovarianceFormR_bilinear_expand] at h
-  convert h using 2
-  push_cast; ring
+  simp_all
 
 /-! ## OS0-Based Derivative Machinery
 
@@ -105,13 +88,7 @@ lemma gff_two_param_analytic (f g : TestFunction) :
       Set.univ := by
   -- Direct application of gaussianFreeField_satisfies_OS0 with n=2, J = ![toComplex f, toComplex g]
   have h := gaussianFreeField_satisfies_OS0 m 2 ![toComplex f, toComplex g]
-  convert h using 2
-  -- Goal: GJGeneratingFunctionalℂ _ (z 0 • toComplex f + z 1 • toComplex g) =
-  --       GJGeneratingFunctionalℂ _ (∑ i, z i • ![toComplex f, toComplex g] i)
-  -- muGFF m = gaussianFreeFieldFree m by definition (abbrev)
-  -- For the test function argument, use Fin.sum_univ_two
-  congr 1
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one]
+  simp_all
 
 /-! ## OS0-Based Complex Extension via Identity Theorem
 
@@ -177,14 +154,14 @@ lemma gaussian_rhs_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
     · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m f f : ℂ)))
       exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
     · -- 2 * z₀ * t * Q(f,g)
-      have h1 : AnalyticOnNhd ℂ
-          (fun z₀ : ℂ => 2 * z₀ * t * freeCovarianceFormR m f g) Set.univ := by
-        have : AnalyticOnNhd ℂ
-            (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) Set.univ :=
-          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-        convert this using 2
+      have hbase : AnalyticOnNhd ℂ
+          (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) Set.univ :=
+        AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+      have hfun : (fun z₀ : ℂ => 2 * z₀ * t * (freeCovarianceFormR m f g : ℂ)) =
+          (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) := by
+        funext z₀
         ring
-      exact h1
+      rwa [hfun]
   · exact analyticOnNhd_const
 
 omit [Fact (0 < m)] in
@@ -200,16 +177,39 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
   · apply AnalyticOnNhd.add
     · exact analyticOnNhd_const
     · -- 2 * z₀ * z₁ * Q(f,g)
-      have h1 : AnalyticOnNhd ℂ
-          (fun z₁ : ℂ => 2 * z₀ * z₁ * freeCovarianceFormR m f g) Set.univ := by
-        have : AnalyticOnNhd ℂ
-            (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) Set.univ :=
-          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-        convert this using 2
+      have hbase : AnalyticOnNhd ℂ
+          (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) Set.univ :=
+        AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+      have hfun : (fun z₁ : ℂ => 2 * z₀ * z₁ * (freeCovarianceFormR m f g : ℂ)) =
+          (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) := by
+        funext z₁
         ring
-      exact h1
+      rwa [hfun]
   · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m g g : ℂ)))
     exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
+
+/-- Identity theorem on a complex line: two functions analytic on all of ℂ that agree
+    on every real point are equal. The real axis accumulates at `0`. -/
+private lemma eq_of_analytic_agree_on_reals {F G : ℂ → ℂ}
+    (hF : AnalyticOnNhd ℂ F Set.univ) (hG : AnalyticOnNhd ℂ G Set.univ)
+    (h_agree : ∀ t : ℝ, F t = G t) (z : ℂ) : F z = G z := by
+  have h_eq : F = G := by
+    apply AnalyticOnNhd.eq_of_frequently_eq hF hG (z₀ := 0)
+    simp only [Filter.Frequently]
+    intro hU
+    rw [Filter.Eventually, mem_nhdsWithin] at hU
+    obtain ⟨V, hV_open, h0_in_V, hV_sub⟩ := hU
+    obtain ⟨ε, hε_pos, hε_ball⟩ := Metric.isOpen_iff.mp hV_open 0 h0_in_V
+    have h_half_pos : (0 : ℝ) < ε / 2 := half_pos hε_pos
+    have h_mem_V : ((ε / 2 : ℝ) : ℂ) ∈ V := hε_ball (by
+      simp only [Metric.mem_ball, Complex.dist_eq, sub_zero, Complex.norm_real]
+      rw [Real.norm_eq_abs, abs_of_pos h_half_pos]
+      linarith)
+    have h_ne : ((ε / 2 : ℝ) : ℂ) ≠ 0 := by
+      simp only [ne_eq, Complex.ofReal_eq_zero]
+      linarith
+    exact hV_sub ⟨h_mem_V, h_ne⟩ (h_agree (ε / 2))
+  exact congrFun h_eq z
 
 /-- The GFF CF and Gaussian formula agree on ℝ².
     This follows from gff_cf_two_testfunctions by converting between types.
@@ -225,8 +225,7 @@ lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
   -- First note: t • f + s • g is real, so toComplex (t • f + s • g) = t • toComplex f + s •
   -- toComplex g
   have h_eq_test : (t : ℂ) • toComplex f + (s : ℂ) • toComplex g = toComplex (t • f + s • g) := by
-    ext x
-    simp
+    simp_all
   rw [h_eq_test]
   -- GJGeneratingFunctionalℂ on a real test function equals GJGeneratingFunctional
   rw [GJGeneratingFunctionalℂ_toComplex, h]
@@ -259,70 +258,20 @@ theorem gff_complex_characteristic_OS0 :
     exact gff_cf_agrees_on_reals_OS0 m f g t s
   -- Step 2: For fixed real s, F(·, s) and G(·, s) are entire and agree on ℝ
   -- By 1D identity theorem: F(z₀, s) = G(z₀, s) for all z₀ ∈ ℂ
-  have h_step1 : ∀ (s : ℝ) (z₀ : ℂ), F z₀ s = G z₀ s := by
-    intro s z₀
-    -- Both slices are entire
-    have hF_an : AnalyticOnNhd ℂ (fun z₀ => F z₀ s) Set.univ := gff_slice_analytic_z0 m f g s
-    have hG_an : AnalyticOnNhd ℂ (fun z₀ => G z₀ s) Set.univ := gaussian_rhs_slice_analytic_z0 m f
-      g s
-    -- They agree on ℝ which has accumulation points in ℂ
-    have h_agree_slice : ∀ t : ℝ, F t s = G t s := fun t => h_agree_real t s
-    -- Apply 1D identity theorem
-    have h_eq : (fun z₀ => F z₀ s) = (fun z₀ => G z₀ s) := by
-      apply AnalyticOnNhd.eq_of_frequently_eq hF_an hG_an (z₀ := 0)
-      -- ℝ has accumulation points at 0 in ℂ: for any neighborhood of 0, there exist nonzero reals
-      simp only [Filter.Frequently]
-      intro hU
-      -- hU : ∀ᶠ (x : ℂ) in nhdsWithin 0 {0}ᶜ, F x s ≠ G x s
-      -- This means {x | F x s ≠ G x s} ∈ nhdsWithin 0 {0}ᶜ
-      rw [Filter.Eventually, mem_nhdsWithin] at hU
-      obtain ⟨V, hV_open, h0_in_V, hV_sub⟩ := hU
-      obtain ⟨ε, hε_pos, hε_ball⟩ := Metric.isOpen_iff.mp hV_open 0 h0_in_V
-      -- ε/2 is a nonzero real in V ∩ {0}ᶜ where F = G, contradicting hU
-      have h_half_pos : (0 : ℝ) < ε / 2 := half_pos hε_pos
-      have h_mem_V : ((ε / 2 : ℝ) : ℂ) ∈ V := hε_ball (by
-        simp only [Metric.mem_ball, Complex.dist_eq, sub_zero, Complex.norm_real]
-        rw [Real.norm_eq_abs, abs_of_pos h_half_pos]
-        linarith)
-      have h_ne : ((ε / 2 : ℝ) : ℂ) ≠ 0 := by
-        simp only [ne_eq, Complex.ofReal_eq_zero]
-        linarith
-      have h_in : ((ε / 2 : ℝ) : ℂ) ∈ V ∩ {(0 : ℂ)}ᶜ := ⟨h_mem_V, h_ne⟩
-      exact hV_sub h_in (h_agree_slice (ε / 2))
-    exact congrFun h_eq z₀
+  have h_step1 : ∀ (s : ℝ) (z₀ : ℂ), F z₀ s = G z₀ s := fun s z₀ =>
+    eq_of_analytic_agree_on_reals (gff_slice_analytic_z0 m f g s)
+      (gaussian_rhs_slice_analytic_z0 m f g s) (fun t => h_agree_real t s) z₀
   -- Step 3: For fixed z₀ ∈ ℂ, F(z₀, ·) and G(z₀, ·) agree on ℝ (by step 2)
   -- By 1D identity theorem: F(z₀, z₁) = G(z₀, z₁) for all z₁ ∈ ℂ
-  have h_step2 : ∀ z₀ z₁ : ℂ, F z₀ z₁ = G z₀ z₁ := by
-    intro z₀ z₁
-    have hF_an : AnalyticOnNhd ℂ (fun z₁ => F z₀ z₁) Set.univ := gff_slice_analytic_z1 m f g z₀
-    have hG_an : AnalyticOnNhd ℂ (fun z₁ => G z₀ z₁) Set.univ := gaussian_rhs_slice_analytic_z1 m f
-      g z₀
-    have h_agree_slice : ∀ s : ℝ, F z₀ s = G z₀ s := fun s => h_step1 s z₀
-    have h_eq : (fun z₁ => F z₀ z₁) = (fun z₁ => G z₀ z₁) := by
-      apply AnalyticOnNhd.eq_of_frequently_eq hF_an hG_an (z₀ := 0)
-      simp only [Filter.Frequently]
-      intro hU
-      rw [Filter.Eventually, mem_nhdsWithin] at hU
-      obtain ⟨V, hV_open, h0_in_V, hV_sub⟩ := hU
-      obtain ⟨ε, hε_pos, hε_ball⟩ := Metric.isOpen_iff.mp hV_open 0 h0_in_V
-      have h_half_pos : (0 : ℝ) < ε / 2 := half_pos hε_pos
-      have h_mem_V : ((ε / 2 : ℝ) : ℂ) ∈ V := hε_ball (by
-        simp only [Metric.mem_ball, Complex.dist_eq, sub_zero, Complex.norm_real]
-        rw [Real.norm_eq_abs, abs_of_pos h_half_pos]
-        linarith)
-      have h_ne : ((ε / 2 : ℝ) : ℂ) ≠ 0 := by
-        simp only [ne_eq, Complex.ofReal_eq_zero]
-        linarith
-      have h_in : ((ε / 2 : ℝ) : ℂ) ∈ V ∩ {(0 : ℂ)}ᶜ := ⟨h_mem_V, h_ne⟩
-      exact hV_sub h_in (h_agree_slice (ε / 2))
-    exact congrFun h_eq z₁
+  have h_step2 : ∀ z₀ z₁ : ℂ, F z₀ z₁ = G z₀ z₁ := fun z₀ z₁ =>
+    eq_of_analytic_agree_on_reals (gff_slice_analytic_z1 m f g z₀)
+      (gaussian_rhs_slice_analytic_z1 m f g z₀) (fun s => h_step1 s z₀) z₁
   -- Step 4: Evaluate at (1, I) to get J = f + I*g
   have h_eval : F 1 Complex.I = G 1 Complex.I := h_step2 1 Complex.I
   -- Step 5: Simplify LHS
   have h_LHS : GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) J = F 1 Complex.I := by
     simp only [F, hJ]
-    congr 1
-    simp [one_smul]
+    simp_all
   -- Step 6: Simplify RHS using Qc formula
   have h_RHS : Complex.exp (-(1/2 : ℂ) * freeCovarianceℂBilinear m J J) = G 1 Complex.I := by
     simp only [G]
@@ -397,13 +346,11 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   have h_sq_fg : ∫ ω, (ω (f + g))^2 ∂(gaussianFreeFieldFree m).toMeasure =
       freeCovarianceFormR m (f + g) (f + g) := by
     have := gff_second_moment_eq_covariance m (f + g)
-    simp only [distributionPairingCLM_apply, distributionPairing] at this
-    exact this
+    simpa only [distributionPairingCLM_apply, distributionPairing] using this
   have h_sq_f_g : ∫ ω, (ω (f - g))^2 ∂(gaussianFreeFieldFree m).toMeasure =
       freeCovarianceFormR m (f - g) (f - g) := by
     have := gff_second_moment_eq_covariance m (f - g)
-    simp only [distributionPairingCLM_apply, distributionPairing] at this
-    exact this
+    simpa only [distributionPairingCLM_apply, distributionPairing] using this
   have h_int_plus : Integrable (fun ω : FieldConfiguration => (ω (f + g)) ^ 2)
       (gaussianFreeFieldFree m).toMeasure := by
     simpa only [distributionPairingCLM_apply, distributionPairing] using
@@ -423,18 +370,16 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   -- Expand Q(f+g, f+g)
   have h_expand_plus : freeCovarianceFormR m (f + g) (f + g) =
       freeCovarianceFormR m f f + 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
-    rw [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    rw [freeCovarianceFormR_symm m g f]
+    simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+      freeCovarianceFormR_symm m g f]
     ring
   -- Expand Q(f-g, f-g)
   have h_expand_minus : freeCovarianceFormR m (f - g) (f - g) =
       freeCovarianceFormR m f f - 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
     rw [h_sub]
-    rw [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    rw [freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
-      freeCovarianceFormR_smul_left,
-        freeCovarianceFormR_smul_right]
-    rw [freeCovarianceFormR_symm m g f]
+    simp only [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right,
+      freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
+      freeCovarianceFormR_symm m g f]
     ring
   rw [h_expand_plus, h_expand_minus]
   ring
@@ -563,6 +508,4 @@ theorem gff_complex_generating (m : ℝ) [Fact (0 < m)] :
 -/
 theorem isGaussianGJ_gaussianFreeField_free (m : ℝ) [Fact (0 < m)] :
     isGaussianGJ (gaussianFreeFieldFree m) := by
-  constructor
-  · exact gaussianFreeField_free_centered m
-  · exact fun J => gff_complex_generating m J
+  exact ⟨gaussianFreeField_free_centered m, fun J => gff_complex_generating m J⟩

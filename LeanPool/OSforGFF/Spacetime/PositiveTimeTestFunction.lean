@@ -47,15 +47,10 @@ def PositiveTimeTestFunctions.submodule : Submodule ℝ TestFunction where
   carrier := { f : TestFunction | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by
     simp only [Set.mem_setOf_eq]
-    suffices h : tsupport (0 : TestFunction) = ∅ by
-      rw [h]
-      apply Set.empty_subset
-    rw [tsupport_eq_empty_iff]
-    rfl
+    suffices h : tsupport (0 : TestFunction) = ∅ by rw [h]; apply Set.empty_subset
+    rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
-  smul_mem' := by
-    intro c f hf
-    refine (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
+  smul_mem' c f hf := (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
 
 /-- Type of real-valued test functions supported in the positive time region -/
 abbrev PositiveTimeTestFunction : Type := PositiveTimeTestFunctions.submodule
@@ -80,15 +75,10 @@ def PositiveTimeTestFunctionsℂ.submodule : Submodule ℂ TestFunctionℂ where
   carrier := { f : TestFunctionℂ | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by
     simp only [Set.mem_setOf_eq]
-    suffices h : tsupport (0 : TestFunctionℂ) = ∅ by
-      rw [h]
-      apply Set.empty_subset
-    rw [tsupport_eq_empty_iff]
-    rfl
+    suffices h : tsupport (0 : TestFunctionℂ) = ∅ by rw [h]; apply Set.empty_subset
+    rw [tsupport_eq_empty_iff]; rfl
   add_mem' := fun {f g} hf hg => Set.Subset.trans (tsupport_add f g) (Set.union_subset hf hg)
-  smul_mem' := by
-    intro c f hf
-    refine (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
+  smul_mem' c f hf := (tsupport_smul_subset_right (fun _ : SpaceTime => c) f).trans hf
 
 /-- Type of complex-valued test functions supported in the positive time region -/
 abbrev PositiveTimeTestFunctionℂ : Type := PositiveTimeTestFunctionsℂ.submodule
@@ -99,15 +89,10 @@ instance : AddCommGroup PositiveTimeTestFunctionℂ := by infer_instance
 lemma PositiveTimeTestFunctionℂ.zero_on_nonpositive
     (f : PositiveTimeTestFunctionℂ) {x : SpaceTime}
     (hx : getTimeComponent x ≤ 0) : f.val x = 0 := by
-  classical
-  have hx_not_support : x ∉ tsupport f.val := by
-    intro hx_mem
-    have hx_pos : getTimeComponent x > 0 := by
-      have hx_mem_pos : x ∈ positiveTimeSet := f.property hx_mem
-      simpa [positiveTimeSet, HasPositiveTime] using hx_mem_pos
-    have : getTimeComponent x < getTimeComponent x := lt_of_le_of_lt hx hx_pos
-    exact (lt_irrefl _ this)
-  exact image_eq_zero_of_notMem_tsupport hx_not_support
+  refine image_eq_zero_of_notMem_tsupport (fun hx_mem => ?_)
+  have hx_pos : getTimeComponent x > 0 := by
+    simpa [positiveTimeSet, HasPositiveTime] using f.property hx_mem
+  linarith
 
 /-- Helper lemma: starRingEnd ℂ commutes through derivatives and preserves norms -/
 lemma starRingEnd_iteratedFDeriv_norm_eq (g : TestFunctionℂ) (n : ℕ) (x : SpaceTime) :
@@ -115,9 +100,7 @@ lemma starRingEnd_iteratedFDeriv_norm_eq (g : TestFunctionℂ) (n : ℕ) (x : Sp
   -- Use the fact that starRingEnd ℂ = Complex.conjLIE (as functions)
   have h : (fun x => starRingEnd ℂ (g x)) = Complex.conjLIE ∘ g := by
     ext y
-    rw [Function.comp_apply]
-    -- Use the fact that conjLIE and starRingEnd are the same
-    exact congr_fun (@RCLike.conjLIE_apply ℂ _) (g y)
+    simp_all
   rw [h]
   -- Now apply the norm preservation lemma for LinearIsometryEquiv
   exact LinearIsometryEquiv.norm_iteratedFDeriv_comp_left Complex.conjLIE g x n
@@ -138,19 +121,11 @@ noncomputable def starTestFunction (f : TestFunctionℂ) : TestFunctionℂ :=
        exact f_reflected.smooth ⊤,
    -- Decay
    fun k n => by
-     -- Use the bound from f_reflected and the fact that starRingEnd is an isometry
+     -- starRingEnd ℂ is an isometry, so it preserves derivative norms.
      obtain ⟨C, hC⟩ := f_reflected.decay' k n
-     use C
-     intro x
-     -- Since starRingEnd ℂ is complex conjugation, which is an isometry,
-     -- it preserves the norms of derivatives. This follows from standard properties
-     -- of linear isometries and the chain rule for derivatives.
-     have h_eq : ‖iteratedFDeriv ℝ n (fun x => starRingEnd ℂ (f_reflected x)) x‖ = ‖iteratedFDeriv
-       ℝ n f_reflected x‖ :=
-       starRingEnd_iteratedFDeriv_norm_eq f_reflected n x
-     calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x => starRingEnd ℂ (f_reflected x)) x‖
-         = ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f_reflected x‖ := by rw [h_eq]
-       _ ≤ C := hC x⟩
+     refine ⟨C, fun x => ?_⟩
+     rw [starRingEnd_iteratedFDeriv_norm_eq f_reflected n x]
+     exact hC x⟩
 
 /-- Star instance for complex test functions -/
 noncomputable instance : Star TestFunctionℂ where
@@ -159,14 +134,9 @@ noncomputable instance : Star TestFunctionℂ where
 lemma PositiveTimeTestFunction.zero_on_nonpositive
     (f : PositiveTimeTestFunction) {x : SpaceTime}
     (hx : getTimeComponent x ≤ 0) : f.val x = 0 := by
-  classical
-  have hx_not_support : x ∉ tsupport f.val := by
-    intro hx_mem
-    have hx_pos : getTimeComponent x > 0 := by
-      have hx_mem_pos : x ∈ positiveTimeSet := f.property hx_mem
-      simpa [positiveTimeSet, HasPositiveTime] using hx_mem_pos
-    have : getTimeComponent x < getTimeComponent x := lt_of_le_of_lt hx hx_pos
-    exact (lt_irrefl _ this)
-  exact image_eq_zero_of_notMem_tsupport hx_not_support
+  refine image_eq_zero_of_notMem_tsupport (fun hx_mem => ?_)
+  have hx_pos : getTimeComponent x > 0 := by
+    simpa [positiveTimeSet, HasPositiveTime] using f.property hx_mem
+  linarith
 
 end

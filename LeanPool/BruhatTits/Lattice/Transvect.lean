@@ -167,8 +167,7 @@ lemma unipotent_pow_irred_smul_eq_submodule {ϖ : R} (hϖ : Irreducible ϖ)
     rw [pow_add, mul_assoc]
     nth_rw 2 [mul_comm]
     rw [← mul_assoc, ← smul_smul]
-  simp only [Module.Basis.toSubmodule, Module.Basis.unipotent, MulEquiv.apply_symm_apply,
-    ]
+  simp only [Module.Basis.toSubmodule, Module.Basis.unipotent, MulEquiv.apply_symm_apply]
   rw [Submodule.map_span]
   apply le_antisymm
   · rw [Submodule.span_le]
@@ -189,11 +188,9 @@ lemma unipotent_pow_irred_smul_eq_submodule {ϖ : R} (hϖ : Irreducible ϖ)
     · rw [heq]
       apply Submodule.smul_mem
       apply Submodule.subset_span
-      use 0
-      simp
+      simp_all
     · apply Submodule.subset_span
-      use 1
-      simp
+      simp_all
   · rw [Submodule.span_le]
     rintro - ⟨i, rfl⟩
     simp only [Module.Basis.transvectEquiv, LinearMap.GeneralLinearGroup.coe_ofLinearEquiv,
@@ -203,8 +200,7 @@ lemma unipotent_pow_irred_smul_eq_submodule {ϖ : R} (hϖ : Irreducible ϖ)
     simp only [Fin.isValue, Module.Basis.ntwist₂_apply₀]
     apply Submodule.subset_span
     refine ⟨ϖ ^ k • b 0, ?_, ?_⟩
-    · use 0
-      simp
+    · simp_all
     · simp [Subring.smul_def, map_smul]
     | 1 =>
     simp only [Fin.isValue, Module.Basis.ntwist₂_apply₁, pow_zero, one_smul]
@@ -212,16 +208,12 @@ lemma unipotent_pow_irred_smul_eq_submodule {ϖ : R} (hϖ : Irreducible ϖ)
     rw [this]
     apply Submodule.sub_mem
     · apply Submodule.subset_span
-      refine ⟨b 1, ?_, ?_⟩
-      · use 1
-        simp
-      · simp
+      simp_all
     · rw [heq]
       apply Submodule.smul_mem
       apply Submodule.subset_span
       refine ⟨ϖ ^ k • b 0, ?_, ?_⟩
-      · use 0
-        simp
+      · simp_all
       · simp [Subring.smul_def, map_smul]
 
 /-- Version of `unipotent_pow_irred_smul_eq_submodule` for `Basis.toLattice`. -/
@@ -230,8 +222,7 @@ lemma unipotent_pow_irred_smul_eq {ϖ : R} (hϖ : Irreducible ϖ) (b : Basis (Fi
     b.unipotent (ϖ ^ n * x) • (b.ntwist₂ hϖ k 0).toLattice (R := R) =
       (b.ntwist₂ hϖ k 0).toLattice := by
   apply BruhatTits.Lattice.ext
-  apply unipotent_pow_irred_smul_eq_submodule
-  assumption
+  exact unipotent_pow_irred_smul_eq_submodule hϖ b x k n hkn
 
 variable [IsDiscreteValuationRing R]
 

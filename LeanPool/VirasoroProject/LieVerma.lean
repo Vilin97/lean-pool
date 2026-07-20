@@ -97,20 +97,15 @@ def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTors
         nth_rw 1 [← B.finsum_repr_smul_basis X]
         have supp_finite_aux : (Function.support (fun i ↦ B.repr X i • B i)).Finite := by
           apply (Finsupp.hasFiniteSupport (B.repr X)).subset
-          intro i hi
-          simp only [Function.support, ne_eq, smul_eq_zero, not_or, Set.mem_setOf_eq] at hi ⊢
-          exact hi.1
+          simp_all
         have supp_finite (ε : SignType) := supp_finite_aux.inter_of_right (Bp ε)
         rw [← finsum_mem_union' (Bp_disj (by simp)) (supp_finite 1) (supp_finite (-1))]
         rw [← finsum_mem_union' ?_ ?_ (supp_finite 0)]
         · have Bp_cover' : Bp 1 ∪ Bp (-1) ∪ Bp 0 = Set.univ := by
             rw [← Bp_cover]
-            apply subset_antisymm
-            · refine Set.union_subset (Set.union_subset ?_ ?_) ?_ <;>
-              · exact Set.subset_iUnion_of_subset _ subset_rfl
-            · apply Set.iUnion_subset
-              intro ε
-              match ε with
+            refine subset_antisymm ?_ (Set.iUnion_subset fun ε ↦ ?_)
+            · simp_all
+            · match ε with
               | 1 => apply Set.subset_union_of_subset_left (by simp)
               | 0 => simp
               | -1 => apply Set.subset_union_of_subset_left (by simp)

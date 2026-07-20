@@ -1,0 +1,165 @@
+/-
+Copyright (c) 2026 Catskills Research Company. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Catskills Research Company
+-/
+
+import LeanPool.DomainTheory.Constructive
+import LeanPool.DomainTheory.InfoSys
+import LeanPool.DomainTheory.ContinuousLattice.Injective
+import LeanPool.DomainTheory.ContinuousLattice.WayBelow
+import LeanPool.DomainTheory.ContinuousLattice.Specialization
+import LeanPool.DomainTheory.ContinuousLattice.ScottMaps
+import LeanPool.DomainTheory.ContinuousLattice.MilnerCorrection
+import LeanPool.DomainTheory.ContinuousLattice.Constructions
+import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaces
+import LeanPool.DomainTheory.ContinuousLattice.Theorem212
+import LeanPool.DomainTheory.ContinuousLattice.InverseLimits
+import LeanPool.DomainTheory.ContinuousLattice.FunctionSpaceTower
+import LeanPool.DomainTheory.Neighborhood.Basic
+import LeanPool.DomainTheory.Neighborhood.Example12
+import LeanPool.DomainTheory.Neighborhood.Example13
+import LeanPool.DomainTheory.Neighborhood.Example14
+import LeanPool.DomainTheory.Neighborhood.Example15
+import LeanPool.DomainTheory.Neighborhood.ExampleB
+import LeanPool.DomainTheory.Neighborhood.Theorem110
+import LeanPool.DomainTheory.Neighborhood.Theorem111
+import LeanPool.DomainTheory.Neighborhood.Exercise112
+import LeanPool.DomainTheory.Neighborhood.Exercise113
+import LeanPool.DomainTheory.Neighborhood.Exercise114
+import LeanPool.DomainTheory.Neighborhood.Exercise115
+import LeanPool.DomainTheory.Neighborhood.Exercise116
+import LeanPool.DomainTheory.Neighborhood.Exercise117
+import LeanPool.DomainTheory.Neighborhood.Exercise118
+import LeanPool.DomainTheory.Neighborhood.Exercise119
+import LeanPool.DomainTheory.Neighborhood.Exercise120
+import LeanPool.DomainTheory.Neighborhood.Exercise121
+import LeanPool.DomainTheory.Neighborhood.Exercise122
+import LeanPool.DomainTheory.Neighborhood.Exercise123
+import LeanPool.DomainTheory.Neighborhood.Exercise124
+import LeanPool.DomainTheory.Neighborhood.Exercise125
+import LeanPool.DomainTheory.Neighborhood.Exercise126
+import LeanPool.DomainTheory.Neighborhood.Exercise127
+import LeanPool.DomainTheory.Neighborhood.Approximable
+import LeanPool.DomainTheory.Neighborhood.ApproximableExercises
+import LeanPool.DomainTheory.Neighborhood.Example23
+import LeanPool.DomainTheory.Neighborhood.Example24
+import LeanPool.DomainTheory.Neighborhood.Exercise213
+import LeanPool.DomainTheory.Neighborhood.Exercise214
+import LeanPool.DomainTheory.Neighborhood.Exercise215
+import LeanPool.DomainTheory.Neighborhood.Exercise216
+import LeanPool.DomainTheory.Neighborhood.Exercise218
+import LeanPool.DomainTheory.Neighborhood.Exercise220
+import LeanPool.DomainTheory.Neighborhood.Exercise221
+import LeanPool.DomainTheory.Neighborhood.Exercise222
+import LeanPool.DomainTheory.Neighborhood.Product
+import LeanPool.DomainTheory.Neighborhood.FunctionSpace
+import LeanPool.DomainTheory.Neighborhood.Exercise314
+import LeanPool.DomainTheory.Neighborhood.Exercise315
+import LeanPool.DomainTheory.Neighborhood.Exercise318
+import LeanPool.DomainTheory.Neighborhood.Exercise319
+import LeanPool.DomainTheory.Neighborhood.Exercise319Sum
+import LeanPool.DomainTheory.Neighborhood.Exercise321
+import LeanPool.DomainTheory.Neighborhood.Exercise322
+import LeanPool.DomainTheory.Neighborhood.Exercise323
+import LeanPool.DomainTheory.Neighborhood.Exercise324
+import LeanPool.DomainTheory.Neighborhood.Exercise316
+import LeanPool.DomainTheory.Neighborhood.Exercise317
+import LeanPool.DomainTheory.Neighborhood.Exercise324Iter
+import LeanPool.DomainTheory.Neighborhood.Exercise324Distrib
+import LeanPool.DomainTheory.Neighborhood.Exercise325
+import LeanPool.DomainTheory.Neighborhood.Exercise327
+import LeanPool.DomainTheory.Neighborhood.Exercise326
+import LeanPool.DomainTheory.Neighborhood.Exercise326Sum
+import LeanPool.DomainTheory.Neighborhood.Exercise328
+import LeanPool.DomainTheory.Neighborhood.Theorem41
+import LeanPool.DomainTheory.Neighborhood.Example43
+import LeanPool.DomainTheory.Neighborhood.Example44
+import LeanPool.DomainTheory.Neighborhood.Theorem46
+import LeanPool.DomainTheory.Neighborhood.Exercise407
+import LeanPool.DomainTheory.Neighborhood.Exercise408
+import LeanPool.DomainTheory.Neighborhood.Exercise409
+import LeanPool.DomainTheory.Neighborhood.Exercise410
+import LeanPool.DomainTheory.Neighborhood.Exercise411
+import LeanPool.DomainTheory.Neighborhood.Exercise412
+import LeanPool.DomainTheory.Neighborhood.Exercise413
+import LeanPool.DomainTheory.Neighborhood.Exercise414
+import LeanPool.DomainTheory.Neighborhood.Exercise415
+import LeanPool.DomainTheory.Neighborhood.Exercise416
+import LeanPool.DomainTheory.Neighborhood.Exercise417
+import LeanPool.DomainTheory.Neighborhood.Exercise418
+import LeanPool.DomainTheory.Neighborhood.Exercise419
+import LeanPool.DomainTheory.Neighborhood.Exercise420
+import LeanPool.DomainTheory.Neighborhood.Exercise421
+import LeanPool.DomainTheory.Neighborhood.Exercise422
+import LeanPool.DomainTheory.Neighborhood.Exercise423
+import LeanPool.DomainTheory.Neighborhood.Exercise424
+import LeanPool.DomainTheory.Neighborhood.Exercise425
+import LeanPool.DomainTheory.Neighborhood.Table55
+import LeanPool.DomainTheory.Neighborhood.Theorem51
+import LeanPool.DomainTheory.Neighborhood.Theorem52
+import LeanPool.DomainTheory.Neighborhood.Proposition53
+import LeanPool.DomainTheory.Neighborhood.Proposition54
+import LeanPool.DomainTheory.Neighborhood.Theorem56
+import LeanPool.DomainTheory.Neighborhood.Theorem56Full
+import LeanPool.DomainTheory.Neighborhood.Exercise507
+import LeanPool.DomainTheory.Neighborhood.Exercise508
+import LeanPool.DomainTheory.Neighborhood.Exercise509
+import LeanPool.DomainTheory.Neighborhood.Exercise510
+import LeanPool.DomainTheory.Neighborhood.Exercise511
+import LeanPool.DomainTheory.Neighborhood.Exercise512
+import LeanPool.DomainTheory.Neighborhood.Exercise513
+import LeanPool.DomainTheory.Neighborhood.Exercise514
+import LeanPool.DomainTheory.Neighborhood.Exercise515
+import LeanPool.DomainTheory.Neighborhood.Exercise516
+import LeanPool.DomainTheory.Neighborhood.Exercise516ThueMorse
+import LeanPool.DomainTheory.Neighborhood.Exercise516Overlap
+import LeanPool.DomainTheory.Neighborhood.Example61
+import LeanPool.DomainTheory.Neighborhood.Example62
+import LeanPool.DomainTheory.Neighborhood.Example62C
+import LeanPool.DomainTheory.Neighborhood.Example62A
+import LeanPool.DomainTheory.Neighborhood.Example62Regular
+import LeanPool.DomainTheory.Neighborhood.Definition63
+import LeanPool.DomainTheory.Neighborhood.Proposition66
+import LeanPool.DomainTheory.Neighborhood.Proposition67
+import LeanPool.DomainTheory.Neighborhood.Definition68
+import LeanPool.DomainTheory.Neighborhood.Theorem69
+import LeanPool.DomainTheory.Neighborhood.Definition610
+import LeanPool.DomainTheory.Neighborhood.Proposition611
+import LeanPool.DomainTheory.Neighborhood.Proposition612
+import LeanPool.DomainTheory.Neighborhood.Definition613
+import LeanPool.DomainTheory.Neighborhood.Theorem614
+import LeanPool.DomainTheory.Neighborhood.Lemma615
+import LeanPool.DomainTheory.Neighborhood.Theorem616
+import LeanPool.DomainTheory.Neighborhood.Exercise617
+import LeanPool.DomainTheory.Neighborhood.Exercise617Gen
+import LeanPool.DomainTheory.Neighborhood.Exercise618
+import LeanPool.DomainTheory.Neighborhood.Exercise619
+import LeanPool.DomainTheory.Neighborhood.Exercise619PartB
+import LeanPool.DomainTheory.Neighborhood.Exercise621
+import LeanPool.DomainTheory.Neighborhood.Exercise622
+import LeanPool.DomainTheory.Neighborhood.Exercise623
+import LeanPool.DomainTheory.Neighborhood.Exercise624
+import LeanPool.DomainTheory.Neighborhood.Exercise625
+import LeanPool.DomainTheory.Neighborhood.Exercise626
+import LeanPool.DomainTheory.Neighborhood.Exercise627
+import LeanPool.DomainTheory.Neighborhood.Exercise628
+import LeanPool.DomainTheory.Neighborhood.Exercise629
+import LeanPool.DomainTheory.Neighborhood.Recursive
+import LeanPool.DomainTheory.Neighborhood.Definition71
+import LeanPool.DomainTheory.Neighborhood.Definition72
+import LeanPool.DomainTheory.Neighborhood.Theorem74
+import LeanPool.DomainTheory.Neighborhood.Theorem75
+import LeanPool.DomainTheory.Neighborhood.Theorem76
+import LeanPool.DomainTheory.Neighborhood.Proposition77
+
+/-!
+# DomainTheory
+
+Source: doi:10.1007/BFb0012801, url:https://doi.org/10.1007/BFb0012801
+Authors: Catskills Research Company
+Status: verified
+Main declarations: `InfoSys`, `Domain.Neighborhood.NeighborhoodSystem`
+Tags: domain-theory, denotational-semantics, information-systems
+MSC: 03B70, 06B35, 68Q55
+-/

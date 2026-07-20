@@ -136,9 +136,7 @@ lemma one_eq_HeckeLeftCoset_single :
 lemma smul_add_left (T₁ T₂ : 𝕋 P Z) (m : HeckeModule P Z) :
     (T₁ + T₂) • m = T₁ • m + T₂ • m := by
   simp only [smul_eq_sum]
-  refine Finsupp.sum_add_index'
-    (fun D1 => ?_)
-    (fun D1 y b₂ => ?_)
+  refine Finsupp.sum_add_index' (fun D1 => ?_) (fun D1 y b₂ => ?_)
   · simp [zero_mul, Finsupp.single_zero, Finset.sum_const_zero, Finsupp.sum]
   · simp only [Finsupp.sum, add_mul, Finsupp.single_add, Finset.sum_add_distrib]
 
@@ -149,10 +147,7 @@ lemma zero_smul_HeckeModule (z : HeckeModule P Z) : (0 : 𝕋 P Z) • z = 0 := 
 /-- Any Hecke ring element acts as zero on the zero module element. -/
 lemma smul_zero_HeckeModule (T : 𝕋 P Z) : T • (0 : HeckeModule P Z) = 0 := by
   simp only [smul_eq_sum]
-  have : ∀ D (b : Z), (0 : HeckeModule P Z).sum (fun m c =>
-      ∑ i ∈ smulOrbit P (HeckeCoset.rep D) (HeckeLeftCoset.rep m),
-        Finsupp.single i (b * c)) = 0 := fun _ _ => Finsupp.sum_zero_index
-  simp_rw [this]; simp [Finsupp.sum]
+  simp_all
 
 /-- The module action is additive in the module argument. -/
 lemma smul_add_right (T : 𝕋 P Z) (m₁ m₂ : HeckeModule P Z) :
@@ -171,10 +166,8 @@ lemma smul_add_right (T : 𝕋 P Z) (m₁ m₂ : HeckeModule P Z) :
     intro D b
     exact Finsupp.sum_add_index'
       (fun m => by simp [mul_zero, Finsupp.single_zero, Finset.sum_const_zero])
-      (fun m c₁ c₂ => by
-        simp only [← Finset.sum_add_distrib, mul_add, Finsupp.single_add])
-  simp_rw [inner_split]
-  exact Finsupp.sum_add
+      (fun m c₁ c₂ => by simp only [← Finset.sum_add_distrib, mul_add, Finsupp.single_add])
+  simp_all
 
 /-- The smul orbits of distinct double cosets acting on the same left coset are disjoint. -/
 lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
@@ -186,33 +179,18 @@ lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
   simp only [smulOrbit, Finset.mem_image] at hx₁ hx₂
   obtain ⟨i₁, _, hi₁⟩ := hx₁; obtain ⟨i₂, _, hi₂⟩ := hx₂
   rw [← hi₂] at hi₁
-  have hset : ({(β : G) * (i₁.out : G) *
-      (g₁ : G)} : Set G) * (P.H : Set G) =
-    {(β : G) * (i₂.out : G) *
-      (g₂ : G)} * P.H := by
-    have := Quotient.exact hi₁
-    exact this
+  have hset : ({(β : G) * (i₁.out : G) * (g₁ : G)} : Set G) * (P.H : Set G) =
+      {(β : G) * (i₂.out : G) * (g₂ : G)} * P.H := Quotient.exact hi₁
   have hmem : (β : G) * ↑i₁.out * (g₁ : G) ∈
       ({(β : G) * ↑i₂.out * (g₂ : G)} : Set G) * (↑P.H : Set G) := by
     rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
   obtain ⟨_, ha, k, hk, hkk⟩ := hmem
   rw [Set.mem_singleton_iff] at ha; subst ha
-  have hstep : ↑i₂.out * (g₂ : G) * k =
-      ↑i₁.out * (g₁ : G) := by
-    have h : (β : G) *
-        (↑i₂.out * (g₂ : G) * k) =
-        (β : G) *
-        (↑i₁.out * (g₁ : G)) := by
-      have := hkk; dsimp at this; group at this ⊢; exact this
-    exact mul_left_cancel h
-  have hg : (g₁ : G) =
-      ↑(i₁.out⁻¹ * i₂.out) *
-        (g₂ : G) * k := by
+  have hstep : ↑i₂.out * (g₂ : G) * k = ↑i₁.out * (g₁ : G) :=
+    mul_left_cancel (a := (β : G)) (by have := hkk; dsimp at this; group at this ⊢; exact this)
+  have hg : (g₁ : G) = ↑(i₁.out⁻¹ * i₂.out) * (g₂ : G) * k := by
     apply mul_left_cancel (a := (↑i₁.out : G))
-    have : ↑i₁.out *
-        (↑(i₁.out⁻¹ * i₂.out) *
-        (g₂ : G) * k) =
-        ↑i₂.out * (g₂ : G) * k := by
+    have : ↑i₁.out * (↑(i₁.out⁻¹ * i₂.out) * (g₂ : G) * k) = ↑i₂.out * (g₂ : G) * k := by
       simp only [Subgroup.coe_mul, Subgroup.coe_inv]; group
     rw [this]; exact hstep.symm
   change DoubleCoset.doubleCoset (g₁ : G) P.H P.H =

@@ -42,17 +42,13 @@ lemma mul_del_commute {R : Type} [CommRing R] (p : Polynomial R) (n : ℕ) :
  C 2 * erase n p = erase n (C 2 * p) := by
   -- Now we use that a polynomial deleting the n-th term and adding it back in
   -- is the same as doing nothing
-  have one := Polynomial.monomial_add_erase p n
-  have two := Polynomial.monomial_add_erase (C 2 * p) n
-  have three : erase n (C 2 * p) = (C 2 * p) - (monomial n) ((C 2 * p).coeff n) := by
-    exact eq_sub_of_add_eq' two
-  have four : erase n p = p - (monomial n) (p.coeff n) := by
-    exact eq_sub_of_add_eq' one
-  rw[three]
-  rw[four]
+  have three : erase n (C 2 * p) = (C 2 * p) - (monomial n) ((C 2 * p).coeff n) :=
+    eq_sub_of_add_eq' (Polynomial.monomial_add_erase (C 2 * p) n)
+  have four : erase n p = p - (monomial n) (p.coeff n) :=
+    eq_sub_of_add_eq' (Polynomial.monomial_add_erase p n)
+  rw [three, four]
   nth_rewrite 3 [mul_comm]
-  rw[coeff_mul_C]
-  rw[← monomial_mul_C]
+  rw [coeff_mul_C, ← monomial_mul_C]
   ring
 
 -- Deleting the highest order term of a polynomial of degree at most n
@@ -65,30 +61,21 @@ lemma erase_degree_leq_n (R : Type) [CommRing R] (p : Polynomial R) (n : ℕ) (h
     have n_not_in_support : n ∉ p.support := by
       intro n_in_support
       have := eq_natDegree_of_le_mem_support (Nat.le_of_succ_le lt) n_in_support
-      rw[this] at lt
-      apply lt_irrefl at lt
-      exact lt
-    have equal : Finsupp.erase n p.toFinsupp = p.toFinsupp := by
-      exact Finsupp.erase_of_notMem_support n_not_in_support
+      omega
     have equal1 : (erase n p).toFinsupp = p.toFinsupp := by
-      rw[toFinsupp_erase]
-      exact equal
-    have equal2 : erase n p = p := toFinsupp_inj.mp equal1
-    rwa[equal2]
+      rw [toFinsupp_erase]
+      exact Finsupp.erase_of_notMem_support n_not_in_support
+    rwa [toFinsupp_inj.mp equal1]
   · -- If the degree is n
     rcases eraseLead_natDegree_lt_or_eraseLead_eq_zero p with lt2 | zero
     · rw[← eq]
       exact lt2
-    · have def1 : p.eraseLead = p.erase p.natDegree := by rfl
-      rw[← eq, ← def1, zero, eq]
-      exact h1
+    · have def1 : p.eraseLead = p.erase p.natDegree := rfl
+      simp_all
 
 /-- For nonzero `α` and `x ≤ n`, we have `α ^ n * (α ^ x)⁻¹ = α ^ (n - x)`. -/
 lemma pow_mul_inv_pow_of_le {α : ℝ} (hα : α ≠ 0) {n x : ℕ} (h : x ≤ n) :
-    α ^ n * (α ^ x)⁻¹ = α ^ (n - x) := by
-  rw [pow_sub₀]
-  · exact hα
-  · exact h
+    α ^ n * (α ^ x)⁻¹ = α ^ (n - x) := (pow_sub₀ α hα h).symm
 
 /-- The degree of `q1.erase n` is either `< n` or `0`, given `q1.natDegree ≤ n`. -/
 lemma erase_natDegree_lt_or_zero {B : Subring ℝ} {q1 : Polynomial B} {n : ℕ}
@@ -119,15 +106,12 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
   (zero_lt_m : m ≠ 0) (zero_lt_n : n ≠ 0) (p_eval : (aeval α) p = 1 / 2)
   (q_eval : (aeval α⁻¹) q = 1 / 2) (leq : n ≤ m) :
   ∃(m' : ℕ) (pq : Polynomial B), m' < m ∧ (aeval α) pq = 1/2 ∧ m' = pq.natDegree := by
-  have algebramap : ∀x : B, (algebraMap ↥B ℝ) x = x := by -- the identity algebra map
-    intro x
-    rfl
+  have algebramap : ∀x : B, (algebraMap ↥B ℝ) x = x := fun x ↦ rfl -- the identity algebra map
   let v₀ := coeff q 0
-  have two_eq_constant : C (2:B) = (2 : Polynomial ↥B) := by rfl
+  have two_eq_constant : C (2:B) = (2 : Polynomial ↥B) := rfl
   have constant_in_poly :
     ∀(b : B), ∀(p : Polynomial B), (aeval α) ((C b) * p) = b * (aeval α) p := by
-      intro b p
-      rw[map_mul, aeval_C, algebramap b]
+      simp_all
   have two_p_eval : (aeval α) (2 * p) = 1 := by -- (2p)(α)=1
     rw[← two_eq_constant, (constant_in_poly 2 p), p_eval]
     simp only [one_div]
@@ -162,33 +146,23 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     apply Finset.sum_eq_zero
     intro x in_Finset -- x is a natural number less than n
     rw[Finset.mem_range] at in_Finset
-    have lt_n : n - (x + 1) < n := by
-      norm_num
-      exact Nat.zero_lt_of_ne_zero zero_lt_n
-    have ne_n : n - (x + 1) ≠ n := by
-      exact Nat.ne_of_lt lt_n
+    have ne_n : n - (x + 1) ≠ n := by omega
     exact Polynomial.coeff_monomial_of_ne (q.coeff (x + 1)) ne_n.symm
   have nth_coeff : q1.coeff n = q.coeff 0 := by
     rw[Polynomial.finsetSum_coeff, Finset.sum_range_succ',
      Nat.sub_zero, coeff_monomial_same n (q.coeff 0), rest_zero]
     ring
   have hα0 : α ≠ 0 := fun h1 ↦ H.1 (h1 ▸ Subring.zero_mem B)
-  have equation (x : ℕ) (h : x ≤ n) : α ^ n * (α ^ x)⁻¹ = α^(n-x) :=
-    pow_mul_inv_pow_of_le hα0 h
   have this : α^n * ((aeval α⁻¹) q) = (aeval α) q1 := by
     rw[aeval_eq_sum_range, Finset.mul_sum]
     simp only [inv_pow, Algebra.mul_smul_comm]
     rw[n_eq_degree_q, _root_.map_sum]
     simp only [aeval_monomial]
-    apply Finset.sum_congr
-    · rfl
-    · intro x in_Finset
-      rw[algebramap]
-      have x_le_n : x ≤ n := by
-        rw[Finset.mem_range] at in_Finset
-        exact Nat.le_of_lt_succ in_Finset
-      rw[equation x x_le_n]
-      rfl
+    apply Finset.sum_congr rfl
+    intro x in_Finset
+    rw[Finset.mem_range] at in_Finset
+    rw[algebramap, pow_mul_inv_pow_of_le hα0 (Nat.le_of_lt_succ in_Finset)]
+    rfl
   have this2 : α^n = 2 * (aeval α) q1 := by
     rw[← this, q_eval]
     ring
@@ -215,11 +189,8 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
                 Nat.sub_self, coeff_monomial_same 0 (q.coeff n), add_eq_right]
     apply Finset.sum_eq_zero
     intro x in_Finset
-    have n_sub_x : n - x ≠ 0 := by
-      rw[Finset.mem_range] at in_Finset
-      rwa[Nat.sub_ne_zero_iff_lt]
-    apply coeff_monomial_of_ne
-    exact n_sub_x.symm
+    rw[Finset.mem_range] at in_Finset
+    exact coeff_monomial_of_ne _ (by omega)
   have erase_neq_zero : q1.erase n ≠ 0 := by
     -- the constant term of q' is nonzero
     rw[← support_nonempty]
@@ -229,14 +200,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     intro eq_zero4
     rw[← n_eq_degree_q] at eq_zero4
     simp at eq_zero4
-    have zero_lt_natDegree : 0 < q.natDegree := by
-      -- by assumption
-      calc
-        0 < n           := Nat.zero_lt_of_ne_zero zero_lt_n
-        _ = q.natDegree := n_eq_degree_q.symm
-    have q_neq_zero : q ≠ 0 := by
-      exact Polynomial.ne_zero_of_natDegree_gt (zero_lt_natDegree)
-    tauto
+    simp_all
   have deg1 : q1.natDegree ≤ n := by
     -- degree of sum is ≤ highest degree of summands
     apply natDegree_sum_le_of_forall_le
@@ -250,14 +214,13 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rcases deg2 with lt | eq
     · rw[Polynomial.natDegree_mul]
       · nth_rewrite 2 [← tsub_add_cancel_of_le leq]
-        simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_lt_add_iff_left]
-        exact lt
+        simpa only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_lt_add_iff_left] using lt
       · simp
       · exact erase_neq_zero
     · rw[Polynomial.natDegree_mul]
       · rw[eq]
-        simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_zero, tsub_lt_self_iff]
-        exact ⟨Nat.zero_lt_of_ne_zero zero_lt_m, Nat.zero_lt_of_ne_zero zero_lt_n⟩
+        simpa only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_zero, tsub_lt_self_iff]
+          using ⟨Nat.zero_lt_of_ne_zero zero_lt_m, Nat.zero_lt_of_ne_zero zero_lt_n⟩
       · simp
       · exact erase_neq_zero
   have this10 : ((1 - 2 * v₀):B) * α^m = 2 * (aeval α) (monomial (m-n) 1 * q1.erase n) := by
@@ -277,20 +240,17 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     -- We show this by considering two different cases:
     -- (1-2v₀) = 0 and (1-2v₀) ≠ 0.
     by_cases eq_zero5 : (1 - 2*v₀) = 0
-    · rw[eq_zero5] -- the case (1-2v₀) = 0
-      simp
+    · simp_all
     · rw[natDegree_add_C, natDegree_C_mul] -- the case (1-2v₀) ≠ 0
       · exact m_eq_degree_p.le
-      · simp
-        tauto
+      · simp_all
   have deg5 : (((C (1 - 2*v₀)) * p + (C v₀)).erase m).natDegree < m :=
-    erase_degree_leq_n B ((C (1 - 2*v₀)) * p + (C v₀)) m
-      (Nat.zero_lt_of_ne_zero zero_lt_m) deg4
+    erase_degree_leq_n B _ m (Nat.zero_lt_of_ne_zero zero_lt_m) deg4
   -- Here we define a new polynomial which here we call pq (this is not the product of the two)
   let pq := ((C (1 - 2*v₀)) * p + (C v₀)).erase m +
   C 2 * C (p.coeff m) * (monomial (m-n) 1) * q1.erase n
-  have this11 (p : Polynomial B) : 2 * (aeval α) p = (aeval α) (2 * p) := by
-    exact Eq.symm (Real.ext_cauchy (congrArg Real.cauchy (constant_in_poly (↑2) p)))
+  have this11 (p : Polynomial B) : 2 * (aeval α) p = (aeval α) (2 * p) :=
+    Eq.symm (Real.ext_cauchy (congrArg Real.cauchy (constant_in_poly (↑2) p)))
   -- The polynomial pq evaluated at α multiplied by 2 equals 1
   have this12 : 1 = 2 * (aeval α) (pq) := by
     rw[this11, left_distrib, aeval_add]
@@ -309,22 +269,18 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     exact one_eq
   let m' := pq.natDegree
   have deg7 : (C 2 * C (p.coeff m) * (monomial (m-n) 1) * q1.erase n).natDegree < m := by
-    rw[← C_mul]
-    rw[mul_assoc]
-    rw[natDegree_C_mul]
+    rw[← C_mul, mul_assoc, natDegree_C_mul]
     · exact deg3
     · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]
       rw[← m_eq_degree_p]
-      simp only [coeff_natDegree, leadingCoeff_eq_zero]
-      have zero_lt_natDegree : 0 < m := Nat.zero_lt_of_ne_zero zero_lt_m
-      rw[← m_eq_degree_p] at zero_lt_natDegree
-      exact ne_zero_of_natDegree_gt zero_lt_natDegree
+      simpa only [coeff_natDegree, leadingCoeff_eq_zero]
+        using ne_zero_of_natDegree_gt (m_eq_degree_p ▸ Nat.zero_lt_of_ne_zero zero_lt_m)
   have deg6 : m' < m := by
     rw[← Nat.le_sub_one_iff_lt (Nat.zero_lt_of_ne_zero zero_lt_m)]
     rw[← Nat.le_sub_one_iff_lt (Nat.zero_lt_of_ne_zero zero_lt_m)] at deg5
     rw[← Nat.le_sub_one_iff_lt (Nat.zero_lt_of_ne_zero zero_lt_m)] at deg7
     exact (natDegree_add_le_of_degree_le deg5 deg7)
-  exact ⟨m', pq, deg6, eq_one_div_of_mul_eq_one_right (_root_.id (Eq.symm this12)), by rfl⟩
+  exact ⟨m', pq, deg6, eq_one_div_of_mul_eq_one_right (_root_.id (Eq.symm this12)), rfl⟩
 
 -- Any maximal subring of ℝ not containing 1/2 is a valuation ring.
 lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
@@ -340,25 +296,14 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     let D : ValuationSubring ℝ :=
       { B with
         mem_or_inv_mem' := H}
-    have for_contra : ∃ (D : ValuationSubring ℝ), D.toSubring = B := by
-      use D
-    tauto
+    exact no_vr ⟨D, rfl⟩
   obtain ⟨α, H⟩ := alpha_existence
   -- We consider B[α], B[α⁻¹] (as algebras over B)
   let Balpha := adjoin B {α}
   let Balpha' := adjoin B {α⁻¹}
   have alpha_in_Balpha : α ∈ Balpha := subset_adjoin rfl
   have alpha_in_Balpha' : α⁻¹ ∈ Balpha' := subset_adjoin rfl
-  have algebramap : ∀x : B, (algebraMap ↥B ℝ) x = x := by
-    intro x
-    rfl
-  -- -- We consider {2} as a subset of Balpha and {2} as a subset of Balpha'
-  -- let (two : Set Balpha.toSubring) := {2}
-  -- let (two' : Set Balpha'.toSubring) := {2}
-  -- -- We view 2B[α], 2B[α⁻¹] as principle ideals,
-  -- -- i.e. submodules generated by 1 element
-  -- let twoBalpha := Submodule.span Balpha.toSubring two
-  -- let twoBalpha' := Submodule.span Balpha'.toSubring two'
+  have algebramap : ∀x : B, (algebraMap ↥B ℝ) x = x := fun x ↦ rfl
   have Balpha_contains_half : 1/2 ∈ Balpha := by
   -- otherwise there is a contradiction with maximality
     by_contra h
@@ -367,16 +312,9 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
       intro x h'
       lift x to B using h'
       apply Subalgebra.algebraMap_mem'
-    have B_is_Balpha : B = Balpha.toSubring := by
-      -- Here we use the maximality of B
-      exact h2 Balpha.toSubring ⟨B_leq_Balpha, h⟩
-    have Balpha_leq_B : Balpha.toSubring ≤ B := by
-      exact le_of_eq_of_le (_root_.id (Eq.symm B_is_Balpha)) fun ⦃x⦄ a ↦ a
-    have alpha_in_B : α ∈ B := Balpha_leq_B alpha_in_Balpha
-    -- We have now shown that α ∈ B, but we also know that α ∉ B by assumption
-    -- therefore we obtain a contradiction
-    rw[← false_iff] at H
-    rwa[H.1]
+    -- Here we use the maximality of B
+    have B_is_Balpha : B = Balpha.toSubring := h2 Balpha.toSubring ⟨B_leq_Balpha, h⟩
+    simp_all
   have Balpha'_contains_half : 1/2 ∈ Balpha' := by
     -- This is essentially the same proof as above, only with primes
     by_contra h
@@ -385,17 +323,9 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
       intro x h'
       lift x to B using h'
       apply Subalgebra.algebraMap_mem'
-    have B_is_Balpha' : B = Balpha'.toSubring := by
-      -- Here we use the maximality of B
-      exact h2 Balpha'.toSubring ⟨B_leq_Balpha', h⟩
-    have Balpha'_leq_B : Balpha'.toSubring ≤ B := by
-      exact le_of_eq_of_le (_root_.id (Eq.symm B_is_Balpha')) fun ⦃x⦄ a ↦ a
-    have alpha_in_B : α⁻¹ ∈ B := Balpha'_leq_B alpha_in_Balpha'
-    -- We have now shown that α⁻¹ ∈ B, but we also know that α⁻¹ ∉ B by assumption
-    -- therefore we obtain a contradiction
-    have one_last : α⁻¹ ∉ B := H.2
-    rw[← false_iff] at one_last
-    rwa[one_last]
+    -- Here we use the maximality of B
+    have B_is_Balpha' : B = Balpha'.toSubring := h2 Balpha'.toSubring ⟨B_leq_Balpha', h⟩
+    simp_all
   let degree : Set ℕ := {n : ℕ | ∃(p : Polynomial B),
    p.natDegree = n ∧ (Polynomial.aeval α) p = 1/2}
   let degree' : Set ℕ := {n : ℕ | ∃(p : Polynomial B),
@@ -404,28 +334,16 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
   have contains_half : 1/2 ∈ ((Polynomial.aeval α).range : Subalgebra ↥B ℝ) := by
     rw[← adjoin_singleton_eq_range_aeval B α]
     exact Balpha_contains_half
-  have is_nonempty : degree ≠ ∅ := by
-    intro is_empty
-    rcases contains_half with ⟨p, eval⟩
-    have deg : p.natDegree ∈ degree := by
-      exact ⟨p, by rfl, eval⟩
-    rw[is_empty] at deg
-    tauto
   have nonempty : degree.Nonempty := by
-    exact Set.nonempty_iff_ne_empty.mpr is_nonempty
+    rcases contains_half with ⟨p, eval⟩
+    exact ⟨p.natDegree, p, rfl, eval⟩
   -- Any element of B[α⁻¹] can be written as a polynomial in α⁻¹ with coefficients in B
   have contains_half' : 1/2 ∈ ((Polynomial.aeval α⁻¹).range : Subalgebra ↥B ℝ) := by
     rw[← adjoin_singleton_eq_range_aeval B α⁻¹]
     exact Balpha'_contains_half
-  have is_nonempty' : degree' ≠ ∅ := by
-    intro is_empty
-    rcases contains_half' with ⟨p, eval⟩
-    have deg : p.natDegree ∈ degree' := by
-      exact ⟨p, by rfl, eval⟩
-    rw[is_empty] at deg
-    tauto
   have nonempty' : degree'.Nonempty := by
-    exact Set.nonempty_iff_ne_empty.mpr is_nonempty'
+    rcases contains_half' with ⟨p, eval⟩
+    exact ⟨p.natDegree, p, rfl, eval⟩
   -- Since the natural numbers are well-founded and degree and degree' are
   -- non-empty, we may conclude that degree and degree' have a minimal element
   let m := WellFounded.min wellFounded_lt degree nonempty
@@ -456,28 +374,19 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
   by_cases leq : n ≤ m
   · rcases (lower_degree B α m n H p q m_eq_degree_p n_eq_degree_q
      zero_lt_m zero_lt_n p_eval q_eval leq) with ⟨m', pq, deg, eval, deg2⟩
-    have main : m' ∈ degree := by
-      exact ⟨pq, deg2.symm, eval⟩
-    have ge : m' ≥ m := by
-      exact WellFounded.min_le wellFounded_lt main
-    rw[lt_iff_not_ge] at deg
-    tauto
+    have main : m' ∈ degree := ⟨pq, deg2.symm, eval⟩
+    have ge : m' ≥ m := WellFounded.min_le wellFounded_lt main
+    omega
   · have leq2 : m ≤ n := Nat.le_of_not_ge leq
     have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
-      simp only [inv_inv]
-      exact _root_.id (And.symm H)
+      simpa only [inv_inv] using _root_.id (And.symm H)
     have p_eval2 : (aeval α⁻¹⁻¹) p = 1/2 := by
-      simp only [inv_inv, one_div]
-      rw[← one_div]
-      exact p_eval
+      simp_all
     rcases (lower_degree B α⁻¹ n m H3 q p n_eq_degree_q m_eq_degree_p
      zero_lt_n zero_lt_m q_eval p_eval2 leq2) with ⟨m', pq, deg, eval, deg2⟩
-    have main : m' ∈ degree' := by
-      exact ⟨pq, deg2.symm, eval⟩
-    have ge : m' ≥ n := by
-      exact WellFounded.min_le wellFounded_lt main
-    rw[lt_iff_not_ge] at deg
-    tauto
+    have main : m' ∈ degree' := ⟨pq, deg2.symm, eval⟩
+    have ge : m' ≥ n := WellFounded.min_le wellFounded_lt main
+    omega
 
 /-- The set of subrings of `ℝ` not containing `1/2`. -/
 def S := {A : Subring ℝ | (1/2) ∉ A}
@@ -494,17 +403,12 @@ lemma Z_in_S : Z ∈ S := by
   rcases half_in_Z with ⟨n, h⟩
   rw[← two_eq_two] at h
   -- Here we use injectivity of coercion
-  have inj : (Int.castRingHom ℝ).toFun.Injective := by
-    exact Isometry.injective fun x1 ↦ congrFun rfl
+  have inj : (Int.castRingHom ℝ).toFun.Injective := Isometry.injective fun x1 ↦ congrFun rfl
   have two_n : (Int.castRingHom ℝ) (2*n) = 1 := by-- 2n=1∈ ℤ
-    rw[map_mul, h]
-    simp
+    simp_all
   rw[← (Int.castRingHom ℝ).map_one] at two_n
-  have two_n_eq_one : 2*n = 1 := by
-    exact (inj two_n)
-  have n_two_eq_one : n*2 = 1 := by
-    rw[← two_n_eq_one]
-    exact Int.mul_comm n 2
+  have two_n_eq_one : 2*n = 1 := inj two_n
+  have n_two_eq_one : n*2 = 1 := by omega
   have two_unit : ∃two : ℤˣ, two = (2:ℤ) := by-- implying 2 is a unit in ℤ
     refine CanLift.prf 2 ?_
     rw[isUnit_iff_exists]
@@ -544,28 +448,24 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
           have hypb' := hypb
           rcases hypa with ⟨ringa, H1a, H2a⟩
           rcases hypb with ⟨ringb, H1b, H2b⟩
-          have antisymm : ringa ≤ ringb ∨ ringb ≤ ringa := by
-            exact IsChain.total chain H1a H1b
-          rcases antisymm with l | r
+          rcases IsChain.total chain H1a H1b with l | r
           · use carb
-            have cara_subset_carb : cara ≤ carb := by
-              rwa[H2a, H2b]
+            have cara_subset_carb : cara ≤ carb := by rwa[H2a, H2b]
             have a_and_b_in_carb : a ∈ ringb ∧ b ∈ ringb := by
               repeat rw[← Subring.mem_carrier]
               rw[← H2b]
               exact ⟨cara_subset_carb a_in_cara, b_in_carb⟩
-            have a_plus_b_in_ringb : a+b ∈ ringb := by
-              exact (ringb.add_mem' a_and_b_in_carb.1 a_and_b_in_carb.2)
+            have a_plus_b_in_ringb : a+b ∈ ringb :=
+              ringb.add_mem' a_and_b_in_carb.1 a_and_b_in_carb.2
             exact ⟨hypb', by rwa[H2b]⟩
           · use cara
-            have carb_subset_cara : carb ≤ cara := by
-              rwa[H2b, H2a]
+            have carb_subset_cara : carb ≤ cara := by rwa[H2b, H2a]
             have a_and_b_in_cara : a ∈ ringa ∧ b ∈ ringa := by
               repeat rw[← Subring.mem_carrier]
               rw[← H2a]
               exact ⟨a_in_cara, carb_subset_cara b_in_carb⟩
-            have a_plus_b_in_ringa : a+b ∈ ringa := by
-              exact (ringa.add_mem' a_and_b_in_cara.1 a_and_b_in_cara.2)
+            have a_plus_b_in_ringa : a+b ∈ ringa :=
+              ringa.add_mem' a_and_b_in_cara.1 a_and_b_in_cara.2
             exact ⟨hypa', by rwa[H2a]⟩,
         mul_mem' := by
           intro a b a_in_carrier b_in_carrier
@@ -576,41 +476,32 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
           have hypb' := hypb
           rcases hypa with ⟨ringa, H1a, H2a⟩
           rcases hypb with ⟨ringb, H1b, H2b⟩
-          have antisymm : ringa ≤ ringb ∨ ringb ≤ ringa := by
-            exact IsChain.total chain H1a H1b
-          rcases antisymm with l | r
+          rcases IsChain.total chain H1a H1b with l | r
           · use carb
-            have cara_subset_carb : cara ≤ carb := by
-              rwa[H2a, H2b]
+            have cara_subset_carb : cara ≤ carb := by rwa[H2a, H2b]
             have a_and_b_in_carb : a ∈ ringb ∧ b ∈ ringb := by
               repeat rw[← Subring.mem_carrier]
               rw[← H2b]
               exact ⟨cara_subset_carb a_in_cara, b_in_carb⟩
-            have a_plus_b_in_ringb : a*b ∈ ringb := by
-              exact (ringb.mul_mem' a_and_b_in_carb.1 a_and_b_in_carb.2)
+            have a_plus_b_in_ringb : a*b ∈ ringb :=
+              ringb.mul_mem' a_and_b_in_carb.1 a_and_b_in_carb.2
             exact ⟨hypb', by rwa[H2b]⟩
           · use cara
-            have carb_subset_cara : carb ≤ cara := by
-              rwa[H2b, H2a]
+            have carb_subset_cara : carb ≤ cara := by rwa[H2b, H2a]
             have a_and_b_in_cara : a ∈ ringa ∧ b ∈ ringa := by
               repeat rw[← Subring.mem_carrier]
               rw[← H2a]
               exact ⟨a_in_cara, carb_subset_cara b_in_carb⟩
-            have a_plus_b_in_ringa : a*b ∈ ringa := by
-              exact (ringa.mul_mem' a_and_b_in_cara.1 a_and_b_in_cara.2)
+            have a_plus_b_in_ringa : a*b ∈ ringa :=
+              ringa.mul_mem' a_and_b_in_cara.1 a_and_b_in_cara.2
             exact ⟨hypa', by rwa[H2a]⟩,
         neg_mem' := by
           intro a a_in_carrier
           rcases a_in_carrier with ⟨cara, hypa, a_in_cara⟩
           have hypa' := hypa
           rcases hypa with ⟨ringa, H1a, H2a⟩
-          refine Set.mem_sUnion.mpr ?intro.intro.intro.intro.a
-          use cara
-          constructor
-          · exact hypa'
-          · rw[H2a, Subring.mem_carrier]
-            rw[H2a, Subring.mem_carrier] at a_in_cara
-            exact Subring.neg_mem ringa a_in_cara}
+          refine Set.mem_sUnion.mpr ⟨cara, hypa', ?_⟩
+          simp_all}
     -- Now we show that 1/2∉ ub
     have ub_carrier_non_half : 1/2 ∉ ub.carrier := by
       intro half_in
@@ -620,53 +511,38 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
       have half_not_in_t : 1/2 ∉ t := Eq.mpr_not (congrFun H3 (1 / 2)) (subset H2)
       tauto
     -- So ub ∈ S
-    have ub_mem_S : ub ∈ S := by
-      exact ub_carrier_non_half
-    use ub -- here we tell lean to use the ub we constructed
-    constructor
-    · exact ub_mem_S
-    · intro z hz x hx
-      exact Subring.mem_carrier.mp (Set.mem_sUnion.mpr ⟨z, ⟨z, hz, by rfl⟩, hx⟩)
+    refine ⟨ub, ub_carrier_non_half, ?_⟩ -- here we tell lean to use the ub we constructed
+    intro z hz x hx
+    exact Subring.mem_carrier.mp (Set.mem_sUnion.mpr ⟨z, ⟨z, hz, rfl⟩, hx⟩)
   · simp only [ne_eq, Decidable.not_not] at emp_or_not
-    use Z -- as Z lies in S, S is nonempty
-    constructor
-    · exact Z_in_S
-    · rw[emp_or_not, Set.forall_mem_empty]
-      trivial
+    refine ⟨Z, Z_in_S, ?_⟩ -- as Z lies in S, S is nonempty
+    simp_all
 
 -- This lemma shows that there is a valuation ring of ℝ
 -- such that 1/2 does not lie in it
 lemma valuation_ring_no_half : ∃(B : ValuationSubring ℝ), (1/2) ∉ B := by
-  have h2 := zorn_le₀ S sUnion_is_ub -- use Zorn's lemma
-  rcases h2 with ⟨B, hl, hr⟩
+  rcases zorn_le₀ S sUnion_is_ub with ⟨B, hl, hr⟩ -- use Zorn's lemma
   have h3 : ∀(C : Subring ℝ), (B ≤ C) ∧ (1/2) ∉ C → B = C := by
     rintro y ⟨h6, h7⟩
-    have h8 : y ∈ S := by
-      exact h7
-    have h5 : y ≤ B := hr h8 h6
-    exact LE.le.antisymm h6 h5
-  have h4 := inclusion_maximal_valuation B hl h3
-  obtain ⟨D, hd⟩ := h4
-  use D
-  have D_no_half : 1/2 ∉ D.toSubring := by
-    rwa[hd]
+    exact LE.le.antisymm h6 (hr h7 h6)
+  obtain ⟨D, hd⟩ := inclusion_maximal_valuation B hl h3
+  refine ⟨D, ?_⟩
+  have D_no_half : 1/2 ∉ D.toSubring := by rwa[hd]
   exact D_no_half
 
 
 lemma non_archimedean (Γ₀ : Type) [LinearOrderedCommGroupWithZero Γ₀] (K : Type) [Field K]
-(v : Valuation K Γ₀) :(∀(x y : K), v x ≠ v y → v (x + y) = max (v x) (v y)) := by
-  exact fun x y a ↦ Valuation.map_add_of_distinct_val v a
+(v : Valuation K Γ₀) :(∀(x y : K), v x ≠ v y → v (x + y) = max (v x) (v y)) :=
+  fun _ _ a ↦ Valuation.map_add_of_distinct_val v a
 
 
 -- There is a valuation v on ℝ such that v(1/2) > 1.
 theorem valuation_on_reals : ∃(Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀)
   (v : Valuation ℝ Γ₀), (v (1/2)) > 1 := by
-    have h := valuation_ring_no_half
-    obtain ⟨B, h⟩ := h
+    obtain ⟨B, h⟩ := valuation_ring_no_half
     use B.ValueGroup, inferInstance, B.valuation
     have g := valuation_le_one_iff B (1/2)
-    rw[← not_iff_not] at g
-    rwa[gt_iff_lt, ← not_le, g]
+    simp_all
 
 lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v : Valuation ℝ Γ₀)
 (vhalf : v (1 / 2) > 1) : ∀ n : ℕ, Odd n → v (1/n) = 1 := by
@@ -682,24 +558,14 @@ lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v
     · rename_i k kind
       intro kpos
       by_cases kpos' : k = 0
-      · rw [kpos']
-        simp only [zero_add, Nat.cast_one, mul_one]
-        apply vhalf'
+      · simp_all
       · apply kind at kpos'
-        simp only [Nat.cast_add, Nat.cast_one, mul_add, mul_one]
-        have : v (2 * ↑k + 2) ≤ max (v (2 * ↑k)) (v 2) := by
-          apply Valuation.map_add
-        have this2 : v (2 * ↑k) ⊔ v 2 < 1 := by
-          have h1 : v (2 * ↑k) < 1 := kpos'
-          have h2 : v 2 < 1 := vhalf'
-          exact max_lt h1 h2
-        exact trans this this2
+        simpa only [Nat.cast_add, Nat.cast_one, mul_add, mul_one]
+          using lt_of_le_of_lt (Valuation.map_add v _ _) (max_lt kpos' vhalf')
   have vind' : ∀ k : ℕ, k ≠ 0 →  v (2*k + 1) = 1 := by
     intro n hn
-    have this : 2*n ≠ 1 := by
-      norm_num
-    have this2 : v (1) = 1 := by
-      rw [Valuation.map_one]
+    have this : 2*n ≠ 1 := by norm_num
+    have this2 : v (1) = 1 := Valuation.map_one v
     rw [Valuation.map_add_of_distinct_val]
     · specialize vind n hn
       simp_all only [one_div, map_inv₀, gt_iff_lt, ne_eq, mul_eq_one, OfNat.ofNat_ne_one, false_and,
@@ -713,31 +579,12 @@ lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v
       intro a
       simp_all only [lt_self_iff_false]
   intro n odd
-  have odd' : ∃ k, 2 *k + 1 = n := by
-    rw [Odd] at odd
-    rcases odd with ⟨k, eq⟩
-    use k
-    rw [eq]
-  rcases odd' with ⟨k, eq⟩
+  rcases odd with ⟨k, eq⟩
+  rw [eq]
   specialize vind' k
   by_cases kpos : k = 0
-  · rw [kpos] at eq
-    simp only [mul_zero, zero_add] at eq
-    simp only [one_div, map_inv₀, inv_eq_one]
-    rw [← eq]
-    rw [Nat.cast_one]
-    apply Valuation.map_one v
-  · have kpos_val : v (2 * ↑k + 1) = 1 := vind' kpos
-    rw [eq.symm]
-    have : v (1 / ↑(2 * k + 1)) = v 1 / v (↑(2 * k + 1)) := by
-      apply Valuation.map_div
-    rw [this]
-    have : v (↑(2 * k + 1)) = 1 := by
-      rw [Nat.cast_add, Nat.cast_mul]
-      simp_all only [one_div, map_inv₀, gt_iff_lt, ne_eq, map_mul, not_false_eq_true, imp_self,
-        map_one, Nat.cast_ofNat, Nat.cast_one]
-    rw [this]
-    simp
+  · simp_all
+  · simp_all
 
 end
 end Monsky

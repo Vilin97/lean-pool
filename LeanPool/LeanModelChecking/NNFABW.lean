@@ -40,9 +40,8 @@ theorem antitone_nat_eventually_constant
   have h := tendsto_atTop_ciInf hf ⟨0, Set.forall_mem_range.mpr fun _ => Nat.zero_le _⟩
   simp only [nhds_discrete, Filter.tendsto_pure, Filter.eventually_atTop] at h
   obtain ⟨N, h⟩ := h
-  refine ⟨N, f N, ?_, hf (Nat.zero_le N)⟩
-  intro n hn
-  simp_all only [ge_iff_le, le_refl]
+  refine ⟨N, f N, fun n hn => ?_, hf (Nat.zero_le N)⟩
+  rw [h n hn, h N le_rfl]
 
 /-- `f.repeatAndNext g n` is the formula `f ∧ X (f ∧ X (… ∧ X g))` with `n` nested
 `next` operators, used to unfold `f until g` to depth `n`. -/
@@ -92,14 +91,11 @@ theorem until_expand_repeat {AP} (f g : NNF AP) : ∀ w, (f.until g).language w
     next n ih =>
       simp only [NNF.repeatAndNext, NNF.language]
       intros w hg hf
-      constructor
-      · specialize hf 0 (by omega)
-        exact hf
-      · apply ih
-        · exact hg
-        · intros k hk
-          specialize hf (k + 1) (by omega)
-          exact hf
+      refine ⟨hf 0 (by omega), ?_⟩
+      apply ih
+      · exact hg
+      · intros k hk
+        exact hf (k + 1) (by omega)
   · simp only [NNF.language, forall_exists_index]
     intros n h
     exists n
@@ -109,8 +105,7 @@ theorem until_expand_repeat {AP} (f g : NNF AP) : ∀ w, (f.until g).language w
     next n ih =>
       simp only [NNF.repeatAndNext, NNF.language, and_imp]
       intros w hf0 h
-      specialize ih (fun j => w (j + 1)) h
-      rcases ih with ⟨hg, hf⟩
+      obtain ⟨hg, hf⟩ := ih (fun j => w (j + 1)) h
       refine ⟨hg, ?_⟩
       intros k hk
       cases k with
@@ -195,10 +190,7 @@ lemma map_sat_le
   induction ψ <;> simp only [mapSubtypeImp, Functor.map, map, Sat, Set.mem_setOf_eq] at Hsat ⊢
   next a => exact Hsat
   next f g f_ih g_ih => exact ⟨f_ih Hsat.left, g_ih Hsat.right⟩
-  next f g f_ih g_ih =>
-    rcases Hsat with Hsat|Hsat
-    · left; apply f_ih Hsat
-    · right; apply g_ih Hsat
+  next f g f_ih g_ih => exact Hsat.imp f_ih g_ih
 
 lemma mapSubtypeImp_embed
   {T : Type} [PartialOrder T] {x y : T} (hle : x ≤ y)
@@ -336,8 +328,7 @@ def runDag
       obtain ⟨Y, p_sat, p_sub⟩ := p_sat M.q₀ _ 0 G.p_root
       exists Subtype.embedLe hle '' Y
       constructor
-      · apply h_delta_root
-        exact p_sat
+      · simp_all
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
         rintro ⟨⟨q, l⟩, q'⟩ H
@@ -354,8 +345,7 @@ def runDag
       exists Subtype.embedLe hle '' Y
       constructor
       · specialize h_delta_eq ⟨q, qp⟩ l
-        rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed hle]
+        rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed hle]
         assumption
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
@@ -367,6 +357,27 @@ def runDag
         specialize p_sub ((⟨q, qp⟩, l), ⟨q', q'p⟩)
         grind
 }
+
+/-- If the source run DAG `G` is accepting and the embedding `embedLe hle` reflects
+the acceptance condition (`hF`), then the transported `replaceRoot.runDag` is
+accepting too. -/
+lemma runDag_accepting
+  {S}
+  {M : ABW S (Iic φ₁)} {M' : ABW S (Iic φ₂)} {w : ℕ → S}
+  {G : RunDAG M w} (G_acc : G.accepting)
+  (h_delta_root : ∀ Q, PositiveBool.Sat Q (M.δ M.q₀ (w 0))
+      → PositiveBool.Sat ((Subtype.embedLe hle) '' Q) (M'.δ M'.q₀ (w 0)))
+  (h_delta_eq : ∀ (q : Iic φ₁) i,
+      M'.δ (q.embedLe hle) (w i) = (M.δ q (w i)).mapSubtypeImp (fun _ p => p.trans hle))
+  (hF : ∀ q : Iic φ₁, q.embedLe hle ∈ M'.F ↔ q ∈ M.F)
+    : (runDag hle G h_delta_root h_delta_eq).accepting := by
+  intros p p_path
+  have p_path' := preserves_path hle M.q₀ M'.q₀ G.toDAG p p_path
+  intros i
+  obtain ⟨j, hj, H⟩ := G_acc _ p_path' i
+  refine ⟨j + 1, by omega, ?_⟩
+  have := (hF _).mpr H
+  rwa [show Subtype.embedLe hle _ = p (j + 1) from rfl] at this
 
 end replaceRoot
 
@@ -427,17 +438,14 @@ def runDag
       Prod.exists, Subtype.exists] at hV ⊢
     rcases hV with ⟨rfl, rfl⟩|⟨z, hz, l, hV, rfl, rfl⟩
     · exists {⟨M.q₀.val, M.q₀.prop.trans hle⟩}
-      constructor
-      · exact h_root
-      · simp
+      simp_all
     · specialize p_sat _ hV
       simp only at p_sat
       obtain ⟨Y, p_sat, p_sub⟩ := p_sat
       exists Subtype.embedLe hle '' Y
       constructor
       · specialize h_delta_eq ⟨z, hz⟩ (l + 1)
-        rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed hle]
+        rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed hle]
         assumption
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
@@ -501,9 +509,7 @@ def dag : DAG (Iic Φ) := {
       constructor
       · split
         next q_root =>
-          cases q_root
-          left; left
-          simp only [Set.mem_singleton_iff]
+          simp_all
         · left; right
           simp only [Set.mem_image, Set.mem_sdiff]
           grind
@@ -610,8 +616,7 @@ lemma runDag_p_sat
       obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
       exists Subtype.embedLe leφ₁ '' Y₁
       constructor
-      · rw [delta_eq_1]
-        rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+      · rw [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
         exact p_sat₁
       · rw [Set.subset_def]
         simp only [dag, base]
@@ -627,9 +632,8 @@ lemma runDag_p_sat
         obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
         exists Subtype.embedLe leφ₁ '' Y₁
         constructor
-        · rw [show Subtype.embedLe leφ₂ ⟨q, pq⟩ = Subtype.embedLe leφ₁ ⟨q, hq1⟩ by rfl]
-          rw [delta_eq_1]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+        · rw [show Subtype.embedLe leφ₂ ⟨q, pq⟩ = Subtype.embedLe leφ₁ ⟨q, hq1⟩ by rfl,
+            delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
           exact p_sat₁
         · rw [Set.subset_def]
           simp only [dag, base]
@@ -644,8 +648,7 @@ lemma runDag_p_sat
       · obtain ⟨Y₂, p_sat₂, p_sub₂⟩ := G₂.p_sat _ hV₂
         exists Subtype.embedLe leφ₂ '' Y₂
         constructor
-        · rw [delta_eq_2]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₂]
+        · rw [delta_eq_2, PositiveBool.mapSubtypeImp_embed leφ₂]
           exact p_sat₂
         · rw [Set.subset_def]
           simp only [dag, base]
@@ -720,8 +723,7 @@ def shiftConjoinDag.runDag
       obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
       exists Subtype.embedLe leφ₁ '' Y₁
       constructor
-      · rw [delta_eq_1]
-        rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+      · rw [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
         exact p_sat₁
       · rw [Set.subset_def]
         simp only [
@@ -742,8 +744,7 @@ def shiftConjoinDag.runDag
         obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
         exists Subtype.embedLe leφ₁ '' Y₁
         constructor
-        · rw [delta_eq_1 ⟨q, hq1⟩]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+        · rw [delta_eq_1 ⟨q, hq1⟩, PositiveBool.mapSubtypeImp_embed leφ₁]
           exact p_sat₁
         · rw [Set.subset_def]
           simp only [conjoinDag.dag, conjoinDag.base, shiftDag.dag]
@@ -864,9 +865,7 @@ lemma mini_le q l (H : (q, l) ∈ Vb G) : mini G (q, l) ≤ l := by
   rcases H with ⟨i, q, pq, l, hV, rfl, rfl⟩
   apply (show ∀ x y z, x ≤ z → x ≤ y + z by omega)
   apply csInf_le ⟨0, by intro i _; exact Nat.zero_le i⟩
-  simp only [Set.mem_setOf_eq, le_add_iff_nonneg_left, zero_le, add_tsub_cancel_right,
-    true_and]
-  exact hV
+  simp_all
 
 lemma mini_in q l (H : (q, l) ∈ Vb G) : let i' := mini G (q, l); (q, l - i') ∈ (G i').V := by
   have hne : Set.Nonempty { i | i ≤ l ∧ (q, l - i) ∈ (G i).V } := by
@@ -1009,8 +1008,7 @@ def runDag
     · obtain ⟨Y, p_sat, p_sub⟩ := (G l).p_sat _ (G l).p_root
       exists ((Subtype.embedLe ltφ.le) '' Y) ∪ {M.q₀}
       constructor
-      · apply h_delta_root
-        simpa using p_sat
+      · simp_all
       · simp only [dag, base, E]
         grind only [
           = Set.subset_def,
@@ -1025,8 +1023,7 @@ def runDag
           l - i') (by apply mini_in (G := (fun i => (G i).toDAG)); exact hv)
       exists Subtype.embedLe ltφ.le '' Y
       constructor
-      · rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed]
+      · rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed]
         have eq : l - i' + i' = l := by have := mini_le (fun i => (G i).toDAG); grind
         rwa [eq] at p_sat
       · simp only [dag, base, E]
@@ -1090,15 +1087,11 @@ theorem sub_trans {AP} {a b c : NNF AP} (h1 : a ≤ b) (h2 : b ≤ c) : a ≤ c 
   induction h2 generalizing a
   case refl => exact h1
   all_goals rename_i ih; first
-    | exact sub.and_left (ih h1)
-    | exact sub.and_right (ih h1)
-    | exact sub.or_left (ih h1)
-    | exact sub.or_right (ih h1)
+    | exact sub.and_left (ih h1) | exact sub.and_right (ih h1)
+    | exact sub.or_left (ih h1) | exact sub.or_right (ih h1)
     | exact sub.next (ih h1)
-    | exact sub.until_left (ih h1)
-    | exact sub.until_right (ih h1)
-    | exact sub.release_left (ih h1)
-    | exact sub.release_right (ih h1)
+    | exact sub.until_left (ih h1) | exact sub.until_right (ih h1)
+    | exact sub.release_left (ih h1) | exact sub.release_right (ih h1)
 
 instance {AP} : PartialOrder (NNF AP) where
   le_refl _ := sub.refl
@@ -1203,6 +1196,14 @@ lemma subformula_toABW_lang
   obtain ⟨j, Hij, G_acc⟩ := G_acc _ p_pres (i + 1)
   exists j + 1, (by omega)
 
+/-- Transfer membership in the acceptance set across the `Subtype.val` inverse:
+if the χ-state recovered from `v.val` is accepting, so is `v` itself. Used to turn
+the acceptance of a component automaton into acceptance of the combined one. -/
+private lemma mem_F_of_invFun {S} {Φ χ : NNF S} {v : Iic Φ}
+    (hχ : v.val ≤ χ) (H : Function.invFun Subtype.val v.val ∈ χ.toABW.F) : v ∈ Φ.toABW.F := by
+  simp only [NNF.toABW, Set.mem_setOf_eq] at H ⊢
+  rwa [Function.invFun_eq (f := Subtype.val) ⟨⟨v.val, hχ⟩, rfl⟩] at H
+
 lemma and_mp.left {S} {φ₁ φ₂ : NNF S} {w} : (φ₁.and φ₂).toABW.language w → φ₁.toABW.language w := by
   simp only [ABW.language, forall_exists_index]
   intros G G_acc
@@ -1240,20 +1241,12 @@ theorem and_mpr {AP : Type} {φ₁ φ₂ : NNF AP} {w : ℕ
     have G1_path := DAG.path_mapped G1.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G1_acc _ G1_path i
-    exists (k + j), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (k + j)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨k + j, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
   · have : Nonempty { q // q ≤ φ₂ } := by infer_instance
     have G2_path := DAG.path_mapped G2.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G2_acc _ G2_path i
-    exists (j + 1), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (j + 1)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨j + 1, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
 
 lemma or_mp {S} {φ₁ φ₂ : NNF S} {w} : (φ₁.or φ₂).toABW.language w
     → φ₁.toABW.language w ∨ φ₂.toABW.language w := by
@@ -1273,45 +1266,31 @@ omit [DecidableEq S] in
 lemma left : φ₁.toABW.language w → (φ₁.or φ₂).toABW.language w := by
   classical
   rintro ⟨G, G_acc⟩
-  exists replaceRoot.runDag (sub.or_left sub.refl) G
+  exact ⟨replaceRoot.runDag (sub.or_left sub.refl) G
     (by
       simp only [NNF.toABW, delta, PositiveBool.mapSubtype, PositiveBool.Sat]
       intros
       left
       let : DecidablePred (· ∈ w 0) := by classical infer_instance
       rw [←PositiveBool.sat_map_image (sub.or_left sub.refl) delta_forall]
-      assumption
-    )
-    (by simp [NNF.toABW])
-  intros _ p_path
-  have p_path' := replaceRoot.preserves_path _ _ _ _ _ p_path
-  specialize G_acc _ p_path'
-  simp only [ge_iff_le, NNF.toABW, Set.mem_setOf_eq] at G_acc ⊢
-  intros i
-  specialize G_acc i
-  grind
+      assumption)
+    (by simp [NNF.toABW]),
+    replaceRoot.runDag_accepting _ G_acc _ _ (by simp [NNF.toABW, Subtype.embedLe])⟩
 
 omit [DecidableEq S] in
 lemma right : φ₂.toABW.language w → (φ₁.or φ₂).toABW.language w := by
   classical
   rintro ⟨G, G_acc⟩
-  exists replaceRoot.runDag (sub.or_right sub.refl) G
+  exact ⟨replaceRoot.runDag (sub.or_right sub.refl) G
     (by
       simp only [NNF.toABW, delta, PositiveBool.mapSubtype, PositiveBool.Sat]
       intros
       right
       let : DecidablePred (· ∈ w 0) := by classical infer_instance
       rw [←PositiveBool.sat_map_image (sub.or_right sub.refl) delta_forall]
-      assumption
-    )
-    (by simp [NNF.toABW])
-  intros _ p_path
-  have p_path' := replaceRoot.preserves_path _ _ _ _ _ p_path
-  specialize G_acc _ p_path'
-  simp only [ge_iff_le, NNF.toABW, Set.mem_setOf_eq] at G_acc ⊢
-  intros i
-  specialize G_acc i
-  grind
+      assumption)
+    (by simp [NNF.toABW]),
+    replaceRoot.runDag_accepting _ G_acc _ _ (by simp [NNF.toABW, Subtype.embedLe])⟩
 
 end or_mpr
 
@@ -1331,8 +1310,7 @@ lemma next_mp {AP : Type} {φ : NNF AP} {w} : φ.next.toABW.language w
 
 lemma next_mpr {AP : Type} {φ : NNF AP} {w} : (φ.toABW.language fun j =>
     w (j + 1)) → φ.next.toABW.language w := by
-  intros H
-  rcases H with ⟨G, G_acc⟩
+  rintro ⟨G, G_acc⟩
   have : DecidableEq AP := by classical infer_instance
   exists shiftDag.runDag (sub.next sub.refl) G
     (by simp [NNF.toABW, delta, PositiveBool.mapSubtype, PositiveBool.Sat])
@@ -1396,8 +1374,7 @@ lemma until_mpr.base
   classical
   simp only [ABW.language, NNF.toABW]
   obtain ⟨G, G_acc⟩ := h2
-  exists
-    replaceRoot.runDag (sub.until_right sub.refl) G
+  exact ⟨replaceRoot.runDag (sub.until_right sub.refl) G
     (by
       simp only [delta, PositiveBool.mapSubtype, PositiveBool.Sat, Set.mem_image, Subtype.mk.injEq,
         Subtype.exists, exists_and_right, exists_eq_right]
@@ -1405,17 +1382,9 @@ lemma until_mpr.base
       left
       let : DecidablePred (· ∈ w 0) := by classical infer_instance
       rw [←PositiveBool.sat_map_image (sub.until_right sub.refl) delta_forall]
-      assumption
-    )
-    (by simp [NNF.toABW])
-  simp only [RunDAG.accepting, ge_iff_le, Set.mem_setOf_eq] at G_acc ⊢
-  intros p p_path
-  have p_path' := replaceRoot.preserves_path _ _ _ _ _ p_path
-  specialize G_acc _ p_path'
-  simp only [NNF.toABW, Set.mem_setOf_eq] at G_acc
-  intros i
-  specialize G_acc i
-  grind
+      assumption)
+    (by simp [NNF.toABW]),
+    replaceRoot.runDag_accepting _ G_acc _ _ (by simp [NNF.toABW, Subtype.embedLe])⟩
 
 lemma until_mpr.next
   {S} {φ₁ φ₂ : NNF S} {w : ℕ → Letter S}
@@ -1444,19 +1413,12 @@ lemma until_mpr.next
     have G₁_path := DAG.path_mapped G₁.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G₁_acc _ G₁_path i
-    exists (k + j), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (k + j)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨k + j, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
   · have Gs_path := DAG.path_mapped _ _ subtype_val_injective _ p_path
     have p_path := shiftDag.preserves_path _ _ _ _ _ _ Gs_path
     intros i
     have ⟨j, Hj, H⟩ := G₂_acc _ p_path i
-    exists (j + 1 + 1), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Subtype.coe_eta, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (j + 1 + 1)).val, _⟩, rfl⟩] at H
-    exact H
+    exact ⟨j + 1 + 1, by omega, mem_F_of_invFun (op (j + 1 + 1)).prop H⟩
 
 namespace release_mp
 
@@ -1517,11 +1479,7 @@ lemma always
   · have Gi_path := DAG.path_mapped (G i).toDAG _ subtype_val_injective _ p_path
     intros l
     have ⟨j, Hj, H⟩ := (hg i).choose_spec _ Gi_path l
-    exists (k + j), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (k + j)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨k + j, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
 
 -- By Claude 4.5 Opus
 omit [DecidableEq S] in
@@ -1556,20 +1514,12 @@ lemma base
   · have G₁_path := DAG.path_mapped G₁.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G₁_acc _ G₁_path i
-    exists (k + j), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (k + j)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨k + j, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
   · have : Nonempty { q // q ≤ φ₂ } := by infer_instance
     have G₂_path := DAG.path_mapped G₂.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G₂_acc _ G₂_path i
-    exists (j + 1), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (j + 1)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨j + 1, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
 
 -- By Claude 4.5 Opus
 omit [DecidableEq S] in
@@ -1592,29 +1542,48 @@ lemma next
           Y ⊆ _ by grind)
         let : DecidablePred (· ∈ w 0) := by classical infer_instance
         rwa [←PositiveBool.sat_map_image _ delta_forall]
-      · right
-        simp
+      · simp_all
     )
   intros op op_path
   rcases conjoinDag.preserves_path _ _ _ _ _ _ _ _ op_path with ⟨k, p_path⟩|p_path
   · have G₂_path := DAG.path_mapped G₂.toDAG _ subtype_val_injective _ p_path
     intros i
     have ⟨j, Hj, H⟩ := G₂_acc _ G₂_path i
-    exists (k + j), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (k + j)).val,
-        DAG.path_elems_prop p_path j⟩, rfl⟩] at H
-    exact H
+    exact ⟨k + j, by omega, mem_F_of_invFun (DAG.path_elems_prop p_path j) H⟩
   · have Gs_path := DAG.path_mapped _ _ subtype_val_injective _ p_path
     have p_path := shiftDag.preserves_path _ _ _ _ _ _ Gs_path
     intros i
     have ⟨j, Hj, H⟩ := G₃_acc _ p_path i
-    exists (j + 1 + 1), (by omega)
-    simp only [NNF.toABW, Function.comp_apply, Subtype.coe_eta, Set.mem_setOf_eq] at H ⊢
-    rw [Function.invFun_eq (f := Subtype.val) ⟨⟨(op (j + 1 + 1)).val, _⟩, rfl⟩] at H
-    exact H
+    exact ⟨j + 1 + 1, by omega, mem_F_of_invFun (op (j + 1 + 1)).prop H⟩
 
 end release_mpr
+
+/-- Language equivalence for a leaf NNF formula `φ` (an `atom`/`not_atom`), whose
+automaton has no edges: it accepts `w` exactly when the truth condition `P` (the
+formula's `language`) holds, which is determined by whether `delta φ (w 0)` is
+`.true` or `.false`. -/
+private lemma toABW_leaf_lang {AP} (φ : NNF AP) (w : ℕ → Letter AP) (P : Prop)
+    (htrue : P → ∀ [DecidablePred (· ∈ w 0)], delta φ (w 0) = .true)
+    (hfalse : ¬ P → ∀ [DecidablePred (· ∈ w 0)], delta φ (w 0) = .false) :
+    φ.toABW.language w ↔ P := by
+  classical
+  constructor
+  · rintro ⟨G, -⟩
+    by_contra hc
+    obtain ⟨Y, p_sat⟩ := G.p_sat _ G.p_root
+    simp [NNF.toABW, hfalse hc, PositiveBool.mapSubtype, PositiveBool.Sat] at p_sat
+  · intro H
+    let G : RunDAG φ.toABW w := {
+      V := { (φ.toABW.q₀, 0) }
+      E := ∅
+      p_root := by rfl
+      p_sat := by simp [NNF.toABW, htrue H, PositiveBool.mapSubtype, PositiveBool.Sat]
+      edge_closure := by simp
+    }
+    refine ⟨G, ?_⟩
+    simp only [RunDAG.accepting, DAG.path, ge_iff_le, forall_exists_index]
+    intros _ _ he _
+    simp [G] at he
 
 theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := by
   have : DecidableEq AP := by classical infer_instance
@@ -1623,68 +1592,28 @@ theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := b
   next p =>
     simp only [language]
     funext w; apply propext
-    constructor
-    · simp only [ABW.language, RunDAG.accepting, ge_iff_le, forall_exists_index]
-      intros G G_acc
-      by_contra hc
-      obtain ⟨Y, p_sat⟩ := G.p_sat _ G.p_root
-      simp [NNF.toABW, delta, hc, PositiveBool.mapSubtype, PositiveBool.Sat] at p_sat
-    · intros H
-      let G : RunDAG (NNF.atom p).toABW w := {
-        V := { (⟨.atom p, sub.refl⟩, 0) }
-        E := ∅
-        p_root := by rfl
-        p_sat := by simp; simp [NNF.toABW, delta, H]; constructor
-        edge_closure := by simp
-      }
-      exists G
-      simp only [RunDAG.accepting, DAG.path, ge_iff_le, forall_exists_index]
-      intros _ _ he _
-      simp [G] at he
+    exact toABW_leaf_lang _ w (p ∈ w 0)
+      (fun H => by simp [delta, H]) (fun H => by simp [delta, H])
   -- not_atom
   next p =>
     simp only [language]
     funext w; apply propext
-    constructor
-    · simp only [ABW.language, RunDAG.accepting, ge_iff_le, forall_exists_index]
-      intros G G_acc
-      by_contra hc
-      obtain ⟨Y, p_sat⟩ := G.p_sat _ G.p_root
-      simp [NNF.toABW, delta, hc, PositiveBool.mapSubtype, PositiveBool.Sat] at p_sat
-    · intros H
-      let G : RunDAG (NNF.not_atom p).toABW w := {
-        V := { (⟨.not_atom p, sub.refl⟩, 0) }
-        E := ∅
-        p_root := by rfl
-        p_sat := by simp; simp [NNF.toABW, delta, H]; constructor
-        edge_closure := by simp
-      }
-      exists G
-      simp only [RunDAG.accepting, DAG.path, ge_iff_le, forall_exists_index]
-      intros _ _ he _
-      simp [G] at he
+    exact toABW_leaf_lang _ w (p ∉ w 0)
+      (fun H => by simp [delta, H]) (fun H => by simp [delta] at H ⊢; simp [H])
   -- and
   next f g f_ih g_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih, ←g_ih]; clear f_ih g_ih
-    constructor
-    · intros H
-      exact ⟨and_mp.left H, and_mp.right H⟩
-    · rintro ⟨H1, H2⟩
-      exact and_mpr H1 H2
+    rw [←f_ih, ←g_ih]
+    exact ⟨fun H => ⟨and_mp.left H, and_mp.right H⟩, fun ⟨H1, H2⟩ => and_mpr H1 H2⟩
   -- or
   next f g f_ih g_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih, ←g_ih]; clear f_ih g_ih
-    constructor
-    · exact or_mp
-    · rintro (H|H)
-      · exact or_mpr.left H
-      · exact or_mpr.right H
+    rw [←f_ih, ←g_ih]
+    exact ⟨or_mp, fun H => H.elim or_mpr.left or_mpr.right⟩
   -- next
   next f f_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih]; clear f_ih
+    rw [←f_ih]
     exact ⟨next_mp, next_mpr⟩
   -- until
   next f g f_ih g_ih =>
@@ -1737,13 +1666,8 @@ theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := b
       · rcases ha with ⟨l, h1, h2⟩
         intros i
         by_cases i ≤ l
-        · left
-          specialize h1 i (by omega)
-          exact release_mp.right G_acc h1
-        · right
-          exists l, (by omega)
-          specialize h1 l (by omega)
-          exact release_mp.left G_acc h1 h2
+        · exact Or.inl (release_mp.right G_acc (h1 i (by omega)))
+        · exact Or.inr ⟨l, by omega, release_mp.left G_acc (h1 l (by omega)) h2⟩
       · simp only [not_exists, not_and, not_not] at ha
         have ha : ∀ l, (⟨f.release g, le_refl _⟩, l) ∈ G.V := by
           suffices ∀ l, ∀ l' ≤ l, (⟨f.release g, le_refl _⟩, l') ∈ G.V by
@@ -1755,22 +1679,18 @@ theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := b
             specialize ha _ ih
             grind
         intros i
-        left
-        specialize ha i
-        exact release_mp.right G_acc ha
+        exact Or.inl (release_mp.right G_acc (ha i))
     · intros H
       by_cases hAlways : ∀ i, g.language (fun j => w (j + i))
       · apply release_mpr.always
-        rw [g_ih]
-        exact hAlways
+        simp_all
       · simp only [not_forall] at hAlways
         obtain ⟨n, hgn⟩ := hAlways
         revert w
         induction n
         · intros w H hgn
           specialize H 0
-          simp at H
-          contradiction
+          simp_all
         next n ih =>
           intros w H hgn
           rw [release_expand] at H

@@ -73,8 +73,7 @@ lemma deleteEdges_empty_depth (G : Digraph V) :
   unfold Digraph.depth
   congr 1
   ext m
-  refine ⟨fun ⟨p, hp⟩ => ⟨p, fun i h => (hp i h).1⟩, fun ⟨p, hp⟩ => ⟨p, ?_⟩⟩
-  intro i h
-  exact ⟨hp i h, Finset.notMem_empty _⟩
+  exact ⟨fun ⟨p, hp⟩ => ⟨p, fun i h => (hp i h).1⟩,
+    fun ⟨p, hp⟩ => ⟨p, fun i h => ⟨hp i h, Finset.notMem_empty _⟩⟩⟩
 
 end Digraph

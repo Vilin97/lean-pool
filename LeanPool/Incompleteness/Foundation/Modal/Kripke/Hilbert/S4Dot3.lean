@@ -17,8 +17,7 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass : FrameClass :=
   { F | Std.Refl F ∧ IsTrans F.World F.Rel ∧ Connected F }
 
 instance _root_.LO.Modal.Kripke.ReflexiveTransitiveConnectedFrameClass.DefinedByS4Dot3Axioms
@@ -90,9 +89,8 @@ instance _root_.LO.Modal.Hilbert.S4Dot3.Kripke.canonical :
         aesop;
     have : (□(□φ ==> ψ) ⋎ □(□ψ ==> φ)) ∉ X := by
       apply iff_mem_or.not.mpr; push Not; exact ⟨hpqX, hqpX⟩;
-    have : □(□φ ==> ψ) ⋎ □(□ψ ==> φ) ∈ X := by
-      apply membership_iff.mpr;
-      exact Entailment.axiomDot3!;
+    have : □(□φ ==> ψ) ⋎ □(□ψ ==> φ) ∈ X :=
+      membership_iff.mpr Entailment.axiomDot3!
     contradiction;
 
 instance _root_.LO.Modal.Hilbert.S4Dot3.Kripke.complete :

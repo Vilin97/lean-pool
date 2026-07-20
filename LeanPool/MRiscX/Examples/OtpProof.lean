@@ -239,10 +239,7 @@ theorem proof_otp_loopBody : ∀ (p k c l : UInt64) (s : MState),
                   · simpSetEq
                 · applySpec specification_LoadWordReg (pc := 6) (dst := 6) (regWithAddr := 1)
                 · simpSetEq
-              · have : @singleton UInt64 (Set UInt64) Set.instSingletonSet 8
-                    = @singleton UInt64 (Set UInt64) Set.instSingletonSet (7 + 1) := by
-                  simp
-                rw [this]
+              · rw [show ({8} : Set UInt64) = {7 + 1} by simp]
                 applySpec specification_XOR (dst := 7) (reg1 := 5) (reg2 := 6)
               · simpSetEq
             · intros l' h_l'
@@ -272,16 +269,10 @@ theorem proof_otp_loopBody : ∀ (p k c l : UInt64) (s : MState),
   · simp only [ne_eq, ge_iff_le, gt_iff_lt]
     simpSetEq
   · simpSetEq
-  · intro neq
-    have hmem : (4 : UInt64) ∈ (({4} ∪ {14}): Set UInt64) := by
-      left
-      rfl
-    rw [neq] at hmem
-    contradiction
+  · simp_all
   · exact h_code'
   · exact h_pc
-  · rcases h_terminated with ⟨h_i, h_x0, h_x1, h_x2, h_x3, h_I_pre⟩
-    exact ⟨⟨h_condition, h_i, h_x0, h_x1, h_x2, h_x3, h_var, h_I_pre⟩, h_I⟩
+  · simp_all
 
 /-- The loop branch (program counter 4 to 14) of the One-Time-Pad correctness
 proof, extracted from `proof_otp` to keep each proof body within the size gate. -/
@@ -372,59 +363,26 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
       · simp
       · simp
       · simp
-      · unfold MState.currInstruction
-        rw [h_code', h_pc]
-        simp
+      · simp_all
       · exact h_pc
       · rcases pre' with ⟨h_reg_3, h_term, h⟩
         simp only [gt_iff_lt, UInt64.not_lt, MState.getRegisterAt_def,
           UInt64.le_zero_iff] at h_reg_3
-        constructor
-        · intros i h_i
-          specialize h i
-          apply h
-          simp only [MState.getRegisterAt_def]
-          rw [h_reg_3]
-          simp only [UInt64.sub_zero]
-          exact h_i
-        · simp only [MState.get_label_from_code, MState.getRegisterAt_def, Bool.not_eq_true]
-          constructor
-          · rw [h_code']
-            simp [p_update_eq]
-          · simp only [Bool.not_eq_true] at h_term
-            exact ⟨h_reg_3, h_term⟩
-    · ext a
-      simp
+        refine ⟨fun i h_i => ?_, ?_⟩
+        · apply h i
+          simp_all
+        · simp_all
+    · simp_all
     · simp
     · exact h_code'
     · exact h_pc
-    · rcases pre with ⟨h_cond, h_temp, h_terminated⟩
-      constructor
-      · exact h_cond
-      · constructor
-        · exact h_terminated
-        · rcases h_temp with ⟨h_I, _⟩
-          exact h_I
-  · ext a
-    simp
+    · simp_all
+  · simp_all
   · simp
   · exact s_code
   · exact h_pc
   -- x[3] = l so this is the beginning
-  · unfold iPre at pre
-    rcases pre with ⟨⟨h_x0, h_x1, h_x2, h_x3, h_noOverlap⟩, h_terminated⟩
-    rw [h_x3]
-    constructor
-    · constructor
-      · intros i h_i'
-        simp at h_i'
-      · unfold iPre
-        simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl,
-          true_and]
-        have : l ≤ l := by
-          simp
-        exact ⟨h_x0, h_x1, h_x2, h_noOverlap⟩
-    · exact h_terminated
+  · simp_all
 
 theorem proof_otp : ∀ (p k c l: UInt64),
   mriscx

@@ -29,8 +29,7 @@ theorem degree_le_sensitivity_sq {n : ℕ} (f : BoolFun n) :
     f.degree ≤ f.sensitivity ^ 2 := by
   by_cases hd : f.degree = 0
   · simp [hd]
-  · have hd' : 1 ≤ f.degree := by omega
-    have hsqrt := sensitivity_ge_sqrt_degree f hd'
+  · have hsqrt := sensitivity_ge_sqrt_degree f (by omega)
     have hsq : (f.degree : ℝ) ≤ (f.sensitivity : ℝ) ^ 2 := by
       nlinarith [Real.sq_sqrt (Nat.cast_nonneg (α := ℝ) f.degree),
                  Real.sqrt_nonneg (↑f.degree : ℝ)]

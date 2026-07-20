@@ -83,6 +83,22 @@ def iBdAllNumLt'
 
 open Lean Elab Tactic
 
+/-- Discharge the `Term.le` bound-comparison subgoal shared by the
+`iBdEx'`/`iBdAll'` `relabelEquiv` congruence proofs. -/
+macro "relabelTermLeCongr" : tactic =>
+  `(tactic| (
+    unfold Term.le Relations.boundedFormula₂ Relations.boundedFormula
+    rw [relabelEquiv.rel]
+    congr
+    funext x
+    simp only [Term.relabelEquiv_apply, Term.relabel_relabel]
+    fin_cases x
+    · simp only [Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Term.relabel.eq_1, Sum.map_inl,
+        Equiv.sumCongr_apply, Equiv.coe_refl, Sum.map_inr, id_eq]
+    · simp [Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one,
+        Term.relabel_relabel, Sum.map_comp_map, Function.comp_id, Equiv.sumCongr]
+      congr 1))
+
 namespace iBdEx'
 
 theorem relabelEquiv
@@ -98,17 +114,7 @@ by
   congr
   rw [relabelEquiv.inf]
   congr
-  · unfold Term.le Relations.boundedFormula₂ Relations.boundedFormula
-    rw [relabelEquiv.rel]
-    congr
-    funext x
-    simp only [Term.relabelEquiv_apply, Term.relabel_relabel]
-    fin_cases x
-    · simp only [Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Term.relabel.eq_1, Sum.map_inl,
-      Equiv.sumCongr_apply, Equiv.coe_refl, Sum.map_inr, id_eq]
-    · simp [Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one,
-        Term.relabel_relabel, Sum.map_comp_map, Function.comp_id, Equiv.sumCongr]
-      congr 1
+  · relabelTermLeCongr
 
 end iBdEx'
 
@@ -127,17 +133,7 @@ by
   congr
   rw [relabelEquiv.imp]
   congr
-  · unfold Term.le Relations.boundedFormula₂ Relations.boundedFormula
-    rw [relabelEquiv.rel]
-    congr
-    funext x
-    simp only [Term.relabelEquiv_apply, Term.relabel_relabel]
-    fin_cases x
-    · simp only [Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Term.relabel.eq_1, Sum.map_inl,
-      Equiv.sumCongr_apply, Equiv.coe_refl, Sum.map_inr, id_eq]
-    · simp [Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one,
-        Term.relabel_relabel, Sum.map_comp_map, Function.comp_id, Equiv.sumCongr]
-      congr 1
+  · relabelTermLeCongr
 
 end iBdAll'
 

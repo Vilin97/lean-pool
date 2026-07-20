@@ -157,8 +157,7 @@ private lemma StandardLP.toValidELP_isFeasible_iff (P : StandardLP I J R) :
       rw [←dotWeig_eq_bot] at hxr
       simp [StandardLP.toValidELP] at hxr
     | ⊤ =>
-      exfalso
-      exact hr rfl
+      simp_all
     | (p : R) =>
       refine ⟨p, x, ?_, ?_⟩
       · rwa [StandardLP.toValidELP.isSolution_iff] at hx
@@ -218,8 +217,7 @@ private theorem StandardLP.toValidELP_optimum_eq (P : StandardLP I J R) :
 
 omit [Fintype J] in
 private lemma StandardLP.toValidELP_dualize_eq (P : StandardLP I J R) :
-    P.toValidELP.dualize = P.dualize.toValidELP :=
-  rfl
+    P.toValidELP.dualize = P.dualize.toValidELP := rfl
 
 
 variable [Fintype I]

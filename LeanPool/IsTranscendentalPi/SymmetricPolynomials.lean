@@ -57,8 +57,8 @@ lemma coeff_eq_esymm_of_roots
     simpa [p] using (Monic.map (algebraMap R S) hmonic).leadingCoeff
   rw [← Polynomial.coeff_map]
   calc
-    _ = p.leadingCoeff * (-1) ^ (p.natDegree - k) * p.roots.esymm (p.natDegree - k) := by
-      exact Polynomial.coeff_eq_esymm_roots_of_splits hsplit (hdeg ▸ hk)
+    _ = p.leadingCoeff * (-1) ^ (p.natDegree - k) * p.roots.esymm (p.natDegree - k) :=
+      Polynomial.coeff_eq_esymm_roots_of_splits hsplit (hdeg ▸ hk)
     _ = (-1) ^ (n - k) * (valuesFin b).esymm (n - k) := by
       simp [hdeg, hlead, p, hroots]
     _ = _ := by simp [valuesFin, MvPolynomial.aeval_esymm_eq_multiset_esymm]

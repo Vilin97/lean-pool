@@ -100,8 +100,7 @@ end BodySystemObj
     apply resEq_ext
     convert bodyMap_restrict f x n using 1 <;> rfl)
 lemma bodyEquivSystem_hom_app_res_coe (x : bodyFunctor.obj T) :
-  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := by
-  rfl
+  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := rfl
 
 namespace BodySystemObj
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -121,14 +120,12 @@ lemma bodySystem_contains_iff' (x : BodySystemObj T) {z} (y : ExtensionsAt z) :
 @[congr] --simp needs this
 lemma res_val_congr (x y : BodySystemObj T) (h : x = y)
   (h' : m = n) : (x.res m).val = (y.res n).val := by
-  cases h
-  cases h'
+  subst h h'
   rfl
 @[congr] --how can this help if it is proven with congr?
 lemma res_val'_congr (x y : BodySystemObj T) (h : x = y)
   (h' : m = n) : resEq.val' (x.res m) = resEq.val' (y.res n) := by
-  cases h
-  cases h'
+  subst h h'
   rfl
 lemma containsTree.map {x : BodySystemObj S} {y}
   (h : x.containsTree y) (f : S ⟶ T) :
@@ -166,8 +163,7 @@ lemma eval_valT'_congr' (S S' : ResStrategy T p k) (h : S = S')
 lemma eval_val_congr' (S S' : ResStrategy T p k) (h : S = S')
   (x x' : T) (h' : x = x') hp hl :
   (S x hp hl).val = (S' x' (by subst h'; exact hp) (by subst h'; exact hl)).val := by
-  cases h
-  cases h'
+  subst h h'
   rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def res (h : m ≤ k) (S : ResStrategy T p k) : ResStrategy T p m :=
@@ -273,14 +269,8 @@ lemma strategy_body (f : Strategy T p) : y ∈ body f.pre.subtree ↔ y ∈ body
   simp only [Set.mem_singleton_iff]
   constructor
   · rintro ⟨hy, h⟩
-    refine ⟨hy, ?_⟩
-    intro x hp hx
-    exact congrArg Subtype.val (h x hp hx)
-  · rintro ⟨hy, h⟩
-    refine ⟨hy, ?_⟩
-    intro x hp hx
-    apply Subtype.ext
-    exact h x hp hx
+    exact ⟨hy, fun x hp hx ↦ congrArg Subtype.val (h x hp hx)⟩
+  · simp_all
 end «Section2»
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def consistent (x : bodySystem.obj T) (S : StrategySystem T p) :=
@@ -308,15 +298,10 @@ lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   (bodyEquivSystem.inv.app _ x).val ∈ body (strategyEquivSystem.symm S).pre.subtree
   ↔ consistent x S := by
   rw [bodyEquivSystem_strat]
-  have hpoint : (bodyEquivSystem.hom.app T) ((bodyEquivSystem.inv.app T) x) = x := by
-    change ((bodyEquivSystem.inv.app T ≫ bodyEquivSystem.hom.app T) x) = x
-    rw [← NatTrans.comp_app]
-    rw [bodyEquivSystem.inv_hom_id]
-    rfl
-  rw [hpoint]
+  simp_all
 lemma bodyEquivSystem_strat'' {x} (S : Strategy T.2 p) :
   x.val ∈ body S.pre.subtree
-  ↔ consistent (bodyEquivSystem.hom.app T x) (strategyEquivSystem S) := by
-  exact bodyEquivSystem_strat (x := x) (strategyEquivSystem S)
+  ↔ consistent (bodyEquivSystem.hom.app T x) (strategyEquivSystem S) :=
+  bodyEquivSystem_strat (x := x) (strategyEquivSystem S)
 end «Section1»
 end GaleStewartGame

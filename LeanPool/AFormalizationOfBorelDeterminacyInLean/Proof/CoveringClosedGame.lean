@@ -55,8 +55,7 @@ lemma LosingCondition.concat {x : List (upA hyp)} {a h} :
   ∃ y : subAt (getTree' hyp x) [a.1], a.2
   = pullSub (subAt G.tree (x.map Prod.fst ++ a.1 :: y)) y := by
   have hxlen : x.length = 2 * k + 1 := by simpa using h
-  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-    exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
   unfold LosingCondition
   simp [hxlen, hmap, Stream'.cons_append_stream, List.append_assoc]
 lemma LosingCondition.of_concat {x : List (upA hyp)} {a h} (H : LosingCondition (x ++ [a]) h) :
@@ -75,8 +74,7 @@ lemma WinningCondition.concat {x : List (upA hyp)} {a h} :
   ∃ S' : QuasiStrategy (subAt (getTree' hyp x) [a.1]) Player.one, a.2
   = S'.1.subtree := by
   have hxlen : x.length = 2 * k + 1 := by simpa using h
-  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-    exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
   unfold WinningCondition
   conv => simp [hmap, Stream'.cons_append_stream]
   intro _
@@ -138,10 +136,10 @@ lemma getTree_sub (x : gameTree hyp) :
   | append_singleton x a ih =>
     conv at h => simp
     conv => simp
-    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-      exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
     obtain ⟨h, ⟨_, h2⟩⟩ := h; split_ifs at h2
-    · obtain ⟨S, h2⟩ := h2; rw [hmap, h2, ← subAt_append]; apply le_trans S.1.subtree_sub
+    · obtain ⟨S, h2⟩ := h2; rw [hmap, h2, ← subAt_append]
+      apply le_trans S.1.subtree_sub
       gcongr; exact ih h
     · rcases h2 with h2 | h2
       · obtain ⟨y, h2⟩ := h2.of_concat; rw [hmap, h2, List.append_cons, ← subAt_append]
@@ -176,16 +174,12 @@ def y : getTree' hyp x.val where
   property := by
     obtain ⟨x, hx⟩ := x
     rcases x.eq_nil_or_concat' with rfl | ⟨xs, a, rfl⟩
-    · change 0 = 2 * k + 2 at h
-      have hzero : 0 = 2 * k + 2 := h
-      omega
+    · simp at h
     · conv at h => simp
       conv => lhs; rw [H.2.choose_spec]
       rw [mem_pullSub_self]
-      have hmap : List.map Prod.fst (xs ++ [a]) = xs.map Prod.fst ++ [a.1] := by
-        exact List.map_append (f := Prod.fst) (l₁ := xs) (l₂ := [a])
-      have hy : a.1 :: H.2.choose.val ∈ getTree' hyp xs := by
-        simpa [h] using H.2.choose.prop
+      have hmap : List.map Prod.fst (xs ++ [a]) = xs.map Prod.fst ++ [a.1] := List.map_append ..
+      have hy : a.1 :: H.2.choose.val ∈ getTree' hyp xs := by simpa [h] using H.2.choose.prop
       simpa [subAt, hmap, List.append_assoc] using getTree_sub ⟨xs, mem_of_append hx⟩ hy
 lemma y_spec : getTree' hyp x.val
   = pullSub (subAt G.tree (x.val.map Prod.fst ++ H.y.val)) H.y.val := H.2.choose_spec
@@ -252,13 +246,11 @@ lemma T'_snd_small' (x : gameTree hyp) (h : x.val.length ≤ 2 * k) :
     conv at hx => simp
     conv => simp
     rw [validExt_short h] at hx
-    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-      exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
     rw [hmap, hx.2.2, ih hx.1 h.le, subAt_append]
 lemma T'_snd_small {x a} (h : x ++ [a] ∈ gameTree hyp) (h' : x.length < 2 * k) :
   a.2 = (G.residual (x.map Prod.fst ++ [a.1])).tree := by
-  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-    exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+  have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
   simpa [Game.residual_tree, hmap] using T'_snd_small' ⟨_, h⟩ (by simpa using h')
 @[simp] lemma pInvTreeHomMap_nil : pInvTreeHomMap hyp [] = [] := by simp [pInvTreeHomMap]
 @[simp] lemma pInvTreeHomMap_concat (x : List A) (a : A) :
@@ -284,18 +276,13 @@ def pInvTreeHom : (Tree.res (2 * k)).obj ⟨_, G.tree⟩ ⟶
       specialize ih (mem_of_append h)
       simp only at ih ⊢
       have hxlt : x.length < 2 * k := by
-        have hxlen : (x ++ [a]).length = x.length + 1 := by
-          simp
-        have hxle : x.length + 1 ≤ 2 * k := by
-          rw [← hxlen]
-          exact h.2
-        exact Nat.lt_of_succ_le hxle
+        have hxle : (x ++ [a]).length ≤ 2 * k := h.2
+        simp only [List.length_append, List.length_cons, List.length_nil] at hxle; omega
       constructor
       · have hconcat := pInvTreeHomMap_concat (hyp := hyp) (x := x) (a := a)
         have hvalid : ValidExt (pInvTreeHomMap hyp x) ⟨a, (G.residual (x ++ [a])).tree⟩ := by
           have hplen : (pInvTreeHomMap hyp x).length < 2 * k := by
-            rw [pInvTreeHomMap_len]
-            exact hxlt
+            rwa [pInvTreeHomMap_len]
           rw [validExt_short hplen]
           constructor
           · rw [getTree_pInvTreeHomMap, Game.residual_tree]
@@ -331,14 +318,9 @@ def treeHomRes : (Tree.res (2 * k)).obj ⟨_, gameTree hyp⟩ ≅
       have hx : x ++ [a] ∈ gameTree hyp := h.1
       have hxprev : x ∈ gameTree hyp := mem_of_append hx
       have hsmall : x.length < 2 * k := by
-        have hxlen : (x ++ [a]).length = x.length + 1 := by
-          simp
-        have hxle : x.length + 1 ≤ 2 * k := by
-          rw [← hxlen]
-          exact h.2
-        exact Nat.lt_of_succ_le hxle
-      have hmap : List.map Prod.fst (x ++ [a]) = List.map Prod.fst x ++ [a.1] := by
-        exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+        have hxle : (x ++ [a]).length ≤ 2 * k := h.2
+        simp only [List.length_append, List.length_cons, List.length_nil] at hxle; omega
+      have hmap : List.map Prod.fst (x ++ [a]) = List.map Prod.fst x ++ [a.1] := List.map_append ..
       rw [hmap, pInvTreeHomMap_concat, ih ⟨hxprev, hsmall.le⟩]
       cases a
       congr
@@ -458,13 +440,12 @@ lemma getTree_eq' (x : List (upA hyp)) (h : x ∈ gameTree hyp) : getTree' hyp x
     | append_singleton y a ih =>
       specialize ih (mem_of_append (by simpa))
       conv at ih => simp [hxl]
-      have hvalid : ValidExt (x ++ y) a := by
-        exact (gameTree_concat (hyp := hyp) (x ++ y) a).mp
-          (by simpa [List.append_assoc] using h) |>.2
+      have hvalid : ValidExt (x ++ y) a :=
+        ((gameTree_concat (hyp := hyp) (x ++ y) a).mp
+          (by simpa [List.append_assoc] using h)).2
       rw [validExt_long (by simp [hxl])] at hvalid
       conv => simp [hxl]
-      have hmap : List.map Prod.fst (y ++ [a]) = List.map Prod.fst y ++ [a.1] := by
-        exact List.map_append (f := Prod.fst) (l₁ := y) (l₂ := [a])
+      have hmap : List.map Prod.fst (y ++ [a]) = List.map Prod.fst y ++ [a.1] := List.map_append ..
       rw [← List.append_assoc, getTree_concat, hvalid.2, ih,
         hmap, ← subAt_append]
 lemma getTree_eq (x : gameTree hyp) : getTree' hyp x.val
@@ -477,16 +458,12 @@ lemma mem_getTree (x : gameTree hyp) : x.val.map Prod.fst ∈
   · have ht : List.take (List.map Prod.fst (List.take (2 * k + 2) x.val)).length
           (List.map Prod.fst x.val)
         = List.map Prod.fst (List.take (2 * k + 2) x.val) := by
-      rw [List.length_map]
-      simp [List.map_take]
+      simp_all
     exact ht.symm ▸ (List.prefix_refl (List.map Prod.fst (List.take (2 * k + 2) x.val)))
   · have hd : List.drop (List.map Prod.fst (List.take (2 * k + 2) x.val)).length
           (List.map Prod.fst x.val)
         = List.map Prod.fst (List.drop (2 * k + 2) x.val) := by
-      rw [List.length_map, List.length_take]
-      rcases le_or_gt x.val.length (2 * k + 2) with hl | hl
-      · simp
-      · simp [List.map_drop]
+      simp_all
     exact hd.symm ▸ h
 
 lemma wins_iff_answer (x : body (game hyp).tree) :
@@ -507,13 +484,10 @@ lemma wins_iff_answer (x : body (game hyp).tree) :
         have hdrop : List.drop (Stream'.take (2 * k + 2) x.val).length
               (List.map Prod.fst (Stream'.take (2 * k + 2 + n) x.val))
             = List.map Prod.fst (List.drop (2 * k + 2) (Stream'.take (2 * k + 2 + n) x.val)) := by
-          rw [← List.map_drop]
-          congr
-          exact Stream'.length_take (2 * k + 2) x.val
+          simp_all
         exact hdrop ▸ by
           convert hm using 1
-          · conv => simp [body.take_coe, Stream'.take_take, Nat.add_comm]
-            trivial
+          · simp_all
           · conv => simp [body.take_coe, Stream'.take_take, Nat.add_comm]
             congr
             exact (Stream'.length_take (2 + 2 * k) x.val).symm
@@ -529,8 +503,7 @@ lemma wins_iff_answer (x : body (game hyp).tree) :
         ((ConcreteCategory.hom (bodyFunctor.map (treeHom hyp))) x).val ∈
           body (pullSub (getTree' hyp (Stream'.take (2 * k + 2) x.val))
             (List.map Prod.fst (Stream'.take (2 * k + 2) x.val))) := by
-      rw [pullSub_body]
-      exact hmem
+      rwa [pullSub_body]
     exact h' (a := (bodyFunctor.map (treeHom hyp) x).val)
       ⟨hbody, by simpa⟩
   · change (bodyFunctor.map (treeHom hyp) x) ∈ G.payoff
@@ -538,8 +511,7 @@ lemma wins_iff_answer (x : body (game hyp).tree) :
         ((ConcreteCategory.hom (bodyFunctor.map (treeHom hyp))) x).val ∈
           body (pullSub (getTree' hyp (Stream'.take (2 * k + 2) x.val))
             (List.map Prod.fst (Stream'.take (2 * k + 2) x.val))) := by
-      rw [pullSub_body]
-      exact hmem
+      rwa [pullSub_body]
     exact Subtype.val_injective.mem_set_image.mp (h.1 hbody)
 instance : TopologicalSpace (upA hyp) := ⊥
 instance : DiscreteTopology (upA hyp) where eq_bot := rfl
@@ -575,16 +547,13 @@ lemma T'_snd_medium' (x : gameTree hyp) (h : x.val.length = 2 * k + 1) :
   getTree' hyp x.val = S.1.subtree := by
   have ⟨x, hx⟩ := x
   rcases x.eq_nil_or_concat' with rfl | ⟨x, a, rfl⟩
-  · change 0 = 2 * k + 1 at h
-    have hzero : 0 = 2 * k + 1 := h
-    omega
+  · simp at h
   · conv at h => simp
     conv at hx => simp [ValidExt, h]
     rw [getTree_concat]
     convert hx.2.2 using 1
     rw [Game.residual_tree]
-    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := by
-      exact List.map_append (f := Prod.fst) (l₁ := x) (l₂ := [a])
+    have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
     rw [hmap, ← subAt_append, ← T'_snd_small' ⟨x, hx.1⟩ (by simp [h])]
 @[simp] lemma treeHom_extensions_val {x} (a : ExtensionsAt x) {y} (h : treeHom hyp x = y) :
   (ExtensionsAt.map (treeHom hyp) h a).val = a.val.1 := by
@@ -593,22 +562,19 @@ lemma T'_snd_medium' (x : gameTree hyp) (h : x.val.length = 2 * k + 1) :
     rfl
   have hlast := congrArg List.getLast? hval'
   have hleft : (ExtensionsAt.map (treeHom hyp) h a).val'.getLast? =
-      some (ExtensionsAt.map (treeHom hyp) h a).val := by
-    exact List.getLast?_append_of_ne_nil _ (by simp)
+      some (ExtensionsAt.map (treeHom hyp) h a).val :=
+    List.getLast?_append_of_ne_nil _ (by simp)
   have hright : (a.val'.map Prod.fst).getLast? = some a.val.1 := by
     change (List.map Prod.fst (x.val ++ [a.val])).getLast? = some a.val.1
-    have hmap : List.map Prod.fst (x.val ++ [a.val]) = x.val.map Prod.fst ++ [a.val.1] := by
-      exact List.map_append (f := Prod.fst) (l₁ := x.val) (l₂ := [a.val])
-    rw [hmap]
-    exact List.getLast?_append_of_ne_nil _ (by simp)
+    have hmap : List.map Prod.fst (x.val ++ [a.val]) = x.val.map Prod.fst ++ [a.val.1] :=
+      List.map_append ..
+    simp_all
   exact Option.some.inj (hleft.symm.trans (hlast.trans hright))
 lemma extensionsAt_ext_fst {x : (game hyp).tree} (a b : ExtensionsAt x)
   (hx : 2 * k + 2 ≤ x.val.length) (h : a.val.1 = b.val.1) : a = b := by
   ext; apply Prod.ext h
   have ha := a.prop; have hb := b.prop
-  conv at ha => simp [hx]
-  conv at hb => simp [hx]
-  rw [ha.2, hb.2, h]
+  simp_all
 
 lemma getTree_lost
   {x : (game hyp).tree} (y : (game hyp).tree) (h : x.val <+: y.val)
@@ -644,12 +610,10 @@ lemma getTree_lost
         have hdrop : List.drop (Stream'.take (2 * k + 2) a).length
               (List.map Prod.fst (Stream'.take (2 * k + 2 + n) a)) =
             List.drop (2 * k + 2) (List.map Prod.fst (Stream'.take (2 * k + 2 + n) a)) := by
-          congr
-          exact Stream'.length_take (2 * k + 2) a
+          simp_all
         exact hdrop ▸ by
           convert hm using 1
-          · conv => simp [hax, Stream'.take_take, Nat.add_comm]
-            trivial
+          · simp_all
           · conv => simp [hax, Stream'.take_take, Nat.add_comm]
             congr
             exact (Stream'.length_take (2 + 2 * k) a).symm
@@ -671,8 +635,7 @@ lemma getTree_lost
           (if (y.val.length % 2 = 0) then Player.one else Player.zero).swap
         else
           (if (y.val.length % 2 = 0) then Player.one else Player.zero).swap.swap).payoff G
-    rw [hp]
-    exact hpay
+    rwa [hp]
 lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ x.val.length)
   (H : LosingCondition (Tree.take (2 * k + 2) x).val (by simpa))
   (hnL : ¬ G.WonPosition (x.val.map Prod.fst) (Player.one.residual x.val)) :
@@ -682,10 +645,8 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
   let u := List.map Prod.fst (List.take (2 * k + 2) x.val) ++ H.y.val
   rw [pullSub_append] at hx
   change List.map Prod.fst x.val ∈ pullSub (subAt G.tree u) u at hx
-  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by
-    simp [hxl]
-  have hlong : (List.take (2 * k + 2) x.val).length + H.y.val.length ≤ x.val.length := by
-    omega
+  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by simp [hxl]
+  have hlong : (List.take (2 * k + 2) x.val).length + H.y.val.length ≤ x.val.length := by omega
   have hlongMap : u.length ≤ (List.map Prod.fst x.val).length := by
     calc
       u.length = (List.take (2 * k + 2) x.val).length + H.y.val.length := by
@@ -703,8 +664,7 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
     rw [Game.wonPosition_iff_disjoint]
     simp_rw [Set.image_preimage_eq_range_inter, Set.inter_assoc, take_coe] at hW
     have hp : ((Player.one.residual u).swap).residual u = Player.zero := by
-      rw [Player.residual_swap, Player.residual_residual]
-      simp
+      simp_all
     rw [hp]
     rw [Player.payoff_zero]
     rw [Set.eq_empty_iff_forall_notMem]
@@ -714,8 +674,7 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
     constructor
     · rcases hs.1 with ⟨t, rfl⟩
       exact ⟨t, rfl⟩
-    · rcases hs.2 with ⟨b, hb, rfl⟩
-      exact ⟨b.prop, ⟨b, hb, rfl⟩⟩
+    · simp_all
   have hUz := Game.WonPosition.extend z (G := G) (p := Player.one.residual u) (x := u) hU
   rw [Player.residual_residual] at hUz
   rw [← hze] at hUz
@@ -739,86 +698,39 @@ lemma extensionsAt_eq_of_lost
   let u := List.map Prod.fst (List.take (2 * k + 2) x.val) ++ H.y.val
   change List.map Prod.fst (x.val ++ [a.val]) ∈ pullSub (subAt G.tree u) u at ha
   change List.map Prod.fst (x.val ++ [b.val]) ∈ pullSub (subAt G.tree u) u at hb
-  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by
-    simp [hxl]
-  have hshortA :
-      (List.map Prod.fst (x.val ++ [a.val])).length ≤ u.length := by
-    calc
-      (List.map Prod.fst (x.val ++ [a.val])).length = x.val.length + 1 := by
-        change (List.map Prod.fst a.val').length = x.val.length + 1
-        rw [List.length_map]
-        exact ExtensionsAt.val'_length a
-      _ ≤ 2 * k + 2 + H.y.val.length := hlen
-      _ = u.length := by
-        symm
-        simp only [u, List.length_append, List.length_map]
-        exact congrArg (fun n ↦ n + H.y.val.length) htakeLen
-  have hshortB :
-      (List.map Prod.fst (x.val ++ [b.val])).length ≤ u.length := by
-    calc
-      (List.map Prod.fst (x.val ++ [b.val])).length = x.val.length + 1 := by
-        change (List.map Prod.fst b.val').length = x.val.length + 1
-        rw [List.length_map]
-        exact ExtensionsAt.val'_length b
-      _ ≤ 2 * k + 2 + H.y.val.length := hlen
-      _ = u.length := by
-        symm
-        simp only [u, List.length_append, List.length_map]
-        exact congrArg (fun n ↦ n + H.y.val.length) htakeLen
+  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by simp [hxl]
+  have hulen : u.length = 2 * k + 2 + H.y.val.length := by
+    simp only [u, List.length_append, List.length_map]
+    exact congrArg (· + H.y.val.length) htakeLen
+  have hextlen : ∀ c : ExtensionsAt x,
+      (List.map Prod.fst (x.val ++ [c.val])).length = x.val.length + 1 := fun c => by
+    change (List.map Prod.fst c.val').length = x.val.length + 1
+    rw [List.length_map]
+    exact ExtensionsAt.val'_length c
+  have hlast : ∀ c : ExtensionsAt x,
+      (List.map Prod.fst (x.val ++ [c.val])).getLast? = some c.val.1 := fun c => by
+    have hmap : List.map Prod.fst (x.val ++ [c.val]) = x.val.map Prod.fst ++ [c.val.1] :=
+      List.map_append ..
+    simp_all
+  have hshortA : (List.map Prod.fst (x.val ++ [a.val])).length ≤ u.length := by
+    rw [hextlen a, hulen]; omega
+  have hshortB : (List.map Prod.fst (x.val ++ [b.val])).length ≤ u.length := by
+    rw [hextlen b, hulen]; omega
   rw [mem_pullSub_short (T := subAt G.tree u) (x := u)
     (y := List.map Prod.fst (x.val ++ [a.val])) hshortA] at ha
   rw [mem_pullSub_short (T := subAt G.tree u) (x := u)
     (y := List.map Prod.fst (x.val ++ [b.val])) hshortB] at hb
+  have hlenEq : (List.map Prod.fst (x.val ++ [a.val])).length =
+      (List.map Prod.fst (x.val ++ [b.val])).length := by
+    rw [hextlen a, hextlen b]
   rcases List.prefix_or_prefix_of_prefix ha.1 hb.1 with h | h
-  · have hlenEq :
-        (List.map Prod.fst (x.val ++ [a.val])).length =
-          (List.map Prod.fst (x.val ++ [b.val])).length := by
-      change (List.map Prod.fst a.val').length = (List.map Prod.fst b.val').length
-      rw [List.length_map, List.length_map]
-      exact (ExtensionsAt.val'_length a).trans (ExtensionsAt.val'_length b).symm
-    have hEq := h.eq_of_length hlenEq
-    have hlast := congrArg List.getLast? hEq
-    have hlastA : (List.map Prod.fst (x.val ++ [a.val])).getLast? = some a.val.1 := by
-      have hmapA : List.map Prod.fst (x.val ++ [a.val]) =
-          List.map Prod.fst x.val ++ List.map Prod.fst [a.val] :=
-        List.map_append (f := Prod.fst) (l₁ := x.val) (l₂ := [a.val])
-      rw [hmapA]
-      change (List.map Prod.fst x.val ++ [a.val.1]).getLast? = some a.val.1
-      exact List.getLast?_append_of_ne_nil _ (by simp)
-    have hlastB : (List.map Prod.fst (x.val ++ [b.val])).getLast? = some b.val.1 := by
-      have hmapB : List.map Prod.fst (x.val ++ [b.val]) =
-          List.map Prod.fst x.val ++ List.map Prod.fst [b.val] :=
-        List.map_append (f := Prod.fst) (l₁ := x.val) (l₂ := [b.val])
-      rw [hmapB]
-      change (List.map Prod.fst x.val ++ [b.val.1]).getLast? = some b.val.1
-      exact List.getLast?_append_of_ne_nil _ (by simp)
-    rw [hlastA, hlastB] at hlast
-    exact Option.some.inj hlast
+  · have he := congrArg List.getLast? (h.eq_of_length hlenEq)
+    rw [hlast a, hlast b] at he
+    exact Option.some.inj he
   · symm
-    have hlenEq :
-        (List.map Prod.fst (x.val ++ [b.val])).length =
-          (List.map Prod.fst (x.val ++ [a.val])).length := by
-      change (List.map Prod.fst b.val').length = (List.map Prod.fst a.val').length
-      rw [List.length_map, List.length_map]
-      exact (ExtensionsAt.val'_length b).trans (ExtensionsAt.val'_length a).symm
-    have hEq := h.eq_of_length hlenEq
-    have hlast := congrArg List.getLast? hEq
-    have hlastB : (List.map Prod.fst (x.val ++ [b.val])).getLast? = some b.val.1 := by
-      have hmapB : List.map Prod.fst (x.val ++ [b.val]) =
-          List.map Prod.fst x.val ++ List.map Prod.fst [b.val] :=
-        List.map_append (f := Prod.fst) (l₁ := x.val) (l₂ := [b.val])
-      rw [hmapB]
-      change (List.map Prod.fst x.val ++ [b.val.1]).getLast? = some b.val.1
-      exact List.getLast?_append_of_ne_nil _ (by simp)
-    have hlastA : (List.map Prod.fst (x.val ++ [a.val])).getLast? = some a.val.1 := by
-      have hmapA : List.map Prod.fst (x.val ++ [a.val]) =
-          List.map Prod.fst x.val ++ List.map Prod.fst [a.val] :=
-        List.map_append (f := Prod.fst) (l₁ := x.val) (l₂ := [a.val])
-      rw [hmapA]
-      change (List.map Prod.fst x.val ++ [a.val.1]).getLast? = some a.val.1
-      exact List.getLast?_append_of_ne_nil _ (by simp)
-    rw [hlastB, hlastA] at hlast
-    exact Option.some.inj hlast
+    have he := congrArg List.getLast? (h.eq_of_length hlenEq.symm)
+    rw [hlast b, hlast a] at he
+    exact Option.some.inj he
 
 end «Section1»
 end GaleStewartGame.BorelDet

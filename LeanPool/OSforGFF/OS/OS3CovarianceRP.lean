@@ -185,9 +185,7 @@ omit [Fact (0 < m)] in
 lemma spatialDot_neg_left (k_sp x_sp : SpatialCoords) :
     spatialDot (-k_sp) x_sp = -spatialDot k_sp x_sp := by
   simp only [spatialDot]
-  have h : ∀ i, (-k_sp) i * x_sp i = -(k_sp i * x_sp i) := by
-    intro i; simp only [PiLp.neg_apply, neg_mul]
-  simp_rw [h, Finset.sum_neg_distrib]
+  simp_all
 
 omit [Fact (0 < m)] in
 lemma xIntegralFactor_eq_conj_neg (f : TestFunctionℂ) (k_sp : SpatialCoords)
@@ -211,14 +209,9 @@ lemma xIntegralFactor_eq_conj_neg (f : TestFunctionℂ) (k_sp : SpatialCoords)
   rw [h_ic]
   congr 1; ext x; simp only [map_mul]
   have h_star_exp : ∀ z : ℂ, starRingEnd ℂ (Complex.exp z) = Complex.exp (starRingEnd ℂ z) := by
-    intro z
-    have h1 : starRingEnd ℂ (Complex.exp z) = conj (Complex.exp z) := rfl
-    have h2 : starRingEnd ℂ z = conj z := rfl
-    rw [h1, h2, ← Complex.exp_conj]
+    simp_all
   simp only [h_star_exp]
-  congr 1
-  · simp only [map_neg, map_mul, Complex.conj_ofReal]; congr 1; ring_nf
-  · simp only [map_mul, Complex.conj_I, Complex.conj_ofReal]
+  simp_all
 
 omit [Fact (0 < m)] in
 lemma yIntegralFactor_eq_neg (f : TestFunctionℂ) (k_sp : SpatialCoords) :
@@ -227,10 +220,7 @@ lemma yIntegralFactor_eq_neg (f : TestFunctionℂ) (k_sp : SpatialCoords) :
   simp only [yIntegralFactor, weightedLaplaceFourier]
   have h_norm : ‖-k_sp‖ = ‖k_sp‖ := norm_neg_eq k_sp
   have h_dot : ∀ x_sp, spatialDot (-k_sp) x_sp = -spatialDot k_sp x_sp := spatialDot_neg_left k_sp
-  simp only [h_norm]; congr 1; ext x; simp only [h_dot, Complex.ofReal_neg]
-  congr 1
-  · congr 1; ring_nf
-  · congr 1; simp only [neg_mul_neg]
+  simp_all
 
 /-! ## Part 6: Factorization to Squared Norm (Direct Approach) -/
 
@@ -372,10 +362,7 @@ theorem freeCovariance_reflection_positive_direct (f : TestFunctionℂ)
   rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   apply mul_nonneg
   · -- (1/(2(2π)^{d-1})) ≥ 0
-    apply one_div_nonneg.mpr
-    apply mul_nonneg (by norm_num : (0 : ℝ) ≤ 2)
-    apply pow_nonneg
-    apply mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) Real.pi_pos.le
+    positivity
   · -- Re(∫ ↑(real_val)) = ∫ real_val ≥ 0
     have h_integral_real : (∫ k_sp : SpatialCoords,
         ((1 / Real.sqrt (‖k_sp‖ ^ 2 + m ^ 2) *
@@ -458,10 +445,7 @@ theorem freeCovariance_reflection_positive_bilinear_real (m : ℝ) [Fact (0 < m)
   0 ≤ ∫ x, ∫ y, (QFT.compTimeReflectionReal f) x * freeCovariance m x y * f y := by
   -- Use the complex theorem for toComplex f
   have h_complex := freeCovariance_reflection_positive_bilinear m (toComplex f) (by
-    intro x hx
-    simp only [toComplex_apply]
-    rw [hf_supp x hx]
-    simp)
+    simp_all)
   -- Connect the real integral to the complex one via real_integral_eq_complex_re
   rw [real_integral_eq_complex_re m f]
   -- Show that the complex integral equals rpInnerProduct
@@ -470,8 +454,7 @@ theorem freeCovariance_reflection_positive_bilinear_real (m : ℝ) [Fact (0 < m)
       = rpInnerProduct m (toComplex f) := by
     rw [rpInnerProduct_toComplex_eq]
     rfl
-  rw [h_eq]
-  exact h_complex
+  simp_all
 
 /-- Alias for `freeCovariance_reflection_positive_bilinear_real` to match expected name. -/
 theorem freeCovariance_reflection_positive_real (m : ℝ) [Fact (0 < m)] (f : TestFunction)

@@ -63,13 +63,10 @@ lemma rho'_norm : ‖rho'‖ = 1 := by
     Real.sq_sqrt (by linarith : (0 : ℝ) ≤ 3)
   rw [h]; norm_num
 
-lemma i_point_norm : ‖iPoint‖ = 1 := by
-  simp only [iPoint, Complex.norm_I]
+lemma i_point_norm : ‖iPoint‖ = 1 := by simp only [iPoint, Complex.norm_I]
 
 lemma outside_closed_unit_ball (z : ℂ) (hz : ‖z‖ > 1) :
-    z ∉ closedBall (0 : ℂ) 1 := by
-  simp only [mem_closedBall, dist_zero_right, not_le]
-  exact hz
+    z ∉ closedBall (0 : ℂ) 1 := by simpa only [mem_closedBall, dist_zero_right, not_le] using hz
 
 /-- The chord (straight line segment) from z₁ to z₂. -/
 def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
@@ -77,17 +74,10 @@ def chordSegment (z₁ z₂ : ℂ) : ℝ → ℂ :=
 
 lemma chordSegment_in_convex {z₁ z₂ : ℂ} {S : Set ℂ} (hS : Convex ℝ S) (hz₁ : z₁ ∈ S) (hz₂ : z₂ ∈ S)
     (t : ℝ) (ht : t ∈ Icc 0 1) :
-    chordSegment z₁ z₂ t ∈ S := by
-  simp only [chordSegment]
-  have ht0 : 0 ≤ t := ht.1
-  have ht1 : t ≤ 1 := ht.2
-  have h1 : 0 ≤ 1 - t := by linarith
-  have h2 : 1 - t + t = 1 := by ring
-  exact hS hz₁ hz₂ h1 ht0 h2
+    chordSegment z₁ z₂ t ∈ S :=
+  hS hz₁ hz₂ (by linarith [ht.2]) ht.1 (by ring)
 
-lemma convex_closedBall_zero_one :
-    Convex ℝ (closedBall (0 : ℂ) 1) :=
-  convex_closedBall 0 1
+lemma convex_closedBall_zero_one : Convex ℝ (closedBall (0 : ℂ) 1) := convex_closedBall 0 1
 
 lemma chord_in_closed_unit_ball (z₁ z₂ : ℂ) (hz₁ : ‖z₁‖ = 1) (hz₂ : ‖z₂‖ = 1)
     (t : ℝ) (ht : t ∈ Icc 0 1) :
@@ -114,16 +104,12 @@ lemma arcToChordHomotopy_in_closed_unit_ball (arc chord : ℝ → ℂ)
   exact chordSegment_in_convex convex_closedBall_zero_one (harc t ht) (hchord t ht) s hs
 
 lemma arcToChordHomotopy_avoids (arc chord : ℝ → ℂ) (p : ℂ) (hp : ‖p‖ > 1)
-    (harc : ∀ t ∈ Icc 0 1,
-      arc t ∈ closedBall (0 : ℂ) 1)
-    (hchord : ∀ t ∈ Icc 0 1,
-      chord t ∈ closedBall (0 : ℂ) 1)
+    (harc : ∀ t ∈ Icc 0 1, arc t ∈ closedBall (0 : ℂ) 1)
+    (hchord : ∀ t ∈ Icc 0 1, chord t ∈ closedBall (0 : ℂ) 1)
     (t : ℝ) (ht : t ∈ Icc 0 1) (s : ℝ) (hs : s ∈ Icc 0 1) :
-    arcToChordHomotopy arc chord (t, s) ≠ p := by
-  have hH := arcToChordHomotopy_in_closed_unit_ball
-    arc chord harc hchord t ht s hs
-  have hp_out := outside_closed_unit_ball p hp
-  exact fun h => hp_out (h ▸ hH)
+    arcToChordHomotopy arc chord (t, s) ≠ p := fun h =>
+  outside_closed_unit_ball p hp
+    (h ▸ arcToChordHomotopy_in_closed_unit_ball arc chord harc hchord t ht s hs)
 
 /-- The argument of the lower-corner point `ρ'` on the unit circle, `π / 3`. -/
 def θRho' : ℝ := Real.pi / 3
@@ -141,30 +127,22 @@ def arc2 (t : ℝ) : ℂ :=
   Complex.exp (I * (θI + t * (θRho - θI)))
 
 lemma arc1_on_unit_circle (t : ℝ) : ‖arc1 t‖ = 1 := by
-  simp only [arc1]
-  have h : I * (↑θRho' + ↑t * (↑θI - ↑θRho')) =
-      I * ↑(θRho' + t * (θI - θRho')) := by
-    simp only [ofReal_add, ofReal_mul, ofReal_sub]
-  rw [h, mul_comm]
+  rw [arc1, show I * (↑θRho' + ↑t * (↑θI - ↑θRho')) =
+      ↑(θRho' + t * (θI - θRho')) * I by push_cast; ring]
   exact Complex.norm_exp_ofReal_mul_I _
 
 lemma arc2_on_unit_circle (t : ℝ) : ‖arc2 t‖ = 1 := by
-  simp only [arc2]
-  have h : I * (↑θI + ↑t * (↑θRho - ↑θI)) =
-      I * ↑(θI + t * (θRho - θI)) := by
-    simp only [ofReal_add, ofReal_mul, ofReal_sub]
-  rw [h, mul_comm]
+  rw [arc2, show I * (↑θI + ↑t * (↑θRho - ↑θI)) =
+      ↑(θI + t * (θRho - θI)) * I by push_cast; ring]
   exact Complex.norm_exp_ofReal_mul_I _
 
 lemma arc1_in_closed_unit_ball (t : ℝ) (_ : t ∈ Icc 0 1) :
     arc1 t ∈ closedBall (0 : ℂ) 1 := by
-  simp only [mem_closedBall, dist_zero_right,
-    arc1_on_unit_circle, le_refl]
+  simp only [mem_closedBall, dist_zero_right, arc1_on_unit_circle, le_refl]
 
 lemma arc2_in_closed_unit_ball (t : ℝ) (_ : t ∈ Icc 0 1) :
     arc2 t ∈ closedBall (0 : ℂ) 1 := by
-  simp only [mem_closedBall, dist_zero_right,
-    arc2_on_unit_circle, le_refl]
+  simp only [mem_closedBall, dist_zero_right, arc2_on_unit_circle, le_refl]
 
 /-- The straight chord from `ρ'` to `i`. -/
 def chord1 : ℝ → ℂ := chordSegment rho' iPoint
@@ -173,40 +151,27 @@ def chord2 : ℝ → ℂ := chordSegment iPoint rho
 
 lemma chord1_in_closed_unit_ball (t : ℝ) (ht : t ∈ Icc 0 1) :
     chord1 t ∈ closedBall (0 : ℂ) 1 :=
-  chord_in_closed_unit_ball rho' iPoint
-    rho'_norm i_point_norm t ht
+  chord_in_closed_unit_ball rho' iPoint rho'_norm i_point_norm t ht
 
 lemma chord2_in_closed_unit_ball (t : ℝ) (ht : t ∈ Icc 0 1) :
     chord2 t ∈ closedBall (0 : ℂ) 1 :=
-  chord_in_closed_unit_ball iPoint rho
-    i_point_norm rho_norm t ht
+  chord_in_closed_unit_ball iPoint rho i_point_norm rho_norm t ht
 
 lemma exists_ball_in_polygon_interior (p : ℂ) (hp : ‖p‖ > 1) (hp_im : 0 < p.im) :
-    ∃ ε > 0, ∀ z, ‖z - p‖ < ε →
-      z.im > 0 ∧ ‖z‖ > 1 := by
+    ∃ ε > 0, ∀ z, ‖z - p‖ < ε → z.im > 0 ∧ ‖z‖ > 1 := by
   use min ((‖p‖ - 1)/2) (p.im/2)
   constructor
   · exact lt_min (by linarith) (by linarith)
   intro z hz
-  have hz₁ : ‖z - p‖ < (‖p‖ - 1)/2 :=
-    lt_of_lt_of_le hz (min_le_left _ _)
-  have hz₂ : ‖z - p‖ < p.im/2 :=
-    lt_of_lt_of_le hz (min_le_right _ _)
+  have hz₁ : ‖z - p‖ < (‖p‖ - 1)/2 := lt_of_lt_of_le hz (min_le_left _ _)
+  have hz₂ : ‖z - p‖ < p.im/2 := lt_of_lt_of_le hz (min_le_right _ _)
+  have h_im_bound : |z.im - p.im| ≤ ‖z - p‖ := Complex.abs_im_le_norm (z - p)
+  have h_norm_bound : |‖z‖ - ‖p‖| ≤ ‖z - p‖ := abs_norm_sub_norm_le z p
   constructor
-  · have h_im_bound : |z.im - p.im| ≤ ‖z - p‖ :=
-      Complex.abs_im_le_norm (z - p)
-    have : z.im - p.im > -(p.im/2) := by
-      have : |z.im - p.im| < p.im/2 :=
-        lt_of_le_of_lt h_im_bound hz₂
-      linarith [abs_lt.mp this]
-    linarith
-  · have h_norm_bound : |‖z‖ - ‖p‖| ≤ ‖z - p‖ :=
-      abs_norm_sub_norm_le z p
-    have : ‖z‖ - ‖p‖ > -((‖p‖ - 1)/2) := by
-      have : |‖z‖ - ‖p‖| < (‖p‖ - 1)/2 :=
-        lt_of_le_of_lt h_norm_bound hz₁
-      linarith [abs_lt.mp this]
-    linarith
+  · linarith [(abs_lt.mp (lt_of_le_of_lt h_im_bound hz₂)).1,
+              (abs_lt.mp (lt_of_le_of_lt h_im_bound hz₂)).2]
+  · linarith [(abs_lt.mp (lt_of_le_of_lt h_norm_bound hz₁)).1,
+              (abs_lt.mp (lt_of_le_of_lt h_norm_bound hz₁)).2]
 
 lemma circleIntegral_winding (p : ℂ) (ε : ℝ) (hε : 0 < ε) :
     (∮ z in C(p, ε), (z - p)⁻¹) =
@@ -332,9 +297,7 @@ lemma norm_ge_abs_im (z : ℂ) : ‖z‖ ≥ |z.im| :=
 
 lemma H_height_gt_one : HHeight > 1 := by
   unfold HHeight
-  have : Real.sqrt 3 > 0 :=
-    Real.sqrt_pos.mpr (by norm_num : (3 : ℝ) > 0)
-  linarith
+  linarith [Real.sqrt_pos.mpr (by norm_num : (3 : ℝ) > 0)]
 
 end RectHomotopyProof
 

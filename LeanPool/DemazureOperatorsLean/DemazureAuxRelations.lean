@@ -71,9 +71,13 @@ lemma transposition_commutes_non_adjacent (i j : Fin n) (h : NonAdjacent i j) :
 lemma transposition_commutes_non_adjacent' (i j : Fin n) (h : NonAdjacent i j) :
   Equiv.swap (Fin.castSucc i) (Fin.succ i) ∘ Equiv.swap (Fin.castSucc j) (Fin.succ j) =
    Equiv.swap (Fin.castSucc j) (Fin.succ j) ∘ Equiv.swap (Fin.castSucc i) (Fin.succ i) := by
-    funext k
-    rw[← equiv_swap_mul_eq_comp]
-    simp[transposition_commutes_non_adjacent i j h]
+  have h_mul := transposition_commutes_non_adjacent i j h
+  funext k
+  have h_comp : (Equiv.swap i.castSucc i.succ ∘ Equiv.swap j.castSucc j.succ) k =
+      (Equiv.swap j.castSucc j.succ ∘ Equiv.swap i.castSucc i.succ) k := by
+    simp only [← Equiv.Perm.coe_mul]
+    exact congr_fun (congrArg Equiv.toFun h_mul) k
+  exact h_comp
 
 
 lemma swap_variables_commutes_non_adjacent (i j : Fin n) (h : NonAdjacent i j)
@@ -177,8 +181,8 @@ lemma transposition_commutes_adjacent' {i : Fin n} (h0 : i < n + 1)
       Equiv.swap ⟨i + 1, h1⟩ ⟨i + 2, h2⟩ ∘
         (Equiv.swap ⟨i, h0⟩ ⟨i + 1, h1⟩) ∘
           (Equiv.swap ⟨i + 1, h1⟩ ⟨i + 2, h2⟩) := by
-  funext j
-  simp[transposition_commutes_adjacent h0 h1 h2]
+  funext k
+  exact transposition_commutes_adjacent h0 h1 h2
 
 lemma swap_variables_commutes_adjacent {i : Fin n} {p : MvPolynomial (Fin (n + 1)) ℂ}
     (h0 : i < n + 1) (h1 : i + 1 < n + 1) (h2 : i + 2 < n + 1) :
@@ -188,8 +192,7 @@ lemma swap_variables_commutes_adjacent {i : Fin n} {p : MvPolynomial (Fin (n + 1
       SwapVariablesFun ⟨i + 1, h1⟩ ⟨i + 2, h2⟩
         (SwapVariablesFun ⟨i, h0⟩ ⟨i + 1, h1⟩
           (SwapVariablesFun ⟨i + 1, h1⟩ ⟨i + 2, h2⟩ p)) := by
-  dsimp [SwapVariablesFun]
-  simp[transposition_commutes_adjacent' h0 h1 h2]
+  simp [SwapVariablesFun, transposition_commutes_adjacent' h0 h1 h2]
 
 @[simp]
 lemma omg {i : ℕ} : i + 1 + 1 = i + 2 := by
@@ -202,15 +205,11 @@ lemma demaux_commutes_adjacent (i : Fin n) (h : i + 1 < n) :
         (DemAux ⟨i+1, h⟩ ∘ DemAux i ∘ DemAux ⟨i+1, h⟩) (mk' p) := by
   intro p
   dsimp [DemAux, mk']
-  repeat rw[lift_r]
-  simp[DemAux']
-  simp[Fin.castSucc, Fin.succ, Fin.castAdd, Fin.castLE]
-  have h0 : i < n + 1 := by
-    linarith
-  have h1 : i + 1 < n + 1 := by
-    linarith
-  have h2 : i + 2 < n + 1 := by
-    linarith
+  repeat rw [lift_r]
+  simp [DemAux', Fin.castSucc, Fin.succ, Fin.castAdd, Fin.castLE]
+  have h0 : i < n + 1 := by linarith
+  have h1 : i + 1 < n + 1 := by linarith
+  have h2 : i + 2 < n + 1 := by linarith
   simp [swap_variables_commutes_adjacent h0 h1 h2]
   ring
 

@@ -24,10 +24,6 @@ def IsWeakHomotopyEquiv {X Y : Type u} [TopologicalSpace X] [TopologicalSpace Y]
   Nonempty X ∧
     ∀ n x, Function.Bijective (HomotopyGroup.inducedMap n x f)
 
--- def IsWeakHomotopyEquiv {X Y : Type u} [TopologicalSpace X] [TopologicalSpace Y]
---     (f : C(X, Y)) : Prop :=
---   ∀ n x, IsIso (HomotopyGroup.inducedPointedHom n x f)
-
 lemma isIso_inducedPointedHom_of_isWeakHomotopyEquiv
     {X Y : Type u} [TopologicalSpace X] [TopologicalSpace Y]
     {f : C(X, Y)} (hf : IsWeakHomotopyEquiv f) :

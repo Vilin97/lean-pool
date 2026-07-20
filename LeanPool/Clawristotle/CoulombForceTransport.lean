@@ -106,10 +106,8 @@ lemma spatial_transport_integrable
     have hlog : |Real.log (f x v)| ≤ |C_log| * (1 + ‖v‖) ^ K_log :=
       le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _) (pow_nonneg (by linarith) _))
     have h1v_nn : (0 : ℝ) ≤ 1 + ‖v‖ := le_trans zero_le_one h1v
-    have hpow_mono : (1 + ‖v‖) ^ (K_log + 5) ≤ (1 + ‖v‖) ^ (K_log + 6) := by
-      have h6eq : (1 + ‖v‖) ^ (K_log + 6) = (1 + ‖v‖) ^ (K_log + 5) * (1 + ‖v‖) := by
-        rw [show K_log + 6 = K_log + 5 + 1 from by omega, pow_succ]
-      rw [h6eq]; exact le_mul_of_one_le_right (pow_nonneg h1v_nn _) h1v
+    have hpow_mono : (1 + ‖v‖) ^ (K_log + 5) ≤ (1 + ‖v‖) ^ (K_log + 6) :=
+      pow_le_pow_right₀ h1v (by omega)
     have hgrad : |FlatTorus3.gradX (fun y => f y v) x i| * (1 + ‖v‖) ^ (K_log + 5) ≤ Ci :=
       le_trans (mul_le_mul_of_nonneg_left hpow_mono (abs_nonneg _)) (hGi x v)
     set g_i := |FlatTorus3.gradX (fun y => f y v) x i| with hg_i_def
@@ -163,26 +161,13 @@ lemma force_fderiv_log_component_integrable
     have h1v : (1 : ℝ) ≤ 1 + ‖v‖ := le_add_of_nonneg_right (norm_nonneg v)
     have h1v_nn : (0 : ℝ) ≤ 1 + ‖v‖ := le_trans zero_le_one h1v
     have hfder_le : |fderiv ℝ (f x) v (Pi.single i 1)| ≤ ‖iteratedFDeriv ℝ 1 (f x) v‖ := by
-      have h_single_norm : ‖(Pi.single i (1 : ℝ) : Fin 3 → ℝ)‖ ≤ 1 := by
-        have : ‖(Pi.single i (1 : ℝ) : Fin 3 → ℝ)‖ = ‖(1 : ℝ)‖ :=
-          @Pi.norm_single (Fin 3) (fun _ => ℝ) _ _ (fun _ => inferInstance) (i := i) 1
-        rw [this]; simp
-      have h_fder_eq : ‖fderiv ℝ (f x) v‖ = ‖iteratedFDeriv ℝ 1 (f x) v‖ :=
-        norm_fderiv_eq_iteratedFDeriv_one _ _
-      calc |fderiv ℝ (f x) v (Pi.single i 1)|
-          = ‖fderiv ℝ (f x) v (Pi.single i 1)‖ := (Real.norm_eq_abs _).symm
-        _ ≤ ‖fderiv ℝ (f x) v‖ * ‖(Pi.single i (1 : ℝ) : Fin 3 → ℝ)‖ :=
-            ContinuousLinearMap.le_opNorm _ _
-        _ ≤ ‖fderiv ℝ (f x) v‖ * 1 := by gcongr
-        _ = ‖fderiv ℝ (f x) v‖ := mul_one _
-        _ = ‖iteratedFDeriv ℝ 1 (f x) v‖ := h_fder_eq
+      rw [← Real.norm_eq_abs, ← norm_fderiv_eq_iteratedFDeriv_one]
+      exact (ContinuousLinearMap.le_opNorm _ _).trans (by simp [Pi.norm_single])
     have hfder := hbound_fder x v
     have hlog : |Real.log (f x v)| ≤ |C_log| * (1 + ‖v‖) ^ K_log :=
       le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _) (pow_nonneg h1v_nn _))
-    have hpow_mono : (1 + ‖v‖) ^ (K_log + 5) ≤ (1 + ‖v‖) ^ (K_log + 6) := by
-      have h6eq : (1 + ‖v‖) ^ (K_log + 6) = (1 + ‖v‖) ^ (K_log + 5) * (1 + ‖v‖) := by
-        rw [show K_log + 6 = K_log + 5 + 1 from by omega, pow_succ]
-      rw [h6eq]; exact le_mul_of_one_le_right (pow_nonneg h1v_nn _) h1v
+    have hpow_mono : (1 + ‖v‖) ^ (K_log + 5) ≤ (1 + ‖v‖) ^ (K_log + 6) :=
+      pow_le_pow_right₀ h1v (by omega)
     set D := ‖iteratedFDeriv ℝ 1 (f x) v‖ with hD_def
     calc |(E x + cross v (B x)) i * fderiv ℝ (f x) v (Pi.single i 1) *
               Real.log (f x v)| * (1 + ‖v‖) ^ 4
@@ -256,8 +241,7 @@ lemma force_ibp_f_dg_integrable_coulomb
     simp only [_root_.sub_apply, _root_.add_apply,
       _root_.smul_apply, smul_eq_mul]
     have hfv_ne : f x v ≠ 0 := ne_of_gt (hf_pos x v)
-    rw [← mul_assoc, mul_inv_cancel₀ hfv_ne, one_mul]
-    ring
+    simp_all
   -- Rewrite integrand using the chain rule
   have heq : (fun v => (E x + cross v (B x)) i *
       fderiv ℝ (fun w => f x w * Real.log (f x w) - f x w) v (Pi.single i 1)) =
@@ -313,17 +297,12 @@ lemma force_ibp_fg_integrable_coulomb
     -- |log f - 1| ≤ |log f| + 1 ≤ (|C_log| + 1) * (1+‖v‖)^K_log
     have h1v : (1 : ℝ) ≤ (1 + ‖v‖) ^ K_log := one_le_pow₀ (by linarith [norm_nonneg v])
     have hlog_sub : |Real.log (f x v) - 1| ≤ (|C_log| + 1) * (1 + ‖v‖) ^ K_log := by
-      calc |Real.log (f x v) - 1|
-          = |Real.log (f x v) + (-1)| := by ring_nf
-        _ ≤ |Real.log (f x v)| + |-1| := by
-            have := norm_add_le (Real.log (f x v)) (-1)
-            rwa [show Real.log (f x v) + -1 = Real.log (f x v) - 1 from by ring,
-              Real.norm_eq_abs, Real.norm_eq_abs, Real.norm_eq_abs] at this
-        _ = |Real.log (f x v)| + 1 := by rw [abs_neg, abs_one]
-        _ ≤ |C_log| * (1 + ‖v‖) ^ K_log + 1 := by
-            linarith [le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
-              (pow_nonneg (by linarith [norm_nonneg v]) _))]
-        _ ≤ (|C_log| + 1) * (1 + ‖v‖) ^ K_log := by nlinarith
+      have htri : |Real.log (f x v) - 1| ≤ |Real.log (f x v)| + 1 := by
+        have := abs_sub (Real.log (f x v)) 1
+        simpa using this
+      have hbnd := le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
+        (pow_nonneg (by linarith [norm_nonneg v]) _))
+      nlinarith
     calc |(E x + cross v (B x)) i * (f x v * Real.log (f x v) - f x v)|
         = |(E x + cross v (B x)) i| * |f x v * Real.log (f x v) - f x v| := abs_mul _ _
       _ = |(E x + cross v (B x)) i| * (f x v * |Real.log (f x v) - 1|) := by rw [hab]

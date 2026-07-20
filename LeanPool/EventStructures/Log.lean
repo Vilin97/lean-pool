@@ -56,8 +56,8 @@ lemma logged_iff {e : es.Event} : logged es e ↔ ∃ e', e ## e' :=
 /-- By symmetry of minimal conflict, if e is logged, then any e' with e ## e'
     also has minimal conflict with some event. -/
 lemma logged_symm {e e' : es.Event} (h : e ## e') :
-    logged es e' := by
-  exact ⟨e, es.minimalConflict_symm h⟩
+    logged es e' :=
+  ⟨e, es.minimalConflict_symm h⟩
 
 /-- Notation for the conflict relation. -/
 local infixl:50 " # " => es.conflict
@@ -66,8 +66,7 @@ local infixl:50 " # " => es.conflict
     then either e' is not in c, or there exists another e'' not in c with e ## e''. -/
 lemma log_has_conflict_outside {c : Conf es} {e : es.Event} (he : e ∈ log es c) :
     ∃ e' ∉ c.1, e ## e' := by
-  simp only [log, Set.mem_setOf_eq] at he
-  exact he.2
+  simp_all
 
 /-- A computation σ is compatible with a log l if:
     1. All events in l are in σ's target configuration

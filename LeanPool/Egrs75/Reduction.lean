@@ -100,7 +100,6 @@ theorem egrs_two_prime_of_crux {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
     simp only [Set.mem_setOf_eq]
     rw [not_dvd_centralBinom_iff_lowDigits hp hpo n,
         not_dvd_centralBinom_iff_lowDigits hq hqo n]
-  rw [hset]
-  exact hcrux
+  rwa [hset]
 
 end Egrs75

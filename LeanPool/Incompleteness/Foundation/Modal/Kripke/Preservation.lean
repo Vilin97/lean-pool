@@ -31,8 +31,7 @@ structure _root_.LO.Modal.Kripke.Model.Bisimulation (M₁ M₂ : Kripke.Model) w
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " ⇄ " => Model.Bisimulation
 
-instance :
-    CoeFun (Model.Bisimulation M₁ M₂) (fun _ => M₁.World → M₂.World → Prop) :=
+instance : CoeFun (Model.Bisimulation M₁ M₂) (fun _ => M₁.World → M₂.World → Prop) :=
   ⟨fun bi => bi.toRel⟩
 
 end «lp_section_1»
@@ -52,10 +51,8 @@ lemma modal_equivalent_of_bisimilar (Bi : M₁ ⇄ M₂) (bisx : Bi x₁ x₂) :
   | hfalsum => simp [Satisfies];
   | himp φ ψ ihp ihq =>
     constructor;
-    · intro hpq hp;
-      exact ihq bisx |>.mp <| hpq <| ihp bisx |>.mpr hp;
-    · intro hpq hp;
-      exact ihq bisx |>.mpr <| hpq <| ihp bisx |>.mp hp;
+    · exact fun hpq hp => ihq bisx |>.mp <| hpq <| ihp bisx |>.mpr hp;
+    · exact fun hpq hp => ihq bisx |>.mpr <| hpq <| ihp bisx |>.mp hp;
   | hbox φ ih =>
     constructor;
     · intro h y₂ rx₂y₂;
@@ -80,8 +77,7 @@ structure _root_.LO.Modal.Kripke.Frame.PseudoEpimorphism (F₁ F₂ : Kripke.Fra
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " →ₚ " => Frame.PseudoEpimorphism
 
-instance :
-    CoeFun (Frame.PseudoEpimorphism F₁ F₂) (fun _ => F₁.World → F₂.World) :=
+instance : CoeFun (Frame.PseudoEpimorphism F₁ F₂) (fun _ => F₁.World → F₂.World) :=
   ⟨fun f => f.toFun⟩
 
 namespace Frame
@@ -108,10 +104,7 @@ def TransitiveClosure (f : F₁ →ₚ F₂) (F₂_trans : IsTrans F₂.World F�
   back := by
     intro x w hxw;
     obtain ⟨u, ⟨rfl, hxu⟩⟩ := f.back hxw;
-    use u;
-    constructor;
-    · rfl;
-    · exact Frame.RelTransGen.single hxu;
+    exact ⟨u, rfl, Frame.RelTransGen.single hxu⟩;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def comp (f : F₁ →ₚ F₂) (g : F₂ →ₚ F₃) : F₁ →ₚ F₃ where
@@ -123,10 +116,7 @@ def comp (f : F₁ →ₚ F₂) (g : F₂ →ₚ F₃) : F₁ →ₚ F₃ where
     intro x w hxw;
     obtain ⟨y, ⟨rfl, hxy⟩⟩ := g.back hxw;
     obtain ⟨u, ⟨rfl, hfu⟩⟩ := f.back hxy;
-    use u;
-    constructor;
-    · simp_all;
-    · assumption;
+    exact ⟨u, by simp_all, hfu⟩;
 
 end PseudoEpimorphism
 end Frame
@@ -140,8 +130,7 @@ structure _root_.LO.Modal.Kripke.Model.PseudoEpimorphism (M₁ M₂ :
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:80 " →ₚ " => Model.PseudoEpimorphism
 
-instance :
-    CoeFun (Model.PseudoEpimorphism M₁ M₂) (fun _ => M₁.World → M₂.World) :=
+instance : CoeFun (Model.PseudoEpimorphism M₁ M₂) (fun _ => M₁.World → M₂.World) :=
   ⟨fun f => f.toFun⟩
 
 namespace Model
@@ -165,19 +154,10 @@ def ofAtomic (f : M₁.toFrame →ₚ M₂.toFrame) (atomic : ∀ {w a}, (M₁ w
   atomic := atomic
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def comp (f : M₁ →ₚ M₂) (g : M₂ →ₚ M₃) :
-    M₁ →ₚ M₃ :=
+def comp (f : M₁ →ₚ M₂) (g : M₂ →ₚ M₃) : M₁ →ₚ M₃ :=
   ofAtomic (f.toPseudoEpimorphism.comp (g.toPseudoEpimorphism)) <| by
   intro x φ;
-  constructor;
-  · intro h;
-    apply g.atomic.mp;
-    apply f.atomic.mp;
-    assumption;
-  · intro h;
-    apply f.atomic.mpr;
-    apply g.atomic.mpr;
-    assumption;
+  exact ⟨fun h => g.atomic.mp <| f.atomic.mp h, fun h => f.atomic.mpr <| g.atomic.mpr h⟩;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def bisimulation (f : M₁ →ₚ M₂) : M₁ ⇄ M₂ where
@@ -185,9 +165,7 @@ def bisimulation (f : M₁ →ₚ M₂) : M₁ ⇄ M₂ where
   atomic := by
     intro x₁ x₂ a hx
     subst x₂
-    constructor;
-    · apply f.atomic.mp;
-    · apply f.atomic.mpr;
+    exact ⟨f.atomic.mp, f.atomic.mpr⟩
   forth := by
     intro x₁ y₁ x₂ hx rx₁y₁
     subst x₂
@@ -195,8 +173,7 @@ def bisimulation (f : M₁ →ₚ M₂) : M₁ ⇄ M₂ where
   back := by
     intro x₁ x₂ y₂ hx rx₂y₂
     subst x₂
-    obtain ⟨y₁, hy₁, hxy₁⟩ := f.back rx₂y₂
-    exact ⟨y₁, hy₁, hxy₁⟩
+    exact f.back rx₂y₂
 
 lemma modal_equivalence (f : M₁ →ₚ M₂) (w : M₁.World) : w ↭ (f w) := by
   apply modal_equivalent_of_bisimilar <| Model.PseudoEpimorphism.bisimulation f;
@@ -209,8 +186,7 @@ end Model
 variable {F₁ F₂ : Kripke.Frame} {M₁ M₂ : Kripke.Model}
 
 lemma validOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjective :
-    Function.Surjective f) :
-    F₁ ⊧ φ → F₂ ⊧ φ := by
+    Function.Surjective f) : F₁ ⊧ φ → F₂ ⊧ φ := by
   contrapose;
   intro h;
   obtain ⟨V₂, w₂, h⟩ := ValidOnFrame.exists_valuation_world_of_not h;
@@ -226,8 +202,7 @@ lemma validOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjec
   } w₁ |>.not.mpr h;
 
 lemma theory_ValidOnFrame_of_surjective_pseudoMorphism (f : F₁ →ₚ F₂) (f_surjective :
-    Function.Surjective f) :
-    F₁ ⊧* T → F₂ ⊧* T := by
+    Function.Surjective f) : F₁ ⊧* T → F₂ ⊧* T := by
   simp only [Semantics.realizeSet_iff];
   intro h φ hp;
   exact validOnFrame_of_surjective_pseudoMorphism f f_surjective (h hp);
@@ -268,12 +243,11 @@ namespace PointGenerated
 
 variable {F : Kripke.Frame} {r : F.World}
 
-lemma rel_transitive (F_trans : IsTrans F.World F.Rel) :
-    IsTrans (F↾r).World (F↾r).Rel := by
+lemma rel_transitive (F_trans : IsTrans F.World F.Rel) : IsTrans (F↾r).World (F↾r).Rel := by
   exact ⟨fun _ _ _ hxy hyz => F_trans.trans _ _ _ hxy hyz⟩
 
-lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel := by
-  exact ⟨fun x h => F_irrefl.irrefl x.1 h⟩
+lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel :=
+  ⟨fun x h => F_irrefl.irrefl x.1 h⟩
 
 lemma rel_universal (F_refl : Std.Refl F.Rel) (F_eucl : Euclidean F.Rel) : Universal (F↾r).Rel := by
   have F_symm := symm_of_refl_eucl F_refl.refl F_eucl;
@@ -327,20 +301,11 @@ def bisimulationOfTrans (M_trans : IsTrans M.World M.Rel) (r : M.World) : (M↾r
     simp [Model.PointGenerated];
   forth := by
     rintro x₁ y₁ x₂ rfl Rx₂y₁;
-    use y₁.1;
-    constructor;
-    · simp;
-    · exact Rx₂y₁;
+    exact ⟨y₁.1, by simp, Rx₂y₁⟩;
   back := by
     rintro ⟨x₁, (rfl | hx₁)⟩ x₂ y₂ rfl Rx₂y₂;
-    · use ⟨y₂, by right; exact Rx₂y₂⟩;
-      constructor;
-      · simp;
-      · exact Rx₂y₂;
-    · use ⟨y₂, ?h₂⟩;
-      constructor;
-      · simp;
-      · exact Rx₂y₂;
+    · exact ⟨⟨y₂, by right; exact Rx₂y₂⟩, by simp, Rx₂y₂⟩;
+    · refine ⟨⟨y₂, ?_⟩, by simp, Rx₂y₂⟩;
       right;
       exact M_trans.trans _ _ _ hx₁ Rx₂y₂;
 
@@ -367,34 +332,6 @@ structure _root_.LO.Modal.Kripke.Frame.GeneratedSub (F₁ F₂ : Kripke.Frame) e
 infix:80 " ⊆ₚ " => Frame.GeneratedSub
 
 end «lp_section_5»
-
-
-/-
-namespace Frame
-
-variable {F : Kripke.Frame} (x : F.World)
-
-def successors := { w | x ≺^* w }
-postfix:100 "↑*" => Frame.upward
-
-def immediate_successors := { w | x ≺ w }
-postfix:100 "↑¹" => Frame.immediate_successor
-
-def proper_immediate_successors := { w | x ≠ w ∧ x ≺ w }
-postfix:100 "↑" => Frame.proper_immediate_successor
-
-
-def predeccsors := { w | w ≺^* x }
-postfix:100 "↓*" => Frame.downward
-
-def immediate_predeccsors := { w | w ≺ x }
-postfix:100 "↓¹" => Frame.immediate_predeccsor
-
-def proper_immediate_predeccsors := { w | w ≠ x ∧ w ≺ x }
-postfix:100 "↓" => Frame.proper_immediate_predeccsors
-
-end Frame
--/
 
 
 end Kripke

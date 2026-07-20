@@ -48,14 +48,12 @@ instance instCommMonoidLeanPool : CommMonoid M where
 instance instAddCommMonoidLeanPool : AddCommMonoid M where
   add_assoc := add_assoc
   zero_add := zero_add
-  add_zero := by
-    exact B3
+  add_zero := B3
   nsmul := nsmulRec
   add_comm := add_comm
 
 instance instSemiringLeanPool : Semiring M where
-  left_distrib := by
-    exact IOPENModel.mul_add
+  left_distrib := IOPENModel.mul_add
   right_distrib := by
     intro a b c
     rw [<- iopen.mul_comm]
@@ -75,14 +73,13 @@ instance : IsOrderedAddMonoid M where
 
 -- D7 used
 instance : IsOrderedMonoid M where
-  mul_le_mul_left := fun a b h c ↦ by
-    exact idelta0.le_mul_right h
+  mul_le_mul_left := fun _ _ h _ ↦ idelta0.le_mul_right h
 
 instance instAddCommMonoidLeanPool' : AddCommMonoid M where
 
 
 instance : IsOrderedRing M where
-  zero_le_one := by exact idelta0.zero_le 1
+  zero_le_one := idelta0.zero_le 1
   mul_le_mul_of_nonneg_left := by
     intro a h_zero_a b c hbc
     rw [mul_comm a b, mul_comm a c]
@@ -106,11 +103,5 @@ instance : IsLeftCancelAdd M where
       rw [add_comm]
     rw [@IOPENModel.add_cancel_right] at h
     exact h
-
--- instance : IsStrictOrderedRing M where
---   le_of_add_le_add_left := by
---     intro a b c h
---     rw [le_cancel_left]
-
 
 end IDelta0

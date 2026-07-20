@@ -31,8 +31,7 @@ lemma at_in_lt_freeVar {𝕏 : Proof} [fin_X : Fintype 𝕏.X] {n : Nat}
   simp only [Proof.freeVar, Sequent.freshVar, 𝕏_ne, ↓reduceDIte]
   apply Nat.lt_of_succ_le
   apply Finset.le_max'
-  simp only [Nat.succ_eq_add_one, Finset.mem_image]
-  exact ⟨at n, h, by simp [Formula.freshVar]⟩
+  simpa only [Nat.succ_eq_add_one, Finset.mem_image] using ⟨at n, h, by simp [Formula.freshVar]⟩
 
 /-- For each `x` in a finite proof, find a free variable. -/
 noncomputable def encodeVar {𝕏 : Proof} [Fintype 𝕏.X] : 𝕏.X → Nat :=
@@ -174,42 +173,36 @@ lemma partial_const {p : Nat → Prop} [DecidablePred p] (σ : Subtype p → For
       have hA : A = partial_ σ A := ihA (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inl hn))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inl hn))
       have hB : B = partial_ σ B := ihB (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inr hn))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inr hn))
       rw [←hA, ←hB]
   | or A B ihA ihB =>
       rw [partial_]
       have hA : A = partial_ σ A := ihA (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inl hn))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inl hn))
       have hB : B = partial_ σ B := ihB (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inr hn))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inr hn))
       rw [←hA, ←hB]
   | box A ihA =>
       rw [partial_]
       have hA : A = partial_ σ A := ihA (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab]
-          exact hn))
+          simpa only [Formula.vocab] using hn))
       rw [←hA]
   | diamond A ihA =>
       rw [partial_]
       have hA : A = partial_ σ A := ihA (by
         intro n hn
         exact h n (by
-          simp only [Formula.vocab]
-          exact hn))
+          simpa only [Formula.vocab] using hn))
       rw [←hA]
 
 @[simp]
@@ -230,58 +223,50 @@ lemma extend_in {𝕏 : Proof} [fin_X : Fintype 𝕏.X] {Y : Finset 𝕏.X}
       by_cases hn : n ∈ Y.image encodeVar
       · have ⟨y, hy, hy_eq⟩ := Finset.mem_image.mp hn
         exact False.elim (h y hy (by
-          simp only [Formula.vocab, Finset.mem_singleton]
-          exact hy_eq))
+          simpa only [Formula.vocab, Finset.mem_singleton] using hy_eq))
       · rw [dif_neg hn]
   | negAtom n =>
       rw [extend]
       by_cases hn : n ∈ Y.image encodeVar
       · have ⟨y, hy, hy_eq⟩ := Finset.mem_image.mp hn
         exact False.elim (h y hy (by
-          simp only [Formula.vocab, Finset.mem_singleton]
-          exact hy_eq))
+          simpa only [Formula.vocab, Finset.mem_singleton] using hy_eq))
       · rw [dif_neg hn]
   | and A B ihA ihB =>
       rw [extend]
       have hA : A = extend Y_sub σ A := ihA (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inl hyv))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inl hyv))
       have hB : B = extend Y_sub σ B := ihB (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inr hyv))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inr hyv))
       rw [←hA, ←hB]
   | or A B ihA ihB =>
       rw [extend]
       have hA : A = extend Y_sub σ A := ihA (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inl hyv))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inl hyv))
       have hB : B = extend Y_sub σ B := ihB (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab, Finset.mem_union]
-          exact Or.inr hyv))
+          simpa only [Formula.vocab, Finset.mem_union] using Or.inr hyv))
       rw [←hA, ←hB]
   | box A ihA =>
       rw [extend]
       have hA : A = extend Y_sub σ A := ihA (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab]
-          exact hyv))
+          simpa only [Formula.vocab] using hyv))
       rw [←hA]
   | diamond A ihA =>
       rw [extend]
       have hA : A = extend Y_sub σ A := ihA (by
         intro y hy hyv
         exact h y hy (by
-          simp only [Formula.vocab]
-          exact hyv))
+          simpa only [Formula.vocab] using hyv))
       rw [←hA]
 
 /-- From the paper: If py ∈ χx then x ◁ y. -/
@@ -940,8 +925,7 @@ theorem interpolant_strong_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X]
        ∧ (∀ y : 𝕏.X,
           encodeVar y ∈ (partial_ (interpolantStrong Y_sub) (at n)).vocab →
             (Relation.ReflTransGen (edge 𝕏.α))
-              (unencodeVar n (encodeVar_helper₁ n.2)) y)
-       := by
+              (unencodeVar n (encodeVar_helper₁ n.2)) y) := by
   unfold interpolantStrong
   intro ⟨n, n_in⟩
   by_cases em_con : Y = ∅
@@ -1147,13 +1131,11 @@ theorem interpolant_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
   ∨ (interpolant 𝕏 (at (encodeVar x)) ≅ interpolant 𝕏 (equation x)))
   ∧ (interpolant 𝕏 (at (encodeVar x))).vocab ⊆
     ((SplitSequent.left (f (r 𝕏.α x))).vocab ∩
-      (SplitSequent.right (f (r 𝕏.α x))).vocab)
- := by
+      (SplitSequent.right (f (r 𝕏.α x))).vocab) := by
   unfold interpolant
   have h : ∀ y : 𝕏.X, encodeVar y ∈ Finset.image encodeVar fin_X.elems := by
     intro y
-    simp only [Finset.mem_image, encodeVar_inj', exists_eq_right]
-    exact fin_X.complete y
+    simpa only [Finset.mem_image, encodeVar_inj', exists_eq_right] using fin_X.complete y
   have := @interpolant_strong_prop 𝕏 _ fin_X.elems (by aesop) ⟨encodeVar x, by simp [h]⟩
   have eq_chain :
       ∀ α, ∀ a b c d : α, ∀ r : α → α → Prop,
@@ -1174,8 +1156,7 @@ theorem interpolant_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
         · rfl
         · simp [encodeVar_inv]
   · have h : encodeVar x ∈ Finset.image encodeVar fin_X.elems := by
-      simp only [Finset.mem_image, encodeVar_inj', exists_eq_right]
-      exact fin_X.complete _
+      simpa only [Finset.mem_image, encodeVar_inj', exists_eq_right] using fin_X.complete _
     simp only [partial_, h, ↓reduceDIte]
     intro m m_in
     have := this.2.1 m m_in

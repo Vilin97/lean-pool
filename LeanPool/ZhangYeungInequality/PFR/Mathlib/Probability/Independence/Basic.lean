@@ -386,8 +386,7 @@ theorem _root_.ProbabilityTheory.iIndepFun.ae_eq {ι : Type*} {β : ι → Type*
       · use F
       rw [← hFE]
       exact Filter.EventuallyEq.preimage (hfg i) F
-    use ∅
-    tauto
+    simp_all
   classical
   rcases Classical.axiomOfChoice this with ⟨E', hE'⟩
   have hE'' : ∀ i ∈ s, MeasurableSet[MeasurableSpace.comap (f i) (m i)] (E' i) := by

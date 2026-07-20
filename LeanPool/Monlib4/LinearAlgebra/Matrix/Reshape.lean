@@ -42,8 +42,7 @@ theorem reshape_one [DecidableEq I] (x y : I) :
   simp_rw [Matrix.reshape_apply, Matrix.one_apply]
 
 /-- ${\varrho(x)}^*=\varrho(\bar{x})$ -/
-theorem reshape_aux_star [Star R] (x : Matrix I J R) : star (reshape x) = reshape xᴴᵀ :=
-  by
+theorem reshape_aux_star [Star R] (x : Matrix I J R) : star (reshape x) = reshape xᴴᵀ := by
   ext1
   simp_rw [Pi.star_apply, Matrix.reshape_apply, Matrix.conj_apply]
 

@@ -172,8 +172,7 @@ lemma _root_.LO.Arith.PR.Construction.CSeq.exists (l : V) : ∃ s, c.CSeq v s �
         simpa [Matrix.comp_vecCons', Matrix.constant_eq_singleton] using
           c.cseq_defined_iff (w 0 :> v) |>.symm⟩
     · definability
-  case zero =>
-    exact ⟨!⟦c.zero v⟧, CSeq.initial, by simp⟩
+  case zero => exact ⟨!⟦c.zero v⟧, CSeq.initial, by simp⟩
   case succ l ih =>
     rcases ih with ⟨s, Hs, hls⟩
     have hl : l < lh s := by simp [←hls]

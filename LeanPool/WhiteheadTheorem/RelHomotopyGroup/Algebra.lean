@@ -36,9 +36,6 @@ namespace IsPointedMap
 
 variable {X Y : Type*} [Inhabited X] [Inhabited Y] (f : X → Y) [IsPointedMap f]
 
--- /-- The kernel of a pointed map is the preimage of the default point. -/
--- def IsPointedMap.ker (f : X → Y) [IsPointedMap f] : Set X := f ⁻¹' default
-
 lemma default_mem_image_of_default_mem {A : Set X} : default ∈ A → default ∈ f '' A :=
   fun h ↦ (Set.mem_image _ _ _).mpr ⟨default, ⟨h, IsPointedMap.map_default⟩⟩
 
@@ -94,27 +91,12 @@ of five pointed sets, if `a` is surjective and `d` is injective, then `C = 0`.
 
 variable {A B C D E : Type*}
 variable [Inhabited A] [Inhabited B] [Inhabited C] [Inhabited D] [Inhabited E]
--- variable (a : A → B) (b : B → C) (c : C → D) (d : D → E)
--- variable [pma : IsPointedMap a] [pmb : IsPointedMap b] [pmc : IsPointedMap c]
--- variable [pmd : IsPointedMap d]
--- variable (a_surj : Function.Surjective a) (d_inj : Function.Injective d)
--- variable (exb : IsExactAt a b) (exc : IsExactAt b c) (exd : IsExactAt c d)
 
 private lemma im_B_eq_zero (a : A → B) (b : B → C) (a_surj : Function.Surjective a)
     [IsPointedMap a] [IsPointedMap b] (exb : IsExactAt a b) :
     Set.range b = {default} := by
   rw [IsExactAt, Set.range_eq_univ.mpr a_surj] at exb
-  ext y
-  constructor
-  · rintro ⟨x, rfl⟩
-    have hx : x ∈ b ⁻¹' ({default} : Set C) := by
-      rw [exb]
-      exact Set.mem_univ x
-    simpa using hx
-  · intro hy
-    rw [Set.mem_singleton_iff] at hy
-    subst y
-    exact ⟨default, IsPointedMap.map_default⟩
+  simp_all
 
 private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective d)
     [IsPointedMap c] [IsPointedMap d] (exd : IsExactAt c d) :
@@ -128,12 +110,7 @@ private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective
     apply @d_inj x default
     rw [hx]
     exact Eq.symm IsPointedMap.map_default
-  have : {default} = Set.range c := this.symm.trans exd
-  apply Set.eq_univ_of_forall
-  intro x
-  have hx : c x ∈ Set.range c := ⟨x, rfl⟩
-  rw [← this] at hx
-  exact hx
+  simp_all
 
 /-- `C = {0}` if there is an exact sequence `A --a-> B --b-> C --c-> D --d-> E`
 of five pointed sets such that `a` is surjective and `d` is injective. -/

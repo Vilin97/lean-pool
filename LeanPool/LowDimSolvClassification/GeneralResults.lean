@@ -156,8 +156,7 @@ theorem LinearIndependent.extend_fin {n k : ℕ} {l : Fin n → L}
     | zero =>
       exact ⟨l,hs,fun i↦rfl⟩
     | succ k ih =>
-      have le : n + k ≤ Module.finrank K L := by
-        exact Nat.le_of_succ_le ht
+      have le : n + k ≤ Module.finrank K L := Nat.le_of_succ_le ht
       let ⟨b, bI, bH⟩ := ih le
       let ⟨b'I,b'H⟩ := LinearIndependent.extendFinSucc bI ht
       use (LinearIndependent.extendFinSuccFun bI ht)
@@ -345,8 +344,7 @@ theorem LinearEquiv.ofComplSubmodules_symm_add (h : IsCompl p q) (x : L) :
     x = ((LinearEquiv.ofComplSubmodules h).symm x).1.val +
       ((LinearEquiv.ofComplSubmodules h).symm x).2.val := by
   obtain ⟨y, z, hy, hz, hx⟩ := Submodule.codisjoint_iff_exists_add_eq.mp h.codisjoint x
-  simp only [LinearEquiv.ofComplSubmodules_symm_apply h x y z hy hz hx.symm]
-  exact hx.symm
+  simpa only [LinearEquiv.ofComplSubmodules_symm_apply h x y z hy hz hx.symm] using hx.symm
 
 variable (K L : Type*) [Field K] [AddCommGroup L] [Module K L]
 
@@ -371,11 +369,8 @@ theorem LinearEquiv.toSpanSingleton_apply {x : L} (h : x ≠ 0) (a : K) :
   have range := LinearMap.span_singleton_eq_range K L x
   rw [← LinearMap.toSpanSingleton_apply, ← LinearEquiv.ofInjective_apply (h := inj)]
   congr 2
-  · rw [range]
-  · rw [range]
-  · rw [range]
-  · rw [range]
-  · apply cast_heq
+  any_goals rw [range]
+  apply cast_heq
 
 @[simp]
 theorem LinearEquiv.toSpanSingleton_symm_apply {x : L} (h : x ≠ 0) (a : K) :
@@ -447,8 +442,7 @@ theorem derivedSeries_succ_is_span {k : ℕ} : (LieAlgebra.derivedSeries K L (k 
     | lie x y _ hy =>
       refine span_induction ?mem ?zero ?add ?smul hy
       · intro z ⟨a, b, hz⟩
-        simp only [LieIdeal.coe_bracket_of_module, LieSubmodule.coe_bracket,
-          ] at hz
+        simp only [LieIdeal.coe_bracket_of_module, LieSubmodule.coe_bracket] at hz
         rw [← hz, leibniz_lie]
         apply add_mem
         · apply subset_span

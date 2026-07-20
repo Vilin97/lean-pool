@@ -42,10 +42,7 @@ lemma sum_mul_log_div_leq {a b : ι → ℝ} (ha : ∀ i ∈ s, 0 ≤ a i) (hb :
     (∑ i ∈ s, a i) * log ((∑ i ∈ s, a i) / (∑ i ∈ s, b i)) ≤ ∑ i ∈ s,
       a i * log (a i / b i) := by
   by_cases h : ∀ i ∈ s, b i = 0
-  · have A : ∑ i ∈ s, b i = ∑ i ∈ s, 0 := Finset.sum_congr rfl (fun i hi ↦ h i hi)
-    have B : ∑ i ∈ s, a i * log (a i / b i) = ∑ i ∈ s, a i * log (a i / 0) := by
-      apply Finset.sum_congr rfl (fun i hi ↦ by simp [h i hi])
-    simp [A, B]
+  · simp_all
   let B := ∑ i ∈ s, b i
   have B_pos : 0 < B := by
     apply Finset.sum_pos' hb

@@ -284,9 +284,6 @@ private def baseWitness (S : Finset (Fin 4)) : ℚ := (S.card : ℚ) + nonemptyB
 private lemma fullBonus_nonneg (S : Finset (Fin 4)) : 0 ≤ fullBonus S := by
   by_cases h : S = Finset.univ <;> simp [fullBonus, h]
 
-private lemma pairBonus_nonneg (S : Finset (Fin 4)) : 0 ≤ pairBonus S := by
-  by_cases h : S = pair01 <;> simp [pairBonus, h]
-
 private lemma FWitnessℚ_eq_base_add_pair :
     ∀ S : Finset (Fin 4), FWitnessℚ S = baseWitness S + pairBonus S := by
   intro S
@@ -303,8 +300,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
         norm_num at h1
       have hFull : S ≠ Finset.univ := by
         intro h
-        rw [h] at h1
-        norm_num at h1
+        simp_all
       have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
       simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h1, hPair, hFull,
         hNonempty]
@@ -317,8 +313,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
       · by_cases h2 : S.card = 2
         · have hFull : S ≠ Finset.univ := by
             intro h
-            rw [h] at h2
-            norm_num at h2
+            simp_all
           have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
           have hPairLit : S ≠ ({0, 1} : Finset (Fin 4)) := by simpa [pair01] using hPair
           simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h2, hPair,
@@ -330,8 +325,7 @@ private lemma FWitnessℚ_eq_base_add_pair :
           | inl h3 =>
               have hFull : S ≠ Finset.univ := by
                 intro h
-                rw [h] at h3
-                norm_num at h3
+                simp_all
               have hNonempty : S.Nonempty := Finset.card_pos.mp (Nat.pos_of_ne_zero h0)
               have hPairLit : S ≠ ({0, 1} : Finset (Fin 4)) := by simpa [pair01] using hPair
               simp [FWitnessℚ, baseWitness, nonemptyBonus, fullBonus, pairBonus, h3, hPair,
@@ -357,12 +351,9 @@ private lemma nonemptyBonus_submodular (α β : Finset (Fin 4)) :
   by_cases hα : α.Nonempty
   · by_cases hβ : β.Nonempty
     · have hUnion : (α ∪ β).Nonempty := Finset.union_nonempty.2 (Or.inl hα)
-      by_cases hInter : (α ∩ β).Nonempty
-      · simp [nonemptyBonus, hα, hβ, hUnion, hInter]
-      · simp [nonemptyBonus, hα, hβ, hUnion, hInter]
-    · have hβ' : β = ∅ := Finset.not_nonempty_iff_eq_empty.mp hβ
-      rw [hβ']
-      simp [nonemptyBonus, hα]
+      by_cases hInter : (α ∩ β).Nonempty <;>
+        simp [nonemptyBonus, hα, hβ, hUnion, hInter]
+    · simp_all
   · have hα' : α = ∅ := Finset.not_nonempty_iff_eq_empty.mp hα
     rw [hα']
     simp [nonemptyBonus]
@@ -372,8 +363,7 @@ private lemma fullBonus_supermodular (α β : Finset (Fin 4)) :
   by_cases hα : α = Finset.univ
   · subst hα
     by_cases hβ : β = Finset.univ
-    · subst hβ
-      simp [fullBonus]
+    · simp_all
     · simp [fullBonus, hβ]
   · by_cases hβ : β = Finset.univ
     · subst hβ
@@ -413,37 +403,29 @@ private lemma pairBonus_submodular_left_pair (β : Finset (Fin 4)) :
   by_cases hSub : β ⊆ pair01
   · by_cases hSup : pair01 ⊆ β
     · have hβ : β = pair01 := Finset.Subset.antisymm hSub hSup
-      subst hβ
-      simp [pairBonus]
+      simp_all
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : pair01 ⊆ β := by simp [h]
-        exact hSup hEqSub
+        simp_all
       have hUnion : pair01 ∪ β = pair01 := Finset.union_eq_left.mpr hSub
       have hInter : pair01 ∩ β ≠ pair01 := by
-        intro h
-        exact hSup (Finset.inter_eq_left.mp h)
+        simp_all
       simp [pairBonus, hUnion, hInter, hβ]
   · by_cases hSup : pair01 ⊆ β
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : β ⊆ pair01 := by simp [h]
-        exact hSub hEqSub
+        simp_all
       have hUnion : pair01 ∪ β ≠ pair01 := by
-        intro h
-        exact hSub (Finset.union_eq_left.mp h)
+        simp_all
       have hInter : pair01 ∩ β = pair01 := Finset.inter_eq_left.mpr hSup
       simp [pairBonus, hUnion, hInter, hβ]
     · have hβ : β ≠ pair01 := by
         intro h
-        have hEqSub : β ⊆ pair01 := by simp [h]
-        exact hSub hEqSub
+        simp_all
       have hUnion : pair01 ∪ β ≠ pair01 := by
-        intro h
-        exact hSub (Finset.union_eq_left.mp h)
+        simp_all
       have hInter : pair01 ∩ β ≠ pair01 := by
-        intro h
-        exact hSup (Finset.inter_eq_left.mp h)
+        simp_all
       simp [pairBonus, hUnion, hInter, hβ]
 
 private lemma pairBonus_submodular_outside_exceptional :
@@ -470,33 +452,25 @@ private lemma FWitnessℚ_submodular :
         FWitnessℚ β := by
   intro α β
   by_cases hExceptional : PairBonusExceptional α β
-  · rcases hExceptional with h01 | h10 | h012013 | h013012
-    · rcases h01 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0} : Finset (Fin 4)) ∪ {1}) = 4 := by decide
-      have hInter : FWitnessℚ (({0} : Finset (Fin 4)) ∩ {1}) = 0 := by decide
-      have h0 : FWitnessℚ ({0} : Finset (Fin 4)) = 2 := by decide
-      have h1 : FWitnessℚ ({1} : Finset (Fin 4)) = 2 := by decide
-      rw [hUnion, hInter, h0, h1]
+  · rcases hExceptional with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
+    · rw [show FWitnessℚ (({0} : Finset (Fin 4)) ∪ {1}) = 4 from by decide,
+          show FWitnessℚ (({0} : Finset (Fin 4)) ∩ {1}) = 0 from by decide,
+          show FWitnessℚ ({0} : Finset (Fin 4)) = 2 from by decide,
+          show FWitnessℚ ({1} : Finset (Fin 4)) = 2 from by decide]
       norm_num
-    · rcases h10 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({1} : Finset (Fin 4)) ∪ {0}) = 4 := by decide
-      have hInter : FWitnessℚ (({1} : Finset (Fin 4)) ∩ {0}) = 0 := by decide
-      have h1 : FWitnessℚ ({1} : Finset (Fin 4)) = 2 := by decide
-      have h0 : FWitnessℚ ({0} : Finset (Fin 4)) = 2 := by decide
-      rw [hUnion, hInter, h1, h0]
+    · rw [show FWitnessℚ (({1} : Finset (Fin 4)) ∪ {0}) = 4 from by decide,
+          show FWitnessℚ (({1} : Finset (Fin 4)) ∩ {0}) = 0 from by decide,
+          show FWitnessℚ ({1} : Finset (Fin 4)) = 2 from by decide,
+          show FWitnessℚ ({0} : Finset (Fin 4)) = 2 from by decide]
       norm_num
-    · rcases h012013 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∪ {0, 1, 3}) = 4 := by decide
-      have hInter : FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∩ {0, 1, 3}) = 4 := by decide
-      have h012 : FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 := by decide
-      have h013 : FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 := by decide
-      rw [hUnion, hInter, h012, h013]
-    · rcases h013012 with ⟨rfl, rfl⟩
-      have hUnion : FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∪ {0, 1, 2}) = 4 := by decide
-      have hInter : FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∩ {0, 1, 2}) = 4 := by decide
-      have h013 : FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 := by decide
-      have h012 : FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 := by decide
-      rw [hUnion, hInter, h013, h012]
+    · rw [show FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∪ {0, 1, 3}) = 4 from by decide,
+          show FWitnessℚ (({0, 1, 2} : Finset (Fin 4)) ∩ {0, 1, 3}) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 from by decide]
+    · rw [show FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∪ {0, 1, 2}) = 4 from by decide,
+          show FWitnessℚ (({0, 1, 3} : Finset (Fin 4)) ∩ {0, 1, 2}) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 3} : Finset (Fin 4)) = 4 from by decide,
+          show FWitnessℚ ({0, 1, 2} : Finset (Fin 4)) = 4 from by decide]
   · rw [FWitnessℚ_eq_base_add_pair (α ∪ β), FWitnessℚ_eq_base_add_pair (α ∩ β),
       FWitnessℚ_eq_base_add_pair α, FWitnessℚ_eq_base_add_pair β]
     have hBase := baseWitness_submodular α β
@@ -624,8 +598,7 @@ lemma entropyFn_empty : entropyFn X μ ∅ = 0 := by
         (fun j : (∅ : Finset (Fin 4)) => X j.1 (Classical.arbitrary Ω)) := by
     funext ω
     exact Subsingleton.elim _ _
-  rw [h_eq]
-  exact entropy_const _
+  simp_all
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -655,8 +628,7 @@ lemma entropyFn_singleton (hX : ∀ i, Measurable (X i)) (i : Fin 4) :
       (fun ω : Ω => fun j : ({i} : Finset (Fin 4)) => X j.1 ω) :=
     measurable_pi_lambda _ (fun j => hX j.1)
   -- π ∘ joint = X i definitionally, so the composed entropy collapses.
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -689,8 +661,7 @@ lemma entropyFn_pair (hX : ∀ i, Measurable (X i))
       (fun ω : Ω => fun k : ({i, j} : Finset (Fin 4)) => X k.1 ω) :=
     measurable_pi_lambda _ (fun k => hX k.1)
   -- π ∘ joint = ⟨X i, X j⟩ definitionally.
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -726,8 +697,7 @@ lemma entropyFn_triple (hX : ∀ i, Measurable (X i))
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({i, j, k} : Finset (Fin 4)) => X m.1 ω) :=
     measurable_pi_lambda _ (fun m => hX m.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 omit [IsProbabilityMeasure μ] in
 /--
@@ -767,8 +737,7 @@ lemma entropyFn_quad (hX : ∀ i, Measurable (X i)) :
   have h_meas : Measurable
       (fun ω : Ω => fun m : ({0, 1, 2, 3} : Finset (Fin 4)) => X m.1 ω) :=
     measurable_pi_lambda _ (fun m => hX m.1)
-  have h_ent := entropy_comp_of_injective μ h_meas π hπ
-  exact h_ent.symm
+  exact (entropy_comp_of_injective μ h_meas π hπ).symm
 
 end EntropyFnEvaluation
 
@@ -791,12 +760,13 @@ lemma _root_.ZhangYeung.zhangYeungAt_entropyFn
     (μ : Measure Ω) [IsProbabilityMeasure μ] (π : Equiv.Perm (Fin 4)) :
     zhangYeungAt (entropyFn X μ) (π 0) (π 1) (π 2) (π 3) := by
   -- Distinctness of the four permuted indices from injectivity of `π`.
-  have h01 : π 0 ≠ π 1 := fun h => absurd (π.injective h) (by decide)
-  have h02 : π 0 ≠ π 2 := fun h => absurd (π.injective h) (by decide)
-  have h03 : π 0 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
-  have h12 : π 1 ≠ π 2 := fun h => absurd (π.injective h) (by decide)
-  have h13 : π 1 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
-  have h23 : π 2 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
+  have d : ∀ a b : Fin 4, a ≠ b → π a ≠ π b := fun _ _ hab h => hab (π.injective h)
+  have h01 : π 0 ≠ π 1 := d 0 1 (by decide)
+  have h02 : π 0 ≠ π 2 := d 0 2 (by decide)
+  have h03 : π 0 ≠ π 3 := d 0 3 (by decide)
+  have h12 : π 1 ≠ π 2 := d 1 2 (by decide)
+  have h13 : π 1 ≠ π 3 := d 1 3 (by decide)
+  have h23 : π 2 ≠ π 3 := d 2 3 (by decide)
   -- Apply M3 at the labeling `(X_M3, Y_M3, Z_M3, U_M3) =
   -- (X (π 2), X (π 3), X (π 0), X (π 1))`.
   have hM3 := ZhangYeung.zhangYeung (hX (π 2)) (hX (π 3)) (hX (π 0)) (hX (π 1)) μ
@@ -1013,10 +983,9 @@ private lemma almostEntropicRegion_four_subset_zhangYeungRegion_4 :
     (closure_minimal entropyRegion_four_subset_zhangYeungRegion_4 isClosed_zhangYeungRegion_4)
 
 /-- The witness is not almost entropic in dimension `4`. -/
-private lemma not_mem_almostEntropicRegion_witness : FWitness ∉ almostEntropicRegionN.{u} 4 :=
-  by
-  intro hF
-  exact not_zhangYeungHolds_witness (almostEntropicRegion_four_subset_zhangYeungRegion_4 hF)
+private lemma not_mem_almostEntropicRegion_witness :
+    FWitness ∉ almostEntropicRegionN.{u} 4 := fun hF =>
+  not_zhangYeungHolds_witness (almostEntropicRegion_four_subset_zhangYeungRegion_4 hF)
 
 /--
 **Theorem 4 of [@zhangyeung1998, §II, eq. 26]** at `n = 4`. The Shannon outer bound
@@ -1032,9 +1001,7 @@ lives entirely at the level of `Finset (Fin 4) → ℝ`.
 theorem _root_.ZhangYeung.theorem4 :
     ∃ F : Finset (Fin 4) → ℝ,
       F ∈ shannonRegionN 4 ∧ F ∉ almostEntropicRegionN.{u} 4 := by
-  refine ⟨FWitness, ?_, not_mem_almostEntropicRegion_witness⟩
-  change shannonConeN FWitness
-  exact shannonCone_of_witness
+  exact ⟨FWitness, shannonCone_of_witness, not_mem_almostEntropicRegion_witness⟩
 
 /--
 Sequence-level strengthening of the witness exclusion: `FWitness` is not the pointwise
@@ -1110,8 +1077,7 @@ private lemma preimage_singleton_castLE {n : ℕ} (hn : 4 ≤ n) (i : Fin 4) :
     ({Fin.castLE hn i} : Finset (Fin n)).preimage (Fin.castLE hn)
         (Fin.castLE_injective hn).injOn = ({i} : Finset (Fin 4)) := by
   ext j
-  simp [Finset.mem_preimage, Finset.mem_singleton,
-    (Fin.castLE_injective hn).eq_iff]
+  simp_all
 
 /--
 Restricting the lifted witness back to the first four coordinates recovers the base
@@ -1147,20 +1113,11 @@ theorem _root_.ZhangYeung.not_zhangYeungHolds_witness_n {n : ℕ} (hn : 4 ≤ n)
     ¬ zhangYeungHoldsN (FWitnessN hn) := by
   intro h
   have inj := Fin.castLE_injective hn
-  have d23 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 3 :=
-    fun e => absurd (inj e) (by decide)
-  have d20 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 0 :=
-    fun e => absurd (inj e) (by decide)
-  have d21 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
-  have d30 : (Fin.castLE hn 3 : Fin n) ≠ Fin.castLE hn 0 :=
-    fun e => absurd (inj e) (by decide)
-  have d31 : (Fin.castLE hn 3 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
-  have d01 : (Fin.castLE hn 0 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
+  have d : ∀ a b : Fin 4, a ≠ b → (Fin.castLE hn a : Fin n) ≠ Fin.castLE hn b :=
+    fun _ _ hab e => hab (inj e)
   have hat := h (Fin.castLE hn 2) (Fin.castLE hn 3) (Fin.castLE hn 0) (Fin.castLE hn 1)
-    d23 d20 d21 d30 d31 d01
+    (d 2 3 (by decide)) (d 2 0 (by decide)) (d 2 1 (by decide))
+    (d 3 0 (by decide)) (d 3 1 (by decide)) (d 0 1 (by decide))
   exact not_zhangYeungAt_witness_canonical ((zhangYeungAtN_witness_castLE hn 2 3 0 1).mp hat)
 
 /--
@@ -1188,9 +1145,7 @@ realization back down to the first four coordinates and applying the `n = 4` exc
 theorem _root_.ZhangYeung.theorem4_ge_four (n : ℕ) (hn : 4 ≤ n) :
     ∃ F : Finset (Fin n) → ℝ,
       F ∈ shannonRegionN n ∧ F ∉ almostEntropicRegionN.{u} n := by
-  refine ⟨FWitnessN hn, ?_, ?_⟩
-  · change shannonConeN (FWitnessN hn)
-    exact shannonCone_of_witness_n hn
+  refine ⟨FWitnessN hn, shannonCone_of_witness_n hn, ?_⟩
   · intro hF
     have h_restrict : FWitness ∈ almostEntropicRegionN.{u} 4 := by
       simpa [restrictFirstFour_witness_n hn] using restrictFirstFour_mem_almostEntropicRegionN

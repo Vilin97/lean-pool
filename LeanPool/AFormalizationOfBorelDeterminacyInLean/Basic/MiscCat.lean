@@ -141,8 +141,7 @@ lemma isCoprod_type_iff {J : Type u1} {F : Discrete J ⥤ Type (max u1 v1)} (t :
         exact (mono_iff_injective _).mp (h1 i) h
       · intro y
         obtain ⟨i, x, h⟩ := h3 y
-        use ⟨i, x⟩
-        exact h
+        exact ⟨⟨i, x⟩, h⟩
     refine Limits.Cocone.ext (asIso f) ?_
     intro j
     ext x
@@ -172,11 +171,8 @@ lemma coprod_type_isIso_iff {J : Type u1} {F G : Discrete J ⥤ Type (max u1 v1)
       have hMap : Mono (hs.map t df) := by infer_instance
       have h : Mono (s.ι.app ⟨j⟩ ≫ hs.map t df) :=
         mono_comp' (h1 ⟨j⟩) hMap
-      have hEq : s.ι.app ⟨j⟩ ≫ hs.map t df = f j ≫ t.ι.app ⟨j⟩ := by
-        exact hs.ι_map t df ⟨j⟩
-      haveI : Mono (f j ≫ t.ι.app ⟨j⟩) := by
-        rw [← hEq]
-        exact h
+      have hEq : s.ι.app ⟨j⟩ ≫ hs.map t df = f j ≫ t.ι.app ⟨j⟩ := hs.ι_map t df ⟨j⟩
+      haveI : Mono (f j ≫ t.ι.app ⟨j⟩) := hEq ▸ h
       exact mono_of_mono _ (t.ι.app ⟨j⟩)
     · intro y
       obtain ⟨i, x, h⟩ := h3 (inv (hs.map t df) (t.ι.app ⟨j⟩ y))

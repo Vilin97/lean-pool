@@ -29,8 +29,7 @@ theorem Entails_pull_pure {σ : Type u} {hyps : List (NamedPred σ)} {goal : pre
   apply Entails_revert_by_name (toRevert := toPull)
   simp at heq; rcases heq with ⟨r, heq1, heq2⟩
   rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
-  rw [← Entails_pure_fact_intro]
-  exact hh
+  rwa [← Entails_pure_fact_intro]
 
 private def pullPureTacDSimps := #[``List.findIdx, ``List.findIdx.go, ``List.eraseIdx, ``String.reduceBEq,
   ``String.reduceBNe, ``cond_false, ``cond_true, ``Option.elim]

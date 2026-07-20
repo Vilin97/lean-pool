@@ -125,8 +125,7 @@ private lemma pd_two (hpd : IsPositiveDefinite φ) (a b : α) (c₀ c₁ : ℂ) 
     0 ≤ (starRingEnd ℂ c₀ * c₀ * φ (a - a) + starRingEnd ℂ c₀ * c₁ * φ (a - b) +
      (starRingEnd ℂ c₁ * c₀ * φ (b - a) + starRingEnd ℂ c₁ * c₁ * φ (b - b))).re := by
   have h := hpd.nonneg 2 ![a, b] ![c₀, c₁]
-  simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one] at h
-  exact h
+  simpa only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one] using h
 
 /-- ‖φ(x)‖ ≤ φ(0).re for all x. (Cauchy-Schwarz on the 2×2 PD matrix.) -/
 lemma bounded_by_zero (hpd : IsPositiveDefinite φ) (x : α) :
@@ -189,10 +188,8 @@ lemma mul (hpd : IsPositiveDefinite φ) {ψ : α → ℂ} (hψ : IsPositiveDefin
     let A : Matrix (Fin m) (Fin m) ℂ := Matrix.of fun i j => φ (x i - x j)
     let B : Matrix (Fin m) (Fin m) ℂ := Matrix.of fun i j => ψ (x i - x j)
     let e : Fin m → Fin m × Fin m := fun i => (i, i)
-    have hA : A.PosSemidef := by
-      simpa [A] using kernelMatrix_posSemidef hpd x
-    have hB : B.PosSemidef := by
-      simpa [B] using kernelMatrix_posSemidef hψ x
+    have hA : A.PosSemidef := by simpa [A] using kernelMatrix_posSemidef hpd x
+    have hB : B.PosSemidef := by simpa [B] using kernelMatrix_posSemidef hψ x
     have hK : (A ⊗ₖ B).PosSemidef := hA.kronecker hB
     have hSub : ((A ⊗ₖ B).submatrix e e).PosSemidef := hK.submatrix e
     have hnonneg := hSub.dotProduct_mulVec_nonneg c

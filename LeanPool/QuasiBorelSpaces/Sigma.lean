@@ -76,12 +76,9 @@ def mk'
     : Var I P where
   embed n := embed ((Encodable.decode₂ Index n).getD (index 0))
   index r := Encodable.encode (index r)
-  var i r := var _ r
-  isHom_var i := isHom_var _
-  measurable_index := by
-    apply Measurable.fun_comp
-    · apply measurable_from_top
-    · exact measurable_index
+  var _ r := var _ r
+  isHom_var _ := isHom_var _
+  measurable_index := Measurable.fun_comp measurable_from_top measurable_index
 
 @[simp]
 lemma apply_mk'
@@ -113,10 +110,7 @@ def comp {f : ℝ → ℝ} (hf : Measurable f) (x : Var I P) : Var I P where
   embed := x.embed
   index r := x.index (f r)
   var i r := x.var i (f r)
-  isHom_var i := by
-    apply isHom_comp'
-    · apply x.isHom_var
-    · simp only [isHom_ofMeasurableSpace, hf]
+  isHom_var i := isHom_comp' (x.isHom_var i) (by simp only [isHom_ofMeasurableSpace, hf])
   measurable_index := Measurable.fun_comp x.measurable_index hf
 
 @[simp]
@@ -170,10 +164,7 @@ instance [∀ i, LE (P i)] : LE (Var I P) where
 
 instance [∀ i, Preorder (P i)] : Preorder (Var I P) where
   le_refl φ x := by simp only [le_refl]
-  le_trans φ₁ φ₂ φ₃ h₁ h₂ x := by
-    apply le_trans
-    · apply h₁
-    · apply h₂
+  le_trans _ _ _ h₁ h₂ x := le_trans (h₁ x) (h₂ x)
 
 open OmegaCompletePartialOrder
 
@@ -358,9 +349,7 @@ lemma isHom_elim'
     {f : ∀ i, P i → B} (hf : ∀ i, IsHom (f i))
     {g : A → (i : I) × P i} (hg : IsHom g)
     : IsHom (fun x ↦ f (g x).1 (g x).2) := by
-  apply isHom_comp' (f := fun x : Sigma P ↦ (f x.1 x.2 : B)) (g := g)
-  · exact isHom_elim hf
-  · exact hg
+  exact isHom_comp' (f := fun x : Sigma P ↦ (f x.1 x.2 : B)) (g := g) (isHom_elim hf) hg
 
 @[fun_prop, simp]
 lemma isHom_fst [QuasiBorelSpace I] : IsHom (Sigma.fst : Sigma P → I) := by
@@ -398,11 +387,10 @@ lemma isHom_distrib : IsHom (fun x : A × Sigma P ↦ (⟨x.2.1, x.1, x.2.2⟩ :
 lemma isHom_distrib'
     {f : A × Sigma P → B} (hf : IsHom (fun x : (i : I) × A × P i ↦ f ⟨x.2.1, x.1, x.2.2⟩))
     : IsHom f := by
-  apply isHom_comp'
+  exact isHom_comp'
       (f := fun x : (i : I) × A × P i ↦ f ⟨x.2.1, x.1, x.2.2⟩)
       (g := fun x : A × Sigma P ↦ ⟨x.2.1, x.1, x.2.2⟩)
-  · exact hf
-  · apply isHom_distrib
+      hf isHom_distrib
 
 @[fun_prop]
 lemma isHom_map

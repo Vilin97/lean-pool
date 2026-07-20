@@ -140,12 +140,10 @@ lemma remainder_integral_bound_on_annulus
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   have hab : a < b :=
     (Set.mem_Ioo.mp hat₀).1.trans_le (le_of_lt (Set.mem_Ioo.mp hat₀).2)
-  -- Localize h_lower for annulus_t_measure_bound
   have h_loc_δ₁ : ∀ t ∈ Set.Icc a b,
       ‖γ t - γ t₀‖ ≤ ε₁ → |t - t₀| < min δ₁ δ₁ := by
     intro s hs hγs; simp only [min_self]
     exact lt_of_lt_of_le (h_localize s hs hγs) (min_le_right _ _)
-  -- Set up the indicator domination
   set R := 2 * ε₁ / ‖L‖
   have hR_pos : 0 < R := by positivity
   set Icontain := Set.Icc (t₀ - R) (t₀ + R)
@@ -247,6 +245,12 @@ lemma volume_shell_le {t₀ r₁ r₂ : ℝ}
         rw [← ENNReal.ofReal_add
           (by linarith) (by linarith)]; ring_nf
 
+/-- If `g` and `x` are within `e` and straddle a threshold `ε`, then `|x - ε| ≤ e`. -/
+private lemma abs_sub_threshold_le {g x ε e : ℝ} (h_approx : |g - x| ≤ e)
+    (h_between : (g ≤ ε ∧ ε ≤ x) ∨ (x ≤ ε ∧ ε ≤ g)) : |x - ε| ≤ e := by
+  rw [abs_le] at h_approx ⊢
+  rcases h_between with ⟨h1, h2⟩ | ⟨h1, h2⟩ <;> constructor <;> linarith
+
 lemma symmDiff_subset_boundaryLayers
     {g x e ε₁ ε₂ : ℝ}
     (h_approx : |g - x| ≤ e)
@@ -258,59 +262,26 @@ lemma symmDiff_subset_boundaryLayers
     ⟨⟨hg_lower, hg_upper⟩, hnotB⟩ |
     ⟨⟨hx_lower, hx_upper⟩, hnotA⟩
   · by_cases hx_le_ε₂ : x ≤ ε₂
-    · left
-      have h1 : ε₂ - x ≤ g - x := by linarith
-      have h2 : g - x ≤ |g - x| := le_abs_self _
-      have hle : x - ε₂ ≤ 0 := by linarith
-      calc |x - ε₂|
-          = ε₂ - x := by rw [abs_of_nonpos hle]; ring
-        _ ≤ g - x := h1
-        _ ≤ |g - x| := h2
-        _ ≤ e := h_approx
+    · exact Or.inl (abs_sub_threshold_le h_approx (Or.inr ⟨hx_le_ε₂, by linarith⟩))
     · push Not at hx_le_ε₂
       have hx_gt_ε₁ : ε₁ < x := by
         by_contra h_not
         push Not at h_not
         exact hnotB ⟨hx_le_ε₂, h_not⟩
-      right
-      have h1 : x - ε₁ ≤ x - g := by linarith
-      have h2 : x - g ≤ |g - x| := by
-        rw [abs_sub_comm]; exact le_abs_self _
-      calc |x - ε₁|
-          = x - ε₁ := abs_of_pos (by linarith)
-        _ ≤ x - g := h1
-        _ ≤ |g - x| := h2
-        _ ≤ e := h_approx
+      exact Or.inr (abs_sub_threshold_le h_approx (Or.inl ⟨hg_upper, by linarith⟩))
   · by_cases hg_le_ε₂ : g ≤ ε₂
-    · left
-      have h1 : x - ε₂ ≤ x - g := by linarith
-      have h2 : x - g ≤ |g - x| := by
-        rw [abs_sub_comm]; exact le_abs_self _
-      calc |x - ε₂|
-          = x - ε₂ := abs_of_pos (by linarith)
-        _ ≤ x - g := h1
-        _ ≤ |g - x| := h2
-        _ ≤ e := h_approx
+    · exact Or.inl (abs_sub_threshold_le h_approx (Or.inl ⟨hg_le_ε₂, by linarith⟩))
     · push Not at hg_le_ε₂
       have hg_gt_ε₁ : ε₁ < g := by
         by_contra h_not
         push Not at h_not
         exact hnotA ⟨hg_le_ε₂, h_not⟩
-      right
-      have h1 : ε₁ - x ≤ g - x := by linarith
-      have h2 : g - x ≤ |g - x| := le_abs_self _
-      have hle : x - ε₁ ≤ 0 := by linarith
-      calc |x - ε₁|
-          = ε₁ - x := by rw [abs_of_nonpos hle]; ring
-        _ ≤ g - x := h1
-        _ ≤ |g - x| := h2
-        _ ≤ e := h_approx
+      exact Or.inr (abs_sub_threshold_le h_approx (Or.inr ⟨hx_upper, by linarith⟩))
 
 lemma tAnnLin_implies_r_le
     {L_norm r ε₁ : ℝ} (hL_pos : 0 < L_norm)
     (h_in : L_norm * r ≤ ε₁) :
-    r ≤ ε₁ / L_norm := by
-  rw [le_div_iff₀ hL_pos, mul_comm]; exact h_in
+    r ≤ ε₁ / L_norm := by rw [le_div_iff₀ hL_pos, mul_comm]; exact h_in
 
 lemma near_threshold_implies_r_in_shell
     {L_norm r ε K₀ R_max : ℝ}
@@ -322,31 +293,15 @@ lemma near_threshold_implies_r_in_shell
     (ε - K₀ * R_max^2) / L_norm ≤ r ∧
     r ≤ (ε + K₀ * R_max^2) / L_norm := by
   have h_abs := abs_le.mp h_near
-  have h_lower : ε - K₀ * r^2 ≤ L_norm * r := by
-    linarith [h_abs.1]
-  have h_upper : L_norm * r ≤ ε + K₀ * r^2 := by
-    linarith [h_abs.2]
+  have h_lower : ε - K₀ * r^2 ≤ L_norm * r := by linarith [h_abs.1]
+  have h_upper : L_norm * r ≤ ε + K₀ * r^2 := by linarith [h_abs.2]
   have hr2_le : r^2 ≤ R_max^2 :=
     sq_le_sq' (by linarith) hr_le
   have hK_r2_le : K₀ * r^2 ≤ K₀ * R_max^2 :=
     mul_le_mul_of_nonneg_left hr2_le hK₀_nonneg
-  constructor
-  · rw [div_le_iff₀ hL_pos]
-    have h1 : ε - K₀ * R_max^2 ≤ ε - K₀ * r^2 := by
-      linarith
-    have h2 : ε - K₀ * r^2 ≤ L_norm * r := h_lower
-    have h3 : L_norm * r = r * L_norm :=
-      mul_comm _ _
-    linarith
-  · rw [le_div_iff₀ hL_pos]
-    have h1 :
-      ε + K₀ * r^2 ≤ ε + K₀ * R_max^2 := by
-      linarith
-    have h2 :
-      L_norm * r ≤ ε + K₀ * r^2 := h_upper
-    have h3 : L_norm * r = r * L_norm :=
-      mul_comm _ _
-    linarith
+  refine ⟨?_, ?_⟩
+  · rw [div_le_iff₀ hL_pos]; linarith
+  · rw [le_div_iff₀ hL_pos]; linarith
 
 /-- When `ε ≤ Δ` (small epsilon), the shell is contained in a ball of radius `(ε+Δ)/L_norm`. -/
 private lemma shell_vol_le_of_small_eps {t₀ ε Δ L_norm : ℝ}
@@ -448,25 +403,13 @@ private lemma annulus_lower_bound {γ : ℝ → ℂ} {t₀ : ℝ} {L : ℂ} {K�
     have := abs_norm_sub_norm_le (γ t - γ t₀) ((t - t₀) • L)
     linarith [abs_le.mp this]
   have h2 : ‖γ t - γ t₀‖ ≥ |t - t₀| * ‖L‖ - K₀ * |t - t₀|^2 := by
-    calc ‖γ t - γ t₀‖
-        ≥ ‖(t - t₀) • L‖ - ‖γ t - γ t₀ - (t - t₀) • L‖ := h1
-      _ = |t - t₀| * ‖L‖ - ‖γ t - γ t₀ - (t - t₀) • L‖ := by rw [h_smul_norm]
-      _ ≥ |t - t₀| * ‖L‖ - K₀ * |t - t₀|^2 := by linarith [h_approx]
-  have h3 : |t - t₀| * ‖L‖ - K₀ * |t - t₀|^2 =
-      |t - t₀| * (‖L‖ - K₀ * |t - t₀|) := by ring
-  rw [h3] at h2
+    rw [h_smul_norm] at h1
+    linarith [h_approx]
   have h4 : K₀ * |t - t₀| < ‖L‖ / 2 := by
-    have h4b : K₀ * |t - t₀| < K₀ * (‖L‖ / (2 * K₀)) :=
-      mul_lt_mul_of_pos_left ht_lt_L_over_2K hK₀_pos
-    have h4c : K₀ * (‖L‖ / (2 * K₀)) = ‖L‖ / 2 := by field_simp
-    linarith
-  have h5 : ‖L‖ - K₀ * |t - t₀| > ‖L‖ / 2 := by linarith
-  have h6 : |t - t₀| * (‖L‖ - K₀ * |t - t₀|) ≥ |t - t₀| * (‖L‖ / 2) :=
-    mul_le_mul_of_nonneg_left (le_of_lt h5) (abs_nonneg _)
-  calc ‖γ t - γ t₀‖
-      ≥ |t - t₀| * (‖L‖ - K₀ * |t - t₀|) := h2
-    _ ≥ |t - t₀| * (‖L‖ / 2) := h6
-    _ = ‖L‖ / 2 * |t - t₀| := by ring
+    have : K₀ * (‖L‖ / (2 * K₀)) = ‖L‖ / 2 := by field_simp
+    linarith [mul_lt_mul_of_pos_left ht_lt_L_over_2K hK₀_pos]
+  nlinarith [h2, h4, abs_nonneg (t - t₀),
+    mul_nonneg (abs_nonneg (t - t₀)) (le_of_lt (by linarith : (0 : ℝ) < ‖L‖ / 2 - K₀ * |t - t₀|))]
 
 lemma annulus_symmDiff_measure_bound
     {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
@@ -501,12 +444,9 @@ lemma annulus_symmDiff_measure_bound
   have hδ₁_le_L_over_4K : δ₁ ≤ ‖L‖ / (4 * K₀) :=
     min_le_right _ _
   have hδ₁_le_L_over_2K :
-      δ₁ ≤ ‖L‖ / (2 * K₀) := by
-    calc δ₁ ≤ ‖L‖ / (4 * K₀) := hδ₁_le_L_over_4K
-      _ ≤ ‖L‖ / (2 * K₀) := by
-          apply div_le_div_of_nonneg_left
-            (le_of_lt hL_norm_pos) (by linarith)
-          linarith
+      δ₁ ≤ ‖L‖ / (2 * K₀) :=
+    hδ₁_le_L_over_4K.trans (div_le_div_of_nonneg_left
+      (le_of_lt hL_norm_pos) (by linarith) (by linarith))
   have h_quad_small :
       ∀ r, r < δ₁ → K₀ * r ≤ ‖L‖ / 4 := by
     intro r hr
@@ -518,8 +458,7 @@ lemma annulus_symmDiff_measure_bound
             hδ₁_le_L_over_4K (le_of_lt hK₀_pos)
       _ = ‖L‖ / 4 := by field_simp
   let δ := ‖L‖ * δ₁ / 2
-  have hδ_pos : 0 < δ := by
-    simp only [δ]; positivity
+  have hδ_pos : 0 < δ := by simp only [δ]; positivity
   use 32 * K₀, by linarith, δ₁, hδ₁_pos, δ, hδ_pos
   intro ε₁ ε₂ hε₂_pos hε₂_le hε₁_lt γAnn tAnnLin
   have hε₁_pos : 0 < ε₁ :=
@@ -554,8 +493,7 @@ lemma annulus_symmDiff_measure_bound
     exact ht_local
   let R_max := 2 * ε₁ / ‖L‖
   let Δ := K₀ * R_max^2
-  have hR_max_pos : 0 < R_max := by
-    simp only [R_max]; positivity
+  have hR_max_pos : 0 < R_max := by simp only [R_max]; positivity
   have hΔ_nonneg : 0 ≤ Δ :=
     mul_nonneg hK₀_nonneg (sq_nonneg _)
   let shell₁_lo := (ε₁ - Δ) / ‖L‖
@@ -578,8 +516,8 @@ lemma annulus_symmDiff_measure_bound
       · exact h_localize_tAnnLin t ht_tAnn
     have ht_lt_δ₀ : |t - t₀| < δ₀ :=
       lt_of_lt_of_le ht_localized (min_le_left _ _)
-    have h_gx_bound : |g t - x t| ≤ e t := by
-      convert norm_linear_approx_bound h_quad ht_lt_δ₀ using 2
+    have h_gx_bound : |g t - x t| ≤ e t :=
+      norm_linear_approx_bound h_quad ht_lt_δ₀
     have ht_Icc : t ∈ Set.Icc a b := by
       rcases hxor with
         ⟨⟨ht_Icc, _, _, _⟩, _⟩ |
@@ -605,8 +543,7 @@ lemma annulus_symmDiff_measure_bound
       rcases hxor with ⟨ht_γAnn, _⟩ | ⟨ht_tAnn, _⟩
       · have h_lb := h_lower_bound t ht_localized
         have ⟨_, _, _, ht_upper⟩ := ht_γAnn
-        have h1 : |t - t₀| * (‖L‖ / 2) ≤ ε₁ := by
-          rw [mul_comm]; exact le_trans h_lb ht_upper
+        have h1 : |t - t₀| * (‖L‖ / 2) ≤ ε₁ := by rw [mul_comm]; exact le_trans h_lb ht_upper
         have hL2_pos : 0 < ‖L‖ / 2 := by linarith
         have h2 : |t - t₀| ≤ ε₁ / (‖L‖ / 2) := (le_div_iff₀ hL2_pos).mpr h1
         simp only [R_max, show ε₁ / (‖L‖ / 2) = 2 * ε₁ / ‖L‖ from by field_simp] at h2 ⊢
@@ -614,13 +551,11 @@ lemma annulus_symmDiff_measure_bound
       · have ⟨_, _, _, ht_upper⟩ := ht_tAnn
         have h1 : ‖L‖ * |t - t₀| ≤ ε₁ := ht_upper
         have h1' :
-            |t - t₀| * ‖L‖ ≤ ε₁ := by
-          rw [mul_comm]; exact h1
+            |t - t₀| * ‖L‖ ≤ ε₁ := by rw [mul_comm]; exact h1
         have hL_nonneg : 0 ≤ ‖L‖ :=
           le_of_lt hL_norm_pos
         calc |t - t₀|
-            ≤ ε₁ / ‖L‖ := by
-              rw [le_div_iff₀ hL_norm_pos]; exact h1'
+            ≤ ε₁ / ‖L‖ := by rw [le_div_iff₀ hL_norm_pos]; exact h1'
           _ ≤ 2 * ε₁ / ‖L‖ := by
               apply div_le_div_of_nonneg_right _
                 hL_nonneg; linarith
@@ -636,10 +571,8 @@ lemma annulus_symmDiff_measure_bound
     · left
       change |x t - ε₁| ≤ Δ
       exact le_trans h_near₁ he_le_Δ
-  have h_shell₁_eq : shell₁ = {t : ℝ | |‖L‖ * |t - t₀| - ε₁| ≤ Δ} := by
-    simp only [shell₁, x]
-  have h_shell₂_eq : shell₂ = {t : ℝ | |‖L‖ * |t - t₀| - ε₂| ≤ Δ} := by
-    simp only [shell₂, x]
+  have h_shell₁_eq : shell₁ = {t : ℝ | |‖L‖ * |t - t₀| - ε₁| ≤ Δ} := by simp only [shell₁, x]
+  have h_shell₂_eq : shell₂ = {t : ℝ | |‖L‖ * |t - t₀| - ε₂| ≤ Δ} := by simp only [shell₂, x]
   have h_shell₁_vol : volume shell₁ ≤ ENNReal.ofReal (4 * Δ / ‖L‖) := by
     rw [h_shell₁_eq]; exact shell_vol_le hL_norm_pos hΔ_nonneg hε₁_pos
   have h_shell₂_vol : volume shell₂ ≤ ENNReal.ofReal (4 * Δ / ‖L‖) := by
@@ -654,8 +587,7 @@ lemma annulus_symmDiff_measure_bound
           ENNReal.ofReal (4 * Δ / ‖L‖) :=
           add_le_add h_shell₁_vol h_shell₂_vol
       _ = ENNReal.ofReal
-            (4 * Δ / ‖L‖ + 4 * Δ / ‖L‖) := by
-          rw [← ENNReal.ofReal_add] <;> positivity
+            (4 * Δ / ‖L‖ + 4 * Δ / ‖L‖) := by rw [← ENNReal.ofReal_add] <;> positivity
       _ = ENNReal.ofReal (8 * Δ / ‖L‖) := by ring_nf
   calc volume (symmDiff γAnn tAnnLin)
       ≤ volume (shell₁ ∪ shell₂) :=

@@ -88,8 +88,7 @@ lemma path_comp_assoc {c₁ c₂ c₃ c₄ : Conf es}
   induction h₁₂ with
   | refl => rfl
   | step hEdge hPath ih =>
-    simp only [pathComp]
-    rw [ih]
+    simp only [pathComp, ih]
 
 /-- Trace of the path -/
 def trace {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : List es.Event :=
@@ -138,8 +137,7 @@ lemma execList_target_eq_union {c₁ c₂ : Conf es} {t : List es.Event}
     c₂.1 = c₁.1 ∪ {e | e ∈ t} := by
   induction h with
   | nil c =>
-    ext x
-    simp
+    simp_all
   | cons e h hnext ih =>
     ext x
     simp [nextConf, ih, List.mem_cons, Set.mem_union, Set.mem_setOf_eq]
@@ -197,8 +195,7 @@ noncomputable def execListLift {c_small c_large c_target : Conf es} {t : List es
 /-- Existence of a path length. -/
 lemma pathLengthExists {c₁ c₂ : Conf es} (h : Nonempty (Path es c₁ c₂)) :
     ∃ n, ∃ p : Path es c₁ c₂, length es p = n := by
-  rcases h with ⟨p⟩
-  exact ⟨length es p, p, rfl⟩
+  simp_all
 
 /-- Minimal path length between two configurations, given existence of a path. -/
 noncomputable def minPathLength {c₁ c₂ : Conf es} (h : Nonempty (Path es c₁ c₂)) : Nat := by
@@ -276,8 +273,7 @@ lemma trace_comp {c₁ c₂ c₃ : Conf es} (p₁₂ : Path es c₁ c₂) (p₂�
   induction p₁₂ with
   | refl => rfl
   | step hEdge hPath ih =>
-    simp only [pathComp, trace, ih]
-    rw [List.cons_append]
+    simp only [pathComp, trace, ih, List.cons_append]
 
 /-- Asynchronous path: paths quotiented by path equivalence. -/
 def Async (c₁ c₂ : Conf es) : Type _ :=

@@ -35,18 +35,6 @@ analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying ins
 @[reducible] def liftEq {x y : ℂ} (h : x = y) [hx : IsComputableℂ x] : IsComputableℂ y :=
   ⟨hx.1.liftEq (congrArg _ h), hx.2.liftEq (congrArg _ h)⟩
 
---We'll need some version of this once we want nontrivial functions, like exp/sin.
-
--- def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
---     (h : ∀ a, (fs a).val = fr a.val) :
---     IsComputable x → IsComputable (fr x) :=
---   fun ⟨sx, hsx⟩ ↦ ⟨fs sx, hsx ▸ h sx⟩
-
--- def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
---     (h : ∀a b, (fs a b).val = fr a.val b.val) :
---     IsComputable x → IsComputable y → IsComputable (fr x y) :=
---   fun ⟨sx, hsx⟩ ⟨sy, hsy⟩ ↦ ⟨fs sx sy, hsx ▸ hsy ▸ h sx sy⟩
-
 variable (x y : ℂ) [hx : IsComputableℂ x] [hy : IsComputableℂ y]
 
 variable (r : ℝ) [hr : IsComputable r]
@@ -164,9 +152,6 @@ noncomputable instance instComputableZSMul (z : ℤ) : IsComputableℂ (z • x)
 --TODO: Can't find a way to make this computable (it really wants to use Complex.instField)
 noncomputable instance instComputableQSMul (q : ℚ) : IsComputableℂ (q • x) :=
   liftEq (Rat.smul_def q x).symm
-  --Alternative:
-  --  ⟨let _ := hx.1; .liftEq (Complex.re_qsmul q x).symm inferInstance,
-  -- let _ := hx.2; .liftEq (Complex.im_qsmul q x).symm inferInstance⟩
 
 noncomputable instance instComputableInner : IsComputable (inner ℝ x y) :=
   IsComputable.liftEq (Complex.inner x y).symm

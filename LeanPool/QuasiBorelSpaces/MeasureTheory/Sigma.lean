@@ -55,9 +55,8 @@ lemma measurable_elim'
     {f : ∀ i, P i → A} (hf : ∀ i, Measurable (f i))
     {g : A → (i : I) × P i} (hg : Measurable g)
     : Measurable (fun x ↦ f (g x).1 (g x).2) := by
-  apply Measurable.fun_comp (g := fun x : Sigma P ↦ (f x.1 x.2 : A)) (f := g)
-  · exact measurable_elim hf
-  · exact hg
+  exact Measurable.fun_comp (g := fun x : Sigma P ↦ (f x.1 x.2 : A)) (f := g)
+    (measurable_elim hf) hg
 
 @[fun_prop, simp]
 lemma measurable_fst [MeasurableSpace I] : Measurable (Sigma.fst : Sigma P → I) := by
@@ -99,10 +98,7 @@ lemma measurable_eq_rec
     (p : ∀ x, ix x = i)
     (f : ∀ x, P (ix x)) (hf : Measurable fun x ↦ (⟨ix x, f x⟩ : Sigma P))
     : Measurable fun x : A ↦ p x ▸ f x := by
-  simp only [eqRec_eq_cast]
-  apply measurable_cast
-  · exact p
-  · exact hf
+  simpa only [eqRec_eq_cast] using measurable_cast ix i p f hf
 
 lemma measurable_distrib [Countable I]
     : Measurable (fun x : A × Sigma P ↦ (⟨x.2.1, x.1, x.2.2⟩ : (i : I) × A × P i)) := by
@@ -145,11 +141,10 @@ lemma measurable_distrib [Countable I]
 lemma measurable_distrib' [Countable I]
     {f : A × Sigma P → B} (hf : Measurable (fun x : (i : I) × A × P i ↦ f ⟨x.2.1, x.1, x.2.2⟩))
     : Measurable f := by
-  apply Measurable.fun_comp
+  exact Measurable.fun_comp
       (g := fun x : (i : I) × A × P i ↦ f ⟨x.2.1, x.1, x.2.2⟩)
       (f := fun x : A × Sigma P ↦ ⟨x.2.1, x.1, x.2.2⟩)
-  · exact hf
-  · apply measurable_distrib
+      hf measurable_distrib
 
 instance [∀ i, DiscreteMeasurableSpace (P i)] : DiscreteMeasurableSpace (Sigma P) where
   forall_measurableSet X := by

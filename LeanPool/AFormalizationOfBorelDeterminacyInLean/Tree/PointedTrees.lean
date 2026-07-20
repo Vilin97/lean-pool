@@ -45,8 +45,7 @@ instance : Category PointedTrees where
   comp_id _ := rfl
   assoc _ _ _ := rfl
 variable {S T : PointedTrees}
-@[ext] lemma ext' {f g : S ⟶ T} (h : f.toLenHom = g.toLenHom) : f = g :=
-  PointedLenHom.ext h
+@[ext] lemma ext' {f g : S ⟶ T} (h : f.toLenHom = g.toLenHom) : f = g := PointedLenHom.ext h
 @[simp] lemma rem_pointedLenHom : PointedLenHom S T = (S ⟶ T) := rfl
 @[simp] lemma rem_toLenHom' (f : S ⟶ T) x :
   DFunLike.coe (F := S.1 ⟶ T.1) f.toLenHom x = f.toHom x := rfl
@@ -114,9 +113,7 @@ def extensions : PointedTrees ⥤ Type* where
     change concat (_ ≫ _) a.prop = concat _ _
     apply concat_uniq
     simp_rw [CategoryTheory.comp_apply, concat_spec']
-    congr!
-    rw [← PointedLenHom.hp]
-    rfl
+    simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=

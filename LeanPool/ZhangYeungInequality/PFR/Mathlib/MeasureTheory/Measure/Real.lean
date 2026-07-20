@@ -52,15 +52,13 @@ lemma measureReal_preimage_fst_singleton_eq_sum [Fintype Ω'] (μ : Measure (Ω 
     μ.real (Prod.fst ⁻¹' {x}) = ∑ y : Ω', μ.real {(x, y)} := by
   rw [measureReal_def, measure_preimage_fst_singleton_eq_sum, ENNReal.toReal_sum]
   · rfl
-  intros
-  finiteness
+  simp_all
 
 lemma measureReal_preimage_snd_singleton_eq_sum [Fintype Ω] (μ : Measure (Ω × Ω'))
     [IsFiniteMeasure μ] (y : Ω') :
     μ.real (Prod.snd ⁻¹' {y}) = ∑ x : Ω, μ.real {(x, y)} := by
   rw [measureReal_def, measure_preimage_snd_singleton_eq_sum, ENNReal.toReal_sum]
   · rfl
-  intros
-  finiteness
+  simp_all
 
 end MeasureTheory

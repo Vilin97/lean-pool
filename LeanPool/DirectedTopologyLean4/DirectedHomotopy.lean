@@ -86,18 +86,14 @@ initialize_simps_projections Dihomotopy (toDirectedMap_toContinuousMap_toFun →
 
 /-- Currying a dihomotopy to a map fron `I` to `D(X,Y)`.
 -/
-def curry (F : Dihomotopy f₀ f₁) : I → D(X,Y) := by
-  intro t
-  exact DirectedMap.prodConstFst ↑F t
+def curry (F : Dihomotopy f₀ f₁) : I → D(X,Y) := fun t => DirectedMap.prodConstFst ↑F t
 
 @[simp]
 lemma curry_apply (F : Dihomotopy f₀ f₁) (t : I) (x : X) : F.curry t x = F (t, x) := rfl
 
 /-- Currying a dihomotopy to a map fron `X` to `D(I,Y)`.
 -/
-def currySnd (F : Dihomotopy f₀ f₁) : X → D(I,Y) := by
-  intro x
-  exact DirectedMap.prodConstSnd ↑F x
+def currySnd (F : Dihomotopy f₀ f₁) : X → D(I,Y) := fun x => DirectedMap.prodConstSnd ↑F x
 
 @[simp]
 lemma curry_snd_apply (F : Dihomotopy f₀ f₁) (x : X) (t : I) : F.currySnd x t = F (t, x) := rfl
@@ -192,16 +188,12 @@ variable {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) (
 lemma trans_apply_half_left (ht : t = halfI) : (dihomToHom F).trans (dihomToHom G) (t, x)
     = F (1, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  have : (t : ℝ) ≤ 2⁻¹ := by linarith
-  simp [this]
-  simp [ht_coe]
+  simp_all
 
 lemma trans_apply_half_right (ht : t = halfI) : (dihomToHom F).trans (dihomToHom G) (t, x)
     = G (0, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  split_ifs <;> simp [ht_coe]
+  simp_all
 
 lemma trans_apply_left (t : I) (x : X) (ht : (t : ℝ) ≤ 2⁻¹) :
   (dihomToHom F).trans (dihomToHom G) (t, x) = F (⟨2 * t, double_mem_I ht⟩, x) := by
@@ -213,12 +205,9 @@ lemma trans_apply_right (t : I) (x : X) (ht : 2⁻¹ ≤ (t : ℝ)) :
   (dihomToHom F).trans (dihomToHom G) (t, x) = G (⟨2 * t - 1, double_sub_one_mem_I ht⟩, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
   simp only [one_div]
-  split_ifs
-  {
-    have : (t : ℝ) = 2⁻¹ := by linarith
-    simp [this]
-  }
-  rfl
+  split_ifs with h
+  · simp [show (t : ℝ) = 2⁻¹ by linarith]
+  · rfl
 
 lemma trans_first_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : IsDipath γ)
     (ht₁ : (a₁.1 : ℝ) ≤ 2⁻¹) :
@@ -234,8 +223,7 @@ lemma trans_first_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : I
   have h : ∀ (t : I) (x : X), (ht : (t : ℝ) ≤ 2⁻¹) → Γ (t, x)
       = F (⟨2 * (t : ℝ), double_mem_I ht⟩, x) := by
     intros t x ht
-    rw [Γ_def]
-    rw [ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
+    rw [Γ_def, ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
     simp [ht]
     rfl
   have : (t₀ : ℝ) ≤ 2⁻¹ := by
@@ -263,12 +251,10 @@ lemma trans_second_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : 
   have h : ∀ (t : I) (x : X), (ht : (2⁻¹ : ℝ) ≤ ↑t) →
     Γ (t, x) = G (⟨2 * (t : ℝ) - 1, double_sub_one_mem_I ht⟩, x) := by
     intros t x ht
-    rw [Γ_def]
-    rw [ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
+    rw [Γ_def, ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
     split_ifs with ht'
     · simp at ht'
-      have : ↑t = (2⁻¹ : ℝ) := by linarith
-      simp [this]
+      simp [show (t : ℝ) = 2⁻¹ by linarith]
     · rfl
   have : 2⁻¹ ≤ (t₁ : ℝ) := by
     have h_le : t₀ ≤ t₁ := directed_path_source_le_target γ₁.dipath_toPath
@@ -363,9 +349,7 @@ def trans {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) 
                 split_ifs with h
                 · have : ((a₂ x).1 : ℝ) ≤ 2⁻¹ := by convert h using 1; norm_num
                   have ha₂x : ((a₂ x).1 : ℝ) = 2⁻¹ := by linarith
-                  have : G (0, _) = F (1, _) := Eq.trans (G.map_zero_left (a₂ x).2)
-                      (F.map_one_left (a₂ x).2).symm
-                  convert this <;> rw [ha₂x] <;> norm_num
+                  simp_all
                 · rfl
         _ = if h : ((a₂ x).1 : ℝ) ≤ 1/2
                 then Fₕ (⟨2 * ((a₂ x).1 : ℝ), double_mem_I (by linarith)⟩, (a₂ x).2)
@@ -380,9 +364,9 @@ def trans {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) 
         _ = Γ (((a₁.trans a₂).reparam φ φ₀ φ₁) t)
             := by { rw [←SplitDipath.first_trans_second_reparam_eq_self γ_as_dipath hT₀ hT₁]; rfl }
         _ = ((a₁.trans a₂).toPath.map Γ.continuous_toFun).reparam φ φ.continuous_toFun φ₀ φ₁ t
-            := by rfl
+            := rfl
         _ = ((a₁.toPath.trans a₂.toPath).map Γ.continuous_toFun).reparam φ φ.continuous_toFun
-              φ₀ φ₁ t := by rfl
+              φ₀ φ₁ t := rfl
         _ = ((a₁.toPath.map Γ.continuous_toFun).trans
               (a₂.toPath.map Γ.continuous_toFun)).reparam φ φ.continuous_toFun φ₀ φ₁ t := by
             rw [Path.map_trans a₁.toPath a₂.toPath (Γ.continuous_toFun)]
@@ -396,10 +380,8 @@ lemma trans_apply {f₀ f₁ f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Diho
   if h : (x.1 : ℝ) ≤ 1/2 then
     F (⟨2 * x.1, (unitInterval.mul_pos_mem_iff two_pos).2 ⟨x.1.2.1, h⟩⟩, x.2)
   else
-    G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) := by
-  have : ((dihomToHom F).trans (dihomToHom G)) x = (F.trans G) x := rfl
-  rw [←this]
-  exact ContinuousMap.Homotopy.trans_apply _ _ x
+    G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
+  ContinuousMap.Homotopy.trans_apply _ _ x
 
 /-- Casting a `Dihomotopy f₀ f₁` to a `Dihomotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.
 -/
@@ -416,21 +398,18 @@ private def Homotopy.hcomp' {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)}
     (F : ContinuousMap.Homotopy f₀ f₁) (G : ContinuousMap.Homotopy g₀ g₁) :
     ContinuousMap.Homotopy (g₀.comp f₀) (g₁.comp f₁) where
   toFun := fun p => G (p.1, F p)
-  continuous_toFun := by
-    apply Continuous.comp G.continuous_toFun
-    exact (continuous_fst).prodMk F.continuous_toFun
-  map_zero_left := by intro x; simp
-  map_one_left := by intro x; simp
+  continuous_toFun :=
+    Continuous.comp G.continuous_toFun ((continuous_fst).prodMk F.continuous_toFun)
+  map_zero_left := fun x => by simp
+  map_one_left := fun x => by simp
 
 /-- If we have a `Dihomotopy f₀ f₁` and a `Dihomotopy g₀ g₁`, then we can compose them and get a
 `Dihomotopy (g₀.comp f₀) (g₁.comp f₁)`.
 -/
 @[simps! -isSimp]
 def hcomp {f₀ f₁ : D(X,Y)} {g₀ g₁ : D(Y,Z)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy g₀ g₁) :
-  Dihomotopy (g₀.comp f₀) (g₁.comp f₁) := by
-  set Fₕ := dihomToHom F
-  set Gₕ := dihomToHom G
-  exact homToDihom (Homotopy.hcomp' Fₕ Gₕ)
+  Dihomotopy (g₀.comp f₀) (g₁.comp f₁) :=
+  homToDihom (Homotopy.hcomp' (dihomToHom F) (dihomToHom G))
     (G.comp (directedFst.prodMapMk (F : D(I × X, Y)))).directed_toFun
 
 end Dihomotopy
@@ -517,8 +496,7 @@ lemma prop (F : DihomotopyWith f₀ f₁ P) (t : I) : P (F.toDihomotopy.curry t)
 @[simps! -isSimp]
 def refl (f : D(X,Y)) (hf : P f) : DihomotopyWith f f P := {
   Dihomotopy.refl f with
-  prop' := by
-    intro t
+  prop' := fun t => by
     convert hf
     ext x
     rfl

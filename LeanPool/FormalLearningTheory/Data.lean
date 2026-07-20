@@ -92,22 +92,6 @@ structure IIDSample (X : Type u) (Y : Type v) [MeasurableSpace X] [MeasurableSpa
   /-- The sample itself: a function from index to labeled example -/
   sample : Fin sampleSize → X × Y
 
-/- Alternative: marginal + conditional decomposition (for agnostic PAC bounds):
--- structure IIDSampleMarginal (X : Type u) (Y : Type v)
---     [MeasurableSpace X] [MeasurableSpace Y] where
---   marginalX : MeasureTheory.ProbabilityMeasure X
---   conditionalY : X → MeasureTheory.ProbabilityMeasure Y
---   sampleSize : ℕ
---   sample : Fin sampleSize → X × Y -/
-
-/- Alternative: prior-weighted sample (for Bayesian posterior consistency):
--- structure IIDSampleBayes (X : Type u) (Y : Type v)
---     [MeasurableSpace X] [MeasurableSpace Y] where
---   distribution : MeasureTheory.ProbabilityMeasure (X × Y)
---   prior : Concept X Y → ℝ≥0
---   sampleSize : ℕ
---   sample : Fin sampleSize → X × Y -/
-
 /-- All Bool-valued functions on X are measurable.
     Domain-level property: the σ-algebra is fine enough that
     concept measurability is never an issue. -/

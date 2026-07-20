@@ -28,8 +28,7 @@ namespace Discrete
   (x ++ₛ ·) ∘ (y ++ₛ ·) = ((x ++ y) ++ₛ ·) := by
   ext1; simp
 @[simp] lemma subAtInf_append (T : Set (Stream' A)) (x y : List A) :
-  (y ++ₛ ·)⁻¹' ((x ++ₛ ·)⁻¹' T) = ((x ++ y) ++ₛ ·)⁻¹' T := by
-  simp [← Set.preimage_comp]
+  (y ++ₛ ·)⁻¹' ((x ++ₛ ·)⁻¹' T) = ((x ++ y) ++ₛ ·)⁻¹' T := by simp [← Set.preimage_comp]
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def principalOpen : Set (Stream' A) := Set.range (x ++ₛ ·)
@@ -77,8 +76,7 @@ lemma principalOpen_complement : (principalOpen x)ᶜ
     intro h'; apply h; rw [h']; simp
   · intro ⟨x', ⟨hl, hne⟩, ⟨a1, h1⟩⟩ ⟨a2, h2⟩
     exact hne (append_left_injective (x := x) (y := x') (a := a2) (b := a1) (by
-      dsimp at h1 h2
-      rw [h2, h1]) hl)
+      simp_all) hl)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 scoped instance prodDisc A : TopologicalSpace (Stream' A) :=
   Pi.topologicalSpace (t₂ := fun _ ↦ ⊥)

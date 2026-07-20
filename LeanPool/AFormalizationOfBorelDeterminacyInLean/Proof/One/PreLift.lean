@@ -39,8 +39,7 @@ lemma pInv_take_length :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) = 2 * k := by
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length = 2 * k
-    rw [pInvTreeHomMap_len]
-    simp
+    simp_all
   · simp
 lemma gameTree_eq :
     subAt (getTree' hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val)
@@ -83,8 +82,7 @@ instance : PartialOrder (PreLift hyp) where
 lemma take_le {h} : H.take n h ≤ H := by
   dsimp [LE.le]
   ext1
-  · ext1
-    simp [PreLift.take]
+  · simp_all
   · rfl
 lemma take_le_take hm hn : H.take m hm ≤ H.take n hn ↔ m ≤ n ∨ H.x.val.length ≤ n := by
   (conv => lhs; dsimp [LE.le]); simp [PreLift.ext_iff]
@@ -137,15 +135,8 @@ def liftVeryShort : gameTree hyp where
   calc
     H.liftVeryShort.val.map Prod.fst =
         (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.map Prod.fst ++
-          [H.x.val[2 * k]] := by
-      change List.map Prod.fst
-          ((pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val ++
-            [⟨H.x.val[2 * k], H.liftTree⟩]) =
-        (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.map Prod.fst ++
-          [H.x.val[2 * k]]
-      exact (List.map_append (f := Prod.fst)
-        (l₁ := (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val)
-        (l₂ := [⟨H.x.val[2 * k], H.liftTree⟩])).trans (by rfl)
+          [H.x.val[2 * k]] :=
+      List.map_append ..
     _ = H.x.val.take (2 * k) ++ [H.x.val[2 * k]] := by
       congr 1
       change (treeHom hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x))).val =
@@ -153,14 +144,12 @@ def liftVeryShort : gameTree hyp where
       rw [cancel_pInv_right]
       rfl
     _ = H.x.val.take (2 * k + 1) := by
-      rw [show 2 * k + 1 = 2 * k + 1 by rfl]
-      exact H.x.val.take_concat_get' (2 * k) (by have := H.hlvl; omega)
+      simp_all
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftShort : gameTree hyp := (H.R H.liftVeryShort
   (by
     change H.liftVeryShort.val.length % 2 = Player.one.toNat
-    rw [H.liftVeryShort_length]
-    synthIsPosition)
+    simp_all)
   (by
     change H.liftVeryShort.val.length ≤ 2 * k + 1
     rw [H.liftVeryShort_length])).valT'
@@ -169,23 +158,21 @@ def liftShort : gameTree hyp := (H.R H.liftVeryShort
   have hlen := ExtensionsAt.val'_length
     (H.R H.liftVeryShort (by
       change H.liftVeryShort.val.length % 2 = Player.one.toNat
-      rw [H.liftVeryShort_length]
-      synthIsPosition) (by
+      simp_all) (by
       change H.liftVeryShort.val.length ≤ 2 * k + 1
       rw [H.liftVeryShort_length]))
   change
     (H.R H.liftVeryShort (by
       change H.liftVeryShort.val.length % 2 = Player.one.toNat
-      rw [H.liftVeryShort_length]
-      synthIsPosition) (by
+      simp_all) (by
       change H.liftVeryShort.val.length ≤ 2 * k + 1
       rw [H.liftVeryShort_length])).val'.length = 2 * k + 2
   rw [hlen]
   change H.liftVeryShort.val.length + 1 = 2 * k + 2
   rw [H.liftVeryShort_length]
 @[simp] lemma liftShort_val_take :
-  H.liftShort.val.take (α := no_index _) (2 * k + 1) = H.liftVeryShort := by
-  exact ExtensionsAt.val'_take_of_eq _ H.liftVeryShort_length.symm
+  H.liftShort.val.take (α := no_index _) (2 * k + 1) = H.liftVeryShort :=
+  ExtensionsAt.val'_take_of_eq _ H.liftVeryShort_length.symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftVal := if H.x.val.length = 2 * k + 1 then H.liftVeryShort.val
   else H.liftShort.val ++
@@ -208,8 +195,7 @@ lemma liftVal_very_short (h : H.x.val.length = 2 * k + 1) : H.liftVal = H.liftVe
   · simp
   · rw [List.take_append_of_le_length (by
       change 2 * k + 1 ≤ H.liftShort.val.length
-      rw [H.liftShort_length]
-      omega)]
+      simp_all)]
     exact H.liftShort_val_take
 @[simp] lemma liftVal_take_init (h : n ≤ 2 * k) :
   H.liftVal.take (α := no_index _) n = pInvTreeHomMap hyp (H.x.val.take n) := by
@@ -219,8 +205,8 @@ lemma liftVal_very_short (h : H.x.val.length = 2 * k + 1) : H.liftVal = H.liftVe
   calc
     List.take n ((pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val ++
         [⟨H.x.val[2 * k]'H.hlvl, H.liftTree⟩]) =
-        List.take n (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val := by
-      exact List.take_append_of_le_length (by
+        List.take n (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val :=
+      List.take_append_of_le_length (by
         rw [H.toPreLift.pInv_take_length]
         exact h)
     _ = pInvTreeHomMap hyp (H.x.val.take (min n (2 * k + 1))) := by
@@ -264,10 +250,8 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
       · change pInvTreeHomMap hyp (List.take (2 * k) (List.take n H.x.val)) =
           pInvTreeHomMap hyp (List.take (2 * k) H.x.val)
         rw [List.take_take, min_eq_left (by omega : 2 * k ≤ n)]
-      · change (List.take (2 * k) H.x.val).length ≤ 2 * k
-        exact List.length_take_le (2 * k) H.x.val
-    · change (List.take (2 * k) (List.take n H.x.val)).length ≤ 2 * k
-      exact List.length_take_le (2 * k) (List.take n H.x.val)
+      · simp_all
+    · simp_all
   · simp
 @[simp] lemma liftShort_take h : (H.take n h).liftShort = H.liftShort := by
   apply tree_ext
@@ -290,8 +274,7 @@ lemma take_le_take hm hn : H.take m hm ≤ H.take n hn ↔ m ≤ n ∨ H.x.val.l
 lemma eq_take {H H' : Lift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTree) :
   H = H'.take H.x.val.length (by simp) := by
   ext1
-  · symm
-    exact h
+  · exact h.symm
   · exact ht
 lemma liftVal_mono {H H' : Lift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTree) :
   H.liftVal <+: H'.liftVal := by rw [eq_take h ht]; simpa using List.take_prefix _ _
@@ -332,22 +315,19 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
     List.map Prod.fst (List.take (2 * k + 1) H.liftShort.val ++
         [H.liftShort.val[2 * k + 1]]) =
         List.map Prod.fst (List.take (2 * k + 1) H.liftShort.val) ++
-          [H.liftShort.val[2 * k + 1].1] := by
-      exact (List.map_append (f := Prod.fst)
-        (l₁ := List.take (2 * k + 1) H.liftShort.val)
-        (l₂ := [H.liftShort.val[2 * k + 1]])).trans (by rfl)
+          [H.liftShort.val[2 * k + 1].1] :=
+      List.map_append ..
     _ = H.x.val.take (2 * k + 1) ++ [H.x.val[2 * k + 1]] := by
       congr 1
       · exact congrArg (List.map Prod.fst) H.liftShort_val_take |>.trans
           H.liftVeryShort_val_map
       · exact congrArg List.singleton (H.conShort h)
-    _ = H.x.val.take (2 * k + 2) := by
-      exact H.x.val.take_concat_get' (2 * k + 1) (by omega)
+    _ = H.x.val.take (2 * k + 2) :=
+      H.x.val.take_concat_get' (2 * k + 1) (by omega)
 @[simp] lemma liftVal_lift : H.liftVal.map (α := no_index _) Prod.fst = H.x.val := by
   unfold Lift.liftVal
   split_ifs with hshort
-  · rw [H.liftVeryShort_val_map]
-    exact List.take_of_length_le (by omega)
+  · simp_all
   · have hlong : 2 * k + 2 ≤ H.x.val.length := by
       have := H.hlvl
       omega
@@ -357,8 +337,8 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
     change List.map Prod.fst (H.liftShort.val ++ tail) = H.x.val
     calc
       List.map Prod.fst (H.liftShort.val ++ tail) =
-          H.liftShort.val.map Prod.fst ++ tail.map Prod.fst := by
-        exact List.map_append (f := Prod.fst) (l₁ := H.liftShort.val) (l₂ := tail)
+          H.liftShort.val.map Prod.fst ++ tail.map Prod.fst :=
+        List.map_append ..
       _ = H.liftShort.val.map Prod.fst ++ H.x.val.drop (2 * k + 2) := by
         congr 1
         change List.map Prod.fst
@@ -368,8 +348,7 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
         rw [← List.zipInitsMap_map]
         simp
       _ = H.x.val := by
-        rw [H.liftShort_val_map hlong]
-        exact List.take_append_drop (2 * k + 2) H.x.val
+        simp_all
 @[simp] lemma liftVal_lift_get (h : n < H.x.val.length) :
   (H.liftVal[n]'(by simp [h])).1 = H.x.val[n]'(by simpa) := by
   have hlift : n < H.liftVal.length := by simpa [H.liftVal_length] using h

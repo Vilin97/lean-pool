@@ -91,10 +91,8 @@ def chartImplicitData (f : E × F → ℝ) (a : E × F)
     constructor
     · rw [Submodule.disjoint_def]
       rintro ⟨x, y⟩ hker hmap
-      have hx : x = 0 := by
-        exact congrArg Prod.fst hmap
-      have hy : H.choose y = 0 := by
-        exact congrArg Prod.snd hmap
+      have hx : x = 0 := congrArg Prod.fst hmap
+      have hy : H.choose y = 0 := congrArg Prod.snd hmap
       refine Prod.ext hx ?_
       lift y to (fderiv ℝ f a ∘L .inr ℝ E F).ker using by simpa [hx] using hker
       have hy' : (y : F) = 0 := by
@@ -119,10 +117,8 @@ def chartImplicitData (f : E × F → ℝ) (a : E × F)
       refine ⟨(x, w + z), (0, t), ?_, ?_, ?_⟩
       · rwa [← zero_add x, ← Prod.mk_add_mk, LinearMap.mem_ker, map_add,
           ContinuousLinearMap.coe_coe, hz, add_zero]
-      · have ht0 : H.choose t = 0 := by
-          exact ht
-        change (0, H.choose t) = (0 : E × (fderiv ℝ f a ∘L .inr ℝ E F).ker)
-        exact Prod.ext rfl ht0
+      · change (0, H.choose t) = (0 : E × (fderiv ℝ f a ∘L .inr ℝ E F).ker)
+        exact Prod.ext rfl ht
       · rw [Prod.mk_add_mk, add_zero, add_right_comm w z t, hsub, sub_add_cancel]
 
 @[simp]
@@ -182,8 +178,7 @@ theorem fderiv_implicitFunction_chartImplicitData_comp_inr {f : E × F → ℝ} 
       ((chartImplicitData f a hfa hk hdf).rightFun a) ∘L .inr ℝ E _ =
       .inr ℝ E F ∘L Submodule.subtypeL _ := by
   ext1 x
-  have := fderiv_implicitFunction_chartImplicitData_apply_mk_zero hfa hk hdf x
-  exact this
+  exact fderiv_implicitFunction_chartImplicitData_apply_mk_zero hfa hk hdf x
 
 theorem fst_implicitFunction_chartImplicitDataEventuallyEq {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0) :

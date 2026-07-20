@@ -62,8 +62,7 @@ private lemma gradIntZero_component (g : X → ℝ) (hg : IsSpatiallySmooth 1 g)
   simp only [one_mul] at h
   have hc : ∀ x : X, gradX (fun _ : X => (1 : ℝ)) x = 0 :=
     hGradConst (fun _ : X => (1 : ℝ)) (fun _ _ => rfl)
-  simp only [hc, Pi.zero_apply, mul_zero, integral_zero, neg_zero] at h
-  linarith
+  simp_all
 
 /-- Gradient integral vanishes (Stokes for 0-forms: ∫_M dg = 0).
     Derived from hIBP_spatial + hGradConst + hGradIntegrable. -/
@@ -72,19 +71,14 @@ lemma hGradIntZero (g : X → ℝ) (hg : IsSpatiallySmooth 1 g) (u : Fin 3 → �
   simp only [dotProduct, Fin.sum_univ_three]
   have hint : ∀ i : Fin 3, MeasureTheory.Integrable (fun x : X => gradX g x i) :=
     hGradIntegrable g hg
-  have h0 : ∫ x : X, u 0 * gradX g x 0 = 0 := by
-    rw [integral_const_mul, gradIntZero_component g hg 0, mul_zero]
-  have h1 : ∫ x : X, u 1 * gradX g x 1 = 0 := by
-    rw [integral_const_mul, gradIntZero_component g hg 1, mul_zero]
-  have h2 : ∫ x : X, u 2 * gradX g x 2 = 0 := by
-    rw [integral_const_mul, gradIntZero_component g hg 2, mul_zero]
-  have h01 := MeasureTheory.integral_add ((hint 0).const_mul (u 0)) ((hint 1).const_mul (u 1))
+  have hzero : ∀ i : Fin 3, ∫ x : X, u i * gradX g x i = 0 := fun i => by
+    rw [integral_const_mul, gradIntZero_component g hg i, mul_zero]
   have h012 : ∫ (a : X), u 0 * gradX g a 0 + u 1 * gradX g a 1 + u 2 * gradX g a 2 =
-      (∫ (a : X), u 0 * gradX g a 0 + u 1 * gradX g a 1) + ∫ (a : X), u 2 * gradX g a 2 := by
-    have := MeasureTheory.integral_add
+      (∫ (a : X), u 0 * gradX g a 0 + u 1 * gradX g a 1) + ∫ (a : X), u 2 * gradX g a 2 :=
+    MeasureTheory.integral_add
       (((hint 0).const_mul (u 0)).add ((hint 1).const_mul (u 1))) ((hint 2).const_mul (u 2))
-    simp only [Pi.add_apply] at this; exact this
-  linarith
+  rw [h012, MeasureTheory.integral_add ((hint 0).const_mul (u 0)) ((hint 1).const_mul (u 1)),
+    hzero 0, hzero 1, hzero 2]; ring
 
 /-- Adding a constant doesn't change the gradient.
     Derived from hGradChainExp + hGradScalarMul via the exp trick:
@@ -119,9 +113,7 @@ lemma hGradAddConst (f : X → ℝ) (hf : IsSpatiallySmooth 1 f) (c : ℝ) :
 lemma hLaplacianMinNonneg (φ : X → ℝ) (hφ : IsSpatiallySmooth 2 φ) (x₀ : X)
     (hmin : ∀ x, φ x₀ ≤ φ x) : 0 ≤ divX (gradX φ) x₀ := by
   have hmax : ∀ x, (fun y => (-1) * φ y) x ≤ (fun y => (-1) * φ y) x₀ := by
-    intro x
-    simp
-    linarith [hmin x]
+    simp_all
   have h := hLaplacianMaxNonpos (fun y => (-1) * φ y) x₀ (hDiff_smul 2 (-1) φ hφ) hmax
   have h2 : divX (gradX (fun y => (-1) * φ y)) x₀ =
       (-1) * divX (gradX φ) x₀ := by
@@ -152,11 +144,8 @@ lemma maxwellian_params_isSpatiallySmooth
   have hlogform : ∀ x v, Real.log (f x v) = a x + dotProduct (b x) v + c x * normSq v := by
     intros x v; rw [hform x v, Real.log_exp]
   -- At v = 0: log f(x, 0) = a x
-  have ha_val : ∀ x, a x = Real.log (f x 0) := by
-    intro x
-    have := hlogform x 0
-    simp [normSq_zero, dotProduct] at this
-    linarith
+  have ha_val : ∀ x, a x = Real.log (f x 0) := fun x => by
+    have := hlogform x 0; simp [normSq_zero, dotProduct] at this; linarith
   -- At v = eⱼ: log f(x, eⱼ) = a x + b x j + c x
   have hform_single : ∀ x (j : Fin 3), Real.log (f x (Pi.single j 1)) = a x + b x j + c x := by
     intros x j; have h := hlogform x (Pi.single j 1)
@@ -177,34 +166,26 @@ lemma maxwellian_params_isSpatiallySmooth
     rw [h_dot, h_ns] at h; linarith
   -- c formula: 2 * c x = log f(2e₀) - 2*log f(e₀) + log f(0)
   have hc_val : ∀ x, 2 * c x = Real.log (f x (2 • Pi.single 0 1)) -
-      2 * Real.log (f x (Pi.single 0 1)) + Real.log (f x 0) := by
-    intro x; linarith [hform_single x 0, hform_2e₀ x, ha_val x]
+      2 * Real.log (f x (Pi.single 0 1)) + Real.log (f x 0) :=
+    fun x => by linarith [hform_single x 0, hform_2e₀ x, ha_val x]
   -- bⱼ formula: b x j = log f(eⱼ) - log f(0) - c x
   have hbj_val : ∀ x (j : Fin 3), b x j = Real.log (f x (Pi.single j 1)) -
-      Real.log (f x 0) - c x := by
-    intros x j; linarith [hform_single x j, ha_val x]
+      Real.log (f x 0) - c x :=
+    fun x j => by linarith [hform_single x j, ha_val x]
   -- IsSpatiallySmooth ⊤ of c
   have hc_diff : IsSpatiallySmooth n c := by
     have hc_eq : c = fun x => (1/2 : ℝ) * (Real.log (f x (2 • Pi.single 0 1)) +
-        (-2) * Real.log (f x (Pi.single 0 1)) + Real.log (f x 0)) := by
-      funext x
-      have := hc_val x
-      field_simp
-      linarith
+        (-2) * Real.log (f x (Pi.single 0 1)) + Real.log (f x 0)) :=
+      funext fun x => by have := hc_val x; field_simp; linarith
     rw [hc_eq]
-    exact hDiff_smul n _ _ (hDiff_add n _ _ (hDiff_add n _ _ (hDiff_lf _)
-      (hDiff_smul n _ _ (hDiff_lf _))) (hDiff_lf _))
-  refine ⟨?_, ?_, hc_diff⟩
-  · -- IsSpatiallySmooth n a: a x = log f(x, 0)
-    have : a = fun x => Real.log (f x 0) := funext (fun x => ha_val x)
-    rw [this]; exact hDiff_lf 0
+    exact hDiff_smul n _ _ (hDiff_add n _ _ (hDiff_add n _ _
+      (hDiff_lf _) (hDiff_smul n _ _ (hDiff_lf _))) (hDiff_lf _))
+  refine ⟨funext (fun x => ha_val x) ▸ hDiff_lf 0, ?_, hc_diff⟩
   · -- IsSpatiallySmooth ⊤ (b · j): b x j = log f(eⱼ) - log f(0) - c x
     intro j
     have hbj_eq : (fun x => b x j) = fun x =>
-        Real.log (f x (Pi.single j 1)) + (-1) * Real.log (f x 0) + (-1) * c x := by
-      funext x
-      have := hbj_val x j
-      linarith
+        Real.log (f x (Pi.single j 1)) + (-1) * Real.log (f x 0) + (-1) * c x :=
+      funext fun x => by have := hbj_val x j; linarith
     rw [hbj_eq]
     exact hDiff_add n _ _ (hDiff_add n _ _ (hDiff_lf _) (hDiff_smul n _ _ (hDiff_lf _)))
       (hDiff_smul n _ _ hc_diff)

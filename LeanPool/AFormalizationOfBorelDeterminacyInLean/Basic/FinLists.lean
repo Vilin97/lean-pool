@@ -17,10 +17,6 @@ variable {α β γ : Type*} {a : α} {m n : ℕ}
 
 namespace List
 variable (x y z : List α)
-/-@[congr] lemma congr_get (m : Fin x.length) (h : x = y) : -not needed anymore with List.getElem?
-  x.get m = y.get ⟨m.val, h ▸ m.prop⟩ := h ▸ rfl
---this does still work, so does simp backtrack?
-example (x : List α) {n m} (h : n = m) : x.get n = x.get m := by simp [h]-/
 
 @[simp] lemma append_compose (x y : List α) : (x ++ ·) ∘ (y ++ ·) = ((x ++ y) ++ ·) := by
   ext1; simp [List.append_assoc]

@@ -89,8 +89,7 @@ variable [Tarski M]
 
 variable {𝓜 : M}
 
-@[simp] lemma realize_iff {φ ψ : F} :
-    𝓜 ⊧ φ <=> ψ ↔ ((𝓜 ⊧ φ) ↔ (𝓜 ⊧ ψ)) := by
+@[simp] lemma realize_iff {φ ψ : F} : 𝓜 ⊧ φ <=> ψ ↔ ((𝓜 ⊧ φ) ↔ (𝓜 ⊧ ψ)) := by
   simp [LogicalConnective.iff, iff_iff_implies_and_implies]
 
 @[simp] lemma realize_list_conj {l : List F} :
@@ -136,8 +135,7 @@ class Meaningful (𝓜 : M) : Prop where
 
 instance [LogicalConnective F] [Semantics.Bot M] (𝓜 : M) : Meaningful 𝓜 := ⟨⟨⊥, by simp⟩⟩
 
-lemma meaningful_iff {𝓜 : M} : Meaningful 𝓜 ↔ ∃ f, ¬𝓜 ⊧ f :=
-  ⟨by rintro ⟨h⟩; exact h, fun h ↦ ⟨h⟩⟩
+lemma meaningful_iff {𝓜 : M} : Meaningful 𝓜 ↔ ∃ f, ¬𝓜 ⊧ f := ⟨by rintro ⟨h⟩; exact h, fun h ↦ ⟨h⟩⟩
 
 lemma not_meaningful_iff (𝓜 : M) : ¬Meaningful 𝓜 ↔ ∀ f, 𝓜 ⊧ f := by simp [meaningful_iff]
 
@@ -148,14 +146,12 @@ lemma not_satisfiable_finset [LogicalConnective F] [Tarski M] [DecidableEq F] (t
     ¬Satisfiable M (t : Set F) ↔ Valid M (t.image (∼·)).disj := by
   simp [Satisfiable, realizeSet_iff, Valid]
 
-lemma satisfiableSet_iff_models_nonempty {T : Set F} :
-    Satisfiable M T ↔ (models M T).Nonempty :=
+lemma satisfiableSet_iff_models_nonempty {T : Set F} : Satisfiable M T ↔ (models M T).Nonempty :=
   ⟨by rintro ⟨𝓜, h𝓜⟩; exact ⟨𝓜, h𝓜⟩, by rintro ⟨𝓜, h𝓜⟩; exact ⟨𝓜, h𝓜⟩⟩
 
 namespace RealizeSet
 
-lemma realize {T : Set F} (𝓜 : M) [𝓜 ⊧* T] (hf : f ∈ T) : 𝓜 ⊧ f :=
-  all_realize hf
+lemma realize {T : Set F} (𝓜 : M) [𝓜 ⊧* T] (hf : f ∈ T) : 𝓜 ⊧ f := all_realize hf
 
 lemma of_subset {T U : Set F} {𝓜 : M} (h : 𝓜 ⊧* U) (ss : T ⊆ U) : 𝓜 ⊧* T :=
   ⟨fun _ hf => h.all_realize (ss hf)⟩
@@ -167,16 +163,13 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 
 @[simp] lemma empty (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 
-@[simp] lemma singleton_iff {f : F} {𝓜 : M} :
-    𝓜 ⊧* {f} ↔ 𝓜 ⊧ f := by simp [realizeSet_iff]
+@[simp] lemma singleton_iff {f : F} {𝓜 : M} : 𝓜 ⊧* {f} ↔ 𝓜 ⊧ f := by simp [realizeSet_iff]
 
 @[simp] lemma insert_iff {T : Set F} {f : F} {𝓜 : M} :
-    𝓜 ⊧* insert f T ↔ 𝓜 ⊧ f ∧ 𝓜 ⊧* T := by
-  simp [realizeSet_iff]
+    𝓜 ⊧* insert f T ↔ 𝓜 ⊧ f ∧ 𝓜 ⊧* T := by simp [realizeSet_iff]
 
 @[simp] lemma union_iff {T U : Set F} {𝓜 : M} :
-    𝓜 ⊧* T ∪ U ↔ 𝓜 ⊧* T ∧ 𝓜 ⊧* U := by
-  simp only [realizeSet_iff, Set.mem_union, or_imp, forall_and]
+    𝓜 ⊧* T ∪ U ↔ 𝓜 ⊧* T ∧ 𝓜 ⊧* U := by simp only [realizeSet_iff, Set.mem_union, or_imp, forall_and]
 
 @[simp] lemma image_iff {ι} {f : ι → F} {A : Set ι} {𝓜 : M} :
     𝓜 ⊧* f '' A ↔ ∀ i ∈ A, 𝓜 ⊧ (f i) := by simp [realizeSet_iff]
@@ -190,12 +183,10 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 end RealizeSet
 
 lemma valid_neg_iff [LogicalConnective F] [Tarski M] (f : F) :
-    Valid M (∼f) ↔ ¬Satisfiable M {f} := by
-  simp [Valid, Satisfiable]
+    Valid M (∼f) ↔ ¬Satisfiable M {f} := by simp [Valid, Satisfiable]
 
 lemma _root_.LO.Semantics.Satisfiable.of_subset {T U : Set F} (h : Satisfiable M U) (ss : T ⊆ U) :
-    Satisfiable M T := by
-  rcases h with ⟨𝓜, h⟩; exact ⟨𝓜, RealizeSet.of_subset h ss⟩
+    Satisfiable M T := by rcases h with ⟨𝓜, h⟩; exact ⟨𝓜, RealizeSet.of_subset h ss⟩
 
 variable (M)
 
@@ -214,8 +205,7 @@ variable {M}
 
 lemma set_models_iff {s : Set M} : s ⊧ f ↔ ∀ 𝓜 ∈ s, 𝓜 ⊧ f := iff_of_eq rfl
 
-instance [LogicalConnective F] [Semantics.Top M] :
-    Semantics.Top (Set M) :=
+instance [LogicalConnective F] [Semantics.Top M] : Semantics.Top (Set M) :=
   ⟨fun s ↦ by simp [set_models_iff]⟩
 
 lemma set_meaningful_iff_nonempty [LogicalConnective F] [∀ 𝓜 : M, Meaningful 𝓜] {s : Set M} :
@@ -247,8 +237,7 @@ lemma consequence_iff_not_satisfiable [LogicalConnective F] [Tarski M] {f : F} :
     exact (Semantics.Not.realize_not.mp hparts.1) this
   · intro h 𝓜 hT
     by_contra hf
-    exact h ⟨𝓜, by
-      exact RealizeSet.insert_iff.mpr ⟨by simpa using hf, hT⟩⟩
+    exact h ⟨𝓜, by exact RealizeSet.insert_iff.mpr ⟨by simpa using hf, hT⟩⟩
 
 lemma weakening {T U : Set F} {f} (h : T ⊨[M] f) (ss : T ⊆ U) : U ⊨[M] f :=
   consequence_iff.mpr fun hs => consequence_iff.mp h (RealizeSet.of_subset hs ss)
@@ -264,8 +253,7 @@ namespace Cumulative
 
 lemma subset_of_le {T : ℕ → Set F} (H : Cumulative T)
     {s₁ s₂ : ℕ} (h : s₁ ≤ s₂) : T s₁ ⊆ T s₂ := by
-  suffices ∀ s d, T s ⊆ T (s + d) by
-    simpa[Nat.add_sub_of_le h] using this s₁ (s₂ - s₁)
+  suffices ∀ s d, T s ⊆ T (s + d) by simpa[Nat.add_sub_of_le h] using this s₁ (s₂ - s₁)
   intro s d
   induction d with
   | zero => simp
@@ -283,8 +271,7 @@ lemma finset_mem {T : ℕ → Set F}
     have : ∃ s', f ∈ T s' := by simpa using (Set.insert_subset_iff.mp hu).1
     rcases this with ⟨s', hs'⟩
     exact ⟨max s s', by
-      simp only [Finset.coe_insert]
-      exact Set.insert_subset
+      simpa only [Finset.coe_insert] using Set.insert_subset
         (subset_of_le H (Nat.le_max_right s s') hs')
         (subset_trans hs (subset_of_le H <| Nat.le_max_left s s'))⟩
 

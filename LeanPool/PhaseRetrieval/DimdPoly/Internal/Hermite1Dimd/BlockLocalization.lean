@@ -46,74 +46,34 @@ Square-block support decomposition and leakage.
 Scaffolding notes: `ScaffoldingNotes/Blocks/block_localization.md`.
 -/
 
-/-- Orthogonal block decomposition by square blocks. -/
-theorem blockDecompositionNorm
-    {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
-    hermiteNormSq κ G = ∑' ℓ : MultiIndex d, hermiteNormSq κ (blockPart ℓ G) := by
-  /-
-  Scaffolding guidance:
-  the block decomposition is the quantitative backbone for both local windows
-  and leakage. Keep it exported in norm-squared form.
-  -/
+private lemma blockPart_support_eq_filter
+    {d : ℕ} (G : FiniteHermiteSum d) (ℓ : MultiIndex d) :
+    (blockPart ℓ G).support = G.support.filter (fun α => blockIndexMulti α = ℓ) := by
+  ext α
+  simp [FiniteHermiteSum.support, blockPart, Finsupp.mem_support_iff,
+    mem_squareBlock_iff_blockIndexMulti_eq, and_comm]
+
+/-- Regroup a coefficient-weighted sum over `G.support` blockwise over square blocks. -/
+private lemma blockwise_regroup
+    {d : ℕ} (G : FiniteHermiteSum d) (w : MultiIndex d → ℝ) :
+    ∑ ℓ ∈ G.support.image blockIndexMulti,
+        ∑ α ∈ (blockPart ℓ G).support, ‖(blockPart ℓ G).coeff α‖ ^ 2 * w α =
+      ∑ α ∈ G.support, ‖G.coeff α‖ ^ 2 * w α := by
   classical
-  let s : Finset (MultiIndex d) := G.support.image blockIndexMulti
-  have hzero : ∀ ℓ ∉ s, hermiteNormSq κ (blockPart ℓ G) = 0 := by
-    intro ℓ hℓ
-    rw [finiteParseval]
-    refine Finset.sum_eq_zero ?_
-    intro α hα
-    have hsuppnz : (blockPart ℓ G).coeff α ≠ 0 := by
-      simpa [FiniteHermiteSum.support, Finsupp.mem_support_iff] using hα
-    rw [blockPart, Finsupp.onFinset_apply] at hsuppnz
-    by_cases hb : α ∈ squareBlock ℓ
-    · have hGnz : G.coeff α ≠ 0 := by simpa [hb] using hsuppnz
-      have hαG : α ∈ G.support := by
-        simpa [FiniteHermiteSum.support, Finsupp.mem_support_iff] using hGnz
-      have himg : ℓ ∈ s := by
-        refine Finset.mem_image.mpr ?_
-        exact ⟨α, hαG, (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hb⟩
-      exact (hℓ himg).elim
-    · simp [hb] at hsuppnz
-  have htsum :
-      ∑' ℓ : MultiIndex d, hermiteNormSq κ (blockPart ℓ G) =
-        Finset.sum s (fun ℓ => hermiteNormSq κ (blockPart ℓ G)) := by
-    exact tsum_eq_sum hzero
-  rw [htsum, finiteParseval]
-  simp_rw [finiteParseval]
-  have hsupport :
-      ∀ ℓ : MultiIndex d,
-        (blockPart ℓ G).support = G.support.filter (fun α => blockIndexMulti α = ℓ) := by
-    intro ℓ
-    ext α
-    simp [FiniteHermiteSum.support, blockPart, Finsupp.mem_support_iff,
-      mem_squareBlock_iff_blockIndexMulti_eq, and_comm]
-  symm
-  calc
-    Finset.sum s (fun ℓ => Finset.sum (blockPart ℓ G).support (fun α => ‖(blockPart ℓ G).coeff α‖
-        ^ 2))
-      = Finset.sum s (fun ℓ => Finset.sum G.support (fun α => if blockIndexMulti α = ℓ then
-          ‖G.coeff α‖ ^ 2 else 0)) := by
-          refine Finset.sum_congr rfl ?_
-          intro ℓ hℓ
-          rw [hsupport ℓ, Finset.sum_filter]
-          refine Finset.sum_congr rfl ?_
-          intro α hα
-          by_cases hblock : blockIndexMulti α = ℓ
-          · have hsq : α ∈ squareBlock ℓ := (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mpr hblock
-            simp [blockPart, Finsupp.onFinset_apply, hsq, hblock]
-          · rw [if_neg hblock]
-            have hnot : α ∉ squareBlock ℓ := by
-              intro hsq
-              exact hblock ((mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hsq)
-            simp [hblock]
-    _ = Finset.sum G.support (fun α => Finset.sum s (fun ℓ => if blockIndexMulti α = ℓ then
-        ‖G.coeff α‖ ^ 2 else 0)) := by
-          rw [Finset.sum_comm]
-    _ = Finset.sum G.support (fun α => ‖G.coeff α‖ ^ 2) := by
-          refine Finset.sum_congr rfl ?_
-          intro α hα
-          have himg : blockIndexMulti α ∈ s := Finset.mem_image.mpr ⟨α, hα, rfl⟩
-          exact Finset.sum_ite_eq_of_mem s (blockIndexMulti α) (fun _ => ‖G.coeff α‖ ^ 2) himg
+  have hterm :
+      ∀ ℓ ∈ G.support.image blockIndexMulti,
+        ∑ α ∈ (blockPart ℓ G).support, ‖(blockPart ℓ G).coeff α‖ ^ 2 * w α =
+          ∑ α ∈ G.support.filter (fun α => blockIndexMulti α = ℓ), ‖G.coeff α‖ ^ 2 * w α := by
+    intro ℓ _
+    rw [blockPart_support_eq_filter]
+    refine Finset.sum_congr rfl fun α hα => ?_
+    have hblock : blockIndexMulti α = ℓ := (Finset.mem_filter.mp hα).2
+    have hsq : α ∈ squareBlock ℓ := (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mpr hblock
+    simp [blockPart, Finsupp.onFinset_apply, hsq]
+  rw [Finset.sum_congr rfl hterm, Finset.sum_fiberwise_eq_sum_filter]
+  refine Finset.sum_congr ?_ fun _ _ => rfl
+  refine Finset.filter_true_of_mem fun α hα => ?_
+  exact Finset.mem_image.mpr ⟨α, hα, rfl⟩
 
 private lemma blockPart_coeff_eq_zero_of_not_mem_support_image
     {d : ℕ} (G : FiniteHermiteSum d) (ℓ α : MultiIndex d)
@@ -122,9 +82,7 @@ private lemma blockPart_coeff_eq_zero_of_not_mem_support_image
   by_cases hb : α ∈ squareBlock ℓ
   · have hidx : blockIndexMulti α = ℓ := (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hb
     by_cases hsupp : α ∈ G.support
-    · have himg : ℓ ∈ G.support.image blockIndexMulti := by
-        exact Finset.mem_image.mpr ⟨α, hsupp, hidx⟩
-      exact (hℓ himg).elim
+    · exact absurd (Finset.mem_image.mpr ⟨α, hsupp, hidx⟩) hℓ
     · have hcoeff : G.coeff α = 0 := by
         simpa [FiniteHermiteSum.support, Finsupp.mem_support_iff] using hsupp
       simp [blockPart, Finsupp.onFinset_apply, hb, hcoeff]
@@ -135,16 +93,30 @@ private lemma hermiteNormSq_blockPart_eq_zero_of_not_mem_support_image
     (hℓ : ℓ ∉ G.support.image blockIndexMulti) :
     hermiteNormSq κ (blockPart ℓ G) = 0 := by
   rw [finiteParseval]
-  refine Finset.sum_eq_zero ?_
-  intro α hα
+  refine Finset.sum_eq_zero fun α _ => ?_
   simp [blockPart_coeff_eq_zero_of_not_mem_support_image G ℓ α hℓ]
 
 private lemma tsum_hermiteNormSq_blockPart_eq_sum_support_image
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
     ∑' ℓ : MultiIndex d, hermiteNormSq κ (blockPart ℓ G) =
-      Finset.sum (G.support.image blockIndexMulti) (fun ℓ => hermiteNormSq κ (blockPart ℓ G)) := by
-  exact tsum_eq_sum
+      Finset.sum (G.support.image blockIndexMulti) (fun ℓ => hermiteNormSq κ (blockPart ℓ G)) :=
+  tsum_eq_sum
     (fun ℓ hℓ => hermiteNormSq_blockPart_eq_zero_of_not_mem_support_image κ G ℓ hℓ)
+
+/-- Orthogonal block decomposition by square blocks. -/
+theorem blockDecompositionNorm
+    {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
+    hermiteNormSq κ G = ∑' ℓ : MultiIndex d, hermiteNormSq κ (blockPart ℓ G) := by
+  /-
+  Scaffolding guidance:
+  the block decomposition is the quantitative backbone for both local windows
+  and leakage. Keep it exported in norm-squared form.
+  -/
+  classical
+  rw [tsum_hermiteNormSq_blockPart_eq_sum_support_image (κ := κ), finiteParseval]
+  simp_rw [finiteParseval]
+  have hkey := blockwise_regroup G (fun _ => 1)
+  simp_all
 
 private lemma blockDecompositionNorm_sum_support_image
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
@@ -152,10 +124,10 @@ private lemma blockDecompositionNorm_sum_support_image
       Finset.sum (G.support.image blockIndexMulti) (fun ℓ => hermiteNormSq κ (blockPart ℓ G)) := by
   rw [blockDecompositionNorm, tsum_hermiteNormSq_blockPart_eq_sum_support_image]
 
-private lemma localizationLeakageCoefficient_nonneg
-    {C c B : ℝ} {d M : ℕ} (hC : 0 ≤ C) :
-    0 ≤ localizationLeakageCoefficient C c B d M := by
-  unfold localizationLeakageCoefficient
+private lemma hermiteNormSq_nonneg
+    {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
+    0 ≤ hermiteNormSq κ G := by
+  rw [finiteParseval]
   positivity
 
 private lemma annulusMass_blockDecomposition_sum_support_image
@@ -165,65 +137,8 @@ private lemma annulusMass_blockDecomposition_sum_support_image
         (fun ℓ => annulusMass j (evalHermiteSum κ (blockPart ℓ G))) := by
   classical
   rw [annulusParseval]
-  have hsupport :
-      ∀ ℓ : MultiIndex d,
-        (blockPart ℓ G).support = G.support.filter (fun α => blockIndexMulti α = ℓ) := by
-    intro ℓ
-    ext α
-    simp [FiniteHermiteSum.support, blockPart, Finsupp.mem_support_iff,
-      mem_squareBlock_iff_blockIndexMulti_eq, and_comm]
-  symm
-  calc
-    Finset.sum (G.support.image blockIndexMulti)
-        (fun ℓ => annulusMass j (evalHermiteSum κ (blockPart ℓ G)))
-      =
-        Finset.sum (G.support.image blockIndexMulti)
-          (fun ℓ =>
-            Finset.sum (blockPart ℓ G).support
-              (fun α => ‖(blockPart ℓ G).coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α))) := by
-            refine Finset.sum_congr rfl ?_
-            intro ℓ hℓ
-            rw [annulusParseval]
-    _ =
-        Finset.sum (G.support.image blockIndexMulti)
-          (fun ℓ =>
-            Finset.sum G.support
-              (fun α =>
-                if blockIndexMulti α = ℓ then
-                  ‖G.coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α)
-                else 0)) := by
-          refine Finset.sum_congr rfl ?_
-          intro ℓ hℓ
-          rw [hsupport ℓ, Finset.sum_filter]
-          refine Finset.sum_congr rfl ?_
-          intro α hα
-          by_cases hblock : blockIndexMulti α = ℓ
-          · have hsq : α ∈ squareBlock ℓ :=
-              (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mpr hblock
-            simp [blockPart, Finsupp.onFinset_apply, hsq, hblock]
-          · rw [if_neg hblock]
-            have hnot : α ∉ squareBlock ℓ := by
-              intro hsq
-              exact hblock ((mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hsq)
-            simp [hblock]
-    _ =
-        Finset.sum G.support
-          (fun α =>
-            Finset.sum (G.support.image blockIndexMulti)
-              (fun ℓ =>
-                if blockIndexMulti α = ℓ then
-                  ‖G.coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α)
-                else 0)) := by
-          rw [Finset.sum_comm]
-    _ =
-        Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α) := by
-          refine Finset.sum_congr rfl ?_
-          intro α hα
-          have himg : blockIndexMulti α ∈ G.support.image blockIndexMulti :=
-            Finset.mem_image.mpr ⟨α, hα, rfl⟩
-          exact Finset.sum_ite_eq_of_mem
-            (G.support.image blockIndexMulti) (blockIndexMulti α)
-            (fun _ => ‖G.coeff α‖ ^ 2 * annulusMass j (PhiKappaAlpha κ α)) himg
+  simp_rw [annulusParseval]
+  exact (blockwise_regroup G (fun α => annulusMass j (PhiKappaAlpha κ α))).symm
 
 private lemma blockPart_remainderPart_coeff
     {d : ℕ} (j ℓ α : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
@@ -232,12 +147,10 @@ private lemma blockPart_remainderPart_coeff
   by_cases hb : α ∈ squareBlock ℓ
   · have hidx : blockIndexMulti α = ℓ :=
       (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hb
-    by_cases hfar : M < blockDistance j ℓ
-    · simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar, hidx]
-    · simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar, hidx]
-  · by_cases hfar : M < blockDistance j ℓ
-    · simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar]
-    · simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar]
+    by_cases hfar : M < blockDistance j ℓ <;>
+      simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar, hidx]
+  · by_cases hfar : M < blockDistance j ℓ <;>
+      simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar]
 
 private lemma hermiteNormSq_blockPart_remainderPart
     {d : ℕ} (κ j ℓ : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
@@ -290,36 +203,15 @@ private lemma remainderPart_annulus_blockwise_bound
         unfold annulusMass
         positivity
       have hzero :
-          annulusMass j (evalHermiteSum κ (blockPart ℓ (remainderPart j M G))) = 0 := by
-        exact le_antisymm hle0 hnonneg
+          annulusMass j (evalHermiteSum κ (blockPart ℓ (remainderPart j M G))) = 0 :=
+        le_antisymm hle0 hnonneg
       have hright_nonneg :
           0 ≤ C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
             hermiteNormSq κ (blockPart ℓ G) := by
-        have hexp_nonneg :
-            0 ≤ Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
-          positivity
-        have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) := by
-          rw [finiteParseval]
-          positivity
-        have hmul_nonneg :
-            0 ≤ C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
-          exact mul_nonneg hC hexp_nonneg
-        exact mul_nonneg hmul_nonneg hnorm_nonneg
+        have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) :=
+          hermiteNormSq_nonneg κ (blockPart ℓ G)
+        positivity
       simp [hfar, hzero])
-
-private lemma blockPart_remainderPart_coeff_eq_of_far
-    {d : ℕ} (j ℓ α : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d)
-    (hfar : M < blockDistance j ℓ) :
-    (blockPart ℓ (remainderPart j M G)).coeff α = (blockPart ℓ G).coeff α := by
-  simpa [hfar] using blockPart_remainderPart_coeff (j := j) (ℓ := ℓ) (α := α) (M := M) (G := G)
-
-private lemma hermiteNormSq_blockPart_remainderPart_eq_of_far
-    {d : ℕ} (κ j ℓ : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d)
-    (hfar : M < blockDistance j ℓ) :
-    hermiteNormSq κ (blockPart ℓ (remainderPart j M G)) =
-      hermiteNormSq κ (blockPart ℓ G) := by
-  simpa [hfar] using
-    hermiteNormSq_blockPart_remainderPart (κ := κ) (j := j) (ℓ := ℓ) (M := M) (G := G)
 
 /-- Explicit local and far support sets relative to an annulus and width. -/
 theorem explicitLocalAndFarSupport
@@ -335,19 +227,13 @@ theorem explicitLocalAndFarSupport
   -/
   classical
   have hdisj : Disjoint (localCoeffSet j M G) (farCoeffSet j M G) := by
-    refine Finset.disjoint_left.mpr ?_
-    intro α hlocal hfar
-    have hle : blockDistance j (blockIndexMulti α) ≤ M := (Finset.mem_filter.mp hlocal).2
-    have hgt : M < blockDistance j (blockIndexMulti α) := (Finset.mem_filter.mp hfar).2
-    exact (not_lt_of_ge hle hgt).elim
+    refine Finset.disjoint_left.mpr fun α hlocal hfar => ?_
+    exact absurd (Finset.mem_filter.mp hfar).2 (not_lt_of_ge (Finset.mem_filter.mp hlocal).2)
   have hunion : localCoeffSet j M G ∪ farCoeffSet j M G = G.support := by
     ext α
     simp only [localCoeffSet, farCoeffSet, mem_union, mem_filter]
     constructor
-    · intro h
-      rcases h with ⟨hsupp, _⟩ | ⟨hsupp, _⟩
-      · exact hsupp
-      · exact hsupp
+    · rintro (⟨hsupp, _⟩ | ⟨hsupp, _⟩) <;> exact hsupp
     · intro hsupp
       by_cases hlocal : blockDistance j (blockIndexMulti α) ≤ M
       · exact Or.inl ⟨hsupp, hlocal⟩
@@ -359,13 +245,6 @@ theorem explicitLocalAndFarSupport
     ext α
     simp [FiniteHermiteSum.support, remainderPart, farCoeffSet, Finsupp.mem_support_iff, and_comm]
   exact ⟨hdisj, hunion, hlocal_support, hfar_support⟩
-
-private lemma blockPart_support_eq_filter
-    {d : ℕ} (G : FiniteHermiteSum d) (ℓ : MultiIndex d) :
-    (blockPart ℓ G).support = G.support.filter (fun α => blockIndexMulti α = ℓ) := by
-  ext α
-  simp [FiniteHermiteSum.support, blockPart, Finsupp.mem_support_iff,
-    mem_squareBlock_iff_blockIndexMulti_eq, and_comm]
 
 private lemma gaussianInner_self
     {d : ℕ} (F : CSpace d → ℂ) :
@@ -382,12 +261,10 @@ private lemma measurableSet_oneDimAnnulus
     (j : ℕ) :
     MeasurableSet (productAnnulus (d := 1) (fun _ => j)) := by
   have hge :
-      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := by
-    exact measurableSet_le measurable_const
+      MeasurableSet {z : CSpace 1 | (j : ℝ) ≤ ‖z 0‖} := measurableSet_le measurable_const
       (measurable_norm.comp (continuous_apply 0).measurable)
   have hlt :
-      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := by
-    exact measurableSet_lt
+      MeasurableSet {z : CSpace 1 | ‖z 0‖ < (j : ℝ) + 1} := measurableSet_lt
       (measurable_norm.comp (continuous_apply 0).measurable) measurable_const
   simpa [productAnnulus, Set.setOf_forall, Set.setOf_and] using hge.inter hlt
 
@@ -400,8 +277,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -427,8 +303,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     convert hsmul.const_mul (1 / Real.pi) using 1
     case e'_5 => rfl
     funext z
-    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by
-      positivity
+    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero,
       Fin.isValue, sum_singleton, hnonneg, ENNReal.toReal_ofReal, real_smul, ofReal_exp,
       ofReal_neg, ofReal_pow]
@@ -485,11 +360,9 @@ private lemma productBasis_annulusFactorization
     convert hind using 1
     funext z
     by_cases hz : z ∈ productAnnulus (d := 1) (fun _ => j q)
-    · have hz0 : (j q : ℝ) ≤ ‖z 0‖ ∧ ‖z 0‖ < (j q : ℝ) + 1 := by
-        simpa [productAnnulus] using hz
+    · have hz0 : (j q : ℝ) ≤ ‖z 0‖ ∧ ‖z 0‖ < (j q : ℝ) + 1 := by simpa [productAnnulus] using hz
       simp [F, hz, hz0]
-    · have hz0 : ¬ ((j q : ℝ) ≤ ‖z 0‖ ∧ ‖z 0‖ < (j q : ℝ) + 1) := by
-        simpa [productAnnulus] using hz
+    · have hz0 : ¬ ((j q : ℝ) ≤ ‖z 0‖ ∧ ‖z 0‖ < (j q : ℝ) + 1) := by simpa [productAnnulus] using hz
       simp [F, hz, hz0]
   have htensor := tensorGaussianFactorization d F F hFG
   apply Complex.ofReal_injective
@@ -515,8 +388,7 @@ private lemma productBasis_annulusFactorization
               simp [hz, hprod]
     _ = ∏ q : Fin d,
           gaussianInner (d := 1) (fun z : CSpace 1 => F q (z 0)) (fun z : CSpace 1 => F q (z 0))
-              := by
-            simpa using htensor.2
+              := by simpa using htensor.2
     _ = ∏ q : Fin d, (((annulusMass (d := 1) (fun _ => j q) (oneDimLift (oneDimPhi (κ q) (α q))) :
         ℝ)) : ℂ) := by
           refine Finset.prod_congr rfl ?_
@@ -553,15 +425,12 @@ private lemma block_decay_compare_coord
     simpa [hsqrt] using (Real.real_sqrt_lt_nat_sqrt_succ (a := α q))
   have hclose : |Real.sqrt (α q : ℝ) - ((ℓ q : ℕ) : ℝ)| < 1 := by
     rw [abs_of_nonneg (sub_nonneg.mpr hle)]
-    have hlt' :
-        Real.sqrt (α q : ℝ) - ((ℓ q : ℕ) : ℝ) < (((ℓ q + 1 : ℕ) : ℝ) - ((ℓ q : ℕ) : ℝ)) := by
-      exact sub_lt_sub_right hlt _
-    simpa using hlt'
+    push_cast at hlt ⊢
+    linarith
   have hdist_eq : ((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) = |((j q : ℕ) : ℝ) - ((ℓ q : ℕ) : ℝ)| := by
     rcases Nat.le_total (j q) (ℓ q) with hj | hℓ
     · rw [Nat.dist_eq_sub_of_le hj, abs_of_nonpos]
-      · rw [Nat.cast_sub hj]
-        simp
+      · simp_all
       · exact sub_nonpos.mpr (by exact_mod_cast hj)
     · rw [Nat.dist_eq_sub_of_le_right hℓ, abs_of_nonneg]
       · rw [Nat.cast_sub hℓ]
@@ -584,15 +453,10 @@ private lemma block_decay_compare_coord
         ≤ |((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| + 1 := by
     rw [hdist_eq]
     linarith
-  have hmain :
-      ((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)
-        ≤ |((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| - ((κ q + 4 : ℕ) : ℝ) := by
-    have hk :
-        (((κ q + 5 : ℕ) : ℝ)) = (((κ q + 4 : ℕ) : ℝ)) + 1 := by
-      have hk' : (((κ q : ℕ) : ℝ) + 5) = ((((κ q : ℕ) : ℝ) + 4) + 1) := by ring
-      simpa [Nat.cast_add] using hk'
-    linarith
-  exact max_le_max hmain le_rfl
+  have hk : (((κ q + 5 : ℕ) : ℝ)) = (((κ q + 4 : ℕ) : ℝ)) + 1 := by
+    push_cast
+    ring
+  exact max_le_max (by linarith) le_rfl
 
 private lemma sup_coord_exists
     {d : ℕ} (hd : d ≠ 0) (j ℓ : MultiIndex d) :
@@ -640,8 +504,7 @@ private lemma shell_offset_mem_cube_sdiff
           (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) : ℤ))) at hx
     rw [Fintype.mem_piFinset] at hx
     rcases sup_coord_exists hd j ℓ with ⟨q0, hq0⟩
-    have hdist : Nat.dist (j q0) (ℓ q0) = r := by
-      simpa [hj] using hq0.symm
+    have hdist : Nat.dist (j q0) (ℓ q0) = r := by simpa [hj] using hq0.symm
     have hxq := hx q0
     simp [Finset.mem_Icc] at hxq
     by_cases hle : j q0 ≤ ℓ q0
@@ -677,37 +540,40 @@ private lemma cube_boundary_card
   rw [Finset.card_sdiff, Finset.inter_eq_left.mpr hsubset, Fintype.card_piFinset_const,
     Fintype.card_piFinset_const, hcube, hinner, shellCardinality]
 
+/-- The shell finset `cube \ inner` carrying the block-distance-`r` offsets. -/
+private def shellFinset (d r : ℕ) : Finset (Fin d → ℤ) :=
+  (Fintype.piFinset (fun _ : Fin d => Finset.Icc (-(r : ℤ)) (r : ℤ))) \
+    Fintype.piFinset (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) : ℤ)))
+
+/-- Block-distance-`r` shifts inject into the integer shell finset. -/
+private lemma shellSubtype_injects
+    {d : ℕ} (hd : d ≠ 0) (ℓ : MultiIndex d) {r : ℕ} (hr : 1 ≤ r) :
+    ∃ f : {j : MultiIndex d // blockDistance j ℓ = r} → {x // x ∈ shellFinset d r},
+      Function.Injective f := by
+  refine ⟨fun j => ⟨(fun q => (j.1 q : ℤ) - ℓ q), by
+      simpa [shellFinset, Finset.mem_sdiff] using shell_offset_mem_cube_sdiff hd j.2 hr⟩, ?_⟩
+  intro a b hab
+  apply Subtype.ext
+  funext q
+  have hq : (a.1 q : ℤ) - ℓ q = (b.1 q : ℤ) - ℓ q := by simpa using congrArg (fun x => x.1 q) hab
+  omega
+
+private lemma shellSubtype_isEmpty
+    (ℓ : MultiIndex 0) {r : ℕ} (hr : 1 ≤ r) :
+    IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := by
+  refine ⟨fun j => ?_⟩
+  have hd0 : blockDistance j.1 ℓ = 0 := by simp [blockDistance]
+  have hjr := j.2
+  omega
+
 private lemma finiteShellSubtype
     {d : ℕ} (ℓ : MultiIndex d) {r : ℕ} (hr : 1 ≤ r) :
     Finite {j : MultiIndex d // blockDistance j ℓ = r} := by
   by_cases hd : d = 0
-  · classical
-    subst hd
-    have hempty :
-        IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := by
-      refine ⟨?_⟩
-      intro j
-      have hdist0 : blockDistance j.1 ℓ = 0 := by
-        simp [blockDistance]
-      omega
-    letI : IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := hempty
+  · subst hd
+    letI := shellSubtype_isEmpty ℓ hr
     infer_instance
-  · let f : {j : MultiIndex d // blockDistance j ℓ = r} →
-        {x // x ∈
-          (Fintype.piFinset (fun _ : Fin d => Finset.Icc (-(r : ℤ)) (r : ℤ)))
-            \ Fintype.piFinset (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) :
-                ℤ)))} :=
-      fun j =>
-        ⟨(fun q => (j.1 q : ℤ) - ℓ q), by
-          simpa [Finset.mem_sdiff] using shell_offset_mem_cube_sdiff hd j.2 hr⟩
-    have hf : Function.Injective f := by
-      intro a b hab
-      apply Subtype.ext
-      funext q
-      have hq : (f a).1 q = (f b).1 q := by
-        simpa using congrArg (fun x => x.1 q) hab
-      dsimp [f] at hq
-      omega
+  · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
     exact Finite.of_injective f hf
 
 private lemma sharpShellCount_of_pos
@@ -715,46 +581,13 @@ private lemma sharpShellCount_of_pos
     Nat.card {j : MultiIndex d // blockDistance j ℓ = r} ≤ shellCardinality d r := by
   by_cases hd : d = 0
   · subst hd
-    have hempty :
-        IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := by
-      refine ⟨?_⟩
-      intro j
-      have hdist0 : blockDistance j.1 ℓ = 0 := by
-        simp [blockDistance]
-      omega
-    have hcard0 : Nat.card {j : MultiIndex 0 // blockDistance j ℓ = r} = 0 := by
-      letI : IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := hempty
-      simp [Nat.card_eq_fintype_card]
-    rw [hcard0]
-    have hr0 : r ≠ 0 := by
-      omega
-    simp [shellCardinality]
-  · let f : {j : MultiIndex d // blockDistance j ℓ = r} →
-        {x // x ∈
-          (Fintype.piFinset (fun _ : Fin d => Finset.Icc (-(r : ℤ)) (r : ℤ)))
-            \ Fintype.piFinset (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) :
-                ℤ)))} :=
-      fun j =>
-        ⟨(fun q => (j.1 q : ℤ) - ℓ q), by
-          simpa [Finset.mem_sdiff] using shell_offset_mem_cube_sdiff hd j.2 hr⟩
-    have hf : Function.Injective f := by
-      intro a b hab
-      apply Subtype.ext
-      funext q
-      have hq : (f a).1 q = (f b).1 q := by
-        simpa using congrArg (fun x => x.1 q) hab
-      dsimp [f] at hq
-      omega
-    let shell :
-        Finset (Fin d → ℤ) :=
-      (Fintype.piFinset (fun _ : Fin d => Finset.Icc (-(r : ℤ)) (r : ℤ))) \
-        Fintype.piFinset
-          (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) : ℤ)))
-    have hshell :
-        Nat.card {x // x ∈ shell} = shellCardinality d r := by
-      have hattach : shell.attach.card = shell.card := Finset.card_attach
+    letI := shellSubtype_isEmpty ℓ hr
+    simp_all
+  · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
+    have hshell : Nat.card {x // x ∈ shellFinset d r} = shellCardinality d r := by
       rw [Nat.card_eq_fintype_card]
-      simpa [shell] using hattach.trans (cube_boundary_card d r hr)
+      simpa [shellFinset] using
+        (Finset.card_attach (s := shellFinset d r)).trans (cube_boundary_card d r hr)
     letI := finiteShellSubtype ℓ hr
     exact le_trans (Nat.card_le_card_of_injective f hf) (le_of_eq hshell)
 
@@ -768,8 +601,7 @@ private lemma shell_cardinality_bound_filter
       ext j
       simp only [mem_filter, notMem_empty, iff_false, not_and]
       intro hj hEq
-      have hdist0 : blockDistance j ℓ = 0 := by
-        simp [blockDistance]
+      have hdist0 : blockDistance j ℓ = 0 := by simp [blockDistance]
       have : r = 0 := by simpa [hdist0] using hEq.symm
       omega
     simp [hfilter0, shellCardinality]
@@ -796,10 +628,8 @@ private lemma shell_cardinality_bound_filter
     rw [← hfilter]
     calc
       ((Nat.card {j // j ∈ s.filter fun j => blockDistance j ℓ = r} : ℕ) : ℝ)
-          ≤ Nat.card {j : MultiIndex d // blockDistance j ℓ = r} := by
-            exact_mod_cast hcard
-      _ ≤ shellCardinality d r := by
-            exact_mod_cast sharpShellCount_of_pos ℓ hr
+          ≤ Nat.card {j : MultiIndex d // blockDistance j ℓ = r} := by exact_mod_cast hcard
+      _ ≤ shellCardinality d r := by exact_mod_cast sharpShellCount_of_pos ℓ hr
 
 /-- Single-basis localization on a product annulus. -/
 theorem productBasisLocalization
@@ -833,9 +663,7 @@ theorem productBasisLocalization
       exact Finset.prod_pos (fun q hq => hCq_pos q)
     have hc_pos : 0 < c := by
       dsimp [c]
-      rw [Finset.lt_inf'_iff]
-      intro q hq
-      exact hcq_pos q
+      simp_all
     have hB_nonneg : 0 ≤ B := by
       dsimp [B]
       positivity
@@ -855,13 +683,8 @@ theorem productBasisLocalization
       have hsq :
           max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2 ≤
             max (|((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| - ((κ q + 4 : ℕ) : ℝ)) 0 ^ 2 := by
-        have hnonneg :
-            0 ≤ max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 := by
-          exact le_max_right _ _
-        have hnonneg' :
-            0 ≤ max (|((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| - ((κ q + 4 : ℕ) : ℝ)) 0 := by
-          exact le_max_right _ _
-        nlinarith [hcmp, hnonneg, hnonneg']
+        nlinarith [hcmp, le_max_right (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0,
+          le_max_right (|((j q : ℕ) : ℝ) - Real.sqrt (α q : ℝ)| - ((κ q + 4 : ℕ) : ℝ)) 0]
       have hexp :
           Real.exp
               (-(cq q) *
@@ -869,8 +692,7 @@ theorem productBasisLocalization
             Real.exp
               (-(cq q) *
                 max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2) := by
-        apply Real.exp_le_exp.mpr
-        nlinarith [hsq, hcq_pos q]
+        simp_all
       exact le_trans hbase <| mul_le_mul_of_nonneg_left hexp (le_of_lt (hCq_pos q))
     have hprod_bound :
         ∏ q : Fin d, annulusMass (d := 1) (fun _ => j q) (oneDimLift (oneDimPhi (κ q) (α q))) ≤
@@ -883,8 +705,7 @@ theorem productBasisLocalization
       · intro q hq
         unfold annulusMass
         positivity
-      · intro q hq
-        exact hcoord q
+      · simp_all
     refine le_trans hprod_bound ?_
     have hcsmall : ∀ q : Fin d, c ≤ cq q := by
       intro q
@@ -911,13 +732,8 @@ theorem productBasisLocalization
       have hsq0 :
           max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2 ≤
             max (((Nat.dist (j q0) (ℓ q0) : ℕ) : ℝ) - ((κ q0 + 5 : ℕ) : ℝ)) 0 ^ 2 := by
-        have hnonneg :
-            0 ≤ max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 := by
-          exact le_max_right _ _
-        have hnonneg' :
-            0 ≤ max (((Nat.dist (j q0) (ℓ q0) : ℕ) : ℝ) - ((κ q0 + 5 : ℕ) : ℝ)) 0 := by
-          exact le_max_right _ _
-        nlinarith [hmax, hnonneg, hnonneg']
+        nlinarith [hmax, le_max_right (((blockDistance j ℓ : ℕ) : ℝ) - B) 0,
+          le_max_right (((Nat.dist (j q0) (ℓ q0) : ℕ) : ℝ) - ((κ q0 + 5 : ℕ) : ℝ)) 0]
       have hsingle :
           max (((Nat.dist (j q0) (ℓ q0) : ℕ) : ℝ) - ((κ q0 + 5 : ℕ) : ℝ)) 0 ^ 2 ≤
             ∑ q : Fin d, max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2 := by
@@ -946,35 +762,18 @@ theorem productBasisLocalization
                 ∑ q : Fin d,
                     (-(cq q) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2) ≤
                   -(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2 := by
-              have hterm :
-                  ∀ q : Fin d,
-                    (-(cq q) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2) ≤
-                      (-(c) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2)
-                          := by
-                intro q
-                nlinarith [hcsmall q,
-                  sq_nonneg (max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0)]
               have hsum_term :
                   ∑ q : Fin d,
                       (-(cq q) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^
                           2) ≤
-                    ∑ q : Fin d,
-                      (-(c) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2)
-                          := by
-                exact Finset.sum_le_sum (fun q _ => hterm q)
-              have hcollapse :
-                  ∑ q : Fin d,
-                      (-(c) * max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0 ^ 2) =
                     -(c) *
                       ∑ q : Fin d, max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0
                           ^ 2 := by
-                rw [← Finset.mul_sum]
-              have hfinal :
-                  -(c) * ∑ q : Fin d, max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ))
-                      0 ^ 2 ≤
-                    -(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2 := by
-                nlinarith [hsq_ge, hc_pos]
-              linarith
+                rw [Finset.mul_sum]
+                refine Finset.sum_le_sum fun q _ => ?_
+                nlinarith [hcsmall q,
+                  sq_nonneg (max (((Nat.dist (j q) (ℓ q) : ℕ) : ℝ) - ((κ q + 5 : ℕ) : ℝ)) 0)]
+              nlinarith [hsum_term, hsq_ge, hc_pos]
             exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr hsum_le) (le_of_lt hC_pos)
 
 /-- Quantitative block localization estimate. -/
@@ -1005,9 +804,7 @@ theorem blockLocalization
                   have hsuppnz : (blockPart ℓ G).coeff α ≠ 0 := by
                     simpa [FiniteHermiteSum.support, Finsupp.mem_support_iff] using hα
                   rw [blockPart, Finsupp.onFinset_apply] at hsuppnz
-                  by_cases hb : α ∈ squareBlock ℓ
-                  · exact hb
-                  · simp [hb] at hsuppnz
+                  simp_all
                 exact mul_le_mul_of_nonneg_left (hloc α j ℓ hblock) (by positivity)
     _ =
         (C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)) *
@@ -1032,8 +829,7 @@ theorem blockLocalization
                       rw [Finset.mul_sum]
     _ =
         (C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)) *
-          hermiteNormSq κ (blockPart ℓ G) := by
-            rw [← finiteParseval]
+          hermiteNormSq κ (blockPart ℓ G) := by rw [← finiteParseval]
 
 /-- Crude shell-count helper for sup-norm block shells. -/
 theorem shellCountingFormula
@@ -1046,58 +842,36 @@ theorem shellCountingFormula
   -/
   exact Nat.sub_le _ _
 
-/-- Gaussian tails with polynomial weights are summable. -/
-theorem polynomialGaussianSeriesSummable
-    (m : ℕ) (c : ℝ) (hc : 0 < c) :
-    Summable (fun r : ℕ => (r : ℝ) ^ m * Real.exp (-c * r ^ 2)) := by
-  obtain ⟨C, hCpos, hbound⟩ :=
-    HermiteLEAN.polynomial_times_gaussian_le_gaussian hc m
-  have hgeom :
-      Summable (fun r : ℕ => Real.exp (-(c / 2) * (r : ℝ) ^ 2)) := by
-    refine Real.summable_exp_nat_mul_of_ge ?_ ?_
-    · linarith
-    · intro i
-      have hnat : i ≤ i * i := Nat.le_mul_self i
-      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by
-        exact_mod_cast hnat
-      simpa [pow_two] using hreal
-  have hmajor : Summable (fun r : ℕ => C * Real.exp (-(c / 2) * (r : ℝ) ^ 2)) :=
-    hgeom.mul_left C
-  exact Summable.of_nonneg_of_le
-      (f := fun r : ℕ => C * Real.exp (-(c / 2) * (r : ℝ) ^ 2))
-      (g := fun r : ℕ => (r : ℝ) ^ m * Real.exp (-c * (r : ℝ) ^ 2))
-      (fun r => by positivity)
-      (fun r => by
-        calc
-          (r : ℝ) ^ m * Real.exp (-c * (r : ℝ) ^ 2)
-            ≤ (1 + (r : ℝ) ^ m) * Real.exp (-c * (r : ℝ) ^ 2) := by
-              have hpow_le : (r : ℝ) ^ m ≤ 1 + (r : ℝ) ^ m := by linarith
-              exact mul_le_mul_of_nonneg_right hpow_le (by positivity)
-          _ ≤ C * Real.exp (-(c / 2) * (r : ℝ) ^ 2) := hbound (r : ℝ) (by positivity))
-      hmajor
+private lemma summable_exp_neg_mul_sq {a : ℝ} (ha : 0 < a) :
+    Summable (fun r : ℕ => Real.exp (-a * (r : ℝ) ^ 2)) := by
+  refine Real.summable_exp_nat_mul_of_ge ?_ ?_
+  · linarith
+  · intro i
+    have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by exact_mod_cast Nat.le_mul_self i
+    simpa [pow_two] using hreal
 
 private lemma polynomialGaussianTailMajorant_summable
     {a : ℝ} (ha : 0 < a) (k : ℕ) :
     Summable (fun r : ℕ => (1 + (r : ℝ) ^ k) * Real.exp (-a * (r : ℝ) ^ 2)) := by
   obtain ⟨C, hCpos, hbound⟩ :=
     HermiteLEAN.polynomial_times_gaussian_le_gaussian ha k
-  have hgeom :
-      Summable (fun r : ℕ => Real.exp (-(a / 2) * (r : ℝ) ^ 2)) := by
-    refine Real.summable_exp_nat_mul_of_ge ?_ ?_
-    · linarith
-    · intro i
-      have hnat : i ≤ i * i := Nat.le_mul_self i
-      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by
-        exact_mod_cast hnat
-      simpa [pow_two] using hreal
-  have hmajor : Summable (fun r : ℕ => C * Real.exp (-(a / 2) * (r : ℝ) ^ 2)) :=
-    hgeom.mul_left C
   exact Summable.of_nonneg_of_le
       (f := fun r : ℕ => C * Real.exp (-(a / 2) * (r : ℝ) ^ 2))
       (g := fun r : ℕ => (1 + (r : ℝ) ^ k) * Real.exp (-a * (r : ℝ) ^ 2))
       (fun r => by positivity)
       (fun r => hbound (r : ℝ) (by positivity))
-      hmajor
+      ((summable_exp_neg_mul_sq (by linarith)).mul_left C)
+
+/-- Gaussian tails with polynomial weights are summable. -/
+theorem polynomialGaussianSeriesSummable
+    (m : ℕ) (c : ℝ) (hc : 0 < c) :
+    Summable (fun r : ℕ => (r : ℝ) ^ m * Real.exp (-c * r ^ 2)) :=
+  Summable.of_nonneg_of_le
+    (f := fun r : ℕ => (1 + (r : ℝ) ^ m) * Real.exp (-c * (r : ℝ) ^ 2))
+    (g := fun r : ℕ => (r : ℝ) ^ m * Real.exp (-c * (r : ℝ) ^ 2))
+    (fun r => by positivity)
+    (fun r => mul_le_mul_of_nonneg_right (by linarith) (by positivity))
+    (polynomialGaussianTailMajorant_summable hc m)
 
 private lemma tailIndicator_tendsto_zero
     {u : ℕ → ℝ} (hu : Summable u) :
@@ -1125,8 +899,7 @@ private lemma tailIndicator_tendsto_zero
   have h2 :
       (∑ i ∈ Finset.range (M + 1), u i) +
           (∑' k : ℕ, u (k + (M + 1))) =
-        ∑' i : ℕ, u i := by
-    simpa using hu.sum_add_tsum_nat_add (M + 1)
+        ∑' i : ℕ, u i := by simpa using hu.sum_add_tsum_nat_add (M + 1)
   have hEq : (∑' r : ℕ, if M < r then u r else 0) = ∑' k : ℕ, u (k + (M + 1)) := by
     linarith [h1, h2]
   simpa [Nat.succ_le_iff] using hEq.symm
@@ -1144,35 +917,20 @@ private lemma shellExp_global_majorant
       (shellCardinality d r : ℝ) ≤ (3 : ℝ) ^ d * (1 + (r : ℝ) ^ d) := by
     by_cases hr0 : r = 0
     · subst hr0
-      have hzero_nat : shellCardinality d 0 ≤ 1 := by
-        simp [shellCardinality]
       have hzero : (shellCardinality d 0 : ℝ) ≤ 1 := by
-        exact_mod_cast hzero_nat
-      have hpow_pos : 0 < (3 : ℝ) ^ d := by
-        positivity
-      have hone :
-          (1 : ℝ) ≤ (3 : ℝ) ^ d * (1 + (((0 : ℕ) : ℝ) ^ d)) := by
-        have hpow1 : (1 : ℝ) ≤ (3 : ℝ) ^ d := by
-          exact one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 3)
-        have hfac : (1 : ℝ) ≤ 1 + (((0 : ℕ) : ℝ) ^ d) := by
-          have hnonneg : (0 : ℝ) ≤ (((0 : ℕ) : ℝ) ^ d) := by positivity
-          linarith
-        calc
-          (1 : ℝ) ≤ (3 : ℝ) ^ d := hpow1
-          _ ≤ (3 : ℝ) ^ d * (1 + (((0 : ℕ) : ℝ) ^ d)) := by
-            exact le_mul_of_one_le_right (le_of_lt hpow_pos) hfac
-      exact le_trans hzero hone
+        exact_mod_cast (by simp [shellCardinality] : shellCardinality d 0 ≤ 1)
+      have hpow1 : (1 : ℝ) ≤ (3 : ℝ) ^ d := one_le_pow₀ (by norm_num)
+      have hfac : (1 : ℝ) ≤ 1 + (((0 : ℕ) : ℝ) ^ d) := by
+        linarith [show (0 : ℝ) ≤ (((0 : ℕ) : ℝ) ^ d) by positivity]
+      nlinarith [hzero, mul_le_mul hpow1 hfac (by norm_num) (by positivity)]
     · have hr1 : 1 ≤ r := Nat.succ_le_of_lt (Nat.pos_iff_ne_zero.mpr hr0)
       have hs : (shellCardinality d r : ℝ) ≤ ((2 * r + 1) ^ d : ℕ) := by
         exact_mod_cast shellCountingFormula d r
-      have hbase : (2 * r + 1 : ℝ) ≤ 3 * r := by
-        nlinarith [show (1 : ℝ) ≤ r by exact_mod_cast hr1]
-      have hpow : (2 * r + 1 : ℝ) ^ d ≤ (3 * r : ℝ) ^ d := by
-        gcongr
+      have hbase : (2 * r + 1 : ℝ) ≤ 3 * r := by nlinarith [show (1 : ℝ) ≤ r by exact_mod_cast hr1]
+      have hpow : (2 * r + 1 : ℝ) ^ d ≤ (3 * r : ℝ) ^ d := by gcongr
       have hshell' : (shellCardinality d r : ℝ) ≤ (3 : ℝ) ^ d * (r : ℝ) ^ d := by
         calc
-          (shellCardinality d r : ℝ) ≤ (2 * r + 1 : ℝ) ^ d := by
-            exact_mod_cast hs
+          (shellCardinality d r : ℝ) ≤ (2 * r + 1 : ℝ) ^ d := by exact_mod_cast hs
           _ ≤ (3 * r : ℝ) ^ d := hpow
           _ = (3 : ℝ) ^ d * (r : ℝ) ^ d := by rw [mul_pow]
       have hrpow_nonneg : 0 ≤ (r : ℝ) ^ d := by positivity
@@ -1184,38 +942,31 @@ private lemma shellExp_global_majorant
     have hsq :
         (r : ℝ) ^ 2 / 8 - B ^ 2 ≤ max ((r : ℝ) - B) 0 ^ 2 := by
       by_cases hsmall : (r : ℝ) ≤ 2 * B
-      · have hrhs_nonpos : (r : ℝ) ^ 2 / 8 - B ^ 2 ≤ 0 := by
-          nlinarith
+      · have hrhs_nonpos : (r : ℝ) ^ 2 / 8 - B ^ 2 ≤ 0 := by nlinarith
         have hnonneg : 0 ≤ max ((r : ℝ) - B) 0 ^ 2 := by positivity
         linarith
       · have hlarge : 2 * B < (r : ℝ) := by linarith
-        have hhalf : (r : ℝ) / 2 ≤ (r : ℝ) - B := by
-          nlinarith
+        have hhalf : (r : ℝ) / 2 ≤ (r : ℝ) - B := by nlinarith
         have hmaxeq : max ((r : ℝ) - B) 0 = (r : ℝ) - B := by
           apply max_eq_left
           linarith
         rw [hmaxeq]
-        have hsquare_half : ((r : ℝ) / 2) ^ 2 ≤ ((r : ℝ) - B) ^ 2 := by
-          nlinarith
+        have hsquare_half : ((r : ℝ) / 2) ^ 2 ≤ ((r : ℝ) - B) ^ 2 := by nlinarith
         nlinarith [hsquare_half]
     have hlog :
-        -(c) * max ((r : ℝ) - B) 0 ^ 2 ≤ c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 := by
-      nlinarith [hsq, hc]
+        -(c) * max ((r : ℝ) - B) 0 ^ 2 ≤ c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 := by nlinarith [hsq, hc]
     calc
       Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
-        ≤ Real.exp (c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2) := by
-          exact Real.exp_le_exp.mpr hlog
+        ≤ Real.exp (c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2) := Real.exp_le_exp.mpr hlog
       _ = Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2) := by
-          have hsplit :
-              c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 =
-                c * B ^ 2 + (-(c / 8) * (r : ℝ) ^ 2) := by
-            ring
-          rw [hsplit, Real.exp_add]
+          rw [← Real.exp_add]
+          congr 1
+          ring
   calc
     (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
       ≤ ((3 : ℝ) ^ d * (1 + (r : ℝ) ^ d)) *
-          (Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2)) := by
-            exact mul_le_mul hshell hexp (by positivity) (by positivity)
+          (Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2)) :=
+            mul_le_mul hshell hexp (by positivity) (by positivity)
     _ = ((3 : ℝ) ^ d * Real.exp (c * B ^ 2)) *
           (1 + (r : ℝ) ^ d) * Real.exp (-(c / 8) * (r : ℝ) ^ 2) := by ring
 
@@ -1268,11 +1019,7 @@ private lemma localizationLeakageCoefficient_tendsto_zero
         C * (if M + 1 ≤ r then
           (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
         else 0) := by
-    apply tsum_congr
-    intro r
-    by_cases hr : M + 1 ≤ r
-    · simp [hr]
-    · simp [hr]
+    simp_all
   rw [hterm, tsum_mul_left]
 
 private lemma shell_sum_localizationLeakageCoefficient_bound
@@ -1301,8 +1048,7 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
       by_cases hr : M + 1 ≤ r
       · by_cases hlt : M < r
         · simp [u, hlt]
-        · have : False := by omega
-          contradiction
+        · simp_all
       · have hlt : ¬ M < r := by omega
         simp only [Order.add_one_le_iff, neg_mul, hlt, ↓reduceIte, ge_iff_le, u]
         positivity
@@ -1312,55 +1058,27 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
         (shellCardinality d r : ℝ) *
           (if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0))
       = Finset.sum t u := by
-          refine Finset.sum_congr rfl ?_
-          intro r hr
+          refine Finset.sum_congr rfl fun r _ => ?_
           by_cases hMr : M < r
           · have hMr' : M + 1 ≤ r := by omega
-            simp [u, hMr]
+            simp only [u, hMr, if_true, hMr']
             ring
-          · have hMr' : ¬ M + 1 ≤ r := by omega
-            simp [u, hMr]
+          · simp [u, hMr]
     _ ≤ ∑' r : ℕ, u r := by
           exact hu.sum_le_tsum _ (fun r hr => by
             by_cases hMr : M + 1 ≤ r
             · simp only [hMr, ↓reduceIte, neg_mul]
               positivity
             · by_cases hlt : M < r
-              · have : False := by omega
-                contradiction
+              · simp_all
               · simp [hMr])
     _ = localizationLeakageCoefficient C c B d M := by
-          let v : ℕ → ℝ := fun r =>
-            if M + 1 ≤ r then
-              (shellCardinality d r : ℝ) * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
-            else 0
-          have huv : u = fun r => C * v r := by
-            funext r
-            by_cases hMr : M + 1 ≤ r
-            · simp [u, v]
-            · simp [u, v]
           unfold localizationLeakageCoefficient
-          rw [show (∑' r : ℕ, u r) = ∑' r : ℕ, C * v r by simp [huv]]
-          rw [tsum_mul_left]
-
-private lemma remainderPart_annulus_le_of_support_image_bound
-    {d : ℕ} (κ : MultiIndex d) {C c B R : ℝ}
-    (hC : 0 ≤ C)
-    (hloc :
-      ∀ j ℓ : MultiIndex d, ∀ G : FiniteHermiteSum d,
-        annulusMass j (evalHermiteSum κ (blockPart ℓ G)) ≤
-          C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-            hermiteNormSq κ (blockPart ℓ G))
-    {j : MultiIndex d} {M : ℕ} {G : FiniteHermiteSum d}
-    (hbound :
-      Finset.sum ((remainderPart j M G).support.image blockIndexMulti)
-        (fun ℓ =>
-          if M < blockDistance j ℓ then
-            C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-              hermiteNormSq κ (blockPart ℓ G)
-          else 0) ≤ R) :
-    annulusMass j (evalHermiteSum κ (remainderPart j M G)) ≤ R := by
-  exact le_trans (remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G) hbound
+          rw [← tsum_mul_left]
+          refine tsum_congr fun r => ?_
+          by_cases hMr : M + 1 ≤ r
+          · simp only [u, hMr, if_true]
+          · simp only [u, hMr, if_false, mul_zero]
 
 private lemma finitePartialLeakage_bound_of_shell_sum_bound
     {d : ℕ} (κ : MultiIndex d) {C c B : ℝ}
@@ -1408,8 +1126,8 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
               if M < blockDistance j ℓ then
                 C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
                   hermiteNormSq κ (blockPart ℓ G)
-              else 0) := by
-                exact remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G
+              else 0) :=
+                remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G
       _ ≤ Finset.sum (G.support.image blockIndexMulti)
             (fun ℓ =>
               if M < blockDistance j ℓ then
@@ -1422,9 +1140,8 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                   · have hexp_nonneg :
                         0 ≤ Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
                       positivity
-                    have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) := by
-                      rw [finiteParseval]
-                      positivity
+                    have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) :=
+                      hermiteNormSq_nonneg κ (blockPart ℓ G)
                     simpa [hfar] using
                       (mul_nonneg (mul_nonneg hC hexp_nonneg) hnorm_nonneg)
                   · simp [hfar])
@@ -1439,8 +1156,7 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                     hermiteNormSq κ (blockPart ℓ G)
                 else 0)) := by
                   refine Finset.sum_le_sum ?_
-                  intro j hj
-                  exact hpoint j
+                  simp_all
     _ = Finset.sum (G.support.image blockIndexMulti)
           (fun ℓ =>
             Finset.sum s
@@ -1448,16 +1164,14 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                 if M < blockDistance j ℓ then
                   C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
                     hermiteNormSq κ (blockPart ℓ G)
-                else 0)) := by
-            rw [Finset.sum_comm]
+                else 0)) := by rw [Finset.sum_comm]
     _ ≤ Finset.sum (G.support.image blockIndexMulti)
           (fun ℓ => localizationLeakageCoefficient C c B d M * hermiteNormSq κ (blockPart ℓ G)) :=
               by
             refine Finset.sum_le_sum ?_
             intro ℓ hℓ
-            have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) := by
-              rw [finiteParseval]
-              positivity
+            have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) :=
+              hermiteNormSq_nonneg κ (blockPart ℓ G)
             have hshell' := hshell M ℓ s
             have hfactor :
                 Finset.sum s
@@ -1472,45 +1186,12 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                         C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)
                       else 0)) *
                     hermiteNormSq κ (blockPart ℓ G) := by
-                      calc
-                        Finset.sum s
-                            (fun j =>
-                              if M < blockDistance j ℓ then
-                                C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^
-                                    2) *
-                                  hermiteNormSq κ (blockPart ℓ G)
-                              else 0)
-                          =
-                            Finset.sum s
-                              (fun j =>
-                                (if M < blockDistance j ℓ then
-                                  C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^
-                                      2)
-                                else 0) * hermiteNormSq κ (blockPart ℓ G)) := by
-                                  refine Finset.sum_congr rfl ?_
-                                  intro j hj
-                                  by_cases hfar : M < blockDistance j ℓ
-                                  · simp [hfar, mul_left_comm, mul_comm]
-                                  · simp [hfar]
-                        _ =
-                            (Finset.sum s
-                              (fun j =>
-                                if M < blockDistance j ℓ then
-                                  C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^
-                                      2)
-                                else 0)) *
-                              hermiteNormSq κ (blockPart ℓ G) := by
-                                rw [← Finset.sum_mul]
+              rw [Finset.sum_mul]
+              simp_all
             rw [hfactor]
             exact mul_le_mul_of_nonneg_right hshell' hnorm_nonneg
     _ = localizationLeakageCoefficient C c B d M * hermiteNormSq κ G := by
           rw [← Finset.mul_sum, ← blockDecompositionNorm_sum_support_image]
-
-private lemma hermiteNormSq_nonneg
-    {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
-    0 ≤ hermiteNormSq κ G := by
-  rw [finiteParseval]
-  positivity
 
 private lemma shell_sum_bound_of_shell_cardinality_bound
     {d : ℕ} {C c B : ℝ}
@@ -1567,10 +1248,7 @@ private lemma shell_sum_bound_of_shell_cardinality_bound
             (fun _ =>
               if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0) := by
               refine Finset.sum_congr rfl ?_
-              intro j hj
-              have hjr : blockDistance j ℓ = r := by
-                simpa using (Finset.mem_filter.mp hj).2
-              simp [hjr]
+              simp_all
       _ =
           (((s.filter fun j => blockDistance j ℓ = r).card : ℕ) : ℝ) *
             (if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0) := by
@@ -1588,22 +1266,16 @@ private lemma shell_sum_bound_of_shell_cardinality_bound
           (fun r =>
             (shellCardinality d r : ℝ) *
               (if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0)) := by
-          refine Finset.sum_le_sum ?_
-          intro r hr
+          refine Finset.sum_le_sum fun r hr => ?_
           rw [hfiber r hr]
-          have hker_nonneg :
-              0 ≤ if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0 := by
-            by_cases hMr : M < r
-            · simp only [hMr, ↓reduceIte, neg_mul]
-              positivity
-            · simp [hMr]
           by_cases hMr : M < r
           · have hr1 : 1 ≤ r := by omega
+            have hker_nonneg : 0 ≤ C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) := by positivity
+            simp only [hMr, if_true]
             exact mul_le_mul_of_nonneg_right (hcard ℓ r s hr1) hker_nonneg
-          · simp [hMr] at hker_nonneg
-            simp [hMr]
-    _ ≤ localizationLeakageCoefficient C c B d M := by
-          exact htail M (s.image (fun j => blockDistance j ℓ))
+          · simp [hMr]
+    _ ≤ localizationLeakageCoefficient C c B d M :=
+          htail M (s.image (fun j => blockDistance j ℓ))
 
 private lemma finiteLeakage_global_bound_of_shell_sum_bound
     {d : ℕ} (κ : MultiIndex d)
@@ -1627,104 +1299,9 @@ private lemma finiteLeakage_global_bound_of_shell_sum_bound
   refine Real.tsum_le_of_sum_le ?_ ?_
   · intro j
     unfold annulusMass
-    exact integral_nonneg fun z => by
-      by_cases hz : z ∈ productAnnulus j <;> simp [hz]
+    exact integral_nonneg fun z => by by_cases hz : z ∈ productAnnulus j <;> simp [hz]
   · intro s
-    have hpoint :
-        ∀ j : MultiIndex d,
-          annulusMass j (evalHermiteSum κ (remainderPart j M G)) ≤
-            Finset.sum (G.support.image blockIndexMulti)
-              (fun ℓ => if M < blockDistance j ℓ then
-                C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                  hermiteNormSq κ (blockPart ℓ G)
-              else 0) := by
-      intro j
-      have hrem_support_subset : (remainderPart j M G).support ⊆ G.support := by
-        intro α hα
-        have hfar_support := (explicitLocalAndFarSupport (j := j) (M := M) (G := G)).2.2.2
-        rw [hfar_support] at hα
-        exact (Finset.mem_filter.mp hα).1
-      have hrem_image_subset :
-          (remainderPart j M G).support.image blockIndexMulti ⊆ G.support.image blockIndexMulti :=
-              by
-        intro ℓ hℓ
-        rcases Finset.mem_image.mp hℓ with ⟨α, hα, rfl⟩
-        exact Finset.mem_image.mpr ⟨α, hrem_support_subset hα, rfl⟩
-      calc
-        annulusMass j (evalHermiteSum κ (remainderPart j M G))
-          ≤ Finset.sum ((remainderPart j M G).support.image blockIndexMulti)
-              (fun ℓ => if M < blockDistance j ℓ then
-                C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                  hermiteNormSq κ (blockPart ℓ G)
-              else 0) := remainderPart_annulus_blockwise_bound (κ := κ) (hC := hC) hloc j M G
-        _ ≤ Finset.sum (G.support.image blockIndexMulti)
-              (fun ℓ => if M < blockDistance j ℓ then
-                C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                  hermiteNormSq κ (blockPart ℓ G)
-              else 0) := by
-                exact Finset.sum_le_sum_of_subset_of_nonneg hrem_image_subset (by
-                  intro ℓ hℓ hnot
-                  by_cases hfar : M < blockDistance j ℓ
-                  · have hexp_nonneg :
-                        0 ≤ Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) := by
-                      positivity
-                    have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) := by
-                      exact hermiteNormSq_nonneg κ (blockPart ℓ G)
-                    simpa [hfar] using
-                      (mul_nonneg (mul_nonneg hC hexp_nonneg) hnorm_nonneg)
-                  · simp [hfar])
-    calc
-      Finset.sum s (fun j => annulusMass j (evalHermiteSum κ (remainderPart j M G)))
-        ≤ Finset.sum s
-            (fun j =>
-              Finset.sum (G.support.image blockIndexMulti)
-                (fun ℓ => if M < blockDistance j ℓ then
-                  C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                    hermiteNormSq κ (blockPart ℓ G)
-                else 0)) := by
-                refine Finset.sum_le_sum ?_
-                intro j hj
-                exact hpoint j
-      _ = Finset.sum (G.support.image blockIndexMulti)
-            (fun ℓ =>
-              Finset.sum s
-                (fun j =>
-                  if M < blockDistance j ℓ then
-                    C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                      hermiteNormSq κ (blockPart ℓ G)
-                  else 0)) := by
-              rw [Finset.sum_comm]
-      _ ≤ Finset.sum (G.support.image blockIndexMulti)
-            (fun ℓ => localizationLeakageCoefficient C c B d M * hermiteNormSq κ (blockPart ℓ G))
-                := by
-              refine Finset.sum_le_sum ?_
-              intro ℓ hℓ
-              have hnorm_nonneg : 0 ≤ hermiteNormSq κ (blockPart ℓ G) :=
-                hermiteNormSq_nonneg κ (blockPart ℓ G)
-              have hshell' := hshell M ℓ s
-              have hfactor :
-                  Finset.sum s
-                    (fun j =>
-                      if M < blockDistance j ℓ then
-                        C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2) *
-                          hermiteNormSq κ (blockPart ℓ G)
-                      else 0) =
-                    (Finset.sum s
-                      (fun j =>
-                        if M < blockDistance j ℓ then
-                          C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)
-                        else 0)) *
-                    hermiteNormSq κ (blockPart ℓ G) := by
-                      rw [Finset.sum_mul]
-                      refine Finset.sum_congr rfl ?_
-                      intro j hj
-                      by_cases hfar : M < blockDistance j ℓ
-                      · simp [hfar, mul_left_comm, mul_comm]
-                      · simp [hfar]
-              rw [hfactor]
-              exact mul_le_mul_of_nonneg_right hshell' hnorm_nonneg
-      _ = localizationLeakageCoefficient C c B d M * hermiteNormSq κ G := by
-            rw [← Finset.mul_sum, ← blockDecompositionNorm_sum_support_image]
+    exact finitePartialLeakage_bound_of_shell_sum_bound (κ := κ) (hC := hC) hloc hshell s M G
 
 private theorem finiteLeakage_of_blockLocalization_shell_sum_bound
     {d : ℕ} (κ : MultiIndex d)

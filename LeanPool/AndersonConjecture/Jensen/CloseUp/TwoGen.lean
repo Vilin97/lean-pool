@@ -69,18 +69,12 @@ theorem close_up_two_gen_coprime
      intersection_close_up from KrullDomain.lean for the main case. -/
   by_cases hy₂_zero : (↑y₂ : T) = 0
   · have hc' : (c : T) ∈ Ideal.span {(y₁ : T)} := by
-      apply Ideal.span_le.mpr _ hc
-      intro x hx
-      rcases Set.mem_insert_iff.mp hx with rfl | hx
-      · exact Ideal.subset_span rfl
-      · rw [Set.mem_singleton_iff.mp hx, hy₂_zero]
-        exact Ideal.zero_mem _
+      simp_all
     obtain ⟨c', hcc'⟩ := Ideal.mem_span_singleton.mp (close_up_dvd R y₁ c hc')
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, c', ?_⟩
     have heq : c - c' * y₁ = 0 := by rw [hcc', mul_comm, sub_self]
     change c - c' * y₁ ∈ Ideal.span {y₂}
-    rw [heq]
-    exact Ideal.zero_mem _
+    simp_all
   have hy₂_ne : (↑y₂ : T) ≠ 0 := hy₂_zero
   by_cases hM_bot : IsLocalRing.maximalIdeal T = ⊥
   · have hR_field : IsLocalRing.maximalIdeal R.carrier = ⊥ := by
@@ -89,8 +83,7 @@ theorem close_up_two_gen_coprime
       by_contra h
       have hmem : y₂ ∈ IsLocalRing.maximalIdeal R.carrier :=
         (IsLocalRing.mem_maximalIdeal _).mpr h
-      rw [hR_field, Ideal.mem_bot] at hmem
-      exact hy₂_ne (congr_arg Subtype.val hmem)
+      simp_all
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
     change c - 0 * y₁ ∈ Ideal.span {y₂}
     simp only [zero_mul, sub_zero]
@@ -100,18 +93,12 @@ theorem close_up_two_gen_coprime
     exact Submodule.mem_top
   by_cases hy₁_zero : (↑y₁ : T) = 0
   · have hc_span_y₂ : (c : T) ∈ Ideal.span {(y₂ : T)} := by
-      apply Ideal.span_le.mpr _ hc
-      intro x hx
-      rcases Set.mem_insert_iff.mp hx with rfl | hx
-      · rw [hy₁_zero]
-        exact Ideal.zero_mem _
-      · exact Ideal.subset_span (Set.mem_singleton_iff.mp hx ▸ rfl)
+      simp_all
     have := close_up_dvd R y₂ c hc_span_y₂
     obtain ⟨q, hq⟩ := Ideal.mem_span_singleton.mp this
     refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
     change c - 0 * y₁ ∈ Ideal.span {y₂}
-    simp only [zero_mul, sub_zero]
-    exact Ideal.mem_span_singleton.mpr ⟨q, hq⟩
+    simpa only [zero_mul, sub_zero] using Ideal.mem_span_singleton.mpr ⟨q, hq⟩
   exact intersection_close_up R y₁ y₂ c hc hcoprime hy₁_zero hy₂_zero hM_bot
     hM_not_assoc hAss_ht hR_card hT_card
 
@@ -164,9 +151,7 @@ theorem close_up_two_gen_key
     obtain ⟨c', hcc'⟩ := hc_pR
     have hp_ne : (p : T) ≠ 0 := fun h => hp.ne_zero (Subtype.val_injective h)
     have hpc : (c : T) = (p : T) * (c' : T) := by
-      have := congr_arg Subtype.val hcc'
-      simp only [Subring.coe_mul] at this
-      exact this
+      simp_all
     have hc'_ab : (c' : T) ∈ Ideal.span {(a : T), (b : T)} := by
       obtain ⟨u₁, u₂, hu⟩ := Submodule.mem_span_pair.mp hc
       rw [hpa, hpb, smul_eq_mul, smul_eq_mul] at hu
@@ -174,15 +159,13 @@ theorem close_up_two_gen_key
         rw [← hpc, ← hu]
         ring
       exact Submodule.mem_span_pair.mpr ⟨u₁, u₂, by
-        rw [smul_eq_mul, smul_eq_mul]
-        exact (mul_left_cancel₀ hp_ne heq).symm⟩
+        simp_all⟩
     by_cases ha : a = 0
     · subst ha
       have hc'_b : (c' : T) ∈ Ideal.span {(b : T)} :=
         (Ideal.span_le.mpr (fun x hx => by
           rcases Set.mem_insert_iff.mp hx with rfl | h
-          · change (0 : T) ∈ _
-            exact Submodule.zero_mem _
+          · simp_all
           · exact Ideal.subset_span h)) hc'_ab
       have hc'R := close_up_dvd R b c' hc'_b
       refine ⟨R, ⟨le_refl _, fun r hr => hr, le_max_right _ _⟩, le_refl _, 0, ?_⟩
@@ -191,9 +174,7 @@ theorem close_up_two_gen_key
       obtain ⟨q, hq⟩ := hc'R
       refine ⟨⟨(q : T), q.2⟩, Subtype.ext ?_⟩
       have hc'_val : (c' : T) = (b : T) * (q : T) := by
-        have := congr_arg Subtype.val hq
-        simp only [Subring.coe_mul] at this
-        exact this
+        simp_all
       simp only [Subring.coe_mul]
       rw [hpc, hc'_val, mul_assoc]
     · have hdvd : DvdNotUnit a (p * a) := ⟨ha, ⟨p, hp.not_unit, mul_comm p a⟩⟩
@@ -249,10 +230,7 @@ theorem close_up_two_gen
     set y₁_S := (⟨(y₁ : T), hle y₁.2⟩ : S.carrier)
     set y₂_S := (⟨(y₂ : T), hle y₂.2⟩ : S.carrier)
     have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) = x₁ * y₁_S + x₂ * y₂_S := by
-      have : (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * y₁_S = x₂ * y₂_S := by
-        rw [hx₂, mul_comm]
-      rw [add_comm]
-      exact (sub_eq_iff_eq_add.mp this)
+      linear_combination hx₂
     rw [hc_eq]
     exact Ideal.add_mem _
       (Ideal.mul_mem_left _ x₁ (Ideal.subset_span (Set.mem_insert _ _)))
@@ -285,10 +263,7 @@ lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S] [IsDomain S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by
-  obtain ⟨a, haQ, ha_ne⟩ : ∃ a ∈ Q, a ≠ (0 : S) := by
-    by_contra h
-    push Not at h
-    exact hQ_ne_bot (le_antisymm (fun x hx => (Submodule.mem_bot _).mpr (h x hx)) bot_le)
+  obtain ⟨a, haQ, ha_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hQ_ne_bot
   have ha_nu : ¬IsUnit a := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q haQ hu)
   suffices ∀ x : S, x ≠ 0 → ¬IsUnit x → x ∈ Q → ∃ q : S, Prime q ∧ q ∈ Q from
     this a ha_ne ha_nu haQ

@@ -60,9 +60,8 @@ private theorem explicitPkappaNorm_sq_eq_integral
     {d : ℕ} (hd : 0 < d) (κ : Fin d -> ℕ)
     (F : Finsupp (Fin d -> ℕ) ℂ) :
     explicitPkappaNorm F ^ 2 =
-      ∫ z, ‖explicitEvalPkappa κ F z‖ ^ 2 ∂ explicitGamma d := by
-  have h := evalPkappa_total_mass hd κ F
-  exact h.symm
+      ∫ z, ‖explicitEvalPkappa κ F z‖ ^ 2 ∂ explicitGamma d :=
+  (evalPkappa_total_mass hd κ F).symm
 
 private theorem explicitPkappaNorm_smul
     {d : ℕ} (c : ℂ) (F : Finsupp (Fin d -> ℕ) ℂ) :
@@ -82,8 +81,7 @@ private theorem explicitPkappaNorm_smul
       refine Finset.sum_congr rfl ?_
       intro α halpha
       simp [Finsupp.smul_apply, mul_pow]
-    rw [hsum, Real.sqrt_mul (sq_nonneg ‖c‖), Real.sqrt_sq_eq_abs]
-    simp [abs_of_nonneg (norm_nonneg _)]
+    simp_all
 
 private theorem explicitPkappaNorm_pos_of_ne_zero
     {d : ℕ} {F : Finsupp (Fin d -> ℕ) ℂ} (hF : F ≠ 0) :
@@ -93,16 +91,12 @@ private theorem explicitPkappaNorm_pos_of_ne_zero
   apply Real.sqrt_pos.mpr
   have hexists : ∃ α, F α ≠ 0 := by
     by_contra hnone
-    apply hF
-    ext α
-    exact not_not.mp (not_exists.mp hnone α)
+    exact hF (by ext α; exact not_not.mp (not_exists.mp hnone α))
   rcases hexists with ⟨α, halpha⟩
   have halpha_mem : α ∈ F.support := F.mem_support_iff.mpr halpha
   have hterm_pos : 0 < ‖F α‖ ^ 2 := sq_pos_of_ne_zero (by simpa using halpha)
-  have hterm_le :
-      ‖F α‖ ^ 2 ≤ Finset.sum F.support (fun β => ‖F β‖ ^ 2) := by
-    exact Finset.single_le_sum (fun β hbeta => sq_nonneg ‖F β‖) halpha_mem
-  exact lt_of_lt_of_le hterm_pos hterm_le
+  exact hterm_pos.trans_le
+    (Finset.single_le_sum (fun β _ => sq_nonneg ‖F β‖) halpha_mem)
 
 private theorem explicitPkappaNorm_normalized
     {d : ℕ} {F : Finsupp (Fin d -> ℕ) ℂ} (hF : F ≠ 0) :
@@ -137,8 +131,7 @@ private theorem explicitModulusDefect_smul_of_nonneg
       congrFun (evalPkappa_smul hd κ (a : ℂ) F) z, norm_mul, norm_mul,
       Complex.norm_of_nonneg ha]
     ring
-  rw [hintegral, Real.sqrt_mul (sq_nonneg a), Real.sqrt_sq_eq_abs]
-  rw [abs_of_nonneg ha]
+  rw [hintegral, Real.sqrt_mul (sq_nonneg a), Real.sqrt_sq_eq_abs, abs_of_nonneg ha]
 
 private theorem modulusDefect_sq_eq_integral_rev
     {d : ℕ} (κ : Fin d -> ℕ)
@@ -175,10 +168,8 @@ private theorem phase_stability_coefficients_of_ne_zero
   have ha_pos : 0 < a := inv_pos.mpr hnorm_pos
   let Fn : Finsupp (Fin d -> ℕ) ℂ := (a : ℂ) • F
   have hFn_norm : explicitPkappaNorm Fn = 1 := by
-    have hcast_inv : (a : ℂ) = ((explicitPkappaNorm F : ℂ)⁻¹) := by
-      simp [a]
     change explicitPkappaNorm ((a : ℂ) • F) = 1
-    rw [hcast_inv]
+    rw [show (a : ℂ) = ((explicitPkappaNorm F : ℂ)⁻¹) by simp [a]]
     exact explicitPkappaNorm_normalized hF
   let Fpk : Pkappa d κ := Fn
   have hFn_norm' : ‖Fpk‖ = 1 := by
@@ -210,15 +201,12 @@ private theorem phase_stability_coefficients_of_ne_zero
     simpa [Fn, Qn] using explicitModulusDefect_smul_of_nonneg hd κ a (le_of_lt ha_pos) F Q
   have hscaled :
       a * explicitPkappaNorm (phase • Q - F) ≤
-        C_F * (a * modulusDefect κ F Q) := by
-    simpa [hleft_scale, hdef_scale] using hbound'
+        C_F * (a * modulusDefect κ F Q) := by simpa [hleft_scale, hdef_scale] using hbound'
   have hscaled' :
       a * explicitPkappaNorm (phase • Q - F) ≤
         a * (C_F * modulusDefect κ F Q) := by
-    calc
-      a * explicitPkappaNorm (phase • Q - F)
-          ≤ C_F * (a * modulusDefect κ F Q) := hscaled
-      _ = a * (C_F * modulusDefect κ F Q) := by ring
+    rw [show a * (C_F * modulusDefect κ F Q) = C_F * (a * modulusDefect κ F Q) by ring]
+    exact hscaled
   exact (mul_le_mul_iff_of_pos_left ha_pos).mp hscaled'
 
 theorem stablePhaseRetrievalCoefficients
@@ -297,9 +285,7 @@ theorem stablePhaseRetrievalExplicitRange
   rcases hP with ⟨F, rfl⟩
   rcases stablePhaseRetrievalCoefficientsAll hd κ F with ⟨C_P, hC_P_pos, hstable⟩
   refine ⟨C_P, hC_P_pos, ?_⟩
-  intro Q hQ
-  rcases hQ with ⟨G, rfl⟩
-  exact hstable G
+  simp_all
 
 /-! ## Closure upgrade -/
 
@@ -341,9 +327,7 @@ private theorem sqrt_integral_norm_sq_eq_lpNorm
       (∫ z, ‖F z‖ ^ (2 : ℝ) ∂ explicitGamma d) ^ ((2 : ℝ)⁻¹)
   rw [show (∫ z, ‖F z‖ ^ (2 : ℝ) ∂ explicitGamma d) =
       ∫ z, ‖F z‖ ^ 2 ∂ explicitGamma d by
-    congr 1
-    ext z
-    exact Real.rpow_natCast ‖F z‖ 2]
+    simp_all]
   rw [Real.sqrt_eq_rpow]
   norm_num
 
@@ -372,8 +356,7 @@ private theorem memLp_of_explicitHermitePoly
     (hQ : Q ∈ Set.range (explicitEvalPkappa κ)) :
     MeasureTheory.MemLp Q 2 (explicitGamma d) := by
   rcases hQ with ⟨F, rfl⟩
-  have hmem := memLp_two_evalPkappa hd κ F
-  exact hmem
+  exact memLp_two_evalPkappa hd κ F
 
 /-- `UnitPhase`: Unit Phase. -/
 def UnitPhase : Type :=
@@ -432,10 +415,8 @@ private theorem explicitGaussianL2DistanceSq_phase_eq_l2_norm_sq
     change hP.toLp P - hθQ.toLp (θ.1 • Q) =
       hP.toLp P - θ.1 • hQ.toLp Q
     rw [MeasureTheory.MemLp.toLp_const_smul]
-  rw [← Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg P (fun z => θ.1 * Q z))]
-  rw [hsqrt]
-  rw [← hnorm]
-  rw [htoLp]
+  rw [← Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg P (fun z => θ.1 * Q z)),
+    hsqrt, ← hnorm, htoLp]
 
 private theorem explicitPhaseOptimizedDistanceSq_attained
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ)
@@ -467,8 +448,8 @@ private theorem explicitPhaseOptimizedDistanceSq_attained
     exact explicitGaussianL2DistanceSq_nonneg P (fun z => θ.1 * Q z)
   have hle :
       explicitPhaseOptimizedDistanceSq P Q ≤
-        explicitGaussianL2DistanceSq P (fun z => θ₀.1 * Q z) := by
-    exact csInf_le hbdd ⟨θ₀, rfl⟩
+        explicitGaussianL2DistanceSq P (fun z => θ₀.1 * Q z) :=
+    csInf_le hbdd ⟨θ₀, rfl⟩
   have hge :
       explicitGaussianL2DistanceSq P (fun z => θ₀.1 * Q z) ≤
         explicitPhaseOptimizedDistanceSq P Q := by
@@ -477,8 +458,7 @@ private theorem explicitPhaseOptimizedDistanceSq_attained
     rintro r ⟨θ, rfl⟩
     change explicitGaussianL2DistanceSq P (fun z => θ₀.1 * Q z) ≤
       explicitGaussianL2DistanceSq P (fun z => θ.1 * Q z)
-    rw [hobjective θ]
-    rw [hobjective θ₀]
+    rw [hobjective θ, hobjective θ₀]
     exact hθ₀_min trivial
   exact le_antisymm hge hle
 
@@ -538,8 +518,7 @@ private theorem explicitClosure_subset_explicitSequentialClosure
       ∀ n, Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q) =
         dist (fn n) (hQ_mem.toLp Q) := by
     intro n
-    rw [← hQn_toLp n]
-    rw [MeasureTheory.Lp.dist_def]
+    rw [← hQn_toLp n, MeasureTheory.Lp.dist_def]
     have hsub_mem : MeasureTheory.MemLp (fun z => Qn n z - Q z) 2 (explicitGamma d) :=
       (hQn_mem n).sub hQ_mem
     have hae :
@@ -556,41 +535,13 @@ private theorem explicitClosure_subset_explicitSequentialClosure
   have hsqrt_tendsto :
       Filter.Tendsto
         (fun n => Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q))
-        Filter.atTop (nhds (0 : ℝ)) := by
-    simpa [hsqrt] using hdist
+        Filter.atTop (nhds (0 : ℝ)) := by simpa [hsqrt] using hdist
   have hsq :
       (fun n => explicitGaussianL2DistanceSq (Qn n) Q) =
-        fun n => (Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)) ^ 2 := by
-    funext n
-    rw [Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg (Qn n) Q)]
+        fun n => (Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)) ^ 2 :=
+    funext fun n => (Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg (Qn n) Q)).symm
   rw [hsq]
   simpa using hsqrt_tendsto.pow 2
-
-private theorem stablePhaseRetrievalExplicitRange_phaseOptimized
-    {d : ℕ} (hd : 0 < d) (κ : Fin d -> ℕ)
-    (P : (Fin d -> ℂ) -> ℂ) (hP : P ∈ Set.range (explicitEvalPkappa κ)) :
-    ∃ C_P : ℝ, 0 < C_P ∧
-      ∀ Q : (Fin d -> ℂ) -> ℂ, Q ∈ Set.range (explicitEvalPkappa κ) →
-        explicitPhaseOptimizedDistanceSq P Q ≤
-          C_P ^ 2 * explicitModulusDistanceSq P Q := by
-  rcases stablePhaseRetrievalExplicitRange hd κ P hP with ⟨C_P, hC_P_pos, hstable⟩
-  refine ⟨C_P, hC_P_pos, ?_⟩
-  intro Q hQ
-  rcases hstable Q hQ with ⟨θ, hθ, hbound⟩
-  have hle :
-      explicitPhaseOptimizedDistanceSq P Q ≤
-        explicitGaussianL2DistanceSq P (fun z => θ * Q z) := by
-    have hbdd :
-        BddBelow (Set.range fun θ' : UnitPhase =>
-          explicitGaussianL2DistanceSq P (fun z => θ'.1 * Q z)) := by
-      refine ⟨0, ?_⟩
-      rintro r ⟨θ', rfl⟩
-      exact explicitGaussianL2DistanceSq_nonneg P (fun z => θ'.1 * Q z)
-    exact csInf_le hbdd ⟨⟨θ, hθ⟩, rfl⟩
-  change
-    explicitGaussianL2DistanceSq P (fun z => θ * Q z) ≤
-      C_P ^ 2 * explicitModulusDistanceSq P Q at hbound
-  exact hle.trans hbound
 
 private theorem explicitPhaseOptimized_bound_of_l2_closure
     {d : ℕ} (hd : 0 < d) (κ : Fin d -> ℕ)
@@ -612,10 +563,8 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       C_P ^ 2 * explicitModulusDistanceSq P Q := by
   let δ : ℕ -> ℝ := fun n => Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)
   let M : ℝ := explicitModulusDistanceSq P Q
-  have hM_nonneg : 0 ≤ M := by
-    exact explicitModulusDistanceSq_nonneg P Q
-  have hδ_tendsto : Filter.Tendsto δ Filter.atTop (nhds (0 : ℝ)) := by
-    simpa [δ] using hQn_lim.sqrt
+  have hM_nonneg : 0 ≤ M := explicitModulusDistanceSq_nonneg P Q
+  have hδ_tendsto : Filter.Tendsto δ Filter.atTop (nhds (0 : ℝ)) := by simpa [δ] using hQn_lim.sqrt
   have hbound_n :
       ∀ n,
         explicitPhaseOptimizedDistanceSq P Q ≤
@@ -675,8 +624,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       rw [hscale] at htri
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by
-        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
       rw [hδ_eq] at htri
       rw [show (fun z => P z - θ * Qn n z + θ * (Qn n z - Q z)) =
           (fun z => P z - θ * Qn n z) + fun z => θ * (Qn n z - Q z) from rfl]
@@ -688,8 +636,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       have hsimp :
           Real.sqrt (C_P ^ 2 * explicitModulusDistanceSq P (Qn n)) =
             C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) := by
-        rw [Real.sqrt_mul (sq_nonneg C_P), Real.sqrt_sq_eq_abs]
-        rw [abs_of_nonneg (le_of_lt hC_P_pos)]
+        rw [Real.sqrt_mul (sq_nonneg C_P), Real.sqrt_sq_eq_abs, abs_of_nonneg (le_of_lt hC_P_pos)]
       simpa [hsimp] using hsqrt
     have hmod_tri :
         Real.sqrt (explicitModulusDistanceSq P (Qn n)) ≤ Real.sqrt M + δ n := by
@@ -714,8 +661,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       have hdecomp :
           (fun z => ‖P z‖ - ‖Qn n z‖) =
             fun z => (‖P z‖ - ‖Q z‖) + (‖Q z‖ - ‖Qn n z‖) := by
-        funext z
-        ring
+        simp_all
       rw [hdecomp]
       have htri :=
         MeasureTheory.lpNorm_add_le
@@ -737,12 +683,10 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
                 have h := abs_norm_sub_norm_le (Q z) (Qn n z)
                 simpa [Real.norm_eq_abs, norm_sub_rev] using h
           _ = MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2
-                (explicitGamma d) := by
-                rw [MeasureTheory.lpNorm_norm hQnQ_mem.1]
+                (explicitGamma d) := by rw [MeasureTheory.lpNorm_norm hQnQ_mem.1]
       have hδ_eq :
           MeasureTheory.lpNorm (fun z => Qn n z - Q z) 2 (explicitGamma d) =
-            δ n := by
-        rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
+            δ n := by rw [← sqrt_explicitGaussianL2DistanceSq_eq_lpNorm (Qn n) Q hQnQ_mem.1]
       rw [hδ_eq] at hsecond
       exact htri.trans (add_le_add_right hsecond _)
     have hsqrt_total :
@@ -753,11 +697,10 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
             ≤ Real.sqrt (explicitGaussianL2DistanceSq P (fun z => θ * Qn n z)) +
                 δ n :=
               hphase_tri
-        _ ≤ C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) + δ n := by
-              exact add_le_add hfinite_sqrt le_rfl
-        _ ≤ C_P * (Real.sqrt M + δ n) + δ n := by
-              exact add_le_add
-                (mul_le_mul_of_nonneg_left hmod_tri (le_of_lt hC_P_pos)) le_rfl
+        _ ≤ C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) + δ n :=
+              add_le_add hfinite_sqrt le_rfl
+        _ ≤ C_P * (Real.sqrt M + δ n) + δ n :=
+              add_le_add (mul_le_mul_of_nonneg_left hmod_tri (le_of_lt hC_P_pos)) le_rfl
     have hphase_inf :
         explicitPhaseOptimizedDistanceSq P Q ≤
           explicitGaussianL2DistanceSq P (fun z => θ * Q z) := by
@@ -796,8 +739,8 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
         Filter.atTop (nhds (C_P ^ 2 * M)) := by
     have hinner :
         Filter.Tendsto (fun n => C_P * (Real.sqrt M + δ n) + δ n)
-          Filter.atTop (nhds (C_P * (Real.sqrt M + 0) + 0)) := by
-      exact (((tendsto_const_nhds.add hδ_tendsto).const_mul C_P).add hδ_tendsto)
+          Filter.atTop (nhds (C_P * (Real.sqrt M + 0) + 0)) :=
+      ((tendsto_const_nhds.add hδ_tendsto).const_mul C_P).add hδ_tendsto
     have hpow := hinner.pow 2
     convert hpow using 1
     ring_nf
@@ -865,8 +808,7 @@ theorem stablePhaseRetrievalExplicitLpClosure_exists
       hP_mem hQ_mem with
     ⟨θ, hθ, hθ_eq⟩
   refine ⟨θ, hθ, ?_⟩
-  rw [hθ_eq]
-  exact hbound Q hQ
+  simp_all
 
 private theorem explicitHermiteLpPolys_eq_ae
     {d : ℕ} (κ : Fin d -> ℕ) :
@@ -881,8 +823,8 @@ private theorem explicitHermiteLpPolys_eq_ae
   · rintro ⟨P, hP, hAe⟩
     have hf_mem : MeasureTheory.MemLp (f : (Fin d -> ℂ) -> ℂ) 2 (explicitGamma d) :=
       MeasureTheory.Lp.memLp f
-    have hP_mem : MeasureTheory.MemLp P 2 (explicitGamma d) := by
-      exact (MeasureTheory.memLp_congr_ae hAe).mp hf_mem
+    have hP_mem : MeasureTheory.MemLp P 2 (explicitGamma d) :=
+      (MeasureTheory.memLp_congr_ae hAe).mp hf_mem
     refine ⟨P, hP, hP_mem, ?_⟩
     rw [← MeasureTheory.Lp.toLp_coeFn f hf_mem]
     exact (MeasureTheory.MemLp.toLp_eq_toLp_iff hP_mem hf_mem).2 hAe.symm

@@ -22,8 +22,7 @@ namespace TopologicalSpace.Opens
 lemma le_def : U ≤ V ↔ (U : Set X) ⊆ V := by simp only [SetLike.coe_subset_coe]
 @[simp] lemma coe_himp' : U ⇨ V = interior (V ∪ (U : Set X)ᶜ) := by
   suffices U ⇨ V = Opens.interior (V ∪ (U : Set X)ᶜ) by
-    apply_fun (fun U ↦ (U : Set X)) at this
-    simpa using this
+    simp_all
   apply eq_of_forall_le_iff; intro W
   simp_rw [le_himp_iff, ← SetLike.coe_subset_coe, coe_inf, coe_interior,
     W.isOpen.subset_interior_iff]

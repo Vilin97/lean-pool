@@ -96,8 +96,7 @@ private def close_up_aux_factor_proof
       if h : q ∣ x then Classical.choose h else x
     have hdiv_spec : ∀ x ∈ s, x = q * div_q x := by
       intro x hx
-      simp only [div_q, dif_pos (hq_dvd_all x hx)]
-      exact Classical.choose_spec (hq_dvd_all x hx)
+      simpa only [div_q, dif_pos (hq_dvd_all x hx)] using Classical.choose_spec (hq_dvd_all x hx)
     let t_set := s.image div_q
     have h_ideal_eq : span (↑s : Set R.carrier) =
         span {q} * span (↑t_set : Set R.carrier) :=
@@ -125,8 +124,7 @@ private def close_up_aux_factor_proof
       have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) =
           ⟨(q : T), hle q.2⟩ * ⟨(c' : T), hle c'.2⟩ := by
         ext
-        simp only [Subring.coe_mul]
-        exact hqc_val.symm
+        simpa only [Subring.coe_mul] using hqc_val.symm
       rw [hc_eq]
       exact Ideal.mul_mem_mul
         (Ideal.mem_map_of_mem _ (Ideal.subset_span rfl)) hc'_S
@@ -215,8 +213,7 @@ private def close_up_aux_factor_proof
       fun x => if h : q ∣ x then Classical.choose h else x
     have hdiv_spec' : ∀ x ∈ s', x = q * div_q' x := by
       intro x hx
-      simp only [div_q', dif_pos (hq_dvd_s' x hx)]
-      exact Classical.choose_spec (hq_dvd_s' x hx)
+      simpa only [div_q', dif_pos (hq_dvd_s' x hx)] using Classical.choose_spec (hq_dvd_s' x hx)
     let t_set' := s'.image div_q'
     have h_ideal_eq_q : span (↑s' : Set R.carrier) =
         span {q} * span (↑t_set' : Set R.carrier) :=
@@ -233,8 +230,7 @@ private def close_up_aux_factor_proof
       have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) =
           ⟨(q : T), hle q.2⟩ * ⟨(c' : T), hle c'.2⟩ := by
         ext
-        simp only [Subring.coe_mul]
-        exact hqc_val
+        simpa only [Subring.coe_mul] using hqc_val
       rw [hc_eq]
       have hmul := Ideal.mul_mem_mul
         (Ideal.mem_map_of_mem (Subring.inclusion hle)

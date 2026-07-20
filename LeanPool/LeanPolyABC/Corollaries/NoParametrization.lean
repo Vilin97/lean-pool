@@ -33,8 +33,7 @@ theorem associates_pow_eq_pow_iff {A B : Associates k[X]} {n : ℕ} (hn : n ≠ 
   · subst hA
     rw [zero_pow hn, eq_comm, pow_eq_zero_iff hn, eq_comm]
   by_cases hB : B = 0
-  · subst hB
-    rw [zero_pow hn, pow_eq_zero_iff hn]
+  · simp_all
   · constructor
     swap
     · intro h; subst h; rfl
@@ -79,8 +78,7 @@ theorem associated_pow_pow_coprime_iff {a b : k[X]} {m n : ℕ} (ha : a ≠ 0) (
   suffices goal : ∃ C, A = C ^ n ∧ B = C ^ m by
     rcases goal with ⟨C, hC⟩
     refine ⟨C.out, ?_, ?_⟩
-    · rw [← Associates.mk_ne_zero, Associates.mk_out, ← pow_ne_zero_iff hn, ← hC.1]
-      exact hA
+    · rwa [← Associates.mk_ne_zero, Associates.mk_out, ← pow_ne_zero_iff hn, ← hC.1]
     · simp only [Associates.mk_out]; exact hC
   have subgoal : ∃ C, A = C ^ n := by
     apply Associates.is_pow_of_dvd_count hA
@@ -204,17 +202,17 @@ theorem no_parametrization_y2_x3_1 (chk : ¬ringChar k ∣ 6) {x y : RatFunc k}
   case nz2 => exact neg_ne_zero.mpr (pow_ne_zero 3 hu0)
   rcases deriv_eq_zero with ⟨eq_dm, eq_dw, eq_dn⟩
   constructor
-  · rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dm]
-    rw [← eq_M]; rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dw]
+  · rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dm, ← eq_M,
+      Polynomial.eq_C_of_natDegree_eq_zero eq_dw]
     rcases Polynomial.isUnit_iff.mp u.isUnit with ⟨cu, -, eq_cu⟩
-    rw [← eq_cu]
-    rw [← map_pow, ← map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_C, ← map_div₀, IsConst]
+    rw [← eq_cu, ← map_pow, ← map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_C, ← map_div₀,
+      IsConst]
     exact ⟨_, rfl⟩
-  · rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dn]
-    rw [← eq_N]; rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dw]
+  · rw [Polynomial.eq_C_of_natDegree_eq_zero eq_dn, ← eq_N,
+      Polynomial.eq_C_of_natDegree_eq_zero eq_dw]
     rcases Polynomial.isUnit_iff.mp v.isUnit with ⟨cv, -, eq_cv⟩
-    rw [← eq_cv]
-    rw [← map_pow, ← map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_C, ← map_div₀, IsConst]
+    rw [← eq_cv, ← map_pow, ← map_mul, RatFunc.algebraMap_C, RatFunc.algebraMap_C, ← map_div₀,
+      IsConst]
     exact ⟨_, rfl⟩
 
 end LeanPolyABC

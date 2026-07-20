@@ -59,11 +59,10 @@ def lang : Semiterm L μ n → Finset (Σ k, L.Func k)
     ⟨k, f⟩ ∈ (func f v).lang := by simp[lang]
 
 lemma lang_func_ss {k} (f : L.Func k) (v : Fin k → Semiterm L μ n) (i) :
-    (v i).lang ⊆ (func f v).lang :=
-  by
-    intro x h
-    simp only [lang, Finset.mem_insert, Finset.mem_biUnion, Finset.mem_univ, true_and]
-    exact Or.inr ⟨i, h⟩
+    (v i).lang ⊆ (func f v).lang := by
+  intro x h
+  simp only [lang, Finset.mem_insert, Finset.mem_biUnion, Finset.mem_univ, true_and]
+  exact Or.inr ⟨i, h⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop) : ∀ t : Semiterm L μ n,
@@ -108,11 +107,9 @@ noncomputable def langRel : ∀ {n}, Semiformula L μ n → Finset (Σ k, L.Rel 
 
 omit [∀ k, DecidableEq (L.Rel k)] in
 lemma langFunc_rel_ss {k} (r : L.Rel k) (v : Fin k → Semiterm L μ n) (i) :
-    (v i).lang ⊆ (rel r v).langFunc :=
-  by
-    intro x h
-    simp only [langFunc, Finset.mem_biUnion, Finset.mem_univ, true_and]
-    exact ⟨i, h⟩
+    (v i).lang ⊆ (rel r v).langFunc := by
+  intro x h
+  simpa only [langFunc, Finset.mem_biUnion, Finset.mem_univ, true_and] using ⟨i, h⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop) : ∀ {n} (φ :
@@ -172,8 +169,7 @@ def toSubLanguageFinsetSelf {Γ : Finset (Semiformula L μ n)} {φ} (h : φ ∈ 
   φ.toSubLanguage' _ _ (fun _ _ hf => ⟨φ, h, hf⟩) (fun _ _ hr => ⟨φ, h, hr⟩)
 
 @[simp] lemma lMap_toSubLanguageFinsetSelf {Γ : Finset (Semiformula L μ n)} {φ} (h : φ ∈ Γ) :
-    lMap L.ofSubLanguage (toSubLanguageFinsetSelf h) = φ :=
-  lMap_toSubLanguage' _ _ _ _ _
+    lMap L.ofSubLanguage (toSubLanguageFinsetSelf h) = φ := lMap_toSubLanguage' _ _ _ _ _
 
 end Semiformula
 

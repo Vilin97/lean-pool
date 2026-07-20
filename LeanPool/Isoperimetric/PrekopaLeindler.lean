@@ -42,18 +42,14 @@ lemma brunn_minkowski_1d_compact
       exact ⟨hA_compact.sSup_mem hA_nonempty, hB_compact.sInf_mem hB_nonempty⟩
   calc
     volume C ≥ volume (A + B) := measure_mono h
-    -- Replacing A+B with A'+B' preserves volume
     _ = volume (A + B + {-sSup A} + {-sInf B}) := by simp
     _ = volume (A' + B') := by
       congr 1; nth_rw 2 [add_assoc]; nth_rw 3 [add_comm]; rw [← add_assoc]; rw [add_assoc]
-    -- The volume of A'+B' is at least that of A'∪B', since both A' and B' contain 0.
     _ ≥ volume (A' ∪ B') := by
       apply measure_mono
       rw [union_subset_iff]
       have h_zero_in_inter : 0 ∈ A' ∩ B' := by simp [h_inter_zero]
       exact ⟨subset_add_left A' h_zero_in_inter.2, subset_add_right B' h_zero_in_inter.1⟩
-    -- Finish the proof using the fact that A' and B' have intersection {0}
-    -- and using translation invariance of volume.
     _ = volume (A' ∪ B') + volume (A' ∩ B') := by simp [h_inter_zero]
     _ = volume A' + volume B' := by
       rw [measure_union_add_inter]
@@ -308,8 +304,7 @@ lemma prekopa_leindler_1d_normalized
   have hhint : hint = ∫⁻ t in Ioi 0, vh t := layercake hh_measurable
   -- implies ∫ f + ∫ g ≤ ∫ h
   have h_ineq_integral : fint + gint ≤ hint := by
-    rw [← hhint, ← hfint, ← hgint] at h_vol_ineq_integral
-    exact h_vol_ineq_integral
+    simp_all
   -- quickly prove the result in the case of fint = ⊤ or gint = ⊤
   by_cases h_fint_eq_top : fint = ⊤
   · simp only [h_fint_eq_top, top_add, top_le_iff] at h_ineq_integral
@@ -761,8 +756,7 @@ theorem prekopa_leindler
   have result_d_3 : ENNReal.ofReal ((1-θ)^((d+2)*(1-θ))*θ^((d+2)*θ))⁻¹
       * (∫⁻ (x : Fin (d + 2) → ℝ), f x) ^ (1 - θ) * (∫⁻ (x : Fin (d + 2) → ℝ), g x) ^ θ ≤
       ∫⁻ (x : Fin (d + 2) → ℝ), h x := by
-    rw [rewrite_lhs_of_result_d_2, combine_consts_of_result_d_2] at result_d_2
-    exact result_d_2
+    simp_all
   have rewrite_const_of_result_d_3 :
       ENNReal.ofReal ((1-θ)^((d+2)*(1-θ))*θ^((d+2)*θ))⁻¹ =
       ENNReal.ofReal ((1-θ)^((↑(d+1)+1)*(1-θ))*θ^((↑(d+1)+1)*θ))⁻¹ := by
@@ -771,8 +765,4 @@ theorem prekopa_leindler
       ring
     simp only [Nat.cast_add, Nat.cast_one]
     ring
-  change ENNReal.ofReal ((1-θ)^((↑(d+1)+1)*(1-θ))*θ^((↑(d+1)+1)*θ))⁻¹
-    * (∫⁻ (x : Fin (d + 2) → ℝ), f x)^(1-θ) * (∫⁻ (x : Fin (d + 2) → ℝ), g x)^θ
-    ≤ ∫⁻ (x : Fin (d + 2) → ℝ), h x
-  rw [rewrite_const_of_result_d_3] at result_d_3
-  exact result_d_3
+  simp_all

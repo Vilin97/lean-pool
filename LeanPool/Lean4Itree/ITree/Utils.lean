@@ -44,9 +44,7 @@ theorem fin1Const_inj {α} {x y : α}
 theorem fin1Const_fin0 : fin1Const (c 0) = c := by
   funext i
   match i with
-  | .up (.ofNat' 0) =>
-    have fwd : Fin2 1 := i.down
-    rfl
+  | .up (.ofNat' 0) => rfl
 
 /-! # ----------------------------------------------------------------------- -/
 /-! # --------------------End Vector3 Utilities------------------------------ -/

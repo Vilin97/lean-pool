@@ -102,8 +102,7 @@ lemma isScalarTowerModuleScalarOfModule :
   apply @IsScalarTower.mk ..
   intro c a v
   change (c • a) • v = algebraMap 𝕜 A c • a • v
-  rw [Algebra.scalar_smul_eq_smul_algebraMap_mul]
-  rw [mul_smul, Algebra.algebraMap_eq_smul_one c]
+  rw [Algebra.scalar_smul_eq_smul_algebraMap_mul, mul_smul, Algebra.algebraMap_eq_smul_one c]
 
 /-- Type synonym of a module over an algebra, when it is to be viewed as a module over
 the scalars. -/
@@ -226,10 +225,6 @@ lemma smul_eq_scalar_smul_of_central_of_mem_span
   suffices Submodule.span A {u} ≤ centralValueSubmodule M z_central ζ from this hv
   apply (Submodule.span_singleton_le_iff_mem u _).mpr
   exact (mem_centralValueSubmodule_iff ..).mpr hzu
-  -- *A shorter (and in some sense more elementary) proof:*
-  --obtain ⟨a, hauv⟩ := Submodule.mem_span_singleton.mp hv
-  --rw [← hauv, ← smul_assoc, smul_eq_mul, z_central a, ← smul_eq_mul, smul_assoc, hau]
-  --exact smul_comm a ζ u
 
 lemma smul_eq_scalar_smul_of_central
     {z : A} (z_central : ∀ a, Commute z a) {u : M} {ζ : 𝕜}
@@ -276,8 +271,7 @@ lemma UniversalEnvelopingAlgebra.induction
   apply TensorAlgebra.induction (C := C')
   · intro r
     simpa [C'] using hAM r
-  · intro X
-    exact hι X
+  · exact hι
   · intro ta tb hta htb
     simpa only [C', map_mul] using hMul _ _ hta htb
   · intro ta tb hta htb
@@ -293,10 +287,8 @@ lemma UniversalEnvelopingAlgebra.central_of_forall_lie_eq_zero
   · intro X
     apply commute_iff_lie_eq.mpr
     rw [← LieHom.map_lie, hZ X, map_zero]
-  · intro a b ha hb
-    exact Commute.mul_right ha hb
-  · intro a b ha hb
-    exact Commute.add_right ha hb
+  · exact fun _ _ ha hb ↦ Commute.mul_right ha hb
+  · exact fun _ _ ha hb ↦ Commute.add_right ha hb
 
 /-- If a central element of a Lie algebra acts as a scalar multiplication on a cyclic
 vector in a representation, then it acts as the same scalar on the whole representation. -/
@@ -337,13 +329,8 @@ def UniversalEnvelopingAlgebra.representation
     exact Module.add_smul _ _ ((unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V) v)
   map_smul' r X := by
     ext v
-    simp only [lsmul_apply, LinearMap.smul_apply]
-    simp only [map_smul, RingHom.id_apply]
-    set v' := unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V v with def_v'
-    set a := ιUEA 𝕜 X with def_a
-    have : ((algebraMap 𝕜 (𝓤 𝕜 𝓰) r) • a) • v' = algebraMap 𝕜 (𝓤 𝕜 𝓰) r • a • v' :=
-      IsScalarTower.smul_assoc ((algebraMap 𝕜 (𝓤 𝕜 𝓰)) r) a v'
-    exact this
+    simp only [lsmul_apply, LinearMap.smul_apply, map_smul, RingHom.id_apply]
+    exact IsScalarTower.smul_assoc ((algebraMap 𝕜 (𝓤 𝕜 𝓰)) r) (ιUEA 𝕜 X) _
   map_lie' := by
     intro X Y
     ext v

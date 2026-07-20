@@ -16,8 +16,7 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.SymmetricTransitiveFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.SymmetricTransitiveFrameClass : FrameClass :=
   { F | IsSymmetric F ∧ IsTrans F.World F.Rel }
 
 namespace Hilbert

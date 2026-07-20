@@ -61,8 +61,7 @@ theorem primeFactors_pow (a : α) {n : ℕ} (hn : 0 < n) : primeFactors (a ^ n) 
   classical
   simp_rw [primeFactors]
   simp only [normalizedFactors_pow]
-  rw [Multiset.toFinset_nsmul]
-  exact ne_of_gt hn
+  rw [Multiset.toFinset_nsmul _ _ (ne_of_gt hn)]
 
 theorem radical_pow (a : α) {n : Nat} (hn : 0 < n) : radical (a ^ n) = radical a := by
   simp_rw [radical, primeFactors_pow a hn]
@@ -70,8 +69,7 @@ theorem radical_pow (a : α) {n : Nat} (hn : 0 < n) : radical (a ^ n) = radical 
 theorem radical_dvd_self (a : α) : radical a ∣ a := by
   classical
   by_cases ha : a = 0
-  · rw [ha]
-    apply dvd_zero
+  · simp_all
   · rw [radical, ← Finset.prod_val, ← (prod_normalizedFactors ha).dvd_iff_dvd_right]
     apply Multiset.prod_dvd_prod_of_le
     rw [primeFactors, Multiset.toFinset_val]
@@ -101,14 +99,11 @@ theorem radical_dvd_radical_of_dvd {a b : α} (hb : b ≠ 0) (h : a ∣ b) :
 theorem radical_mul_dvd_mul_radical (a b : α) : radical (a * b) ∣ radical a * radical b := by
   classical
   by_cases ha : a = 0
-  · rw [ha]
-    simp only [zero_mul, dvd_mul_right]
+  · simp_all
   by_cases hb : b = 0
-  · rw [hb]
-    simp only [mul_zero, dvd_mul_left]
-  rw [radical, primeFactors, normalizedFactors_mul ha hb, Multiset.toFinset_add]
-  rw [radical, primeFactors]
-  rw [radical, primeFactors]
+  · simp_all
+  rw [radical, primeFactors, normalizedFactors_mul ha hb, Multiset.toFinset_add, radical,
+    primeFactors, radical, primeFactors]
   exact ⟨((normalizedFactors a).toFinset ∩ (normalizedFactors b).toFinset).prod id,
     (Finset.prod_union_inter).symm⟩
 
@@ -130,11 +125,8 @@ theorem prime_dvd_radical_iff {a p : α} (ha : a ≠ 0) (hp : Prime p) :
   · exact fun h => h.trans <| radical_dvd_self a
   · intro hpa
     rcases exists_mem_normalizedFactors_of_dvd ha hp.irreducible hpa with ⟨q, ⟨hqf, hpq⟩⟩
-    rw [hpq.dvd_iff_dvd_left]
-    rw [radical, primeFactors]
-    apply Finset.dvd_prod_of_mem id
-    rw [Multiset.mem_toFinset]
-    exact hqf
+    rw [hpq.dvd_iff_dvd_left, radical, primeFactors]
+    exact Finset.dvd_prod_of_mem id (Multiset.mem_toFinset.mpr hqf)
 
 theorem radical_isUnit_iff {a : α} (h : a ≠ 0) : IsUnit (radical a) ↔ IsUnit a := by
   constructor
@@ -143,9 +135,7 @@ theorem radical_isUnit_iff {a : α} (h : a ≠ 0) : IsUnit (radical a) ↔ IsUni
     rcases exists_mem_factors h ha with ⟨p, hpf⟩
     have hpp := prime_of_factor _ hpf
     have hpd := dvd_of_mem_factors hpf
-    apply not_isUnit_of_not_isUnit_dvd hpp.not_unit
-    rw [prime_dvd_radical_iff h hpp]
-    exact hpd
+    exact not_isUnit_of_not_isUnit_dvd hpp.not_unit ((prime_dvd_radical_iff h hpp).mpr hpd)
   · intro ha
     rw [radical_unit_eq_one ha]
     exact isUnit_one
@@ -232,10 +222,8 @@ theorem radical_natDegree_le (a : k[X]) : (radical a).natDegree ≤ a.natDegree 
 theorem radical_natDegree_mul_le (a b : k[X]) :
     (radical (a * b)).natDegree ≤ (radical a).natDegree + (radical b).natDegree := by
   rw [← natDegree_mul (radical_ne_zero _) (radical_ne_zero _)]
-  apply natDegree_le_of_dvd (radical_mul_dvd_mul_radical a b)
-  apply mul_ne_zero
-  · exact radical_ne_zero _
-  · exact radical_ne_zero _
+  exact natDegree_le_of_dvd (radical_mul_dvd_mul_radical a b)
+    (mul_ne_zero (radical_ne_zero _) (radical_ne_zero _))
 
 end Polynomial
 

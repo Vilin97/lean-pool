@@ -51,8 +51,7 @@ theorem goedel_first_incompleteness : ¬Entailment.Complete T := by
   have D_re : RePred D := by
     have : Sg1-Predicate fun φ : ℕ ↦
       ⌜ℒₒᵣ⌝.IsSemiformula 1 φ ∧
-          (T.codeIn ℕ).Provable (⌜ℒₒᵣ⌝.neg <| ⌜ℒₒᵣ⌝.substs ?[numeral φ] φ) := by
-        definability
+          (T.codeIn ℕ).Provable (⌜ℒₒᵣ⌝.neg <| ⌜ℒₒᵣ⌝.substs ?[numeral φ] φ) := by definability
     exact (re_iff_sigma1.mpr this).of_eq <| by
       intro φ; constructor
       · rintro ⟨hφ, b⟩

@@ -21,6 +21,13 @@ FILE_HEADERS_DOC = f"{CODE_QUALITY_URL}#7-file-headers"
 STATUS_VALUES = {"verified"}
 SOURCE_KEYS = {"arxiv", "doi", "url"}
 SOURCE_KEY_ORDER = ("arxiv", "doi", "url")
+# Permissive SPDX licenses accepted for Lean Pool projects (Apache-2.0 or MIT,
+# per CONTRIBUTING.md). Every project entry must declare one; enforced below.
+LICENSE_VALUES = {"Apache-2.0", "MIT"}
+# Provenance of a project's Lean proofs: written by a human (`human`), by an AI
+# system (`AI`), or by a mix of both (`mix`). Every project entry must declare
+# one; enforced below. See candidates/provenance.md for the rubric.
+PROVENANCE_VALUES = {"human", "AI", "mix"}
 # Kept identical to partial_port_audit.GITHUB_REPO_RE on purpose: a project is
 # auditable for partial imports only when source.github_repo matches this
 # `owner/name` shape, so the quality gate must reject exactly what the audit
@@ -699,7 +706,9 @@ def _check_required_project_fields(
         "entry_module",
         "authors",
         "source",
+        "license",
         "status",
+        "provenance",
         "main_declarations",
         "main_results",
         "tags",
@@ -724,6 +733,24 @@ def _check_project_values(
     errors: list[_QualityError] = []
     if project["status"] not in STATUS_VALUES:
         errors.append(_QualityError(path, 1, f"project #{index} has invalid status"))
+    if "license" in project and project["license"] not in LICENSE_VALUES:
+        errors.append(
+            _QualityError(
+                path,
+                1,
+                f"project #{index} has invalid license "
+                f"(expected one of {', '.join(sorted(LICENSE_VALUES))})",
+            )
+        )
+    if "provenance" in project and project["provenance"] not in PROVENANCE_VALUES:
+        errors.append(
+            _QualityError(
+                path,
+                1,
+                f"project #{index} has invalid provenance "
+                f"(expected one of {', '.join(sorted(PROVENANCE_VALUES))})",
+            )
+        )
     if not _source_is_valid(project["source"]):
         errors.append(_QualityError(path, 1, f"project #{index} has invalid source"))
     elif not _has_github_repo(project["source"]):

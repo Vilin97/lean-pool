@@ -31,8 +31,7 @@ instance : FunLike (NontrivialElementaryEmbedding M) M M where
   coe j := j.toElementaryEmbedding
   coe_injective := by
     rintro ⟨j, hj⟩ ⟨k, hk⟩ eq
-    congr 1
-    simpa using eq
+    simp_all
 
 @[ext] lemma ext (eq : ∀ x, j x = k x) : j = k := by
   rcases j with ⟨j, hj⟩
@@ -131,8 +130,7 @@ lemma crit_mem_j_crit : crit j ∈ j (crit j) := by
 lemma j_eq_of_mem_crit {α} (hα : α ∈ crit j) : j α = α := by
   have ord_α := isOrdinal_crit.mem hα
   replace hα := notMem_of_lt_csInf (isOrdinal_crit.lt_of_mem hα) (by simp)
-  simp only [ne_eq, Set.mem_setOf_eq, not_and, not_imp_not] at hα
-  exact hα ord_α
+  simp_all
 
 lemma j_ne_crit {α} : j α ≠ crit j := by
   intro hα

@@ -86,8 +86,7 @@ private lemma decide_mod_two_ite_bit {p : Prop} [Decidable p] (k : Nat) :
     | zero =>
         simp [hp, bit]
     | succ k =>
-        have hdvd : 2 ∣ 2 ^ (Nat.succ k) := by
-          refine ⟨2 ^ k, by simp [Nat.pow_succ, Nat.mul_comm]⟩
+        have hdvd : 2 ∣ 2 ^ (Nat.succ k) := by refine ⟨2 ^ k, by simp [Nat.pow_succ, Nat.mul_comm]⟩
         have hmod : (2 ^ (Nat.succ k)) % 2 = 0 :=
           Nat.mod_eq_zero_of_dvd hdvd
         simp [hp, bit, Nat.shiftLeft_eq, hmod]
@@ -120,12 +119,9 @@ lemma dirMask_lt (u v : V) : dirMask u v < (1 <<< 9) := by
   have hv12 : v.1 i1 ≠ v.1 i2 := by
     intro hEq
     exact (by decide : (i1 : Fin 3) ≠ i2) (v.2 hEq)
-  have hv10 : v.1 i1 ≠ v.1 i0 := by
-    simpa [eq_comm] using hv01
-  have hv20 : v.1 i2 ≠ v.1 i0 := by
-    simpa [eq_comm] using hv02
-  have hv21 : v.1 i2 ≠ v.1 i1 := by
-    simpa [eq_comm] using hv12
+  have hv10 : v.1 i1 ≠ v.1 i0 := by simpa [eq_comm] using hv01
+  have hv20 : v.1 i2 ≠ v.1 i0 := by simpa [eq_comm] using hv02
+  have hv21 : v.1 i2 ≠ v.1 i1 := by simpa [eq_comm] using hv12
   have hRow0 :
       (let row0 : Nat :=
         ((if u.1 i0 = v.1 i0 then bit 0 else 0) ||| (if u.1 i0 = v.1 i1 then bit 1 else 0)) |||

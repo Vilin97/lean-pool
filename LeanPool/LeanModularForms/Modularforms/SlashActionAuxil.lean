@@ -100,10 +100,6 @@ private theorem α_zpow_val (k : ℤ) : (α ^ k : SL(2, ℤ)).val = !![1, 2 * k;
       Matrix.adjugate_fin_two, ih]
     ext i j; fin_cases i <;> fin_cases j <;> simp [α]; ring
 
-/-- The `(1, 0)` entry of `α ^ k` is always `0`. -/
-private theorem α_zpow_one_zero (k : ℤ) : (α ^ k : SL(2, ℤ)).val 1 0 = 0 := by
-  simp [α_zpow_val]
-
 /-- The matrix `β ^ k` equals `[[1, 0], [2k, 1]]`. -/
 private theorem β_zpow_val (k : ℤ) : (β ^ k : SL(2, ℤ)).val = !![1, 0; 2 * k, 1] := by
   induction k using Int.induction_on with
@@ -120,26 +116,20 @@ lemma Γ2_c_eq_zero (A : Γ 2) (h : A.1 1 0 = 0) : A ∈ Subgroup.closure {α, �
   by_cases ha : (A.val.val 0 0) = 1 ∨ (A.val.val 0 0) = -1
   · obtain ⟨val, property⟩ := A
     simp_all only [Fin.isValue, Int.reduceNeg]
+    obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
+      simp only [Gamma_mem] at property
+      erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
+      exact property.2.1
     cases ha with
     | inl h_1 =>
-      obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
-        simp only [Gamma_mem] at property
-        erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
-        exact property.2.1
-      have h11 : val.val 1 1 = 1 := by
-        have := val.2; rw [Matrix.det_fin_two] at this; simp_all
+      have h11 : val.val 1 1 = 1 := by have := val.2; rw [Matrix.det_fin_two] at this; simp_all
       have h_alpha_k : val = α ^ k := by
         refine Subtype.ext ?_
         rw [α_zpow_val]
         ext i j; fin_cases i <;> fin_cases j <;> simp_all
       exact h_alpha_k.symm ▸ Subgroup.zpow_mem _ (Subgroup.subset_closure (Set.mem_insert _ _)) _
     | inr h_2 =>
-      obtain ⟨k, hk⟩ : ∃ k : ℤ, val.val 0 1 = 2 * k := by
-        simp only [Gamma_mem] at property
-        erw [ZMod.intCast_zmod_eq_zero_iff_dvd] at property
-        exact property.2.1
-      have h11 : val.val 1 1 = -1 := by
-        have := val.2; rw [Matrix.det_fin_two] at this; grind
+      have h11 : val.val 1 1 = -1 := by have := val.2; rw [Matrix.det_fin_two] at this; grind
       have h_val : val = negI * α^(-k) := by
         refine Subtype.ext ?_
         simp only [SpecialLinearGroup.coe_mul, zpow_neg, SpecialLinearGroup.coe_inv]
@@ -203,8 +193,7 @@ lemma Γ2_descent (A : Γ 2) (h : A.1 1 0 ≠ 0) :
     ∃ (M : Γ 2), M ∈ Subgroup.closure {α, β, negI} ∧ |(M * A).1 1 0| < |A.1 1 0| := by
   have h_odd := Γ2_odd_00 A
   have h_even := Γ2_even_10 A
-  obtain ⟨k, hk⟩ : ∃ k, A.val.val 1 0 = 2 * k := by
-    obtain ⟨k, hk⟩ := h_even; exact ⟨k, by omega⟩
+  obtain ⟨k, hk⟩ : ∃ k, A.val.val 1 0 = 2 * k := by obtain ⟨k, hk⟩ := h_even; exact ⟨k, by omega⟩
   have hn := Γ2_reduce_row (A.val.val 0 0) (2 * k) h_odd (by simp [parity_simps])
     (by simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; omega)
   simp only [← hk] at hn
@@ -279,20 +268,17 @@ theorem slashaction_generators'
     (f : ℍ → ℂ) {G : Subgroup SL(2, ℤ)} (s : Set G) (hG : ⊤ = Subgroup.closure s) (k : ℤ) :
     (∀ γ : G, f ∣[k] γ.1 = f) ↔ (∀ γ ∈ s, f ∣[k] γ.1 = f) := by
   constructor <;> intro h
-  · intro γ _
-    exact h _
+  · simp_all
   · intro ⟨γ, hγ⟩
     -- key idea: this lemma allows induction on the "words" of the group
     apply Subgroup.closure_induction (G := G) (p := fun γ _ ↦ f ∣[k] γ.1 = f) (k := s) ?_ ?_
     · intro _ _ _ _ hf₁ hf₂
-      rw [@Subgroup.coe_mul]
-      rw [SlashAction.slash_mul, hf₁, hf₂]
+      rw [@Subgroup.coe_mul, SlashAction.slash_mul, hf₁, hf₂]
     · intro x _ hf
       rw [← hf, ← SlashAction.slash_mul]
       simp [hf]
     · simp [← hG]
-    · intro γ hγ
-      exact h γ hγ
+    · simp_all
     · exact SlashAction.slash_one k f
 
 theorem slashaction_generators_SL2Z
@@ -300,8 +286,7 @@ theorem slashaction_generators_SL2Z
     (∀ γ : SL(2, ℤ), f ∣[k] γ = f) := by
   intro γ
   refine (slashaction_generators f ⊤ _ SL2Z_generate k).mpr ?_ ⟨γ, by simp⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 theorem slashaction_generators_GL2R
     (f : ℍ → ℂ) (k : ℤ) (hS : f ∣[k] S = f) (hT : f ∣[k] T = f) :
@@ -313,8 +298,7 @@ theorem slashaction_generators_GL2R
   rw [←hA₂]
   change f ∣[k] A = f
   refine (slashaction_generators f ⊤ _ SL2Z_generate k).mpr ?_ ⟨A, by simp⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 theorem slashaction_generators_Γ2
     (f : ℍ → ℂ) (k : ℤ) (hα : f ∣[k] α.1 = f) (hβ : f ∣[k] β.1 = f) (hnegI : f ∣[k] negI.1 = f) :
@@ -325,7 +309,6 @@ theorem slashaction_generators_Γ2
   rw [←hA₂]
   change f ∣[k] A = f
   refine (slashaction_generators' f {α, β, negI} Γ2_generate k).mpr ?_ ⟨_, hA₁⟩
-  intro γ hγ
-  rcases hγ with (rfl | rfl | rfl | _) <;> assumption
+  simp_all
 
 end slashaction_generators

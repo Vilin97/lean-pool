@@ -83,11 +83,7 @@ def monotone (f : Set α → Set α) := ∀ S T, S ⊆ T → f S ⊆ f T
 theorem continuous_monotone {f : Set α → Set α} : continuous f → monotone f := by
   intro Cf S T ST x xfS
   obtain ⟨y, yS, xfy⟩ := (Cf S x).mp xfS
-  apply (Cf T x).mpr
-  use y
-  constructor
-  · intro z zy; exact ST (yS zy)
-  · assumption
+  exact (Cf T x).mpr ⟨y, fun z zy => ST (yS zy), xfy⟩
 
 /-- Continuity of a binary map -/
 def continuous₂ (f : Set α → Set α → Set α) :=
@@ -102,13 +98,7 @@ theorem continuous₂_monotone₂ {f : Set α → Set α → Set α} :
   continuous₂ f → monotone₂ f := by
   intro Cf S S' T T' SS' TT' x xfST
   obtain ⟨y, z, yS, zT, xfyz⟩ := (Cf S T x).mp xfST
-  apply (Cf S' T' x).mpr
-  use y, z
-  constructor
-  · intro w wy; exact SS' (yS wy)
-  · constructor
-    · intro w wz; exact TT' (zT wz)
-    · assumption
+  exact (Cf S' T' x).mpr ⟨y, z, fun w wy => SS' (yS wy), fun w wz => TT' (zT wz), xfyz⟩
 
 /-- If a binary map is continuous in each arguments separately, then it is continuous. -/
 theorem continuous₂_separately (f : Set α → Set α → Set α) :
@@ -120,14 +110,9 @@ theorem continuous₂_separately (f : Set α → Set α → Set α) :
   · intro xfST
     obtain ⟨z, zT, xfSz⟩ := (Cf₁ S T x).mp xfST
     obtain ⟨y, zS, xfyz⟩ := (Cf₂ (toSet z) S x).mp xfSz
-    use y; use z
+    exact ⟨y, z, zS, zT, xfyz⟩
   · rintro ⟨y, z, yS, zT, xfyz⟩
-    apply (Cf₁ S T x).mpr
-    use z
-    constructor
-    · assumption
-    · apply (Cf₂ (toSet z) S x).mpr
-      use y
+    exact (Cf₁ S T x).mpr ⟨z, zT, (Cf₂ (toSet z) S x).mpr ⟨y, yS, xfyz⟩⟩
 
 /-- A continuous binary map is continuous as a map of its first argument -/
 theorem continuous₂_fst (h : Set α → Set α → Set α) :
@@ -135,13 +120,10 @@ theorem continuous₂_fst (h : Set α → Set α → Set α) :
   intro Ch S T x
   constructor
   · intro xhST
-    obtain ⟨y, z, yS, zT, xhyz⟩ :=  (Ch S T x).mp xhST
-    use z
-    constructor
-    · assumption
-    · exact continuous₂_monotone₂ Ch (toSet y) S (toSet z) (toSet z) yS (fun ⦃_⦄ a => a) xhyz
+    obtain ⟨y, z, yS, zT, xhyz⟩ := (Ch S T x).mp xhST
+    exact ⟨z, zT, continuous₂_monotone₂ Ch _ S _ _ yS (fun ⦃_⦄ a => a) xhyz⟩
   · rintro ⟨z, zT, xhSz⟩
-    exact continuous₂_monotone₂ Ch S S (toSet z) T (fun ⦃_⦄ a => a) zT xhSz
+    exact continuous₂_monotone₂ Ch S S _ T (fun ⦃_⦄ a => a) zT xhSz
 
 /-- A continuous binary map is contunuous as a map of its second argument -/
 theorem continuous₂_snd (h : Set α → Set α → Set α) :
@@ -149,13 +131,10 @@ theorem continuous₂_snd (h : Set α → Set α → Set α) :
   intro Ch T S x
   constructor
   · intro xhST
-    obtain ⟨y, z, yS, zT, xhyz⟩ :=  (Ch S T x).mp xhST
-    use y
-    constructor
-    · assumption
-    · exact continuous₂_monotone₂ Ch (toSet y) (toSet y) (toSet z) T (fun ⦃_⦄ a => a) zT xhyz
+    obtain ⟨y, z, yS, zT, xhyz⟩ := (Ch S T x).mp xhST
+    exact ⟨y, yS, continuous₂_monotone₂ Ch _ _ _ T (fun ⦃_⦄ a => a) zT xhyz⟩
   · rintro ⟨y, yS, xhyT⟩
-    exact continuous₂_monotone₂ Ch (toSet y) S T T yS (fun ⦃_⦄ a => a) xhyT
+    exact continuous₂_monotone₂ Ch _ S T T yS (fun ⦃_⦄ a => a) xhyT
 
 /-- The identity map is continuous. -/
 theorem continuous_id : continuous (@id (Set α)) := by
@@ -181,11 +160,8 @@ theorem continuous_const (T : Set α) : continuous (fun (_ : Set α) => T) := by
   intros S x
   constructor
   · intro xT
-    refine ⟨fromList [], ?_, xT⟩
-    rw [eq_toSet_fromList]
-    rintro _ ⟨⟩
-  · rintro ⟨_, _, xT⟩
-    exact xT
+    exact ⟨fromList [], by rw [eq_toSet_fromList]; rintro _ ⟨⟩, xT⟩
+  · rintro ⟨_, _, xT⟩; exact xT
 
 
 /-- If `f` is continuous then any finite subset of `f S` is already a subset of some
@@ -194,38 +170,25 @@ theorem continuous_const (T : Set α) : continuous (fun (_ : Set α) => T) := by
 lemma continuous_finite {f : Set α → Set α} (ys : List α) (S : Set α) :
   continuous f → (∀ y, y ∈ ys → y ∈ f S) → ∃ z, toSet z ⊆ S ∧ ∀ y, y ∈ ys → y ∈ f (toSet z) := by
   intro Cf ysfS
-  induction ys
-  case nil =>
-    use (fromList [])
-    constructor
-    · rw [eq_toSet_fromList]; rintro _ ⟨⟩
-    · rintro _ ⟨⟩
-  case cons y ys ih =>
-    have H : ∀ z ∈ ys, z ∈ f S := by
-      intro z zys
-      apply ysfS
-      exact List.mem_cons_of_mem _ zys
-    obtain ⟨zs, zsS, ysfzs⟩ := ih H
+  induction ys with
+  | nil =>
+    exact ⟨fromList [], by rw [eq_toSet_fromList]; rintro _ ⟨⟩, by rintro _ ⟨⟩⟩
+  | cons y ys ih =>
+    obtain ⟨zs, zsS, ysfzs⟩ := ih (fun z zys => ysfS z (List.mem_cons_of_mem _ zys))
     obtain ⟨z, zS, yfz⟩ := (Cf S y).mp (ysfS y List.mem_cons_self)
-    use (fromList (toList z ++ toList zs))
-    rw [eq_toSet_fromList]
-    constructor
-    · intro w wzws
-      cases List.mem_append.mp wzws
-      case inl => apply zS; assumption
-      case inr H => apply zsS; assumption
+    refine ⟨fromList (toList z ++ toList zs), ?_, ?_⟩
+    · rw [eq_toSet_fromList]
+      intro w wzws
+      cases List.mem_append.mp wzws with
+      | inl h => exact zS h
+      | inr h => exact zsS h
     · intro w wyys
-      cases wyys
-      case head =>
-        apply continuous_monotone Cf (toSet z)
-        · intro w wz
-          apply List.mem_append.mpr; left; exact wz
-        · assumption
-      case tail =>
-        apply continuous_monotone Cf (toSet zs)
-        · intro w wzs
-          apply List.mem_append.mpr; right; exact wzs
-        · apply ysfzs; assumption
+      rw [eq_toSet_fromList] at *
+      cases wyys with
+      | head =>
+        exact continuous_monotone Cf _ _ (fun w wz => List.mem_append.mpr (.inl wz)) yfz
+      | tail _ h =>
+        exact continuous_monotone Cf _ _ (fun w wzs => List.mem_append.mpr (.inr wzs)) (ysfzs _ h)
 
 /-- The composition of continuous maps is continuous. -/
 theorem continuous_compose (f g : Set α → Set α) :
@@ -234,20 +197,10 @@ theorem continuous_compose (f g : Set α → Set α) :
   constructor
   · intro xfgS
     obtain ⟨y, ygS, xfy⟩ := (Cf (g S) x).mp xfgS
-    unfold toSet at ygS
     obtain ⟨z, zS, ygz⟩ := continuous_finite (toList y) S Cg ygS
-    use z
-    constructor
-    · assumption
-    · apply continuous_monotone Cf (toSet y) (g (toSet z))
-      · intro z zy
-        apply ygz
-        apply zy
-      · assumption
+    exact ⟨z, zS, continuous_monotone Cf _ _ (fun z zy => ygz z zy) xfy⟩
   · rintro ⟨y, yS, xfgy⟩
-    apply continuous_monotone Cf (g (toSet y)) (g S)
-    · exact continuous_monotone Cg _ _ yS
-    · assumption
+    exact continuous_monotone Cf _ _ (continuous_monotone Cg _ _ yS) xfgy
 
 /-- The composition of a binary continuous map and continuous maps is continuous. -/
 theorem continuous₂_compose (f g : Set α → Set α) (h : Set α → Set α → Set α) :
@@ -261,23 +214,25 @@ theorem continuous₂_compose (f g : Set α → Set α) (h : Set α → Set α �
     obtain ⟨y, z, yfU, zgU, xhyz⟩ := (Ch (f U) (g U) x).mp xhfUgU
     obtain ⟨u, uU, yfu⟩ := continuous_finite (toList y) U Cf yfU
     obtain ⟨v, vU, zgv⟩ := continuous_finite (toList z) U Cg zgU
-    use (fromList (toList u ++ toList v))
-    rw [eq_toSet_fromList]
-    constructor
-    · intro w wuv
-      cases (List.mem_append.mp wuv)
-      case inl wu => exact uU wu
-      case inr wv => exact vU wv
+    refine ⟨fromList (toList u ++ toList v), ?_, ?_⟩
+    · rw [eq_toSet_fromList]
+      intro w wuv
+      cases List.mem_append.mp wuv with
+      | inl wu => exact uU wu
+      | inr wv => exact vU wv
     · apply continuous₂_monotone₂ Ch (f (toSet u)) _ (g (toSet v)) _
       · apply continuous_monotone Cf
-        intro; apply List.mem_append_left _
+        intro w wz
+        rw [eq_toSet_fromList]
+        exact List.mem_append.mpr (.inl wz)
       · apply continuous_monotone Cg
-        intro; apply List.mem_append_right _
+        intro w wzs
+        rw [eq_toSet_fromList]
+        exact List.mem_append.mpr (.inr wzs)
       · exact continuous₂_monotone₂ Ch _ _ _ _ yfu zgv xhyz
   · rintro ⟨y, yU, xhfygy⟩
-    have fyfU : f (toSet y) ⊆ f U := continuous_monotone Cf _ _ yU
-    have gygU : g (toSet y) ⊆ g U := continuous_monotone Cg _ _ yU
-    exact continuous₂_monotone₂ Ch _ _ _ _ fyfU gygU xhfygy
+    exact continuous₂_monotone₂ Ch _ _ _ _ (continuous_monotone Cf _ _ yU)
+      (continuous_monotone Cg _ _ yU) xhfygy
 
 /-- The graph of a function -/
 def graph (f : Set α → Set α) : Set α :=
@@ -287,16 +242,11 @@ def graph (f : Set α → Set α) : Set α :=
 theorem continuous_graph (f : Set α → Set α → Set α) :
   continuous₂ f → continuous (fun S => graph (f S)) := by
   intro fC S x
-  have fC₁ := continuous₂_fst f fC
-  have fC₂ := continuous₂_snd f fC
   constructor
-  · exact (fC₂ (toSet (snd x)) S (fst x)).mp
-  · intro ⟨y, yS, H⟩
-    apply (fC₁ S (toSet (snd x)) (fst x)).mpr
-    use (snd x)
-    constructor
-    · trivial
-    · exact continuous_monotone (fC₂ (toSet (snd x))) _ _ yS H
+  · exact (continuous₂_snd f fC (toSet (snd x)) S (fst x)).mp
+  · rintro ⟨y, yS, H⟩
+    apply (continuous₂_fst f fC S (toSet (snd x)) (fst x)).mpr
+    exact ⟨snd x, fun ⦃_⦄ a => a, continuous_monotone (continuous₂_snd f fC _) _ _ yS H⟩
 
 /-- Combinatory application on the graph model -/
 def apply (S : Set α) : Set α → Set α :=
@@ -314,10 +264,7 @@ namespace apply
 /-- Application is monotone. -/
 theorem monotone₂ : monotone₂ (@apply α _) := by
   rintro S S' T T' SS' TT' x ⟨y, yT, yzS⟩
-  use y
-  constructor
-  · intro w wy; exact TT' (yT wy)
-  · exact SS' yzS
+  exact ⟨y, fun w wy => TT' (yT wy), SS' yzS⟩
 
 /-- Application is monotone in the first argument. -/
 theorem monotone_fst {T : Set α} : monotone (fun S => apply S T) := by
@@ -335,9 +282,7 @@ theorem continuous_fst (T : Set α) : continuous (apply T) := by
   constructor
   · rintro ⟨y, yS, xyT⟩
     use y
-    constructor
-    · assumption
-    · use y
+    exact ⟨yS, y, fun ⦃_⦄ a => a, xyT⟩
   · rintro ⟨y, yS, xTy⟩
     apply apply.monotone_snd _ _ yS xTy
 
@@ -358,11 +303,7 @@ theorem continuous_snd (S : Set α) : continuous (fun T => apply T S) := by
       · assumption
       · rw [eq_toSet_fromList]; constructor
   · rintro ⟨y, yT, z, zS, xyz⟩
-    unfold apply
-    use z
-    constructor
-    · assumption
-    · exact yT xyz
+    exact ⟨z, zS, yT xyz⟩
 
 /-- Application is continuous. -/
 theorem continuous₂ : continuous₂ (@apply α _) := by
@@ -377,16 +318,12 @@ theorem eq_apply_graph (f : Set α → Set α) : continuous f → apply (graph f
   intro Cf
   ext S x
   constructor
-  case mp =>
-    simp only [apply, graph, Membership.mem, Set.Mem]
+  · simp only [apply, graph, Membership.mem, Set.Mem]
     rintro ⟨y, yS, H⟩
     rw [eq_fst_pair, eq_snd_pair] at H
-    apply (Cf S x).mpr
-    use y
-    trivial
-  case mpr =>
-    intro xfS
-    obtain ⟨y, ys, H⟩ := (Cf S x).mp xfS
+    exact (Cf S x).mpr ⟨y, yS, H⟩
+  · intro xfS
+    obtain ⟨y, yS, H⟩ := (Cf S x).mp xfS
     use y
     constructor
     · assumption

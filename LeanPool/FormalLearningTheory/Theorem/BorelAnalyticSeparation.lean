@@ -101,51 +101,37 @@ theorem singleton_badEvent_eq_preimage_planar
     rcases hh with rfl | ⟨a, haA, rfl⟩
     · -- zeroConcept case: gap must be 0
       exfalso
-      unfold EmpiricalError at hgap
+      unfold EmpiricalError zeroOneLoss zeroConcept at hgap
       simp only [show (1 : ℕ) ≠ 0 from one_ne_zero, ↓reduceIte, Fin.sum_univ_one,
-        Nat.cast_one, div_one] at hgap
-      unfold zeroOneLoss zeroConcept at hgap
-      simp only [↓reduceIte, sub_self] at hgap
+        Nat.cast_one, div_one, sub_self] at hgap
       linarith
     · -- singletonConcept a case
       unfold EmpiricalError at hgap
       simp only [show (1 : ℕ) ≠ 0 from one_ne_zero, ↓reduceIte, Fin.sum_univ_one,
         Nat.cast_one, div_one] at hgap
-      -- hgap : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0))
-      --      - zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) ≥ 1 / 2
-      constructor
+      refine ⟨?_, ?_⟩
       · -- p.2 0 ∈ A
         by_contra h_not
         have hne : p.2 0 ≠ a := fun heq => h_not (heq ▸ haA)
-        have : singletonConcept a (p.2 0) = false := by
-          unfold singletonConcept; simp [hne]
-        have : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0)) = 0 := by
-          unfold zeroOneLoss zeroConcept; simp [*]
-        have : zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) ≥ 0 := by
+        have hz : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0)) = 0 := by
+          unfold zeroOneLoss zeroConcept singletonConcept; simp [hne]
+        have hnn : zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) ≥ 0 := by
           unfold zeroOneLoss; split <;> norm_num
-        linarith
+        rw [hz] at hgap; linarith
       · -- p.1 0 ≠ p.2 0
         intro heq
         by_cases ha2 : p.2 0 = a
-        · -- p.2 0 = a and p.1 0 = p.2 0, so p.1 0 = a too
-          have ha1 : p.1 0 = a := heq ▸ ha2
-          have h1 : singletonConcept a (p.2 0) = true := by
-            unfold singletonConcept; simp [ha2]
-          have h2 : singletonConcept a (p.1 0) = true := by
-            unfold singletonConcept; simp [ha1]
+        · have ha1 : p.1 0 = a := heq ▸ ha2
           have e1 : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0)) = 1 := by
-            unfold zeroOneLoss zeroConcept; simp [h1]
+            unfold zeroOneLoss zeroConcept singletonConcept; simp [ha2]
           have e2 : zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) = 1 := by
-            unfold zeroOneLoss zeroConcept; simp [h2]
-          linarith
-        · -- p.2 0 ≠ a, so error1 = 0
-          have h1 : singletonConcept a (p.2 0) = false := by
-            unfold singletonConcept; simp [ha2]
-          have e1 : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0)) = 0 := by
-            unfold zeroOneLoss zeroConcept; simp [h1]
-          have : zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) ≥ 0 := by
+            unfold zeroOneLoss zeroConcept singletonConcept; simp [ha1]
+          rw [e1, e2] at hgap; linarith
+        · have e1 : zeroOneLoss Bool (singletonConcept a (p.2 0)) (zeroConcept (p.2 0)) = 0 := by
+            unfold zeroOneLoss zeroConcept singletonConcept; simp [ha2]
+          have hnn : zeroOneLoss Bool (singletonConcept a (p.1 0)) (zeroConcept (p.1 0)) ≥ 0 := by
             unfold zeroOneLoss; split <;> norm_num
-          linarith
+          rw [e1] at hgap; linarith
   · rintro ⟨hmem, hne⟩
     refine ⟨singletonConcept (p.2 0), Or.inr ⟨p.2 0, hmem, rfl⟩, ?_⟩
     unfold EmpiricalError
@@ -327,26 +313,25 @@ theorem analytic_nonborel_set_gives_measTarget_separation
     ghostGapSup, ghostGapVals, oneSidedGhostGap]
   -- C is nonempty (contains zeroConcept)
   have hC_ne : C.Nonempty := ⟨e (false, θ0), ⟨(false, θ0), rfl⟩⟩
+  -- The value set is a subset of the finite grid, hence finite (used by both directions).
+  have hfin : {r | ∃ h ∈ C, r =
+      EmpiricalError ℝ Bool h (fun i => (p.2 i, zeroConcept (p.2 i)))
+        (zeroOneLoss Bool) -
+      EmpiricalError ℝ Bool h (fun i => (p.1 i, zeroConcept (p.1 i)))
+        (zeroOneLoss Bool)}.Finite := by
+    apply Set.Finite.subset (Finset.finite_toSet (ghostGapGrid 1))
+    intro r ⟨h, _, hr⟩
+    rw [hr]; exact oneSidedGhostGap_mem_grid h zeroConcept 1 p
   constructor
   · -- Forward: witness in singletonClassOn → sSup ≥ 1 / 2
     rintro ⟨h_wit, hh_wit, hge⟩
-    have hh_wit' : h_wit ∈ C := hC_eq ▸ hh_wit
     have hmem : (EmpiricalError ℝ Bool h_wit
         (fun i => (p.2 i, zeroConcept (p.2 i))) (zeroOneLoss Bool) -
         EmpiricalError ℝ Bool h_wit (fun i => (p.1 i, zeroConcept (p.1 i))) (zeroOneLoss Bool)) ∈
       {r | ∃ h ∈ C, r =
         EmpiricalError ℝ Bool h (fun i => (p.2 i, zeroConcept (p.2 i))) (zeroOneLoss Bool) -
         EmpiricalError ℝ Bool h (fun i => (p.1 i, zeroConcept (p.1 i))) (zeroOneLoss Bool)} :=
-      ⟨h_wit, hh_wit', rfl⟩
-    have hfin : {r | ∃ h ∈ C, r =
-        EmpiricalError ℝ Bool h (fun i => (p.2 i, zeroConcept (p.2 i)))
-          (zeroOneLoss Bool) -
-        EmpiricalError ℝ Bool h (fun i => (p.1 i, zeroConcept (p.1 i)))
-          (zeroOneLoss Bool)}.Finite := by
-      -- ghostGapVals C zeroConcept 1 p is this set, and it's a subset of the finite grid
-      apply Set.Finite.subset (Finset.finite_toSet (ghostGapGrid 1))
-      intro r ⟨h, _, hr⟩
-      rw [hr]; exact oneSidedGhostGap_mem_grid h zeroConcept 1 p
+      ⟨h_wit, hC_eq ▸ hh_wit, rfl⟩
     calc (1 : ℝ) / 2 ≤ _ := hge
       _ ≤ sSup _ := le_csSup hfin.bddAbove hmem
   · -- Backward: sSup ≥ 1 / 2 → witness in singletonClassOn
@@ -358,16 +343,7 @@ theorem analytic_nonborel_set_gives_measTarget_separation
           (zeroOneLoss Bool)}.Nonempty := by
       obtain ⟨h0, hh0⟩ := hC_ne
       exact ⟨_, h0, hh0, rfl⟩
-    have hfin : {r | ∃ h ∈ C, r =
-        EmpiricalError ℝ Bool h (fun i => (p.2 i, zeroConcept (p.2 i)))
-          (zeroOneLoss Bool) -
-        EmpiricalError ℝ Bool h (fun i => (p.1 i, zeroConcept (p.1 i)))
-          (zeroOneLoss Bool)}.Finite := by
-      apply Set.Finite.subset (Finset.finite_toSet (ghostGapGrid 1))
-      intro r ⟨h, _, hr⟩
-      rw [hr]; exact oneSidedGhostGap_mem_grid h zeroConcept 1 p
-    have h_attained := hne.csSup_mem hfin
-    obtain ⟨h_star, hh_star, h_eq⟩ := h_attained
+    obtain ⟨h_star, hh_star, h_eq⟩ := hne.csSup_mem hfin
     exact ⟨h_star, hC_eq ▸ hh_star, by rw [← h_eq]; exact hp⟩
 
 /-- Existence form: provided an analytic non-Borel set in ℝ is available, the

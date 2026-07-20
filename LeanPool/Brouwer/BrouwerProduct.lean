@@ -26,6 +26,14 @@ noncomputable def totalCard (card : I → ℕ+)
   · simp
   · exact Finset.univ_nonempty⟩
 
+omit [DecidableEq I] [LinearOrder I] in
+private lemma totalCard_pos_real : 0 < (totalCard card : ℝ) := by
+  norm_cast; exact PNat.pos (totalCard card)
+
+omit [Fintype I] [DecidableEq I] [Inhabited I] [LinearOrder I] in
+private lemma card_pos_real (i : I) : 0 < (card i : ℝ) := by
+  norm_cast; exact PNat.pos (card i)
+
 /-- The big simplex on `totalCard card` coordinates. -/
 abbrev BigSimplex := stdSimplex ℝ (Fin (totalCard card))
 
@@ -133,8 +141,7 @@ lemma index_split_spec (k : Fin (totalCard card)) :
 noncomputable def indexCombine (p : Σ i, Fin (card i)) : Fin (totalCard card) :=
   ⟨prefixSum card p.1 + (p.2 : ℕ), by
     have h1 : prefixSum card p.1 + (p.2 : ℕ) < prefixSum card p.1 + (card p.1 : ℕ) := by
-      simp only [add_lt_add_iff_left]
-      exact p.2.is_lt
+      simpa only [add_lt_add_iff_left] using p.2.is_lt
     have h2 : prefixSum card p.1 + (card p.1 : ℕ) ≤ (totalCard card : ℕ) := by
       simp only [prefixSum, totalCard]
       have h_subset : Finset.univ.filter (· ≤ p.1) ⊆ Finset.univ := Finset.filter_subset _ _
@@ -315,11 +322,8 @@ noncomputable def pushTowardsZ (x : BigSimplex card) : BigSimplex card :=
   ⟩
 
 omit [DecidableEq I] [LinearOrder I] in
-lemma blockWeight_pos (i : I) : 0 < blockWeight card i := by
-  unfold blockWeight
-  have htc : 0 < (totalCard card : ℝ) := by norm_cast; exact PNat.pos (totalCard card)
-  have hci : 0 < (card i : ℝ) := by norm_cast; exact PNat.pos (card i)
-  exact div_pos hci htc
+lemma blockWeight_pos (i : I) : 0 < blockWeight card i :=
+  div_pos (card_pos_real card i) (totalCard_pos_real card)
 
 /-- `blockSum card i x` is always nonnegative. -/
 lemma blockSum_nonneg (i : I) (x : BigSimplex card) : 0 ≤ blockSum card i x := by
@@ -337,20 +341,11 @@ lemma deficit_nonneg (x : BigSimplex card) : 0 ≤ deficit card x := by
 
 /-- `tPush card x` is always in `[0, 1]`. -/
 lemma tPush_mem_Icc (x : BigSimplex card) : tPush card x ∈ Set.Icc (0 : ℝ) 1 := by
-  constructor
-  · have hden : 0 ≤ (1 : ℝ) + deficit card x := by
-      have := deficit_nonneg card x; linarith
-    simpa [tPush] using div_nonneg (deficit_nonneg card x) hden
-  · have hdenpos : 0 < (1 : ℝ) + deficit card x := by
-      have := deficit_nonneg card x
-      exact add_pos_of_pos_of_nonneg (by norm_num) this
-    have hle : deficit card x ≤ 1 + deficit card x := by linarith
-    have hinv_nonneg : 0 ≤ (1 + deficit card x)⁻¹ := inv_nonneg.mpr (le_of_lt hdenpos)
-    have := mul_le_mul_of_nonneg_right hle hinv_nonneg
-    have : (deficit card x) / (1 + deficit card x) ≤ (1 + deficit card x) / (1 + deficit card x)
-        := by
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using this
-    simpa [tPush, div_self (ne_of_gt hdenpos)] using this
+  have hdef := deficit_nonneg card x
+  have hdenpos : 0 < (1 : ℝ) + deficit card x := by linarith
+  refine ⟨?_, ?_⟩
+  · simpa [tPush] using div_nonneg hdef (le_of_lt hdenpos)
+  · rw [tPush, div_le_one hdenpos]; linarith
 
 /-- The block sum after pushing towards `zUniform` follows a linear formula. -/
 lemma blockSum_pushTowardsZ_formula (i : I) (x : BigSimplex card) :
@@ -489,13 +484,7 @@ lemma project_embed_id (y : ProductSimplices card) :
   have h_denom :
       blockSum card i (pushTowardsZ card (embedFromProduct card y)) = blockWeight card i := by
     simpa [h_push_id] using h_blockSum i
-  have h_bw_pos : 0 < blockWeight card i := by
-    unfold blockWeight
-    have htc : 0 < (totalCard card : ℝ) := by
-      norm_cast; exact PNat.pos (totalCard card)
-    have hci : 0 < (card i : ℝ) := by
-      norm_cast; exact PNat.pos (card i)
-    exact div_pos hci htc
+  have h_bw_pos : 0 < blockWeight card i := blockWeight_pos card i
   have h_norm_eq_div :
       ((projectToProduct card (embedFromProduct card y)) i).1 j =
         ((embedFromProduct card y).1 (indexCombine card ⟨i, j⟩)) / (blockWeight card i) := by
@@ -512,14 +501,8 @@ lemma project_embed_id (y : ProductSimplices card) :
             (y p.1).1 p.2 * (card p.1 : ℝ) / (totalCard card : ℝ))
           (index_split_combine_inverse card ⟨i, j⟩)
     have hbw_ne : blockWeight card i ≠ 0 := ne_of_gt h_bw_pos
-    have htc : (totalCard card : ℝ) ≠ 0 := by
-      have : 0 < (totalCard card : ℝ) := by
-        norm_cast; exact PNat.pos (totalCard card)
-      exact ne_of_gt this
-    have hci : (card i : ℝ) ≠ 0 := by
-      have : 0 < (card i : ℝ) := by
-        norm_cast; exact PNat.pos (card i)
-      exact ne_of_gt this
+    have htc : (totalCard card : ℝ) ≠ 0 := ne_of_gt (totalCard_pos_real card)
+    have hci : (card i : ℝ) ≠ 0 := ne_of_gt (card_pos_real card i)
     have :
         ((y i).1 j * (card i : ℝ) / (totalCard card : ℝ)) /
             ((card i : ℝ) / (totalCard card : ℝ)) =
@@ -605,26 +588,13 @@ lemma embed_continuous : Continuous (embedFromProduct card) := by
   intro k
   let p := indexSplit card k
   apply Continuous.div
-  · apply Continuous.mul
-    · have h1 : (fun y : ProductSimplices card => (y p.1).1 p.2) =
-                (fun z => z p.2) ∘ (fun w => w.1) ∘ (fun y => y p.1) := by
-        rfl
-      rw [h1]
-      apply Continuous.comp
-      · apply continuous_apply
-      · apply Continuous.comp
-        · apply continuous_subtype_val
-        · apply continuous_apply
-    · exact continuous_const
+  · refine Continuous.mul ?_ continuous_const
+    exact ((continuous_apply p.2).comp continuous_subtype_val).comp (continuous_apply p.1)
   · exact continuous_const
   · intro y
     simp only [totalCard]
     norm_cast
-    apply ne_of_gt
-    apply Finset.sum_pos
-    · intro i _
-      exact PNat.pos (card i)
-    · exact Finset.univ_nonempty
+    exact ne_of_gt (Finset.sum_pos (fun i _ => PNat.pos (card i)) Finset.univ_nonempty)
 
 omit [Fintype I] [DecidableEq I] in
 /-- Brouwer fixed point theorem for a product of simplices, via a retraction. -/
@@ -635,13 +605,10 @@ theorem Brouwer_Product [Finite I]
   have : Fintype I := Fintype.ofFinite I
   let f_lifted : BigSimplex card → BigSimplex card :=
     embedFromProduct card ∘ f ∘ projectToProduct card
-  have hf_lifted : Continuous f_lifted := by
-    exact Continuous.comp (embed_continuous card) (Continuous.comp hf (project_continuous card))
+  have hf_lifted : Continuous f_lifted :=
+    Continuous.comp (embed_continuous card) (Continuous.comp hf (project_continuous card))
   obtain ⟨x_big, hx_big⟩ := Brouwer f_lifted hf_lifted
-  let x_prod := projectToProduct card x_big
-  use x_prod
-  have : f x_prod = f (projectToProduct card x_big) := rfl
-  rw [this]
+  refine ⟨projectToProduct card x_big, ?_⟩
   have : f (projectToProduct card x_big) = projectToProduct card (f_lifted x_big) := by
     simp [f_lifted, project_embed_id]
   rw [this, hx_big]

@@ -106,8 +106,7 @@ lemma ωScottContinuous_of
     : ωScottContinuous f := by
   rw [ωScottContinuous_iff_monotone_map_ωSup]
   refine ⟨fun x y hxy ↦ ?_, fun c ↦ ?_⟩
-  · simp only [le_iff_eq] at hxy
-    simp only [hxy, le_refl]
+  · simp_all
   · simp only [ωSup]
     apply le_antisymm
     · apply le_ωSup_of_le 0

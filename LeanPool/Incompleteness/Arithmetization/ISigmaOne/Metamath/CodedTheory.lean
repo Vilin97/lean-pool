@@ -79,8 +79,7 @@ variable (T V)
 def codeIn : (L.codeIn V).Theory where
   set := T.tDef.ch.val.curve
 
-@[simp] lemma properOn :
-    T.tDef.ch.ProperOn V :=
+@[simp] lemma properOn : T.tDef.ch.ProperOn V :=
   (LO.FirstOrder.Theory.Delta1Definable.isDelta1 (T := T)).properOn V
 
 variable {T V}
@@ -94,13 +93,7 @@ variable {T V}
 
 instance tDef_defined : (T.codeIn V).Defined T.tDef where
   defined := ⟨by
-    intro v
-    rw [show v = ![v 0] from Matrix.constant_eq_singleton']
-    have :=
-      (consequence_iff (T := 𝐈Sg1)).mp (sound! <|
-          FirstOrder.Theory.Delta1Definable.isDelta1 (T := T)) V inferInstance
-    simp [models_iff] at this ⊢
-    simp [Theory.tDef, this, Matrix.constant_eq_singleton],
+    simp_all,
   by intro v; simp [FirstOrder.Semiformula.curve, Theory.codeIn, ←Matrix.constant_eq_singleton']⟩
 
 variable (T V)
@@ -179,8 +172,7 @@ def ofList (l : List (SyntacticFormula L)) : Delta1Definable {φ | φ ∈ l} :=
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
 noncomputable
-def ofFinite (T : Theory L) (h : Set.Finite T) :
-    T.Delta1Definable :=
+def ofFinite (T : Theory L) (h : Set.Finite T) : T.Delta1Definable :=
   (ofList h.toFinset.toList).ofEq (by ext; simp)
 
 end Delta1Definable

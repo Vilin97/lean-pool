@@ -83,7 +83,6 @@ lemma isCover_sub {n : ℕ} {S : Set (Fin n → ℝ²)} {X : Set ℝ²} (hCover 
 
 lemma isCover_includes {n : ℕ} {S : Set (Fin n → ℝ²)} {X : Set ℝ²} {x : ℝ²}
     (hCover : isCover X S) (hx : x ∈ X) : ∃ P ∈ S, x ∈ closedHull P := by
-  unfold isCover at hCover
   rw [hCover] at hx
   simp_all only [Set.mem_iUnion, exists_prop]
 

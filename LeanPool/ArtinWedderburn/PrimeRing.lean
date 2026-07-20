@@ -47,13 +47,11 @@ theorem prime_ring_equiv :
     | inl ha =>
       apply Or.inl
       have ainbot : a ∈ leftIdealOfElement a := by use 1; simp
-      rw [ha] at ainbot
-      exact ainbot
+      simp_all
     | inr hb =>
       apply Or.inr
       have binbot : b ∈ leftIdealOfElement b := by use 1; simp
-      rw [hb] at binbot
-      exact binbot
+      simp_all
   · intro h I J hIJ
     have hI : I = ⊥ ∨ I ≠ ⊥ := by apply Classical.em
     cases hI with
@@ -76,8 +74,7 @@ theorem prime_ring_equiv :
             calc
               x * r * y = x * (r * y) := by noncomm_ring
               _ = 0 := Ideal.span_eq_bot.mp hIJ (x * (r * y)) hz
-          rw [k]
-          rfl
+          simp_all
         · intro hz
           rw [Set.mem_singleton_iff] at hz
           rw [hz]
@@ -102,8 +99,7 @@ theorem equal_sets (I : TwoSidedIdeal R) :
 theorem ideal_eq_to_two_sided_ideal_eq (I J : TwoSidedIdeal R) :
     I = J ↔ TwoSidedIdeal.asIdeal I = TwoSidedIdeal.asIdeal J := by
   constructor
-  · intro h
-    rw [h]
+  · simp_all
   · intro h
     apply (two_sided_ideal_equality I J).mpr
     rw [← equal_sets I, ← equal_sets J]
@@ -117,9 +113,7 @@ theorem ideal_bot_iff_set_zero (I : Ideal R) : I = ⊥ ↔ (I : Set R) = {0} :=
 
 theorem ideal_bot (I : TwoSidedIdeal R) : I = ⊥ ↔ TwoSidedIdeal.asIdeal I = ⊥ := by
   constructor
-  · intro h
-    rw [h]
-    rfl
+  · simp_all
   · intro h
     apply (two_sided_bot_iff_set_zero I).mpr
     apply (ideal_bot_iff_set_zero (TwoSidedIdeal.asIdeal I)).mp h
@@ -138,12 +132,8 @@ theorem same_prod (I J : TwoSidedIdeal R) :
     have rwhx : x ∈ Ideal.span ((I : Set R) * (J : Set R)) := hx
     have span_ineq := ideal_span_sub_two_sided_ideal_span ((I : Set R) * (J : Set R))
     apply span_ineq at rwhx
-    have hxIJ : x ∈ (TwoSidedIdeal.asIdeal (I * J)) := span_ineq hx
-    rw [h] at hxIJ
-    exact hxIJ
-  · intro hx
-    rw [hx]
-    exact Submodule.zero_mem (TwoSidedIdeal.asIdeal I * TwoSidedIdeal.asIdeal J)
+    simp_all
+  · simp_all
 
 theorem prime_ring_implies_prime_by_two_sided :
     IsPrimeRing R → ∀ (I J : TwoSidedIdeal R), I * J = ⊥ → I = ⊥ ∨ J = ⊥ := by
@@ -158,8 +148,7 @@ theorem two_sided_span_bot_el_zero (a : R) : TwoSidedIdeal.span {a} = ⊥ → a 
   intro h
   have ha : a ∈ TwoSidedIdeal.span {a} :=
     TwoSidedIdeal.mem_span_iff.mpr fun _ a_1 ↦ a_1 rfl
-  rw [h] at ha
-  exact ha
+  simp_all
 
 /-- The two-sided multiplicative closure `RaR = {y * a * z | y, z : R}` of `a`. -/
 def mulClosure (a : R) : Set R := {x : R | ∃ y z : R, x = y * a * z}
@@ -213,8 +202,7 @@ lemma both_mul_zero {a b x y : R} (hab : bothMul a b = {0}) (hx : x ∈ mulClosu
   obtain ⟨y1, y2, hy⟩ := hy
   have prod_in_both_mul : a * (x2 * y1) * b ∈ bothMul a b := ⟨x2 * y1, rfl⟩
   have prod_zero : a * (x2 * y1) * b = 0 := by
-    rw [hab] at prod_in_both_mul
-    exact prod_in_both_mul
+    simp_all
   rw [hx, hy]
   calc
     x1 * a * x2 * (y1 * b * y2) = x1 * (a * (x2 * y1) * b) * y2 := by noncomm_ring
@@ -227,20 +215,16 @@ lemma span_mul_closure_bot_forall {a b x y : R} (hab : bothMul a b = {0})
   | zero => simp
   | add u v hu hv ihu ihv =>
     noncomm_ring
-    rw [ihu, ihv]
-    simp
+    simp_all
   | neg u hu ihu =>
-    noncomm_ring
-    rw [ihu]
-    simp
+    simp_all
 
 lemma span_mul_closure_bot_forall' {a b x y : R} (hab : bothMul a b = {0})
     (hx : x ∈ TwoSidedIdeal.span {a}) (hy : y ∈ mulClosure b) : x * y = 0 := by
   rw [← span_mul_closure_eq_span a] at hx
   apply span_mul_closure_bot_forall hab
   · have hx' : x ∈ (AddSubgroup.closure (mulClosure a) : Set R) := by
-      rw [ideal_mul_closure a]
-      exact hx
+      rwa [ideal_mul_closure a]
     exact hx'
   · exact hy
 
@@ -251,8 +235,7 @@ theorem span_mul_closure_bot (a b : R) (hab : bothMul a b = {0}) :
   · rintro ⟨y, hy, z, hz, h⟩
     simp only at h
     rw [span_mul_closure_bot_forall' hab hy hz] at h
-    rw [← h]
-    rfl
+    simp_all
   · intro hx
     rw [Set.mem_singleton_iff] at hx
     rw [hx]
@@ -269,12 +252,9 @@ lemma two_sided_span_bot_forall {a b x y : R} (hab : bothMul a b = {0})
   | zero => simp
   | add u v hu hv ihu ihv =>
     noncomm_ring
-    rw [ihu, ihv]
-    simp
+    simp_all
   | neg u hu ihu =>
-    noncomm_ring
-    rw [ihu]
-    simp
+    simp_all
 
 lemma span_mul_span_bot' (a b : R) (hab : bothMul a b = {0}) :
     (TwoSidedIdeal.span {a} : Set R) * (AddSubgroup.closure (mulClosure b)) = {0} := by
@@ -283,8 +263,7 @@ lemma span_mul_span_bot' (a b : R) (hab : bothMul a b = {0}) :
   · rintro ⟨y, hy, z, hz, h⟩
     simp only at h
     rw [two_sided_span_bot_forall hab hy hz] at h
-    rw [← h]
-    rfl
+    simp_all
   · intro hx
     rw [Set.mem_singleton_iff] at hx
     rw [hx]
@@ -341,9 +320,6 @@ theorem simple_ring_is_prime [IsSimpleRing R] : IsPrimeRing R := by
         apply (TwoSidedIdeal.one_mem_iff (I * J)).mp
         apply TwoSidedIdeal.subset_span
         refine ⟨1, by rw [hi]; trivial, 1, by rw [hj]; trivial, by noncomm_ring⟩
-      rw [hIJ] at h
-      have k : (⊥ : TwoSidedIdeal R) ≠ (⊤ : TwoSidedIdeal R) := bot_ne_top
-      absurd h
-      trivial
+      simp_all
 
 end LeanPool.ArtinWedderburn

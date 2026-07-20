@@ -28,8 +28,7 @@ lemma not_acc_iff {x : α} : ¬Acc r x ↔ ∃ y, y ≺ x ∧ ¬Acc r y :=
     intro hx
     by_contra h
     exact hx <| Acc.intro x (fun y hy => by
-      by_contra hy'
-      exact h ⟨y, hy, hy'⟩),
+      simp_all),
   by
     rintro ⟨y, hy, hy'⟩ hx
     exact hy' (Acc.inv hx hy)⟩
@@ -38,8 +37,7 @@ lemma not_acc_iff {x : α} : ¬Acc r x ↔ ∃ y, y ≺ x ∧ ¬Acc r y :=
 
 lemma isInfiniteDescendingChain_of_non_acc (z : α) (hz : ¬Acc r z) :
     IsInfiniteDescendingChain r (descendingChain r z) := by
-  have :
-      ∀ i, (i ≠ 0 → descendingChain r z i ≺ descendingChain r z i.pred) ∧
+  have : ∀ i, (i ≠ 0 → descendingChain r z i ≺ descendingChain r z i.pred) ∧
           ¬Acc r (descendingChain r z i) := by
     intro i
     induction i with
@@ -48,13 +46,6 @@ lemma isInfiniteDescendingChain_of_non_acc (z : α) (hz : ¬Acc r z) :
     | succ i ih =>
       have : ∃ y, y ≺ (descendingChain r z i) ∧ ¬Acc r y := (not_acc_iff r).mp ih.2
       have hs := Classical.epsilon_spec this
-      change
-        (i.succ ≠ 0 →
-          (@Classical.epsilon α ⟨z⟩
-              (fun y => y ≺ descendingChain r z i ∧ ¬Acc r y)) ≺ descendingChain r z i) ∧
-          ¬Acc r
-            (@Classical.epsilon α ⟨z⟩
-              (fun y => y ≺ descendingChain r z i ∧ ¬Acc r y))
       exact ⟨fun _ => hs.1, hs.2⟩
   intro i; simpa using (this (i + 1)).1
 

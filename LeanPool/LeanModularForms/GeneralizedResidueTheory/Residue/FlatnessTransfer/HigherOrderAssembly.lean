@@ -41,6 +41,16 @@ private theorem differentiableOn_ppMinusRes (f : ℂ → ℂ) (s : ℂ)
       (differentiableOn_id.sub (differentiableOn_const _))
       (fun _ hz => sub_ne_zero.mpr (Set.mem_compl_singleton_iff.mp hz)))
 
+/-- The circle integral of an analytic function over a circle contained in its
+ball of analyticity vanishes. -/
+private theorem circleIntegral_eq_zero_of_analyticOnNhd_ball {g : ℂ → ℂ} {s : ℂ}
+    {rg r : ℝ} (hg_ball : AnalyticOnNhd ℂ g (Metric.ball s rg)) (hr_pos : 0 < r)
+    (hr_lt_rg : r < rg) : (∮ z in C(s, r), g z) = 0 :=
+  Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable hr_pos.le
+    Set.countable_empty
+    (hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg))
+    (fun z ⟨hz, _⟩ => (hg_ball z (Metric.ball_subset_ball hr_lt_rg.le hz)).differentiableAt)
+
 private theorem residueAt_eq_zero_of_analyticExpansion (f : ℂ → ℂ) (s : ℂ)
     (g_loc : ℂ → ℂ) (hg_loc_an : AnalyticAt ℂ g_loc s)
     (hf_eq_loc : ∀ᶠ (z : ℂ) in 𝓝[≠] s, f z = g_loc z) :
@@ -59,22 +69,13 @@ private theorem residueAt_eq_zero_of_analyticExpansion (f : ℂ → ℂ) (s : �
   have hr_lt_rf : r < rf := lt_of_lt_of_le hr_lt (min_le_right _ _)
   have h_eq_on : ∀ z ∈ Metric.sphere s r, f z = g_loc z := by
     intro z hz
-    have hne : z ≠ s := by
-      intro h; rw [h, Metric.mem_sphere, dist_self] at hz; linarith
+    have hne : z ≠ s := by intro h; rw [h, Metric.mem_sphere, dist_self] at hz; linarith
     have h_in : z ∈ Metric.ball s rf ∩ {s}ᶜ :=
       ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf),
        Set.mem_compl_singleton_iff.mpr hne⟩
     exact hrf_eq h_in
-  have hg_cont : ContinuousOn g_loc (Metric.closedBall s r) :=
-    hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg)
-  have hg_diff : DifferentiableOn ℂ g_loc (Metric.ball s r) := by
-    intro z hz; exact (hg_ball z (Metric.ball_subset_ball hr_lt_rg.le hz)
-      ).differentiableAt.differentiableWithinAt
   have hg_ci_zero : (∮ z in C(s, r), g_loc z) = 0 :=
-    Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable
-      hr_pos.le Set.countable_empty hg_cont
-      (fun z ⟨hz, _⟩ => hg_diff.differentiableAt
-        (Metric.isOpen_ball.mem_nhds hz))
+    circleIntegral_eq_zero_of_analyticOnNhd_ball hg_ball hr_pos hr_lt_rg
   have hf_ci : (∮ z in C(s, r), f z) =
       (∮ z in C(s, r), g_loc z) :=
     circleIntegral.integral_congr hr_pos.le h_eq_on
@@ -139,8 +140,7 @@ private theorem laurent_coeff_le_poleOrder (f : ℂ → ℂ) (s : ℂ)
           have hk_gt : m_idx < k :=
             lt_of_le_of_ne (Fin.mk_le_mk.mpr hkm) (Ne.symm hk)
           have := hm_max k
-          have hk_eq : a_s k = 0 := by
-            by_contra ha; exact absurd (this ha) (not_le.mpr hk_gt)
+          have hk_eq : a_s k = 0 := by by_contra ha; exact absurd (this ha) (not_le.mpr hk_gt)
           simp only [hk_eq, zero_mul]
       · intro h; exact absurd (Finset.mem_univ m_idx) h
     rw [this]; exact hm_ne
@@ -190,8 +190,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
         (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) z =
         (fun z => f z - residueAt f s / (z - s)) z - g_rp z := by
       intro z hz
-      have hne : z ≠ s := by
-        intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+      have hne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
       have h_in : z ∈ Metric.ball s rp ∩ {s}ᶜ :=
         ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rp),
          Set.mem_compl_singleton_iff.mpr hne⟩
@@ -203,16 +202,8 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
       linear_combination -hfpp
     have hg_cont : ContinuousOn g_rp (Metric.closedBall s r) :=
       hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg)
-    have hg_diff : DifferentiableOn ℂ g_rp (Metric.ball s r) := by
-      intro z hz
-      have := hg_ball z
-        (Metric.ball_subset_ball hr_lt_rg.le hz)
-      exact this.differentiableAt.differentiableWithinAt
     have hg_ci_zero : (∮ z in C(s, r), g_rp z) = 0 :=
-      Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable
-        hr_pos.le Set.countable_empty hg_cont
-        (fun z ⟨hz, _⟩ => hg_diff.differentiableAt
-          (Metric.isOpen_ball.mem_nhds hz))
+      circleIntegral_eq_zero_of_analyticOnNhd_ball hg_ball hr_pos hr_lt_rg
     have hg_ci : CircleIntegrable g_rp s r :=
       hg_cont.mono Metric.sphere_subset_closedBall |>.circleIntegrable hr_pos.le
     have h_sphere_sub : Metric.sphere s r ⊆ ({s}ᶜ : Set ℂ) := by
@@ -223,9 +214,6 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
     have h_term_ci : CircleIntegrable
         (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) s r :=
       (h_term_diff_compl.continuousOn.mono h_sphere_sub).circleIntegrable hr_pos.le
-    have h_add_ci : CircleIntegrable
-        (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) s r :=
-      h_term_ci.add hg_ci
     have h_split : (∮ z in C(s, r),
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z) =
       (∮ z in C(s, r), (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) z) +
@@ -242,20 +230,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z) =
       (∮ z in C(s, r), (fun z => f z - residueAt f s / (z - s)) z) :=
       circleIntegral.integral_congr hr_pos.le h_sum_eq
-    calc (∮ z in C(s, r), (fun z =>
-            meromorphicPrincipalPart f s z - residueAt f s / (z - s)) z)
-        = (∮ z in C(s, r), (fun z =>
-            meromorphicPrincipalPart f s z -
-              residueAt f s / (z - s)) z) + 0 := (add_zero _).symm
-      _ = (∮ z in C(s, r), (fun z =>
-            meromorphicPrincipalPart f s z -
-              residueAt f s / (z - s)) z) +
-          (∮ z in C(s, r), g_rp z) := by rw [hg_ci_zero]
-      _ = (∮ z in C(s, r), (fun z =>
-            (meromorphicPrincipalPart f s z -
-              residueAt f s / (z - s)) + g_rp z) z) :=
-          h_split.symm
-      _ = (∮ z in C(s, r), (fun z => f z - residueAt f s / (z - s)) z) := h_int_eq
+    rw [← h_int_eq, h_split, hg_ci_zero, add_zero]
   rw [show residueAt (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) s =
     residueAt (fun z => f z - residueAt f s / (z - s)) s from by
     simp only [residueAt]
@@ -532,32 +507,10 @@ private theorem cpv_tendsto_zero_of_add_split
     (h_g₂_cpv : Tendsto (fun ε => ∫ t in γ.a..γ.b,
       cauchyPrincipalValueIntegrandOn S0 g₂ γ.toFun ε t) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => ∫ t in γ.a..γ.b,
-      cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) (𝓝[>] 0) (𝓝 0) := by
-  rw [show (0 : ℂ) = 0 + 0 from (add_zero 0).symm]
-  apply Filter.Tendsto.congr' _ (h_g₁_cpv.add h_g₂_cpv)
-  filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-  have h_pw_eq : ∀ t, cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t =
-      cauchyPrincipalValueIntegrandOn S0 (fun z => g₁ z + g₂ z) γ.toFun ε t := by
-    intro t; simp only [cauchyPrincipalValueIntegrandOn]
-    split_ifs with h_near
-    · rfl
-    · push Not at h_near
-      have hne : γ.toFun t ≠ s := fun heq => by
-        have := h_near s hs; rw [heq, sub_self, norm_zero] at this; linarith
-      congr 1; exact h_off_s (γ.toFun t) hne
-  rw [show (fun t => cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) =
-      fun t => cauchyPrincipalValueIntegrandOn S0
-        (fun z => g₁ z + g₂ z) γ.toFun ε t from funext h_pw_eq]
-  rw [show (fun t => cauchyPrincipalValueIntegrandOn S0
-        (fun z => g₁ z + g₂ z) γ.toFun ε t) =
-      fun t => cauchyPrincipalValueIntegrandOn S0 g₁ γ.toFun ε t +
-        cauchyPrincipalValueIntegrandOn S0 g₂ γ.toFun ε t from
-    funext (fun t => cpvIntegrandOn_add S0 g₁ g₂ γ.toFun ε t)]
-  exact (intervalIntegral.integral_add
-    (intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff U S0 g₁
-      h_g₁_cont γ hγ_in_U ε hε)
-    (intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff U S0 g₂
-      h_g₂_cont γ hγ_in_U ε hε)).symm
+      cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) (𝓝[>] 0) (𝓝 0) :=
+  cpv_tendsto_zero_of_add_split_set U S0 γ hγ_in_U g g₁ g₂
+    (fun z hz => h_off_s z (fun heq => hz (Finset.mem_coe.mpr (heq ▸ hs))))
+    h_g₁_cont h_g₂_cont h_g₁_cpv h_g₂_cpv
 
 /-- A function that agrees with an analytic function near `s` and equals
 `g₁ - g₂` away from `s` (where both are differentiable off `{s}`) is differentiable on `U`. -/
@@ -786,8 +739,7 @@ private theorem assembly_errNF_eventuallyEq (f : ℂ → ℂ) (s : ℂ)
         a_s k / (z - s) ^ (k.val + 1) := hr1_eq hz_in_1
     have hgrpz : f z - meromorphicPrincipalPart f s z = g_rp z :=
       hr2_eq hz_in_2
-    have hpp : meromorphicPrincipalPart f s z = f z - g_rp z := by
-      linear_combination -hgrpz
+    have hpp : meromorphicPrincipalPart f s z = f z - g_rp z := by linear_combination -hgrpz
     rw [hpp, hfz]
     have h_sum_split : ∑ k : Fin N_s, a_s k / (z - s) ^ (k.val + 1) -
         ∑ k : Fin N_s, (if k.val ≥ 1 then a_s k / (z - s) ^ (k.val + 1) else 0) =
@@ -826,8 +778,7 @@ private theorem assembly_polarHigher_differentiableOn
   have h_eq_sum : (fun w => ∑ k : Fin N_s,
       if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0) =
     ∑ k : Fin N_s, fun w =>
-      if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0 := by
-    ext w; simp [Finset.sum_apply]
+      if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0 := by ext w; simp [Finset.sum_apply]
   rw [h_eq_sum]
   exact (DifferentiableAt.sum fun k _ => h_each k).differentiableWithinAt
 
@@ -930,8 +881,7 @@ private theorem assembly_ppMinusRes_continuousOn (S0 : Finset ℂ) (f : ℂ → 
         (fun heq => by subst heq; exact hz.2 (Finset.mem_coe.mpr hs)))
   · apply ContinuousOn.div continuousOn_const (continuousOn_id.sub continuousOn_const)
     intro z ⟨_, hz_not_S0⟩
-    exact sub_ne_zero.mpr (fun heq => by
-      subst heq; exact hz_not_S0 (Finset.mem_coe.mpr hs))
+    exact sub_ne_zero.mpr (fun heq => by subst heq; exact hz_not_S0 (Finset.mem_coe.mpr hs))
 
 private theorem cpv_perTerm_dispatch (U : Set ℂ) (S0 : Finset ℂ)
     (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)

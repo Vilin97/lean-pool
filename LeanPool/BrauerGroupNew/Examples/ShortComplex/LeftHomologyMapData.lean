@@ -25,9 +25,7 @@ abbrev φK : ↥(LinearMap.ker (ModuleCat.Hom.hom S₁.g)) →ₗ[R]
   LinearMap.restrict f.2.hom
     fun x hx ↦ by
       have := (LinearMap.ext_iff.1 <| ModuleCat.hom_ext_iff|>.1 f.5) x
-      simp at hx
-      simp [hx] at this
-      simp [this]
+      simp_all
 
 /-- The map on cycles carries boundaries to boundaries. -/
 lemma φK_moduleCatToCycles (x : S₁.X₁) :

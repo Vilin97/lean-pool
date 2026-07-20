@@ -13,7 +13,6 @@ import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Pushout`.
 -/
--- import Mathlib.Topology.Category.TopCat.Limits.Pullbacks  -- does not contain pushouts
 
 /-!
 TODO:
@@ -83,7 +82,6 @@ lemma eq_inl_or_eq_inr_of_mem_pushout (a : (pushout f g).carrier) :
     ext x : 1
     change some ((f ≫ pushout.inl f g) x) = some ((g ≫ pushout.inr f g) x)
     rw [pushout.condition]
-  -- let d : pushout f g ⟶ A' := pushout.desc inl' inr' w'
   let d1 : pushout f g ⟶ A' := homToDiscreteSpaceOfFun fun b ↦ some b
   let d2 : pushout f g ⟶ A' := homToDiscreteSpaceOfFun fun b ↦ if b = a then none else some b
   by_contra! h
@@ -160,10 +158,7 @@ lemma pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ z' ∈ Set.range g, (pushout.inr f g) z ≠ (pushout.inr f g) z' := by
   haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
-  · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
-    intro z hz z' hz'
-    simp_all only [Set.compl_empty_iff, Set.mem_univ, not_true_eq_false, Set.setOf_false,
-      Set.isEmpty_coe_sort, Set.compl_univ, Set.mem_empty_iff_false]
+  · simp_all
   · have z₀ : {z | z ∉ Set.range g} := Nonempty.some <| Set.Nonempty.to_subtype nemp
     let B := @TopCat.of (ULift Bool) ⊤  -- with the indiscrete topology
     let pZ : Z ⟶ B := @TopCat.ofHom _ _ _ ⊤ <| @ContinuousMap.mk _ _ _ ⊤
@@ -174,29 +169,22 @@ lemma pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range :
       simp only [hom_comp, hom_ofHom, ContinuousMap.const_comp, ContinuousMap.const_apply,
         Set.mem_range, not_exists, dite_eq_ite, ite_not, ContinuousMap.comp_apply, Bool.false_eq,
         pY, pZ, B]
-      have : g x ∈ Set.range g := Set.mem_range_self x
-      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte] )
+      simp_all )
     intro z hz z' hz'
     have p_neq : pYZ ((pushout.inr f g) z) ≠ pYZ ((pushout.inr f g) z') := by
       change (pushout.inr f g ≫ pYZ) z ≠ (pushout.inr f g ≫ pYZ) z'
       unfold pYZ
       rw [pushout.inr_desc]
       simp only [Set.mem_range, not_exists, dite_eq_ite, ite_not, hom_ofHom, ne_eq, pZ, B]
-      simp_all only [Set.mem_compl_iff, Set.mem_range, not_exists, ContinuousMap.coe_mk,
-        exists_false, ↓reduceIte, ULift.up.injEq, Bool.true_eq_false, not_false_eq_true, B]
-    have {A B : Type u} {f : A → B} {a1 a2 : A} (h : f a1 ≠ f a2) : a1 ≠ a2 :=
-      fun a ↦ h (congrArg f a)
-    exact this p_neq
+      simp_all
+    exact fun heq ↦ p_neq (congrArg pYZ heq)
 
 /-- TODO: re-use the code in `pushoutInr_neq_pushoutInr_of_mem_compl_range_of_mem_range` -/
 lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ y : Y, (pushout.inr f g) z ≠ (pushout.inl f g) y := by
   haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
-  · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
-    intro z hz y hy
-    simp_all only [Set.compl_empty_iff, Set.mem_univ, not_true_eq_false, Set.setOf_false,
-      Set.isEmpty_coe_sort, Set.compl_univ, Set.mem_empty_iff_false]
+  · simp_all
   · have z₀ : {z | z ∉ Set.range g} := Nonempty.some <| Set.Nonempty.to_subtype nemp
     let B := @TopCat.of (ULift Bool) ⊤  -- with the indiscrete topology
     let pZ : Z ⟶ B := @TopCat.ofHom _ _ _ ⊤ <| @ContinuousMap.mk _ _ _ ⊤
@@ -207,8 +195,7 @@ lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
       simp only [hom_comp, hom_ofHom, ContinuousMap.const_comp, ContinuousMap.const_apply,
         Set.mem_range, not_exists, dite_eq_ite, ite_not, ContinuousMap.comp_apply, Bool.false_eq,
         pY, pZ, B]
-      have : g x ∈ Set.range g := Set.mem_range_self x
-      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte] )
+      simp_all )
     intro z hz y
     have p_neq : pYZ ((pushout.inr f g) z) ≠ pYZ ((pushout.inl f g) y) := by
       have hl : (pushout.inl f g ≫ pYZ).hom y = (⟨false⟩ : ULift Bool) := by
@@ -220,9 +207,7 @@ lemma pushoutInr_neq_pushoutInl_of_mem_compl_range :
       change (pushout.inr f g ≫ pYZ).hom z ≠ (pushout.inl f g ≫ pYZ).hom y
       rw [hl, hr]
       decide
-    have {A B : Type u} {f : A → B} {a1 a2 : A} (h : f a1 ≠ f a2) : a1 ≠ a2 :=
-      fun a ↦ h (congrArg f a)
-    exact this p_neq
+    exact fun heq ↦ p_neq (congrArg pYZ heq)
 
 lemma _root_.Function.Injective.preimage_image_of_restrict
     (X Y : Type u) (A : Set X) (s : Set A) (f : X → Y)
@@ -236,19 +221,12 @@ lemma _root_.Function.Injective.preimage_image_of_restrict
       exact hf a a.property x hnxA ha
     rw [(by rfl : f x = Set.restrict A f ⟨x, hxA⟩)] at ha
     have hax := inj_f ha
-    subst hax
-    use ⟨x, hxA⟩
+    simp_all
   · intro x hx
     apply Set.mem_preimage.mpr
     obtain ⟨a, has, hax⟩ := hx
     subst hax
-    simp_all only [Set.restrict_apply, Set.mem_image, Subtype.exists, exists_and_right]
-    obtain ⟨val, property⟩ := a
-    simp_all only
-    apply Exists.intro
-    · apply And.intro
-      on_goal 2 => rfl
-      · simp_all only [exists_const]
+    exact ⟨a, has, rfl⟩
 
 /--
 In the pushout square below, if `g X` is closed in `Z`,
@@ -280,8 +258,7 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
       intro z hz y hy
       convert pushoutInr_neq_pushoutInl_of_mem_compl_range f g z z.property y using 2
       rfl
-    rw [this]
-    exact isOpen_empty
+    simp_all
   · simp only []
     change IsOpen <| (pushout.inr f g) ⁻¹' ((pushoutInr' f g) '' s)
     unfold pushoutInr'

@@ -30,9 +30,7 @@ instance : OfNat zeroOne 1 where ofNat := ⟨1, by norm_num⟩
 namespace zeroOne
 
 lemma val_eq_zero_or_val_eq_one (t : zeroOne) : t.val = 0 ∨ t.val = 1 := by
-  obtain ⟨val, property⟩ := t
-  simp_all only
-  simp_all only [Set.mem_insert_iff, Set.mem_singleton_iff]
+  simpa only [Set.mem_insert_iff, Set.mem_singleton_iff] using t.property
 
 lemma eq_zero_or_eq_one (t : zeroOne) : t = 0 ∨ t = 1 := by
   obtain ht | ht := val_eq_zero_or_val_eq_one t

@@ -147,22 +147,18 @@ def inr : J →ₗ⁅K⁆ L ⋉[φ] J := {
     · simp only [RingHom.id_apply, smul_right]
   map_lie' := by
     intro x y
-    ext
-    · simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
-      sub_self, zero_add]
-    · simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
-      sub_self, zero_add]
+    ext <;>
+      simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
+        sub_self, zero_add]
 }
 
 /-- TODO. -/
 def fst : L ⋉[φ] J →ₗ⁅K⁆ L := {
   toFun := fun x ↦ x.1,
   map_add' := by
-    intro x y
-    simp only [add_left]
+    simp_all
   map_smul' := by
-    intro k x
-    simp only [smul_left, RingHom.id_apply]
+    simp_all
   map_lie' := by
     intro x y
     simp only [bracket_def]
@@ -211,8 +207,7 @@ def rightIdealEquivRight : rightIdeal φ ≃ₗ⁅K⁆ J := {
     change y.1 = 0 at hy
     change (⁅(⟨x, hx⟩ : rightIdeal φ).val, (⟨y, hy⟩ : rightIdeal φ).val⁆ : L ⋉[φ] J).2 = ⁅x.2, y.2⁆
     simp only [bracket_def]
-    rw [hx, hy]
-    simp [map_zero]
+    simp_all
   invFun := fun x ↦ ⟨⟨0, x⟩, rfl⟩
   left_inv := by
     intro x
@@ -236,8 +231,7 @@ theorem range_inr_eq_ker_fst : LieHom.range inr = (rightIdeal φ).toLieSubalgebr
     rw [LieHom.coe_toLinearMap]
     nth_rw 2 [← inl_left_add_inr_right x]
     simp only [fst, LieHom.coe_mk] at h
-    rw [h]
-    simp only [map_zero, zero_add]
+    simp_all
 
 theorem finrank_eq [StrongRankCondition K] [Module.Free K L] [Module.Free K J]
       [Module.Finite K L] [Module.Finite K J] :
@@ -298,11 +292,9 @@ variable (K L J : Type*) [CommRing K] [LieRing L] [LieRing J] [LieAlgebra K L] [
 def LieHom.inl : L →ₗ⁅K⁆ L × J := {
   toFun := fun x ↦ ⟨x, 0⟩,
   map_add' := by
-    intro x y
-    ext <;> simp only [Prod.mk_add_mk, add_zero]
+    simp_all
   map_smul' := by
-    intro k x
-    ext <;> simp only [RingHom.id_apply, Prod.smul_mk, smul_zero]
+    simp_all
   map_lie' := by
     intro x y
     ext <;> simp only [Prod.bracket_def, lie_self]
@@ -312,11 +304,9 @@ def LieHom.inl : L →ₗ⁅K⁆ L × J := {
 def LieHom.inr : J →ₗ⁅K⁆ L × J := {
   toFun := fun x ↦ ⟨0, x⟩,
   map_add' := by
-    intro x y
-    ext <;> simp only [Prod.mk_add_mk, add_zero]
+    simp_all
   map_smul' := by
-    intro k x
-    ext <;> simp only [RingHom.id_apply, Prod.smul_mk, smul_zero]
+    simp_all
   map_lie' := by
     intro x y
     ext <;> simp only [Prod.bracket_def, lie_self]
@@ -326,11 +316,9 @@ def LieHom.inr : J →ₗ⁅K⁆ L × J := {
 def LieHom.fst : L × J →ₗ⁅K⁆ L := {
   toFun := fun x ↦ x.1,
   map_add' := by
-    intro x y
-    simp only [Prod.fst_add]
+    simp_all
   map_smul' := by
-    intro k x
-    simp only [Prod.smul_fst, RingHom.id_apply]
+    simp_all
   map_lie' := rfl
 }
 
@@ -338,11 +326,9 @@ def LieHom.fst : L × J →ₗ⁅K⁆ L := {
 def LieHom.snd : L × J →ₗ⁅K⁆ J := {
   toFun := fun x ↦ x.2,
   map_add' := by
-    intro x y
-    simp only [Prod.snd_add]
+    simp_all
   map_smul' := by
-    intro k x
-    simp only [Prod.smul_snd, RingHom.id_apply]
+    simp_all
   map_lie' := rfl
 }
 

@@ -43,22 +43,13 @@ noncomputable def normalizingCochain : LieOneCochain 𝕜 (WittAlgebra 𝕜) �
 
 lemma normalizingCochain_apply_lgen_zero :
     normalizingCochain γ (lgen 𝕜 0) = (-2⁻¹ : 𝕜) * γ (lgen 𝕜 1) (lgen 𝕜 (-1)) := by
-  have aux := (WittAlgebra.lgen 𝕜).constr_basis 𝕜 (fun n ↦ if n = 0
-        then (-2⁻¹ : 𝕜) • γ (lgen 𝕜 1) (lgen 𝕜 (-1))
-        else (1/n : 𝕜) • γ (lgen 𝕜 0) (lgen 𝕜 n)) 0
-  dsimp at aux
-  rw [← aux]
-  congr
+  change ((WittAlgebra.lgen 𝕜).constr 𝕜 _) (lgen 𝕜 0) = _
+  simp [smul_eq_mul]
 
 lemma normalizingCochain_apply_lgen (n : ℤ) (hn : n ≠ 0) :
     normalizingCochain γ (lgen 𝕜 n) = (1/n : 𝕜) * γ (lgen 𝕜 0) (lgen 𝕜 n) := by
-  have aux := (WittAlgebra.lgen 𝕜).constr_basis 𝕜 (fun n ↦ if n = 0
-        then (-2⁻¹ : 𝕜) • γ (lgen 𝕜 1) (lgen 𝕜 (-1))
-        else (1/n : 𝕜) • γ (lgen 𝕜 0) (lgen 𝕜 n)) n
-  dsimp at aux
-  simp only [hn, ↓reduceIte] at aux
-  rw [← aux]
-  congr
+  change ((WittAlgebra.lgen 𝕜).constr 𝕜 _) (lgen 𝕜 n) = _
+  simp [smul_eq_mul, hn]
 
 lemma add_bdry_normalizingCochain_apply_lgen_one :
     (γ + (normalizingCochain γ).bdry) (lgen 𝕜 1) (lgen 𝕜 (-1)) = 0 := by
@@ -72,8 +63,7 @@ lemma add_bdry_normalizingCochain_apply_lgen_zero (n : ℤ) (hn : n ≠ 0) :
   simp only [LieTwoCocycle.add_apply, LieOneCochain.bdry_apply, bracket_lgen_lgen, Int.cast_zero,
              zero_sub, zero_add, neg_smul, map_neg, map_smul, smul_eq_mul]
   rw [normalizingCochain_apply_lgen γ n hn]
-  simp only [one_div, ← mul_assoc]
-  simp [show (n : 𝕜) * (n : 𝕜)⁻¹ = 1 from mul_inv_cancel₀ <| Int.cast_ne_zero.mpr hn]
+  simp_all
 
 /-- The 2-cocycle equation in the standard basis `ℓₙ` of the Witt algebra:
     `0 = (m-k) * γ(n,m+k) + (k-n) * γ(m,n+k) + (n-m) * γ(k,n+m)`. -/

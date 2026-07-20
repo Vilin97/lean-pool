@@ -108,8 +108,7 @@ lemma eq_standardNeighbour_of_isStandardNeighbour {L : Lattice R} {y : Vertices 
   apply le_of_lt at h2
   rw [b.twist₂_le_twist₂_iff] at h1 h2
   have : n = 0 := by omega
-  rw [this]
-  simp
+  simp_all
 
 open IsLocalRing
 
@@ -121,11 +120,8 @@ def neighborsEquivStandardNeighbors (L : Lattice R) :
   left_inv y := by simp
   right_inv M := by
     ext : 1
-    simp only [Set.mem_setOf_eq]
-    symm
-    apply eq_standardNeighbour_of_isStandardNeighbour
-    · rfl
-    · exact M.property
+    simpa only [Set.mem_setOf_eq] using
+      (eq_standardNeighbour_of_isStandardNeighbour _ _ rfl M.property).symm
 
 /-- Restrict scalars from the residue field quotient to an `R`-submodule. -/
 def _root_.BruhatTits.Lattice.quotientRestrictScalarsEquiv (L : Lattice R) :

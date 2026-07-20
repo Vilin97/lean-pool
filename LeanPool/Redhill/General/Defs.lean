@@ -70,11 +70,9 @@ lemma tup_castAdd {i : Fin n} :
     tup n F h (i.castAdd 6) = primeChain (100 * Y F ^ 6) i.1 := by
   simp [tup]
 
-@[simp] lemma tup_natAdd_zero : tup n F h (natAdd n 0) = (VW n F).v := by
-  simp [tup]
+@[simp] lemma tup_natAdd_zero : tup n F h (natAdd n 0) = (VW n F).v := by simp [tup]
 
-@[simp] lemma tup_natAdd_one : tup n F h (natAdd n 1) = -(VW n F).w := by
-  simp [tup]
+@[simp] lemma tup_natAdd_one : tup n F h (natAdd n 1) = -(VW n F).w := by simp [tup]
 
 @[simp] lemma tup_natAdd_two : tup n F h (natAdd n 2) = (X F h ^ 2 + 10 * Y F ^ 3) ^ 2 := by
   simp [tup]
@@ -82,11 +80,9 @@ lemma tup_castAdd {i : Fin n} :
 @[simp] lemma tup_natAdd_three : tup n F h (natAdd n 3) = (10 * Y F - 1) * X F h ^ 4 := by
   simp [tup]
 
-@[simp] lemma tup_natAdd_four : tup n F h (natAdd n 4) = (X F h - Y F) ^ 5 := by
-  simp [tup]
+@[simp] lemma tup_natAdd_four : tup n F h (natAdd n 4) = (X F h - Y F) ^ 5 := by simp [tup]
 
-@[simp] lemma tup_natAdd_five : tup n F h (natAdd n 5) = -(X F h + Y F) ^ 5 := by
-  simp [tup]
+@[simp] lemma tup_natAdd_five : tup n F h (natAdd n 5) = -(X F h + Y F) ^ 5 := by simp [tup]
 
 lemma sum_tup : ∑ i, tup n F h i = 0 := by
   simp only [tup, sum_univ_add, addCases_left, addCases_right, sum_univ_six, add_assoc]
@@ -101,8 +97,7 @@ section Factors
 
 variable {f : ℕ} (mf : f ∈ F)
 
-lemma dvd_Y_of_mem_F (mf : f ∈ F.erase 0) : f ∣ Y F :=
-  (dvd_prod_of_mem _ mf).mul_left _
+lemma dvd_Y_of_mem_F (mf : f ∈ F.erase 0) : f ∣ Y F := (dvd_prod_of_mem _ mf).mul_left _
 
 include mf
 

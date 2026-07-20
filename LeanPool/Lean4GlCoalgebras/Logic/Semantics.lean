@@ -49,8 +49,7 @@ lemma evaluate_neg {α : Type} (M : Model α) (u : α) (φ : Formula) :
 
 @[simp]
 lemma evaluate_and {α : Type} (M : Model α) (u : α) (φ ψ : Formula) :
-  evaluate (M, u) (φ & ψ) ↔ (evaluate (M, u) φ ∧ evaluate (M, u) ψ) := by
-  simp
+  evaluate (M, u) (φ & ψ) ↔ (evaluate (M, u) φ ∧ evaluate (M, u) ψ) := by simp
 
 lemma evaluate_imp {α : Type} (M : Model α) (u : α) (φ ψ : Formula) :
     evaluate (M, u) (φ ↣ ψ) ↔ (evaluate (M, u) φ → evaluate (M, u) ψ) := by

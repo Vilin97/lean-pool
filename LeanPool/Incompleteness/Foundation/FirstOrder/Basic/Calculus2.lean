@@ -107,8 +107,7 @@ noncomputable def _root_.LO.FirstOrder.Derivation2.toDerivation : {Γ :
     Derivation.all' (φ :=
       φ) (by simp [h]) (Tait.wk d.toDerivation <| by intro x; simp [Rewriting.shifts])
   | _, Derivation2.ex (φ := φ) h t d             =>
-    Derivation.ex' (φ :=
-      φ) (by simp [h]) t (Tait.wk d.toDerivation <| by intro x; simp [])
+    Derivation.ex' (φ := φ) (by simp [h]) t (Tait.wk d.toDerivation <| by intro x; simp [])
   | _, Derivation2.wk d h                        =>
     Tait.wk d.toDerivation (by intro x; simp only [Finset.mem_toList]; exact @h x)
   | _, Derivation2.shift d                       =>

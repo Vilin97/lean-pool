@@ -90,14 +90,7 @@ protected theorem Config.Cup.extend_right {l : List α} (l_cup : C.Cup l) {a b :
   · cases l with
     | nil => exact absurd a_last_l (Option.not_mem_none a)
     | cons p l =>
-      cases l with
-      | nil =>
-        rw [List.getLast?_singleton, Option.mem_some_iff] at a_last_l
-        subst a_last_l
-        rw [List.singleton_append, Cup.pair]
-        exact hab
-      | cons q l =>
-        exact absurd (by simp [List.length_cons] : 2 ≤ (p :: q :: l).length) hl
+      simp_all
 
 protected theorem Config.NCup.extend_left {n : ℕ} {l : List α} (l_ncup : C.NCup n l) {a b : α}
     (s_ab : ¬label.Slope a b) (ha : a ∈ S) (hab : a < b) (l_in_S : l.In S)

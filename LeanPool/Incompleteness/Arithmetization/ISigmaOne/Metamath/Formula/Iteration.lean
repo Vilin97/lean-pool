@@ -23,8 +23,7 @@ def replicate (p : Semiformula L ξ n) : ℕ → Semiformula L ξ n
 lemma replicate_zero (p : Semiformula L ξ n) : p.replicate 0 = p := by simp [replicate]
 
 lemma replicate_succ (p : Semiformula L ξ n) (k : ℕ) :
-    p.replicate (k + 1) = p ⋏ p.replicate k := by
-  simp [replicate]
+    p.replicate (k + 1) = p ⋏ p.replicate k := by simp [replicate]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def weight (k : ℕ) : Semiformula L ξ n := (List.replicate k ⊤).conj
@@ -113,8 +112,7 @@ lemma qqConj_semiformula {n ps : V} :
   · definability
   case nil => simp [qqVerum]
   case cons p ps ih =>
-    simp only [len_cons, qqConj_cons, succ_le_iff_lt]
-    exact lt_of_le_of_lt ih (by simp)
+    simpa only [len_cons, qqConj_cons, succ_le_iff_lt] using lt_of_le_of_lt ih (by simp)
 
 end «lp_section_1»
 
@@ -160,8 +158,7 @@ lemma qqDisj_defined : Sg1-Function₁ (qqDisj : V → V) via qqDisjDef := const
 
 instance qqDisj_definable : Sg1-Function₁ (qqDisj : V → V) := qqDisj_defined.to_definable
 
-instance qqDisj_definable' (Γ) : Γ-[m + 1]-Function₁ (qqDisj :
-    V → V) :=
+instance qqDisj_definable' (Γ) : Γ-[m + 1]-Function₁ (qqDisj : V → V) :=
   .of_sigmaOne qqDisj_definable
 
 end «lp_section_4»
@@ -221,8 +218,7 @@ def substItr (w p k : V) : V := construction.result ![w, p] k
 section «lp_section_6»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Arith.substItrDef :
-    Sg1.Semisentence 4 :=
+def _root_.LO.FirstOrder.Arith.substItrDef : Sg1.Semisentence 4 :=
   blueprint.resultDef |>.rew (Rew.substs ![#0, #3, #1, #2])
 
 lemma substItr_defined : Sg1-Function₃ (substItr : V → V → V → V) via substItrDef :=
@@ -234,12 +230,10 @@ lemma substItr_defined : Sg1-Function₃ (substItr : V → V → V → V) via su
     Semiformula.Evalbm V v substItrDef.val ↔ v 0 = substItr (v 1) (v 2) (v 3) :=
       substItr_defined.df.iff v
 
-instance substItr_definable : Sg1-Function₃ (substItr :
-    V → V → V → V) :=
+instance substItr_definable : Sg1-Function₃ (substItr : V → V → V → V) :=
   substItr_defined.to_definable
 
-instance substItr_definable' : Γ-[m + 1]-Function₃ (substItr :
-    V → V → V → V) :=
+instance substItr_definable' : Γ-[m + 1]-Function₃ (substItr : V → V → V → V) :=
   .of_sigmaOne substItr_definable
 
 end «lp_section_6»
@@ -359,8 +353,7 @@ lemma qqVerums_defined : Sg1-Function₁ (qqVerums : V → V) via qqVerumsDef :=
 
 instance qqVerums_definable : Sg1-Function₁ (qqVerums : V → V) := qqVerums_defined.to_definable
 
-instance qqVerums_definable' : Γ-[m + 1]-Function₁ (qqVerums :
-    V → V) :=
+instance qqVerums_definable' : Γ-[m + 1]-Function₁ (qqVerums : V → V) :=
   .of_sigmaOne qqVerums_definable
 
 end «lp_section_8»

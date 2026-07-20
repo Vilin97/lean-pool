@@ -45,12 +45,10 @@ instance : Cons F (FiniteContext F 𝓢) := ⟨(· :: ·.ctx)⟩
 
 lemma mem_def {φ : F} {Γ : FiniteContext F 𝓢} : φ ∈ Γ ↔ φ ∈ Γ.ctx := iff_of_eq rfl
 
-@[simp 1100] lemma coe_subset_coe_iff {Γ Δ : List F} : (Γ :
-    FiniteContext F 𝓢) ⊆ Δ ↔ Γ ⊆ Δ :=
+@[simp 1100] lemma coe_subset_coe_iff {Γ Δ : List F} : (Γ : FiniteContext F 𝓢) ⊆ Δ ↔ Γ ⊆ Δ :=
   iff_of_eq rfl
 
-@[simp] lemma mem_coe_iff {φ : F} {Γ : List F} : φ ∈ (Γ :
-    FiniteContext F 𝓢) ↔ φ ∈ Γ :=
+@[simp] lemma mem_coe_iff {φ : F} {Γ : List F} : φ ∈ (Γ : FiniteContext F 𝓢) ↔ φ ∈ Γ :=
   iff_of_eq rfl
 
 @[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ :
@@ -139,8 +137,7 @@ lemma «by_axm!» {φ} (h : φ ∈ Γ := by simp) :
   exact Axiomatized.provable_axm _ (by simpa)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def weakening [DecidableEq F] (h : Γ ⊆ Δ) {φ} :
-    Γ ⊢[𝓢] φ → Δ ⊢[𝓢] φ :=
+def weakening [DecidableEq F] (h : Γ ⊆ Δ) {φ} : Γ ⊢[𝓢] φ → Δ ⊢[𝓢] φ :=
   Axiomatized.weakening (by simpa)
 
 lemma «weakening!» (h : Γ ⊆ Δ) {φ} : Γ ⊢[𝓢]! φ → Δ ⊢[𝓢]! φ := by
@@ -157,8 +154,7 @@ def emptyPrf {φ : F} : [] ⊢[𝓢] φ → 𝓢 ⊢ φ := fun b ↦ b ⨀ verum
 lemma provable_iff_provable {φ : F} : 𝓢 ⊢! φ ↔ [] ⊢[𝓢]! φ :=
   ⟨fun b ↦ ⟨of b.some⟩, fun b ↦ ⟨emptyPrf b.some⟩⟩
 
-lemma «of'!» (h : 𝓢 ⊢! φ) :
-    Γ ⊢[𝓢]! φ :=
+lemma «of'!» (h : 𝓢 ⊢! φ) : Γ ⊢[𝓢]! φ :=
   weakening! (by simp) <| provable_iff_provable.mp h
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -185,14 +181,12 @@ instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomImply₁ Γ := ⟨fun 
 
 instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomImply₂ Γ := ⟨fun _ _ _ ↦ of imply₂⟩
 
-instance (Γ : FiniteContext F 𝓢) :
-    Entailment.HasAxiomAndElim Γ :=
+instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomAndElim Γ :=
   ⟨fun _ _ ↦ of and₁, fun _ _ ↦ of and₂⟩
 
 instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomAndInst Γ := ⟨fun _ _ ↦ of and₃⟩
 
-instance (Γ : FiniteContext F 𝓢) :
-    Entailment.HasAxiomOrInst Γ :=
+instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomOrInst Γ :=
   ⟨fun _ _ ↦ of or₁, fun _ _ ↦ of or₂⟩
 
 instance (Γ : FiniteContext F 𝓢) : Entailment.HasAxiomOrElim Γ := ⟨fun _ _ _ ↦ of or₃⟩
@@ -203,8 +197,7 @@ instance (Γ : FiniteContext F 𝓢) : Entailment.Minimal Γ where
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def mdp' [DecidableEq F] (bΓ : Γ ⊢[𝓢] φ ==> ψ) (bΔ : Δ ⊢[𝓢] φ) :
-    (Γ ++ Δ) ⊢[𝓢] ψ :=
+def mdp' [DecidableEq F] (bΓ : Γ ⊢[𝓢] φ ==> ψ) (bΔ : Δ ⊢[𝓢] φ) : (Γ ++ Δ) ⊢[𝓢] ψ :=
   wk (by simp) bΓ ⨀ wk (by simp) bΔ
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -290,9 +283,7 @@ lemma mem_def {φ : F} {Γ : Context F 𝓢} : φ ∈ Γ ↔ φ ∈ Γ.ctx := if
 
 @[simp] lemma mem_coe_iff {φ : F} {Γ : Set F} : φ ∈ (Γ : Context F 𝓢) ↔ φ ∈ Γ := iff_of_eq rfl
 
-@[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ : Context F 𝓢) := by
-  intro h
-  exact h
+@[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ : Context F 𝓢) := fun h ↦ h
 
 instance : Collection F (Context F 𝓢) where
   subset_iff := by rintro ⟨s⟩ ⟨u⟩; simp [Set.subset_def]
@@ -384,9 +375,7 @@ def deduct [DecidableEq F] {φ ψ : F} {Γ : Set F} : (insert φ Γ) *⊢[𝓢] 
 /-- Imported declaration from the Incompleteness formalization. -/
 def deductInv {φ ψ : F} {Γ : Set F} : Γ *⊢[𝓢] φ ==> ψ → (insert φ Γ) *⊢[𝓢] ψ
   | ⟨Δ, h, b⟩ => ⟨φ :: Δ, by
-      simp only [List.mem_cons, mem_coe_iff, Set.mem_insert_iff, forall_eq_or_imp, true_or,
-        true_and]
-      intro χ hr; exact Or.inr (h χ hr), FiniteContext.deductInv b⟩
+      simp_all, FiniteContext.deductInv b⟩
 
 instance deduction [DecidableEq F] : Deduction (Context F 𝓢) where
   ofInsert := deduct
@@ -411,10 +400,10 @@ lemma «by_axm!» (h : φ ∈ Γ) : Γ *⊢[𝓢]! φ := by
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def emptyPrf {φ : F} : ∅ *⊢[𝓢] φ → 𝓢 ⊢ φ := by
-  rintro ⟨Γ, hΓ, h⟩;
-  have := List.eq_nil_iff_forall_not_mem.mpr hΓ;
-  subst this;
-  exact FiniteContext.emptyPrf h;
+  rintro ⟨Γ, hΓ, h⟩
+  have := List.eq_nil_iff_forall_not_mem.mpr hΓ
+  subst this
+  exact FiniteContext.emptyPrf h
 
 lemma «emptyPrf!» {φ : F} : ∅ *⊢[𝓢]! φ → 𝓢 ⊢! φ := fun h ↦ ⟨emptyPrf h.some⟩
 

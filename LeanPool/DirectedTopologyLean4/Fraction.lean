@@ -37,7 +37,6 @@ lemma ofPos_coe {n : ℕ} (hn : 0 < n) : ((ofPos hn) : ℝ) = (1/n : ℝ) := by 
 -/
 lemma eq_zero {n : ℕ} (n_pos : 0 < n) : Fraction n_pos (Nat.zero_le n) = 0 := by
   ext
-  rw [Fraction_coe]
   simp
 
 /-- For any postive `n : ℕ`, we have that `n/n = n`.

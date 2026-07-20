@@ -29,8 +29,7 @@ noncomputable section
 /-- If f(n+1) → L, then f(n) → L. This is because atTop is shift-invariant. -/
 private lemma tendsto_of_tendsto_succ {α : Type*} {f : ℕ → α} {L : Filter α}
     (h : Filter.Tendsto (fun n => f (n + 1)) Filter.atTop L) :
-    Filter.Tendsto f Filter.atTop L :=
-  (Filter.tendsto_add_atTop_iff_nat 1).mp h
+    Filter.Tendsto f Filter.atTop L := (Filter.tendsto_add_atTop_iff_nat 1).mp h
 
 /-! ### Two-Point Schwinger Function Infrastructure -/
 
@@ -80,8 +79,7 @@ noncomputable def standardBumpSequence (n : ℕ) (hn : n ≠ 0) : ContDiffBump (
       have hn' : (0 : ℝ) < n := Nat.cast_pos.mpr (Nat.pos_of_ne_zero hn)
       have h2n : (0 : ℝ) < 2 * n := by positivity
       have : (2 * (n : ℝ))⁻¹ < (n : ℝ)⁻¹ := inv_strictAnti₀ hn' (by linarith)
-      simp only [one_div]
-      exact this }
+      simp_all }
 
 /-- Two-point correlation function defined as the limit of smeared correlations.
 
@@ -152,8 +150,7 @@ theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     (bumpToSchwartz (φ i)) =
       ∫ u, ∫ v, (translateSchwartz (bumpToSchwartz (φ i)) x) u * C (u - v) * (bumpToSchwartz (φ i))
         v := by
-    intro i
-    exact hS₂ _ _
+    simp_all
   simp_rw [h_eq]
   -- bumpToSchwartz produces the normed bump, so we can directly apply double_mollifier_convergence
   -- translateSchwartz is SchwartzMap.translate, which shifts by x
@@ -220,8 +217,7 @@ theorem schwingerTwoPointFunction_eq_kernel
     -- original(n+1) = if (n+1)=0 then 0 else SmearedTwo (standardBumpSequence (n+1))
     --              = SmearedTwo (standardBumpSequence (n+1))  [since n+1 ≠ 0]
     --              = SmearedTwo (φ n)
-    simp only [Nat.succ_ne_zero, dite_false]
-    exact h_smeared
+    simpa only [Nat.succ_ne_zero, dite_false] using h_smeared
   -- In Hausdorff spaces, limUnder equals the limit when it exists
   exact Filter.Tendsto.limUnder_eq h_tendsto
 

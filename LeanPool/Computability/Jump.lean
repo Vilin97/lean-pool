@@ -71,16 +71,13 @@ theorem jump_recIn (f : ℕ →. ℕ) : f ≤ᵀ (f⌜) := by
       | zero => rfl
       | succ n ih => simp [evalo, ih, const]
     unfold jump s
-    rw [ decodeCodeo_encodeCodeo ]; simp [ *, evalo ];
-  have h_s : RecursiveIn {jump f} (fun n => Part.some (s n)) := by
-    apply RecursiveIn.of_primrec
-    apply s_primrec
-  have h_jump : RecursiveIn {jump f} (jump f) := by
-    apply RecursiveIn.oracle
-    norm_num at *
+    rw [decodeCodeo_encodeCodeo]
+    simp [*, evalo]
+  have h_s : RecursiveIn {jump f} (fun n => Part.some (s n)) := RecursiveIn.of_primrec s_primrec
+  have h_jump : RecursiveIn {jump f} (jump f) := RecursiveIn.oracle _ (by norm_num)
   have h_comp : RecursiveIn {jump f} (fun n => jump f (s n)) := by
     convert RecursiveIn.comp h_jump h_s using 1
-    ext; simp [ bind ]
+    ext; simp [bind]
   exact RecursiveIn.of_eq h_comp h_eq
 
 /-- A predicate `p` is computable relative to `f` if it is decidable and its decision procedure is
@@ -95,9 +92,7 @@ def REPredIn (f : ℕ →. ℕ) (p : ℕ → Prop) :=
 
 theorem dom_re_in_jump (f : ℕ →. ℕ) :
   REPredIn (f⌜) (fun n => (f n).Dom) :=
-by
-  refine ⟨f, ?_, rfl⟩
-  exact jump_recIn f
+  ⟨f, jump_recIn f, rfl⟩
 
 section decide
 
@@ -133,7 +128,6 @@ theorem re_in_trans (A : Set ℕ) (f h : ℕ →. ℕ) :
   recursivelyEnumerableIn₂ h A := by
   intro freInA fh
   obtain ⟨g, hg, hA⟩ := freInA
-  refine ⟨g, ?_, hA⟩
-  exact TuringReducible.trans hg fh
+  exact ⟨g, TuringReducible.trans hg fh, hA⟩
 
 end Computability

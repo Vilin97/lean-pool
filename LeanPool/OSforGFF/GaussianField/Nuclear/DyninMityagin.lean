@@ -100,7 +100,6 @@ theorem _root_.GaussianField.DyninMityaginSpace.expansion_H
     @inner ℝ H _ w (T f) =
     ∑' m, (DyninMityaginSpace.coeff m f) * @inner ℝ H _ w (T (DyninMityaginSpace.basis m)) := by
   have hφ := DyninMityaginSpace.expansion ((innerSL ℝ w).comp T) f
-  simp only [ContinuousLinearMap.comp_apply, innerSL_apply_apply] at hφ
-  exact hφ
+  simpa only [ContinuousLinearMap.comp_apply, innerSL_apply_apply] using hφ
 
 end GaussianField

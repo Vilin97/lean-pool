@@ -35,13 +35,15 @@ instance moduleOverOver (A : CSA k) (I : TwoSidedIdeal A) :
 
 theorem is_simple_A [IsSimpleRing (K ⊗[k] A)] : IsSimpleRing A := IsSimpleRing.right_of_tensor k K A
 
+private lemma subsingleton_tensor [Subsingleton A] : Subsingleton (K ⊗[k] A) := by
+  rw [← subsingleton_iff_zero_eq_one, show (0 : K ⊗[k] A) = 0 ⊗ₜ 0 by simp,
+      show (1 : K ⊗[k] A) = 1 ⊗ₜ 1 by rfl, show (1 : A) = 0 from Subsingleton.elim _ _]
+  simp
+
 theorem central_over_extension_iff_subsingleton
     [Subsingleton A] [FiniteDimensional k A] [FiniteDimensional k K] :
     Algebra.IsCentral k A ↔ Algebra.IsCentral K (K ⊗[k] A) := by
-  have : Subsingleton (K ⊗[k] A) := by
-    rw [← subsingleton_iff_zero_eq_one, show (0 : K ⊗[k] A) = 0 ⊗ₜ 0 by simp,
-        show (1 : K ⊗[k] A) = 1 ⊗ₜ 1 by rfl, show (1 : A) = 0 from Subsingleton.elim _ _]
-    simp
+  have : Subsingleton (K ⊗[k] A) := subsingleton_tensor k A K
   constructor <;>
   · intro h
     refine ⟨fun x hx => ?_⟩
@@ -51,10 +53,7 @@ theorem central_over_extension_iff_subsingleton
 theorem isSimple_over_extension_iff_subsingleton
     [Subsingleton A] [FiniteDimensional k A] [FiniteDimensional k K] :
     IsSimpleRing A ↔ IsSimpleRing (K ⊗[k] A) := by
-  have : Subsingleton (K ⊗[k] A) := by
-    rw [← subsingleton_iff_zero_eq_one, show (0 : K ⊗[k] A) = 0 ⊗ₜ 0 by simp,
-        show (1 : K ⊗[k] A) = 1 ⊗ₜ 1 by rfl, show (1 : A) = 0 from Subsingleton.elim _ _]
-    simp
+  have : Subsingleton (K ⊗[k] A) := subsingleton_tensor k A K
   constructor <;>
   · intro h
     have : Nontrivial (K ⊗[k] A) := inferInstance

@@ -25,9 +25,7 @@ lemma Set.Subtype {α : Type*} {property : α → Prop} (S : Set α) (hS : ∀ s
   rw [Set.mem_preimage, ← hS', Set.mem_image]
   constructor
   · -- 1.
-    rintro ⟨x', hx', hxx⟩
-    rw [Subtype.coe_inj] at hxx
-    exact hxx ▸ hx'
+    simp_all
   · -- 2.
     intro hx
     exact ⟨x, hx, rfl⟩
@@ -43,8 +41,7 @@ lemma Set.mem_translation {α : Type} [AddGroup α] {S : Set α} (x s : α) :
   constructor
   · -- 1.
     rintro ⟨y, hy, rfl⟩
-    rw [add_sub_cancel_right]
-    exact hy
+    rwa [add_sub_cancel_right]
   · -- 2.
     intro h
     exact ⟨s - x, h, by rw [sub_add_cancel]⟩
@@ -58,8 +55,7 @@ lemma Set.sub_eq_neg_add {α : Type} [AddGroup α] (S : Set α) (x : α) :
   simp only [sub_singleton, mem_image, add_singleton, image_add_right, neg_neg, mem_preimage]
   refine ⟨ ?_, fun h => ⟨y + x, h, by rw [add_sub_cancel_right]⟩ ⟩
   rintro ⟨z, hz, rfl⟩
-  rw [sub_add_cancel]
-  exact hz
+  rwa [sub_add_cancel]
 
 lemma Set.neg_add_cancel_right' {α : Type} [AddGroup α] {S : Set α} (x : α) :
   S - {x} + {x} = S := by
@@ -78,14 +74,9 @@ lemma Set.Nonempty.sInter_inter_comm {α : Type u_1} {s : Set (Set α)} (hs : s.
       rw [mem_image]
       exact ⟨Nonempty.some hs, hs.some_mem, rfl⟩
     refine ⟨ ?_, (h (hs.some ∩ t) this).2⟩
-    intro y hy
-    have : y ∩ t ∈ (fun x => x ∩ t) '' s := by
-      rw [mem_image]
-      exact ⟨y, hy, rfl⟩
-    exact (h (y ∩ t) this).1
+    simp_all
   · -- 2.
-    rintro h y ⟨ z, hz, rfl ⟩
-    exact mem_inter (h.1 z hz) h.2
+    simp_all
 
 lemma Set.Nonempty.image_sInter {α β : Type*} {S : Set (Set α)} (hS : S.Nonempty)
   {f : α → β} (hf : f.Injective) :
@@ -144,8 +135,7 @@ lemma Submodule.mem_orthogonal_Basis {𝕜 : Type u_1} {E : Type u_2} {ι : Type
   v ∈ Kᗮ ↔ ∀ i : ι, inner 𝕜 (↑(b i)) v = (0:𝕜) := by
   rw [Submodule.mem_orthogonal]
   constructor
-  · intro h i
-    exact h _ (Submodule.coe_mem (b i))
+  · simp_all
   · intro h x hx
     rw [Basis.mem_submodule_iff b] at hx
     rcases hx with ⟨ a, rfl ⟩
@@ -212,11 +202,7 @@ lemma Fin.mem_fin_list_range {n : ℕ} (i : Fin n) : i ∈ n.finListRange := by
       have : m < n := by omega
       let m' : Fin n := ⟨m, this⟩
       unfold Nat.finListRange
-      apply List.mem_cons_of_mem
-      simp only [List.mem_map]
-      use m'
-      use ih m'
-      rfl
+      simp_all
 
 /-- Drops the first `m` entries from a length-indexed vector. -/
 def Vector.Listdrop {R : Type*} {n : ℕ} (m : ℕ) : Vector R n → Vector R (n - m) :=

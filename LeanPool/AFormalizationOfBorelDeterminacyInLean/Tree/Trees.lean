@@ -75,8 +75,7 @@ lemma IsPruned.pullSub {T : tree A} (hP : IsPruned T) (x : List A) : IsPruned (p
     · rw [List.drop_take]; simpa [h] using hy.2
   · rw [mem_pullSub_long h] at hy; obtain ⟨z, hz, rfl⟩ := hy; obtain ⟨a, ha⟩ := hP ⟨z, hz⟩
     use a; simpa
-@[simp] lemma pullSub_ne {T : tree A} x : [] ∈ pullSub T x ↔ [] ∈ T := by
-  simp [mem_pullSub_short]
+@[simp] lemma pullSub_ne {T : tree A} x : [] ∈ pullSub T x ↔ [] ∈ T := by simp [mem_pullSub_short]
 @[simp] lemma top_isPruned [h : Nonempty A] : IsPruned (⊤ : tree A) :=
   fun _ ↦ ⟨h.some, CompleteSublattice.mem_top⟩
 

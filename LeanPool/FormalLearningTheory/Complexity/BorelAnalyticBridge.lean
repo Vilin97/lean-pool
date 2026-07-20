@@ -77,6 +77,33 @@ def patchEval
 
 /-! ## Theorem A: Measurable witness graph -/
 
+/-- One `EmpiricalError` component of the witness gap is measurable, where `sel` selects
+which of the two ghost samples to read. Used for both the ghost (`Prod.snd`) and train
+(`Prod.fst`) halves in `paramWitnessSet_measurable`. -/
+private theorem empiricalError_component_measurable
+    {X : Type u} [MeasurableSpace X]
+    {Θ : Type*} [MeasurableSpace Θ]
+    {e : Θ → Concept X Bool}
+    (he : Measurable (fun p : Θ × X => e p.1 p.2))
+    {c : Concept X Bool} (hc : Measurable c) (m : ℕ)
+    (sel : GhostPairs X m → (Fin m → X))
+    (hsel : Measurable sel) :
+    Measurable fun q : Θ × GhostPairs X m =>
+      EmpiricalError X Bool (e q.1) (fun i => (sel q.2 i, c (sel q.2 i))) (zeroOneLoss Bool) := by
+  have term_meas : ∀ i : Fin m, Measurable fun q : Θ × GhostPairs X m =>
+      zeroOneLoss Bool (e q.1 (sel q.2 i)) (c (sel q.2 i)) := by
+    intro i
+    simp only [zeroOneLoss]
+    refine Measurable.ite (measurableSet_eq_fun ?_ ?_) measurable_const measurable_const
+    · exact he.comp (measurable_fst.prodMk
+        ((measurable_pi_apply i).comp (hsel.comp measurable_snd)))
+    · exact hc.comp ((measurable_pi_apply i).comp (hsel.comp measurable_snd))
+  simp only [EmpiricalError]
+  by_cases hm : m = 0
+  · simp [hm]
+  · simp only [hm, ↓reduceIte]
+    exact (Finset.measurable_sum _ (fun i _ => term_meas i)).div_const _
+
 /-- The witness set {(θ, p) | ghost-gap ≥ ε/2} is MeasurableSet
     when the evaluation map e and target c are measurable.
     This is the Borel half of the Borel-analytic bridge. -/
@@ -89,49 +116,10 @@ theorem paramWitnessSet_measurable
     (m : ℕ) (ε : ℝ) :
     MeasurableSet (paramWitnessSet e c m ε) := by
   unfold paramWitnessSet
-  -- The set is {q | ε/2 ≤ Δ(q)} where Δ = EmpErr_ghost - EmpErr_train
-  -- Suffices to show Δ is measurable, then use measurableSet_le
-  -- Helper: measurability of a single zeroOneLoss term for ghost sample
-  have ghost_term_meas : ∀ i : Fin m, Measurable fun q : Θ × GhostPairs X m =>
-      zeroOneLoss Bool (e q.1 (q.2.2 i)) (c (q.2.2 i)) := by
-    intro i
-    simp only [zeroOneLoss]
-    apply Measurable.ite
-    · exact measurableSet_eq_fun
-        (he.comp (measurable_fst.prodMk
-          ((measurable_pi_apply i).comp (measurable_snd.comp measurable_snd))))
-        (hc.comp ((measurable_pi_apply i).comp (measurable_snd.comp measurable_snd)))
-    · exact measurable_const
-    · exact measurable_const
-  -- Helper: measurability of a single zeroOneLoss term for train sample
-  have train_term_meas : ∀ i : Fin m, Measurable fun q : Θ × GhostPairs X m =>
-      zeroOneLoss Bool (e q.1 (q.2.1 i)) (c (q.2.1 i)) := by
-    intro i
-    simp only [zeroOneLoss]
-    apply Measurable.ite
-    · exact measurableSet_eq_fun
-        (he.comp (measurable_fst.prodMk
-          ((measurable_pi_apply i).comp (measurable_fst.comp measurable_snd))))
-        (hc.comp ((measurable_pi_apply i).comp (measurable_fst.comp measurable_snd)))
-    · exact measurable_const
-    · exact measurable_const
-  -- Helper: each EmpiricalError component is measurable
-  have ghost_meas : Measurable fun q : Θ × GhostPairs X m =>
-      EmpiricalError X Bool (e q.1) (fun i => (q.2.2 i, c (q.2.2 i))) (zeroOneLoss Bool) := by
-    simp only [EmpiricalError]
-    by_cases hm : m = 0
-    · simp [hm]
-    · simp only [hm, ↓reduceIte]
-      exact (Finset.measurable_sum _ (fun i _ => ghost_term_meas i)).div_const _
-  have train_meas : Measurable fun q : Θ × GhostPairs X m =>
-      EmpiricalError X Bool (e q.1) (fun i => (q.2.1 i, c (q.2.1 i))) (zeroOneLoss Bool) := by
-    simp only [EmpiricalError]
-    by_cases hm : m = 0
-    · simp [hm]
-    · simp only [hm, ↓reduceIte]
-      exact (Finset.measurable_sum _ (fun i _ => train_term_meas i)).div_const _
-  -- The gap Δ = ghost - train is measurable
-  exact measurableSet_le measurable_const (ghost_meas.sub train_meas)
+  -- The gap Δ = EmpErr_ghost - EmpErr_train is measurable, then use measurableSet_le.
+  exact measurableSet_le measurable_const
+    ((empiricalError_component_measurable he hc m _ measurable_snd).sub
+      (empiricalError_component_measurable he hc m _ measurable_fst))
 
 /-! ## Theorem B: Bad event is analytic (Suslin projection) -/
 

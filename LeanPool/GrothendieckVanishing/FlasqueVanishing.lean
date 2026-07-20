@@ -137,8 +137,7 @@ private lemma exists_patch_of_shortExact {X : TopCat.{u}}
   refine ⟨tW', ?_, ?_⟩
   · simp only [tW', map_add, hgf_zero, add_zero, htW]
   · simp only [tW', map_add]
-    rw [hf_naturality, hahat, ha]
-    abel
+    simp_all
 
 private lemma bool_isCompatible_of_false_true_eq {X : TopCat.{u}}
     (F : TopCat.Presheaf AddCommGrpCat.{u} X)
@@ -230,8 +229,7 @@ private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
       ConcreteCategory.hom (G.obj.map (homOfLE hVsup_le).op) s := by
     apply map_glued_eq_of_local_eq g (fun j ↦ le_trans (le_iSup cV j) hVsup_le) ht_gl
     intro j
-    have hmap := CategoryOfElements.map_snd (T j).hom
-    exact hmap.symm
+    exact (CategoryOfElements.map_snd (T j).hom).symm
   let y := underMk g s t_gl hVsup_le hgt
   refine ⟨y, rfl, fun i ↦ ?_⟩
   exact Nonempty.intro (StructuredArrow.homMk
@@ -264,9 +262,8 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
   let t₀ : S.X₂.obj.obj (op V₀) := t.right.2
   have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
-      ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
-    have hmap := CategoryOfElements.map_snd t.hom
-    exact hmap.symm
+      ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s :=
+    (CategoryOfElements.map_snd t.hom).symm
   obtain ⟨t'', hgt'', hcompat_patch⟩ :=
     exists_patch_of_shortExact hS hX₁_epi hV₀U hWU ht₀ ht'
   let T : Bool → PartialLift S.g s
@@ -312,9 +309,8 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
   let t₀ : S.X₂.obj.obj (op V₀) := t.right.2
   have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
-      ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
-    have hmap := CategoryOfElements.map_snd t.hom
-    exact hmap.symm
+      ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s :=
+    (CategoryOfElements.map_snd t.hom).symm
   have hUleV₀ : U ≤ V₀ := by
     by_contra hnot
     have hlt : V₀ < U := lt_of_le_not_ge hV₀U hnot
@@ -339,8 +335,8 @@ theorem epi_app_of_shortExact_flasque {X : TopCat.{u}}
     (hS : S.ShortExact)
     (hX₁ : IsFlasqueSheaf S.X₁)
     (U : Opens X) :
-    Epi (S.g.hom.app (op U)) := by
-  exact epi_app_of_shortExact_of_epi_restrictions hS
+    Epi (S.g.hom.app (op U)) :=
+  epi_app_of_shortExact_of_epi_restrictions hS
     (fun {_ _} i ↦ hX₁ i) U
 
 /-- Quotients of flasque sheaves are flasque along a short exact sequence. -/
