@@ -42,10 +42,16 @@ open Polynomial
 
 /-! ### The five trace roots, pinned from the RHLehmerTrace IVT witnesses. -/
 
+/-- The first trace root of the quintic `q`, in `(−2, −1)`. -/
 noncomputable def y1 : ℝ := traceQ_root_1.choose
+/-- The second trace root of the quintic `q`, in `(−1, 0)`. -/
 noncomputable def y2 : ℝ := traceQ_root_2.choose
+/-- The third trace root of the quintic `q`, in `(0, 1)`. -/
 noncomputable def y3 : ℝ := traceQ_root_3.choose
+/-- The fourth trace root of the quintic `q`, in `(1, 2)`. -/
 noncomputable def y4 : ℝ := traceQ_root_4.choose
+/-- The Salem trace root of the quintic `q`, in `(2, 21/10)` — the one root
+off `[−2, 2]`, giving the reciprocal pair `{μ, 1/μ}`. -/
 noncomputable def y5 : ℝ := traceQ_root_salem.choose
 
 lemma y1_mem : y1 ∈ Set.Ioo (-2 : ℝ) (-3/2) := traceQ_root_1.choose_spec.1
@@ -70,6 +76,8 @@ lemma y_chain : y1 < y2 ∧ y2 < y3 ∧ y3 < y4 ∧ y4 < y5 := by
 
 /-! ### The trace quintic as a polynomial over ℂ, and its root census. -/
 
+/-- The trace quintic over ℂ: `q(y) = y⁵ + y⁴ − 5y³ − 5y² + 4y + 3`, with
+`L(x) = x⁵·q(x + 1/x)`. -/
 noncomputable def tracePoly : Polynomial ℂ :=
   X ^ 5 + X ^ 4 - C 5 * X ^ 3 - C 5 * X ^ 2 + C 4 * X + C 3
 
@@ -86,6 +94,7 @@ lemma trace_root_mem {y : ℝ} (hy : traceQ y = 0) : (y : ℂ) ∈ tracePoly.roo
   rw [mem_roots tracePoly_monic.ne_zero, IsRoot.def, tracePoly_eval, traceQC_ofReal, hy]
   simp
 
+/-- The five trace roots as a multiset over ℂ. -/
 noncomputable def T5 : Multiset ℂ := {(y1 : ℂ), (y2 : ℂ), (y3 : ℂ), (y4 : ℂ), (y5 : ℂ)}
 
 lemma T5_nodup : T5.Nodup := by
@@ -148,6 +157,8 @@ lemma trace_factor :
 
 /-! ### The derivative of the trace quintic; the Salem trace root is simple. -/
 
+/-- The derivative of the trace quintic, evaluated over ℂ (used to show the
+trace roots are simple). -/
 noncomputable def dtraceQC (y : ℂ) : ℂ := 5 * y ^ 4 + 4 * y ^ 3 - 15 * y ^ 2 - 10 * y + 4
 
 lemma tracePoly_derivative_eval (w : ℂ) : (derivative tracePoly).eval w = dtraceQC w := by
@@ -175,6 +186,7 @@ lemma dtrace_y5_ne_zero : dtraceQC (y5 : ℂ) ≠ 0 := by
 
 /-! ### Lehmer over ℂ: evaluation bridge, derivative, and the derivative–trace identity. -/
 
+/-- Lehmer's polynomial over ℂ. -/
 noncomputable def LC : Polynomial ℂ := lehmerPolynomial.map (Int.castRingHom ℂ)
 
 lemma LC_poly : LC = X ^ 10 + X ^ 9 - X ^ 7 - X ^ 6 - X ^ 5 - X ^ 4 - X ^ 3 + X + 1 := by
@@ -221,8 +233,12 @@ lemma deriv_trace_identity {z : ℂ} (hz : z ≠ 0) :
 
 /-! ### The off-circle Salem pair `{μ, ν}`, `μν = 1`, `ν < 1 < μ`. -/
 
+/-- The square-root discriminant `√(y₅² − 4)` splitting the Salem trace root
+into the reciprocal pair. -/
 noncomputable def s5 : ℝ := Real.sqrt (y5 ^ 2 - 4)
+/-- Lehmer's number `μ ≈ 1.17628`: the larger root of `x² − y₅·x + 1`. -/
 noncomputable def mu : ℝ := (y5 + s5) / 2
+/-- The reciprocal root `1/μ`: the smaller root of `x² − y₅·x + 1`. -/
 noncomputable def nu : ℝ := (y5 - s5) / 2
 
 lemma y5_gt_two : 2 < y5 := (Set.mem_Ioo.mp y5_mem).1
