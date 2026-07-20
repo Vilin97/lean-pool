@@ -162,14 +162,14 @@ theorem charpoly_eq_lehmer_of_irreducible {M : Matrix (Fin 10) (Fin 10) ℤ}
       rw [hLg, ← hlead, Polynomial.C_1, mul_one]
   -- charpoly: monic, degree 10, divisible by the degree-10 monic minpoly ⟹ equal
   have hchdeg : Cq.charpoly.natDegree = 10 := by
-    simpa using Cq.charpoly_natDegree_eq_dim
+    simp
   have hchmonic : Cq.charpoly.Monic := Cq.charpoly_monic
   have hdvd : Lq ∣ Cq.charpoly := hmin_eq ▸ hminC
   obtain ⟨u, hu⟩ := hdvd
   have hudeg : u.natDegree = 0 := by
     have h0 : Cq.charpoly ≠ 0 := hchmonic.ne_zero
     have := congrArg Polynomial.natDegree hu
-    rw [Polynomial.natDegree_mul hLmonic.ne_zero (by rintro rfl; simp at hu; exact h0 hu),
+    rw [Polynomial.natDegree_mul hLmonic.ne_zero (by rintro rfl; rw [mul_zero] at hu; exact h0 hu),
       hchdeg, hLdeg] at this
     omega
   have hulead : u.leadingCoeff = 1 := by

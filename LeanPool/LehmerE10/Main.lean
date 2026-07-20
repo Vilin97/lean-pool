@@ -164,8 +164,8 @@ lemma dtrace_y5_ne_zero : dtraceQC (y5 : ℂ) ≠ 0 := by
   have h5 := Set.mem_Ioo.mp y5_mem
   rw [← tracePoly_derivative_eval, trace_factor]
   simp only [derivative_mul, derivative_sub, derivative_X, derivative_C, eval_add, eval_mul,
-    eval_sub, eval_X, eval_C, sub_self, sub_zero, mul_zero, zero_mul, mul_one, one_mul,
-    add_zero, zero_add]
+    eval_sub, eval_X, eval_C, sub_self, sub_zero, mul_zero, mul_one, one_mul,
+    zero_add]
   have hne : ∀ a : ℝ, a < y5 → (y5 : ℂ) - (a : ℂ) ≠ 0 := by
     intro a ha
     rw [sub_ne_zero]
@@ -205,7 +205,7 @@ lemma LC_derivative_eval (z : ℂ) :
     (derivative LC).eval z =
       10 * z ^ 9 + 9 * z ^ 8 - 7 * z ^ 6 - 6 * z ^ 5 - 5 * z ^ 4 - 4 * z ^ 3 - 3 * z ^ 2 + 1 := by
   rw [LC_poly]
-  simp [derivative_add, derivative_sub, derivative_X_pow, derivative_X, derivative_one]
+  simp [derivative_add, derivative_sub, derivative_X, derivative_one]
   try push_cast
   try ring
 
@@ -330,7 +330,7 @@ lemma nuC_mem : (nu : ℂ) ∈ LC.roots := by
 lemma salem_count_le_one {t : ℝ} (ht0 : 0 < t) (ht1 : t ≠ 1)
     (htr : (t : ℂ) + 1 / (t : ℂ) = (y5 : ℂ)) : LC.roots.count (t : ℂ) ≤ 1 := by
   by_contra hcon
-  push_neg at hcon
+  push Not at hcon
   have h2 : 2 ≤ rootMultiplicity ((t : ℝ) : ℂ) LC := by
     rw [← Polynomial.count_roots]; omega
   have hdvd : (X - C ((t : ℝ) : ℂ)) ^ 2 ∣ LC :=
@@ -370,7 +370,7 @@ lemma count_nuC : LC.roots.count (nu : ℂ) = 1 :=
 lemma norm_multiset_prod (S : Multiset ℂ) : ‖S.prod‖ = (S.map fun z => ‖z‖).prod := by
   induction S using Multiset.induction with
   | empty => simp
-  | cons a s ih => simp [norm_mul, ih]
+  | cons a s ih => simp [ih]
 
 lemma norm_muC : ‖((mu : ℝ) : ℂ)‖ = mu := by
   rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (by linarith [mu_gt_one])]
@@ -511,7 +511,7 @@ theorem lehmer_irreducible : Irreducible lehmerPolynomial := by
     exact absurd h (by norm_num)
   · intro a b hab
     by_contra hcon
-    push_neg at hcon
+    push Not at hcon
     obtain ⟨hua, hub⟩ := hcon
     have ha0 : a ≠ 0 := by
       rintro rfl; rw [zero_mul] at hab; exact lehmerPolynomial_monic.ne_zero hab
