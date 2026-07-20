@@ -33,7 +33,7 @@ Route:
       first over ℚ, then over ℤ by injectivity of the coefficient map.
 SCOPE: Lehmer's 1933 conjecture (a positive lower bound for Mahler measures > 1)
 is NOT claimed anywhere in this repository.
-No `sorry`; no axioms beyond `propext`, `Classical.choice`, `Quot.sound`.
+Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
 namespace LehmerE10

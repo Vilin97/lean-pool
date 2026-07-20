@@ -17,7 +17,7 @@ and a root of `L` lies on `|z| = 1` iff its trace `y = x + 1/x` lies in `[−2, 
 reciprocal pair `{λ, 1/λ}` off it — therefore reduces to "`q` has 4 real roots in
 `(−2, 2)` and one root in `(2, 21/10)`": five intermediate-value sign checks,
 carried out here.
-No `sorry`; no axioms beyond `propext`, `Classical.choice`, `Quot.sound`.
+Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
 namespace LehmerE10

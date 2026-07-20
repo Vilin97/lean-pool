@@ -22,7 +22,7 @@ Contents:
     field ℚ⟮z⟯.
   • `totient_le_of_lehmer_root` — a primitive k-th root of unity that is a root of
     `L` has φ(k) ≤ 10 (cyclotomic = minimal polynomial + degree bound).
-No `sorry`; no axioms beyond `propext`, `Classical.choice`, `Quot.sound`.
+Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
 namespace LehmerE10

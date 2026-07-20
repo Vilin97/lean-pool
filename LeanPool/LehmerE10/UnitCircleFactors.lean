@@ -20,7 +20,7 @@ Contents:
     `z + 1/z` real in `(−2, 2)` forces `‖z‖ = 1` (real `z` is excluded by AM–GM;
     the conjugate is then the reciprocal).
   • `two_le_self_add_inv` — the AM–GM inequality used above.
-No `sorry`; no axioms beyond `propext`, `Classical.choice`, `Quot.sound`.
+Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
 namespace LehmerE10

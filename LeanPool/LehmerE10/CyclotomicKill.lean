@@ -21,7 +21,7 @@ argument, using that 2 is a primitive root mod `1291 = L(2)` (order 1290):
 `charpoly_eq_lehmer_of_irreducible`: if `L` is irreducible over ℚ, then any 10×10
 integer matrix annihilated by `L` has characteristic polynomial `L` (over ℚ), via
 Cayley–Hamilton + minimal-polynomial divisibility + degree count.
-No `sorry`; no axioms beyond `propext`, `Classical.choice`, `Quot.sound`.
+Axiom footprint: `propext`, `Classical.choice`, `Quot.sound` only.
 -/
 
 namespace LehmerE10
