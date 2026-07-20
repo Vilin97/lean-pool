@@ -105,12 +105,7 @@ lemma «subst!» {φ} (s) (h : H ⊢! φ) : H ⊢! φ⟦s⟧ := by
   | mdp ihφψ ihφ => exact ihφψ ⨀ ihφ;
   | maxm h =>
     obtain ⟨ψ, h, ⟨s', rfl⟩⟩ := h;
-    apply maxm!;
-    use ψ;
-    constructor;
-    · assumption;
-    · use s' ∘ s;
-      exact subst_comp;
+    exact maxm! ⟨ψ, h, s' ∘ s, subst_comp⟩
   | _ => simp;
 
 end Deduction
@@ -138,11 +133,7 @@ lemma weakerThan_of_dominate_axiomInstances (hMaxm : ∀ {φ :
 lemma weakerThan_of_subset_axioms (hSubset : H₁.axioms ⊆ H₂.axioms) : H₁ wkn H₂ := by
   apply weakerThan_of_dominate_axiomInstances;
   rintro φ ⟨ψ, hs, ⟨s, rfl⟩⟩;
-  apply maxm!;
-  use ψ;
-  constructor;
-  · exact hSubset hs;
-  · use s;
+  exact maxm! ⟨ψ, hSubset hs, s, rfl⟩
 
 end «lp_section_2»
 

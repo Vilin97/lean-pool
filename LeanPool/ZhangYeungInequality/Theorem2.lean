@@ -224,22 +224,9 @@ private lemma theorem2_shannon_identity
       chain_rule'' μ hZ hX, chain_rule'' μ hU hX, chain_rule'' μ hZU hX,
       chain_rule'' μ hZ hY, chain_rule'' μ hU hY, chain_rule'' μ hZU hY,
       chain_rule'' μ hX hZ, chain_rule'' μ hY hZ, chain_rule'' μ hXY hZ]
-  have e_XZU : H[⟨X, fun ω => (Z ω, U ω)⟩; μ] = H[⟨fun ω => (Z ω, U ω), X⟩; μ] :=
-    entropy_comm hX hZU μ
-  have e_YZU : H[⟨Y, fun ω => (Z ω, U ω)⟩; μ] = H[⟨fun ω => (Z ω, U ω), Y⟩; μ] :=
-    entropy_comm hY hZU μ
-  have e_ZXY : H[⟨Z, fun ω => (X ω, Y ω)⟩; μ] = H[⟨fun ω => (X ω, Y ω), Z⟩; μ] :=
-    entropy_comm hZ hXY μ
-  have e_UXY : H[⟨U, fun ω => (X ω, Y ω)⟩; μ] = H[⟨fun ω => (X ω, Y ω), U⟩; μ] :=
-    entropy_comm hU hXY μ
-  have e_XU : H[⟨X, U⟩; μ] = H[⟨U, X⟩; μ] := entropy_comm hX hU μ
-  have e_YU : H[⟨Y, U⟩; μ] = H[⟨U, Y⟩; μ] := entropy_comm hY hU μ
-  have e_XZ : H[⟨X, Z⟩; μ] = H[⟨Z, X⟩; μ] := entropy_comm hX hZ μ
-  have e_YZ : H[⟨Y, Z⟩; μ] = H[⟨Z, Y⟩; μ] := entropy_comm hY hZ μ
-  have e_XYZU : H[⟨fun ω => (X ω, Y ω), fun ω => (Z ω, U ω)⟩; μ]
-      = H[⟨fun ω => (Z ω, U ω), fun ω => (X ω, Y ω)⟩; μ] :=
-    entropy_comm hXY hZU μ
-  linarith [e_XZU, e_YZU, e_ZXY, e_UXY, e_XU, e_YU, e_XZ, e_YZ, e_XYZU]
+  linarith [entropy_comm hX hZU μ, entropy_comm hY hZU μ, entropy_comm hZ hXY μ,
+    entropy_comm hU hXY μ, entropy_comm hX hU μ, entropy_comm hY hU μ,
+    entropy_comm hX hZ μ, entropy_comm hY hZ μ, entropy_comm hXY hZU μ]
 
 /-! ### Auxiliary distributions `ptilde`, `phat`, and the joint PMF -/
 
@@ -483,8 +470,7 @@ private lemma measureReal_map_pair_le_map_fst
       map_measureReal_apply hf (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact hω.1
+  simp_all
 
 /--
 **Marginal bound (pair, second).** The pair mass is bounded by the second projection.
@@ -501,8 +487,7 @@ private lemma measureReal_map_pair_le_map_snd
       map_measureReal_apply hg (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact hω.2
+  simp_all
 
 /-- **Marginal bound (triple, forget third).** `p(a, b, c) ≤ p(a, b)`. -/
 private lemma measureReal_map_triple_le_map_pair_12
@@ -519,8 +504,7 @@ private lemma measureReal_map_triple_le_map_pair_12
       map_measureReal_apply (hf.prodMk hg) (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact ⟨hω.1, hω.2.1⟩
+  simp_all
 
 /-- **Marginal bound (triple, forget second).** `p(a, b, c) ≤ p(a, c)`. -/
 private lemma measureReal_map_triple_le_map_pair_13
@@ -537,8 +521,7 @@ private lemma measureReal_map_triple_le_map_pair_13
       map_measureReal_apply (hf.prodMk hh) (measurableSet_singleton _)]
   apply measureReal_mono _ (measure_ne_top _ _)
   intro ω hω
-  simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq] at hω ⊢
-  exact ⟨hω.1, hω.2.2⟩
+  simp_all
 
 /--
 **IndepFun product formula.** If `f, g` are independent under `μ`, the joint singleton
@@ -622,16 +605,12 @@ private lemma sum_filter_map_real_eq_map_comp
   have hUnion : (fun ω => proj (F ω)) ⁻¹' {b}
       = ⋃ t ∈ (Finset.univ.filter (fun t : α => proj t = b) : Finset α), F ⁻¹' {t} := by
     ext ω
-    simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_iUnion,
-               Finset.mem_filter, Finset.mem_univ, true_and]
-    exact ⟨fun h => ⟨F ω, h, rfl⟩, fun ⟨_, ht, hωt⟩ => hωt ▸ ht⟩
+    simp_all
   rw [hUnion]
   refine (measureReal_biUnion_finset ?_ ?_).symm
   · rintro t₁ - t₂ - hne
     rw [Function.onFun, Set.disjoint_left]
-    intro ω hω₁ hω₂
-    simp only [Set.mem_preimage, Set.mem_singleton_iff] at hω₁ hω₂
-    exact hne (hω₁.symm.trans hω₂)
+    simp_all
   · exact fun _ _ => hF (measurableSet_singleton _)
 
 /-! ### Marginal structure of `ptilde`
@@ -671,9 +650,7 @@ private lemma ptilde_fibre_sum
   change ∑ x, ∑ y, Fx x * Fy y / c = c
   simp_rw [div_eq_mul_inv, ← Finset.sum_mul]
   rw [← Finset.sum_mul_sum, hSumFx, hSumFy]
-  by_cases hc : c = 0
-  · simp [hc]
-  · field_simp
+  simp_all
 
 omit [Fintype S₁] [Fintype S₃] [Fintype S₄] in
 /--
@@ -780,6 +757,17 @@ private lemma sum_ptilde_over_x_z
   simp_rw [sum_ptilde_over_x hX hY hZ hU μ]
   exact sum_map_triple_second hY hZ hU μ y u
 
+/--
+**Rotate the outermost coordinate of a triple sum to the front.** `∑ₐ ∑_b ∑_c f a b c =
+∑_c ∑ₐ ∑_b f a b c`. Factors the shared reordering of the four `sum_ptilde_over_*_*_*`
+marginal lemmas.
+-/
+private lemma sum_rotate3 {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (f : α → β → γ → ℝ) :
+    (∑ a, ∑ b, ∑ c, f a b c) = ∑ c, ∑ a, ∑ b, f a b c := by
+  rw [Finset.sum_comm (γ := γ)]
+  exact Finset.sum_congr rfl fun _ _ => Finset.sum_comm
+
 omit [Fintype S₁] in
 /--
 **`ptilde` marginal over `(y, z, u)` is `pX`.** Derived from `sum_ptilde_over_y_z` and
@@ -791,13 +779,7 @@ private lemma sum_ptilde_over_y_z_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (x : S₁) :
     (∑ y : S₂, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map X).real {x} := by
-  have step1 : (∑ y : S₂, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ y : S₂, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ y : S₂, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [sum_rotate3 (fun y z u => ptilde X Y Z U μ (x, y, z, u))]
   simp_rw [sum_ptilde_over_y_z hX hY hZ hU μ]
   exact sum_map_pair_second hX hU μ x
 
@@ -812,13 +794,7 @@ private lemma sum_ptilde_over_x_z_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (y : S₂) :
     (∑ x : S₁, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map Y).real {y} := by
-  have step1 : (∑ x : S₁, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ x : S₁, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [sum_rotate3 (fun x z u => ptilde X Y Z U μ (x, y, z, u))]
   simp_rw [sum_ptilde_over_x_z hX hY hZ hU μ]
   exact sum_map_pair_second hY hU μ y
 
@@ -833,13 +809,7 @@ private lemma sum_ptilde_over_x_y_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (z : S₃) :
     (∑ x : S₁, ∑ y : S₂, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map Z).real {z} := by
-  have step1 : (∑ x : S₁, ∑ y : S₂, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ u : S₄, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ u : S₄, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [sum_rotate3 (fun x y u => ptilde X Y Z U μ (x, y, z, u))]
   have hFibre : ∀ u : S₄, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} :=
     fun u => ptilde_fibre_sum hX hY hZ hU μ z u
@@ -857,13 +827,7 @@ private lemma sum_ptilde_over_x_y_z
     (μ : Measure Ω) [IsFiniteMeasure μ] (u : S₄) :
     (∑ x : S₁, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map U).real {u} := by
-  have step1 : (∑ x : S₁, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ z : S₃, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ z : S₃, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ z : S₃, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [sum_rotate3 (fun x y z => ptilde X Y Z U μ (x, y, z, u))]
   have hFibre : ∀ z : S₃, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} :=
     fun z => ptilde_fibre_sum hX hY hZ hU μ z u
@@ -904,8 +868,7 @@ private lemma ptilde_sum_eq_one
     fun z u => ptilde_fibre_sum hX hY hZ hU μ z u
   simp_rw [hFibre]
   have hSingletonSum : (∑ p : S₃ × S₄, (μ.map (fun ω => (Z ω, U ω))).real {p}) = 1 := by
-    rw [sum_measureReal_singleton (Finset.univ : Finset (S₃ × S₄))]
-    simp
+    simp_all
   have hCollapse :
       (∑ z : S₃, ∑ u : S₄, (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}) = 1 := by
     rw [show (∑ z : S₃, ∑ u : S₄, (μ.map (fun ω => (Z ω, U ω))).real {(z, u)})
@@ -952,8 +915,6 @@ private lemma condIndepFun_map_triple_real_singleton
     have h_h_pre_ne : μ (h ⁻¹' {c}) ≠ 0 := by
       rw [← Measure.map_apply hh (measurableSet_singleton c)]; exact h_map_c_ne
     have h_h_pre_top : μ (h ⁻¹' {c}) ≠ ⊤ := measure_ne_top _ _
-    have h_Xinv_ne : (μ (h ⁻¹' {c}))⁻¹ ≠ 0 := ENNReal.inv_ne_zero.mpr h_h_pre_top
-    have h_Xinv_top : (μ (h ⁻¹' {c}))⁻¹ ≠ ⊤ := ENNReal.inv_ne_top.mpr h_h_pre_ne
     have h_cancel : μ (h ⁻¹' {c}) * (μ (h ⁻¹' {c}))⁻¹ = 1 :=
       ENNReal.mul_inv_cancel h_h_pre_ne h_h_pre_top
     -- Extract IndepFun on the conditional.
@@ -965,12 +926,9 @@ private lemma condIndepFun_map_triple_real_singleton
       (indepFun_iff_measure_inter_preimage_eq_mul).mp h_indep {a} {b}
         (measurableSet_singleton a) (measurableSet_singleton b)
     simp_rw [cond_apply (hh (measurableSet_singleton c))] at h_prod_cond
-    -- `h_prod_cond : X⁻¹ * μ(h⁻¹{c} ∩ (f⁻¹{a} ∩ g⁻¹{b}))
-    -- = X⁻¹ * μ(h⁻¹{c} ∩ f⁻¹{a}) * (X⁻¹ * μ(h⁻¹{c} ∩ g⁻¹{b}))`
-    -- Rearrange the right-hand side via `mul_mul_mul_comm`, then cancel `X⁻¹` on the
-    -- left.
+    -- `h_prod_cond : X⁻¹ * P = X⁻¹ * (X⁻¹ * (F * G))`. Multiply both by `X` twice
+    -- and cancel to clear the two conditional denominators.
     rw [mul_mul_mul_comm, mul_assoc] at h_prod_cond
-    -- Now `h_prod_cond : X⁻¹ * P = X⁻¹ * (X⁻¹ * (F * G))`. Multiply both by `X` twice.
     have h_step1 : μ (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))
         = (μ (h ⁻¹' {c}))⁻¹ *
           (μ (h ⁻¹' {c} ∩ f ⁻¹' {a}) * μ (h ⁻¹' {c} ∩ g ⁻¹' {b})) := by
@@ -981,7 +939,6 @@ private lemma condIndepFun_map_triple_real_singleton
           ← mul_assoc (μ (h ⁻¹' {c})) _ (_ * (_ * _)),
           h_cancel, one_mul] at this
       exact this
-    -- `h_step1 : P = X⁻¹ * (F * G)`. Multiply by `X` to clear.
     have h_step2 : μ (h ⁻¹' {c}) * μ (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))
         = μ (h ⁻¹' {c} ∩ f ⁻¹' {a}) * μ (h ⁻¹' {c} ∩ g ⁻¹' {b}) := by
       rw [h_step1, ← mul_assoc, h_cancel, one_mul]
@@ -1005,13 +962,7 @@ private lemma condIndepFun_map_triple_real_singleton
         map_measureReal_apply hh (measurableSet_singleton _),
         h_T_eq, h_A_eq, h_B_eq]
     -- Convert ENNReal → Real.
-    rw [show μ.real (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))
-          = (μ (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))).toReal from rfl,
-        show μ.real (h ⁻¹' {c}) = (μ (h ⁻¹' {c})).toReal from rfl,
-        show μ.real (h ⁻¹' {c} ∩ f ⁻¹' {a}) =
-          (μ (h ⁻¹' {c} ∩ f ⁻¹' {a})).toReal from rfl,
-        show μ.real (h ⁻¹' {c} ∩ g ⁻¹' {b}) =
-          (μ (h ⁻¹' {c} ∩ g ⁻¹' {b})).toReal from rfl]
+    simp only [measureReal_def]
     rw [← ENNReal.toReal_mul, ← ENNReal.toReal_mul, mul_comm (μ (h ⁻¹' {c} ∩ _)) _]
     exact congrArg ENNReal.toReal h_step2
 
@@ -1157,19 +1108,15 @@ private lemma phat_sum_eq_one
         le_antisymm (hX_zero ▸ measureReal_map_pair_le_map_fst hX hU μ x u) measureReal_nonneg
       have h_phat_zero : ∀ z, phat X Y Z U μ (x, y, z, u) = 0 := by
         intro z; unfold phat; simp [hX_zero]
-      rw [Finset.sum_congr rfl (fun z _ => h_phat_zero z), Finset.sum_const_zero, hXU_zero,
-        zero_mul, zero_div]
+      simp_all
     by_cases hY_zero : (μ.map Y).real {y} = 0
     · have hYU_zero : (μ.map (fun ω => (Y ω, U ω))).real {(y, u)} = 0 :=
         le_antisymm (hY_zero ▸ measureReal_map_pair_le_map_fst hY hU μ y u) measureReal_nonneg
       have h_phat_zero : ∀ z, phat X Y Z U μ (x, y, z, u) = 0 := by
         intro z; unfold phat; simp [hY_zero]
-      rw [Finset.sum_congr rfl (fun z _ => h_phat_zero z), Finset.sum_const_zero, hYU_zero,
-        mul_zero, zero_div]
+      simp_all
     have h_denom_ne : (μ.map U).real {u} * (μ.map X).real {x} * (μ.map Y).real {y} ≠ 0 := by
-      intro heq; simp only [mul_eq_zero] at heq
-      rcases heq with (h | h) | h
-      exacts [hU_zero h, hX_zero h, hY_zero h]
+      simp_all
     have h' : ∑ z, phat X Y Z U μ (x, y, z, u)
             = (μ.map (fun ω => (X ω, U ω))).real {(x, u)}
               * (μ.map (fun ω => (Y ω, U ω))).real {(y, u)}
@@ -1204,8 +1151,7 @@ private lemma phat_sum_eq_one
     field_simp
   simp_rw [h_sum_y, sum_map_pair_first hX hU μ]
   haveI : IsProbabilityMeasure (μ.map U) := Measure.isProbabilityMeasure_map hU.aemeasurable
-  rw [sum_measureReal_singleton (Finset.univ : Finset S₄)]
-  simp
+  simp_all
 
 /-! ### Δ-to-log-ratio identities -/
 
@@ -1253,6 +1199,80 @@ private lemma entropy_eq_sum_joint
       refine Finset.sum_congr rfl fun t ht => ?_
       rw [(Finset.mem_filter.mp ht).2]]
   rw [sum_filter_map_real_eq_map_comp hF hproj μ b]
+
+omit [Fintype S₁] [Fintype S₂] [Fintype S₃] [Fintype S₄] in
+/--
+**Pointwise log-ratio expansion.** On the support of `ptilde` (equivalently, where the
+three triple/pair marginals `p(x,z,u)`, `p(y,z,u)`, `p(z,u)` are positive), the log of
+`phat / ptilde` splits into the eleven additive marginal log-terms. Shared kernel of the
+two `set`-abbreviated expansions in `delta_eq_sum_log_ratio` and `sum_joint_eq_sum_ptilde`.
+-/
+private lemma log_phat_div_ptilde_eq
+    {X : Ω → S₁} {Y : Ω → S₂} {Z : Ω → S₃} {U : Ω → S₄}
+    (hX : Measurable X) (hY : Measurable Y) (hZ : Measurable Z) (hU : Measurable U)
+    (μ : Measure Ω) [IsFiniteMeasure μ] (x : S₁) (y : S₂) (z : S₃) (u : S₄)
+    (hXZU_pos : 0 < (μ.map (fun ω => (X ω, Z ω, U ω))).real {(x, z, u)})
+    (hYZU_pos : 0 < (μ.map (fun ω => (Y ω, Z ω, U ω))).real {(y, z, u)})
+    (hZU_pos : 0 < (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}) :
+    Real.log (phat X Y Z U μ (x, y, z, u) / ptilde X Y Z U μ (x, y, z, u))
+      = Real.log ((μ.map (fun ω => (X ω, Z ω))).real {(x, z)})
+        + Real.log ((μ.map (fun ω => (X ω, U ω))).real {(x, u)})
+        + Real.log ((μ.map (fun ω => (Y ω, Z ω))).real {(y, z)})
+        + Real.log ((μ.map (fun ω => (Y ω, U ω))).real {(y, u)})
+        + Real.log ((μ.map (fun ω => (Z ω, U ω))).real {(z, u)})
+        - Real.log ((μ.map Z).real {z}) - Real.log ((μ.map U).real {u})
+        - Real.log ((μ.map X).real {x}) - Real.log ((μ.map Y).real {y})
+        - Real.log ((μ.map (fun ω => (X ω, Z ω, U ω))).real {(x, z, u)})
+        - Real.log ((μ.map (fun ω => (Y ω, Z ω, U ω))).real {(y, z, u)}) := by
+  have hXZ_pos : 0 < (μ.map (fun ω => (X ω, Z ω))).real {(x, z)} := lt_of_lt_of_le hXZU_pos
+    (measureReal_map_triple_le_map_pair_12 hX hZ hU μ x z u)
+  have hXU_pos : 0 < (μ.map (fun ω => (X ω, U ω))).real {(x, u)} := lt_of_lt_of_le hXZU_pos
+    (measureReal_map_triple_le_map_pair_13 hX hZ hU μ x z u)
+  have hYZ_pos : 0 < (μ.map (fun ω => (Y ω, Z ω))).real {(y, z)} := lt_of_lt_of_le hYZU_pos
+    (measureReal_map_triple_le_map_pair_12 hY hZ hU μ y z u)
+  have hYU_pos : 0 < (μ.map (fun ω => (Y ω, U ω))).real {(y, u)} := lt_of_lt_of_le hYZU_pos
+    (measureReal_map_triple_le_map_pair_13 hY hZ hU μ y z u)
+  have hX_pos : 0 < (μ.map X).real {x} := lt_of_lt_of_le hXZU_pos
+    (measureReal_map_pair_le_map_fst hX (hZ.prodMk hU) μ x (z, u))
+  have hY_pos : 0 < (μ.map Y).real {y} := lt_of_lt_of_le hYZU_pos
+    (measureReal_map_pair_le_map_fst hY (hZ.prodMk hU) μ y (z, u))
+  have hZ_pos : 0 < (μ.map Z).real {z} := lt_of_lt_of_le hZU_pos
+    (measureReal_map_pair_le_map_fst hZ hU μ z u)
+  have hU_pos : 0 < (μ.map U).real {u} := lt_of_lt_of_le hZU_pos
+    (measureReal_map_pair_le_map_snd hZ hU μ z u)
+  rw [show phat X Y Z U μ (x, y, z, u) / ptilde X Y Z U μ (x, y, z, u)
+      = (μ.map (fun ω => (X ω, Z ω))).real {(x, z)}
+          * (μ.map (fun ω => (X ω, U ω))).real {(x, u)}
+          * (μ.map (fun ω => (Y ω, Z ω))).real {(y, z)}
+          * (μ.map (fun ω => (Y ω, U ω))).real {(y, u)}
+          * (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}
+        / ((μ.map Z).real {z} * (μ.map U).real {u} * (μ.map X).real {x} * (μ.map Y).real {y}
+          * (μ.map (fun ω => (X ω, Z ω, U ω))).real {(x, z, u)}
+          * (μ.map (fun ω => (Y ω, Z ω, U ω))).real {(y, z, u)}) from by
+      simp only [phat, ptilde]; field_simp]
+  rw [Real.log_div (by positivity) (by positivity)]
+  rw [show (μ.map (fun ω => (X ω, Z ω))).real {(x, z)}
+        * (μ.map (fun ω => (X ω, U ω))).real {(x, u)}
+        * (μ.map (fun ω => (Y ω, Z ω))).real {(y, z)}
+        * (μ.map (fun ω => (Y ω, U ω))).real {(y, u)}
+        * (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}
+      = (μ.map (fun ω => (X ω, Z ω))).real {(x, z)}
+        * ((μ.map (fun ω => (X ω, U ω))).real {(x, u)}
+        * ((μ.map (fun ω => (Y ω, Z ω))).real {(y, z)}
+        * ((μ.map (fun ω => (Y ω, U ω))).real {(y, u)}
+        * (μ.map (fun ω => (Z ω, U ω))).real {(z, u)}))) from by ring]
+  rw [Real.log_mul hXZ_pos.ne' (by positivity), Real.log_mul hXU_pos.ne' (by positivity),
+      Real.log_mul hYZ_pos.ne' (by positivity), Real.log_mul hYU_pos.ne' hZU_pos.ne']
+  rw [show (μ.map Z).real {z} * (μ.map U).real {u} * (μ.map X).real {x} * (μ.map Y).real {y}
+        * (μ.map (fun ω => (X ω, Z ω, U ω))).real {(x, z, u)}
+        * (μ.map (fun ω => (Y ω, Z ω, U ω))).real {(y, z, u)}
+      = (μ.map Z).real {z} * ((μ.map U).real {u} * ((μ.map X).real {x} * ((μ.map Y).real {y}
+        * ((μ.map (fun ω => (X ω, Z ω, U ω))).real {(x, z, u)}
+        * (μ.map (fun ω => (Y ω, Z ω, U ω))).real {(y, z, u)})))) from by ring]
+  rw [Real.log_mul hZ_pos.ne' (by positivity), Real.log_mul hU_pos.ne' (by positivity),
+      Real.log_mul hX_pos.ne' (by positivity), Real.log_mul hY_pos.ne' (by positivity),
+      Real.log_mul hXZU_pos.ne' hYZU_pos.ne']
+  ring
 
 /--
 **`Δ` as a weighted-log sum.** The identity `Δ(Z, U | X, Y) = ∑_{x,y,z,u} p(x,y,z,u) ·
@@ -1310,49 +1330,8 @@ private lemma delta_eq_sum_log_ratio
         exact measureReal_map_pair_le_map_snd hX (hY.prodMk (hZ.prodMk hU)) μ x (y, z, u)
       have hZU_pos : 0 < pZU (z, u) :=
         lt_of_lt_of_le hXZU_pos (measureReal_map_pair_le_map_snd hX (hZ.prodMk hU) μ x (z, u))
-      have hXZ_pos : 0 < pXZ (x, z) := lt_of_lt_of_le hXZU_pos
-        (measureReal_map_triple_le_map_pair_12 hX hZ hU μ x z u)
-      have hXU_pos : 0 < pXU (x, u) := lt_of_lt_of_le hXZU_pos
-        (measureReal_map_triple_le_map_pair_13 hX hZ hU μ x z u)
-      have hYZ_pos : 0 < pYZ (y, z) := lt_of_lt_of_le hYZU_pos
-        (measureReal_map_triple_le_map_pair_12 hY hZ hU μ y z u)
-      have hYU_pos : 0 < pYU (y, u) := lt_of_lt_of_le hYZU_pos
-        (measureReal_map_triple_le_map_pair_13 hY hZ hU μ y z u)
-      have hX_pos : 0 < pX x := lt_of_lt_of_le hXZU_pos
-        (measureReal_map_pair_le_map_fst hX (hZ.prodMk hU) μ x (z, u))
-      have hY_pos : 0 < pY y := lt_of_lt_of_le hYZU_pos
-        (measureReal_map_pair_le_map_fst hY (hZ.prodMk hU) μ y (z, u))
-      have hZ_pos : 0 < pZ z := lt_of_lt_of_le hZU_pos
-        (measureReal_map_pair_le_map_fst hZ hU μ z u)
-      have hU_pos : 0 < pU u := lt_of_lt_of_le hZU_pos
-        (measureReal_map_pair_le_map_snd hZ hU μ z u)
       congr 1
-      have h_phat_form : phat X Y Z U μ (x, y, z, u)
-          = pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) / (pZ z * pU u * pX x * pY y) := rfl
-      have h_ptilde_form : ptilde X Y Z U μ (x, y, z, u)
-          = pXZU (x, z, u) * pYZU (y, z, u) / pZU (z, u) := rfl
-      rw [h_phat_form, h_ptilde_form]
-      rw [show pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) / (pZ z * pU u * pX x * pY y)
-          / (pXZU (x, z, u) * pYZU (y, z, u) / pZU (z, u))
-        = pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) * pZU (z, u)
-          / (pZ z * pU u * pX x * pY y * pXZU (x, z, u) * pYZU (y, z, u)) from by field_simp]
-      rw [Real.log_div (by positivity) (by positivity)]
-      rw [show pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) * pZU (z, u)
-          = pXZ (x, z) * (pXU (x, u) * (pYZ (y, z) * (pYU (y, u) * pZU (z, u)))) from by ring]
-      rw [Real.log_mul hXZ_pos.ne' (by positivity),
-          Real.log_mul hXU_pos.ne' (by positivity),
-          Real.log_mul hYZ_pos.ne' (by positivity),
-          Real.log_mul hYU_pos.ne' hZU_pos.ne']
-      rw [show pZ z * pU u * pX x * pY y * pXZU (x, z, u) * pYZU (y, z, u)
-          = pZ z * (pU u * (pX x * (pY y * (pXZU (x, z, u) * pYZU (y, z, u))))) from by ring]
-      rw [Real.log_mul hZ_pos.ne' (by positivity),
-          Real.log_mul hU_pos.ne' (by positivity),
-          Real.log_mul hX_pos.ne' (by positivity),
-          Real.log_mul hY_pos.ne' (by positivity),
-          Real.log_mul hXZU_pos.ne' hYZU_pos.ne']
-      change _ = L (x, y, z, u)
-      simp only [L]
-      ring
+      rw [log_phat_div_ptilde_eq hX hY hZ hU μ x y z u hXZU_pos hYZU_pos hZU_pos]
   rw [show (∑ t : S₁ × S₂ × S₃ × S₄,
             pJoint X Y Z U μ t * Real.log (phat X Y Z U μ t / ptilde X Y Z U μ t))
         = ∑ t, pJoint X Y Z U μ t * L t from
@@ -1506,13 +1485,10 @@ private lemma ptilde_filter_sum_eq_reindex
         (fun t => proj t = c), ptilde X Y Z U μ t)
       = ∑ d : δ, ptilde X Y Z U μ (embed d) := by
   refine (Finset.sum_nbij' embed extract ?_ ?_ ?_ ?_ ?_).symm
-  · intro d _
-    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h_proj_embed d⟩
+  · simp_all
   · intro _ _; exact Finset.mem_univ _
   · intro d _; exact h_extract_embed d
-  · intro t ht
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ht
-    exact h_embed_extract t ht
+  · simp_all
   · intro _ _; rfl
 
 /-!
@@ -1885,73 +1861,19 @@ private lemma sum_joint_eq_sum_ptilde
       u) / pZU (z, u) :=
       rfl
     rw [h_ptilde_form] at h_pt_pos
-    have hXZU_nn : 0 ≤ pXZU (x, z, u) := measureReal_nonneg
-    have hYZU_nn : 0 ≤ pYZU (y, z, u) := measureReal_nonneg
-    have hZU_nn : 0 ≤ pZU (z, u) := measureReal_nonneg
-    have hZU_pos : 0 < pZU (z, u) := by
-      rcases hZU_nn.lt_or_eq with h | h
-      · exact h
-      · exfalso; rw [← h] at h_pt_pos; simp at h_pt_pos
-    have hProd_pos : 0 < pXZU (x, z, u) * pYZU (y, z, u) := by
-      have h_num : pXZU (x, z, u) * pYZU (y, z, u) / pZU (z, u) > 0 := h_pt_pos
-      by_contra h_neg
-      push Not at h_neg
-      have : pXZU (x, z, u) * pYZU (y, z, u) = 0 :=
-        le_antisymm h_neg (mul_nonneg hXZU_nn hYZU_nn)
-      rw [this, zero_div] at h_num
-      exact lt_irrefl _ h_num
-    have hXZU_pos : 0 < pXZU (x, z, u) := by
-      rcases (mul_pos_iff.mp hProd_pos) with ⟨hp1, _⟩ | ⟨hn1, _⟩
-      · exact hp1
-      · exact absurd hn1 ((not_lt.mpr) hXZU_nn)
-    have hYZU_pos : 0 < pYZU (y, z, u) := by
-      rcases (mul_pos_iff.mp hProd_pos) with ⟨_, hp2⟩ | ⟨_, hn2⟩
-      · exact hp2
-      · exact absurd hn2 ((not_lt.mpr) hYZU_nn)
-    -- From the triple marginals, derive positivity of all 11 factors.
-    have hXZ_pos : 0 < pXZ (x, z) := lt_of_lt_of_le hXZU_pos
-      (measureReal_map_triple_le_map_pair_12 hX hZ hU μ x z u)
-    have hXU_pos : 0 < pXU (x, u) := lt_of_lt_of_le hXZU_pos
-      (measureReal_map_triple_le_map_pair_13 hX hZ hU μ x z u)
-    have hYZ_pos : 0 < pYZ (y, z) := lt_of_lt_of_le hYZU_pos
-      (measureReal_map_triple_le_map_pair_12 hY hZ hU μ y z u)
-    have hYU_pos : 0 < pYU (y, u) := lt_of_lt_of_le hYZU_pos
-      (measureReal_map_triple_le_map_pair_13 hY hZ hU μ y z u)
-    have hX_pos : 0 < pX x := lt_of_lt_of_le hXZU_pos
-      (measureReal_map_pair_le_map_fst hX (hZ.prodMk hU) μ x (z, u))
-    have hY_pos : 0 < pY y := lt_of_lt_of_le hYZU_pos
-      (measureReal_map_pair_le_map_fst hY (hZ.prodMk hU) μ y (z, u))
-    have hZ_pos : 0 < pZ z := lt_of_lt_of_le hZU_pos
-      (measureReal_map_pair_le_map_fst hZ hU μ z u)
-    have hU_pos : 0 < pU u := lt_of_lt_of_le hZU_pos
-      (measureReal_map_pair_le_map_snd hZ hU μ z u)
-    -- Rewrite `phat / ptilde` as a single fraction and take logs.
-    have hphat_form : phat X Y Z U μ (x, y, z, u)
-        = pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) / (pZ z * pU u * pX x * pY y) := rfl
-    rw [hphat_form, h_ptilde_form]
-    -- Combine the two fractions into a single one with positive denominator.
-    rw [show pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) / (pZ z * pU u * pX x * pY y)
-            / (pXZU (x, z, u) * pYZU (y, z, u) / pZU (z, u))
-          = pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) * pZU (z, u)
-            / (pZ z * pU u * pX x * pY y * pXZU (x, z, u) * pYZU (y, z, u)) from by
-        field_simp]
-    rw [Real.log_div (by positivity) (by positivity)]
-    rw [show pXZ (x, z) * pXU (x, u) * pYZ (y, z) * pYU (y, u) * pZU (z, u)
-          = pXZ (x, z) * (pXU (x, u) * (pYZ (y, z) * (pYU (y, u) * pZU (z, u)))) from by ring]
-    rw [Real.log_mul hXZ_pos.ne' (by positivity),
-        Real.log_mul hXU_pos.ne' (by positivity),
-        Real.log_mul hYZ_pos.ne' (by positivity),
-        Real.log_mul hYU_pos.ne' hZU_pos.ne']
-    rw [show pZ z * pU u * pX x * pY y * pXZU (x, z, u) * pYZU (y, z, u)
-          = pZ z * (pU u * (pX x * (pY y * (pXZU (x, z, u) * pYZU (y, z, u))))) from by ring]
-    rw [Real.log_mul hZ_pos.ne' (by positivity),
-        Real.log_mul hU_pos.ne' (by positivity),
-        Real.log_mul hX_pos.ne' (by positivity),
-        Real.log_mul hY_pos.ne' (by positivity),
-        Real.log_mul hXZU_pos.ne' hYZU_pos.ne']
-    change _ = L (x, y, z, u)
-    simp only [hL_def]
-    ring
+    have hZU_pos : 0 < pZU (z, u) :=
+      (div_pos_iff.mp h_pt_pos).resolve_right (fun h => absurd h.2 (not_lt.mpr measureReal_nonneg))
+        |>.2
+    have hProd_pos : 0 < pXZU (x, z, u) * pYZU (y, z, u) :=
+      (div_pos_iff.mp h_pt_pos).resolve_right
+        (fun h => absurd h.2 (not_lt.mpr measureReal_nonneg)) |>.1
+    have hXZU_pos : 0 < pXZU (x, z, u) :=
+      (mul_pos_iff.mp hProd_pos).resolve_right
+        (fun h => absurd h.1 (not_lt.mpr measureReal_nonneg)) |>.1
+    have hYZU_pos : 0 < pYZU (y, z, u) :=
+      (mul_pos_iff.mp hProd_pos).resolve_right
+        (fun h => absurd h.1 (not_lt.mpr measureReal_nonneg)) |>.2
+    rw [log_phat_div_ptilde_eq hX hY hZ hU μ x y z u hXZU_pos hYZU_pos hZU_pos]
   -- Absolute-continuity claim: the support of `pJoint` is contained in the
   -- support of `ptilde`. This lets us transport `h_log_eq_L` from the support
   -- of `ptilde` to the support of `pJoint` below.
@@ -2108,12 +2030,7 @@ private lemma theorem2_delta_le_zero
     Real.sum_mul_log_div_leq h_ptilde_nn h_phat_nn h_abs
   have h_kl_nonneg : 0 ≤ ∑ t ∈ s,
       ptilde X Y Z U μ t * Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-    have : (1 : ℝ) * Real.log (1 / 1) ≤
-        ∑ t ∈ s, ptilde X Y Z U μ t *
-          Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-      rw [h_ptilde_sum, h_phat_sum] at h_log_sum
-      exact h_log_sum
-    simpa using this
+    simp_all
   have h_delta_eq : delta Z U X Y μ
       = ∑ t ∈ s, pJoint X Y Z U μ t *
           Real.log (phat X Y Z U μ t / ptilde X Y Z U μ t) :=

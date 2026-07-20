@@ -109,8 +109,7 @@ lemma isHom_fold
     induction t with | mk label children ih =>
     simp only [Rose.fold.eq_1, Rose.Encoding.encode_mk, Rose.Encoding.fold_mk, List.map_map]
     congr 1
-    simp only [List.map_inj_left, Function.comp_apply]
-    grind
+    simp_all
   rw [this]
   fun_prop
 
@@ -120,21 +119,7 @@ private def foldAlgHom
     : B → List (A →𝒒 C) → A →𝒒 C :=
   fun b ks ↦
     QuasiBorelHom.mk
-      (fun a ↦ mk a b (List.map (fun k : A →𝒒 C ↦ k a) ks)) (by
-        fun_prop)
-
-private lemma map_congr'
-    {α β : Type*} {l : List α} {f g : α → β}
-    (h : ∀ x ∈ l, f x = g x) : List.map f l = List.map g l := by
-  induction l with
-  | nil => simp
-  | cons x xs ih =>
-      have hx : f x = g x := by
-        exact h x (by simp)
-      have hxs : ∀ y ∈ xs, f y = g y := by
-        intro y hy
-        exact h y (by simp [hy])
-      simp [hx, ih hxs]
+      (fun a ↦ mk a b (List.map (fun k : A →𝒒 C ↦ k a) ks)) (by fun_prop)
 
 private lemma fold_pointwise
     (mk : A → B → List C → C)
@@ -152,9 +137,7 @@ private lemma fold_pointwise
           = List.map ((fun k : A →𝒒 C ↦ k a) ∘
               Rose.Encoding.fold (A := B) (mk := foldAlgHom mk hmk) ∘
               Rose.Encoding.encode (A := B)) children := by
-        simp only [List.map_inj_left, Function.comp_apply]
-        intro child hmem
-        simpa using ih child hmem
+        simp_all
       simp [Rose.fold.eq_1, Rose.Encoding.encode_mk, Rose.Encoding.fold_mk,
         foldAlgHom, List.map_map, this]
 
@@ -188,15 +171,13 @@ lemma isHom_fold'
 lemma isHom_label : IsHom (fun t : Rose A ↦ t.label) := by
   have h : IsHom (fun e : Rose.Encoding A ↦ e.2 []) := by
     fun_prop
-  have hencode : IsHom (Rose.Encoding.encode (A := A)) := isHom_encode (A := A)
-  have hcomp := isHom_comp' h hencode
   have hfun : (fun t : Rose A ↦ (Rose.Encoding.encode t).2 [])
       = fun t ↦ t.label := by
     funext t
     cases t with
     | mk label children =>
         simp [Rose.Encoding.encode_mk, Rose.Encoding.mk]
-  simpa [hfun] using hcomp
+  simpa [hfun] using isHom_comp' h (isHom_encode (A := A))
 
 private def childrenFoldAlg (x : C) (xs : List (Rose C × List (Rose C)))
     : Rose C × List (Rose C) :=
@@ -216,9 +197,7 @@ private lemma fold_children_eq
                 ∘ Rose.Encoding.encode (A := C))
               children
             = List.map (fun child ↦ (child, child.children)) children := by
-        refine map_congr' ?_
-        intro child hmem
-        simpa using ih child hmem
+        simp_all
       have hchildren :
           List.map (Prod.fst ∘ fun child ↦ (child, child.children)) children
             = children := by
@@ -260,11 +239,6 @@ lemma isHom_bind
     intro t
     induction t with
     | mk label children ih =>
-        have : List.map (Rose.fold (mkBind x)) children
-            = List.map (Rose.bind (f x)) children := by
-          simp only [List.map_inj_left]
-          intro child hmem
-          simpa [mkBind] using (ih child hmem).symm
         simp [Rose.bind, mkBind, bindFoldAlg]
   have : IsHom fun (x, y, z) ↦ mkBind x y z := by
     dsimp [mkBind, bindFoldAlg]

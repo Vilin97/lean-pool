@@ -123,8 +123,7 @@ lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.t
   rw [IsPosition] at hp ⊢
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take n H.x.val)).length % 2 = p.toNat
-    rw [pInvTreeHomMap_len]
-    exact hp
+    rwa [pInvTreeHomMap_len]
   · change (List.take n H.x.val).length ≤ 2 * k
     exact (List.length_take_le n H.x.val).trans h
 lemma pInv_fixing_short :
@@ -164,8 +163,7 @@ lemma losable_or_winnable :
             ext1
             · simp [HL, Ht, dropLast, hn]
             · dsimp [HL, PreLift.LLift.S]
-              have hG : Ht.preLift.game = H.preLift.game := by
-                simp [Ht, dropLast]
+              have hG : Ht.preLift.game = H.preLift.game := by simp [Ht, dropLast]
               exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
           have ⟨hcs, hcl⟩ :=
             (Lift.con_short_long _ (by simp_rw [Ht]; synthIsPosition)).mp ih.lift'.con
@@ -205,8 +203,7 @@ lemma losable_or_winnable :
             exact hm
           · rfl
         · change (defensiveQuasi H.preLift.game Player.one (hyp.pruned.sub _)).1.subtree = _
-          have hG : H.preLift.game = Ht.preLift.game := by
-            simp [Ht, dropLast]
+          have hG : H.preLift.game = Ht.preLift.game := by simp [Ht, dropLast]
           exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
     · exact Or.inr (ih.winnable_of_le (by simp [Ht, dropLast]))
 
@@ -233,8 +230,7 @@ lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player
         (pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
       H.pInv_fixing_short).val.length ≤ 2 * k := hlen.trans_le htakeLen
     rw [take_coe]
-    simp only [List.length_take]
-    exact min_le_iff.mpr (Or.inr hpInvLen))
+    simpa only [List.length_take] using min_le_iff.mpr (Or.inr hpInvLen))
   erw [take_apply (treeHom hyp)]
   rw [cancel_pInv_right]
   refine Eq.trans ?_ (hvalT.trans ?_)
@@ -359,8 +355,7 @@ lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree :
           convert hW
           synthIsPosition)
     · let H' := PreLift.WLift.mk _ h; have hux := H'.u_spec'
-      have hshortLen : H'.toLift.liftShort.val.length = 2 * k + 2 := by
-        exact Lift.liftShort_length H'.toLift
+      have hshortLen : H'.toLift.liftShort.val.length = 2 * k + 2 := Lift.liftShort_length H'.toLift
       have hul : H'.u.val.length > n - (2 * k + 1) := by
         conv at hW => simp [PreLift.Won]
         by_contra
@@ -386,8 +381,7 @@ lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree :
         left
         change n < H'.toLift.liftShort.val.length + (H'.u.val.length - 1)
         have htarget : H'.toLift.liftShort.val.length + (H'.u.val.length - 1) =
-            2 * k + 2 + (H'.u.val.length - 1) := by
-          rw [hshortLen]
+            2 * k + 2 + (H'.u.val.length - 1) := by rw [hshortLen]
         exact Nat.lt_of_lt_of_eq (by omega) htarget.symm)] at hR
       replace hR := hR.1; conv at hR => simp [List.prefix_iff_eq_take]
       conv => rhs; erw [← ExtensionsAt.val'_get_last,
@@ -404,8 +398,7 @@ lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree :
         simp only [Lift.liftShort_length, le_inf_iff]
         constructor
         · exact Nat.succ_le_of_lt hn'
-        · have hnX : n < H.x.val.length := by
-            simpa [PreLift.Won.lift'_toLift] using hnLift
+        · have hnX : n < H.x.val.length := by simpa [PreLift.Won.lift'_toLift] using hnLift
           exact (Nat.succ_le_of_lt hn').trans (Nat.le_of_lt hnX))]
       conv => lhs; erw [h.lift'.liftVal_lift_get (by as_aux_lemma => synthIsPosition)]
       conv => simp
@@ -414,8 +407,7 @@ lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree :
       congr 1
       change n = 2 * k + 1 + (min n H.x.val.length - H'.toLift.liftShort.val.length + 1)
       rw [hshortLen]
-      have hnX : n < H.x.val.length := by
-        simpa [PreLift.Won.lift'_toLift] using hnLift
+      have hnX : n < H.x.val.length := by simpa [PreLift.Won.lift'_toLift] using hnLift
       rw [min_eq_left hnX.le]
       omega
 
@@ -480,8 +472,7 @@ lemma lLift_mem_tree (h : H.preLift.Losable) :
       simp only [dropLast, take_coe, take_trans, preLift_take, Lift'.lift_coe,
         PreLift.Losable.lift'_toLift, subtreeIncl_coe]
       rw [← Lift.liftVal_take _ _ (by as_aux_lemma => omega)]
-      have hnX : n < H.x.val.length := by
-        simpa [PreLift.Losable.lift'_toLift] using hnLift
+      have hnX : n < H.x.val.length := by simpa [PreLift.Losable.lift'_toLift] using hnLift
       congr 1
       ext1
       · simp_rw [PreLift.LLift.toLift_toPreLift, Lift.take_toPreLift]
@@ -499,15 +490,13 @@ lemma lLift_mem_tree (h : H.preLift.Losable) :
         have hG :
             (H.preLift.take (min (n + 1) ((List.take (n + 1) H.x.val).length - 1)) (by
               rw [htake]
-              omega)).game = H.preLift.game := by
-          rw [PreLift.game_take]
+              omega)).game = H.preLift.game := by rw [PreLift.game_take]
         exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
 
 lemma take_winnable (h : H.preLift.Winnable) n :
   (H.take (2 * k + 1 + h.num + n) (by as_aux_lemma => omega)).preLift.Winnable :=
   h.takeMin_winnable.winnable_of_le (by
-    rw [PreLift.Winnable.takeMin]
-    rw [TreeLift.preLift_take]
+    rw [PreLift.Winnable.takeMin, TreeLift.preLift_take]
     exact (PreLift.take_le_take (H := H.preLift) (hm := by omega) (hn := by omega)).mpr
       (Or.inl (by omega)))
 lemma winnable_subtree (hL : H.preLift.Winnable) (hnL : ¬ ∃ h, (H.dropLast h).preLift.Won) :
@@ -531,8 +520,7 @@ lemma winnable_subtree (hL : H.preLift.Winnable) (hnL : ¬ ∃ h, (H.dropLast h)
   have := H.take_winnable hL n
   dsimp [extension, PreLift.extension]; split_ifs with hi
   · cases hnL ⟨by synthIsPosition, by
-      have hbound : n + (2 * k + 1 + hL.num) < H.x.val.length := by
-        exact Nat.lt_sub_iff_add_lt.mp hn
+      have hbound : n + (2 * k + 1 + hL.num) < H.x.val.length := Nat.lt_sub_iff_add_lt.mp hn
       apply hi.won_of_le
       conv => simp [dropLast, - PreLift.le_def]
       exact (PreLift.take_le_take _ _ _).mpr (Or.inl (by
@@ -589,8 +577,7 @@ lemma won_of_winnable n (h : (bodyTake y n).preLift.Winnable) :
       conv at this => simp [Stream'.take_drop]
       conv => simp [Stream'.take_drop]
       generalize_proofs pf1 pf2 pf3 at this
-      have hsub : pf1.strat.pre.subtree = h.strat.pre.subtree := by
-        exact h.prefix_strat_subtree
+      have hsub : pf1.strat.pre.subtree = h.strat.pre.subtree := h.prefix_strat_subtree
           (((Stream'.take_prefix _ _ _).mpr (by as_aux_lemma => synthIsPosition)).drop _)
           (by simp) rfl
       simp_rw [add_assoc] at this ⊢; convert (hsub ▸ this) using 4
@@ -664,8 +651,7 @@ lemma lostLift_map (h : ∀ n, (bodyTake y n).preLift.Losable) :
 lemma body_stratMap {G : Game A} {k : ℕ} {hyp : Hyp G k}
   {R : Strategy (gameAsTrees hyp).2 Player.one} (y : body (stratMap' R).pre.subtree) :
   ∃ x : body R.pre.subtree, (bodyFunctor.map π
-    ⟨x.val, body_mono R.pre.subtree_sub x.prop⟩).val = y.val :=
-  by
+    ⟨x.val, body_mono R.pre.subtree_sub x.prop⟩).val = y.val := by
   classical
   exact if h : ∀ n, (bodyTake y n).preLift.Losable then ⟨lostLift y h, lostLift_map y h⟩
   else by

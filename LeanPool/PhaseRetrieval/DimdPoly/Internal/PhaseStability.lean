@@ -46,8 +46,7 @@ private theorem pkappa_ne_zero_of_norm_eq_one
           (Finset.sum (0 : Pkappa d kappa).support
             (fun alpha => ‖(0 : Pkappa d kappa) alpha‖ ^ 2)) = 0
     simp
-  rw [hzero] at hF_norm
-  norm_num at hF_norm
+  simp_all
 
 theorem pkappaInner_smul_left
     {d : Nat} {kappa : MultiIndex d} (c : ℂ)
@@ -100,10 +99,7 @@ private theorem lpNorm_congr_ae {α E : Type*} [MeasurableSpace α] [NormedAddCo
   by_cases hf : AEStronglyMeasurable f μ
   · have hg : AEStronglyMeasurable g μ := hmeas.mp hf
     simp [hf, hg, eLpNorm_congr_ae hfg]
-  · have hg : ¬ AEStronglyMeasurable g μ := by
-      intro hg
-      exact hf (hmeas.mpr hg)
-    simp [hf, hg]
+  · simp_all
 
 private theorem gaussianL2Norm_eq_lpNorm
     {d : Nat} {α : Type*} [NormedAddCommGroup α] [MeasurableSpace α] [NormedSpace ℝ α]
@@ -129,26 +125,23 @@ theorem evalPkappa_lpNorm_eq_norm
     lpNorm (evalPkappa kappa F) 2 (gammaD d) = ‖F‖ := by
   calc
     lpNorm (evalPkappa kappa F) 2 (gammaD d)
-        = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) := by
-          symm
-          exact gaussianL2Norm_eq_lpNorm (evalPkappa kappa F)
-            (memLp_two_evalPkappa hd kappa F).1
+        = Real.sqrt (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) :=
+          (gaussianL2Norm_eq_lpNorm (evalPkappa kappa F)
+            (memLp_two_evalPkappa hd kappa F).1).symm
     _ = ‖F‖ := by
           have hpow :
               (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ (2 : ℝ) ∂ gammaD d) =
                 ∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d := by
-            congr 1
-            ext z
-            exact Real.rpow_natCast ‖evalPkappa kappa F z‖ 2
+            simp_all
           rw [hpow, evalPkappa_total_mass hd kappa F, Real.sqrt_sq_eq_abs]
           exact abs_of_nonneg (Real.sqrt_nonneg _)
 
 theorem evalPkappaL2_norm
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     ‖evalPkappaL2 kappa F‖ = ‖F‖ := by
-  rw [evalPkappaL2_eq_toLp hd kappa F]
-  rw [MeasureTheory.Lp.norm_toLp]
-  rw [MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
+  rw [evalPkappaL2_eq_toLp hd kappa F,
+    MeasureTheory.Lp.norm_toLp,
+    MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
   exact evalPkappa_lpNorm_eq_norm hd kappa F
 
 theorem evalPkappaL2_sub
@@ -179,8 +172,7 @@ theorem inner_evalPkappaL2_eq_star_pkappaInner
       · rw [Finsupp.sum_single_index]
         · simp [coeffPkappa]
         · simp
-      · intro a ha
-        simp
+      · simp_all
       · intro a ha b1 b2
         ring
 
@@ -193,8 +185,7 @@ private theorem defect_lpNorm_eq
   have hmeas :
       AEStronglyMeasurable
         (fun z : Cd d => ‖evalPkappa kappa (F + G) z‖ - ‖evalPkappa kappa F z‖)
-        (gammaD d) := by
-    exact
+        (gammaD d) :=
       (((continuous_evalPkappa kappa (F + G)).norm).sub
         ((continuous_evalPkappa kappa F).norm)).stronglyMeasurable.aestronglyMeasurable
   simpa [defect, Real.norm_eq_abs, sq_abs] using
@@ -220,8 +211,7 @@ private theorem defect_lpNorm_evalPkappaL2_eq
   filter_upwards [hGF, hF] with z hGFz hFz
   rw [evalPkappaL2_eq_toLp hd kappa (G + F),
     evalPkappaL2_eq_toLp hd kappa F]
-  rw [hGFz, hFz]
-  rw [add_comm G F]
+  rw [hGFz, hFz, add_comm G F]
 
 private theorem phase_alignment
     {H : Type*}
@@ -236,14 +226,13 @@ private theorem phase_alignment
   let g : H := u - a • f0
   let β : ℂ := 1 + a
   have hf0_inner : inner ℂ f0 f0 = (1 : ℂ) := by
-    rw [inner_self_eq_norm_sq_to_K, hf0]
-    simp
+    simp_all
   have hg_left : inner ℂ f0 g = 0 := by
     dsimp [g, a]
     rw [inner_sub_right, inner_smul_right, hf0_inner]
     simp
-  have hg_right : inner ℂ g f0 = 0 := by
-    exact (inner_eq_zero_symm (𝕜 := ℂ) (x := g) (y := f0)).2 hg_left
+  have hg_right : inner ℂ g f0 = 0 :=
+    (inner_eq_zero_symm (𝕜 := ℂ) (x := g) (y := f0)).2 hg_left
   have hu_decomp : u = a • f0 + g := by
     dsimp [g]
     abel_nf
@@ -255,12 +244,9 @@ private theorem phase_alignment
     rw [hu_decomp, sub_eq_add_neg]
     calc
       phase • (f0 + (a • f0 + g)) + -f0
-          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by
-              simp [add_smul, add_assoc]
-      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by
-            simp [β, smul_add, mul_smul]
-      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by
-            abel_nf
+          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by simp [add_smul, add_assoc]
+      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by simp [β, smul_add, mul_smul]
+      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by abel_nf
       _ = ((phase * β - 1 : ℂ) • f0) + phase • g := by
             rw [← add_smul]
             congr 1
@@ -301,8 +287,7 @@ private theorem phase_alignment
   have hcomp : ‖((phase * β - 1 : ℂ) • f0)‖ ≤ ‖a • f0‖ := by
     rw [norm_smul, norm_smul]
     simpa [hf0] using hcoef
-  have hphase_g : ‖phase • g‖ = ‖g‖ := by
-    rw [norm_smul, hphase, one_mul]
+  have hphase_g : ‖phase • g‖ = ‖g‖ := by rw [norm_smul, hphase, one_mul]
   have hnorm_sq_le :
       ‖phase • (f0 + u) - f0‖ * ‖phase • (f0 + u) - f0‖ ≤ ‖u‖ * ‖u‖ := by
     rw [hh_sq, hu_sq, hphase_g]
@@ -356,8 +341,7 @@ theorem realGaugeLocalStability
       dsimp [orthogonalToPk]
       have hstar_zero : star (pkappaInner G F) = 0 := by
         simpa [inner_evalPkappaL2_eq_star_pkappaInner hd kappa G F] using hinner_val
-      have hzero := congrArg star hstar_zero
-      simpa using hzero
+      simp_all
     have hnorm_g : ‖g‖ = ‖G‖ := by
       change ‖(g : L2Tensor d)‖ = ‖G‖
       rw [← hG, evalPkappaL2_norm hd kappa G]
@@ -390,8 +374,7 @@ theorem realGaugeLocalStability
     linarith
   have him_h : (inner ℂ h f0).im = 0 := by
     have hstar_im : (star (pkappaInner H F)).im = 0 := by
-      rw [show star (pkappaInner H F) = (starRingEnd ℂ) (pkappaInner H F) from rfl,
-        Complex.conj_im, hH_gauge, neg_zero]
+      simp_all
     change (inner ℂ (evalPkappaL2 kappa H) (evalPkappaL2 kappa F)).im = 0
     simpa [inner_evalPkappaL2_eq_star_pkappaInner hd kappa H F] using hstar_im
   have hlocal_h := hlocal h hnorm_h him_h
@@ -424,10 +407,7 @@ private theorem defect_phase_sub_eq_modulusDefect
   filter_upwards with z
   have heval : evalPkappa kappa (F + (phase • Q - F)) z = phase * evalPkappa kappa Q z := by
     have h1 := congrFun (evalPkappa_smul hd kappa phase Q) z
-    have h2 := congrFun (evalPkappa_add hd kappa F (phase • Q - F)) z
-    have h3 := congrFun (evalPkappa_sub hd kappa (phase • Q) F) z
-    rw [h2, h3, h1]
-    ring
+    simp_all
   rw [heval, norm_mul, hphase, one_mul]
 
 /-- Rewriting the perturbation defect as the two-signal modulus defect. -/
@@ -443,8 +423,8 @@ theorem modulusDefect_phase_smul
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     (F Q : Pkappa d kappa) {phase : ℂ} (hphase : ‖phase‖ = 1) :
     modulusDefect kappa F (phase • Q) = modulusDefect kappa F Q := by
-  rw [← defect_sub_eq_modulusDefect hd kappa F (phase • Q)]
-  rw [defect_phase_sub_eq_modulusDefect hd kappa F Q hphase]
+  rw [← defect_sub_eq_modulusDefect hd kappa F (phase • Q),
+    defect_phase_sub_eq_modulusDefect hd kappa F Q hphase]
 
 /--
 Global stable recovery after fixing the positive phase gauge.
@@ -524,8 +504,8 @@ theorem localPhaseStability
       (phase • (f0 + u) - f0 : S) = ⟨evalPkappaL2 kappa H, ⟨H, rfl⟩⟩ := by
     apply Subtype.ext
     dsimp [H, f0, u]
-    rw [evalPkappaL2_sub hd kappa (phase • Q) F, evalPkappaL2_smul hd kappa phase Q]
-    rw [evalPkappaL2_sub hd kappa Q F]
+    rw [evalPkappaL2_sub hd kappa (phase • Q) F, evalPkappaL2_smul hd kappa phase Q,
+      evalPkappaL2_sub hd kappa Q F]
     module
   have hH_norm_le : ‖H‖ ≤ δ := by
     have hu_norm : ‖u‖ = ‖Q - F‖ := by
@@ -549,11 +529,7 @@ theorem localPhaseStability
       exact hphase_gauge'
     have hstar_im : (star (pkappaInner H F)).im = 0 := by
       simpa [inner_evalPkappaL2_eq_star_pkappaInner hd kappa H F] using hinner
-    have hconj := hstar_im
-    rw [show star (pkappaInner H F) = (starRingEnd ℂ) (pkappaInner H F) from rfl,
-      Complex.conj_im] at hconj
-    rw [neg_eq_zero] at hconj
-    exact hconj
+    simp_all
   refine ⟨phase, hphase, ?_⟩
   calc
     phasedCoeffDistance F Q phase = ‖H‖ := rfl

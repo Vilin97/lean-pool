@@ -28,8 +28,7 @@ lemma isHom_up {f : A → B} (hf : IsHom f) : IsHom (fun x ↦ ULift.up (f x)) :
 
 @[fun_prop]
 lemma isHom_down {f : A → ULift B} (hf : IsHom f) : IsHom (fun x ↦ ULift.down (f x)) := by
-  simp only [isHom_def] at hf
-  exact hf
+  simp_all
 
 end QuasiBorelSpace.ULift
 
@@ -47,7 +46,6 @@ lemma isHom_up {f : A → B} (hf : IsHom f) : IsHom (fun x ↦ PLift.up (f x)) :
 
 @[fun_prop]
 lemma isHom_down {f : A → PLift B} (hf : IsHom f) : IsHom (fun x ↦ PLift.down (f x)) := by
-  simp only [isHom_def] at hf
-  exact hf
+  simp_all
 
 end QuasiBorelSpace.PLift

@@ -40,6 +40,15 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 def barrierPotential (u : ℝ) (M : Matrix V V ℝ) : ℝ :=
   (u • (1 : Matrix V V ℝ) - M)⁻¹.trace
 
+/-- Real form of the spectral theorem: a real Hermitian matrix equals
+    `U * diagonal eigenvalues * star U` for its eigenvector unitary `U`. -/
+lemma realSpectralDecomp {M : Matrix V V ℝ} (hM : M.IsHermitian) :
+    M = (hM.eigenvectorUnitary : Matrix V V ℝ) * diagonal hM.eigenvalues *
+      star (hM.eigenvectorUnitary : Matrix V V ℝ) := by
+  have h := hM.spectral_theorem
+  simpa only [Unitary.conjStarAlgAut_apply, Function.comp_def,
+    RCLike.ofReal_real_eq_id, id] using h
+
 omit [DecidableEq V] in
 /-- PSD factorization via spectral theorem: P PSD implies P = Nᴴ * N for some N. -/
 lemma psd_factorization (P : Matrix V V ℝ) (hP : P.PosSemidef) :
@@ -48,11 +57,7 @@ lemma psd_factorization (P : Matrix V V ℝ) (hP : P.PosSemidef) :
   set herm := hP.isHermitian
   set U := (herm.eigenvectorUnitary : Matrix V V ℝ)
   set eig := herm.eigenvalues
-  have hP_eq : P = U * diagonal eig * star U := by
-    have h := herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at h
-    exact h
+  have hP_eq : P = U * diagonal eig * star U := realSpectralDecomp herm
   have h_nn := hP.eigenvalues_nonneg
   set sqrt_eig := fun i => Real.sqrt (eig i)
   use diagonal sqrt_eig * star U
@@ -65,6 +70,47 @@ lemma psd_factorization (P : Matrix V V ℝ) (hP : P.PosSemidef) :
     rw [diagonal_mul_diagonal]; congr 1; ext i; exact Real.mul_self_sqrt (h_nn i)
   rw [hP_eq, hNH, Matrix.mul_assoc, Matrix.mul_assoc,
       ← Matrix.mul_assoc (diagonal sqrt_eig), h_sqrt_sq]
+
+/-- The Hermitian, invertible square root of a positive definite matrix. -/
+lemma posDef_sqrt_exists (U : Matrix V V ℝ) (hU : U.PosDef) :
+    ∃ R : Matrix V V ℝ, R.IsHermitian ∧ IsUnit R.det ∧ R * R = U := by
+  classical
+  set hU_herm := hU.isHermitian
+  set eigP := (hU_herm.eigenvectorUnitary : Matrix V V ℝ)
+  set d := hU_herm.eigenvalues
+  have hP_star_mul : star eigP * eigP = 1 := Unitary.coe_star_mul_self hU_herm.eigenvectorUnitary
+  have hP_mul_star : eigP * star eigP = 1 := Unitary.coe_mul_star_self hU_herm.eigenvectorUnitary
+  have hU_eq : U = eigP * Matrix.diagonal d * star eigP := realSpectralDecomp hU_herm
+  set sqrtd := fun i => Real.sqrt (d i) with sqrtd_def
+  set Uhalf := eigP * Matrix.diagonal sqrtd * star eigP with Uhalf_def
+  have hsqrtd_ne : ∀ i, sqrtd i ≠ 0 := fun i =>
+    ne_of_gt (Real.sqrt_pos_of_pos (hU.eigenvalues_pos i))
+  have hUhalf_sq : Uhalf * Uhalf = U := by
+    rw [Uhalf_def, hU_eq]
+    calc eigP * Matrix.diagonal sqrtd * star eigP *
+          (eigP * Matrix.diagonal sqrtd * star eigP)
+        = eigP * Matrix.diagonal sqrtd * (star eigP * eigP) *
+              Matrix.diagonal sqrtd * star eigP := by simp only [Matrix.mul_assoc]
+      _ = eigP * (Matrix.diagonal sqrtd * Matrix.diagonal sqrtd) * star eigP := by
+          rw [hP_star_mul, Matrix.mul_one]; simp only [Matrix.mul_assoc]
+      _ = eigP * Matrix.diagonal d * star eigP := by
+          have h : Matrix.diagonal (fun i => sqrtd i * sqrtd i) = Matrix.diagonal d := by
+            congr 1
+            ext i
+            exact Real.mul_self_sqrt (le_of_lt (hU.eigenvalues_pos i))
+          rw [Matrix.diagonal_mul_diagonal, h]
+  have hUhalf_herm : Uhalf.IsHermitian := by
+    rw [Uhalf_def, Matrix.IsHermitian, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul]
+    simp only [star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose,
+      (show (Matrix.diagonal sqrtd).IsHermitian from by simp [Matrix.IsHermitian]).eq,
+      Matrix.mul_assoc]
+  have hUhalf_det : IsUnit Uhalf.det := by
+    rw [Uhalf_def, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal]
+    exact IsUnit.mul (IsUnit.mul
+      (IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hP_mul_star, Matrix.det_one]))
+      (IsUnit.mk0 _ (Finset.prod_ne_zero_iff.mpr fun i _ => hsqrtd_ne i)))
+      (IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hP_star_mul, Matrix.det_one]))
+  exact ⟨Uhalf, hUhalf_herm, hUhalf_det, hUhalf_sq⟩
 
 omit [DecidableEq V] in
 /-- For PSD matrices P, Q over ℝ, tr(P * Q) ≥ 0.
@@ -152,8 +198,7 @@ lemma barrier_potential_decrease
       rw [Matrix.sub_mul, Matrix.trace_sub]; ring
     linarith
   -- Step 7: Conclude
-  rw [htrace]
-  exact mul_le_mul_of_nonneg_left hkey (sub_nonneg.mpr hu.le)
+  simp_all
 
 /-- Helper: the barrier potential gap is positive when u' > u and M ≺ uI.
     Requires Nonempty V since trace is 0 on the empty type. -/
@@ -199,10 +244,35 @@ lemma eigenvalue_le_trace_of_posSemidef
   -- trace = sum of eigenvalues (for real Hermitian matrices, ofReal is the identity on ℝ)
   have htr : K.trace = ∑ j, hK_herm.eigenvalues j := by
     have h := hK_herm.trace_eq_sum_eigenvalues
-    simp only [RCLike.ofReal_real_eq_id, id] at h
-    exact h
+    simp_all
   rw [htr]
   exact Finset.single_le_sum (fun j _ => h_eig_nn j) (Finset.mem_univ i)
+
+/-- If `K` is PSD with trace `< 1`, then `I - K` is positive definite. -/
+lemma one_sub_posDef_of_trace_lt_one (K : Matrix V V ℝ) (hK_psd : K.PosSemidef)
+    (htrK_lt : K.trace < 1) :
+    ((1 : Matrix V V ℝ) - K).PosDef := by
+  classical
+  set hK_herm := hK_psd.isHermitian
+  set eigQ := (hK_herm.eigenvectorUnitary : Matrix V V ℝ)
+  set eig := hK_herm.eigenvalues
+  have hQ_mul_star : eigQ * star eigQ = 1 := Unitary.coe_mul_star_self hK_herm.eigenvectorUnitary
+  have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := realSpectralDecomp hK_herm
+  have h_eig_lt_1 : ∀ i, eig i < 1 := fun i =>
+    lt_of_le_of_lt (eigenvalue_le_trace_of_posSemidef K hK_psd i) htrK_lt
+  have hQ_unit : IsUnit (eigQ : Matrix V V ℝ) := by
+    rw [Matrix.isUnit_iff_isUnit_det]
+    exact IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hQ_mul_star, Matrix.det_one])
+  rw [hK_eq, ← hQ_mul_star,
+      show eigQ * star eigQ - eigQ * Matrix.diagonal eig * star eigQ =
+        eigQ * Matrix.diagonal (fun i => 1 - eig i) * star eigQ from by
+          rw [show eigQ * star eigQ = eigQ * 1 * star eigQ from by rw [Matrix.mul_one],
+              ← Matrix.sub_mul, ← Matrix.mul_sub]
+          congr 2; ext i j
+          simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_apply]
+          split_ifs <;> simp,
+      hQ_unit.posDef_star_right_conjugate_iff]
+  exact Matrix.PosDef.diagonal (fun i => sub_pos.mpr (h_eig_lt_1 i))
 
 end Problem6
 

@@ -61,8 +61,7 @@ Some easy consequences of the definition of an action by automorphisms.
 omit [AddGroup A] [AutAction α] in
 @[aesop norm (rule_sets := [AutAction])]
 lemma apply_zero : ∀ {a : A}, α a (0 : B) = (0 : B) := by
-  intro a
-  exact map_zero (α a)
+  simp_all
 
 @[aesop norm (rule_sets := [AutAction])]
 lemma zero_apply : ∀ {b : B}, α (0 : A) b = b := by
@@ -73,8 +72,7 @@ lemma zero_apply : ∀ {b : B}, α (0 : A) b = b := by
 omit [AddGroup A] [AutAction α] in
 @[aesop norm (rule_sets := [AutAction])]
 lemma apply_add : ∀ {a : A} {b b' : B}, α a (b + b') = α a b + α a b' := by
-  intro a b b'
-  exact map_add (α a) b b'
+  simp_all
 
 @[aesop safe (rule_sets := [AutAction])]
 lemma compatibility' : ∀ {a a' : A} {b : B}, α a (α a' b) = α (a + a') b := by
@@ -90,8 +88,7 @@ lemma act_neg_act {a : A} {b : B} : α a (α (-a) b) = b := by
 omit [AddGroup A] [AutAction α] in
 @[aesop safe (rule_sets := [AutAction])]
 lemma apply_neg : ∀ {a : A} {b : B}, α a (-b) = -α a b := by
-  intro a b
-  exact map_neg (α a) b
+  simp_all
 
 end AutAction
 
@@ -134,16 +131,14 @@ lemma left_id {q : Q} : c 0 q = (0 : K) := by
   have := ccl.cocycle_condition 0 0 q
   simp only [ccl.cocycle_zero, AutAction.id_action, zero_add, add_zero,
     AddMonoidHom.id_apply] at this
-  exact (add_left_cancel (a := c 0 q)
-    (show c 0 q + 0 = c 0 q + c 0 q by simpa only [add_zero] using this)).symm
+  simp_all
 
 
 @[aesop norm (rule_sets := [Cocycle])]
 lemma right_id {q : Q} : c q 0 = (0 : K) := by
   have := ccl.cocycle_condition q 0 0
   simp only [ccl.cocycle_zero, AutAction.apply_zero, zero_add, add_zero] at this
-  exact add_left_cancel (a := c q 0)
-    (show c q 0 + c q 0 = c q 0 + 0 by simpa only [add_zero] using this)
+  simp_all
 
 @[aesop safe (rule_sets := [Cocycle])]
 lemma inv_rel (q : Q) : c q (-q) = ccl.α q (c (-q) q) := by

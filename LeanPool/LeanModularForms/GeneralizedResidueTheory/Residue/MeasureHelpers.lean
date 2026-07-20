@@ -44,29 +44,19 @@ theorem Set.countable_setOf_isolated_points'
         fun heq => h_ne (by simp [heq])
       have h1 : |t₁ - t₂| ≤ |t₁ - x| + |x - t₂| :=
         abs_sub_le t₁ x t₂
-      have h2 : |t₁ - x| < r ⟨t₁, ht₁⟩ / 2 := by
-        rw [abs_sub_comm]; exact hx₁
+      have h2 : |t₁ - x| < r ⟨t₁, ht₁⟩ / 2 := by rw [abs_sub_comm]; exact hx₁
       have h3 : |x - t₂| < r ⟨t₂, ht₂⟩ / 2 := hx₂
       have h4' :=
         hr_sep ⟨t₁, ht₁⟩ t₂ ht₂ (Ne.symm h_ne')
-      have h4 : r ⟨t₁, ht₁⟩ ≤ |t₁ - t₂| := by
-        rw [abs_sub_comm]; exact h4'
+      have h4 : r ⟨t₁, ht₁⟩ ≤ |t₁ - t₂| := by rw [abs_sub_comm]; exact h4'
       have h5' :=
         hr_sep ⟨t₂, ht₂⟩ t₁ ht₁ h_ne'
-      have h5 : r ⟨t₂, ht₂⟩ ≤ |t₂ - t₁| := by
-        rw [abs_sub_comm]; exact h5'
+      have h5 : r ⟨t₂, ht₂⟩ ≤ |t₂ - t₁| := by rw [abs_sub_comm]; exact h5'
       rw [abs_sub_comm] at h5
       linarith [hr_pos ⟨t₁, ht₁⟩, hr_pos ⟨t₂, ht₂⟩]
-    have h_open : ∀ t : S, IsOpen (ball t) :=
-      fun _ => Metric.isOpen_ball
-    have h_nonempty : ∀ t : S, (ball t).Nonempty :=
-      fun t =>
-        ⟨t.val,
-          Metric.mem_ball_self (by linarith [hr_pos t])⟩
-    have h_countable_S : Countable S :=
-      Pairwise.countable_of_isOpen_disjoint
-        h_disj h_open h_nonempty
-    exact Set.countable_coe_iff.mp h_countable_S
+    exact Set.countable_coe_iff.mp <|
+      Pairwise.countable_of_isOpen_disjoint h_disj (fun _ => Metric.isOpen_ball)
+        (fun t => ⟨t.val, Metric.mem_ball_self (by linarith [hr_pos t])⟩)
 
 /-- Preimage of a singleton under a piecewise C¹
 immersion has measure zero. -/
@@ -82,13 +72,9 @@ theorem preimage_singleton_measure_zero_of_deriv_ne_zero
   have h_isolated : ∀ t₀ ∈ S, t₀ ∉ P →
       ∃ ε > 0, ∀ t ∈ S, t ≠ t₀ → |t - t₀| ≥ ε := by
     intro t₀ ⟨ht₀_Icc, ht₀_eq⟩ ht₀_nP
-    have h_diff : DifferentiableAt ℝ γ t₀ :=
-      hγ_diff t₀ ht₀_Icc ht₀_nP
-    have h_deriv_ne : deriv γ t₀ ≠ 0 :=
-      hγ'_ne t₀ ht₀_Icc ht₀_nP
     have h_ev :=
-      HasDerivAt.eventually_ne h_diff.hasDerivAt
-        h_deriv_ne (c := z₀)
+      HasDerivAt.eventually_ne (hγ_diff t₀ ht₀_Icc ht₀_nP).hasDerivAt
+        (hγ'_ne t₀ ht₀_Icc ht₀_nP) (c := z₀)
     rw [eventually_nhdsWithin_iff,
       Metric.eventually_nhds_iff] at h_ev
     obtain ⟨ε, hε_pos, h_ball⟩ := h_ev
@@ -96,11 +82,7 @@ theorem preimage_singleton_measure_zero_of_deriv_ne_zero
     intro t ⟨_, ht_eq⟩ ht_ne
     by_contra h_lt
     push Not at h_lt
-    have h_in_ball : dist t t₀ < ε := by
-      simp only [Real.dist_eq]; exact h_lt
-    have h_ne' : t ∈ ({t₀} : Set ℝ)ᶜ := by
-      simp [ht_ne]
-    exact h_ball h_in_ball h_ne' ht_eq
+    exact h_ball (by simp only [Real.dist_eq]; exact h_lt) (by simp [ht_ne]) ht_eq
   have h_countable : S.Countable := by
     have h_eq : S = (S ∩ ↑P) ∪ (S \ ↑P) :=
       (Set.inter_union_sdiff S ↑P).symm

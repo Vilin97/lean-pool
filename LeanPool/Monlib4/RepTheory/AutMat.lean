@@ -53,24 +53,17 @@ theorem automorphism_matrix_inner [Field R] [DecidableEq n] [Nonempty n]
     ∃ T : Mₙ n,
       (∀ a : Mₙ n, f a * T = T * a) ∧
         Function.Bijective (Matrix.toLin' T) := by
-  have exists_vector : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
-  have exists_vector' := exists_vector
-  obtain ⟨u, hu⟩ := exists_vector
-  obtain ⟨y, hy⟩ := exists_vector'
+  obtain ⟨u, hu⟩ : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
+  obtain ⟨y, hy⟩ : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
   have f_ne_zero_iff :
       f (vecMulVec u y) ≠ 0 ↔ vecMulVec u y ≠ 0 := by
-    rw [not_iff_not]
-    exact
-      ⟨fun hzero =>
-        (injective_iff_map_eq_zero f).mp f.bijective.1 _ hzero,
-        fun hzero => by rw [hzero, map_zero]⟩
+    simp_all
   have exists_z : ∃ z : n → R, (f (vecMulVec u y)) *ᵥ z ≠ 0 := by
     simp_rw [ne_eq, ← Classical.not_forall]
     suffices ¬f (vecMulVec u y) = 0 by
       simp_rw [mulVec_eq, zero_mulVec] at this
       exact this
-    rw [← ne_eq, f_ne_zero_iff]
-    exact vecMulVec_ne_zero hu hy
+    simp_all
   obtain ⟨z, hz⟩ := exists_z
   let T := matT f.toLinearMap y z
   use LinearMap.toMatrix' T
@@ -103,8 +96,7 @@ theorem automorphism_matrix_inner [Field R] [DecidableEq n] [Nonempty n]
     exact ⟨LinearMap.injective_iff_surjective.mpr this, this⟩
   intro w
   have hTu : T u ≠ 0 := by
-    rw [matT_apply _ y z]
-    exact hz
+    rwa [matT_apply _ y z]
   have exists_dual : ∃ d : n → R, T u ⬝ᵥ d = 1 := by
     rw [← vec_ne_zero] at hTu
     obtain ⟨q, hq⟩ := hTu
@@ -174,8 +166,7 @@ theorem automorphism_matrix_inner'' [DecidableEq n] [Nonempty n]
         f a * LinearMap.toMatrix' (g.symm.trans g) := by
       simp_rw [← LinearEquiv.comp_coe, LinearMap.toMatrix'_comp]
     _ = f a := by
-      simp_rw [LinearEquiv.symm_trans_self, LinearEquiv.refl_toLinearMap,
-        LinearMap.toMatrix'_id, Matrix.mul_one]
+      simp_all
 
 namespace Algebra
 
@@ -253,15 +244,7 @@ theorem aut_mat_inner' [DecidableEq n] (f : (M n) ≃ₐ[𝕜] M n) :
 theorem aut_mat_inner_trace_preserving [DecidableEq n]
     (f : (M n) ≃ₐ[𝕜] M n) (x : M n) :
     (f x).trace = x.trace := by
-  obtain ⟨T, rfl⟩ := aut_mat_inner' f
-  rw [Algebra.autInner_apply]
-  calc
-    (T * x * ⅟ (T : M n)).trace = (⅟ (T : M n) * (T * x)).trace := by
-      rw [trace_mul_comm]
-    _ = ((⅟ (T : M n) * T) * x).trace := by
-      rw [Matrix.mul_assoc]
-    _ = x.trace := by
-      rw [invOf_mul_self, Matrix.one_mul]
+  simp_all
 
 alias AlgEquiv.apply_matrix_trace := aut_mat_inner_trace_preserving
 
@@ -561,8 +544,7 @@ theorem Matrix.commutes_with_all_iff {R n : Type _} [CommSemiring R] [Fintype n]
     simp_rw [Matrix.smul_apply, one_apply, smul_ite, smul_zero, smul_eq_mul, mul_one]
     nth_rw 1 [this]
     simp_rw [diagonal, diag, of_apply, this1 i k]
-  · rintro ⟨α, rfl⟩ y
-    simp_rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
+  · simp_all
 
 lemma Matrix.center {R n : Type*} [CommSemiring R] [Fintype n] [DecidableEq n] :
     Set.center (Matrix n n R) = Submodule.span R {(1 : Matrix n n R)} := by
@@ -592,9 +574,7 @@ lemma Matrix.pi_center {R ι : Type*} [CommSemiring R] {n : ι → Type*}
   classical
   simp_rw [Set.center_pi, Matrix.center]
   ext x
-  simp only [Set.mem_pi, Set.mem_univ, SetLike.mem_coe, forall_true_left]
-  simp only [Submodule.mem_span_singleton]
-  rfl
+  simp_all
 
 lemma PiMat.center {R ι : Type*} [CommSemiring R] {n : ι → Type*}
     [∀ i, Fintype (n i)] :
@@ -617,14 +597,11 @@ theorem Matrix.commutes_with_all_iff_of_ne_zero [DecidableEq n] [Nonempty n]
   refine ⟨fun h => ?_, fun ⟨α, hα, _⟩ => ⟨α, hα⟩⟩
   obtain ⟨α, hα⟩ := h
   have : α ≠ 0 := by
-    intro this
-    rw [this, zero_smul] at hα
-    contradiction
+    simp_all
   refine ⟨Units.mk0 α this, hα, fun y hy => ?_⟩
   simp only at hy
   rw [hα, ← sub_eq_zero, ← sub_smul, smul_eq_zero, sub_eq_zero] at hy
-  simp_rw [matrix.one_ne_zero, or_false] at hy
-  simp_rw [Units.mk0, hy, Units.mk_val]
+  simp_all
 
 theorem Algebra.autInner_eq_autInner_iff [DecidableEq n] (x y : Matrix n n 𝕜)
     [Invertible x] [Invertible y] :
@@ -643,13 +620,7 @@ theorem Matrix.one_ne_zero_iff {𝕜 n : Type*} [DecidableEq n]
     [Zero 𝕜] [One 𝕜] [NeZero (1 : 𝕜)] :
     (1 : Matrix n n 𝕜) ≠ (0 : Matrix n n 𝕜) ↔ Nonempty n := by
   simp_rw [ne_eq, ← Matrix.ext_iff, one_apply, zero_apply, not_forall]
-  constructor
-  · rintro ⟨x, _, _⟩
-    use x
-  · intro h
-    obtain ⟨i⟩ := h
-    use i, i
-    simp only [↓reduceIte, one_ne_zero, not_false_iff]
+  simp_all
 
 theorem Matrix.one_eq_zero_iff {𝕜 n : Type*} [DecidableEq n]
     [Zero 𝕜] [One 𝕜] [NeZero (1 : 𝕜)] :
@@ -667,26 +638,19 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
   have he₂ : e₂ = (0, 1) := rfl
   rw [← he₁, ← he₂]
   have h₁ : e₁ + e₂ = 1 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_add_mk, add_zero, zero_add, Prod.mk_eq_one, and_self]
+    simp only [he₁, he₂, Prod.mk_add_mk, add_zero, zero_add, Prod.mk_eq_one, and_self]
   have h₂ : e₁ * e₂ = 0 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_mul_mk, mul_zero, mul_one, Prod.mk_eq_zero, and_self]
+    simp only [he₁, he₂, Prod.mk_mul_mk, mul_zero, mul_one, Prod.mk_eq_zero, and_self]
   have h₃ : e₂ * e₁ = 0 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_mul_mk, mul_one, mul_zero, Prod.mk_eq_zero, and_self]
+    simp only [he₁, he₂, Prod.mk_mul_mk, mul_one, mul_zero, Prod.mk_eq_zero, and_self]
   have h₄ : e₁ * e₁ = e₁ := by
-    rw [he₁]
-    simp only [Prod.mk_mul_mk, mul_one, mul_zero]
+    simp_all
   have h₅ : e₂ * e₂ = e₂ := by
-    rw [he₂]
-    simp only [Prod.mk_mul_mk, mul_zero, mul_one]
+    simp_all
   have h10 : ∀ a : 𝕜, a • e₁ = (a • 1, 0) := by
-    intro a
-    simp_rw [e₁, Prod.smul_mk, smul_zero]
+    simp_all
   have h11 : ∀ a : 𝕜, a • e₂ = (0, a • 1) := by
-    intro a
-    simp_rw [e₂, Prod.smul_mk, smul_zero]
+    simp_all
   have he₁' :
       e₁ ∈
         (Submodule.span 𝕜 {((1 : Mat 𝕜 n), (0 : Mat 𝕜 m)), (0, 1)} :
@@ -695,8 +659,7 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
     simp_rw [Submodule.mem_span_pair, ← he₁, ← he₂, h10, h11,
       Prod.mk_add_mk, add_zero]
     use 1, 0
-    simp only [one_smul, zero_smul, add_zero]
-    rfl
+    simp_all
   have he₂' :
       e₂ ∈
         (Submodule.span 𝕜 {((1 : Mat 𝕜 n), (0 : Mat 𝕜 m)), (0, 1)} :
@@ -705,8 +668,7 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
     simp_rw [Submodule.mem_span_pair, ← he₁, ← he₂, h10, h11,
       Prod.mk_add_mk, add_zero]
     use 0, 1
-    simp only [one_smul, zero_smul, zero_add]
-    rfl
+    simp_all
   have center_eq :
       Set.center (Matrix n n 𝕜 × Matrix m m 𝕜) =
         Submodule.span 𝕜 {((1 : Mat 𝕜 n), (0 : Mat 𝕜 m)), (0, 1)} :=
@@ -796,24 +758,16 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       · rw [h81, add_zero] at h₉
         rw [h81, zero_smul, add_zero] at h₇
         rcases h₉ with ⟨h₉, (h91 | h92)⟩
-        · rw [h91, one_smul] at h₆
-          right
-          exact ⟨h₆.symm, h₇.symm⟩
+        · simp_all
         · rw [← @Matrix.one_eq_zero_iff 𝕜] at h92
-          simp_rw [he₁, he₂, h92, ← Prod.zero_eq_mk, ← h92,
-            ← Prod.one_eq_mk, _root_.map_one, _root_.map_zero,
-            Prod.ext_iff, Prod.fst_one, Prod.snd_one, Prod.fst_zero,
-            Prod.snd_zero, h92, Hem, true_and, true_or]
+          simp_all
       · simp_rw [he₁, he₂, h82, ← Prod.zero_eq_mk, ← h82,
           ← Prod.one_eq_mk, _root_.map_one, _root_.map_zero,
           Prod.ext_iff, Prod.fst_one, Prod.snd_one, Prod.fst_zero,
           Prod.snd_zero, h82, Hem, true_and, true_or]
 
-theorem Fin.fintwo_of_neZero {i : Fin 2} (hi : i ≠ 0) : i = 1 := by
-  revert i
-  rw [Fin.forall_fin_two]
-  simp only [Fin.isValue, ne_eq, not_true_eq_false, _root_.zero_ne_one, imp_self,
-    one_ne_zero, not_false_eq_true, and_self]
+theorem Fin.fintwo_of_neZero {i : Fin 2} (hi : i ≠ 0) : i = 1 :=
+  Fin.eq_one_of_ne_zero i hi
 
 /-- Split a nonempty finite dependent product of matrix algebras into its head and tail. -/
 def matrixPiFinAlgEquivPiFinTwo {𝕜 : Type*} [CommSemiring 𝕜]
@@ -835,10 +789,10 @@ def matrixPiFinAlgEquivPiFinTwo {𝕜 : Type*} [CommSemiring 𝕜]
     simp only [↓reduceDIte, eq_mpr_eq_cast, cast_eq]
     simp only [true_and]
     aesop
-  right_inv _ := by rfl
-  map_add' _ _ := by rfl
-  map_mul' _ _ := by rfl
-  commutes' _ := by rfl
+  right_inv _ := rfl
+  map_add' _ _ := rfl
+  map_mul' _ _ := rfl
+  commutes' _ := rfl
 
 theorem matrixPiFinAlgEquivPiFinTwo_apply {𝕜 : Type*} [CommSemiring 𝕜]
     {k : ℕ} {n : Fin (k + 1) → Type*}
@@ -875,18 +829,14 @@ def matrixPiFinTwoAlgEquivProd {𝕜 : Type*} [CommSemiring 𝕜]
     exact x.2
   left_inv x := by
     refine funext ?h
-    simp_rw [Fin.forall_fin_two]
-    simp only [↓reduceDIte, eq_mpr_eq_cast, cast_eq, Fin.isValue, one_ne_zero, and_self]
+    simp_all
   right_inv x := by ext <;> rfl
   map_add' _ _ := by
-    simp_rw [Prod.add_def]
-    rfl
+    simp_all
   map_mul' _ _ := by
-    simp_rw [Prod.mul_def]
-    rfl
+    simp_all
   commutes' _ := by
-    simp_rw [Algebra.algebraMap_eq_smul_one, Prod.smul_def]
-    rfl
+    simp_all
 
 @[simp]
 theorem matrixPiFinTwoAlgEquivProd_apply {𝕜 : Type*} [CommSemiring 𝕜]
@@ -983,14 +933,12 @@ def ofProdMap₁₁ {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
     have : ((f.symm ((f (a, 0)).1, 0)).1, 0) = (a, 0) := by
       rw [← Algebra.prod_one_zero_mul, _root_.map_mul, ← hf_symm,
         f.symm_apply_apply, Algebra.prod_one_zero_mul]
-    simp_rw [Prod.ext_iff, and_true] at this
-    exact this
+    simp_all
   right_inv a := by
     have : ((f ((f.symm (a, 0)).1, 0)).1, 0) = (a, 0) := by
       rw [← Algebra.prod_one_zero_mul, _root_.map_mul, hf,
         f.apply_symm_apply, Algebra.prod_one_zero_mul]
-    simp_rw [Prod.ext_iff, and_true] at this
-    exact this
+    simp_all
   map_add' a b := by
     nth_rw 1 [← add_zero (0 : _)]
     simp_rw [← Prod.mk_add_mk, _root_.map_add]
@@ -1021,14 +969,12 @@ def ofProdMap₂₂ {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
     have : (0, (f.symm (0, (f (0, a)).2)).2) = (0, a) := by
       rw [← Algebra.prod_zero_one_mul, _root_.map_mul, ← hf_symm,
         f.symm_apply_apply, Algebra.prod_zero_one_mul]
-    simp_rw [Prod.ext_iff, true_and] at this
-    exact this
+    simp_all
   right_inv a := by
     have : (0, (f (0, (f.symm (0, a)).2)).2) = (0, a) := by
       rw [← Algebra.prod_zero_one_mul, _root_.map_mul, hf,
         f.apply_symm_apply, Algebra.prod_zero_one_mul]
-    simp_rw [Prod.ext_iff, true_and] at this
-    exact this
+    simp_all
   map_add' a b := by
     nth_rw 1 [← add_zero (0 : _)]
     simp_rw [← Prod.mk_add_mk, _root_.map_add]
@@ -1056,14 +1002,12 @@ def ofProdMap₁₂ {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
     have : ((f.symm (0, (f (a, 0)).2)).1, 0) = (a, 0) := by
       rw [← Algebra.prod_zero_one_mul, _root_.map_mul, ← hf,
         f.symm_apply_apply, Algebra.prod_one_zero_mul, f.symm_apply_apply]
-    simp_rw [Prod.ext_iff, and_true] at this
-    exact this
+    simp_all
   right_inv a := by
     have : (0, (f ((f.symm (0, a)).1, 0)).2) = (0, a) := by
       rw [← Algebra.prod_one_zero_mul, _root_.map_mul, hf,
         f.apply_symm_apply, Algebra.prod_zero_one_mul]
-    simp_rw [Prod.ext_iff, true_and] at this
-    exact this
+    simp_all
   map_add' a b := by
     nth_rw 1 [← add_zero (0 : _)]
     simp_rw [← Prod.mk_add_mk, _root_.map_add]
@@ -1091,14 +1035,12 @@ def ofProdMap₂₁ {K R₁ R₂ R₃ R₄ : Type*} [CommSemiring K]
     have : (0, (f.symm ((f (0, a)).1, 0)).2) = (0, a) := by
       rw [← Algebra.prod_one_zero_mul, _root_.map_mul, ← hf,
         f.symm_apply_apply, Algebra.prod_zero_one_mul, f.symm_apply_apply]
-    simp_rw [Prod.ext_iff, true_and] at this
-    exact this
+    simp_all
   right_inv a := by
     have : ((f (0, (f.symm (a, 0)).2)).1, 0) = (a, 0) := by
       rw [← Algebra.prod_zero_one_mul, _root_.map_mul, hf,
         f.apply_symm_apply, Algebra.prod_one_zero_mul]
-    simp_rw [Prod.ext_iff, and_true] at this
-    exact this
+    simp_all
   map_add' a b := by
     nth_rw 1 [← add_zero (0 : _)]
     simp_rw [← Prod.mk_add_mk, _root_.map_add]
@@ -1138,8 +1080,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       f x = f (x.1, 0) + f (0, x.2) := by
         rw [← map_add, Prod.fst_add_snd]
       _ = f ((1, 0) * (x.1, 0)) + f ((0, 1) * (0, x.2)) := by
-        rw [Prod.mul_def]
-        simp only [one_mul, mul_zero, Prod.mk_mul_mk]
+        simp_all
       _ = (1, 0) * f (x.1, 0) + (0, 1) * f (0, x.2) := by
         simp_rw [_root_.map_mul, h]
       _ = ((f (x.1, 0)).1, 0) + (0, (f (0, x.2)).2) := by
@@ -1160,8 +1101,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       f x = f (0, x.2) + f (x.1, 0) := by
         rw [← map_add, add_comm, Prod.fst_add_snd]
       _ = f ((0, 1) * (0, x.2)) + f ((1, 0) * (x.1, 0)) := by
-        rw [Prod.mul_def]
-        simp only [one_mul, mul_zero, Prod.mk_mul_mk]
+        simp_all
       _ = (1, 0) * f (0, x.2) + (0, 1) * f (x.1, 0) := by
         simp_rw [_root_.map_mul, h]
       _ = ((f (0, x.2)).1, 0) + (0, (f (x.1, 0)).2) := by

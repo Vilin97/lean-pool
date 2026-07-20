@@ -386,8 +386,7 @@ lemma fst_same_in_range {α : Type} {β : α → Type} {f : ℕ → (a : α) × 
   have n_le_m := dep_sum_seq_proj_leq h n
   induction n
   case zero =>
-    have n_ge := by simpa using n_ge
-    simp [n_ge]
+    simp_all
   case succ n ih =>
     have neq := Nat.find_spec (h (n + 1))
     by_cases eq : n + 1 = (depSumSeqProj h m).2
@@ -399,9 +398,7 @@ lemma fst_same_in_range {α : Type} {β : α → Type} {f : ℕ → (a : α) × 
       have :
           ∀ h : (f n).1 = (f (n + 1)).1,
             ¬ Q (f n).1 (f n).2 (h ▸ (f (n + 1)).2) := by
-        intro h
-        exfalso
-        exact eq h
+        simp_all
       have := @Nat.find_le _ _ _ (h n) ⟨by grind, this⟩
       have : Nat.find (h (depSumSeqProj h m).2) ≤ Nat.find (h n) := by
         have g : ∀ n, ∀ m, n ≤ m → Nat.find (h n) ≤ Nat.find (h m) :=
@@ -622,65 +619,17 @@ private theorem proofTransformation_step {𝕏 : Proof} {σ}
     rw [ExtSkip.r]
     simp [ptm_eq, ExtSkip.fₙ_alternate, h2]
   case topₗ Δ in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.topₗ Δ in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case topᵣ Δ in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.topᵣ Δ in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case axₗₗ Δ n in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.axₗₗ Δ n in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case axₗᵣ Δ n in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.axₗᵣ Δ n in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case axᵣₗ Δ n in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.axᵣₗ Δ n in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case axᵣᵣ Δ n in_Δ =>
-    have ptm_eq :
-        proofTransformationMap partialProof y_zy =
-          ⟨ExtSkip.RuleApp.axᵣᵣ Δ n in_Δ, children⟩ := by
-      simp [proofTransformationMap, r_def, children]
-    simp only [ExtSkip.p, ptm_eq, List.map_map, List.map_eq_singleton_iff, Function.comp_apply,
-      proofTransformation_f, Bool.false_eq_true, Finset.union_singleton, List.map_eq_nil_iff,
-      Finset.union_insert, children]
-    rw [ExtSkip.r]
-    simp [ptm_eq, ←h2]
+    simp [ExtSkip.p, ExtSkip.r, proofTransformationMap, r_def, ←h2]
   case orₗ Δ φ ψ in_Δ =>
     have ptm_eq :
         proofTransformationMap partialProof y_zy =
@@ -768,8 +717,7 @@ private theorem proofTransformation_path {𝕏 : Proof} {σ}
     case pre z z_in =>
       apply Sigma.Lex.left
       change (f (n + 1)).1 ∈ p 𝕏.α (f n).1
-      rw [this]
-      exact z_in
+      simp_all
     all_goals
       have ⟨z, z_prop, eq⟩ := this
       apply Sigma.lex_iff.2 (Or.inr ⟨?_, ?_⟩)
@@ -791,13 +739,10 @@ private theorem proofTransformation_path {𝕏 : Proof} {σ}
       intro m m_ge
       induction m
       case zero =>
-        have m_ge := by simpa using m_ge
-        subst m_ge
-        rfl
+        simp_all
       case succ k ih =>
         by_cases eq : n = k + 1
-        · subst eq
-          rfl
+        · simp_all
         · rw [ih (by omega)]
           exact (n_prop k (by omega)).choose
     let g : ℕ → (partialProof (f n).1).X :=
@@ -898,8 +843,7 @@ private theorem proofTransformation_path {𝕏 : Proof} {σ}
           (fun x ↦ Ext.edge (partialProof x).α) h
           (Nat.find (h ih)) n le_rfl (Nat.find_spec (h ih)).1
       have eq : ih + (Nat.find (h ih) - ih) = Nat.find (h ih) := by
-        have find_ge : ih ≤ Nat.find (h ih) := (Nat.find_spec (h ih)).1
-        omega
+        simp_all
       have idx_eq :
           f (ih + (Nat.find (h ih) - ih)) = f (Nat.find (h ih)) :=
         congrArg f eq

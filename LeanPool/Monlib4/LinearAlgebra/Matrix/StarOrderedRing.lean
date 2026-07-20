@@ -34,8 +34,8 @@ theorem _root_.Matrix.eq_zero_iff {n : Type _} [Fintype n]
   calc
     x = 0 ↔ (Matrix.toLpLin 2 2) x = 0 := by simp only [LinearEquiv.map_eq_zero_iff]
     _ ↔ ∀ a : WithLp 2 (n → ℂ),
-        (inner ℂ (((Matrix.toLpLin 2 2) x) a) a : ℂ) = 0 := by
-      exact (inner_map_self_eq_zero (T := (Matrix.toLpLin 2 2) x)).symm
+        (inner ℂ (((Matrix.toLpLin 2 2) x) a) a : ℂ) = 0 :=
+      (inner_map_self_eq_zero (T := (Matrix.toLpLin 2 2) x)).symm
     _ ↔ ∀ a : WithLp 2 (n → ℂ),
         (inner ℂ a (((Matrix.toLpLin 2 2) x) a) : ℂ) = 0 := by
       simp_rw [inner_eq_zero_symm]
@@ -68,12 +68,8 @@ def _root_.Matrix.NegDef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
 
 theorem _root_.Matrix.IsHermitian.neg_iff {𝕜 n : Type _} [RCLike 𝕜]
     (x : Matrix n n 𝕜) :
-    (-x).IsHermitian ↔ x.IsHermitian := by
-  constructor
-  · intro h
-    rw [← neg_neg x]
-    exact Matrix.IsHermitian.neg h
-  · exact Matrix.IsHermitian.neg
+    (-x).IsHermitian ↔ x.IsHermitian :=
+  ⟨fun h => neg_neg x ▸ h.neg, Matrix.IsHermitian.neg⟩
 
 theorem _root_.Matrix.negSemidef_iff_neg_posSemidef {𝕜 n : Type _} [RCLike 𝕜]
     [Fintype n] (x : Matrix n n 𝕜) :
@@ -139,9 +135,7 @@ theorem _root_.Matrix.not_posDef_and_negDef {𝕜 n : Type _} [RCLike 𝕜] [Fin
   classical
   let i : n := Nonempty.some (by infer_instance)
   rintro ⟨h1, h2⟩
-  have hh1 := PosDef.pos_eigenvalues h1 i
-  have hh2 := NegDef.neg_eigenvalues h2 i
-  linarith
+  linarith [PosDef.pos_eigenvalues h1 i, NegDef.neg_eigenvalues h2 i]
 
 open scoped BigOperators
 
@@ -259,12 +253,12 @@ theorem _root_.Matrix.negDef_of_negSemidef {𝕜 n : Type _} [RCLike 𝕜] [Fint
 /-- The matrix partial order induced by positive semidefinite differences. -/
 @[reducible]
 noncomputable def _root_.Matrix.partialOrder {n : Type _} :
-    PartialOrder (Matrix n n ℂ) := by
-  infer_instance
+    PartialOrder (Matrix n n ℂ) :=
+  inferInstance
 
 theorem _root_.Matrix.starOrderedRing {n : Type _} [Fintype n] :
-    StarOrderedRing (Matrix n n ℂ) := by
-  infer_instance
+    StarOrderedRing (Matrix n n ℂ) :=
+  inferInstance
 
 theorem _root_.Matrix.Pi.le_iff_sub_nonneg {ι : Type _} {n : ι → Type _}
     [∀ i, Fintype (n i)] (x y : PiMat ℂ ι n) :
@@ -308,9 +302,7 @@ lemma StarAlgEquiv.map_pow {R A₁ A₂ : Type _} [CommSemiring R] [Semiring A�
     [Semiring A₂] [Algebra R A₁] [Algebra R A₂] [Star A₁] [Star A₂]
     (e : A₁ ≃⋆ₐ[R] A₂) (x : A₁) (n : ℕ) :
     e (x ^ n) = e x ^ n := by
-  induction n with
-  | zero => simp
-  | succ n ih => rw [pow_succ', map_mul, ih, ← pow_succ']
+  simp_all
 
 lemma Matrix.innerAut.map_pow {n : Type _} [Fintype n] [DecidableEq n] {𝕜 : Type _}
     [RCLike 𝕜] (U : unitaryGroup n 𝕜) (x : Matrix n n 𝕜) (n : ℕ) :

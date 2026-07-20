@@ -84,32 +84,26 @@ lemma toLinearMap_smul (c : 𝕜) (β : LieOneCochain 𝕜 𝓰 𝓪) :
     (c • β).toLinearMap = c • β.toLinearMap := rfl
 
 instance : AddCommMonoid (LieOneCochain 𝕜 𝓰 𝓪) where
-  add_assoc β β' β'' := by
-    ext1
-    simp only [LieOneCochain.toLinearMap_add]
-    exact add_assoc β.toLinearMap β'.toLinearMap β''.toLinearMap
+  add_assoc β β' β'' := by ext1
+                           simp [add_assoc]
   zero_add β := by ext1; simp
   add_zero β := by ext1; simp
-  add_comm β β' := by
-    ext1
-    simp only [LieOneCochain.toLinearMap_add]
-    exact AddCommMagma.add_comm β.toLinearMap β'.toLinearMap
+  add_comm β β' := by ext1
+                      simp [add_comm]
   nsmul n β := { toLinearMap := n • β.toLinearMap }
-  nsmul_zero β := by ext1; simp only [zero_smul]; rfl
-  nsmul_succ n β := by
-    ext1
-    simpa only [LieOneCochain.toLinearMap_add] using succ_nsmul β.toLinearMap n
+  nsmul_zero β := by ext1
+                     simp
+  nsmul_succ n β := by ext1
+                       simpa using succ_nsmul β.toLinearMap n
 
 instance : Module 𝕜 (LieOneCochain 𝕜 𝓰 𝓪) where
   one_smul β := by ext1; simp
-  mul_smul c c' β := by
-    ext1
-    simpa only [toLinearMap_smul] using mul_smul c c' β.toLinearMap
+  mul_smul c c' β := by ext1
+                        simpa using mul_smul c c' β.toLinearMap
   smul_zero β := by ext1; simp
   smul_add c β β' := by ext1; simp
-  add_smul c c' β := by
-    ext1
-    simpa only [toLinearMap_smul, toLinearMap_add] using add_smul c c' β.toLinearMap
+  add_smul c c' β := by ext1
+                        simpa using add_smul c c' β.toLinearMap
   zero_smul β := by ext1; simp
 
 instance : AddCommGroup (LieOneCochain 𝕜 𝓰 𝓪) where
@@ -121,7 +115,7 @@ instance : AddCommGroup (LieOneCochain 𝕜 𝓰 𝓪) where
   neg β := (-1 : 𝕜) • β
   sub β₁ β₂ := β₁ + (-1 : 𝕜) • β₂
   zsmul k β := (k : 𝕜) • β
-  zsmul_zero' β := by simp only [Int.cast_zero, zero_smul]
+  zsmul_zero' β := by simp
   zsmul_succ' k β := by simp [add_smul]
   zsmul_neg' k β := by simp [add_smul, smul_smul, add_comm]
   neg_add_cancel β := by
@@ -201,12 +195,8 @@ instance : Add (LieTwoCocycle 𝕜 𝓰 𝓪) where
     { toBilin := γ.toBilin + γ'.toBilin
       self' := fun X ↦ by simp [γ.self', γ'.self']
       leibniz' := fun X Y Z ↦ by
-        calc (γ.toBilin X) ⁅Y, Z⁆ + (γ'.toBilin X) ⁅Y, Z⁆
-            = (γ.toBilin ⁅X, Y⁆) Z + (γ.toBilin Y) ⁅X, Z⁆
-              + (γ'.toBilin ⁅X, Y⁆) Z + (γ'.toBilin Y) ⁅X, Z⁆ := by
-              simp [γ.leibniz' X Y Z, γ'.leibniz' X Y Z, ← add_assoc]
-          _ = ((γ.toBilin + γ'.toBilin) ⁅X, Y⁆) Z + ((γ.toBilin + γ'.toBilin) Y) ⁅X, Z⁆ := by
-              simp only [LinearMap.add_apply]; ac_rfl }
+        simp only [LinearMap.add_apply, γ.leibniz' X Y Z, γ'.leibniz' X Y Z]
+        ac_rfl }
 
 instance : SMul 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   smul c γ :=
@@ -227,20 +217,22 @@ lemma _root_.VirasoroProject.LieTwoCocycle.toBilin_smul (c : 𝕜) (γ : LieTwoC
     (c • γ).toBilin = c • γ.toBilin := rfl
 
 instance : AddCommMonoid (LieTwoCocycle 𝕜 𝓰 𝓪) where
-  add_assoc γ γ' γ'' := by
-    ext1
-    simpa only [LieTwoCocycle.toBilin_add] using add_assoc ..
-  zero_add γ := by ext1; simp only [LieTwoCocycle.toBilin_add, add_eq_right]; rfl
-  add_zero γ := by ext1; simp only [LieTwoCocycle.toBilin_add, add_eq_left]; rfl
-  add_comm γ γ' := by ext1; simpa only [LieTwoCocycle.toBilin_add] using AddCommMagma.add_comm ..
+  add_assoc γ γ' γ'' := by ext1
+                           simpa using add_assoc γ.toBilin γ'.toBilin γ''.toBilin
+  zero_add γ := by ext1
+                   simp [LieTwoCocycle.toBilin_add]
+  add_zero γ := by ext1
+                   simp [LieTwoCocycle.toBilin_add]
+  add_comm γ γ' := by ext1
+                      simpa using AddCommMagma.add_comm γ.toBilin γ'.toBilin
   nsmul n γ :=
     { toBilin := n • γ.toBilin
-      self' := fun X ↦ by simp only [LinearMap.smul_apply, γ.self', smul_zero]
-      leibniz' := fun X Y Z ↦ by simp only [LinearMap.smul_apply, γ.leibniz' X Y Z, smul_add] }
-  nsmul_zero γ := by ext1; simp only [zero_smul]; rfl
-  nsmul_succ n γ := by
-    ext1
-    simpa only [LieTwoCocycle.toBilin_add] using succ_nsmul γ.toBilin n
+      self' := fun X ↦ by simp [γ.self']
+      leibniz' := fun X Y Z ↦ by simp [γ.leibniz' X Y Z, smul_add] }
+  nsmul_zero γ := by ext1
+                     simp
+  nsmul_succ n γ := by ext1
+                       simpa using succ_nsmul γ.toBilin n
 
 instance : Module 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   one_smul γ := by ext1; simp
@@ -260,7 +252,7 @@ instance :
   neg γ := (-1 : 𝕜) • γ
   sub γ₁ γ₂ := γ₁ + (-1 : 𝕜) • γ₂
   zsmul k γ := (k : 𝕜) • γ
-  zsmul_zero' γ := by simp only [Int.cast_zero, zero_smul]
+  zsmul_zero' γ := by simp
   zsmul_succ' k γ := by simp [add_smul]
   zsmul_neg' k γ := by simp [add_smul, smul_smul, add_comm]
   neg_add_cancel γ := by
@@ -299,8 +291,8 @@ variable {𝕜 𝓰 𝓪}
 /-- A Lie algebra 1-cochain determines a bilinear map via the differential. -/
 def _root_.VirasoroProject.LieOneCochain.bdry' (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun X ↦ β ∘ₗ LieAlgebra.bracketHom 𝕜 𝓰 X
-  map_add' X₁ X₂ := by simp_all only [map_add]; ext; simp_all
-  map_smul' c X := by simp_all only [LinearMapClass.map_smul, RingHom.id_apply]; ext; simp_all
+  map_add' X₁ X₂ := by ext; simp
+  map_smul' c X := by ext; simp
 
 /-- A Lie algebra 1-cochain linearly determines a bilinear map via the differential. -/
 def _root_.VirasoroProject.LieOneCochain.bdryHom'

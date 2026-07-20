@@ -207,19 +207,16 @@ lemma jacobi_neg_m_q (m : ℕ) (q : ℕ) (hm_mod : m % 8 = 3) (hq_mod : q % 4 = 
   -- We need to show that $(q/m) = (-2/m)$.
   have h_jacobi_qm : jacobiSym q m = jacobiSym (-2) m := by
     have h_jacobi_qm : jacobiSym (-2 * q) m = 1 := by
-      rw [jacobiSym];
-      rw [List.prod_eq_one];
+      rw [jacobiSym, List.prod_eq_one]
       intro x a
       simp_all only [Int.reduceNeg, neg_mul, List.mem_pmap, Nat.mem_primeFactorsList', ne_eq]
-      obtain ⟨w, h⟩ := a
-      obtain ⟨w_1, h⟩ := h
-      obtain ⟨left, right⟩ := w_1
-      obtain ⟨left_1, right⟩ := right
-      subst h
-      haveI := Fact.mk left; simp_all +decide [jacobiSym];
-      specialize h_jacobi w left_1 left; simp_all +decide [Nat.primeFactorsList_prime left];
-    rw [jacobiSym.mul_left] at h_jacobi_qm;
-    rw [Int.mul_eq_one_iff_eq_one_or_neg_one] at h_jacobi_qm; aesop;
+      obtain ⟨w, ⟨left, left_1, _⟩, rfl⟩ := a
+      haveI := Fact.mk left
+      simp_all +decide [jacobiSym]
+      specialize h_jacobi w left_1 left
+      simp_all +decide [Nat.primeFactorsList_prime left]
+    rw [jacobiSym.mul_left, Int.mul_eq_one_iff_eq_one_or_neg_one] at h_jacobi_qm
+    aesop
   -- Since $(-m/q) = (q/m)$ and $(q/m) = (-2/m)$, we have $(-m/q) = (-2/m)$.
   have h_jacobi_neg_mq : jacobiSym (-m) q = jacobiSym q m := by
     rw [jacobiSym.neg _ (Nat.odd_iff.mpr (by omega)), ZMod.χ₄_nat_one_mod_four hq_mod, one_mul]
@@ -351,7 +348,7 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
     intro p pp dp dm
     rw [Finset.sum_eq_single p] <;> aesop
   -- Since $m$ is squarefree, $m = \prod p$, so $2q t^2 \equiv -1 \pmod m$.
-  use t;
+  use t
   -- Since $m$ is squarefree, it is the product of its distinct prime factors.
   have h_prod : (m : ℤ) = ∏ p ∈ Nat.primeFactors m, (p : ℤ) := by
     rw [← Nat.cast_prod, Nat.prod_primeFactors_of_squarefree hm_sq]
@@ -495,13 +492,9 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
   have h_symm : ∀ x ∈ S_pre, -x ∈ S_pre := by
     intro x hx
     unfold S_pre B at hx ⊢
-    simp only [Set.mem_preimage, Metric.mem_ball, dist_zero_right] at hx ⊢
-    rw [map_neg, norm_neg]
-    exact hx
-  have h_conv : Convex ℝ S_pre := by
-    unfold S_pre
-    apply Convex.linear_preimage
-    exact convex_ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m))
+    simp_all
+  have h_conv : Convex ℝ S_pre :=
+    (convex_ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m))).linear_preimage _
   have h_vol : (2 : ENNReal) ^ 3 < MeasureTheory.volume S_pre := by
     unfold S_pre
     rw [vol_preimage_ball_euclidean m q t b hm hq]
@@ -523,14 +516,11 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
       · positivity
     all_goals positivity
   let E := EuclideanSpace ℝ (Fin 3)
-  have := classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure h_symm h_conv h_vol
-  obtain ⟨x, hx0, hxs, h⟩ := this
-  have hcoor0 := h 0
-  have hcoor1 := h 1
-  have hcoor2 := h 2
-  obtain ⟨R, hr⟩ := hcoor0
-  obtain ⟨S, hs⟩ := hcoor1
-  obtain ⟨T, ht⟩ := hcoor2
+  obtain ⟨x, hx0, hxs, h⟩ :=
+    classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure h_symm h_conv h_vol
+  obtain ⟨R, hr⟩ := h 0
+  obtain ⟨S, hs⟩ := h 1
+  obtain ⟨T, ht⟩ := h 2
   use R, S, T
   constructor
   · contrapose! hx0
@@ -594,95 +584,22 @@ private lemma rst_expand_eq (m q : ℕ) (t b h x y z : ℤ) (hq : 0 < q)
       (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 =
     (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
       2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) := by
-  have hqf :=
-    congrArg
-      (fun u : ℝ => (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 + u)
-      (quad_form_decomposition m q b h x y hq hbqm)
-  calc
-    (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
-        (Real.sqrt 2 * Real.sqrt q * x + (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 +
-        (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2
-        = (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
-            ((Real.sqrt 2 * Real.sqrt q * x + (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 +
-              (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2) := by ring
-    _ = (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
-          2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) := by
-          simpa [add_assoc, add_left_comm, add_comm] using hqf
+  rw [add_assoc, quad_form_decomposition m q b h x y hq hbqm]
 
 private lemma rst_modEq_zero (m q : ℕ) (t b h x y z : ℤ)
     (hqt : t ^ 2 * 2 * q ≡ -1 [ZMOD m]) (hbqm : b ^ 2 - 4 * q * h = -m) :
     (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
       2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) ≡ 0 [ZMOD m] := by
-  have hsplit :
-      (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
-          2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) =
-        (t ^ 2 * ↑q * x * b * y * 4 + t ^ 2 * ↑q ^ 2 * x ^ 2 * 4 + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2) +
-        (t * q * x * z * 4 + t * b * y * z * 2 + m * z ^ 2) * m := by ring
-  rw [hsplit]
-  have hdrop :
-      (t ^ 2 * ↑q * x * b * y * 4 + t ^ 2 * ↑q ^ 2 * x ^ 2 * 4 + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2) +
-        (t * q * x * z * 4 + t * b * y * z * 2 + m * z ^ 2) * m
-      ≡ t ^ 2 * ↑q * x * b * y * 4 + t ^ 2 * ↑q ^ 2 * x ^ 2 * 4 + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2 [ZMOD m] := by
-    have h0 : (t * q * x * z * 4 + t * b * y * z * 2 + m * z ^ 2) * m ≡ 0 [ZMOD m] :=
-      Int.modEq_zero_iff_dvd.mpr ⟨t * q * x * z * 4 + t * b * y * z * 2 + m * z ^ 2, by ring⟩
-    simpa only [add_zero] using (Int.ModEq.refl _).add h0
-  have hqt_xy : (t ^ 2 * 2 * ↑q) * (x * b * y * 2) ≡ (-1) * (x * b * y * 2) [ZMOD m] := by
-    simpa using hqt.mul_right (x * b * y * 2)
-  have hqt_x2 : (t ^ 2 * 2 * ↑q) * (↑q * x ^ 2 * 2) ≡ (-1) * (↑q * x ^ 2 * 2) [ZMOD m] := by
-    simpa using hqt.mul_right (↑q * x ^ 2 * 2)
-  have hreplace :
-      (t ^ 2 * 2 * ↑q) * (x * b * y * 2) +
-          (t ^ 2 * 2 * ↑q) * (↑q * x ^ 2 * 2) + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2
-      ≡ (-1) * (x * b * y * 2) + (-1) * (↑q * x ^ 2 * 2) + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2 [ZMOD m] := by
-    apply Int.ModEq.add
-    · apply Int.ModEq.add
-      · apply Int.ModEq.add
-        · apply Int.ModEq.add
-          · apply Int.ModEq.add
-            · exact hqt_xy
-            · exact hqt_x2
-          · exact Int.ModEq.refl _
-        · exact Int.ModEq.refl _
-      · exact Int.ModEq.refl _
-    · exact Int.ModEq.refl _
-  have hb2 : (b : ℤ) ^ 2 = 4 * q * h - m := by linarith [hbqm]
-  have ht2b2 : t ^ 2 * b ^ 2 ≡ t ^ 2 * (4 * q * h) [ZMOD m] := by
-    calc
-      t ^ 2 * b ^ 2 = t ^ 2 * (4 * q * h - m) := by rw [hb2]
-      _ = t ^ 2 * (4 * q * h) - t ^ 2 * m := by ring
-      _ ≡ t ^ 2 * (4 * q * h) - 0 [ZMOD m] := by
-            apply Int.ModEq.sub (Int.ModEq.refl _)
-            exact Int.modEq_zero_iff_dvd.mpr ⟨t ^ 2, by ring⟩
-      _ = t ^ 2 * (4 * q * h) := by ring
-  have ht2_4qh : t ^ 2 * (4 * q * h) ≡ -2 * h [ZMOD m] := by
-    calc
-      t ^ 2 * (4 * q * h) = (t ^ 2 * 2 * q) * (2 * h) := by ring
-      _ ≡ (-1) * (2 * h) [ZMOD m] := hqt.mul_right _
-      _ = -2 * h := by ring
-  calc
-    (t ^ 2 * ↑q * x * b * y * 4 + t ^ 2 * ↑q ^ 2 * x ^ 2 * 4 + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2) +
-        (t * q * x * z * 4 + t * b * y * z * 2 + m * z ^ 2) * m
-      ≡ t ^ 2 * ↑q * x * b * y * 4 + t ^ 2 * ↑q ^ 2 * x ^ 2 * 4 + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2 [ZMOD m] := hdrop
-    _ = (t ^ 2 * 2 * ↑q) * (x * b * y * 2) +
-        (t ^ 2 * 2 * ↑q) * (↑q * x ^ 2 * 2) + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2 := by ring
-    _ ≡ (-1) * (x * b * y * 2) + (-1) * (↑q * x ^ 2 * 2) + t ^ 2 * b ^ 2 * y ^ 2 +
-          ↑q * x ^ 2 * 2 + x * b * y * 2 + y ^ 2 * h * 2 [ZMOD m] := hreplace
-    _ = t ^ 2 * b ^ 2 * y ^ 2 + y ^ 2 * h * 2 := by ring
-    _ ≡ (t ^ 2 * (4 * q * h)) * y ^ 2 + y ^ 2 * h * 2 [ZMOD m] := by
-      apply Int.ModEq.add _ (Int.ModEq.refl _)
-      exact ht2b2.mul_right _
-    _ ≡ (-2 * h) * y ^ 2 + y ^ 2 * h * 2 [ZMOD m] := by
-      apply Int.ModEq.add _ (Int.ModEq.refl _)
-      exact ht2_4qh.mul_right _
-    _ = 0 := by ring
+  refine Int.modEq_iff_dvd.mpr ?_
+  have h1 : (↑m : ℤ) ∣ (t ^ 2 * 2 * ↑q - (-1)) := Int.modEq_iff_dvd.mp hqt.symm
+  have h2 : (↑m : ℤ) ∣ (b ^ 2 - 4 * ↑q * ↑h - (-↑m)) := ⟨0, by linarith [hbqm]⟩
+  have key : (0 : ℤ) - ((2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z) ^ 2 +
+        2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2)) =
+      (-(2 * x * b * y + 2 * ↑q * x ^ 2 + 2 * ↑h * y ^ 2)) * (t ^ 2 * 2 * ↑q - (-1)) +
+        (-(t ^ 2 * y ^ 2)) * (b ^ 2 - 4 * ↑q * ↑h - (-↑m)) +
+        ↑m * (-(4 * t * ↑q * x * z + 2 * t * b * y * z + ↑m * z ^ 2 - t ^ 2 * y ^ 2)) := by ring
+  rw [key]
+  exact dvd_add (dvd_add (h1.mul_left _) (h2.mul_left _)) (dvd_mul_right _ _)
 
 private lemma xyz_zero_of_sum_sq_eq_zero (m q : ℕ) (t b x y z : ℤ)
     (hm : 0 < m) (hq : 0 < q)
@@ -714,25 +631,16 @@ private lemma xyz_zero_of_sum_sq_eq_zero (m q : ℕ) (t b x y z : ℤ)
     nlinarith [hS0sq]
   have hx0R : (x : ℝ) = 0 := by
     have hcoef : (Real.sqrt 2 * Real.sqrt q : ℝ) ≠ 0 := by positivity
-    have hlin : (Real.sqrt 2 * Real.sqrt q : ℝ) * x = 0 := by
-      simpa [hy0R] using hS0
-    exact (mul_eq_zero.mp hlin).resolve_left hcoef
+    simp_all
   have hx0 : x = 0 := by exact_mod_cast hx0R
   have hR0sq : (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 = 0 := by
-    nlinarith [
-      sq_nonneg
-        (Real.sqrt 2 * Real.sqrt q * x +
-          (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y),
-      sq_nonneg (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y), hsum0]
+    simp_all
   have hR0 : (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) = 0 := by
     nlinarith [hR0sq]
   have hz0R : (z : ℝ) = 0 := by
     have hmne : (m : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hm)
-    have hlin : (m : ℝ) * z = 0 := by
-      simpa [hx0R, hy0R] using hR0
-    exact (mul_eq_zero.mp hlin).resolve_left hmne
-  have hz0 : z = 0 := by exact_mod_cast hz0R
-  exact ⟨hx0, hy0, hz0⟩
+    simp_all
+  simp_all
 
 
 
@@ -747,7 +655,7 @@ lemma exists_Rv_from_Minkowski (m q : ℕ) (t b h : ℤ) (hm : 0 < m) (hq : 0 < 
       (Real.sqrt (2 * q) * x + (b : ℝ) / Real.sqrt (2 * q) * y) ^ 2 +
       (Real.sqrt m / Real.sqrt (2 * q) * y) ^ 2 < 2 * m := by
     simpa using exists_lattice_xyz_lt_two_m m q t b hm hq
-  obtain ⟨x, y, z, hne, hlt⟩ := h_exists;
+  obtain ⟨x, y, z, hne, hlt⟩ := h_exists
   -- The integer expression is nonnegative, divisible by `m`, and strictly below `2m`.
   have h_cases :
       (2 * t * q * x + t * b * y + m * z : ℤ) ^ 2 +
@@ -766,54 +674,30 @@ lemma exists_Rv_from_Minkowski (m q : ℕ) (t b h : ℤ) (hm : 0 < m) (hq : 0 < 
           (Real.sqrt m / Real.sqrt (2 * q) * y) ^ 2 =
           (2 * t * q * x + t * b * y + m * z : ℝ) ^ 2 +
           2 * (q * x ^ 2 + b * x * y + h * y ^ 2) := by
-        calc
-          (2 * t * q * x + t * b * y + m * z : ℝ) ^ 2 +
-              (Real.sqrt (2 * q) * x + (b : ℝ) / Real.sqrt (2 * q) * y) ^ 2 +
-              (Real.sqrt m / Real.sqrt (2 * q) * y) ^ 2
-              = (2 * t * q * x + t * b * y + m * z : ℝ) ^ 2 +
-                (Real.sqrt 2 * Real.sqrt q * x + (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 +
-                (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 := by
-                  simp [mul_assoc, mul_left_comm, mul_comm]
-          _ = (2 * t * q * x + t * b * y + m * z : ℝ) ^ 2 +
-              2 * (q * x ^ 2 + b * x * y + h * y ^ 2) :=
-                rst_expand_eq m q t b h x y z (by positivity) (by simpa using hbqm)
-      exact_mod_cast h_expand ▸ hlt;
-    obtain ⟨k, hk⟩ := Int.modEq_zero_iff_dvd.mp ‹_›;
+        rw [Real.sqrt_mul (by norm_num),
+          rst_expand_eq m q t b h x y z (by positivity) (by simpa using hbqm)]
+      exact_mod_cast h_expand ▸ hlt
+    obtain ⟨k, hk⟩ := Int.modEq_zero_iff_dvd.mp ‹_›
     have hquad_nonneg : (q : ℤ) * x ^ 2 + b * x * y + h * y ^ 2 ≥ 0 := by
       nlinarith [sq_nonneg (2 * q * x + b * y)]
     have hexpr_nonneg : 0 ≤ (2 * t * q * x + t * b * y + m * z : ℤ) ^ 2 +
         2 * (q * x ^ 2 + b * x * y + h * y ^ 2) := by
       nlinarith [sq_nonneg (2 * t * q * x + t * b * y + m * z), hquad_nonneg]
     have hk_nonneg : 0 ≤ k := by
-      have hm_nonneg : (0 : ℤ) ≤ m := by exact_mod_cast Nat.zero_le m
-      nlinarith [hk, hexpr_nonneg, hm_nonneg]
+      simp_all
     have hk_lt_two : k < 2 := by
       have hm_pos' : (0 : ℤ) < m := by exact_mod_cast hm
       nlinarith [hk, h_cases, hm_pos']
     have hk_zero_or_one : k = 0 ∨ k = 1 := by omega
     rcases hk_zero_or_one with rfl | rfl
-    · left
-      nlinarith [hk]
-    · right
-      nlinarith [hk]
+    · simp_all
+    · simp_all
   rcases h_cases with h_case1 | h_case2
   · -- If $R^2 + 2v = 0$, then `x = y = z = 0`.
     have h_contra : x = 0 ∧ y = 0 ∧ z = 0 := by
       apply xyz_zero_of_sum_sq_eq_zero m q t b x y z hm hq
-      have hsum0 :
-          (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 +
-            (Real.sqrt 2 * Real.sqrt q * x + (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 +
-            (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 = 0 := by
-        calc
-          (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 +
-              (Real.sqrt 2 * Real.sqrt q * x + (b : ℝ) / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2 +
-              (Real.sqrt m / (Real.sqrt 2 * Real.sqrt q) * y) ^ 2
-              = (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 +
-                2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) :=
-                  rst_expand_eq m q t b h x y z hq (by simpa using hbqm)
-          _ = 0 := by
-                simpa using congr_arg ((↑) : ℤ → ℝ) h_case1
-      exact hsum0
+      rw [rst_expand_eq m q t b h x y z hq (by simpa using hbqm)]
+      simpa using congr_arg ((↑) : ℤ → ℝ) h_case1
     aesop
   · refine ⟨x, y, 2 * t * q * x + t * b * y + m * z,
       Int.toNat (q * x ^ 2 + b * x * y + h * y ^ 2), ?_, ?_, ?_⟩ <;> norm_num
@@ -924,9 +808,7 @@ lemma jacobi_neg_d_of_odd_padicVal (p : ℕ) (a d b' : ℤ)
       have hlt : a'.natAbs + k.natAbs < n := by
         rw [← hn, hab, hkb, ← Nat.left_distrib]
         rcases Nat.eq_zero_or_pos (a'.natAbs + k.natAbs) with hz | hpos
-        · obtain ⟨ha0, hk0⟩ := Nat.add_eq_zero_iff.mp hz
-          rw [Int.natAbs_eq_zero] at ha0 hk0
-          exact absurd (by rw [ha0, hk0]; ring) hsum_ne
+        · simp_all
         · exact lt_mul_of_one_lt_left hpos hp.one_lt
       exact ih _ hlt a' k rfl hodd'
     · exact jacobi_neg_d_of_dvd_sq_add p a d b' hp hp_odd hp_dvd hp_not_dvd_d h_div_b'
@@ -985,8 +867,7 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
   have h_jacobi_neg_1 : jacobiSym (-1) p = 1 := by
     have h_mul : jacobiSym (-m) p = jacobiSym (-1) p * jacobiSym m p := by
       simpa [neg_mul] using (jacobiSym.mul_left (-1) m p)
-    rw [h_mul, h_jacobi_m] at h_jacobi_neg_m
-    simpa using h_jacobi_neg_m
+    simp_all
   rw [jacobiSym.at_neg_one] at h_jacobi_neg_1
   · rw [ZMod.χ₄_nat_mod_four] at h_jacobi_neg_1
     have := Nat.mod_lt p zero_lt_four
@@ -1121,10 +1002,6 @@ theorem blueprint_case_mod8_eq3 (m : ℕ) (hm_sq : Squarefree m) (hm_pos : 0 < m
   obtain ⟨a, b, c, habc⟩ := habc
   refine ⟨a.natAbs, b.natAbs, c.natAbs, ?_⟩
   apply Int.ofNat.inj
-  calc
-    ((a.natAbs ^ 2 + b.natAbs ^ 2 + c.natAbs ^ 2 : ℕ) : ℤ)
-        = a ^ 2 + b ^ 2 + c ^ 2 := by
-          norm_num [Int.natCast_natAbs, sq_abs]
-    _ = (m : ℤ) := by simpa using habc.symm
+  simp_all
 
 end LeanPool.SumsThreeSquares

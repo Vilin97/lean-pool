@@ -43,8 +43,7 @@ theorem IsUnifLocDoublingMeasure.exists_closedBall_covering_tsum_measure_le_of_m
     rw [lt_min_iff] at hr
     refine ⟨r / 4, by positivity, ?_, ?_, ?_⟩
     · grw [hr.2]
-      field_simp
-      rfl
+      simp_all
     · field_simp; assumption
     · grw [← hδU]
       gcongr

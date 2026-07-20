@@ -18,12 +18,10 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFrameClass : FrameClass :=
   { F | Std.Refl F ∧ IsSymmetric F }
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFiniteFrameClass :
-    FiniteFrameClass :=
+abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFiniteFrameClass : FiniteFrameClass :=
   { F | Std.Refl F.Rel ∧ IsSymmetric F.Rel }
 
 namespace Hilbert

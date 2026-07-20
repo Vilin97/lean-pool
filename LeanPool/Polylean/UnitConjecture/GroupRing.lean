@@ -54,11 +54,8 @@ omit [DecidableEq R] in
 theorem mul_monom_zero (g x₀ : G) (s : FormalSum R G) :
     coords (mulMonom 0 g s) x₀ = 0 := by
   induction s with
-  | nil =>
-    simp only [mulMonom, coords]
-  | cons h t ih =>
-    simp only [mulMonom, mul_zero, coords, monom_coords_at_zero, zero_add]
-    assumption
+  | nil => simp only [mulMonom, coords]
+  | cons h t ih => simp only [mulMonom, mul_zero, coords, monom_coords_at_zero, zero_add, ih]
 
 -- distributivity of multiplication by a monomial
 omit [DecidableEq R] in
@@ -67,12 +64,9 @@ theorem mul_monom_dist (b : R) (h x₀ : G)
     coords (mulMonom b h (s₁ ++ s₂)) x₀ =
       coords (mulMonom b h s₁) x₀ + coords (mulMonom b h s₂) x₀ := by
     induction s₁ with
-    | nil =>
-      simp only [List.nil_append, mulMonom, coords, zero_add]
+    | nil => simp only [List.nil_append, mulMonom, coords, zero_add]
     | cons head tail ih =>
-      simp only [List.cons_append, mulMonom, coords]
-      rw [ih]
-      simp only [add_assoc]
+      simp only [List.cons_append, mulMonom, coords, ih, add_assoc]
 
 -- right distributivity
 omit [DecidableEq R] in
@@ -80,14 +74,9 @@ theorem mul_dist (x₀ : G) (s₁ s₂ s₃ : FormalSum R G) :
     coords (mul s₁ (s₂ ++ s₃)) x₀ =
       coords (mul s₁ s₂) x₀ + coords (mul s₁ s₃) x₀ := by
     induction s₂ with
-    | nil =>
-      simp only [List.nil_append, mul, coords, zero_add]
+    | nil => simp only [List.nil_append, mul, coords, zero_add]
     | cons head tail ih =>
-      simp only [List.cons_append, mul]
-      rw [← append_coords]
-      rw [← append_coords]
-      rw [ih]
-      simp only [add_assoc]
+      simp only [List.cons_append, mul, ← append_coords, ih, add_assoc]
 
 
 -- associativity with two terms monomials
@@ -97,12 +86,10 @@ theorem mul_monom_monom_assoc (a b : R) (h x₀ : G)
     coords (mulMonom b h (mulMonom a x s)) x₀ =
       coords (mulMonom (a * b) (x * h) s) x₀ := by
     induction s with
-    | nil =>
-      simp only [mulMonom, coords]
+    | nil => simp only [mulMonom, coords]
     | cons head tail ih =>
       let (a₁, x₁) := head
-      simp only [mulMonom, mul_assoc, coords, add_right_inj]
-      rw [ih]
+      simp only [mulMonom, mul_assoc, coords, ih]
 
 -- associativity with one term a monomial
 omit [DecidableEq R] in
@@ -111,16 +98,10 @@ theorem mul_monom_assoc (b : R) (h x₀ : G)
     coords (mulMonom b h (mul s₁ s₂)) x₀ =
       coords (mul s₁ (mulMonom b h s₂)) x₀ := by
     induction s₂ with
-    | nil =>
-      simp only [mul, mulMonom, coords]
+    | nil => simp only [mul, mulMonom, coords]
     | cons head tail ih =>
       let (a, x) := head
-      simp only [mul, mulMonom]
-      rw [← append_coords]
-      rw [mul_monom_dist]
-      rw [ih]
-      simp only [add_left_inj]
-      rw [mul_monom_monom_assoc]
+      simp only [mul, mulMonom, ← append_coords, mul_monom_dist, ih, mul_monom_monom_assoc]
 
 -- left distributivity for multiplication by a monomial
 omit [DecidableEq R] in
@@ -129,46 +110,22 @@ theorem mul_monom_add (b₁ b₂ : R) (h x₀ : G)
     coords (mulMonom (b₁ + b₂) h s) x₀ =
       coords (mulMonom b₁ h s) x₀ + coords (mulMonom b₂ h s) x₀ := by
   induction s with
-  | nil =>
-    simp only [mulMonom, coords, add_zero]
+  | nil => simp only [mulMonom, coords, add_zero]
   | cons head tail ih =>
     let (a, g) := head
-    simp only [mulMonom, coords]
-    rw [left_distrib]
-    rw [monom_coords_hom]
-    rw [ih]
-    conv =>
-      lhs
-      rw [add_assoc]
-      arg 2
-      rw [← add_assoc]
-      congr
-      rw [add_comm]
-    conv =>
-      rhs
-      rw [add_assoc]
-    conv =>
-      rhs
-      arg 2
-      skip
-      rw [← add_assoc]
+    simp only [mulMonom, coords, left_distrib, monom_coords_hom, ih, add_assoc,
+      add_left_comm]
 
 /-- multiplication equivalent when adding term with `0` coefficient -/
 theorem mul_zero_cons (s t : FormalSum R G) : mul s ((0, h) :: t) ≈ mul s t := by
-    induction s
-    case nil =>
+    induction s with
+    | nil =>
       simp only [mul, mulMonom, List.nil_append]
       apply eqlCoords.refl
-    case cons head tail _ =>
+    | cons head tail _ =>
       simp only [mul, mulMonom, mul_zero, List.cons_append]
       apply funext; intro x₀
-      simp only [coords]
-      rw [monom_coords_at_zero]
-      rw [zero_add]
-      rw [← append_coords]
-      simp only [add_eq_right]
-      let l := mul_monom_zero h x₀ tail
-      rw [l]
+      simp only [coords, monom_coords_at_zero, zero_add, ← append_coords, mul_monom_zero]
 
 /-!
 ## Induced product on the quotient
@@ -190,8 +147,7 @@ def mulAux : FormalSum R G → R[G] → R[G] := by
     intro x₀
     rw [← append_coords]
     let l := mul_monom_zero g x₀ s
-    rw [l]
-    simp only [zero_add]
+    simp_all
   | addCoeffs a b x tail =>
     apply Quotient.sound
     apply funext; intro x₀
@@ -234,13 +190,7 @@ theorem mul_monom_invariant (b : R) (h x₀ : G) (s₁ s₂ : FormalSum R G)
       | cons a x t₁ t₂ _ step =>
         simp only [mulMonom, coords, step]
       | swap a₁ a₂ x₁ x₂ tail =>
-        simp only [mulMonom, coords]
-        conv =>
-          lhs
-          rw [← add_assoc]
-          arg 1
-          rw [add_comm]
-        rw [← add_assoc]
+        simp only [mulMonom, coords, add_left_comm]
 
 
 /-- invariance under moves for the first argument for multipilication -/
@@ -248,85 +198,35 @@ theorem first_arg_invariant (s₁ s₂ t : FormalSum R G)
     (rel : ElementaryMove R G s₁ s₂) :
     FormalSum.mul s₁ t ≈ FormalSum.mul s₂ t := by
     cases t
-    case nil =>
-      simp only [mul]
-      rfl
+    case nil => simp only [mul]
+                exact eqlCoords.refl _
     case cons head' tail' =>
       let (b, h) := head'
       induction rel with
       | zeroCoeff tail g a hyp =>
         rw [hyp]
-        simp only [mul, mulMonom, zero_mul, List.cons_append]
         apply funext; intro x₀
-        rw [← append_coords]
-        simp only [coords, monom_coords_at_zero, zero_add]
-        rw [← append_coords]
-        simp only [add_right_inj]
-        let rel' : ElementaryMove R G ((0, g) :: tail) tail := by
-          apply ElementaryMove.zeroCoeff
-          rfl
-        let prev := first_arg_invariant _ _ tail' rel'
-        let pl := congrFun prev x₀
-        rw [pl]
+        simp only [mul, mulMonom, zero_mul, List.cons_append, ← append_coords,
+          coords, monom_coords_at_zero, zero_add, add_right_inj]
+        let prev := first_arg_invariant _ _ tail' (ElementaryMove.zeroCoeff tail g 0 rfl)
+        exact congrFun prev x₀
       | addCoeffs a₁ a₂ x tail =>
-        simp only [mul]
         apply funext; intro x₀
-        rw [← append_coords]
-        rw [← append_coords]
-        simp only [mulMonom, coords]
-        rw [right_distrib]
-        simp only [monom_coords_hom]
-        let rel' : ElementaryMove R G
-          ((a₁, x) :: (a₂, x) :: tail)
-            ((a₁ + a₂, x) :: tail) := by
-            apply ElementaryMove.addCoeffs
-        let prev := first_arg_invariant _ _ tail' rel'
-        let pl := congrFun prev x₀
-        rw [pl]
+        simp only [mul, ← append_coords, mulMonom, coords, right_distrib, monom_coords_hom]
+        let prev := first_arg_invariant _ _ tail' (ElementaryMove.addCoeffs a₁ a₂ x tail)
+        rw [congrFun prev x₀]
         simp only [add_assoc]
       | cons a x s₁ s₂ r _ =>
-        simp only [mul]
         apply funext; intro x₀
-        rw [← append_coords]
-        rw [← append_coords]
-        simp only [mulMonom, coords]
-        let rel' : ElementaryMove R G
-          ((a, x) :: s₁)
-            ((a, x) :: s₂) := by
-            apply ElementaryMove.cons
-            assumption
-        let prev := first_arg_invariant _ _ tail' rel'
-        let pl := congrFun prev x₀
-        rw [pl]
-        let ps := mul_monom_invariant b h x₀ s₁ s₂ r
-        rw [ps]
+        simp only [mul, ← append_coords, mulMonom, coords]
+        let prev := first_arg_invariant _ _ tail' (ElementaryMove.cons a x s₁ s₂ r)
+        rw [congrFun prev x₀, mul_monom_invariant b h x₀ s₁ s₂ r]
       | swap a₁ a₂ x₁ x₂ tail =>
-        simp only [mul]
         apply funext; intro x₀
-        rw [← append_coords]
-        rw [← append_coords]
-        rw [mulMonom]
-        rw [mulMonom]
-        rw [coords]
-        rw [coords]
-        rw [mulMonom]
-        rw [mulMonom]
-        rw [coords]
-        rw [coords]
-        let rel' : ElementaryMove R G
-          ((a₁, x₁) :: (a₂, x₂) :: tail)
-            ((a₂, x₂) :: (a₁, x₁) :: tail) := by
-            apply ElementaryMove.swap
-        let prev := first_arg_invariant _ _ tail' rel'
-        let pl := congrFun prev x₀
-        rw [pl]
-        simp only [add_left_inj]
-        rw [← add_assoc]
-        rw [← add_assoc]
-        simp only [add_left_inj]
-        conv =>
-          lhs
-          rw [add_comm]
+        simp only [mul, ← append_coords, mulMonom, coords]
+        let prev := first_arg_invariant _ _ tail' (ElementaryMove.swap a₁ a₂ x₁ x₂ tail)
+        rw [congrFun prev x₀]
+        simp only [add_left_comm]
 
 /-- The empty right factor is preserved by elementary moves in the first factor. -/
 theorem first_arg_invariant_nil (s₁ s₂ : FormalSum R G)
@@ -400,9 +300,6 @@ instance : Ring (R[G]) :=
         intro x
         let l := FreeModule.coeffs_distrib (-1 : R) (1 : R) x
         simp only [neg_add_cancel] at l
-        have lc : (-1 : R) + 1 = 0 := by
-            apply neg_add_cancel
-        -- rw [lc] at l
         rw [FreeModule.unit_coeffs] at l
         rw [FreeModule.zero_coeffs] at l
         exact l
@@ -460,12 +357,7 @@ instance : Ring (R[G]) :=
       | cons h t ih =>
         rw [FormalSum.mul]
         simp only [mulMonom, List.nil_append]
-        apply funext; intro x₀
-        let lih := congrFun ih x₀
-        rw [coords] at lih
-        -- rw [← append_coords]
-        rw [lih]
-        simp only [coords]
+        simp_all
 
     mul_zero := by
       apply Quotient.ind
@@ -583,8 +475,7 @@ theorem groupInclusionHom_injective {F : Type} [Field F] [DecidableEq F]
     Function.Injective (groupInclusionHom (R := F) G) := by
   intro _ _
   apply groupInclusionHom_injective'
-  have : (0 : F) ≠ (1 : F) := zero_ne_one
-  simp_all only [ne_eq, zero_ne_one, not_false_iff, one_ne_zero]
+  simp_all
 
 /-- The ring homomorphism `R → R[G]` given by `a ↦  a ⬝ 1` -/
 def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=

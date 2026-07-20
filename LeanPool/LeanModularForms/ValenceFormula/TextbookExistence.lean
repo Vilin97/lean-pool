@@ -52,8 +52,7 @@ lemma repLeftVert_mem_s₀ {p : ℍ} (hp : p ∈ repLeftVert f hf) : p ∈ s₀ 
 lemma repLeftArc_mem_s₀ {p : ℍ} (hp : p ∈ repLeftArc f hf) : p ∈ s₀ f hf :=
   (Finset.mem_filter.mp hp).1
 
-lemma repCanon_mem_s₀ {p : ℍ} (hp : p ∈ repCanon f hf) :
-    p ∈ s₀ f hf := by
+lemma repCanon_mem_s₀ {p : ℍ} (hp : p ∈ repCanon f hf) : p ∈ s₀ f hf := by
   simp only [repCanon, Finset.mem_union] at hp
   obtain (h | h) | h := hp
   · exact repStrict_mem_s₀ f hf h
@@ -90,8 +89,7 @@ lemma orb_S_smul_eq (p : ℍ) :
 private lemma uhp_norm_one_re_zero_eq_i (p : ℍ) (hn : ‖(p : ℂ)‖ = 1) (hr : (p : ℂ).re = 0) :
     p = ellipticPointI' := by
   apply UpperHalfPlane.ext; change (p : ℂ) = I
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
+  have h_nsq : Complex.normSq (p : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
   have h_im : (p : ℂ).im = 1 := by
     have h_prod : ((p : ℂ).im - 1) * ((p : ℂ).im + 1) = 0 := by nlinarith
@@ -99,48 +97,6 @@ private lemma uhp_norm_one_re_zero_eq_i (p : ℍ) (hn : ‖(p : ℂ)‖ = 1) (hr
     · linarith
     · exact absurd h (ne_of_gt (add_pos p.2 one_pos))
   exact Complex.ext (hr.trans Complex.I_re.symm) (h_im.trans Complex.I_im.symm)
-
-private lemma uhp_norm_one_re_neg_half_eq_rho (p : ℍ)
-    (hn : ‖(p : ℂ)‖ = 1) (hr : (p : ℂ).re = -1 / 2) :
-    p = ellipticPointRho' := by
-  apply UpperHalfPlane.ext
-  show (p : ℂ) = (ellipticPointRho' : ℂ)
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
-  rw [Complex.normSq_apply, hr] at h_nsq
-  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
-    have h_im_sq : (p : ℂ).im ^ 2 = (Real.sqrt 3 / 2) ^ 2 := by
-      rw [h_sq, div_pow, Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]; norm_num
-    rcases sq_eq_sq_iff_eq_or_eq_neg.mp h_im_sq with h | h
-    · exact h
-    · exact absurd h (by
-        have : (↑p : ℂ).im > 0 := p.2
-        linarith [Real.sqrt_pos.mpr (show (3 : ℝ) > 0 by norm_num)])
-  apply Complex.ext
-  · simp [ellipticPointRho']; have : p.re = (↑p : ℂ).re := rfl; linarith
-  · simp [ellipticPointRho']; have : p.im = (↑p : ℂ).im := rfl; linarith
-
-private lemma uhp_norm_one_re_half_eq_rho_plus_one (p : ℍ)
-    (hn : ‖(p : ℂ)‖ = 1) (hr : (p : ℂ).re = 1 / 2) :
-    p = ellipticPointRhoPlusOne' := by
-  apply UpperHalfPlane.ext
-  show (p : ℂ) = (ellipticPointRhoPlusOne' : ℂ)
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
-  rw [Complex.normSq_apply, hr] at h_nsq
-  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
-    have h_im_sq : (p : ℂ).im ^ 2 = (Real.sqrt 3 / 2) ^ 2 := by
-      rw [h_sq, div_pow, Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]; norm_num
-    rcases sq_eq_sq_iff_eq_or_eq_neg.mp h_im_sq with h | h
-    · exact h
-    · exact absurd h (by
-        have : (↑p : ℂ).im > 0 := p.2
-        linarith [Real.sqrt_pos.mpr (show (3 : ℝ) > 0 by norm_num)])
-  apply Complex.ext
-  · simp [ellipticPointRhoPlusOne']; have : p.re = (↑p : ℂ).re := rfl; linarith
-  · simp [ellipticPointRhoPlusOne']; have : p.im = (↑p : ℂ).im := rfl; linarith
 
 private lemma case_right_vertical_via_tInv (q : NonEllOrbit) (p0 : ℍ)
     (hp0_fd : p0 ∈ 𝒟) (hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0)
@@ -173,8 +129,7 @@ private lemma case_right_arc_via_S (q : NonEllOrbit) (p0 : ℍ)
   have h_re_S : (ModularGroup.S • p0 : ℍ).re = -p0.re :=
     S_smul_re_neg_of_unit p0 h_norm_eq
   have hp1_re_neg : (↑p1 : ℂ).re < 0 := by
-    change (ModularGroup.S • p0 : ℍ).re < 0; rw [h_re_S]
-    have : p0.re = (↑p0 : ℂ).re := rfl; linarith
+    change (ModularGroup.S • p0 : ℍ).re < 0; simp_all
   have hp1_ne_rho : p1 ≠ ellipticPointRho' := by
     intro h
     have : orb ellipticPointRho' = q.val := by
@@ -193,13 +148,10 @@ theorem exists_repCanon_of_nonEllOrbit :
   intro q hord
   obtain ⟨hq_ne_i, hq_ne_rho⟩ := q.2
   obtain ⟨p0, hp0_orb, hp0_fd⟩ := orbit_has_fd_rep q.val
-  have hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0 := by
-    rw [← ordOrbit_mk f p0, hp0_orb]; exact hord
+  have hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0 := by rw [← ordOrbit_mk f p0, hp0_orb]; exact hord
   have hp0_s₀ : p0 ∈ s₀ f hf := s₀_complete f hf p0 hp0_fd hp0_ord
-  have hp0_ne_i : p0 ≠ ellipticPointI' :=
-    fun h ↦ by rw [h] at hp0_orb; exact hq_ne_i hp0_orb.symm
-  have hp0_ne_rho : p0 ≠ ellipticPointRho' :=
-    fun h ↦ by rw [h] at hp0_orb; exact hq_ne_rho hp0_orb.symm
+  have hp0_ne_i : p0 ≠ ellipticPointI' := fun h ↦ hq_ne_i (hp0_orb ▸ h ▸ rfl)
+  have hp0_ne_rho : p0 ≠ ellipticPointRho' := fun h ↦ hq_ne_rho (hp0_orb ▸ h ▸ rfl)
   have hp0_ne_rho1 : p0 ≠ ellipticPointRhoPlusOne' := fun h ↦ by
     rw [h] at hp0_orb; exact hq_ne_rho (hp0_orb.symm.trans orb_rho_plus_one_eq_orb_rho)
   rcases (by nlinarith [Complex.normSq_eq_norm_sq (p0 : ℂ),

@@ -54,8 +54,7 @@ lemma toFun_rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
 
 lemma rwTargetPt_eq {f g : C(X, Y)} (point : X) (gf : g = f) :
     rwTargetPt point gf = ofHom f point := by
-  ext x
-  exact congr_fun (congr_arg ContinuousMap.toFun gf) x
+  simp_all
 
 end Hom
 
@@ -79,13 +78,9 @@ lemma toFun_rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = 
 
 lemma rwTargetPt_eq {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
     rwTargetPt point gf = ofHom' f point := by
-  ext x
-  exact congr_fun (congr_arg (ContinuousMap.toFun ∘ TopCat.Hom.hom) gf) x
+  simp_all
 
 end Hom'
-
--- instance : Coe PointedTopCat TopCat where
---   coe X := X.right
 
 /-- Regard a pointed topological space as simply a topological space. -/
 abbrev as (X : PointedTopCat.{u}) : TopCat.{u} := X.right
@@ -135,13 +130,10 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
       have h1 : (f ≫ inv f) a₁ = (f ≫ inv f) a₂ := by
         change (inv f) (f a₁) = (inv f) (f a₂)
         rw [ha]
-      rw [CategoryTheory.IsIso.hom_inv_id] at h1
-      exact h1
+      simp_all
     · intro b
       refine ⟨(inv f) b, ?_⟩
-      have : (inv f ≫ f) b = b := by
-        rw [CategoryTheory.IsIso.inv_hom_id]; rfl
-      exact this
+      simp_all
   · intro bf
     constructor
     obtain ⟨g, ⟨gl, gr⟩⟩ := Function.bijective_iff_has_inverse.mp bf
@@ -153,21 +145,6 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
     constructor
     · ext a; exact gl a
     · ext b; exact gr b
-
--- /-- Copy of a `Pointed.Hom X Y` with a new map `g` equal to the old `f.toFun`.
--- Useful to fix definitional equalities.  See also `GenLoop.copy`.-/
--- def Hom.copy {X Y : Pointed.{u}} (f : Pointed.Hom X Y) (g : X → Y) (gf : g = f.toFun) :
---     Pointed.Hom X Y :=
---   ⟨g, gf ▸ f.map_point⟩
-
--- lemma Hom.toFun_copy {X Y : Pointed.{u}} (f : Pointed.Hom X Y) {g : X → Y} (gf : g = f.toFun) :
---     (copy f g gf).toFun = g :=
---   rfl
-
--- lemma Hom.copy_eq {X Y : Pointed.{u}} (f : Pointed.Hom X Y) {g : X → Y} (gf : g = f.toFun) :
---     copy f g gf = f := by
---   ext x
---   exact congr_fun gf x
 
 namespace Hom
 
@@ -183,8 +160,7 @@ lemma toFun_rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
 
 lemma rwTargetPt_eq {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
     rwTargetPt point gf = ⟨f, rfl⟩ := by
-  ext x
-  exact congr_fun gf x
+  simp_all
 
 end Hom
 
@@ -210,14 +186,6 @@ end GenLoop
 
 
 namespace HomotopyGroup
-
--- example (X : Under (TopCat.of PUnit)) : Discrete PUnit := X.left
--- example (X : Under (TopCat.of PUnit)) : TopCat.{u} := X.right
--- example (X : Under (TopCat.of PUnit)) : (TopCat.of PUnit) ⟶ X.right := X.hom
--- example (X : Under (TopCat.of PUnit)) : C((TopCat.of PUnit), X.right) := X.hom.hom
--- (TopCat.Hom.hom (CategoryTheory.Comma.hom X))
--- example (X : Under (TopCat.of PUnit)) : X.right := X.hom.hom () -- X.hom.hom PUnit.unit
--- example {n : ℕ} (hn : n > 0) : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp hn
 
 /-- The map between homotopy groups (as sets)
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
@@ -305,11 +273,6 @@ noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u}
       Functor.map_comp]
     congr
 
--- -- noncomputable instance piGroup {X : Type*} [TopologicalSpace X] {x : X} {n : ℕ}
--- --     [hpos : Fact (n > 0)] : Group (π_ n X x) := by
--- --   have : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp hpos.out
--- --   exact HomotopyGroup.group (Fin n)
-
 -- TODO (phase 3): The `functorToGrp` definition was here.
 -- Its `map_mul` proof relied on subtle definitional equalities between the
 -- old `HomotopyGroup` multiplication and `GenLoop.transAt`, which changed
@@ -318,11 +281,6 @@ noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u}
 -- functor (whose `map` field requires the `map_mul` step) needs a new proof
 -- strategy via `HomotopyGroup.mul_spec` plus a fresh ⟦·⟧ congruence argument.
 -- It is unused elsewhere in this project. -/
-
--- #check FundamentalGroupoid.fundamentalGroupoidFunctor
--- #check FundamentalGroupoidFunctor.equivOfHomotopyEquiv
-
-
 
 /-- The morphism $f_{*} : π_n(X, x₀) → π_n(Y, f(x₀))$ in the category `Pointed`,
 induced by the continuous map `f : C(X, Y)` -/
@@ -362,8 +320,7 @@ lemma toFun_rwTargetPt
 
 lemma rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
     rwTargetPt n x₀ gf = inducedPointedHom n x₀ f := by
-  unfold rwTargetPt inducedPointedHom
-  rw [PointedTopCat.Hom.rwTargetPt_eq]
+  simp_all
 
 end inducedPointedHom
 
@@ -391,8 +348,7 @@ lemma toFun_rwTargetPt
 lemma rwTargetPt_eq
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
     rwTargetPt n x₀ gf = inducedPointedHom' n x₀ f := by
-  unfold rwTargetPt inducedPointedHom'
-  rw [PointedTopCat.Hom'.rwTargetPt_eq]
+  simp_all
 
 end inducedPointedHom'
 

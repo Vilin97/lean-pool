@@ -45,8 +45,7 @@ theorem dim_max_subfield (k : SubField K D) (hk : IsMax k) :
           · rw [Subalgebra.mem_centralizer_iff] at ha1
             refine ha1 _ hβ |>.symm
           · rw [Subalgebra.mem_centralizer_iff] at ha1
-            apply ha1
-            exact hα
+            simp_all
           · apply k.mul_comm hα hβ
         · intros
           rw [Algebra.commutes]
@@ -72,8 +71,7 @@ theorem dim_max_subfield (k : SubField K D) (hk : IsMax k) :
         have := this.2 ⟨x, hx⟩ ⟨y, hy⟩
         change (⟨x * y, Subalgebra.mul_mem _ hx hy⟩ :
           (Algebra.adjoin K (insert a k.1) : Subalgebra K D)) = ⟨_, _⟩ at this
-        simp only [Subtype.mk.injEq] at this ⊢
-        exact this
+        simp_all
       exists_inverse x hx hx0 := by
          have := this.3 (Subtype.coe_ne_coe.1 hx0 : (⟨x, hx⟩ :
           (Algebra.adjoin K (insert a k.1) : Subalgebra K D)) ≠ 0)
@@ -157,8 +155,7 @@ lemma cor_two_3to1 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
         · rw [Subalgebra.mem_centralizer_iff] at ha1
           exact ha1 _ hy |>.symm
         · rw [Subalgebra.mem_centralizer_iff] at ha1
-          rename_i hxx
-          exact ha1 _ hxx
+          simp_all
         · exact L.2 hx hy)
         (fun k1 k2 ↦ Algebra.commutes _ _) (fun k x _ ↦ Algebra.commutes _ _)
         (fun k x _ ↦ Algebra.commutes _ _ |>.symm)

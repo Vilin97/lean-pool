@@ -67,6 +67,79 @@ lemma gradX_stronglyMeasurable_v
   rfl
 
 
+/-- Uniform bound on `|v ⬝ᵥ gradX(f·v)(x) * log(f x v)|` over all `x` and `v`.
+    Returns `C_total` and the pointwise bound `C_total / (1+‖v‖)^4`. -/
+private lemma spatial_transport_uniform_bound
+    {f : Torus3 → (Fin 3 → ℝ) → ℝ}
+    (hSchwartz : UniformSchwartzDecay f)
+    (C_log : ℝ) (K_log : ℕ)
+    (hLB : ∀ (x : Torus3) (v : Fin 3 → ℝ), |Real.log (f x v)| ≤ C_log * (1 + ‖v‖) ^ K_log) :
+    ∃ C_total > 0, ∀ (x : Torus3) (v : Fin 3 → ℝ),
+      |v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v)| ≤
+      C_total / (1 + ‖v‖) ^ 4 := by
+  have hLB' : ∀ (x : Torus3) (v : Fin 3 → ℝ),
+      |Real.log (f x v)| ≤ |C_log| * (1 + ‖v‖) ^ K_log :=
+    fun x v => le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
+      (pow_nonneg (by linarith [norm_nonneg v]) _))
+  obtain ⟨C0, hC0, hG0⟩ := hSchwartz.hGradDecay (K_log + 6) 0
+  obtain ⟨C1, hC1, hG1⟩ := hSchwartz.hGradDecay (K_log + 6) 1
+  obtain ⟨C2, hC2, hG2⟩ := hSchwartz.hGradDecay (K_log + 6) 2
+  refine ⟨(C0 + C1 + C2) * (|C_log| + 1) + 1, by positivity, fun x v => ?_⟩
+  have h1v : (1 : ℝ) ≤ 1 + ‖v‖ := le_add_of_nonneg_right (norm_nonneg v)
+  have h1v_nn : (0 : ℝ) ≤ 1 + ‖v‖ := le_trans zero_le_one h1v
+  have hg_eq : v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v) =
+      ∑ i : Fin 3, v i * FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v) := by
+    simp only [dotProduct, Fin.sum_univ_three]; ring
+  rw [hg_eq]
+  have hpow_bound : (1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6) ≤
+      1 / (1 + ‖v‖) ^ 4 := by
+    rw [div_le_div_iff₀ (pow_pos (by linarith) _) (pow_pos (by linarith) _), one_mul,
+      show K_log + 6 = (K_log + 1) + 5 from by omega, pow_add,
+      show (1 + ‖v‖) * (1 + ‖v‖) ^ K_log = (1 + ‖v‖) ^ (K_log + 1) from (pow_succ' _ _).symm]
+    exact mul_le_mul_of_nonneg_left (by nlinarith [pow_nonneg h1v_nn 4]) (pow_nonneg h1v_nn _)
+  have h_factor : ∀ Ci : ℝ, 0 < Ci →
+      (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) ≤
+      Ci * |C_log| / (1 + ‖v‖) ^ 4 := fun Ci _ => by
+    rw [show (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) =
+        Ci * |C_log| * ((1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6)) from by ring,
+      show Ci * |C_log| / (1 + ‖v‖) ^ 4 = Ci * |C_log| * (1 / (1 + ‖v‖) ^ 4) from by ring]
+    exact mul_le_mul_of_nonneg_left hpow_bound (by positivity)
+  calc |∑ i : Fin 3, v i * FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v)|
+      ≤ ∑ i : Fin 3, |v i * FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v)| :=
+        Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ i : Fin 3, (1 + ‖v‖) *
+          (if i = 0 then C0 else if i = 1 then C1 else C2) /
+          (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) := by
+        apply Finset.sum_le_sum; intro i _
+        rw [abs_mul, abs_mul]
+        have hvi : |v i| ≤ 1 + ‖v‖ := le_trans
+          ((Real.norm_eq_abs _) ▸ norm_le_pi_norm v i) (le_add_of_nonneg_left zero_le_one)
+        have hgrad : |FlatTorus3.gradX (fun y => f y v) x i| ≤
+            (if i = 0 then C0 else if i = 1 then C1 else C2) / (1 + ‖v‖) ^ (K_log + 6) := by
+          rw [le_div_iff₀ (pow_pos (by linarith : (0 : ℝ) < 1 + ‖v‖) _)]
+          fin_cases i
+          · exact hG0 x v
+          · exact hG1 x v
+          · exact hG2 x v
+        calc |v i| * |FlatTorus3.gradX (fun y => f y v) x i| * |Real.log (f x v)|
+            ≤ (1 + ‖v‖) * ((if i = 0 then C0 else if i = 1 then C1 else C2) /
+              (1 + ‖v‖) ^ (K_log + 6)) * (|C_log| * (1 + ‖v‖) ^ K_log) := by
+              gcongr
+              exact hLB' x v
+          _ = _ := by ring
+    _ ≤ (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
+        simp only [Fin.sum_univ_three, Fin.isValue, ↓reduceIte, Fin.reduceEq]
+        have hp4 : (0 : ℝ) < (1 + ‖v‖) ^ 4 := pow_pos (by linarith) 4
+        have hle : C0 * |C_log| / (1 + ‖v‖) ^ 4 + C1 * |C_log| / (1 + ‖v‖) ^ 4 +
+            C2 * |C_log| / (1 + ‖v‖) ^ 4 ≤ (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
+          have key : ∀ a b : ℝ, a / (1 + ‖v‖) ^ 4 + b / (1 + ‖v‖) ^ 4 =
+              (a + b) / (1 + ‖v‖) ^ 4 := fun a b => by ring
+          rw [key, key, div_le_div_iff₀ hp4 hp4]
+          nlinarith [abs_nonneg C_log]
+        linarith [h_factor C0 hC0, h_factor C1 hC1, h_factor C2 hC2]
+    _ ≤ ((C0 + C1 + C2) * (|C_log| + 1) + 1) / (1 + ‖v‖) ^ 4 := by gcongr; linarith
+
+
 /-- Spatial transport joint integrability (Fubini on compact torus × ℝ³).
     Uses: uniform Schwartz grad decay → uniform velocity integral bound,
     combined with finite measure on compact T³ → joint integrability. -/
@@ -85,86 +158,12 @@ lemma spatial_transport_joint_integrable
   set g : Torus3 → (Fin 3 → ℝ) → ℝ :=
     fun x v => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v) with hg_def
   -- Uniform bound: |g x v| ≤ C_total / (1+‖v‖)^4 for all x, v
-  -- from Schwartz grad decay + log bound
   have h_unif_bound : ∃ C_total > 0, ∀ (x : Torus3) (v : Fin 3 → ℝ),
       |g x v| ≤ C_total / (1 + ‖v‖) ^ 4 := by
-    -- Get gradient decay bounds for each component
-    have hLB' : ∀ (x : Torus3) (v : Fin 3 → ℝ),
-        |Real.log (f x v)| ≤ |C_log| * (1 + ‖v‖) ^ K_log :=
-      fun x v => le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
-        (pow_nonneg (by linarith [norm_nonneg v]) _))
-    -- Sum of 3 components bound
-    obtain ⟨C0, hC0, hG0⟩ := hSchwartz.hGradDecay (K_log + 6) 0
-    obtain ⟨C1, hC1, hG1⟩ := hSchwartz.hGradDecay (K_log + 6) 1
-    obtain ⟨C2, hC2, hG2⟩ := hSchwartz.hGradDecay (K_log + 6) 2
-    refine ⟨(C0 + C1 + C2) * (|C_log| + 1) + 1, by positivity, fun x v => ?_⟩
-    have h1v : (1 : ℝ) ≤ 1 + ‖v‖ := le_add_of_nonneg_right (norm_nonneg v)
-    have h1v_nn : (0 : ℝ) ≤ 1 + ‖v‖ := le_trans zero_le_one h1v
-    -- Decompose g into 3 components
-    have hg_eq : g x v = ∑ i : Fin 3, v i *
-        FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v) := by
-      simp only [hg_def, dotProduct, Fin.sum_univ_three]; ring
-    rw [hg_eq]
-    -- |∑ᵢ comp_i| ≤ ∑ᵢ |comp_i|
-    calc |∑ i : Fin 3, v i * FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v)|
-        ≤ ∑ i : Fin 3, |v i * FlatTorus3.gradX (fun y => f y v) x i *
-            Real.log (f x v)| := Finset.abs_sum_le_sum_abs _ _
-      _ ≤ ∑ i : Fin 3, (1 + ‖v‖) *
-            (if i = 0 then C0 else if i = 1 then C1 else C2) /
-            (1 + ‖v‖) ^ (K_log + 6) *
-            (|C_log| * (1 + ‖v‖) ^ K_log) := by
-          apply Finset.sum_le_sum; intro i _
-          rw [abs_mul, abs_mul]
-          have hvi : |v i| ≤ 1 + ‖v‖ := le_trans
-            ((Real.norm_eq_abs _) ▸ norm_le_pi_norm v i) (le_add_of_nonneg_left zero_le_one)
-          have hlog := hLB' x v
-          have hgrad : |FlatTorus3.gradX (fun y => f y v) x i| ≤
-              (if i = 0 then C0 else if i = 1 then C1 else C2) /
-              (1 + ‖v‖) ^ (K_log + 6) := by
-            rw [le_div_iff₀ (pow_pos (by linarith : (0 : ℝ) < 1 + ‖v‖) _)]
-            fin_cases i
-            · exact hG0 x v
-            · exact hG1 x v
-            · exact hG2 x v
-          calc |v i| * |FlatTorus3.gradX (fun y => f y v) x i| * |Real.log (f x v)|
-              ≤ (1 + ‖v‖) * ((if i = 0 then C0 else if i = 1 then C1 else C2) /
-                (1 + ‖v‖) ^ (K_log + 6)) * (|C_log| * (1 + ‖v‖) ^ K_log) := by
-                gcongr
-            _ = _ := by ring
-      _ ≤ (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
-          simp only [Fin.sum_univ_three, Fin.isValue, ↓reduceIte, Fin.reduceEq]
-          have hpow_bound : (1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6) ≤
-              1 / (1 + ‖v‖) ^ 4 := by
-            rw [div_le_div_iff₀ (pow_pos (by linarith) _) (pow_pos (by linarith) _)]
-            rw [one_mul, show K_log + 6 = (K_log + 1) + 5 from by omega, pow_add,
-              show (1 + ‖v‖) * (1 + ‖v‖) ^ K_log = (1 + ‖v‖) ^ (K_log + 1) from
-                (pow_succ' _ _).symm]
-            exact mul_le_mul_of_nonneg_left (by nlinarith [pow_nonneg h1v_nn 4])
-              (pow_nonneg h1v_nn _)
-          -- Each summand bounded via hpow_bound
-          have h_factor : ∀ Ci : ℝ, 0 < Ci →
-              (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) ≤
-              Ci * |C_log| / (1 + ‖v‖) ^ 4 := by
-            intro Ci hCi
-            rw [show (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) =
-                Ci * |C_log| * ((1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6))
-                from by ring,
-              show Ci * |C_log| / (1 + ‖v‖) ^ 4 =
-                Ci * |C_log| * (1 / (1 + ‖v‖) ^ 4) from by ring]
-            exact mul_le_mul_of_nonneg_left hpow_bound (by positivity)
-          have hp4 : (0 : ℝ) < (1 + ‖v‖) ^ 4 := pow_pos (by linarith) 4
-          have h_sum_bound : C0 * |C_log| / (1 + ‖v‖) ^ 4 + C1 * |C_log| / (1 + ‖v‖) ^ 4 +
-              C2 * |C_log| / (1 + ‖v‖) ^ 4 ≤
-              (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
-            rw [show C0 * |C_log| / (1 + ‖v‖) ^ 4 + C1 * |C_log| / (1 + ‖v‖) ^ 4 +
-                C2 * |C_log| / (1 + ‖v‖) ^ 4 =
-                (C0 + C1 + C2) * |C_log| / (1 + ‖v‖) ^ 4 from by ring,
-              div_le_div_iff₀ hp4 hp4]
-            exact mul_le_mul_of_nonneg_right
-              (mul_le_mul_of_nonneg_left (by linarith [abs_nonneg C_log]) (by linarith)) hp4.le
-          linarith [h_factor C0 hC0, h_factor C1 hC1, h_factor C2 hC2]
-      _ ≤ ((C0 + C1 + C2) * (|C_log| + 1) + 1) / (1 + ‖v‖) ^ 4 := by
-          gcongr; linarith
+    obtain ⟨C_total, hC_total_pos, hbound⟩ :=
+      spatial_transport_uniform_bound hSchwartz C_log K_log hLB
+    exact ⟨C_total, hC_total_pos, fun x v => by
+      simpa only [hg_def] using hbound x v⟩
   obtain ⟨C_total, hC_total_pos, h_bound⟩ := h_unif_bound
   -- Use integrable_prod_iff
   refine (integrable_prod_iff ?_).mpr ⟨?_, ?_⟩
@@ -232,9 +231,7 @@ lemma spatial_transport_joint_integrable
         (fun x => (spatial_transport_integrable hf_pos hf_smooth_v hf_smooth_x hSchwartz
           ⟨C_log, K_log, hLB⟩ x).norm.aestronglyMeasurable)
         (fun x => Filter.Eventually.of_forall fun v => by
-          change ‖‖g x v‖‖ ≤ C_total / (1 + ‖v‖) ^ 4
-          rw [Real.norm_eq_abs, abs_of_nonneg (norm_nonneg _), Real.norm_eq_abs]
-          exact h_bound x v)
+          simp_all)
         (inverse_poly_integrable C_total)
         (Filter.Eventually.of_forall fun v => (hg_cont v).norm)).aestronglyMeasurable
     · filter_upwards with x
@@ -245,8 +242,7 @@ lemma spatial_transport_joint_integrable
             · exact Filter.Eventually.of_forall (fun v => norm_nonneg _)
             · exact inverse_poly_integrable C_total
             · exact Filter.Eventually.of_forall (fun v => by
-                change ‖g x v‖ ≤ C_total / (1 + ‖v‖) ^ 4
-                rw [Real.norm_eq_abs]; exact h_bound x v)
+                simp_all)
         _ = C_total * ∫ v, (1 + ‖v‖)⁻¹ ^ 4 := by
             simp_rw [div_eq_mul_inv, inv_pow]; exact integral_const_mul _ _
 
@@ -265,106 +261,23 @@ lemma spatial_transport_continuous
     Continuous (fun x => ∫ v, v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x *
       Real.log (f x v)) := by
   obtain ⟨C_log, K_log, hLB⟩ := hLogBound
-  set g : Torus3 → (Fin 3 → ℝ) → ℝ :=
-    fun x v => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v) with hg_def
-  -- Reuse the uniform bound from spatial_transport_joint_integrable
-  have hLB' : ∀ (x : Torus3) (v : Fin 3 → ℝ),
-      |Real.log (f x v)| ≤ |C_log| * (1 + ‖v‖) ^ K_log :=
-    fun x v => le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
-      (pow_nonneg (by linarith [norm_nonneg v]) _))
-  obtain ⟨C0, hC0, hG0⟩ := hSchwartz.hGradDecay (K_log + 6) 0
-  obtain ⟨C1, hC1, hG1⟩ := hSchwartz.hGradDecay (K_log + 6) 1
-  obtain ⟨C2, hC2, hG2⟩ := hSchwartz.hGradDecay (K_log + 6) 2
-  set C_total := (C0 + C1 + C2) * (|C_log| + 1) + 1
-  have hC_total_pos : 0 < C_total := by positivity
-  have h_bound : ∀ (x : Torus3) (v : Fin 3 → ℝ),
-      |g x v| ≤ C_total / (1 + ‖v‖) ^ 4 := by
-    intro x v
-    have h1v : (1 : ℝ) ≤ 1 + ‖v‖ := le_add_of_nonneg_right (norm_nonneg v)
-    have h1v_nn : (0 : ℝ) ≤ 1 + ‖v‖ := le_trans zero_le_one h1v
-    have hg_eq : g x v = ∑ i : Fin 3, v i *
-        FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v) := by
-      simp only [hg_def, dotProduct, Fin.sum_univ_three]; ring
-    rw [hg_eq]
-    calc |∑ i : Fin 3, v i * FlatTorus3.gradX (fun y => f y v) x i * Real.log (f x v)|
-        ≤ ∑ i : Fin 3, |v i * FlatTorus3.gradX (fun y => f y v) x i *
-            Real.log (f x v)| := Finset.abs_sum_le_sum_abs _ _
-      _ ≤ ∑ i : Fin 3, (1 + ‖v‖) *
-            (if i = 0 then C0 else if i = 1 then C1 else C2) /
-            (1 + ‖v‖) ^ (K_log + 6) *
-            (|C_log| * (1 + ‖v‖) ^ K_log) := by
-          apply Finset.sum_le_sum; intro i _
-          rw [abs_mul, abs_mul]
-          have hvi : |v i| ≤ 1 + ‖v‖ := le_trans
-            ((Real.norm_eq_abs _) ▸ norm_le_pi_norm v i) (le_add_of_nonneg_left zero_le_one)
-          have hlog := hLB' x v
-          have hgrad : |FlatTorus3.gradX (fun y => f y v) x i| ≤
-              (if i = 0 then C0 else if i = 1 then C1 else C2) /
-              (1 + ‖v‖) ^ (K_log + 6) := by
-            rw [le_div_iff₀ (pow_pos (by linarith : (0 : ℝ) < 1 + ‖v‖) _)]
-            fin_cases i
-            · exact hG0 x v
-            · exact hG1 x v
-            · exact hG2 x v
-          calc |v i| * |FlatTorus3.gradX (fun y => f y v) x i| * |Real.log (f x v)|
-              ≤ (1 + ‖v‖) * ((if i = 0 then C0 else if i = 1 then C1 else C2) /
-                (1 + ‖v‖) ^ (K_log + 6)) * (|C_log| * (1 + ‖v‖) ^ K_log) := by
-                gcongr
-            _ = _ := by ring
-      _ ≤ (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
-          simp only [Fin.sum_univ_three, Fin.isValue, ↓reduceIte, Fin.reduceEq]
-          have hpow_bound : (1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6) ≤
-              1 / (1 + ‖v‖) ^ 4 := by
-            rw [div_le_div_iff₀ (pow_pos (by linarith) _) (pow_pos (by linarith) _)]
-            rw [one_mul, show K_log + 6 = (K_log + 1) + 5 from by omega, pow_add,
-              show (1 + ‖v‖) * (1 + ‖v‖) ^ K_log = (1 + ‖v‖) ^ (K_log + 1) from
-                (pow_succ' _ _).symm]
-            exact mul_le_mul_of_nonneg_left (by nlinarith [pow_nonneg h1v_nn 4])
-              (pow_nonneg h1v_nn _)
-          have h_factor : ∀ Ci : ℝ, 0 < Ci →
-              (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) ≤
-              Ci * |C_log| / (1 + ‖v‖) ^ 4 := by
-            intro Ci hCi
-            rw [show (1 + ‖v‖) * Ci / (1 + ‖v‖) ^ (K_log + 6) * (|C_log| * (1 + ‖v‖) ^ K_log) =
-                Ci * |C_log| * ((1 + ‖v‖) * (1 + ‖v‖) ^ K_log / (1 + ‖v‖) ^ (K_log + 6))
-                from by ring,
-              show Ci * |C_log| / (1 + ‖v‖) ^ 4 =
-                Ci * |C_log| * (1 / (1 + ‖v‖) ^ 4) from by ring]
-            exact mul_le_mul_of_nonneg_left hpow_bound (by positivity)
-          have hp4 : (0 : ℝ) < (1 + ‖v‖) ^ 4 := pow_pos (by linarith) 4
-          have h_sum_bound : C0 * |C_log| / (1 + ‖v‖) ^ 4 + C1 * |C_log| / (1 + ‖v‖) ^ 4 +
-              C2 * |C_log| / (1 + ‖v‖) ^ 4 ≤
-              (C0 + C1 + C2) * (|C_log| + 1) / (1 + ‖v‖) ^ 4 := by
-            rw [show C0 * |C_log| / (1 + ‖v‖) ^ 4 + C1 * |C_log| / (1 + ‖v‖) ^ 4 +
-                C2 * |C_log| / (1 + ‖v‖) ^ 4 =
-                (C0 + C1 + C2) * |C_log| / (1 + ‖v‖) ^ 4 from by ring,
-              div_le_div_iff₀ hp4 hp4]
-            exact mul_le_mul_of_nonneg_right
-              (mul_le_mul_of_nonneg_left (by linarith [abs_nonneg C_log]) (by linarith)) hp4.le
-          linarith [h_factor C0 hC0, h_factor C1 hC1, h_factor C2 hC2]
-      _ ≤ C_total / (1 + ‖v‖) ^ 4 := by
-          gcongr; linarith
-  -- Apply continuous_of_dominated
+  obtain ⟨C_total, hC_total_pos, h_bound⟩ :=
+    spatial_transport_uniform_bound hSchwartz C_log K_log hLB
   exact continuous_of_dominated
     (fun x => (spatial_transport_integrable hf_pos hf_smooth_v hf_smooth_x hSchwartz
       ⟨C_log, K_log, hLB⟩ x).aestronglyMeasurable)
     (fun x => Filter.Eventually.of_forall fun v => by
-      change ‖g x v‖ ≤ C_total / (1 + ‖v‖) ^ 4
       rw [Real.norm_eq_abs]; exact h_bound x v)
     (inverse_poly_integrable C_total)
     (Filter.Eventually.of_forall fun v => by
-      change Continuous (fun x => g x v)
       have hcont_f : Continuous (fun x => f x v) :=
         FlatTorus3.hDiff_continuous 0 _ ((hf_smooth_x v).of_le (by decide))
       have hcont_log : Continuous (fun x => Real.log (f x v)) :=
         hcont_f.log (fun x => ne_of_gt (hf_pos x v))
-      have hcont_grad : ∀ i, Continuous (fun x =>
-          FlatTorus3.gradX (fun y => f y v) x i) :=
+      have hcont_grad : ∀ i, Continuous (fun x => FlatTorus3.gradX (fun y => f y v) x i) :=
         fun i => FlatTorus3.hDiff_continuous 0 _
-          (FlatTorus3.hDiff_grad 1 _ i
-            ((hf_smooth_x v).of_le (by decide)))
-      have hcont_dot : Continuous (fun x =>
-          v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
+          (FlatTorus3.hDiff_grad 1 _ i ((hf_smooth_x v).of_le (by decide)))
+      have hcont_dot : Continuous (fun x => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
         simp only [dotProduct, Fin.sum_univ_three]
         exact ((continuous_const.mul (hcont_grad 0)).add
           (continuous_const.mul (hcont_grad 1))).add (continuous_const.mul (hcont_grad 2))

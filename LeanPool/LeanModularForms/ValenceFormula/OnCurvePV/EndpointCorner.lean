@@ -20,6 +20,16 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- Cancellation `(a * b)⁻¹ * b = a⁻¹` when `b ≠ 0`. -/
+private lemma inv_mul_mul_cancel (a b : ℂ) (hb : b ≠ 0) : (a * b)⁻¹ * b = a⁻¹ := by
+  rw [mul_inv_rev, mul_assoc, mul_comm a⁻¹ b, ← mul_assoc, inv_mul_cancel₀ hb, one_mul]
+
+/-- From `1 < normSq s` conclude `1 < ‖s‖`. -/
+private lemma one_lt_norm_of_one_lt_normSq {s : ℂ} (h : 1 < Complex.normSq s) : 1 < ‖s‖ :=
+  calc (1 : ℝ) = Real.sqrt 1 := Real.sqrt_one.symm
+    _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h
+    _ = ‖s‖ := rfl
+
 /-- `∫ t in a..1, t⁻¹ = log 1 - log a` for `0 < a ≤ 1`. -/
 private lemma integral_inv_eq_log_sub (a : ℝ) (ha : 0 < a) (ha1 : a ≤ 1) :
     ∫ t in a..1, (↑t : ℂ)⁻¹ = Complex.log ↑(1 : ℝ) - Complex.log ↑a := by
@@ -30,10 +40,7 @@ private lemma integral_inv_eq_log_sub (a : ℝ) (ha : 0 < a) (ha1 : a ≤ 1) :
     intro t ht; rw [Set.uIcc_of_le ha1] at ht
     exact Real.hasDerivAt_log (by linarith [ht.1] : t ≠ 0)
   have hint : IntervalIntegrable (fun t : ℝ => t⁻¹) MeasureTheory.volume a 1 := by
-    apply ContinuousOn.intervalIntegrable
-    apply ContinuousOn.inv₀ continuousOn_id
-    intro t ht; rw [Set.uIcc_of_le ha1, Set.mem_Icc] at ht
-    simp only [id]; linarith [ht.1]
+    simp_all
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint, Real.log_one,
     Complex.ofReal_one, Complex.log_one, ← Complex.ofReal_log ha.le]
   push_cast; ring
@@ -52,10 +59,7 @@ private lemma integral_shifted_inv_eq_log (η : ℝ) (hη : 0 < η) (hη1 : η <
     have h1 := (Real.hasDerivAt_log this).comp t ((hasDerivAt_id t).sub_const 5)
     simp only [Function.comp_def, mul_one] at h1; exact h1
   have hint : IntervalIntegrable (fun t => (t - 5)⁻¹) MeasureTheory.volume 4 (5 - η) := by
-    apply ContinuousOn.intervalIntegrable
-    apply ContinuousOn.inv₀ (continuousOn_id.sub continuousOn_const)
-    intro t ht; rw [Set.uIcc_of_le h5η, Set.mem_Icc] at ht
-    simp only [id]; exact ne_of_lt (by linarith [ht.2])
+    simp_all
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hint]
   simp only [show 5 - η - 5 = -η from by ring, show (4 : ℝ) - 5 = -(1 : ℝ) from by ring]
   rw [Real.log_neg_eq_log, Real.log_neg_eq_log, Real.log_one, sub_zero]
@@ -80,10 +84,7 @@ private lemma endpoint_avoid_14 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
       have h_norm : ‖fdBoundaryH H t‖ = 1 :=
         fdBoundary_H_eq_arc ht1' (lt_of_le_of_ne ht3 (by
           intro h; subst h
-          have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-            rw [fdBoundary_H_at_three]
-            exact fdBoundary_at_three.symm
-          rw [hγ3_eq, fdBoundary_at_three] at habs
+          rw [fdBoundary_H_at_three] at habs
           have him := congr_arg Complex.im habs
           simp [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk,
             Complex.add_im, Complex.neg_im, Complex.ofReal_im, Complex.mul_im,
@@ -91,19 +92,14 @@ private lemma endpoint_avoid_14 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
           linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)])) |>.symm ▸
         Complex.norm_exp_ofReal_mul_I _
       rw [habs] at h_norm
-      have : 1 < ‖s‖ := by
-        have h_nsq : 1 < Complex.normSq s := by
-          simp only [s, Complex.normSq_apply, Complex.add_re, Complex.ofReal_re,
-            Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
-            Complex.add_im, Complex.mul_im, Complex.one_re, Complex.one_im,
-            Complex.div_ofNat]
-          have hH0 : 0 < H := by
-            linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
-          nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
-                     Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
-        calc (1 : ℝ) = Real.sqrt 1 := by simp only [Real.sqrt_one]
-          _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h_nsq
-          _ = ‖s‖ := rfl
+      have : 1 < ‖s‖ := one_lt_norm_of_one_lt_normSq (by
+        simp only [s, Complex.normSq_apply, Complex.add_re, Complex.ofReal_re,
+          Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
+          Complex.add_im, Complex.mul_im, Complex.one_re, Complex.one_im,
+          Complex.div_ofNat]
+        have hH0 : 0 < H := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+        nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
+                   Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)])
       linarith
   · push Not at ht3
     have h_re_t := fdBoundary_H_seg4_re' H ht3 ht.2
@@ -165,14 +161,11 @@ private lemma endpoint_integrand_seg1 (H : ℝ) (s : ℂ) (hs_def : s = (1 / 2 :
     (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t = (↑t : ℂ)⁻¹ := by
   rw [endpoint_diff_seg1 H s hs_def c hc_def t ht0.le ht1.le]
   erw [(fdBoundary_H_hasDerivAt_seg1 H ht1).deriv]
-  have key : ∀ (a b : ℂ), a ≠ 0 → b ≠ 0 → (a * b)⁻¹ * b = a⁻¹ := fun a b _ hb => by
-    rw [mul_inv_rev, mul_assoc, mul_comm a⁻¹ b,
-      ← mul_assoc, inv_mul_cancel₀ hb, one_mul]
   have hc_eq : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑c := by push_cast [hc_def]; ring
   have hrw1 : (-(↑H - ↑(Real.sqrt 3) / 2 : ℂ)) * I = -(↑c : ℂ) * I := by rw [hc_eq]
   have hrw2 : (↑(-t * c) : ℂ) * I = ↑t * (-(↑c : ℂ) * I) := by push_cast; ring
   rw [hrw1, hrw2]
-  exact key ↑t _ (Complex.ofReal_ne_zero.mpr ht0.ne') (mul_ne_zero (neg_ne_zero.mpr
+  exact inv_mul_mul_cancel ↑t _ (mul_ne_zero (neg_ne_zero.mpr
       (Complex.ofReal_ne_zero.mpr hc.ne')) I_ne_zero)
 
 /-- Integrand on seg5: `(γ t - s)⁻¹ * γ'(t) = (t - 5)⁻¹` for the endpoint. -/
@@ -206,14 +199,12 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
   have hε_δ : ε < δ := by have := min_le_right c (min 1 δ); have := min_le_right 1 δ; linarith
   have hε₀2_pos : 0 < ε₀ / 2 := by positivity
   have hε₀2_c : ε₀ / 2 < c := by have := min_le_left c (min 1 δ); linarith
-  have hε₀2_1 : ε₀ / 2 < 1 := by
-    have := min_le_right c (min 1 δ); have := min_le_left 1 δ; linarith
+  have hε₀2_1 : ε₀ / 2 < 1 := by have := min_le_right c (min 1 δ); have := min_le_left 1 δ; linarith
   have hε₀2_δ : ε₀ / 2 < δ := by
     have := min_le_right c (min 1 δ); have := min_le_right 1 δ; linarith
   suffices h_formula : ∀ η, 0 < η → η < c → η < 1 → η < δ →
       F η = ↑(Real.log c) + C by
-    rw [h_formula ε hε hε_c hε_1 hε_δ,
-      h_formula (ε₀/2) hε₀2_pos hε₀2_c hε₀2_1 hε₀2_δ]
+    simp_all
   intro η hη hη_c hη_1 hη_δ
   have hη_div_c_pos : 0 < η / c := div_pos hη hc
   have hη_div_c_lt_1 : η / c < 1 := (div_lt_one hc).mpr hη_c
@@ -379,29 +370,20 @@ private lemma corner_cpv_03 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     · have h_norm : ‖fdBoundaryH H t‖ = 1 := by
         rw [fdBoundary_H_eq_arc (H := H) ht1 ht3, Complex.norm_exp_ofReal_mul_I]
       rw [habs] at h_norm
-      have : 1 < ‖s‖ := by
-        have h_nsq : 1 < Complex.normSq s := by
-          simp only [hs_def, Complex.normSq_apply, Complex.add_re, Complex.neg_re,
-            Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
-            Complex.add_im, Complex.neg_im, Complex.mul_im, Complex.one_re, Complex.one_im,
-            Complex.div_ofNat]
-          have hH0 : 0 < H := by
-            linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
-          nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
-                     Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
-        calc (1 : ℝ) = Real.sqrt 1 := by simp only [Real.sqrt_one]
-          _ < Real.sqrt (Complex.normSq s) := Real.sqrt_lt_sqrt (by norm_num) h_nsq
-          _ = ‖s‖ := rfl
+      have : 1 < ‖s‖ := one_lt_norm_of_one_lt_normSq (by
+        simp only [hs_def, Complex.normSq_apply, Complex.add_re, Complex.neg_re,
+          Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
+          Complex.add_im, Complex.neg_im, Complex.mul_im, Complex.one_re, Complex.one_im,
+          Complex.div_ofNat]
+        have hH0 : 0 < H := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+        nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
+                   Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)])
       linarith
     · have ht3_eq : t = 3 := le_antisymm ht.2 (by linarith)
       subst ht3_eq
-      have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-        rw [fdBoundary_H_at_three]
-        exact fdBoundary_at_three.symm
-      rw [hγ3_eq, fdBoundary_at_three] at habs
+      rw [fdBoundary_H_at_three] at habs
       have him_s : s.im = H := by
-        simp [hs_def, Complex.add_im, Complex.neg_im, Complex.ofReal_im, Complex.mul_im,
-          Complex.I_re, Complex.I_im, Complex.ofReal_re]
+        simp_all
       rw [← habs] at him_s
       have him_rho : (ellipticPointRho : ℂ).im = Real.sqrt 3 / 2 := by
         simp [ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk,
@@ -413,8 +395,7 @@ private lemma integral_inv_shift_four (a b : ℝ) :
     (∫ t in a..b, (↑(t - 4) : ℂ)⁻¹) = ∫ u in (a - 4)..(b - 4), (↑u : ℂ)⁻¹ := by
   simp_rw [← Complex.ofReal_inv]
   rw [intervalIntegral.integral_ofReal, intervalIntegral.integral_ofReal]
-  congr 1
-  exact intervalIntegral.integral_comp_sub_right (fun u : ℝ => u⁻¹) (4 : ℝ)
+  simp_all
 
 private lemma integral_inv_neg_axis (r : ℝ) :
     (∫ u in (-1 : ℝ)..(-r), (↑u : ℂ)⁻¹) = -(∫ u in r..1, (↑u : ℂ)⁻¹) := by
@@ -423,10 +404,7 @@ private lemma integral_inv_neg_axis (r : ℝ) :
     ← Complex.ofReal_neg, Complex.ofReal_inj]
   have key : (∫ x in r..(1 : ℝ), (-x)⁻¹) = ∫ x in (-1 : ℝ)..-r, x⁻¹ :=
     intervalIntegral.integral_comp_neg (fun u : ℝ => u⁻¹) (a := r) (b := 1)
-  rw [show (∫ x in r..(1 : ℝ), (-x)⁻¹) = ∫ x in r..(1 : ℝ), -(x⁻¹) from by
-      apply intervalIntegral.integral_congr; intro x _; exact neg_inv.symm] at key
-  rw [intervalIntegral.integral_neg] at key
-  linarith
+  simp_all
 
 lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     CauchyPrincipalValueExists' (fun z => (z - (-(1/2 : ℂ) + ↑H * I))⁻¹)
@@ -451,12 +429,8 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
     have hε_c : ε < c := lt_of_lt_of_le hε_lt (min_le_left _ _)
     have hε_1 : ε < 1 := lt_of_lt_of_le hε_lt (min_le_right _ _)
     have hε₀2_pos : 0 < ε₀ / 2 := by positivity
-    have hε₀2_c : ε₀ / 2 < c := by
-      calc ε₀ / 2 < ε₀ := by linarith
-        _ ≤ c := min_le_left _ _
-    have hε₀2_1 : ε₀ / 2 < 1 := by
-      calc ε₀ / 2 < ε₀ := by linarith
-        _ ≤ 1 := min_le_right _ _
+    have hε₀2_c : ε₀ / 2 < c := by linarith [min_le_left c (1 : ℝ)]
+    have hε₀2_1 : ε₀ / 2 < 1 := by linarith [min_le_right c (1 : ℝ)]
     suffices h_formula : ∀ η, 0 < η → η < c → η < 1 →
         F η = -↑(Real.log c) by
       rw [h_formula ε hε hε_c hε_1, h_formula (ε₀/2) hε₀2_pos hε₀2_c hε₀2_1]
@@ -491,15 +465,11 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
         (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t = (↑(t - 4) : ℂ)⁻¹ := by
       intro t ht3 ht4
       rw [h_diff_seg4 t ht3 ht4.le]; erw [(fdBoundary_H_hasDerivAt_seg4 H ht3 ht4).deriv]
-      have key : ∀ (a b : ℂ), a ≠ 0 → b ≠ 0 → (a * b)⁻¹ * b = a⁻¹ := fun a b _ hb => by
-        rw [mul_inv_rev, mul_assoc, mul_comm a⁻¹ b,
-          ← mul_assoc, inv_mul_cancel₀ hb, one_mul]
-      have hc_eq : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑c := by
-        push_cast [hc_def]; ring
+      have hc_eq : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑c := by push_cast [hc_def]; ring
       have hrw1 : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) * I = (↑c : ℂ) * I := by rw [hc_eq]
       have hrw2 : (↑((t - 4) * c) : ℂ) * I = ↑(t - 4) * (↑c * I) := by push_cast; ring
       rw [hrw1, hrw2]
-      exact key ↑(t - 4) _ (Complex.ofReal_ne_zero.mpr (by linarith : (t - 4 : ℝ) ≠ 0))
+      exact inv_mul_mul_cancel ↑(t - 4) _
         (mul_ne_zero (Complex.ofReal_ne_zero.mpr hc.ne') I_ne_zero)
     have h_integrand_seg5 : ∀ t, 4 < t →
         (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t = (↑(t - 4) : ℂ)⁻¹ := by
@@ -545,8 +515,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             rw [if_neg]; push Not
             rw [h_norm_seg4 t (by linarith [ht.1]) ht.2]
             have h1 : 4 - t ≤ η / c := by linarith [ht.1]
-            calc (4 - t) * c ≤ (η / c) * c := by
-                  apply mul_le_mul_of_nonneg_right h1 hc.le
+            calc (4 - t) * c ≤ (η / c) * c := by apply mul_le_mul_of_nonneg_right h1 hc.le
               _ = η := by field_simp)
         rw [this, intervalIntegral.integral_zero]
       rw [h_zero, add_zero]

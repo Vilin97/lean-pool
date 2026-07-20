@@ -582,12 +582,10 @@ example {ex : V → V} [Sg0.BoldfaceFunction₁ ex] (c : V) :
   definability?
 
 example {ex : V → V} [h : Dlt1.BoldfaceFunction₁ ex] :
-    Sg1.BoldfaceRel (fun x y : V ↦ ∃ z, x < y ↔ ex (ex x) = z) := by
-  definability?
+    Sg1.BoldfaceRel (fun x y : V ↦ ∃ z, x < y ↔ ex (ex x) = z) := by definability?
 
 example {ex : V → V} [h : Sg1.BoldfaceFunction₁ ex] :
-    Sg1.BoldfaceRel (fun x y : V ↦ ∀ z < ex y, x < y ↔ ex (ex x) = z) := by
-  definability?
+    Sg1.BoldfaceRel (fun x y : V ↦ ∀ z < ex y, x < y ↔ ex (ex x) = z) := by definability?
 
 end «lp_section_1»
 

@@ -663,8 +663,7 @@ lemma fst_aux {x y z : M} (hz : z = ⸨x, y⸩) : ExistsUniqueAt x fun x => ∀ 
   simpa only [fst.eq_iff (h₁ := ⟨x, y, rfl⟩)] using (fst_aux rfl).1
 
 lemma pair_eq_singleton_iff {x y z : M} : {x, y} = ({z} : M) ↔ x = z ∧ y = z := by
-  simp only [toZFSet_simps]
-  exact ZFSet.pair_eq_singleton_iff
+  simpa only [toZFSet_simps] using ZFSet.pair_eq_singleton_iff
 
 lemma snd_aux {x y z : M} (hz : z = ⸨x, y⸩) :
     ExistsUniqueAt y fun y => (∃ w ∈ z, y ∈ w) ∧ ((∀ w ∈ z, y ∈ w) → ∀ a ∈ z, ∀ b ∈ z, a = b) := by

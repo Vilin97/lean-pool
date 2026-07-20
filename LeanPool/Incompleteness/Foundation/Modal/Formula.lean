@@ -84,30 +84,7 @@ instance : Coe α (Formula α) := ⟨atom⟩
 
 end «lp_section_1»
 
--- @[simp] lemma neg_top : ∼(⊤ : Formula α) = ⊥ := rfl
-
 @[simp] lemma neg_bot : ∼(⊥ : Formula α) = ⊤ := rfl
-
--- @[simp] lemma neg_atom (a : α) : ∼(atom a) = natom a := rfl
-
--- @[simp] lemma neg_natom (a : α) : ∼(natom a) = atom a := rfl
-
--- @[simp] lemma neg_and (φ ψ : Formula α) : ∼(φ ⋏ ψ) = ∼φ ⋎ ∼ψ := rfl
-
--- @[simp] lemma neg_or (φ ψ : Formula α) : ∼(φ ⋎ ψ) = ∼φ ⋏ ∼ψ := rfl
-
--- @[simp] lemma neg_neg' (φ : Formula α) : ∼∼φ = φ := neg_neg φ
-
--- @[simp] lemma neg_box (φ : Formula α) : ∼(□φ) = ◇(∼φ) := rfl
-
--- @[simp] lemma neg_dia (φ : Formula α) : ∼(◇φ) = □(∼φ) := rfl
-
-/-
-@[simp] lemma neg_inj (φ ψ : Formula α) : ∼φ = ∼ψ ↔ φ = ψ := by
-  constructor
-  · intro h; simpa using congr_arg (∼·) h
-  · exact congr_arg _
--/
 
 lemma or_eq (φ ψ : Formula α) : or φ ψ = φ ⋎ ψ := rfl
 
@@ -198,9 +175,6 @@ def rec' {C : Formula α → Sort w}
   | φ ==> ψ  => himp φ ψ (rec' hfalsum hatom himp hbox φ) (rec' hfalsum hatom himp hbox ψ)
   | □φ     => hbox φ (rec' hfalsum hatom himp hbox φ)
 
--- @[simp] lemma complexity_neg (φ : Formula α) : complexity (∼φ) = φ.complexity + 1 :=
---   by induction φ using rec' <;> try { simp[neg_eq, neg, *]; rfl;}
-
 section «lp_section_2»
 
 variable [DecidableEq α]
@@ -225,106 +199,6 @@ abbrev FormulaSet (α) := Set (Formula α)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev FormulaFinset (α) := Finset (Formula α)
-
-
-/-
-
-
-lemma sub_of_top (h : φ ∈ 𝒮 ⊤) : φ = ⊤ := by simp_all [subformulae];
-lemma sub_of_bot (h : φ ∈ 𝒮 ⊥) : φ = ⊥ := by simp_all [subformulae];
-
--/
-
-/-
-class FormulaFinset.SubformulaClosed (X : FormulaFinset α) where
-  imp_closed : ∀ {φ ψ}, φ ==> ψ ∈ X → φ ∈ X ∧ ψ ∈ X
-  box_closed : ∀ {φ}, □φ ∈ X → φ ∈ X
-
-namespace SubformulaClosed
-
-instance [DecidableEq α] {φ : Formula α} : FormulaFinset.SubformulaClosed (φ.subformulae) where
-  imp_closed hpq := ⟨Formula.subformulae.mem_imp₁ hpq, Formula.subformulae.mem_imp₂ hpq⟩
-  box_closed hp := Formula.subformulae.mem_box hp
-
-
-variable {φ : Formula α} {X : FormulaFinset α} [closed : X.SubformulaClosed]
-
-lemma mem_box (h : □φ ∈ X) : φ ∈ X := closed.box_closed h
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_box <| by assumption)
-
-lemma mem_imp (h : φ ==> ψ ∈ X) : φ ∈ X ∧ ψ ∈ X := closed.imp_closed h
-
-lemma mem_imp₁ (h : φ ==> ψ ∈ X) : φ ∈ X := mem_imp h |>.1
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_imp₁ <| by assumption)
-
-lemma mem_imp₂ (h : φ ==> ψ ∈ X) : ψ ∈ X := mem_imp h |>.2
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_imp₁ <| by assumption)
-
-attribute [aesop safe 5 forward]
-  mem_box
-  mem_imp₁
-  mem_imp₂
-
-end SubformulaClosed
-
-
-class FormulaSet.SubformulaClosed (T : FormulaSet α) where
-  imp_closed : ∀ {φ ψ}, φ ==> ψ ∈ T → φ ∈ T ∧ ψ ∈ T
-  box_closed : ∀ {φ}, □φ ∈ T → φ ∈ T
-
-namespace FormulaSet
-namespace SubformulaClosed
-
-instance {φ : Formula α} [DecidableEq α] : FormulaSet.SubformulaClosed (φ.subformulae).toSet where
-  box_closed := FormulaFinset.SubformulaClosed.box_closed;
-  imp_closed := FormulaFinset.SubformulaClosed.imp_closed;
-
-variable {φ : Formula α} {T : FormulaSet α} [T_closed : T.SubformulaClosed]
-
-lemma mem_box (h : □φ ∈ T) : φ ∈ T := T_closed.box_closed h
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_box <| by assumption)
-
-lemma mem_imp (h : φ ==> ψ ∈ T) : φ ∈ T ∧ ψ ∈ T := T_closed.imp_closed h
-
-lemma mem_imp₁ (h : φ ==> ψ ∈ T) : φ ∈ T := mem_imp h |>.1
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_imp₁ <| by assumption)
-
-lemma mem_imp₂ (h : φ ==> ψ ∈ T) : ψ ∈ T := mem_imp h |>.2
-macro_rules | `(tactic| trivial) => `(tactic| apply mem_imp₂ <| by assumption)
-
-end SubformulaClosed
-end FormulaSet
-
-end Subformula
--/
-
-/-
-section Atoms
-
-variable [DecidableEq α]
-
-namespace Formula
-
-def atoms : Formula α → Finset (α)
-  | .atom a => {a}
-  | ⊤      => ∅
-  | ⊥      => ∅
-  | ∼φ     => φ.atoms
-  | □φ  => φ.atoms
-  | φ ==> ψ => φ.atoms ∪ ψ.atoms
-  | φ ⋏ ψ  => φ.atoms ∪ ψ.atoms
-  | φ ⋎ ψ  => φ.atoms ∪ ψ.atoms
-prefix:70 "𝒜 " => Formula.atoms
-
-@[simp]
-lemma mem_atoms_iff_mem_subformulae {a : α} {φ : Formula α} :
-    a ∈ 𝒜 φ ↔ (atom a) ∈ φ.subformulae := by
-  induction φ using Formula.rec' <;> simp_all [subformulae, atoms];
-
-end Formula
-
-end Atoms
--/
 
 
 namespace Formula
@@ -466,70 +340,6 @@ instance : Encodable (Formula α) where
 end «lp_section_4»
 
 end Formula
-
-
-/-
-end Formula
-
-namespace FormulaSet
-
-open Formula
-variable {T : FormulaSet α}
-
-class SubstClosed (T : FormulaSet α) : Prop where
-  closed : ∀ {φ}, φ ∈ T → ∀ {σ}, φ.subst σ ∈ T
-
-def instSubstClosed
-  (hAtom : ∀ a : α, (atom a) ∈ T → ∀ {σ}, (atom a).subst σ ∈ T)
-  (hImp : ∀ {φ ψ}, φ ==> ψ ∈ T → ∀ {σ}, (φ ==> ψ).subst σ ∈ T)
-  (hBox : ∀ {φ}, □φ ∈ T → ∀ {σ}, (□φ).subst σ ∈ T)
-  : T.SubstClosed := ⟨
-  by
-    intro φ hφ σ;
-    induction φ using Formula.cases' with
-    | hatom a => apply hAtom; assumption;
-    | hfalsum => apply hφ;
-    | himp φ ψ => apply hImp; assumption;
-    | hbox φ => apply hBox; assumption;
-⟩
-
-namespace SubstClosed
-
-variable [T.SubstClosed]
-
-lemma mem_atom (h : atom a ∈ T) : (atom a).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_bot (h : ⊥ ∈ T) : (⊥ : Formula α).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_imp (h : φ ==> ψ ∈ T) : (φ ==> ψ).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_neg (h : ∼φ ∈ T) : (∼φ).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_and (h : φ ⋏ ψ ∈ T) : (φ ⋏ ψ).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_or (h : φ ⋎ ψ ∈ T) : (φ ⋎ ψ).subst σ ∈ T := SubstClosed.closed h
-
-lemma mem_box (h : □φ ∈ T) : (□φ).subst σ ∈ T := SubstClosed.closed h
-
-instance union {T₁ T₂ : FormulaSet α} [T₁_closed : T₁.SubstClosed] [T₂_closed : T₂.SubstClosed] :
-    (T₁ ∪ T₂).SubstClosed := by
-  refine instSubstClosed ?_ ?_ ?_;
-  · rintro a (ha₁ | ha₂) σ;
-    · left; apply mem_atom ha₁;
-    · right; apply mem_atom ha₂;
-  · rintro φ ψ (h₁ | h₂) σ;
-    · left; apply mem_imp h₁;
-    · right; apply mem_imp h₂;
-  · rintro φ (h₁ | h₂) σ;
-    · left; apply mem_box h₁;
-    · right; apply mem_box h₂;
-
-end SubstClosed
-
-end FormulaSet
-
-end subst
--/
 
 end Modal
 end LO

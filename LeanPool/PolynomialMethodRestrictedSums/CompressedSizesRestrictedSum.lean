@@ -119,11 +119,9 @@ lemma exists_gt_base_of_ne_base {k : ℕ} {b : Fin (k + 1) → ℕ}
     ∃ j, baseSeq k j < b j := by
       -- Since $b$ is not equal to the base sequence, there must be some $i$ where $b i \neq
       -- baseSeq k i$.
-      obtain ⟨i, hi⟩ : ∃ i, b i ≠ baseSeq k i := by
-        exact Function.ne_iff.mp h_ne;
+      obtain ⟨i, hi⟩ : ∃ i, b i ≠ baseSeq k i := Function.ne_iff.mp h_ne
       -- Since $b$ is valid, we have $b i \geq baseSeq k i$ for all $i$.
-      have h_ge : ∀ i, b i ≥ baseSeq k i := by
-        exact fun i => valid_seq_ge_base h_valid i;
+      have h_ge : ∀ i, b i ≥ baseSeq k i := fun i => valid_seq_ge_base h_valid i
       exact ⟨ i, lt_of_le_of_ne ( h_ge i ) hi.symm ⟩
 
 /-- The transformation T maps a sequence `b` to `b'` by finding the largest index
@@ -253,8 +251,8 @@ lemma compressedSizes_pos {k : ℕ} {b : Fin (k + 1) → ℕ}
         -- By definition of compressed sizes, we have `compressedSizes b i.succ = min
         -- (compressedSizes b i.castSucc - 1) (b i.succ)`.
         have h_compressed_succ :
-            compressedSizes b i.succ = min (compressedSizes b i.castSucc - 1) (b i.succ) := by
-          exact compressedSizes_succ i
+            compressedSizes b i.succ = min (compressedSizes b i.castSucc - 1) (b i.succ) :=
+          compressedSizes_succ i
         cases min_cases ( compressedSizes b i.castSucc - 1 ) ( b i.succ ) <;> omega
 
 /-
@@ -283,9 +281,8 @@ lemma polynomialMethod_reduction_lemma {k : ℕ} {b : Fin (k + 1) → ℕ} (h_va
             have hp : p > 1 := Fact.out
             have hk : 0 < (k + 2).choose 2 := Nat.choose_pos ( by linarith : 2 ≤ k + 2 )
             omega
-          · exact ⟨ transformSeq k b, transformSeq_props h_valid h_eq_base |>.1,
-              transformSeq_props h_valid h_eq_base |>.2.1,
-              transformSeq_props h_valid h_eq_base |>.2.2 ⟩;
+          · obtain ⟨h1, h2, h3⟩ := transformSeq_props h_valid h_eq_base
+            exact ⟨ transformSeq k b, h1, h2, h3 ⟩;
         grind
 
 /-
@@ -303,30 +300,14 @@ lemma compressedSizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
       | zero => tauto
       | succ j ih =>
         rcases lt_or_eq_of_le ( show i ≤ Fin.castSucc j from Nat.le_of_lt_succ hij ) with h | h
-        · -- By definition of compressedSizes, we have compressedSizes b (j + 1) = min
-          -- (compressedSizes b j - 1) (b (j + 1)).
-          have h_compressed_succ :
-              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
-              b (Fin.succ j)) := by
-            exact compressedSizes_succ j
-          exact h_compressed_succ.symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
+        · exact (compressedSizes_succ j).symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
               Nat.lt_of_le_of_lt ( Nat.sub_le _ _ ) ( ih _ h ) );
         · subst h
-          -- By definition of `compressedSizes`, we have `compressedSizes b (Fin.succ j) = min
-          -- (compressedSizes b (Fin.castSucc j) - 1) (b (Fin.succ j))`.
-          have h_compressed_succ :
-              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
-              b (Fin.succ j)) := by
-            exact compressedSizes_succ j
           rcases min_cases ( compressedSizes b ( Fin.castSucc j ) - 1 ) (
               b ( Fin.succ j ) ) with ⟨ left, right ⟩ | ⟨ left, right ⟩
-          · -- By definition of `compressedSizes`, we know that `compressedSizes b (Fin.last k) >
-            -- 0`.
-            rw [h_compressed_succ, left]
-            have h_compressed_last_pos : ∀ i, compressedSizes b i > 0 := by
-              exact fun i => compressedSizes_pos h_last_pos i
-            exact Nat.sub_lt (h_compressed_last_pos _) Nat.one_pos
-          · rw [h_compressed_succ, left]
+          · rw [compressedSizes_succ j, left]
+            exact Nat.sub_lt (compressedSizes_pos h_last_pos _) Nat.one_pos
+          · rw [compressedSizes_succ j, left]
             exact right.trans_le ( Nat.sub_le _ _ )
 
 end AristotleLemmas
@@ -346,8 +327,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
     obtain ⟨A', hA'⟩ : ∃ A' : Fin (k + 1) → Finset (ZMod p),
         (∀ i, A' i ⊆ A i) ∧ (∀ i, (A' i).card = b' i) ∧
             (∀ i j, i < j → (A' i).card ≠ (A' j).card) := by
-      have h_valid_seq : ValidSeq k b' := by
-        apply compressedSizes_is_valid; assumption;
+      have h_valid_seq : ValidSeq k b' := compressedSizes_is_valid h_last_pos
       have h_subset : ∀ i, ∃ A'_i ⊆ A i, (A'_i).card = b' i := by
         intro i;
         exact Finset.exists_subset_card_eq ( by
@@ -394,8 +374,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
               (∀ i j, i < j → (A'' i).card ≠ (A'' j).card) := by
         have h_subset : ∀ i, ∃ A''_i ⊆ A i, (A''_i).card = b'' i := by
           intros i
-          have h_card : b'' i ≤ #(A i) := by
-            exact le_trans ( hb''.2.2 i ) ( compressedSizes_le i );
+          have h_card : b'' i ≤ #(A i) := le_trans ( hb''.2.2 i ) ( compressedSizes_le i )
           exact Finset.exists_subset_card_eq h_card;
         choose A'' hA''₁ hA''₂ using h_subset;
         exact ⟨ A'', hA''₁, hA''₂,
@@ -430,11 +409,4 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
       obtain ⟨left_2, right_1⟩ := h
       obtain ⟨left_2, right_2⟩ := left_2
       subst right_1
-      apply Exists.intro
-      · apply And.intro
-        on_goal 2 => { rfl
-        }
-        · simp_all only [not_false_eq_true, implies_true, and_true]
-          intro a
-          apply hA''₁
-          simp_all only
+      exact ⟨w, ⟨fun a => hA''₁ _ (left_2 a), right_2⟩, rfl⟩

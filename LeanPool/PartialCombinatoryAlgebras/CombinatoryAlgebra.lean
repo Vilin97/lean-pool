@@ -64,10 +64,9 @@ instance isPCA {A : Type} [CA A] : PCA A where
   df_K₁ := by intros; trivial
   eq_K := by
     intro u v hu hv
-    have step1 : (Part.some (K : A)) ⬝ u ⬝ v = Part.some (K ⬝ u.get hu ⬝ v.get hv) := by
-      rw [CA.eq_app trivial hu, CA.eq_app trivial hv]
-      simp only [Part.get_some]
-    rw [step1, CA.eq_K]
+    rw [CA.eq_app trivial hu, CA.eq_app trivial hv]
+    simp only [Part.get_some]
+    rw [CA.eq_K]
     exact Part.some_get hu
   df_S₀ := by trivial
   df_S₁ := by intros; trivial

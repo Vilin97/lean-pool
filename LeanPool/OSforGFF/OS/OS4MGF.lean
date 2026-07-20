@@ -115,17 +115,8 @@ lemma timeTranslationDistribution_pairingℂ (s : ℝ) (ω : FieldConfiguration)
     (g : TestFunctionℂ) :
     distributionPairingℂReal (timeTranslationDistribution s ω) g =
     distributionPairingℂReal ω (timeTranslationSchwartzℂ (-s) g) := by
-  simp only [distributionPairingℂReal]
-  set g_re := (complexTestFunctionDecompose g).1
-  set g_im := (complexTestFunctionDecompose g).2
-  set g'_re := (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).1
-  set g'_im := (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).2
-  have h_re : g'_re = timeTranslationSchwartz (-s) g_re := timeTranslationSchwartzℂ_decompose_fst
-    (-s) g
-  have h_im : g'_im = timeTranslationSchwartz (-s) g_im := timeTranslationSchwartzℂ_decompose_snd
-    (-s) g
-  simp only [timeTranslationDistribution_apply]
-  rw [h_re, h_im]
+  simp only [distributionPairingℂReal, timeTranslationDistribution_apply]
+  rw [timeTranslationSchwartzℂ_decompose_fst (-s) g, timeTranslationSchwartzℂ_decompose_snd (-s) g]
 
 /-! ## Continuity of Complex Pairing under Time Translation -/
 
@@ -139,23 +130,18 @@ lemma continuous_distributionPairingℂ_timeTranslation (ω : FieldConfiguration
     exact timeTranslationDistribution_pairingℂ s ω g
   rw [h_eq]
   simp only [distributionPairingℂReal]
-  set g_re := (complexTestFunctionDecompose g).1 with hg_re
-  set g_im := (complexTestFunctionDecompose g).2 with hg_im
+  set g_re := (complexTestFunctionDecompose g).1
+  set g_im := (complexTestFunctionDecompose g).2
   have h_decomp_re : ∀ s, (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).1
       = timeTranslationSchwartz (-s) g_re := fun s => timeTranslationSchwartzℂ_decompose_fst (-s) g
   have h_decomp_im : ∀ s, (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).2
       = timeTranslationSchwartz (-s) g_im := fun s => timeTranslationSchwartzℂ_decompose_snd (-s) g
   simp only [h_decomp_re, h_decomp_im]
   apply Continuous.add
-  · apply Complex.continuous_ofReal.comp
-    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_re) := by
-      exact (TimeTranslation.continuous_timeTranslationSchwartz g_re).comp continuous_neg
-    exact ω.continuous.comp h_trans_cont
-  · apply Continuous.mul continuous_const
-    apply Complex.continuous_ofReal.comp
-    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_im) := by
-      exact (TimeTranslation.continuous_timeTranslationSchwartz g_im).comp continuous_neg
-    exact ω.continuous.comp h_trans_cont
+  · exact Complex.continuous_ofReal.comp (ω.continuous.comp
+      ((TimeTranslation.continuous_timeTranslationSchwartz g_re).comp continuous_neg))
+  · exact (Continuous.mul continuous_const) (Complex.continuous_ofReal.comp (ω.continuous.comp
+      ((TimeTranslation.continuous_timeTranslationSchwartz g_im).comp continuous_neg)))
 
 /-! ## Euclidean Group Infrastructure for Time Translation -/
 
@@ -207,8 +193,7 @@ lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
     congr 1
     have h_lin : distributionPairingℂReal ω (negI • J) =
         negI * distributionPairingℂReal ω J := by
-      have := pairing_linear_combo ω J 0 negI 0
-      simpa using this
+      simpa using pairing_linear_combo ω J 0 negI 0
     rw [h_lin]
     simp only [negI]
     ring_nf
@@ -220,8 +205,7 @@ lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
     simp only [negI]
     ring_nf
     simp [Complex.I_sq]
-  rw [h_cov]
-  ring_nf
+  simp_all
 
 /-- The GFF generating function is invariant under time translation. -/
 lemma gff_generating_time_invariant (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : TestFunctionℂ) :
@@ -245,26 +229,19 @@ lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunction�
     (∫ ω, Complex.exp (distributionPairingℂReal ω g) ∂(gaussianFreeFieldFree m).toMeasure) *
     Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeFieldFree m) f g) := by
   have h_pairing_add : ∀ ω, distributionPairingℂReal ω f + distributionPairingℂReal ω g =
-      distributionPairingℂReal ω (f + g) := by
-    intro ω
-    have := pairing_linear_combo ω f g 1 1
-    simp at this
-    exact this.symm
+      distributionPairingℂReal ω (f + g) := fun ω => by
+    simpa using (pairing_linear_combo ω f g 1 1).symm
   have h_lhs : (∫ ω, Complex.exp (distributionPairingℂReal ω f + distributionPairingℂReal ω g)
       ∂(gaussianFreeFieldFree m).toMeasure) =
       (∫ ω, Complex.exp (distributionPairingℂReal ω (f + g))
       ∂(gaussianFreeFieldFree m).toMeasure) := by
     congr 1; ext ω; rw [h_pairing_add]
-  rw [h_lhs]
-  rw [gff_mgf_formula, gff_mgf_formula, gff_mgf_formula]
-  rw [gff_two_point_equals_covarianceℂ_free]
-  rw [freeCovarianceℂ_bilinear_add_left, freeCovarianceℂ_bilinear_add_right,
-      freeCovarianceℂ_bilinear_add_right]
-  rw [← Complex.exp_add, ← Complex.exp_add]
+  rw [h_lhs, gff_mgf_formula, gff_mgf_formula, gff_mgf_formula,
+    gff_two_point_equals_covarianceℂ_free, freeCovarianceℂ_bilinear_add_left,
+    freeCovarianceℂ_bilinear_add_right, freeCovarianceℂ_bilinear_add_right,
+    ← Complex.exp_add, ← Complex.exp_add]
   congr 1
-  have h_sym : freeCovarianceℂBilinear m g f = freeCovarianceℂBilinear m f g :=
-    freeCovarianceℂ_bilinear_symm m g f
-  rw [h_sym]
+  rw [freeCovarianceℂ_bilinear_symm m g f]
   ring
 
 /-! ## Exponential Bound -/
@@ -273,29 +250,17 @@ lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunction�
 lemma exp_sub_one_bound_general (x : ℂ) : ‖Complex.exp x - 1‖ ≤ ‖x‖ * Real.exp ‖x‖ := by
   have h1 : ‖Complex.exp x - 1‖ ≤ Real.exp ‖x‖ - 1 := by
     have h := Complex.norm_exp_sub_sum_le_exp_norm_sub_sum x 1
-    simp only [Finset.range_one, Finset.sum_singleton, pow_zero, Nat.factorial_zero,
-               Nat.cast_one, div_one] at h
-    exact h
+    simpa using h
+  have hexp_pos := Real.exp_pos ‖x‖
   have h2 : Real.exp ‖x‖ - 1 ≤ ‖x‖ * Real.exp ‖x‖ := by
-    have hr := norm_nonneg x
-    have hexp_pos := Real.exp_pos ‖x‖
     by_cases hr1 : ‖x‖ ≤ 1
-    · have : 1 - Real.exp (-‖x‖) ≤ ‖x‖ := by
-        have h := Real.add_one_le_exp (-‖x‖)
-        linarith
-      calc Real.exp ‖x‖ - 1
-          = Real.exp ‖x‖ * (1 - Real.exp (-‖x‖)) := by
-            rw [Real.exp_neg]
-            field_simp
-        _ ≤ Real.exp ‖x‖ * ‖x‖ := by
-            apply mul_le_mul_of_nonneg_left this (le_of_lt hexp_pos)
-        _ = ‖x‖ * Real.exp ‖x‖ := mul_comm _ _
+    · have hle : 1 - Real.exp (-‖x‖) ≤ ‖x‖ := by
+        have := Real.add_one_le_exp (-‖x‖); linarith
+      have hkey : Real.exp ‖x‖ - 1 = Real.exp ‖x‖ * (1 - Real.exp (-‖x‖)) := by
+        rw [Real.exp_neg]; field_simp
+      nlinarith [mul_le_mul_of_nonneg_left hle (le_of_lt hexp_pos)]
     · push Not at hr1
-      calc Real.exp ‖x‖ - 1
-          ≤ Real.exp ‖x‖ := by linarith [hexp_pos]
-        _ ≤ ‖x‖ * Real.exp ‖x‖ := by
-            have h1 : 1 ≤ ‖x‖ := le_of_lt hr1
-            exact (le_mul_iff_one_le_left hexp_pos).mpr h1
+      nlinarith [(le_mul_iff_one_le_left hexp_pos).mpr (le_of_lt hr1)]
   linarith
 
 end OS4infra

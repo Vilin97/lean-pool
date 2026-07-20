@@ -196,11 +196,10 @@ lemma mul_not_comm_empty
     (hdistinct : ∃ e₁ e₂ : es.Event, e₁ ≠ e₂) :
     ∃ t₁ t₂ : List es.Event, ¬ TraceEquiv es (t₁ ++ t₂) (t₂ ++ t₁) := by
   obtain ⟨e₁, e₂, hneq⟩ := hdistinct
-  refine ⟨[e₁], [e₂], ?_⟩
-  intro hteq
-  have h' : TraceEquiv es [e₁, e₂] [e₂, e₁] := by simpa using hteq
-  have hlists_eq : [e₁, e₂] = [e₂, e₁] := traceEquiv_eq_empty es hempty h'
-  exact hneq (by injection hlists_eq)
+  refine ⟨[e₁], [e₂], fun hteq => hneq ?_⟩
+  have hlists_eq : [e₁, e₂] = [e₂, e₁] :=
+    traceEquiv_eq_empty es hempty (by simpa using hteq)
+  injection hlists_eq
 
 end Monoid
 

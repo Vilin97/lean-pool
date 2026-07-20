@@ -104,11 +104,11 @@ lemma spacetimeDecomp_symm_eq_spacetimeOfTimeSpace (t : ℝ) (v : SpatialCoords)
     -- i = j + 1: spatial components
     have h_spatial : spatialPart (spacetimeDecomp.symm (t, v)) = v :=
       congr_arg Prod.snd (spacetimeDecomp.apply_symm_apply (t, v))
-    -- spatialPart k (j) = k (j + 1) by definition
-    have h_spatialPart_def : ∀ (k : SpaceTime), spatialPart k j = k j.succ := fun _ => rfl
-    rw [← h_spatialPart_def (spacetimeDecomp.symm (t, v)), h_spatial]
-    symm
-    exact spacetimeOfTimeSpace_spatial t v j
+    -- spatialPart k j = k j.succ by definition
+    have h_spatialPart_def : spatialPart (spacetimeDecomp.symm (t, v)) j =
+      (spacetimeDecomp.symm (t, v)) j.succ := rfl
+    rw [← h_spatialPart_def, h_spatial]
+    exact (spacetimeOfTimeSpace_spatial t v j).symm
 
 /-- The SpaceTime norm decomposes into time and spatial parts: ‖k‖² = k₀² + ‖k_sp‖². -/
 lemma spacetime_norm_sq_decompose (k : SpaceTime) :

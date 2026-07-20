@@ -38,39 +38,25 @@ open Finset Real
 
 /-- First marginal: `(marginalFst p)(a) = ∑_b p(a, b)`. -/
 def marginalFst {α β : Type} [Fintype α] [Fintype β]
-    (p : ProbDist (α × β)) : ProbDist α := by
-  refine ⟨fun a => ∑ b, p (a, b), ?_⟩
-  constructor
-  · intro a
-    exact Finset.sum_nonneg fun b _ => prob_nonneg p (a, b)
-  · calc ∑ a, ∑ b, p (a, b)
-        = ∑ ab : α × β, p ab := (Fintype.sum_prod_type _).symm
-      _ = 1 := prob_sum_eq_one p
+    (p : ProbDist (α × β)) : ProbDist α :=
+  ⟨fun a => ∑ b, p (a, b),
+    fun a => Finset.sum_nonneg fun b _ => prob_nonneg p (a, b),
+    by simp_rw [← Fintype.sum_prod_type, prob_sum_eq_one p]⟩
 
 /-- Second marginal: `(marginalSnd p)(b) = ∑_a p(a, b)`. -/
 def marginalSnd {α β : Type} [Fintype α] [Fintype β]
-    (p : ProbDist (α × β)) : ProbDist β := by
-  refine ⟨fun b => ∑ a, p (a, b), ?_⟩
-  constructor
-  · intro b
-    exact Finset.sum_nonneg fun a _ => prob_nonneg p (a, b)
-  · calc ∑ b, ∑ a, p (a, b)
-        = ∑ ab : α × β, p ab := (Fintype.sum_prod_type_right _).symm
-      _ = 1 := prob_sum_eq_one p
+    (p : ProbDist (α × β)) : ProbDist β :=
+  ⟨fun b => ∑ a, p (a, b),
+    fun b => Finset.sum_nonneg fun a _ => prob_nonneg p (a, b),
+    by simp_rw [← Fintype.sum_prod_type_right, prob_sum_eq_one p]⟩
 
 /-- Product distribution: `(prodDist p q)(a, b) = p(a) * q(b)`. -/
 def prodDist {α β : Type} [Fintype α] [Fintype β]
-    (p : ProbDist α) (q : ProbDist β) : ProbDist (α × β) := by
-  refine ⟨fun ab => p ab.1 * q ab.2, ?_⟩
-  constructor
-  · intro ab
-    exact mul_nonneg (prob_nonneg p ab.1) (prob_nonneg q ab.2)
-  · calc ∑ ab : α × β, p ab.1 * q ab.2
-        = ∑ a, ∑ b, p a * q b := Fintype.sum_prod_type _
-      _ = ∑ a, p a * (∑ b, q b) := by
-          apply Finset.sum_congr rfl; intro a _; rw [Finset.mul_sum]
-      _ = ∑ a, p a * 1 := by rw [prob_sum_eq_one q]
-      _ = 1 := by simp [mul_one, prob_sum_eq_one p]
+    (p : ProbDist α) (q : ProbDist β) : ProbDist (α × β) :=
+  ⟨fun ab => p ab.1 * q ab.2,
+    fun ab => mul_nonneg (prob_nonneg p ab.1) (prob_nonneg q ab.2),
+    by simp_rw [Fintype.sum_prod_type, ← Finset.mul_sum, prob_sum_eq_one q,
+               mul_one, prob_sum_eq_one p]⟩
 
 /-! ## Independence, conditional entropy, mutual information -/
 
@@ -99,9 +85,9 @@ def mutualInfo {α β : Type} [Fintype α] [Fintype β]
 coordinate is zero (since the marginal is a sum of nonnegative terms). -/
 lemma prob_eq_zero_of_marginalFst_eq_zero {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) (a : α) (ha : marginalFst p a = 0) (b : β) :
-    p (a, b) = 0 := by
-  have hterms : ∀ b' ∈ Finset.univ, 0 ≤ p (a, b') := fun b' _ => prob_nonneg p (a, b')
-  exact (Finset.sum_eq_zero_iff_of_nonneg hterms).mp ha b (Finset.mem_univ b)
+    p (a, b) = 0 :=
+  (Finset.sum_eq_zero_iff_of_nonneg (fun b' _ => prob_nonneg p (a, b'))).mp ha b
+    (Finset.mem_univ b)
 
 /-- A positive joint probability implies a positive first marginal. -/
 lemma marginalFst_pos_of_prob_pos {α β : Type} [Fintype α] [Fintype β]
@@ -116,17 +102,13 @@ lemma marginalFst_pos_of_prob_pos {α β : Type} [Fintype α] [Fintype β]
 theorem marginalFst_prodDist {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist α) (q : ProbDist β) :
     marginalFst (prodDist p q) = p := by
-  ext a
-  change ∑ b, p a * q b = p a
-  rw [← Finset.mul_sum, prob_sum_eq_one q, mul_one]
+  ext a; change ∑ b, p a * q b = p a; rw [← Finset.mul_sum, prob_sum_eq_one q, mul_one]
 
 /-- The second marginal of a product distribution recovers the second factor. -/
 theorem marginalSnd_prodDist {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist α) (q : ProbDist β) :
     marginalSnd (prodDist p q) = q := by
-  ext b
-  change ∑ a, p a * q b = q b
-  rw [← Finset.sum_mul, prob_sum_eq_one p, one_mul]
+  ext b; change ∑ a, p a * q b = q b; rw [← Finset.sum_mul, prob_sum_eq_one p, one_mul]
 
 /-! ## Chain rule -/
 
@@ -143,12 +125,9 @@ theorem chain_rule {α β : Type} [Fintype α] [Fintype β]
       (∑ ab : α × β, p ab * Real.log (p ab / marginalFst p ab.1)) by linarith
   have hmargsplit : ∑ a, marginalFst p a * Real.log (marginalFst p a) =
       ∑ ab : α × β, p ab * Real.log (marginalFst p ab.1) := by
-    have hsplit : ∀ a, marginalFst p a * Real.log (marginalFst p a) =
-        ∑ b, p (a, b) * Real.log (marginalFst p a) := by
-      intro a; rw [← Finset.sum_mul]; rfl
-    simp_rw [hsplit]
-    exact (Fintype.sum_prod_type
-      (fun (ab : α × β) => p ab * Real.log (marginalFst p ab.1))).symm
+    simp_rw [show ∀ a, marginalFst p a * Real.log (marginalFst p a) =
+        ∑ b, p (a, b) * Real.log (marginalFst p a) from fun a => by rw [← Finset.sum_mul]; rfl]
+    exact (Fintype.sum_prod_type (fun ab => p ab * Real.log (marginalFst p ab.1))).symm
   rw [hmargsplit, ← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro ab _
@@ -170,12 +149,10 @@ theorem entropyNat_prodDist {α β : Type} [Fintype α] [Fintype β]
   unfold entropyNat
   suffices h : ∑ ab : α × β, (prodDist p q) ab * Real.log ((prodDist p q) ab) =
       (∑ a, p a * Real.log (p a)) + (∑ b, q b * Real.log (q b)) by linarith
-  have hprod : ∀ ab : α × β, (prodDist p q) ab = p ab.1 * q ab.2 := fun _ => rfl
-  simp_rw [hprod]
-  rw [Fintype.sum_prod_type]
+  simp_rw [show ∀ ab : α × β, (prodDist p q) ab = p ab.1 * q ab.2 from fun _ => rfl,
+    Fintype.sum_prod_type]
   have key : ∀ a b, p a * q b * Real.log (p a * q b) =
-      q b * (p a * Real.log (p a)) + p a * (q b * Real.log (q b)) := by
-    intro a b
+      q b * (p a * Real.log (p a)) + p a * (q b * Real.log (q b)) := fun a b => by
     by_cases hpa : p a = 0
     · simp [hpa]
     · by_cases hqb : q b = 0
@@ -183,10 +160,8 @@ theorem entropyNat_prodDist {α β : Type} [Fintype α] [Fintype β]
       · rw [Real.log_mul (ne_of_gt (lt_of_le_of_ne (prob_nonneg p a) (Ne.symm hpa)))
               (ne_of_gt (lt_of_le_of_ne (prob_nonneg q b) (Ne.symm hqb)))]
         ring
-  simp_rw [key, Finset.sum_add_distrib, ← Finset.sum_mul, ← Finset.mul_sum]
-  rw [prob_sum_eq_one q, one_mul]
-  congr 1
-  rw [← Finset.sum_mul, prob_sum_eq_one p, one_mul]
+  simp_rw [key, Finset.sum_add_distrib, ← Finset.sum_mul, ← Finset.mul_sum,
+    prob_sum_eq_one q, one_mul, ← Finset.sum_mul, prob_sum_eq_one p, one_mul]
 
 end
 

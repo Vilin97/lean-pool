@@ -87,9 +87,7 @@ private def close_up_aux_factor_intersection_proof
       show insert (R.carrier.subtype a) ({R.carrier.subtype q'} : Set T) =
         {(a : T), (q' : T)} from rfl] at h1
     exact h1
-  have hq'_ne : (q' : T) ≠ 0 := by
-    intro h
-    exact hq'.ne_zero (Subtype.val_injective h)
+  have hq'_ne : (q' : T) ≠ 0 := fun h => hq'.ne_zero (Subtype.val_injective h)
   -- Apply intersection_close_up
   obtain ⟨S₁, hAext₁, hle₁, x₁, hrem⟩ :=
     intersection_close_up R a q' c_n hc_n_aq'T hcoprime ha_zero hq'_ne hM_bot hM_not_assoc
@@ -104,8 +102,7 @@ private def close_up_aux_factor_intersection_proof
     fun x => if h : q' ∣ x then Classical.choose h else x
   have hdiv_b2 : ∀ x ∈ rest, x = q' * div_q_b2 x := by
     intro x hx
-    simp only [div_q_b2, dif_pos (hq'_dvd x hx)]
-    exact Classical.choose_spec (hq'_dvd x hx)
+    simpa only [div_q_b2, dif_pos (hq'_dvd x hx)] using Classical.choose_spec (hq'_dvd x hx)
   let rest'2 := rest.image div_q_b2
   have h_ie_b2 : span (↑rest : Set R.carrier) =
       span {q'} * span (↑rest'2 : Set R.carrier) :=

@@ -68,9 +68,8 @@ lemma round_near_int_of_nonneg {q : ℚ} (h : 0 ≤ q) : 0 ≤ roundNearInt q :=
   rw [roundNearInt]
   split_ifs <;> (try exact Int.floor_nonneg.mpr h) <;> (try exact Int.ceil_nonneg h)
 
-lemma round_near_int_of_pos {q : ℚ} (h : 0 < q) : 0 ≤ roundNearInt q := by
-  apply round_near_int_of_nonneg
-  exact le_of_lt h
+lemma round_near_int_of_pos {q : ℚ} (h : 0 < q) : 0 ≤ roundNearInt q :=
+  round_near_int_of_nonneg h.le
 
 /-
 Round nearest preserves order.
@@ -160,9 +159,7 @@ lemma round_near_eq_of (q : ℚ) (z : ℤ) :
       linarith
     have fract_eq : Int.fract q = q - (z - 1) := by
       rw [Int.fract]
-      suffices (⌊q⌋ : ℚ) = z - 1 by
-        linarith
-      norm_cast
+      simp_all
     rw [roundNearInt, fract_eq]
     have : 1/2 < q - (z - 1) := by
       linarith
@@ -195,12 +192,11 @@ lemma round_near_int_le (q : ℚ) :
   rw [abs_of_nonneg (by linarith [Int.le_ceil q])]
   rw [fract_eq_ceil_of_pos] at this
   · linarith
-  rw [this]
-  norm_num
+  simp_all
 
 lemma round_near_int_of_int (z : ℤ) :
   roundNearInt z = z := by
-  rw [roundNearInt,Int.fract_intCast]
+  rw [roundNearInt, Int.fract_intCast]
   simp
 
 lemma round_near_add_half (z : ℤ) (h : z % 2 = 0) :
@@ -315,9 +311,7 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
     apply round_near_le_round_near
     linarith [h.1]
   rw [roundNearInterval, if_neg h'] at h
-  symm
-  apply round_near_eq_of
-  exact h
+  exact (round_near_eq_of q z h).symm
 
 
 open Lean Meta Qq Mathlib.Meta.Positivity in

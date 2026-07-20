@@ -202,17 +202,13 @@ lemma freePropagatorMomentum_pos' (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
 
 /-- The Gaussian regulator exp(-α‖k‖²) is integrable for α > 0. -/
 lemma gaussian_regulator_integrable (α : ℝ) (hα : 0 < α) :
-    Integrable (fun k : SpaceTime => Real.exp (-α * ‖k‖^2)) volume := by
-  exact gaussian_regulator_integrable' α hα
+    Integrable (fun k : SpaceTime => Real.exp (-α * ‖k‖^2)) volume :=
+  gaussian_regulator_integrable' α hα
 
 /-- The Gaussian regulator is continuous. -/
 lemma gaussian_regulator_continuous (α : ℝ) :
     Continuous (fun k : SpaceTime => Real.exp (-α * ‖k‖^2)) := by
-  refine Real.continuous_exp.comp ?_
-  have h1 : Continuous (fun k : SpaceTime => α * ‖k‖^2) := continuous_const.mul
-    (continuous_norm.pow 2)
-  convert h1.neg using 1
-  ext k; ring
+  fun_prop
 
 /-- The norm of the regulated propagator as a complex number. -/
 lemma regulated_propagator_norm (α : ℝ) (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
@@ -223,10 +219,10 @@ lemma regulated_propagator_norm (α : ℝ) (m : ℝ) [Fact (0 < m)] (k : SpaceTi
   have hval_nonneg : 0 ≤ Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^
     STDimension :=
     div_nonneg (mul_nonneg (Real.exp_nonneg _) hprop_nonneg) hC_nonneg
-  have h : (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℂ) =
-      ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension) := by
-    push_cast; ring
-  rw [h, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hval_nonneg]
+  rw [show (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℂ) =
+      ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension) from by
+    push_cast; ring]
+  rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hval_nonneg]
 
 /-- The inner product function is measurable. -/
 lemma measurable_inner_fixed (k : SpaceTime) : Measurable (fun x : SpaceTime => ⟪k, x⟫_ℝ) :=
@@ -353,8 +349,8 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
           p.1 - p.2.1⟫_ℝ) :=
           Measurable.inner measurable_snd.snd (measurable_fst.sub measurable_snd.fst)
         have h_phase_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime =>
-            -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) := by
-          exact (measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas))
+            -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) :=
+          measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas)
         exact Complex.continuous_exp.aestronglyMeasurable.comp_measurable h_phase_meas
     · have hcont : Continuous (fun y => starRingEnd ℂ (f y)) := f.continuous.star
       exact hcont.aestronglyMeasurable.comp_measurable measurable_snd.fst
@@ -759,6 +755,38 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
   filter_upwards [self_mem_nhdsWithin] with α hα
   exact (h_eq α hα).symm
 
+/-- The diagonal of `SpaceTime × SpaceTime` is `volume.prod volume`-null. -/
+private lemma prod_diagonal_null :
+    (volume.prod volume) {p : SpaceTime × SpaceTime | p.1 = p.2} = 0 := by
+  have h_meas : MeasurableSet {p : SpaceTime × SpaceTime | p.1 = p.2} := measurableSet_diagonal
+  rw [MeasureTheory.Measure.prod_apply h_meas]
+  simp only [Set.preimage_setOf_eq]
+  have h_slice : ∀ x, (volume : Measure SpaceTime) {y : SpaceTime | x = y} = 0 := fun x => by
+    rw [show {y : SpaceTime | x = y} = {x} from by ext y; simp [eq_comm]]
+    exact MeasureTheory.measure_singleton x
+  simp only [h_slice, MeasureTheory.lintegral_zero]
+
+/-- For `volume.prod volume`-a.e. `p`, the two coordinates differ. -/
+private lemma ae_fst_ne_snd :
+    ∀ᵐ p ∂(volume.prod volume), (p : SpaceTime × SpaceTime).1 ≠ p.2 := by
+  have h := prod_diagonal_null
+  rw [MeasureTheory.measure_eq_zero_iff_ae_notMem] at h
+  filter_upwards [h] with p hp
+  exact fun heq => hp (Set.mem_setOf.mpr heq)
+
+/-- For complex test functions `f g`, the integrand `p ↦ f p.1 * ⟨middle p⟩ * conj (g p.2)`
+    is a.e. strongly measurable whenever the middle factor is. -/
+private lemma aestronglyMeasurable_bilinear_prod {f g : TestFunctionℂ}
+    {C : SpaceTime × SpaceTime → ℂ} (hC : AEStronglyMeasurable C (volume.prod volume)) :
+    AEStronglyMeasurable
+      (fun p : SpaceTime × SpaceTime => f p.1 * C p * starRingEnd ℂ (g p.2))
+      (volume.prod volume) := by
+  have hf_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => f p.1) :=
+    (f.continuous.comp continuous_fst).stronglyMeasurable
+  have hg_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => starRingEnd ℂ (g p.2)) :=
+    ((Complex.continuous_conj.comp g.continuous).comp continuous_snd).stronglyMeasurable
+  exact (hf_meas.aestronglyMeasurable.mul hC).mul hg_meas.aestronglyMeasurable
+
 /-- **Complex bilinear form convergence (general f, g):** The regulated bilinear covariance
     form converges to the Bessel form as α → 0⁺ for arbitrary complex test functions f, g.
 
@@ -811,22 +839,7 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     -- For all (x, y) with x ≠ y, we have pointwise convergence.
     -- The diagonal has measure zero, so this is a.e.
     -- Strategy: filter_upwards with a criterion that holds a.e.
-    have h_diag_null : (volume.prod volume) {p : SpaceTime × SpaceTime | p.1 = p.2} = 0 := by
-      -- Use Fubini: ∫∫ 1_{x=y} dμ(x) dμ(y) = ∫ μ({y}) dμ(x) = ∫ 0 dμ(x) = 0
-      have h_meas : MeasurableSet {p : SpaceTime × SpaceTime | p.1 = p.2} := measurableSet_diagonal
-      rw [MeasureTheory.Measure.prod_apply h_meas]
-      simp only [Set.preimage_setOf_eq]
-      -- For each x, the slice {y | x = y} = {x} has measure 0
-      have h_slice : ∀ x, (volume : Measure SpaceTime) {y : SpaceTime | x = y} = 0 := by
-        intro x
-        have h_eq : {y : SpaceTime | x = y} = {x} := by
-          ext y; simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, eq_comm]
-        rw [h_eq]
-        exact MeasureTheory.measure_singleton x
-      simp only [h_slice, MeasureTheory.lintegral_zero]
-    rw [MeasureTheory.measure_eq_zero_iff_ae_notMem] at h_diag_null
-    filter_upwards [h_diag_null] with p hp
-    have hxy : p.1 ≠ p.2 := fun h => hp (Set.mem_setOf.mpr h)
+    filter_upwards [ae_fst_ne_snd] with p hxy
     -- Now p.1 ≠ p.2, so we can use freeCovariance_regulated_limit_eq_freeCovariance
     have hC := freeCovariance_regulated_limit_eq_freeCovariance m hm p.1 p.2 hxy
     -- F α p = f x * C_α(x,y) * conj(g y), and we need convergence of this
@@ -847,21 +860,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
       intro x ⟨hx_lt, hx_pos⟩
       exact ⟨hx_pos, hx_lt⟩
     filter_upwards [h_mem] with α ⟨hα_pos, hα_lt1⟩
-    -- Now α ∈ (0, 1), need to show a.e. bound
-    -- Diagonal has measure zero, use same argument as before
-    have h_diag_null : (volume.prod volume) {p : SpaceTime × SpaceTime | p.1 = p.2} = 0 := by
-      have h_meas : MeasurableSet {p : SpaceTime × SpaceTime | p.1 = p.2} := measurableSet_diagonal
-      rw [MeasureTheory.Measure.prod_apply h_meas]
-      simp only [Set.preimage_setOf_eq]
-      have h_slice : ∀ x, (volume : Measure SpaceTime) {y : SpaceTime | x = y} = 0 := by
-        intro x
-        have h_eq : {y : SpaceTime | x = y} = {x} := by
-          ext y; simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, eq_comm]
-        rw [h_eq]; exact MeasureTheory.measure_singleton x
-      simp only [h_slice, MeasureTheory.lintegral_zero]
-    rw [MeasureTheory.measure_eq_zero_iff_ae_notMem] at h_diag_null
-    filter_upwards [h_diag_null] with p hp
-    have hxy : p.1 ≠ p.2 := fun h => hp (Set.mem_setOf.mpr h)
+    -- Now α ∈ (0, 1), need to show a.e. bound (diagonal has measure zero)
+    filter_upwards [ae_fst_ne_snd] with p hxy
     -- Now use the covariance bound
     have h_cov_bound := freeCovariance_regulated_le_const_mul_freeCovariance m hm p.1 p.2 hxy α
       hα_pos (le_of_lt hα_lt1)
@@ -884,16 +884,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     -- F α p = f(p.1) * C_α(p.1, p.2) * conj(g(p.2))
     -- Each factor is AEStronglyMeasurable, so their product is too
     filter_upwards [self_mem_nhdsWithin] with α hα
-    simp only [F]
-    -- f ∘ fst is strongly measurable (Schwartz is continuous)
-    have hf_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => f p.1) :=
-      (f.continuous.comp continuous_fst).stronglyMeasurable
-    -- g ∘ snd is strongly measurable
-    have hg_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => starRingEnd ℂ (g p.2)) :=
-      ((Complex.continuous_conj.comp g.continuous).comp continuous_snd).stronglyMeasurable
-    -- The regulated covariance is AEStronglyMeasurable
-    have hC_meas := aestronglyMeasurable_freeCovariance_regulated α (Set.mem_Ioi.mp hα) m hm
-    exact (hf_meas.aestronglyMeasurable.mul hC_meas).mul hg_meas.aestronglyMeasurable
+    simpa only [F] using aestronglyMeasurable_bilinear_prod
+      (aestronglyMeasurable_freeCovariance_regulated α (Set.mem_Ioi.mp hα) m hm)
   -- Apply DCT on product space
   have h_prod_tendsto := MeasureTheory.tendsto_integral_filter_of_dominated_convergence
     bound h_meas h_bound h_bound_int h_ae_tendsto
@@ -920,14 +912,9 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     have h_norm_eq : ∀ p : SpaceTime × SpaceTime,
         ‖f p.1 * (freeCovarianceRegulated α m p.1 p.2 : ℂ) * g p.2‖ = ‖F α p‖ := fun p => by
       simp only [F, norm_mul, RCLike.norm_conj]
-    have hF_meas : AEStronglyMeasurable (F α) (volume.prod volume) := by
-      simp only [F]
-      have hf_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => f p.1) :=
-        (f.continuous.comp continuous_fst).stronglyMeasurable
-      have hg_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => starRingEnd ℂ (g p.2)) :=
-        ((Complex.continuous_conj.comp g.continuous).comp continuous_snd).stronglyMeasurable
-      have hC_meas := aestronglyMeasurable_freeCovariance_regulated α (Set.mem_Ioi.mp hα) m hm
-      exact (hf_meas.aestronglyMeasurable.mul hC_meas).mul hg_meas.aestronglyMeasurable
+    have hF_meas : AEStronglyMeasurable (F α) (volume.prod volume) :=
+      aestronglyMeasurable_bilinear_prod
+        (aestronglyMeasurable_freeCovariance_regulated α (Set.mem_Ioi.mp hα) m hm)
     have h_int_F : Integrable (F α) (volume.prod volume) :=
       h_int.congr' hF_meas (Filter.Eventually.of_forall h_norm_eq)
     -- Apply Fubini: ∫ F α ∂(prod) = ∫∫ F α (x,y) dy dx
@@ -940,14 +927,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     have h_norm_eq : ∀ p : SpaceTime × SpaceTime,
         ‖f p.1 * (freeCovariance m p.1 p.2 : ℂ) * g p.2‖ = ‖F_limit p‖ := fun p => by
       simp only [F_limit, norm_mul, RCLike.norm_conj]
-    have hF_meas : AEStronglyMeasurable F_limit (volume.prod volume) := by
-      simp only [F_limit]
-      have hf_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => f p.1) :=
-        (f.continuous.comp continuous_fst).stronglyMeasurable
-      have hg_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => starRingEnd ℂ (g p.2)) :=
-        ((Complex.continuous_conj.comp g.continuous).comp continuous_snd).stronglyMeasurable
-      have hC_meas := aestronglyMeasurable_freeCovariance m
-      exact (hf_meas.aestronglyMeasurable.mul hC_meas).mul hg_meas.aestronglyMeasurable
+    have hF_meas : AEStronglyMeasurable F_limit (volume.prod volume) :=
+      aestronglyMeasurable_bilinear_prod (aestronglyMeasurable_freeCovariance m)
     have h_int_F : Integrable F_limit (volume.prod volume) :=
       h_int.congr' hF_meas (Filter.Eventually.of_forall h_norm_eq)
     -- Apply Fubini: ∫ F_limit ∂(prod) = ∫∫ F_limit (x,y) dy dx

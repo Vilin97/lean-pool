@@ -87,8 +87,7 @@ lemma _root_.Nat.Partrec.projection {f : ℕ →. ℕ} (hf : Nat.Partrec f) (uni
     intro a m n₁ n₂ hn h₁
     rcases hF.mp h₁ with ⟨x, hx, H⟩
     apply hF.mpr ⟨x, lt_of_lt_of_le hx hn, Code.evaln_mono hn H⟩
-  have hrfind : _root_.Partrec (fun m : ℕ ↦ rfindOpt (F m)) :=
-    _root_.Partrec.rfindOpt this.to_comp
+  have hrfind : _root_.Partrec (fun m : ℕ ↦ rfindOpt (F m)) := _root_.Partrec.rfindOpt this.to_comp
   have : Nat.Partrec (fun m : ℕ ↦ rfindOpt (F m)) := _root_.Partrec.nat_iff.mp hrfind
   exact ⟨_, this, by
     intro a m
@@ -128,12 +127,7 @@ lemma _root_.Partrec.projection {f : α → β →. γ} (hf : Partrec₂ f) (uni
     simp only [Part.mem_bind_iff, Part.mem_ofOption, Option.mem_def, decode₂_eq_some,
       Part.mem_map_iff, Prod.exists, encode_prod_val, Nat.pair_eq_pair, ↓existsAndEq,
       and_true, exists_and_left] at H
-    intro c a; constructor
-    · intro h
-      rcases (H c a).mp h with ⟨a', ha, b, c', hc, hcenc⟩
-      exact ⟨a', b, ha, c', hc, hcenc⟩
-    · rintro ⟨a', b, ha, c', hc, hcenc⟩
-      exact (H c a).mpr ⟨a', ha, b, c', hc, hcenc⟩
+    simp_all
   intro c a
   constructor
   · intro hcga
@@ -387,8 +381,7 @@ private lemma codeAux_sigma_one {k} (c : Nat.ArithPart₁.Code k) : Hierarchy Sg
         (Hierarchy.ex (Hierarchy.and (Hierarchy.nrel _ _ _ _) (Hierarchy.rew _ ih))))
 
 @[simp] lemma _root_.LO.FirstOrder.Arith.code_sigma_one {k} (c : Nat.ArithPart₁.Code k) :
-    Hierarchy Sg 1 (code c) :=
-  Hierarchy.rew _ (codeAux_sigma_one c)
+    Hierarchy Sg 1 (code c) := Hierarchy.rew _ (codeAux_sigma_one c)
 
 @[simp] lemma _root_.LO.FirstOrder.Arith.natCast_nat (n : ℕ) : Nat.cast n = n := by rfl
 
@@ -425,10 +418,7 @@ private lemma models_codeAux {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc :
       Matrix.comp_vecCons', Semiterm.val_fvar, Matrix.vecCons_zero, Semiterm.val_bvar,
       Matrix.vecCons_succ]
     constructor
-    · rintro ⟨e, hf, hg⟩
-      have hf : f (List.Vector.ofFn e) = Part.some y := (ihf _ _).mp hf
-      have hg : ∀ i, g i (List.Vector.ofFn v) = Part.some (e i) := fun i => (ihg i _ _).mp (hg i)
-      simp [hg, hf]
+    · simp_all
     · intro h
       have : ∃ w, (∀ i, List.Vector.get w i ∈ g i (List.Vector.ofFn v)) ∧ y ∈ f w := by
         simpa using Part.eq_some_iff.mp h

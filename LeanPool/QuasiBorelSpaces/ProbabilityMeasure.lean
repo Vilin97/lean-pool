@@ -105,9 +105,8 @@ scoped notation "∫⁻ " x ", " m " ∂" μ:70 => lintegral (fun x ↦ m) μ
 @[simp]
 lemma lintegral_mk
     {k : A → ENNReal} (hk : IsHom k) (μ : PreProbabilityMeasure A)
-    : ∫⁻ x, k x ∂mk μ = μ.lintegral k := by
-  apply PreProbabilityMeasure.lintegral_congr hk
-  apply toPreProbabilityMeasure_mk
+    : ∫⁻ x, k x ∂mk μ = μ.lintegral k :=
+  PreProbabilityMeasure.lintegral_congr hk (toPreProbabilityMeasure_mk μ)
 
 /-- Converting to `PreProbabilityMeasure` and back preserves the integral. -/
 @[simp]
@@ -192,8 +191,8 @@ lemma lintegral_iSup
     (f : ℕ → A → ENNReal) (hf₁ : Monotone f) (hf₂ : ∀ n, IsHom (f n)) (μ : ProbabilityMeasure A)
     : ⨆n, ∫⁻ x, f n x ∂μ = ∫⁻ x, ⨆n, f n x ∂μ := by
   unfold lintegral
-  have := PreProbabilityMeasure.lintegral_iSup f hf₁ hf₂ μ.toPreProbabilityMeasure
-  simpa only [lintegral_toPreProbabilityMeasure, iSup_apply] using this
+  simpa only [lintegral_toPreProbabilityMeasure, iSup_apply] using
+    PreProbabilityMeasure.lintegral_iSup f hf₁ hf₂ μ.toPreProbabilityMeasure
 
 /-- The integral of a finite sum is the sum of the integrals. -/
 lemma lintegral_finset_sum {A}
@@ -288,16 +287,13 @@ lemma unit_injective [SeparatesPoints A] : Function.Injective (unit (A := A)) :=
 /-- `unit` is injective iff the inputs are equal. -/
 @[simp]
 lemma unit_inj [SeparatesPoints A] (x y : A) : unit x = unit y ↔ x = y := by
-  apply Iff.intro
-  · apply unit_injective
-  · grind
+  exact ⟨fun h ↦ unit_injective h, by grind⟩
 
 /-- `A` separates points iff `unit` is injective. -/
 lemma separatesPoints_iff_unit_injective
     : SeparatesPoints A ↔ Function.Injective (unit (A := A)) := by
   apply Iff.intro
-  · intro _
-    apply unit_injective
+  · exact fun _ ↦ unit_injective
   · intro h
     constructor
     intro x y h'
@@ -690,13 +686,7 @@ instance : PartialOrder (ProbabilityMeasure A) where
 /-- `ProbabilityMeasure` is an ωCPO with the discrete order -/
 instance : OmegaCompletePartialOrder (ProbabilityMeasure A) where
   ωSup c := c 0
-  le_ωSup c := by
-    intro n
-    have := c.monotone' (Nat.zero_le n)
-    exact this.symm
-  ωSup_le c := by
-    intro x h
-    have h0 := h 0
-    exact h0
+  le_ωSup c n := (c.monotone' (Nat.zero_le n)).symm
+  ωSup_le _ _ h := h 0
 
 end QuasiBorelSpace

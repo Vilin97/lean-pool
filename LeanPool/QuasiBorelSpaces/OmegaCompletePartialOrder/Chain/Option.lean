@@ -62,16 +62,13 @@ noncomputable def project (c : Chain (Option A)) (h : ∃ n, (c n).isSome) : Cha
     have hh := Nat.find_spec h
     cases hi : c (Nat.find h + i) with
     | none =>
-      simp only [hi, Option.le_none] at hhi
-      simp only [Option.isSome_iff_exists, hhi, Option.isSome_none, Bool.false_eq_true] at hh
+      simp_all
     | some x =>
     cases hj : c (Nat.find h + j) with
     | none =>
-      simp only [hj, Option.le_none] at hhj
-      simp only [Option.isSome_iff_exists, hhj, Option.isSome_none, Bool.false_eq_true] at hh
+      simp_all
     | some y =>
-    simp only [hi, hj, Option.some_le_some] at hhij
-    simp only [Option.getD_some, hhij]⟩
+    simp_all⟩
 
 @[simp]
 lemma project_coe
@@ -132,11 +129,7 @@ lemma distrib_cases
         | none => grind
         | some val => grind
       | some val => simp only [Option.some.injEq, Option.getD_some]
-    · simp only [hn, false_and, iff_false]
-      simp only [
-        Nat.find_le_iff, not_exists, not_and, Bool.not_eq_true,
-        Option.isSome_eq_false_iff, Option.isNone_iff_eq_none] at hn
-      simp only [le_refl, hn, reduceCtorEq, not_false_eq_true]
+    · simp_all
   · simp only [distrib, h, ↓reduceDIte, Option.elim_none, none_coe, reduceCtorEq, iff_false]
     grind
 

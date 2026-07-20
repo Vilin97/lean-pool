@@ -131,8 +131,7 @@ theorem stable_phase_retrieval
     simp only [TrueHermitePoly, Φ, HermitePoly, DimdPolyLEAN.explicitEvalPkappa,
       DimdPolyLEAN.explicitPhi, DimdPolyLEAN.explicitPhi1D,
       DimdPolyLEAN.explicitComplexHermite]
-  have hP' : P ∈ Set.range (DimdPolyLEAN.explicitEvalPkappa κ) := by
-    rw [← hTHP]; exact hP
+  have hP' : P ∈ Set.range (DimdPolyLEAN.explicitEvalPkappa κ) := by rw [← hTHP]; exact hP
   have hγ : γ = DimdPolyLEAN.explicitGamma d := by
     simp only [γ, gaussianDensity, DimdPolyLEAN.explicitGamma,
       DimdPolyLEAN.explicitGaussianDensity, one_div]

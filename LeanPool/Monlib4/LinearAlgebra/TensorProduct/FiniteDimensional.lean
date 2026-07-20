@@ -84,9 +84,7 @@ theorem TensorProduct.map_real {A B E F : Type _} [AddCommGroup A] [AddCommGroup
     [StarModule 𝕜 E] [StarModule 𝕜 F] [Module.Finite 𝕜 A] [Module.Finite 𝕜 B]
     [Module.Finite 𝕜 E] [Module.Finite 𝕜 F] (f : E →ₗ[𝕜] F) (g : A →ₗ[𝕜] B) :
     (TensorProduct.map f g).real = TensorProduct.map f.real g.real :=
-  by
-  apply TensorProduct.ext'
-  intro x y
+  TensorProduct.ext' fun x y => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, TensorProduct.map_tmul]
 
 
@@ -96,9 +94,7 @@ variable (A : Type _) [Ring A] [Module 𝕜 A] [StarRing A] [StarModule 𝕜 A] 
 omit [Module.Finite 𝕜 A] in
 theorem LinearMap.mul'_real :
     (LinearMap.mul' 𝕜 A).real = LinearMap.mul' 𝕜 A ∘ₗ (TensorProduct.comm 𝕜 A A).toLinearMap :=
-  by
-  apply TensorProduct.ext'
-  intro a b
+  TensorProduct.ext' fun a b => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul,
     LinearEquiv.coe_coe, LinearMap.comp_apply, TensorProduct.comm_tmul, LinearMap.mul'_apply,
     star_mul, star_star]
@@ -109,45 +105,35 @@ omit [Module.Finite 𝕜 E] [Module.Finite 𝕜 F] [Module.Finite 𝕜 G] in
 theorem TensorProduct.assoc_real :
     (TensorProduct.assoc 𝕜 E F G : (E ⊗[𝕜] F) ⊗[𝕜] G →ₗ[𝕜] E ⊗[𝕜] (F ⊗[𝕜] G)).real =
       TensorProduct.assoc 𝕜 E F G :=
-  by
-  apply TensorProduct.ext_threefold
-  intro a b c
+  TensorProduct.ext_threefold fun a b c => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, LinearEquiv.coe_coe,
     TensorProduct.assoc_tmul, star_star]
 
 omit [Module.Finite 𝕜 E] [Module.Finite 𝕜 F] in
 theorem TensorProduct.comm_real :
     (TensorProduct.comm 𝕜 E F : E ⊗[𝕜] F →ₗ[𝕜] F ⊗[𝕜] E).real = TensorProduct.comm 𝕜 E F :=
-  by
-  apply TensorProduct.ext'
-  intro a b
+  TensorProduct.ext' fun a b => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, LinearEquiv.coe_coe,
     TensorProduct.comm_tmul, star_star]
 
 omit [Module.Finite 𝕜 E] in
 theorem TensorProduct.lid_real :
     (TensorProduct.lid 𝕜 E : 𝕜 ⊗[𝕜] E →ₗ[𝕜] E).real = TensorProduct.lid 𝕜 E :=
-  by
-  apply TensorProduct.ext'
-  intro a b
+  TensorProduct.ext' fun a b => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, LinearEquiv.coe_coe,
     TensorProduct.lid_tmul, star_star, star_smul]
 
 omit [Module.Finite 𝕜 E] in
 theorem TensorProduct.rid_real :
     (TensorProduct.rid 𝕜 E : E ⊗[𝕜] 𝕜 →ₗ[𝕜] E).real = TensorProduct.rid 𝕜 E :=
-  by
-  apply TensorProduct.ext'
-  intro a b
+  TensorProduct.ext' fun a b => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, LinearEquiv.coe_coe,
     TensorProduct.rid_tmul, star_star, star_smul]
 
 omit [Module.Finite 𝕜 E] in
 theorem tensor_op_star_apply (x : E) (y : Eᵐᵒᵖ) :
-    star (x ⊗ₜ[𝕜] y) = star x ⊗ₜ[𝕜] (op 𝕜) (star (unop 𝕜 y)) :=
-  by
-  simp only [TensorProduct.star_tmul]
-  rfl
+    star (x ⊗ₜ[𝕜] y) = star x ⊗ₜ[𝕜] (op 𝕜) (star (unop 𝕜 y)) := by
+  simp_all
 
 omit [Module.Finite 𝕜 E] in
 theorem tenSwap_star (x : E ⊗[𝕜] Eᵐᵒᵖ) : star (tenSwap 𝕜 x) = tenSwap 𝕜 (star x) :=
@@ -235,8 +221,7 @@ lemma StarAlgEquiv.lTensor_tmul {R A B C : Type*}
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C]
   [StarModule R A] [StarModule R B] [StarModule R C]
   (f : A ≃⋆ₐ[R] B) (x : C) (y : A) :
-  (StarAlgEquiv.lTensor C f) (x ⊗ₜ[R] y) = x ⊗ₜ f (y) :=
-by
+  (StarAlgEquiv.lTensor C f) (x ⊗ₜ[R] y) = x ⊗ₜ f (y) := by
   simpa [StarAlgEquiv.lTensor] using AlgEquiv.lTensor_tmul (C := C) f.toAlgEquiv x y
 lemma StarAlgEquiv.lTensor_symm_tmul {R A B C : Type*} [RCLike R]
   [Ring A]
@@ -244,7 +229,6 @@ lemma StarAlgEquiv.lTensor_symm_tmul {R A B C : Type*} [RCLike R]
   [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid C]
   [StarModule R A] [StarModule R B] [StarModule R C]
   (f : A ≃⋆ₐ[R] B) (x : C) (y : B) :
-  (StarAlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) :=
-by
+  (StarAlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) := by
   simpa [StarAlgEquiv.lTensor, StarAlgEquiv.toAlgEquiv_symm] using
     AlgEquiv.lTensor_symm_tmul (C := C) f.toAlgEquiv x y

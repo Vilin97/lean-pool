@@ -25,9 +25,7 @@ lemma measurable_map'
     : Measurable (fun x ↦ map (f x) (μ x)) := by
   apply measurable_of_measurable_coe
   intro X hX
-  have hf' (x) : Measurable (f x) := by
-    apply Measurable.of_uncurry_left
-    exact hf
+  have hf' (x) : Measurable (f x) := Measurable.of_uncurry_left hf
   simp only [hf', hX, map_apply]
   let κ : ProbabilityTheory.Kernel A B := ⟨μ, hμ₁⟩
   change Measurable fun b ↦ κ b (Prod.mk b ⁻¹' (Function.uncurry f ⁻¹' X))
@@ -47,8 +45,7 @@ lemma measurable_apply
   simp only [← MeasureTheory.lintegral_indicator_one, hi']
   apply Measurable.lintegral_kernel_prod_left (κ := ⟨μ, hμ⟩)
   apply Measurable.ite
-  · simp only [measurableSet_setOf]
-    fun_prop
+  · simp_all
   · fun_prop
   · fun_prop
 

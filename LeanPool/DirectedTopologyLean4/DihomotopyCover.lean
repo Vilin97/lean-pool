@@ -50,17 +50,11 @@ lemma covered_of_coveredPartwise {F : Dihomotopy f g} {hX : X₀ ∪ X₁ = univ
     (hF : coveredPartwise hX F 0 0) :
     covered F hX := by
   unfold covered
-  cases hF 0 0 zero_lt_one zero_lt_one
-  case inl h =>
-    left
-    rintro x ⟨⟨t₀, t₁⟩, ht⟩
-    rw [←ht]
-    exact h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
-  case inr h =>
-    right
-    rintro x ⟨⟨t₀, t₁⟩, ht⟩
-    rw [←ht]
-    exact h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
+  rcases hF 0 0 zero_lt_one zero_lt_one with h | h
+  · exact Or.inl fun x ⟨⟨t₀, t₁⟩, ht⟩ =>
+      ht ▸ h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
+  · exact Or.inr fun x ⟨⟨t₀, t₁⟩, ht⟩ =>
+      ht ▸ h ⟨(t₀, t₁), UnitSubrectangle.mem_unitSquare _, rfl⟩
 
 /-- If `F : f ∼ g` is a dihomotopy of directed maps, then the image of `f` restricted to `[i/(m+1),
 (i+1)/(m+1)]`
@@ -73,16 +67,14 @@ lemma left_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) 
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
   rw [Path.extend_apply (Dipath.ofDirectedMap f).toPath tI]
-  use (0, ⟨t, tI⟩)
-  constructor
+  refine ⟨(0, ⟨t, tI⟩), ?_, ?_⟩
   · apply UnitSubrectangle.mem_unitSubrectangle
     constructor
     · norm_num
-    · apply div_nonneg
-      · norm_num
-      · exact Nat.cast_nonneg _
+    · exact div_nonneg (by norm_num) (Nat.cast_nonneg _)
     · convert ht <;> exact Nat.cast_succ _
-  · simp; rfl
+  · simp
+    rfl
 
 /-- If `F : f ∼ g` is a dihomotopy of directed maps, and `F` is `n × m`-covered, then `f` is
 `m`-covered.
@@ -93,13 +85,9 @@ lemma path_covered_partiwse_of_dihomotopy_coveredPartwise_left {F : Dihomotopy f
     Dipath.coveredPartwise hX (Dipath.ofDirectedMap f) m := by
   apply Dipath.coveredPartwise.covered_partwise_of_covered_by_intervals
   intros i hi
-  cases hF 0 i (Nat.succ_pos n) hi
-  case inl h =>
-    left
-    exact subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h
-  case inr h =>
-    right
-    exact subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h
+  rcases hF 0 i (Nat.succ_pos n) hi with h | h
+  · exact Or.inl (subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h)
+  · exact Or.inr (subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h)
 
 /-- If `F : f ∼ g` is a dihomotopy of directed maps, then the image of `g` restricted to `[i/(m+1),
 (i+1)/(m+1)]`
@@ -112,8 +100,7 @@ lemma right_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g)
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
   rw [Path.extend_apply (Dipath.ofDirectedMap g).toPath tI]
-  use (1, ⟨t, tI⟩)
-  constructor
+  refine ⟨(1, ⟨t, tI⟩), ?_, ?_⟩
   · apply UnitSubrectangle.mem_unitSubrectangle
     · constructor
       · exact (div_le_one (show (n.succ : ℝ) > 0 by
@@ -121,7 +108,8 @@ lemma right_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g)
       · rw [div_self]
         exact Nat.cast_ne_zero.mpr (ne_of_gt (Nat.succ_pos n))
     · convert ht <;> exact Nat.cast_succ _
-  · simp; rfl
+  · simp
+    rfl
 
 /-- If `F : f ∼ g` is a dihomotopy of directed maps, and `F` is `n × m`-covered, then `g` is
 `m`-covered.
@@ -131,13 +119,9 @@ lemma path_covered_partiwse_of_dihomotopy_coveredPartwise_right {F : Dihomotopy 
     Dipath.coveredPartwise hX (Dipath.ofDirectedMap g) m := by
   apply Dipath.coveredPartwise.covered_partwise_of_covered_by_intervals
   intros i hi
-  cases hF n i (Nat.lt_succ_self n) hi
-  case inl h =>
-    left
-    exact subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h
-  case inr h =>
-    right
-    exact subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h
+  rcases hF n i (Nat.lt_succ_self n) hi with h | h
+  · exact Or.inl (subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h)
+  · exact Or.inr (subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h)
 
 /-- If `F : f ∼ g` is a dihomotopy of directed maps, there exist `n m : ℕ` such that `F` is `n ×
 m`-covered.
@@ -167,12 +151,8 @@ lemma coveredPartwise_exists (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) (X
   obtain ⟨ι, hι⟩ := hn i j hi hj
   rw [c_def] at hι
   by_cases h : ι = 0
-  · left
-    simp only [h, if_pos] at hι
-    exact Set.image_subset_iff.mpr hι
-  · right
-    simp only [if_neg h] at hι
-    exact Set.image_subset_iff.mpr hι
+  · simp_all
+  · simp_all
 
 /-- The image of a dihomotopy F of the subrectangles `[0, 1/(n+2)] × [j/(m+1), (j+1)/(m+1)]`
   contains the image of the first part of F, split at `1/(n+2)`, of `[0, 1]
@@ -225,8 +205,7 @@ lemma spv_aux₁_coed {t : ℝ} {n i : ℕ} (_ : i < n.succ) (ht : (i : ℝ) / (
   have h₂ : (n.succ : ℝ) > 0 := Nat.cast_pos.mpr (Nat.succ_pos n)
   have h₃ : 0 ≤ (n : ℝ) + 1 := by
     apply le_of_lt
-    rw [Nat.cast_succ _] at h₂
-    exact h₂
+    simp_all
   have hne : ((n : ℝ) + 1 + 1) ≠ 0 := by positivity
   rw [show (↑n.succ : ℝ) = (n : ℝ) + 1 from by push_cast; ring] at ht h₂
   have h₃' : ((n : ℝ) + 1) > 0 := h₂
@@ -318,9 +297,9 @@ lemma coveredPartwise_second_vpart {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dip
   unfold coveredPartwise at hF
   unfold coveredPartwise
   intros i j hi hj
-  cases (hF i.succ j (Nat.succ_lt_succ hi) hj)
-  case inl h => left; exact subset_trans (spv_subrectangle _ _) h
-  case inr h => right; exact subset_trans (spv_subrectangle _ _) h
+  rcases hF i.succ j (Nat.succ_lt_succ hi) hj with h | h
+  · exact Or.inl (subset_trans (spv_subrectangle _ _) h)
+  · exact Or.inr (subset_trans (spv_subrectangle _ _) h)
 
 /-- The image of a dihomotopy F of the rectangle `[i/(n+1), (i+1)/(n+1)] × [0, 1/(m+2)]`
   contains the image of the first part of F, split at `1/(m+2)`, of `[i/(n+1), (i+1)/(n+1)]
@@ -385,9 +364,9 @@ lemma coveredPartwise_second_hpart {f g : D(I,X)} {F : Dihomotopy f g} {hX : X�
   unfold coveredPartwise at hF
   unfold coveredPartwise
   intros i j hi hj
-  cases (hF i j.succ hi (Nat.succ_lt_succ hj))
-  case inl h => left; exact subset_trans (sph_subrectangle _ _) h
-  case inr h => right; exact subset_trans (sph_subrectangle _ _) h
+  rcases hF i j.succ hi (Nat.succ_lt_succ hj) with h | h
+  · exact Or.inl (subset_trans (sph_subrectangle _ _) h)
+  · exact Or.inr (subset_trans (sph_subrectangle _ _) h)
 
 end Dihomotopy
 end DirectedMap

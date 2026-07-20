@@ -24,8 +24,7 @@ namespace VonNeumannAlgebra
 variable {H : Type _} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 lemma star_commutant_iff {M : VonNeumannAlgebra H} {e : H →L[ℂ] H} :
-  star e ∈ M.commutant ↔ e ∈ M.commutant :=
-by
+  star e ∈ M.commutant ↔ e ∈ M.commutant := by
   simp only [mem_commutant_iff]
   constructor
   · rintro h g hg
@@ -46,32 +45,26 @@ theorem elem_idempotent_iff_ker_and_range_invariantUnder_commutant (M : VonNeuma
     (e : H →L[ℂ] H) (h : IsIdempotentElem e) :
     e ∈ M ↔ ∀ y : H →L[ℂ] H, y ∈ M.commutant →
       (LinearMap.ker e.toLinearMap).InvariantUnder y.toLinearMap ∧
-        (LinearMap.range e.toLinearMap).InvariantUnder y.toLinearMap :=
-  by
+        (LinearMap.range e.toLinearMap).InvariantUnder y.toLinearMap := by
   simp_rw [Submodule.invariantUnder_iff, Set.subset_def,
     ContinuousLinearMap.coe_coe, Set.mem_image, SetLike.mem_coe, LinearMap.mem_ker,
     LinearMap.mem_range, forall_exists_index, and_imp,
     forall_apply_eq_imp_iff₂]
   constructor
   · intro he y hy
-    have : e.comp y = y.comp e :=
-      by
+    have : e.comp y = y.comp e := by
       rw [← VonNeumannAlgebra.commutant_commutant M, VonNeumannAlgebra.mem_commutant_iff] at he
       exact (he y hy).symm
     exact
       ⟨fun x hx => by
         have hxy := congrArg (fun f : H →L[ℂ] H => f x) this
         change e (y x) = y (e x) at hxy
-        change e x = 0 at hx
-        change e (y x) = 0
-        rw [hxy, hx, map_zero],
+        simp_all,
       fun u ⟨v, hv⟩ => by
         refine ⟨y v, ?_⟩
         have hxy := congrArg (fun f : H →L[ℂ] H => f v) this
         change e (y v) = y (e v) at hxy
-        change e v = u at hv
-        change e (y v) = y u
-        rw [hxy, hv]⟩
+        simp_all⟩
   · intro H'
     rw [← VonNeumannAlgebra.commutant_commutant M]
     intro m hm; ext x
@@ -93,15 +86,13 @@ theorem elem_idempotent_iff_ker_and_range_invariantUnder_commutant (M : VonNeuma
       rw [IsIdempotentElem.eq h]
     calc
       (m * e) x = m (e ((v : H) + w)) := by
-        rw [← hvw]
-        rfl
+        simp_all
       _ = m (w : H) := by
         rw [map_add, hv_ker, hw_fixed, zero_add]
       _ = e (m ((v : H) + w)) := by
         rw [map_add, map_add, hmv_ker, hmw_fixed, zero_add]
       _ = (e * m) x := by
-        rw [hvw]
-        rfl
+        simp_all
 
 /-- The algebra of all bounded linear operators on a Hilbert space as a von Neumann algebra. -/
 def ofHilbertSpace : VonNeumannAlgebra H

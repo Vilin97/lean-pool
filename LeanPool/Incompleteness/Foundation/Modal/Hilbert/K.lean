@@ -29,13 +29,9 @@ class HasK (H : Hilbert α) where
   mem_K : Axioms.K (.atom p) (.atom q) ∈ H.axioms := by tauto;
 
 instance [DecidableEq α] [hK : H.HasK] : Entailment.HasAxiomK H where
-  K φ ψ := by
-    apply maxm;
-    use Axioms.K (.atom hK.p) (.atom hK.q);
-    constructor;
-    · exact hK.mem_K;
-    · use (fun b => if hK.p = b then φ else if hK.q = b then ψ else (.atom b));
-      simp [hK.ne_pq];
+  K φ ψ :=
+    maxm ⟨Axioms.K (.atom hK.p) (.atom hK.q), hK.mem_K,
+      (fun b => if hK.p = b then φ else if hK.q = b then ψ else (.atom b)), by simp [hK.ne_pq]⟩
 
 end «lp_section_1»
 

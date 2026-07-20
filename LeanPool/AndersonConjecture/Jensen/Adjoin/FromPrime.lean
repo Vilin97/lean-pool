@@ -56,11 +56,7 @@ private def adjoin_from_prime_proof
   by_cases hqR : q.comap R.carrier.subtype = ⊥
   swap
   · -- q ∩ R ≠ (0): take S = R
-    have hne : ∃ r : R.carrier, r ∈ q.comap R.carrier.subtype ∧ r ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hqR ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
-    obtain ⟨r, hr_comap, hr_ne⟩ := hne
+    obtain ⟨r, hr_comap, hr_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hqR
     rw [Ideal.mem_comap] at hr_comap
     exact ⟨R, ⟨le_refl _, fun s hs => hs, le_max_right _ _⟩,
       ⟨r, hr_comap, fun h => hr_ne (Subtype.ext h)⟩⟩
@@ -78,10 +74,7 @@ private def adjoin_from_prime_proof
         P ∈ associatedPrimes T (T ⧸ Ideal.span {(r : T)}) := by
       intro P hP
       rw [mem_iUnion] at hP
-      obtain ⟨r, hP'⟩ := hP
-      rw [mem_iUnion] at hP'
-      obtain ⟨hr_ne, hP_assoc⟩ := hP'
-      exact ⟨r, hr_ne, hP_assoc⟩
+      simp_all
     have hC_prime : ∀ P ∈ C, P.IsPrime := by
       intro P hP
       obtain ⟨r, _, hP_assoc⟩ := hC_mem P hP
@@ -89,8 +82,7 @@ private def adjoin_from_prime_proof
     have hC_ne_max : ∀ P ∈ C, P ≠ IsLocalRing.maximalIdeal T := by
       intro P hP hPM
       obtain ⟨r, hr_ne, hP_assoc⟩ := hC_mem P hP
-      subst hPM
-      exact hM_not_assoc (r : T) hr_ne hP_assoc
+      simp_all
     -- q ⊄ P for P ∈ C: height argument
     have hq_not_le : ∀ P ∈ C, ¬(q ≤ P) := by
       intro P hP hle
@@ -108,12 +100,9 @@ private def adjoin_from_prime_proof
           rw [Submodule.mem_bot]
           obtain ⟨m', rfl⟩ := Ideal.Quotient.mk_surjective m
           change (Ideal.Quotient.mk (Ideal.span {(r : T)})) ((r : T) * m') = 0
-          exact Ideal.Quotient.eq_zero_iff_mem.mpr
-            (Ideal.mul_mem_right m' _ (Ideal.subset_span rfl))
+          simp_all
         have hr_comap : r ∈ q.comap R.carrier.subtype := Ideal.mem_comap.mpr hr_mem_q
-        rw [hqR] at hr_comap
-        have := (Submodule.mem_bot _).mp hr_comap
-        exact hr_ne (congrArg Subtype.val this)
+        simp_all
       · -- q < P: height chain ⊥ < q < P gives ht(P) ≥ 2, contradiction
         have h_bot_lt_q : (⊥ : Ideal T) < q := bot_lt_iff_ne_bot.mpr hq_ne_bot
         have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ q Ideal.isPrime_bot
@@ -122,8 +111,7 @@ private def adjoin_from_prime_proof
         have h4 : (2 : ℕ∞) ≤ P.height :=
           calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
             _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-              gcongr
-              exact zero_le
+              simp_all
             _ ≤ q.height + 1 := by gcongr
             _ ≤ P.height := h2
         exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
@@ -156,8 +144,7 @@ private def adjoin_from_prime_proof
       intro P hP hle
       rcases hP with hP | hP
       · exact hq_not_le P hP hle
-      · rw [mem_singleton_iff.mp hP] at hle
-        exact hq_ne_bot (le_bot_iff.mp hle)
+      · simp_all
     let φ : (P : Ideal T) → R.carrier →+* T ⧸ P :=
       fun P => (Ideal.Quotient.mk P).comp R.carrier.subtype
     let liftQ : (P : Ideal T) → T ⧸ P → T :=
@@ -305,9 +292,7 @@ private def adjoin_from_prime_proof
       | zero =>
         intro f hf_deg hf_eval
         rw [Polynomial.eq_C_of_natDegree_le_zero hf_deg] at hf_eval ⊢
-        simp only [aeval_C] at hf_eval
-        rw [Polynomial.C_eq_zero]
-        exact Subtype.val_injective hf_eval
+        simp_all
       | succ n ih =>
         intro f hf_deg hf_eval
         -- f.coeff 0 ∈ q ∩ R = ⊥, then f = X * f.divX, apply IH
@@ -325,12 +310,10 @@ private def adjoin_from_prime_proof
             exact q.neg_mem (q.mul_mem_right _ ht_q)
           have hc_comap : f.coeff 0 ∈ q.comap R.carrier.subtype :=
             Ideal.mem_comap.mpr hc_in_q
-          rw [hqR] at hc_comap
-          exact (Submodule.mem_bot _).mp hc_comap
+          simp_all
         have hf_eq : f = X * f.divX := by
           have := Polynomial.X_mul_divX_add f
-          rw [hc0, map_zero, add_zero] at this
-          exact this.symm
+          simp_all
         have hdivX_eval : aeval t f.divX = 0 := by
           have : aeval t f = t * aeval t f.divX := by
             conv_lhs => rw [hf_eq]
@@ -357,11 +340,7 @@ private def adjoin_from_prime_proof
         exact Ideal.mem_comap.mpr (Ideal.Quotient.eq_zero_iff_mem.mp h)
       -- P ∈ C: find nonzero r₀ ∈ P ∩ R, show P is minimal over (r₀)
       have hP_in_C : P ∈ C := by
-        obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ : ∃ r₀ : R.carrier,
-            r₀ ∈ P.comap R.carrier.subtype ∧ r₀ ≠ 0 := by
-          by_contra h
-          push Not at h
-          exact hPR_ne ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
+        obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR_ne
         have hr₀T_ne : (r₀ : T) ≠ 0 := fun h => hr₀_ne (Subtype.val_injective h)
         have hr₀_in_P : (r₀ : T) ∈ P := Ideal.mem_comap.mp hr₀_mem
         -- P minimal over (r₀): ht ≤ 1 prevents strictly smaller primes
@@ -374,9 +353,7 @@ private def adjoin_from_prime_proof
           have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
           have hQ_ne_bot : Q ≠ ⊥ := by
             intro h
-            rw [h] at hQ_le_span
-            exact hr₀T_ne (Ideal.mem_bot.mp
-              (hQ_le_span (Ideal.subset_span (Set.mem_singleton _))))
+            simp_all
           have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
           have h_bot_lt_Q : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
           have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
@@ -386,8 +363,7 @@ private def adjoin_from_prime_proof
           have h4 : (2 : ℕ∞) ≤ P.height :=
             calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
               _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-                gcongr
-                exact zero_le
+                simp_all
               _ ≤ Q.height + 1 := by gcongr
               _ ≤ P.height := h2
           exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))

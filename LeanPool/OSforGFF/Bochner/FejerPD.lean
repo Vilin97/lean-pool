@@ -95,14 +95,6 @@ private lemma isPositiveDefinite_exp_inner (ξ : V) :
 instance volumeIsNegInvariant : (volume : Measure V).IsNegInvariant := by
   constructor; exact ((LinearIsometryEquiv.neg ℝ (E := V)).measurePreserving).map_eq
 
-/-- Haar translation: ∫ f(a - x) dx = ∫ f(x) dx. -/
-private lemma integral_sub_left_eq (f : V → ℂ) (a : V) :
-    ∫ x, f (a - x) = ∫ x, f x := by
-  simp_rw [sub_eq_add_neg]
-  have h1 : ∫ x : V, f (a + -x) = ∫ x : V, f (a + x) :=
-    integral_neg_eq_self (fun y : V => f (a + y)) volume
-  rw [h1]; exact integral_add_left_eq_self f a
-
 /-! ### Step A: The PD double integral has nonneg real part -/
 
 omit [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [BorelSpace V] in
@@ -324,6 +316,13 @@ private lemma closedBall_sub_norm_subset (v : V) (R : ℝ) :
     simp only [dist_zero_right, dist_zero_left] at h1
     linarith
 
+/-- The real volume of a centered closed ball as a power of the radius. -/
+private lemma volume_closedBall_toReal_eq (r : ℝ) (hr : 0 ≤ r) :
+    (volume (Metric.closedBall (0 : V) r)).toReal =
+      r ^ Module.finrank ℝ V * (volume (Metric.ball (0 : V) 1)).toReal := by
+  rw [Measure.addHaar_closedBall volume (0 : V) hr, ENNReal.toReal_mul,
+    ENNReal.toReal_ofReal (by positivity)]
+
 /-- The overlap ratio → 1 as R → ∞ for fixed v.
     Proof: closedBall 0 (R-‖v‖) ⊆ closedBall 0 R ∩ closedBall v R, so
     overlapRatio ≥ ((R-‖v‖)/R)^d → 1. Upper bound is 1. Squeeze.
@@ -363,13 +362,11 @@ private lemma overlapRatio_tendsto_one (v : V) :
           ENNReal.toReal_pos (ne_of_gt (Metric.measure_ball_pos volume 0 one_pos))
             (ne_of_lt measure_ball_lt_top)
         have hvol_sub : (volume (Metric.closedBall (0 : V) (↑n - ‖v‖))).toReal =
-            (↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal := by
-          rw [Measure.addHaar_closedBall volume (0 : V) hsub_nn, ENNReal.toReal_mul,
-              ENNReal.toReal_ofReal (by positivity)]
+            (↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal :=
+          volume_closedBall_toReal_eq _ hsub_nn
         have hvol_n : (volume (Metric.closedBall (0 : V) (↑n))).toReal =
-            (↑n) ^ d * (volume (Metric.ball (0 : V) 1)).toReal := by
-          rw [Measure.addHaar_closedBall volume (0 : V) hn_pos.le, ENNReal.toReal_mul,
-              ENNReal.toReal_ofReal (by positivity)]
+            (↑n) ^ d * (volume (Metric.ball (0 : V) 1)).toReal :=
+          volume_closedBall_toReal_eq _ hn_pos.le
         calc ((↑n - ‖v‖) / ↑n) ^ d
             = (↑n - ‖v‖) ^ d / (↑n) ^ d := by rw [div_pow]
           _ = ((↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal) /
@@ -401,8 +398,7 @@ private lemma inner_integral_sub (ψ : V → ℂ) (x : V) (R : ℝ) :
       (Metric.closedBall x R).indicator ψ (x - y) := by
     intro y
     simp only [Set.indicator, Metric.mem_closedBall]
-    have : dist (x - y) x = dist y 0 := by simp [dist_eq_norm]
-    rw [this]
+    simp_all
   simp_rw [hind]
   simp_rw [sub_eq_add_neg]
   have h1 : ∫ y : V, (Metric.closedBall x R).indicator ψ (x + -y) =
@@ -494,10 +490,7 @@ private lemma fejer_avg_eq_integral (ψ : V → ℂ) (hcont : Continuous ψ)
       by_cases hx : x ∈ B
       · rw [Set.indicator_of_mem hx]; congr 1; funext v
         rw [← indicator_closedBall_inter ψ R x v, Set.indicator_of_mem hx]
-      · rw [Set.indicator_of_notMem hx]
-        rw [show (fun v => (B ∩ Metric.closedBall v R).indicator (fun _ => ψ v) x) = 0 from by
-          funext v; exact Set.indicator_of_notMem (fun h => hx h.1) _]
-        simp
+      · simp_all
   -- Suffices: prove the unscaled Fubini identity, then handle scaling
   suffices h_fubini : ∫ x in B, ∫ v in Metric.closedBall x R, ψ v =
       ∫ v, (volume (B ∩ Metric.closedBall v R)).toReal • ψ v by
@@ -594,8 +587,7 @@ theorem pd_l1_fourier_re_nonneg_theorem
     change ∫ v, 𝐞 (-(innerSL ℝ v ξ)) • φ v = _
     congr 1; ext v
     rw [Circle.smul_def, Real.fourierChar_apply, smul_eq_mul, mul_comm]
-    congr 1; congr 1
-    simp only [innerSL_apply_apply]; push_cast; ring
+    simp_all
   rw [hF]
   -- Step 2: The integrand is ψ(v) where ψ = φ · exp(2πi⟨·,-ξ⟩) is PD
   have hψ_eq : (fun v => φ v * cexp (-(2 * ↑π * ↑⟪v, ξ⟫_ℝ * I))) =

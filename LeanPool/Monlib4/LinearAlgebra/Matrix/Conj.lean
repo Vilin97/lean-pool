@@ -33,10 +33,7 @@ theorem conj_apply [Star α] (x : Matrix n₁ n₂ α) (i : n₁) (j : n₂) : x
   rfl
 
 theorem conj_conj [InvolutiveStar α] (x : Matrix n₁ n₂ α) : xᴴᵀᴴᵀ = x :=
-  calc
-    xᴴᵀᴴᵀ = xᵀᵀᴴᴴ := rfl
-    _ = xᵀᵀ := (conjTranspose_conjTranspose _)
-    _ = x := transpose_transpose _
+  (conjTranspose_conjTranspose (xᵀᵀ)).trans (transpose_transpose _)
 
 theorem conj_add [AddMonoid α] [StarAddMonoid α] (x y : Matrix n₁ n₂ α) : (x + y)ᴴᵀ = xᴴᵀ + yᴴᵀ :=
   by simp_rw [conj, ← transpose_add, ← conjTranspose_add]
@@ -46,14 +43,10 @@ theorem conj_smul {R : Type _} [Star R] [Star α] [SMul R α] [StarModule R α] 
   simp_rw [conj, ← transpose_smul, ← conjTranspose_smul]
 
 theorem conj_conjTranspose [InvolutiveStar α] (x : Matrix n₁ n₂ α) : xᴴᵀᴴ = xᵀ :=
-  calc
-    xᴴᵀᴴ = xᵀᴴᴴ := rfl
-    _ = xᵀ := conjTranspose_conjTranspose _
+  conjTranspose_conjTranspose (xᵀ)
 
 theorem conjTranspose_conj [InvolutiveStar α] (x : Matrix n₁ n₂ α) : xᴴᴴᵀ = xᵀ :=
-  calc
-    xᴴᴴᵀ = xᴴᵀᴴ := rfl
-    _ = xᵀ := conj_conjTranspose _
+  conj_conjTranspose _
 
 theorem transpose_conj_eq_conjTranspose [Star α] (x : Matrix n₁ n₂ α) : xᴴᵀᵀ = xᴴ :=
   rfl
@@ -66,8 +59,7 @@ theorem conj {α n : Type _} [Star α] {x : Matrix n n α} (hx : x.IsHermitian) 
 end IsHermitian
 
 theorem conj_mul {α m n p : Type _} [Fintype n] [CommSemiring α] [StarRing α] (x : Matrix m n α)
-    (y : Matrix n p α) : (x * y)ᴴᵀ = xᴴᵀ * yᴴᵀ :=
-  by
+    (y : Matrix n p α) : (x * y)ᴴᵀ = xᴴᵀ * yᴴᵀ := by
   ext
   simp_rw [conj_apply, mul_apply, star_sum, StarMul.star_mul, conj_apply, mul_comm]
 

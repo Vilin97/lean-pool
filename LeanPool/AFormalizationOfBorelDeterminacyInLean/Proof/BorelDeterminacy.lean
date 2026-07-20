@@ -178,8 +178,7 @@ lemma unravelFunctor_preimage m n :
     change (f' ≫ g')⁻¹' (G.sets m).1 = _
     rw [cat_preimage_comp]
     have hg : (ConcreteCategory.hom g')⁻¹' (G.sets m).1 =
-        ((unravelNth G k n).sets m).1 := by
-      simpa [g'] using ih
+        ((unravelNth G k n).sets m).1 := by simpa [g'] using ih
     exact hg ▸ (((unravelNth G k n).continue k).2.2.2 m).symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def unravelLim : Limits.Cone (unravelFunctor G k) :=
@@ -219,8 +218,8 @@ def unravelableAsMeasurable : MeasurableSpace (Tree.body T.1.2) where
       change IsOpen ((ConcreteCategory.hom a)⁻¹'
         ((ConcreteCategory.hom b)⁻¹' ((Tree.bodyFunctor.map f.toHom)⁻¹' W n)))
       have hinner : (ConcreteCategory.hom b)⁻¹' ((Tree.bodyFunctor.map f.toHom)⁻¹' W n) =
-          ((unravelNth G0 k (n + 1)).sets n).1 := by
-        exact unravelFunctor_preimage G0 k n (n + 1)
+          ((unravelNth G0 k (n + 1)).sets n).1 :=
+        unravelFunctor_preimage G0 k n (n + 1)
       rw [hinner]
       exact ((unravelNth G0 k (n + 1)).unrav n (by omega)).preimage
         (Tree.LenHom.bodyMap_continuous _)

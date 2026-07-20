@@ -33,9 +33,7 @@ lemma rightEdge_t₀_mem_Ioo (H : ℝ) (_hH : heightCutoff ≤ H) (s : ℂ)
   have hH_sqrt : Real.sqrt 3 / 2 < H := by
     have : heightCutoff = Real.sqrt 3 / 2 + 1 := rfl; linarith
   have hα_pos : 0 < H - Real.sqrt 3 / 2 := by linarith
-  constructor
-  · exact div_pos (by linarith) hα_pos
-  · rw [div_lt_one hα_pos]; linarith
+  exact ⟨div_pos (by linarith) hα_pos, by rw [div_lt_one hα_pos]; linarith⟩
 
 /-- `fdBoundaryH H` passes through `s` at parameter `t₀`. -/
 lemma rightEdge_fdBoundary_eq (H : ℝ) (s : ℂ)
@@ -45,8 +43,7 @@ lemma rightEdge_fdBoundary_eq (H : ℝ) (s : ℂ)
   intro t₀
   have hH_sqrt : Real.sqrt 3 / 2 < H := by linarith
   have hden_pos : 0 < H - Real.sqrt 3 / 2 := by linarith
-  have ht₀_le : t₀ ≤ 1 := by
-    rw [div_le_one hden_pos]; linarith
+  have ht₀_le : t₀ ≤ 1 := by rw [div_le_one hden_pos]; linarith
   simp only [fdBoundaryH, ht₀_le, ↓reduceIte]
   apply Complex.ext
   · simp [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
@@ -128,8 +125,7 @@ lemma rightEdge_dist_from_arc (s : ℂ) (z : ℂ) (hz : ‖z‖ = 1) :
 lemma rightEdge_dist_from_leftVertical (s : ℂ) (hs_re : s.re = 1 / 2) (z : ℂ)
     (hz_re : z.re = -1 / 2) :
     1 ≤ ‖z - s‖ := by
-  have hre : (z - s).re = -1 := by
-    simp [Complex.sub_re, hz_re, hs_re]; ring
+  have hre : (z - s).re = -1 := by simp [Complex.sub_re, hz_re, hs_re]; ring
   calc 1 = |(z - s).re| := by rw [hre]; norm_num
     _ ≤ ‖z - s‖ := abs_re_le_norm (z - s)
 
@@ -143,8 +139,7 @@ lemma rightEdge_dist_from_horizontal (s : ℂ) (hs_im : s.im < H) (z : ℂ) (hz_
 /-- Minimum distance from s (on right edge) to the non-seg1 parts of the boundary. -/
 lemma rightEdge_min_dist_pos (s : ℂ) (hs_norm : ‖s‖ > 1) (hs_im : s.im < H) :
     0 < min (min (‖s‖ - 1) 1) (H - s.im) := by
-  simp only [lt_min_iff]
-  exact ⟨⟨by linarith, by norm_num⟩, by linarith⟩
+  simpa only [lt_min_iff] using ⟨⟨by linarith, by norm_num⟩, by linarith⟩
 
 /-- FTC on a smooth segment: `∫ f'/f = log(−f(b)) − log(−f(a))`
 when `−f` stays in `slitPlane`. Delegates to `LogDerivFTC.ftc_log_neg_on_segment`. -/
@@ -183,31 +178,16 @@ lemma log_div_of_re_pos {a b : ℂ} (ha : 0 < a.re) (hb : 0 < b.re) :
   rw [div_eq_mul_inv]
   have hb_arg_ne_pi : b.arg ≠ Real.pi := by
     intro h; have := Complex.arg_eq_pi_iff.mp h; linarith [this.1]
-  have hb_inv_arg : b⁻¹.arg = -b.arg := by
-    rw [Complex.arg_inv]; simp [hb_arg_ne_pi]
+  have hb_inv_arg : b⁻¹.arg = -b.arg := by rw [Complex.arg_inv]; simp [hb_arg_ne_pi]
   have ha_abs_arg : |a.arg| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl ha)
   have hb_abs_arg : |b.arg| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hb)
-  have hbi_abs_arg : |b⁻¹.arg| < Real.pi / 2 := by
-    rw [hb_inv_arg, abs_neg]; exact hb_abs_arg
-  have h_sum : a.arg + b⁻¹.arg ∈ Set.Ioc (-Real.pi) Real.pi := by
-    constructor
-    · linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]
-    · linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]
-  rw [Complex.log_mul ha_ne hb_inv_ne h_sum, Complex.log_inv b hb_arg_ne_pi]
-  ring
-
-private lemma rightEdge_g_seg1_eq {H : ℝ} {s : ℂ} (hs_re : s.re = 1 / 2) (t : ℝ)
-    (ht : t ≤ 1) :
-    fdBoundaryH H t - s = (↑(H - t * (H - Real.sqrt 3 / 2) - s.im) : ℂ) * I := by
-  simp only [fdBoundaryH, ht, ↓reduceIte]
-  rw [show s = (↑(1/2 : ℝ) : ℂ) + ↑s.im * I from by
-    rw [show (1/2 : ℝ) = s.re from hs_re.symm]; exact (Complex.re_add_im s).symm]
-  apply Complex.ext
-  · simp [Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
-  · simp [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
-          Complex.I_re, Complex.I_im]
+  have hbi_abs_arg : |b⁻¹.arg| < Real.pi / 2 := by rw [hb_inv_arg, abs_neg]; exact hb_abs_arg
+  have h_sum : a.arg + b⁻¹.arg ∈ Set.Ioc (-Real.pi) Real.pi :=
+    ⟨by linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg],
+      by linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]⟩
+  rw [Complex.log_mul ha_ne hb_inv_ne h_sum, Complex.log_inv b hb_arg_ne_pi]; ring
 
 private lemma rightEdge_h₀_eq {H : ℝ} {s : ℂ} (hs_re : s.re = 1 / 2) (t : ℝ) :
     fdBoundarySeg1H H t - s = (↑(H - t * (H - Real.sqrt 3 / 2) - s.im) : ℂ) * I := by
@@ -268,8 +248,7 @@ private lemma rightEdge_min_dist_from_non_seg1 (H : ℝ) (s : ℂ)
     (hs_re : s.re = 1 / 2) (hs_norm : ‖s‖ > 1) (hs_im : s.im < H)
     (t : ℝ) (ht1 : 1 < t) (ht5 : t ≤ 5) :
     min (min (‖s‖ - 1) 1) (H - s.im) ≤ ‖fdBoundaryH H t - s‖ := by
-  have neg_sub_norm : ‖fdBoundaryH H t - s‖ = ‖s - fdBoundaryH H t‖ := by
-    rw [norm_sub_rev]
+  have neg_sub_norm : ‖fdBoundaryH H t - s‖ = ‖s - fdBoundaryH H t‖ := by rw [norm_sub_rev]
   rw [neg_sub_norm]
   by_cases h2 : t ≤ 2
   · exact rightEdge_min_dist_from_non_seg1_arc s hs_norm _
@@ -408,10 +387,7 @@ private lemma rightEdge_neg_seg1_slitPlane_left (H : ℝ) (s : ℂ) (hs_re : s.r
     Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
     mul_one, mul_zero, add_zero]
   have : t * (H - Real.sqrt 3 / 2) < H - s.im := by
-    calc t * (H - Real.sqrt 3 / 2) ≤ (t₀ - δ') * (H - Real.sqrt 3 / 2) := by nlinarith
-      _ = t₀ * (H - Real.sqrt 3 / 2) - δ' * (H - Real.sqrt 3 / 2) := by ring
-      _ = (H - s.im) - δ' * (H - Real.sqrt 3 / 2) := by rw [ht₀_mul]
-      _ < H - s.im := by nlinarith
+    nlinarith [mul_le_mul_of_nonneg_right htd (le_of_lt hα_pos), mul_pos hδ' hα_pos]
   intro h; linarith
 
 private lemma rightEdge_neg_seg1_slitPlane_right (H : ℝ) (s : ℂ) (hs_re : s.re = 1 / 2)
@@ -427,10 +403,7 @@ private lemma rightEdge_neg_seg1_slitPlane_right (H : ℝ) (s : ℂ) (hs_re : s.
     Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
     mul_one, mul_zero, add_zero]
   have : t * (H - Real.sqrt 3 / 2) > H - s.im := by
-    calc t * (H - Real.sqrt 3 / 2) ≥ (t₀ + δ') * (H - Real.sqrt 3 / 2) := by nlinarith
-      _ = t₀ * (H - Real.sqrt 3 / 2) + δ' * (H - Real.sqrt 3 / 2) := by ring
-      _ = (H - s.im) + δ' * (H - Real.sqrt 3 / 2) := by rw [ht₀_mul]
-      _ > H - s.im := by nlinarith
+    nlinarith [mul_le_mul_of_nonneg_right htd (le_of_lt hα_pos), mul_pos hδ' hα_pos]
   intro h; linarith
 
 private lemma rightEdge_neg_arc_slitPlane (s : ℂ) (hs_re : s.re = 1 / 2)
@@ -487,8 +460,20 @@ private lemma rightEdge_final_log (H : ℝ) (s : ℂ)
   have hdα_pos : 0 < δ * α := mul_pos hδ_pos hα_pos
   rw [Complex.log_ofReal_mul hdα_pos (show (-I : ℂ) ≠ 0 from neg_ne_zero.mpr I_ne_zero),
       Complex.log_ofReal_mul hdα_pos I_ne_zero,
-      Complex.log_neg_I, Complex.log_I]
-  ring
+      Complex.log_neg_I, Complex.log_I]; ring
+
+/-- The crossing-correction `E ε` is eventually constant `-(π·I)` near `0⁺`, hence tends to it. -/
+private lemma rightEdge_E_tendsto (H : ℝ) (s : ℂ) (hs_re : s.re = 1 / 2)
+    (α : ℝ) (hα_def : α = H - Real.sqrt 3 / 2) (hα_pos : 0 < α)
+    (t₀ : ℝ) (ht₀_mul : t₀ * α = H - s.im)
+    (threshold : ℝ) (hthresh_pos : 0 < threshold) :
+    Tendsto (fun ε => Complex.log (-(fdBoundarySeg1H H (t₀ - ε / α) - s)) -
+        Complex.log (-(fdBoundarySeg1H H (t₀ + ε / α) - s)))
+      (𝓝[>] 0) (𝓝 (-(↑Real.pi * I))) :=
+  tendsto_const_nhds.congr' (by
+    filter_upwards [Ioo_mem_nhdsGT hthresh_pos] with ε hε
+    exact (rightEdge_final_log H s hs_re α hα_def (ε / α)
+      (div_pos hε.1 hα_pos) hα_pos t₀ ht₀_mul).symm)
 
 private lemma rightEdge_seg1_eq_arc_at_one (H : ℝ) (s : ℂ) :
     fdBoundarySeg1H H 1 - s = exp (↑(Real.pi * (1 + (1 : ℝ)) / 6) * I) - s := by
@@ -532,11 +517,10 @@ lemma rightEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
   set g : ℝ → ℂ := fun t => fdBoundaryH H t - s with hg_def
   set α := H - Real.sqrt 3 / 2 with hα_def
   have hα_pos : 0 < α := by rw [hα_def]; linarith
-  have hα_ne : α ≠ 0 := ne_of_gt hα_pos
   have ht₀_def : t₀ = (H - s.im) / α := rfl
   have ht₀_pos : 0 < t₀ := div_pos (by linarith) hα_pos
   have ht₀_lt : t₀ < 1 := by rw [ht₀_def, div_lt_one hα_pos]; linarith [hα_def]
-  have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ hα_ne
+  have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ (ne_of_gt hα_pos)
   set h_arc : ℝ → ℂ := fun t => exp (↑(Real.pi * (1 + t) / 6) * I) - s
   set h₃ : ℝ → ℂ := fun t => fdBoundarySeg4H H t - s
   set h₅ : ℝ → ℂ := fun t => fdBoundarySeg5H H t - s
@@ -702,12 +686,10 @@ lemma rightEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     rw [hd, div_eq_mul_inv, mul_comm]
   have hint_left_g : IntervalIntegrable
       (fun t => (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t)
-      volume 0 (t₀ - δ) :=
-    hint₀.congr_ae (ae_of_all _ h_congr)
+      volume 0 (t₀ - δ) := hint₀.congr_ae (ae_of_all _ h_congr)
   have hint_right_g : IntervalIntegrable
       (fun t => (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t)
-      volume (t₀ + δ) 5 :=
-    hint_right.congr_ae (ae_of_all _ h_congr)
+      volume (t₀ + δ) 5 := hint_right.congr_ae (ae_of_all _ h_congr)
   have h_int_eq_left :
       (∫ t in (0 : ℝ)..(t₀ - δ), (fdBoundaryH H t - s)⁻¹ * deriv (fdBoundaryH H) t) =
       ∫ t in (0 : ℝ)..(t₀ - δ), deriv g t / g t :=
@@ -733,16 +715,11 @@ private lemma rightEdge_h_far (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
   intro ε hε_pos hε_lt t ht_mem h_abs
   set d := min (min (‖s‖ - 1) 1) (H - s.im)
   have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-  have hεα_lt_t₀ : ε / α < t₀ := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := hε_lt
-      _ ≤ t₀ * α := hthresh_le_t₀α
-  have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := hε_lt
-      _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
-  have hε_lt_d : ε < d := calc ε < threshold := hε_lt
-    _ ≤ _ := hthresh_le_d
+  have hεα_lt_t₀ : ε / α < t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_t₀α)
+  have hεα_lt_1mt₀ : ε / α < 1 - t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_1mt₀α)
+  have hε_lt_d : ε < d := hε_lt.trans_le hthresh_le_d
   rw [abs_sub_comm] at h_abs
   rcases lt_or_ge t (t₀ - ε / α) with h_left | h_right
   · -- t < t₀ - δ: t is on seg1 (t < 1), norm > ε
@@ -792,14 +769,10 @@ private lemma rightEdge_h_near (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     ∀ ε, 0 < ε → ε < threshold → ∀ t, |t - t₀| ≤ ε / α → ‖fdBoundaryH H t - s‖ ≤ ε := by
   intro ε hε_pos _hε_lt t h_abs
   have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-  have hεα_lt_t₀ : ε / α < t₀ := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := ‹_›
-      _ ≤ t₀ * α := hthresh_le_t₀α
-  have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-    rw [div_lt_iff₀ hα_pos]
-    calc ε < threshold := ‹_›
-      _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
+  have hεα_lt_t₀ : ε / α < t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (_hε_lt.trans_le hthresh_le_t₀α)
+  have hεα_lt_1mt₀ : ε / α < 1 - t₀ :=
+    (div_lt_iff₀ hα_pos).mpr (_hε_lt.trans_le hthresh_le_1mt₀α)
   rw [abs_le] at h_abs
   have ht_lower : t₀ - ε / α ≤ t := by linarith [h_abs.1]
   have ht_upper : t ≤ t₀ + ε / α := by linarith [h_abs.2]
@@ -815,6 +788,15 @@ private lemma rightEdge_h_near (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     mul_le_mul_of_nonneg_right ht_lower (le_of_lt hα_pos)
   constructor <;> nlinarith [ht₀_mul, div_mul_cancel₀ ε (ne_of_gt hα_pos)]
 
+/-- From `ε < threshold ≤ min (t₀·α) ((1-t₀)·α)` derive `0 < ε/α`, `ε/α < t₀`, `ε/α < 1-t₀`. -/
+private lemma rightEdge_eps_bounds {α t₀ threshold ε : ℝ} (hα_pos : 0 < α)
+    (hthresh_le_t₀α : threshold ≤ t₀ * α) (hthresh_le_1mt₀α : threshold ≤ (1 - t₀) * α)
+    (hε_pos : 0 < ε) (hε_lt : ε < threshold) :
+    0 < ε / α ∧ ε / α < t₀ ∧ ε / α < 1 - t₀ :=
+  ⟨div_pos hε_pos hα_pos,
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_t₀α),
+    (div_lt_iff₀ hα_pos).mpr (hε_lt.trans_le hthresh_le_1mt₀α)⟩
+
 private lemma rightEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     (s : ℂ) (hs_re : s.re = 1 / 2) (hs_norm : ‖s‖ > 1)
     (hs_im_lower : Real.sqrt 3 / 2 < s.im) (hs_im : s.im < H) :
@@ -824,11 +806,10 @@ private lemma rightEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
       (𝓝[>] 0) (𝓝 (-(↑Real.pi * I))) := by
   set α := H - Real.sqrt 3 / 2 with hα_def
   have hα_pos : 0 < α := by rw [hα_def]; linarith
-  have hα_ne : α ≠ 0 := ne_of_gt hα_pos
   set t₀ := (H - s.im) / α with ht₀_def
   have ht₀_pos : 0 < t₀ := div_pos (by linarith) hα_pos
   have ht₀_lt : t₀ < 1 := by rw [ht₀_def, div_lt_one hα_pos]; linarith [hα_def]
-  have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ hα_ne
+  have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ (ne_of_gt hα_pos)
   set d := min (min (‖s‖ - 1) 1) (H - s.im)
   have hd_pos : 0 < d := rightEdge_min_dist_pos s hs_norm hs_im
   -- Choose threshold small enough for all bounds
@@ -837,26 +818,18 @@ private lemma rightEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     (lt_min (mul_pos ht₀_pos hα_pos) (mul_pos (by linarith) hα_pos))
   have hthresh_le_d : threshold ≤ d := min_le_left _ _
   have hthresh_le_t₀α : threshold ≤ t₀ * α :=
-    calc threshold ≤ min (t₀ * α) ((1 - t₀) * α) := min_le_right _ _
-      _ ≤ t₀ * α := min_le_left _ _
+    (min_le_right _ _).trans (min_le_left _ _)
   have hthresh_le_1mt₀α : threshold ≤ (1 - t₀) * α :=
-    calc threshold ≤ min (t₀ * α) ((1 - t₀) * α) := min_le_right _ _
-      _ ≤ (1 - t₀) * α := min_le_right _ _
+    (min_le_right _ _).trans (min_le_right _ _)
   -- Define δ(ε) = ε/α
   have hδ_fn : ∀ ε, 0 < ε → ε < threshold → 0 < ε / α :=
     fun ε hε _ => div_pos hε hα_pos
   have hδ_small : ∀ ε, 0 < ε → ε < threshold →
       ε / α < min (t₀ - 0) (5 - t₀) := by
     intro ε hε_pos hε_lt
-    simp only [sub_zero]
-    apply lt_min
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ t₀ * α := hthresh_le_t₀α
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
-        _ < (5 - t₀) * α := by nlinarith
+    obtain ⟨_, h1, h2⟩ :=
+      rightEdge_eps_bounds hα_pos hthresh_le_t₀α hthresh_le_1mt₀α hε_pos hε_lt
+    simpa only [sub_zero] using lt_min h1 (h2.trans (by linarith))
   -- Apply pv_tendsto_of_crossing_limit
   refine ContourIntegral.pv_tendsto_of_crossing_limit
       (t₀ := t₀) (ht₀ := ⟨by linarith, by linarith⟩)
@@ -880,53 +853,24 @@ private lemma rightEdge_winding_aux (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
       threshold hthresh_le_t₀α hthresh_le_1mt₀α ε hε_pos hε_lt
   · -- h_ftc: far integrals = E(ε)
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ t₀ * α := hthresh_le_t₀α
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ :=
+      rightEdge_eps_bounds hα_pos hthresh_le_t₀α hthresh_le_1mt₀α hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).2.2
   · -- hint_left
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ t₀ * α := hthresh_le_t₀α
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ :=
+      rightEdge_eps_bounds hα_pos hthresh_le_t₀α hthresh_le_1mt₀α hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).1
   · -- hint_right
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ t₀ * α := hthresh_le_t₀α
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < threshold := hε_lt
-        _ ≤ (1 - t₀) * α := hthresh_le_1mt₀α
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ :=
+      rightEdge_eps_bounds hα_pos hthresh_le_t₀α hthresh_le_1mt₀α hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).2.1
   · -- h_limit: E(ε) → L
-    have hE_const : ∀ ε, 0 < ε → ε < threshold →
-        Complex.log (-(fdBoundarySeg1H H (t₀ - ε / α) - s)) -
-        Complex.log (-(fdBoundarySeg1H H (t₀ + ε / α) - s)) = -(↑Real.pi * I) := by
-      intro ε hε_pos hε_lt
-      exact rightEdge_final_log H s hs_re α hα_def (ε / α) (div_pos hε_pos hα_pos) hα_pos
-        t₀ ht₀_mul
-    exact tendsto_const_nhds.congr' (by
-      filter_upwards [Ioo_mem_nhdsGT hthresh_pos] with ε hε
-      exact (hE_const ε hε.1 hε.2).symm)
+    exact rightEdge_E_tendsto H s hs_re α hα_def hα_pos t₀ ht₀_mul threshold hthresh_pos
 
 theorem gWN_fdBoundary_H_eq_neg_half_of_rightEdge (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     (s : ℂ) (hs_re : s.re = 1 / 2) (hs_norm : ‖s‖ > 1)
@@ -985,15 +929,10 @@ def rightEdgeCrossingData (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     have ht₀_lt : t₀ < 1 := by
       rw [div_lt_one hα_pos]; change H - s.im < H - Real.sqrt 3 / 2; linarith
     intro ε hε_pos hε_lt
-    simp only [sub_zero]
-    apply lt_min
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < _ := hε_lt
-        _ ≤ t₀ * α := le_trans (min_le_right _ _) (min_le_left _ _)
-    · rw [div_lt_iff₀ hα_pos]
-      calc ε < _ := hε_lt
-        _ ≤ (1 - t₀) * α := le_trans (min_le_right _ _) (min_le_right _ _)
-        _ < (5 - t₀) * α := by nlinarith
+    obtain ⟨_, h1, h2⟩ := rightEdge_eps_bounds hα_pos
+      (le_trans (min_le_right _ _) (min_le_left _ _))
+      (le_trans (min_le_right _ _) (min_le_right _ _)) hε_pos hε_lt
+    simpa only [sub_zero] using lt_min h1 (h2.trans (by linarith))
   h_far := by
     set α := H - Real.sqrt 3 / 2 with hα_def
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith
@@ -1034,15 +973,9 @@ def rightEdgeCrossingData (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith
     set t₀ := (H - s.im) / α
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < _ := hε_lt
-        _ ≤ t₀ * α := le_trans (min_le_right _ _) (min_le_left _ _)
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]
-      calc ε < _ := hε_lt
-        _ ≤ (1 - t₀) * α := le_trans (min_le_right _ _) (min_le_right _ _)
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ := rightEdge_eps_bounds hα_pos
+      (le_trans (min_le_right _ _) (min_le_left _ _))
+      (le_trans (min_le_right _ _) (min_le_right _ _)) hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).2.2
   hint_left := by
@@ -1050,13 +983,9 @@ def rightEdgeCrossingData (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith
     set t₀ := (H - s.im) / α
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]; calc ε < _ := hε_lt
-        _ ≤ t₀ * α := le_trans (min_le_right _ _) (min_le_left _ _)
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]; calc ε < _ := hε_lt
-        _ ≤ (1 - t₀) * α := le_trans (min_le_right _ _) (min_le_right _ _)
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ := rightEdge_eps_bounds hα_pos
+      (le_trans (min_le_right _ _) (min_le_left _ _))
+      (le_trans (min_le_right _ _) (min_le_right _ _)) hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).1
   hint_right := by
@@ -1064,36 +993,23 @@ def rightEdgeCrossingData (H : ℝ) (hH_sqrt : Real.sqrt 3 / 2 < H)
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith
     set t₀ := (H - s.im) / α
     intro ε hε_pos hε_lt
-    have hδ_pos : 0 < ε / α := div_pos hε_pos hα_pos
-    have hεα_lt_t₀ : ε / α < t₀ := by
-      rw [div_lt_iff₀ hα_pos]; calc ε < _ := hε_lt
-        _ ≤ t₀ * α := le_trans (min_le_right _ _) (min_le_left _ _)
-    have hεα_lt_1mt₀ : ε / α < 1 - t₀ := by
-      rw [div_lt_iff₀ hα_pos]; calc ε < _ := hε_lt
-        _ ≤ (1 - t₀) * α := le_trans (min_le_right _ _) (min_le_right _ _)
+    obtain ⟨hδ_pos, hεα_lt_t₀, hεα_lt_1mt₀⟩ := rightEdge_eps_bounds hα_pos
+      (le_trans (min_le_right _ _) (min_le_left _ _))
+      (le_trans (min_le_right _ _) (min_le_right _ _)) hε_pos hε_lt
     exact (rightEdge_ftc_telescope H hH_sqrt s hs_re hs_im_lower hs_im (ε / α)
       hδ_pos hεα_lt_t₀ hεα_lt_1mt₀).2.1
   h_limit := by
     set α := H - Real.sqrt 3 / 2 with hα_def
     have hα_pos : 0 < α := by change 0 < H - Real.sqrt 3 / 2; linarith
-    have hα_ne : α ≠ 0 := ne_of_gt hα_pos
     set t₀ := (H - s.im) / α
     have ht₀_pos : 0 < t₀ := div_pos (by linarith) hα_pos
     have ht₀_lt : t₀ < 1 := by
       rw [div_lt_one hα_pos]; change H - s.im < H - Real.sqrt 3 / 2; linarith
-    have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ hα_ne
+    have ht₀_mul : t₀ * α = H - s.im := div_mul_cancel₀ _ (ne_of_gt hα_pos)
     set threshold := min (min (min (‖s‖ - 1) 1) (H - s.im)) (min (t₀ * α) ((1 - t₀) * α))
     have hthresh_pos : 0 < threshold := lt_min (rightEdge_min_dist_pos s hs_norm hs_im)
       (lt_min (mul_pos ht₀_pos hα_pos) (mul_pos (by linarith) hα_pos))
-    have hE_const : ∀ ε, 0 < ε → ε < threshold →
-        Complex.log (-(fdBoundarySeg1H H (t₀ - ε / α) - s)) -
-        Complex.log (-(fdBoundarySeg1H H (t₀ + ε / α) - s)) = -(↑Real.pi * I) := by
-      intro ε hε_pos _hε_lt
-      exact rightEdge_final_log H s hs_re α hα_def (ε / α) (div_pos hε_pos hα_pos) hα_pos
-        t₀ ht₀_mul
-    exact tendsto_const_nhds.congr' (by
-      filter_upwards [Ioo_mem_nhdsGT hthresh_pos] with ε hε
-      exact (hE_const ε hε.1 hε.2).symm)
+    exact rightEdge_E_tendsto H s hs_re α hα_def hα_pos t₀ ht₀_mul threshold hthresh_pos
 
 /-- Alternative proof of the right edge gWN via the `SingleCrossingData` framework.
 

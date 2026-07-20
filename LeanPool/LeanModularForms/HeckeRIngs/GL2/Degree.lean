@@ -53,15 +53,6 @@ theorem deg_T_diag_scalar (c : ℕ) (hc : 0 < c) :
 
 /-! ### Identity 7: Degree of T(m) -/
 
-/-- `deg` of a `TAd` equals the `HeckeCosetDeg` of its underlying double coset. -/
-private lemma deg_T_ad (a d : ℕ) (ha : 0 < a) (hd : 0 < d) (h : a ∣ d) :
-    deg (GLPair 2) (TAd a d) =
-    HeckeCosetDeg (GLPair 2) (TDiag (![a, d])) := by
-  rw [T_ad_of_pos a d ha hd h]
-  change deg (GLPair 2) (Finsupp.single (TDiag _) 1) = _
-  rw [deg_T_single]
-  simp
-
 /-- `deg` of `TAd` when conditions hold. -/
 private lemma deg_T_ad_of_pos' (a d : ℕ) (ha : 0 < a) (hd : 0 < d) (hdvd : a ∣ d) :
     deg (GLPair 2) (TAd a d) =
@@ -74,18 +65,11 @@ include hp in
 private lemma deg_ppow_term_lt' (i k : ℕ) (h2i : 2 * i < k) :
     deg (GLPair 2) (TAd (p ^ i) (p ^ (k - i))) =
     ↑(p ^ (k - 2 * i - 1) * (p + 1)) := by
-  have h_exp_eq : k - i = i + (k - 2 * i) := by omega
   rw [deg_T_ad_of_pos' (p ^ i) (p ^ (k - i))
-    (pow_pos hp.pos i) (pow_pos hp.pos (k - i))
-    (Nat.pow_dvd_pow p (by omega))]
-  change HeckeCosetDeg (GLPair 2) (TDiag (![p ^ i, p ^ (k - i)])) =
-    ↑(p ^ (k - 2 * i - 1) * (p + 1))
-  have h_mk2_eq :
-      (![p ^ i, p ^ (k - i)] : Fin 2 → ℕ) =
-      (![p ^ i, p ^ (i + (k - 2 * i))] : Fin 2 → ℕ) := by
-    ext j; fin_cases j <;> simp only [h_exp_eq]
+    (pow_pos hp.pos i) (pow_pos hp.pos (k - i)) (Nat.pow_dvd_pow p (by omega))]
   rw [show TDiag (![p ^ i, p ^ (k - i)]) =
-    TDiag (![p ^ i, p ^ (i + (k - 2 * i))]) from by rw [h_mk2_eq]]
+      TDiag (![p ^ i, p ^ (i + (k - 2 * i))]) from by
+    congr 1; ext j; fin_cases j <;> simp only [show k - i = i + (k - 2 * i) from by omega]]
   exact deg_T_diag_ppow p hp i (k - 2 * i) (by omega)
 
 include hp in
@@ -93,14 +77,10 @@ include hp in
 private lemma deg_ppow_term_eq' (i k : ℕ) (h2i : 2 * i = k) :
     deg (GLPair 2) (TAd (p ^ i) (p ^ (k - i))) = 1 := by
   rw [show k - i = i from by omega,
-    deg_T_ad_of_pos' (p ^ i) (p ^ i) (pow_pos hp.pos i)
-      (pow_pos hp.pos i) (dvd_refl _)]
-  set c := p ^ i with hc_def
-  have hc : 0 < c := pow_pos hp.pos i
-  rw [show TDiag (![c, c]) =
-      TDiag (fun _ => c) from by
-    congr 1; exact funext fun j => by fin_cases j <;> rfl]
-  exact deg_T_diag_scalar c hc
+    deg_T_ad_of_pos' (p ^ i) (p ^ i) (pow_pos hp.pos i) (pow_pos hp.pos i) (dvd_refl _),
+    show TDiag (![p ^ i, p ^ i]) = TDiag (fun _ => p ^ i) from by
+      congr 1; exact funext fun j => by fin_cases j <;> rfl]
+  exact deg_T_diag_scalar (p ^ i) (pow_pos hp.pos i)
 
 include hp in
 /-- For i in the shifted tail, degree of the (k+2)-expansion term equals the k-expansion term.
@@ -128,13 +108,11 @@ theorem deg_T_sum_prime_pow (k : ℕ) :
   rw [T_sum_ppow_expansion p hp k, map_sum]
   match k with
   | 0 =>
-    simp only [Nat.zero_div, Nat.zero_add, Finset.sum_range_one, Nat.sub_zero]
-    exact deg_ppow_term_eq' p hp 0 0 rfl
+    simp_all
   | 1 =>
     simp only [show (1 : ℕ) / 2 = 0 from rfl, Nat.zero_add, Finset.sum_range_one, Nat.sub_zero]
     convert deg_ppow_term_lt' p hp 0 1 (by omega) using 1
-    simp only [Finset.sum_range_succ, Finset.sum_range_zero, zero_add, pow_zero, pow_one]
-    push_cast; ring
+    simp_all
   | k + 2 =>
     have hdiv : (k + 2) / 2 = k / 2 + 1 := by omega
     rw [hdiv, Finset.sum_range_succ']
@@ -158,14 +136,7 @@ theorem deg_T_sum_prime_pow (k : ℕ) :
 /-- `deg(TSum(1)) = 1`, used as base case for deg_T_sum. -/
 private lemma deg_T_sum_one : deg (GLPair 2) (TSum 1) = 1 := by
   change deg (GLPair 2) (∑ a ∈ Nat.divisors 1, TAd a (1 / a)) = 1
-  simp only [Nat.divisors_one, Finset.sum_singleton, Nat.div_self one_pos]
-  rw [deg_T_ad_of_pos' 1 1 one_pos one_pos (dvd_refl 1)]
-  set c : ℕ := 1 with hc_def
-  have hc : 0 < c := Nat.one_pos
-  rw [show TDiag (![c, c]) =
-      TDiag (fun _ => c) from by
-    congr 1; exact funext fun j => by fin_cases j <;> rfl]
-  exact deg_T_diag_scalar c hc
+  simp_all
 
 /-- Theorem 3.24(7): `deg(T(m)) = σ₁(m)`.
     By prime factorization + coprime multiplicativity + prime-power case. -/
@@ -182,15 +153,12 @@ theorem deg_T_sum (m : ℕ+) :
   | @prime_pow p k hp hk =>
     intro hn
     rw [deg_T_sum_prime_pow p hp k]; simp only [ArithmeticFunction.sigma_one_apply]
-    have h := @Nat.sum_divisors_prime_pow ℕ _ k p id hp; simp only [id] at h
-    exact_mod_cast h.symm
+    simp_all
   | @coprime a b ha hb hcop iha ihb =>
     intro hn
-    have ha_pos : 0 < a := by omega
-    have hb_pos : 0 < b := by omega
-    rw [show TSum ⟨a * b, hn⟩ = TSum ⟨a, ha_pos⟩ * TSum ⟨b, hb_pos⟩ from
-      (T_sum_mul_coprime ⟨a, ha_pos⟩ ⟨b, hb_pos⟩ hcop).symm,
-      map_mul, iha ha_pos, ihb hb_pos]
+    rw [show TSum ⟨a * b, hn⟩ = TSum ⟨a, by omega⟩ * TSum ⟨b, by omega⟩ from
+      (T_sum_mul_coprime ⟨a, by omega⟩ ⟨b, by omega⟩ hcop).symm,
+      map_mul, iha (by omega), ihb (by omega)]
     simp only [ArithmeticFunction.sigma_one_apply]
     exact_mod_cast (Nat.Coprime.sum_divisors_mul hcop).symm
 

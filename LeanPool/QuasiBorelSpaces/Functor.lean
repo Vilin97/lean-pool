@@ -167,9 +167,8 @@ lemma isHom_coe
     : IsHom (fun x ↦ f x n) := by
   have : IsHom (toSubtype (S := S)) := isHom_of_lift _
   change IsHom (fun x ↦ (f x).toSubtype.val n)
-  apply isHom_comp' (f := Function.eval n ∘ Subtype.val) (g := toSubtype ∘ f)
-  · apply isHom_comp' (Pi.isHom_eval n) (Subtype.isHom_val isHom_id)
-  · fun_prop
+  exact isHom_comp' (f := Function.eval n ∘ Subtype.val) (g := toSubtype ∘ f)
+    (isHom_comp' (Pi.isHom_eval n) (Subtype.isHom_val isHom_id)) (by fun_prop)
 
 end Limit
 
@@ -209,8 +208,7 @@ def zero : Iter F 0 := .mk ()
 
 instance : Subsingleton (Iter F 0) where
   allEq := by
-    rintro ⟨a⟩ ⟨b⟩
-    simp only [mk.injEq]
+    rintro ⟨⟩ ⟨⟩
     rfl
 
 /-- Successor element constructor. -/
@@ -346,9 +344,7 @@ private def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
     apply Limit.isHom_mk
     simp only [Pi.isHom_iff]
     intro n
-    cases n with
-    | zero => fun_prop
-    | succ n => fun_prop
+    cases n <;> fun_prop
 
 @[simp]
 private lemma shift_unshift_coe (x : Limit (Comp F (Iter F))) : shift (unshift x) = x := by
@@ -374,13 +370,7 @@ def unroll [Continuous F] : Nu F →𝒒 F (Nu F) where
 lemma roll_unroll [Continuous F] (x : Nu F) : roll (unroll x) = x := by
   rcases x with ⟨x⟩
   simp only [roll, unroll, QuasiBorelHom.coe_mk, Functor.map_comp_coe, mk.injEq]
-  ext n
-  cases n with
-  | zero => subsingleton
-  | succ n =>
-    simp only [
-      QuasiBorelHom.eq_comp, QuasiBorelHom.eq_id, Functor.map_id,
-      QuasiBorelHom.id_coe, Continuous.seq_unseq_coe, unshift_shift_coe]
+  simp_all
 
 @[simp]
 lemma unroll_roll [Continuous F] (x : F (Nu F)) : unroll (roll x) = x := by

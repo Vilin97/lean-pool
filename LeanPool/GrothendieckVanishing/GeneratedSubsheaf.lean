@@ -159,11 +159,7 @@ instance allSectionMap_epi {X : TopCat.{u}}
       ⟨U, t⟩) ≫ allSectionMap hF).hom.app (op U) (TopCat.Sheaf.zeroOutsideInt.generator U)) =
     TopCat.Presheaf.restrictOpen t U le_rfl
   rw [Sigma.ι_desc]
-  trans t
-  · simpa using TopCat.Sheaf.zeroOutsideInt.sHomVal_app_generator (F := F) hF t
-  · symm
-    change F.map (𝟙 (Opposite.op U)) t = t
-    simp
+  simp [TopCat.Sheaf.zeroOutsideInt.sHomVal_app_generator (F := F) hF t]
 
 end Presheaf
 

@@ -184,10 +184,7 @@ theorem gold_theorem (X : Type u) [Countable X] [DecidableEq X]
     obtain ⟨p, hp_mem, hp_eq⟩ := hlock_cov n x hn
     obtain ⟨idx, hidx, heq⟩ := List.mem_iff_getElem.mp hp_mem
     refine ⟨idx, ?_⟩
-    have h := hobs_eq n idx hidx
-    change (T_adv.observe idx).1 = x
-    have : T_adv.observe idx = (lock n)[idx] := h
-    rw [this]; rw [show (lock n)[idx] = p from heq]; exact hp_eq
+    rw [hobs_eq n idx hidx, heq]; exact hp_eq
   let T_inf : TextPresentation X c_inf :=
     ⟨T_adv, T_adv_pos, T_adv_correct, T_adv_exh⟩
   -- === CONTRADICTION ===

@@ -1779,14 +1779,14 @@ theorem partialInterpolationLeft_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X
   intro isBox n
   have 𝕏_h := 𝕏.step x
   cases r_def : r 𝕏.α x <;> simp_all only [RuleApp.isBox, Bool.false_eq_true]
-  case boxₗ =>
+  case boxₗ | boxᵣ =>
     by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
     · unfold partialInterpolationLeft
       rw [dif_pos eq, partialEquationLeft]
-      split <;> simp_all only [RuleApp.boxₗ.injEq, reduceCtorEq]
+      split <;> simp_all only [RuleApp.boxₗ.injEq, RuleApp.boxᵣ.injEq, reduceCtorEq]
       intro f f_zero f_last f_succ
       use 0
-      simp [partialLeftBoxₗ, f_zero]
+      simp [partialLeftBoxₗ, partialLeftBoxᵣ, f_zero]
       split <;> simp_all
       simp [Ext.r, Ext.RuleApp.isBox]
     · unfold partialInterpolationLeft
@@ -1806,7 +1806,7 @@ theorem partialInterpolationLeft_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X
         rcases step with l | r
         · rw [l]
           simp [partialInterpolationLeftAlpha, Ext.r]
-          simp [partialEquationLeft, partialLeftBoxₗ]
+          simp [partialEquationLeft, partialLeftBoxₗ, partialLeftBoxᵣ]
           split <;> simp_all
           split <;> simp_all [Ext.RuleApp.isBox]
         · exfalso
@@ -1820,100 +1820,25 @@ theorem partialInterpolationLeft_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.X
               rcases fk_def : f k.castSucc.succ with l | r
               · simp [fk_def] at ih
               · rcases r with z₁ | z₂
-                · rcases (by
-                    simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-                · rcases (by
+                all_goals
+                  rcases (by
                     simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def] using step) with
                     ⟨z, _z_mem, next_eq⟩
                   simp [←next_eq]
           have isRight' : ∀ m : Fin (n + 1), ((f m.succ).getRight (isRight m)).isRight := by
-                intro n
-                induction n using Fin.induction
-                case zero => simp [r]
-                case succ k ih =>
-                  have step := f_succ k.succ
-                  rcases fk_def : f k.castSucc.succ with _ | l | r
-                  · have := isRight k.castSucc
-                    simp [fk_def] at this
-                  · simp [fk_def] at ih
-                  · rcases (by
-                      simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def]
-                        using step) with
-                      ⟨z, _z_mem, next_eq⟩
-                    simp [←next_eq]
-          rcases f_last_def : f ⟨n + 1, by simp⟩ with c1 | ⟨c2 | c3⟩
-          · have := isRight ⟨n, by simp⟩
-            simp [f_last_def] at this
-          · have := isRight' ⟨n, by simp⟩
-            simp [f_last_def] at this
-          · exact @Split_to_Ext_notNonAxLeaf 𝕏 x leftInterpolantSequent _
-              (by simpa [f_last_def] using f_last)
-  case boxᵣ =>
-    by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
-    · unfold partialInterpolationLeft
-      rw [dif_pos eq, partialEquationLeft]
-      split <;> simp_all only [RuleApp.boxᵣ.injEq, reduceCtorEq]
-      intro f f_zero f_last f_succ
-      use 0
-      simp [partialLeftBoxᵣ, f_zero]
-      split <;> simp_all
-      simp [Ext.r, Ext.RuleApp.isBox]
-    · unfold partialInterpolationLeft
-      rw [dif_neg eq]
-      intro f f_zero f_last f_succ
-      use 1
-      cases n
-      case zero =>
-        exfalso
-        simp_all
-        simp [partialInterpolationLeftAlpha, Ext.r, Ext.RuleApp.isNonAxLeaf] at f_last
-      case succ n =>
-        have step := f_succ 0
-        simp only [partialInterpolationLeftAlpha, Ext.edge, Ext.p, Lean.Elab.WF.paramLet,
-          Fin.castSucc_zero,
-          f_zero, Fin.succ_zero_eq_one, List.mem_cons, List.not_mem_nil, or_false] at step
-        rcases step with l | r
-        · rw [l]
-          simp [partialInterpolationLeftAlpha, Ext.r]
-          simp [partialEquationLeft, partialLeftBoxᵣ]
-          split <;> simp_all
-          split <;> simp_all [Ext.RuleApp.isBox]
-        · exfalso
-          simp only [partialInterpolationLeftAlpha, Ext.r] at f_last
-          have isRight : ∀ m : Fin (n + 1), (f m.succ).isRight := by
             intro n
             induction n using Fin.induction
             case zero => simp [r]
             case succ k ih =>
               have step := f_succ k.succ
-              rcases fk_def : f k.castSucc.succ with l | r
+              rcases fk_def : f k.castSucc.succ with _ | l | r
+              · have := isRight k.castSucc
+                simp [fk_def] at this
               · simp [fk_def] at ih
-              · rcases r with z₁ | z₂
-                · rcases (by
-                    simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-                · rcases (by
-                    simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-          have isRight' : ∀ m : Fin (n + 1), ((f m.succ).getRight (isRight m)).isRight := by
-                intro n
-                induction n using Fin.induction
-                case zero => simp [r]
-                case succ k ih =>
-                  have step := f_succ k.succ
-                  rcases fk_def : f k.castSucc.succ with _ | l | r
-                  · have := isRight k.castSucc
-                    simp [fk_def] at this
-                  · simp [fk_def] at ih
-                  · rcases (by
-                      simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def]
-                        using step) with
-                      ⟨z, _z_mem, next_eq⟩
-                    simp [←next_eq]
+              · rcases (by
+                  simpa [partialInterpolationLeftAlpha, Ext.edge, Ext.p, fk_def] using step) with
+                  ⟨z, _z_mem, next_eq⟩
+                simp [←next_eq]
           rcases f_last_def : f ⟨n + 1, by simp⟩ with c1 | ⟨c2 | c3⟩
           · have := isRight ⟨n, by simp⟩
             simp [f_last_def] at this
@@ -1960,14 +1885,14 @@ theorem partialInterpolationRight_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.
   intro isBox n
   have 𝕏_h := 𝕏.step x
   cases r_def : r 𝕏.α x <;> simp_all only [RuleApp.isBox, Bool.false_eq_true]
-  case boxₗ =>
+  case boxₗ | boxᵣ =>
     by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
     · unfold partialInterpolationRight
       rw [dif_pos eq, partialEquationRight]
-      split <;> simp_all only [RuleApp.boxₗ.injEq, reduceCtorEq]
+      split <;> simp_all only [RuleApp.boxₗ.injEq, RuleApp.boxᵣ.injEq, reduceCtorEq]
       intro f f_zero f_last f_succ
       use 0
-      simp [partialRightBoxₗ, f_zero]
+      simp [partialRightBoxₗ, partialRightBoxᵣ, f_zero]
       split <;> simp_all
       simp [Ext.r, Ext.RuleApp.isBox]
     · unfold partialInterpolationRight
@@ -1987,7 +1912,7 @@ theorem partialInterpolationRight_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.
         rcases step with l | r
         · rw [l]
           simp [partialInterpolationRightAlpha, Ext.r]
-          simp [partialEquationRight, partialRightBoxₗ]
+          simp [partialEquationRight, partialRightBoxₗ, partialRightBoxᵣ]
           split <;> simp_all
           split <;> simp_all [Ext.RuleApp.isBox]
         · exfalso
@@ -2001,100 +1926,25 @@ theorem partialInterpolationRight_box_prop {𝕏 : Proof} [fin_X : Fintype 𝕏.
               rcases fk_def : f k.castSucc.succ with l | r
               · simp [fk_def] at ih
               · rcases r with z₁ | z₂
-                · rcases (by
-                    simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-                · rcases (by
+                all_goals
+                  rcases (by
                     simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def] using step) with
                     ⟨z, _z_mem, next_eq⟩
                   simp [←next_eq]
           have isRight' : ∀ m : Fin (n + 1), ((f m.succ).getRight (isRight m)).isRight := by
-                intro n
-                induction n using Fin.induction
-                case zero => simp [r]
-                case succ k ih =>
-                  have step := f_succ k.succ
-                  rcases fk_def : f k.castSucc.succ with _ | l | r
-                  · have := isRight k.castSucc
-                    simp [fk_def] at this
-                  · simp [fk_def] at ih
-                  · rcases (by
-                      simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def]
-                        using step) with
-                      ⟨z, _z_mem, next_eq⟩
-                    simp [←next_eq]
-          rcases f_last_def : f ⟨n + 1, by simp⟩ with c1 | ⟨c2 | c3⟩
-          · have := isRight ⟨n, by simp⟩
-            simp [f_last_def] at this
-          · have := isRight' ⟨n, by simp⟩
-            simp [f_last_def] at this
-          · exact @Split_to_Ext_notNonAxLeaf 𝕏 x rightInterpolantSequent _
-              (by simpa [f_last_def] using f_last)
-  case boxᵣ =>
-    by_cases eq : interpolant 𝕏 (at (encodeVar x)) = interpolant 𝕏 (equation x)
-    · unfold partialInterpolationRight
-      rw [dif_pos eq, partialEquationRight]
-      split <;> simp_all only [RuleApp.boxᵣ.injEq, reduceCtorEq]
-      intro f f_zero f_last f_succ
-      use 0
-      simp [partialRightBoxᵣ, f_zero]
-      split <;> simp_all
-      simp [Ext.r, Ext.RuleApp.isBox]
-    · unfold partialInterpolationRight
-      rw [dif_neg eq]
-      intro f f_zero f_last f_succ
-      use 1
-      cases n
-      case zero =>
-        exfalso
-        simp_all
-        simp [partialInterpolationRightAlpha, Ext.r, Ext.RuleApp.isNonAxLeaf] at f_last
-      case succ n =>
-        have step := f_succ 0
-        simp only [partialInterpolationRightAlpha, Ext.edge, Ext.p, Lean.Elab.WF.paramLet,
-          Fin.castSucc_zero,
-          f_zero, Fin.succ_zero_eq_one, List.mem_cons, List.not_mem_nil, or_false] at step
-        rcases step with l | r
-        · rw [l]
-          simp [partialInterpolationRightAlpha, Ext.r]
-          simp [partialEquationRight, partialRightBoxᵣ]
-          split <;> simp_all
-          split <;> simp_all [Ext.RuleApp.isBox]
-        · exfalso
-          simp only [partialInterpolationRightAlpha, Ext.r] at f_last
-          have isRight : ∀ m : Fin (n + 1), (f m.succ).isRight := by
             intro n
             induction n using Fin.induction
             case zero => simp [r]
             case succ k ih =>
               have step := f_succ k.succ
-              rcases fk_def : f k.castSucc.succ with l | r
+              rcases fk_def : f k.castSucc.succ with _ | l | r
+              · have := isRight k.castSucc
+                simp [fk_def] at this
               · simp [fk_def] at ih
-              · rcases r with z₁ | z₂
-                · rcases (by
-                    simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-                · rcases (by
-                    simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def] using step) with
-                    ⟨z, _z_mem, next_eq⟩
-                  simp [←next_eq]
-          have isRight' : ∀ m : Fin (n + 1), ((f m.succ).getRight (isRight m)).isRight := by
-                intro n
-                induction n using Fin.induction
-                case zero => simp [r]
-                case succ k ih =>
-                  have step := f_succ k.succ
-                  rcases fk_def : f k.castSucc.succ with _ | l | r
-                  · have := isRight k.castSucc
-                    simp [fk_def] at this
-                  · simp [fk_def] at ih
-                  · rcases (by
-                      simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def]
-                        using step) with
-                      ⟨z, _z_mem, next_eq⟩
-                    simp [←next_eq]
+              · rcases (by
+                  simpa [partialInterpolationRightAlpha, Ext.edge, Ext.p, fk_def] using step) with
+                  ⟨z, _z_mem, next_eq⟩
+                simp [←next_eq]
           rcases f_last_def : f ⟨n + 1, by simp⟩ with c1 | ⟨c2 | c3⟩
           · have := isRight ⟨n, by simp⟩
             simp [f_last_def] at this

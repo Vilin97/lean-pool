@@ -29,12 +29,7 @@ lemma block_extract_disjoint (k m : ℕ) (j₁ j₂ : Fin k) (hne : j₁ ≠ j�
       (Finset.image (fun i : Fin m => finProdFinEquiv (j₁, i)) Finset.univ)
       (Finset.image (fun i : Fin m => finProdFinEquiv (j₂, i)) Finset.univ) := by
   rw [Finset.disjoint_iff_ne]
-  intro a ha b hb
-  simp only [Finset.mem_image, Finset.mem_univ, true_and] at ha hb
-  obtain ⟨i₁, rfl⟩ := ha
-  obtain ⟨i₂, rfl⟩ := hb
-  intro heq
-  exact hne (congr_arg Prod.fst (finProdFinEquiv.injective heq))
+  simp_all
 
 /-- Block extraction is measurable: extracting block j from a pi-type is measurable. -/
 lemma block_extract_measurable {X : Type*} [MeasurableSpace X]
@@ -127,9 +122,7 @@ theorem shatters_hard_labeling {X : Type u} {C : ConceptClass X Bool} {T : Finse
   obtain ⟨f, hf⟩ := exists_many_disagreements h hcard'
   obtain ⟨c, hcC, hcf⟩ := shatters_realize hT f
   refine ⟨c, hcC, ?_⟩
-  convert hf using 2
-  · exact (Fintype.card_coe T).symm
-  · congr 1; ext x; simp [hcf x]
+  simp_all
 
 /-- NFL per-sample lemma for shattered sets: for ANY fixed sample xs and
     ANY hypothesis h, there exists c ∈ C agreeing with h on sample points
@@ -149,9 +142,7 @@ theorem nfl_per_sample_shattered {X : Type u} {C : ConceptClass X Bool}
   refine ⟨c, hcC, ?_, ?_⟩
   · -- c agrees with h on sample points that are in T
     intro i hi
-    have hcfi : c (xs i) = f ⟨xs i, hi⟩ := hcf ⟨xs i, hi⟩
-    simp only [f, Set.mem_range_self, ↓reduceIte] at hcfi
-    exact hcfi
+    simpa only [f, Set.mem_range_self, ↓reduceIte] using hcf ⟨xs i, hi⟩
   · -- c disagrees with h on all unseen points of T
     -- So the disagreement count ≥ |T \ range(xs)| ≥ T.card - m > T.card/2
     -- First: every unseen point in T has c x ≠ h x
@@ -185,10 +176,8 @@ theorem nfl_per_sample_shattered {X : Type u} {C : ConceptClass X Bool}
     -- Combine: disagree.card ≥ T.card - m
     have hdisagree_ge : T.card - m ≤ disagree.card :=
       le_trans hsdiff_card (Finset.card_le_card hsub)
-    -- Since 2m < T.card: T.card - m > T.card / 2, so 4*(T.card - m) > 2*T.card > T.card
-    -- More precisely: T.card < 4 * (T.card - m) ≤ 4 * disagree.card
-    calc T.card < 4 * (T.card - m) := by omega
-      _ ≤ 4 * disagree.card := by omega
+    -- Since 2m < T.card: T.card < 4 * (T.card - m) ≤ 4 * disagree.card
+    omega
 /-- If VCDim = ⊤, then C is not PAC learnable.
     Proof: for any learner L with sample function mf, pick ε = 1 / 4, δ = 1 / 4.
     Let m = mf(1 / 4, 1 / 4). Since VCDim = ⊤, ∃ shattered set S with |S| ≥ 2m.
@@ -239,13 +228,8 @@ theorem vcdim_infinite_not_pac (X : Type u) [MeasurableSpace X]
     pac_lower_bound_good_event_le_half (X := X) (T := T) hTne L m c₀
       (1 / 4 : ℝ) (by norm_num) (by simpa using hcount)
   refine ⟨D, hDprob, c₀, hc₀C, ?_⟩
-  calc MeasureTheory.Measure.pi (fun _ : Fin m => D)
-        { xs : Fin m → X |
-          D { x | L.learn (fun i => (xs i, c₀ (xs i))) x ≠ c₀ x }
-            ≤ ENNReal.ofReal (1 / 4 : ℝ) }
-      ≤ ENNReal.ofReal (1 / 2 : ℝ) := hgood_half
-    _ < ENNReal.ofReal (1 - 1 / 4 : ℝ) := by
-        exact ENNReal.ofReal_lt_ofReal_iff_of_nonneg (by norm_num) |>.mpr (by norm_num)
+  exact lt_of_le_of_lt hgood_half
+    ((ENNReal.ofReal_lt_ofReal_iff_of_nonneg (by norm_num)).mpr (by norm_num))
 
 end PACTheoremHelpers
 

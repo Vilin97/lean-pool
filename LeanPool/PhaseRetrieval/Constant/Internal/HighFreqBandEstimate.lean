@@ -55,8 +55,7 @@ private lemma P_eq_fourier_mul_Q {N L : ℕ}
 -- to_mathlib: Mathlib.Analysis.Fourier.AddCircle
 /-- Pointwise norm of a Fourier character is 1. -/
 private lemma norm_fourier_apply (n : ℤ)
-    (t : AddCircle T) : ‖fourier n t‖ = 1 := by
-  rw [fourier_apply]; exact Circle.norm_coe _
+    (t : AddCircle T) : ‖fourier n t‖ = 1 := by rw [fourier_apply]; exact Circle.norm_coe _
 
 /-- circleNormSq P = circleNormSq Q. -/
 private lemma circleNormSq_P_eq_Q {N L : ℕ}
@@ -84,8 +83,7 @@ private lemma rho_sq_lower (α w z : ℂ)
       (1 / 2) * (rho (α * z)) ^ 2 -
         ‖w - z‖ ^ 2 := by
   have h1 := rho_pointwise_lower (α * w) (α * z)
-  have h2 : ‖α * w - α * z‖ = ‖w - z‖ := by
-    rw [← mul_sub, norm_mul, hα, one_mul]
+  have h2 : ‖α * w - α * z‖ = ‖w - z‖ := by rw [← mul_sub, norm_mul, hα, one_mul]
   exact nonneg_safe_square _ _ _
     (rho_nonneg' _) (rho_nonneg' _)
     (norm_nonneg _) (by linarith)
@@ -126,8 +124,7 @@ This follows from:
 
 -- to_mathlib: Mathlib.MeasureTheory.Integral.IntervalIntegral
 /-- Haar integral equals (1/T) times the sum of interval integrals. -/
-private lemma iLeft_zero (N : ℕ) : iLeft N 0 = 0 := by
-  simp [iLeft]
+private lemma iLeft_zero (N : ℕ) : iLeft N 0 = 0 := by simp [iLeft]
 
 private lemma iLeft_N (N : ℕ) (hN : 1 ≤ N) : iLeft N N = T := by
   unfold iLeft
@@ -189,8 +186,7 @@ private lemma bias_variance_interval (a b : ℝ) (hab : a < b)
   have h_cross :
       ∫ t in a..b, @inner ℝ ℂ _ c (g t - c) = 0 := by
     have key : ∀ t, @inner ℝ ℂ _ c (g t - c) =
-        (innerSL ℝ c) (g t - c) := by
-      intro t; simp [innerSL_apply_apply]
+        (innerSL ℝ c) (g t - c) := by intro t; simp [innerSL_apply_apply]
     simp_rw [key]
     rw [ContinuousLinearMap.intervalIntegral_comp_comm
       (innerSL ℝ c) hgc, h_mean_zero,
@@ -204,8 +200,7 @@ private lemma bias_variance_interval (a b : ℝ) (hab : a < b)
   have h1 : ∫ t in a..b,
       (‖g t‖ ^ 2 - ‖g t - c‖ ^ 2) =
     ∫ t in a..b,
-      (2 * @inner ℝ ℂ _ c (g t - c) + ‖c‖ ^ 2) := by
-    congr 1; ext t; exact h_pw t
+      (2 * @inner ℝ ℂ _ c (g t - c) + ‖c‖ ^ 2) := by congr 1; ext t; exact h_pw t
   -- Integrability from continuity on compact interval
   have hgc_cont : ContinuousOn (fun t => g t - c) (Set.Icc a b) :=
     hg_cont.sub continuousOn_const
@@ -247,8 +242,7 @@ private lemma bias_variance_interval (a b : ℝ) (hab : a < b)
     give (1/N) ∑_k ‖q_k‖². -/
 -- The interval length is T/N.
 private lemma iLeft_diff (N : ℕ) (k : ℕ) :
-    iLeft N (k + 1) - iLeft N k = T / N := by
-  simp [iLeft]; ring
+    iLeft N (k + 1) - iLeft N k = T / N := by simp [iLeft]; ring
 
 -- Interval endpoints are monotone.
 private lemma iLeft_lt_iLeft (N : ℕ) (hN : 1 ≤ N) (k : ℕ) :
@@ -473,8 +467,7 @@ private lemma deriv_norm_le_circleNormSq {N L : ℕ} (hN : 1 ≤ N)
   have h_haar := haar_eq_sum_intervals hN (hQ'_cont.norm.pow 2)
   have h_lhs : (1 / T) * ∑ k : Fin N,
       ∫ t in iLeft N k.val..iLeft N (k.val + 1), ‖Q' t‖ ^ 2 =
-      circleNormSq Q'_circle := by
-    unfold circleNormSq; rw [h_haar, smul_eq_mul]
+      circleNormSq Q'_circle := by unfold circleNormSq; rw [h_haar, smul_eq_mul]
   rw [h_lhs]
   -- Rewrite Q'_circle as a Fourier sum with
   -- coefficients c(m) = b(m) * (2πim/T)
@@ -488,8 +481,7 @@ private lemma deriv_norm_le_circleNormSq {N L : ℕ} (hN : 1 ≤ N)
   have h_parseval_Q' : circleNormSq Q'_circle =
       ∑ m : Fin L,
         ‖b m * (2 * Real.pi * Complex.I *
-          ↑(m.val : ℤ) / (T : ℂ))‖ ^ 2 := by
-    rw [h_Q'_rewrite]; exact parseval_fin_fourier _
+          ↑(m.val : ℤ) / (T : ℂ))‖ ^ 2 := by rw [h_Q'_rewrite]; exact parseval_fin_fourier _
   have h_parseval_Q :
       circleNormSq Q = ∑ m : Fin L, ‖b m‖ ^ 2 := by
     change circleNormSq
@@ -502,8 +494,7 @@ private lemma deriv_norm_le_circleNormSq {N L : ℕ} (hN : 1 ≤ N)
     intro m
     have hsimpl :
         (2 * ↑π * Complex.I * ↑(m.val : ℤ) / (T : ℂ)) =
-          Complex.I * (m.val : ℂ) := by
-      simp only [T]; push_cast; field_simp
+          Complex.I * (m.val : ℂ) := by simp only [T]; push_cast; field_simp
     rw [hsimpl, norm_mul, norm_mul, Complex.norm_I,
       one_mul, Complex.norm_natCast]; ring
   simp_rw [h_parseval_Q', h_coeff_norm, h_parseval_Q]
@@ -588,8 +579,7 @@ private lemma poincare_per_interval {N L : ℕ} (hN : 1 ≤ N)
       ∫ x in (0 : ℝ)..h, ‖f' x‖ ^ 2 := by
     simp only [f']
     exact integral_shift (fun t => ‖Q' t‖ ^ 2) a h
-  have h_ak : iLeft N (k.val + 1) = a + h := by
-    simp only [a, h]; linarith [iLeft_diff N k.val]
+  have h_ak : iLeft N (k.val + 1) = a + h := by simp only [a, h]; linarith [iLeft_diff N k.val]
   rw [h_ak, h_shift_lhs, h_shift_rhs]
   have hf_deriv :
       ∀ x ∈ Set.Icc 0 h,
@@ -632,18 +622,13 @@ private lemma poincare_per_interval {N L : ℕ} (hN : 1 ≤ N)
       (↑N / (T : ℂ)) •
         ∫ t in a..iLeft N (k.val + 1),
           Q (↑t : AddCircle T) from by
-      rw [show (↑N / (T : ℂ)) = ((↑N / T : ℝ) : ℂ)
-        from by push_cast; field_simp]
-      exact (Complex.coe_smul _ _).symm]
+      simp_all]
   have h_mean_inv :
       h⁻¹ • ∫ x in (0 : ℝ)..h, f x =
-        qAvg b N k := by
-    simpa only [one_div] using h_mean_smul
+        qAvg b N k := by simpa only [one_div] using h_mean_smul
   have hp := FockSPR.MissingMathlib.poincare_interval
     hh_pos hf_deriv hf_cont hf'_cont
-  simp only [one_div] at hp
-  rw [h_mean_inv] at hp
-  exact hp
+  simp_all
 
 /-- 4.1a: Poincaré bound with (L−1)² derivative bound. -/
 private lemma poincare_bound {N L : ℕ} (hN : 1 ≤ N)
@@ -752,8 +737,7 @@ private lemma frozen_rotation {N L : ℕ} (hN : 1 ≤ N)
     have h_simp : (fun x => g ((↑N : ℝ) * x / ↑N)) = g := by
       ext x; show g (↑N * x / ↑N) = g x; congr 1; field_simp
     rw [h_simp] at key
-    have h_el : (↑N : ℝ) * iLeft N k.val = T * ↑k.val := by
-      unfold iLeft; field_simp
+    have h_el : (↑N : ℝ) * iLeft N k.val = T * ↑k.val := by unfold iLeft; field_simp
     have h_er : (↑N : ℝ) * iLeft N (k.val + 1) = T * (↑k.val + 1) := by
       unfold iLeft; push_cast; field_simp
     rw [h_el, h_er] at key; rw [key, smul_eq_mul]; congr 1
@@ -788,11 +772,7 @@ private lemma frozen_rotation {N L : ℕ} (hN : 1 ≤ N)
       _ = T * ∫ t : AddCircle T, (rho (fourier (1 : ℤ) t * q)) ^ 2
           ∂AddCircle.haarAddCircle := by
         -- ∫ f = T * ∫ f ∂haar  <==  ∫ f ∂haar = T⁻¹ • ∫ f
-        rw [h_haar, smul_eq_mul]
-        set V := ∫ t : AddCircle T, (rho (fourier (1 : ℤ) t * q)) ^ 2
-        -- Goal: V = T * (T⁻¹ * V)
-        rw [mul_comm T (T⁻¹ * V), mul_assoc, mul_comm V T, ← mul_assoc,
-          inv_mul_cancel₀ hT_ne, one_mul]
+        simp_all
   -- Step B: ∫ ρ(fourier(1)·q)² d(haar) ≥ ‖q‖²/8
   -- Use rotation invariance: fourier(1)(t) * q = ‖q‖ * fourier(1)(t + s)
   -- where s is chosen so that fourier(1)(s) = q/‖q‖
@@ -827,8 +807,7 @@ private lemma frozen_rotation {N L : ℕ} (hN : 1 ≤ N)
           exact hα_norm⟩
       rw [AddCircle.homeomorphCircle_apply] at hs
       have hα_eq : (fourier (1 : ℤ) s : ℂ) = α := by
-        simp only [fourier_apply, one_zsmul]
-        exact congr_arg Subtype.val hs
+        simp_all
       -- fourier(1)(t) * α = fourier(1)(t + s)
       have h_shift : ∀ t : AddCircle T,
           fourier (1 : ℤ) t * α = fourier (1 : ℤ) (t + s) := by
@@ -949,14 +928,7 @@ private lemma assembly {N L : ℕ} (hN : 1 ≤ N)
         ((1/2) * (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 -
           ‖slowFactor b (↑t : AddCircle T) - qAvg b N k‖ ^ 2) =
       (1/2) * A - B := by
-      have h1 := intervalIntegral.integral_sub (hi_rho.const_mul (1/2)) hi_norm
-      have h2 : ∫ t in iLeft N k.val..iLeft N (k.val + 1),
-          (1/2) * (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 =
-        (1/2) * ∫ t in iLeft N k.val..iLeft N (k.val + 1),
-          (rho (fourier (N : ℤ) (↑t : AddCircle T) * qAvg b N k)) ^ 2 :=
-        intervalIntegral.integral_const_mul _ _
-      simp only [hA_def, hB_def] at h1 h2 ⊢
-      linarith
+      simp_all
     rw [h_split] at h_int_bound
     -- Multiply by 1/T
     have h_mul := mul_le_mul_of_nonneg_left h_int_bound hT_inv_pos.le
@@ -1004,12 +976,6 @@ private lemma circleNormSq_nonneg
     0 ≤ circleNormSq f := by
   unfold circleNormSq; apply integral_nonneg; intro
   positivity
-
-/-- Poincaré approximation (placeholder retained for
-    compatibility with the non-WIP file). -/
-private lemma poincare_approximation {N L : ℕ}
-    (_hN : 1 ≤ N) (_hL : 1 ≤ L) (_b : Fin L → ℂ) :
-    True := trivial
 
 /-! ## Core lower bound
 
@@ -1063,8 +1029,7 @@ private lemma rho_integral_lower_bound {N L : ℕ}
     exact_mod_cast this
   -- Key: 4π²(L-1)² ≤ N²/34
   have h_rate_bound : 34 * (4 * Real.pi ^ 2 * (↑L - 1) ^ 2) ≤ (↑N : ℝ) ^ 2 := by
-    have hLm1_sq : ((↑L : ℝ) - 1) ^ 2 ≤ (↑L : ℝ) ^ 2 := by
-      apply sq_le_sq' <;> linarith
+    have hLm1_sq : ((↑L : ℝ) - 1) ^ 2 ≤ (↑L : ℝ) ^ 2 := by apply sq_le_sq' <;> linarith
     -- 34 * 4π² * (L-1)² ≤ 136π² * L² < 1343 * L² ≤ N²
     nlinarith [sq_nonneg Real.pi, sq_nonneg (↑L : ℝ)]
   -- r·C ≤ C/34 where r = 4π²(L-1)²/N²

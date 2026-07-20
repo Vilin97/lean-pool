@@ -72,15 +72,12 @@ include R in lemma factorPow_comp_evalₐ_noeth {m n : ℕ} (hmn : m ≤ n) (x :
   simp only [evalₐ_mk]
   have hfactor : Ideal.Quotient.factorPow I hmn (Ideal.Quotient.mk (I ^ n) (a.1 n)) =
       Ideal.Quotient.mk (I ^ m) (a.1 n) := by
-    unfold Ideal.Quotient.factorPow
-    simp [Ideal.Quotient.factor_mk]
+    simp [Ideal.Quotient.factorPow, Ideal.Quotient.factor_mk]
   rw [hfactor]
   have hcauchy := a.2 hmn
   rw [SModEq.sub_mem] at hcauchy
   have hmem : a.1 m - a.1 n ∈ (I ^ m : Ideal R) := by
-    rwa [show I ^ m • (⊤ : Submodule R R) = (I ^ m : Ideal R) by
-           ext
-           simp] at hcauchy
+    simp_all
   rw [Ideal.Quotient.eq]
   rwa [show a.1 n - a.1 m = -(a.1 m - a.1 n) from by ring, neg_mem_iff]
 
@@ -125,8 +122,7 @@ instance adicCompletion_isPrecomplete :
   have hr_cauchy : ∀ k, r k ≡ r (k + 1) [SMOD M ^ k • (⊤ : Submodule R R)] := by
     intro k
     rw [SModEq.sub_mem, show M ^ k • (⊤ : Submodule R R) = (M ^ k : Ideal R) by
-          ext
-          simp]
+          simp_all]
     have h1 : (Ideal.Quotient.mk (M ^ k)) (r k) = evalₐ M k (f k) := hr k
     have h2 : (Ideal.Quotient.mk (M ^ (k + 1))) (r (k + 1)) = evalₐ M (k + 1) (f (k + 1)) :=
       hr (k + 1)
@@ -138,12 +134,9 @@ instance adicCompletion_isPrecomplete :
       have hfp : Ideal.Quotient.factorPow M (Nat.le_succ k)
           ((Ideal.Quotient.mk (M ^ (k + 1))) (r (k + 1))) =
           (Ideal.Quotient.mk (M ^ k)) (r (k + 1)) := by
-        unfold Ideal.Quotient.factorPow
-        simp [Ideal.Quotient.factor_mk]
+        simp [Ideal.Quotient.factorPow, Ideal.Quotient.factor_mk]
       rw [← hfp, h2, h3, h4, h1]
-    have h6 : (Ideal.Quotient.mk (M ^ k)) (r k - r (k + 1)) = 0 := by
-      rw [map_sub, h5, sub_self]
-    rwa [Ideal.Quotient.eq_zero_iff_mem] at h6
+    exact Ideal.Quotient.eq_zero_iff_mem.mp (by rw [map_sub, h5, sub_self])
   -- Construct the limit L ∈ R̂ from the Cauchy sequence r.
   let cauchy_seq := AdicCauchySequence.mk M R r hr_cauchy
   use mk M R cauchy_seq
@@ -187,11 +180,8 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma filtration_smul_le
     Mi * FN n ≤ FN (n + 1) := by
   rw [Ideal.mul_le]
   intro m hm r hr_mem
-  have hr_pow : r ∈ Mi ^ n := by rw [hFN_def] at hr_mem
-                                 exact hr_mem.1
-  have hr_comap : r ∈ Ideal.comap (Ideal.Quotient.mk (Mi ^ (n + 1)))
-      (Ideal.map (evalₐ Mi (n + 1)).toRingHom J) := by rw [hFN_def] at hr_mem
-                                                       exact hr_mem.2
+  rw [hFN_def] at hr_mem
+  obtain ⟨hr_pow, hr_comap⟩ := hr_mem
   rw [hFN_def]
   refine ⟨?_, ?_⟩
   · rw [pow_succ']
@@ -212,8 +202,7 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma filtration_smul_le
     have hfp_r : Ideal.Quotient.factorPow Mi (Nat.le_succ (n + 1))
         (Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r) =
         Ideal.Quotient.mk (Mi ^ (n + 1)) r := by
-      unfold Ideal.Quotient.factorPow
-      simp [Ideal.Quotient.factor_mk]
+      simp_all
     have hdiff_quot : evalₐ Mi (n + 1 + 1) y - Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r ∈
         RingHom.ker (Ideal.Quotient.factorPow Mi (Nat.le_succ (n + 1))) := by
       rw [RingHom.mem_ker, map_sub, hfp_y, hfp_r, hyr, sub_self]
@@ -236,6 +225,35 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma filtration_smul_le
     rw [show n + 1 + 1 = (n + 1).succ from rfl, pow_succ']
     exact Ideal.mul_mem_mul hm hs
 
+/- Auxiliary: the shared coefficient-matching step for a single smul generator. -/
+omit [IsLocalRing R] [IsNoetherianRing R] in lemma evalₐ_mk_smul_eq
+    (Mi : Ideal R) (n0 K : ℕ) (m s : R) (hm : m ∈ (Mi ^ K : Ideal R))
+    (δ_s : AdicCompletion Mi R)
+    (hδ_s_eq : evalₐ Mi (n0 + 1) δ_s = Ideal.Quotient.mk (Mi ^ (n0 + 1)) s) :
+    Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) m * evalₐ Mi (n0 + K + 1) δ_s =
+      Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) (m • s) := by
+  have hdiff_ker : evalₐ Mi (n0 + K + 1) δ_s -
+      Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s ∈
+      RingHom.ker (Ideal.Quotient.factor
+        (Ideal.pow_le_pow_right (show n0 + 1 ≤ n0 + K + 1 by omega))) := by
+    rw [RingHom.mem_ker, map_sub,
+      show Ideal.Quotient.factor _ (evalₐ Mi (n0 + K + 1) δ_s) =
+        evalₐ Mi (n0 + 1) δ_s from factorPow_comp_evalₐ_noeth Mi (by omega) δ_s,
+      hδ_s_eq, Ideal.Quotient.factor_mk, sub_self]
+  rw [Ideal.Quotient.factor_ker] at hdiff_ker
+  have hmk_kills : Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) m *
+      (evalₐ Mi (n0 + K + 1) δ_s -
+        Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s) = 0 := by
+    obtain ⟨q, hq_mem, hq_eq⟩ := (Ideal.mem_map_iff_of_surjective _
+      Ideal.Quotient.mk_surjective).mp hdiff_ker
+    rw [← hq_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
+    exact Ideal.pow_le_pow_right (by omega)
+      (show m * q ∈ Mi ^ (K + (n0 + 1)) by
+         rw [pow_add]
+         exact Ideal.mul_mem_mul hm hq_mem)
+  rw [mul_sub] at hmk_kills
+  rw [sub_eq_zero.mp hmk_kills, show m • s = m * s from rfl, ← map_mul]
+
 /- Auxiliary: lift elements of Mi^K • FN(n0) to I₀ with evalₐ compatibility. -/
 omit [IsLocalRing R] [IsNoetherianRing R] in lemma smul_lift_of_filtration
     (Mi : Ideal R)
@@ -257,27 +275,7 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma smul_lift_of_filtration
     obtain ⟨δ_s, hδ_s_I, hδ_s_eq⟩ := hlift_span s hs_span
     refine ⟨of Mi R m * δ_s, I₀.mul_mem_left _ hδ_s_I, ?_⟩
     rw [map_mul, evalₐ_of]
-    have hdiff_ker : evalₐ Mi (n0 + K + 1) δ_s -
-        Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s ∈
-        RingHom.ker (Ideal.Quotient.factor
-          (Ideal.pow_le_pow_right (show n0 + 1 ≤ n0 + K + 1 by omega))) := by
-      rw [RingHom.mem_ker, map_sub,
-        show Ideal.Quotient.factor _ (evalₐ Mi (n0 + K + 1) δ_s) =
-          evalₐ Mi (n0 + 1) δ_s from factorPow_comp_evalₐ_noeth Mi (by omega) δ_s,
-        hδ_s_eq, Ideal.Quotient.factor_mk, sub_self]
-    rw [Ideal.Quotient.factor_ker] at hdiff_ker
-    have hmk_kills : Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) m *
-        (evalₐ Mi (n0 + K + 1) δ_s -
-          Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s) = 0 := by
-      obtain ⟨q, hq_mem, hq_eq⟩ := (Ideal.mem_map_iff_of_surjective _
-        Ideal.Quotient.mk_surjective).mp hdiff_ker
-      rw [← hq_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
-      exact Ideal.pow_le_pow_right (by omega)
-        (show m * q ∈ Mi ^ (K + (n0 + 1)) by
-           rw [pow_add]
-           exact Ideal.mul_mem_mul hm hq_mem)
-    rw [mul_sub] at hmk_kills
-    rw [sub_eq_zero.mp hmk_kills, show m • s = m * s from rfl, ← map_mul]
+    exact evalₐ_mk_smul_eq R Mi n0 K m s hm δ_s hδ_s_eq
   · intro a b ⟨δa, hδaI, hδaeq⟩ ⟨δb, hδbI, hδbeq⟩
     exact ⟨δa + δb, I₀.add_mem hδaI hδbI, by rw [map_add, hδaeq, hδbeq, map_add]⟩
 
@@ -310,36 +308,10 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma coeff_decomp_of_smul
            rw [← Ideal.map_pow]
            exact Ideal.mem_map_of_mem _ hm), ?_⟩
     have hsum_eq : Finset.sum genS (fun g => (of Mi R m * f g) * g) = of Mi R m * δ_s := by
-      have : Finset.sum genS (fun g => of Mi R m * f g * g) =
-          of Mi R m * Finset.sum genS (fun g => f g * g) := by
-        rw [Finset.mul_sum]
-        congr 1
-        ext g
-        ring_nf
-      rw [this, ← hf_sum]
-      congr 1
+      rw [← hf_sum, Finset.mul_sum]
+      exact Finset.sum_congr rfl fun g _ => by ring
     rw [hsum_eq, map_mul, evalₐ_of]
-    have hdiff_ker : evalₐ Mi (n0 + K + 1) δ_s -
-        Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s ∈
-        RingHom.ker (Ideal.Quotient.factor
-          (Ideal.pow_le_pow_right (show n0 + 1 ≤ n0 + K + 1 by omega))) := by
-      rw [RingHom.mem_ker, map_sub,
-        show Ideal.Quotient.factor _ (evalₐ Mi (n0 + K + 1) δ_s) =
-          evalₐ Mi (n0 + 1) δ_s from factorPow_comp_evalₐ_noeth Mi (by omega) δ_s,
-        hδ_s_eq, Ideal.Quotient.factor_mk, sub_self]
-    rw [Ideal.Quotient.factor_ker] at hdiff_ker
-    have hmk_kills : Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) m *
-        (evalₐ Mi (n0 + K + 1) δ_s -
-          Ideal.Quotient.mk (Mi ^ (n0 + K + 1)) s) = 0 := by
-      obtain ⟨q, hq_mem, hq_eq⟩ := (Ideal.mem_map_iff_of_surjective _
-        Ideal.Quotient.mk_surjective).mp hdiff_ker
-      rw [← hq_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
-      exact Ideal.pow_le_pow_right (by omega)
-        (show m * q ∈ Mi ^ (K + (n0 + 1)) by
-           rw [pow_add]
-           exact Ideal.mul_mem_mul hm hq_mem)
-    rw [mul_sub] at hmk_kills
-    rw [sub_eq_zero.mp hmk_kills, show m • s = m * s from rfl, ← map_mul]
+    exact evalₐ_mk_smul_eq R Mi n0 K m s hm δ_s hδ_s_eq
   · intro a b ⟨ca, hcaM, hcaeq⟩ ⟨cb, hcbM, hcbeq⟩
     refine ⟨fun g => ca g + cb g,
       fun g hg => ((Ideal.map (algebraMap R (AdicCompletion Mi R)) Mi) ^ K).add_mem
@@ -379,15 +351,9 @@ omit [IsLocalRing R] [IsNoetherianRing R] in lemma extract_filtration_rep
     Ideal.Quotient.mk_surjective).mp he_in_map
   have hr_FN : r ∈ FN (n0 + K) := by
     rw [hFN_def]
-    exact ⟨hr_pow, by change r ∈ Ideal.comap (Ideal.Quotient.mk (Mi ^ (n0 + K + 1)))
-                        (Ideal.map (evalₐ Mi (n0 + K + 1)).toRingHom J)
-                      rw [Ideal.mem_comap]
-                      rw [hr_eq]
-                      exact Ideal.mem_map_of_mem _ heJ⟩
-  have hr_in_smul : r ∈ (Mi ^ K • FN_n0_sub : Submodule R R) := by
-    rw [hn0_pow]
-    exact (hFN_def (n0 + K) ▸ hr_FN : r ∈ (FN (n0 + K) : Submodule R R))
-  exact ⟨r, hr_in_smul, hr_eq.symm⟩
+    exact ⟨hr_pow, Ideal.mem_comap.mpr (hr_eq ▸ Ideal.mem_map_of_mem _ heJ)⟩
+  refine ⟨r, ?_, hr_eq.symm⟩
+  simp_all
 
 /-- Every ideal of the adic completion of a Noetherian local ring is finitely generated. -/
 private def adicCompletion_ideal_fg_proof : PLift (
@@ -414,19 +380,13 @@ private def adicCompletion_ideal_fg_proof : PLift (
       (surjective_evalₐ Mi (n + 1))).mpr ⟨y, hyJ, ?_⟩
     have heval : evalₐ Mi (n + 1) y = Ideal.Quotient.mk (Mi ^ (n + 1)) r := by
       rw [← factorPow_comp_evalₐ_noeth Mi (Nat.le_succ (n + 1)) y]
-      change Ideal.Quotient.factorPow Mi _ ((evalₐ Mi (n + 1 + 1)).toRingHom y) =
-        Ideal.Quotient.mk (Mi ^ (n + 1)) r
-      conv_lhs => rw [show (evalₐ Mi (n + 1 + 1)).toRingHom y =
-        Ideal.Quotient.mk (Mi ^ (n + 1 + 1)) r from hyr]
-      rfl
+      simp_all
     exact heval
   have hFN_smul_sub : forall n, Mi * FN n ≤ FN (n + 1) :=
     filtration_smul_le R Mi J FN hFN_def
   -- Build the Ideal.Filtration and prove stability
   have hFN_smul_R : forall n, Mi • (FN n : Submodule R R) ≤ (FN (n + 1) : Submodule R R) := by
-    intro n
-    rw [Ideal.smul_eq_mul]
-    exact hFN_smul_sub n
+    simp_all
   set F_filt : Mi.Filtration R :=
     { N := fun n => (FN n : Submodule R R)
       mono := fun n => hFN_mono_sub n
@@ -465,12 +425,10 @@ private def adicCompletion_ideal_fg_proof : PLift (
     rcases hx with hx | hx
     · rw [Finset.mem_image] at hx
       obtain ⟨a, ha, rfl⟩ := hx
-      rw [dif_pos ha]
-      exact hlJ_mem a ha
+      simp_all
     · rw [Finset.mem_image] at hx
       obtain ⟨r, hr, rfl⟩ := hx
-      rw [dif_pos hr]
-      exact hlF_mem r hr
+      simp_all
   · -- HARD DIRECTION: J ≤ Ideal.span ↑(genJ ∪ genF)
     -- It suffices to show ∀ x ∈ J, ∀ N, x ∈ I₀ + M̂^N, then conclude by Hausdorff.
     set I₀ := Ideal.span (↑(genJ ∪ genF) : Set (AdicCompletion Mi R))
@@ -485,12 +443,10 @@ private def adicCompletion_ideal_fg_proof : PLift (
       rcases hz with hz | hz
       · rw [Finset.mem_image] at hz
         obtain ⟨a, ha, rfl⟩ := hz
-        rw [dif_pos ha]
-        exact hlJ_mem a ha
+        simp_all
       · rw [Finset.mem_image] at hz
         obtain ⟨r, hr, rfl⟩ := hz
-        rw [dif_pos hr]
-        exact hlF_mem r hr
+        simp_all
     have hgenJ_sub : ∀ a ∈ S_J, (if h : a ∈ S_J then lJ a h else 0) ∈ I₀ := by
       intro a ha
       exact Ideal.subset_span (Finset.mem_coe.mpr
@@ -517,8 +473,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         have ht_fin : t ∈ S_F := Finset.mem_coe.mp ht_mem
         refine ⟨of Mi R c * (if h : t ∈ S_F then lF t h else 0),
           I₀.mul_mem_left _ (hgenF_sub t ht_fin), ?_⟩
-        rw [dif_pos ht_fin, map_mul, evalₐ_of, hlF_eq t ht_fin]
-        rw [show c • t = c * t from rfl, ← map_mul]
+        simp_all
     -- Phase 1: ∀ K x ∈ J, x ∈ I₀ ⊔ Mhat^(n0 + K)
     suffices hphase1 : ∀ (K : ℕ) (x : AdicCompletion Mi R), x ∈ J →
         x ∈ I₀ ⊔ Mhat ^ (n0 + K) by
@@ -653,9 +608,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         simp only [sumG, zero_mul, Finset.sum_const_zero]
       have csd0 : { c // CSDPred 0 c } := ⟨fun _ => 0, by
         constructor
-        · show x - y₀ - sumG (fun _ => 0) ∈ _
-          rw [hsum_zero, sub_zero]
-          rwa [Nat.add_zero]
+        · simp_all
         · show x - y₀ - sumG (fun _ => 0) ∈ _
           rw [hsum_zero, sub_zero]
           exact J.sub_mem hx (hI0_le_J hy₀)⟩
@@ -720,8 +673,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
       have hcLim_spec : ∀ g, g ∈ genS → ∀ n,
           pc n g ≡ cLim g [SMOD (Mi ^ n • ⊤ : Submodule R (AdicCompletion Mi R))] := by
         intro g hg n
-        simp only [cLim, dif_pos hg]
-        exact (hpc_lim g hg).choose_spec n
+        simpa only [cLim, dif_pos hg] using (hpc_lim g hg).choose_spec n
       -- Step 7: L = y₀ + ∑ cLim(g) * g by Hausdorff, hence L ∈ I₀
       suffices hL_eq : L = y₀ + sumG cLim from
         hL_eq ▸ I₀.add_mem hy₀ (hsum_in_I₀ cLim)
@@ -790,8 +742,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
         have ha_fin : a ∈ S_J := ha
         exact (Ideal.mem_map_iff_of_surjective _ (surjective_evalₐ Mi n0)).mpr
           ⟨if h : a ∈ S_J then lJ a h else 0, hgenJ_sub a ha_fin, by
-            rw [dif_pos ha_fin]
-            exact hlJ_eq a ha_fin⟩
+            simp_all⟩
     | succ K ih =>
       intro x hx
       obtain ⟨y, hy, e, he, hxye⟩ := Submodule.mem_sup.mp (ih x hx)
@@ -802,8 +753,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
       obtain ⟨δ, hδI, hδeq⟩ := smul_lift_of_filtration R Mi n0 K (FN n0) S_F
         hS_F I₀ hlift_span r hr_in_smul
       have hsum : (y + δ) + (e - δ) = x := by
-        rw [show y + δ + (e - δ) = y + e from by abel]
-        exact hxye
+        simp_all
       have hmem_ker : e - δ ∈ Mhat ^ (n0 + (K + 1)) := by
         rw [show n0 + (K + 1) = n0 + K + 1 from by omega, ← hker_eq,
           RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,

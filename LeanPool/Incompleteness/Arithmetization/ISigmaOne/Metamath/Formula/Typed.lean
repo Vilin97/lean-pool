@@ -92,29 +92,21 @@ namespace Semiformula
 
 @[simp] lemma val_falsum : (⊥ : L.Semiformula n).val = ^⊥ := rfl
 
-@[simp] lemma val_and (p q : L.Semiformula n) :
-    (p ⋏ q).val = p.val ^⋏ q.val := rfl
+@[simp] lemma val_and (p q : L.Semiformula n) : (p ⋏ q).val = p.val ^⋏ q.val := rfl
 
-@[simp] lemma val_or (p q : L.Semiformula n) :
-    (p ⋎ q).val = p.val ^⋎ q.val := rfl
+@[simp] lemma val_or (p q : L.Semiformula n) : (p ⋎ q).val = p.val ^⋎ q.val := rfl
 
-@[simp] lemma val_neg (p : L.Semiformula n) :
-    (∼p).val = L.neg p.val := rfl
+@[simp] lemma val_neg (p : L.Semiformula n) : (∼p).val = L.neg p.val := rfl
 
-@[simp] lemma val_imp (p q : L.Semiformula n) :
-    (p ==> q).val = L.imp p.val q.val := rfl
+@[simp] lemma val_imp (p q : L.Semiformula n) : (p ==> q).val = L.imp p.val q.val := rfl
 
-@[simp] lemma val_all (p : L.Semiformula (n + 1)) :
-    p.all.val = ^∀ p.val := rfl
+@[simp] lemma val_all (p : L.Semiformula (n + 1)) : p.all.val = ^∀ p.val := rfl
 
-@[simp] lemma val_ex (p : L.Semiformula (n + 1)) :
-    p.ex.val = ^∃ p.val := rfl
+@[simp] lemma val_ex (p : L.Semiformula (n + 1)) : p.ex.val = ^∃ p.val := rfl
 
-@[simp] lemma val_iff (p q : L.Semiformula n) :
-    (p <=> q).val = L.iff p.val q.val := rfl
+@[simp] lemma val_iff (p q : L.Semiformula n) : (p <=> q).val = L.iff p.val q.val := rfl
 
-lemma val_inj {p q : L.Semiformula n} :
-    p.val = q.val ↔ p = q := by rcases p; rcases q; simp
+lemma val_inj {p q : L.Semiformula n} : p.val = q.val ↔ p = q := by rcases p; rcases q; simp
 
 @[ext] lemma ext {p q : L.Semiformula n} (h : p.val = q.val) : p = q := val_inj.mp h
 
@@ -147,8 +139,7 @@ lemma val_inj {p q : L.Semiformula n} :
 
 lemma imp_def (p q : L.Semiformula n) : p ==> q = ∼p ⋎ q := by ext; simp [imp]
 
-@[simp] lemma neg_neg (p : L.Semiformula n) : ∼∼p = p := by
-  ext; simp [Language.IsUFormula.neg_neg]
+@[simp] lemma neg_neg (p : L.Semiformula n) : ∼∼p = p := by ext; simp [Language.IsUFormula.neg_neg]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def shift (p : L.Semiformula n) : L.Semiformula n := ⟨L.shift p.val, p.prop.shift⟩
@@ -200,12 +191,10 @@ def substs (p : L.Semiformula n) (w : L.SemitermVec n m) : L.Semiformula m :=
     (p ⋎ q).substs w = p.substs w ⋎ q.substs w := by ext; simp [substs]
 @[simp] lemma substs_all (w : L.SemitermVec n m) (p : L.Semiformula (n + 1)) :
     p.all.substs w = (p.substs w.q).all := by
-  ext; simp [substs, Language.bvar, Language.qVec, Language.SemitermVec.bShift,
-    Language.SemitermVec.q, w.prop.lh]
+  ext; simp_all
 @[simp] lemma substs_ex (w : L.SemitermVec n m) (p : L.Semiformula (n + 1)) :
     p.ex.substs w = (p.substs w.q).ex := by
-  ext; simp [substs, Language.bvar, Language.qVec, Language.SemitermVec.bShift,
-    Language.SemitermVec.q, w.prop.lh]
+  ext; simp_all
 
 @[simp] lemma substs_neg (w : L.SemitermVec n m) (p : L.Semiformula n) :
     (∼p).substs w = ∼(p.substs w) := by
@@ -265,12 +254,9 @@ lemma subst_eq_self {n : V} (w : L.SemitermVec n n) (p : L.Semiformula n) (H : �
 @[simp] lemma subst_eq_self₁ (p : L.Semiformula (0 + 1)) :
     p^/[(L.bvar 0 (by simp)).sing] = p := by
   apply subst_eq_self
-  simp only [zero_add, lt_one_iff_eq_zero]
-  rintro _ rfl
-  simp
+  simp_all
 
-@[simp] lemma subst_nil_eq_self (w : L.SemitermVec 0 0) :
-    p^/[w] = p := subst_eq_self _ _ (by simp)
+@[simp] lemma subst_nil_eq_self (w : L.SemitermVec 0 0) : p^/[w] = p := subst_eq_self _ _ (by simp)
 
 lemma shift_substs {n m : V} (w : L.SemitermVec n m) (p : L.Semiformula n) :
     (p^/[w]).shift = p.shift^/[w.shift] := by
@@ -288,45 +274,6 @@ end Language
 
 end «lp_section_1»
 
-/-
-section typed_isfvfree
-
-namespace Language
-namespace Semiformula
-
-def FVFree (p : L.Semiformula n) : Prop := L.IsFVFree n p.val
-
-lemma FVFree.iff {p : L.Semiformula n} : p.FVFree ↔ p.shift = p := by
-  simp [FVFree, Language.IsFVFree, ext_iff]
-
-@[simp] lemma Fvfree.verum : (⊤ : L.Semiformula n).FVFree := by simp [FVFree]
-
-@[simp] lemma Fvfree.falsum : (⊥ : L.Semiformula n).FVFree := by simp [FVFree]
-
-@[simp] lemma Fvfree.and {p q : L.Semiformula n} :
-    (p ⋏ q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff, FVFree.iff]
-
-@[simp] lemma Fvfree.or {p q : L.Semiformula n} : (p ⋎ q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.neg {p : L.Semiformula n} : (∼p).FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.all {p : L.Semiformula (n + 1)} : p.all.FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.ex {p : L.Semiformula (n + 1)} : p.ex.FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.imp {p q : L.Semiformula n} : (p ==> q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff]
-
-end Semiformula
-end Language
-
-end typed_isfvfree
--/
 
 open Formalized
 

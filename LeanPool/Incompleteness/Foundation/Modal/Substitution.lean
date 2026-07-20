@@ -64,12 +64,10 @@ end Formula
 
 
 @[simp] lemma subst_id {φ : Formula α} :
-    φ⟦.id⟧ = φ := by
-  induction φ using Formula.rec' <;> simp_all;
+    φ⟦.id⟧ = φ := by induction φ using Formula.rec' <;> simp_all;
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Modal.Substitution.comp (s₁ s₂ : Substitution α) :
-    Substitution α :=
+def _root_.LO.Modal.Substitution.comp (s₁ s₂ : Substitution α) : Substitution α :=
   fun a => (s₁ a)⟦s₂⟧
 /-- Imported declaration from the Incompleteness formalization. -/
 infixr:80 " ∘ " => Substitution.comp

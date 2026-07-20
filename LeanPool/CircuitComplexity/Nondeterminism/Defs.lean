@@ -90,9 +90,7 @@ theorem existQuantify_mono {f g : BitString (k + m) → Bool}
 theorem forallQuantify_mono {f g : BitString (k + m) → Bool}
     (h : ∀ z, f z = true → g z = true) {y : BitString m} :
     forallQuantify f y = true → forallQuantify g y = true := by
-  simp only [forallQuantify_eq_true]
-  intro hf x
-  exact h _ (hf x)
+  simp_all
 
 /-- Constant true: existential quantification is always true. -/
 @[simp]
@@ -145,8 +143,12 @@ theorem existQuantify_succ (f : BitString ((k + 1) + m) → Bool) (y : BitString
       simp only [Fin.append, Fin.addCases]
       split_ifs with h1 h2 h3 <;> simp_all <;> try omega
       · simp_all [Fin.castLT]
-      · congr 1; simp [Fin.ext_iff]; omega
-      · congr 1; simp [Fin.ext_iff]; omega
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
     · left
       refine ⟨fun i => a ⟨i.val + 1, by omega⟩, ?_⟩
       convert ha using 2
@@ -154,18 +156,32 @@ theorem existQuantify_succ (f : BitString ((k + 1) + m) → Bool) (y : BitString
       simp only [Fin.append, Fin.addCases]
       split_ifs with h1 h2 h3 <;> simp_all <;> try omega
       · simp_all [Fin.castLT]
-      · congr 1; simp [Fin.ext_iff]; omega
-      · congr 1; simp [Fin.ext_iff]; omega
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
   · rintro (⟨x, hx⟩ | ⟨x, hx⟩)
-    · exact ⟨fun i => if h : i.val = 0 then false else x ⟨i.val - 1, by omega⟩, by
-        convert hx using 2; ext ⟨i, hi⟩; simp only [Fin.append, Fin.addCases]
-        split_ifs <;> simp_all <;> try omega
-        · exfalso; simp_all [Fin.castLT]
-        · congr 1; simp [Fin.ext_iff]; omega⟩
-    · exact ⟨fun i => if h : i.val = 0 then true else x ⟨i.val - 1, by omega⟩, by
-        convert hx using 2; ext ⟨i, hi⟩; simp only [Fin.append, Fin.addCases]
-        split_ifs <;> simp_all <;> try omega
-        · exfalso; simp_all [Fin.castLT]
-        · congr 1; simp [Fin.ext_iff]; omega⟩
+    · refine ⟨fun i => if h : i.val = 0 then false else x ⟨i.val - 1, by omega⟩, ?_⟩
+      convert hx using 2
+      ext ⟨i, hi⟩
+      simp only [Fin.append, Fin.addCases]
+      split_ifs <;> simp_all <;> try omega
+      · exfalso
+        simp_all [Fin.castLT]
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
+    · refine ⟨fun i => if h : i.val = 0 then true else x ⟨i.val - 1, by omega⟩, ?_⟩
+      convert hx using 2
+      ext ⟨i, hi⟩
+      simp only [Fin.append, Fin.addCases]
+      split_ifs <;> simp_all <;> try omega
+      · exfalso
+        simp_all [Fin.castLT]
+      · congr 1
+        simp [Fin.ext_iff]
+        omega
 
 end CircuitComplexity

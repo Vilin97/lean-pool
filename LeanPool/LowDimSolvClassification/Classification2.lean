@@ -32,14 +32,12 @@ variable {K L : Type*} [Field K] [LieRing L] [LieAlgebra K L]
 lemma abelian_or_basis (h : finrank K L = 2) :
   IsLieAbelian L ∨ (∃ B : Basis (Fin 2) K L, ⁅B 0, B 1⁆ = B 1) := by
   by_cases s : IsLieAbelian L
-  · left
-    assumption
+  · simp_all
   · right
     simp only [IsLieAbelian] at s
     have t : (∃ X Y : L, ⁅X,Y⁆ ≠ 0) := by
       have u : ¬ (∀ X Y : L, ⁅X,Y⁆ = 0) := fun H ↦ s ⟨ H ⟩
-      push Not at u
-      assumption
+      simp_all
     rcases t with ⟨x, y, hxy⟩
     have ⟨S_b, S_b0, S_b1⟩ := basis_of_bracket_ne_zero h _ _ hxy
     have ⟨ α , β , pf ⟩ : ∃ (α β : K), ⁅ x , y ⁆ = α • x + β • y := by
@@ -47,66 +45,34 @@ lemma abelian_or_basis (h : finrank K L = 2) :
       let αβ := S_b.repr ⁅ x , y ⁆
       exists (αβ 0),(αβ 1)
       rw [Finsupp.linearCombination_apply] at c
-      rw [← c]
-      rw [Finsupp.sum_fintype]
-      · rw [Fin.sum_univ_two]
-        rw [S_b0, S_b1]
+      rw [← c, Finsupp.sum_fintype]
+      · rw [Fin.sum_univ_two, S_b0, S_b1]
       · simp
     have ⟨ X , Y, pf1, pf2⟩ : ∃ X Y : L, ⁅X , Y⁆ = Y ∧ Y ≠ 0 := by
       by_cases hα : (α = 0)
       · exists (1 / β) • x, y
-        have β_ne_zero : β ≠ 0 := by
-          intro hβ
-          rw [hα, hβ] at pf
-          apply hxy
-          simp at pf
-          assumption
-        constructor
-        · calc ⁅(1 / β) • x, y⁆ = (1 / β) • ⁅x, y⁆  := by
-                simp
-              _ = ((1 / β) * β) • y := by
-                rw [pf, hα]; simp [← smul_assoc]
-              _ = y := by
-                rw [one_div_mul_cancel β_ne_zero]; simp
-        · rw [hα] at pf
-          simp only [zero_smul, zero_add] at pf
-          rw [pf] at hxy
-          exact right_ne_zero_of_smul hxy
+        simp_all
       · exists -(1 / α) • y, x + (β / α) • y
         constructor
-        · calc ⁅-(1 / α) • y, x + (β / α) • y⁆ = (-(1 / α)) • (-1 : K) • ⁅x, y⁆ := by
-                simp
-              _ = ((-(1 / α)) * (-1)) • ⁅x, y⁆ := by
-                rw [← mul_smul]
-              _ = (1 / α) • ⁅x, y⁆ := by
-                simp
-              _ = (1 / α) • (α • x + β • y) := by
-                rw [pf]
-              _ = ((1 / α) • α • x + (1 / α) • β • y) := by
-                simp
-              _ = (((1 / α) * α) • x + (1 / α) • β • y) := by
-                rw [mul_smul]
-              _ = x + (1 / α) • β • y := by
-                rw [one_div_mul_cancel hα];simp
-              _ = x + α⁻¹ • β • y := by
-                rw [@one_div]
-              _ = x + (α⁻¹ * β) • y := by
-                rw [← mul_smul]
-              _ = x + (β / α) • y := by
-                rw [@inv_mul_eq_div]
+        · calc ⁅-(1 / α) • y, x + (β / α) • y⁆ = (-(1 / α)) • (-1 : K) • ⁅x, y⁆ := by simp
+              _ = ((-(1 / α)) * (-1)) • ⁅x, y⁆ := by rw [← mul_smul]
+              _ = (1 / α) • ⁅x, y⁆ := by simp
+              _ = (1 / α) • (α • x + β • y) := by rw [pf]
+              _ = ((1 / α) • α • x + (1 / α) • β • y) := by simp
+              _ = (((1 / α) * α) • x + (1 / α) • β • y) := by rw [mul_smul]
+              _ = x + (1 / α) • β • y := by rw [one_div_mul_cancel hα];simp
+              _ = x + α⁻¹ • β • y := by rw [@one_div]
+              _ = x + (α⁻¹ * β) • y := by rw [← mul_smul]
+              _ = x + (β / α) • y := by rw [@inv_mul_eq_div]
         · intro Heq
           apply hxy
-          calc ⁅x, y⁆ = ⁅x, y⁆ + ((β / α) • ⁅y, y⁆) := by
-                simp
-              _ = ⁅x +(β / α) • y, y⁆ := by
-                simp
-              _ = 0 := by
-                rw [Heq]; simp
+          calc ⁅x, y⁆ = ⁅x, y⁆ + ((β / α) • ⁅y, y⁆) := by simp
+              _ = ⁅x +(β / α) • y, y⁆ := by simp
+              _ = 0 := by rw [Heq]; simp
     rw [← pf1] at pf2
     have ⟨ B, u ⟩ := basis_of_bracket_ne_zero h X Y pf2
     use B
-    rw [u.1, u.2]
-    assumption
+    simp_all
 
 theorem classification (h : finrank K L = 2) :
     Nonempty (L ≃ₗ⁅K⁆ Abelian K) ∨ Nonempty (L ≃ₗ⁅K⁆ Affine K) := by
@@ -130,16 +96,12 @@ theorem classification (h : finrank K L = 2) :
         intro x y
         change ![(B.repr (x + y)) 0, (B.repr (x + y)) 1] =
           ![(B.repr x) 0, (B.repr x) 1] + ![(B.repr y) 0, (B.repr y) 1]
-        rw [map_add, show (B.repr x + B.repr y) 0 = B.repr x 0 + B.repr y 0 from rfl,
-          show (B.repr x + B.repr y) 1 = B.repr x 1 + B.repr y 1 from rfl,
-          Matrix.cons_add_cons, Matrix.cons_add_cons, Matrix.empty_add_empty]
+        simp_all
       map_smul' := by
         intro r x
         change ![(B.repr (r • x)) 0, (B.repr (r • x)) 1] =
           (RingHom.id K) r • ![(B.repr x) 0, (B.repr x) 1]
-        rw [map_smul, show (r • B.repr x) 0 = r * B.repr x 0 from rfl,
-          show (r • B.repr x) 1 = r * B.repr x 1 from rfl, RingHom.id_apply,
-          Matrix.smul_cons, Matrix.smul_cons, Matrix.smul_empty, smul_eq_mul, smul_eq_mul]
+        simp_all
       map_lie' := by
         intro x y
         have lie_repr : ⁅ x , y ⁆ = (B.repr x 0 * B.repr y 1 - B.repr y 0 * B.repr x 1) • B 1 := by
@@ -194,9 +156,7 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
    obtain (a | ⟨ B, pfB ⟩) := Dim2.abelian_or_basis dim2
    · apply ofAbelianIsSolvable
    · have h1 : span K (span K {B 1}).carrier= span K {B 1} := by
-      apply le_antisymm
-      · exact span_le.mpr fun ⦃a⦄ a ↦ a
-      · apply subset_span
+      simp_all
      have hh : {m | ∃ (x : L) (n : L), ⁅x, n⁆ = m} = (span K {B 1}).carrier := by
       ext y
       constructor
@@ -205,8 +165,7 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
         rw [Basis.repr_fin_two B x,Basis.repr_fin_two B n] at hxn
         simp only [lie_add, lie_smul, add_lie, smul_lie, lie_self, smul_zero, zero_add,
           add_zero] at hxn
-        rw [<- lie_skew] at hxn
-        rw [pfB] at hxn
+        rw [<- lie_skew, pfB] at hxn
         have u : y = ((-1: K) • B.repr n 0 • (B.repr x) 1 + (B.repr n) 1 • (B.repr x) 0) • B 1 := by
           rw [← hxn]
           simp only [smul_neg, smul_eq_mul, neg_mul, one_mul]
@@ -215,20 +174,16 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
         refine
           (span K {B 1}).smul_mem' (-1 • (B.repr n) 0 • (B.repr x) 1 + (B.repr n) 1 • (B.repr x) 0)
             ?h.mp.intro.intro.a
-        simp only [AddSubsemigroup.mem_carrier, AddSubmonoid.mem_toSubsemigroup, mem_toAddSubmonoid]
-        apply  mem_span_singleton_self
+        simp_all
       · simp only [Fin.isValue, carrier_eq_coe, SetLike.mem_coe, Set.mem_setOf_eq]
         intro hy
         apply mem_span_singleton.mp at hy
         obtain ⟨α, hα⟩ := hy
         exists (α • B 0), B 1
-        rw [← hα]
-        simp only [smul_lie]
-        rw [pfB]
+        simp_all
      have : (commutator K L).toSubmodule = span K {x : L | ∃ (y : L) (z : L), ⁅y,
        z⁆ = x} := commutator_eq_span
-     rw [hh] at this
-     rw [h1] at this
+     rw [hh, h1] at this
      have dimcomm : finrank K (commutator K L).toSubmodule = 1 := by
       rw [this]
       refine finrank_span_singleton ?hv

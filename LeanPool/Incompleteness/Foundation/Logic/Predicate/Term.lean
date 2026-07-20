@@ -184,8 +184,7 @@ lemma freeVariables_func {k} (f : L.Func k) (v : Fin k → Semiterm L ξ n) :
   rfl
 
 @[simp] lemma freeVariables_empty {ο : Type*} [IsEmpty ο] {t : Semiterm L ο n} :
-    t.freeVariables = ∅ := by
-  ext x; exact IsEmpty.elim inferInstance x
+    t.freeVariables = ∅ := by ext x; exact IsEmpty.elim inferInstance x
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev «FVar?» (t : Semiterm L ξ n) (x : ξ) : Prop := x ∈ t.freeVariables

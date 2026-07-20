@@ -193,8 +193,7 @@ private lemma cyl_inter_eq_cyl_update (N : ℕ → ℕ) (n k : ℕ) :
 
 private lemma cyl_ext (N N' : ℕ → ℕ) (n : ℕ) (h : ∀ i, i ≤ n → N i = N' i) :
     Cyl N n = Cyl N' n := by
-  ext g; simp only [Cyl, Set.mem_setOf_eq]
-  exact ⟨fun hg i hi => h i hi ▸ hg i hi, fun hg i hi => (h i hi).symm ▸ hg i hi⟩
+  ext g; simp_all
 
 /-- Truncation: replace g(i) by min(g(i), N(i)) to bring any g into bounded set. -/
 private noncomputable def truncate (N : ℕ → ℕ) (g : ℕ → ℕ) : ℕ → ℕ :=
@@ -246,18 +245,12 @@ private lemma iInter_closure_image_cyl_eq
     have hg_conv : Tendsto (fun n => g (φ n)) atTop (𝓝 g_star) := by
       rw [tendsto_pi_nhds]
       intro i
-      -- In discrete ℕ, convergence means eventually equal
       simp only [nhds_discrete, Filter.tendsto_pure]
-      -- Eventually g'(φ n) i = g_star i (from hg'_conv)
       have hg'_ev : ∀ᶠ n in atTop, g' (φ n) i = g_star i := by
         rw [tendsto_pi_nhds] at hg'_conv
-        have := hg'_conv i
-        simp only [nhds_discrete, Filter.tendsto_pure] at this
-        exact this
-      -- Eventually φ n ≥ i (since φ is strictly monotone)
+        simp_all
       have hφ_ev : ∀ᶠ n in atTop, i ≤ φ n :=
         (hφ_strict.tendsto_atTop).eventually (Filter.eventually_ge_atTop i)
-      -- When both hold, g(φ n) i = g'(φ n) i = g_star i
       filter_upwards [hg'_ev, hφ_ev] with n h1 h2
       rw [← h1, hg'_agree (φ n) i h2]
     -- f(g(φ n)) → f(g_star) by continuity
@@ -267,12 +260,9 @@ private lemma iInter_closure_image_cyl_eq
     have hfy : Tendsto (fun n => f (g (φ n))) atTop (𝓝 y) := by
       rw [Metric.tendsto_atTop]
       intro ε hε
-      -- 1/(n+1) → 0, so eventually 1/(φ n + 1) < ε
       have h1div : Tendsto (fun n : ℕ => (1 : ℝ) / (↑n + 1)) atTop (𝓝 0) :=
         tendsto_one_div_add_atTop_nhds_zero_nat
-      -- φ n → ∞
       have hφ_top := hφ_strict.tendsto_atTop
-      -- So 1/(φ n + 1) → 0
       have h_comp : Tendsto (fun n => (1 : ℝ) / (↑(φ n) + 1)) atTop (𝓝 0) :=
         h1div.comp hφ_top
       obtain ⟨M, hM⟩ := (Metric.tendsto_atTop.mp h_comp) ε hε
@@ -281,8 +271,7 @@ private lemma iInter_closure_image_cyl_eq
       have hdist_bound := hg_dist (φ n)
       have hsmall : (1 : ℝ) / (↑(φ n) + 1) < ε := by
         have h := hM n hn
-        rw [Real.dist_0_eq_abs, abs_of_nonneg (by positivity)] at h
-        exact h
+        rwa [Real.dist_0_eq_abs, abs_of_nonneg (by positivity)] at h
       exact lt_trans hdist_bound hsmall
     -- By uniqueness of limits in T2: f(g_star) = y
     have : f g_star = y := tendsto_nhds_unique hf_conv hfy
@@ -376,9 +365,7 @@ theorem MeasureTheory.AnalyticSet.cap_eq_iSup_isCompact
           by_cases heq : i = m + 1
           · subst heq; rfl
           · have him : i ≤ m := by omega
-            change N_seq i i = N_seq (m + 1) i
-            rw [hN_seq_consistent m i him]
-            exact ih i him
+            simp_all
       -- Cyl N n = Cyl (N_seq n) n
       have hcyl_eq : ∀ n, Cyl N n = Cyl (N_seq n) n :=
         fun n => cyl_ext N (N_seq n) n (hN_agree n)

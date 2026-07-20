@@ -44,8 +44,7 @@ private lemma integral_fourier (n : ℤ) :
   have h1 := congr_fun h (-n)
   simp only [Pi.single_apply] at h1
   rw [fourierCoeff] at h1
-  simp only [neg_neg, fourier_zero, smul_eq_mul, mul_one] at h1
-  rw [h1]; simp [neg_eq_zero]
+  simp_all
 
 /-- Fourier orthogonality: `∫ fourier(m) · conj(fourier(n)) = δ_{m,n}`. -/
 private lemma fourier_orthogonality (m n : ℤ) :
@@ -56,11 +55,6 @@ private lemma fourier_orthogonality (m n : ℤ) :
       (fourier m t : ℂ) * (starRingEnd ℂ) (fourier n t : ℂ) = (fourier (m - n) t : ℂ) := by
     intro t; rw [← fourier_neg (n := n), ← fourier_add]; ring_nf
   simp_rw [key]; rw [integral_fourier]; simp [sub_eq_zero]
-
-/-- `‖fourier n t‖ = 1` pointwise. -/
-private lemma norm_fourier_eq_one (n : ℤ) (t : AddCircle T) :
-    ‖(fourier n t : ℂ)‖ = 1 := by
-  simp [fourier_apply, AddCircle.toCircle]
 
 /-- Rewrite `blockPoly` at `r · fourier(1)(t)` as a Fourier series. -/
 private lemma blockPoly_fourier_expansion {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ)
@@ -109,8 +103,7 @@ private lemma dist_peak_to_interval {n ℓ : ℕ} (hℓ : 1 ≤ ℓ) (hn : n ∈
         linarith
     · push Not at hjl2
       have hje : j = ℓ := by omega
-      right; subst hje
-      constructor <;> linarith
+      simp_all
 
 /-- `distToInterval` is always nonneg. -/
 private lemma distToInterval_nonneg (x : ℝ) (j : ℕ) : 0 ≤ distToInterval x j := by
@@ -124,16 +117,14 @@ private lemma dist_peak_ge_max_zero {n ℓ : ℕ} (hℓ : 1 ≤ ℓ) (hn : n ∈
   -- From hdist: distToInterval ≥ max(j-ℓ-1, ℓ-j-1) ≥ j-ℓ-1
   -- From hnonneg: distToInterval ≥ 0
   -- Together: distToInterval ≥ max(j-ℓ-1, 0)
-  simp only [ge_iff_le, Int.cast_max] at hdist ⊢
-  exact max_le (le_trans (le_max_left _ _) hdist) (by exact_mod_cast hnonneg)
+  simp_all
 
 /-- `distToInterval ≥ max(max(j - ℓ - 1, ℓ - j - 1), 0)` for `n ∈ I_ℓ` (symmetric). -/
 private lemma dist_peak_ge_symmetric {n ℓ : ℕ} (hℓ : 1 ≤ ℓ) (hn : n ∈ freqBlock ℓ) (j : ℕ) :
     distToInterval (rStar n) j ≥ max (max ((j : ℤ) - ℓ - 1) ((ℓ : ℤ) - j - 1)) 0 := by
   have hdist := dist_peak_to_interval hℓ hn j
   have hnonneg := distToInterval_nonneg (rStar n) j
-  simp only [ge_iff_le, Int.cast_max] at hdist ⊢
-  exact max_le hdist (by exact_mod_cast hnonneg)
+  simp_all
 
 /-- Circle Parseval: `∫ ‖blockPoly a ℓ (r·ζ)‖² d(haar)(ζ) = ∑_k [k+1 ∈ I_ℓ] ‖a_k‖² r^{2(k+1)}`.
 This uses Fourier orthogonality: the monomials `fourier n` are orthonormal. -/
@@ -219,11 +210,9 @@ private lemma blockPoly_circle_norm_sq {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ)
         by_cases hkk : k1 = k2
         · subst hkk
           simp only [ite_true, mul_one, Complex.mul_conj']; push_cast; rfl
-        · have hne : ¬((k1.val + 1 : ℕ) : ℤ) = ((k2.val + 1 : ℕ) : ℤ) := by
-            push_cast; omega
+        · have hne : ¬((k1.val + 1 : ℕ) : ℤ) = ((k2.val + 1 : ℕ) : ℤ) := by push_cast; omega
           simp only [hne, ite_false, mul_zero, hkk]
-      simp_rw [heval, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
-      push_cast; ring
+      simp_all
     -- From complex integral to real integral:
     -- ‖f t‖² = re(f t * conj(f t)), so ∫ ‖f‖² = re(∫ f * conj f) = ∑ ‖c_k‖²
     have hfconj : ∀ t : AddCircle T,
@@ -362,8 +351,7 @@ theorem block_annulus_leakage {D : ℕ} (a : Fin D → ℂ) {ℓ : ℕ} (hℓ : 
       apply Continuous.intervalIntegrable
       exact continuous_const.mul ((continuous_pow _).mul
         (Real.continuous_exp.comp (continuous_neg.comp (continuous_pow 2))))
-    · simp only [h, ite_false]
-      exact intervalIntegrable_const
+    · simp_all
   -- Exchange integral and sum: ∫ ∑ f_k = ∑ ∫ f_k
   rw [intervalIntegral.integral_finsetSum (μ := volume) (fun k _ => hint k)]
   -- Pull the if outside each integral
@@ -704,8 +692,7 @@ private lemma remainder_annulus_le_far_blocks {D : ℕ} (a : Fin D → ℂ) {M :
     intro r hr
     rw [Set.uIcc_of_le (show (j : ℝ) ≤ j + 1 by linarith)] at hr
     have hr0 : (0 : ℝ) ≤ r := le_trans (Nat.cast_nonneg j) hr.1
-    dsimp only
-    rw [hpw r hr0]
+    simp_all
   rw [heq]
   -- Step 3: Distribute weight over the sum inside the integral
   have integrand_eq : ∀ r : ℝ,

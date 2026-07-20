@@ -49,8 +49,8 @@ lemma coeff_zero_iterate_derivative_Fp_pred {R : Type*} [CommSemiring R] (T : R[
 /-- `P(0)` is the constant coefficient of `P`. -/
 lemma aeval_zero_eq_cast_coeff_zero
     {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A] (P : R[X]) :
-    aeval (0 : A) P = algebraMap R A (P.coeff 0) := by
-  exact (coeff_zero_eq_aeval_zero' (A := A) P).symm
+    aeval (0 : A) P = algebraMap R A (P.coeff 0) :=
+  (coeff_zero_eq_aeval_zero' (A := A) P).symm
 
 /-- If `T ≠ 0`, then `multₐ(Tᵖ) = p * multₐ(T)`. -/
 lemma rootMultiplicity_npow (T : ℤ[X]) (a : ℂ) (p : ℕ) (hT : T ≠ 0) :
@@ -70,9 +70,7 @@ lemma rootMultiplicity_Fp (T : ℤ[X]) (p : ℕ) (a : ℂ) (hT : T ≠ 0) :
   have hmap : (T.map (algebraMap ℤ ℂ)) ≠ 0 :=
     (Polynomial.map_ne_zero_iff (f := algebraMap ℤ ℂ) (hf := Int.cast_injective (α := ℂ))).2 hT
   have hFp : (X^(p - 1) * (T.map (algebraMap ℤ ℂ))^p : ℂ[X]) ≠ 0 := by
-    apply mul_ne_zero
-    · exact pow_ne_zero _ X_ne_zero
-    · exact pow_ne_zero _ hmap
+    simp_all
   by_cases hzero : a = 0
   · subst hzero
     have hXpow : rootMultiplicity (0 : ℂ) (X^(p - 1) : ℂ[X]) = p - 1 := by
@@ -83,8 +81,7 @@ lemma rootMultiplicity_Fp (T : ℤ[X]) (p : ℕ) (a : ℂ) (hT : T ≠ 0) :
       (x := (0 : ℂ)) hFp, hXpow, rootMultiplicity_npow T (0 : ℂ) p hT]
     simp
   · have hXpow : rootMultiplicity a (X^(p - 1) : ℂ[X]) = 0 := by
-      apply rootMultiplicity_eq_zero
-      simpa [IsRoot, eval_X_pow] using (pow_ne_zero (p - 1) hzero)
+      simp_all
     rw [if_neg hzero, Fp, Polynomial.map_mul, Polynomial.map_pow]
     simp only [Polynomial.map_X, Polynomial.map_pow]
     rw [rootMultiplicity_mul (p := (X^(p - 1) : ℂ[X])) (q := (T.map (algebraMap ℤ ℂ))^p)
@@ -105,8 +102,7 @@ def Fpd (T : ℤ[X]) (p : ℕ) : ℤ[X] := sumDeriv (Fp T p)
 lemma iterate_derivative_Fp_eq_factorial_Sp
     {R : Type*} [Semiring R] (T : R[X]) (p i : ℕ) :
     derivative^[i] (Fp T p) = i.factorial • Sp T p i := by
-  simpa [Sp] using
-    (iterate_derivative_eq_factorial_smul_sum (p := Fp T p) (k := i))
+  simpa [Sp] using iterate_derivative_eq_factorial_smul_sum (p := Fp T p) (k := i)
 
 /-- If `multₐ(T) ≥ m`, then `F_{p,d}(a)` is expressed in terms of `Fₚ⁽ⁱ⁾(a)`. -/
 lemma aeval_Fpd (T : ℤ[X]) (p m : ℕ) (a : ℂ) (hT : T ≠ 0)
@@ -134,7 +130,7 @@ def sumStartpDerivFp {R : Type*} [Semiring R] (T : R[X]) (p : ℕ) : R[X]
 
 /-- If `a` is a root of `T`, then `T ≠ 0`. -/
 lemma TwithRootNotZero (T : ℤ[X]) (a : ℂ)
-  (hroot : a ∈ T.aroots ℂ) : T ≠ 0 := by exact (Polynomial.mem_aroots.1 hroot).1
+  (hroot : a ∈ T.aroots ℂ) : T ≠ 0 := (Polynomial.mem_aroots.1 hroot).1
 
 /-- If `a ≠ 0` and `a` is a root of `T`, then `F_{p,d} = ∑ᵢ₌ₚᵈ Fₚ⁽ⁱ⁾(a)`. -/
 lemma aeval_Fpd_at_nonzero (T : ℤ[X]) (p : ℕ) (a : ℂ) (ha : a ≠ 0)

@@ -67,8 +67,8 @@ theorem tsum_gamma_bound (k : ℕ) {x : K} (hx : ‖x‖ < 1) :
   rw [tsum_mul_right]
   refine mul_le_mul_of_nonneg_right ?_ ?_
   · simp_rw [pow_mul]
-    rw [tsum_geometric_of_lt_one (by simp) hx']
-    rw [inv_le_inv₀ (by simpa using hx') (by simpa using hx), sub_le_sub_iff_left]
+    rw [tsum_geometric_of_lt_one (by simp) hx',
+      inv_le_inv₀ (by simpa using hx') (by simpa using hx), sub_le_sub_iff_left]
     exact pow_le_of_le_one (by simp) hx.le (by simp)
   -- hx : ‖x‖ < 1
   -- ⊢ 0 ≤ ∏' (i : ℕ), (1 + ‖x‖ ^ i)

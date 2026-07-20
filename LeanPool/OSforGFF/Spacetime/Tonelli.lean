@@ -77,12 +77,8 @@ lemma schwartz_slice_integrable (f : SchwartzMap SpaceTime ℂ) (t : ℝ) :
       _ ≤ C / (1 + ‖v‖)^5 := by
           apply div_le_div_of_nonneg_left (le_of_lt hC_pos) (by positivity) h_pow_le
   apply Integrable.mono h_dom_integrable
-  · have h1 : Measurable (fun v : SpatialCoords => ((t, v) : ℝ × SpatialCoords)) :=
-      Measurable.prodMk measurable_const measurable_id
-    have h2 : Measurable spacetimeDecomp.symm := spacetimeDecomp.symm.measurable
-    have h3 : Continuous f := f.continuous
-    have h4 : Continuous (fun x : SpaceTime => ‖f x‖) := h3.norm
-    exact (h4.measurable.comp (h2.comp h1)).aestronglyMeasurable
+  · exact (f.continuous.norm.measurable.comp (spacetimeDecomp.symm.measurable.comp
+      (measurable_const.prodMk measurable_id))).aestronglyMeasurable
   · filter_upwards with v
     simp only [Real.norm_of_nonneg (norm_nonneg _)]
     rw [Real.norm_of_nonneg (by positivity : 0 ≤ C / (1 + ‖v‖)^5)]
@@ -207,8 +203,8 @@ theorem schwartz_tonelli_spacetime
         ‖g (spacetimeDecomp.symm p₂)‖ * K t₁ p₂.1) := by
       obtain ⟨C, hC⟩ := hK_bdd
       have hC_pos : 0 ≤ C := le_trans (hK_nn t₁ 0) (hC t₁ 0)
-      have h_bound_int : Integrable (fun p₂ => C * ‖g (spacetimeDecomp.symm p₂)‖) := by
-        exact hg_int.const_mul C
+      have h_bound_int : Integrable (fun p₂ => C * ‖g (spacetimeDecomp.symm p₂)‖) :=
+        hg_int.const_mul C
       have h_meas : AEStronglyMeasurable (fun p₂ : ℝ × SpatialCoords =>
           ‖g (spacetimeDecomp.symm p₂)‖ * K t₁ p₂.1) volume := by
         have h1 : AEStronglyMeasurable (fun p₂ => ‖g (spacetimeDecomp.symm p₂)‖) volume :=
@@ -262,16 +258,9 @@ theorem schwartz_tonelli_spacetime
       apply Integrable.mono' (hGg_int.const_mul C) (h_meas_K.aestronglyMeasurable.mul h_meas_G)
       filter_upwards with t₂
       simp only [Pi.mul_apply]
-      rw [Real.norm_eq_abs, abs_mul]
-      rw [abs_of_nonneg (hK_nn t₁ t₂)]
-      rw [abs_of_nonneg]
-      · apply mul_le_mul_of_nonneg_right (hC t₁ t₂)
-        apply integral_nonneg
-        intro
-        exact norm_nonneg _
-      · apply integral_nonneg
-        intro
-        exact norm_nonneg _
+      rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hK_nn t₁ t₂),
+        abs_of_nonneg (integral_nonneg (fun _ => norm_nonneg _))]
+      exact mul_le_mul_of_nonneg_right (hC t₁ t₂) (integral_nonneg (fun _ => norm_nonneg _))
     have h_final := hf_slice.mul_prod h_right_int
     apply Integrable.congr h_final
     filter_upwards with p
@@ -313,12 +302,10 @@ theorem schwartz_tonelli_spacetime
         simp only [b, G_g]
     _ = K t₁ t₂ * (G_g t₂ * ∫ v₁, a v₁) := by
         congr 1
-        have h_comm : (∫ v₁, a v₁ * G_g t₂) = G_g t₂ * ∫ v₁, a v₁ := by
-          rw [← MeasureTheory.integral_const_mul]
-          apply MeasureTheory.integral_congr_ae
-          filter_upwards with v₁
-          ring
-        exact h_comm
+        rw [← MeasureTheory.integral_const_mul]
+        apply MeasureTheory.integral_congr_ae
+        filter_upwards with v₁
+        ring
     _ = K t₁ t₂ * (G_g t₂ * G_f t₁) := by
         simp only [a, G_f]
     _ = K t₁ t₂ * G_f t₁ * G_g t₂ := by

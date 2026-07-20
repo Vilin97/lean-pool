@@ -55,15 +55,12 @@ private lemma norm_one_add_ge_one {r : ℝ} (hr : 0 ≤ r) {θ : ℝ}
 
 /-- When `‖1 + w‖ ≥ 1`, `rho(w) = ‖1 + w‖ − 1`. -/
 private lemma rho_eq_norm_sub {w : ℂ} (hw : ‖(1 : ℂ) + w‖ ≥ 1) :
-    rho w = ‖(1 : ℂ) + w‖ - 1 := by
-  simp only [rho]; rw [abs_of_nonneg]; linarith
+    rho w = ‖(1 : ℂ) + w‖ - 1 := by simp only [rho]; rw [abs_of_nonneg]; linarith
 
 /-- `‖r * exp(iθ)‖ = r` for `r ≥ 0`. -/
 private lemma norm_r_exp (r θ : ℝ) (hr : 0 ≤ r) :
     ‖(↑r : ℂ) * Complex.exp (Complex.I * ↑θ)‖ = r := by
-  rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hr,
-    show Complex.I * (↑θ : ℂ) = (↑θ : ℂ) * Complex.I from mul_comm _ _,
-    Complex.norm_exp_ofReal_mul_I, mul_one]
+  simp_all
 
 /-! ## Private Lemma 2.6a: Pointwise bound on an arc
 
@@ -99,19 +96,6 @@ private lemma rho_arc_lower_bound {r : ℝ} (hr : 0 ≤ r) {θ : ℝ} (hθ : |θ
   nlinarith [mul_nonneg h1 (Real.sqrt_nonneg 2), mul_nonneg hr (Real.sqrt_nonneg 2),
     mul_nonneg hr h1, sq_nonneg (a - 1 - r / Real.sqrt 2),
     Real.sq_sqrt (show (2 : ℝ) ≥ 0 by norm_num), Real.sqrt_nonneg 2]
-
-/-! ## Private Lemma 2.6b: Algebraic bound
-
-For `r ≥ 0`: `(r + √2) / (r + 2) ≥ 1 / √2`.
-Equivalently: `√2 (r + √2) ≥ r + 2`, i.e., `(√2 − 1) r ≥ 0`.
--/
-private lemma algebraic_bound {r : ℝ} (hr : 0 ≤ r) :
-    (r + Real.sqrt 2) / (r + 2) ≥ 1 / Real.sqrt 2 := by
-  rw [ge_iff_le, div_le_div_iff₀
-    (by positivity : (0 : ℝ) < Real.sqrt 2)
-    (by linarith : (0 : ℝ) < r + 2)]
-  nlinarith [Real.sq_sqrt (show (2 : ℝ) ≥ 0 by norm_num),
-    Real.sqrt_nonneg 2]
 
 /-! ### Auxiliary lemmas for the integral bound -/
 
@@ -171,8 +155,7 @@ theorem rotational_averaging_bound {r : ℝ} (hr : 0 ≤ r) :
           simp only [f, fourier_mk_eq]
           have habs : |θ| ≤ Real.pi / 4 := abs_le.mpr ⟨hθ.1, hθ.2⟩
           calc r ^ 2 / 2
-              = (r / Real.sqrt 2) ^ 2 := by
-                rw [div_pow, Real.sq_sqrt (by norm_num : (2 : ℝ) ≥ 0)]
+              = (r / Real.sqrt 2) ^ 2 := by rw [div_pow, Real.sq_sqrt (by norm_num : (2 : ℝ) ≥ 0)]
             _ ≤ _ := pow_le_pow_left₀ (div_nonneg hr (Real.sqrt_nonneg _))
                       (rho_arc_lower_bound hr habs).le 2)
         ((integrand_continuous r).continuousOn.integrableOn_compact isCompact_Icc)
@@ -193,8 +176,7 @@ theorem rotational_averaging_bound {r : ℝ} (hr : 0 ≤ r) :
   -- Combine with T⁻¹ factor
   rw [smul_eq_mul]
   calc r ^ 2 / 8
-      = T⁻¹ * (r ^ 2 / 2 * (Real.pi / 2)) := by
-        unfold T; field_simp; ring
+      = T⁻¹ * (r ^ 2 / 2 * (Real.pi / 2)) := by unfold T; field_simp; ring
     _ ≤ T⁻¹ * ∫ θ in Set.Ioc (-Real.pi) Real.pi, f θ := by
         apply mul_le_mul_of_nonneg_left (le_trans h_Icc_bound h_mono)
         exact inv_nonneg.mpr (le_of_lt T_pos)

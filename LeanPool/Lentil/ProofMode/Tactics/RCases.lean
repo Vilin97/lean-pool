@@ -57,7 +57,6 @@ theorem Entails_rcases_or_by_idx (idx : Nat)
   apply Entails_revert_by_idx idx
   simp at heq; rcases heq with ⟨r, heq1, heq2⟩
   rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
-  -- Oh
   intro e hΓ hab; exact TLA.or_elim e hab (h1 e hΓ) (h2 e hΓ)
 
 theorem Entails_rcases_or_by_name (chosen : String) :

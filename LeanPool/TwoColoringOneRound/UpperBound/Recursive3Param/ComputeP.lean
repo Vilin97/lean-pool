@@ -84,14 +84,7 @@ lemma dSlice_eq (x : Samples 4) :
           (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2)) else Set.Ici (z0I (x 1) (x 2))) ↔
           d < z0I (x 1) (x 2) := by
       simp [hc']
-    calc
-      d ∈ dSlice x ↔ (d : ℝ) < z0 (x 1) (x 2) := hL
-      _ ↔ d < z0I (x 1) (x 2) := by rfl
-      _ ↔
-          d ∈
-            (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2))
-              else Set.Ici (z0I (x 1) (x 2))) :=
-        hR.symm
+    exact hL.trans hR.symm
   · have hc' : ¬ x 2 < z0I (x 0) (x 1) := by
       exact_mod_cast hc
     have hL : d ∈ dSlice x ↔ z0 (x 1) (x 2) ≤ (d : ℝ) := by
@@ -101,14 +94,7 @@ lemma dSlice_eq (x : Samples 4) :
           (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2)) else Set.Ici (z0I (x 1) (x 2))) ↔
           z0I (x 1) (x 2) ≤ d := by
       simp [hc']
-    calc
-      d ∈ dSlice x ↔ z0 (x 1) (x 2) ≤ (d : ℝ) := hL
-      _ ↔ z0I (x 1) (x 2) ≤ d := by rfl
-      _ ↔
-          d ∈
-            (if x 2 < z0I (x 0) (x 1) then Set.Iio (z0I (x 1) (x 2))
-              else Set.Ici (z0I (x 1) (x 2))) :=
-        hR.symm
+    exact hL.trans hR.symm
 
 lemma lmarginal_D (x : Samples 4) :
     (∫⋯∫⁻_{(3 : Fin 4)}, pInd ∂μ4) x =
@@ -151,10 +137,8 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
   classical
   ext a
   have hbt : (b : ℝ) < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
-  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by
-    simp [Set.mem_Icc, not_le_of_gt hb]
-  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by
-    simp [Set.mem_Ici, not_le_of_gt hbt]
+  have hbIcc : ¬ ((b : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)) := by simp [Set.mem_Icc, not_le_of_gt hb]
+  have hbIci : ¬ ((b : ℝ) ∈ Set.Ici (t : ℝ)) := by simp [Set.mem_Ici, not_le_of_gt hbt]
   have hz0 :
       z0 a b =
         if (t : ℝ) ≤ a then 0 else if (a : ℝ) ≤ b then (t : ℝ) else (b : ℝ) := by
@@ -197,11 +181,9 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
           by_cases hta : (t : ℝ) ≤ a
           · have : (c : ℝ) < 0 := by simpa [hta] using hc
             exact (not_lt_of_ge (show (0 : ℝ) ≤ c from c.property.1) this)
-          · have : (c : ℝ) < b := by simpa [hta, hab] using hc
-            exact hcb (show c < b from this)
+          · simp_all
         · intro hab
-          have hta : ¬ (t : ℝ) ≤ a := by
-            exact not_le_of_gt (lt_of_le_of_lt hab hbt)
+          have hta : ¬ (t : ℝ) ≤ a := by exact not_le_of_gt (lt_of_le_of_lt hab hbt)
           have hab' : (a : ℝ) ≤ b := hab
           simpa [hta, hab'] using hctR
       exact (hL.trans hR.symm)
@@ -222,22 +204,18 @@ lemma aSlice_eq_of_b_lt_t1 {b c : Rand} (hb : b < t1) :
         · intro hc
           have : (c : ℝ) < t := lt_of_lt_of_le hc hz0_le
           exact hct (show c < t from this)
-        · intro hf
-          exact False.elim hf
+        · exact fun hf => hf.elim
       exact (hL.trans hR.symm)
 
 lemma measurableSet_aSlice (b c : Rand) : MeasurableSet (aSlice b c) := by
   classical
   have mz0 : Measurable fun ab : Rand × Rand => z0 ab.1 ab.2 := measurable_z0
   have mPair : Measurable fun a : Rand => ((c : ℝ), z0 a b) := by
-    have mc : Measurable fun _a : Rand => (c : ℝ) := measurable_const
-    have mb : Measurable fun a : Rand => (a, b) := measurable_id.prodMk measurable_const
-    have mz : Measurable fun a : Rand => z0 a b := by
-      change Measurable (fun a : Rand => (fun ab : Rand × Rand => z0 ab.1 ab.2) (a, b))
-      exact mz0.comp mb
-    exact mc.prodMk mz
-  have hopen : IsOpen {p : ℝ × ℝ | p.1 < p.2} := isOpen_lt continuous_fst continuous_snd
-  have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) := hopen.measurableSet
+    have mz : Measurable fun a : Rand => z0 a b :=
+      mz0.comp (measurable_id.prodMk measurable_const)
+    exact measurable_const.prodMk mz
+  have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) :=
+    (isOpen_lt continuous_fst continuous_snd).measurableSet
   -- `c < z0I a b` is definitional equal to `(c : ℝ) < z0 a b`.
   have :
       aSlice b c =
@@ -261,8 +239,7 @@ lemma lintegral_ite_const {α : Type*} [MeasurableSpace α] (μ : Measure α) {s
     (∫⁻ x,
         (s.indicator (fun _ : α => a) x + sᶜ.indicator (fun _ : α => b) x) ∂μ) =
       a * μ s + b * μ sᶜ
-  rw [MeasureTheory.lintegral_add_left (μ := μ) hf (g := fun x => sᶜ.indicator (fun _ : α => b) x)]
-  simp [hs]
+  simp_all
 
 lemma lmarginal_AD (x : Samples 4) :
     (∫⋯∫⁻_({0, 3} : Finset (Fin 4)), pInd ∂μ4) x =
@@ -373,8 +350,7 @@ lemma p_eq_lintegral_innerBC :
     have h :=
       (MeasureTheory.lmarginal_union (μ := μ4) (s := ({1, 2} : Finset (Fin 4)))
         (t := ({0, 3} : Finset (Fin 4))) pInd measurable_pInd (by decide))
-    have huniv : ({1, 2} ∪ {0, 3} : Finset (Fin 4)) = Finset.univ := by
-      decide
+    have huniv : ({1, 2} ∪ {0, 3} : Finset (Fin 4)) = Finset.univ := by decide
     simpa [huniv] using h
   have hsplit_x0 : (∫⋯∫⁻_(Finset.univ : Finset (Fin 4)), pInd ∂μ4) x0 =
         (∫⋯∫⁻_({1, 2} : Finset (Fin 4)),
@@ -393,9 +369,7 @@ lemma p_eq_lintegral_innerBC :
     have h :=
       (MeasureTheory.lmarginal_union (μ := μ4) (s := ({1} : Finset (Fin 4)))
         (t := ({2} : Finset (Fin 4))) f03 hf03 (by decide))
-    have hunion : (({1} : Finset (Fin 4)) ∪ {2}) = ({1, 2} : Finset (Fin 4)) := by
-      decide
-    simpa [hunion] using h
+    simp_all
   have hsplit12_x0 :
       (∫⋯∫⁻_({1, 2} : Finset (Fin 4)), f03 ∂μ4) x0 =
         (∫⋯∫⁻_({1} : Finset (Fin 4)),

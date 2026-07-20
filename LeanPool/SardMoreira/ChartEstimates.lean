@@ -49,8 +49,8 @@ theorem eventually_contDiffAt_comp {f : E × F → G} {ψ : Chart 1 α s} {x : E
 theorem eventually_differentiableAt_comp {f : E × F → G} {ψ : Chart 1 α s} {x : E × ψ.Dom}
     (hx : x ∈ ψ.set) (hfk : ∀ᶠ (y : E × F) in 𝓝[s] ψ x, ContDiffMoreiraHolderAt k α f y)
     (hk : k ≠ 0) :
-    ∀ᶠ y in 𝓝 x.2, DifferentiableAt ℝ (fun y ↦ f (ψ (x.1, y))) y := by
-  exact eventually_contDiffAt_comp hx hfk hk |>.mono fun y hy ↦
+    ∀ᶠ y in 𝓝 x.2, DifferentiableAt ℝ (fun y ↦ f (ψ (x.1, y))) y :=
+  eventually_contDiffAt_comp hx hfk hk |>.mono fun y hy ↦
     hy.differentiableAt (by simp)
 
 theorem fderiv₂_comp_eventuallyEq {f : E × F → G} (ψ : Chart 1 α s) {x : E × ψ.Dom} (hx : x ∈ ψ.set)
@@ -81,8 +81,8 @@ theorem step_aux {f : E × F → G} (ψ : Chart 1 α s) {x : E × ψ.Dom} (hx : 
       fun y ↦ (fderiv ℝ f (ψ (x.1, y)) ∘L .inr ℝ E F) := by
   calc
     _ =ᶠ[𝓝 x.2] (fun y ↦ (fderiv ℝ f (ψ (x.1, y)) ∘L .inr ℝ E F) ∘L
-                  fderiv ℝ (fun y ↦ (ψ (x.1, y)).2) y) := by
-      apply ψ.fderiv₂_comp_eventuallyEq hx hfk hk
+                  fderiv ℝ (fun y ↦ (ψ (x.1, y)).2) y) :=
+      ψ.fderiv₂_comp_eventuallyEq hx hfk hk
     _ =O[𝓝 x.2] fun y ↦ ‖fderiv ℝ f (ψ (x.1, y)) ∘L .inr ℝ E F‖ *
                   ‖fderiv ℝ (fun z ↦ (ψ (x.1, z)).2) y‖ := by
       refine .of_norm_le fun _ ↦ ContinuousLinearMap.opNorm_comp_le _ _
@@ -268,8 +268,7 @@ theorem _root_.Moreira2001.Atlas.isLittleO_main_sub_of_fderiv_zero_right
         filter_upwards [hψcont.eventually hy] with z hz hψz using hz (ψ.mapsTo hψz)
     rw [EventuallyEq, eventually_nhdsWithin_iff]
     filter_upwards [ψ.fderiv₂_comp_eventuallyEq hx hcontDiff (by simp), hf₀] with y hy_eq hy hy_mem
-    rw [hy_eq, hy hy_mem]
-    simp
+    simp_all
   · exact hdensity
 
 end Moreira2001.Atlas

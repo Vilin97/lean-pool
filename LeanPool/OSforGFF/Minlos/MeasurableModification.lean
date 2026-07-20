@@ -54,6 +54,16 @@ noncomputable section
 variable {E : Type*} [AddCommGroup E] [Module ℝ E]
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
 
+omit [ContinuousSMul ℝ E] in
+/-- The finite supremum of topology-generating seminorms is continuous. -/
+private lemma continuous_finset_sup_seminorm (p : ℕ → Seminorm ℝ E)
+    (hp_top : WithSeminorms (fun n => p n)) (s : Finset ℕ) :
+    Continuous (fun x : E => (s.sup p) x) := by
+  refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
+  change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
+  simp_rw [map_sum, Finset.sum_apply]
+  exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+
 /-! ## Embedding: WeakDual ℝ E → (E → ℝ) -/
 
 /-- The evaluation embedding sending a continuous linear functional to its
@@ -197,20 +207,15 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         ring
-      rw [h1] at hql_c hbd_c
-      rw [(hql_c.trans h2).symm]
-      exact hbd_c
+      simp_all
     -- Use the bound to prove ContinuousWithinAt
     change Filter.Tendsto ω (nhdsWithin (d n) (Set.range d)) (nhds (ω (d n)))
     rw [Metric.tendsto_nhds]
     intro ε hε
     have hCε : (0 : ℝ) < (C : ℝ) + 1 := by positivity
     rw [Filter.Eventually, mem_nhdsWithin]
-    have h_cont_sp : Continuous (fun x : E => (s.sup p) x) := by
-      refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
-      change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
-      simp_rw [map_sum, Finset.sum_apply]
-      exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+    have h_cont_sp : Continuous (fun x : E => (s.sup p) x) :=
+      continuous_finset_sup_seminorm p hp_top s
     refine ⟨{x | (s.sup p) (x - d n) < ε / ((C : ℝ) + 1)},
       isOpen_lt (h_cont_sp.comp (continuous_sub_right _)) continuous_const,
       by simp only [Set.mem_setOf_eq, sub_self, map_zero]; exact div_pos hε hCε, ?_⟩
@@ -254,11 +259,8 @@ private lemma extensionFun_continuous (d : ℕ → E) (hd : DenseRange d)
         Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
       ring
     rw [h1] at hql_c hbd_c; rw [(hql_c.trans h2).symm]; exact hbd_c
-  have h_cont_sp : Continuous (fun x : E => (s.sup p) x) := by
-    refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
-    change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
-    simp_rw [map_sum, Finset.sum_apply]
-    exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+  have h_cont_sp : Continuous (fun x : E => (s.sup p) x) :=
+      continuous_finset_sup_seminorm p hp_top s
   -- Image filter is Cauchy in ℝ, hence convergent by completeness
   have h_cauchy : Cauchy (Filter.map ω (nhdsWithin x (Set.range d))) := by
     haveI : (nhdsWithin x (Set.range d)).NeBot :=
@@ -315,11 +317,8 @@ private lemma extensionFun_map_add (d : ℕ → E) (hd : DenseRange d)
   have hbd : ω ∈ boundedPaths d p := hω.2
   simp only [boundedPaths, Set.mem_iUnion, Set.mem_iInter, Set.mem_setOf_eq] at hbd
   obtain ⟨s, C, hC⟩ := hbd
-  have h_cont_sp : Continuous (fun x : E => (s.sup p) x) := by
-    refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
-    change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
-    simp_rw [map_sum, Finset.sum_apply]
-    exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+  have h_cont_sp : Continuous (fun x : E => (s.sup p) x) :=
+      continuous_finset_sup_seminorm p hp_top s
   -- g(d m + d n) = g(d m) + g(d n) via ℚ-linearity + extendFrom_eq
   have hg_add_dense : ∀ m n, g (d m + d n) = g (d m) + g (d n) := by
     intro m n
@@ -438,11 +437,8 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
       intro ε hε
       have hCε : (0 : ℝ) < (C : ℝ) + 1 := by positivity
       rw [Filter.Eventually, mem_nhdsWithin]
-      have h_cont_sp : Continuous (fun x : E => (s.sup p) x) := by
-        refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
-        change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
-        simp_rw [map_sum, Finset.sum_apply]
-        exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+      have h_cont_sp : Continuous (fun x : E => (s.sup p) x) :=
+      continuous_finset_sup_seminorm p hp_top s
       refine ⟨{x | (s.sup p) (x - (q : ℝ) • d n) < ε / ((C : ℝ) + 1)},
         isOpen_lt (h_cont_sp.comp (continuous_sub_right _)) continuous_const,
         by simp [sub_self, map_zero, div_pos hε hCε], ?_⟩
@@ -470,8 +466,7 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
       calc |ω (d m) - ω ((q : ℝ) • d n)|
           = |ω (d m) - (q : ℝ) * ω (d n)| := by rw [h_ω_qn]
         _ = |ω (d m - (q : ℝ) • d n)| := by
-              have := hql_c'.trans h2'  -- ω(dm - q•dn) = ω(dm) - q*ω(dn)
-              congr 1; linarith
+              simp_all
         _ ≤ (C : ℝ) * (s.sup p) (d m - (q : ℝ) • d n) := hbd_c'
         _ ≤ ((C : ℝ) + 1) * (s.sup p) (d m - (q : ℝ) • d n) := by
             apply mul_le_mul_of_nonneg_right (by linarith) (apply_nonneg _ _)
@@ -533,8 +528,7 @@ lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     simp only [qLinearPaths, Set.mem_iInter, Set.mem_setOf_eq]
     intro c
     simp only [weakDualEmbed, Finsupp.sum]
-    rw [map_sum]
-    simp_rw [map_smul, smul_eq_mul]
+    simp_all
   · -- Boundedness: l is continuous, hence bounded by finitely many p_n
     simp only [boundedPaths, Set.mem_iUnion, Set.mem_iInter, Set.mem_setOf_eq]
     -- View |l(·)| as a continuous seminorm and apply bound_of_continuous
@@ -665,8 +659,7 @@ private lemma measurable_eval_comp_projection
         unfold measurableProjectionAux
         rw [dif_neg hω]
         rfl
-      rw [h_unfold]
-      exact tendsto_const_nhds
+      simp_all
   exact measurable_of_tendsto_metrizable hF_meas hF_tendsto
 
 /-- The projection map is measurable.
@@ -802,11 +795,7 @@ theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
         simp only [← Finset.sum_coe_sort c.support, σ]
         exact Fintype.sum_equiv c.support.equivFin.symm _ _ (fun _ => rfl)
       rw [h2, Finsupp.sum]
-    rw [h_sum_x, h_normalized] at h
-    rw [show (fun ω' => exp (I * ↑(t * X ω'))) =
-      (fun ω' => exp (I * ↑(∑ i : Fin (k + 1), s' i * ω' (x' i)))) from by
-      funext ω'; congr 2; exact_mod_cast (h_sum_ω ω').symm]
-    exact h
+    simp_all
   -- Apply ae_eq_zero_of_charfun_eq_one
   have := ae_eq_zero_of_charfun_eq_one hX_meas hX_cf
   filter_upwards [this] with ω hω
@@ -897,11 +886,9 @@ theorem boundedPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
           (C : ℝ) * (s.sup p) (c.sum fun i a => (a : ℝ) • d i))} := by
     intro ω hω
     simp only [Set.mem_setOf_eq, boundedPaths, Set.mem_iUnion, Set.mem_iInter] at hω ⊢
-    push Not at hω ⊢
-    exact hω s C
+    simp_all
   have h_lt := lt_of_le_of_lt (measure_mono h_subset) hC
-  rw [hε₀_def, ENNReal.ofReal_toReal (measure_ne_top ν _)] at h_lt
-  exact absurd h_lt (lt_irrefl _)
+  simp_all
 
 /-- The good paths have full ν-measure. Combines ℚ-linearity and boundedness a.e. -/
 lemma goodPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
@@ -946,8 +933,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
   -- Step 0: Derive Φ(0) = 1 from h_cf_joint with n=1
   have h_normalized : Φ 0 = 1 := by
     have h1 := h_cf_joint 1 (fun _ => 0) (fun _ => (0 : E))
-    simp at h1
-    exact h1.symm
+    simp_all
   -- Step 1: Good paths have full measure
   have h_good := goodPaths_ae Φ ν h_cf_joint h_cf_cont h_normalized
   -- Step 2: Choose a sequence d(n_k) → f
@@ -996,8 +982,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
       h_Pω_cont.continuousAt.tendsto.comp hφ
     have h_ω_tendsto : Filter.Tendsto (fun k => ω (d (φ k)))
         Filter.atTop (nhds ((measurableProjection ω : E →L[ℝ] ℝ) f)) := by
-      convert h_Pω_tendsto using 1
-      ext k; exact (h_eq_dense k).symm
+      simp_all
     exact Filter.Tendsto.sub h_ω_tendsto tendsto_const_nhds
   -- Step 8: Apply DCT + CF convergence to show ∫ exp(it Z) = 1
   have hZ_cf : ∀ t : ℝ, ∫ ω, exp (I * ↑(t * Z ω)) ∂ν = 1 := by
@@ -1116,9 +1101,7 @@ lemma uniqueness_via_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempt
         MeasurableEquiv.trans_apply, MeasurableEquiv.coe_mk, Equiv.coe_fn_mk,
         MeasurableEquiv.coe_toLp, Function.comp_apply, Finset.restrict,
         weakDualEmbed]
-      simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-        fun a b => RCLike.inner_apply a b]
-      rw [map_sum]; simp_rw [map_smul, smul_eq_mul]
+      simp_all
     simp_rw [h_inner_eq, mul_comm _ Complex.I]
     rw [← hμ']
     rfl

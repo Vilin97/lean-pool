@@ -60,9 +60,7 @@ private theorem norm_ne_zero_of_ne_zero_pkappa_wip
       simpa using
         (Finset.single_le_sum (f := fun a : Idx d => ‖F a‖ ^ 2) (s := F.support) (a := alpha)
           (fun a _ => by positivity) hmem)
-    have hterm_pos : 0 < ‖F alpha‖ ^ 2 := by
-      have hnorm_pos : 0 < ‖F alpha‖ := norm_pos_iff.mpr hcoeff_ne
-      nlinarith
+    have hterm_pos : 0 < ‖F alpha‖ ^ 2 := pow_pos (norm_pos_iff.mpr hcoeff_ne) 2
     have hsum_pos : 0 < Finset.sum F.support (fun a : Idx d => ‖F a‖ ^ 2) :=
       lt_of_lt_of_le hterm_pos hle
     change Real.sqrt (Finset.sum F.support (fun a : Idx d => ‖F a‖ ^ 2)) = 0 at hnorm
@@ -94,14 +92,10 @@ private lemma measurableSet_productAnnulus_wip
         (⋂ q : Fin d, {z : Cd d | (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1}) := by
     refine MeasurableSet.iInter (ι := Fin d) ?_
     intro q
-    have hge :
-        MeasurableSet {z : Cd d | (j q : ℝ) ≤ ‖z q‖} := by
-      exact measurableSet_le measurable_const
-        (measurable_norm.comp (continuous_apply q).measurable)
-    have hlt :
-        MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} := by
-      exact measurableSet_lt
-        (measurable_norm.comp (continuous_apply q).measurable) measurable_const
+    have hge : MeasurableSet {z : Cd d | (j q : ℝ) ≤ ‖z q‖} :=
+      measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
+    have hlt : MeasurableSet {z : Cd d | ‖z q‖ < (j q : ℝ) + 1} :=
+      measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
     simpa [Set.setOf_and] using hge.inter hlt
   simpa [productAnnulus, Set.setOf_forall] using h
 
@@ -112,17 +106,9 @@ private lemma productAnnulus_eq_of_mem_wip
   funext q
   rcases hj q with ⟨hj_lower, hj_upper⟩
   rcases hℓ q with ⟨hℓ_lower, hℓ_upper⟩
-  refine le_antisymm ?_ ?_
-  · by_contra hlt
-    have hlt' : ℓ q + 1 ≤ j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((ℓ q : Nat) : ℝ) + 1 ≤ j q := by
-      exact_mod_cast hlt'
-    linarith
-  · by_contra hlt
-    have hlt' : j q + 1 ≤ ℓ q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : Nat) : ℝ) + 1 ≤ ℓ q := by
-      exact_mod_cast hlt'
-    linarith
+  have h1 : j q < ℓ q + 1 := by exact_mod_cast lt_of_le_of_lt hj_lower hℓ_upper
+  have h2 : ℓ q < j q + 1 := by exact_mod_cast lt_of_le_of_lt hℓ_lower hj_upper
+  omega
 
 private lemma sum_indicator_productAnnulus_le_wip
     {d : Nat} (s : Finset (Idx d)) (z : Cd d) (a : ℝ)
@@ -133,23 +119,12 @@ private lemma sum_indicator_productAnnulus_le_wip
   · rcases hs with ⟨j0, hj0s, hj0z⟩
     have hsum :
         ∑ j ∈ s, Set.indicator (productAnnulus j) (fun _ : Cd d => a) z =
-          Set.indicator (productAnnulus j0) (fun _ : Cd d => a) z := by
-      exact Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
-        have hjz : z ∉ productAnnulus j := by
-          intro hjz
-          have heq := productAnnulus_eq_of_mem_wip hjz hj0z
-          exact hjne heq
+          Set.indicator (productAnnulus j0) (fun _ : Cd d => a) z :=
+      Finset.sum_eq_single_of_mem j0 hj0s (fun j hjs hjne => by
+        have hjz : z ∉ productAnnulus j := fun hjz => hjne (productAnnulus_eq_of_mem_wip hjz hj0z)
         simp [Set.indicator, hjz])
-    rw [hsum]
-    simp [Set.indicator, hj0z]
-  · have hzero : ∀ j ∈ s, z ∉ productAnnulus j := by
-      intro j hjs
-      by_contra hjz
-      exact hs ⟨j, hjs, hjz⟩
-    rw [Finset.sum_eq_zero]
-    · linarith
-    · intro j hj
-      simp [Set.indicator, hzero j hj]
+    simp_all
+  · simp_all
 
 private theorem integrable_evalPkappa_sq_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
@@ -168,10 +143,7 @@ private theorem integrable_evalPkappa_sq_wip
         (∫ z : Cd d, ‖evalPkappa kappa F z‖ ^ 2 ∂ gammaD d) = ‖F‖ ^ 2 :=
       evalPkappa_total_mass hd kappa F
     have hnorm_ne : ‖F‖ ≠ 0 := norm_ne_zero_of_ne_zero_pkappa_wip hd hF
-    have hpos : 0 < ‖F‖ ^ 2 := by
-      have hnorm_pos : 0 < ‖F‖ := lt_of_le_of_ne (norm_nonneg_pkappa_wip hd F) hnorm_ne.symm
-      nlinarith
-    linarith
+    simp_all
 
 private theorem finite_sum_annulusMass_le_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -203,8 +175,7 @@ private theorem finite_sum_annulusMass_le_wip
           · filter_upwards with z
             exact sum_indicator_productAnnulus_le_wip s z
               (‖toFun kappa (ofPkappa kappa F) z‖ ^ 2) (by positivity)
-    _ = ‖F‖ ^ 2 := by
-          simpa [htoFun] using evalPkappa_total_mass hd kappa F
+    _ = ‖F‖ ^ 2 := by simpa [htoFun] using evalPkappa_total_mass hd kappa F
 
 private theorem phi1D_eq_oneDimPhi_wip
     (k n : Nat) (z : ℂ) :
@@ -227,11 +198,9 @@ private theorem phi1D_eq_oneDimPhi_wip
         ((Nat.factorial j : ℂ) * (Nat.choose n j : ℂ)) * (Nat.factorial (n - j) : ℂ)
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) *
                 (Nat.factorial (n - j) : ℂ) := by ring
-        _ = (Nat.factorial n : ℂ) := by
-            exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
+        _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
-              (Nat.factorial (n - j) : ℂ) := by
-            field_simp [hfac_ne]
+              (Nat.factorial (n - j) : ℂ) := by field_simp [hfac_ne]
     simpa [mul_assoc, mul_left_comm, mul_comm] using
       congrArg
         (fun x : ℂ =>
@@ -359,8 +328,7 @@ private theorem mem_nearLowBlocks_wip
     have hidx_upper : ℓ q ≤ j q + M := by
       have htri : ℓ q ≤ j q + Nat.dist (ℓ q) (j q) :=
         Nat.dist_tri_right' (ℓ q) (j q)
-      have hdist' : Nat.dist (ℓ q) (j q) ≤ M := by
-        simpa [Nat.dist_comm] using hqdist
+      have hdist' : Nat.dist (ℓ q) (j q) ≤ M := by simpa [Nat.dist_comm] using hqdist
       exact le_trans htri (Nat.add_le_add_left hdist' _)
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le hidx_upper)
 
@@ -392,20 +360,15 @@ private theorem truncate_ofPkappa_apply_wip
     truncateFinset E (ofPkappa kappa H) alpha = if alpha ∈ E then H alpha else 0 := by
   have hsum :
       truncateFinset E (ofPkappa kappa H) alpha =
-        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by
-    rfl
+        (∑ beta ∈ E, Finsupp.single beta (coeffSkappa (ofPkappa kappa H) beta)) alpha := by rfl
   rw [hsum]
-  by_cases h : alpha ∈ E
-  · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
-  · simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
+  by_cases h : alpha ∈ E <;> simp [h, coeffSkappa, ofPkappa, Finsupp.single_apply]
 
 private theorem farPart_apply_wip
     {d : Nat} (kappa : MultiIndex d) (E : Finset (Idx d))
     (H : Pkappa d kappa) (alpha : Idx d) :
     (H - truncateFinset E (ofPkappa kappa H)) alpha = if alpha ∈ E then 0 else H alpha := by
-  by_cases h : alpha ∈ E
-  · simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
-  · simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
+  by_cases h : alpha ∈ E <;> simp [truncate_ofPkappa_apply_wip kappa E H alpha, h]
 
 private theorem norm_sq_eq_sum_wip
     {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) :
@@ -482,8 +445,7 @@ private theorem annulusMass_add_le_two_wip
                   simpa [evalPkappa_add_apply_wip kappa F G z] using
                     norm_add_le (evalPkappa kappa F z) (evalPkappa kappa G z)
                 have hsq_nonneg :
-                    0 ≤ (‖evalPkappa kappa F z‖ - ‖evalPkappa kappa G z‖) ^ 2 := by
-                  positivity
+                    0 ≤ (‖evalPkappa kappa F z‖ - ‖evalPkappa kappa G z‖) ^ 2 := by positivity
                 have hsq :
                     ‖evalPkappa kappa (F + G) z‖ ^ 2 ≤
                       2 * ‖evalPkappa kappa F z‖ ^ 2 + 2 * ‖evalPkappa kappa G z‖ ^ 2 := by
@@ -541,8 +503,7 @@ private theorem farPart_support_subset_wip
         (H - truncateFinset E (ofPkappa kappa H)) alpha = 0 := by
       simp [farPart_apply_wip kappa E H alpha, hE]
     exact (hcoeff_ne hzero).elim
-  · have hH_ne : H alpha ≠ 0 := by
-      simpa [farPart_apply_wip kappa E H alpha, hE] using hcoeff_ne
+  · have hH_ne : H alpha ≠ 0 := by simpa [farPart_apply_wip kappa E H alpha, hE] using hcoeff_ne
     exact Finsupp.mem_support_iff.mpr hH_ne
 
 private theorem norm_sq_farPart_le_wip
@@ -558,14 +519,12 @@ private theorem norm_sq_farPart_le_wip
           intro alpha halpha
           have hnotE : alpha ∉ E := by
             intro hE
-            have hzero : Hfar alpha = 0 := by
-              simp [Hfar, farPart_apply_wip kappa E H alpha, hE]
+            have hzero : Hfar alpha = 0 := by simp [Hfar, farPart_apply_wip kappa E H alpha, hE]
             exact (Finsupp.mem_support_iff.mp halpha) hzero
           simp [Hfar, farPart_apply_wip kappa E H alpha, hnotE]
     _ ≤ Finset.sum H.support (fun alpha => ‖H alpha‖ ^ 2) := by
           exact Finset.sum_le_sum_of_subset_of_nonneg hsubset (by
-            intro alpha hα _
-            positivity)
+            simp_all)
     _ = ‖H‖ ^ 2 := by rw [← norm_sq_eq_sum_wip H]
 
 private theorem remainderPart_eq_self_of_support_far_wip
@@ -578,10 +537,8 @@ private theorem remainderPart_eq_self_of_support_far_wip
   congr
   ext alpha
   by_cases hα : alpha ∈ F.support
-  · have hdist := hfar alpha hα
-    simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support, hdist]
-  · simp [Hermite1DimdLEAN.farCoeffSet, Hermite1DimdLEAN.FiniteHermiteSum.support,
-      Finsupp.notMem_support_iff.mp hα]
+  · simp_all
+  · simp_all
 
 theorem annulusMassPartition
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -612,8 +569,8 @@ theorem lowAnnulusProjection
     Hermite1DimdLEAN.finitePartialLeakage (κ := kappa)
   have hsmall_event :
       ∀ᶠ M : ℕ in Filter.atTop,
-        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M < 1 / 16 := by
-    exact htail.eventually (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1 / 16))
+        Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M < 1 / 16 :=
+    htail.eventually (Iio_mem_nhds (by norm_num : (0 : ℝ) < 1 / 16))
   rw [Filter.eventually_atTop] at hsmall_event
   obtain ⟨M, hM⟩ := hsmall_event
   let E : Finset (Idx d) := nearLowCoeffSet_wip (d := d) J M
@@ -643,15 +600,12 @@ theorem lowAnnulusProjection
           finite_sum_annulusMass_le_wip hd kappa Hnear (lowAnnuli d J)
       _ = Finset.sum E (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := hnear_norm_sq
       _ ≤ rho := hcoeff_small
-  have hH_sq : ‖H‖ ^ 2 = 1 := by
-    nlinarith [hH_norm]
+  have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith [hH_norm]
   have hfar_norm_sq_le_one : ‖Hfar‖ ^ 2 ≤ 1 := by
     calc
-      ‖Hfar‖ ^ 2 ≤ ‖H‖ ^ 2 := by
-        simpa [Hfar, Hnear] using norm_sq_farPart_le_wip kappa E H
+      ‖Hfar‖ ^ 2 ≤ ‖H‖ ^ 2 := by simpa [Hfar, Hnear] using norm_sq_farPart_le_wip kappa E H
       _ = 1 := hH_sq
-  have hfar_norm_sq_nonneg : 0 ≤ ‖Hfar‖ ^ 2 := by
-    positivity
+  have hfar_norm_sq_nonneg : 0 ≤ ‖Hfar‖ ^ 2 := by positivity
   have hfar_self :
       ∀ j ∈ lowAnnuli d J,
         Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩ = ⟨Hfar⟩ := by
@@ -675,8 +629,8 @@ theorem lowAnnulusProjection
     unfold Hermite1DimdLEAN.localizationLeakageCoefficient
     positivity
   have hloc_small :
-      Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M ≤ rho := by
-    exact le_of_lt (by simpa [rho] using hM M le_rfl)
+      Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M ≤ rho :=
+    le_of_lt (by simpa [rho] using hM M le_rfl)
   have hfar_low :
       lowAnnulusMass J (ofPkappa kappa Hfar) ≤ rho := by
     calc
@@ -691,12 +645,11 @@ theorem lowAnnulusProjection
               calc
                 annulusMass j (ofPkappa kappa Hfar)
                     = Hermite1DimdLEAN.annulusMass j
-                        (Hermite1DimdLEAN.evalHermiteSum kappa ⟨Hfar⟩) := by
-                            exact annulusMass_ofPkappa_eq_annulusMass_wip hd kappa j Hfar
+                        (Hermite1DimdLEAN.evalHermiteSum kappa ⟨Hfar⟩) :=
+                            annulusMass_ofPkappa_eq_annulusMass_wip hd kappa j Hfar
                 _ = Hermite1DimdLEAN.annulusMass j
                       (Hermite1DimdLEAN.evalHermiteSum kappa
-                        (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by
-                          rw [hfar_self j hj]
+                        (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by rw [hfar_self j hj]
       _ ≤ Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
             Hermite1DimdLEAN.hermiteNormSq kappa ⟨Hfar⟩ := by
               simpa using hpartial (lowAnnuli d J) M ⟨Hfar⟩
@@ -710,9 +663,7 @@ theorem lowAnnulusProjection
       ≤ 2 * lowAnnulusMass J (ofPkappa kappa Hnear) +
           2 * lowAnnulusMass J (ofPkappa kappa Hfar) := by
             simpa [hdecomp] using lowAnnulusMass_add_le_two_wip hd kappa J Hnear Hfar
-    _ ≤ 2 * rho + 2 * rho := by
-          nlinarith [hnear_low, hfar_low]
-    _ = 1 / 4 := by
-          norm_num [rho]
+    _ ≤ 2 * rho + 2 * rho := by nlinarith [hnear_low, hfar_low]
+    _ = 1 / 4 := by norm_num [rho]
 
 end DimdPolyLEAN

@@ -96,8 +96,7 @@ def dst {n : Nat} (e : Edge n) : Vertex n :=
     intro i j hij
     have h4 : dstIndex i = dstIndex j := e.2 hij
     apply Fin.ext
-    have hval : (i.1 + 1) = (j.1 + 1) := by
-      simpa [dstIndex] using congrArg Fin.val h4
+    have hval : (i.1 + 1) = (j.1 + 1) := by simpa [dstIndex] using congrArg Fin.val h4
     exact Nat.succ.inj hval⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -163,8 +162,7 @@ lemma monoFraction_eq_one_add_edgeCorrelation_div_two {n : Nat} (f : Coloring n)
     (hE : edgeCount n ≠ 0) :
     monoFraction f = ((1 : ℚ) + edgeCorrelation f) / 2 := by
   classical
-  have hE' : (edgeCount n : ℚ) ≠ 0 := by
-    exact_mod_cast hE
+  have hE' : (edgeCount n : ℚ) ≠ 0 := by exact_mod_cast hE
   let z : Edge n → ℚ := fun e =>
     ((signOfColoring f (Edge.src e) * signOfColoring f (Edge.dst e) : Int) : ℚ)
   -- Express `monoCount` as a sum of indicators using `Finset.sum_boole`.
@@ -203,7 +201,6 @@ lemma monoFraction_eq_one_add_edgeCorrelation_div_two {n : Nat} (f : Coloring n)
     _ = ((1 : ℚ) + (edgeCorrSum f : ℚ) / (edgeCount n : ℚ)) / 2 := by
           -- algebra in a field; requires `edgeCount n ≠ 0`
           field_simp [hE', add_comm, add_left_comm, add_assoc, mul_add, add_mul]
-    _ = ((1 : ℚ) + edgeCorrelation f) / 2 := by
-          simp [edgeCorrelation]
+    _ = ((1 : ℚ) + edgeCorrelation f) / 2 := by simp [edgeCorrelation]
 
 end Distributed2Coloring.LowerBound

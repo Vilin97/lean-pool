@@ -35,8 +35,7 @@ def finsetArithmetizeAux : List V → V
 def _root_.Finset.arithmetize (s : Finset V) : V := finsetArithmetizeAux s.toList
 
 @[simp] lemma mem_finsetArithmetize_iff {x : V} {s : Finset V} :
-    x ∈ s.arithmetize ↔ x ∈ s := by
-  simp [Finset.arithmetize]
+    x ∈ s.arithmetize ↔ x ∈ s := by simp [Finset.arithmetize]
 
 @[simp] lemma finset_empty_arithmetize : (∅ : Finset V).arithmetize = ∅ := by
   simp [Finset.arithmetize]

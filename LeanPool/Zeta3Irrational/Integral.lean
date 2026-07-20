@@ -29,14 +29,12 @@ open BigOperators Finset
 
 lemma Nat_Ico_succ_right (a b : ℕ) : Finset.Ico a (b + 1) = Finset.Icc a b := by
   ext x
-  simp only [Finset.mem_Ico, Finset.mem_Icc]
-  omega
+  simp_all
 
 lemma Nat_Ico_succ_succ (a b : ℕ) :
     Finset.Ico (a + 1) (b + 1) = Finset.Ioc a b := by
   ext x
-  simp only [Finset.mem_Ico, Finset.mem_Ioc]
-  omega
+  simp_all
 
 /-- The two-variable Apéry integral with monomial weights. -/
 noncomputable abbrev J (r s : ℕ) : ℝ :=
@@ -128,9 +126,7 @@ lemma log_rpow_integral' (n : ℝ) (hn : n > -1) (a : ℝ) (ha : 0 < a ∧ a ≤
       · apply HasDerivAt.log (hasDerivAt_id' x) (by linarith)
   · apply IntervalIntegrable.continuousOn_mul
     · apply intervalIntegral.intervalIntegrable_rpow
-      right
-      simp only [Set.uIcc_of_le ha.2, Set.mem_Icc, zero_le_one, and_true, not_le]
-      linarith
+      simp_all
     · apply ContinuousOn.neg
       apply ContinuousOn.log continuousOn_id
       intro x hx
@@ -155,9 +151,7 @@ lemma log_rpow_integrable (n : ℝ) (hn : n > -1) :
     rw [← Set.uIoc_of_le hi.2, ← intervalIntegrable_iff]
     apply IntervalIntegrable.continuousOn_mul
     · apply intervalIntegral.intervalIntegrable_rpow
-      right
-      simp only [Set.uIcc_of_le hi.2, Set.mem_Icc, zero_le_one, and_true, not_le]
-      linarith
+      simp_all
     · apply ContinuousOn.neg
       apply ContinuousOn.log continuousOn_id
       intro x hx
@@ -202,8 +196,7 @@ lemma log_rpow_integral (n : ℝ) (hn : n > -1) :
   have h1 : 1 /(n + 1) ^ 2 = F 1 - F 0 := by
     simp only [F, one_div]
     rw [Real.zero_rpow (by linarith), zero_mul, zero_div, sub_zero]
-    simp only [Real.log_one, mul_zero, sub_zero, Real.one_rpow]
-    ring
+    simp_all
   rw [h1]
   refine intervalIntegral.integral_eq_sub_of_hasDerivAt_of_tendsto (by norm_num) (a := 0) (b := 1)
     (f := F) (f' := fun x : ℝ => -x.log * x ^ n ) ?_ ?_ ?_ ?_
@@ -268,8 +261,7 @@ lemma log_rpow_integral (n : ℝ) (hn : n > -1) :
       · apply ContinuousAt.sub continuousAt_const
         apply ContinuousAt.mul continuousAt_const
         apply ContinuousAt.log continuousAt_id (by norm_num)
-    · intro _ _
-      simp
+    · simp_all
 
 lemma ENN_log_rpow_integral (n : ℝ) (hn : n > -1) : ∫⁻ (x : ℝ) in Set.Ioo 0 1,
     ENNReal.ofReal (-x.log * x ^ n) = ENNReal.ofReal (1 / (n + 1) ^ 2) := by
@@ -361,22 +353,14 @@ lemma integral1 {a : ℝ} (ha : 0 < a) (ha1 : a < 1) :
   simp only [mul_zero, mul_one, smul_eq_mul] at eq1
   simp only [one_div]
   rw [eq1, inv_mul_eq_div]
-  field_simp
-  simp only [one_div]
-  simp only [one_mul, intervalIntegral.integral_comp_sub_left, sub_sub_cancel, sub_zero,
-    mul_zero] at eq2
-  have hsub := intervalIntegral.integral_comp_sub_left
-    (f := fun x : ℝ => x⁻¹) (a := 0) (b := 1 - a) 1
-  simp only [sub_zero, sub_sub_cancel] at hsub
-  rw [hsub, eq3, one_div, Real.log_inv]
+  simp_all
 
 lemma sub_mul_mul_ne_zero (y : ℝ) (x : ℝ × ℝ)
     (hy : y ∈ Set.Icc 0 1) (h1 : 0 < 1 - (1 - x.1 * x.2)) : 1 - (1 - x.1 * x.2) * y ≠ 0 := by
   suffices 1 - (1 - x.1 * x.2) * y > 0 by linarith
   simp only [gt_iff_lt, sub_pos]
   by_cases hy' : y = 0
-  · rw [hy']
-    simp
+  · simp_all
   · simp only [sub_pos, Set.mem_Icc] at *
     suffices (1 - x.1 * x.2) * y < y by linarith
     rwa [mul_lt_iff_lt_one_left]
@@ -428,8 +412,7 @@ lemma JENN_eq_triple_aux' (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 
     ∫⁻ (w : ℝ) in Set.Ioo 0 1, ENNReal.ofReal (1 / (1 - (1 - x.1 * x.2) * w)) =
     ENNReal.ofReal (-Real.log (1 - (1 - x.1 * x.2)) / (1 - x.1 * x.2)) := by
   have h1 : 0 < 1 - (1 - x.1 * x.2) := by
-    simp only [Set.mem_prod, Set.mem_Ioo, sub_sub_cancel] at *
-    apply mul_pos (by linarith) (by linarith)
+    simp_all
   have h2 : 1 - (1 - x.1 * x.2) < 1 := by
     simp only [Set.mem_prod, Set.mem_Ioo, sub_sub_cancel] at *
     suffices x.1 * x.2 < x.2 by linarith
@@ -854,8 +837,7 @@ lemma integrableOn_J_rr (r : ℕ) : MeasureTheory.IntegrableOn
         · positivity
         · exact fun_of_J_nonneg r r x hx
       · simp only [hx, ↓reduceIte]
-    rw [h1, h]
-    simp only [one_div, ENNReal.ofReal_lt_top]
+    simp_all
 
 theorem J_rr (r : ℕ) :
     J r r =
@@ -888,8 +870,7 @@ theorem J_rr (r : ℕ) :
       intro y hy
       by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
       · exact fun_of_J_nonneg r r y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
+      · simp_all
   · apply AEMeasurable.aestronglyMeasurable
     apply Measurable.aemeasurable
     · apply Measurable.mul
@@ -937,8 +918,7 @@ lemma J_ENN_rs (r s : ℕ) (h : r > s) :
     have hy : y > 0 := by positivity
     have hxy : x - y > 0 := by
       rw [show (x : ℝ) - y = r - s by ring]
-      simp only [gt_iff_lt, sub_pos, Nat.cast_lt]
-      linarith
+      simp_all
     rw [show r - s = (x : ℝ) - y by ring, ENNReal.ofReal_eq_ofReal_iff]
     · rw [div_add_div]
       · rw [div_sub_div]
@@ -1045,8 +1025,7 @@ lemma integrableOn_J_rs' (r s : ℕ) (h : r > s) : MeasureTheory.IntegrableOn
         · positivity
         · exact fun_of_J_nonneg r s x hx
       · simp only [hx, ↓reduceIte]
-    rw [h1, h₀]
-    simp only [one_div, ENNReal.ofReal_lt_top]
+    simp_all
 
 lemma J_rs' (r s : ℕ) (h : r > s) :
     J r s = (∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s) := by
@@ -1068,8 +1047,7 @@ lemma J_rs' (r s : ℕ) (h : r > s) :
       intro y hy
       by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
       · exact fun_of_J_nonneg r s y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
+      · simp_all
   · apply AEMeasurable.aestronglyMeasurable
     apply Measurable.aemeasurable
     · apply Measurable.mul
@@ -1131,9 +1109,7 @@ lemma integrableOn_J_rs (r s : ℕ) : MeasureTheory.IntegrableOn
           · simp only [hx, ↓reduceIte]
         have h₀ := J_ENN_rs s r h2
         rw [J_ENN_rs_symm s r] at h₀
-        simp only [JENN] at h₀
-        rw [h1, h₀]
-        simp only [one_div, ENNReal.ofReal_lt_top]
+        simp_all
 
 lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (JENN r s).toReal := by
   rw [J, JENN, MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
@@ -1144,8 +1120,7 @@ lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (JENN r s).toReal := by
       intro y hy
       by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
       · exact fun_of_J_nonneg r s y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
+      · simp_all
   · apply AEMeasurable.aestronglyMeasurable
     apply Measurable.aemeasurable
     · apply Measurable.mul

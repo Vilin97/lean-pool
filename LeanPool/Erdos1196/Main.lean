@@ -35,15 +35,12 @@ private lemma exists_eventual_subMarkov_cutoff :
         ∀ ⦃m : ℕ⦄, x₀ ≤ m → (∑' q : ℕ, transitionWeight Y m q) ≤ 1 := by
   rcases subMarkovRowSumBound with ⟨C, hCpos, hC⟩
   let Y : ℕ := Nat.ceil (Real.exp (2 * C)) + 1
-  have hceil_lt_Y : Nat.ceil (Real.exp (2 * C)) < Y := by
-    simp [Y]
-  have hYlarge : Real.exp (2 * C) < (Y : ℝ) := by
-    exact lt_of_le_of_lt (Nat.le_ceil (Real.exp (2 * C))) (by exact_mod_cast hceil_lt_Y)
+  have hYlarge : Real.exp (2 * C) < (Y : ℝ) :=
+    lt_of_le_of_lt (Nat.le_ceil _) (by exact_mod_cast Nat.lt_succ_self _)
   rcases hC hYlarge with ⟨x₀, hYx₀, hx₀⟩
   refine ⟨Y, ?_, x₀, hYx₀, hx₀⟩
-  have hY_gt_one : (1 : ℝ) < (Y : ℝ) := by
-    refine lt_trans ?_ hYlarge
-    simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos])
+  have hY_gt_one : (1 : ℝ) < (Y : ℝ) :=
+    lt_trans (by simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos])) hYlarge
   exact_mod_cast hY_gt_one
 
 /--
@@ -66,50 +63,39 @@ theorem mainTheorem :
   have hxCut : xCut ≤ x := by omega
   have hxNorm : xNorm ≤ x := by omega
   have hxLog : xLog ≤ x := by omega
-  have hxY : Y ≤ x := by omega
   have hxTwo : 2 ≤ x := by omega
-  have hExp_lt_x : Real.exp C < (x : ℝ) := by
-    refine lt_of_le_of_lt (Nat.le_ceil (Real.exp C)) ?_
-    exact_mod_cast
-      (lt_of_lt_of_le (Nat.lt_succ_self (Nat.ceil (Real.exp C))) (by simpa [xLog] using hxLog))
+  have hExp_lt_x : Real.exp C < (x : ℝ) :=
+    lt_of_le_of_lt (Nat.le_ceil _)
+      (by exact_mod_cast lt_of_lt_of_le (Nat.lt_succ_self _) (by simpa [xLog] using hxLog))
   have hlog_gt : C < Real.log (x : ℝ) := by
     simpa [Real.log_exp] using (Real.log_lt_log (Real.exp_pos _) hExp_lt_x)
   have hlog_pos : 0 < Real.log (x : ℝ) := lt_trans hCpos hlog_gt
   have hBpos : 0 < normalizationConstant x Y := by
-    have hBnear : |normalizationConstant x Y - 1| < 1 := by
-      refine lt_of_le_of_lt (hNorm hxNorm) ?_
-      have hlog_ne : Real.log (x : ℝ) ≠ 0 := hlog_pos.ne'
-      field_simp [hlog_ne]
-      nlinarith
+    have hBnear : |normalizationConstant x Y - 1| < 1 :=
+      lt_of_le_of_lt (hNorm hxNorm) (by field_simp [hlog_pos.ne']; nlinarith)
     linarith [(abs_lt.mp hBnear).1]
   let visit : ℕ → ℝ := fun n =>
     if x ≤ n then
       1 / (normalizationConstant x Y * (n : ℝ) * Real.log (n : ℝ))
     else 0
   let chain : MarkovLayer x Y := {
-    transitionSubMarkov := by
-      intro m hm
-      exact hSub (le_trans hxCut hm)
+    transitionSubMarkov := fun m hm => hSub (le_trans hxCut hm)
     visitProbability := visit
     visitProbabilityRecurrence := by
       intro n hn
       simpa [visit, hn] using
         (explicitFormula_eq_recurrence_rhs (x := x) (Y := Y) (n := n) hxTwo hn
-          (f := visit) <| by
-            intro q hq hqx hq1
+          (f := visit) fun q hq hqx hq1 => by
             have hcast_div : ((n / q : ℕ) : ℝ) = (n : ℝ) / q :=
               Nat.cast_div (Nat.dvd_of_mem_divisors hq)
                 (by exact_mod_cast (Nat.pos_of_mem_divisors hq).ne')
             simp [visit, hqx.2, hcast_div, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm])
   }
-  have hinit : (∑' n : ℕ, initialMass x Y n) ≤ 1 :=
-    (tsum_initialMass_eq_one (x := x) (Y := Y) hBpos).le
   have hVisitMass : visitMass chain A ≤ 1 :=
-    visitMass_le_of_bounds chain A (by omega) (le_trans (by decide : 1 ≤ 2) hY) hinit
-      chain.kernelRowBound
+    visitMass_le_of_bounds chain A (by omega) (le_trans (by decide : 1 ≤ 2) hY)
+      ((tsum_initialMass_eq_one (x := x) (Y := Y) hBpos).le) chain.kernelRowBound
   rcases PrimitiveSet.summable_indicator_visitProbability_and_tsum_le_one_of_visitMass_le_one
-      chain hPrimitive hA hxTwo hY hBpos hVisitMass with
-    ⟨hHitSummable, hHit⟩
+      chain hPrimitive hA hxTwo hY hBpos hVisitMass with ⟨hHitSummable, hHit⟩
   exact summable_indicatorLogSeries_and_tsum_le_of_hitMass
     chain hxTwo hA hBpos hHitSummable hHit (hNorm hxNorm)
 

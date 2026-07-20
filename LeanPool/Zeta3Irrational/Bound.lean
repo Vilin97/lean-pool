@@ -70,8 +70,7 @@ lemma bound (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
   calc
     _ ≤ x * (1 -x) * y * (1 - y) * z * (1 - z) / (2 * √(1 - x) * √(x * z) * (1 - y * z)) := by
       refine div_le_div₀ (by positivity) (le_refl _) (by positivity) ?_
-      rwa [mul_le_mul_iff_of_pos_right]
-      linarith
+      simp_all
     _ ≤ x * (1 -x) * y * (1 - y) * z * (1 - z) /
         (2 * √(1 - x) * √(x * z) * 2 * √(1 - y) * √((1 - z) * y)) := by
       refine div_le_div₀ (by positivity) (le_refl _) (by positivity) ?_
@@ -179,8 +178,7 @@ lemma bound'' (x y z : ℝ) (x0 : 0 < x) (x1 : x < 1) (y0 : 0 < y) (y1 : y < 1)
     have hxy_lt_one : x * y < 1 := by nlinarith
     nlinarith
   have hden_pos_s : 0 < 1 - (1 - s ^ 2) * z := by
-    rw [hs_sq]
-    exact hden_pos
+    simp_all
   have hfrac :
       z * (1 - z) / (1 - (1 - s ^ 2) * z) ≤ 1 / (1 + s) ^ 2 := by
     rw [div_le_div_iff₀ hden_pos_s (by positivity : 0 < (1 + s) ^ 2)]

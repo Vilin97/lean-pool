@@ -48,14 +48,13 @@ lemma schwartz_log_bound
   -- Lower bound from stretched-exponential decay
   obtain ⟨C_exp, K_exp, hbound_low⟩ := hExpDecay
   -- From Schwartz: ‖iteratedFDeriv ℝ 0 (f x) v‖ * 1 ≤ C_up → |f x v| ≤ C_up
-  have hf_le : ∀ x v, f x v ≤ C_up := by
-    intro x v
+  have hf_le : ∀ x v, f x v ≤ C_up := fun x v => by
     have h := hbound_up x v
     simp only [norm_iteratedFDeriv_zero, norm_eq_abs, pow_zero, mul_one] at h
     exact le_trans (le_abs_self _) h
   -- log(f x v) ≤ log(C_up)
-  have hlog_upper : ∀ x v, Real.log (f x v) ≤ Real.log C_up := by
-    intro x v; exact Real.log_le_log (hf_pos x v) (hf_le x v)
+  have hlog_upper : ∀ x v, Real.log (f x v) ≤ Real.log C_up :=
+    fun x v => Real.log_le_log (hf_pos x v) (hf_le x v)
   -- log(f x v) ≥ -C_exp * (1 + ‖v‖)^K_exp from exp lower bound
   have hlog_lower : ∀ x v, -C_exp * (1 + ‖v‖) ^ K_exp ≤ Real.log (f x v) := by
     intro x v
@@ -67,23 +66,18 @@ lemma schwartz_log_bound
   have h1v_ge : (1 : ℝ) ≤ (1 + ‖v‖) ^ K_exp :=
     one_le_pow₀ (by linarith [norm_nonneg v])
   have h1v_nn : (0 : ℝ) ≤ (1 + ‖v‖) ^ K_exp := le_trans zero_le_one h1v_ge
+  have hlow := hlog_lower x v
+  have hup := hlog_upper x v
+  have hlb := le_abs_self (Real.log C_up)
+  have key : (|Real.log C_up| + |C_exp| + 1) * (1 + ‖v‖) ^ K_exp ≥
+      (|Real.log C_up| + |C_exp| + 1) * 1 :=
+    mul_le_mul_of_nonneg_left h1v_ge (by positivity)
   constructor
-  · -- -((|log C_up| + |C_exp| + 1) * (1+‖v‖)^K_exp) ≤ log(f x v)
-    calc -((|Real.log C_up| + |C_exp| + 1) * (1 + ‖v‖) ^ K_exp)
-        ≤ -(C_exp * (1 + ‖v‖) ^ K_exp) := by
-          apply neg_le_neg
-          exact mul_le_mul_of_nonneg_right
-            (by linarith [le_abs_self C_exp, abs_nonneg (Real.log C_up)]) h1v_nn
-      _ = -C_exp * (1 + ‖v‖) ^ K_exp := by ring
-      _ ≤ Real.log (f x v) := hlog_lower x v
-  · -- log(f x v) ≤ (|log C_up| + |C_exp| + 1) * (1+‖v‖)^K_exp
-    have hC_nn : (0 : ℝ) ≤ |Real.log C_up| + |C_exp| + 1 := by positivity
-    calc Real.log (f x v) ≤ Real.log C_up := hlog_upper x v
-      _ ≤ |Real.log C_up| := le_abs_self _
-      _ ≤ |Real.log C_up| + |C_exp| + 1 := by linarith [abs_nonneg C_exp]
-      _ = (|Real.log C_up| + |C_exp| + 1) * 1 := by ring
-      _ ≤ (|Real.log C_up| + |C_exp| + 1) * (1 + ‖v‖) ^ K_exp :=
-          mul_le_mul_of_nonneg_left h1v_ge hC_nn
+  · nlinarith [le_abs_self C_exp, abs_nonneg (Real.log C_up),
+      mul_le_mul_of_nonneg_right
+        (show C_exp ≤ |Real.log C_up| + |C_exp| + 1 by
+          linarith [le_abs_self C_exp, abs_nonneg (Real.log C_up)]) h1v_nn]
+  · nlinarith [abs_nonneg C_exp]
 
 /-- Schwartz decay implies moment integrability with norm powers. -/
 lemma schwartz_norm_pow_integrable

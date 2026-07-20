@@ -56,13 +56,11 @@ private def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.
 
 private lemma fwd_inv (f : X → Y) : invColoring X Y (fwdColoring X Y f) = f := by
   funext x
-  change f (enum.equiv.symm (enum.equiv x)) = f x
-  rw [enum.equiv.symm_apply_apply]
+  simp [invColoring, fwdColoring]
 
 private lemma inv_fwd (f : Fin enum.card → Y) : fwdColoring X Y (invColoring X Y f) = f := by
   funext i
-  change f (enum.equiv (enum.equiv.symm i)) = f i
-  rw [enum.equiv.apply_symm_apply]
+  simp [fwdColoring, invColoring]
 
 private lemma fwd_smul (g : G) (f : X → Y) :
     fwdColoring X Y (g • f) = g • fwdColoring X Y f := by
@@ -95,16 +93,8 @@ def equivOfQuotientOfQuotientFin :
     rintro f₁ f₂ ⟨g, hg⟩
     refine ⟨g, ?_⟩
     rw [← hg, inv_smul])
-  left_inv := by
-    intro q
-    rcases Quotient.mk_surjective q with ⟨f, rfl⟩
-    change ⟦invColoring X Y (fwdColoring X Y f)⟧ = ⟦f⟧
-    rw [fwd_inv]
-  right_inv := by
-    intro q
-    rcases Quotient.mk_surjective q with ⟨f, rfl⟩
-    change ⟦fwdColoring X Y (invColoring X Y f)⟧ = ⟦f⟧
-    rw [inv_fwd]
+  left_inv := Quotient.ind fun f => by simp [fwd_inv]
+  right_inv := Quotient.ind fun f => by simp [inv_fwd]
 
 /-- An instance of `Fintype` for the distinct colorings of `Fin enum.card` with colors in `Y` under
     the induced group action of `G` on `Fin enum.card`. Required by

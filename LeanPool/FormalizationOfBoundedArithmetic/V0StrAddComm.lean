@@ -51,12 +51,10 @@ lemma mem_add_iff_xor : ∀ {X Y : str}, ∀ {i : num},
     have h_lt : i < len X + len Y := by
       rw [xor3_split] at h_xor
       rcases h_xor with h | h | h | h
-      · exact lt_of_lt_of_le (L1 h.1) (show len X ≤ len X + len Y from B8)
-      · exact lt_of_lt_of_le (L1 h.2.1) (by
-          rw [_root_.add_comm]
-          exact B8)
+      · exact lt_add_right_of_mem_left h.1
+      · exact lt_add_left_of_mem_right h.2.1
       · exact carry_lt_add_len h.2.2
-      · exact lt_of_lt_of_le (L1 h.1) (show len X ≤ len X + len Y from B8)
+      · exact lt_add_right_of_mem_left h.1
     exact (ax_add (X := X) (Y := Y) (i := i)).mpr ⟨h_lt, h_xor⟩
 
 theorem str_add_comm : ∀ {X Y : str}, X + Y = Y + X := by

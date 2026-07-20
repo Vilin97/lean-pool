@@ -81,8 +81,7 @@ instance normal [H.HasK] : (H.logic).Normal where
 
 instance [Entailment.Unnecessitation H] : H.logic.Unnecessitation := ⟨fun {_} h => unnec! h⟩
 
-instance [Entailment.ModalDisjunctive H] :
-    H.logic.ModalDisjunctive :=
+instance [Entailment.ModalDisjunctive H] : H.logic.ModalDisjunctive :=
   ⟨fun {_ _} h => modal_disjunctive h⟩
 
 instance : (Logic.K).Normal := Hilbert.normal

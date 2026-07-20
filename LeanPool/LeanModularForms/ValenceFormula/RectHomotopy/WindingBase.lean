@@ -27,6 +27,16 @@ open Complex Set Metric Filter Topology
 
 namespace RectHomotopyProof
 
+/-- The reference point `refP₀ = I·Y₀` has zero real part. -/
+private lemma refP₀_re_eq_zero : refP₀.re = 0 := by
+  unfold refP₀
+  simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
+
+/-- The reference point `refP₀ = I·Y₀` has imaginary part `refY₀`. -/
+private lemma refP₀_im_eq : refP₀.im = refY₀ := by
+  unfold refP₀
+  simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
+
 private lemma sqrt_one_minus_sq_plus_linear_ge_one (x : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1 / 2) :
     Real.sqrt (1 - x^2) + (2 - Real.sqrt 3) * x ≥ 1 := by
   have hsq3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)
@@ -90,15 +100,13 @@ private lemma avoids_chord_rho'_to_i (p : ℂ)
     have h_u : u = 1 - 2 * ((1 - s) * p.re) := by linarith
     have heq_im' : (1 - s) * (p.im + p.re * (2 - Real.sqrt 3)) + s * refY₀ = 1 := by
       have : (1 - u) * (Real.sqrt 3 / 2) + u =
-        1 - (1 - s) * p.re * (2 - Real.sqrt 3) := by
-        rw [h_1mu, h_u]; ring
+        1 - (1 - s) * p.re * (2 - Real.sqrt 3) := by rw [h_1mu, h_u]; ring
       linarith
     have hp_im_bound : p.im > Real.sqrt (1 - p.re ^ 2) := by
       have h1 : 0 ≤ 1 - p.re ^ 2 := by nlinarith [abs_lt.mp hp_re]
       rw [show p.im = Real.sqrt (p.im ^ 2) from (Real.sqrt_sq (le_of_lt hp_im_pos)).symm]
       exact Real.sqrt_lt_sqrt h1 (by nlinarith)
-    have hp_re_le : p.re ≤ 1/2 := by
-      rcases abs_le.mp (le_of_lt hp_re) with ⟨_, h⟩; linarith
+    have hp_re_le : p.re ≤ 1/2 := by rcases abs_le.mp (le_of_lt hp_re) with ⟨_, h⟩; linarith
     have h_combo : p.im + p.re * (2 - Real.sqrt 3) > 1 := by
       have h_ge := sqrt_one_minus_sq_plus_linear_ge_one p.re hp_re_nn hp_re_le
       linarith
@@ -110,8 +118,7 @@ private lemma avoids_chord_rho'_to_i (p : ℂ)
     have h_lhs_nn : (1 - u) / 2 ≥ 0 := div_nonneg (by linarith) (by norm_num)
     have h_rhs_le : (1 - s) * p.re ≤ 0 :=
       mul_nonpos_of_nonneg_of_nonpos h1s_nn (le_of_lt hp_re_neg)
-    have h_both_zero : (1 - s) * p.re = 0 ∧ (1 - u) / 2 = 0 := by
-      constructor <;> linarith
+    have h_both_zero : (1 - s) * p.re = 0 ∧ (1 - u) / 2 = 0 := by constructor <;> linarith
     have hs_eq : s = 1 := by
       rcases mul_eq_zero.mp h_both_zero.1 with h | h
       · linarith
@@ -121,8 +128,7 @@ private lemma avoids_chord_rho'_to_i (p : ℂ)
     rw [hfd_im] at heq_im
     have h_bound : (1 - u) * (Real.sqrt 3 / 2) + u ≤ 1 := by
       have : (1 - u) * (Real.sqrt 3 / 2) + u =
-          Real.sqrt 3 / 2 + u * (1 - Real.sqrt 3 / 2) := by
-        ring
+          Real.sqrt 3 / 2 + u * (1 - Real.sqrt 3 / 2) := by ring
       rw [this]
       have h1 : 1 - Real.sqrt 3 / 2 > 0 := by nlinarith [hsq3]
       have h2 : u * (1 - Real.sqrt 3 / 2) ≤ 1 * (1 - Real.sqrt 3 / 2) :=
@@ -184,8 +190,7 @@ private lemma avoids_chord_i_to_rho (p : ℂ)
         linarith
       have hp_abs_re : |p.re| = -p.re := abs_of_neg hp_re_neg
       have hp_re_nn' : 0 ≤ -p.re := by linarith
-      have hp_re_le' : -p.re ≤ 1/2 := by
-        rw [← hp_abs_re]; linarith
+      have hp_re_le' : -p.re ≤ 1/2 := by rw [← hp_abs_re]; linarith
       have hp_im_bound : p.im > Real.sqrt (1 - p.re ^ 2) := by
         have h1 : 0 ≤ 1 - p.re ^ 2 := by nlinarith [abs_lt.mp hp_re]
         rw [show p.im = Real.sqrt (p.im ^ 2) from (Real.sqrt_sq (le_of_lt hp_im_pos)).symm]
@@ -202,8 +207,7 @@ private lemma avoids_chord_i_to_rho (p : ℂ)
   · rw [hfd_re] at heq_re
     have h_rhs_nn : (1 - s) * p.re ≥ 0 := by positivity
     have h_lhs_le : -v / 2 ≤ 0 := by linarith
-    have h_both_zero : (1 - s) * p.re = 0 ∧ v = 0 := by
-      constructor <;> linarith
+    have h_both_zero : (1 - s) * p.re = 0 ∧ v = 0 := by constructor <;> linarith
     have hs_eq : s = 1 := by
       rcases mul_eq_zero.mp h_both_zero.1 with h | h
       · linarith
@@ -222,12 +226,8 @@ lemma fdPolygon_avoids_line_to_ref (p : ℂ) (hp_norm : ‖p‖ > 1)
   have hsq3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)
   have hsq3_pos : 0 < Real.sqrt 3 := Real.sqrt_pos_of_pos (by norm_num : (0 : ℝ) < 3)
   have hsq3_lt2 : Real.sqrt 3 < 2 := by nlinarith [hsq3]
-  have href_re : refP₀.re = 0 := by
-    unfold refP₀
-    simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
-  have href_im : refP₀.im = refY₀ := by
-    unfold refP₀
-    simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
+  have href_re : refP₀.re = 0 := refP₀_re_eq_zero
+  have href_im : refP₀.im = refY₀ := refP₀_im_eq
   have hp_sq : p.re ^ 2 + p.im ^ 2 > 1 := by
     rw [Complex.norm_eq_sqrt_sq_add_sq] at hp_norm
     nlinarith [Real.sq_sqrt (add_nonneg (sq_nonneg p.re) (sq_nonneg p.im)),
@@ -251,14 +251,11 @@ lemma fdPolygon_avoids_line_to_ref (p : ℂ) (hp_norm : ‖p‖ > 1)
     linarith
   by_cases ht1 : t ≤ 1
   · have hfd_re : (fdPolygon t).re = 1/2 := by
-      simp only [fdPolygon, ht1, ↓reduceIte, add_re,
-        div_ofNat_re, one_re, mul_re, I_re,
-        mul_zero, I_im, mul_one]
-      norm_num
+      simp only [fdPolygon, ht1, ↓reduceIte, add_re, div_ofNat_re, one_re, mul_re, I_re,
+        mul_zero, I_im, mul_one]; norm_num
     rw [hfd_re] at heq_re
     have h1 : |(1 - s) * p.re| ≤ |p.re| := by
-      rw [abs_mul, abs_of_nonneg h1s_nn]
-      exact mul_le_of_le_one_left (abs_nonneg _) (by linarith)
+      rw [abs_mul, abs_of_nonneg h1s_nn]; exact mul_le_of_le_one_left (abs_nonneg _) (by linarith)
     have h2 : |(1 - s) * p.re| < 1/2 := lt_of_le_of_lt h1 hp_re
     have h3 : (1 - s) * p.re = 1/2 := by linarith
     have h4 : |(1 - s) * p.re| = 1/2 := by rw [h3]; norm_num
@@ -274,12 +271,9 @@ lemma fdPolygon_avoids_line_to_ref (p : ℂ) (hp_norm : ‖p‖ > 1)
       · push Not at ht3
         by_cases ht4 : t ≤ 4
         · have hfd_re : (fdPolygon t).re = -1/2 := by
-            simp only [fdPolygon, not_le.mpr ht1,
-              not_le.mpr ht2, not_le.mpr ht3, ht4,
-              ↓reduceIte, add_re, neg_re, one_re,
-              div_ofNat_re, mul_re, ofReal_re,
-              I_re, mul_zero, I_im, mul_one]
-            norm_num
+            simp only [fdPolygon, not_le.mpr ht1, not_le.mpr ht2, not_le.mpr ht3, ht4,
+              ↓reduceIte, add_re, neg_re, one_re, div_ofNat_re, mul_re, ofReal_re,
+              I_re, mul_zero, I_im, mul_one]; norm_num
           rw [hfd_re] at heq_re
           have h1 : |(1 - s) * p.re| ≤ |p.re| := by
             rw [abs_mul, abs_of_nonneg h1s_nn]
@@ -301,8 +295,7 @@ lemma fdPolygon_avoids_line_to_ref (p : ℂ) (hp_norm : ‖p‖ > 1)
           · simp only [sub_self, zero_mul, zero_add, one_mul] at heq_im; linarith [ref_Y₀_lt_H]
           · have : (1 - s) * p.im < (1 - s) * HHeight := by
               apply mul_lt_mul_of_pos_left hp_im; linarith
-            have : s * refY₀ < s * HHeight := by
-              apply mul_lt_mul_of_pos_left ref_Y₀_lt_H; linarith
+            have : s * refY₀ < s * HHeight := by apply mul_lt_mul_of_pos_left ref_Y₀_lt_H; linarith
             have : (1 - s) * p.im + s * refY₀ < (1 - s) * HHeight + s * HHeight := by linarith
             have : (1 - s) * HHeight + s * HHeight = HHeight := by ring
             linarith
@@ -322,26 +315,16 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
   have hnorm_pos : (0 : ℝ) < ‖w‖ := norm_pos_iff.mpr hw_ne
   have hgoal_eq : fdPolygonRadialCircle refP₀ t - refP₀ = w / ↑‖w‖ := by
     unfold fdPolygonRadialCircle polygonToCircleRadial
-    simp only [← hw_def, sub_self, zero_mul, zero_add, add_sub_cancel_left, div_eq_mul_inv]
-    exact one_smul ℝ _
+    simp_all
   rw [hgoal_eq]
   suffices hw_slit : w ∈ Complex.slitPlane by
     simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw_slit ⊢
-    rw [Complex.div_ofReal_re, Complex.div_ofReal_im]
-    rcases hw_slit with hre | him
-    · left; exact div_pos hre hnorm_pos
-    · right; exact div_ne_zero him (ne_of_gt hnorm_pos)
+    simp_all
   simp only [Complex.slitPlane, Set.mem_setOf_eq]
-  have ref_re : refP₀.re = 0 := by
-    unfold refP₀
-    simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
-  have ref_im : refP₀.im = refY₀ := by
-    unfold refP₀
-    simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
-  have hw_re : w.re = (fdPolygon t).re := by
-    simp only [hw_def, Complex.sub_re, ref_re, sub_zero]
-  have hw_im : w.im = (fdPolygon t).im - refY₀ := by
-    simp only [hw_def, Complex.sub_im, ref_im]
+  have ref_re : refP₀.re = 0 := refP₀_re_eq_zero
+  have ref_im : refP₀.im = refY₀ := refP₀_im_eq
+  have hw_re : w.re = (fdPolygon t).re := by simp only [hw_def, Complex.sub_re, ref_re, sub_zero]
+  have hw_im : w.im = (fdPolygon t).im - refY₀ := by simp only [hw_def, Complex.sub_im, ref_im]
   have ht0 : 0 ≤ t := ht.1
   have ht5 : t ≤ 5 := ht.2
   by_cases ht1 : t ≤ 1
@@ -357,19 +340,14 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
       have hfd_im_le : (fdPolygon t).im ≤ 1 := by
         rw [hfd_eq, chordSegment]
         have him : ((1 - (t - 1)) • rho' + (t - 1) • iPoint).im =
-            (1 - (t - 1)) * rho'.im + (t - 1) * iPoint.im := by
-          simp only [add_im, Complex.real_smul, mul_im, ofReal_re, ofReal_im,
-            add_zero, zero_mul]
-        rw [him]
+            (1 - (t - 1)) * rho'.im + (t - 1) * iPoint.im :=
+          by simp only [add_im, Complex.real_smul, mul_im, ofReal_re, ofReal_im, add_zero, zero_mul]
         have hrho' : rho'.im = Real.sqrt 3 / 2 := by
-          unfold rho'
-          simp only [one_div, Complex.add_im, Complex.inv_im, Complex.im_ofNat, neg_zero,
-            Complex.normSq_ofNat, zero_div, Complex.mul_im, Complex.div_ofNat_re,
-            Complex.ofReal_re, Complex.I_im, mul_one, Complex.div_ofNat_im,
-            Complex.ofReal_im, Complex.I_re, mul_zero, add_zero, zero_add]
-        have hi : iPoint.im = 1 := by
-          unfold iPoint; simp only [Complex.I_im]
-        rw [hrho', hi]
+          unfold rho'; simp only [one_div, Complex.add_im, Complex.inv_im, Complex.im_ofNat,
+            neg_zero, Complex.normSq_ofNat, zero_div, Complex.mul_im, Complex.div_ofNat_re,
+            Complex.ofReal_re, Complex.I_im, mul_one, Complex.div_ofNat_im, Complex.ofReal_im,
+            Complex.I_re, mul_zero, add_zero, zero_add]
+        rw [him, hrho', show iPoint.im = 1 from by unfold iPoint; simp only [Complex.I_im]]
         nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num), sq_nonneg (2 - Real.sqrt 3)]
       intro h_eq; linarith [ref_Y₀_gt_one]
     · push Not at ht2
@@ -382,17 +360,12 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
           rw [hfd_eq, chordSegment]
           have him : ((1 - (t - 2)) • iPoint + (t - 2) • rho).im =
               (1 - (t - 2)) * iPoint.im + (t - 2) * rho.im := by
-            simp only [add_im, Complex.real_smul, mul_im, ofReal_re, ofReal_im,
-              add_zero, zero_mul]
-          rw [him]
-          have hi : iPoint.im = 1 := by
-            unfold iPoint; simp only [Complex.I_im]
+            simp only [add_im, Complex.real_smul, mul_im, ofReal_re, ofReal_im, add_zero, zero_mul]
           have hrho : rho.im = Real.sqrt 3 / 2 := by
-            unfold rho
-            simp only [add_im, div_ofNat_im, neg_im, one_im, neg_zero, zero_div, mul_im,
-              div_ofNat_re, ofReal_re, I_im, mul_one, ofReal_im, I_re, mul_zero, add_zero,
-              zero_add]
-          rw [hi, hrho]
+            unfold rho; simp only [add_im, div_ofNat_im, neg_im, one_im, neg_zero, zero_div,
+              mul_im, div_ofNat_re, ofReal_re, I_im, mul_one, ofReal_im, I_re, mul_zero,
+              add_zero, zero_add]
+          rw [him, show iPoint.im = 1 from by unfold iPoint; simp only [Complex.I_im], hrho]
           nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num), sq_nonneg (2 - Real.sqrt 3)]
         intro h_eq; linarith [ref_Y₀_gt_one]
       · push Not at ht3
@@ -401,13 +374,7 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
           have hfd_im : (fdPolygon t).im =
               Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2) := by
             simp only [fdPolygon, not_le.mpr ht1, not_le.mpr ht2, not_le.mpr ht3, ht4, ↓reduceIte]
-            have heq : (-1/2 + (↑(Real.sqrt 3) / 2 + (↑t - 3) *
-                (↑HHeight - ↑(Real.sqrt 3) / 2)) * I) =
-              ↑(-1/2 : ℝ) +
-              ↑(Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2)) * I := by
-              push_cast; ring
-            rw [heq, add_im, ofReal_im, mul_im, ofReal_re, ofReal_im, I_re, I_im,
-              mul_one, mul_zero, add_zero, zero_add]
+            simp_all
           have hdenom_pos : HHeight - Real.sqrt 3 / 2 > 0 := by unfold HHeight; linarith
           intro h_eq
           have him_eq : (fdPolygon t).im = refY₀ := by linarith
@@ -422,10 +389,7 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
           have hfd_im : (fdPolygon t).im = HHeight := by
             simp only [fdPolygon, not_le.mpr ht1, not_le.mpr ht2, not_le.mpr ht3,
               not_le.mpr ht4, ↓reduceIte]
-            have heq : ((↑t - 9/2) + ↑HHeight * I) = ↑(t - 9/2 : ℝ) + ↑HHeight * I := by
-              push_cast; ring
-            rw [heq, add_im, ofReal_im, mul_im, ofReal_re, ofReal_im, I_re, I_im,
-              mul_one, mul_zero, add_zero, zero_add]
+            simp_all
           linarith [ref_Y₀_lt_H]
 
 /-- fdPolygon t - refP₀ is in slitPlane for t ∈ [0, 5] with t ≠ tL refP₀.
@@ -442,18 +406,10 @@ lemma fdPolygon_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5
   have hnorm_pos : (0 : ℝ) < ‖w‖ := norm_pos_iff.mpr hw_ne
   have hrc_eq : fdPolygonRadialCircle refP₀ t - refP₀ = w / ↑‖w‖ := by
     unfold fdPolygonRadialCircle polygonToCircleRadial
-    simp only [← hw_def, sub_self, zero_mul, zero_add, add_sub_cancel_left, div_eq_mul_inv]
-    exact one_smul ℝ _
+    simp_all
   rw [hrc_eq] at hw
   simp only [Complex.slitPlane, Set.mem_setOf_eq] at hw ⊢
-  rcases hw with hre | him
-  · left
-    rw [Complex.div_ofReal_re] at hre
-    exact (div_pos_iff.mp hre).elim (fun h => h.1)
-      (fun h => absurd h.2 (not_lt.mpr (le_of_lt hnorm_pos)))
-  · right
-    rw [Complex.div_ofReal_im] at him
-    exact fun h => him (div_eq_zero_iff.mpr (Or.inl h))
+  simp_all
 
 /-- w = fdPolygon · - refP₀ is continuous. -/
 lemma continuous_w : Continuous (fun t => fdPolygon t - refP₀) :=
@@ -495,18 +451,18 @@ lemma w_im_pos_near_tL_right :
 /-- Tendsto arg(w(t)) from the left of tL to -π. -/
 lemma tendsto_arg_w_left :
     Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-      (𝓝[Iio (tL refP₀)] (tL refP₀)) (𝓝 (-Real.pi)) := by
-  exact (Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
+      (𝓝[Iio (tL refP₀)] (tL refP₀)) (𝓝 (-Real.pi)) :=
+  (Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
     w_tL_re_neg w_tL_im_zero).comp (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       continuous_w.continuousAt.continuousWithinAt w_im_neg_near_tL_left)
 
 /-- Tendsto arg(w(t)) from the right of tL to π. -/
 lemma tendsto_arg_w_right :
     Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-      (𝓝[Ioi (tL refP₀)] (tL refP₀)) (𝓝 Real.pi) := by
-  exact (Complex.tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
+      (𝓝[Ioi (tL refP₀)] (tL refP₀)) (𝓝 Real.pi) :=
+  (Complex.tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
     w_tL_re_neg w_tL_im_zero).comp (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
       continuous_w.continuousAt.continuousWithinAt
-      (w_im_pos_near_tL_right.mono (fun t ht => le_of_lt ht)))
+      (w_im_pos_near_tL_right.mono (fun _t ht => le_of_lt ht)))
 
 end RectHomotopyProof

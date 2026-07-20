@@ -75,6 +75,9 @@ MIT permission notice that follows them.
   LeanPool/ArtinWedderburn           https://github.com/JobPetrovcic/ArtinWedderburn
       Copyright (c) 2024 Job Petrovčič
 
+  LeanPool/Brouwer                   https://github.com/math-xmum/Brouwer
+      Copyright (c) 2025 Math_XMUM
+
   LeanPool/DeadEnds                  https://github.com/AxiomMath/dead-ends
       Copyright (c) 2026 Axiom Math
 
@@ -96,6 +99,9 @@ MIT permission notice that follows them.
   LeanPool/LatticeTriangle           https://github.com/AxiomMath/lattice-triangle
       Copyright (c) 2026 Axiom Math
 
+  LeanPool/Lean4Itree                https://github.com/mit-plv/lean4-itree
+      Copyright (c) 2025 the choice-tree authors (see the AUTHORS file)
+
   LeanPool/PartialCombinatoryAlgebras
                                      https://github.com/andrejbauer/partial-combinatory-algebras
       Copyright (c) 2024 Andrej Bauer
@@ -116,6 +122,9 @@ MIT permission notice that follows them.
   LeanPool/RamanujanTauMissesPrimes  https://github.com/AxiomMath/ramanujan-tau-misses-primes
       Copyright (c) 2026 Axiom Math
 
+  LeanPool/Redhill                   https://github.com/Parcly-Taxel/Redhill
+      Copyright (c) 2026 Jeremy Tan / Parcly Taxel
+
   LeanPool/RlTheoryInLean            https://github.com/ShangtongZhang/rl-theory-in-lean
       Copyright (c) 2025 Shangtong Zhang
 
@@ -126,6 +135,9 @@ MIT permission notice that follows them.
       The upstream MIT LICENSE file gives the copyright line as
       "Copyright (c) 2026" with no name; the repository owner of record is
       "SamuelSchlesinger".
+
+  LeanPool/SpecialNumbers            https://github.com/provables/special-numbers
+      Copyright (c) 2024 Walter Moreira, Joe Stubbs
 
   LeanPool/TwoColoringOneRound       https://github.com/suomela/2-coloring-1-round
       Copyright (c) 2026 Jukka Suomela

@@ -254,8 +254,7 @@ lemma coeff_rhs' (f : MvPowerSeries (Fin 3) ℂ) (d : Fin 3 →₀ ℕ) :
       simp only [Finsupp.single_apply]
       by_cases hi : i = 0
       · subst hi
-        simp only [Fin.isValue, ↓reduceIte]
-        exact h
+        simpa only [Fin.isValue, ↓reduceIte] using h
       · simp [show (0 : Fin 3) ≠ i from fun h => hi h.symm]
     simp [hle, hd0]
 
@@ -604,27 +603,8 @@ lemma jensen_map_maxIdeal_eq_of_surj_closed
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) (r : T)))
     (h_closed : ∀ (I : Ideal ↥R), I.FG →
       ∀ (c : ↥R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :
-    Ideal.map R.subtype (IsLocalRing.maximalIdeal ↥R) = IsLocalRing.maximalIdeal T := by
-  apply le_antisymm (jensen_map_maxIdeal_le_of_closed R h_closed)
-  apply Submodule.le_of_le_smul_of_le_jacobson_bot
-  · exact IsNoetherian.noetherian _
-  · rw [IsLocalRing.jacobson_eq_maximalIdeal _ bot_ne_top]
-  · intro m hm
-    obtain ⟨r, hr⟩ := h_surj (Ideal.Quotient.mk (IsLocalRing.maximalIdeal T ^ 2) m)
-    have hdiff : (r : T) - m ∈ IsLocalRing.maximalIdeal T ^ 2 :=
-      (Ideal.Quotient.eq (I := IsLocalRing.maximalIdeal T ^ 2)).mp hr
-    have hr_in_M : (r : T) ∈ IsLocalRing.maximalIdeal T := by
-      rw [show (r : T) = ((r : T) - m) + m from by ring]
-      exact (IsLocalRing.maximalIdeal T).add_mem (Ideal.pow_le_self two_ne_zero hdiff) hm
-    have hr_in_MR : r ∈ IsLocalRing.maximalIdeal ↥R :=
-      jensen_comap_maxIdeal_le_of_local R (Ideal.mem_comap.mpr hr_in_M)
-    rw [show m = (r : T) + (m - (r : T)) from by ring]
-    apply Submodule.add_mem_sup
-    · exact Ideal.mem_map_of_mem R.subtype hr_in_MR
-    · have hmr : m - (r : T) ∈ IsLocalRing.maximalIdeal T ^ 2 := by
-        rw [show m - (r : T) = -((r : T) - m) from by ring]
-        exact neg_mem hdiff
-      rwa [sq] at hmr
+    Ideal.map R.subtype (IsLocalRing.maximalIdeal ↥R) = IsLocalRing.maximalIdeal T :=
+  map_maxIdeal_eq_of_surj_closed R h_surj h_closed
 
 -- jensen_construction unifies many deep typeclass instances across Construction/Application
 /-- Jensen's Corollary 2.4 for P = (0): the deep transfinite construction.

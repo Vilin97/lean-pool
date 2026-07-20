@@ -44,15 +44,13 @@ theorem tendsto_cpv_of_continuousOn_zero_integral
     (h_integral_zero : ∫ t in γ.a..γ.b, g (γ.toFun t) * deriv γ.toFun t = 0) :
     Tendsto (fun ε => ∫ t in γ.a..γ.b,
       cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) (𝓝[>] 0) (𝓝 0) := by
-  have hγ_cont := γ.toPiecewiseC1Curve.continuous_toFun
-  have hγ'_bdd := piecewiseC1Immersion_deriv_bounded γ
-  have hgγ_cont : ContinuousOn (fun t => g (γ.toFun t)) (Set.uIcc γ.a γ.b) := by
-    rw [Set.uIcc_of_le (le_of_lt γ.hab)]
-    exact hg_cont.comp hγ_cont (fun t ht => Set.mem_image_of_mem _ ht)
+  have hgγ_cont : ContinuousOn (fun t => g (γ.toFun t)) (Set.uIcc γ.a γ.b) :=
+    Set.uIcc_of_le (le_of_lt γ.hab) ▸ hg_cont.comp
+      γ.toPiecewiseC1Curve.continuous_toFun (fun t ht => Set.mem_image_of_mem _ ht)
   have h_ord_int : IntervalIntegrable (fun t => g (γ.toFun t) * deriv γ.toFun t)
       MeasureTheory.volume γ.a γ.b :=
-    (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ'_bdd).continuousOn_mul
-      hgγ_cont
+    (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve
+      (piecewiseC1Immersion_deriv_bounded γ)).continuousOn_mul hgγ_cont
   rw [← h_integral_zero]
   have h_ae_not_in_S0 := ae_forall_ne_of_finite_crossings S0 γ
   exact intervalIntegral.tendsto_integral_filter_of_dominated_convergence
@@ -72,11 +70,7 @@ theorem tendsto_cpv_of_continuousOn_zero_integral
         simp only [cauchyPrincipalValueIntegrandOn]
         have h_not_in' := h_not_in ht_in
         by_cases hS0_empty : S0 = ∅
-        · have : ∀ ε, ¬∃ s ∈ S0, ‖γ.toFun t - s‖ ≤ ε := by
-            intro ε h_ex; obtain ⟨s, hs, _⟩ := h_ex
-            exact absurd hs (hS0_empty ▸ Finset.notMem_empty s)
-          apply tendsto_const_nhds.congr'
-          filter_upwards with ε; rw [if_neg (this ε)]
+        · simp_all
         · have hS0_ne : S0.Nonempty := Finset.nonempty_of_ne_empty hS0_empty
           let δ := S0.inf' hS0_ne (fun s => ‖γ.toFun t - s‖)
           have hδ_pos : 0 < δ :=
@@ -115,31 +109,26 @@ theorem holomorphic_cpv_tendsto_zero_on_convex (U : Set ℂ) (hU : IsOpen U)
   have hgγ_cont : ContinuousOn (fun t => g (γ.toFun t)) (Set.uIcc γ.a γ.b) := by
     rw [Set.uIcc_of_le (le_of_lt γ.hab)]
     exact hg_cont_U.comp hγ_cont (fun t ht => hγ_in_U t ht)
-  have hγ'_bdd := piecewiseC1Immersion_deriv_bounded γ
   have h_ord_int : IntervalIntegrable (fun t => g (γ.toFun t) * deriv γ.toFun t)
       MeasureTheory.volume γ.a γ.b :=
-    (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ'_bdd).continuousOn_mul
-      hgγ_cont
-  have hU_ne : U.Nonempty :=
-    ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩
-  obtain ⟨F, hF⟩ := holomorphic_convex_primitive hU_convex hU hU_ne hg
+    (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve
+      (piecewiseC1Immersion_deriv_bounded γ)).continuousOn_mul hgγ_cont
+  obtain ⟨F, hF⟩ := holomorphic_convex_primitive hU_convex hU
+    ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩ hg
   have h_Fγ_cont : ContinuousOn (F ∘ γ.toFun) (Icc γ.a γ.b) := by
     intro t ht
     exact ((hF (γ.toFun t) (hγ_in_U t ht)).continuousAt).continuousWithinAt.comp
       (hγ_cont t ht) (mapsTo_image γ.toFun _)
-  have h_countable : (↑γ.partition ∩ Ioo γ.a γ.b : Set ℝ).Countable :=
-    (γ.partition.finite_toSet.inter_of_left _).countable
   have h_deriv' : ∀ t ∈ Ioo γ.a γ.b \ (↑γ.partition ∩ Ioo γ.a γ.b),
-      HasDerivAt (F ∘ γ.toFun) (g (γ.toFun t) * deriv γ.toFun t) t := by
-    intro t ⟨ht, hp⟩
-    exact (hF (γ.toFun t) (hγ_in_U t (Ioo_subset_Icc_self ht))).comp_of_eq t
+      HasDerivAt (F ∘ γ.toFun) (g (γ.toFun t) * deriv γ.toFun t) t := fun t ⟨ht, hp⟩ =>
+    (hF (γ.toFun t) (hγ_in_U t (Ioo_subset_Icc_self ht))).comp_of_eq t
       ((γ.smooth_off_partition t (Ioo_subset_Icc_self ht)
         (fun h => hp ⟨h, ht⟩)).hasDerivAt) rfl
   have h_ord_zero : ∫ t in γ.a..γ.b, g (γ.toFun t) * deriv γ.toFun t = 0 := by
-    have h_ftc := MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le
-      (F ∘ γ.toFun) (fun t => g (γ.toFun t) * deriv γ.toFun t) (le_of_lt γ.hab)
-      h_countable h_Fγ_cont h_deriv' h_ord_int
-    rw [h_ftc, Function.comp_apply, Function.comp_apply,
+    rw [MeasureTheory.integral_eq_of_hasDerivAt_off_countable_of_le (F ∘ γ.toFun)
+        (fun t => g (γ.toFun t) * deriv γ.toFun t) (le_of_lt γ.hab)
+        (γ.partition.finite_toSet.inter_of_left _).countable h_Fγ_cont h_deriv' h_ord_int,
+      Function.comp_apply, Function.comp_apply,
       (hγ_closed : γ.toFun γ.a = γ.toFun γ.b), sub_self]
   exact tendsto_cpv_of_continuousOn_zero_integral S0 g γ hg_cont_image h_ord_zero
 
@@ -168,9 +157,7 @@ lemma cpvIntegrandOn_finset_sum {ι : Type*} (S0 : Finset ℂ) (T : Finset ι)
     cauchyPrincipalValueIntegrandOn S0 (fun z => ∑ i ∈ T, f i z) γ ε t =
     ∑ i ∈ T, cauchyPrincipalValueIntegrandOn S0 (f i) γ ε t := by
   simp only [cauchyPrincipalValueIntegrandOn]
-  split_ifs with h
-  · simp only [Finset.sum_const_zero]
-  · simp only [Finset.sum_mul]
+  split_ifs <;> simp only [Finset.sum_const_zero, Finset.sum_mul]
 
 /-- Integrability of CPV integrand for functions continuous on U \ S0.
 For any g continuous on U \ S0 with γ mapping into U, the multi-point CPV
@@ -186,17 +173,14 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
       (cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε) volume γ.a γ.b := by
   have hγ_cont := γ.toPiecewiseC1Curve.continuous_toFun
   obtain ⟨Mγ', hMγ'⟩ := piecewiseC1Immersion_deriv_bounded γ
-  have h_compact_image : IsCompact (γ.toFun '' Icc γ.a γ.b) :=
-    isCompact_Icc.image_of_continuousOn hγ_cont
   have h_safe_closed : IsClosed ({z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖}) := by
     have : {z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖} =
-        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by
-      ext z; simp [Set.mem_iInter]
+        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by ext z; simp [Set.mem_iInter]
     rw [this]; exact isClosed_biInter fun s _ =>
       isClosed_le continuous_const (continuous_norm.comp (continuous_id.sub continuous_const))
   have h_safe_compact : IsCompact
       ((γ.toFun '' Icc γ.a γ.b) ∩ {z | ∀ s ∈ S0, ε ≤ ‖z - s‖}) :=
-    h_compact_image.inter_right h_safe_closed
+    (isCompact_Icc.image_of_continuousOn hγ_cont).inter_right h_safe_closed
   have h_safe_sub :
       (γ.toFun '' Icc γ.a γ.b) ∩
         {z | ∀ s ∈ S0, ε ≤ ‖z - s‖} ⊆ U \ ↑S0 := by
@@ -235,14 +219,13 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
       apply ContinuousOn.comp (hg_cont.mono h_safe_sub) (hγ_cont.mono inter_subset_right)
       intro t ⟨ht_good, ht_Icc⟩
       exact ⟨mem_image_of_mem _ ht_Icc, fun s' hs' => le_of_lt (ht_good s' hs')⟩
-    have hγ'_meas := aesm_deriv_on_Icc γ
     have h_prod_meas : AEStronglyMeasurable (fun t => g (γ.toFun t) * deriv γ.toFun t)
         (volume.restrict (GoodSet ∩ Icc γ.a γ.b)) :=
       (hgγ_cont_good.aestronglyMeasurable hGoodSet_meas).mul
-        (hγ'_meas.mono_measure (Measure.restrict_mono Set.inter_subset_right le_rfl))
-    have h_zero_meas : AEStronglyMeasurable (fun _ : ℝ => (0 : ℂ))
-        (volume.restrict (GoodSet ∩ Icc γ.a γ.b)ᶜ) := aestronglyMeasurable_const
-    have h_pw := AEStronglyMeasurable.piecewise hGoodSet_meas h_prod_meas h_zero_meas
+        ((aesm_deriv_on_Icc γ).mono_measure (Measure.restrict_mono Set.inter_subset_right le_rfl))
+    have h_pw := AEStronglyMeasurable.piecewise hGoodSet_meas h_prod_meas
+      (aestronglyMeasurable_const : AEStronglyMeasurable (fun _ : ℝ => (0 : ℂ))
+        (volume.restrict (GoodSet ∩ Icc γ.a γ.b)ᶜ))
     have h_ae_eq : cpv_fn =ᵐ[volume.restrict (Icc γ.a γ.b)]
         (GoodSet ∩ Icc γ.a γ.b).piecewise
           (fun t => g (γ.toFun t) * deriv γ.toFun t) (fun _ => (0 : ℂ)) := by
@@ -276,27 +259,6 @@ The proof decomposes h into:
 The identification `a_0 = residueAt f s` uses `residueAt_eq_laurent_head_coeff`
 (Sublemma 1). -/
 
-/-- If two functions agree eventually on `𝓝[≠] s`, they have the same `residueAt`.
-This is because `residueAt` is defined via circle integrals, and two functions that
-agree on a punctured neighborhood have the same circle integrals for small radii. -/
-private lemma residueAt_congr {f g : ℂ → ℂ} {s : ℂ}
-    (h : f =ᶠ[𝓝[≠] s] g) : residueAt f s = residueAt g s := by
-  have h_mem : {z | f z = g z} ∈ 𝓝[≠] s := h
-  rw [Metric.mem_nhdsWithin_iff] at h_mem
-  obtain ⟨δ, hδ_pos, hδ_eq⟩ := h_mem
-  have h_ci_eq : ∀ r, 0 < r → r < δ →
-      (∮ z in C(s, r), f z) = (∮ z in C(s, r), g z) := by
-    intro r hr_pos hr_lt
-    apply circleIntegral.integral_congr hr_pos.le
-    intro z hz
-    have hne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    exact hδ_eq ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt),
-      Set.mem_compl_singleton_iff.mpr hne⟩
-  exact limUnder_eventually_eq (by
-    filter_upwards [Ioo_mem_nhdsGT hδ_pos] with r ⟨hr_pos, hr_lt⟩
-    congr 1; exact h_ci_eq r hr_pos hr_lt)
-
 /-- Circle integrals of a meromorphic `f` are constant for small radii: if `f` is
 analytic on `ball s rf \ {s}`, then `∮_{C(s,r)} f = ∮_{C(s,R₀)} f` for `r ≤ R₀ < rf`.
 The proof multiplies by `(z-s)` to get a holomorphic `F` on the annulus, applies
@@ -311,8 +273,7 @@ private lemma circleIntegral_const_of_meromorphicAt_aux (f : ℂ → ℂ) (s : �
       Set.EqOn (fun z => (z - s)⁻¹ • ((z - s) * f z)) f (Metric.sphere s ρ) := by
     intro ρ hρ_ne z hz
     have h_ne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz
-      exact hρ_ne hz.symm
+      intro heq; simp_all
     simp only [smul_eq_mul, inv_mul_cancel_left₀ (sub_ne_zero.mpr h_ne)]
   set F : ℂ → ℂ := fun z => (z - s) * f z with hF_def
   have hF_analytic : ∀ z, z ∈ Metric.ball s rf → z ≠ s → AnalyticAt ℂ F z := by
@@ -330,9 +291,8 @@ private lemma circleIntegral_const_of_meromorphicAt_aux (f : ℂ → ℂ) (s : �
     have h_ne : z ≠ s := by
       intro heq; subst heq
       exact hz_not_cb (Metric.mem_closedBall_self hr_pos.le)
-    have hz_rf : z ∈ Metric.ball s rf :=
-      Metric.mem_ball.mpr (lt_trans (Metric.mem_ball.mp hz_ball) hR₀_lt_rf)
-    exact (hF_analytic z hz_rf h_ne).differentiableAt
+    exact (hF_analytic z (Metric.mem_ball.mpr
+      (lt_trans (Metric.mem_ball.mp hz_ball) hR₀_lt_rf)) h_ne).differentiableAt
   have h_annulus :=
     Complex.circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable
       hr_pos hr_le Set.countable_empty hF_cont hF_diff
@@ -436,8 +396,7 @@ lemma residueAt_sub_residueSum_eq_zero
     exact (hf_analytic_at z
       (by rwa [Metric.mem_ball, Metric.mem_sphere.mp hz])
       (by intro heq
-          rw [heq, Metric.mem_sphere, dist_self] at hz
-          linarith)).continuousAt.continuousWithinAt
+          simp_all)).continuousAt.continuousWithinAt
   have h_const_integral : ∀ r, 0 < r → r ≤ R₀ →
       (∮ z in C(s, r), f z) = (∮ z in C(s, R₀), f z) := fun r hr hr_le =>
     circleIntegral_const_of_meromorphicAt_aux f s rf R₀ hR₀_pos hR₀_lt_rf
@@ -446,26 +405,21 @@ lemma residueAt_sub_residueSum_eq_zero
   rw [eventually_nhdsWithin_iff]
   filter_upwards [Iio_mem_nhds hR₀_pos] with r hr_lt hr_pos
   simp only [Set.mem_Ioi] at hr_pos; simp only [Set.mem_Iio] at hr_lt
-  have hr_lt_δ : r < δ := lt_trans hr_lt hR₀_lt_δ
-  have hr_lt_rf : r < rf := lt_trans hr_lt hR₀_lt_rf
-  have hr_ne : r ≠ 0 := ne_of_gt hr_pos
-  have hs_not : s ∉ Metric.sphere s r := by simp [hr_ne.symm]
   have hf_ci : CircleIntegrable f s r :=
-    (hf_cont_sphere r hr_pos hr_lt_rf).circleIntegrable hr_pos.le
+    (hf_cont_sphere r hr_pos (lt_trans hr_lt hR₀_lt_rf)).circleIntegrable hr_pos.le
   have h_no_pole_on_sphere : ∀ p ∈ S0, ∀ z ∈ Metric.sphere s r, z - ↑p ≠ 0 := by
     intro p hp z hz
     apply sub_ne_zero.mpr; intro heq
     rw [heq] at hz
     by_cases h_eq : p = s
-    · exact hs_not (h_eq ▸ hz)
+    · exact absurd (h_eq ▸ hz) (by simp [(ne_of_gt hr_pos).symm])
     · have h_dist := hδ_sep p hp h_eq
-      rw [Metric.mem_sphere] at hz; linarith
+      rw [Metric.mem_sphere] at hz; linarith [lt_trans hr_lt hR₀_lt_δ]
   have hsum_ci : CircleIntegrable (fun z => ∑ s' ∈ S0, residueAt f s' / (z - s')) s r := by
     apply ContinuousOn.circleIntegrable hr_pos.le
     apply continuousOn_finsetSum; intro p hp
     exact ContinuousOn.div continuousOn_const (continuousOn_id.sub continuousOn_const)
       (fun z hz => h_no_pole_on_sphere p hp z hz)
-  have h_int_sub := circleIntegral.integral_sub hf_ci hsum_ci
   have h_no_pole_in_cb : ∀ p ∈ S0.erase s,
       ∀ z ∈ Metric.closedBall s r, z - ↑p ≠ 0 := by
     intro p hp z hz
@@ -473,22 +427,20 @@ lemma residueAt_sub_residueSum_eq_zero
     rw [heq] at hz
     have h_dist := hδ_sep p (Finset.mem_of_mem_erase hp) (Finset.ne_of_mem_erase hp)
     rw [Metric.mem_closedBall] at hz; linarith
-  have h_int_sum : (∮ z in C(s, r), ∑ s' ∈ S0, residueAt f s' / (z - s')) =
-      residueAt f s * (2 * ↑Real.pi * I) :=
+  rw [circleIntegral.integral_sub hf_ci hsum_ci,
     circleIntegral_simple_pole_sum S0 (residueAt f) s hs r hr_pos
-      h_no_pole_on_sphere h_no_pole_in_cb
-  rw [h_int_sub, h_int_sum, mul_sub, mul_comm (residueAt f s) _, ← mul_assoc,
+      h_no_pole_on_sphere h_no_pole_in_cb,
+    mul_sub, mul_comm (residueAt f s) _, ← mul_assoc,
     inv_mul_cancel₀ h2piI_ne, one_mul]
   rw [h_const_integral r hr_pos hr_lt.le]
-  have h_res_eq : residueAt f s = (2 * ↑Real.pi * I)⁻¹ * ∮ z in C(s, R₀), f z := by
+  rw [show residueAt f s = (2 * ↑Real.pi * I)⁻¹ * ∮ z in C(s, R₀), f z from by
     unfold residueAt
     apply Filter.Tendsto.limUnder_eq
     apply tendsto_nhds_of_eventually_eq
     rw [eventually_nhdsWithin_iff]
     filter_upwards [Iio_mem_nhds hR₀_pos] with r' hr'_lt hr'_pos
     simp only [Set.mem_Ioi] at hr'_pos; simp only [Set.mem_Iio] at hr'_lt
-    rw [h_const_integral r' hr'_pos hr'_lt.le]
-  rw [h_res_eq, sub_self]
+    rw [h_const_integral r' hr'_pos hr'_lt.le], sub_self]
 
 /-- Helper: If `g` decomposes as `g = g_reg + g_pol` where:
 - `g_reg` is continuous on `γ`'s image with `∮ g_reg = 0`, and
@@ -508,22 +460,12 @@ private theorem cpv_tendsto_zero_of_add_decomposition
       cauchyPrincipalValueIntegrandOn S0 g_pol γ.toFun ε t) (𝓝[>] 0) (𝓝 0)) :
     Tendsto (fun ε => ∫ t in γ.a..γ.b,
       cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) (𝓝[>] 0) (𝓝 0) := by
-  have hg_eq_fun : g = fun z => g_reg z + g_pol z := funext hg_eq
-  have h_integrand_eq : ∀ ε t,
-      cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t =
-      cauchyPrincipalValueIntegrandOn S0 g_reg γ.toFun ε t +
-      cauchyPrincipalValueIntegrandOn S0 g_pol γ.toFun ε t := by
-    intro ε t; rw [hg_eq_fun]; exact cpvIntegrandOn_add S0 g_reg g_pol γ.toFun ε t
-  have h_reg_tendsto := tendsto_cpv_of_continuousOn_zero_integral S0 g_reg γ
-    hg_reg_cont hg_reg_int_zero
-  have h_zero_eq : (0 : ℂ) = 0 + 0 := (add_zero 0).symm
-  rw [h_zero_eq]
-  apply Filter.Tendsto.congr' _ (h_reg_tendsto.add hg_pol_tendsto)
+  rw [show (0 : ℂ) = 0 + 0 from (add_zero 0).symm]
+  apply Filter.Tendsto.congr' _
+    ((tendsto_cpv_of_continuousOn_zero_integral S0 g_reg γ
+      hg_reg_cont hg_reg_int_zero).add hg_pol_tendsto)
   filter_upwards [self_mem_nhdsWithin] with ε (hε : (0 : ℝ) < ε)
-  rw [show (fun t => cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε t) =
-      (fun t => cauchyPrincipalValueIntegrandOn S0 g_reg γ.toFun ε t +
-       cauchyPrincipalValueIntegrandOn S0 g_pol γ.toFun ε t) from
-    funext (fun t => h_integrand_eq ε t)]
+  simp_rw [funext hg_eq, cpvIntegrandOn_add]
   exact (intervalIntegral.integral_add
     (intervalIntegrable_cauchyPrincipalValueIntegrandOn (S0 := S0) hε hg_reg_cont)
     (intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff U S0 g_pol

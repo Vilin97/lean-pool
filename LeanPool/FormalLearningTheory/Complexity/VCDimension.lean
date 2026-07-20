@@ -27,11 +27,6 @@ def Shatters (X : Type u) (C : ConceptClass X Bool) (S : Finset X) : Prop :=
 noncomputable def VCDim (X : Type u) (C : ConceptClass X Bool) : WithTop ℕ :=
   ⨆ (S : Finset X) (_ : Shatters X C S), (S.card : WithTop ℕ)
 
-/- Alternative: Mathlib's Finset.vcDim (requires Fintype X, DecidableEq X):
--- def VCDimMathlib (X : Type u) [Fintype X] [DecidableEq X]
---     (C : Finset (X → Bool)) : ℕ :=
---   Finset.vcDim C -/
-
 /-- Growth function (shattering coefficient): π_C(m) = max_{|S|=m} |{c|_S : c ∈ C}|.
     For each m-element set S, counts the number of distinct restrictions of C to S,
     then takes the supremum over all such S. -/

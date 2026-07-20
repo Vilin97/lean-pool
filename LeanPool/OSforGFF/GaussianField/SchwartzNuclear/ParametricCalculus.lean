@@ -80,9 +80,7 @@ lemma norm_iteratedFDeriv_iteratedFDeriv {E F : Type*}
     rw [iteratedFDeriv_succ_eq_comp_left (f := f) (n := k)]
     rw [show ⇑(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => E) F).symm =
       ⇑(curryLeftLIE (E := E) (F := F) k) from (curryLeftLIE_coe_eq k).symm]
-    rw [(curryLeftLIE k).norm_iteratedFDeriv_comp_left]
-    rw [norm_iteratedFDeriv_fderiv]
-    rw [ih (n + 1)]
+    rw [(curryLeftLIE k).norm_iteratedFDeriv_comp_left, norm_iteratedFDeriv_fderiv, ih (n + 1)]
     conv_lhs => rw [show n + 1 + k = n + (k + 1) from by omega]
 
 /-! ### Leibniz integral rule for Schwartz integrands
@@ -138,8 +136,7 @@ lemma contDiff_schwartz_parametric_integral
       iteratedFDeriv ℝ m (Φ_t t) y =
       g t • iteratedFDeriv ℝ m (fun y' => f (ι y' t)) y := by
     intro m y t
-    have h_eq : Φ_t t = fun y' => g t • f (ι y' t) := by
-      ext y'; simp [Φ_t, mul_comm, smul_eq_mul]
+    have h_eq : Φ_t t = fun y' => g t • f (ι y' t) := by ext y'; simp [Φ_t, mul_comm, smul_eq_mul]
     rw [h_eq]
     exact iteratedFDeriv_const_smul_apply'
       ((inner_smooth t).of_le (by exact_mod_cast le_top) |>.contDiffAt)
@@ -167,12 +164,9 @@ lemma contDiff_schwartz_parametric_integral
   have Φ_t_raw_integrable : ∀ (y : H), Integrable (fun t => Φ_t t y) volume := by
     intro y
     obtain ⟨C, hC_pos, hC⟩ := h_bound 0
-    have hC' : ∀ y t, ‖Φ_t t y‖ ≤ C * ‖g t‖ := by
-      intro y t
-      have h := hC y t
-      simp only [iteratedFDeriv_zero_eq_comp, Function.comp_def,
-        LinearIsometryEquiv.norm_map] at h
-      exact h
+    have hC' : ∀ y t, ‖Φ_t t y‖ ≤ C * ‖g t‖ := fun y t => by
+      simpa only [iteratedFDeriv_zero_eq_comp, Function.comp_def,
+        LinearIsometryEquiv.norm_map] using hC y t
     exact (g_integrable.norm.const_mul C).mono
       (by -- measurability of Φ_t · y
         have h := Φ_t_meas 0 y

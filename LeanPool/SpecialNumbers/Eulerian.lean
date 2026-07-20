@@ -38,8 +38,7 @@ def eulerian (n k : ℕ) : ℕ :=
 
 theorem eulerian_0_0 : eulerian 0 0 = 1 := by rfl
 
-theorem eulerian_of_n_zero (n : ℕ) : eulerian n 0 = 1 := by
-  simp [eulerian]
+theorem eulerian_of_n_zero (n : ℕ) : eulerian n 0 = 1 := by simp [eulerian]
 
 theorem eulerian_of_zero : eulerian 0 0 = 1 := eulerian_of_n_zero 0
 
@@ -59,9 +58,7 @@ theorem eulerian_of_n_succ_n (n k : ℕ) (h : n > 0) (hp : k ≥ n) : eulerian n
               false_or]
             constructor
             · exact eulerian_of_zero_k k (by omega)
-            · by_cases d : 1 - k = 0
-              · exact Or.inl d
-              · exact Or.inr <| eulerian_of_zero_k (k - 1) (by omega)
+            · simp_all
           · simp [ih k (by omega) (by omega), ih (k - 1) (by omega) (by omega)]
         · omega
 
@@ -149,9 +146,7 @@ theorem worpitzky (n x : ℕ) :
           = (k + 1) * eulerian n k * (x + k).choose (n + 1)
             + (n - k) * eulerian n k * (x + k + 1).choose (n + 1) := by
       intro k hk
-      have hkn : k ≤ n := by
-        have := Finset.mem_range.mp hk
-        omega
+      have hkn : k ≤ n := Nat.lt_succ_iff.mp (Finset.mem_range.mp hk)
       calc eulerian n k * (x + k).choose n * x
           = eulerian n k * (x * (x + k).choose n) := by ring
         _ = eulerian n k * ((k + 1) * (x + k).choose (n + 1)

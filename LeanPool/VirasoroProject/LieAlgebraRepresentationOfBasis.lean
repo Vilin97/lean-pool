@@ -117,7 +117,7 @@ lemma _root_.LieAlgebra.representationOfBasis_property
     ((representationOfBasis B genComm).compRight 𝕂).comp (bracketHom 𝕂 𝓰)
       = (LinearMap.commutatorBilin V).compl₁₂
           (representationOfBasis B genComm)
-          (representationOfBasis B genComm) := by
-  exact representationOfBasisAux_property B genComm
+          (representationOfBasis B genComm) :=
+  representationOfBasisAux_property B genComm
 
 end LieAlgebra -- namespace

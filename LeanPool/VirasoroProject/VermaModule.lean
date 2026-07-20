@@ -67,8 +67,8 @@ def _root_.VirasoroProject.Ring.smulVectorₗ (m : M) :
 lemma _root_.VirasoroProject.Ring.range_smulVectorₗ_eq_span (m : M) :
     LinearMap.range (Ring.smulVectorₗ R m) = Submodule.span R {m} := by
   ext v
-  rw [show v ∈ Submodule.span R {m} ↔ v ∈ (Submodule.span R {m} : Set M) from Eq.to_iff rfl]
-  rw [Submodule.span_singleton_eq_range R m ]
+  rw [show v ∈ Submodule.span R {m} ↔ v ∈ (Submodule.span R {m} : Set M) from Eq.to_iff rfl,
+    Submodule.span_singleton_eq_range R m]
   simp only [LinearMap.mem_range, Set.mem_range]
   rfl
 

@@ -70,13 +70,9 @@ lemma exists_isUniform [MeasurableSpace S] [MeasurableSingletonClass S]
       Finset.sum_apply, Measure.dirac_apply, smul_eq_mul]
     rw [Finset.sum_eq_single ⟨x, hx⟩, Finset.sum_eq_single ⟨y, hy⟩]
     · simp
-    · rintro ⟨b, bH⟩ _hb h'b
-      simp only [ne_eq, Subtype.mk.injEq] at h'b
-      simp [h'b]
+    · simp_all
     · simp
-    · rintro ⟨b, bH⟩ _hb h'b
-      simp only [ne_eq, Subtype.mk.injEq] at h'b
-      simp [h'b]
+    · simp_all
     · simp
   · simp
   · apply finiteRange_of_finset _ H _
@@ -173,8 +169,7 @@ lemma _root_.ProbabilityTheory.IsUniform.measure_preimage_of_mem
     _ = (Nat.card H) * μ (X ⁻¹' {s}) := by
       congr; simp
   rcases Nat.eq_zero_or_pos (Nat.card H) with hH|hH
-  · simp only [hH, CharP.cast_eq_zero, zero_mul, Measure.measure_univ_eq_zero] at B
-    simp [B]
+  · simp_all
   · rwa [eq_comm, ← ENNReal.eq_div_iff] at B
     · simpa using Nat.pos_iff_ne_zero.mp hH
     · simp
@@ -339,9 +334,7 @@ lemma isUniform_iff_map_eq_uniformOn [Finite H] {Ω : Type*} [mΩ : MeasurableSp
           intro x hx
           simp only [Set.Finite.mem_toFinset, Set.mem_inter_iff, AHf] at hx
           simp [hx]
-        intro x hx
-        simp at hx
-        simpa
+        simp_all
       _ = Nat.card ↑(H ∩ A) / Nat.card H := by
         simp [Finset.sum_const, Set.inter_comm, AHf, ← Nat.card_eq_card_finite_toFinset]
         rfl

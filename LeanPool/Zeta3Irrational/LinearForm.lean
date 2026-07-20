@@ -51,15 +51,12 @@ lemma Icc_diff_Icc {r s : ℕ} (_ : r > s) (_ : ¬s = 0) :
     Finset.Icc 1 r \ Finset.Icc 1 s = Finset.Icc (s + 1) r := by
   ext x
   constructor
-  · intro hx
-    simp_all only [gt_iff_lt, Finset.mem_sdiff, Finset.mem_Icc, not_and, not_le, and_true]
-    exact LT.lt.nat_succ_le (hx.2 hx.1.1)
+  · simp_all
   · intro hx
     simp_all only [gt_iff_lt, Finset.mem_Icc, Finset.mem_sdiff, and_true, not_and, not_le]
     constructor
     · linarith
-    · intro
-      linarith
+    · simp_all
 
 lemma one_div_sum_eq {r s : ℕ} (h : r > s) :
     ∑ m ∈ Finset.Icc 1 r, (1 / m ^ 2 : ℝ) - ∑ m ∈ Finset.Icc 1 s, (1 / m ^ 2 : ℝ) =
@@ -205,7 +202,6 @@ lemma linear_int_aux : ∃ a b : ℕ → ℕ → ℤ, ∀ r s : ℕ, J r s =
     simp_all only [gt_iff_lt, one_div, ite_true, ite_self, Int.cast_zero, zero_mul, dite_true,
       zero_add, dite_false]
     rw [(J_rs_linear h1).choose_spec] at ha
-    simp only [not_lt] at h
     simp_all
   else
     have h : x = y := by linarith

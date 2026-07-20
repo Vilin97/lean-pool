@@ -113,8 +113,7 @@ instance : Nonempty M := ⟨0⟩
 @[simp] lemma numeral_two_eq_two : (ORingStruc.numeral 2 : M) = 2 := by simp [numeral_eq_natCast]
 
 @[simp] lemma numeral_three_eq_three : (ORingStruc.numeral 3 :
-    M) = 3 := by
-  simp [numeral_eq_natCast]
+    M) = 3 := by simp [numeral_eq_natCast]
 
 @[simp] lemma numeral_four_eq_four : (ORingStruc.numeral 4 : M) = 4 := by simp [numeral_eq_natCast]
 
@@ -170,8 +169,7 @@ lemma two_mul_two_eq_four : 2 * 2 = (4 : M) := by
   rw [←one_add_one_eq_two, mul_add, add_mul, mul_one, ←add_assoc,
     one_add_one_eq_two, two_add_one_eq_three, three_add_one_eq_four]
 
-lemma two_pow_two_eq_four : 2 ^ 2 = (4 : M) := by
-  simp [sq, two_mul_two_eq_four]
+lemma two_pow_two_eq_four : 2 ^ 2 = (4 : M) := by simp [sq, two_mul_two_eq_four]
 
 lemma two_pos : (0 : M) < 2 := by exact _root_.two_pos
 
@@ -191,41 +189,34 @@ lemma two_pos : (0 : M) < 2 := by exact _root_.two_pos
   rw [sq, sq]
   exact (mul_self_lt_mul_self_iff (zero_le a) (zero_le b)).symm
 
-lemma le_mul_of_pos_right (h : 0 < b) :
-    a ≤ a * b :=
+lemma le_mul_of_pos_right (h : 0 < b) : a ≤ a * b :=
   le_mul_of_one_le_right (by simp) (pos_iff_one_le.mp h)
 
-lemma le_mul_of_pos_left (h : 0 < b) :
-    a ≤ b * a :=
+lemma le_mul_of_pos_left (h : 0 < b) : a ≤ b * a :=
   le_mul_of_one_le_left (by simp) (pos_iff_one_le.mp h)
 
 @[simp] lemma le_two_mul_left : a ≤ 2 * a := le_mul_of_pos_left (by simp)
 
-lemma lt_mul_of_pos_of_one_lt_right (pos : 0 < a) (h : 1 < b) :
-    a < a * b :=
+lemma lt_mul_of_pos_of_one_lt_right (pos : 0 < a) (h : 1 < b) : a < a * b :=
   _root_.lt_mul_of_one_lt_right pos h
 
-lemma lt_mul_of_pos_of_one_lt_left (pos : 0 < a) (h : 1 < b) :
-    a < b * a :=
+lemma lt_mul_of_pos_of_one_lt_left (pos : 0 < a) (h : 1 < b) : a < b * a :=
   _root_.lt_mul_of_one_lt_left pos h
 
 lemma mul_le_mul_left (h : b ≤ c) : a * b ≤ a * c := mul_le_mul_of_nonneg_left h (by simp)
 
 lemma mul_le_mul_right (h : b ≤ c) : b * a ≤ c * a := mul_le_mul_of_nonneg_right h (by simp)
 
-theorem lt_of_mul_lt_mul_left (h : a * b < a * c) :
-    b < c :=
+theorem lt_of_mul_lt_mul_left (h : a * b < a * c) : b < c :=
   lt_of_mul_lt_mul_of_nonneg_left h (by simp)
 
-theorem lt_of_mul_lt_mul_right (h : b * a < c * a) :
-    b < c :=
+theorem lt_of_mul_lt_mul_right (h : b * a < c * a) : b < c :=
   lt_of_mul_lt_mul_of_nonneg_right h (by simp)
 
 lemma pow_three (x : M) : x^3 = x * x * x := by rw [← two_add_one_eq_three, pow_add, sq]; simp
 
 lemma pow_four (x : M) :
-    x^4 = x * x * x * x := by
-  rw [← three_add_one_eq_four, pow_add, pow_three]; simp
+    x^4 = x * x * x * x := by rw [← three_add_one_eq_four, pow_add, pow_three]; simp
 
 lemma pow_four_eq_sq_sq (x : M) : x^4 = (x ^ 2) ^ 2 := by simp [pow_four, sq, mul_assoc]
 
@@ -248,8 +239,7 @@ scoped instance : CovariantClass M M (Function.swap (· * ·)) (· ≤ ·) :=
 
 @[simp] lemma sq_eq_one_iff {a : M} : a ^ 2 = 1 ↔ a = 1 := by simp [sq]
 
-lemma lt_square_of_lt {a : M} (pos : 1 < a) : a < a ^ 2 := by
-  rw [sq]; apply lt_mul_self pos
+lemma lt_square_of_lt {a : M} (pos : 1 < a) : a < a ^ 2 := by rw [sq]; apply lt_mul_self pos
 
 lemma two_mul_le_sq {i : M} (h : 2 ≤ i) : 2 * i ≤ i ^ 2 := by
   rw [sq]
@@ -303,14 +293,10 @@ instance : Structure.Monotone ℒₒᵣ M := ⟨
 @[simp] lemma zero_ne_add_one (x : M) : 0 ≠ x + (1 : M) := ne_of_lt (by simp)
 
 @[simp] lemma nat_cast_inj {n m : ℕ} : (n : M) = (m : M) ↔ n = m := by
-  induction n with
-  | zero => cases m <;> simp
-  | succ n ih => cases m <;> simp
+  simp_all
 
 @[simp] lemma coe_coe_lt {n m : ℕ} : (n : M) < (m : M) ↔ n < m := by
-  induction n with
-  | zero => cases m <;> simp
-  | succ n ih => cases m <;> simp
+  simp_all
 
 /-- TODO: move -/
 lemma coe_succ (x : ℕ) : ((x + 1 : ℕ) : M) = (x : M) + 1 := by simp

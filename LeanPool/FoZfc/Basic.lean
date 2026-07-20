@@ -130,8 +130,7 @@ theorem realize_fv [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V} (k
 @[simp]
 theorem realize_bv [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V) (k : Fin n) :
     Language.Term.realize (Sum.elim s xs) (bv n k) = xs k := by
-  rw [bv]
-  simp
+  simp [bv]
 
 @[simp]
 theorem realize_in [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
@@ -153,8 +152,7 @@ theorem realize_neq [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     {t₁ t₂ : LZFC.Term (ℕ ⊕ Fin n)} :
     (t₁≠'t₂).Realize s xs ↔
       Term.realize (Sum.elim s xs) t₁ ≠ Term.realize (Sum.elim s xs) t₂ := by
-  unfold intNotEqual
-  simp
+  simp [intNotEqual]
 
 /-- Make a free variable in LSet with n implicit. -/
 def fv' {n : ℕ} (k : ℕ) : Language.LZFC.Term (ℕ ⊕ Fin n) := Language.Term.var (Sum.inl k)
@@ -178,15 +176,13 @@ theorem realize_fv' [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V} (
 @[simp]
 theorem realize_bv' [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V) (k : Fin n) :
     Language.Term.realize (Sum.elim s xs) (bv' k) = xs k := by
-  unfold bv'
-  simp
+  simp [bv']
 
 /-- Realize bv'' with the type ℕ. -/
 @[simp]
 theorem realize_bv'' [ModelSets V] {n : ℕ} [NeZero n] (s : ℕ → V) (xs : Fin n → V) (k : ℕ) :
     Language.Term.realize (Sum.elim s xs) (bv'' k) = xs (Fin.ofNat n k) := by
-  unfold bv''
-  simp
+  simp [bv'']
 
 end ZFC
 end FirstOrder

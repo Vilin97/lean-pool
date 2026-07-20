@@ -160,20 +160,12 @@ theorem schwinger_two_point_decay_bound (m : ℝ) [Fact (0 < m)] :
   refine ⟨C, hC_pos, fun x y => ?_⟩
   by_cases h : x - y = 0
   · -- At coincident points x = y, both sides are 0
-    simp only [h]
-    -- By definition, SchwingerTwoPointFunction _ 0 = 0
-    rw [schwingerTwoPointFunction_zero]
-    -- By mathlib convention, 0^(-2) = 0, so RHS = C * 0 = 0
-    have h_rhs : C * (0 : ℝ) ^ (-2 : ℝ) = 0 := by
-      rw [Real.zero_rpow (by norm_num : (-2 : ℝ) ≠ 0)]
-      ring
-    simp only [norm_zero, h_rhs, le_refl]
+    simp [h, schwingerTwoPointFunction_zero, Real.zero_rpow (by norm_num : (-2 : ℝ) ≠ 0)]
   · -- Non-coincident points: use the bridge lemma
     rw [schwingerTwoPointFunction_eq_freeCovarianceKernel m (x - y) h]
     rw [Real.norm_eq_abs]
     have := hC_bound x y
-    rw [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
-    exact this
+    rwa [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
 
 /-- The abstract two-point Schwinger function is measurable.
     This uses the bridge lemma to connect to the concrete GFF definition.
@@ -349,12 +341,11 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
   -- Pull out the (1/m²) bound from the integral using a real integral monotonicity helper
   have h_dom_int : Integrable (fun k => (1 / m^2) * ‖F k‖^2) volume :=
     Integrable.const_mul hF_sq_int (1 / m^2)
-  have h_nonneg : ∀ k, 0 ≤ ‖F k‖^2 * freePropagatorMomentumMathlib m k := by
-    intro k; exact mul_nonneg (by positivity) (by unfold freePropagatorMomentumMathlib; positivity)
-  have h_le_pt : ∀ k, ‖F k‖^2 * freePropagatorMomentumMathlib m k ≤ (1 / m^2) * ‖F k‖^2 := by
-    intro k
-    have := mul_le_mul_of_nonneg_left (h_bound k) (by positivity : 0 ≤ ‖F k‖^2)
-    simpa [mul_comm] using this
+  have h_nonneg : ∀ k, 0 ≤ ‖F k‖^2 * freePropagatorMomentumMathlib m k :=
+    fun k => mul_nonneg (by positivity) (by unfold freePropagatorMomentumMathlib; positivity)
+  have h_le_pt : ∀ k, ‖F k‖^2 * freePropagatorMomentumMathlib m k ≤ (1 / m^2) * ‖F k‖^2 :=
+    fun k => by
+      simpa [mul_comm] using mul_le_mul_of_nonneg_left (h_bound k) (by positivity : 0 ≤ ‖F k‖^2)
   have h_int_le :
       ∫ k, ‖F k‖^2 * freePropagatorMomentumMathlib m k ∂volume
         ≤ ∫ k, (1 / m^2) * ‖F k‖^2 ∂volume := by
@@ -390,8 +381,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     -- Robust proof without external lemma names: |Im z|^2 ≤ ‖z‖^2
     have habs_sq : |(f x).im| ^ 2 = ((f x).im) ^ 2 := by
       simp [pow_two]
-    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := by
-      exact le_add_of_nonneg_left (sq_nonneg _)
+    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := le_add_of_nonneg_left (sq_nonneg _)
     have hnorm_sq : ‖f x‖ ^ 2 = (f x).re ^ 2 + (f x).im ^ 2 := by
       simpa [Complex.normSq_apply, pow_two] using (Complex.sq_norm (f x))
     have hsq : |(f x).im| ^ 2 ≤ ‖f x‖ ^ 2 := by simpa [habs_sq, hnorm_sq] using hineq
@@ -414,8 +404,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
   calc (freeCovarianceℂBilinear m (toComplex fIm) (toComplex fIm)).re
       ≤ (1 / m^2) * (∫ k, ‖F k‖^2 ∂volume) := this
     _ = (1 / m^2) * ∫ x, ‖(toComplex fIm) x‖^2 ∂volume := by simp [h_plancherel]
-    _ ≤ (1 / m^2) * ∫ x, ‖f x‖^2 ∂volume := by
-          exact mul_le_mul_of_nonneg_left h_imag_bound (by positivity)
+    _ ≤ (1 / m^2) * ∫ x, ‖f x‖^2 ∂volume := mul_le_mul_of_nonneg_left h_imag_bound (by positivity)
 
 
 /-- The GFF generating functional satisfies the exponential bound
@@ -458,13 +447,9 @@ lemma gff_two_point_locally_integrable (m : ℝ) [Fact (0 < m)] :
     exact hC_pos
   · -- hα: 2 < STDimension (2 < 4)
     norm_num [STDimension]
-  · -- h_decay: Decay bound holds: convert two-argument decay to single-argument
+  · -- h_decay: setting y = 0 in the two-argument decay gives the single-argument bound.
     intro x
-    -- We have h_decay: ‖S(x-y)‖ ≤ C * ‖x-y‖^{-2}, and need |S(x)| ≤ C * ‖x‖^{-2}
-    -- Setting y = 0 gives ‖S(x-0)‖ = ‖S(x)‖ ≤ C * ‖x-0‖^{-2} = C * ‖x‖^{-2}
-    have := h_decay x 0
-    simp only [Real.norm_eq_abs, sub_zero] at this
-    exact this
+    simpa only [Real.norm_eq_abs, sub_zero] using h_decay x 0
   · -- h_meas: Measurability (follows from Schwartz theory)
     exact schwingerTwoPoint_measurable m
 
@@ -490,9 +475,7 @@ theorem gaussianFreeField_satisfies_OS1_revised (m : ℝ) [Fact (0 < m)] :
   refine ⟨(2 : ℝ), (1 / (2 * m^2)), by norm_num, by norm_num, ?cpos, ?bound, ?tpInt⟩
   · -- c > 0
     have hmpos : 0 < m := Fact.out
-    have hm2pos : 0 < m^2 := by exact sq_pos_of_pos hmpos
-    have hdenpos : 0 < 2 * m^2 := by nlinarith
-    exact one_div_pos.mpr hdenpos
+    positivity
   · -- Exponential bound: |Z[f]| ≤ exp(c(∫|f| + ∫|f|^2))
     intro f
     -- Start from the established L² bound
@@ -501,26 +484,18 @@ theorem gaussianFreeField_satisfies_OS1_revised (m : ℝ) [Fact (0 < m)] :
       gff_generating_L2_bound m f
     -- Convert the exponent from ℕ to ℝ
     have heq : ∫ x, ‖f x‖^(2:ℕ) ∂volume = ∫ x, ‖f x‖^(2:ℝ) ∂volume := by
-      congr 1
-      funext x
-      norm_num
+      congr 1; funext x; norm_num
     have hL2 : ‖GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) f‖ ≤
-        Real.exp ((1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume) := by
-      rw [← heq]
-      exact hL2_nat
+        Real.exp ((1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume) := heq ▸ hL2_nat
     -- Strengthen the exponent by adding the nonnegative L¹ term
     have hmono : (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume ≤
                  (1 / (2 * m^2)) * (∫ x, ‖f x‖ ∂volume + ∫ x, ‖f x‖^(2:ℝ) ∂volume) := by
       -- This is immediate since a ≤ a + b for any b ≥ 0; here b = ∫|f| ≥ 0
-      have hI1_nonneg : 0 ≤ ∫ x, ‖f x‖ ∂volume := by
-        -- Pointwise nonnegativity of the integrand implies nonnegativity of the integral
-        have hpt : ∀ x, 0 ≤ ‖f x‖ := by intro x; exact norm_nonneg _
-        -- `integral_nonneg` is applicable to nonnegative functions over `volume`
-        exact integral_nonneg hpt
+      have hI1_nonneg : 0 ≤ ∫ x, ‖f x‖ ∂volume :=
+        integral_nonneg fun x => norm_nonneg _
       have hcpos : 0 ≤ (1 / (2 * m^2)) := by positivity
       -- Use `add_nonneg` and rearrange
-      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := by
-        exact mul_nonneg hcpos hI1_nonneg
+      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := mul_nonneg hcpos hI1_nonneg
       calc (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume
         _ ≤ (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume + (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume :=
             le_add_of_nonneg_right hadd

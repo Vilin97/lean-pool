@@ -33,35 +33,10 @@ def localValidResidues (p : ℕ) (b : ℕ) (T : Finset ℕ) : Finset ℕ :=
 
 lemma localValidResidues_card_eq (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (T : Finset ℕ) :
     ((localValidResidues p b T).card : ℝ) = (p : ℝ) ^ 2 * localDensityFactor p b T := by
-  have h1 : ((localValidResidues p b T).card : ℝ) = ((localValidResidues p b T).card : ℝ) := rfl
-  have h2 : localDensityFactor p b T = ( ( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T,
-      ¬(p ^ 2 ∣ (b * r + d))) (Finset.range (p ^ 2))).card : ℝ) / ( (p ^ 2 : ℕ) : ℝ)) := by
-    dsimp [localDensityFactor]
-  have h3 : ((localValidResidues p b T).card : ℝ) = ( ( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧
-      ∀ d ∈ T, ¬(p ^ 2 ∣ (b * r + d))) (Finset.range (p ^ 2))).card : ℝ)) := by
-    dsimp [localValidResidues]
-  have h4 : ( ( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬(p ^ 2 ∣ (b * r + d))) (
-      Finset.range (p ^ 2))).card : ℝ)) = (p : ℝ) ^ 2 * localDensityFactor p b T := by
-    have h5 : localDensityFactor p b T = ( ( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T,
-        ¬(p ^ 2 ∣ (b * r + d))) (Finset.range (p ^ 2))).card : ℝ) / ( (p ^ 2 : ℕ) : ℝ)) := by
-      rw [h2]
-    have h6 : (p : ℝ) ≠ 0 := by
-      norm_cast
-      exact Nat.Prime.ne_zero hp
-    have h7 : (p : ℝ) ^ 2 ≠ 0 := by
-      positivity
-    have h8 : ((p : ℝ) ^ 2 : ℝ) = (p ^ 2 : ℕ) := by
-      norm_cast
-    rw [h5]
-    have h9 : (( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬(p ^ 2 ∣ (b * r + d))) (
-        Finset.range (p ^ 2))).card : ℝ)) = (( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T,
-            ¬(p ^ 2 ∣ (b * r + d))) (Finset.range (p ^ 2))).card : ℝ)) := rfl
-    have h10 : ((p : ℝ) ^ 2 : ℝ) ≠ 0 := by positivity
-    field_simp [h7, h10]; ring_nf; field_simp [h7, h10]; norm_cast
-  calc
-    ((localValidResidues p b T).card : ℝ) = ( ( (Finset.filter (fun r => ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T,
-        ¬(p ^ 2 ∣ (b * r + d))) (Finset.range (p ^ 2))).card : ℝ)) := by rw [h3]
-    _ = (p : ℝ) ^ 2 * localDensityFactor p b T := by rw [h4]
+  have hp2 : ((p ^ 2 : ℕ) : ℝ) ≠ 0 := by exact_mod_cast pow_ne_zero 2 hp.pos.ne'
+  simp only [localDensityFactor, localValidResidues]
+  rw [show ((p : ℝ) ^ 2 : ℝ) = (p ^ 2 : ℕ) by norm_cast]
+  field_simp [hp2]
 
 lemma prime_sq_coprime (p q : Nat.Primes) (hne : p ≠ q) :
     ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
@@ -100,26 +75,21 @@ lemma modEq_primeSquareProduct_of_forall_modEq (S : Finset Nat.Primes) (r₁ r�
     r₁ ≡ r₂ [MOD primeSquareProduct S] := by
   rw [← list_map_prod_eq_primeSquareProduct]
   rw [Nat.modEq_list_map_prod_iff (toList_pairwise_coprime_prime_squares S)]
-  intro p hp
-  exact h p (Finset.mem_toList.mp hp)
+  simp_all
 
 /-- The CRT remainder map is injective on residues below the product modulus. -/
 lemma crtMap_injective_on_range (S : Finset Nat.Primes) :
     Set.InjOn (fun r => fun p (_hp : p ∈ S) => r % ((p : ℕ) ^ 2))
       {r | r < primeSquareProduct S} := by
   intro r₁ hr₁ r₂ hr₂ heq
-  have h_modEq : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2] := by
-    intro p hp
-    have h : r₁ % (p : ℕ) ^ 2 = r₂ % (p : ℕ) ^ 2 := congrFun (congrFun heq p) hp
-    exact h
-  have h_modEq_M : r₁ ≡ r₂ [MOD primeSquareProduct S] :=
-    modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq
-  exact Nat.ModEq.eq_of_lt_of_lt h_modEq_M hr₁ hr₂
+  have h_modEq : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2] :=
+    fun p hp => congrFun (congrFun heq p) hp
+  exact Nat.ModEq.eq_of_lt_of_lt
+    (modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq) hr₁ hr₂
 
 lemma dvd_iff_mod_dvd (p : ℕ) (_hp : 0 < p ^ 2) (r : ℕ) :
-    p ^ 2 ∣ r ↔ r % (p ^ 2) = 0 := by
-  have h_main : p ^ 2 ∣ r ↔ r % (p ^ 2) = 0 := Nat.dvd_iff_mod_eq_zero
-  aesop
+    p ^ 2 ∣ r ↔ r % (p ^ 2) = 0 :=
+  Nat.dvd_iff_mod_eq_zero
 
 lemma shifted_dvd_iff_mod (p b d r : ℕ) (_hp : 0 < p ^ 2) :
     p ^ 2 ∣ (b * r + d) ↔ p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
@@ -146,8 +116,7 @@ lemma valid_iff_locally_valid (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     · intro hr
       have hzero := (dvd_iff_mod_dvd (p : ℕ) hp_pos r).mp hr
       have hmod : (p : ℕ) ^ 2 ∣ r % (p : ℕ) ^ 2 := by
-        rw [hzero]
-        simp
+        simp_all
       exact (h p hp).1 hmod
     · intro d hd hr
       exact (h p hp).2 d hd ((shifted_dvd_iff_mod (p : ℕ) b d r hp_pos).mp hr)
@@ -205,54 +174,17 @@ lemma crtMap_mapsTo_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (r : �
 lemma not_dvd_of_mod_eq_not_dvd (p r f : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^ 2 = f)
     (hf_ndiv : ¬(p ^ 2 ∣ f)) : ¬(p ^ 2 ∣ r) := by
   intro h_dvd_r
-  have h_mod_eq : r % p ^ 2 = 0 := by
-    have h₁ : p ^ 2 ∣ r := h_dvd_r
-    have h₂ : r % p ^ 2 = 0 := by
-      have h₃ := Nat.mod_eq_zero_of_dvd h₁
-      exact h₃
-    exact h₂
   have h_f_eq_zero : f = 0 := by
-    linarith
-  have h_p_sq_dvd_f : p ^ 2 ∣ f := by
-    have h₁ : f = 0 := h_f_eq_zero
-    rw [h₁]
-    exact by
-      exact ⟨0, by simp⟩
-  exact hf_ndiv h_p_sq_dvd_f
+    rw [← hr_eq]
+    exact Nat.mod_eq_zero_of_dvd h_dvd_r
+  exact hf_ndiv (h_f_eq_zero ▸ dvd_zero _)
 
 lemma not_dvd_shift_of_mod_eq (p b r f d : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^ 2 = f)
     (hf_shift : ¬(p ^ 2 ∣ b * f + d)) : ¬(p ^ 2 ∣ b * r + d) := by
   intro h
-  have h₁ : p ^ 2 ∣ b * r + d := h
-  have h₂ : (b * r + d) % (p ^ 2) = 0 := by
-    exact Nat.mod_eq_zero_of_dvd h₁
-  have h₃ : (b * r + d) % (p ^ 2) = (b * f + d) % (p ^ 2) := by
-    have h₄ : r % p ^ 2 = f := hr_eq
-    have h₅ : b * r % (p ^ 2) = b * f % (p ^ 2) := by
-      have h₆ : b * r % (p ^ 2) = (b * (r % p ^ 2)) % (p ^ 2) := by
-        simp [Nat.mul_mod]
-      rw [h₆]
-      have h₇ : (b * (r % p ^ 2)) % (p ^ 2) = (b * f) % (p ^ 2) := by
-        rw [h₄]
-      rw [h₇]
-    have h₈ : (b * r + d) % (p ^ 2) = (b * f + d) % (p ^ 2) := by
-      have h₉ : (b * r + d) % (p ^ 2) = ((b * r) % (p ^ 2) + d % (p ^ 2)) % (p ^ 2) := by
-        simp [Nat.add_mod]
-      rw [h₉]
-      have h₁₀ : (b * f + d) % (p ^ 2) = ((b * f) % (p ^ 2) + d % (p ^ 2)) % (p ^ 2) := by
-        simp [Nat.add_mod]
-      rw [h₁₀]
-      have h₁₁ : (b * r) % (p ^ 2) = (b * f) % (p ^ 2) := by
-        exact h₅
-      rw [h₁₁]
-    exact h₈
-  have h₄ : (b * f + d) % (p ^ 2) = 0 := by
-    rw [h₃] at h₂
-    exact h₂
-  have h₅ : p ^ 2 ∣ b * f + d := by
-    have h₆ : (b * f + d) % (p ^ 2) = 0 := h₄
-    exact Nat.dvd_of_mod_eq_zero h₆
-  exact hf_shift h₅
+  apply hf_shift
+  have : p ^ 2 ∣ b * (r % p ^ 2) + d := (shifted_dvd_iff_mod p b d r _hp).mp h
+  rwa [hr_eq] at this
 
 lemma crt_inverse_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     (f : (p : Nat.Primes) → p ∈ S → ℕ)
@@ -304,9 +236,7 @@ lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) 
   have hf_surj : Function.Surjective f := by
     intro ⟨g, hg⟩
     have hg' : ∀ p (hp : p ∈ S), g p hp ∈ localValidResidues (p : ℕ) b T := by
-      intro p hp
-      rw [Finset.mem_pi] at hg
-      exact hg p hp
+      simp_all
     obtain ⟨r, hr, hr_eq⟩ := crt_inverse_mapsTo b T S g hg'
     use ⟨r, hr⟩
     apply Subtype.ext
@@ -324,8 +254,7 @@ lemma validResiduesMod_card_eq_prod (b : ℕ) (T : Finset ℕ) (S : Finset Nat.P
     ((validResiduesMod b T S).card : ℝ) =
       ∏ p ∈ S, ((localValidResidues (p : ℕ) b T).card : ℝ) := by
   rw [validResiduesMod_card_eq_pi_card]
-  rw [Finset.card_pi]
-  simp only [Nat.cast_prod]
+  simp_all
 
 lemma validResidues_card_eq_mul (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) :
@@ -350,65 +279,21 @@ lemma localDensityProduct_le_one (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prim
     exact localDensityFactor_le_one p b T
 
 lemma prime_sq_dvd_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Primes) (hp : p ∈ S) :
-    (p : ℕ) ^ 2 ∣ primeSquareProduct S := by
-  have h₁ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-    apply Finset.dvd_prod_of_mem; simp_all
-  simpa [primeSquareProduct] using h₁
+    (p : ℕ) ^ 2 ∣ primeSquareProduct S :=
+  Finset.dvd_prod_of_mem _ hp
 
 lemma dvd_iff_of_mod_eq_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Primes) (hp : p ∈ S)
     (N₁ N₂ : ℕ) (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
-    ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-  have h₁ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := by
-    have h₂ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-      have h₃ : p ∈ S := hp
-      have h₅ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-        apply Finset.dvd_prod_of_mem; simpa using h₃
-      exact h₅
-    simpa [primeSquareProduct] using h₂
-  have h₂ : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S := hmod
-  have h₃ : N₁ ≡ N₂ [MOD primeSquareProduct S] := by
-    rw [Nat.ModEq]; simp_all
-  have h₄ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-    have h₇ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-      have h₉ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-        have h₁₀ : N₁ ≡ N₂ [MOD primeSquareProduct S] := h₃
-        have h₁₁ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := h₁
-        have h₁₂ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-          apply Nat.ModEq.dvd_iff h₁₀; exact h₁₁
-        exact h₁₂
-      exact h₉
-    exact h₇
-  exact h₄
+    ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) :=
+  Nat.ModEq.dvd_iff hmod (prime_sq_dvd_primeSquareProduct S p hp)
 
 lemma shifted_dvd_iff_of_mod_eq_primeSquareProduct (b d : ℕ) (S : Finset Nat.Primes)
     (p : Nat.Primes) (hp : p ∈ S) (N₁ N₂ : ℕ)
     (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
     ((p : ℕ) ^ 2 ∣ b * N₁ + d ↔ (p : ℕ) ^ 2 ∣ b * N₂ + d) := by
-  have h₁ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := by
-    rw [primeSquareProduct]
-    apply Finset.dvd_prod_of_mem; simp_all
-  have h₂ : N₁ ≡ N₂ [MOD primeSquareProduct S] := by
-    rw [Nat.ModEq]
-    exact hmod
-  have h₃ : N₁ ≡ N₂ [MOD (p : ℕ) ^ 2] := by
-    have h₃ : N₁ ≡ N₂ [MOD primeSquareProduct S] := h₂
-    have h₄ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := h₁
-    exact h₃.of_dvd h₄
-  have h₄ : b * N₁ ≡ b * N₂ [MOD (p : ℕ) ^ 2] := by
-    have h₄ : N₁ ≡ N₂ [MOD (p : ℕ) ^ 2] := h₃
-    exact h₄.mul_left b
-  have h₅ : b * N₁ + d ≡ b * N₂ + d [MOD (p : ℕ) ^ 2] := by
-    have h₅ : b * N₁ ≡ b * N₂ [MOD (p : ℕ) ^ 2] := h₄
-    exact h₅.add_right d
-  have h₆ : ((p : ℕ) ^ 2 ∣ b * N₁ + d ↔ (p : ℕ) ^ 2 ∣ b * N₂ + d) := by
-    have h₆ : b * N₁ + d ≡ b * N₂ + d [MOD (p : ℕ) ^ 2] := h₅
-    have h₇ : (p : ℕ) ^ 2 ∣ (p : ℕ) ^ 2 := by
-      apply Nat.dvd_refl
-    have h₈ : ((p : ℕ) ^ 2 ∣ b * N₁ + d ↔ (p : ℕ) ^ 2 ∣ b * N₂ + d) := by
-      apply Nat.ModEq.dvd_iff h₆ h₇
-    exact h₈
-  exact h₆
-
+  have hN : N₁ ≡ N₂ [MOD (p : ℕ) ^ 2] :=
+    Nat.ModEq.of_dvd (prime_sq_dvd_primeSquareProduct S p hp) hmod
+  exact Nat.ModEq.dvd_iff ((hN.mul_left b).add_right d) dvd_rfl
 theorem condition_mod_invariant (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     (N₁ N₂ : ℕ) (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
     (∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N₁) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N₁ + d)) ↔

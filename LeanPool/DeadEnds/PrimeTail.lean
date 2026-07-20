@@ -43,7 +43,7 @@ lemma exists_finset_tsum_compl_lt (f : Nat.Primes → ℝ) (_hf : ∀ p, 0 ≤ f
     simpa using tendsto_tsum_compl_atTop_zero f
   obtain ⟨s, hs⟩ := Metric.tendsto_atTop.mp htail ε hε
   refine ⟨s, ?_⟩
-  have hs_self := hs s (by simp)
+  have hs_self := hs s le_rfl
   rw [Real.dist_eq] at hs_self
   linarith [(abs_lt.mp hs_self).2]
 
@@ -55,10 +55,8 @@ lemma prime_tail_sum_small (ε : ℝ) (hε : 0 < ε) :
   obtain ⟨s, hs⟩ := exists_finset_tsum_compl_lt f hfnn primes_summable_one_div_sq ε hε
   use s.sup (·.val)
   have h1 : ∑' (p : {q : Nat.Primes // (q : ℕ) > s.sup (·.val)}), f p ≤
-            ∑' (p : {q : Nat.Primes // q ∉ s}), f p := by
-    apply tsum_primes_gt_le_tsum_compl
-    · exact hfnn
-    · exact primes_summable_one_div_sq
+            ∑' (p : {q : Nat.Primes // q ∉ s}), f p :=
+    tsum_primes_gt_le_tsum_compl f hfnn primes_summable_one_div_sq s
   simp only [hf] at h1 hs
   exact lt_of_le_of_lt h1 hs
 
@@ -72,64 +70,33 @@ lemma prime_count_le_sqrt (M : ℕ) :
 
 lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
     ∃ X₀ : ℕ, ∀ X ≥ X₀, (Nat.sqrt X : ℝ) / X < ε := by
-  have h₁ : 0 < (1 / ε : ℝ) := by positivity
-  have h₂ : 0 < (1 / ε : ℝ) ^ 2 := by positivity
-  have h₃ : ∃ (X₀ : ℕ), (1 / ε : ℝ) ^ 2 < (X₀ : ℝ) := by
-    obtain ⟨X₀, hX₀⟩ := exists_nat_gt ((1 / ε : ℝ) ^ 2)
-    refine ⟨X₀, ?_⟩
-    exact_mod_cast hX₀
-  obtain ⟨X₀, hX₀⟩ := h₃
-  refine ⟨X₀, ?_⟩
-  intro X hX
-  have h₄ : (X : ℝ) ≥ (X₀ : ℝ) := by exact_mod_cast hX
-  have h₆ : 0 < (X : ℝ) := by
-    by_contra h
-    have h₁₀ : (X₀ : ℕ) = 0 := by
-      by_contra _
-      linarith
-    have h₁₁ : (1 / ε : ℝ) ^ 2 < (X₀ : ℝ) := hX₀
-    have h₁₂ : (X₀ : ℝ) = 0 := by simp [h₁₀]
-    rw [h₁₂] at h₁₁
-    norm_num at h₁₁ ⊢; nlinarith [h₂]
-  have h₇ : Real.sqrt (X : ℝ) > 1 / ε := by
-    have h₈ : Real.sqrt (X : ℝ) > 1 / ε := by
-      have h₉ : Real.sqrt (X : ℝ) > 0 := Real.sqrt_pos.mpr (by positivity)
-      have h₁₁ : (Real.sqrt (X : ℝ)) ^ 2 = (X : ℝ) := by
-        rw [Real.sq_sqrt]; positivity
-      nlinarith [Real.sqrt_nonneg (X : ℝ), Real.sq_sqrt (by positivity : 0 ≤ (X : ℝ))]
-    exact h₈
-  have h₈ : 1 / Real.sqrt (X : ℝ) < ε := by
-    have h₁₂ : 1 / Real.sqrt (X : ℝ) < ε := by
-      calc
-        1 / Real.sqrt (X : ℝ) < 1 / (1 / ε) := by
-          apply one_div_lt_one_div_of_lt
-          · positivity
-          · linarith
-        _ = ε := by
-          field_simp
-    exact h₁₂
-  have h₉ : (Nat.sqrt X : ℝ) ≤ Real.sqrt (X : ℝ) := by
-    have h₁₁ : (Nat.sqrt X : ℝ) ^ 2 ≤ (X : ℝ) := by
-      norm_cast
-      have h₁₂ : (Nat.sqrt X : ℕ) ^ 2 ≤ X := by
-        nlinarith [Nat.sqrt_le X, Nat.lt_succ_sqrt X]
-      exact_mod_cast h₁₂
-    nlinarith [Real.sq_sqrt (by positivity : 0 ≤ (X : ℝ)),
-      sq_nonneg ((Nat.sqrt X : ℝ) - Real.sqrt (X : ℝ))]
-  have h₁₀ : (Nat.sqrt X : ℝ) / X ≤ 1 / Real.sqrt (X : ℝ) := by
-    have h₁₁ : 0 < (X : ℝ) := by positivity
-    calc
-      (Nat.sqrt X : ℝ) / X ≤ Real.sqrt (X : ℝ) / X := by
-        gcongr
-      _ = 1 / Real.sqrt (X : ℝ) := by
-        have h₁₄ : Real.sqrt (X : ℝ) > 0 := by positivity
-        field_simp [h₁₁.ne', h₁₄.ne'];
-        nlinarith [Real.sq_sqrt (by positivity : 0 ≤ (X : ℝ))]
-  have h₁₁ : (Nat.sqrt X : ℝ) / X < ε := by
-    calc
-      (Nat.sqrt X : ℝ) / X ≤ 1 / Real.sqrt (X : ℝ) := h₁₀
-      _ < ε := h₈
-  exact h₁₁
+  obtain ⟨X₀, hX₀⟩ := exists_nat_gt ((1 / ε : ℝ) ^ 2)
+  refine ⟨X₀, fun X hX => ?_⟩
+  have hX₀r : (1 / ε : ℝ) ^ 2 < (X : ℝ) := by
+    have h1 : (1 / ε : ℝ) ^ 2 < (X₀ : ℝ) := by exact_mod_cast hX₀
+    have h2 : (X₀ : ℝ) ≤ (X : ℝ) := by exact_mod_cast hX
+    linarith
+  have hXpos : 0 < (X : ℝ) := by nlinarith [sq_nonneg (1 / ε : ℝ)]
+  have hsqrtX : Real.sqrt (X : ℝ) > 1 / ε := by
+    nlinarith [Real.sq_sqrt (le_of_lt hXpos), Real.sqrt_nonneg (X : ℝ)]
+  have hNatsqrt : (Nat.sqrt X : ℝ) ≤ Real.sqrt (X : ℝ) := by
+    have h₁ : (Nat.sqrt X : ℝ) ^ 2 ≤ (X : ℝ) := by
+      have hcast : (Nat.sqrt X : ℝ) * (Nat.sqrt X : ℝ) ≤ (X : ℝ) := by exact_mod_cast Nat.sqrt_le X
+      nlinarith [sq_nonneg (Nat.sqrt X : ℝ)]
+    nlinarith [Real.sq_sqrt (le_of_lt hXpos), sq_nonneg ((Nat.sqrt X : ℝ) - Real.sqrt (X : ℝ)),
+      Real.sqrt_nonneg (X : ℝ), mul_self_nonneg (Real.sqrt (X : ℝ))]
+  have h8 : 1 / Real.sqrt (X : ℝ) < ε := by
+    have hsqrtpos : Real.sqrt (X : ℝ) > 0 := Real.sqrt_pos.mpr hXpos
+    calc 1 / Real.sqrt (X : ℝ) < 1 / (1 / ε) := by
+          apply one_div_lt_one_div_of_lt (by positivity)
+          linarith
+      _ = ε := by field_simp
+  calc (Nat.sqrt X : ℝ) / X ≤ Real.sqrt (X : ℝ) / X := by gcongr
+    _ = 1 / Real.sqrt (X : ℝ) := by
+        have hsqrtpos : Real.sqrt (X : ℝ) > 0 := Real.sqrt_pos.mpr hXpos
+        field_simp
+        nlinarith [Real.sq_sqrt (le_of_lt hXpos)]
+    _ < ε := h8
 
 lemma card_multiples_Icc (q : ℕ) (X : ℕ) :
     ((Finset.Icc 1 X).filter fun N => q ^ 2 ∣ N).card ≤ X / q ^ 2 := by
@@ -138,9 +105,7 @@ lemma card_multiples_Icc (q : ℕ) (X : ℕ) :
     intro N hN
     simp only [Finset.mem_filter, Finset.mem_Icc, Finset.mem_range] at hN ⊢
     exact ⟨by omega, by omega, hN.2⟩
-  have h_card_multiples' : ((Finset.range (X + 1)).filter (fun k => k ≠ 0 ∧ q ^ 2 ∣ k)).card =
-      X / q ^ 2 := Nat.card_multiples' X (q ^ 2)
-  simpa [h_card_multiples'] using Finset.card_le_card h_subset
+  simpa [Nat.card_multiples' X (q ^ 2)] using Finset.card_le_card h_subset
 
 /-- The number of N ∈ (0, X] satisfying N ≡ v (mod r) is at most X / r + 1.
 
@@ -188,23 +153,18 @@ lemma card_modEq_Icc_bound (v r X : ℕ) (hr : 0 < r) :
   omega
 
 lemma gcd_psq_b_eq_one (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp : b < p) :
-    (p ^ 2).gcd b = 1 := by
-  have h₁ : b.Coprime (p ^ 2) := b_coprime_p_sq p hp b hb hbp
-  have h₂ : (p ^ 2).gcd b = 1 := h₁.symm
-  aesop
+    (p ^ 2).gcd b = 1 :=
+  (b_coprime_p_sq p hp b hb hbp).symm
 
 /-- p² > 0 when p is prime. -/
-lemma prime_sq_pos (p : ℕ) (hp : Nat.Prime p) : 0 < p ^ 2 := by
-  exact Nat.pow_pos hp.pos
+lemma prime_sq_pos (p : ℕ) (hp : Nat.Prime p) : 0 < p ^ 2 :=
+  Nat.pow_pos hp.pos
 
 lemma zmod_mul_inv_add_eq_zero (n b d : ℕ) (_hn : 0 < n) (hb : b.Coprime n) :
     (↑b : ZMod n) * ((-↑d : ZMod n) * (↑b : ZMod n)⁻¹) + ↑d = 0 := by
   have h_unit : IsUnit (↑b : ZMod n) := (ZMod.isUnit_iff_coprime b n).mpr hb
-  have h_inv : (↑b : ZMod n) * (↑b : ZMod n)⁻¹ = 1 := ZMod.mul_inv_of_unit _ h_unit
-  have h_main : (↑b : ZMod n) * ((-↑d : ZMod n) * (↑b : ZMod n)⁻¹) = (-↑d : ZMod n) := by
-    rw [mul_left_comm, h_inv, mul_one]
-  have h_final : (↑b : ZMod n) * ((-↑d : ZMod n) * (↑b : ZMod n)⁻¹) + ↑d = 0 := by aesop
-  exact h_final
+  rw [mul_left_comm, ZMod.mul_inv_of_unit _ h_unit, mul_one]
+  ring
 
 /-- Constructs a unique residue v such that b*v ≡ -d (mod p²) for prime p > b ≥ 2.
     In ZMod (p²), since b is a unit (coprime to p²), we can define v = b⁻¹ * (-d).
@@ -215,14 +175,10 @@ lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ 
   have hp2_pos : 0 < p ^ 2 := prime_sq_pos p hp
   haveI : NeZero (p ^ 2) := ⟨Nat.pos_iff_ne_zero.mp hp2_pos⟩
   let v_zmod : ZMod (p ^ 2) := (-↑d : ZMod (p ^ 2)) * (↑b : ZMod (p ^ 2))⁻¹
-  use v_zmod.val
-  constructor
-  · exact ZMod.val_lt v_zmod
-  · rw [← CharP.cast_eq_zero_iff (ZMod (p ^ 2)) (p ^ 2)]
-    simp only [Nat.cast_add, Nat.cast_mul]
-    have hval : (v_zmod.val : ZMod (p ^ 2)) = v_zmod := ZMod.natCast_zmod_val v_zmod
-    rw [hval]
-    exact zmod_mul_inv_add_eq_zero (p ^ 2) b d hp2_pos hcop
+  refine ⟨v_zmod.val, ZMod.val_lt v_zmod, ?_⟩
+  rw [← CharP.cast_eq_zero_iff (ZMod (p ^ 2)) (p ^ 2)]
+  push_cast [ZMod.natCast_zmod_val v_zmod]
+  exact zmod_mul_inv_add_eq_zero (p ^ 2) b d hp2_pos hcop
 
 lemma dvd_iff_modEq_of_coprime (p b v d N : ℕ) (hcop : (p ^ 2).gcd b = 1)
     (hdvd_v : (p ^ 2) ∣ (b * v + d)) :
@@ -291,9 +247,8 @@ lemma card_union_shifted_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : 
 
 lemma combined_bound_aux (T : Finset ℕ) (X q_sq : ℕ) :
     X / q_sq + T.card * (X / q_sq + 1) ≤ (T.card + 1) * (X / q_sq + 1) := by
-  have h_main : X / q_sq + T.card * (X / q_sq + 1) ≤ (T.card + 1) * (X / q_sq + 1) := by
-    rw [add_mul, one_mul]; omega
-  aesop
+  rw [add_mul, one_mul]
+  omega
 
 lemma single_prime_violation_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (q : Nat.Primes) (hq : (q : ℕ) > b) (X : ℕ) :

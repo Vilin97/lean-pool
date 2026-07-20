@@ -42,18 +42,8 @@ def mk := Quot.mk eq
 
 instance hasDot : HasDot carrier where
   dot := Quot.lift₂ (fun (x y : Expr) => mk (x ⬝ y))
-    (by
-      intros a b c e'
-      apply Quot.sound
-      apply eq.app
-      · apply eq.refl
-      · assumption)
-    (by
-      intros a b c e'
-      apply Quot.sound
-      apply eq.app
-      · assumption
-      · apply eq.refl)
+    (by intros a b c e'; exact Quot.sound (.app .refl ‹_›))
+    (by intros a b c e'; exact Quot.sound (.app ‹_› .refl))
 
 @[simp]
 theorem eq_mk_app (a b : Expr) : mk a ⬝ mk b = mk (a ⬝ b) := rfl
@@ -69,15 +59,13 @@ instance FreeCA : CA FreeCA.carrier where
     apply Quot.ind; intro a
     apply Quot.ind; intro b
     rw [FreeCA.eq_mk_app, FreeCA.eq_mk_app]
-    apply Quot.sound
-    apply FreeCA.eq.K
+    exact Quot.sound FreeCA.eq.K
 
   eq_S := by
     apply Quot.ind; intro a
     apply Quot.ind; intro b
     apply Quot.ind; intro c
     rw [FreeCA.eq_mk_app, FreeCA.eq_mk_app, FreeCA.eq_mk_app]
-    apply Quot.sound
-    apply FreeCA.eq.S
+    exact Quot.sound FreeCA.eq.S
 
 end LeanPool.PartialCombinatoryAlgebras

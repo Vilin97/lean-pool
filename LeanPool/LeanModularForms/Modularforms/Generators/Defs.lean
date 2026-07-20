@@ -56,15 +56,11 @@ theorem levelOne_odd_weight_eq_zero {k : ℤ} (hk : Odd k)
   have hmod : (f.toFun ∣[k] (-1 : SL(2, ℤ))) z = f z :=
     congrFun (f.slash_action_eq' _
       (Subgroup.mem_map_of_mem _ (CongruenceSubgroup.mem_Gamma_one (-1)))) z
-  rw [SL_slash_apply] at hmod
-  rw [ModularGroup.SL_neg_smul, one_smul] at hmod
+  rw [SL_slash_apply, ModularGroup.SL_neg_smul, one_smul] at hmod
   have hdenom : denom (Matrix.SpecialLinearGroup.toGL
       ((Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)) (-1 : SL(2, ℤ)))) ↑z = -1 := by
     rw [ModularGroup.denom_apply]
-    simp only [Fin.isValue, Matrix.SpecialLinearGroup.coe_neg,
-      Matrix.SpecialLinearGroup.coe_one, Matrix.neg_apply, ne_eq, one_ne_zero, not_false_eq_true,
-      Matrix.one_apply_ne, neg_zero, Int.cast_zero, zero_mul, Matrix.one_apply_eq, Int.reduceNeg,
-      Int.cast_neg, Int.cast_one, zero_add]
+    simp_all
   rw [hdenom, zpow_neg, hk.neg_one_zpow, inv_neg, inv_one] at hmod
   simp only [SlashInvariantForm.toFun_eq_coe, ModularForm.toSlashInvariantForm_coe] at hmod
   simp only [ModularForm.zero_apply]
@@ -72,9 +68,8 @@ theorem levelOne_odd_weight_eq_zero {k : ℤ} (hk : Odd k)
 
 /-- For odd weight k, the space of modular forms of weight k for Γ(1) has rank zero. -/
 theorem levelOne_odd_weight_rank_zero {k : ℤ} (hk : Odd k) :
-    Module.rank ℂ (ModularForm (CongruenceSubgroup.Gamma 1) k) = 0 := by
-  rw [rank_zero_iff_forall_zero]
-  exact levelOne_odd_weight_eq_zero hk
+    Module.rank ℂ (ModularForm (CongruenceSubgroup.Gamma 1) k) = 0 :=
+  rank_zero_iff_forall_zero.mpr (levelOne_odd_weight_eq_zero hk)
 
 /-! ## Combinatorial helpers for monomial weight decomposition -/
 
@@ -90,9 +85,7 @@ lemma monomial_weight_exists (k : ℕ) (hk : 4 ≤ k) (hkeven : Even k) :
 
 /-- The 0th q-expansion coefficient of E_k raised to the n-th power equals 1. -/
 lemma Ek_q_exp_zero_pow (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (n : ℕ) :
-    (qExpansion 1 (E k hk)).coeff 0 ^ n = 1 := by
-  rw [Ek_q_exp_zero k hk hk2]
-  exact one_pow n
+    (qExpansion 1 (E k hk)).coeff 0 ^ n = 1 := by simp [Ek_q_exp_zero k hk hk2]
 
 /-! ## Delta in the range of evalE₄E₆ -/
 
@@ -184,11 +177,7 @@ lemma evalE₄E₆_whc_eq_single (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
     have hd0 : MvPolynomial.monomial d (MvPolynomial.coeff d p) =
         MvPolynomial.C (MvPolynomial.coeff d p) * MvPolynomial.X 0 ^ d 0 *
           MvPolynomial.X 1 ^ d 1 := by
-      rw [MvPolynomial.monomial_eq, mul_assoc]; congr 1
-      rw [Finsupp.prod, Finset.prod_subset (fun _ _ => Finset.mem_univ _) (fun i _ hi => by
-        have : d i = 0 := by rwa [Finsupp.mem_support_iff, not_not] at hi
-        rw [this, pow_zero])]
-      simp only [Fin.prod_univ_two]
+      rw [MvPolynomial.monomial_eq, mul_assoc]; simp_all
     rw [hd0, show MvPolynomial.C (MvPolynomial.coeff d p) *
         MvPolynomial.X (0 : Fin 2) ^ d 0 * MvPolynomial.X (1 : Fin 2) ^ d 1 =
         MvPolynomial.C (MvPolynomial.coeff d p) *
@@ -212,8 +201,7 @@ lemma evalE₄E₆_whc_eq_single (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
 lemma DirectSum_of_cast_eq {k₁ k₂ : ℤ} (hk : k₁ = k₂)
     (x : ModularForm (CongruenceSubgroup.Gamma 1) k₁) :
     DirectSum.of (fun k : ℤ => ModularForm (CongruenceSubgroup.Gamma 1) k) k₁ x =
-    DirectSum.of _ k₂ (hk ▸ x) := by
-  subst hk; rfl
+    DirectSum.of _ k₂ (hk ▸ x) := by subst hk; rfl
 
 /-- The 0th q-expansion coefficient of `Δ` is 0 (Δ is a cusp form). -/
 lemma qExpansion_coeff_zero_Delta :

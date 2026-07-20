@@ -47,11 +47,7 @@ instance (v : V) [Finite (X.incidenceSet v)] : Finite { e : X.edgeSet | v ∈ e.
 
 /-- The finset of the edges of `X` consisting of all edges connected to `v`. -/
 def incidenceFinset' (v : V) [Fintype (X.neighborSet v)] : Finset X.edgeSet :=
-  let s : Set X.edgeSet := { e | v ∈ e.val }
-  have hs : s.Finite := by
-    change Finite s
-    infer_instance
-  hs.toFinset
+  (Set.toFinite { e : X.edgeSet | v ∈ e.val }).toFinset
 
 lemma mem_incidenceFinset' (v : V) [Fintype (X.neighborSet v)] (e : X.edgeSet) :
     e ∈ incidenceFinset' v ↔ v ∈ e.val := by
@@ -78,7 +74,6 @@ namespace Tree
 
 variable {X : Tree V} [∀ v, Fintype (X.neighborSet v)] (w : V → Aˣ) (f : V → M)
 
--- an arbitrary root vertex
 variable (v₀ : V)
 
 section «API»
@@ -90,9 +85,7 @@ lemma exists_path_eq_append_of_isPath_of_mem_support {v w x : V} (p : X.Walk v w
   rw [p.mem_support_iff_exists_append] at hx
   obtain ⟨r, s, hrs⟩ := hx
   have : (r.append s).IsPath := by rwa [← hrs]
-  refine ⟨r, s, ?_, ?_, hrs⟩
-  · apply Walk.IsPath.of_append_left this
-  · apply Walk.IsPath.of_append_right this
+  exact ⟨r, s, this.of_append_left, this.of_append_right, hrs⟩
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma exists_path_eq_cons_of_isPath_of_mem_support {v w : V} (h : X.Adj w v) (p : X.Walk w v₀)
@@ -127,10 +120,8 @@ lemma dist_ne_of_of_adj {v w : V} (h : X.Adj v w) : X.dist v₀ v ≠ X.dist v�
     have : pw.length = pv.length + 1 := by simp [this, hpr]
     omega
   let q' : X.Path v v₀ := ⟨q, hqpath⟩
-  have : pv' = q' := X.isTree.isAcyclic.path_unique _ _
-  have heq : pv = q := by
-    change pv'.val = q'.val
-    rwa [← Subtype.ext_iff]
+  have hpeq : pv' = q' := X.isTree.isAcyclic.path_unique _ _
+  have heq : pv = q := congrArg Subtype.val hpeq
   have : q.length = pw.length + 1 := by simp [q]
   rw [← heq, hpvlength, dist_comm, hdist, dist_comm, ← hpwlength] at this
   omega
@@ -188,11 +179,9 @@ omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma source_adj_target (e : X.edgeSet) :
     X.Adj (X.source v₀ e) (X.target v₀ e) := by
   rw [adj_iff_exists_edge]
-  refine ⟨?_, ?_⟩
-  · intro hc
-    have := norm_source_lt_norm_target v₀ e
-    simp [hc] at this
-  · exact ⟨e, e.property, source_mem v₀ e, target_mem v₀ e⟩
+  refine ⟨fun hc ↦ ?_, e, e.property, source_mem v₀ e, target_mem v₀ e⟩
+  have := norm_source_lt_norm_target v₀ e
+  simp [hc] at this
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma norm_target_eq_norm_source_add_one (e : X.edgeSet) :
@@ -231,11 +220,7 @@ lemma source_eq_origin_of_mem (e : X.edgeSet) (h : v₀ ∈ e.val) :
 a bigger distance to `v₀` than `w`. -/
 def outwardCone (w : V) : Finset V :=
   let s : Set V := { v : V | X.Adj w v ∧ X.dist v₀ w < X.dist v₀ v }
-  have hs : s.Finite := by
-    apply Set.Finite.subset
-    · exact Set.toFinite (X.neighborSet w)
-    · intro a ha
-      exact ha.left
+  have hs : s.Finite := (Set.toFinite (X.neighborSet w)).subset fun _ ha ↦ ha.left
   hs.toFinset
 
 omit [DecidableEq V] in
@@ -252,13 +237,9 @@ lemma not_mem_outwardCone (w : V) : w ∉ X.outwardCone v₀ w := by
 /-- The outward edge cone of a vertex `w` wrt. `v₀` is the finset of neighboring edges
 where `w` is the source vertex wrt. to `v₀`. -/
 def outwardEdgeCone (w : V) : Finset X.edgeSet :=
-  let s : Set X.edgeSet :=
-    { e | w ∈ e.val ∧ X.source v₀ e = w }
-  have hs : s.Finite := by
-    apply Set.Finite.subset (Finset.finite_toSet (incidenceFinset' w))
-    intro e he
-    simp only [Finset.mem_coe, mem_incidenceFinset']
-    exact he.left
+  let s : Set X.edgeSet := { e | w ∈ e.val ∧ X.source v₀ e = w }
+  have hs : s.Finite := (Finset.finite_toSet (incidenceFinset' w)).subset fun e he ↦ by
+    simpa only [Finset.mem_coe, mem_incidenceFinset'] using he.left
   hs.toFinset
 
 lemma mem_outwardEdgeCone_iff (w : V) (e : X.edgeSet) :
@@ -303,9 +284,9 @@ lemma outwardEdgeCone_eq_union (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty
     by_cases hde : e = distinguishedEdge v₀ w hw
     · exact Or.inl hde
     · exact Or.inr ⟨h, fun a ↦ hde a.symm⟩
-  · rintro ⟨_, _⟩
+  · rintro (rfl | ⟨h, _⟩)
     · exact distinguishedEdge_mem v₀ w hw
-    · next h => exact h.left
+    · exact h
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 /-- For every vertex `w` different from the root vertex `v₀` there exists an edge `e`, whose
@@ -361,17 +342,13 @@ lemma edgeTowardsOrigin_target_eq (w : V) (hw : 0 < X.dist v₀ w) :
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma eq_of_isPath {x y : V} {p q : X.Walk x y} (hp : p.IsPath) (hq : q.IsPath) :
-    p = q := by
-  let p' : X.Path x y := ⟨p, hp⟩
-  let q' : X.Path x y := ⟨q, hq⟩
-  have : p' = q' := X.isTree.isAcyclic.path_unique _ _
-  simpa [p', q'] using this
+    p = q :=
+  congrArg Subtype.val (X.isTree.isAcyclic.path_unique ⟨p, hp⟩ ⟨q, hq⟩)
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
 lemma dist_eq_of_isPath {x y : V} (p : X.Walk x y) (hp : p.IsPath) :
     X.dist x y = p.length := by
   obtain ⟨q, hq, hqlen⟩ := X.isTree.connected.exists_path_of_dist x y
-  have : p = q := eq_of_isPath hp hq
   rw [eq_of_isPath hp hq, hqlen]
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
@@ -423,8 +400,7 @@ lemma eq_edgeTowardsOrigin_iff_of_mem (w : V) (hw : 0 < X.dist v₀ w) (e : X.ed
   · rintro rfl
     apply edgeTowardsOrigin_target_eq
   · intro h
-    apply eq_of_target_eq v₀
-    simpa
+    exact eq_of_target_eq v₀ _ _ (by simpa)
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
 lemma vertex_mem_edgeTowardsOrigin (w : V) (hw : 0 < X.dist v₀ w) :
@@ -484,8 +460,7 @@ def auxBorder (e : X.edgeSet) (he : X.dist v₀ (X.target v₀ e) = n + 1) : M :
     have hd : (X.outwardEdgeCone v₀ d).Nonempty := by
       use e
       rw [mem_outwardEdgeCone_iff]
-      simp only [d, and_true]
-      exact source_mem v₀ e
+      simpa only [d, and_true] using source_mem v₀ e
     if X.distinguishedEdge v₀ d hd = e
       then (w d)⁻¹ • f d
       else 0
@@ -494,8 +469,7 @@ def auxBorder (e : X.edgeSet) (he : X.dist v₀ (X.target v₀ e) = n + 1) : M :
     have hd : (X.outwardEdgeCone v₀ d).Nonempty := by
       use e
       rw [mem_outwardEdgeCone_iff]
-      simp only [d, and_true]
-      exact source_mem v₀ e
+      simpa only [d, and_true] using source_mem v₀ e
     have hd2 : 0 < X.dist v₀ d := by
       rw [norm_target_eq_norm_source_add_one] at he
       rw [add_left_inj] at he
@@ -606,11 +580,7 @@ lemma aux_spec₀ (e : X.edgeSet) (n : ℕ) (he : X.dist v₀ (X.target v₀ e) 
     intro h'
     simp only [auxBorder, Nat.reduceAdd]
     match n with
-    | 0 =>
-      rw [ite_eq_right_iff]
-      intro hc
-      contradiction
-    | n + 1 =>
+    | 0 | n + 1 =>
       rw [ite_eq_right_iff]
       intro hc
       contradiction

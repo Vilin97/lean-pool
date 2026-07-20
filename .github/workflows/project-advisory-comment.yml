@@ -1,0 +1,60 @@
+name: Project Advisory Comment
+
+# Posts a sticky, advisory PR comment with project source metadata:
+# license, source default-branch last commit date, and source Lean version.
+# This never checks out or runs PR-head code; it only reads repository files
+# and public source metadata through the GitHub API.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Optional PR number. Leave empty to update every open PR."
+        required: false
+        type: string
+  schedule:
+    - cron: "37 9 * * *"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: project-advisory-comment-${{ github.event.pull_request.number || inputs.pr_number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    name: Project metadata advisory
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Sync Python dependencies
+        working-directory: python
+        run: uv sync
+
+      - name: Post project advisory comment
+        working-directory: python
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER_FROM_EVENT: ${{ github.event.pull_request.number }}
+          PR_NUMBER_FROM_INPUT: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          pr_number="${PR_NUMBER_FROM_EVENT:-$PR_NUMBER_FROM_INPUT}"
+          if [ -n "$pr_number" ]; then
+            uv run python -m lean_pool.pr_advisory --pr-number "$pr_number"
+          else
+            uv run python -m lean_pool.pr_advisory
+          fi

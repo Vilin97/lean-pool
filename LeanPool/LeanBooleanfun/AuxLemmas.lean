@@ -24,11 +24,9 @@ lemma sum_singletons [AddCommMonoid α] {F : Finset ι → α} {G : ι → α} (
     ∑ S ∈ {S | S.card = 1}, F S = ∑ i, G i := by
   symm
   apply sum_of_injOn (e := fun i ↦ {i})
-  · intro j _ l _ h
-    dsimp at h
-    apply eq_of_mem_singleton
-    rw [← h]
-    exact mem_singleton_self j
+  · intro j _ l _ h'
+    simp only at h'
+    exact Finset.singleton_inj.mp h'
   · intro j _
     simp
   · intro S hS hS'
@@ -80,7 +78,8 @@ lemma oneOn_true (h : p) : oneOn p = 1 := by simpa
 lemma oneOn_false (h : ¬p) : oneOn p = 0 := by simpa
 
 lemma oneOn_and : oneOn (p ∧ q) = (oneOn p) * (oneOn q) := by
-  unfold oneOn; split_ifs <;> {simp; try tauto}
+  unfold oneOn
+  split_ifs <;> simp_all
 
 lemma oneOn_not : oneOn (¬p) = 1 - oneOn p := by
   unfold oneOn; split_ifs <;> simp

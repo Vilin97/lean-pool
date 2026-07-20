@@ -98,13 +98,9 @@ private lemma transitionWeight_nonneg (Y m q : ℕ) : 0 ≤ transitionWeight Y m
   by_cases hYq : Y ≤ q
   · by_cases hm : m = 0
     · simp [transitionWeight, hYq, hm]
-    · have hm1 : 1 ≤ m := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hm)
-      have hlog_nonneg : 0 ≤ Real.log (m : ℝ) := by
-        positivity
-      rw [transitionWeight, if_pos hYq]
-      refine mul_nonneg ?_ ?_
-      · exact div_nonneg hlog_nonneg (sq_nonneg _)
-      · exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
+    · rw [transitionWeight, if_pos hYq]
+      exact mul_nonneg (div_nonneg (by positivity) (sq_nonneg _))
+        (div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity))
   · simp [transitionWeight, hYq]
 
 /--
@@ -116,9 +112,8 @@ private lemma transitionKernel_eq_indicator {x Y m n : ℕ} (hm : x ≤ m) :
       Set.indicator {n : ℕ | m ∣ n}
         (fun n => ENNReal.ofReal (transitionWeight Y m (n / m))) n := by
   by_cases hdiv : m ∣ n
-  · by_cases hYnm : Y ≤ n / m
-    · simp [transitionKernel, hm, hdiv, hYnm, Set.indicator, transitionWeight]
-    · simp [transitionKernel, hm, hdiv, hYnm, Set.indicator, transitionWeight]
+  · by_cases hYnm : Y ≤ n / m <;>
+      simp [transitionKernel, hm, hdiv, hYnm, Set.indicator, transitionWeight]
   · simp [transitionKernel, hm, hdiv, Set.indicator]
 
 /--
@@ -240,11 +235,7 @@ theorem kernelRowBound {x Y : ℕ} (chain : MarkovLayer x Y) :
   intro m hm
   by_cases hm0 : m = 0
   · subst hm0
-    have hzero : ∀ n : ℕ, transitionKernel x Y 0 n = 0 := by
-      intro n
-      simp [transitionKernel, transitionWeight]
-    rw [show (∑' n : ℕ, transitionKernel x Y 0 n) = 0 by
-      exact (ENNReal.tsum_eq_zero).2 hzero]
+    rw [ENNReal.tsum_eq_zero.2 fun n => by simp [transitionKernel, transitionWeight]]
     simp
   · have hmpos : 0 < m := Nat.pos_iff_ne_zero.mpr hm0
     have hm1 : 1 ≤ m := Nat.succ_le_of_lt hmpos
@@ -279,17 +270,12 @@ lemma tsum_initialMass_eq_one {x Y : ℕ} (hB : 0 < normalizationConstant x Y) :
         (fun n => div_nonneg (hf_nonneg n) hB.le)
         (by simpa [div_eq_mul_inv] using hf_summable.mul_right ((normalizationConstant x Y)⁻¹))]
     _ = ENNReal.ofReal ((∑' n : ℕ, f n) / normalizationConstant x Y) := by
-      congr 1
-      rw [show (fun n : ℕ => f n / normalizationConstant x Y) =
-        fun n => f n * (normalizationConstant x Y)⁻¹ by
-          funext n
-          simp [div_eq_mul_inv]]
-      rw [tsum_mul_right]
-      simp [div_eq_mul_inv]
+      simp only [div_eq_mul_inv, tsum_mul_right]
     _ = 1 := by
       rw [show ∑' n : ℕ, f n = normalizationConstant x Y by simp [normalizationConstant, f]]
       field_simp [hB.ne']
       simp
+
 /-- A kernel term landing below `x` is zero once `Y ≥ 1` and `x > 0`. -/
 private lemma transitionKernel_eq_zero_of_lt {x Y m n : ℕ} (hY : 1 ≤ Y) (hn : n < x) :
     transitionKernel x Y m n = 0 := by
@@ -298,7 +284,7 @@ private lemma transitionKernel_eq_zero_of_lt {x Y m n : ℕ} (hY : 1 ≤ Y) (hn 
     have hm_le_prod : m ≤ m * (n / m) := by
       simpa [one_mul] using Nat.mul_le_mul_left m hqm
     have hprod_le_n : m * (n / m) ≤ n := Nat.mul_div_le n m
-    lia
+    omega
   · simp [transitionKernel, hcond]
 
 /-- States below `x` carry no surviving mass either. -/
@@ -433,14 +419,11 @@ private lemma tsum_arrivalMass_eq_initial_add_parentSum {x Y : ℕ} (chain : Mar
 private lemma lt_of_dvd_of_two_le_div {m n Y : ℕ} (hmn : m ∣ n) (hY : 2 ≤ Y)
     (hYm : Y ≤ n / m) : m < n := by
   have hm_pos : 0 < m := by
-    by_contra hm_pos
-    have hm0 : m = 0 := Nat.eq_zero_of_not_pos hm_pos
-    have : Y ≤ 0 := by simpa [hm0] using hYm
-    omega
-  have hmul : m * 2 ≤ n := by
-    calc
-      m * 2 ≤ m * (n / m) := Nat.mul_le_mul_left _ (le_trans hY hYm)
-      _ = n := Nat.mul_div_cancel' hmn
+    rcases Nat.eq_zero_or_pos m with hm0 | hm0
+    · simp [hm0] at hYm; omega
+    · exact hm0
+  have hmul : m * 2 ≤ n :=
+    (Nat.mul_le_mul_left _ (le_trans hY hYm)).trans (Nat.mul_div_cancel' hmn).le
   omega
 
 /--

@@ -41,8 +41,7 @@ variable (m : ℝ) [Fact (0 < m)]
 lemma euclidean_action_apply (g : E) (f : TestFunctionℂ) (x : SpaceTime) :
     euclideanAction g f x = f (euclideanPullback g x) := by
   unfold euclideanAction
-  simp only [SchwartzMap.compCLM_apply]
-  rfl
+  simp_all
 
 /-- The Euclidean pullback satisfies euclideanPullback g x = g⁻¹ • x = act g⁻¹ x. -/
 lemma euclidean_pullback_eq_inv_act (g : E) (x : SpaceTime) :
@@ -56,8 +55,7 @@ lemma euclidean_pullback_act (g : E) (y : SpaceTime) :
 /-- The forward composition: act g (euclideanPullback g x) = x. -/
 lemma act_euclidean_pullback (g : E) (x : SpaceTime) :
     act g (euclideanPullback g x) = x := by
-  simp only [euclidean_pullback_eq_inv_act]
-  simpa using act_inv_general (g := g⁻¹) x
+  simpa [euclidean_pullback_eq_inv_act] using act_inv_general (g := g⁻¹) x
 
 /-! ## Change of variables for the bilinear form -/
 

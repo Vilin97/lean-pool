@@ -29,11 +29,7 @@ include T in theorem prime_height_le_one_mem_assoc
     (hPR_ne : P.comap R.carrier.subtype ≠ ⊥) :
     ∃ (r₀ : R.carrier), (r₀ : T) ≠ 0 ∧
       P ∈ associatedPrimes T (T ⧸ span {(r₀ : T)}) := by
-  obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ : ∃ r₀ : R.carrier,
-      r₀ ∈ P.comap R.carrier.subtype ∧ r₀ ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hPR_ne ((Submodule.eq_bot_iff _).mpr fun x hx => h x hx)
+  obtain ⟨r₀, hr₀_mem, hr₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR_ne
   have hr₀T_ne : (r₀ : T) ≠ 0 := fun h => hr₀_ne (Subtype.val_injective h)
   have hr₀_in_P : (r₀ : T) ∈ P := Ideal.mem_comap.mp hr₀_mem
   have hP_minimal : P ∈ (Ideal.span {(r₀ : T)}).minimalPrimes := by
@@ -44,9 +40,7 @@ include T in theorem prime_height_le_one_mem_assoc
     have hQ_ne_P : Q ≠ P := fun h => hPQ (h ▸ le_refl _)
     have hQ_ne_bot : Q ≠ ⊥ := by
       intro h
-      rw [h] at hQ_le_span
-      exact hr₀T_ne (Ideal.mem_bot.mp
-        (hQ_le_span (Ideal.subset_span (Set.mem_singleton _))))
+      simp_all
     have hQ_lt_P : Q < P := lt_of_le_of_ne hQ_le_P hQ_ne_P
     have h_bot_lt_Q : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
     have h1 := @Ideal.height_add_one_le_of_lt_of_isPrime T _ ⊥ Q
@@ -56,8 +50,7 @@ include T in theorem prime_height_le_one_mem_assoc
     have h4 : (2 : ℕ∞) ≤ P.height :=
       calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
         _ ≤ (⊥ : Ideal T).height + 1 + 1 := by
-          gcongr
-          exact zero_le
+          simp_all
         _ ≤ Q.height + 1 := by gcongr
         _ ≤ P.height := h2
     exact not_lt.mpr h4 (by exact_mod_cast hP_ht.trans_lt (by norm_num))
@@ -91,15 +84,11 @@ include T in theorem no_common_I_not_le_assoc
       intro x hx
       have h1 : x ∈ P.comap R.carrier.subtype :=
         Ideal.mem_comap.mpr (hgens_in_P x hx)
-      rw [hcomap] at h1
-      exact (Submodule.mem_bot _).mp h1
+      simp_all
     have h_le_one : s'.card ≤ 1 :=
       Finset.card_le_one.mpr fun x hx y hy => by
         rw [hall_zero x hx, hall_zero y hy]
-    have h_ge_two : 2 ≤ s'.card := by
-      rw [hs'_def, Finset.card_erase_of_mem ha_mem, hs_eq]
-      omega
-    omega
+    simp_all
   · haveI : (P.comap R.carrier.subtype).IsPrime :=
       hP_mem.isPrime.comap R.carrier.subtype
     obtain ⟨q, hq_prime, hq_Q⟩ :=

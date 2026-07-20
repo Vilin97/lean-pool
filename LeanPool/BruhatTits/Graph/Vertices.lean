@@ -58,8 +58,7 @@ lemma inv_mk (L M : BruhatTits.Lattice R) :
 
 lemma inv_symm (L M : Vertices R) : inv L M = inv M L := by
   refine Quotient.inductionOn₂' L M (fun L M ↦ ?_)
-  simp only [inv_mk]
-  exact dist_symm L M
+  simpa only [inv_mk] using dist_symm L M
 
 lemma inv_self (L : Vertices R) : inv L L = 0 := by
   refine Quotient.inductionOn' L (fun L ↦ ?_)
@@ -122,12 +121,12 @@ lemma exists_repr_inv'_of_fixed (M : Lattice R) (L : Vertices R) :
     ext i : 1
     simp only [inv_mk, Basis.fromLattice_apply]
     match i with
-    | 0 => simp only [Basis.ntwist₂_apply₀, Basis.fromLattice_apply, h0]; rfl
+    | 0 =>
+      simp_all
     | 1 => simp [h1]
   refine ⟨ϖ, hϖ, bM.fromLattice, ?_, ?_⟩
   · simp only [Basis.toLattice_fromLattice]
-  · rw [hML]
-    simp only [Basis.toLattice_fromLattice, hL]
+  · simp_all
 
 /-- Variant of `exists_repr_inv` in terms of `Basis.ntwist₂`. -/
 lemma exists_repr_inv' (M L : Vertices R) :
@@ -144,12 +143,10 @@ lemma dist_twist (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible
     dist b.toLattice (R := R) (b.twist hϖ f).toLattice = f 0 - f 1 := by
   have hcast : f 0 - f 1 = ↑(f 0 - f 1).toNat :=
     (Int.toNat_sub_of_le <| hf (by simp)).symm
-  have : dist b.toLattice (R := R) (b.twist hϖ f).toLattice = (f 0 - f 1).toNat := by
-    rw [eq_dist_iff]
-    refine ⟨ϖ, b.restrictToLattice, (b.twist hϖ f).restrictToLattice, f, hϖ, hf, ?_, hcast⟩
-    · intro i
-      simp only [Basis.restrictToLattice_apply, Basis.twist_apply]
-  rw [this, ← hcast]
+  rw [hcast, Nat.cast_inj, eq_dist_iff]
+  refine ⟨ϖ, b.restrictToLattice, (b.twist hϖ f).restrictToLattice, f, hϖ, hf, ?_, hcast⟩
+  intro i
+  simp only [Basis.restrictToLattice_apply, Basis.twist_apply]
 
 /-- If `b` is a basis of `Fin 2 → K` and `f₀ ≤ f₁`, the distance of `b.toLattice` and
 `(b.twist hϖ f).toLattice` is `f₁ - f₀`. -/
@@ -158,19 +155,17 @@ lemma dist_twist_monotone (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Ir
     dist b.toLattice (R := R) (b.twist hϖ f).toLattice = f 1 - f 0 := by
   have hcast : f 1 - f 0 = ↑(f 1 - f 0).toNat :=
     (Int.toNat_sub_of_le <| hf (by simp)).symm
-  have : dist b.toLattice (R := R) (b.twist hϖ f).toLattice = (f 1 - f 0).toNat := by
-    rw [eq_dist_iff_monotone]
-    refine ⟨ϖ, b.restrictToLattice, (b.twist hϖ f).restrictToLattice, f, hϖ, hf, ?_, hcast⟩
-    · intro i
-      simp only [Basis.restrictToLattice_apply, Basis.twist_apply]
-  rw [this, ← hcast]
+  rw [hcast, Nat.cast_inj, eq_dist_iff_monotone]
+  refine ⟨ϖ, b.restrictToLattice, (b.twist hϖ f).restrictToLattice, f, hϖ, hf, ?_, hcast⟩
+  intro i
+  simp only [Basis.restrictToLattice_apply, Basis.twist_apply]
 
 @[simp]
 lemma dist_smul_GL_eq_dist (M L : Lattice R) (g : GL (Fin 2) K) :
     dist (g • M) (g • L) = dist M L := by
   obtain ⟨ϖ, hϖ, b, f, hf, rfl, rfl, hdiff⟩ := exists_repr_dist' M L
-  rw [← Basis.smulGL_toLattice, ← Basis.smulGL_toLattice, Basis.smulGL_twist]
-  rw [← Nat.cast_inj (R := ℤ), dist_twist _ _ hf, dist_twist _ _ hf]
+  rw [← Basis.smulGL_toLattice, ← Basis.smulGL_toLattice, Basis.smulGL_twist,
+    ← Nat.cast_inj (R := ℤ), dist_twist _ _ hf, dist_twist _ _ hf]
 
 lemma dist_twist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible ϖ) (n m : ℤ) :
     dist b.toLattice (R := R) (b.twist₂ hϖ n m).toLattice = |n - m| := by

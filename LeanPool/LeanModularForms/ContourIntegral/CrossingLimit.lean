@@ -165,10 +165,7 @@ theorem pv_tendsto_of_crossing_limit_asymmetric
         mem_ae_iff.mpr (by rw [compl_compl]; exact (Set.finite_singleton _).measure_zero volume)
       filter_upwards [h_ne] with t ht_ne ht_mem
       rw [uIoc_of_le (le_of_lt h_right_lt)] at ht_mem
-      simp only [hF_def]
-      rw [if_pos]
-      apply h_far_right ε hε_pos hε_lt t
-      exact ⟨ht_mem.1, ht_mem.2⟩
+      simp_all
     -- Integrability of F on each piece
     have hF_int_left : IntervalIntegrable F volume a (t₀ - δ_left ε) :=
       (hint_left ε hε_pos hε_lt).congr_ae
@@ -202,10 +199,7 @@ theorem pv_tendsto_of_crossing_limit_asymmetric
         ∫ t in (t₀ + δ_right ε)..b, (γ t - s)⁻¹ * deriv γ t :=
       intervalIntegral.integral_congr_ae hF_right
     -- Assemble
-    change ∫ t in a..b, F t = E ε
-    rw [h_split, h_mid_zero, h_eq_left, h_eq_right]
-    simp only [add_zero]
-    exact h_ftc ε hε_pos hε_lt
+    simp_all
   exact h_limit.congr' h_ev.symm
 
 end ContourIntegral

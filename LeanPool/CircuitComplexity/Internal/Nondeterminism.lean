@@ -92,13 +92,8 @@ private theorem mkConstGateP_eval {G : Nat} [NeZero m] (val : Bool) (bound : Nat
     (mkConstGateP (k := k) (m := m) (G := G) val bound).val.eval wv = val := by
   unfold mkConstGateP
   split
-  · rename_i hval; rw [andOr2_eval_two]; simp only
-    cases wv ⟨0, by have := NeZero.ne m; omega⟩ <;> simp [hval]
-  · rename_i hval; rw [andOr2_eval_two]; simp only
-    cases wv ⟨0, by have := NeZero.ne m; omega⟩ <;>
-      simp only [Bool.not_eq_true, ↓reduceIte, bne_self_eq_false, one_ne_zero, Bool.bne_false,
-        Bool.and_true, Bool.false_eq, Bool.bne_true, Bool.not_false, Bool.and_false] at hval ⊢ <;>
-      exact hval
+  · rename_i hval; rw [andOr2_eval_two]; simp_all
+  · rename_i hval; rw [andOr2_eval_two]; simp_all
 
 private theorem mkIdentGateP_eval {G : Nat} (op : AONOp) (w : Fin (k + m + G)) (neg : Bool)
     (bound : Nat) (hw : w.val < k + m + bound)
@@ -278,7 +273,6 @@ theorem restrictCircuit_eval {G : Nat} [NeZero m] (b : Bool)
     (c.wireValue (prependInput b x)) ((restrictCircuit b c).wireValue x)
     (wireValue_zero b c x)
   intro i hi hip
-  have := wireValue_restrict b c x i (by omega) hip
-  convert this using 2
+  convert wireValue_restrict b c x i (by omega) hip using 2
 
 end CircuitComplexity

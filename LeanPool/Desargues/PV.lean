@@ -99,23 +99,16 @@ theorem l2_rep
     have : (0 : Fin 2) = 1 := inj (by simp [hpq])
     simp at this
   -- a, b, p, q are in the span of p, q.
-  have a_span_pq : a ∈ span K {p, q} := by
-    apply lin_dep_imp_span a p q pq_indep apq_dep
-  have b_span_pq : b ∈ span K {p, q} := by
-    apply lin_dep_imp_span b p q pq_indep bpq_dep
-  have ppq_dep : ¬ LinearIndependent K ![p, p, q] :=
-    by apply (lin_dep_aab p q)
-  have p_span_pq : p ∈ span K {p, q} :=
-    by apply lin_dep_imp_span p p q pq_indep ppq_dep
-  have qpq_dep : ¬ LinearIndependent K ![q, p, q] :=
-    by apply (lin_dep_aba q p)
-  have q_span_pq : q ∈ span K {p, q} :=
-    by apply lin_dep_imp_span q p q pq_indep qpq_dep
+  have a_span_pq : a ∈ span K {p, q} := lin_dep_imp_span a p q pq_indep apq_dep
+  have b_span_pq : b ∈ span K {p, q} := lin_dep_imp_span b p q pq_indep bpq_dep
+  have ppq_dep : ¬ LinearIndependent K ![p, p, q] := lin_dep_aab p q
+  have p_span_pq : p ∈ span K {p, q} := lin_dep_imp_span p p q pq_indep ppq_dep
+  have qpq_dep : ¬ LinearIndependent K ![q, p, q] := lin_dep_aba q p
+  have q_span_pq : q ∈ span K {p, q} := lin_dep_imp_span q p q pq_indep qpq_dep
   intro abp_dep
   -- The three vectors a, b, p all lie in the span of {p, q}, which has rank 2,
   -- so they cannot be linearly independent.
-  have pq_range : ({p, q} : Set V) = Set.range ![p, q] := by
-    rw [Matrix.range_cons_cons_empty]
+  have pq_range : ({p, q} : Set V) = Set.range ![p, q] := by rw [Matrix.range_cons_cons_empty]
   have span_le : span K (Set.range ![a, b, p]) ≤ span K (Set.range ![p, q]) := by
     rw [span_le, Set.range_subset_iff]
     intro i
@@ -145,8 +138,7 @@ theorem finrank_span_pair_le
     (x y : V) :
     Module.finrank K (span K ({x, y} : Set V)) ≤ 2 := by
   have h := finrank_range_le_card (R := K) ![x, y]
-  rw [Set.finrank, Matrix.range_cons_cons_empty, Fintype.card_fin] at h
-  exact h
+  rwa [Set.finrank, Matrix.range_cons_cons_empty, Fintype.card_fin] at h
 
 -- A linearly independent pair spans a rank-two subspace.
 theorem finrank_span_pair_indep
@@ -280,11 +272,9 @@ by_cases hAC : A = C
       exact lin_dep_abb A.rep D.rep
   · -- General position: lines AC and BD meet in a common point Q.
     have ac_indep : LinearIndependent K ![A.rep, C.rep] := by
-      rw [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
-      exact hAC
+      rwa [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
     have bd_indep : LinearIndependent K ![B.rep, D.rep] := by
-      rw [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
-      exact hBD
+      rwa [← rep_comp_2, ← independent_iff, independent_pair_iff_ne]
     have inter_ne :
         span K ({A.rep, C.rep} : Set V) ⊓ span K ({B.rep, D.rep} : Set V) ≠ ⊥ :=
       l3_inter_ne_bot A.rep B.rep C.rep D.rep P.rep PABcol PCDcol P.rep_nonzero

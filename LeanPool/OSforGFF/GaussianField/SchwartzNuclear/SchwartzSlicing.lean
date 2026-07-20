@@ -125,8 +125,7 @@ private lemma euclideanSnoc_antilipschitz (d : ℕ)
     · intro j; simp [Fin.snoc_castSucc]
   have hsum : ∑ i, ‖(euclideanSnoc (d+1) y s - euclideanSnoc (d+1) y t) i‖ ^ 2
     = ‖s - t‖ ^ 2 := by
-    conv_lhs => arg 2; ext i; rw [hcoord]
-    simp [Finset.sum_ite_eq', Finset.mem_univ]
+    simp_all
   change dist s t ≤ dist (euclideanSnoc (d + 1) y s) (euclideanSnoc (d + 1) y t)
   rw [dist_eq_norm, dist_eq_norm (E := EuclideanSpace ℝ _), EuclideanSpace.norm_eq,
     hsum, Real.sqrt_sq (norm_nonneg _)]
@@ -149,11 +148,7 @@ private lemma euclideanSnoc_norm_sq (d : ℕ)
     (∑ j : Fin (d + 1), ‖(euclideanSnoc (d + 1) y t) (Fin.castSucc j)‖ ^ 2) +
     ‖(euclideanSnoc (d + 1) y t) (Fin.last (d + 1))‖ ^ 2 from
     Fin.sum_univ_castSucc _]
-  rw [hlast, norm_eq_abs, sq_abs]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro j _
-  rw [hcast]
+  simp_all
 
 /-- The first `d+1` coordinates contribute to the norm:
 `‖y‖ ≤ ‖euclideanSnoc (d+1) y t‖`.
@@ -216,17 +211,6 @@ Use the key norm bound `‖y‖ ≤ ‖euclideanSnoc y t‖` (`euclideanSnoc_nor
 4. The resulting `t`-integral is finite since `hermiteFunction n` is integrable.
 -/
 
-/-- The integrand `f(euclideanSnoc y t) * hermiteFunction n t` is dominated
-by `(seminorm ℝ 0 0 f) * |hermiteFunction n t|`, which is `y`-independent.
--/
-private lemma hermiteCoeff_integrand_bound (d : ℕ)
-    (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n : ℕ)
-    (y : EuclideanSpace ℝ (Fin (d + 1))) (t : ℝ) :
-    ‖f (euclideanSnoc (d + 1) y t) * hermiteFunction n t‖ ≤
-      SchwartzMap.seminorm ℝ 0 0 f * ‖hermiteFunction n t‖ := by
-  rw [norm_mul]
-  exact mul_le_mul_of_nonneg_right (norm_le_seminorm ℝ f _) (norm_nonneg _)
-
 /-- The dominating function `C * |hermiteFunction n t|` is integrable in `t`. -/
 private lemma hermiteCoeff_bound_integrable (n : ℕ) (C : ℝ) :
     Integrable (fun t : ℝ => C * ‖hermiteFunction n t‖) := by
@@ -235,30 +219,6 @@ private lemma hermiteCoeff_bound_integrable (n : ℕ) (C : ℝ) :
     (fun t => ‖(schwartzHermiteBasis1D n) t‖) from
     by ext t; rw [schwartzHermiteBasis1D_apply]]
   exact (schwartzHermiteBasis1D n).integrable.norm
-
-/-- For fixed `t`, the map `y ↦ euclideanSnoc y t` is continuous.
-Proved via 1-Lipschitz: changing `y` by `δ` changes `euclideanSnoc y t` by at most `δ`
-since only the first `d+1` coordinates change.
--/
-private lemma continuous_euclideanSnoc_y (d : ℕ) (t : ℝ) :
-    Continuous (fun y : EuclideanSpace ℝ (Fin (d + 1)) =>
-      euclideanSnoc (d + 1) y t) := by
-  apply LipschitzWith.continuous (K := 1)
-  intro y₁ y₂
-  simp only [ENNReal.coe_one, one_mul, edist_dist, dist_eq_norm]
-  apply ENNReal.ofReal_le_ofReal
-  -- ‖euclideanSnoc y₁ t - euclideanSnoc y₂ t‖ ≤ ‖y₁ - y₂‖
-  rw [show euclideanSnoc (d + 1) y₁ t - euclideanSnoc (d + 1) y₂ t =
-    euclideanSnoc (d + 1) (y₁ - y₂) 0 from by
-    ext i
-    simp only [euclideanSnoc, WithLp.equiv_symm_apply, WithLp.ofLp_sub, Pi.sub_apply]
-    refine Fin.lastCases ?_ ?_ i
-    · simp [Fin.snoc_last]
-    · intro j; simp [Fin.snoc_castSucc]]
-  have h : ‖euclideanSnoc (d + 1) (y₁ - y₂) 0‖ ^ 2 = ‖y₁ - y₂‖ ^ 2 := by
-    rw [euclideanSnoc_norm_sq]; ring
-  nlinarith [norm_nonneg (euclideanSnoc (d + 1) (y₁ - y₂) 0), norm_nonneg (y₁ - y₂),
-    sq_nonneg (‖euclideanSnoc (d + 1) (y₁ - y₂) 0‖ - ‖y₁ - y₂‖)]
 
 /-- For fixed `t`, the map `y ↦ euclideanSnoc y t` has temperate growth.
 This is because the map is affine: `euclideanSnoc y t = c + L(y)` where
@@ -288,10 +248,8 @@ private lemma euclideanSnoc_y_hasTemperateGrowth (d : ℕ) (t : ℝ) :
   have hL_bound : ∀ y, ‖L_fun y‖ ≤ 1 * ‖y‖ := fun y => by
     rw [one_mul]
     have hdef : ‖L_fun y‖ = ‖euclideanSnoc (d + 1) y 0‖ := rfl
-    have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by
-      rw [euclideanSnoc_norm_sq]; ring
-    nlinarith [norm_nonneg (euclideanSnoc (d + 1) y 0), norm_nonneg y,
-      sq_nonneg (‖euclideanSnoc (d + 1) y 0‖ - ‖y‖)]
+    have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by rw [euclideanSnoc_norm_sq]; ring
+    simp_all
   set L := L_fun.mkContinuous 1 hL_bound
   have h_eq : (fun y => euclideanSnoc (d + 1) y t) = fun y => c + L y := by
     funext y
@@ -327,9 +285,7 @@ private lemma euclideanSnoc_y_antilipschitz (d : ℕ) (t : ℝ) :
       · simp [Fin.snoc_last]
       · intro j; simp [Fin.snoc_castSucc]]
     rw [euclideanSnoc_norm_sq]; ring
-  nlinarith [norm_nonneg (euclideanSnoc (d + 1) y₁ t - euclideanSnoc (d + 1) y₂ t),
-    norm_nonneg (y₁ - y₂),
-    sq_nonneg (‖euclideanSnoc (d + 1) y₁ t - euclideanSnoc (d + 1) y₂ t‖ - ‖y₁ - y₂‖)]
+  simp_all
 
 /-- For fixed `t`, the composition `f ∘ euclideanSnoc · t` is a Schwartz function of `y`. -/
 private noncomputable def schwartz_slice_y (d : ℕ)
@@ -363,8 +319,7 @@ private noncomputable def euclideanSnoc_linearCLM (d : ℕ) :
       change ‖euclideanSnoc (d + 1) y 0‖ ≤ _
       have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by
         rw [euclideanSnoc_norm_sq]; ring
-      nlinarith [norm_nonneg (euclideanSnoc (d + 1) y 0), norm_nonneg y,
-        sq_nonneg (‖euclideanSnoc (d + 1) y 0‖ - ‖y‖)])
+      simp_all)
 
 private lemma euclideanSnoc_linearCLM_apply (d : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) :
@@ -381,8 +336,7 @@ private lemma euclideanSnoc_decomp (d : ℕ) (y : EuclideanSpace ℝ (Fin (d + 1
   · intro j; simp [Fin.snoc_castSucc]
 
 private lemma euclideanSnoc_linearCLM_norm_le (d : ℕ) :
-    ‖euclideanSnoc_linearCLM d‖ ≤ 1 :=
-  LinearMap.mkContinuous_norm_le _ zero_le_one _
+    ‖euclideanSnoc_linearCLM d‖ ≤ 1 := LinearMap.mkContinuous_norm_le _ zero_le_one _
 
 /-- Pointwise bound: the y-seminorm of the slice `f ∘ euclideanSnoc · t` is
 bounded by the seminorm of `f`, uniformly in `t`. This uses the chain rule
@@ -401,8 +355,7 @@ private lemma schwartz_slice_y_le_seminorm (d : ℕ)
   -- The slice function equals (f ∘ (c + ·)) ∘ L
   set f' : EuclideanSpace ℝ (Fin (d + 2)) → ℝ := fun z => f (c + z)
   -- Step 2: Chain rule for composition with L
-  have hf'_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) f' := by
-    exact f.smooth'.comp (contDiff_const.add contDiff_id)
+  have hf'_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) f' := f.smooth'.comp (contDiff_const.add contDiff_id)
   have h_chain : iteratedFDeriv ℝ m (f' ∘ ⇑L) y =
       (iteratedFDeriv ℝ m f' (L y)).compContinuousLinearMap (fun _ => L) :=
     L.iteratedFDeriv_comp_right hf'_smooth y
@@ -434,8 +387,7 @@ private lemma schwartz_slice_y_le_seminorm (d : ℕ)
                   (fun _ _ => euclideanSnoc_linearCLM_norm_le d)
             _ = 1 := by simp
       _ = ‖iteratedFDeriv ℝ m f (c + L y)‖ := by rw [mul_one, h_trans]
-      _ = ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ := by
-          rw [euclideanSnoc_decomp d y t]
+      _ = ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ := by rw [euclideanSnoc_decomp d y t]
   -- Step 6: Combine with Schwartz decay
   calc ‖y‖ ^ k * ‖iteratedFDeriv ℝ m (schwartz_slice_y d f t) y‖
       ≤ ‖y‖ ^ k * ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ :=
@@ -644,9 +596,7 @@ lemma integral_euclidean_snoc (d : ℕ) (g : EuclideanSpace ℝ (Fin (d + 2)) �
   congr 1
   ext i
   simp only [euclideanSnoc, WithLp.equiv_symm_apply]
-  refine Fin.lastCases ?_ ?_ i
-  · simp [Fin.snoc_last]
-  · intro j; simp [Fin.snoc_castSucc]
+  simp_all
 
 /-! ### Scalarization helpers for seminorm control
 
@@ -676,8 +626,7 @@ private lemma schwartz_slice_partial_chain_rule (d : ℕ)
     simp only [Function.comp_apply, f']
     congr 1
     exact euclideanSnoc_decomp d y' t
-  rw [h_fun_eq]
-  rw [L.iteratedFDeriv_comp_right hf'_smooth y (WithTop.coe_le_coe.mpr le_top)]
+  rw [h_fun_eq, L.iteratedFDeriv_comp_right hf'_smooth y (WithTop.coe_le_coe.mpr le_top)]
   simp only [ContinuousMultilinearMap.compContinuousLinearMap_apply]
   congr 1
   ext u
@@ -690,20 +639,7 @@ Used for the `L_t` norm bound in several places.
 private lemma euclideanSnoc_Pi_single_norm_le (d : ℕ) (t : ℝ) :
     ‖(EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm
       (Pi.single (Fin.last (d + 1)) t)‖ ≤ ‖t‖ := by
-  rw [EuclideanSpace.norm_eq]
-  rw [show ∑ i : Fin (d + 2),
-      ‖((EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm
-        (Pi.single (Fin.last (d + 1)) t)) i‖ ^ 2 = ‖t‖ ^ 2 from by
-    have : ∀ i : Fin (d + 2),
-        ‖((EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm
-          (Pi.single (Fin.last (d + 1)) t)) i‖ ^ 2 =
-        if i = Fin.last (d + 1) then ‖t‖ ^ 2 else 0 := by
-      intro i
-      simp only [EuclideanSpace.equiv, PiLp.continuousLinearEquiv_symm_apply,
-        PiLp.toLp_apply, Pi.single_apply]
-      by_cases hi : i = Fin.last (d + 1) <;> simp [hi]
-    simp_rw [this, Finset.sum_ite_eq', Finset.mem_univ, if_true]]
-  exact le_of_eq (Real.sqrt_sq (norm_nonneg t))
+  simp_all
 
 /-- The map `t ↦ euclideanSnoc y t` is smooth (affine in `t`). -/
 private lemma euclideanSnoc_t_contDiff (d : ℕ)
@@ -813,8 +749,7 @@ noncomputable def schwartzSlicePartial (d : ℕ)
         _ = ‖iteratedFDeriv ℝ b G (c₀ + L_t t)‖ := by
             rw [mul_one]; congr 1; exact iteratedFDeriv_comp_add_left b c₀ (L_t t)
         _ = ‖iteratedFDeriv ℝ b G (euclideanSnoc (d + 1) y t)‖ := by
-            rw [show c₀ + L_t t = euclideanSnoc (d + 1) y t from
-              (congr_fun h_snoc_eq t).symm]
+            simp_all
     -- Bound ‖D^b G(z)‖ ≤ C_w * ‖D^(b+l') f(z)‖
     set L_apply := ContinuousMultilinearMap.apply ℝ
       (fun _ : Fin l' => EuclideanSpace ℝ (Fin (d + 2))) ℝ w
@@ -982,8 +917,7 @@ lemma schwartz_partial_hermiteCoeff_iteratedFDeriv (d : ℕ)
               gcongr; simpa using schwartz_slice_y_le_seminorm d f t 0 l' y
           _ = f.seminorm ℝ 0 l' * ‖hermiteFunction n t‖ := mul_comm _ _)
   rw [ContinuousMultilinearMap.integral_apply h_int v]
-  congr 1; ext t
-  exact h_factor_v t
+  congr 1; simp_all
 
 /-- Pointwise bound for the scalarized slice: for each `t`,
 `‖y‖^k * ‖t‖^a * ‖D^b_t[slice_partial](t)‖ ≤ ‖apply w‖ * f.seminorm (k+a) (b+l')`.
@@ -1080,8 +1014,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
   set C_w := ‖ContinuousMultilinearMap.apply ℝ
     (fun _ : Fin l' => EuclideanSpace ℝ (Fin (d + 2))) ℝ w‖
   calc ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b (↑g) t‖)
-      ≤ ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b G (euclideanSnoc (d + 1) y t)‖) := by
-        gcongr
+      ≤ ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b G (euclideanSnoc (d + 1) y t)‖) := by gcongr
     _ ≤ ‖y‖ ^ k * (‖t‖ ^ a * (C_w *
           ‖iteratedFDeriv ℝ (b + l') (↑f : _ → ℝ) (euclideanSnoc (d + 1) y t)‖)) := by
         gcongr
@@ -1149,12 +1082,10 @@ lemma schwartz_slice_partial_seminorm_bound (d : ℕ) (k' l' a b : ℕ) :
           = ‖y‖ ^ k' * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b (↑g) t‖) := by ring
         _ ≤ ‖ContinuousMultilinearMap.apply ℝ _ ℝ w‖ * f.seminorm ℝ (k' + a) (b + l') :=
             schwartz_slice_partial_pointwise_bound d f l' y v k' a b t
-        _ ≤ (∏ i : Fin l', ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := by
-            gcongr
+        _ ≤ (∏ i : Fin l', ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := by gcongr
     calc ‖y‖ ^ k' * SchwartzMap.seminorm ℝ a b g
         ≤ ‖y‖ ^ k' * (((∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l')) / ‖y‖ ^ k') :=
           mul_le_mul_of_nonneg_left h_sem (le_of_lt hy_pos)
-      _ = (∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') :=
-          mul_div_cancel₀ _ (ne_of_gt hy_pos)
+      _ = (∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := mul_div_cancel₀ _ (ne_of_gt hy_pos)
 
 end GaussianField

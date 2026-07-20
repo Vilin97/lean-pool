@@ -38,8 +38,6 @@ lemma sub_pow_ringChar {R : Type _} [CommRing R] [IsDomain R] (a b : R) (h : rin
 lemma pow_ringChar_injective {R : Type _} [CommRing R] [IsDomain R]
     (hn : ringChar R ≠ 0) : Function.Injective (· ^ ringChar R : R → R) := by
   intros x y h
-  rw [←sub_eq_zero] at *
-  rw [←sub_eq_zero] at *
-  simp only [sub_zero] at *
+  rw [← sub_eq_zero] at h ⊢
   rw [← sub_pow_ringChar _ _ hn] at h
   exact (pow_eq_zero_iff hn).mp h

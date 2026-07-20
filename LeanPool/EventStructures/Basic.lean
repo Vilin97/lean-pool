@@ -60,11 +60,8 @@ lemma concurrent_irrefl : ∀ e, ¬ es.concurrent e e :=
   fun _ ⟨_, hNotLe, _⟩ => hNotLe le_rfl
 
 /-- Concurrency is symmetric. -/
-lemma concurrent_symm : ∀ ⦃e₁ e₂⦄, es.concurrent e₁ e₂ → es.concurrent e₂ e₁ := by
-  intro e₁ e₂ h
-  rcases h with ⟨hCons, hNotLe12, hNotLe21⟩
-  refine ⟨?_, hNotLe21, hNotLe12⟩
-  exact (consistent_symm es) hCons
+lemma concurrent_symm : ∀ ⦃e₁ e₂⦄, es.concurrent e₁ e₂ → es.concurrent e₂ e₁ :=
+  fun _ _ ⟨hCons, hNotLe12, hNotLe21⟩ => ⟨(consistent_symm es) hCons, hNotLe21, hNotLe12⟩
 
 /-- Minimal conflict relation: (e₁, e₂) is a minimal conflicting pair if they conflict
     and there is no proper reduction of either that still produces a conflict.
@@ -80,10 +77,8 @@ local infixl:50 " ## " => es.minimalConflict
 /-- Minimal conflict is symmetric. -/
 lemma minimalConflict_symm : ∀ ⦃e₁ e₂⦄, es.minimalConflict e₁ e₂ → es.minimalConflict e₂ e₁ := by
   intro e₁ e₂ ⟨hConf, hMin⟩
-  refine ⟨es.conflict_symm hConf, ?_⟩
-  intro e₂' e₁' he₂ he₁ hConf'
-  have := hMin e₁' e₂' he₁ he₂ (es.conflict_symm hConf')
-  exact ⟨this.2, this.1⟩
+  exact ⟨es.conflict_symm hConf,
+    fun e₂' e₁' he₂ he₁ hConf' => (hMin e₁' e₂' he₁ he₂ (es.conflict_symm hConf')).symm⟩
 
 /-- If (e₁, e₂) is a minimal conflict, then e₁ and e₂ conflict. -/
 lemma minimalConflict_conflict {e₁ e₂ : es.Event} (h : es.minimalConflict e₁ e₂) :

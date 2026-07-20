@@ -110,8 +110,8 @@ lemma closedHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
 lemma open_pol_nonempty {n : ℕ} (hn : 0 < n) (P : Fin n → ℝ²) : Set.Nonempty (openHull P) := by
   use ∑ i, (1/(n : ℝ)) • P i, fun _ ↦ (1/(n : ℝ))
   refine ⟨⟨fun _ ↦ by simp [hn], ?_⟩, by simp⟩
-  simp only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
-  exact mul_inv_cancel₀ (by simp; linarith)
+  simpa only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    using mul_inv_cancel₀ (by simp; linarith)
 
 
 lemma open_sub_closedSimplex {n : ℕ} : openSimplex n ⊆ closedSimplex n :=
@@ -289,14 +289,12 @@ lemma open_closedHull_minus_boundary {n : ℕ} {P : Fin n → ℝ²} :
 
 lemma boundary_constant {n : ℕ} {P : ℝ²} :
     boundary (fun (_ : Fin n) ↦ P) = ∅ := by
+  unfold boundary
   rcases (ne_or_eq n 0) with hn | hz
-  · unfold boundary
-    rw [openHull_constant hn, closedHull_constant hn]
+  · rw [openHull_constant hn, closedHull_constant hn]
     simp only [sdiff_self, Set.bot_eq_empty]
-  · unfold boundary
-    unfold closedHull
-    rw [hz]
-    rw [closedSimplex_zero_empty]
+  · unfold closedHull
+    rw [hz, closedSimplex_zero_empty]
     simp only [univ_eq_empty, sum_empty, Set.image_empty, Set.empty_sdiff]
 
 
@@ -310,20 +308,16 @@ lemma openHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
     by_contra h
     unfold openHull at ho
     rw [openSimplex_zero_empty] at ho
-    simp only [univ_eq_empty, sum_empty, Set.image_empty] at ho
-    symm at ho
-    exact Set.singleton_ne_empty P ho
+    simp_all
   · by_contra hc; push Not at hc
     have hP : P ∈ openHull f := by
       rw [ho, Set.mem_singleton_iff]
     have ⟨i, hi⟩ := hc
     have this := closedHull_openHull_com hP (corner_in_closedHull (i := i) (P := f))
-    have bla := (one_smul (M := ℝ) P)
     rw [ho, Set.mem_singleton_iff, add_comm, ←eq_sub_iff_add_eq] at this
     nth_rw 1 [←(one_smul (M := ℝ) P), ←sub_smul] at this
     ring_nf at this
-    apply hi
-    rwa [IsUnit.smul_left_cancel (by norm_num)] at this
+    simp_all
 
 end Monsky
 end LeanPool

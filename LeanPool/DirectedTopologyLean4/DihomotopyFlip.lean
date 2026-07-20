@@ -145,16 +145,7 @@ lemma hcomp'_apply_zero_right (F : Dihomotopy p₀.toDirectedMap q₀.toDirected
   (h : (F.evalAtRight 1).toDirectedMap = (G.evalAtRight 0).toDirectedMap) (x : I) :
     (hcomp' F G h) (x, 0) = F (x, 0) := by
   rw [hcomp'_apply]
-  split_ifs with h
-  · change F (x, _) = F (x, 0)
-    apply congr_arg
-    ext
-    · rfl
-    simp
-  · exfalso
-    apply h
-    change (0 : ℝ) ≤ 1/2
-    linarith
+  simp_all
 
 lemma hcomp'_apply_one_right (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap)
     (G : Dihomotopy p₁.toDirectedMap q₁.toDirectedMap)
@@ -162,10 +153,7 @@ lemma hcomp'_apply_one_right (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedM
     (hcomp' F G h) (x, 1) = G (x, 1) := by
   rw [hcomp'_apply]
   split_ifs with h
-  · exfalso
-    have : ¬ ((1 : ℝ) ≤ 1/2) := by linarith
-    apply this
-    exact h
+  · exact absurd h (by norm_num)
   · change G (x, _) = G (x, 1)
     apply congr_arg
     ext
@@ -179,12 +167,8 @@ lemma hcomp'_range (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap)
     Set.range (hcomp' F G h) ⊆ Set.range F ∪ Set.range G := fun z ⟨⟨t₁, t₂⟩, ht⟩ =>  by
   rw [hcomp'_apply] at ht
   split_ifs at ht with h
-  · left
-    constructor
-    exact ht
-  · right
-    constructor
-    exact ht
+  · exact Or.inl ⟨_, ht⟩
+  · exact Or.inr ⟨_, ht⟩
 
 end Dihomotopy
 end DirectedMap

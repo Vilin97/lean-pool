@@ -95,11 +95,8 @@ def length : {A B : V} → Path A B → Nat
 
 @[simp] theorem append_nil (p : Path A B) : .append p .nil = p := by
   induction p
-  · case nil => rfl
-  · case cons =>
-      simp only [append]
-      apply congrArg
-      assumption
+  · rfl
+  · simp [append, *]
 
 theorem snoc_cons (e : A ⟶ B) (p : Path B C) (e' : C ⟶ D) :
   snoc (cons e p) e' = cons e (snoc p e') := by cases p <;> simp
@@ -128,12 +125,8 @@ theorem nil_length {A : V} : (p : Path A A) → p.length = .zero ↔ p = .nil' A
   | .cons _ p => by apply Iff.intro <;> (intro; simp [length] at *)
 
 theorem snoc_length {A B C : V} : (p : Path A B) → (e : B ⟶ C) → length (.snoc p e) = .succ (length p)
-  | .nil, e => rfl
-  | .cons _ p', e => by
-    rw [snoc_cons]
-    dsimp only [length]
-    apply congrArg
-    apply snoc_length
+  | .nil, _ => rfl
+  | .cons _ p', e => by simp [length, snoc_length p' e]
 
 theorem length_append {A B C : V} : (p : Path A B) → (q : Path B C) → (append p q).length = p.length + q.length
   | .nil, q => by rw [Nat.add_comm]; rfl

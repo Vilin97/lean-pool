@@ -58,10 +58,7 @@ lemma not_mem_associatedPrime_of_ndvd
       ⟨Or.inr (by simp [Ideal.height_bot])⟩
     have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
       (⊥ : Ideal R.carrier) (Ideal.span {r}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
-    rw [hspan_ht] at h0
-    exact lt_irrefl _ h0
+    simp_all
   have hy_comap : y ∈ P.comap R.carrier.subtype := hy_P
   rw [← hspan_eq] at hy_comap
   exact hry (Ideal.mem_span_singleton.mp hy_comap)
@@ -118,8 +115,7 @@ lemma prime_in_adjoinLocSet
     have h1 := hCr.dvd_of_dvd_pow h
     rw [Polynomial.C_dvd_iff_dvd_coeff] at h1
     have h2 := h1 0
-    rw [Polynomial.coeff_C_zero] at h2
-    exact hry h2
+    simp_all
   have hCr_dvd : (C r : Polynomial R.carrier) ∣ f₁ * f₂ := by
     have hdvd : (C r : Polynomial R.carrier) ∣ f₁ * f₂ * C (y ^ n₃) :=
       ⟨f₃ * C (y ^ (n₁ + n₂)), by rw [hpoly, mul_assoc]⟩
@@ -164,10 +160,7 @@ lemma exists_prime_mem_of_ne_bot {S : Type*} [CommRing S] [IsDomain S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by
-  obtain ⟨a, haQ, ha_ne⟩ : ∃ a ∈ Q, a ≠ (0 : S) := by
-    by_contra h
-    push Not at h
-    exact hQ_ne_bot (le_antisymm (fun x hx => (Submodule.mem_bot _).mpr (h x hx)) bot_le)
+  obtain ⟨a, haQ, ha_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hQ_ne_bot
   have ha_nu : ¬IsUnit a := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q haQ hu)
   suffices ∀ x : S, x ≠ 0 → ¬IsUnit x → x ∈ Q → ∃ q : S, Prime q ∧ q ∈ Q from
     this a ha_ne ha_nu haQ
@@ -222,10 +215,7 @@ theorem coprime_not_both_in_prime (R : NSubring T)
     have h0 : (⊥ : Ideal R.carrier).height < (Ideal.span {q}).height :=
       @Ideal.height_strict_mono_of_isPrime R.carrier _ (⊥ : Ideal R.carrier)
         (Ideal.span {q}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_height
-    rw [hspan_height] at h0
-    exact lt_irrefl _ h0
+    simp_all
   have hy₁_span : y₁ ∈ Ideal.span {q} := hspan_eq ▸ hy₁_comap
   have hy₂_span : y₂ ∈ Ideal.span {q} := hspan_eq ▸ hy₂_comap
   rw [Ideal.mem_span_singleton] at hy₁_span hy₂_span

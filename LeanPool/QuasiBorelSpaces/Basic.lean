@@ -31,18 +31,12 @@ lemma isVar_cases
     : IsVar (fun r ↦ φ (ix r) r) := by
   have hI : Nonempty I := ⟨ix 0⟩
   have ⟨k, hk⟩ := Countable.exists_injective_nat I
-  have hk' : ∀i, k.invFun (k i) = i := by
-    apply Function.leftInverse_invFun
-    apply hk
-  have hix' : Measurable (fun x ↦ k (ix x)) := by
-    apply Measurable.fun_comp
-    · apply measurable_from_top
-    · apply hix
+  have hk' : ∀i, k.invFun (k i) = i := Function.leftInverse_invFun hk
+  have hix' : Measurable (fun x ↦ k (ix x)) := Measurable.fun_comp measurable_from_top hix
   have hφk (n) : IsVar (φ (Function.invFun k n)) := by
     simp only [hφ]
   have := isVar_cases' hix' hφk
-  simp only [hk'] at this
-  apply this
+  simp_all
 
 @[simp]
 lemma isVar_iff_isHom {A : Type*} {_ : QuasiBorelSpace A} (f : ℝ → A) : IsVar f ↔ IsHom f := by
@@ -52,8 +46,7 @@ lemma isVar_iff_isHom {A : Type*} {_ : QuasiBorelSpace A} (f : ℝ → A) : IsVa
     intro φ hφ
     apply isVar_comp hφ hf
   · rintro ⟨hf⟩
-    apply hf
-    apply measurable_id
+    exact hf measurable_id
 
 @[simp]
 lemma isHom_ofMeasurableSpace
@@ -73,12 +66,10 @@ lemma isHom_def
     : IsHom f ↔ (∀⦃φ : ℝ → A⦄, IsHom φ → IsHom fun x ↦ f (φ x)) := by
   apply Iff.intro
   · rintro ⟨hf⟩
-    simp only [isVar_iff_isHom] at hf
-    exact hf
+    simp_all
   · intro hf
     constructor
-    simp only [isVar_iff_isHom]
-    exact hf
+    simpa only [isVar_iff_isHom] using hf
 
 namespace IsHom
 
@@ -128,8 +119,8 @@ lemma isHom_comp
 lemma isHom_comp'
     {f : B → C} (hf : IsHom f)
     {g : A → B} (hg : IsHom g)
-    : IsHom (fun x ↦ f (g x)) := by
-  exact isHom_comp hf hg
+    : IsHom (fun x ↦ f (g x)) :=
+  isHom_comp hf hg
 
 @[simp]
 lemma isHom_const (x : B) : IsHom (Function.const A x) := by
@@ -149,8 +140,7 @@ lemma isHom_cases
   simp only [isVar_iff_isHom] at hφ
   apply isVar_cases (ix := fun x ↦ ix (φ x)) (φ := fun n x ↦ f n (φ x))
   · replace hix := hix hφ
-    simp only [isHom_ofMeasurableSpace] at hix
-    exact hix
+    simp_all
   · intro n
     simp only [isVar_iff_isHom]
     refine hf _ ?_
@@ -218,8 +208,7 @@ lemma isHom_cast
   subst eq
   have : instB = instC := by
     ext
-    simp only [isVar_iff_isHom]
-    apply heq
+    simp_all
   subst this
   rfl
 
@@ -261,11 +250,7 @@ lemma isHom_mono
     (hinst : ∀ φ : ℝ → B, inst₁.IsVar φ → inst₂.IsVar φ)
     : IsHom[_, inst₂] f := by
   rw [isHom_def] at ⊢ hf
-  intro φ hφ
-  specialize hf hφ
-  rw [← isVar_iff_isHom] at ⊢ hf
-  apply hinst
-  apply hf
+  simp_all
 
 lemma measurableSet_toMeasurableSpace
     (X : Set A)

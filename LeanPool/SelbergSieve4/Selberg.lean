@@ -136,8 +136,7 @@ lemma sum_mul_subst (k n : ℕ) {f : ℕ → ℝ} (h : ∀ l, l ∣ n → ¬ k �
     by_cases hkl : k ∣ l
     swap
     · rw [h l (dvd_of_mem_divisors hl) hkl, sum_eq_zero]
-      intro m _
-      rw [ite_id]
+      simp_all
     rw [sum_eq_single (l/k)]
     · rw[if_pos]; rw [Nat.mul_div_cancel' hkl]
     · intro m hmn hmlk
@@ -147,13 +146,7 @@ lemma sum_mul_subst (k n : ℕ) {f : ℕ → ℝ} (h : ∀ l, l ∣ n → ¬ k �
     · contrapose!; intro _
       rw [mem_divisors]
       exact ⟨Trans.trans (Nat.div_dvd_of_dvd hkl) (dvd_of_mem_divisors hl), hn⟩
-  · rw [sum_comm, sum_congr rfl]; intro m _
-    split_ifs with hdvd
-    · rw [←Aux.sum_intro]
-      aesopDiv
-    · apply sum_eq_zero; intro l hl
-      apply if_neg;
-      aesopDiv
+  · rw [sum_comm, sum_congr rfl]; simp_all
 
 --Important facts about the selberg weights
 theorem selbergWeights_eq_dvds_sum (d : ℕ) :
@@ -192,9 +185,7 @@ theorem selbergWeights_eq_dvds_sum (d : ℕ) :
           <| coprime_comm.mp h.2]
         ring
       ring
-  · intro l _ hdl
-    rw [if_neg, mul_zero]
-    push Not; intro h; contradiction
+  · simp_all
 
 theorem selbergWeights_diagonalisation (l : ℕ) (hl : l ∈ divisors P) :
     (∑ d ∈ divisors P, if l ∣ d then ν d * γ d else 0) =
@@ -227,9 +218,7 @@ theorem selbergWeights_diagonalisation (l : ℕ) (hl : l ∈ divisors P) :
         ←ite_and, ite_zero_mul, ite_zero_mul, ← ite_and]
       apply if_ctx_congr _ _ fun _ => rfl
       · rw [and_comm, eq_comm]
-        apply and_congr_right
-        intro heq
-        rw [heq]
+        simp_all
       intro h
       rw[h.1]
       ring
@@ -279,8 +268,7 @@ theorem selberg_bound_simple_mainSum :
       · ring
       norm_cast
       rw [moebius_sq_eq_one_of_squarefree <| s.squarefree_of_mem_divisors_prodPrimes hl]
-      rw [one_div_mul_cancel <| _root_.ne_of_gt <| s.selbergTerms_pos l <| dvd_of_mem_divisors hl]
-      ring
+      simp_all
     · linarith
   conv => {lhs; congr; {skip}; {ext i; rw [← ite_zero_mul]}}
   dsimp only [selbergBoundingSum]
@@ -294,9 +282,7 @@ lemma eq_gcd_mul_of_dvd_of_coprime {k d m : ℕ} (hkd : k ∣ d) (hmd : Coprime 
     k = d.gcd (k*m) := by
   rcases hkd with ⟨r, hr⟩
   have hrdvd : r ∣ d := by
-    use k
-    rw [mul_comm]
-    exact hr
+    simp_all
   apply symm; rw [hr, Nat.gcd_mul_left, mul_eq_left₀ hk, Nat.gcd_comm]
   apply Coprime.coprime_dvd_right hrdvd hmd
 

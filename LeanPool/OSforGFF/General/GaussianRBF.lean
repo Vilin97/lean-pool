@@ -57,10 +57,7 @@ lemma innerProduct_is_pd_kernel :
     intro i j
     simp only [a, b, star_def]
     apply Complex.ext
-    · simp only [Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im,
-                 Complex.ofReal_im, mul_zero, sub_zero, zero_mul, add_zero,
-                 Complex.conj_re, Complex.conj_im]
-      ring
+    · simp_all
     · simp only [Complex.add_im, Complex.ofReal_im, Complex.mul_im, Complex.I_re, Complex.I_im,
                  Complex.ofReal_re, mul_zero, zero_add,
                  Complex.conj_re, Complex.conj_im]
@@ -68,19 +65,11 @@ lemma innerProduct_is_pd_kernel :
   -- The product cbarᵢcⱼ⟪xᵢ,xⱼ⟫ has real part (aᵢaⱼ + bᵢbⱼ)⟪xᵢ,xⱼ⟫
   have re_prod : ∀ i j, (star (c i) * c j * (⟪x i,
     x j⟫_ℝ : ℂ)).re = (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ := by
-    intro i j
-    rw [expand_cc]
-    simp only [Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im,
-               Complex.ofReal_im, mul_zero, sub_zero, zero_mul]
-    ring
+    simp_all
   -- Sum over i,j: Re(∑∑) = ∑∑ (aᵢaⱼ + bᵢbⱼ)⟪xᵢ,xⱼ⟫
   have sum_re : (∑ i : Fin m, ∑ j : Fin m, star (c i) * c j * (⟪x i, x j⟫_ℝ : ℂ)).re =
                 ∑ i : Fin m, ∑ j : Fin m, (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ := by
-    rw [Complex.re_sum]
-    apply Finset.sum_congr rfl; intro i _
-    rw [Complex.re_sum]
-    apply Finset.sum_congr rfl; intro j _
-    exact re_prod i j
+    simp_all
   rw [sum_re]
   -- Split into two sums
   have split_sum : ∑ i : Fin m, ∑ j : Fin m, (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ =
@@ -123,9 +112,7 @@ lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ
   constructor
   · -- Hermitian (symmetric for real matrices)
     ext i j
-    simp only [Matrix.conjTranspose_apply, Matrix.of_apply, star_trivial]
-    -- Use the symmetry assumption
-    rw [h_symm (x j) (x i)]
+    simp_all
   · -- Nonneg quadratic form for real vectors
     intro v
     have h := hK m x (fun i => (v i : ℂ))
@@ -143,8 +130,7 @@ lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ
       simp only [star_def, Complex.conj_ofReal, Complex.mul_re, Complex.ofReal_re,
                  Complex.ofReal_im, mul_zero, sub_zero, him]
       ring
-    rw [h_eq]
-    exact h
+    rwa [h_eq]
 
 /-- Step 3b: Exponential of a symmetric real-valued PD kernel is PD.
     Uses the Hadamard series machinery from HadamardExp.lean (same as OS3 proof).
@@ -159,8 +145,7 @@ lemma exp_is_pd_kernel {α : Type*} (K : α → α → ℂ) (hK : IsPositiveDefi
   -- The kernel matrix M_{ij} = K(x_i, x_j) is PSD (real part)
   let M : Matrix (Fin m) (Fin m) ℝ := Matrix.of fun i j => (K (x i) (x j)).re
   -- M is PSD because K is a symmetric real-valued PD kernel
-  have hM_psd : M.PosSemidef := by
-    exact real_valued_PD_kernel_gives_PSD_matrix K h_real h_symm hK m x
+  have hM_psd : M.PosSemidef := real_valued_PD_kernel_gives_PSD_matrix K h_real h_symm hK m x
   -- Apply the Hadamard series result: entrywiseExp M is PSD
   have hExpM_psd : (OSforGFF.entrywiseExp M).PosSemidef := by
     have h := OSforGFF.posSemidef_entrywiseExp_hadamardSeries_of_posSemidef M hM_psd
@@ -276,8 +261,7 @@ theorem gaussian_rbf_pd_innerProduct_proof :
   have h_sum' : ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i -
     x j‖^2 : ℝ)) =
                ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (d i) * d j * cexp (⟪x i, x j⟫_ℝ : ℂ) := by
-    simp only [star_def] at h_sum
-    convert h_sum using 2
+    simp_all
   rw [h_sum']
   -- Now apply that exp(⟨·,·⟩) is a PD kernel
   have h_inner_pd : IsPositiveDefiniteKernel (fun (u v : H) => (⟪u,

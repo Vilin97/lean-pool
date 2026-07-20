@@ -40,15 +40,6 @@ structure BayesianLearner (X : Type u) (Y : Type v) [MeasurableSpace X] where
   /-- Output is in hypothesis space -/
   output_in_H : ∀ {m : ℕ} (S : Fin m → X × Y), learnMAP S ∈ hypotheses
 
-/- Alternative: measure-theoretic Bayesian learner (for posterior consistency / Doob's theorem):
--- structure BayesianLearnerMeas (X : Type u) (Y : Type v)
---     [MeasurableSpace X] [MeasurableSpace Y]
---     [MeasurableSpace (Concept X Y)] where
---   hypotheses : HypothesisSpace X Y
---   prior : MeasureTheory.ProbabilityMeasure (Concept X Y)
---   posteriorMeasure : List (X × Y) → MeasureTheory.ProbabilityMeasure (Concept X Y)
---   learnMAP : {m : ℕ} → (Fin m → X × Y) → Concept X Y -/
-
 /-- Gibbs posterior: a Bayesian learner that uses a tempered posterior
     (PAC-Bayes bound optimization). -/
 structure GibbsPosterior (X : Type u) (Y : Type v) [MeasurableSpace X] where

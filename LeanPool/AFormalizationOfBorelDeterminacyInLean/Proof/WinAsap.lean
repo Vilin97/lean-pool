@@ -44,8 +44,7 @@ lemma mem_defensiveQuasi (x : G.tree) (h : ¬ WinningPrefix G p.swap x.val) hpr 
   intro n hn hx hp _
   conv => simp [defensiveQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
   intro _ hW; apply h; use n + 1
-  rw [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition]
-  exact hW
+  rwa [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition]
 lemma winningPrefix_of_residual {x y : List A}
   (hW : WinningPrefix (G.residual x) p y) :
   WinningPrefix G (p.residual x) (x ++ y) := by
@@ -111,8 +110,7 @@ lemma extracted_2 {G : Game A} {p : Player} {x : List A} (h : WinningPrefix G p 
   · rw [h.extend_num, h.take_num]
   · rw [h.extend_num, h.take_num]
   · congr!
-    symm
-    apply cast_heq
+    exact (cast_heq _ _).symm
 lemma extend_strat y : HEq (h.extend y).strat h.strat :=
   choose_eq' --even explicit arguments do not help with performance
     (α := Strategy (G.residual ((x ++ y).take (h.extend y).num)).tree

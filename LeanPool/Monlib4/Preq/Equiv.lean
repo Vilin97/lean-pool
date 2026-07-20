@@ -16,8 +16,7 @@ Imported Lean Pool material for `LeanPool.Monlib4.Preq.Equiv`.
 
 theorem Equiv.Perm.ToPequiv.toMatrix_mem_unitaryGroup {n : Type _} [DecidableEq n]
     [Fintype n] {𝕜 : Type _} [CommRing 𝕜] [StarRing 𝕜] (σ : Equiv.Perm n) :
-    (Equiv.toPEquiv σ).toMatrix ∈ Matrix.unitaryGroup n 𝕜 :=
-  by
+    (Equiv.toPEquiv σ).toMatrix ∈ Matrix.unitaryGroup n 𝕜 := by
   rw [Matrix.mem_unitaryGroup_iff]
   ext i j
   by_cases h : i = j <;>

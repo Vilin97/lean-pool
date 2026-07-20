@@ -100,8 +100,7 @@ private lemma cdf_continuous
   intro ε hε
   obtain ⟨δ, hδ₁, hδ₂⟩ := this ε hε
   use δ, hδ₁
-  intro j hj hj'
-  apply hδ₂ hj hj'
+  exact fun j hj hj' ↦ hδ₂ hj hj'
 
 /-- The quantile distribution function (i.e., the inverse of `cdf`). -/
 noncomputable def quantile (μ : Measure I) [IsProbabilityMeasure μ] (i : I) : I :=
@@ -179,9 +178,7 @@ lemma eq_quantile_volume
     have lemma₂ : {r : I | r ≤ cdf μ i} = Set.Iic (cdf μ i) := by
       ext ⟨_, _⟩
       simp only [Set.mem_setOf_eq, Set.mem_Iic]
-    simp only [
-      lemma₂, unitInterval.volume_Iic, cdf_apply_val, ne_eq,
-      measure_ne_top, not_false_eq_true, ENNReal.ofReal_toReal]
+    simp_all
   · apply measurable_quantile
     · fun_prop
     · fun_prop

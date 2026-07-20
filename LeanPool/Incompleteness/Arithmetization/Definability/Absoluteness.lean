@@ -16,8 +16,7 @@ namespace Arith
 open LO.Arith
 
 lemma nat_modelsWithParam_iff_models_substs {v : Fin k → ℕ} {φ : Semisentence ℒₒᵣ k} :
-    ℕ ⊧/v φ ↔ ℕ ⊧ₘ₀ (φ <~ (fun i ↦ Semiterm.Operator.numeral ℒₒᵣ (v i))) := by
-  simp [models_iff]
+    ℕ ⊧/v φ ↔ ℕ ⊧ₘ₀ (φ <~ (fun i ↦ Semiterm.Operator.numeral ℒₒᵣ (v i))) := by simp [models_iff]
 
 variable (V : Type*) [ORingStruc V] [V ⊧ₘ* 𝐏𝐀⁻]
 
@@ -38,16 +37,14 @@ lemma _root_.LO.FirstOrder.Arith.Defined.shigmaZero_absolute {k} {R : (Fin k →
     (Fin k → V) → Prop} {φ :
     Sg0.Semisentence k}
     (hR : Sg0.Defined R φ) (hR' : Sg0.Defined R' φ) (v : Fin k → ℕ) :
-    R v ↔ R' (fun i ↦ (v i : V)) := by
-  simpa [hR.iff, hR'.iff] using Arith.shigmaZero_absolute V φ v
+    R v ↔ R' (fun i ↦ (v i : V)) := by simpa [hR.iff, hR'.iff] using Arith.shigmaZero_absolute V φ v
 
 lemma _root_.LO.FirstOrder.Arith.DefinedFunction.shigmaZero_absolute_func
     {k} {f : (Fin k → ℕ) → ℕ} {f' :
     (Fin k → V) → V} {φ :
     Sg0.Semisentence (k + 1)}
     (hf : Sg0.DefinedFunction f φ) (hf' : Sg0.DefinedFunction f' φ) (v : Fin k → ℕ) :
-    (f v : V) = f' (fun i ↦ (v i)) := by
-  simpa using Defined.shigmaZero_absolute V hf hf' (f v :> v)
+    (f v : V) = f' (fun i ↦ (v i)) := by simpa using Defined.shigmaZero_absolute V hf hf' (f v :> v)
 
 lemma sigmaOne_upward_absolute {k} (φ : Sg1.Semisentence k) (v : Fin k → ℕ) :
     ℕ ⊧/v φ.val → V ⊧/(v ·) φ.val := by
@@ -125,8 +122,7 @@ lemma models_iff_provable_of_Sigma0_param [V ⊧ₘ* T] {σ : Semisentence ℒ�
     Fin n → ℕ} :
     V ⊧/(e ·) σ ↔ T ⊢!. (σ <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by
   calc
-    V ⊧/(e ·) σ ↔ ℕ ⊧/e σ        := by
-      simp [models_iff_of_Sigma0 hσ]
+    V ⊧/(e ·) σ ↔ ℕ ⊧/e σ        := by simp [models_iff_of_Sigma0 hσ]
   _             ↔ T ⊢!. (σ <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by
       apply sigma_one_completeness_iff_param (by simp [Hierarchy.of_zero hσ])
 
@@ -136,10 +132,8 @@ lemma models_iff_provable_of_Delta1_param
     Fin n → ℕ} :
     V ⊧/(e ·) σ.val ↔ T ⊢!. (σ <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by
   calc
-    V ⊧/(e ·) σ.val ↔ ℕ ⊧/e σ.val        := by
-      simp [models_iff_of_Delta1 hσ hσV]
-  _                 ↔ ℕ ⊧/e σ.sigma.val  := by
-      simp [HierarchySymbol.Semiformula.val_sigma]
+    V ⊧/(e ·) σ.val ↔ ℕ ⊧/e σ.val        := by simp [models_iff_of_Delta1 hσ hσV]
+  _                 ↔ ℕ ⊧/e σ.sigma.val  := by simp [HierarchySymbol.Semiformula.val_sigma]
   _                 ↔ T ⊢!. (σ.sigma.val <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by
       apply sigma_one_completeness_iff_param (by simp)
   _                 ↔ T ⊢!. (σ.val <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x))       := by

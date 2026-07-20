@@ -245,10 +245,7 @@ theorem sHom_app_generator {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U))
   change (((AddCommGrpCat.Hom.hom (eqToHom hObjU))
       ((AddCommGrpCat.Hom.hom (eqToHom hObjU.symm)) (1 : ULift ℤ))).down : ℤ) •
         ((ConcreteCategory.hom (F.map (homOfLE (le_rfl : U ≤ U)).op)) s) = s
-  rw [show (homOfLE (le_rfl : U ≤ U)).op = 𝟙 (op U) from Subsingleton.elim _ _]
-  rw [F.map_id]
-  rw [congrArg ULift.down h1]
-  simp
+  simp_all
 
 /-- The restriction of the distinguished generator of `constZ.zeroOutside V` to a smaller open
 `W ≤ V` corresponds to `1 : ULift ℤ` under the canonical identification with `ULift ℤ`. -/
@@ -266,8 +263,7 @@ theorem resGen_eqToHom_eq_one
     change eqToHom _ ≫ eqToHom
       (rfl : AddCommGrpCat.of (ULift ℤ) = AddCommGrpCat.of (ULift ℤ)) ≫
       eqToHom _ = eqToHom _
-    rw [eqToHom_trans_assoc]
-    simp [eqToHom_trans]
+    simp_all
   rw [hmap]
   simp [← ConcreteCategory.comp_apply, eqToHom_trans]
 
@@ -364,8 +360,8 @@ theorem sHomVal_app_generator {X : TopCat.{u}} {U : Opens X}
 
 theorem sHom_app_generator {X : TopCat.{u}} {U : Opens X}
     {F : Sheaf AddCommGrpCat.{u} X} (s : F.presheaf.obj (op U)) :
-    (sHom s).hom.app (op U) (generator U) = s := by
-  exact sHomVal_app_generator F.property s
+    (sHom s).hom.app (op U) (generator U) = s :=
+  sHomVal_app_generator F.property s
 
 theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) :
     (openHom h).hom.app (op V) (generator V) =
@@ -403,10 +399,7 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
     NatTrans.comp_app, ConcreteCategory.comp_apply,
     ← (CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).naturality_apply
       (homOfLE h).op (Presheaf.zeroOutside.generator U)]
-  exact congrArg
-    (fun s ↦ (ConcreteCategory.hom
-      ((CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).app (op V))) s)
-    hpresheaf
+  simp_all
 
 end zeroOutsideInt
 
@@ -433,11 +426,8 @@ theorem _root_.isZero_zeroOutsideInt_bot (X : TopCat.{u}) :
     IsZero (TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)) := by
   let F := TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)
   change IsZero F
-  have hstalk :
-      ∀ (x : X) (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj F.obj), a = 0 := by
-    intro x a
-    exact stalk_zeroOutsideInt_zero_outside ⊥ x (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a
-  exact sheaf_isZero_of_zero_stalks X F.property hstalk
+  exact sheaf_isZero_of_zero_stalks X F.property (fun x a ↦
+    stalk_zeroOutsideInt_zero_outside ⊥ x (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a)
 
 /-- At a point inside the support open, every stalk element of `zeroOutsideInt V` is an integer
     multiple of the germ of the distinguished generator over `V`. -/
@@ -493,8 +483,7 @@ theorem _root_.zsmul_generator_injective
           = n • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) :=
             map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) n _
       _ = m • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) := by
-            rw [hgen_eq]
-            exact h
+            rwa [hgen_eq]
       _ = (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (m • P.germ V x hx gen_P) :=
             (map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) m _).symm
   obtain ⟨W, hxW, iU, iV, hEq⟩ := P.germ_eq x hx hx _ _ h'

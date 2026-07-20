@@ -106,8 +106,7 @@ theorem pac_imp_vcdim_finite (X : Type u) [MeasurableSpace X]
     VCDim X C < ⊤ := by
   -- M-Contrapositive: VCDim = ⊤ → ¬PACLearnable (in Generalization.lean)
   by_contra h
-  push Not at h
-  exact absurd hC (vcdim_infinite_not_pac X C (le_antisymm le_top h))
+  exact absurd hC (vcdim_infinite_not_pac X C (le_antisymm le_top (not_lt.mp h)))
 
 /-- VC characterization: C is PAC-learnable iff VCDim(C) < ∞.
 
@@ -347,8 +346,7 @@ theorem vcdim_univ_infinite (X : Type u) [Infinite X] :
   have hShat : Shatters X (Set.univ : ConceptClass X Bool) S := by
     intro f
     refine ⟨Function.extend Subtype.val f (fun _ => false), Set.mem_univ _, ?_⟩
-    intro ⟨x, hxS⟩
-    exact Function.Injective.extend_apply Subtype.val_injective f _ ⟨x, hxS⟩
+    simp_all
   -- Step 4 (LIFT): |S| = n and |S| ≤ VCDim via le_iSup₂_of_le
   change (n : WithTop ℕ) ≤ VCDim X Set.univ
   unfold VCDim

@@ -38,16 +38,7 @@ variable (R : Type*) [Ring R]
 
 -- in a nontrivial ring, 0 and 1 are different elements
 theorem nontrivial_zero_not_one (nontriv : Nontrivial R) : (0 : R) ≠ (1 : R) := by
-  intro h
-  obtain ⟨x, y, x_neq_y⟩ := nontriv.exists_pair_ne
-  have x_eq_y : x = y := by
-    calc
-      x = x * 1 := by noncomm_ring
-      _ = x * 0 := by rw [← h]
-      _ = y * 0 := by noncomm_ring
-      _ = y * 1 := by rw [h]
-      _ = y := by noncomm_ring
-  exact x_neq_y x_eq_y
+  simp_all
 
 theorem nontrivial_ortidem_n_pos (nontriv : Nontrivial R) (ort_idem : OrtIdemDiv R) :
     0 < ort_idem.n := by
@@ -247,19 +238,13 @@ theorem corner_matrix_zero_equiv (a : R) :
       intro i
       rw [Finset.mul_sum Finset.univ, Finset.mul_sum Finset.univ]
       simp only [mul_assoc] at hij
-      simp only [hij]
-      apply Fintype.sum_eq_zero
-      simp
+      simp_all
     have hs : ∑ (i : Fin n), (es i i) * a = 0 := by
-      simp only [h]
-      exact Fintype.sum_eq_zero (fun a ↦ 0) (congrFun rfl)
+      simp_all
     rw [← Finset.sum_mul Finset.univ] at hs
     rw [mu.diag_sum_eq_one] at hs
-    simp only [one_mul] at hs
-    exact hs
-  · intro h
-    rw [h]
-    simp only [mul_zero, zero_mul, implies_true]
+    simp_all
+  · simp_all
 
 -- same as previous but in a more applicable form
 theorem corner_matrix_zero_crit (a : R) :
@@ -271,16 +256,14 @@ theorem corner_matrix_zero_crit (a : R) :
   have h' : (mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j) = 0 := by
     have l := h i j
     have l' : (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) = 0 := congrArg Subtype.val l
-    simp only [l']
-    simp only [mul_zero, zero_mul]
+    simp_all
   have h'' : (mu.es i ⟨0, hn⟩ * mu.es ⟨0, hn⟩ i) * a *
         (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j) = 0 := by
     rw [← h']
     repeat rw [mul_assoc]
   simp only [mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il i ⟨0, hn⟩ ⟨0, hn⟩ i] at h''
   simp only [mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il j ⟨0, hn⟩ ⟨0, hn⟩ j] at h''
-  simp only [↓reduceIte] at h''
-  exact h''
+  simp_all
 
 -- the actual definition of the homomorphism
 /-- The ring homomorphism from `R` to the matrix ring over its `e₀₀` corner ring. -/
@@ -322,11 +305,8 @@ lemma e0k_left_mul_sum {k : Fin n} {f : Fin n → R} :
       es ⟨0, hn⟩ k * (es i ⟨0, hn⟩ * f i) = if k = i then es ⟨0, hn⟩ ⟨0, hn⟩ * f k else 0 := by
     intro i
     rw [← mul_assoc, mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, hn⟩ k i ⟨0, hn⟩]
-    split_ifs with h
-    · simp only [h]
-    · simp only [zero_mul]
-  simp only [hif]
-  exact Fintype.sum_ite_eq k fun _ ↦ es ⟨0, hn⟩ ⟨0, hn⟩ * f k
+    simp_all
+  simp_all
 
 -- same but now from the right: ∑ f i e0i and ek0 = fk e0k ek0 = f k e00
 lemma right_mul_sum_e0k {k : Fin n} {f : Fin n → R} :
@@ -337,11 +317,8 @@ lemma right_mul_sum_e0k {k : Fin n} {f : Fin n → R} :
         if i = k then f k * mu.es ⟨0, hn⟩ ⟨0, hn⟩ else 0 := by
     intro i
     rw [mul_assoc, mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, hn⟩ i k ⟨0, hn⟩]
-    split_ifs with h
-    · simp only [h]
-    · simp only [mul_zero]
-  simp only [hif]
-  exact Fintype.sum_ite_eq' k fun _ ↦ f k * es ⟨0, hn⟩ ⟨0, hn⟩
+    simp_all
+  simp_all
 
 lemma matrixcorner1 :
     (1 : Matrix (Fin n) (Fin n) (@e00Cornerring R _ n hn mu)) =

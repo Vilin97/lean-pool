@@ -42,11 +42,9 @@ private noncomputable def tailCutoffCoeff (y q : ℕ) : ℝ :=
 /-- The `0`-term in `mertensPartialSum` vanishes, so the same sum may start at `0`. -/
 private lemma mertensPartialSum_eq_sum_Icc_zero (n : ℕ) :
     mertensPartialSum n = (Finset.Icc 0 n).sum (fun q => Λ q / (q : ℝ)) := by
-  have hI : Finset.Ioc 0 n = Finset.Icc 1 n := by
-    rfl
   rw [mertensPartialSum, ← Finset.add_sum_Ioc_eq_sum_Icc
     (f := fun q => Λ q / (q : ℝ)) (Nat.zero_le n)]
-  simp [hI]
+  simp [show Finset.Ioc 0 n = Finset.Icc 1 n from rfl]
 
 /-- The cutoff coefficients sum to a difference of Mertens partial sums. -/
 private lemma tailCutoffCoeff_partialSum {y n : ℕ} (hy0 : 1 ≤ y) (hy : y ≤ n) :
@@ -85,20 +83,25 @@ private lemma tailCutoffCoeff_partialSum {y n : ℕ} (hy0 : 1 ≤ y) (hy : y ≤
 private lemma tailCutoffCoeff_partialSum_floor {y : ℕ} {t : ℝ}
     (hy : 2 ≤ y) (ht : (y : ℝ) ≤ t) :
     (Finset.Icc 0 ⌊t⌋₊).sum (tailCutoffCoeff y) =
-      mertensPartialSum ⌊t⌋₊ - mertensPartialSum (y - 1) := by
-  refine tailCutoffCoeff_partialSum (by omega) ?_
-  exact Nat.le_floor ht
+      mertensPartialSum ⌊t⌋₊ - mertensPartialSum (y - 1) :=
+  tailCutoffCoeff_partialSum (by omega) (Nat.le_floor ht)
 
 /-- The cutoff coefficients are zero at `0`. -/
 private lemma tailCutoffCoeff_zero (y : ℕ) : tailCutoffCoeff y 0 = 0 := by
-  by_cases hy : y ≤ 0
-  · simp [tailCutoffCoeff, hy]
-  · simp [tailCutoffCoeff, hy]
+  by_cases hy : y ≤ 0 <;> simp [tailCutoffCoeff, hy]
 
 /-- The cutoff coefficients are zero at `1` once `y ≥ 2`. -/
 private lemma tailCutoffCoeff_one {y : ℕ} (hy : 2 ≤ y) : tailCutoffCoeff y 1 = 0 := by
-  have hy1 : ¬ y ≤ 1 := by omega
-  simp [tailCutoffCoeff, hy1]
+  simp [tailCutoffCoeff, show ¬ y ≤ 1 by omega]
+
+/-- The natural number `m` casts to a positive real once `m ≥ 1`. -/
+private lemma cast_pos_of_one_le {m : ℕ} (hm : 1 ≤ m) : 0 < (m : ℝ) := by
+  exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
+
+/-- The product `m * y` exceeds `1` once `m ≥ 1` and `y ≥ 2`. -/
+private lemma one_lt_cast_mul {m y : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) : 1 < (m : ℝ) * y := by
+  have hmy_nat : 2 ≤ m * y := le_trans hy (Nat.le_mul_of_pos_left y hm)
+  exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hmy_nat)
 
 /-- The kernel is differentiable on the domain relevant to the tail estimate. -/
 private lemma hasDerivAt_tailKernel {m : ℕ} {t : ℝ} (hmt : 1 < (m : ℝ) * t) :
@@ -125,15 +128,12 @@ private lemma continuousOn_tailKernelDerivFactor_Ici {m y : ℕ} (hm : 1 ≤ m) 
       (fun t : ℝ => -2 / (t * Real.log ((m : ℝ) * t) ^ 3))
       (Set.Ici (y : ℝ)) := by
   intro t ht
-  have ht_pos : 0 < t := by
-    have hy0 : (0 : ℝ) < y := by positivity
-    exact lt_of_lt_of_le hy0 ht
+  have ht_pos : 0 < t := lt_of_lt_of_le (by positivity) ht
   have hmt : 1 < (m : ℝ) * t := by
     have hm1 : (1 : ℝ) ≤ m := by exact_mod_cast hm
     have hy1 : (1 : ℝ) < y := by
       exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hy)
-    have ht1 : 1 < t := lt_of_lt_of_le hy1 ht
-    nlinarith
+    nlinarith [lt_of_lt_of_le hy1 ht]
   have hlog_ne : Real.log ((m : ℝ) * t) ≠ 0 := (Real.log_pos hmt).ne'
   refine ContinuousWithinAt.div ?_ ?_ ?_
   · exact continuousWithinAt_const.neg
@@ -177,11 +177,9 @@ private lemma tailCutoffCoeff_partialSum_eq_zero_of_lt {y : ℕ} {t : ℝ}
     (ht0 : 0 ≤ t) (ht : t < y) :
     (Finset.Icc 0 ⌊t⌋₊).sum (tailCutoffCoeff y) = 0 := by
   have hfloor : ⌊t⌋₊ < y := (Nat.floor_lt ht0).2 ht
-  refine Finset.sum_eq_zero ?_
-  intro q hq
+  refine Finset.sum_eq_zero fun q hq => ?_
   have hqle : q ≤ ⌊t⌋₊ := (Finset.mem_Icc.mp hq).2
-  have hyq : ¬ y ≤ q := by omega
-  simp [tailCutoffCoeff, hyq]
+  simp [tailCutoffCoeff, show ¬ y ≤ q by omega]
 
 /-- Abel summation for the finite truncations of the tail sum. -/
 private lemma tailPartialSum_abel {m y n : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) (hyn : y ≤ n) :
@@ -274,28 +272,20 @@ private lemma abs_log_natPred_sub_log_le_log_two {y : ℕ} (hy : 2 ≤ y) :
     |Real.log ((y - 1 : ℕ) : ℝ) - Real.log (y : ℝ)| ≤ Real.log 2 := by
   by_cases hy2 : y = 2
   · subst hy2
-    have hlog2_nonneg : 0 ≤ Real.log 2 := by positivity
-    simp [abs_of_nonneg hlog2_nonneg]
+    simp [abs_of_nonneg (show (0:ℝ) ≤ Real.log 2 by positivity)]
   · have hy3 : 3 ≤ y := by omega
-    have hpred_pos_nat : 0 < y - 1 := by omega
-    have hpred_pos : 0 < ((y - 1 : ℕ) : ℝ) := by exact_mod_cast hpred_pos_nat
-    have hy_pos : 0 < (y : ℝ) := by positivity
-    have hy_le : ((y - 1 : ℕ) : ℝ) ≤ y := by
-      exact_mod_cast Nat.sub_le y 1
+    have hpred_pos : 0 < ((y - 1 : ℕ) : ℝ) := by exact_mod_cast (show 0 < y - 1 by omega)
+    have hy_le : ((y - 1 : ℕ) : ℝ) ≤ y := by exact_mod_cast Nat.sub_le y 1
     have hratio : (y : ℝ) / ((y - 1 : ℕ) : ℝ) ≤ 2 := by
       rw [div_le_iff₀ hpred_pos]
-      have hmul : y ≤ 2 * (y - 1) := by omega
-      exact_mod_cast hmul
+      exact_mod_cast (show y ≤ 2 * (y - 1) by omega)
     have hlog_ratio :
         Real.log ((y : ℝ) / ((y - 1 : ℕ) : ℝ)) ≤ Real.log 2 :=
       Real.log_le_log (by positivity) hratio
     have hlog_le : Real.log (y : ℝ) - Real.log ((y - 1 : ℕ) : ℝ) ≤ Real.log 2 := by
       rwa [Real.log_div (show (y : ℝ) ≠ 0 by positivity)
         (show (((y - 1 : ℕ) : ℝ) ≠ 0) by positivity), sub_eq_add_neg] at hlog_ratio
-    have hneg : Real.log ((y - 1 : ℕ) : ℝ) - Real.log (y : ℝ) ≤ 0 := by
-      exact sub_nonpos.mpr (Real.log_le_log hpred_pos hy_le)
-    rw [abs_of_nonpos hneg, neg_sub]
-    exact hlog_le
+    rwa [abs_of_nonpos (sub_nonpos.mpr (Real.log_le_log hpred_pos hy_le)), neg_sub]
 
 /-- The predecessor cutoff carries the same uniform Mertens error up to `log 2`. -/
 private lemma abs_mertensPartialSum_pred_sub_log_le {C : ℝ}
@@ -305,13 +295,10 @@ private lemma abs_mertensPartialSum_pred_sub_log_le {C : ℝ}
     |mertensPartialSum (y - 1) - Real.log (y : ℝ)| ≤ C + Real.log 2 := by
   by_cases hy2 : y = 2
   · subst hy2
-    have hCnonneg : 0 ≤ C := by
-      have h₂ := hC (u := 2) (by decide : 2 ≤ 2)
-      exact le_trans (abs_nonneg (mertensPartialSum 2 - Real.log (2 : ℝ))) h₂
-    have hlog2_pos : 0 < Real.log 2 := by positivity
+    have hCnonneg : 0 ≤ C :=
+      le_trans (abs_nonneg _) (hC (u := 2) (by decide : 2 ≤ 2))
     have hlog2_nonneg : 0 ≤ Real.log 2 := by positivity
-    have h₁ : mertensPartialSum 1 = 0 := by
-      simp [mertensPartialSum]
+    have h₁ : mertensPartialSum 1 = 0 := by simp [mertensPartialSum]
     rw [show (2 - 1 : ℕ) = 1 by decide, h₁, zero_sub]
     norm_num
     rw [abs_of_nonneg hlog2_nonneg]
@@ -330,15 +317,12 @@ private lemma abs_mertensPartialSum_pred_sub_log_le {C : ℝ}
 /-- The tail kernel decays to `0` along the naturals. -/
 private lemma tendsto_tailKernel_natZero {m : ℕ} (hm : 1 ≤ m) :
     Tendsto (fun n : ℕ => tailKernel m n) atTop (𝓝 0) := by
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
+  have hm_pos : 0 < (m : ℝ) := cast_pos_of_one_le hm
   have hmul : Tendsto (fun n : ℕ => (m : ℝ) * n) atTop atTop := by
     simpa [mul_comm] using tendsto_natCast_atTop_atTop.const_mul_atTop hm_pos
-  have hlog : Tendsto (fun n : ℕ => Real.log ((m : ℝ) * n)) atTop atTop := by
-    exact Real.tendsto_log_atTop.comp hmul
-  have hinv : Tendsto (fun n : ℕ => (Real.log ((m : ℝ) * n))⁻¹) atTop (𝓝 0) := by
-    exact tendsto_inv_atTop_zero.comp hlog
-  simpa [tailKernel] using hinv.pow 2
+  have hlog : Tendsto (fun n : ℕ => Real.log ((m : ℝ) * n)) atTop atTop :=
+    Real.tendsto_log_atTop.comp hmul
+  simpa [tailKernel] using (tendsto_inv_atTop_zero.comp hlog).pow 2
 
 /-- The boundary contribution coming from the continuous Mertens error vanishes at infinity. -/
 private lemma tendsto_tailKernel_mul_mertensError_zero {m : ℕ} (hm : 1 ≤ m) {C : ℝ}
@@ -377,21 +361,14 @@ private lemma log_sub_log_bounds {m y : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) {t : 
   · exact sub_nonneg.mpr <| Real.log_le_log hy_pos ht
   · have hlog_le : Real.log t ≤ Real.log ((m : ℝ) * t) := by
       have hm1 : (1 : ℝ) ≤ m := by exact_mod_cast hm
-      have hle : t ≤ (m : ℝ) * t := by
-        have := mul_le_mul_of_nonneg_right hm1 ht_pos.le
-        simpa using this
-      exact Real.log_le_log ht_pos hle
-    have : Real.log t - Real.log (y : ℝ) ≤ Real.log t := by
-      have hy1 : (1 : ℝ) ≤ y := by
-        exact_mod_cast (le_trans (by decide : 1 ≤ 2) hy)
-      linarith [Real.log_nonneg hy1]
-    exact le_trans this hlog_le
+      exact Real.log_le_log ht_pos (by nlinarith)
+    have hy1 : (1 : ℝ) ≤ y := by exact_mod_cast (le_trans (by decide : 1 ≤ 2) hy)
+    linarith [Real.log_nonneg hy1, hlog_le]
 
 /-- The logarithmic boundary term vanishes along the real tail. -/
 private lemma tendsto_tailKernel_mul_log_sub_log_zero_aux {m y : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) :
     Tendsto (fun t : ℝ => tailKernel m t * (Real.log t - Real.log (y : ℝ))) atTop (𝓝 0) := by
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
+  have hm_pos : 0 < (m : ℝ) := cast_pos_of_one_le hm
   have hmul : Tendsto (fun t : ℝ => (m : ℝ) * t) atTop atTop := by
     simpa [mul_comm] using tendsto_id.const_mul_atTop' hm_pos
   have hlog : Tendsto (fun t : ℝ => Real.log ((m : ℝ) * t)) atTop atTop :=
@@ -452,18 +429,14 @@ private lemma tendsto_tailKernel_mul_mertensTail_zero {m y : ℕ} (hm : 1 ≤ m)
 private lemma one_lt_mul_of_mem_Ioi {m y : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) {t : ℝ}
     (ht : t ∈ Set.Ioi (y : ℝ)) :
     1 < (m : ℝ) * t := by
-  have hy1 : (1 : ℝ) < y := by
-    exact_mod_cast lt_of_lt_of_le one_lt_two hy
-  have ht1 : 1 < t := lt_trans hy1 ht
-  have hm1 : (1 : ℝ) ≤ m := by
-    exact_mod_cast hm
-  exact one_lt_mul hm1 ht1
+  have hy1 : (1 : ℝ) < y := by exact_mod_cast lt_of_lt_of_le one_lt_two hy
+  have hm1 : (1 : ℝ) ≤ m := by exact_mod_cast hm
+  exact one_lt_mul hm1 (lt_trans hy1 ht)
 
 /-- Points in the admissible tail are positive. -/
 private lemma zero_lt_of_mem_Ioi {y : ℕ} (hy : 2 ≤ y) {t : ℝ} (ht : t ∈ Set.Ioi (y : ℝ)) :
-    0 < t := by
-  have hy0 : (0 : ℝ) < y := by positivity
-  exact lt_trans hy0 ht
+    0 < t :=
+  lt_trans (by positivity) ht
 
 /-- The Abel-summation error after subtracting the logarithmic main term is uniformly bounded. -/
 private lemma abs_mertensTail_floor_error_le {C : ℝ}
@@ -509,13 +482,8 @@ private lemma integrableOn_Ioi_deriv_tailKernel_mul_log_sub_log {m y : ℕ}
     IntegrableOn
       (fun t => deriv (tailKernel m) t * (Real.log t - Real.log (y : ℝ)))
       (Set.Ioi (y : ℝ)) := by
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
-  have hmy : 1 < (m : ℝ) * y := by
-    have hmy_nat : 2 ≤ m * y := by
-      have := Nat.mul_le_mul hm hy
-      simpa using this
-    exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hmy_nat)
+  have hm_pos : 0 < (m : ℝ) := cast_pos_of_one_le hm
+  have hmy : 1 < (m : ℝ) * y := one_lt_cast_mul hm hy
   have hdom :
       (fun t => deriv (tailKernel m) t * (Real.log t - Real.log (y : ℝ))) =ᵐ[
         MeasureTheory.volume.restrict (Set.Ioi (y : ℝ))]
@@ -578,13 +546,8 @@ private lemma integrableOn_Ioi_deriv_tailKernel_mul_log_sub_log {m y : ℕ}
 private lemma integral_tailKernel_mainTerm {m y : ℕ} (hm : 1 ≤ m) (hy : 2 ≤ y) :
     -∫ t in Set.Ioi (y : ℝ), deriv (tailKernel m) t * (Real.log t - Real.log (y : ℝ)) =
       1 / Real.log ((m * y : ℕ) : ℝ) := by
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
-  have hmy : 1 < (m : ℝ) * y := by
-    have hmy_nat : 2 ≤ m * y := by
-      have := Nat.mul_le_mul hm hy
-      simpa using this
-    exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hmy_nat)
+  have hm_pos : 0 < (m : ℝ) := cast_pos_of_one_le hm
+  have hmy : 1 < (m : ℝ) * y := one_lt_cast_mul hm hy
   have hu :
       ∀ x ∈ Set.Ioi (y : ℝ),
         HasDerivAt (tailKernel m) (-2 / (x * Real.log ((m : ℝ) * x) ^ 3)) x := by
@@ -674,29 +637,17 @@ lemma tailEstimate :
   let E : ℝ → ℝ := fun t =>
     (mertensPartialSum ⌊t⌋₊ - mertensPartialSum (y - 1)) -
       (Real.log t - Real.log (y : ℝ))
-  have hm_pos : 0 < (m : ℝ) := by
-    exact_mod_cast lt_of_lt_of_le Nat.zero_lt_one hm
-  have hmy : 1 < (m : ℝ) * y := by
-    have hmy_nat : 2 ≤ m * y := by
-      have := Nat.mul_le_mul hm hy
-      simpa using this
-    exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hmy_nat)
+  have hm_pos : 0 < (m : ℝ) := cast_pos_of_one_le hm
+  have hmy : 1 < (m : ℝ) * y := one_lt_cast_mul hm hy
   have hcoeff_nonneg : ∀ q : ℕ, 0 ≤ coeff q := by
     intro q
     by_cases hyq : y ≤ q
-    · have hmq_nat : 2 ≤ m * q := by
-        have := Nat.mul_le_mul hm hyq
-        exact le_trans (by omega) this
-      have hmq : 1 < ((m * q : ℕ) : ℝ) := by
-        exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hmq_nat)
-      have hkernel_nonneg : 0 ≤ tailKernel m q := tailKernel_nonneg m q
-      have hcutoff_nonneg : 0 ≤ tailCutoffCoeff y q := by
-        have hq_pos_nat : 0 < q := lt_of_lt_of_le (by decide : 0 < 2) (le_trans hy hyq)
-        have hq_pos : 0 < (q : ℝ) := by exact_mod_cast hq_pos_nat
-        have hΛ_nonneg : 0 ≤ Λ q := ArithmeticFunction.vonMangoldt_nonneg
+    · have hcutoff_nonneg : 0 ≤ tailCutoffCoeff y q := by
+        have hq_pos : 0 < (q : ℝ) := by
+          exact_mod_cast (show 0 < q from lt_of_lt_of_le (by decide : 0 < 2) (le_trans hy hyq))
         rw [tailCutoffCoeff, if_pos hyq]
-        exact div_nonneg hΛ_nonneg hq_pos.le
-      exact mul_nonneg hkernel_nonneg hcutoff_nonneg
+        exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg hq_pos.le
+      exact mul_nonneg (tailKernel_nonneg m q) hcutoff_nonneg
     · simp [coeff, tailCutoffCoeff, hyq]
   have hAeq :
       A =

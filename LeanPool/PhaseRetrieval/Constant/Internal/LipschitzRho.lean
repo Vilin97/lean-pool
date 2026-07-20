@@ -73,8 +73,7 @@ theorem rho_pointwise_lower (w z : ℂ) : rho w ≥ rho z - ‖w - z‖ := by
 **Proof**: Apply 2.4 with `z = 0`: `rho(w) ≤ rho(0) + ‖w‖ = 0 + ‖w‖`.
 -/
 theorem rho_le_norm (w : ℂ) : rho w ≤ ‖w‖ := by
-  have h := rho_pointwise_upper w 0
-  simp only [rho, add_zero, norm_one, sub_self, abs_zero, zero_add, sub_zero] at h
-  exact h
+  simpa only [rho, add_zero, norm_one, sub_self, abs_zero, zero_add, sub_zero] using
+    rho_pointwise_upper w 0
 
 end FockSPR

@@ -56,5 +56,3 @@ theorem WhiteheadTheorem (X Y : CWComplex.{u}) (f : (X : TopCat.{u}) ⟶ Y) :
       invFun := g.hom
       left_inv := hf.CWComplex_induced_map_injective X (f ≫ g) (𝟙 _) hfgf
       right_inv := hgf }
-
--- #print axioms WhiteheadTheorem

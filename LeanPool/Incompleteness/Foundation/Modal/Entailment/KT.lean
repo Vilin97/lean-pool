@@ -24,9 +24,7 @@ namespace KT
 variable [Entailment.KT 𝓢]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def axiomDiaTc : 𝓢 ⊢ φ ==> ◇φ := by
-  apply impTrans'' ?_ (and₂' diaDuality);
-  exact impTrans'' dni <| contra₀' axiomT;
+def axiomDiaTc : 𝓢 ⊢ φ ==> ◇φ := impTrans'' (impTrans'' dni <| contra₀' axiomT) (and₂' diaDuality)
 instance : HasAxiomDiaTc 𝓢 := ⟨fun _ ↦ KT.axiomDiaTc⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -43,9 +41,7 @@ namespace KT'
 variable [Entailment.KT' 𝓢]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def axiomT :
-    𝓢 ⊢ □φ ==> φ :=
-  impTrans'' boxDni (contra₃' (impTrans'' diaTc diaDualityMp))
+protected def axiomT : 𝓢 ⊢ □φ ==> φ := impTrans'' boxDni (contra₃' (impTrans'' diaTc diaDualityMp))
 
 instance : HasAxiomT 𝓢 := ⟨fun _ ↦ KT'.axiomT⟩
 instance : Entailment.KT 𝓢 where

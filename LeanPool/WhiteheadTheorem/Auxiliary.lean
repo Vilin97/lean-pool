@@ -21,17 +21,12 @@ Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Auxiliary`.
 
 namespace CategoryTheory
 
--- #check CategoryTheory.eq_of_comp_right_eq
 lemma eq_of_comp_right_iso_eq {C : Type*} [Category C] {X Y Z : C}
     (h : X ⟶ Y) [IsIso h] {f g : Y ⟶ Z} (e : h ≫ f = h ≫ g) : f = g := by
-  have := congrArg (inv h ≫ ·) e
-  simp only [IsIso.inv_hom_id_assoc] at this
-  exact this
+  simpa only [IsIso.inv_hom_id_assoc] using congrArg (inv h ≫ ·) e
 lemma eq_of_comp_left_iso_eq {C : Type*} [Category C] {X Y Z : C}
     (h : Y ⟶ Z) [IsIso h] {f g : X ⟶ Y} (e : f ≫ h = g ≫ h) : f = g := by
-  have := congrArg (· ≫ inv h) e
-  simp only [Category.assoc, IsIso.hom_inv_id, Category.comp_id] at this
-  exact this
+  simpa only [Category.assoc, IsIso.hom_inv_id, Category.comp_id] using congrArg (· ≫ inv h) e
 
 end CategoryTheory
 
@@ -82,12 +77,7 @@ lemma Real.forall_le_of_iSup_le_of_bddAbove {ι : Sort*} {f : ι → ℝ} {a : �
 
 lemma Real.range_bddAbove_of_finite_domain {ι : Type*} (f : ι → ℝ) [Finite ι] :
     BddAbove (Set.range f) := by
-  cases isEmpty_or_nonempty ι
-  · exact ⟨0, fun y hy ↦ (IsEmpty.exists_iff.mp hy).elim⟩
-  · obtain ⟨i, hi⟩ := Finite.exists_max f
-    exact ⟨f i, fun y hy ↦ by
-      obtain ⟨j, hj⟩ := Set.mem_range.mp hy
-      rw [← hj]; exact hi j⟩
+  simp_all
 
 lemma Real.forall_le_of_iSup_le_of_finite_domain {ι : Type*} {f : ι → ℝ} {a : ℝ}
     [Finite ι] (hf : ⨆ i, f i ≤ a) : ∀ (i : ι), f i ≤ a :=
@@ -109,9 +99,7 @@ lemma Real.exists_eq_of_iSup_eq_of_finite_domain {ι : Type*} {f : ι → ℝ} {
   have : Nonempty ι := hfz.nonempty
   have iSup_lt_iff : ⨆ i ∈ (Set.univ : Set ι), f i < a ↔ ∀ i ∈ Set.univ, f i < a := by
     apply Set.Finite.ciSup_lt_iff Set.finite_univ
-    rw [Real.sSup_empty]   -- The supremum `sSup ∅` is defined to be 0 for `ℝ`
-    simp only [Set.mem_univ, true_and]
-    exact hfz
+    simp_all
   have lt_iSup_iff : a < ⨆ i, f i ↔ ∃ i, a < f i :=
     lt_ciSup_iff (range_bddAbove_of_finite_domain f)
   by_contra nex; simp only [not_exists] at nex
@@ -120,22 +108,11 @@ lemma Real.exists_eq_of_iSup_eq_of_finite_domain {ι : Type*} {f : ι → ℝ} {
     · exact h
     · exfalso; exact nex i h
     · exfalso; exact ne_of_lt (lt_iSup_iff.mpr ⟨i, h⟩) hf.symm
-  replace : ∀ i ∈ Set.univ, f i < a := fun i _ ↦ this i
-  replace := iSup_lt_iff.mpr this
-  rw [(by simp only [Set.mem_univ, ciSup_unique] : ⨆ i ∈ Set.univ, f i = ⨆ i, f i)] at this
-  exact ne_of_lt this hf
-
-
-
--- /-- The result of embedding `i : Fin n` in `Fin (n+1)` is not equal to `n : Fin (n+1)` -/
--- lemma Fin.castSucc_ne_last {n : ℕ} (i : Fin n) : i.castSucc ≠ Fin.last n :=
---   fun heq ↦ Nat.ne_of_lt i.isLt (congrArg Fin.val heq)
+  simp_all
 
 
 
 namespace ContinuousMap
-
--- #check ContinuousMap.liftCover -- gluing lemma for an open cover
 
 variable {α β : Type*} [TopologicalSpace α] [TopologicalSpace β]
 
@@ -172,20 +149,3 @@ theorem liftCoverClosed_coe' {i : ι} (x : α) (hx : x ∈ S i) :
   rw [← liftCoverClosed_coe]
 
 end ContinuousMap
-
-
-
-
--- namespace CategoryTheory.IsPushout
-
--- variable {C : Type*} [Category C] {Z X Y P : C}
---   {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
-
--- lemma uniq (hP : IsPushout f g inl inr) {W : C} (h : X ⟶ W) (k : Y ⟶ W) (w : f ≫ h = g ≫ k)
---     (d : P ⟶ W) (hl : inl ≫ d = h) (hr : inr ≫ d = k) : d = hP.desc h k w :=
---   hP.isColimit.uniq (CommSq.mk w).cocone d fun j => match j with
---     | none => by simp; congr
---     | some Limits.WalkingPair.left => by simp; congr
---     | some Limits.WalkingPair.right => by simp; congr
-
--- end CategoryTheory.IsPushout

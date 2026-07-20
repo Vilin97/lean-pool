@@ -169,10 +169,7 @@ private lemma disagreementFamily_boolVCDim_le
   -- Normalize: ↑(⟨embed y, hxS⟩ : ↥S) = y.val = ↑y
   change h_concept (y : X) = g ⟨(y : X), hxS⟩
   by_cases heq : h_concept (y : X) = c (y : X)
-  · have hay : a y = false := by rw [ha_y]; simp [heq]
-    have hgeq : ¬(g ⟨y.val, hxS⟩ ≠ c y.val) := by
-      rw [← h_ay_iff, hay]; simp
-    push Not at hgeq; rw [heq, hgeq]
+  · simp_all
   · have hay : a y = true := by rw [ha_y]; simp [heq]
     have hgne := h_ay_iff.mp hay
     cases hc : c (y : X) <;> cases hh : h_concept (y : X) <;>
@@ -185,8 +182,7 @@ private lemma supportError_eq_boolTestExpectation
     supportError Y q h c =
     boolTestExpectation q (fun y : ↥Y => decide (h (y : X) ≠ c (y : X))) := by
   simp only [supportError, boolTestExpectation, trueExpectation]
-  congr 1; ext y
-  by_cases heq : h (y : X) = c (y : X) <;> simp [heq]
+  simp_all
 
 /-- Finite VC dimension implies existence of a proper finite-support learner.
     The construction uses ERM + finite_support_vc_approx on the disagreement family. -/
@@ -294,8 +290,7 @@ theorem vcdim_finite_imp_proper_finite_support_learner
         -- hcons_i : h_out (Z.equivFin.symm i : X) = c (Z.equivFin.symm i : X)
         -- Z.equivFin.symm i = y_sub = ⟨(hs t : X), ht_in_Z⟩
         have h_symm : Z.equivFin.symm i = y_sub := Z.equivFin.symm_apply_apply y_sub
-        rw [h_symm] at hcons_i
-        exact hcons_i
+        rwa [h_symm] at hcons_i
       -- Now combine: |true - 0| ≤ 1 / 3, and true is nonneg, so true ≤ 1 / 3
       rw [h_emp_zero, sub_zero] at hclose
       calc boolTestExpectation q disagree
@@ -347,9 +342,7 @@ private theorem boolTestExpectation_empirical_agreeTest_eq_avg {X : Type u} {T :
   congr 1
   apply Finset.sum_congr rfl
   intro t _
-  by_cases h : (↑(reps t) : X → Bool) x = c x
-  · simp [agreeTest, h]
-  · simp [agreeTest, h]
+  by_cases h : (↑(reps t) : X → Bool) x = c x <;> simp [agreeTest, h]
 
 /-! ## Roundtrip helpers for the compression proof -/
 
@@ -401,20 +394,9 @@ lemma decodeWitnessXCoords_encode_eq
     obtain ⟨⟨x0, hx0W⟩, _, hidx_mem2⟩ := hidx_mem
     by_cases hmk : ((x0 : X), c x0) ∈ kernel
     · by_cases hlt : (kernel.equivFin ⟨(x0, c x0), hmk⟩).val < K
-      · simp only [dif_pos hmk, dif_pos hlt, Finset.mem_singleton] at hidx_mem2
-        have hltCard : ((kernel.equivFin ⟨(x0, c x0), hmk⟩ : Fin kernel.card) : ℕ) < kernel.card :=
-          (kernel.equivFin ⟨(x0, c x0), hmk⟩).isLt
-        subst hidx_mem2
-        simp only [dif_pos hltCard, Finset.mem_singleton] at hx
-        have hrt := congrArg Subtype.val
-          (Equiv.symm_apply_apply (kernel.equivFin) ⟨(x0, c x0), hmk⟩)
-        simp only [] at hrt
-        rw [hrt] at hx
-        have hx_eq : x = x0 := by simpa using hx
-        rw [hx_eq]
-        exact hx0W
-      · simp only [dif_pos hmk, dif_neg hlt] at hidx_mem2; exact absurd hidx_mem2 (by simp)
-    · simp only [dif_neg hmk] at hidx_mem2; exact absurd hidx_mem2 (by simp)
+      · simp_all
+      · simp [dif_pos hmk, dif_neg hlt] at hidx_mem2
+    · simp [dif_neg hmk] at hidx_mem2
   · intro hxW
     have hmk : (x, c x) ∈ kernel := hWker x hxW
     have hltK : (kernel.equivFin ⟨(x, c x), hmk⟩).val < K :=
@@ -428,9 +410,7 @@ lemma decodeWitnessXCoords_encode_eq
     change x ∈ decodeWitnessXCoords kernel (encodeWitnessInfo kernel c K W)
     simp only [decodeWitnessXCoords, Finset.mem_biUnion]
     refine ⟨⟨(kernel.equivFin ⟨(x, c x), hmk⟩).val, hltK⟩, hidx_in_enc, ?_⟩
-    have hltCard : ((kernel.equivFin ⟨(x, c x), hmk⟩ : Fin kernel.card) : ℕ) < kernel.card :=
-      (kernel.equivFin ⟨(x, c x), hmk⟩).isLt
-    simp [Equiv.symm_apply_apply]
+    simp_all
 
 /-- On the encoded witness support, the decoded label function agrees with the true
 label function `c`, provided every pair in the kernel has the correct second coordinate. -/
@@ -448,12 +428,8 @@ lemma decodeWitnessLabel_eq_on_encoded
     simp [hmem, hc]
   · have hnot : (x, true) ∉ kernel := by
       intro htrue
-      have hcoord : true = c x := by
-        simpa using hlabels (x, true) htrue
-      exact hc hcoord.symm
-    have hfalse : c x = false := by
-      cases hcx : c x <;> simp_all
-    simp [hnot, hfalse]
+      simp_all
+    simp_all
 
 /-- If two label functions agree on all points of `Z`, then the labeled samples they
 induce on `Z.equivFin` are equal. -/
@@ -464,8 +440,7 @@ lemma labeledSampleOfFinset_eq_of_eq_on_support
     labeledSampleOfFinset ℓ₁ Z = labeledSampleOfFinset ℓ₂ Z := by
   funext j
   simp only [labeledSampleOfFinset]
-  congr 1
-  exact hℓ _ (Z.equivFin.symm j).property
+  simp_all
 
 /-- Generic roundtrip theorem for the compression reconstruction invariant.
 
@@ -583,8 +558,7 @@ private lemma agreeTests_boolVCDim_le
       exact hjk_ne hb'k.symm
     -- x j = x k gives: h.val (x j) = c (x j) ↔ h ∈ halfSet' j, same for k.
     have hj := (hx j h0.val h0.property).mpr h0_in_j
-    rw [hjk] at hj
-    exact h0_nin_k ((hx k h0.val h0.property).mp hj)
+    simp_all
   -- Step 4: Build P = {x 0, ..., x d}.
   let P : Finset X := Finset.univ.image x
   have hP_card : P.card = d + 1 := by
@@ -805,12 +779,7 @@ private lemma good_on_support_gives_row_response
       ⟨Finset.mem_powerset.mpr hZY, hZcard⟩, rfl⟩
   refine ⟨⟨h, hh_mem⟩, ?_⟩
   have hag := supportAgreement_eq_one_sub_supportError Y q h c
-  have : (fun y : ↥Y => q.prob y *
-      (if decide (h (y : X) = c (y : X)) then (1 : ℝ) else 0)) =
-    (fun y : ↥Y => q.prob y *
-      (if h (y : X) = c (y : X) then (1 : ℝ) else 0)) := by
-    ext y; congr 1; simp [decide_eq_true_eq]
-  simp only [this] at *
+  simp only [decide_eq_true_eq] at *
   linarith
 
 private theorem pointSupportNonempty {X : Type u} {m : ℕ} (S : Fin m → X × Bool)
@@ -827,10 +796,7 @@ private theorem moranKernel_labels {X : Type u} [DecidableEq X] {T : ℕ} (c : X
     (getWitness : Fin T → Finset X) :
     ∀ pair ∈ Finset.univ.biUnion (fun t => (getWitness t).image (fun x => (x, c x))),
       pair.2 = c pair.1 := by
-  intro pair hp
-  simp only [Finset.mem_biUnion, Finset.mem_image] at hp
-  obtain ⟨_, _, x, _, rfl⟩ := hp
-  rfl
+  simp_all
 
 private theorem witness_mem_moranKernel {X : Type u} [DecidableEq X] {T : ℕ} (c : X → Bool)
     (getWitness : Fin T → Finset X) (t : Fin T) {x : X} (hx : x ∈ getWitness t) :
@@ -972,10 +938,8 @@ private theorem moran_yehudayoff_forward_construction
         (1 / 2 : ℝ) := by
     intro m S hreal i
     have hm : 0 < m := Fin.pos i
-    -- Phase 1: Roundtrip — decoded block hyp = raw representative
-    -- Key insight: dsimp only [localLet] works on GOALS but NOT hypotheses.
-    -- So unfold in the goal FIRST, then intro.
-    -- Step A: All pairs in kernel have label c.
+    -- Phase 1: Roundtrip — decoded block hyp = raw representative.
+    -- (`dsimp only [localLet]` works on goals, not hypotheses, so unfold in the goal first.)
     have h_kernel_labels : ∀ pair ∈ (compressCore S).1,
         pair.2 = hreal.choose pair.1 := by
       -- Unfold compressCore in the GOAL, resolve dite branches, THEN intro
@@ -983,8 +947,7 @@ private theorem moran_yehudayoff_forward_construction
       let getWitness : Fin Tvc → Finset X :=
         fun t => (Finset.mem_image.mp (reps t).property).choose
       dsimp only [compressCore]
-      simp only [dif_pos hreal, dif_pos hm]
-      simpa only [reps, getWitness] using moranKernel_labels hreal.choose getWitness
+      simp_all
     have hround : ∀ t : Fin Tvc,
         rowHyp S hreal t (S i).1 = (mkReps S hreal hm t).val (S i).1 := by
       intro t
@@ -1008,39 +971,10 @@ private theorem moran_yehudayoff_forward_construction
         (kernel := (compressCore S).1) (c := c) (K := Kreal)
         (W := W) (h := (reps t).val)
         hKbound hWker hlabels hrep (x := (S i).1)
-      -- hrt : L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --         (decodeWitnessXCoords (compressCore S).1
-      --           (encodeWitnessInfo (compressCore S).1 c Kreal W)))
-      --       (S i).1 = (reps t).val (S i).1
-      -- Goal: rowHyp S hreal t (S i).1 = (reps t).val (S i).1
-      -- rowHyp = blockHyp (compressCore S).1 (compressCore S).2 t (S i).1
-      -- blockHyp Z info t x =
-      --   L.learn (labeledSampleOfFinset (decodeWitnessLabel Z)
-      --     (decodeWitnessXCoords Z (info t))) x
-      -- (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal (getWitness t)
-      -- getWitness t = W  (by definition)
-      -- So: rowHyp = L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --                (decodeWitnessXCoords (compressCore S).1
-      --                  (encodeWitnessInfo (compressCore S).1 c Kreal W)))
-      --             (S i).1
-      -- = hrt's LHS. So we need to show rowHyp reduces to hrt's LHS.
-      -- This is true definitionally since rowHyp → blockHyp → decodeWitness...
-      -- and (compressCore S).2 t → encodeWitnessInfo (compressCore S).1 c Kreal W
-      -- But Lean may need help with the dite reduction.
-      -- Let's unfold the goal's LHS and match hrt.
+      -- rowHyp reduces definitionally to hrt's LHS once `(compressCore S).2 t` is
+      -- rewritten to `encodeWitnessInfo (compressCore S).1 c Kreal W` (getWitness t = W).
       dsimp only [rowHyp]
       dsimp only [blockHyp, moranBlockHyp]
-      -- Now the goal is:
-      -- L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --   (decodeWitnessXCoords (compressCore S).1 ((compressCore S).2 t))) (S i).1
-      --   = (mkReps S hreal hm t).val (S i).1
-      -- We need: (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W
-      -- After unfolding compressCore, (compressCore S).2 =
-      --   fun t => encodeWitnessInfo kernel c Kreal (getWitness t)
-      -- So (compressCore S).2 t =
-      --   encodeWitnessInfo kernel c Kreal (getWitness t) = encodeWitnessInfo kernel c Kreal W
-      -- (since getWitness t = W by definition)
-      -- Let's use show + convert to bridge:
       have hinfo_eq : (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W := by
         dsimp only [compressCore, c, reps, W]
         simp only [dif_pos hreal, dif_pos hm]
@@ -1095,8 +1029,6 @@ private theorem moran_yehudayoff_forward_construction
     have h_minimax : boolTestExpectation p (agreeTest c' (S i).1 HY') ≥ 7 / 12 := by
       have h_gp := hp ⟨(S i).1, hxi_in_Y⟩
       rw [boolGamePayoff_eq_boolTestExpectation] at h_gp
-      -- h_gp: 7 / 12 ≤ boolTestExpectation p (fun h => M' h ⟨(S i).1, ...⟩)
-      -- Need: (fun h => M' h ⟨(S i).1, ...⟩) = agreeTest c' (S i).1 HY'
       have hfun : (fun h => M' h ⟨(S i).1, hxi_in_Y⟩) = agreeTest c' (S i).1 HY' := by
         ext h; simp only [M', agreeTest]
       rw [hfun] at h_gp; linarith
@@ -1181,8 +1113,7 @@ theorem compress_with_info_injective_on_labelings {X : Type u} {n : ℕ}
     obtain ⟨c, hcC, hc⟩ := hg_real; exact ⟨c, hcC, fun i => by simp [hc i]⟩
   have hf := cs.correct (fun i => (pts i, f i)) hf_real' i
   have hg := cs.correct (fun i => (pts i, g i)) hg_real' i
-  simp only at hf hg
-  rw [← hf, congr_fun h_recon (pts i), hg]
+  simp_all
 
 private lemma shatters_subset_compression {X : Type u} {C : ConceptClass X Bool}
     {S T : Finset X} (hST : T ⊆ S) (hS : Shatters X C S) : Shatters X C T := by
@@ -1291,9 +1222,7 @@ theorem compression_with_info_imp_vcdim_finite
           have hsub : A.powerset.filter (fun S => S.card ≤ K) ⊆
               (Finset.range (K + 1)).biUnion (fun j => A.powersetCard j) := by
             intro S hS
-            simp only [Finset.mem_filter, Finset.mem_powerset] at hS
-            simp only [Finset.mem_biUnion, Finset.mem_range]
-            exact ⟨S.card, by omega, Finset.mem_powersetCard.mpr ⟨hS.1, rfl⟩⟩
+            simp_all
           exact (Finset.card_le_card hsub).trans Finset.card_biUnion_le
       _ = (Finset.range (K + 1)).sum (fun j => (2 * n).choose j) := by
           congr 1; ext j; simp [Finset.card_powersetCard, hA_card]

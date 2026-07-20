@@ -45,11 +45,10 @@ noncomputable def PushforwardHIso
   let closedIncl := TopCat.closedIncl hZ
   induction n generalizing G with
   | zero =>
-    exact by
-      change (sheafCohomologyFunctor (TopCat.of Z) 0).obj G ≅
+    change (sheafCohomologyFunctor (TopCat.of Z) 0).obj G ≅
         (sheafCohomologyFunctor X 0).obj
           ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} closedIncl).obj G)
-      simpa [Opens.map_top] using
+    simpa [Opens.map_top] using
         (sheafH0NatIsoSections (X := TopCat.of Z)).app G ≪≫
           ((sheafH0NatIsoSections (X := X)).app
             ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} closedIncl).obj G)).symm
@@ -72,17 +71,15 @@ noncomputable def PushforwardHIso
       AddCommGrpCat.of (Sheaf.H SX.X₁ (k + 1))
     cases k with
     | zero =>
-      exact by
-        simpa [S, SX] using
-          (show cokernel (SX.g.hom.app (op ⊤)) ≅ AddCommGrpCat.of (Sheaf.H G 1) from by
+      simpa [S, SX] using
+        (show cokernel (SX.g.hom.app (op ⊤)) ≅ AddCommGrpCat.of (Sheaf.H G 1) from by
             change cokernel (S.g.hom.app (op ⊤)) ≅ AddCommGrpCat.of (Sheaf.H S.X₁ 1)
             exact sheafH1CokernelIsoOfSubsingletonMiddle hSE (hSrcSub 0)).symm ≪≫
           sheafH1CokernelIsoOfSubsingletonMiddle hSE_X (hTgtSub 0)
     | succ m =>
-      exact by
-        simpa [S, SX] using
-          (sheafHSuccIsoOfSubsingletonMiddle hSE (m + 1) (hSrcSub m)
-            (hSrcSub (m + 1))).symm ≪≫
+      simpa [S, SX] using
+        (sheafHSuccIsoOfSubsingletonMiddle hSE (m + 1) (hSrcSub m)
+          (hSrcSub (m + 1))).symm ≪≫
         ih_push S.X₃ ≪≫
           sheafHSuccIsoOfSubsingletonMiddle hSE_X (m + 1) (hTgtSub m)
             (hTgtSub (m + 1))
@@ -104,11 +101,9 @@ theorem subsingleton_sheafH_of_closedImmersion_middle
   let FZ := ((TopCat.Sheaf.pullback AddCommGrpCat.{u} closedIncl).obj F)
   let S := closedImmersionSES (Z := Z) (hZ := hZ) F
   have hSE := closedImmersionSES_shortExact (Z := Z) (hZ := hZ) F
-  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by
-    simpa [S] using h₁
-  have h₃' : Subsingleton (Sheaf.H FZ n) := by
-    simpa [closedIncl, FZ] using h₃
+  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by simpa [S] using h₁
   have hPush : Subsingleton (Sheaf.H S.X₃ n) := by
+    have h₃' : Subsingleton (Sheaf.H FZ n) := by simpa [closedIncl, FZ] using h₃
     let e :
         Sheaf.H FZ n ≃
           Sheaf.H ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} closedIncl).obj FZ) n :=

@@ -188,17 +188,9 @@ scoped instance : CanonicallyOrderedAdd M where
     · exact ⟨0, by simp⟩
     · simpa[eq_comm] using add_eq_of_lt x y h
   le_add_self := by
-    intro x y
-    rw [add_comm]
-    exact show x ≤ x + y by
-      rcases zero_le y with (rfl | hy)
-      · exact Or.inl (by simp)
-      · exact Or.inr (by simpa using add_lt_add 0 y x hy)
+    simp_all
   le_self_add := by
-    intro x y
-    rcases zero_le y with (rfl | hy)
-    · exact Or.inl (by simp)
-    · exact Or.inr (by simpa using add_lt_add 0 y x hy)
+    simp_all
 
 lemma numeral_eq_natCast : (n : ℕ) → (ORingStruc.numeral n : M) = n
   | 0     => rfl
@@ -233,12 +225,9 @@ instance qq : M ⊧ₘ* 𝐑₀ := modelsTheory_iff.mpr <| by
   case equal h =>
     have : M ⊧ₘ* (𝐄𝐐 : Theory ℒₒᵣ) := inferInstance
     exact modelsTheory_iff.mp this h
-  case Ω₁ n m =>
-    simp [models_iff, numeral_eq_natCast]
-  case Ω₂ n m =>
-    simp [models_iff, numeral_eq_natCast]
-  case Ω₃ n m h =>
-    simp [models_iff, numeral_eq_natCast, h]
+  case Ω₁ n m => simp [models_iff, numeral_eq_natCast]
+  case Ω₂ n m => simp [models_iff, numeral_eq_natCast]
+  case Ω₃ n m h => simp [models_iff, numeral_eq_natCast, h]
   case Ω₄ n =>
       simp only [Nat.reduceAdd, Fin.isValue, models_iff, Semiformula.eval_all,
         Nat.succ_eq_add_one, LogicalConnective.HomClass.map_iff, Semiformula.eval_operator₂,

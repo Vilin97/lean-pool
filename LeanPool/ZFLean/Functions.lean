@@ -16,14 +16,6 @@ Imported Lean Pool material for `LeanPool.ZFLean.Functions`.
 
 namespace ZFSet
 
--- syntax "zrel" : tactic
--- macro_rules | `(tactic| zrel) => `(tactic| (
---   change ?R ⊆ ZFSet.prod ?A ?B
---   try
---     have : ZFSet.IsFunc ?A ?B ?R := by try assumption
---     obtain ⟨_,_⟩ := this
---   exact ‹?R ⊆ ZFSet.prod ?A ?B›))
-
 /--
 Inverse of a (binary) relation. A proof that `R` is a relation is needed and tried to be
 automatically inferred.
@@ -48,18 +40,13 @@ theorem mem_inv {x y R A B : ZFSet} (hR : R ⊆ A.prod B) :
     intro h
     rw [inv, mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
     dsimp
-    and_intros
-    · exact hR h |> pair_mem_prod.mp |>.2
-    · exact hR h |> pair_mem_prod.mp |>.1
-    · exact h
+    exact ⟨⟨hR h |> pair_mem_prod.mp |>.2, hR h |> pair_mem_prod.mp |>.1⟩, h⟩
 
 @[zrel]
 theorem subset_prod_inv {R A B : ZFSet} (hR : R ⊆ A.prod B) : R⁻¹ ⊆ B.prod A := by
   intro z hz
   rw [inv, mem_sep] at hz
   exact hz.1
-
--- macro_rules | `(tactic| zrel) => `(tactic| apply subset_prod_inv; done)
 
 theorem inv_involutive {R A B : ZFSet} (hR : R ⊆ A.prod B) : (R⁻¹)⁻¹ = R := by
   ext1 z
@@ -75,8 +62,6 @@ theorem inv_involutive {R A B : ZFSet} (hR : R ⊆ A.prod B) : (R⁻¹)⁻¹ = R
 Domain of a (binary) relation. A proof that `f` is a relation is needed and tried to be
 automatically inferred.
 -/
--- abbrev Dom   (f : ZFSet) {A B : ZFSet} (hf : f ⊆ A.prod B := by zrel) :=
---   ⋃₀ (A.powerset.sep λ 𝒟 => IsFunc 𝒟 B f) --NOTE: this def was specific to functions
 abbrev Dom (f : ZFSet) {A B : ZFSet} (_hf : f ⊆ A.prod B := by zrel) :=
   let _ := _hf
   A.sep (fun x => ∃ y ∈ B, pair x y ∈ f)
@@ -84,26 +69,21 @@ abbrev Dom (f : ZFSet) {A B : ZFSet} (_hf : f ⊆ A.prod B := by zrel) :=
 abbrev Range (f : ZFSet) {A B : ZFSet} (hf : f ⊆ A.prod B := by zrel) :=
   B.sep (fun y => ∃ x ∈ Dom f hf, pair x y ∈ f)
 
-
-
 theorem _root_.ZFSet.funs.nonempty {A B : ZFSet} (hB : B ≠ ∅) : ZFSet.funs A B ≠ ∅ := by
   obtain ⟨b, hb⟩ := nonempty_exists_iff.mp hB
   letI f := (A.prod B).sep fun z ↦ ∃ x ∈ A, z = x.pair b
   have hf : ZFSet.IsFunc A B f := by
-    unfold IsFunc
+    refine ⟨sep_subset_self, fun x hx ↦ ?_⟩
+    exists b
     and_intros
-    · exact sep_subset_self
-    · intro x hx
-      exists b
-      and_intros
-      · beta_reduce
-        rw [mem_sep, pair_mem_prod]
-        exact ⟨⟨hx,hb⟩,x, ⟨hx, rfl⟩⟩
-      · intro y hy
-        rw [mem_sep, pair_mem_prod] at hy
-        obtain ⟨⟨xA, yB⟩, z, z_A, eq⟩ := hy
-        rw [pair_inj] at eq
-        exact eq.2
+    · beta_reduce
+      rw [mem_sep, pair_mem_prod]
+      exact ⟨⟨hx, hb⟩, x, ⟨hx, rfl⟩⟩
+    · intro y hy
+      rw [mem_sep, pair_mem_prod] at hy
+      obtain ⟨⟨xA, yB⟩, z, z_A, eq⟩ := hy
+      rw [pair_inj] at eq
+      exact eq.2
   intro contr
   rw [← mem_funs, contr] at hf
   nomatch notMem_empty f hf
@@ -115,70 +95,37 @@ i.e. that if `pair x y ∈ f` and `pair x z ∈ f` then `y = z`.
 def IsPFunc (f A B : ZFSet) := f ⊆ prod A B ∧ ∀ x y :
   ZFSet, pair x y ∈ f → ∀ z, pair x z ∈ f → y = z
 
--- syntax "zpfun" : tactic
--- macro_rules | `(tactic| zpfun) => `(tactic| assumption; done)
-
--- syntax "zfun" : tactic
--- macro_rules | `(tactic| zfun) => `(tactic| assumption; done)
-
--- macro_rules | `(tactic| zrel) => `(tactic| first | zfun | zpfun)
-
 @[zrel]
 theorem is_rel_of_is_pfunc {f A B : ZFSet} (hf : f.IsPFunc A B) : f ⊆ A.prod B := hf.1
-
--- macro_rules | `(tactic| zrel) => `(tactic| (
---   change ?R ⊆ ZFSet.prod ?A ?B
---   try
---     have : IsPFunc ?R ?A ?B := by try assumption
---     obtain ⟨_,_⟩ := this
---   exact ‹?R ⊆ ZFSet.prod ?A ?B›))
-
--- macro_rules | `(tactic| zrel) => `(tactic| apply is_rel_of_is_pfunc; assumption; done)
 
 theorem pfunc_weaken {f A B C D : ZFSet} (hf : f.IsPFunc C D) (hAB : C ⊆ A) (hCD : D ⊆ B) :
     f.IsPFunc A B := by
   rcases hf with ⟨sub, unique⟩
-  and_intros
-  · intro _ hz
-    obtain ⟨a,ha,b,hb,rfl⟩ := mem_prod.mp <| sub hz
-    rw [mem_prod]
-    exact ⟨a, hAB ha, b, hCD hb, rfl⟩
-  · intros x y pair_x_y z pair_x_z
-    exact unique x y pair_x_y z pair_x_z
-
--- macro_rules | `(tactic| zpfun) =>
---   `(tactic| (apply pfunc_weaken <;> first | (assumption; done) | zpfun))
+  refine ⟨fun _ hz ↦ ?_, unique⟩
+  obtain ⟨a, ha, b, hb, rfl⟩ := mem_prod.mp <| sub hz
+  rw [mem_prod]
+  exact ⟨a, hAB ha, b, hCD hb, rfl⟩
 
 @[zpfun]
 theorem is_func_is_pfunc {f A B : ZFSet} (hf : A.IsFunc B f) : f.IsPFunc A B := by
   obtain ⟨sub, func⟩ := hf
-  and_intros
-  · assumption
-  · intros x y pair_x_y z pair_x_z
-    obtain ⟨_, x_A, b, b_B, eq⟩ := mem_prod.mp <| sub pair_x_y
-    rw [pair_inj] at eq; rcases eq with ⟨rfl, rfl⟩
-    obtain ⟨w, pair_x_w, unique⟩ := func x x_A
-    rw [unique z pair_x_z, unique y pair_x_y]
-
--- macro_rules | `(tactic| zpfun) => `(tactic| apply is_func_is_pfunc; zfun; done)
+  refine ⟨sub, fun x y pair_x_y z pair_x_z ↦ ?_⟩
+  obtain ⟨_, x_A, b, b_B, eq⟩ := mem_prod.mp <| sub pair_x_y
+  rw [pair_inj] at eq
+  rcases eq with ⟨rfl, rfl⟩
+  obtain ⟨w, pair_x_w, unique⟩ := func x x_A
+  rw [unique z pair_x_z, unique y pair_x_y]
 
 @[zrel]
 theorem is_rel_of_is_func {f A B : ZFSet} (hf : A.IsFunc B f) : f ⊆ A.prod B := hf.1
 
--- macro_rules | `(tactic| zrel) => `(tactic| apply is_rel_of_is_func; zfun; done)
-
 theorem is_func_extend_range {f D E : ZFSet} (hf : IsFunc D E f) {F : ZFSet} (sub_E_F : E ⊆ F) :
     IsFunc D F f := by
   rcases hf with ⟨sub, func⟩
-  and_intros
-  · intro _ hz
-    obtain ⟨a, ha, b, hb, rfl⟩ := mem_prod.mp <| sub hz
-    rw [mem_prod]
-    exact ⟨a, ha, b, sub_E_F hb, rfl⟩
-  · exact func
-
--- macro_rules | `(tactic| zpfun) =>
---   `(tactic| apply is_func_extend_range <;> first | (assumption;done) | zpfun)
+  refine ⟨fun _ hz ↦ ?_, func⟩
+  obtain ⟨a, ha, b, hb, rfl⟩ := mem_prod.mp <| sub hz
+  rw [mem_prod]
+  exact ⟨a, ha, b, sub_E_F hb, rfl⟩
 
 @[simp, zfun]
 theorem is_func_empty : IsFunc ∅ ∅ ∅ :=
@@ -216,10 +163,8 @@ theorem is_pfunc_func_exists {f A B : ZFSet} :
       exact ⟨y, pair, fun z hz ↦ func x z hz y pair⟩
     repeat (intro z hz; exact mem_sep.mp hz |>.left)
 
-theorem pfun_dom_subset (f : ZFSet) {A B} (hf : f.IsPFunc A B) : f.Dom ⊆ A := by
-  rintro x x_dom
-  rw [mem_sep] at x_dom
-  exact x_dom.1
+theorem pfun_dom_subset (f : ZFSet) {A B} (hf : f.IsPFunc A B) : f.Dom ⊆ A :=
+  fun _ x_dom ↦ (mem_sep.mp x_dom).1
 
 theorem mem_dom {f A B : ZFSet} (hf : f.IsPFunc A B) {x y : ZFSet} :
     pair x y ∈ f → x ∈ f.Dom := by classical
@@ -230,9 +175,7 @@ theorem mem_dom {f A B : ZFSet} (hf : f.IsPFunc A B) {x y : ZFSet} :
   rw [pair_inj] at eq
   rcases eq with ⟨rfl, rfl⟩
   rw [mem_sep]
-  and_intros
-  · exact ha
-  · use y
+  exact ⟨ha, y, hb, mem_pair⟩
 
 theorem is_func_dom_range (f : ZFSet) {A B} (hf : f.IsPFunc A B) :
     IsFunc f.Dom f.Range f := by
@@ -240,42 +183,28 @@ theorem is_func_dom_range (f : ZFSet) {A B} (hf : f.IsPFunc A B) :
   rcases hf with ⟨sub, unique⟩
   and_intros
   · intro _ h
-    obtain ⟨a,a_A,b,b_B,rfl⟩ := mem_prod.mp <| sub h
+    obtain ⟨a, a_A, b, b_B, rfl⟩ := mem_prod.mp <| sub h
     rw [pair_mem_prod]
-    and_intros
+    refine ⟨?_, ?_⟩
     · rw [mem_sep]
-      and_intros
-      · exact a_A
-      · use b
+      exact ⟨a_A, b, b_B, h⟩
     · unfold Range
       rw [mem_sep]
-      and_intros
-      · exact b_B
-      · exists a
-        and_intros
-        · exact mem_dom ⟨sub, unique⟩ h
-        · exact h
+      exact ⟨b_B, a, mem_dom ⟨sub, unique⟩ h, h⟩
   · intro z z_dom
     rw [mem_sep] at z_dom
     obtain ⟨zA, w, hw, zw_f⟩ := z_dom
-    use w
-    and_intros
-    · exact zw_f
-    · intro w' zw'_f
-      exact unique z w' zw'_f w zw_f
+    exact ⟨w, zw_f, fun w' zw'_f ↦ unique z w' zw'_f w zw_f⟩
 
 theorem is_func_of_pfunc (f : ZFSet) {A B} (hf : f.IsPFunc A B) : IsFunc f.Dom B f := by
   obtain ⟨ftot, uniq⟩ := is_func_dom_range f hf
   obtain ⟨fsub, ispfun⟩ := hf
-  and_intros
-  · intro z hz
-    obtain ⟨x, xA, y, yB, rfl⟩ := mem_prod.mp <| fsub hz
-    obtain ⟨u, u_dom, v, v_dom, eq⟩ := mem_prod.mp <| ftot hz
-    rcases pair_inj.mp eq with ⟨rfl, rfl⟩
-    clear eq
-    rw [pair_mem_prod]
-    exact ⟨u_dom, yB⟩
-  · exact uniq
+  refine ⟨fun z hz ↦ ?_, uniq⟩
+  obtain ⟨x, xA, y, yB, rfl⟩ := mem_prod.mp <| fsub hz
+  obtain ⟨u, u_dom, v, v_dom, eq⟩ := mem_prod.mp <| ftot hz
+  rcases pair_inj.mp eq with ⟨rfl, rfl⟩
+  rw [pair_mem_prod]
+  exact ⟨u_dom, yB⟩
 /-- Imported ZFLean declaration. -/
 def IsInjective (f : ZFSet) {A B : ZFSet} (_hf : IsFunc A B f := by zfun) :=
   let _ := _hf
@@ -376,17 +305,12 @@ theorem _root_.ZFSet.Id.IsFunc {A : ZFSet} : A.IsFunc A 𝟙A := by
     exists x
     beta_reduce
     simp only [and_self, and_true, and_imp, forall_self_imp]
-    and_intros
-    · exact xA
-    · rintro _ _ _ rfl
-      rfl
-
--- macro_rules | `(tactic| zfun) => `(tactic| apply Id.IsFunc; done)
+    refine ⟨xA, ?_⟩
+    rintro _ _ _ rfl
+    rfl
 
 @[zpfun]
 theorem _root_.ZFSet.Id.IsPFunc {A : ZFSet} : (𝟙A).IsPFunc A A := is_func_is_pfunc Id.IsFunc
-
--- macro_rules | `(tactic| zpfun) => `(tactic| apply Id.IsPFunc; done)
 
 theorem _root_.ZFSet.Id.IsBijective {A : ZFSet} : (𝟙A).IsBijective Id.IsFunc := by
   constructor
@@ -488,24 +412,18 @@ theorem _root_.ZFSet.Id.composition_right
 theorem IsPFunc_of_composition_IsPFunc {f g : ZFSet} {A B C : ZFSet}
   (hf : f.IsPFunc A B) (hg : g.IsPFunc B C) :
     (composition g f A B C).IsPFunc A C := by
-  and_intros
-  · intro z hz
-    rw [composition, mem_sep] at hz
+  refine ⟨fun z hz ↦ ?_, fun x y hxy z hz ↦ ?_⟩
+  · rw [composition, mem_sep] at hz
     exact hz.1
-  · intro x y hxy z hz
-    rw [composition, mem_sep, pair_mem_prod] at hxy hz
-    obtain ⟨a, c, eq, b, bB, ab_f, bc_g⟩ := hz.2
-    obtain ⟨a', c', eq', b', bB', ab_f', bc_g'⟩ := hxy.2
-    rw [pair_inj] at eq eq'
-    obtain ⟨rfl, rfl⟩ := eq
-    obtain ⟨rfl, rfl⟩ := eq'
-    have := hf.2 _ _ ab_f _ ab_f'
-    subst this
-    symm
-    exact hg.2 _ _ bc_g _ bc_g'
-
--- macro_rules | `(tactic| zpfun) =>
---   `(tactic| apply IsPFunc_of_composition_IsPFunc <;> first | (assumption; done) | zpfun)
+  rw [composition, mem_sep, pair_mem_prod] at hxy hz
+  obtain ⟨a, c, eq, b, bB, ab_f, bc_g⟩ := hz.2
+  obtain ⟨a', c', eq', b', bB', ab_f', bc_g'⟩ := hxy.2
+  rw [pair_inj] at eq eq'
+  obtain ⟨rfl, rfl⟩ := eq
+  obtain ⟨rfl, rfl⟩ := eq'
+  have := hf.2 _ _ ab_f _ ab_f'
+  subst this
+  exact (hg.2 _ _ bc_g _ bc_g').symm
 
 @[zfun]
 theorem IsFunc_of_composition_IsFunc {g f : ZFSet} {A B C : ZFSet}
@@ -534,14 +452,8 @@ theorem IsFunc_of_composition_IsFunc {g f : ZFSet} {A B C : ZFSet}
       rw [pair_inj] at eq
       obtain ⟨rfl, rfl⟩ := eq
       apply z_unq
-      suffices y' = y by
-        rw [←this]
-        exact y'z'g
-      apply y_unq
-      exact x'y'f
+      rwa [← y_unq y' x'y'f]
 
--- macro_rules | `(tactic| zfun) =>
---   `(tactic| apply IsFunc_of_composition_IsFunc <;> first | (assumption; done) | zfun)
 /-- Imported ZFLean declaration. -/
 abbrev fcomp (g f : ZFSet) {A B C : ZFSet}
   (_hg : B.IsFunc C g := by zfun) (_hf : A.IsFunc B f := by zfun) :=
@@ -667,13 +579,8 @@ theorem is_func_dom_eq {f A B : ZFSet} (hf : IsFunc A B f := by zfun) : f.Dom = 
     exact xA
   · intro mem_x_A
     rw [mem_sep]
-    and_intros
-    · exact mem_x_A
-    · obtain ⟨y, hy, _⟩ := hf.2 x mem_x_A
-      use y
-      and_intros
-      · exact hf.1 hy |> pair_mem_prod.mp |>.2
-      · exact hy
+    obtain ⟨y, hy, _⟩ := hf.2 x mem_x_A
+    exact ⟨mem_x_A, y, hf.1 hy |> pair_mem_prod.mp |>.2, hy⟩
 
 open Classical in
 theorem fapply_Id {A x : ZFSet} (hx : x ∈ A) :
@@ -745,12 +652,7 @@ theorem _root_.ZFSet.IsPFunc.exists_unique_of_mem_dom {f A B : ZFSet}
   unfold Dom at hx
   rw [mem_sep] at hx
   obtain ⟨xA, y, yB, xy_f⟩ := hx
-  use y
-  and_intros
-  · exact xy_f
-  · intro y' xy'_f
-    symm
-    exact hf.2 _ _ xy_f _ xy'_f
+  exact ⟨y, xy_f, fun y' xy'_f ↦ (hf.2 _ _ xy_f _ xy'_f).symm⟩
 
 theorem _root_.ZFSet.fapply.of_pair
     {f A B : ZFSet} (hf : f.IsPFunc A B) {x y : ZFSet} (hxy : x.pair y ∈ f) :
@@ -763,32 +665,24 @@ theorem _root_.ZFSet.fapply.of_pair
   exact uniq _ hxy ▸ uniq _ spec
 
 theorem _root_.ZFSet.IsPFunc.supset_of_range
-    {f A B : ZFSet} (hf : f.IsPFunc A B) : f.Range ⊆ B := by
-  intro y y_B
-  rw [mem_sep] at y_B
-  exact y_B.1
+    {f A B : ZFSet} (hf : f.IsPFunc A B) : f.Range ⊆ B :=
+  fun _ y_B ↦ (mem_sep.mp y_B).1
 
 theorem _root_.ZFSet.IsPFunc.mem_range_of_mem {f A B : ZFSet}
   (hf : f.IsPFunc A B) {x y : ZFSet} (hxy : x.pair y ∈ f) :
     y ∈ f.Range := by
   rw [mem_sep]
-  and_intros
-  · obtain ⟨_,_,_,_,eq⟩ := mem_prod.mp <| hf.1 hxy
-    rw [pair_inj] at eq
-    rcases eq with ⟨rfl, rfl⟩
-    assumption
-  · exists x
-    and_intros
-    · exact mem_dom hf hxy
-    · exact hxy
+  refine ⟨?_, x, mem_dom hf hxy, hxy⟩
+  obtain ⟨_, _, _, _, eq⟩ := mem_prod.mp <| hf.1 hxy
+  rw [pair_inj] at eq
+  rcases eq with ⟨rfl, rfl⟩
+  assumption
 
 theorem _root_.ZFSet.IsPFunc.nonempty_range_of_nonempty_dom {f A B x y : ZFSet}
   (hf : f.IsPFunc A B) (hxy : x.pair y ∈ f) :
     f.Range ≠ ∅ := by
-  have x_dom := mem_dom hf hxy
-  have y_dom := IsPFunc.mem_range_of_mem hf hxy
   rw [nonempty_exists_iff]
-  exists y
+  exact ⟨y, IsPFunc.mem_range_of_mem hf hxy⟩
 
 theorem _root_.ZFSet.IsInjective.apply_inj_pfun {f A B : ZFSet}
   (hf : IsPFunc f A B) (inj : f.IsInjective (is_func_of_pfunc f hf)) :
@@ -843,7 +737,6 @@ def lambda (dom : ZFSet) (ran : ZFSet) (exp : ZFSet → ZFSet) : ZFSet :=
   (dom.prod ran).sep fun xy ↦ xy.π₂ = exp xy.π₁
 
 -- NOTE: deprecated syntax, use `λᶻ : dom → ran | x ↦ exp x` instead
--- notation:60 "λᶻ" " : " dom:max " → " ran:max " := " exp:max => lambda dom ran exp
 
 open Lean Parser Term
 /-- Imported ZFLean declaration. -/
@@ -1006,18 +899,16 @@ theorem lambda_subset {A B : ZFSet} {exp : ZFSet → ZFSet} : lambda A B exp ⊆
 
 theorem lambda_isFunc {A B : ZFSet} {f : ZFSet → ZFSet} (hf : ∀ {x}, x ∈ A → f x ∈ B) :
     A.IsFunc B (lambda A B f) := by
+  refine ⟨lambda_subset, fun x x_A ↦ ?_⟩
+  exists f x
   and_intros
-  · exact lambda_subset
-  · intro x x_A
-    exists f x
-    and_intros
-    · beta_reduce
-      rw [lambda_spec]
-      exact ⟨x_A, hf x_A, rfl⟩
-    · beta_reduce
-      intro y hy
-      rw [lambda_spec] at hy
-      exact hy.2.2
+  · beta_reduce
+    rw [lambda_spec]
+    exact ⟨x_A, hf x_A, rfl⟩
+  · beta_reduce
+    intro y hy
+    rw [lambda_spec] at hy
+    exact hy.2.2
 
 theorem mem_funs_of_lambda {A B : ZFSet} {f : ZFSet → ZFSet} (hf : ∀ {x}, x ∈ A → f x ∈ B) :
   lambda A B f ∈ A.funs B := mem_funs.mpr <| lambda_isFunc hf
@@ -1048,23 +939,14 @@ theorem inv_is_func_of_injective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
     rw [π₁_pair, π₂_pair] at pair_f
     dsimp at pair_f
     rw [pair_mem_prod]
-    and_intros
-    · rw [mem_sep]
-      and_intros
-      · exact hb
-      · use a
-        and_intros
-        · rwa [is_func_dom_eq f_is_func]
-        · exact pair_f
-    · exact ha
+    refine ⟨?_, ha⟩
+    rw [mem_sep]
+    exact ⟨hb, a, by rwa [is_func_dom_eq f_is_func], pair_f⟩
   · intro y hy
     rw [mem_sep] at hy
     obtain ⟨hy, x, hx, pair_f⟩ := hy
     use x
-    have x_A : x ∈ A := by
-      rw [mem_sep] at hx
-      obtain ⟨xA, _, _, _⟩ := hx
-      exact xA
+    have x_A : x ∈ A := (mem_sep.mp hx).1
     and_intros <;> beta_reduce
     · unfold inv
       rw [mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
@@ -1073,8 +955,6 @@ theorem inv_is_func_of_injective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
       rw [inv, mem_sep, π₁_pair, π₂_pair, pair_mem_prod] at hz
       symm
       exact hf x z y x_A hz.1.2 hy pair_f hz.2
-
--- macro_rules | `(tactic| zfun) => `(tactic| apply inv_is_func_of_injective; zfun)
 
 /--
 The inverse of a bijection is a function.
@@ -1104,8 +984,6 @@ theorem inv_is_func_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
       refine And.intro ?_ hy
       exact f_is_func.1 hy |> pair_mem_prod.mp |>.1
 
--- macro_rules | `(tactic| zfun) => `(tactic| apply inv_is_func_of_bijective; zfun)
-
 /--
 The inverse of a bijection is a bijection.
 -/
@@ -1119,11 +997,8 @@ theorem inv_bijective_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
     rw [unq x fxz, unq y fyz]
   · intro x xA
     obtain ⟨y, yA, _⟩ := f_is_func.2 x xA
-    use y
-    and_intros
-    · exact f_is_func.1 yA |> pair_mem_prod.mp |>.2
-    · rw [mem_inv]
-      exact yA
+    refine ⟨y, f_is_func.1 yA |> pair_mem_prod.mp |>.2, ?_⟩
+    rwa [mem_inv]
 
 theorem composition_self_inv_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   (hf : f.IsBijective) :
@@ -1144,8 +1019,7 @@ theorem composition_self_inv_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc 
       and_self_left]
     apply And.intro aA
     use b, f_is_func.1 ab_f |> pair_mem_prod.mp |>.2
-    rw [mem_inv, and_self]
-    exact ab_f
+    rwa [mem_inv, and_self]
 
 theorem composition_inv_self_of_bijective {f A B : ZFSet} {f_is_func : A.IsFunc B f}
   (hf : f.IsBijective) :
@@ -1326,9 +1200,7 @@ theorem Image_of_singleton_pair_mem_iff {A B : ZFSet} {f : ZFSet}
     simp only [mem_Image, mem_singleton, exists_eq_left]
     constructor
     · rintro ⟨zB, hz⟩
-      apply hf.2 a (hf.1 h |> pair_mem_prod.mp |>.1) |>.unique
-      · exact hz
-      · exact h
+      exact hf.2 a (hf.1 h |> pair_mem_prod.mp |>.1) |>.unique hz h
     · rintro rfl
       exact ⟨hf.1 h |> pair_mem_prod.mp |>.2, h⟩
   · rw [ZFSet.ext_iff] at h
@@ -1459,7 +1331,6 @@ theorem fapply_inv_of_bijective_iff {A B : ZFSet} {f : ZFSet} {hf : IsFunc A B f
         rw [←fapply_eq_Image_singleton hf hx]
       exact this
 
-
 /--
 A set is finite if it is equinumerous to a (ZF) natural number, i.e.
 if there is a bijection between the set and a natural number.
@@ -1562,18 +1433,12 @@ theorem subset_of_𝔹_sUnion (B : ZFSet) : B ⊆ ZFSet.𝔹 → (⋃₀ B : ZFS
 theorem sInter_sep_subset_of_𝔹_mem_𝔹 {D : ZFSet} {P : ZFSet → Prop} :
     D ⊆ ZFSet.𝔹 → (⋂₀ (D.sep P) : ZFSet) ∈ ZFSet.𝔹 := by
   intro h
-  apply ZFSet.subset_of_𝔹_sInter (ZFSet.sep P D)
-  intros _ hx
-  rw [ZFSet.mem_sep] at hx
-  exact h hx.1
+  exact ZFSet.subset_of_𝔹_sInter (ZFSet.sep P D) fun _ hx ↦ h (ZFSet.mem_sep.mp hx).1
 
 theorem sUnion_sep_subset_of_𝔹_mem_𝔹 {D : ZFSet} {P : ZFSet → Prop} :
     D ⊆ ZFSet.𝔹 → (⋃₀ (D.sep P) : ZFSet) ∈ ZFSet.𝔹 := by
   intro h
-  apply ZFSet.subset_of_𝔹_sUnion (ZFSet.sep P D)
-  intros _ hx
-  rw [ZFSet.mem_sep] at hx
-  exact h hx.1
+  exact ZFSet.subset_of_𝔹_sUnion (ZFSet.sep P D) fun _ hx ↦ h (ZFSet.mem_sep.mp hx).1
 
 theorem _root_.ZFSet.IsFunc.sep_on_eq {A B : ZFSet} {f : ZFSet → ZFSet} (hf : ∀ x ∈ A, f x ∈ B) :
     IsFunc A B <| (A.prod B).sep (fun z ↦ ∃ x y : ZFSet, z = x.pair y ∧ y = f z.π₁) := by
@@ -1976,10 +1841,8 @@ theorem _root_.ZFSet.IsFinite.union {A B : ZFSet} (finA : A.IsFinite) (finB : B.
     ext1 z
     rw [mem_inter, mem_sdiff, and_assoc]
     simp only [not_and_self, and_false, notMem_empty]
-  apply IsFinite.disjoint_union (IsFinite.subset finA ?_) finB this
-  intro z hz
-  rw [mem_sdiff] at hz
-  exact hz.1
+  exact IsFinite.disjoint_union
+    (IsFinite.subset finA fun _ hz ↦ (mem_sdiff.mp hz).1) finB this
 
 theorem _root_.ZFSet.IsFinite.inter {A B : ZFSet} (fin : A.IsFinite ∨ B.IsFinite) :
   (A ∩ B).IsFinite := by
@@ -1987,17 +1850,11 @@ theorem _root_.ZFSet.IsFinite.inter {A B : ZFSet} (fin : A.IsFinite ∨ B.IsFini
   · replace fin := Or.resolve_left ‹_ ∨ _› fin
     rw [inter_comm]
     exact this (Or.inl fin) fin
-  · apply IsFinite.subset fin
-    · intro z hz
-      rw [mem_inter] at hz
-      exact hz.1
+  · exact IsFinite.subset fin fun _ hz ↦ (mem_inter.mp hz).1
 
 theorem _root_.ZFSet.IsFinite.diff {A B : ZFSet} (finA : A.IsFinite) :
-  (A \ B).IsFinite := by
-  apply IsFinite.subset finA
-  intro z hz
-  rw [mem_sdiff] at hz
-  exact hz.1
+  (A \ B).IsFinite :=
+  IsFinite.subset finA fun _ hz ↦ (mem_sdiff.mp hz).1
 
 @[induction_eliminator]
 theorem _root_.ZFSet.ZFFinSet.inductionOn {P : ZFFinSet → Prop}
@@ -2149,14 +2006,12 @@ theorem _root_.ZFSet.IsFinite.prod_singleton {A x : ZFSet} (finA : A.IsFinite) :
     injections
     subst_vars
     rw [insert_prod]
-    apply IsFinite.union
-    · apply ih
-      rfl
-    · have : ({e} : ZFSet).prod {x} = {e.pair x} := by
-        ext1 z
-        simp only [mem_prod, mem_singleton, exists_eq_left]
-      rw [this]
-      apply IsFinite.singleton
+    refine IsFinite.union (by apply ih; rfl) ?_
+    have : ({e} : ZFSet).prod {x} = {e.pair x} := by
+      ext1 z
+      simp only [mem_prod, mem_singleton, exists_eq_left]
+    rw [this]
+    apply IsFinite.singleton
 
 theorem _root_.ZFSet.IsFinite.singleton_prod {A x : ZFSet} (finA : A.IsFinite) :
   (({x} : ZFSet).prod A).IsFinite := by
@@ -2169,14 +2024,12 @@ theorem _root_.ZFSet.IsFinite.singleton_prod {A x : ZFSet} (finA : A.IsFinite) :
     injections
     subst_vars
     rw [prod_insert]
-    apply IsFinite.union
-    · apply ih
-      rfl
-    · have : ({x} : ZFSet).prod {e} = {x.pair e} := by
-        ext1 z
-        simp only [mem_prod, mem_singleton, exists_eq_left]
-      rw [this]
-      apply IsFinite.singleton
+    refine IsFinite.union (by apply ih; rfl) ?_
+    have : ({x} : ZFSet).prod {e} = {x.pair e} := by
+      ext1 z
+      simp only [mem_prod, mem_singleton, exists_eq_left]
+    rw [this]
+    apply IsFinite.singleton
 
 theorem _root_.ZFSet.IsFinite.prod {A B : ZFSet} (finA : A.IsFinite) (finB : B.IsFinite) :
   (A.prod B).IsFinite := by
@@ -2189,10 +2042,7 @@ theorem _root_.ZFSet.IsFinite.prod {A B : ZFSet} (finA : A.IsFinite) (finB : B.I
     injections
     subst_vars
     rw [insert_prod]
-    apply IsFinite.union
-    · apply ih
-      rfl
-    · exact IsFinite.singleton_prod finB
+    refine IsFinite.union (by apply ih; rfl) (IsFinite.singleton_prod finB)
 
 theorem _root_.ZFSet.IsFinite.sep
     {A : ZFSet} (finA : A.IsFinite) (P : ZFSet → Prop) : (A.sep P).IsFinite :=
@@ -2434,8 +2284,6 @@ theorem fprod_is_func {A B A' B' φ ψ : ZFSet} (hφ : A.IsFunc A' φ) (hψ : B.
       rw [dite_cond_eq_true (eq_true (by rw [pair_mem_prod]; exact ⟨ha, hb⟩))] at hy
       exact hy.2.2
 
--- macro_rules | `(tactic| zfun) => `(tactic| apply fprod_is_func <;> zfun)
-
 theorem fprod_bijective_of_bijective {A B A' B' φ ψ : ZFSet}
   {hφ : A.IsFunc A' φ} {hψ : B.IsFunc B' ψ}
   (φ_bij : φ.IsBijective) (ψ_bij : ψ.IsBijective) :
@@ -2653,6 +2501,5 @@ theorem fprod_injective_of_injective {A B A' B' φ ψ : ZFSet}
     rfl
   · obtain ⟨⟩ := IsInjective.apply_inj hψ ψ_inj ψb_eq_ψd
     rfl
-
 
 end ZFSet

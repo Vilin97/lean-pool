@@ -27,16 +27,12 @@ theorem logDeriv_tprod_eq_tsum2 {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ �
     (hd : ∀ i : ℕ, DifferentiableOn ℂ (f i) s) (hm : Summable fun i ↦ logDeriv (f i) ↑x)
     (htend : MultipliableLocallyUniformlyOn f s) (hnez : ∏' (i : ℕ), f i ↑x ≠ 0) :
     logDeriv (∏' i : ℕ, f i ·) x = ∑' i : ℕ, logDeriv (f i) x := by
-    have h2 := Summable.hasSum hm
-    rw [Summable.hasSum_iff_tendsto_nat hm] at h2
     apply symm
-    rw [← Summable.hasSum_iff hm]
-    rw [Summable.hasSum_iff_tendsto_nat hm]
+    rw [← Summable.hasSum_iff hm, Summable.hasSum_iff_tendsto_nat hm]
     let g := (∏' i : ℕ, f i ·)
-    have h_tlu : TendstoLocallyUniformlyOn (fun n z ↦ ∏ i ∈ Finset.range n, f i z) g atTop s := by
-      have := htend.hasProdLocallyUniformlyOn.tendstoLocallyUniformlyOn_finsetRange
-      exact this.congr (fun n => by
-        intro z _; change ∏ i ∈ Finset.range n, f i z = ∏ i ∈ Finset.range n, f i z; rfl)
+    have h_tlu : TendstoLocallyUniformlyOn (fun n z ↦ ∏ i ∈ Finset.range n, f i z) g atTop s :=
+      htend.hasProdLocallyUniformlyOn.tendstoLocallyUniformlyOn_finsetRange.congr
+        (fun n z _ => rfl)
     have h_diff :
         ∀ᶠ (n : ℕ) in atTop, DifferentiableOn ℂ (fun z => ∏ i ∈ Finset.range n, f i z) s := by
       simp only [eventually_atTop]
@@ -61,11 +57,8 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
     (htend : TendstoLocallyUniformlyOn (fun n ↦ ∏ i ∈ Finset.range n, f i)
     (fun x ↦ ∏' (i : ℕ), f i x) atTop s) (hnez : ∏' (i : ℕ), f i ↑x ≠ 0) :
     logDeriv (∏' i : ℕ, f i ·) x = ∑' i : ℕ, logDeriv (f i) x := by
-    have h2 := Summable.hasSum hm
-    rw [Summable.hasSum_iff_tendsto_nat hm] at h2
     apply symm
-    rw [← Summable.hasSum_iff hm]
-    rw [Summable.hasSum_iff_tendsto_nat hm]
+    rw [← Summable.hasSum_iff hm, Summable.hasSum_iff_tendsto_nat hm]
     let g := (∏' i : ℕ, f i ·)
     have HT := logDeriv_tendsto (f := fun n ↦ ∏ i ∈ Finset.range n, (f i)) (g := g)
       (s := s) hs (x.2) (p := atTop) ?_ ?_ ?_
@@ -81,18 +74,9 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
       simp only [Finset.prod_apply]
     · exact htend
     · simp only [eventually_atTop]
-      use 0
-      intro b hb
-      rw [DifferentiableOn]
-      intro z hz
-      apply DifferentiableAt.differentiableWithinAt
-      have hp : ∀ (i : ℕ), i ∈ Finset.range b →  DifferentiableAt ℂ (f i) z := by
-        intro i hi
-        have := (hd i z hz).differentiableAt
-        apply this
-        exact IsOpen.mem_nhds hs hz
-      have := DifferentiableAt.finsetProd hp
-      convert this
+      exact ⟨0, fun b _ z hz =>
+        (DifferentiableAt.finsetProd (fun i _ =>
+          (hd i z hz).differentiableAt (IsOpen.mem_nhds hs hz))).differentiableWithinAt⟩
     · exact hnez
 
 
@@ -100,9 +84,7 @@ lemma logDeriv_one_sub_exp (r : ℂ) : logDeriv (fun z => 1 - r * cexp (z)) =
     fun z => -r * cexp z / (1 - r * cexp ( z)) := by
   ext z
   rw [logDeriv]
-  simp only [Pi.div_apply, differentiableAt_const, differentiableAt_exp, DifferentiableAt.fun_mul,
-    deriv_fun_sub, deriv_const', deriv_fun_mul, zero_mul, Complex.deriv_exp, zero_add, zero_sub,
-    neg_mul]
+  simp_all
 
 lemma logDeriv_one_sub_exp_comp (r : ℂ) (g : ℂ → ℂ) (hg : Differentiable ℂ g) :
     logDeriv ((fun z => 1 - r * cexp (z)) ∘ g) =
@@ -111,8 +93,7 @@ lemma logDeriv_one_sub_exp_comp (r : ℂ) (g : ℂ → ℂ) (hg : Differentiable
   rw  [logDeriv_comp, logDeriv_one_sub_exp]
   · simp only [neg_mul]
     ring
-  · simp only [differentiableAt_const, differentiableAt_exp, DifferentiableAt.fun_mul,
-      DifferentiableAt.fun_sub]
+  · simp_all
   · exact hg y
 
 lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : ℕ =>
@@ -128,8 +109,7 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
   · apply Summable.mul_left
     simp only [Complex.norm_mul, RCLike.norm_natCast, norm_pow]
     have := (summable_norm_pow_mul_geometric_of_norm_lt_one 1 hr)
-    simp only [pow_one, Complex.norm_mul, RCLike.norm_natCast, norm_pow] at this
-    apply this
+    simp_all
   · simp only [Complex.norm_div, Complex.norm_mul, RCLike.norm_natCast, norm_pow, eventually_atTop]
     obtain ⟨N, hN⟩ := h3
     use N
@@ -139,38 +119,24 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
     have := norm_lt_of_mem_ball (Metric.mem_ball.mpr this) (E := ℂ)
     simp only [tendsto_const_nhds_iff, norm_inv, one_mem, CStarRing.norm_of_mem_unitary,
       ge_iff_le] at *
-    rw [div_eq_mul_inv]
-    rw [mul_comm]
+    rw [div_eq_mul_inv, mul_comm]
     gcongr
     apply le_trans this.le
     norm_cast
 
 lemma func_div (a b c d : ℂ → ℂ) (x : ℂ) (hb : b x ≠ 0) (hd : d x ≠ 0) :
      (a / b) x = (c /d) x ↔ (a * d) x = (b * c) x := by
-  constructor
-  · intro h
-    simp only [ne_eq, Pi.div_apply, Pi.mul_apply] at *
-    rw [div_eq_div_iff hb hd] at h
-    nth_rw 2 [mul_comm]
-    exact h
-  · intro h
-    simp only [Pi.div_apply]
-    rw [div_eq_div_iff hb hd]
-    simp only [Pi.mul_apply] at h
-    nth_rw 2 [mul_comm]
-    exact h
+  simp only [Pi.div_apply, Pi.mul_apply, div_eq_div_iff hb hd]
+  constructor <;> (intro h; nth_rw 2 [mul_comm]; exact h)
 
 
 variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
 lemma deriv_EqOn_congr {f g : ℂ → ℂ} (s : Set ℂ) (hfg : s.EqOn f g) (hs : IsOpen s) :
-    s.EqOn (deriv f) ( deriv g) := by
-  intro x hx
-  rw [← derivWithin_of_isOpen hs hx]
-  rw [← derivWithin_of_isOpen hs hx]
-  apply derivWithin_congr hfg
-  apply hfg hx
+    s.EqOn (deriv f) ( deriv g) := fun x hx => by
+  rw [← derivWithin_of_isOpen hs hx, ← derivWithin_of_isOpen hs hx]
+  exact derivWithin_congr hfg (hfg hx)
 
 
 lemma logDeriv_eqOn_iff2 (f g : ℂ → ℂ) (s : Set ℂ) (hf : DifferentiableOn ℂ f s)

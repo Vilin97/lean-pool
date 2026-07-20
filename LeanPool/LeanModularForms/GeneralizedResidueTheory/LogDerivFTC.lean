@@ -60,12 +60,9 @@ theorem intervalIntegrable_logDeriv_of_slitPlane {f : ℝ → ℂ} {a b : ℝ} (
     (hf_cont : ContinuousOn f (Icc a b))
     (hf_deriv_cont : ContinuousOn (deriv f) (Icc a b))
     (hf_slit : ∀ t ∈ Icc a b, f t ∈ Complex.slitPlane) :
-    IntervalIntegrable (fun t => deriv f t / f t) volume a b := by
-  have hf_ne : ∀ t ∈ Icc a b, f t ≠ 0 :=
-    fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)
-  have hdiv_cont : ContinuousOn (fun t => deriv f t / f t) (Icc a b) :=
-    hf_deriv_cont.div hf_cont hf_ne
-  exact (hdiv_cont.mono (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
+    IntervalIntegrable (fun t => deriv f t / f t) volume a b :=
+  ((hf_deriv_cont.div hf_cont fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)).mono
+    (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
 
 /-- Fundamental theorem of calculus for log-derivative integrals:
 If f : ℝ → ℂ is differentiable on (a,b) with derivative continuous on [a,b],
@@ -76,15 +73,11 @@ theorem integral_logDeriv_eq_log_sub {f : ℝ → ℂ} {a b : ℝ} (hab : a ≤ 
     (hf_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ f t)
     (hf_deriv_cont : ContinuousOn (deriv f) (Icc a b))
     (hf_slit : ∀ t ∈ Icc a b, f t ∈ Complex.slitPlane) :
-    ∫ t in a..b, deriv f t / f t = Complex.log (f b) - Complex.log (f a) := by
-  have hf_ne : ∀ t ∈ Icc a b, f t ≠ 0 :=
-    fun t ht => Complex.slitPlane_ne_zero (hf_slit t ht)
-  have hint : IntervalIntegrable (fun t => deriv f t / f t) volume a b :=
-    intervalIntegrable_logDeriv_of_slitPlane hab hf_cont hf_deriv_cont hf_slit
-  exact intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
+    ∫ t in a..b, deriv f t / f t = Complex.log (f b) - Complex.log (f a) :=
+  intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
     (ContinuousOn.clog hf_cont hf_slit)
     (fun t ht => (hf_diff t ht).hasDerivAt.clog_real (hf_slit t (Ioo_subset_Icc_self ht)))
-    hint
+    (intervalIntegrable_logDeriv_of_slitPlane hab hf_cont hf_deriv_cont hf_slit)
 
 /-!
 ### Combined integrability + FTC for a.e.-equal pairs of curves
@@ -116,7 +109,6 @@ theorem ftc_log_piece {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     hh_deriv_cont.div hh_cont hh_ne
   have hint_h : IntervalIntegrable (fun t => deriv h t / h t) volume a b :=
     (hh_div_cont.mono (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
-  -- The set {b} has measure zero, so g and h agree a.e. on Ι a b
   have hb_ae : ({b} : Set ℝ)ᶜ ∈ ae volume :=
     mem_ae_iff.mpr (by rw [compl_compl]; exact measure_singleton b)
   have h_congr : ∀ᵐ t ∂volume, t ∈ Ι a b → deriv g t / g t = deriv h t / h t := by
@@ -131,8 +123,7 @@ theorem ftc_log_piece {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
         (show Integrable _ (volume.restrict (Ioc a b)) from hint_h.1)
         ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
           (h_congr.mono (fun t ht hm => (ht (uIoc_of_le hab ▸ hm)).symm)))
-    · rw [show Ioc b a = ∅ from Set.Ioc_eq_empty (not_lt.mpr hab)]
-      exact MeasureTheory.integrableOn_empty
+    · simp_all
   have h_ftc := integral_logDeriv_eq_log_sub hab hh_cont hh_diff hh_deriv_cont hh_slit
   exact ⟨hint_g, by
     calc ∫ t in a..b, deriv g t / g t
@@ -185,9 +176,7 @@ theorem ftc_log_neg_on_segment {f : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     intro x hx
     have hslit := hf_slit x (Ioo_subset_Icc_self hx)
     have h_log := (hf_diff x hx).hasDerivAt.neg.clog_real hslit
-    convert h_log using 1
-    · rfl
-    · exact (neg_div_neg_eq (deriv f x) (f x)).symm
+    simp_all
   have hint : IntervalIntegrable (fun t => deriv f t / f t) volume a b := by
     apply ContinuousOn.intervalIntegrable
     rw [Set.uIcc_of_le hab]
@@ -201,23 +190,7 @@ theorem integral_logDeriv_eq_neg_log_sub {f : ℝ → ℂ} {a b : ℝ} (hab : a 
     (hf_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ f t)
     (hf_deriv_cont : ContinuousOn (deriv f) (Icc a b))
     (hf_neg_slit : ∀ t ∈ Icc a b, -f t ∈ Complex.slitPlane) :
-    ∫ t in a..b, deriv f t / f t = Complex.log (-f b) - Complex.log (-f a) := by
-  have hf_ne : ∀ t ∈ Icc a b, f t ≠ 0 := fun t ht =>
-    neg_ne_zero.mp (Complex.slitPlane_ne_zero (hf_neg_slit t ht))
-  have hF_cont : ContinuousOn (fun t => Complex.log (-(f t))) (Icc a b) :=
-    hf_cont.neg.clog (fun t ht => hf_neg_slit t ht)
-  have hF_deriv : ∀ x ∈ Ioo a b, HasDerivAt (fun t => Complex.log (-(f t)))
-      (deriv f x / f x) x := by
-    intro x hx
-    have hslit := hf_neg_slit x (Ioo_subset_Icc_self hx)
-    have h_log := (hf_diff x hx).hasDerivAt.neg.clog_real hslit
-    convert h_log using 1
-    · rfl
-    · exact (neg_div_neg_eq (deriv f x) (f x)).symm
-  have hint : IntervalIntegrable (fun t => deriv f t / f t) volume a b := by
-    apply ContinuousOn.intervalIntegrable
-    rw [Set.uIcc_of_le hab]
-    exact hf_deriv_cont.div hf_cont (fun x hx => hf_ne x hx)
-  exact intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab hF_cont hF_deriv hint
+    ∫ t in a..b, deriv f t / f t = Complex.log (-f b) - Complex.log (-f a) :=
+  (ftc_log_neg_on_segment hab hf_cont hf_diff hf_deriv_cont hf_neg_slit).2
 
 end LogDerivFTC

@@ -71,8 +71,7 @@ private lemma normSq_denom_at_I (g : SL(2, ℤ)) :
 private lemma sl2_det (g : SL(2, ℤ)) :
     (g : Matrix (Fin 2) (Fin 2) ℤ) 0 0 * (g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 -
     (g : Matrix (Fin 2) (Fin 2) ℤ) 0 1 *
-      (g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 = 1 := by
-  have h := g.prop; rwa [Matrix.det_fin_two] at h
+      (g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 = 1 := by have h := g.prop; rwa [Matrix.det_fin_two] at h
 
 private lemma ellipticPointI'_coe : (ellipticPointI' : ℂ) = Complex.I := rfl
 private lemma ellipticPointI'_im : (ellipticPointI' : ℍ).im = 1 := Complex.I_im
@@ -346,10 +345,8 @@ private lemma c_abs_le_one_of_smul_fd (g : SL(2, ℤ)) (p₁ p₂ : ℍ)
     have h_c2_real : (↑c : ℝ) ^ 2 ≥ 4 := by exact_mod_cast h_c2
     nlinarith [mul_nonneg (show (0 : ℝ) ≤ (↑c : ℝ) ^ 2 - 4 from by linarith)
       (mul_nonneg p₂.im_pos.le p₁.im_pos.le)]
-  have hp1_im : (1 : ℝ) / 2 < p₁.im := by
-    rw [← UpperHalfPlane.coe_im]; exact fd_im_gt_half _ hp₁
-  have hp2_im : (1 : ℝ) / 2 < p₂.im := by
-    rw [← UpperHalfPlane.coe_im]; exact fd_im_gt_half _ hp₂
+  have hp1_im : (1 : ℝ) / 2 < p₁.im := by rw [← UpperHalfPlane.coe_im]; exact fd_im_gt_half _ hp₁
+  have hp2_im : (1 : ℝ) / 2 < p₂.im := by rw [← UpperHalfPlane.coe_im]; exact fd_im_gt_half _ hp₂
   nlinarith [mul_pos (by linarith : (0 : ℝ) < p₁.im - 1/2)
     (by linarith : (0 : ℝ) < p₂.im - 1/2)]
 
@@ -367,8 +364,7 @@ private lemma injOn_c_eq_zero (g : SL(2, ℤ)) (p₁ p₂ : ℍ)
     p₁ = p₂ := by
   obtain ⟨n, hn⟩ := ModularGroup.exists_eq_T_zpow_of_c_eq_zero hc
   have hTn : p₁ = ModularGroup.T ^ n • p₂ := by rw [hn] at hg; exact hg.symm
-  have h_re_shift : p₁.re = p₂.re + (n : ℝ) := by
-    rw [hTn]; exact ModularGroup.re_T_zpow_smul p₂ n
+  have h_re_shift : p₁.re = p₂.re + (n : ℝ) := by rw [hTn]; exact ModularGroup.re_T_zpow_smul p₂ n
   have h_n_zero : n = 0 := by
     have h1 := repCanon_re_lt_half f hf p₁ hp₁
     have h3 := repCanon_re_lt_half f hf p₂ hp₂

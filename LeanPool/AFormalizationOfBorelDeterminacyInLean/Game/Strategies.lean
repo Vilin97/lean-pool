@@ -133,8 +133,7 @@ variable (T p) in
 def QuasiStrategy := PSigma (@PreStrategy.IsQuasi A T p)
 @[ext] lemma QuasiStrategy.ext {f g : QuasiStrategy T p} (h : f.1 = g.1) : f = g := by
   obtain ⟨f, hf⟩ := f; obtain ⟨g, hg⟩ := g
-  conv at h => simp
-  simp_rw [h] --make general lemma?
+  simp_all --make general lemma?
 variable (T p) in
 /-- A quasistrategy is a `PreStrategy` that allows exactly one move in every position -/
 def Strategy := ∀ x : T, IsPosition x.val p → ExtensionsAt x
@@ -144,23 +143,18 @@ def Strategy := ∀ x : T, IsPosition x.val p → ExtensionsAt x
 @[congr] lemma PreStrategy.eval_val_congr {U : tree A}
   (S S' : PreStrategy U p) (h : S = S') (x x' : U) (h' : x = x') hp :
   Subtype.val '' (S x hp) = Subtype.val '' (S' x' (by subst h'; exact hp)) := by
-  subst h
-  subst h'
+  subst h h'
   rfl
 lemma PreStrategy.eval_mem_congr {U : tree A} (S : PreStrategy U p) {x x' : U}
     (hx : x = x') (hp : IsPosition x.val p) (hp' : IsPosition x'.val p)
     {a : ExtensionsAt x} {a' : ExtensionsAt x'} (ha : a.val = a'.val) :
     a ∈ S x hp ↔ a' ∈ S x' hp' := by
   subst hx
-  have haa : a = a' := ExtensionsAt.ext ha
-  subst haa
-  have hhp : hp = hp' := Subsingleton.elim hp hp'
-  subst hhp
-  rfl
+  obtain rfl : a = a' := ExtensionsAt.ext ha
+  simp_all
 @[congr] lemma Strategy.eval_val_congr {U : tree A} (S S' : Strategy U p) (h : S = S') (x x' : U)
   (h' : x = x') hp : (S x hp).val = (S' x' (by subst h'; exact hp)).val := by
-  subst h
-  subst h'
+  subst h h'
   rfl
 
 /-- regard a Strategy as PreStrategy -/

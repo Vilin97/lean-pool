@@ -128,8 +128,7 @@ theorem add_low_digit {q : ℕ} (hq : 1 < q) (n U i t : ℕ) (ht : t < i)
   have hlow := digitAt_add_low (p := q) (by omega) (k := i)
     (u := n % q ^ i + U - q ^ i) (h := n / q ^ i + 1) (i := t) ht
   unfold digitAt at hlow
-  rw [hdecomp]
-  exact hlow
+  rwa [hdecomp]
 
 /-! ## Top-bad bound from a goodness ray -/
 
@@ -178,10 +177,7 @@ theorem staircase {q : ℕ} (hq3 : 3 ≤ q) (hqo : Odd q) :
   intro i
   induction i with
   | zero =>
-    intro R hR
-    exfalso
-    simp only [pow_zero] at hR
-    omega
+    simp_all
   | succ i ih =>
     intro R hR
     have hq1 : 1 < q := by omega

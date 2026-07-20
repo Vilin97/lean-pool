@@ -67,9 +67,7 @@ theorem electric_field_zero {X : Type*} [FlatTorus3 X] (ss : VMLSteadyState X) :
   -- hGradA : gradX aLoc x = 0
   rw [hGradA] at hfb
   -- hfb : 0 = -(2 * c₀) • E x
-  have hne : -(2 * ss.c₀) ≠ (0 : ℝ) := by nlinarith [ss.hc₀_neg]
-  have hsm : -(2 * ss.c₀) • ss.E x = 0 := hfb.symm
-  exact (smul_eq_zero.mp hsm).resolve_left hne
+  exact (smul_eq_zero.mp hfb.symm).resolve_left (by nlinarith [ss.hc₀_neg])
 
 /-- On a compact topological space, a continuous real-valued function attains
     its maximum. (Extreme value theorem.) -/
@@ -127,11 +125,7 @@ lemma poisson_boltzmann_from_vlasov
   -- a₀ is spatially differentiable: a₀(x) = log(f(x,0)) and f(·,0) is IsSpatiallySmooth ⊤
   have ha₀_diff : FlatTorus3.IsSpatiallySmooth 2 a₀ := by
     have ha₀_eq : a₀ = fun x => Real.log (f x 0) := by
-      ext x
-      have h := ha₀ x 0
-      simp only [normSq, dotProduct_zero, mul_zero, add_zero] at h
-      have : a₀ x = Real.log (Real.exp (a₀ x)) := (Real.log_exp _).symm
-      rw [this, h]
+      simp_all
     rw [ha₀_eq]
     exact FlatTorus3.hDiff_log 2 _ (_hDiff_fv 0) (fun x => _hf_pos x 0)
   -- Isotropic form with b=0 for nullspace_sufficiency
@@ -145,19 +139,14 @@ lemma poisson_boltzmann_from_vlasov
   have hTransport : ∀ x v,
       dotProduct v (FlatTorus3.gradX (fun y => f y v) x) +
       dotProduct (E x + cross v (B x)) (vGrad (f x) v) = 0 := by
-    intro x v
-    have h := _hVlasov x v
-    rw [hQ x v, mul_zero] at h
-    exact h
+    simp_all
   -- Step 3: Compute vGrad(f(x,·))(v) = f(x,v) • 2c₀v (isotropic: b=0)
   have hvGrad : ∀ x v, vGrad (f x) v = f x v • ((2 * c₀) • v) := by
     intro x v
     have h1 := vGrad_exp_quadratic (a₀ x) 0 c₀ v
     conv_lhs => rw [show f x = (fun w => Real.exp (a₀ x + dotProduct 0 w + c₀ * normSq w))
       from funext (ha₀_b0 x)]
-    rw [h1]; congr 1
-    · exact (ha₀_b0 x v).symm
-    · simp
+    simp_all
   -- Step 4: Compute gradX(f(·,v))(x)(i) = f(x,v) * gradX(a₀)(x)(i)
   have hgradX : ∀ x v i, FlatTorus3.gradX (fun y => f y v) x i =
       f x v * FlatTorus3.gradX a₀ x i := by
@@ -198,9 +187,7 @@ lemma poisson_boltzmann_from_vlasov
       have hdp := (mul_eq_zero.mp hfact).resolve_left hfv_ne
       have hcross : dotProduct (cross v (B x)) v = 0 := by
         rw [dotProduct_comm]; exact dot_cross_self_zero v (B x)
-      simp only [hcross, mul_zero, add_zero] at hdp
-      simp only [dotProduct_add, dotProduct_smul, smul_eq_mul]
-      linarith)).1
+      simp_all)).1
   -- Step 6: gradX(log ∘ ρ) = gradX(a₀)
   -- ρ(x) = exp(a₀(x)) * C, so log(ρ) = a₀ + log(C), gradient of constant = 0
   have hGradLogRho : ∀ x, FlatTorus3.gradX (Real.log ∘ ρ) x = FlatTorus3.gradX a₀ x := by

@@ -34,17 +34,12 @@ theorem LinearMap.sum_comp {R M M₂ M₃ : Type _} [Semiring R] [AddCommMonoid 
 
 theorem Module.End.has_eigenvector_iff_hasEigenvalue {R M : Type _} [CommRing R] [AddCommGroup M]
     [Module R M] {T : Module.End R M} {α : R} :
-    (∃ v : M, T v = α • v ∧ v ≠ 0) ↔ Module.End.HasEigenvalue T α :=
-  by
+    (∃ v : M, T v = α • v ∧ v ≠ 0) ↔ Module.End.HasEigenvalue T α := by
   constructor
   · rintro ⟨v, hv⟩
     apply Module.End.hasEigenvalue_of_hasEigenvector (x := v)
-    rw [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
-    exact hv
+    rwa [Module.End.hasEigenvector_iff, Module.End.mem_eigenspace_iff]
   · intro h
     simp only [Module.End.HasEigenvalue, Module.End.HasUnifEigenvalue] at h
     simp_rw [Submodule.ne_bot_iff] at h
-    rcases h with ⟨x, Hx, hx⟩
-    use x
-    rw [← Module.End.mem_eigenspace_iff]
-    exact ⟨Hx, hx⟩
+    simp_all

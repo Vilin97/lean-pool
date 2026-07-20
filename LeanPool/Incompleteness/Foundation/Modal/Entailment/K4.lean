@@ -18,16 +18,15 @@ variable {S F : Type*} [BasicModalLogicalConnective F] [DecidableEq F] [Entailme
 variable {𝓢 : S} [Entailment.K4 𝓢]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyBoxBoxdotBox : 𝓢 ⊢  □⊡φ ==> □φ := by
-  exact impTrans'' distributeBoxAnd and₁
+def implyBoxBoxdotBox : 𝓢 ⊢  □⊡φ ==> □φ := impTrans'' distributeBoxAnd and₁
 omit [DecidableEq F] in
 @[simp] lemma imply_boxboxdot_box : 𝓢 ⊢! □⊡φ ==> □φ := by
   classical
   exact ⟨implyBoxBoxdotBox⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyBoxBoxBoxdot : 𝓢 ⊢ □φ ==> □⊡φ := by
-  exact impTrans'' (implyRightAnd (impId _) axiomFour) collectBoxAnd
+def implyBoxBoxBoxdot : 𝓢 ⊢ □φ ==> □⊡φ :=
+  impTrans'' (implyRightAnd (impId _) axiomFour) collectBoxAnd
 omit [DecidableEq F] in
 @[simp] lemma «imply_box_boxboxdot!» : 𝓢 ⊢! □φ ==> □⊡φ := by
   classical
@@ -42,30 +41,23 @@ lemma «implyBoxBoxBoxdot'!» (h : 𝓢 ⊢! □φ) : 𝓢 ⊢! □⊡φ := by
   exact ⟨implyBoxBoxBoxdot' h.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffBoxBoxBoxdot : 𝓢 ⊢ □φ <=> □⊡φ := by
-  apply iffIntro;
-  · exact implyBoxBoxBoxdot
-  · exact implyBoxBoxdotBox;
+def iffBoxBoxBoxdot : 𝓢 ⊢ □φ <=> □⊡φ := iffIntro implyBoxBoxBoxdot implyBoxBoxdotBox
 omit [DecidableEq F] in
 @[simp] lemma «iff_box_boxboxdot!» : 𝓢 ⊢! □φ <=> □⊡φ := by
   classical
   exact ⟨iffBoxBoxBoxdot⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffBoxBoxdotBox : 𝓢 ⊢ □φ <=> ⊡□φ := by
-  apply iffIntro;
-  · exact impTrans'' (implyRightAnd (impId _) axiomFour) (impId _)
-  · exact and₁
+def iffBoxBoxdotBox : 𝓢 ⊢ □φ <=> ⊡□φ :=
+  iffIntro (impTrans'' (implyRightAnd (impId _) axiomFour) (impId _)) and₁
 omit [DecidableEq F] in
 @[simp] lemma «iff_box_boxdotbox!» : 𝓢 ⊢! □φ <=> ⊡□φ := by
   classical
   exact ⟨iffBoxBoxdotBox⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffBoxdotBoxdotBoxdot : 𝓢 ⊢ ⊡φ <=> ⊡⊡φ := by
-  apply iffIntro;
-  · exact implyRightAnd (impId _) (impTrans'' boxdotBox (and₁' iffBoxBoxBoxdot));
-  · exact and₁;
+def iffBoxdotBoxdotBoxdot : 𝓢 ⊢ ⊡φ <=> ⊡⊡φ :=
+  iffIntro (implyRightAnd (impId _) (impTrans'' boxdotBox (and₁' iffBoxBoxBoxdot))) and₁
 omit [DecidableEq F] in
 @[simp] lemma iff_boxdot_boxdotboxdot : 𝓢 ⊢! ⊡φ <=> ⊡⊡φ := by
   classical

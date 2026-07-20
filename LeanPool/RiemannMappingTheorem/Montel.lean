@@ -33,12 +33,10 @@ lemma UniformlyBoundedOn.deriv (h1 : UniformlyBoundedOn F U) (hU : IsOpen U)
   refine ⟨closedBall 0 (M / δ), isCompact_closedBall _ _, ?_⟩
   intro i x hx
   simp only [mem_closedBall_zero_iff]
-  refine norm_deriv_le_of_forall_mem_sphere_norm_le hδ ?_ ?_
-  · exact (h2 i).diffContOnCl_ball ((closedBall_subset_cthickening hx δ).trans h)
-  · rintro z hz
-    have : z ∈ cthickening δ K :=
-      sphere_subset_closedBall.trans (closedBall_subset_cthickening hx δ) hz
-    simpa using hM (hQ2 i this)
+  refine norm_deriv_le_of_forall_mem_sphere_norm_le hδ
+    ((h2 i).diffContOnCl_ball ((closedBall_subset_cthickening hx δ).trans h)) ?_
+  rintro z hz
+  simpa using hM (hQ2 i (sphere_subset_closedBall.trans (closedBall_subset_cthickening hx δ) hz))
 
 lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : IsOpen U)
     (h2 : ∀ i, DifferentiableOn ℂ (F i) U) (hK : K ∈ compacts U) : EquicontinuousOn F K := by
@@ -62,16 +60,16 @@ lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : Is
   have e4 : w.1 ∈ closedBall z δ := by
     simpa [mem_closedBall, Subtype.dist_eq] using (lt_inf_iff.1 hw).1.le
   rw [dist_eq_norm]
+  have hzw : ‖z - w.val‖ < ε / M := by
+    have hw2 := (lt_inf_iff.1 hw).2
+    rwa [dist_comm, Subtype.dist_eq, dist_eq_norm] at hw2
   refine ((convex_closedBall _ _).norm_image_sub_le_of_norm_deriv_le e1 e2 e4 e3).trans_lt ?_
-  have : ‖z - w.val‖ < ε / M := by
-    have := (lt_inf_iff.1 hw).2
-    rwa [dist_comm, Subtype.dist_eq, dist_eq_norm] at this
-  convert mul_lt_mul' le_rfl this (norm_nonneg _) hMp
+  convert mul_lt_mul' le_rfl hzw (norm_nonneg _) hMp
   field_simp [hMp.lt.ne.symm, mul_comm]
 
 theorem uniformlyBoundedOn_𝓑 (hQ : ∀ K ∈ compacts U, IsCompact (Q K)) :
-    UniformlyBoundedOn ((↑) : 𝓑 U Q → 𝓒 U) U := by
-  exact fun K hK => ⟨Q K, hQ K hK, fun f => f.2.2 K hK⟩
+    UniformlyBoundedOn ((↑) : 𝓑 U Q → 𝓒 U) U :=
+  fun K hK => ⟨Q K, hQ K hK, fun f => f.2.2 K hK⟩
 
 theorem isCompact_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q K)) :
     IsCompact (𝓑 U Q) := by

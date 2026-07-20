@@ -123,8 +123,7 @@ lemma centralizer_tensor_le_inf_centralizer :
   rw [← Subalgebra.centralizer_sup]
   intro y hy
   apply hx
-  rw [Algebra.TensorProduct.map_range]
-  exact hy
+  rwa [Algebra.TensorProduct.map_range]
 
 include 𝒜 𝒜' in
 lemma centralizer_tensor_centralizer :
@@ -167,8 +166,7 @@ lemma centralizer_tensor_centralizer :
         (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B : Set A)).subtype
         (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B' : Set A')).subtype) by
       exact this
-    rw [← this]
-    exact hx
+    rwa [← this]
   · rintro _ ⟨x, rfl⟩
     induction x using TensorProduct.induction_on with
     | zero => exact Subalgebra.zero_mem _
@@ -222,7 +220,6 @@ lemma centralizer_mulLeft_le_of_isCentralSimple :
         AddHom.coe_mk, eqv] ]
     ext b
     simp only [Module.End.mul_apply, LinearMap.mulLeft_apply]
-    -- change y * (eqv (eqv.symm x)) b = (eqv (eqv.symm x)) (y * b)
     rw [eqv.apply_symm_apply]
     exact congr($(hx (LinearMap.mulLeft F y) (by simp)) b)
   have eq : Subalgebra.centralizer F
@@ -337,9 +334,7 @@ def Module.End.leftMul : Subalgebra F (Module.End F B) where
     ext z
     simp [add_mul]
   zero_mem' := by
-    refine ⟨0, ?_⟩
-    ext z
-    simp
+    simp_all
   algebraMap_mem' := by
     intro c
     refine ⟨algebraMap _ _ c, ?_⟩
@@ -357,9 +352,7 @@ def Module.End.rightMul : Subalgebra F (Module.End F B) where
     ext z
     simp [mul_add]
   zero_mem' := by
-    refine ⟨0, ?_⟩
-    ext z
-    simp
+    simp_all
   mul_mem' := by
     rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
     refine ⟨y * x, ?_⟩
@@ -387,14 +380,9 @@ AlgEquiv.symm <| AlgEquiv.ofBijective
       simp only [algebraMap_end_apply, Algebra.smul_def, Algebra.commutes] } <| by
   constructor
   · intro x y hxy
-    have := congr($hxy.1 1)
-    simp only [AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-      LinearMap.mulRight_apply, one_mul, MulOpposite.unop_inj] at this
-    exact this
+    simp_all
   · rintro ⟨_, ⟨x, rfl⟩⟩
-    use (MulOpposite.op x)
-    ext
-    simp
+    simp_all
 
 lemma centralizer_mulLeft :
     Subalgebra.centralizer F (Module.End.leftMul F B : Set <| Module.End F B) =
@@ -443,13 +431,11 @@ def Subalgebra.conj (B : Subalgebra F A) (x : Aˣ) : Subalgebra F A where
   mul_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b * c, B.mul_mem hb hc, by simp [mul_assoc]⟩
-  one_mem' := by
-    exact ⟨1, B.one_mem, by simp⟩
+  one_mem' := ⟨1, B.one_mem, by simp⟩
   add_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b + c, B.add_mem hb hc, by simp [mul_add, add_mul]⟩
-  zero_mem' := by
-    exact ⟨0, B.zero_mem, by simp⟩
+  zero_mem' := ⟨0, B.zero_mem, by simp⟩
   algebraMap_mem' := by
     intro c
     refine ⟨algebraMap _ _ c, B.algebraMap_mem c, ?_⟩
@@ -533,9 +519,7 @@ lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
         rintro ⟨_, ⟨a, ha, rfl⟩⟩ _ ⟨b, hb, rfl⟩
         refine ⟨⟨a, ha⟩ * b, J.mul_mem_left _ _ hb, ?_⟩
         ext
-        simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-          MulMemClass.coe_mul, mul_assoc]
-        rw [← mul_assoc x⁻¹.1, Units.inv_mul, one_mul])
+        simp_all)
       (by
         rintro ⟨_, ⟨a, ha, rfl⟩⟩ ⟨_, ⟨b, hb, rfl⟩⟩ ⟨c, hc1, hc2⟩
         simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
@@ -550,13 +534,7 @@ lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
       intro J
       ext ⟨_, ⟨a, ha, rfl⟩⟩
       simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-      generalize_proofs
-      rw [TwoSidedIdeal.mem_mk']
-      try assumption
-      simp only [Set.mem_image, SetLike.mem_coe, TwoSidedIdeal.mem_comap, AlgHom.coe_mk,
-        RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, Subtype.mk.injEq, Units.mul_left_inj,
-        Units.mul_right_inj, Subtype.exists, exists_and_right, exists_eq_right, ha,
-        exists_true_left]
+      simp_all
     right_inv := by
       intro J
       ext ⟨a, ha⟩
@@ -606,8 +584,7 @@ lemma Subalgebra.conj_centralizer (B : Subalgebra F A) {x : Aˣ} :
     rintro _ a ha rfl
     simp only [mul_assoc, Units.inv_mul_cancel_left, Units.mul_right_inj]
     simp only [← mul_assoc, Units.mul_left_inj]
-    apply hb
-    exact ha
+    simp_all
 
 omit [FiniteDimensional F A] [Algebra.IsCentral F A] [IsSimpleRing A] in
 lemma Subalgebra.conj_centralizer' (B : Subalgebra F A) {x : Aˣ} :
@@ -621,20 +598,14 @@ open FiniteDimensional
 
 instance :
     Algebra.IsCentral F (Matrix (Fin (Module.finrank F B)) (Fin (Module.finrank F B)) F) := by
-  haveI : NeZero (Module.finrank F B) := by
-    have : 0 < Module.finrank F B := Module.finrank_pos
-    constructor
-    omega
+  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   infer_instance
 
 instance : Algebra.IsCentral F (Module.End F B) :=
   algEquivMatrix (Module.finBasis F B) |>.symm.isCentral
 
 instance : IsSimpleRing (Module.End F B) := by
-  haveI : NeZero (Module.finrank F B) := by
-    have : 0 < Module.finrank F B := Module.finrank_pos
-    constructor
-    omega
+  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   constructor
   rw [TwoSidedIdeal.orderIsoOfRingEquiv
     (algEquivMatrix (Module.finBasis F B) |>.toRingEquiv) |>.isSimpleOrder_iff]
@@ -769,10 +740,9 @@ lemma step1 {ι : Type*} (ℬ : Basis ι F <| Module.End F B) :
       exact hx ⟨z, hz⟩
   have eq2 := congr(Subalgebra.centralizer F $(eq1).carrier)
   erw [centralizer_inclusionLeft (𝒜' := ℬ)] at eq2
-  have temp := Subalgebra.conj_centralizer' (F := F) (A := A ⊗[F] Module.End F B)
+  rw [Subalgebra.conj_centralizer' (F := F) (A := A ⊗[F] Module.End F B)
     (B := (Algebra.TensorProduct.includeRight (R := F) (A := A) (B := Module.End F B) |>.comp
-          (Module.End.leftMul F B).val).range) (x := x)
-  rw [temp] at eq2; clear temp
+          (Module.End.leftMul F B).val).range) (x := x)] at eq2
   rw [centralizer_inclusionRight (𝒜 := Module.finBasis F A)] at eq2
   rw [centralizer_mulLeft] at eq2
   rw [← eq2]

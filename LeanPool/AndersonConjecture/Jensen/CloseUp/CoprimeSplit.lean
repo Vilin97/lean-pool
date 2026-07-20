@@ -208,8 +208,7 @@ private def close_up_aux_b2_nonzero_proof
           ⟨(↑x₁ : T), hle₂ x₁.2⟩ * ⟨(a : T), hle_comp a.2⟩ +
           ⟨(p : T), hle_comp p.2⟩ * ⟨(↑w : T), hle₂ w.2⟩ := by
         ext
-        simp only [Subring.coe_mul, Subring.coe_add]
-        exact hc_val
+        simpa only [Subring.coe_mul, Subring.coe_add] using hc_val
       rw [hc_eq]
       apply add_mem
       · apply Ideal.mul_mem_left

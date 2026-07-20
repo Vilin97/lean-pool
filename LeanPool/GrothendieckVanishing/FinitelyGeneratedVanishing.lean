@@ -88,7 +88,7 @@ noncomputable def finsetGenCoconeIsColimit :
   let d := colimit.desc (finsetGenFunctor hK) (finsetGenCocone hK)
   -- desc is mono: natural transformation to const K has all components mono (image.ι),
   -- and in a Grothendieck abelian category filtered colimits preserve monos
-  have hd_mono : Mono d := by
+  haveI hd_mono : Mono d := by
     haveI : IsConnected
         (Finset (TopCat.Presheaf.SectionIndex K)) := IsFiltered.isConnected _
     haveI : ∀ j, Mono ((finsetGenCocone hK).ι.app j) := fun j ↦
@@ -101,7 +101,7 @@ noncomputable def finsetGenCoconeIsColimit :
           (finsetGenCocone hK).ι.app j
         exact colimit.ι_desc (finsetGenCocone hK) j)
   -- desc is epi: allSectionMap K factors through desc
-  have hd_epi : Epi d := by
+  haveI hd_epi : Epi d := by
     let g : (∐ fun σ : TopCat.Presheaf.SectionIndex K ↦ TopCat.Sheaf.zeroOutsideInt σ.1) ⟶
         colimit (finsetGenFunctor hK) :=
       Sigma.desc fun σ ↦
@@ -134,8 +134,6 @@ noncomputable def finsetGenCoconeIsColimit :
     exact @epi_of_epi_fac _ _ _ _ _ g d (TopCat.Presheaf.allSectionMap hK)
       (TopCat.Presheaf.allSectionMap_epi (F := K) hK) hfac
   -- mono + epi → iso in abelian category
-  haveI : Mono d := hd_mono
-  haveI : Epi d := hd_epi
   haveI : IsIso ((colimit.isColimit (finsetGenFunctor hK)).desc (finsetGenCocone hK)) :=
     isIso_of_mono_of_epi d
   exact (colimit.isColimit (finsetGenFunctor hK)).ofPointIso
@@ -251,6 +249,6 @@ theorem directLimit_cohomology_vanishing
       (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G),
       TopCat.Presheaf.IsLocallySurjective f →
       Subsingleton (Sheaf.H (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) :
-    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) := by
-  exact cohomology_vanishing_of_finitelyGenerated_vanishing hK m
+    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) :=
+  cohomology_vanishing_of_finitelyGenerated_vanishing hK m
     (fun S _ ↦ finsetGeneratedSheaf_vanishing hK m hzero S)

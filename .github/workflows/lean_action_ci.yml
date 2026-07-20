@@ -1,5 +1,25 @@
 name: Lean Action CI
 
+# The build runs in one of two modes, decided per run by a cheap `plan` job
+# (scripts/ci/plan-build-shards.py) from the diff and the cache state:
+#
+# - `single`: the classic one-job pipeline. This is the fast path for the
+#   common case — a PR that adds or edits a project or three — and is
+#   byte-for-byte the pre-sharding behavior.
+# - `sharded`: for the runs that take hours serially (cold cache,
+#   toolchain/manifest bump, refactors touching many projects), the dirty
+#   projects are bin-packed into parallel `shard` build jobs. Pool projects
+#   never import each other, so project-granular shards duplicate no work.
+#   Each shard uploads only the files its build produced; `finalize` merges
+#   them, builds the root library (also a safety net: anything a shard
+#   missed is built here), and runs the whole-pool linters and quality
+#   checks once.
+#
+# Shard assignment is computed from the tree at run time — there is no
+# static shard list to maintain as the pool grows. The `Build project`
+# gate job reports the overall verdict under the same check name the
+# single-job workflow used.
+
 on:
   push:
     branches:
@@ -14,6 +34,7 @@ on:
       - 'python/pyproject.toml'
       - 'python/uv.lock'
       - 'scripts/nolints-style.txt'
+      - 'scripts/ci/**'
       - '.github/CODE_QUALITY.md'
       - '.github/workflows/lean_action_ci.yml'
   pull_request:
@@ -29,9 +50,16 @@ on:
       - 'python/pyproject.toml'
       - 'python/uv.lock'
       - 'scripts/nolints-style.txt'
+      - 'scripts/ci/**'
       - '.github/CODE_QUALITY.md'
       - '.github/workflows/lean_action_ci.yml'
   workflow_dispatch:
+    inputs:
+      force_full:
+        description: "Shard-build the whole pool even when a warm cache exists"
+        required: false
+        type: boolean
+        default: false
 
 # Cancel superseded runs on the same branch / PR.
 concurrency:
@@ -44,9 +72,79 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  plan:
     runs-on: ubuntu-latest
-    name: Build project
+    name: Plan build
+    outputs:
+      mode: ${{ steps.plan.outputs.mode }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      # Only checks whether a warm build cache exists; a cold cache means a
+      # whole-pool build, which is exactly when sharding pays off most.
+      - name: Check for a warm build cache
+        id: lake-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          lookup-only: true
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Plan the build
+        id: plan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          FORCE_FULL: ${{ inputs.force_full }}
+          CACHE_MATCHED: ${{ steps.lake-cache.outputs.cache-matched-key }}
+        run: |
+          set -euo pipefail
+          diff_available=true
+          changed_files=""
+          case "$EVENT_NAME" in
+            pull_request)
+              changed_files=$(git diff --name-only "$BASE_SHA"...HEAD | tr '\n' ' ')
+              ;;
+            push)
+              if [ -n "$BEFORE_SHA" ] \
+                 && ! printf '%s' "$BEFORE_SHA" | grep -q '^0*$' \
+                 && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+                changed_files=$(git diff --name-only "$BEFORE_SHA"..HEAD | tr '\n' ' ')
+              else
+                diff_available=false
+              fi
+              ;;
+            workflow_dispatch)
+              diff_available=false
+              ;;
+          esac
+          cold=false
+          if [ -z "$CACHE_MATCHED" ]; then cold=true; fi
+          plan=$(CHANGED_FILES="$changed_files" DIFF_AVAILABLE="$diff_available" \
+                 COLD="$cold" FORCE_FULL="$FORCE_FULL" \
+                 python3 scripts/ci/plan-build-shards.py)
+          echo "Plan: $plan"
+          {
+            echo "mode=$(echo "$plan" | python3 -c 'import json,sys; print(json.load(sys.stdin)["mode"])')"
+            echo "matrix=$(echo "$plan" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["matrix"]))')"
+          } >> "$GITHUB_OUTPUT"
+
+  # The classic pipeline, unchanged — the fast path for ordinary PRs.
+  build:
+    needs: plan
+    if: needs.plan.outputs.mode == 'single'
+    runs-on: ubuntu-latest
+    name: Build pool
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -122,3 +220,226 @@ jobs:
             .lake/packages
             .lake/build
           key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+  shard:
+    needs: plan
+    if: needs.plan.outputs.mode == 'sharded'
+    runs-on: ubuntu-latest
+    name: Build shard ${{ matrix.shard }}
+    strategy:
+      # One shard failing must not cancel the rest: `finalize` rebuilds any
+      # gap itself, so the run still yields a complete log — but the gate
+      # job fails whenever a shard failed (a shard's warning gate must not
+      # be bypassable by cache replay in `finalize`).
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Build this shard's projects
+        env:
+          PROJECTS: ${{ matrix.projects }}
+        run: |
+          set -euo pipefail
+          touch "$RUNNER_TEMP/build-stamp"
+          modules=""
+          # shellcheck disable=SC2086 # word-split the project list on purpose
+          for project in $PROJECTS; do
+            project_modules=$(git ls-files -- "LeanPool/$project.lean" "LeanPool/$project/" \
+              | grep '\.lean$' \
+              | sed -e 's/\.lean$//' -e 's#/#.#g' \
+              | tr '\n' ' ')
+            modules="$modules $project_modules"
+          done
+          # shellcheck disable=SC2086 # modules is a space-separated list on purpose
+          ~/.elan/bin/lake build $modules 2>&1 | tee shard-build.log
+          if grep -nE '(^|: )warning:' shard-build.log; then
+            echo "::error::Lean build emitted warnings; fix them before merging."
+            exit 1
+          fi
+
+      # Ship only what this build produced; unchanged (cache-replayed)
+      # files stay out, so `finalize` can layer the shard outputs onto the
+      # same restored cache without clobbering anything fresher.
+      - name: Package new build outputs
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          find .lake/build -type f -newer "$RUNNER_TEMP/build-stamp" \
+            > "$RUNNER_TEMP/new-files.txt"
+          echo "$(wc -l < "$RUNNER_TEMP/new-files.txt") new build files"
+          if [ -s "$RUNNER_TEMP/new-files.txt" ]; then
+            tar -czf "shard-oleans-$SHARD.tar.gz" -T "$RUNNER_TEMP/new-files.txt"
+          fi
+
+      - name: Upload build outputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-oleans-${{ matrix.shard }}
+          path: shard-oleans-*.tar.gz
+          if-no-files-found: ignore
+          retention-days: 1
+
+  finalize:
+    needs: [plan, shard]
+    # Run even when a shard failed: merging what succeeded and building the
+    # rest here still produces a complete build log and lint report for
+    # debugging. The gate job is what enforces that every shard was green.
+    if: >-
+      !cancelled() && needs.plan.result == 'success' &&
+      needs.plan.outputs.mode == 'sharded'
+    runs-on: ubuntu-latest
+    name: Assemble and lint
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Download shard build outputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: ci-oleans-*
+          merge-multiple: true
+
+      - name: Merge shard build outputs
+        run: |
+          set -euo pipefail
+          for archive in shard-oleans-*.tar.gz; do
+            if [ -e "$archive" ]; then
+              tar -xzf "$archive"
+              rm "$archive"
+            fi
+          done
+
+      - name: Check that LeanPool.lean is up to date
+        run: |
+          if ! ~/.elan/bin/lake exe mk_all --check; then
+            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
+            exit 1
+          fi
+
+      # With the shard outputs in place this is mostly cache replay; it
+      # builds the root module and anything a shard missed or failed to
+      # deliver, so the assembled pool is complete regardless.
+      - name: Build project
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake build LeanPool 2>&1 | tee lean-build.log
+          if grep -nE '(^|: )warning:' lean-build.log; then
+            echo "::error::Lean build emitted warnings; fix them before merging."
+            exit 1
+          fi
+
+      - name: Lint
+        run: ~/.elan/bin/lake exe runLinter LeanPool
+
+      - name: Text style lint
+        run: ~/.elan/bin/lake exe lint-style LeanPool
+
+      - name: Repository quality checks
+        run: |
+          cd python
+          uv sync --locked
+          uv run python -m lean_pool.quality --repo ..
+
+      - name: Save caches
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+  # Single overall verdict under the check name the one-job workflow used,
+  # so nothing watching "Build project" needs to change.
+  gate:
+    needs: [plan, build, shard, finalize]
+    if: always()
+    runs-on: ubuntu-latest
+    name: Build project
+    steps:
+      - name: Check outcome
+        env:
+          MODE: ${{ needs.plan.outputs.mode }}
+          PLAN_RESULT: ${{ needs.plan.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          SHARD_RESULT: ${{ needs.shard.result }}
+          FINALIZE_RESULT: ${{ needs.finalize.result }}
+        run: |
+          set -euo pipefail
+          echo "plan=$PLAN_RESULT mode=$MODE build=$BUILD_RESULT shard=$SHARD_RESULT finalize=$FINALIZE_RESULT"
+          if [ "$PLAN_RESULT" != "success" ]; then
+            echo "::error::Build planning failed."
+            exit 1
+          fi
+          if [ "$MODE" = "single" ]; then
+            [ "$BUILD_RESULT" = "success" ] || { echo "::error::Build failed."; exit 1; }
+          else
+            [ "$SHARD_RESULT" = "success" ] || { echo "::error::A build shard failed."; exit 1; }
+            [ "$FINALIZE_RESULT" = "success" ] || { echo "::error::Assembly or linting failed."; exit 1; }
+          fi
+          echo "CI passed in $MODE mode."

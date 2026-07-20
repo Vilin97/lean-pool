@@ -90,32 +90,25 @@ lemma serre_DE₂_slash_invariant (γ : SL(2, ℤ)) :
     (serreD 1 E₂) ∣[(4 : ℤ)] γ = serreD 1 E₂ := by
   have hserre12 : serreD 1 E₂ = serreD 2 E₂ + (1 / 12 : ℂ) • (E₂ * E₂) := by
     ext z; simp only [serreD, Pi.add_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul]; ring
-  have hequiv := serre_D_slash_equivariant 2 E₂ E₂_holo' γ
   have hE₂slash := E₂_slash_transform γ
-  have hprod := ModularForm.mul_slash_SL2 (2 : ℤ) (2 : ℤ) γ E₂ E₂
   ext z
   rw [hserre12]
   simp only [SlashAction.add_slash, Pi.add_apply, ModularForm.SL_smul_slash, Pi.smul_apply,
     smul_eq_mul]
   rw [show (serreD 2 E₂ ∣[(4 : ℤ)] γ) z = serreD 2 (E₂ ∣[(2 : ℤ)] γ) z by
-        simpa using congrFun hequiv z,
+        simpa using congrFun (serre_D_slash_equivariant 2 E₂ E₂_holo' γ) z,
       show ((E₂ * E₂) ∣[(4 : ℤ)] γ) z = (E₂ ∣[(2 : ℤ)] γ) z * (E₂ ∣[(2 : ℤ)] γ) z by
-        simpa using congrFun hprod z]
+        simpa using congrFun (ModularForm.mul_slash_SL2 (2 : ℤ) (2 : ℤ) γ E₂ E₂) z]
   set α := (1 : ℂ) / (2 * riemannZeta 2) with hα_def
   have hE₂slash_fun : (E₂ ∣[(2 : ℤ)] γ) = E₂ - α • D₂ γ := by
     ext w; simpa using congrFun hE₂slash w
   rw [hE₂slash_fun]
-  simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
-  have hD_lin : D (E₂ - α • D₂ γ) z = D E₂ z - α * D (D₂ γ) z := by
-    have hαD₂ := (MDifferentiable_D₂ γ).const_smul α
-    simp only [D_sub E₂ _ E₂_holo' hαD₂, D_smul α _ (MDifferentiable_D₂ γ),
-               Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
-  simp only [serreD, Pi.sub_apply, Pi.mul_apply, Pi.smul_apply, smul_eq_mul]
-  rw [hD_lin, D_D₂ γ z]
-  have hα_val : α = 3 / π^2 := by simp only [hα_def, riemannZeta_two]; field_simp; ring
-  have hpi_ne : (π : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr Real.pi_ne_zero
-  rw [show D₂ γ z = (2 * π * I * (γ 1 0 : ℂ)) / denom γ z from rfl, hα_val]
-  field_simp [UpperHalfPlane.denom_ne_zero γ z, hpi_ne]
+  simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, serreD, Pi.mul_apply]
+  rw [show D (E₂ - α • D₂ γ) z = D E₂ z - α * D (D₂ γ) z by
+        simp only [D_sub E₂ _ E₂_holo' ((MDifferentiable_D₂ γ).const_smul α),
+                   D_smul α _ (MDifferentiable_D₂ γ), Pi.sub_apply, Pi.smul_apply, smul_eq_mul],
+      D_D₂ γ z, show D₂ γ z = (2 * π * I * (γ 1 0 : ℂ)) / denom γ z from rfl,
+      show α = 3 / π ^ 2 by simp only [hα_def, riemannZeta_two]; field_simp; ring]
+  field_simp [UpperHalfPlane.denom_ne_zero γ z, Complex.ofReal_ne_zero.mpr Real.pi_ne_zero]
   ring_nf
-  simp only [Complex.I_sq]
-  ring
+  simp_all

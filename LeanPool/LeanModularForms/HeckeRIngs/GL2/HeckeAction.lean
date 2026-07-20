@@ -76,26 +76,13 @@ private lemma SLnZ_det_one_real (σ : (GLPair 2).H) :
 
 private lemma cosetRep_delta_det_pos (σ : (GLPair 2).H) (g : (GLPair 2).Δ) :
     0 < (glMap ((σ : GL (Fin 2) ℚ) * (g : GL (Fin 2) ℚ))).det.val := by
-  have hmul : (glMap ((σ : GL (Fin 2) ℚ) * ↑g)).det =
-      (glMap ↑σ).det * (glMap ↑g).det := by rw [map_mul, map_mul]
   rw [show (glMap ((σ : GL (Fin 2) ℚ) * ↑g)).det.val =
-    ((glMap ↑σ).det * (glMap ↑g).det).val from congrArg Units.val hmul,
-    Units.val_mul]
+    ((glMap ↑σ).det * (glMap ↑g).det).val from
+      congrArg Units.val (by rw [map_mul, map_mul]), Units.val_mul]
   exact mul_pos (by rw [SLnZ_det_one_real]; exact one_pos) (delta_det_pos_real g)
 
-private lemma delta_cosetRep_det_pos (g : (GLPair 2).Δ) (σ : (GLPair 2).H) :
-    0 < (glMap ((g : GL (Fin 2) ℚ) * (σ : GL (Fin 2) ℚ))).det.val := by
-  have hmul : (glMap ((g : GL (Fin 2) ℚ) * ↑σ)).det =
-      (glMap ↑g).det * (glMap ↑σ).det := by rw [map_mul, map_mul]
-  rw [show (glMap ((g : GL (Fin 2) ℚ) * ↑σ)).det.val =
-    ((glMap ↑g).det * (glMap ↑σ).det).val from congrArg Units.val hmul,
-    Units.val_mul]
-  exact mul_pos (delta_det_pos_real g)
-    (by rw [SLnZ_det_one_real]; exact one_pos)
-
 private lemma sigma_eq_refl_of_pos_det {g : GL (Fin 2) ℝ} (hg : 0 < g.det.val) :
-    UpperHalfPlane.σ g = .refl ℝ ℂ := by
-  unfold UpperHalfPlane.σ; simp only [hg, ↓reduceIte]
+    UpperHalfPlane.σ g = .refl ℝ ℂ := by unfold UpperHalfPlane.σ; simp only [hg, ↓reduceIte]
 
 private lemma glMap_transpose_det_val (g : GL (Fin 2) ℚ) :
     (glMap (GLTransposeEquiv 2 g).unop).det.val = (glMap g).det.val := by
@@ -166,44 +153,6 @@ private lemma mem_SL_exists_H {γ : GL (Fin 2) ℝ} (hγ : γ ∈ 𝒮ℒ) :
   obtain ⟨s, rfl⟩ := MonoidHom.mem_range.mp hγ
   exact ⟨mapGL ℚ s, ⟨s, rfl⟩, glMap_mapGL_eq s⟩
 
-private lemma left_coset_disjoint (D : HeckeCoset (GLPair 2))
-    (i j : decompQuot (GLPair 2) (HeckeCoset.rep D)) (hij : i ≠ j) :
-    ((GLPair 2).H : Set (GL (Fin 2) ℚ)) * {tRep D i} ≠
-    ((GLPair 2).H : Set (GL (Fin 2) ℚ)) * {tRep D j} := by
-  intro h_eq
-  apply decompQuot_coset_diff (GLPair 2) (HeckeCoset.rep D) i j hij
-  have hmem : tRep D i ∈ ((GLPair 2).H : Set _) * ({tRep D j} : Set _) := by
-    rw [← h_eq]; exact ⟨1, (GLPair 2).H.one_mem, _, rfl, by simp⟩
-  obtain ⟨h, hh, _, rfl, heq⟩ := hmem
-  have h_key : (i.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL (Fin 2) ℚ) =
-      ((j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL (Fin 2) ℚ)) *
-        (GLTransposeEquiv 2 h).unop := by
-    have step := GL_transposeEquiv_involutive 2
-      ((i.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL (Fin 2) ℚ))
-    change (GLTransposeEquiv 2 (tRep D i)).unop = _ at step
-    rw [show tRep D i = h * tRep D j from heq.symm] at step
-    rw [← step, (GLTransposeEquiv 2).map_mul h (tRep D j),
-      MulOpposite.unop_mul, GL_transposeEquiv_involutive]
-  calc ({(i.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)} : Set _) *
-          ((GLPair 2).H : Set _)
-      = ({((j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)) *
-          (GLTransposeEquiv 2 h).unop} : Set _) *
-          ((GLPair 2).H : Set _) := by rw [h_key]
-    _ = ({(j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)} : Set _) *
-          (({(GLTransposeEquiv 2 h).unop} : Set _) *
-          ((GLPair 2).H : Set _)) := by
-        rw [← Set.singleton_mul_singleton, mul_assoc]
-    _ = ({(j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)} : Set _) *
-          ((GLPair 2).H : Set _) := by
-        have hT : (GLTransposeEquiv 2 h).unop ∈ (GLPair 2).H :=
-          GL_transpose_mem_SLnZ 2 hh
-        rw [Subgroup.singleton_mul_subgroup hT]
-
-/-- `f ∣[k]_ℚ h = f` for H-elements, via Γ-invariance. -/
-private lemma slash_H_eq (k : ℤ) (f : ℍ → ℂ) (hf : ∀ γ ∈ 𝒮ℒ, f ∣[k] γ = f)
-    (h : GL (Fin 2) ℚ) (hh : h ∈ (GLPair 2).H) : f ∣[k] h = f :=
-  hf (glMap h) (glMap_mem_SL ⟨h, hh⟩)
-
 /-- Left multiplication by an H-element on `decompQuot`. This is well-defined since
     the stabilizer `K = δHδ⁻¹ ∩ H` is invariant under left multiplication by H-elements
     (if `h₂⁻¹h₁ ∈ K` then `(σh₂)⁻¹(σh₁) = h₂⁻¹h₁ ∈ K`). -/
@@ -224,9 +173,7 @@ private lemma leftMulQuot_injective (D : HeckeCoset (GLPair 2)) (σ : (GLPair 2)
       (HeckeCoset.rep D : GL _ ℚ) ∈ (GLPair 2).H := by
     have := h_K
     rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def] at this
-    simp only [ConjAct.ofConjAct_toConjAct, map_inv, inv_inv] at this
-    convert this using 1
-    simp only [Subgroup.coe_mul, Subgroup.coe_inv]; group
+    simp_all
   exact decompQuot_coset_diff (GLPair 2) (HeckeCoset.rep D) i₁ i₂ hne
     (leftCoset_eq_of_not_disjoint (GLPair 2).H _ _ (by
       rw [Set.not_disjoint_iff]
@@ -250,10 +197,7 @@ private lemma heckeSlash_slash (k : ℤ) (D : HeckeCoset (GLPair 2)) (f : ℍ �
     (g : GL (Fin 2) ℚ) : (heckeSlash k D f) ∣[k] g =
     ∑ i : decompQuot (GLPair 2) (HeckeCoset.rep D), (f ∣[k] tRep D i) ∣[k] g := by
   simp only [heckeSlash]
-  induction Finset.univ (α := decompQuot (GLPair 2) (HeckeCoset.rep D))
-      using Finset.cons_induction with
-  | empty => simp [SlashAction.zero_slash]
-  | cons a s has ih => simp [Finset.sum_cons, SlashAction.add_slash, ih]
+  simp_all
 
 /-- Left multiplication by a transposed H-element preserves the slash action
     under Γ-invariance: `f ∣[k] (hᵀ * g) = f ∣[k] g` when `h ∈ H`. -/

@@ -37,10 +37,8 @@ alias multiboxed_imply_distribute! := multiboxAxiomK'!
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def boxIff' (h : 𝓢 ⊢ φ <=> ψ) : 𝓢 ⊢ (□φ <=> □ψ) := by
-  apply iffIntro;
-  · exact axiomK' <| nec <| and₁' h;
-  · exact axiomK' <| nec <| and₂' h;
+def boxIff' (h : 𝓢 ⊢ φ <=> ψ) : 𝓢 ⊢ (□φ <=> □ψ) :=
+  iffIntro (axiomK' <| nec <| and₁' h) (axiomK' <| nec <| and₂' h)
 omit [DecidableEq F] in @[simp] lemma box_iff! (h : 𝓢 ⊢! φ <=> ψ) : 𝓢 ⊢! □φ <=> □ψ :=
   ⟨boxIff' h.some⟩
 
@@ -331,8 +329,7 @@ omit [DecidableEq F] in @[simp] lemma collectMultiboxAnd! :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectBoxAnd : 𝓢 ⊢ □φ ⋏ □ψ ==> □(φ ⋏ ψ) := collectMultiboxAnd (n := 1)
-omit [DecidableEq F] in @[simp] lemma collectBoxAnd! : 𝓢 ⊢! □φ ⋏ □ψ ==> □(φ ⋏ ψ) :=
-  ⟨collectBoxAnd⟩
+omit [DecidableEq F] in @[simp] lemma collectBoxAnd! : 𝓢 ⊢! □φ ⋏ □ψ ==> □(φ ⋏ ψ) := ⟨collectBoxAnd⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectMultiboxAnd' (h : 𝓢 ⊢ □^[n]φ ⋏ □^[n]ψ) : 𝓢 ⊢ □^[n](φ ⋏ ψ) := collectMultiboxAnd ⨀ h
@@ -413,8 +410,7 @@ omit [DecidableEq F] in @[simp] lemma collectMultiboxOr! :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectBoxOr : 𝓢 ⊢ □φ ⋎ □ψ ==> □(φ ⋎ ψ) := collectMultiboxOr (n := 1)
-omit [DecidableEq F] in @[simp] lemma collectBoxOr! : 𝓢 ⊢! □φ ⋎ □ψ ==> □(φ ⋎ ψ) :=
-  ⟨collectBoxOr⟩
+omit [DecidableEq F] in @[simp] lemma collectBoxOr! : 𝓢 ⊢! □φ ⋎ □ψ ==> □(φ ⋎ ψ) := ⟨collectBoxOr⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectMultiboxOr' (h : 𝓢 ⊢ □^[n]φ ⋎ □^[n]ψ) : 𝓢 ⊢ □^[n](φ ⋎ ψ) := collectMultiboxOr ⨀ h
@@ -427,29 +423,23 @@ def collectBoxOr' (h : 𝓢 ⊢ □φ ⋎ □ψ) : 𝓢 ⊢ □(φ ⋎ ψ) := co
 omit [DecidableEq F] in lemma collectBoxOr'! (h : 𝓢 ⊢! □φ ⋎ □ψ) : 𝓢 ⊢! □(φ ⋎ ψ) :=
   ⟨collectBoxOr' h.some⟩
 
-/-- Imported declaration from the Incompleteness formalization. -/
-def diaOrInst₁ : 𝓢 ⊢ ◇φ ==> ◇(φ ⋎ ψ) := by
+private def diaOrInstOf (h : 𝓢 ⊢ χ ==> φ ⋎ ψ) : 𝓢 ⊢ ◇χ ==> ◇(φ ⋎ ψ) := by
   apply impTrans'' (and₁' diaDuality);
   apply impTrans'' ?h (and₂' diaDuality);
   apply contra₀';
   apply axiomK';
   apply nec;
-  apply contra₀';
-  exact or₁;
+  exact contra₀' h;
+
+/-- Imported declaration from the Incompleteness formalization. -/
+def diaOrInst₁ : 𝓢 ⊢ ◇φ ==> ◇(φ ⋎ ψ) := diaOrInstOf or₁
 omit [DecidableEq F] in
 @[simp] lemma «dia_or_inst₁!» : 𝓢 ⊢! ◇φ ==> ◇(φ ⋎ ψ) := by
   classical
   exact ⟨diaOrInst₁⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def diaOrInst₂ : 𝓢 ⊢ ◇ψ ==> ◇(φ ⋎ ψ) := by
-  apply impTrans'' (and₁' diaDuality);
-  apply impTrans'' ?h (and₂' diaDuality);
-  apply contra₀';
-  apply axiomK';
-  apply nec;
-  apply contra₀';
-  exact or₂;
+def diaOrInst₂ : 𝓢 ⊢ ◇ψ ==> ◇(φ ⋎ ψ) := diaOrInstOf or₂
 omit [DecidableEq F] in
 @[simp] lemma «dia_or_inst₂!» : 𝓢 ⊢! ◇ψ ==> ◇(φ ⋎ ψ) := by
   classical
@@ -505,7 +495,6 @@ omit [DecidableEq F] in
         exact (iff_provable_list_conj.mp <| (of'! ih) ⨀ (and₂'! <| id!)) ψ (by aesop);
   | _ => simp
 
--- def distributeDiaAnd' (h : 𝓢 ⊢ ◇(φ ⋏ ψ)) : 𝓢 ⊢ ◇φ ⋏ ◇ψ := distributeDiaAnd ⨀ h
 omit [DecidableEq F] in
 lemma «distribute_dia_and'!» (h : 𝓢 ⊢! ◇(φ ⋏ ψ)) : 𝓢 ⊢! ◇φ ⋏ ◇ψ := by
   classical
@@ -524,10 +513,9 @@ omit [DecidableEq F] in
   exact ⟨boxdotAxiomK⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def boxdotAxiomT : 𝓢 ⊢ ⊡φ ==> φ := by exact and₁;
+def boxdotAxiomT : 𝓢 ⊢ ⊡φ ==> φ := and₁
 omit [DecidableEq F] in @[simp 1100] lemma boxdot_axiomT! : 𝓢 ⊢! ⊡φ ==> φ := by
-  classical
-  exact ⟨boxdotAxiomT⟩
+  simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def boxdotNec (d : 𝓢 ⊢ φ) : 𝓢 ⊢ ⊡φ := and₃' d (nec d)
@@ -536,17 +524,15 @@ omit [DecidableEq F] in lemma boxdot_nec! (d : 𝓢 ⊢! φ) : 𝓢 ⊢! ⊡φ :
   exact ⟨boxdotNec d.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def boxdotBox : 𝓢 ⊢ ⊡φ ==> □φ := by exact and₂;
+def boxdotBox : 𝓢 ⊢ ⊡φ ==> □φ := and₂
 omit [DecidableEq F] in lemma boxdot_box! : 𝓢 ⊢! ⊡φ ==> □φ := by
-  classical
-  exact ⟨boxdotBox⟩
+  simp_all
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def BoxBoxdotBoxDotbox : 𝓢 ⊢ □⊡φ ==> ⊡□φ := impTrans'' distributeBoxAnd (impId _)
 omit [DecidableEq F] in
 lemma boxboxdot_boxdotbox : 𝓢 ⊢! □⊡φ ==> ⊡□φ := by
-  classical
-  exact ⟨BoxBoxdotBoxDotbox⟩
+  simp_all
 
 
 /-- Imported declaration from the Incompleteness formalization. -/

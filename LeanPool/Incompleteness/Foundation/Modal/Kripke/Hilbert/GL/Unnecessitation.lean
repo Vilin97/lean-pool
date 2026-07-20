@@ -57,8 +57,7 @@ theorem «unnecessitation!» : Hilbert.GL ⊢! □φ → Hilbert.GL ⊢! φ := b
   have : Hilbert.GL ⊢! ⊡⊤ ==> φ := imply_boxdot_plain_of_imply_box_box this;
   exact this ⨀ boxdotverum!;
 
-noncomputable instance :
-    Entailment.Unnecessitation Hilbert.GL :=
+noncomputable instance : Entailment.Unnecessitation Hilbert.GL :=
   ⟨fun h => unnecessitation! ⟨h⟩ |>.some⟩
 
 end GL

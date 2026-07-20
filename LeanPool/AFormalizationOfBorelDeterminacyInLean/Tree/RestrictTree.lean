@@ -48,8 +48,7 @@ variable {S T U : Trees} {k m n : ℕ}
 @[ext] lemma resEq_ext (x y : (resEq k).obj S) (h : x.val = y.val) : x = y := Subtype.ext h
 lemma resEq_ext_hEq (x : (resEq k).obj T) (y : (resEq m).obj T) (h' : x.val = y.val) :
   HEq x y := by
-  have hkm : k = m := by
-    rw [← x.prop.2, ← y.prop.2, h']
+  have hkm : k = m := by rw [← x.prop.2, ← y.prop.2, h']
   cases hkm
   exact heq_of_eq (Subtype.ext h')
 
@@ -127,8 +126,7 @@ lemma fixing_iff_forget_isIso k (f : S ⟶ T) :
   constructor
   · intro _; exact Functor.map_isIso (forget Trees) ((res k).map f)
   · intro h
-    haveI : IsIso ((forget Trees).map ((res k).map f)) := by
-      exact h
+    haveI : IsIso ((forget Trees).map ((res k).map f)) := h
     constructor
     exact isIso_of_reflects_iso ((res k).map f) (forget Trees)
 lemma Fixing.bijective {k} {f : S ⟶ T} (h : Fixing k f) :
@@ -150,8 +148,7 @@ lemma fixing_iff_fixingEq k (f : S ⟶ T) :
     intro j
     exact (hs.ι_map (evResCocone k T)
       (Discrete.natTrans fun x ↦ match x with | { as := j } => (resEq ↑j).map f) j).symm
-  rw [hmap]
-  exact hres
+  rwa [hmap]
 lemma Fixing.mon {f : S ⟶ T} (h : Fixing k f) (hn : n ≤ k) :
   Fixing n f := by rw [fixing_iff_fixingEq] at *; intro m _; apply h m; omega
 lemma fixing_iso {f : S ⟶ T} [IsIso f] {k : ℕ} : Fixing k f := by constructor; infer_instance
@@ -181,8 +178,7 @@ lemma Fixing.inj (x y : S) (ht : Fixing x.val.length f := by as_aux_lemma => syn
 def pInv (y : T) (h : Fixing y.val.length f := by as_aux_lemma => synthFixing) : S :=
   let x := inv ((res y.val.length).map f) ⟨y.val, ⟨y.prop, le_rfl⟩⟩; res.val' x
 @[simp, simp_lengths] lemma h_length_pInv (y : T) (h : Fixing y.val.length f) :
-  (pInv f y h).val.length (α := no_index _) = y.val.length (α := no_index _) :=
-  by
+  (pInv f y h).val.length (α := no_index _) = y.val.length (α := no_index _) := by
   change (inv ((res y.val.length).map f) ⟨y.val, ⟨y.prop, le_rfl⟩⟩).val.length =
     y.val.length
   exact (inv ((res y.val.length).map f)).h_length ⟨y.val, ⟨y.prop, le_rfl⟩⟩

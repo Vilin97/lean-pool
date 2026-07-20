@@ -33,8 +33,7 @@ lemma slope_fdPolygon_seg1 (s t : ℝ) (hs : s < 1) (ht : t < 1) (hst : s ≠ t)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 
@@ -44,15 +43,12 @@ lemma slope_fdPolygon_seg2 (s t : ℝ) (hs : s > 1) (ht : t > 1) (hs2 : s ≤ 2)
   have hs' : ¬(s ≤ 1) := not_le.mpr hs
   have ht' : ¬(t ≤ 1) := not_le.mpr ht
   have heq_s : fdPolygon s =
-      chordSegment rho' iPoint (s - 1) := by
-    simp only [fdPolygon, hs', ↓reduceIte, hs2]
+      chordSegment rho' iPoint (s - 1) := by simp only [fdPolygon, hs', ↓reduceIte, hs2]
   have heq_t : fdPolygon t =
-      chordSegment rho' iPoint (t - 1) := by
-    simp only [fdPolygon, ht', ↓reduceIte, ht2]
+      chordSegment rho' iPoint (t - 1) := by simp only [fdPolygon, ht', ↓reduceIte, ht2]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_sub, Complex.ofReal_one, rho', iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -64,15 +60,12 @@ lemma slope_fdPolygon_seg3 (s t : ℝ) (hs : s > 2) (ht : t > 2) (hs3 : s ≤ 3)
   have hs2 : ¬(s ≤ 2) := not_le.mpr hs
   have ht2 : ¬(t ≤ 2) := not_le.mpr ht
   have heq_s : fdPolygon s =
-      chordSegment iPoint rho (s - 2) := by
-    simp only [fdPolygon, hs1, ↓reduceIte, hs2, hs3]
+      chordSegment iPoint rho (s - 2) := by simp only [fdPolygon, hs1, ↓reduceIte, hs2, hs3]
   have heq_t : fdPolygon t =
-      chordSegment iPoint rho (t - 2) := by
-    simp only [fdPolygon, ht1, ↓reduceIte, ht2, ht3]
+      chordSegment iPoint rho (t - 2) := by simp only [fdPolygon, ht1, ↓reduceIte, ht2, ht3]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_sub, Complex.ofReal_one, Complex.ofReal_ofNat, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -94,8 +87,7 @@ lemma slope_fdPolygon_seg4 (s t : ℝ) (hs : s > 3) (ht : t > 3) (hs4 : s ≤ 4)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; ring
 
@@ -116,23 +108,17 @@ lemma slope_fdPolygon_seg5 (s t : ℝ) (hs : s > 4) (ht : t > 4) (hst : s ≠ t)
   simp only [slope_def_module, heq_s, heq_t]
   erw [Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
-    simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
-    exact hst.symm
-  simp only [Complex.ofReal_inv, Complex.ofReal_sub]
-  field_simp [hne]; ring
+    simpa only [sub_ne_zero, ne_eq, Complex.ofReal_inj] using hst.symm
+  simp_all
+
+private lemma HHeight_sub_sqrt3_half : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
+  simp only [HHeight]; push_cast; ring
 
 lemma fdPolygon_deriv_ne_at_t1 : (-I : ℂ) ≠ (iPoint - rho') := by
   simp only [rho', iPoint]
   intro heq
-  have h_lhs : (-I : ℂ).re = 0 := by
-    simp only [Complex.neg_re, Complex.I_re, neg_zero]
-  have h_rhs : (I - (1/2 + ↑(Real.sqrt 3) / 2 * I)).re = -1/2 := by
-    simp only [Complex.sub_re, Complex.I_re, Complex.add_re,
-      Complex.one_re, Complex.div_ofNat_re, Complex.mul_re,
-      Complex.ofReal_re, Complex.I_re, mul_zero,
-      Complex.I_im, mul_one]
-    norm_num
-  rw [heq] at h_lhs; rw [h_rhs] at h_lhs; linarith
+  have h_lhs : (-I : ℂ).re = 0 := by simp only [Complex.neg_re, Complex.I_re, neg_zero]
+  simp_all
 
 lemma fdPolygon_deriv_ne_at_t2 : (iPoint - rho' : ℂ) ≠ (rho - iPoint) := by
   simp only [rho', iPoint, rho]
@@ -168,8 +154,7 @@ lemma fdPolygon_deriv_ne_at_t3 : (rho - iPoint : ℂ) ≠ I := by
 lemma fdPolygon_deriv_ne_at_t4 : (I : ℂ) ≠ (1 : ℂ) := by
   intro heq
   have h_lhs : (I : ℂ).im = 1 := Complex.I_im
-  have h_rhs : (1 : ℂ).im = 0 := Complex.one_im
-  rw [heq] at h_lhs; rw [h_rhs] at h_lhs; linarith
+  simp_all
 
 lemma slope_fdPolygon_at_t1_left (s : ℝ) (hs : s < 1) :
     slope fdPolygon 1 s =
@@ -207,8 +192,7 @@ lemma slope_fdPolygon_at_t2_left (s : ℝ) (hs1 : s > 1) (hs2 : s < 2) :
   have heqs : fdPolygon s = chordSegment rho' iPoint (s - 1) := by
     simp only [fdPolygon, not_le.mpr hs1, ↓reduceIte, le_of_lt hs2]
   simp only [slope_def_module, heq2, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 2 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs2
+  have hne : (↑s : ℂ) - 2 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs2
   simp only [Complex.ofReal_sub, Complex.ofReal_one, rho', iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -222,8 +206,7 @@ lemma slope_fdPolygon_at_t2_right (s : ℝ) (hs2 : s > 2) (hs3 : s ≤ 3) :
     simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hs2),
       ↓reduceIte, not_le.mpr hs2, hs3]
   simp only [slope_def_module, heq2, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 2 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs2
+  have hne : (↑s : ℂ) - 2 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs2
   simp only [Complex.ofReal_sub, Complex.ofReal_ofNat, Complex.ofReal_one, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -238,8 +221,7 @@ lemma slope_fdPolygon_at_t3_left (s : ℝ) (hs2 : s > 2) (hs3 : s < 3) :
     simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hs2),
       ↓reduceIte, not_le.mpr hs2, le_of_lt hs3]
   simp only [slope_def_module, heq3, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 3 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs3
+  have hne : (↑s : ℂ) - 3 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs3
   simp only [Complex.ofReal_sub, Complex.ofReal_ofNat, Complex.ofReal_one, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -257,8 +239,7 @@ lemma slope_fdPolygon_at_t3_right (s : ℝ) (hs3 : s > 3) (hs4 : s ≤ 4) :
       not_le.mpr hs3, hs4]
   simp only [slope_def_module, heq3, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 3 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs3
+  have hne : (↑s : ℂ) - 3 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs3
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; simp only [HHeight]; push_cast; ring
 
@@ -276,8 +257,7 @@ lemma slope_fdPolygon_at_t4_left (s : ℝ) (hs3 : s > 3) (hs4 : s < 4) :
       not_le.mpr hs3, le_of_lt hs4]
   simp only [slope_def_module, heq4, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 4 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs4
+  have hne : (↑s : ℂ) - 4 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs4
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; simp only [HHeight]; push_cast; ring
 
@@ -294,8 +274,7 @@ lemma slope_fdPolygon_at_t4_right (s : ℝ) (hs4 : s > 4) :
       not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hs4), not_le.mpr hs4]
   simp only [slope_def_module, heq4, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 4 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs4
+  have hne : (↑s : ℂ) - 4 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs4
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; push_cast; ring
 
@@ -355,53 +334,43 @@ lemma slope_fdPolygon_tendsto_seg5_right :
     exact (slope_fdPolygon_at_t4_right s hs.1).symm
   · exact tendsto_const_nhds
 
+/-- If `fdPolygon` is differentiable at `k` and the slope tends to `vL` from the left and
+    `vR` from the right, then `vL = vR`. Used to derive a contradiction at partition points. -/
+private lemma fdPolygon_slope_lr_eq {vL vR : ℂ} (k₀ : ℝ)
+    (hLbot : (𝓝[<] k₀).NeBot) (hRbot : (𝓝[>] k₀).NeBot)
+    (hdiff : DifferentiableAt ℝ fdPolygon k₀)
+    (hLtends : Tendsto (slope fdPolygon k₀) (𝓝[<] k₀) (𝓝 vL))
+    (hRtends : Tendsto (slope fdPolygon k₀) (𝓝[>] k₀) (𝓝 vR)) : vL = vR := by
+  have hslope : Tendsto (slope fdPolygon k₀) (𝓝[≠] k₀) (𝓝 (deriv fdPolygon k₀)) :=
+    hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
+  have hL := tendsto_nhds_unique' hLbot
+    (hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))) hLtends
+  have hR := tendsto_nhds_unique' hRbot
+    (hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))) hRtends
+  rw [← hL, ← hR]
+
 lemma fdPolygon_not_differentiableAt_partition (t : ℝ) (ht : t ∈ ({1, 2, 3, 4} : Finset ℝ)) :
     ¬DifferentiableAt ℝ fdPolygon t := by
   simp only [Finset.mem_insert, Finset.mem_singleton] at ht
   rcases ht with rfl | rfl | rfl | rfl
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 1) (𝓝[≠] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 1) (𝓝[<] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 1) (𝓝[>] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg1_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg2_right
-    rw [hL'] at hR'; rw [fdPolygon_seg1_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t1 hR'
+    have h := fdPolygon_slope_lr_eq 1 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg1_left slope_fdPolygon_tendsto_seg2_right
+    rw [fdPolygon_seg1_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t1 h
+  · exact fun hdiff => fdPolygon_deriv_ne_at_t2
+      (fdPolygon_slope_lr_eq 2 inferInstance inferInstance hdiff
+        slope_fdPolygon_tendsto_seg2_left slope_fdPolygon_tendsto_seg3_right)
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 2) (𝓝[≠] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 2) (𝓝[<] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 2) (𝓝[>] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg2_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg3_right
-    rw [hL'] at hR'; exact fdPolygon_deriv_ne_at_t2 hR'
+    have h := fdPolygon_slope_lr_eq 3 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg3_left slope_fdPolygon_tendsto_seg4_right
+    rw [fdPolygon_seg4_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t3 h
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 3) (𝓝[≠] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 3) (𝓝[<] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 3) (𝓝[>] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg3_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg4_right
-    rw [hL'] at hR'; rw [fdPolygon_seg4_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t3 hR'
-  · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 4) (𝓝[≠] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 4) (𝓝[<] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 4) (𝓝[>] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg4_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg5_right
-    rw [hL'] at hR'; rw [fdPolygon_seg4_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t4 hR'
+    have h := fdPolygon_slope_lr_eq 4 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg4_left slope_fdPolygon_tendsto_seg5_right
+    rw [fdPolygon_seg4_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t4 h
 
 lemma fdPolygon_deriv_bounded :
     ∃ M : ℝ, ∀ t ∈ Icc 0 5, ‖deriv fdPolygon t‖ ≤ M := by
@@ -414,10 +383,8 @@ lemma fdPolygon_deriv_bounded :
         filter_upwards [eventually_lt_nhds h_seg1] with s hs
         simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
       rw [heq, fdPolygon_deriv_seg1]; simp only
-      rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one]
-      have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-        simp only [HHeight]; push_cast; ring
-      rw [heq2, norm_one]; norm_num
+      rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
+        HHeight_sub_sqrt3_half, norm_one]; norm_num
     · push Not at h_seg1
       by_cases h_seg2 : t < 2 ∧ t > 1
       · have heq : deriv fdPolygon t = deriv fdPolygonSeg2 t := by
@@ -455,10 +422,8 @@ lemma fdPolygon_deriv_bounded :
                 show ¬s ≤ 3 from not_le.mpr hs1, show s ≤ 4 from le_of_lt hs2,
                 if_true, if_false, fdPolygonSeg4]
             rw [heq, fdPolygon_deriv_seg4]; simp only
-            rw [Complex.norm_mul, Complex.norm_I, mul_one]
-            have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-              simp only [HHeight]; push_cast; ring
-            rw [heq2, norm_one]; norm_num
+            rw [Complex.norm_mul, Complex.norm_I, mul_one,
+              HHeight_sub_sqrt3_half, norm_one]; norm_num
           · push Not at h_seg4
             by_cases h_seg5 : t > 4 ∧ t < 5
             · have heq : deriv fdPolygon t = deriv fdPolygonSeg5 t := by
@@ -478,10 +443,8 @@ lemma fdPolygon_deriv_bounded :
                   filter_upwards [Iio_mem_nhds (by norm_num : (0 : ℝ) < 1)] with s hs
                   simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
                 rw [heq, fdPolygon_deriv_seg1]; simp only
-                rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one]
-                have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-                  simp only [HHeight]; push_cast; ring
-                rw [heq2, norm_one]; norm_num
+                rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one,
+                  HHeight_sub_sqrt3_half, norm_one]; norm_num
               · by_cases h_five : t = 5
                 · have heq : deriv fdPolygon t = deriv fdPolygonSeg5 t := by
                     apply Filter.EventuallyEq.deriv_eq; rw [h_five]
@@ -493,9 +456,7 @@ lemma fdPolygon_deriv_bounded :
                       show ¬s ≤ 4 from not_le.mpr hs, if_false, fdPolygonSeg5]
                   rw [heq, fdPolygon_deriv_seg5]; simp only [norm_one]; norm_num
                 · exfalso
-                  have ht_le4 : t ≤ 4 := by
-                    by_contra hc; push Not at hc
-                    exact h_five (le_antisymm ht.2 (h_seg5 hc))
+                  have ht_le4 : t ≤ 4 := by grind
                   have ht_ge1 : t ≥ 1 := h_seg1
                   have ht_in : t ∈ ({1, 2, 3, 4} : Finset ℝ) := by
                     simp only [Finset.mem_insert, Finset.mem_singleton]

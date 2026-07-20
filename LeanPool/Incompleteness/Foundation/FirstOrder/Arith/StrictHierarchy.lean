@@ -32,8 +32,7 @@ inductive StrictHierarchy : Polarity → ℕ → {n : ℕ} → Semiformula L μ 
     StrictHierarchy Pg (s + 1) (∀' φ)
 
 lemma _root_.LO.FirstOrder.Arith.DeltaZero.of_open {φ : Semiformula L μ n} :
-    φ.Open → DeltaZero φ :=
-  Hierarchy.of_open
+    φ.Open → DeltaZero φ := Hierarchy.of_open
 
 namespace StrictHierarchy
 

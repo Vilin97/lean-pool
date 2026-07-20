@@ -61,8 +61,7 @@ theorem heisenberg_iff : Nonempty (L ≃ₗ⁅K⁆ (Heisenberg K)) ↔
           Pi.single_eq_same, sub_self]
         rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
         change (![(0 : K), 0, 0] : Fin 3 → K) = 0
-        ext i
-        fin_cases i <;> simp
+        simp_all
       · change ⁅f.symm (Pi.single 0 1), f.symm (Pi.single 2 1)⁆ = 0
         rw [← LieEquiv.map_lie f.symm]
         simp only [Heisenberg.bracket, Nat.succ_eq_add_one, Nat.reduceAdd, ne_eq,
@@ -70,8 +69,7 @@ theorem heisenberg_iff : Nonempty (L ≃ₗ⁅K⁆ (Heisenberg K)) ↔
           Pi.single_eq_same]
         rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
         change (![(0 * 1 - 0 : K), 0, 0] : Fin 3 → K) = 0
-        ext i
-        fin_cases i <;> simp
+        simp_all
   · intro ⟨B, hB01, hB02, hB12⟩
     exact ⟨{ Basis.equivFun B with
       map_lie' := by
@@ -120,8 +118,7 @@ theorem affinePlusAbelian_iff : Nonempty (L ≃ₗ⁅K⁆ (AffinePlusAbelian K))
           Fin.reduceEq, mul_zero, sub_self]
       rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
       change (![(0 : K), 0, 0] : Fin 3 → K) = 0
-      ext i
-      fin_cases i <;> simp
+      simp_all
     · constructor
       · change ⁅f.symm (Pi.single 0 1), f.symm (Pi.single 2 1)⁆ = 0
         rw [← LieEquiv.map_lie f.symm]
@@ -130,8 +127,7 @@ theorem affinePlusAbelian_iff : Nonempty (L ≃ₗ⁅K⁆ (AffinePlusAbelian K))
           Fin.reduceEq, mul_zero, sub_self]
         rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
         change (![(0 : K), 0, 0] : Fin 3 → K) = 0
-        ext i
-        fin_cases i <;> simp
+        simp_all
       · change ⁅f.symm (Pi.single 1 1), f.symm (Pi.single 2 1)⁆ = f.symm (Pi.single 1 1)
         rw [← LieEquiv.map_lie f.symm]
         simp only [AffinePlusAbelian.bracket, Nat.succ_eq_add_one, Nat.reduceAdd,
@@ -196,8 +192,7 @@ theorem hyperbolic_iff : Nonempty (L ≃ₗ⁅K⁆ (Hyperbolic K)) ↔
           Fin.reduceEq, mul_zero, sub_self]
         rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
         change (![(0 : K), 0, 0] : Fin 3 → K) = 0
-        ext i
-        fin_cases i <;> simp
+        simp_all
   · intro ⟨B, hB01, hB02, hB12⟩
     exact ⟨{ Basis.equivFun B with
       map_lie' := by
@@ -251,8 +246,7 @@ theorem family_iff (α β : K) : Nonempty (L ≃ₗ⁅K⁆ (Family K α β)) ↔
           Fin.reduceEq, mul_zero, sub_self]
         rw [← LieEquiv.coe_toLinearEquiv, LinearEquiv.map_eq_zero_iff]
         change (![0, 0 * α, 0 * β + 0 - 0] : Fin 3 → K) = 0
-        ext i
-        fin_cases i <;> simp
+        simp_all
       · change ⁅f.symm (Pi.single 0 1), f.symm (Pi.single 2 1)⁆ =
           α • f.symm (Pi.single 1 1) + β • f.symm (Pi.single 2 1)
         have key : ∀ (e0 e1 e2 : Family K α β), e0 = Pi.single 0 1 → e1 = Pi.single 1 1 →
@@ -265,10 +259,7 @@ theorem family_iff (α β : K) : Nonempty (L ≃ₗ⁅K⁆ (Family K α β)) ↔
           funext i
           change (![0, _, _] : Fin 3 → K) i = (α • (Pi.single 1 1 : Fin 3 → K)) i
             + (β • (Pi.single 2 1 : Fin 3 → K)) i
-          fin_cases i
-          · simp
-          · simp
-          · simp
+          fin_cases i <;> simp
         rw [← LieEquiv.map_lie f.symm,
           key (Pi.single 0 1) (Pi.single 1 1) (Pi.single 2 1) rfl rfl rfl,
           map_add, map_smul, map_smul]
@@ -312,8 +303,7 @@ theorem classification (dim3 : finrank K L = 3) (hs : IsSolvable L) :
     (∃ α, α ≠ 0 ∧ Nonempty (L ≃ₗ⁅K⁆ (Family K α 1))) := by
   have : FiniteDimensional K L := by
     apply FiniteDimensional.of_finrank_pos
-    rw [dim3]
-    norm_num
+    simp_all
   rcases aux_dim_comm dim3 with dc₀|dc₁|dc₂|dc₃
   · left -- dim commutator is 0
     rw [LieAlgebra.abelian_iff_dim_comm_zero] at dc₀
@@ -346,25 +336,18 @@ theorem classification (dim3 : finrank K L = 3) (hs : IsSolvable L) :
       use α, hα
       rw [family_iff α 0]
       use B, hB01, hB02
-      rw [zero_smul, add_zero]
-      exact hB12
+      rwa [zero_smul, add_zero]
     · right
       right -- Family_α_β α 1
       use α, hα
       rw [family_iff α 1]
       use B, hB01, hB02
-      rw [one_smul]
-      exact hB12
+      rwa [one_smul]
   · have : Nontrivial L := nontrivial_of_finrank_pos (by exact Nat.lt_of_sub_eq_succ dim3)
     have := derivedSeries_lt_top_of_solvable K L
     rw [← dim3] at dc₃
     apply eq_top_of_finrank_eq at dc₃
-    have : (derivedSeries K L 1).toSubmodule < ⊤ := by
-      assumption
-    rw [← dc₃] at this
-    unfold commutator at this
-    apply (lt_self_iff_false _).mp at this
-    contradiction
+    simp_all
 
 namespace Family
 
@@ -395,11 +378,8 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
       rw [← h]
       change (![(0 : K), a, b] : Fin 3 → K) =
         a • (![0, 1, 0] : Fin 3 → K) + b • (![0, 0, 1] : Fin 3 → K)
-      ext i
-      fin_cases i <;> simp [Matrix.smul_cons, Matrix.smul_empty]
-    have : ![0, a, b] 0 = ![1, 0, 0] 0 := by
-      rw [h]
-    simp at this
+      simp_all
+    simp_all
   have vnotinc : v ∉ commutator K (Family K α' β') := by
     intro ha
     have := LieIdeal.mem_map (f := f.symm.toLieHom) (I := commutator K (Family K α' β')) ha
@@ -427,8 +407,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     have : u.val 0 = 0 := by
       obtain ⟨u, hu⟩ := u
       have u_in_span : u ∈ span K {Family.e₂, Family.e₃} := by
-        rw [← Family.commutator_is_span_e₂e₃ hα']
-        exact hu
+        rwa [← Family.commutator_is_span_e₂e₃ hα']
       let ⟨a, b, h⟩ := mem_span_pair.mp u_in_span
       have w := h
       unfold Family.e₂ Family.e₃ at h
@@ -436,11 +415,9 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
         rw [← h]
         change (![(0 : K), a, b] : Fin 3 → K) =
           a • (![0, 1, 0] : Fin 3 → K) + b • (![0, 0, 1] : Fin 3 → K)
-        ext i
-        fin_cases i <;> simp [Matrix.smul_cons, Matrix.smul_empty]
+        simp_all
       symm at h
-      apply_fun (fun x => x 0) at h
-      exact h
+      simp_all
     unfold Family.ade₁Restr adv_restr
     rw [Family.ad_restr_apply, Family.ad_restr_apply]
     rw [@SetLike.mk_smul_of_tower_mk]
@@ -474,8 +451,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
       exact v0b0v (B_basis' j)
     rw [← this]
     rw [@LinearEquiv.map_smul]
-    rw [← Pi.smul_apply]
-    simp only [Fin.isValue, Pi.smul_apply, smul_eq_mul, Finsupp.coe_smul]
+    simp_all
   have det_adv_restr_eq : LinearMap.det adv_restr = -((v 0)^2 * α') := by
     rw [← LinearMap.det_toMatrix (ι := Fin 2) (f := (adv_restr)) B_basis']
     rw [← hM_adv_restr]
@@ -646,8 +622,7 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
   -- we show that ⁅Family.e₁, Family.e₂⁆ = t • Family.e₂
   have : ade₁ ⟨Family.e₂, Family.e₂_in_comm (hα := hα)⟩ = t • ⟨Family.e₂,
     Family.e₂_in_comm (hα := hα)⟩ := by
-    rw [ade₁_id]
-    simp only [LinearMap.smul_apply, LinearMap.id_coe, id_eq, SetLike.mk_smul_mk]
+    simp_all
   unfold ade₁ Family.ade₁Restr at this
   rw [Family.ad_restr_apply] at this
   simp only [SetLike.mk_smul_mk, Subtype.mk.injEq] at this
@@ -655,12 +630,7 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
   --this leads to a contradiction because ⁅Family.e₁, Family.e₂⁆ = Family.e₃
   rw [ad_apply, Family.e₃_bracket, Family.e₂_def, Family.e₃_def] at this
   unfold Family at this
-  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.smul_cons, smul_eq_mul, mul_zero, mul_one,
-    Matrix.smul_empty] at this
-  apply funext_iff.mp at this
-  specialize this 2
-  simp only [Fin.isValue, Matrix.cons_val_two, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.tail_cons,
-    Matrix.head_cons, one_ne_zero] at this
+  simp_all
 
 /-the following are corollaries of the above-/
 theorem iso_1 {α α' : K} (hα : α ≠ 0) (hα' : α' ≠ 0) : (Family K α 1 ≃ₗ⁅K⁆ Family K α' 1) →

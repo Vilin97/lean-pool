@@ -16,8 +16,7 @@ open Kripke
 open Geachean
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev _root_.LO.Modal.Kripke.TransitiveEuclideanFrameClass :
-    FrameClass :=
+abbrev _root_.LO.Modal.Kripke.TransitiveEuclideanFrameClass : FrameClass :=
   { F | IsTrans F.World F.Rel ∧ Euclidean F }
 
 namespace Hilbert

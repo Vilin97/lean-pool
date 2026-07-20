@@ -159,16 +159,14 @@ variable {M : Type*} [ORingStruc M] [s : Structure L M]
     intro H φ hp f; exact eval_lMap_oringEmb.mpr (H hp f)
 
 instance [M ⊧ₘ* 𝐈open] :
-    M ⊧ₘ* 𝐏𝐀⁻ :=
-  ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ Semiformula.Open)
+    M ⊧ₘ* 𝐏𝐀⁻ := ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ Semiformula.Open)
 
 instance [M ⊧ₘ* 𝐈open] : M ⊧ₘ* Theory.indScheme ℒₒᵣ Semiformula.Open :=
   ModelsTheory.of_add_right M 𝐏𝐀⁻ (Theory.indScheme _ Semiformula.Open)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma models_PeanoMinus_of_models_indH (Γ n) [M ⊧ₘ* Theory.indH Γ n] :
-    M ⊧ₘ* 𝐏𝐀⁻ :=
-  ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ (Arith.Hierarchy Γ n))
+    M ⊧ₘ* 𝐏𝐀⁻ := ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ (Arith.Hierarchy Γ n))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma models_indScheme_of_models_indH (Γ n) [M ⊧ₘ* Theory.indH Γ n] :
@@ -176,8 +174,7 @@ lemma models_indScheme_of_models_indH (Γ n) [M ⊧ₘ* Theory.indH Γ n] :
   ModelsTheory.of_add_right M 𝐏𝐀⁻ (Theory.indScheme _ (Arith.Hierarchy Γ n))
 
 instance models_PeanoMinus_of_models_peano [M ⊧ₘ* 𝐏𝐀] :
-    M ⊧ₘ* 𝐏𝐀⁻ :=
-  ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ Set.univ)
+    M ⊧ₘ* 𝐏𝐀⁻ := ModelsTheory.of_add_left M 𝐏𝐀⁻ (Theory.indScheme _ Set.univ)
 
 end «lp_section_4»
 

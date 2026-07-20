@@ -54,8 +54,7 @@ theorem ContinuousLinearEquiv.map_nhdsWithin_preimage_eq {R M N : Type*} [Semiri
     [AddCommMonoid M] [Module R M] [TopologicalSpace M]
     [AddCommMonoid N] [Module R N] [TopologicalSpace N]
     (e : M ≃L[R] N) (s : Set N) (x : M) :
-    (𝓝[e ⁻¹' s] x).map e = 𝓝[s] (e x) := by
-  rw [e.map_nhdsWithin_eq, e.surjective.image_preimage]
+    (𝓝[e ⁻¹' s] x).map e = 𝓝[s] (e x) := by rw [e.map_nhdsWithin_eq, e.surjective.image_preimage]
 
 namespace Submodule
 

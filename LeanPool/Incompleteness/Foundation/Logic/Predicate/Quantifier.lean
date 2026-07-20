@@ -62,8 +62,7 @@ lemma eq_pi : pi = Pg := rfl
 
 @[simp] lemma alt_pi : alt Pg = Sg := rfl
 
-@[simp] lemma alt_alt (Γ : Polarity) : Γ.alt.alt = Γ := by
-  rcases Γ <;> rfl
+@[simp] lemma alt_alt (Γ : Polarity) : Γ.alt.alt = Γ := by rcases Γ <;> rfl
 
 end Polarity
 
@@ -96,8 +95,7 @@ lemma eq_delta : delta = Dlt := rfl
 
 @[simp] lemma alt_delta : alt Dlt = Dlt := rfl
 
-@[simp] lemma alt_alt (Γ : SigmaPiDelta) : Γ.alt.alt = Γ := by
-  rcases Γ <;> rfl
+@[simp] lemma alt_alt (Γ : SigmaPiDelta) : Γ.alt.alt = Γ := by rcases Γ <;> rfl
 
 end SigmaPiDelta
 
@@ -218,8 +216,7 @@ section «lp_section_4»
 variable {α : ℕ → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) :
-    α n :=
+def ball [UnivQuantifier α] [Arrow (α (n + 1))] (φ : α (n + 1)) (ψ : α (n + 1)) : α n :=
   ∀' (φ ==> ψ)
 
 /-- Imported declaration from the Incompleteness formalization. -/

@@ -32,16 +32,14 @@ lemma prime_algebraMap_of_not_dvd_pow (y p : R₀) (hp : Prime p)
   have hyne : y ≠ 0 := by
     intro h
     apply hpy 1
-    rw [h, pow_one]
-    exact dvd_zero p
+    simp_all
   have hpow_ne : (0 : R₀) ∉ Submonoid.powers y := by
     rintro ⟨n, hn⟩
     exact pow_ne_zero n hyne hn
   have hinj := IsLocalization.injective (Localization.Away y)
     (le_nonZeroDivisors_of_noZeroDivisors hpow_ne)
-  have hne : algebraMap R₀ (Localization.Away y) p ≠ 0 := by
-    intro h
-    exact hp.ne_zero (hinj (by rw [h, map_zero]))
+  have hne : algebraMap R₀ (Localization.Away y) p ≠ 0 :=
+    fun h => hp.ne_zero (hinj (by rw [h, map_zero]))
   -- Reduce primality of p in R[y⁻¹] to disjointness of (p) from powers of y
   rw [← Ideal.span_singleton_prime hne]
   rw [show Ideal.span {algebraMap R₀ (Localization.Away y) p} =
@@ -74,8 +72,7 @@ theorem localization_away_UFD (y : R₀) (hy : y ≠ 0) :
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers y) z
   change IsLocalization.mk' _ a s ≠ 0 at hz
   have ha : a ≠ 0 := by intro h
-                        apply hz
-                        simp [h]
+                        simp_all
   obtain ⟨f, hf_prime, hf_assoc⟩ := UniqueFactorizationMonoid.exists_prime_factors a ha
   -- Partition prime factors: g = primes not dividing y (stay prime),
   -- h = primes dividing y (become units)
@@ -151,8 +148,7 @@ theorem localization_submonoid_UFD {S : Type*} [CommRing S]
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective M z
   change IsLocalization.mk' _ a s ≠ 0 at hz
   have ha : a ≠ 0 := by intro h
-                        apply hz
-                        simp [h]
+                        simp_all
   obtain ⟨f, hf_prime, hf_assoc⟩ :=
     UniqueFactorizationMonoid.exists_prime_factors a ha
   -- g = primes disjoint from M (stay prime in S), h = primes dividing some m ∈ M (become units)
