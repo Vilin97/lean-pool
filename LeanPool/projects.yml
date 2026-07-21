@@ -3468,7 +3468,7 @@ projects:
       - declaration: Egrs75.MuFinish.egrs_two_prime_mu
         informal: Proves that for distinct odd primes p and q there are infinitely many n with p and q both not dividing the central binomial coefficient binom(2n,n), via the mu-measure descent.
       - declaration: Egrs75.Finish.egrs_two_prime_finish
-        informal: Proves the same theorem along an independent second route, a bad-bit-mask strong induction consuming the same single-move lemma.
+        informal: Reassembles the same theorem via bad-bit-mask strong induction, with the low-case clearing discharged by Egrs75.MuFinish.egrs_clearing_low_mu.
       - declaration: Egrs75.not_dvd_centralBinom_iff_lowDigits
         informal: The Kummer bridge, stating that an odd prime p does not divide binom(2n,n) exactly when every base-p digit of n is at most (p-1)/2.
       - declaration: Egrs75.MathlibAPI.irrational_log_div_log
