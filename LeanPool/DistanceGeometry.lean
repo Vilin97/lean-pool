@@ -16,8 +16,8 @@ import LeanPool.DistanceGeometry.CayleyMengerVolume
 Source: doi:10.2307/1968654
 Authors: Egor Lyfar
 Status: verified
-Main declarations: `DistanceGeometry.schoenberg`, `DistanceGeometry.encard_setOf_forall_dist_eq_le_two`, `DistanceGeometry.trilateration_le_two`, `DistanceGeometry.cayleyMenger_det_heron`
-Tags: distance-geometry, euclidean-geometry, linear-algebra, positive-semidefinite-matrices, cayley-menger
+Main declarations: `DistanceGeometry.schoenberg`, `DistanceGeometry.trilateration_le_two`
+Tags: distance-geometry, euclidean-geometry, linear-algebra, cayley-menger
 MSC: 51K05, 52C99, 15A18
 -/
 

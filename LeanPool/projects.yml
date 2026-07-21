@@ -4806,9 +4806,7 @@ projects:
     provenance: AI
     main_declarations:
       - DistanceGeometry.schoenberg
-      - DistanceGeometry.encard_setOf_forall_dist_eq_le_two
       - DistanceGeometry.trilateration_le_two
-      - DistanceGeometry.cayleyMenger_det_heron
     main_results:
       - declaration: DistanceGeometry.schoenberg
         informal: >-
@@ -4832,7 +4830,6 @@ projects:
       - distance-geometry
       - euclidean-geometry
       - linear-algebra
-      - positive-semidefinite-matrices
       - cayley-menger
     msc:
       - "51K05"
