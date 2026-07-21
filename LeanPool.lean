@@ -1474,6 +1474,17 @@ import LeanPool.LeanQuantumAlg.Util.FinPow
 import LeanPool.LeanQuantumAlg.Util.HilbertSchmidt
 import LeanPool.LeanQuantumAlg.Util.Polynomial
 import LeanPool.LeanQuantumAlg.Util.TrigPolynomial
+import LeanPool.LehmerE10
+import LeanPool.LehmerE10.CoxeterE8
+import LeanPool.LehmerE10.CyclotomicKill
+import LeanPool.LehmerE10.Defs
+import LeanPool.LehmerE10.Ergodic
+import LeanPool.LehmerE10.Kronecker
+import LeanPool.LehmerE10.Mahler
+import LeanPool.LehmerE10.Main
+import LeanPool.LehmerE10.SalemSymmetry
+import LeanPool.LehmerE10.TraceQuintic
+import LeanPool.LehmerE10.UnitCircleFactors
 import LeanPool.Lentil
 import LeanPool.Lentil.Basic
 import LeanPool.Lentil.Expr

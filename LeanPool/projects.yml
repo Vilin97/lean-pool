@@ -4556,3 +4556,49 @@ projects:
     msc:
       - "11B75"
       - "05D99"
+  - slug: lehmer-e10
+    title: Lehmer's Polynomial and the E10 Coxeter Element
+    summary: >-
+      Proves that Lehmer's degree-10 polynomial — the integer polynomial of
+      smallest known Mahler measure above 1 — is irreducible over the
+      integers, and that it is the characteristic polynomial of a Coxeter
+      element of the E10 Weyl group (the rank-10 instance of McMullen).
+      Against Mathlib's Mahler-measure API it computes M(L) exactly as the
+      Salem root with the unconditional bounds 1 < M(L) < 7/5, states
+      Lehmer's conjecture as a defined Prop (never assumed) with the strong
+      form implying the gap form, and contrasts the E8 Coxeter element
+      (order exactly 30) with the E10 element (infinite order in GL(10,Z)):
+      the E-series crosses from torsion to a Salem matrix at rank 10, and
+      the crossing value is Lehmer's number.
+    branch: number theory
+    entry_module: LeanPool.LehmerE10
+    authors:
+      - Dillon Ryan
+    source:
+      github_repo: dillon-11/lehmer-E10
+      url: https://github.com/dillon-11/lehmer-E10
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LehmerE10.main_theorem
+    main_results:
+      - declaration: LehmerE10.main_theorem
+        informal: >-
+          Lehmer's polynomial L(x) = x^10 + x^9 - x^7 - x^6 - x^5 - x^4 -
+          x^3 + x + 1 is irreducible over the integers, and the
+          characteristic polynomial of a Coxeter element of the E10 Weyl
+          group equals L.
+      - declaration: LehmerE10.lehmer_mahlerMeasure
+        informal: >-
+          The Mahler measure of L equals its Salem root mu, with the
+          unconditional bounds 1 < M(L) < 7/5.
+    tags:
+      - number-theory
+      - mahler-measure
+      - salem-numbers
+      - coxeter-groups
+    msc:
+      - "11R06"
+      - "11C08"
+      - "20F55"
