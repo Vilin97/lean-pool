@@ -4782,3 +4782,60 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: gkp-carry-language
+    title: A Carry-Language Characterization of the Graham--Knuth--Patashnik Conjecture
+    summary: >-
+      Formalizes a complete reduction of the Graham--Knuth--Patashnik central-binomial
+      divisibility conjecture to avoidance of an explicit regular language by powers of two.
+      Develops the Kummer digit-sum bridge, the binary-popcount reduction, a verified
+      four-state ternary doubling automaton, an exact classification and enumeration of its
+      deficient-carry language, and a bounded divisibility certificate. The universal
+      language-avoidance statement, and hence the GKP conjecture itself, remain open.
+    branch: number theory
+    entry_module: LeanPool.GKPCarry
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science, Second Edition"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: https://cs.stanford.edu/~knuth/gkp.html
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+    main_results:
+      - declaration: GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+        informal: >-
+          The GKP conjecture is equivalent to the assertion that every nonexceptional power
+          of two avoids the explicitly defined deficient-carry regular language. This is an
+          exact reformulation and does not prove the remaining avoidance assertion.
+      - declaration: GKPCarry.nine_dvd_centralBinom_iff_two_le_ternaryDoubleCarryCount
+        informal: >-
+          For every natural number n, its central binomial coefficient is divisible by nine
+          exactly when doubling the canonical ternary expansion of n creates at least two
+          carries.
+      - declaration: GKPCarry.badCarryLanguage_true_iff_shape
+        informal: >-
+          The deficient-carry automaton accepts exactly three concrete little-endian ternary
+          word shapes: all digits zero or one; a unique top digit two; or a unique two followed
+          by a higher zero with all other digits zero or one.
+      - declaration: GKPCarry.card_badCarryWords
+        informal: >-
+          Among all ternary words of length n+2, exactly (n+7) times 2^n create fewer than two
+          carries when doubled.
+      - declaration: GKPCarry.nine_dvd_centralBinom_four_pow_in_finite_range
+        informal: >-
+          For every m from 27 through 6560, nine divides the central binomial coefficient
+          indexed by 4^m; this is a bounded computational corollary, not the headline result.
+    tags:
+      - number-theory
+      - finite-automata
+    msc:
+      - "11A63"
+      - "11B65"
+      - "68Q45"
