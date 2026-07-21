@@ -13,13 +13,13 @@ public import Mathlib.Analysis.InnerProductSpace.GramMatrix
 
 This file sets up the basic objects of Euclidean distance geometry: the
 squared-distance matrix of a point configuration, the predicate that a given
-matrix is such a matrix, embeddability in a fixed dimension, and the centered
+matrix is such a matrix, embeddability in a fixed dimension, and the basepoint-centered
 Gram matrix that underlies Schoenberg's characterization.
 
 A configuration of points indexed by `ι` in `k`-dimensional Euclidean space is a
 map `x : ι → EuclideanSpace ℝ (Fin k)`. The *squared-distance matrix* `sqDistMatrix x`
 records `dist (x i) (x j) ^ 2`. Schoenberg's theorem characterizes which symmetric
-hollow matrices arise this way through their *centered Gram matrix*.
+hollow matrices arise this way through their *basepoint-centered Gram matrix*.
 
 ## Main definitions
 
@@ -27,16 +27,16 @@ hollow matrices arise this way through their *centered Gram matrix*.
 * `DistanceGeometry.IsSqDistMatrix D x` : `D` is the squared-distance matrix of `x`.
 * `DistanceGeometry.EmbedsIn D k` : `D` embeds as a squared-distance matrix in
   `EuclideanSpace ℝ (Fin k)`.
-* `DistanceGeometry.IsPreDistMatrix D` : `D` is symmetric and hollow.
-* `DistanceGeometry.centeredGram D` : the Gram matrix obtained by centering `D` at
-  the base index `0`.
+* `DistanceGeometry.IsPreDistMatrix D` : the project's symmetric-and-hollow
+  structural predicate.
+* `DistanceGeometry.centeredGram D` : the Gram matrix anchored at the base index `0`.
 
 ## Implementation notes
 
-`centeredGram` is centered at the fixed base index `0 : Fin n` (hence `[NeZero n]`);
-this is a gauge choice. Any base index yields a Gram matrix congruent to this one,
-with the same rank and positive-semidefiniteness, so the Schoenberg conditions are
-base-point independent. The point index is taken to be `Fin n` here because the
+`centeredGram` uses the fixed base index `0 : Fin n` (hence `[NeZero n]`) as its
+origin. For a symmetric hollow matrix, changing the base index gives a congruent
+Gram matrix with the same rank and positive-semidefiniteness. The Schoenberg
+conditions are therefore basepoint-independent. The point index is `Fin n` because the
 base-`0` choice uses the order on `Fin n`; the squared-distance machinery itself
 only needs `Fintype` and `DecidableEq`.
 
@@ -92,27 +92,28 @@ some configuration of points in `EuclideanSpace ℝ (Fin k)`. -/
 def EmbedsIn (D : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) : Prop :=
   ∃ x : Fin n → EuclideanSpace ℝ (Fin k), IsSqDistMatrix D x
 
-/-- `D` is a pre-distance matrix: symmetric and hollow (zero diagonal). Every
-squared-distance matrix is a pre-distance matrix; this is the structural hypothesis
-of the sufficiency direction of Schoenberg's theorem. -/
+/-- `IsPreDistMatrix` is this project's name for the symmetric-and-hollow structural
+predicate. It does not include entrywise nonnegativity. Every squared-distance matrix
+satisfies this predicate, which supplies the structural hypothesis for the sufficiency
+direction of Schoenberg's theorem. -/
 def IsPreDistMatrix (D : Matrix (Fin n) (Fin n) ℝ) : Prop :=
   (∀ i j, D i j = D j i) ∧ (∀ i, D i i = 0)
 
-/-- A pre-distance matrix is symmetric. -/
+/-- A matrix satisfying `IsPreDistMatrix` is symmetric. -/
 theorem IsPreDistMatrix.symm {D : Matrix (Fin n) (Fin n) ℝ} (hD : IsPreDistMatrix D)
     (i j : Fin n) : D i j = D j i := hD.1 i j
 
-/-- A pre-distance matrix is hollow. -/
+/-- A matrix satisfying `IsPreDistMatrix` is hollow. -/
 theorem IsPreDistMatrix.hollow {D : Matrix (Fin n) (Fin n) ℝ} (hD : IsPreDistMatrix D)
     (i : Fin n) : D i i = 0 := hD.2 i
 
-/-- Every squared-distance matrix is a pre-distance matrix. -/
+/-- Every squared-distance matrix satisfies `IsPreDistMatrix`. -/
 theorem IsSqDistMatrix.isPreDistMatrix {D : Matrix (Fin n) (Fin n) ℝ}
     {x : Fin n → EuclideanSpace ℝ (Fin k)} (hD : IsSqDistMatrix D x) :
     IsPreDistMatrix D :=
   ⟨hD.symm, hD.hollow⟩
 
-/-- The centered Gram matrix of a squared-distance matrix `D`, centered at the base
+/-- The basepoint-centered Gram matrix of a squared-distance matrix `D`, anchored at
 index `0` (requires `n ≥ 1`, i.e. `[NeZero n]`, for the index `0 : Fin n` to exist).
 When `D` holds the squared distances of a configuration `x`, this matrix equals
 `⟪x i - x 0, x j - x 0⟫` (proved in `Schoenberg.lean`), hence it is the Gram matrix
@@ -125,7 +126,7 @@ noncomputable def centeredGram [NeZero n] (D : Matrix (Fin n) (Fin n) ℝ) :
 theorem centeredGram_apply [NeZero n] (D : Matrix (Fin n) (Fin n) ℝ) (i j : Fin n) :
     centeredGram D i j = (D 0 i + D 0 j - D i j) / 2 := rfl
 
-/-- The centered Gram matrix of a symmetric matrix is symmetric. -/
+/-- The basepoint-centered Gram matrix of a symmetric matrix is symmetric. -/
 theorem centeredGram_symm [NeZero n] {D : Matrix (Fin n) (Fin n) ℝ}
     (hsymm : ∀ i j, D i j = D j i) (i j : Fin n) :
     centeredGram D i j = centeredGram D j i := by

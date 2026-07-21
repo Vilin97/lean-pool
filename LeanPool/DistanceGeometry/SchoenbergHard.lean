@@ -14,9 +14,10 @@ public import Mathlib.Algebra.Order.Star.Real
 /-!
 # Schoenberg's characterization: the sufficiency direction
 
-This file proves the converse of `schoenberg_easy`: if `D` is a pre-distance matrix
-(symmetric and hollow) whose centered Gram matrix is positive semidefinite of rank
-at most `k`, then `D` is the squared-distance matrix of some configuration in
+This file proves the converse of `schoenberg_easy`: if `D` satisfies
+`IsPreDistMatrix`, this project's symmetric-and-hollow structural predicate, and its
+basepoint-centered Gram matrix is positive semidefinite of rank at most `k`, then `D`
+is the squared-distance matrix of some configuration in
 `EuclideanSpace ℝ (Fin k)`. Combined with the easy direction this gives the full
 Schoenberg characterization `schoenberg`.
 
@@ -141,9 +142,9 @@ namespace PosSemidef
 variable {G : Matrix (Fin n) (Fin n) ℝ}
 
 /-- A positive semidefinite matrix `G` with `G.rank ≤ k` factors as `Mᴴ * M` for
-some matrix `M : Matrix (Fin k) (Fin n) ℝ`. This is the rank-controlled
-Cholesky-type factorization: it realizes `G` as a Gram matrix using exactly `k`
-coordinates, no more than the rank requires. -/
+some matrix `M : Matrix (Fin k) (Fin n) ℝ`. This rank-controlled Cholesky-type
+factorization realizes `G` in ambient dimension `k` and uses only `G.rank` active
+directions. -/
 theorem exists_conjTranspose_mul_self_of_rank_le (hG : G.PosSemidef) (hrank : G.rank ≤ k) :
     ∃ M : Matrix (Fin k) (Fin n) ℝ, Mᴴ * M = G := by
   classical
@@ -200,9 +201,10 @@ variable {n k : ℕ} [NeZero n]
 
 /-! ### Schoenberg, sufficiency direction -/
 
-/-- The sufficiency direction of Schoenberg's theorem. If `D` is a pre-distance
-matrix (symmetric and hollow) whose centered Gram matrix is positive semidefinite of
-rank at most `k`, then `D` is the squared-distance matrix of some configuration in
+/-- The sufficiency direction of Schoenberg's theorem. If `D` satisfies this project's
+`IsPreDistMatrix` predicate (symmetric and hollow) and its basepoint-centered Gram
+matrix is positive semidefinite of rank at most `k`, then `D` is the squared-distance
+matrix of some configuration in
 `EuclideanSpace ℝ (Fin k)`.
 
 This is the converse of `schoenberg_easy`: it reconstructs the point configuration
@@ -241,10 +243,10 @@ theorem schoenberg_hard
   rw [hD.hollow i, hD.hollow j, hD.symm j i]
   ring
 
-/-- Schoenberg's characterization of Euclidean squared-distance matrices. A
-pre-distance matrix `D` (symmetric and hollow) embeds as a squared-distance matrix
-in `EuclideanSpace ℝ (Fin k)` if and only if its centered Gram matrix is positive
-semidefinite and has rank at most `k`. -/
+/-- Schoenberg's characterization of Euclidean squared-distance matrices. A matrix
+`D` satisfying this project's `IsPreDistMatrix` predicate (symmetric and hollow)
+embeds as a squared-distance matrix in `EuclideanSpace ℝ (Fin k)` if and only if its
+basepoint-centered Gram matrix is positive semidefinite and has rank at most `k`. -/
 theorem schoenberg {D : Matrix (Fin n) (Fin n) ℝ} (hD : IsPreDistMatrix D) :
     EmbedsIn D k ↔ (centeredGram D).PosSemidef ∧ (centeredGram D).rank ≤ k := by
   constructor

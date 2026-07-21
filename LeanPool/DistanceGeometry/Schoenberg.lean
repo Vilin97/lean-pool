@@ -13,7 +13,7 @@ public import Mathlib.Algebra.Order.Star.Real
 # Schoenberg's characterization: the easy direction
 
 Given a real configuration `x : Fin n → EuclideanSpace ℝ (Fin k)` with
-squared-distance matrix `D`, the centered Gram matrix `centeredGram D` is
+squared-distance matrix `D`, the basepoint-centered Gram matrix `centeredGram D` is
 
 * positive semidefinite, and
 * of rank at most `k`.
@@ -47,7 +47,7 @@ open scoped RealInnerProductSpace
 variable {n k : ℕ} [NeZero n]
 
 /-- The polarization identity. When `D` is the squared-distance matrix of `x`, the
-`(i, j)` entry of the centered Gram matrix is the inner product of the recentred
+`(i, j)` entry of the basepoint-centered Gram matrix is the inner product of the recentred
 vectors `x i - x 0` and `x j - x 0`. -/
 theorem centeredGram_apply_eq_inner
     {D : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → EuclideanSpace ℝ (Fin k)}
@@ -55,7 +55,7 @@ theorem centeredGram_apply_eq_inner
     centeredGram D i j = ⟪x i - x 0, x j - x 0⟫ := by
   have key := real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two
     (x i - x 0) (x j - x 0)
-  -- unfold the centered-Gram entry and replace each `D` entry by its squared distance
+  -- unfold the basepoint-centered Gram entry and replace each `D` entry by its squared distance
   rw [centeredGram_apply, hD 0 i, hD 0 j, hD i j, key]
   -- turn distances into norms
   rw [dist_eq_norm, dist_eq_norm, dist_eq_norm]
@@ -65,7 +65,7 @@ theorem centeredGram_apply_eq_inner
   rw [hsub]
   ring
 
-/-- The centered Gram matrix is the Gram matrix of the recentred vectors. -/
+/-- The basepoint-centered Gram matrix is the Gram matrix of the recentred vectors. -/
 theorem centeredGram_eq_gram
     {D : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → EuclideanSpace ℝ (Fin k)}
     (hD : IsSqDistMatrix D x) :
@@ -73,7 +73,7 @@ theorem centeredGram_eq_gram
   ext i j
   rw [centeredGram_apply_eq_inner hD i j, gram_apply]
 
-/-- The centered Gram matrix of a squared-distance matrix is positive semidefinite.
+/-- The basepoint-centered Gram matrix of a squared-distance matrix is positive semidefinite.
 This is the positive-semidefiniteness half of Schoenberg's necessary conditions. -/
 theorem posSemidef_centeredGram
     {D : Matrix (Fin n) (Fin n) ℝ} {x : Fin n → EuclideanSpace ℝ (Fin k)}
@@ -82,7 +82,7 @@ theorem posSemidef_centeredGram
   rw [centeredGram_eq_gram hD]
   exact posSemidef_gram ℝ _
 
-/-- The centered Gram matrix of a squared-distance matrix of a configuration in
+/-- The basepoint-centered Gram matrix of a squared-distance matrix of a configuration in
 dimension `k` has rank at most `k`. This is the rank half of Schoenberg's necessary
 conditions. -/
 theorem rank_centeredGram_le
@@ -99,7 +99,7 @@ theorem rank_centeredGram_le
   calc m.rank ≤ Fintype.card (Fin k) := rank_le_card_height m
     _ = k := Fintype.card_fin k
 
-/-- The necessary conditions in Schoenberg's theorem: the centered Gram matrix of a
+/-- The necessary conditions in Schoenberg's theorem: the basepoint-centered Gram matrix of a
 squared-distance matrix of a configuration in `EuclideanSpace ℝ (Fin k)` is positive
 semidefinite and has rank at most `k`. -/
 theorem schoenberg_easy

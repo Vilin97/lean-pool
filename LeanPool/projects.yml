@@ -4785,12 +4785,13 @@ projects:
   - slug: distance-geometry
     title: Euclidean Distance Geometry
     summary: >-
-      Develops the centered-Gram approach to finite Euclidean distance geometry.
+      Develops the basepoint-centered Gram approach to finite Euclidean distance geometry.
       Proves both directions of Schoenberg's characterization, including a
       rank-controlled factorization of positive-semidefinite matrices; proves that
       three affinely independent centers in Euclidean three-space determine at most
       two points with prescribed distances; and verifies the Cayley--Menger
-      determinant for segments and triangles, including Heron's formula.
+      determinant for segments and triangles, including the triangle-area identity
+      underlying Heron's formula.
     branch: main
     entry_module: LeanPool.DistanceGeometry
     authors:
@@ -4810,9 +4811,9 @@ projects:
     main_results:
       - declaration: DistanceGeometry.schoenberg
         informal: >-
-          A symmetric hollow matrix is a squared-distance matrix of points in
-          k-dimensional Euclidean space exactly when its centered Gram matrix is
-          positive semidefinite and has rank at most k.
+          For n at least one, a symmetric hollow n-by-n matrix is a squared-distance
+          matrix of points in k-dimensional Euclidean space exactly when its
+          basepoint-centered Gram matrix is positive semidefinite and has rank at most k.
       - declaration: DistanceGeometry.encard_setOf_forall_dist_eq_le_two
         informal: >-
           In a finite-dimensional real inner-product affine space, prescribed

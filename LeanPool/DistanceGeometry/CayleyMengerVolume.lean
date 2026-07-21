@@ -20,20 +20,20 @@ simplex on the points:
 
 `det CM = (-1)^(n+1) · 2^n · det G`,
 
-where `G` is the Gram matrix of the `n` edge vectors `x i - x 0` — exactly the
-nonzero block of `centeredGram D` from `Defs.lean`.
+where `G` is the Gram matrix of the `n` edge vectors `x i - x 0`, namely the
+nonzero block of the basepoint-centered matrix `centeredGram D` from `Defs.lean`.
 
 This file proves the identity in low dimension:
 
 * `n = 1` (a segment): `det CM = 2 · ℓ²` (`cayleyMenger_det_segment`).
 * `n = 2` (a triangle): `det CM = -4 · det G` (`cayleyMenger_det_triangle`).
-* `n = 2`, geometric: `det CM = -16 · area²`, i.e. Heron's formula
-  (`cayleyMenger_det_heron`).
+* `n = 2`, geometric: `det CM = -16 · area²`, the triangle-area identity underlying
+  Heron's formula (`cayleyMenger_det_heron`).
 
 The `n = 2` core identity is a pure algebraic identity in the entries of any
-symmetric hollow `3×3` matrix; the geometric Heron specialization identifies the
-edge-Gram `2×2` block with `centeredGram D` and reads the triangle area off the edge
-coordinates.
+symmetric hollow `3×3` matrix. The geometric triangle-area specialization identifies
+the edge-Gram `2×2` block with the basepoint-centered matrix `centeredGram D` and
+reads the triangle area from the edge coordinates.
 
 ## Main results
 
@@ -158,8 +158,9 @@ theorem cayleyMenger_det_triangle (D : Matrix (Fin 3) (Fin 3) ℝ)
       h00, h11, h22, s01, s02, s12]
   ring
 
-/-- The triangle Cayley–Menger determinant in terms of the core `centeredGram`. The
-`2×2` edge-Gram block above is exactly `centeredGram D` restricted to the nonzero
+/-- The triangle Cayley–Menger determinant in terms of the basepoint-centered
+matrix `centeredGram`. The `2×2` edge-Gram block above is exactly `centeredGram D`
+restricted to the nonzero
 indices `{1, 2}` (cf. `Defs.centeredGram`): its diagonal entries are
 `centeredGram D 1 1 = D 0 1`, `centeredGram D 2 2 = D 0 2` (by hollowness) and its
 off-diagonal is `centeredGram D 1 2`. Hence
@@ -179,7 +180,7 @@ theorem cayleyMenger_det_triangle_centeredGram (D : Matrix (Fin 3) (Fin 3) ℝ)
   have e12 : centeredGram D 1 2 = (D 0 1 + D 0 2 - D 1 2) / 2 := by simp [centeredGram_apply]
   rw [e11, e22, e12]
 
-/-! ### `n = 2` : Heron's formula (geometric) -/
+/-! ### `n = 2` : the geometric triangle-area identity -/
 
 /-- The inner product on `ℝ` (the real scalar field) is multiplication. -/
 private theorem real_scalar_inner (a b : ℝ) : ⟪a, b⟫ = a * b := by
@@ -200,7 +201,7 @@ noncomputable def triangleArea (x : Fin 3 → EuclideanSpace ℝ (Fin 2)) : ℝ 
   |((x 1 - x 0) 0 * (x 2 - x 0) 1 - (x 1 - x 0) 1 * (x 2 - x 0) 0)| / 2
 
 /-- The Gram–volume identity for `n = 2`. The determinant of the `2×2` edge-Gram block
-`centeredGram D` (indices `{1, 2}`) of a planar triangle equals the square of the
+of the basepoint-centered matrix `centeredGram D` (indices `{1, 2}`) equals the square of the
 edge-coordinate determinant `det E`, where `E = [x 1 - x 0; x 2 - x 0]`. This is the
 `n = 2` case of `det G = (n!·Vol)²` (here `det G = (2·area)²`). -/
 theorem det_centeredGram_block_eq_sq
@@ -212,14 +213,15 @@ theorem det_centeredGram_block_eq_sq
       centeredGram_apply_eq_inner hD 1 2, inner_fin_two, inner_fin_two, inner_fin_two]
   ring
 
-/-- Cayley–Menger gives Heron's formula (`n = 2`). For a triangle on three points `x`
-of the Euclidean plane with squared-distance matrix `D`, the `4×4` Cayley–Menger
-determinant equals `-16` times the squared area:
+/-- The Cayley–Menger triangle-area identity (`n = 2`). For a triangle on three points
+`x` of the Euclidean plane with squared-distance matrix `D`, the `4×4`
+Cayley–Menger determinant equals `-16` times the squared area:
 
 `det CM = -16 · area²`.
 
-Expanding the left side with the squared edge lengths recovers Heron's formula
-`16·area² = (a+b+c)(-a+b+c)(a-b+c)(a+b-c)`. -/
+After expansion and factorization in the three side lengths, this identity is equivalent
+to Heron's formula `16·area² = (a+b+c)(-a+b+c)(a-b+c)(a+b-c)`. This file does not
+state that factorized formula as a separate theorem. -/
 theorem cayleyMenger_det_heron
     {D : Matrix (Fin 3) (Fin 3) ℝ} {x : Fin 3 → EuclideanSpace ℝ (Fin 2)}
     (hD : IsSqDistMatrix D x) :

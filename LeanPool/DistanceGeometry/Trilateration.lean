@@ -55,7 +55,9 @@ variable {V P : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
   [MetricSpace P] [NormedAddTorsor V P] [FiniteDimensional ℝ V]
   {ι : Type*} {c : ι → P} {r : ι → ℝ}
 
-/-- The intersection of the spheres of radii `r` about the centers `c`. -/
+/-- The intersection of the spheres of real-valued radii `r` about the centers `c`.
+If some `r i` is negative, the intersection is empty because distances are
+nonnegative. -/
 def sphereIntersection (c : ι → P) (r : ι → ℝ) : Set P :=
   {p | ∀ i, dist p (c i) = r i}
 
@@ -174,8 +176,9 @@ end General
 
 /-! ### Specialization: three affinely independent centers in `EuclideanSpace ℝ (Fin 3)` -/
 
-/-- The localization set of three centers `c` and radii `r` in `EuclideanSpace ℝ (Fin 3)`:
-the intersection of the three spheres. -/
+/-- The localization set of three centers `c` and real-valued radii `r` in
+`EuclideanSpace ℝ (Fin 3)`: the intersection of the three spheres. A negative radius
+makes the set empty. -/
 def trilaterationSet (c : Fin 3 → EuclideanSpace ℝ (Fin 3)) (r : Fin 3 → ℝ) :
     Set (EuclideanSpace ℝ (Fin 3)) :=
   {p : EuclideanSpace ℝ (Fin 3) | ∀ i, dist p (c i) = r i}
