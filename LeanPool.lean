@@ -2268,6 +2268,16 @@ import LeanPool.Rupert.SnubCube
 import LeanPool.Rupert.Square
 import LeanPool.Rupert.Tetrahedron
 import LeanPool.Rupert.TriakisTetrahedron
+import LeanPool.Sabidussi
+import LeanPool.Sabidussi.Color
+import LeanPool.Sabidussi.CyclicWord
+import LeanPool.Sabidussi.LocalPattern
+import LeanPool.Sabidussi.LoopGraphBridge
+import LeanPool.Sabidussi.LoopMultigraph
+import LeanPool.Sabidussi.OddBalance
+import LeanPool.Sabidussi.OrdinaryCircuit
+import LeanPool.Sabidussi.Parity
+import LeanPool.Sabidussi.Statement
 import LeanPool.SardMoreira
 import LeanPool.SardMoreira.Chart
 import LeanPool.SardMoreira.ChartEstimates
