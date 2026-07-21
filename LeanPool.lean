@@ -470,6 +470,8 @@ import LeanPool.CriticalPortraits.Forward
 import LeanPool.CriticalPortraits.Injectivity
 import LeanPool.CriticalPortraits.Portraits
 import LeanPool.CriticalPortraits.Surjectivity
+import LeanPool.DeBruijnErdosGraphColoring
+import LeanPool.DeBruijnErdosGraphColoring.Compactness
 import LeanPool.DeadEnds
 import LeanPool.DeadEnds.Basic
 import LeanPool.DeadEnds.CRT

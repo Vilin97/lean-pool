@@ -4782,3 +4782,62 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: de-bruijn-erdos-graph-coloring
+    title: De Bruijn–Erdős Compactness for Graph Coloring
+    summary: >-
+      Formalizes the de Bruijn–Erdős compactness theorem that a graph is
+      colorable with a fixed finite number of colors whenever all of its finite
+      induced subgraphs are. Develops stronger finite-target homomorphism and
+      finite-list-coloring compactness theorems, the exact finite-obstruction
+      equivalence, and finite attainment of every positive finite chromatic
+      number, together with finite characterizations of infinite chromatic
+      number.
+    branch: graph theory
+    entry_module: LeanPool.DeBruijnErdosGraphColoring
+    authors:
+      - Egor Lyfar
+    source:
+      title: A colour problem for infinite graphs and a problem in the theory of relations
+      authors:
+        - N. G. de Bruijn
+        - P. Erdős
+      url: https://pure.tue.nl/ws/files/4237754/597497.pdf
+      github_repo: lyfar/de-bruijn-erdos-graph-coloring-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SimpleGraph.colorable_of_finite_induced_colorable
+    main_results:
+      - declaration: SimpleGraph.colorable_of_finite_induced_colorable
+        informal: >-
+          If every finite induced subgraph of an arbitrary graph is colorable
+          with n colors, then the entire graph is colorable with n colors.
+      - declaration: SimpleGraph.nonempty_hom_of_finite_induced
+        informal: >-
+          A graph admits a homomorphism to a fixed finite target whenever each
+          of its finite induced subgraphs admits such a homomorphism.
+      - declaration: SimpleGraph.nonempty_listColoring_of_finite_induced
+        informal: >-
+          A graph has a proper coloring from prescribed finite color lists
+          whenever every finite induced subgraph has one from the restricted
+          lists.
+      - declaration: SimpleGraph.not_colorable_iff_exists_finite_induced_not_colorable
+        informal: >-
+          Failure of n-colorability is equivalent to the existence of a finite
+          induced subgraph that is not n-colorable.
+      - declaration: SimpleGraph.exists_finite_induced_chromaticNumber_eq
+        informal: >-
+          If a graph has positive finite chromatic number, some finite induced
+          subgraph has exactly the same chromatic number.
+      - declaration: SimpleGraph.chromaticNumber_eq_top_iff_forall_exists_finite_induced_succ_le
+        informal: >-
+          A graph has infinite chromatic number exactly when the chromatic
+          numbers of its finite induced subgraphs are unbounded.
+    tags:
+      - graph-theory
+      - graph-coloring
+      - compactness
+      - list-coloring
+    msc:
+      - "05C15"
