@@ -535,6 +535,12 @@ import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 import LeanPool.DirectedTopologyLean4.StretchPath
 import LeanPool.DirectedTopologyLean4.TransRefl
 import LeanPool.DirectedTopologyLean4.UnitIntervalAux
+import LeanPool.DistanceGeometry
+import LeanPool.DistanceGeometry.CayleyMengerVolume
+import LeanPool.DistanceGeometry.Defs
+import LeanPool.DistanceGeometry.Schoenberg
+import LeanPool.DistanceGeometry.SchoenbergHard
+import LeanPool.DistanceGeometry.Trilateration
 import LeanPool.DomainTheory
 import LeanPool.DomainTheory.Constructive
 import LeanPool.DomainTheory.ContinuousLattice.Constructions
