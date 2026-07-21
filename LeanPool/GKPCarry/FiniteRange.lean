@@ -412,7 +412,7 @@ theorem four_pow_has_two_ternary_twos_of_length_le_eight
   norm_num at hupper
   exact four_pow_has_two_ternary_twos_in_finite_range hlower (by omega)
 
-/-- Headline bounded C3 carry result: throughout `27 ≤ m ≤ 6560`, doubling
+/-- Bounded C3 carry result: throughout `27 ≤ m ≤ 6560`, doubling
 the selected prefix of the ternary expansion of `4 ^ m` produces at least two
 outgoing carries. -/
 theorem four_pow_prefix_carry_count_ge_two_in_finite_range

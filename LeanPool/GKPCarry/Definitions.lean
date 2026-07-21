@@ -10,8 +10,9 @@ import Mathlib.Data.Nat.Digits.Defs
 /-!
 # Ternary prefixes and doubling carries
 
-This file gives the small collection of definitions needed for the bounded C3
-certificate. Ternary digit lists are little-endian, following `Nat.digits`.
+This file gives the definitions used by the carry-language theory and its
+bounded C3 corollary. Ternary digit lists are little-endian, following
+`Nat.digits`.
 -/
 
 namespace GKPCarry
