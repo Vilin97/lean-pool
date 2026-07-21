@@ -4782,3 +4782,56 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: odd-prime-valuation-distribution
+    title: Exact odd-prime distributions of central-binomial valuations
+    summary: >-
+      Formalizes the exact distribution of the p-adic valuation of the central binomial
+      coefficient binom(2n,n) over every complete block 0 <= n < p^k for every odd prime p.
+      The development proves Kummer correctness for padded digit words, constructs the
+      two-state doubling carry enumerator, identifies it with the arithmetic valuation
+      polynomial, derives its second-order recurrence, proves the rational bivariate
+      generating function, and obtains closed formulas for valuations zero and one.
+    branch: number theory
+    entry_module: LeanPool.OddPrimeValuationDistribution
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Carry–Run Theorem and Sakib Index for the Exact Distribution of ν_p((2n choose n)) over n mod p^k"
+      authors:
+        - S. M. Nazmuz Sakib
+      doi: "10.33774/coe-2026-1w9zm"
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+    main_results:
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+        informal: >-
+          For every odd prime p = 2h+1, proves the denominator-cleared identity for the
+          bivariate series whose coefficient of T^k X^r counts n < p^k with
+          nu_p(binomial(2n,n)) = r; equivalently the series is
+          (1-XT)/(1-(h+1)(1+X)T+pXT^2).
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationPolynomial_recurrence
+        informal: >-
+          Proves that the exact valuation polynomials satisfy
+          F_{k+2}(X)+pX F_k(X)=(h+1)(1+X)F_{k+1}(X), with F_0=1 and
+          F_1=(h+1)+hX.
+      - declaration: OddPrimeValuationDistribution.padicValNat_oddPrime_centralBinom_ofDigits_eq_carryCount
+        informal: >-
+          Proves Kummer correctness for every valid padded base-p word: the p-adic valuation
+          of its central binomial coefficient equals the number of carries produced by
+          doubling the word.
+      - declaration: OddPrimeValuationDistribution.card_oddPrimeBlock_valuation_one
+        informal: >-
+          Gives a closed formula for the number of n below p^(k+2) whose central binomial
+          coefficient has p-adic valuation exactly one.
+    tags:
+      - central-binomial-coefficients
+      - p-adic-valuations
+      - digit-carries
+      - generating-functions
+    msc:
+      - "11A63"
+      - "11B65"
