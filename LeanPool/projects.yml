@@ -4721,3 +4721,64 @@ projects:
       - equidistribution
     msc:
       - "11K06"
+  - slug: stationary-harmonic-maps
+    title: Monotonicity Formula for Stationary Harmonic Maps
+    summary: >-
+      Formalizes the monotonicity formula for stationary `W^{1,2}_{loc}` maps with Euclidean
+      target. The proof is target independent: it uses only the displayed weak gradient and a
+      vanishing domain first variation, so no target-manifold structure enters the argument.
+      From a bundled stationary Sobolev witness `StationaryW12LocMap u Omega` it proves, for
+      `0 < s <= r < R0`, that the normalized energy `Theta(Du, a, rho) = rho^(2-n) * integral
+      over B(a, rho) of |Du|^2` is monotone: `weakTheta Du a s <= weakTheta Du a r`, together
+      with the exact increment formula `weakTheta Du a r - weakTheta Du a s = weakMonotonicityRhs
+      Du a s r`. The Sobolev layer is project-defined from Mathlib's `MemLp`, weak-derivative
+      identities, Bochner integration, and Euclidean measure theory, following the De
+      Giorgi-Nash-Moser engineering choice; the internal proof routes through a radial
+      vector-field first variation, a coarea/Radon-Nikodym radius representation, smooth radial
+      cutoffs, and an absolute-continuity boundary step.
+    branch: analysis
+    entry_module: LeanPool.LeanStationaryHarmonicMaps
+    authors:
+      - Wei Wang
+    source:
+      title: "Theorems on Regularity and Singularity of Energy Minimizing Maps"
+      authors:
+        - Leon Simon
+      doi: "10.1007/978-3-0348-9193-6"
+      github_repo: BrookWW/LeanStationaryHarmonicMaps
+    license: MIT
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryW12LocMap
+    main_results:
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryW12LocMap
+        informal: >-
+          The public input package: a domain-variation stationary `W^{1,2}_{loc}` Sobolev map
+          bundling a chosen weak gradient (`W12LocMapWitness`) with the vanishing domain
+          first-variation identity. This is the object users construct to invoke the
+          monotonicity theorem.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationaryW12LocMonotonicity_euclidean
+        informal: >-
+          Witness-style monotonicity: from a stationary `W^{1,2}_{loc}` map package, the
+          normalized weak energy `weakTheta` is monotone in the radius, `weakTheta Du a s <=
+          weakTheta Du a r` for `0 < s <= r < R0`.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationaryW12LocMonotonicityFormula_euclidean
+        informal: >-
+          Witness-style monotonicity formula: the increment of `weakTheta` equals the
+          nonnegative annular radial-energy term, `weakTheta Du a r - weakTheta Du a s =
+          weakMonotonicityRhs Du a s r` for `0 < s < r < R0`.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationarySobolevMonotonicity_euclidean
+        informal: >-
+          Componentwise convenience wrapper: the same monotonicity inequality stated directly
+          from the local `L^2`, measurability, weak-gradient, and first-variation hypotheses,
+          without first constructing the witness package.
+    tags:
+      - analysis
+      - pde
+      - harmonic-maps
+      - monotonicity-formula
+      - sobolev
+    msc:
+      - "58E20"
+      - "35J50"
