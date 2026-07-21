@@ -2389,6 +2389,8 @@ import LeanPool.SpectralPositivity.Operator.Jentzsch
 import LeanPool.SpectralPositivity.Operator.JentzschProof
 import LeanPool.SpectralPositivity.Operator.KernelPositivity
 import LeanPool.SpectralPositivity.Operator.SpectralRadius
+import LeanPool.SteinhausThreeGap
+import LeanPool.SteinhausThreeGap.Basic
 import LeanPool.SumsThreeSquares
 import LeanPool.SumsThreeSquares.MinkowskiConvex
 import LeanPool.SumsThreeSquares.SumThreeSquares

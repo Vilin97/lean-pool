@@ -4681,3 +4681,43 @@ projects:
       - sabidussi
     msc:
       - "05C45"
+  - slug: three-gap-theorem
+    title: The Three-Gap (Steinhaus) Theorem
+    summary: >-
+      Formalizes the three-gap (Steinhaus, three-distance) theorem: for every real `a` and
+      every `N`, the `N`-point orbit `{i·a mod 1 : i < N}` partitions `[0,1)` into gaps taking
+      at most three distinct lengths, and when exactly three occur the largest is the sum of
+      the other two. The proof works in `[0,1)` via `Int.fract` (not `AddCircle`) through the
+      two first-return times `η⁺` and `η⁻`, and is uniform in the rotation number, covering
+      rational and irrational `a` with no case split.
+    branch: number theory
+    entry_module: LeanPool.SteinhausThreeGap
+    authors:
+      - Dirk Kunert
+    source:
+      title: "The Three Gap Theorem (Steinhaus Conjecture)"
+      authors:
+        - Tony van Ravenstein
+      doi: "10.1017/S1446788700031062"
+      github_repo: dkunert/three-gap-theorem-lean
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SteinhausThreeGap.three_gap_card_le_three
+    main_results:
+      - declaration: SteinhausThreeGap.three_gap_card_le_three
+        informal: >-
+          For every real `a` and natural `N`, the gaps of the orbit `{i·a mod 1 : i < N}` take
+          at most three distinct lengths.
+      - declaration: SteinhausThreeGap.three_gap_lengths_eq
+        informal: >-
+          When the gaps take exactly three distinct lengths, those lengths are precisely the two
+          first returns `η⁺`, `η⁻`, and their sum `η⁺ + η⁻`; in particular the largest gap is the
+          sum of the other two.
+    tags:
+      - number-theory
+      - three-gap-theorem
+      - equidistribution
+    msc:
+      - "11K06"
