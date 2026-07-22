@@ -4782,3 +4782,41 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: erdos-97-convex-octagon
+    title: The Convex-Octagon Case of Erdős Problem 97
+    summary: >-
+      Proves that among eight labelled points in the Euclidean plane in convex position, at least
+      one point has no four other points at a common distance. The development reduces a geometric
+      counterexample to a finite incidence model, classifies normalized row patterns up to dihedral
+      symmetry, proves geometric and algebraic obstructions, and closes all 245 canonical residual
+      branches with kernel-reconstructed LRAT certificates. This is the convex-octagon case only;
+      the general Erdős Problem 97 remains open.
+    branch: discrete geometry
+    entry_module: LeanPool.Erdos97ConvexOctagon
+    authors:
+      - Egor Lyfar
+    source:
+      title: On Sets of Distances of n Points
+      authors:
+        - Paul Erdős
+      doi: "10.1080/00029890.1946.11991674"
+      url: "https://www.erdosproblems.com/97"
+      github_repo: lyfar/erdos-97-octagon-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Erdos97Octagon.erdos97_convex_octagon
+    main_results:
+      - declaration: Erdos97Octagon.erdos97_convex_octagon
+        informal: >-
+          Among eight labelled points in the Euclidean plane in convex position, some point has no
+          four other points at a common distance.
+    tags:
+      - discrete-geometry
+      - distance-geometry
+      - erdos-problems
+      - convexity
+    msc:
+      - "51K05"
+      - "52A10"
