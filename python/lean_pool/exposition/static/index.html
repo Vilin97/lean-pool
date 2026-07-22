@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Lean Pool exposition</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/viewer.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="./">Lean Pool exposition</a>
+    <nav class="site-nav">
+      <a href="./" aria-current="page">Projects</a>
+      <a href="decls/">Declarations</a>
+      <a href="../">API docs</a>
+      <a href="https://github.com/Vilin97/lean-pool">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="landing-wrap">
+    <section class="hero">
+      <h1>Lean Pool exposition</h1>
+      <p>Interactive dependency graphs and a declaration index for every
+        project in the pool — <a href="../">API docs</a> hold the full
+        signatures.</p>
+    </section>
+
+    <section class="stat-tiles" id="statTiles" hidden></section>
+
+    <section class="kind-breakdown" id="kindBreakdown" hidden>
+      <div class="kind-bar" id="kindBar" role="img"
+           aria-label="Declarations by kind"></div>
+      <div class="pool-legend" id="kindLegend"></div>
+    </section>
+
+    <section class="projects" id="projectsSection" hidden>
+      <div class="table-tools">
+        <input id="projectFilter" type="search" placeholder="Filter projects…"
+               autocomplete="off" spellcheck="false"
+               aria-label="Filter projects by name">
+        <span id="projectCount" class="table-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="project-table">
+          <thead><tr id="projectHead"></tr></thead>
+          <tbody id="projectBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="load-error" id="loadError" hidden></p>
+
+    <footer class="landing-footer" id="landingFooter"></footer>
+  </main>
+
+  <script src="assets/landing.js"></script>
+</body>
+</html>
