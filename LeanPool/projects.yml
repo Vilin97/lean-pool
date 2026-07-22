@@ -4782,3 +4782,49 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: moser-lattice-colorings
+    title: Geometric Four-Colorings of the Moser Lattice and Ring
+    summary: >-
+      Formalizes the two explicit parity colorings from Dúcz's 2026 note on the
+      Moser lattice. The development derives the exact quadratic norm formula,
+      proves that the integer-coordinate embedding is faithful, proves both
+      colorings proper and geometric on the entire lattice, and descends them
+      through localization by powers of three to the Moser ring. As a structural
+      corollary, every unit-distance graph realized entirely in the Moser ring is
+      four-colorable. The uniqueness classification of geometric four-colorings
+      and the chromatic number of the full Euclidean plane are not claimed.
+    branch: combinatorics
+    entry_module: LeanPool.MoserLatticeColorings
+    authors:
+      - Egor Lyfar
+    source:
+      title: "A note on geometric colorings of the Moser lattice"
+      authors:
+        - Ákos Dúcz
+      arxiv: "2606.12325"
+      github_repo: lyfar/moser-lattice-colorings-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+    main_results:
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+        informal: >-
+          The two parity maps defined by Dúcz descend to proper four-colorings of
+          the full Moser ring, and equality of colors for each map depends only
+          on Euclidean distance.
+        source_ref: "Theorem 3.1 and the Moser-ring extension following it."
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.graph_colorable_four_of_moserRing_realization
+        informal: >-
+          Every abstract graph with a realization in the Moser ring that sends
+          each edge to a unit-distance pair is four-colorable.
+        source_ref: "Corollary of the geometric four-coloring of the Moser ring."
+    tags:
+      - combinatorics
+      - graph-coloring
+      - discrete-geometry
+      - unit-distance-graphs
+      - moser-lattice
+    msc:
+      - "05C15"
