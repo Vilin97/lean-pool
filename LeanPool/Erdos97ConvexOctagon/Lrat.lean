@@ -6,6 +6,7 @@ Authors: Egor Lyfar
 
 import Lean.Elab.Command
 import Mathlib.Tactic.Sat.FromLRAT
+import Mathlib.Util.CountHeartbeats
 
 /-! # Safe embedded LRAT elaboration
 
