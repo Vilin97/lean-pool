@@ -4,17 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.GKPCarry.BadCarryCounting
+import LeanPool.GKPCarry.DensityOne
 import LeanPool.GKPCarry.FiniteRangeCorollary
-import LeanPool.GKPCarry.GKPCharacterization
 
 /-!
-# A Carry-Language Characterization of the Graham--Knuth--Patashnik Conjecture
+# Density-One GKP Divisibility and Its Carry-Language Characterization
 
 Source: url:https://cs.stanford.edu/~knuth/gkp.html
 Authors: Egor Lyfar
 Status: verified
-Main declarations: `GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion`
-Tags: number-theory, finite-automata
+Main declarations: `GKPCarry.tendsto_gkpSuccessProportion_one`
+Tags: number-theory, finite-automata, asymptotic-density
 MSC: 11A63, 11B65, 68Q45
 -/

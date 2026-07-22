@@ -4782,15 +4782,15 @@ projects:
     msc:
       - "58E20"
       - "35J50"
-  - slug: gkp-carry-language
-    title: A Carry-Language Characterization of the Graham--Knuth--Patashnik Conjecture
+  - slug: gkp-density-one
+    title: Density-One GKP Divisibility and Its Carry-Language Characterization
     summary: >-
-      Formalizes a complete reduction of the Graham--Knuth--Patashnik central-binomial
-      divisibility conjecture to avoidance of an explicit regular language by powers of two.
-      Develops the Kummer digit-sum bridge, the binary-popcount reduction, a verified
-      four-state ternary doubling automaton, an exact classification and enumeration of its
-      deficient-carry language, and a bounded divisibility certificate. The universal
-      language-avoidance statement, and hence the GKP conjecture itself, remain open.
+      Proves that the exponents k satisfying the Graham--Knuth--Patashnik divisibility
+      condition have natural density one. The proof gives an exact all-depth modular sieve,
+      quantitative bounds for possible failures in initial intervals, and a density-zero
+      limit for the failure proportion. It also develops the Kummer digit-sum bridge, the
+      binary-popcount reduction, and a verified ternary carry automaton. The universal GKP
+      conjecture remains open because the possible density-zero failure set may be nonempty.
     branch: number theory
     entry_module: LeanPool.GKPCarry
     authors:
@@ -4807,8 +4807,21 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+      - GKPCarry.tendsto_gkpSuccessProportion_one
     main_results:
+      - declaration: GKPCarry.tendsto_gkpSuccessProportion_one
+        informal: >-
+          The proportion of exponents k below N for which nine divides the central binomial
+          coefficient indexed by 2^k tends to one as N tends to infinity.
+      - declaration: GKPCarry.card_gkpFailureExponentsBelow_le
+        informal: >-
+          At each ternary depth n+3, the number of possible failures below N is at most
+          (N divided by 2*3^(n+2), plus one) times (n+9)*2^n.
+      - declaration: GKPCarry.gkp_exact_modular_sieve
+        informal: >-
+          At depth n+3, exactly (n+9)*2^n of the 2*3^(n+2) exponent classes remain
+          uncertified; every other class gives divisibility by nine and avoids the deficient
+          carry language for all exponents in that class.
       - declaration: GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
         informal: >-
           The GKP conjecture is equivalent to the assertion that every nonexceptional power
@@ -4835,6 +4848,7 @@ projects:
     tags:
       - number-theory
       - finite-automata
+      - asymptotic-density
     msc:
       - "11A63"
       - "11B65"

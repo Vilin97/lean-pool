@@ -922,12 +922,17 @@ import LeanPool.GKPCarry.BadCarryLanguage
 import LeanPool.GKPCarry.BinaryReduction
 import LeanPool.GKPCarry.CarryArithmetic
 import LeanPool.GKPCarry.Definitions
+import LeanPool.GKPCarry.DensityOne
 import LeanPool.GKPCarry.FiniteRange
 import LeanPool.GKPCarry.FiniteRangeCorollary
 import LeanPool.GKPCarry.GKPCharacterization
+import LeanPool.GKPCarry.InfiniteSieve
+import LeanPool.GKPCarry.InfiniteSlices
 import LeanPool.GKPCarry.Kummer
 import LeanPool.GKPCarry.ModularPrefix
+import LeanPool.GKPCarry.PowerResidues
 import LeanPool.GKPCarry.Statement
+import LeanPool.GKPCarry.UnitCarryCounting
 import LeanPool.GrothendieckVanishing
 import LeanPool.GrothendieckVanishing.ClosedImmersion
 import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
