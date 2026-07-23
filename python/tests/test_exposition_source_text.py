@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from lean_pool.exposition.source_text import SourceFile, statement_slice
+from lean_pool.exposition.source_text import (
+    SourceFile,
+    module_skeleton,
+    statement_slice,
+)
 
 THEOREM_BLOCK = """\
 /-- Doc for foo. -/
@@ -19,16 +23,77 @@ def _slice(
     selection: list[int],
     fallback: str = "theorem",
 ) -> tuple[str, str]:
-    """Run statement_slice over freshly parsed source text."""
+    """Run statement_slice over freshly parsed source text (kind, statement)."""
+    kind, statement, _ = _slice_full(text, declaration_range, selection, fallback)
+    return kind, statement
+
+
+def _slice_full(
+    text: str,
+    declaration_range: list[int],
+    selection: list[int],
+    fallback: str = "theorem",
+) -> tuple[str, str, tuple[int, int] | None]:
+    """Run statement_slice over freshly parsed source text (full result)."""
     source = SourceFile.from_text(text)
     return statement_slice(source, declaration_range, selection, fallback)
 
 
 def test_theorem_with_assignment_boundary() -> None:
     """Doc comment, attribute, and modifier are skipped; body is cut at :=."""
-    kind, statement = _slice(THEOREM_BLOCK, [1, 0, 5, 6], [3, 16])
+    kind, statement, statement_end = _slice_full(THEOREM_BLOCK, [1, 0, 5, 6], [3, 16])
     assert kind == "theorem"
     assert statement == "theorem foo (n : Nat) :\n    n + 0 = n"
+    # The boundary sits at the `:=` on line 4, column 14 (0-based codepoints).
+    assert statement_end == (4, 14)
+
+
+def test_module_skeleton_contexts_imports_and_mutual() -> None:
+    """module_skeleton collects imports, context commands, and mutual spans."""
+    text = (
+        "import Mathlib.Order.Basic\n"
+        "import LeanPool.Other.Module\n"
+        "\n"
+        "/-! Module doc: skipped. -/\n"
+        "\n"
+        "namespace Demo\n"
+        "\n"
+        "open Finset in\n"
+        "theorem uses_prefix : True := trivial\n"
+        "\n"
+        "variable {n : Nat}\n"
+        "open Nat\n"
+        'notation "⟪" x "⟫" => id x\n'
+        "\n"
+        "mutual\n"
+        "  def even : Nat → Bool | 0 => true | n + 1 => odd n\n"
+        "  def odd : Nat → Bool | 0 => false | n + 1 => even n\n"
+        "end\n"
+        "\n"
+        "end Demo\n"
+    )
+    skeleton = module_skeleton(SourceFile.from_text(text))
+    assert skeleton.external_imports == ["Mathlib.Order.Basic"]
+    assert all("skipped" not in t for _, t in skeleton.contexts)
+    context_texts = [entry[1] for entry in skeleton.contexts]
+    assert context_texts == [
+        "namespace Demo",
+        "variable {n : Nat}",
+        "open Nat",
+        'notation "⟪" x "⟫" => id x',
+        "end Demo",
+    ]
+    assert skeleton.contexts[0][0] == 6  # namespace Demo sits on line 6
+    assert skeleton.mutual_spans == [(15, 18)]
+
+
+def test_context_block_does_not_swallow_following_doc_comment() -> None:
+    """A doc comment after a context command belongs to the next declaration."""
+    text = (
+        "namespace Demo\n\n/-- Doc of the next declaration. -/\ndef next : Nat := 1\n"
+    )
+    skeleton = module_skeleton(SourceFile.from_text(text))
+    assert skeleton.contexts == [(1, "namespace Demo")]
 
 
 def test_lemma_keyword_refines_theorem_kind() -> None:
