@@ -4946,3 +4946,57 @@ projects:
     msc:
       - "05C15"
       - "52C10"
+  - slug: distance-geometry
+    title: Euclidean Distance Geometry
+    summary: >-
+      Develops the basepoint-centered Gram approach to finite Euclidean distance geometry.
+      Proves both directions of Schoenberg's characterization, including a
+      rank-controlled factorization of positive-semidefinite matrices; proves that
+      three affinely independent centers in Euclidean three-space determine at most
+      two points with prescribed distances; and verifies the Cayley--Menger
+      determinant for segments and triangles, including the triangle-area identity
+      underlying Heron's formula.
+    branch: geometry
+    entry_module: LeanPool.DistanceGeometry
+    authors:
+      - Egor Lyfar
+    source:
+      title: Remarks to Maurice Fréchet's article Sur la définition axiomatique d'une classe d'espace distanciés vectoriellement applicable sur l'espace de Hilbert
+      authors:
+        - Isaac Jacob Schoenberg
+      doi: "10.2307/1968654"
+      github_repo: lyfar/distance-geometry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - DistanceGeometry.schoenberg
+      - DistanceGeometry.trilateration_le_two
+    main_results:
+      - declaration: DistanceGeometry.schoenberg
+        informal: >-
+          For n at least one, a symmetric hollow n-by-n matrix is a squared-distance
+          matrix of points in k-dimensional Euclidean space exactly when its
+          basepoint-centered Gram matrix is positive semidefinite and has rank at most k.
+      - declaration: DistanceGeometry.encard_setOf_forall_dist_eq_le_two
+        informal: >-
+          In a finite-dimensional real inner-product affine space, prescribed
+          distances to centers whose affine span has codimension one admit at most
+          two solutions.
+      - declaration: DistanceGeometry.trilateration_le_two
+        informal: >-
+          Three affinely independent centers in three-dimensional Euclidean space
+          admit at most two points with any prescribed triple of distances.
+      - declaration: DistanceGeometry.cayleyMenger_det_heron
+        informal: >-
+          The Cayley--Menger determinant of three planar points equals minus sixteen
+          times the squared area of their triangle.
+    tags:
+      - distance-geometry
+      - euclidean-geometry
+      - linear-algebra
+      - cayley-menger
+    msc:
+      - "51K05"
+      - "52C99"
+      - "15A18"
