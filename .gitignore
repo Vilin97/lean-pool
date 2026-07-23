@@ -2,6 +2,10 @@
 /docbuild/.lake
 .env
 
+# Exposition build outputs (see python/lean_pool/exposition/)
+/exposition-dump.jsonl
+/exposition-site/
+
 # Python
 __pycache__/
 *.pyc

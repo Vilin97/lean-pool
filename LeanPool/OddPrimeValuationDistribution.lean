@@ -9,7 +9,7 @@ import LeanPool.OddPrimeValuationDistribution.LowValuations
 /-!
 # Exact odd-prime distributions of central-binomial valuations
 
-Source: doi:10.33774/coe-2026-1w9zm
+Source: doi:10.1515/crll.1852.44.93
 Authors: Egor Lyfar
 Status: verified
 Main declarations: `OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity`

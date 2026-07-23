@@ -56,6 +56,23 @@ LEAN_IDENT = r"[^\W\d][\w'.]*"
 FORBIDDEN_DIAGNOSTICS = re.compile(
     r"^\s*#(?:check|print|eval!?|reduce|guard_msgs|lint)\b"
 )
+# Programmatic option manipulation is semantically `set_option` (banned below)
+# but invisible to that textual gate: PR #278 raised `maxRecDepth` from a
+# custom elaborator via `withOptions (fun options => options.set `maxRecDepth
+# (100000 : Nat))`. Two complementary layers close the gap: these patterns
+# reject option-API tokens and gated option names in comment-stripped source,
+# and the `_check_option_backdoors` environment audit rejects compiled
+# declarations whose terms reference option-manipulating constants or embed
+# gated option-name literals (catching spellings the text scan cannot see,
+# e.g. names assembled from string literals).
+FORBIDDEN_OPTION_APIS = re.compile(
+    r"\b(?:withOptions|modifyOptions|MonadWithOptions|withRecDepth"
+    r"|withCurrHeartbeats|elabSetOption|setOptionFromString|modifyScope"
+    r"|KVMap\.(?:set|insert|erase)\w*|Options\.set\w*|Option\.set(?:IfNotSet)?)\b"
+)
+FORBIDDEN_OPTION_NAMES = re.compile(
+    r"\b(?:maxRecDepth|maxHeartbeats|maxSynthPendingDepth)\b|\blinter\.[\w'.]+"
+)
 FORBIDDEN_SOUNDNESS = re.compile(
     r"\b(?:axiom|constant|unsafe|partial|opaque)\b|@\[\s*extern\b"
 )
@@ -244,6 +261,22 @@ def _check_forbidden_lean_text(root: Path) -> list[_QualityError]:
                 errors.append(
                     _QualityError(path, line_number, "nolint waiver is forbidden")
                 )
+            if FORBIDDEN_OPTION_APIS.search(line):
+                errors.append(
+                    _QualityError(
+                        path,
+                        line_number,
+                        "programmatic option manipulation is forbidden",
+                    )
+                )
+            if FORBIDDEN_OPTION_NAMES.search(line):
+                errors.append(
+                    _QualityError(
+                        path,
+                        line_number,
+                        "gated option name in code is forbidden",
+                    )
+                )
             if re.match(r"^\s*(?:public\s+)?import\s+Mathlib\s*$", line):
                 errors.append(
                     _QualityError(
@@ -274,6 +307,7 @@ def _check_lake_options(root: Path) -> list[_QualityError]:
         "heartbeat override": re.compile(
             r"\b(?:maxHeartbeats|synthInstance\.maxHeartbeats)\b"
         ),
+        "recursion-depth override": re.compile(r"\bmaxRecDepth\b"),
         "trace option": re.compile(r"\btrace\."),
         "autoImplicit enabled": re.compile(
             r"\b(?:relaxedAutoImplicit|autoImplicit)\s*=\s*true"
@@ -433,6 +467,191 @@ def _qualify_name(namespace_stack: list[str], name: str) -> str:
     # dotted: `theorem Foo.bar` inside `namespace N` declares `N.Foo.bar`, so
     # the audit must look it up under the fully-qualified name, not `Foo.bar`.
     return ".".join([*namespace_stack, name])
+
+
+# Environment-level companion to FORBIDDEN_OPTION_APIS/FORBIDDEN_OPTION_NAMES:
+# a standalone Lean script (same `lake env lean --run` pattern as
+# scripts/exposition/Extract.lean). It imports the pool WITHOUT activating
+# extensions, so project-defined notation cannot interfere with the audit,
+# then walks every declaration compiled into a `LeanPool.*` module (including
+# elaborator auxiliaries and generated declarations the textual declaration
+# parser cannot see) and reports any that
+#   - references an option-manipulating constant,
+#   - embeds a gated option-name string literal (Lean `Name` literals compile
+#     to string pieces, so `` `maxRecDepth `` and `Name.mkStr1 "maxRecDepth"`
+#     both surface here),
+#   - directly references an axiom-injecting constant (`sorryAx`,
+#     `ofReduceBool`, ...), or
+#   - IS an axiom declared inside a pool module — this extends the
+#     `#print axioms` audit to declarations it cannot enumerate textually (on
+#     this toolchain `native_decide` compiles to a generated per-theorem
+#     axiom in the module, which is exactly what the kind check rejects; an
+#     elaborator calling `addDecl (Declaration.axiomDecl ...)` is the same
+#     hole).
+# Candidate constants absent from the current toolchain are skipped, so core
+# renames degrade coverage rather than break the audit; the completion marker
+# lets the Python side fail closed if the audit itself stops compiling.
+_OPTION_AUDIT_FINDING_RE = re.compile(
+    r"LEANPOOL_OPTION_AUDIT\|([^|\s]+)\|([^|\s]+)\|([^\n]*)"
+)
+_OPTION_AUDIT_COMPLETE_MARKER = "LEANPOOL_OPTION_AUDIT_COMPLETE"
+_OPTION_AUDIT_LEAN = """
+import Lean
+
+namespace LeanPoolQuality.OptionAudit
+
+open Lean
+
+def gatedFragments : List String :=
+  ["maxRecDepth", "maxHeartbeats", "maxSynthPendingDepth", "linter."]
+
+def isGatedLiteral (s : String) : Bool :=
+  s == "linter"
+    || gatedFragments.any fun fragment => (s.splitOn fragment).length > 1
+
+def manipulatorCandidates : List Name :=
+  [`Lean.MonadWithOptions.withOptions, `Lean.withOptions, `Lean.modifyOptions,
+   `Lean.MonadRecDepth.withRecDepth,
+   `Lean.withCurrHeartbeats, `Lean.Core.withCurrHeartbeats,
+   `Lean.KVMap.set, `Lean.KVMap.setBool, `Lean.KVMap.setNat, `Lean.KVMap.setInt,
+   `Lean.KVMap.setString, `Lean.KVMap.setName, `Lean.KVMap.setSyntax,
+   `Lean.KVMap.insert, `Lean.KVMap.insertCore, `Lean.KVMap.setEntry,
+   `Lean.KVMap.erase,
+   `Lean.Option.set, `Lean.Option.setIfNotSet,
+   `Lean.Options.set, `Lean.Options.setBool, `Lean.Options.setNat,
+   `Lean.Core.Context.mk, `Lean.Elab.Command.Scope.mk,
+   `Lean.Elab.Command.modifyScope,
+   `Lean.Elab.elabSetOption, `Lean.Elab.Command.elabSetOption,
+   `Lean.setOptionFromString,
+   `Lean.maxRecDepth, `Lean.maxHeartbeats, `maxRecDepth, `maxHeartbeats]
+
+def axiomInjectorCandidates : List Name :=
+  [`sorryAx, `Lean.sorryAx, `Lean.ofReduceBool, `Lean.ofReduceNat,
+   `Lean.trustCompiler]
+
+/- Only the axiom kind is rejected: `opaque` and `partial`/`unsafe`
+definitions carry kernel-checked values (and unsafe constants cannot appear
+in proofs at all), and the compiler legitimately generates such companions
+(`._unsafe_rec`, hygienic `ext._@...` opaques, `deriving` helpers) for
+ordinary safe code. An axiom declared inside a pool module, by contrast, is
+always a soundness hole — whether written via an elaborator calling `addDecl`
+or generated by `native_decide`. -/
+def kindViolation? (info : ConstantInfo) : Option String :=
+  match info with
+  | .axiomInfo _ => some "declares an axiom"
+  | _ => none
+
+def gatedLiteral? (e : Expr) : Option String :=
+  match e.find? fun sub =>
+    match sub with
+    | .lit (.strVal s) => isGatedLiteral s
+    | _ => false
+  with
+  | some (.lit (.strVal s)) => some s
+  | _ => none
+
+def auditEnv (env : Environment) : IO Unit := do
+  let manipulators := manipulatorCandidates.filter env.contains
+  let injectors := axiomInjectorCandidates.filter env.contains
+  let mut visited : NameSet := NameSet.empty
+  for (moduleName, data) in env.header.moduleNames.zip env.header.moduleData do
+    unless moduleName.getRoot == `LeanPool do continue
+    for declName in data.constNames do
+      unless visited.contains declName do
+        visited := visited.insert declName
+        if let some info := env.find? declName then
+          let exprs := info.type :: info.value?.toList
+          let used := exprs.foldl (fun acc e => acc ++ e.getUsedConstants) #[]
+          let mut details : List String := []
+          let hits := manipulators.filter used.contains
+          unless hits.isEmpty do
+            let joined := ", ".intercalate (hits.map (·.toString))
+            details := details.concat
+              s!"references forbidden option-manipulating constants: {joined}"
+          if let some s := exprs.findSome? gatedLiteral? then
+            details := details.concat
+              s!"embeds forbidden gated option name {repr s}"
+          let injectorHits := injectors.filter used.contains
+          unless injectorHits.isEmpty do
+            let joined := ", ".intercalate (injectorHits.map (·.toString))
+            details := details.concat
+              s!"references forbidden axiom-injecting constants: {joined}"
+          if let some kindDetail := kindViolation? info then
+            details := details.concat kindDetail
+          unless details.isEmpty do
+            let joined := "; ".intercalate details
+            IO.println s!"LEANPOOL_OPTION_AUDIT|{moduleName}|{declName}|{joined}"
+  IO.println "LEANPOOL_OPTION_AUDIT_COMPLETE"
+
+end LeanPoolQuality.OptionAudit
+
+def main (args : List String) : IO UInt32 := do
+  let modules := if args.isEmpty then [`LeanPool] else args.map (·.toName)
+  Lean.initSearchPath (<- Lean.findSysroot)
+  let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
+  let env <- Lean.importModules imports {} (trustLevel := 1024)
+  LeanPoolQuality.OptionAudit.auditEnv env
+  return 0
+"""
+
+
+def _check_option_backdoors(root: Path) -> list[_QualityError]:
+    """Audit every declaration compiled into the pool for backdoors."""
+    with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as temp_file:
+        temp_path = Path(temp_file.name)
+        temp_file.write(_OPTION_AUDIT_LEAN)
+        temp_file.flush()
+
+    try:
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", "--run", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH; surface a single advisory error rather
+            # than crashing the whole quality run.
+            return [
+                _QualityError(
+                    root / "LeanPool.lean",
+                    1,
+                    "option-manipulation audit skipped: `lake` not found",
+                )
+            ]
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+    return _parse_option_audit_output(root, process.stdout, process.stderr)
+
+
+def _parse_option_audit_output(
+    root: Path, stdout: str, stderr: str
+) -> list[_QualityError]:
+    """Turn environment-audit findings (and non-completion) into errors."""
+    errors: list[_QualityError] = []
+    for match in _OPTION_AUDIT_FINDING_RE.finditer(stdout):
+        module, declaration, detail = match.groups()
+        errors.append(
+            _QualityError(
+                _module_to_path(root, module),
+                1,
+                f"{declaration} {detail.strip()}",
+            )
+        )
+    if _OPTION_AUDIT_COMPLETE_MARKER not in stdout:
+        snippet = stderr.strip().splitlines()
+        errors.append(
+            _QualityError(
+                root / "LeanPool.lean",
+                1,
+                "option-manipulation audit did not complete: "
+                f"{snippet[0] if snippet else '(no stderr)'}",
+            )
+        )
+    return errors
 
 
 def _check_axioms(root: Path) -> list[_QualityError]:
@@ -1066,6 +1285,7 @@ def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityEr
     errors = [error for check in checks for error in check(root)]
     if not skip_lean_axioms:
         errors.extend(_check_axioms(root))
+        errors.extend(_check_option_backdoors(root))
     return sorted(
         errors, key=lambda error: (str(error.path), error.line, error.message)
     )
@@ -1082,7 +1302,8 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--skip-lean-axioms",
         action="store_true",
-        help="Skip the Lean subprocess used for #print axioms.",
+        help="Skip the Lean subprocess used for #print axioms and the "
+        "option-manipulation environment audit.",
     )
     parser.add_argument(
         "--write-project-cards",
