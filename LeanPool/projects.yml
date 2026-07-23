@@ -3468,7 +3468,7 @@ projects:
       - declaration: Egrs75.MuFinish.egrs_two_prime_mu
         informal: Proves that for distinct odd primes p and q there are infinitely many n with p and q both not dividing the central binomial coefficient binom(2n,n), via the mu-measure descent.
       - declaration: Egrs75.Finish.egrs_two_prime_finish
-        informal: Proves the same theorem along an independent second route, a bad-bit-mask strong induction consuming the same single-move lemma.
+        informal: Reassembles the same theorem via bad-bit-mask strong induction, with the low-case clearing discharged by Egrs75.MuFinish.egrs_clearing_low_mu.
       - declaration: Egrs75.not_dvd_centralBinom_iff_lowDigits
         informal: The Kummer bridge, stating that an odd prime p does not divide binom(2n,n) exactly when every base-p digit of n is at most (p-1)/2.
       - declaration: Egrs75.MathlibAPI.irrational_log_div_log
@@ -4782,6 +4782,278 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: gkp-density-one
+    title: Density-One GKP Divisibility and Its Carry-Language Characterization
+    summary: >-
+      Proves that the exponents k satisfying the Graham--Knuth--Patashnik divisibility
+      condition have natural density one. The proof gives an exact all-depth modular sieve,
+      quantitative bounds for possible failures in initial intervals, and a density-zero
+      limit for the failure proportion. It also develops the Kummer digit-sum bridge, the
+      binary-popcount reduction, and a verified ternary carry automaton. The universal GKP
+      conjecture remains open because the possible density-zero failure set may be nonempty.
+    branch: number theory
+    entry_module: LeanPool.GKPCarry
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science, Second Edition"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: https://cs.stanford.edu/~knuth/gkp.html
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GKPCarry.tendsto_gkpSuccessProportion_one
+    main_results:
+      - declaration: GKPCarry.tendsto_gkpSuccessProportion_one
+        informal: >-
+          The proportion of exponents k below N for which nine divides the central binomial
+          coefficient indexed by 2^k tends to one as N tends to infinity.
+      - declaration: GKPCarry.card_gkpFailureExponentsBelow_le
+        informal: >-
+          At each ternary depth n+3, the number of possible failures below N is at most
+          (N divided by 2*3^(n+2), plus one) times (n+9)*2^n.
+      - declaration: GKPCarry.gkp_exact_modular_sieve
+        informal: >-
+          At depth n+3, exactly (n+9)*2^n of the 2*3^(n+2) exponent classes remain
+          uncertified; every other class gives divisibility by nine and avoids the deficient
+          carry language for all exponents in that class.
+      - declaration: GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+        informal: >-
+          The GKP conjecture is equivalent to the assertion that every nonexceptional power
+          of two avoids the explicitly defined deficient-carry regular language. This is an
+          exact reformulation and does not prove the remaining avoidance assertion.
+      - declaration: GKPCarry.nine_dvd_centralBinom_iff_two_le_ternaryDoubleCarryCount
+        informal: >-
+          For every natural number n, its central binomial coefficient is divisible by nine
+          exactly when doubling the canonical ternary expansion of n creates at least two
+          carries.
+      - declaration: GKPCarry.badCarryLanguage_true_iff_shape
+        informal: >-
+          The deficient-carry automaton accepts exactly three concrete little-endian ternary
+          word shapes: all digits zero or one; a unique top digit two; or a unique two followed
+          by a higher zero with all other digits zero or one.
+      - declaration: GKPCarry.card_badCarryWords
+        informal: >-
+          Among all ternary words of length n+2, exactly (n+7) times 2^n create fewer than two
+          carries when doubled.
+      - declaration: GKPCarry.nine_dvd_centralBinom_four_pow_in_finite_range
+        informal: >-
+          For every m from 27 through 6560, nine divides the central binomial coefficient
+          indexed by 4^m; this is a bounded computational corollary, not the headline result.
+    tags:
+      - number-theory
+      - finite-automata
+      - asymptotic-density
+    msc:
+      - "11A63"
+      - "11B65"
+      - "68Q45"
+  - slug: moser-lattice-colorings
+    title: Geometric Four-Colorings of the Moser Lattice and Ring
+    summary: >-
+      Formalizes the two explicit parity colorings from Dúcz's 2026 note on the
+      Moser lattice. The development derives the exact quadratic norm formula,
+      proves that the integer-coordinate embedding is faithful, proves both
+      colorings proper and geometric on the entire lattice, and descends them
+      through localization by powers of three to the Moser ring. As a structural
+      corollary, every unit-distance graph realized entirely in the Moser ring is
+      four-colorable. The uniqueness classification of geometric four-colorings
+      and the chromatic number of the full Euclidean plane are not claimed.
+    branch: combinatorics
+    entry_module: LeanPool.MoserLatticeColorings
+    authors:
+      - Egor Lyfar
+    source:
+      title: "A note on geometric colorings of the Moser lattice"
+      authors:
+        - Ákos Dúcz
+      arxiv: "2606.12325"
+      github_repo: lyfar/moser-lattice-colorings-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+    main_results:
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+        informal: >-
+          The two parity maps defined by Dúcz descend to proper four-colorings of
+          the full Moser ring, and equality of colors for each map depends only
+          on Euclidean distance.
+        source_ref: "Theorem 3.1 and the Moser-ring extension following it."
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.graph_colorable_four_of_moserRing_realization
+        informal: >-
+          Every abstract graph with a realization in the Moser ring that sends
+          each edge to a unit-distance pair is four-colorable.
+        source_ref: "Corollary of the geometric four-coloring of the Moser ring."
+    tags:
+      - combinatorics
+      - graph-coloring
+      - discrete-geometry
+      - unit-distance-graphs
+      - moser-lattice
+    msc:
+      - "05C15"
+  - slug: hadwiger-nelson-bounds
+    title: Known Bounds for the Hadwiger-Nelson Problem
+    summary: >-
+      Formalizes the currently known bounds 5 <= chi(R^2) <= 7 for the
+      chromatic number of the Euclidean plane. The upper bound constructs an
+      explicit Isbell-style seven-coloring. The lower bound checks Parts'
+      481-vertex coloring certificate, develops a finite doubled
+      triangular-lattice forcing gadget, proves its exact Euclidean embedding,
+      and closes the four-color contradiction with a spindle construction.
+      The exact chromatic number remains open.
+    branch: graph theory and discrete geometry
+    entry_module: LeanPool.HadwigerNelsonBounds
+    authors:
+      - Egor Lyfar
+    source:
+      title: A human-verifiable proof of the chromatic number of the plane being at least 5
+      authors:
+        - Jaan Parts
+      arxiv: "2010.12661"
+      url: https://www.erdosproblems.com/508
+      github_repo: lyfar/hadwiger-nelson-bounds-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+    main_results:
+      - declaration: HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+        informal: >-
+          The chromatic number of the unit-distance graph on the Euclidean
+          plane lies between five and seven, inclusive.
+      - declaration: HadwigerNelsonBounds.unitDistanceGraph_not_colorable_four
+        informal: >-
+          The unit-distance graph on the Euclidean plane admits no proper
+          coloring with four colors.
+      - declaration: HadwigerNelsonBounds.chromaticNumber_le_seven
+        informal: >-
+          An explicit Isbell-style coloring proves that the unit-distance graph
+          on the Euclidean plane is colorable with seven colors.
+    tags:
+      - graph-theory
+      - geometric-graph-theory
+      - graph-coloring
+      - hadwiger-nelson
+    msc:
+      - "05C15"
+      - "52C10"
+  - slug: distance-geometry
+    title: Euclidean Distance Geometry
+    summary: >-
+      Develops the basepoint-centered Gram approach to finite Euclidean distance geometry.
+      Proves both directions of Schoenberg's characterization, including a
+      rank-controlled factorization of positive-semidefinite matrices; proves that
+      three affinely independent centers in Euclidean three-space determine at most
+      two points with prescribed distances; and verifies the Cayley--Menger
+      determinant for segments and triangles, including the triangle-area identity
+      underlying Heron's formula.
+    branch: geometry
+    entry_module: LeanPool.DistanceGeometry
+    authors:
+      - Egor Lyfar
+    source:
+      title: Remarks to Maurice Fréchet's article Sur la définition axiomatique d'une classe d'espace distanciés vectoriellement applicable sur l'espace de Hilbert
+      authors:
+        - Isaac Jacob Schoenberg
+      doi: "10.2307/1968654"
+      github_repo: lyfar/distance-geometry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - DistanceGeometry.schoenberg
+      - DistanceGeometry.trilateration_le_two
+    main_results:
+      - declaration: DistanceGeometry.schoenberg
+        informal: >-
+          For n at least one, a symmetric hollow n-by-n matrix is a squared-distance
+          matrix of points in k-dimensional Euclidean space exactly when its
+          basepoint-centered Gram matrix is positive semidefinite and has rank at most k.
+      - declaration: DistanceGeometry.encard_setOf_forall_dist_eq_le_two
+        informal: >-
+          In a finite-dimensional real inner-product affine space, prescribed
+          distances to centers whose affine span has codimension one admit at most
+          two solutions.
+      - declaration: DistanceGeometry.trilateration_le_two
+        informal: >-
+          Three affinely independent centers in three-dimensional Euclidean space
+          admit at most two points with any prescribed triple of distances.
+      - declaration: DistanceGeometry.cayleyMenger_det_heron
+        informal: >-
+          The Cayley--Menger determinant of three planar points equals minus sixteen
+          times the squared area of their triangle.
+    tags:
+      - distance-geometry
+      - euclidean-geometry
+      - linear-algebra
+      - cayley-menger
+    msc:
+      - "51K05"
+      - "52C99"
+      - "15A18"
+  - slug: odd-prime-valuation-distribution
+    title: Exact odd-prime distributions of central-binomial valuations
+    summary: >-
+      Formalizes the exact distribution of the p-adic valuation of the central binomial
+      coefficient binom(2n,n) over every complete block 0 <= n < p^k for every odd prime p.
+      The development proves Kummer correctness for padded digit words, constructs the
+      two-state doubling carry enumerator, identifies it with the arithmetic valuation
+      polynomial, derives its second-order recurrence, proves the rational bivariate
+      generating function, and obtains closed formulas for valuations zero and one.
+    branch: number theory
+    entry_module: LeanPool.OddPrimeValuationDistribution
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Über die Ergänzungssätze zu den allgemeinen Reciprocitätsgesetzen"
+      authors:
+        - Ernst Eduard Kummer
+      doi: "10.1515/crll.1852.44.93"
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+    main_results:
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+        informal: >-
+          For every odd prime p = 2h+1, proves the denominator-cleared identity for the
+          bivariate series whose coefficient of T^k X^r counts n < p^k with
+          nu_p(binomial(2n,n)) = r; equivalently the series is
+          (1-XT)/(1-(h+1)(1+X)T+pXT^2).
+        source_ref: "A. Straub, V. H. Moll, T. Amdeberhan, The p-adic valuation of k-central binomial coefficients, Acta Arith. 140 (2009), 31-42."
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationPolynomial_recurrence
+        informal: >-
+          Proves that the exact valuation polynomials satisfy
+          F_{k+2}(X)+pX F_k(X)=(h+1)(1+X)F_{k+1}(X), with F_0=1 and
+          F_1=(h+1)+hX.
+      - declaration: OddPrimeValuationDistribution.padicValNat_oddPrime_centralBinom_ofDigits_eq_carryCount
+        informal: >-
+          Proves Kummer correctness for every valid padded base-p word: the p-adic valuation
+          of its central binomial coefficient equals the number of carries produced by
+          doubling the word.
+      - declaration: OddPrimeValuationDistribution.card_oddPrimeBlock_valuation_one
+        informal: >-
+          Gives a closed formula for the number of n below p^(k+2) whose central binomial
+          coefficient has p-adic valuation exactly one.
+    tags:
+      - central-binomial-coefficients
+      - p-adic-valuations
+      - digit-carries
+      - generating-functions
+    msc:
+      - "11A63"
+      - "11B65"
   - slug: erdos132-n14
     title: A Conditional Fourteen-Point Case of Erdős Problem 132
     summary: >-

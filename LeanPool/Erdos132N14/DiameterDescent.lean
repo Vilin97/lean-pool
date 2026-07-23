@@ -178,23 +178,6 @@ theorem retainedEndpoint_mem_remaining :
 theorem remaining_card : profile.remaining.card = 13 := by
   simp [remaining, deletedVertex]
 
-theorem remaining_pairs_card : (pairs profile.remaining).card = 78 := by
-  have hvNot : profile.deletedVertex ∉ profile.remaining := by
-    simp [remaining]
-  have huniv : insert profile.deletedVertex profile.remaining = Finset.univ := by
-    simp [remaining]
-  have hpairs := pairs_insert hvNot
-  rw [huniv] at hpairs
-  have hcard := congrArg Finset.card hpairs
-  rw [Finset.card_union_of_disjoint
-    (pairs_disjoint_insertionPairs hvNot)] at hcard
-  have hinsertionCard :
-      (insertionPairs profile.deletedVertex profile.remaining).card = 13 := by
-    rw [insertionPairs, Finset.card_image_of_injective _
-      (pairWith_injective profile.deletedVertex), profile.remaining_card]
-  rw [pairs_univ_fin_fourteen_card, hinsertionCard] at hcard
-  omega
-
 /-- Deleting the endpoint removes exactly the unique rare distance class. -/
 theorem erase_endpoint_realizedDistances_eq_erase :
     P.realizedDistances profile.remaining =
