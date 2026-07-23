@@ -11,6 +11,7 @@ on:
       - 'lake-manifest.json'
       - 'lean-toolchain'
       - 'docbuild/**'
+      - 'python/lean_pool/exposition/**'
       - '.github/workflows/docs.yml'
   pull_request:
     branches:
@@ -22,6 +23,7 @@ on:
       - 'lake-manifest.json'
       - 'lean-toolchain'
       - 'docbuild/**'
+      - 'python/lean_pool/exposition/**'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
@@ -33,8 +35,75 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 jobs:
+  # Runs in parallel with the doc-gen4 build; its (small) artifact is merged
+  # into the Pages tree by the `build` job just before deployment. Restores
+  # the same cache as `build` but never saves it — `build` owns cache writes.
+  exposition:
+    runs-on: ubuntu-latest
+    name: Build exposition site
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            docbuild/.lake/build
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
+          restore-keys: |
+            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
+            Docs-Lake-${{ runner.os }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Build pool
+        run: ~/.elan/bin/lake build LeanPool
+
+      - name: Extract declarations
+        run: ~/.elan/bin/lake env ~/.elan/bin/lean --run scripts/exposition/Extract.lean exposition-dump.jsonl
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Generate site
+        run: |
+          cd python
+          uv sync --locked
+          uv run python -m lean_pool.exposition \
+            --dump ../exposition-dump.jsonl \
+            --repo-root .. \
+            --out ../exposition-site \
+            --commit ${{ github.sha }}
+
+      - name: Upload exposition artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: exposition-site
+          path: exposition-site
+          retention-days: 3
+
   build:
     runs-on: ubuntu-latest
     name: Build doc-gen4 site
@@ -79,6 +148,41 @@ jobs:
       - name: Build documentation
         id: build
         run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs
+
+      - name: Add exposition site
+        # Wait for the parallel `exposition` job's artifact and merge it into
+        # the Pages tree. Fail-soft: if that job failed or timed out, deploy
+        # the docs without the exposition rather than blocking the site.
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Drop any exposition tree restored from the Docs-Lake cache so the
+          # deploy matches the fresh artifact exactly (or omits the exposition
+          # entirely on the fail-soft paths) — never a stale mixture.
+          rm -rf docbuild/.lake/build/doc/exposition
+          deadline=$((SECONDS + 1800))
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            found=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
+              --jq '[.artifacts[] | select(.name == "exposition-site" and .expired == false)] | length' || echo 0)
+            if [ "$found" -ge 1 ]; then
+              if gh run download "${{ github.run_id }}" --repo "${{ github.repository }}" \
+                  --name exposition-site --dir docbuild/.lake/build/doc/exposition; then
+                echo "Exposition site merged into Pages tree."
+              else
+                echo "::warning::Exposition artifact download failed; deploying docs without it."
+              fi
+              exit 0
+            fi
+            conclusion=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
+              --jq '.jobs[] | select(.name == "Build exposition site") | .conclusion' || echo "")
+            if [ "$conclusion" = "failure" ] || [ "$conclusion" = "cancelled" ]; then
+              echo "::warning::Exposition job concluded with '$conclusion'; deploying docs without it."
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::warning::Timed out waiting for the exposition artifact; deploying docs without it."
 
       - name: Configure Pages
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
