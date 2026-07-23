@@ -16,6 +16,15 @@ retried with ``service_tier="auto"`` (standard pricing). The rendered
 comment shows which tier was actually used and prices the request at that
 tier's rate.
 
+Very large PRs (machine-generated certificates or case data) can exceed
+the model's input-token limit — PR #278's 3.1M-character diff was
+rejected at 1.56M tokens. Rather than crashing and leaving the PR
+unreviewed, the diff is fitted to a token budget first: the largest
+per-file patches are elided (keeping every file's path, line counts, and
+opening lines) until the estimate fits, and both the model prompt and
+the posted comment state that the review covered a reduced diff. See
+:func:`fit_diff_to_budget`.
+
 Per-token prices live in the ``PRICING_PER_M`` table below — the OpenAI
 API does not return cost in its responses, so we maintain a small lookup
 keyed on ``(model, tier)``. Update it when bumping ``DEFAULT_MODEL`` or
@@ -41,11 +50,12 @@ import json
 import os
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from textwrap import dedent
 from typing import Any
 
-from openai import APIStatusError, OpenAI, RateLimitError
+from openai import APIStatusError, BadRequestError, OpenAI, RateLimitError
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
@@ -54,6 +64,23 @@ DEFAULT_MODEL = "gpt-5.5"
 # Flex tier requests can take longer than the default 10-minute timeout.
 REQUEST_TIMEOUT_SECONDS = 6000.0
 LLM_REVIEW_MARKER = "<!-- lean-pool-llm-review -->"
+
+# Input-token guardrail. OpenAI rejected PR #278's review at a configured
+# limit of 922k input tokens; its 3,112,190-character diff measured ~2.0
+# characters per token (machine-generated arithmetic tokenizes far denser
+# than the ~4 chars/token of ordinary code). Budget below the observed
+# limit and estimate with that worst measured density; anything denser
+# still is caught by the shrink-and-retry loop in :func:`request_review`.
+MAX_INPUT_TOKENS = 800_000
+CHARS_PER_TOKEN_ESTIMATE = 2.0
+# Initial fit plus this many budget halvings before giving up.
+REVIEW_FIT_ATTEMPTS = 3
+# Patch lines kept for an elided file — enough for an added Lean file's
+# module docstring and imports. If even the elided diff overflows, refit
+# with the minimum head before hard-truncating the tail.
+ELIDED_FILE_HEAD_LINES = 40
+MINIMUM_ELIDED_FILE_HEAD_LINES = 8
+ELISION_MARKER = "[elided by lean-pool llm-review:"
 
 # USD per 1M tokens, keyed by (model, tier) -> (input_per_M, output_per_M).
 # Source: https://developers.openai.com/api/docs/pricing — update when
@@ -300,26 +327,172 @@ def classify_pr(files: list[tuple[str, str]]) -> str:
     return "project"
 
 
-def request_review(
-    model: str, rules: str, diff: str, system_prompt: str
-) -> tuple[dict, Any, str]:
-    """Ask the model to apply ``rules`` to ``diff`` under ``system_prompt``.
+def estimate_tokens(text: str) -> int:
+    """Conservatively estimate how many model tokens ``text`` costs.
 
-    Tries the ``flex`` service tier first; if OpenAI returns 429 Resource
-    Unavailable, retries with ``service_tier="auto"`` (standard tier).
+    Uses the densest ratio measured in practice (PR #278's generated
+    interval-arithmetic diff: ~2.0 characters per token), so ordinary
+    code overestimates — which only errs toward eliding more, never
+    toward an API rejection.
+    """
+    return int(len(text) / CHARS_PER_TOKEN_ESTIMATE) + 1
+
+
+@dataclass(frozen=True)
+class DiffTruncation:
+    """How an oversized diff was reduced to fit the review token budget.
+
+    Attributes:
+        total_files: Per-file chunks in the original diff.
+        elided_files: Files whose patch bodies were replaced with markers.
+        original_chars: Character count of the untruncated diff.
+        final_chars: Character count of the diff actually sent.
+        hard_truncated: True when even full elision overflowed and the
+            tail of the diff was cut outright.
+    """
+
+    total_files: int
+    elided_files: int
+    original_chars: int
+    final_chars: int
+    hard_truncated: bool = False
+
+
+def split_diff_into_files(diff: str) -> list[str]:
+    """Split a unified diff into per-file chunks.
+
+    Each chunk starts at a ``diff --git`` header. Content lines inside a
+    patch body always carry a prefix (``+``, ``-``, space, ``@@``), so a
+    line starting with ``diff --git `` is reliably a file boundary.
+    """
+    chunk_lines: list[list[str]] = []
+    current: list[str] = []
+    for line in diff.splitlines():
+        if line.startswith("diff --git ") and current:
+            chunk_lines.append(current)
+            current = [line]
+        else:
+            current.append(line)
+    if current:
+        chunk_lines.append(current)
+    return ["\n".join(lines) for lines in chunk_lines]
+
+
+def _elide_file_chunk(chunk: str, head_lines: int) -> str:
+    """Replace the bulk of one file's patch with a marker, keeping its head.
+
+    Keeps the file headers (everything up to the first ``@@`` hunk) plus
+    the first ``head_lines`` patch lines — for an added Lean file that is
+    the module docstring and imports — and appends a marker recording how
+    many patch lines were dropped. Returns the chunk unchanged when it is
+    too small for elision to save anything.
+    """
+    lines = chunk.split("\n")
+    body_start = next((i for i, line in enumerate(lines) if line.startswith("@@")), 0)
+    kept = body_start + head_lines
+    if len(lines) <= kept + 1:
+        return chunk
+    marker = (
+        f"{ELISION_MARKER} {len(lines) - kept:,} of {len(lines) - body_start:,} "
+        "patch lines omitted — diff exceeded the review size budget]"
+    )
+    return "\n".join([*lines[:kept], marker])
+
+
+def fit_diff_to_budget(
+    diff: str,
+    budget_tokens: int,
+    head_lines: int = ELIDED_FILE_HEAD_LINES,
+) -> tuple[str, DiffTruncation | None]:
+    """Reduce ``diff`` until it fits ``budget_tokens`` estimated tokens.
+
+    A diff that already fits is returned unchanged. Otherwise the bodies
+    of the largest per-file patches are elided first — machine-generated
+    certificate/data files are what blows PRs past the limit — keeping
+    every file's path, line counts, and opening lines. If eliding every
+    file is still not enough, the fit is redone with the minimum head
+    size, and as a last resort the tail of the diff is cut outright.
 
     Returns:
-        ``(payload, usage, tier)`` where ``payload`` is the parsed JSON
-        review, ``usage`` is the OpenAI ``CompletionUsage`` object (or
-        ``None``), and ``tier`` is ``"flex"`` or ``"standard"``.
+        ``(fitted_diff, truncation)`` where ``truncation`` is ``None``
+        when the diff was left untouched.
     """
-    client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
-    user_content = f"## Review rules\n\n{rules}\n\n## PR diff\n\n```diff\n{diff}\n```"
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_content},
-    ]
+    budget_chars = int(budget_tokens * CHARS_PER_TOKEN_ESTIMATE)
+    if len(diff) <= budget_chars:
+        return diff, None
+    chunks = split_diff_into_files(diff)
+    total_chars = sum(len(chunk) + 1 for chunk in chunks)
+    largest_first = sorted(
+        range(len(chunks)), key=lambda index: len(chunks[index]), reverse=True
+    )
+    elided = 0
+    for index in largest_first:
+        if total_chars <= budget_chars:
+            break
+        replacement = _elide_file_chunk(chunks[index], head_lines)
+        if len(replacement) >= len(chunks[index]):
+            continue
+        total_chars -= len(chunks[index]) - len(replacement)
+        chunks[index] = replacement
+        elided += 1
+    fitted = "\n".join(chunks) + "\n"
+    hard_truncated = False
+    if len(fitted) > budget_chars:
+        if head_lines > MINIMUM_ELIDED_FILE_HEAD_LINES:
+            return fit_diff_to_budget(
+                diff, budget_tokens, head_lines=MINIMUM_ELIDED_FILE_HEAD_LINES
+            )
+        fitted = (
+            fitted[:budget_chars]
+            + f"\n{ELISION_MARKER} remainder of the diff omitted — review "
+            "size budget exhausted]\n"
+        )
+        hard_truncated = True
+    return fitted, DiffTruncation(
+        total_files=len(chunks),
+        elided_files=elided,
+        original_chars=len(diff),
+        final_chars=len(fitted),
+        hard_truncated=hard_truncated,
+    )
 
+
+def build_user_content(rules: str, diff: str, truncation: DiffTruncation | None) -> str:
+    """Assemble the user message from rules, diff, and any size notice."""
+    sections = [f"## Review rules\n\n{rules}"]
+    if truncation is not None:
+        notice = (
+            "This PR's diff was too large to send in full "
+            f"({truncation.original_chars:,} characters). The bodies of the "
+            f"{truncation.elided_files} largest of its {truncation.total_files} "
+            f"file patches were replaced with `{ELISION_MARKER} ...]` markers; "
+            "every file's diff header, patch line counts, and opening lines "
+            "are retained. Machine-generated bulk (proof certificates, "
+            "generated case data) is the usual cause of this size. Review "
+            "from the visible content plus the elided files' paths, sizes, "
+            "and heads — an elision marker is not missing work by the author "
+            "— and state in your summary that the review is based on a "
+            "partial diff."
+        )
+        if truncation.hard_truncated:
+            notice += (
+                " Even the elided diff overflowed, so its tail was cut "
+                "outright after the character budget."
+            )
+        sections.append(f"## Diff size notice\n\n{notice}")
+    sections.append(f"## PR diff\n\n```diff\n{diff}\n```")
+    return "\n\n".join(sections)
+
+
+def _completion_with_tier_fallback(
+    client: OpenAI, model: str, messages: list[dict[str, str]]
+) -> tuple[Any, str]:
+    """Create a completion on the ``flex`` tier, falling back to standard.
+
+    Flex is either out of capacity (429 RateLimitError) or unsupported for
+    this model (e.g. 500 InternalServerError on gpt-5.5); either way retry
+    with ``service_tier="auto"``. Any other error propagates.
+    """
     try:
         response = client.chat.completions.create(
             model=model,
@@ -327,11 +500,8 @@ def request_review(
             response_format={"type": "json_object"},
             service_tier="flex",
         )
-        tier = "flex"
+        return response, "flex"
     except (RateLimitError, APIStatusError) as e:
-        # Flex either out of capacity (429 RateLimitError) or unsupported
-        # for this model (e.g. 500 InternalServerError on gpt-5.5).
-        # Either way, fall back to standard.
         if isinstance(e, RateLimitError) or (500 <= e.status_code < 600):
             response = client.chat.completions.create(
                 model=model,
@@ -339,12 +509,77 @@ def request_review(
                 response_format={"type": "json_object"},
                 service_tier="auto",
             )
-            tier = "standard"
-        else:
-            raise
+            return response, "standard"
+        raise
 
-    content = response.choices[0].message.content or "{}"
-    return json.loads(content), response.usage, tier
+
+def _is_token_overflow(error: Exception) -> bool:
+    """Whether ``error`` is the API rejecting the input as too many tokens.
+
+    Matches e.g. "Input tokens exceed the configured limit of 922000
+    tokens" (PR #278) as well as the classic "maximum context length"
+    phrasing, without relying on a stable machine-readable error code.
+    """
+    if getattr(error, "status_code", None) != 400:
+        return False
+    message = str(error).lower()
+    return "token" in message and (
+        "exceed" in message or "context length" in message or "too long" in message
+    )
+
+
+def request_review(
+    model: str, rules: str, diff: str, system_prompt: str
+) -> tuple[dict, Any, str, DiffTruncation | None]:
+    """Ask the model to apply ``rules`` to ``diff`` under ``system_prompt``.
+
+    The diff is first fitted to :data:`MAX_INPUT_TOKENS` estimated input
+    tokens (:func:`fit_diff_to_budget`). Token estimation is approximate,
+    so if the API still rejects the input as too large, the diff budget is
+    halved and the request refitted and retried instead of failing the
+    review. Tries the ``flex`` service tier first; if OpenAI returns 429
+    Resource Unavailable, retries with ``service_tier="auto"`` (standard).
+
+    Returns:
+        ``(payload, usage, tier, truncation)`` where ``payload`` is the
+        parsed JSON review, ``usage`` is the OpenAI ``CompletionUsage``
+        object (or ``None``), ``tier`` is ``"flex"`` or ``"standard"``,
+        and ``truncation`` describes any diff elision (``None`` when the
+        full diff was reviewed).
+    """
+    client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
+    scaffold_tokens = estimate_tokens(rules) + estimate_tokens(system_prompt)
+    diff_budget_tokens = MAX_INPUT_TOKENS - scaffold_tokens
+    for attempt in range(REVIEW_FIT_ATTEMPTS):
+        fitted_diff, truncation = fit_diff_to_budget(diff, diff_budget_tokens)
+        if truncation is not None:
+            print(
+                f"Diff over review budget: elided {truncation.elided_files} of "
+                f"{truncation.total_files} files "
+                f"({truncation.original_chars:,} -> {truncation.final_chars:,} "
+                "chars).",
+                file=sys.stderr,
+            )
+        user_content = build_user_content(rules, fitted_diff, truncation)
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content},
+        ]
+        try:
+            response, tier = _completion_with_tier_fallback(client, model, messages)
+        except BadRequestError as error:
+            if not _is_token_overflow(error) or attempt == REVIEW_FIT_ATTEMPTS - 1:
+                raise
+            diff_budget_tokens //= 2
+            print(
+                "Model rejected the input as too large; refitting the diff "
+                f"to ~{diff_budget_tokens:,} estimated tokens and retrying.",
+                file=sys.stderr,
+            )
+            continue
+        content = response.choices[0].message.content or "{}"
+        return json.loads(content), response.usage, tier, truncation
+    raise RuntimeError("unreachable: review fit loop exited without a result")
 
 
 def render_usage(usage: Any, model: str, tier: str) -> str:
@@ -442,12 +677,14 @@ def render_comment(
     tier: str,
     reviewed_head_sha: str,
     kind: str = "project",
+    truncation: DiffTruncation | None = None,
 ) -> str:
     """Render the model's payload as a Markdown PR comment body.
 
     ``kind`` is ``"project"`` (fit/significance review) or ``"refactor"``
     (tech-debt review); it selects the header, the assessment table, and
-    the rules doc linked in the footer.
+    the rules doc linked in the footer. When ``truncation`` is set, the
+    comment states up front that the model reviewed a reduced diff.
     """
     summary = (payload.get("summary") or "").strip()
     verdict = (payload.get("verdict") or "").strip()
@@ -462,6 +699,19 @@ def render_comment(
 
     if reviewed_head_sha:
         lines.extend([f"**Reviewed head:** `{reviewed_head_sha}`", ""])
+
+    if truncation is not None:
+        notice = (
+            "> ⚠️ **Partial review — diff exceeded the size budget.** The "
+            f"bodies of the {truncation.elided_files} largest of "
+            f"{truncation.total_files} file patches were elided before review "
+            f"({truncation.original_chars:,} → {truncation.final_chars:,} "
+            "characters); every file's path, line counts, and opening lines "
+            "were still shown to the model."
+        )
+        if truncation.hard_truncated:
+            notice += " Even the elided diff overflowed, so its tail was cut outright."
+        lines.extend([notice, ""])
 
     if verdict:
         icon = VERDICT_ICON.get(verdict, "•")
@@ -581,7 +831,7 @@ def main() -> int:
         os.environ.get("REVIEW_HEAD_SHA")
         or fetch_head_sha(pr_number, repo_full_name).strip()
     )
-    payload, usage, tier = request_review(
+    payload, usage, tier, truncation = request_review(
         model=model, rules=rules, diff=diff, system_prompt=system_prompt
     )
     comment = render_comment(
@@ -591,6 +841,7 @@ def main() -> int:
         tier=tier,
         reviewed_head_sha=reviewed_head_sha,
         kind=kind,
+        truncation=truncation,
     )
     post_comment(pr_number, comment, repo_full_name=repo_full_name)
     return 0
