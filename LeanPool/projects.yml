@@ -4782,6 +4782,77 @@ projects:
     msc:
       - "58E20"
       - "35J50"
+  - slug: gkp-density-one
+    title: Density-One GKP Divisibility and Its Carry-Language Characterization
+    summary: >-
+      Proves that the exponents k satisfying the Graham--Knuth--Patashnik divisibility
+      condition have natural density one. The proof gives an exact all-depth modular sieve,
+      quantitative bounds for possible failures in initial intervals, and a density-zero
+      limit for the failure proportion. It also develops the Kummer digit-sum bridge, the
+      binary-popcount reduction, and a verified ternary carry automaton. The universal GKP
+      conjecture remains open because the possible density-zero failure set may be nonempty.
+    branch: number theory
+    entry_module: LeanPool.GKPCarry
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science, Second Edition"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: https://cs.stanford.edu/~knuth/gkp.html
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GKPCarry.tendsto_gkpSuccessProportion_one
+    main_results:
+      - declaration: GKPCarry.tendsto_gkpSuccessProportion_one
+        informal: >-
+          The proportion of exponents k below N for which nine divides the central binomial
+          coefficient indexed by 2^k tends to one as N tends to infinity.
+      - declaration: GKPCarry.card_gkpFailureExponentsBelow_le
+        informal: >-
+          At each ternary depth n+3, the number of possible failures below N is at most
+          (N divided by 2*3^(n+2), plus one) times (n+9)*2^n.
+      - declaration: GKPCarry.gkp_exact_modular_sieve
+        informal: >-
+          At depth n+3, exactly (n+9)*2^n of the 2*3^(n+2) exponent classes remain
+          uncertified; every other class gives divisibility by nine and avoids the deficient
+          carry language for all exponents in that class.
+      - declaration: GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+        informal: >-
+          The GKP conjecture is equivalent to the assertion that every nonexceptional power
+          of two avoids the explicitly defined deficient-carry regular language. This is an
+          exact reformulation and does not prove the remaining avoidance assertion.
+      - declaration: GKPCarry.nine_dvd_centralBinom_iff_two_le_ternaryDoubleCarryCount
+        informal: >-
+          For every natural number n, its central binomial coefficient is divisible by nine
+          exactly when doubling the canonical ternary expansion of n creates at least two
+          carries.
+      - declaration: GKPCarry.badCarryLanguage_true_iff_shape
+        informal: >-
+          The deficient-carry automaton accepts exactly three concrete little-endian ternary
+          word shapes: all digits zero or one; a unique top digit two; or a unique two followed
+          by a higher zero with all other digits zero or one.
+      - declaration: GKPCarry.card_badCarryWords
+        informal: >-
+          Among all ternary words of length n+2, exactly (n+7) times 2^n create fewer than two
+          carries when doubled.
+      - declaration: GKPCarry.nine_dvd_centralBinom_four_pow_in_finite_range
+        informal: >-
+          For every m from 27 through 6560, nine divides the central binomial coefficient
+          indexed by 4^m; this is a bounded computational corollary, not the headline result.
+    tags:
+      - number-theory
+      - finite-automata
+      - asymptotic-density
+    msc:
+      - "11A63"
+      - "11B65"
+      - "68Q45"
   - slug: moser-lattice-colorings
     title: Geometric Four-Colorings of the Moser Lattice and Ring
     summary: >-
