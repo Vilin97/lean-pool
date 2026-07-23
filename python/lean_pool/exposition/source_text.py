@@ -15,6 +15,7 @@ keyword up to the top-level ``:=`` / ``where`` / ``|``-arm boundary.
 
 from __future__ import annotations
 
+import bisect
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -63,13 +64,15 @@ _WHERE_RE = re.compile(r"(?<![\w.'])where(?![\w'])")
 _IN_RE = re.compile(r"(?<![\w.'])in(?![\w'])")
 
 
-def code_view(text: str) -> str:
-    """Return ``text`` with comments and string literals blanked to spaces.
+def code_view(text: str, blank_strings: bool = True) -> str:
+    """Return ``text`` with comments (and optionally strings) blanked.
 
     Copied from ``scripts/proof-profile/statements.py``. Length and newline
     positions are preserved so indices computed on the result line up with
     the original source. Block comments (``/- -/``) nest, which also covers
-    doc comments (``/-- -/``) and module docs (``/-! -/``).
+    doc comments (``/-- -/``) and module docs (``/-! -/``). With
+    ``blank_strings=False`` string literals keep their content (used when
+    trimming trailing comments off a command without eating a final string).
     """
     out: list[str] = []
     i, n = 0, len(text)
@@ -92,7 +95,7 @@ def code_view(text: str) -> str:
                 block_depth = 1
                 continue
             if c == '"':
-                out.append(" ")
+                out.append(" " if blank_strings else '"')
                 i += 1
                 state = string_literal
                 continue
@@ -122,15 +125,21 @@ def code_view(text: str) -> str:
             i += 1
         else:  # string literal
             if c == "\\":
-                out.append("  " if i + 1 < n else " ")
+                if blank_strings:
+                    out.append("  " if i + 1 < n else " ")
+                else:
+                    out.append(text[i : i + 2])
                 i += 2
                 continue
             if c == '"':
-                out.append(" ")
+                out.append('"' if not blank_strings else " ")
                 state = normal
                 i += 1
                 continue
-            out.append("\n" if c == "\n" else " ")
+            if blank_strings:
+                out.append("\n" if c == "\n" else " ")
+            else:
+                out.append(c)
             i += 1
     return "".join(out)
 
@@ -187,6 +196,11 @@ def _line_prefix(code: str, pos: int) -> str:
     return code[start:pos]
 
 
+def _ident_char(character: str) -> bool:
+    """Is this character part of a Lean identifier token (statements.py)?"""
+    return character.isalnum() or character in "_.'" or ord(character) > 127
+
+
 def _find_boundary(
     code: str, start: int, end: int, bar_always_ends: bool = False
 ) -> int:
@@ -203,12 +217,24 @@ def _find_boundary(
     b_assign = b_where = b_bar = None
     seen_bars: list[int] = []
     depth = 0
+    pending_binders = 0  # top-level `let`/`have` in the type own the next `:=`
     i = start
     while i < end:
         c = code[i]
         if depth == 0:
+            if code[i : i + 4] in ("let ", "let\n", "let\t") and not _ident_char(
+                code[i - 1] if i > start else " "
+            ):
+                pending_binders += 1
+            elif code[i : i + 5] in ("have ", "have\n", "have\t") and not _ident_char(
+                code[i - 1] if i > start else " "
+            ):
+                pending_binders += 1
             if b_assign is None and code[i : i + 2] == ":=":
-                b_assign = i
+                if pending_binders > 0:
+                    pending_binders -= 1
+                else:
+                    b_assign = i
             elif (
                 code[i : i + 2] == "=>"
                 and seen_bars
@@ -260,6 +286,12 @@ class SourceFile:
             return len(self.text)
         return min(self.line_offsets[line - 1] + max(column, 0), len(self.text))
 
+    def position(self, offset: int) -> tuple[int, int]:
+        """Return the (1-based line, 0-based column) of a character offset."""
+        clamped = min(max(offset, 0), len(self.text))
+        line = bisect.bisect_right(self.line_offsets, clamped)
+        return line, clamped - self.line_offsets[line - 1]
+
 
 def _next_token(code: str, pos: int, end: int) -> str:
     """Return the next token at or after ``pos``, skipping whitespace."""
@@ -291,13 +323,220 @@ def _boundary_scan_start(
     return name_end
 
 
+# Top-level commands replayed verbatim as scoping/notation context by the
+# minimal-file builder. Anything else at top level is either a declaration
+# (sliced through its own range) or intentionally dropped (`example`,
+# `#eval`, module docstrings, ...).
+CONTEXT_KEYWORDS = frozenset(
+    {
+        "namespace",
+        "section",
+        "end",
+        "open",
+        "variable",
+        "universe",
+        "set_option",
+        "attribute",
+        "export",
+        "deriving",
+        "notation",
+        "notation3",
+        "macro",
+        "macro_rules",
+        "syntax",
+        "elab",
+        "elab_rules",
+        "declare_syntax_cat",
+        "binder_predicate",
+        "infix",
+        "infixl",
+        "infixr",
+        "prefix",
+        "postfix",
+    }
+)
+
+_IMPORT_RE = re.compile(r"^import\s+([\w.«»]+)", re.MULTILINE)
+
+
+@dataclass
+class ModuleSkeleton:
+    """Per-module facts the minimal-file builder needs.
+
+    ``external_imports`` — the module's non-pool imports (Mathlib etc.).
+    ``local_imports`` — the module's pool-internal imports (full names).
+    ``contexts`` — ``(line, text)`` of top-level context commands, in order.
+    ``mutual_spans`` — ``(start_line, end_line)`` of top-level ``mutual``
+    blocks; members must be emitted as one verbatim block.
+    ``prefix_blocks`` — ``(line, next_line, text)`` of bare
+    ``open/set_option … in`` blocks whose declaration starts at
+    ``next_line`` (Lean's declaration range excludes such prefixes).
+    """
+
+    external_imports: list[str]
+    local_imports: list[str]
+    contexts: list[tuple[int, str]]
+    mutual_spans: list[tuple[int, int]]
+    prefix_blocks: list[tuple[int, int, str]]
+
+
+def _block_starts(code: str) -> list[int]:
+    """Offsets of top-level command starts (column-0 non-blank characters)."""
+    starts = [0] if code and not code[0].isspace() else []
+    for i in range(1, len(code)):
+        if code[i - 1] == "\n" and not code[i].isspace() and code[i] != "\n":
+            starts.append(i)
+    return starts
+
+
+def _is_context_block(code: str, start: int, end: int) -> bool:
+    """Classify a top-level block as a replayable context command.
+
+    ``open``/``set_option`` (and modifier-prefixed forms) can also prefix a
+    declaration via ``... in``; those blocks belong to the declaration and
+    are excluded by checking where :func:`_strip_prefixes` lands.
+    """
+    token = _read_token(code, start, end)
+    if token in ("scoped", "local", "noncomputable"):
+        # `noncomputable section` opens a scope; `scoped notation` etc.
+        after = start + len(token)
+        while after < end and code[after] in " \t":
+            after += 1
+        token = _read_token(code, after, end)
+    if token == "deriving":
+        # `deriving instance Foo for Bar` is a standalone command, but a
+        # column-0 `deriving Foo` continuation of an inductive belongs to
+        # that declaration's range.
+        after = start + len(token)
+        while after < end and code[after] in " \t":
+            after += 1
+        return _read_token(code, after, end) == "instance"
+    if token in ("attribute", "variable") and _ends_with_in(code, start, end):
+        # `attribute [...] X in` / `variable … in` prefix the next declaration.
+        return False
+    if token not in CONTEXT_KEYWORDS:
+        return False
+    if token in ("open", "set_option"):
+        after_prefixes = _strip_prefixes(code, start, end)
+        keyword = _read_token(code, after_prefixes, end)
+        if keyword in DECLARATION_KEYWORDS:
+            return False
+        if after_prefixes >= end or not keyword:
+            # A bare `open … in` / `set_option … in` block is the prefix of a
+            # declaration starting at column 0 on the next line; the
+            # declaration's own range covers it.
+            return False
+    return True
+
+
+def _ends_with_in(code: str, start: int, end: int) -> bool:
+    """Does this block's code end with a top-level ``in`` token?"""
+    j = end
+    while j > start and code[j - 1] in " \t\r\n":
+        j -= 1
+    return (
+        j - start >= 2
+        and code[j - 2 : j] == "in"
+        and (j - 2 == start or not _ident_char(code[j - 3]))
+    )
+
+
+def _is_prefix_only_block(code: str, start: int, end: int) -> bool:
+    """Is this a bare ``open/set_option/attribute/variable … in`` prefix?"""
+    token = _read_token(code, start, end)
+    if token in ("attribute", "variable"):
+        return _ends_with_in(code, start, end)
+    if token not in ("open", "set_option"):
+        return False
+    after_prefixes = _strip_prefixes(code, start, end)
+    keyword = _read_token(code, after_prefixes, end)
+    return (after_prefixes >= end or not keyword) and _IN_RE.search(
+        code, start, end
+    ) is not None
+
+
+def module_skeleton(source: SourceFile) -> ModuleSkeleton:
+    """Scan a module for imports, context commands, and mutual blocks."""
+    code = source.code
+    # Comments blanked but strings kept: used to trim trailing comments off a
+    # command without eating a final string literal (e.g. an `elab` command
+    # ending in an error message).
+    comment_view = code_view(source.text, blank_strings=False)
+    starts = _block_starts(code)
+    all_imports = _IMPORT_RE.findall(code)
+    external_imports = [
+        module
+        for module in all_imports
+        if not (module == "LeanPool" or module.startswith("LeanPool."))
+    ]
+    local_imports = [module for module in all_imports if module.startswith("LeanPool.")]
+    contexts: list[tuple[int, str]] = []
+    mutual_spans: list[tuple[int, int]] = []
+    prefix_blocks: list[tuple[int, int, str]] = []
+    skip_until = -1
+    for index, start in enumerate(starts):
+        end = starts[index + 1] if index + 1 < len(starts) else len(code)
+        if start < skip_until:
+            continue
+        first = _read_token(code, start, end)
+        if first == "import":
+            continue
+        if _is_prefix_only_block(code, start, end):
+            line, _ = source.position(start)
+            next_line = (
+                source.position(starts[index + 1])[0]
+                if index + 1 < len(starts)
+                else line + 1
+            )
+            code_end = end
+            while code_end > start and comment_view[code_end - 1] in " \t\r\n":
+                code_end -= 1
+            prefix_blocks.append(
+                (line, next_line, source.text[start:code_end].rstrip())
+            )
+            continue
+        if first == "mutual":
+            # The block ends at the next column-0 command, which is the
+            # matching bare `end`; fold it into the span and skip it.
+            close_end = end
+            if index + 1 < len(starts):
+                next_start = starts[index + 1]
+                next_end = starts[index + 2] if index + 2 < len(starts) else len(code)
+                if _read_token(code, next_start, next_end) == "end":
+                    close_end = next_end
+                    skip_until = next_end
+            start_line, _ = source.position(start)
+            last = close_end
+            while last > start and comment_view[last - 1] in " \t\r\n":
+                last -= 1
+            end_line, _ = source.position(max(last - 1, start))
+            mutual_spans.append((start_line, end_line))
+            continue
+        if _is_context_block(code, start, end):
+            line, _ = source.position(start)
+            # Cut at the last code character: the raw block otherwise runs to
+            # the next command and swallows a following declaration's doc
+            # comment (blanked in the comment view, so invisible to the scan).
+            code_end = end
+            while code_end > start and comment_view[code_end - 1] in " \t\r\n":
+                code_end -= 1
+            contexts.append((line, source.text[start:code_end].rstrip()))
+    return ModuleSkeleton(
+        external_imports=external_imports,
+        local_imports=local_imports,
+        contexts=contexts,
+        mutual_spans=mutual_spans,
+        prefix_blocks=prefix_blocks,
+    )
+
+
 def statement_slice(
     source: SourceFile,
     declaration_range: Sequence[int],
     selection: Sequence[int],
     fallback_kind: str,
-) -> tuple[str, str]:
-    """Return ``(kind, statement)`` for one declaration.
+) -> tuple[str, str, tuple[int, int] | None]:
+    """Return ``(kind, statement, statement_end)`` for one declaration.
 
     ``declaration_range`` is ``[startLine, startCol, endLine, endCol]`` with
     1-based lines; ``selection`` is the ``[line, col]`` of the name token.
@@ -305,11 +544,15 @@ def statement_slice(
     (``class inductive`` reports ``class``), else ``fallback_kind``. The
     statement is original source from the keyword to the body boundary,
     trimmed only at the edges and capped at 1200 characters.
+    ``statement_end`` is the boundary's ``(line, column)`` in the file —
+    where the body (``:=`` / ``where`` / ``|`` arms) begins — or ``None``
+    when the range points at a mid-line generated token; the minimal-file
+    builder cuts theorem statements there before appending ``:= sorry``.
     """
     start = source.offset(declaration_range[0], declaration_range[1])
     end = source.offset(declaration_range[2], declaration_range[3])
     if end <= start:
-        return fallback_kind, ""
+        return fallback_kind, "", None
     code = source.code
     keyword_position = _strip_prefixes(code, start, end)
     keyword = _read_token(code, keyword_position, end)
@@ -320,7 +563,7 @@ def statement_slice(
         # token; slicing from there yields a meaningless fragment.
         line_start = source.line_offsets[declaration_range[0] - 1]
         if source.text[line_start:start].strip():
-            return fallback_kind, ""
+            return fallback_kind, "", None
     inductive_like = keyword == "inductive" or (
         keyword == "class"
         and _next_token(code, keyword_position + len(keyword), end) == "inductive"
@@ -332,4 +575,4 @@ def statement_slice(
     statement = source.text[keyword_position:boundary].strip()
     if len(statement) > STATEMENT_CHARACTER_LIMIT:
         statement = statement[: STATEMENT_CHARACTER_LIMIT - 1].rstrip() + "…"
-    return kind, statement
+    return kind, statement, source.position(boundary)

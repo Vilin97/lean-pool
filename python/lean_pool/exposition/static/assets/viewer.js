@@ -42,6 +42,8 @@
   const sortedOrders = new Map(); // column name -> ascending Uint32Array
   let filtered = null;            // Uint32Array scratch; first filteredCount valid
   let filteredCount = 0;
+  let kindFacetCounts = null;     // Uint32Array: per-kind counts under project+search
+  let chipCountEls = [];          // kind index -> chip count element
 
   const state = {
     column: "name",
@@ -98,13 +100,17 @@
     const project = state.project;
     const kindActive = state.kindActive;
     const allKindsActive = kindActive.every(Boolean);
+    // Facet counts: per-kind totals under the project + search filters only,
+    // so the chips always show how many rows each kind toggle governs.
+    kindFacetCounts.fill(0);
     let n = 0;
     for (let j = 0; j < total; j++) {
       // Descending = walk the ascending order backwards (no array reversal).
       const i = order[descending ? total - 1 - j : j];
       if (project !== -1 && projectOf[i] !== project) continue;
-      if (!allKindsActive && !kindActive[kindOf[i]]) continue;
       if (hasQuery && lowerNames[i].indexOf(query) === -1) continue;
+      kindFacetCounts[kindOf[i]]++;
+      if (!allKindsActive && !kindActive[kindOf[i]]) continue;
       filtered[n++] = i;
     }
     filteredCount = n;
@@ -116,6 +122,7 @@
     emptyEl.hidden = filteredCount !== 0;
     countEl.textContent =
       `${formatCount(filteredCount)} of ${formatCount(total)} declarations`;
+    updateKindChipCounts();
     if (resetScroll) scroller.scrollTop = 0;
     renderWindow();
   }
@@ -212,6 +219,7 @@
       const count = document.createElement("span");
       count.className = "chip-count";
       count.textContent = formatCount(kindCounts[k]);
+      chipCountEls[k] = count;
       chip.append(label, count);
       chip.addEventListener("click", () => {
         state.kindActive[k] = !state.kindActive[k];
@@ -220,6 +228,14 @@
         refresh(true);
       });
       chipsEl.appendChild(chip);
+    }
+  }
+
+  function updateKindChipCounts() {
+    for (let k = 0; k < chipCountEls.length; k++) {
+      if (chipCountEls[k]) {
+        chipCountEls[k].textContent = formatCount(kindFacetCounts[k]);
+      }
     }
   }
 
@@ -311,6 +327,8 @@
     }
     state.kindActive = new Array(kinds.length).fill(true);
     filtered = new Uint32Array(total);
+    kindFacetCounts = new Uint32Array(kinds.length);
+    chipCountEls = new Array(kinds.length).fill(null);
 
     buildProjectSelect();
     buildKindChips(kindCounts);

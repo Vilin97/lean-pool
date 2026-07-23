@@ -123,6 +123,8 @@
   let searchQuery = '';
   let mainIds = []; // node ids flagged as main results (card metadata)
   let mainInformal = {}; // node id -> informal statement from the card
+  let rawShard = null; // full shard JSON (minimal-file builder input)
+  const moduleSources = {}; // module index -> fetched raw source text
 
   let fullView = null;
   let coneView = null;
@@ -685,6 +687,12 @@
       setHash('cone=' + id);
     });
     actions.appendChild(coneBtn);
+    const minimalBtn = elWith('button', 'btn', 'Minimal Lean file');
+    minimalBtn.type = 'button';
+    minimalBtn.addEventListener('click', () => {
+      openMinimalFile(id, minimalBtn);
+    });
+    actions.appendChild(minimalBtn);
     panelBodyEl.appendChild(actions);
 
     if (d.doc) {
@@ -1318,6 +1326,7 @@
   }
 
   function initData(json) {
+    rawShard = json;
     decls = Array.isArray(json.decls) ? json.decls : [];
     modules = Array.isArray(json.modules) ? json.modules : [];
     N = decls.length;
@@ -1410,6 +1419,239 @@
         showMessage('Could not load the dependency graph for “' + slug
           + '” — data/projects/' + slug + '.json failed to load ('
           + error.message + ').');
+      });
+  }
+
+  // ----- minimal Lean file --------------------------------------------------------
+
+  const RAW_BASE = 'https://raw.githubusercontent.com/Vilin97/lean-pool/';
+  const PLAYGROUND_URL_LIMIT = 128000; // characters; beyond this, download only
+
+  function fetchModuleSource(moduleIndex) {
+    if (moduleSources[moduleIndex] !== undefined) {
+      return Promise.resolve(moduleSources[moduleIndex]);
+    }
+    const path = modules[moduleIndex].split('.').join('/') + '.lean';
+    const commit = (rawShard && rawShard.commit) || 'main';
+    return fetch(RAW_BASE + encodeURIComponent(commit) + '/' + path)
+      .then((response) => {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.text();
+      })
+      .then((text) => {
+        moduleSources[moduleIndex] = text;
+        return text;
+      });
+  }
+
+  // LZ-string `compressToBase64` (with `=` padding stripped) — exactly what
+  // the Lean playground's #codez= fragment expects (see lean4web
+  // client/src/editor/code-atoms.ts). Algorithm by Pieroxy, MIT.
+  function lzCompress(input) {
+    const keyStrBase64 =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    if (input == null || input === '') return '';
+    const bitsPerChar = 6;
+    const dictionary = {};
+    const dictionaryToCreate = {};
+    let wc = '';
+    let w = '';
+    let enlargeIn = 2;
+    let dictSize = 3;
+    let numBits = 2;
+    const data = [];
+    let dataVal = 0;
+    let dataPosition = 0;
+
+    const writeBit = (bit) => {
+      dataVal = (dataVal << 1) | bit;
+      if (dataPosition === bitsPerChar - 1) {
+        dataPosition = 0;
+        data.push(keyStrBase64.charAt(dataVal));
+        dataVal = 0;
+      } else {
+        dataPosition++;
+      }
+    };
+    const writeBits = (numberOfBits, value) => {
+      for (let i = 0; i < numberOfBits; i++) {
+        writeBit(value & 1);
+        value >>= 1;
+      }
+    };
+    const decrementEnlarge = () => {
+      enlargeIn--;
+      if (enlargeIn === 0) {
+        enlargeIn = Math.pow(2, numBits);
+        numBits++;
+      }
+    };
+    const produceW = () => {
+      if (Object.prototype.hasOwnProperty.call(dictionaryToCreate, w)) {
+        const first = w.charCodeAt(0);
+        if (first < 256) {
+          writeBits(numBits, 0);
+          writeBits(8, first);
+        } else {
+          writeBits(numBits, 1);
+          writeBits(16, first);
+        }
+        decrementEnlarge();
+        delete dictionaryToCreate[w];
+      } else {
+        writeBits(numBits, dictionary[w]);
+      }
+      decrementEnlarge();
+    };
+
+    for (let ii = 0; ii < input.length; ii++) {
+      const c = input.charAt(ii);
+      if (!Object.prototype.hasOwnProperty.call(dictionary, c)) {
+        dictionary[c] = dictSize++;
+        dictionaryToCreate[c] = true;
+      }
+      wc = w + c;
+      if (Object.prototype.hasOwnProperty.call(dictionary, wc)) {
+        w = wc;
+      } else {
+        produceW();
+        dictionary[wc] = dictSize++;
+        w = String(c);
+      }
+    }
+    if (w !== '') produceW();
+    writeBits(numBits, 2); // end-of-stream token
+    // Flush the last partial character.
+    for (;;) {
+      dataVal <<= 1;
+      if (dataPosition === bitsPerChar - 1) {
+        data.push(keyStrBase64.charAt(dataVal));
+        break;
+      }
+      dataPosition++;
+    }
+    return data.join('');
+  }
+
+  function minimalModal() {
+    let modal = byId('minimal-modal');
+    if (modal) return modal;
+    modal = elWith('div', 'minimal-modal', null);
+    modal.id = 'minimal-modal';
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) modal.hidden = true;
+    });
+    const box = elWith('div', 'minimal-box', null);
+    const bar = elWith('div', 'minimal-bar', null);
+    bar.appendChild(elWith('span', 'minimal-title', null)).id = 'minimal-title';
+    const close = elWith('button', 'panel-close', '×');
+    close.type = 'button';
+    close.addEventListener('click', () => { modal.hidden = true; });
+    bar.appendChild(close);
+    box.appendChild(bar);
+    const meta = elWith('div', 'minimal-meta', null);
+    meta.id = 'minimal-meta';
+    box.appendChild(meta);
+    const actions = elWith('div', 'minimal-actions', null);
+    actions.id = 'minimal-actions';
+    box.appendChild(actions);
+    const pre = elWith('pre', 'minimal-code', null);
+    pre.id = 'minimal-code';
+    box.appendChild(pre);
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  function showMinimalResult(node, result) {
+    const modal = minimalModal();
+    byId('minimal-title').textContent = 'Minimal Lean file · ' + node.name;
+    const meta = byId('minimal-meta');
+    const kb = (result.text.length / 1024).toFixed(1);
+    let summary = result.declarationCount + ' declarations from '
+      + result.moduleCount + ' module' + (result.moduleCount === 1 ? '' : 's')
+      + ' · ' + kb + ' KB';
+    if (result.missingHost.length > 0) {
+      summary += ' · ' + result.missingHost.length
+        + ' generated dependenc' + (result.missingHost.length === 1 ? 'y' : 'ies')
+        + ' could not be inlined';
+    }
+    meta.textContent = summary;
+    const actions = byId('minimal-actions');
+    actions.textContent = '';
+
+    const compressed = lzCompress(result.text);
+    const playgroundUrl = 'https://live.lean-lang.org/#codez=' + compressed;
+    if (playgroundUrl.length <= PLAYGROUND_URL_LIMIT) {
+      const open = elWith('a', 'btn btn-accent', 'Open in Lean playground');
+      open.href = playgroundUrl;
+      open.target = '_blank';
+      open.rel = 'noopener';
+      actions.appendChild(open);
+    } else {
+      const note = elWith('span', 'minimal-note',
+        'Too large for a playground link — download instead.');
+      actions.appendChild(note);
+    }
+
+    const download = elWith('a', 'btn', 'Download .lean');
+    const blob = new Blob([result.text], { type: 'text/plain;charset=utf-8' });
+    download.href = URL.createObjectURL(blob);
+    download.download = node.name.replace(/[^\w.']/g, '_') + '.lean';
+    actions.appendChild(download);
+
+    const copy = elWith('button', 'btn', 'Copy');
+    copy.type = 'button';
+    copy.addEventListener('click', () => {
+      navigator.clipboard.writeText(result.text).then(() => {
+        copy.textContent = 'Copied';
+        setTimeout(() => { copy.textContent = 'Copy'; }, 1200);
+      });
+    });
+    actions.appendChild(copy);
+
+    byId('minimal-code').textContent = result.text;
+    modal.hidden = false;
+  }
+
+  function openMinimalFile(id, button) {
+    if (!rawShard || !window.ExpoMinimal) return;
+    const previous = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Building…';
+    const cone = window.ExpoMinimal.coneIds(rawShard, id);
+    const needed = new Set();
+    for (const nodeId of cone.ids) needed.add(decls[nodeId].module);
+    const buildOnceFetched = (attempt) =>
+      Promise.all(Array.from(needed).map(fetchModuleSource)).then(() => {
+        const result = window.ExpoMinimal.build(rawShard, moduleSources, id);
+        if (result.pending && attempt < 4) {
+          // The tactic-reference closure pulled in declarations from
+          // modules we have not fetched yet.
+          for (const moduleIndex of result.pending) needed.add(moduleIndex);
+          return buildOnceFetched(attempt + 1);
+        }
+        return result;
+      });
+    buildOnceFetched(0)
+      .then((result) => {
+        if (result.pending) {
+          throw new Error('could not resolve all module sources');
+        }
+        showMinimalResult(decls[id], result);
+      })
+      .catch((error) => {
+        const modal = minimalModal();
+        byId('minimal-title').textContent = 'Minimal Lean file';
+        byId('minimal-meta').textContent =
+          'Could not fetch project sources (' + error.message + ').';
+        byId('minimal-actions').textContent = '';
+        byId('minimal-code').textContent = '';
+        modal.hidden = false;
+      })
+      .finally(() => {
+        button.disabled = false;
+        button.textContent = previous;
       });
   }
 

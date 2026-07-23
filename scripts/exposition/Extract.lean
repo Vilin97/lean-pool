@@ -87,15 +87,15 @@ def directUses (env : Environment) (info : ConstantInfo) : Array Name :=
       |>.toArray
   | _ => info.getUsedConstantsAsSet.toArray
 
-/-- Expand the used-constant set of `info`, tunnelling through generated pool
+/-- Expand a seed set of used constants, tunnelling through generated pool
 auxiliaries, until exposed pool declarations (edges) or non-pool constants
 (externals) are reached. -/
-def resolveDeps (env : Environment) (self : Name) (info : ConstantInfo)
+def resolveSeeds (env : Environment) (self : Name) (seeds : Array Name)
     (exposed : NameSet) : NameSet × Nat := Id.run do
   let mut edges : NameSet := {}
   let mut externals : NameSet := {}
   let mut visited : NameSet := {}
-  let mut stack : Array Name := directUses env info
+  let mut stack : Array Name := seeds
   while h : stack.size > 0 do
     let c := stack[stack.size - 1]
     stack := stack.pop
@@ -124,7 +124,13 @@ def declJson (env : Environment) (name : Name) (info : ConstantInfo)
   let module := env.header.moduleNames[moduleIdx.toNat]!
   let display := privateToUserName name
   let doc ← findDocString? env name
-  let (edges, extCount) := resolveDeps env name info exposed
+  let (edges, extCount) := resolveSeeds env name (directUses env info) exposed
+  -- Statement-only dependencies for proof-carrying declarations: the minimal
+  -- Lean file replaces their proofs by `sorry`, so only the type's
+  -- dependencies must be present for it to elaborate.
+  let typeEdges : Option NameSet := match info with
+    | .thmInfo v => some (resolveSeeds env name v.type.getUsedConstants exposed).1
+    | _ => none
   let r := ranges.range
   let s := ranges.selectionRange
   return some <| Json.mkObj <| [
@@ -136,7 +142,10 @@ def declJson (env : Environment) (name : Name) (info : ConstantInfo)
     ("s", toJson [s.pos.line, s.pos.column]),
     ("deps", Json.arr (edges.toArray.map (Json.str ∘ escapeName))),
     ("ext", Json.num extCount)
-  ] ++ (if isPrivateName name then [("p", Json.bool true)] else [])
+  ] ++ (match typeEdges with
+    | some t => [("tdeps", Json.arr (t.toArray.map (Json.str ∘ escapeName)))]
+    | none => [])
+    ++ (if isPrivateName name then [("p", Json.bool true)] else [])
     ++ (match doc with | some d => [("d", Json.str d)] | none => [])
 
 def extract (outPath : System.FilePath) : CoreM Unit := do

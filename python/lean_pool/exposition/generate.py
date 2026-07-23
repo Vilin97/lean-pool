@@ -23,7 +23,12 @@ from pathlib import Path
 import yaml
 
 from lean_pool.exposition.layout import compute_layout
-from lean_pool.exposition.source_text import SourceFile, statement_slice
+from lean_pool.exposition.source_text import (
+    ModuleSkeleton,
+    SourceFile,
+    module_skeleton,
+    statement_slice,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -201,14 +206,18 @@ def _sorted_records(records: list[dict]) -> list[dict]:
     )
 
 
-def _remap_dependencies(records: list[dict]) -> list[list[int]]:
-    """Map dependency ids to shard-local indices, dropping dangling/self refs."""
+def _remap_dependencies(records: list[dict], key: str = "deps") -> list[list[int]]:
+    """Map dependency ids under ``key`` to shard-local indices.
+
+    Dangling and self references are dropped. Records without the key yield
+    an empty list.
+    """
     index_of = {record["id"]: index for index, record in enumerate(records)}
     dependency_lists: list[list[int]] = []
     for index, record in enumerate(records):
         indices = {
             index_of[dependency]
-            for dependency in record.get("deps", [])
+            for dependency in record.get(key, [])
             if dependency in index_of
         }
         indices.discard(index)
@@ -218,19 +227,90 @@ def _remap_dependencies(records: list[dict]) -> list[list[int]]:
 
 def _refined_kind_and_statement(
     record: dict, source: SourceFile | None
-) -> tuple[str, str]:
+) -> tuple[str, str, tuple[int, int] | None]:
     """Refine the extractor kind and slice the statement from the source."""
     if source is None:
-        return record["k"], ""
+        return record["k"], "", None
     return statement_slice(source, record["r"], record["s"], record["k"])
+
+
+# Declarations whose proofs the minimal Lean file replaces with `sorry`.
+PROOF_KINDS = frozenset({"theorem", "lemma"})
+
+
+def _attach_minimal_file_fields(
+    nodes: list[dict],
+    skeletons: dict[int, ModuleSkeleton | None],
+) -> None:
+    """Add per-node minimal-file fields: ``span`` and ``host`` (schema 1.2).
+
+    ``span`` widens a node's verbatim slice to its enclosing top-level
+    ``mutual`` block. ``host`` points a generated declaration (mid-line
+    range, blanked statement) at the human-written declaration whose source
+    contains it, so the builder can emit the host instead.
+    """
+    by_module: dict[int, list[int]] = {}
+    for node_id, node in enumerate(nodes):
+        by_module.setdefault(node["module"], []).append(node_id)
+    for module_index, node_ids in by_module.items():
+        skeleton = skeletons.get(module_index)
+        if skeleton is not None:
+            for start_line, end_line in skeleton.mutual_spans:
+                for node_id in node_ids:
+                    node = nodes[node_id]
+                    if start_line <= node["line"] and node["endLine"] <= end_line:
+                        node["span"] = [start_line, end_line]
+        if skeleton is not None and skeleton.prefix_blocks:
+            # Lean's declaration range excludes a bare `open/set_option/
+            # attribute … in` prefix on the preceding lines; reattach it.
+            # The prefix's following command may start inside the node's
+            # range at a later line than node["line"] when a doc comment
+            # sits between them, hence the range check. Chains supported.
+            prefix_by_next_line = {
+                next_line: (line, text)
+                for line, next_line, text in skeleton.prefix_blocks
+            }
+            for node_id in node_ids:
+                node = nodes[node_id]
+                chain_end = None
+                for line, next_line, text in skeleton.prefix_blocks:
+                    if node["line"] <= next_line <= node["endLine"]:
+                        chain_end = (line, text)
+                        break
+                if chain_end is None:
+                    continue
+                parts = [chain_end[1]]
+                cursor = chain_end[0]
+                while cursor in prefix_by_next_line:
+                    line, text = prefix_by_next_line[cursor]
+                    parts.append(text)
+                    cursor = line
+                node["prefix"] = "\n".join(reversed(parts))
+        for node_id in node_ids:
+            node = nodes[node_id]
+            generated = node["statement"] == "" and "stmtEnd" not in node
+            if not generated:
+                continue
+            host = None
+            for other_id in node_ids:
+                other = nodes[other_id]
+                if other_id == node_id or other["statement"] == "":
+                    continue
+                if other["line"] <= node["line"] <= other["endLine"]:
+                    if host is None or other["line"] >= nodes[host]["line"]:
+                        host = other_id
+            if host is not None:
+                node["host"] = host
 
 
 def _build_node(
     record: dict,
     kind: str,
     statement: str,
+    statement_end: tuple[int, int] | None,
     module_index: int,
     dependencies: list[int],
+    type_dependencies: list[int] | None,
     layer: int,
     order: int,
 ) -> dict:
@@ -245,9 +325,13 @@ def _build_node(
     if "d" in record:
         node["doc"] = record["d"]
     node["statement"] = statement
+    if statement_end is not None and kind in PROOF_KINDS:
+        node["stmtEnd"] = list(statement_end)
     if record.get("p"):
         node["private"] = True
     node["deps"] = dependencies
+    if type_dependencies is not None and kind in PROOF_KINDS:
+        node["tdeps"] = type_dependencies
     node["ext"] = record.get("ext", 0)
     node["layer"] = layer
     node["order"] = order
@@ -260,33 +344,67 @@ def _kind_counts(kinds: list[str]) -> dict[str, int]:
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
 
 
+def _closed_module_list(
+    slug: str, project_modules: list[str], source_cache: SourceCache
+) -> tuple[list[str], dict[int, ModuleSkeleton | None]]:
+    """Close the module list under same-project imports; return skeletons.
+
+    Modules without exposed declarations (notation- or attribute-only files)
+    still contribute context commands, so the minimal-file builder needs
+    their skeletons too; they are appended after the declaration-bearing
+    modules.
+    """
+    modules = list(project_modules)
+    known = set(modules)
+    project_prefix = f"LeanPool.{slug}."
+    skeletons: dict[int, ModuleSkeleton | None] = {}
+    index = 0
+    while index < len(modules):
+        source = source_cache.get(modules[index])
+        skeleton = module_skeleton(source) if source else None
+        skeletons[index] = skeleton
+        if skeleton is not None:
+            for imported in skeleton.local_imports:
+                if imported.startswith(project_prefix) and imported not in known:
+                    known.add(imported)
+                    modules.append(imported)
+        index += 1
+    return modules, skeletons
+
+
 def build_project_shard(
     slug: str,
     records: list[dict],
     card: ProjectCard | None,
     source_cache: SourceCache,
+    commit: str = "main",
 ) -> dict:
     """Build one ``data/projects/<Project>.json`` payload per SCHEMA.md."""
     ordered = _sorted_records(records)
-    modules = sorted({record["m"] for record in ordered})
+    declaration_modules = sorted({record["m"] for record in ordered})
+    modules, skeletons = _closed_module_list(slug, declaration_modules, source_cache)
     module_indices = {module: index for index, module in enumerate(modules)}
     dependency_lists = _remap_dependencies(ordered)
+    type_dependency_lists = _remap_dependencies(ordered, key="tdeps")
     layout = compute_layout(dependency_lists)
     nodes = []
     for index, record in enumerate(ordered):
         source = source_cache.get(record["m"])
-        kind, statement = _refined_kind_and_statement(record, source)
+        kind, statement, statement_end = _refined_kind_and_statement(record, source)
         nodes.append(
             _build_node(
                 record,
                 kind,
                 statement,
+                statement_end,
                 module_indices[record["m"]],
                 dependency_lists[index],
+                type_dependency_lists[index] if "tdeps" in record else None,
                 layout.node_layers[index],
                 layout.node_orders[index],
             )
         )
+    _attach_minimal_file_fields(nodes, skeletons)
     node_count = len(nodes)
     average = sum(layout.node_layers) / node_count if node_count else 0.0
     stats = {
@@ -297,15 +415,34 @@ def build_project_shard(
         "kinds": _kind_counts([node["kind"] for node in nodes]),
     }
     main_results = _resolve_main_results(card, nodes)
+    module_data = []
+    for index in range(len(modules)):
+        skeleton = skeletons[index]
+        uses = sorted(
+            module_indices[imported]
+            for imported in (skeleton.local_imports if skeleton else [])
+            if imported in module_indices
+        )
+        module_data.append(
+            {
+                "imports": skeleton.external_imports if skeleton else [],
+                "uses": uses,
+                "contexts": [list(entry) for entry in skeleton.contexts]
+                if skeleton
+                else [],
+            }
+        )
     return {
         "schema": 1,
         "project": slug,
+        "commit": commit,
         "title": card.title if card else None,
         "provenance": card.provenance if card else None,
         "card": card.card if card and card.card else None,
         "mainResults": main_results,
         "stats": stats,
         "modules": modules,
+        "moduleData": module_data,
         "layers": layout.layer_sizes,
         "decls": nodes,
     }
@@ -419,7 +556,7 @@ def generate_site(
     cards = load_project_cards(Path(repo_root) / "LeanPool" / "projects.yml")
     source_cache = SourceCache(Path(repo_root))
     shards = {
-        slug: build_project_shard(slug, records, cards.get(slug), source_cache)
+        slug: build_project_shard(slug, records, cards.get(slug), source_cache, commit)
         for slug, records in grouped.items()
     }
     index = build_index(shards, commit)

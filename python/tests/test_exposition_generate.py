@@ -95,6 +95,7 @@ RECORDS = [
         "r": [1, 0, 1, 26],
         "s": [1, 6],
         "deps": [],
+        "tdeps": [],
         "ext": 1,
     },
     {
@@ -198,15 +199,19 @@ def test_project_shard_schema_and_stats(site: tuple[Path, SiteSummary]) -> None:
     assert list(shard) == [
         "schema",
         "project",
+        "commit",
         "title",
         "provenance",
         "card",
         "mainResults",
         "stats",
         "modules",
+        "moduleData",
         "layers",
         "decls",
     ]
+    assert shard["commit"] == "deadbeef"
+    assert len(shard["moduleData"]) == len(shard["modules"])
     assert shard["schema"] == 1
     assert shard["project"] == "Alpha"
     assert shard["title"] == "Alpha & Co"
@@ -287,6 +292,10 @@ def test_declaration_nodes(site: tuple[Path, SiteSummary]) -> None:
         "order",
         "main",  # a3 is one of the card's main declarations
     ]
+    # a1 is a lemma: it carries the statement boundary and type-only deps.
+    assert alpha[0]["stmtEnd"] == [1, 16]  # the `:=` in `lemma a1 : True := …`
+    assert alpha[0]["tdeps"] == []
+    assert "stmtEnd" not in alpha[2]  # defs keep their bodies — no boundary field
     beta = _load(out, "data/projects/Beta.json")["decls"]
     b3 = beta[2]
     assert b3["full"] == "_private.LeanPool.Beta.0.b3"
@@ -300,6 +309,7 @@ def test_declaration_nodes(site: tuple[Path, SiteSummary]) -> None:
         "line",
         "endLine",
         "statement",
+        "stmtEnd",
         "private",
         "deps",
         "ext",
