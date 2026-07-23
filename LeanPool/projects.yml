@@ -4899,3 +4899,50 @@ projects:
       - moser-lattice
     msc:
       - "05C15"
+  - slug: hadwiger-nelson-bounds
+    title: Known Bounds for the Hadwiger-Nelson Problem
+    summary: >-
+      Formalizes the currently known bounds 5 <= chi(R^2) <= 7 for the
+      chromatic number of the Euclidean plane. The upper bound constructs an
+      explicit Isbell-style seven-coloring. The lower bound checks Parts'
+      481-vertex coloring certificate, develops a finite doubled
+      triangular-lattice forcing gadget, proves its exact Euclidean embedding,
+      and closes the four-color contradiction with a spindle construction.
+      The exact chromatic number remains open.
+    branch: graph theory and discrete geometry
+    entry_module: LeanPool.HadwigerNelsonBounds
+    authors:
+      - Egor Lyfar
+    source:
+      title: A human-verifiable proof of the chromatic number of the plane being at least 5
+      authors:
+        - Jaan Parts
+      arxiv: "2010.12661"
+      url: https://www.erdosproblems.com/508
+      github_repo: lyfar/hadwiger-nelson-bounds-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+    main_results:
+      - declaration: HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+        informal: >-
+          The chromatic number of the unit-distance graph on the Euclidean
+          plane lies between five and seven, inclusive.
+      - declaration: HadwigerNelsonBounds.unitDistanceGraph_not_colorable_four
+        informal: >-
+          The unit-distance graph on the Euclidean plane admits no proper
+          coloring with four colors.
+      - declaration: HadwigerNelsonBounds.chromaticNumber_le_seven
+        informal: >-
+          An explicit Isbell-style coloring proves that the unit-distance graph
+          on the Euclidean plane is colorable with seven colors.
+    tags:
+      - graph-theory
+      - geometric-graph-theory
+      - graph-coloring
+      - hadwiger-nelson
+    msc:
+      - "05C15"
+      - "52C10"
