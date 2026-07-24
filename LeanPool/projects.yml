@@ -5057,10 +5057,10 @@ projects:
   - slug: erdos132-n14
     title: A Conditional Fourteen-Point Case of Erdős Problem 132
     summary: >-
-      Proves the fourteen-point low-multiplicity conclusion conditional on
-      exactly three published interfaces: the Hopf--Pannwitz
-      low-multiplicity diameter bound, the known maximum-cardinality bound for
-      planar sets with at most six distances, and the Szöllősi--Östergård
+      Formalizes the planar Hopf--Pannwitz diameter bound and proves the
+      fourteen-point low-multiplicity conclusion conditional on exactly two
+      remaining published interfaces: the known maximum-cardinality bound for
+      planar sets with at most six distances and the Szöllősi--Östergård
       classification of thirteen-point planar six-distance sets. Internally
       derives the exact failure profile and endpoint deletion, constructs the
       three classified templates, eliminates the nonregular cases by
@@ -5084,13 +5084,20 @@ projects:
     main_declarations:
       - LeanPool.Erdos132N14.erdos132_for_fourteen_of_published_inputs
     main_results:
+      - declaration: LeanPool.Erdos132N14.hopfPannwitzLowMultiplicityDistance14
+        informal: >-
+          Every injectively labelled fourteen-point planar configuration has
+          a realized distance represented by at most fourteen unordered pairs;
+          the proof chooses that distance to be a diameter.
+        source_ref: >-
+          The planar diameter bound, conventionally associated with
+          Hopf--Pannwitz; Perles's clockwise-extreme endpoint proof.
       - declaration: LeanPool.Erdos132N14.erdos132_for_fourteen_of_published_inputs
         informal: >-
-          Assuming precisely the named Hopf--Pannwitz, published planar
-          few-distance cardinality, and Szöllősi--Östergård classification
-          interfaces, every injectively labelled fourteen-point planar
-          configuration realizes at least two distances whose unordered-pair
-          multiplicities are at most fourteen.
+          Assuming precisely the published planar few-distance cardinality
+          and Szöllősi--Östergård classification interfaces, every injectively
+          labelled fourteen-point planar configuration realizes at least two
+          distances whose unordered-pair multiplicities are at most fourteen.
         source_ref: >-
           Erdős Problem 132; Hopf--Pannwitz's planar diameter bound; Wei,
           "A Proof of Erdős--Fishburn's Conjecture for g(6)=13," EJC 19(4)
@@ -5104,7 +5111,6 @@ projects:
     msc:
       - "52C10"
       - "05D99"
-  - slug: erdos346
   - slug: erdos346
     title: "Erdős Problem 346: Ratio Limit Forces the Golden Ratio"
     summary: >-

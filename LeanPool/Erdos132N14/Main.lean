@@ -14,8 +14,9 @@ fifteen-pair ceiling. In the regular branch, insertion counts give one rare
 distance and two copies of each regular chord; the explicit coordinate
 moments then contradict planar Cauchy--Schwarz.
 
-The result is conditional on the three interfaces in `PublishedInputs.lean`.
-It does not settle Erdős Problem 132 in general.
+The result is conditional on the two interfaces in `PublishedInputs.lean`.
+The planar diameter bound is proved internally. It does not settle Erdős
+Problem 132 in general.
 -/
 
 namespace LeanPool.Erdos132N14
@@ -455,11 +456,11 @@ theorem regular13_extension_impossible
   exact regular13_extension_moment_certificate
     (Complex.normSq v) D2 (planeDot v u) hDpos hSecond hFourth hPair hCauchy
 
-/-- Conditional end-to-end fourteen-point case of Erdős Problem 132. The
-three arguments are precisely the named published interfaces; all counting,
-deletion, classified-case elimination, and moment steps are proved above. -/
+/-- Conditional end-to-end fourteen-point case of Erdős Problem 132. The two
+arguments are precisely the remaining named published interfaces; the planar
+diameter bound, counting, deletion, classified-case elimination, and moment
+steps are proved internally. -/
 theorem erdos132_for_fourteen_of_published_inputs
-    (hopfPannwitz : HopfPannwitzLowMultiplicityDistance14)
     (publishedCardinality : PublishedAtMostSixDistanceCardinalityBound)
     (classification :
       SzollosiOstergardThirteenPointSixDistanceClassification) :
@@ -467,7 +468,7 @@ theorem erdos132_for_fourteen_of_published_inputs
   intro P
   by_contra hfailure
   obtain ⟨profile⟩ := fourteen_failure_exact_profile
-    hopfPannwitz publishedCardinality P hfailure
+    hopfPannwitzLowMultiplicityDistance14 publishedCardinality P hfailure
   have hclassified := classification P profile.remaining
     profile.remaining_card profile.remaining_realizedDistance_card
   cases hclassified with

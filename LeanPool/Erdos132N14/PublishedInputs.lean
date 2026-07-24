@@ -3,15 +3,16 @@ Copyright (c) 2026 Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
+import LeanPool.Erdos132N14.HopfPannwitz
 import LeanPool.Erdos132N14.RegularTridecagon
 
 /-!
 # Published inputs for the conditional fourteen-point theorem
 
-Exactly three external interfaces are used. They record the Hopf--Pannwitz
-low-multiplicity diameter consequence at fourteen points, the published
-cardinality bound for planar sets with at most six distances, and the
-Szöllősi--Östergård classification of thirteen-point six-distance sets.
+Exactly two external interfaces remain. They record the published cardinality
+bound for planar sets with at most six distances and the Szöllősi--Östergård
+classification of thirteen-point six-distance sets. The Hopf--Pannwitz
+low-multiplicity diameter consequence is proved in `HopfPannwitz.lean`.
 
 The cardinality interface packages the known planar maxima through six
 distances. Its exact six-distance case is Wei's theorem `g(6) = 13`; the
@@ -34,14 +35,6 @@ inductive ThirteenPointSixDistanceClassification
       ThirteenPointSixDistanceClassification P S
   | hexagramWithCenter : SimilarTo P S hexagramWithCenter.point →
       ThirteenPointSixDistanceClassification P S
-
-/-- Published Hopf--Pannwitz input: every fourteen-point planar set has a
-realized distance represented by at most fourteen pairs. The published witness
-is the diameter. -/
-def HopfPannwitzLowMultiplicityDistance14 : Prop :=
-  ∀ P : Configuration (Fin 14),
-    ∃ d ∈ P.realizedDistances Finset.univ,
-      P.distanceMultiplicity Finset.univ d ≤ 14
 
 /-- Published planar few-distance input: a set determining at most six
 distances has at most thirteen points. This combines the known maxima through

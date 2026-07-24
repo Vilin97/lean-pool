@@ -20,9 +20,9 @@ MSC: 52C10, 05D99
 /-!
 # A conditional fourteen-point case of Erdős Problem 132
 
-This project proves the `n = 14` conclusion conditional on exactly three
-published interfaces: the Hopf--Pannwitz diameter bound, the known maximum
-cardinalities of planar sets with at most six distances, and the
-Szöllősi--Östergård thirteen-point classification. The exact six-distance
+This project formalizes the planar Hopf--Pannwitz diameter bound and proves the
+`n = 14` conclusion conditional on exactly two remaining published interfaces:
+the known maximum cardinalities of planar sets with at most six distances and
+the Szöllősi--Östergård thirteen-point classification. The exact six-distance
 cardinality result is due to Wei. The general problem remains open.
 -/
