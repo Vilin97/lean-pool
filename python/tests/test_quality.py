@@ -10,6 +10,7 @@ from lean_pool.quality import (
     _axiom_audit_resolved,
     _Declaration,
     _parse_declarations,
+    _parse_option_audit_output,
     _project_card,
     _strip_lean_comments,
     _write_project_card,
@@ -102,6 +103,121 @@ def test_quality_check_rejects_set_option(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("set_option is forbidden" in error.message for error in errors)
+
+
+def test_quality_check_rejects_programmatic_option_manipulation(
+    tmp_path: Path,
+) -> None:
+    """The PR #278 bypass — `withOptions` in an elaborator — is rejected."""
+    _write_minimal_repo(
+        tmp_path,
+        "elab_rules : command\n"
+        "  | `(lrat_semantic) => do\n"
+        "      Command.liftTermElabM do\n"
+        "        withOptions (fun options => options.set `maxRecDepth"
+        " (100000 : Nat)) do\n"
+        "          pure ()\n"
+        "\n"
+        "def hello := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any(
+        "programmatic option manipulation is forbidden" in error.message
+        for error in errors
+    )
+    assert any(
+        "gated option name in code is forbidden" in error.message for error in errors
+    )
+
+
+def test_quality_check_rejects_gated_option_name_in_code(tmp_path: Path) -> None:
+    """Receiver-variable spellings like `opts.set` cannot slip through."""
+    _write_minimal_repo(
+        tmp_path,
+        "def tweak (opts : Lean.Options) : Lean.Options :=\n"
+        "  opts.set `maxHeartbeats 400000\n"
+        "\n"
+        "def hello := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any(
+        "gated option name in code is forbidden" in error.message for error in errors
+    )
+
+
+def test_quality_check_rejects_linter_option_name_in_code(tmp_path: Path) -> None:
+    """Backtick-quoted linter option names are programmatic waiver material."""
+    _write_minimal_repo(
+        tmp_path,
+        "def waiver := `linter.unusedVariables\n\ndef hello := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any(
+        "gated option name in code is forbidden" in error.message for error in errors
+    )
+
+
+def test_quality_check_allows_option_names_in_comments_and_identifiers(
+    tmp_path: Path,
+) -> None:
+    """Option talk in comments and names like `maxRecDepth_bound` are fine."""
+    _write_minimal_repo(
+        tmp_path,
+        "-- a large `decide`; upstream increases `maxHeartbeats` to avoid timeouts\n"
+        "/- `withOptions` and `set_option maxRecDepth` are banned here. -/\n"
+        "theorem maxRecDepth_bound : 1 = 1 := rfl\n"
+        "\n"
+        "def hello := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert not any(
+        "programmatic option manipulation" in error.message for error in errors
+    )
+    assert not any("gated option name" in error.message for error in errors)
+
+
+def test_parse_option_audit_output_reports_findings(tmp_path: Path) -> None:
+    """Environment-audit findings map to the module's file with the detail."""
+    stdout = (
+        "LEANPOOL_OPTION_AUDIT|LeanPool.Evil.Lrat|Evil.elabRule|references "
+        "forbidden option-manipulating constants: "
+        "Lean.MonadWithOptions.withOptions; embeds forbidden gated option "
+        'name "maxRecDepth"\n'
+        "LEANPOOL_OPTION_AUDIT_COMPLETE\n"
+    )
+
+    errors = _parse_option_audit_output(tmp_path, stdout, "")
+
+    assert len(errors) == 1
+    assert errors[0].path == tmp_path / "LeanPool" / "Evil" / "Lrat.lean"
+    assert (
+        "Evil.elabRule references forbidden option-manipulating constants"
+        in errors[0].message
+    )
+
+
+def test_parse_option_audit_output_accepts_clean_run(tmp_path: Path) -> None:
+    """A completed audit with no findings yields no errors."""
+    assert not _parse_option_audit_output(
+        tmp_path, "LEANPOOL_OPTION_AUDIT_COMPLETE\n", ""
+    )
+
+
+def test_parse_option_audit_output_fails_closed_without_marker(tmp_path: Path) -> None:
+    """A crashed or non-compiling audit must fail the run, not pass silently."""
+    errors = _parse_option_audit_output(tmp_path, "", "error: script broke\nmore")
+
+    assert len(errors) == 1
+    assert "option-manipulation audit did not complete" in errors[0].message
+    assert "error: script broke" in errors[0].message
 
 
 def test_quality_check_rejects_nolint_attribute(tmp_path: Path) -> None:

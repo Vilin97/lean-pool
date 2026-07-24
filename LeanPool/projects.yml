@@ -1,4 +1,40 @@
 projects:
+  - slug: boolean-isoperimetry
+    title: Harper's Vertex-Isoperimetric Theorem on the Boolean Cube
+    summary: >-
+      Formalizes Harper's vertex-isoperimetric theorem for the Boolean cube:
+      among all families of a fixed cardinality, the simplicial initial segment
+      has the smallest closed radius-one Hamming neighborhood. Develops the
+      supporting binomial-cascade identities, Kruskal--Katona shadow bounds,
+      coordinate compressions, and the final dimension induction.
+    branch: extremal combinatorics
+    entry_module: LeanPool.BooleanIsoperimetry
+    authors:
+      - Alexey Milovanov
+    source:
+      title: Optimal numberings and isoperimetric problems on graphs
+      authors:
+        - L. H. Harper
+      doi: "10.1016/S0021-9800(66)80059-5"
+      github_repo: AlexeyMilovanov/BooleanIsoperimetry
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - BooleanIsoperimetry.harper_theorem
+    main_results:
+      - declaration: BooleanIsoperimetry.harper_theorem
+        informal: >-
+          For every family of vertices in an n-dimensional Boolean cube, the
+          simplicial initial segment of the same cardinality has a closed
+          radius-one Hamming neighborhood no larger than that of the family.
+    tags:
+      - extremal-combinatorics
+      - isoperimetry
+      - boolean-cube
+    msc:
+      - "05D05"
+      - "05C35"
   - slug: biswal
     title: Chebyshev Quotients and Demazure Multiplicities
     summary: >-
@@ -3432,7 +3468,7 @@ projects:
       - declaration: Egrs75.MuFinish.egrs_two_prime_mu
         informal: Proves that for distinct odd primes p and q there are infinitely many n with p and q both not dividing the central binomial coefficient binom(2n,n), via the mu-measure descent.
       - declaration: Egrs75.Finish.egrs_two_prime_finish
-        informal: Proves the same theorem along an independent second route, a bad-bit-mask strong induction consuming the same single-move lemma.
+        informal: Reassembles the same theorem via bad-bit-mask strong induction, with the low-case clearing discharged by Egrs75.MuFinish.egrs_clearing_low_mu.
       - declaration: Egrs75.not_dvd_centralBinom_iff_lowDigits
         informal: The Kummer bridge, stating that an odd prime p does not divide binom(2n,n) exactly when every base-p digit of n is at most (p-1)/2.
       - declaration: Egrs75.MathlibAPI.irrational_log_div_log
@@ -4512,6 +4548,769 @@ projects:
       - kuramoto
     msc:
       - "34D06"
+  - slug: min-modulus-unique-multiset-sum
+    title: Minimum modulus for the unique multiset-sum problem
+    summary: >-
+      Formalizes the exact minimum modulus
+      `N_min(n) = 2^n - 2^{floor(log_2 n)}` for the unique multiset-sum
+      problem on the super-increasing residue set `{2^i - 1 : 0 <= i < n}`,
+      and proves the sharp elementary-abelian-2-group lower bound `k >= n - 1`
+      for unique multiset sums in `(Z/2Z)^k`.
+    branch: additive combinatorics
+    entry_module: LeanPool.MinModulusUniqueMultisetSum
+    authors:
+      - José A. R. Fonollosa
+    source:
+      title: Minimum modulus for the unique multiset-sum problem, with an application to computing the permanent
+      authors:
+        - José A. R. Fonollosa
+      arxiv: "2607.08366"
+      github_repo: jarfo/min-modulus
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - MinModulus.nmin_eq
+      - MinModulus.elementaryAbelianTwoGroups_optimal
+    main_results:
+      - declaration: MinModulus.nmin_eq
+        informal: >-
+          Proves that among moduli `N >= 2` the least one making the
+          super-increasing residue set `{2^i - 1 : 0 <= i < n}` valid for the
+          unique multiset-sum problem is `2^n - 2^{floor(log_2 n)}`, for every
+          `n >= 2` (stated as `IsLeast`).
+      - declaration: MinModulus.elementaryAbelianTwoGroups_optimal
+        informal: >-
+          Proves that if `g_0, ..., g_{n-1}` in `(Z/2Z)^k` have unique
+          multiset sums, then `k >= n - 1`: an elementary abelian 2-group
+          admitting such a family has order at least `2^(n - 1)`.
+    tags:
+      - additive-combinatorics
+      - multiset-sums
+      - finite-groups
+      - permanent
+    msc:
+      - "11B75"
+      - "05D99"
+  - slug: lehmer-e10
+    title: Lehmer's Polynomial and the E10 Coxeter Element
+    summary: >-
+      Proves that Lehmer's degree-10 polynomial — the integer polynomial of
+      smallest known Mahler measure above 1 — is irreducible over the
+      integers, and that it is the characteristic polynomial of a Coxeter
+      element of the E10 Weyl group (the rank-10 instance of McMullen).
+      Against Mathlib's Mahler-measure API it computes M(L) exactly as the
+      Salem root with the unconditional bounds 1 < M(L) < 7/5, states
+      Lehmer's conjecture as a defined Prop (never assumed) with the strong
+      form implying the gap form, and contrasts the E8 Coxeter element
+      (order exactly 30) with the E10 element (infinite order in GL(10,Z)):
+      the E-series crosses from torsion to a Salem matrix at rank 10, and
+      the crossing value is Lehmer's number.
+    branch: number theory
+    entry_module: LeanPool.LehmerE10
+    authors:
+      - Dillon Ryan
+    source:
+      github_repo: dillon-11/lehmer-E10
+      url: https://github.com/dillon-11/lehmer-E10
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LehmerE10.main_theorem
+    main_results:
+      - declaration: LehmerE10.main_theorem
+        informal: >-
+          Lehmer's polynomial L(x) = x^10 + x^9 - x^7 - x^6 - x^5 - x^4 -
+          x^3 + x + 1 is irreducible over the integers, and the
+          characteristic polynomial of a Coxeter element of the E10 Weyl
+          group equals L.
+      - declaration: LehmerE10.lehmer_mahlerMeasure
+        informal: >-
+          The Mahler measure of L equals its Salem root mu, with the
+          unconditional bounds 1 < M(L) < 7/5.
+    tags:
+      - number-theory
+      - mahler-measure
+      - salem-numbers
+      - coxeter-groups
+    msc:
+      - "11R06"
+      - "11C08"
+      - "20F55"
+  - slug: sabidussi
+    title: "Sabidussi's compatibility conjecture for Eulerian multigraphs"
+    summary: >-
+      Formalizes Sabidussi's compatibility conjecture for finite labelled endpoint multigraphs
+      with loops and parallel edges, where a loop contributes two half-edge incidences to the
+      degree of its vertex. Given an Euler tour and minimum degree at least four, the main theorem
+      constructs a partition of all edges into nonempty, edge-connected, 2-regular ordinary
+      circuits such that consecutive edges of the Euler tour never lie in the same circuit. The
+      proof runs a four-colour (F_2^2) algebra over the cyclic transition word, uses an odd
+      balancing parity lemma to choose compatible local frames, and transports the resulting
+      colouring back to a compatible ordinary circuit decomposition.
+    branch: graph theory
+    entry_module: LeanPool.Sabidussi
+    authors:
+      - Nikolay Ulyanov
+    source:
+      title: "Graph Puzzles III.1: A proof of Sabidussi's compatibility conjecture"
+      authors:
+        - Nikolay Ulyanov
+      url: "https://github.com/gexahedron/sabidussi-lean/blob/032e640df0cc41d4d3d217f7c68628ab19cb3767/sabidussi_proof.pdf"
+      github_repo: gexahedron/sabidussi-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Sabidussi.LoopMultigraph.loop_sabidussi_compatibility_ordinary
+    main_results:
+      - declaration: Sabidussi.LoopMultigraph.loop_sabidussi_compatibility_ordinary
+        informal: >-
+          For any finite endpoint multigraph with an Euler tour and minimum degree at least four,
+          the edges partition into ordinary, nonempty, connected, 2-regular circuits that are
+          compatible with the tour: no circuit contains two consecutive tour edges.
+      - declaration: Sabidussi.LoopMultigraph.loop_sabidussi_compatibility
+        informal: >-
+          The same compatibility statement phrased with the intrinsic even-edge-set circuit
+          decomposition, from which the ordinary-circuit form is derived.
+    tags:
+      - graph-theory
+      - eulerian-graphs
+      - circuit-decomposition
+      - sabidussi
+    msc:
+      - "05C45"
+  - slug: three-gap-theorem
+    title: The Three-Gap (Steinhaus) Theorem
+    summary: >-
+      Formalizes the three-gap (Steinhaus, three-distance) theorem: for every real `a` and
+      every `N`, the `N`-point orbit `{i·a mod 1 : i < N}` partitions `[0,1)` into gaps taking
+      at most three distinct lengths, and when exactly three occur the largest is the sum of
+      the other two. The proof works in `[0,1)` via `Int.fract` (not `AddCircle`) through the
+      two first-return times `η⁺` and `η⁻`, and is uniform in the rotation number, covering
+      rational and irrational `a` with no case split.
+    branch: number theory
+    entry_module: LeanPool.SteinhausThreeGap
+    authors:
+      - Dirk Kunert
+    source:
+      title: "The Three Gap Theorem (Steinhaus Conjecture)"
+      authors:
+        - Tony van Ravenstein
+      doi: "10.1017/S1446788700031062"
+      github_repo: dkunert/three-gap-theorem-lean
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - SteinhausThreeGap.three_gap_card_le_three
+    main_results:
+      - declaration: SteinhausThreeGap.three_gap_card_le_three
+        informal: >-
+          For every real `a` and natural `N`, the gaps of the orbit `{i·a mod 1 : i < N}` take
+          at most three distinct lengths.
+      - declaration: SteinhausThreeGap.three_gap_lengths_eq
+        informal: >-
+          When the gaps take exactly three distinct lengths, those lengths are precisely the two
+          first returns `η⁺`, `η⁻`, and their sum `η⁺ + η⁻`; in particular the largest gap is the
+          sum of the other two.
+    tags:
+      - number-theory
+      - three-gap-theorem
+      - equidistribution
+    msc:
+      - "11K06"
+  - slug: stationary-harmonic-maps
+    title: Monotonicity Formula for Stationary Harmonic Maps
+    summary: >-
+      Formalizes the monotonicity formula for stationary `W^{1,2}_{loc}` maps with Euclidean
+      target. The proof is target independent: it uses only the displayed weak gradient and a
+      vanishing domain first variation, so no target-manifold structure enters the argument.
+      From a bundled stationary Sobolev witness `StationaryW12LocMap u Omega` it proves, for
+      `0 < s <= r < R0`, that the normalized energy `Theta(Du, a, rho) = rho^(2-n) * integral
+      over B(a, rho) of |Du|^2` is monotone: `weakTheta Du a s <= weakTheta Du a r`, together
+      with the exact increment formula `weakTheta Du a r - weakTheta Du a s = weakMonotonicityRhs
+      Du a s r`. The Sobolev layer is project-defined from Mathlib's `MemLp`, weak-derivative
+      identities, Bochner integration, and Euclidean measure theory, following the De
+      Giorgi-Nash-Moser engineering choice; the internal proof routes through a radial
+      vector-field first variation, a coarea/Radon-Nikodym radius representation, smooth radial
+      cutoffs, and an absolute-continuity boundary step.
+    branch: analysis
+    entry_module: LeanPool.LeanStationaryHarmonicMaps
+    authors:
+      - Wei Wang
+    source:
+      title: "Theorems on Regularity and Singularity of Energy Minimizing Maps"
+      authors:
+        - Leon Simon
+      doi: "10.1007/978-3-0348-9193-6"
+      github_repo: BrookWW/LeanStationaryHarmonicMaps
+    license: MIT
+    status: verified
+    provenance: mix
+    main_declarations:
+      - LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryW12LocMap
+    main_results:
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryW12LocMap
+        informal: >-
+          The public input package: a domain-variation stationary `W^{1,2}_{loc}` Sobolev map
+          bundling a chosen weak gradient (`W12LocMapWitness`) with the vanishing domain
+          first-variation identity. This is the object users construct to invoke the
+          monotonicity theorem.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationaryW12LocMonotonicity_euclidean
+        informal: >-
+          Witness-style monotonicity: from a stationary `W^{1,2}_{loc}` map package, the
+          normalized weak energy `weakTheta` is monotone in the radius, `weakTheta Du a s <=
+          weakTheta Du a r` for `0 < s <= r < R0`.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationaryW12LocMonotonicityFormula_euclidean
+        informal: >-
+          Witness-style monotonicity formula: the increment of `weakTheta` equals the
+          nonnegative annular radial-energy term, `weakTheta Du a r - weakTheta Du a s =
+          weakMonotonicityRhs Du a s r` for `0 < s < r < R0`.
+      - declaration: LeanStationaryHarmonicMaps.StationaryHarmonicMap.stationarySobolevMonotonicity_euclidean
+        informal: >-
+          Componentwise convenience wrapper: the same monotonicity inequality stated directly
+          from the local `L^2`, measurability, weak-gradient, and first-variation hypotheses,
+          without first constructing the witness package.
+    tags:
+      - analysis
+      - pde
+      - harmonic-maps
+      - monotonicity-formula
+      - sobolev
+    msc:
+      - "58E20"
+      - "35J50"
+  - slug: gkp-density-one
+    title: Density-One GKP Divisibility and Its Carry-Language Characterization
+    summary: >-
+      Proves that the exponents k satisfying the Graham--Knuth--Patashnik divisibility
+      condition have natural density one. The proof gives an exact all-depth modular sieve,
+      quantitative bounds for possible failures in initial intervals, and a density-zero
+      limit for the failure proportion. It also develops the Kummer digit-sum bridge, the
+      binary-popcount reduction, and a verified ternary carry automaton. The universal GKP
+      conjecture remains open because the possible density-zero failure set may be nonempty.
+    branch: number theory
+    entry_module: LeanPool.GKPCarry
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science, Second Edition"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: https://cs.stanford.edu/~knuth/gkp.html
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - GKPCarry.tendsto_gkpSuccessProportion_one
+    main_results:
+      - declaration: GKPCarry.tendsto_gkpSuccessProportion_one
+        informal: >-
+          The proportion of exponents k below N for which nine divides the central binomial
+          coefficient indexed by 2^k tends to one as N tends to infinity.
+      - declaration: GKPCarry.card_gkpFailureExponentsBelow_le
+        informal: >-
+          At each ternary depth n+3, the number of possible failures below N is at most
+          (N divided by 2*3^(n+2), plus one) times (n+9)*2^n.
+      - declaration: GKPCarry.gkp_exact_modular_sieve
+        informal: >-
+          At depth n+3, exactly (n+9)*2^n of the 2*3^(n+2) exponent classes remain
+          uncertified; every other class gives divisibility by nine and avoids the deficient
+          carry language for all exponents in that class.
+      - declaration: GKPCarry.gkpConjecture_iff_badCarryLanguageExclusion
+        informal: >-
+          The GKP conjecture is equivalent to the assertion that every nonexceptional power
+          of two avoids the explicitly defined deficient-carry regular language. This is an
+          exact reformulation and does not prove the remaining avoidance assertion.
+      - declaration: GKPCarry.nine_dvd_centralBinom_iff_two_le_ternaryDoubleCarryCount
+        informal: >-
+          For every natural number n, its central binomial coefficient is divisible by nine
+          exactly when doubling the canonical ternary expansion of n creates at least two
+          carries.
+      - declaration: GKPCarry.badCarryLanguage_true_iff_shape
+        informal: >-
+          The deficient-carry automaton accepts exactly three concrete little-endian ternary
+          word shapes: all digits zero or one; a unique top digit two; or a unique two followed
+          by a higher zero with all other digits zero or one.
+      - declaration: GKPCarry.card_badCarryWords
+        informal: >-
+          Among all ternary words of length n+2, exactly (n+7) times 2^n create fewer than two
+          carries when doubled.
+      - declaration: GKPCarry.nine_dvd_centralBinom_four_pow_in_finite_range
+        informal: >-
+          For every m from 27 through 6560, nine divides the central binomial coefficient
+          indexed by 4^m; this is a bounded computational corollary, not the headline result.
+    tags:
+      - number-theory
+      - finite-automata
+      - asymptotic-density
+    msc:
+      - "11A63"
+      - "11B65"
+      - "68Q45"
+  - slug: moser-lattice-colorings
+    title: Geometric Four-Colorings of the Moser Lattice and Ring
+    summary: >-
+      Formalizes the two explicit parity colorings from Dúcz's 2026 note on the
+      Moser lattice. The development derives the exact quadratic norm formula,
+      proves that the integer-coordinate embedding is faithful, proves both
+      colorings proper and geometric on the entire lattice, and descends them
+      through localization by powers of three to the Moser ring. As a structural
+      corollary, every unit-distance graph realized entirely in the Moser ring is
+      four-colorable. The uniqueness classification of geometric four-colorings
+      and the chromatic number of the full Euclidean plane are not claimed.
+    branch: combinatorics
+    entry_module: LeanPool.MoserLatticeColorings
+    authors:
+      - Egor Lyfar
+    source:
+      title: "A note on geometric colorings of the Moser lattice"
+      authors:
+        - Ákos Dúcz
+      arxiv: "2606.12325"
+      github_repo: lyfar/moser-lattice-colorings-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+    main_results:
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.both_colorings_are_geometric
+        informal: >-
+          The two parity maps defined by Dúcz descend to proper four-colorings of
+          the full Moser ring, and equality of colors for each map depends only
+          on Euclidean distance.
+        source_ref: "Theorem 3.1 and the Moser-ring extension following it."
+      - declaration: LeanPool.MoserLatticeColorings.MoserRing.graph_colorable_four_of_moserRing_realization
+        informal: >-
+          Every abstract graph with a realization in the Moser ring that sends
+          each edge to a unit-distance pair is four-colorable.
+        source_ref: "Corollary of the geometric four-coloring of the Moser ring."
+    tags:
+      - combinatorics
+      - graph-coloring
+      - discrete-geometry
+      - unit-distance-graphs
+      - moser-lattice
+    msc:
+      - "05C15"
+  - slug: hadwiger-nelson-bounds
+    title: Known Bounds for the Hadwiger-Nelson Problem
+    summary: >-
+      Formalizes the currently known bounds 5 <= chi(R^2) <= 7 for the
+      chromatic number of the Euclidean plane. The upper bound constructs an
+      explicit Isbell-style seven-coloring. The lower bound checks Parts'
+      481-vertex coloring certificate, develops a finite doubled
+      triangular-lattice forcing gadget, proves its exact Euclidean embedding,
+      and closes the four-color contradiction with a spindle construction.
+      The exact chromatic number remains open.
+    branch: graph theory and discrete geometry
+    entry_module: LeanPool.HadwigerNelsonBounds
+    authors:
+      - Egor Lyfar
+    source:
+      title: A human-verifiable proof of the chromatic number of the plane being at least 5
+      authors:
+        - Jaan Parts
+      arxiv: "2010.12661"
+      url: https://www.erdosproblems.com/508
+      github_repo: lyfar/hadwiger-nelson-bounds-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+    main_results:
+      - declaration: HadwigerNelsonBounds.hadwiger_nelson_known_bounds
+        informal: >-
+          The chromatic number of the unit-distance graph on the Euclidean
+          plane lies between five and seven, inclusive.
+      - declaration: HadwigerNelsonBounds.unitDistanceGraph_not_colorable_four
+        informal: >-
+          The unit-distance graph on the Euclidean plane admits no proper
+          coloring with four colors.
+      - declaration: HadwigerNelsonBounds.chromaticNumber_le_seven
+        informal: >-
+          An explicit Isbell-style coloring proves that the unit-distance graph
+          on the Euclidean plane is colorable with seven colors.
+    tags:
+      - graph-theory
+      - geometric-graph-theory
+      - graph-coloring
+      - hadwiger-nelson
+    msc:
+      - "05C15"
+      - "52C10"
+  - slug: distance-geometry
+    title: Euclidean Distance Geometry
+    summary: >-
+      Develops the basepoint-centered Gram approach to finite Euclidean distance geometry.
+      Proves both directions of Schoenberg's characterization, including a
+      rank-controlled factorization of positive-semidefinite matrices; proves that
+      three affinely independent centers in Euclidean three-space determine at most
+      two points with prescribed distances; and verifies the Cayley--Menger
+      determinant for segments and triangles, including the triangle-area identity
+      underlying Heron's formula.
+    branch: geometry
+    entry_module: LeanPool.DistanceGeometry
+    authors:
+      - Egor Lyfar
+    source:
+      title: Remarks to Maurice Fréchet's article Sur la définition axiomatique d'une classe d'espace distanciés vectoriellement applicable sur l'espace de Hilbert
+      authors:
+        - Isaac Jacob Schoenberg
+      doi: "10.2307/1968654"
+      github_repo: lyfar/distance-geometry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - DistanceGeometry.schoenberg
+      - DistanceGeometry.trilateration_le_two
+    main_results:
+      - declaration: DistanceGeometry.schoenberg
+        informal: >-
+          For n at least one, a symmetric hollow n-by-n matrix is a squared-distance
+          matrix of points in k-dimensional Euclidean space exactly when its
+          basepoint-centered Gram matrix is positive semidefinite and has rank at most k.
+      - declaration: DistanceGeometry.encard_setOf_forall_dist_eq_le_two
+        informal: >-
+          In a finite-dimensional real inner-product affine space, prescribed
+          distances to centers whose affine span has codimension one admit at most
+          two solutions.
+      - declaration: DistanceGeometry.trilateration_le_two
+        informal: >-
+          Three affinely independent centers in three-dimensional Euclidean space
+          admit at most two points with any prescribed triple of distances.
+      - declaration: DistanceGeometry.cayleyMenger_det_heron
+        informal: >-
+          The Cayley--Menger determinant of three planar points equals minus sixteen
+          times the squared area of their triangle.
+    tags:
+      - distance-geometry
+      - euclidean-geometry
+      - linear-algebra
+      - cayley-menger
+    msc:
+      - "51K05"
+      - "52C99"
+      - "15A18"
+  - slug: odd-prime-valuation-distribution
+    title: Exact odd-prime distributions of central-binomial valuations
+    summary: >-
+      Formalizes the exact distribution of the p-adic valuation of the central binomial
+      coefficient binom(2n,n) over every complete block 0 <= n < p^k for every odd prime p.
+      The development proves Kummer correctness for padded digit words, constructs the
+      two-state doubling carry enumerator, identifies it with the arithmetic valuation
+      polynomial, derives its second-order recurrence, proves the rational bivariate
+      generating function, and obtains closed formulas for valuations zero and one.
+    branch: number theory
+    entry_module: LeanPool.OddPrimeValuationDistribution
+    authors:
+      - Egor Lyfar
+    source:
+      title: "Über die Ergänzungssätze zu den allgemeinen Reciprocitätsgesetzen"
+      authors:
+        - Ernst Eduard Kummer
+      doi: "10.1515/crll.1852.44.93"
+      github_repo: lyfar/gkp-carry-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+    main_results:
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationGeneratingSeries_identity
+        informal: >-
+          For every odd prime p = 2h+1, proves the denominator-cleared identity for the
+          bivariate series whose coefficient of T^k X^r counts n < p^k with
+          nu_p(binomial(2n,n)) = r; equivalently the series is
+          (1-XT)/(1-(h+1)(1+X)T+pXT^2).
+        source_ref: "A. Straub, V. H. Moll, T. Amdeberhan, The p-adic valuation of k-central binomial coefficients, Acta Arith. 140 (2009), 31-42."
+      - declaration: OddPrimeValuationDistribution.oddPrimeValuationPolynomial_recurrence
+        informal: >-
+          Proves that the exact valuation polynomials satisfy
+          F_{k+2}(X)+pX F_k(X)=(h+1)(1+X)F_{k+1}(X), with F_0=1 and
+          F_1=(h+1)+hX.
+      - declaration: OddPrimeValuationDistribution.padicValNat_oddPrime_centralBinom_ofDigits_eq_carryCount
+        informal: >-
+          Proves Kummer correctness for every valid padded base-p word: the p-adic valuation
+          of its central binomial coefficient equals the number of carries produced by
+          doubling the word.
+      - declaration: OddPrimeValuationDistribution.card_oddPrimeBlock_valuation_one
+        informal: >-
+          Gives a closed formula for the number of n below p^(k+2) whose central binomial
+          coefficient has p-adic valuation exactly one.
+    tags:
+      - central-binomial-coefficients
+      - p-adic-valuations
+      - digit-carries
+      - generating-functions
+    msc:
+      - "11A63"
+      - "11B65"
+  - slug: erdos346
+    title: "Erdős Problem 346: Ratio Limit Forces the Golden Ratio"
+    summary: >-
+      Formalizes the limit-exists interpretation of Erdős Problem 346: for a
+      strictly increasing positive integer sequence with a uniform ratio gap
+      whose finite deletions are complete but whose infinite deletions are not,
+      if the consecutive quotient sequence converges to some real limit greater
+      than one, then that limit must equal the golden ratio and the quotient
+      sequence tends to it.
+    branch: number theory
+    entry_module: LeanPool.Erdos346
+    authors:
+      - KitaKen1
+    source:
+      title: "Erdős Problem #346"
+      authors:
+        - KitaKen1
+      url: "https://www.erdosproblems.com/346"
+      github_repo: KitaKen1/erdos346-ratio-limit-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Erdos346.intended_problem_if_limit_exists
+    main_results:
+      - declaration: Erdos346.intended_problem_if_limit_exists
+        informal: >-
+          Existence of any limit greater than one for the quotient sequence forces
+          convergence to the golden ratio, the intended Erdős–Graham conclusion.
+      - declaration: Erdos346.ratio_limit_eq_goldenRatio
+        informal: >-
+          If the quotient sequence converges to a limit greater than one under the
+          completeness and incompleteness deletion hypotheses, that limit equals
+          the golden ratio.
+      - declaration: Erdos346.ratio_tendsto_goldenRatio_of_limit_exists
+        informal: >-
+          Under the same hypotheses, the quotient sequence converges to the golden
+          ratio itself.
+    tags:
+      - number-theory
+      - golden-ratio
+      - erdos-problems
+    msc:
+      - "11B05"
+      - "11J70"
+  - slug: channel-capacity
+    title: Uniqueness of Shannon Capacity-Achieving Priors
+    summary: >-
+      Formalizes uniqueness of the capacity-achieving input distribution for a
+      Markov-kernel channel in three aligned layers: a finite-alphabet theorem
+      (compactness, continuity, and strict concavity of mutual information on
+      Mathlib's weak topology for `ProbabilityMeasure`), a concrete discharged
+      theorem for compact-Polish channels with a common strictly positive
+      jointly continuous density, and a general measure-theoretic packaging that
+      isolates the abstract well-conditioning hypotheses, plus a counterexample
+      showing pairwise-distinct rows do not give an injective prior pushforward
+      (the non-degeneracy required for uniqueness).
+    branch: information theory
+    entry_module: LeanPool.ChannelCapacity
+    authors:
+      - Adam Benenson
+    source:
+      title: Elements of Information Theory
+      authors:
+        - Thomas M. Cover
+        - Joy A. Thomas
+      doi: "10.1002/047174882X"
+      github_repo: abenenson/channel-capacity
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+    main_results:
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+        informal: >-
+          For a Markov kernel between finite alphabets (nonempty input) whose
+          rows are linearly independent (`Kernel.RowMatrixFullRank`), a
+          capacity-achieving input prior exists and is unique.
+        source_ref: "R. G. Gallager, Information Theory and Reliable Communication, Wiley, 1968, Section 4.5."
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_discharged
+        informal: >-
+          For compact-Polish channels with a common strictly positive jointly
+          continuous density, given injectivity of the prior-pushforward map and
+          upper semicontinuity of mutual information (the latter carried as a
+          field of `Kernel.ContinuousPositiveDensity`, not derived), the
+          capacity-achieving prior is unique.
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior
+        informal: >-
+          General measure-theoretic packaging: under abstract well-conditioning
+          hypotheses, the capacity-achieving prior is unique.
+    tags:
+      - information-theory
+      - channel-capacity
+      - mutual-information
+      - kullback-leibler
+      - markov-kernel
+    msc:
+      - "94A17"
+      - "94A15"
+      - "60A10"
+  - slug: johnson-lindenstrauss-lean
+    title: The Johnson–Lindenstrauss Lemma and Quantized JL
+    summary: >-
+      Formalizes the Johnson–Lindenstrauss lemma end to end — a Gaussian random
+      projection preserves pairwise distances of a finite point set up to a
+      (1 ± ε) factor, so a distortion-ε embedding of any m-point set exists once
+      k is logarithmic in m — together with the quantized JL (QJL) one-bit sign
+      sketch: unbiasedness of the asymmetric 1-bit estimator and its sub-Gaussian
+      distortion bound.
+    branch: probability
+    entry_module: LeanPool.JohnsonLindenstraussLean
+    authors:
+      - claytomode
+    source:
+      title: Extensions of Lipschitz mappings into a Hilbert space
+      authors:
+        - William B. Johnson
+        - Joram Lindenstrauss
+      doi: "10.1090/conm/026/737400"
+      github_repo: claytomode/johnson-lindenstrauss-lean
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - JL.johnson_lindenstrauss
+      - JL.johnson_lindenstrauss_pointset
+    main_results:
+      - declaration: JL.johnson_lindenstrauss
+        informal: The abstract probabilistic-method union bound — if the summed per-pair distortion-failure probability is below one, a distortion-preserving map exists.
+      - declaration: JL.johnson_lindenstrauss_pointset
+        informal: The end-to-end Johnson–Lindenstrauss lemma — a Gaussian random projection into k dimensions embeds any m-point set with (1 ± ε) distortion once k is logarithmic in m.
+        source_ref: "S. Dasgupta, A. Gupta, An elementary proof of a theorem of Johnson and Lindenstrauss, Random Structures and Algorithms 22 (2003), 60-65, doi:10.1002/rsa.10073."
+      - declaration: JL.qjlEstimator_unbiased
+        informal: >-
+          The QJL asymmetric 1-bit estimator is unbiased for the normalized
+          inner product between key and query.
+        source_ref: "A. Zandieh, M. Daliri, I. Han, QJL: 1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead, AAAI 2025, arXiv:2406.03482."
+      - declaration: JL.qjlEstimator_concentration_exp
+        informal: >-
+          Sub-Gaussian distortion bound for the QJL 1-bit estimator: deviation
+          at least ε has probability at most 2·exp(-m·ε²/(π·‖q‖²)).
+        source_ref: "A. Zandieh, M. Daliri, I. Han, QJL: 1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead, AAAI 2025, arXiv:2406.03482."
+    tags:
+      - dimensionality-reduction
+      - random-projection
+      - johnson-lindenstrauss
+      - gaussian
+      - quantization
+    msc:
+      - "68W20"
+      - "60G15"
+      - "68P05"
+  - slug: cut-and-project
+    title: Period Lengths of Rational Cut-and-Project Gap Sequences
+    summary: >-
+      Formalizes the closed-form minimal periods of one-dimensional rational
+      cut-and-project gap sequences at the level of the paper's residue model, plus a
+      fully geometric aperiodicity theorem for irrational slopes. For coprime α, β ∈ ℕ
+      and window parameter ω ≥ 0, write N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and D = α² + β². The
+      strip-to-residue reduction of the paper — sorting the hits of the length-N
+      progression twisted by the geometric multiplier −αβ⁻¹ (mod D) — is taken as the
+      definition of the gap sequence rather than derived from the lattice; for it, the
+      multiset convention has minimal period N/D when D ∣ N and N otherwise, and the
+      set convention (multiplicities flattened to {0,1}) has minimal period 1 when
+      N ≥ D and N otherwise. The irrational case is geometric from first principles:
+      for positive irrational slope and ω > 0, the accepted points of ℤ² sorted by the
+      physical projection have a gap sequence with no finite period, via injectivity
+      of the projection and Kronecker density of the internal image.
+    branch: number theory
+    entry_module: LeanPool.CutAndProject
+    authors:
+      - Dirk Kunert
+    source:
+      title: "Period lengths of one-dimensional rational cut-and-project sequences"
+      authors:
+        - Dirk Kunert
+      url: "https://github.com/dkunert/cut-and-project/blob/main/LaTeX/rational_cut_and_project_gap_periods.tex"
+      github_repo: dkunert/cut-and-project
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - CutAndProject.main_theorem_geometric_concrete
+    main_results:
+      - declaration: CutAndProject.main_theorem_geometric_concrete
+        informal: >-
+          The gap sequence of the residue model of the rational cut-and-project
+          multiset (sorted hits of the length-N progression under the multiplier
+          −αβ⁻¹ mod D) has minimal period N/D if D divides N and N otherwise, where
+          N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and D = α² + β².
+      - declaration: CutAndProject.set_main_theorem_geometric_concrete
+        informal: >-
+          The set-convention residue-model gap sequence (multiplicities flattened to
+          {0,1}) has minimal period 1 if N ≥ D and N otherwise.
+      - declaration: CutAndProject.Irrational.prop_irrational
+        informal: >-
+          For positive irrational slope and window parameter ω > 0, the projected gap
+          sequence has no finite period.
+    tags:
+      - number-theory
+      - aperiodic-order
+      - cut-and-project
+      - quasicrystals
+    msc:
+      - "52C23"
+      - "11K06"
+  - slug: sundogcert
+    title: Sundog certificates
+    summary: >-
+      A referee-free, axiom-clean Lean development of coding-theory certificates: syndrome
+      decoding soundness and lossiness bounds for GF(2) parity-check schemes (with a
+      Reed–Solomon evaluation-dual variant), and a fully machine-checked correctness proof of
+      the Karp reduction chain 3SAT ≤ 3DM ≤ X3C ≤ bounded-weight syndrome decoding. Only the
+      logical iff of each reduction is formalized; polynomial-time bounds, NP classes, and
+      Cook–Levin are unformalized external inputs, so NP-hardness of decoding is conditional
+      on those standard facts.
+    branch: complexity theory
+    entry_module: LeanPool.Sundogcert
+    authors:
+      - Humiliati
+    source:
+      title: "Sundog certificates"
+      authors:
+        - Humiliati
+      url: "https://github.com/humiliati/sundogcert"
+      github_repo: humiliati/sundogcert
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Sundog.SATReductionMain.sat_iff_decodes
+      - Sundog.Certificate.accept_sound
+    main_results:
+      - declaration: Sundog.SATReductionMain.sat_iff_decodes
+        informal: >-
+          The end-to-end reduction correctness: a formula is satisfiable iff its image under the
+          composed 3SAT-to-decoding reduction is a yes-instance of bounded-weight syndrome decoding.
+      - declaration: Sundog.MatchingNPHard.threeDM_iff_X3C
+        informal: >-
+          The 3-dimensional matching instance has a perfect matching iff the reduced
+          exact-cover-by-3-sets instance has an exact cover, both directions machine-checked.
+      - declaration: Sundog.Certificate.accept_sound
+        informal: >-
+          Soundness of the cheap syndrome-decoding verifier when it accepts: an exhibited light
+          same-syndrome witness certifies the body is safe within the decoding radius.
+      - declaration: Sundog.Certificate.reject_sound
+        informal: >-
+          Soundness of the verifier when it rejects: a sound column-weight lower bound on the
+          minimum same-syndrome weight rules out every light witness, so the body is genuinely unsafe.
+    tags:
+      - complexity
+      - coding-theory
+      - np-hardness
+    msc:
+      - "68Q17"
+      - "94B35"
   - slug: runge-kutta-order-conditions
     title: Certified Runge-Kutta Order Conditions
     summary: Certifies Runge-Kutta order conditions over planar rooted trees, including RK4 order four, Dormand-Prince order five, and Gauss-Legendre order six.
