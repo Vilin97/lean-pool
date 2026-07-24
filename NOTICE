@@ -78,6 +78,9 @@ MIT permission notice that follows them.
   LeanPool/Brouwer                   https://github.com/math-xmum/Brouwer
       Copyright (c) 2025 Math_XMUM
 
+  LeanPool/CutAndProject             https://github.com/dkunert/cut-and-project
+      Copyright (c) 2026 Dirk Kunert
+
   LeanPool/DeadEnds                  https://github.com/AxiomMath/dead-ends
       Copyright (c) 2026 Axiom Math
 
@@ -135,6 +138,9 @@ MIT permission notice that follows them.
       The upstream MIT LICENSE file gives the copyright line as
       "Copyright (c) 2026" with no name; the repository owner of record is
       "SamuelSchlesinger".
+
+  LeanPool/SteinhausThreeGap         https://github.com/dkunert/three-gap-theorem-lean
+      Copyright (c) 2026 Dirk Kunert
 
   LeanPool/SpecialNumbers            https://github.com/provables/special-numbers
       Copyright (c) 2024 Walter Moreira, Joe Stubbs
