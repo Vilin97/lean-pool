@@ -114,6 +114,42 @@ Link recipes: `doi` → `https://doi.org/<doi>`, `arxiv` →
 `https://arxiv.org/abs/<arxiv>`, `url` as-is, `github_repo` →
 `https://github.com/<github_repo>`.
 
+### Minimal-Lean-file fields (schema 1.2, additive)
+
+The shard gains `commit` (the exact commit its data was extracted from —
+raw-source fetches for the minimal-file builder pin to it) and a
+`moduleData` array parallel to `modules`:
+
+```json
+"moduleData": [{"imports": ["Mathlib.Order.Basic", …],   // external imports
+                "uses": [3, 7],                           // same-project imports (module indices)
+                "contexts": [[20, "namespace Foo"], …]},  // (line, text) of replayable top-level
+               …]                                         //   context commands
+```
+
+`modules` may list more entries than declarations reference: modules pulled
+in only through `uses` (notation-/attribute-only files) are appended so
+their contexts can be replayed.
+
+Per-declaration additions:
+
+```json
+"stmtEnd": [436, 69],   // theorem/lemma only: statement/body boundary (line, col)
+"tdeps": [124, 164],    // theorem/lemma only: statement-only dependencies ⊆ deps
+"span": [15, 18],       // mutual members: the whole block's line span
+"host": 12,             // generated decls: the source declaration containing them
+"prefix": "open Classical in"  // bare `… in` prefix excluded from Lean's range
+```
+
+The minimal-file builder (`static/assets/minimal.js`, shared verbatim with
+the node validation harness) follows `tdeps` through theorems (proofs become
+`:= sorry`) and full `deps` elsewhere, replays module contexts in import
+order, prunes `variable`/`attribute`/`export` contexts that reference
+declarations outside the cone, and grows the cone with lemmas named in
+`simp only [...]`-style tactic lists (invisible to term-level dependency
+extraction). `build()` may return `{pending: [moduleIndex…]}` when that
+closure needs sources not yet fetched; callers fetch and retry (≤ 4 rounds).
+
 ## `data/index.json`
 
 ```json

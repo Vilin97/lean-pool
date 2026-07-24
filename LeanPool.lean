@@ -323,6 +323,17 @@ import LeanPool.CencovPetz.Uniform
 import LeanPool.CencovPetz.UniformScalarConstant
 import LeanPool.CencovPetz.UniformScalarMultiple
 import LeanPool.CencovPetz.UniformSimplex
+import LeanPool.ChannelCapacity
+import LeanPool.ChannelCapacity.Basic
+import LeanPool.ChannelCapacity.Capacity
+import LeanPool.ChannelCapacity.ChainRule
+import LeanPool.ChannelCapacity.Counterexample
+import LeanPool.ChannelCapacity.Discharged
+import LeanPool.ChannelCapacity.DischargedExample
+import LeanPool.ChannelCapacity.Finite
+import LeanPool.ChannelCapacity.KernelCompositionKullbackLeibler
+import LeanPool.ChannelCapacity.NonDegeneracy
+import LeanPool.ChannelCapacity.StrictConcavity
 import LeanPool.Chudnovsky
 import LeanPool.Chudnovsky.Basic
 import LeanPool.Chudnovsky.Chudnovsky
@@ -761,6 +772,8 @@ import LeanPool.Erdos137.SmoothRefinement
 import LeanPool.Erdos137.SpliceFiniteness
 import LeanPool.Erdos137.SquarefreeCapacity
 import LeanPool.Erdos137.TaoPoint
+import LeanPool.Erdos346
+import LeanPool.Erdos346.LimitExistsVariant
 import LeanPool.Erdos367
 import LeanPool.Erdos367.Core139
 import LeanPool.Erdos367.Core4027
