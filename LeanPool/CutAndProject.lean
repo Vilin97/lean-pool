@@ -10,7 +10,7 @@ import LeanPool.CutAndProject.Irrational
 /-!
 # Period Lengths of Rational Cut-and-Project Gap Sequences
 
-Source: url:https://doi.org/10.1017/CBO9781139025256
+Source: url:https://github.com/dkunert/cut-and-project/blob/main/LaTeX/rational_cut_and_project_gap_periods.tex
 Authors: Dirk Kunert
 Status: verified
 Main declarations: `CutAndProject.main_theorem_geometric_concrete`

@@ -24,15 +24,20 @@ For coprime `α, β : ℕ` and a window parameter `ω ≥ 0`, the accepted latti
 points `(x, y) ∈ ℤ²` with `y ∈ [(α/β)(x-ω), (α/β)x + ω]` project onto the
 line `f(x) = (α/β)x`; sorting the projections yields a periodic sequence of
 consecutive gaps. Writing `N = ⌊ωα⌋ + ⌊ωβ⌋ + 1` and `D = α² + β²`, this file
-proves the closed-form minimal periods: counting projected points with
-multiplicity the period is `N` if `D ∤ N` and `N / D` if `D ∣ N`
-(`main_theorem_geometric_concrete`), while discarding multiplicities it is
-`N` if `N < D` and `1` otherwise (`set_main_theorem_geometric_concrete`).
+proves the closed-form minimal periods for the residue model of that
+construction: the paper's strip-to-residue reduction — enumerate `N`
+consecutive residue classes modulo `D` under the multiplier `m = -α·β⁻¹` and
+sort the hits — is taken here as the definition of the gap sequence
+(`differenceSequenceUnit`), not derived from the lattice points. For it,
+counting with multiplicity the period is `N` if `D ∤ N` and `N / D` if
+`D ∣ N` (`main_theorem_geometric_concrete`), while discarding multiplicities
+it is `N` if `N < D` and `1` otherwise (`set_main_theorem_geometric_concrete`).
 
-The strip geometry is reduced to enumerating `N` consecutive residue classes
-modulo `D` under the multiplier `m = -α·β⁻¹`; the geometric data is threaded
-through the `GeometricProjection` typeclass, whose concrete instance
-`GeometricProjectionConcrete` discharges its four hypotheses.
+The geometric data is threaded through the `GeometricProjection` typeclass,
+whose concrete instance `GeometricProjectionConcrete` discharges its four
+hypotheses; the identification of the residue model with the sorted lattice
+projections is not formalised here. The irrational-slope case
+(`LeanPool.CutAndProject.Irrational`) is built from the lattice directly.
 -/
 
 open Nat
@@ -664,10 +669,11 @@ noncomputable def sortedMultiset (α β : ℕ) (ω : ℝ) (i : ℤ) : ℤ :=
   (V α β ω r : ℤ) + q * D
 
 /--
-The concrete difference sequence of the normalized residue model (`u = 1`). The
-geometric gap sequence of the cut-and-project set is realised by
-`differenceSequenceUnit` with `u = multiplier α β h`; the two have the same
-period length (the content of the main theorems) but differ as sequences in
+The concrete difference sequence of the normalized residue model (`u = 1`).
+`differenceSequenceUnit` with `u = multiplier α β h` is the residue-model
+counterpart of the geometric gap sequence in the paper (the identification is
+the paper's strip-to-residue reduction, stated as a definition here, not
+proved); the two have the same period length but differ as sequences in
 general.
 -/
 noncomputable def differenceSequence (α β : ℕ) (ω : ℝ) (i : ℤ) : ℤ :=
@@ -709,8 +715,8 @@ noncomputable def sortedMultisetUnit (α β : ℕ) (ω : ℝ)
 
 /--
 Unit-aware concrete difference sequence. With `u = multiplier α β h_coprime`
-this realises the geometric gap sequence of the cut-and-project construction
-in the paper.
+this is the residue-model counterpart of the geometric gap sequence in the
+paper (the strip-to-residue identification is definitional, not proved).
 -/
 noncomputable def differenceSequenceUnit (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
@@ -1977,7 +1983,7 @@ lemma period_degenerate_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β) (
       _ = L' := h3
 
 
-/-- The concrete geometric projection built from the difference sequence:
+/-- The concrete residue-model instance built from the difference sequence:
 discharges the four hypotheses of `GeometricProjection` for coprime `α, β`
 and window parameter `ω ≥ 0`. Supplied explicitly at each use site (the
 coprimality and nonnegativity hypotheses cannot be found by synthesis). -/
@@ -2579,7 +2585,9 @@ theorem main_theorem_unit_concrete (α β : ℕ) (h_coprime : Nat.Coprime α β)
 /-- Geometric concrete main theorem. Specialises `main_theorem_unit_concrete`
 to the geometric multiplier `u = multiplier α β h_coprime`, so the period
 result holds for the residue-model enumeration carrying the geometric
-residues `c_{r0+r} ≡ -αβ⁻¹ · (r0 + r) (mod D)` (paper §9.3, Layer 2). -/
+residues `c_{r0+r} ≡ -αβ⁻¹ · (r0 + r) (mod D)` (paper §9.3, Layer 2; the
+reduction from the lattice strip is not formalised — see the module
+docstring). -/
 theorem main_theorem_geometric_concrete
     (α β : ℕ) (h_coprime : Nat.Coprime α β) (ω : ℝ) (h_ω : 0 ≤ ω)
     [NeZero (α ^ 2 + β ^ 2)] :
@@ -2710,7 +2718,8 @@ noncomputable def setSortedUnit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 
   (setVUnit α β ω u r : ℤ) + q * D
 
 /-- Unit-aware concrete set-valued gap sequence. With
-`u = multiplier α β h_coprime` this realises the geometric set enumeration. -/
+`u = multiplier α β h_coprime` this is the residue-model counterpart of the
+geometric set enumeration (identification definitional, not proved). -/
 noncomputable def setDifferenceSequenceUnit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) : ℤ :=
   setSortedUnit α β ω u (i + 1) - setSortedUnit α β ω u i
