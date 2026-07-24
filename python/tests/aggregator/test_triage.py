@@ -3,23 +3,14 @@
 from __future__ import annotations
 
 import json
-import sys
-import types
 from pathlib import Path
 
 import yaml
 
-# `openai` ships only in the `review` dependency group, which the test
-# environment does not install. Stub it before importing the triage module
-# (which imports it at module load), exactly as the review tests do.
-openai_stub = types.ModuleType("openai")
-openai_stub.APIStatusError = Exception
-openai_stub.OpenAI = object
-openai_stub.RateLimitError = Exception
-sys.modules.setdefault("openai", openai_stub)
-
-from lean_pool.aggregator.discovery import _github_queries  # noqa: E402
-from lean_pool.aggregator.triage import (  # noqa: E402
+# `openai` is stubbed by tests/conftest.py before this module loads; the
+# triage module imports it at module load.
+from lean_pool.aggregator.discovery import _github_queries
+from lean_pool.aggregator.triage import (
     repository_context,
     triage_discovered_file,
 )

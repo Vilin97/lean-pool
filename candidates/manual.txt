@@ -1155,3 +1155,5 @@ https://github.com/alexeyev/finite-state-transducers-lean
 https://github.com/alexeyev/lukasiewicz-many-valued-logic-lean
 https://github.com/dududuguo/HighDimProb
 https://github.com/FormalFrontier/TauCeti
+# Erdos 97 convex-octagon case (PR #278, closed as-shaped 2026-07-23: cert-blob maintenance; revisit if restructured)
+https://github.com/lyfar/erdos-97-octagon-lean
