@@ -5099,3 +5099,59 @@ projects:
     msc:
       - "11B05"
       - "11J70"
+  - slug: channel-capacity
+    title: Uniqueness of Shannon Capacity-Achieving Priors
+    summary: >-
+      Formalizes uniqueness of the capacity-achieving input distribution for a
+      Markov-kernel channel in three aligned layers: a finite-alphabet theorem
+      (compactness, continuity, and strict concavity of mutual information on
+      Mathlib's weak topology for `ProbabilityMeasure`), a concrete discharged
+      theorem for compact-Polish channels with a common strictly positive
+      jointly continuous density, and a general measure-theoretic packaging that
+      isolates the abstract well-conditioning hypotheses, plus a counterexample
+      showing pairwise-distinct rows do not give an injective prior pushforward
+      (the non-degeneracy required for uniqueness).
+    branch: information theory
+    entry_module: LeanPool.ChannelCapacity
+    authors:
+      - Adam Benenson
+    source:
+      title: Elements of Information Theory
+      authors:
+        - Thomas M. Cover
+        - Joy A. Thomas
+      doi: "10.1002/047174882X"
+      github_repo: abenenson/channel-capacity
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+    main_results:
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite
+        informal: >-
+          For a Markov kernel between finite alphabets (nonempty input) whose
+          rows are linearly independent (`Kernel.RowMatrixFullRank`), a
+          capacity-achieving input prior exists and is unique.
+        source_ref: "R. G. Gallager, Information Theory and Reliable Communication, Wiley, 1968, Section 4.5."
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior_discharged
+        informal: >-
+          For compact-Polish channels with a common strictly positive jointly
+          continuous density, given injectivity of the prior-pushforward map and
+          upper semicontinuity of mutual information (the latter carried as a
+          field of `Kernel.ContinuousPositiveDensity`, not derived), the
+          capacity-achieving prior is unique.
+      - declaration: ChannelCapacity.exists_unique_capacity_achieving_prior
+        informal: >-
+          General measure-theoretic packaging: under abstract well-conditioning
+          hypotheses, the capacity-achieving prior is unique.
+    tags:
+      - information-theory
+      - channel-capacity
+      - mutual-information
+      - kullback-leibler
+      - markov-kernel
+    msc:
+      - "94A17"
+      - "94A15"
+      - "60A10"
