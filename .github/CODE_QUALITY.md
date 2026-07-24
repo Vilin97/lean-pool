@@ -26,7 +26,8 @@ Current checks:
 - every `.lean` file under `LeanPool/`, plus `LeanPool.lean`, is reachable from `LeanPool.lean`
 - every content `.lean` file except `LeanPool.lean` has the exact four-line file header
 - content files do not contain `set_option`, `nolint` waivers, broad `import Mathlib`, `sorry`, `admit`, unchecked declarations (`axiom`, `constant`, `unsafe`, `partial`, `opaque`, `@[extern]`), or diagnostic commands (`#check`, `#print`, `#eval`, `#reduce`, `#guard_msgs`, `#lint`)
-- Lake configuration does not pass forbidden option overrides, trace options, linter disables, or heartbeat overrides
+- content files do not manipulate elaborator options programmatically: option-API tokens (`withOptions`, `modifyOptions`, `withRecDepth`, `withCurrHeartbeats`, `KVMap`/`Options`/`Option` setters, ...) and gated option names (`maxRecDepth`, `maxHeartbeats`, `maxSynthPendingDepth`, `linter.*`) are forbidden in code (comments are fine) — ``withOptions (fun o => o.set `maxRecDepth 100000)`` inside an elaborator is still `set_option maxRecDepth 100000`
+- Lake configuration does not pass forbidden option overrides, trace options, linter disables, or heartbeat / recursion-depth overrides
 - the style-linter allowlist `scripts/nolints-style.txt` has no active entries
 - no Lean content file exceeds 10000 non-blank, non-comment code lines
 - no theorem/lemma proof body exceeds 200 non-blank, non-comment code lines, using the current text heuristic
@@ -44,6 +45,7 @@ Current checks:
 - project entry modules and listed main declarations resolve in Lean
 - generated entry-point project cards match `LeanPool/projects.yml`
 - public declarations depend only on the allowed axiom set: `Classical.choice`, `propext`, and `Quot.sound`
+- a Lean environment audit (run via `lake env lean --run` with extensions disabled, so project notation cannot interfere) walks **every** declaration compiled into a pool module — including elaborator auxiliaries and generated declarations the textual scans cannot see — and rejects any that references option-manipulating constants, embeds a gated option-name literal (however the `Name` was assembled), directly references an axiom-injecting constant (`sorryAx`, `ofReduceBool`, ...), or is itself an axiom declared inside a pool module (which is how `native_decide` and `addDecl`-of-an-axiom backdoors surface)
 
 The checker also has `--write-project-cards` to regenerate entry-point module docstrings from `LeanPool/projects.yml`.
 

@@ -18,7 +18,7 @@ import LeanPool.ChannelCapacity.Counterexample
 /-!
 # Uniqueness of Shannon Capacity-Achieving Priors
 
-Source: url:https://github.com/abenenson/channel-capacity
+Source: doi:10.1002/047174882X
 Authors: Adam Benenson
 Status: verified
 Main declarations: `ChannelCapacity.exists_unique_capacity_achieving_prior_of_finite`
