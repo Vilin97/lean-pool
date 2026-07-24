@@ -20,7 +20,7 @@ import LeanPool.JohnsonLindenstraussLean.Verify
 /-!
 # The Johnson–Lindenstrauss Lemma and Quantized JL
 
-Source: url:https://github.com/claytomode/johnson-lindenstrauss-lean
+Source: doi:10.1090/conm/026/737400
 Authors: claytomode
 Status: verified
 Main declarations: `JL.johnson_lindenstrauss`, `JL.johnson_lindenstrauss_pointset`
