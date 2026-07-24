@@ -51,6 +51,16 @@ def kindOf (env : Environment) (name : Name) (info : ConstantInfo) : Option Stri
   | .inductInfo _ => if isStructure env name then some "structure" else some "inductive"
   | _ => none
 
+/-- Is `name` a notation/syntax parser descriptor? Notation commands are
+replayed as *context* by the minimal-file builder (following LMLExposition),
+so parser declarations are not exposition nodes. -/
+def isParserDescr (env : Environment) (name : Name) : Bool :=
+  match env.find? name with
+  | some info =>
+    info.type.isConstOf ``Lean.ParserDescr
+      || info.type.isConstOf ``Lean.TrailingParserDescr
+  | none => false
+
 /-- Mirrors the doc-gen4 / import-graph blacklist for generated declarations. -/
 def isGenerated (env : Environment) (name : Name) : CoreM Bool := do
   let display := privateToUserName name
@@ -58,13 +68,7 @@ def isGenerated (env : Environment) (name : Name) : CoreM Bool := do
   if isAuxRecursor env name || isNoConfusion env name then return true
   if (← isRec name) || (← Meta.isMatcher name) then return true
   if (env.getProjectionFnInfo? name).isSome then return true
-  -- `declare_syntax_cat` generates a quotation parser `<cat>.quot`; the type
-  -- guard keeps genuine user definitions that happen to be named `quot`.
-  if let .str _ "quot" := display then
-    if let some info := env.find? name then
-      if info.type.isConstOf ``Lean.ParserDescr
-          || info.type.isConstOf ``Lean.TrailingParserDescr then
-        return true
+  if isParserDescr env name then return true
   return false
 
 /-- Should `name` appear as a node of the exposition? -/
@@ -80,12 +84,91 @@ inductives/structures (field types live in the constructor's type). -/
 def directUses (env : Environment) (info : ConstantInfo) : Array Name :=
   match info with
   | .inductInfo v =>
-    v.ctors.foldl (init := info.getUsedConstantsAsSet)
+    let base := v.ctors.foldl (init := info.getUsedConstantsAsSet)
       (fun acc c => match env.find? c with
         | some ci => acc.insertMany ci.getUsedConstantsAsSet
         | none => acc)
-      |>.toArray
+    -- Structure field defaults live in generated `<S>.<field>._default`
+    -- functions; seeding them lets the resolver tunnel through their bodies.
+    let withDefaults :=
+      if (getStructureInfo? env v.name).isSome then
+        (getStructureFields env v.name).foldl (init := base) fun acc field =>
+          match getDefaultFnForField? env v.name field with
+          | some defaultFn => acc.insert defaultFn
+          | none => acc
+      else base
+    withDefaults.toArray
   | _ => info.getUsedConstantsAsSet.toArray
+
+/-! The three dependency-recovery mechanisms below are ported from
+LMLExposition's `Collect.lean` (Rémy Degenne,
+https://github.com/LeanMachineLearning/exposition): coercion instances and
+notation expansions leave no constant in elaborated terms, so
+`getUsedConstants` alone misses them. -/
+
+/-- Coercion type classes whose instances Lean unfolds at use sites; the
+instance must still be present for the source's `↑`/`⇑` to elaborate. -/
+def coercionClasses : List Name :=
+  [``CoeFun, ``CoeSort, ``Coe, ``CoeTC, ``CoeHead, ``CoeTail, ``CoeHTCT,
+   ``CoeOut, ``CoeDep]
+
+/-- If `type` is, under binders, a coercion-class application `Cls Src …`,
+the head constant of `Src` (the type coerced *from*). -/
+partial def coercionSourceType? (type : Expr) : Option Name :=
+  match type with
+  | .forallE _ _ b _ => coercionSourceType? b
+  | _ =>
+    let (fn, args) := type.getAppFnArgs
+    if coercionClasses.contains fn && args.size ≥ 1 then
+      args[0]!.getAppFn.constName?
+    else none
+
+/-- The `String` a string-literal `Expr` holds, if `e` is one. -/
+def exprStrLit? (e : Expr) : Option String :=
+  match e with
+  | .lit (.strVal s) => some s
+  | _ => none
+
+/-- Reconstructs the `Name` value `e` builds (notation/macro definitions
+store the constants they expand to as pre-resolved `Name` data, invisible
+to `getUsedConstants`). -/
+partial def evalNameExpr? (e : Expr) : Option Name := do
+  match e.getAppFnArgs with
+  | (``Lean.Name.anonymous, _) => some .anonymous
+  | (``Lean.Name.mkStr1, #[a]) => some (.str .anonymous (← exprStrLit? a))
+  | (``Lean.Name.mkStr2, #[a, b]) =>
+    some (.str (.str .anonymous (← exprStrLit? a)) (← exprStrLit? b))
+  | (``Lean.Name.mkStr3, #[a, b, c]) =>
+    some (.str (.str (.str .anonymous (← exprStrLit? a)) (← exprStrLit? b))
+      (← exprStrLit? c))
+  | (``Lean.Name.mkStr4, #[a, b, c, d]) =>
+    some (.str (.str (.str (.str .anonymous (← exprStrLit? a))
+      (← exprStrLit? b)) (← exprStrLit? c)) (← exprStrLit? d))
+  | (``Lean.Name.str, #[p, s]) => some (.str (← evalNameExpr? p) (← exprStrLit? s))
+  | (``Lean.Name.num, #[p, n]) =>
+    match n with
+    | .lit (.natVal k) => some (.num (← evalNameExpr? p) k)
+    | _ => none
+  | (``Lean.Name.mkNum, #[p, n]) =>
+    match n with
+    | .lit (.natVal k) => some (.num (← evalNameExpr? p) k)
+    | _ => none
+  | _ => none
+
+/-- Every `Name` value embedded anywhere in `e`. -/
+partial def collectEmbeddedNames (e : Expr) : Array Name := Id.run do
+  let mut acc : Array Name := #[]
+  if let some n := evalNameExpr? e then acc := acc.push n
+  match e with
+  | .app f a => return acc ++ collectEmbeddedNames f ++ collectEmbeddedNames a
+  | .lam _ t b _ => return acc ++ collectEmbeddedNames t ++ collectEmbeddedNames b
+  | .forallE _ t b _ => return acc ++ collectEmbeddedNames t ++ collectEmbeddedNames b
+  | .letE _ t v b _ =>
+    return acc ++ collectEmbeddedNames t ++ collectEmbeddedNames v
+      ++ collectEmbeddedNames b
+  | .mdata _ b => return acc ++ collectEmbeddedNames b
+  | .proj _ _ b => return acc ++ collectEmbeddedNames b
+  | _ => return acc
 
 /-- Expand a seed set of used constants, tunnelling through generated pool
 auxiliaries, until exposed pool declarations (edges) or non-pool constants
@@ -116,20 +199,83 @@ def resolveSeeds (env : Environment) (self : Name) (seeds : Array Name)
 
 def escapeName (n : Name) : String := n.toString
 
+/-- Pool constants whose type is a coercion-class application, keyed by the
+head constant of the type coerced *from*. Ported from LMLExposition
+(`coercionInstancesByType`); membership in the instance table is not
+consulted (extension states are not loaded), the type shape suffices. -/
+def coercionInstancesByType (env : Environment) (exposed : NameSet) :
+    Std.HashMap Name (Array Name) := Id.run do
+  let mut m : Std.HashMap Name (Array Name) := {}
+  for name in exposed.toArray do
+    if let some info := env.find? name then
+      if let some src := coercionSourceType? info.type then
+        m := m.insert src ((m.getD src #[]).push name)
+  return m
+
+/-- Normalized notation-kind name: re-elaborated local notations get fresh
+private prefixes, so kinds are matched modulo `privateToUserName` on both
+the environment side and the parsed-syntax side. -/
+def normalizeKind (n : Name) : Name := privateToUserName n
+
+/-- All pool parser-descriptor constants (notation kinds, normalized), with
+their defining module and range-start position. -/
+def poolNotationKinds (env : Environment) : CoreM (Array (Name × Name × Position)) := do
+  let mut acc : Array (Name × Name × Position) := #[]
+  for moduleIdx in [0:env.header.moduleNames.size] do
+    let moduleName := env.header.moduleNames[moduleIdx]!
+    unless isPoolModule moduleName do continue
+    let moduleData : ModuleData := env.header.moduleData[moduleIdx]!
+    for name in moduleData.constNames do
+      if isParserDescr env name then
+        if let some ranges ← findDeclarationRanges? name then
+          acc := acc.push (normalizeKind name, moduleName, ranges.range.pos)
+  return acc
+
+/-- Maps each pool notation kind to the *exposed* constants its expansion
+references (ported from LMLExposition's `notationExpansionDeps`): notation
+macro definitions embed both the parser kind and the abbreviated constants
+as pre-resolved `Name` data. -/
+def notationExpansionDeps (env : Environment) (exposed : NameSet) :
+    Std.HashMap Name (Array Name) := Id.run do
+  let mut m : Std.HashMap Name (Array Name) := {}
+  for moduleIdx in [0:env.header.moduleNames.size] do
+    unless isPoolModule env.header.moduleNames[moduleIdx]! do continue
+    let moduleData : ModuleData := env.header.moduleData[moduleIdx]!
+    for name in moduleData.constNames do
+      if let some (.defnInfo v) := env.find? name then
+        let names := collectEmbeddedNames v.value
+        let kinds := names.filter (isParserDescr env ·)
+        unless kinds.isEmpty do
+          let realDeps := names.filter (fun n => exposed.contains n)
+          for k in kinds do
+            let key := normalizeKind k
+            m := m.insert key ((m.getD key #[]) ++ realDeps)
+  return m
+
 def declJson (env : Environment) (name : Name) (info : ConstantInfo)
-    (exposed : NameSet) : CoreM (Option Json) := do
+    (exposed : NameSet) (coercionInsts : Std.HashMap Name (Array Name)) :
+    CoreM (Option Json) := do
   let some ranges ← findDeclarationRanges? name | return none
   let some kind := kindOf env name info | return none
   let some moduleIdx := env.getModuleIdxFor? name | return none
   let module := env.header.moduleNames[moduleIdx.toNat]!
   let display := privateToUserName name
   let doc ← findDocString? env name
-  let (edges, extCount) := resolveSeeds env name (directUses env info) exposed
+  -- Coercion instances are unfolded out of elaborated terms; re-attach the
+  -- instances coercing *from* any referenced type (LMLExposition's
+  -- `addCoercionInsts`).
+  let addCoercion (edges : NameSet) : NameSet :=
+    edges.toArray.foldl (init := edges) fun acc dep =>
+      (coercionInsts.getD dep #[]).foldl (init := acc) fun acc2 inst =>
+        if inst == name then acc2 else acc2.insert inst
+  let (rawEdges, extCount) := resolveSeeds env name (directUses env info) exposed
+  let edges := addCoercion rawEdges
   -- Statement-only dependencies for proof-carrying declarations: the minimal
   -- Lean file replaces their proofs by `sorry`, so only the type's
   -- dependencies must be present for it to elaborate.
   let typeEdges : Option NameSet := match info with
-    | .thmInfo v => some (resolveSeeds env name v.type.getUsedConstants exposed).1
+    | .thmInfo v =>
+      some (addCoercion (resolveSeeds env name v.type.getUsedConstants exposed).1)
     | _ => none
   let r := ranges.range
   let s := ranges.selectionRange
@@ -148,9 +294,8 @@ def declJson (env : Environment) (name : Name) (info : ConstantInfo)
     ++ (if isPrivateName name then [("p", Json.bool true)] else [])
     ++ (match doc with | some d => [("d", Json.str d)] | none => [])
 
-def extract (outPath : System.FilePath) : CoreM Unit := do
-  let env ← getEnv
-  -- Pass 1: collect the exposed node set.
+/-- Pass 1: the exposed node set, in module order. -/
+def exposedDecls (env : Environment) : CoreM (NameSet × Array Name) := do
   let mut exposed : NameSet := {}
   let mut names : Array Name := #[]
   for moduleIdx in [0:env.header.moduleNames.size] do
@@ -164,31 +309,335 @@ def extract (outPath : System.FilePath) : CoreM Unit := do
       if ← isExposed env name info then
         exposed := exposed.insert name
         names := names.push name
-  -- Pass 2: emit one JSON line per exposed declaration.
+  return (exposed, names)
+
+def extract (outPath : System.FilePath) (exposed : NameSet) (names : Array Name) :
+    CoreM Unit := do
+  let env ← getEnv
+  let coercionInsts := coercionInstancesByType env exposed
   IO.FS.createDirAll (outPath.parent.getD ".")
   let handle ← IO.FS.Handle.mk outPath .write
   for name in names do
     let some info := env.find? name | continue
-    if let some json ← declJson env name info exposed then
+    if let some json ← declJson env name info exposed coercionInsts then
       handle.putStrLn json.compress
   handle.flush
   IO.println s!"exposition: wrote {names.size} declarations to {outPath}"
 
 end Exposition
 
-def main (args : List String) : IO UInt32 := do
+namespace Exposition.Commands
+
+/-!
+Per-module command classification for the minimal-file builder, ported from
+LMLExposition's `Extract.lean` (Rémy Degenne, after Matthew Ballard's
+`EmitStandalone.lean`). Each source file is re-elaborated against the loaded
+environment (`IO.processCommands`; declarations fail fast with "already
+declared", which is expected and ignored) to recover per-command `Syntax`
+and byte ranges. The output is one JSON line per module describing every
+declaration command (with byte-exact `sorry`-surgery edits) and every
+context command (`namespace`/`open`/`variable`/notation/...), which the
+client-side builder assembles into standalone files.
+-/
+
+open Lean.Elab
+
+/-- The `declVal` syntax node of a declaration, if present. -/
+partial def findDeclValStx? (root : Syntax) : Option Syntax := Id.run do
+  let mut worklist : Array Syntax := #[root]
+  while !worklist.isEmpty do
+    let stx := worklist.back!
+    worklist := worklist.pop
+    let k := stx.getKind
+    if k == ``Parser.Command.declValSimple || k == ``Parser.Command.declValEqns
+        || k == ``Parser.Command.whereStructInst then
+      return some stx
+    for arg in stx.getArgs do
+      worklist := worklist.push arg
+  return none
+
+/-- True if `stx` declares a `theorem` or `lemma` (proof replaced by
+`sorry`); sees through `open … in` wrapper commands. -/
+partial def isTheoremDecl (stx : Syntax) : Bool := Id.run do
+  let mut worklist : Array Syntax := #[stx]
+  while !worklist.isEmpty do
+    let s := worklist.back!
+    worklist := worklist.pop
+    let k := s.getKind
+    if k == ``Parser.Command.theorem || k == `lemma then return true
+    for arg in s.getArgs do
+      worklist := worklist.push arg
+  return false
+
+/-- Byte ranges of the outermost `by …` blocks inside `root` (embedded
+proofs in a definition's value, replaced by `sorry`). -/
+partial def collectByBlocks (root : Syntax) : Array (String.Pos.Raw × String.Pos.Raw) := Id.run do
+  let mut acc : Array (String.Pos.Raw × String.Pos.Raw) := #[]
+  let mut worklist : Array Syntax := #[root]
+  while !worklist.isEmpty do
+    let stx := worklist.back!
+    worklist := worklist.pop
+    if stx.getKind == ``Lean.Parser.Term.byTactic then
+      match stx.getPos?, stx.getTailPos? with
+      | some s, some e => acc := acc.push (s, e)
+      | _, _ => for arg in stx.getArgs do worklist := worklist.push arg
+    else
+      for arg in stx.getArgs do
+        worklist := worklist.push arg
+  return acc
+
+/-- Every `SyntaxNodeKind` occurring in `stx` (notation uses show up as
+nodes whose kind is the notation parser's name). -/
+partial def collectSyntaxKinds (stx : Syntax) (acc : NameSet := {}) : NameSet := Id.run do
+  let mut acc := acc
+  let mut worklist : Array Syntax := #[stx]
+  while !worklist.isEmpty do
+    let s := worklist.back!
+    worklist := worklist.pop
+    acc := acc.insert s.getKind
+    for arg in s.getArgs do
+      worklist := worklist.push arg
+  return acc
+
+/-- Every identifier appearing anywhere in `stx`, as strings. -/
+partial def collectIdents (stx : Syntax) : Array String := Id.run do
+  let mut acc : Array String := #[]
+  let mut worklist : Array Syntax := #[stx]
+  while !worklist.isEmpty do
+    let s := worklist.back!
+    worklist := worklist.pop
+    if s.isIdent then acc := acc.push s.getId.toString
+    for a in s.getArgs do
+      worklist := worklist.push a
+  return acc
+
+/-- Notation/syntax-defining command kinds, replayed as context so that
+declarations using them still parse. Extends LMLExposition's set with the
+Mathlib `notation3` command and `elab_rules`/`declare_syntax_cat`. -/
+def isNotationCmdKind (k : SyntaxNodeKind) : Bool :=
+  k == ``Parser.Command.«notation» || k == ``Parser.Command.«mixfix»
+    || k == ``Parser.Command.«macro» || k == ``Parser.Command.«macro_rules»
+    || k == ``Parser.Command.«syntax» || k == ``Parser.Command.«elab»
+    || k == `Lean.Parser.Command.elab_rules || k == ``Parser.Command.syntaxCat
+    || k == `Mathlib.Notation3.notation3 || k == `Lean.Parser.Command.binderPredicate
+
+/-- Short context tag for a command kind, or `none` when the command is
+neither context nor (potentially) a declaration wrapper. -/
+def contextTag (k : SyntaxNodeKind) : Option String :=
+  if k == ``Parser.Command.namespace then some "ns"
+  else if k == ``Parser.Command.«end» then some "end"
+  else if k == ``Parser.Command.«open» then some "open"
+  else if k == ``Parser.Command.«variable» then some "var"
+  else if k == ``Parser.Command.«section»
+      || k == `Lean.Parser.Command.noncomputableSection then some "sec"
+  else if k == ``Parser.Command.«set_option» then some "opt"
+  else if k == ``Parser.Command.universe then some "univ"
+  else if isNotationCmdKind k then some "nota"
+  else none
+
+/-- Decomposes a `variable` command into binders as
+`(startByte, endByte, identifiers)`. -/
+def decomposeVariable (stx : Syntax) : Array (Nat × Nat × Array String) := Id.run do
+  let binderNodes := if stx.getArgs.size ≥ 2 then stx[1].getArgs else #[]
+  let mut res : Array (Nat × Nat × Array String) := #[]
+  for b in binderNodes do
+    match b.getPos?, b.getTailPos? with
+    | some s, some e => res := res.push (s.byteIdx, e.byteIdx, collectIdents b)
+    | _, _ => pure ()
+  return res
+
+/-- `open NS (a b c)`: the namespace as spelled and the listed identifiers. -/
+def openOnlyParts (stx : Syntax) : Option (String × Array String) :=
+  if stx.getKind == ``Parser.Command.«open» && stx.getArgs.size ≥ 2
+      && stx[1].getKind == ``Parser.Command.openOnly && stx[1].getArgs.size ≥ 3 then
+    some (stx[1][0].getId.toString, collectIdents stx[1][2])
+  else none
+
+/-- Edits (byte range → replacement) that turn a declaration command into
+its minimal-file form: theorem proofs become `:= sorry`; a definition keeps
+its value but embedded `by` blocks become `sorry`. -/
+def surgeryEdits (stx : Syntax) (cmdEnd : String.Pos.Raw) : Array (Nat × Nat × String) :=
+  if isTheoremDecl stx then
+    match findDeclValStx? stx >>= (·.getPos?) with
+    | some valStart => #[(valStart.byteIdx, cmdEnd.byteIdx, ":= sorry")]
+    | none => #[]
+  else
+    match findDeclValStx? stx with
+    | some v =>
+      -- Nested `byTactic` wrappers can yield the same byte range twice;
+      -- duplicate edits would emit `sorrysorry`.
+      let ranges := (collectByBlocks v).map fun (s, e) => (s.byteIdx, e.byteIdx)
+      let deduped := ranges.foldl (init := #[]) fun acc r =>
+        if acc.contains r then acc else acc.push r
+      deduped.map fun (s, e) => (s, e, "sorry")
+    | none => #[]
+
+/-- Processes one module source: classifies each command and emits the JSON
+entry list. `declPos` maps range-start byte indices to exposed declaration
+names; `notationKindsAt` maps range-start byte indices to pool parser-kind
+names (so a notation command learns which kinds it defines);
+`notationDeps` maps parser kinds to their expansion's exposed constants;
+`allNotationKinds` is the pool-wide kind set for `usedNotations`. -/
+def processFile (env : Environment) (source : String) (filePath : String)
+    (declPos : Std.HashMap Nat Name) (notationKindsAt : Std.HashMap Nat Name)
+    (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet) :
+    IO (Array Json) := do
+  let inputCtx := Parser.mkInputContext source filePath
+  let (_, parserState, messages) ← Parser.parseHeader inputCtx
+  let cmdState := Command.mkState env messages {}
+  let s ← IO.processCommands inputCtx parserState cmdState
+  let mut entries : Array Json := #[]
+  let mut nsPrefixStack : Array Name := #[Name.anonymous]
+  for stx in s.commands do
+    if stx.getKind == ``Parser.Module.header then continue
+    let some cmdStart := stx.getPos? | continue
+    let some cmdEnd := stx.getTailPos? | continue
+    let mut declNames : Array Name := #[]
+    for (pos, name) in declPos do
+      if pos ≥ cmdStart.byteIdx && pos < cmdEnd.byteIdx then
+        declNames := declNames.push name
+    let mut kindNames : Array Name := #[]
+    for (pos, kindName) in notationKindsAt do
+      if pos ≥ cmdStart.byteIdx && pos < cmdEnd.byteIdx then
+        kindNames := kindNames.push kindName
+    -- Notation/tactic-defining commands (`elab "casesPlayer" : tactic`,
+    -- `macro …`) also *define* constants, but they must be replayed as
+    -- context so the syntax they introduce still parses.
+    if !declNames.isEmpty && !isNotationCmdKind stx.getKind then
+      let used := (collectSyntaxKinds stx).toArray.map normalizeKind
+        |>.filter allNotationKinds.contains
+      entries := entries.push <| Json.mkObj <| [
+        ("t", Json.str "d"),
+        ("s", Json.num cmdStart.byteIdx),
+        ("e", Json.num cmdEnd.byteIdx),
+        ("n", toJson (declNames.map escapeName))
+      ] ++ (let ed := surgeryEdits stx cmdEnd
+            if ed.isEmpty then [] else
+              [("ed", Json.arr (ed.map fun (a, b, r) =>
+                Json.arr #[Json.num a, Json.num b, Json.str r]))])
+        ++ (if used.isEmpty then [] else [("un", toJson (used.map escapeName))])
+    else if let some tag := contextTag stx.getKind then
+      let kind := stx.getKind
+      let nsName? :=
+        if kind == ``Parser.Command.namespace && stx.getArgs.size ≥ 2 then
+          some stx[1].getId
+        else if kind == ``Parser.Command.«end» && stx.getArgs.size ≥ 2 then
+          -- `end A.B` names what it closes; the builder needs it to pop the
+          -- right number of (dotted) scope components. The optional name may
+          -- be a direct ident or wrapped in a null node.
+          if stx[1].isIdent then some stx[1].getId
+          else if stx[1].getNumArgs ≥ 1 && stx[1][0].isIdent then some stx[1][0].getId
+          else none
+        else none
+      let qualifiedNs? := nsName?.map (nsPrefixStack.back! ++ ·)
+      if let some ns := qualifiedNs? then
+        nsPrefixStack := nsPrefixStack.push ns
+      else if tag == "sec" then
+        nsPrefixStack := nsPrefixStack.push nsPrefixStack.back!
+      else if tag == "end" && nsPrefixStack.size > 1 then
+        nsPrefixStack := nsPrefixStack.pop
+      let mut fields : List (String × Json) := [
+        ("t", Json.str "c"),
+        ("s", Json.num cmdStart.byteIdx),
+        ("e", Json.num cmdEnd.byteIdx),
+        ("k", Json.str tag)
+      ]
+      if let some ns := nsName? then
+        fields := fields ++ [("ns", Json.str ns.toString)]
+      if let some qns := qualifiedNs? then
+        fields := fields ++ [("q", Json.str qns.toString)]
+      if tag == "var" then
+        let binders := decomposeVariable stx
+        fields := fields ++ [("b", Json.arr (binders.map fun (a, b, ids) =>
+          Json.arr #[Json.num a, Json.num b, toJson ids]))]
+      if let some (ns, ids) := openOnlyParts stx then
+        fields := fields ++ [("on", Json.arr #[Json.str ns, toJson ids])]
+      if tag == "nota" && !kindNames.isEmpty then
+        fields := fields ++ [("kn", toJson (kindNames.map escapeName))]
+        let deps := kindNames.foldl (init := #[]) fun acc k =>
+          acc ++ notationDeps.getD k #[]
+        unless deps.isEmpty do
+          fields := fields ++ [("nd", toJson (deps.map escapeName))]
+      entries := entries.push (Json.mkObj fields)
+  return entries
+
+/-- Writes the per-module command tables as JSONL:
+`{"m": "<module>", "c": [<entry>, …]}` per line. Only modules containing
+exposed declarations or pool notation kinds are emitted. -/
+def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array Name) :
+    CoreM Unit := do
+  let env ← getEnv
+  let notationKinds ← poolNotationKinds env
+  let notationDeps := notationExpansionDeps env exposed
+  let allNotationKinds : NameSet :=
+    notationKinds.foldl (init := {}) fun acc (n, _, _) => acc.insert n
+  -- Group exposed declarations and notation kinds by module.
+  let mut declsByModule : Std.HashMap Name (Array Name) := {}
+  for name in names do
+    if let some idx := env.getModuleIdxFor? name then
+      let module := env.header.moduleNames[idx.toNat]!
+      declsByModule := declsByModule.insert module
+        ((declsByModule.getD module #[]).push name)
+  let mut kindsByModule : Std.HashMap Name (Array (Name × Position)) := {}
+  for (kindName, module, pos) in notationKinds do
+    kindsByModule := kindsByModule.insert module
+      ((kindsByModule.getD module #[]).push (kindName, pos))
+  IO.FS.createDirAll (outPath.parent.getD ".")
+  let handle ← IO.FS.Handle.mk outPath .write
+  let mut written := 0
+  for moduleIdx in [0:env.header.moduleNames.size] do
+    let module := env.header.moduleNames[moduleIdx]!
+    unless isPoolModule module do continue
+    let moduleDecls := declsByModule.getD module #[]
+    let moduleKinds := kindsByModule.getD module #[]
+    if moduleDecls.isEmpty && moduleKinds.isEmpty then continue
+    let path := System.mkFilePath (module.components.map (·.toString))
+      |>.addExtension "lean"
+    let some source ← (do
+        try pure (some (← IO.FS.readFile path)) catch _ => pure none)
+      | continue
+    let fileMap := FileMap.ofString source
+    let mut declPos : Std.HashMap Nat Name := {}
+    for name in moduleDecls do
+      if let some ranges ← findDeclarationRanges? name then
+        declPos := declPos.insert (fileMap.ofPosition ranges.range.pos).byteIdx name
+    let mut notationKindsAt : Std.HashMap Nat Name := {}
+    for (kindName, pos) in moduleKinds do
+      notationKindsAt := notationKindsAt.insert (fileMap.ofPosition pos).byteIdx kindName
+    let entries ← processFile env source path.toString declPos notationKindsAt
+      notationDeps allNotationKinds
+    handle.putStrLn (Json.mkObj [
+      ("m", Json.str module.toString),
+      ("c", Json.arr entries)
+    ]).compress
+    written := written + 1
+  handle.flush
+  IO.println s!"exposition: wrote command tables for {written} modules to {outPath}"
+
+end Exposition.Commands
+
+unsafe def main (args : List String) : IO UInt32 := do
   let outPath := args[0]?.getD "exposition-dump.jsonl"
+  let commandsPath := args[1]?.getD "exposition-commands.jsonl"
   -- Further arguments override the imported modules (default: the whole pool);
   -- useful for testing against a partially built tree.
-  let modules := if args.length > 1 then args.drop 1 |>.map (·.toName) else [Exposition.poolRoot]
+  let modules := if args.length > 2 then args.drop 2 |>.map (·.toName) else [Exposition.poolRoot]
   Lean.initSearchPath (← Lean.findSysroot)
+  -- Extension states must be loaded (and initializers executed) so that
+  -- `IO.processCommands` can parse Mathlib/pool notations (`Type*`, ...);
+  -- without them, parse-error recovery silently truncates commands.
+  Lean.enableInitializersExecution
   let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
-  let env ← Lean.importModules imports {} (trustLevel := 1024)
+  let env ← Lean.importModules imports {} (trustLevel := 1024) (loadExts := true)
   let coreContext : Lean.Core.Context := {
     fileName := "<exposition-extract>",
     fileMap := default,
     maxHeartbeats := 0
   }
-  let (result, _) ← (Exposition.extract outPath).toIO coreContext { env }
+  let run : Lean.CoreM Unit := do
+    let (exposed, names) ← Exposition.exposedDecls env
+    Exposition.extract outPath exposed names
+    Exposition.Commands.emitCommands commandsPath exposed names
+  let (result, _) ← run.toIO coreContext { env }
   let _ := result
   return 0

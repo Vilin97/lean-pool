@@ -143,8 +143,8 @@ RECORDS = [
 ]
 
 
-def _write_inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
-    """Create the fake repo, static, templates, and dump under tmp_path."""
+def _write_inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
+    """Create the fake repo, static, templates, dump, and commands files."""
     repo = tmp_path / "repo"
     (repo / "LeanPool" / "Alpha").mkdir(parents=True)
     (repo / "LeanPool" / "Alpha" / "One.lean").write_text(ALPHA_ONE)
@@ -162,19 +162,48 @@ def _write_inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
     (templates / "project.html").write_text(TEMPLATE)
     dump = tmp_path / "dump.jsonl"
     dump.write_text("\n".join(json.dumps(record) for record in RECORDS) + "\n")
-    return repo, static, templates, dump
+    commands = tmp_path / "commands.jsonl"
+    commands.write_text(
+        json.dumps(
+            {
+                "m": "LeanPool.Alpha.One",
+                "c": [
+                    {"t": "c", "s": 0, "e": 10, "k": "ns", "ns": "A", "q": "A"},
+                    {
+                        "t": "d",
+                        "s": 0,
+                        "e": 26,
+                        "n": ["a1"],
+                        "ed": [[17, 26, ":= sorry"]],
+                    },
+                    {"t": "d", "s": 30, "e": 40, "n": ["NotExposed.x"]},
+                    {
+                        "t": "c",
+                        "s": 50,
+                        "e": 60,
+                        "k": "nota",
+                        "kn": ["Alpha.termX"],
+                        "nd": ["a3", "Unknown.y"],
+                    },
+                ],
+            }
+        )
+        + "\n"
+    )
+    return repo, static, templates, dump, commands
 
 
 @pytest.fixture
 def site(tmp_path: Path) -> tuple[Path, SiteSummary]:
     """Generate the site from the synthetic dump; return (out_dir, summary)."""
-    repo, static, templates, dump = _write_inputs(tmp_path)
+    repo, static, templates, dump, commands = _write_inputs(tmp_path)
     out = tmp_path / "out"
     summary = generate_site(
         dump,
         repo,
         out,
         commit="deadbeef",
+        commands_path=commands,
         static_dir=static,
         templates_dir=templates,
     )
@@ -232,6 +261,29 @@ def test_project_shard_schema_and_stats(site: tuple[Path, SiteSummary]) -> None:
     assert a4["layer"] == 2
     assert a4["module"] == 1
     assert shard["decls"][1]["deps"] == [0]
+
+
+def test_command_tables_remapped(site: tuple[Path, SiteSummary]) -> None:
+    """ModuleData carries command entries with names remapped to shard ids."""
+    out, _ = site
+    shard = _load(out, "data/projects/Alpha.json")
+    module_data = shard["moduleData"]
+    assert [set(row) for row in module_data] == [
+        {"imports", "uses", "commands"} for _ in module_data
+    ]
+    one = module_data[0]["commands"]
+    # The a1 decl command: names remapped to ids, unknown names dropped.
+    decl_entries = [entry for entry in one if entry["t"] == "d"]
+    assert decl_entries[0]["d"] == [0]
+    assert "n" not in decl_entries[0]
+    assert decl_entries[0]["ed"] == [[17, 26, ":= sorry"]]
+    # The non-exposed decl command was dropped entirely.
+    assert all(entry["d"] for entry in decl_entries)
+    # Context entry passes through; notation deps are remapped.
+    context_entries = [entry for entry in one if entry["t"] == "c"]
+    assert context_entries[0]["k"] == "ns"
+    nota = [entry for entry in one if entry.get("k") == "nota"][0]
+    assert nota["nd"] == [2]
 
 
 def test_card_and_main_results(site: tuple[Path, SiteSummary]) -> None:
@@ -292,10 +344,8 @@ def test_declaration_nodes(site: tuple[Path, SiteSummary]) -> None:
         "order",
         "main",  # a3 is one of the card's main declarations
     ]
-    # a1 is a lemma: it carries the statement boundary and type-only deps.
-    assert alpha[0]["stmtEnd"] == [1, 16]  # the `:=` in `lemma a1 : True := …`
+    # a1 is a lemma: it carries statement-only deps for the minimal builder.
     assert alpha[0]["tdeps"] == []
-    assert "stmtEnd" not in alpha[2]  # defs keep their bodies — no boundary field
     beta = _load(out, "data/projects/Beta.json")["decls"]
     b3 = beta[2]
     assert b3["full"] == "_private.LeanPool.Beta.0.b3"
@@ -309,7 +359,6 @@ def test_declaration_nodes(site: tuple[Path, SiteSummary]) -> None:
         "line",
         "endLine",
         "statement",
-        "stmtEnd",
         "private",
         "deps",
         "ext",
@@ -390,7 +439,7 @@ def test_static_copy_and_project_pages(site: tuple[Path, SiteSummary]) -> None:
 
 def test_missing_static_directory_raises(tmp_path: Path) -> None:
     """A missing static directory fails loudly instead of emitting a site."""
-    repo, _, templates, dump = _write_inputs(tmp_path)
+    repo, _, templates, dump, _commands = _write_inputs(tmp_path)
     with pytest.raises(FileNotFoundError, match="static asset directory"):
         generate_site(
             dump,

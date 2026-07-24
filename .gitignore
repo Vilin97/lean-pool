@@ -4,6 +4,7 @@
 
 # Exposition build outputs (see python/lean_pool/exposition/)
 /exposition-dump.jsonl
+/exposition-commands.jsonl
 /exposition-site/
 
 # Python
