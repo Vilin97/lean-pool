@@ -5261,3 +5261,53 @@ projects:
     msc:
       - "52C23"
       - "11K06"
+  - slug: sundogcert
+    title: Sundog certificates
+    summary: >-
+      A referee-free, axiom-clean Lean development of coding-theory certificates: syndrome
+      decoding soundness and lossiness bounds for GF(2) parity-check schemes (with a
+      Reed–Solomon evaluation-dual variant), and a fully machine-checked correctness proof of
+      the Karp reduction chain 3SAT ≤ 3DM ≤ X3C ≤ bounded-weight syndrome decoding. Only the
+      logical iff of each reduction is formalized; polynomial-time bounds, NP classes, and
+      Cook–Levin are unformalized external inputs, so NP-hardness of decoding is conditional
+      on those standard facts.
+    branch: complexity theory
+    entry_module: LeanPool.Sundogcert
+    authors:
+      - Humiliati
+    source:
+      title: "Sundog certificates"
+      authors:
+        - Humiliati
+      url: "https://github.com/humiliati/sundogcert"
+      github_repo: humiliati/sundogcert
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Sundog.SATReductionMain.sat_iff_decodes
+      - Sundog.Certificate.accept_sound
+    main_results:
+      - declaration: Sundog.SATReductionMain.sat_iff_decodes
+        informal: >-
+          The end-to-end reduction correctness: a formula is satisfiable iff its image under the
+          composed 3SAT-to-decoding reduction is a yes-instance of bounded-weight syndrome decoding.
+      - declaration: Sundog.MatchingNPHard.threeDM_iff_X3C
+        informal: >-
+          The 3-dimensional matching instance has a perfect matching iff the reduced
+          exact-cover-by-3-sets instance has an exact cover, both directions machine-checked.
+      - declaration: Sundog.Certificate.accept_sound
+        informal: >-
+          Soundness of the cheap syndrome-decoding verifier when it accepts: an exhibited light
+          same-syndrome witness certifies the body is safe within the decoding radius.
+      - declaration: Sundog.Certificate.reject_sound
+        informal: >-
+          Soundness of the verifier when it rejects: a sound column-weight lower bound on the
+          minimum same-syndrome weight rules out every light witness, so the body is genuinely unsafe.
+    tags:
+      - complexity
+      - coding-theory
+      - np-hardness
+    msc:
+      - "68Q17"
+      - "94B35"
