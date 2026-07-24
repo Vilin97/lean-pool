@@ -5155,3 +5155,55 @@ projects:
       - "94A17"
       - "94A15"
       - "60A10"
+  - slug: johnson-lindenstrauss-lean
+    title: The Johnson–Lindenstrauss Lemma and Quantized JL
+    summary: >-
+      Formalizes the Johnson–Lindenstrauss lemma end to end — a Gaussian random
+      projection preserves pairwise distances of a finite point set up to a
+      (1 ± ε) factor, so a distortion-ε embedding of any m-point set exists once
+      k is logarithmic in m — together with the quantized JL (QJL) one-bit sign
+      sketch: unbiasedness of the asymmetric 1-bit estimator and its sub-Gaussian
+      distortion bound.
+    branch: probability
+    entry_module: LeanPool.JohnsonLindenstraussLean
+    authors:
+      - claytomode
+    source:
+      title: Extensions of Lipschitz mappings into a Hilbert space
+      authors:
+        - William B. Johnson
+        - Joram Lindenstrauss
+      doi: "10.1090/conm/026/737400"
+      github_repo: claytomode/johnson-lindenstrauss-lean
+    license: Apache-2.0
+    status: verified
+    provenance: human
+    main_declarations:
+      - JL.johnson_lindenstrauss
+      - JL.johnson_lindenstrauss_pointset
+    main_results:
+      - declaration: JL.johnson_lindenstrauss
+        informal: The abstract probabilistic-method union bound — if the summed per-pair distortion-failure probability is below one, a distortion-preserving map exists.
+      - declaration: JL.johnson_lindenstrauss_pointset
+        informal: The end-to-end Johnson–Lindenstrauss lemma — a Gaussian random projection into k dimensions embeds any m-point set with (1 ± ε) distortion once k is logarithmic in m.
+        source_ref: "S. Dasgupta, A. Gupta, An elementary proof of a theorem of Johnson and Lindenstrauss, Random Structures and Algorithms 22 (2003), 60-65, doi:10.1002/rsa.10073."
+      - declaration: JL.qjlEstimator_unbiased
+        informal: >-
+          The QJL asymmetric 1-bit estimator is unbiased for the normalized
+          inner product between key and query.
+        source_ref: "A. Zandieh, M. Daliri, I. Han, QJL: 1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead, AAAI 2025, arXiv:2406.03482."
+      - declaration: JL.qjlEstimator_concentration_exp
+        informal: >-
+          Sub-Gaussian distortion bound for the QJL 1-bit estimator: deviation
+          at least ε has probability at most 2·exp(-m·ε²/(π·‖q‖²)).
+        source_ref: "A. Zandieh, M. Daliri, I. Han, QJL: 1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead, AAAI 2025, arXiv:2406.03482."
+    tags:
+      - dimensionality-reduction
+      - random-projection
+      - johnson-lindenstrauss
+      - gaussian
+      - quantization
+    msc:
+      - "68W20"
+      - "60G15"
+      - "68P05"
