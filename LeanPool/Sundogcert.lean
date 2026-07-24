@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Humiliati
 -/
 
-import LeanPool.Sundogcert.Basic
 import LeanPool.Sundogcert.Certificate
 import LeanPool.Sundogcert.Instance
 import LeanPool.Sundogcert.Scaling
@@ -12,17 +11,8 @@ import LeanPool.Sundogcert.Looseness
 import LeanPool.Sundogcert.CertWall
 import LeanPool.Sundogcert.Degradation
 import LeanPool.Sundogcert.CheckCost
-import LeanPool.Sundogcert.ShadowDecay
-import LeanPool.Sundogcert.ShadowDecayGeneral
-import LeanPool.Sundogcert.ShadowDecayCauchy
-import LeanPool.Sundogcert.HaloGeometry
-import LeanPool.Sundogcert.FaradayAB
-import LeanPool.Sundogcert.SortingCert
 import LeanPool.Sundogcert.RSCertificate
 import LeanPool.Sundogcert.DecodingNPHard
-import LeanPool.Sundogcert.AxiomAudit
-import LeanPool.Sundogcert.ShadowDecayLattice
-import LeanPool.Sundogcert.AuditCost
 import LeanPool.Sundogcert.MatchingNPHard
 import LeanPool.Sundogcert.SATNPHard
 import LeanPool.Sundogcert.VarWheel

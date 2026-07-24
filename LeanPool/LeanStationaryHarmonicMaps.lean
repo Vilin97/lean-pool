@@ -1,0 +1,52 @@
+/-
+Copyright (c) 2026 Wei Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Wei Wang
+-/
+
+import LeanPool.LeanStationaryHarmonicMaps.Examples.StationaryMonotonicity
+import LeanPool.LeanStationaryHarmonicMaps.Examples.UseMainTheorem
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.API
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BallIntegralAC
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Basic
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryBasics
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.BoundaryFromRadial
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.CenterTranslation
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.EnergyQuantities
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Euclidean
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.FirstVariationBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.L2LocBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MainTheorem
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.Monotonicity
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityEuclidean
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityFinal
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.MonotonicityRoutes
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.PrimitiveCutoffs
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialCutoffs
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialGeometry
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIdentity
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialIntegrability
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadialMeasure
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusAnalysis
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusFormulas
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusPrimitive
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedDerivative
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeightedRepresentation
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.RadiusWeights
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.SobolevWitness
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationarityBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryMap
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakGradientBridge
+import LeanPool.LeanStationaryHarmonicMaps.StationaryHarmonicMap.WeakStationarity
+
+/-!
+# Monotonicity Formula for Stationary Harmonic Maps
+
+Source: doi:10.1007/978-3-0348-9193-6
+Authors: Wei Wang
+Status: verified
+Main declarations: `LeanStationaryHarmonicMaps.StationaryHarmonicMap.StationaryW12LocMap`
+Tags: analysis, pde, harmonic-maps, monotonicity-formula, sobolev
+MSC: 58E20, 35J50
+-/

@@ -43,7 +43,8 @@ import LeanPool.Sundogcert.DecodingNPHard
     * the POLY-TIME-NESS of the reductions — the maps `reduce`, `reduce3DM` are built and their
       correctness is verified, but their running time is never modelled or bounded;
     * 3SAT's OWN NP-hardness — Cook–Levin, the deep terminal wall that sources every Karp-reduction
-      hardness claim along this chain, and which is formalized in NO proof assistant to date.
+      hardness claim along this chain, and which has no Lean/Mathlib formalization to date
+      (Coq and Isabelle formalizations exist: Gäher–Kunze, ITP 2021; Balbach, AFP 2023).
   Because of this wall, any "NP-hard" reading of `Decodes` stays CONDITIONAL on `P ≠ NP` and on the
   imported Cook–Levin hardness of 3SAT.  This file does NOT prove that decoding is hard, and makes
   NO claim about P-vs-NP; it proves only that the reduction is faithful (the iff).
