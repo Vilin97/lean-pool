@@ -5054,3 +5054,48 @@ projects:
     msc:
       - "11A63"
       - "11B65"
+  - slug: erdos346
+    title: "Erdős Problem 346: Ratio Limit Forces the Golden Ratio"
+    summary: >-
+      Formalizes the limit-exists interpretation of Erdős Problem 346: for a
+      strictly increasing positive integer sequence with a uniform ratio gap
+      whose finite deletions are complete but whose infinite deletions are not,
+      if the consecutive quotient sequence converges to some real limit greater
+      than one, then that limit must equal the golden ratio and the quotient
+      sequence tends to it.
+    branch: number theory
+    entry_module: LeanPool.Erdos346
+    authors:
+      - KitaKen1
+    source:
+      title: "Erdős Problem #346"
+      authors:
+        - KitaKen1
+      url: "https://www.erdosproblems.com/346"
+      github_repo: KitaKen1/erdos346-ratio-limit-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - Erdos346.intended_problem_if_limit_exists
+    main_results:
+      - declaration: Erdos346.intended_problem_if_limit_exists
+        informal: >-
+          Existence of any limit greater than one for the quotient sequence forces
+          convergence to the golden ratio, the intended Erdős–Graham conclusion.
+      - declaration: Erdos346.ratio_limit_eq_goldenRatio
+        informal: >-
+          If the quotient sequence converges to a limit greater than one under the
+          completeness and incompleteness deletion hypotheses, that limit equals
+          the golden ratio.
+      - declaration: Erdos346.ratio_tendsto_goldenRatio_of_limit_exists
+        informal: >-
+          Under the same hypotheses, the quotient sequence converges to the golden
+          ratio itself.
+    tags:
+      - number-theory
+      - golden-ratio
+      - erdos-problems
+    msc:
+      - "11B05"
+      - "11J70"

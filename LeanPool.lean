@@ -755,6 +755,8 @@ import LeanPool.Erdos137.SmoothRefinement
 import LeanPool.Erdos137.SpliceFiniteness
 import LeanPool.Erdos137.SquarefreeCapacity
 import LeanPool.Erdos137.TaoPoint
+import LeanPool.Erdos346
+import LeanPool.Erdos346.LimitExistsVariant
 import LeanPool.Erdos367
 import LeanPool.Erdos367.Core139
 import LeanPool.Erdos367.Core4027
