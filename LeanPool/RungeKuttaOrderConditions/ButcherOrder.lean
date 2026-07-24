@@ -650,14 +650,14 @@ theorem dp_order5 : satisfiesOrderConditions dpA dpB 5 := by
     `gaussCheck` closes by `norm_num` — no algebraic-number tactic.  This certifies
     the framework on implicit methods with irrational (algebraic) coefficients.
 
-    We certify order 4 here; the full order-6 certificate
-    (`satisfiesOrderConditions gaussA gaussB 6`) is mathematically settled — Gauss
-    s=3 attains order 6 EXACTLY, verified independently in Sage over ℚ(√15)
-    (conditions hold for orders 1..6, fail at 7) — but its Lean proof by `fin_cases`
-    over `catalog 6` (65 planar trees) is dominated by the elaborator's whnf reduction
-    of the catalogue and does not complete in practical time at this scale.  The
-    efficient route (Brick 6) is to certify over ABSTRACT trees (37 vs 65) via the
-    symmetrization bridge `orderCond_node_perm`.  See the paper. -/
+    We certify order 4 here by this direct symbolic route.  At order 6 the same
+    route dies: a `fin_cases` over `catalog 6` (65 planar trees) with per-tree
+    `norm_num` is dominated by the elaborator's whnf reduction of the catalogue
+    and does not complete in practical time at this scale.  The full order-6
+    certificate `satisfiesOrderConditions gaussA gaussB 6` is instead
+    `gauss_order6_rat` below: Brick 6 clears denominators into ℤ[√15] and
+    certifies the scaled tableau by `decide`, and Brick 7 transports the result
+    back to `gaussA`/`gaussB` through the formalized homogeneity bridge. -/
 private def gaussOnes : List Q15 := [1, 1, 1]
 
 private def gaussC : List Q15 := [⟨1 / 2, -1 / 10⟩, ⟨1 / 2, 0⟩, ⟨1 / 2, 1 / 10⟩]
@@ -822,8 +822,9 @@ def gaussIB : List Z15 := [⟨100, 0⟩, ⟨160, 0⟩, ⟨100, 0⟩]
 def Dscale : Int := 360
 
 /-- the order condition with denominators cleared: `γ(t)·Φ(D·A,D·b,t) = D^{|t|}`
-    in `Z15`.  Equivalent to `orderCond` on the unscaled ℚ(√15) tableau by homogeneity
-    of `Φ`, but decidable by the kernel. -/
+    in `Z15`, decidable by the kernel.  The equivalence with `orderCond` on the
+    unscaled ℚ(√15) tableau is the homogeneity bridge, formalized in Brick 7 and
+    consumed by `gauss_order6_rat`. -/
 abbrev orderCondInt (A : List (List Z15)) (b : List Z15) (D : Int) (t : RTree) : Prop :=
   (⟨(gamma t : Int), 0⟩ : Z15) * Phi A b t = ⟨D ^ (order t), 0⟩
 
@@ -842,23 +843,203 @@ theorem satisfiesOrderConditionsInt_iff (A : List (List Z15)) (b : List Z15) (D 
   · intro h t hle
     exact h t (List.mem_filter.2 ⟨mem_build_trees p t hle, decide_eq_true hle⟩)
 
-/-! Gauss–Legendre s=3 satisfies ALL order-≤6 conditions: the full order-6
-    certificate, axiom-free.
+/-! Gauss–Legendre s=3 satisfies ALL order-≤6 conditions for the scaled tableau:
+    the integer certificate, axiom-free.
     `fin_cases` enumerates the 65-tree catalogue; each condition is closed by the kernel (`decide`)
-    over `Z15` integer arithmetic.  (Heartbeat bump bounds only `fin_cases`' elaboration; the
-    per-tree
-    `decide` is cheap and has no effect on the axiom set.) -/
+    over `Z15` integer arithmetic.  Brick 7 below transports this certificate back
+    to the rational tableau (`gauss_order6_rat`). -/
 -- `fin_cases` unfolds the finite 65-tree Gauss order-6 catalogue.
 theorem gauss_order6 : satisfiesOrderConditionsInt gaussIA gaussIB Dscale 6 := by
   rw [satisfiesOrderConditionsInt_iff]; intro t ht
   fin_cases ht <;> decide
+
+/-! ### Brick 7 — the homogeneity bridge: the order-6 certificate over ℚ(√15)
+
+    `gauss_order6` certifies the 360-scaled tableau over `Z15`.  Two generic facts
+    transport it back to the true rational tableau: the engine commutes with the
+    componentwise inclusion `Z15 → Q15` (`Phi_toQ15`), and `Φ` is homogeneous of
+    degree `|t|` under entrywise scaling of the tableau (`Phi_smulVec`).  In `Q15`
+    the factor `⟨360,0⟩^{|t|}` has the explicit inverse `⟨(1/360)^{|t|},0⟩`, so the
+    scaled condition divides back to `orderCond gaussA gaussB t`, yielding the
+    real-tableau certificate `gauss_order6_rat` — pointwise, no `fin_cases`. -/
+
+/-- Componentwise inclusion of `Z15` into `Q15`: both integer components cast to `ℚ`. -/
+def toQ15 (x : Z15) : Q15 := ⟨(x.re : ℚ), (x.im : ℚ)⟩
+
+private theorem toQ15_re (x : Z15) : (toQ15 x).re = (x.re : ℚ) := rfl
+
+private theorem toQ15_im (x : Z15) : (toQ15 x).im = (x.im : ℚ) := rfl
+
+private theorem toQ15_zero : toQ15 0 = 0 := by
+  ext <;> simp [toQ15_re, toQ15_im]
+
+private theorem toQ15_one : toQ15 1 = 1 := by
+  ext <;> simp [toQ15_re, toQ15_im]
+
+private theorem toQ15_add (x y : Z15) : toQ15 (x + y) = toQ15 x + toQ15 y := by
+  ext <;> simp [toQ15_re, toQ15_im]
+
+private theorem toQ15_mul (x y : Z15) : toQ15 (x * y) = toQ15 x * toQ15 y := by
+  ext <;> simp [toQ15_re, toQ15_im]
+
+private theorem dot_toQ15 : ∀ u v : List Z15,
+    toQ15 (dot u v) = dot (u.map toQ15) (v.map toQ15)
+  | [], _ => by simp [dot, toQ15_zero]
+  | _ :: _, [] => by simp [dot, toQ15_zero]
+  | a :: u, b :: v => by
+      have ih := dot_toQ15 u v
+      simp only [dot, List.map_cons, List.zipWith_cons_cons, List.sum_cons] at ih ⊢
+      rw [toQ15_add, toQ15_mul, ih]
+
+private theorem pmul_toQ15 : ∀ u v : List Z15,
+    (pmul u v).map toQ15 = pmul (u.map toQ15) (v.map toQ15)
+  | [], _ => by simp [pmul]
+  | _ :: _, [] => by simp [pmul]
+  | a :: u, b :: v => by
+      have ih := pmul_toQ15 u v
+      simp only [pmul, List.map_cons, List.zipWith_cons_cons] at ih ⊢
+      rw [toQ15_mul, ih]
+
+private theorem mulMatVec_toQ15 (v : List Z15) : ∀ A : List (List Z15),
+    (mulMatVec A v).map toQ15 = mulMatVec (A.map (fun row => row.map toQ15)) (v.map toQ15)
+  | [] => rfl
+  | row :: A => by
+      have ih := mulMatVec_toQ15 v A
+      simp only [mulMatVec, List.map_cons] at ih ⊢
+      rw [dot_toQ15, ih]
+
+private theorem phiForest_toQ15 (A : List (List Z15)) : ∀ F : Forest,
+    (phiForest A F).map toQ15 = phiForest (A.map (fun row => row.map toQ15)) F
+  | [] => by simp [phiForest, List.map_map, Function.comp_def, toQ15_one]
+  | RTree.node G :: ts => by
+      have ihG := phiForest_toQ15 A G
+      have ihts := phiForest_toQ15 A ts
+      simp only [phiForest, phiVec]
+      rw [← ihG, ← ihts, ← mulMatVec_toQ15, ← pmul_toQ15]
+  termination_by F => sizeOf F
+  decreasing_by all_goals (simp_wf <;> omega)
+
+/-- The elementary-weight engine commutes with the inclusion `toQ15` of `Z15` in `Q15`. -/
+theorem Phi_toQ15 (A : List (List Z15)) (b : List Z15) (t : RTree) :
+    toQ15 (Phi A b t) = Phi (A.map (fun row => row.map toQ15)) (b.map toQ15) t := by
+  cases t with
+  | node F =>
+      simp only [Phi, phiVec]
+      rw [dot_toQ15, phiForest_toQ15]
+
+/-- Entrywise scaling of a coefficient vector. -/
+def smulVec (c : K) (v : List K) : List K := v.map (c * ·)
+
+/-- Entrywise scaling of a stage matrix (each row scaled entrywise). -/
+def smulMat (c : K) (A : List (List K)) : List (List K) := A.map (smulVec c)
+
+private theorem smulVec_cons (c a : K) (v : List K) :
+    smulVec c (a :: v) = c * a :: smulVec c v := rfl
+
+private theorem smulVec_one (v : List K) : smulVec 1 v = v := by
+  simp [smulVec]
+
+private theorem dot_smulVec (c d : K) : ∀ u v : List K,
+    dot (smulVec c u) (smulVec d v) = c * d * dot u v
+  | [], _ => by simp [dot, smulVec]
+  | _ :: _, [] => by simp [dot, smulVec]
+  | a :: u, b :: v => by
+      have ih := dot_smulVec c d u v
+      simp only [dot, smulVec_cons, List.zipWith_cons_cons, List.sum_cons] at ih ⊢
+      rw [ih]; ring
+
+private theorem pmul_smulVec (c d : K) : ∀ u v : List K,
+    pmul (smulVec c u) (smulVec d v) = smulVec (c * d) (pmul u v)
+  | [], _ => by simp [pmul, smulVec]
+  | _ :: _, [] => by simp [pmul, smulVec]
+  | a :: u, b :: v => by
+      have ih := pmul_smulVec c d u v
+      simp only [pmul, smulVec_cons, List.zipWith_cons_cons, List.cons.injEq] at ih ⊢
+      exact ⟨by ring, ih⟩
+
+private theorem mulMatVec_smulVec (c d : K) (v : List K) : ∀ A : List (List K),
+    mulMatVec (smulMat c A) (smulVec d v) = smulVec (c * d) (mulMatVec A v)
+  | [] => rfl
+  | row :: A => by
+      have ih := mulMatVec_smulVec c d v A
+      simp only [mulMatVec, smulMat, List.map_cons, smulVec_cons, List.cons.injEq] at ih ⊢
+      exact ⟨dot_smulVec c d row v, ih⟩
+
+private theorem phiForest_smulVec (c : K) (A : List (List K)) : ∀ F : Forest,
+    phiForest (smulMat c A) F = smulVec (c ^ orderF F) (phiForest A F)
+  | [] => by simp [phiForest, smulMat, orderF, smulVec_one, List.map_map, Function.comp_def]
+  | RTree.node G :: ts => by
+      have ihG := phiForest_smulVec c A G
+      have ihts := phiForest_smulVec c A ts
+      simp only [phiForest, phiVec, orderF, order]
+      rw [ihG, ihts, mulMatVec_smulVec, pmul_smulVec]
+      have hpow : c * c ^ orderF G * c ^ orderF ts = c ^ (1 + orderF G + orderF ts) := by ring
+      rw [hpow]
+  termination_by F => sizeOf F
+  decreasing_by all_goals (simp_wf <;> omega)
+
+/-- `Φ` is homogeneous of degree `|t|`: scaling the stage matrix and the weights
+    entrywise by `c` multiplies the elementary weight on `t` by `c ^ order t`. -/
+theorem Phi_smulVec (c : K) (A : List (List K)) (b : List K) (t : RTree) :
+    Phi (smulMat c A) (smulVec c b) t = c ^ order t * Phi A b t := by
+  cases t with
+  | node F =>
+      simp only [Phi, phiVec, order]
+      rw [phiForest_smulVec, dot_smulVec]
+      ring
+
+private theorem q15_real_mul (a b : ℚ) : (⟨a, 0⟩ : Q15) * ⟨b, 0⟩ = ⟨a * b, 0⟩ := by
+  ext <;> simp
+
+private theorem q15_real_pow (a : ℚ) : ∀ n : ℕ, (⟨a, 0⟩ : Q15) ^ n = ⟨a ^ n, 0⟩
+  | 0 => by ext <;> simp
+  | n + 1 => by rw [pow_succ, q15_real_pow a n, q15_real_mul, ← pow_succ]
+
+private theorem gaussIA_toQ15 :
+    gaussIA.map (fun row => row.map toQ15) = smulMat ⟨360, 0⟩ gaussA := by
+  simp only [gaussIA, gaussA, smulMat, smulVec, toQ15, List.map_cons, List.map_nil,
+    List.cons.injEq, and_true]
+  and_intros <;> (ext <;> norm_num)
+
+private theorem gaussIB_toQ15 : gaussIB.map toQ15 = smulVec ⟨360, 0⟩ gaussB := by
+  simp only [gaussIB, gaussB, smulVec, toQ15, List.map_cons, List.map_nil,
+    List.cons.injEq, and_true]
+  and_intros <;> (ext <;> norm_num)
+
+/-- Gauss–Legendre s=3 satisfies ALL order-≤6 conditions over the true ℚ(√15)
+    tableau `gaussA`, `gaussB`: the full order-6 certificate, obtained from the
+    scaled integer certificate `gauss_order6` through the homogeneity bridge. -/
+theorem gauss_order6_rat : satisfiesOrderConditions gaussA gaussB 6 := by
+  intro t ht
+  have h := congrArg toQ15 (gauss_order6 t ht)
+  rw [toQ15_mul, Phi_toQ15, gaussIA_toQ15, gaussIB_toQ15, Phi_smulVec] at h
+  have hgamma : toQ15 ⟨(gamma t : Int), 0⟩ = ((gamma t : ℕ) : Q15) := by
+    rw [Q15.natCast_eq]
+    ext <;> simp [toQ15_re, toQ15_im]
+  have hDpow : toQ15 ⟨Dscale ^ order t, 0⟩ = (⟨360, 0⟩ : Q15) ^ order t := by
+    rw [q15_real_pow]
+    ext <;> simp [toQ15_re, toQ15_im, Dscale]
+  rw [hgamma, hDpow] at h
+  have key : (⟨1 / 360, 0⟩ : Q15) ^ order t * (⟨360, 0⟩ : Q15) ^ order t = 1 := by
+    rw [← mul_pow, q15_real_mul]
+    have h360 : (1 / 360 : ℚ) * 360 = 1 := by norm_num
+    rw [h360, q15_real_pow, one_pow]
+    ext <;> simp
+  calc ((gamma t : ℕ) : Q15) * Phi gaussA gaussB t
+      = ((⟨1 / 360, 0⟩ : Q15) ^ order t * (⟨360, 0⟩ : Q15) ^ order t)
+          * (((gamma t : ℕ) : Q15) * Phi gaussA gaussB t) := by rw [key, one_mul]
+    _ = (⟨1 / 360, 0⟩ : Q15) ^ order t
+          * (((gamma t : ℕ) : Q15) * ((⟨360, 0⟩ : Q15) ^ order t * Phi gaussA gaussB t)) := by
+        ring
+    _ = (⟨1 / 360, 0⟩ : Q15) ^ order t * (⟨360, 0⟩ : Q15) ^ order t := by rw [h]
+    _ = 1 := key
 
 end Butcher
 
 -- sanity: catalogue sizes = cumulative PLANAR rooted trees (Catalan Cₙ₋₁ partial sums
 -- 1,2,4,9,23).
 -- These are ORDERED trees (`RTree` has `List` children) = the NONCOMMUTATIVE
--- Connes–Kreimer/Foissy Hopf algebra of ConnesKreimer.lean, not the abstract
+-- Connes–Kreimer/Foissy Hopf algebra setting, not the abstract
 -- (A000081: 1,1,2,4,9) trees.  Φ symmetric in a
 -- node's children ⇒ certifying all planar trees SUBSUMES the abstract order conditions (Brick 3).
 -- The order-budget `build` is Catalan-small, so unlike a length-bounded generator these are cheap.

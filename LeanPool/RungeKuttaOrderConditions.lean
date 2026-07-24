@@ -12,7 +12,7 @@ import LeanPool.RungeKuttaOrderConditions.ButcherOrder
 Source: doi:10.5281/zenodo.20787666
 Authors: Carles Marín
 Status: verified
-Main declarations: `RungeKuttaOrderConditions.Butcher.gauss_order6`
+Main declarations: `RungeKuttaOrderConditions.Butcher.gauss_order6_rat`
 Tags: numerical-analysis, runge-kutta, rooted-trees, order-conditions
 MSC: 65L06, 65L05, 05C05
 -/

@@ -4529,7 +4529,7 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - RungeKuttaOrderConditions.Butcher.gauss_order6
+      - RungeKuttaOrderConditions.Butcher.gauss_order6_rat
     main_results:
       - declaration: RungeKuttaOrderConditions.Butcher.satisfiesOrderConditions_iff
         informal: Reduces order-p Runge-Kutta conditions to a finite catalogue check over rooted trees.
@@ -4544,7 +4544,9 @@ projects:
       - declaration: RungeKuttaOrderConditions.Butcher.gauss_order4
         informal: Certifies the Gauss-Legendre three-stage tableau through order four over Q(sqrt(15)).
       - declaration: RungeKuttaOrderConditions.Butcher.gauss_order6
-        informal: Certifies the Gauss-Legendre three-stage tableau through order six using an integer Z(sqrt(15)) scaling.
+        informal: Certifies the denominator-cleared (360-scaled) integer Z(sqrt(15)) Gauss-Legendre tableau through order six, the scaled certificate feeding the homogeneity bridge.
+      - declaration: RungeKuttaOrderConditions.Butcher.gauss_order6_rat
+        informal: Certifies the Gauss-Legendre s=3 tableau through order six over Q(sqrt(15)), via the formalized homogeneity bridge from the 360-scaled integer certificate.
     tags:
       - numerical-analysis
       - runge-kutta
