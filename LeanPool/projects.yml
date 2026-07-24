@@ -5266,9 +5266,11 @@ projects:
     summary: >-
       A referee-free, axiom-clean Lean development of coding-theory certificates: syndrome
       decoding soundness and lossiness bounds for GF(2) parity-check schemes (with a
-      Reed–Solomon evaluation-dual variant), and a fully machine-checked Karp reduction chain
-      3SAT ≤ 3DM ≤ X3C ≤ syndrome-decoding establishing NP-hardness of bounded-weight decoding
-      conditional on the named complexity wall.
+      Reed–Solomon evaluation-dual variant), and a fully machine-checked correctness proof of
+      the Karp reduction chain 3SAT ≤ 3DM ≤ X3C ≤ bounded-weight syndrome decoding. Only the
+      logical iff of each reduction is formalized; polynomial-time bounds, NP classes, and
+      Cook–Levin are unformalized external inputs, so NP-hardness of decoding is conditional
+      on those standard facts.
     branch: complexity theory
     entry_module: LeanPool.Sundogcert
     authors:
