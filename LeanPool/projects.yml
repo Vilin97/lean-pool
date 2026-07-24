@@ -5207,3 +5207,57 @@ projects:
       - "68W20"
       - "60G15"
       - "68P05"
+  - slug: cut-and-project
+    title: Period Lengths of Rational Cut-and-Project Gap Sequences
+    summary: >-
+      Formalizes the closed-form minimal periods of one-dimensional rational
+      cut-and-project gap sequences at the level of the paper's residue model, plus a
+      fully geometric aperiodicity theorem for irrational slopes. For coprime α, β ∈ ℕ
+      and window parameter ω ≥ 0, write N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and D = α² + β². The
+      strip-to-residue reduction of the paper — sorting the hits of the length-N
+      progression twisted by the geometric multiplier −αβ⁻¹ (mod D) — is taken as the
+      definition of the gap sequence rather than derived from the lattice; for it, the
+      multiset convention has minimal period N/D when D ∣ N and N otherwise, and the
+      set convention (multiplicities flattened to {0,1}) has minimal period 1 when
+      N ≥ D and N otherwise. The irrational case is geometric from first principles:
+      for positive irrational slope and ω > 0, the accepted points of ℤ² sorted by the
+      physical projection have a gap sequence with no finite period, via injectivity
+      of the projection and Kronecker density of the internal image.
+    branch: number theory
+    entry_module: LeanPool.CutAndProject
+    authors:
+      - Dirk Kunert
+    source:
+      title: "Period lengths of one-dimensional rational cut-and-project sequences"
+      authors:
+        - Dirk Kunert
+      url: "https://github.com/dkunert/cut-and-project/blob/main/LaTeX/rational_cut_and_project_gap_periods.tex"
+      github_repo: dkunert/cut-and-project
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+      - CutAndProject.main_theorem_geometric_concrete
+    main_results:
+      - declaration: CutAndProject.main_theorem_geometric_concrete
+        informal: >-
+          The gap sequence of the residue model of the rational cut-and-project
+          multiset (sorted hits of the length-N progression under the multiplier
+          −αβ⁻¹ mod D) has minimal period N/D if D divides N and N otherwise, where
+          N = ⌊ωα⌋ + ⌊ωβ⌋ + 1 and D = α² + β².
+      - declaration: CutAndProject.set_main_theorem_geometric_concrete
+        informal: >-
+          The set-convention residue-model gap sequence (multiplicities flattened to
+          {0,1}) has minimal period 1 if N ≥ D and N otherwise.
+      - declaration: CutAndProject.Irrational.prop_irrational
+        informal: >-
+          For positive irrational slope and window parameter ω > 0, the projected gap
+          sequence has no finite period.
+    tags:
+      - number-theory
+      - aperiodic-order
+      - cut-and-project
+      - quasicrystals
+    msc:
+      - "52C23"
+      - "11K06"
