@@ -276,8 +276,18 @@ def _remap_command_entries(
             )
             if not ids:
                 continue
-            new_entry = {key: value for key, value in entry.items() if key != "n"}
+            new_entry = {
+                key: value for key, value in entry.items() if key not in ("n", "sd")
+            }
             new_entry["d"] = ids
+            if entry.get("sd"):
+                new_entry["sd"] = sorted(
+                    {
+                        id_by_name[name]
+                        for name in entry["sd"]
+                        if name in id_by_name and id_by_name[name] not in ids
+                    }
+                )
             remapped.append(new_entry)
         else:
             new_entry = dict(entry)

@@ -420,6 +420,12 @@ def isNotationCmdKind (k : SyntaxNodeKind) : Bool :=
     || k == ``Parser.Command.«syntax» || k == ``Parser.Command.«elab»
     || k == `Lean.Parser.Command.elab_rules || k == ``Parser.Command.syntaxCat
     || k == `Mathlib.Notation3.notation3 || k == `Lean.Parser.Command.binderPredicate
+    -- Attribute/extension registration commands (`register_simp_attr …`)
+    -- must replay for inline `@[custom_attr]` uses to elaborate.
+    || (match k with
+        | .str _ "registerSimpAttr" => true
+        | .str _ "registerLabelAttr" => true
+        | _ => false)
 
 /-- Short context tag for a command kind, or `none` when the command is
 neither context nor (potentially) a declaration wrapper. -/
@@ -453,24 +459,112 @@ def openOnlyParts (stx : Syntax) : Option (String × Array String) :=
     some (stx[1][0].getId.toString, collectIdents stx[1][2])
   else none
 
+/-- The individual declaration nodes of a command: a plain command yields
+itself; a `mutual … end` yields each member, so surgery applies per member
+(the previous whole-command scan found only the first `declVal`). -/
+partial def declarationNodes (stx : Syntax) : Array Syntax := Id.run do
+  if stx.getKind != ``Parser.Command.«mutual» then return #[stx]
+  let mut acc : Array Syntax := #[]
+  let mut worklist : Array Syntax := #[stx]
+  while !worklist.isEmpty do
+    let s := worklist.back!
+    worklist := worklist.pop
+    if s.getKind == ``Parser.Command.declaration || s.getKind == `lemma then
+      acc := acc.push s
+    else
+      for arg in s.getArgs do
+        worklist := worklist.push arg
+  return if acc.isEmpty then #[stx] else acc
+
 /-- Edits (byte range → replacement) that turn a declaration command into
 its minimal-file form: theorem proofs become `:= sorry`; a definition keeps
-its value but embedded `by` blocks become `sorry`. -/
+its value but embedded `by` blocks become `sorry`. Mutual members are
+handled individually. -/
 def surgeryEdits (stx : Syntax) (cmdEnd : String.Pos.Raw) : Array (Nat × Nat × String) :=
-  if isTheoremDecl stx then
-    match findDeclValStx? stx >>= (·.getPos?) with
-    | some valStart => #[(valStart.byteIdx, cmdEnd.byteIdx, ":= sorry")]
-    | none => #[]
-  else
-    match findDeclValStx? stx with
-    | some v =>
-      -- Nested `byTactic` wrappers can yield the same byte range twice;
-      -- duplicate edits would emit `sorrysorry`.
-      let ranges := (collectByBlocks v).map fun (s, e) => (s.byteIdx, e.byteIdx)
-      let deduped := ranges.foldl (init := #[]) fun acc r =>
-        if acc.contains r then acc else acc.push r
-      deduped.map fun (s, e) => (s, e, "sorry")
-    | none => #[]
+  Id.run do
+    let mut edits : Array (Nat × Nat) := #[]
+    let mut sorried : Array (Nat × Nat × String) := #[]
+    for node in declarationNodes stx do
+      let nodeEnd := (node.getTailPos?).getD cmdEnd
+      if isTheoremDecl node then
+        if let some valStart := findDeclValStx? node >>= (·.getPos?) then
+          sorried := sorried.push (valStart.byteIdx, nodeEnd.byteIdx, ":= sorry")
+      else
+        if let some v := findDeclValStx? node then
+          for (s, e) in collectByBlocks v do
+            -- Nested `byTactic` wrappers can yield the same byte range
+            -- twice; duplicate edits would emit `sorrysorry`.
+            if !edits.contains (s.byteIdx, e.byteIdx) then
+              edits := edits.push (s.byteIdx, e.byteIdx)
+              sorried := sorried.push (s.byteIdx, e.byteIdx, "sorry")
+    return sorried
+
+/-- Every identifier in `stx` paired with its start byte position. -/
+partial def collectIdentsWithPos (stx : Syntax) : Array (String × Nat) := Id.run do
+  let mut acc : Array (String × Nat) := #[]
+  let mut worklist : Array Syntax := #[stx]
+  while !worklist.isEmpty do
+    let s := worklist.back!
+    worklist := worklist.pop
+    if s.isIdent then
+      if let some pos := s.getPos? then
+        acc := acc.push (s.getId.toString, pos.byteIdx)
+    for a in s.getArgs do
+      worklist := worklist.push a
+  return acc
+
+/-- Pool modules transitively imported by `module` (inclusive), from the
+environment's import graph. Restricts the syntactic-deps scan to
+declarations actually visible at the command — a short name matching a
+declaration in a *sibling* namespace of an unimported module must not
+resolve (it wouldn't in Lean either). -/
+def moduleImportClosure (env : Environment) (module : Name) : NameSet := Id.run do
+  let mut closure : NameSet := {}
+  let mut stack : Array Name := #[module]
+  while h : stack.size > 0 do
+    let current := stack[stack.size - 1]
+    stack := stack.pop
+    if closure.contains current then continue
+    closure := closure.insert current
+    if let some idx := env.getModuleIdx? current then
+      if h2 : idx.toNat < env.header.moduleData.size then
+        for imported in env.header.moduleData[idx.toNat].imports do
+          if isPoolModule imported.module then
+            stack := stack.push imported.module
+  return closure
+
+/-- Exposed declarations a command's *source* mentions by (possibly
+partially qualified) name, restricted to `visibleModules`. Elaborated terms
+lose references that only exist syntactically — `simp only [name]` lists,
+tactic arguments, reducible definitions inlined during elaboration — so the
+builder needs this closure for commands whose bodies are kept. -/
+def syntacticDeps (env : Environment) (stx : Syntax) (self : Array Name)
+    (exposedByLast : Std.HashMap String (Array Name))
+    (visibleModules : NameSet) : Array Name := Id.run do
+  -- Scan only the parts that survive surgery: a theorem's proof is replaced
+  -- by `sorry`, so identifiers at or past its `declVal` don't contribute.
+  let mut idents : Array String := #[]
+  for node in declarationNodes stx do
+    let pairs := collectIdentsWithPos node
+    match (if isTheoremDecl node then
+        findDeclValStx? node >>= (·.getPos?) else none) with
+    | none => idents := idents ++ pairs.map (·.1)
+    | some valStart =>
+      idents := idents
+        ++ (pairs.filter (fun (_, pos) => pos < valStart.byteIdx)).map (·.1)
+  let mut acc : NameSet := {}
+  for ident in idents do
+    let lastComponent := (ident.splitOn ".").getLastD ident
+    for candidate in exposedByLast.getD lastComponent #[] do
+      if self.contains candidate then continue
+      let visible := match env.getModuleIdxFor? candidate with
+        | some idx => visibleModules.contains env.header.moduleNames[idx.toNat]!
+        | none => false
+      unless visible do continue
+      let cstr := candidate.toString
+      if cstr == ident || cstr.endsWith ("." ++ ident) then
+        acc := acc.insert candidate
+  return acc.toArray
 
 /-- Processes one module source: classifies each command and emits the JSON
 entry list. `declPos` maps range-start byte indices to exposed declaration
@@ -480,7 +574,8 @@ names (so a notation command learns which kinds it defines);
 `allNotationKinds` is the pool-wide kind set for `usedNotations`. -/
 def processFile (env : Environment) (source : String) (filePath : String)
     (declPos : Std.HashMap Nat Name) (notationKindsAt : Std.HashMap Nat Name)
-    (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet) :
+    (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet)
+    (exposedByLast : Std.HashMap String (Array Name)) (visibleModules : NameSet) :
     IO (Array Json) := do
   let inputCtx := Parser.mkInputContext source filePath
   let (_, parserState, messages) ← Parser.parseHeader inputCtx
@@ -506,6 +601,7 @@ def processFile (env : Environment) (source : String) (filePath : String)
     if !declNames.isEmpty && !isNotationCmdKind stx.getKind then
       let used := (collectSyntaxKinds stx).toArray.map normalizeKind
         |>.filter allNotationKinds.contains
+      let sd := syntacticDeps env stx declNames exposedByLast visibleModules
       entries := entries.push <| Json.mkObj <| [
         ("t", Json.str "d"),
         ("s", Json.num cmdStart.byteIdx),
@@ -516,6 +612,7 @@ def processFile (env : Environment) (source : String) (filePath : String)
               [("ed", Json.arr (ed.map fun (a, b, r) =>
                 Json.arr #[Json.num a, Json.num b, Json.str r]))])
         ++ (if used.isEmpty then [] else [("un", toJson (used.map escapeName))])
+        ++ (if sd.isEmpty then [] else [("sd", toJson (sd.map escapeName))])
     else if let some tag := contextTag stx.getKind then
       let kind := stx.getKind
       let nsName? :=
@@ -529,7 +626,10 @@ def processFile (env : Environment) (source : String) (filePath : String)
           else if stx[1].getNumArgs ≥ 1 && stx[1][0].isIdent then some stx[1][0].getId
           else none
         else none
-      let qualifiedNs? := nsName?.map (nsPrefixStack.back! ++ ·)
+      -- Only `namespace` commands qualify and push; `end`/`section` manage
+      -- the stack without contributing a qualified name.
+      let qualifiedNs? := if kind == ``Parser.Command.namespace then
+        nsName?.map (nsPrefixStack.back! ++ ·) else none
       if let some ns := qualifiedNs? then
         nsPrefixStack := nsPrefixStack.push ns
       else if tag == "sec" then
@@ -571,6 +671,11 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
   let notationDeps := notationExpansionDeps env exposed
   let allNotationKinds : NameSet :=
     notationKinds.foldl (init := {}) fun acc (n, _, _) => acc.insert n
+  -- Index exposed names by last component for the syntactic-deps scan.
+  let exposedByLast : Std.HashMap String (Array Name) :=
+    exposed.toArray.foldl (init := {}) fun acc name =>
+      let key := name.components.getLastD name |>.toString
+      acc.insert key ((acc.getD key #[]).push name)
   -- Group exposed declarations and notation kinds by module.
   let mut declsByModule : Std.HashMap Name (Array Name) := {}
   for name in names do
@@ -604,8 +709,9 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
     let mut notationKindsAt : Std.HashMap Nat Name := {}
     for (kindName, pos) in moduleKinds do
       notationKindsAt := notationKindsAt.insert (fileMap.ofPosition pos).byteIdx kindName
+    let visibleModules := moduleImportClosure env module
     let entries ← processFile env source path.toString declPos notationKindsAt
-      notationDeps allNotationKinds
+      notationDeps allNotationKinds exposedByLast visibleModules
     handle.putStrLn (Json.mkObj [
       ("m", Json.str module.toString),
       ("c", Json.arr entries)

@@ -1,0 +1,108 @@
+name: Exposition Verify
+
+# Compiles a minimal Lean file for every project card's main_declarations
+# (the exposition's "Minimal Lean file" feature) and fails if any does not
+# elaborate. Runs weekly, on demand, and on PRs touching the exposition
+# pipeline — not on every content merge (the docs.yml exposition job stays
+# fast; this is the correctness gate for the builder itself).
+
+on:
+  schedule:
+    - cron: '40 6 * * 1'
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'python/lean_pool/exposition/**'
+      - 'scripts/exposition/**'
+      - '.github/workflows/exposition-verify.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    name: Verify minimal Lean files
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            docbuild/.lake/build
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
+          restore-keys: |
+            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
+            Docs-Lake-${{ runner.os }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Build pool
+        run: ~/.elan/bin/lake build LeanPool
+
+      - name: Extract declarations
+        env:
+          LEAN_CMD: /home/runner/.elan/bin/lean
+          EXTRACT_JOBS: "2"
+        run: >-
+          ~/.elan/bin/lake env bash scripts/exposition/extract-all.sh
+          exposition-dump.jsonl exposition-commands.jsonl
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Generate site data
+        run: |
+          cd python
+          uv sync --locked
+          uv run python -m lean_pool.exposition \
+            --dump ../exposition-dump.jsonl \
+            --commands ../exposition-commands.jsonl \
+            --repo-root .. \
+            --out ../exposition-site \
+            --commit ${{ github.sha }}
+
+      - name: Verify minimal files
+        run: |
+          cd python
+          ~/.elan/bin/lake env uv run python -m lean_pool.exposition.verify \
+            --site ../exposition-site \
+            --repo-root .. \
+            --out ../exposition-verify \
+            --jobs 2 \
+            --lean /home/runner/.elan/bin/lean
+
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: exposition-verify-report
+          path: |
+            exposition-verify/report.json
+          retention-days: 30
