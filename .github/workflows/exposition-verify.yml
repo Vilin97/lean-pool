@@ -90,8 +90,13 @@ jobs:
 
       - name: Verify minimal files
         run: |
+          # `lake env` must run from the workspace root; from python/ it
+          # resolves no workspace and hands `lean` an empty LEAN_PATH, which
+          # fails every target at `import Mathlib`.
+          LEAN_PATH="$(~/.elan/bin/lake env printenv LEAN_PATH)"
+          export LEAN_PATH
           cd python
-          ~/.elan/bin/lake env uv run python -m lean_pool.exposition.verify \
+          uv run python -m lean_pool.exposition.verify \
             --site ../exposition-site \
             --repo-root .. \
             --out ../exposition-verify \

@@ -120,6 +120,37 @@ def _compile_one(lean_command: str, target: Target, path: Path) -> Outcome:
     return Outcome(target, "compile", "\n".join(real_lines[:6])[:500])
 
 
+def preflight(lean_command: str, out_dir: Path) -> str | None:
+    """Check that ``lean`` can see Mathlib; return an error message if it cannot.
+
+    Without this, a missing LEAN_PATH makes every single target fail at
+    ``import Mathlib`` and the report reads as a pipeline regression rather
+    than a broken environment.
+    """
+    probe = out_dir / "_preflight.lean"
+    probe.write_text("import Mathlib\n")
+    try:
+        result = subprocess.run(
+            [lean_command, str(probe)],
+            capture_output=True,
+            text=True,
+            timeout=COMPILE_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (subprocess.TimeoutExpired, OSError) as error:
+        return f"could not run `{lean_command}`: {error}"
+    finally:
+        probe.unlink(missing_ok=True)
+    if result.returncode != 0:
+        return (
+            "`lean` cannot import Mathlib — LEAN_PATH is unset or wrong.\n"
+            "Run under `lake env` from the repository root, e.g.\n"
+            '  export LEAN_PATH="$(lake env printenv LEAN_PATH)"\n'
+            f"lean said: {(result.stdout + result.stderr).strip()[:300]}"
+        )
+    return None
+
+
 @click.command()
 @click.option(
     "--site",
@@ -160,6 +191,9 @@ def cli(
     """Assemble and compile minimal files for every main declaration."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     out_dir.mkdir(parents=True, exist_ok=True)
+    environment_error = preflight(lean_command, out_dir)
+    if environment_error:
+        raise click.ClickException(environment_error)
     targets = main_declaration_targets(repo_root, site_dir)
     if limit:
         targets = targets[:limit]
