@@ -754,6 +754,14 @@ import LeanPool.Erdos1196.Preliminaries
 import LeanPool.Erdos1196.PreliminariesMertens
 import LeanPool.Erdos1196.PreliminariesTailAux
 import LeanPool.Erdos1196.PrimitiveWeight
+import LeanPool.Erdos132N14
+import LeanPool.Erdos132N14.Basic
+import LeanPool.Erdos132N14.DiameterDescent
+import LeanPool.Erdos132N14.HopfPannwitz
+import LeanPool.Erdos132N14.HopfPannwitzGeometry
+import LeanPool.Erdos132N14.Main
+import LeanPool.Erdos132N14.PublishedInputs
+import LeanPool.Erdos132N14.RegularTridecagon
 import LeanPool.Erdos137
 import LeanPool.Erdos137.AxiomAudit
 import LeanPool.Erdos137.Base
