@@ -48,8 +48,8 @@ def test_theorem_with_assignment_boundary() -> None:
     assert statement_end == (4, 14)
 
 
-def test_module_skeleton_contexts_imports_and_mutual() -> None:
-    """module_skeleton collects imports, context commands, and mutual spans."""
+def test_module_skeleton_imports() -> None:
+    """module_skeleton splits external and pool-internal imports."""
     text = (
         "import Mathlib.Order.Basic\n"
         "import LeanPool.Other.Module\n"
@@ -57,43 +57,32 @@ def test_module_skeleton_contexts_imports_and_mutual() -> None:
         "/-! Module doc: skipped. -/\n"
         "\n"
         "namespace Demo\n"
-        "\n"
-        "open Finset in\n"
-        "theorem uses_prefix : True := trivial\n"
-        "\n"
-        "variable {n : Nat}\n"
-        "open Nat\n"
-        'notation "⟪" x "⟫" => id x\n'
-        "\n"
-        "mutual\n"
-        "  def even : Nat → Bool | 0 => true | n + 1 => odd n\n"
-        "  def odd : Nat → Bool | 0 => false | n + 1 => even n\n"
-        "end\n"
-        "\n"
+        "def x : Nat := 1\n"
         "end Demo\n"
     )
     skeleton = module_skeleton(SourceFile.from_text(text))
     assert skeleton.external_imports == ["Mathlib.Order.Basic"]
-    assert all("skipped" not in t for _, t in skeleton.contexts)
-    context_texts = [entry[1] for entry in skeleton.contexts]
-    assert context_texts == [
-        "namespace Demo",
-        "variable {n : Nat}",
-        "open Nat",
-        'notation "⟪" x "⟫" => id x',
-        "end Demo",
-    ]
-    assert skeleton.contexts[0][0] == 6  # namespace Demo sits on line 6
-    assert skeleton.mutual_spans == [(15, 18)]
+    assert skeleton.local_imports == ["LeanPool.Other.Module"]
 
 
-def test_context_block_does_not_swallow_following_doc_comment() -> None:
-    """A doc comment after a context command belongs to the next declaration."""
+def test_module_skeleton_reads_module_system_imports() -> None:
+    """`public`/`meta` modifiers and `import all` are still imports.
+
+    Missing these leaves a module with no recorded imports, which collapses
+    the module ordering the minimal-file builder relies on.
+    """
     text = (
-        "namespace Demo\n\n/-- Doc of the next declaration. -/\ndef next : Nat := 1\n"
+        "public import Mathlib.Order.Basic\n"
+        "public meta import Lean.Elab.Command\n"
+        "import all LeanPool.Other.Module\n"
+        "public import LeanPool.Second.Module\n"
     )
     skeleton = module_skeleton(SourceFile.from_text(text))
-    assert skeleton.contexts == [(1, "namespace Demo")]
+    assert skeleton.external_imports == ["Mathlib.Order.Basic", "Lean.Elab.Command"]
+    assert skeleton.local_imports == [
+        "LeanPool.Other.Module",
+        "LeanPool.Second.Module",
+    ]
 
 
 def test_lemma_keyword_refines_theorem_kind() -> None:

@@ -323,210 +323,40 @@ def _boundary_scan_start(
     return name_end
 
 
-# Top-level commands replayed verbatim as scoping/notation context by the
-# minimal-file builder. Anything else at top level is either a declaration
-# (sliced through its own range) or intentionally dropped (`example`,
-# `#eval`, module docstrings, ...).
-CONTEXT_KEYWORDS = frozenset(
-    {
-        "namespace",
-        "section",
-        "end",
-        "open",
-        "variable",
-        "universe",
-        "set_option",
-        "attribute",
-        "export",
-        "deriving",
-        "notation",
-        "notation3",
-        "macro",
-        "macro_rules",
-        "syntax",
-        "elab",
-        "elab_rules",
-        "declare_syntax_cat",
-        "binder_predicate",
-        "infix",
-        "infixl",
-        "infixr",
-        "prefix",
-        "postfix",
-    }
+# Lean's module system allows `public`/`private`/`meta` modifiers and
+# `import all`. Missing them leaves a module with no recorded imports, which
+# silently collapses the module ordering used to assemble minimal files.
+_IMPORT_RE = re.compile(
+    r"^(?:(?:public|private|meta)\s+)*import\s+(?:all\s+)?([\w.«»]+)", re.MULTILINE
 )
-
-_IMPORT_RE = re.compile(r"^import\s+([\w.«»]+)", re.MULTILINE)
 
 
 @dataclass
 class ModuleSkeleton:
-    """Per-module facts the minimal-file builder needs.
+    """Per-module import facts.
 
+    Context replay now uses the extractor's syntax-classified command
+    tables (SCHEMA.md schema 1.3), so only imports are scanned here.
     ``external_imports`` — the module's non-pool imports (Mathlib etc.).
     ``local_imports`` — the module's pool-internal imports (full names).
-    ``contexts`` — ``(line, text)`` of top-level context commands, in order.
-    ``mutual_spans`` — ``(start_line, end_line)`` of top-level ``mutual``
-    blocks; members must be emitted as one verbatim block.
-    ``prefix_blocks`` — ``(line, next_line, text)`` of bare
-    ``open/set_option … in`` blocks whose declaration starts at
-    ``next_line`` (Lean's declaration range excludes such prefixes).
     """
 
     external_imports: list[str]
     local_imports: list[str]
-    contexts: list[tuple[int, str]]
-    mutual_spans: list[tuple[int, int]]
-    prefix_blocks: list[tuple[int, int, str]]
-
-
-def _block_starts(code: str) -> list[int]:
-    """Offsets of top-level command starts (column-0 non-blank characters)."""
-    starts = [0] if code and not code[0].isspace() else []
-    for i in range(1, len(code)):
-        if code[i - 1] == "\n" and not code[i].isspace() and code[i] != "\n":
-            starts.append(i)
-    return starts
-
-
-def _is_context_block(code: str, start: int, end: int) -> bool:
-    """Classify a top-level block as a replayable context command.
-
-    ``open``/``set_option`` (and modifier-prefixed forms) can also prefix a
-    declaration via ``... in``; those blocks belong to the declaration and
-    are excluded by checking where :func:`_strip_prefixes` lands.
-    """
-    token = _read_token(code, start, end)
-    if token in ("scoped", "local", "noncomputable"):
-        # `noncomputable section` opens a scope; `scoped notation` etc.
-        after = start + len(token)
-        while after < end and code[after] in " \t":
-            after += 1
-        token = _read_token(code, after, end)
-    if token == "deriving":
-        # `deriving instance Foo for Bar` is a standalone command, but a
-        # column-0 `deriving Foo` continuation of an inductive belongs to
-        # that declaration's range.
-        after = start + len(token)
-        while after < end and code[after] in " \t":
-            after += 1
-        return _read_token(code, after, end) == "instance"
-    if token in ("attribute", "variable") and _ends_with_in(code, start, end):
-        # `attribute [...] X in` / `variable … in` prefix the next declaration.
-        return False
-    if token not in CONTEXT_KEYWORDS:
-        return False
-    if token in ("open", "set_option"):
-        after_prefixes = _strip_prefixes(code, start, end)
-        keyword = _read_token(code, after_prefixes, end)
-        if keyword in DECLARATION_KEYWORDS:
-            return False
-        if after_prefixes >= end or not keyword:
-            # A bare `open … in` / `set_option … in` block is the prefix of a
-            # declaration starting at column 0 on the next line; the
-            # declaration's own range covers it.
-            return False
-    return True
-
-
-def _ends_with_in(code: str, start: int, end: int) -> bool:
-    """Does this block's code end with a top-level ``in`` token?"""
-    j = end
-    while j > start and code[j - 1] in " \t\r\n":
-        j -= 1
-    return (
-        j - start >= 2
-        and code[j - 2 : j] == "in"
-        and (j - 2 == start or not _ident_char(code[j - 3]))
-    )
-
-
-def _is_prefix_only_block(code: str, start: int, end: int) -> bool:
-    """Is this a bare ``open/set_option/attribute/variable … in`` prefix?"""
-    token = _read_token(code, start, end)
-    if token in ("attribute", "variable"):
-        return _ends_with_in(code, start, end)
-    if token not in ("open", "set_option"):
-        return False
-    after_prefixes = _strip_prefixes(code, start, end)
-    keyword = _read_token(code, after_prefixes, end)
-    return (after_prefixes >= end or not keyword) and _IN_RE.search(
-        code, start, end
-    ) is not None
 
 
 def module_skeleton(source: SourceFile) -> ModuleSkeleton:
-    """Scan a module for imports, context commands, and mutual blocks."""
-    code = source.code
-    # Comments blanked but strings kept: used to trim trailing comments off a
-    # command without eating a final string literal (e.g. an `elab` command
-    # ending in an error message).
-    comment_view = code_view(source.text, blank_strings=False)
-    starts = _block_starts(code)
-    all_imports = _IMPORT_RE.findall(code)
-    external_imports = [
-        module
-        for module in all_imports
-        if not (module == "LeanPool" or module.startswith("LeanPool."))
-    ]
-    local_imports = [module for module in all_imports if module.startswith("LeanPool.")]
-    contexts: list[tuple[int, str]] = []
-    mutual_spans: list[tuple[int, int]] = []
-    prefix_blocks: list[tuple[int, int, str]] = []
-    skip_until = -1
-    for index, start in enumerate(starts):
-        end = starts[index + 1] if index + 1 < len(starts) else len(code)
-        if start < skip_until:
-            continue
-        first = _read_token(code, start, end)
-        if first == "import":
-            continue
-        if _is_prefix_only_block(code, start, end):
-            line, _ = source.position(start)
-            next_line = (
-                source.position(starts[index + 1])[0]
-                if index + 1 < len(starts)
-                else line + 1
-            )
-            code_end = end
-            while code_end > start and comment_view[code_end - 1] in " \t\r\n":
-                code_end -= 1
-            prefix_blocks.append(
-                (line, next_line, source.text[start:code_end].rstrip())
-            )
-            continue
-        if first == "mutual":
-            # The block ends at the next column-0 command, which is the
-            # matching bare `end`; fold it into the span and skip it.
-            close_end = end
-            if index + 1 < len(starts):
-                next_start = starts[index + 1]
-                next_end = starts[index + 2] if index + 2 < len(starts) else len(code)
-                if _read_token(code, next_start, next_end) == "end":
-                    close_end = next_end
-                    skip_until = next_end
-            start_line, _ = source.position(start)
-            last = close_end
-            while last > start and comment_view[last - 1] in " \t\r\n":
-                last -= 1
-            end_line, _ = source.position(max(last - 1, start))
-            mutual_spans.append((start_line, end_line))
-            continue
-        if _is_context_block(code, start, end):
-            line, _ = source.position(start)
-            # Cut at the last code character: the raw block otherwise runs to
-            # the next command and swallows a following declaration's doc
-            # comment (blanked in the comment view, so invisible to the scan).
-            code_end = end
-            while code_end > start and comment_view[code_end - 1] in " \t\r\n":
-                code_end -= 1
-            contexts.append((line, source.text[start:code_end].rstrip()))
+    """Scan a module's header for its imports."""
+    all_imports = _IMPORT_RE.findall(source.code)
     return ModuleSkeleton(
-        external_imports=external_imports,
-        local_imports=local_imports,
-        contexts=contexts,
-        mutual_spans=mutual_spans,
-        prefix_blocks=prefix_blocks,
+        external_imports=[
+            module
+            for module in all_imports
+            if not (module == "LeanPool" or module.startswith("LeanPool."))
+        ],
+        local_imports=[
+            module for module in all_imports if module.startswith("LeanPool.")
+        ],
     )
 
 

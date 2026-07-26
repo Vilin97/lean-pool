@@ -238,76 +238,71 @@ def _refined_kind_and_statement(
 PROOF_KINDS = frozenset({"theorem", "lemma"})
 
 
-def _attach_minimal_file_fields(
-    nodes: list[dict],
-    skeletons: dict[int, ModuleSkeleton | None],
-) -> None:
-    """Add per-node minimal-file fields: ``span`` and ``host`` (schema 1.2).
+def read_command_tables(commands_path: Path | None) -> dict[str, list[dict]]:
+    """Parse the extractor's per-module command tables (JSONL).
 
-    ``span`` widens a node's verbatim slice to its enclosing top-level
-    ``mutual`` block. ``host`` points a generated declaration (mid-line
-    range, blanked statement) at the human-written declaration whose source
-    contains it, so the builder can emit the host instead.
+    Returns a mapping from module name to its command entry list; empty when
+    no command file was provided (the minimal-file builder then has no
+    replay data and the frontend hides the feature).
     """
-    by_module: dict[int, list[int]] = {}
-    for node_id, node in enumerate(nodes):
-        by_module.setdefault(node["module"], []).append(node_id)
-    for module_index, node_ids in by_module.items():
-        skeleton = skeletons.get(module_index)
-        if skeleton is not None:
-            for start_line, end_line in skeleton.mutual_spans:
-                for node_id in node_ids:
-                    node = nodes[node_id]
-                    if start_line <= node["line"] and node["endLine"] <= end_line:
-                        node["span"] = [start_line, end_line]
-        if skeleton is not None and skeleton.prefix_blocks:
-            # Lean's declaration range excludes a bare `open/set_option/
-            # attribute … in` prefix on the preceding lines; reattach it.
-            # The prefix's following command may start inside the node's
-            # range at a later line than node["line"] when a doc comment
-            # sits between them, hence the range check. Chains supported.
-            prefix_by_next_line = {
-                next_line: (line, text)
-                for line, next_line, text in skeleton.prefix_blocks
-            }
-            for node_id in node_ids:
-                node = nodes[node_id]
-                chain_end = None
-                for line, next_line, text in skeleton.prefix_blocks:
-                    if node["line"] <= next_line <= node["endLine"]:
-                        chain_end = (line, text)
-                        break
-                if chain_end is None:
-                    continue
-                parts = [chain_end[1]]
-                cursor = chain_end[0]
-                while cursor in prefix_by_next_line:
-                    line, text = prefix_by_next_line[cursor]
-                    parts.append(text)
-                    cursor = line
-                node["prefix"] = "\n".join(reversed(parts))
-        for node_id in node_ids:
-            node = nodes[node_id]
-            generated = node["statement"] == "" and "stmtEnd" not in node
-            if not generated:
+    if commands_path is None:
+        return {}
+    tables: dict[str, list[dict]] = {}
+    with Path(commands_path).open(encoding="utf-8") as command_file:
+        for line in command_file:
+            stripped = line.strip()
+            if not stripped:
                 continue
-            host = None
-            for other_id in node_ids:
-                other = nodes[other_id]
-                if other_id == node_id or other["statement"] == "":
-                    continue
-                if other["line"] <= node["line"] <= other["endLine"]:
-                    if host is None or other["line"] >= nodes[host]["line"]:
-                        host = other_id
-            if host is not None:
-                node["host"] = host
+            record = json.loads(stripped)
+            tables[record["m"]] = record["c"]
+    return tables
+
+
+def _remap_command_entries(
+    entries: list[dict], id_by_name: dict[str, int]
+) -> list[dict]:
+    """Remap a module's command entries to shard-local declaration ids.
+
+    Declaration entries whose names are all unknown (non-exposed) are
+    dropped — the builder skips those command spans entirely, like
+    LMLExposition's `skip` class. Notation expansion deps are remapped the
+    same way.
+    """
+    remapped: list[dict] = []
+    for entry in entries:
+        if entry.get("t") == "d":
+            ids = sorted(
+                {id_by_name[name] for name in entry.get("n", []) if name in id_by_name}
+            )
+            if not ids:
+                continue
+            new_entry = {
+                key: value for key, value in entry.items() if key not in ("n", "sd")
+            }
+            new_entry["d"] = ids
+            if entry.get("sd"):
+                new_entry["sd"] = sorted(
+                    {
+                        id_by_name[name]
+                        for name in entry["sd"]
+                        if name in id_by_name and id_by_name[name] not in ids
+                    }
+                )
+            remapped.append(new_entry)
+        else:
+            new_entry = dict(entry)
+            if "nd" in new_entry:
+                new_entry["nd"] = sorted(
+                    {id_by_name[name] for name in new_entry["nd"] if name in id_by_name}
+                )
+            remapped.append(new_entry)
+    return remapped
 
 
 def _build_node(
     record: dict,
     kind: str,
     statement: str,
-    statement_end: tuple[int, int] | None,
     module_index: int,
     dependencies: list[int],
     type_dependencies: list[int] | None,
@@ -325,8 +320,10 @@ def _build_node(
     if "d" in record:
         node["doc"] = record["d"]
     node["statement"] = statement
-    if statement_end is not None and kind in PROOF_KINDS:
-        node["stmtEnd"] = list(statement_end)
+    if statement.startswith("alias"):
+        # An `alias` keeps its body verbatim in the minimal file, so its
+        # closure must follow value dependencies despite the theorem kind.
+        node["alias"] = True
     if record.get("p"):
         node["private"] = True
     node["deps"] = dependencies
@@ -354,22 +351,57 @@ def _closed_module_list(
     their skeletons too; they are appended after the declaration-bearing
     modules.
     """
-    modules = list(project_modules)
-    known = set(modules)
     project_prefix = f"LeanPool.{slug}."
-    skeletons: dict[int, ModuleSkeleton | None] = {}
-    index = 0
-    while index < len(modules):
-        source = source_cache.get(modules[index])
-        skeleton = module_skeleton(source) if source else None
-        skeletons[index] = skeleton
-        if skeleton is not None:
-            for imported in skeleton.local_imports:
-                if imported.startswith(project_prefix) and imported not in known:
-                    known.add(imported)
-                    modules.append(imported)
-        index += 1
-    return modules, skeletons
+    scanned: dict[str, ModuleSkeleton | None] = {}
+
+    def imports_of(module: str) -> list[str]:
+        """Same-project imports of one module, in source order."""
+        if module not in scanned:
+            source = source_cache.get(module)
+            scanned[module] = module_skeleton(source) if source else None
+        skeleton = scanned[module]
+        if skeleton is None:
+            return []
+        return [
+            imported
+            for imported in skeleton.local_imports
+            if imported.startswith(project_prefix)
+        ]
+
+    def visit(root: str, placed: set[str], order: list[str]) -> None:
+        """Append ``root``'s import closure, each module after its imports."""
+        stack = [(root, False)]
+        while stack:
+            module, expanded = stack.pop()
+            if module in placed:
+                continue
+            if expanded:
+                placed.add(module)
+                order.append(module)
+                continue
+            stack.append((module, True))
+            for imported in reversed(imports_of(module)):
+                if imported not in placed:
+                    stack.append((imported, False))
+
+    # The set: declaration-bearing modules closed under same-project imports.
+    included: set[str] = set()
+    for module in project_modules:
+        visit(module, included, [])
+
+    # The order: Lean's own, taken by walking the project's entry module and
+    # emitting each module after the ones it imports. Ordering alphabetically
+    # instead puts unrelated modules in an order Lean never elaborates, which
+    # changes which instances and notations are in scope at a given point and
+    # can silently break assembled files.
+    placed: set[str] = set()
+    order: list[str] = []
+    visit(f"LeanPool.{slug}", placed, order)
+    for module in project_modules:
+        visit(module, placed, order)
+
+    modules = [module for module in order if module in included]
+    return modules, {index: scanned.get(module) for index, module in enumerate(modules)}
 
 
 def build_project_shard(
@@ -378,8 +410,10 @@ def build_project_shard(
     card: ProjectCard | None,
     source_cache: SourceCache,
     commit: str = "main",
+    command_tables: dict[str, list[dict]] | None = None,
 ) -> dict:
     """Build one ``data/projects/<Project>.json`` payload per SCHEMA.md."""
+    command_tables = command_tables or {}
     ordered = _sorted_records(records)
     declaration_modules = sorted({record["m"] for record in ordered})
     modules, skeletons = _closed_module_list(slug, declaration_modules, source_cache)
@@ -390,13 +424,12 @@ def build_project_shard(
     nodes = []
     for index, record in enumerate(ordered):
         source = source_cache.get(record["m"])
-        kind, statement, statement_end = _refined_kind_and_statement(record, source)
+        kind, statement, _ = _refined_kind_and_statement(record, source)
         nodes.append(
             _build_node(
                 record,
                 kind,
                 statement,
-                statement_end,
                 module_indices[record["m"]],
                 dependency_lists[index],
                 type_dependency_lists[index] if "tdeps" in record else None,
@@ -404,7 +437,6 @@ def build_project_shard(
                 layout.node_orders[index],
             )
         )
-    _attach_minimal_file_fields(nodes, skeletons)
     node_count = len(nodes)
     average = sum(layout.node_layers) / node_count if node_count else 0.0
     stats = {
@@ -415,6 +447,9 @@ def build_project_shard(
         "kinds": _kind_counts([node["kind"] for node in nodes]),
     }
     main_results = _resolve_main_results(card, nodes)
+    id_by_name: dict[str, int] = {}
+    for node_id, node in enumerate(nodes):
+        id_by_name.setdefault(node.get("full", node["name"]), node_id)
     module_data = []
     for index in range(len(modules)):
         skeleton = skeletons[index]
@@ -427,9 +462,9 @@ def build_project_shard(
             {
                 "imports": skeleton.external_imports if skeleton else [],
                 "uses": uses,
-                "contexts": [list(entry) for entry in skeleton.contexts]
-                if skeleton
-                else [],
+                "commands": _remap_command_entries(
+                    command_tables.get(modules[index], []), id_by_name
+                ),
             }
         )
     return {
@@ -535,6 +570,7 @@ def generate_site(
     repo_root: Path,
     out_dir: Path,
     commit: str = "main",
+    commands_path: Path | None = None,
     static_dir: Path | None = None,
     templates_dir: Path | None = None,
 ) -> SiteSummary:
@@ -555,8 +591,11 @@ def generate_site(
     grouped = group_records_by_project(read_dump(dump_path))
     cards = load_project_cards(Path(repo_root) / "LeanPool" / "projects.yml")
     source_cache = SourceCache(Path(repo_root))
+    command_tables = read_command_tables(commands_path)
     shards = {
-        slug: build_project_shard(slug, records, cards.get(slug), source_cache, commit)
+        slug: build_project_shard(
+            slug, records, cards.get(slug), source_cache, commit, command_tables
+        )
         for slug, records in grouped.items()
     }
     index = build_index(shards, commit)

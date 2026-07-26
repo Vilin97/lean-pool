@@ -124,7 +124,7 @@
   let mainIds = []; // node ids flagged as main results (card metadata)
   let mainInformal = {}; // node id -> informal statement from the card
   let rawShard = null; // full shard JSON (minimal-file builder input)
-  const moduleSources = {}; // module index -> fetched raw source text
+  const moduleSources = {}; // module index -> raw source bytes (Uint8Array)
 
   let fullView = null;
   let coneView = null;
@@ -1436,11 +1436,13 @@
     return fetch(RAW_BASE + encodeURIComponent(commit) + '/' + path)
       .then((response) => {
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        return response.text();
+        // The shard's command tables use UTF-8 byte offsets, so sources are
+        // kept as raw bytes; minimal.js decodes slices with TextDecoder.
+        return response.arrayBuffer();
       })
-      .then((text) => {
-        moduleSources[moduleIndex] = text;
-        return text;
+      .then((buffer) => {
+        moduleSources[moduleIndex] = new Uint8Array(buffer);
+        return moduleSources[moduleIndex];
       });
   }
 
@@ -1620,14 +1622,14 @@
     button.disabled = true;
     button.textContent = 'Building…';
     const cone = window.ExpoMinimal.coneIds(rawShard, id);
-    const needed = new Set();
+    // coneIds reports every involved module (declaration modules plus
+    // notation-only ones); build returns {pending} as a safety net.
+    const needed = new Set(cone.modules || []);
     for (const nodeId of cone.ids) needed.add(decls[nodeId].module);
     const buildOnceFetched = (attempt) =>
       Promise.all(Array.from(needed).map(fetchModuleSource)).then(() => {
         const result = window.ExpoMinimal.build(rawShard, moduleSources, id);
         if (result.pending && attempt < 4) {
-          // The tactic-reference closure pulled in declarations from
-          // modules we have not fetched yet.
           for (const moduleIndex of result.pending) needed.add(moduleIndex);
           return buildOnceFetched(attempt + 1);
         }

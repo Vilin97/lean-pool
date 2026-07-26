@@ -114,41 +114,48 @@ Link recipes: `doi` → `https://doi.org/<doi>`, `arxiv` →
 `https://arxiv.org/abs/<arxiv>`, `url` as-is, `github_repo` →
 `https://github.com/<github_repo>`.
 
-### Minimal-Lean-file fields (schema 1.2, additive)
+### Minimal-Lean-file fields (schema 1.3)
 
-The shard gains `commit` (the exact commit its data was extracted from —
-raw-source fetches for the minimal-file builder pin to it) and a
+The minimal-file pipeline follows LMLExposition's methodology (Rémy
+Degenne, github.com/LeanMachineLearning/exposition): the extractor
+re-elaborates every module against the loaded environment and classifies
+each top-level command from its real `Syntax`, so the builder replays
+byte-exact source with pre-computed surgery edits instead of textual
+heuristics.
+
+The shard carries `commit` (raw-source fetches pin to it) and a
 `moduleData` array parallel to `modules`:
 
 ```json
-"moduleData": [{"imports": ["Mathlib.Order.Basic", …],   // external imports
-                "uses": [3, 7],                           // same-project imports (module indices)
-                "contexts": [[20, "namespace Foo"], …]},  // (line, text) of replayable top-level
-               …]                                         //   context commands
+"moduleData": [{"imports": ["Mathlib.Order.Basic", …],  // external imports
+                "uses": [3, 7],                          // same-project imports (module indices)
+                "commands": [ … ]},                      // classified top-level commands
+               …]
 ```
 
-`modules` may list more entries than declarations reference: modules pulled
-in only through `uses` (notation-/attribute-only files) are appended so
-their contexts can be replayed.
-
-Per-declaration additions:
+All command positions are **UTF-8 byte offsets** into the module source
+(the builder fetches sources as bytes and slices before decoding):
 
 ```json
-"stmtEnd": [436, 69],   // theorem/lemma only: statement/body boundary (line, col)
-"tdeps": [124, 164],    // theorem/lemma only: statement-only dependencies ⊆ deps
-"span": [15, 18],       // mutual members: the whole block's line span
-"host": 12,             // generated decls: the source declaration containing them
-"prefix": "open Classical in"  // bare `… in` prefix excluded from Lean's range
+{"t": "d", "s": 100, "e": 420, "d": [12, 13],       // declaration command: shard ids it defines
+ "ed": [[380, 420, ":= sorry"]],                     // surgery edits (theorem proof → sorry,
+ "un": ["LMF.termℍ"]}                                //   by-blocks in def values → sorry)
+{"t": "c", "s": 0, "e": 14, "k": "ns",              // context command; k ∈ ns|end|open|var|
+ "ns": "Foo", "q": "Bar.Foo"}                        //   sec|opt|univ|nota
+{"t": "c", "k": "var", "b": [[s, e, ["Γ", "h"]], …]} // variable: per-binder ranges + idents
+{"t": "c", "k": "nota", "kn": ["…"], "nd": [4]}      // notation: kinds defined, expansion deps
 ```
 
-The minimal-file builder (`static/assets/minimal.js`, shared verbatim with
-the node validation harness) follows `tdeps` through theorems (proofs become
-`:= sorry`) and full `deps` elsewhere, replays module contexts in import
-order, prunes `variable`/`attribute`/`export` contexts that reference
-declarations outside the cone, and grows the cone with lemmas named in
-`simp only [...]`-style tactic lists (invisible to term-level dependency
-extraction). `build()` may return `{pending: [moduleIndex…]}` when that
-closure needs sources not yet fetched; callers fetch and retry (≤ 4 rounds).
+Non-exposed declarations have no entry. `tdeps` (statement-only deps ⊆
+`deps`) remains per proof-kind declaration; `"alias": true` marks alias
+commands whose bodies stay verbatim (closure follows `deps`).
+
+The builder (`static/assets/minimal.js`, shared verbatim with the node
+validation harness) is a port of LML's `assembleTarget`: dependency cone +
+notation-usage closure, module replay in import order with per-binder
+`variable` pruning, `open NS (…)` trimming, namespace stubs, and
+empty-scope stripping. `build()` returns `{pending: [moduleIndex…]}` when
+it needs module sources not yet fetched; callers fetch and retry.
 
 ## `data/index.json`
 

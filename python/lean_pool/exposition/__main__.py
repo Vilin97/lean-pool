@@ -40,11 +40,28 @@ from lean_pool.exposition.generate import generate_site
     show_default=True,
     help="Commit SHA recorded in index.json and used for GitHub link metadata.",
 )
-def cli(dump_path: Path, repo_root: Path, out_dir: Path, commit: str) -> None:
+@click.option(
+    "--commands",
+    "commands_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Extractor per-module command tables (JSONL) for the minimal-file builder.",
+)
+def cli(
+    dump_path: Path,
+    repo_root: Path,
+    out_dir: Path,
+    commit: str,
+    commands_path: Path | None,
+) -> None:
     """Generate the static exposition site from an extractor dump."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     summary = generate_site(
-        dump_path=dump_path, repo_root=repo_root, out_dir=out_dir, commit=commit
+        dump_path=dump_path,
+        repo_root=repo_root,
+        out_dir=out_dir,
+        commit=commit,
+        commands_path=commands_path,
     )
     click.echo(
         f"Wrote {summary.projects} projects ({summary.decls} declarations, "

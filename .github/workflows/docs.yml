@@ -80,7 +80,14 @@ jobs:
         run: ~/.elan/bin/lake build LeanPool
 
       - name: Extract declarations
-        run: ~/.elan/bin/lake env ~/.elan/bin/lean --run scripts/exposition/Extract.lean exposition-dump.jsonl
+        # Per-project environments (see extract-all.sh); 2-way parallel to
+        # stay inside the runner's memory.
+        env:
+          LEAN_CMD: /home/runner/.elan/bin/lean
+          EXTRACT_JOBS: "2"
+        run: >-
+          ~/.elan/bin/lake env bash scripts/exposition/extract-all.sh
+          exposition-dump.jsonl exposition-commands.jsonl
 
       - name: Install uv
         uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
@@ -93,6 +100,7 @@ jobs:
           uv sync --locked
           uv run python -m lean_pool.exposition \
             --dump ../exposition-dump.jsonl \
+            --commands ../exposition-commands.jsonl \
             --repo-root .. \
             --out ../exposition-site \
             --commit ${{ github.sha }}
@@ -161,7 +169,7 @@ jobs:
           # deploy matches the fresh artifact exactly (or omits the exposition
           # entirely on the fail-soft paths) — never a stale mixture.
           rm -rf docbuild/.lake/build/doc/exposition
-          deadline=$((SECONDS + 1800))
+          deadline=$((SECONDS + 2700))
           while [ "$SECONDS" -lt "$deadline" ]; do
             found=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
               --jq '[.artifacts[] | select(.name == "exposition-site" and .expired == false)] | length' || echo 0)
