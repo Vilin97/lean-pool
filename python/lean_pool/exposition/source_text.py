@@ -323,7 +323,12 @@ def _boundary_scan_start(
     return name_end
 
 
-_IMPORT_RE = re.compile(r"^import\s+([\w.«»]+)", re.MULTILINE)
+# Lean's module system allows `public`/`private`/`meta` modifiers and
+# `import all`. Missing them leaves a module with no recorded imports, which
+# silently collapses the module ordering used to assemble minimal files.
+_IMPORT_RE = re.compile(
+    r"^(?:(?:public|private|meta)\s+)*import\s+(?:all\s+)?([\w.«»]+)", re.MULTILINE
+)
 
 
 @dataclass

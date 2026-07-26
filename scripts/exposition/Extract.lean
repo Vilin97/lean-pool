@@ -420,6 +420,9 @@ def isNotationCmdKind (k : SyntaxNodeKind) : Bool :=
     || k == ``Parser.Command.«syntax» || k == ``Parser.Command.«elab»
     || k == `Lean.Parser.Command.elab_rules || k == ``Parser.Command.syntaxCat
     || k == `Mathlib.Notation3.notation3 || k == `Lean.Parser.Command.binderPredicate
+    -- Mathlib's `scoped[NS] infixl …` wrapper: dropping it loses the
+    -- notation entirely, so declarations using it cannot be re-parsed.
+    || k == `Mathlib.Tactic.scopedNS
     -- Attribute/extension registration commands (`register_simp_attr …`)
     -- must replay for inline `@[custom_attr]` uses to elaborate.
     || (match k with
@@ -568,12 +571,12 @@ def syntacticDeps (env : Environment) (stx : Syntax) (self : Array Name)
 
 /-- Processes one module source: classifies each command and emits the JSON
 entry list. `declPos` maps range-start byte indices to exposed declaration
-names; `notationKindsAt` maps range-start byte indices to pool parser-kind
+names (several may share one range start); `notationKindsAt` maps range-start byte indices to pool parser-kind
 names (so a notation command learns which kinds it defines);
 `notationDeps` maps parser kinds to their expansion's exposed constants;
 `allNotationKinds` is the pool-wide kind set for `usedNotations`. -/
 def processFile (env : Environment) (source : String) (filePath : String)
-    (declPos : Std.HashMap Nat Name) (notationKindsAt : Std.HashMap Nat Name)
+    (declPos : Std.HashMap Nat (Array Name)) (notationKindsAt : Std.HashMap Nat Name)
     (notationDeps : Std.HashMap Name (Array Name)) (allNotationKinds : NameSet)
     (exposedByLast : Std.HashMap String (Array Name)) (visibleModules : NameSet) :
     IO (Array Json) := do
@@ -588,9 +591,9 @@ def processFile (env : Environment) (source : String) (filePath : String)
     let some cmdStart := stx.getPos? | continue
     let some cmdEnd := stx.getTailPos? | continue
     let mut declNames : Array Name := #[]
-    for (pos, name) in declPos do
+    for (pos, names) in declPos do
       if pos ≥ cmdStart.byteIdx && pos < cmdEnd.byteIdx then
-        declNames := declNames.push name
+        declNames := declNames ++ names
     let mut kindNames : Array Name := #[]
     for (pos, kindName) in notationKindsAt do
       if pos ≥ cmdStart.byteIdx && pos < cmdEnd.byteIdx then
@@ -702,10 +705,13 @@ def emitCommands (outPath : System.FilePath) (exposed : NameSet) (names : Array 
         try pure (some (← IO.FS.readFile path)) catch _ => pure none)
       | continue
     let fileMap := FileMap.ofString source
-    let mut declPos : Std.HashMap Nat Name := {}
+    -- One range start can carry several declarations (`irreducible_def`,
+    -- mutual blocks), so map each position to every name declared there.
+    let mut declPos : Std.HashMap Nat (Array Name) := {}
     for name in moduleDecls do
       if let some ranges ← findDeclarationRanges? name then
-        declPos := declPos.insert (fileMap.ofPosition ranges.range.pos).byteIdx name
+        let key := (fileMap.ofPosition ranges.range.pos).byteIdx
+        declPos := declPos.insert key ((declPos.getD key #[]).push name)
     let mut notationKindsAt : Std.HashMap Nat Name := {}
     for (kindName, pos) in moduleKinds do
       notationKindsAt := notationKindsAt.insert (fileMap.ofPosition pos).byteIdx kindName

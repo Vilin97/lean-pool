@@ -65,6 +65,26 @@ def test_module_skeleton_imports() -> None:
     assert skeleton.local_imports == ["LeanPool.Other.Module"]
 
 
+def test_module_skeleton_reads_module_system_imports() -> None:
+    """`public`/`meta` modifiers and `import all` are still imports.
+
+    Missing these leaves a module with no recorded imports, which collapses
+    the module ordering the minimal-file builder relies on.
+    """
+    text = (
+        "public import Mathlib.Order.Basic\n"
+        "public meta import Lean.Elab.Command\n"
+        "import all LeanPool.Other.Module\n"
+        "public import LeanPool.Second.Module\n"
+    )
+    skeleton = module_skeleton(SourceFile.from_text(text))
+    assert skeleton.external_imports == ["Mathlib.Order.Basic", "Lean.Elab.Command"]
+    assert skeleton.local_imports == [
+        "LeanPool.Other.Module",
+        "LeanPool.Second.Module",
+    ]
+
+
 def test_lemma_keyword_refines_theorem_kind() -> None:
     """A source `lemma` refines the extractor's coarse `theorem` kind."""
     text = "lemma bar : True := trivial\n"

@@ -448,3 +448,23 @@ def test_missing_static_directory_raises(tmp_path: Path) -> None:
             static_dir=tmp_path / "no-such-static",
             templates_dir=templates,
         )
+
+
+def test_module_order_follows_imports_not_alphabet(tmp_path: Path) -> None:
+    """Modules are emitted after the modules they import, in source order.
+
+    Ordering alphabetically instead puts unrelated modules in an order Lean
+    never elaborates, which changes which instances and notations are in
+    scope and can silently break the assembled minimal file.
+    """
+    from lean_pool.exposition.generate import SourceCache, _closed_module_list
+
+    repo = tmp_path / "repo"
+    (repo / "LeanPool" / "Zeta").mkdir(parents=True)
+    # Alphabetically Apex < Zulu, but Zulu is imported by Apex.
+    (repo / "LeanPool" / "Zeta" / "Zulu.lean").write_text("def z : Nat := 0\n")
+    (repo / "LeanPool" / "Zeta" / "Apex.lean").write_text(
+        "public import LeanPool.Zeta.Zulu\ndef a : Nat := z\n"
+    )
+    modules, _ = _closed_module_list("Zeta", ["LeanPool.Zeta.Apex"], SourceCache(repo))
+    assert modules == ["LeanPool.Zeta.Zulu", "LeanPool.Zeta.Apex"]

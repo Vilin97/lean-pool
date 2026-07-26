@@ -351,22 +351,57 @@ def _closed_module_list(
     their skeletons too; they are appended after the declaration-bearing
     modules.
     """
-    modules = list(project_modules)
-    known = set(modules)
     project_prefix = f"LeanPool.{slug}."
-    skeletons: dict[int, ModuleSkeleton | None] = {}
-    index = 0
-    while index < len(modules):
-        source = source_cache.get(modules[index])
-        skeleton = module_skeleton(source) if source else None
-        skeletons[index] = skeleton
-        if skeleton is not None:
-            for imported in skeleton.local_imports:
-                if imported.startswith(project_prefix) and imported not in known:
-                    known.add(imported)
-                    modules.append(imported)
-        index += 1
-    return modules, skeletons
+    scanned: dict[str, ModuleSkeleton | None] = {}
+
+    def imports_of(module: str) -> list[str]:
+        """Same-project imports of one module, in source order."""
+        if module not in scanned:
+            source = source_cache.get(module)
+            scanned[module] = module_skeleton(source) if source else None
+        skeleton = scanned[module]
+        if skeleton is None:
+            return []
+        return [
+            imported
+            for imported in skeleton.local_imports
+            if imported.startswith(project_prefix)
+        ]
+
+    def visit(root: str, placed: set[str], order: list[str]) -> None:
+        """Append ``root``'s import closure, each module after its imports."""
+        stack = [(root, False)]
+        while stack:
+            module, expanded = stack.pop()
+            if module in placed:
+                continue
+            if expanded:
+                placed.add(module)
+                order.append(module)
+                continue
+            stack.append((module, True))
+            for imported in reversed(imports_of(module)):
+                if imported not in placed:
+                    stack.append((imported, False))
+
+    # The set: declaration-bearing modules closed under same-project imports.
+    included: set[str] = set()
+    for module in project_modules:
+        visit(module, included, [])
+
+    # The order: Lean's own, taken by walking the project's entry module and
+    # emitting each module after the ones it imports. Ordering alphabetically
+    # instead puts unrelated modules in an order Lean never elaborates, which
+    # changes which instances and notations are in scope at a given point and
+    # can silently break assembled files.
+    placed: set[str] = set()
+    order: list[str] = []
+    visit(f"LeanPool.{slug}", placed, order)
+    for module in project_modules:
+        visit(module, placed, order)
+
+    modules = [module for module in order if module in included]
+    return modules, {index: scanned.get(module) for index, module in enumerate(modules)}
 
 
 def build_project_shard(

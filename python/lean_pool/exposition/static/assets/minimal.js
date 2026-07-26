@@ -166,6 +166,21 @@
   /* Shard ids an identifier token may refer to: strict-matcher hits plus
    * exact hits after qualifying with each active namespace prefix. */
   function resolveToken(token, names, activePrefixes) {
+    var ids = matchToken(token, names, activePrefixes);
+    if (ids.length > 0) return ids;
+    // `Class.field` names a member of a declaration that is itself in the
+    // shard (a class projection, a structure field). The index only records
+    // suffixes, never a name plus an extra component, so drop trailing
+    // components until something resolves and pull in the owner.
+    var parts = token.split(".");
+    for (var cut = parts.length - 1; cut > 0; cut--) {
+      var owner = matchToken(parts.slice(0, cut).join("."), names, activePrefixes);
+      if (owner.length > 0) return owner;
+    }
+    return ids;
+  }
+
+  function matchToken(token, names, activePrefixes) {
     var ids = (names.strict[token] || []).slice();
     for (var p = 0; p < activePrefixes.length; p++) {
       if (activePrefixes[p] === "") continue;
@@ -298,10 +313,19 @@
       var closed = usesClosure(shard, moduleSet);
       var seeds = [];
       for (var cm in closed) {
+        // Deliberately keyed on `moduleSet`, not on a separate "already
+        // expanded" set. Making the rule monotone (expanding every
+        // syntax-defining module in the closure, even once it is involved
+        // for another reason) sounds more correct and measurably is not:
+        // it pulls in enough extra instances to break elaboration elsewhere
+        // — 7 targets regressed against 2 fixed when that was tried.
         if (moduleSet[cm]) continue;
         var commands = (moduleData[cm] || {}).commands || [];
         if (!hasNotationEntry(commands)) continue;
         wholesale[cm] = true;
+        // A syntax-only module contributes no seeds; record it as involved
+        // now or the zero-seed return below drops it from the emit order.
+        moduleSet[cm] = true;
         seeds = seeds.concat(wholesaleSeeds(commands));
       }
       if (seeds.length === 0) {
@@ -976,10 +1000,25 @@
             secText = "section";
           }
           // A named `section Foo` must close with `end Foo`: remember the
-          // name for the synthesized close.
+          // name for the synthesized close. A dotted `section A.B` opens one
+          // scope per component just like `namespace A.B` does, so split it —
+          // otherwise the matching `end A.B` pops two frames while only one
+          // was pushed, stealing the enclosing namespace's frame.
           var secMatch = secText.match(/section\s+([^\s]+)\s*$/);
-          scopeStack.push({ section: true, name: secMatch ? secMatch[1] : null });
-          items.push({ tag: "openSection", text: secText + "\n" });
+          var secName = secMatch ? secMatch[1] : null;
+          if (secName && secName.indexOf(".") !== -1) {
+            var secComponents = secName.split(".");
+            var secPrefix = secText.slice(0, secMatch.index);
+            for (var sc = 0; sc < secComponents.length; sc++) {
+              scopeStack.push({ section: true, name: secComponents[sc] });
+              items.push({ tag: "openSection",
+                text: (sc === 0 ? secPrefix : "") + "section "
+                  + escapeNamespaceComponent(secComponents[sc]) + "\n" });
+            }
+          } else {
+            scopeStack.push({ section: true, name: secName });
+            items.push({ tag: "openSection", text: secText + "\n" });
+          }
         } else if (entry.k === "end") {
           // Never slice `end` text from the source: pop one typed frame per
           // dotted component (a bare `end` pops one) and synthesize each
