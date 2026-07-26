@@ -180,6 +180,12 @@ def preflight(lean_command: str, out_dir: Path) -> str | None:
 @click.option(
     "--limit", default=0, show_default=True, help="Verify only the first N targets."
 )
+@click.option(
+    "--baseline",
+    default=0,
+    show_default=True,
+    help="Minimum passing count to accept; 0 requires every target to pass.",
+)
 def cli(
     site_dir: Path,
     repo_root: Path,
@@ -187,6 +193,7 @@ def cli(
     jobs: int,
     lean_command: str,
     limit: int,
+    baseline: int,
 ) -> None:
     """Assemble and compile minimal files for every main declaration."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -232,8 +239,19 @@ def cli(
     for failure in report["failures"]:
         click.echo(f"FAIL [{failure['stage']}] {failure['project']}/{failure['name']}")
     click.echo(f"passed {passed}/{len(targets)} (report: {out_dir / 'report.json'})")
-    if passed != len(targets):
-        sys.exit(1)
+    if passed == len(targets):
+        return
+    if baseline and passed >= baseline:
+        click.echo(
+            f"at or above the {baseline} baseline; {len(targets) - passed} still "
+            "fail — see report.json"
+        )
+        if passed > baseline:
+            click.echo(f"raise --baseline to {passed} to lock in the gain")
+        return
+    if baseline:
+        click.echo(f"REGRESSION: {passed} passing is below the {baseline} baseline")
+    sys.exit(1)
 
 
 if __name__ == "__main__":

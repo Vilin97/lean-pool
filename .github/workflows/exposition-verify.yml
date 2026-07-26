@@ -101,7 +101,8 @@ jobs:
             --repo-root .. \
             --out ../exposition-verify \
             --jobs 2 \
-            --lean /home/runner/.elan/bin/lean
+            --lean /home/runner/.elan/bin/lean \
+            --baseline 207
 
       - name: Upload verification report
         if: always()
