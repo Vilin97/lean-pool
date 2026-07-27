@@ -5,7 +5,7 @@ Authors: Alexey Milovanov, Egor Lyfar
 -/
 
 import LeanPool.BooleanIsoperimetry.CoherentGap
-import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
+import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
 import LeanPool.BooleanIsoperimetry.Harper
 import LeanPool.BooleanIsoperimetry.MacaulayMin
 import LeanPool.BooleanIsoperimetry.SetFamilyShadow
@@ -16,7 +16,7 @@ import LeanPool.BooleanIsoperimetry.SetFamilyShadow
 Source: doi:10.1016/S0021-9800(66)80059-5, url:https://doi.org/10.1090/S0002-9939-96-03653-2
 Authors: Alexey Milovanov, Egor Lyfar
 Status: verified
-Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.CoherentGap.conwayGuyNormalizedChamberRigidity`
+Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps`
 Tags: additive-combinatorics, extremal-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-orders
 MSC: 05D05, 05C35
 -/
@@ -37,11 +37,11 @@ shadow estimates, coordinate compressions, and the final induction over cube
 dimension.
 
 For the Conway--Guy distinct-subset-sum sequence, the development also proves
-an all-dimension certificate recurrence. Every real row satisfying its
-liftable unit-relation inequalities dominates the Conway--Guy row
-coordinatewise. Bohman's theorem that the sequence has distinct subset sums is
-kept as the external input connecting these unit relations to consecutive gaps
-of the induced Boolean term order.
+an all-dimension certificate recurrence. Every real row whose consecutive
+subset-sum gaps in the Conway--Guy order are at least one dominates the
+Conway--Guy row coordinatewise. Bohman's theorem that the sequence has
+distinct subset sums remains the external input showing that its subset-sum
+comparison is a total coherent Boolean term order.
 
 ## Provenance
 

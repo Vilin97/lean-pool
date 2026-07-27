@@ -7,8 +7,8 @@ projects:
       has the smallest closed radius-one Hamming neighborhood. Develops the
       supporting binomial-cascade identities, Kruskal--Katona shadow bounds,
       coordinate compressions, and the final dimension induction. Applies the
-      coherent-gap certificate method to prove normalized chamber rigidity for
-      the Conway--Guy sequence from its exact recurrence.
+      coherent-gap certificate method to prove normalized consecutive-gap
+      rigidity for the Conway--Guy sequence from its exact recurrence.
     branch: extremal and additive combinatorics
     entry_module: LeanPool.BooleanIsoperimetry
     authors:
@@ -29,7 +29,7 @@ projects:
     provenance: AI
     main_declarations:
       - BooleanIsoperimetry.harper_theorem
-      - BooleanIsoperimetry.CoherentGap.conwayGuyNormalizedChamberRigidity
+      - BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps
     main_results:
       - declaration: BooleanIsoperimetry.harper_theorem
         informal: >-
@@ -37,11 +37,11 @@ projects:
           simplicial initial segment of the same cardinality has a closed
           radius-one Hamming neighborhood no larger than that of the family.
       - declaration: >-
-          BooleanIsoperimetry.CoherentGap.conwayGuyNormalizedChamberRigidity
+          BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps
         informal: >-
-          In every dimension, any real row satisfying all liftable
-          unit-relation inequalities of the Conway--Guy reference row
-          dominates that row coordinatewise.
+          In every dimension, any real row whose consecutive subset-sum gaps
+          in the Conway--Guy reference order are at least one dominates that
+          row coordinatewise.
     tags:
       - additive-combinatorics
       - extremal-combinatorics
