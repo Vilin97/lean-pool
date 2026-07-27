@@ -167,8 +167,8 @@ theorem normalizedConsecutiveGaps_imply_unitRelations {n : ℕ}
   rw [realDot_eq_support_difference candidate relation hrelation.1]
   exact hgap
 
-/-- The Conway--Guy row is coordinatewise minimal among real rows with
-normalized consecutive gaps in its induced subset-sum order. -/
+/-- The Conway--Guy row is a coordinatewise lower bound for every real row
+with normalized consecutive gaps relative to its subset sums. -/
 theorem conwayGuyRigidity_of_normalizedConsecutiveGaps {n : ℕ}
     (candidate : Fin n → ℝ)
     (hnormalized : SatisfiesNormalizedConsecutiveGaps
@@ -180,3 +180,12 @@ theorem conwayGuyRigidity_of_normalizedConsecutiveGaps {n : ℕ}
     (normalizedConsecutiveGaps_imply_unitRelations hnormalized)
 
 end BooleanIsoperimetry.CoherentGap
+
+namespace BooleanIsoperimetry
+
+/-- Public short name for the all-dimensional Conway--Guy gap-rigidity
+theorem. -/
+alias conwayGuyGapRigidity :=
+  CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps
+
+end BooleanIsoperimetry

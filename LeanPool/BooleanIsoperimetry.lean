@@ -16,8 +16,8 @@ import LeanPool.BooleanIsoperimetry.SetFamilyShadow
 Source: doi:10.1016/S0021-9800(66)80059-5, url:https://doi.org/10.1090/S0002-9939-96-03653-2
 Authors: Alexey Milovanov, Egor Lyfar
 Status: verified
-Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps`
-Tags: additive-combinatorics, extremal-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-orders
+Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.conwayGuyGapRigidity`
+Tags: additive-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-orders
 MSC: 05D05, 05C35
 -/
 

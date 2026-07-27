@@ -530,8 +530,8 @@ theorem recurrenceCertificate_mass (tower : WeightTower)
     (dot_basis coordinate (tower.weights n))
 
 /-- **Normalized chamber rigidity.** An explicit principal/correction
-recurrence forces the reference row to be the coordinatewise minimum of its
-unit-relation chamber.
+recurrence makes the reference row a coordinatewise lower bound for every row
+satisfying its unit-relation inequalities.
 
 For the Conway--Guy order, the remaining concrete instantiation consists of:
 

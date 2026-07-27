@@ -29,7 +29,7 @@ projects:
     provenance: AI
     main_declarations:
       - BooleanIsoperimetry.harper_theorem
-      - BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps
+      - BooleanIsoperimetry.conwayGuyGapRigidity
     main_results:
       - declaration: BooleanIsoperimetry.harper_theorem
         informal: >-
@@ -37,14 +37,13 @@ projects:
           simplicial initial segment of the same cardinality has a closed
           radius-one Hamming neighborhood no larger than that of the family.
       - declaration: >-
-          BooleanIsoperimetry.CoherentGap.conwayGuyRigidity_of_normalizedConsecutiveGaps
+          BooleanIsoperimetry.conwayGuyGapRigidity
         informal: >-
           In every dimension, any real row whose consecutive subset-sum gaps
-          in the Conway--Guy reference order are at least one dominates that
-          row coordinatewise.
+          relative to the Conway--Guy reference row are at least one dominates
+          that row coordinatewise.
     tags:
       - additive-combinatorics
-      - extremal-combinatorics
       - isoperimetry
       - boolean-cube
       - subset-sums

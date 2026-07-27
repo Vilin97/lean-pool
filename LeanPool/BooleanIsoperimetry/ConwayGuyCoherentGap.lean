@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 import LeanPool.BooleanIsoperimetry.CoherentGap
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 
 /-!
 # Conway--Guy coherent-gap data
