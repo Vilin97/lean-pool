@@ -102,7 +102,7 @@ jobs:
             --out ../exposition-verify \
             --jobs 2 \
             --lean /home/runner/.elan/bin/lean \
-            --baseline 207
+            --baseline 214
 
       - name: Upload verification report
         if: always()
