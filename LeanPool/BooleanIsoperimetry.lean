@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexey Milovanov
 -/
 
+import LeanPool.BooleanIsoperimetry.CoherentGap
 import LeanPool.BooleanIsoperimetry.Harper
 import LeanPool.BooleanIsoperimetry.MacaulayMin
 import LeanPool.BooleanIsoperimetry.SetFamilyShadow

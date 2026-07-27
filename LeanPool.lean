@@ -163,6 +163,7 @@ import LeanPool.Biswal.Theorem1
 import LeanPool.Biswal.Theorem23
 import LeanPool.BooleanIsoperimetry
 import LeanPool.BooleanIsoperimetry.Cascade
+import LeanPool.BooleanIsoperimetry.CoherentGap
 import LeanPool.BooleanIsoperimetry.Compression
 import LeanPool.BooleanIsoperimetry.Cube
 import LeanPool.BooleanIsoperimetry.Harper
