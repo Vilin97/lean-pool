@@ -6,15 +6,20 @@ projects:
       among all families of a fixed cardinality, the simplicial initial segment
       has the smallest closed radius-one Hamming neighborhood. Develops the
       supporting binomial-cascade identities, Kruskal--Katona shadow bounds,
-      coordinate compressions, and the final dimension induction.
-    branch: extremal combinatorics
+      coordinate compressions, and the final dimension induction. Applies the
+      coherent-gap certificate method to prove normalized chamber rigidity for
+      the Conway--Guy sequence from its exact recurrence.
+    branch: extremal and additive combinatorics
     entry_module: LeanPool.BooleanIsoperimetry
     authors:
       - Alexey Milovanov
     source:
-      title: Optimal numberings and isoperimetric problems on graphs
+      title: >-
+        Optimal numberings and isoperimetric problems on graphs; A sum packing
+        problem of Erdős and the Conway--Guy sequence
       authors:
         - L. H. Harper
+        - Tom Bohman
       doi: "10.1016/S0021-9800(66)80059-5"
       github_repo: AlexeyMilovanov/BooleanIsoperimetry
     license: Apache-2.0
@@ -22,12 +27,19 @@ projects:
     provenance: AI
     main_declarations:
       - BooleanIsoperimetry.harper_theorem
+      - BooleanIsoperimetry.CoherentGap.conwayGuyNormalizedChamberRigidity
     main_results:
       - declaration: BooleanIsoperimetry.harper_theorem
         informal: >-
           For every family of vertices in an n-dimensional Boolean cube, the
           simplicial initial segment of the same cardinality has a closed
           radius-one Hamming neighborhood no larger than that of the family.
+      - declaration: >-
+          BooleanIsoperimetry.CoherentGap.conwayGuyNormalizedChamberRigidity
+        informal: >-
+          In every dimension, any real row satisfying all liftable
+          unit-relation inequalities of the Conway--Guy reference row
+          dominates that row coordinatewise.
     tags:
       - extremal-combinatorics
       - isoperimetry

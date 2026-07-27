@@ -165,6 +165,9 @@ import LeanPool.BooleanIsoperimetry
 import LeanPool.BooleanIsoperimetry.Cascade
 import LeanPool.BooleanIsoperimetry.CoherentGap
 import LeanPool.BooleanIsoperimetry.Compression
+import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
+import LeanPool.BooleanIsoperimetry.ConwayGuyHeight
+import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
 import LeanPool.BooleanIsoperimetry.Cube
 import LeanPool.BooleanIsoperimetry.Harper
 import LeanPool.BooleanIsoperimetry.KruskalKatona

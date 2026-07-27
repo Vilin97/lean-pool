@@ -21,7 +21,7 @@ That theorem is needed only to identify integral unit relations with
 consecutive gaps in the Conway--Guy subset-sum order.
 
 The open-problem context and the exact boundary of this formalization are
-recorded in `~/Knowledge/Construct/recon/erdos_001.md`.
+recorded separately in the Construct research notes.
 -/
 
 open scoped BigOperators
