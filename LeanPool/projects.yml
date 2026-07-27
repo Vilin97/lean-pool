@@ -5432,7 +5432,6 @@ projects:
         - Richard K. Guy
       doi: "10.1016/S0304-0208(08)73500-X"
       url: https://www.erdosproblems.com/1
-      github_repo: lyfar/lean-pool
     license: Apache-2.0
     status: verified
     provenance: AI

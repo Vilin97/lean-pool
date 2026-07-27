@@ -6,7 +6,6 @@ Authors: Egor Lyfar
 
 import LeanPool.ErdosMoser.Basic
 import Mathlib.Data.Finset.Sort
-import Lean.Elab.Tactic.Omega
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Push
 import Mathlib.Tactic.Ring
