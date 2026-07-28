@@ -5,6 +5,17 @@ name: PR Separation Guard
 #   - LeanPool.lean
 #   - LeanPool/**/*.lean
 #   - LeanPool/projects.yml
+#   - Challenge/**/*.lean
+#   - Challenge/challenges.yml
+#   - Solution/**/*.lean
+# Challenge statements and their solutions count as content: they are
+# formalization material reviewed on their mathematics, and a PR that solves a
+# challenge legitimately adds a pooled project alongside the registry flip.
+# `Challenge.lean` and `Solution.lean` are neutral — generated indexes with no
+# mathematics in them, which have to exist before anything can be added to
+# those libraries — so they may accompany either category.
+# One extra rule applies here: a PR may not edit a challenge statement and a
+# solution together; see the check below.
 # A PR may touch only content files, or only non-content files (.github/,
 # python/, scripts/, docs, lakefile.toml, lean-toolchain, etc.). Mixing both
 # categories fails this gate, except for Lean/lake version-bump metadata.
@@ -61,8 +72,35 @@ jobs:
           printf '%s\n' "$files" | sed 's/^/  /'
           echo
 
-          # Content: the mk_all index, any .lean under LeanPool/, projects.yml.
-          content_re='^(LeanPool\.lean|LeanPool/.+\.lean|LeanPool/projects\.yml)$'
+          # Content: the pool index, any .lean under LeanPool/, Challenge/ or
+          # Solution/, and the two registries.
+          content_re='^(LeanPool\.lean|LeanPool/.+\.lean|LeanPool/projects\.yml|Challenge/.+\.lean|Challenge/challenges\.yml|Solution/.+\.lean)$'
+
+          # Neutral: the generated indexes of the challenge libraries. They are
+          # `lake exe mk_all` output with no mathematics in them, and the
+          # libraries have to exist — with empty indexes — before any statement
+          # can be added to them, so they may accompany either category.
+          neutral_re='^(Challenge\.lean|Solution\.lean)$'
+          files="$(printf '%s\n' "$files" | { grep -vE "$neutral_re" || true; })"
+
+          # A solution PR may not edit the statement it claims to solve: the
+          # merged statement is the text comparator judges against, and
+          # changing it in the same PR is how a hard problem quietly becomes
+          # an easy one. Land statement repairs separately.
+          edited_statements="$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
+            --jq '.[] | select(.status == "modified") | .filename' \
+            | { grep -E '^Challenge/.+\.lean$' || true; })"
+          touched_solutions="$(printf '%s\n' "$files" | { grep -E '^Solution/.+\.lean$' || true; })"
+          if [ -n "$edited_statements" ] && [ -n "$touched_solutions" ]; then
+            echo "::error::This PR edits a challenge statement and a solution together."
+            echo "Statements are the text solutions are judged against; edit them in"
+            echo "their own PR so the change is reviewed on its own terms."
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              echo "::error file=$f::challenge statement modified alongside a solution"
+            done <<< "$edited_statements"
+            exit 1
+          fi
           content="$(printf '%s\n' "$files" | { grep -E "$content_re" || true; })"
           non_content="$(printf '%s\n' "$files" | { grep -vE "$content_re" || true; })"
 
@@ -86,6 +124,11 @@ jobs:
             echo "  - LeanPool.lean"
             echo "  - LeanPool/**/*.lean"
             echo "  - LeanPool/projects.yml"
+            echo "  - Challenge/**/*.lean"
+            echo "  - Challenge/challenges.yml"
+            echo "  - Solution/**/*.lean"
+            echo "(Challenge.lean and Solution.lean are generated indexes and"
+            echo " may accompany either category.)"
             echo "(Exception: a version bump may also touch lean-toolchain,"
             echo " lake-manifest.json, and lakefile.toml.)"
             echo

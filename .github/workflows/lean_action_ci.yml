@@ -30,6 +30,8 @@ on:
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - 'LeanPool/projects.yml'
+      - 'Challenge/challenges.yml'
+      - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
@@ -46,6 +48,8 @@ on:
       - 'lean-toolchain'
       - 'lake-manifest.json'
       - 'LeanPool/projects.yml'
+      - 'Challenge/challenges.yml'
+      - 'python/lean_pool/challenge.py'
       - 'python/lean_pool/quality.py'
       - 'python/pyproject.toml'
       - 'python/uv.lock'
@@ -199,11 +203,20 @@ jobs:
             exit 1
           fi
 
+      - name: Build challenges and solutions
+        run: ./scripts/ci/build-challenges.sh
+
       - name: Lint
-        run: ~/.elan/bin/lake exe runLinter LeanPool
+        run: |
+          ~/.elan/bin/lake exe runLinter LeanPool
+          ~/.elan/bin/lake exe runLinter Challenge
+          ~/.elan/bin/lake exe runLinter Solution
 
       - name: Text style lint
-        run: ~/.elan/bin/lake exe lint-style LeanPool
+        run: |
+          ~/.elan/bin/lake exe lint-style LeanPool
+          ~/.elan/bin/lake exe lint-style Challenge
+          ~/.elan/bin/lake exe lint-style Solution
 
       - name: Repository quality checks
         run: |
@@ -392,11 +405,20 @@ jobs:
             exit 1
           fi
 
+      - name: Build challenges and solutions
+        run: ./scripts/ci/build-challenges.sh
+
       - name: Lint
-        run: ~/.elan/bin/lake exe runLinter LeanPool
+        run: |
+          ~/.elan/bin/lake exe runLinter LeanPool
+          ~/.elan/bin/lake exe runLinter Challenge
+          ~/.elan/bin/lake exe runLinter Solution
 
       - name: Text style lint
-        run: ~/.elan/bin/lake exe lint-style LeanPool
+        run: |
+          ~/.elan/bin/lake exe lint-style LeanPool
+          ~/.elan/bin/lake exe lint-style Challenge
+          ~/.elan/bin/lake exe lint-style Solution
 
       - name: Repository quality checks
         run: |
