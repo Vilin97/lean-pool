@@ -1,0 +1,103 @@
+# Registry of Lean Pool challenges: open statements awaiting a proof.
+#
+# One entry per challenge. `statements` (and the optional `definitions`) name
+# the declarations that may be left as `sorry` in the entry module; every other
+# declaration in that file must be closed. `informal` is the natural-language
+# statement the Lean is judged against — keep the two saying the same thing.
+#
+# Regenerate the cards after editing:
+#   cd python && uv run python -m lean_pool.quality --repo .. --write-challenge-cards
+challenges:
+  - slug: odlyzko-root-discriminant-bound
+    title: Odlyzko bound for root discriminants
+    summary: >-
+      Prove that a totally complex number field of degree at least 18 has
+      absolute discriminant at least 8.25 raised to the degree — equivalently,
+      root discriminant at least 8.25. Minkowski's elementary bound is too weak;
+      the result comes from analysing the zeros of the Dedekind zeta function of
+      the field, and follows from equation 26 and the table on p17 of Poitou's
+      1977 "Sur les petits discriminants". The Fermat's Last Theorem project
+      assumes it as FLT.Assumptions.Odlyzko_statement (tracking issue #458,
+      which also links Thomas Browning's notes on an approach); Kevin Buzzard
+      calls it one of the easiest of the results it assumes, and it is not on
+      the project's own formalization plan. The line estimate is a guess at the
+      analytic machinery needed — an explicit formula for the Dedekind zeta
+      function and the resulting inequality — not at the write-up of the
+      finished argument.
+    branch: algebraic number theory
+    entry_module: Challenge.Odlyzko
+    proposers:
+      - Kevin Buzzard
+      - Vasily Ilin
+    source:
+      title: Sur les petits discriminants
+      authors:
+        - Georges Poitou
+      url: https://www.numdam.org/item/SDPP_1976-1977__18_1_A6_0/
+    license: Apache-2.0
+    provenance: human
+    status: open
+    estimated_lines: 5000
+    statements:
+      - declaration: Challenge.Odlyzko.abs_discr_ge
+        informal: >-
+          For a totally complex number field K whose degree over the rationals
+          is at least 18, the absolute value of the discriminant of K is at
+          least 8.25 raised to the power of that degree.
+    tags:
+      - number-theory
+      - discriminants
+      - number-fields
+      - flt-assumption
+    msc:
+      - "11R29"
+      - "11R42"
+  - slug: mazur-torsion-bound
+    title: Mazur's bound on the torsion of an elliptic curve over the rationals
+    summary: >-
+      Prove that the torsion subgroup of the group of rational points of an
+      elliptic curve over the rationals has at most 16 elements. This is the
+      numerical consequence of Mazur's 1977 classification of the possible
+      torsion subgroups — cyclic of order at most 10 or of order 12, and
+      Z/2Z x Z/nZ for n = 2, 4, 6, 8 — proved in "Modular curves and the
+      Eisenstein ideal" by descent on the Eisenstein quotient of the Jacobian
+      of a modular curve of prime level. Every known proof of Fermat's Last
+      Theorem uses it, and the FLT project assumes it as
+      FLT.Assumptions.Mazur_statement (tracking issue #477); it is not on the
+      project's own formalization plan. The line estimate reflects that Mathlib
+      has none of the modular-curve machinery a proof needs, so it is an
+      estimate of a programme rather than of a single development; a solution
+      via the winding quotient and known partial results towards
+      Birch-Swinnerton-Dyer may be shorter than Mazur's own route.
+    branch: arithmetic geometry
+    entry_module: Challenge.Mazur
+    proposers:
+      - Kevin Buzzard
+      - Vasily Ilin
+    source:
+      title: Modular curves and the Eisenstein ideal
+      authors:
+        - Barry Mazur
+      doi: "10.1007/BF02684339"
+      url: https://www.numdam.org/item/?id=PMIHES_1977__47__33_0
+    license: Apache-2.0
+    provenance: human
+    status: open
+    estimated_lines: 50000
+    statements:
+      - declaration: Challenge.Mazur.torsion_ncard_le
+        informal: >-
+          For every elliptic curve E over the rationals, the torsion subgroup of
+          the group of rational points of E, viewed as a set, has at most 16
+          elements. Set.ncard returns 0 on an infinite set, so the statement
+          reads "at most 16, or infinite"; that is the form the FLT project
+          assumes, since finiteness of the torsion subgroup is classical and far
+          easier.
+    tags:
+      - elliptic-curves
+      - torsion
+      - modular-curves
+      - flt-assumption
+    msc:
+      - "11G05"
+      - "11G18"
