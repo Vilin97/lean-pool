@@ -91,14 +91,19 @@ def remote_tags(remote: str = MATHLIB_REMOTE) -> list[str]:
 
 
 def newer_versions(
-    current: str, tags: list[str], *, allow_prerelease: bool
+    current: str, tags: list[str], *, stable_only: bool = False
 ) -> list[str]:
-    """Return tags strictly newer than ``current``, oldest first."""
+    """Return tags strictly newer than ``current``, oldest first.
+
+    Release candidates count by default: the pool tracks the newest Lean and
+    Mathlib available, and an rc is what "newest" usually means during a
+    release cycle. ``stable_only`` narrows this to final releases.
+    """
     threshold = version_key(current)
     candidates = [
         tag
         for tag in tags
-        if version_key(tag) > threshold and (allow_prerelease or not is_prerelease(tag))
+        if version_key(tag) > threshold and not (stable_only and is_prerelease(tag))
     ]
     return sorted(set(candidates), key=version_key)
 
@@ -234,11 +239,13 @@ def build_report(log: str) -> dict[str, object]:
 
 
 def _command_detect(args: argparse.Namespace) -> int:
-    """Print the next Mathlib release to bump to, if any."""
+    """Print the newest Mathlib release to bump to, if any."""
     root = args.repo.resolve()
     current = current_version(root)
     tags = remote_tags(args.remote)
-    newer = newer_versions(current, tags, allow_prerelease=args.allow_prerelease)
+    newer = newer_versions(current, tags, stable_only=args.stable_only)
+    # The newest available release, candidates included: the pool tracks the
+    # latest Lean and Mathlib, not the latest final release.
     target = newer[-1] if newer else ""
     payload = {
         "current": current,
@@ -282,9 +289,9 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     detect.add_argument("--repo", type=Path, default=Path("."), help="repository root")
     detect.add_argument("--remote", default=MATHLIB_REMOTE)
     detect.add_argument(
-        "--allow-prerelease",
+        "--stable-only",
         action="store_true",
-        help="also consider -rc tags (default: final releases only)",
+        help="ignore -rc tags (default: bump to the newest release of any kind)",
     )
     detect.set_defaults(func=_command_detect)
 

@@ -34,17 +34,17 @@ on:
         description: "Target release (e.g. v4.33.0-rc1); blank = auto-detect"
         required: false
         type: string
-      allow_prerelease:
-        description: "Consider -rc tags when auto-detecting"
+      stable_only:
+        description: "Ignore -rc tags (default: bump to the newest release of any kind)"
         required: false
         default: false
         type: boolean
       repair:
         description: "Run the Claude repair fan-out"
         required: false
-        default: 'auto'
+        default: 'always'
         type: choice
-        options: ['auto', 'always', 'never']
+        options: ['always', 'never']
 
 concurrency:
   # One bump at a time: two concurrent bumps would fight over the branch.
@@ -79,8 +79,8 @@ jobs:
         id: detect
         env:
           REQUESTED: ${{ inputs.version }}
-          ALLOW_PRERELEASE: ${{ inputs.allow_prerelease }}
-          REPAIR_MODE: ${{ inputs.repair || 'auto' }}
+          STABLE_ONLY: ${{ inputs.stable_only }}
+          REPAIR_MODE: ${{ inputs.repair || 'always' }}
         run: |
           set -euo pipefail
           if [ -n "$REQUESTED" ]; then
@@ -88,9 +88,11 @@ jobs:
             found=true
           else
             flags=""
-            if [ "$ALLOW_PRERELEASE" = "true" ]; then
-              flags="--allow-prerelease"
+            if [ "$STABLE_ONLY" = "true" ]; then
+              flags="--stable-only"
             fi
+            # Release candidates count: the pool tracks the newest Lean and
+            # Mathlib, which mid-cycle means the latest rc.
             # shellcheck disable=SC2086
             result="$(cd python && uv run python -m lean_pool.bump detect --repo .. $flags)"
             echo "$result"
@@ -98,14 +100,10 @@ jobs:
             found="$(echo "$result" | python3 -c 'import json,sys; print(str(json.load(sys.stdin)["found"]).lower())')"
           fi
 
-          # `auto` repairs final releases but only reports on candidates, so a
-          # steady stream of rc tags cannot quietly drain the token budget.
-          repair=false
-          case "$REPAIR_MODE" in
-            always) repair=true ;;
-            never)  repair=false ;;
-            auto)   case "$target" in *-rc*) repair=false ;; *) repair=true ;; esac ;;
-          esac
+          repair=true
+          if [ "$REPAIR_MODE" = "never" ]; then
+            repair=false
+          fi
 
           {
             echo "found=$found"

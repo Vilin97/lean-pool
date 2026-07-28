@@ -76,25 +76,22 @@ def test_is_prerelease() -> None:
     assert not is_prerelease("v4.33.0")
 
 
-def test_newer_versions_skips_prereleases_by_default() -> None:
-    """Prereleases are opt-in, so nightly runs do not chase every rc."""
-    tags = ["v4.32.0-rc1", "v4.32.0", "v4.33.0-rc1", "v4.33.0"]
-    assert newer_versions("v4.32.0-rc1", tags, allow_prerelease=False) == [
-        "v4.32.0",
-        "v4.33.0",
-    ]
-    assert newer_versions("v4.32.0-rc1", tags, allow_prerelease=True) == [
-        "v4.32.0",
-        "v4.33.0-rc1",
-        "v4.33.0",
-    ]
+def test_prereleases_count_by_default() -> None:
+    """The pool tracks the newest release, which mid-cycle is an rc."""
+    tags = ["v4.32.0-rc1", "v4.32.0", "v4.33.0-rc1"]
+    assert newer_versions("v4.32.0-rc1", tags) == ["v4.32.0", "v4.33.0-rc1"]
+    assert newer_versions("v4.32.0-rc1", tags)[-1] == "v4.33.0-rc1"
+
+
+def test_stable_only_narrows_to_final_releases() -> None:
+    """``stable_only`` opts out of release candidates."""
+    tags = ["v4.32.0-rc1", "v4.32.0", "v4.33.0-rc1"]
+    assert newer_versions("v4.32.0-rc1", tags, stable_only=True) == ["v4.32.0"]
 
 
 def test_newer_versions_empty_when_current_is_latest() -> None:
     """An up-to-date pin yields no bump target."""
-    assert (
-        newer_versions("v4.33.0", ["v4.32.0", "v4.33.0"], allow_prerelease=True) == []
-    )
+    assert newer_versions("v4.33.0", ["v4.32.0", "v4.33.0"], stable_only=False) == []
 
 
 def test_newer_versions_ignores_unparseable_tags() -> None:
@@ -103,7 +100,7 @@ def test_newer_versions_ignores_unparseable_tags() -> None:
     assert newer_versions(
         "v4.32.0",
         [t for t in tags if t != "nightly-2026-07-01"],
-        allow_prerelease=False,
+        stable_only=True,
     ) == ["v4.33.0"]
 
 
