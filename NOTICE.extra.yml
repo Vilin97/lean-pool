@@ -1,0 +1,133 @@
+# Per-project prose for the generated NOTICE file, keyed by the project's
+# directory under LeanPool/. Everything else in NOTICE (which project, which
+# upstream repository, which license section) is derived from
+# LeanPool/projects.yml, so only text that cannot be derived belongs here.
+#
+# Recognised keys, all optional:
+#   note         Text shown under the project in its license section. For MIT
+#                projects this is the upstream copyright line, which the MIT
+#                License requires be preserved.
+#   relicensed   Moves the project into the "relicensed by their original
+#                author" section, with this text as its explanation. An empty
+#                string lists the project there without a note of its own
+#                (used when a following entry carries the shared explanation).
+#   attribution  Adds the project to the "additional upstream attribution"
+#                section, reproducing an upstream NOTICE or citation request.
+#
+# Regenerate NOTICE after editing:
+#   cd python && uv run python -m lean_pool.notice --repo ..
+
+ArtinWedderburn:
+  note: Copyright (c) 2024 Job Petrovčič
+
+Brouwer:
+  note: Copyright (c) 2025 Math_XMUM
+
+Clawristotle:
+  # The shared relicensing note sits on GrothendieckVanishing, which follows
+  # this entry -- both projects live in the same upstream repository.
+  relicensed: ""
+
+CutAndProject:
+  note: Copyright (c) 2026 Dirk Kunert
+
+DeadEnds:
+  note: Copyright (c) 2026 Axiom Math
+
+DirectedTopologyLean4:
+  note: Copyright 2023 Dominique Lawson
+
+FactorizationSystems:
+  note: Copyright (c) 2024 ivankobe
+
+FelConjecture:
+  note: Copyright (c) 2026 Axiom Math
+
+FormalLearningTheory:
+  attribution: |-
+    The upstream LICENSE appends a citation request. The original author asks
+    that publications, software, or derivative works built on this
+    formalization cite:
+
+        Gupta, D. (2026). Formal Learning Theory Kernel: Lean4 Formalization
+        of the Fundamental Theorem of Statistical Learning.
+        https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+
+FormalizationOfBoundedArithmetic:
+  note: |-
+    The upstream MIT LICENSE file leaves the copyright line as the unfilled
+    template text "Copyright (c) [year] [fullname]"; the repository owner of
+    record is "ruplet".
+
+ForwardEuler:
+  relicensed: |-
+    Originally distributed without a license file, then placed under the
+    Apache License, Version 2.0, by its sole author.
+
+GrothendieckVanishing:
+  relicensed: |-
+    Originally distributed under the Creative Commons
+    Attribution-NonCommercial-ShareAlike 4.0 International license, then
+    relicensed under the Apache License, Version 2.0, by its sole author.
+
+LatticeTriangle:
+  note: Copyright (c) 2026 Axiom Math
+
+Lean4Itree:
+  note: Copyright (c) 2025 the choice-tree authors (see the AUTHORS file)
+
+PCFTheory:
+  note: |-
+    The upstream MIT LICENSE file contains no copyright line; the repository
+    owner of record is "YnirPaz".
+
+PartialCombinatoryAlgebras:
+  note: Copyright (c) 2024 Andrej Bauer
+
+PartialRegularity:
+  note: Copyright (c) 2026 Axiom Math
+
+PolyaEnumerationTheorem:
+  note: Copyright (c) 2024 Luka-O
+
+QuasiBorelSpaces:
+  note: Copyright (c) 2025 Anthony Vandikas, Kiarash Sotoudeh
+
+RamanujanTauMissesPrimes:
+  note: Copyright (c) 2026 Axiom Math
+
+Redhill:
+  note: Copyright (c) 2026 Jeremy Tan / Parcly Taxel
+
+RlTheoryInLean:
+  note: Copyright (c) 2025 Shangtong Zhang
+
+SemicircleLaw:
+  note: Copyright (c) 2025 FredRaj3
+
+Shannon1948Formalization:
+  note: |-
+    The upstream MIT LICENSE file gives the copyright line as
+    "Copyright (c) 2026" with no name; the repository owner of record is
+    "SamuelSchlesinger".
+
+SpecialNumbers:
+  note: Copyright (c) 2024 Walter Moreira, Joe Stubbs
+
+SteinhausThreeGap:
+  note: Copyright (c) 2026 Dirk Kunert
+
+TwoColoringOneRound:
+  note: Copyright (c) 2026 Jukka Suomela
+
+ZhangYeungInequality:
+  attribution: |-
+    The upstream repository ships a NOTICE file (Apache License, Version 2.0,
+    Section 4(d)). Its attribution notice reads:
+
+        The Zhang-Yeung Inequality
+        Copyright 2026 Christopher Boone
+
+    The upstream additionally carries CC-BY-4.0 prose, CC-BY-SA-4.0 for its
+    code of conduct, CC0-1.0 for generated files, and bundled reference
+    materials under a custom license; none of those files were imported.

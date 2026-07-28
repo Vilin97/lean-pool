@@ -6,12 +6,22 @@ on:
       - main
     paths:
       - 'python/**'
+      - 'NOTICE'
+      - 'NOTICE.extra.yml'
       - '.github/workflows/python_ci.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'python/**'
+      # NOTICE is generated (notice.yml); the pytest suite asserts the
+      # committed file matches its inputs, which catches hand-edits to
+      # either. LeanPool/projects.yml is deliberately absent: it is a
+      # content path, and a content PR cannot also update NOTICE, so
+      # gating on it here would be unsatisfiable. notice.yml regenerates
+      # after merge instead.
+      - 'NOTICE'
+      - 'NOTICE.extra.yml'
       - '.github/workflows/python_ci.yml'
   workflow_dispatch:
 
