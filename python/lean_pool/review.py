@@ -579,8 +579,8 @@ def classify_pr(files: list[tuple[str, str]]) -> str:
     in the PR, the board entry is what needs judging. Otherwise a mixed PR
     falls through to the content classification, which is the conservative
     choice — a Lean/Mathlib bump repairing every library should not be
-    reviewed as a challenge. When no Lean content is touched at all, default
-    to ``"project"``.
+    reviewed as a challenge. A PR that touches no Lean in any of the three
+    content trees is ``"infra"``; anything left is ``"project"``.
     """
     added_projects: set[str] = set()
     existing_projects: set[str] = set()
