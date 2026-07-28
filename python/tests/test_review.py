@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import types
 
 # The stub registered by tests/conftest.py; its exception classes carry
@@ -880,6 +881,34 @@ def test_render_pr_context_truncates_a_huge_description() -> None:
     assert "OPENING CLAIM." in rendered
     assert "description truncated" in rendered
     assert len(rendered) < MAX_PR_BODY_CHARS + 1_000
+
+
+def test_fetch_pr_context_round_trips_markdown(monkeypatch) -> None:
+    """Newlines and backslashes in a description survive the fetch."""
+    from lean_pool import review
+
+    body = "Line one\n\n```\nlatex \\alpha\ttab\n```\nEnd."
+    monkeypatch.setattr(
+        review,
+        "run_gh",
+        lambda *a, **k: json.dumps({"title": "T", "body": body}),
+    )
+
+    context = review.fetch_pr_context("1", "o/r")
+
+    assert context.title == "T"
+    assert context.body == body
+
+
+def test_fetch_pr_context_tolerates_a_null_description(monkeypatch) -> None:
+    """A PR opened with no description yields an empty body, not None."""
+    from lean_pool import review
+
+    monkeypatch.setattr(
+        review, "run_gh", lambda *a, **k: json.dumps({"title": "T", "body": ""})
+    )
+
+    assert review.fetch_pr_context("1", "o/r").body == ""
 
 
 def test_project_assessment_leads_with_the_ungated_checks() -> None:

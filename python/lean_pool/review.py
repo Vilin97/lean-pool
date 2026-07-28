@@ -837,17 +837,22 @@ MAX_PR_BODY_CHARS = 12_000
 
 
 def fetch_pr_context(pr_number: str, repo_full_name: str) -> PullRequestContext:
-    """Return the title and description of ``pr_number``."""
+    """Return the title and description of ``pr_number``.
+
+    Selects a JSON object rather than a flat format: descriptions are
+    Markdown full of newlines, tabs, and backslashes, and only JSON
+    round-trips them without a lossy unescaping step of our own.
+    """
     raw = run_gh(
         "api",
         f"repos/{repo_full_name}/pulls/{pr_number}",
         "--jq",
-        '[.title, .body // ""] | @tsv',
+        '{title: .title, body: (.body // "")}',
     )
-    title, _, body = raw.strip().partition("\t")
-    # `@tsv` escapes newlines in the body; restore them for readability.
-    body = body.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "")
-    return PullRequestContext(title=title, body=body)
+    parsed = json.loads(raw)
+    return PullRequestContext(
+        title=parsed.get("title") or "", body=parsed.get("body") or ""
+    )
 
 
 def render_pr_context(
