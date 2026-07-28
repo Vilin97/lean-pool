@@ -34,7 +34,7 @@ def test_render_comment_includes_marker_and_reviewed_head() -> None:
                 "level": "graduate",
                 "branch": "analysis",
                 "mode": "theory_building",
-                "obscure_problem": False,
+                "proves_the_claim": "proves_it",
                 "code_quality": 4,
                 "significance_one_sentence": "A named theorem is formalized.",
             },
@@ -93,11 +93,41 @@ def test_classify_pr_module_split_is_refactor() -> None:
     assert classify_pr(files) == "refactor"
 
 
-def test_classify_pr_without_project_files_defaults_to_project() -> None:
-    """Infra-only diffs fall back to the conservative project review."""
+def test_classify_pr_tooling_lean_is_not_a_project() -> None:
+    """A `.lean` file outside the content trees is infra, not a project.
+
+    `scripts/exposition/Extract.lean` clears the workflow's "touches
+    Lean?" filter, so PRs #279, #282, and #283 reached the project rules
+    and were graded for mathematical fit — inconsistently, since the
+    first two came back `not_a_fit` and the third `good_fit`/`approve`.
+    All three merged.
+    """
     from lean_pool.review import classify_pr
 
-    assert classify_pr([("README.md", "modified")]) == "project"
+    files = [
+        ("scripts/exposition/Extract.lean", "modified"),
+        ("python/lean_pool/exposition/generate.py", "modified"),
+    ]
+    assert classify_pr(files) == "infra"
+
+
+def test_classify_pr_without_any_lean_is_infra() -> None:
+    """A diff with no Lean at all has no contribution to judge."""
+    from lean_pool.review import classify_pr
+
+    assert classify_pr([("README.md", "modified")]) == "infra"
+
+
+def test_classify_pr_project_root_module_still_counts_as_content() -> None:
+    """A project's own root module is content even at depth two."""
+    from lean_pool.review import classify_pr, touches_reviewable_content
+
+    assert touches_reviewable_content([("Challenge/TwinPrimes.lean", "added")])
+    assert touches_reviewable_content([("Solution/Widget.lean", "added")])
+    assert touches_reviewable_content([("LeanPool/Foo/A.lean", "added")])
+    # The generated root index alone is not somebody's contribution.
+    assert not touches_reviewable_content([("LeanPool.lean", "modified")])
+    assert classify_pr([("LeanPool/NewProj/A.lean", "added")]) == "project"
 
 
 def test_classify_pr_new_challenge_is_challenge() -> None:
@@ -748,3 +778,207 @@ def test_every_review_mode_asks_for_literal_unicode(monkeypatch) -> None:
         sent = captured[0]["messages"][0]["content"]
         assert "copy the characters exactly" in sent
         assert "ℚ" in sent
+
+
+def test_every_review_mode_holds_the_trust_boundary(monkeypatch) -> None:
+    """Contributor text is evidence in every mode, never instruction.
+
+    The diff and the PR description are written by the contributor, and
+    the pool accepts AI-generated projects by design, so a review kind
+    that skipped this rule would take orders from the thing it reviews.
+    """
+    from lean_pool import review
+
+    captured: list[dict] = []
+
+    class _Message:
+        content = '{"summary": "s", "verdict": "approve", "findings": []}'
+
+    class _Choice:
+        message = _Message()
+
+    class _Response:
+        choices = [_Choice()]
+        usage = None
+
+    class _Completions:
+        def create(self, **kwargs):
+            captured.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        completions = _Completions()
+
+    class _Client:
+        chat = _Chat()
+
+        def __init__(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(review, "OpenAI", _Client)
+
+    for _rules_path, system_prompt in review.REVIEW_MODES.values():
+        captured.clear()
+        review.request_review(
+            model="gpt-5.5",
+            rules="rules",
+            diff="diff --git a/A b/A",
+            system_prompt=system_prompt,
+        )
+        sent = captured[0]["messages"][0]["content"]
+        assert "Trust boundary" in sent
+        assert "prompt-injection" in sent
+
+
+def test_pr_context_reaches_the_model_as_a_claim_to_verify() -> None:
+    """The description is shown, and framed as something to check."""
+    from lean_pool.review import PullRequestContext, build_user_content
+
+    content = build_user_content(
+        rules="RULES",
+        diff="diff --git a/A b/A",
+        truncation=None,
+        context=PullRequestContext(
+            title="Import the Widget formalization",
+            body="Formalizes Theorem 3 of arXiv:2401.00001.",
+        ),
+    )
+
+    assert "Import the Widget formalization" in content
+    assert "arXiv:2401.00001" in content
+    # The source anchor REVIEW_RULES.md allows in the PR description is
+    # only usable if it is presented as a claim, not as a finding.
+    assert "claim to verify against the diff" in content
+    # Rules still lead; the diff still arrives.
+    assert content.index("RULES") < content.index("arXiv:2401.00001")
+    assert "## PR diff" in content
+
+
+def test_build_user_content_without_context_is_unchanged() -> None:
+    """A review with no PR metadata still sends rules and diff alone."""
+    from lean_pool.review import build_user_content
+
+    content = build_user_content("RULES", "diff --git a/A b/A", None)
+
+    assert "What the PR says about itself" not in content
+    assert "## Review rules" in content
+
+
+def test_render_pr_context_truncates_a_huge_description() -> None:
+    """A release-note-sized body is capped without losing the opening."""
+    from lean_pool.review import (
+        MAX_PR_BODY_CHARS,
+        PullRequestContext,
+        render_pr_context,
+    )
+
+    rendered = render_pr_context(
+        PullRequestContext(title="T", body="OPENING CLAIM. " + "x" * 40_000)
+    )
+
+    assert rendered is not None
+    assert "OPENING CLAIM." in rendered
+    assert "description truncated" in rendered
+    assert len(rendered) < MAX_PR_BODY_CHARS + 1_000
+
+
+def test_project_assessment_leads_with_the_ungated_checks() -> None:
+    """Claim, source, and prior art outrank the fields that echo the verdict."""
+    from lean_pool.review import render_project_assessment
+
+    table = render_project_assessment(
+        {
+            "assessment": {
+                "fit": "borderline",
+                "level": "research",
+                "branch": "graph theory",
+                "mode": "theory_building",
+                "proves_the_claim": "weaker_than_claimed",
+                "claim_note": "Proved for n = 14 only, not all n.",
+                "assumed_inputs": "Szöllősi–Östergård classification, disclosed",
+                "already_formalized": "SimpleGraph.nonempty_hom_of_forall_finite",
+                "source_match": "matches",
+                "code_quality": 4,
+                "significance_one_sentence": "A conditional fourteen-point case.",
+            }
+        }
+    )
+
+    assert "Proves the claim" in table
+    assert "weaker_than_claimed" in table
+    assert "Proved for n = 14 only" in table
+    assert "Already formalized" in table
+    assert "Assumed, not proved" in table
+    assert "Szöllősi–Östergård" in table
+    # Prior art and the claim check come before the verdict-echoing rows.
+    assert table.index("Already formalized") < table.index("| Level |")
+    # The field that was `no` in all 147 past reviews is gone.
+    assert "Obscure problem" not in table
+
+
+def test_project_assessment_omits_empty_optional_rows() -> None:
+    """A clean project shows no prior-art or assumption row at all."""
+    from lean_pool.review import render_project_assessment
+
+    table = render_project_assessment(
+        {
+            "assessment": {
+                "fit": "good_fit",
+                "level": "research",
+                "proves_the_claim": "proves_it",
+                "already_formalized": "",
+                "assumed_inputs": "",
+                "code_quality": 4,
+            }
+        }
+    )
+
+    assert "Already formalized" not in table
+    assert "Assumed, not proved" not in table
+    assert "✅ `proves_it`" in table
+
+
+def test_request_changes_comment_says_it_is_not_a_close() -> None:
+    """39% of past `request_changes` verdicts were merged after a human look."""
+    from lean_pool.review import render_comment
+
+    body = render_comment(
+        {"summary": "s", "verdict": "request_changes", "findings": []},
+        model="gpt-5.6-sol",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="abc123",
+    )
+    approved = render_comment(
+        {"summary": "s", "verdict": "approve", "findings": []},
+        model="gpt-5.6-sol",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="abc123",
+    )
+
+    assert "an ask, not a close" in body
+    assert "an ask, not a close" not in approved
+
+
+def test_infra_skip_comment_is_sticky_and_explains_itself() -> None:
+    """A tooling PR gets a note, not a mathematical-fit verdict."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_infra_skip_comment
+
+    body = render_infra_skip_comment("abc123")
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "**Reviewed head:** `abc123`" in body
+    assert "no project, challenge, or solution here to judge" in body
+    # No verdict, because there is no contribution to have a verdict about.
+    assert "**Verdict:**" not in body
+
+
+def test_render_pr_context_handles_an_empty_description() -> None:
+    """An author who wrote no description is reported as such, not blank."""
+    from lean_pool.review import PullRequestContext, render_pr_context
+
+    rendered = render_pr_context(PullRequestContext(title="T", body="   "))
+
+    assert rendered is not None
+    assert "no description provided" in rendered
