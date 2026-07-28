@@ -708,7 +708,8 @@ private lemma boosted_sample_error_le_of_good_blocks
         D {x : X |
             L.learn (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i))) x ≠ c x}
           ≤ ENNReal.ofReal (rate n) := by
-      simpa [good, goodBlockEvent] using hj
+      simp only [good, Finset.mem_filter] at hj
+      simpa [goodBlockEvent] using hj
     exact le_trans hj' (ENNReal.ofReal_le_ofReal (le_max_left _ _))
   exact majority_error_le_seven_rate_of_good_fraction
     (D := D) (k := k) hk_pos

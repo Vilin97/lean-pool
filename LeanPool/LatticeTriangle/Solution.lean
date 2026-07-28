@@ -1952,22 +1952,26 @@ lemma summand_reindex (n : ℕ) [NeZero n] (m : ℕ) (hm2 : m < n) (k : ZMod n) 
   rw [← Finset.sum_filter]
   apply Finset.sum_nbij' (fun j => ZMod.val j - 1) (fun t => ((t + 1 : ℕ) : ZMod n))
   · intro j hj
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, intervalSet, Set.mem_setOf_eq] at hj
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
+    simp only [intervalSet, Set.mem_setOf_eq] at hj
     exact Finset.mem_range.mpr (by omega)
   · intro t ht
     have htm : t < m := Finset.mem_range.mp ht
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, intervalSet, Set.mem_setOf_eq]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    simp only [intervalSet, Set.mem_setOf_eq]
     rw [ZMod.val_natCast_of_lt (by omega : t + 1 < n)]
     exact ⟨by omega, by omega⟩
   · intro j hj
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, intervalSet, Set.mem_setOf_eq] at hj
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
+    simp only [intervalSet, Set.mem_setOf_eq] at hj
     simp_all
   · intro t ht
     have htm : t < m := Finset.mem_range.mp ht
     rw [ZMod.val_natCast_of_lt (by omega : t + 1 < n)]
     omega
   · intro j hj
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, intervalSet, Set.mem_setOf_eq] at hj
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hj
+    simp only [intervalSet, Set.mem_setOf_eq] at hj
     simp_all
 
 lemma character_multiplication_simplify (n : ℕ) [NeZero n] (t : ℕ) (k : ZMod n) :

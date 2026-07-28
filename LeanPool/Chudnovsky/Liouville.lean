@@ -155,7 +155,7 @@ lemma residue_simplePole_add_analytic {c a : ℂ} {w : ℂ → ℂ} (hw : Analyt
     refine ContinuousOn.circleIntegrable hr0.le (continuousOn_const.mul ?_)
     refine (continuousOn_id.sub continuousOn_const).inv₀ (fun z hz => ?_)
     rw [Metric.mem_sphere] at hz
-    simp only [id_eq]
+    simp only [Pi.sub_apply, id_eq]
     refine sub_ne_zero.2 (fun h => ?_)
     rw [h, dist_self] at hz
     exact hr0.ne' hz.symm
@@ -437,6 +437,7 @@ private lemma boundaryIntegral_zpow_eq_zero {L : PeriodPair} {n : ℤ} (hn : n �
     push_cast at h
     rwa [mul_div_cancel_left₀ _ hn'] at h
   · refine (continuousOn_id.sub continuousOn_const).zpow₀ n (fun z hz => ?_)
+    simp only [Pi.sub_apply, id_eq]
     exact Or.inl (sub_ne_zero.2 (fun h => hc (h ▸ hz)))
 
 /-- Two boundary integrals of pointwise equal functions agree. -/
@@ -606,11 +607,11 @@ private lemma boundaryIntegral_sub_inv_congr {L : PeriodPair} {v c c' : ℂ}
     L.boundaryIntegral (fun z ↦ (z - c)⁻¹) v = L.boundaryIntegral (fun z ↦ (z - c')⁻¹) v := by
   have hcont1 : ContinuousOn (fun z ↦ (z - c)⁻¹) (L.boundarySet v) := by
     refine (continuousOn_id.sub continuousOn_const).inv₀ (fun z hz => ?_)
-    simp only [id_eq]
+    simp only [Pi.sub_apply, id_eq]
     exact sub_ne_zero.2 (fun h => hseg z hz (h ▸ left_mem_segment ℝ c c'))
   have hcont2 : ContinuousOn (fun z ↦ (z - c')⁻¹) (L.boundarySet v) := by
     refine (continuousOn_id.sub continuousOn_const).inv₀ (fun z hz => ?_)
-    simp only [id_eq]
+    simp only [Pi.sub_apply, id_eq]
     exact sub_ne_zero.2 (fun h => hseg z hz (h ▸ right_mem_segment ℝ c c'))
   have hzero : L.boundaryIntegral (fun z ↦ (z - c)⁻¹ - (z - c')⁻¹) v = 0 :=
     boundaryIntegral_eq_zero_of_primitive
@@ -1246,7 +1247,7 @@ private lemma residue_decomposition {c a : ℂ} {N : ℕ} {A : ℕ → ℂ} {h :
     refine ContinuousOn.circleIntegrable hr0.le (continuousOn_const.mul ?_)
     refine (continuousOn_id.sub continuousOn_const).inv₀ (fun z hz => ?_)
     rw [Metric.mem_sphere] at hz
-    simp only [id_eq]
+    simp only [Pi.sub_apply, id_eq]
     refine sub_ne_zero.2 (fun hzz => ?_)
     rw [hzz, dist_self] at hz
     exact hr0.ne' hz.symm
@@ -1327,7 +1328,7 @@ private lemma boundaryIntegral_principalPart {L : PeriodPair} {v c : ℂ} (a : �
       = a * L.boundaryIntegral (fun z ↦ (z - c)⁻¹) v := by
   have hcinv : ContinuousOn (fun z ↦ (z - c)⁻¹) (L.boundarySet v) := by
     refine (continuousOn_id.sub continuousOn_const).inv₀ (fun z hz => ?_)
-    simp only [id_eq]
+    simp only [Pi.sub_apply, id_eq]
     exact sub_ne_zero.2 (hbne z hz)
   have hcont1 : ContinuousOn (fun z ↦ a * (z - c)⁻¹) (L.boundarySet v) :=
     continuousOn_const.mul hcinv

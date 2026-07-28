@@ -89,11 +89,9 @@ lemma sum_intExpNegPoly_bound
   choose M hM0 hM using (fun i : Fin n => intExpNegPoly_bounded T (a i))
   let A : ℝ := ∑ i : Fin n, ‖b i * cexp (a i)‖ * rexp ‖a i‖
   let B : ℝ := Finset.sup' Finset.univ huniv_nonempty (fun i : Fin n => ‖a i‖ * M i)
-  have hB : ∀ i : Fin n, ‖a i‖ * M i ≤ B := by
-    intro i
-    simpa [B] using
-      (Finset.le_sup' (s := Finset.univ)
-        (f := fun j : Fin n => ‖a j‖ * M j) (by simp : i ∈ Finset.univ))
+  have hB : ∀ i : Fin n, ‖a i‖ * M i ≤ B := fun i =>
+    Finset.le_sup' (s := Finset.univ)
+      (f := fun j : Fin n => ‖a j‖ * M j) (Finset.mem_univ i)
   have hA0 : 0 ≤ A := by positivity
   have hB0 : 0 ≤ B := by
     let i0 : Fin n := ⟨0, hn⟩

@@ -219,7 +219,9 @@ theorem HerglotzRiesz_realPos (μ : ProbabilityMeasure (sphere (0 : ℂ) 1)) :
       apply herglotz_hasDerivAt μ z
       simp_all
     · exact isOpen_ball
-  · simp
+  · have h_div_self : ∀ x : sphere (0 : ℂ) 1, (x : ℂ) / (x : ℂ) = 1 := fun x =>
+      div_self (norm_ne_zero_iff.mp (by rw [mem_sphere_zero_iff_norm.mp x.2]; norm_num))
+    simp [h_div_self]
   · have h_real_part (z : ℂ) (hz : z ∈ ball 0 1) :
       0 < Complex.re (∫ x : sphere (0 : ℂ) 1, ((x + z) / (x - z)) ∂μ) := by
       have h_real_part (x : ℂ) (hx : ‖x‖ = 1) : 0 < Complex.re ((x + z) / (x - z)) := by
@@ -589,7 +591,7 @@ lemma embed_injective : Function.Injective embed := by
   apply ContinuousLinearMap.ext; intro f; exact h_eval f
 
 /-- The metrizability of the space `KWeak`. -/
-lemma K_weak_metrizable : TopologicalSpace.MetrizableSpace (Subtype KWeak) := by
+lemma K_weak_metrizable : TopologicalSpace.MetrizableSpace (↥KWeak) := by
   let embed_K : KWeak → (ℕ → ℝ) := fun Λ => embed Λ.val
   have h_cont : Continuous embed_K := embed_continuous.comp continuous_subtype_val
   have h_inj : Function.Injective embed_K := fun Λ₁ Λ₂ h => Subtype.ext (embed_injective h)
@@ -637,9 +639,9 @@ lemma norm_lambda_leq_one (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
   simp_all only [one_div, mul_inv_rev, ge_iff_le, Λ]
 
 /-- The space `KWeak` is sequentially compact. -/
-lemma K_weak_seq_compact : SeqCompactSpace (Subtype KWeak) := by
-  have h₁ : CompactSpace (Subtype KWeak) := K_weak_compact
-  have h₂ : TopologicalSpace.MetrizableSpace (Subtype KWeak) := K_weak_metrizable
+lemma K_weak_seq_compact : SeqCompactSpace (↥KWeak) := by
+  have h₁ : CompactSpace (↥KWeak) := K_weak_compact
+  have h₂ : TopologicalSpace.MetrizableSpace (↥KWeak) := K_weak_metrizable
   exact FirstCountableTopology.seq_compact_of_compact
 
 /-- The sequence of functionals `ΛN`. -/
@@ -671,12 +673,12 @@ lemma Λ_seq_converging_subsequence (p : ℂ → ℂ) (r : ℕ → ℝ)
   obtain ⟨phi, hphi⟩ : ∃ phi : ℕ → ℕ, StrictMono phi ∧ ∃ Λ : WeakDual ℝ CUnitCircle,
     Filter.Tendsto (fun k => ΛSeq p r hp_analytic hr (phi k)) Filter.atTop (nhds Λ) := by
     have := K_weak_seq_compact
-    obtain ⟨Λ, hΛ⟩ : ∃ Λ : Subtype KWeak, ∃ phi : ℕ → ℕ, StrictMono phi ∧
+    obtain ⟨Λ, hΛ⟩ : ∃ Λ : ↥KWeak, ∃ phi : ℕ → ℕ, StrictMono phi ∧
       Filter.Tendsto (fun k => ⟨ΛSeq p r hp_analytic hr (phi k), h_seq_in_K (phi k)⟩ : ℕ →
-        Subtype KWeak) Filter.atTop (nhds Λ) := by
+        ↥KWeak) Filter.atTop (nhds Λ) := by
       have := this.1
       have := this (fun n => Set.mem_univ (
-        ⟨ΛSeq p r hp_analytic hr n, h_seq_in_K n⟩ : Subtype KWeak));
+        ⟨ΛSeq p r hp_analytic hr n, h_seq_in_K n⟩ : ↥KWeak));
       simp_all only [mem_univ, true_and, Subtype.exists]
       obtain ⟨w, w_1, w_2, left, right⟩ := this
       exact ⟨w, w_1, w_2, left, right⟩

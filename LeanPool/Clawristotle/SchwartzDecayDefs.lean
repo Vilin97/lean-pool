@@ -89,7 +89,7 @@ lemma _root_.VML.UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3
     Integrable (fun v => (1 + ‖v‖) ^ M * f x v) := by
   obtain ⟨C, hC_pos, hbound⟩ := hS.hDecay (k := 0) (M + 4) (by omega)
   have hint := inverse_poly_integrable C
-  apply hint.mono' ((continuous_const.add continuous_norm).pow M |>.mul
+  apply hint.mono' ((continuous_const.fun_add continuous_norm).fun_pow M |>.fun_mul
     (hf_smooth x).continuous).aestronglyMeasurable
   filter_upwards [] with v
   have hb := hbound x v
@@ -98,9 +98,7 @@ lemma _root_.VML.UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3
     norm_eq_abs] at hb
   have hv_pos : (0 : ℝ) < (1 + ‖v‖) ^ 4 := by positivity
   have hMnn : (0 : ℝ) ≤ (1 + ‖v‖) ^ M := by positivity
-  -- `Continuous.mul` produces a `Pi` product; unfold it pointwise before the abs rewrites.
-  simp only [Pi.mul_apply, Pi.add_apply, Real.norm_eq_abs, abs_mul,
-    abs_of_nonneg hMnn]
+  simp only [Real.norm_eq_abs, abs_mul, abs_of_nonneg hMnn]
   rw [le_div_iff₀ hv_pos]
   calc (1 + ‖v‖) ^ M * |f x v| * (1 + ‖v‖) ^ 4
       = |f x v| * ((1 + ‖v‖) ^ M * (1 + ‖v‖) ^ 4) := by ring

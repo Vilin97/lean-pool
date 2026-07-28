@@ -162,7 +162,7 @@ lemma continuousOn_weakClosedBall_reApplyInnerSelf_of_isCompactOperator
           (g := fun _ => (0 : ℝ))
           (h := fun y => ‖T (y : E) - T (x : E)‖ * r)
           tendsto_const_nhds hrhs ?_ ?_
-      · simp_all
+      · exact Filter.Eventually.of_forall fun _ => norm_nonneg _
       · filter_upwards [hx_ball] with y hy
         have hy' : ‖(y : E)‖ ≤ r := by
           let ye : E := y
@@ -199,7 +199,7 @@ lemma continuousOn_weakClosedBall_reApplyInnerSelf_of_isCompactOperator
             l
             (𝓝 (((InnerProductSpace.toDual 𝕜 E) (T (x : E))) (x : E))) :=
         (hcont.tendsto x).comp hid
-      simpa [InnerProductSpace.toDual_apply_apply] using this
+      exact this
     have hadd :
         Tendsto
           (fun y : WeakSpace 𝕜 E =>
@@ -230,7 +230,7 @@ lemma continuousOn_weakClosedBall_reApplyInnerSelf_of_isCompactOperator
           RCLike.re (inner 𝕜 (T (y : E)) (y : E)))
         l (𝓝 (RCLike.re (inner 𝕜 (T (x : E)) (x : E)))) :=
     (RCLike.continuous_re.tendsto _).comp hinner
-  simpa [ContinuousWithinAt, l, ContinuousLinearMap.reApplyInnerSelf_apply] using hre
+  exact hre
 omit [CompleteSpace E] in
 /-- An extremum of a positive-2-homogeneous function on the unit weak closed ball must lie on the
 unit sphere, provided the extremal value has a definite sign (encoded via a sign `σ`).

@@ -34,7 +34,7 @@ universe u v
 
 /-- A concept is a function from domain to label. This is the atomic unit that
     concept classes collect and learners try to approximate. -/
-def Concept (X : Type u) (Y : Type v) := X → Y
+abbrev Concept (X : Type u) (Y : Type v) := X → Y
 
 /-- A concept class is a set of concepts. Used by every paradigm, complexity
     measure, and criterion.

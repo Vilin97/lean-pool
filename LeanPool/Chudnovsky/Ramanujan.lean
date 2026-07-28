@@ -91,7 +91,8 @@ lemma E2_slash_T : E2 ∣[(2 : ℤ)] ModularGroup.T = E2 := by
   simp [E2_slash_action, D2_T]
 
 private lemma denom_T (τ : ℍ) : denom ModularGroup.T τ = 1 := by
-  simp [ModularGroup.denom_apply, ModularGroup.T]
+  rw [ModularGroup.denom_apply]
+  simp [ModularGroup.T]
 
 /-- `E₂` is invariant under `τ ↦ τ + 1`. -/
 lemma E2_vadd_one (τ : ℍ) : E2 ((1 : ℝ) +ᵥ τ) = E2 τ := by

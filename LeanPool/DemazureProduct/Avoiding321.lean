@@ -190,9 +190,8 @@ noncomputable def perm321aEquivTfas :
     constructor
     · cases I
       case mk toAspSet prop_321a =>
-        rw [tfas.mk.injEq]
-        apply SetLike.coe_injective
-        exact toAspSet.invSet_of_toAspPerm χ
+        congr 1
+        exact SetLike.coe_injective (toAspSet.invSet_of_toAspPerm χ)
     · exact I.chi_of_toAspPerm χ
 
 /-- Characterize the sets of boxes that arise as inversion sets of

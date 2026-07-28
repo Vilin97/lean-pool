@@ -807,16 +807,19 @@ lemma H_increment_lower (n p : ℕ) (hp : p + 1 ≤ 2 ^ n) :
         · intro x hx y hy; simp_all +decide [Fin.ext_iff, Finset.ext_iff]
           grind +extAll
       refine le_trans h_inv_w <| Finset.card_le_card ?_
-      simp +decide only [Fin.val_fin_lt, Finset.lt_min'_iff, gShift, Finset.subset_iff,
-        Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and, forall_exists_index,
-        and_imp, forall_apply_eq_imp_iff₂, Finset.insert_nonempty, ↓reduceDIte]
-      intro a ha; rw [Finset.min'_eq_inf'] ; simp +decide only [id_eq]
-      rw [show Finset.inf' (insert a w) _ (fun x => x) = a from ?_]
-      · grind
-      · refine le_antisymm ?_ ?_ <;>
-          simp +decide only [Finset.inf'_le_iff, Finset.le_inf'_iff, Finset.mem_insert,
-            exists_eq_or_imp, forall_eq_or_imp, le_refl, true_or, true_and]
-        exact fun x hx => le_of_lt (ha x hx)
+      intro v hv
+      simp +decide only [Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and,
+        Fin.val_fin_lt, Finset.lt_min'_iff] at hv
+      obtain ⟨a, ha, rfl⟩ := hv
+      refine Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩
+      have hne : (insert a w).Nonempty := Finset.insert_nonempty _ _
+      have hmin : (insert a w).min' hne = a :=
+        le_antisymm (Finset.min'_le _ _ (Finset.mem_insert_self a w))
+          (Finset.le_min' _ _ _ fun y hy =>
+            (Finset.mem_insert.mp hy).elim (fun h => h.ge) fun h => (ha y h).le)
+      have hnotMem : a ∉ w := fun h => absurd (ha a h) (lt_irrefl a)
+      unfold gShift
+      rw [dif_pos hne, hmin, Finset.erase_insert hnotMem]
     -- Since `gShift⁻¹(w)` is a subset of `filter (rank (gShift ·) = p)`, we have
     -- `H n (p + 1) ≥ H n p + |gShift⁻¹(w)|`.
     have h_filter :

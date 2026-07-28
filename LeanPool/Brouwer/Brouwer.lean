@@ -55,7 +55,7 @@ instance TT.finite : Finite (TT n l) := by
 instance TT.inhabited : Inhabited (TT n l) where
   default :=
     ⟨ fun i => if i = 0 then Fin.last l else 0,  by
-      simp only [TT, Set.mem_setOf_eq]
+      refine Set.mem_setOf.mpr ?_
       rw [Finset.sum_eq_single (0 : Fin n)]
       · simp
       · intro b _ hb; simp [hb]
@@ -172,7 +172,7 @@ lemma size_bound_key (σ : Finset (TT n l)) (C : Finset (Fin n)) (h : TT.ILO.isD
             h_sum_plus_one
         · simp [M', hk_in_C]
     let M_val : Fin n → Fin (l + 1) := fun k => ⟨M_coords k, Nat.lt_succ_of_le (h_M_coords_bound k)⟩
-    use ⟨M_val, by simp [M_val, h_M_coords_sum]⟩
+    use ⟨M_val, Set.mem_setOf.mpr (by simp [M_val, h_M_coords_sum])⟩
     intro k hk_in_C
     change m k + 1 ≤ (M_val k : ℕ)
     by_cases h_is_zero : k = 0
@@ -383,11 +383,11 @@ def Fcolor (x : TT n l) : Fin n := stdSimplex.pick x (f x)
 
 /-- A colorful room produced by Scarf lemma for the `l-th` subdivision. -/
 def roomSeq (l' : ℕ) :=
-  let l : PNat := ⟨l'+1,Nat.zero_lt_succ _⟩
+  let l : PNat := l'.succPNat
   Classical.choice (TT.ILO.Scarf (@Fcolor n l f)).to_subtype
 
 /-- A point of the colorful room `roomSeq`, as an integer point of `TT`. -/
-def roomPointSeq (l' : ℕ) : TT n ⟨l' + 1, Nat.zero_lt_succ _⟩ :=
+def roomPointSeq (l' : ℕ) : TT n l'.succPNat :=
   (pickColorfulPoint (Finset.mem_filter.1 (roomSeq f l').2).2).1
 
 
@@ -505,7 +505,7 @@ lemma dominant_coords_tend_to_zero (f : stdSimplex ℝ (Fin n) → stdSimplex �
   · intro l'
     exact ((roomPointSeq f (g l')) : stdSimplex ℝ (Fin n)).2.1 i
   · intro l'
-    let l_pnat : PNat := ⟨g l' + 1, Nat.succ_pos _⟩
+    let l_pnat : PNat := (g l').succPNat
     let rs := roomSeq f (g l')
     let σ := rs.1.1
     let C_l := rs.1.2
@@ -517,7 +517,7 @@ lemma dominant_coords_tend_to_zero (f : stdSimplex ℝ (Fin n) → stdSimplex �
     have h_dom : TT.ILO.isDominant σ C_l := colorful_proof.1
     have h_bound := size_bound_out n l_pnat σ C_l h_dom x hx_mem i hiC_l
     simp only [TTtostdSimplex, Subtype.coe_mk]
-    have h_eq : (↑l_pnat : ℝ) = ↑(g l') + 1 := by simp [l_pnat, PNat.mk_coe]
+    have h_eq : (↑l_pnat : ℝ) = ↑(g l') + 1 := by simp [l_pnat]
     rw [h_eq]
     rw [div_le_div_iff_of_pos_right (by positivity : (0 : ℝ) < ↑(g l') + 1)]
     have h_bound_real : ((x i : ℕ) : ℝ) < (↑n + 1 : ℝ) := by
@@ -558,7 +558,7 @@ theorem tendsto_diam_to_zero (f : stdSimplex ℝ (Fin n) → stdSimplex ℝ (Fin
       ≤ C / (l k + 1) := by
     use 2 * Real.sqrt (n : ℝ) * ((n : ℝ) + 1)
     intro k
-    let l_pnat : PNat := ⟨l k + 1, Nat.succ_pos _⟩
+    let l_pnat : PNat := (l k).succPNat
     let rs := roomSeq f (l k)
     let C_k := rs.1.2
     have h_dom : TT.ILO.isDominant (σ k) C_k := (Finset.mem_filter.mp rs.2).2.1
@@ -572,7 +572,7 @@ theorem tendsto_diam_to_zero (f : stdSimplex ℝ (Fin n) → stdSimplex ℝ (Fin
       rw [abs_div]
       have h_pos : (0 : ℝ) < l_pnat := by positivity
       rw [abs_of_pos h_pos]
-      have h_eq : (l_pnat : ℝ) = l k + 1 := by simp [l_pnat, PNat.mk_coe]
+      have h_eq : (l_pnat : ℝ) = l k + 1 := by simp [l_pnat]
       rw [h_eq]
       rw [div_lt_div_iff_of_pos_right (by positivity : (0 : ℝ) < l k + 1)]
       exact_mod_cast h_bound_int
@@ -627,9 +627,9 @@ theorem f_coords_ge_z_coords (f : stdSimplex ℝ (Fin n) → stdSimplex ℝ (Fin
       intro idx h_idx_C
       have h_exists_point : ∀ l', ∃ y,
         y ∈ (roomSeq f (g1 f l')).1.1 ∧
-        (let l_pnat : PNat := ⟨(g1 f) l' + 1, by simp⟩; @Fcolor n l_pnat f y) = idx := by
+        (let l_pnat : PNat := ((g1 f) l').succPNat; @Fcolor n l_pnat f y) = idx := by
         intro l'
-        let l_pnat : PNat := ⟨(g1 f) l' + 1, by simp⟩
+        let l_pnat : PNat := ((g1 f) l').succPNat
         let rs := roomSeq f (g1 f l')
         let σ := rs.1.1
         let C_l := rs.1.2
@@ -645,18 +645,18 @@ theorem f_coords_ge_z_coords (f : stdSimplex ℝ (Fin n) → stdSimplex ℝ (Fin
       let y_seq := fun l' => TTtostdSimplex (h_exists_point l').choose
       have y_seq_spec : ∀ l',
         (h_exists_point l').choose ∈ (roomSeq f (g1 f l')).1.1 ∧
-        (let l_pnat : PNat := ⟨(g1 f) l' + 1, by simp⟩;
+        (let l_pnat : PNat := ((g1 f) l').succPNat;
             @Fcolor n l_pnat f (h_exists_point l').choose) = idx := by
         intro l'
         exact (h_exists_point l').choose_spec
       have h_ineq : ∀ l', (f (y_seq l')).1 idx ≥ (y_seq l').1 idx := by
         intro l'
         have h_spec := y_seq_spec l'
-        simp only [PNat.mk_coe, ge_iff_le, y_seq] at h_spec ⊢
+        simp only [ge_iff_le, y_seq] at h_spec ⊢
         let chosen_point := (h_exists_point l').choose
-        have h_color : (let l_pnat : PNat := ⟨(g1 f) l' + 1, by simp⟩;
+        have h_color : (let l_pnat : PNat := ((g1 f) l').succPNat;
             @Fcolor n l_pnat f chosen_point) = idx := h_spec.2
-        let l_pnat : PNat := ⟨(g1 f) l' + 1, by simp⟩
+        let l_pnat : PNat := ((g1 f) l').succPNat
         unfold Fcolor at h_color
         have h_pick_property : ∃ h : Nonempty {i | (chosen_point : stdSimplex ℝ (Fin n)).1 i ≤ (f
             (chosen_point : stdSimplex ℝ (Fin n))).1 i},

@@ -200,7 +200,8 @@ partial order.
 -/
 def embed (n : ℕ) : ℕ × ℕ ↪o Hollom where
   toFun x := h(x.1, x.2, n)
-  inj' x := by aesop
+  inj' := Function.LeftInverse.injective
+    (g := fun x ↦ ((ofHollom x).1, (ofHollom x).2.1)) fun _ ↦ rfl
   map_rel_iff' := by simp
 
 lemma embed_apply (n : ℕ) (x y : ℕ) : embed n (x, y) = h(x, y, n) := rfl

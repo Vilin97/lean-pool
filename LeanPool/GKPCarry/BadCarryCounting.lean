@@ -28,6 +28,13 @@ def ternaryWordDigits {length : ℕ}
     (word : List.Vector (Fin 3) length) : List ℕ :=
   word.toList.map Fin.val
 
+/-- Peeling the least significant digit off a nonempty ternary word. -/
+lemma ternaryWordDigits_cons {length : ℕ}
+    (word : List.Vector (Fin 3) (length + 1)) :
+    ternaryWordDigits word = word.head.val :: ternaryWordDigits word.tail := by
+  conv_lhs => rw [← List.Vector.cons_head_tail word]
+  simp only [ternaryWordDigits, List.Vector.toList_cons, List.map_cons]
+
 /-- Fixed-length ternary words that remain outside `.good` when read from a
 given automaton state. -/
 abbrev BadCarryWordsFrom (state : BadCarryState) (length : ℕ) :=
@@ -47,12 +54,9 @@ def badCarryWordsFromSuccEquiv (state : BadCarryState) (length : ℕ) :
   toFun word :=
     ⟨word.val.head,
       ⟨word.val.tail, by
-        have hword :
-            word.val = List.Vector.cons word.val.head word.val.tail :=
-          (List.Vector.cons_head_tail word.val).symm
         have hproperty := word.property
-        rw [hword] at hproperty
-        simpa [ternaryWordDigits, badCarryStateAux] using hproperty⟩⟩
+        rw [ternaryWordDigits_cons] at hproperty
+        simpa only [badCarryStateAux] using hproperty⟩⟩
   invFun pair :=
     ⟨List.Vector.cons pair.1 pair.2.val, by
       simpa [BadCarryWordsFrom, ternaryWordDigits, badCarryStateAux] using

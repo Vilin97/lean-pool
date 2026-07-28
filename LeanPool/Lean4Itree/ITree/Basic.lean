@@ -51,7 +51,7 @@ coinductive ITree (ε : Type → Type) (ρ : Type)
 | vis {α : Type} (e : ε α) (k : α → ITree ε ρ)
 ```
 -/
-def ITree (ε : Type u1 → Type v) (ρ : Type u2) :=
+@[implicit_reducible] def ITree (ε : Type u1 → Type v) (ρ : Type u2) :=
   (ITree.P ε ρ).M
 
 /-- A continuation tree: a function from `α` into interaction trees, i.e. a
@@ -135,8 +135,7 @@ theorem vis_inj {ε α ρ}
   have := Sigma.mk.inj (PFunctor.M.mk_inj h)
   apply And.intro
   · exact eq_of_heq (shape.vis.inj this.left).right
-  · have := eq_of_heq this.right
-    simp_all
+  · exact eq_of_heq this.right
 
 theorem tau_inj {ε ρ} {t1 t2 : ITree ε ρ} (h : tau t1 = tau t2) : t1 = t2 := by
   simp only [tau, tau'] at h
@@ -154,7 +153,7 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
       rw [elim0_eq_all snd] at hm
       simp only [ITree.ret, ret']
       rw [←hm]
-      simp only [PFunctor.M.mk_dest]
+      exact (PFunctor.M.mk_dest x).symm
     )
   | ⟨.tau, c⟩ =>
     tau (c 0) (by
@@ -166,7 +165,7 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
     vis α e k (by
       simp only [ITree.vis, vis']
       rw [←hm]
-      simp only [PFunctor.M.mk_dest]
+      exact (PFunctor.M.mk_dest x).symm
     )
 
 /- Destructor utilities -/
@@ -300,9 +299,15 @@ theorem ieq_iff_eq (t1 t2 : ITree ε ρ) : IEq t1 t2 ↔ t1 = t2 := by
       simpItreeBasic
       try grind [fin1Const]
     )
-    rename_i v
-    exists .ret v, elim0, elim0
-    simp only [true_and]; intro i; exact elim0 i
+    · rename_i v
+      exact ⟨.ret v, elim0, elim0, rfl, rfl, fun i => elim0 i⟩
+    · rename_i c1 c2 hsim
+      refine ⟨.tau, fin1Const c1, fin1Const c2, rfl, rfl, ?_⟩
+      intro i
+      match i with
+      | .up (.ofNat' 0) => exact hsim
+    · rename_i α' e' k1 k2 hsim
+      exact ⟨.vis α' e', k1, k2, rfl, rfl, hsim⟩
   · intro h; subst h
     apply IEq.coinduct Eq _
     · rfl

@@ -56,9 +56,9 @@ abbrev TernaryUnitWords (length : ℕ) :=
 lemma ternaryWordValue_mod_three {length : ℕ}
     (word : List.Vector (Fin 3) (length + 1)) :
     ternaryWordValue word % 3 = word.head.val := by
-  rw [← List.Vector.cons_head_tail word]
-  simp [ternaryWordValue, ternaryWordDigits,
-    Nat.ofDigits_mod_eq_head!]
+  simp only [ternaryWordValue, Nat.ofDigits_mod_eq_head!, ternaryWordDigits_cons,
+    List.head!_cons]
+  exact Nat.mod_eq_of_lt word.head.isLt
 
 lemma ternaryWordValue_coprime_three_pow_iff {length : ℕ}
     (word : List.Vector (Fin 3) (length + 1)) :
@@ -211,8 +211,8 @@ def unitBadCarryWordsToSum (length : ℕ) :
   · apply Sum.inl
     refine ⟨word.val.val.tail, ?_⟩
     have hbad := word.property
-    rw [← List.Vector.cons_head_tail word.val.val] at hbad
-    simpa [ternaryWordDigits, badCarryStateAux, badCarryStateStep, hone] using hbad
+    rw [ternaryWordDigits_cons] at hbad
+    simpa [badCarryStateAux, badCarryStateStep, hone] using hbad
   · apply Sum.inr
     refine ⟨word.val.val.tail, ?_⟩
     have htwo : word.val.val.head.val = 2 := by
@@ -220,8 +220,8 @@ def unitBadCarryWordsToSum (length : ℕ) :
       have hne := word.val.property
       omega
     have hbad := word.property
-    rw [← List.Vector.cons_head_tail word.val.val] at hbad
-    simpa [ternaryWordDigits, badCarryStateAux, badCarryStateStep, htwo] using hbad
+    rw [ternaryWordDigits_cons] at hbad
+    simpa [badCarryStateAux, badCarryStateStep, htwo] using hbad
 
 /-- Peeling the nonzero least significant digit splits deficient unit words
 into the states reached by digit `1` and digit `2`. -/

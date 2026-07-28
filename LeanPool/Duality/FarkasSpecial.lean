@@ -281,8 +281,19 @@ of heartbeats. -/
 private abbrev extendedFarkas.I' (A : Matrix I J F∞) (b : I → F∞) : Type _ :=
   { i : I // b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥ }
 
+/- Instance synthesis does not unfold `Matrix`, so it cannot see that `A i j` is an application
+of a function under the two binders of these predicates; introducing the outer binder by hand
+lets the search proceed. -/
+private instance extendedFarkas.decidablePredI' {A : Matrix I J F∞} {b : I → F∞} :
+    DecidablePred (fun i : I => b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) :=
+  fun _ => inferInstance
+
 private abbrev extendedFarkas.J' (A : Matrix I J F∞) (b : I → F∞) : Type _ :=
   { j : J // ∀ i' : extendedFarkas.I' A b, A i'.val j ≠ ⊤ }
+
+private instance extendedFarkas.decidablePredJ' {A : Matrix I J F∞} {b : I → F∞} :
+    DecidablePred (fun j : J => ∀ i' : extendedFarkas.I' A b, A i'.val j ≠ ⊤) :=
+  fun _ => inferInstance
 
 private def extendedFarkas.A' (A : Matrix I J F∞) (b : I → F∞) :
     Matrix (extendedFarkas.I' A b) (extendedFarkas.J' A b) F :=

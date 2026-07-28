@@ -1543,7 +1543,7 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
-    simpa [Q1, Q2, f2, Function.comp_def] using
+    simpa [Q1, Q2, f2, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DxauxFunction1 p hp').comp hneg.continuousOn hmap).neg
   have hcont3 : ContinuousOn f3 Q3 := by
     have hmap : Set.MapsTo (fun z : ℝ × ℝ => (z.2, z.1)) Q3 Q1 := by
@@ -1559,7 +1559,7 @@ private lemma continuousDxuCandidate (p : ℝ) (hp : 2 < p) :
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
-    simpa [Q1, Q4, f4, Function.comp_def] using
+    simpa [Q1, Q4, f4, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DyauxFunction1 p hp).comp hns.continuousOn hmap).neg
   have hcl1 : IsClosed Q1 := isClosed_setOf_QuarterPlane
   have hcl2 : IsClosed Q2 := isClosed_setOf_QuarterPlane2
@@ -1723,7 +1723,7 @@ private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
-    simpa [Q1, Q2, f2, Function.comp_def] using
+    simpa [Q1, Q2, f2, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DyauxFunction1 p hp).comp hneg.continuousOn hmap).neg
   have hcont3 : ContinuousOn f3 Q3 := by
     have hmap : Set.MapsTo (fun z : ℝ × ℝ => (z.2, z.1)) Q3 Q1 := by
@@ -1739,7 +1739,7 @@ private lemma continuousDyuCandidate (p : ℝ) (hp : 2 < p) :
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
-    simpa [Q1, Q4, f4, Function.comp_def] using
+    simpa [Q1, Q4, f4, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DxauxFunction1 p hp').comp hns.continuousOn hmap).neg
   have hcl1 : IsClosed Q1 := isClosed_setOf_QuarterPlane
   have hcl2 : IsClosed Q2 := isClosed_setOf_QuarterPlane2
@@ -7152,7 +7152,7 @@ private lemma uCandidate_tangent_x_increment_of_y_neg
   have hdx := DxuCandidate_neg_neg_of_y_neg (p := p) (x := x) (y := y) hy_neg
   calc
     uCandidate p (x + h) y = uCandidate p (-(x + h)) (-y) := hend
-    _ = uCandidate p ((-x) + (-h)) (-y) := by ring
+    _ = uCandidate p ((-x) + (-h)) (-y) := by rw [neg_add]
     _ ≤ uCandidate p (-x) (-y) + DxuCandidate p (-x) (-y) * (-h) := hmain
     _ = uCandidate p x y + DxuCandidate p x y * h := by
       rw [← hstart, hdx]

@@ -54,7 +54,7 @@ lemma largeEigenspace_mem_invtSubmodule_of_isCompactOperator_of_isSelfAdjoint
       simpa [Finset.sup_insert] using Module.End.invtSubmodule.sup_mem (f := t) (h_each a) hS
   have hU' : (⨆ i : s.Elem, t.eigenspace i.1) ∈ t.invtSubmodule := by
     simpa [Finset.sup_univ_eq_iSup] using h_sup
-  simpa [largeEigenspace, t, s] using hU'
+  exact hU'
 lemma largeEigenspace_orthogonal_mem_invtSubmodule_of_isCompactOperator_of_isSelfAdjoint
     (T : E →L[𝕜] E) (hT : IsSelfAdjoint T) (hTc : IsCompactOperator (T : E → E))
     {ε : ℝ} (hε : 0 < ε) :

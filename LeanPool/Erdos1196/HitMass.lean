@@ -146,7 +146,7 @@ private lemma tsum_transitionKernel_eq {x Y m : ℕ} (hm : x ≤ m) :
                 (fun n => ENNReal.ofReal (transitionWeight Y m (n / m))) by
                   funext n
                   exact transitionKernel_eq_indicator (x := x) (Y := Y) (m := m) hm]
-            simpa using (tsum_subtype {n : ℕ | m ∣ n}
+            exact (tsum_subtype {n : ℕ | m ∣ n}
               (fun n => ENNReal.ofReal (transitionWeight Y m (n / m)))).symm
       _ = ∑' q : ℕ, ENNReal.ofReal (transitionWeight Y m ((e q).1 / m)) := by
             simpa [e] using (Equiv.tsum_eq e
@@ -207,10 +207,10 @@ private lemma summable_transitionTailSummand (Y m : ℕ) (hm : 1 ≤ m) :
   rw [← Finset.summable_compl_iff (s := Finset.range N)]
   refine (hsN.subtype {q : ℕ | q ∉ Finset.range N}).congr ?_
   intro q
-  have hq : N ≤ q := by
-    have hq' : (q : ℕ) ∉ Finset.range N := q.property
+  have hq : N ≤ q.val := by
+    have hq' : q.val ∉ Finset.range N := q.property
     exact not_lt.mp (by simpa [Finset.mem_range] using hq')
-  have hYq : Y ≤ q := le_trans hN_ge_Y hq
+  have hYq : Y ≤ q.val := le_trans hN_ge_Y hq
   simp [hq, hYq]
 
 /-- The transition-weight series is summable for every `m ≥ 1`. -/

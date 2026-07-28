@@ -161,7 +161,7 @@ abbrev matrixCorner := Matrix (Fin n) (Fin n) (@e00Cornerring R _ n hn mu)
 /-- The map sending `a : R` to the matrix with entries `e₀ᵢ * a * eⱼ₀`. -/
 def ringToMatrixRing (n : ℕ) (hn : 0 < n) (mu : hasMatrixUnits R n) :
     R → Matrix (Fin n) (Fin n) (@e00Cornerring R _ n hn mu) :=
-  fun a => fun i j => (ijCorner R i j a)
+  fun a => Matrix.of fun i j => (ijCorner R i j a)
 
 -- show that this map is additive
 theorem ring_to_matrix_ring_additive (a b : R) :
@@ -169,7 +169,7 @@ theorem ring_to_matrix_ring_additive (a b : R) :
       (ringToMatrixRing R n hn mu) a + (ringToMatrixRing R n hn mu) b := by
   ext i j
   unfold ringToMatrixRing
-  simp only [ijCorner, Matrix.add_apply, NonUnitalSubring.val_add]
+  simp only [Matrix.of_apply, ijCorner, Matrix.add_apply, NonUnitalSubring.val_add]
   noncomm_ring
 
 theorem matrixunit_iz_zi_eq_ii :
@@ -200,7 +200,7 @@ theorem ring_to_matrix_ring_multiplicative (a b : R) :
   have hab : a * b = a * 1 * b := by simp
   rw [hab]
   rw [one_eq_sum_es_00e_00e R n hn mu]
-  simp only [Matrix.mul_apply, SetLike.coe_eq_coe]
+  simp only [Matrix.of_apply, Matrix.mul_apply, SetLike.coe_eq_coe]
   unfold ijCorner
   apply Subtype.ext
   simp only [MulMemClass.mk_mul_mk]
@@ -274,7 +274,7 @@ def ringToMatrixRingHom :
       ext i j
       simp only [SetLike.coe_eq_coe]
       unfold ringToMatrixRing ijCorner
-      simp only [mul_one]
+      simp only [Matrix.of_apply, mul_one]
       simp only [matrix_one (@e00Cornerring R _ n hn mu)]
       have h := mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, hn⟩ i j ⟨0, hn⟩
       simp only [h]
@@ -347,15 +347,12 @@ def ringToMatrixIso :
   refine ⟨?_, ?_⟩
   · refine (injective_iff_map_eq_zero (ringToMatrixRingHom R)).mpr ?_
     intro a
-    simp only [ringToMatrixRingHom]
+    simp only [ringToMatrixRingHom, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
     unfold ringToMatrixRing
-    simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
     intro h
     apply @corner_matrix_zero_crit R _ n hn mu
     intro i j
-    have fn_lemma {α β} {f g : α → β} (h : f = g) (a : α) : f a = g a := by rw [h]
-    have h := fn_lemma h i
-    exact fn_lemma h j
+    simpa only [Matrix.of_apply, Matrix.zero_apply] using Matrix.ext_iff.mpr h i j
   · intro A
     let a : R := ∑ i, ∑ j, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j)
     refine ⟨a, ?_⟩
@@ -363,7 +360,7 @@ def ringToMatrixIso :
     unfold ringToMatrixRing
     ext i j
     unfold ijCorner
-    simp only [a]
+    simp only [Matrix.of_apply, a]
     have h : (es ⟨0, hn⟩ i *
           ∑ i : Fin n, ∑ j : Fin n, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j)) =
         (es ⟨0, hn⟩ i * ∑ i : Fin n, es i ⟨0, hn⟩ * ∑ j : Fin n,

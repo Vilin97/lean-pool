@@ -160,6 +160,19 @@ noncomputable instance permutationKernel_isMarkov :
   change IsProbabilityMeasure ((rowPMF i).toMeasure)
   infer_instance
 
+/-- Pushing a point mass at `i` through the channel returns the `i`-th row.
+
+This is `Kernel.priorPushforward_dirac` restated with `permutationRows i` in place of the
+anonymous-constructor `⟨permutationKernel i, _⟩`. The two terms are definitionally equal, but the
+latter is a `Subtype.mk` whose inferred type is `{μ // IsProbabilityMeasure μ}` rather than
+`ProbabilityMeasure (Fin 3)`, which blocks any subsequent `rw`/`simp` from matching it. -/
+private lemma priorPushforward_diracProba (i : Fin 6) :
+    ChannelCapacity.Kernel.priorPushforward permutationKernel (MeasureTheory.diracProba i) =
+      permutationRows i := by
+  apply ProbabilityMeasure.toMeasure_injective
+  rw [ChannelCapacity.Kernel.priorPushforward_dirac]
+  rfl
+
 /-- The first prior: uniform on the inputs `{0, 3, 4}`. -/
 noncomputable def prior₁ : ProbabilityMeasure (Fin 6) :=
   uniformTriple 0 3 4
@@ -244,10 +257,9 @@ lemma pushforward_prior₁ :
   change ChannelCapacity.Kernel.priorPushforward permutationKernel (uniformTriple 0 3 4) =
     uniformOutput
   rw [uniformTriple, ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
+    priorPushforward_diracProba,
     ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
-    ChannelCapacity.Kernel.priorPushforward_dirac]
+    priorPushforward_diracProba, priorPushforward_diracProba]
   apply ProbabilityMeasure.toMeasure_injective
   apply Measure.ext_of_singleton
   intro y
@@ -270,10 +282,9 @@ lemma pushforward_prior₂ :
   change ChannelCapacity.Kernel.priorPushforward permutationKernel (uniformTriple 1 2 5) =
     uniformOutput
   rw [uniformTriple, ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
+    priorPushforward_diracProba,
     ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
-    ChannelCapacity.Kernel.priorPushforward_dirac]
+    priorPushforward_diracProba, priorPushforward_diracProba]
   apply ProbabilityMeasure.toMeasure_injective
   apply Measure.ext_of_singleton
   intro y

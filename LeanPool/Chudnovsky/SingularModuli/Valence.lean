@@ -686,13 +686,15 @@ theorem exists_sl2_of_lattice_eq {σ₁ σ₂ : ℍ} {a : ℂˣ}
   set M : Matrix (Fin 2) (Fin 2) ℤ := !![n₂, m₂; n₁, m₁] with hM
   have hMdet : M.det = 1 := by
     rw [hM, Matrix.det_fin_two_of]; linear_combination hdet1
-  refine ⟨⟨M, hMdet⟩, ?_⟩
+  set γ : SL(2, ℤ) := ⟨M, hMdet⟩
+  have hγval : (γ : Matrix (Fin 2) (Fin 2) ℤ) = M := rfl
+  refine ⟨γ, ?_⟩
   rw [← UpperHalfPlane.coe_inj, coe_specialLinearGroup_apply]
   have hden : (↑n₁ : ℂ) * ↑σ₁ + ↑m₁ ≠ 0 := by
     have : (↑n₁ : ℂ) * ↑σ₁ + ↑m₁ = ↑a := by rw [h1]; ring
     rw [this]; exact a.ne_zero
   change (↑σ₂ : ℂ) = _
-  simp only [hM, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val',
+  simp only [hγval, hM, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val',
     Matrix.cons_val_fin_one, Matrix.of_apply, algebraMap_int_eq, eq_intCast]
   push_cast
   rw [eq_div_iff hden]

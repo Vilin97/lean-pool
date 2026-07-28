@@ -1453,7 +1453,9 @@ private lemma scalar_deriv_sum_lower_leTwo
               rw [Real.rpow_one]
           _ = p ^ ((1 : ℝ) + (1 - p)) := by
               rw [Real.rpow_add hp_pos]
-          _ = p ^ (2 - p) := by ring
+          _ = p ^ (2 - p) := by
+              congr 1
+              ring
       rw [← hpow_shift]
       field_simp [hp_ne, hpden_pos.ne']
     have hcoeff_eq :
@@ -1844,7 +1846,7 @@ private lemma uCandidate_tangent_x_increment_of_y_neg_leTwo_of_pos
   have hdx := DxuCandidate_neg_neg_of_y_neg_leTwo (p := p) (x := x) (y := y) hy_neg
   calc
     uCandidate p (x + h) y = uCandidate p (-(x + h)) (-y) := hend
-    _ = uCandidate p ((-x) + (-h)) (-y) := by ring
+    _ = uCandidate p ((-x) + (-h)) (-y) := by rw [neg_add]
     _ ≤ uCandidate p (-x) (-y) + DxuCandidate p (-x) (-y) * (-h) := hmain
     _ = uCandidate p x y + DxuCandidate p x y * h := by
       rw [← hstart, hdx]
@@ -9879,7 +9881,7 @@ private lemma continuousDxuCandidate_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p < 2)
       rcases hz with ⟨hx, hy, hxy⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hneg : Continuous (fun z : ℝ × ℝ => (-z.1, -z.2)) := by continuity
-    simpa [Q1, Q2, Function.comp_def] using
+    simpa [Q1, Q2, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DxauxFunction1_leTwo p hp1 hp2).comp hneg.continuousOn hmap).neg
   have hcont3 : ContinuousOn (fun z : ℝ × ℝ => DyauxFunction1 p z.2 z.1) Q3 := by
     have hmap : Set.MapsTo (fun z : ℝ × ℝ => (z.2, z.1)) Q3 Q1 := by
@@ -9895,7 +9897,7 @@ private lemma continuousDxuCandidate_leTwo (p : ℝ) (hp1 : 1 < p) (hp2 : p < 2)
       rcases hz with ⟨hy, hyx, hxn⟩
       exact ⟨by linarith, by linarith, by linarith⟩
     have hns : Continuous (fun z : ℝ × ℝ => (-z.2, -z.1)) := by continuity
-    simpa [Q1, Q4, Function.comp_def] using
+    simpa [Q1, Q4, Function.comp_def, Pi.neg_def] using
       ((continuousOn_DyauxFunction1_leTwo p hp1 hp2).comp hns.continuousOn hmap).neg
   have hc1 : ContinuousOn (fun z : ℝ × ℝ => DxuCandidate p z.1 z.2) Q1 := by
     apply ContinuousOn.congr hcont1

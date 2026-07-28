@@ -604,8 +604,8 @@ infixl:67 "⋆" => convolution
 /-- Convolution theorem : the Walsh-Fourier transform turns convolution into pointwise product. -/
 lemma fourier_convolution : 𝓕 (f ⋆ g) = (𝓕 f) * (𝓕 g) := by
   funext S
-  unfold fourierTransform convolution expectation
-  dsimp
+  simp only [fourierTransform, convolution, expectation, LinearMap.coe_mk, AddHom.coe_mk,
+    Pi.mul_apply]
   simp_rw [mul_sum]; rw [sum_comm]
   conv => enter [1, 2, y]; rw [sum_translate y]
   simp_rw [walsh_add]

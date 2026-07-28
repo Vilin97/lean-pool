@@ -261,7 +261,9 @@ lemma tripleAt_mem_abcExceptions (n : ℕ) (hn : 0 < n) : tripleAt n ∈ abcExce
     _ ≤ (radical 9 * radical k) * 2 :=
       Nat.mul_le_mul_right 2 (Nat.le_of_dvd (by positivity) radical_mul_dvd)
     _ = 2 * radical 9 * radical k := by ring
-    _ = 6 * radical k := by simp +ground [radical, primeFactors_eq_natPrimeFactors]
+    _ = 6 * radical k := by
+      rw [show (9 : ℕ) = 3 ^ 2 by norm_num,
+        radical_pow_of_prime Nat.prime_three.prime two_ne_zero, normalize_eq]
     _ ≤ 9 * k := by
       gcongr
       · norm_num1

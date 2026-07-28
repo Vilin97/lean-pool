@@ -1798,7 +1798,8 @@ lemma coe_pow_eq_prod_coe_pow
   conv_lhs => rw [hS_eq]
   change Polynomial.coeToPowerSeries.ringHom ((S.roots.map _).prod) ^ k = _
   rw [map_multiset_prod Polynomial.coeToPowerSeries.ringHom]
-  simp [Multiset.map_map, Polynomial.coeToPowerSeries.ringHom_apply, Multiset.prod_map_pow]
+  simp [Multiset.map_map, Polynomial.coeToPowerSeries.ringHom_apply, Multiset.prod_map_pow,
+    Function.comp_def]
 
 lemma inv_prod_eq_prod_inv_of_roots
     (roots : Multiset ℝ) (k : ℕ) :

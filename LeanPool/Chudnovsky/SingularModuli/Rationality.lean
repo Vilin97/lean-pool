@@ -128,10 +128,11 @@ def cmGamma (n : ℤ) : SL(2, ℤ) :=
 lemma cmGL_factor (n : ℤ) [NeZero m] (hm : (m : ℤ) = n ^ 2 + n + 41) :
     cmGL n = (cmGamma n : GL (Fin 2) ℝ) * Acol m n := by
   have hmR : (m : ℝ) = (n : ℝ) ^ 2 + (n : ℝ) + 41 := by exact_mod_cast hm
+  have hgamma : (cmGamma n : Matrix (Fin 2) (Fin 2) ℤ) = !![n + 1, -1; 1, 0] := rfl
   apply Matrix.GeneralLinearGroup.ext
   intro a c
   fin_cases a <;> fin_cases c <;>
-    simp [val_cmGL, val_Acol, cmGamma, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [val_cmGL, val_Acol, hgamma, Matrix.mul_apply, Fin.sum_univ_two]
   nlinarith [hmR]
 
 /-- **The `b`-coset value at `τ₁₆₃`.** `j (Acol m n • τ₁₆₃) = j τ₁₆₃`. -/

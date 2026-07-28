@@ -95,7 +95,7 @@ lemma schwartz_norm_pow_integrable
   -- Then ‖v‖^k * f x v ≤ (1+‖v‖)^k * C/(1+‖v‖)^(k+4) = C/(1+‖v‖)^4
   obtain ⟨C, hC_pos, hbound⟩ := hSchwartz.hDecay (k := 0) (k + 4) (by omega)
   apply (inverse_poly_integrable C).mono'
-    ((continuous_norm.pow k |>.mul (hf_smooth x).continuous).aestronglyMeasurable)
+    ((continuous_norm.fun_pow k |>.fun_mul (hf_smooth x).continuous).aestronglyMeasurable)
   filter_upwards [] with v
   have hb := hbound x v
   simp only [norm_iteratedFDeriv_zero, norm_eq_abs] at hb
@@ -103,8 +103,6 @@ lemma schwartz_norm_pow_integrable
   have hfv_pos := hf_pos x v
   rw [abs_of_pos hfv_pos] at hb
   have h1v : (0 : ℝ) < 1 + ‖v‖ := by linarith [norm_nonneg v]
-  -- `Continuous.mul` produces a `Pi` product; unfold it pointwise.
-  simp only [Pi.mul_apply]
   rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (pow_nonneg (norm_nonneg _) _)
     (le_of_lt hfv_pos)), le_div_iff₀ (pow_pos h1v 4)]
   have h_norm_le : ‖v‖ ≤ 1 + ‖v‖ := le_add_of_nonneg_left zero_le_one

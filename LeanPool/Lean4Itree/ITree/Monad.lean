@@ -15,6 +15,13 @@ This module equips `ITree` with its functor and monad operations (`map`, `bind`,
 `bind_assoc`, using the parameterized-coinduction (Paco) tactics.
 -/
 
+-- `coinductive_fixpoint` builds `IEq` as a `Lean.Order.lfp_monotone` whose carrier is spelled
+-- `... → Prop` while its complete-lattice instance is stated over `... → ReverseImplicationOrder`,
+-- and whose monotonicity witness carries the unfolded `∀ ...` type rather than `monotone IEqF`.
+-- Unfolding these two definitions at `implicit` transparency is what lets the Paco rewrites
+-- (`plfp_init`, `plfp_unfold`) unify with such a goal.
+attribute [local implicit_reducible] Lean.Order.ReverseImplicationOrder Lean.Order.monotone
+
 namespace Lean4Itree
 
 namespace ITree

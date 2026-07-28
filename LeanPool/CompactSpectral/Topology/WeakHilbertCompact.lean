@@ -62,8 +62,7 @@ lemma continuous_weakToWeakDual : Continuous (weakToWeakDual (𝕜 := 𝕜) (E :
       (fun x : WeakSpace 𝕜 E => (weakToWeakDual (𝕜 := 𝕜) (E := E) x) y) =
         fun x : WeakSpace 𝕜 E => star ((InnerProductSpace.toDual 𝕜 E y) x) := by
     funext x
-    change ((InnerProductSpace.toDual 𝕜 E) (x : E)) y = _
-    simp [InnerProductSpace.toDual_apply_apply, inner_conj_symm]
+    exact (inner_conj_symm (𝕜 := 𝕜) (E := E) x y).symm
   simpa [h_eq] using h
 
 private lemma eval_weakDualToWeak (l : E →L[𝕜] 𝕜) (f : WeakDual 𝕜 E) :
@@ -89,19 +88,10 @@ private lemma eval_weakDualToWeak (l : E →L[𝕜] 𝕜) (f : WeakDual 𝕜 E) 
         ((InnerProductSpace.toDual 𝕜 E).symm f) =
         star (inner 𝕜
           ((InnerProductSpace.toDual 𝕜 E).symm f)
-          ((InnerProductSpace.toDual 𝕜 E).symm l)) := by
-    have h :
-        inner 𝕜
-          ((InnerProductSpace.toDual 𝕜 E).symm l)
-          ((InnerProductSpace.toDual 𝕜 E).symm f) =
-          (starRingEnd 𝕜) (inner 𝕜
-            ((InnerProductSpace.toDual 𝕜 E).symm f)
-            ((InnerProductSpace.toDual 𝕜 E).symm l)) := by
-      simpa using (inner_conj_symm (𝕜 := 𝕜)
-        (x := (InnerProductSpace.toDual 𝕜 E).symm l)
-        (y := (InnerProductSpace.toDual 𝕜 E).symm f)
-        ).symm
-    simp_all
+          ((InnerProductSpace.toDual 𝕜 E).symm l)) :=
+    (inner_conj_symm (𝕜 := 𝕜)
+      ((InnerProductSpace.toDual 𝕜 E).symm l)
+      ((InnerProductSpace.toDual 𝕜 E).symm f)).symm
   calc
     l ((InnerProductSpace.toDual 𝕜 E).symm f)
         = inner 𝕜
@@ -134,7 +124,7 @@ lemma continuous_weakDualToWeak : Continuous (weakDualToWeak (𝕜 := 𝕜) (E :
       Continuous
         (fun f : WeakDual 𝕜 E => (starRingEnd 𝕜) (f ((InnerProductSpace.toDual 𝕜 E).symm l))) :=
     h_conj.comp h_eval
-  simpa [eval_weakDualToWeak (𝕜 := 𝕜) (E := E) l] using h
+  exact h.congr fun f => (eval_weakDualToWeak (𝕜 := 𝕜) (E := E) l f).symm
 
 /-! ### Closed balls -/
 

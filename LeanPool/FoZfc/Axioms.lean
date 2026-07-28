@@ -551,7 +551,9 @@ def ExtIsSubset [ModelSets V] (a b : V) := ∀ (x : V), (x ∈ a → x ∈ b)
 /-- a is not a subset of b. -/
 def ExtNotIsSubset [ModelSets V] (a b : V) := ¬ ∀ (x : V), (x ∈ a → x ∈ b)
 
-@[inherit_doc ExtIsSubset] infixl : 50 " ⊆ " => ExtIsSubset
+/- Mathlib's `⊆` is a high-priority elaborator that always routes to `HasSubset`/`LE`, so the
+overload below must share that priority to stay in the same parser group and be tried too. -/
+@[inherit_doc ExtIsSubset] infixl : 50 (priority := high) " ⊆ " => ExtIsSubset
 @[inherit_doc ExtNotIsSubset] infixl : 50 " ⊈ " => ExtNotIsSubset
 
 /-- Make a formula that fv 0 is a subset of fv 1. -/
