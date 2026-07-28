@@ -9,7 +9,10 @@ review the draft PR it opens.
 | Stage | What it does | Cost |
 |---|---|---|
 | `detect` | Compares the pinned release against Mathlib's tags | free |
-| `probe` | Moves the pins, builds every project, buckets failures per project | free |
+| `auth` | One-minute check that the Claude token still works | negligible |
+| `pin` | Moves the four pins, refreshes manifests, pushes `bump/<version>` | free |
+| `probe` | Builds every project across 10 parallel shards | free |
+| `triage` | Buckets the shard logs into a per-project breakage map | free |
 | `repair` | One Claude job per broken project, in parallel | subscription quota |
 | `assemble` | Applies patches, rebuilds the pool, runs all four gates, opens a draft PR | free |
 
@@ -22,13 +25,18 @@ three projects or thirty.
 
 ### Repair modes
 
+Bumps target the **newest available release, release candidates included** —
+mid-cycle that is what "latest Lean and Mathlib" means. `stable_only: true`
+narrows detection to final releases.
+
 The `repair` input controls the fan-out:
 
-- `auto` (default) — repair final releases, report only on `-rc` tags. Mathlib
-  tags release candidates often; repairing each one would drain the token budget
-  for a version you are not adopting yet.
-- `always` — repair whatever was detected, including candidates.
-- `never` — probe only. Use this to size a bump before committing to it.
+- `always` (default) — repair every broken project.
+- `never` — probe only. Use this to size a bump without spending anything; the
+  per-project breakage report is produced either way.
+
+`auth` gates only `repair`, and runs in parallel with `pin`/`probe`, so an
+expired token still leaves you with the free breakage report.
 
 ## One-time setup
 
