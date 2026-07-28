@@ -573,3 +573,53 @@ def test_render_comment_notes_truncation() -> None:
     assert "Partial review" in body
     assert "250" in body and "317" in body
     assert "3,112,190" in body
+
+
+def test_every_review_mode_asks_for_literal_unicode(monkeypatch) -> None:
+    """The notation rule reaches the model whichever mode is reviewing.
+
+    PR #289's challenge review came back with `over ^R09` where `over ℚ`
+    belonged, so a Lean review that cannot render its own notation is a
+    regression worth a test.
+    """
+    from lean_pool import review
+
+    captured: list[dict] = []
+
+    class _Message:
+        content = '{"summary": "s", "verdict": "approve", "findings": []}'
+
+    class _Choice:
+        message = _Message()
+
+    class _Response:
+        choices = [_Choice()]
+        usage = None
+
+    class _Completions:
+        def create(self, **kwargs):
+            captured.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        completions = _Completions()
+
+    class _Client:
+        chat = _Chat()
+
+        def __init__(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(review, "OpenAI", _Client)
+
+    for _rules_path, system_prompt in review.REVIEW_MODES.values():
+        captured.clear()
+        review.request_review(
+            model="gpt-5.5",
+            rules="rules",
+            diff="diff --git a/A b/A",
+            system_prompt=system_prompt,
+        )
+        sent = captured[0]["messages"][0]["content"]
+        assert "copy the characters exactly" in sent
+        assert "ℚ" in sent
