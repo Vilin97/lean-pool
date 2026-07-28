@@ -9,6 +9,7 @@ on:
     # cannot re-trigger this workflow (no commit loop).
     paths:
       - 'LeanPool/**'
+      - 'Challenge/**'
       - 'python/lean_pool/stats.py'
       - '.github/workflows/readme-stats.yml'
   workflow_dispatch:

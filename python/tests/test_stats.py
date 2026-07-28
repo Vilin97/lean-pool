@@ -11,6 +11,7 @@ from lean_pool.stats import (
     apply_stats,
     collect_stats,
     count_lean_loc,
+    count_open_challenges,
     count_projects,
     main,
     render_stats,
@@ -65,6 +66,28 @@ def test_collect_stats(tmp_path: Path) -> None:
     """Both headline numbers are gathered from the checkout."""
     _write_pool(tmp_path)
     assert collect_stats(tmp_path) == Stats(projects=2, lines_of_lean=4)
+
+
+def test_count_open_challenges(tmp_path: Path) -> None:
+    """Only unsolved challenges count toward the headline number."""
+    registry = tmp_path / "challenges.yml"
+    registry.write_text(
+        "challenges:\n"
+        "  - slug: open-one\n"
+        "    status: open\n"
+        "  - slug: done-one\n"
+        "    status: solved\n"
+    )
+    assert count_open_challenges(registry) == 1
+
+
+def test_render_stats_omits_an_empty_challenge_board() -> None:
+    """A repository with no open challenges says nothing about them."""
+    rendered = render_stats(Stats(projects=2, lines_of_lean=4))
+    assert "challenge" not in rendered
+    assert "open challenges" in render_stats(
+        Stats(projects=2, lines_of_lean=4, open_challenges=3)
+    )
 
 
 def test_apply_stats_replaces_block() -> None:

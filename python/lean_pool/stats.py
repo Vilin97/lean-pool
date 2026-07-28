@@ -47,6 +47,7 @@ class Stats:
 
     projects: int
     lines_of_lean: int
+    open_challenges: int = 0
 
 
 def count_projects(projects_yml_path: Path) -> int:
@@ -97,20 +98,50 @@ def count_lean_loc(pool_dir: Path) -> int:
     return total
 
 
+def count_open_challenges(challenges_yml_path: Path) -> int:
+    """Return the number of unsolved challenges on the board.
+
+    Args:
+        challenges_yml_path: Path to ``Challenge/challenges.yml``.
+
+    Returns:
+        How many registered challenges have ``status: open``, or ``0`` if
+        the file is missing, malformed, or has no ``challenges`` key.
+    """
+    if not challenges_yml_path.is_file():
+        return 0
+    data = yaml.safe_load(challenges_yml_path.read_text()) or {}
+    if not isinstance(data, dict):
+        return 0
+    challenges = data.get("challenges") or []
+    if not isinstance(challenges, list):
+        return 0
+    return sum(
+        1
+        for challenge in challenges
+        if isinstance(challenge, dict) and challenge.get("status") == "open"
+    )
+
+
 def collect_stats(root: Path) -> Stats:
     """Gather all README statistics for the checkout at ``root``."""
     return Stats(
         projects=count_projects(root / "LeanPool" / "projects.yml"),
         lines_of_lean=count_lean_loc(root / "LeanPool"),
+        open_challenges=count_open_challenges(root / "Challenge" / "challenges.yml"),
     )
 
 
 def render_stats(stats: Stats) -> str:
     """Render the stats block body (without the surrounding markers)."""
-    return (
-        f"**{stats.projects}** formalization projects · "
-        f"**{stats.lines_of_lean:,}** lines of Lean"
-    )
+    parts = [
+        f"**{stats.projects}** formalization projects",
+        f"**{stats.lines_of_lean:,}** lines of Lean",
+    ]
+    # An empty board says nothing worth a README line; omit it entirely.
+    if stats.open_challenges:
+        parts.append(f"**{stats.open_challenges}** open challenges")
+    return " · ".join(parts)
 
 
 def apply_stats(readme_text: str, stats: Stats) -> str:

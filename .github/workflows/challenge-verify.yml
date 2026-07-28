@@ -1,0 +1,158 @@
+name: Verify challenge solutions
+
+# Replays every solved challenge through `leanprover/comparator`: it exports
+# the challenge and solution environments separately, checks that the solution
+# proves the *same* statement, and re-checks the proof in the Lean kernel with
+# no axiom beyond propext / Quot.sound / Classical.choice. This is what makes
+# `status: solved` in Challenge/challenges.yml a verified claim rather than an
+# assertion, and it is the check the solution review defers to.
+#
+# The three external tools are pinned to exact commits, because they are part
+# of the trusted base for that claim. Bumping one is a deliberate change, not a
+# floating `@main`. The same pins are what leanprover/lean-eval uses.
+#
+# This workflow compiles pull-request code, exactly as the Lean build does. It
+# runs on `pull_request`, so the token is read-only and no secret is exposed;
+# landrun is defence in depth on top of the ephemeral runner.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Challenge/**'
+      - 'Challenge.lean'
+      - 'Solution/**'
+      - 'Solution.lean'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'lakefile.toml'
+      - 'scripts/challenge/**'
+      - 'python/lean_pool/challenge.py'
+      - '.github/workflows/challenge-verify.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'Challenge/**'
+      - 'Challenge.lean'
+      - 'Solution/**'
+      - 'Solution.lean'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # landrun: zouuup/landrun main HEAD as of 2026-05-04. Tagged releases
+  # through v0.1.15 lack fixes comparator needs, so this is a commit pin.
+  LANDRUN_COMMIT: 5ed4a3db3a4ad930d577215c6b9abaa19df7f99f
+  # lean4export at refs/tags/v4.32.0-rc1 — it must match this repository's
+  # lean-toolchain, because it reads the oleans the build produced.
+  LEAN4EXPORT_COMMIT: 3de59f10bc4b4a0f2de698597aeb1246caa0df0a
+  COMPARATOR_COMMIT: 71b52ec29e06d4b7d882726553b1ceb99a2499e0
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    name: Verify challenge solutions
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore caches
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Cache verification tools
+        id: tools
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/go/bin/landrun
+            .ci/lean4export/.lake/build/bin/lean4export
+            .ci/comparator/.lake/build/bin/comparator
+          key: >-
+            challenge-tools-${{ runner.os }}-${{ env.LANDRUN_COMMIT }}-${{
+              env.LEAN4EXPORT_COMMIT }}-${{ env.COMPARATOR_COMMIT }}-${{
+              hashFiles('lean-toolchain') }}
+
+      # actions/setup-go pinned to d35c59ab (= refs/tags/v5.5.0), the pin
+      # leanprover/lean-eval uses to build the same landrun commit.
+      - name: Set up Go
+        if: steps.tools.outputs.cache-hit != 'true'
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
+        with:
+          go-version: '1.24.0'
+
+      - name: Build landrun
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: go install "github.com/zouuup/landrun/cmd/landrun@$LANDRUN_COMMIT"
+
+      - name: Build lean4export
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          git clone https://github.com/leanprover/lean4export.git .ci/lean4export
+          cd .ci/lean4export
+          git checkout "$LEAN4EXPORT_COMMIT"
+          ~/.elan/bin/lake build lean4export
+
+      - name: Build comparator
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          git clone https://github.com/leanprover/comparator.git .ci/comparator
+          cd .ci/comparator
+          git checkout "$COMPARATOR_COMMIT"
+          ~/.elan/bin/lake build comparator
+
+      - name: Verify every solved challenge
+        env:
+          COMPARATOR_LANDRUN: /home/runner/go/bin/landrun
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          slugs=$(cd python && uv run python -m lean_pool.challenge --repo .. solved)
+          if [ -z "$slugs" ]; then
+            echo "No solved challenges to verify."
+            exit 0
+          fi
+          for slug in $slugs; do
+            echo "::group::comparator: $slug"
+            scripts/challenge/verify-solution.sh "$slug" \
+              --comparator "$PWD/.ci/comparator/.lake/build/bin/comparator" \
+              --lean4export "$PWD/.ci/lean4export/.lake/build/bin/lean4export"
+            echo "::endgroup::"
+          done

@@ -100,6 +100,248 @@ def test_classify_pr_without_project_files_defaults_to_project() -> None:
     assert classify_pr([("README.md", "modified")]) == "project"
 
 
+def test_classify_pr_new_challenge_is_challenge() -> None:
+    """Putting an open statement on the board gets the challenge review."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/TwinPrimes.lean", "added"),
+        ("Challenge/challenges.yml", "modified"),
+        ("Challenge.lean", "modified"),
+    ]
+    assert classify_pr(files) == "challenge"
+
+
+def test_classify_pr_edited_challenge_is_challenge() -> None:
+    """Editing a live statement is reviewed as a challenge, not a refactor."""
+    from lean_pool.review import classify_pr
+
+    assert classify_pr([("Challenge/TwinPrimes.lean", "modified")]) == "challenge"
+
+
+def test_classify_pr_challenge_plus_pool_content_is_not_challenge() -> None:
+    """A bump repairing both libraries keeps the content classification."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/TwinPrimes.lean", "modified"),
+        ("LeanPool/Foo/A.lean", "modified"),
+    ]
+    assert classify_pr(files) == "refactor"
+
+
+def test_classify_pr_answer_is_solution() -> None:
+    """Adding an answer to a challenge already on the board is a solution."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Solution/TwoPlusTwo.lean", "added"),
+        ("Solution.lean", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "solution"
+
+
+def test_classify_pr_new_challenge_with_its_answer_is_challenge() -> None:
+    """A new board entry is judged as one even when its proof rides along."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/Widget.lean", "added"),
+        ("Solution/Widget.lean", "added"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "challenge"
+
+
+def test_classify_pr_delegated_solution_is_solution() -> None:
+    """A solution backed by a pooled project is still a solution PR."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("LeanPool/WidgetProof/A.lean", "added"),
+        ("LeanPool/projects.yml", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "solution"
+
+
+def test_plain_solution_pr_skips_the_model(tmp_path) -> None:
+    """Nothing but an answer and its registry entry: nothing to review."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text(
+        "challenges:\n"
+        "  - slug: widget\n"
+        "    entry_module: Challenge.Widget\n"
+        "    statements:\n"
+        "      - declaration: Challenge.Widget.widget_exists\n"
+        "        informal: A widget exists.\n"
+        "    solution:\n"
+        "      module: Solution.Widget\n"
+    )
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("Solution.lean", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+
+    assert solution_needs_llm_review(files, tmp_path) is None
+
+
+def test_solution_pr_touching_the_statement_is_reviewed(tmp_path) -> None:
+    """Anything beyond the answer itself gets a reading."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text("challenges: []\n")
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("Challenge/Widget.lean", "modified"),
+    ]
+
+    reason = solution_needs_llm_review(files, tmp_path)
+
+    assert reason is not None
+    assert "Challenge/Widget.lean" in reason
+
+
+def test_solution_pr_for_a_definition_hole_is_reviewed(tmp_path) -> None:
+    """Comparator matches a hole by name and type only, so a human looks."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text(
+        "challenges:\n"
+        "  - slug: widget\n"
+        "    entry_module: Challenge.Widget\n"
+        "    statements:\n"
+        "      - declaration: Challenge.Widget.widget_bound\n"
+        "        informal: The answer exceeds 37.\n"
+        "    definitions:\n"
+        "      - declaration: Challenge.Widget.answer\n"
+        "        informal: The answer.\n"
+        "    solution:\n"
+        "      module: Solution.Widget\n"
+    )
+    files = [("Solution/Widget.lean", "added")]
+
+    reason = solution_needs_llm_review(files, tmp_path)
+
+    assert reason is not None
+    assert "definition hole" in reason
+
+
+def test_render_comment_solution_mode() -> None:
+    """A solution review defers correctness to the comparator check."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_comment
+
+    body = render_comment(
+        {
+            "summary": "Proves the two-plus-two fixture by decide.",
+            "assessment": {
+                "touches_challenge_statement": False,
+                "definition_hole_risk": "none",
+                "proof_quality": 4,
+                "assessment_one_sentence": "One-line proof, nothing to flag.",
+            },
+            "verdict": "approve",
+            "findings": [],
+        },
+        model="gpt-5.5",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="deadbeef",
+        kind="solution",
+    )
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "LLM review — challenge solution" in body
+    assert "Correctness is decided by" in body
+    assert "| Touches the challenge statement | ✅ no |" in body
+    assert "| Definition-hole risk | ✅ `none` |" in body
+    assert "SOLUTION_REVIEW_RULES.md" in body
+    assert "| Fit |" not in body
+
+
+def test_render_solution_skip_comment_is_sticky_and_explains_itself() -> None:
+    """The skip note replaces the review and says what did the checking."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_solution_skip_comment
+
+    body = render_solution_skip_comment("deadbeef")
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "skipped" in body
+    assert "Correctness is decided by" in body
+    assert "deadbeef" in body
+
+
+def test_render_comment_challenge_mode() -> None:
+    """A challenge review shows faithfulness, vacuity, and a size estimate."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_comment
+
+    body = render_comment(
+        {
+            "summary": "Adds the twin prime conjecture as an open statement.",
+            "assessment": {
+                "significance": "high",
+                "faithfulness": "faithful",
+                "faithfulness_note": "Set.Infinite over {p | p.Prime ∧ (p+2).Prime}.",
+                "source_match": "matches",
+                "vacuity_risk": "none",
+                "difficulty": "open_problem",
+                "estimated_lines": 25000,
+                "estimate_basis": "No known proof; Zhang-style machinery is absent.",
+                "already_formalized": "",
+                "assessment_one_sentence": "A correctly stated famous open problem.",
+            },
+            "verdict": "approve",
+            "findings": [],
+        },
+        model="gpt-5.5",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="deadbeef",
+        kind="challenge",
+    )
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "LLM review — challenge" in body
+    assert "| Faithful to the prose | ✅ `faithful` |" in body
+    assert "| Vacuity risk | ✅ `none` |" in body
+    assert "~25,000 lines" in body
+    assert "Zhang-style machinery is absent" in body
+    assert "CHALLENGE_REVIEW_RULES.md" in body
+    # Project- and refactor-only fields must not leak into a challenge review.
+    assert "| Fit |" not in body
+    assert "| Brittleness |" not in body
+
+
+def test_render_challenge_assessment_flags_existing_formalization() -> None:
+    """A challenge that duplicates existing work says so in the table."""
+    from lean_pool.review import render_challenge_assessment
+
+    table = render_challenge_assessment(
+        {
+            "assessment": {
+                "significance": "low",
+                "faithfulness": "mismatch",
+                "source_match": "unverifiable",
+                "vacuity_risk": "possible",
+                "difficulty": "exercise",
+                "estimated_lines": 40,
+                "already_formalized": "Nat.exists_infinite_primes",
+            }
+        }
+    )
+
+    assert "🛑 `mismatch`" in table
+    assert "🛑 `Nat.exists_infinite_primes`" in table
+    assert "~40 lines" in table
+
+
 def test_render_comment_refactor_mode() -> None:
     """A refactor review shows the tech-debt table and refactor rules link."""
     from lean_pool.review import LLM_REVIEW_MARKER, render_comment

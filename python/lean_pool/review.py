@@ -1,14 +1,28 @@
 """LLM-driven pull request review for Lean Pool.
 
-Detects whether the PR adds a new project or refactors projects already in
-the pool — the same added-vs-modified split ``/profile`` uses — and reviews
-it under the matching rules. New-project PRs are judged on fit and
-significance (``.github/REVIEW_RULES.md``); refactor PRs are judged on tech
-debt and maintainability (``.github/REFACTOR_REVIEW_RULES.md``). Either way
-it fetches the PR diff via the GitHub CLI, asks the configured OpenAI model
-to evaluate the contribution, and posts or updates a sticky PR comment with
-the reviewed head SHA, a one-paragraph summary, a structured assessment
-table, a verdict, and any specific findings.
+Detects what kind of PR this is and reviews it under the matching rules:
+
+- **project** — adds a new project to the pool. Judged on fit and
+  significance (``.github/REVIEW_RULES.md``).
+- **refactor** — only touches projects already in the pool, the same
+  added-vs-modified split ``/profile`` uses. Judged on tech debt and
+  maintainability (``.github/REFACTOR_REVIEW_RULES.md``).
+- **challenge** — adds or edits an open statement under ``Challenge/``.
+  Judged on whether the problem is worth stating, whether the Lean says
+  what the prose says, whether a cited known result is stated correctly,
+  whether it is vacuous or gameable, and how much Lean a solution would
+  take (``.github/CHALLENGE_REVIEW_RULES.md``).
+- **solution** — answers a challenge. Correctness belongs to
+  ``leanprover/comparator``, which replays the proof through the Lean
+  kernel in its own CI check, so this review is short and narrow
+  (``.github/SOLUTION_REVIEW_RULES.md``) — and is skipped outright when the
+  PR touches nothing but the answer and its registry entry and the
+  challenge left no definition hole. See :func:`solution_needs_llm_review`.
+
+Otherwise it fetches the PR diff via the GitHub CLI, asks the configured
+OpenAI model to evaluate the contribution, and posts or updates a sticky PR
+comment with the reviewed head SHA, a one-paragraph summary, a structured
+assessment table, a verdict, and any specific findings.
 
 The reviewer prefers OpenAI's ``flex`` tier (cheaper, slower, occasionally
 unavailable). When flex returns 429 Resource Unavailable, the request is
@@ -48,6 +62,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -57,13 +72,24 @@ from typing import Any
 
 from openai import APIStatusError, BadRequestError, OpenAI, RateLimitError
 
+from lean_pool import challenge
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
 REFACTOR_RULES_PATH = REPO_ROOT / ".github" / "REFACTOR_REVIEW_RULES.md"
+CHALLENGE_RULES_PATH = REPO_ROOT / ".github" / "CHALLENGE_REVIEW_RULES.md"
+SOLUTION_RULES_PATH = REPO_ROOT / ".github" / "SOLUTION_REVIEW_RULES.md"
 DEFAULT_MODEL = "gpt-5.5"
 # Flex tier requests can take longer than the default 10-minute timeout.
 REQUEST_TIMEOUT_SECONDS = 6000.0
 LLM_REVIEW_MARKER = "<!-- lean-pool-llm-review -->"
+# Said up front on every solution comment: whatever the model writes, the
+# proof itself was judged by a kernel, not by a language model.
+COMPARATOR_DISCLAIMER = (
+    "> Correctness is decided by the **Verify challenge solutions** check "
+    "(`leanprover/comparator` replays the proof through the Lean kernel and "
+    "compares it against the challenge statement), not by this review."
+)
 
 # Input-token guardrail. OpenAI rejected PR #278's review at a configured
 # limit of 922k input tokens; its 3,112,190-character diff measured ~2.0
@@ -101,6 +127,14 @@ VERDICT_ICON = {
     "request_changes": "🛑",
     "needs_discussion": "🤔",
 }
+# Rules document each PR kind is reviewed against, linked in the comment
+# footer and read as the model's user message.
+RULES_DOC_NAME = {
+    "project": "REVIEW_RULES.md",
+    "refactor": "REFACTOR_REVIEW_RULES.md",
+    "challenge": "CHALLENGE_REVIEW_RULES.md",
+    "solution": "SOLUTION_REVIEW_RULES.md",
+}
 FIT_ICON = {
     "good_fit": "✅",
     "borderline": "🟡",
@@ -120,6 +154,22 @@ BRITTLENESS_ICON = {
     "more_brittle": "🛑",
 }
 RISK_ICON = {"low": "✅", "medium": "🟡", "high": "🛑"}
+# Challenge-assessment icons. A challenge is only as good as the match
+# between its Lean and its prose, so faithfulness and vacuity get the
+# loudest markers.
+SIGNIFICANCE_ICON = {"high": "✅", "moderate": "🟡", "low": "🛑"}
+FAITHFULNESS_ICON = {"faithful": "✅", "drifts": "🟡", "mismatch": "🛑"}
+SOURCE_MATCH_ICON = {
+    "matches": "✅",
+    "mismatch": "🛑",
+    "unverifiable": "🟡",
+    "not_a_known_result": "➖",
+}
+VACUITY_ICON = {"none": "✅", "possible": "🟡", "vacuous": "🛑"}
+# Solution-assessment icons. Statement tampering is the one thing a
+# solution PR can do that comparator cannot catch on its own.
+TAMPERING_ICON = {True: "🛑", False: "✅"}
+HOLE_RISK_ICON = {"none": "✅", "review_needed": "🟡", "gamed": "🛑"}
 
 SYSTEM_PROMPT_PROJECT = dedent(
     """\
@@ -171,6 +221,82 @@ SYSTEM_PROMPT_REFACTOR = dedent(
     fine and correct for a clean mechanical golf.
     """
 )
+
+
+SYSTEM_PROMPT_CHALLENGE = dedent(
+    """\
+    You are a senior mathematician and Lean engineer reviewing a challenge
+    pull request to Lean Pool. A challenge is an OPEN statement: a theorem
+    written in Mathlib vocabulary, left as `sorry`, that the pool is asking
+    someone to prove. Nothing in this PR is proved, and that is correct —
+    never treat the `sorry` as a defect.
+
+    Your job is to tell the maintainer whether this belongs on the board.
+    Judge four things above all: whether the problem is significant (a
+    recognized open problem or a genuinely hard unformalized result, not a
+    pet conjecture or an exercise); whether the Lean statement faithfully
+    says what the informal statement says, quantifier by quantifier and
+    definition by definition; whether a cited known result is stated the way
+    its source states it; and whether the statement is vacuous, trivial, or
+    gameable. Then estimate how many lines of Lean a solution would take and
+    say what the estimate rests on.
+
+    A merged challenge is a contract — `leanprover/comparator` compares
+    submitted solutions against exactly this text — so quote the Lean when
+    you claim it means something other than the prose does.
+
+    Write to a colleague: direct, no encouragement, no editorializing.
+    Mechanical issues (headers, naming, line length, the sorry policy,
+    registry schema, axiom audits) are enforced by CI gates elsewhere. Do
+    NOT flag those.
+
+    Always respond with a single JSON object matching the schema in the
+    rules document. The `assessment` block is the core deliverable.
+    `findings` is for specific, actionable concerns; an empty list is fine
+    for a well-stated challenge.
+    """
+)
+
+
+SYSTEM_PROMPT_SOLUTION = dedent(
+    """\
+    You are reviewing a solution pull request to Lean Pool: it answers a
+    challenge already on the board. Be brief.
+
+    Correctness is NOT your call. `leanprover/comparator` replays the
+    solution through the Lean kernel and checks that it proves the same
+    statement as the challenge with no axiom beyond propext, Quot.sound,
+    and Classical.choice; that runs as its own CI check. You usually cannot
+    even see the challenge statement — it is not in the diff. Never assert
+    that a proof is correct or incorrect.
+
+    Three things are yours. First, statement tampering: if the diff touches
+    anything under `Challenge/`, quote it and say plainly whether the
+    statement changed — editing the text a solver is being judged against,
+    in the PR that claims to meet it, is the one way to fake a solution
+    past comparator. Second, definition holes: comparator matches a hole
+    only by name and type, so a filled hole may restate the question
+    instead of answering it. Third, proof quality by the pool's usual
+    standard — agent slop, brittle one-shot automation, dead branches.
+
+    Everything else is gated by CI: sorry, axioms, headers, imports, sizes,
+    registry schema, card sync. Do not flag those. Do not re-litigate
+    whether the problem was worth stating.
+
+    Always respond with a single JSON object matching the schema in the
+    rules document. A clean solution deserves a two-sentence summary and an
+    empty `findings` list.
+    """
+)
+
+
+# Rules document and system prompt per PR kind, keyed by `classify_pr`.
+REVIEW_MODES: dict[str, tuple[Path, str]] = {
+    "project": (PROJECT_RULES_PATH, SYSTEM_PROMPT_PROJECT),
+    "refactor": (REFACTOR_RULES_PATH, SYSTEM_PROMPT_REFACTOR),
+    "challenge": (CHALLENGE_RULES_PATH, SYSTEM_PROMPT_CHALLENGE),
+    "solution": (SOLUTION_RULES_PATH, SYSTEM_PROMPT_SOLUTION),
+}
 
 
 def run_gh(*args: str, stdin: str | None = None) -> str:
@@ -298,20 +424,52 @@ def project_of(path: str) -> str | None:
     return None
 
 
-def classify_pr(files: list[tuple[str, str]]) -> str:
-    """Classify a PR as ``"refactor"`` or ``"project"``.
+def is_challenge_statement(path: str) -> bool:
+    """Whether ``path`` is a challenge statement file.
 
-    Mirrors ``/profile``'s added-vs-modified split lifted to the PR level: a
-    PR that adds a *new project* (a project directory that appears only
-    through added ``.lean`` files) is a ``"project"`` PR and gets the full
-    fit/significance review. A PR that only changes files in projects
-    already in the pool — the pure-golf / reorganization case — is a
-    ``"refactor"`` and gets the tech-debt review. When no project files are
-    touched at all, default to ``"project"`` (the conservative review).
+    Statements live at ``Challenge/<Name>.lean``; the auto-generated root
+    ``Challenge.lean`` index is not one.
+    """
+    return path.startswith("Challenge/") and path.endswith(".lean")
+
+
+def is_solution_file(path: str) -> bool:
+    """Whether ``path`` is an in-repo answer to a challenge."""
+    return path.startswith("Solution/") and path.endswith(".lean")
+
+
+def classify_pr(files: list[tuple[str, str]]) -> str:
+    """Classify a PR by what it is asking the maintainer to accept.
+
+    - ``"challenge"`` — puts an open statement on the board, or edits one
+      already there, without touching pooled Lean content. Judged on
+      significance, faithfulness of the Lean to the prose, and cost; there
+      is no proof in it to judge.
+    - ``"solution"`` — answers a challenge. Correctness is settled by
+      comparator, so the review is short and narrow.
+    - ``"project"`` — adds a new project (a project directory that appears
+      only through added ``.lean`` files). The full fit/significance review.
+    - ``"refactor"`` — only changes files in projects already in the pool,
+      the pure-golf / reorganization case. The tech-debt review.
+
+    A *new* challenge statement wins over everything else: whatever else is
+    in the PR, the board entry is what needs judging. Otherwise a mixed PR
+    falls through to the content classification, which is the conservative
+    choice — a Lean/Mathlib bump repairing every library should not be
+    reviewed as a challenge. When no Lean content is touched at all, default
+    to ``"project"``.
     """
     added_projects: set[str] = set()
     existing_projects: set[str] = set()
+    added_statements = False
+    touched_statements = False
+    touched_solutions = False
     for name, status in files:
+        if is_challenge_statement(name):
+            touched_statements = True
+            added_statements = added_statements or status == "added"
+        if is_solution_file(name):
+            touched_solutions = True
         if not name.endswith(".lean"):
             continue
         project = project_of(name)
@@ -321,10 +479,59 @@ def classify_pr(files: list[tuple[str, str]]) -> str:
             added_projects.add(project)
         else:  # modified / removed / renamed / changed / copied
             existing_projects.add(project)
+    pool_content = bool(added_projects or existing_projects)
+    if added_statements:
+        return "challenge"
+    if touched_solutions:
+        return "solution"
+    if touched_statements and not pool_content:
+        return "challenge"
     new_projects = added_projects - existing_projects
     if not new_projects and existing_projects:
         return "refactor"
     return "project"
+
+
+# Paths a plain solution PR may touch: the answer, the regenerated index,
+# and the registry entry recording it. Anything else — a statement edit,
+# a pooled project, tooling — means there is something to read.
+SOLUTION_ONLY_PATH = re.compile(
+    r"^(Solution\.lean|Solution/.+\.lean|Challenge/challenges\.yml)$"
+)
+
+
+def solution_needs_llm_review(files: list[tuple[str, str]], root: Path) -> str | None:
+    """Return why a solution PR still needs a reading, or ``None``.
+
+    Comparator decides whether a solution proves the challenge, and the
+    quality gates decide the rest, so most solution PRs have nothing left
+    for a language model to weigh in on. Two things do:
+
+    - the PR touches something beyond the answer itself, or
+    - the challenge leaves a *definition hole*, which comparator can only
+      check by name and type — a solver can define the hole in terms of the
+      object the challenge asks about, so a human (or a model) has to look.
+    """
+    extra = sorted(name for name, _ in files if not SOLUTION_ONLY_PATH.match(name))
+    if extra:
+        return f"the PR also touches {', '.join(extra[:5])}"
+    touched = {name for name, _ in files if is_solution_file(name)}
+    challenges, errors = challenge.load_challenges(root)
+    if errors:
+        return "the challenge registry could not be read"
+    for entry in challenges:
+        if not isinstance(entry, dict):
+            continue
+        module = challenge.solution_module(entry)
+        if module is None:
+            continue
+        path = "/".join(module.split(".")) + ".lean"
+        if path in touched and challenge.definition_names(entry):
+            return (
+                f"challenge `{entry.get('slug')}` leaves a definition hole, which "
+                "comparator only checks by name and type"
+            )
+    return None
 
 
 def estimate_tokens(text: str) -> int:
@@ -670,6 +877,85 @@ def render_refactor_assessment(payload: dict) -> str:
     return table
 
 
+def render_challenge_assessment(payload: dict) -> str:
+    """Render a challenge assessment block as a Markdown table."""
+    a = payload.get("assessment") or {}
+    if not a:
+        return ""
+
+    significance = a.get("significance", "")
+    faithfulness = a.get("faithfulness", "")
+    source_match = a.get("source_match", "")
+    vacuity = a.get("vacuity_risk", "")
+    estimate = a.get("estimated_lines")
+    estimate_cell = f"~{estimate:,} lines" if isinstance(estimate, int) else "?"
+    basis = (a.get("estimate_basis") or "").strip()
+    if basis:
+        estimate_cell += f" — {basis}"
+
+    rows = [
+        ("Significance", _icon_cell(SIGNIFICANCE_ICON, significance)),
+        ("Faithful to the prose", _icon_cell(FAITHFULNESS_ICON, faithfulness)),
+        ("Matches cited source", _icon_cell(SOURCE_MATCH_ICON, source_match)),
+        ("Vacuity risk", _icon_cell(VACUITY_ICON, vacuity)),
+        ("Difficulty", f"`{a.get('difficulty', '?')}`"),
+        ("Estimated solution size", estimate_cell),
+    ]
+    already = (a.get("already_formalized") or "").strip()
+    if already:
+        rows.append(("Already formalized", f"🛑 `{already}`"))
+
+    table = "| Aspect | Value |\n|---|---|\n"
+    for key, value in rows:
+        table += f"| {key} | {value} |\n"
+
+    note = (a.get("faithfulness_note") or "").strip()
+    if note:
+        table += f"\n**Statement check:** {note}\n"
+    sentence = (a.get("assessment_one_sentence") or "").strip()
+    if sentence:
+        table += f"\n_{sentence}_"
+    return table
+
+
+def _icon_cell(icons: dict[str, str], value: str) -> str:
+    """Render one assessment value with its status icon."""
+    if not value:
+        return "?"
+    return f"{icons.get(value, '•')} `{value}`"
+
+
+def render_solution_assessment(payload: dict) -> str:
+    """Render a solution assessment block as a Markdown table."""
+    a = payload.get("assessment") or {}
+    if not a:
+        return ""
+
+    tampering = a.get("touches_challenge_statement")
+    tampering_cell = (
+        f"{TAMPERING_ICON.get(bool(tampering), '•')} {'yes' if tampering else 'no'}"
+        if tampering is not None
+        else "?"
+    )
+    quality = a.get("proof_quality")
+    rows = [
+        ("Touches the challenge statement", tampering_cell),
+        (
+            "Definition-hole risk",
+            _icon_cell(HOLE_RISK_ICON, a.get("definition_hole_risk", "")),
+        ),
+        ("Proof quality", f"{quality} / 5" if quality is not None else "?"),
+    ]
+    table = "| Aspect | Value |\n|---|---|\n"
+    for key, value in rows:
+        table += f"| {key} | {value} |\n"
+
+    sentence = (a.get("assessment_one_sentence") or "").strip()
+    if sentence:
+        table += f"\n_{sentence}_"
+    return table
+
+
 def render_comment(
     payload: dict,
     model: str,
@@ -681,21 +967,25 @@ def render_comment(
 ) -> str:
     """Render the model's payload as a Markdown PR comment body.
 
-    ``kind`` is ``"project"`` (fit/significance review) or ``"refactor"``
-    (tech-debt review); it selects the header, the assessment table, and
-    the rules doc linked in the footer. When ``truncation`` is set, the
-    comment states up front that the model reviewed a reduced diff.
+    ``kind`` is ``"project"`` (fit/significance review), ``"refactor"``
+    (tech-debt review), or ``"challenge"`` (open-statement review); it
+    selects the header, the assessment table, and the rules doc linked in
+    the footer. When ``truncation`` is set, the comment states up front
+    that the model reviewed a reduced diff.
     """
     summary = (payload.get("summary") or "").strip()
     verdict = (payload.get("verdict") or "").strip()
     findings = payload.get("findings") or []
 
-    heading = (
-        f"## 🤖 LLM review — refactor (`{model}`)"
-        if kind == "refactor"
-        else f"## 🤖 LLM review (`{model}`)"
-    )
+    headings = {
+        "refactor": f"## 🤖 LLM review — refactor (`{model}`)",
+        "challenge": f"## 🤖 LLM review — challenge (`{model}`)",
+        "solution": f"## 🤖 LLM review — challenge solution (`{model}`)",
+    }
+    heading = headings.get(kind, f"## 🤖 LLM review (`{model}`)")
     lines = [LLM_REVIEW_MARKER, heading, ""]
+    if kind == "solution":
+        lines.extend([COMPARATOR_DISCLAIMER, ""])
 
     if reviewed_head_sha:
         lines.extend([f"**Reviewed head:** `{reviewed_head_sha}`", ""])
@@ -720,11 +1010,12 @@ def render_comment(
     if summary:
         lines.extend([summary, ""])
 
-    assessment = (
-        render_refactor_assessment(payload)
-        if kind == "refactor"
-        else render_project_assessment(payload)
-    )
+    renderers = {
+        "refactor": render_refactor_assessment,
+        "challenge": render_challenge_assessment,
+        "solution": render_solution_assessment,
+    }
+    assessment = renderers.get(kind, render_project_assessment)(payload)
     if assessment:
         lines.extend([assessment, ""])
 
@@ -750,13 +1041,47 @@ def render_comment(
     usage_line = render_usage(usage, model, tier)
     if usage_line:
         lines.append(usage_line)
-    rules_doc = "REFACTOR_REVIEW_RULES.md" if kind == "refactor" else "REVIEW_RULES.md"
+    rules_doc = RULES_DOC_NAME.get(kind, "REVIEW_RULES.md")
     lines.append(
         "_Automated review against "
         f"[`.github/{rules_doc}`](../blob/main/.github/{rules_doc}). "
         "Disagree? Reply on the PR; rules can be updated in a PR of their own._"
     )
     return "\n".join(lines)
+
+
+def render_solution_skip_comment(reviewed_head_sha: str) -> str:
+    """Render the comment posted instead of reviewing a plain solution PR.
+
+    A solution PR that touches nothing but the answer, the generated index,
+    and the registry entry has no judgment left in it: comparator decides
+    whether the proof proves the challenge, and the quality gates decide
+    everything else. Spending a model call to say so would only add noise
+    the maintainer has to read.
+    """
+    return "\n".join(
+        [
+            LLM_REVIEW_MARKER,
+            "## 🤖 LLM review — challenge solution (skipped)",
+            "",
+            f"**Reviewed head:** `{reviewed_head_sha}`" if reviewed_head_sha else "",
+            "",
+            "No model review: this PR only adds an answer to a challenge that is "
+            "already on the board, and everything about it is machine-checkable.",
+            "",
+            COMPARATOR_DISCLAIMER,
+            "",
+            "The quality gates cover the rest — no `sorry` or axioms in the "
+            "solution, the solution does not import the challenge module, the "
+            "registry records it, and the generated cards match.",
+            "",
+            "---",
+            "_Skip rule: a solution PR is reviewed by a model only when it touches "
+            "more than the answer and its registry entry, or when the challenge "
+            "leaves a definition hole. See "
+            "[`.github/SOLUTION_REVIEW_RULES.md`](../blob/main/.github/SOLUTION_REVIEW_RULES.md)._",
+        ]
+    )
 
 
 def post_comment(pr_number: str, body: str, repo_full_name: str) -> None:
@@ -810,27 +1135,41 @@ def main() -> int:
     model = os.environ.get("REVIEW_MODEL", DEFAULT_MODEL)
     repo_full_name = resolve_repo_full_name().strip()
 
-    # Detect whether this is a new-project PR or a refactor of projects
-    # already in the pool, and review it under the matching rules.
-    kind = classify_pr(fetch_pr_files(pr_number, repo_full_name))
-    if kind == "refactor":
-        rules = REFACTOR_RULES_PATH.read_text(encoding="utf-8")
-        system_prompt = SYSTEM_PROMPT_REFACTOR
-    else:
-        rules = PROJECT_RULES_PATH.read_text(encoding="utf-8")
-        system_prompt = SYSTEM_PROMPT_PROJECT
+    # Detect what this PR is asking for — a new project, a refactor, a new
+    # challenge, or an answer to one — and review it under the matching
+    # rules.
+    files = fetch_pr_files(pr_number, repo_full_name)
+    kind = classify_pr(files)
+    rules_path, system_prompt = REVIEW_MODES[kind]
+    rules = rules_path.read_text(encoding="utf-8")
     print(f"Reviewing PR #{pr_number} as a {kind} PR.", file=sys.stderr)
+
+    reviewed_head_sha = (
+        os.environ.get("REVIEW_HEAD_SHA")
+        or fetch_head_sha(pr_number, repo_full_name).strip()
+    )
+
+    if kind == "solution":
+        reason = solution_needs_llm_review(files, REPO_ROOT)
+        if reason is None:
+            print(
+                "Solution PR with nothing left to judge; posting the skip "
+                "note instead of calling the model.",
+                file=sys.stderr,
+            )
+            post_comment(
+                pr_number,
+                render_solution_skip_comment(reviewed_head_sha),
+                repo_full_name=repo_full_name,
+            )
+            return 0
+        print(f"Reviewing this solution PR because {reason}.", file=sys.stderr)
 
     diff = fetch_diff(pr_number, repo_full_name)
 
     if not diff.strip():
         print("Empty diff; nothing to review.", file=sys.stderr)
         return 0
-
-    reviewed_head_sha = (
-        os.environ.get("REVIEW_HEAD_SHA")
-        or fetch_head_sha(pr_number, repo_full_name).strip()
-    )
     payload, usage, tier, truncation = request_review(
         model=model, rules=rules, diff=diff, system_prompt=system_prompt
     )

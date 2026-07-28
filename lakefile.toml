@@ -1,7 +1,7 @@
 name = "lean-pool"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["LeanPool"]
+defaultTargets = ["LeanPool", "Challenge", "Solution"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -16,3 +16,16 @@ rev = "v4.32.0-rc1"
 
 [[lean_lib]]
 name = "LeanPool"
+
+# Challenge mode: open statements awaiting a proof. This is the only library
+# where `sorry` is allowed, and only as the whole proof body of a declaration
+# registered in `Challenge/challenges.yml`. See CONTRIBUTING.md#challenge-mode.
+[[lean_lib]]
+name = "Challenge"
+
+# Answers to challenges. A solution restates its challenge's statement under the
+# same name and proves it, WITHOUT importing the challenge module: comparator
+# exports the two environments separately and compares them, which is what makes
+# the check independent of the statement file.
+[[lean_lib]]
+name = "Solution"
