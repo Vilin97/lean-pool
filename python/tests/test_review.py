@@ -500,13 +500,15 @@ def test_request_review_refits_after_token_overflow(monkeypatch) -> None:
     small = _file_patch("LeanPool/Tiny/Card.lean", ["KEEP_ME"] * 10)
     diff = "\n".join([big, small]) + "\n"
 
-    payload, usage, tier, truncation = review.request_review(
+    result = review.request_review(
         model="gpt-5.5", rules="R" * 200, diff=diff, system_prompt="Review."
     )
 
-    assert payload == {"summary": "ok", "verdict": "approve", "findings": []}
-    assert usage is None
-    assert tier == "flex"
+    assert result.payload == {"summary": "ok", "verdict": "approve", "findings": []}
+    assert result.usage is None
+    assert result.tier == "flex"
+    # The stubbed response reports no model, so the requested one stands.
+    assert result.model == "gpt-5.5"
     # First attempt sent the full diff; the retry elided the big file.
     assert len(calls) == 2
     assert review.ELISION_MARKER not in calls[0]
@@ -514,8 +516,8 @@ def test_request_review_refits_after_token_overflow(monkeypatch) -> None:
     assert review.ELISION_MARKER in calls[1]
     assert len(calls[1]) < len(calls[0])
     assert "+KEEP_ME" in calls[1]
-    assert truncation is not None
-    assert truncation.elided_files == 1
+    assert result.truncation is not None
+    assert result.truncation.elided_files == 1
 
 
 def test_request_review_reraises_unrelated_bad_request(monkeypatch) -> None:
@@ -547,6 +549,129 @@ def test_request_review_reraises_unrelated_bad_request(monkeypatch) -> None:
             diff="diff --git a/x b/x\n",
             system_prompt="s",
         )
+
+
+def test_request_review_sends_effort_and_reports_resolved_model(monkeypatch) -> None:
+    """The effort knob reaches the API; the serving snapshot is reported."""
+    from lean_pool import review
+
+    seen: list[dict] = []
+
+    class _FakeCompletions:
+        """Answers like the OpenAI client, resolving the model alias."""
+
+        def create(self, **kwargs):
+            """Record kwargs and answer with a dated snapshot name."""
+            seen.append(kwargs)
+            message = types.SimpleNamespace(content='{"summary": "ok"}')
+            return types.SimpleNamespace(
+                choices=[types.SimpleNamespace(message=message)],
+                usage=None,
+                model="gpt-5.6-sol-2026-06-17",
+            )
+
+    class _FakeClient:
+        """Stub OpenAI client exposing chat.completions.create."""
+
+        def __init__(self) -> None:
+            """Wire up the fake chat.completions endpoint."""
+            self.chat = types.SimpleNamespace(completions=_FakeCompletions())
+
+    monkeypatch.setattr(review, "OpenAI", lambda timeout: _FakeClient())
+
+    result = review.request_review(
+        model="gpt-5.6",
+        rules="rules",
+        diff="diff --git a/x b/x\n",
+        system_prompt="s",
+        effort="xhigh",
+    )
+
+    assert seen[0]["reasoning_effort"] == "xhigh"
+    assert result.model == "gpt-5.6-sol-2026-06-17"
+    assert result.effort == "xhigh"
+
+
+def test_request_review_drops_rejected_effort(monkeypatch) -> None:
+    """An unsupported effort value retries at the model's default effort."""
+    from lean_pool import review
+
+    seen: list[dict] = []
+
+    class _FakeCompletions:
+        """Rejects the effort parameter once, then answers."""
+
+        def create(self, **kwargs):
+            """Refuse reasoning_effort; accept the parameterless retry."""
+            seen.append(kwargs)
+            if "reasoning_effort" in kwargs:
+                raise openai.BadRequestError(
+                    "Unsupported value: 'xhigh' is not one of the supported "
+                    "values for parameter 'reasoning_effort'."
+                )
+            message = types.SimpleNamespace(content='{"summary": "ok"}')
+            return types.SimpleNamespace(
+                choices=[types.SimpleNamespace(message=message)], usage=None
+            )
+
+    class _FakeClient:
+        """Stub OpenAI client exposing chat.completions.create."""
+
+        def __init__(self) -> None:
+            """Wire up the fake chat.completions endpoint."""
+            self.chat = types.SimpleNamespace(completions=_FakeCompletions())
+
+    monkeypatch.setattr(review, "OpenAI", lambda timeout: _FakeClient())
+
+    result = review.request_review(
+        model="gpt-5.6",
+        rules="rules",
+        diff="diff --git a/x b/x\n",
+        system_prompt="s",
+        effort="xhigh",
+    )
+
+    assert len(seen) == 2
+    assert "reasoning_effort" not in seen[1]
+    assert result.payload == {"summary": "ok"}
+    assert result.effort is None
+
+
+def test_pricing_rates_prefix_match_and_long_context() -> None:
+    """Snapshot names price by family prefix; big inputs hit the long rate."""
+    from lean_pool import review
+
+    short = review.pricing_rates("gpt-5.6-sol-2026-06-17", "flex", 10_000)
+    long = review.pricing_rates(
+        "gpt-5.6-sol-2026-06-17", "flex", review.LONG_CONTEXT_INPUT_TOKENS
+    )
+    assert short is not None and long is not None
+    assert long[0] > short[0] and long[1] > short[1]
+    # The bare alias prices like the Sol model it routes to.
+    assert review.pricing_rates("gpt-5.6", "standard", 10_000) == (
+        review.pricing_rates("gpt-5.6-sol", "standard", 10_000)
+    )
+    assert review.pricing_rates("some-unknown-model", "flex", 10_000) is None
+    assert review.pricing_rates("gpt-5.6-sol", "batch", 10_000) is None
+
+
+def test_render_usage_shows_effort_and_long_context_rate() -> None:
+    """The footer names the effort and flags long-context pricing."""
+    from lean_pool import review
+
+    usage = types.SimpleNamespace(prompt_tokens=400_000, completion_tokens=20_000)
+    line = review.render_usage(usage, "gpt-5.6-sol-2026-06-17", "flex", "xhigh")
+
+    assert "**Effort:** `xhigh`" in line
+    # 400k in at $5/M plus 20k out at $22.50/M — the long-context rate.
+    assert "**Cost:** $2.4500 (long-context rate)" in line
+
+    small = types.SimpleNamespace(prompt_tokens=100_000, completion_tokens=10_000)
+    short_line = review.render_usage(small, "gpt-5.6-sol", "flex")
+    assert "long-context" not in short_line
+    assert "**Effort:**" not in short_line
+    # 100k in at $2.50/M plus 10k out at $15/M.
+    assert "**Cost:** $0.4000" in short_line
 
 
 def test_render_comment_notes_truncation() -> None:

@@ -2,7 +2,8 @@ name: LLM Review
 
 # Triggers: successful Lean Action CI completion, /review issue comment,
 # workflow_dispatch. PRs with no .lean files skip immediately. Otherwise
-# call gpt-5.5 only when Lean Action CI is green for the reviewed head SHA.
+# call the review model only when Lean Action CI is green for the
+# reviewed head SHA.
 on:
   workflow_run:
     workflows: ["Lean Action CI"]
@@ -102,7 +103,7 @@ jobs:
                   | wc -l | tr -d '[:space:]')
           echo "count=$count" >> "$GITHUB_OUTPUT"
           if [ "$count" -eq 0 ]; then
-            echo "PR #$PR_NUMBER touches no .lean files; skipping gpt-5.5 review."
+            echo "PR #$PR_NUMBER touches no .lean files; skipping LLM review."
           else
             echo "PR #$PR_NUMBER touches $count .lean file(s); checking Lean Action CI."
           fi
@@ -190,10 +191,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           REVIEW_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          # Override here if the model name needs to change. Per-tier
-          # prices live in PRICING_PER_M inside review.py — update there
-          # when bumping the model.
-          REVIEW_MODEL: gpt-5.5
+          # Override here if the model or effort needs to change. The
+          # gpt-5.6 alias tracks the newest gpt-5.6-sol snapshot; there
+          # is no cross-family rolling alias, so a new family (gpt-5.7)
+          # needs a bump here. Per-tier prices live in PRICING_PER_M
+          # inside review.py — update there when bumping the model.
+          REVIEW_MODEL: gpt-5.6
+          # Reasoning depth (main cost dial): none/low/medium/high/xhigh/max,
+          # or "default" to let the model decide.
+          REVIEW_EFFORT: xhigh
         run: uv run python -m lean_pool.review
 
       # Request Copilot's PR review. Idempotent — re-requesting the same

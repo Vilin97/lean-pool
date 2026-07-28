@@ -41,8 +41,9 @@ the posted comment state that the review covered a reduced diff. See
 
 Per-token prices live in the ``PRICING_PER_M`` table below — the OpenAI
 API does not return cost in its responses, so we maintain a small lookup
-keyed on ``(model, tier)``. Update it when bumping ``DEFAULT_MODEL`` or
-when OpenAI changes pricing.
+keyed on model-name prefix and tier, with separate rates for requests
+above OpenAI's long-context input threshold. Update it when bumping
+``DEFAULT_MODEL`` or when OpenAI changes pricing.
 
 Environment variables:
     OPENAI_API_KEY: OpenAI credentials (required).
@@ -53,6 +54,9 @@ Environment variables:
     REVIEW_HEAD_SHA:
                     Head SHA being reviewed (optional; fetched if absent).
     REVIEW_MODEL:   Model name; defaults to :data:`DEFAULT_MODEL`.
+    REVIEW_EFFORT:  Reasoning effort; defaults to
+                    :data:`DEFAULT_REASONING_EFFORT`. Set to ``default``
+                    to send no effort parameter at all.
 
 Run:
     uv run python -m lean_pool.review
@@ -79,8 +83,18 @@ PROJECT_RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
 REFACTOR_RULES_PATH = REPO_ROOT / ".github" / "REFACTOR_REVIEW_RULES.md"
 CHALLENGE_RULES_PATH = REPO_ROOT / ".github" / "CHALLENGE_REVIEW_RULES.md"
 SOLUTION_RULES_PATH = REPO_ROOT / ".github" / "SOLUTION_REVIEW_RULES.md"
-DEFAULT_MODEL = "gpt-5.5"
-# Flex tier requests can take longer than the default 10-minute timeout.
+# The `gpt-5.6` alias routes to the newest gpt-5.6-sol snapshot (OpenAI's
+# flagship reasoning model), so snapshot upgrades arrive automatically.
+# OpenAI publishes no cross-family rolling alias — when a new family ships
+# (gpt-5.7, gpt-6), this line and PRICING_PER_M still need a bump.
+DEFAULT_MODEL = "gpt-5.6"
+# Reasoning effort sent with every review request. `xhigh` is the deep
+# end of gpt-5.6's range (none/low/medium/high/xhigh/max); reasoning
+# tokens are billed as output tokens, so this is the main cost dial —
+# lower it via the REVIEW_EFFORT env var if review costs run hot.
+DEFAULT_REASONING_EFFORT = "xhigh"
+# Flex tier requests can take longer than the default 10-minute timeout,
+# and xhigh reasoning stretches generation further.
 REQUEST_TIMEOUT_SECONDS = 6000.0
 LLM_REVIEW_MARKER = "<!-- lean-pool-llm-review -->"
 # Said up front on every solution comment: whatever the model writes, the
@@ -108,19 +122,59 @@ ELIDED_FILE_HEAD_LINES = 40
 MINIMUM_ELIDED_FILE_HEAD_LINES = 8
 ELISION_MARKER = "[elided by lean-pool llm-review:"
 
-# USD per 1M tokens, keyed by (model, tier) -> (input_per_M, output_per_M).
+# Requests whose input exceeds this many tokens are billed entirely at
+# the long-context rate (2x input / 1.5x output as of 2026-07).
+LONG_CONTEXT_INPUT_TOKENS = 272_000
+
+# USD per 1M tokens, keyed by model-name prefix -> tier -> a pair of
+# (input_per_M, output_per_M) rates: [0] below the long-context
+# threshold, [1] at or above it. Keys are prefixes because the API
+# reports resolved snapshots (`gpt-5.6-sol-2026-...`) when called
+# through an alias; :func:`pricing_rates` picks the longest match.
 # Source: https://developers.openai.com/api/docs/pricing — update when
 # bumping DEFAULT_MODEL or when OpenAI changes pricing.
-PRICING_PER_M: dict[str, dict[str, tuple[float, float]]] = {
-    "gpt-5.5": {
-        "flex": (2.50, 15.00),
-        "standard": (5.00, 30.00),
+PRICING_PER_M: dict[str, dict[str, tuple[tuple[float, float], tuple[float, float]]]] = {
+    # The `gpt-5.6` key also covers the alias itself, which routes to
+    # gpt-5.6-sol; both rows carry Sol rates.
+    "gpt-5.6-sol": {
+        "flex": ((2.50, 15.00), (5.00, 22.50)),
+        "standard": ((5.00, 30.00), (10.00, 45.00)),
     },
-    "gpt-5.4-mini": {
-        "flex": (0.375, 2.25),
-        "standard": (0.75, 4.50),
+    "gpt-5.6": {
+        "flex": ((2.50, 15.00), (5.00, 22.50)),
+        "standard": ((5.00, 30.00), (10.00, 45.00)),
+    },
+    "gpt-5.5": {
+        "flex": ((2.50, 15.00), (5.00, 22.50)),
+        "standard": ((5.00, 30.00), (10.00, 45.00)),
     },
 }
+
+
+def pricing_rates(
+    model: str, tier: str, input_tokens: int
+) -> tuple[float, float] | None:
+    """Return ``(input_per_M, output_per_M)`` for a served request.
+
+    Args:
+        model: Model name as reported by the API — a dated snapshot like
+            ``gpt-5.6-sol-2026-06-17`` matches its family prefix.
+        tier: Service tier the request was billed at.
+        input_tokens: Prompt size, which selects the short- or
+            long-context rate.
+
+    Returns:
+        The matching rate pair, or ``None`` when the model/tier pair is
+        not in :data:`PRICING_PER_M`.
+    """
+    for prefix in sorted(PRICING_PER_M, key=len, reverse=True):
+        if model == prefix or model.startswith(prefix):
+            rates = PRICING_PER_M[prefix].get(tier)
+            if rates is None:
+                return None
+            return rates[1] if input_tokens >= LONG_CONTEXT_INPUT_TOKENS else rates[0]
+    return None
+
 
 VERDICT_ICON = {
     "approve": "✅",
@@ -710,32 +764,78 @@ def build_user_content(rules: str, diff: str, truncation: DiffTruncation | None)
     return "\n\n".join(sections)
 
 
+def _is_effort_rejection(error: Exception) -> bool:
+    """Whether ``error`` is the API refusing the reasoning-effort value.
+
+    Guards the auto-upgrading model alias: if a future snapshot drops an
+    effort level, the review retries at the model default instead of
+    failing. Matches by message because OpenAI's parameter errors carry
+    no stable machine-readable code.
+    """
+    if getattr(error, "status_code", None) != 400:
+        return False
+    message = str(error).lower()
+    return "reasoning" in message and "effort" in message
+
+
+def _create_completion(
+    client: OpenAI,
+    model: str,
+    messages: list[dict[str, str]],
+    effort: str | None,
+    service_tier: str,
+) -> tuple[Any, str | None]:
+    """Create one completion, dropping the effort parameter if rejected.
+
+    Returns:
+        ``(response, effort_used)`` where ``effort_used`` is ``None``
+        when the request went out without a reasoning-effort parameter.
+    """
+    kwargs: dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "response_format": {"type": "json_object"},
+        "service_tier": service_tier,
+    }
+    if effort:
+        kwargs["reasoning_effort"] = effort
+    try:
+        return client.chat.completions.create(**kwargs), effort
+    except BadRequestError as error:
+        if not (effort and _is_effort_rejection(error)):
+            raise
+        print(
+            f"Model rejected reasoning_effort={effort}; retrying at the "
+            "model's default effort.",
+            file=sys.stderr,
+        )
+        del kwargs["reasoning_effort"]
+        return client.chat.completions.create(**kwargs), None
+
+
 def _completion_with_tier_fallback(
-    client: OpenAI, model: str, messages: list[dict[str, str]]
-) -> tuple[Any, str]:
+    client: OpenAI, model: str, messages: list[dict[str, str]], effort: str | None
+) -> tuple[Any, str, str | None]:
     """Create a completion on the ``flex`` tier, falling back to standard.
 
     Flex is either out of capacity (429 RateLimitError) or unsupported for
-    this model (e.g. 500 InternalServerError on gpt-5.5); either way retry
+    this model (historically a 500 InternalServerError); either way retry
     with ``service_tier="auto"``. Any other error propagates.
+
+    Returns:
+        ``(response, tier, effort_used)``.
     """
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            response_format={"type": "json_object"},
-            service_tier="flex",
+        response, effort_used = _create_completion(
+            client, model, messages, effort, service_tier="flex"
         )
-        return response, "flex"
+        return response, "flex", effort_used
     except (RateLimitError, APIStatusError) as e:
         if isinstance(e, RateLimitError) or (500 <= e.status_code < 600):
-            response = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                response_format={"type": "json_object"},
-                service_tier="auto",
+            response, effort_used = _create_completion(
+                client, model, messages, effort, service_tier="auto"
             )
-            return response, "standard"
+            return response, "standard", effort_used
         raise
 
 
@@ -754,9 +854,32 @@ def _is_token_overflow(error: Exception) -> bool:
     )
 
 
+@dataclass(frozen=True)
+class ReviewResult:
+    """One completed review request.
+
+    Attributes:
+        payload: Parsed JSON review from the model.
+        usage: OpenAI ``CompletionUsage`` object, or ``None``.
+        tier: ``"flex"`` or ``"standard"`` — the tier that served it.
+        truncation: Diff elision applied, ``None`` for a full-diff review.
+        model: Model that actually served the request — the resolved
+            snapshot when the request went through an alias.
+        effort: Reasoning effort actually applied, ``None`` when the
+            request went out without one.
+    """
+
+    payload: dict
+    usage: Any
+    tier: str
+    truncation: DiffTruncation | None
+    model: str
+    effort: str | None
+
+
 def request_review(
-    model: str, rules: str, diff: str, system_prompt: str
-) -> tuple[dict, Any, str, DiffTruncation | None]:
+    model: str, rules: str, diff: str, system_prompt: str, effort: str | None = None
+) -> ReviewResult:
     """Ask the model to apply ``rules`` to ``diff`` under ``system_prompt``.
 
     The diff is first fitted to :data:`MAX_INPUT_TOKENS` estimated input
@@ -766,12 +889,15 @@ def request_review(
     review. Tries the ``flex`` service tier first; if OpenAI returns 429
     Resource Unavailable, retries with ``service_tier="auto"`` (standard).
 
+    Args:
+        model: Model name or alias to request.
+        rules: Review rules document, sent as part of the user message.
+        diff: Unified PR diff.
+        system_prompt: Reviewer persona for this PR kind.
+        effort: Reasoning effort to request; ``None`` sends none.
+
     Returns:
-        ``(payload, usage, tier, truncation)`` where ``payload`` is the
-        parsed JSON review, ``usage`` is the OpenAI ``CompletionUsage``
-        object (or ``None``), ``tier`` is ``"flex"`` or ``"standard"``,
-        and ``truncation`` describes any diff elision (``None`` when the
-        full diff was reviewed).
+        The :class:`ReviewResult` for the request that succeeded.
     """
     client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
     system_prompt = f"{system_prompt}\n{NOTATION_RULE}"
@@ -793,7 +919,9 @@ def request_review(
             {"role": "user", "content": user_content},
         ]
         try:
-            response, tier = _completion_with_tier_fallback(client, model, messages)
+            response, tier, effort_used = _completion_with_tier_fallback(
+                client, model, messages, effort
+            )
         except BadRequestError as error:
             if not _is_token_overflow(error) or attempt == REVIEW_FIT_ATTEMPTS - 1:
                 raise
@@ -805,16 +933,24 @@ def request_review(
             )
             continue
         content = response.choices[0].message.content or "{}"
-        return json.loads(content), response.usage, tier, truncation
+        return ReviewResult(
+            payload=json.loads(content),
+            usage=response.usage,
+            tier=tier,
+            truncation=truncation,
+            model=getattr(response, "model", None) or model,
+            effort=effort_used,
+        )
     raise RuntimeError("unreachable: review fit loop exited without a result")
 
 
-def render_usage(usage: Any, model: str, tier: str) -> str:
-    """Render a one-line token / tier / cost footer.
+def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -> str:
+    """Render a one-line token / tier / effort / cost footer.
 
     Returns an empty string if ``usage`` is unavailable. Cost is computed
-    from :data:`PRICING_PER_M` and suppressed when the model/tier pair is
-    not listed there.
+    from :data:`PRICING_PER_M` at the short- or long-context rate the
+    request's input size lands in, and suppressed when the model/tier
+    pair is not listed there.
     """
     if usage is None:
         return ""
@@ -822,11 +958,16 @@ def render_usage(usage: Any, model: str, tier: str) -> str:
     out_tok = getattr(usage, "completion_tokens", 0) or 0
 
     parts = [f"**Tokens:** {in_tok:,} in / {out_tok:,} out", f"**Tier:** `{tier}`"]
-    rates = PRICING_PER_M.get(model, {}).get(tier)
+    if effort:
+        parts.append(f"**Effort:** `{effort}`")
+    rates = pricing_rates(model, tier, in_tok)
     if rates is not None:
         in_price, out_price = rates
         cost = (in_tok * in_price + out_tok * out_price) / 1_000_000
-        parts.append(f"**Cost:** ${cost:.4f}")
+        cost_cell = f"**Cost:** ${cost:.4f}"
+        if in_tok >= LONG_CONTEXT_INPUT_TOKENS:
+            cost_cell += " (long-context rate)"
+        parts.append(cost_cell)
     else:
         parts.append(f"_(no pricing recorded for `{model}` at `{tier}` tier)_")
     return " · ".join(parts)
@@ -984,6 +1125,7 @@ def render_comment(
     reviewed_head_sha: str,
     kind: str = "project",
     truncation: DiffTruncation | None = None,
+    effort: str | None = None,
 ) -> str:
     """Render the model's payload as a Markdown PR comment body.
 
@@ -1058,7 +1200,7 @@ def render_comment(
         lines.append("")
 
     lines.append("---")
-    usage_line = render_usage(usage, model, tier)
+    usage_line = render_usage(usage, model, tier, effort)
     if usage_line:
         lines.append(usage_line)
     rules_doc = RULES_DOC_NAME.get(kind, "REVIEW_RULES.md")
@@ -1153,6 +1295,9 @@ def main() -> int:
         return 2
 
     model = os.environ.get("REVIEW_MODEL", DEFAULT_MODEL)
+    effort: str | None = os.environ.get("REVIEW_EFFORT", DEFAULT_REASONING_EFFORT)
+    if effort in ("", "default"):
+        effort = None
     repo_full_name = resolve_repo_full_name().strip()
 
     # Detect what this PR is asking for — a new project, a refactor, a new
@@ -1190,17 +1335,22 @@ def main() -> int:
     if not diff.strip():
         print("Empty diff; nothing to review.", file=sys.stderr)
         return 0
-    payload, usage, tier, truncation = request_review(
-        model=model, rules=rules, diff=diff, system_prompt=system_prompt
+    result = request_review(
+        model=model,
+        rules=rules,
+        diff=diff,
+        system_prompt=system_prompt,
+        effort=effort,
     )
     comment = render_comment(
-        payload,
-        model=model,
-        usage=usage,
-        tier=tier,
+        result.payload,
+        model=result.model,
+        usage=result.usage,
+        tier=result.tier,
         reviewed_head_sha=reviewed_head_sha,
         kind=kind,
-        truncation=truncation,
+        truncation=result.truncation,
+        effort=result.effort,
     )
     post_comment(pr_number, comment, repo_full_name=repo_full_name)
     return 0
