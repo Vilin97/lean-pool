@@ -297,6 +297,10 @@ jobs:
     name: Repair ${{ matrix.project }}
     permissions:
       contents: read
+      # claude-code-action exchanges a GitHub OIDC token for its credentials;
+      # without this it fails every attempt with "Unable to get
+      # ACTIONS_ID_TOKEN_REQUEST_URL".
+      id-token: write
     strategy:
       fail-fast: false
       # The free plan allows 20 concurrent jobs across the account; leave
@@ -349,6 +353,11 @@ jobs:
           PROJECT: ${{ matrix.project }}
           LEAN_NUM_THREADS: 2
         run: |
+          # `set +e`, not just `set -uo pipefail`: the runner's shell is
+          # `bash -e`, which would abort this step on a failing build before
+          # PIPESTATUS could be read. A project that still fails must be
+          # recorded, not silently lost.
+          set +e
           set -uo pipefail
           lake build "LeanPool.$PROJECT" 2>&1 | tee verify.log
           status=${PIPESTATUS[0]}
@@ -451,6 +460,9 @@ jobs:
         env:
           LEAN_NUM_THREADS: 2
         run: |
+          # See the repair job's verify step: the runner's `bash -e` would
+          # abort here on a failing build, skipping the PR that reports it.
+          set +e
           set -uo pipefail
           lake exe cache get
           # Whole-pool, not per-project: this is the pass that catches the
@@ -470,6 +482,9 @@ jobs:
         id: gates
         if: steps.build.outputs.status == '0'
         run: |
+          # Each gate's result is recorded rather than aborting the job, so the
+          # PR body can report which ones failed.
+          set +e
           set -uo pipefail
           results=""
           lake exe mk_all --check      && results="$results mk_all:pass" || results="$results mk_all:FAIL"
