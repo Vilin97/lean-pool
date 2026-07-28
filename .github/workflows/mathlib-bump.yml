@@ -124,6 +124,38 @@ jobs:
             echo "Target: **$TARGET** (repair fan-out: $REPAIR)" >> "$GITHUB_STEP_SUMMARY"
           fi
 
+  auth:
+    needs: detect
+    # Only gates the paid stage; the free probe runs regardless of the token.
+    if: needs.detect.outputs.found == 'true' && needs.detect.outputs.repair == 'true'
+    runs-on: ubuntu-latest
+    name: Preflight Claude auth
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      # A trivial round-trip. Without it an invalid or expired token is only
+      # discovered after the ~40-minute probe, by 99 repair jobs failing
+      # identically -- which is exactly how the first three runs were spent.
+      - uses: anthropics/claude-code-action@be7b93b1907a4abad570368f3c74b6fe3807510b
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: "Reply with exactly: AUTH_OK"
+          claude_args: >-
+            --max-turns 1
+            --model claude-sonnet-5
+
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "::error::CLAUDE_CODE_OAUTH_TOKEN is invalid or expired." \
+            "Regenerate it with \`claude setup-token\` and update the secret," \
+            "then verify with the Claude auth check workflow."
+
   pin:
     needs: detect
     if: needs.detect.outputs.found == 'true'
@@ -291,7 +323,7 @@ jobs:
             build.log
 
   repair:
-    needs: [detect, triage]
+    needs: [detect, auth, triage]
     if: needs.detect.outputs.repair == 'true' && needs.triage.outputs.has_breakage == 'true'
     runs-on: ubuntu-latest
     name: Repair ${{ matrix.project }}
