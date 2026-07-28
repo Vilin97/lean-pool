@@ -342,6 +342,12 @@ jobs:
         uses: anthropics/claude-code-action@be7b93b1907a4abad570368f3c74b6fe3807510b
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Supplying a token short-circuits the action's OIDC-to-app-token
+          # exchange (OVERRIDE_GITHUB_TOKEN in its token.ts), which otherwise
+          # 401s with "Claude Code is not installed on this repository". These
+          # jobs only read the repo and write a patch artifact, so the default
+          # job token is sufficient and no GitHub App install is needed.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: "/version-bump-project ${{ matrix.project }} ${{ needs.detect.outputs.target }}"
           claude_args: >-
             --max-turns 60
