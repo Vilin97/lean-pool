@@ -1156,8 +1156,10 @@ def render_project_assessment(payload: dict) -> str:
     """Render a new-project assessment block as a Markdown table.
 
     The rows the maintainer has to act on come first: whether the Lean
-    proves what the card claims, what it assumes, and whether someone has
-    already done it. Fit and level restate the verdict and sit below.
+    proves what the card claims, whether the cited source backs it, what
+    it assumes, and whether someone has already done it. Fit and level
+    sit below — the verdict is rendered directly above this table and
+    ``fit`` almost always restates it.
     """
     a = payload.get("assessment") or {}
     if not a:
@@ -1169,23 +1171,25 @@ def render_project_assessment(payload: dict) -> str:
     quality_cell = f"{quality} / 5" if quality is not None else "?"
 
     rows = [
-        ("Fit", fit_cell),
         ("Proves the claim", _icon_cell(CLAIM_ICON, a.get("proves_the_claim", ""))),
         (
             "Matches cited source",
             _icon_cell(SOURCE_MATCH_ICON, a.get("source_match", "")),
         ),
+    ]
+    already = (a.get("already_formalized") or "").strip()
+    if already:
+        rows.append(("Already formalized", f"🛑 `{already}`"))
+    assumed = (a.get("assumed_inputs") or "").strip()
+    if assumed:
+        rows.append(("Assumed, not proved", assumed))
+    rows += [
+        ("Fit", fit_cell),
         ("Level", f"`{a.get('level', '?')}`"),
         ("Branch", a.get("branch", "?")),
         ("Mode", f"`{a.get('mode', '?')}`"),
         ("Code quality", quality_cell),
     ]
-    assumed = (a.get("assumed_inputs") or "").strip()
-    if assumed:
-        rows.insert(3, ("Assumed, not proved", assumed))
-    already = (a.get("already_formalized") or "").strip()
-    if already:
-        rows.insert(3, ("Already formalized", f"🛑 `{already}`"))
 
     table = "| Aspect | Value |\n|---|---|\n"
     for k, v in rows:

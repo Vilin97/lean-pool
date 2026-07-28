@@ -939,8 +939,12 @@ def test_project_assessment_leads_with_the_ungated_checks() -> None:
     assert "Already formalized" in table
     assert "Assumed, not proved" in table
     assert "Szöllősi–Östergård" in table
-    # Prior art and the claim check come before the verdict-echoing rows.
-    assert table.index("Already formalized") < table.index("| Level |")
+    # The ungated checks lead; `fit` and `level` echo the verdict that is
+    # already rendered above the table, so they come last.
+    assert table.index("Proves the claim") < table.index("| Fit |")
+    assert table.index("Already formalized") < table.index("| Fit |")
+    assert table.index("Assumed, not proved") < table.index("| Fit |")
+    assert table.index("| Fit |") < table.index("| Level |")
     # The field that was `no` in all 147 past reviews is gone.
     assert "Obscure problem" not in table
 
