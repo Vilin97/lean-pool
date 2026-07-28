@@ -1,0 +1,521 @@
+name: Mathlib Bump
+
+# Automated whole-pool migration to a new Lean/Mathlib release, in stages where
+# only the last one needs a human:
+#
+#   detect    Is there a newer release than the pinned one? (free, no LLM)
+#   pin       Move the four version pins, refresh the manifests, push a
+#             bump/<version> branch, and plan the build shards. (free)
+#   probe     Build every project across parallel shards, one project at a
+#             time so each diagnostic is attributable. (free)
+#   triage    Merge the shard logs into a per-project breakage map, which
+#             becomes the repair fan-out's job matrix. (free)
+#   repair    One Claude job per broken project, in parallel. Pool projects
+#             never import each other, so a bump decomposes into independent
+#             per-project repairs. (subscription quota)
+#   assemble  Apply every patch, rebuild the WHOLE pool, run all four gates,
+#             open a DRAFT pull request. (free)
+#
+# Agents propose, deterministic gates dispose: nothing here can merge itself,
+# and `assemble` re-runs the same checks CI would. Repair jobs upload patches
+# as artifacts rather than pushing, so parallel jobs cannot race the branch.
+#
+# Auth: `CLAUDE_CODE_OAUTH_TOKEN` is a Claude subscription token generated
+# locally with `claude setup-token`; usage bills against the subscription
+# rather than API credits. See .github/BUMP_AUTOMATION.md for setup and costs.
+
+on:
+  schedule:
+    # Off-peak, and off the :00 mark where every scheduled workflow piles up.
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Target release (e.g. v4.33.0-rc1); blank = auto-detect"
+        required: false
+        type: string
+      stable_only:
+        description: "Ignore -rc tags (default: bump to the newest release of any kind)"
+        required: false
+        default: false
+        type: boolean
+      repair:
+        description: "Run the Claude repair fan-out"
+        required: false
+        default: 'always'
+        type: choice
+        options: ['always', 'never']
+
+concurrency:
+  # One bump at a time: two concurrent bumps would fight over the branch.
+  group: mathlib-bump
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    name: Detect new release
+    outputs:
+      found: ${{ steps.detect.outputs.found }}
+      target: ${{ steps.detect.outputs.target }}
+      branch: ${{ steps.detect.outputs.branch }}
+      repair: ${{ steps.detect.outputs.repair }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - name: Resolve target version
+        id: detect
+        env:
+          REQUESTED: ${{ inputs.version }}
+          STABLE_ONLY: ${{ inputs.stable_only }}
+          REPAIR_MODE: ${{ inputs.repair || 'always' }}
+        run: |
+          set -euo pipefail
+          if [ -n "$REQUESTED" ]; then
+            target="$REQUESTED"
+            found=true
+          else
+            flags=""
+            if [ "$STABLE_ONLY" = "true" ]; then
+              flags="--stable-only"
+            fi
+            # Release candidates count: the pool tracks the newest Lean and
+            # Mathlib, which mid-cycle means the latest rc.
+            # shellcheck disable=SC2086
+            result="$(cd python && uv run python -m lean_pool.bump detect --repo .. $flags)"
+            echo "$result"
+            target="$(echo "$result" | python3 -c 'import json,sys; print(json.load(sys.stdin)["target"])')"
+            found="$(echo "$result" | python3 -c 'import json,sys; print(str(json.load(sys.stdin)["found"]).lower())')"
+          fi
+
+          repair=true
+          if [ "$REPAIR_MODE" = "never" ]; then
+            repair=false
+          fi
+
+          {
+            echo "found=$found"
+            echo "target=$target"
+            echo "branch=bump/$target"
+            echo "repair=$repair"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        env:
+          FOUND: ${{ steps.detect.outputs.found }}
+          TARGET: ${{ steps.detect.outputs.target }}
+          REPAIR: ${{ steps.detect.outputs.repair }}
+        run: |
+          if [ "$FOUND" != "true" ]; then
+            echo "Pool is up to date; nothing to bump." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Target: **$TARGET** (repair fan-out: $REPAIR)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  pin:
+    needs: detect
+    if: needs.detect.outputs.found == 'true'
+    runs-on: ubuntu-latest
+    name: Move pins and plan shards
+    permissions:
+      contents: write
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - name: Move the version pins
+        env:
+          TARGET: ${{ needs.detect.outputs.target }}
+        run: cd python && uv run python -m lean_pool.bump pin --repo .. --version "$TARGET"
+
+      - name: Install Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Refresh dependency manifests
+        run: |
+          set -euo pipefail
+          lake update mathlib
+          (cd docbuild && lake update doc-gen4)
+
+      - name: Push the bump branch
+        env:
+          BRANCH: ${{ needs.detect.outputs.branch }}
+          TARGET: ${{ needs.detect.outputs.target }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add lean-toolchain lakefile.toml lake-manifest.json \
+            docbuild/lean-toolchain docbuild/lakefile.toml docbuild/lake-manifest.json
+          # A re-run against an already-pinned version has nothing to commit.
+          if git diff --cached --quiet; then
+            echo "Pins already at $TARGET."
+          else
+            git commit -m "chore: pin Lean and Mathlib to $TARGET"
+          fi
+          git push --force origin "$BRANCH"
+
+      - name: Plan the build shards
+        id: plan
+        env:
+          FORCE_FULL: 'true'
+        run: |
+          set -euo pipefail
+          plan="$(python3 scripts/ci/plan-build-shards.py)"
+          echo "$plan"
+          matrix="$(echo "$plan" | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["matrix"]))')"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  probe:
+    needs: [detect, pin]
+    runs-on: ubuntu-latest
+    name: Probe shard ${{ matrix.shard }}
+    strategy:
+      # A shard whose projects fail to build is the expected case, and one
+      # shard dying must never hide the breakage the others found.
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.pin.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.detect.outputs.branch }}
+          persist-credentials: false
+
+      - name: Install Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch Mathlib build cache
+        run: lake exe cache get
+
+      - name: Build this shard's projects
+        env:
+          PROJECTS: ${{ matrix.projects }}
+          SHARD: ${{ matrix.shard }}
+          # Lake 5.0 ignores LAKE_JOBS and -j; this is the only working lever,
+          # and a 16 GB runner needs it (~3.5 GB per concurrent elaboration).
+          LEAN_NUM_THREADS: 2
+        run: |
+          set -uo pipefail
+          # One project at a time, so a failure never masks the rest and each
+          # diagnostic is attributable to the project that produced it.
+          for project in $PROJECTS; do
+            echo "::group::LeanPool.$project"
+            lake build "LeanPool.$project" 2>&1 | tee -a "shard-$SHARD.log" || true
+            echo "::endgroup::"
+          done
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: probe-log-${{ matrix.shard }}
+          path: shard-${{ matrix.shard }}.log
+          if-no-files-found: ignore
+
+  triage:
+    needs: [detect, probe]
+    if: always() && needs.probe.result != 'skipped'
+    runs-on: ubuntu-latest
+    name: Triage breakage
+    outputs:
+      broken: ${{ steps.report.outputs.broken }}
+      has_breakage: ${{ steps.report.outputs.has_breakage }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: probe-log-*
+          path: logs
+          merge-multiple: true
+
+      - name: Triage the build logs
+        id: report
+        run: |
+          set -euo pipefail
+          cat logs/*.log > build.log 2>/dev/null || : > build.log
+          (cd python && uv run python -m lean_pool.bump report \
+            --log ../build.log --output ../bump-report.json > /dev/null)
+          broken="$(python3 -c 'import json; print(json.dumps(json.load(open("bump-report.json"))["broken_projects"]))')"
+          echo "broken=$broken" >> "$GITHUB_OUTPUT"
+          if [ "$broken" = "[]" ]; then
+            echo "has_breakage=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_breakage=true" >> "$GITHUB_OUTPUT"
+          fi
+          python3 scripts/ci/bump-summary.py bump-report.json >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: bump-report
+          path: |
+            bump-report.json
+            build.log
+
+  repair:
+    needs: [detect, triage]
+    if: needs.detect.outputs.repair == 'true' && needs.triage.outputs.has_breakage == 'true'
+    runs-on: ubuntu-latest
+    name: Repair ${{ matrix.project }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      # The free plan allows 20 concurrent jobs across the account; leave
+      # headroom so a bump never starves ordinary PR CI.
+      max-parallel: 12
+      matrix:
+        project: ${{ fromJSON(needs.triage.outputs.broken) }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.detect.outputs.branch }}
+          persist-credentials: false
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: bump-report
+
+      - name: Install Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch Mathlib build cache
+        run: lake exe cache get
+
+      - name: Extract this project's diagnostics
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          set -euo pipefail
+          python3 scripts/ci/bump-summary.py bump-report.json --project "$PROJECT" \
+            > diagnostics.txt
+          cat diagnostics.txt
+
+      - name: Repair with Claude
+        uses: anthropics/claude-code-action@be7b93b1907a4abad570368f3c74b6fe3807510b
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "/version-bump-project ${{ matrix.project }} ${{ needs.detect.outputs.target }}"
+          claude_args: >-
+            --max-turns 60
+            --allowedTools "Bash,Read,Edit,Write,Grep,Glob"
+
+      - name: Verify the repair
+        id: verify
+        env:
+          PROJECT: ${{ matrix.project }}
+          LEAN_NUM_THREADS: 2
+        run: |
+          set -uo pipefail
+          lake build "LeanPool.$PROJECT" 2>&1 | tee verify.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            echo "::warning::LeanPool.$PROJECT still fails to build"
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+          elif grep -qE '(^|: )warning:' verify.log; then
+            echo "::warning::LeanPool.$PROJECT builds but emits warnings"
+            echo "clean=warnings" >> "$GITHUB_OUTPUT"
+          else
+            echo "clean=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Export the repair as a patch
+        env:
+          PROJECT: ${{ matrix.project }}
+          CLEAN: ${{ steps.verify.outputs.clean }}
+        run: |
+          set -euo pipefail
+          # Patches, not pushes: parallel jobs writing the same branch would
+          # race. `assemble` applies them in a defined order instead.
+          git add -- LeanPool
+          git diff --cached --binary > "repair-$PROJECT.patch"
+          changed="$(git diff --cached --name-only | wc -l | tr -d ' ')"
+          printf '{"project": "%s", "clean": "%s", "changed": %s}\n' \
+            "$PROJECT" "$CLEAN" "$changed" > "repair-$PROJECT.json"
+          cat "repair-$PROJECT.json"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: repair-${{ matrix.project }}
+          path: |
+            repair-${{ matrix.project }}.patch
+            repair-${{ matrix.project }}.json
+
+  assemble:
+    needs: [detect, pin, triage, repair]
+    # Runs even when some repairs failed: a partial bump PR with an honest
+    # summary beats no PR. Skipped only if triage never produced a report.
+    if: always() && needs.triage.result == 'success'
+    runs-on: ubuntu-latest
+    name: Assemble and open PR
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.detect.outputs.branch }}
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Apply repair patches
+        id: apply
+        env:
+          TARGET: ${{ needs.detect.outputs.target }}
+        run: |
+          set -euo pipefail
+          applied=0
+          skipped=""
+          for patch in artifacts/repair-*.patch; do
+            [ -s "$patch" ] || continue
+            if git apply --index "$patch"; then
+              applied=$((applied + 1))
+            else
+              skipped="$skipped $(basename "$patch" .patch)"
+            fi
+          done
+          {
+            echo "applied=$applied"
+            echo "skipped=$skipped"
+          } >> "$GITHUB_OUTPUT"
+          if [ "$applied" -gt 0 ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Repair $applied project(s) for $TARGET"
+          fi
+
+      - name: Install Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Build the whole pool
+        id: build
+        env:
+          LEAN_NUM_THREADS: 2
+        run: |
+          set -uo pipefail
+          lake exe cache get
+          # Whole-pool, not per-project: this is the pass that catches the
+          # cross-project effects per-project repair cannot see (a transitive
+          # instance changing simp behaviour in an unrelated project).
+          lake build LeanPool 2>&1 | tee assemble.log
+          status=${PIPESTATUS[0]}
+          errors=$(grep -cE '(^|: )error:' assemble.log || true)
+          warnings=$(grep -cE '(^|: )warning:' assemble.log || true)
+          {
+            echo "errors=$errors"
+            echo "warnings=$warnings"
+            echo "status=$status"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run the quality gates
+        id: gates
+        if: steps.build.outputs.status == '0'
+        run: |
+          set -uo pipefail
+          results=""
+          lake exe mk_all --check      && results="$results mk_all:pass" || results="$results mk_all:FAIL"
+          lake exe runLinter LeanPool  && results="$results linter:pass" || results="$results linter:FAIL"
+          lake exe lint-style LeanPool && results="$results style:pass"  || results="$results style:FAIL"
+          (cd python && uv run python -m lean_pool.quality --repo ..) \
+            && results="$results quality:pass" || results="$results quality:FAIL"
+          echo "results=$results" >> "$GITHUB_OUTPUT"
+          echo "Gates:$results" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Push and open a draft PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ needs.detect.outputs.branch }}
+          TARGET: ${{ needs.detect.outputs.target }}
+          APPLIED: ${{ steps.apply.outputs.applied }}
+          SKIPPED: ${{ steps.apply.outputs.skipped }}
+          ERRORS: ${{ steps.build.outputs.errors }}
+          WARNINGS: ${{ steps.build.outputs.warnings }}
+          GATES: ${{ steps.gates.outputs.results }}
+        run: |
+          set -euo pipefail
+          git push origin "$BRANCH"
+          {
+            echo "Automated migration of the pool to \`$TARGET\`."
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Repairs applied | $APPLIED |"
+            echo "| Whole-pool errors | $ERRORS |"
+            echo "| Whole-pool warnings | $WARNINGS |"
+            echo "| Gates | ${GATES:-not run (build failed)} |"
+            if [ -n "$SKIPPED" ]; then
+              echo "| Patches that would not apply |$SKIPPED |"
+            fi
+            echo
+            echo "Opened as a **draft**: review the statement-level changes before"
+            echo "marking ready. CI must be green on the head SHA, and a declaration"
+            echo "that disappeared should be one Mathlib absorbed, not one lost."
+            echo
+            echo "Generated by \`.github/workflows/mathlib-bump.yml\`."
+          } > body.md
+          if gh pr view "$BRANCH" --json number >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --body-file body.md
+          else
+            gh pr create --draft --base main --head "$BRANCH" \
+              --title "chore: bump Lean and Mathlib to $TARGET" \
+              --body-file body.md
+          fi

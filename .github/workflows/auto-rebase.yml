@@ -1,0 +1,203 @@
+name: Auto-rebase open PRs
+
+# When a content PR merges, every other open import PR conflicts -- always in
+# the same two files, and always mechanically:
+#
+#   LeanPool.lean          a sorted list of imports, regenerated from the file
+#                          tree (no Lean toolchain needed, so this job is fast)
+#   LeanPool/projects.yml  the merged base's registry plus the cards this
+#                          branch adds, moved as verbatim text blocks
+#
+# Any other conflicted path is a real content overlap: the merge is abandoned
+# and the PR labelled `needs-manual-rebase`. The resolution logic lives in
+# python/lean_pool/rebase.py, under test; this workflow only drives it.
+#
+# Pushing to a contributor's fork needs more than GITHUB_TOKEN, which has no
+# write access to forks even when "Allow edits by maintainers" is set. Set
+# REBASE_TOKEN (a GitHub App installation token or a PAT with `repo`) to cover
+# fork PRs; without it they are labelled instead of rebased, and same-repo PRs
+# still work. An App token is preferable: its pushes re-trigger `pull_request`
+# CI, which GITHUB_TOKEN pushes do not.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'LeanPool/**'
+      - 'LeanPool.lean'
+  workflow_dispatch:
+
+concurrency:
+  # Serialised: two runs rebasing the same PR would race on its branch.
+  group: auto-rebase
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    name: List open PRs
+    outputs:
+      pulls: ${{ steps.list.outputs.pulls }}
+      any: ${{ steps.list.outputs.any }}
+    steps:
+      - name: Collect open pull requests
+        id: list
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          pulls="$(gh pr list --repo "$REPO" --state open --limit 100 \
+            --json number,headRefName,headRepository,headRepositoryOwner,isCrossRepository,labels \
+            --jq '[.[]
+                  | select([.labels[].name] | index("needs-manual-rebase") | not)
+                  | {number, branch: .headRefName,
+                     repo: "\(.headRepositoryOwner.login)/\(.headRepository.name)",
+                     fork: .isCrossRepository}]')"
+          echo "pulls=$pulls" >> "$GITHUB_OUTPUT"
+          if [ "$(echo "$pulls" | python3 -c 'import json,sys; print(len(json.load(sys.stdin)))')" = "0" ]; then
+            echo "any=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "any=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "$pulls"
+
+  rebase:
+    needs: list
+    if: needs.list.outputs.any == 'true'
+    runs-on: ubuntu-latest
+    name: Rebase #${{ matrix.pull.number }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        pull: ${{ fromJSON(needs.list.outputs.pulls) }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.REBASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install Python tooling
+        run: cd python && uv sync --locked
+
+      - name: Check we can push to this branch
+        id: capable
+        env:
+          FORK: ${{ matrix.pull.fork }}
+          HAS_TOKEN: ${{ secrets.REBASE_TOKEN != '' }}
+        run: |
+          set -euo pipefail
+          if [ "$FORK" = "true" ] && [ "$HAS_TOKEN" != "true" ]; then
+            echo "REBASE_TOKEN is not set; cannot push to a fork branch."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Merge main and resolve mechanically
+        id: rebase
+        if: steps.capable.outputs.ok == 'true'
+        env:
+          NUMBER: ${{ matrix.pull.number }}
+          BRANCH: ${{ matrix.pull.branch }}
+          HEAD_REPO: ${{ matrix.pull.repo }}
+          TOKEN: ${{ secrets.REBASE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          remote="https://x-access-token:$TOKEN@github.com/$HEAD_REPO"
+          git remote add head "$remote"
+          git fetch head "$BRANCH"
+          git checkout -B "pr-$NUMBER" "head/$BRANCH"
+
+          if git merge --no-edit origin/main; then
+            echo "Merged cleanly."
+            if git diff --quiet "head/$BRANCH" HEAD; then
+              echo "result=up-to-date" >> "$GITHUB_OUTPUT"
+            else
+              echo "result=merged" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            git diff --name-only --diff-filter=U > conflicts.txt
+            echo "Conflicts:"; cat conflicts.txt
+            if ! (cd python && uv run python -m lean_pool.rebase resolvable \
+                  --conflicts ../conflicts.txt); then
+              git merge --abort
+              echo "result=manual" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            merge_base="$(git merge-base "head/$BRANCH" origin/main)"
+            if grep -qx 'LeanPool/projects.yml' conflicts.txt; then
+              git show "$merge_base:LeanPool/projects.yml" > /tmp/base.yml
+              git show origin/main:LeanPool/projects.yml   > /tmp/ours.yml
+              git show "head/$BRANCH:LeanPool/projects.yml" > /tmp/theirs.yml
+              (cd python && uv run python -m lean_pool.rebase registry --repo .. \
+                --base /tmp/base.yml --ours /tmp/ours.yml --theirs /tmp/theirs.yml)
+              git add LeanPool/projects.yml
+            fi
+            if grep -qx 'LeanPool.lean' conflicts.txt; then
+              # Regenerated from the file tree, so the conflict markers sitting
+              # in the checked-out index file are irrelevant.
+              (cd python && uv run python -m lean_pool.rebase index --repo ..)
+              git add LeanPool.lean
+            fi
+
+            if git diff --name-only --diff-filter=U | grep -q .; then
+              git merge --abort
+              echo "result=manual" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git commit --no-edit
+            echo "result=resolved" >> "$GITHUB_OUTPUT"
+          fi
+
+          # The index must be correct even when it did not conflict: main may
+          # have added modules this branch has never seen.
+          (cd python && uv run python -m lean_pool.rebase index --repo ..)
+          if ! git diff --quiet -- LeanPool.lean; then
+            git add LeanPool.lean
+            git commit -m "Regenerate the module index"
+            echo "result=resolved" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push the rebase
+        if: steps.rebase.outputs.result == 'merged' || steps.rebase.outputs.result == 'resolved'
+        env:
+          NUMBER: ${{ matrix.pull.number }}
+          BRANCH: ${{ matrix.pull.branch }}
+        run: git push head "pr-$NUMBER:$BRANCH"
+
+      - name: Flag PRs that need a human
+        if: steps.rebase.outputs.result == 'manual' || steps.capable.outputs.ok == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ matrix.pull.number }}
+          REASON: ${{ steps.capable.outputs.ok == 'false' && 'no-token' || 'conflict' }}
+        run: |
+          set -euo pipefail
+          gh pr edit "$NUMBER" --repo "$REPO" --add-label needs-manual-rebase || true
+          if [ "$REASON" = "no-token" ]; then
+            body="This PR is from a fork and \`REBASE_TOKEN\` is not configured, so
+          auto-rebase cannot push to its branch. See
+          \`.github/workflows/auto-rebase.yml\` for the token setup."
+          else
+            body="Auto-rebase stopped: this PR conflicts with \`main\` outside the two
+          mechanically resolvable files (\`LeanPool.lean\`, \`LeanPool/projects.yml\`),
+          so the overlap needs a human. Remove the \`needs-manual-rebase\` label once
+          resolved to re-enable automatic updates."
+          fi
+          gh pr comment "$NUMBER" --repo "$REPO" --body "$body" || true
