@@ -16,7 +16,7 @@ This module owns the challenge *domain*:
 - the JSON configuration consumed by `leanprover/comparator
   <https://github.com/leanprover/comparator>`_, the third-party judge that
   decides whether a claimed solution really proves the challenge statement
-  (:func:`comparator_config`).
+  (:func:`comparator_configuration`).
 
 The deterministic gates that *enforce* all of this live in
 ``lean_pool.quality``, which imports this module; nothing here imports
@@ -24,7 +24,7 @@ The deterministic gates that *enforce* all of this live in
 
 Run:
     uv run python -m lean_pool.challenge list
-    uv run python -m lean_pool.challenge config twin-primes --solution-module M
+    uv run python -m lean_pool.challenge config <slug> --solution-module <module>
 """
 
 from __future__ import annotations
@@ -207,7 +207,7 @@ def definition_names(challenge: dict[str, Any]) -> list[str]:
     ]
 
 
-def comparator_config(
+def comparator_configuration(
     challenge: dict[str, Any],
     solution_module: str,
     *,
@@ -232,7 +232,7 @@ def comparator_config(
 
     .. _comparator: https://github.com/leanprover/comparator
     """
-    config: dict[str, Any] = {
+    configuration: dict[str, Any] = {
         "challenge_module": challenge["entry_module"],
         "solution_module": solution_module,
         "theorem_names": statement_names(challenge),
@@ -245,8 +245,8 @@ def comparator_config(
         # checks that name, type, universes and safety level match — so a
         # challenge that declares them needs human review of the solution
         # too. See the "Definition Holes" section of comparator's README.
-        config["definition_names"] = holes
-    return config
+        configuration["definition_names"] = holes
+    return configuration
 
 
 def _format_source(source: Any) -> str:
@@ -705,19 +705,21 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help="Print the slug of every challenge with an in-repo solution, one "
         "per line — the set CI hands to comparator.",
     )
-    config = subparsers.add_parser(
+    configuration_parser = subparsers.add_parser(
         "config", help="Emit a comparator JSON configuration for one challenge."
     )
-    config.add_argument("slug", help="Challenge slug from Challenge/challenges.yml.")
-    config.add_argument(
+    configuration_parser.add_argument(
+        "slug", help="Challenge slug from Challenge/challenges.yml."
+    )
+    configuration_parser.add_argument(
         "--solution-module",
         help="Module name of the claimed solution, as comparator will import it. "
         "Defaults to the module recorded in the registry.",
     )
-    config.add_argument(
+    configuration_parser.add_argument(
         "--out", type=Path, help="Write the configuration here instead of stdout."
     )
-    config.add_argument(
+    configuration_parser.add_argument(
         "--enable-nanoda",
         action="store_true",
         help="Also replay the solution through the nanoda kernel.",
@@ -762,8 +764,10 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 1
-    config = comparator_config(challenge, module, enable_nanoda=args.enable_nanoda)
-    rendered = json.dumps(config, indent=4) + "\n"
+    configuration = comparator_configuration(
+        challenge, module, enable_nanoda=args.enable_nanoda
+    )
+    rendered = json.dumps(configuration, indent=4) + "\n"
     if args.out is not None:
         args.out.write_text(rendered)
         print(f"Wrote {args.out}")

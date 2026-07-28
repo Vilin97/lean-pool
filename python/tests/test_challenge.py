@@ -1,4 +1,4 @@
-"""Tests for challenge mode: registry, cards, comparator config, and gates."""
+"""Tests for challenge mode: registry, cards, comparator configuration, and gates."""
 
 from __future__ import annotations
 
@@ -110,10 +110,12 @@ def _registry_text(**overrides: object) -> str:
 
 
 def test_comparator_config_lists_statements_and_axioms() -> None:
-    """The generated config is what `leanprover/comparator` consumes."""
-    config = challenge.comparator_config(CHALLENGE_ENTRY, "LeanPool.Solution")
+    """The generated configuration is what `leanprover/comparator` consumes."""
+    configuration = challenge.comparator_configuration(
+        CHALLENGE_ENTRY, "LeanPool.Solution"
+    )
 
-    assert config == {
+    assert configuration == {
         "challenge_module": "Challenge.Widget",
         "solution_module": "LeanPool.Solution",
         "theorem_names": ["Challenge.Widget.widget_exists"],
@@ -131,10 +133,12 @@ def test_comparator_config_declares_definition_holes() -> None:
         ],
     }
 
-    config = challenge.comparator_config(entry, "Solution", enable_nanoda=True)
+    configuration = challenge.comparator_configuration(
+        entry, "Solution", enable_nanoda=True
+    )
 
-    assert config["definition_names"] == ["Challenge.Widget.answer"]
-    assert config["enable_nanoda"] is True
+    assert configuration["definition_names"] == ["Challenge.Widget.answer"]
+    assert configuration["enable_nanoda"] is True
 
 
 def test_challenge_card_wraps_and_carries_the_informal_statement() -> None:
@@ -353,6 +357,27 @@ def test_axiom_audit_requires_registered_statements_to_stay_open() -> None:
     """A statement proved in place is no longer the contract solvers took on."""
     declarations = [_declaration("Challenge.Widget.widget_exists")]
     output = "'Challenge.Widget.widget_exists' does not depend on any axioms\n"
+
+    errors = _parse_axiom_output(
+        Path("/repo"), declarations, output, {"Challenge.Widget.widget_exists"}
+    )
+
+    assert len(errors) == 1
+    assert "does not depend on `sorryAx`" in errors[0].message
+
+
+def test_axiom_audit_catches_a_statement_proved_classically() -> None:
+    """A proof that uses only permitted axioms still closes the statement.
+
+    The axiom set is inside the allowlist, so the extra-axiom check has
+    nothing to say and the declaration *is* reported by `#print axioms` —
+    the gap is closed by demanding `sorryAx` outright.
+    """
+    declarations = [_declaration("Challenge.Widget.widget_exists")]
+    output = (
+        "'Challenge.Widget.widget_exists' depends on axioms: [propext, "
+        "Classical.choice]\n"
+    )
 
     errors = _parse_axiom_output(
         Path("/repo"), declarations, output, {"Challenge.Widget.widget_exists"}

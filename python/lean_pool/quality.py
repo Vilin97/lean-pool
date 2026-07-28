@@ -988,19 +988,24 @@ def _parse_axiom_output(
     # already reported once by `_axiom_audit_missing`.
     resolved = _axiom_audit_resolved(output)
     errors.extend(
-        _QualityError(
-            declaration.path,
-            declaration.line,
-            f"{declaration.name} is registered as an open challenge declaration "
-            f"but does not depend on `{SORRY_AXIOM}`; challenge statements keep "
-            "their `sorry` and solutions live outside the statement file",
-        )
+        _not_open_error(declaration)
         for declaration in declarations
         if declaration.name in permitted
         and declaration.name not in seen
         and declaration.name in resolved
     )
     return errors
+
+
+def _not_open_error(declaration: _Declaration) -> _QualityError:
+    """Report a registered challenge statement that is no longer open."""
+    return _QualityError(
+        declaration.path,
+        declaration.line,
+        f"{declaration.name} is registered as an open challenge declaration "
+        f"but does not depend on `{SORRY_AXIOM}`; challenge statements keep "
+        "their `sorry` and solutions live outside the statement file",
+    )
 
 
 def _axiom_errors(
@@ -1010,6 +1015,11 @@ def _axiom_errors(
     allowed = ALLOWED_AXIOMS | ({SORRY_AXIOM} if is_open else set())
     extra_axioms = sorted(axioms - allowed)
     errors: list[_QualityError] = []
+    if is_open and SORRY_AXIOM not in axioms:
+        # Proved in place, using nothing worse than the allowed axioms — so
+        # the checks below are all happy, and the challenge has silently
+        # stopped being one.
+        errors.append(_not_open_error(declaration))
     if SORRY_AXIOM in extra_axioms:
         extra_axioms.remove(SORRY_AXIOM)
         errors.append(
