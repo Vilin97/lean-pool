@@ -15,8 +15,14 @@ log="${RUNNER_TEMP:-/tmp}/challenge-build.log"
 
 "$lake" build Challenge Solution 2>&1 | tee "$log"
 
-# `grep -v` exits 1 when everything was filtered out, which is the clean case.
-unexpected="$(grep -nE '(^|: )warning:' "$log" | { grep -vE "declaration uses .sorry." || true; })"
+# Both greps exit 1 on no match, and both no-matches are the clean case: a
+# build with no warnings at all (an empty board), or one whose only warnings
+# are the expected sorry notices. Under `set -o pipefail` an unguarded first
+# stage would kill the script on the quietest possible build.
+unexpected="$(
+  { grep -nE '(^|: )warning:' "$log" || true; } |
+    { grep -vE "declaration uses .sorry." || true; }
+)"
 if [ -n "$unexpected" ]; then
   printf '%s\n' "$unexpected"
   echo "::error::Challenge build emitted warnings beyond the expected sorry notices."
