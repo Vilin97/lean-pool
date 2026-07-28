@@ -290,6 +290,25 @@ SYSTEM_PROMPT_SOLUTION = dedent(
 )
 
 
+# Appended to every system prompt. The first challenge review (PR #289)
+# came back with the mathematics unreadable: `over ^R09` for `over ℚ`,
+# `|(discr K : ^])| ^U 8.25 ^ finrank ^R0a K` for
+# `|(discr K : ℝ)| ≥ 8.25 ^ finrank ℚ K`. The mangling is the model's own —
+# nothing between `json.loads` and the posted comment touches those
+# strings — and it is not a systematic escape (`ℚ` came out as both `^R0a`
+# and `^R09`), so it cannot be decoded after the fact. Ask for the
+# characters directly, with a graceful fallback to words, since a review of
+# Lean that cannot render `ℚ` or `≥` is worth much less in this repository.
+NOTATION_RULE = dedent(
+    """\
+    Notation: when you quote Lean, copy the characters exactly as they
+    appear in the diff, Unicode included (ℚ, ℝ, ℕ, ≤, ≥, ∀, ∃, ⁄, ₀).
+    Never transliterate, escape, or approximate them. If you cannot
+    reproduce a symbol faithfully, describe it in words instead — a
+    sentence is readable, a mangled glyph is not.
+    """
+)
+
 # Rules document and system prompt per PR kind, keyed by `classify_pr`.
 REVIEW_MODES: dict[str, tuple[Path, str]] = {
     "project": (PROJECT_RULES_PATH, SYSTEM_PROMPT_PROJECT),
@@ -755,6 +774,7 @@ def request_review(
         full diff was reviewed).
     """
     client = OpenAI(timeout=REQUEST_TIMEOUT_SECONDS)
+    system_prompt = f"{system_prompt}\n{NOTATION_RULE}"
     scaffold_tokens = estimate_tokens(rules) + estimate_tokens(system_prompt)
     diff_budget_tokens = MAX_INPUT_TOKENS - scaffold_tokens
     for attempt in range(REVIEW_FIT_ATTEMPTS):
