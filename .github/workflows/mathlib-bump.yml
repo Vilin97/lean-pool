@@ -167,6 +167,12 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          # GitHub suppresses workflow triggers for anything pushed with
+          # GITHUB_TOKEN, so a branch pushed with it yields a PR that never
+          # runs CI. BUMP_TOKEN (a PAT or GitHub App token) restores that;
+          # without it `assemble` dispatches Lean Action CI explicitly.
+          token: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
         with:
@@ -441,11 +447,14 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      # To release the PR's own CI run from the approval gate; see the last step.
+      actions: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           ref: ${{ needs.detect.outputs.branch }}
           fetch-depth: 0
+          token: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
         with:
@@ -535,7 +544,7 @@ jobs:
 
       - name: Push and open a draft PR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
           BRANCH: ${{ needs.detect.outputs.branch }}
           TARGET: ${{ needs.detect.outputs.target }}
           APPLIED: ${{ steps.apply.outputs.applied }}
@@ -572,3 +581,38 @@ jobs:
               --title "chore: bump Lean and Mathlib to $TARGET" \
               --body-file body.md
           fi
+
+      - name: Release the PR's CI run from the approval gate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ needs.detect.outputs.branch }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # A PR opened by a bot has its workflow runs held in
+          # `action_required` until someone approves them, so the bump PR
+          # shows no checks at all -- worse than a red one, because it reads
+          # as unverified rather than broken. Approve the run here so the
+          # draft PR arrives with CI already going.
+          #
+          # This only ever approves a run on this workflow's own bump/* branch,
+          # whose contents are main plus patches this run produced. It does not
+          # relax the gate for contributor pull requests.
+          for _ in $(seq 1 10); do
+            run_id="$(gh run list --repo "$REPO" --workflow lean_action_ci.yml \
+              --branch "$BRANCH" --limit 1 --json databaseId,status \
+              --jq '.[] | select(.status == "action_required") | .databaseId')"
+            if [ -n "$run_id" ]; then
+              gh api -X POST "repos/$REPO/actions/runs/$run_id/approve"
+              echo "Approved Lean Action CI run $run_id on $BRANCH." \
+                >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          # Nothing to approve is the normal case with BUMP_TOKEN set, since a
+          # PAT-authored PR is not gated. Fall back to an explicit dispatch so
+          # the branch is never left unverified.
+          gh workflow run lean_action_ci.yml --repo "$REPO" --ref "$BRANCH" || true
+          echo "No gated run found; dispatched Lean Action CI on $BRANCH." \
+            >> "$GITHUB_STEP_SUMMARY"

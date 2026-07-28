@@ -9,7 +9,10 @@ review the draft PR it opens.
 | Stage | What it does | Cost |
 |---|---|---|
 | `detect` | Compares the pinned release against Mathlib's tags | free |
-| `probe` | Moves the pins, builds every project, buckets failures per project | free |
+| `auth` | One-minute check that the Claude token still works | negligible |
+| `pin` | Moves the four pins, refreshes manifests, pushes `bump/<version>` | free |
+| `probe` | Builds every project across 10 parallel shards | free |
+| `triage` | Buckets the shard logs into a per-project breakage map | free |
 | `repair` | One Claude job per broken project, in parallel | subscription quota |
 | `assemble` | Applies patches, rebuilds the pool, runs all four gates, opens a draft PR | free |
 
@@ -22,13 +25,18 @@ three projects or thirty.
 
 ### Repair modes
 
+Bumps target the **newest available release, release candidates included** —
+mid-cycle that is what "latest Lean and Mathlib" means. `stable_only: true`
+narrows detection to final releases.
+
 The `repair` input controls the fan-out:
 
-- `auto` (default) — repair final releases, report only on `-rc` tags. Mathlib
-  tags release candidates often; repairing each one would drain the token budget
-  for a version you are not adopting yet.
-- `always` — repair whatever was detected, including candidates.
-- `never` — probe only. Use this to size a bump before committing to it.
+- `always` (default) — repair every broken project.
+- `never` — probe only. Use this to size a bump without spending anything; the
+  per-project breakage report is produced either way.
+
+`auth` gates only `repair`, and runs in parallel with `pin`/`probe`, so an
+expired token still leaves you with the free breakage report.
 
 ## One-time setup
 
@@ -54,7 +62,27 @@ healthy and only the repair half is dead. Two ways to handle it:
   repository and have the action refresh the stored token automatically. This
   trades a long-lived PAT for never having to think about expiry.
 
-### 2. Pushing to branches (and to fork PRs)
+### 2. `BUMP_TOKEN` (optional) — CI on the bump PR
+
+A pull request opened by a bot has its workflow runs held in `action_required`
+until someone approves them. The run exists and is attached to the right
+commit, but no checks are created, so the PR shows **no checks at all** — worse
+than a red one, because it reads as unverified rather than broken.
+
+`assemble` handles this itself: it finds its own gated run and approves it, so
+the draft PR arrives with CI already going. That only ever approves a run on a
+`bump/*` branch this workflow created, and does not relax the approval gate for
+contributor pull requests.
+
+Setting `BUMP_TOKEN` to a PAT with `repo` scope (or a GitHub App installation
+token) avoids the gate entirely, since the PR is then authored by a real
+account. It is optional; without it the approval step covers the same ground.
+
+`assemble` also re-runs the whole-pool build and all four gates itself and puts
+the results in the PR body, so the information exists either way — but a
+reviewer should be able to see it on the PR.
+
+### 3. Pushing to branches (and to fork PRs)
 
 This workflow only ever pushes to `bump/*` branches in this repository, which
 the default `GITHUB_TOKEN` can do.
