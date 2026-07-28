@@ -43,7 +43,7 @@ jobs:
           prompt: "Reply with exactly: AUTH_OK"
           claude_args: >-
             --max-turns 1
-            --model claude-sonnet-5
+            --model claude-opus-5
 
       - name: Report
         if: always()

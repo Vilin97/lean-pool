@@ -13,7 +13,7 @@ review the draft PR it opens.
 | `pin` | Moves the four pins, refreshes manifests, pushes `bump/<version>` | free |
 | `probe` | Builds every project across 10 parallel shards | free |
 | `triage` | Buckets the shard logs into a per-project breakage map | free |
-| `repair` | One Claude job per broken project, in parallel | subscription quota |
+| `repair` | One Claude job per broken project, in parallel (Opus 5) | subscription quota |
 | `assemble` | Applies patches, rebuilds the pool, runs all four gates, opens a draft PR | free |
 
 "Free" means GitHub-hosted runner minutes, which are unmetered for public
@@ -36,7 +36,14 @@ The `repair` input controls the fan-out:
   per-project breakage report is produced either way.
 
 `auth` gates only `repair`, and runs in parallel with `pin`/`probe`, so an
-expired token still leaves you with the free breakage report.
+expired token still leaves you with the free breakage report. It exercises the
+same model the fan-out uses, so it cannot pass while that model is unavailable.
+
+Repairs run on **Opus 5**, pinned explicitly rather than left to the action's
+default. A bump repair is the hardest work in this repository -- Mathlib API
+archaeology plus proof surgery under a no-statement-drops constraint -- and a
+weaker model spends the same runner hours to produce patches that do not
+apply.
 
 ## One-time setup
 
