@@ -54,7 +54,24 @@ healthy and only the repair half is dead. Two ways to handle it:
   repository and have the action refresh the stored token automatically. This
   trades a long-lived PAT for never having to think about expiry.
 
-### 2. Pushing to branches (and to fork PRs)
+### 2. `BUMP_TOKEN` — so the bump PR actually runs CI
+
+GitHub does not trigger workflows for anything pushed with `GITHUB_TOKEN`.
+That anti-recursion rule means a bump branch pushed by the workflow produces a
+pull request with **no checks at all** — which is worse than a red one, because
+it reads as unverified rather than broken.
+
+Set `BUMP_TOKEN` to a PAT with `repo` scope, or a GitHub App installation
+token, and the push triggers `pull_request` CI natively. Without it the
+workflow falls back to dispatching Lean Action CI explicitly on the branch:
+the code still gets built and gated, but the run appears in the workflow's run
+list rather than as a check on the PR.
+
+`assemble` also re-runs the whole-pool build and all four gates itself and puts
+the results in the PR body, so the information exists either way — but a
+reviewer should be able to see it on the PR.
+
+### 3. Pushing to branches (and to fork PRs)
 
 This workflow only ever pushes to `bump/*` branches in this repository, which
 the default `GITHUB_TOKEN` can do.

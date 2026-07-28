@@ -167,6 +167,12 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          # GitHub suppresses workflow triggers for anything pushed with
+          # GITHUB_TOKEN, so a branch pushed with it yields a PR that never
+          # runs CI. BUMP_TOKEN (a PAT or GitHub App token) restores that;
+          # without it `assemble` dispatches Lean Action CI explicitly.
+          token: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
         with:
@@ -446,6 +452,7 @@ jobs:
         with:
           ref: ${{ needs.detect.outputs.branch }}
           fetch-depth: 0
+          token: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
         with:
@@ -535,7 +542,7 @@ jobs:
 
       - name: Push and open a draft PR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
           BRANCH: ${{ needs.detect.outputs.branch }}
           TARGET: ${{ needs.detect.outputs.target }}
           APPLIED: ${{ steps.apply.outputs.applied }}
@@ -572,3 +579,23 @@ jobs:
               --title "chore: bump Lean and Mathlib to $TARGET" \
               --body-file body.md
           fi
+
+      - name: Ensure the branch gets a real CI run
+        env:
+          GH_TOKEN: ${{ secrets.BUMP_TOKEN || secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ needs.detect.outputs.branch }}
+          HAS_PAT: ${{ secrets.BUMP_TOKEN != '' }}
+        run: |
+          set -euo pipefail
+          # With BUMP_TOKEN the push already triggered `pull_request` CI. On
+          # the GITHUB_TOKEN fallback nothing fires at all, which would leave
+          # a bump PR showing no checks -- worse than a red one, because it
+          # looks unverified rather than broken. Dispatch explicitly instead.
+          if [ "$HAS_PAT" = "true" ]; then
+            echo "BUMP_TOKEN set; the push triggers PR checks natively."
+            exit 0
+          fi
+          gh workflow run lean_action_ci.yml --ref "$BRANCH"
+          echo "Dispatched Lean Action CI on $BRANCH (it cannot be a PR check" \
+            "without BUMP_TOKEN; see the workflow's run list)." \
+            >> "$GITHUB_STEP_SUMMARY"
