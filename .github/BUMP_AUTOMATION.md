@@ -62,18 +62,21 @@ healthy and only the repair half is dead. Two ways to handle it:
   repository and have the action refresh the stored token automatically. This
   trades a long-lived PAT for never having to think about expiry.
 
-### 2. `BUMP_TOKEN` — so the bump PR actually runs CI
+### 2. `BUMP_TOKEN` (optional) — CI on the bump PR
 
-GitHub does not trigger workflows for anything pushed with `GITHUB_TOKEN`.
-That anti-recursion rule means a bump branch pushed by the workflow produces a
-pull request with **no checks at all** — which is worse than a red one, because
-it reads as unverified rather than broken.
+A pull request opened by a bot has its workflow runs held in `action_required`
+until someone approves them. The run exists and is attached to the right
+commit, but no checks are created, so the PR shows **no checks at all** — worse
+than a red one, because it reads as unverified rather than broken.
 
-Set `BUMP_TOKEN` to a PAT with `repo` scope, or a GitHub App installation
-token, and the push triggers `pull_request` CI natively. Without it the
-workflow falls back to dispatching Lean Action CI explicitly on the branch:
-the code still gets built and gated, but the run appears in the workflow's run
-list rather than as a check on the PR.
+`assemble` handles this itself: it finds its own gated run and approves it, so
+the draft PR arrives with CI already going. That only ever approves a run on a
+`bump/*` branch this workflow created, and does not relax the approval gate for
+contributor pull requests.
+
+Setting `BUMP_TOKEN` to a PAT with `repo` scope (or a GitHub App installation
+token) avoids the gate entirely, since the PR is then authored by a real
+account. It is optional; without it the approval step covers the same ground.
 
 `assemble` also re-runs the whole-pool build and all four gates itself and puts
 the results in the PR body, so the information exists either way — but a
