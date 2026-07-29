@@ -145,7 +145,7 @@ theorem lipschitzOnWith_symm_extChartAt_ofRiemannianMetric
             (mfderivWithin 𝓘(ℝ) 𝓘(ℝ, E) η (Icc (0 : ℝ) 1) t 1) :=
       congr($this 1)
     rw [this]
-    apply (ContinuousLinearMap.le_opNorm_enorm _ _).trans
+    apply (ContinuousLinearMap.le_opENorm _ _).trans
     gcongr
     · have htP : η t ∈ P := by
         have : t ∈ ⇑η ⁻¹' P := hη.2 ht

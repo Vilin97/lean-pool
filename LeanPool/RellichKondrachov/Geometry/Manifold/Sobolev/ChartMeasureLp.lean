@@ -36,7 +36,7 @@ namespace Geometry
 namespace Manifold
 namespace Sobolev
 
-open scoped Manifold MeasureTheory Topology
+open scoped _root_.Manifold MeasureTheory Topology
 open MeasureTheory
 
 section
