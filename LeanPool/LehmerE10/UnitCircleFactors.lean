@@ -133,7 +133,7 @@ theorem no_unit_circle_factor {F : Polynomial ℤ} (hFm : F.Monic)
     (cyclotomic_eq_minpoly_rat hprim hk) ▸ minpoly.dvd ℚ z hzL
   have hdvdZ : cyclotomic (orderOf z) ℤ ∣ lehmerPolynomial := by
     rw [IsPrimitive.Int.dvd_iff_map_cast_dvd_map_cast _ _
-      (cyclotomic.monic _ ℤ).isPrimitive lehmerPolynomial_monic.isPrimitive]
+      (cyclotomic.monic _ ℤ).isPrimitive]
     rwa [Polynomial.map_cyclotomic_int]
   exact no_cyclotomic_divisor hk hdvdZ
 

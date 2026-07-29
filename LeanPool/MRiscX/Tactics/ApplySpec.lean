@@ -271,8 +271,12 @@ elab "applySpecScdGoal" name?:(Lean.Parser.ident)? : tactic => do
         -- Since the goal is in the form of `∀ l' ∈ {...} → ...`, we
         -- just access the value in the Set and hope it is just one.
         -- (TODO: handle multiple values)
-        let lExpr := goalType.bindingBody!.bindingDomain!.getAppArgs[3]!
-        let pc ← parseSingletonExpr lExpr
+        unless goalType.isForall && goalType.bindingBody!.isForall do
+          throwError "Expected the goal to universally quantify `l'` over a set"
+        let membershipArgs := goalType.bindingBody!.bindingDomain!.getAppArgs
+        unless membershipArgs.size > 3 do
+          throwError "Expected the goal to bind `l'` by a membership hypothesis"
+        let pc ← parseSingletonExpr membershipArgs[3]!
         -- After obtaining the value of pc, we need to introduce the
         -- rest of the lemma and prepare everything for the application etc.
         evalTactic (← `(tactic | prepareSecondSeq))

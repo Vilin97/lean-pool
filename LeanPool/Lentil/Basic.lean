@@ -414,8 +414,10 @@ where
 
 namespace TLA
 
-theorem exec.take_length {α : Type u} (k : Nat) (σ : exec α) : (σ.take k).length = k := by
-  simp [exec.take]
+-- `simp` cannot apply `List.length_map` here: matching `σ` against `_ → _` requires unfolding
+-- `exec`, which is beyond the transparency simp uses.
+theorem exec.take_length {α : Type u} (k : Nat) (σ : exec α) : (σ.take k).length = k :=
+  (List.length_map σ).trans List.length_range
 
 theorem exec.drop_drop {α : Type u} (k l : Nat) (σ : exec α) :
     (σ.drop k).drop l = σ.drop (k + l) := by
