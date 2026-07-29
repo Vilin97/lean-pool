@@ -223,23 +223,7 @@ private def mkHom : M →ₛ[L] QuotEq L M where
 
 lemma val_mk {e} {ε} (t : Semiterm L μ n) :
     Semiterm.valm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧) t = ⟦Semiterm.valm M e ε t⟧ :=
-  by
-    let q := mkHom (L := L) (M := M)
-    have he : (q : M → QuotEq L M) ∘ e = fun i => ⟦e i⟧ := by
-      funext i
-      rfl
-    have hε : (q : M → QuotEq L M) ∘ ε = fun i => ⟦ε i⟧ := by
-      funext i
-      rfl
-    have hq (a : M) : q a = (⟦a⟧ : QuotEq L M) := rfl
-    have henv :
-        Semiterm.valm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧) t =
-          Semiterm.valm (QuotEq L M) (q ∘ e) (q ∘ ε) t :=
-      congrArg₂ (fun e ε => Semiterm.valm (QuotEq L M) e ε t) he.symm hε.symm
-    have hterm : Semiterm.valm (QuotEq L M) (q ∘ e) (q ∘ ε) t =
-        q (Semiterm.valm M e ε t) :=
-      (HomClass.val_term q e ε t).symm
-    exact henv.trans (hterm.trans (hq _))
+  by exact (HomClass.val_term (mkHom (L := L) (M := M)) e ε t).symm
 
 lemma eval_mk {e} {ε} {φ : Semiformula L μ n} :
     Semiformula.Evalm (QuotEq L M) (fun i =>

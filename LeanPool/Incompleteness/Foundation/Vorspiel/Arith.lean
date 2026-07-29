@@ -134,29 +134,6 @@ def Arith₁ (f : List.Vector ℕ n → ℕ) := ArithPart₁ (n := n) f
 
 end Nat
 
-private lemma bind_none_pfun {α β : Type*} (f : α →. β) :
-    Part.none.bind f = Part.none := by
-  apply Part.ext
-  intro b
-  constructor
-  · intro h
-    rcases Part.mem_bind_iff.mp h with ⟨a, ha, _⟩
-    exact (Part.notMem_none a ha).elim
-  · intro h
-    exact (Part.notMem_none b h).elim
-
-private lemma bind_some_pfun {α β : Type*} (f : α →. β) (x : α) :
-    (Part.some x).bind f = f x := by
-  apply Part.ext
-  intro b
-  constructor
-  · intro h
-    rcases Part.mem_bind_iff.mp h with ⟨a, ha, hb⟩
-    have : a = x := Part.mem_some_iff.mp ha
-    simpa only [this] using hb
-  · intro h
-    exact Part.mem_bind (Part.mem_some x) h
-
 namespace Nat.ArithPart₁
 
 open _root_.Nat.Primrec
@@ -226,8 +203,8 @@ lemma bind (f : List.Vector ℕ n → ℕ →. ℕ) (hf :
           Part.none.bind (fun w : List.Vector ℕ (n + 1) => f w.tail w.head) :=
             congrArg
               (fun p => p.bind (fun w : List.Vector ℕ (n + 1) => f w.tail w.head)) hm
-        _ = Part.none := bind_none_pfun _
-        _ = Part.none.bind (f v) := (bind_none_pfun (f v)).symm
+        _ = Part.none := Part.bind_none _
+        _ = Part.none.bind (f v) := (Part.bind_none (f v)).symm
         _ = (g v).bind (f v) :=
           congrArg (fun p => p.bind (f v)) hgv.symm
     · have hm : List.Vector.mOfFn
@@ -252,9 +229,9 @@ lemma bind (f : List.Vector ℕ n → ℕ →. ℕ) (hf :
             congrArg
               (fun p => p.bind (fun w : List.Vector ℕ (n + 1) => f w.tail w.head)) hm
         _ = (fun w => f w.tail w.head : List.Vector ℕ (n + 1) →. ℕ) (x ::ᵥ v) :=
-          bind_some_pfun _ _
+          Part.bind_some _ _
         _ = f v x := hf
-        _ = (Part.some x).bind (f v) := (bind_some_pfun (f v) x).symm
+        _ = (Part.some x).bind (f v) := (Part.bind_some x (f v)).symm
         _ = (g v).bind (f v) :=
           congrArg (fun p => p.bind (f v)) hgv.symm)
 
@@ -335,7 +312,7 @@ lemma comp {m n f} (g : Fin n → List.Vector ℕ m → ℕ) (hf : Arith₁ f) (
           (f : List.Vector ℕ n →. ℕ) =
         (Part.some w).bind (f : List.Vector ℕ n →. ℕ) :=
           congrArg (fun p => p.bind (f : List.Vector ℕ n →. ℕ)) hm
-      _ = (f : List.Vector ℕ n →. ℕ) w := bind_some_pfun _ _
+      _ = (f : List.Vector ℕ n →. ℕ) w := Part.bind_some _ _
       _ = Part.some (f w) := PFun.coe_val f w
       _ = ((fun v => f (List.Vector.ofFn fun i => g i v)) :
           List.Vector ℕ m →. ℕ) v := by
