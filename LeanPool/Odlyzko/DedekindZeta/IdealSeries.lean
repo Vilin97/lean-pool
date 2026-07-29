@@ -5,10 +5,11 @@ Authors: The FLT Project
 -/
 module
 
-public import LeanPool.Odlyzko.DedekindZeta.EulerProduct
+public import LeanPool.Odlyzko.DedekindZeta.Convergence
 public import LeanPool.Odlyzko.DedekindZeta.FiniteFiberSeries
 public import LeanPool.Odlyzko.DedekindZeta.IdealPrimeFactorization
 public import LeanPool.Odlyzko.DedekindZeta.PrimeIdealSummability
+public import Mathlib.NumberTheory.EulerProduct.Basic
 public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 
 /-! TODO: Add doc-string. -/
@@ -16,6 +17,28 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 @[expose] public section
 
 noncomputable section
+
+section
+
+open Complex Nat
+
+namespace NumberField.Odlyzko
+
+variable (K : Type*) [Field K] [NumberField K]
+
+/-- A dedekind zeta summand used in the Odlyzko-bound argument. -/
+noncomputable def dedekindZetaSummand (s : ℂ) (n : ℕ) : ℂ :=
+  LSeries.term (fun m ↦ (idealNormCount K m : ℂ)) s n
+
+@[simp] lemma dedekindZetaSummand_zero (s : ℂ) :
+    dedekindZetaSummand K s 0 = 0 := by
+  simp [dedekindZetaSummand]
+
+end NumberField.Odlyzko
+
+end
+
+section
 
 open Ideal IsDedekindDomain
 
@@ -150,3 +173,5 @@ theorem hasSum_nonzeroIdeal_inverseNormPower {s : ℂ} (hs : 1 < s.re) :
   exact (hasSum_extend_zero Subtype.val_injective).1 h
 
 end NumberField.Odlyzko
+
+end
