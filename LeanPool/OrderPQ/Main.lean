@@ -15,6 +15,8 @@ namespace OrderPQ
 -- Let `p` and `q` be prime numbers.
 variable {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime]
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- There exists a noncyclic group `G` of order `p * q` if and only if `p` equals `q` or `p` divides
   `q - 1` or `q` divides `p - 1`. -/
 theorem exists_card_eq_prime_mul_prime_and_not_isCyclic_iff :

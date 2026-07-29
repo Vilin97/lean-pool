@@ -31,6 +31,8 @@ lemma Nat.Prime.mem_self_primeFactorsList {p : ℕ} (hp : p.Prime) : p ∈ p.pri
 variable {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime]
 variable {G : Type*} [Group G]
 
+set_option backward.isDefEq.respectTransparency false
+
 lemma exists_monoidHom_ne_one (h : p ∣ q - 1) :
     ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 := by
   rw [← card_mulAut_mulZMod q] at h
@@ -202,7 +204,7 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   obtain ⟨f, hf⟩ := IsCyclic.exists_mulEquiv_of_generators_and_card_eq (hg_gen hg1) (hg_gen hg2) rfl
   have hcompat (x : P) : φ1 x = φ2 (f x) := by
     rw [← (Subgroup.mem_zpowers_iff.mp (hg_gen hg1 x)).choose_spec]
-    simp_all
+    rw [map_zpow, map_zpow, map_zpow, hg1, hf, hg2]
   refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   ext y
   change (φ1 x) y = (φ2 (f x)) y
