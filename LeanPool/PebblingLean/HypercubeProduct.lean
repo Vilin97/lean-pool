@@ -19,6 +19,8 @@ to hypercubes.  The first ingredient is the coordinate split
 `Q_{a+m} ≃ Q_a × Q_m`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace PebblingLean
 
 namespace Hypercube
