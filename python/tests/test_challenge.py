@@ -585,3 +585,20 @@ def test_option_audit_still_reports_combined_findings(tmp_path: Path) -> None:
 
     assert len(errors) == 1
     assert "declares an axiom" in errors[0].message
+
+
+def test_challenge_card_does_not_change_when_the_challenge_is_solved() -> None:
+    """Solving a challenge must not require editing its statement file.
+
+    The PR guard rejects a solution PR that edits a challenge statement,
+    and the card check rejects a stale card — so any lifecycle field in
+    the card makes solving a challenge impossible to do cleanly. PR #301
+    hit exactly that: the contributor preserved the statement, as the
+    rules ask, and the stale-card gate failed them for it.
+    """
+    open_card = challenge.challenge_card(CHALLENGE_ENTRY)
+    solved_card = challenge.challenge_card(_solved_entry())
+
+    assert open_card == solved_card
+    assert "Status:" not in open_card
+    assert "Solution:" not in open_card

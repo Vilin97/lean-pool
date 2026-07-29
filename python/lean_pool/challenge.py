@@ -311,12 +311,21 @@ def challenge_card(challenge: dict[str, Any]) -> str:
     the LLM reviewer) can judge faithfulness without leaving the file.
     ``lean_pool.quality`` regenerates and gates it, so the format has to be
     deterministic.
+
+    It deliberately carries none of the challenge's *lifecycle* — no
+    status, no solution pointer. Those live in the registry, because a
+    statement file must not change once merged: it is the text every
+    solution is judged against, and the PR guard rejects a solution PR
+    that edits it. Putting `status: solved` in the card would have made
+    solving a challenge impossible — regenerate the card and the guard
+    refuses the PR, leave it stale and the card check refuses it. The
+    solved state is recorded in `challenges.yml`, on the answering module's
+    own card, and by `make challenges`.
     """
     lines = [f"# {challenge['title']}", ""]
     fields = [
         ("Source", _format_source(challenge["source"])),
         ("Proposed by", _join(challenge["proposers"])),
-        ("Status", str(challenge["status"])),
         ("Open declarations", _join_declarations(challenge)),
         ("Tags", _join(challenge["tags"])),
         ("MSC", _join(challenge["msc"])),
@@ -325,8 +334,6 @@ def challenge_card(challenge: dict[str, Any]) -> str:
         estimated = challenge["estimated_lines"]
         unit = "line" if estimated == 1 else "lines"
         fields.append(("Estimated size", f"~{estimated} {unit} of Lean"))
-    if challenge.get("solution") is not None:
-        fields.append(("Solution", _format_solution(challenge["solution"])))
     for label, value in fields:
         lines.extend(_wrap(f"{label}: {value}"))
     lines.extend(["", "Informal statement:"])

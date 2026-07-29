@@ -12,7 +12,6 @@ import Mathlib.GroupTheory.Torsion
 
 Source: doi:10.1007/BF02684339, url:https://www.numdam.org/item/?id=PMIHES_1977__47__33_0
 Proposed by: Kevin Buzzard, Vasily Ilin
-Status: open
 Open declarations: `Challenge.Mazur.torsion_ncard_le`
 Tags: elliptic-curves, torsion, modular-curves, flt-assumption
 MSC: 11G05, 11G18
