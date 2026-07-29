@@ -925,7 +925,7 @@ def buildRealizeIff (thmName : Name) : BuildFormulaM Unit := do
   let nVars := Syntax.mkNatLit (← numFreeVars true)
   let identM := mkIdent `M
   let cmd ← `(
-  set_option backward.isDefEq.respectTransparency false in
+  attribute [local implicit_reducible] ExistsUnique in
   @[realize_simps] lemma $thmIdent
       $(← classParamBinders)* (v : Fin $nVars → $identM) :
       FirstOrder.Language.Formula.Realize $formulaIdent v ↔ $realizedApplyV' := by
