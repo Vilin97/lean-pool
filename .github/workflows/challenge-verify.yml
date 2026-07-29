@@ -51,9 +51,9 @@ env:
   # landrun: zouuup/landrun main HEAD as of 2026-05-04. Tagged releases
   # through v0.1.15 lack fixes comparator needs, so this is a commit pin.
   LANDRUN_COMMIT: 5ed4a3db3a4ad930d577215c6b9abaa19df7f99f
-  # lean4export at refs/tags/v4.32.0-rc1 — it must match this repository's
+  # lean4export at refs/tags/v4.33.0-rc1 — it must match this repository's
   # lean-toolchain, because it reads the oleans the build produced.
-  LEAN4EXPORT_COMMIT: 3de59f10bc4b4a0f2de698597aeb1246caa0df0a
+  LEAN4EXPORT_COMMIT: af5aa64bb914c3c2c781f378088dbd38acf4f804
   COMPARATOR_COMMIT: 71b52ec29e06d4b7d882726553b1ceb99a2499e0
 
 jobs:
