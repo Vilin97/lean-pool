@@ -5412,3 +5412,45 @@ projects:
       - "65L06"
       - "65L05"
       - "05C05"
+  - slug: odlyzko-bound
+    title: Poitou's Explicit Odlyzko Bound for Root Discriminants
+    summary: >-
+      Formalizes the unconditional explicit-formula argument for a lower bound
+      on root discriminants of totally complex number fields. Develops the
+      completed Dedekind zeta function and its functional equation, Poitou's
+      explicit formula, the Tartar test function, and a certified numerical
+      estimate proving that degree at least 18 forces root discriminant at
+      least 8.25.
+    branch: algebraic number theory
+    entry_module: LeanPool.Odlyzko
+    authors:
+      - The FLT Project
+      - √2
+    source:
+      title: Sur les petits discriminants
+      authors:
+        - Georges Poitou
+      url: https://www.numdam.org/item/SDPP_1976-1977__18_1_A6_0/
+      github_repo: ImperialCollegeLondon/FLT
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - NumberField.Odlyzko.odlyzkoBound
+    main_results:
+      - declaration: NumberField.Odlyzko.odlyzkoBound
+        informal: >-
+          Proves that every totally complex number field of degree at least 18
+          has absolute discriminant at least 8.25 raised to its degree.
+        source_ref: >-
+          Georges Poitou, Sur les petits discriminants, equation (26) and the
+          table on p. 17; Lean source adapted from ImperialCollegeLondon/FLT
+          commit 01370b013e55c83f1994af814cd31cb8fb2ef653.
+    tags:
+      - number-theory
+      - discriminants
+      - number-fields
+      - explicit-formula
+    msc:
+      - "11R29"
+      - "11R42"
