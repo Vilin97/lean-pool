@@ -601,7 +601,7 @@ theorem LinearMap.mul'_comp_mul'_adjoint_of_delta_form {φ : Module.Dual ℂ (Ma
     LinearMap.adjoint (LinearMap.mul' ℂ (Matrix n n ℂ)) = φ.matrix⁻¹.trace • 1
   rw [Qam.Nontracial.mul_comp_mul_adjoint]
 
-theorem LinearMap.pi_mul'_comp_mul'_adjoint_of_delta_form [∀ i, Nontrivial (s i)] {δ : ℂ}
+theorem LinearMap.pi_mul'_comp_mul'_adjoint_of_delta_form {δ : ℂ}
   {φ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
   [hφ : ∀ i, (φ i).IsFaithfulPosMap] (hφ₂ : ∀ i, (φ i).matrix⁻¹.trace = δ) :
     letI : starAlgebra (PiMat ℂ k s) := PiMat.isStarAlgebra (ψ := φ)
@@ -704,4 +704,3 @@ noncomputable def PiMat.quantumSetDeltaForm [Nonempty k] [∀ i, Nontrivial (s i
           LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s)) = d • 1
         exact (LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff
           (k := k) (s := s) (ψ := φ) d).mpr hφ₂.out }
-

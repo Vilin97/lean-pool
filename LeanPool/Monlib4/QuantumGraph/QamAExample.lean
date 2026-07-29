@@ -50,14 +50,8 @@ instance trace_isFaithfulPosMap {n : Type _} [Fintype n] {𝕜 : Type _} [RCLike
 
 theorem traceModuleDual_matrix {n : Type _} [Fintype n] [DecidableEq n] :
     (traceModuleDual : Module.Dual ℂ (Matrix n n ℂ)).matrix = 1 := by
-  ext i j
-  have :=
-    (traceModuleDual : Module.Dual ℂ (Matrix n n ℂ)).apply fun k l =>
-      ite (j = k) (ite (i = l) 1 0) 0
-  simp only [traceModuleDual, traceLinearMap_apply, trace_iff, mul_apply, mul_ite,
-    MulZeroClass.mul_zero, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at this
-  rw [traceModuleDual, ← this]
-  rfl
+  refine Eq.symm (Module.Dual.apply_eq_of _ 1 (fun _ => ?_))
+  simp_all [traceModuleDual]
 
 open scoped BigOperators
 
@@ -112,7 +106,7 @@ theorem StarAlgEquiv.symm_comp_self {R U V : Type _} [CommSemiring R] [Semiring 
     StarAlgEquiv.coe_toAlgEquiv, StarAlgEquiv.symm_apply_apply, Module.End.one_apply,
       forall_true_iff]
 
-theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
+theorem Qam.iso_preserves_ir_reflexive {φ : Module.Dual ℂ ℍ}
     [hφ : φ.IsFaithfulPosMap] {x y : ℍ →ₗ[ℂ] ℍ} (hxhy : @Qam.Iso n _ _ φ x y)
     (ir_reflexive : Prop) [Decidable ir_reflexive] :
     withMatrixQuantum[φ]
@@ -124,7 +118,7 @@ theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
   obtain ⟨f, hf, h⟩ := hxhy
   rw [StarAlgEquiv.comp_eq_iff, LinearMap.comp_assoc] at hf
   have := List.TFAE.out (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
-    _ f) 0 4
+    f) 0 4
   have hisometry : StarAlgEquiv.IsIsometry f := by
     change Isometry f
     rw [isometry_iff_norm]

@@ -362,9 +362,9 @@ noncomputable def oneMapTranspose : ℍ ⊗[ℂ] ℍᵐᵒᵖ ≃⋆ₐ[ℂ] Mat
       refine x.induction_on ?zero ?tmul ?add
       · simp only [star_zero, map_zero]
       · intro x₁ x₂
-        simp [F, TensorProduct.star_tmul, AlgEquiv.TensorProduct.map_tmul,
-          tensorToKronecker_apply, TensorProduct.toKronecker_star]
-        rfl
+        simp only [TensorProduct.star_tmul]
+        exact (TensorProduct.toKronecker_star
+          (x₁ ⊗ₜ[ℂ] (MulOpposite.unop x₂)ᵀ)).symm
       · intro a b ha hb
         calc
           F (star (a + b)) = F (star a + star b) := by rw [star_add]
@@ -734,7 +734,11 @@ theorem RealQam.edges_eq_dim_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
             ((hφ.psi (ψ := φ) 0 (1 / 2)) A))) at t1
     rw [this] at t1
     have this' := (AlgEquiv.eq_apply_iff_symm_eq _).mpr t1.symm
-    simp_rw [_root_.map_one, ← tensorToKronecker_apply, MulEquivClass.map_eq_one_iff] at this'
+    rw [_root_.map_one] at this'
+    change (tensorToKronecker : ℍ ⊗[ℂ] ℍ ≃ₐ[ℂ] Matrix (p × p) (p × p) ℂ)
+      ((1 ⊗ₘ (transposeAlgEquiv p ℂ ℂ).symm.toLinearMap)
+        ((hφ.psi 0 (1 / 2)) A)) = 1 at this'
+    rw [MulEquivClass.map_eq_one_iff] at this'
     have this'' := AlgEquiv.TensorProduct.map_toLinearMap (1 :
       ℍ ≃ₐ[ℂ] ℍ) (transposeAlgEquiv p ℂ ℂ).symm
     rw [AlgEquiv.toLinearMap_one] at this''
@@ -769,7 +773,6 @@ lemma Complex.ofReal'_eq_isROrC_ofReal (a : ℝ) :
   (a : ℂ) = RCLike.ofReal a :=
 rfl
 
--- set_option pp.explicit true in
 theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam hφ A) :
     withMatrixQuantum[φ]
     (hA.edges = 1 ↔

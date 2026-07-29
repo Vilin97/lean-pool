@@ -104,21 +104,22 @@ lemma matrixOfQuat_is_unitary (q : Quaternion ℝ) (nz : Quaternion.normSq q ≠
 
 lemma denormMatrixOfQuat_has_correct_det (q : Quaternion ℝ)
    : (denormMatrixOfQuat q).det = (Quaternion.normSq q)^3 := by
+ rw [Quaternion.normSq_def']
  let ⟨r, x, y, z⟩ := q
- simp only [Matrix.det_succ_row_zero, Fin.sum_univ_succ, denormMatrixOfQuat,
-   Quaternion.normSq_def'];
+ have hdet : Matrix.det (![] : Matrix (Fin 0) (Fin 0) ℝ) = 1 := Matrix.det_isEmpty
+ simp only [Matrix.det_succ_row_zero, Fin.sum_univ_succ, denormMatrixOfQuat]
  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.isValue, Fin.val_zero, pow_zero,
    Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, one_mul,
    Fin.succAbove_zero, Matrix.submatrix_apply, Fin.succ_zero_eq_one, Matrix.cons_val_one,
    Fin.val_eq_zero, Fin.succ_one_eq_two, Matrix.cons_val, Matrix.submatrix_submatrix,
-   Matrix.submatrix_empty, Matrix.det_fin_zero, Finset.univ_eq_empty, Matrix.cons_val_succ,
+   Matrix.submatrix_empty, hdet, Finset.univ_eq_empty, Matrix.cons_val_succ,
    Finset.sum_const, Finset.card_empty, zero_smul, add_zero, Fin.val_one, pow_one,
    neg_mul, Fin.succAbove, Fin.castSucc_zero, Fin.lt_one_iff, ↓reduceIte,
    Fin.castSucc_eq_zero_iff,
    Finset.sum_empty, Fin.val_succ, zero_add, Fin.succ_pos, Fin.castSucc_lt_succ_iff,
    le_of_subsingleton, Finset.sum_neg_distrib, neg_zero, Fin.castSucc_one, lt_self_iff_false,
    Fin.val_two, even_two, Even.neg_pow, one_pow, Fin.reduceLT, neg_sub]
- ring_nf
+ ring
 
 lemma matrixOfQuat_has_det_one (q : Quaternion ℝ) (nz : Quaternion.normSq q ≠ 0)
    : (matrixOfQuat q).det = 1 := by

@@ -53,12 +53,26 @@ theorem ContinuousLinearMap.finrank_comp_eq_right_of_injective {R M N P : Type*}
     (g ∘L f).finrank = f.finrank := by
   -- Since $g$ is injective, the range of $g \circ f$ is isomorphic to the range of $f$.
   have h_iso : (g.comp f).range ≃ₗ[R] f.range := by
-    symm
-    refine
-      { Equiv.ofBijective (fun x => ⟨g x, by aesop⟩)
-          ⟨fun x y hxy => ?_, fun x => ?_⟩ with
-        map_add' := ?_
-        map_smul' := ?_ } <;> aesop
+    let φ : f.range →ₗ[R] (g.comp f).range := {
+      toFun x := ⟨g (x : N), by
+        rcases x.property with ⟨y, hy⟩
+        refine ⟨y, ?_⟩
+        change g (f y) = g (x : N)
+        exact congrArg g hy⟩
+      map_add' x y := by
+        apply Subtype.ext
+        exact map_add g (x : N) (y : N)
+      map_smul' r x := by
+        apply Subtype.ext
+        exact map_smul g r (x : N)
+    }
+    refine (LinearEquiv.ofBijective φ ⟨?_, ?_⟩).symm
+    · intro x y hxy
+      exact Subtype.ext (hg (congrArg Subtype.val hxy))
+    · rintro ⟨z, hz⟩
+      rcases hz with ⟨x, rfl⟩
+      refine ⟨⟨f x, ⟨x, rfl⟩⟩, ?_⟩
+      rfl
   exact h_iso.finrank_eq
 
 @[simp]
@@ -526,7 +540,11 @@ theorem hausdorffMeasure_image_piProd_fst_null_of_fderiv_comp_inr_zero
   intro ψ hψ
   set g := Function.prod Prod.fst (f ∘ ψ)
   suffices μH[sardMoreiraBound (dim E + dim F) (k + 1) α (dim E)] (g '' ψ.set) = 0 by
-    simpa [g, Function.prod] using this
+    have hg : Function.prod Prod.fst f ∘ (ψ : E × ψ.Dom → E × F) = g := by
+      funext x
+      simp [g, Function.prod]
+    rw [hg]
+    exact this
   apply hausdorffMeasure_image_piProd_fst_null_of_isBigO_isLittleO
   · simp
   · simp [Module.finrank_pos]
@@ -618,7 +636,9 @@ theorem hausdorffMeasure_image_nhdsWithin_null_of_finrank_eq
       exact .prodMk (.comp (ContinuousLinearMap.contDiffMoreiraHolderAt _) (hf x hx) hk)
         (ContinuousLinearMap.contDiffMoreiraHolderAt _)
     · intro x
-      simp [eDom]
+      rw [show (eDom x).fst = hrange.choose (f x) by
+        exact hdf.implicitToOpenPartialHomeomorphOfComplementedKerRange_apply_fst hker hrange x]
+      rfl
   have : Nontrivial Ker := by
     apply Module.nontrivial_of_finrank_pos (R := ℝ)
     grind

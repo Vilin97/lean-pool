@@ -74,13 +74,13 @@ theorem Measurable.measure_ball {α X : Type*} {_ : MeasurableSpace α}
   lowerSemicontinuous_measure_ball.measurable.comp (hf.prodMk hg)
 
 theorem IsCompact.exists_isMinOn_measure_ball {X : Type*} [PseudoMetricSpace X]
-    [MeasurableSpace X] [OpensMeasurableSpace X] (μ : Measure X) {s : Set X}
+    [MeasurableSpace X] (μ : Measure X) {s : Set X}
     (hs : IsCompact s) (hne : s.Nonempty) (r : ℝ) : ∃ x ∈ s, IsMinOn (μ <| ball · r) s x :=
   ((lowerSemicontinuous_measure_ball.comp
     (continuous_id.prodMk continuous_const)).lowerSemicontinuousOn _).exists_isMinOn hne hs
 
 theorem IsCompact.exists_pos_forall_lt_measure_ball {X : Type*} [PseudoMetricSpace X]
-    [MeasurableSpace X] [OpensMeasurableSpace X] (μ : Measure X) [μ.IsOpenPosMeasure] {s : Set X}
+    [MeasurableSpace X] (μ : Measure X) [μ.IsOpenPosMeasure] {s : Set X}
     (hs : IsCompact s) {r : ℝ} (hr : 0 < r) : ∃ m > (0 : ℝ≥0), ∀ x ∈ s, m < μ (ball x r) := by
   rcases s.eq_empty_or_nonempty with rfl | hne
   · use 1
@@ -90,6 +90,6 @@ theorem IsCompact.exists_pos_forall_lt_measure_ball {X : Type*} [PseudoMetricSpa
     exact ⟨m, mod_cast hm₀, fun y hy ↦ hmx.trans_le <| hx hy⟩
 
 theorem exists_pos_forall_lt_measure_ball {X : Type*} [PseudoMetricSpace X] [CompactSpace X]
-    [MeasurableSpace X] [OpensMeasurableSpace X] (μ : Measure X) [μ.IsOpenPosMeasure]
+    [MeasurableSpace X] (μ : Measure X) [μ.IsOpenPosMeasure]
     {r : ℝ} (hr : 0 < r) : ∃ m > (0 : ℝ≥0), ∀ x, m < μ (ball x r) := by
   simpa using isCompact_univ.exists_pos_forall_lt_measure_ball μ hr
