@@ -17,6 +17,8 @@ import LeanPool.LowDimSolvClassification.InstancesConstructions
 # LeanPool.LowDimSolvClassification.InstancesLowDim
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open Module
 open Submodule
 

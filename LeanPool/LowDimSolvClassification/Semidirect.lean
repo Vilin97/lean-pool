@@ -11,6 +11,8 @@ import LeanPool.LowDimSolvClassification.Tactics
 # LeanPool.LowDimSolvClassification.Semidirect
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 section lie_semidirect
 
 variable {K : Type*} (L J : Type*) [CommRing K] [LieRing L] [LieRing J] [LieAlgebra K L]

@@ -14,6 +14,8 @@ import Mathlib.Algebra.Lie.Basic
 # LeanPool.LowDimSolvClassification.Tactics
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open Lean hiding Module
 open Meta Elab Qq Mathlib.Tactic List
 

@@ -21,6 +21,8 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 # LeanPool.LowDimSolvClassification.Classification3
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open Module
 open Submodule
 namespace LieAlgebra.Dim3
@@ -315,7 +317,6 @@ theorem classification (dim3 : finrank K L = 3) (hs : IsSolvable L) :
         intro x y
         simp only [trivial_lie_zero, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
           LinearEquiv.coe_coe, Basis.equivFun_apply, map_zero]
-        rfl
     })
   · right -- dim commutator is 1
     by_cases cc : IsTwoStepNilpotent K L

@@ -19,6 +19,8 @@ import LeanPool.LowDimSolvClassification.Classification1
 # LeanPool.LowDimSolvClassification.Classification2
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open Module
 open Submodule
 namespace LieAlgebra
@@ -86,7 +88,6 @@ theorem classification (h : finrank K L = 2) :
         intro x y
         simp only [trivial_lie_zero, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
           LinearEquiv.coe_coe, Basis.equivFun_apply, map_zero]
-        rfl
     })
   · right
     constructor
