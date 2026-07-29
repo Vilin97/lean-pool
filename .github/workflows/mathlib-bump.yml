@@ -181,6 +181,48 @@ jobs:
       - name: Install Python tooling
         run: cd python && uv sync --locked
 
+      - name: Resume the bump branch if one exists
+        env:
+          BRANCH: ${{ needs.detect.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            echo "No existing $BRANCH; starting from main."
+            git checkout -B "$BRANCH"
+            exit 0
+          fi
+          # Build on the repairs earlier runs already landed. Recreating the
+          # branch from main would discard them, so every run would re-repair
+          # the same projects from scratch and the bump could never converge.
+          echo "Resuming $BRANCH."
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          if git merge --no-edit origin/main; then
+            exit 0
+          fi
+          # main moving under the branch conflicts only in the generated index
+          # and the registry, both of which resolve mechanically.
+          git diff --name-only --diff-filter=U > conflicts.txt
+          cat conflicts.txt
+          (cd python && uv run python -m lean_pool.rebase resolvable \
+            --conflicts ../conflicts.txt)
+          merge_base="$(git merge-base "origin/$BRANCH" origin/main)"
+          if grep -qx 'LeanPool/projects.yml' conflicts.txt; then
+            git show "$merge_base:LeanPool/projects.yml" > /tmp/base.yml
+            git show origin/main:LeanPool/projects.yml > /tmp/ours.yml
+            git show "origin/$BRANCH:LeanPool/projects.yml" > /tmp/theirs.yml
+            (cd python && uv run python -m lean_pool.rebase registry --repo .. \
+              --base /tmp/base.yml --ours /tmp/ours.yml --theirs /tmp/theirs.yml)
+            git add LeanPool/projects.yml
+          fi
+          if grep -qx 'LeanPool.lean' conflicts.txt; then
+            (cd python && uv run python -m lean_pool.rebase index --repo ..)
+            git add LeanPool.lean
+          fi
+          git commit --no-edit
+
       - name: Move the version pins
         env:
           TARGET: ${{ needs.detect.outputs.target }}
@@ -206,9 +248,7 @@ jobs:
           TARGET: ${{ needs.detect.outputs.target }}
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$BRANCH"
+          # Already on $BRANCH, resumed or freshly created above.
           git add lean-toolchain lakefile.toml lake-manifest.json \
             docbuild/lean-toolchain docbuild/lakefile.toml docbuild/lake-manifest.json
           # A re-run against an already-pinned version has nothing to commit.
@@ -217,7 +257,10 @@ jobs:
           else
             git commit -m "chore: pin Lean and Mathlib to $TARGET"
           fi
-          git push --force origin "$BRANCH"
+          # --force-with-lease, never --force: the branch carries accumulated
+          # repairs, and a blind force would discard anything landed since this
+          # job checked it out.
+          git push --force-with-lease origin "$BRANCH"
 
       - name: Plan the build shards
         id: plan
