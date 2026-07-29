@@ -911,85 +911,201 @@ def test_fetch_pr_context_tolerates_a_null_description(monkeypatch) -> None:
     assert review.fetch_pr_context("1", "o/r").body == ""
 
 
-def test_project_assessment_leads_with_the_ungated_checks() -> None:
-    """Claim, source, and prior art outrank the fields that echo the verdict."""
-    from lean_pool.review import render_project_assessment
+def _outcome(key, verdict="pass", payload=None, usage=None):
+    """Build one RubricOutcome for rendering/aggregation tests."""
+    from lean_pool import review
 
-    table = render_project_assessment(
-        {
-            "assessment": {
-                "fit": "borderline",
-                "level": "research",
-                "branch": "graph theory",
-                "mode": "theory_building",
-                "proves_the_claim": "weaker_than_claimed",
-                "claim_note": "Proved for n = 14 only, not all n.",
-                "assumed_inputs": "Szöllősi–Östergård classification, disclosed",
-                "already_formalized": "SimpleGraph.nonempty_hom_of_forall_finite",
-                "source_match": "matches",
-                "code_quality": 4,
-                "significance_one_sentence": "A conditional fourteen-point case.",
-            }
-        }
+    spec = next(s for s in review.PROJECT_RUBRICS if s.key == key)
+    result = review.ReviewResult(
+        payload=payload or {"verdict": verdict, "bottom_line": f"{key} fine."},
+        usage=usage,
+        tier="flex",
+        truncation=None,
+        model="gpt-5.6-sol-2026-06-17",
+        effort="xhigh",
+    )
+    return review.RubricOutcome(spec=spec, result=result, verdict=verdict)
+
+
+def test_advisory_rubric_block_is_recorded_as_discuss() -> None:
+    """Code quality informs the maintainer; it does not veto a merge."""
+    from lean_pool import review
+
+    quality = next(s for s in review.PROJECT_RUBRICS if not s.blocking)
+    faithfulness = next(s for s in review.PROJECT_RUBRICS if s.blocking)
+
+    assert review.normalize_rubric_verdict(quality, {"verdict": "block"}) == "discuss"
+    assert (
+        review.normalize_rubric_verdict(faithfulness, {"verdict": "block"}) == "block"
+    )
+    # An unreadable verdict is a review for a human, never a silent pass.
+    assert review.normalize_rubric_verdict(faithfulness, {}) == "discuss"
+    assert (
+        review.normalize_rubric_verdict(faithfulness, {"verdict": "approve"})
+        == "discuss"
     )
 
-    assert "Proves the claim" in table
-    assert "weaker_than_claimed" in table
-    assert "Proved for n = 14 only" in table
-    assert "Already formalized" in table
-    assert "Assumed, not proved" in table
-    assert "Szöllősi–Östergård" in table
-    # The ungated checks lead; `fit` and `level` echo the verdict that is
-    # already rendered above the table, so they come last.
-    assert table.index("Proves the claim") < table.index("| Fit |")
-    assert table.index("Already formalized") < table.index("| Fit |")
-    assert table.index("Assumed, not proved") < table.index("| Fit |")
-    assert table.index("| Fit |") < table.index("| Level |")
-    # The field that was `no` in all 147 past reviews is gone.
-    assert "Obscure problem" not in table
+
+def test_aggregate_verdict_is_deterministic() -> None:
+    """Block beats discuss beats pass, and a partial diff cannot approve."""
+    from lean_pool.review import aggregate_verdict
+
+    all_pass = [_outcome("faithfulness"), _outcome("novelty")]
+    one_block = [_outcome("faithfulness", "block"), _outcome("novelty")]
+    one_discuss = [_outcome("faithfulness"), _outcome("quality", "discuss")]
+
+    assert aggregate_verdict(all_pass, truncated=False) == "approve"
+    assert aggregate_verdict(one_block, truncated=False) == "request_changes"
+    assert aggregate_verdict(one_discuss, truncated=False) == "needs_discussion"
+    # Nobody read the elided files, so clean rubrics still cannot approve.
+    assert aggregate_verdict(all_pass, truncated=True) == "needs_discussion"
+    assert aggregate_verdict(one_block, truncated=True) == "request_changes"
 
 
-def test_prior_art_hedge_is_not_rendered_as_a_duplicate() -> None:
-    """A prose non-answer must not wear the stop icon a real hit earns.
+def test_rubric_comment_carries_table_facts_and_findings() -> None:
+    """The combined comment shows each rubric, the facts, and evidence."""
+    from lean_pool.review import render_rubric_comment
 
-    The first production run under these rules answered
-    `already_formalized` with "unverifiable from the supplied diff" on a
-    PR it approved; rendering that with 🛑 said the opposite.
-    """
-    from lean_pool.review import render_project_assessment
+    outcomes = [
+        _outcome(
+            "faithfulness",
+            payload={
+                "verdict": "pass",
+                "bottom_line": "Headline matches the card.",
+                "proves_the_claim": "proves_it",
+                "claim_note": "Proves the n = 14 case exactly as stated.",
+                "assumed_inputs": "",
+                "findings": [],
+            },
+        ),
+        _outcome(
+            "novelty",
+            verdict="block",
+            payload={
+                "verdict": "block",
+                "bottom_line": "Already in Mathlib.",
+                "already_formalized": "SimpleGraph.nonempty_hom",
+                "findings": [
+                    {
+                        "file": "LeanPool/X/A.lean",
+                        "line": 12,
+                        "rule": "duplicate-of-mathlib",
+                        "comment": "The headline follows from Finsubgraph.",
+                        "evidence": "SimpleGraph.nonempty_hom states the same.",
+                    }
+                ],
+            },
+        ),
+        _outcome("quality", verdict="discuss"),
+    ]
 
-    hedged = render_project_assessment(
-        {"assessment": {"already_formalized": "unverifiable from the supplied diff"}}
+    body = render_rubric_comment(
+        outcomes,
+        verdict="request_changes",
+        model="gpt-5.6-sol-2026-06-17",
+        reviewed_head_sha="abc123",
+        effort="xhigh",
     )
-    hit = render_project_assessment(
-        {"assessment": {"already_formalized": "SimpleGraph.nonempty_hom"}}
+
+    assert body.startswith("<!-- lean-pool-llm-review -->")
+    assert "**Reviewed head:** `abc123`" in body
+    assert "computed from the rubric verdicts" in body
+    assert "| Faithfulness | " in body and "| Novelty | " in body
+    assert "Code quality _(advisory)_" in body
+    assert "🛑 `SimpleGraph.nonempty_hom`" in body
+    assert "### Novelty findings (1)" in body
+    assert "_Evidence:_ SimpleGraph.nonempty_hom states the same." in body
+    assert "an ask, not a close" in body
+    assert "review-rubrics" in body
+
+
+def test_rubric_facts_render_a_prior_art_hedge_as_a_hedge() -> None:
+    """Prose in already_formalized must not wear the duplicate stop icon."""
+    from lean_pool.review import _rubric_facts_table
+
+    hedged = _rubric_facts_table(
+        [
+            _outcome(
+                "novelty",
+                payload={
+                    "verdict": "pass",
+                    "already_formalized": "unverifiable from the supplied diff",
+                },
+            )
+        ]
     )
 
     assert "🛑" not in hedged
     assert "🟡 unverifiable from the supplied diff" in hedged
-    assert "🛑 `SimpleGraph.nonempty_hom`" in hit
 
 
-def test_project_assessment_omits_empty_optional_rows() -> None:
-    """A clean project shows no prior-art or assumption row at all."""
-    from lean_pool.review import render_project_assessment
+def test_run_project_rubrics_isolates_the_angles(monkeypatch, tmp_path) -> None:
+    """Each rubric gets the core plus its own file; only novelty gets search."""
+    from lean_pool import review
 
-    table = render_project_assessment(
-        {
-            "assessment": {
-                "fit": "good_fit",
-                "level": "research",
-                "proves_the_claim": "proves_it",
-                "already_formalized": "",
-                "assumed_inputs": "",
-                "code_quality": 4,
-            }
-        }
+    calls: list[dict] = []
+
+    def _fake_request_review(**kwargs):
+        calls.append(kwargs)
+        return review.ReviewResult(
+            payload={"verdict": "pass", "bottom_line": "ok"},
+            usage=None,
+            tier="flex",
+            truncation=None,
+            model="gpt-5.6-sol",
+            effort="xhigh",
+        )
+
+    monkeypatch.setattr(review, "request_review", _fake_request_review)
+
+    outcomes = review.run_project_rubrics(
+        model="gpt-5.6",
+        diff="diff --git a/x b/x",
+        effort="xhigh",
+        context=None,
+        prior_art_section="PRIOR-ART-EVIDENCE",
     )
 
-    assert "Already formalized" not in table
-    assert "Assumed, not proved" not in table
-    assert "✅ `proves_it`" in table
+    assert [o.spec.key for o in outcomes] == [s.key for s in review.PROJECT_RUBRICS]
+    by_key = dict(zip([s.key for s in review.PROJECT_RUBRICS], calls, strict=True))
+    # Every call shares the core rules and carries its own rubric.
+    for key, call in by_key.items():
+        assert "shared core" in call["rules"]
+        assert f"Rubric: {key}" in call["rules"]
+        assert call["system_prompt"] == review.SYSTEM_PROMPT_RUBRIC
+    # The search evidence goes only to the rubric that judges novelty.
+    assert by_key["novelty"]["prior_art_section"] == "PRIOR-ART-EVIDENCE"
+    assert by_key["faithfulness"]["prior_art_section"] is None
+    assert by_key["quality"]["prior_art_section"] is None
+
+
+def test_rubric_usage_sums_cost_across_calls() -> None:
+    """The footer prices each call at its own tier and adds them up."""
+    from lean_pool.review import _render_rubric_usage
+
+    usage = types.SimpleNamespace(prompt_tokens=10_000, completion_tokens=2_000)
+    outcomes = [
+        _outcome("faithfulness", usage=usage),
+        _outcome("novelty", usage=usage),
+    ]
+
+    line = _render_rubric_usage(outcomes, "xhigh")
+
+    assert "20,000 in / 4,000 out across 2 rubric calls" in line
+    assert "**Tier:** `flex`" in line
+    assert "**Effort:** `xhigh`" in line
+    # 2 x (10k x $2.50/M + 2k x $15/M) = 2 x $0.055 = $0.11 on flex.
+    assert "**Cost:** $0.1100" in line
+
+
+def test_rubric_usage_without_pricing_says_so_instead_of_free() -> None:
+    """No usage data must read as unknown, not as $0.0000."""
+    from lean_pool.review import _render_rubric_usage
+
+    line = _render_rubric_usage([_outcome("faithfulness")], None)
+
+    assert "$0.0000" not in line
+    assert "no pricing recorded" in line
 
 
 def test_request_changes_comment_says_it_is_not_a_close() -> None:

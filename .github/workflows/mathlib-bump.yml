@@ -609,7 +609,26 @@ jobs:
           GATES: ${{ steps.gates.outputs.results }}
         run: |
           set -euo pipefail
-          git push origin "$BRANCH"
+          # The branch may have moved while the whole-pool build ran (a
+          # parallel session pushing to the same bump branch, or auto-rebase).
+          # A rejected push here threw away round 2's repairs after two hours
+          # of build. Rebase the repair commits onto the new tip and retry;
+          # repairs touch only LeanPool project files, so a clean rebase is
+          # the overwhelmingly common case. A genuine conflict still fails.
+          pushed=false
+          for _ in 1 2 3; do
+            if git push origin "$BRANCH"; then
+              pushed=true
+              break
+            fi
+            git fetch origin "$BRANCH"
+            git rebase "origin/$BRANCH" || { git rebase --abort; break; }
+          done
+          if [ "$pushed" != "true" ]; then
+            echo "::error::Could not push $BRANCH: it moved during assemble" \
+              "and the repairs do not rebase cleanly. Re-run the workflow."
+            exit 1
+          fi
           {
             echo "Automated migration of the pool to \`$TARGET\`."
             echo
