@@ -45,8 +45,6 @@ Minkowski's theorem (see `LeanPool.SumsThreeSquares.MinkowskiConvex`).
 The main result is `blueprint_case_mod8_eq3`.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace LeanPool.SumsThreeSquares
 
 open scoped BigOperators
@@ -372,11 +370,16 @@ noncomputable def linearMapM (m q : ℕ) (t b : ℤ) :
 
 lemma det_linear_map_M (m q : ℕ) (t b : ℤ) (_hm : 0 < m) (hq : 0 < q) :
     LinearMap.det (linearMapM m q t b) = m * Real.sqrt m := by
-  unfold linearMapM
-  simp +decide only [Nat.ofNat_nonneg, Real.sqrt_mul, LinearMap.det_toLin',
-    Matrix.det_fin_three, Fin.isValue, Matrix.cons_val', Matrix.cons_val_zero,
-    Matrix.cons_val_fin_one, Matrix.cons_val_one, Matrix.cons_val, mul_zero, zero_mul,
-    sub_self, add_zero, zero_add, sub_zero]
+  let M : Matrix (Fin 3) (Fin 3) ℝ :=
+    (![![2 * t * q, t * b, m],
+      ![Real.sqrt (2 * q), b / Real.sqrt (2 * q), 0],
+      ![0, Real.sqrt m / Real.sqrt (2 * q), 0]] :
+      Matrix (Fin 3) (Fin 3) ℝ)
+  have hM : linearMapM m q t b = Matrix.toLin' M := rfl
+  rw [hM, LinearMap.det_toLin', Matrix.det_fin_three]
+  simp only [M, Nat.ofNat_nonneg, Real.sqrt_mul, Fin.isValue,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
+    mul_zero, zero_mul, sub_self, add_zero, zero_add, sub_zero]
   rw [mul_assoc, mul_div_cancel₀ _ (by positivity)]
 
 lemma det_linear_map_M_ne_zero (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 < q) :

@@ -15,8 +15,6 @@ Conway--Guy distinct-subset-sum sequence.  The recurrence and notation follow
 Section 2 of Tom Bohman's 1996 paper on the Conway--Guy sequence.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 open scoped BigOperators
 
 namespace BooleanIsoperimetry.CoherentGap
@@ -359,7 +357,10 @@ lemma correctionFor_target (offset : ℕ)
   congr 1
   · apply congrArg basis
     apply Fin.ext
-    simp [correctionFor, negativeIndex]
+    suffices
+        offset + 2 - triangular index.val - index.val - 3 + (index.val + 2) =
+          offset + 2 - triangular index.val - 1 by
+      simpa [correctionFor, negativeIndex]
     have hdeep := correction_deep_bound (dimension := offset + 2)
       (index := index.val) (by omega) index.isLt
     omega

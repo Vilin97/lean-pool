@@ -17,8 +17,6 @@ half-edge; the bridge therefore precomposes occurrence sides with `Fin.rev`.
 namespace Sabidussi
 namespace LoopMultigraph
 
-set_option backward.isDefEq.respectTransparency false
-
 open Sabidussi
 open scoped BigOperators
 
@@ -65,7 +63,7 @@ theorem incidentColor_eq_halfEdgeColor
   · change x (T.prev o.1) = x (T.edge.symm (T.edge (T.prev o.1)))
     simp
   · change x o.1 = x (T.edge.symm (T.edge o.1))
-    simp
+    exact (congrArg x (T.edge.symm_apply_apply (show T.Pos from o.1))).symm
 
 /-- The coloured occurrence sides of the word and the correspondingly coloured half-edges at a
 vertex are equinumerous. -/
