@@ -710,6 +710,7 @@ instance : SMulCommClass C F SM where
     change c • algebraMap F C f • a = algebraMap F C f • _
     rw [← mul_smul, ← Algebra.commutes, mul_smul]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- Endomorphisms of a finite power are matrix algebras over endomorphisms of the summand. -/
 def isoDagger (m : ℕ) :
     Module.End C (Fin m → SM) ≃ₐ[F] Matrix (Fin m) (Fin m) (Module.End C SM) where
@@ -724,6 +725,7 @@ def isoDagger (m : ℕ) :
     · simp only [algebraMap_end_apply, Pi.smul_apply, Pi.single_eq_of_ne h, smul_zero,
       LinearMap.zero_apply]
 
+set_option backward.isDefEq.respectTransparency false in
 /-- The opposite algebra of `C` as endomorphisms of the regular `C`-module. -/
 def mopEquivEnd' : Cᵐᵒᵖ ≃ₐ[F] Module.End C C :=
   .ofRingEquiv (f := mopEquivEnd C) fun f ↦ by

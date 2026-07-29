@@ -147,12 +147,12 @@ def matrix.unitIsoHom :
   app X := ModuleCat.ofHom
     { toFun x := ∑ i : ι, x.1 i
       map_add' a b := by
-        show ∑ i : ι, (a.1 i + b.1 i) = (∑ i : ι, a.1 i) + ∑ i : ι, b.1 i
+        change ∑ i : ι, (a.1 i + b.1 i) = (∑ i : ι, a.1 i) + ∑ i : ι, b.1 i
         exact Finset.sum_add_distrib
       map_smul' := by
         rintro r ⟨_, x, rfl⟩
         revert x
-        show ∀ x : ι → X, ∑ i : ι, ((single default default r : M[ι, R]) •
+        change ∀ x : ι → X, ∑ i : ι, ((single default default r : M[ι, R]) •
             ((single default default 1 : M[ι, R]) • x)) i =
           r • ∑ i : ι, ((single default default 1 : M[ι, R]) • x) i
         intro x
@@ -257,9 +257,8 @@ def matrix.unitIso :
       subst h
       simp only [single, of_apply, ite_smul, one_smul, zero_smul, true_and]
       split_ifs with h
-      · simp_all
-        exact Fintype.sum_ite_eq i fun j ↦ x j
-      · simp_all
+      · simpa only [h, true_and] using (Fintype.sum_ite_eq i fun j ↦ x j)
+      · simp only [h, false_and, if_false, Finset.sum_const_zero]
     · symm
       apply Finset.sum_eq_zero
       intro j _
@@ -417,8 +416,8 @@ noncomputable def moritaEquivalentToMatrix : ModuleCat R ≌ ModuleCat M[ι, R] 
       (∑ k : ι, single default i (1 : R) j k • v k)
     by_cases h : j = default
     · subst h
-      simp [Function.update, single]
-      exact (Fintype.sum_ite_eq i fun k ↦ v k).symm
+      simp only [Function.update_self]
+      simpa [single] using (Fintype.sum_ite_eq i fun k ↦ v k).symm
     · simp [Function.update, single, h, Ne.symm h]
 
 namespace IsMoritaEquivalent

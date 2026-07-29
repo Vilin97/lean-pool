@@ -75,7 +75,7 @@ def smul1AddHom (K A B M : Type u)
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     M → (B ⊗[K] (Module.End A M)) →+ M := fun m ↦
   TensorProduct.liftAddHom (smul1AddHom' K A B M f m) fun k b l ↦ by
-    show f (k • b) • l m = f b • (k • l) m
+    change f (k • b) • l m = f b • (k • l) m
     rw [map_smul, LinearMap.smul_apply, smul_assoc, smul_comm]
 
 /-- The tensor-product linear action on the transported module. -/
@@ -94,7 +94,7 @@ def smul1 (K A B M : Type u)
       · rename_i b l
         rw [TensorProduct.smul_tmul', TensorProduct.liftAddHom_tmul,
           TensorProduct.liftAddHom_tmul]
-        show f (k • b) • l m = algebraMap K A k • (f b • l m)
+        change f (k • b) • l m = algebraMap K A k • (f b • l m)
         rw [map_smul, Algebra.smul_def, mul_smul]
       · rename_i x y hx hy
         rw [smul_add, map_add, map_add, hx, hy]
@@ -139,7 +139,7 @@ lemma smul1_add (K A B M : Type u)
     (f : B →ₐ[K] A) :  ∀ (r : (B ⊗[K] (Module.End A M))) (m1 m2 : moduleInst K A B M f),
     smul1 K A B M f (m1 + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r :=
     fun r (m1 m2 : M) ↦ by
-  show smul1 K A B M f ((m1 : M) + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r
+  change smul1 K A B M f ((m1 : M) + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r
   induction r using TensorProduct.induction_on with
   | zero => rw [map_zero, map_zero, map_zero, add_zero]
   | tmul b l =>
@@ -323,11 +323,10 @@ theorem SkolemNoether (K A B M : Type u)
   intro x
   simp only [Units.inv_mk, a, b]
   apply_fun ISO using AlgEquiv.injective _
-  simp only [endEndIso, AlgEquiv.coe_ofBijective, map_mul, AlgEquiv.apply_symm_apply, ISO, Φ, Ψ]
+  simp only [endEndIso, map_mul, AlgEquiv.apply_symm_apply, ISO, Φ, Ψ]
   ext m
-  simp only [toEndEndAlgHom, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, AlgHom.coe_mk,
-    RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, toEndEnd_apply, Module.End.mul_apply,
-    LinearMap.coe_mk, AddHom.coe_mk]
+  simp only [toEndEndAlgHom, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Module.End.mul_apply,
+    LinearMap.coe_mk]
   have e1 : smul1 K A B M f (φ.symm m) (x ⊗ₜ[K] LinearMap.id) = f x • φ.symm m :=
     smul1_tmul K A B M f _ x LinearMap.id
   have e2 : smul1 K A B M g (φ (φ.symm m)) (x ⊗ₜ[K] LinearMap.id) = g x • φ (φ.symm m) :=

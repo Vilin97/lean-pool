@@ -17,6 +17,8 @@ Imported Lean Pool material for `LeanPool.BrauerGroupNew.ToSecond`.
 
 suppress_compilation
 
+set_option backward.isDefEq.respectTransparency false
+
 open FiniteDimensional BrauerGroup Module groupCohomology
 
 variable {F K : Type} [Field K] [Field F] [Algebra F K]
@@ -915,8 +917,7 @@ lemma toSnd_fromSnd : toSnd ∘ fromSnd F K ∘ (H2Iso (galAct F K)).hom = id :=
     (Amfix.coboundariesOfIsMulCoboundary₂ H).2
   refine ⟨fun _ => 1, ?_⟩
   intro σ τ
-  simp only [smul_one, div_self', _root_.mul_one, cocyclesOfIsMulCocycle₂_coe, Function.comp_apply,
-    cocycles₂.val_eq_coe]
+  simp only [smul_one, div_self', _root_.mul_one]
   erw [Equiv.symm_apply_apply]
   simp only [toCocycles₂, conjFactorCompCoeffAsUnit]
   ext : 1
@@ -936,7 +937,6 @@ lemma toSnd_fromSnd : toSnd ∘ fromSnd F K ∘ (H2Iso (galAct F K)).hom = id :=
       rw [Units.mul_inv]
     _ = _ := by
       rw [← _root_.mul_assoc, ← CrossProductAlgebra.of_mul_of]
-      rfl
 
 lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id := by
   ext X

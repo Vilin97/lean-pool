@@ -72,17 +72,17 @@ abbrev moduleMapAux : C →ₐ[R] Module.End A ((ModuleCat.restrictScalars
     toFun (m : M) := ((1 : A) ⊗ₜ[R] c) • m
     map_add' := by intros; exact smul_add _ _ _
     map_smul' r (m : M) := by
-      show ((1 : A) ⊗ₜ[R] c) • ((r ⊗ₜ[R] (1 : C)) • m) =
+      change ((1 : A) ⊗ₜ[R] c) • ((r ⊗ₜ[R] (1 : C)) • m) =
         (r ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m)
       simp [smul_smul, Algebra.TensorProduct.tmul_mul_tmul]
   }
   map_one' := by
     ext m
-    show ((1 : A) ⊗ₜ[R] (1 : C)) • m = m
+    change ((1 : A) ⊗ₜ[R] (1 : C)) • m = m
     rw [← Algebra.TensorProduct.one_def, one_smul]
   map_mul' c1 c2 := by
     ext m
-    show ((1 : A) ⊗ₜ[R] (c1 * c2)) • m = ((1 : A) ⊗ₜ[R] c1) • (((1 : A) ⊗ₜ[R] c2) • m)
+    change ((1 : A) ⊗ₜ[R] (c1 * c2)) • m = ((1 : A) ⊗ₜ[R] c1) • (((1 : A) ⊗ₜ[R] c2) • m)
     rw [smul_smul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
   map_zero' := by ext m; simp; rfl
   map_add' c1 c2 := by ext m; simp [TensorProduct.tmul_add, add_smul]; rfl
@@ -328,7 +328,7 @@ abbrev e02 (M : ModuleCat (A ⊗[R] C)) :
           exact (zero_smul _ m).symm
         | tmul a c =>
           refine (moduleAux_apply R A C ((fromModuleOverTensor R A C).obj M) a c m).trans ?_
-          show (a ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m) = (a ⊗ₜ[R] c) • m
+          change (a ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m) = (a ⊗ₜ[R] c) • m
           rw [smul_smul, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
         | add x y hx hy =>
           rw [map_add]

@@ -31,7 +31,7 @@ theorem dim_max_subfield (k : SubField K D) (hk : IsMax k) :
     by_contra! hneq
     have lt := LE.le.lt_iff_ne this |>.2 hneq
     obtain ⟨a, ha1, ha2⟩ : ∃ a ∈ Subalgebra.centralizer K (A := D) k.1, a ∉ k.1 :=
-      Set.ssubset_iff_of_subset this |>.1 <| Set.lt_iff_ssubset.1 lt
+      Set.ssubset_iff_of_subset this |>.1 lt
     letI : CommRing (Algebra.adjoin K (insert a k.1) : Subalgebra K D) :=
     { mul_comm := by
         rintro ⟨x, hx⟩ ⟨y, hy⟩
@@ -145,7 +145,7 @@ lemma cor_two_3to1 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
     have := Subalgebra.le_centralizer_self.2 L.2
     have Llt := lt_of_le_not_ge this hL'
     have exist_ele : ∃ a ∈ Subalgebra.centralizer K L.1, a ∉ L.1 :=
-      Set.ssubset_iff_of_subset this |>.1 <| Set.lt_iff_ssubset.1 Llt
+      Set.ssubset_iff_of_subset this |>.1 Llt
     obtain ⟨a, ⟨ha1, ha2⟩⟩ := exist_ele
     specialize H (Algebra.adjoin K (insert a L.1)) (fun x hx y hy ↦ by
       refine Algebra.adjoin_induction₂ (fun x y hx hy ↦ by

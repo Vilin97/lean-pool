@@ -540,7 +540,9 @@ lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
       intro J
       ext ⟨_, ⟨a, ha, rfl⟩⟩
       simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-      simp_all
+      simp_all only [TwoSidedIdeal.mem_mk', Set.mem_image, SetLike.mem_coe,
+        TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
+        OneHom.coe_mk, Subtype.exists]
       constructor
       · rintro ⟨b, _, hbJ, hbe⟩
         exact hbe ▸ hbJ
