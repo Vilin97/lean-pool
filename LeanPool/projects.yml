@@ -4,9 +4,9 @@ projects:
     summary: >-
       Proves that a Weierstrass curve in characteristic different from two has
       at most four points killed by two, and that an elliptic curve over the
-      rationals cannot have full rational 4-torsion. The latter follows from
-      the classical square-product argument applied to rational halves of the
-      three nonzero two-torsion points.
+      rationals cannot have full rational 3-torsion or full rational
+      4-torsion. The latter follows from the classical square-product argument
+      applied to rational halves of the three nonzero two-torsion points.
     branch: number theory
     entry_module: LeanPool.MazurTorsionFoundations
     authors:
@@ -22,7 +22,6 @@ projects:
     provenance: AI
     main_declarations:
       - LeanPool.MazurTorsionFoundations.ncard_two_torsion_le_four
-      - LeanPool.MazurTorsionFoundations.FullFour.not_injective_zmod_four_square
     main_results:
       - declaration: LeanPool.MazurTorsionFoundations.ncard_two_torsion_le_four
         informal: >-
@@ -32,6 +31,11 @@ projects:
         informal: >-
           For every elliptic curve over the rationals, no additive homomorphism
           from ZMod 4 × ZMod 4 to its rational points is injective.
+      - declaration: LeanPool.MazurTorsionFoundations.ThreeTorsion.not_injective_zmod_three_square
+        informal: >-
+          For every Weierstrass curve over the rationals, no additive
+          homomorphism from ZMod 3 × ZMod 3 to its nonsingular rational points
+          is injective.
     tags:
       - elliptic-curves
       - torsion
