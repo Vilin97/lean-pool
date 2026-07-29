@@ -4,35 +4,37 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.Erdos97ConvexOctagon.MasterFormulaData
 
 /-!
 # Master coverage formula
 
-The master formula combines every valid shared semantic clause with one clause
-excluding each noncanonical first row.  It has 64 variables and 6,582 clauses.
+The master formula combines the shared semantic clauses used by the certificate
+with the needed noncanonical first-row exclusions. It has 64 variables and 3,263 clauses.
 -/
 
 namespace Erdos97Octagon.RawIncidence
 
 open LRAT
 
-/-- References of every valid shared semantic clause, in generator order. -/
+/-- Shared semantic-clause references retained in the unsatisfiable core. -/
 def masterReferences : List ℕ :=
   (List.range 20659).filter fun reference =>
-    (tagOfRef 0 0 reference).validB
+    masterReferenceUsedB reference && (tagOfRef 0 0 reference).validB
 
 /-- The seven canonical first rows viewed as finite sets. -/
 def canonicalRows : List (Finset Vertex) :=
   List.ofFn fun orbit : Fin 7 => packedRow (canonicalRowMask orbit)
 
-/-- Every eight-bit row, in numeric mask order. -/
-def allPackedRows : List (Finset Vertex) :=
-  (List.range 256).map fun mask => packedRow (UInt64.ofNat mask)
+/-- Noncanonical first-row masks retained in the unsatisfiable core. -/
+def masterExcludedRowMasks : List ℕ :=
+  (List.range 256).filter fun mask =>
+    masterExcludedMaskUsedB mask &&
+      decide (packedRow (UInt64.ofNat mask) ∉ canonicalRows)
 
-/-- The 249 rows outside the seven canonical symmetry classes. -/
+/-- First rows excluded by the committed unsatisfiable core. -/
 def excludedRows : List (Finset Vertex) :=
-  allPackedRows.filter fun row => row ∉ canonicalRows
+  masterExcludedRowMasks.map fun mask => packedRow (UInt64.ofNat mask)
 
 /-- A clause which is false precisely when row one equals `row`. -/
 def rowExclusionClause (row : Finset Vertex) : Clause :=
@@ -42,11 +44,11 @@ def rowExclusionClause (row : Finset Vertex) : Clause :=
     else
       .positive (varIndex 1 target)
 
-/-- All valid shared clauses. -/
+/-- Retained shared clauses. -/
 def masterBaseFormula : Formula :=
   masterReferences.map fun reference => (tagOfRef 0 0 reference).toClause
 
-/-- Clauses restricting row one to the seven canonical rows. -/
+/-- Retained noncanonical first-row exclusion clauses. -/
 def canonicalRowFormula : Formula :=
   excludedRows.map rowExclusionClause
 
@@ -57,6 +59,7 @@ def masterFormula : Formula :=
 /-- A valid in-range shared reference gives its clause directly from the master formula. -/
 theorem masterBaseClause_proves
     (reference : ℕ) (hrange : decide (reference < 20659) = true)
+    (hused : masterReferenceUsedB reference = true)
     (hvalid : (tagOfRef 0 0 reference).validB = true)
     (clause : Clause) (hclause : clause = (tagOfRef 0 0 reference).toClause) :
     masterFormula.Proves clause := by
@@ -67,11 +70,13 @@ theorem masterBaseClause_proves
   apply Or.inl
   refine ⟨reference, ?_, rfl⟩
   rw [masterReferences, List.mem_filter]
-  exact ⟨List.mem_range.mpr (of_decide_eq_true hrange), hvalid⟩
+  exact ⟨List.mem_range.mpr (of_decide_eq_true hrange),
+    by simpa only [Bool.and_eq_true] using And.intro hused hvalid⟩
 
 /-- A noncanonical in-range row mask gives its exclusion clause from the master formula. -/
 theorem canonicalRowClause_proves
     (mask : ℕ) (hrange : decide (mask < 256) = true)
+    (hused : masterExcludedMaskUsedB mask = true)
     (hnoncanonical :
       decide (packedRow (UInt64.ofNat mask) ∉ canonicalRows) = true)
     (clause : Clause)
@@ -83,10 +88,11 @@ theorem canonicalRowClause_proves
   rw [masterFormula, List.mem_append, canonicalRowFormula, List.mem_map]
   apply Or.inr
   refine ⟨packedRow (UInt64.ofNat mask), ?_, rfl⟩
-  rw [excludedRows, List.mem_filter]
-  refine ⟨?_, hnoncanonical⟩
-  rw [allPackedRows, List.mem_map]
-  exact ⟨mask, List.mem_range.mpr (of_decide_eq_true hrange), rfl⟩
+  rw [excludedRows, List.mem_map]
+  refine ⟨mask, ?_, rfl⟩
+  rw [masterExcludedRowMasks, List.mem_filter]
+  exact ⟨List.mem_range.mpr (of_decide_eq_true hrange),
+    by simpa only [Bool.and_eq_true] using And.intro hused hnoncanonical⟩
 
 private theorem rowExclusionClause_satisfied
     (Q : OctagonIncidence) (row : Finset Vertex)
@@ -120,8 +126,11 @@ private theorem masterBaseFormula_satisfied
   rw [masterBaseFormula, List.mem_map] at hclause
   obtain ⟨reference, hreference, rfl⟩ := hclause
   have hparts := List.mem_filter.mp hreference
+  have hchecks : masterReferenceUsedB reference = true ∧
+      (tagOfRef 0 0 reference).validB = true := by
+    simpa only [Bool.and_eq_true] using hparts.2
   exact (tagOfRef 0 0 reference).satisfies hC hR hN hSparse hBalanced
-    ((tagOfRef 0 0 reference).valid_of_validB hparts.2)
+    ((tagOfRef 0 0 reference).valid_of_validB hchecks.2)
     (tagOfRef_baseBranchValid Q (List.mem_range.mp hparts.1))
 
 /-- The canonical-row clauses are satisfied for one selected canonical orbit. -/
@@ -133,15 +142,21 @@ theorem canonicalRowFormula_satisfied
   intro clause hclause
   rw [canonicalRowFormula, List.mem_map] at hclause
   obtain ⟨row, hrowExcluded, rfl⟩ := hclause
+  rw [excludedRows, List.mem_map] at hrowExcluded
+  obtain ⟨mask, hmask, rfl⟩ := hrowExcluded
   apply rowExclusionClause_satisfied
   intro hequal
-  have hcanonical : row ∈ canonicalRows := by
+  have hcanonical : packedRow (UInt64.ofNat mask) ∈ canonicalRows := by
     rw [← hequal, hrow]
     unfold canonicalRows
     rw [List.mem_ofFn]
     exact ⟨orbit, rfl⟩
-  have hnotCanonical : row ∉ canonicalRows :=
-    of_decide_eq_true (List.mem_filter.mp hrowExcluded).2
+  have hmaskParts := List.mem_filter.mp hmask
+  have hmaskChecks : masterExcludedMaskUsedB mask = true ∧
+      decide (packedRow (UInt64.ofNat mask) ∉ canonicalRows) = true := by
+    simpa only [Bool.and_eq_true] using hmaskParts.2
+  have hnotCanonical : packedRow (UInt64.ofNat mask) ∉ canonicalRows :=
+    of_decide_eq_true hmaskChecks.2
   exact hnotCanonical hcanonical
 
 /-- Every hypothetical normalized counterexample with canonical row one

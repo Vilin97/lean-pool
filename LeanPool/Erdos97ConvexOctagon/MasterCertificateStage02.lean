@@ -11,10 +11,10 @@ import LeanPool.Erdos97ConvexOctagon.MasterCertificateStage01
 namespace Erdos97Octagon.RawIncidence
 
 master_lrat_stage
-  initial_clauses 6582
-  additions 11139
-  stage_start 1400
-  stage_stop 2100
+  initial_clauses 3263
+  additions 4294
+  stage_start 2864
+  stage_stop 4294
   clause_prefix masterCertificateClause
   final_theorem masterFormula_unsatisfiable
   data_parts
@@ -28,13 +28,6 @@ master_lrat_stage
     masterCertificatePart7
     masterCertificatePart8
     masterCertificatePart9
-    masterCertificatePart10
-    masterCertificatePart11
-    masterCertificatePart12
-    masterCertificatePart13
-    masterCertificatePart14
-    masterCertificatePart15
-    masterCertificatePart16
 
 
 end Erdos97Octagon.RawIncidence

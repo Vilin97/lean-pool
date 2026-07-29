@@ -52,10 +52,10 @@ def componentTreeB (R : RawIncidence) (root : Vertex) : List Vertex → Bool
 def TreeLabelledEdge (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Prop :=
   (a ∈ component ∧ b ∈ R a) ∨ (b ∈ component ∧ a ∈ R b)
 
-instance (R : RawIncidence) (component : List Vertex) (a b : Vertex) :
-    Decidable (TreeLabelledEdge R component a b) := by
-  unfold TreeLabelledEdge
-  infer_instance
+private def treeLabelledEdgeB
+    (R : RawIncidence) (component : List Vertex) (a b : Vertex) : Bool :=
+  (decide (a ∈ component) && decide (b ∈ R a)) ||
+    (decide (b ∈ component) && decide (a ∈ R b))
 
 /-- The class number stored in a residual-isomorphism payload. -/
 def payloadClass (payload : UInt64) : ℕ :=
@@ -109,10 +109,6 @@ def Certificate.Valid (R : RawIncidence) : Certificate → Prop
         ∀ v w, w ∈ R v ↔
           forward w ∈ (residualRepresentative (Fin.ofNat 13 classIndex)).targets (forward v)
 
-instance (R : RawIncidence) (certificate : Certificate) :
-    Decidable (certificate.Valid R) := by
-  cases certificate <;> simp only [Certificate.Valid] <;> infer_instance
-
 private def residualValidB (R : RawIncidence) (payload : UInt64) : Bool :=
   let classIndex := payloadClass payload
   let forward := decodeMap (payloadForwardCode payload)
@@ -127,8 +123,31 @@ private def residualValidB (R : RawIncidence) (payload : UInt64) : Bool :=
 
 /-- Kernel-check the mathematical content of an emitted witness. -/
 def Certificate.validB (R : RawIncidence) : Certificate → Bool
+  | .k4 root component a b c d =>
+      componentTreeB R root component && decide [a, b, c, d].Nodup &&
+        treeLabelledEdgeB R component a b && treeLabelledEdgeB R component a c &&
+        treeLabelledEdgeB R component a d && treeLabelledEdgeB R component b c &&
+        treeLabelledEdgeB R component b d && treeLabelledEdgeB R component c d
+  | .hubPentagon root component o a b c d e =>
+      componentTreeB R root component && decide [o, a, b, c, d, e].Nodup &&
+        treeLabelledEdgeB R component o a && treeLabelledEdgeB R component o b &&
+        treeLabelledEdgeB R component o c && treeLabelledEdgeB R component o d &&
+        treeLabelledEdgeB R component o e && treeLabelledEdgeB R component a b &&
+        treeLabelledEdgeB R component b c && treeLabelledEdgeB R component c d &&
+        treeLabelledEdgeB R component d e && treeLabelledEdgeB R component e a
+  | .sharedThree a b q1 q2 q3 =>
+      decide (a ≠ b) && decide (q1 ≠ q2) && decide (q1 ≠ q3) && decide (q2 ≠ q3) &&
+        decide (q1 ∈ R a) && decide (q2 ∈ R a) && decide (q3 ∈ R a) &&
+        decide (q1 ∈ R b) && decide (q2 ∈ R b) && decide (q3 ∈ R b)
+  | .cycleStrip root component o x1 x2 x3 x4 x5 x6 =>
+      componentTreeB R root component && decide [o, x1, x2, x3, x4, x5, x6].Nodup &&
+        treeLabelledEdgeB R component o x1 && treeLabelledEdgeB R component o x2 &&
+        treeLabelledEdgeB R component o x6 && treeLabelledEdgeB R component x1 x2 &&
+        treeLabelledEdgeB R component x1 x3 && treeLabelledEdgeB R component x2 x3 &&
+        treeLabelledEdgeB R component x2 x4 && treeLabelledEdgeB R component x3 x4 &&
+        treeLabelledEdgeB R component x3 x5 && treeLabelledEdgeB R component x4 x5 &&
+        treeLabelledEdgeB R component x4 x6 && treeLabelledEdgeB R component x5 x6
   | .residual payload => residualValidB R payload
-  | certificate => decide (certificate.Valid R)
 
 /-- The Boolean validator implies the mathematical certificate predicate. -/
 theorem Certificate.valid_of_validB
@@ -146,10 +165,21 @@ theorem Certificate.valid_of_validB
       · intro v w
         have hv := (List.all_eq_true.mp hedges) v (List.mem_finRange v)
         exact of_decide_eq_true ((List.all_eq_true.mp hv) w (List.mem_finRange w))
-  | k4 root component a b c d => exact of_decide_eq_true hvalid
-  | hubPentagon root component o a b c d e => exact of_decide_eq_true hvalid
-  | sharedThree a b q1 q2 q3 => exact of_decide_eq_true hvalid
-  | cycleStrip root component o x1 x2 x3 x4 x5 x6 => exact of_decide_eq_true hvalid
+  | k4 root component a b c d =>
+      simpa only [Certificate.validB, Bool.and_eq_true, decide_eq_true_eq,
+        treeLabelledEdgeB, TreeLabelledEdge, Certificate.Valid, Bool.or_eq_true,
+        and_assoc] using hvalid
+  | hubPentagon root component o a b c d e =>
+      simpa only [Certificate.validB, Bool.and_eq_true, decide_eq_true_eq,
+        treeLabelledEdgeB, TreeLabelledEdge, Certificate.Valid, Bool.or_eq_true,
+        and_assoc] using hvalid
+  | sharedThree a b q1 q2 q3 =>
+      simpa only [Certificate.validB, Bool.and_eq_true, decide_eq_true_eq,
+        Certificate.Valid, and_assoc] using hvalid
+  | cycleStrip root component o x1 x2 x3 x4 x5 x6 =>
+      simpa only [Certificate.validB, Bool.and_eq_true, decide_eq_true_eq,
+        treeLabelledEdgeB, TreeLabelledEdge, Certificate.Valid, Bool.or_eq_true,
+        and_assoc] using hvalid
 
 /-- One incidence table extends another when it contains every selected edge. -/
 def Extends (R S : RawIncidence) : Prop :=

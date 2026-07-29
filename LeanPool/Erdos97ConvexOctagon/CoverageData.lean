@@ -133,15 +133,12 @@ def hardEntry (origin : ℕ) : Option HardEntry :=
 
 theorem patternEntry_sound {origin : ℕ} {entry : PatternEntry}
     (hfind : patternEntry origin = some entry) :
-    entry.origin = origin ∧
-      entry.certificate.toCertificate.Valid (packedIncidence entry.mask) := by
-  refine ⟨?_, entry.valid⟩
+    entry.origin = origin := by
   simpa using List.find?_some hfind
 
 theorem hardEntry_sound {origin : ℕ} {entry : HardEntry}
     (hfind : hardEntry origin = some entry) :
-    entry.origin = origin ∧ entry.certificate.Valid (packedIncidence entry.code) := by
-  refine ⟨?_, entry.valid⟩
+    entry.origin = origin := by
   simpa using List.find?_some hfind
 
 end Erdos97Octagon.RawIncidence

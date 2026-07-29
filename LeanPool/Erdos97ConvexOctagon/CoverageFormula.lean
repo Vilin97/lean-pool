@@ -105,8 +105,14 @@ def BaseClauseTag.Valid : BaseClauseTag → Prop
       .columnAtMost _ subset | .columnAtLeast _ subset =>
       subset.Nodup ∧ subset.length = 5
   | .pairSparse a b centres => a ≠ b ∧ centres.Nodup ∧ centres.length = 3
-  | .pattern origin => (patternEntry origin).isSome = true
-  | .hard origin => (hardEntry origin).isSome = true
+  | .pattern origin =>
+      match patternEntry origin with
+      | some entry => entry.validB = true
+      | none => False
+  | .hard origin =>
+      match hardEntry origin with
+      | some entry => entry.validB = true
+      | none => False
   | _ => True
 
 /-- Structural and lookup conditions needed for any tag to be meaningful. -/
@@ -120,17 +126,30 @@ def ClauseTag.BranchValid (Q : OctagonIncidence) : ClauseTag → Prop
   | .branchTwo target selected => selected = true ↔ target ∈ Q.targets 2
   | _ => True
 
-instance (tag : BaseClauseTag) : Decidable tag.Valid := by
-  cases tag <;> simp only [BaseClauseTag.Valid] <;> infer_instance
-
-instance (tag : ClauseTag) : Decidable tag.Valid := by
-  cases tag <;> simp only [ClauseTag.Valid] <;> infer_instance
-
 /-- Boolean checker for the structural validity of a semantic clause tag. -/
-def ClauseTag.validB (tag : ClauseTag) : Bool := decide tag.Valid
+def ClauseTag.validB : ClauseTag → Bool
+  | .base (.rowAtMost _ subset) | .base (.rowAtLeast _ subset) |
+      .base (.columnAtMost _ subset) | .base (.columnAtLeast _ subset) =>
+      decide (subset.Nodup ∧ subset.length = 5)
+  | .base (.pairSparse a b centres) =>
+      decide (a ≠ b ∧ centres.Nodup ∧ centres.length = 3)
+  | .base (.pattern origin) => match patternEntry origin with
+    | some entry => entry.validB
+    | none => false
+  | .base (.hard origin) => match hardEntry origin with
+    | some entry => entry.validB
+    | none => false
+  | _ => true
 
 theorem ClauseTag.valid_of_validB {tag : ClauseTag} (h : tag.validB = true) : tag.Valid :=
-  of_decide_eq_true h
+  by
+    cases tag with
+    | base tag =>
+        cases tag <;> simp only [ClauseTag.validB, ClauseTag.Valid,
+          BaseClauseTag.Valid, decide_eq_true_eq] at h ⊢
+        all_goals try exact h
+        all_goals split <;> simp_all
+    | branchOne | branchTwo => trivial
 
 private def branchStart : ℕ := 20659
 private def branchEnd : ℕ := branchStart + 16
@@ -387,6 +406,9 @@ theorem BaseClauseTag.satisfies
       cases hfind : patternEntry origin with
       | none => simp [hfind] at hvalid
       | some entry =>
+          have hentryValid : entry.certificate.toCertificate.Valid
+              (packedIncidence entry.mask) :=
+            PatternEntry.valid_of_validB (by simpa only [hfind] using hvalid)
           have hmask : patternMask origin = entry.mask := by simp [patternMask, hfind]
           apply satisfies_of_not_all_neg
           intro hall
@@ -404,12 +426,14 @@ theorem BaseClauseTag.satisfies
             · simpa [packedSelectsB] using
                 (mem_packedIncidence entry.mask centre target).mp hselected
           exact Certificate.not_convex_realises entry.certificate.toCertificate
-            (entry.certificate.valid_mono hextends entry.valid) hC hR
+            (entry.certificate.valid_mono hextends hentryValid) hC hR
   | hard origin =>
       simp only [BaseClauseTag.Valid] at hvalid
       cases hfind : hardEntry origin with
       | none => simp [hfind] at hvalid
       | some entry =>
+          have hentryValid : entry.certificate.Valid (packedIncidence entry.code) :=
+            HardEntry.valid_of_validB (by simpa only [hfind] using hvalid)
           have hcode : hardCode origin = entry.code := by simp [hardCode, hfind]
           apply satisfies_of_not_all_neg
           intro hall
@@ -444,7 +468,7 @@ theorem BaseClauseTag.satisfies
                   · simp [hbit]
           have hcertificate : entry.certificate.Valid Q.targets := by
             rw [htargets]
-            exact entry.valid
+            exact hentryValid
           exact Certificate.not_convex_realises entry.certificate hcertificate hC hR
 
 /-- Every audited shared or branch clause is satisfied by the incidence table. -/

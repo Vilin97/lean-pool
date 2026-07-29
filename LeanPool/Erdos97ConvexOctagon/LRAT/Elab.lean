@@ -43,12 +43,6 @@ private structure GlobalClause where
   expression : Expr
   proof : Expr
 
-/-- A referenced clause represented by a local proof variable. -/
-private structure LocalClause where
-  literals : Array Int
-  expression : Expr
-  binderDepth : ℕ
-
 private def buildClause (literals : Array Int) : Expr :=
   let literalType := mkConst ``Literal
   let empty := mkApp (mkConst ``List.nil [0]) literalType
@@ -62,31 +56,13 @@ private def buildProofStep
     (database : HashMap ℕ GlobalClause) (newLiterals : Array Int)
     (antecedents : Array ℕ) (context clause : Expr) :
     Except String Expr := Id.run do
-  let mut binderTypes := #[]
-  let mut proofArguments := #[]
-  let mut localDatabase : HashMap ℕ LocalClause := {}
-  for identifier in antecedents do
-    let some referenced := database[identifier]?
-      | return .error s!"missing antecedent clause {identifier}"
-    unless localDatabase.contains identifier do
-      binderTypes := binderTypes.push
-        (mkApp2 (mkConst ``Formula.Proves) context referenced.expression)
-      proofArguments := proofArguments.push referenced.proof
-      localDatabase := localDatabase.insert identifier {
-        literals := referenced.literals
-        expression := referenced.expression
-        binderDepth := proofArguments.size
-      }
-  let argumentCount := proofArguments.size
   let mut finish :=
-    (mkAppN · proofArguments) ∘
-    binderTypes.foldr (mkLambda `clause default) ∘
     mkLambda `valuation default (mkConst ``Valuation) ∘
     mkLambda `satisfies default
       (mkApp2 (mkConst ``Valuation.SatisfiesFormula) (mkBVar 0) context)
   let valuation depth := mkBVar (depth + 1)
   let satisfies depth := mkBVar depth
-  binderTypes := #[]
+  let mut binderTypes := #[]
   let mut remainingClause := clause
   let mut depth := 0
   let mut literalContext : HashMap Int ℕ := {}
@@ -100,8 +76,8 @@ private def buildProofStep
     literalContext := literalContext.insert literal depth
   finish := finish ∘ binderTypes.foldr (mkLambda `falsified default)
   for identifier in antecedents do
-    let some referenced := localDatabase[identifier]?
-      | return .error s!"missing local antecedent clause {identifier}"
+    let some referenced := database[identifier]?
+      | return .error s!"missing antecedent clause {identifier}"
     let mut unitLiteral : Option Int := none
     for literal in referenced.literals do
       unless literalContext.contains literal do
@@ -109,10 +85,8 @@ private def buildProofStep
           return .error s!"antecedent {identifier} is not unit"
         depth := depth + 1
         unitLiteral := some literal
-    let proofVariable :=
-      mkBVar (depth + argumentCount + 2 - referenced.binderDepth)
     let mut refutation :=
-      mkApp2 proofVariable (valuation depth) (satisfies depth)
+      mkApp2 referenced.proof (valuation depth) (satisfies depth)
     for literal in referenced.literals do
       let binderIndex :=
         match literalContext[literal]? with
@@ -222,9 +196,7 @@ private def masterBaseReferences : Array ℕ :=
   RawIncidence.masterReferences.toArray
 
 private def masterExcludedMasks : Array ℕ :=
-  ((List.range 256).filter fun mask =>
-    decide (RawIncidence.packedRow (UInt64.ofNat mask) ∉
-      RawIncidence.canonicalRows)).toArray
+  RawIncidence.masterExcludedRowMasks.toArray
 
 private def certificateProofType (clause : Expr) : Expr :=
   mkApp2 (mkConst ``Formula.Proves)
@@ -232,6 +204,9 @@ private def certificateProofType (clause : Expr) : Expr :=
 
 private def certificateClauseName (baseName : Name) (identifier : ℕ) : Name :=
   Name.str baseName s!"_c{identifier}"
+
+private def certificateInitialClauseName (baseName : Name) (identifier : ℕ) : Name :=
+  Name.str baseName s!"_i{identifier}"
 
 private def requireTheoremWithType (name : Name) (expectedType : Expr) :
     MetaM Unit := do
@@ -256,9 +231,9 @@ private def checkedSourceProof (proof clause : Expr) : MetaM Expr := do
 
 private def checkSourceMetadata
     (clauses : Array (Array Int)) : Except String Unit := do
-  unless masterBaseReferences.size = 6333 do
+  unless masterBaseReferences.size = 3224 do
     throw "master reference count does not match its committed source metadata"
-  unless masterExcludedMasks.size = 249 do
+  unless masterExcludedMasks.size = 39 do
     throw "excluded-row count does not match its committed source metadata"
   unless masterBaseReferences.size + masterExcludedMasks.size = clauses.size do
     throw "source metadata does not partition the master formula"
@@ -312,8 +287,25 @@ private def neededStageClauses
             importedIdentifiers := importedIdentifiers.push antecedent
   pure (initialIdentifiers, importedIdentifiers)
 
+private def cacheInitialClauseProof
+    (clause proof : Expr) (clausePrefix : Name) (identifier : ℕ) :
+    MetaM Expr := do
+  let theoremName := certificateInitialClauseName clausePrefix identifier
+  let theoremType := certificateProofType clause
+  if (← getEnv).contains theoremName then
+    requireTheoremWithType theoremName theoremType
+  else
+    addDecl <| Declaration.thmDecl {
+      name := theoremName
+      levelParams := []
+      type := theoremType
+      value := ← checkedSourceProof proof clause
+    }
+  pure <| mkConst theoremName
+
 private def sourceInitialClause
-    (clauses : Array (Array Int)) (identifier : ℕ) : MetaM GlobalClause := do
+    (clauses : Array (Array Int)) (clausePrefix : Name) (identifier : ℕ) :
+    MetaM GlobalClause := do
   if identifier = 0 ∨ clauses.size < identifier then
     throwError "initial certificate clause identifier is out of range"
   let index := identifier - 1
@@ -324,34 +316,36 @@ private def sourceInitialClause
     let some reference := masterBaseReferences[index]?
       | throwError "master reference index is out of range"
     let tag := RawIncidence.tagOfRef 0 0 reference
-    unless reference < 20659 ∧ tag.validB do
+    unless reference < 20659 ∧
+        RawIncidence.masterReferenceUsedB reference ∧ tag.validB do
       throwError "master reference metadata is not valid and in range"
     unless clauseLiterals tag.toClause == literals do
       throwError "master reference clause does not match the certificate formula order"
     let proof := mkAppN (mkConst ``RawIncidence.masterBaseClause_proves)
-      #[mkRawNatLit reference, truthProof, truthProof, clause,
+      #[mkRawNatLit reference, truthProof, truthProof, truthProof, clause,
         clauseReflexivity clause]
     pure {
       literals
       expression := clause
-      proof := ← checkedSourceProof proof clause
+      proof := ← cacheInitialClauseProof clause proof clausePrefix identifier
     }
   else
     let maskIndex := index - masterBaseReferences.size
     let some mask := masterExcludedMasks[maskIndex]?
       | throwError "excluded-row mask index is out of range"
     let row := RawIncidence.packedRow (UInt64.ofNat mask)
-    unless mask < 256 ∧ decide (row ∉ RawIncidence.canonicalRows) do
+    unless mask < 256 ∧ RawIncidence.masterExcludedMaskUsedB mask ∧
+        decide (row ∉ RawIncidence.canonicalRows) do
       throwError "excluded-row metadata is not noncanonical and in range"
     unless clauseLiterals (RawIncidence.rowExclusionClause row) == literals do
       throwError "excluded-row clause does not match the certificate formula order"
     let proof := mkAppN (mkConst ``RawIncidence.canonicalRowClause_proves)
-      #[mkRawNatLit mask, truthProof, truthProof, clause,
+      #[mkRawNatLit mask, truthProof, truthProof, truthProof, clause,
         clauseReflexivity clause]
     pure {
       literals
       expression := clause
-      proof := ← checkedSourceProof proof clause
+      proof := ← cacheInitialClauseProof clause proof clausePrefix identifier
     }
 
 private def importedAdditionClause
@@ -393,7 +387,7 @@ private def reconstructStage
   let mut database : HashMap ℕ GlobalClause := {}
   for identifier in initialIdentifiers do
     database := database.insert identifier
-      (← sourceInitialClause clauses identifier)
+      (← sourceInitialClause clauses clausePrefix identifier)
   for identifier in importedIdentifiers do
     database := database.insert identifier
       (← importedAdditionClause additions indices clausePrefix identifier)
@@ -418,7 +412,7 @@ private def reconstructStage
         value := proof
       }
       addDocStringCore finalTheorem
-        "Unsatisfiability of the 6,582-clause master coverage formula."
+        "Unsatisfiability of the 3,263-clause master coverage formula."
       derivedEmpty := true
     else
       let theoremName := certificateClauseName clausePrefix addition.identifier

@@ -4,6 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Egor Lyfar
 -/
 
-import LeanPool.Erdos97ConvexOctagon.MasterCertificateStage15
+import LeanPool.Erdos97ConvexOctagon.MasterCertificateStage02
 
 /-! # Kernel-checked master coverage certificate -/

@@ -14,43 +14,43 @@ namespace Erdos97Octagon.RawIncidence
 def masterCertificateFormatVersion : ℕ := 1
 
 /-- Number of initial clauses. -/
-def masterCertificateInitialClauses : ℕ := 6582
+def masterCertificateInitialClauses : ℕ := 3263
 
 /-- Number of retained LRAT additions. -/
-def masterCertificateAdditions : ℕ := 11139
+def masterCertificateAdditions : ℕ := 4294
 
 /-- Number of omitted LRAT deletion records. -/
-def masterCertificateDeletions : ℕ := 8677
+def masterCertificateDeletions : ℕ := 3145
 
 /-- Total number of actions in the generated LRAT text. -/
-def masterCertificateActions : ℕ := 19816
+def masterCertificateActions : ℕ := 7439
 
 /-- Number of packed bytes. -/
-def masterCertificatePackedBytes : ℕ := 542830
+def masterCertificatePackedBytes : ℕ := 316443
 
 /-- Number of base64 characters. -/
-def masterCertificateEncodedCharacters : ℕ := 723774
+def masterCertificateEncodedCharacters : ℕ := 421924
 
 /-- Number of generated data modules. -/
-def masterCertificateDataModules : ℕ := 17
+def masterCertificateDataModules : ℕ := 10
 
 /-- Number of sequential proof-stage modules. -/
-def masterCertificateStageModules : ℕ := 16
+def masterCertificateStageModules : ℕ := 3
 
 /-- Maximum retained additions reconstructed in one proof stage. -/
-def masterCertificateMaximumAdditionsPerStage : ℕ := 700
+def masterCertificateMaximumAdditionsPerStage : ℕ := 1432
 
 /-- Retained additions reconstructed by each sequential proof stage. -/
 def masterCertificateStageAdditionCounts : List ℕ :=
-  [700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 639]
+  [1432, 1432, 1430]
 
 /-- Zero-based addition boundaries of the sequential proof stages. -/
 def masterCertificateStageBoundaries : List ℕ :=
-  [0, 700, 1400, 2100, 2800, 3500, 4200, 4900, 5600] ++
-    [6300, 7000, 7700, 8400, 9100, 9800, 10500, 11139]
+  [0, 1432] ++
+    [2864, 4294]
 
 /-- Maximum measured bytes used by one packed natural number. -/
-def masterCertificateMaximumVarintBytes : ℕ := 3
+def masterCertificateMaximumVarintBytes : ℕ := 2
 
 /-- Decoder byte bound for one packed natural number. -/
 def masterCertificateVarintByteBound : ℕ := 16
@@ -70,11 +70,11 @@ def masterCertificateCnfSha256 : String :=
 
 /-- SHA-256 of the normalized LRAT text. -/
 def masterCertificateLratSha256 : String :=
-  "9775d8f16020ea79871936dcdc064a45e4f8097e054c7322c76a5f049e8551e7"
+  "e793eacb1b67901daad1a61d11e9c6f20ccc7ad832b67d16fe7550c1ea292e83"
 
 /-- SHA-256 of the packed certificate bytes. -/
 def masterCertificatePackedSha256 : String :=
-  "d5646632bb06c66f6f8caf638cbc7cdcdcd127e81ae88b2985b6d3990a4bf932"
+  "55a6fad508976f2ccb1a0ee412ca941564df743a4d6cf4552be1bd3c3360ccae"
 
 /-- Pinned CaDiCaL source commit. -/
 def masterCertificateCadicalCommit : String :=

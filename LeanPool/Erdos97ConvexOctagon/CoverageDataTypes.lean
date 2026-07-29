@@ -18,8 +18,6 @@ structure PatternEntry where
   mask : UInt64
   /-- The obstruction witness attached to the mask. -/
   certificate : PrefixCertificate
-  /-- Kernel-checked validity of the witness on the decoded mask. -/
-  valid : certificate.toCertificate.Valid (packedIncidence mask)
 
 /-- An exact complete table paired with its checked witness. -/
 structure HardEntry where
@@ -29,8 +27,6 @@ structure HardEntry where
   code : UInt64
   /-- The obstruction witness attached to the exact table. -/
   certificate : Certificate
-  /-- Kernel-checked validity of the witness on the decoded table. -/
-  valid : certificate.Valid (packedIncidence code)
 
 /-- Validate a pattern witness against precisely its required incidences. -/
 def PatternEntry.validB (entry : PatternEntry) : Bool :=

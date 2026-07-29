@@ -28,6 +28,7 @@ namespace Erdos97Octagon.Regenerate
 
 open LRAT RawIncidence
 open System
+open Std
 
 private def cadicalCommit :=
   "c60730422e758ef1cebe7aeddf2dda31c996bf04"
@@ -35,21 +36,19 @@ private def cadicalCommit :=
 private def dratTrimCommit :=
   "2e3b2dc0ecf938addbd779d42877b6ed69d9a985"
 
-private def initialClauseCount := 6582
-private def additionCount := 11139
-private def deletionCount := 8677
-private def actionCount := 19816
-private def additionsPerStage := 700
+private def solverInitialClauseCount := 6582
+private def initialClauseCount := 3263
+private def additionsPerStage := 1432
 private def encodedLineWidth := 88
 private def linesPerDataModule := 500
 
-private def stageCount : ℕ :=
+private def stageCount (additionCount : ℕ) : ℕ :=
   (additionCount + additionsPerStage - 1) / additionsPerStage
 
 private def stageStart (index : ℕ) : ℕ :=
   index * additionsPerStage
 
-private def stageStop (index : ℕ) : ℕ :=
+private def stageStop (additionCount index : ℕ) : ℕ :=
   min additionCount ((index + 1) * additionsPerStage)
 
 private inductive Mode where
@@ -74,6 +73,11 @@ private structure ParsedCertificate where
   proofSteps : Array Addition
   actions : ℕ
   deletions : ℕ
+
+private structure DerivedCore where
+  identifiers : HashMap ℕ ℕ
+  referenceWords : Array UInt64
+  excludedMaskWords : Array UInt64
 
 private def parseNatural (token : String) : Except String ℕ :=
   match token.toNat? with
@@ -193,11 +197,244 @@ private def renderClause (clause : Clause) : String :=
   let literals := clause.map fun literal => toString (literalInteger literal)
   String.intercalate " " literals ++ " 0\n"
 
-private def renderMasterCnf : Except String String := do
-  unless masterFormula.length = initialClauseCount do
-    throw s!"expected {initialClauseCount} master clauses, got {masterFormula.length}"
-  pure <| s!"p cnf 64 {initialClauseCount}\n" ++
-    String.join (masterFormula.map renderClause)
+private def retiredPatternCount : ℕ := 508
+
+private def retiredPatternPackedBytes : ℕ := 5080
+
+private def retiredPatternEncoded : String :=
+  String.join [
+    "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",
+  ]
+
+private def packedByteAt (bytes : ByteArray) (index : ℕ) : Except String ℕ :=
+  match bytes[index]? with
+  | some byte => pure byte.toNat
+  | none => throw "retired-pattern data ended early"
+
+private def decodeLittleEndianUInt64
+    (bytes : ByteArray) (offset : ℕ) : Except String UInt64 := do
+  let mut value : ℕ := 0
+  for index in [0:8] do
+    value := value + (← packedByteAt bytes (offset + index)) * 256 ^ index
+  pure (UInt64.ofNat value)
+
+private def decodeRetiredPatterns : Except String (Array (ℕ × UInt64)) := do
+  let bytes ← decodeBase64 retiredPatternEncoded
+  unless bytes.size = retiredPatternPackedBytes do
+    throw "retired-pattern packed size mismatch"
+  let mut result := Array.mkEmpty retiredPatternCount
+  let mut previousOrigin : Option ℕ := none
+  for index in [0:retiredPatternCount] do
+    let offset := 10 * index
+    let low ← packedByteAt bytes offset
+    let high ← packedByteAt bytes (offset + 1)
+    let origin := low + 256 * high
+    let mask ← decodeLittleEndianUInt64 bytes (offset + 2)
+    unless origin < 11043 do
+      throw s!"retired pattern origin {origin} is out of range"
+    if let some previous := previousOrigin then
+      unless previous < origin do
+        throw "retired pattern origins are not strictly increasing"
+    result := result.push (origin, mask)
+    previousOrigin := some origin
+  pure result
+
+private def retiredPatternMap : Except String (HashMap ℕ UInt64) := do
+  let entries ← decodeRetiredPatterns
+  let mut result : HashMap ℕ UInt64 := {}
+  for (origin, mask) in entries do
+    unless (patternEntry origin).isNone do
+      throw s!"retired pattern origin {origin} remains in semantic coverage data"
+    result := result.insert origin mask
+  pure result
+
+private def solverExcludedMasks : List ℕ :=
+  (List.range 256).filter fun mask =>
+    decide (packedRow (UInt64.ofNat mask) ∉ canonicalRows)
+
+private def retiredPatternClause (mask : UInt64) : Clause :=
+  ((List.range 64).filter fun index => bitSetB mask index).map .negative
+
+private def isPatternReference (reference : ℕ) : Bool :=
+  decide (3376 ≤ reference ∧ reference < 14419)
+
+private def solverReferenceValidB
+    (retired : HashMap ℕ UInt64) (reference : ℕ) : Bool :=
+  if isPatternReference reference then
+    (tagOfRef 0 0 reference).validB ||
+      retired.contains (reference - 3376)
+  else
+    (tagOfRef 0 0 reference).validB
+
+private def solverReferenceClause
+    (retired : HashMap ℕ UInt64) (reference : ℕ) : Clause :=
+  if isPatternReference reference then
+    match retired[reference - 3376]? with
+    | some mask => retiredPatternClause mask
+    | none => (tagOfRef 0 0 reference).toClause
+  else
+    (tagOfRef 0 0 reference).toClause
+
+private def solverReferences (retired : HashMap ℕ UInt64) : List ℕ :=
+  (List.range 20659).filter (solverReferenceValidB retired)
+
+private def solverFormula (retired : HashMap ℕ UInt64) : Formula :=
+  (solverReferences retired).map (solverReferenceClause retired) ++
+    solverExcludedMasks.map fun mask =>
+      rowExclusionClause (packedRow (UInt64.ofNat mask))
+
+private def renderMasterCnf (retired : HashMap ℕ UInt64) :
+    Except String String := do
+  let formula := solverFormula retired
+  unless formula.length = solverInitialClauseCount do
+    throw s!"expected {solverInitialClauseCount} solver clauses, got {formula.length}"
+  pure <| s!"p cnf 64 {solverInitialClauseCount}\n" ++
+    String.join (formula.map renderClause)
+
+private def bitsetWords
+    (size : ℕ) (values : Array ℕ) : Except String (Array UInt64) := do
+  let mut words := Array.replicate ((size + 63) / 64) 0
+  for value in values do
+    unless value < size do
+      throw s!"bitset value {value} is out of range"
+    let index := value / 64
+    let word := words.getD index 0
+    words := words.set! index (word + 2 ^ (value % 64))
+  pure <| words.map UInt64.ofNat
+
+private def deriveCore
+    (retired : HashMap ℕ UInt64) (steps : Array Addition) :
+    Except String DerivedCore := do
+  let mut usedSourceIdentifiers : HashSet ℕ := {}
+  for addition in steps do
+    for antecedent in addition.antecedents do
+      if antecedent ≤ solverInitialClauseCount then
+        usedSourceIdentifiers := usedSourceIdentifiers.insert antecedent
+  let mut identifiers : HashMap ℕ ℕ := {}
+  let mut references := #[]
+  let mut excludedMasks := #[]
+  let mut oldIdentifier := 1
+  let mut newIdentifier := 1
+  for reference in solverReferences retired do
+    if usedSourceIdentifiers.contains oldIdentifier then
+      identifiers := identifiers.insert oldIdentifier newIdentifier
+      references := references.push reference
+      newIdentifier := newIdentifier + 1
+    oldIdentifier := oldIdentifier + 1
+  for mask in solverExcludedMasks do
+    if usedSourceIdentifiers.contains oldIdentifier then
+      identifiers := identifiers.insert oldIdentifier newIdentifier
+      excludedMasks := excludedMasks.push mask
+      newIdentifier := newIdentifier + 1
+    oldIdentifier := oldIdentifier + 1
+  unless oldIdentifier = solverInitialClauseCount + 1 do
+    throw "solver source metadata has the wrong clause count"
+  unless usedSourceIdentifiers.size = newIdentifier - 1 do
+    throw "certificate contains an invalid source-clause identifier"
+  unless newIdentifier = initialClauseCount + 1 do
+    throw s!"expected {initialClauseCount} core clauses, got {newIdentifier - 1}"
+  pure {
+    identifiers
+    referenceWords := ← bitsetWords 20659 references
+    excludedMaskWords := ← bitsetWords 256 excludedMasks
+  }
+
+private def recodeAdditions
+    (core : DerivedCore) (steps : Array Addition) :
+    Except String (Array Addition) := do
+  let mut identifiers := core.identifiers
+  for index in [0:steps.size] do
+    let some addition := steps[index]?
+      | throw "certificate addition index is out of range"
+    identifiers := identifiers.insert addition.identifier
+      (initialClauseCount + index + 1)
+  let mut result := #[]
+  for addition in steps do
+    let some identifier := identifiers[addition.identifier]?
+      | throw "certificate addition identifier is missing"
+    let mut antecedents := #[]
+    for antecedent in addition.antecedents do
+      let some recoded := identifiers[antecedent]?
+        | throw s!"certificate uses source clause outside the committed core: {antecedent}"
+      antecedents := antecedents.push recoded
+    result := result.push { addition with identifier, antecedents }
+  pure result
 
 private def processOutput
     (executable : FilePath) (arguments : Array String) : IO IO.Process.Output :=
@@ -226,25 +463,33 @@ private def verifySourceCommit
       s!"tool at {sourceDirectory} is {actual}; expected {expected}"
 
 private def runCertificateTools
-    (configuration : Configuration) (directory : FilePath) :
+    (configuration : Configuration) (directory : FilePath)
+    (retired : HashMap ℕ UInt64) :
     IO (FilePath × FilePath × FilePath) := do
   verifySourceCommit configuration.cadical cadicalCommit
   verifySourceCommit configuration.dratTrim dratTrimCommit
   let cnfPath := directory / "master.cnf"
   let dratPath := directory / "master.drat"
+  let optimizedDratPath := directory / "master-optimized.drat"
   let lratPath := directory / "master.lrat"
-  IO.FS.writeFile cnfPath (← IO.ofExcept renderMasterCnf)
+  IO.FS.writeFile cnfPath (← IO.ofExcept <| renderMasterCnf retired)
   let solver ← processOutput configuration.cadical
-    #[cnfPath.toString, dratPath.toString]
+    #["-P2", "--shrink=1", "--chrono=0", "--stabilizeonly=true",
+      cnfPath.toString, dratPath.toString]
   unless solver.exitCode = 20 do
     throw <| IO.userError
       s!"CaDiCaL failed with {solver.exitCode}:\n{solver.stderr}"
+  let optimizer ← processOutput configuration.dratTrim
+    #[cnfPath.toString, dratPath.toString, "-O", "-l", optimizedDratPath.toString]
+  unless optimizer.exitCode = 0 do
+    throw <| IO.userError
+      s!"drat-trim optimization failed with {optimizer.exitCode}:\n{optimizer.stderr}"
   let converter ← processOutput configuration.dratTrim
-    #[cnfPath.toString, dratPath.toString, "-L", lratPath.toString]
+    #[cnfPath.toString, optimizedDratPath.toString, "-L", lratPath.toString]
   unless converter.exitCode = 0 do
     throw <| IO.userError
       s!"drat-trim failed with {converter.exitCode}:\n{converter.stderr}"
-  pure (cnfPath, dratPath, lratPath)
+  pure (cnfPath, optimizedDratPath, lratPath)
 
 private def hashOutput (executable : FilePath) (arguments : Array String) :
     IO (Option String) := do
@@ -299,6 +544,30 @@ private def header : String :=
   "Authors: Egor Lyfar\n" ++
   "-/\n\n"
 
+private def renderWordArray (words : Array UInt64) : String :=
+  let lines := (chunksOf 4 words.toList).map fun line =>
+    "  " ++ String.intercalate ", " (line.map toString)
+  "#[\n" ++ String.intercalate ",\n" lines ++ "\n]"
+
+private def renderMasterFormulaData (core : DerivedCore) : String :=
+  header ++
+    "import LeanPool.Erdos97ConvexOctagon.RowSymmetry\n\n" ++
+    "/-! # Generated master-formula core data -/\n\n" ++
+    "namespace Erdos97Octagon.RawIncidence\n\n" ++
+    "/-- Bitset of source-clause references retained in the unsatisfiable core. -/\n" ++
+    "def masterReferenceWords : Array UInt64 := " ++
+    renderWordArray core.referenceWords ++ "\n\n" ++
+    "/-- Bitset of first-row masks retained in the unsatisfiable core. -/\n" ++
+    "def masterExcludedMaskWords : Array UInt64 := " ++
+    renderWordArray core.excludedMaskWords ++ "\n\n" ++
+    "/-- Whether a shared clause belongs to the committed unsatisfiable core. -/\n" ++
+    "def masterReferenceUsedB (reference : ℕ) : Bool :=\n" ++
+    "  bitSetB (masterReferenceWords.getD (reference / 64) 0) (reference % 64)\n\n" ++
+    "/-- Whether a noncanonical first-row mask belongs to the committed core. -/\n" ++
+    "def masterExcludedMaskUsedB (mask : ℕ) : Bool :=\n" ++
+    "  bitSetB (masterExcludedMaskWords.getD (mask / 64) 0) (mask % 64)\n\n" ++
+    "end Erdos97Octagon.RawIncidence\n"
+
 private def renderDataModule
     (moduleIndex : ℕ) (lines : List String) : String :=
   let name := s!"masterCertificatePart{moduleIndex}"
@@ -325,12 +594,14 @@ private def renderNaturalList (values : List ℕ) : String :=
   "[" ++ String.intercalate ", " (values.map toString) ++ "]"
 
 private def renderManifest
-    (dataModuleCount packedByteCount encodedCharacterCount maximumVarintBytes : ℕ)
+    (additionCount deletionCount actionCount dataModuleCount packedByteCount
+      encodedCharacterCount maximumVarintBytes : ℕ)
     (cnfHash lratHash packedHash : String) : String :=
-  let stageCounts := (List.range stageCount).map fun index =>
-    stageStop index - stageStart index
+  let count := stageCount additionCount
+  let stageCounts := (List.range count).map fun index =>
+    stageStop additionCount index - stageStart index
   let stageBoundaries :=
-    (List.range stageCount).map stageStart ++ [additionCount]
+    (List.range count).map stageStart ++ [additionCount]
   let stageBoundarySplit := (stageBoundaries.length + 1) / 2
   header ++
     "import LeanPool.Erdos97ConvexOctagon.LRAT.Format\n\n" ++
@@ -353,7 +624,7 @@ private def renderManifest
     "/-- Number of generated data modules. -/\n" ++
     s!"def masterCertificateDataModules : ℕ := {dataModuleCount}\n\n" ++
     "/-- Number of sequential proof-stage modules. -/\n" ++
-    s!"def masterCertificateStageModules : ℕ := {stageCount}\n\n" ++
+    s!"def masterCertificateStageModules : ℕ := {count}\n\n" ++
     "/-- Maximum retained additions reconstructed in one proof stage. -/\n" ++
     s!"def masterCertificateMaximumAdditionsPerStage : ℕ := {additionsPerStage}\n\n" ++
     "/-- Retained additions reconstructed by each sequential proof stage. -/\n" ++
@@ -392,7 +663,7 @@ private def renderManifest
     "end Erdos97Octagon.RawIncidence\n"
 
 private def renderStageModule
-    (dataModuleCount stageIndex : ℕ) : String :=
+    (dataModuleCount additionCount stageIndex : ℕ) : String :=
   let imports := (List.range dataModuleCount).map fun index =>
     s!"import LeanPool.Erdos97ConvexOctagon.{dataModuleName index}\n"
   let parts := (List.range dataModuleCount).map fun index =>
@@ -412,17 +683,17 @@ private def renderStageModule
     s!"  initial_clauses {initialClauseCount}\n" ++
     s!"  additions {additionCount}\n" ++
     s!"  stage_start {stageStart stageIndex}\n" ++
-    s!"  stage_stop {stageStop stageIndex}\n" ++
+    s!"  stage_stop {stageStop additionCount stageIndex}\n" ++
     "  clause_prefix masterCertificateClause\n" ++
     "  final_theorem masterFormula_unsatisfiable\n" ++
     "  data_parts\n" ++
     String.join parts ++
     "\n\nend Erdos97Octagon.RawIncidence\n"
 
-private def renderCertificateModule : String :=
+private def renderCertificateModule (count : ℕ) : String :=
   header ++
     s!"import LeanPool.Erdos97ConvexOctagon." ++
-    s!"{stageModuleName (stageCount - 1)}\n\n" ++
+    s!"{stageModuleName (count - 1)}\n\n" ++
     "/-! # Kernel-checked master coverage certificate -/\n"
 
 private def generatedDirectory (repository : FilePath) : FilePath :=
@@ -467,20 +738,16 @@ private def removeOrRejectObsoleteFile
 
 private def generate
     (configuration : Configuration) (temporaryDirectory : FilePath) : IO Unit := do
+  let retired ← IO.ofExcept retiredPatternMap
   let (cnfPath, _, lratPath) ←
-    runCertificateTools configuration temporaryDirectory
+    runCertificateTools configuration temporaryDirectory retired
   let lratText ← IO.FS.readFile lratPath
   let certificate ← IO.ofExcept <| parseCertificate lratText
-  unless certificate.actions = actionCount do
-    throw <| IO.userError
-      s!"expected {actionCount} LRAT actions, got {certificate.actions}"
-  unless certificate.deletions = deletionCount do
-    throw <| IO.userError
-      s!"expected {deletionCount} LRAT deletions, got {certificate.deletions}"
-  let proofAdditions := certificate.proofSteps
-  unless proofAdditions.size = additionCount do
-    throw <| IO.userError
-      s!"expected {additionCount} LRAT additions, got {proofAdditions.size}"
+  let core ← IO.ofExcept <| deriveCore retired certificate.proofSteps
+  let proofAdditions ← IO.ofExcept <|
+    recodeAdditions core certificate.proofSteps
+  let additionCount := proofAdditions.size
+  let count := stageCount additionCount
   for index in [0:proofAdditions.size] do
     let some addition := proofAdditions[index]?
       | throw <| IO.userError "LRAT addition index is out of range"
@@ -497,7 +764,7 @@ private def generate
     maximumVarintByteCount initialClauseCount proofAdditions
   let roundTripBytes ← IO.ofExcept <| decodeBase64 encoded
   let roundTrip ← IO.ofExcept <|
-    decodeAdditions initialClauseCount additionCount roundTripBytes
+    decodeAdditions initialClauseCount proofAdditions.size roundTripBytes
   unless roundTrip == proofAdditions do
     throw <| IO.userError "packed certificate round trip changed an action"
   let packedPath := temporaryDirectory / "master.packed"
@@ -505,6 +772,9 @@ private def generate
   let lines ← IO.ofExcept <| encodedLines encoded
   let lineModules := chunksOf linesPerDataModule lines
   let directory := generatedDirectory configuration.repository
+  reconcileFile configuration.mode
+    (directory / "MasterFormulaData.lean")
+    (renderMasterFormulaData core)
   for index in List.range lineModules.length do
     let lines := lineModules.getD index []
     reconcileFile configuration.mode
@@ -514,23 +784,25 @@ private def generate
     "MasterCertificateData" lineModules.length
   removeOrRejectObsoleteFile configuration
     (directory / "MasterCertificateContext.lean")
-  for index in List.range stageCount do
+  for index in List.range count do
     reconcileFile configuration.mode
       (directory / s!"{stageModuleName index}.lean")
-      (renderStageModule lineModules.length index)
+      (renderStageModule lineModules.length additionCount index)
   removeOrRejectExtraModules configuration
-    "MasterCertificateStage" stageCount
+    "MasterCertificateStage" count
   reconcileFile configuration.mode
     (directory / "MasterCertificateManifest.lean")
-    (renderManifest lineModules.length packed.size encoded.length maximumVarintBytes
+    (renderManifest additionCount certificate.deletions certificate.actions
+      lineModules.length packed.size encoded.length maximumVarintBytes
       (← sha256 cnfPath) (← sha256 lratPath) (← sha256 packedPath))
   reconcileFile configuration.mode
     (directory / "MasterCertificate.lean")
-    renderCertificateModule
-  IO.println <| s!"{configuration.mode.text}: {initialClauseCount} clauses, " ++
+    (renderCertificateModule count)
+  IO.println <| s!"{configuration.mode.text}: {solverInitialClauseCount} solver clauses, " ++
+    s!"{initialClauseCount} core clauses, " ++
     s!"{certificate.actions} actions, {proofAdditions.size} additions, " ++
     s!"{packed.size} packed bytes, {lineModules.length} data modules, " ++
-    s!"{stageCount} proof stages"
+    s!"{count} proof stages"
 
 private def configuration (mode repository cadical dratTrim : String) :
     Except String Configuration := do
