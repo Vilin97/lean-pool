@@ -163,7 +163,12 @@ import LeanPool.Biswal.Theorem1
 import LeanPool.Biswal.Theorem23
 import LeanPool.BooleanIsoperimetry
 import LeanPool.BooleanIsoperimetry.Cascade
+import LeanPool.BooleanIsoperimetry.CoherentGap
 import LeanPool.BooleanIsoperimetry.Compression
+import LeanPool.BooleanIsoperimetry.ConwayGuyCoherentGap
+import LeanPool.BooleanIsoperimetry.ConwayGuyHeight
+import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
+import LeanPool.BooleanIsoperimetry.ConwayGuyRigidity
 import LeanPool.BooleanIsoperimetry.Cube
 import LeanPool.BooleanIsoperimetry.Harper
 import LeanPool.BooleanIsoperimetry.KruskalKatona
@@ -879,6 +884,11 @@ import LeanPool.Erdos97ConvexOctagon.ResidualObstructions
 import LeanPool.Erdos97ConvexOctagon.ResidualRepresentatives
 import LeanPool.Erdos97ConvexOctagon.RhombusFan
 import LeanPool.Erdos97ConvexOctagon.RowSymmetry
+import LeanPool.ErdosMoser
+import LeanPool.ErdosMoser.Basic
+import LeanPool.ErdosMoser.Bounds
+import LeanPool.ErdosMoser.DiscreteVariance
+import LeanPool.ErdosMoser.SubsetSums
 import LeanPool.ErdosTuzaValtr
 import LeanPool.ErdosTuzaValtr.All
 import LeanPool.ErdosTuzaValtr.Config.Default
