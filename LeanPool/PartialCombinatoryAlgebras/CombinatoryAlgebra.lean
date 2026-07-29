@@ -17,6 +17,8 @@ combinatory algebra induces a partial combinatory algebra on the same type.
 
 namespace LeanPool.PartialCombinatoryAlgebras
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- A (total) combinatory structure on a set `A`. -/
 class CA (A : Type*) extends HasDot A where
   /-- The `K` combinator. -/
