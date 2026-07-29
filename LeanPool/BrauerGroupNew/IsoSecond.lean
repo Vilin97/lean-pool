@@ -710,27 +710,14 @@ instance : SMulCommClass C F SM where
     change c • algebraMap F C f • a = algebraMap F C f • _
     rw [← mul_smul, ← Algebra.commutes, mul_smul]
 
-set_option backward.isDefEq.respectTransparency false in
 /-- Endomorphisms of a finite power are matrix algebras over endomorphisms of the summand. -/
 def isoDagger (m : ℕ) :
-    Module.End C (Fin m → SM) ≃ₐ[F] Matrix (Fin m) (Fin m) (Module.End C SM) where
-  __ := endPowEquivMatrix C SM m
-  commutes' f := by
-    ext i j x
-    simp only [endPowEquivMatrix, endVecAlgEquivMatrixEnd, endVecRingEquivMatrixEnd,
-      RingEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe, EquivLike.coe_coe, RingEquiv.coe_mk,
-      Equiv.coe_fn_mk, LinearMap.coe_mk, AddHom.coe_mk, Matrix.algebraMap_matrix_apply]
-    split_ifs with h
-    · simp only [h, algebraMap_end_apply, Pi.smul_apply, Pi.single_eq_same]
-    · simp only [algebraMap_end_apply, Pi.smul_apply, Pi.single_eq_of_ne h, smul_zero,
-      LinearMap.zero_apply]
+    Module.End C (Fin m → SM) ≃ₐ[F] Matrix (Fin m) (Fin m) (Module.End C SM) :=
+  endVecAlgEquivMatrixEnd (Fin m) F C SM
 
-set_option backward.isDefEq.respectTransparency false in
 /-- The opposite algebra of `C` as endomorphisms of the regular `C`-module. -/
 def mopEquivEnd' : Cᵐᵒᵖ ≃ₐ[F] Module.End C C :=
-  .ofRingEquiv (f := mopEquivEnd C) fun f ↦ by
-  ext x
-  simp [mopEquivEnd, Algebra.algebraMap_eq_smul_one]
+  AlgEquiv.moduleEndSelf F
 
 /-- Transport the regular-module endomorphism algebra across the simple-module decomposition. -/
 def CIsoAux : Cᵐᵒᵖ ≃ₐ[F] Module.End C (Fin (Fintype.card ι) → SM) :=
