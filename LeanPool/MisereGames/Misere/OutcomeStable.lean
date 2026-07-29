@@ -353,7 +353,6 @@ its witness is the positive shift: $\operatorname{o}(G + \operatorname{n}(G)) =
 \mathscr{N}$.
 -/
 theorem misereOutcome_add_NTippingPoint_N_of_misereOutcome_L {g : GameForm}
-    [OutcomeStable A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A]
     (hA : (PFreeSubset A) g) (hsg : IsShort g) (hL : MisereOutcome g = .L) :
     MisereOutcome (g + (NTippingPoint hsg : GameForm)) = .N := by
   rcases NTippingPoint_spec hsg with h | h
@@ -822,7 +821,7 @@ and $G^R$ is a Right option of $G$, then $\operatorname{r}(G^R) \ge
 \operatorname{n}(G)$.
 -/
 theorem RTippingPoint_ge_NTippingPoint_of_mem_moves_right
-    [OutcomeStable A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A] [Hereditary A]
+    [OutcomeStable A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A]
     {g gr : GameForm} (hAg : (PFreeSubset A) g) (hsg : IsShort g) (hL : MisereOutcome g = .L)
     (hgr : gr ∈ moves .right g) :
     NTippingPoint hsg ≤ RTippingPoint (Short.of_mem_moves hsg hgr) := by
@@ -848,7 +847,7 @@ and $G^L$ is a Left option of $G$, then $\operatorname{l}(G^L) \ge
 \operatorname{n}(G)$.
 -/
 theorem LTippingPoint_ge_NTippingPoint_of_mem_moves_left
-    [OutcomeStable A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A] [Hereditary A]
+    [OutcomeStable A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A]
     {g gl : GameForm} (hAg : (PFreeSubset A) g) (hsg : IsShort g) (hR : MisereOutcome g = .R)
     (hgl : gl ∈ moves .left g) :
     NTippingPoint hsg ≤ LTippingPoint (Short.of_mem_moves hsg hgl) := by
@@ -1097,7 +1096,7 @@ theorem exists_mem_moves_right_R_NTippingPoint_eq_LTippingPoint
   · exact (RTippingPoint_neg hsg).symm
 
 theorem misereOutcome_ne_R_of_mem_moves_right_of_L
-    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A] [Hereditary A]
+    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A]
     {g gr : GameForm} (hAg : (PFreeSubset A) g)
     (hpfg : IsPFree g) (hsg : IsShort g) (hLg : MisereOutcome g = .L)
     (hgr : gr ∈ moves .right g) : MisereOutcome gr ≠ .R := by
@@ -1110,7 +1109,7 @@ theorem misereOutcome_ne_R_of_mem_moves_right_of_L
   simpa using h4
 
 theorem misereOutcome_right_option_of_L_cases
-    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A] [Hereditary A]
+    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A]
     {g gr : GameForm} (hAg : (PFreeSubset A g))
     (hsg : IsShort g) (hLg : MisereOutcome g = .L) (hgr : gr ∈ moves .right g) :
     MisereOutcome gr = .L ∨ MisereOutcome gr = .N := by
@@ -1121,7 +1120,7 @@ theorem misereOutcome_right_option_of_L_cases
   · exact absurd h (misereOutcome_ne_R_of_mem_moves_right_of_L hAg hAg.isPFree hsg hLg hgr)
 
 theorem NTippingPoint_lt_LTippingPoint_of_misereOutcome_R
-    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A] [Hereditary A]
+    [OutcomeStable A] [ClosedUnderAddNat A] [ClosedUnderNeg A] [HasInt A]
     {g : GameForm} (hAg : (PFreeSubset A) g)
     (hsg : IsShort g) (hRg : MisereOutcome g = .R) :
     NTippingPoint hsg < LTippingPoint hsg := by

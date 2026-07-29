@@ -382,14 +382,11 @@ def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
   inv := ofHom ⟨fun ⟨t, ⟨y⟩⟩ ↦ ⟨Cube.splitAtLast.symm ⟨t, y⟩⟩, by fun_prop⟩
   hom_inv_id := by
     ext ⟨y⟩
-    simp only [hom_comp, ContinuousMap.comp_apply, hom_id,
-      ContinuousMap.id_apply]
-    change ULift.up _ = _
-    simp only [Prod.mk.eta, Homeomorph.symm_apply_apply]
+    change ULift.up (Cube.splitAtLast.symm (Cube.splitAtLast y)) = ULift.up y
+    exact congrArg ULift.up (Cube.splitAtLast.symm_apply_apply y)
   inv_hom_id := by
     ext ⟨t, ⟨y⟩⟩
-    all_goals simp only [hom_comp, ContinuousMap.comp_apply,
-        hom_id, ContinuousMap.id_apply]
+    all_goals simp only [hom_id, ContinuousMap.id_apply]
     · congr 1
       change (Cube.splitAtLast (Cube.splitAtLast.symm _)).fst = _
       simp only [Homeomorph.apply_symm_apply]
@@ -453,7 +450,8 @@ lemma castSucc_mem_sides {n : ℕ} (t : I) (y : ∂𝕀 n) :
   use i.castSucc
   constructor
   · exact Fin.castSucc_lt_last i
-  · simp only [↓cubeSplitAtLast_inv_down_eq, ↓cubeBoundaryIncl_apply_down_eq]
+  · change Cube.splitAtLast.symm (t, y) i.castSucc = 0 ∨
+      Cube.splitAtLast.symm (t, y) i.castSucc = 1
     rw [Cube.splitAtLast_symm_apply_eq_of_neq_last t y i.castSucc (Fin.castSucc_ne_last i)]
     exact hi
 
