@@ -28,8 +28,6 @@ must have a "majority" parity-sign class strictly larger than `2^{n-1}`.
   degree, one parity-sign class has more than `2^{n-1}` vertices.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace LeanPoolSensitivity
 
 variable {n : ℕ}
@@ -154,14 +152,14 @@ theorem moebius_parity_sum (f : BoolFun n) (hn : 0 < n) :
     rw [pow_add, pow_mul, neg_one_sq, one_pow, mul_one]
   rw [show Finset.univ.powerset = (Finset.univ : Finset (Finset (Fin n))) from by ext S; simp]
   symm
-  apply Fintype.sum_equiv
-    (Equiv.ofBijective (fun T : Finset (Fin n) => indicator T)
-      ⟨fun S T h => by
-         have h' : indicator S = indicator T := h
-         rw [← filter_true_indicator S, h', filter_true_indicator],
-       fun x => ⟨Finset.univ.filter (fun i => x i), indicator_filter_true x⟩⟩)
+  let e : Finset (Fin n) ≃ (Fin n → Bool) :=
+    { toFun := indicator
+      invFun := fun x => Finset.univ.filter (fun i => x i)
+      left_inv := filter_true_indicator
+      right_inv := indicator_filter_true }
+  apply Fintype.sum_equiv e
   intro T
-  simp only [Equiv.ofBijective_apply]
+  dsimp only [e]
   have hcard := congrArg Finset.card (filter_true_indicator T)
   rw [show
         (-1 : ℤ) ^ T.card * boolToInt (f (indicator T)) =
