@@ -388,12 +388,17 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: "/version-bump-project ${{ matrix.project }} ${{ needs.detect.outputs.target }}"
           claude_args: >-
-            --max-turns 60
+            --max-turns 200
             --model claude-opus-5
             --allowedTools "Bash,Read,Edit,Write,Grep,Glob"
 
       - name: Verify the repair
         id: verify
+        # Runs even when the Claude step failed. The common failure is
+        # `error_max_turns`, and an agent that ran out of turns has usually
+        # made real progress -- skipping these steps threw all of it away and
+        # made the project start from scratch on the next run.
+        if: always()
         env:
           PROJECT: ${{ matrix.project }}
           LEAN_NUM_THREADS: 2
@@ -417,6 +422,7 @@ jobs:
           fi
 
       - name: Export the repair as a patch
+        if: always()
         env:
           PROJECT: ${{ matrix.project }}
           CLEAN: ${{ steps.verify.outputs.clean }}
@@ -432,6 +438,7 @@ jobs:
           cat "repair-$PROJECT.json"
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
           name: repair-${{ matrix.project }}
           path: |

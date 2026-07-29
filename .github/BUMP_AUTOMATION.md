@@ -147,6 +147,14 @@ The probe report (per-project errors and warnings) is attached to the run as the
 
 Failures are isolated: `fail-fast` is off, so one project failing does not stop
 the others, and `assemble` still opens a PR with whatever succeeded. The PR body
-lists how many repairs applied and which patches would not apply. Re-run just
-the failed jobs from the run page, or fix that project by hand on the `bump/*`
-branch.
+lists how many repairs applied and which patches would not apply.
+
+The usual failure is `error_max_turns` — the agent ran out of its turn budget
+mid-repair. Its work is still exported as a patch and applied, because partial
+progress on a hard project is worth keeping and the whole-pool build in
+`assemble` is what decides whether the result is actually correct. Re-running
+the bump lets the next agent start from that partial state rather than from
+scratch.
+
+Measured on the first real run (v4.32.0-rc1 → v4.33.0-rc1, 99 projects
+broken): 40 repaired cleanly, 59 hit the turn limit.
