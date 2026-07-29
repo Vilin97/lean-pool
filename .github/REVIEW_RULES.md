@@ -122,7 +122,7 @@ Return a single JSON object:
     "proves_the_claim": "proves_it" | "weaker_than_claimed" | "mismatch" | "unverifiable",
     "claim_note": "<one sentence: what the main theorem actually says, especially where it is narrower than the card's prose>",
     "assumed_inputs": "<what the headline takes as hypothesis rather than proving, and whether the card discloses it; empty if it assumes nothing>",
-    "already_formalized": "<Mathlib or pool declaration that already proves this, or empty>",
+    "already_formalized": "<the Mathlib or pool declaration that already proves this — a bare declaration name and nothing else. Leave EMPTY if you found none or could not check; do not write a sentence here, and never use it to say the question is unverifiable>",
     "source_match": "matches" | "mismatch" | "unverifiable" | "not_a_known_result",
     "code_quality": <int 1-5 where 1 = clear AI slop, 3 = competent, 5 = mathlib-merge-ready; anything other than 3 needs a finding or the note below to point at what earned it>,
     "significance_one_sentence": "<one sentence: what would a mathematician say the contribution is, or why it isn't one>"
