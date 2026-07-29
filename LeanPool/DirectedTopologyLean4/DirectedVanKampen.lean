@@ -13,8 +13,6 @@ import LeanPool.DirectedTopologyLean4.MorphismAux
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 /-
   This file contains the directed version of the Van Kampen Theorem.
   The statement is as follows:
@@ -40,10 +38,13 @@ universe u v
 open Set
 open scoped unitInterval FundamentalCategory
 attribute [local instance] Dipath.Dihomotopic.setoid
--- Lean 4.33 checks that tactic goals stay type-correct at `.implicit` transparency; the goals
--- below mix `dπₓ X` with `FundamentalCategory X`, so the bundling layers must unfold there.
+-- Lean 4.33 checks tactic goals at `.implicit` transparency; the categorical bundling and
+-- path-endpoint coercions below must unfold while those goals are transformed.
 attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of
   Quiver.Hom Quotient Dipath.Dihomotopic.Quotient Dipath.coveredPartwise
+  FundamentalCategory.fundamentalCategoryFunctor Dipath.cast SplitDipath.FirstPart
+  SplitDipath.SecondPart SplitPath.FirstPart SplitPath.SecondPart Dipath.ofDirectedMap
+  Dipath.toDirectedMap
 noncomputable section
 namespace DirectedVanKampen
 open FundamentalCategory DiSubtype CategoryTheory
@@ -950,6 +951,7 @@ def Functor : (dπₓ X) ⥤ C where
   map γ := F_hom γ
   map_id x := functorOnHom_id hX X₁_open X₂_open h_comm x
   map_comp γ₁ γ₂ := functorOnHom_comp hX X₁_open X₂_open h_comm γ₁ γ₂
+attribute [local implicit_reducible] Functor
 local notation "F" => Functor hX X₁_open X₂_open h_comm
 lemma functorObj_def {x : dπₓ X} : (F).obj x = F_obj x := rfl
 lemma functorHom_def {x y : dπₓ X} (f : x ⟶ y) : (F).map f = F_hom f := rfl
@@ -971,7 +973,7 @@ lemma functor_comp_left_dipath {x y : X₁} (γ : Dipath x y) : F_hom ((dπₘ j
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm h₂,
     functorOnHomOfCoveredPartwise_apply_0, functorOnHomOfCovered_apply_left' hX h_comm h₁,
     FunctorOnHomOfCoveredAux₁, subtypeDipath_of_included_dipath_eq]
-  erw [functor_cast F₁ γ]
+  erw [functor_cast F₁ γ]; rfl
 /- Shpw that the two obtained triangles commute -/
 lemma functor_comp_left : (dπₘ j₁) ⋙ F = F₁ := by
   refine CategoryTheory.Functor.ext ?_ ?_
@@ -1000,7 +1002,7 @@ lemma functor_comp_right_dipath {x y : X₂} (γ : Dipath x y) :
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm h₂,
     functorOnHomOfCoveredPartwise_apply_0, functorOnHomOfCovered_apply_right' hX h_comm h₁,
     FunctorOnHomOfCoveredAux₂, subtypeDipath_of_included_dipath_eq]
-  erw [functor_cast F₂ γ]
+  erw [functor_cast F₂ γ]; rfl
 lemma functor_comp_right : (dπₘ j₂) ⋙ F = F₂ := by
   refine CategoryTheory.Functor.ext ?_ ?_
   · intro x
@@ -1040,14 +1042,14 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
     refine Eq.trans (congrArg F'.map (map_subtypeDipath_eq γ hγ)).symm ?_
     change ((dπₘ j₁) ⋙ F').map ⟦SubtypeDipath γ hγ⟧ = _
     rw [map_eq_map_of_eq h₁]
-    simp [functorObj_def]
+    simp [functorObj_def]; rfl
   case inr hγ =>
     rw [functorOnHomOfCovered_apply_right' _ _ hγ]
     unfold FunctorOnHomOfCoveredAux₂
     refine Eq.trans (congrArg F'.map (map_subtypeDipath_eq γ hγ)).symm ?_
     change ((dπₘ j₂) ⋙ F').map ⟦SubtypeDipath γ hγ⟧ = _
     rw [map_eq_map_of_eq h₂]
-    simp [functorObj_def]
+    simp [functorObj_def]; rfl
 lemma functor_uniq_aux_map (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
     (h₂ : (dπₘ j₂) ⋙ F' = F₂) {n : ℕ} :
     Π {x y : X} {γ : Dipath x y} (_ : coveredPartwise hX γ n), F'.map ⟦γ⟧ =
