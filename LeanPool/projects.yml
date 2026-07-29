@@ -5412,3 +5412,48 @@ projects:
       - "65L06"
       - "65L05"
       - "05C05"
+  - slug: odlyzko-root-discriminant
+    title: Odlyzko's root-discriminant bound
+    summary: >-
+      Develops the unconditional Weil--Poitou explicit formula for Dedekind
+      zeta functions and applies an exact three-exponential test-function
+      certificate to prove that every totally complex number field of degree
+      at least eighteen has root discriminant at least 8.25.
+    branch: algebraic number theory
+    entry_module: LeanPool.Odlyzko
+    authors:
+      - Chris Birkbeck
+      - OpenAI Codex
+    source:
+      title: Sur les petits discriminants
+      authors:
+        - Georges Poitou
+      url: https://www.numdam.org/item/SDPP_1976-1977__18_1_A6_0/
+      github_repo: CBirkbeck/AINTLIB
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - DedekindResidue.abs_discr_ge
+    main_results:
+      - declaration: DedekindResidue.abs_discr_ge
+        informal: >-
+          A totally complex number field of degree at least eighteen has
+          absolute discriminant at least 8.25 raised to its degree.
+      - declaration: DedekindResidue.odlyzkoTransform_re_nonneg
+        informal: >-
+          The three-exponential Poitou transform is nonnegative throughout the
+          closed critical strip, without assuming the generalized Riemann
+          hypothesis.
+      - declaration: DedekindResidue.odlyzko_log_discr_bound
+        informal: >-
+          The unconditional explicit formula yields the logarithmic
+          discriminant inequality used in the final numerical estimate.
+    tags:
+      - number-theory
+      - discriminants
+      - number-fields
+      - explicit-formula
+    msc:
+      - "11R29"
+      - "11R42"

@@ -36,7 +36,12 @@ challenges:
       url: https://www.numdam.org/item/SDPP_1976-1977__18_1_A6_0/
     license: Apache-2.0
     provenance: human
-    status: open
+    status: solved
+    solution:
+      module: Solution.Odlyzko
+      authors:
+        - OpenAI Codex
+      project: odlyzko-root-discriminant
     estimated_lines: 5000
     statements:
       - declaration: Challenge.Odlyzko.abs_discr_ge
