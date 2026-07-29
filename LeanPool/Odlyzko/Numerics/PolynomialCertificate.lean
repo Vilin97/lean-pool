@@ -145,33 +145,15 @@ theorem hasDerivAt_odlyzkoExpAntiderivative (x : ℝ) :
     HasDerivAt odlyzkoExpAntiderivative
       (odlyzkoDeficitPolynomial x * Real.exp (-x)) x := by
   have he := (Real.hasDerivAt_exp (-x)).comp x (hasDerivAt_neg x)
-  have hp : HasDerivAt odlyzkoExpPolynomial
-      (deficitC2 * (2 * x + 2) +
-        deficitC4 * (4 * x ^ 3 + 12 * x ^ 2 + 24 * x + 24) +
-        deficitC6 * (6 * x ^ 5 + 30 * x ^ 4 + 120 * x ^ 3 +
-          360 * x ^ 2 + 720 * x + 720) +
-        deficitC8 * (8 * x ^ 7 + 56 * x ^ 6 + 336 * x ^ 5 +
-          1680 * x ^ 4 + 6720 * x ^ 3 + 20160 * x ^ 2 + 40320 * x + 40320) +
-        deficitC10 * (10 * x ^ 9 + 90 * x ^ 8 + 720 * x ^ 7 + 5040 * x ^ 6 +
-          30240 * x ^ 5 + 151200 * x ^ 4 + 604800 * x ^ 3 +
-          1814400 * x ^ 2 + 3628800 * x + 3628800) +
-        deficitC12 * (12 * x ^ 11 + 132 * x ^ 10 + 1320 * x ^ 9 +
-          11880 * x ^ 8 + 95040 * x ^ 7 + 665280 * x ^ 6 +
-          3991680 * x ^ 5 + 19958400 * x ^ 4 + 79833600 * x ^ 3 +
-          239500800 * x ^ 2 + 479001600 * x + 479001600)) x := by
-    apply (odlyzkoExpPolynomialObj.hasDerivAt x).congr_deriv
-    simp only [odlyzkoExpPolynomialObj, Polynomial.derivative_add,
-      Polynomial.derivative_mul, Polynomial.derivative_C, Polynomial.derivative_X_pow,
-      Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X,
-      Polynomial.eval_pow, zero_mul]
-    norm_num
-    ring
-  have hprod := (he.mul hp).neg
-  apply hprod.congr_deriv
+  have hp := odlyzkoExpPolynomialObj.hasDerivAt (x := x)
+  apply ((he.mul hp).neg).congr_deriv
   rw [deficit_polynomial_expansion]
-  simp only [Function.comp_apply, odlyzkoExpPolynomial, odlyzkoExpPolynomialObj,
-    Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X,
-    Polynomial.eval_pow, Polynomial.eval_ofNat]
+  simp only [Function.comp_apply, odlyzkoExpPolynomialObj,
+    Polynomial.derivative_add, Polynomial.derivative_mul, Polynomial.derivative_C,
+    Polynomial.derivative_X_pow, Polynomial.eval_add, Polynomial.eval_mul,
+    Polynomial.eval_C, Polynomial.eval_X, Polynomial.eval_pow, Polynomial.eval_ofNat,
+    zero_mul]
+  norm_num
   ring
 
 theorem integral_odlyzkoDeficitPolynomial_mul_exp (a b : ℝ) :
@@ -185,6 +167,11 @@ theorem integral_odlyzkoDeficitPolynomial_mul_exp (a b : ℝ) :
     fun_prop
   exact hc.intervalIntegrable _ _
 
+private theorem exp_neg_nat (n : ℕ) :
+    Real.exp (-(n : ℝ)) = Real.exp (-1) ^ n := by
+  rw [← Real.exp_nat_mul]
+  norm_num
+
 theorem integral_odlyzkoDeficitPolynomial_mul_exp_one_two_lt :
     ∫ x in (1 : ℝ)..2, odlyzkoDeficitPolynomial x * Real.exp (-x) < 29 / 500 := by
   rw [integral_odlyzkoDeficitPolynomial_mul_exp]
@@ -194,11 +181,7 @@ theorem integral_odlyzkoDeficitPolynomial_mul_exp_one_two_lt :
     Polynomial.eval_ofNat, deficitC2, deficitC4, deficitC6, deficitC8, deficitC10,
     deficitC12, odlyzkoScale]
   have hu := Real.exp_neg_one_lt_d9
-  have he2 : Real.exp (-2) = Real.exp (-1) ^ 2 := by
-    calc
-      Real.exp (-2) = Real.exp ((2 : ℕ) * (-1 : ℝ)) := by norm_num
-      _ = Real.exp (-1) ^ 2 := Real.exp_nat_mul (-1) 2
-  rw [he2]
+  rw [show (-2 : ℝ) = -(2 : ℕ) by norm_num, exp_neg_nat]
   nlinarith [sq_nonneg (Real.exp (-1) - 36787944116 / 10 ^ 11)]
 
 theorem integral_odlyzkoDeficitPolynomial_mul_exp_two_four_lt :
@@ -211,15 +194,8 @@ theorem integral_odlyzkoDeficitPolynomial_mul_exp_two_four_lt :
     deficitC12, odlyzkoScale]
   have hu := Real.exp_neg_one_lt_d9
   have hu0 := Real.exp_pos (-1)
-  have he2 : Real.exp (-2) = Real.exp (-1) ^ 2 := by
-    calc
-      Real.exp (-2) = Real.exp ((2 : ℕ) * (-1 : ℝ)) := by norm_num
-      _ = Real.exp (-1) ^ 2 := Real.exp_nat_mul (-1) 2
-  have he4 : Real.exp (-4) = Real.exp (-1) ^ 4 := by
-    calc
-      Real.exp (-4) = Real.exp ((4 : ℕ) * (-1 : ℝ)) := by norm_num
-      _ = Real.exp (-1) ^ 4 := Real.exp_nat_mul (-1) 4
-  rw [he2, he4]
+  rw [show (-2 : ℝ) = -(2 : ℕ) by norm_num, show (-4 : ℝ) = -(4 : ℕ) by norm_num,
+    exp_neg_nat, exp_neg_nat]
   norm_num at hu ⊢
   have hsq :
       Real.exp (-1) ^ 2 < (919698603 / 2500000000 : ℝ) ^ 2 := by
@@ -258,16 +234,7 @@ theorem integral_odlyzkoDeficitPolynomial_div_id_zero_one :
       (((hasDerivAt_const x deficitC8).mul (hasDerivAt_pow 8 x)).div_const 8)).add
       (((hasDerivAt_const x deficitC10).mul (hasDerivAt_pow 10 x)).div_const 10)).add
       (((hasDerivAt_const x deficitC12).mul (hasDerivAt_pow 12 x)).div_const 12)
-    have hvalue :
-        (0 * x ^ 2 + deficitC2 * ((2 : ℕ) * x ^ (2 - 1))) / 2 +
-              (0 * x ^ 4 + deficitC4 * ((4 : ℕ) * x ^ (4 - 1))) / 4 +
-            (0 * x ^ 6 + deficitC6 * ((6 : ℕ) * x ^ (6 - 1))) / 6 +
-          (0 * x ^ 8 + deficitC8 * ((8 : ℕ) * x ^ (8 - 1))) / 8 +
-        (0 * x ^ 10 + deficitC10 * ((10 : ℕ) * x ^ (10 - 1))) / 10 +
-        (0 * x ^ 12 + deficitC12 * ((12 : ℕ) * x ^ (12 - 1))) / 12 =
-          deficitC2 * x + deficitC4 * x ^ 3 + deficitC6 * x ^ 5 +
-            deficitC8 * x ^ 7 + deficitC10 * x ^ 9 + deficitC12 * x ^ 11 := by grind
-    exact hderiv.congr_deriv hvalue
+    exact hderiv.congr_deriv (by grind)
   · exact (by fun_prop : Continuous (fun x : ℝ ↦
       deficitC2 * x + deficitC4 * x ^ 3 + deficitC6 * x ^ 5 +
         deficitC8 * x ^ 7 + deficitC10 * x ^ 9 + deficitC12 * x ^ 11))

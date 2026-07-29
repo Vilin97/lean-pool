@@ -72,19 +72,21 @@ theorem integral_archimedean_odlyzkoScale_Ioc_zero_one_le :
       exact (odlyzkoDeficitPolynomial_div x).symm
     _ = _ := integral_odlyzkoDeficitPolynomial_div_id_zero_one
 
-theorem integral_archimedean_odlyzkoScale_Ioc_one_two_lt :
-    (∫ x in Set.Ioc (1 : ℝ) 2, archimedeanIntegrand odlyzkoScale x) <
-      (7 / 3 : ℝ) * (29 / 500) := by
+private theorem integral_archimedean_Ioc_le_mul (c lo hi : ℝ)
+    (hlo : 0 < lo) (hle : lo ≤ hi) (hhi : hi ≤ 4)
+    (hbound : ∀ x : ℝ, lo ≤ x → 1 / Real.sinh x ≤ c * Real.exp (-x)) :
+    (∫ x in Set.Ioc lo hi, archimedeanIntegrand odlyzkoScale x) ≤
+      c * ∫ x in lo..hi, odlyzkoDeficitPolynomial x * Real.exp (-x) := by
   have hmono :
-      (∫ x in Set.Ioc (1 : ℝ) 2, archimedeanIntegrand odlyzkoScale x) ≤
-        ∫ x in Set.Ioc (1 : ℝ) 2,
-          (7 / 3 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by
-    apply integral_mono_ae (integrableOn_archimedean_Ioc 1 2 (by norm_num))
-      (integrableOn_scaled_deficit_exp_Ioc (7 / 3) 1 2)
+      (∫ x in Set.Ioc lo hi, archimedeanIntegrand odlyzkoScale x) ≤
+        ∫ x in Set.Ioc lo hi,
+          c * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by
+    apply integral_mono_ae (integrableOn_archimedean_Ioc lo hi hlo.le)
+      (integrableOn_scaled_deficit_exp_Ioc c lo hi)
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
-    have hx0 : 0 ≤ x := le_trans (by norm_num) hx.1.le
-    have hx4 : x ≤ 4 := hx.2.trans (by norm_num)
-    have hs : 0 < Real.sinh x := Real.sinh_pos_iff.mpr (lt_trans (by norm_num) hx.1)
+    have hx0 : 0 ≤ x := (hlo.trans hx.1).le
+    have hx4 : x ≤ 4 := hx.2.trans hhi
+    have hs : 0 < Real.sinh x := Real.sinh_pos_iff.mpr (hlo.trans hx.1)
     have hnum := one_sub_tartarTestFunction_le_odlyzkoDeficitPolynomial hx0 hx4
     have hpoly := odlyzkoDeficitPolynomial_nonneg hx0 hx4
     calc
@@ -93,62 +95,36 @@ theorem integral_archimedean_odlyzkoScale_Ioc_one_two_lt :
             rw [archimedeanIntegrand]
             exact div_le_div_of_nonneg_right hnum hs.le
       _ = odlyzkoDeficitPolynomial x * (1 / Real.sinh x) := by ring
-      _ ≤ odlyzkoDeficitPolynomial x * ((7 / 3 : ℝ) * Real.exp (-x)) := by
+      _ ≤ odlyzkoDeficitPolynomial x * (c * Real.exp (-x)) := by
             gcongr
-            exact one_div_sinh_le_seven_thirds_exp hx.1.le
-      _ = (7 / 3 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by ring
+            exact hbound x hx.1.le
+      _ = c * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by ring
   calc
-    (∫ x in Set.Ioc (1 : ℝ) 2, archimedeanIntegrand odlyzkoScale x)
-        ≤ ∫ x in Set.Ioc (1 : ℝ) 2,
-          (7 / 3 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := hmono
-    _ = (7 / 3 : ℝ) *
-        ∫ x in (1 : ℝ)..2, odlyzkoDeficitPolynomial x * Real.exp (-x) := by
-          rw [intervalIntegral.integral_of_le (by norm_num), integral_const_mul]
-    _ < (7 / 3 : ℝ) * (29 / 500) := by
-          gcongr
-          exact integral_odlyzkoDeficitPolynomial_mul_exp_one_two_lt
-
-theorem integral_archimedean_odlyzkoScale_Ioc_two_four_lt :
-    (∫ x in Set.Ioc (2 : ℝ) 4, archimedeanIntegrand odlyzkoScale x) <
-      (64 / 31 : ℝ) * (3 / 40) := by
-  have hmono :
-      (∫ x in Set.Ioc (2 : ℝ) 4, archimedeanIntegrand odlyzkoScale x) ≤
-        ∫ x in Set.Ioc (2 : ℝ) 4,
-          (64 / 31 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by
-    apply integral_mono_ae (integrableOn_archimedean_Ioc 2 4 (by norm_num))
-      (integrableOn_scaled_deficit_exp_Ioc (64 / 31) 2 4)
-    filter_upwards [ae_restrict_mem measurableSet_Ioc] with x hx
-    have hx0 : 0 ≤ x := le_trans (by norm_num) hx.1.le
-    have hx4 : x ≤ 4 := hx.2
-    have hs : 0 < Real.sinh x := Real.sinh_pos_iff.mpr (lt_trans (by norm_num) hx.1)
-    have hnum := one_sub_tartarTestFunction_le_odlyzkoDeficitPolynomial hx0 hx4
-    have hpoly := odlyzkoDeficitPolynomial_nonneg hx0 hx4
-    calc
-      archimedeanIntegrand odlyzkoScale x
-          ≤ odlyzkoDeficitPolynomial x / Real.sinh x := by
-            rw [archimedeanIntegrand]
-            exact div_le_div_of_nonneg_right hnum hs.le
-      _ = odlyzkoDeficitPolynomial x * (1 / Real.sinh x) := by ring
-      _ ≤ odlyzkoDeficitPolynomial x * ((64 / 31 : ℝ) * Real.exp (-x)) := by
-            gcongr
-            exact one_div_sinh_le_sixty_four_thirty_one_exp hx.1.le
-      _ = (64 / 31 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := by ring
-  calc
-    (∫ x in Set.Ioc (2 : ℝ) 4, archimedeanIntegrand odlyzkoScale x)
-        ≤ ∫ x in Set.Ioc (2 : ℝ) 4,
-          (64 / 31 : ℝ) * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := hmono
-    _ = (64 / 31 : ℝ) *
-        ∫ x in (2 : ℝ)..4, odlyzkoDeficitPolynomial x * Real.exp (-x) := by
-          rw [intervalIntegral.integral_of_le (by norm_num), integral_const_mul]
-    _ < (64 / 31 : ℝ) * (3 / 40) := by
-          gcongr
-          exact integral_odlyzkoDeficitPolynomial_mul_exp_two_four_lt
+    (∫ x in Set.Ioc lo hi, archimedeanIntegrand odlyzkoScale x)
+        ≤ ∫ x in Set.Ioc lo hi,
+          c * (odlyzkoDeficitPolynomial x * Real.exp (-x)) := hmono
+    _ = c * ∫ x in lo..hi, odlyzkoDeficitPolynomial x * Real.exp (-x) := by
+          rw [intervalIntegral.integral_of_le hle, integral_const_mul]
 
 theorem integral_archimedean_odlyzkoScale_Ioc_zero_four_le :
     (∫ x in Set.Ioc (0 : ℝ) 4, archimedeanIntegrand odlyzkoScale x) ≤ 9 / 25 := by
   have h01 := integral_archimedean_odlyzkoScale_Ioc_zero_one_le
-  have h12 := integral_archimedean_odlyzkoScale_Ioc_one_two_lt
-  have h24 := integral_archimedean_odlyzkoScale_Ioc_two_four_lt
+  have h12 :
+      (∫ x in Set.Ioc (1 : ℝ) 2, archimedeanIntegrand odlyzkoScale x) <
+        (7 / 3 : ℝ) * (29 / 500) :=
+    lt_of_le_of_lt
+      (integral_archimedean_Ioc_le_mul (7 / 3) 1 2 one_pos (by norm_num) (by norm_num)
+        fun x hx ↦ one_div_sinh_le_seven_thirds_exp hx)
+      (mul_lt_mul_of_pos_left
+        integral_odlyzkoDeficitPolynomial_mul_exp_one_two_lt (by norm_num))
+  have h24 :
+      (∫ x in Set.Ioc (2 : ℝ) 4, archimedeanIntegrand odlyzkoScale x) <
+        (64 / 31 : ℝ) * (3 / 40) :=
+    lt_of_le_of_lt
+      (integral_archimedean_Ioc_le_mul (64 / 31) 2 4 two_pos (by norm_num) le_rfl
+        fun x hx ↦ one_div_sinh_le_sixty_four_thirty_one_exp hx)
+      (mul_lt_mul_of_pos_left
+        integral_odlyzkoDeficitPolynomial_mul_exp_two_four_lt (by norm_num))
   have hsplit :
       Set.Ioc (0 : ℝ) 4 =
         Set.Ioc (0 : ℝ) 1 ∪ (Set.Ioc (1 : ℝ) 2 ∪ Set.Ioc (2 : ℝ) 4) := by grind
