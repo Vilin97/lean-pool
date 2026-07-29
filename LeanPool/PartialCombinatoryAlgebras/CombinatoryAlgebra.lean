@@ -17,8 +17,6 @@ combinatory algebra induces a partial combinatory algebra on the same type.
 
 namespace LeanPool.PartialCombinatoryAlgebras
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- A (total) combinatory structure on a set `A`. -/
 class CA (A : Type*) extends HasDot A where
   /-- The `K` combinator. -/
@@ -67,7 +65,7 @@ instance isPCA {A : Type} [CA A] : PCA A where
   eq_K := by
     intro u v hu hv
     rw [CA.eq_app trivial hu, CA.eq_app trivial hv]
-    simp only [Part.get_some]
+    change Part.some (K ⬝ u.get hu ⬝ v.get hv) = u
     rw [CA.eq_K]
     exact Part.some_get hu
   df_S₀ := by trivial
@@ -80,7 +78,9 @@ instance isPCA {A : Type} [CA A] : PCA A where
     have lhs : (Part.some (S : A)) ⬝ u ⬝ v ⬝ w =
         Part.some (S ⬝ u.get hu ⬝ v.get hv ⬝ w.get hw) := by
       rw [CA.eq_app trivial hu, CA.eq_app trivial hv, CA.eq_app trivial hw]
-      simp only [Part.get_some]
+      change Part.some (S ⬝ u.get hu ⬝ v.get hv ⬝ w.get hw) =
+        Part.some (S ⬝ u.get hu ⬝ v.get hv ⬝ w.get hw)
+      rfl
     have heq1 : (u ⬝ w).get huw = u.get hu ⬝ w.get hw :=
       Part.get_eq_iff_eq_some.mpr (CA.eq_app hu hw)
     have heq2 : (v ⬝ w).get hvw = v.get hv ⬝ w.get hw :=
