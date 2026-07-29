@@ -173,3 +173,21 @@ def test_no_claims_means_no_search_and_no_failure_note() -> None:
     from lean_pool.prior_art import search_mathlib
 
     assert search_mathlib([]) == ({}, None)
+
+
+def test_zero_claims_from_a_failure_never_reads_as_nothing_new() -> None:
+    """An unreadable registry must not render as "adds no new headline".
+
+    Both produce zero claims, and only one of them means prior art went
+    unchecked. Conflating them is how a broken search reports success.
+    """
+    from lean_pool.prior_art import render
+
+    broken = render([], {}, PROJECTS_BASE, "projects.yml could not be read")
+    empty = render([], {}, PROJECTS_BASE, None)
+
+    assert broken is not None and empty is not None
+    assert "did not run" in broken
+    assert "adds no new headline" not in broken
+    assert "adds no new headline" in empty
+    assert "did not run" not in empty

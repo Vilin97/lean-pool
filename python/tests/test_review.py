@@ -1036,3 +1036,51 @@ def test_render_pr_context_handles_an_empty_description() -> None:
 
     assert rendered is not None
     assert "no description provided" in rendered
+
+
+def test_fetch_file_at_requests_raw_bytes_without_a_jq_filter(monkeypatch) -> None:
+    """The raw media type and `--jq` are mutually exclusive.
+
+    Asking for `application/vnd.github.raw+json` returns the file bytes,
+    so a `--jq` filter makes gh parse YAML as JSON and exit 1. That is
+    caught, yields "", and turns every prior-art search into "this PR
+    adds no new headline" — a silent, total failure of the feature.
+    """
+    from lean_pool import review
+
+    seen: list[tuple[str, ...]] = []
+
+    def _capture(*args, **kwargs):
+        seen.append(args)
+        return "projects: []\n"
+
+    monkeypatch.setattr(review, "run_gh", _capture)
+
+    text = review.fetch_file_at("LeanPool/projects.yml", "abc123", "o/r")
+
+    assert text == "projects: []\n"
+    assert "--jq" not in seen[0]
+    assert "Accept: application/vnd.github.raw+json" in seen[0]
+    assert "repos/o/r/contents/LeanPool/projects.yml?ref=abc123" in seen[0]
+
+
+def test_gather_prior_art_flags_an_unreadable_registry(monkeypatch) -> None:
+    """A failed head fetch is reported, not silently read as "nothing new"."""
+    from lean_pool import review
+
+    monkeypatch.setattr(review, "fetch_file_at", lambda *a, **k: "")
+
+    section = review.gather_prior_art("project", "abc12345", "o/r")
+
+    assert section is not None
+    assert "did not run" in section
+    assert "adds no new headline" not in section
+
+
+def test_gather_prior_art_skips_kinds_with_nothing_new_to_check(monkeypatch) -> None:
+    """A refactor re-opens prior art that was settled at merge time."""
+    from lean_pool import review
+
+    assert review.gather_prior_art("refactor", "abc123", "o/r") is None
+    assert review.gather_prior_art("solution", "abc123", "o/r") is None
+    assert review.gather_prior_art("infra", "abc123", "o/r") is None

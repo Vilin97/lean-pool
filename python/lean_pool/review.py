@@ -1493,11 +1493,13 @@ def fetch_file_at(path: str, ref: str, repo_full_name: str) -> str:
     ``safe_load``.
     """
     try:
+        # The raw media type returns the file bytes, so there is no JSON
+        # to filter — pairing it with `--jq` makes gh try to parse YAML
+        # as JSON and exit 1, which would silently turn every prior-art
+        # search into "this PR adds no new headline".
         return run_gh(
             "api",
             f"repos/{repo_full_name}/contents/{path}?ref={ref}",
-            "--jq",
-            ".content",
             "--header",
             "Accept: application/vnd.github.raw+json",
         )
@@ -1520,6 +1522,14 @@ def gather_prior_art(kind: str, head_sha: str, repo_full_name: str) -> str | Non
     )
     head_text = fetch_file_at(registry, head_sha, repo_full_name)
     base_text = (REPO_ROOT / registry).read_text(encoding="utf-8")
+    if not head_text.strip():
+        # Distinguish "could not read the registry" from "the PR adds
+        # nothing": both yield zero claims, but only one of them means
+        # the reviewer should treat prior art as unchecked.
+        unreadable = f"{registry} could not be read at {head_sha[:8]}"
+        print(f"Mathlib prior-art search skipped: {unreadable}", file=sys.stderr)
+        projects = (REPO_ROOT / "LeanPool" / "projects.yml").read_text(encoding="utf-8")
+        return prior_art.render([], {}, projects, unreadable)
     claims = prior_art.new_claims(head_text, base_text, kind)
     hits, unavailable = prior_art.search_mathlib(claims)
     if unavailable is not None:

@@ -272,7 +272,9 @@ def render(
                 lines.append("- _No Mathlib declaration matched this statement._")
             lines.append("")
         sections.append("\n".join(lines))
-    elif unavailable is None:
+    elif unavailable is not None:
+        sections.append(f"\n**The Mathlib search did not run:** {unavailable}.")
+    else:
         sections.append(
             "\nThis PR adds no new headline to a registry, so no Mathlib "
             "search was run."
