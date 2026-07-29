@@ -333,6 +333,11 @@ jobs:
     if: needs.detect.outputs.repair == 'true' && needs.triage.outputs.has_breakage == 'true'
     runs-on: ubuntu-latest
     name: Repair ${{ matrix.project }}
+    # No turn limit -- a repair is done when the project builds, not after N
+    # turns, and a turn-capped agent leaves a half-finished edit behind. Wall
+    # clock is the honest bound: it caps runner cost without deciding how much
+    # thinking the problem deserves.
+    timeout-minutes: 90
     permissions:
       contents: read
       # claude-code-action exchanges a GitHub OIDC token for its credentials;
@@ -388,7 +393,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: "/version-bump-project ${{ matrix.project }} ${{ needs.detect.outputs.target }}"
           claude_args: >-
-            --max-turns 200
             --model claude-opus-5
             --allowedTools "Bash,Read,Edit,Write,Grep,Glob"
 

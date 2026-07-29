@@ -149,12 +149,19 @@ Failures are isolated: `fail-fast` is off, so one project failing does not stop
 the others, and `assemble` still opens a PR with whatever succeeded. The PR body
 lists how many repairs applied and which patches would not apply.
 
-The usual failure is `error_max_turns` — the agent ran out of its turn budget
-mid-repair. Its work is still exported as a patch and applied, because partial
-progress on a hard project is worth keeping and the whole-pool build in
-`assemble` is what decides whether the result is actually correct. Re-running
-the bump lets the next agent start from that partial state rather than from
-scratch.
+Repair agents run with **no turn limit**. A repair is finished when the project
+builds, not after some number of turns, and an agent cut off mid-edit leaves
+behind a half-applied change that is worse than either outcome. The bound is
+wall clock instead — `timeout-minutes: 90` per project — which caps runner cost
+without deciding how much thinking a problem deserves.
 
-Measured on the first real run (v4.32.0-rc1 → v4.33.0-rc1, 99 projects
-broken): 40 repaired cleanly, 59 hit the turn limit.
+Whatever an agent has done is exported as a patch even when its job fails, so
+partial progress on a hard project is never thrown away, and a re-run resumes
+from it. The whole-pool build in `assemble` remains what decides whether the
+result is actually correct.
+
+Measured on the first real run (v4.32.0-rc1 → v4.33.0-rc1, 99 projects broken,
+with a 60-turn cap still in place): 40 repaired cleanly, 59 hit the cap. Those
+59 had a *lower* median runtime (5 min) than the successes (9 min) — they were
+burning turns in tight edit/build/fail loops, so the cap was stopping them
+early rather than after sustained work. That is what removing it addresses.
