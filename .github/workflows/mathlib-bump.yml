@@ -333,11 +333,11 @@ jobs:
     if: needs.detect.outputs.repair == 'true' && needs.triage.outputs.has_breakage == 'true'
     runs-on: ubuntu-latest
     name: Repair ${{ matrix.project }}
-    # No turn limit -- a repair is done when the project builds, not after N
-    # turns, and a turn-capped agent leaves a half-finished edit behind. Wall
-    # clock is the honest bound: it caps runner cost without deciding how much
-    # thinking the problem deserves.
-    timeout-minutes: 90
+    # No turn limit and no explicit timeout: a repair is done when the project
+    # builds, and any cap only ever stops an agent mid-edit, leaving a
+    # half-applied change behind. GitHub-hosted runners still enforce their own
+    # six-hour ceiling, which is the longest a job can run here; raising that
+    # would require a self-hosted runner.
     permissions:
       contents: read
       # claude-code-action exchanges a GitHub OIDC token for its credentials;
