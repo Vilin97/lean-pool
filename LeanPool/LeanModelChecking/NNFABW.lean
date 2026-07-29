@@ -1376,8 +1376,7 @@ lemma until_mpr.base
   obtain ⟨G, G_acc⟩ := h2
   exact ⟨replaceRoot.runDag (sub.until_right sub.refl) G
     (by
-      simp only [delta, PositiveBool.mapSubtype, PositiveBool.Sat, Set.mem_image, Subtype.mk.injEq,
-        Subtype.exists, exists_and_right, exists_eq_right]
+      simp only [delta, PositiveBool.mapSubtype, PositiveBool.Sat, Set.mem_image, Subtype.exists]
       intros
       left
       let : DecidablePred (· ∈ w 0) := by classical infer_instance
@@ -1398,8 +1397,7 @@ lemma until_mpr.next
     (by simp [NNF.toABW])
     (by
       simp only [NNF.toABW, Set.union_singleton, delta, PositiveBool.mapSubtype, PositiveBool.Sat,
-        Set.mem_insert_iff, Set.mem_image, Subtype.mk.injEq, Subtype.exists, exists_and_right,
-        exists_eq_right, true_or, and_true]
+        Set.mem_insert_iff, Set.mem_image, Subtype.exists, true_or, and_true]
       intros Y hsat
       right
       apply PositiveBool.Sat.monotone (show Subtype.embedLe (sub.until_left sub.refl) ''
@@ -1466,8 +1464,7 @@ lemma always
     (by
       intros Y l p_sat
       simp only [NNF.toABW, Set.union_singleton, delta, PositiveBool.mapSubtype, PositiveBool.Sat,
-        Set.mem_insert_iff, Set.mem_image, Subtype.mk.injEq, Subtype.exists, exists_and_right,
-        exists_eq_right, true_or, or_true, and_true] at p_sat ⊢
+        Set.mem_insert_iff, Set.mem_image, Subtype.exists, true_or, or_true, and_true] at p_sat ⊢
       apply PositiveBool.Sat.monotone (Set.subset_insert _ _)
       apply PositiveBool.mapSubtype_contract p_sat
       grind

@@ -195,7 +195,7 @@ def haveExpr (n : Name) (h : Expr) :=
       let (_, mvarIdNew) ← Lean.MVarId.intro1P mvarIdNew
       return [mvarIdNew]
 
-open Parser Tactic Syntax
+open _root_.Lean.Parser Tactic Syntax
 
 /-- Definitions for perm tactic -/
 syntax "havePerms" (" [" term,* "]")? : tactic

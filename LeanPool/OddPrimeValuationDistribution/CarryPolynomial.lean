@@ -73,11 +73,7 @@ lemma oddCarryPolynomialFrom_succ (half carry length : ℕ) :
               (List.Vector.cons pair.1 pair.2)) carry := by
           exact Fintype.sum_equiv (oddCarryWordsSuccEquiv half length) _ _
             (fun word => by
-              simpa [oddCarryWordsSuccEquiv] using
-                congrArg
-                  (fun value => X ^ oddDoubleCarryCountAux half
-                    (oddCarryWordDigits value) carry)
-                  (List.Vector.cons_head_tail word).symm)
+              simp [oddCarryWordsSuccEquiv])
     _ = ∑ digit : Fin (oddBase half),
           X ^ oddDoubleCarryStep half carry digit.val *
             ∑ word : List.Vector (Fin (oddBase half)) length,
