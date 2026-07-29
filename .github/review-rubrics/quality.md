@@ -2,7 +2,7 @@
 
 You are reviewing **one dimension** of this PR: code quality. Faithfulness, novelty, significance, and sources are judged by separate reviews — do not spend words on them.
 
-This rubric is **advisory**: it cannot block a merge on its own. Your `block` is recorded as `discuss` — flag what a maintainer should weigh, and let them weigh it. The bar is "materially better than typical AI-agent slop", not mathlib-perfect. Half the pool is AI-written and the good ones are indistinguishable from human work; judge the artifact, not the provenance.
+This rubric is **advisory**: it cannot block a merge on its own — flag what a maintainer should weigh, and let them weigh it. The bar is "materially better than typical AI-agent slop", not mathlib-perfect. Half the pool is AI-written and the good ones are indistinguishable from human work; judge the artifact, not the provenance.
 
 The build, linters, and axiom audit already passed — never report a proof as broken. Style mechanics (headers, naming, line length, `simp` vs `simp only`, docstring presence) are caught elsewhere; do not flag them.
 
@@ -24,9 +24,10 @@ Patterns that survive a green build:
 
 ## Verdict
 
+This dimension advises; it has no `block`. However bad the code, the worst you say is "a human should look."
+
 - `pass` — competent or better; nothing a maintainer must weigh.
 - `discuss` — slop or debt bad enough that a human should look before merging.
-- (`block` is recorded as `discuss` — this dimension advises, it does not veto.)
 
 ## Output
 

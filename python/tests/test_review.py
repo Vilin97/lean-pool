@@ -1092,9 +1092,20 @@ def test_rubric_usage_sums_cost_across_calls() -> None:
     line = _render_rubric_usage(outcomes, "xhigh")
 
     assert "20,000 in / 4,000 out across 2 rubric calls" in line
+    assert "**Tier:** `flex`" in line
     assert "**Effort:** `xhigh`" in line
     # 2 x (10k x $2.50/M + 2k x $15/M) = 2 x $0.055 = $0.11 on flex.
     assert "**Cost:** $0.1100" in line
+
+
+def test_rubric_usage_without_pricing_says_so_instead_of_free() -> None:
+    """No usage data must read as unknown, not as $0.0000."""
+    from lean_pool.review import _render_rubric_usage
+
+    line = _render_rubric_usage([_outcome("faithfulness")], None)
+
+    assert "$0.0000" not in line
+    assert "no pricing recorded" in line
 
 
 def test_request_changes_comment_says_it_is_not_a_close() -> None:

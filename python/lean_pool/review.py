@@ -1486,16 +1486,22 @@ def _render_rubric_usage(outcomes: list[RubricOutcome], effort: str | None) -> s
             unpriced = True
             continue
         cost += (call_in * rates[0] + call_out * rates[1]) / 1_000_000
+    tiers = dict.fromkeys(o.result.tier for o in outcomes if o.result.tier)
+    tier_cell = " / ".join(tiers) if tiers else "unknown"
     parts = [
         f"**Tokens:** {in_tokens:,} in / {out_tokens:,} out "
-        f"across {len(outcomes)} rubric calls"
+        f"across {len(outcomes)} rubric calls",
+        f"**Tier:** `{tier_cell}`",
     ]
     if effort:
         parts.append(f"**Effort:** `{effort}`")
-    cost_cell = f"**Cost:** ${cost:.4f}"
-    if unpriced:
-        cost_cell += " (partial — some calls unpriced)"
-    parts.append(cost_cell)
+    if cost > 0 or not unpriced:
+        cost_cell = f"**Cost:** ${cost:.4f}"
+        if unpriced:
+            cost_cell += " (partial — some calls unpriced)"
+        parts.append(cost_cell)
+    else:
+        parts.append("_(no pricing recorded for these calls)_")
     return " · ".join(parts)
 
 
@@ -1571,7 +1577,8 @@ def render_rubric_comment(
                 ref = "_PR-wide_"
             lines.append(f"- **{finding.get('rule', '')}** — {ref}")
             body = (finding.get("comment") or "").strip()
-            lines.append(f"  {body}")
+            if body:
+                lines.append(f"  {body}")
             evidence = (finding.get("evidence") or "").strip()
             if evidence:
                 lines.append(f"  _Evidence:_ {evidence}")
