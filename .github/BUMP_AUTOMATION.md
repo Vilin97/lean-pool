@@ -161,9 +161,19 @@ limit is five days — worth doing only if projects ever start hitting six hours
 which is far from the observed maximum of 20 minutes.
 
 Whatever an agent has done is exported as a patch even when its job fails, so
-partial progress on a hard project is never thrown away, and a re-run resumes
-from it. The whole-pool build in `assemble` remains what decides whether the
-result is actually correct.
+partial progress on a hard project is never thrown away. The whole-pool build
+in `assemble` remains what decides whether the result is actually correct.
+
+**Runs accumulate.** `pin` resumes an existing `bump/<version>` branch rather
+than recreating it from main, so each run starts from every repair earlier runs
+landed. The probe then only finds the projects that are *still* broken, and the
+repair fan-out shrinks each round — that is what lets a large bump converge
+instead of re-repairing the same projects forever. If main has moved
+underneath, the branch merges it, resolving the generated index and the
+registry with the same mechanical resolver `auto-rebase.yml` uses.
+
+Re-running a bump is therefore the normal way to finish one. Dispatch it again
+and it picks up where the last run stopped.
 
 Measured on the first real run (v4.32.0-rc1 → v4.33.0-rc1, 99 projects broken,
 with a 60-turn cap still in place): 40 repaired cleanly, 59 hit the cap. Those
