@@ -91,10 +91,9 @@ theorem fundamentalConeNormCount_eq_torsion_mul
     (J : (Ideal (𝓞 K))⁰) (n : ℕ) :
     fundamentalConeNormCount K J n =
       principalIdealNormCount K J n * torsionOrder K := by
-  -- v4.32's `torsionOrder` unfolds to `Fintype.card`; bridge to `Nat.card`
-  -- before folding the product.
+  -- Fold the two finite cardinalities into the product equivalence.
   rw [fundamentalConeNormCount, principalIdealNormCount, torsionOrder,
-    ← Nat.card_eq_fintype_card, ← Nat.card_prod]
+    ← Nat.card_prod]
   exact Nat.card_congr (idealSetEquivNorm K J n)
 
 theorem principalIdealNormCount_le_idealNormCount
