@@ -434,7 +434,7 @@ lemma associator_naturality
             | exact Fin.ext (by simp; try omega)
             | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
                simp only [Stream'.map, Stream'.get, Wires.get_cast,
-                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_cast_vector, Wires.get_append_vector,
                  Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
                all_goals (first
                  | (exfalso; omega)
@@ -459,7 +459,7 @@ lemma pentagon
   simp only [CategoryStruct.comp, Function.comp,
     tensorHomVal, associator, iso, isoHom, isoHomVal,
     CategoryStruct.id, id, idVal, Stream'.map, Stream'.zip, Stream'.get,
-    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
   split_ifs <;>
     first
@@ -528,7 +528,7 @@ lemma leftUnitor_naturality
             | exact Fin.ext (by simp; try omega)
             | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
                simp only [Stream'.map, Stream'.get, Wires.get_cast,
-                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_cast_vector, Wires.get_append_vector,
                  Wires.get_drop]
                all_goals (first
                  | (exfalso; omega)
@@ -563,7 +563,7 @@ lemma rightUnitor_naturality
             | exact Fin.ext (by simp; try omega)
             | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
                simp only [Stream'.map, Stream'.get, Wires.get_cast,
-                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_cast_vector, Wires.get_append_vector,
                  Wires.get_take]
                all_goals (first
                  | (exfalso; omega)
@@ -588,7 +588,7 @@ lemma triangle
   simp only [CategoryStruct.comp, Function.comp,
     tensorHomVal, associator, leftUnitor, rightUnitor, iso, isoHom, isoHomVal,
     CategoryStruct.id, id, idVal, Stream'.map, Stream'.zip, Stream'.get,
-    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
   split_ifs <;>
     first
@@ -666,7 +666,7 @@ lemma braiding_hom_monotone
     {X Y : SequentialCircuitCategory V G} :
     Monotone (X.braidingHomVal Y) := fun a b hab t i => by
   simp only [braidingHomVal, monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
-    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_drop]
   split_ifs <;> exact hab t _
 
@@ -691,7 +691,7 @@ lemma braiding_hom_inv_id
   have hi : i.val < X.obj + Y.obj := i.isLt
   simp only [CategoryStruct.comp, Function.comp, braidingHom, braidingHomVal, id_coe_apply,
     monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
-    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
   split_ifs <;>
     first
@@ -733,7 +733,7 @@ lemma braiding_naturality_left
             | exact Fin.ext (by simp; try omega)
             | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
                simp only [Stream'.map, Stream'.get,
-                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_cast_vector, Wires.get_append_vector,
                  Wires.get_take, Wires.get_drop, Wires.get_drop_vector]
                all_goals (first
                  | (exfalso; omega)
@@ -770,7 +770,7 @@ lemma braiding_naturality_right
             | exact Fin.ext (by simp; try omega)
             | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
                simp only [Stream'.map, Stream'.get,
-                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_cast_vector, Wires.get_append_vector,
                  Wires.get_take, Wires.get_take_vector, Wires.get_drop]
                all_goals (first
                  | (exfalso; omega)
@@ -817,7 +817,7 @@ lemma braiding_get
       else (v t).get ⟨i.val - Y.obj, braiding_sub⟩ := by
   have hi : i.val < Y.obj + X.obj := i.isLt
   simp only [braidingHomVal, monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
-    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_drop]
   split_ifs <;>
     first
@@ -865,7 +865,7 @@ lemma hexagon_forward
     whiskerRight, tensorHom, tensorHomVal, associator, iso, isoHom, isoHomVal,
     braiding, braidingHom, braidingHomVal, monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
     Stream.map, Stream'.map, Stream'.zip, Stream'.get,
-    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
   split_ifs <;>
     first
@@ -892,7 +892,7 @@ lemma hexagon_reverse
     whiskerRight, tensorHom, tensorHomVal, associator, iso, isoInv, isoInvVal,
     braiding, braidingHom, braidingHomVal, monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
     Stream.map, Stream'.map, Stream'.zip, Stream'.get,
-    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector,
     Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
   split_ifs <;>
     first
