@@ -17,7 +17,7 @@ namespace Lean4GlCoalgebras
 
 open Split
 
-private lemma encodeVar_mem_elems {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
+private abbrev encodeVar_mem_elems {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
     encodeVar x ∈ Finset.image encodeVar fin_X.elems := by
   simpa only [Finset.mem_image, encodeVar_inj', exists_eq_right] using fin_X.complete x
 
