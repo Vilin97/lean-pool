@@ -15,8 +15,6 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Objective

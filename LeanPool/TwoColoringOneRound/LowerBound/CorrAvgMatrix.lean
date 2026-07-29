@@ -13,8 +13,6 @@ import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 # LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Distributed2Coloring.LowerBound
 
 namespace Correlation
@@ -60,8 +58,11 @@ theorem corrAvgMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrAvgMatrix f).
         ((Fintype.card (Correlation.G n) : Correlation.Q)⁻¹) •
           (∑ σ : Correlation.G n, corrMat σ) := by
     ext u v
-    simp [corrAvgMatrix, corrAvg, corrMat, Matrix.smul_apply, Matrix.sum_apply, div_eq_mul_inv,
-      mul_comm]
+    simp only [Matrix.smul_apply, smul_eq_mul]
+    change
+      (∑ σ : G, corr f (σ • u) (σ • v)) / (Fintype.card G : Q) =
+        (Fintype.card G : Q)⁻¹ * (∑ σ : G, corrMat σ) u v
+    rw [Matrix.sum_apply u v Finset.univ corrMat, div_eq_mul_inv, mul_comm]
   have hinv_nonneg : 0 ≤ (Fintype.card (Correlation.G n) : Q)⁻¹ := by
     exact le_of_lt (inv_pos.2 (cardG_pos n))
   simpa [havg] using Matrix.PosSemidef.smul (x := (∑ σ : Correlation.G n, corrMat σ)) hsum

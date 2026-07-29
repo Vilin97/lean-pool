@@ -13,8 +13,6 @@ This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg
 `b < t1` and `t1 ≤ b < t2` regions.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Distributed2Coloring
 
 open MeasureTheory
