@@ -34,6 +34,8 @@ coordinate, **with no remaining hypothesis** (`nnDist_count_unconditional`,
 `nnDist_count_plane_unconditional`). Axiom-clean.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace ThreeGap.SimDirichlet
 
 open ThreeGap.SimApprox ThreeGap.Chevallier ThreeGap.DeltaCost
