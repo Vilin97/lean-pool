@@ -126,7 +126,7 @@ theorem SignedInterval.ext' {n : ℕ} {J K : SignedInterval n}
     (hi : J.i = K.i) (hj : J.j = K.j) (hε : J.ε = K.ε) : J = K := by
   cases J; cases K; simp_all
 
-theorem s_involutive {n : ℕ} [NeZero n] (J K : SignedInterval n) :
+theorem s_involutive {n : ℕ} (J K : SignedInterval n) :
     s J (s J K) = K := by
   cases J; cases K; simp +decide only [s, Bool.not_false, Bool.if_true_right, Bool.decide_eq_true,
     Bool.or_false, Bool.not_true, Bool.if_false_right, Bool.and_true, gt_iff_lt, Fin.val_fin_lt,
@@ -193,7 +193,7 @@ theorem α_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (t : Fin n) :
   simp [α, Pi.smul_apply, Finset.sum_apply]
 
 /-- `αDual J` evaluated on a test function. -/
-theorem α_dual_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (f : Zn n) :
+theorem α_dual_eval {n : ℕ} (J : SignedInterval n) (f : Zn n) :
     αDual J f = J.sign * ∑ v ∈ Finset.Icc J.i J.j, f v := by
   unfold αDual; simp +decide [Finset.mul_sum _ _ _]; ring_nf;
   rfl
@@ -356,7 +356,7 @@ instance finite (n : ℕ) : Fintype (SignedInterval n) := by
         intro J
         simp_all }
 
-lemma An_is_finite (n : ℕ) [NeZero n] : Finite (SignedInterval n) := by
+lemma An_is_finite (n : ℕ) : Finite (SignedInterval n) := by
   infer_instance
 
 -- Proof that the root pairing is reduced

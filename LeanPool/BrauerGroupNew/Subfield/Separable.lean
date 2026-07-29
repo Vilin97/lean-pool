@@ -189,7 +189,7 @@ lemma exists_max_sepSub : ∃ L : AllSepSubfield K D, IsMax L :=
     change L.1.1 ≤ (⨆ (L : c), L.1.1.1 : Subalgebra K D)
     exact le_iSup_of_le ⟨L, hL⟩ (by rfl)
 
-theorem Set.centralizer.qsmul_mem (K D : Type u) [Field K] [DivisionRing D] [Algebra K D]
+theorem Set.centralizer.qsmul_mem (D : Type u) [DivisionRing D]
     (L : Set D) (q : ℚ) (a : D) (ha : a ∈ Set.centralizer L) :
     q • a ∈ Set.centralizer L := by
   rw [Set.mem_centralizer_iff] at ha ⊢
@@ -239,9 +239,9 @@ instance centralizerSubfieldDiv (L : SubField K D) :
     ext
     change (q : D) = (q.num : D) / (q.den : D)
     rw [NNRat.cast_def]
-  qsmul q a := ⟨q • a.1, Set.centralizer.qsmul_mem K D (L.1.1) q a.1 a.2⟩
+  qsmul q a := ⟨q • a.1, Set.centralizer.qsmul_mem D (L.1.1) q a.1 a.2⟩
   qsmul_def q x := by ext; simp [Rat.smul_def q x.1]
-  nnqsmul q a := ⟨q.1 • a.1, Set.centralizer.qsmul_mem K D L.1.1 q a.1 a.2⟩
+  nnqsmul q a := ⟨q.1 • a.1, Set.centralizer.qsmul_mem D L.1.1 q a.1 a.2⟩
   nnqsmul_def q a := by ext; simp [Rat.smul_def]
 
 noncomputable instance (L : SubField K D) : Algebra L (Subalgebra.centralizer K (A := D) L) where

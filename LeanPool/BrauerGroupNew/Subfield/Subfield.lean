@@ -134,8 +134,7 @@ lemma cor_two_2to3 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
     simp_all only [mul_zero, lt_self_iff_false]
 
 /-- Maximality among commutative subalgebras implies that the centralizer is the subfield itself. -/
-lemma cor_two_3to1 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
-    [Algebra.IsCentral K A] [IsSimpleRing A] (L : SubField K A) :
+lemma cor_two_3to1 (A : Type u) [Ring A] [Algebra K A] (L : SubField K A) :
     (∀ (L' : Subalgebra K A)  (_ : ∀ x ∈ L', ∀ y ∈ L',  x * y = y * x), L.1 ≤ L' →
       L.1 = L') →
     Subalgebra.centralizer K L = L.1 := by

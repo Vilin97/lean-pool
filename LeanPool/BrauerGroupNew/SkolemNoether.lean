@@ -45,7 +45,7 @@ instance (K A B M : Type u)
   inferInstanceAs (Module A M)
 
 instance (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A] [Ring B] [Algebra K B]
+    [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module A M] (f : B →ₐ[K] A) :
     IsScalarTower K A (moduleInst K A B M f) :=
   IsScalarTower.of_algebraMap_smul fun _ ↦ congrFun rfl
@@ -116,7 +116,7 @@ lemma smul1_one_tmul (K A B M : Type u)
   rw [smul1_tmul, map_one, one_smul]
 
 lemma one_smul1 (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A] [Ring B] [Algebra K B] [AddCommGroup M]
+    [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B] [AddCommGroup M]
     [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     ∀ (m : moduleInst K A B M f), smul1 K A B M f m 1 = m := fun (m : M) ↦ by
   rw [Algebra.TensorProduct.one_def, smul1_tmul, map_one, Module.End.one_apply, one_smul]
@@ -134,7 +134,7 @@ lemma smul1_zero_left (K A B M : Type u)
   | add x y hx hy => rw [map_add, hx, hy, add_zero]
 
 lemma smul1_add (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A]
+    [Field K] [Ring A] [Algebra K A]
     [Ring B] [Algebra K B] [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M]
     (f : B →ₐ[K] A) :  ∀ (r : (B ⊗[K] (Module.End A M))) (m1 m2 : moduleInst K A B M f),
     smul1 K A B M f (m1 + m2) r = smul1 K A B M f m1 r + smul1 K A B M f m2 r :=
@@ -150,7 +150,7 @@ lemma smul1_add (K A B M : Type u)
     abel
 
 lemma mul_smul1 (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A] [Ring B] [Algebra K B] [AddCommGroup M]
+    [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B] [AddCommGroup M]
     [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     ∀ (x y : (B ⊗[K] (Module.End A M))) (m : moduleInst K A B M f),
     smul1 K A B M f m (x * y) = smul1 K A B M f (smul1 K A B M f m y) x := fun x y (m : M) ↦ by
@@ -170,14 +170,14 @@ lemma mul_smul1 (K A B M : Type u)
   | add x1 x2 hx1 hx2 => rw [add_mul, map_add, map_add, hx1, hx2]
 
 lemma add_smul1 (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A]
+    [Field K] [Ring A] [Algebra K A]
     [Ring B] [Algebra K B] [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M]
     (f : B →ₐ[K] A) (r s : B ⊗[K] Module.End A M) (x : moduleInst K A B M f) :
     smul1 K A B M f x (r + s) = smul1 K A B M f x r + smul1 K A B M f x s :=
   map_add _ _ _
 
 instance IsMod (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A] [Ring B] [Algebra K B]
+    [Field K] [Ring A] [Algebra K A] [Ring B] [Algebra K B]
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M] (f : B →ₐ[K] A) :
     Module (B ⊗[K] (Module.End A M)) (moduleInst K A B M f) where
   smul := fun r m => smul1 K A B M f m r
@@ -189,10 +189,10 @@ instance IsMod (K A B M : Type u)
   zero_smul m := map_zero (smul1 K A B M f m)
 
 instance (K A B M : Type u)
-    [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A]
+    [Field K] [Ring A] [Algebra K A]
     [Ring B] [Algebra K B]
     [AddCommGroup M] [Module K M] [Module A M] [IsScalarTower K A M]
-    [IsSimpleModule A M] (f : B →ₐ[K] A) :
+    (f : B →ₐ[K] A) :
     IsScalarTower K (B ⊗[K] Module.End A M) (moduleInst K A B M f) where
   smul_assoc a x y := by
     induction x with
@@ -254,11 +254,11 @@ variable (K A B M : Type u)
     [IsScalarTower K A M] [IsSimpleModule A M] (f g : B →ₐ[K] A)
 
 -- set_option linter.unusedVariables false in
-lemma findimB (K A B M : Type u)
+lemma findimB (K A B : Type u)
     [Field K] [Ring A] [Algebra K A] [FiniteDimensional K A]
-    [Algebra.IsCentral K A] [IsSimpleRing A] [Ring B]
-    [Algebra K B] [hB : IsSimpleRing B] [AddCommGroup M] [Module K M] [Module A M]
-    [IsScalarTower K A M] [IsSimpleModule A M] (f : B →ₐ[K] A) :
+    [IsSimpleRing A] [Ring B]
+    [Algebra K B] [hB : IsSimpleRing B]
+    (f : B →ₐ[K] A) :
     FiniteDimensional K B := FiniteDimensional.of_injective (K := K) (V₂ := A) f (by
     change Function.Injective f
     have H := IsSimpleRing.injective_ringHom_or_subsingleton_codomain f.toRingHom
@@ -270,7 +270,7 @@ lemma findimB (K A B M : Type u)
 omit hB in
 lemma iso_fg [hB1 : IsSimpleRing B] :
     Nonempty <| moduleInst K A B M f ≃ₗ[B ⊗[K] (Module.End A M)] moduleInst K A B M g := by
-  haveI := findimB K A B M f
+  haveI := findimB K A B f
   rw [linearEquiv_iff_finrank_eq_over_simple_ring K]
   rfl
 

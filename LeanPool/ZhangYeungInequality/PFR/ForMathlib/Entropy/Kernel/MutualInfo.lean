@@ -90,18 +90,18 @@ lemma compProd_assoc' (ξ : Kernel T S) [IsSFiniteKernel ξ]
   congr
 
 lemma _root_.ProbabilityTheory.Kernel.Measure.compProd_compProd (μ : Measure T)
-    (ξ : Kernel T S) [IsSFiniteKernel ξ] (κ : Kernel (T × S) U) [IsSFiniteKernel κ] :
+    (ξ : Kernel T S) (κ : Kernel (T × S) U) :
     μ ⊗ₘ (ξ ⊗ₖ κ) = (μ ⊗ₘ ξ ⊗ₘ κ).map MeasurableEquiv.prodAssoc := by
   simp_all
 
 lemma _root_.ProbabilityTheory.Kernel.Measure.compProd_compProd' (μ : Measure T)
-    (ξ : Kernel T S) [IsSFiniteKernel ξ] (κ : Kernel (T × S) U) [IsSFiniteKernel κ] :
+    (ξ : Kernel T S) (κ : Kernel (T × S) U) :
     μ ⊗ₘ (ξ ⊗ₖ κ) = (μ ⊗ₘ ξ ⊗ₘ κ).comap
       (MeasurableEquiv.prodAssoc.symm : T × S × U ≃ᵐ (T × S) × U) := by
   rw [MeasurableEquiv.comap_symm, Measure.compProd_compProd]
 
 lemma _root_.ProbabilityTheory.Kernel.Measure.compProd_compProd'' (μ : Measure T)
-    (ξ : Kernel T S) [IsSFiniteKernel ξ] (κ : Kernel (T × S) U) [IsSFiniteKernel κ] :
+    (ξ : Kernel T S) (κ : Kernel (T × S) U) :
     μ ⊗ₘ ξ ⊗ₘ κ = Measure.comap MeasurableEquiv.prodAssoc (μ ⊗ₘ (ξ ⊗ₖ κ)) :=
       by
   rw [Measure.compProd_compProd, ← MeasurableEquiv.map_symm, Measure.map_map]

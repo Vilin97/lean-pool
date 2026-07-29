@@ -957,7 +957,7 @@ lemma isBoundedAtImInfty_powerSum_mul_qpow [Fact m.Prime] (k : ℕ) :
 
 /-- The summand identity feeding the root-of-unity average: the `n`-th term of the `some b`
 orbit `q`-expansion, rewritten so the `b`-dependence is exactly `ζ^{b·(n-k)}`. -/
-lemma coset_summand_eq [NeZero m] (k : ℕ) (b : ZMod m) (τ : ℍ) (n : ℕ) :
+lemma coset_summand_eq (k : ℕ) (b : ZMod m) (τ : ℍ) (n : ℕ) :
     ((PowerSeries.coeff n (jqInt ^ k) : ℤ) : ℂ)
         * (zetaM m ^ (↑b.val : ℤ) * wParam m τ) ^ n
         * (zetaM m ^ (-(↑b.val * ↑k : ℤ)) * wParam m τ ^ ((m ^ 2 - 1) * k))

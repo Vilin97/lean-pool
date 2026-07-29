@@ -376,7 +376,7 @@ lemma seq_tendsto_to_oneIn_unit_interval_aux :
 /-- If r n tends to 1, then f (r n * z) tends to f z, for z in the unit disc,
 when f is continuous on the closed unit disc. -/
 lemma tendsto_of_radius_tendsto_one_of_continuousOn_closedUnitDisc
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    {E : Type*} [NormedAddCommGroup E]
     {f : ℂ → E} {z : ℂ} {r : ℕ → ℝ}
     (hc : ContinuousOn f (closedBall 0 1)) (hr_lim : Tendsto r atTop (𝓝 1))
     (hz : z ∈ ball 0 1) : Tendsto (fun n => f (r n * z)) atTop (𝓝 (f z)) := by
