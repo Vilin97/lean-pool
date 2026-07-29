@@ -15,6 +15,8 @@ are split apart since otherwise the file runs very slow. -/
 
 namespace Lean4GlCoalgebras
 
+set_option backward.isDefEq.respectTransparency false
+
 open Split
 
 /-- Given a node `x`, defines what the root of the left interpolation proof should look like,

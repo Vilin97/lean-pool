@@ -17,6 +17,8 @@ half-edge; the bridge therefore precomposes occurrence sides with `Fin.rev`.
 namespace Sabidussi
 namespace LoopMultigraph
 
+set_option backward.isDefEq.respectTransparency false
+
 open Sabidussi
 open scoped BigOperators
 

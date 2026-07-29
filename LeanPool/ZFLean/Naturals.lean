@@ -24,6 +24,8 @@ various properties and usual arithmetic operations on natural numbers.
 
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 universe u
 
 noncomputable section

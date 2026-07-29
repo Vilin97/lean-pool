@@ -45,6 +45,8 @@ Minkowski's theorem (see `LeanPool.SumsThreeSquares.MinkowskiConvex`).
 The main result is `blueprint_case_mod8_eq3`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPool.SumsThreeSquares
 
 open scoped BigOperators

@@ -12,6 +12,8 @@ import LeanPool.Lean4GlCoalgebras.General.Soundness
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof of `Γ`,
 proven in `prover_win_builds_proof`, all other definitions and proofs in this file are helpers. -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lean4GlCoalgebras
 
 private lemma unDi_mem_D_of_ne {Γ : Sequent} {φ χ : Formula}
@@ -312,7 +314,7 @@ lemma rewind_history_one_step_correspondence {Γ g} (strat : Strategy coalgebraG
       · unfold Game.Pos.moves Game.moves at q_mem
         dsimp [coalgebraGame] at q_mem
         rcases (Finset.mem_map).mp q_mem with ⟨R, R_mem, hR⟩
-        simp only [← hR, Function.Embedding.coeFn_mk] at g_in_moves_q ⊢
+        simp only [← hR] at g_in_moves_q ⊢
         rcases (Finset.mem_filterMap _).mp g_in_moves_q with ⟨Δ', _, hΔ'⟩
         by_cases hmem : Δ' ∈ Δ0 :: Δs
         · simp only [hmem, ↓reduceIte, reduceCtorEq] at hΔ'
@@ -344,7 +346,7 @@ lemma builder_RuleApp_head_of_in_cone {Γ g} (strat : Strategy coalgebraGame Pro
     · unfold Game.Pos.moves Game.moves at q_mem
       dsimp [coalgebraGame] at q_mem
       rcases (Finset.mem_map).mp q_mem with ⟨R, R_mem, hR⟩
-      simp only [← hR, Function.Embedding.coeFn_mk]
+      simp only [← hR]
       exact f_of_mem_ruleApps R_mem
     · change Builder = Prover at P_turn_q
       cases P_turn_q
@@ -1284,7 +1286,11 @@ lemma formula_in_successor_of_diamond_formula_in {Γ : Sequent}
       simp only [not_exists] at max
       have := max (Sum.inr R, Γ :: Γs, Rs)
       simp only [nonBoxMove, isBox, Bool.not_eq_true, not_and, Bool.not_eq_false] at this
-      simp_all
+      apply this
+      have last_def' : π.getLast ne = (Sum.inl Γ, Γs, Rs) := by
+        simpa only [MaximalPath.last] using last_def
+      rw [last_def']
+      exact x_y
     cases R <;> simp [RuleApp.isBox] at R_box
     rename_i Δ ψ ψ_in
     simp only [f] at R_f
@@ -1650,7 +1656,8 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
       have u₁_u₂ :
           nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
             (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
-        simp_all
+        convert u₁_u₂
+        exact u₁_def
       have u₁_u₂_mem := move_iff_in_moves.1 u₁_u₂.1
       change π[π.length - (i + 1 + 1) - 1 + 1 + 1] ∈
         Finset.filterMap
@@ -1725,7 +1732,7 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
           exfalso; apply no_box_u₁
           have h : isBox ⟨Sum.inr (RuleApp.box Δ ψ ψ_in), Γ :: Γs, Rs⟩ := by
             simp [isBox, RuleApp.isBox]
-          simp_all
+          exact u₁_def ▸ h
 termination_by (φ.length, i)
 decreasing_by
   · subst_eqs; apply Prod.Lex.left; simp [Formula.length]

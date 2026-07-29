@@ -13,6 +13,8 @@ If Prover has a winning strategy in the game starting from `Γ`, then there is a
 of `Γ`, proven in `prover_win_builds_proof`; all other definitions and proofs in this
 file are helpers. -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Lean4GlCoalgebras
 
 namespace Split
@@ -1494,7 +1496,11 @@ lemma formula_in_successor_of_diamond_formula_in {Γ : SplitSequent}
       simp only [not_exists] at max
       have := max (Sum.inr R, Γ :: Γs, Rs)
       simp only [nonBoxMove, isBox, not_and, not_not] at this
-      simp_all
+      apply this
+      have last_def' : π.getLast ne = (Sum.inl Γ, Γs, Rs) := by
+        simpa only [MaximalPath.last] using last_def
+      rw [last_def']
+      exact x_y
     cases R <;> simp [RuleApp.isBox] at R_box
     all_goals
       simp only [f] at R_f
@@ -1961,12 +1967,13 @@ lemma builder_win_strong_left_succ {Δ : SplitSequent}
     simp only [y_def] at y_u₁
     have y_u₁_mem := move_iff_in_moves.1 y_u₁.1
     unfold Game.Pos.moves Game.moves at y_u₁_mem
-    simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at y_u₁_mem
+    simp only [Finset.mem_map] at y_u₁_mem
     rcases y_u₁_mem with ⟨R, R_Γ, u₁_def⟩
     have move_u₁_u₂ :
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
+      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,
@@ -2055,12 +2062,12 @@ lemma builder_win_strong_left_succ {Δ : SplitSequent}
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
       case boxᵣ source A source_mem => --
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
 termination_by (φ.length, i + 1, 3)
 decreasing_by
   all_goals
@@ -2205,12 +2212,13 @@ lemma builder_win_strong_right_succ {Δ : SplitSequent}
     simp only [y_def] at y_u₁
     have y_u₁_mem := move_iff_in_moves.1 y_u₁.1
     unfold Game.Pos.moves Game.moves at y_u₁_mem
-    simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at y_u₁_mem
+    simp only [Finset.mem_map] at y_u₁_mem
     rcases y_u₁_mem with ⟨R, R_Γ, u₁_def⟩
     have move_u₁_u₂ :
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
+      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,
@@ -2297,12 +2305,12 @@ lemma builder_win_strong_right_succ {Δ : SplitSequent}
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
       case boxᵣ source A source_mem =>
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
 termination_by (φ.length, i + 1, 3)
 decreasing_by
   all_goals

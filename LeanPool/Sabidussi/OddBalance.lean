@@ -17,6 +17,8 @@ modulo two, expands the count over choices of partner vertices, and cancels the 
 derangement contributions in pairs.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open scoped BigOperators
 open Finset
 

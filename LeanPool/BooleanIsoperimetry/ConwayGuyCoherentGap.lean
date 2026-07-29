@@ -15,6 +15,8 @@ Conway--Guy distinct-subset-sum sequence.  The recurrence and notation follow
 Section 2 of Tom Bohman's 1996 paper on the Conway--Guy sequence.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 open scoped BigOperators
 
 namespace BooleanIsoperimetry.CoherentGap

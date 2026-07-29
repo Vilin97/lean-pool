@@ -18,6 +18,9 @@ Imported Lean Pool material for `LeanPool.ZFLean.Sum`.
 universe u v
 
 namespace ZFSet
+
+set_option backward.isDefEq.respectTransparency false
+
 /-- Imported ZFLean declaration. -/
 def Sum (A B : ZFSet) :=
   {x // x ∈ (ZFSet.prod { ZFBool.false.val } A) ∪ (ZFSet.prod { ZFBool.true.val } B)}
