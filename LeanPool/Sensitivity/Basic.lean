@@ -21,6 +21,8 @@ Basic bounds and symmetries for the sensitivity of Boolean functions.
   predicate is invariant under flipping the same coordinate at the input.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPoolSensitivity
 
 variable {n : ℕ}

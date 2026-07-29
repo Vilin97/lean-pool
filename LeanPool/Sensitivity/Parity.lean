@@ -28,6 +28,8 @@ must have a "majority" parity-sign class strictly larger than `2^{n-1}`.
   degree, one parity-sign class has more than `2^{n-1}` vertices.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPoolSensitivity
 
 variable {n : ℕ}
