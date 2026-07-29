@@ -16,9 +16,13 @@ name: Verify challenge solutions
 # landrun is defence in depth on top of the ephemeral runner.
 
 on:
+  # Deliberately not restricted to PRs targeting `main`. A solution lands
+  # wherever the work is happening — during a Lean/Mathlib bump, solution PRs
+  # stack on the bump branch — and whether a proof proves the challenge has
+  # nothing to do with which branch it is heading for. PR #301 (the first
+  # solution to the Odlyzko challenge) got no verification at all because it
+  # targeted `bump/v4.33.0-rc1`.
   pull_request:
-    branches:
-      - main
     paths:
       - 'Challenge/**'
       - 'Challenge.lean'
@@ -119,6 +123,37 @@ jobs:
       - name: Build landrun
         if: steps.tools.outputs.cache-hit != 'true'
         run: go install "github.com/zouuup/landrun/cmd/landrun@$LANDRUN_COMMIT"
+
+      # lean4export reads the oleans this repository's build produced, so its
+      # version has to track `lean-toolchain`. That coupling is invisible in a
+      # commit pin: a version bump that forgets it fails later, inside an
+      # export, with an error about the file format rather than the pin. Say
+      # it here instead, with the replacement SHA already resolved.
+      - name: Check the lean4export pin matches the toolchain
+        run: |
+          set -euo pipefail
+          toolchain="$(cut -d: -f2 lean-toolchain)"
+          # Annotated tags need the `^{}` dereference to reach the commit;
+          # lightweight ones (what lean4export uses today) answer only the
+          # plain query. Ask for both rather than depend on which it is.
+          expected="$(git ls-remote https://github.com/leanprover/lean4export \
+            "refs/tags/$toolchain^{}" | cut -f1)"
+          if [ -z "$expected" ]; then
+            expected="$(git ls-remote https://github.com/leanprover/lean4export \
+              "refs/tags/$toolchain" | cut -f1)"
+          fi
+          if [ -z "$expected" ]; then
+            echo "::warning::lean4export has no $toolchain tag; leaving the pin alone."
+            exit 0
+          fi
+          if [ "$expected" != "$LEAN4EXPORT_COMMIT" ]; then
+            echo "::error::LEAN4EXPORT_COMMIT is pinned to a lean4export that does"
+            echo "not match lean-toolchain ($toolchain). Comparator would fail"
+            echo "reading this repository's oleans. Set it in this workflow to:"
+            echo "  LEAN4EXPORT_COMMIT: $expected"
+            exit 1
+          fi
+          echo "lean4export pin matches $toolchain."
 
       - name: Build lean4export
         if: steps.tools.outputs.cache-hit != 'true'

@@ -57,6 +57,7 @@ Challenge-mode checks (the `Challenge/` library — open statements awaiting a p
 - `status` is `open` or `solved`; a solved challenge carries a `solution` block naming an in-repo `module`, a pool `project`, or a `url`, and an open one carries none
 - slugs, entry modules, and open declaration names are unique; every declaration named in the registry lives in that challenge's namespace and is declared in its file; every statement file is registered
 - generated challenge cards match `Challenge/challenges.yml` — the card carries the informal statement next to the Lean, which is what the [challenge review](CHALLENGE_REVIEW_RULES.md) judges faithfulness against
+- a challenge card carries no lifecycle: no `status`, no solution pointer. A statement file must not change once merged, and the PR guard rejects a solution PR that edits one — so a card that moved with the status would make solving a challenge impossible (regenerate it and the guard refuses the PR; leave it stale and the card check refuses it). The solved state lives in the registry, on the answering module's card, and in `make challenges`
 - `#print axioms` over the challenge library: declarations the registry lists as open must depend on `sorryAx` (a statement quietly proved in place is rejected — the statement is the contract solvers work against), every other declaration must not, and nothing may use an axiom outside the allowed set
 - the environment audit tolerates a `sorryAx` reference only for registered open declarations and their generated companions; combined findings (`sorryAx` plus an axiom declaration, an option backdoor, ...) still fail
 
@@ -130,7 +131,7 @@ Current behavior:
 
 - checks out the PR head
 - restores Lake caches and fetches Mathlib cache if needed
-- profiles new and modified Lean files under `LeanPool/`
+- profiles new and modified Lean files under `LeanPool/`, `Challenge/`, and `Solution/`
 - posts or updates a sticky PR comment
 - uploads the raw profile log as an artifact
 

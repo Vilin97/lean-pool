@@ -15,7 +15,7 @@ This file is a concatenation of README.md and CONTRIBUTING.md.
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and [`merely-true`](https://github.com/merely-true/merely-true), preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, it relies on deterministic linters and LLM judgment, so it can grow faster while staying `sorry`-free and pinned to the latest Mathlib. See [`MOTIVATION.md`](MOTIVATION.md) for the why, browse the API docs at <https://vilin97.github.io/lean-pool/>, and explore each project's dependency graph and declarations in the [exposition site](https://vilin97.github.io/lean-pool/exposition/).
 
 <!-- BEGIN STATS -->
-**141** formalization projects · **946,790** lines of Lean
+**141** formalization projects · **946,790** lines of Lean · **2** open challenges
 <!-- END STATS -->
 
 <sub>(stats above are refreshed automatically by [`readme-stats.yml`](.github/workflows/readme-stats.yml) — edit [`python/lean_pool/stats.py`](python/lean_pool/stats.py), not the numbers)</sub>
@@ -98,7 +98,7 @@ A challenge PR gets its own [LLM review](.github/CHALLENGE_REVIEW_RULES.md), whi
 
 A challenge statement never changes once merged: it is the text every solution is judged against. So a solution goes in [`Solution/`](Solution/) as its own module, which **restates** the statement under the same name and proves it. It must not import the challenge module — comparator exports the two environments separately and checks that the statements agree, and importing would defeat exactly that check (a gate enforces it).
 
-Open a content PR that adds `Solution/<Challenge>.lean` and flips the registry entry to `status: solved` with a `solution:` block (`module:`, plus optional `authors:`, `project:`, and `verified:`), then regenerate the index and cards. A solution that needs real work should prove it in a pooled project under `LeanPool/` and leave a thin bridge here.
+Open a content PR that adds `Solution/<Challenge>.lean` and flips the registry entry to `status: solved` with a `solution:` block (`module:`, plus optional `authors:`, `project:`, and `verified:`), then regenerate the index and cards. The challenge statement file is **not** touched by any of that: its card carries the contract (source, proposers, open declarations, the informal statement) and never the lifecycle, so solving a challenge leaves it byte-identical. A solution that needs real work should prove it in a pooled project under `LeanPool/` and leave a thin bridge here.
 
 Correctness is decided by [`leanprover/comparator`](https://github.com/leanprover/comparator), which replays the solution through the Lean kernel and checks that it proves *the same* statement with no axiom beyond `propext`/`Quot.sound`/`Classical.choice`. [`challenge-verify.yml`](.github/workflows/challenge-verify.yml) runs it on every solved challenge in CI, with `landrun`, `lean4export`, and comparator pinned to exact commits. Locally:
 
@@ -111,7 +111,7 @@ make verify-challenge C=<slug>        # replay a solution
 
 A failed verification is loud rather than tidy: a solution missing the theorem ends in a `lean4export` panic ("Constant … not found in environment"), a weakened statement in `Challenge and solution theorem statement do not match`, and one that still leans on `sorry` in `Illegal axiom detected: 'sorryAx'`. All are rejections — the script exits non-zero and prints the `Verified:` line only on success.
 
-Because a kernel decides correctness, the [solution review](.github/SOLUTION_REVIEW_RULES.md) is deliberately thin, and is skipped altogether when the PR touches nothing but the answer, the generated index, and the registry entry. It runs when there is something a machine cannot settle: a definition hole, a pooled project to judge as a project, or anything else in the diff. Editing a challenge statement in the same PR as a solution is rejected outright by the PR guard.
+A green comparator run is necessary, not sufficient: a solution is still content entering the repository, so it gets the same `/profile` compile-cost comment as any other Lean change, and can be sent back for being too large, too messy, or too slow to build. Because a kernel decides correctness, the [solution review](.github/SOLUTION_REVIEW_RULES.md) is deliberately thin, and is skipped altogether when the PR touches nothing but the answer, the generated index, and the registry entry. It runs when there is something a machine cannot settle: a definition hole, a pooled project to judge as a project, or anything else in the diff. Editing a challenge statement in the same PR as a solution is rejected outright by the PR guard.
 
 **Definition holes.** A challenge may leave a `def ... := sorry` for the solver to fill in (register it under `definitions:`). Comparator only checks that the name, type, universes, and safety level match, so a hole can be gamed — a solution may define it in terms of the very object the challenge asks about. Holes always need human review on top of a green comparator run.
 

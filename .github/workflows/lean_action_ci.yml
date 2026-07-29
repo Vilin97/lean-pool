@@ -42,6 +42,11 @@ on:
   pull_request:
     branches:
       - main
+      # Work stacks on the bump branch during a Lean/Mathlib migration, and
+      # a contribution that never builds is a contribution nobody can judge:
+      # PR #301 added a 210-file project onto `bump/v4.33.0-rc1` and got no
+      # build, no linters, and no quality checks at all.
+      - 'bump/**'
     paths:
       - '**/*.lean'
       - 'lakefile.toml'
