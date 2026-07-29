@@ -1,4 +1,43 @@
 projects:
+  - slug: mazur-torsion-foundations
+    title: Elementary Torsion Foundations for Mazur's Theorem
+    summary: >-
+      Proves that a Weierstrass curve in characteristic different from two has
+      at most four points killed by two, and that an elliptic curve over the
+      rationals cannot have full rational 4-torsion. The latter follows from
+      the classical square-product argument applied to rational halves of the
+      three nonzero two-torsion points.
+    branch: number theory
+    entry_module: LeanPool.MazurTorsionFoundations
+    authors:
+      - Victor Aguiar
+    source:
+      title: The Arithmetic of Elliptic Curves
+      authors:
+        - Joseph H. Silverman
+      doi: "10.1007/978-0-387-09494-6"
+      github_repo: vaguiarl/lean-pool
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.MazurTorsionFoundations.ncard_two_torsion_le_four
+      - LeanPool.MazurTorsionFoundations.FullFour.not_injective_zmod_four_square
+    main_results:
+      - declaration: LeanPool.MazurTorsionFoundations.ncard_two_torsion_le_four
+        informal: >-
+          Over a field of characteristic different from two, a Weierstrass
+          curve has at most four nonsingular affine points killed by two.
+      - declaration: LeanPool.MazurTorsionFoundations.FullFour.not_injective_zmod_four_square
+        informal: >-
+          For every elliptic curve over the rationals, no additive homomorphism
+          from ZMod 4 × ZMod 4 to its rational points is injective.
+    tags:
+      - elliptic-curves
+      - torsion
+      - mazur-theorem
+    msc:
+      - "11G05"
   - slug: boolean-isoperimetry
     title: Harper's Vertex-Isoperimetric Theorem on the Boolean Cube
     summary: >-

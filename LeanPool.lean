@@ -1752,6 +1752,9 @@ import LeanPool.MRiscX.Tactics.SpecificationTactics
 import LeanPool.MRiscX.Tactics.SplitLastSeq
 import LeanPool.MRiscX.Tactics.TacticUtil
 import LeanPool.MRiscX.Util.BasicTheorems
+import LeanPool.MazurTorsionFoundations
+import LeanPool.MazurTorsionFoundations.FullFourTorsion
+import LeanPool.MazurTorsionFoundations.TwoTorsion
 import LeanPool.MinModulusUniqueMultisetSum
 import LeanPool.MinModulusUniqueMultisetSum.ElemAbelian2
 import LeanPool.MinModulusUniqueMultisetSum.UniqueSums
