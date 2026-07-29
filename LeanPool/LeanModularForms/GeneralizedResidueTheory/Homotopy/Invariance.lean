@@ -30,8 +30,6 @@ open scoped Real Interval
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 private theorem homotopy_uniform_avoidance
     (H : ℝ × ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) (hab : a < b)
     (hH_cont : Continuous H)

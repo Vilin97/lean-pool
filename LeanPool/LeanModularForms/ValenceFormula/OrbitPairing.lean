@@ -27,8 +27,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 private lemma normSq_add_one_eq_of_re_neg_half (z : ℂ) (hre : z.re = -1 / 2) :
     Complex.normSq (z + 1) = Complex.normSq z := by
   simp only [normSq_apply, add_re, one_re, add_im, one_im, add_zero, hre]; ring
@@ -216,7 +214,10 @@ def sRightArc (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => ‖(p : ℂ)‖ = 1 ∧ (p : ℂ).re > 0)
 
 private lemma S_mul_S : ModularGroup.S * ModularGroup.S = -1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [ModularGroup.S]
+  apply Subtype.ext
+  change (!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ) * !![0, -1; 1, 0] = -1
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply]
 
 /-- S² acts as the identity on ℍ. -/
 lemma S_smul_S_smul (p : ℍ) : ModularGroup.S • (ModularGroup.S • p) = p := by

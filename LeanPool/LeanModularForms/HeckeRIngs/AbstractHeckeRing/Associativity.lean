@@ -20,8 +20,6 @@ open scoped Pointwise
 
 namespace HeckeRing
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {G : Type*} [Group G]
 
 variable (P : HeckePair G) (Z : Type*) [CommRing Z]
@@ -286,9 +284,10 @@ private lemma iter_mem_smulOrbit_mulMap (g₂ g₁ : P.Δ) (β : P.Δ)
         (delta_mul_mem P.H P.Δ i.out β g₂ P.h₀)
         (P.h₀ j.out.2)) g₁.2⟩⟧ : HeckeLeftCoset P) by
     rw [← hsuff]
-    change _ ∈ smulOrbit P (HeckeCoset.rep D) β
-    simp only [smulOrbit, Finset.mem_image]
-    exact ⟨r, Finset.mem_univ _, rfl⟩
+    change smulOrbitElement P (HeckeCoset.rep D) β r ∈
+      smulOrbit P (HeckeCoset.rep D) β
+    rw [smulOrbit]
+    exact Finset.mem_image_of_mem _ (Finset.mem_univ r)
   apply Quotient.sound; change lcRel P _ _; simp only [lcRel]
   apply leftCoset_eq_of_not_disjoint; rw [@not_disjoint_iff]
   refine ⟨α * h₁ * g_D, ?_, ?_⟩
@@ -359,6 +358,9 @@ private lemma iter_smulOrbit_mem_mulSupport_smulOrbit
       Submonoid.mul_mem _ (Submonoid.mul_mem _
         (delta_mul_mem P.H P.Δ i₀.out β₀ g₂ P.h₀)
         (P.h₀ k'.out.2)) g₁.2⟩⟧ : HeckeLeftCoset P) by
+    change (⟦⟨β * (k₀.out : G) * g₁',
+      delta_mul_mem P.H P.Δ k₀.out (HeckeLeftCoset.rep j) g₁ P.h₀⟩⟧ :
+        HeckeLeftCoset P) ∈ smulOrbit P D'.rep β₀
     rw [hsuff]; exact h_target
   apply Quotient.sound; change lcRel P _ _; simp only [lcRel]
   apply leftCoset_eq_of_not_disjoint; rw [@not_disjoint_iff]
@@ -373,9 +375,7 @@ private lemma smulOrbit_indicator_eq_sum (g₁ : P.Δ)
     (x₀ : HeckeLeftCoset P) (β : P.Δ) :
     (if x₀ ∈ smulOrbit P g₁ β then (1 : ℤ) else 0) =
     ∑ k : decompQuot P g₁,
-      if (⟦⟨(β : G) * (k.out : G) * (g₁ : G),
-      delta_mul_mem P.H P.Δ k.out β g₁ P.h₀⟩⟧ :
-        HeckeLeftCoset P) = x₀ then 1 else 0 := by
+      if smulOrbitElement P g₁ β k = x₀ then 1 else 0 := by
   by_cases hmem : x₀ ∈ smulOrbit P g₁ β
   · rw [if_pos hmem]
     simp only [smulOrbit, Finset.mem_image] at hmem
@@ -403,8 +403,7 @@ private lemma smulOrbit_count_eq_m' (g₂ g₁ : P.Δ) (D₀ : HeckeCoset P)
   have h_lhs_eq :
     ∀ q : decompQuot P g₂,
       smulOrbit P g₁ (HeckeLeftCoset.rep
-        (⟦⟨(β₀ : G) * (q.out : G) * (g₂ : G),
-          delta_mul_mem P.H P.Δ q.out β₀ g₂ P.h₀⟩⟧ : HeckeLeftCoset P)) =
+        (smulOrbitElement P g₂ β₀ q)) =
       smulOrbit P g₁ ⟨(β₀ : G) * (q.out : G) * (g₂ : G),
           delta_mul_mem P.H P.Δ q.out β₀ g₂ P.h₀⟩ := by
     intro q
@@ -416,9 +415,7 @@ private lemma smulOrbit_count_eq_m' (g₂ g₁ : P.Δ) (D₀ : HeckeCoset P)
     fun j => if x₀ ∈ smulOrbit P g₁ (HeckeLeftCoset.rep j) then 1 else 0 with hF_def
   change (∑ j ∈ smulOrbit P g₂ β₀, F j) = (m P g₂ g₁) D₀
   conv_lhs => rw [smulOrbit]; rw [Finset.top_eq_univ]
-  have h_inj : Set.InjOn (fun i : decompQuot P g₂ =>
-      (⟦⟨(β₀ : G) * (i.out : G) * (g₂ : G),
-        delta_mul_mem P.H P.Δ i.out β₀ g₂ P.h₀⟩⟧ : HeckeLeftCoset P))
+  have h_inj : Set.InjOn (smulOrbitElement P g₂ β₀)
       (Finset.univ : Finset (decompQuot P g₂)) :=
     fun a _ b _ hab => smulOrbit_map_injective P g₂ β₀ hab
   have h_img := Finset.sum_image (f := F) h_inj
@@ -426,11 +423,25 @@ private lemma smulOrbit_count_eq_m' (g₂ g₁ : P.Δ) (D₀ : HeckeCoset P)
   simp only [hF_def, h_lhs_eq]
   -- Step 2: Use smulOrbit_indicator_eq_sum to expand each indicator
   simp_rw [smulOrbit_indicator_eq_sum P g₁ x₀]
-  have M_mk_eq_iff : ∀ (a b : P.Δ),
-      (⟦a⟧ : HeckeLeftCoset P) = ⟦b⟧ ↔
-      ({(a : G)} : Set G) * ↑P.H = {(b : G)} * ↑P.H :=
-    fun a b => ⟨fun h => Quotient.exact h, fun h => Quotient.sound h⟩
-  simp_rw [← hq₀, M_mk_eq_iff]
+  have orbitElement_eq_iff :
+      ∀ (q : decompQuot P g₂) (k : decompQuot P g₁),
+        smulOrbitElement P g₁
+          ⟨(β₀ : G) * (q.out : G) * (g₂ : G),
+            delta_mul_mem P.H P.Δ q.out β₀ g₂ P.h₀⟩ k =
+            smulOrbitElement P (HeckeCoset.rep D₀) β₀ q₀ ↔
+          ({(β₀ : G) * (q.out : G) * (g₂ : G) * (k.out : G) *
+            (g₁ : G)} : Set G) * ↑P.H =
+            {(β₀ : G) * (q₀.out : G) * (HeckeCoset.rep D₀ : G)} * ↑P.H := by
+    intro q k
+    change (⟦⟨(β₀ : G) * (q.out : G) * (g₂ : G) * (k.out : G) * (g₁ : G),
+        Submonoid.mul_mem _ (Submonoid.mul_mem _
+          (delta_mul_mem P.H P.Δ q.out β₀ g₂ P.h₀) (P.h₀ k.out.2)) g₁.2⟩⟧ :
+        Quotient (lcSetoid P)) =
+      ⟦⟨(β₀ : G) * (q₀.out : G) * (HeckeCoset.rep D₀ : G),
+        delta_mul_mem P.H P.Δ q₀.out β₀ (HeckeCoset.rep D₀) P.h₀⟩⟧ ↔ _
+    rw [Quotient.eq]
+    rfl
+  simp_rw [← hq₀, orbitElement_eq_iff]
   rw [← Fintype.sum_prod_type']
   rw [Finset.sum_boole, ← Fintype.card_subtype, ← Nat.card_eq_fintype_card]
   -- Step 4: Factor out the left coset representative β₀

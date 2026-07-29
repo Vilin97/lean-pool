@@ -46,10 +46,10 @@ lemma mul_Delta_map_eq_mul (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 
   ext z
   rw [mulDeltaMap, mcast_apply ]
 
-lemma qExpansion_coe_smul {n : ℕ} [NeZero n] {k : ℤ} (a : ℂ) (f : ModularForm Γ(n) k) :
+lemma qExpansion_coe_smul {n : ℕ} {k : ℤ} (a : ℂ) (f : ModularForm Γ(n) k) :
     qExpansion n (⇑(a • f)) = qExpansion n (a • ⇑f) := rfl
 
-lemma qExpansion_coe_smul_cusp {n : ℕ} [NeZero n] {k : ℤ} (a : ℂ) (f : CuspForm Γ(n) k) :
+lemma qExpansion_coe_smul_cusp {n : ℕ} {k : ℤ} (a : ℂ) (f : CuspForm Γ(n) k) :
     qExpansion n (⇑(a • f)) = qExpansion n (a • ⇑f) := rfl
 
 lemma qExpansion_coe_sub {k : ℤ} (f g : ModularForm Γ(1) k) :

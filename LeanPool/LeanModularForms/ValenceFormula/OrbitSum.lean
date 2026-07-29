@@ -27,8 +27,6 @@ open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {k : ℤ} (f : ModularForm (Gamma 1) k)
 
 /-- `orderOfVanishingAt'` is invariant under the action of any `g ∈ SL(2, ℤ)`. -/
@@ -224,7 +222,8 @@ theorem finite_support_ordOrbit_nonEll (hf : f ≠ 0) :
   apply Set.Finite.subset ((finite_support_ordOrbit f hf).preimage
       (fun (a : NonEllOrbit) _ (b : NonEllOrbit) _ h =>
         Subtype.val_injective h))
-  simp_all
+  intro q hq
+  exact hq
 
 /-- The canonical finite set of zeros (with nonzero order) in `𝒟`. -/
 noncomputable def s₀ (hf : f ≠ 0) : Finset ℍ := (finite_zeros_in_fd f hf).toFinset

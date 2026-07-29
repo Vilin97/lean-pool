@@ -22,8 +22,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 private lemma leftEdge_t₀_mem_Ioo (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H) (s : ℂ)
     (hs_im_lower : Real.sqrt 3 / 2 < s.im) (hs_im : s.im < H) :
     3 + (s.im - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) ∈ Ioo (3 : ℝ) 4 := by

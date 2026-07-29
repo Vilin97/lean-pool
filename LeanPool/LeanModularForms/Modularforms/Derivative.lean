@@ -17,8 +17,6 @@ public import Mathlib.Analysis.Complex.Liouville
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
-
 open UpperHalfPlane hiding I
 open Real Complex CongruenceSubgroup SlashAction SlashInvariantForm ContinuousMap
 open Metric Filter Function

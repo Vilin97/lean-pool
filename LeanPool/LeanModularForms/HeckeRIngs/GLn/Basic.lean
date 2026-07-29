@@ -34,8 +34,6 @@ open Matrix Subgroup.Commensurable Pointwise Matrix.SpecialLinearGroup
 
 namespace HeckeRing.GLn
 
-set_option backward.isDefEq.respectTransparency false
-
 variable (n : ℕ)
 
 section Embedding
@@ -125,11 +123,14 @@ private lemma ker_entry_dvd (d : ℕ) [NeZero d] (γ : SpecialLinearGroup (Fin n
     (hγ : γ ∈ (SpecialLinearGroup.map (Int.castRingHom (ZMod d))).ker) (i j : Fin n) :
     (d : ℤ) ∣ (γ.val i j - (1 : Matrix (Fin n) (Fin n) ℤ) i j) := by
   rw [MonoidHom.mem_ker] at hγ
-  have h := congr_fun₂ (congr_arg Subtype.val hγ) i j
-  simp only [SpecialLinearGroup.map, RingHom.mapMatrix_apply, Int.coe_castRingHom,
-    MonoidHom.coe_mk, OneHom.coe_mk, map_apply, coe_one] at h
+  have h := congr_fun₂
+    (congr_arg (fun A : SpecialLinearGroup (Fin n) (ZMod d) => A.val) hγ) i j
+  change ((γ.val i j : ℤ) : ZMod d) =
+    (1 : Matrix (Fin n) (Fin n) (ZMod d)) i j at h
   rw [Matrix.one_apply] at h ⊢; split_ifs at h ⊢
-  · exact (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp (by push_cast; simp [h])
+  · exact (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp (by
+      push_cast
+      exact sub_eq_zero.mpr h)
   · rw [sub_zero]; exact (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mp h
 
 /-- When `d | (gamma - I)` entry-wise, decompose `gamma = I + d * M`. -/

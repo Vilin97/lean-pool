@@ -15,8 +15,6 @@ public import LeanPool.LeanModularForms.Modularforms.SummableLems
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
-
 open ModularForm hiding E₄ E₆
 open LevelOneEisenstein
 open EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
@@ -311,12 +309,12 @@ lemma q_exp_unique (c : ℕ → ℂ) (f : ModularForm Γ(n) k) [hn : NeZero n]
     intro S
     congr
     ext b
-    simp only [smul_eq_mul, PowerSeries.coeff_mk, qq, qExpansion2]
+    simp only [smul_eq_mul]
     rw [mul_comm]
     congr
-    rw [FormalMultilinearSeries.coeff.eq_1 ]
+    rw [FormalMultilinearSeries.coeff.eq_1]
     simp only [_root_.smul_apply, ContinuousMultilinearMap.mkPiAlgebraFin_apply,
-      smul_eq_mul]
+      smul_eq_mul, qq, qExpansion2, PowerSeries.coeff_mk]
     rw [@Fin.prod_ofFn]
     simp only [Pi.one_apply, Finset.prod_const_one, mul_one]
   have h3 : HasFPowerSeriesAt (cuspFunction n f) qq 0 := by

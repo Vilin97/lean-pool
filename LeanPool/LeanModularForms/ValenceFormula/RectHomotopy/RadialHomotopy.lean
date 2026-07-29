@@ -25,8 +25,6 @@ open Complex Set Metric Filter Topology
 
 namespace RectHomotopyProof
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- Radial homotopy from polygon to unit circle around p.
     H(t, s) = p + ((1-s)·‖z-p‖ + s) · (z-p)/‖z-p‖ -/
 noncomputable def polygonToCircleRadial (p : ℂ) : ℝ × ℝ → ℂ := fun (t, s) =>

@@ -23,8 +23,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- For a unit-norm complex `s`, `s.re² + s.im² = 1`. -/
 private lemma unitArc_re_sq_add_im_sq {s : ℂ} (hs_norm : ‖s‖ = 1) :
     s.re ^ 2 + s.im ^ 2 = 1 := by

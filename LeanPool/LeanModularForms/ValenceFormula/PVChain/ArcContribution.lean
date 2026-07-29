@@ -34,8 +34,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
 private lemma deriv_fdBoundary_H_arc (H : ℝ) {t : ℝ} (h1 : 1 < t) (h3 : t < 3) :

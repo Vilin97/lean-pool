@@ -28,8 +28,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- The elliptic point i as an element of ℍ. -/
 def ellipticPointI' : UpperHalfPlane := ⟨I, by simp [Complex.I_im]⟩
 
@@ -86,7 +84,10 @@ theorem ellipticPointRho_norm : ‖ellipticPointRho‖ = 1 := by
 
 theorem ellipticPointI_mem_fd : ellipticPointI' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointI', mem_setOf_eq]
-  simp_all
+  constructor
+  · norm_num [Complex.normSq]
+  · change |(I : ℂ).re| ≤ (1 : ℝ) / 2
+    norm_num
 
 theorem ellipticPointRho_mem_fd : ellipticPointRho' ∈ 𝒟 := by
   simp only [ModularGroup.fd, ellipticPointRho', mem_setOf_eq]

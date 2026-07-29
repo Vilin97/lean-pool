@@ -31,36 +31,70 @@ are modular forms of weight 2 and level Γ(2).
 open scoped ModularForm MatrixGroups
 open Matrix UpperHalfPlane CongruenceSubgroup ModularGroup
 
-set_option backward.isDefEq.respectTransparency false
-
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 local notation "Γ " n:100 => Gamma n
 
+/-- The special-linear matrix underlying `α`. -/
+def αMatrix : SL(2, ℤ) := ⟨!![1, 2; 0, 1], by simp⟩
+
 /-- The generator `α = [[1, 2], [0, 1]]` of the congruence subgroup `Γ(2)`. -/
-def α : Γ 2 := ⟨⟨!![1, 2; 0, 1], by simp⟩, by
-  simp only [Gamma_mem, Fin.isValue, of_apply, cons_val', cons_val_zero, cons_val_fin_one,
-    Int.cast_one, cons_val_one, Int.cast_ofNat, Int.cast_zero, and_self, and_true, true_and]
+def α : Γ 2 := ⟨αMatrix, by
+  rw [Gamma_mem]
+  change ((1 : ℤ) : ZMod 2) = 1 ∧ ((2 : ℤ) : ZMod 2) = 0 ∧
+    ((0 : ℤ) : ZMod 2) = 0 ∧ ((1 : ℤ) : ZMod 2) = 1
   decide⟩
+
+/-- The special-linear matrix underlying `β`. -/
+def βMatrix : SL(2, ℤ) := ⟨!![1, 0; 2, 1], by simp⟩
 
 /-- The generator `β = [[1, 0], [2, 1]]` of the congruence subgroup `Γ(2)`. -/
-def β : Γ 2 := ⟨⟨!![1, 0; 2, 1], by simp⟩, by
-  simp only [Gamma_mem, Fin.isValue, of_apply, cons_val', cons_val_zero, cons_val_fin_one,
-    Int.cast_one, cons_val_one, Int.cast_zero, Int.cast_ofNat, and_true, true_and]
+def β : Γ 2 := ⟨βMatrix, by
+  rw [Gamma_mem]
+  change ((1 : ℤ) : ZMod 2) = 1 ∧ ((0 : ℤ) : ZMod 2) = 0 ∧
+    ((2 : ℤ) : ZMod 2) = 0 ∧ ((1 : ℤ) : ZMod 2) = 1
   decide⟩
 
+/-- The negative identity as a special-linear matrix. -/
+def negIMatrix : SL(2, ℤ) := ⟨!![-1, 0; 0, -1], by simp⟩
+
 /-- The element `-I = [[-1, 0], [0, -1]]` of the congruence subgroup `Γ(2)`. -/
-def negI : Γ 2 := ⟨⟨!![-1, 0; 0, -1], by simp⟩, by simp⟩
+def negI : Γ 2 := ⟨negIMatrix, by
+  rw [Gamma_mem]
+  change ((-1 : ℤ) : ZMod 2) = 1 ∧ ((0 : ℤ) : ZMod 2) = 0 ∧
+    ((0 : ℤ) : ZMod 2) = 0 ∧ ((-1 : ℤ) : ZMod 2) = 1
+  decide⟩
 
 theorem α_eq_T_sq :
     α = ⟨T ^ 2, by simp only [Gamma_mem, Fin.isValue, SpecialLinearGroup.coe_pow]; decide⟩ := by
-  ext; simp [α, T, sq]
+  apply Subtype.ext
+  apply Subtype.ext
+  change (!![1, 2; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ) =
+    (!![1, 1; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ) ^ 2
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [pow_two, Matrix.mul_apply]
 
-theorem β_eq_negI_mul_S_mul_α_inv_mul_S : β = negI * S * α⁻¹ * S := by ext; simp [β, S, α, negI]
+theorem β_eq_negI_mul_S_mul_α_inv_mul_S : β = negI * S * α⁻¹ * S := by
+  apply Subtype.ext
+  change (!![1, 0; 2, 1] : Matrix (Fin 2) (Fin 2) ℤ) =
+    !![-1, 0; 0, -1] * !![0, -1; 1, 0] * Matrix.adjugate !![1, 2; 0, 1] *
+      !![0, -1; 1, 0]
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply, Matrix.adjugate_fin_two]
 
 theorem ModularGroup.modular_negI_sq : negI ^ 2 = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> rfl
+  apply Subtype.ext
+  apply Subtype.ext
+  change (!![-1, 0; 0, -1] : Matrix (Fin 2) (Fin 2) ℤ) ^ 2 = 1
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [pow_two, Matrix.mul_apply]
 
-theorem ModularGroup.modular_negI_inv : negI⁻¹ = negI := by ext i j; simp [negI]
+theorem ModularGroup.modular_negI_inv : negI⁻¹ = negI := by
+  apply Subtype.ext
+  apply Subtype.ext
+  change Matrix.adjugate (!![-1, 0; 0, -1] : Matrix (Fin 2) (Fin 2) ℤ) =
+    !![-1, 0; 0, -1]
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.adjugate_fin_two]
 
 section slash_action
 
@@ -68,17 +102,27 @@ variable (f : ℍ → ℂ) (k : ℤ) (z : ℍ)
 
 open ModularForm
 
-theorem modular_negI_smul : negI.1 • z = z := by rw [specialLinearGroup_apply]; simp [negI]
+theorem modular_negI_smul : negI.1 • z = z := by
+  rw [specialLinearGroup_apply]
+  simp [negI, negIMatrix]
 
 theorem modular_slash_negI_of_even (hk : Even k) : f ∣[k] negI.1 = f := by
-  ext x; rw [slash_action_eq'_iff, modular_negI_smul]; simp [negI, hk.neg_one_zpow]
+  ext x
+  rw [slash_action_eq'_iff, modular_negI_smul]
+  simp [negI, negIMatrix, hk.neg_one_zpow]
 
 theorem modular_slash_S_apply :
     (f ∣[k] S) z = f (UpperHalfPlane.mk (-z)⁻¹ z.im_inv_neg_coe_pos) * z ^ (-k) := by
-  rw [SL_slash_apply, denom, UpperHalfPlane.modular_S_smul]; simp [S]
+  rw [SL_slash_apply, denom, UpperHalfPlane.modular_S_smul]
+  simp only [SpecialLinearGroup.coe_GL_coe_matrix]
+  rw [SpecialLinearGroup.map_apply_coe (Int.castRingHom ℝ) S]
+  simp [S, RingHom.mapMatrix_apply]
 
 theorem modular_slash_T_apply : (f ∣[k] T) z = f ((1 : ℝ) +ᵥ z) := by
-  rw [SL_slash_apply, denom, UpperHalfPlane.modular_T_smul]; simp [T]
+  rw [SL_slash_apply, denom, UpperHalfPlane.modular_T_smul]
+  simp only [SpecialLinearGroup.coe_GL_coe_matrix]
+  rw [SpecialLinearGroup.map_apply_coe (Int.castRingHom ℝ) T]
+  simp [T, RingHom.mapMatrix_apply]
 
 end slash_action
 
@@ -96,11 +140,11 @@ private theorem α_zpow_val (k : ℤ) : (α ^ k : SL(2, ℤ)).val = !![1, 2 * k;
   | zero => exact Matrix.one_fin_two
   | succ n ih =>
     simp only [zpow_add, zpow_one, SpecialLinearGroup.coe_mul, ih]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [α]; ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [α, αMatrix]; ring
   | pred n ih =>
     simp only [zpow_sub, zpow_one, SpecialLinearGroup.coe_mul, SpecialLinearGroup.coe_inv,
       Matrix.adjugate_fin_two, ih]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [α]; ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [α, αMatrix]; ring
 
 /-- The matrix `β ^ k` equals `[[1, 0], [2k, 1]]`. -/
 private theorem β_zpow_val (k : ℤ) : (β ^ k : SL(2, ℤ)).val = !![1, 0; 2 * k, 1] := by
@@ -108,11 +152,11 @@ private theorem β_zpow_val (k : ℤ) : (β ^ k : SL(2, ℤ)).val = !![1, 0; 2 *
   | zero => exact Matrix.one_fin_two
   | succ n ih =>
     simp only [zpow_add, zpow_one, SpecialLinearGroup.coe_mul, ih]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [β, Matrix.mul_apply]; ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [β, βMatrix, Matrix.mul_apply]; ring
   | pred n ih =>
     simp only [zpow_sub, zpow_one, SpecialLinearGroup.coe_mul, SpecialLinearGroup.coe_inv,
       Matrix.adjugate_fin_two, ih]
-    ext i j; fin_cases i <;> fin_cases j <;> simp [β, Matrix.mul_apply]; ring
+    ext i j; fin_cases i <;> fin_cases j <;> simp [β, βMatrix, Matrix.mul_apply]; ring
 
 lemma Γ2_c_eq_zero (A : Γ 2) (h : A.1 1 0 = 0) : A ∈ Subgroup.closure {α, β, negI} := by
   by_cases ha : (A.val.val 0 0) = 1 ∨ (A.val.val 0 0) = -1
@@ -137,7 +181,7 @@ lemma Γ2_c_eq_zero (A : Γ 2) (h : A.1 1 0 = 0) : A ∈ Subgroup.closure {α, �
         simp only [SpecialLinearGroup.coe_mul, zpow_neg, SpecialLinearGroup.coe_inv]
         rw [α_zpow_val]
         ext i j; fin_cases i <;> fin_cases j
-          <;> simp [negI, Matrix.mul_apply, Matrix.adjugate_fin_two, hk, h, h_2, h11]
+          <;> simp [negI, negIMatrix, Matrix.mul_apply, Matrix.adjugate_fin_two, hk, h, h_2, h11]
       have hnegI_mem : negI ∈ Subgroup.closure {α, β, negI} :=
         Subgroup.subset_closure (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ rfl))
       have hα_mem : α ∈ Subgroup.closure {α, β, negI} :=

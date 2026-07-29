@@ -25,8 +25,6 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- For a point on the right edge, `t₀ = (H - s.im) / (H - √3/2)` is the unique
 parameter in `(0, 1)` with `fdBoundaryH H t₀ = s`. -/
 lemma rightEdge_t₀_mem_Ioo (H : ℝ) (_hH : heightCutoff ≤ H) (s : ℂ)

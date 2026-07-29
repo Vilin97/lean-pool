@@ -154,7 +154,7 @@ theorem PiecewiseCurvesHomotopicAvoiding.toBasic
     fun t ht s hs => havoid t (Set.Ioo_subset_Icc_self ht) s hs⟩
 
 /-- If f is eventually equal to a constant, `limUnder` equals that constant. -/
-theorem limUnder_eventually_eq_const {α : Type*} [TopologicalSpace α] {f : α → ℂ}
+theorem limUnder_eventually_eq_const {α : Type*} {f : α → ℂ}
     {l : Filter α} {c : ℂ} [l.NeBot] (hf : ∀ᶠ x in l, f x = c) : limUnder l f = c :=
   (tendsto_const_nhds.congr' (hf.mono fun _ h => h.symm)).limUnder_eq
 

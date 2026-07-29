@@ -35,8 +35,6 @@ open scoped Real Interval
 
 noncomputable section
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- Multi-point PV integrand: zero near any s in S, else f(γ(t))·γ'(t). -/
 def cauchyPrincipalValueIntegrandOn
     (S : Finset ℂ) (f : ℂ → ℂ) (γ : ℝ → ℂ)

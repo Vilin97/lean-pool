@@ -19,8 +19,6 @@ transvection matrices `E_{ij}(c) = I + c·e_{ij}`.
   of transvections.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- An elementary transvection in `SL_m(ℤ)`: the matrix `I + c·e_{ij}`. -/
 def slTransvecG {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c : ℤ) :
     Matrix.SpecialLinearGroup (Fin m) ℤ :=
@@ -44,7 +42,7 @@ private lemma slTransvecG_mul_entry {m : ℕ} [NeZero m] (i j : Fin m) (hij : i 
     (slTransvecG i j hij c * σ).1 a b =
     if a = i then σ.1 i b + c * σ.1 j b else σ.1 a b := by
   have hcoe : (slTransvecG i j hij c * σ).1 = Matrix.transvection i j c * σ.1 := by
-    simp only [Matrix.SpecialLinearGroup.coe_mul, slTransvecG]
+    exact (Matrix.SpecialLinearGroup.coe_mul (slTransvecG i j hij c) σ).trans rfl
   rw [hcoe]
   split_ifs with hai
   · subst hai; simp [Matrix.transvection, Matrix.add_mul]
@@ -55,7 +53,7 @@ private lemma slTransvecG_mul_right_entry {m : ℕ}
     (a b : Fin m) : (σ * slTransvecG i j hij c).1 a b =
     if b = j then σ.1 a j + c * σ.1 a i else σ.1 a b := by
   have hcoe : (σ * slTransvecG i j hij c).1 = σ.1 * Matrix.transvection i j c := by
-    simp only [Matrix.SpecialLinearGroup.coe_mul, slTransvecG]
+    exact (Matrix.SpecialLinearGroup.coe_mul σ (slTransvecG i j hij c)).trans rfl
   rw [hcoe]
   split_ifs with hbj
   · subst hbj; simp [Matrix.transvection, Matrix.mul_add, mul_comm]
@@ -74,7 +72,7 @@ private lemma slTransvecG_col0 {m : ℕ} (i j : Fin (m + 1)) (hij : i ≠ j) (c 
     (slTransvecG i j hij c * σ).1 a 0 =
     if a = i then σ.1 i 0 + c * σ.1 j 0 else σ.1 a 0 := by
   have : (slTransvecG i j hij c * σ).1 = Matrix.transvection i j c * σ.1 := by
-    simp only [Matrix.SpecialLinearGroup.coe_mul, slTransvecG]
+    exact (Matrix.SpecialLinearGroup.coe_mul (slTransvecG i j hij c) σ).trans rfl
   rw [this]; split_ifs with hai
   · subst hai; simp [Matrix.transvection, Matrix.add_mul]
   · simp [Matrix.transvection, Matrix.add_mul, hai]

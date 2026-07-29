@@ -20,8 +20,6 @@ public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
 
 @[expose] public section
 
-set_option backward.isDefEq.respectTransparency false
-
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups
 
@@ -257,7 +255,8 @@ theorem Delta_boundedfactor :
       intro b hb k
       let K : ℕ+ := ⟨k+1, Nat.zero_lt_succ k⟩
       have haa := ha (K • b) (by have h8 := hA K b hb; simp_all)
-      simp only [natPosSMul_apply, PNat.mk_coe, Nat.cast_add, Nat.cast_one, K] at haa
+      rw [natPosSMul_apply K b] at haa
+      norm_num [K] at haa
       have := Complex.norm_log_one_add_half_le_self (z := -cexp (2 * ↑π * Complex.I * (↑k + 1) * b))
       rw [sub_eq_add_neg]
       simp_rw [← mul_assoc] at haa
@@ -273,8 +272,9 @@ theorem Delta_boundedfactor :
         simp only [UpperHalfPlane.I_im, hb.2.2]
       have HH := ha3 (K • b) (by
         have h8 := hA K b hb; simp only [mem_inter_iff, mem_setOf_eq] at h8; exact h8.1.2)
-      simp only [natPosSMul_apply, PNat.mk_coe, Nat.cast_add, Nat.cast_one, ← mul_assoc, K] at HH
-      exact HH.le
+      rw [natPosSMul_apply K b] at HH
+      norm_num [K, ← mul_assoc] at HH
+      simpa [one_div] using HH.le
   · intro x n
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff]
     apply term_ne_zero

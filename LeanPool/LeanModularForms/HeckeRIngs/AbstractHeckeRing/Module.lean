@@ -19,8 +19,6 @@ open scoped Pointwise
 
 namespace HeckeRing
 
-set_option backward.isDefEq.respectTransparency false
-
 variable {G : Type*} [Group G]
 
 variable (P : HeckePair G) (Z : Type*) [CommRing Z]
@@ -32,17 +30,23 @@ Higher priority than the inherited `Mul.toSMul` so that `•` denotes the revers
 noncomputable instance (priority := 1100) instSMul𝕋 : SMul (𝕋 P ℤ) (𝕋 P ℤ) where
   smul x y := y * x
 
+/-- The left coset represented by `β · i · g` in the orbit indexed by `i`. -/
+noncomputable def smulOrbitElement (g β : P.Δ) (i : decompQuot P g) :
+    HeckeLeftCoset P :=
+  ⟦⟨(β : G) * (i.out : G) * (g : G),
+    delta_mul_mem P.H P.Δ i.out β g P.h₀⟩⟧
+
 /-- The orbit of a left coset representative `β` under double coset representative `g`:
 the set of left cosets `{β · σ_i · g | σ_i ∈ H/(H ∩ gHg⁻¹)}`. -/
 noncomputable def smulOrbit (g : P.Δ) (β : P.Δ) :
     Finset (HeckeLeftCoset P) :=
-  Finset.image (fun i : decompQuot P g =>
-    (⟦⟨(β : G) * (i.out : G) * (g : G),
-      delta_mul_mem P.H P.Δ i.out β g P.h₀⟩⟧ : HeckeLeftCoset P)) ⊤
+  Finset.image (smulOrbitElement P g β) ⊤
 
 /-- The smul orbit of any left coset under any double coset is nonempty. -/
 lemma smulOrbit_nonempty (g : P.Δ) (β : P.Δ) :
-    (smulOrbit P g β).Nonempty := by rw [smulOrbit]; simp
+    (smulOrbit P g β).Nonempty := by
+  rw [smulOrbit]
+  exact Finset.univ_nonempty.image _
 
 /-- The orbit is invariant under left coset equivalence: if `β₁H = β₂H`, then
     `smulOrbit g β₁ = smulOrbit g β₂`. This is the key API lemma that lets us
@@ -52,15 +56,13 @@ lemma smulOrbit_lcRel (g : P.Δ) {β₁ β₂ : P.Δ} (h : lcRel P β₁ β₂) 
   -- lcRel means {β₁} * H = {β₂} * H
   -- Each orbit element ⟦⟨β * i.out * g, ...⟩⟧ only depends on the left coset {β * i.out * g} * H
   -- Since β₁H = β₂H, for each i there exists i' with {β₁ * i.out * g} * H = {β₂ * i'.out * g} * H
-  ext x; simp only [smulOrbit, Finset.top_eq_univ, Finset.mem_image, Finset.mem_univ, true_and]
+  ext x
+  simp only [smulOrbit, Finset.top_eq_univ, Finset.mem_image, Finset.mem_univ, true_and]
   -- Both directions: show ⟦⟨β₁ * i.out * g⟩⟧ ∈ image iff ⟦⟨β₂ * j.out * g⟩⟧ ∈ image
   -- by showing they produce the same set of HeckeLeftCoset values
   suffices hsuff : ∀ (β β' : P.Δ), lcRel P β β' → ∀ i : decompQuot P g,
       ∃ j : decompQuot P g,
-        (⟦⟨(β : G) * (i.out : G) * (g : G),
-          delta_mul_mem P.H P.Δ i.out β g P.h₀⟩⟧ : HeckeLeftCoset P) =
-        ⟦⟨(β' : G) * (j.out : G) * (g : G),
-          delta_mul_mem P.H P.Δ j.out β' g P.h₀⟩⟧ by
+        smulOrbitElement P g β i = smulOrbitElement P g β' j by
     constructor
     · rintro ⟨i, hi⟩; obtain ⟨j, hj⟩ := hsuff β₁ β₂ h i; exact ⟨j, hi ▸ hj.symm⟩
     · rintro ⟨i, hi⟩; obtain ⟨j, hj⟩ := hsuff β₂ β₁ h.symm i; exact ⟨j, hi ▸ hj.symm⟩
@@ -74,7 +76,9 @@ lemma smulOrbit_lcRel (g : P.Δ) {β₁ β₂ : P.Δ} (h : lcRel P β₁ β₂) 
   -- We need j s.t. {β * i.out * g} * H = {β' * j.out * g} * H
   -- Use j = ⟦k⁻¹ * i.out⟧ so β' * j.out * g ≈ (β*k) * (k⁻¹*i.out) * g = β * i.out * g
   set j : decompQuot P g := ⟦⟨k⁻¹ * i.out, P.H.mul_mem (P.H.inv_mem hk) (SetLike.coe_mem i.out)⟩⟧
-  refine ⟨j, Quotient.sound ?_⟩
+  refine ⟨j, ?_⟩
+  unfold smulOrbitElement
+  apply Quotient.sound
   change ({(β : G) * (i.out : G) * (g : G)} : Set G) * (P.H : Set G) =
     {(β' : G) * (j.out : G) * (g : G)} * P.H
   -- j.out = (k⁻¹ * i.out) * n for some n in the conjugate subgroup
@@ -181,6 +185,11 @@ lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
   simp only [smulOrbit, Finset.mem_image] at hx₁ hx₂
   obtain ⟨i₁, _, hi₁⟩ := hx₁; obtain ⟨i₂, _, hi₂⟩ := hx₂
   rw [← hi₂] at hi₁
+  change
+    (⟦⟨(β : G) * (i₁.out : G) * (g₁ : G),
+      delta_mul_mem P.H P.Δ i₁.out β g₁ P.h₀⟩⟧ : Quotient (lcSetoid P)) =
+    ⟦⟨(β : G) * (i₂.out : G) * (g₂ : G),
+      delta_mul_mem P.H P.Δ i₂.out β g₂ P.h₀⟩⟧ at hi₁
   have hset : ({(β : G) * (i₁.out : G) * (g₁ : G)} : Set G) * (P.H : Set G) =
       {(β : G) * (i₂.out : G) * (g₂ : G)} * P.H := Quotient.exact hi₁
   have hmem : (β : G) * ↑i₁.out * (g₁ : G) ∈
