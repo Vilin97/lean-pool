@@ -130,7 +130,7 @@ Current behavior:
 
 - checks out the PR head
 - restores Lake caches and fetches Mathlib cache if needed
-- profiles new and modified Lean files under `LeanPool/`
+- profiles new and modified Lean files under `LeanPool/`, `Challenge/`, and `Solution/`
 - posts or updates a sticky PR comment
 - uploads the raw profile log as an artifact
 

@@ -29,12 +29,17 @@ would normally be in question has already been settled by machines:
    very object the challenge asks about — the classic
    `def ChallengeSolution : Prop := RiemannHypothesis` move. Read the filled
    hole and say whether it answers the question or restates it.
-3. **Proof quality.** The pool's usual standard: is this a proof a maintainer
-   would be content to keep building against Mathlib, or is it agent slop —
-   walls of repeated `have`s, dead branches, an opaque `simp_all` where a
-   structured argument was there to be written? Brittleness matters here for
-   the same reason it does in a refactor: someone has to fix it at the next
-   bump.
+3. **Proof quality and cost.** The pool's usual standard: is this a proof a
+   maintainer would be content to keep building against Mathlib, or is it
+   agent slop — walls of repeated `have`s, dead branches, an opaque
+   `simp_all` where a structured argument was there to be written?
+   Brittleness matters here for the same reason it does in a refactor:
+   someone has to fix it at the next bump. Compile cost matters too, and you
+   do not have to guess at it — the `/profile` comment on the PR reports
+   heartbeats and wall time for every added file. Cite it when a solution is
+   expensive enough that the pool would feel it on every build. A correct
+   proof can still be too slow, too large, or too messy to merge as it
+   stands.
 4. **Delegated work.** A large solution may prove the real content in a
    pooled project and leave a thin bridge module under `Solution/`. If the
    PR adds such a project, the project's own standards apply — card, source
