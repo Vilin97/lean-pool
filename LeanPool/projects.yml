@@ -40,6 +40,10 @@ projects:
         informal: >-
           A nonsingular rational affine point is killed by three exactly when
           its x-coordinate is a root of the three-division polynomial.
+      - declaration: LeanPool.MazurTorsionFoundations.ThreeTorsion.ncard_three_torsion_le_nine
+        informal: >-
+          For every Weierstrass curve over the rationals, the set of rational
+          points killed by three has at most nine elements.
     tags:
       - elliptic-curves
       - torsion

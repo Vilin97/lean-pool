@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Victor Aguiar
 -/
 
-import Mathlib.AlgebraicGeometry.EllipticCurve.DivisionPolynomial.Basic
+import Mathlib.AlgebraicGeometry.EllipticCurve.DivisionPolynomial.Degree
 import Mathlib.Tactic.LinearCombination
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
@@ -220,6 +220,92 @@ theorem three_nsmul_some_eq_zero_iff
       exact (WeierstrassCurve.Affine.Point.some_ne_zero hP hzero).elim
     · rw [show (3 : ℕ) = 2 + 1 by norm_num, add_nsmul, one_nsmul,
         hdouble, neg_add_cancel]
+
+private noncomputable def threeTorsionRootMap
+    (W : WeierstrassCurve.Affine ℚ) :
+    {P : W.Point // (3 : ℕ) • P = 0} →
+      Option (W.Ψ₃.rootSet ℚ × Bool)
+  | ⟨0, _⟩ => none
+  | ⟨WeierstrassCurve.Affine.Point.some x y hP, hthree⟩ =>
+      some (⟨x, by
+        rw [Polynomial.mem_rootSet_of_ne (W.Ψ₃_ne_zero (by norm_num))]
+        exact (three_nsmul_some_eq_zero_iff W hP).mp hthree⟩,
+        decide (y ≤ W.negY x y))
+
+private theorem threeTorsionRootMap_injective
+    (W : WeierstrassCurve.Affine ℚ) :
+    Function.Injective (threeTorsionRootMap W) := by
+  rintro ⟨P, hP⟩ ⟨Q, hQ⟩ hmap
+  apply Subtype.ext
+  cases P with
+  | zero =>
+      cases Q with
+      | zero => rfl
+      | some x y hxy => simp [threeTorsionRootMap] at hmap
+  | some x y hxy =>
+      cases Q with
+      | zero => simp [threeTorsionRootMap] at hmap
+      | some x' y' hxy' =>
+          have hpair :
+              ((⟨x, by
+                rw [Polynomial.mem_rootSet_of_ne (W.Ψ₃_ne_zero (by norm_num))]
+                exact (three_nsmul_some_eq_zero_iff W hxy).mp hP⟩,
+                decide (y ≤ W.negY x y)) : W.Ψ₃.rootSet ℚ × Bool) =
+              ((⟨x', by
+                rw [Polynomial.mem_rootSet_of_ne (W.Ψ₃_ne_zero (by norm_num))]
+                exact (three_nsmul_some_eq_zero_iff W hxy').mp hQ⟩,
+                decide (y' ≤ W.negY x' y')) : W.Ψ₃.rootSet ℚ × Bool) := by
+            simpa only [threeTorsionRootMap, Option.some.injEq] using hmap
+          have hx : x = x' :=
+            congrArg (fun z : W.Ψ₃.rootSet ℚ × Bool ↦ z.1.1) hpair
+          have hbool :
+              decide (y ≤ W.negY x y) =
+                decide (y' ≤ W.negY x' y') :=
+            congrArg (fun z : W.Ψ₃.rootSet ℚ × Bool ↦ z.2) hpair
+          subst x'
+          have hxrep :
+              (WeierstrassCurve.Affine.Point.some x y hxy).xRep =
+                (WeierstrassCurve.Affine.Point.some x y' hxy').xRep := by
+            simp
+          rcases
+              WeierstrassCurve.Affine.Point.eq_or_eq_neg_of_xRep_eq_xRep hxrep
+            with heq | heq
+          · exact heq
+          · have hy : y = W.negY x y' :=
+              (WeierstrassCurve.Affine.Point.some.inj heq).2
+            have hy' : y' = W.negY x y := by
+              rw [hy, WeierstrassCurve.Affine.negY_negY]
+            have hbool' : (y ≤ y') ↔ (y' ≤ y) := by
+              rw [hy'.symm, hy.symm] at hbool
+              exact decide_eq_decide.mp hbool
+            have hyy : y = y' := by
+              by_contra hne
+              rcases lt_or_gt_of_ne hne with hlt | hgt
+              · exact (not_le_of_gt hlt) (hbool'.mp (le_of_lt hlt))
+              · exact (not_le_of_gt hgt) (hbool'.mpr (le_of_lt hgt))
+            simp only [WeierstrassCurve.Affine.Point.some.injEq]
+            exact ⟨trivial, hyy⟩
+
+/-- The rational three-torsion of a Weierstrass curve has at most nine
+points. -/
+theorem ncard_three_torsion_le_nine
+    (W : WeierstrassCurve.Affine ℚ) :
+    Set.ncard {P : W.Point | (3 : ℕ) • P = 0} ≤ 9 := by
+  rw [← Nat.card_coe_set_eq]
+  calc
+    Nat.card {P : W.Point // (3 : ℕ) • P = 0}
+        ≤ Nat.card (Option (W.Ψ₃.rootSet ℚ × Bool)) :=
+      Nat.card_le_card_of_injective (threeTorsionRootMap W)
+        (threeTorsionRootMap_injective W)
+    _ = Nat.card (W.Ψ₃.rootSet ℚ) * Nat.card Bool + 1 := by
+      rw [Finite.card_option, Nat.card_prod]
+    _ ≤ 4 * 2 + 1 := by
+      gcongr
+      · rw [Nat.card_coe_set_eq]
+        exact (W.Ψ₃.ncard_rootSet_le ℚ).trans_eq
+          (W.natDegree_Ψ₃ (by norm_num))
+      · norm_num
+    _ = 9 := by norm_num
 
 lemma quartic_coefficients_of_four_distinct_roots
     {b₂ b₄ b₆ b₈ r₁ r₂ r₃ r₄ : ℚ}
