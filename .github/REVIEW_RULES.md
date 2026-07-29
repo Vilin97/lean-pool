@@ -61,9 +61,11 @@ Say what is assumed and whether the card discloses it. "Proves X conditional on 
 
 ### 3. Is it already done?
 
-Duplication is not machine-checked here — there is no dedup gate — and the pool now holds 141 projects, so it is worth a minute. Ask whether the headline result is already in Mathlib, or already in the pool under another name, and say so with the declaration name if you can. A project that restates `Mathlib`'s compactness argument for graph colorings, or that reproves what a pooled project already derives, is a reject however good the Lean is.
+There is no dedup gate, so this is yours — and you are not guessing. A **Prior art** section above the diff carries a Mathlib search for every headline this PR adds, plus every project already in the pool. Use it. A project that restates Mathlib's compactness argument for graph colorings, or reproves what a pooled project already derives, is a reject however good the Lean is.
 
-Not every overlap is duplication: a different proof of a known theorem, a sharper constant, a generalization, or a restatement in a genuinely different setting can all be worth having. Distinguish, and name what is new. If you cannot check, say `unverifiable` rather than guessing in either direction.
+Read the search results as candidates, not verdicts. A hit that merely shares vocabulary is not prior art; check what the declaration actually says before calling anything a duplicate, and name the declaration when you do. Not every overlap is duplication either — a different proof, a sharper constant, a generalization, or a restatement in a genuinely different setting can all be worth having. Distinguish, and say what is new.
+
+The section states whether the search ran. If it did and turned up nothing, that is real evidence of novelty: say so, and leave `already_formalized` empty. Only when the search could not run is `unverifiable` the honest answer — and it belongs in your prose, never in `already_formalized`, which holds a declaration name or nothing.
 
 ### 4. Does the cited source say what the PR says it says?
 

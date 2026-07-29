@@ -51,14 +51,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  # landrun: zouuup/landrun main HEAD as of 2026-05-04. Tagged releases
-  # through v0.1.15 lack fixes comparator needs, so this is a commit pin.
-  LANDRUN_COMMIT: 5ed4a3db3a4ad930d577215c6b9abaa19df7f99f
-  # lean4export at refs/tags/v4.33.0-rc1 — it must match this repository's
-  # lean-toolchain, because it reads the oleans the build produced.
-  LEAN4EXPORT_COMMIT: af5aa64bb914c3c2c781f378088dbd38acf4f804
-  COMPARATOR_COMMIT: 71b52ec29e06d4b7d882726553b1ceb99a2499e0
 
 jobs:
   verify:
@@ -67,6 +59,11 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      # `make comparator` reads the same file, so a local verification and a
+      # CI verification run the same judge.
+      - name: Load tool pins
+        run: cat scripts/challenge/pins.env | grep -E '^[A-Z0-9_]+=' >> "$GITHUB_ENV"
 
       - name: Restore caches
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
@@ -108,9 +105,8 @@ jobs:
             .ci/lean4export/.lake/build/bin/lean4export
             .ci/comparator/.lake/build/bin/comparator
           key: >-
-            challenge-tools-${{ runner.os }}-${{ env.LANDRUN_COMMIT }}-${{
-              env.LEAN4EXPORT_COMMIT }}-${{ env.COMPARATOR_COMMIT }}-${{
-              hashFiles('lean-toolchain') }}
+            challenge-tools-${{ runner.os }}-${{
+              hashFiles('scripts/challenge/pins.env', 'lean-toolchain') }}
 
       # actions/setup-go pinned to d35c59ab (= refs/tags/v5.5.0), the pin
       # leanprover/lean-eval uses to build the same landrun commit.
@@ -174,11 +170,12 @@ jobs:
           ~/.elan/bin/lake build comparator
 
       - name: Verify every solved challenge
-        env:
-          COMPARATOR_LANDRUN: /home/runner/go/bin/landrun
         run: |
           set -euo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
+          # The pinned comparator hardcodes `landrun` and `lean4export` as
+          # PATH lookups — the COMPARATOR_* environment variables are a newer
+          # feature — so the binaries have to be *on PATH*, not merely passed.
+          export PATH="$PWD/.ci/lean4export/.lake/build/bin:$HOME/go/bin:$HOME/.elan/bin:$PATH"
           slugs=$(cd python && uv run python -m lean_pool.challenge --repo .. solved)
           if [ -z "$slugs" ]; then
             echo "No solved challenges to verify."
