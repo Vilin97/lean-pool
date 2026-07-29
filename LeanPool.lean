@@ -790,6 +790,11 @@ import LeanPool.Erdos403
 import LeanPool.Erdos403.Basic
 import LeanPool.Erdos403.FactBase
 import LeanPool.Erdos403.Sharp
+import LeanPool.ErdosMoser
+import LeanPool.ErdosMoser.Basic
+import LeanPool.ErdosMoser.Bounds
+import LeanPool.ErdosMoser.DiscreteVariance
+import LeanPool.ErdosMoser.SubsetSums
 import LeanPool.ErdosTuzaValtr
 import LeanPool.ErdosTuzaValtr.All
 import LeanPool.ErdosTuzaValtr.Config.Default

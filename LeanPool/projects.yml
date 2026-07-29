@@ -5412,3 +5412,57 @@ projects:
       - "65L06"
       - "65L05"
       - "05C05"
+  - slug: erdos-moser-distinct-subset-sums
+    title: Leo Moser's finite distinct-subset-sums inequality
+    summary: >-
+      Formalizes the exact finite sum-of-squares inequality that Guy's 1982
+      account states as Theorem 2 and attributes to Leo Moser: a finite set A
+      of natural numbers with distinct subset sums satisfies
+      4^|A| - 1 <= 3 * sum(a^2). It then derives direct and square-root lower
+      bounds for the largest element of A. This does not claim the stronger
+      historical asymptotic bound attributed jointly to Erdős and Moser, and
+      Erdős Problem 1 remains open.
+    branch: additive combinatorics
+    entry_module: LeanPool.ErdosMoser
+    authors:
+      - Egor Lyfar
+    source:
+      title: Sets of Integers Whose Subsets Have Distinct Sums
+      authors:
+        - Richard K. Guy
+      doi: "10.1016/S0304-0208(08)73500-X"
+      url: https://www.erdosproblems.com/1
+      github_repo: lyfar/erdos-moser-distinct-subset-sums-lean
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.ErdosMoser.leoMoserVarianceBound
+    main_results:
+      - declaration: LeanPool.ErdosMoser.leoMoserVarianceBound
+        informal: >-
+          If a finite set A of natural numbers has distinct subset sums, then
+          4^|A| - 1 is at most three times the sum of the squares of the
+          elements of A.
+        source_ref: >-
+          Richard K. Guy, "Sets of Integers Whose Subsets Have Distinct
+          Sums," Theorem 2 (credited there to Leo Moser), Annals of Discrete
+          Mathematics 12 (1982), 141-154,
+          doi:10.1016/S0304-0208(08)73500-X.
+      - declaration: LeanPool.ErdosMoser.erdosMoserMaxBound
+        informal: >-
+          For a nonempty finite set A of natural numbers with distinct subset
+          sums, 4^|A| - 1 is at most 3|A| times the square of its largest
+          element.
+      - declaration: LeanPool.ErdosMoser.erdosMoserMaxSqrt
+        informal: >-
+          The equivalent square-root lower bound on the largest element:
+          sqrt((4^|A| - 1)/(3|A|)) is at most max(A).
+    tags:
+      - additive-combinatorics
+      - number-theory
+      - distinct-subset-sums
+      - erdos-problems
+    msc:
+      - "11B13"
+      - "11B75"
