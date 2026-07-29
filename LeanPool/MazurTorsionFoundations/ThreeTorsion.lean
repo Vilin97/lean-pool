@@ -45,6 +45,31 @@ lemma tangent_forces_three_division
       a₁ * (2 * y + a₁ * x + a₃)) * hslope -
     (a₁ ^ 2 + 4 * a₂ + 12 * x) * hcurve
 
+/-- The exact algebraic identity behind the three-division polynomial:
+on the curve, the value of `Ψ₃` is the negative square of the tangent
+denominator times the difference between the doubled and original
+x-coordinates. -/
+lemma three_division_tangent_identity
+    {a₁ a₂ a₃ a₄ a₆ x y slope : ℚ}
+    (hcurve :
+      y ^ 2 + a₁ * x * y + a₃ * y =
+        x ^ 3 + a₂ * x ^ 2 + a₄ * x + a₆)
+    (hslope :
+      slope * (2 * y + a₁ * x + a₃) =
+        3 * x ^ 2 + 2 * a₂ * x + a₄ - a₁ * y) :
+    3 * x ^ 4 + (a₁ ^ 2 + 4 * a₂) * x ^ 3 +
+        3 * (a₁ * a₃ + 2 * a₄) * x ^ 2 +
+        3 * (a₃ ^ 2 + 4 * a₆) * x +
+        (a₁ ^ 2 * a₆ + 4 * a₂ * a₆ - a₁ * a₃ * a₄ +
+          a₂ * a₃ ^ 2 - a₄ ^ 2) =
+      -(2 * y + a₁ * x + a₃) ^ 2 *
+        (slope ^ 2 + a₁ * slope - a₂ - 3 * x) := by
+  linear_combination
+    ((3 * x ^ 2 + 2 * a₂ * x + a₄ - a₁ * y) +
+      slope * (2 * y + a₁ * x + a₃) +
+      a₁ * (2 * y + a₁ * x + a₃)) * hslope -
+    (a₁ ^ 2 + 4 * a₂ + 12 * x) * hcurve
+
 open scoped WeierstrassCurve.Affine
 
 lemma nonzero_three_torsion_abscissa
@@ -107,6 +132,94 @@ lemma nonzero_three_torsion_abscissa
         WeierstrassCurve.b₄, WeierstrassCurve.b₆, WeierstrassCurve.b₈]
       ring_nf at hψ ⊢
       exact hψ
+
+/-- For a nonsingular affine point over `ℚ`, vanishing of the
+three-division polynomial is equivalent to the point being killed by `3`. -/
+theorem three_nsmul_some_eq_zero_iff
+    (W : WeierstrassCurve.Affine ℚ) {x y : ℚ}
+    (hP : W.Nonsingular x y) :
+    (3 : ℕ) • WeierstrassCurve.Affine.Point.some x y hP = 0 ↔
+      Polynomial.eval x W.Ψ₃ = 0 := by
+  constructor
+  · intro hthree
+    obtain ⟨x', y', hP', heq, hψ⟩ :=
+      nonzero_three_torsion_abscissa W
+        (WeierstrassCurve.Affine.Point.some x y hP) hthree
+        (WeierstrassCurve.Affine.Point.some_ne_zero hP)
+    have hcoords := WeierstrassCurve.Affine.Point.some.inj heq
+    simpa [hcoords.1] using hψ
+  · intro hψ
+    have hcurve := hP.1
+    rw [WeierstrassCurve.Affine.equation_iff] at hcurve
+    simp only [WeierstrassCurve.Ψ₃, Polynomial.eval_add,
+      Polynomial.eval_mul, Polynomial.eval_pow, Polynomial.eval_C,
+      Polynomial.eval_X, Polynomial.eval_ofNat, WeierstrassCurve.b₂,
+      WeierstrassCurve.b₄, WeierstrassCurve.b₆, WeierstrassCurve.b₈] at hψ
+    let D := 2 * y + W.a₁ * x + W.a₃
+    let N := 3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ - W.a₁ * y
+    have hD : D ≠ 0 := by
+      intro hD0
+      have hN2 : N ^ 2 = 0 := by
+        dsimp [D, N] at hD0 ⊢
+        linear_combination
+          -hψ - (W.a₁ ^ 2 + 4 * W.a₂ + 12 * x) * hcurve -
+          (W.a₁ * (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ - W.a₁ * y) -
+            (W.a₂ + 3 * x) * (2 * y + W.a₁ * x + W.a₃)) * hD0
+      have hN : N = 0 := sq_eq_zero_iff.mp hN2
+      rw [WeierstrassCurve.Affine.nonsingular_iff'] at hP
+      rcases hP.2 with hX | hY
+      · apply hX
+        dsimp [N] at hN
+        linarith
+      · exact hY (by simpa [D] using hD0)
+    let slope := W.slope x x y y
+    have hy : y ≠ W.negY x y := by
+      intro hy
+      apply hD
+      dsimp [D]
+      simp only [WeierstrassCurve.Affine.negY] at hy
+      linarith
+    have hslope :
+        slope * D = N := by
+      have hden : y - W.negY x y = D := by
+        dsimp [D]
+        ring
+      dsimp [slope]
+      rw [← hden, WeierstrassCurve.Affine.slope_of_Y_ne rfl hy,
+        div_mul_cancel₀ _ (sub_ne_zero.mpr hy)]
+    have hidentity :=
+      three_division_tangent_identity hcurve hslope
+    have hx : slope ^ 2 + W.a₁ * slope - W.a₂ - 3 * x = 0 := by
+      have hmul : D ^ 2 *
+          (slope ^ 2 + W.a₁ * slope - W.a₂ - 3 * x) = 0 := by
+        dsimp [D, N] at hidentity ⊢
+        linear_combination hidentity - hψ
+      exact (mul_eq_zero.mp hmul).resolve_left (pow_ne_zero 2 hD)
+    have hadd :=
+      WeierstrassCurve.Affine.Point.add_self_of_Y_ne (h₁ := hP) hy
+    have hxcoord : W.addX x x slope = x := by
+      simp only [WeierstrassCurve.Affine.addX]
+      linarith
+    change W.addX x x (W.slope x x y y) = x at hxcoord
+    have hxrep :
+        ((2 : ℕ) • WeierstrassCurve.Affine.Point.some x y hP).xRep =
+          (WeierstrassCurve.Affine.Point.some x y hP).xRep := by
+      rw [two_nsmul, hadd]
+      simp only [WeierstrassCurve.Affine.Point.xRep_some, hxcoord]
+    rcases WeierstrassCurve.Affine.Point.eq_or_eq_neg_of_xRep_eq_xRep hxrep
+      with hdouble | hdouble
+    · have hzero : WeierstrassCurve.Affine.Point.some x y hP = 0 := by
+        have hsum :
+            WeierstrassCurve.Affine.Point.some x y hP +
+                WeierstrassCurve.Affine.Point.some x y hP =
+              WeierstrassCurve.Affine.Point.some x y hP + 0 := by
+          rw [add_zero]
+          rw [two_nsmul] at hdouble
+          exact hdouble
+        exact add_left_cancel hsum
+      exact (WeierstrassCurve.Affine.Point.some_ne_zero hP hzero).elim
+    · rw [show (3 : ℕ) = 2 + 1 by norm_num, add_nsmul, one_nsmul,
+        hdouble, neg_add_cancel]
 
 lemma quartic_coefficients_of_four_distinct_roots
     {b₂ b₄ b₆ b₈ r₁ r₂ r₃ r₄ : ℚ}

@@ -36,6 +36,10 @@ projects:
           For every Weierstrass curve over the rationals, no additive
           homomorphism from ZMod 3 × ZMod 3 to its nonsingular rational points
           is injective.
+      - declaration: LeanPool.MazurTorsionFoundations.ThreeTorsion.three_nsmul_some_eq_zero_iff
+        informal: >-
+          A nonsingular rational affine point is killed by three exactly when
+          its x-coordinate is a root of the three-division polynomial.
     tags:
       - elliptic-curves
       - torsion
