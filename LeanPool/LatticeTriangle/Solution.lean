@@ -1534,7 +1534,7 @@ lemma ramanujanSum_unit_shift (n : ℕ) [NeZero n] (u : (ZMod n)ˣ) (s : ZMod n)
     (fun a => ZMod.stdAddChar (a.val * s))
     (fun a => by simp only [Equiv.coe_mulRight, Units.val_mul, mul_assoc])
 
-lemma dvd_sub_mul_crt_val {n₁ n₂ : ℕ} [NeZero n₁] [NeZero n₂]
+lemma dvd_sub_mul_crt_val {n₁ n₂ : ℕ} [NeZero n₁]
     (h : Nat.Coprime n₁ n₂) (j : ℤ) :
     (n₁ : ℤ) ∣ j - ↑n₂ * ↑((j : ZMod n₁) * (↑n₂ : ZMod n₁)⁻¹).val := by
   rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
@@ -1993,7 +1993,7 @@ lemma dft_intervalIndicator_eq_geom_sum (n : ℕ) [NeZero n] (m : ℕ)
   rw [summand_reindex n m hm2 k]
   exact Finset.sum_congr rfl fun t _ => character_multiplication_simplify n t k
 
-lemma exponent_algebra (n : ℕ) [NeZero n] (k : ZMod n) :
+lemma exponent_algebra (n : ℕ) (k : ZMod n) :
     (2 : ℂ) * ↑Real.pi * Complex.I * ↑(-(↑(ZMod.val k) : ℤ)) / ↑(n : ℕ) =
       Complex.I * ↑(-2 * Real.pi * (ZMod.val k : ℝ) / (n : ℝ)) := by
   push_cast
@@ -2950,7 +2950,7 @@ lemma mul_lt_of_mem_Icc (n d : ℕ) (_hd_dvd : d ∣ n) (hd_pos : 0 < d)
     nlinarith
   nlinarith
 
-lemma fwd_mem (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (hd_pos : 0 < d)
+lemma fwd_mem (n d : ℕ) [NeZero n] (hd_dvd : d ∣ n) (hd_pos : 0 < d)
     (j : ℕ) (hj : j ∈ Finset.Icc 1 (n / d - 1)) :
     (↑(j * d) : ZMod n) ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ (d : ℕ) ∣ ZMod.val k) := by
   have hjd_lt : j * d < n := mul_lt_of_mem_Icc n d hd_dvd hd_pos j hj
@@ -2964,7 +2964,7 @@ lemma fwd_mem (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (hd_pos : 0 <
   · rw [ZMod.val_natCast_of_lt hjd_lt]
     exact dvd_mul_left d j
 
-lemma bwd_mem (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (hd_pos : 0 < d)
+lemma bwd_mem (n d : ℕ) [NeZero n] (hd_dvd : d ∣ n) (hd_pos : 0 < d)
     (k : ZMod n) (hk : k ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ (d : ℕ) ∣ ZMod.val k)) :
     ZMod.val k / d ∈ Finset.Icc 1 (n / d - 1) := by
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hk
@@ -2977,26 +2977,26 @@ lemma bwd_mem (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (hd_pos : 0 <
   · have h1 : ZMod.val k / d < n / d := Nat.div_lt_div_of_lt_of_dvd hd_dvd hval_lt
     omega
 
-lemma left_inv (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (hd_pos : 0 < d)
+lemma left_inv (n d : ℕ) (hd_dvd : d ∣ n) (hd_pos : 0 < d)
     (j : ℕ) (hj : j ∈ Finset.Icc 1 (n / d - 1)) :
     ZMod.val (↑(j * d) : ZMod n) / d = j := by
   have hjd : j * d < n := mul_lt_of_mem_Icc n d hd_dvd hd_pos j hj
   rw [ZMod.val_natCast_of_lt hjd, Nat.mul_div_cancel j hd_pos]
 
-lemma right_inv (n d : ℕ) [NeZero n] [NeZero d] (_hd_dvd : d ∣ n) (_hd_pos : 0 < d)
+lemma right_inv (n d : ℕ) [NeZero n] (_hd_dvd : d ∣ n) (_hd_pos : 0 < d)
     (k : ZMod n) (hk : k ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ (d : ℕ) ∣ ZMod.val k)) :
     (↑(ZMod.val k / d * d) : ZMod n) = k := by
   have hmem := (Finset.mem_filter.mp hk).2
   have hdvd : d ∣ ZMod.val k := hmem.2
   rw [Nat.div_mul_cancel hdvd, ZMod.natCast_zmod_val]
 
-lemma div_lt_div_of_dvd (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n)
+lemma div_lt_div_of_dvd (n d : ℕ) [NeZero n] (hd_dvd : d ∣ n)
     (k : ZMod n) (_hd_dvd_val : d ∣ ZMod.val k) :
     ZMod.val k / d < n / d := by
   have h_val_lt_n : ZMod.val k < n := ZMod.val_lt k
   exact Nat.div_lt_div_of_lt_of_dvd hd_dvd h_val_lt_n
 
-lemma min_factor_d_nat (n d : ℕ) [NeZero n] [NeZero d] (hd_dvd : d ∣ n) (k : ZMod n)
+lemma min_factor_d_nat (n d : ℕ) [NeZero n] (hd_dvd : d ∣ n) (k : ZMod n)
     (_hk_ne : k ≠ 0) (hd_dvd_val : d ∣ ZMod.val k) :
     min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k) =
     (d : ℝ) * min (↑(ZMod.val k / d) : ℝ) ((↑(n / d) : ℝ) - ↑(ZMod.val k / d)) := by
@@ -3105,7 +3105,7 @@ lemma simplify_u_sum_when_d_dvd_k
   simp_all
 
 lemma restricted_fourier_mass_le
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (mq : ℕ) (hmq1 : 1 ≤ mq) (hmq2 : mq < n) :
     (∑ l : ZMod n,
       if ((d : ℤ) ∣ ↑(ZMod.val l))
@@ -3256,7 +3256,7 @@ lemma weight_nonneg (n : ℕ) [NeZero n] (k : ZMod n) (hk : k ≠ 0) :
   linarith
 
 lemma weight_sum_le_log
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n) :
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n) :
     ∑ k ∈ Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ ¬((d : ℕ) ∣ ZMod.val k)),
       (1 : ℝ) / (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) ≤
     1 + Real.log ↑n := by
@@ -3281,7 +3281,7 @@ lemma weight_sum_le_log
     _ ≤ Real.log n := symmetric_harmonic_sum_le_log n hn
     _ ≤ 1 + Real.log n := le_add_of_nonneg_left (by norm_num)
 
-lemma const_bound_nonneg (n d : ℕ) [NeZero n] [NeZero d] (_hn : 2 ≤ n) :
+lemma const_bound_nonneg (n d : ℕ) [NeZero d] (_hn : 2 ≤ n) :
     (0 : ℝ) ≤ ↑(Fintype.card (ZMod d)ˣ) * (5 * (1 + Real.log ↑n) / ↑d) := by
   positivity
 
@@ -3327,7 +3327,7 @@ lemma one_plus_log_nonneg (n : ℕ) (hn : 2 ≤ n) :
     exact Real.log_nonneg h₂
   linarith
 
-lemma key_val_eq (d : ℕ) [NeZero d] (k_val : ℕ) (hcop : Nat.Coprime k_val d)
+lemma key_val_eq (d : ℕ) (k_val : ℕ) (hcop : Nat.Coprime k_val d)
     (u : (ZMod d)ˣ) :
     let k_unit := ZMod.unitOfCoprime k_val hcop
     ((k_unit * u : (ZMod d)ˣ) : ZMod d).val = (k_val * (↑u : ZMod d).val) % d := by
@@ -3399,12 +3399,11 @@ lemma units_sum_le_Icc_sum
 lemma nat_mul_mod_right (a b n : ℕ) : a * b % n = a * (b % n) % n := by simp
 
 lemma kval_mul_unit_mod_eq_pv_mul
-    (d : ℕ) [NeZero d] (p : ℕ) (_hp : Nat.Prime p) (α : ℕ) (_hα : 1 ≤ α)
+    (d : ℕ) (p : ℕ) (_hp : Nat.Prime p) (α : ℕ) (_hα : 1 ≤ α)
     (hd_eq : d = p ^ α)
     (k_val : ℕ) (_hk_nd : ¬((d : ℕ) ∣ k_val)) (_hk_dvd_p : p ∣ k_val)
     (v : ℕ) (_hv_pos : 1 ≤ v) (hv_lt : v < α)
     (hv_val : p ^ v ∣ k_val) (_hv_max : ¬(p ^ (v + 1) ∣ k_val))
-    [NeZero (p ^ (α - v))]
     (u : (ZMod d)ˣ) :
     k_val * (u : ZMod d).val % d =
       p ^ v * ((k_val / p ^ v) * ((u : ZMod d).val % p ^ (α - v)) % p ^ (α - v)) := by
@@ -3437,7 +3436,6 @@ lemma dvd_of_dvd_mod_of_dvd (p a m : ℕ) (hpm : p ∣ m) (hpr : p ∣ a % m) : 
 lemma not_p_dvd_unit_val_mod
     (p : ℕ) (hp : Nat.Prime p) (α : ℕ) (hα : 1 ≤ α)
     (v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)]
     (u : (ZMod (p ^ α))ˣ) :
     ¬(p ∣ (u : ZMod (p ^ α)).val % p ^ (α - v)) := by
   have hcop : (u : ZMod (p ^ α)).val.Coprime (p ^ α) := ZMod.val_coe_unit_coprime u
@@ -3470,7 +3468,6 @@ lemma reduced_product_mod_ne_zero
     (k_val : ℕ)
     (v : ℕ) (hv_pos : 1 ≤ v) (hv_lt : v < α)
     (hv_val : p ^ v ∣ k_val) (hv_max : ¬(p ^ (v + 1) ∣ k_val))
-    [NeZero (p ^ α)] [NeZero (p ^ (α - v))]
     (u : (ZMod (p ^ α))ˣ) :
     (k_val / p ^ v) * ((u : ZMod (p ^ α)).val % p ^ (α - v)) % p ^ (α - v) ≠ 0 := by
   have _ := hv_pos
@@ -3553,7 +3550,6 @@ lemma fiber_reconstruct
 
 lemma fiber_fwd_bwd
     (p : ℕ) (hp : Nat.Prime p) (α v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)]
     (s : ℕ) (hs_lt : s < p ^ (α - v)) (hs_cop : Nat.Coprime s p)
     (j : ℕ) (hj : j < p ^ v) :
     let a := s + j * p ^ (α - v)
@@ -3566,7 +3562,7 @@ lemma fiber_fwd_bwd
 
 lemma fiber_bwd_fwd
     (p : ℕ) (hp : Nat.Prime p) (α v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)] [NeZero (p ^ (α - v))]
+    [NeZero (p ^ α)]
     (s : ℕ) (_hs_lt : s < p ^ (α - v)) (hs_cop : Nat.Coprime s p)
     (u : (ZMod (p ^ α))ˣ)
     (hu : (u : ZMod (p ^ α)).val % p ^ (α - v) = s) :
@@ -3583,7 +3579,6 @@ lemma fiber_bwd_fwd
 
 lemma fiber_fwd_mem
     (p : ℕ) (hp : Nat.Prime p) (α v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)]
     (s : ℕ) (hs_lt : s < p ^ (α - v)) (hs_cop : Nat.Coprime s p)
     (j : ℕ) (hj : j < p ^ v) :
     let a := s + j * p ^ (α - v)
@@ -3598,7 +3593,7 @@ lemma fiber_fwd_mem
 lemma projection_fiber_card
     (p : ℕ) (hp : Nat.Prime p) (α : ℕ) (_hα : 1 ≤ α)
     (v : ℕ) (_hv_pos : 1 ≤ v) (hv_lt : v < α)
-    [NeZero (p ^ α)] [NeZero (p ^ (α - v))]
+    [NeZero (p ^ α)]
     (s : ℕ) (hs_lt : s < p ^ (α - v)) (hs_cop : Nat.Coprime s p) :
     (Finset.univ.filter (fun u : (ZMod (p ^ α))ˣ =>
       (u : ZMod (p ^ α)).val % p ^ (α - v) = s)).card = p ^ v := by
@@ -3667,7 +3662,6 @@ lemma pv_cancel (pv : ℝ) (x : ℝ) (hpv : 0 < pv) (hx : x ≠ 0) :
 lemma unit_mod_coprime_p
     (p : ℕ) (hp : Nat.Prime p) (α : ℕ) (hα : 1 ≤ α)
     (v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)]
     (u : (ZMod (p ^ α))ˣ) :
     Nat.Coprime ((u : ZMod (p ^ α)).val % p ^ (α - v)) p := by
   have hcop : Nat.Coprime (u : ZMod (p ^ α)).val (p ^ α) := ZMod.val_coe_unit_coprime u
@@ -3688,7 +3682,6 @@ lemma reduced_product_mod_ne_zero_of_coprime
     (k_val : ℕ)
     (v : ℕ) (_hv_pos : 1 ≤ v) (hv_lt : v < α)
     (hv_val : p ^ v ∣ k_val) (hv_max : ¬(p ^ (v + 1) ∣ k_val))
-    [NeZero (p ^ (α - v))]
     (s : ℕ) (hs_cop : Nat.Coprime s p) :
     (k_val / p ^ v) * s % p ^ (α - v) ≠ 0 := by
   intro h
@@ -3748,7 +3741,6 @@ lemma fiber_sum_cancel
 lemma unit_mod_coprime_pow
     (p : ℕ) (hp : Nat.Prime p) (α : ℕ) (hα : 1 ≤ α)
     (v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)]
     (u : (ZMod (p ^ α))ˣ) :
     Nat.Coprime ((u : ZMod (p ^ α)).val % p ^ (α - v)) (p ^ (α - v)) :=
   hp.coprime_pow_of_not_dvd
@@ -3757,7 +3749,7 @@ lemma unit_mod_coprime_pow
 lemma unitProjection_filter_iff
     (p : ℕ) (hp : Nat.Prime p) (α : ℕ) (hα : 1 ≤ α)
     (v : ℕ) (hv_lt : v < α)
-    [NeZero (p ^ α)] [NeZero (p ^ (α - v))]
+    [NeZero (p ^ (α - v))]
     (u : (ZMod (p ^ α))ˣ) (t : (ZMod (p ^ (α - v)))ˣ) :
     ZMod.unitOfCoprime
       ((u : ZMod (p ^ α)).val % p ^ (α - v))
@@ -4113,7 +4105,7 @@ lemma d_le_n (n d : ℕ) (hn : 2 ≤ n)
   exact Nat.le_of_dvd (by omega) (d_dvd_n n hn)
 
 lemma orbit_sum_le_two_log
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero d] (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (k : ZMod n) (_hk : k ≠ 0) (hk_nd : ¬((d : ℕ) ∣ ZMod.val k)) :
     (∑ u : (ZMod d)ˣ,
@@ -4167,7 +4159,7 @@ lemma totient_prime_pow_times_four_div_ge_two
   exact four_times_sub_one_div_ge_two P hP2
 
 lemma totient_times_four_div_d_ge_two
-    (n d : ℕ) [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n)) :
     2 ≤ (d.totient : ℝ) * (4 / (d : ℝ)) := by
   have hP := largest_prime_factor_prime n hn
@@ -4177,7 +4169,7 @@ lemma totient_times_four_div_d_ge_two
   exact totient_prime_pow_times_four_div_ge_two _ _ hP (by omega) hP2
 
 lemma two_log_le_card_times_bound
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero d] (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n)) :
     2 * (1 + Real.log ↑n) ≤
     ↑(Fintype.card (ZMod d)ˣ) * (4 * (1 + Real.log ↑n) / ↑d) := by
@@ -4195,7 +4187,7 @@ lemma two_log_le_card_times_bound
         exact totient_times_four_div_d_ge_two n d hn hd
 
 lemma orbit_reciprocal_sum_bound
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero d] (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (k : ZMod n) (hk : k ≠ 0) (hk_nd : ¬((d : ℕ) ∣ ZMod.val k)) :
     (∑ u : (ZMod d)ˣ,
@@ -4212,7 +4204,7 @@ lemma orbit_reciprocal_sum_bound
 namespace PerUnitMerge
 
 lemma neg_inv_isUnit
-    (d : ℕ) [NeZero d]
+    (d : ℕ)
     (q : ℤ) (hq : Int.gcd q (d : ℤ) = 1) :
     IsUnit (-(q : ZMod d)⁻¹) := by
   apply IsUnit.neg
@@ -4222,14 +4214,14 @@ lemma neg_inv_isUnit
   rwa [Int.gcd_comm]
 
 lemma dvd_of_dvd_mul_unit_val
-    (d : ℕ) [NeZero d]
+    (d : ℕ)
     (k_val : ℕ) (u : (ZMod d)ˣ)
     (h : d ∣ k_val * (u : ZMod d).val) :
     d ∣ k_val := by
   exact (ZMod.val_coe_unit_coprime u).symm.dvd_of_dvd_mul_right h
 
 lemma b_ne_zero
-    (d : ℕ) [NeZero d]
+    (d : ℕ)
     (q : ℤ) (hq_coprime_d : Int.gcd q (d : ℤ) = 1)
     (k_val : ℕ) (hk_nd : ¬(d ∣ k_val))
     (u : (ZMod d)ˣ) :
@@ -4253,12 +4245,12 @@ lemma b_bounds
     hk_nd u))
   · exact ZMod.val_lt _
 
-lemma q_isUnit_of_gcd (d : ℕ) [NeZero d] (q : ℤ) (hq : Int.gcd q (d : ℤ) = 1) :
+lemma q_isUnit_of_gcd (d : ℕ) (q : ℤ) (hq : Int.gcd q (d : ℤ) = 1) :
     IsUnit (q : ZMod d) := by
   rw [ZMod.coe_int_isUnit_iff_isCoprime]
   exact (Int.isCoprime_iff_gcd_eq_one.mpr hq).symm
 
-lemma neg_inv_eq_inv_neg (d : ℕ) [NeZero d] (q : ℤ) (hq : Int.gcd q (d : ℤ) = 1) :
+lemma neg_inv_eq_inv_neg (d : ℕ) (q : ℤ) (hq : Int.gcd q (d : ℤ) = 1) :
     -(q : ZMod d)⁻¹ = (-(q : ZMod d))⁻¹ := by
   have hu := q_isUnit_of_gcd d q hq
   have h1 : (-(q : ZMod d)) * (-(q : ZMod d)⁻¹) = 1 := by
@@ -4267,7 +4259,7 @@ lemma neg_inv_eq_inv_neg (d : ℕ) [NeZero d] (q : ℤ) (hq : Int.gcd q (d : ℤ
   rw [← ZMod.inv_eq_of_mul_eq_one d (-(q : ZMod d)) (-(q : ZMod d)⁻¹) h1]
 
 lemma dvd_iff_zmod_eq_zero
-    (d : ℕ) [NeZero d] (k_val u_val l_val : ℕ) (q : ℤ) :
+    (d : ℕ) (k_val u_val l_val : ℕ) (q : ℤ) :
     ((d : ℤ) ∣ (↑k_val * ↑u_val + ↑l_val * q)) ↔
     ((k_val : ZMod d) * (u_val : ZMod d) + (l_val : ZMod d) * (q : ZMod d) = 0) := by
   have h_iff : ((d : ℤ) ∣ (↑k_val * ↑u_val + ↑l_val * q)) ↔ (((k_val : ℤ) * (u_val : ℤ) +
@@ -4275,7 +4267,7 @@ lemma dvd_iff_zmod_eq_zero
   simp_all
 
 lemma zmod_eq_zero_forward
-    (d : ℕ) [NeZero d] (k_val u_val l_val : ℕ) (q : ℤ)
+    (d : ℕ) (k_val u_val l_val : ℕ) (q : ℤ)
     (hq : IsUnit (q : ZMod d))
     (h : (k_val : ZMod d) * (u_val : ZMod d) + (l_val : ZMod d) * (q : ZMod d) = 0) :
     (l_val : ZMod d) = -(q : ZMod d)⁻¹ * ((k_val * u_val : ℕ) : ZMod d) := by
@@ -4291,7 +4283,7 @@ lemma zmod_eq_zero_forward
   simp_all
 
 lemma zmod_eq_zero_backward
-    (d : ℕ) [NeZero d] (k_val u_val l_val : ℕ) (q : ℤ)
+    (d : ℕ) (k_val u_val l_val : ℕ) (q : ℤ)
     (hq : IsUnit (q : ZMod d))
     (h : (l_val : ZMod d) = -(q : ZMod d)⁻¹ * ((k_val * u_val : ℕ) : ZMod d)) :
     (k_val : ZMod d) * (u_val : ZMod d) + (l_val : ZMod d) * (q : ZMod d) = 0 := by
@@ -4301,7 +4293,7 @@ lemma zmod_eq_zero_backward
   simp_all
 
 lemma zmod_eq_zero_iff_eq_neg_inv_mul
-    (d : ℕ) [NeZero d] (k_val u_val l_val : ℕ) (q : ℤ)
+    (d : ℕ) (k_val u_val l_val : ℕ) (q : ℤ)
     (hq : IsUnit (q : ZMod d)) :
     ((k_val : ZMod d) * (u_val : ZMod d) + (l_val : ZMod d) * (q : ZMod d) = 0) ↔
     ((l_val : ZMod d) = -(q : ZMod d)⁻¹ * ((k_val * u_val : ℕ) : ZMod d)) :=
@@ -4320,7 +4312,7 @@ lemma residue_iff_zmod_eq
   · intro heq; rw [← h_val_nat_cast, heq]
 
 lemma divisibility_iff_residue_class
-    (n d : ℕ) [NeZero n] [NeZero d]
+    (n d : ℕ) [NeZero d]
     (_hd_dvd : d ∣ n)
     (q : ℤ) (hq_coprime_d : Int.gcd q (d : ℤ) = 1)
     (k : ZMod n) (_hk : k ≠ 0)
@@ -4357,20 +4349,20 @@ lemma cond_sum_eq_residue_class_sum
   have h := divisibility_iff_residue_class n d hd_dvd q hq_coprime_d k hk u l
   simp_all
 
-lemma nonzero_of_val_mod_eq_pos (n d : ℕ) [NeZero n] [NeZero d]
+lemma nonzero_of_val_mod_eq_pos (n d : ℕ)
     (l : ZMod n) (b : ℕ) (hb_pos : 1 ≤ b) (_hb_lt : b < d)
     (hmod : ZMod.val l % d = b) : l ≠ 0 := by
   intro h
   rw [h, ZMod.val_zero, Nat.zero_mod] at hmod
   omega
 
-lemma min_eq_val_of_two_mul_le (n : ℕ) [NeZero n] (l : ZMod n)
+lemma min_eq_val_of_two_mul_le (n : ℕ) (l : ZMod n)
     (h2 : 2 * ZMod.val l ≤ n) :
     (min (ZMod.val l : ℝ) ((n : ℝ) - ZMod.val l)) = (ZMod.val l : ℝ) := by
   have h₄ : (2 : ℝ) * (ZMod.val l : ℝ) ≤ (n : ℝ) := by exact_mod_cast h2
   exact min_eq_left (by linarith)
 
-lemma pointwise_bound_in_low_range (n d : ℕ) [NeZero n] [NeZero d]
+lemma pointwise_bound_in_low_range (n d : ℕ) [NeZero n]
     (mq : ℕ) (hmq_lo : 1 ≤ mq) (hmq_hi : mq < n)
     (b : ℕ) (hb_pos : 1 ≤ b) (hb_lt : b < d)
     (l : ZMod n) (hmod : ZMod.val l % d = b) (hlow : 2 * ZMod.val l ≤ n) :
@@ -4381,7 +4373,7 @@ lemma pointwise_bound_in_low_range (n d : ℕ) [NeZero n] [NeZero d]
   rw [min_eq_val_of_two_mul_le n l hlow] at hbound
   exact hbound
 
-lemma val_eq_of_mod_eq_and_quot_eq (n d : ℕ) [NeZero n] [NeZero d]
+lemma val_eq_of_mod_eq_and_quot_eq (n d : ℕ)
     (b : ℕ) (_hb_lt : b < d)
     (l₁ l₂ : ZMod n)
     (h1 : ZMod.val l₁ % d = b)
@@ -4394,7 +4386,7 @@ lemma val_eq_of_mod_eq_and_quot_eq (n d : ℕ) [NeZero n] [NeZero d]
   have hr2 := fiber_reconstruct d b (ZMod.val l₂) h2 hb2
   simp_all
 
-lemma quotient_injOn (n d : ℕ) [NeZero n] [NeZero d] (_hd_dvd : d ∣ n)
+lemma quotient_injOn (n d : ℕ) [NeZero n] (_hd_dvd : d ∣ n)
     (b : ℕ) (hb_lt : b < d) :
     Set.InjOn (fun l : ZMod n => (ZMod.val l - b) / d)
       (↑(Finset.univ.filter (fun l : ZMod n => ZMod.val l % d = b ∧ 2 * ZMod.val l ≤ n))) := by
@@ -4403,7 +4395,7 @@ lemma quotient_injOn (n d : ℕ) [NeZero n] [NeZero d] (_hd_dvd : d ∣ n)
   have hval := val_eq_of_mod_eq_and_quot_eq n d b hb_lt l₁ l₂ hl₁.1 hl₂.1 heq
   exact ZMod.val_injective n hval
 
-lemma quotient_mem_range (n d : ℕ) [NeZero n] [NeZero d] (_hd_dvd : d ∣ n)
+lemma quotient_mem_range (n d : ℕ) (_hd_dvd : d ∣ n)
     (b : ℕ) (_hb_pos : 1 ≤ b) (_hb_lt : b < d)
     (l : ZMod n) (hl : ZMod.val l % d = b ∧ 2 * ZMod.val l ≤ n) :
     (ZMod.val l - b) / d ∈ Finset.range (n / (2 * d) + 1) := by
@@ -4415,7 +4407,7 @@ lemma quotient_mem_range (n d : ℕ) [NeZero n] [NeZero d] (_hd_dvd : d ∣ n)
   rw [← Nat.div_div_eq_div_mul]
   omega
 
-lemma summand_eq (n d : ℕ) [NeZero n] [NeZero d]
+lemma summand_eq (n d : ℕ)
     (b : ℕ) (_hb_pos : 1 ≤ b) (_hb_lt : b < d)
     (l : ZMod n) (hl : ZMod.val l % d = b ∧ 2 * ZMod.val l ≤ n) :
     (1 : ℝ) / (2 * (ZMod.val l : ℝ)) =
@@ -4431,7 +4423,7 @@ lemma rhs_term_nonneg (b d : ℕ) (hb_pos : 1 ≤ b) (j : ℕ) :
   have h₁ : (0 : ℝ) < (b : ℝ) := by exact_mod_cast hb_pos
   positivity
 
-lemma sum_val_reciprocal_le_sum_range (n d : ℕ) [NeZero n] [NeZero d] (_hn : 2 ≤ n)
+lemma sum_val_reciprocal_le_sum_range (n d : ℕ) [NeZero n] (_hn : 2 ≤ n)
     (hd_dvd : d ∣ n)
     (b : ℕ) (hb_pos : 1 ≤ b) (hb_lt : b < d) :
     (∑ l : ZMod n,
@@ -4463,7 +4455,7 @@ lemma sum_val_reciprocal_le_sum_range (n d : ℕ) [NeZero n] [NeZero d] (_hn : 2
         · intro j _ _
           exact rhs_term_nonneg b d hb_pos j
 
-lemma low_range_le_sum_over_j (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+lemma low_range_le_sum_over_j (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (hd_dvd : d ∣ n) (mq : ℕ) (hmq_lo : 1 ≤ mq) (hmq_hi : mq < n)
     (b : ℕ) (hb_pos : 1 ≤ b) (hb_lt : b < d) :
     (∑ l : ZMod n,
@@ -4817,7 +4809,7 @@ lemma arith_prog_summand_nonneg
   apply div_nonneg <;> linarith
 
 lemma reindex_map_injOn
-    (n d : ℕ) [NeZero n] [NeZero d] (_hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (_hn : 2 ≤ n)
     (hd_dvd : d ∣ n)
     (b : ℕ) (hb_pos : 1 ≤ b) (hb_lt : b < d) :
     Set.InjOn (fun l : ZMod n => (n - ZMod.val l - (d - b)) / d)
@@ -4840,7 +4832,7 @@ lemma reindex_map_injOn
   exact ZMod.val_injective n hval_eq
 
 lemma reindex_filtered_sum
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (hd_dvd : d ∣ n)
     (b : ℕ) (hb_pos : 1 ≤ b) (hb_lt : b < d) :
     (∑ l ∈ Finset.univ.filter (fun l : ZMod n =>
@@ -4991,7 +4983,7 @@ lemma high_range_bound
   linarith
 
 lemma split_sum_low_high
-    (n d : ℕ) [NeZero n] [NeZero d]
+    (n d : ℕ) [NeZero n]
     (mq : ℕ)
     (b : ℕ) :
     (∑ l : ZMod n,
@@ -5109,7 +5101,7 @@ lemma summand_val_eq_after_bijection
   exact ZMod.val_natCast d (k_val * (↑v : ZMod d).val)
 
 lemma neg_q_unit_exists
-    (d : ℕ) [NeZero d]
+    (d : ℕ)
     (q : ℤ) (hq_coprime_d : Int.gcd q (d : ℤ) = 1) :
     ∃ w : (ZMod d)ˣ, (w : ZMod d) = -(q : ZMod d) := by
   exact (q_isUnit_of_gcd d q hq_coprime_d).neg
@@ -5332,7 +5324,7 @@ lemma average_S_bound
   exact weighted_orbit_total n d hn hd q hq_coprime hq_pos hq_bound mq hmq
 
 lemma sum_filter_lower_bound
-    (d : ℕ) [NeZero d]
+    (d : ℕ)
     (f : (ZMod d)ˣ → ℝ) (_hf : ∀ u, 0 ≤ f u)
     (avg : ℝ) (R : ℕ)
     (S : Finset (ZMod d)ˣ)
@@ -5443,7 +5435,7 @@ lemma bad_set_from_average
       simpa only [hB_def] using Finset.mem_image_of_mem _ this
     contradiction
 
-lemma k_zero_term_eq (n d : ℕ) [NeZero n] [NeZero d]
+lemma k_zero_term_eq (n d : ℕ) [NeZero n]
     (mp mq : ℕ) (p q : ℤ) :
     (∑ l : ZMod n,
       if ((0 : ZMod n), l) ≠ (0, 0) ∧ ((d : ℤ) ∣ (↑(ZMod.val (0 : ZMod n)) * p + ↑(ZMod.val l) * q))
@@ -5457,7 +5449,7 @@ lemma k_zero_term_eq (n d : ℕ) [NeZero n] [NeZero d]
       else (0 : ℝ)) := by
   simp_all
 
-lemma inner_sum_eq_of_k_ne_zero (n d : ℕ) [NeZero n] [NeZero d]
+lemma inner_sum_eq_of_k_ne_zero (n d : ℕ) [NeZero n]
     (mp mq : ℕ) (p q : ℤ) (k : ZMod n) (hk : k ≠ 0) :
     (∑ l : ZMod n,
       if (k, l) ≠ (0, 0) ∧ ((d : ℤ) ∣ (↑(ZMod.val k) * p + ↑(ZMod.val l) * q))
@@ -5471,7 +5463,7 @@ lemma inner_sum_eq_of_k_ne_zero (n d : ℕ) [NeZero n] [NeZero d]
       else (0 : ℝ)) := by
   simp_all
 
-lemma filtered_sum_to_full_sum (n d : ℕ) [NeZero n] [NeZero d]
+lemma filtered_sum_to_full_sum (n d : ℕ) [NeZero n]
     (mp mq : ℕ) (p q : ℤ) :
     (∑ k ∈ Finset.univ.filter (· ≠ (0 : ZMod n)), ∑ l : ZMod n,
       if (k, l) ≠ (0, 0) ∧ ((d : ℤ) ∣ (↑(ZMod.val k) * p + ↑(ZMod.val l) * q))
@@ -5491,7 +5483,7 @@ lemma filtered_sum_to_full_sum (n d : ℕ) [NeZero n] [NeZero d]
   · simp_all
 
 lemma double_sum_split_k0_kneq0
-    (n d : ℕ) [NeZero n] [NeZero d]
+    (n d : ℕ) [NeZero n]
     (mp mq : ℕ)
     (p q : ℤ) :
     (∑ k : ZMod n, ∑ l : ZMod n,
@@ -5522,7 +5514,7 @@ lemma int_coprime_dvd_mul_imp_dvd (d v : ℕ) (q : ℤ)
   exact Int.natCast_dvd_natCast.mp (by simpa using h₁.dvd_of_dvd_mul_right h₃)
 
 lemma dvd_val_of_dvd_val_mul_q
-    (n d : ℕ) [NeZero n] [NeZero d]
+    (n d : ℕ)
     (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (q : ℤ) (hq_coprime : Int.gcd q (largestPrimeFactor n : ℤ) = 1)
@@ -5558,7 +5550,7 @@ lemma sum_nonzero_multiples_dft_bound
           weight_sum_multiples_of_d_bound n d hn hd_dvd hd_pos
 
 lemma filter_int_dvd_subset_filter_nat_dvd
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (q : ℤ) (hq_coprime : Int.gcd q (largestPrimeFactor n : ℤ) = 1) :
     Finset.univ.filter (fun l : ZMod n => l ≠ 0 ∧ ((d : ℤ) ∣ (↑(ZMod.val l) * q))) ⊆
@@ -5568,7 +5560,7 @@ lemma filter_int_dvd_subset_filter_nat_dvd
   exact ⟨hl_ne, dvd_val_of_dvd_val_mul_q n d hn hd q hq_coprime l hl_ne hdvd⟩
 
 lemma sum_int_dvd_le_sum_nat_dvd
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (q : ℤ) (hq_coprime : Int.gcd q (largestPrimeFactor n : ℤ) = 1)
     (f g : ZMod n → ℝ) (hf_nonneg : ∀ l, 0 ≤ f l) (hg_nonneg : ∀ l, 0 ≤ g l) :
@@ -5583,7 +5575,7 @@ lemma sum_int_dvd_le_sum_nat_dvd
     (fun l _ _ => mul_nonneg (hf_nonneg l) (hg_nonneg l))
 
 lemma sum_mul_le_sum_of_le_one
-    (n : ℕ) [NeZero n] (c : ℝ) (hc : c ≤ 1) (_hc_nonneg : 0 ≤ c)
+    (n : ℕ) (c : ℝ) (hc : c ≤ 1) (_hc_nonneg : 0 ≤ c)
     (g : ZMod n → ℝ) (hg_nonneg : ∀ l, 0 ≤ g l)
     (S : Finset (ZMod n)) :
     ∑ l ∈ S, c * g l ≤ ∑ l ∈ S, g l := by
@@ -5635,7 +5627,7 @@ lemma k_zero_contribution_bound
     sum_nonzero_multiples_dft_bound n d hn hd_dvd hd_pos' mq hmq.1 hmq.2
   linarith
 
-lemma dvd_diff_from_zmod_eq (d : ℕ) [NeZero d] (p : ℤ) (u_val : ℕ)
+lemma dvd_diff_from_zmod_eq (d : ℕ) (p : ℤ) (u_val : ℕ)
     (hu : (p : ZMod d) = (u_val : ZMod d))
     (k_val l_val : ℕ) (q : ℤ) :
     ((d : ℤ) ∣ (↑k_val * p + ↑l_val * q - (↑k_val * ↑u_val + ↑l_val * q))) := by
@@ -5645,14 +5637,14 @@ lemma dvd_diff_from_zmod_eq (d : ℕ) [NeZero d] (p : ℤ) (u_val : ℕ)
     ↑k_val * (p - (u_val : ℤ)) from by ring]
   exact dvd_mul_of_dvd_right h₁ _
 
-lemma congr_dvd_equiv (d : ℕ) [NeZero d] (p : ℤ) (u_val : ℕ)
+lemma congr_dvd_equiv (d : ℕ) (p : ℤ) (u_val : ℕ)
     (hu : (p : ZMod d) = (u_val : ZMod d))
     (k_val l_val : ℕ) (q : ℤ) :
     ((d : ℤ) ∣ (↑k_val * p + ↑l_val * q)) ↔
     ((d : ℤ) ∣ (↑k_val * ↑u_val + ↑l_val * q)) := by
   exact dvd_iff_dvd_of_dvd_sub (dvd_diff_from_zmod_eq d p u_val hu k_val l_val q)
 
-lemma summand_le (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+lemma summand_le (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (p q : ℤ) (hp_pos : 1 ≤ p) (hq_pos : 1 ≤ q)
     (hpq : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2)
     (u_val : ℕ) (hu_congr : (p : ZMod d) = (u_val : ZMod d))
@@ -5697,7 +5689,7 @@ lemma summand_le (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
     · rw [if_neg hcond2]
 
 lemma k_nonzero_contribution_bound
-    (n d : ℕ) [NeZero n] [NeZero d] (hn : 2 ≤ n)
+    (n d : ℕ) [NeZero n] (hn : 2 ≤ n)
     (_hd : d = largestPrimeFactor n ^ n.factorization (largestPrimeFactor n))
     (p q : ℤ) (hp_pos : 1 ≤ p) (hq_pos : 1 ≤ q)
     (hpq : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2)
@@ -5837,7 +5829,7 @@ lemma natAbs_mod_eq_emod_toNat
   simp
 
 lemma intCast_eq_natCast_of_pos
-    (d : ℕ) [NeZero d] (p : ℤ) (hp_pos : 1 ≤ p) :
+    (d : ℕ) (p : ℤ) (hp_pos : 1 ≤ p) :
     (p : ZMod d) = (p.natAbs : ZMod d) := by
   have h_p_nonneg : 0 ≤ (p : ℤ) := by omega
   rw [← ZMod.natCast_toNat d h_p_nonneg, show p.toNat = p.natAbs from by omega]
