@@ -21,8 +21,6 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 # LeanPool.LowDimSolvClassification.Classification3
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 open Module
 open Submodule
 namespace LieAlgebra.Dim3

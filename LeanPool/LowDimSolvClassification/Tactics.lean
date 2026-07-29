@@ -14,13 +14,12 @@ import Mathlib.Algebra.Lie.Basic
 # LeanPool.LowDimSolvClassification.Tactics
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 open Lean hiding Module
 open Meta Elab Qq Mathlib.Tactic List
 
 /-- Pair-or-single carrier used by the Lie-algebra atom store: each atom is either a single
 expression or a pair of expressions tracked together. -/
+@[implicit_reducible]
 def V (M : Type*) := Sum M (M × M)
 
 namespace AtomD
@@ -98,6 +97,7 @@ def v {M : Type*} [LieRing M] (x : V M) :=
   Sum.elim (fun m ↦ m) (fun ⟨ m₁ , m₂ ⟩ ↦ ⁅ m₁ , m₂ ⁆) x
 
 /-- TODO. -/
+@[implicit_reducible]
 def NF (R : Type*) (M : Type*) := List (R × V M)
 
 namespace NF

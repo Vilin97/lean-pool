@@ -19,8 +19,6 @@ import LeanPool.LowDimSolvClassification.Classification1
 # LeanPool.LowDimSolvClassification.Classification2
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 open Module
 open Submodule
 namespace LieAlgebra

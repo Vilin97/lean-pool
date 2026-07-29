@@ -17,8 +17,6 @@ import LeanPool.LowDimSolvClassification.InstancesConstructions
 # LeanPool.LowDimSolvClassification.InstancesLowDim
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 open Module
 open Submodule
 
@@ -37,6 +35,7 @@ variable (K : Type*) [CommRing K]
 abbrev Abelian := mkAbelian K (Fin 2 → K)
 
 /-- TODO. -/
+@[implicit_reducible]
 def Affine := Fin 2 → K
 
 instance : LieRing (Affine K) := {
@@ -190,6 +189,7 @@ variable (K : Type*) [CommRing K]
 abbrev _root_.LieAlgebra.Dim3.Abelian := mkAbelian K (Fin 3 → K)
 
 /-- The three-dimensional Heisenberg Lie algebra. -/
+@[implicit_reducible]
 def _root_.LieAlgebra.Dim3.Heisenberg := Fin 3 → K
 
 instance : LieRing (Heisenberg K) := {
@@ -226,6 +226,7 @@ instance : LieAlgebra K (Heisenberg K) := {
 }
 
 /-- The three-dimensional Lie algebra which has one-dimensional commutator and is not nilpotent. -/
+@[implicit_reducible]
 def _root_.LieAlgebra.Dim3.AffinePlusAbelian := Fin 3 → K
 
 instance : LieRing (AffinePlusAbelian K) := {
@@ -262,6 +263,7 @@ instance : LieAlgebra K (AffinePlusAbelian K):= {
 }
 
 /-- The three-dimensional solvable Lie algebra associated to real hyperbolic space. -/
+@[implicit_reducible]
 def _root_.LieAlgebra.Dim3.Hyperbolic := Fin 3 → K
 
 instance : LieRing (Hyperbolic K) := {
@@ -300,7 +302,9 @@ theorem _root_.LieAlgebra.Dim3.Hyperbolic.bracket (l r : Hyperbolic K) :
 /-- The two-parameter family of solvable Lie algebras appearing in the classification of
 3-dimensional Lie algebras. The two `K` parameters are phantom: they index the bracket structure
 but do not appear in the underlying type; consuming them via `id` keeps the linter happy. -/
-def _root_.LieAlgebra.Dim3.Family (α β : K) : Type _ := (id (α, β) : K × K) |> fun _ ↦ Fin 3 → K
+@[implicit_reducible]
+def _root_.LieAlgebra.Dim3.Family (α β : K) : Type _ :=
+  (id (α, β) : K × K) |> fun _ ↦ Fin 3 → K
 
 instance (α : K) (β : K) : LieRing (Family K α β) := {
   (inferInstance : AddCommGroup (Fin 3 → K)) with
@@ -877,6 +881,7 @@ def _root_.LieAlgebra.Dim3.Family.equivToSemidirect :
 }
 
 /-- TODO. -/
+@[implicit_reducible]
 def _root_.LieAlgebra.Dim3.Family.M : Matrix (Fin 2) (Fin 2) K := ![
   ![0, α],
   ![1, β]
@@ -885,15 +890,13 @@ def _root_.LieAlgebra.Dim3.Family.M : Matrix (Fin 2) (Fin 2) K := ![
 variable {α β : K}
 
 theorem _root_.LieAlgebra.Dim3.Family.M_det {α β : K} : Matrix.det (M α β) = -α := by
-  unfold M
   rw [Matrix.det_fin_two]
-  simp only [Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one,
+  simp only [M, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one,
         Matrix.cons_val_one, zero_mul, mul_one, zero_sub]
 
 theorem _root_.LieAlgebra.Dim3.Family.M_trace {α β : K} : Matrix.trace (M α β) = β := by
-  unfold M
   rw [Matrix.trace_fin_two]
-  simp only [Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one,
+  simp only [M, Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one,
       Matrix.cons_val_one, zero_add]
 
 /-- TODO. -/
@@ -968,6 +971,7 @@ theorem _root_.LieAlgebra.Dim3.Family.commutator_is_span_e₂e₃ (hα : α ≠ 
     · apply subset_span (R:=K) (M:=Family K α β) (s := {x | ∃ y z, ⁅y, z⁆ = x})
 
 /-- TODO. -/
+@[reducible]
 def _root_.LieAlgebra.Dim3.Family.B (α β : K) : Fin 2 → Family K α β := ![e₂, e₃]
 
 theorem _root_.LieAlgebra.Dim3.Family.B_is_li_ambient : LinearIndependent K (M
@@ -1011,6 +1015,7 @@ lemma _root_.LieAlgebra.Dim3.Family.e₃_in_comm : e₃ ∈ commutator K (Family
     exact (this ⟨_, _, e₃_bracket⟩)
 
 /-- TODO. -/
+@[implicit_reducible]
 noncomputable def _root_.LieAlgebra.Dim3.Family.commutatorBasis (α β : K) (hα : α ≠ 0) : Basis
     (Fin 2) K (commutator K (Family K α β)) := by
   -- Basis are ![0,1,0] and ![0,0,1]
@@ -1135,13 +1140,13 @@ theorem _root_.LieAlgebra.Dim3.Family.dim_commutator {hα : α ≠ 0} : finrank 
 
 theorem _root_.LieAlgebra.Dim3.Family.B_basis_0 {hα : α ≠ 0} : ((commutatorBasis α β hα) 0).val =
     (e₂ : Family K α β) := by
-  simp only [commutatorBasis, e₂, Basis.coe_mk]
-  rfl
+  simp only [commutatorBasis]
+  exact congrArg (fun x : commutator K (Family K α β) => x.val) (Basis.mk_apply _ _ 0)
 
 theorem _root_.LieAlgebra.Dim3.Family.B_basis_1 {hα : α ≠ 0} : ((commutatorBasis α β hα) 1).val =
     (e₃ : Family K α β) := by
-  simp only [commutatorBasis, e₃, Basis.coe_mk]
-  rfl
+  simp only [commutatorBasis]
+  exact congrArg (fun x : commutator K (Family K α β) => x.val) (Basis.mk_apply _ _ 1)
 
 theorem _root_.LieAlgebra.Dim3.Family.B_basis_repr {hα : α ≠ 0} {x : commutator K
     (Family K α β)} : (commutatorBasis α β hα).repr x = ![x.val 1, x.val 2] := by
