@@ -13,6 +13,8 @@ import LeanPool.DirectedTopologyLean4.MorphismAux
 # LeanPool.DirectedTopologyLean4.DirectedVanKampen
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 /-
   This file contains the directed version of the Van Kampen Theorem.
   The statement is as follows:
@@ -41,7 +43,7 @@ attribute [local instance] Dipath.Dihomotopic.setoid
 -- Lean 4.33 checks that tactic goals stay type-correct at `.implicit` transparency; the goals
 -- below mix `dπₓ X` with `FundamentalCategory X`, so the bundling layers must unfold there.
 attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of
-  Quiver.Hom Quotient Dipath.Dihomotopic.Quotient dTopCat.of Dipath.coveredPartwise
+  Quiver.Hom Quotient Dipath.Dihomotopic.Quotient Dipath.coveredPartwise
 noncomputable section
 namespace DirectedVanKampen
 open FundamentalCategory DiSubtype CategoryTheory
@@ -315,21 +317,18 @@ lemma functorOnHomOfCovered_cast {x y x' y' : X} {γ : Dipath x y}
       (F₀ hγ) ≫ (eqToHom (show F_obj ⟨y⟩ = F_obj ⟨y'⟩ by rw [hy])) := by
   subst_vars
   rw [eqToHom_refl, eqToHom_refl, Category.comp_id, Category.id_comp]
-  rfl
 lemma functorOnHomOfCovered_cast_left {x y x' : X} {γ : Dipath x y}
     (hγ : covered hX γ) (hx : x' = x) :
     F₀ ((covered_cast_iff γ hX hx rfl).mp hγ) =
       (eqToHom (show F_obj ⟨x'⟩ = F_obj ⟨x⟩ by rw [hx])) ≫ (F₀ hγ) := by
   subst_vars
   rw [eqToHom_refl, Category.id_comp]
-  rfl
 lemma functorOnHomOfCovered_cast_right {x y y' : X} {γ : Dipath x y}
     (hγ : covered hX γ) (hy : y' = y) :
   F₀ ((covered_cast_iff γ hX rfl hy).mp hγ) =
     (F₀ hγ) ≫ (eqToHom (show F_obj ⟨y⟩ = F_obj ⟨y'⟩ by rw [hy])) := by
   subst_vars
   rw [eqToHom_refl, Category.comp_id]
-  rfl
 lemma functorOnHomOfCovered_split_comp {x y : X} {γ : Dipath x y}
     (hγ : covered hX γ) {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) :
     F₀ hγ =
@@ -488,7 +487,6 @@ lemma functorOnHomOfCoveredPartwise_split {n : ℕ} :
           apply functorOnHomOfCovered_equal
           rw [SplitProperties.firstPart_of_firstPart γ (Nat.succ_lt_succ hdn)
             (Nat.succ_pos d.succ)]
-          rfl
       · rw [←Category.assoc]
         apply eq_of_morphism
         · apply (comp_eqToHom_iff _ _ _).mp
@@ -498,7 +496,6 @@ lemma functorOnHomOfCoveredPartwise_split {n : ℕ} :
             focus
               apply functorOnHomOfCoveredPartwise_equal
               rw [SplitProperties.first_part_of_second_part γ hdn (Nat.succ_pos d)]
-              rfl
         · rw [←functorOnHomOfCoveredPartwise_cast_left]
           exact functorOnHomOfCoveredPartwise_equal' hX h_comm
             (SplitProperties.second_part_of_second_part γ (Nat.lt_of_succ_lt_succ hdn))
@@ -975,7 +972,6 @@ lemma functor_comp_left_dipath {x y : X₁} (γ : Dipath x y) : F_hom ((dπₘ j
     functorOnHomOfCoveredPartwise_apply_0, functorOnHomOfCovered_apply_left' hX h_comm h₁,
     FunctorOnHomOfCoveredAux₁, subtypeDipath_of_included_dipath_eq]
   erw [functor_cast F₁ γ]
-  rfl
 /- Shpw that the two obtained triangles commute -/
 lemma functor_comp_left : (dπₘ j₁) ⋙ F = F₁ := by
   refine CategoryTheory.Functor.ext ?_ ?_
@@ -1005,7 +1001,6 @@ lemma functor_comp_right_dipath {x y : X₂} (γ : Dipath x y) :
     functorOnHomOfCoveredPartwise_apply_0, functorOnHomOfCovered_apply_right' hX h_comm h₁,
     FunctorOnHomOfCoveredAux₂, subtypeDipath_of_included_dipath_eq]
   erw [functor_cast F₂ γ]
-  rfl
 lemma functor_comp_right : (dπₘ j₂) ⋙ F = F₂ := by
   refine CategoryTheory.Functor.ext ?_ ?_
   · intro x
@@ -1046,7 +1041,6 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
     change ((dπₘ j₁) ⋙ F').map ⟦SubtypeDipath γ hγ⟧ = _
     rw [map_eq_map_of_eq h₁]
     simp [functorObj_def]
-    rfl
   case inr hγ =>
     rw [functorOnHomOfCovered_apply_right' _ _ hγ]
     unfold FunctorOnHomOfCoveredAux₂
@@ -1054,7 +1048,6 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
     change ((dπₘ j₂) ⋙ F').map ⟦SubtypeDipath γ hγ⟧ = _
     rw [map_eq_map_of_eq h₂]
     simp [functorObj_def]
-    rfl
 lemma functor_uniq_aux_map (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
     (h₂ : (dπₘ j₂) ⋙ F' = F₂) {n : ℕ} :
     Π {x y : X} {γ : Dipath x y} (_ : coveredPartwise hX γ n), F'.map ⟦γ⟧ =
