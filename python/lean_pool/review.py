@@ -2,8 +2,13 @@
 
 Detects what kind of PR this is and reviews it under the matching rules:
 
-- **project** — adds a new project to the pool. Judged on fit and
-  significance (``.github/REVIEW_RULES.md``).
+- **project** — adds a new project to the pool. Reviewed once per
+  rubric — faithfulness, novelty, significance, sources, and advisory
+  code quality (``.github/review-rubrics/``), each an independent model
+  call on top of the shared core (``.github/REVIEW_RULES.md``). The
+  overall verdict is computed from the rubric verdicts, never asked of
+  a model: any blocking ``block`` → request_changes, any ``discuss`` →
+  needs_discussion, and an elided-diff review cannot approve.
 - **refactor** — only touches projects already in the pool, the same
   added-vs-modified split ``/profile`` uses. Judged on tech debt and
   maintainability (``.github/REFACTOR_REVIEW_RULES.md``).
@@ -241,38 +246,6 @@ VACUITY_ICON = {"none": "✅", "possible": "🟡", "vacuous": "🛑"}
 TAMPERING_ICON = {True: "🛑", False: "✅"}
 HOLE_RISK_ICON = {"none": "✅", "review_needed": "🟡", "gamed": "🛑"}
 
-SYSTEM_PROMPT_PROJECT = dedent(
-    """\
-    You are a senior mathematician and Lean engineer reviewing pull
-    requests to Lean Pool, a curated repository of formalization
-    projects — mathematics and the disciplines next to it, so about a
-    quarter of the pool is theoretical computer science, information
-    theory, mathematical physics, and game theory. Your job is to tell
-    the maintainer, in one paragraph plus a short structured assessment,
-    whether this PR is worth merging.
-
-    Write to a colleague: direct, no encouragement, no editorializing,
-    no convention justifications, no "great work."
-
-    The build, the linters, and the axiom audit have already passed —
-    assume that, and never report a proof as broken or incomplete.
-    Mechanical style issues (sorry, headers, naming, simp discipline,
-    line length, card schema) are caught elsewhere in CI. Do NOT flag
-    those, even if you notice them.
-
-    What the gates cannot check is whether the project proves what its
-    card claims, what it assumes rather than proves, whether someone has
-    already done it, and whether its cited source supports it. That is
-    the review. Much of what you read was written by an AI and reads
-    fluently whether or not it is right, so rest every claim on the Lean
-    itself rather than on a docstring that asserts it.
-
-    Always respond with a single JSON object matching the schema in the
-    rules document. The `assessment` block is the core deliverable —
-    that is what tells the maintainer whether to bother reading the PR.
-    """
-)
-
 SYSTEM_PROMPT_REFACTOR = dedent(
     """\
     You are a senior Lean engineer reviewing a refactor pull request to
@@ -411,12 +384,78 @@ UNTRUSTED_INPUT_RULE = dedent(
 )
 
 # Rules document and system prompt per PR kind, keyed by `classify_pr`.
+# Project PRs do not appear here: they are reviewed per-rubric (see
+# PROJECT_RUBRICS) rather than in one monolithic call.
 REVIEW_MODES: dict[str, tuple[Path, str]] = {
-    "project": (PROJECT_RULES_PATH, SYSTEM_PROMPT_PROJECT),
     "refactor": (REFACTOR_RULES_PATH, SYSTEM_PROMPT_REFACTOR),
     "challenge": (CHALLENGE_RULES_PATH, SYSTEM_PROMPT_CHALLENGE),
     "solution": (SOLUTION_RULES_PATH, SYSTEM_PROMPT_SOLUTION),
 }
+
+RUBRICS_DIR = REPO_ROOT / ".github" / "review-rubrics"
+
+
+@dataclass(frozen=True)
+class RubricSpec:
+    """One dimension a project PR is reviewed on, by its own model call.
+
+    An audit of the 148 monolithic reviews showed one narrative call
+    letting a positive overall impression swamp specific checks — the
+    two worst misses (#275, #278) were long approving summaries with
+    zero findings. Tau Ceti's review runs each angle as its own agent
+    for exactly this reason; this is that structure, sized to the pool.
+
+    Attributes:
+        key: Verdict-table identifier, also the rubric filename stem.
+        title: Human-readable rubric name for the comment.
+        blocking: Whether this rubric's ``block`` can force
+            ``request_changes``. An advisory rubric's ``block`` is
+            recorded as ``discuss`` — it informs, it does not veto.
+        wants_prior_art: Whether the pre-computed Mathlib/pool search
+            evidence is included in this rubric's prompt.
+    """
+
+    key: str
+    title: str
+    blocking: bool
+    wants_prior_art: bool = False
+
+    @property
+    def path(self) -> Path:
+        """The rubric's markdown file under ``.github/review-rubrics/``."""
+        return RUBRICS_DIR / f"{self.key}.md"
+
+
+# Ordered by expected value per token: the dimensions that have actually
+# rejected PRs first. `quality` is advisory — in 148 reviews it produced
+# one finding and never drove a verdict, so it flags for a human rather
+# than vetoing.
+PROJECT_RUBRICS: list[RubricSpec] = [
+    RubricSpec("faithfulness", "Faithfulness", blocking=True),
+    RubricSpec("novelty", "Novelty", blocking=True, wants_prior_art=True),
+    RubricSpec("significance", "Significance", blocking=True),
+    RubricSpec("sources", "Sources", blocking=True),
+    RubricSpec("quality", "Code quality", blocking=False),
+]
+
+SYSTEM_PROMPT_RUBRIC = dedent(
+    """\
+    You are a senior mathematician and Lean engineer reviewing ONE
+    dimension of a pull request to Lean Pool, a curated repository of
+    formalization projects. The rules document below names your
+    dimension and ends with your output schema. Other dimensions are
+    reviewed by separate, independent reviews — stay inside yours, and
+    do not let strength or weakness elsewhere move your verdict.
+
+    Write to a colleague: direct, no encouragement, no editorializing.
+    The build, linters, and axiom audit already passed; never report a
+    proof as broken. Rest every claim on the Lean in the diff, not on
+    prose that asserts it.
+
+    Always respond with a single JSON object matching the schema in the
+    rules document.
+    """
+)
 
 
 def run_gh(*args: str, stdin: str | None = None) -> str:
@@ -1138,6 +1177,89 @@ def request_review(
     raise RuntimeError("unreachable: review fit loop exited without a result")
 
 
+@dataclass(frozen=True)
+class RubricOutcome:
+    """One rubric's completed review of a project PR.
+
+    Attributes:
+        spec: The rubric that ran.
+        result: The underlying model call.
+        verdict: Normalized to ``pass`` / ``block`` / ``discuss`` —
+            see :func:`normalize_rubric_verdict`.
+    """
+
+    spec: RubricSpec
+    result: ReviewResult
+    verdict: str
+
+
+def normalize_rubric_verdict(spec: RubricSpec, payload: dict) -> str:
+    """Clamp a rubric's self-reported verdict to what it may say.
+
+    An advisory rubric's ``block`` becomes ``discuss`` — it informs the
+    maintainer, it does not veto. Anything unrecognized also becomes
+    ``discuss``: a review whose verdict cannot be read is a review a
+    human should look at, never a silent pass.
+    """
+    verdict = (payload.get("verdict") or "").strip()
+    if verdict not in ("pass", "block", "discuss"):
+        return "discuss"
+    if verdict == "block" and not spec.blocking:
+        return "discuss"
+    return verdict
+
+
+def aggregate_verdict(outcomes: list[RubricOutcome], truncated: bool) -> str:
+    """Compute the overall verdict from the rubric outcomes.
+
+    The model is never asked for an overall verdict — the audit showed
+    `fit` ~96% collinear with the verdict it sat next to, i.e. the
+    narrative was grading itself. Deterministic aggregation also
+    enforces what a prompt can only request: a partial (elided-diff)
+    review cannot approve, because nobody read the elided files.
+    """
+    if any(outcome.verdict == "block" for outcome in outcomes):
+        return "request_changes"
+    if truncated or any(outcome.verdict == "discuss" for outcome in outcomes):
+        return "needs_discussion"
+    return "approve"
+
+
+def run_project_rubrics(
+    model: str,
+    diff: str,
+    effort: str | None,
+    context: PullRequestContext | None,
+    prior_art_section: str | None,
+) -> list[RubricOutcome]:
+    """Review a project PR once per rubric in :data:`PROJECT_RUBRICS`.
+
+    Every call shares the same core rules, PR context, and diff; only
+    the rubric text differs, plus the prior-art evidence for the rubric
+    that judges novelty. Calls run sequentially — flex-tier latency is
+    acceptable for a comment bot, and sequencing keeps the tier and
+    overflow fallbacks per call untouched.
+    """
+    core = PROJECT_RULES_PATH.read_text(encoding="utf-8")
+    outcomes: list[RubricOutcome] = []
+    for spec in PROJECT_RUBRICS:
+        rules = f"{core}\n\n---\n\n{spec.path.read_text(encoding='utf-8')}"
+        print(f"Rubric {spec.key}: requesting review.", file=sys.stderr)
+        result = request_review(
+            model=model,
+            rules=rules,
+            diff=diff,
+            system_prompt=SYSTEM_PROMPT_RUBRIC,
+            effort=effort,
+            context=context,
+            prior_art_section=prior_art_section if spec.wants_prior_art else None,
+        )
+        verdict = normalize_rubric_verdict(spec, result.payload)
+        print(f"Rubric {spec.key}: {verdict}.", file=sys.stderr)
+        outcomes.append(RubricOutcome(spec=spec, result=result, verdict=verdict))
+    return outcomes
+
+
 def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -> str:
     """Render a one-line token / tier / effort / cost footer.
 
@@ -1165,58 +1287,6 @@ def render_usage(usage: Any, model: str, tier: str, effort: str | None = None) -
     else:
         parts.append(f"_(no pricing recorded for `{model}` at `{tier}` tier)_")
     return " · ".join(parts)
-
-
-def render_project_assessment(payload: dict) -> str:
-    """Render a new-project assessment block as a Markdown table.
-
-    The rows the maintainer has to act on come first: whether the Lean
-    proves what the card claims, whether the cited source backs it, what
-    it assumes, and whether someone has already done it. Fit and level
-    sit below — the verdict is rendered directly above this table and
-    ``fit`` almost always restates it.
-    """
-    a = payload.get("assessment") or {}
-    if not a:
-        return ""
-
-    fit = a.get("fit", "")
-    fit_cell = f"{FIT_ICON.get(fit, '•')} `{fit}`" if fit else "?"
-    quality = a.get("code_quality")
-    quality_cell = f"{quality} / 5" if quality is not None else "?"
-
-    rows = [
-        ("Proves the claim", _icon_cell(CLAIM_ICON, a.get("proves_the_claim", ""))),
-        (
-            "Matches cited source",
-            _icon_cell(SOURCE_MATCH_ICON, a.get("source_match", "")),
-        ),
-    ]
-    already = (a.get("already_formalized") or "").strip()
-    if already:
-        rows.append(("Already formalized", _prior_art_cell(already)))
-    assumed = (a.get("assumed_inputs") or "").strip()
-    if assumed:
-        rows.append(("Assumed, not proved", assumed))
-    rows += [
-        ("Fit", fit_cell),
-        ("Level", f"`{a.get('level', '?')}`"),
-        ("Branch", a.get("branch", "?")),
-        ("Mode", f"`{a.get('mode', '?')}`"),
-        ("Code quality", quality_cell),
-    ]
-
-    table = "| Aspect | Value |\n|---|---|\n"
-    for k, v in rows:
-        table += f"| {k} | {v} |\n"
-
-    note = (a.get("claim_note") or "").strip()
-    if note:
-        table += f"\n**Statement check:** {note}\n"
-    sig = (a.get("significance_one_sentence") or "").strip()
-    if sig:
-        table += f"\n_{sig}_"
-    return table
 
 
 def render_refactor_assessment(payload: dict) -> str:
@@ -1349,6 +1419,181 @@ def render_solution_assessment(payload: dict) -> str:
     return table
 
 
+RUBRIC_VERDICT_ICON = {"pass": "✅", "block": "🛑", "discuss": "🤔"}
+
+
+def _rubric_facts_table(outcomes: list[RubricOutcome]) -> str:
+    """Assemble the key structured fields across rubrics into one table."""
+    payloads = {outcome.spec.key: outcome.result.payload for outcome in outcomes}
+
+    def field(key: str, name: str) -> str:
+        return str(payloads.get(key, {}).get(name) or "").strip()
+
+    rows: list[tuple[str, str]] = []
+    claim = field("faithfulness", "proves_the_claim")
+    if claim:
+        rows.append(("Proves the claim", _icon_cell(CLAIM_ICON, claim)))
+    assumed = field("faithfulness", "assumed_inputs")
+    if assumed:
+        rows.append(("Assumed, not proved", assumed))
+    already = field("novelty", "already_formalized")
+    if already:
+        rows.append(("Already formalized", _prior_art_cell(already)))
+    source = field("sources", "source_match")
+    if source:
+        rows.append(("Matches cited source", _icon_cell(SOURCE_MATCH_ICON, source)))
+    fit = field("significance", "fit")
+    if fit:
+        rows.append(("Fit", _icon_cell(FIT_ICON, fit)))
+    for key, label in (("level", "Level"), ("branch", "Branch"), ("mode", "Mode")):
+        value = field("significance", key)
+        if value:
+            rows.append((label, f"`{value}`" if key != "branch" else value))
+    quality = payloads.get("quality", {}).get("code_quality")
+    if quality is not None:
+        rows.append(("Code quality", f"{quality} / 5"))
+    if not rows:
+        return ""
+    table = "| Aspect | Value |\n|---|---|\n"
+    for name, value in rows:
+        table += f"| {name} | {value} |\n"
+    claim_note = field("faithfulness", "claim_note")
+    if claim_note:
+        table += f"\n**Statement check:** {claim_note}\n"
+    significance = field("significance", "significance_one_sentence")
+    if significance:
+        table += f"\n_{significance}_"
+    return table
+
+
+def _render_rubric_usage(outcomes: list[RubricOutcome], effort: str | None) -> str:
+    """Sum tokens and cost across the rubric calls into one footer line."""
+    in_tokens = 0
+    out_tokens = 0
+    cost = 0.0
+    unpriced = False
+    for outcome in outcomes:
+        usage = outcome.result.usage
+        if usage is None:
+            unpriced = True
+            continue
+        call_in = getattr(usage, "prompt_tokens", 0) or 0
+        call_out = getattr(usage, "completion_tokens", 0) or 0
+        in_tokens += call_in
+        out_tokens += call_out
+        rates = pricing_rates(outcome.result.model, outcome.result.tier, call_in)
+        if rates is None:
+            unpriced = True
+            continue
+        cost += (call_in * rates[0] + call_out * rates[1]) / 1_000_000
+    parts = [
+        f"**Tokens:** {in_tokens:,} in / {out_tokens:,} out "
+        f"across {len(outcomes)} rubric calls"
+    ]
+    if effort:
+        parts.append(f"**Effort:** `{effort}`")
+    cost_cell = f"**Cost:** ${cost:.4f}"
+    if unpriced:
+        cost_cell += " (partial — some calls unpriced)"
+    parts.append(cost_cell)
+    return " · ".join(parts)
+
+
+def render_rubric_comment(
+    outcomes: list[RubricOutcome],
+    verdict: str,
+    model: str,
+    reviewed_head_sha: str,
+    effort: str | None = None,
+) -> str:
+    """Render the combined per-rubric review as one sticky PR comment."""
+    lines = [
+        LLM_REVIEW_MARKER,
+        f"## 🤖 LLM review (`{model}`, {len(outcomes)} rubrics)",
+        "",
+    ]
+    if reviewed_head_sha:
+        lines.extend([f"**Reviewed head:** `{reviewed_head_sha}`", ""])
+
+    truncation = next(
+        (o.result.truncation for o in outcomes if o.result.truncation is not None),
+        None,
+    )
+    if truncation is not None:
+        lines.extend(
+            [
+                "> ⚠️ **Partial review — diff exceeded the size budget.** The "
+                f"bodies of the {truncation.elided_files} largest of "
+                f"{truncation.total_files} file patches were elided before "
+                "review; an elided review cannot approve.",
+                "",
+            ]
+        )
+
+    icon = VERDICT_ICON.get(verdict, "•")
+    lines.extend(
+        [
+            f"**Verdict:** {icon} `{verdict}` — computed from the rubric "
+            "verdicts below, not chosen by a model.",
+            "",
+            "| Rubric | Verdict | Bottom line |",
+            "|---|---|---|",
+        ]
+    )
+    for outcome in outcomes:
+        rubric_icon = RUBRIC_VERDICT_ICON.get(outcome.verdict, "•")
+        bottom = str(outcome.result.payload.get("bottom_line") or "").strip()
+        advisory = "" if outcome.spec.blocking else " _(advisory)_"
+        lines.append(
+            f"| {outcome.spec.title}{advisory} | {rubric_icon} "
+            f"`{outcome.verdict}` | {bottom} |"
+        )
+    lines.append("")
+
+    facts = _rubric_facts_table(outcomes)
+    if facts:
+        lines.extend([facts, ""])
+
+    for outcome in outcomes:
+        findings = outcome.result.payload.get("findings") or []
+        if not findings:
+            continue
+        lines.append(f"### {outcome.spec.title} findings ({len(findings)})")
+        lines.append("")
+        for finding in findings:
+            path = finding.get("file") or ""
+            line_no = finding.get("line", 0) or 0
+            if path and line_no:
+                ref = f"`{path}:{line_no}`"
+            elif path:
+                ref = f"`{path}`"
+            else:
+                ref = "_PR-wide_"
+            lines.append(f"- **{finding.get('rule', '')}** — {ref}")
+            body = (finding.get("comment") or "").strip()
+            lines.append(f"  {body}")
+            evidence = (finding.get("evidence") or "").strip()
+            if evidence:
+                lines.append(f"  _Evidence:_ {evidence}")
+        lines.append("")
+
+    lines.append("---")
+    lines.append(_render_rubric_usage(outcomes, effort))
+    lines.append(
+        "_Each rubric is an independent review against "
+        "[`.github/review-rubrics/`](../blob/main/.github/review-rubrics) "
+        "on top of [`.github/REVIEW_RULES.md`](../blob/main/.github/REVIEW_RULES.md). "
+        "Disagree? Reply on the PR; rules can be updated in a PR of their own._"
+    )
+    if verdict == "request_changes":
+        lines.append(
+            "_`request_changes` is an ask, not a close: of the reviewer's past "
+            "`request_changes` verdicts, 39% were merged after a human looked. "
+            "Read the findings before acting on the verdict._"
+        )
+    return "\n".join(lines)
+
+
 def render_comment(
     payload: dict,
     model: str,
@@ -1409,7 +1654,7 @@ def render_comment(
         "challenge": render_challenge_assessment,
         "solution": render_solution_assessment,
     }
-    assessment = renderers.get(kind, render_project_assessment)(payload)
+    assessment = renderers.get(kind, lambda _payload: "")(payload)
     if assessment:
         lines.extend([assessment, ""])
 
@@ -1648,9 +1893,6 @@ def main() -> int:
         )
         return 0
 
-    rules_path, system_prompt = REVIEW_MODES[kind]
-    rules = rules_path.read_text(encoding="utf-8")
-
     if kind == "solution":
         reason = solution_needs_llm_review(files, REPO_ROOT)
         if reason is None:
@@ -1672,6 +1914,29 @@ def main() -> int:
     if not diff.strip():
         print("Empty diff; nothing to review.", file=sys.stderr)
         return 0
+
+    if kind == "project":
+        outcomes = run_project_rubrics(
+            model=model,
+            diff=diff,
+            effort=effort,
+            context=fetch_pr_context(pr_number, repo_full_name),
+            prior_art_section=gather_prior_art(kind, reviewed_head_sha, repo_full_name),
+        )
+        truncated = any(o.result.truncation is not None for o in outcomes)
+        verdict = aggregate_verdict(outcomes, truncated)
+        comment = render_rubric_comment(
+            outcomes,
+            verdict=verdict,
+            model=outcomes[0].result.model,
+            reviewed_head_sha=reviewed_head_sha,
+            effort=outcomes[0].result.effort,
+        )
+        post_comment(pr_number, comment, repo_full_name=repo_full_name)
+        return 0
+
+    rules_path, system_prompt = REVIEW_MODES[kind]
+    rules = rules_path.read_text(encoding="utf-8")
     result = request_review(
         model=model,
         rules=rules,
