@@ -156,7 +156,7 @@ both y₁ and y₂. This is what makes the intersection approach work.
 section CoprimeHeight
 
 /-- In a UFD, every nonzero prime ideal contains a prime element. -/
-lemma exists_prime_mem_of_ne_bot {S : Type*} [CommRing S] [IsDomain S]
+lemma exists_prime_mem_of_ne_bot {S : Type*} [CommRing S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by

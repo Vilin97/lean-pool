@@ -262,7 +262,7 @@ u ∉ P + {r} for all P ∈ C and r ∈ D.
 
 The proof constructs a Cauchy sequence in I whose limit avoids all translates. -/
 theorem countable_avoidance
-    [TopologicalSpace T] [IsTopologicalRing T] [IsNoetherianRing T]
+    [IsNoetherianRing T]
     [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     {C : Set (Ideal T)} (hC_countable : C.Countable)
     (hC_prime : ∀ P ∈ C, P.IsPrime)
@@ -447,7 +447,7 @@ cannot be covered by fewer than |k| proper subspaces.
 /-- Covering number argument: in a Noetherian local ring, if |C| < |T/M| and I ⊄ P
 for all primes P ∈ C, then ∃ t ∈ I avoiding all P ∈ C.
 Proof by induction on the number of generators of I. -/
-lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
+lemma ideal_avoidance_of_card_lt_aux :
     ∀ (n : ℕ) (I : Ideal T) (C : Set (Ideal T)),
     (∀ P ∈ C, P.IsPrime) →
     Cardinal.mk C < Cardinal.mk (IsLocalRing.ResidueField T) →

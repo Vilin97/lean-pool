@@ -30,7 +30,7 @@ By Anderson Cor 2 Part 1 (= Farley Prop 1), A is WQC.
 Uses: trivial generic formal fiber + isWeaklyQuasiComplete_iff_primes_meet. -/
 theorem a_isWeaklyQuasiComplete
     (A : Type*) [CommRing A] [IsLocalRing A] [IsDomain A]
-    [UniqueFactorizationMonoid A] [IsNoetherianRing A]
+    [IsNoetherianRing A]
     (_hiso : Nonempty (AdicCompletion (IsLocalRing.maximalIdeal A) A ≃+* T))
     (htrivial : HasTrivialGenericFormalFiber A) :
     IsWeaklyQuasiComplete A := by
@@ -102,7 +102,7 @@ lemma comap_ringEquiv_ne_bot {R S : Type*} [CommRing R] [CommRing S]
     Uses faithful flatness of adic completion: 1 ≤ ht(q) ≤ ht(Q') = ht(Q) = 1. -/
 lemma contraction_height_one
     (A : Type*) [CommRing A] [IsLocalRing A] [IsDomain A]
-    [UniqueFactorizationMonoid A] [IsNoetherianRing A]
+    [IsNoetherianRing A]
     (φ : AdicCompletion (IsLocalRing.maximalIdeal A) A ≃+* T)
     (q : Ideal A) (hq_ne : q ≠ ⊥) (hq_prime : q.IsPrime)
     (hq_eq : q = Ideal.comap (algebraMap A (AdicCompletion (IsLocalRing.maximalIdeal A) A))
@@ -165,8 +165,7 @@ lemma ufd_height_one_principal
 /-- `algebraMap A Â` is a local ring hom: if `r ∈ M_A` then `evalOneₐ` sends its
 image to `0`, so it cannot be a unit. -/
 lemma isLocalHom_algebraMap_adicCompletion
-    {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
-    [IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal A) A)] :
+    {A : Type*} [CommRing A] [IsLocalRing A] :
     IsLocalHom (algebraMap A (AdicCompletion (IsLocalRing.maximalIdeal A) A)) := by
   set M := IsLocalRing.maximalIdeal A
   set Ahat := AdicCompletion M A
@@ -187,7 +186,7 @@ lemma isLocalHom_algebraMap_adicCompletion
     Proof: algebraMap A Â is a local ring hom (via evalOneₐ), so maximalIdeal Â lies over
     maximalIdeal A, then height_eq_height_add gives ht(M_A) ≤ ht(M_Â) = dim(Â). -/
 lemma ringKrullDim_le_of_adic_completion
-    {A : Type*} [CommRing A] [IsLocalRing A] [IsDomain A] [IsNoetherianRing A]
+    {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
     (φ : AdicCompletion (IsLocalRing.maximalIdeal A) A ≃+* T) :
     ringKrullDim A ≤ ringKrullDim (AdicCompletion (IsLocalRing.maximalIdeal A) A) := by
   set M := IsLocalRing.maximalIdeal A
@@ -246,7 +245,6 @@ instance residueField_isPrecomplete (A : Type*) [CommRing A] [IsLocalRing A] :
 
 /-- map mkQ (mk a) = of (evalOneₐ (mk a)) — component-wise comparison. -/
 lemma map_mkQ_mk_eq_of_evalOneₐ {A : Type*} [CommRing A] [IsLocalRing A]
-    [IsNoetherianRing A]
     (a : AdicCompletion.AdicCauchySequence (IsLocalRing.maximalIdeal A) A) :
     AdicCompletion.map (IsLocalRing.maximalIdeal A)
         ((IsLocalRing.maximalIdeal A : Submodule A A).mkQ)
@@ -271,7 +269,7 @@ lemma map_mkQ_mk_eq_of_evalOneₐ {A : Type*} [CommRing A] [IsLocalRing A]
 
 /-- map mkQ x = 0 ↔ evalOneₐ x = 0 — kernel equivalence. -/
 lemma map_mkQ_eq_zero_iff_evalOneₐ {A : Type*} [CommRing A] [IsLocalRing A]
-    [IsNoetherianRing A] (x : AdicCompletion (IsLocalRing.maximalIdeal A) A) :
+    (x : AdicCompletion (IsLocalRing.maximalIdeal A) A) :
     AdicCompletion.map (IsLocalRing.maximalIdeal A)
         ((IsLocalRing.maximalIdeal A : Submodule A A).mkQ) x = 0 ↔
     AdicCompletion.evalOneₐ (IsLocalRing.maximalIdeal A) x = 0 := by
@@ -375,7 +373,7 @@ lemma pow_smul_top_eq_bot_quotient_pow {A : Type*} [CommRing A]
 /-- evalₐ M n z = 0 implies map M (mkQ (M^n)) z = 0.
     Component-wise: each component of (map mkQ z) in (A/M^n)/(M^k•(A/M^n)) is 0. -/
 lemma evalₐ_zero_imp_map_mkQ_pow_zero {A : Type*} [CommRing A]
-    [IsNoetherianRing A] (M : Ideal A) (n : ℕ)
+    (M : Ideal A) (n : ℕ)
     (z : AdicCompletion M A)
     (hz : (AdicCompletion.evalₐ M n) z = 0) :
     AdicCompletion.map M ((M ^ n : Submodule A A).mkQ) z = 0 := by
@@ -579,7 +577,7 @@ lemma span_singleton_not_isPrime_of_mem_Q {b : T} (hb_ne : b ≠ 0) (hb_mem : b 
     Since completion commutes with quotient: completion(A/(a)) ≅ T/bT, done. -/
 lemma quotient_not_analytically_irreducible
     (A : Type*) [CommRing A] [IsLocalRing A] [IsDomain A]
-    [UniqueFactorizationMonoid A] [IsNoetherianRing A]
+    [IsNoetherianRing A]
     (φ : AdicCompletion (IsLocalRing.maximalIdeal A) A ≃+* T)
     (a : A) (ha : Prime a)
     (hq_eq : Ideal.span {a} = Ideal.comap
@@ -833,13 +831,13 @@ theorem anderson_main_theorem :
   obtain ⟨A, instCR, instLR, instDom, instUFM, instNoeth, hiso, htrivial⟩ :=
     jensen_special_case
   have hwqc : @IsWeaklyQuasiComplete A instCR instLR :=
-    @a_isWeaklyQuasiComplete A instCR instLR instDom instUFM instNoeth hiso htrivial
+    @a_isWeaklyQuasiComplete A instCR instLR instDom instNoeth hiso htrivial
   -- Not QC: bad quotient A/(a) contradicts QC ↔ all quotients WQC (Anderson Thm 5)
   have hnqc : ¬ @IsQuasiComplete A instCR instLR := by
     intro hqc
     obtain ⟨a, ha, hbad⟩ :=
       @exists_prime_bad_quotient A instCR instLR instDom instUFM instNoeth hiso htrivial
-    have hqc_iff := @isQuasiComplete_iff_quotients_wqc A instCR instLR instNoeth
+    have hqc_iff := @isQuasiComplete_iff_quotients_wqc A instCR instLR
     have hall_wqc := hqc_iff.mp hqc
     have hne_top : Ideal.span {a} ≠ ⊤ := Ideal.span_singleton_ne_top ha.not_unit
     exact hbad (hall_wqc (Ideal.span {a}) hne_top)

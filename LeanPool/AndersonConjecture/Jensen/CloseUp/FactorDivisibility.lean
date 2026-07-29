@@ -21,7 +21,6 @@ open Cardinal Ideal
 variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain T]
 
 theorem close_up_aux_factor_dvd_a
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (n'' : ℕ)
     (ih : ∀ (R : NSubring T) (_ : Cardinal.mk R.carrier < Cardinal.mk T)
       (s : Finset R.carrier) (_ : s.card ≤ n'' + 1 + 1) (c : R.carrier)
@@ -174,7 +173,6 @@ theorem close_up_aux_factor_dvd_a
 
 
 theorem close_up_aux_factor_dvd_c
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (hM_not_assoc : ∀ (r : T), r ≠ 0 →
       IsLocalRing.maximalIdeal T ∉ associatedPrimes T (T ⧸ Ideal.span {r}))
     (n'' : ℕ)

@@ -80,7 +80,7 @@ lemma Mhat_isMaximal
   rwa [hker_eq] at hker_max
 
 lemma iInf_comap_add_pow_eq_comap
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R]
+    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     (A : Ideal (AdicCompletion (IsLocalRing.maximalIdeal R) R)) :
     (⨅ n, Ideal.comap (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R))
       (A ⊔ (Ideal.map (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R))
@@ -108,7 +108,7 @@ lemma iInf_comap_add_pow_eq_comap
 
 -- WQC + domain implies every nonzero ideal of R̂ has nonzero contraction to R.
 lemma wqc_implies_ideals_meet
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R]
+    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     (hwqc : IsWeaklyQuasiComplete R)
     (A : Ideal (AdicCompletion (IsLocalRing.maximalIdeal R) R)) (hA : A ≠ ⊥) :
     Ideal.comap (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R)) A ≠ ⊥ := by
@@ -157,7 +157,7 @@ lemma wqc_implies_ideals_meet
   exact Ideal.add_mem _ hfr_Mk hdiff_Mk
 
 lemma not_wqc_exists_maximal_zero_contraction
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R]
+    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     (hnwqc : ¬IsWeaklyQuasiComplete R) :
     ∃ A : Ideal (AdicCompletion (IsLocalRing.maximalIdeal R) R),
       A ≠ ⊥ ∧
@@ -406,7 +406,7 @@ Since `R̂/M̂ ≅ R/M` is a field, `height(M̂) ≤ 1`, but `⊥ < P < M̂` giv
 `height(M̂) ≥ 2`.
 -/
 lemma dim1_ai_nonzero_prime_contracts
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R]
+    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     (hdim : ringKrullDim R = 1)
     (hAI : IsAnalyticallyIrreducible R)
     (P : Ideal (AdicCompletion (IsLocalRing.maximalIdeal R) R))
@@ -567,7 +567,7 @@ The forward direction is in Basic.lean (IsQuasiComplete.quotient_isWeaklyQuasiCo
 Here we state the full iff.
 -/
 theorem isQuasiComplete_iff_quotients_wqc
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] :
+    (R : Type*) [CommRing R] [IsLocalRing R] :
     IsQuasiComplete R ↔
       ∀ (I : Ideal R) (hI : I ≠ ⊤),
         letI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI

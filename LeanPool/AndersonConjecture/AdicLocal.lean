@@ -169,6 +169,6 @@ end AdicCompletion
 end Main
 
 theorem adicCompletion_isLocalRing
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] :
+    (R : Type*) [CommRing R] [IsLocalRing R] :
     IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
   AdicCompletion.adicCompletion_isLocalRing R

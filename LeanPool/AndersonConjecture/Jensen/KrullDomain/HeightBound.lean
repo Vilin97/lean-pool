@@ -112,7 +112,7 @@ divisible by p₀, contradicting WfDvdMonoid. Hence q = ⊥, giving the
 height bound contradiction. -/
 include T in theorem height_bound_wf_descent
     (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier)
-    (S_sub : Subring T) [IsDomain S_sub] [WfDvdMonoid S_sub]
+    (S_sub : Subring T)
     (hR_le : R.carrier ≤ S_sub)
     (hRbar_le_S : ∀ t, t ∈ intersectionSet R x₁ x₂ y₁ y₂ →
       t ∈ (S_sub : Set T))
