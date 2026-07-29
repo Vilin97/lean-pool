@@ -27,6 +27,10 @@ projects:
         informal: >-
           Over a field of characteristic different from two, a Weierstrass
           curve has at most four nonsingular affine points killed by two.
+      - declaration: LeanPool.MazurTorsionFoundations.ncard_four_torsion_le_sixteen
+        informal: >-
+          For an elliptic curve in characteristic different from two, the
+          points killed by four have cardinality at most sixteen.
       - declaration: LeanPool.MazurTorsionFoundations.FullFour.not_injective_zmod_four_square
         informal: >-
           For every elliptic curve over the rationals, no additive homomorphism

@@ -7,6 +7,7 @@ Authors: Victor Aguiar
 import Mathlib.AlgebraicGeometry.EllipticCurve.Affine.Point
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.Data.ZMod.Basic
+import Mathlib.GroupTheory.Index
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.GCongr
 import Mathlib.Tactic.LinearCombination
@@ -101,6 +102,61 @@ private theorem twoTorsionRootMap_injective :
             rw [hself.symm] at heq
             exact heq
 
+/-- The points killed by `2` form a finite type in characteristic different
+from two. -/
+theorem finite_two_torsion :
+    Finite {P : (E⁄F).Point // (2 : ℕ) • P = 0} :=
+  Finite.of_injective (twoTorsionRootMap E)
+    (twoTorsionRootMap_injective E)
+
+private def fourTorsion [E.IsElliptic] : AddSubgroup (E⁄F).Point :=
+  (nsmulAddMonoidHom (α := (E⁄F).Point) 4).ker
+
+private def doubleOnFourTorsion [E.IsElliptic] :
+    fourTorsion E →+ fourTorsion E where
+  toFun P := ⟨2 • P.1, by
+    change 4 • (2 • P.1) = 0
+    have hfour : 4 • P.1 = 0 := by
+      have hp := P.2
+      change (nsmulAddMonoidHom 4) P.1 = 0 at hp
+      exact hp
+    calc
+      4 • (2 • P.1) = 2 • (4 • P.1) := by
+        simp only [← mul_nsmul]
+      _ = 0 := by rw [hfour, nsmul_zero]⟩
+  map_zero' := by simp
+  map_add' P Q := by simp
+
+private def doubleKernelToTwoTorsion [E.IsElliptic] :
+    (doubleOnFourTorsion E).ker →
+      {P : (E⁄F).Point // (2 : ℕ) • P = 0} :=
+  fun P ↦ ⟨P.1.1, congrArg Subtype.val P.2⟩
+
+omit [NeZero (2 : F)] in
+private theorem doubleKernelToTwoTorsion_injective [E.IsElliptic] :
+    Function.Injective (doubleKernelToTwoTorsion E) := by
+  intro P Q h
+  have hpq : P.1.1 = Q.1.1 := congrArg (fun R ↦ R.1) h
+  exact Subtype.ext (Subtype.ext hpq)
+
+private def doubleRangeToTwoTorsion [E.IsElliptic] :
+    (doubleOnFourTorsion E).range →
+      {P : (E⁄F).Point // (2 : ℕ) • P = 0} :=
+  fun P ↦ ⟨P.1.1, by
+    rcases P.2 with ⟨Q, hQ⟩
+    have hval : P.1 = (doubleOnFourTorsion E) Q := hQ.symm
+    rw [hval]
+    change 2 • (2 • Q.1) = 0
+    have hfour : 4 • Q.1 = 0 := Q.2
+    simpa only [← mul_nsmul] using hfour⟩
+
+omit [NeZero (2 : F)] in
+private theorem doubleRangeToTwoTorsion_injective [E.IsElliptic] :
+    Function.Injective (doubleRangeToTwoTorsion E) := by
+  intro P Q h
+  have hpq : P.1.1 = Q.1.1 := congrArg (fun R ↦ R.1) h
+  exact Subtype.ext (Subtype.ext hpq)
+
 /-- Over a field of characteristic different from two, an elliptic curve has
 at most four points killed by `2`. -/
 theorem ncard_two_torsion_le_four :
@@ -122,6 +178,36 @@ theorem ncard_two_torsion_le_four :
           rw [show (4 : F) = 2 ^ 2 by norm_num]
           exact pow_ne_zero 2 (NeZero.ne (2 : F))))
     _ = 4 := by norm_num
+
+/-- For an elliptic curve in characteristic different from two, the points
+killed by `4` have cardinality at most sixteen. -/
+theorem ncard_four_torsion_le_sixteen [E.IsElliptic] :
+    Set.ncard {P : (E⁄F).Point | (4 : ℕ) • P = 0} ≤ 16 := by
+  letI : Finite {P : (E⁄F).Point // (2 : ℕ) • P = 0} :=
+    finite_two_torsion E
+  letI : Finite (doubleOnFourTorsion E).ker :=
+    Finite.of_injective (doubleKernelToTwoTorsion E)
+      (doubleKernelToTwoTorsion_injective E)
+  letI : Finite (doubleOnFourTorsion E).range :=
+    Finite.of_injective (doubleRangeToTwoTorsion E)
+      (doubleRangeToTwoTorsion_injective E)
+  letI : Finite (fourTorsion E) :=
+    (doubleOnFourTorsion E).finite_iff_finite_ker_range.mpr
+      ⟨inferInstance, inferInstance⟩
+  change Nat.card (fourTorsion E) ≤ 16
+  rw [← (doubleOnFourTorsion E).ker.card_mul_index,
+    AddSubgroup.index_ker]
+  have htwo :
+      Nat.card {P : (E⁄F).Point // (2 : ℕ) • P = 0} ≤ 4 := by
+    change Set.ncard {P : (E⁄F).Point | (2 : ℕ) • P = 0} ≤ 4
+    exact ncard_two_torsion_le_four E
+  have hker : Nat.card (doubleOnFourTorsion E).ker ≤ 4 :=
+    (Nat.card_le_card_of_injective (doubleKernelToTwoTorsion E)
+      (doubleKernelToTwoTorsion_injective E)).trans htwo
+  have hrange : Nat.card (doubleOnFourTorsion E).range ≤ 4 :=
+    (Nat.card_le_card_of_injective (doubleRangeToTwoTorsion E)
+      (doubleRangeToTwoTorsion_injective E)).trans htwo
+  exact (Nat.mul_le_mul hker hrange).trans_eq (by norm_num)
 
 /-- There is no embedding of an elementary abelian group of order eight into
 the rational points of a Weierstrass curve in characteristic different from
