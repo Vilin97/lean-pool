@@ -27,6 +27,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 private lemma normSq_add_one_eq_of_re_neg_half (z : ℂ) (hre : z.re = -1 / 2) :
     Complex.normSq (z + 1) = Complex.normSq z := by
   simp only [normSq_apply, add_re, one_re, add_im, one_im, add_zero, hre]; ring

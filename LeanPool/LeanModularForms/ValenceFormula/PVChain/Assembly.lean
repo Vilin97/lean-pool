@@ -31,6 +31,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
 /-! ### Modular side sub-lemmas
@@ -417,7 +419,13 @@ private lemma integrableOn_logDeriv_mul_deriv_farSet
       isClosed_iInter fun s => isClosed_iInter fun _ =>
         isClosed_le continuous_const
           (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const))
-    convert this using 1; ext t; simp only [mem_iInter, mem_setOf_eq]; exact Iff.rfl
+    change IsClosed ({t : ℝ | ∀ s ∈ S₀, ε ≤ ‖γ t - s‖} : Set ℝ)
+    have hset : {t : ℝ | ∀ s ∈ S₀, ε ≤ ‖γ t - s‖} =
+        ⋂ (s : ℂ) (_ : s ∈ S₀), {t : ℝ | ε ≤ ‖γ t - s‖} := by
+      ext t
+      simp only [mem_iInter, mem_setOf_eq]
+    rw [hset]
+    exact this
   have hK'_meas : MeasurableSet K' := hK'_compact.isClosed.measurableSet
   have h_ne : ∀ t ∈ K', g (γ t) ≠ 0 := by
     intro t ⟨ht_Icc, h_far⟩ h_zero
@@ -504,8 +512,13 @@ private lemma pvIntegrand_intervalIntegrable
     apply measurableSet_uIoc.inter
     apply MeasurableSet.compl
     suffices h : IsClosed (⋃ s ∈ (S₀ : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε}) by
-      convert h.measurableSet using 1
-      ext t; simp only [mem_iUnion, mem_setOf_eq, Finset.mem_coe, exists_prop]; exact Iff.rfl
+      change MeasurableSet ({t : ℝ | ∃ s ∈ (S₀ : Set ℂ), ‖γ t - s‖ ≤ ε} : Set ℝ)
+      have hset : {t : ℝ | ∃ s ∈ (S₀ : Set ℂ), ‖γ t - s‖ ≤ ε} =
+          ⋃ s ∈ (S₀ : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε} := by
+        ext t
+        simp only [mem_iUnion, mem_setOf_eq, Finset.mem_coe, exists_prop]
+      rw [hset]
+      exact h.measurableSet
     exact S₀.finite_toSet.isClosed_biUnion fun s _ =>
       isClosed_le (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const))
         continuous_const

@@ -392,7 +392,7 @@ private lemma evalE₄E₆_Delta_mul_coeff_zero {n : ℕ} (_hn12 : 12 ≤ n)
       ↑((D 12).mul (S (↑(n-12)))) from rfl]
   have hmul_coeff := qExpansion_mul_coeff 1 12 (↑(n-12)) (D 12) (S (↑(n-12)))
   simp only [Nat.cast_one] at hmul_coeff; rw [hmul_coeff]
-  simp only [PowerSeries.coeff_mul, Finset.antidiagonal_zero, Finset.sum_singleton]
+  simp only [PowerSeries.coeff_mul, Finset.Nat.antidiagonal_zero, Finset.sum_singleton]
   rw [show D 12 = ModFormMk Γ(1) 12 Delta from evalE₄E₆_Delta_poly_grade,
     qExpansion_coeff_zero_Delta, zero_mul]
 

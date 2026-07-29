@@ -34,6 +34,8 @@ open Matrix Subgroup.Commensurable Pointwise Matrix.SpecialLinearGroup
 
 namespace HeckeRing.GLn
 
+set_option backward.isDefEq.respectTransparency false
+
 variable (n : ℕ)
 
 section Embedding

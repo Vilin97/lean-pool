@@ -27,6 +27,8 @@ open scoped Real Interval UpperHalfPlane ModularForm Modular MatrixGroups
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 variable {k : ℤ} (f : ModularForm (Gamma 1) k)
 
 /-- `orderOfVanishingAt'` is invariant under the action of any `g ∈ SL(2, ℤ)`. -/

@@ -593,7 +593,7 @@ private lemma arc_angle_lt_epsilon {δ_R ε : ℝ} (hδ_R_pos : 0 < δ_R)
   have hx_pos : 0 < x := by positivity
   have hx_le_one : x ≤ 1 := by
     linarith [Real.pi_le_four, show x < Real.pi / 12 by rw [hx_def]; nlinarith]
-  nlinarith [Real.sin_gt_sub_cube hx_pos hx_le_one, sq_nonneg x, sq_nonneg (1 - x)]
+  nlinarith [Real.sin_gt_sub_cube hx_pos, sq_nonneg x, sq_nonneg (1 - x)]
 
 private lemma δ_right_lt_one_aux {ε : ℝ}
     (hε_half_neg : (-1 : ℝ) ≤ ε / 2)

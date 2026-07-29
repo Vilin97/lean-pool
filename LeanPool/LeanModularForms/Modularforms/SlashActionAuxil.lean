@@ -31,6 +31,8 @@ are modular forms of weight 2 and level Γ(2).
 open scoped ModularForm MatrixGroups
 open Matrix UpperHalfPlane CongruenceSubgroup ModularGroup
 
+set_option backward.isDefEq.respectTransparency false
+
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 local notation "Γ " n:100 => Gamma n
 

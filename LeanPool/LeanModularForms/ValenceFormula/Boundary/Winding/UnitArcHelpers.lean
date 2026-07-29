@@ -23,6 +23,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- For a unit-norm complex `s`, `s.re² + s.im² = 1`. -/
 private lemma unitArc_re_sq_add_im_sq {s : ℂ} (hs_norm : ‖s‖ = 1) :
     s.re ^ 2 + s.im ^ 2 = 1 := by
@@ -438,7 +440,7 @@ lemma unitArc_ftc_value (H : ℝ) (hH : 1 < H) (s : ℂ)
     have : -(fdBoundarySeg5H H t - s) ∈ Complex.slitPlane :=
       unitArc_neg_g_slitPlane_seg5 s hs_norm H hH t
     simpa [h₅]
-  have piece₀ := ftc_log (by norm_num : (0 : ℝ) ≤ 1)
+  have piece₀ := ftc_log (f := h₀) (by norm_num : (0 : ℝ) ≤ 1)
     ((continuous_fdBoundary_seg1_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₀ t).differentiableAt)
     (by rw [show deriv h₀ = fun _ => -(↑(H - Real.sqrt 3 / 2) : ℂ) * I from
@@ -447,26 +449,26 @@ lemma unitArc_ftc_value (H : ℝ) (hH : 1 < H) (s : ℂ)
     hslit_seg1
   have h_arc_cont : Continuous h_arc := by
     simp only [h_arc]; exact (Continuous.cexp (by fun_prop)).sub continuous_const
-  have piece₁ := ftc_log (by linarith : (1 : ℝ) ≤ t₀ - δ)
+  have piece₁ := ftc_log (f := h_arc) (by linarith : (1 : ℝ) ≤ t₀ - δ)
     h_arc_cont.continuousOn (fun t _ => (hd_arc t).differentiableAt)
     (by rw [show deriv h_arc = fun t => ↑(Real.pi / 6) * I *
           exp (↑(Real.pi * (1 + t) / 6) * I) from funext fun t => (hd_arc t).deriv]
         exact (Continuous.mul continuous_const (Continuous.cexp (by fun_prop))).continuousOn)
     hslit_arc_before
-  have piece₂ := ftc_log_neg (by linarith : t₀ + δ ≤ 3)
+  have piece₂ := ftc_log_neg (f := h_arc) (by linarith : t₀ + δ ≤ 3)
     h_arc_cont.continuousOn (fun t _ => (hd_arc t).differentiableAt)
     (by rw [show deriv h_arc = fun t => ↑(Real.pi / 6) * I *
           exp (↑(Real.pi * (1 + t) / 6) * I) from funext fun t => (hd_arc t).deriv]
         exact (Continuous.mul continuous_const (Continuous.cexp (by fun_prop))).continuousOn)
     hslit_arc_after
-  have piece₃ := ftc_log_neg (by norm_num : (3 : ℝ) ≤ 4)
+  have piece₃ := ftc_log_neg (f := h₃) (by norm_num : (3 : ℝ) ≤ 4)
     ((continuous_fdBoundary_seg4_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₃ t).differentiableAt)
     (by rw [show deriv h₃ = fun _ => (↑(H - Real.sqrt 3 / 2) : ℂ) * I from
           funext fun t => (hd₃ t).deriv]
         exact continuousOn_const)
     hslit_seg4
-  have piece₄ := ftc_log_neg (by norm_num : (4 : ℝ) ≤ 5)
+  have piece₄ := ftc_log_neg (f := h₅) (by norm_num : (4 : ℝ) ≤ 5)
     ((continuous_fdBoundary_seg5_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₅ t).differentiableAt)
     (by rw [show deriv h₅ = fun _ => (1 : ℂ) from funext fun t => (hd₅ t).deriv]

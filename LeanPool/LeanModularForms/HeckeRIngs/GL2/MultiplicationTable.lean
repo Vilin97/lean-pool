@@ -33,6 +33,8 @@ open scoped ArithmeticFunction.sigma
 
 namespace HeckeRing.GL2
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- `SL_n(ℤ) → GL_n(ℚ)` has determinant 1 (replaces removed `SLnZ_to_GLnQ_det`). -/
 lemma SLnZ_to_GLnQ_det {n : ℕ} [NeZero n] (S : Matrix.SpecialLinearGroup (Fin n) ℤ) :
     (S : GL (Fin n) ℚ).val.det = 1 := by

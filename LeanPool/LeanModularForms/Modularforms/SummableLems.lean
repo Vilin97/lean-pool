@@ -29,6 +29,8 @@ public import LeanPool.LeanModularForms.Modularforms.TsumderivWithin
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency false
+
 
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set
   Metric Filter Function Complex

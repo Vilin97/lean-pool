@@ -35,6 +35,8 @@ open scoped Real Interval
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- Multi-point PV integrand: zero near any s in S, else f(γ(t))·γ'(t). -/
 def cauchyPrincipalValueIntegrandOn
     (S : Finset ℂ) (f : ℂ → ℂ) (γ : ℝ → ℂ)
@@ -346,7 +348,8 @@ private lemma continuousAt_g_at_pole
     have hsingleton : ∑ s ∈ S0.filter (· = z), residueSimplePole f s / (w - s) =
         residueSimplePole f z / (w - z) := by rw [hfilter_eq, Finset.sum_singleton]
     rw [hsum_split, hsingleton]; ring
-  exact (funext hg_eq_at ▸ hf_ext.sub h2 : _)
+  rw [funext hg_eq_at]
+  exact hf_ext.sub h2
 
 private lemma diff_punctured_of_diff_off_poles
     (U : Set ℂ) (hU : IsOpen U) (S0 : Finset ℂ)

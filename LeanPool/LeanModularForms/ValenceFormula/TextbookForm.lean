@@ -26,6 +26,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
 /-- The order of vanishing on non-elliptic orbits, cast to `ℂ`. -/

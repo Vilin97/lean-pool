@@ -34,6 +34,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
 private lemma deriv_fdBoundary_H_arc (H : ℝ) {t : ℝ} (h1 : 1 < t) (h3 : t < 3) :
@@ -163,8 +165,13 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
       isClosed_iInter fun s => isClosed_iInter fun _ =>
         isClosed_le (f := fun _ => ε) (g := fun t => ‖γ t - s‖) continuous_const
           (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const))
-    convert this using 1
-    ext t; simp only [Set.mem_iInter, Set.mem_setOf]; exact Iff.rfl
+    change IsClosed ({t : ℝ | ∀ s ∈ S_arc, ε ≤ ‖γ t - s‖} : Set ℝ)
+    have hset : {t : ℝ | ∀ s ∈ S_arc, ε ≤ ‖γ t - s‖} =
+        ⋂ (s : ℂ) (_ : s ∈ S_arc), {t : ℝ | ε ≤ ‖γ t - s‖} := by
+      ext t
+      simp only [Set.mem_iInter, Set.mem_setOf]
+    rw [hset]
+    exact this
   set K := {t ∈ Set.uIoc (1 : ℝ) 3 | ¬∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε}
   have hK_subset_K' : K ⊆ K' := by
     intro t ⟨ht_uioc, h_not_near⟩
@@ -215,8 +222,13 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     apply measurableSet_uIoc.inter
     apply MeasurableSet.compl
     suffices h : IsClosed (⋃ s ∈ (↑S_arc : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε}) by
-      convert h.measurableSet using 1
-      ext t; simp only [Set.mem_iUnion, Set.mem_setOf, Finset.mem_coe, exists_prop]; exact Iff.rfl
+      change MeasurableSet ({t : ℝ | ∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε} : Set ℝ)
+      have hset : {t : ℝ | ∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε} =
+          ⋃ s ∈ (↑S_arc : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε} := by
+        ext t
+        simp only [Set.mem_iUnion, Set.mem_setOf, Finset.mem_coe, exists_prop]
+      rw [hset]
+      exact h.measurableSet
     exact S_arc.finite_toSet.isClosed_biUnion fun s _ =>
       isClosed_le (continuous_norm.comp ((fdBoundary_H_continuous H).sub continuous_const))
         continuous_const

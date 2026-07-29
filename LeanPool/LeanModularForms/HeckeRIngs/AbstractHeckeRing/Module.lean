@@ -19,6 +19,8 @@ open scoped Pointwise
 
 namespace HeckeRing
 
+set_option backward.isDefEq.respectTransparency false
+
 variable {G : Type*} [Group G]
 
 variable (P : HeckePair G) (Z : Type*) [CommRing Z]

@@ -16,6 +16,8 @@ public import LeanPool.LeanModularForms.Modularforms.Delta
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency false
+
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex
 
@@ -346,7 +348,6 @@ lemma E_k_q_expansion (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) 
       ∑' (n : ℕ+), ↑((σ (k - 1)) ↑n) * cexp (2 * ↑π * Complex.I * ↑z * ↑↑n) by
     -- step.symm ▸ h gives the goal; `convert` handles alpha-equiv binder names
     convert step.symm ▸ h using 2
-    rfl
   simp_rw [← mul_assoc]
   rw [HE1, mul_add]
   have : 2⁻¹ * (riemannZeta (k))⁻¹ * (2 * riemannZeta (k)) = 1 := by field_simp

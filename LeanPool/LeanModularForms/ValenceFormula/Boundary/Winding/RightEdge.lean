@@ -25,6 +25,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- For a point on the right edge, `t₀ = (H - s.im) / (H - √3/2)` is the unique
 parameter in `(0, 1)` with `fdBoundaryH H t₀ = s`. -/
 lemma rightEdge_t₀_mem_Ioo (H : ℝ) (_hH : heightCutoff ≤ H) (s : ℂ)
@@ -574,13 +576,13 @@ lemma rightEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     fun t ⟨ht3, ht4⟩ => rightEdge_neg_seg4_slitPlane s hs_re t ht3 ht4
   have hslit₅ : ∀ t ∈ Icc (4 : ℝ) 5, -(h₅ t) ∈ Complex.slitPlane :=
     fun t ⟨ht4, ht5⟩ => rightEdge_neg_seg5_slitPlane s hs_re hs_im t ht4 ht5
-  have piece₀ := ftc_log_neg (by linarith : (0 : ℝ) ≤ t₀ - δ)
+  have piece₀ := ftc_log_neg (f := h₀) (by linarith : (0 : ℝ) ≤ t₀ - δ)
     ((continuous_fdBoundary_seg1_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₀ t).differentiableAt)
     (by rw [show deriv h₀ = fun _ => -(↑α : ℂ) * I from funext fun t => (hd₀ t).deriv]
         exact continuousOn_const)
     (hslit₀_left δ hδ_pos hδ_lt_t₀)
-  have piece₁ := ftc_log_neg (by linarith : t₀ + δ ≤ 1)
+  have piece₁ := ftc_log_neg (f := h₀) (by linarith : t₀ + δ ≤ 1)
     ((continuous_fdBoundary_seg1_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₀ t).differentiableAt)
     (by rw [show deriv h₀ = fun _ => -(↑α : ℂ) * I from funext fun t => (hd₀ t).deriv]
@@ -588,19 +590,19 @@ lemma rightEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     (hslit₀_right δ hδ_pos hδ_lt_1mt₀)
   have h_arc_cont : Continuous h_arc := by
     simp only [h_arc]; exact (Continuous.cexp (by fun_prop)).sub continuous_const
-  have piece₂ := ftc_log_neg (by norm_num : (1 : ℝ) ≤ 3)
+  have piece₂ := ftc_log_neg (f := h_arc) (by norm_num : (1 : ℝ) ≤ 3)
     h_arc_cont.continuousOn (fun t _ => (hd_arc t).differentiableAt)
     (by rw [show deriv h_arc = fun t => ↑(Real.pi / 6) * I *
           exp (↑(Real.pi * (1 + t) / 6) * I) from funext fun t => (hd_arc t).deriv]
         exact (Continuous.mul continuous_const (Continuous.cexp (by fun_prop))).continuousOn)
     hslit_arc
-  have piece₃ := ftc_log_neg (by norm_num : (3 : ℝ) ≤ 4)
+  have piece₃ := ftc_log_neg (f := h₃) (by norm_num : (3 : ℝ) ≤ 4)
     ((continuous_fdBoundary_seg4_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₃ t).differentiableAt)
     (by rw [show deriv h₃ = fun _ => (↑α : ℂ) * I from funext fun t => (hd₃ t).deriv]
         exact continuousOn_const)
     hslit₃
-  have piece₄ := ftc_log_neg (by norm_num : (4 : ℝ) ≤ 5)
+  have piece₄ := ftc_log_neg (f := h₅) (by norm_num : (4 : ℝ) ≤ 5)
     ((continuous_fdBoundary_seg5_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₅ t).differentiableAt)
     (by rw [show deriv h₅ = fun _ => (1 : ℂ) from funext fun t => (hd₅ t).deriv]

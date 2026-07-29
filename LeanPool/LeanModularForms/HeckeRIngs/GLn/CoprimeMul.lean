@@ -33,6 +33,8 @@ open scoped Pointwise
 
 namespace HeckeRing.GLn
 
+set_option backward.isDefEq.respectTransparency false
+
 variable (n : ℕ)
 
 section DiagMul

@@ -30,6 +30,8 @@ open scoped MatrixGroups
 
 namespace HeckeRing.GL2
 
+set_option backward.isDefEq.respectTransparency false
+
 private lemma ZMod_inv_mul_cancel (p : ℕ) (hp : Nat.Prime p) (a : ℤ)
     (h : (a : ZMod p) ≠ 0) : (a : ZMod p)⁻¹ * (a : ZMod p) = 1 := by
   haveI : NeZero p := ⟨hp.ne_zero⟩

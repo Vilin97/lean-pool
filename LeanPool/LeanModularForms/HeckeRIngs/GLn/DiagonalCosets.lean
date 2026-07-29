@@ -42,6 +42,8 @@ open Matrix Subgroup.Commensurable Pointwise HeckeRing Matrix.SpecialLinearGroup
 
 namespace HeckeRing.GLn
 
+set_option backward.isDefEq.respectTransparency false
+
 section Diagonal
 
 variable (n : ℕ)

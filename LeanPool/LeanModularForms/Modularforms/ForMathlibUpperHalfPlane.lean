@@ -14,6 +14,8 @@ public import Mathlib.Data.Fintype.Parity
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency false
+
 -- Probably put it at LinearAlgebra/Matrix/SpecialLinearGroup.lean
 
 theorem ModularGroup.modular_S_sq : S * S = -1 := by

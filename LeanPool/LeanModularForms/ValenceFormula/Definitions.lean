@@ -28,6 +28,8 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- The elliptic point i as an element of ℍ. -/
 def ellipticPointI' : UpperHalfPlane := ⟨I, by simp [Complex.I_im]⟩
 

@@ -20,6 +20,8 @@ public import LeanPool.LeanModularForms.Modularforms.ForMathlibCusps
 
 @[expose] public section
 
+set_option backward.isDefEq.respectTransparency false
+
 open ModularForm EisensteinSeries UpperHalfPlane TopologicalSpace Set MeasureTheory intervalIntegral
   Metric Filter Function Complex MatrixGroups
 
