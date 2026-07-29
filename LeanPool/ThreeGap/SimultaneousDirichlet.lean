@@ -34,8 +34,6 @@ coordinate, **with no remaining hypothesis** (`nnDist_count_unconditional`,
 `nnDist_count_plane_unconditional`). Axiom-clean.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace ThreeGap.SimDirichlet
 
 open ThreeGap.SimApprox ThreeGap.Chevallier ThreeGap.DeltaCost
@@ -161,9 +159,12 @@ theorem recordsContinue_deltaCost (α : Fin d → ℝ) {k₀ : Fin d} (hirr : Ir
   push Not at hcon
   -- hcon : ∀ q' > q, deltaCost α q ≤ deltaCost α q'
   -- the minimum of delta over {1,…,q} is positive
-  set δ₀ : ℝ := (Finset.Icc 1 q).inf' ⟨1, Finset.mem_Icc.mpr ⟨le_refl 1, hq⟩⟩ (deltaCost α) with hδ₀
+  have hIcc : (Finset.Icc 1 q).Nonempty :=
+    ⟨1, Finset.mem_Icc.mpr ⟨le_refl 1, hq⟩⟩
+  set δ₀ : ℝ := (Finset.Icc 1 q).inf' hIcc (deltaCost α) with hδ₀
   have hδ₀pos : 0 < δ₀ := by
-    rw [hδ₀, Finset.lt_inf'_iff]
+    rw [hδ₀]
+    apply (Finset.lt_inf'_iff hIcc).2
     intro j hj
     rw [Finset.mem_Icc] at hj
     exact delta_pos α hirr hj.1

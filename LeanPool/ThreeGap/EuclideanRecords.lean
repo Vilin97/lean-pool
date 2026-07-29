@@ -24,8 +24,6 @@ Dirichlet via `deltaN(euclNorm 2) α q ≤ √2 · delta α q` (the Euclidean no
 in the plane). The sharp `g₂ ≤ 5` needs Romanov's `K = 4`; this is the `K = 5` bound. Axiom-clean.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace ThreeGap.EuclideanRecords
 
 open scoped Real
@@ -85,9 +83,12 @@ theorem recordsContinue_deltaE (α : Fin 2 → ℝ) {k₀ : Fin 2} (hirr : Irrat
   intro q hq
   by_contra hcon
   push Not at hcon
-  set δ₀ : ℝ := (Finset.Icc 1 q).inf' ⟨1, Finset.mem_Icc.mpr ⟨le_refl 1, hq⟩⟩ (deltaE α) with hδ₀
+  have hIcc : (Finset.Icc 1 q).Nonempty :=
+    ⟨1, Finset.mem_Icc.mpr ⟨le_refl 1, hq⟩⟩
+  set δ₀ : ℝ := (Finset.Icc 1 q).inf' hIcc (deltaE α) with hδ₀
   have hδ₀pos : 0 < δ₀ := by
-    rw [hδ₀, Finset.lt_inf'_iff]
+    rw [hδ₀]
+    apply (Finset.lt_inf'_iff hIcc).2
     intro j hj
     rw [Finset.mem_Icc] at hj
     exact deltaE_pos α hirr hj.1
