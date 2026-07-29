@@ -263,7 +263,7 @@ lemma schwartz_conj_mul_phase_integrable (f : TestFunctionℂ) (k : SpaceTime) :
   ext y; ring
 
 /-- The bounding function for the triple integrand is integrable. -/
-lemma triple_bound_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
+lemma triple_bound_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) (f : TestFunctionℂ) :
     Integrable (fun p : SpaceTime × SpaceTime × SpaceTime =>
       ‖f p.1‖ * ((1 / m^2 / (2 * Real.pi) ^ STDimension) * Real.exp (-α * ‖p.2.2‖^2)) * ‖f p.2.1‖)
       (volume.prod (volume.prod volume)) := by

@@ -108,8 +108,7 @@ then `y ↦ ∫_t f(ι(y,t)) · g(t) dt` is C^∞ and `D^m` commutes with `∫`.
 **Reference**: Folland, "Real Analysis", Theorem 2.27 (iterated version).
 -/
 lemma contDiff_schwartz_parametric_integral
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
-    [BorelSpace E] [FiniteDimensional ℝ E]
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (f : SchwartzMap E ℝ) (g : SchwartzMap ℝ ℝ)
     (ι : H → ℝ → E)

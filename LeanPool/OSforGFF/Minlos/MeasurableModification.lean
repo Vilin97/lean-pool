@@ -516,7 +516,7 @@ theorem extensionCLM_eq_on_dense [SeparableSpace E] [IsHilbertNuclear E] [Nonemp
     Proof: l is ℝ-linear (hence ℚ-linear on all Finsupp combinations),
     and bounded by continuity.
 -/
-lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+lemma embed_mem_goodPaths
     (d : ℕ → E) (p : ℕ → Seminorm ℝ E)
     (hp_top : WithSeminorms (fun n => p n))
     (l : WeakDual ℝ E) :
@@ -727,7 +727,7 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 
     Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3.
 -/
-theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+theorem qLinearPaths_ae [SeparableSpace E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =

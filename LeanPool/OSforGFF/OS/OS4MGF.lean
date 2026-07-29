@@ -168,7 +168,7 @@ lemma euclidean_action_timeTranslationE (t : ℝ) (f : TestFunctionℂ) :
 /-! ## GFF Covariance Invariance -/
 
 /-- The GFF covariance is invariant under simultaneous time translation. -/
-lemma freeCovarianceℂ_bilinear_timeTranslation_invariant (m : ℝ) [Fact (0 < m)] (t : ℝ)
+lemma freeCovarianceℂ_bilinear_timeTranslation_invariant (m : ℝ) (t : ℝ)
     (f g : TestFunctionℂ) :
     freeCovarianceℂBilinear m (timeTranslationSchwartzℂ t f) (timeTranslationSchwartzℂ t g) =
     freeCovarianceℂBilinear m f g := by

@@ -735,8 +735,10 @@ private lemma entrywiseExp_IsRePSD
   have hS_entry : ∀ N i j, S N i j =
       ∑ k ∈ Finset.range (N + 1), (↑(Nat.factorial k : ℕ) : ℂ)⁻¹ * (M i j) ^ k := by
     intro N i j
-    set_option backward.isDefEq.respectTransparency false in
-      simp [S, Matrix.sum_apply, HP]
+    simp only [S, Matrix.sum_apply, HP]
+    apply Finset.sum_congr rfl
+    intro k _
+    rfl
   -- Prove IsRePSD of the entrywise exp by taking the limit
   intro v
   -- The Re part of the quadratic form of S N is nonneg

@@ -197,7 +197,7 @@ noncomputable def sqrtPropagatorMapNormSq (m : ℝ) (f : TestFunction) : ℝ :=
   ∫ k, ‖sqrtPropagatorMap m f k‖ ^ 2 ∂volume
 
 /-- The map is linear in f (additive). -/
-lemma sqrtPropagatorMap_linear_add (m : ℝ) [Fact (0 < m)] (f g : TestFunction) :
+lemma sqrtPropagatorMap_linear_add (m : ℝ) (f g : TestFunction) :
     sqrtPropagatorMap m (f + g) = sqrtPropagatorMap m f + sqrtPropagatorMap m g := by
   ext k
   unfold sqrtPropagatorMap
@@ -209,7 +209,7 @@ lemma sqrtPropagatorMap_linear_add (m : ℝ) [Fact (0 < m)] (f g : TestFunction)
   simp only [hadd, hmap, _root_.add_apply, Pi.add_apply, add_mul]
 
 /-- The map is ℝ-linear (scalar multiplication). -/
-lemma sqrtPropagatorMap_linear_smul (m : ℝ) [Fact (0 < m)] (c : ℝ) (f : TestFunction) :
+lemma sqrtPropagatorMap_linear_smul (m : ℝ) (c : ℝ) (f : TestFunction) :
     sqrtPropagatorMap m (c • f) = c • sqrtPropagatorMap m f := by
   ext k
   unfold sqrtPropagatorMap

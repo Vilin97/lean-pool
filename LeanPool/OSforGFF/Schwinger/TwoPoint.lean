@@ -130,7 +130,7 @@ theorem schwingerTwoPointFunction_zero
 -/
 theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     (dμ_config : ProbabilityMeasure FieldConfiguration) (x : SpaceTime) (hx : x ≠ 0)
-    {ι : Type*} {l : Filter ι} [l.NeBot]
+    {ι : Type*} {l : Filter ι}
     (φ : ι → ContDiffBump (0 : SpaceTime))
     (hφ : Filter.Tendsto (fun i => (φ i).rOut) l (nhds 0))
     -- Key hypothesis: there exists an underlying continuous kernel

@@ -1041,12 +1041,17 @@ private theorem finsetSup_seminorm_ball_mem_nhds
 theorem pure_continuous :
     Continuous (fun p : E₁ × E₂ => pure p.1 p.2) := by
   -- Package as AddMonoidHom for continuous_of_continuousAt_zero₂
-  set f : E₁ →+ E₂ →+ NuclearTensorProduct E₁ E₂ :=
+  set f : E₁ →+ E₂ →+ RapidDecaySeq :=
     { toFun := fun e₁ => (pureLin e₁).toAddMonoidHom
       map_zero' := by
         ext e₂ m; simp [pureLin, pure_val]; rfl
       map_add' := fun e₁ e₁' => by
-        ext e₂ m; simp [pureLin, pure_val, add_mul] }
+        ext e₂ m
+        change (pure (e₁ + e₁') e₂).val m =
+          ((show RapidDecaySeq from pure e₁ e₂) +
+            (show RapidDecaySeq from pure e₁' e₂)).val m
+        rw [RapidDecaySeq.add_val]
+        simp [pure_val, add_mul] }
   change Continuous (fun p : E₁ × E₂ => f p.1 p.2)
   apply continuous_of_continuousAt_zero₂ f
   · -- Continuity at (0, 0): use the seminorm bound
@@ -1069,8 +1074,7 @@ theorem pure_continuous :
     have harg : f e₁ e₂ - 0 = pure e₁ e₂ := by
       rw [sub_zero]
       rfl
-    set_option backward.isDefEq.respectTransparency false in
-      rw [harg]
+    rw [harg]
     calc RapidDecaySeq.rapidDecaySeminorm k (pure e₁ e₂)
         ≤ ↑C * (s₁.sup DyninMityaginSpace.p) e₁ * (s₂.sup DyninMityaginSpace.p) e₂ :=
           hbound e₁ e₂

@@ -78,7 +78,7 @@ linear functional `φ` attaining `q` at `f` and bounded by `q` everywhere.
 -/
 lemma exists_CLF_le_seminorm
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    [TopologicalSpace E] [IsTopologicalAddGroup E]
     (q : Seminorm ℝ E) (hq : Continuous q) (f : E) :
     ∃ φ : E →L[ℝ] ℝ, φ f = q f ∧ ∀ x, |φ x| ≤ q x := by
   by_cases hf : f = 0

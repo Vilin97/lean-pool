@@ -770,7 +770,7 @@ open Real
     **Reference**: Stein-Weiss, Chapter 1, Proposition 1.1
 -/
 theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
-    [NormedSpace ℝ V] [FiniteDimensional ℝ V] [MeasureSpace V] [BorelSpace V]
+    [NormedSpace ℝ V]
     (f : SchwartzMap V ℂ) (N : ℕ) (_hN : Module.finrank ℝ V < N) :
     ∃ C : ℝ, 0 < C ∧ ∀ x : V, ‖f x‖ ≤ C / (1 + ‖x‖)^N := by
   -- Get bounds for each k ≤ N
@@ -883,7 +883,7 @@ lemma bumpSelfConv_support_subset (φ : ContDiffBump (0 : E)) :
     _ = 2 * φ.rOut := by ring
 
 /-- Self-convolution support shrinks to {0} as rOut → 0. -/
-lemma bumpSelfConv_support_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
+lemma bumpSelfConv_support_tendsto {ι : Type*} {l : Filter ι}
     (φ : ι → ContDiffBump (0 : E)) (hφ : Tendsto (fun i => (φ i).rOut) l (nhds 0)) :
     Tendsto (fun i => support (bumpSelfConv (φ i))) l (𝓝 (0 : E)).smallSets := by
   rw [tendsto_smallSets_iff]
@@ -920,7 +920,7 @@ theorem double_mollifier_convergence
     (C : E → ℝ)
     (hC : ContinuousOn C {x | x ≠ 0})
     (a : E) (ha : a ≠ 0)
-    {ι : Type*} {l : Filter ι} [l.NeBot]
+    {ι : Type*} {l : Filter ι}
     (φ : ι → ContDiffBump (0 : E))
     (hφ : Tendsto (fun i => (φ i).rOut) l (nhds 0)) :
     Tendsto

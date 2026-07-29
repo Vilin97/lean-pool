@@ -1447,11 +1447,11 @@ lemma schwartz_hermite_hasSum (f : SchwartzMap ℝ ℝ) :
     _ < ε := half_lt_self hε
 
 theorem schwartz_hermite_expansion_1D :
-    ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
        (T : (SchwartzMap ℝ ℝ) →L[ℝ] H) (f : SchwartzMap ℝ ℝ) (w : H),
        @inner ℝ H _ w (T f) =
          ∑' n, hermiteCoeff1D n f * @inner ℝ H _ w (T (schwartzHermiteBasis1D n)) := by
-  intro H _ _ _ T f w
+  intro H _ _ T f w
   -- Apply CLM T to Schwartz HasSum
   have h_T := (schwartz_hermite_hasSum f).map T T.continuous
   simp only [Function.comp_def, map_smul] at h_T
