@@ -112,7 +112,11 @@ EOF
   echo "warning: running without a sandbox; the solution's code will execute." >&2
 fi
 
-config="$(mktemp -t lean-pool-comparator)"
+# `mktemp -t PREFIX` means a prefix on BSD (macOS) but a *template* on GNU,
+# where it must end in at least three X's — so the BSD spelling dies on the
+# Linux runner with "too few X's in template". Pass the template as an
+# operand, which both implementations read the same way.
+config="$(mktemp "${TMPDIR:-/tmp}/lean-pool-comparator.XXXXXX")"
 trap 'rm -f "$config"' EXIT
 
 # Plain string, not an array: bash 3.2 (macOS) treats an empty array as
