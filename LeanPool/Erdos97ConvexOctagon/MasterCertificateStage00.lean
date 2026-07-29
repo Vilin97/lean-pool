@@ -14,7 +14,6 @@ import LeanPool.Erdos97ConvexOctagon.MasterCertificateData5
 import LeanPool.Erdos97ConvexOctagon.MasterCertificateData6
 import LeanPool.Erdos97ConvexOctagon.MasterCertificateData7
 import LeanPool.Erdos97ConvexOctagon.MasterCertificateData8
-import LeanPool.Erdos97ConvexOctagon.MasterCertificateData9
 
 /-! # Master-certificate proof stage 0 -/
 
@@ -37,7 +36,6 @@ master_lrat_stage
     masterCertificatePart6
     masterCertificatePart7
     masterCertificatePart8
-    masterCertificatePart9
 
 
 end Erdos97Octagon.RawIncidence

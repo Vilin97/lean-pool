@@ -39,7 +39,7 @@ private def dratTrimCommit :=
 private def solverInitialClauseCount := 6582
 private def initialClauseCount := 3263
 private def additionsPerStage := 1432
-private def encodedLineWidth := 88
+private def encodedLineWidth := 94
 private def linesPerDataModule := 500
 
 private def stageCount (additionCount : ℕ) : ℕ :=

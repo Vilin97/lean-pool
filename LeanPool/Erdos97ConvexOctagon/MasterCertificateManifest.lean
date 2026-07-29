@@ -32,7 +32,7 @@ def masterCertificatePackedBytes : ℕ := 316443
 def masterCertificateEncodedCharacters : ℕ := 421924
 
 /-- Number of generated data modules. -/
-def masterCertificateDataModules : ℕ := 10
+def masterCertificateDataModules : ℕ := 9
 
 /-- Number of sequential proof-stage modules. -/
 def masterCertificateStageModules : ℕ := 3

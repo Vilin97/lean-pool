@@ -27,7 +27,6 @@ master_lrat_stage
     masterCertificatePart6
     masterCertificatePart7
     masterCertificatePart8
-    masterCertificatePart9
 
 
 end Erdos97Octagon.RawIncidence
