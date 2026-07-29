@@ -91,10 +91,14 @@ instance : AddCommMonoid (LieOneCochain 𝕜 𝓰 𝓪) where
   add_comm β β' := by ext1
                       simp [add_comm]
   nsmul n β := { toLinearMap := n • β.toLinearMap }
-  nsmul_zero β := by ext1
-                     simp
-  nsmul_succ n β := by ext1
-                       simpa using succ_nsmul β.toLinearMap n
+  nsmul_zero β := by
+    ext1
+    change (0 : ℕ) • β.toLinearMap = 0
+    exact zero_nsmul β.toLinearMap
+  nsmul_succ n β := by
+    ext1
+    change (n + 1) • β.toLinearMap = n • β.toLinearMap + β.toLinearMap
+    exact succ_nsmul β.toLinearMap n
 
 instance : Module 𝕜 (LieOneCochain 𝕜 𝓰 𝓪) where
   one_smul β := by ext1; simp
@@ -106,22 +110,8 @@ instance : Module 𝕜 (LieOneCochain 𝕜 𝓰 𝓪) where
                         simpa using add_smul c c' β.toLinearMap
   zero_smul β := by ext1; simp
 
-instance : AddCommGroup (LieOneCochain 𝕜 𝓰 𝓪) where
-  zero_add β := AddZeroClass.zero_add β
-  add_zero β := AddZeroClass.add_zero β
-  nsmul := HSMul.hSMul
-  nsmul_zero β := zero_nsmul β
-  nsmul_succ n β := succ_nsmul β n
-  neg β := (-1 : 𝕜) • β
-  sub β₁ β₂ := β₁ + (-1 : 𝕜) • β₂
-  zsmul k β := (k : 𝕜) • β
-  zsmul_zero' β := by simp
-  zsmul_succ' k β := by simp [add_smul]
-  zsmul_neg' k β := by simp [add_smul, smul_smul, add_comm]
-  neg_add_cancel β := by
-    nth_rewrite 2 [← one_smul 𝕜 β]
-    simp only [← add_smul, neg_add_cancel, zero_smul]
-  add_comm β₁ β₂ := AddCommMagma.add_comm β₁ β₂
+instance : AddCommGroup (LieOneCochain 𝕜 𝓰 𝓪) :=
+  Module.addCommMonoidToAddCommGroup 𝕜
 
 variable {𝕜 𝓰 𝓪}
 
@@ -132,6 +122,23 @@ instance : FunLike (LieOneCochain 𝕜 𝓰 𝓪) 𝓰 𝓪 where
 instance : LinearMapClass (LieOneCochain 𝕜 𝓰 𝓪) 𝕜 𝓰 𝓪 where
   map_add β X Y := β.toLinearMap.map_add X Y
   map_smulₛₗ β c X := LinearMap.CompatibleSMul.map_smul β.toLinearMap c X
+
+@[simp]
+lemma zero_apply (X : 𝓰) : (0 : LieOneCochain 𝕜 𝓰 𝓪) X = 0 := rfl
+
+@[simp]
+lemma add_apply (β β' : LieOneCochain 𝕜 𝓰 𝓪) (X : 𝓰) :
+    (β + β') X = β X + β' X := rfl
+
+@[simp]
+lemma smul_apply (c : 𝕜) (β : LieOneCochain 𝕜 𝓰 𝓪) (X : 𝓰) :
+    (c • β) X = c • β X := rfl
+
+@[simp]
+lemma neg_apply (β : LieOneCochain 𝕜 𝓰 𝓪) (X : 𝓰) :
+    (-β) X = -β X := by
+  change (-1 : 𝕜) • β X = -β X
+  simp
 
 end LieOneCochain -- namespace
 
@@ -229,10 +236,14 @@ instance : AddCommMonoid (LieTwoCocycle 𝕜 𝓰 𝓪) where
     { toBilin := n • γ.toBilin
       self' := fun X ↦ by simp [γ.self']
       leibniz' := fun X Y Z ↦ by simp [γ.leibniz' X Y Z, smul_add] }
-  nsmul_zero γ := by ext1
-                     simp
-  nsmul_succ n γ := by ext1
-                       simpa using succ_nsmul γ.toBilin n
+  nsmul_zero γ := by
+    ext1
+    change (0 : ℕ) • γ.toBilin = 0
+    exact zero_nsmul γ.toBilin
+  nsmul_succ n γ := by
+    ext1
+    change (n + 1) • γ.toBilin = n • γ.toBilin + γ.toBilin
+    exact succ_nsmul γ.toBilin n
 
 instance : Module 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   one_smul γ := by ext1; simp
@@ -242,23 +253,8 @@ instance : Module 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   add_smul c c' γ := by ext1; simpa using Module.add_smul c c' γ.toBilin
   zero_smul γ := by ext1; simp
 
-instance :
-    AddCommGroup (LieTwoCocycle 𝕜 𝓰 𝓪) where
-  zero_add γ := AddZeroClass.zero_add γ
-  add_zero γ := AddZeroClass.add_zero γ
-  nsmul := HSMul.hSMul
-  nsmul_zero γ := zero_nsmul γ
-  nsmul_succ n γ := succ_nsmul γ n
-  neg γ := (-1 : 𝕜) • γ
-  sub γ₁ γ₂ := γ₁ + (-1 : 𝕜) • γ₂
-  zsmul k γ := (k : 𝕜) • γ
-  zsmul_zero' γ := by simp
-  zsmul_succ' k γ := by simp [add_smul]
-  zsmul_neg' k γ := by simp [add_smul, smul_smul, add_comm]
-  neg_add_cancel γ := by
-    nth_rewrite 2 [← one_smul 𝕜 γ]
-    simp only [← add_smul, neg_add_cancel, zero_smul]
-  add_comm γ₁ γ₂ := AddCommMagma.add_comm γ₁ γ₂
+instance : AddCommGroup (LieTwoCocycle 𝕜 𝓰 𝓪) :=
+  Module.addCommMonoidToAddCommGroup 𝕜
 
 lemma _root_.VirasoroProject.LieTwoCocycle.add_apply (γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪) (X Y : 𝓰) :
     (γ₁ + γ₂) X Y = γ₁ X Y + γ₂ X Y := rfl

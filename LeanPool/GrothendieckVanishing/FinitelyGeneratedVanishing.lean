@@ -51,6 +51,7 @@ variable {X : TopCat.{u}} [NoetherianSpace X]
 
 /-- The functor `Finset(SectionIndex K) ⥤ Sheaf(X)` sending `S ↦ finsetGeneratedSheaf S`.
     Transition maps are the canonical image inclusions, which are monomorphisms. -/
+@[implicit_reducible]
 noncomputable def finsetGenFunctor :
     Finset
         (TopCat.Presheaf.SectionIndex K) ⥤
@@ -67,15 +68,16 @@ noncomputable def finsetGenFunctor :
       TopCat.Presheaf.finsetImageInclGen_comp_ι]
 
 /-- Cocone with vertex `K`: the cocone maps are `image.ι : finsetGeneratedSheaf S ⟶ K`. -/
+@[implicit_reducible]
 noncomputable def finsetGenCocone :
     Cocone (finsetGenFunctor hK) :=
-  Cocone.mk (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
+  Cocone.mk (TopCat.Presheaf.sheafOfIsSheaf hK)
     { app := fun S ↦ Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S)
       naturality := fun S S' h ↦ by
         change TopCat.Presheaf.finsetImageInclGen hK h.le ≫
             Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S') =
           Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S) ≫
-            𝟙 (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
+            𝟙 (TopCat.Presheaf.sheafOfIsSheaf hK)
         rw [TopCat.Presheaf.finsetImageInclGen_comp_ι]
         exact (Category.comp_id _).symm }
 
@@ -128,9 +130,10 @@ noncomputable def finsetGenCoconeIsColimit :
           rw [show d = colimit.desc (finsetGenFunctor hK) (finsetGenCocone hK) from rfl]
           simp_rw [Category.assoc]
           erw [colimit.ι_desc]
-          simp [finsetGenCocone, TopCat.Presheaf.allSectionMap,
-            TopCat.Presheaf.finsetGeneratorMap, TopCat.Sheaf.familyMap,
-            Sigma.ι_desc]
+          rw [← Category.assoc]
+          dsimp only [finsetGenCocone]
+          rw [Category.assoc, Limits.image.fac]
+          exact (Sigma.ι_desc _ _).trans (Sigma.ι_desc _ _).symm
     exact @epi_of_epi_fac _ _ _ _ _ g d (TopCat.Presheaf.allSectionMap hK)
       (TopCat.Presheaf.allSectionMap_epi (F := K) hK) hfac
   -- mono + epi → iso in abelian category
@@ -150,7 +153,7 @@ theorem cohomology_vanishing_of_finitelyGenerated_vanishing
         (TopCat.Presheaf.SectionIndex K))
       [HasCoproduct fun σ : {σ // σ ∈ S} ↦ TopCat.Sheaf.zeroOutsideInt σ.1.1],
       Subsingleton (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m)) :
-    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) := by
+    Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hK) m) := by
   have hZeroDiagram : IsZero (finsetGenFunctor hK ⋙ sheafCohomologyFunctor X m) := by
     refine Functor.isZero _ ?_
     intro S
@@ -164,7 +167,7 @@ theorem cohomology_vanishing_of_finitelyGenerated_vanishing
     (colimit.isColimit _).isZero_pt hZeroDiagram
   have hZeroTarget :
       IsZero (AddCommGrpCat.of
-        (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) := by
+        (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hK) m)) := by
     change IsZero (AddCommGrpCat.of (Sheaf.H (finsetGenCocone hK).pt m))
     exact IsZero.of_iso hZeroColim
       (sheafHPreservesFilteredColimits
@@ -180,13 +183,13 @@ variable {X : TopCat.{u}} {K : TopCat.Presheaf AddCommGrpCat.{u} X} (hK : K.IsSh
 
 /-- **Step 3B–3C**: vanishing for `finsetGeneratedSheaf S` by `Finset.induction`. -/
 theorem finsetGeneratedSheaf_vanishing
-    {X : TopCat.{u}} [NoetherianSpace X]
+    {X : TopCat.{u}}
     {K : TopCat.Presheaf AddCommGrpCat.{u} X} (hK : K.IsSheaf)
     (m : ℕ)
     (hzero : ∀ {G : TopCat.Presheaf AddCommGrpCat.{u} X} (hG : G.IsSheaf) {V : Opens X}
       (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G),
       TopCat.Presheaf.IsLocallySurjective f →
-      Subsingleton (Sheaf.H (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m))
+      Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hG) m))
     (S : Finset
       (TopCat.Presheaf.SectionIndex K))
     [HasCoproduct fun σ : {σ // σ ∈ S} ↦ TopCat.Sheaf.zeroOutsideInt σ.1.1] :
@@ -248,7 +251,7 @@ theorem directLimit_cohomology_vanishing
     (hzero : ∀ {G : TopCat.Presheaf AddCommGrpCat.{u} X} (hG : G.IsSheaf) {V : Opens X}
       (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G),
       TopCat.Presheaf.IsLocallySurjective f →
-      Subsingleton (Sheaf.H (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) :
-    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) :=
+      Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hG) m)) :
+    Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hK) m) :=
   cohomology_vanishing_of_finitelyGenerated_vanishing hK m
     (fun S _ ↦ finsetGeneratedSheaf_vanishing hK m hzero S)

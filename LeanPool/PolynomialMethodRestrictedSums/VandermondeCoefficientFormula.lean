@@ -351,7 +351,8 @@ private lemma sum_X_pow_eq_multinomial_sum (m : ℕ) :
         Multiset.card_replicate]
       change ∑ i, b i = m
       exact hb_sum
-    · simp
+    · apply Finset.mem_sym_iff.mpr
+      exact fun i _ => Finset.mem_univ i
     · ext i
       simp? +decide [Multiset.count_bind]
       induction i using Fin.inductionOn

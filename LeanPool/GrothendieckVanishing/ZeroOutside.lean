@@ -319,6 +319,7 @@ namespace Sheaf
 open Presheaf
 
 /-- Sheafification of the integer-valued zero-outside presheaf. -/
+@[implicit_reducible]
 def zeroOutsideInt {X : TopCat.{u}} (U : Opens X) : Sheaf AddCommGrpCat.{u} X :=
   (presheafToSheaf _ _).obj (Presheaf.constZ.zeroOutside U)
 
@@ -445,7 +446,7 @@ theorem _root_.stalk_zeroOutsideInt_eq_zsmul_generator
     (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj
       (TopCat.Sheaf.zeroOutsideInt V).obj) :
     ∃ n : ℤ,
-      a = n • ((TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x hx
+      a = n • (TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt V).obj V x hx
         (TopCat.Sheaf.zeroOutsideInt.generator V)) := by
   let P := TopCat.Presheaf.constZ.zeroOutside V
   let J := Opens.grothendieckTopology (T := X)
@@ -466,7 +467,7 @@ theorem _root_.stalk_zeroOutsideInt_eq_zsmul_generator
 theorem _root_.zsmul_generator_injective
     {X : TopCat.{u}} (V : Opens X) (x : X) (hx : x ∈ V) :
     Function.Injective (fun (n : ℤ) ↦
-      n • ((TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x hx
+      n • (TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt V).obj V x hx
         (TopCat.Sheaf.zeroOutsideInt.generator V))) := by
   intro n m h
   let P := TopCat.Presheaf.constZ.zeroOutside V
@@ -476,7 +477,7 @@ theorem _root_.zsmul_generator_injective
   have hbij := ConcreteCategory.bijective_of_isIso (T.map (toSheafify J P))
   have hgen_eq : ConcreteCategory.hom (T.map (toSheafify J P))
       (P.germ V x hx (TopCat.Presheaf.zeroOutside.generator V)) =
-      (TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x hx
+      TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt V).obj V x hx
         (TopCat.Sheaf.zeroOutsideInt.generator V) :=
     TopCat.Presheaf.stalkFunctor_map_germ_apply V x hx
       (toSheafify J P) (TopCat.Presheaf.zeroOutside.generator V)

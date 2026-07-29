@@ -159,7 +159,8 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
           + (if n + m = 0 then ((n ^ 3 - n : 𝕜) / 12) • cgen 𝕜 else 0).1 by
       simp_all
     split_ifs
-    · simp [lgen_eq', cgen_eq']
+    · rw [smul_fst]
+      simp [lgen_eq', cgen_eq']
     · simp only [lgen_eq']
       change (n - m : 𝕜) • WittAlgebra.lgen 𝕜 (n + m) =
         (n - m : 𝕜) • WittAlgebra.lgen 𝕜 (n + m) + (0 : WittAlgebra 𝕜)
@@ -170,7 +171,8 @@ lemma lgen_eq' (n : ℤ) : lgen 𝕜 n = ⟨WittAlgebra.lgen 𝕜 n, 0⟩ := rfl
       simpa only [bracket_snd, toWittAlgebra_lgen,
         WittAlgebra.virasoroCocycle_apply_lgen_lgen, add_snd, smul_snd] using this
     split_ifs
-    · simp [lgen_eq', cgen_eq']
+    · rw [smul_snd]
+      simp [lgen_eq', cgen_eq']
     · simp only [lgen_eq']
       change (0 : 𝕜) = (n - m : 𝕜) * 0 + 0
       ring
@@ -185,6 +187,10 @@ lemma lgen_bracket' (n m : ℤ) :
 noncomputable def lsection : WittAlgebra 𝕜 →ₗ[𝕜] VirasoroAlgebra 𝕜 :=
   LieTwoCocycle.CentralExtension.stdSection (WittAlgebra.virasoroCocycle 𝕜)
 
+lemma lsection_prop : toWittAlgebra.toLinearMap ∘ₗ lsection 𝕜 = 1 := by
+  ext X
+  rfl
+
 @[simp] lemma lsection_lgen (n : ℤ) :
     lsection 𝕜 (WittAlgebra.lgen 𝕜 n) = lgen 𝕜 n :=
   rfl
@@ -193,7 +199,7 @@ open Module in
 /-- The most commonly used basis of the Virasoro algebra, consisting of `Lₙ` (`n ∈ ℤ`)
 and the central element `C`. (Lean notation: `lgen _ n` and `cgen _`, respectively.) -/
 noncomputable def basisLC : Basis (Option ℤ) 𝕜 (VirasoroAlgebra 𝕜) :=
-  ((isCentralExtension 𝕜).basis (lsection 𝕜) rfl
+  ((isCentralExtension 𝕜).basis (lsection 𝕜) (lsection_prop 𝕜)
         (Basis.singleton Unit 𝕜) (WittAlgebra.lgen 𝕜)).reindex
     { toFun uz := match uz with
         | Sum.inl _ => none
@@ -210,11 +216,20 @@ noncomputable def basisLC : Basis (Option ℤ) 𝕜 (VirasoroAlgebra 𝕜) :=
 
 @[simp] lemma basisLC_some (n : ℤ) :
     basisLC 𝕜 (some n) = lgen 𝕜 n := by
-  simp [basisLC]
+  unfold basisLC
+  rw [Module.Basis.reindex_apply]
+  change ((isCentralExtension 𝕜).basis (lsection 𝕜) (lsection_prop 𝕜)
+    (Module.Basis.singleton Unit 𝕜) (WittAlgebra.lgen 𝕜)) (Sum.inr n) = lgen 𝕜 n
+  rw [LieAlgebra.IsExtension.basis_eq_of_right, lsection_lgen]
 
 @[simp] lemma basisLC_none :
     basisLC 𝕜 none = cgen 𝕜 := by
-  simp [basisLC]
+  unfold basisLC
+  rw [Module.Basis.reindex_apply]
+  change ((isCentralExtension 𝕜).basis (lsection 𝕜) (lsection_prop 𝕜)
+    (Module.Basis.singleton Unit 𝕜) (WittAlgebra.lgen 𝕜)) (Sum.inl PUnit.unit) = cgen 𝕜
+  rw [LieAlgebra.IsExtension.basis_eq_of_left]
+  simp
 
 end VirasoroAlgebra -- namespace
 
