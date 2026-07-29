@@ -47,6 +47,31 @@ namespace Lean4Itree
 
 open Lean Lean.Elab
 
+private def mkPlfpInitProof (type : Expr) : MetaM Expr := do
+  let args := type.cleanupAnnotations.getAppArgs
+  unless type.cleanupAnnotations.getAppFn.isConstOf ``Lean.Order.lfp_monotone && args.size ≥ 4 do
+    throwError "{type} is not constructed with lfp_monotone"
+  Meta.mkAppOptM ``plfp_init
+    #[some args[0]!, some args[1]!, some args[2]!, some args[3]!]
+
+private def mkPlfpUnfoldProof (type : Expr) : MetaM Expr := do
+  let args := type.cleanupAnnotations.getAppArgs
+  unless type.cleanupAnnotations.getAppFn.isConstOf ``plfp && args.size ≥ 5 do
+    throwError "{type} is not constructed with plfp"
+  Meta.mkAppOptM ``plfp_unfold
+    #[some args[0]!, some args[4]!, some args[1]!, some args[2]!, some args[3]!]
+
+private def rewriteTargetWith (mvarId : MVarId) (proof : Expr) : MetaM (List MVarId) := do
+  let result ← mvarId.rewrite (← mvarId.getType) proof
+  let mvarId ← mvarId.replaceTargetEq result.eNew result.eqProof
+  return mvarId :: result.mvarIds
+
+private def rewriteLocalWith (mvarId : MVarId) (fvarId : FVarId)
+    (proof : Expr) : MetaM (List MVarId) := do
+  let result ← mvarId.rewrite (← fvarId.getType) proof
+  let replacement ← mvarId.replaceLocalDecl fvarId result.eNew result.eqProof
+  return replacement.mvarId :: result.mvarIds
+
 /-- Initialise a parameterized-coinduction proof: mark the context and unfold the
 goal's `lfp_monotone` fixed point so the Paco combinators can act on it. -/
 elab "pinit" : tactic =>
@@ -64,6 +89,12 @@ elab "pinit" : tactic =>
       throwError "{expanded} is not constructed with lfp_monotone"
     let mvarId ← mvarId.deltaTarget (c == ·)
     return [mvarId]
+
+/-- Rewrite an initialized fixed point to its parameterized form while preserving
+the complete-lattice instance already present in the goal. -/
+elab "pinitPlfp" : tactic =>
+  Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+    rewriteTargetWith mvarId (← mkPlfpInitProof (← mvarId.getType))
 
 /-- Introduce the `plfp_acc` accumulation hypothesis for the current goal,
 threading the goal's complete-lattice instance and monotonicity proof. -/
@@ -187,8 +218,7 @@ elab "destructLastAnd" : tactic =>
 introduces the coinduction hypothesis under the name `cih`. -/
 macro "pcofix" cih:ident : tactic => `(tactic|(
   pinit
-  set_option backward.isDefEq.respectTransparency false in
-    rw [@plfp_init] at *
+  pinitPlfp
   pcofixIntroAcc
   pcofixWrap
   rename_i x; exists x -- proof for plfp_acc
@@ -201,23 +231,24 @@ macro "pcofix" cih:ident : tactic => `(tactic|(
   intro $(mkIdent `φ) dummy _h
   have $cih := (converter _).mp _h
   refine ((converter ?_).mpr ?_)
-  set_option backward.isDefEq.respectTransparency false in
-    rw [unpacker] at *
   simp only at *
   clear unpacker converter dummy _h
 ))
 
 /-- Unfold the parameterized least fixed point once in the goal. -/
-macro "pfold" : tactic => `(tactic|(
-  set_option backward.isDefEq.respectTransparency false in
-    rw [@plfp_unfold]))
+elab "pfold" : tactic =>
+  Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+    rewriteTargetWith mvarId (← mkPlfpUnfoldProof (← mvarId.getType))
+
 /-- Unfold the parameterized least fixed point once in a hypothesis. -/
 syntax "punfold" " at " ident : tactic
-macro_rules
+elab_rules : tactic
 | `(tactic| punfold at $h:ident) =>
-  `(tactic|
-    set_option backward.isDefEq.respectTransparency false in
-      rw [@plfp_unfold] at $h:ident)
+    Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+      let some decl := (← getLCtx).findDecl? fun decl =>
+        if decl.userName == h.getId then some decl else none
+        | throwError "Cannot find hypothesis of name {h.getId}"
+      rewriteLocalWith mvarId decl.fvarId (← mkPlfpUnfoldProof decl.type)
 
 /-- Initialise a parameterized-coinduction proof from a fixed-point hypothesis `h`. -/
 elab "pinit" " at " h:ident : tactic =>
@@ -225,6 +256,7 @@ elab "pinit" " at " h:ident : tactic =>
     let some hyp := (← getLCtx).findDecl? (λ ldecl =>
       if ldecl.userName == h.getId then some ldecl.fvarId
       else none) | throwError "Cannot find hypothesis of name {h.getId}"
+    let hypName := (← hyp.getDecl).userName
     let hypType ← hyp.getType
     let hypType ← instantiateMVars hypType.cleanupAnnotations
     let hypHead := hypType.getAppFn
@@ -234,10 +266,11 @@ elab "pinit" " at " h:ident : tactic =>
       throwError "{expanded} is not constructed with lfp_monotone"
     Tactic.liftMetaTactic λ mvarId => do
       let mvarId ← mvarId.deltaLocalDecl hyp (c == ·)
-      return [mvarId]
-    Tactic.evalTactic <| ← `(tactic|
-      set_option backward.isDefEq.respectTransparency false in
-        rw [@plfp_init] at $h:ident)
+      mvarId.withContext do
+        let some hypDecl := (← getLCtx).findFromUserName? hypName
+          | throwError "Cannot find hypothesis of name {hypName}"
+        rewriteLocalWith mvarId hypDecl.fvarId
+          (← mkPlfpInitProof hypDecl.type)
 
 /-- Clear the residual `⊤ₚ` meet from a `uplfp` hypothesis, leaving the plain
 parameterized fixed point. -/
