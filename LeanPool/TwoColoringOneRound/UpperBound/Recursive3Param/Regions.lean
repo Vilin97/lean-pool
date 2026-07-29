@@ -13,6 +13,8 @@ This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg
 `b < t1` and `t1 ≤ b < t2` regions.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring
 
 open MeasureTheory
@@ -102,7 +104,8 @@ private lemma measurable_mul_Ico_measure {g : Rand → ℝ≥0∞} (hg : Measura
     Measurable fun b : Rand => g b * μ (Set.Ico b r) := by
   have hmeas : Measurable fun b : Rand => ENNReal.ofReal ((r : ℝ) - (b : ℝ)) :=
     ENNReal.measurable_ofReal.comp (measurable_const.sub measurable_subtype_coe)
-  simpa [μ] using hg.mul hmeas
+  apply hg.mul
+  simpa [μ] using hmeas
 
 /-- Merge a product of `ofReal`s into a single `ofReal` of the (evaluated) product. -/
 private lemma ofReal_mul_eq {p q r : ℝ} (hp : 0 ≤ p) (hpq : p * q = r) :
@@ -139,9 +142,15 @@ private lemma lintegral_affine_mul_length {g : Rand → ℝ≥0∞} {slope const
     ENNReal.measurable_ofReal.comp (mx.mul (measurable_const.sub mx))
   have mLength : Measurable fun x : Rand => ENNReal.ofReal (R - (x : ℝ)) :=
     ENNReal.measurable_ofReal.comp (measurable_const.sub mx)
-  rw [MeasureTheory.lintegral_add_left (μ := μ.restrict S) (measurable_const.mul mMoment),
-    MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mMoment,
-    MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mLength]
+  calc
+    _ = (∫⁻ x in S, ENNReal.ofReal slope *
+          ENNReal.ofReal ((x : ℝ) * (R - (x : ℝ))) ∂μ) +
+        (∫⁻ x in S, ENNReal.ofReal const * ENNReal.ofReal (R - (x : ℝ)) ∂μ) :=
+      MeasureTheory.lintegral_add_left (μ := μ.restrict S)
+        (measurable_const.mul mMoment) _
+    _ = _ := by
+      rw [MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mMoment,
+        MeasureTheory.lintegral_const_mul (μ := μ.restrict S) _ mLength]
 
 lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =

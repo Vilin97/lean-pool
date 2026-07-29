@@ -13,6 +13,8 @@ import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 # LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring.LowerBound
 
 namespace Correlation

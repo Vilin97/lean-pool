@@ -16,6 +16,8 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000OrbitCounting
@@ -63,7 +65,7 @@ private lemma ge_three_of_ne_base (x : SymN)
           have hx1 : x.1 = 1 := by simp [hx0, hm0]
           have : x = (baseVertex.1 ⟨1, by decide⟩) := by
             apply Fin.ext
-            simp [baseVertex, baseTuple, hx1]
+            simp [baseVertex, baseTuple, hx1, n, N1000000Data.n]
           exact h1 this
       | succ m2 =>
           cases hm1 : m2 with

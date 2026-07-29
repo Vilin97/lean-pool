@@ -16,6 +16,8 @@ This file will prove that the 3-parameter recursive cutoff algorithm from
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring
 
 open MeasureTheory

@@ -31,6 +31,8 @@ This file proves a small “warm-up” theorem matching the report:
 All proofs are kernel-checked (no `native_decide`).
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring.LowerBound
 
 

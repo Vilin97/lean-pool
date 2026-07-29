@@ -16,6 +16,8 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 # LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000IntersectionCounting
