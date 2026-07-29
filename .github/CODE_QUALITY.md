@@ -171,7 +171,14 @@ agree, and replays the proof through the Lean kernel accepting no axiom beyond
 `status: solved` a verified claim, and it is the check the solution review
 defers to.
 
-The three external tools are pinned to exact commits and cached by pin:
+The three external tools are pinned to exact commits in
+[`scripts/challenge/pins.env`](../scripts/challenge/pins.env), which both this
+workflow and `make comparator` read — so a local verification and a CI
+verification run the same judge. They once did not, and the difference hid a
+real failure: comparator's `main` resolves its tools from `COMPARATOR_*`
+environment variables, while the pinned commit hardcodes `landrun` and
+`lean4export` as PATH lookups, so passing paths worked locally and failed in
+CI. The pins are:
 
 - `landrun` (the sandbox comparator runs builds under), built with Go from
   `zouuup/landrun`
