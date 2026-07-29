@@ -12,7 +12,6 @@ import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 
 Source: url:https://www.numdam.org/item/SDPP_1976-1977__18_1_A6_0/
 Proposed by: Kevin Buzzard, Vasily Ilin
-Status: open
 Open declarations: `Challenge.Odlyzko.abs_discr_ge`
 Tags: number-theory, discriminants, number-fields, flt-assumption
 MSC: 11R29, 11R42
