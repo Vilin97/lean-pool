@@ -27,8 +27,6 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Finset
 
 lemma biUnion_eq_empty [DecidableEq β] {s : Finset α} {f : α → Finset β} :
@@ -536,7 +534,7 @@ def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
 
 @[simp] lemma emb_toEmpty [DecidableEq ξ] (φ : Semiformula L ξ n) (hp : φ.freeVariables = ∅) :
     Rewriting.embedding (φ.toEmpty hp) = φ := by
-  induction φ using rec' <;> simp [toEmpty, rew_rel, rew_nrel, *]
+  induction φ using rec' <;> simp [toEmpty, rew_rel, rew_nrel, *] <;> aesop
 
 @[simp] lemma toEmpty_verum [DecidableEq ξ] : (⊤ : Semiformula L ξ n).toEmpty (by simp) = ⊤ := rfl
 

@@ -9,9 +9,6 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
 
 /-! # Model -/
 
-set_option backward.isDefEq.respectTransparency false
-
-
 namespace LO
 
 namespace FirstOrder
@@ -135,16 +132,18 @@ variable {L₁ L₂ M}
 @[simp] lemma eval_lMap_add₁ {n} (φ : Semiformula L₁ μ n) (e : Fin n → M) (ε : μ → M) :
     Semiformula.Eval (add L₁ L₂ M) e ε (Semiformula.lMap (Language.Hom.add₁ L₁ L₂) φ)
     ↔ Semiformula.Eval str₁ e ε φ := by
-  induction φ using Semiformula.rec' <;>
-    simp [*, Language.Hom.rel_add₁, Semiformula.eval_rel,
-      Semiformula.lMap_rel, Semiformula.eval_nrel, Semiformula.lMap_nrel]
+  have h : (add L₁ L₂ M).lMap (Language.Hom.add₁ L₁ L₂) = str₁ := rfl
+  simpa only [h] using
+    (Semiformula.eval_lMap (s₂ := add L₁ L₂ M)
+      (Φ := Language.Hom.add₁ L₁ L₂) (e := e) (ε := ε) (φ := φ))
 
 @[simp] lemma eval_lMap_add₂ {n} (φ : Semiformula L₂ μ n) (e : Fin n → M) (ε : μ → M) :
     Semiformula.Eval (add L₁ L₂ M) e ε (Semiformula.lMap (Language.Hom.add₂ L₁ L₂) φ)
     ↔ Semiformula.Eval str₂ e ε φ := by
-  induction φ using Semiformula.rec' <;>
-    simp [*, Language.Hom.rel_add₂, Semiformula.eval_rel,
-      Semiformula.lMap_rel, Semiformula.eval_nrel, Semiformula.lMap_nrel]
+  have h : (add L₁ L₂ M).lMap (Language.Hom.add₂ L₁ L₂) = str₂ := rfl
+  simpa only [h] using
+    (Semiformula.eval_lMap (s₂ := add L₁ L₂ M)
+      (Φ := Language.Hom.add₂ L₁ L₂) (e := e) (ε := ε) (φ := φ))
 
 end «lp_section_3»
 
@@ -169,9 +168,10 @@ instance sigma : Structure (Language.sigma L) M where
 @[simp] lemma eval_lMap_sigma {n} (φ : Semiformula (L i) μ n) (e : Fin n → M) (ε : μ → M) :
     Semiformula.Eval (sigma L M) e ε (Semiformula.lMap (Language.Hom.sigma L i) φ)
     ↔ Semiformula.Eval (str i) e ε φ := by
-  induction φ using Semiformula.rec' <;>
-    simp [*, Language.Hom.rel_sigma, Semiformula.eval_rel,
-      Semiformula.lMap_rel, Semiformula.eval_nrel, Semiformula.lMap_nrel]
+  have h : (sigma L M).lMap (Language.Hom.sigma L i) = str i := rfl
+  simpa only [h] using
+    (Semiformula.eval_lMap (s₂ := sigma L M)
+      (Φ := Language.Hom.sigma L i) (e := e) (ε := ε) (φ := φ))
 
 end «lp_section_4»
 

@@ -9,9 +9,6 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Syntax.Rew
 
 /-! # Calculus -/
 
-set_option backward.isDefEq.respectTransparency false
-
-
 namespace LO
 
 namespace FirstOrder

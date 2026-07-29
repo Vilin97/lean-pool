@@ -10,9 +10,6 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
 
 /-! # Eq -/
 
-set_option backward.isDefEq.respectTransparency false
-
-
 namespace Matrix
 
 variable {α : Type*}
@@ -212,9 +209,37 @@ lemma rel_mk {k} (r : L.Rel k) (v : Fin k → M) :
   QuotEq L M) r (fun i => ⟦v i⟧) ↔ Structure.rel r v :=
   of_eq <| Quotient.liftVec_mk (s := eqvSetoid L M) _ _ _
 
+private def mkHom : M →ₛ[L] QuotEq L M where
+  toFun := fun a => ⟦a⟧
+  func' := by
+    intro k f v
+    change (⟦Structure.func f v⟧ : QuotEq L M) =
+      Structure.func (M := QuotEq L M) f (fun i => ⟦v i⟧)
+    exact (funk_mk f v).symm
+  rel' := by
+    intro k r v h
+    change Structure.rel (M := QuotEq L M) r (fun i => ⟦v i⟧)
+    exact (rel_mk r v).mpr h
+
 lemma val_mk {e} {ε} (t : Semiterm L μ n) :
     Semiterm.valm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧) t = ⟦Semiterm.valm M e ε t⟧ :=
-  by induction t <;> simp [*, funk_mk, Semiterm.val_func]
+  by
+    let q := mkHom (L := L) (M := M)
+    have he : (q : M → QuotEq L M) ∘ e = fun i => ⟦e i⟧ := by
+      funext i
+      rfl
+    have hε : (q : M → QuotEq L M) ∘ ε = fun i => ⟦ε i⟧ := by
+      funext i
+      rfl
+    have hq (a : M) : q a = (⟦a⟧ : QuotEq L M) := rfl
+    have henv :
+        Semiterm.valm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧) t =
+          Semiterm.valm (QuotEq L M) (q ∘ e) (q ∘ ε) t :=
+      congrArg₂ (fun e ε => Semiterm.valm (QuotEq L M) e ε t) he.symm hε.symm
+    have hterm : Semiterm.valm (QuotEq L M) (q ∘ e) (q ∘ ε) t =
+        q (Semiterm.valm M e ε t) :=
+      (HomClass.val_term q e ε t).symm
+    exact henv.trans (hterm.trans (hq _))
 
 lemma eval_mk {e} {ε} {φ : Semiformula L μ n} :
     Semiformula.Evalm (QuotEq L M) (fun i =>
@@ -224,10 +249,40 @@ lemma eval_mk {e} {ε} {φ : Semiformula L μ n} :
     simp only [LogicalConnective.HomClass.map_top, «Prop».top_eq_true]
   case hfalsum =>
     simp only [LogicalConnective.HomClass.map_bot, «Prop».bot_eq_false]
-  case hrel =>
-    simp only [Semiformula.eval_rel, val_mk, rel_mk]
-  case hnrel =>
-    simp only [Semiformula.eval_nrel, val_mk, rel_mk]
+  case hrel r v =>
+    have hv : (fun i =>
+        Semiterm.valm (QuotEq L M) (fun j => ⟦e j⟧) (fun j => ⟦ε j⟧) (v i)) =
+        fun i => ⟦Semiterm.valm M e ε (v i)⟧ := by
+      funext i
+      exact val_mk (e := e) (ε := ε) (v i)
+    calc
+      Semiformula.Evalm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧)
+          (Semiformula.rel r v) ↔
+        Structure.rel (M := QuotEq L M) r (fun i =>
+          Semiterm.valm (QuotEq L M) (fun j => ⟦e j⟧) (fun j => ⟦ε j⟧) (v i)) :=
+        Semiformula.eval_rel
+      _ ↔ Structure.rel (M := QuotEq L M) r
+          (fun i => ⟦Semiterm.valm M e ε (v i)⟧) :=
+        iff_of_eq (congrArg (Structure.rel (M := QuotEq L M) r) hv)
+      _ ↔ Structure.rel r (fun i => Semiterm.valm M e ε (v i)) :=
+        rel_mk r (fun i => Semiterm.valm M e ε (v i))
+  case hnrel r v =>
+    have hv : (fun i =>
+        Semiterm.valm (QuotEq L M) (fun j => ⟦e j⟧) (fun j => ⟦ε j⟧) (v i)) =
+        fun i => ⟦Semiterm.valm M e ε (v i)⟧ := by
+      funext i
+      exact val_mk (e := e) (ε := ε) (v i)
+    calc
+      Semiformula.Evalm (QuotEq L M) (fun i => ⟦e i⟧) (fun i => ⟦ε i⟧)
+          (Semiformula.nrel r v) ↔
+        ¬Structure.rel (M := QuotEq L M) r (fun i =>
+          Semiterm.valm (QuotEq L M) (fun j => ⟦e j⟧) (fun j => ⟦ε j⟧) (v i)) :=
+        Semiformula.eval_nrel
+      _ ↔ ¬Structure.rel (M := QuotEq L M) r
+          (fun i => ⟦Semiterm.valm M e ε (v i)⟧) :=
+        not_congr (iff_of_eq (congrArg (Structure.rel (M := QuotEq L M) r) hv))
+      _ ↔ ¬Structure.rel r (fun i => Semiterm.valm M e ε (v i)) :=
+        not_congr (rel_mk r (fun i => Semiterm.valm M e ε (v i)))
   case hand =>
     simp only [LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq, *]
   case hor =>

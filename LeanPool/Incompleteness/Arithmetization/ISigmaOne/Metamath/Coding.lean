@@ -10,9 +10,6 @@ import Mathlib.Combinatorics.Colex
 
 /-! # Coding -/
 
-set_option backward.isDefEq.respectTransparency false
-
-
 namespace LO
 namespace FirstOrder
 
@@ -265,8 +262,20 @@ lemma quote_func {k} (f : L.Func k) (v : Fin k → SyntacticSemiterm L n) :
   quote_mul V t u
 
 @[simp] lemma quote_absolute (t : SyntacticSemiterm L n) : ((⌜t⌝ : ℕ) : V) = ⌜t⌝ := by
-  induction t <;> simp [quote_bvar, quote_fvar, quote_func, qqBvar, qqFvar, qqFunc,
-    nat_cast_pair, *]
+  have htwo : ((2 : ℕ) : V) = 2 :=
+    (numeral_eq_natCast (M := V) 2).symm.trans (LO.Arith.numeral_two_eq_two (M := V))
+  induction t with
+  | bvar x =>
+    simp only [quote_bvar, qqBvar, LO.Arith.natCast_nat, Nat.cast_add, nat_cast_pair,
+      Nat.cast_zero, Nat.cast_one]
+  | fvar x =>
+    simp only [quote_fvar, qqFvar, LO.Arith.natCast_nat, Nat.cast_add, nat_cast_pair,
+      Nat.cast_one]
+  | func f v ih =>
+    simp only [quote_func, qqFunc, LO.Arith.natCast_nat, Nat.cast_add, nat_cast_pair,
+      coe_quote_func_nat, quote_matrix_absolute, Nat.cast_one, add_left_inj, pair_ext_iff,
+      quote_matrix_inj, true_and]
+    exact ⟨htwo, funext ih⟩
 
 lemma quote_eq_encode (t : SyntacticSemiterm L n) : ⌜t⌝ = Encodable.encode t := by
   induction t
@@ -750,12 +759,23 @@ open LO.Arith Formalized
 @[simp] lemma codeIn'_ball (t : SyntacticSemiterm ℒₒᵣ n) (φ : SyntacticSemiformula ℒₒᵣ (n + 1)) :
     (⌜∀[“#0 < !!(Rew.bShift t)”] φ⌝ : (Language.codeIn ℒₒᵣ V).Semiformula n) =
         Language.Semiformula.ball ⌜t⌝ (.cast (n := ↑(n + 1)) ⌜φ⌝) := by
-  ext; simp [LO.ball, imp_eq, Language.Semiformula.cast,
-    Language.Semiformula.ball, Semiformula.Operator.lt_eq]
+  simp only [ball, Semiformula.Operator.lt_eq, imp_eq, neg_rel, codeIn'_all,
+    Language.Semiformula.cast, codeIn'_or, codeIn'_nlt, Fin.isValue,
+    Matrix.vecCons_zero, Semiterm.codeIn'_bvar, Fin.coe_ofNat_eq_mod, Nat.zero_mod,
+    Nat.cast_zero, Matrix.cons_val_one, Language.Semiformula.ball]
+  congr 4
+  apply Language.Semiterm.ext
+  exact quote_termBShift (V := V) (L := ℒₒᵣ) t
 @[simp] lemma codeIn'_bex (t : SyntacticSemiterm ℒₒᵣ n) (φ : SyntacticSemiformula ℒₒᵣ (n + 1)) :
     (⌜∃[“#0 < !!(Rew.bShift t)”] φ⌝ : (Language.codeIn ℒₒᵣ V).Semiformula n) =
         Language.Semiformula.bex ⌜t⌝ (.cast (n := ↑(n + 1)) ⌜φ⌝) := by
-  ext; simp [LO.bex, Language.Semiformula.cast, Semiformula.Operator.lt_eq]
+  simp only [bex, Semiformula.Operator.lt_eq, codeIn'_ex, Language.Semiformula.cast,
+    codeIn'_and, codeIn'_lt, Fin.isValue, Matrix.vecCons_zero, Semiterm.codeIn'_bvar,
+    Fin.coe_ofNat_eq_mod, Nat.zero_mod, Nat.cast_zero, Matrix.cons_val_one,
+    Language.Semiformula.bex]
+  congr 4
+  apply Language.Semiterm.ext
+  exact quote_termBShift (V := V) (L := ℒₒᵣ) t
 
 instance : GoedelQuote (Sentence L) ((L.codeIn V).Formula) :=
   ⟨fun σ ↦ (⌜Rew.embs ▹ σ⌝ : (Language.codeIn L V).Semiformula (0 : ℕ))⟩
@@ -768,7 +788,11 @@ lemma quote_sentence_def' (σ : Sentence L) : (⌜σ⌝ : (L.codeIn V).Formula) 
 
 @[simp] lemma codeIn''_imp (σ π : Sentence L) : (⌜σ ==> π⌝ :
     (L.codeIn V).Formula) = ⌜σ⌝ ==> ⌜π⌝ := by
-  simp [quote_sentence_def']
+  apply Language.Semiformula.ext
+  change ⌜Rew.embs ▹ (σ ==> π)⌝ =
+    (L.codeIn V).imp ⌜Rew.embs ▹ σ⌝ ⌜Rew.embs ▹ π⌝
+  rw [LogicalConnective.HomClass.map_imply]
+  exact quote_imply (Rew.embs ▹ σ) (Rew.embs ▹ π)
 
 end Semiformula
 

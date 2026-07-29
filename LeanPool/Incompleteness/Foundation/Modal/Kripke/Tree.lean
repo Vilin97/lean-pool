@@ -10,9 +10,6 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # Tree -/
 
-set_option backward.isDefEq.respectTransparency false
-
-
 namespace LO
 namespace Modal
 
@@ -214,7 +211,9 @@ lemma rooted : (F.TransitiveTreeUnravelling r).isRooted ⟨[r], by tauto⟩ := b
   · rw [←hzs];
     by_contra hC;
     simp at hC;
-    simp_all;
+    apply ha;
+    apply Subtype.ext;
+    simpa [hC] using hzs.symm;
   · use zs;
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -294,7 +293,10 @@ abbrev _root_.LO.Modal.Kripke.FiniteFrame.FiniteTransitiveTreeUnravelling
           Finite.of_injective
           (β := { x // List.IsChain (F.PointGenerated r).Rel x })
           (fun x => ⟨x.1, x.2.2⟩)
-          (by rintro ⟨x, hx⟩ ⟨y, hy⟩; simp_all);
+          (by
+            intro x y hxy;
+            apply Subtype.ext;
+            exact congrArg (fun z => z.1) hxy);
       exact List.chains_finite
         (Frame.PointGenerated.rel_transitive (F := F.toFrame) (r := r) F_trans)
         (Frame.PointGenerated.rel_irreflexive (F := F.toFrame) (r := r) F_irrefl)
