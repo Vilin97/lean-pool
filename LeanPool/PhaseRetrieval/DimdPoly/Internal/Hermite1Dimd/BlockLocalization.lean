@@ -148,7 +148,8 @@ private lemma blockPart_remainderPart_coeff
   · have hidx : blockIndexMulti α = ℓ :=
       (mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hb
     by_cases hfar : M < blockDistance j ℓ <;>
-      simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar, hidx]
+      simp [blockPart, remainderPart, Finsupp.onFinset_apply, farCoeffSet,
+        FiniteHermiteSum.support, hb, hfar, hidx]
   · by_cases hfar : M < blockDistance j ℓ <;>
       simp [blockPart, remainderPart, Finsupp.onFinset_apply, hb, hfar]
 
@@ -585,9 +586,8 @@ private lemma sharpShellCount_of_pos
     simp_all
   · obtain ⟨f, hf⟩ := shellSubtype_injects hd ℓ hr
     have hshell : Nat.card {x // x ∈ shellFinset d r} = shellCardinality d r := by
-      rw [Nat.card_eq_fintype_card]
-      simpa [shellFinset] using
-        (Finset.card_attach (s := shellFinset d r)).trans (cube_boundary_card d r hr)
+      rw [Nat.card_eq_fintype_card, Fintype.card_coe]
+      exact cube_boundary_card d r hr
     letI := finiteShellSubtype ℓ hr
     exact le_trans (Nat.card_le_card_of_injective f hf) (le_of_eq hshell)
 
@@ -652,7 +652,7 @@ theorem productBasisLocalization
     have hℓ : ℓ = 0 := Subsingleton.elim _ _
     subst hα hj hℓ
     rw [productBasis_annulusFactorization]
-    simp
+    simp [blockDistance]
   · choose Cq cq hCq_pos hcq_pos hloc using (fun q : Fin d => localizationIncludingZero (κ q))
     let q0 : Fin d := ⟨0, Nat.pos_of_ne_zero hd⟩
     let C : ℝ := ∏ q : Fin d, Cq q
@@ -663,7 +663,8 @@ theorem productBasisLocalization
       exact Finset.prod_pos (fun q hq => hCq_pos q)
     have hc_pos : 0 < c := by
       dsimp [c]
-      simp_all
+      exact (Finset.lt_inf'_iff ⟨q0, Finset.mem_univ q0⟩).2
+        (fun q _ => hcq_pos q)
     have hB_nonneg : 0 ≤ B := by
       dsimp [B]
       positivity
@@ -885,17 +886,44 @@ private lemma tailIndicator_tendsto_zero
       (tendsto_sum_nat_add u).comp (Filter.tendsto_add_atTop_nat 1)
   refine htail.congr' ?_
   filter_upwards [] with M
-  have hsub :
-      (∑' r : {r // r ∉ Finset.range (M + 1)}, u r) =
-        ∑' r : ℕ, if M < r then u r else 0 := by
-    simpa [Set.indicator, Finset.mem_range, Nat.not_lt] using
-      (tsum_subtype (s := {r : ℕ | r ∉ Finset.range (M + 1)}) (f := u))
+  let p : ℕ → ℝ := fun r => if r < M + 1 then u r else 0
+  let v : ℕ → ℝ := fun r => if M < r then u r else 0
+  have hp : Summable p := by
+    refine (hu.indicator {r : ℕ | r < M + 1}).congr ?_
+    intro r
+    simp [p, Set.indicator]
+  have hv : Summable v := by
+    refine (hu.indicator {r : ℕ | M < r}).congr ?_
+    intro r
+    simp [v, Set.indicator]
+  have hp_tsum :
+      (∑' r : ℕ, p r) = ∑ i ∈ Finset.range (M + 1), u i := by
+    calc
+      (∑' r : ℕ, p r) = ∑ r ∈ Finset.range (M + 1), p r := tsum_eq_sum (by
+        intro b hb
+        simp only [p]
+        rw [if_neg]
+        simpa [Finset.mem_range] using hb)
+      _ = ∑ r ∈ Finset.range (M + 1), u r := by
+        apply Finset.sum_congr rfl
+        intro r hr
+        simp only [p, if_pos (Finset.mem_range.mp hr)]
+  have hpv : ∀ r : ℕ, p r + v r = u r := by
+    intro r
+    dsimp [p, v]
+    by_cases h : r < M + 1
+    · rw [if_pos h, if_neg]
+      · exact add_zero _
+      · omega
+    · rw [if_neg h, if_pos]
+      · exact zero_add _
+      · omega
   have h1 :
       (∑ i ∈ Finset.range (M + 1), u i) +
           (∑' r : ℕ, if M < r then u r else 0) =
         ∑' i : ℕ, u i := by
-    rw [← hsub]
-    simpa using hu.sum_add_tsum_subtype_compl (Finset.range (M + 1))
+    rw [← hp_tsum, ← hp.tsum_add hv]
+    exact tsum_congr hpv
   have h2 :
       (∑ i ∈ Finset.range (M + 1), u i) +
           (∑' k : ℕ, u (k + (M + 1))) =

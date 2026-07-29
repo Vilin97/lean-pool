@@ -191,10 +191,23 @@ theorem pair_of_sum_natAbs_lt (hi : ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (a i).na
   obtain rfl | hn := eq_or_ne i j
   · simp [singleton]
   let f : Fin 2 ↪ Fin n := ⟨fun | 0 => i | 1 => j, fun i₁ i₂ h ↦ by grind⟩
-  have mf : univ.map f = {i, j} := by ext k; simp [f]; grind
+  have f_zero : f 0 = i := rfl
+  have f_one : f 1 = j := rfl
+  have mf : univ.map f = {i, j} := by
+    ext k
+    simp only [mem_map, mem_univ, true_and, mem_insert, mem_singleton]
+    constructor
+    · rintro ⟨x, hx⟩
+      have hx_cases : x = 0 ∨ x = 1 := by omega
+      rcases hx_cases with rfl | rfl
+      · exact Or.inl (by simpa only [f_zero] using hx.symm)
+      · exact Or.inr (by simpa only [f_one] using hx.symm)
+    · rintro (hk | hk)
+      · exact ⟨0, by simpa only [f_zero] using hk.symm⟩
+      · exact ⟨1, by simpa only [f_one] using hk.symm⟩
   rw [← mf]
   refine of_sum_natAbs_lt _ fun b ncb ↦ ?_
-  simp_rw [Fin.sum_univ_two, mf, f, Function.Embedding.coeFn_mk]
+  rw [Fin.sum_univ_two, mf, f_zero, f_one]
   suffices ∀ (b₁ b₂ : SignType),
       b₁ ≠ b₂ → ∑ k ∈ {i, j}ᶜ, (a k).natAbs < (b₁ * a i + b₂ * a j).natAbs by
     apply this

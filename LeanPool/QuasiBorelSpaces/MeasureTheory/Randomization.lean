@@ -71,6 +71,7 @@ lemma measurableEmbedding_normalize (r) : MeasurableEmbedding (normalize (r := r
     have : ((fun a ↦ ↑a / r) '' s) = (· / r) '' (Subtype.val '' s) := by
       simp only [← Set.image_comp]
       rfl
+    change MeasurableSet ((fun a : Set.Ico 0 r ↦ (a : ℝ) / r) '' s)
     rw [this]
     generalize ht : Subtype.val '' s = t
     rw [ht] at hs

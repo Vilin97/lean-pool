@@ -176,15 +176,23 @@ theorem exists_omega0_seq_succ_prop (opos : 0 < o) {P : Ordinal → Ordinal → 
     (succ r) H₂ H₃
   -- Key relation: f at successor equals chosen witness
   have f_succ_eq : ∀ n : Iio ω,
-      f ⟨Order.succ n.1, isSuccLimit_omega0.succ_lt n.2⟩ = Classical.choose (hP (f n)) := by
+      f ⟨n.1 + 1, by
+        rw [mem_Iio]
+        simpa only [Order.succ_eq_add_one] using
+          isSuccLimit_omega0.succ_lt (by simpa only [mem_Iio] using n.2)⟩ =
+        Classical.choose (hP (f n)) := by
     intro n
-    change boundedLimitRec' isSuccLimit_omega0 ⟨Order.succ n.1, _⟩ (succ r) H₂ H₃ =
+    change boundedLimitRec' isSuccLimit_omega0 ⟨n.1 + 1, _⟩ (succ r) H₂ H₃ =
       Classical.choose (hP (f n))
     rw [@boundedLimitRec'_succ ω isSuccLimit_omega0 (fun _ ↦ Iio o) n (succ r) H₂ H₃]
   -- The successor in Iio ω
   have succ_eq : ∀ n : Iio ω,
-      (succ n : Iio ω) = ⟨Order.succ n.1, isSuccLimit_omega0.succ_lt n.2⟩ := fun n ↦
-    succ_Iio isSuccLimit_omega0.isSuccPrelimit
+      (succ n : Iio ω) = ⟨n.1 + 1, by
+        rw [mem_Iio]
+        simpa only [Order.succ_eq_add_one] using
+          isSuccLimit_omega0.succ_lt (by simpa only [mem_Iio] using n.2)⟩ := fun n ↦ by
+    apply Subtype.ext
+    exact (coe_succ_Iio isSuccLimit_omega0.isSuccPrelimit).trans (Order.succ_eq_add_one n.1)
   have f_succ : ∀ n : Iio ω, f (succ n) = Classical.choose (hP (f n)) := fun n ↦ by
     rw [succ_eq n, f_succ_eq n]
   use f
@@ -216,6 +224,7 @@ theorem isAccPt_iSup_of_between {δ : Ordinal.{u}} (C : Set Ordinal) (δLim : Is
     use ⟨1, one_lt_of_isSuccLimit δLim⟩
     refine lt_of_le_of_lt (bot_le (a := s ⟨0, δLim.bot_lt⟩)) ?_
     convert sInc ⟨0, δLim.bot_lt⟩
+    apply Subtype.ext
     rw [coe_succ_Iio δLim.isSuccPrelimit]
     exact (zero_add (1 : Ordinal)).symm
   intro p hp

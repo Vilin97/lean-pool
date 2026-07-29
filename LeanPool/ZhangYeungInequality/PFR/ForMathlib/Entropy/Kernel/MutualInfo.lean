@@ -300,13 +300,17 @@ lemma _root_.ProbabilityTheory.Kernel.entropy_submodular_compProd
   have h_meas := (MeasurableEquiv.prodAssoc.symm : T × S × U ≃ᵐ (T × S) × U).symm.measurable
   have : FiniteSupport (μ ⊗ₘ ξ) := finiteSupport_of_compProd hξ
   have : FiniteSupport (μ ⊗ₘ (ξ ⊗ₖ κ)) := finiteSupport_of_compProd (hξ.compProd hκ)
+  let η' : Kernel ((T × S) × U) V :=
+    comap η MeasurableEquiv.prodAssoc h_meas
+  letI : IsMarkovKernel η' := IsMarkovKernel.comap η h_meas
+  letI : IsZeroOrMarkovKernel (κ ⊗ₖ η') :=
+    IsZeroOrMarkovKernel.compProd κ η'
   have h := entropy_condKernel_le_entropy_snd
-    (κ := κ ⊗ₖ (comap η MeasurableEquiv.prodAssoc h_meas)) (μ := μ ⊗ₘ ξ) ?_
+    (κ := κ ⊗ₖ η') (μ := μ ⊗ₘ ξ) ?_
   · simp only [fst_compProd] at h
-    have : condKernel (κ ⊗ₖ comap η ↑MeasurableEquiv.prodAssoc h_meas)
-        =ᵐ[μ ⊗ₘ ξ ⊗ₘ κ] comap η ↑MeasurableEquiv.prodAssoc h_meas := by
-      exact condKernel_compProd_ae_eq κ (comap η _ MeasurableEquiv.prodAssoc.measurable) (μ
-        ⊗ₘ ξ)
+    have : condKernel (κ ⊗ₖ η') =ᵐ[μ ⊗ₘ ξ ⊗ₘ κ] η' := by
+      exact condKernel_compProd_ae_eq κ η' (μ ⊗ₘ ξ)
+    dsimp only [η'] at h ⊢
     rwa [entropy_congr this, Measure.compProd_compProd'', entropy_comap_equiv] at h
   · refine (hκ.compProd ?_)
     convert hη.comap_equiv MeasurableEquiv.prodAssoc

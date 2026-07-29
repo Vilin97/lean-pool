@@ -110,10 +110,12 @@ lemma ωScottContinuous_of
   · simp only [ωSup]
     apply le_antisymm
     · apply le_ωSup_of_le 0
-      simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, le_refl]
-    · simp only [ωSup_le_iff, Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
+      change f (c 0) ≤ f (c 0)
+      exact le_rfl
+    · simp only [ωSup_le_iff, Chain.coe_map, Function.comp_apply]
       intro i
       apply le_of_eq
+      change f (c i) = f (c 0)
       congr 1
       symm
       apply (OrderHomClass.mono c)

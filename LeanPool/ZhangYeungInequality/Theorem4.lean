@@ -924,20 +924,27 @@ lemma _root_.ZhangYeung.zhangYeungHolds_of_tendsto
 
 private lemma continuous_IF (α β : Finset (Fin 4)) :
     Continuous (fun F : Finset (Fin 4) → ℝ => IF F α β) := by
-  simpa [IF] using ((continuous_apply α).add (continuous_apply β)).sub (continuous_apply (α
-    ∪ β))
+  unfold IF
+  apply (((continuous_apply α).add (continuous_apply β)).sub
+    (continuous_apply (α ∪ β))).congr
+  intro F
+  rfl
 
 private lemma continuous_condIF (α β γ : Finset (Fin 4)) :
     Continuous (fun F : Finset (Fin 4) → ℝ => condIF F α β γ) := by
-  simpa [condIF, Finset.union_assoc] using
-    (((continuous_apply (α ∪ γ)).add (continuous_apply (β ∪ γ))).sub
-      (continuous_apply (α ∪ (β ∪ γ)))).sub (continuous_apply γ)
+  unfold condIF
+  apply ((((continuous_apply (α ∪ γ)).add (continuous_apply (β ∪ γ))).sub
+    (continuous_apply (α ∪ (β ∪ γ)))).sub (continuous_apply γ)).congr
+  intro F
+  simp only [Pi.add_apply, Pi.sub_apply, ← Finset.union_assoc]
 
 private lemma continuous_deltaF (i j k l : Fin 4) :
     Continuous (fun F : Finset (Fin 4) → ℝ => deltaF F i j k l) := by
-  simpa [deltaF] using
-    ((continuous_IF {i} {j}).sub (continuous_condIF {i} {j} {k})).sub
-      (continuous_condIF {i} {j} {l})
+  unfold deltaF
+  apply (((continuous_IF {i} {j}).sub (continuous_condIF {i} {j} {k})).sub
+    (continuous_condIF {i} {j} {l})).congr
+  intro F
+  rfl
 
 private lemma isClosed_zhangYeungAt_set (π : Equiv.Perm (Fin 4)) :
     IsClosed {F : Finset (Fin 4) → ℝ | zhangYeungAt F (π 0) (π 1) (π 2) (π 3)} := by
@@ -1079,6 +1086,12 @@ private lemma preimage_singleton_castLE {n : ℕ} (hn : 4 ≤ n) (i : Fin 4) :
   ext j
   simp_all
 
+private lemma preimage_pair_castLE {n : ℕ} (hn : 4 ≤ n) (i j : Fin 4) :
+    (({Fin.castLE hn i} : Finset (Fin n)) ∪ {Fin.castLE hn j}).preimage
+        (Fin.castLE hn) (Fin.castLE_injective hn).injOn =
+      ({i} : Finset (Fin 4)) ∪ {j} := by
+  rw [Finset.preimage_union, preimage_singleton_castLE, preimage_singleton_castLE]
+
 /--
 Restricting the lifted witness back to the first four coordinates recovers the base
 witness.
@@ -1102,7 +1115,7 @@ private lemma zhangYeungAtN_witness_castLE {n : ℕ} (hn : 4 ≤ n) (i j k l : F
         (Fin.castLE hn k) (Fin.castLE hn l)
       ↔ zhangYeungAt FWitness i j k l := by
   unfold zhangYeungAtN zhangYeungAt deltaFN deltaF IFN IF condIFN condIF FWitnessN
-  simp only [Finset.preimage_union, preimage_singleton_castLE]
+  simp only [Finset.preimage_union, preimage_singleton_castLE, preimage_pair_castLE]
 
 /--
 Part (b) lifted to `Fin n`: the lifted witness fails `zhangYeungHoldsN` at the lifted

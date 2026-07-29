@@ -36,15 +36,21 @@ instance : PartialOrder (Cont R A) :=
     rintro ⟨x⟩ ⟨y⟩
     simp only [mk.injEq, imp_self])
 
+/-- The underlying continuation as an order homomorphism. -/
+private def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
+  toFun := apply
+  monotone' _ _ h := h
+
+@[simp]
+private lemma applyOrderHom_apply (x : Cont R A) : applyOrderHom x = x.apply := rfl
+
 instance : OmegaCompletePartialOrder (Cont R A) := by
-  refine OmegaCompletePartialOrder.lift ⟨apply, ?_⟩ (fun c ↦ ⟨ωSup (c.map ⟨apply, ?_⟩)⟩) ?_ ?_
-  · rintro ⟨x⟩ ⟨y⟩
-    simp only [LE.le, imp_self]
-  · rintro ⟨x⟩ ⟨y⟩
-    simp only [LE.le, imp_self]
+  refine OmegaCompletePartialOrder.lift applyOrderHom
+    (fun c ↦ ⟨ωSup (c.map applyOrderHom)⟩) ?_ ?_
   · intro ⟨x⟩ ⟨y⟩
-    simp only [LE.le, OrderHom.coe_mk, imp_self]
-  · simp only [OrderHom.coe_mk, implies_true]
+    exact id
+  · intro c
+    rfl
 
 instance : QuasiBorelSpace (Cont R A) :=
   QuasiBorelSpace.lift apply
@@ -102,8 +108,7 @@ instance : OmegaQuasiBorelSpace (Cont R A) where
     apply isHom_comp' isHom_mk
     apply isHom_ωSup'
     simp only [
-      Chain.isHom_iff, Chain.coe_map, OrderHom.coe_mk,
-      Function.comp_apply, OmegaQuasiBorelHom.isHom_iff]
+      Chain.isHom_iff, Chain.coe_map, Function.comp_apply, OmegaQuasiBorelHom.isHom_iff]
     intro i
     apply isHom_comp'
         (f := fun x : Cont R A × _ ↦ x.1.apply x.2)

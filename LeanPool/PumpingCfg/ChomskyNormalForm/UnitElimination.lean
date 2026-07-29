@@ -260,7 +260,7 @@ lemma generatorsProd_limits_unitPairs {l : Finset (g.NT × g.NT)}
     (hne : l ≠ addUnitPairs l) :
     (g.generators ×ˢ g.generators).card - (addUnitPairs l).card
       < (g.generators ×ˢ g.generators).card - l.card := by
-   have hl := HasSubset.Subset.ssubset_of_ne (subset_addUnitPairs l) hne
+   have hl := LE.le.ssubset_of_ne (subset_addUnitPairs l) hne
    exact Nat.sub_lt_sub_left (Nat.lt_of_lt_of_le (Finset.card_lt_card hl)
      (Finset.card_le_card (addUnitPairs_subset_generatorsProd l hlg))) (Finset.card_lt_card hl)
 
