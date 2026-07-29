@@ -34,7 +34,7 @@ instance UprodStruc : Structure L (Uprod A 𝓤) where
   func := fun _ f v => ⟨fun i ↦ (s i).func f (fun x ↦ (v x).val i)⟩
   rel  := fun _ r v => {i | (s i).rel r (fun x ↦ (v x).val i)} ∈ 𝓤
 
-instance [Nonempty I] [(i : I) → Nonempty (A i)] :
+instance [(i : I) → Nonempty (A i)] :
     Nonempty (Uprod A 𝓤) := Nonempty.map (⟨·⟩) inferInstance
 
 @[simp] lemma func_Uprod {k} (f : L.Func k) (v : Fin k → Uprod A 𝓤) :
@@ -123,7 +123,7 @@ lemma val_Uprod [(i : I) → Nonempty (A i)] {φ : Formula L μ} :
 
 end Semiformula
 
-lemma models_Uprod [Nonempty I] [(i : I) → Nonempty (A i)] {φ : SyntacticFormula L} :
+lemma models_Uprod [(i : I) → Nonempty (A i)] {φ : SyntacticFormula L} :
     (Uprod A 𝓤) ⊧ₘ φ ↔ {i | (A i) ⊧ₘ φ} ∈ 𝓤 := by
       simp [models_iff₀, Semiformula.val_Uprod, Empty.eq_elim]
 

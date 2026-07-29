@@ -10,6 +10,8 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Soundness
 
 /-! # Eq -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace Matrix
 

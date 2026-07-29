@@ -11,6 +11,8 @@ import Mathlib.Computability.Primrec.List
 
 /-! # Representation -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace Part
 

@@ -16,7 +16,7 @@ namespace FirstOrder
 
 namespace Completeness
 
-open Semiformula Encodable Entailment
+open Semiformula Encodable _root_.LO.FirstOrder.Entailment
 variable {L : Language.{u}}
 variable {T : Theory L} {Γ : Sequent L}
 
@@ -230,7 +230,7 @@ lemma chain_monotone (nwf : ¬WellFounded (SearchTree.Lt T Γ)) {s u : ℕ} (h :
   induction d with
   | zero => simp
   | succ d ih =>
-    simpa only [Nat.add_succ] using subset_trans ih <|
+    simpa only [Nat.add_succ] using Collection.subset_trans ih <|
       ReduxNat.antimonotone (chain_spec nwf (s + d))
 
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in

@@ -10,6 +10,8 @@ import LeanPool.Incompleteness.Foundation.Modal.Kripke.FiniteFrame
 
 /-! # Tree -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace LO
 namespace Modal

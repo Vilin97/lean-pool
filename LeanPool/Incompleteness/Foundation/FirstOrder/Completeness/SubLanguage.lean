@@ -8,6 +8,8 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
 
 /-! # SubLanguage -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace LO
 

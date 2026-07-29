@@ -16,6 +16,8 @@ import Mathlib.Logic.Godel.GodelBetaFunction
 
 open Mathlib List.Vector Part
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Nat
 
 lemma pos_of_eq_one (h : n = 1) : 0 < n := by simp[h]
@@ -190,7 +192,6 @@ lemma bind (f : List.Vector ℕ n → ℕ →. ℕ) (hf :
     intro v; simp only [succ_eq_add_one, coe_some, bind_eq_bind]
     rcases Part.eq_none_or_eq_some (g v) with (hgv | ⟨x, hgv⟩)
     · simp[hgv, List.Vector.mOfFn]
-      exact (Part.bind_none (f v)).symm
     · simp[hgv]
       have : List.Vector.mOfFn (fun i =>
         (g :> fun j v => Part.some <|
@@ -199,8 +200,7 @@ lemma bind (f : List.Vector ℕ n → ℕ →. ℕ) (hf :
         funext i; cases i using Fin.cases
         · simp[hgv]
         · rfl
-      simp[this]
-      exact (Part.bind_some x (f v)).symm)
+      simp[this])
 
 lemma map (f : List.Vector ℕ n → ℕ → ℕ) (hf : @Arith₁ (n + 1) fun v => f v.tail v.head) {g} (hg :
     @ArithPart₁ n g) :

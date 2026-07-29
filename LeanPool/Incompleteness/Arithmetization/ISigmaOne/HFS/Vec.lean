@@ -182,7 +182,7 @@ instance : construction.Finite V where
     · exact ⟨⟪sndIdx v, i, x⟫ + 1, Or.inr ⟨v, i, x, rfl, h, by simp⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph : V → Prop := construction.Fixpoint ![]
+def Graph : V → Prop := construction.fixedPoint ![]
 
 section «lp_section_3»
 
@@ -460,7 +460,7 @@ instance : c.construction.Finite V where
 variable (param : Fin arity → V)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph : V → Prop := c.construction.Fixpoint param
+def Graph : V → Prop := c.construction.fixedPoint param
 
 section «lp_section_6»
 

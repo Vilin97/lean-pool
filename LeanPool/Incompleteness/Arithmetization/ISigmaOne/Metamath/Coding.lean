@@ -10,6 +10,8 @@ import Mathlib.Combinatorics.Colex
 
 /-! # Coding -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace LO
 namespace FirstOrder
@@ -264,8 +266,7 @@ lemma quote_func {k} (f : L.Func k) (v : Fin k → SyntacticSemiterm L n) :
 
 @[simp] lemma quote_absolute (t : SyntacticSemiterm L n) : ((⌜t⌝ : ℕ) : V) = ⌜t⌝ := by
   induction t <;> simp [quote_bvar, quote_fvar, quote_func, qqBvar, qqFvar, qqFunc,
-    nat_cast_pair, *];
-    rfl
+    nat_cast_pair, *]
 
 lemma quote_eq_encode (t : SyntacticSemiterm L n) : ⌜t⌝ = Encodable.encode t := by
   induction t
@@ -767,7 +768,7 @@ lemma quote_sentence_def' (σ : Sentence L) : (⌜σ⌝ : (L.codeIn V).Formula) 
 
 @[simp] lemma codeIn''_imp (σ π : Sentence L) : (⌜σ ==> π⌝ :
     (L.codeIn V).Formula) = ⌜σ⌝ ==> ⌜π⌝ := by
-  simp [quote_sentence_def']; rfl
+  simp [quote_sentence_def']
 
 end Semiformula
 

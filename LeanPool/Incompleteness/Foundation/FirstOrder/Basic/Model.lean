@@ -9,6 +9,8 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic.Semantics.Elementary
 
 /-! # Model -/
 
+set_option backward.isDefEq.respectTransparency false
+
 
 namespace LO
 

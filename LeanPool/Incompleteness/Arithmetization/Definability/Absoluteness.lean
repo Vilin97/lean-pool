@@ -117,7 +117,7 @@ theorem sigma_one_completeness_iff_param {σ : Semisentence ℒₒᵣ n} (hσ : 
   (by simp [models_iff, Semiformula.eval_substs])
   (sigma_one_completeness_iff (T := T) (by simp [hσ]))
 
-lemma models_iff_provable_of_Sigma0_param [V ⊧ₘ* T] {σ : Semisentence ℒₒᵣ n} (hσ :
+lemma models_iff_provable_of_Sigma0_param {σ : Semisentence ℒₒᵣ n} (hσ :
     Hierarchy Sg 0 σ) {e :
     Fin n → ℕ} :
     V ⊧/(e ·) σ ↔ T ⊢!. (σ <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by
@@ -127,7 +127,7 @@ lemma models_iff_provable_of_Sigma0_param [V ⊧ₘ* T] {σ : Semisentence ℒ�
       apply sigma_one_completeness_iff_param (by simp [Hierarchy.of_zero hσ])
 
 lemma models_iff_provable_of_Delta1_param
-    [V ⊧ₘ* T] {σ : Dlt1.Semisentence n} (hσ : σ.ProperOn ℕ) (hσV :
+    {σ : Dlt1.Semisentence n} (hσ : σ.ProperOn ℕ) (hσV :
     σ.ProperOn V) {e :
     Fin n → ℕ} :
     V ⊧/(e ·) σ.val ↔ T ⊢!. (σ <~ fun x ↦ Semiterm.Operator.numeral ℒₒᵣ (e x)) := by

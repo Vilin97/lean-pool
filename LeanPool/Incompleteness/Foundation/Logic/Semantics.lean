@@ -208,7 +208,7 @@ lemma set_models_iff {s : Set M} : s ⊧ f ↔ ∀ 𝓜 ∈ s, 𝓜 ⊧ f := iff
 instance [LogicalConnective F] [Semantics.Top M] : Semantics.Top (Set M) :=
   ⟨fun s ↦ by simp [set_models_iff]⟩
 
-lemma set_meaningful_iff_nonempty [LogicalConnective F] [∀ 𝓜 : M, Meaningful 𝓜] {s : Set M} :
+lemma set_meaningful_iff_nonempty [∀ 𝓜 : M, Meaningful 𝓜] {s : Set M} :
     Meaningful s ↔ s.Nonempty :=
   ⟨by rintro ⟨f, hf⟩; by_contra A; rcases Set.not_nonempty_iff_eq_empty.mp A; simp at hf,
    by rintro ⟨𝓜, h𝓜⟩
@@ -216,7 +216,7 @@ lemma set_meaningful_iff_nonempty [LogicalConnective F] [∀ 𝓜 : M, Meaningfu
       rcases hMeaningful.exists_unrealize with ⟨f, hf⟩
       exact ⟨f, fun hs => hf (set_models_iff.mp hs 𝓜 h𝓜)⟩⟩
 
-lemma meaningful_iff_satisfiableSet [LogicalConnective F] [∀ 𝓜 : M, Meaningful 𝓜] :
+lemma meaningful_iff_satisfiableSet [∀ 𝓜 : M, Meaningful 𝓜] :
     Satisfiable M T ↔ Meaningful (models M T) := by
   simp [set_meaningful_iff_nonempty, satisfiableSet_iff_models_nonempty]
 

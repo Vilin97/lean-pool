@@ -27,6 +27,8 @@ Rewritings `LO.FirstOrder.Rew` is naturally converted to formula Rewritings by
 
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace Finset
 
 lemma biUnion_eq_empty [DecidableEq β] {s : Finset α} {f : α → Finset β} :

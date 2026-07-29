@@ -12,6 +12,8 @@ import LeanPool.Incompleteness.Arith.D1
 
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 noncomputable section «lp_nc_section_1»
 
 namespace LO
