@@ -17,8 +17,6 @@ open Set Function Metric UniformConvergence Complex
 
 variable {ι : Type*} {U K : Set ℂ} {z : ℂ} {F : ι → 𝓒 U} {Q : Set ℂ → Set ℂ}
 
-set_option backward.isDefEq.respectTransparency false
-
 /-- A family `F` is uniformly bounded on `U` iff for every compact
 `K ⊆ U` there is a single compact `Q ⊆ ℂ` containing every `F i K`. -/
 def UniformlyBoundedOn (F : ι → ℂ → ℂ) (U : Set ℂ) : Prop :=
@@ -54,7 +52,7 @@ lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : Is
   rw [equicontinuousAt_iff]
   rintro ε hε
   refine ⟨δ ⊓ ε / M, gt_iff_lt.2 (lt_inf_iff.2 ⟨hδ, div_pos hε hMp⟩), fun w hw i => ?_⟩
-  simp only [comp_apply, restrict_apply]
+  change dist (F i z) (F i w.1) < ε
   have e1 : ∀ x ∈ closedBall z δ, DifferentiableAt ℂ (F i) x :=
     fun x hx => (h2 i).differentiableAt (hU.mem_nhds (h hx))
   have e2 : ∀ x ∈ closedBall z δ, ‖_root_.deriv (F i) x‖ ≤ M := by simpa [MapsTo] using hM i
@@ -83,7 +81,13 @@ theorem isCompact_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q 
   rw [isCompact_iff_compactSpace]
   refine ArzelaAscoli.compactSpace_of_isClosedEmbedding (fun K hK => hK.2) ?_ l1 l2
   refine ⟨⟨by tauto, fun f g => Subtype.ext⟩, ?_⟩
-  simpa [range, UniformOnFun.ofFun] using isClosed_𝓑 hU hQ
+  convert isClosed_𝓑 hU hQ using 1
+  ext f
+  constructor
+  · rintro ⟨g, rfl⟩
+    exact g.property
+  · intro hf
+    exact ⟨⟨f, hf⟩, rfl⟩
 
 theorem montel (hU : IsOpen U) (h1 : UniformlyBoundedOn F U)
     (h2 : ∀ i, DifferentiableOn ℂ (F i) U) :
