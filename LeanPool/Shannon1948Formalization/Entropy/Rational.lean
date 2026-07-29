@@ -16,6 +16,9 @@ This module derives the entropy formula for distributions of the form
 It also includes a worked decomposition corresponding to Shannon's
 `(1/2, 1/3, 1/6)` narrative.
 -/
+
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section
