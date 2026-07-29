@@ -43,12 +43,13 @@ lemma defensive_equals_pre {G : Game A} {p : Player} (hP : IsPruned G.tree)
       PreStrategy (((G.residual x).residual [a.val]).residual [b]).tree Player.zero :=
       cast (by simp [ExtensionsAt.val']) (hc ⟨b, by simpa [ExtensionsAt.val']⟩).choose.pre
     let S := (sew f).firstMove _ (by exact a.prop)
-    use S.extQuasi (hP.sub _); rw [firstMove_extQuasi_isWinning]
+    use S.extQuasi (hP.sub _)
+    refine (firstMove_extQuasi_isWinning _ _ _ (hP.sub _) ?_).mpr ?_
+    · apply sew_isQuasi; intros
+      exact (PreStrategy.cast_quasi (by simp [ExtensionsAt.val']) rfl _).mpr (Strategy.isQuasi _)
     · apply sew_isWinning; intro b h
       rw [cast_winning (G := G.residual _) (by simp [ExtensionsAt.val'])]
       exact (hc ⟨b, by simpa [ExtensionsAt.val']⟩).choose_spec
-    · apply sew_isQuasi; intros
-      exact (PreStrategy.cast_quasi (by simp [ExtensionsAt.val']) rfl _).mpr (Strategy.isQuasi _)
   · rintro rfl; by_contra hc; conv at hc => simp
     apply h; rw [existsWinning_iff_quasi]
     let f (a : A) (h : [a] ∈ G.tree) := (existsWinning_iff_quasi.mp (hc a h)).choose
@@ -73,8 +74,16 @@ lemma defensive_winning_isClosed (hC : IsClosed G.payoff) (hP : IsPruned G.tree)
   rw [← Set.subset_empty_iff]; intro a' ⟨h1, h2⟩; apply hfa a'
   · conv at h1 => simp [ExtensionsAt.val']
     apply principalOpen_mono _ h1
-    rw [(principalOpen_iff_restrict _ _).mp h]; simp; omega
-  · rw [Player.residual_odd _ _ (by simp)] at h2; simpa using h2
+    nth_rw 1 [(principalOpen_iff_restrict _ _).mp h]
+    change Stream'.take x.length a <+:
+      Stream'.take (2 * (x.length / 2)) a ++ [a.get (2 * (x.length / 2))]
+    rw [Stream'.concat_take_get]
+    exact Stream'.take_prefix_take_left _ _ _ (by omega)
+  · rw [Player.residual_odd _ _ (by
+      change (Stream'.take (2 * (x.length / 2)) a ++ [a.get (2 * (x.length / 2))]).length % 2 = 1
+      simp only [List.length_append, Stream'.length_take, List.length_cons, List.length_nil]
+      omega)] at h2
+    exact h2
 
 lemma defensive_winning_isOpen (hC : IsOpen G.payoff) (hP : IsPruned G.tree) :
   (defensivePre G Player.one).IsWinning := by

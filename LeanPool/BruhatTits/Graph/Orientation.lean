@@ -85,8 +85,8 @@ lemma isEven_iff' (L : Lattice R) :
   rintro ⟨b, rfl, hb⟩
   use b.restrictToLattice
   have : (b.restrictToLattice (R := R)).toGL = b.toGeneralLinearGroup := by
-    ext
-    simp [Basis.restrictToLattice]
+    ext i j
+    rw [Basis.toGL_apply, Basis.toGeneralLinearGroup_apply, Basis.restrictToLattice_apply]
   rwa [this]
 
 open Matrix

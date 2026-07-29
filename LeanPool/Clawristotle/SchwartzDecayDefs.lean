@@ -99,7 +99,7 @@ lemma _root_.VML.UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3
   have hv_pos : (0 : ℝ) < (1 + ‖v‖) ^ 4 := by positivity
   have hMnn : (0 : ℝ) ≤ (1 + ‖v‖) ^ M := by positivity
   -- `Continuous.mul` produces a `Pi` product; unfold it pointwise before the abs rewrites.
-  simp only [Pi.mul_apply, Pi.add_apply, Real.norm_eq_abs, abs_mul,
+  simp only [Pi.mul_apply, Pi.pow_apply, Pi.add_apply, Real.norm_eq_abs, abs_mul,
     abs_of_nonneg hMnn]
   rw [le_div_iff₀ hv_pos]
   calc (1 + ‖v‖) ^ M * |f x v| * (1 + ‖v‖) ^ 4

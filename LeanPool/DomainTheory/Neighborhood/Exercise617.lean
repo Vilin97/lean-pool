@@ -133,6 +133,7 @@ genuine three-way
 separated sum `𝟙 + D + D` (Example 6.2's `sum3`, with `𝟙 = unitSys`), again
 `∅`-free by
 `sum3_nonempty`. -/
+@[implicit_reducible]
 def tcObj (D : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := Option (Unit ⊕ D.carrier ⊕ D.carrier)
   sys := sum3 unitSys D.sys D.sys Example62C.unitSys_nonempty D.nonempty D.nonempty
@@ -676,6 +677,7 @@ domains and
 strict
 maps. On objects, `T(D) = 𝟙 + D + D` (Example 6.2's three-way sum); on maps, `T(f)
 = I_𝟙 + f + f`. -/
+@[implicit_reducible]
 def Tc : Endofunctor StrictDomainObj.{w} where
   obj := tcObj
   map := tcMapHom
@@ -1056,7 +1058,7 @@ def descAlgHom : AlgHom Calg B where
   hom := descStrict B
   comm := by
     apply Subtype.ext
-    simp only [StrictDomainObj.comp_val, Tc_map_val]
+    simp only [StrictDomainObj.comp_val]
     exact descComm B
 
 /-- **Uniqueness.** Any `T`-algebra homomorphism out of `(C, i)` equals

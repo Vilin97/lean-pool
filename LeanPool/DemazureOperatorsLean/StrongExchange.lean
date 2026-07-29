@@ -26,7 +26,7 @@ local prefix:100 "len" => cs.length
 instance instDecidableEqLeanPool : DecidableEq W := Classical.typeDecidableEq W
 
 /-- The subtype of reflections in a Coxeter system. -/
-def Reflection : Type := {t : W // IsReflection cs t}
+abbrev Reflection : Type := {t : W // IsReflection cs t}
 
 /-- The number of times a reflection appears in the left inversion sequence of a word. -/
 def reflectionMemLeftInvSeqCount (l : List B) (t : cs.Reflection) : ℕ :=

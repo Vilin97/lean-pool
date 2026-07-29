@@ -1784,7 +1784,8 @@ private lemma no_penultimate_prover_turn {Δ : SplitSequent}
   · have u₁_last_mem := move_iff_in_moves.1 u₁_last'.1
     rw [u₁_def] at u₁_last_mem
     change π.getLast ne ∈
-      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs), by intro r1 r2; simp⟩
+      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs),
+        by unfold Function.Injective; intro r1 r2; simp⟩
         (SplitSequent.ruleApps Γ) at u₁_last_mem
     rcases (Finset.mem_map).mp u₁_last_mem with ⟨R, _R_Γ, last_eq⟩
     have P_turn_last' : coalgebraGame.turn (π.getLast ne) = Prover := by

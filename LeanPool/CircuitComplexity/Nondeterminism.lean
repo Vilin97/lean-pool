@@ -197,7 +197,7 @@ theorem existQuantify_complexity_le [CompleteBasis Basis.andOr2]
     unconditionally.  Even if `f` has exponential circuit complexity,
     `existQuantify f` has complexity at most `O(2^m / m)`, which decreases
     exponentially as more variables are quantified away. -/
-theorem existQuantify_complexity_shannon [CompleteBasis Basis.andOr2]
+theorem existQuantify_complexity_shannon
     (f : BitString (k + m) → Bool) [NeZero m] (hm : 16 ≤ m) :
     Circuit.sizeComplexity Basis.andOr2 (existQuantify f) ≤ 18 * 2 ^ m / m :=
   shannon_upper_bound m hm (existQuantify f)

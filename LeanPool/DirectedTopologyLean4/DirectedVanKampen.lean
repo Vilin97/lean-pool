@@ -38,6 +38,10 @@ universe u v
 open Set
 open scoped unitInterval FundamentalCategory
 attribute [local instance] Dipath.Dihomotopic.setoid
+-- Lean 4.33 checks that tactic goals stay type-correct at `.implicit` transparency; the goals
+-- below mix `dπₓ X` with `FundamentalCategory X`, so the bundling layers must unfold there.
+attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of
+  Quiver.Hom Quotient Dipath.Dihomotopic.Quotient dTopCat.of Dipath.coveredPartwise
 noncomputable section
 namespace DirectedVanKampen
 open FundamentalCategory DiSubtype CategoryTheory
@@ -69,20 +73,8 @@ lemma subset_functor_trans {x y z : Y} {γ₁ : Dipath x y} {γ₂ : Dipath y z}
     (F.map ⟦SubtypeDipath γ₁ (subsets_of_trans_subset hγ).1⟧ ≫
       F.map ⟦SubtypeDipath γ₂ (subsets_of_trans_subset hγ).2⟧) =
       F.map ⟦SubtypeDipath (γ₁.trans γ₂) hγ⟧ := by
-  rw [←F.map_comp]
-  change F.map (Dipath.Dihomotopic.Quotient.comp
-    ⟦SubtypeDipath γ₁ (subsets_of_trans_subset hγ).1⟧
-    ⟦SubtypeDipath γ₂ (subsets_of_trans_subset hγ).2⟧) =
-      F.map ⟦SubtypeDipath (γ₁.trans γ₂) hγ⟧
-  rw [←Dipath.Dihomotopic.comp_lift]
-  congr 1
-  apply Quotient.sound
-  exact Eq.ndrec
-    (motive := fun p =>
-      ((SubtypeDipath γ₁ (subsets_of_trans_subset hγ).1).trans
-        (SubtypeDipath γ₂ (subsets_of_trans_subset hγ).2)).Dihomotopic p)
-    (Relation.EqvGen.refl _)
-    (subtype_trans hγ)
+  refine (F.map_comp _ _).symm.trans (congrArg (fun p => F.map p) ?_)
+  exact congrArg _ (subtype_trans hγ)
 lemma subset_functor_reparam {x y : Y} {γ : Dipath x y} (hγ : range γ ⊆ Y₀)
     {f : D(I,I)} (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
     F.map ⟦SubtypeDipath (γ.reparam f hf₀ hf₁)
@@ -131,7 +123,8 @@ variable {F₁ F₂}
 include h_comm
 lemma functorOnObj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
   have := h_comm
-  rw [FunctorOnObj, Or.by_cases, dif_pos hx]
+  refine Eq.symm ?_
+  exact dif_pos hx
 lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
     F₂.obj ⟨x, hx₂⟩ = F_obj ⟨x⟩ := by
   by_cases hx₁ : x ∈ X₁
@@ -148,9 +141,11 @@ lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
         _ = F₂.obj ((dπₘ i₂).obj ⟨x, hx₀⟩) := this
         _ = F₂.obj (⟨x, hx₂⟩) := rfl
     rw [this.symm]
-    rw [FunctorOnObj, Or.by_cases, dif_pos hx₁]
+    refine Eq.symm ?_
+    exact dif_pos hx₁
   case neg =>
-    rw [FunctorOnObj, Or.by_cases, dif_neg hx₁]
+    refine Eq.symm ?_
+    exact dif_neg hx₁
 /- ### Functor on Maps -/
 /-
   Define the mapping behaviour on paths that are fully covered by one set
@@ -209,13 +204,15 @@ lemma functorOnHomOfCoveredAux₁_refl {x : X} (hx : x ∈ X₁) :
   unfold FunctorOnHomOfCoveredAux₁
   rw [subtype_refl]
   change eqToHom _ ≫ F₁.map (𝟙 ⟨x, hx⟩) ≫ eqToHom _ = 𝟙 (F_obj ⟨x⟩)
-  simp_all
+  rw [F₁.map_id]
+  simp
 lemma functorOnHomOfCoveredAux₂_refl {x : X} (hx : x ∈ X₂) :
   FunctorOnHomOfCoveredAux₂ hX h_comm (range_refl_subset_of_mem hx) = 𝟙 (F_obj ⟨x⟩) := by
   unfold FunctorOnHomOfCoveredAux₂
   rw [subtype_refl]
   change eqToHom _ ≫ F₂.map (𝟙 ⟨x, hx⟩) ≫ eqToHom _ = 𝟙 (F_obj ⟨x⟩)
-  simp_all
+  rw [F₂.map_id]
+  simp
 /-
   Show that for any path living in `X₁ ∩ X₂`, either map gives the same result.
 -/

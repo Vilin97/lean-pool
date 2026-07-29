@@ -118,10 +118,10 @@ def C : NeighborhoodSystem Str :=
 /-! ### Elements of `C`: `σ` (total) and `σ⊥` (partial). -/
 
 /-- Scott's partial element `σ⊥ = ↑σΣ*` ("the sequence starts with `σ`"). -/
-def strBot (σ : Str) : C.Element := C.principal (memC_cone σ)
+def strBot (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_cone σ))
 
 /-- Scott's total element `σ = ↑{σ}` (the finite sequence `σ`, completed). -/
-def strElem (σ : Str) : C.Element := C.principal (memC_singleton σ)
+def strElem (σ : Str) : C.Element := C.principal (C_mem.mpr (memC_singleton σ))
 
 /-! ### The successor maps `x ↦ bx`. -/
 

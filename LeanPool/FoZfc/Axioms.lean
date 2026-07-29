@@ -551,7 +551,13 @@ def ExtIsSubset [ModelSets V] (a b : V) := ∀ (x : V), (x ∈ a → x ∈ b)
 /-- a is not a subset of b. -/
 def ExtNotIsSubset [ModelSets V] (a b : V) := ¬ ∀ (x : V), (x ∈ a → x ∈ b)
 
-@[inherit_doc ExtIsSubset] infixl : 50 " ⊆ " => ExtIsSubset
+/-- The `⊆` notation on a model of set theory is `ExtIsSubset`. This is an instance rather
+than a bare notation because a bare `⊆` notation is shadowed by the core one. -/
+instance instHasSubsetOfModelSets [ModelSets V] : HasSubset V := ⟨ExtIsSubset⟩
+
+@[simp]
+theorem subset_iff_extIsSubset [ModelSets V] (a b : V) : a ⊆ b ↔ ExtIsSubset a b := Iff.rfl
+
 @[inherit_doc ExtNotIsSubset] infixl : 50 " ⊈ " => ExtNotIsSubset
 
 /-- Make a formula that fv 0 is a subset of fv 1. -/

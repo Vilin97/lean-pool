@@ -91,9 +91,8 @@ lemma sum_intExpNegPoly_bound
   let B : ℝ := Finset.sup' Finset.univ huniv_nonempty (fun i : Fin n => ‖a i‖ * M i)
   have hB : ∀ i : Fin n, ‖a i‖ * M i ≤ B := by
     intro i
-    simpa [B] using
-      (Finset.le_sup' (s := Finset.univ)
-        (f := fun j : Fin n => ‖a j‖ * M j) (by simp : i ∈ Finset.univ))
+    exact Finset.le_sup' (s := Finset.univ)
+      (f := fun j : Fin n => ‖a j‖ * M j) (Finset.mem_univ i)
   have hA0 : 0 ≤ A := by positivity
   have hB0 : 0 ≤ B := by
     let i0 : Fin n := ⟨0, hn⟩

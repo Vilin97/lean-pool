@@ -156,9 +156,16 @@ lemma approx_count (N : ℕ) (i : U) :
         Finset.image (fun k : Fin (C.floorCount N j) => Sum.inl ⟨j, k⟩)
           (Finset.univ : Finset (Fin (C.floorCount N j))) from ?_,
     Finset.sum_biUnion];
-  · simp +decide [ Finset.card_image_of_injective, Function.Injective ];
+  · simp only [Finset.sum_const_zero, add_zero, Finset.sum_const, smul_eq_mul, mul_one]
+    apply Finset.sum_congr rfl
+    intro j _
+    rw [Finset.card_image_of_injective _ (fun k₁ k₂ h => by simpa using h), Finset.card_univ,
+      Fintype.card_fin]
   · exact fun x hx y hy hxy => Finset.disjoint_left.mpr fun z => by aesop;
-  · ext x; cases x <;> simp +decide [ WeightedCollection.approxFam ];
+  · ext x
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_biUnion,
+      Finset.mem_image]
+    cases x <;> simp +decide [WeightedCollection.approxFam]
     grind
 
 omit [Fintype U] in

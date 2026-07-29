@@ -1418,7 +1418,7 @@ lemma reachableComponentGraph_degree_eq
     _ = (G.neighborFinset x.1).card := by rw [hImage]
     _ = G.degree x.1 := rfl
 
-theorem scarfAlgorithmTrace_exists [Inhabited I] (c : T → I) (i : I) :
+theorem scarfAlgorithmTrace_exists (c : T → I) (i : I) :
     Nonempty (ScarfAlgorithmTrace (IST := IST) c i) := by
   classical
   let outside : GiCell T I :=

@@ -43,8 +43,12 @@ lemma mem_defensiveQuasi (x : G.tree) (h : ¬ WinningPrefix G p.swap x.val) hpr 
   apply subtree_induction (S := ⊤) (by simp)
   intro n hn hx hp _
   conv => simp [defensiveQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
-  intro _ hW; apply h; use n + 1
-  rwa [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition]
+  split_ifs with hne
+  · refine Set.mem_of_subset_of_mem (if_pos hne).ge ?_
+    intro hW; apply h; use n + 1
+    rwa [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition,
+      ← List.take_concat_get' _ _ hn]
+  · exact Set.mem_of_subset_of_mem (if_neg hne).ge (Set.mem_univ _)
 lemma winningPrefix_of_residual {x y : List A}
   (hW : WinningPrefix (G.residual x) p y) :
   WinningPrefix G (p.residual x) (x ++ y) := by
@@ -82,10 +86,12 @@ lemma of_prefix' {G' p' y} (xy : x <+: y) (hG : G = G') (hp : p = p')
 
 lemma extend_num y : (h.extend y).num = h.num := by
   classical
-  apply le_antisymm <| Nat.find_le <| by simpa [take_num] using h.num_spec
-  by_contra h'; rw [Nat.le_find_iff] at h'; push Not at h'; obtain ⟨m, hmn, hm⟩ := h'
-  rw [List.take_append_of_le_length (hmn.le.trans h.num_le_length)] at hm
-  rw [num, Nat.lt_find_iff] at hmn; exact hmn m le_rfl hm
+  apply Nat.le_antisymm <| Nat.find_le <| by simpa [take_num] using h.num_spec
+  by_contra h'
+  have hlt : (h.extend y).num < h.num := Nat.lt_of_not_le h'
+  have hm := (h.extend y).num_spec
+  rw [List.take_append_of_le_length (hlt.le.trans h.num_le_length)] at hm
+  exact Nat.find_min h hlt hm
 lemma prefix_num {G' p' y} (xy : x <+: y) (hG : G = G') (hp : p = p') :
   (h.of_prefix' xy hG hp).num = h.num := by
   subst hG hp; obtain ⟨z, rfl⟩ := xy; exact h.extend_num z
@@ -241,7 +247,7 @@ lemma mem_winAsap_subtree_of_no_prefix
   · cases h (by
       simp at hn
       simpa [List.take_append_of_le_length, hn] using hW.extend (x.drop n))
-  · trivial
+  · exact id
 lemma winAsap_subtree {x} (h : WinningPrefix G p x) :
   Tree.subAt (winAsap G p).subtree (x.take h.num) = h.strat.pre.subtree := by --TODO nice proof
   ext y
@@ -269,7 +275,8 @@ lemma winAsap_subtree {x} (h : WinningPrefix G p x) :
         (by as_aux_lemma => synthIsPosition)] at h'
       conv at h' => simp [winAsap, h.shrink.extend y]
       conv => simp [winAsap, h.shrink.extend y]
-      obtain ⟨_, h'⟩ := h'; apply_fun Subtype.val at h'
+      obtain ⟨_, h'⟩ := h'
+      replace h' := congrArg Subtype.val (Set.eq_of_mem_singleton h')
       apply ExtensionsAt.ext (x := (PreStrategy.subtreeIncl _ ⟨_, _⟩)) --why necessary?
       rw [h']
       conv => simp
@@ -301,10 +308,11 @@ lemma winAsap_body (x : body (winAsap G p).subtree)
   suffices x.val.drop h.num ∈ body h.strat.pre.subtree by
     have hW := h.strat_winning this
     conv at hW => simp [hN]
-    obtain ⟨_, hpay⟩ := hW
-    change (body.append (Stream'.take h.num x.val) ⟨Stream'.drop h.num x.val, _⟩ : body G.tree) ∈
-      p.payoff G at hpay
-    simpa [body.append, Stream'.append_take_drop] using hpay
+    obtain ⟨w, hpay, hw⟩ := hW
+    refine Set.mem_of_eq_of_mem (y := body.append (Stream'.take h.num x.val) w) ?_ hpay
+    apply Subtype.ext
+    change x.val = Stream'.take h.num x.val ++ₛ w.val
+    rw [hw, Stream'.append_take_drop]
   apply mem_body_of_take 0; intro n _
   rw [← winAsap_subtree]; simp [hN]
 lemma winAsap_body' (x : body (winAsap G p).followUntilWon.subtree)

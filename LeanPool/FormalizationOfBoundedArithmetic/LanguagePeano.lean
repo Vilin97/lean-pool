@@ -41,7 +41,7 @@ inductive PeanoRel : Nat -> Type*
   deriving DecidableEq
 
 /-- The first-order language of Peano arithmetic used by the formalization. -/
-def peano : Language :=
+@[reducible] def peano : Language :=
 { Functions := PeanoFunc,
   Relations := PeanoRel
 }

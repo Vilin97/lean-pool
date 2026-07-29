@@ -152,6 +152,7 @@ structure Dom where
 and its system
 is the
 function space `funSpace A.sys B.sys`. -/
+@[implicit_reducible]
 def Dom.arrow (A B : Dom) : Dom := ⟨ApproximableMap A.sys B.sys, funSpace A.sys B.sys⟩
 
 /-! ### The three combinators as elements of the appropriate function domains. -/

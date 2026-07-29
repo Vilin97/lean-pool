@@ -73,28 +73,32 @@ def constTree (k : ℕ) : Type* ⥤ Trees where
   = ConcreteCategory.hom f (List.head x.val h) := by
   change (List.map (ConcreteCategory.hom f) x.val).head _ =
     ConcreteCategory.hom f (List.head x.val h)
-  simp
+  exact List.head_map _
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def resEqUnit k : 𝟭 _ ⟶ constTree k ⋙ resEq k where
   app _ := TypeCat.ofHom fun a ↦ ⟨List.replicate k a, by
     constructor
     · exact mem_constTree a le_rfl
-    · simp⟩
+    · exact List.length_replicate⟩
   naturality _ _ f := by
     apply ConcreteCategory.hom_ext
     intro x
     exact resEq_ext _ _ List.map_replicate.symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def resEqCounitComp k T : (constTree k).obj ((resEq k).obj T) ⟶ T where
-  toFun := fun x ↦ take x.val.length ⟨(headD x).val, by simp⟩
+  toFun := fun x ↦ take x.val.length ⟨(headD x).val, (headD x).prop.1⟩
   monotone' := by
     intro x y h; by_cases hx : x.val = []
     · simp_all
-    · have h' : headD x = headD y := by simpa only [← headD_nonempty] using h.head hx
+    · have h' : headD x = headD y := by
+        rw [headD_nonempty x hx, headD_nonempty y (h.ne_nil hx)]
+        exact Subtype.ext (congrArg Subtype.val (h.head hx))
       change List.take x.val.length (headD x).val <+: List.take y.val.length (headD y).val
       rw [h']
       exact List.take_isPrefix_take.mpr (Or.inl (List.IsPrefix.length_le h))
-  h_length _ := by simp only [take_coe, List.length_take, resEq_len, constTree_length, min_eq_left]
+  h_length x := by
+    simp only [take_coe, List.length_take]
+    exact min_eq_left ((constTree_length x).trans (resEq_len k (headD x)).symm.le)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def resEqCounit k : resEq k ⋙ constTree k ⟶ 𝟭 _ where
   app := resEqCounitComp k
@@ -112,11 +116,16 @@ def resEqCounit k : resEq k ⋙ constTree k ⟶ 𝟭 _ where
     by_cases hxl : x.val = []
     · rw [hxl]
       rfl
-    · rw [headD_nonempty]
-      · simp_rw [headD_nonempty _ hxl]
-        rw [head_constTree_map]
-        rfl
-      · exact LenHom.map_ne_nil _ hxl
+    · have hhead : headD (((constTree k).map ((resEq k).map f)) x)
+          = ((resEq k).map f) (headD x) :=
+        (headD_nonempty _ (LenHom.map_ne_nil _ hxl)).trans
+          ((head_constTree_map k ((resEq k).map f) hxl).trans
+            (congrArg _ (headD_nonempty x hxl).symm))
+      have key : (⟨(headD (((constTree k).map ((resEq k).map f)) x)).val,
+          (headD (((constTree k).map ((resEq k).map f)) x)).prop.1⟩ : Y)
+          = f ⟨(headD x).val, (headD x).prop.1⟩ :=
+        tree_ext ((congrArg Subtype.val hhead).trans (resEq_val f k (headD x)))
+      exact congrArg (fun z ↦ (take x.val.length z).val) key
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def resEqAdj (k : ℕ) : constTree k ⊣ resEq k := Adjunction.mkOfUnitCounit {
   unit := resEqUnit k
@@ -271,8 +280,7 @@ def isLimit : Limits.IsLimit (limCone F) where
       rw [show List.mapEval j ((isLimitLift F s).toFun x).val = ((s.π.app j) x).val from
         coneZip_mapEval F s x j]
       convert hπ using 1
-      · simp only [ConcreteCategory.comp_apply]; rfl
-      · rfl
+      simp only [ConcreteCategory.comp_apply]; rfl
 end «TreeLimits»
 
 lemma proj_fixing (F : ℕᵒᵖ ⥤ Trees) (k : ℕ)

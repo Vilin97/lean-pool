@@ -79,11 +79,21 @@ lemma zeroOutside_le {W : Opens X} (h : W ≤ U) :
     (zeroOutside U F).obj (op W) = F.obj (op W) := by
   simp [zeroOutside, h]
 
+/-- Restriction in `zeroOutside U F` is restriction in `F`, transported along
+`zeroOutside_le`. Stated so that proofs never have to unfold `zeroOutside` under an
+`eqToHom` whose proof mentions it. -/
+lemma zeroOutside_map_of_le {W Y : (Opens X)ᵒᵖ} (i : W ⟶ Y) (h : unop W ≤ U) :
+    (zeroOutside U F).map i = eqToHom (zeroOutside_le h) ≫ F.map i ≫
+      eqToHom (zeroOutside_le (le_trans (leOfHom i.unop) h)).symm :=
+  dif_pos h
+
 /-- `zeroOutside ⊤ F ≅ F`: zero-outside on the whole space is the identity. -/
 def zeroOutsideTopIso : zeroOutside (⊤ : Opens X) F ≅ F :=
   NatIso.ofComponents
     (fun W ↦ eqToIso (zeroOutside_le (le_top : unop W ≤ ⊤)))
-    (fun {W Y} i ↦ by simp [zeroOutside, le_top])
+    (fun {W Y} i ↦ by
+      simp only [eqToIso.hom, zeroOutside_map_of_le _ (le_top : unop W ≤ ⊤)]
+      simp)
 
 variable {V : Opens X} (h : V ≤ U)
 
@@ -98,7 +108,9 @@ def zeroOutsideOpenHom : zeroOutside V F ⟶ zeroOutside U F where
     · have hYV : unop Y ≤ V := le_trans (leOfHom i.unop) hWV
       have hYU : unop Y ≤ U := le_trans hYV h
       have hWU : unop W ≤ U := le_trans hWV h
-      simp [zeroOutside, hWV, hYV, hWU, hYU]
+      simp only [dif_pos hWV, dif_pos hYV, zeroOutside_map_of_le i hWV,
+        zeroOutside_map_of_le i hWU]
+      simp
     · apply (zeroOutside_isZero (F := F) hWV).eq_of_src
 
 /-- The canonical inclusion of zero-outside presheaves is a monomorphism. -/
@@ -209,16 +221,12 @@ def sHom {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U)) :
         simpa [Functor.map_comp_apply] using
           (congrArg (fun j ↦ F.map j s) (Subsingleton.elim ((homOfLE hWU).op ≫ i)
             (homOfLE hYU).op)).symm
-      have hObjW : (zeroOutside U constZ).obj W = AddCommGrpCat.of (ULift ℤ) := by
-        simp [zeroOutside, hWU, constZ]
-      let w : ULift ℤ :=
-        (AddCommGrpCat.Hom.hom (eqToHom hObjW) z)
-      have hz : (AddCommGrpCat.Hom.hom (eqToHom hObjW.symm)) w = z := by
-        simp [w, ← ConcreteCategory.comp_apply, eqToHom_trans]
-      rw [← hz]
-      conv_lhs => simp [zeroOutside, hWU, hYU, w, hmap, constZ]
-      conv_rhs => simp [zeroOutside, hWU, hYU, w, hmap, constZ]
-      exact (map_zsmul (AddCommGrpCat.Hom.hom (F.map i)) _ _).symm
+      simp only [dif_pos hWU, dif_pos hYU, zeroOutside_map_of_le i hWU,
+        AddCommGrpCat.hom_comp, AddMonoidHom.coe_comp, Function.comp_apply,
+        AddCommGrpCat.hom_ofHom, uliftZMultiplesHom_apply_apply, hmap]
+      rw [map_zsmul]
+      congr 1
+      simp [← ConcreteCategory.comp_apply, eqToHom_trans]
     · apply (zeroOutside_isZero (F := constZ) hWU).eq_of_src
 
 theorem sHom_app_generator {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U)) :
@@ -399,7 +407,8 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
     NatTrans.comp_app, ConcreteCategory.comp_apply,
     ← (CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).naturality_apply
       (homOfLE h).op (Presheaf.zeroOutside.generator U)]
-  simp_all
+  exact congrArg (ConcreteCategory.hom
+    ((CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).app (op V))) hpresheaf
 
 end zeroOutsideInt
 
@@ -448,10 +457,9 @@ theorem _root_.stalk_zeroOutsideInt_eq_zsmul_generator
   refine ⟨n, ?_⟩
   rw [hn]
   change (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (n • _) = _
-  rw [map_zsmul]
-  congr 1
-  exact TopCat.Presheaf.stalkFunctor_map_germ_apply V x hx
-    (toSheafify J P) (TopCat.Presheaf.zeroOutside.generator V)
+  refine (map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) n _).trans ?_
+  exact congrArg (fun z ↦ n • z) (TopCat.Presheaf.stalkFunctor_map_germ_apply V x hx
+    (toSheafify J P) (TopCat.Presheaf.zeroOutside.generator V))
 
 /-- The map `n ↦ n • gen` from `ℤ` into `stalk(zeroOutsideInt V, x)` is injective
     for `x ∈ V`. -/

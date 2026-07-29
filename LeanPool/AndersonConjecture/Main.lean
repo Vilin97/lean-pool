@@ -300,9 +300,11 @@ lemma range_map_subtype_le_ideal_map {A : Type u_1} [CommRing A] [IsLocalRing A]
   change (AdicCompletion.map _ (Submodule.subtype _))
     ((AdicCompletion.ofTensorProduct _ _) t) ∈ _
   induction t using TensorProduct.induction_on with
-  | zero => simp only [map_zero, zero_mem]
+  | zero =>
+    rw [map_zero]
+    exact Submodule.zero_mem _
   | tmul a m =>
-    simp only [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
+    rw [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
     exact Ideal.mul_mem_left _ a (Ideal.mem_map_of_mem _ m.property)
   | add x y hx hy => simp only [map_add]
                      exact Ideal.add_mem _ hx hy
@@ -426,9 +428,11 @@ lemma range_map_subtype_pow_le {A : Type u_1} [CommRing A] [IsLocalRing A]
   change (AdicCompletion.map _ (Submodule.subtype _))
     ((AdicCompletion.ofTensorProduct _ _) t) ∈ _
   induction t using TensorProduct.induction_on with
-  | zero => simp only [map_zero, zero_mem]
+  | zero =>
+    rw [map_zero]
+    exact Submodule.zero_mem _
   | tmul a m =>
-    simp only [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
+    rw [AdicCompletion.ofTensorProduct_tmul, map_smul, AdicCompletion.map_of]
     exact Ideal.mul_mem_left _ a (Ideal.mem_map_of_mem _ m.property)
   | add x y hx hy => simp only [map_add]
                      exact Ideal.add_mem _ hx hy

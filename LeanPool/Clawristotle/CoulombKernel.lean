@@ -104,7 +104,7 @@ lemma schwartz_norm_pow_integrable
   rw [abs_of_pos hfv_pos] at hb
   have h1v : (0 : ℝ) < 1 + ‖v‖ := by linarith [norm_nonneg v]
   -- `Continuous.mul` produces a `Pi` product; unfold it pointwise.
-  simp only [Pi.mul_apply]
+  simp only [Pi.mul_apply, Pi.pow_apply]
   rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (pow_nonneg (norm_nonneg _) _)
     (le_of_lt hfv_pos)), le_div_iff₀ (pow_pos h1v 4)]
   have h_norm_le : ‖v‖ ≤ 1 + ‖v‖ := le_add_of_nonneg_left zero_le_one

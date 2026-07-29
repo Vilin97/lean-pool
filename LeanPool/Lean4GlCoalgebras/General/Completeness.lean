@@ -111,6 +111,7 @@ lemma rewind_history_in_cone {Γ} (g : coalgebraGame.Pos)
   simp [rewindHistory]
 
 /-- This is the type of the coalgebra we will use to build the proof of `Γ`. -/
+@[reducible]
 def proof_type (Γ : Sequent) (strat : Strategy coalgebraGame Prover) :=
  {g // inMyCone strat (startPos Γ) g ∧ coalgebraGame.turn g = Builder}
 
@@ -1524,7 +1525,8 @@ private lemma no_penultimate_prover_turn {Δ : Sequent} {strat : Strategy coalge
   · have u₁_last_mem := move_iff_in_moves.1 u₁_last'.1
     rw [u₁_def] at u₁_last_mem
     change π.getLast ne ∈
-      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs), by intro r1 r2; simp⟩
+      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs),
+        by unfold Function.Injective; intro r1 r2; simp⟩
         (Sequent.ruleApps Γ) at u₁_last_mem
     rcases (Finset.mem_map).mp u₁_last_mem with ⟨R, _R_Γ, last_eq⟩
     have P_turn_last' : coalgebraGame.turn (π.getLast ne) = Prover := by
@@ -1641,7 +1643,8 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
       simp only [y_def] at y_u₁
       have y_u₁_mem := move_iff_in_moves.1 y_u₁.1
       change π[π.length - (i + 1 + 1) - 1 + 1] ∈
-        Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs), by intro r1 r2; simp⟩
+        Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs),
+          by unfold Function.Injective; intro r1 r2; simp⟩
           (Sequent.ruleApps Γ) at y_u₁_mem
       rcases (Finset.mem_map).mp y_u₁_mem with ⟨R, R_Γ, u₁_def⟩
       have u₁_u₂ :

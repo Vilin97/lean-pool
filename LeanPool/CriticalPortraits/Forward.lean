@@ -111,7 +111,7 @@ def Sstrict (a b : ℕ) : Finset ι := (contained fam a b).filter (IsStrict fam 
 lemma mem_Sstrict {a b : ℕ} {e : ι} :
     e ∈ Sstrict fam a b ↔ (e ∈ fam.E ∧ a ≤ fam.lo e ∧ fam.hi e ≤ b) ∧
       (fam.lo e ≠ a ∨ fam.hi e ≠ b) := by
-  unfold Sstrict IsStrict; rw [mem_filter, mem_contained]
+  unfold Sstrict; rw [mem_filter, mem_contained]; unfold IsStrict; exact Iff.rfl
 
 /-- Strict edges containing `f`. -/
 def containersS (a b : ℕ) (f : ι) : Finset ι :=

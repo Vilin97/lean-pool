@@ -95,8 +95,9 @@ lemma prod_one_add_cexp_split (s : Multiset ℂ) :
     (map (fun x : ℂ => 1 + cexp x) s).prod =
       (map cexpMultisetSum (zeroSumPowerset s)).sum +
         (map cexpMultisetSum (nonZeroSumPowerset s)).sum := by
-  rw [prod_map_add, antidiagonal_eq_map_powerset]
-  simpa [cexpMultisetSum, Complex.exp_multiset_sum] using sum_cexp_powerset_split s
+  rw [prod_map_add, antidiagonal_eq_map_powerset, ← sum_cexp_powerset_split s]
+  unfold cexpMultisetSum
+  simp [Complex.exp_multiset_sum]
 
 /-- The multiset of all subset sums of `s`, i.e. `{ ∑_{x ∈ t} x | t ⊆ s }`. -/
 def subsetSums {α : Type*} [AddCommMonoid α] (s : Multiset α) : Multiset α :=
@@ -156,8 +157,9 @@ lemma sum_cexp_subsetSums_aroots_filter_ne_zero_eq_neg_count_zero
   rw [prod_one_add_cexp_split (s := B.aroots ℂ)] at hprod
   have hzero := sum_cexp_zeroSumPowerset_eq_count_zero_subsetSums (B.aroots ℂ)
   rw [hzero] at hprod
+  unfold cexpMultisetSum at hprod
   exact eq_neg_of_add_eq_zero_right <| by
-    simpa [nonzeroSubsetSums, subsetSums, nonZeroSumPowerset, cexpMultisetSum, filter_map,
+    simpa [nonzeroSubsetSums, subsetSums, nonZeroSumPowerset, filter_map,
       Function.comp] using hprod
 
 /-- If `f⁽ᵏ⁾` is differentiable at `t * x` for every `k ≤ n` and every `t ∈ [0, 1]`, then

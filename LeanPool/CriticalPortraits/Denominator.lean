@@ -285,7 +285,7 @@ lemma cnt_rhoPow {d m : ℕ} (hd : 0 < d) (hm : 0 < m) (t : ℕ) (S : Finset (ZM
 
 /-! ## Part 4: the period-`d` count sequence and the cycle-lemma bridge. -/
 
-open Cycle
+open _root_.CriticalPortraits.Cycle
 
 /-- The period-`d` natural count sequence: `aP S l = cnt S (l % d)`. -/
 def aP {d m : ℕ} (S : Finset (ZMod (d * m))) (l : ℕ) : ℕ := cnt S (l % d)

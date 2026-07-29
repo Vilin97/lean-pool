@@ -71,10 +71,19 @@ abbrev moduleMapAux : C →ₐ[R] Module.End A ((ModuleCat.restrictScalars
   toFun c := {
     toFun (m : M) := ((1 : A) ⊗ₜ[R] c) • m
     map_add' := by intros; exact smul_add _ _ _
-    map_smul' r (m : M) := by simp [smul_smul]
+    map_smul' r (m : M) := by
+      show ((1 : A) ⊗ₜ[R] c) • ((r ⊗ₜ[R] (1 : C)) • m) =
+        (r ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m)
+      simp [smul_smul, Algebra.TensorProduct.tmul_mul_tmul]
   }
-  map_one' := by ext; simp [← Algebra.TensorProduct.one_def]
-  map_mul' c1 c2 := by ext; simp [smul_smul]
+  map_one' := by
+    ext m
+    show ((1 : A) ⊗ₜ[R] (1 : C)) • m = m
+    rw [← Algebra.TensorProduct.one_def, one_smul]
+  map_mul' c1 c2 := by
+    ext m
+    show ((1 : A) ⊗ₜ[R] (c1 * c2)) • m = ((1 : A) ⊗ₜ[R] c1) • (((1 : A) ⊗ₜ[R] c2) • m)
+    rw [smul_smul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
   map_zero' := by ext m; simp; rfl
   map_add' c1 c2 := by ext m; simp [TensorProduct.tmul_add, add_smul]; rfl
   commutes' r := by
@@ -86,7 +95,10 @@ abbrev moduleMap : B ⊗[R] C →ₐ[R]
     Module.End R (e1.obj ((ModuleCat.restrictScalars
     (Algebra.TensorProduct.includeLeftRingHom)).obj M)) :=
   Algebra.TensorProduct.lift (Algebra.lsmul _ _ _) ((Module.End.restrictScalars R B _ R).comp
-    ((aux0 R A B e1 _).comp (moduleMapAux R A C _))) fun b c ↦ by ext; simp
+    ((aux0 R A B e1 _).comp (moduleMapAux R A C _))) fun b c ↦ by
+      ext x
+      exact (LinearMap.map_smul
+        (ModuleCat.Hom.hom (e1.map (ModuleCat.ofHom (moduleMapAux R A C M c)))) b x).symm
 
 instance modulefromtensor (M : ModuleCat (A ⊗[R] C)) :
   Module (B ⊗[R] C) (e1.obj ((ModuleCat.restrictScalars
@@ -226,11 +238,12 @@ instance : Linear R (TensorModule R A C) where
 /-- The `A ⊗ C` action associated to a tensor module. -/
 abbrev moduleAux (M : TensorModule R A C) : A ⊗[R] C →ₐ[R] Module.End R M :=
   Algebra.TensorProduct.lift (Algebra.lsmul _ _ _)
-    ((Module.End.restrictScalars R A M R).comp M.morphism) fun a c ↦ by ext; simp
+    ((Module.End.restrictScalars R A M R).comp M.morphism) fun a c ↦ by
+      ext x
+      exact (LinearMap.map_smul (M.morphism c) a x).symm
 
 lemma moduleAux_apply (M : TensorModule R A C) (a : A) (c : C) (m : M) :
-    moduleAux R A C M (a ⊗ₜ[R] c) m = a • (M.morphism c) m := by
-  simp [moduleAux]
+    moduleAux R A C M (a ⊗ₜ[R] c) m = a • (M.morphism c) m := rfl
 
 instance moduletotensor (M : TensorModule R A C) : Module (A ⊗[R] C) M :=
   Module.compHom _ (moduleAux R A C M).toRingHom
@@ -247,7 +260,7 @@ abbrev toModuleOverTensor : TensorModule R A C ⥤ ModuleCat (A ⊗[R] C) where
     map_smul' ac m := by
       induction ac using TensorProduct.induction_on with
       | zero => simp
-      | tmul a c => simp
+      | tmul a c => simp [moduleAux_apply, TensorModule.commutes_apply]
       | add _ _ _ _ => simp_all [add_smul]
   }
   map_id M := by ext; simp
@@ -261,7 +274,9 @@ abbrev fromModuleOverTensor : ModuleCat (A ⊗[R] C) ⥤ TensorModule R A C wher
   }
   map f := {
     hom := (ModuleCat.restrictScalars (Algebra.TensorProduct.includeLeftRingHom)).map f
-    commutes c := by ext; simp
+    commutes c := by
+      ext x
+      exact (LinearMap.map_smul (ModuleCat.Hom.hom f) ((1 : A) ⊗ₜ[R] c) x).symm
   }
   map_id M := by ext; simp
   map_comp _ _ := by ext; simp
@@ -276,14 +291,13 @@ abbrev e01 (M : TensorModule R A C) :
       · exact AddHom.id _
       · intro a m
         change a • m = (moduleAux R A C M (a ⊗ₜ[R] (1 : C))) m
-        simp
-        rfl
+        simp [moduleAux_apply]
     · exact id
     · exact congrFun rfl
     · exact congrFun rfl)) fun c ↦ by
       ext m
       change moduleAux R A C M ((1 : A) ⊗ₜ[R] c) m = (M.morphism c) m
-      simp_all
+      rw [moduleAux_apply, one_smul]
 
 /-- Naturality of the tensor-module unit comparison. -/
 lemma e01_naturality {X Y : TensorModule R A C} (f : X ⟶ Y) :
@@ -305,28 +319,22 @@ abbrev e02 (M : ModuleCat (A ⊗[R] C)) :
   apply (config := {allowSynthFailures := true, newGoals := .all}) @LinearEquiv.mk
   · apply (config := {allowSynthFailures := true, newGoals := .all}) @LinearMap.mk
     · exact AddHom.id _
-    · intro ac m
-      induction ac using TensorProduct.induction_on with
-      | zero =>
-      conv_lhs => erw [AddHom.toFun_eq_coe, AddHom.id_apply]
-      rw [RingHom.id_apply, zero_smul]
-      rfl
-      | tmul a c =>
-      conv_lhs => erw [AddHom.toFun_eq_coe, AddHom.id_apply]
-      rw [RingHom.id_apply, AddHom.toFun_eq_coe]
-      conv_rhs => erw [AddHom.id_apply]
-      rw [smul_tensormod]
-      simp [smul_smul]
-      | add x y h1 h2 =>
-      rw [RingHom.id_apply, AddHom.toFun_eq_coe]
-      erw [AddHom.id_apply, AddHom.id_apply]
-      conv_rhs => rw [add_smul]
-      erw [AddHom.toFun_eq_coe, AddHom.id_apply] at h1 h2
-      simp only [RingHom.id_apply] at h1 h2
-      erw [AddHom.id_apply] at h1 h2
-      rw [← h1, ← h2]
-      rw [smul_tensormod, map_add]
-      rfl
+    · have key : ∀ (ac : A ⊗[R] C) (m : M),
+          (moduleAux R A C ((fromModuleOverTensor R A C).obj M) ac) m = ac • m := by
+        intro ac m
+        induction ac using TensorProduct.induction_on with
+        | zero =>
+          rw [map_zero]
+          exact (zero_smul _ m).symm
+        | tmul a c =>
+          refine (moduleAux_apply R A C ((fromModuleOverTensor R A C).obj M) a c m).trans ?_
+          show (a ⊗ₜ[R] (1 : C)) • (((1 : A) ⊗ₜ[R] c) • m) = (a ⊗ₜ[R] c) • m
+          rw [smul_smul, Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul]
+        | add x y hx hy =>
+          rw [map_add]
+          exact (LinearMap.add_apply _ _ m).trans
+            ((congrArg₂ (· + ·) hx hy).trans (add_smul x y m).symm)
+      exact key
   · exact id
   · exact congrFun rfl
   · exact congrFun rfl

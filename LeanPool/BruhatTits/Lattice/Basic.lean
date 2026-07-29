@@ -101,7 +101,7 @@ instance (g : GL ι K) (M : Submodule R (ι → K)) [IsLattice M] : IsLattice (g
     exact IsLattice.isFG
   spans := by
     rw [GeneralLinearGroup.smul_def]
-    simp_rw [Submodule.map_coe, LinearMap.coe_restrictScalars, mulVecLin_apply]
+    simp_rw [Submodule.map_coe, LinearMap.coe_restrictScalars]
     erw [Submodule.span_image g.val.mulVecLin]
     rw [IsLattice.spans]
     simp only [Submodule.map_top]

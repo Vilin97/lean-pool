@@ -373,10 +373,14 @@ lemma hDist_embed0_embed1 {n : ℕ} (x y : Cube n) :
   have h_symmDiff :
       symmDiff (embed0 x) (embed1 y) =
         Finset.image Fin.castSucc (symmDiff x y) ∪ {Fin.last n} := by
-    ext i; simp [embed0, embed1, Finset.mem_symmDiff, Finset.mem_image]
-    grind +suggestions
+    ext i
+    obtain ⟨j, rfl⟩ | rfl := Fin.eq_castSucc_or_eq_last i
+    · simp [embed0, embed1, Finset.mem_symmDiff, Finset.mem_image,
+        (Fin.castSucc_injective n).eq_iff, (Fin.castSucc_lt_last j).ne]
+    · simp [embed0, embed1, Finset.mem_symmDiff, Finset.mem_image,
+        fun a : Fin n => (Fin.castSucc_lt_last a).ne]
   rw [h_symmDiff, Finset.card_union_of_disjoint] <;>
-    norm_num [Finset.card_image_of_injective, Function.Injective]
+    norm_num [Finset.card_image_of_injective _ (Fin.castSucc_injective n)]
 
 lemma slice0_neighborhood {n : ℕ} (A : Finset (Cube (n + 1))) :
     slice0 (neighborhood 1 A) = neighborhood 1 (slice0 A) ∪ slice1 A := by
@@ -828,7 +832,8 @@ lemma embed0_cubeToNat {n : ℕ} (x : Cube n) : cubeToNat (embed0 x) = cubeToNat
 embed1 adds one element (the last coordinate) and the top power of two.
 -/
 lemma embed1_card {n : ℕ} (x : Cube n) : (embed1 x).card = x.card + 1 := by
-  unfold embed1; simp +decide [Finset.card_image_of_injective, Function.Injective]
+  unfold embed1
+  simp [Finset.card_image_of_injective _ (Fin.castSucc_injective n)]
 
 lemma embed1_cubeToNat {n : ℕ} (x : Cube n) : cubeToNat (embed1 x) = cubeToNat x + 2 ^ n := by
   unfold cubeToNat embed1

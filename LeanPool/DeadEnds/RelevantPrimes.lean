@@ -56,9 +56,7 @@ lemma relevantNotInS_gt_y (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)
     (q : ℕ) > y := by
   by_contra h
   have h₁ : (q : ℕ) ≤ y := by linarith
-  have h₃ : q ∉ S := by
-    simp only [relevantNotInS, primesBelow', Finset.mem_filter] at hq
-    simp_all
+  have h₃ : q ∉ S := (Finset.mem_filter.mp hq).2
   exact h₃ (hy q h₁)
 
 lemma relevantNotInS_gt_b (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)

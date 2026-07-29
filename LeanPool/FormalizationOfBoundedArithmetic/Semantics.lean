@@ -74,7 +74,6 @@ macro "realizeViaRelabel " target:ident : tactic =>
   `(tactic| (
     unfold Formula.Realize $target
     rw [realize_relabelEquiv]
-    dsimp only [Equiv.coe_fn_mk]
     exact Eq.to_iff rfl))
 
 @[delta0_simps]

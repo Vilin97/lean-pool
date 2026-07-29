@@ -211,8 +211,10 @@ def primesUpTo (n : ℕ) : Finset Nat.Primes :=
 lemma mem_primesUpTo (n : ℕ) (p : Nat.Primes) :
     (p : ℕ) ≤ n → p ∈ primesUpTo n := by
   intro hpn
-  simp only [primesUpTo, Finset.mem_image, Finset.mem_subtype, Finset.mem_filter, Finset.mem_range]
-  exact ⟨⟨(p : ℕ), p.prop⟩, ⟨Nat.lt_succ_of_le hpn, p.prop⟩, by simp⟩
+  rw [primesUpTo, Finset.mem_image]
+  refine ⟨⟨(p : ℕ), p.prop⟩, ?_, rfl⟩
+  rw [Finset.mem_subtype, Finset.mem_filter, Finset.mem_range]
+  exact ⟨Nat.lt_succ_of_le hpn, p.prop⟩
 
 lemma crt_error_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) :

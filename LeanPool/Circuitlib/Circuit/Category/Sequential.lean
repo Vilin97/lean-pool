@@ -123,9 +123,11 @@ lemma tensorHom_take
     (a : Wires V (X₁.obj + X₂.obj)) :
     (a.take X₁.obj).cast tensorHom_val_add =
     Vector.ofFn fun i => a.get (Fin.castAdd X₂.obj i) := by
+  unfold Wires at a
   apply Wires.ext
   intro i
   simp [Vector.get]
+  rfl
 
 /-- The first projection used when tensoring sequential morphisms. -/
 @[inline, simp]
@@ -147,9 +149,9 @@ lemma tensorHom_eq_left
     (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
     ((tensorHomVal f g v).get t).get (Fin.castAdd Y₂.obj j) =
     (f.val (Stream'.map tensorHomEq' v) t).get j := by
-  simp only [tensorHom_take, tensorHomVal, Stream'.get_zip,
-    Vector.get, Vector.append]
-  exact Array.getElem_append_left (by simp)
+  simp only [tensorHom_take, tensorHomVal, Stream'.zip, Stream'.get,
+    Wires.get_append_left]
+  rfl
 
 lemma tensorHom_eq_right
     {X₁ Y₁ X₂ Y₂ : SequentialCircuitCategory V G}
@@ -162,14 +164,14 @@ lemma tensorHom_eq_right
   have hdrop : ∀ (a : Wires V (X₁.obj + X₂.obj)),
       (a.drop X₁.obj).cast tensorHom_val_sub =
       Vector.ofFn fun i => a.get (Fin.natAdd X₁.obj i) := fun a => by
+    unfold Wires at a
     apply Wires.ext
     intro i
-    simp [Vector.get, Vector.drop, Fin.val_natAdd]
-  simp only [tensorHom_take, hdrop, tensorHomVal, Stream'.get_zip,
-    Vector.get, Vector.append]
-  rw [Array.getElem_append_right (by simp)]
-  congr 1
-  simp
+    simp [Vector.get]
+    rfl
+  simp only [tensorHom_take, hdrop, tensorHomVal, Stream'.zip, Stream'.get,
+    Wires.get_append_right]
+  rfl
 
 @[simp]
 lemma tensorHom_monotone
@@ -183,14 +185,14 @@ lemma tensorHom_monotone
       have rhs_eq := tensorHom_eq_left v₂ t j f g
       rw [lhs_eq, rhs_eq]
       exact f.property.1 (fun t' k => by
-        simp only [Stream'.get_map, Wires.get_ofFn]
+        simp only [Stream'.map, Stream'.get, Wires.get_ofFn]
         exact h t' (k.castAdd _)) t j)
     (fun j => by
       have lhs_eq := tensorHom_eq_right v₁ t j f g
       have rhs_eq := tensorHom_eq_right v₂ t j f g
       rw [lhs_eq, rhs_eq]
       exact g.property.1 (fun t' k => by
-        simp only [Stream'.get_map, Wires.get_ofFn]
+        simp only [Stream'.map, Stream'.get, Wires.get_ofFn]
         exact h t' (k.natAdd _)) t j)
     i
 
@@ -203,14 +205,14 @@ lemma tensorHom_causal
   simp only [tensorHomVal]
   have hf : f.val (Stream'.map (fun w => (w.take X₁.obj).cast tensorHom_val_add) x) t =
       f.val (Stream'.map (fun w => (w.take X₁.obj).cast tensorHom_val_add) y) t :=
-    f.property.2 _ _ t fun s hs => by
-      show (Stream'.map _ x) s = (Stream'.map _ y) s
-      simp only [Stream'.map_apply, h s hs]
+    f.property.2 _ _ t fun s hs =>
+      congrArg (fun w : Wires V (X₁.obj + X₂.obj) =>
+        (w.take X₁.obj).cast tensorHom_val_add) (h s hs)
   have hg : g.val (Stream'.map (fun w => (w.drop X₁.obj).cast tensorHom_val_sub) x) t =
       g.val (Stream'.map (fun w => (w.drop X₁.obj).cast tensorHom_val_sub) y) t :=
-    g.property.2 _ _ t fun s hs => by
-      show (Stream'.map _ x) s = (Stream'.map _ y) s
-      simp only [Stream'.map_apply, h s hs]
+    g.property.2 _ _ t fun s hs =>
+      congrArg (fun w : Wires V (X₁.obj + X₂.obj) =>
+        (w.drop X₁.obj).cast tensorHom_val_sub) (h s hs)
   unfold Stream'.zip Stream'.get
   rw [hf, hg]
 
@@ -415,25 +417,33 @@ lemma associator_naturality
       (X₁.associator X₂ X₃).hom ≫ tensorHom f₁ (tensorHom f₂ f₃) := by
   apply Subtype.ext
   funext v t
-  apply Vector.ext
-  intro i hi
-  simp only [CategoryStruct.comp, Function.comp, tensorHomVal,
-    associator, iso, isoHom, isoHomVal, Stream'.map_map,
-    Stream'.map, Stream'.zip, Stream'.get, Vector.append,
-    Vector.cast]
-  simp only [Vector.getElem_mk, Array.append_assoc]
-  congr 1
-  congr 1
-  · exact congrArg Vector.toArray (congrFun (congrArg f₁.val
-      (funext fun t' => Wires.ext fun k => by
-        simp [Stream'.map, Function.comp, Vector.get, Vector.take])) t)
-  congr 1
-  · exact congrArg Vector.toArray (congrFun (congrArg f₂.val
-      (funext fun t' => Wires.ext fun k => by
-        simp [Stream'.map, Function.comp, Vector.get, Vector.take, Vector.drop])) t)
-  · exact congrArg Vector.toArray (congrFun (congrArg f₃.val
-      (funext fun t' => Wires.ext fun k => by
-        simp [Stream'.map, Function.comp, Vector.get, Vector.drop])) t)
+  apply Wires.ext
+  intro i
+  have hi : i.val < Y₁.obj + (Y₂.obj + Y₃.obj) := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, tensorHom,
+    tensorHomVal, associator, iso, isoHom, isoHomVal,
+    Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append,
+    Wires.get_append_wires_vector, Wires.get_append_vector_wires]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream'.map, Stream'.get, Wires.get_cast,
+                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
+
 
 lemma pentagon
     (W X Y Z : SequentialCircuitCategory V G) :
@@ -443,15 +453,34 @@ lemma pentagon
     ((W.tensorObj X).associator Y Z).hom ≫ (W.associator X (Y.tensorObj Z)).hom := by
   apply Subtype.ext
   funext v t
-  apply Vector.ext
-  intro i hi
-  simp only [CategoryStruct.comp, Function.comp, tensorHomVal,
-    associator, iso, isoHom, isoHomVal,
-    Vector.append, Vector.cast]
-  unfold Stream'.map Stream'.zip Stream'.get
-  simp [show W.obj + (X.obj + (Y.obj + Z.obj)) =
-    W.obj + (X.obj + Y.obj) + Z.obj from by omega,
-    show min W.obj (W.obj + (X.obj + Y.obj) + Z.obj) = W.obj from by omega]
+  apply Wires.ext
+  intro i
+  have hi : i.val < W.obj + (X.obj + (Y.obj + Z.obj)) := i.isLt
+  simp only [CategoryStruct.comp, Function.comp,
+    tensorHomVal, associator, iso, isoHom, isoHomVal,
+    CategoryStruct.id, id, idVal, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream.map, Stream'.map, Stream'.get, Wires.get_cast,
+                 Wires.get_cast_vector, Wires.get_append, Wires.get_append_vector,
+                 Wires.get_append_wires_vector, Wires.get_append_vector_wires,
+                 Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
+
 
 omit [Preorder V] in
 lemma leftUnitor_eq
@@ -480,12 +509,34 @@ lemma leftUnitor_naturality
     whiskerLeft tensorUnit f ≫ (leftUnitor Y).hom = (leftUnitor X).hom ≫ f := by
   apply Subtype.ext
   funext v t
-  apply Vector.ext
-  intro i hi
-  simp only [iso, CategoryStruct.comp, Function.comp,
-    tensorHomVal, isoHomVal, isoHom]
-  unfold Stream'.map Stream'.zip Stream'.get
-  simp [Vector.append]
+  apply Wires.ext
+  intro i
+  have hi : i.val < Y.obj := i.isLt
+  have h0 : (tensorUnit (V := V) (G := G)).obj = 0 := rfl
+  simp only [CategoryStruct.comp, Function.comp, tensorHomVal,
+    leftUnitor, iso, isoHom, isoHomVal, CategoryStruct.id, id, idVal,
+    Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast_vector,
+    Wires.get_append_vector_wires,
+    Wires.get_take]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream'.map, Stream'.get, Wires.get_cast,
+                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_drop]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
 
 lemma rightUnitor_naturality
     {X Y : SequentialCircuitCategory V G}
@@ -493,13 +544,34 @@ lemma rightUnitor_naturality
     whiskerRight f tensorUnit ≫ (rightUnitor Y).hom = (rightUnitor X).hom ≫ f := by
   apply Subtype.ext
   funext v t
-  apply Vector.ext
-  intro i hi
-  simp only [CategoryStruct.comp, Function.comp,
-    tensorHomVal, isoHomVal, isoHom, iso]
-  unfold Stream'.map Stream'.zip Stream'.get
-  have : (v t).toArray.extract X.obj X.obj = #[] := by grind
-  simp [Vector.append, this]
+  apply Wires.ext
+  intro i
+  have hi : i.val < Y.obj := i.isLt
+  have h0 : (tensorUnit (V := V) (G := G)).obj = 0 := rfl
+  simp only [CategoryStruct.comp, Function.comp, tensorHomVal,
+    rightUnitor, iso, isoHom, isoHomVal, CategoryStruct.id, id, idVal,
+    Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast_vector,
+    Wires.get_append_wires_vector,
+    Wires.get_drop]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream'.map, Stream'.get, Wires.get_cast,
+                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_take]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
 
 open MonoidalCategory
 
@@ -509,12 +581,34 @@ lemma triangle
     whiskerRight (rightUnitor X).hom Y := by
   apply Subtype.ext
   funext v t
-  apply Vector.ext
-  intro i hi
+  apply Wires.ext
+  intro i
+  have hi : i.val < X.obj + Y.obj := i.isLt
+  have h0 : (tensorUnit (V := V) (G := G)).obj = 0 := rfl
   simp only [CategoryStruct.comp, Function.comp,
-    tensorHomVal, isoHomVal, isoHom, iso]
-  unfold Stream'.map Stream'.zip Stream'.get
-  simp [Stream'.map, Stream'.get, Vector.cast]
+    tensorHomVal, associator, leftUnitor, rightUnitor, iso, isoHom, isoHomVal,
+    CategoryStruct.id, id, idVal, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream.map, Stream'.map, Stream'.get, Wires.get_cast,
+                 Wires.get_cast_vector, Wires.get_append, Wires.get_append_vector,
+                 Wires.get_append_wires_vector, Wires.get_append_vector_wires,
+                 Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
 
 @[inline, simp]
 instance : MonoidalCategory.{v} (SequentialCircuitCategory V G) where
@@ -571,23 +665,16 @@ lemma braiding_hom_ge
 lemma braiding_hom_monotone
     {X Y : SequentialCircuitCategory V G} :
     Monotone (X.braidingHomVal Y) := fun a b hab t i => by
-  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp only [Stream'.map, Stream'.get, Vector.get, Vector.cast, Vector.append,
-               Vector.drop, monoidal_tensorObj_obj, Vector.size_toArray, Fin.val_cast,
-               Fin.val_castAdd, Array.size_extract, min_self, Nat.add_sub_cancel_left, Fin.is_lt,
-               Array.getElem_append_left, Array.getElem_extract]
-    exact hab t ⟨X.obj + j.val, braiding_hom_lt⟩
-  · simp only [Stream.map, Stream'.map, Stream'.get, braidingHomVal, monoidal_tensorObj_obj,
-               Vector.get, Vector.cast, Vector.append, Vector.drop, Vector.take,
-               Vector.size_toArray, Fin.val_cast, Fin.val_natAdd, Array.size_extract, min_self,
-               Nat.add_sub_cancel_left, Nat.le_add_right, Array.getElem_append_right,
-               Array.getElem_extract, Nat.zero_add]
-    exact hab t ⟨j.val, braiding_hom_ge⟩
+  simp only [braidingHomVal, monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_drop]
+  split_ifs <;> exact hab t _
 
 lemma braiding_hom_causal
     {X Y : SequentialCircuitCategory V G} :
-    Causal (X.braidingHomVal Y) := fun _ _ t h => by
-  simp only [braidingHomVal, Stream.map, Stream'.map_apply, h t le_rfl]
+    Causal (X.braidingHomVal Y) := fun _ _ t h =>
+  congrArg (fun w : Wires V (X ⊗ Y).obj =>
+    ((w.drop X.obj).append (w.take X.obj)).cast braiding_hom_eq) (h t le_rfl)
 
 /-- The braiding morphism, swapping two blocks of wires. -/
 @[inline]
@@ -601,11 +688,15 @@ lemma braiding_hom_inv_id
   funext v t
   apply Wires.ext
   intro i
-  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp [CategoryStruct.comp, Function.comp, braidingHom, braidingHomVal,
-          monoidal_tensorObj_obj, id_coe_apply, monoidal_tensorObj_obj, Vector.get, Vector.append]
-  · simp [CategoryStruct.comp, Function.comp, braidingHom, braidingHomVal,
-          monoidal_tensorObj_obj, id_coe_apply, Vector.get, Vector.append]
+  have hi : i.val < X.obj + Y.obj := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, braidingHom, braidingHomVal, id_coe_apply,
+    monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
 
 /-- The braiding isomorphism of the symmetric monoidal structure. -/
 @[inline]
@@ -624,26 +715,33 @@ lemma braiding_naturality_left
   funext v t
   apply Wires.ext
   intro i
-  change (braidingHomVal Y Z (tensorHomVal f (𝟙 Z) v) t).get i =
-    (tensorHomVal (𝟙 Z) f (braidingHomVal X Z v) t).get i
-  simp only [braidingHomVal, tensorHomVal]
-  unfold Stream.map Stream'.map Stream'.zip Stream'.get
-  dsimp only [Function.comp]
-  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp [Vector.get, Vector.append]
-  · simp only [Vector.get, monoidal_tensorObj_obj, Vector.cast, Vector.append, Vector.drop,
-               Vector.take, Array.take_eq_extract, Array.drop_eq_extract, Vector.size_toArray,
-               id_coe_apply, Array.size_append, Array.size_extract, min_self,
-               Nat.add_sub_cancel_left, Array.extract_append, Nat.sub_self, Array.extract_extract,
-               Nat.add_zero, Nat.zero_le, Nat.sub_eq_zero_of_le, Array.extract_zero,
-               Array.append_empty, Array.append_assoc, Vector.take_eq_extract,
-               Vector.toArray_extract, Vector.cast_mk, Vector.drop_mk, Vector.extract_mk,
-               Nat.sub_zero, Fin.val_cast, Fin.val_natAdd, Nat.le_add_right, inf_of_le_right,
-               Array.getElem_append_right, Array.getElem_extract, Nat.zero_add,
-               Vector.getElem_toArray, inf_of_le_left, Nat.add_le_add_iff_left]
-    congr 1
-    exact congrFun (congrArg f.val (funext fun n =>
-      Wires.ext (fun k => by simp [Vector.get]))) t
+  have hi : i.val < Z.obj + Y.obj := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, MonoidalCategoryStruct.whiskerLeft,
+    MonoidalCategoryStruct.whiskerRight, whiskerLeft, whiskerRight, tensorHom,
+    tensorHomVal, braiding, braidingHom, braidingHomVal,
+    monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
+    Stream.map, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append_vector,
+    Wires.get_append_wires_vector, Wires.get_append_vector_wires,
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream'.map, Stream'.get,
+                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_take, Wires.get_drop, Wires.get_drop_vector]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
 
 lemma braiding_naturality_right
     (X : SequentialCircuitCategory V G)
@@ -654,14 +752,33 @@ lemma braiding_naturality_right
   funext v t
   apply Wires.ext
   intro i
-  change (braidingHomVal X Z (tensorHomVal (𝟙 X) f v) t).get i =
-    (tensorHomVal f (𝟙 X) (braidingHomVal X Y v) t).get i
-  simp only [braidingHomVal, tensorHomVal]
-  unfold Stream.map Stream'.map Stream'.zip Stream'.get
-  dsimp only [Function.comp]
-  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp [Vector.get, Vector.drop, Vector.take, Vector.append, Vector.cast]
-  · simp [Vector.get, Vector.append]
+  have hi : i.val < Z.obj + X.obj := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, MonoidalCategoryStruct.whiskerLeft,
+    MonoidalCategoryStruct.whiskerRight, whiskerLeft, whiskerRight, tensorHom,
+    tensorHomVal, braiding, braidingHom, braidingHomVal,
+    monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
+    Stream.map, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append_vector,
+    Wires.get_append_wires_vector, Wires.get_append_vector_wires,
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+      | (congr 1 <;>
+          first
+            | exact Fin.ext (by simp; try omega)
+            | (refine congrFun (congrArg _ (funext fun t' => Wires.ext fun k => ?_)) t
+               simp only [Stream'.map, Stream'.get,
+                 Wires.get_cast_vector, Wires.get_append_vector
+                 Wires.get_take, Wires.get_take_vector, Wires.get_drop]
+               all_goals (first
+                 | (exfalso; omega)
+                 | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
+                 | (split_ifs <;>
+                     first
+                       | (exfalso; omega)
+                       | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)))))
 
 omit [Preorder V] in
 lemma braiding_add
@@ -687,7 +804,7 @@ omit [Preorder V] in
 lemma iso_hom_get
     (h : n = m) (v : Stream (Wires V n)) (t : ℕ) (i : Fin m) :
     (isoHomVal (V:=V) h v t).get i = (v t).get ⟨i.val, h ▸ i.isLt⟩ := by
-  simp_all
+  simp only [isoHomVal, Stream'.map, Stream'.get, Wires.get_cast]
 
 lemma braiding_get
     (X Y : SequentialCircuitCategory V G)
@@ -698,12 +815,14 @@ lemma braiding_get
       if h : i.val < Y.obj
       then (v t).get ⟨X.obj + i.val, braiding_add h⟩
       else (v t).get ⟨i.val - Y.obj, braiding_sub⟩ := by
-  unfold braidingHomVal Stream.map Stream'.map Stream'.get
-  refine Fin.addCases (fun j => ?_) (fun j => ?_) i
-  · simp only [Fin.val_castAdd, dif_pos j.isLt]
-    simp [Vector.get, Vector.append]
-  · simp only [Fin.val_natAdd, dif_neg (show ¬(Y.obj + j.val < Y.obj) from by omega)]
-    simp [Vector.get, Vector.append]
+  have hi : i.val < Y.obj + X.obj := i.isLt
+  simp only [braidingHomVal, monoidal_tensorObj_obj, Stream.map, Stream'.map, Stream'.get,
+    Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_drop]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
 
 lemma tensorHom_get
     {X₁ Y₁ X₂ Y₂ : SequentialCircuitCategory V G}
@@ -736,60 +855,22 @@ lemma hexagon_forward
     (X Y Z : SequentialCircuitCategory V G) :
     (α_ X Y Z).hom ≫ (X.braiding (Y ⊗ Z)).hom ≫ (α_ Y Z X).hom =
     (X.braiding Y).hom ▷ Z ≫ (α_ Y X Z).hom ≫ Y ◁ (X.braiding Z).hom := by
-  change (associator X Y Z).hom ≫ (X.braiding (tensorObj Y Z)).hom ≫ (associator Y Z X).hom =
-    whiskerRight (X.braiding Y).hom Z ≫ (associator Y X Z).hom ≫ whiskerLeft Y (X.braiding Z).hom
   apply Subtype.ext
   funext v t
   apply Wires.ext
   intro i
-  simp only [CategoryStruct.comp, Function.comp, tensorHomVal, associator, iso, isoHom,
-             isoHomVal, braiding, braidingHom, braidingHomVal, Vector.append, Vector.cast,
-             CategoryStruct.id, id]
-  unfold Stream.map Stream'.map Stream'.zip Stream'.get
-  simp only [Vector.drop, Vector.take, idVal]
-  unfold Array.take Array.drop
-  have htXY : (X ⊗ Y).obj = X.obj + Y.obj := rfl
-  have hm1 : min (X.obj + Y.obj) (X.obj + Y.obj + Z.obj) = X.obj + Y.obj :=
-    min_eq_left (by omega)
-  have hm2 : min X.obj (X.obj + Y.obj) = X.obj := min_eq_left (by omega)
-  refine Fin.addCases (fun j => ?_) (fun jj => Fin.addCases (fun k => ?_) (fun k => ?_) jj) i
-  all_goals simp only [Vector.get, Fin.val_castAdd, Fin.val_natAdd, Fin.val_cast,
-    Array.size_extract, Array.size_append, tensorObj_size_eq_forward, htXY, hm1, hm2, min_self,
-    Nat.add_sub_cancel_left, Nat.sub_zero]
-  · rw [Array.getElem_append_left (by simp [*]; omega), Array.getElem_extract,
-        Array.getElem_append_left (by simp [*]), Array.getElem_extract,
-        Array.getElem_append_left (by simp [*]; omega),
-        Array.getElem_append_left (by simp [*]),
-        Array.getElem_extract, Array.getElem_extract]
-    simp_all
-  · rw [Array.getElem_append_left (by simp [*]), Array.getElem_extract,
-        Array.getElem_append_right (by simp [*])]
-    simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_forward, hm1, hm2, min_self,
-      Nat.add_sub_cancel_left, Nat.sub_zero]
-    rw [Array.getElem_append_left (by simp [*]; omega),
-        Array.getElem_extract, Array.getElem_extract,
-        Array.getElem_append_right (by simp [*])]
-    simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_forward, Nat.sub_zero]
-    rw [Array.getElem_extract]
-    congr 1
-    omega
-  · rw [Array.getElem_append_right (by simp [*])]
-    simp only [Array.size_extract, tensorObj_size_eq_forward, min_self]
-    rw [Array.getElem_extract,
-        Array.getElem_append_right (by simp [*])]
-    simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_forward, hm1, hm2, min_self,
-      Nat.add_sub_cancel_left, Nat.sub_zero]
-    rw [Array.getElem_append_right (by simp [*]; omega)]
-    simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_forward, hm1, hm2, min_self,
-      Nat.add_sub_cancel_left, Nat.sub_zero]
-    rw [Array.getElem_extract, Array.getElem_extract,
-        Array.getElem_append_left (by simp [*]),
-        Array.getElem_append_right (by simp [*])]
-    simp only [Array.size_extract, tensorObj_size_eq_forward, hm1, min_self,
-               Nat.add_sub_cancel_left, Nat.sub_zero]
-    rw [Array.getElem_extract, Array.getElem_extract]
-    congr 1
-    omega
+  have hi : i.val < Y.obj + (Z.obj + X.obj) := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, MonoidalCategoryStruct.whiskerLeft,
+    MonoidalCategoryStruct.whiskerRight, MonoidalCategoryStruct.associator, whiskerLeft,
+    whiskerRight, tensorHom, tensorHomVal, associator, iso, isoHom, isoHomVal,
+    braiding, braidingHom, braidingHomVal, monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
+    Stream.map, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
+    first
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
 
 omit [Preorder V] in
 lemma tensorObj_size_eq_reverse
@@ -801,75 +882,22 @@ lemma hexagon_reverse
     (X Y Z : SequentialCircuitCategory V G) :
     (α_ X Y Z).inv ≫ ((X ⊗ Y).braiding Z).hom ≫ (α_ Z X Y).inv =
     X ◁ (Y.braiding Z).hom ≫ (α_ X Z Y).inv ≫ (X.braiding Z).hom ▷ Y := by
-  change (associator X Y Z).inv ≫ ((tensorObj X Y).braiding Z).hom ≫ (associator Z X Y).inv =
-    whiskerLeft X (Y.braiding Z).hom ≫ (associator X Z Y).inv ≫ whiskerRight (X.braiding Z).hom Y
   apply Subtype.ext
   funext v t
   apply Wires.ext
   intro i
-  simp only [CategoryStruct.comp, Function.comp, tensorHomVal, associator, iso, isoInv,
-             isoInvVal, braiding, braidingHom, braidingHomVal, Vector.append, Vector.cast,
-             CategoryStruct.id, id]
-  unfold Stream.map Stream'.map Stream'.zip Stream'.get
-  simp only [Vector.drop, Vector.take, idVal]
-  unfold Array.take Array.drop
-  have htXZ : (X ⊗ Z).obj = X.obj + Z.obj := rfl
-  have hm9 : min Y.obj (Y.obj + Z.obj) = Y.obj := min_eq_left (by omega)
-  have hm3' : min X.obj (X.obj + (Y.obj + Z.obj)) = X.obj := min_eq_left (by omega)
-  have hm7' : min (X.obj + Z.obj) (X.obj + (Z.obj + Y.obj)) = X.obj + Z.obj :=
-    min_eq_left (by omega)
-  have hsub1 : X.obj + (Y.obj + Z.obj) - (X.obj + Y.obj) = Z.obj := by omega
-  refine Fin.addCases
-    (fun jj => Fin.addCases (fun j => ?_) (fun k => ?_) jj)
-    (fun k => ?_) i
-  all_goals simp only [Vector.get, Fin.val_castAdd, Fin.val_natAdd, Fin.val_cast,
-    Array.size_extract, Array.size_append, tensorObj_size_eq_reverse, htXZ, hm9,
-    hm3', hm7', min_self, Nat.add_sub_cancel_left, Nat.sub_zero]
-  all_goals
+  have hi : i.val < Z.obj + X.obj + Y.obj := i.isLt
+  simp only [CategoryStruct.comp, Function.comp, MonoidalCategoryStruct.whiskerLeft,
+    MonoidalCategoryStruct.whiskerRight, MonoidalCategoryStruct.associator, whiskerLeft,
+    whiskerRight, tensorHom, tensorHomVal, associator, iso, isoInv, isoInvVal,
+    braiding, braidingHom, braidingHomVal, monoidal_tensorObj_obj, CategoryStruct.id, id, idVal,
+    Stream.map, Stream'.map, Stream'.zip, Stream'.get,
+    Wires.get_cast, Wires.get_cast_vector, Wires.get_append_vector
+    Wires.get_take, Wires.get_take_vector, Wires.get_drop, Wires.get_drop_vector]
+  split_ifs <;>
     first
-    | rw [Array.getElem_append_right
-            (by simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, hsub1]; omega)]
-      simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, hsub1]
-      rw [Array.getElem_extract,
-           Array.getElem_append_right
-             (by
-                simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse,
-                           min_self, hm3', Nat.add_sub_cancel_left, Nat.sub_zero]
-                omega)]
-      simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse, hm3', min_self,
-                 Nat.add_sub_cancel_left, Nat.sub_zero]
-      rw [Array.getElem_extract,
-          Array.getElem_append_right
-            (by
-               simp only [Array.size_extract, tensorObj_size_eq_reverse, hm3', Nat.sub_zero]
-               omega)]
-      simp only [Array.size_extract, tensorObj_size_eq_reverse, hm3', Nat.sub_zero]
-      rw [Array.getElem_append_right
-            (by
-               simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self,
-                          Nat.add_sub_cancel_left]
-               omega)]
-      simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, Nat.add_sub_cancel_left]
-      rw [Array.getElem_extract, Array.getElem_extract]
-      congr 1
-      omega
-    | rw [Array.getElem_append_left
-            (by simp only [Array.size_extract, tensorObj_size_eq_reverse, min_self, hsub1]; omega),
-          Array.getElem_extract,
-          Array.getElem_append_left
-            (by
-               simp only [Array.size_extract, Array.size_append, tensorObj_size_eq_reverse,
-                          min_self, hm3', Nat.add_sub_cancel_left, Nat.sub_zero]
-               omega),
-          Array.getElem_append_left
-            (by
-               simp_all),
-          Array.getElem_extract, Array.getElem_extract,
-          Array.getElem_append_right
-             (by
-                simp_all)]
-      simp_all
-    | simp_all
+      | (exfalso; omega)
+      | (refine congrArg _ (Fin.ext ?_) <;> simp <;> omega)
 
 lemma symmetry
     (X Y : SequentialCircuitCategory V G) :

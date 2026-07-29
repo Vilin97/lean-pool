@@ -166,7 +166,8 @@ private def close_up_avoidance_step_proof
           · -- R countable: both C_good and D are countable
             haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
             haveI : Countable (Polynomial R.carrier) := by
-              letI : Countable (AddMonoidAlgebra R.carrier ℕ) := instCountableFinsupp
+              letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+                Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
               exact Polynomial.toFinsupp_injective.countable
             have hC_good_countable : C_good.Countable :=
               Set.Countable.union (Set.countable_iUnion fun r =>

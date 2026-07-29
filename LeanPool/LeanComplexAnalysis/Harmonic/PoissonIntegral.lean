@@ -339,7 +339,7 @@ lemma tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc
     · exact ContinuousOn.comp_continuous (s:= closedBall 0 1) hf (by fun_prop) (hrn n)
   · exact Eventually.of_forall fun n => Eventually.of_forall fun t ht =>
              bounds_of_continuousOn_unitCircle_closedUnitDisc (hr n) hf hk
-  · simp only [ne_eq, enorm_ne_top, not_false_eq_true, intervalIntegrable_const]
+  · simp only [intervalIntegrable_const]
   · refine Eventually.of_forall fun x hx => Tendsto.smul tendsto_const_nhds ?_
     apply Tendsto.comp (hf.continuousWithinAt _)
     · rw [tendsto_nhdsWithin_iff]

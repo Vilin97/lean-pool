@@ -77,7 +77,7 @@ lemma or_eq (n m : ℕ) : or n m = if 0 < n ∨ 0 < m then 1 else 0 := by simp[o
 @[simp] lemma and_pos_iff (n m : ℕ) :
     0 < and n m ↔ 0 < n ∧ 0 < m := by simp[and_eq]; by_cases 0 < n ∧ 0 < m <;> simp[*]
 
-@[simp] lemma or_pos_iff (n m : ℕ) :
+@[simp] lemma or_pos_iff' (n m : ℕ) :
     0 < or n m ↔ 0 < n ∨ 0 < m := by simp[or_eq]; by_cases 0 < n ∨ 0 < m <;> simp[*]
 
 @[simp] lemma inv_pos_iff (n : ℕ) : 0 < inv n ↔ ¬0 < n := by simp[inv]
@@ -136,7 +136,7 @@ end Nat
 
 namespace Nat.ArithPart₁
 
-open Primrec
+open _root_.Nat.Primrec
 
 lemma to_partrec' {n} {f : List.Vector ℕ n →. ℕ} (hf : ArithPart₁ f) : Partrec' f := by
   induction hf
@@ -190,13 +190,17 @@ lemma bind (f : List.Vector ℕ n → ℕ →. ℕ) (hf :
     intro v; simp only [succ_eq_add_one, coe_some, bind_eq_bind]
     rcases Part.eq_none_or_eq_some (g v) with (hgv | ⟨x, hgv⟩)
     · simp[hgv, List.Vector.mOfFn]
+      exact (Part.bind_none (f v)).symm
     · simp[hgv]
       have : List.Vector.mOfFn (fun i =>
         (g :> fun j v => Part.some <|
             v.get j) i v) = pure (List.Vector.ofFn (x :> fun j => v.get j)) := by
         rw[←List.Vector.mOfFn_pure]; apply congr_arg
-        funext i; cases i using Fin.cases <;> simp[hgv]
-      simp[this])
+        funext i; cases i using Fin.cases
+        · simp[hgv]
+        · rfl
+      simp[this]
+      exact (Part.bind_some x (f v)).symm)
 
 lemma map (f : List.Vector ℕ n → ℕ → ℕ) (hf : @Arith₁ (n + 1) fun v => f v.tail v.head) {g} (hg :
     @ArithPart₁ n g) :
@@ -365,7 +369,9 @@ namespace Nat.Arith₁
 protected lemma sqrt {n} (i : Fin n) : Arith₁ (fun v => sqrt (v.get i)) := by
   have := ArithPart₁.implicit_fun i (fun _ x => x * x) ((mul 0 1).comp₂ _ head head)
   exact this.of_eq <| by
-    intro v; simp only [Bool.decide_and, PFun.coe_val, eq_some_iff, mem_rfind, mem_some_iff]
+    intro v; simp only [Bool.decide_and, PFun.coe_val, eq_some_iff]
+    refine Nat.mem_rfind.mpr ?_
+    simp only [mem_some_iff]
     constructor
     · symm; simp only [Bool.and_eq_true, decide_eq_true_eq]; constructor
       · exact sqrt_le (List.Vector.get v i)
@@ -385,9 +391,10 @@ lemma sub {n} (i j : Fin n) : Arith₁ (fun v => v.get i - v.get j) := by
         zero))
   exact (ArithPart₁.rfindPos this).of_eq <| by
     intro v
-    simp only [head_cons, get_cons_succ, or_pos_iff, isEqNat_pos_iff, and_pos_iff,
-      isLtNat_pos_iff, Bool.decide_or, Bool.decide_and, PFun.coe_val, eq_some_iff, mem_rfind,
-      mem_some_iff, F]
+    simp only [head_cons, get_cons_succ, or_pos_iff', isEqNat_pos_iff, and_pos_iff,
+      isLtNat_pos_iff, Bool.decide_or, Bool.decide_and, PFun.coe_val, eq_some_iff, F]
+    refine Nat.mem_rfind.mpr ?_
+    simp only [mem_some_iff]
     constructor
     · symm; simp only [Bool.or_eq_true, decide_eq_true_eq, Bool.and_eq_true]
       have : v.get i < v.get j ∨ v.get j ≤ v.get i := Nat.lt_or_ge _ _
@@ -447,8 +454,8 @@ lemma dvd (i j : Fin n) : Arith₁ (fun v => isDvdNat (v.get i) (v.get j)) := by
   have := ArithPart₁.map (fun v x => isLeNat x (v.get j)) this (ArithPart₁.rfindPos hr)
   exact this.of_eq <| by
     intro v
-    simp only [head_cons, get_cons_succ, or_pos_iff, isEqNat_pos_iff, isLtNat_pos_iff,
-      Bool.decide_or, isDvdNat, PFun.coe_val, eq_some_iff, mem_map_iff, mem_rfind, mem_some_iff]
+    simp only [head_cons, get_cons_succ, or_pos_iff', isEqNat_pos_iff, isLtNat_pos_iff,
+      Bool.decide_or, isDvdNat, PFun.coe_val, eq_some_iff, mem_map_iff]
     by_cases hv : v.get i ∣ v.get j
     · simp only [hv, ↓reduceIte]
       rcases least_number _ hv with ⟨k, hk, hkm⟩
@@ -459,19 +466,21 @@ lemma dvd (i j : Fin n) : Arith₁ (fun v => isDvdNat (v.get i) (v.get j)) := by
             simp[hvi] at hk
             have : v.get j ≠ 0 := hkm 0 (Nat.pos_of_ne_zero hkz)
             contradiction)
-      refine ⟨k,
-        ⟨by symm; simp only [Bool.or_eq_true, decide_eq_true_eq]; left; simp[hk, mul_comm],
+      refine ⟨k, Nat.mem_rfind.mpr ?_, by simp[isLeNat, hkvj]⟩
+      simp only [mem_some_iff]
+      exact ⟨by symm; simp only [Bool.or_eq_true, decide_eq_true_eq]; left; simp[hk, mul_comm],
          by intro m hm; symm; simp[mul_comm m, Ne.symm (hkm m hm),
-           le_of_lt (lt_of_lt_of_le hm hkvj)]⟩,
-        by simp[isLeNat, hkvj]⟩
+           le_of_lt (lt_of_lt_of_le hm hkvj)]⟩
     · simp only [hv, ↓reduceIte]
-      exact ⟨v.get j + 1, ⟨by symm; simp, by
+      refine ⟨v.get j + 1, Nat.mem_rfind.mpr ?_, by simp [isLeNat]⟩
+      simp only [mem_some_iff]
+      exact ⟨by symm; simp, by
         intro m hm; symm
         simp only [Bool.or_eq_false_iff, decide_eq_false_iff_not, not_lt,
           Nat.lt_succ_iff.mp hm, and_true]
         intro A
         have : v.get i ∣ v.get j := by rw[←A]; exact Nat.dvd_mul_left (List.Vector.get v i) m
-        contradiction⟩, by simp [isLeNat]⟩
+        contradiction⟩
 
 lemma rem (i j : Fin n) : Arith₁ (fun v => v.get i % v.get j) := by
   let F : List.Vector ℕ (n + 1) → ℕ := fun v => isDvdNat (v.get j.succ) (v.get i.succ - v.head)
@@ -518,7 +527,7 @@ lemma ball {φ : List.Vector ℕ n → ℕ → ℕ} (hp : @Arith₁ (n + 1) (fun
     (ArithPart₁.rfindPos hF)
   exact this.of_eq <| by
     intro v
-    simp only [tail_cons, head_cons, get_cons_succ, or_pos_iff, inv_pos_iff, not_lt,
+    simp only [tail_cons, head_cons, get_cons_succ, or_pos_iff', inv_pos_iff, not_lt,
       nonpos_iff_eq_zero, isLeNat_pos_iff, Bool.decide_or, PFun.coe_val, eq_some_iff, mem_map_iff,
       mem_rfind, mem_some_iff, F]
     by_cases H : ∀ m < v.get i, 0 < φ v m

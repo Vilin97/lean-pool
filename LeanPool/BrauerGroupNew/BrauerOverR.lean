@@ -39,14 +39,26 @@ abbrev toEndMap : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ] →ₗ[ℝ] Module.End ℝ (ℍ[ℝ
 lemma toEndMap.map_mul (x1 x2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) : toEndMap (x1 * x2) =
     toEndMap x1 * toEndMap x2 := by
   induction x1 using TensorProduct.induction_on with
-  | zero => simp
+  | zero =>
+    have e : (0 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * x2 = 0 := by
+      exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).zero_mul _
+    rw [e, map_zero, zero_mul]
   | tmul q1 q2 =>
     induction x2 using TensorProduct.induction_on with
-    | zero => simp
+    | zero =>
+      have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * 0 = 0 := by
+        exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).mul_zero _
+      rw [e, map_zero, mul_zero]
     | tmul q3 q4 => ext : 1; simp [← _root_.mul_assoc]
     | add x y h1 h2 =>
-      rw [mul_add, map_add, map_add, mul_add, h1, h2]
-  | add x y h1 h2 => rw [add_mul, map_add, map_add, add_mul, h1, h2]
+      have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * (x + y) =
+          q1 ⊗ₜ[ℝ] q2 * x + q1 ⊗ₜ[ℝ] q2 * y := by
+        exact (inferInstance : Distrib (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).left_distrib _ _ _
+      rw [e, map_add, map_add, mul_add, h1, h2]
+  | add x y h1 h2 =>
+    have e : ((x + y) * x2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) = x * x2 + y * x2 := by
+      exact (inferInstance : Distrib (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).right_distrib _ _ _
+    rw [e, map_add, map_add, add_mul, h1, h2]
 
 /-- The algebra homomorphism `ℍ ⊗ ℍ → End_R(ℍ)` from two-sided quaternion multiplication. -/
 abbrev toEnd : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ] →ₐ[ℝ] Module.End ℝ (ℍ[ℝ]) where

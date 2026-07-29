@@ -106,7 +106,6 @@ theorem analyticSet_nullMeasurableSet
       measureReal_mono (Set.sdiff_subset_sdiff_right hKs)
     -- Combine with hKapprox (μ.real s < μ.real K + μ.real(t \ s)/2) for the contradiction.
     linarith
-  have h_ae : s =ᵐ[μ] t := by
-    rw [Filter.eventuallyEq_comm, ae_eq_set]
-    exact ⟨hzero, by simp [Set.sdiff_eq_empty.mpr hst]⟩
+  have h_ae : s =ᵐ[μ] t :=
+    ae_eq_set.mpr ⟨by simp [Set.sdiff_eq_empty.mpr hst], hzero⟩
   exact ht_meas.nullMeasurableSet.congr h_ae.symm

@@ -67,9 +67,13 @@ theorem iterElem_succ (f : ApproximableMap V V) (n : ℕ) :
 theorem iterElem_zero (f : ApproximableMap V V) : f.iterElem 0 = V.bot :=
   toElementMap_idMap V.bot
 
+/-- The approximants `fⁿ(⊥)` form a monotone chain. -/
+theorem iterElem_monotone (f : ApproximableMap V V) : Monotone f.iterElem :=
+  fun _ _ hab => iterElem_mono f hab
+
 /-- The approximants `fⁿ(⊥)` form a monotone chain whose sup is `fix(f)`. -/
 theorem fixElement_eq_supChain (f : ApproximableMap V V) :
-    f.fixElement = supChain f.iterElem (fun _ _ hab => iterElem_mono f hab) := by
+    f.fixElement = supChain f.iterElem (iterElem_monotone f) := by
   apply Element.ext
   intro X
   rw [mem_supChain, mem_fixElement]

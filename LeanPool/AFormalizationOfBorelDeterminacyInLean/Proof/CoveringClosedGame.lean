@@ -123,9 +123,15 @@ abbrev T {A : Type*} {G : Game A} : tree A := G.tree
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev T' {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} : tree (upA hyp) := gameTree hyp
 variable {hyp}
-lemma gameTree_ne : [] ∈ gameTree hyp := by simp [gameTree]
+lemma gameTree_ne : [] ∈ gameTree hyp := by
+  change List.reverseRecOn ([] : List (upA hyp)) True (fun x a hx ↦ hx ∧ ValidExt x a)
+  rw [List.reverseRecOn_nil]
+  trivial
 @[simp] lemma gameTree_concat (x : List (upA hyp)) (a : upA hyp) :
-  x ++ [a] ∈ gameTree hyp ↔ x ∈ gameTree hyp ∧ ValidExt x a := by simp [gameTree]
+  x ++ [a] ∈ gameTree hyp ↔ x ∈ gameTree hyp ∧ ValidExt x a := by
+  change List.reverseRecOn (x ++ [a]) True (fun x a hx ↦ hx ∧ ValidExt x a) ↔
+    List.reverseRecOn x True (fun x a hx ↦ hx ∧ ValidExt x a) ∧ ValidExt x a
+  rw [List.reverseRecOn_concat]
 lemma getTree_sub (x : gameTree hyp) :
   getTree' hyp x.val ≤ subAt G.tree (x.val.map Prod.fst) := by
   have ⟨x, h⟩ := x
@@ -195,7 +201,7 @@ end WinningCondition
 variable (x h) in
 lemma lose_or_win : LosingCondition x.val h ∨ WinningCondition x.val h := by
   let ⟨x, hx⟩ := x; rcases x.eq_nil_or_concat' with rfl | ⟨_, _, rfl⟩ <;> simp at h
-  simp [gameTree, h] at hx; tauto
+  rw [gameTree_concat] at hx; simp [h] at hx; tauto
 @[simp] lemma not_winning : ¬ WinningCondition x.val h ↔ LosingCondition x.val h := by
   constructor
   · have := lose_or_win x h; tauto
@@ -232,10 +238,11 @@ lemma treeHom_val x : (treeHom hyp x).val = x.val.map Prod.fst := by
 lemma treeHom_body (x : body (gameTree hyp)) :
   ((bodyFunctor.map (treeHom hyp)) x).val = x.val.map Prod.fst := by
   ext n
-  rw [bodyMap_spec_res']
-  change (List.map Prod.fst (Stream'.take (n + 1) (x : Stream' (upA hyp))))[n] =
-    (Stream'.map Prod.fst (x : Stream' (upA hyp))).get n
-  simp
+  rw [bodyMap_spec_res' (treeHom hyp) x n]
+  simp only [treeHom_val]
+  exact (List.getElem_map ..).trans
+    ((congrArg Prod.fst (Stream'.take_get n (n + 1) x.val (by simp))).trans
+      (Stream'.get_map Prod.fst n x.val).symm)
 lemma T'_snd_small' (x : gameTree hyp) (h : x.val.length ≤ 2 * k) :
   getTree' hyp x.val = subAt G.tree (x.val.map Prod.fst) := by
   have ⟨x, hx⟩ := x
@@ -252,52 +259,48 @@ lemma T'_snd_small {x a} (h : x ++ [a] ∈ gameTree hyp) (h' : x.length < 2 * k)
   a.2 = (G.residual (x.map Prod.fst ++ [a.1])).tree := by
   have hmap : List.map Prod.fst (x ++ [a]) = x.map Prod.fst ++ [a.1] := List.map_append ..
   simpa [Game.residual_tree, hmap] using T'_snd_small' ⟨_, h⟩ (by simpa using h')
-@[simp] lemma pInvTreeHomMap_nil : pInvTreeHomMap hyp [] = [] := by simp [pInvTreeHomMap]
+@[simp] lemma pInvTreeHomMap_nil : pInvTreeHomMap hyp [] = [] :=
+  List.zipInitsMap_nil _
 @[simp] lemma pInvTreeHomMap_concat (x : List A) (a : A) :
   pInvTreeHomMap hyp (x ++ [a])
-  = pInvTreeHomMap hyp x ++ [⟨a, (G.residual (x ++ [a])).tree⟩] := by simp [pInvTreeHomMap]
+  = pInvTreeHomMap hyp x ++ [⟨a, (G.residual (x ++ [a])).tree⟩] :=
+  List.zipInitsMap_concat ..
 @[simp, simp_lengths] lemma pInvTreeHomMap_len (x : List A) :
-  (pInvTreeHomMap hyp x).length = x.length := by simp [pInvTreeHomMap]
+  (pInvTreeHomMap hyp x).length = x.length := List.zipInitsMap_length ..
 @[simp] lemma getTree_pInvTreeHomMap (x : List A) :
   getTree' hyp (pInvTreeHomMap hyp x) = (G.residual x).tree := by
-  rcases x.eq_nil_or_concat with rfl | ⟨_, _, rfl⟩ <;> simp
+  rcases x.eq_nil_or_concat' with rfl | ⟨_, _, rfl⟩
+  · simp
+  · rw [pInvTreeHomMap_concat]
+    exact getTree_concat _ _
+/-- Auxiliary declaration for the Borel determinacy formalization. -/
+lemma pInvTreeHomMap_mem : ∀ {x : List A}, x ∈ G.tree → x.length ≤ 2 * k →
+    pInvTreeHomMap hyp x ∈ gameTree hyp := by
+  intro x
+  induction x using List.reverseRecOn with
+  | nil => intro _ _; rw [pInvTreeHomMap_nil]; exact gameTree_ne
+  | append_singleton x a ih =>
+    intro hmem hlen
+    have hxlt : x.length < 2 * k := by
+      simp only [List.length_append, List.length_cons, List.length_nil] at hlen; omega
+    have hplen : (pInvTreeHomMap hyp x).length < 2 * k :=
+      (pInvTreeHomMap_len (hyp := hyp) x).trans_lt hxlt
+    have hvalid : ValidExt (pInvTreeHomMap hyp x) ⟨a, (G.residual (x ++ [a])).tree⟩ := by
+      refine (validExt_short hplen).mpr ⟨?_, ?_⟩
+      · rw [getTree_pInvTreeHomMap, Game.residual_tree]
+        exact hmem
+      · rw [getTree_pInvTreeHomMap, Game.residual_tree, Game.residual_tree, subAt_append]
+    rw [pInvTreeHomMap_concat]
+    exact (gameTree_concat (pInvTreeHomMap hyp x) ⟨a, (G.residual (x ++ [a])).tree⟩).mpr
+      ⟨ih (mem_of_append hmem) hxlt.le, hvalid⟩
 variable (hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def pInvTreeHom : (Tree.res (2 * k)).obj ⟨_, G.tree⟩ ⟶
     (Tree.res (2 * k)).obj ⟨_, gameTree hyp⟩ where
-  toFun x := ⟨pInvTreeHomMap hyp x.val, by
-    have ⟨x, h⟩ := x
-    induction x using List.reverseRecOn with
-    | nil =>
-      change pInvTreeHomMap hyp ([] : List A) ∈ ↑((res (2 * k)).obj ⟨upA hyp, gameTree hyp⟩).snd
-      rw [pInvTreeHomMap_nil]
-      exact ⟨gameTree_ne, by simp⟩
-    | append_singleton x a ih =>
-      specialize ih (mem_of_append h)
-      simp only at ih ⊢
-      have hxlt : x.length < 2 * k := by
-        have hxle : (x ++ [a]).length ≤ 2 * k := h.2
-        simp only [List.length_append, List.length_cons, List.length_nil] at hxle; omega
-      constructor
-      · have hconcat := pInvTreeHomMap_concat (hyp := hyp) (x := x) (a := a)
-        have hvalid : ValidExt (pInvTreeHomMap hyp x) ⟨a, (G.residual (x ++ [a])).tree⟩ := by
-          have hplen : (pInvTreeHomMap hyp x).length < 2 * k := by
-            rwa [pInvTreeHomMap_len]
-          rw [validExt_short hplen]
-          constructor
-          · rw [getTree_pInvTreeHomMap, Game.residual_tree]
-            change x ++ [a] ∈ G.tree
-            exact h.1
-          · simp [getTree_pInvTreeHomMap, Game.residual_tree, subAt_append]
-            rfl
-        have hmem : pInvTreeHomMap hyp x ++ [⟨a, (G.residual (x ++ [a])).tree⟩] ∈
-            gameTree hyp :=
-          (gameTree_concat (pInvTreeHomMap hyp x)
-            ⟨a, (G.residual (x ++ [a])).tree⟩).mpr ⟨ih.1, hvalid⟩
-        exact hconcat.symm ▸ hmem
-      · have hlen := h.2
-        simpa [pInvTreeHomMap_len] using hlen⟩
-  monotone' x y h := h.zipInitsMap _ _ _
+  toFun x := ⟨pInvTreeHomMap hyp x.val,
+    pInvTreeHomMap_mem x.prop.1 x.prop.2,
+    (pInvTreeHomMap_len (hyp := hyp) x.val).trans_le x.prop.2⟩
+  monotone' _ _ h := h.zipInitsMap _ _ _
   h_length := fun x ↦ pInvTreeHomMap_len (hyp := hyp) x.val
 @[simp] lemma pInvTreeHom_val (x : (Tree.res (2 * k)).obj ⟨_, G.tree⟩) :
   (pInvTreeHom hyp x).val = pInvTreeHomMap hyp x.val := rfl
@@ -346,7 +349,7 @@ instance treeHom_fixing : Tree.Fixing (2 * k) (treeHom hyp) := ⟨Iso.isIso_hom 
   rw [cancel_pInv_right]
   ext1
   change x.val = List.map Prod.fst (pInvTreeHomMap hyp x.val)
-  rw [pInvTreeHomMap]
+  unfold pInvTreeHomMap
   have hmap : ∀ xs : List A,
       xs = List.map Prod.fst (xs.zipInitsMap fun a y => (a, (G.residual y).tree)) := by
     intro xs
@@ -375,10 +378,8 @@ lemma gameTree_isPruned : IsPruned <| gameTree hyp := by
       let b : tree A := pullSub (subAt G.tree (x.map Prod.fst ++ a :: u.val)) u.val
       refine ⟨b, ?_⟩
       change x ++ ([⟨a, b⟩] : List (upA hyp)) ∈ gameTree hyp
-      rw [gameTree_concat, validExt_one hlen]
-      refine ⟨hx, ha, Or.inl ?_⟩
-      rw [LosingCondition.concat]
-      constructor
+      refine (gameTree_concat x ⟨a, b⟩).mpr ⟨hx, (validExt_one hlen).mpr ⟨ha, Or.inl ?_⟩⟩
+      refine LosingCondition.concat.mpr ⟨?_, ?_⟩
       · change body (pullSub b (x.map Prod.fst ++ [a])) ∩ G.payoff = ∅
         dsimp [b]
         simp_rw [pullSub_body, Set.image_image, ← Set.subset_empty_iff]
@@ -402,17 +403,19 @@ lemma gameTree_isPruned : IsPruned <| gameTree hyp := by
       let b : tree A := S.1.subtree
       refine ⟨b, ?_⟩
       change x ++ ([⟨a, b⟩] : List (upA hyp)) ∈ gameTree hyp
-      rw [gameTree_concat, validExt_one hlen]
-      refine ⟨hx, ha, Or.inr ?_⟩
-      rw [WinningCondition.concat]
-      constructor
+      refine (gameTree_concat x ⟨a, b⟩).mpr ⟨hx, (validExt_one hlen).mpr ⟨ha, Or.inr ?_⟩⟩
+      refine WinningCondition.concat.mpr ⟨?_, ?_⟩
       · simpa [Set.subset_def, S, b] using h
       · exact ⟨S, rfl⟩
   · use (a, subAt (getTree' hyp x) [a])
     by_cases hlen' : x.length = 2 * k
-    · conv => simp [hx, ValidExt, hlen', ha]
-      use ⟨⊤, PreStrategy.top_isQuasi (hPr.sub _)⟩, PreStrategy.top_subtree.symm
-    · simpa [hx, ValidExt, hlen, hlen']
+    · refine (gameTree_concat x ⟨a, subAt (getTree' hyp x) [a]⟩).mpr
+        ⟨hx, (validExt_zero hlen').mpr ⟨ha, ?_⟩⟩
+      exact ⟨⟨⊤, PreStrategy.top_isQuasi (hPr.sub _)⟩, PreStrategy.top_subtree.symm⟩
+    · refine (gameTree_concat x ⟨a, subAt (getTree' hyp x) [a]⟩).mpr ⟨hx, ?_⟩
+      unfold ValidExt
+      rw [if_neg hlen', dif_neg hlen]
+      exact ⟨ha, rfl⟩
 
 variable (hyp) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

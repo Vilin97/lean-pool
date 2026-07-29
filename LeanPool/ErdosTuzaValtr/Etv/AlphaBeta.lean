@@ -91,8 +91,8 @@ def alphaCup {a : α} (ha : a ∈ S) :
   have h_argmax := Option.get_mem some
   rw [← def_c, alphaCup'] at h_argmax
   have c_alpha_cup := List.argmax_mem h_argmax
-  simp only [alphaCups', IsAlphaCup, List.append_in, List.cons_in, List.nil_in, and_true,
-    List.mem_filter, List.mem_sublists, decide_eq_true_eq] at c_alpha_cup
+  simp only [alphaCups', List.mem_filter, List.mem_sublists, decide_eq_true_eq] at c_alpha_cup
+  simp only [IsAlphaCup, List.append_in, List.cons_in, List.nil_in, and_true] at c_alpha_cup
   use c ++ [a]
   simp_all
 
@@ -213,8 +213,8 @@ def betaCup {a : α} (ha : a ∈ S) :
   have h_argmax := Option.get_mem some
   rw [← def_c, betaCup'] at h_argmax
   have c_beta_cup := List.argmax_mem h_argmax
-  simp only [betaCups', IsBetaCup, List.append_in, List.cons_in, List.nil_in, and_true,
-    List.mem_filter, List.mem_sublists, decide_eq_true_eq] at c_beta_cup
+  simp only [betaCups', List.mem_filter, List.mem_sublists, decide_eq_true_eq] at c_beta_cup
+  simp only [IsBetaCup, List.append_in, List.cons_in, List.nil_in, and_true] at c_beta_cup
   use c ++ [a]
   simp only [List.append_in, List.cons_in, List.nil_in, and_true, NCup, List.length_append,
     List.length_cons, List.length_nil, zero_add, List.getLast?_append,

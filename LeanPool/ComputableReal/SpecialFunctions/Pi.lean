@@ -419,7 +419,7 @@ noncomputable def Pi : ComputableℝSeq :=
   (heq := by
     obtain ⟨_, h₁⟩ := piLb_causeq
     obtain ⟨_, h₂⟩ := piUb_causeq
-    rw [← Real.mk_eq, h₁, h₂]
+    exact Real.mk_eq.1 (h₁.trans h₂.symm)
   )
 
 end Pi

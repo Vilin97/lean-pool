@@ -308,15 +308,15 @@ lemma nw_finite (a b : ℤ) : (northwestSet τ a b).Finite :=
 noncomputable def seFinset (a b : ℤ) : Finset ℤ := (τ.se_finite a b).toFinset
 
 @[simp] lemma mem_se (a b n : ℤ) : n ∈ (τ.seFinset a b) ↔ n ≥ b ∧ τ n < a := by
-  unfold seFinset southeastSet
-  simp
+  unfold seFinset
+  simp [southeastSet]
 
 /-- The finite northwest quadrant for an ASP permutation. -/
 noncomputable def nwFinset (a b : ℤ) : Finset ℤ := (τ.nw_finite a b).toFinset
 
 @[simp] lemma mem_nw (a b n : ℤ) : n ∈ (τ.nwFinset a b) ↔ n < b ∧ τ n ≥ a := by
-  unfold nwFinset northwestSet
-  simp
+  unfold nwFinset
+  simp [northwestSet]
 
 lemma inv_set_inverse (u v : ℤ) :
     ⟨u, v⟩ ∈ invSet τ ↔ ⟨τ v, τ u⟩ ∈ invSet τ⁻¹.func := by

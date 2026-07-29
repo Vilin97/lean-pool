@@ -42,7 +42,7 @@ inductive ZambellaRel : Nat -> Type u
 deriving DecidableEq
 
 /-- The two-sorted language for bounded arithmetic. -/
-def zambella : Language :=
+@[reducible] def zambella : Language :=
 { Functions := ZambellaFunc,
   Relations := ZambellaRel
 }

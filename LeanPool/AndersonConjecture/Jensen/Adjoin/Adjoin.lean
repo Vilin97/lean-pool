@@ -131,11 +131,9 @@ private def adjoin_surjectivity_proof
           apply Set.countable_iUnion
           intro _
           exact (associatedPrimes.finite T _).countable
-        haveI : Countable (Polynomial R.carrier) := by
-          haveI : Countable (AddMonoidAlgebra R.carrier ℕ) := by
-            change Countable (ℕ →₀ R.carrier)
-            infer_instance
-          exact Countable.of_equiv _ (Polynomial.toFinsuppIso R.carrier).symm.toEquiv
+        haveI : Countable (Polynomial R.carrier) :=
+          Countable.of_equiv _ ((Polynomial.toFinsuppIso R.carrier).toEquiv.trans
+            AddMonoidAlgebra.coeffEquiv).symm
         have hD'_countable : D'.Countable := by
           apply Set.Countable.union
           · apply Set.Countable.union (Set.countable_singleton _)

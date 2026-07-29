@@ -420,6 +420,7 @@ def coalgebraGame : Game where
     | ⟨Sum.inl Γ, Γs, Rs⟩ =>
         Finset.map
           ⟨fun R ↦ ⟨Sum.inr R, Γ :: Γs, Rs⟩, by
+            unfold Function.Injective
             intro r1 r2
             simp⟩
           (SplitSequent.ruleApps Γ)

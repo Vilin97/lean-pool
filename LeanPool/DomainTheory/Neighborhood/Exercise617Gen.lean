@@ -747,6 +747,7 @@ end SumMapSig
 /-! ## The endofunctor `Tsig(X) = 𝟙 + Σ_a X` on the `∅`-free category. -/
 
 /-- `Tsig` on objects: `Tsig(D) = 𝟙 + Σ_a D`, again `∅`-free (`sumSig_nonempty`). -/
+@[implicit_reducible]
 def tsigObj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) : StrictDomainObj.{0} where
   carrier := SigTok A D.carrier
   sys := sumSig A D.sys D.nonempty
@@ -767,6 +768,7 @@ def tsigMapHom (A : Type) [DecidableEq A] {D E : StrictDomainObj.{0}} (f : Categ
 /-- **The functor `Tsig(X) = 𝟙 + Σ_{a:A} X`** on the category of `∅`-free domains
 and strict
 maps. -/
+@[implicit_reducible]
 def Tsig (A : Type) [DecidableEq A] : Endofunctor StrictDomainObj.{0} where
   obj := tsigObj A
   map := tsigMapHom A
@@ -1536,7 +1538,7 @@ def descAlgHom : AlgHom (Cnalg A) B where
   hom := descStrict B
   comm := by
     apply Subtype.ext
-    simp only [StrictDomainObj.comp_val, Tsig_map_val]
+    simp only [StrictDomainObj.comp_val]
     exact descComm B
 
 /-- **Uniqueness.** Any `Tsig`-algebra homomorphism out of `(Cₐ, i)` equals

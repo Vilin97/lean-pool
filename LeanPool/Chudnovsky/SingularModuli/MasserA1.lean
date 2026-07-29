@@ -109,10 +109,11 @@ def LamGamma : SL(2, ℤ) :=
 
 /-- **Coset decomposition** `Λ = γ · Acol 163 (−82)` in `GL (Fin 2) ℝ`. -/
 lemma LamGL_factor : LamGL = (LamGamma : GL (Fin 2) ℝ) * Acol 163 (-82) := by
+  have hcoe : ((LamGamma : SL(2, ℤ)) : Matrix (Fin 2) (Fin 2) ℤ) = !![1, 0; 2, 1] := rfl
   apply Matrix.GeneralLinearGroup.ext
   intro a c
   fin_cases a <;> fin_cases c <;>
-    norm_num [val_LamGL, val_Acol, LamGamma, Matrix.mul_apply, Fin.sum_univ_two]
+    norm_num [val_LamGL, val_Acol, hcoe, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- **Step 2 — coset identification.** For *every* `z : ℍ`, `j(Λ • z)` equals the
 `81`-coset orbit value `f 163 (some 81) z` (since `−82 ≡ 81 mod 163`).  Hence one factor of

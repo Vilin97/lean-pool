@@ -398,7 +398,6 @@ private def build_height_bound_proof
                        exact hRbar_add _ _ hf hg
     | monomial n r =>
       rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₁ ^ n ∈ Rbar
       exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
         induction n with
         | zero => simp only [pow_zero]
@@ -414,7 +413,6 @@ private def build_height_bound_proof
                        exact hRbar_add _ _ hf hg
     | monomial n r =>
       rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₂ ^ n ∈ Rbar
       exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
         induction n with
         | zero => simp only [pow_zero]
