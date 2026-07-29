@@ -14,10 +14,8 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Constructions
 
 namespace NumberField.Odlyzko
 
-variable {α β E : Type*} [AddCommMonoid E] [TopologicalSpace E]
-  [ContinuousAdd E] [T3Space E]
-
-theorem tsum_sigma_of_summable
+theorem tsum_sigma_of_summable {β E : Type*} [AddCommMonoid E] [TopologicalSpace E]
+    [ContinuousAdd E] [T3Space E]
     {γ : β → Type*} (w : (Σ b, γ b) → E)
     (hfiber : ∀ b, Summable (fun x : γ b ↦ w ⟨b, x⟩))
     (hw : Summable w) :

@@ -19,15 +19,12 @@ open scoped Topology
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-  [FiniteDimensional ℝ E]
-  (L : Submodule ℤ E) [DiscreteTopology L]
+variable {E : Type*} [NormedAddCommGroup E]
 
 /-- A lattice gaussian used in the Odlyzko-bound argument. -/
 noncomputable def latticeGaussian (a : ℝ) (x : E) : ℂ :=
   Complex.exp (-(a : ℂ) * (‖x‖ : ℂ) ^ 2)
 
-omit [NormedSpace ℝ E] [FiniteDimensional ℝ E] in
 theorem norm_latticeGaussian (a : ℝ) (x : E) :
     ‖latticeGaussian a x‖ = Real.exp (-a * ‖x‖ ^ 2) := by
   have hvalue :
@@ -38,7 +35,6 @@ theorem norm_latticeGaussian (a : ℝ) (x : E) :
   rw [hvalue, Complex.norm_real,
     Real.norm_of_nonneg (Real.exp_pos _).le]
 
-omit [NormedSpace ℝ E] [FiniteDimensional ℝ E] in
 theorem norm_latticeGaussian_add_le
     {a : ℝ} (ha : 0 ≤ a) (y z : E) :
     ‖latticeGaussian a (y + z)‖ ≤
@@ -55,7 +51,8 @@ theorem norm_latticeGaussian_add_le
       norm_nonneg z, norm_nonneg (y + z), norm_nonneg y]
   nlinarith
 
-theorem summable_latticeGaussian {a : ℝ} (ha : 0 < a) :
+theorem summable_latticeGaussian [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] {a : ℝ} (ha : 0 < a) :
     Summable (fun x : L ↦ latticeGaussian a (x : E)) := by
   let r : ℝ := -(Module.finrank ℤ L + 1)
   have hr : r < -(Module.finrank ℤ L : ℝ) := by grind
@@ -80,9 +77,5 @@ theorem summable_latticeGaussian {a : ℝ} (ha : 0 < a) :
   apply hreal.of_norm_bounded
   intro x
   rw [norm_latticeGaussian]
-
-theorem summable_norm_latticeGaussian {a : ℝ} (ha : 0 < a) :
-    Summable (fun x : L ↦ ‖latticeGaussian a (x : E)‖) :=
-  (summable_latticeGaussian L ha).norm
 
 end NumberField.Odlyzko

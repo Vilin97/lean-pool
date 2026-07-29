@@ -18,19 +18,18 @@ open scoped RealInnerProductSpace
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
-  (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-  {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {E : Type*} [NormedAddCommGroup E] {ι : Type*} [Fintype ι]
 
 /-- An ambient fourier gaussian used in the Odlyzko-bound argument. -/
-noncomputable def ambientFourierGaussian
+noncomputable def ambientFourierGaussian [InnerProductSpace ℝ E]
     (a : ℝ) (w y : E) : ℂ :=
   Complex.exp
     (-(a : ℂ) * (‖y‖ : ℂ) ^ 2 +
       (-2 * (Real.pi : ℂ) * Complex.I) * (inner ℝ w y : ℂ))
 
 theorem integrable_ambientFourierGaussian
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
     {a : ℝ} (ha : 0 < a) (w : E) :
     Integrable (ambientFourierGaussian a w) := by
   have h :=
@@ -40,8 +39,9 @@ theorem integrable_ambientFourierGaussian
   unfold ambientFourierGaussian
   simp
 
-omit [MeasurableSpace E] [BorelSpace E] in
 theorem coordinateFourierGaussian_eq_ambient
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] [DecidableEq ι]
     (b : Basis ι ℤ L) (a : ℝ) (n : ι → ℤ) (x : ι → ℝ) :
     coordinateFourierGaussian L b a n x =
       ambientFourierGaussian a (dualLatticePoint L b n)
@@ -54,8 +54,10 @@ theorem coordinateFourierGaussian_eq_ambient
   push_cast
   ring_nf
 
-omit [DecidableEq ι] in
 theorem integrable_coordinateFourierGaussian
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) (n : ι → ℤ) :
     Integrable (coordinateFourierGaussian L b a n) := by
   classical
@@ -67,6 +69,8 @@ theorem integrable_coordinateFourierGaussian
   exact (coordinateFourierGaussian_eq_ambient L b a n x).symm
 
 theorem integral_ambientFourierGaussian
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
     {a : ℝ} (ha : 0 < a) (w : E) :
     (∫ y : E, ambientFourierGaussian a w y) =
       ((Real.pi : ℂ) / a) ^
@@ -85,6 +89,9 @@ theorem integral_ambientFourierGaussian
   ring_nf
 
 theorem mFourierCoeff_gaussianTorusPeriodization_eq
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] [DecidableEq ι]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) (n : ι → ℤ) :
     UnitAddTorus.mFourierCoeff
         (gaussianTorusPeriodization L b a ha) n =

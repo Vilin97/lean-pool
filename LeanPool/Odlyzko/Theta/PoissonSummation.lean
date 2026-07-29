@@ -17,12 +17,8 @@ open Module MeasureTheory
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
-  (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-  {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {E : Type*} [NormedAddCommGroup E] {ι : Type*}
 
-omit [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] in
 theorem exp_fourierGaussian_eq_latticeGaussian
     {a : ℝ} (_ha : 0 < a) (w : E) :
     Complex.exp
@@ -32,8 +28,10 @@ theorem exp_fourierGaussian_eq_latticeGaussian
   push_cast
   grind
 
-omit [DecidableEq ι] in
 theorem summable_mFourierCoeff_gaussianTorusPeriodization
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] [Fintype ι]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     Summable
       (UnitAddTorus.mFourierCoeff
@@ -63,8 +61,10 @@ theorem summable_mFourierCoeff_gaussianTorusPeriodization
   dsimp [C]
   simp
 
-omit [DecidableEq ι] [Fintype ι] in
-theorem latticeGaussian_poissonSummation_of_basis [Finite ι]
+theorem latticeGaussian_poissonSummation_of_basis
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] [Finite ι]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     latticeTheta L a =
       (Real.toNNReal (ZLattice.covolume L))⁻¹ •
@@ -120,6 +120,9 @@ theorem latticeGaussian_poissonSummation_of_basis [Finite ι]
   rw [← dualLatticeTheta_eq_tsum_coordinates L b]
 
 theorem latticeGaussian_poissonSummation
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    [MeasurableSpace E] [BorelSpace E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {a : ℝ} (ha : 0 < a) :
     latticeTheta L a =
       (Real.toNNReal (ZLattice.covolume L))⁻¹ •

@@ -20,11 +20,9 @@ open scoped RealInnerProductSpace
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E]
 
-omit [FiniteDimensional ℝ E] in
-theorem innerBilin_nondegenerate :
+theorem innerBilin_nondegenerate [InnerProductSpace ℝ E] :
     (innerₗ E).Nondegenerate := by
   constructor
   · intro x hx
@@ -33,28 +31,14 @@ theorem innerBilin_nondegenerate :
     exact inner_self_eq_zero.mp (hx x)
 
 /-- A dual real basis used in the Odlyzko-bound argument. -/
-noncomputable def dualRealBasis
+noncomputable def dualRealBasis [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L) :
     Basis ι ℝ E :=
   LinearMap.BilinForm.dualBasis (innerₗ E) innerBilin_nondegenerate
     (b.ofZLatticeBasis ℝ L)
 
-/-- A dual lattice of basis used in the Odlyzko-bound argument. -/
-noncomputable def dualLatticeOfBasis
-    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-    {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L) :
-    Submodule ℤ E :=
-  span ℤ (Set.range (dualRealBasis L b))
-
-instance
-    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-    {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L) :
-    DiscreteTopology (dualLatticeOfBasis L b) := by
-  unfold dualLatticeOfBasis
-  infer_instance
-
-theorem inner_dualRealBasis_apply
+theorem inner_dualRealBasis_apply [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L)
     (i : ι) (x : E) :
@@ -64,18 +48,14 @@ theorem inner_dualRealBasis_apply
   simp [dualRealBasis, LinearMap.BilinForm.dualBasis,
     Basis.coe_dualBasis]
 
-/-- An is in dual lattice used in the Odlyzko-bound argument. -/
-def IsInDualLattice (L : Submodule ℤ E) (y : E) : Prop :=
-  ∀ x : L, ∃ n : ℤ, inner ℝ y (x : E) = n
-
 /-- A dual lattice used in the Odlyzko-bound argument. -/
-noncomputable def dualLattice (L : Submodule ℤ E) : Submodule ℤ E :=
+noncomputable def dualLattice [InnerProductSpace ℝ E]
+    (L : Submodule ℤ E) : Submodule ℤ E :=
   LinearMap.BilinForm.dualSubmodule (innerₗ E) L
 
-omit [FiniteDimensional ℝ E] in
-theorem mem_dualLattice_iff
+theorem mem_dualLattice_iff [InnerProductSpace ℝ E]
     (L : Submodule ℤ E) (y : E) :
-    y ∈ dualLattice L ↔ IsInDualLattice L y := by
+    y ∈ dualLattice L ↔ ∀ x : L, ∃ n : ℤ, inner ℝ y (x : E) = n := by
   constructor
   · intro hy x
     obtain ⟨n, hn⟩ := Submodule.mem_one.mp (hy x x.2)
@@ -84,11 +64,11 @@ theorem mem_dualLattice_iff
     obtain ⟨n, hn⟩ := hy ⟨x, hx⟩
     simp_all
 
-theorem dualLatticeOfBasis_eq_dualLattice
+theorem span_range_dualRealBasis [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L) :
-    dualLatticeOfBasis L b = dualLattice L := by
-  unfold dualLatticeOfBasis dualLattice dualRealBasis
+    span ℤ (Set.range (dualRealBasis L b)) = dualLattice L := by
+  unfold dualLattice dualRealBasis
   calc
     span ℤ (Set.range (LinearMap.BilinForm.dualBasis (innerₗ E)
       innerBilin_nondegenerate (b.ofZLatticeBasis ℝ L))) =
@@ -99,27 +79,23 @@ theorem dualLatticeOfBasis_eq_dualLattice
     _ = LinearMap.BilinForm.dualSubmodule (innerₗ E) L := by
       rw [b.ofZLatticeBasis_span ℝ]
 
-instance dualLattice.instDiscreteTopology
+instance dualLattice.instDiscreteTopology [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] :
     DiscreteTopology (dualLattice L) := by
   classical
-  let b := Module.Free.chooseBasis ℤ L
-  rw [← dualLatticeOfBasis_eq_dualLattice L b]
+  rw [← span_range_dualRealBasis L (Free.chooseBasis ℤ L)]
   infer_instance
 
 /-- A dual lattice basis used in the Odlyzko-bound argument. -/
-noncomputable def dualLatticeBasis
+noncomputable def dualLatticeBasis [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L) :
     Basis ι ℤ (dualLattice L) :=
   ((dualRealBasis L b).restrictScalars ℤ).map
-    (LinearEquiv.ofEq (span ℤ (Set.range (dualRealBasis L b))) (dualLattice L)
-      (by
-        change dualLatticeOfBasis L b = dualLattice L
-        exact dualLatticeOfBasis_eq_dualLattice L b))
+    (LinearEquiv.ofEq _ _ (span_range_dualRealBasis L b))
 
 @[simp]
-theorem dualLatticeBasis_apply_coe
+theorem dualLatticeBasis_apply_coe [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     {ι : Type*} [Finite ι] [DecidableEq ι] (b : Basis ι ℤ L)
     (i : ι) :

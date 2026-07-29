@@ -21,11 +21,8 @@ open Complex intervalIntegral
 
 namespace NumberField.Odlyzko
 
-universe u
-
-variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E]
-
 theorem verticalSegmentIntegral_one_sub_of_antiInvariant
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {f : ℂ → E} (hf : ∀ z, f (1 - z) = -f z)
     (b T : ℝ) :
     verticalSegmentIntegral f (1 - b) (-T) T =
@@ -55,6 +52,7 @@ theorem verticalSegmentIntegral_one_sub_of_antiInvariant
   simp_all
 
 theorem rectangleIntegral_eq_horizontal_sub_add_two_vertical_of_antiInvariant
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {f : ℂ → E} (hf : ∀ z, f (1 - z) = -f z)
     (b T : ℝ) :
     rectangleIntegral f ((1 - b : ℝ) + (-T) * I) (b + T * I) =

@@ -18,17 +18,13 @@ open Module MeasureTheory Set
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E]
-  (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-  {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {E : Type*} [NormedAddCommGroup E] {ι : Type*} [Fintype ι]
 
 /-- A coordinate fourier character used in the Odlyzko-bound argument. -/
 noncomputable def coordinateFourierCharacter
     (n : ι → ℤ) (x : ι → ℝ) : ℂ :=
   UnitAddTorus.mFourier (-n) (torusQuotientMap x)
 
-omit [DecidableEq ι] in
 private theorem continuous_coordinateFourierCharacter (n : ι → ℤ) :
     Continuous (coordinateFourierCharacter n) := by
   unfold coordinateFourierCharacter
@@ -36,17 +32,15 @@ private theorem continuous_coordinateFourierCharacter (n : ι → ℤ) :
     (continuous_pi fun i ↦
       continuous_quotient_mk'.comp (continuous_apply i))
 
-omit [DecidableEq ι] [Fintype ι] in
-theorem measurableSet_pi_Ioc [Finite ι] :
-    MeasurableSet {x : ι → ℝ | ∀ i, x i ∈ Ioc 0 1} := by
-  letI := Fintype.ofFinite ι
+theorem measurableSet_pi_Ioc {κ : Type*} [Finite κ] :
+    MeasurableSet {x : κ → ℝ | ∀ i, x i ∈ Ioc 0 1} := by
+  letI := Fintype.ofFinite κ
   rw [setOf_forall]
   apply MeasurableSet.iInter
   intro i
-  have hi : Measurable (fun x : ι → ℝ ↦ x i) := measurable_pi_apply i
+  have hi : Measurable (fun x : κ → ℝ ↦ x i) := measurable_pi_apply i
   exact measurableSet_Ioc.preimage hi
 
-omit [DecidableEq ι] in
 @[simp]
 theorem norm_coordinateFourierCharacter
     (n : ι → ℤ) (x : ι → ℝ) :
@@ -55,23 +49,28 @@ theorem norm_coordinateFourierCharacter
 
 /-- A coordinate fourier gaussian used in the Odlyzko-bound argument. -/
 noncomputable def coordinateFourierGaussian
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (n : ι → ℤ) (x : ι → ℝ) : ℂ :=
   coordinateFourierCharacter n x * coordinateGaussian L b a x
 
 /-- A coordinate fourier gaussian translate used in the Odlyzko-bound argument. -/
 noncomputable def coordinateFourierGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (n k : ι → ℤ)
     (x : ι → ℝ) : ℂ :=
   coordinateFourierCharacter n x * coordinateGaussianTranslate L b a k x
 
-omit [DecidableEq ι] in
 theorem continuous_coordinateFourierGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (n k : ι → ℤ) :
-    Continuous (coordinateFourierGaussianTranslate L b a n k) :=
-  (continuous_coordinateFourierCharacter n).mul
+    Continuous (coordinateFourierGaussianTranslate L b a n k) := by
+  classical
+  exact (continuous_coordinateFourierCharacter n).mul
     (coordinateGaussianTranslate L b a k).continuous
 
-omit [DecidableEq ι] in
 private theorem coordinateFourierCharacter_add_intPi
     (n k : ι → ℤ) (x : ι → ℝ) :
     coordinateFourierCharacter n ((fun i ↦ (k i : ℝ)) + x) =
@@ -81,20 +80,23 @@ private theorem coordinateFourierCharacter_add_intPi
   rw [add_comm]
   exact torusQuotientMap_add_intPi x k
 
-omit [DecidableEq ι] in
 theorem coordinateFourierGaussian_add_intPi
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (n k : ι → ℤ) (x : ι → ℝ) :
     coordinateFourierGaussian L b a n
         ((fun i ↦ (k i : ℝ)) + x) =
       coordinateFourierGaussianTranslate L b a n k x := by
+  classical
   rw [coordinateFourierGaussian,
     coordinateFourierGaussianTranslate,
     coordinateFourierCharacter_add_intPi]
   congr 1
   exact congrArg (coordinateGaussian L b a) (add_comm _ _)
 
-omit [DecidableEq ι] in
 theorem summable_integral_norm_coordinateFourierGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) (n : ι → ℤ) :
     Summable (fun k : ι → ℤ ↦
       ∫ x in {x : ι → ℝ | ∀ i, x i ∈ Ioc 0 1},
@@ -145,8 +147,9 @@ theorem summable_integral_norm_coordinateFourierGaussianTranslate
       (fun _ ↦ integral_nonneg fun _ ↦ norm_nonneg _) hbound
   exact hKsum.mul_left (volume.real S)
 
-omit [DecidableEq ι] in
 theorem integral_tsum_coordinateFourierGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) (n : ι → ℤ) :
     ∫ x in {x : ι → ℝ | ∀ i, x i ∈ Ioc 0 1},
         ∑' k : ι → ℤ,
@@ -167,8 +170,9 @@ theorem integral_tsum_coordinateFourierGaussianTranslate
   · exact summable_integral_norm_coordinateFourierGaussianTranslate
       L b ha n
 
-omit [DecidableEq ι] in
 theorem mFourierCoeff_gaussianTorusPeriodization
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) (n : ι → ℤ)
     (hint : Integrable (coordinateFourierGaussian L b a n)) :
     UnitAddTorus.mFourierCoeff

@@ -22,26 +22,25 @@ open scoped Interval
 
 namespace NumberField.Odlyzko
 
-universe u
-
-variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E]
-
 /-- A horizontal integral used in the Odlyzko-bound argument. -/
-noncomputable def horizontalIntegral (f : ℂ → E) (x₁ x₂ y : ℝ) : E :=
+noncomputable def horizontalIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (x₁ x₂ y : ℝ) : E :=
   ∫ x in x₁..x₂, f (x + y * I)
 
 /-- A vertical segment integral used in the Odlyzko-bound argument. -/
-noncomputable def verticalSegmentIntegral (f : ℂ → E) (x y₁ y₂ : ℝ) : E :=
+noncomputable def verticalSegmentIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (x y₁ y₂ : ℝ) : E :=
   I • ∫ y in y₁..y₂, f (x + y * I)
 
 /-- A rectangle integral used in the Odlyzko-bound argument. -/
-noncomputable def rectangleIntegral (f : ℂ → E) (z w : ℂ) : E :=
+noncomputable def rectangleIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (z w : ℂ) : E :=
   horizontalIntegral f z.re w.re z.im -
     horizontalIntegral f z.re w.re w.im +
     verticalSegmentIntegral f w.re z.im w.im -
     verticalSegmentIntegral f z.re z.im w.im
 
-theorem rectangleIntegral_congr
+theorem rectangleIntegral_congr {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {f g : ℂ → E} {z w : ℂ}
     (hbottom : ∀ x ∈ uIcc z.re w.re,
       f (x + z.im * I) = g (x + z.im * I))
@@ -59,18 +58,19 @@ theorem rectangleIntegral_congr
     intervalIntegral.integral_congr hleft]
 
 /-- A normalized rectangle integral used in the Odlyzko-bound argument. -/
-noncomputable def normalizedRectangleIntegral (f : ℂ → E) (z w : ℂ) : E :=
+noncomputable def normalizedRectangleIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (z w : ℂ) : E :=
   (1 / (2 * Real.pi * I)) • rectangleIntegral f z w
 
 /-- A rectangle border integrable used in the Odlyzko-bound argument. -/
-def RectangleBorderIntegrable (f : ℂ → E) (z w : ℂ) : Prop :=
+def RectangleBorderIntegrable {E : Type*} [NormedAddCommGroup E]
+    (f : ℂ → E) (z w : ℂ) : Prop :=
   IntervalIntegrable (fun x ↦ f (x + z.im * I)) volume z.re w.re ∧
   IntervalIntegrable (fun x ↦ f (x + w.im * I)) volume z.re w.re ∧
   IntervalIntegrable (fun y ↦ f (w.re + y * I)) volume z.im w.im ∧
   IntervalIntegrable (fun y ↦ f (z.re + y * I)) volume z.im w.im
 
-omit [NormedSpace ℂ E] in
-theorem RectangleBorderIntegrable.add_integrable
+theorem RectangleBorderIntegrable.add_integrable {E : Type*} [NormedAddCommGroup E]
     {f g : ℂ → E} {z w : ℂ}
     (hf : RectangleBorderIntegrable f z w)
     (hg : RectangleBorderIntegrable g z w) :
@@ -78,8 +78,7 @@ theorem RectangleBorderIntegrable.add_integrable
   ⟨hf.1.add hg.1, hf.2.1.add hg.2.1,
     hf.2.2.1.add hg.2.2.1, hf.2.2.2.add hg.2.2.2⟩
 
-omit [NormedSpace ℂ E] in
-theorem rectangleBorderIntegrable_fun_sum
+theorem rectangleBorderIntegrable_fun_sum {E : Type*} [NormedAddCommGroup E]
     {ι : Type*} {T : Finset ι} {f : ι → ℂ → E} {z w : ℂ}
     (hf : ∀ i ∈ T, RectangleBorderIntegrable (f i) z w) :
     RectangleBorderIntegrable (fun s ↦ ∑ i ∈ T, f i s) z w := by
@@ -92,7 +91,7 @@ theorem rectangleBorderIntegrable_fun_sum
       exact (hf i (Finset.mem_insert_self i T)).add_integrable
         (ih fun j hj ↦ hf j (Finset.mem_insert_of_mem hj))
 
-theorem RectangleBorderIntegrable.add
+theorem RectangleBorderIntegrable.add {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {f g : ℂ → E} {z w : ℂ}
     (hf : RectangleBorderIntegrable f z w)
     (hg : RectangleBorderIntegrable g z w) :
@@ -106,7 +105,7 @@ theorem RectangleBorderIntegrable.add
   simp only [smul_add]
   grind
 
-theorem RectangleBorderIntegrable.sub
+theorem RectangleBorderIntegrable.sub {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {f g : ℂ → E} {z w : ℂ}
     (hf : RectangleBorderIntegrable f z w)
     (hg : RectangleBorderIntegrable g z w) :
@@ -120,7 +119,7 @@ theorem RectangleBorderIntegrable.sub
   simp only [smul_sub]
   grind
 
-theorem rectangleIntegral_fun_sum
+theorem rectangleIntegral_fun_sum {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     {ι : Type*} {T : Finset ι} {f : ι → ℂ → E} {z w : ℂ}
     (hf : ∀ i ∈ T, RectangleBorderIntegrable (f i) z w) :
     rectangleIntegral (fun s ↦ ∑ i ∈ T, f i s) z w =
@@ -140,14 +139,16 @@ theorem rectangleIntegral_fun_sum
       · exact rectangleBorderIntegrable_fun_sum fun j hj ↦
           hf j (Finset.mem_insert_of_mem hj)
 
-theorem rectangleIntegral_translate (f : ℂ → E) (z w p : ℂ) :
+theorem rectangleIntegral_translate {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (z w p : ℂ) :
     rectangleIntegral (fun s ↦ f (s - p)) z w =
       rectangleIntegral f (z - p) (w - p) := by
   simp_rw [rectangleIntegral, horizontalIntegral, verticalSegmentIntegral,
     sub_re, sub_im, ← intervalIntegral.integral_comp_sub_right]
   congr <;> ext <;> congr 1 <;> simp [Complex.ext_iff]
 
-theorem normalizedRectangleIntegral_translate (f : ℂ → E) (z w p : ℂ) :
+theorem normalizedRectangleIntegral_translate {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f : ℂ → E) (z w p : ℂ) :
     normalizedRectangleIntegral (fun s ↦ f (s - p)) z w =
       normalizedRectangleIntegral f (z - p) (w - p) := by
   simp [normalizedRectangleIntegral, rectangleIntegral_translate]

@@ -23,11 +23,6 @@ open Complex MeasureTheory Real
 
 namespace NumberField.Odlyzko
 
-private theorem abs_sub_half_le_max_endpoints
-    {a b σ : ℝ} (hσ : σ ∈ Set.Icc a b) :
-    |σ - 1 / 2| ≤ max |a - 1 / 2| |b - 1 / 2| := by
-  grind
-
 /-- A regularized poitou profile second derivative majorant used in the Odlyzko-bound argument. -/
 noncomputable def regularizedPoitouProfileSecondDerivativeMajorant
     (y δ M x : ℝ) : ℝ :=

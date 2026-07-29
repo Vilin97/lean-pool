@@ -22,11 +22,6 @@ namespace Complex
 
 open ComplexConjugate Filter Function MeromorphicOn Metric Real Set Topology
 
-variable
-  {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
-  {R : ℝ} {c w : ℂ}
-  {f g : ℂ → E}
-
 /--
 In a `T1Space`, every set is codiscrete within a subsingleton set. Vendored from Mathlib
 `Topology/DiscreteSubset.lean` at `v4.33.0-rc1`; delete with this file at the next bump.
@@ -57,7 +52,8 @@ Given a canonical decomposition `CanonicalDecomp f g R`, the function associated
 `g` equals the function associated with the divisor of `f`, seen as a meromorphic function on the
 sphere.
 -/
-theorem CanonicalDecomp.divisor_eq_divisor {x : ℂ} (D : CanonicalDecomp f g R) (hR : 0 < R) :
+theorem CanonicalDecomp.divisor_eq_divisor {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℂ E] {R : ℝ} {f g : ℂ → E} {x : ℂ} (D : CanonicalDecomp f g R) (hR : 0 < R) :
     divisor g (closedBall (0 : ℂ) R) x = divisor f (sphere 0 R) x := by
   rcases lt_trichotomy ‖x‖ R with h|h|h
   · -- The case where `x` is contained in `ball 0 R`. There, the divisor of `g` vanishes because `g`
@@ -103,7 +99,8 @@ theorem CanonicalDecomp.divisor_eq_divisor {x : ℂ} (D : CanonicalDecomp f g R)
 Given functions `f`, `g` and a real number `R`, the following convenience structure packs the
 information relevant in the extended canonical decomposition.
 -/
-structure ECanonicalDecomp (f g : ℂ → E) (R : ℝ) where
+structure ECanonicalDecomp {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
+    (f g : ℂ → E) (R : ℝ) where
   /-- A proof that `f` is meromorphic on `closedBall 0 R`. -/
   meromorphicOn : MeromorphicOn f (closedBall 0 R)
   /-- A proof that `g` is analytic in a neighborhood of `closedBall 0 R`. -/
@@ -125,7 +122,8 @@ modification over a discrete set, to a product of a non-vanishing analytic funct
 factors and meromorphic functions of the form `(x - const) ^ n` where `const` is on the
 circumference of the disk.
 -/
-theorem _root_.MeromorphicOn.exists_ecanonicalDecomp (h₁f : MeromorphicOn f (closedBall 0 R))
+theorem _root_.MeromorphicOn.exists_ecanonicalDecomp {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℂ E] {R : ℝ} {f : ℂ → E} (h₁f : MeromorphicOn f (closedBall 0 R))
     (h₂f : ∀ u : (closedBall (0 : ℂ) R), meromorphicOrderAt f u ≠ ⊤) :
     ∃ h, ECanonicalDecomp f h R := by
   rcases gt_trichotomy 0 R with hR | hR | hR

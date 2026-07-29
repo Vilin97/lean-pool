@@ -18,27 +18,28 @@ open Module
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E]
-  (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
-  {ι : Type*} [Fintype ι] [DecidableEq ι]
+variable {E : Type*} [NormedAddCommGroup E] {ι : Type*} [Fintype ι]
 
 /-- A coordinate gaussian used in the Odlyzko-bound argument. -/
-noncomputable def coordinateGaussian
+noncomputable def coordinateGaussian [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (x : ι → ℝ) : ℂ :=
   latticeGaussian a ((b.ofZLatticeBasis ℝ L).equivFun.symm x)
 
 /-- A coordinate basis map used in the Odlyzko-bound argument. -/
-noncomputable def coordinateBasisMap (b : Basis ι ℤ L) :
+noncomputable def coordinateBasisMap [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
+    (b : Basis ι ℤ L) :
     C(ι → ℝ, E) :=
   let e := LinearEquiv.toContinuousLinearEquiv
     (b.ofZLatticeBasis ℝ L).equivFun.symm
   ⟨e, e.continuous⟩
 
-omit [DecidableEq ι] in
-theorem continuous_coordinateGaussian
+theorem continuous_coordinateGaussian [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) :
     Continuous (coordinateGaussian L b a) := by
+  classical
   unfold coordinateGaussian latticeGaussian
   have hlin : Continuous fun x : ι → ℝ ↦
       (b.ofZLatticeBasis ℝ L).equivFun.symm x :=
@@ -46,8 +47,9 @@ theorem continuous_coordinateGaussian
       (b.ofZLatticeBasis ℝ L).equivFun.symm).continuous
   fun_prop
 
-omit [DecidableEq ι] in
 theorem ofZLatticeBasis_equivFun_symm_intCast
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (n : ι → ℤ) :
     (b.ofZLatticeBasis ℝ L).equivFun.symm (fun i ↦ (n i : ℝ)) =
       latticePoint L b n := by
@@ -64,6 +66,8 @@ theorem ofZLatticeBasis_equivFun_symm_intCast
 
 /-- A coordinate gaussian translate used in the Odlyzko-bound argument. -/
 noncomputable def coordinateGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (n : ι → ℤ) :
     C(ι → ℝ, ℂ) :=
   ⟨fun x ↦ coordinateGaussian L b a
@@ -71,23 +75,26 @@ noncomputable def coordinateGaussianTranslate
     (continuous_coordinateGaussian L b a).comp
       (continuous_id.add (continuous_pi fun _ ↦ continuous_const))⟩
 
-omit [IsZLattice ℝ L] [DecidableEq ι] in
 theorem summable_norm_latticeGaussian_latticePoint
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     Summable (fun n : ι → ℤ ↦
       ‖latticeGaussian a (latticePoint L b n)‖) := by
   have hs := (Equiv.summable_iff
     (e := b.equivFun.toEquiv.symm)).mpr
-      (summable_norm_latticeGaussian L ha)
+      (summable_latticeGaussian L ha).norm
   simpa [Function.comp_def, latticePoint] using hs
 
-omit [DecidableEq ι] in
 theorem norm_coordinateGaussianTranslate_apply_le
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a)
     (x : ι → ℝ) (n : ι → ℤ) :
     ‖coordinateGaussianTranslate L b a n x‖ ≤
       Real.exp (a * ‖coordinateBasisMap L b x‖ ^ 2) *
         ‖latticeGaussian (a / 2) (latticePoint L b n)‖ := by
+  classical
   change ‖coordinateGaussian L b a
       (x + fun i ↦ (n i : ℝ))‖ ≤ _
   have hsplit :
@@ -99,13 +106,15 @@ theorem norm_coordinateGaussianTranslate_apply_le
   rw [coordinateGaussian, hsplit]
   exact norm_latticeGaussian_add_le ha.le _ _
 
-omit [DecidableEq ι] in
 theorem norm_restrict_coordinateGaussianTranslate_le
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a)
     (K : TopologicalSpace.Compacts (ι → ℝ)) (n : ι → ℤ) :
     ‖(coordinateGaussianTranslate L b a n).restrict K‖ ≤
       Real.exp (a * ‖(coordinateBasisMap L b).restrict K‖ ^ 2) *
         ‖latticeGaussian (a / 2) (latticePoint L b n)‖ := by
+  classical
   apply (ContinuousMap.norm_le _ (mul_nonneg (Real.exp_pos _).le
     (norm_nonneg _))).2
   intro x
@@ -121,12 +130,14 @@ theorem norm_restrict_coordinateGaussianTranslate_le
   nlinarith [norm_nonneg (coordinateBasisMap L b x),
     norm_nonneg ((coordinateBasisMap L b).restrict K)]
 
-omit [DecidableEq ι] in
 theorem summable_norm_restrict_coordinateGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a)
     (K : TopologicalSpace.Compacts (ι → ℝ)) :
     Summable (fun n : ι → ℤ ↦
       ‖(coordinateGaussianTranslate L b a n).restrict K‖) := by
+  classical
   let C := Real.exp
     (a * ‖(coordinateBasisMap L b).restrict K‖ ^ 2)
   have hbase := summable_norm_latticeGaussian_latticePoint
@@ -136,8 +147,9 @@ theorem summable_norm_restrict_coordinateGaussianTranslate
   rw [Real.norm_of_nonneg (norm_nonneg _)]
   exact norm_restrict_coordinateGaussianTranslate_le L b ha K n
 
-omit [DecidableEq ι] in
 private theorem summable_coordinateGaussianTranslate
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     Summable (coordinateGaussianTranslate L b a) := by
   classical
@@ -145,8 +157,9 @@ private theorem summable_coordinateGaussianTranslate
   intro K
   exact summable_norm_restrict_coordinateGaussianTranslate L b ha K
 
-omit [DecidableEq ι] in
 theorem continuous_intPeriodization_coordinateGaussian
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     Continuous (intPeriodization (coordinateGaussian L b a)) := by
   classical
@@ -166,13 +179,16 @@ theorem continuous_intPeriodization_coordinateGaussian
 
 /-- A gaussian torus periodization used in the Odlyzko-bound argument. -/
 noncomputable def gaussianTorusPeriodization
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) (a : ℝ) (ha : 0 < a) :
     C(UnitAddTorus ι, ℂ) :=
   torusPeriodization (coordinateGaussian L b a)
     (continuous_intPeriodization_coordinateGaussian L b ha)
 
-omit [DecidableEq ι] in
 theorem gaussianTorusPeriodization_zero
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L]
     (b : Basis ι ℤ L) {a : ℝ} (ha : 0 < a) :
     gaussianTorusPeriodization L b a ha 0 = latticeTheta L a := by
   classical

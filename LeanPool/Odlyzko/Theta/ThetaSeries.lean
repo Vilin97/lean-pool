@@ -18,20 +18,17 @@ open Module
 
 namespace NumberField.Odlyzko
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E]
 
 /-- A lattice theta used in the Odlyzko-bound argument. -/
 noncomputable def latticeTheta
     (L : Submodule ℤ E) (a : ℝ) : ℂ :=
   ∑' x : L, latticeGaussian a (x : E)
 
-theorem summable_latticeTheta
-    (L : Submodule ℤ E) [DiscreteTopology L] {a : ℝ} (ha : 0 < a) :
-    Summable (fun x : L ↦ latticeGaussian a (x : E)) :=
-  summable_latticeGaussian L ha
+section
 
-omit [FiniteDimensional ℝ E] in
+variable [NormedSpace ℝ E]
+
 theorem latticeTheta_map_linearIsometryEquiv
     (L : Submodule ℤ E) (e : E ≃ₗᵢ[ℝ] E) (a : ℝ) :
     latticeTheta
@@ -48,8 +45,15 @@ theorem latticeTheta_map_linearIsometryEquiv
   rw [show ((eL.toEquiv x : L.map eZ.toLinearMap) : E) = e x by rfl,
     e.norm_map]
 
+theorem summable_latticeTheta [FiniteDimensional ℝ E]
+    (L : Submodule ℤ E) [DiscreteTopology L] {a : ℝ} (ha : 0 < a) :
+    Summable (fun x : L ↦ latticeGaussian a (x : E)) :=
+  summable_latticeGaussian L ha
+
+end
+
 /-- A dual lattice theta used in the Odlyzko-bound argument. -/
-noncomputable def dualLatticeTheta
+noncomputable def dualLatticeTheta [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (L : Submodule ℤ E) (a : ℝ) : ℂ :=
   latticeTheta (dualLattice L) a
 
