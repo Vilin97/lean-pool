@@ -53,7 +53,7 @@ theorem summable_latticeTheta [FiniteDimensional ℝ E]
 end
 
 /-- A dual lattice theta used in the Odlyzko-bound argument. -/
-noncomputable def dualLatticeTheta [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+noncomputable def dualLatticeTheta [InnerProductSpace ℝ E]
     (L : Submodule ℤ E) (a : ℝ) : ℂ :=
   latticeTheta (dualLattice L) a
 
