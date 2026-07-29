@@ -149,11 +149,16 @@ Failures are isolated: `fail-fast` is off, so one project failing does not stop
 the others, and `assemble` still opens a PR with whatever succeeded. The PR body
 lists how many repairs applied and which patches would not apply.
 
-Repair agents run with **no turn limit**. A repair is finished when the project
-builds, not after some number of turns, and an agent cut off mid-edit leaves
-behind a half-applied change that is worse than either outcome. The bound is
-wall clock instead — `timeout-minutes: 90` per project — which caps runner cost
-without deciding how much thinking a problem deserves.
+Repair agents run with **no turn limit and no job timeout**. A repair is
+finished when the project builds, not after some number of turns or minutes,
+and an agent cut off mid-edit leaves behind a half-applied change that is worse
+than either outcome.
+
+One ceiling remains and cannot be removed here: GitHub-hosted runners kill any
+job at **six hours**. That is the longest a single project's repair can run.
+Raising it would mean moving the repair jobs to a self-hosted runner, where the
+limit is five days — worth doing only if projects ever start hitting six hours,
+which is far from the observed maximum of 20 minutes.
 
 Whatever an agent has done is exported as a patch even when its job fails, so
 partial progress on a hard project is never thrown away, and a re-run resumes
