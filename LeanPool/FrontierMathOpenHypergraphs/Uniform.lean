@@ -397,6 +397,7 @@ private def binaryValues (a b : ℕ) : Fin 2 → ℕ
   | ⟨0, _⟩ => a
   | ⟨1, _⟩ => b
 
+set_option backward.isDefEq.respectTransparency false in
 private theorem binary_isFrame (a b c : ℕ) (hc : c ≤ min a b) :
     IsFrame (binarySupports c) (binaryCap a b) := by
   simpa [binarySupports] using

@@ -41,6 +41,8 @@ import LeanPool.FrontierMathOpenHypergraphs.Uniform
 
 namespace HypergraphLowerBound
 
+set_option backward.isDefEq.respectTransparency false
+
 open private WitnessStrong WitnessStrong.toWitnessData apply_frameData ws_singleton
   exists_cover_subset_card_le_of_noLargePartition
   from LeanPool.FrontierMathOpenHypergraphs.Uniform
