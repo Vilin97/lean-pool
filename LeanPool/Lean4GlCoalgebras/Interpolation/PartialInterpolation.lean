@@ -15,9 +15,11 @@ are split apart since otherwise the file runs very slow. -/
 
 namespace Lean4GlCoalgebras
 
-set_option backward.isDefEq.respectTransparency false
-
 open Split
+
+private lemma encodeVar_mem_elems {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
+    encodeVar x ∈ Finset.image encodeVar fin_X.elems := by
+  simpa only [Finset.mem_image, encodeVar_inj', exists_eq_right] using fin_X.complete x
 
 /-- Given a node `x`, defines what the root of the left interpolation proof should look like,
     i.e. `f(x)ˡ ∣ ιₓ` in on paper work. -/
@@ -238,7 +240,9 @@ noncomputable def partialLeftAndₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
         interpolant 𝕏 (equation x) =
           (interpolant 𝕏 (at encodeVar y) v interpolant 𝕏 (at encodeVar z)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      have hz := encodeVar_mem_elems z
+      split <;> simp_all [interpolant, partial_]
     if eq : interpolant 𝕏 (at encodeVar y) = interpolant 𝕏 (at encodeVar z)
     then {
     X := Fin 4
@@ -349,7 +353,9 @@ noncomputable def partialLeftAndᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
         interpolant 𝕏 (equation x) =
           (interpolant 𝕏 (at encodeVar y) & interpolant 𝕏 (at encodeVar z)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      have hz := encodeVar_mem_elems z
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 3
       α | 0 =>
           ⟨Ext.RuleApp.andᵣ (leftEquationSequent x)
@@ -384,7 +390,8 @@ noncomputable def partialLeftBoxₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
     have interpolant_eq :
         interpolant 𝕏 (equation x) = ◇ (interpolant 𝕏 (at encodeVar y)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 3
       α | 0 =>
           ⟨Ext.RuleApp.boxₗ (leftEquationSequent x) φ (by
@@ -433,7 +440,8 @@ noncomputable def partialLeftBoxᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x :
     have interpolant_eq :
         interpolant 𝕏 (equation x) = □ (interpolant 𝕏 (at encodeVar y)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 2
       α | 0 =>
           ⟨Ext.RuleApp.boxᵣ (leftEquationSequent x) (interpolant 𝕏 (at encodeVar y))
@@ -650,7 +658,9 @@ noncomputable def partialRightAndₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
         interpolant 𝕏 (equation x) =
           (interpolant 𝕏 (at encodeVar y) v interpolant 𝕏 (at encodeVar z)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      have hz := encodeVar_mem_elems z
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 3
       α | 0 =>
           ⟨Ext.RuleApp.andₗ (rightEquationSequent x)
@@ -687,7 +697,9 @@ noncomputable def partialRightAndᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
         interpolant 𝕏 (equation x) =
           (interpolant 𝕏 (at encodeVar y) & interpolant 𝕏 (at encodeVar z)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      have hz := encodeVar_mem_elems z
+      split <;> simp_all [interpolant, partial_]
     if eq : interpolant 𝕏 (at encodeVar y) = interpolant 𝕏 (at encodeVar z)
     then {
     X := Fin 4
@@ -805,7 +817,8 @@ noncomputable def partialRightBoxₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
     have interpolant_eq :
         interpolant 𝕏 (equation x) = ◇ (interpolant 𝕏 (at encodeVar y)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 2
       α | 0 =>
           ⟨Ext.RuleApp.boxₗ (rightEquationSequent x)
@@ -840,7 +853,8 @@ noncomputable def partialRightBoxᵣ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x 
     have interpolant_eq :
         interpolant 𝕏 (equation x) = □ (interpolant 𝕏 (at encodeVar y)) := by
       rw [equation]
-      split <;> simp_all [interpolant, partial_, encodeVar]
+      have hy := encodeVar_mem_elems y
+      split <;> simp_all [interpolant, partial_]
     { X := Fin 3
       α | 0 =>
           ⟨Ext.RuleApp.boxᵣ (rightEquationSequent x) φ (by

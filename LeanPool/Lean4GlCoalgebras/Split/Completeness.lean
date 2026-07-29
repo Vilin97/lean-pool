@@ -13,8 +13,6 @@ If Prover has a winning strategy in the game starting from `Γ`, then there is a
 of `Γ`, proven in `prover_win_builds_proof`; all other definitions and proofs in this
 file are helpers. -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Lean4GlCoalgebras
 
 namespace Split
@@ -22,12 +20,16 @@ namespace Split
 private lemma left_diamond_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inl (◇φ) ∈ Γ) (hne : Sum.inl (◇φ) ≠ χ) :
     Sum.inl (◇φ) ∈ (Γ \ {χ}).D := by
-  simp [SplitSequent.D, SplitFormula.isDiamond, h, hne]
+  rw [SplitSequent.D, Finset.mem_union]
+  exact Or.inl <| Finset.mem_filter.mpr
+    ⟨Finset.mem_sdiff.mpr ⟨h, by simpa using hne⟩, by simp [SplitFormula.isDiamond]⟩
 
 private lemma right_diamond_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inr (◇φ) ∈ Γ) (hne : Sum.inr (◇φ) ≠ χ) :
     Sum.inr (◇φ) ∈ (Γ \ {χ}).D := by
-  simp [SplitSequent.D, SplitFormula.isDiamond, h, hne]
+  rw [SplitSequent.D, Finset.mem_union]
+  exact Or.inl <| Finset.mem_filter.mpr
+    ⟨Finset.mem_sdiff.mpr ⟨h, by simpa using hne⟩, by simp [SplitFormula.isDiamond]⟩
 
 private lemma left_unDi_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inl (◇φ) ∈ Γ) (hne : Sum.inl (◇φ) ≠ χ) :
@@ -99,13 +101,17 @@ def rewindHistory
         · rfl
         · intro hRs
           subst hRs
-          simp_all
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega
       · right
         constructor
         · rfl
         · intro hΓs
           subst hΓs
-          simp_all)) ⟨m, by
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega)) ⟨m, by
             have ⟨n_val, n_prop⟩ := n
             simp_all only [Nat.lt_add_one_iff, ge_iff_le]
             rcases g with ⟨Γ | R, Γs, Rs⟩ <;>
@@ -143,6 +149,7 @@ lemma rewind_history_zero (g : coalgebraGame.Pos) : rewindHistory g 0 = g := by
   simp [rewindHistory]
 
 /-- This is the type of the coalgebra we will use to build the proof of `Γ`. -/
+@[reducible]
 def proof_type (Γ : SplitSequent) (strat : Strategy coalgebraGame Prover) :=
  {g // inMyCone strat (startPos Γ) g ∧ coalgebraGame.turn g = Builder}
 
@@ -271,9 +278,9 @@ lemma rewind_turn_one_step {g n h1 h2} :
   cases n
   case zero =>
     rcases g with ⟨Γ | R, Γs, Rs⟩
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
   case succ n =>
     unfold rewindHistory

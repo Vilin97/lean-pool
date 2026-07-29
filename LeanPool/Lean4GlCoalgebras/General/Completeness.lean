@@ -12,8 +12,6 @@ import LeanPool.Lean4GlCoalgebras.General.Soundness
 If Prover has a winning strategy in the game starting from `Γ`, then there is a proof of `Γ`,
 proven in `prover_win_builds_proof`, all other definitions and proofs in this file are helpers. -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace Lean4GlCoalgebras
 
 private lemma unDi_mem_D_of_ne {Γ : Sequent} {φ χ : Formula}
@@ -74,13 +72,17 @@ def rewindHistory
         · rfl
         · intro hRs
           subst hRs
-          simp_all
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega
       · right
         constructor
         · rfl
         · intro hΓs
           subst hΓs
-          simp_all)) ⟨m, by
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega)) ⟨m, by
             have ⟨n_val, n_prop⟩ := n
             simp_all only [Nat.lt_add_one_iff, ge_iff_le]
             rcases g with ⟨Γ | R, Γs, Rs⟩ <;> simp_all only [rewindHistoryOneStep,
@@ -247,9 +249,9 @@ lemma rewind_turn_one_step {g n h1 h2} :
   cases n
   case zero =>
     rcases g with ⟨Γ | R, Γs, Rs⟩
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
   case succ n =>
     unfold rewindHistory
@@ -1134,12 +1136,13 @@ lemma diamond_in_of_move_move_diamond_in {x z} (hx hz)
     subst eq
     simp only [RuleApp.sequents, Finset.mem_singleton] at Γ'_R
     subst Γ'_R
-    simp only [Sequent.D, Finset.mem_union, Finset.mem_filter, Bool.decide_eq_true,
-      Formula.isDiamond, Finset.mem_sdiff, Finset.mem_singleton,
-      reduceCtorEq, not_false_eq_true, and_true]
+    apply Finset.mem_union.mpr
     left
+    rw [Sequent.D]
+    apply Finset.mem_union.mpr
     left
-    exact φ_in
+    exact Finset.mem_filter.mpr
+      ⟨Finset.mem_sdiff.mpr ⟨φ_in, by simp⟩, by simp [Formula.isDiamond]⟩
   case diamond =>
     simp only [reduceCtorEq] at eq
 
