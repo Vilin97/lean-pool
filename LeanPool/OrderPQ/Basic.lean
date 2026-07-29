@@ -31,8 +31,6 @@ lemma Nat.Prime.mem_self_primeFactorsList {p : ℕ} (hp : p.Prime) : p ∈ p.pri
 variable {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime]
 variable {G : Type*} [Group G]
 
-set_option backward.isDefEq.respectTransparency false
-
 lemma exists_monoidHom_ne_one (h : p ∣ q - 1) :
     ∃ φ : MulZMod p →* MulAut (MulZMod q), φ ≠ 1 := by
   rw [← card_mulAut_mulZMod q] at h
