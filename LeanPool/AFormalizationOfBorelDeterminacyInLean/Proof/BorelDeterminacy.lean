@@ -42,7 +42,7 @@ def treeCov : (G'h hyp).tree ⟶ (Gh hyp).tree where
     · apply Zero.body_stratMap
     · apply One.body_stratMap
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def gameCov : Games.Covering (G'h hyp) (Gh hyp) where
+def gameCov : Games.GameCovering (G'h hyp) (Gh hyp) where
   toCovering := treeCov hyp
   hpre := game_payoff hyp
 lemma main_lemma {G : Games} (hC : IsClosed G.2.1.payoff) : G.IsUnravelable :=
@@ -56,14 +56,12 @@ lemma main_lemma {G : Games} (hC : IsClosed G.2.1.payoff) : G.IsUnravelable :=
       apply ExtensionsAt.ext_valT'
       have hshort : x.val.length ≤ 2 * k := le_trans hl (by omega)
       conv => simp [Zero.stratMap, hshort, ResStrategy.fromMap, ResStrategy.res, π]
-      erw [dif_pos hshort]
-      exact ExtensionsAt.map_valT' (f := treeHom hyp') _ _
+      rfl
     · funext R x hp hl
       apply ExtensionsAt.ext_valT'
       have hshort : x.val.length ≤ 2 * k := le_trans hl (by omega)
       conv => simp [One.stratMap, hshort, ResStrategy.fromMap, ResStrategy.res, π]
-      erw [dif_pos hshort]
-      exact ExtensionsAt.map_valT' (f := treeHom hyp') _ _, payoff_clopen⟩
+      rfl, payoff_clopen⟩
 end BorelDet
 namespace BorelDet'
 
@@ -102,7 +100,7 @@ lemma unravelable_preimage {T' T : PTrees} (f : T' ⟶ T) W (h : UniversallyUnra
   intro _ g
   convert h (g ≫ f) using 2
   ext x
-  simp only [Set.mem_preimage, comp_covering_toHom, CategoryTheory.Functor.map_comp]
+  simp only [comp_covering_toHom, CategoryTheory.Functor.map_comp]
   rfl
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -131,7 +129,7 @@ def PartiallyUnravelled.continue (G : PartiallyUnravelled n) (k : ℕ) :
         have hfpre : (bodyFunctor.map f.toHom)⁻¹' (G.sets m).1 = car.2.1.payoff := by
           rw [← hf]
           ext x
-          simp only [extendToGame, Set.mem_preimage, id_covering_toHom,
+          simp only [extendToGame, id_covering_toHom,
             CategoryTheory.Functor.map_id]
           rfl
         change IsOpen ((bodyFunctor.map f.toHom)⁻¹' (G.sets m).1)
@@ -152,6 +150,7 @@ lemma unravelFunctor_succ n :
     = ((unravelNth G k n).continue k).2.1 := by
   change (natFreeCat (unravelFunctor G k)).2 _ = _
   simp [unravelFunctor]
+  rfl
 lemma unravelFunctor_fixing n :
   Covering.Fixing (k + n) ((unravelFunctor G k).map (homOfLE (Nat.le_succ n)).op) := by
   rw [unravelFunctor_succ]
@@ -172,13 +171,25 @@ lemma unravelFunctor_preimage m n :
       by apply Subsingleton.elim
     rw [hcomp, CategoryTheory.Functor.map_comp]
     simp_rw [unravelFunctor_succ]
-    rw [comp_covering_toHom, CategoryTheory.Functor.map_comp]
-    let f' := bodyFunctor.map ((unravelNth G k n).continue k).2.1.toHom
-    let g' := bodyFunctor.map ((unravelFunctor G k).map (homOfLE (by simp : 0 ≤ n)).op).toHom
+    let fc := ((unravelNth G k n).continue k).2.1
+    let gc := (unravelFunctor G k).map (homOfLE (by simp : 0 ≤ n)).op
+    change (ConcreteCategory.hom (bodyFunctor.map (fc.toHom ≫ gc.toHom))) ⁻¹'
+      (G.sets m).1 = _
+    have hmap : bodyFunctor.map (fc.toHom ≫ gc.toHom) =
+        bodyFunctor.map fc.toHom ≫ bodyFunctor.map gc.toHom :=
+      bodyFunctor.map_comp fc.toHom gc.toHom
+    rw [hmap]
+    let f' := bodyFunctor.map fc.toHom
+    let g' := bodyFunctor.map gc.toHom
     change (f' ≫ g')⁻¹' (G.sets m).1 = _
-    rw [cat_preimage_comp]
+    have hpre : (ConcreteCategory.hom (f' ≫ g')) ⁻¹' (G.sets m).1 =
+        (ConcreteCategory.hom f') ⁻¹'
+          ((ConcreteCategory.hom g') ⁻¹' (G.sets m).1) := by
+      ext x
+      rfl
+    rw [hpre]
     have hg : (ConcreteCategory.hom g')⁻¹' (G.sets m).1 =
-        ((unravelNth G k n).sets m).1 := by simpa [g'] using ih
+        ((unravelNth G k n).sets m).1 := by simpa [g', gc] using ih
     exact hg ▸ (((unravelNth G k n).continue k).2.2.2 m).symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def unravelLim : Limits.Cone (unravelFunctor G k) :=
@@ -203,7 +214,22 @@ def unravelableAsMeasurable : MeasurableSpace (Tree.body T.1.2) where
     let G := (unravelLim G0 k).pt; let π := (unravelLim G0 k).π
     have hO : IsOpen ((Tree.bodyFunctor.map (π.app ⟨0⟩).toHom)⁻¹'
       ((Tree.bodyFunctor.map f.toHom)⁻¹' (⋃i, W i))) := by
-      simp_rw [Set.preimage_iUnion]; apply isOpen_iUnion; intro n
+      let a := ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom)
+      let b := ConcreteCategory.hom (bodyFunctor.map f.toHom)
+      have hiUnion : a ⁻¹' b ⁻¹' (⋃ i, W i) = ⋃ i, a ⁻¹' b ⁻¹' W i := by
+        ext x
+        constructor
+        · intro hx
+          obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
+          exact Set.mem_iUnion.mpr ⟨i, hi⟩
+        · intro hx
+          obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
+          exact Set.mem_iUnion.mpr ⟨i, hi⟩
+      rw [hiUnion]
+      apply isOpen_iUnion
+      intro n
+      change IsOpen ((ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom)) ⁻¹'
+        ((ConcreteCategory.hom (bodyFunctor.map f.toHom)) ⁻¹' W n))
       have hnat : π.app ⟨0⟩ = π.app ⟨n + 1⟩ ≫ F.map (homOfLE (by omega)).op := by
         rw [← CategoryTheory.Category.id_comp (π.app ⟨0⟩)]
         exact π.naturality (homOfLE (by omega : 0 ≤ n + 1)).op
@@ -230,18 +256,44 @@ def unravelableAsMeasurable : MeasurableSpace (Tree.body T.1.2) where
       hpre := by
         rw [← g.hpre]
         ext x
-        simp only [gc, extendToGame, Set.mem_preimage, comp_covering_toHom,
-          CategoryTheory.Functor.map_comp, id_covering_toHom, CategoryTheory.Functor.map_id]
+        let Gcone :=
+          ((Functor.const ℕᵒᵖ).obj (unravelLim G0 k).pt).obj (Opposite.op 0)
+        have hcompMap : bodyFunctor.map (gc ≫ π.app ⟨0⟩).toHom =
+            bodyFunctor.map gc.toHom ≫ bodyFunctor.map (π.app ⟨0⟩).toHom := by
+          change bodyFunctor.map (gc.toHom ≫ (π.app ⟨0⟩).toHom) = _
+          exact bodyFunctor.map_comp gc.toHom (π.app ⟨0⟩).toHom
+        have hidMap : bodyFunctor.map ((𝟙 Gcone : Gcone ⟶ Gcone).toHom) = 𝟙 _ := by
+          change bodyFunctor.map (𝟙 Gcone.1) = _
+          exact bodyFunctor.map_id Gcone.1
+        have hcompApply :
+            (ConcreteCategory.hom (bodyFunctor.map (gc ≫ π.app ⟨0⟩).toHom)) x =
+              (ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom))
+                ((ConcreteCategory.hom (bodyFunctor.map g.toHom)) x) := by
+          rw [hcompMap]
+          rfl
+        have hidApply (z : bodyFunctor.obj Gcone.1) :
+            (ConcreteCategory.hom
+              (bodyFunctor.map ((𝟙 Gcone : Gcone ⟶ Gcone).toHom))) z = z := by
+          rw [hidMap]
+          rfl
+        simp only [extendToGame]
         change (ConcreteCategory.hom (bodyFunctor.map f.toHom))
-            ((ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom))
-              ((ConcreteCategory.hom (bodyFunctor.map g.toHom)) x)) ∈ ⋃ i, W i ↔
+            ((ConcreteCategory.hom
+              (bodyFunctor.map (gc ≫ π.app ⟨0⟩).toHom)) x) ∈ ⋃ i, W i ↔
           (ConcreteCategory.hom (bodyFunctor.map f.toHom))
             ((ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom))
               ((ConcreteCategory.hom
-                (𝟙 (bodyFunctor.obj
-                  (((Functor.const ℕᵒᵖ).obj (unravelLim G0 k).pt).obj (Opposite.op 0)).fst)))
+                (bodyFunctor.map ((𝟙 Gcone : Gcone ⟶ Gcone).toHom)))
                 ((ConcreteCategory.hom (bodyFunctor.map g.toHom)) x))) ∈ ⋃ i, W i
-        rw [ConcreteCategory.id_apply]
+        rw [hcompApply]
+        let u := (ConcreteCategory.hom (bodyFunctor.map g.toHom)) x
+        let mapπ := ConcreteCategory.hom (bodyFunctor.map (π.app ⟨0⟩).toHom)
+        let mapf := ConcreteCategory.hom (bodyFunctor.map f.toHom)
+        have hout : mapf (mapπ ((ConcreteCategory.hom
+            (bodyFunctor.map ((𝟙 Gcone : Gcone ⟶ Gcone).toHom))) u)) =
+            mapf (mapπ u) :=
+          congrArg (fun z ↦ mapf (mapπ z)) (hidApply u)
+        exact iff_of_eq (congrArg (fun z ↦ z ∈ ⋃ i, W i) hout).symm
     }, fixing_comp k gc _ hgT <| unravelLim_fixing G0 k
 
 lemma borel_unravelable : borel _ ≤ unravelableAsMeasurable T :=
@@ -255,6 +307,14 @@ lemma Games.borel_determinacy (G : Games.{0}) (h : MeasurableSet[borel _] G.2.1.
     ((ConcreteCategory.hom (bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom)))⁻¹'
       G.2.1.payoff)
   have hgame : Gid.2.1 = G.2.1 := by
+    have hmapId : bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom) = 𝟙 _ := by
+      change bodyFunctor.map (𝟙 G.tree.1) = _
+      exact bodyFunctor.map_id G.tree.1
+    have hmapIdApply (y : bodyFunctor.obj G.tree.1) :
+        (ConcreteCategory.hom
+          (bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom))) y = y := by
+      rw [hmapId]
+      rfl
     ext1
     · rfl
     · ext x
@@ -267,9 +327,7 @@ lemma Games.borel_determinacy (G : Games.{0}) (h : MeasurableSet[borel _] G.2.1.
         change y ∈ G.2.1.payoff
         change (ConcreteCategory.hom
           (bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom))) y ∈ G.2.1.payoff at hy
-        simp only [id_covering_toHom, CategoryTheory.Functor.map_id,
-          ConcreteCategory.id_apply] at hy
-        exact hy
+        exact Eq.mp (congrArg (fun z ↦ z ∈ G.2.1.payoff) (hmapIdApply y)) hy
       · rintro ⟨y, hy, rfl⟩
         refine ⟨y, ?_, rfl⟩
         change y ∈
@@ -277,8 +335,7 @@ lemma Games.borel_determinacy (G : Games.{0}) (h : MeasurableSet[borel _] G.2.1.
             (bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom)))⁻¹' G.2.1.payoff)
         change (ConcreteCategory.hom
           (bodyFunctor.map ((𝟙 G.tree : G.tree ⟶ G.tree).toHom))) y ∈ G.2.1.payoff
-        simp only [id_covering_toHom, CategoryTheory.Functor.map_id, ConcreteCategory.id_apply]
-        exact hy
+        exact Eq.mpr (congrArg (fun z ↦ z ∈ G.2.1.payoff) (hmapIdApply y)) hy
   rw [← hgame]
   change Gid.2.1.IsDetermined
   simpa [Gid] using (BorelDet'.borel_unravelable G.tree _ h (𝟙 G.tree)).isDetermined

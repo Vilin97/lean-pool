@@ -210,7 +210,6 @@ attribute [simp] h'lvl
         List.take (2 * k) (List.take (2 * k + 1) H.x.val)
       rw [cancel_pInv_right]
       simp [List.take_take]
-      rfl
 lemma liftShort_lift : treeHom hyp H.liftShort = Tree.take (2 * k + 1) H.x :=
   tree_ext H.liftShort_val_map
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -347,10 +346,10 @@ variable (hp : IsPosition H.x.val Player.zero)
   = H.x.val.take n := ExtensionsAt.val'_take_of_le _ h
 @[simp] lemma extension_take_medium :
   (H.extension hp R).val'.take (α := no_index _) (2 * k + 2) = H.liftMediumVal := by
-  rw [ExtensionsAt.val'_take_of_le _ (by
-    change 2 * k + 2 ≤ H.liftVal.length
-    simp_all)]
-  exact H.liftVal_take_medium
+  have htake := congrArg (List.take (2 * k + 2)) (H.extension_take hp R)
+  rw [List.take_take, min_eq_left H.h'lvl_le] at htake
+  rw [← H.liftVal_take_medium]
+  simpa [gameAsTrees] using htake
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def extensionPreLift : PreLift hyp where
   x := (H.extensionMap hp R).valT'

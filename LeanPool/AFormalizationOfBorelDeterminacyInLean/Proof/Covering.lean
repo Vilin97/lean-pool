@@ -247,15 +247,15 @@ instance (G : Games) : DiscreteTopology G.1 where eq_bot := rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev Games.tree (G : Games) : PTrees := ⟨⟨G.1, G.2.1.tree⟩, G.2.2⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[ext] structure Games.Covering (G' : Games) (G : Games) extends
+@[ext] structure Games.GameCovering (G' : Games) (G : Games) extends
   GaleStewartGame.Covering G'.tree G.tree where
   hpre : (Tree.bodyFunctor.map toHom)⁻¹' (G.2.1.payoff) = G'.2.1.payoff
-lemma covering_hpre_pl {G' G} (f : Games.Covering G' G) (p : Player) :
+lemma covering_hpre_pl {G' G} (f : Games.GameCovering G' G) (p : Player) :
   (Tree.bodyFunctor.map f.toHom)⁻¹' (p.payoff G.2.1) = p.payoff G'.2.1 := by
   cases p
   · simpa using f.hpre
   · exact congrArg (fun s => sᶜ) f.hpre
-lemma covering_winning {G' G} (f : Games.Covering G' G) {p : Player}
+lemma covering_winning {G' G} (f : Games.GameCovering G' G) {p : Player}
   {S : Strategy G'.tree.1.2 p} (h : S.pre.IsWinning) :
   (LvlStratHom.globalOfObj
     (ConcreteCategory.hom ((LvlStratHom.global p).map f.str)
@@ -274,7 +274,7 @@ lemma covering_winning {G' G} (f : Games.Covering G' G) {p : Player}
     hxpre, rfl⟩
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.Covering G' G),
+def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.GameCovering G' G),
   Fixing k f.toCovering ∧ IsClopen G'.2.1.payoff
 lemma Games.IsUnravelable.isDetermined {G : Games} (h : G.IsUnravelable) :
   G.2.1.IsDetermined :=

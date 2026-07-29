@@ -85,15 +85,19 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
     apply subset_trans h
     conv => simp [PreLift.game_payoff]
     intro a ha
-    rcases ha with ⟨haBody, haPay⟩
+    rcases ha with ⟨a, haPay, rfl⟩
     have haBody' : (body.append [H.liftNode] a).val ∈
         body (subAt G.tree (H.x.val.take (2 * k + 1))) := by
-      simpa [subAt_body] using haBody
+      simpa only [H.liftShort_val_map] using
+        body_mono H.game_tree_sub (body.append [H.liftNode] a).prop
     let x : body (subAt G.tree (H.x.val.take (2 * k + 1))) :=
       ⟨(body.append [H.liftNode] a).val, haBody'⟩
     have hxmem : x ∈ body.append (H.x.val.take (2 * k + 1)) ⁻¹' G.payoff := by
-      by_contra hxnot
-      exact haPay ⟨x, hxnot, rfl⟩
+      rcases haPay with ⟨y, hy, hyval⟩
+      have hyx : y = x := by
+        apply Subtype.ext
+        exact hyval
+      exact hyx ▸ of_not_not hy
     use body.append (H.x.val.take (2 * k + 1)) x
     constructor
     · exact hxmem
@@ -155,18 +159,6 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
           rw [(show H.x.val[2 * k + 2 + n] = (H.x.val.drop (2 * k + 2))[n]'hdrop by
             rw [List.getElem_drop'])]
           rw [← List.take_concat_get' (List.drop (2 * k + 2) H.x.val) n hdrop]
-          congr 1
-          · symm
-            calc
-              List.map Prod.fst (List.take n (List.drop (2 * k + 2) H.toWLift.liftVal)) =
-                  List.take n
-                    (List.map Prod.fst (List.drop (2 * k + 2) H.toWLift.liftVal)) := by
-                rw [List.map_take]
-              _ = List.take n (List.drop (2 * k + 2)
-                    (List.map Prod.fst H.toWLift.liftVal)) := by
-                rw [List.map_drop]
-              _ = List.take n (List.drop (2 * k + 2) H.x.val) := by
-                simp_all
 attribute [simp_lengths] toWLift'_toWLLift
 lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
   have hm : H.x.val[2 * k + 1] :: (((hW.toWLift'.extensionMap hp R).val').drop (2 * k + 2))
@@ -191,7 +183,10 @@ lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
     rw [hval']
     rw [← List.singleton_append]
     rw [← liftNode]
-    rwa [← WLLift.liftMediumVal_length H.toWLift]
+    change [H.liftNode] ++
+        List.drop (2 * k + 2)
+          (List.map Prod.fst (hW.toWLift'.extension hp R).val') ∈ H.game.tree at hsub
+    exact hsub
   conv => simp [PreLift.ConLong]
   convert hm using 1
   rw [← List.getElem_cons_drop (by
@@ -232,18 +227,21 @@ lemma losable (h : H.ConLong) : H.Losable := by
   rintro ⟨x, hx⟩ hxp
   conv at hx => simp [Nat.add_mod]
   conv at hxp => simp [Nat.add_mod, PreLift.game_payoff]
-  apply hL' ⟨x, by
+  let xFull : body (subAt G.tree H.x.val) := ⟨x, by
     simpa [← Stream'.append_append_stream] using body_mono H.game_tree_sub hx⟩
+  apply hL' xFull
   by_contra hnot
-  apply hxp.2
-  use ⟨List.drop (2 * k + 1) H.x.val ++ₛ x, by
-    simpa [← Stream'.append_append_stream, List.take_append_drop] using
-      body_mono H.game_tree_sub hx⟩
-  constructor
-  · intro hpay
-    apply hnot
-    simpa [body.append, ← Stream'.append_append_stream, List.take_append_drop] using hpay
-  · rfl
+  rcases hxp with ⟨w, hw, hwval⟩
+  apply hnot
+  change body.append H.x.val xFull ∈ G.payoff
+  have happ : body.append H.x.val xFull =
+      body.append (H.x.val.take (2 * k + 1)) w := by
+    apply Subtype.ext
+    change H.x.val ++ₛ x = H.x.val.take (2 * k + 1) ++ₛ w.val
+    rw [hwval]
+    simp [body.append, ← Stream'.append_append_stream, List.take_append_drop]
+  rw [happ]
+  exact of_not_not hw
 lemma exists_prefix : ∃ n h, (H.take n h).Lost' :=
   ⟨H.x.val.length, H.h'lvl, by simpa using H.lost'⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -538,6 +536,7 @@ lemma extension_losable hp : (h.extensionLift hp).Losable := by
     exact h
   · unfold PreLift.ConLong
     conv => simp [extension, ExtensionsAt.val']
+    change List.drop (2 * k + 1) (H.x.val ++ [(h.a hp).val]) ∈ H.game.tree
     rw [List.drop_append_of_le_length (by simp)]
     simpa [← List.append_assoc] using (h.a hp).prop
 end «Section3»
@@ -553,12 +552,21 @@ noncomputable def extension : ExtensionsAt H.x := by
     else if h : H.Losable then h.extension hp
     else if h : H.Winnable then h.toWLift'.extensionMap hp R
     else Classical.choice (hyp.pruned H.x)
+lemma extension_lost (h : H.Lost) :
+  H.extension hp R = h.toLLift'.extensionMap hp R := by
+  unfold extension
+  exact dif_pos h
+lemma extension_losable (hnLost : ¬ H.Lost) (h : H.Losable) :
+    H.extension hp R = h.extension hp := by
+  unfold extension
+  exact (dif_neg hnLost).trans (dif_pos h)
 lemma extension_winnable (h : H.Winnable) :
   H.extension hp R = h.toWLift'.extensionMap hp R := by
-  unfold extension; split_ifs with h' h'
-  · cases h (h'.1.mk.losable h.conLong).2
-  · cases h h'.2
-  · rfl
+  have hnLost : ¬ H.Lost := fun hL ↦ h (hL.1.mk.losable h.conLong).2
+  have hnLosable : ¬ H.Losable := fun hL ↦ h hL.2
+  classical
+  unfold extension
+  exact (dif_neg hnLost).trans ((dif_neg hnLosable).trans (dif_pos h))
 end Lift
 
 end «Section1»

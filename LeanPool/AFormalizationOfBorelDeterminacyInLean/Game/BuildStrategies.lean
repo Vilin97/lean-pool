@@ -184,7 +184,7 @@ noncomputable def firstMove : PreStrategy T Player.zero := by
       rw [firstMove_subtree]; exact ⟨rfl, h _ hy⟩
 variable {G : Game A} (h : [a] ∈ G.tree) (s : PreStrategy (G.residual [a]).tree Player.one)
 @[simp] lemma firstMove_isWinning :
-  (s.firstMove a h).IsWinning ↔ s.IsWinning := by
+  body (s.firstMove a h).subtree ⊆ Subtype.val '' G.payoff ↔ s.IsWinning := by
   constructor
   · intro hw b hb
     have hb' : Stream'.cons a b ∈ body (s.firstMove a h).subtree :=
@@ -216,8 +216,11 @@ lemma firstMove_extQuasi_tree (hs : s.IsQuasi) (hT : IsPruned G.tree) :
       simp only [firstMove, subtreeIncl, ↓reduceDIte]
       rfl⟩
 @[simp] lemma firstMove_extQuasi_isWinning (hT : IsPruned G.tree) (hs : s.IsQuasi) :
-  ((s.firstMove a h).extQuasi hT).1.IsWinning ↔ s.IsWinning := by
-  unfold IsWinning; rw [firstMove_extQuasi_tree a h s hs]; apply firstMove_isWinning a h s
+  body ((s.firstMove a h).tryAndElse ⊤).subtree ⊆ Subtype.val '' G.payoff ↔ s.IsWinning := by
+  unfold IsWinning
+  rw [firstMove_extQuasi_tree a h s hs]
+  · apply firstMove_isWinning a h s
+  · exact hT
 end «firstMove»
 
 section «PreserveProp»
