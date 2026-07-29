@@ -24,8 +24,6 @@ various properties and usual arithmetic operations on natural numbers.
 
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 universe u
 
 noncomputable section
@@ -649,12 +647,20 @@ theorem induction_is_rec_into_Prop {motive : ZFNat → Prop} :
 
 theorem rec_zero {motive : ZFNat → Sort u}
   (zero : motive 0) (succ : Π x, motive x → motive (succ x)) :
-  rec 0 zero succ = zero := by conv => arg 1; simp [ZFNat.rec, ZFNat.rec'_zero]
+  rec 0 zero succ = zero := by
+  unfold ZFNat.rec
+  dsimp
+  rw [ZFNat.rec'_zero]
+  apply cast_eq_iff_heq.mpr
+  apply eqRec_heq_self
 
 theorem rec_succ {motive : ZFNat → Sort u} (n : ZFNat)
   (zero : motive 0) (succ' : Π x, motive x → motive (succ x)) :
   rec (succ n) zero succ' = succ' n (ZFNat.rec n zero succ') := by
-    simp [ZFNat.rec, succ, ZFNat.rec'_succ _ n.property]
+  rcases n with ⟨n, hn⟩
+  simp only [ZFNat.rec, succ, ZFNat.rec'_succ n hn]
+  apply cast_eq_iff_heq.mpr
+  apply eqRec_heq_self
 
 
 /--
