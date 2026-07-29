@@ -20,6 +20,9 @@ test = [
 ]
 review = [
     "openai>=1.50",
+    # Mathlib prior-art search; imported lazily so a review still runs if
+    # the backend or the key is unavailable.
+    "lean-explore>=0.4",
 ]
 
 [tool.pytest.ini_options]

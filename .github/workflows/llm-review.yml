@@ -187,6 +187,9 @@ jobs:
         working-directory: python
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Mathlib prior-art search. Absent, the review still runs and
+          # is told the search did not happen.
+          LEANEXPLORE_API_KEY: ${{ secrets.LEANEXPLORE_API_KEY }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
