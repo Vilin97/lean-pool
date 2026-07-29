@@ -31,6 +31,8 @@ import LeanPool.Monsky.Square
 Imported Lean Pool material for `LeanPool.Monsky.SegmentCounting`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPool.Monsky
 
 local notation "ℝ²" => EuclideanSpace ℝ (Fin 2)
@@ -831,7 +833,7 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
       := by
     intro S hS T hT hST Y hY h
     have hDisj2 := hDisj S T hS hT hST
-    simp_all only [mem_coe, ne_eq, le_eq_subset, bot_eq_empty, subset_empty]
+    simp_all only [mem_coe, ne_eq, bot_eq_empty, subset_empty]
     have h_nontriv : ∀ L ∈ Y, L 0 ≠ L 1 := by
       intro L hL
       apply @segmentSet_vertex_distinct X L

@@ -29,6 +29,8 @@ import LeanPool.Monsky.SegmentTriangle
 Imported Lean Pool material for `LeanPool.Monsky.RainbowTriangles`.
 -/
 
+set_option backward.isDefEq.respectTransparency false
+
 namespace LeanPool.Monsky
 
 /-!
