@@ -949,6 +949,27 @@ def test_project_assessment_leads_with_the_ungated_checks() -> None:
     assert "Obscure problem" not in table
 
 
+def test_prior_art_hedge_is_not_rendered_as_a_duplicate() -> None:
+    """A prose non-answer must not wear the stop icon a real hit earns.
+
+    The first production run under these rules answered
+    `already_formalized` with "unverifiable from the supplied diff" on a
+    PR it approved; rendering that with 🛑 said the opposite.
+    """
+    from lean_pool.review import render_project_assessment
+
+    hedged = render_project_assessment(
+        {"assessment": {"already_formalized": "unverifiable from the supplied diff"}}
+    )
+    hit = render_project_assessment(
+        {"assessment": {"already_formalized": "SimpleGraph.nonempty_hom"}}
+    )
+
+    assert "🛑" not in hedged
+    assert "🟡 unverifiable from the supplied diff" in hedged
+    assert "🛑 `SimpleGraph.nonempty_hom`" in hit
+
+
 def test_project_assessment_omits_empty_optional_rows() -> None:
     """A clean project shows no prior-art or assumption row at all."""
     from lean_pool.review import render_project_assessment

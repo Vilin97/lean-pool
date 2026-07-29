@@ -126,7 +126,7 @@ Return a single JSON object:
     "difficulty": "exercise" | "substantial" | "research" | "open_problem",
     "estimated_lines": <int: lines of Lean a solution would take>,
     "estimate_basis": "<one sentence: what the estimate rests on>",
-    "already_formalized": "<Mathlib or pool declaration that already proves this, or empty>",
+    "already_formalized": "<the Mathlib or pool declaration that already proves this — a bare declaration name and nothing else. Leave EMPTY if you found none or could not check; do not write a sentence here, and never use it to say the question is unverifiable>",
     "assessment_one_sentence": "<one sentence: the bottom line for the maintainer>"
   },
   "verdict": "approve" | "request_changes" | "needs_discussion",

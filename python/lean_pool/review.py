@@ -1179,7 +1179,7 @@ def render_project_assessment(payload: dict) -> str:
     ]
     already = (a.get("already_formalized") or "").strip()
     if already:
-        rows.append(("Already formalized", f"🛑 `{already}`"))
+        rows.append(("Already formalized", _prior_art_cell(already)))
     assumed = (a.get("assumed_inputs") or "").strip()
     if assumed:
         rows.append(("Assumed, not proved", assumed))
@@ -1266,7 +1266,7 @@ def render_challenge_assessment(payload: dict) -> str:
     ]
     already = (a.get("already_formalized") or "").strip()
     if already:
-        rows.append(("Already formalized", f"🛑 `{already}`"))
+        rows.append(("Already formalized", _prior_art_cell(already)))
 
     table = "| Aspect | Value |\n|---|---|\n"
     for key, value in rows:
@@ -1286,6 +1286,21 @@ def _icon_cell(icons: dict[str, str], value: str) -> str:
     if not value:
         return "?"
     return f"{icons.get(value, '•')} `{value}`"
+
+
+def _prior_art_cell(value: str) -> str:
+    """Render an ``already_formalized`` value at its actual confidence.
+
+    The field is specified as a declaration name or nothing, but the
+    model sometimes answers the question in prose instead — the first
+    production run under the new rules returned "unverifiable from the
+    supplied diff". Stamping 🛑 on that reads as "this is a duplicate" on
+    a PR the same review approved, which is the opposite of what it said.
+    Treat a multi-word answer as the hedge it is.
+    """
+    if " " in value:
+        return f"🟡 {value}"
+    return f"🛑 `{value}`"
 
 
 def render_solution_assessment(payload: dict) -> str:
