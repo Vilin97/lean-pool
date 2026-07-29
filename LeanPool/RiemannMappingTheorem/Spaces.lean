@@ -53,7 +53,8 @@ def 𝓑 (U : Set ℂ) (Q : Set ℂ → Set ℂ) : Set (𝓒 U) :=
     {f ∈ 𝓗 U | ∀ K ∈ compacts U, MapsTo f K (Q K)}
 
 lemma 𝓑_const {Q : Set ℂ} : 𝓑 U (fun _ => Q) = {f ∈ 𝓗 U | MapsTo f U Q} := by
-  simp [𝓑, ← mapsTo_sUnion]
+  set_option backward.isDefEq.respectTransparency false in
+    simp [𝓑, ← mapsTo_sUnion]
 
 theorem isClosed_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q K)) :
     IsClosed (𝓑 U Q) := by

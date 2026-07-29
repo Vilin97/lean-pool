@@ -17,6 +17,8 @@ open Set Function Metric UniformConvergence Complex
 
 variable {ι : Type*} {U K : Set ℂ} {z : ℂ} {F : ι → 𝓒 U} {Q : Set ℂ → Set ℂ}
 
+set_option backward.isDefEq.respectTransparency false
+
 /-- A family `F` is uniformly bounded on `U` iff for every compact
 `K ⊆ U` there is a single compact `Q ⊆ ℂ` containing every `F i K`. -/
 def UniformlyBoundedOn (F : ι → ℂ → ℂ) (U : Set ℂ) : Prop :=
