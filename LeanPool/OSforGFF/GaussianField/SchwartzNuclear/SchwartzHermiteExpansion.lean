@@ -596,7 +596,7 @@ private lemma clm_finset_sup_seminorm_bound
     have h_a : ∀ f : SchwartzMap ℝ ℝ, SchwartzMap.seminorm ℝ a.1 a.2 (T f) ≤
         (C_a : ℝ) * s_a.sup snf f := fun f => by
       have := hle_a f
-      simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def] at this
+      simp only [Seminorm.comp_apply, smul_apply, NNReal.smul_def] at this
       exact this
     -- Take q large enough
     set q₁ := max q_s.1 (s_a.sup Prod.fst)

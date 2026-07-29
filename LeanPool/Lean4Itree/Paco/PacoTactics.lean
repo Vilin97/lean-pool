@@ -186,7 +186,11 @@ elab "destructLastAnd" : tactic =>
 /-- The Paco coinduction tactic: starts a parameterized-coinduction proof and
 introduces the coinduction hypothesis under the name `cih`. -/
 macro "pcofix" cih:ident : tactic => `(tactic|(
-  pinit; rw [@plfp_init] at *; pcofixIntroAcc; pcofixWrap
+  pinit
+  set_option backward.isDefEq.respectTransparency false in
+    rw [@plfp_init] at *
+  pcofixIntroAcc
+  pcofixWrap
   rename_i x; exists x -- proof for plfp_acc
   intros; constructor -- proof for converter
   · intro h x; apply h; exists x
@@ -197,18 +201,23 @@ macro "pcofix" cih:ident : tactic => `(tactic|(
   intro $(mkIdent `φ) dummy _h
   have $cih := (converter _).mp _h
   refine ((converter ?_).mpr ?_)
-  rw [unpacker] at *
+  set_option backward.isDefEq.respectTransparency false in
+    rw [unpacker] at *
   simp only at *
   clear unpacker converter dummy _h
 ))
 
 /-- Unfold the parameterized least fixed point once in the goal. -/
-macro "pfold" : tactic => `(tactic|(rw [@plfp_unfold]))
+macro "pfold" : tactic => `(tactic|(
+  set_option backward.isDefEq.respectTransparency false in
+    rw [@plfp_unfold]))
 /-- Unfold the parameterized least fixed point once in a hypothesis. -/
 syntax "punfold" " at " ident : tactic
 macro_rules
 | `(tactic| punfold at $h:ident) =>
-  `(tactic| rw [@plfp_unfold] at $h:ident)
+  `(tactic|
+    set_option backward.isDefEq.respectTransparency false in
+      rw [@plfp_unfold] at $h:ident)
 
 /-- Initialise a parameterized-coinduction proof from a fixed-point hypothesis `h`. -/
 elab "pinit" " at " h:ident : tactic =>
@@ -226,7 +235,9 @@ elab "pinit" " at " h:ident : tactic =>
     Tactic.liftMetaTactic λ mvarId => do
       let mvarId ← mvarId.deltaLocalDecl hyp (c == ·)
       return [mvarId]
-    Tactic.evalTactic <| ← `(tactic|rw [@plfp_init] at $h:ident)
+    Tactic.evalTactic <| ← `(tactic|
+      set_option backward.isDefEq.respectTransparency false in
+        rw [@plfp_init] at $h:ident)
 
 /-- Clear the residual `⊤ₚ` meet from a `uplfp` hypothesis, leaving the plain
 parameterized fixed point. -/

@@ -160,8 +160,8 @@ lemma euclidean_action_timeTranslationE (t : ℝ) (f : TestFunctionℂ) :
   congr 1
   simp only [QFT.inv_R, QFT.inv_t, QFT.LinearIsometry.inv]
   have h1 : ∀ v, (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl).symm v = v := fun v => by
-    have hv : (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl) v = v := by simp
-      [LinearIsometry.toLinearIsometryEquiv]
+    have hv : (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl) v = v := by
+      simp only [LinearIsometry.toLinearIsometryEquiv_apply, LinearIsometry.coe_one, id_eq]
     rw [← hv]; exact LinearIsometryEquiv.symm_apply_apply _ v
   simp only [LinearIsometryEquiv.coe_toLinearIsometry, h1, neg_neg]
 

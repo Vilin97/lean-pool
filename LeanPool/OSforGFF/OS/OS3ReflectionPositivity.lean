@@ -98,9 +98,7 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
   -- First prove the matrix is Hermitian (symmetric since entries are real)
   have h_herm : M.IsHermitian := by
     ext i j
-    simp only [M, conjTranspose_apply]
-    -- For real entries, star is the identity, so we need to show symmetry
-    simp only [star_id_of_comm]
+    change M j i = M i j
     -- Use the symmetry from freeCovarianceFormR_reflection_cross
     exact (freeCovarianceFormR_reflection_cross (m := m) (f := (f i).val) (g := (f j).val)).symm
   -- Use the constructor for regular functions
@@ -737,7 +735,8 @@ private lemma entrywiseExp_IsRePSD
   have hS_entry : ∀ N i j, S N i j =
       ∑ k ∈ Finset.range (N + 1), (↑(Nat.factorial k : ℕ) : ℂ)⁻¹ * (M i j) ^ k := by
     intro N i j
-    simp [S, Matrix.sum_apply, HP]
+    set_option backward.isDefEq.respectTransparency false in
+      simp [S, Matrix.sum_apply, HP]
   -- Prove IsRePSD of the entrywise exp by taking the limit
   intro v
   -- The Re part of the quadratic form of S N is nonneg

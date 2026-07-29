@@ -916,7 +916,7 @@ lemma bumpSelfConv_support_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
     3. Apply single-convolution theorem: (ψ ⋆ C)(a) → C(a)
 -/
 theorem double_mollifier_convergence
-    [NoAtoms (volume : Measure E)]
+    [NullSingletonClass (volume : Measure E)]
     (C : E → ℝ)
     (hC : ContinuousOn C {x | x ≠ 0})
     (a : E) (ha : a ≠ 0)

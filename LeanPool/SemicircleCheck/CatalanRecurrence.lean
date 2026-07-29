@@ -797,10 +797,14 @@ theorem noncrossing_zero_target_odd {n : ℕ} (p : Pairing (n + 1))
       constructor
       · rintro ⟨j, rfl⟩
         constructor
-        · simp [f]
-        · simp [f]; omega
+        · exact Nat.zero_lt_succ j.val
+        · change j.val + 1 < t
+          omega
       · intro ⟨h_pos, h_lt⟩
-        exact ⟨⟨x.val - 1, by omega⟩, Fin.ext (by simp [f]; omega)⟩
+        refine ⟨⟨x.val - 1, by omega⟩, ?_⟩
+        apply Fin.ext
+        change (x.val - 1) + 1 = x.val
+        omega
     rw [← h_map, Finset.card_map, Finset.card_univ, Fintype.card_fin]
   -- t - 1 = 2k - 1 is odd
   have h_odd : Odd shadow.card := by rw [h_card, hk]; exact ⟨k - 1, by omega⟩

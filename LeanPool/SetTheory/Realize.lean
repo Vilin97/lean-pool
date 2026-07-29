@@ -25,7 +25,7 @@ inductive memRel : ℕ → Type
 
 open FirstOrder in
 /-- The first-order language of ZF set theory, with a single binary membership relation. -/
-def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
+@[reducible] def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
 deriving IsRelational
 
 namespace FirstOrder.Language.BoundedFormula
@@ -173,7 +173,7 @@ noncomputable instance (priority := low) instEmptyCollectionM : EmptyCollection 
     (EqEmptyN n).Realize v ↔ ∅ = v (Fin.last n) := by
   simp only [EqEmptyN, Formula.Realize, realize_simps]
   rw [iff_comm]
-  exact HasEmpty.exists_empty.choose_eq_iff
+  exact (HasEmpty.exists_empty (M := M)).choose_eq_iff
 
 end ZFStructure
 
@@ -925,6 +925,7 @@ def buildRealizeIff (thmName : Name) : BuildFormulaM Unit := do
   let nVars := Syntax.mkNatLit (← numFreeVars true)
   let identM := mkIdent `M
   let cmd ← `(
+  set_option backward.isDefEq.respectTransparency false in
   @[realize_simps] lemma $thmIdent
       $(← classParamBinders)* (v : Fin $nVars → $identM) :
       FirstOrder.Language.Formula.Realize $formulaIdent v ↔ $realizedApplyV' := by
