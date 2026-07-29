@@ -183,7 +183,7 @@ noncomputable def TrueErrorReal (X : Type u) [MeasurableSpace X]
     not have a clean computational witness. -/
 theorem trueError_eq_genError (X : Type u) [MeasurableSpace X]
     (h : Concept X Bool) (c : Concept X Bool)
-    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
+    (D : MeasureTheory.Measure X)
     (hmeas : MeasurableSet { x | h x ≠ c x })
     (hcmeas : Measurable c)
     (hhmeas : Measurable h) :
@@ -295,7 +295,7 @@ def IsConsistentWith (X : Type u) (Y : Type v)
   ∀ i : Fin m, h (S i).1 = (S i).2
 
 /-- Consistency implies zero empirical 0-1 error. -/
-theorem consistent_imp_zero_empiricalError (X : Type u) [MeasurableSpace X]
+theorem consistent_imp_zero_empiricalError (X : Type u)
     (h : Concept X Bool) (c : Concept X Bool)
     {m : ℕ} (hm : 0 < m) (xs : Fin m → X)
     (hcons : IsConsistentWith X Bool h (fun i => (xs i, c (xs i)))) :
@@ -359,7 +359,7 @@ theorem empError_zero_iff_consistent {X : Type u} {Y : Type v} [DecidableEq Y]
       exact hfaith.loss_self_zero _
     rw [this, zero_div]
 
-theorem erm_consistent_realizable (X : Type u) [MeasurableSpace X] [DecidableEq Bool]
+theorem erm_consistent_realizable (X : Type u) [DecidableEq Bool]
     (H : HypothesisSpace X Bool) (C : ConceptClass X Bool)
     (loss : LossFunction Bool) (hfaith : IsFaithfulLoss loss)
     (hloss_nonneg : ∀ y₁ y₂, 0 ≤ loss y₁ y₂)
@@ -450,7 +450,7 @@ def HasBoundedDifferences {X : Type u} {m : ℕ} (f : (Fin m → X) → ℝ) (c 
 /-- EmpiricalError of a fixed hypothesis h is a bounded-difference function
     of the sample, with constant 1/m. Changing one sample point changes the
     average loss by at most 1/m (since each term is in [0,1] for zeroOneLoss). -/
-theorem empiricalError_bounded_diff {X : Type u} [MeasurableSpace X]
+theorem empiricalError_bounded_diff {X : Type u}
     (h c : Concept X Bool) (m : ℕ) (hm : 0 < m) :
     HasBoundedDifferences
       (fun xs : Fin m → X =>
@@ -1375,7 +1375,6 @@ noncomputable def uniformMeasure (X : Type u) [MeasurableSpace X] [Fintype X]
 
 /-- The uniform measure is a probability measure when X is nonempty and finite. -/
 theorem uniformMeasure_isProbability (X : Type u) [MeasurableSpace X] [Fintype X]
-    [MeasurableSingletonClass X]
     (hne : Nonempty X) (hpos : 0 < Fintype.card X) :
     MeasureTheory.IsProbabilityMeasure (uniformMeasure X hne) := by
   constructor
@@ -1534,7 +1533,7 @@ theorem pac_lower_bound_good_event_le_half
   have hTpos : 0 < Fintype.card ↥T := Fintype.card_pos_iff.mpr hTne_type
   let D_sub := @uniformMeasure ↥T ⊤ _ hTne_type
   have hD_sub_prob : @MeasureTheory.IsProbabilityMeasure ↥T ⊤ D_sub :=
-    @uniformMeasure_isProbability ↥T ⊤ _ ⟨fun _ => trivial⟩ hTne_type hTpos
+    @uniformMeasure_isProbability ↥T ⊤ _ hTne_type hTpos
   have hval_meas : @Measurable ↥T X ⊤ _ Subtype.val :=
     fun _ _ => MeasurableSpace.measurableSet_top
   let D := @MeasureTheory.Measure.map ↥T X ⊤ _ Subtype.val D_sub

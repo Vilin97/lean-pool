@@ -69,7 +69,6 @@ universe u v
     → compression scheme learner is PAC.
     **Swap condition:** When proving COMPUTATIONAL PAC learnability (polynomial time). -/
 theorem vcdim_finite_imp_pac (X : Type u) [MeasurableSpace X]
-    [MeasurableSingletonClass X]
     (C : ConceptClass X Bool) (hC : VCDim X C < ⊤)
     [MeasurableConceptClass X C] :
     PACLearnable X C := by

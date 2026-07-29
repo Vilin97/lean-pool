@@ -105,8 +105,8 @@ theorem amalgClass_wellBehaved
 
 /-- Fixed-region interpolation is a subset of amalgamation with trivial projections. -/
 theorem interpClassFixed_subset_amalgClass
-    {X : Type u} [MeasurableSpace X]
-    {Θ₁ Θ₂ : Type*} [MeasurableSpace Θ₁] [MeasurableSpace Θ₂]
+    {X : Type u}
+    {Θ₁ Θ₂ : Type*}
     (e₁ : Θ₁ → Concept X Bool) (e₂ : Θ₂ → Concept X Bool)
     (A : Set X) :
     interpClassFixed (Set.range e₁) (Set.range e₂) A ⊆
