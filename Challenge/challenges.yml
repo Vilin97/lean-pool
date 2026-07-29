@@ -101,3 +101,53 @@ challenges:
     msc:
       - "11G05"
       - "11G18"
+  - slug: mckay-conjecture
+    title: The McKay conjecture
+    summary: >-
+      Prove the McKay conjecture: for every finite group G, every prime p, and
+      every Sylow p-subgroup P of G, the number of irreducible complex
+      characters of G of degree not divisible by p equals the same count for
+      the normalizer of P in G. Conjectured by McKay in 1972 and proved in
+      full by Cabanes and Späth (Annals of Mathematics, 2026) by completing
+      the Isaacs–Malle–Navarro programme: the conjecture reduces to the
+      inductive McKay condition for quasisimple groups, whose verification
+      rests on the classification of finite simple groups and on
+      Deligne–Lusztig theory. Irreducible characters are counted as character
+      functions of simple finite-dimensional complex representations, which
+      identifies exactly the isomorphism classes. The line estimate is a
+      guess at that programme — the character theory Mathlib is missing, the
+      reduction theorem, the classification, and the case-by-case
+      verification — not at any single write-up.
+    branch: group theory
+    entry_module: Challenge.McKay
+    proposers:
+      - Vasily Ilin
+    source:
+      title: The McKay Conjecture on character degrees
+      authors:
+        - Marc Cabanes
+        - Britta Späth
+      arxiv: "2410.20392"
+      doi: "10.4007/annals.2026.203.3.5"
+    license: Apache-2.0
+    provenance: AI
+    status: open
+    estimated_lines: 1000000
+    statements:
+      - declaration: Challenge.McKay.card_pPrimeCharacters_eq
+        informal: >-
+          For every finite group G, every prime p, and every Sylow p-subgroup
+          P of G, the set of character functions of simple finite-dimensional
+          complex representations of G whose dimension p does not divide has
+          the same cardinality as the corresponding set for the normalizer of
+          P in G. Two simple representations have equal characters exactly
+          when they are isomorphic, so both sets are in bijection with the
+          sets Irr_p'(G) and Irr_p'(N_G(P)) that the McKay conjecture counts.
+    tags:
+      - group-theory
+      - representation-theory
+      - character-theory
+      - mckay-conjecture
+    msc:
+      - "20C15"
+      - "20D20"
