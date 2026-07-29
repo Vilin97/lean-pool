@@ -63,12 +63,14 @@ comparator:
 	@mkdir -p $(COMPARATOR_CACHE)
 	@test -d $(COMPARATOR_CACHE)/comparator || \
 		git clone https://github.com/leanprover/comparator $(COMPARATOR_CACHE)/comparator
-	cd $(COMPARATOR_CACHE)/comparator && git pull --ff-only && lake build comparator
+	cd $(COMPARATOR_CACHE)/comparator && git fetch --quiet origin && \
+		git checkout --quiet $$(. $(CURDIR)/scripts/challenge/pins.env && echo $$COMPARATOR_COMMIT) && \
+		lake build comparator
 	@test -d $(COMPARATOR_CACHE)/lean4export || \
 		git clone https://github.com/leanprover/lean4export $(COMPARATOR_CACHE)/lean4export
-	cd $(COMPARATOR_CACHE)/lean4export && git pull --ff-only
-	cp lean-toolchain $(COMPARATOR_CACHE)/lean4export/lean-toolchain
-	cd $(COMPARATOR_CACHE)/lean4export && lake build lean4export
+	cd $(COMPARATOR_CACHE)/lean4export && git fetch --quiet origin && \
+		git checkout --quiet $$(. $(CURDIR)/scripts/challenge/pins.env && echo $$LEAN4EXPORT_COMMIT) && \
+		lake build lean4export
 	@echo
 	@echo "comparator:  $(COMPARATOR_CACHE)/comparator/.lake/build/bin/comparator"
 	@echo "lean4export: $(COMPARATOR_CACHE)/lean4export/.lake/build/bin/lean4export"

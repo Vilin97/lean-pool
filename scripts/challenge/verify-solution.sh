@@ -140,6 +140,12 @@ echo "Building the challenge library..."
 lake build Challenge
 
 echo "Running comparator..."
+# Belt and braces: comparator's `main` resolves these from the environment,
+# while the commit CI pins hardcodes them as PATH lookups. Provide both, so a
+# local run and a CI run behave the same whichever judge is installed.
+lean4export_dir="$(dirname "$lean4export_bin")"
+landrun_dir="$(dirname "$landrun_bin")"
+export PATH="$lean4export_dir:$landrun_dir:$PATH"
 COMPARATOR_LANDRUN="$landrun_bin" COMPARATOR_LEAN4EXPORT="$lean4export_bin" \
   lake env "$comparator_bin" "$config"
 echo "Verified: challenge '$slug' is proved by the solution comparator checked."
