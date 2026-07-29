@@ -29,8 +29,6 @@ import LeanPool.Monsky.SegmentTriangle
 Imported Lean Pool material for `LeanPool.Monsky.RainbowTriangles`.
 -/
 
-set_option backward.isDefEq.respectTransparency false
-
 namespace LeanPool.Monsky
 
 /-!
@@ -53,7 +51,12 @@ inductive Color
 | Red
 | Green
 | Blue
-deriving DecidableEq, Fintype
+deriving DecidableEq
+
+instance : Fintype Color where
+  elems := {Color.Red, Color.Green, Color.Blue}
+  complete x := by
+    cases x <;> simp
 
 variable {Γ₀ : Type} [LinearOrderedCommGroupWithZero Γ₀]
 variable (v : Valuation ℝ Γ₀)
