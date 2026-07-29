@@ -126,6 +126,52 @@ def test_render_says_plainly_when_nothing_matched() -> None:
     assert "No Mathlib declaration matched" in section
 
 
+def test_one_failed_query_is_not_reported_as_novelty() -> None:
+    """A per-claim failure must not read as "nothing matched".
+
+    `asyncio.gather` returns exceptions alongside results; a query that
+    times out maps to None, not to an empty hit list, because "the
+    search errored" and "the search found nothing" are opposite pieces
+    of evidence about prior art.
+    """
+    from lean_pool.prior_art import new_claims, render
+
+    claims = new_claims(PROJECTS_HEAD, PROJECTS_BASE, "project")
+
+    section = render(claims, {claims[0].declaration: None}, PROJECTS_HEAD, None)
+
+    assert section is not None
+    assert "search failed" in section
+    assert "No Mathlib declaration matched" not in section
+
+
+def test_search_all_keeps_a_failed_claim_as_none(monkeypatch) -> None:
+    """A raising query stays in the mapping instead of vanishing."""
+    import asyncio
+
+    from lean_pool import prior_art
+
+    # ApiClient refuses to construct without one; the stub never calls out.
+    monkeypatch.setenv("LEANEXPLORE_API_KEY", "test-key")
+
+    async def _one(_client, claim):
+        if claim.declaration == "A.bad":
+            raise TimeoutError("took too long")
+        return [prior_art.MathlibHit("Mathlib.Thing", "Mathlib.Mod", "desc")]
+
+    monkeypatch.setattr(prior_art, "_search_one", _one)
+
+    result = asyncio.run(
+        prior_art._search_all(
+            [prior_art.Claim("A.good", "works"), prior_art.Claim("A.bad", "explodes")]
+        )
+    )
+
+    assert set(result) == {"A.good", "A.bad"}
+    assert result["A.bad"] is None
+    assert result["A.good"] and result["A.good"][0].name == "Mathlib.Thing"
+
+
 def test_render_distinguishes_a_failed_search_from_a_clean_one() -> None:
     """Silence must never be mistaken for an absence of prior art."""
     from lean_pool.prior_art import new_claims, render

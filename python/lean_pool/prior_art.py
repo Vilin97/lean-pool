@@ -195,8 +195,14 @@ async def _search_one(client: Any, claim: Claim) -> list[MathlibHit]:
     return hits
 
 
-async def _search_all(claims: list[Claim]) -> dict[str, list[MathlibHit]]:
-    """Search every claim concurrently against Mathlib."""
+async def _search_all(claims: list[Claim]) -> dict[str, list[MathlibHit] | None]:
+    """Search every claim concurrently against Mathlib.
+
+    A claim whose own query failed maps to ``None`` rather than being
+    dropped. Dropping it would render as "no Mathlib declaration
+    matched" — one timed-out query reported as evidence of novelty,
+    which is the confusion this whole module exists to prevent.
+    """
     from lean_explore.api import ApiClient
 
     client = ApiClient()
@@ -204,20 +210,22 @@ async def _search_all(claims: list[Claim]) -> dict[str, list[MathlibHit]]:
         *(_search_one(client, claim) for claim in claims), return_exceptions=True
     )
     return {
-        claim.declaration: hits
+        claim.declaration: None if isinstance(hits, BaseException) else hits
         for claim, hits in zip(claims, results, strict=True)
-        if not isinstance(hits, BaseException)
     }
 
 
 def search_mathlib(
     claims: list[Claim],
-) -> tuple[dict[str, list[MathlibHit]], str | None]:
+) -> tuple[dict[str, list[MathlibHit] | None], str | None]:
     """Search Mathlib for each claim.
 
     Returns:
-        ``(hits_by_declaration, unavailable_reason)``. A search that
-        cannot run is never fatal — the reviewer is told it did not
+        ``(hits_by_declaration, unavailable_reason)``. A declaration
+        maps to ``None`` when its own query failed, distinct from an
+        empty list, which means the search ran and found nothing.
+        ``unavailable_reason`` is set when no query ran at all. A search
+        that cannot run is never fatal — the reviewer is told it did not
         happen so it can say `unverifiable` honestly rather than
         mistaking silence for an absence of prior art.
     """
@@ -233,7 +241,7 @@ def search_mathlib(
 
 def render(
     claims: list[Claim],
-    hits: dict[str, list[MathlibHit]],
+    hits: dict[str, list[MathlibHit] | None],
     projects_text: str,
     unavailable: str | None,
 ) -> str | None:
@@ -263,6 +271,12 @@ def render(
             found = hits.get(claim.declaration)
             if unavailable is not None:
                 lines.append(f"- _Not searched: {unavailable}._")
+            elif found is None:
+                # Distinct from an empty list: this query errored, so
+                # nothing here is evidence either way.
+                lines.append(
+                    "- _This headline's search failed; prior art for it is unchecked._"
+                )
             elif found:
                 for hit in found:
                     where = f" ({hit.module})" if hit.module else ""
