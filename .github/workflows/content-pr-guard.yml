@@ -30,7 +30,10 @@ name: PR Separation Guard
 #   - docbuild/lean-toolchain
 #   - docbuild/lake-manifest.json
 #   - docbuild/lakefile.toml
+#   - scripts/challenge/pins.env
 #   - .github/workflows/content-pr-guard.yml
+# (scripts/challenge/pins.env pins lean4export to this repository's
+# toolchain, so a toolchain bump has to move it in the same PR.)
 # Any other non-content file alongside content still fails the gate.
 
 on:
@@ -105,7 +108,7 @@ jobs:
           non_content="$(printf '%s\n' "$files" | { grep -vE "$content_re" || true; })"
 
           if [ -n "$content" ] && [ -n "$non_content" ]; then
-            bump_metadata_re='^(lean-toolchain|lakefile\.toml|lake-manifest\.json|docbuild/(lean-toolchain|lakefile\.toml|lake-manifest\.json)|\.github/workflows/content-pr-guard\.yml)$'
+            bump_metadata_re='^(lean-toolchain|lakefile\.toml|lake-manifest\.json|docbuild/(lean-toolchain|lakefile\.toml|lake-manifest\.json)|scripts/challenge/pins\.env|\.github/workflows/content-pr-guard\.yml)$'
             non_bump_metadata="$(printf '%s\n' "$non_content" | { grep -vE "$bump_metadata_re" || true; })"
             bump_metadata="$(printf '%s\n' "$non_content" | { grep -E "$bump_metadata_re" || true; })"
 
@@ -139,6 +142,7 @@ jobs:
             echo "  - docbuild/lean-toolchain"
             echo "  - docbuild/lakefile.toml"
             echo "  - docbuild/lake-manifest.json"
+            echo "  - scripts/challenge/pins.env"
             echo
             echo "Content files in this PR:"
             while IFS= read -r f; do
