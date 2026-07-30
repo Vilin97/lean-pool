@@ -206,7 +206,7 @@ lemma conditionalEntropy_convexCombination (p q : ProbabilityMeasure α) (k : Ke
   rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
 
 omit [Fintype α] [MeasurableSingletonClass α] in
-lemma absolutelyContinuous_count (μ : ProbabilityMeasure α) [Countable α] :
+lemma absolutelyContinuous_count (μ : ProbabilityMeasure α) :
     μ.toMeasure ≪ Measure.count := by
   refine Measure.AbsolutelyContinuous.mk fun s hs hs_zero => ?_
   rw [Measure.count_eq_zero_iff] at hs_zero

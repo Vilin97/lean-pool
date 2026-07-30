@@ -331,10 +331,10 @@ theorem winning_of_whatever_other_move {i g} {sI : Strategy g i}
     -- At `p` we use the given `m`, otherwise d othe same as `sJ`.
     if same_p : npos = p then same_p ▸ m else  sJ _ npos_Bui_turn nonE
   specialize sI_wins_p sJ_m
-  unfold sJ_m winner at sI_wins_p
+  unfold winner at sI_wins_p
   have : (Game.moves p).Nonempty := ⟨m.1,m.2⟩
   have : ¬ Game.turn p = i := by aesop
-  have sI_wins_p := by simpa [*] using sI_wins_p
+  have sI_wins_p := by simpa [sJ_m, *] using sI_wins_p
   convert sI_wins_p using 1 -- because rw [← sI_wins_p] does not work
   apply same_winner_of_same_in_cone
   -- Remains to show that sJ and sJ_m will agree on all remaining moves.

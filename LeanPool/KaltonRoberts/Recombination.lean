@@ -148,7 +148,7 @@ theorem approx_additive_finset_partition_sum_lower
 /-- From an expander's expansion property, derive Hall's matching for any
 subset of left vertices of size at most the expansion threshold. -/
 theorem hall_matching_from_expansion
-    {V W : Type*} [Finite V] [Finite W] [DecidableEq W]
+    {V W : Type*} [_hV : Finite V] [_hW : Finite W] [DecidableEq W]
     {r : ℕ} (edge : V → Fin r → W)
     (threshold : ℕ)
     (hexp : ∀ S : Finset V, S.card ≤ threshold →

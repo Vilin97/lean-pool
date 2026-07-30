@@ -78,6 +78,14 @@ end DiagMul
 
 variable [NeZero n]
 
+omit [NeZero n] in
+private lemma mapGL_integer_matrix (A : SpecialLinearGroup (Fin n) ℤ) :
+    (↑(mapGL ℚ A) : Matrix (Fin n) (Fin n) ℚ) = A.val.map (Int.cast : ℤ → ℚ) := by
+  calc
+    _ = ((SpecialLinearGroup.map (Int.castRingHom ℚ)) A).val :=
+      mapGL_coe_matrix (S := ℚ) A
+    _ = _ := SpecialLinearGroup.map_apply_coe (Int.castRingHom ℚ) A
+
 private lemma doubleCoset_eq_of_mem' (g δ : GL (Fin n) ℚ)
     (h : g ∈ DoubleCoset.doubleCoset δ (GLPair n).H (GLPair n).H) :
     DoubleCoset.doubleCoset g (GLPair n).H (GLPair n).H =
@@ -447,9 +455,10 @@ lemma conjugate_congruent_mem_SLnZ (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) (_h
       mapGL ℚ ⟨M, hM_det⟩ * diagMat n a := by
     apply Units.ext
     have hτ_val : (↑(mapGL ℚ τ) : Matrix _ _ ℚ) = τ.val.map (Int.cast) := by
-      simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+      exact mapGL_integer_matrix n τ
     have hM_val : (↑(mapGL ℚ (⟨M, hM_det⟩ : SpecialLinearGroup (Fin n) ℤ)) : Matrix _ _ ℚ) =
-        M.map (Int.cast) := by simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+        M.map (Int.cast) := by
+      exact mapGL_integer_matrix n (⟨M, hM_det⟩ : SpecialLinearGroup (Fin n) ℤ)
     simp only [Units.val_mul, hτ_val, hM_val, diagMat_val _ _ ha]
     have h_mul_map : ∀ (A B : Matrix (Fin n) (Fin n) ℤ),
         (A * B).map (Int.cast : ℤ → ℚ) = A.map Int.cast * B.map Int.cast := by
@@ -493,9 +502,10 @@ lemma inv_conjugate_congruent_mem_SLnZ (b : Fin n → ℕ) (hb : ∀ i, 0 < b i)
       (τ : GL (Fin n) ℚ) * diagMat n b := by
     apply Units.ext
     have hτ_val : (↑(mapGL ℚ τ) : Matrix _ _ ℚ) = τ.val.map (Int.cast) := by
-      simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+      exact mapGL_integer_matrix n τ
     have hN_val : (↑(mapGL ℚ (⟨N, hN_det⟩ : SpecialLinearGroup (Fin n) ℤ)) : Matrix _ _ ℚ) =
-        N.map (Int.cast) := by simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+        N.map (Int.cast) := by
+      exact mapGL_integer_matrix n (⟨N, hN_det⟩ : SpecialLinearGroup (Fin n) ℤ)
     simp only [Units.val_mul, hτ_val, hN_val, diagMat_val _ _ hb]
     have h_mul_map : ∀ (A B : Matrix (Fin n) (Fin n) ℤ),
         (A * B).map (Int.cast : ℤ → ℚ) = A.map Int.cast * B.map Int.cast := by
@@ -606,9 +616,14 @@ private lemma GLnQ_mem_SLnZ_of_coprime_scaling (C : GL (Fin n) ℚ)
     have hN_cast : (↑C : Matrix (Fin n) (Fin n) ℚ) = N.map (Int.cast : ℤ → ℚ) := by
       ext i j; simp only [N, Matrix.of_apply, Matrix.map_apply]; exact hN_eq i j
     exact_mod_cast show (N.det : ℚ) = 1 by rw [← (Int.cast_det N).symm, ← hN_cast, h_det]
-  rw [MonoidHom.mem_range]; refine ⟨⟨N, hN_det⟩, ?_⟩
-  apply Units.ext; simp only [mapGL_coe_matrix, map_apply_coe, RingHom.mapMatrix_apply]
-  ext i j; simp only [Matrix.map_apply]; exact (hN_eq i j).symm
+  rw [MonoidHom.mem_range]
+  let specialN : SpecialLinearGroup (Fin n) ℤ := ⟨N, hN_det⟩
+  refine ⟨specialN, ?_⟩
+  apply Units.ext
+  rw [mapGL_integer_matrix n specialN]
+  ext i j
+  simp only [specialN, Matrix.map_apply]
+  exact (hN_eq i j).symm
 
 omit [NeZero n] in
 private lemma diagConj_scaling (a : Fin n → ℕ) (ha : ∀ i, 0 < a i)

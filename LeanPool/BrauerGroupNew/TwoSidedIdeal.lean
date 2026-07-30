@@ -69,7 +69,7 @@ lemma mem_span_iff_exists_fin (s : Set R) (x : R) :
   apply ringCon_injective
   refine sInf_eq_of_forall_ge_of_forall_gt_exists_lt ?_ ?_
   · rintro I (hI : ∀ a b, _ → _)
-    suffices span' s ≤ .mk I by
+    suffices span' s ≤ .ofRingCon I by
       rw [ringCon_le_iff] at this
       exact this
     intro x h

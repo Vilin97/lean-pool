@@ -234,11 +234,14 @@ theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_rec [CompleteSpace E]
       OrderedFinpartition.compAlongOrderFinpartition_apply,
       OrderedFinpartition.applyOrderedFinpartition, ftaylorSeries,
       (f.hasFDerivAt_symm hy hf').fderiv,
-      Function.comp_def, OrderedFinpartition.atomic_emb]
+      OrderedFinpartition.atomic_emb]
     refine congrArg (iteratedFDeriv 𝕜 i (↑f.symm) y) (funext fun m ↦ ?_)
-    rw [show (OrderedFinpartition.atomic i).partSize m = 1 by
-      simp [OrderedFinpartition.atomic_partSize]]
-    simp [iteratedFDeriv_one_eq, hf'.fderiv]
+    dsimp only [OrderedFinpartition.atomic]
+    rw [iteratedFDeriv_one_eq, hf'.fderiv]
+    change v m =
+      ((continuousMultilinearCurryFin1 𝕜 E F).symm f') (fun _ : Fin 1 => f'.symm (v m))
+    rw [continuousMultilinearCurryFin1_symm_apply]
+    exact (f'.apply_symm_apply (v m)).symm
 
 theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_taylorLeftInv [CompleteSpace E]
     (f : OpenPartialHomeomorph E F) {y : F} (hy : y ∈ f.target) (hf : ContDiffAt 𝕜 n f (f.symm y))

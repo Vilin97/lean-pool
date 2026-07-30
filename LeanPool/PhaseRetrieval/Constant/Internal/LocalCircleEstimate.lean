@@ -154,7 +154,10 @@ private lemma circle_linfty_bound {L : ℕ} (_hL : 1 ≤ L) {E : Finset ℕ}
     rw [hP]; simp only
     calc ‖∑ n ∈ E, b n * (fourier (n : ℤ)) t‖
         ≤ ∑ n ∈ E, ‖b n * (fourier (n : ℤ)) t‖ := norm_sum_le _ _
-      _ = ∑ n ∈ E, ‖b n‖ := by congr 1; ext n; rw [norm_mul, fourier_apply]; simp
+      _ = ∑ n ∈ E, ‖b n‖ := by
+        congr 1
+        ext n
+        rw [norm_mul, fourier_apply, Circle.norm_coe, mul_one]
   have h2 : (∑ n ∈ E, ‖b n‖) ≤
       Real.sqrt L * Real.sqrt (∑ n ∈ E, ‖b n‖ ^ 2) := by
     have hcs := Real.sum_sqrt_mul_sqrt_le (s := E)
@@ -581,6 +584,11 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
               (h_1pP_cont.norm.pow 2 |>.const_mul 2 |>.add continuous_const))
             h_pw
       _ = 2 * ∫ t, ‖(1 : ℂ) + P t‖ ^ 2 ∂AddCircle.haarAddCircle + 2 := by
+          change
+            (∫ t, 2 * ((fun x => ‖(1 : ℂ) + P x‖) ^ 2) t + 2
+              ∂AddCircle.haarAddCircle) =
+              2 * ∫ t, ((fun x => ‖(1 : ℂ) + P x‖) ^ 2) t
+                ∂AddCircle.haarAddCircle + 2
           rw [integral_add
             ((real_cont_integrable (h_1pP_cont.norm.pow 2)).const_mul 2)
             (integrable_const (2 : ℝ)),

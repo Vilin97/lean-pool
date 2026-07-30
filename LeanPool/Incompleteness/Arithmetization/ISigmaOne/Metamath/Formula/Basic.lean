@@ -468,7 +468,7 @@ open FormalizedFormula
 variable (L)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.Arith.Language.IsUFormula : V → Prop := (construction L).Fixpoint ![]
+def _root_.LO.Arith.Language.IsUFormula : V → Prop := (construction L).fixedPoint ![]
 
 section «lp_section_3»
 
@@ -926,7 +926,7 @@ instance : c.construction.Finite where
         exact ⟨p₁, y₁, by simp [h₁], rfl, rfl⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Graph (param : V) (x y : V) : Prop := c.construction.Fixpoint ![] ⟪param, x, y⟫
+def Graph (param : V) (x y : V) : Prop := c.construction.fixedPoint ![] ⟪param, x, y⟫
 
 variable {param : V}
 

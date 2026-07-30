@@ -222,7 +222,7 @@ lemma Hyperplane_affineClosed (Hi_ : Halfspace E) :
   rw [hg, ←Finset.sum_mul, ha, one_mul]
 
 omit [CompleteSpace E] in
-lemma Halfspace.val_raw (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace p) :
+lemma Halfspace.val_raw (p : Subspace ℝ E) (H_' : Halfspace p) :
   ∃ H_ : Halfspace E, ((∀ (x : { x // x ∈ p }), H_.f.1 x = H_'.f.1 x) ∧ ‖H_.f.1‖ = ‖H_'.f.1‖) ∧
     H_.α = H_'.α := by
   rcases H_' with ⟨ ⟨ f, hf ⟩, C ⟩
@@ -230,19 +230,19 @@ lemma Halfspace.val_raw (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace 
   exact ⟨ ⟨ ⟨ g, hg.2 ▸ hf ⟩, C ⟩, hg, rfl ⟩
 
 /-- A halfspace of the subspace `p` extended to a halfspace of the whole space `E`. -/
-noncomputable def Halfspace.val (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace p) :
+noncomputable def Halfspace.val (p : Subspace ℝ E) (H_' : Halfspace p) :
   Halfspace E := by
   choose H_ _ using (Halfspace.val_raw p H_')
   exact H_
 
 omit [CompleteSpace E] in
-lemma Halfspace.val_f (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace p) :
+lemma Halfspace.val_f (p : Subspace ℝ E) (H_' : Halfspace p) :
   ∀ (x : { x // x ∈ p }), (Halfspace.val p H_').f.1 x = H_'.f.1 x := by
   unfold val
   exact (Classical.choose_spec (Halfspace.val_raw p H_')).1.1
 
 omit [CompleteSpace E] in
-lemma Halfspace.val_C (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace p) :
+lemma Halfspace.val_C (p : Subspace ℝ E) (H_' : Halfspace p) :
   (Halfspace.val p H_').α = H_'.α := by
   unfold val
   exact (Classical.choose_spec (Halfspace.val_raw p H_')).2

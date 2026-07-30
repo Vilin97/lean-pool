@@ -27,10 +27,10 @@ section «Coeffs»
 
 /-- The set of coefficients appearing in a matrix. -/
 noncomputable def coeffs (g : Matrix n m R) : Set R :=
-  Set.image2 g Set.univ Set.univ
+  Set.image2 (fun i j ↦ g i j) Set.univ Set.univ
 
-lemma mem_coeffs (g : Matrix n m R) (i : n) (j : m) : g i j ∈ g.coeffs := by
-  simp [coeffs]
+lemma mem_coeffs (g : Matrix n m R) (i : n) (j : m) : g i j ∈ g.coeffs :=
+  Set.mem_image2_of_mem (Set.mem_univ i) (Set.mem_univ j)
 
 lemma coeffs_nonempty [Nonempty n] [Nonempty m] (g : Matrix n m R) : g.coeffs.Nonempty :=
   have ⟨i⟩ := (inferInstance : Nonempty n)
@@ -38,8 +38,8 @@ lemma coeffs_nonempty [Nonempty n] [Nonempty m] (g : Matrix n m R) : g.coeffs.No
   ⟨g i j, g.mem_coeffs i j⟩
 
 lemma finite_coeffs [Finite n] [Finite m] (g : Matrix n m R) :
-    (coeffs g).Finite := by
-  simpa only [coeffs] using Set.toFinite (Set.image2 g Set.univ Set.univ)
+    (coeffs g).Finite :=
+  Set.Finite.image2 _ Set.finite_univ Set.finite_univ
 
 @[simp]
 lemma transpose_coeffs (g : Matrix n m R) : g.transpose.coeffs = g.coeffs := by
@@ -220,7 +220,7 @@ lemma mul_swap_coeffs (g : Matrix m m R) (i j : m) :
         simp only [mul_swap_apply_left] at hlk
         simp only [Set.mem_image2, Set.mem_univ, true_and]
         use l, j
-      · rw [mul_swap_of_ne hik hjl] at hlk
+      · simp only [mul_swap_of_ne hik hjl] at hlk
         simp only [Set.mem_image2, Set.mem_univ, true_and]
         use l, k
   · rintro ⟨l, -, k, -, hlk⟩

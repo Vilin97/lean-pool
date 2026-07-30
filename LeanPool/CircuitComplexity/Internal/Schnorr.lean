@@ -211,7 +211,8 @@ private theorem wireValD_restrictD {N s : Nat} (d : CircDesc (N + 1) s)
     have hgi : w.val + 1 - (N + 1) = w.val - N := by omega
     simp only [restrictD, hgi]
     -- Both sides branch on isAnd; congr reduces to per-wire-input goals
-    split <;> (congr 1 <;> [skip; skip]) <;>
+    split <;> rename_i hd <;>
+      simp only [hd, Bool.false_eq_true, if_false, if_true] <;> congr 1 <;>
       exact remapWireR_effective d a b x w hw _ _
         (fun w' hw' => wireValD_restrictD d a b x w')
 termination_by w.val

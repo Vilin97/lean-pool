@@ -20,12 +20,16 @@ namespace Split
 private lemma left_diamond_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inl (◇φ) ∈ Γ) (hne : Sum.inl (◇φ) ≠ χ) :
     Sum.inl (◇φ) ∈ (Γ \ {χ}).D := by
-  simp [SplitSequent.D, SplitFormula.isDiamond, h, hne]
+  rw [SplitSequent.D, Finset.mem_union]
+  exact Or.inl <| Finset.mem_filter.mpr
+    ⟨Finset.mem_sdiff.mpr ⟨h, by simpa using hne⟩, by simp [SplitFormula.isDiamond]⟩
 
 private lemma right_diamond_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inr (◇φ) ∈ Γ) (hne : Sum.inr (◇φ) ≠ χ) :
     Sum.inr (◇φ) ∈ (Γ \ {χ}).D := by
-  simp [SplitSequent.D, SplitFormula.isDiamond, h, hne]
+  rw [SplitSequent.D, Finset.mem_union]
+  exact Or.inl <| Finset.mem_filter.mpr
+    ⟨Finset.mem_sdiff.mpr ⟨h, by simpa using hne⟩, by simp [SplitFormula.isDiamond]⟩
 
 private lemma left_unDi_mem_D_of_ne {Γ : SplitSequent} {φ : Formula} {χ : SplitFormula}
     (h : Sum.inl (◇φ) ∈ Γ) (hne : Sum.inl (◇φ) ≠ χ) :
@@ -97,13 +101,17 @@ def rewindHistory
         · rfl
         · intro hRs
           subst hRs
-          simp_all
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega
       · right
         constructor
         · rfl
         · intro hΓs
           subst hΓs
-          simp_all)) ⟨m, by
+          have hn := n.isLt
+          change n.1 < 1 at hn
+          omega)) ⟨m, by
             have ⟨n_val, n_prop⟩ := n
             simp_all only [Nat.lt_add_one_iff, ge_iff_le]
             rcases g with ⟨Γ | R, Γs, Rs⟩ <;>
@@ -143,6 +151,8 @@ lemma rewind_history_zero (g : coalgebraGame.Pos) : rewindHistory g 0 = g := by
 /-- This is the type of the coalgebra we will use to build the proof of `Γ`. -/
 def proof_type (Γ : SplitSequent) (strat : Strategy coalgebraGame Prover) :=
  {g // inMyCone strat (startPos Γ) g ∧ coalgebraGame.turn g = Builder}
+
+attribute [local implicit_reducible] proof_type
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 def builderRuleApp (g : coalgebraGame.Pos) (h : coalgebraGame.turn g = Builder) :
@@ -269,9 +279,9 @@ lemma rewind_turn_one_step {g n h1 h2} :
   cases n
   case zero =>
     rcases g with ⟨Γ | R, Γs, Rs⟩
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
-    · simp [rewindHistory, rewindHistoryOneStep]
+    · simp only [rewindHistory]
       rfl
   case succ n =>
     unfold rewindHistory
@@ -1494,7 +1504,11 @@ lemma formula_in_successor_of_diamond_formula_in {Γ : SplitSequent}
       simp only [not_exists] at max
       have := max (Sum.inr R, Γ :: Γs, Rs)
       simp only [nonBoxMove, isBox, not_and, not_not] at this
-      simp_all
+      apply this
+      have last_def' : π.getLast ne = (Sum.inl Γ, Γs, Rs) := by
+        simpa only [MaximalPath.last] using last_def
+      rw [last_def']
+      exact x_y
     cases R <;> simp [RuleApp.isBox] at R_box
     all_goals
       simp only [f] at R_f
@@ -1784,7 +1798,8 @@ private lemma no_penultimate_prover_turn {Δ : SplitSequent}
   · have u₁_last_mem := move_iff_in_moves.1 u₁_last'.1
     rw [u₁_def] at u₁_last_mem
     change π.getLast ne ∈
-      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs), by intro r1 r2; simp⟩
+      Finset.map ⟨fun R ↦ (Sum.inr R, Γ :: Γs, Rs),
+        by unfold Function.Injective; intro r1 r2; simp⟩
         (SplitSequent.ruleApps Γ) at u₁_last_mem
     rcases (Finset.mem_map).mp u₁_last_mem with ⟨R, _R_Γ, last_eq⟩
     have P_turn_last' : coalgebraGame.turn (π.getLast ne) = Prover := by
@@ -1960,12 +1975,13 @@ lemma builder_win_strong_left_succ {Δ : SplitSequent}
     simp only [y_def] at y_u₁
     have y_u₁_mem := move_iff_in_moves.1 y_u₁.1
     unfold Game.Pos.moves Game.moves at y_u₁_mem
-    simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at y_u₁_mem
+    simp only [Finset.mem_map] at y_u₁_mem
     rcases y_u₁_mem with ⟨R, R_Γ, u₁_def⟩
     have move_u₁_u₂ :
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
+      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,
@@ -2054,12 +2070,12 @@ lemma builder_win_strong_left_succ {Δ : SplitSequent}
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
       case boxᵣ source A source_mem => --
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
 termination_by (φ.length, i + 1, 3)
 decreasing_by
   all_goals
@@ -2204,12 +2220,13 @@ lemma builder_win_strong_right_succ {Δ : SplitSequent}
     simp only [y_def] at y_u₁
     have y_u₁_mem := move_iff_in_moves.1 y_u₁.1
     unfold Game.Pos.moves Game.moves at y_u₁_mem
-    simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at y_u₁_mem
+    simp only [Finset.mem_map] at y_u₁_mem
     rcases y_u₁_mem with ⟨R, R_Γ, u₁_def⟩
     have move_u₁_u₂ :
         nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
           (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
       convert raw_u₁_u₂ -- dont understand why simp or rw doesn't do this
+      exact u₁_def
     have u₁_u₂_mem := move_iff_in_moves.1 move_u₁_u₂.1
     unfold Game.Pos.moves Game.moves at u₁_u₂_mem
     simp only [List.mem_cons, Finset.mem_filterMap, Option.ite_none_left_eq_some, not_or,
@@ -2296,12 +2313,12 @@ lemma builder_win_strong_right_succ {Δ : SplitSequent}
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
       case boxᵣ source A source_mem =>
         exfalso
         apply no_box_u₁
         rw [←u₁_def]
-        simp [isBox, RuleApp.isBox]
+        rfl
 termination_by (φ.length, i + 1, 3)
 decreasing_by
   all_goals

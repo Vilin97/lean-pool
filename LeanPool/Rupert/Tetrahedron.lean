@@ -35,7 +35,9 @@ def outerQuat : Quaternion ℝ := ⟨0.338990, -0.426182, 0.173602, -0.820558⟩
 noncomputable def outerRot := matrixOfQuat outerQuat
 
 lemma outerRot_so3 : outerRot ∈ SO3 := by
-  have h : outerQuat.normSq ≠ 0 := by norm_num [outerQuat, Quaternion.normSq_def]
+  have h : outerQuat.normSq ≠ 0 := by
+    rw [Quaternion.normSq_def']
+    norm_num [outerQuat]
   exact matrixOfQuat_is_s03 h
 
 /-- Quaternion certificate for the inner tetrahedron rotation. -/
@@ -45,7 +47,9 @@ def innerQuat : Quaternion ℝ := ⟨0.857701, -0.119161, 0.443971, 0.230299⟩
 noncomputable def innerRot := matrixOfQuat innerQuat
 
 lemma innerRot_so3 : innerRot ∈ SO3 := by
-  have h : innerQuat.normSq ≠ 0 := by norm_num [innerQuat, Quaternion.normSq_def]
+  have h : innerQuat.normSq ≠ 0 := by
+    rw [Quaternion.normSq_def']
+    norm_num [innerQuat]
   exact matrixOfQuat_is_s03 h
 
 /-- Translation offset for the inner tetrahedron shadow. -/

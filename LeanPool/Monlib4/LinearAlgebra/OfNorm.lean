@@ -683,7 +683,7 @@ theorem Set.subset_diff_inj {α : Type _} (s : Set α) {t u : Set α}
   rw [union_eq_self_of_subset_left h]
 
 lemma example_pos_commute_iff_pos_mul_of {𝕜 R : Type _} [RCLike 𝕜] [Ring R]
-  [PartialOrder R] [StarRing R] [StarOrderedRing R] [Algebra 𝕜 R]
+  [PartialOrder R] [StarRing R] [Algebra 𝕜 R]
   (h₁ : ∀ x : R, 0 ≤ x ↔ ∃ r : R, x = star r * r)
   (h₂ : ∀ x : R, 0 ≤ x ↔ IsSelfAdjoint x ∧ spectrum 𝕜 x ⊆ { a : 𝕜 | 0 ≤ a })
   {x y : R} (hx : 0 ≤ x) (hy : 0 ≤ y) :

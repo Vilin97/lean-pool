@@ -778,7 +778,7 @@ private lemma i_angle_bound {δ ε : ℝ} (H : ℝ)
   set x := δ * Real.pi / 12 with hx_def
   have hx_pos : 0 < x := by positivity
   have hx_le_one : x ≤ 1 := by nlinarith [Real.pi_le_four]
-  have h_sin_lb := Real.sin_gt_sub_cube hx_pos hx_le_one
+  have h_sin_lb := Real.sin_gt_sub_cube hx_pos
   have h_lb : x - x ^ 3 / 4 > x / 2 := by nlinarith [sq_nonneg x, sq_nonneg (1 - x)]
   have h_norm_is_2sin : 2 * Real.sin x = ε := by
     rw [hx_def]

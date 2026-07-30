@@ -133,7 +133,7 @@ namespace Measure
 
 @[fun_prop]
 lemma isHom_lintegral
-    [MeasurableSpace A] [MeasurableSpace B] [StandardBorelSpace B] [MeasurableQuasiBorelSpace B]
+    [MeasurableSpace B] [StandardBorelSpace B] [MeasurableQuasiBorelSpace B]
     {f : A → B → ENNReal} (hf : IsHom fun x : _ × _ ↦ f x.1 x.2)
     (μ : MeasureTheory.Measure B) [MeasureTheory.SFinite μ]
     : IsHom fun x ↦ ∫⁻ y, f x y ∂μ := by

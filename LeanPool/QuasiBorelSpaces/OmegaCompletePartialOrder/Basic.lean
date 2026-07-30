@@ -111,13 +111,15 @@ lemma ωScottContinuous_ite
     {g : A → B} (hg : ωScottContinuous g)
     {h : A → B} (hh : ωScottContinuous h)
     : ωScottContinuous fun x ↦ if f x then g x else h x := by
-  rw [ωScottContinuous_iff_monotone_map_ωSup]
-  refine ⟨fun x y hxy ↦ ?_, fun c ↦ ?_⟩
-  · grind [hh.monotone hxy, hg.monotone hxy]
-  · rw [hg.map_ωSup, hh.map_ωSup, ← apply_ite]
-    congr 1
-    ext i
-    simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, hf (le_ωSup c i)]
-    split_ifs <;> simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
+  have hmono : Monotone fun x ↦ if f x then g x else h x := by
+    intro x y hxy
+    grind [hh.monotone hxy, hg.monotone hxy]
+  apply ωScottContinuous.of_monotone_map_ωSup
+  refine ⟨hmono, fun c ↦ ?_⟩
+  rw [hg.map_ωSup, hh.map_ωSup, ← apply_ite]
+  congr 1
+  ext i
+  simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, hf (le_ωSup c i)]
+  split_ifs <;> simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
 
 end OmegaCompletePartialOrder

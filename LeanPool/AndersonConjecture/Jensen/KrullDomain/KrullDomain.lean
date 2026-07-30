@@ -460,11 +460,8 @@ private def intersection_close_up_proof
     · -- R countable: use countable avoidance branch
       haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
       haveI : Countable (Polynomial R.carrier) :=
-        Countable.of_equiv (ℕ →₀ R.carrier)
-          { toFun := Polynomial.ofFinsupp
-            invFun := Polynomial.toFinsupp
-            left_inv := fun _ => rfl
-            right_inv := fun _ => rfl }
+        Countable.of_equiv _ ((Polynomial.toFinsuppIso R.carrier).toEquiv.trans
+          AddMonoidAlgebra.coeffEquiv).symm
       -- C_ext is countable: countable union of finite associated prime sets
       have hC_ext_countable : C_ext.Countable := by
         apply Set.Countable.union (Set.countable_singleton _)

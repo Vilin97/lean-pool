@@ -167,8 +167,7 @@ In fact we shrunk the club below every element of `S ∩ C'`, because no club gu
  -/
 theorem restrict_ssubset_restrict {β γ : Iio (succ κ).ord} (h : β < γ) :
     restrict (F' γ) α ⊂ restrict (F' β) α := by
-  rw [ssubset_iff_subset_ne]
-  constructor
+  apply LE.le.ssubset_of_ne
   · apply restrict_subset_restrict
     · exact fun x hx s ⟨z, hz⟩ ↦ hx s ⟨⟨z.1, z.2.trans h⟩, hz⟩
     · exact isAcc_α_F' _

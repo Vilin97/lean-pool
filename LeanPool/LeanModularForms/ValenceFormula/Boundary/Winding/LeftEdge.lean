@@ -492,7 +492,7 @@ private lemma leftEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
   have hderiv_5 : ∀ t ∈ Ioo (4 : ℝ) 5, deriv g t = deriv h₅ t :=
     fun t ⟨ht4, _⟩ => Filter.EventuallyEq.deriv_eq
       (Filter.eventually_of_mem (Ioi_mem_nhds ht4) (fun s hs => hg_h₅ s hs))
-  have piece₀ := ftc_log (by norm_num : (0 : ℝ) ≤ 1)
+  have piece₀ := ftc_log (f := h₀) (by norm_num : (0 : ℝ) ≤ 1)
     ((continuous_fdBoundary_seg1_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₀ t).differentiableAt)
     (by rw [show deriv h₀ = fun _ => -(↑α : ℂ) * I from funext fun t => (hd₀ t).deriv]
@@ -500,27 +500,27 @@ private lemma leftEdge_ftc_telescope (H : ℝ) (_hH_sqrt : Real.sqrt 3 / 2 < H)
     (fun t ht => leftEdge_slit_seg1 s hs_re t ht)
   have h_arc_cont : Continuous h_arc :=
     (Continuous.cexp (by fun_prop)).sub continuous_const
-  have piece₁ := ftc_log (by norm_num : (1 : ℝ) ≤ 3)
+  have piece₁ := ftc_log (f := h_arc) (by norm_num : (1 : ℝ) ≤ 3)
     h_arc_cont.continuousOn (fun t _ => (hd_arc t).differentiableAt)
     (by rw [show deriv h_arc = fun t => ↑(Real.pi / 6) * I *
           exp (↑(Real.pi * (1 + t) / 6) * I) from funext fun t => (hd_arc t).deriv]
         exact (Continuous.mul continuous_const (Continuous.cexp (by fun_prop))).continuousOn)
     (fun t ⟨ht1, ht3⟩ => leftEdge_slit_arc s hs_re hs_im_lower t ht1 ht3)
-  have piece₂ := ftc_log (by linarith : (3 : ℝ) ≤ t₀ - δ)
+  have piece₂ := ftc_log (f := h₃) (by linarith : (3 : ℝ) ≤ t₀ - δ)
     ((continuous_fdBoundary_seg4_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₃ t).differentiableAt)
     (by rw [show deriv h₃ = fun _ => (↑α : ℂ) * I from funext fun t => (hd₃ t).deriv]
         exact continuousOn_const)
     (fun t ⟨ht3, htd⟩ => leftEdge_slit_seg4_left H s hs_re α hα_def hα_pos t₀ ht₀_mul
       δ hδ_pos hεα_lt_t₀m3 t ht3 htd)
-  have piece₃ := ftc_log (by linarith : t₀ + δ ≤ 4)
+  have piece₃ := ftc_log (f := h₃) (by linarith : t₀ + δ ≤ 4)
     ((continuous_fdBoundary_seg4_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₃ t).differentiableAt)
     (by rw [show deriv h₃ = fun _ => (↑α : ℂ) * I from funext fun t => (hd₃ t).deriv]
         exact continuousOn_const)
     (fun t ⟨htd, ht4⟩ => leftEdge_slit_seg4_right H s hs_re α hα_def hα_pos t₀ ht₀_mul
       δ hδ_pos hεα_lt_4mt₀ t htd ht4)
-  have piece₄ := ftc_log (by norm_num : (4 : ℝ) ≤ 5)
+  have piece₄ := ftc_log (f := h₅) (by norm_num : (4 : ℝ) ≤ 5)
     ((continuous_fdBoundary_seg5_H H).sub continuous_const).continuousOn
     (fun t _ => (hd₅ t).differentiableAt)
     (by rw [show deriv h₅ = fun _ => (1 : ℂ) from funext fun t => (hd₅ t).deriv]

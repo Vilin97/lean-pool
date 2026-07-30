@@ -72,12 +72,15 @@ theorem jump_recIn (f : ℕ →. ℕ) : f ≤ᵀ (f⌜) := by
       | succ n ih => simp [evalo, ih, const]
     unfold jump s
     rw [decodeCodeo_encodeCodeo]
-    simp [*, evalo]
+    simp only [evalo, Encodable.decode_unit_zero, evalo_const]
+    exact Part.bind_some n f
   have h_s : RecursiveIn {jump f} (fun n => Part.some (s n)) := RecursiveIn.of_primrec s_primrec
   have h_jump : RecursiveIn {jump f} (jump f) := RecursiveIn.oracle _ (by norm_num)
   have h_comp : RecursiveIn {jump f} (fun n => jump f (s n)) := by
     convert RecursiveIn.comp h_jump h_s using 1
-    ext; simp [bind]
+    refine iff_of_eq (congrArg (RecursiveIn {jump f}) ?_)
+    funext n
+    exact (Part.bind_some (s n) (jump f)).symm
   exact RecursiveIn.of_eq h_comp h_eq
 
 /-- A predicate `p` is computable relative to `f` if it is decidable and its decision procedure is

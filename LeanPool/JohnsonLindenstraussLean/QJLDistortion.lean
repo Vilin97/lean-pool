@@ -494,7 +494,8 @@ theorem isPerRowSubgaussian_normalized {d : ℕ} (key q : EuclideanSpace ℝ (Fi
           (ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d))) t = 1 := by
         rw [mgf]; simp
       rw [hmgf]
-      exact Real.one_le_exp (by positivity)
+      exact Real.one_le_exp
+        (div_nonneg (mul_nonneg (NNReal.coe_nonneg _) (sq_nonneg t)) (by norm_num))
     · filter_upwards with g
       simp [inner_zero_left, Real.sign_zero]
   · have hkne : ‖key‖ ≠ 0 := by simpa [norm_eq_zero] using hkey
@@ -561,13 +562,20 @@ theorem qjlEstimator_centered_hasSubgaussianMGF {m d : ℕ} (hm : 0 < m)
     field_simp
   rw [hDeq] at hscale
   -- reconcile the variance proxy
-  convert hscale using 2
-  apply NNReal.coe_injective
-  rw [NNReal.coe_mul, NNReal.coe_sum]
-  change π / 2 * ‖q‖ ^ 2 / (m : ℝ)
-      = ((m : ℝ)⁻¹) ^ 2 * ∑ _i : Fin m, (π / 2 * ‖q‖ ^ 2)
-  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-  field_simp
+  have hvar : NNReal.mk ((m : ℝ)⁻¹ ^ 2) (sq_nonneg _)
+        * ∑ _i : Fin m, NNReal.mk (π / 2 * ‖q‖ ^ 2) (by positivity)
+      = NNReal.mk (π / 2 * ‖q‖ ^ 2 / m) (by positivity) := by
+    apply NNReal.coe_injective
+    rw [NNReal.coe_mul, NNReal.coe_sum]
+    simp only [NNReal.coe_mk, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    field_simp
+  have hscale' : HasSubgaussianMGF (fun S => qjlEstimator key q S - ⟪u, q⟫)
+      (NNReal.mk ((m : ℝ)⁻¹ ^ 2) (sq_nonneg _)
+        * ∑ _i : Fin m, NNReal.mk (π / 2 * ‖q‖ ^ 2) (by positivity))
+      (Measure.pi (fun _ : Fin m => ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)))) :=
+    hscale
+  rw [hvar] at hscale'
+  exact hscale'
 
 open scoped RealInnerProductSpace in
 /-- **QJL exponential distortion bound (sub-Gaussian / Chernoff).** The asymmetric 1-bit estimator

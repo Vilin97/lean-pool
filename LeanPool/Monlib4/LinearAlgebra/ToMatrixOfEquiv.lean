@@ -41,13 +41,16 @@ noncomputable def OrthonormalBasis.toMatrix {n E : Type _} [Fintype n] [Decidabl
     simp only [LinearMap.smul_apply, inner_smul_right]
     rfl
   map_mul' x y := by
-    ext
-    simp only [Module.End.mul_apply, Matrix.mul_apply, ← LinearMap.adjoint_inner_left x,
-      OrthonormalBasis.sum_inner_mul_inner]
+    ext i j
+    change inner 𝕜 (b i) (x (y (b j))) =
+      ∑ k, inner 𝕜 (b i) (x (b k)) * inner 𝕜 (b k) (y (b j))
+    simp only [← LinearMap.adjoint_inner_left x, OrthonormalBasis.sum_inner_mul_inner]
   map_star' x := by
-    ext
-    simp only [star_eq_conjTranspose, conjTranspose_apply, LinearMap.star_eq_adjoint,
-      LinearMap.adjoint_inner_right, RCLike.star_def, inner_conj_symm]
+    ext i j
+    change inner 𝕜 (b i) (LinearMap.adjoint x (b j)) =
+      star (inner 𝕜 (b j) (x (b i)))
+    rw [LinearMap.adjoint_inner_right]
+    exact (inner_conj_symm (x (b i)) (b j)).symm
   right_inv x := by
     ext
     simp only [LinearMap.sum_apply, LinearMap.smul_apply, ContinuousLinearMap.coe_coe,

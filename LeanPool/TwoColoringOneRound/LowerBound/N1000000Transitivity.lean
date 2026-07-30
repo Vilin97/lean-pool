@@ -178,9 +178,18 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
         have hτ_apply :
             τ • (((keyEmb w).trans availEquiv.toEmbedding) jf) =
               ((keyEmb w').trans availEquiv.toEmbedding) jf := by
-          have := congrArg
+          have hthis := congrArg
             (fun t : Fin m ↪ SubMulAction.ofFixingSubgroup G baseSet => t i) hτ
-          simpa [x, y, e, i, jf, Function.Embedding.trans_apply] using this
+          have hthis' :
+              τ • availEquiv (keyEmb w (e.symm i)) =
+                availEquiv (keyEmb w' (e.symm i)) := by
+            simpa [x, y, Function.Embedding.trans_apply] using hthis
+          have hei : e.symm i = jf := by
+            dsimp [i]
+            exact e.symm_apply_apply jf
+          rw [hei] at hthis'
+          change τ • availEquiv (keyEmb w jf) = availEquiv (keyEmb w' jf)
+          exact hthis'
         change τ • w.1.1 j = w'.1.1 j
         exact congrArg Subtype.val hτ_apply
     | some i =>

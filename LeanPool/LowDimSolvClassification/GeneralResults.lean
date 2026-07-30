@@ -99,11 +99,13 @@ theorem LinearIndependent.iff_in_submodule {S : Type*} (N : Submodule K L) {f : 
 
 /-- A function into a submodule `N` defined by specifying a function into the ambient
     space with range in `N`. -/
+@[implicit_reducible]
 def Submodule.mapIntoSubtype {S : Type*} (N : Submodule K L) (f : S → L) (hr : Set.range f ⊆ N) :
     S → N := fun x ↦ ⟨f x, hr (Set.mem_range_self x)⟩
 
 /-- A function with range in a given subset gives rise to a function to the corresponding subtype.
 -/
+@[implicit_reducible]
 def Set.mapIntoSubtype {α β : Type*} (s : Set β) (f : α → β) (hr : Set.range f ⊆ s) :
     α → s := Subtype.coind f fun x => hr ⟨x, rfl⟩
 

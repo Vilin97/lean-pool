@@ -66,8 +66,7 @@ def IsExactAt {X Y Z : Type*} [Inhabited Z]
   g ⁻¹' {default} = Set.range f
 
 lemma isExactAt_of_ker_supset_im_of_ker_subset_im
-    {X Y Z : Type*} [Inhabited X] [Inhabited Y] [Inhabited Z]
-    {f : X → Y} {g : Y → Z} [IsPointedMap f] [IsPointedMap g]
+    {X Y Z : Type*} [Inhabited Z] {f : X → Y} {g : Y → Z}
     (hsup : ∀ y, (∃ x, f x = y) → g y = default)
     (hsub : ∀ y, (g y = default) → ∃ x, f x = y) :
     IsExactAt f g := by

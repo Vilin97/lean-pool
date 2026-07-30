@@ -333,7 +333,7 @@ lemma semicirclePDF_eq_zero_of_notMem (μ : ℝ) (v : ℝ≥0) {x : ℝ}
 
 /-- The semicircle measure has no atoms when the variance is nonzero. -/
 lemma noAtoms_semicircleReal {μ : ℝ} {v : ℝ≥0} (hv : v ≠ 0) :
-    NoAtoms (semicircleReal μ v) := by
+    NullSingletonClass (semicircleReal μ v) := by
   rw [semicircleReal_of_var_ne_zero μ hv]; infer_instance
 
 /-- The semicircle measure of a set is the set integral of the density when `v ≠ 0`. -/
@@ -437,10 +437,11 @@ lemma semicircleReal_map_const_mul (c : ℝ) :
   · simp only [ne_eq, mul_eq_zero, hv, or_false]
     rw [← NNReal.coe_inj]
     simp [hc]
-  simp only [e, Homeomorph.mulLeft₀, Equiv.mulLeft₀_symm_apply,
-    Homeomorph.toMeasurableEquiv_coe, Homeomorph.homeomorph_mk_coe_symm,
-    semicirclePDFReal_inv_mul hc]
-  simp_all
+  refine congrArg ENNReal.ofReal (integral_congr_ae ?_)
+  filter_upwards with x
+  have he_apply : e x = c⁻¹ * x := rfl
+  rw [he_apply, semicirclePDFReal_inv_mul hc]
+  rw [abs_inv, ← mul_assoc, inv_mul_cancel₀ (abs_ne_zero.mpr hc), one_mul]
 
 /-- The map of a semicircle distribution by multiplication by a constant is semicircular. -/
 lemma semicircleReal_map_mul_const (c : ℝ) :
@@ -791,9 +792,9 @@ lemma integral_even_pow_mul_sqrt_eq_cos_diff (n : ℕ) :
       rw [show (fun (x : ℝ) ↦ (1 - Real.cos x ^ 2) * Real.cos x ^ (2 * n))
         = fun (x : ℝ) ↦ Real.cos x ^ (2 * n) - Real.cos x ^ (2 * n + 2) from
         funext fun x ↦ by rw [pow_add]; ring]
-      rw [intervalIntegral.integral_sub
+      simpa only [Pi.pow_apply] using intervalIntegral.integral_sub
         ((Real.continuous_cos.pow (2 * n)).intervalIntegrable _ _)
-        ((Real.continuous_cos.pow (2 * n + 2)).intervalIntegrable _ _)]
+        ((Real.continuous_cos.pow (2 * n + 2)).intervalIntegrable _ _)
     rw [c510, c511, c512]
   rw [c51]
 

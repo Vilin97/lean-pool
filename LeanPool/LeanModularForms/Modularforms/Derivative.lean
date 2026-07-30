@@ -530,7 +530,7 @@ lemma D_slash (k : ℤ) (F : ℍ → ℂ) (hF : MDiff F) (γ : SL(2, ℤ)) :
       deriv (F ∘ ofComplex) (num γ z / denom γ z) * deriv (fun w => num γ w / denom γ w) z := by
     rw [hcomp_eq, (hdiff_F_comp.hasDerivAt.comp (z : ℂ) hdiff_mobius.hasDerivAt).deriv]
   have hderiv_mob := deriv_moebius γ z
-  have hderiv_zpow := deriv_denom_zpow γ k z
+  have hderiv_zpow := _root_.deriv_denom_zpow γ k z
   rw [hchain, hderiv_mob, hderiv_zpow]
   have hmob_eq : ↑(γ • z) = num γ z / denom γ z :=
     UpperHalfPlane.coe_smul_of_det_pos hdet_pos z

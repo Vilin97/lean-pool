@@ -31,7 +31,19 @@ namespace BoolFun
 of `f`. -/
 theorem localSensitivity_not (f : BoolFun n) (x : Fin n → Bool) :
     BoolFun.localSensitivity (fun y => !f y) x = f.localSensitivity x := by
-  simp [localSensitivity, sensitiveAt]
+  have not_ne_not_iff (a b : Bool) : ((!a) ≠ (!b)) ↔ a ≠ b := by
+    constructor
+    · intro h hab
+      exact h (congrArg (fun z : Bool => !z) hab)
+    · intro h hab
+      apply h
+      have := congrArg (fun z : Bool => !z) hab
+      simpa using this
+  unfold localSensitivity sensitiveAt
+  apply congrArg Finset.card
+  apply Finset.filter_congr
+  intro i _
+  exact not_ne_not_iff (f (flipBit x i)) (f x)
 
 /-- The sensitivity of the negation of `f` equals the sensitivity of `f`. -/
 theorem sensitivity_not (f : BoolFun n) :

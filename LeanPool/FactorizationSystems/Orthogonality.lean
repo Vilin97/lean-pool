@@ -600,8 +600,8 @@ lemma hom_orthogonal_aux_uniq
       lift ≫ homPullbackFst l r := by
     calc
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackFst l r =
-          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackFst l r) := by
-        rw [Category.assoc]
+          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackFst l r) :=
+        Category.assoc ..
       _ = m ≫ (homSquare l r).top := by
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_fst l r
@@ -613,8 +613,8 @@ lemma hom_orthogonal_aux_uniq
       lift ≫ homPullbackSnd l r := by
     calc
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
-          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackSnd l r) := by
-        rw [Category.assoc]
+          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackSnd l r) :=
+        Category.assoc ..
       _ = m ≫ (homSquare l r).left := by
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_snd l r

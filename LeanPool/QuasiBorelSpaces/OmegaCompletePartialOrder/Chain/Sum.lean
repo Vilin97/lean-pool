@@ -55,27 +55,30 @@ lemma projl_coe [Inhabited A] (c : Chain (A ⊕ B)) (n : ℕ) :
     projl c n = Sum.elim id (fun _ ↦ default) (c n) := by
   rfl
 
+/-- Swaps the two sides of an ordered sum. -/
+def swapOrderHom : A ⊕ B →o B ⊕ A where
+  toFun := Sum.swap
+  monotone' := by
+    intro x y h
+    simp_all
+
+@[simp]
+lemma swapOrderHom_apply (x : A ⊕ B) : swapOrderHom x = Sum.swap x := rfl
+
 /-- Projects right values out of a chain. -/
 def projr [hB : Inhabited B] (c : Chain (A ⊕ B)) : Chain B :=
-  projl (c.map
-    ⟨ Sum.swap
-    , by
-      intro x y h
-      simp_all
-    ⟩)
+  projl (c.map swapOrderHom)
 
 @[simp]
 lemma projr_coe [Inhabited B] (c : Chain (A ⊕ B)) (n : ℕ) :
     projr c n = Sum.elim (fun _ ↦ default) id (c n) := by
   cases h : c n with
   | inl _ =>
-      simp only [
-        projr, projl_coe, coe_map, OrderHom.coe_mk, Function.comp_apply, h, Sum.swap_inl,
-        Sum.elim_inr, Sum.elim_inl]
+    simp only [projr, projl_coe, coe_map, Function.comp_apply, h, swapOrderHom_apply,
+      Sum.swap_inl, Sum.elim_inr, Sum.elim_inl]
   | inr _ =>
-      simp only [
-        projr, projl_coe, coe_map, OrderHom.coe_mk, Function.comp_apply, h, Sum.swap_inr,
-        Sum.elim_inl, id_eq, Sum.elim_inr]
+    simp only [projr, projl_coe, coe_map, Function.comp_apply, h, swapOrderHom_apply,
+      Sum.swap_inr, Sum.elim_inl, id_eq, Sum.elim_inr]
 
 /-- Splits a chain of sums into a sum of chains. -/
 def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=

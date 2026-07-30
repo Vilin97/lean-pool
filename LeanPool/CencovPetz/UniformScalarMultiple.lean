@@ -24,7 +24,7 @@ namespace TangentFin
 
 namespace Bilin
 
-open Basis
+open _root_.LeanPool.CencovPetz.TangentFin.Basis
 
 variable {n : ℕ} (G : MonotoneMetricFamily) [Nonempty (Fin n)]
 

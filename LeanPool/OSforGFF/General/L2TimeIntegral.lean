@@ -174,7 +174,7 @@ lemma integral_swap_Icc (μ : Measure Ω) [SFinite μ]
   rw [← h1, h2]
 
 /-- Helper: setIntegral bound using uniform L² bound. -/
-lemma setIntegral_L2_bound (μ : Measure Ω) [SFinite μ] (M_sq T : ℝ) (hT : T > 0)
+lemma setIntegral_L2_bound (μ : Measure Ω) (M_sq T : ℝ) (hT : T > 0)
     (A : ℝ → Ω → ℂ)
     (h_L2_bound : ∀ s, s ∈ Icc 0 T → ∫ ω, ‖A s ω‖ ^ 2 ∂μ ≤ M_sq)
     (h_int : IntegrableOn (fun s => ∫ ω, ‖A s ω‖ ^ 2 ∂μ) (Icc 0 T) volume) :
@@ -443,7 +443,7 @@ then u ↦ ‖Cov(s,u)‖ is integrable on [0,T] since continuous functions on
 compact sets are integrable.
 -/
 theorem gff_covariance_norm_integrableOn_slice_proved
-    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (μ : Measure Ω)
     (A : ℝ → Ω → ℂ) (EA : ℂ) (s T : ℝ)
     (h_cov_cont : Continuous (fun p : ℝ × ℝ =>
       ∫ ω, A p.1 ω * starRingEnd ℂ (A p.2 ω) ∂μ - EA * starRingEnd ℂ EA)) :

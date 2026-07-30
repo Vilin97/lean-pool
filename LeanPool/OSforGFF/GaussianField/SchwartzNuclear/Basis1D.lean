@@ -75,7 +75,7 @@ theorem schwartz_hermite_expansion_CLF
     (φ : SchwartzMap ℝ ℝ →L[ℝ] ℝ) (f : SchwartzMap ℝ ℝ) :
     φ f = ∑' n, hermiteCoeff1D n f * φ (schwartzHermiteBasis1D n) := by
   -- Specialize schwartz_hermite_expansion_1D with H = ℝ, T = φ, w = 1
-  have h := @schwartz_hermite_expansion_1D ℝ _ _ _ φ f 1
+  have h := @schwartz_hermite_expansion_1D ℝ _ _ φ f 1
   -- h states: inner 1 (φ f) = ∑' n, hermiteCoeff1D n f * inner 1 (φ (schwartzHermiteBasis1D n))
   -- On ℝ, RCLike.inner_apply tells us: inner x y = y * conj x
   -- For real numbers, conj x = x, so inner 1 x = x * 1 = x

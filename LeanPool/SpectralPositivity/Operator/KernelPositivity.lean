@@ -190,7 +190,6 @@ private theorem ae_pos_of_setIntegral_pos
 finite measure and every positive-measure pair `(A, B)` has strictly positive double integral,
 then `K(x, y) > 0` for every pair `(x, y)`, hence in particular for a.e. `(x, y)`. -/
 theorem IntegralOperator.ae_pos_kernel_of_positivity_improving
-    [SFinite (volume : Measure Ω)]
     [MeasurableSingletonClass Ω]
     (T : IntegralOperator Ω)
     (h_atom_pos : ∀ x : Ω, 0 < volume ({x} : Set Ω))

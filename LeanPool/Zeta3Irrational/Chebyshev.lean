@@ -246,7 +246,6 @@ theorem psi_ge_weighted (x : ℝ) (hx : x > 0) : ψ x ≥ U x := by
   gcongr with i
   have := E_nu_bound (x / i) (div_nonneg hx.le (by simp))
   grw [this.2, mul_one]
-  exact vonMangoldt_nonneg
 
 theorem psi_diff_le_weighted (x : ℝ) (hx : x > 0) : ψ x - ψ (x / 6) ≤ U x := by
   unfold U Chebyshev.psi

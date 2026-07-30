@@ -751,6 +751,7 @@ def tsigObj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) : StrictDomainO
   carrier := SigTok A D.carrier
   sys := sumSig A D.sys D.nonempty
   nonempty := sumSig_nonempty
+attribute [local implicit_reducible] tsigObj
 
 @[simp] theorem tsigObj_sys (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) :
     (tsigObj A D).sys = sumSig A D.sys D.nonempty := rfl
@@ -772,6 +773,7 @@ def Tsig (A : Type) [DecidableEq A] : Endofunctor StrictDomainObj.{0} where
   map := tsigMapHom A
   map_id _D := Subtype.ext sumMapSig_id
   map_comp {_D _E _F} g f := Subtype.ext (sumMapSig_comp g.1 f.1)
+attribute [local implicit_reducible] Tsig
 
 @[simp] theorem Tsig_obj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) :
     (Tsig A).obj D = tsigObj A D := rfl
@@ -1536,7 +1538,7 @@ def descAlgHom : AlgHom (Cnalg A) B where
   hom := descStrict B
   comm := by
     apply Subtype.ext
-    simp only [StrictDomainObj.comp_val, Tsig_map_val]
+    simp only [StrictDomainObj.comp_val]
     exact descComm B
 
 /-- **Uniqueness.** Any `Tsig`-algebra homomorphism out of `(Cₐ, i)` equals

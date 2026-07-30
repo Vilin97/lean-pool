@@ -334,7 +334,7 @@ lemma forces : dom A ⊩ A := by
       specialize habs V hV
       convert habs.mono_left (a := (W : Set X)) (by simp [W])
       simp [disjoint_iff, SetLike.ext'_iff, Set.inter_comm]) (by simp)
-    rw [Set.le_iff_subset, Set.union_subset_iff] at hUmax
+    rw [Set.union_subset_iff] at hUmax
     conv at hUmax => simp
     replace habs := habs.mono (a := (W : Set X)) (c := (W : Set X)) (by simp [W])
       (le_iSup₂_of_le W (by simpa using hUmax) le_rfl)

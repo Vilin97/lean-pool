@@ -140,16 +140,15 @@ theorem CWComplex_induced_map_injective
     ext ⟨⟨tval, tprop⟩, x⟩
     unfold G₀₁ G
     simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
-      ContinuousMap.coe_mk, Limits.colimit.cocone_x, ContinuousMap.prodMap_apply,
-      ContinuousMap.coe_id, Prod.map_apply, id_eq]
+      ContinuousMap.coe_mk, Limits.colimit.cocone_x]
     rw [Set.mem_insert_iff, Set.mem_singleton_iff] at tprop
     cases tprop with
     | inl h0 =>
-        subst h0; simp only [↓reduceIte, Set.Icc.mk_zero]
+        subst h0; simp only [↓reduceIte]
         change _ = (Nonempty.some hg).toContinuousMap (0, x)
         simp_all
     | inr h1 =>
-        subst h1; simp only [one_ne_zero, ↓reduceIte, Set.Icc.mk_one]
+        subst h1; simp only [one_ne_zero, ↓reduceIte]
         change _ = (Nonempty.some hg).toContinuousMap (1, x)
         simp_all ⟩
   have com := IsCompressible.of_arrow_iso_left (CWComplex.IProd.arrowIso X) <|

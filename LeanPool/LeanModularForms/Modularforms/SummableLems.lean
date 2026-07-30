@@ -42,7 +42,7 @@ private lemma neg_eq_comp_negEquiv {α : Type*} (f : ℤ → α) :
   funext
   rfl
 
-theorem int_sum_neg {α : Type*} [AddCommMonoid α] [TopologicalSpace α] [T2Space α] (f : ℤ → α) :
+theorem int_sum_neg {α : Type*} [AddCommMonoid α] [TopologicalSpace α] (f : ℤ → α) :
   ∑' d : ℤ, f d = ∑' d, f (-d) := by
   simp_all
 
@@ -58,7 +58,7 @@ lemma aux33 (f : ℕ → ℂ) (hf : Summable f) : ∑' n, f (n) =
   exact hf.hasSum.comp tendsto_finset_range
 
 /- this is being Pr'd-/
-lemma tsum_pnat_eq_tsum_succ3 {α : Type*} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]
+lemma tsum_pnat_eq_tsum_succ3 {α : Type*} [TopologicalSpace α] [AddCommMonoid α]
   (f : ℕ → α) : ∑' (n : ℕ+), f ↑n = ∑' (n : ℕ), f (n + 1) := by apply tsum_pnat_eq_tsum_succ
 
 
@@ -73,7 +73,7 @@ theorem nat_pos_tsum2 {α : Type _} [TopologicalSpace α] [AddCommMonoid α]
   simp_all
 
 theorem tsum_pNat {α : Type _} [AddCommGroup α] [UniformSpace α] [IsUniformAddGroup α] [T2Space α]
-  [CompleteSpace α] (f : ℕ → α) (hf : f 0 = 0) : ∑' n : ℕ+, f n = ∑' n, f n := by
+    (f : ℕ → α) (hf : f 0 = 0) : ∑' n : ℕ+, f n = ∑' n, f n := by
   by_cases hf2 : Summable f
   · rw [hf2.tsum_eq_zero_add, hf, zero_add]
     exact tsum_pnat_eq_tsum_succ
@@ -125,7 +125,7 @@ theorem int_nat_sum {α : Type*} [AddCommGroup α] [UniformSpace α] [IsUniformA
   exact Eq.symm (Equiv.apply_ofInjective_symm Nat.cast_injective b)
 
 theorem HasSum.nonneg_add_neg {α : Type*} [TopologicalSpace α] [AddCommGroup α]
-    [IsTopologicalAddGroup α] [T2Space α] {a b : α} {f : ℤ → α} (hnonneg : HasSum (fun n : ℕ => f n)
+    [IsTopologicalAddGroup α] {a b : α} {f : ℤ → α} (hnonneg : HasSum (fun n : ℕ => f n)
       a)
     (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + b) := by
   convert hnonneg.int_rec hneg using 1
@@ -133,7 +133,7 @@ theorem HasSum.nonneg_add_neg {α : Type*} [TopologicalSpace α] [AddCommGroup �
 
 
 theorem HasSum.pos_add_zero_add_neg {α : Type*} [TopologicalSpace α] [AddCommGroup α]
-    [IsTopologicalAddGroup α] [T2Space α] {a b : α} {f : ℤ → α} (hpos : HasSum (fun n : ℕ => f (n +
+    [IsTopologicalAddGroup α] {a b : α} {f : ℤ → α} (hpos : HasSum (fun n : ℕ => f (n +
       1)) a)
     (hneg : HasSum (fun n : ℕ => f (-n.succ)) b) : HasSum f (a + f 0 + b) :=
   haveI : ∀ g : ℕ → α, HasSum (fun k => g (k + 1)) a → HasSum g (a + g 0) := by
@@ -1419,8 +1419,12 @@ theorem tsum_sigma_eqn2 (k : ℕ) (z : ℍ) :
     ∑' (c : Fin 2 → ℕ+), (c 0 ^ k : ℂ) * Complex.exp (2 * ↑π * Complex.I * z * c 0 * c 1) =
       ∑' e : ℕ+, sigma k e * Complex.exp (2 * ↑π * Complex.I * z * e) := by
   rw [← (piFinTwoEquiv fun _ => ℕ+).symm.tsum_eq, ← sigmaAntidiagonalEquivProd.tsum_eq]
-  simp only [sigmaAntidiagonalEquivProd, divisorsAntidiagonalFactors, PNat.mk_coe,
-    Equiv.coe_fn_mk, Fin.isValue, piFinTwoEquiv_symm_apply, Fin.cons_zero, Fin.cons_one]
+  simp only [piFinTwoEquiv_symm_apply, Fin.cons_zero, Fin.cons_one]
+  have firstFactor (c : (n : ℕ+) × Nat.divisorsAntidiagonal n) :
+      ((sigmaAntidiagonalEquivProd c).1.val : ℂ) = (c.snd.val.1 : ℂ) := rfl
+  have secondFactor (c : (n : ℕ+) × Nat.divisorsAntidiagonal n) :
+      ((sigmaAntidiagonalEquivProd c).2.val : ℂ) = (c.snd.val.2 : ℂ) := rfl
+  simp_rw [firstFactor, secondFactor]
   simp_rw [sigma_eq_sum_div']
   simp only [Nat.cast_sum, Nat.cast_pow]
   rw [(summable_auxil_1 k z).tsum_sigma]
@@ -1509,12 +1513,17 @@ theorem a1 (k : ℕ) (e : ℕ+) (z : ℍ) :
 theorem a4 (k : ℕ) (z : ℍ) :
     Summable (uncurry fun b c : ℕ+ => ↑b ^ (k - 1) * exp (2 * ↑π * Complex.I * ↑c * ↑z * ↑b)) := by
   rw [sigmaAntidiagonalEquivProd.summable_iff.symm]
-  simp only [sigmaAntidiagonalEquivProd, divisorsAntidiagonalFactors, PNat.mk_coe, Equiv.coe_fn_mk]
   apply (summable_auxil_1 (k - 1) z).congr
   intro b
-  simp only [comp_apply, uncurry_apply_pair, PNat.mk_coe, mul_eq_mul_left_iff, pow_eq_zero_iff',
-    Nat.cast_eq_zero, ne_eq]
-  left; ring_nf
+  simp only [comp_apply]
+  rw [← Prod.eta (sigmaAntidiagonalEquivProd b)]
+  simp only [uncurry_apply_pair]
+  have firstFactor :
+      ((sigmaAntidiagonalEquivProd b).1.val : ℂ) = (b.snd.val.1 : ℂ) := rfl
+  have secondFactor :
+      ((sigmaAntidiagonalEquivProd b).2.val : ℂ) = (b.snd.val.2 : ℂ) := rfl
+  rw [firstFactor, secondFactor]
+  ring_nf
 
 lemma t9 (z : ℍ) : ∑' m : ℕ,
   ( 2 * (-2 * ↑π * Complex.I) ^ 2 / (2 - 1)! *

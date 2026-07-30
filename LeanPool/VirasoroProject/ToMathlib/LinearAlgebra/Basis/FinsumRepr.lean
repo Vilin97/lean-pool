@@ -42,17 +42,12 @@ lemma finsum_mem_mem_span {ι R V : Type*}
   · let t : Finset ι := h.toFinset
     rw [finsum_eq_finsetSum_of_support_subset (s := t) _ ?_]
     · classical
-      have aux : ∑ i ∈ t, ∑ᶠ (_ : i ∈ s), cfs i • vs i = ∑ i ∈ t.filter s, cfs i • vs i  := by
-        rw [Finset.sum_filter]
-        congr 1
-        funext i
-        by_cases his : i ∈ s <;>
-        · simpa [his] using fun con ↦ by contradiction
-      rw [aux]
-      apply Submodule.sum_smul_mem
-      intro i hist
-      apply Submodule.mem_span_of_mem <| Set.mem_image_of_mem ..
-      simp_all only [ne_eq, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq, t]
+      apply Submodule.sum_mem
+      intro i _
+      by_cases his : i ∈ s
+      · simpa [his] using Submodule.smul_mem (Submodule.span R (vs '' s)) (cfs i)
+          (Submodule.mem_span_of_mem (Set.mem_image_of_mem vs his))
+      · simp [his]
     · intro i hi
       simp only [ne_eq, Set.Finite.coe_toFinset, Set.mem_setOf_eq, t]
       refine ⟨?_, ?_⟩ <;>

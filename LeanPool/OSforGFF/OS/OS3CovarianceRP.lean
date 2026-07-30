@@ -387,7 +387,7 @@ end RPProof
     Both are defined using the same Bessel kernel C(x,y) = (m/(4π²r)) K₁(mr),
     so this equality holds by definition (rfl).
 -/
-lemma rpInnerProduct_eq_rpProof (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
+lemma rpInnerProduct_eq_rpProof (m : ℝ) (f : TestFunctionℂ) :
     rpInnerProduct m f = RPProof.rpInnerProduct m f := by
   -- Both sides expand to the same integral using freeCovariance (Bessel)
   unfold rpInnerProduct RPProof.rpInnerProduct

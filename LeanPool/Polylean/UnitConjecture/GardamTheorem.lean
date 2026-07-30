@@ -172,7 +172,7 @@ We check that our definition of "trivial but not zero" is correct by showing it 
 to a more direct definition.
 -/
 
-theorem trivialNonZeroElem_trivial_nonzeroAux {R G : Type _} [Ring R] [Group G]
+theorem trivialNonZeroElem_trivial_nonzeroAux {R G : Type _} [Ring R]
     [DecidableEq G] [DecidableEq R] (p : FormalSum R G) :
     trivialNonZeroElem  ⟦p⟧  ↔  ∃ a: R, ∃ g : G, p ≈ [(a, g)] ∧ (a ≠ 0) := by
   apply Iff.intro
@@ -207,7 +207,7 @@ theorem trivialNonZeroElem_trivial_nonzeroAux {R G : Type _} [Ring R] [Group G]
       · simp only [beq_false_of_ne (Ne.symm c), not_true] at h
 
 /-- Triviality of `p : R[G]` coincides with the direct definition `p = a ⬝ g`, `a ≠ 0`. -/
-theorem trivialNonZeroElem_trivial_nonzero {R G : Type _} [Ring R] [Group G]
+theorem trivialNonZeroElem_trivial_nonzero {R G : Type _} [Ring R]
     [DecidableEq G] [DecidableEq R] :
     ∀ (p : FreeModule R G),
     trivialNonZeroElem  p  ↔  ∃ a: R, ∃ g : G, p = (a * g) ∧ (a ≠ 0) := by

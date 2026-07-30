@@ -199,10 +199,13 @@ theorem kernel_pow (k : K) (n : ℕ) : ((k, Q.e) : P) ^ n = (n • k, Q.e) := by
   | succ n ih =>
       unfold HPow.hPow instHPow Pow.pow instPow
       change PGrp.toMonoid.npow (n + 1) ((k, Q.e) : P) = ((n + 1) • k, Q.e)
-      rw [PGrp.toMonoid.npow_succ]
+      have step :
+          PGrp.toMonoid.npow (n + 1) ((k, Q.e) : P) =
+            PGrp.toMonoid.mul (PGrp.toMonoid.npow n ((k, Q.e) : P)) ((k, Q.e) : P) :=
+        PGrp.toMonoid.npow_succ n ((k, Q.e) : P)
+      apply step.trans
       change ((k, Q.e) : P) ^ n * (k, Q.e) = ((n + 1) • k, Q.e)
-      rw [ih]
-      rw [P.mul]
+      rw [ih, P.mul]
       simp only [AddMonoidHom.coe_prodMap, AddMonoidHom.coe_id, Prod.map_id, id_eq,
         Prod.mk.injEq, add_eq_left]
       constructor

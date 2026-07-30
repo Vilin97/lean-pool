@@ -105,12 +105,12 @@ lemma coe_eval (F : Dihomotopy p₀ p₁) (t : I) :
 @[simp]
 lemma eval_zero (F : Dihomotopy p₀ p₁) : F.eval 0 = p₀ := by
   ext t
-  simp [eval]
+  simp
 
 @[simp]
 lemma eval_one (F : Dihomotopy p₀ p₁) : F.eval 1 = p₁ := by
   ext t
-  simp [eval]
+  simp
 
 end
 
@@ -738,7 +738,7 @@ lemma _root_.Dipath.Dihomotopic.hpath_hext {x₀ x₁ x₂ x₃ : X} {p₁ : Dip
     @HEq (Dipath.Dihomotopic.Quotient _ _) ⟦p₁⟧ (Dipath.Dihomotopic.Quotient _ _) ⟦p₂⟧ := by
   obtain rfl : x₀ = x₂ := by convert hp 0 <;> simp
   obtain rfl : x₁ = x₃ := by convert hp 1 <;> simp
-  rw [heq_iff_eq]
+  refine heq_of_eq ?_
   congr
   ext t
   exact hp t

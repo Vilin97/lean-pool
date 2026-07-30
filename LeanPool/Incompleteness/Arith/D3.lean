@@ -194,13 +194,21 @@ theorem sigma₁_complete {σ : Sentence ℒₒᵣ} (hσ : Hierarchy Sg 1 σ) : 
   intro h
   have hpr := bold_sigma₁_complete T hσ (e := ![]) (by simpa [models₀_iff] using h)
   rw [Language.Theory.TProvable.iff_provable] at hpr ⊢
+  have hquote : (⌜Rew.embs ▹ σ⌝ : V) = (⌜σ⌝ : V) := by
+    exact FirstOrder.Semiformula.quote_sentence_val V σ
   have hsub :
-      (⌜ℒₒᵣ⌝[V]).substs 0 (⌜σ⌝ : V) = (⌜σ⌝ : V) := by
+      (⌜ℒₒᵣ⌝[V]).substs 0 (⌜Rew.embs ▹ σ⌝ : V) = (⌜σ⌝ : V) := by
+    rw [hquote]
     exact LO.Arith.subst_eq_self (L := ⌜ℒₒᵣ⌝[V]) (p := (⌜σ⌝ : V))
       (by simpa using (⌜σ⌝ : (⌜ℒₒᵣ⌝[V]).Formula).prop)
       (by simp)
       (by simp)
-  simpa [FirstOrder.Semiformula.quote_sentence_def', hsub] using hpr
+  have hval :
+      ((⌜Rew.embs ▹ σ⌝ : (⌜ℒₒᵣ⌝[V]).Semiformula (0 : ℕ))^/[
+        toNumVec (![] : Fin 0 → V)]).val = (⌜σ⌝ : (⌜ℒₒᵣ⌝[V]).Formula).val := by
+    rw [Language.Semiformula.val_substs, toNumVec_nil, Language.Semitermvec.val_nil,
+      Semiformula.codeIn'_val, hsub, FirstOrder.Semiformula.quote_sentence_val]
+  exact hval ▸ hpr
 
 end TProof
 

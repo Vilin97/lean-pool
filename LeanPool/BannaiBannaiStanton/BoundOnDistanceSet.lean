@@ -355,7 +355,7 @@ lemma restrictTotalDegree_finrank {d : ℕ} (s : ℕ) :
       let b := basisMonomials (Fin d) F
       let S := {f : Fin d →₀ ℕ | f.sum (fun _ n ↦ n) ≤ s}
       -- We need tos show restrictTotalDegree is the span of monomials in S.
-      rw [restrictTotalDegree, restrictSupport, Finsupp.supported_eq_span_single]
+      rw [restrictTotalDegree, restrictSupport_eq_span]
       -- We need to show b '' S is linearly independent.
       have h_li : LinearIndependent F (b ∘ (Subtype.val : S → (Fin d →₀ ℕ))) :=
         b.linearIndependent.comp Subtype.val Subtype.coe_injective
@@ -482,13 +482,13 @@ lemma eval_split {d : ℕ}
     · rw [Finsupp.prod_fintype]
       · apply Finset.prod_congr rfl
         intro i _
-        · simp [m_left, Finsupp.equivFunOnFinite, Fin.append_left]
+        · simp [m_left, Fin.append_left]
       · simp only [pow_zero, implies_true]
     · rw [Finsupp.prod_fintype]
       · apply Finset.prod_congr rfl
         intro i _
-        simp only [Fin.natAdd_eq_addNat, finCongr_symm, finCongr_apply, Finsupp.equivFunOnFinite,
-         Equiv.coe_fn_symm_mk, Finsupp.coe_mk, m_right]
+        simp only [Fin.natAdd_eq_addNat, finCongr_symm, finCongr_apply,
+         Finsupp.coe_equivFunOnFinite_symm, m_right]
         rw [← Fin.natAdd_eq_addNat, Fin.append_right]
       · simp only [pow_zero, implies_true]
   · simp [Function.comp_apply, implies_true]
@@ -530,23 +530,22 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
       f a * (eval ((Fin.append a.1 b.1) ∘ Fin.cast (by rw [two_mul])) p) * g b
       = ∑ m ∈ p.support, f a *
           (eval ((Fin.append a.1 b.1) ∘ Fin.cast (by rw [two_mul]))
-            (Finsupp.single m (coeff m p))) * g b := by
+            (monomial m (coeff m p))) * g b := by
     intro a b
     conv_lhs => rw [p.as_sum, map_sum]
     rw [Finset.mul_sum, Finset.sum_mul]
-    simp only [MvPolynomial.single_eq_monomial]
   simp only [Finset.univ_eq_attach, hexp]
   have h_swap : ∑ b : A, ∑ a : A, ∑ m ∈ p.support, f a * (eval ((Fin.append a.1 b.1)
-      ∘ Fin.cast (by rw [two_mul])) (Finsupp.single m (coeff m p))) * g b =
+      ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b =
       ∑ b : A, ∑ m ∈ p.support, ∑ a : A,
       f a * (eval ((Fin.append a.1 b.1)
-      ∘ Fin.cast (by rw [two_mul])) (Finsupp.single m (coeff m p))) * g b := by
+      ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b := by
     apply Finset.sum_congr rfl
     intro b _
     rw [Finset.sum_comm]
   rw [Finset.sum_comm]
   change ∑ b : A, ∑ a : A, ∑ m ∈ p.support, f a * (eval ((Fin.append a.1 b.1)
-  ∘ Fin.cast (by rw [two_mul])) (Finsupp.single m (coeff m p))) * g b = 0
+  ∘ Fin.cast (by rw [two_mul])) (monomial m (coeff m p))) * g b = 0
   rw [h_swap, Finset.sum_comm]
   -- It then suffices to show that each term in the rewritten sum is 0.
   apply Finset.sum_eq_zero
@@ -559,11 +558,9 @@ lemma bilinear_form_vanishes_on_orthogonal_complement
   Finsupp.equivFunOnFinite.symm (fun i => m (Fin.cast h_cast.symm (Fin.castAdd d i)))
   let m_right : Fin d →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun i => m (Fin.cast h_cast.symm (Fin.natAdd d i)))
-  have monomial_eq_single : ∀ (n : Fin (2 * d) →₀ ℕ) (a : F),
-  monomial n a = Finsupp.single n a := fun _ _ => rfl
   have monomial_eq_smul_monomial (n : Fin (2 * d) →₀ ℕ) (a : F) :
     monomial n a = a • monomial n 1 := by simp [smul_monomial]
-  rw [← monomial_eq_single, monomial_eq_smul_monomial]
+  rw [monomial_eq_smul_monomial]
   have h_eq : (∑ a : A, ∑ b : A, f a * (coeff m p *
   ((eval a.1 (monomial m_left 1)) * eval b.1 (monomial m_right 1))) * g b)
   = coeff m p * (∑ a : A, f a * eval a.1 (monomial m_left 1)) *
@@ -715,7 +712,8 @@ lemma Croot_Lev_Pach_lemma_generalised_1st_part
       (coeff m p) * eval a.1 (monomial (m_left m) 1) * eval b.1 (monomial (m_right m) 1)
     have h_M_eq : M = M1 + M2 := by
       ext a b
-      simp only [M, M1, M2, Matrix.add_apply]
+      rw [Matrix.add_apply]
+      simp only [M, M1, M2]
       rw [← Finset.sum_union]
       · conv_lhs => rw [p.as_sum, map_sum]
         apply Finset.sum_congr

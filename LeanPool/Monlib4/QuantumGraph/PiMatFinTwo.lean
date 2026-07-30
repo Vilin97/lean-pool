@@ -496,7 +496,10 @@ theorem QuantumGraph.Real.exists_unique_includeMap_of_adjoint_and_dim_ofPiMatSub
         ((LinearMap.proj x.1 ∘ₗ A ∘ₗ LinearMap.adjoint (LinearMap.proj x.2))) ∘ₗ LinearMap.proj x.2
       = (0 : PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p) := by
     apply Finset.sum_eq_zero
-    simp_all
+    intro x hx
+    apply LinearMap.ext
+    intro y
+    simp only [LinearMap.comp_apply, this₁ x hx, LinearMap.zero_apply, map_zero]
   have hAA : A = LinearMap.adjoint (LinearMap.proj i.1)
     ∘ₗ (LinearMap.proj i.1 ∘ₗ A ∘ₗ LinearMap.adjoint (LinearMap.proj i.1))
     ∘ₗ LinearMap.proj i.1 := by
@@ -697,17 +700,14 @@ lemma schurMul_proj_adjoint_comp
 open scoped Classical in
 omit [Fintype ι] [DecidableEq ι] [(i : ι) → DecidableEq (p i)] in
 lemma schurMul_proj_comp
-  {B : Type*} [starAlgebra B] [QuantumSet B] [Finite ι]
-  : letI : DecidableEq ι := Classical.decEq ι
+  {B : Type*} [starAlgebra B] [QuantumSet B] :
+    letI : DecidableEq ι := Classical.decEq ι
     letI : ∀ i, DecidableEq (p i) := fun i => Classical.decEq (p i)
-    withPiBlockQuantum[φ]
     ∀ (f g : B →ₗ[ℂ] PiMat ℂ ι p) (i : ι),
       ((LinearMap.proj i) ∘ₗ f) •ₛ ((LinearMap.proj i) ∘ₗ g)
         = (LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i)
           ∘ₗ (f •ₛ g) := by
   classical
-  letI := Fintype.ofFinite ι
-  withPiBlockQuantumCtx[φ]
   intro f g i
   simp only [schurMul_apply_apply, TensorProduct.map_comp]
   simp only [← LinearMap.comp_assoc]
@@ -841,7 +841,7 @@ theorem QuantumGraph.Real.proj_adjoint_comp_proj_conj_isRealQuantumGraph
   withPiBlockCoalgebraQuantumCtx[φ]
   intro f hf i
   constructor
-  · rw [schurMul_proj_adjoint_comp (hφ := hφ), schurMul_proj_comp (hφ := hφ)]
+  · rw [schurMul_proj_adjoint_comp (hφ := hφ), schurMul_proj_comp]
     simp only [← LinearMap.comp_assoc]
     rw [schurMul_comp_proj, schurMul_comp_proj_adjoint]
     simp only [LinearMap.comp_assoc, hf.1]
@@ -1021,7 +1021,7 @@ theorem QuantumGraph.Real.schurProjection_proj_conj
   withPiBlockCoalgebraQuantumCtx[φ]
   intro f hf i
   constructor
-  · rw [schurMul_proj_comp (hφ := hφ), schurMul_comp_proj_adjoint (hφ := hφ), hf.1]
+  · rw [schurMul_proj_comp, schurMul_comp_proj_adjoint (hφ := hφ), hf.1]
   · rw [LinearMap.isReal_iff]
     simp_rw [LinearMap.real_comp, LinearMap.real_of_isReal hf.2, LinearMap.proj_adjoint,
     LinearMap.real_of_isReal (LinearMap.proj_isReal (φ := fun r => Mat ℂ (p r)) _),

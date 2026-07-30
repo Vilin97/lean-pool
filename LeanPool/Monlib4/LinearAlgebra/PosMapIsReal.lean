@@ -89,7 +89,7 @@ theorem selfAdjointDecompositionRight_isSelfAdjoint
 
 theorem selfAdjointDecomposition
   {B : Type*} [AddCommGroup B] [StarAddMonoid B]
-  [Module ℂ B] [StarModule ℂ B] (a : B) :
+  [Module ℂ B] (a : B) :
   a = aL a + (RCLike.I : ℂ) • (aR a) := by
   simp_rw [selfAdjointDecompositionLeft, selfAdjointDecompositionRight,
     smul_smul, ← mul_assoc, RCLike.I, Complex.I_mul_I, smul_add, smul_sub,
@@ -577,7 +577,7 @@ theorem StarNonUnitalAlgHom.toLinearMap_apply
 
 theorem LinearMap.isPosMap_iff_star_mul_self_nonneg {A K : Type*}
   [NonUnitalSemiring A] [PartialOrder A] [StarRing A] [StarOrderedRing A]
-  [NonUnitalSemiring K] [PartialOrder K] [StarRing K] [StarOrderedRing K]
+  [NonUnitalSemiring K] [PartialOrder K]
   (hA : ∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ b, a = star b * b)
   {F : Type*} [FunLike F A K] {f : F} :
   LinearMap.IsPosMap f ↔ ∀ a : A, 0 ≤ f (star a * a) := by
@@ -586,7 +586,7 @@ theorem LinearMap.isPosMap_iff_star_mul_self_nonneg {A K : Type*}
 
 theorem LinearMap.isPosMap_iff_comp_starAlgEquiv
   {K A B : Type*}
-  [Mul K] [Mul A] [Mul B] [Star K] [Star A] [Star B]
+  [Mul A] [Mul B] [Star A] [Star B]
   [Zero A] [Zero B] [Zero K]
   [PartialOrder A] [PartialOrder B] [PartialOrder K]
   (hA : ∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ b, a = star b * b)
@@ -634,7 +634,7 @@ isReal_of_isPosMap_of_selfAdjointDecomposition hf
 /-- a $^*$-homomorphism from $A$ to $B$ is a positive map -/
 theorem starMulHom_isPosMap
   {A K : Type*}
-  [Semiring A] [PartialOrder A] [StarRing A] [StarOrderedRing A]
+  [Semiring A] [PartialOrder A] [StarRing A]
   [Semiring K] [PartialOrder K] [StarRing K] [StarOrderedRing K]
   (hA : ∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ b, a = star b * b)
   {F : Type*} [FunLike F A K] [StarHomClass F A K] [MulHomClass F A K]
@@ -767,7 +767,7 @@ theorem Matrix.PosDef.eq_of_zpow_inv_eq_zpow_inv {𝕜 : Type*} [RCLike 𝕜]
 
 theorem selfAdjointDecomposition_ext_iff
   {B : Type*} [AddCommGroup B] [StarAddMonoid B]
-  [Module ℂ B] [StarModule ℂ B] (a b : B) :
+  [Module ℂ B] (a b : B) :
     a = b ↔ aL a = aL b ∧ aR a = aR b := by
   refine ⟨fun h => by simp [h], fun h => ?_⟩
   rw [selfAdjointDecomposition a, h.1, h.2]
@@ -795,8 +795,8 @@ theorem selfAdjointDecompositionRight_of
   simp_all
 
 theorem complex_decomposition_mul_decomposition
-  {B : Type*} [Ring B] [StarRing B]
-  [Module ℂ B] [StarModule ℂ B] [IsScalarTower ℂ B B]
+  {B : Type*} [Ring B]
+  [Module ℂ B] [IsScalarTower ℂ B B]
   [SMulCommClass ℂ B B] (a b c d : B) :
     (a + Complex.I • b) * (c + Complex.I • d)
       = (a * c - b * d) + Complex.I • (b * c + a * d) := by
@@ -879,8 +879,7 @@ theorem isStarNormal_iff_selfAdjointDecomposition_commute
 
 theorem isSelfAdjoint_iff_selfAdjointDecompositionRight_eq_zero
   {B : Type*} [Ring B] [StarRing B]
-  [Module ℂ B] [StarModule ℂ B] [IsScalarTower ℂ B B]
-  [SMulCommClass ℂ B B] (p : B) :
+  [Module ℂ B] (p : B) :
     IsSelfAdjoint p ↔ aR p = 0 := by
   simp only [isSelfAdjoint_iff, RCLike.I_to_complex, isUnit_iff_ne_zero, ne_eq, Complex.I_ne_zero,
     not_false_eq_true, IsUnit.smul_eq_zero, one_div, inv_eq_zero, OfNat.ofNat_ne_zero, sub_eq_zero]

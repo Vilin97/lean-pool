@@ -70,7 +70,8 @@ lemma sections_exact_of_shortExact {X : TopCat.{u}}
   have hexact : complex.Exact :=
     @ShortComplex.Exact.map_of_mono_of_preservesKernel _ _ _ _ _ _ S _
       hS.exact sectV hzero hhomology hS.mono_f
-      (PreservesLimitsOfShape.preservesLimit (F := sectV) (K := parallelPair S.g 0))
+      (PreservesLimitsOfShape.preservesLimit
+        (F := sectV) (K := parallelPair S.g (0 : S.X₂ ⟶ S.X₃)))
   exact (ShortComplex.ab_exact_iff complex).mp hexact x hx
 
 private lemma presheaf_map_eq {X : TopCat.{u}}
@@ -174,11 +175,23 @@ private abbrev underMk {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     (Y := ⟨op V, t⟩)
     (CategoryOfElements.homMk _ _ (homOfLE hVU).op (by exact ht.symm))
 
+/-- Partial lifts of a section `s` along a morphism of sheaves. An object is an
+open `V`, a section over `V`, and the proof that it maps to `s |_ V`. -/
+private abbrev PartialLift {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
+    (g : F ⟶ G) {U : Opens X} (s : G.obj.obj (op U)) :=
+  StructuredArrow ⟨op U, s⟩
+    (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements
+
+private local instance partialLiftCategory {X : TopCat.{u}}
+    {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (g : F ⟶ G)
+    {U : Opens X} (s : G.obj.obj (op U)) :
+    Category.{u} (PartialLift g s) :=
+  CategoryTheory.instCategoryStructuredArrow
+
 private lemma chain_isCompatible_of_chain {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     {g : F ⟶ G} {U : Opens X} {s : G.obj.obj (op U)}
-    {c : Set (StructuredArrow ⟨op U, s⟩
-      (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements)}
+    {c : Set (PartialLift g s)}
     (hchain : IsChain (fun x y ↦ Nonempty (y ⟶ x)) c) :
     TopCat.Presheaf.IsCompatible F.obj
       (fun x : c ↦ x.1.right.1.unop)
@@ -210,13 +223,10 @@ private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
     (g : F ⟶ G) {U : Opens X} (s : G.obj.obj (op U))
     {ι : Type*}
-    (T : ι → StructuredArrow ⟨op U, s⟩
-      (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements)
+    (T : ι → PartialLift g s)
     (hcompat : TopCat.Presheaf.IsCompatible F.obj
       (fun i ↦ (T i).right.1.unop) (fun i ↦ (T i).right.2)) :
-    ∃ y : StructuredArrow ⟨op U, s⟩
-        (Functor.whiskerRight g.hom
-          (CategoryTheory.forget AddCommGrpCat.{u})).mapElements,
+    ∃ y : PartialLift g s,
       y.right.1.unop = iSup (fun i ↦ (T i).right.1.unop) ∧
       ∀ i, Nonempty (y ⟶ T i) := by
   let cV : ι → Opens X := fun i ↦ (T i).right.1.unop
@@ -239,13 +249,6 @@ private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
     (by cat_disch))
 
 /-! ### Structured-arrow Zorn setup for partial lifts -/
-
-/-- Partial lifts of a section `s` along a morphism of sheaves. An object is an
-open `V`, a section over `V`, and the proof that it maps to `s |_ V`. -/
-private abbrev PartialLift {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
-    (g : F ⟶ G) {U : Opens X} (s : G.obj.obj (op U)) :=
-  StructuredArrow ⟨op U, s⟩
-    (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements
 private lemma under_extend_by_one_open {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
@@ -279,7 +282,10 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
   obtain ⟨y, hy_open, hy⟩ := exists_glued_lift_upper_bound S.g s T hcompat_glue
   refine ⟨y, hy false, ?_⟩
   rw [hy_open]
-  exact Opens.mem_iSup.mpr ⟨true, by simpa [T] using hxW⟩
+  apply Opens.mem_iSup.mpr
+  refine ⟨true, ?_⟩
+  change x ∈ W
+  exact hxW
 
 /-- If `0 → X₁ → X₂ → X₃ → 0` is short exact and every restriction map of the
 underlying presheaf `S.X₁.obj` is epi, then `g(U) : X₂(U) → X₃(U)` is epi. -/

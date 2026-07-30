@@ -343,10 +343,9 @@ theorem starAlgEquiv_adjoint_eq (hφ : φ.IsFaithfulPosMap)
     Matrix.mul_inv_cancel_left_of_invertible, Matrix.mul_assoc, mul_inv_of_invertible,
     Matrix.mul_one]
 
-theorem starAlgEquiv_unitary_commute_iff [φ.IsFaithfulPosMap]
+theorem starAlgEquiv_unitary_commute_iff
     (f : Matrix n n ℂ ≃⋆ₐ[ℂ] Matrix n n ℂ) :
     Commute φ.matrix f.ofMatrixUnitary ↔ f φ.matrix = φ.matrix := by
-  mat_inner_instances φ
   rw [Commute, SemiconjBy]
   nth_rw 3 [← StarAlgEquiv.eq_innerAut f]
   rw [innerAutStarAlg_apply, ← unitaryGroup.star_coe_eq_coe_star]
@@ -362,7 +361,7 @@ theorem starAlgEquiv_unitary_commute_iff [φ.IsFaithfulPosMap]
 * `∀ x, ‖f x‖ = ‖x‖`,
 * `φ.matrix` commutes with `f.unitary`.
 -/
-theorem starAlgEquiv_is_isometry_tFAE [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem starAlgEquiv_is_isometry_tFAE [hφ : φ.IsFaithfulPosMap]
     (f : Matrix n n ℂ ≃⋆ₐ[ℂ] Matrix n n ℂ) :
     withMatrixInner[φ]
     (List.TFAE
@@ -818,9 +817,12 @@ protected theorem basis_is_orthonormal [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
       rw [← Module.Dual.pi.IsFaithfulPosMap.basis.apply_cast_eq_mpr hψ h']
       simp only [orthonormal_iff_ite.mp (hψ _).basis_is_orthonormal i.snd]
       simp only [eq_mpr_eq_cast]
-      rw [eq_comm, ite_eq_right_iff]
+      symm
+      apply if_neg
       intro hh
-      simp only [hh, cast_heq, not_true_eq_false] at h
+      apply h
+      rw [hh]
+      exact cast_heq _ _
     · simp only [includeBlock_inner_ne_same h']
 
 /-- The dependent pi basis as an orthonormal basis. -/
@@ -1140,17 +1142,18 @@ theorem LinearMap.mulRight_toMatrix [hφ : φ.IsFaithfulPosMap] (x : Matrix n n 
   simp_rw [Module.Dual.IsFaithfulPosMap.toMatrix, LinearMap.toMatrixAlgEquiv_apply,
     LinearMap.mulRight_apply, Module.Dual.IsFaithfulPosMap.basis_repr_apply,
     Module.Dual.IsFaithfulPosMap.inner_coord']
-  simp only [Matrix.mul_apply, kroneckerMap, of_apply, Matrix.one_apply,
-    IsFaithfulPosMap.basis_apply,
-    Module.Dual.IsFaithfulPosMap.sig_apply, Matrix.mul_assoc, Matrix.single_eq, boole_mul,
-    Matrix.transpose_apply, ite_and, eq_comm]
+  rw [IsFaithfulPosMap.basis_apply, Module.Dual.IsFaithfulPosMap.sig_apply]
+  simp only [kroneckerMap, of_apply, Matrix.one_apply, Matrix.transpose_apply]
+  simp_rw [Matrix.mul_assoc]
   by_cases h : ij.1 = kl.1
-  · simp only [h, if_true]
-    simp only [ite_mul, one_mul, MulZeroClass.zero_mul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
-    simp_rw [← Matrix.mul_apply]
-    rw [Matrix.mul_assoc]
-  · simp [h]
+  · rw [h]
+    simp only [if_true, one_mul]
+    exact
+      (Matrix.single_mul_apply_same (1 : ℂ) kl.1 kl.2 ij.2
+        (hφ.matrixIsPosDef.rpow (-(1 / 2)) *
+          (x * hφ.matrixIsPosDef.rpow (1 / 2)))).trans
+        (one_mul _)
+  · simp [Matrix.single_mul_apply_of_ne, h]
 
 
 local notation "ℍ_" i => Matrix (s i) (s i) ℂ

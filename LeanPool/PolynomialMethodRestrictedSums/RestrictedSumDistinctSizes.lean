@@ -151,7 +151,8 @@ lemma vandermonde_degree_eq (k : ℕ) (p : ℕ) [Fact (Nat.Prime p)] :
             = Finset.biUnion (Finset.univ : Finset (Fin (k + 1)))
                 fun i => Finset.image (fun j => (i, j)) (Finset.Iio i)
           from ?_, Finset.card_biUnion];
-      · simp? +decide [Finset.card_image_of_injective, Function.Injective];
+      · rw [Finset.sum_congr rfl fun u _ =>
+          Finset.card_image_of_injective _ fun _ _ h => congrArg Prod.snd h]
         exact Eq.symm (Nat.recOn k (by norm_num) fun n ih => by
           norm_num [Fin.sum_univ_castSucc, Nat.choose] at *; linarith);
       · exact fun i _ j _ hij => Finset.disjoint_left.mpr fun x hx₁ hx₂ => hij <| by aesop;
@@ -206,7 +207,8 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
                      if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ)))
                          = expectedValue c m := by
            have h_index : (Finsupp.equivFunOnFinite.symm c : (Fin (k + 1)) →₀ ℕ) = toFinsupp c := by
-             ext i; simp [Finsupp.equivFunOnFinite, toFinsupp]
+             ext i
+             rfl
            -- By definition of polynomial multiplication and the properties of coefficients, the
            -- coefficient of the monomial corresponding to `c` in the product of the power sum and
            -- the Vandermonde polynomial is equal to the coefficient of the monomial corresponding
@@ -455,12 +457,26 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
         S = restrictedSumSet k A := by
           ext; simp only [restrictedSumSet, vandermondePolynomial, ne_eq, mem_image, mem_filter,
             Fintype.mem_piFinset];
-          constructor <;> rintro ⟨a, ⟨ha₁, ha₂⟩,
-              rfl⟩ <;> use a <;> simp_all? +decide [Finset.prod_eq_zero_iff];
-          · intro i j hij; specialize ha₂ j i; aesop;
-          · intro i j; split_ifs
-              <;> simp_all? (config := { decide := Bool.true }) [sub_eq_iff_eq_add];
-            exact Ne.symm (ha₂ _ _ ‹_›);
+          constructor
+          · rintro ⟨a, ha, rfl⟩
+            obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
+            refine ⟨a, ?_, rfl⟩
+            constructor
+            · simpa only [Fintype.mem_piFinset] using ha₁
+            · intro i j hij heq
+              apply ha₂
+              rw [map_prod]
+              apply Finset.prod_eq_zero (Finset.mem_univ j)
+              rw [map_prod]
+              apply Finset.prod_eq_zero (Finset.mem_univ i)
+              simp [hij, heq]
+          · rintro ⟨a, ⟨ha₁, ha₂⟩, rfl⟩
+            use a
+            simp_all? +decide [Finset.prod_eq_zero_iff]
+            intro i j
+            split_ifs <;>
+              simp_all? (config := { decide := Bool.true }) [sub_eq_iff_eq_add]
+            exact Ne.symm (ha₂ _ _ ‹_›)
       simp_all only [ne_eq, ge_iff_le, Order.add_one_le_iff, gt_iff_lt, m, c]
       -- After `aesop`, the goal is
       --   ∑ i, #(A i) - (k + 2).choose 2 < #(restrictedSumSet k A).

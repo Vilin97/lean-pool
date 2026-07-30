@@ -262,7 +262,7 @@ u ∉ P + {r} for all P ∈ C and r ∈ D.
 
 The proof constructs a Cauchy sequence in I whose limit avoids all translates. -/
 theorem countable_avoidance
-    [TopologicalSpace T] [IsTopologicalRing T] [IsNoetherianRing T]
+    [IsNoetherianRing T]
     [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     {C : Set (Ideal T)} (hC_countable : C.Countable)
     (hC_prime : ∀ P ∈ C, P.IsPrime)
@@ -447,7 +447,7 @@ cannot be covered by fewer than |k| proper subspaces.
 /-- Covering number argument: in a Noetherian local ring, if |C| < |T/M| and I ⊄ P
 for all primes P ∈ C, then ∃ t ∈ I avoiding all P ∈ C.
 Proof by induction on the number of generators of I. -/
-lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
+lemma ideal_avoidance_of_card_lt_aux :
     ∀ (n : ℕ) (I : Ideal T) (C : Set (Ideal T)),
     (∀ P ∈ C, P.IsPrime) →
     Cardinal.mk C < Cardinal.mk (IsLocalRing.ResidueField T) →
@@ -499,7 +499,7 @@ lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
     -- Line argument: for each P ∈ C, at most one residue class of a puts g + a*s_elem ∈ P
     let forbidden : ↑C → IsLocalRing.ResidueField T :=
       fun ⟨P, _⟩ => if h : ∃ a : T, g + a * s_elem ∈ (P : Ideal T)
-        then (Ideal.Quotient.mk (IsLocalRing.maximalIdeal T)) h.choose else 0
+        then IsLocalRing.residue T h.choose else 0
     have h_range : Cardinal.mk (Set.range forbidden) <
         Cardinal.mk (IsLocalRing.ResidueField T) :=
       lt_of_le_of_lt Cardinal.mk_range_le hC_card
@@ -508,7 +508,7 @@ lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
       by_contra hall
       push Not at hall
       exact absurd (Cardinal.mk_univ ▸ (Set.eq_univ_of_forall hall ▸ h_range)) (lt_irrefl _)
-    obtain ⟨a₀, rfl⟩ := Ideal.Quotient.mk_surjective a₀_bar
+    obtain ⟨a₀, rfl⟩ := IsLocalRing.residue_surjective a₀_bar
     refine ⟨g + a₀ * s_elem, I.add_mem hg_mem (I.mul_mem_left a₀ hs_in_I),
       fun P hP hmem => ?_⟩
     -- s_elem ∉ P: if s_elem ∈ P then g ∈ P, so P ∈ S_bad, contradicting hs_avoid
@@ -530,7 +530,8 @@ lemma ideal_avoidance_of_card_lt_aux [IsNoetherianRing T] :
     have hsub : hex.choose - a₀ ∈ IsLocalRing.maximalIdeal T :=
       IsLocalRing.le_maximalIdeal (hC_prime P hP).ne_top
         (((hC_prime P hP).mem_or_mem hdiff).resolve_right hsP)
-    exact (Ideal.Quotient.mk_eq_mk_iff_sub_mem hex.choose a₀).mpr hsub
+    rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
+    exact hsub
 
 /-- Wrapper: in a Noetherian local ring, |C| < |T/M| and I ⊄ P
 implies ∃ t ∈ I, t ∉ P for all P. -/
@@ -604,7 +605,7 @@ theorem uncountable_avoidance [IsNoetherianRing T]
               (fun P hP _ _ => hC_prime P (Set.mem_of_mem_inter_left hP))] at hsub
             obtain ⟨P, hP, hle⟩ := hsub
             exact hI P (Set.mem_of_mem_inter_left hP) hle
-          let π := Ideal.Quotient.mk (IsLocalRing.maximalIdeal T)
+          let π := IsLocalRing.residue T
           let g : ↑C → IsLocalRing.ResidueField T := fun ⟨P, _⟩ =>
             if h : ∃ a : T, v + a * w' ∈ (P : Ideal T) then π h.choose else 0
           have hg_range : Cardinal.mk (Set.range g) <
@@ -615,7 +616,7 @@ theorem uncountable_avoidance [IsNoetherianRing T]
             push Not at hall
             exact absurd (Cardinal.mk_univ ▸ (Set.eq_univ_of_forall hall ▸ hg_range))
               (lt_irrefl _)
-          obtain ⟨a₀, rfl⟩ := Ideal.Quotient.mk_surjective y_bar
+          obtain ⟨a₀, rfl⟩ := IsLocalRing.residue_surjective y_bar
           refine ⟨v + a₀ * w', I.add_mem hv_mem (I.mul_mem_left a₀ hw'_mem),
             fun P hP hmem => ?_⟩
           by_cases hw'P : (w' : T) ∈ (P : Set T)
@@ -637,9 +638,8 @@ theorem uncountable_avoidance [IsNoetherianRing T]
             have hsub : hex.choose - a₀ ∈ IsLocalRing.maximalIdeal T :=
               IsLocalRing.le_maximalIdeal (hC_prime P hP).ne_top
                 (((hC_prime P hP).mem_or_mem hdiff).resolve_right hw'P)
-            change (Ideal.Quotient.mk (IsLocalRing.maximalIdeal T)) hex.choose =
-              (Ideal.Quotient.mk (IsLocalRing.maximalIdeal T)) a₀
-            rw [Ideal.Quotient.mk_eq_mk_iff_sub_mem]
+            change IsLocalRing.residue T hex.choose = IsLocalRing.residue T a₀
+            rw [← sub_eq_zero, ← map_sub, IsLocalRing.residue_eq_zero_iff]
             exact hsub
         · exact ideal_avoidance_of_card_lt I C hC_prime hC_card hI
   -- Step 2: For each (P, r) ∈ C × D, compute the unique forbidden residue class

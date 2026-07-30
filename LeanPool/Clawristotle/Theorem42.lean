@@ -252,7 +252,8 @@ theorem Theorem42
     have hD_neg_int : FlatTorus3.spatialIntegral (fun y => -(entropyDissipation Ψ (f y))) = 0 := by
       have h := FlatTorus3.hSpatialMul (fun y => entropyDissipation Ψ (f y)) (-1)
       simp_all
-    linarith [FlatTorus3.hSpatialNonnegZero _ hDecay.hD_cont.neg hD_neg hD_neg_int x]
+    have hD_neg_zero := FlatTorus3.hSpatialNonnegZero _ hDecay.hD_cont.neg hD_neg hD_neg_int x
+    simpa using hD_neg_zero
   -- Step 3: Apply the main theorem via VMLInput.
   have result := main_from_physics {
     x₀ := Classical.arbitrary X

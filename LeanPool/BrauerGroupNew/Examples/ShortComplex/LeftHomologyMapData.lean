@@ -27,12 +27,20 @@ abbrev φK : ↥(LinearMap.ker (ModuleCat.Hom.hom S₁.g)) →ₗ[R]
       have := (LinearMap.ext_iff.1 <| ModuleCat.hom_ext_iff|>.1 f.5) x
       simp_all
 
+/-- The underlying element of `S.moduleCatToCycles x` is `S.f x`.
+
+`ShortComplex.moduleCatToCycles` is a `LinearMap.codRestrict` whose membership proof is only
+type-correct at default transparency, so `LinearMap.codRestrict_apply` cannot fire on it. -/
+@[simp]
+lemma ShortComplex.moduleCatToCycles_coe (S : ShortComplex (ModuleCat.{v} R)) (x : S.X₁) :
+    (S.moduleCatToCycles x : S.X₂) = ModuleCat.Hom.hom S.f x := rfl
+
 /-- The map on cycles carries boundaries to boundaries. -/
 lemma φK_moduleCatToCycles (x : S₁.X₁) :
     φK R S₁ S₂ f (S₁.moduleCatToCycles x) = S₂.moduleCatToCycles (f.τ₁ x) := by
   ext
   have h := LinearMap.ext_iff.1 ((ModuleCat.hom_ext_iff.1 f.comm₁₂).symm) x
-  simpa [φK, ShortComplex.moduleCatToCycles] using h
+  simpa [φK] using h
 
 /-- The map on cycles descends to the quotient by boundaries. -/
 lemma φK_maps_moduleCatToCycles_range :

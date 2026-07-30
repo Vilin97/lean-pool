@@ -3692,7 +3692,10 @@ private theorem slowBandPolyDeriv_interval_sum_eq_circleL2Sq
   let f : Circle -> ℝ := fun x => ‖slowBandPolyDerivCircle p x‖ ^ 2
   have hNpos : 0 < N := Nat.lt_of_lt_of_le Nat.zero_lt_one hN
   have hf_cont : Continuous f := by
-    simpa [f] using (continuous_slowBandPolyDerivCircle p).norm.pow 2
+    unfold f
+    refine ((continuous_slowBandPolyDerivCircle p).norm.pow 2).congr ?_
+    intro x
+    rfl
   have hf_int : MeasureTheory.Integrable f μCircle := by
     simpa [f, μCircle] using
       hf_cont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)

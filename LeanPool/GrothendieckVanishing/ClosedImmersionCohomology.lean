@@ -31,6 +31,13 @@ open CategoryTheory TopologicalSpace Abelian Limits Opposite
 
 /-! ## Closed-immersion cohomology consequences -/
 
+-- Instance search does not unfold the subtype topology in `TopCat.of Z`.
+private noncomputable instance subtypeSheafHAddCommGroup
+    {X : TopCat.{u}} {Z : Set X}
+    (G : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of Z)) (n : ℕ) :
+    AddCommGroup (Sheaf.H G n) :=
+  sheafHAddCommGroup G n
+
 /-- Pushforward along a closed inclusion preserves sheaf cohomology in every degree, as an
 isomorphism. The proof is by induction: in degree zero via sections, in degree one via the
 cokernel model of `H¹`, and in higher degrees via dimension-shift isomorphisms on both
@@ -57,6 +64,10 @@ noncomputable def PushforwardHIso
     let ip : InjectivePresentation G := Classical.choice (EnoughInjectives.presentation G)
     let S := ip.shortComplex
     let SX := S.map (TopCat.Sheaf.pushforward AddCommGrpCat.{u} closedIncl)
+    let hInjective : Injective S.X₂ := by
+      change Injective ip.J
+      exact ip.injective
+    letI : Injective S.X₂ := hInjective
     have hSE_X : SX.ShortExact :=
       closedIncl_pushforward_shortExact hZ ip.shortExact_shortComplex
     have hFlasqueSX₂ : IsFlasqueSheaf SX.X₂ := fun j ↦ by
@@ -64,7 +75,8 @@ noncomputable def PushforwardHIso
       exact (isFlasque_of_injective S.X₂) ((Opens.map closedIncl).map j)
     have hSE : S.ShortExact := by simpa [S] using ip.shortExact_shortComplex
     have hSrcSub (r : ℕ) : Subsingleton (Sheaf.H S.X₂ (r + 1)) :=
-      sheafH_subsingleton_of_injective S.X₂ r
+      @sheafH_subsingleton_of_injective (Opens (TopCat.of Z)) _
+        (Opens.grothendieckTopology (TopCat.of Z)) _ _ S.X₂ hInjective r
     have hTgtSub (r : ℕ) : Subsingleton (Sheaf.H SX.X₂ (r + 1)) :=
       sheafH_subsingleton_of_flasque X SX.X₂ hFlasqueSX₂ r
     change AddCommGrpCat.of (Sheaf.H G (k + 1)) ≅

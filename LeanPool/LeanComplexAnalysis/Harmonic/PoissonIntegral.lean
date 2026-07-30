@@ -339,7 +339,7 @@ lemma tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc
     · exact ContinuousOn.comp_continuous (s:= closedBall 0 1) hf (by fun_prop) (hrn n)
   · exact Eventually.of_forall fun n => Eventually.of_forall fun t ht =>
              bounds_of_continuousOn_unitCircle_closedUnitDisc (hr n) hf hk
-  · simp only [ne_eq, enorm_ne_top, not_false_eq_true, intervalIntegrable_const]
+  · simp only [intervalIntegrable_const]
   · refine Eventually.of_forall fun x hx => Tendsto.smul tendsto_const_nhds ?_
     apply Tendsto.comp (hf.continuousWithinAt _)
     · rw [tendsto_nhdsWithin_iff]
@@ -376,7 +376,7 @@ lemma seq_tendsto_to_oneIn_unit_interval_aux :
 /-- If r n tends to 1, then f (r n * z) tends to f z, for z in the unit disc,
 when f is continuous on the closed unit disc. -/
 lemma tendsto_of_radius_tendsto_one_of_continuousOn_closedUnitDisc
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    {E : Type*} [NormedAddCommGroup E]
     {f : ℂ → E} {z : ℂ} {r : ℕ → ℝ}
     (hc : ContinuousOn f (closedBall 0 1)) (hr_lim : Tendsto r atTop (𝓝 1))
     (hz : z ∈ ball 0 1) : Tendsto (fun n => f (r n * z)) atTop (𝓝 (f z)) := by

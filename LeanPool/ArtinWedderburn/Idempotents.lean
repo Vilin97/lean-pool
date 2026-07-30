@@ -456,7 +456,7 @@ def ringIsoToCornerIso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
     invFun := fun y => ⟨φ.symm y.val, by
       have h : y = φ e * y * φ e := by
         apply (corner_ring_set_mem ?idem_e).mp
-        simp
+        exact y.2
       rw [h]
       have h' : φ.symm (φ e * ↑y * φ e) = e * φ.symm ↑y * e := by
         rw [RingEquiv.map_mul, RingEquiv.map_mul]

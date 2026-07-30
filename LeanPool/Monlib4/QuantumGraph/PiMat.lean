@@ -87,6 +87,15 @@ theorem Matrix.toEuclideanStarAlgEquiv_coe {n : Type*} [Fintype n] [DecidableEq 
     Matrix n n ℂ ≃⋆ₐ[ℂ] EuclideanSpace ℂ n →ₗ[ℂ] EuclideanSpace ℂ n) =
     Matrix.toEuclideanLin := rfl
 
+open scoped Kronecker
+
+theorem kroneckerTMulLinearEquiv_map_lid_tmul
+    {R m n : Type*} [CommSemiring R] [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (x : Matrix m m R) (y : Matrix n n R) :
+    ((kroneckerTMulLinearEquiv m m n n R R R R) (x ⊗ₜ[R] y)).map
+      ⇑(Algebra.TensorProduct.lid R R) = x ⊗ₖ y := by
+  exact kroneckerLinearEquiv_tmul x y
+
 /-- Tensor-product equivalence for direct products of matrix algebras. -/
 @[simps!]
 noncomputable def PiMatTensorProductEquiv
@@ -100,13 +109,14 @@ StarAlgEquiv.ofAlgEquiv
   ((directSumTensorAlgEquiv ℂ _ _).trans
     (AlgEquiv.piCongrRight (fun i => tensorToKronecker)))
   (fun x => by
-    ext1
-    simp only [Pi.star_apply]
+    ext1 i
+    change TensorProduct.toKronecker (directSumTensorToFun (star x) i) =
+      star (TensorProduct.toKronecker (directSumTensorToFun x i))
+    rw [TensorProduct.toKronecker_star]
+    congr 1
     obtain ⟨S, rfl⟩ := TensorProduct.exists_finset x
-    simp only [AlgEquiv.trans_apply, AlgEquiv.piCongrRight_apply, directSumTensorAlgEquiv_apply,
-      tensorToKronecker_apply]
-    simp only [TensorProduct.star_tmul, map_sum, Finset.sum_apply, star_sum,
-      directSumTensorToFun_apply, Pi.star_apply, TensorProduct.toKronecker_star])
+    simp only [star_sum, map_sum, Finset.sum_apply, directSumTensorToFun_apply,
+      TensorProduct.star_tmul, Pi.star_apply])
 
 theorem PiMatTensorProductEquiv_tmul_apply
   {ι₁ ι₂ : Type*} {p₁ : ι₁ → Type*} {p₂ : ι₂ → Type*}
@@ -117,7 +127,7 @@ theorem PiMatTensorProductEquiv_tmul_apply
   (a b : p₁ r.1 × p₂ r.2) :
     (PiMatTensorProductEquiv (x ⊗ₜ[ℂ] y)) r a b = x r.1 a.1 b.1 * y r.2 a.2 b.2 := by
   simp_rw [PiMatTensorProductEquiv_apply, directSumTensorToFun_apply,
-    TensorProduct.toKronecker_apply]
+    kroneckerTMulLinearEquiv_map_lid_tmul]
   rfl
 open scoped Kronecker
 theorem PiMatTensorProductEquiv_tmul
@@ -287,8 +297,7 @@ theorem StarAlgEquiv.lTensor_toLinearMap {R A B C : Type*}
   [RCLike R] [Ring A] [Ring B] [Ring C] [Algebra R A]
   [Algebra R B] [Algebra R C] [StarAddMonoid A] [StarAddMonoid B]
   [StarAddMonoid C] [StarModule R A] [StarModule R B]
-  [StarModule R C] [Module.Finite R A] [Module.Finite R B]
-  [Module.Finite R C] (f : A ≃⋆ₐ[R] B) :
+  [StarModule R C] (f : A ≃⋆ₐ[R] B) :
   (StarAlgEquiv.lTensor C f).toLinearMap = LinearMap.lTensor C f.toLinearMap :=
 rfl
 
@@ -819,7 +828,7 @@ theorem QuantumGraph.Real.PiMat_eq :
     map_sum, directSumTensorToFun_apply,
     PiMat.transposeStarAlgEquiv_symm_apply,
     MulOpposite.unop_op]
-  simp only [TensorProduct.toKronecker_apply]
+  simp only [kroneckerTMulLinearEquiv_map_lid_tmul]
   simp only [QuantumSet.modAut_apply_modAut, add_neg_cancel, starAlgebra.modAut_zero]
   simp only [Matrix.includeBlock_conjTranspose, Matrix.conj_conjTranspose]
   conv_lhs =>
@@ -873,12 +882,10 @@ theorem PiMat.piAlgEquiv_trace_apply
 
 omit [Nonempty ι] [∀ (i : ι), Nontrivial (p i)] in
 omit [Fintype ι] [DecidableEq ι] in
-theorem PiMat.modAut_trace_apply [Finite ι] :
-  withPiQuantum[φ]
+theorem PiMat.modAut_trace_apply :
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
     ∀ (r : ℝ) (x : PiMat ℂ ι p) (a : ι), (modAut r x a).trace = (x a).trace := by
-  classical
-  letI := Fintype.ofFinite ι
-  withPiQuantumCtx[φ]
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
   intro r x a
   exact PiMat.piAlgEquiv_trace_apply _ _ _
 
@@ -1273,13 +1280,11 @@ theorem innerAutStarAlg_apply_dualMatrix_eq_iff_eq_sqrt {i : ι}
   simp_rw [pow_two, Matrix.PosDef.rpow_mul_rpow, add_halves, Matrix.PosDef.rpow_one_eq_self]
 
 omit [Fintype ι] [DecidableEq ι] in
-theorem PiMat.modAut [Finite ι] :
-  withPiQuantum[φ]
+theorem PiMat.modAut :
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
     ∀ (r : ℝ) (x : PiMat ℂ ι p) (i : ι),
       modAut r x i = sig (hφ i) r (x i) := by
-  classical
-  letI := Fintype.ofFinite ι
-  withPiQuantumCtx[φ]
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
   intro r x i
   rfl
 
@@ -1331,18 +1336,18 @@ theorem unitary.mul_inj {A : Type*} [Monoid A] [StarMul A] (U : ↥(unitary A)) 
   exact (Units.mul_right_inj (Unitary.toUnits U))
 
 omit [Fintype ι] [DecidableEq ι] in
-theorem piInnerAut_modAut_commutes_of [Finite ι] :
-  withPiQuantum[φ]
+theorem piInnerAut_modAut_commutes_of :
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
     ∀ {U : (i : ι) → Matrix.unitaryGroup (p i) ℂ} {r : ℝ},
       (∀ i, (Matrix.innerAutStarAlg (U i)) ((hφ i).matrixIsPosDef.rpow r)
         = (hφ i).matrixIsPosDef.rpow r) →
         ∀ x, (piInnerAut U) ((modAut (-r)) x) = (modAut (-r)) ((piInnerAut U) x) := by
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
   intro U r h
   simp only [Matrix.innerAutStarAlg_apply', unitary.mul_inv_eq_iff] at h
   intro x
   funext i
   classical
-  letI := Fintype.ofFinite ι
   simp only [StarAlgEquiv.piCongrRight_apply, Unitary.conjStarAlgAut_apply]
   rw [PiMat.modAut, PiMat.modAut]
   simp only [piInnerAut, StarAlgEquiv.piCongrRight_apply, Unitary.conjStarAlgAut_apply,
@@ -1485,16 +1490,15 @@ lemma LinearMap.proj_apply_includeBlock
 by simp [Matrix.includeBlock_apply]
 
 omit [Fintype ι] in
-lemma _root_.PiMat.modAut_includeBlock [Finite ι] :
-  withPiQuantum[φ]
+lemma _root_.PiMat.modAut_includeBlock :
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
     ∀ (r : ℝ) (j : ι) (x : Matrix (p j) (p j) ℂ),
       (modAut r) (Matrix.includeBlock x)
         = (letI : starAlgebra (Matrix (p j) (p j) ℂ) := Matrix.isStarAlgebra (φ := φ j);
           Matrix.includeBlock
             ((modAut r : Matrix (p j) (p j) ℂ ≃ₐ[ℂ] Matrix (p j) (p j) ℂ) x)) := by
   classical
-  letI := Fintype.ofFinite ι
-  withPiQuantumCtx[φ]
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
   intro r j x
   ext i
   by_cases h : j = i
@@ -1503,16 +1507,15 @@ lemma _root_.PiMat.modAut_includeBlock [Finite ι] :
   · simp [PiMat.modAut, Matrix.includeBlock_apply_ne_same _ h]
 
 omit [Fintype ι] [DecidableEq ι] in
-lemma _root_.PiMat.modAut_proj [Finite ι] :
-  withPiQuantum[φ]
+lemma _root_.PiMat.modAut_proj :
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
     ∀ (r : ℝ) (j : ι) (x : PiMat ℂ ι p),
       (letI : starAlgebra (Matrix (p j) (p j) ℂ) := Matrix.isStarAlgebra (φ := φ j);
         ((modAut r : Matrix (p j) (p j) ℂ ≃ₐ[ℂ] Matrix (p j) (p j) ℂ)
           (LinearMap.proj (R := ℂ) j x)))
         = LinearMap.proj (R := ℂ) j (modAut r x) := by
   classical
-  letI := Fintype.ofFinite ι
-  withPiQuantumCtx[φ]
+  letI : starAlgebra (PiMat ℂ ι p) := PiMat.isStarAlgebra (ψ := φ)
   intro r j x
   change sig (hφ j) r (x j) = modAut r x j
   rw [PiMat.modAut]
@@ -1577,7 +1580,7 @@ theorem QuantumGraph.Real.PiMatSubmodule_eq_bot_iff_proj_comp_adjoint_proj_eq_ze
     LinearMap.rankOne_comp', LinearMap.comp_rankOne, map_sum,
     QuantumSet.Psi_apply, QuantumSet.PsiToFun_apply, AlgEquiv.lTensor_tmul,
     Matrix.transposeAlgEquiv_symm_op_apply, PiMat.modAut_proj,
-    tensorToKronecker_apply, TensorProduct.toKronecker_apply, map_zero]
+    tensorToKronecker_apply, kroneckerTMulLinearEquiv_map_lid_tmul, map_zero]
   rfl
 
 theorem QuantumGraph.Real.PiMatSubmodule_eq_top_iff_proj_comp_adjoint_proj_eq_rankOne_one_one :
@@ -1633,7 +1636,7 @@ theorem QuantumGraph.Real.PiMatSubmodule_eq_top_iff_proj_comp_adjoint_proj_eq_ra
     LinearMap.rankOne_comp', LinearMap.comp_rankOne, map_sum,
     QuantumSet.Psi_apply, QuantumSet.PsiToFun_apply, AlgEquiv.lTensor_tmul,
     Matrix.transposeAlgEquiv_symm_op_apply, PiMat.modAut_proj,
-    tensorToKronecker_apply, TensorProduct.toKronecker_apply, map_one,
+    tensorToKronecker_apply, kroneckerTMulLinearEquiv_map_lid_tmul, map_one,
     star_one, Matrix.transpose_one, Matrix.one_kronecker_one]
   rfl
 
@@ -1814,4 +1817,3 @@ theorem QuantumGraph.Real.PiMatSubmodule_eq_top_iff_swap_eq_top_of_adjoint :
     rw [finrank_euclideanSpace (𝕜 := ℂ), finrank_euclideanSpace (𝕜 := ℂ),
       Fintype.card_prod, Fintype.card_prod, mul_comm]
   rw [hdim]
-  rfl

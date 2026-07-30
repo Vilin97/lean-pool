@@ -226,23 +226,23 @@ lemma mem_limSeq_self [c.StrongFinite] {u s : V} :
 variable (v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Fixpoint (x : V) : Prop := ∃ s, x ∈ c.limSeq v s
+def fixedPoint (x : V) : Prop := ∃ s, x ∈ c.limSeq v s
 
 variable {v}
 
-lemma fixpoint_iff [c.StrongFinite] {x : V} : c.Fixpoint v x ↔ x ∈ c.limSeq v (x + 1) :=
+lemma fixpoint_iff [c.StrongFinite] {x : V} : c.fixedPoint v x ↔ x ∈ c.limSeq v (x + 1) :=
   ⟨by rintro ⟨s, hs⟩; exact c.mem_limSeq_self hs, fun h ↦ ⟨x + 1, h⟩⟩
 
-lemma fixpoint_iff_succ {x : V} : c.Fixpoint v x ↔ ∃ u, x ∈ c.limSeq v (u + 1) :=
+lemma fixpoint_iff_succ {x : V} : c.fixedPoint v x ↔ ∃ u, x ∈ c.limSeq v (u + 1) :=
   ⟨by
     rintro ⟨u, h⟩
     rcases zero_or_succ u with (rfl | ⟨u, rfl⟩)
     · simp at h
     · exact ⟨u, h⟩, by rintro ⟨u, h⟩; exact ⟨u + 1, h⟩⟩
 
-lemma finite_upperbound (m : V) : ∃ s, ∀ z < m, c.Fixpoint v z → z ∈ c.limSeq v s := by
-  have : ∃ F : V, ∀ x, x ∈ F ↔ x < m ∧ c.Fixpoint v x := by
-    have : Sg1-Predicate fun x ↦ x < m ∧ c.Fixpoint v x :=
+lemma finite_upperbound (m : V) : ∃ s, ∀ z < m, c.fixedPoint v z → z ∈ c.limSeq v s := by
+  have : ∃ F : V, ∀ x, x ∈ F ↔ x < m ∧ c.fixedPoint v x := by
+    have : Sg1-Predicate fun x ↦ x < m ∧ c.fixedPoint v x :=
       HierarchySymbol.Boldface.and (by definability)
         (HierarchySymbol.Boldface.ex
           (HierarchySymbol.Boldface.comp₂
@@ -266,7 +266,7 @@ lemma finite_upperbound (m : V) : ∃ s, ∀ z < m, c.Fixpoint v z → z ∈ c.l
     have : z ∈ c.limSeq v u := hf z u hu
     exact c.limSeq_cumulative (le_of_lt <| lt_of_mem_rng hu) this⟩
 
-theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
+theorem case [c.Finite] : c.fixedPoint v x ↔ c.Φ v {z | c.fixedPoint v z} x :=
   ⟨by intro h
       rcases c.fixpoint_iff_succ.mp h with ⟨u, hu⟩
       have : c.Φ v {z | z ∈ c.limSeq v u} x := (c.mem_limSeq_succ_iff.mp hu).2
@@ -274,7 +274,7 @@ theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
    by intro hx
       rcases Finite.finite hx with ⟨m, hm⟩
       simp only [Set.mem_setOf_eq] at hm
-      have : ∃ s, ∀ z < m, c.Fixpoint v z → z ∈ c.limSeq v s := c.finite_upperbound m
+      have : ∃ s, ∀ z < m, c.fixedPoint v z → z ∈ c.limSeq v s := c.finite_upperbound m
       rcases this with ⟨s, hs⟩
       have : c.Φ v {z | z ∈ c.limSeq v s} x :=
         c.monotone (by
@@ -286,28 +286,28 @@ theorem case [c.Finite] : c.Fixpoint v x ↔ c.Φ v {z | c.Fixpoint v z} x :=
 
 section «lp_section_1»
 
-lemma fixpoint_defined : Sg1.Defined (fun v ↦ c.Fixpoint (v ·.succ) (v 0)) φ.fixpointDef := by
+lemma fixpoint_defined : Sg1.Defined (fun v ↦ c.fixedPoint (v ·.succ) (v 0)) φ.fixpointDef := by
   intro v; simp [Blueprint.fixpointDef, c.eval_limSeqDef]; rfl
 
 lemma eval_fixpointDef (v) :
-    Semiformula.Evalbm V v φ.fixpointDef.val ↔ c.Fixpoint (v ·.succ) (v 0) :=
+    Semiformula.Evalbm V v φ.fixpointDef.val ↔ c.fixedPoint (v ·.succ) (v 0) :=
       c.fixpoint_defined.df.iff v
 
 lemma fixpoint_definedΔ₁ [c.StrongFinite] :
-    Dlt1.Defined (fun v ↦ c.Fixpoint (v ·.succ) (v 0)) φ.fixpointDefΔ₁ :=
+    Dlt1.Defined (fun v ↦ c.fixedPoint (v ·.succ) (v 0)) φ.fixpointDefΔ₁ :=
   ⟨by intro v; simp [Blueprint.fixpointDefΔ₁, c.eval_limSeqDef],
    by intro v; simp [Blueprint.fixpointDefΔ₁, c.eval_limSeqDef, fixpoint_iff]⟩
 
 lemma eval_fixpointDefΔ₁ [c.StrongFinite] (v) :
-    Semiformula.Evalbm V v φ.fixpointDefΔ₁.val ↔ c.Fixpoint (v ·.succ) (v 0) :=
+    Semiformula.Evalbm V v φ.fixpointDefΔ₁.val ↔ c.fixedPoint (v ·.succ) (v 0) :=
       c.fixpoint_definedΔ₁.df.iff v
 
 end «lp_section_1»
 
 theorem induction [c.StrongFinite] {P : V → Prop} (hP : Γ-[1]-Predicate P)
-    (H : ∀ C : Set V, (∀ x ∈ C, c.Fixpoint v x ∧ P x) → ∀ x, c.Φ v C x → P x) :
-    ∀ x, c.Fixpoint v x → P x := by
-  apply order_induction_hh (Γ := Γ) (m := 1) (P := fun x ↦ c.Fixpoint v x → P x)
+    (H : ∀ C : Set V, (∀ x ∈ C, c.fixedPoint v x ∧ P x) → ∀ x, c.Φ v C x → P x) :
+    ∀ x, c.fixedPoint v x → P x := by
+  apply order_induction_hh (Γ := Γ) (m := 1) (P := fun x ↦ c.fixedPoint v x → P x)
   · apply HierarchySymbol.Boldface.imp
       (HierarchySymbol.BoldfacePred.comp
         (by
@@ -318,8 +318,8 @@ theorem induction [c.StrongFinite] {P : V → Prop} (hP : Γ-[1]-Predicate P)
         (by definability))
       (by definability)
   intro x ih hx
-  have : c.Φ v {y | c.Fixpoint v y ∧ y < x} x := StrongFinite.strong_finite (c.case.mp hx)
-  exact H {y | c.Fixpoint v y ∧ y < x} (by intro y ⟨hy, hyx⟩; exact ⟨hy, ih y hyx hy⟩) x this
+  have : c.Φ v {y | c.fixedPoint v y ∧ y < x} x := StrongFinite.strong_finite (c.case.mp hx)
+  exact H {y | c.fixedPoint v y ∧ y < x} (by intro y ⟨hy, hyx⟩; exact ⟨hy, ih y hyx hy⟩) x this
 
 end Construction
 

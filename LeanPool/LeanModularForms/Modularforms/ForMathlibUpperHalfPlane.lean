@@ -17,7 +17,7 @@ public import Mathlib.Data.Fintype.Parity
 -- Probably put it at LinearAlgebra/Matrix/SpecialLinearGroup.lean
 
 theorem ModularGroup.modular_S_sq : S * S = -1 := by
+  apply Subtype.ext
+  change (!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ) * !![0, -1; 1, 0] = -1
   ext i j
-  simp only [S, Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_neg,
-    Matrix.SpecialLinearGroup.coe_one, Matrix.neg_apply]
-  fin_cases i <;> fin_cases j <;> simp
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply]

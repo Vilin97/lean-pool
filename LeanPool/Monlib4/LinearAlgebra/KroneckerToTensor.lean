@@ -27,49 +27,29 @@ variable {R m n : Type _} [CommSemiring R] [Fintype m] [Fintype n] [DecidableEq 
 
 /-- Convert a tensor of square matrices into its Kronecker-product matrix. -/
 noncomputable def TensorProduct.toKronecker :
-    Matrix m m R ⊗[R] Matrix n n R →ₗ[R] Matrix (m × n) (m × n) R
-    where
-  toFun x ij kl := (matrixEquivTensor _ _ _).symm x ij.2 kl.2 ij.1 kl.1
-  map_add' x y := by simp_rw [_root_.map_add, Matrix.add_apply]; rfl
-  map_smul' r x := by
-    simp only [_root_.map_smul (matrixEquivTensor n R (Matrix m m R)).symm,
-      Matrix.smul_apply, smul_eq_mul, RingHom.id_apply]
-    rfl
+    Matrix m m R ⊗[R] Matrix n n R →ₗ[R] Matrix (m × n) (m × n) R :=
+  (kroneckerLinearEquiv m m n n R).toLinearMap
 
 theorem TensorProduct.toKronecker_apply (x : Matrix m m R) (y : Matrix n n R) :
     toKronecker (x ⊗ₜ[R] y) = x ⊗ₖ y := by
-  simp_rw [TensorProduct.toKronecker, LinearMap.coe_mk]
-  simp only [AddHom.coe_mk, matrixEquivTensor_apply_symm, Matrix.map_apply,
-    Algebra.algebraMap_eq_smul_one, Matrix.mul_apply,
-    Matrix.one_apply, smul_eq_mul, mul_ite, MulZeroClass.mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.kroneckerMap,
-    Matrix.smul_apply, smul_eq_mul, mul_one]
-  rfl
+  exact kroneckerLinearEquiv_tmul x y
 
 /-- Convert a Kronecker-product matrix back to the tensor of matrix algebras. -/
 noncomputable def Matrix.kroneckerToTensorProduct :
-    Matrix (m × n) (m × n) R →ₗ[R] Matrix m m R ⊗[R] Matrix n n R
-    where
-  toFun x := (matrixEquivTensor n R (Matrix m m R)) fun i j k l => x (k, i) (l, j)
-  map_add' x y := by simp_rw [Matrix.add_apply, ← _root_.map_add]; rfl
-  map_smul' r x := by
-    simp_rw [Matrix.smul_apply, ← _root_.map_smul (matrixEquivTensor n R (Matrix m m R)),
-      RingHom.id_apply]
-    rfl
+    Matrix (m × n) (m × n) R →ₗ[R] Matrix m m R ⊗[R] Matrix n n R :=
+  (kroneckerLinearEquiv m m n n R).symm.toLinearMap
 
 theorem TensorProduct.toKronecker_to_tensorProduct (x : Matrix m m R ⊗[R] Matrix n n R) :
     Matrix.kroneckerToTensorProduct (toKronecker x) = x := by
-  simp_rw [TensorProduct.toKronecker, Matrix.kroneckerToTensorProduct, LinearMap.coe_mk,
-    AddHom.coe_mk, AlgEquiv.apply_symm_apply]
+  exact (kroneckerLinearEquiv m m n n R).symm_apply_apply x
 
 theorem Matrix.kroneckerToTensorProduct_apply (x : Matrix m m R) (y : Matrix n n R) :
     kroneckerToTensorProduct (x ⊗ₖ y) = x ⊗ₜ[R] y := by
-  rw [← TensorProduct.toKronecker_apply, TensorProduct.toKronecker_to_tensorProduct]
+  exact kroneckerLinearEquiv_symm_kronecker x y
 
 theorem Matrix.kroneckerToTensorProduct_toKronecker (x : Matrix (m × n) (m × n) R) :
     TensorProduct.toKronecker (kroneckerToTensorProduct x) = x := by
-  simp_rw [Matrix.kroneckerToTensorProduct, TensorProduct.toKronecker, LinearMap.coe_mk,
-    AddHom.coe_mk, AlgEquiv.symm_apply_apply]
+  exact (kroneckerLinearEquiv m m n n R).apply_symm_apply x
 
 open scoped Matrix
 
@@ -143,27 +123,16 @@ theorem Matrix.kroneckerToTensorProduct_hMul (x y : Matrix m m R) (z w : Matrix 
     Algebra.TensorProduct.tmul_mul_tmul]
 
 /-- Algebra equivalence from the tensor product of matrix algebras to Kronecker matrices. -/
-@[simps]
+@[simps!]
 noncomputable def tensorToKronecker :
-    Matrix m m R ⊗[R] Matrix n n R ≃ₐ[R] Matrix (m × n) (m × n) R
-    where
-  toFun := TensorProduct.toKronecker
-  invFun := Matrix.kroneckerToTensorProduct
-  left_inv := TensorProduct.toKronecker_to_tensorProduct
-  right_inv := kroneckerToTensorProduct_toKronecker
-  map_add' _ _ := map_add _ _ _
-  map_mul' := TensorProduct.toKronecker_hMul
-  commutes' r := by
-    simp only [Algebra.TensorProduct.algebraMap_apply]
-    simp_rw [Algebra.algebraMap_eq_smul_one]
-    rw [TensorProduct.toKronecker_apply, smul_kronecker,
-      one_kronecker_one]
+    Matrix m m R ⊗[R] Matrix n n R ≃ₐ[R] Matrix (m × n) (m × n) R :=
+  Matrix.kroneckerAlgEquiv m n R
 
 /-- Algebra equivalence from Kronecker matrices to the tensor product of matrix algebras. -/
 @[simps!]
 noncomputable def kroneckerToTensor :
     Matrix (m × n) (m × n) R ≃ₐ[R] Matrix m m R ⊗[R] Matrix n n R :=
-  tensorToKronecker.symm
+  (Matrix.kroneckerAlgEquiv m n R).symm
 
 theorem Matrix.kroneckerToTensorProduct_star {R m n : Type _} [Field R] [StarRing R]
   [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]

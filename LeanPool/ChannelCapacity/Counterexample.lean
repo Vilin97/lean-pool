@@ -160,6 +160,16 @@ noncomputable instance permutationKernel_isMarkov :
   change IsProbabilityMeasure ((rowPMF i).toMeasure)
   infer_instance
 
+/-- Pushing a point mass through `permutationKernel` returns the corresponding row.
+
+This restates `ChannelCapacity.Kernel.priorPushforward_dirac` with the row written as
+`permutationRows i` rather than as an anonymous `Subtype` constructor: the latter is not
+type-correct at `implicit` transparency, so `rw` refuses to see through it below. -/
+private lemma priorPushforward_diracProba (i : Fin 6) :
+    ChannelCapacity.Kernel.priorPushforward permutationKernel (MeasureTheory.diracProba i) =
+      permutationRows i :=
+  ChannelCapacity.Kernel.priorPushforward_dirac permutationKernel i
+
 /-- The first prior: uniform on the inputs `{0, 3, 4}`. -/
 noncomputable def prior₁ : ProbabilityMeasure (Fin 6) :=
   uniformTriple 0 3 4
@@ -244,10 +254,10 @@ lemma pushforward_prior₁ :
   change ChannelCapacity.Kernel.priorPushforward permutationKernel (uniformTriple 0 3 4) =
     uniformOutput
   rw [uniformTriple, ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
+    priorPushforward_diracProba,
     ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
-    ChannelCapacity.Kernel.priorPushforward_dirac]
+    priorPushforward_diracProba,
+    priorPushforward_diracProba]
   apply ProbabilityMeasure.toMeasure_injective
   apply Measure.ext_of_singleton
   intro y
@@ -270,10 +280,10 @@ lemma pushforward_prior₂ :
   change ChannelCapacity.Kernel.priorPushforward permutationKernel (uniformTriple 1 2 5) =
     uniformOutput
   rw [uniformTriple, ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
+    priorPushforward_diracProba,
     ChannelCapacity.Kernel.priorPushforward_convexCombination,
-    ChannelCapacity.Kernel.priorPushforward_dirac,
-    ChannelCapacity.Kernel.priorPushforward_dirac]
+    priorPushforward_diracProba,
+    priorPushforward_diracProba]
   apply ProbabilityMeasure.toMeasure_injective
   apply Measure.ext_of_singleton
   intro y

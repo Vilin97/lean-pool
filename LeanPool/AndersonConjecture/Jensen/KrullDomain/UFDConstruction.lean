@@ -35,7 +35,7 @@ If p is prime in R with (p:T) ∈ M_T, then the image of p in S_sub is prime.
 The proof uses denominator clearing in Rbar and coprime prime_in_adjoinLocSet. -/
 include T in theorem build_R_prime_in_S
     (R : NSubring T) (x₁ x₂ : T) (y₁ y₂ : R.carrier)
-    (S_sub : Subring T) [IsDomain S_sub]
+    (S_sub : Subring T)
     (hR_le : R.carrier ≤ S_sub)
     (hx₁_trans : Transcendental R.carrier x₁)
     (hx₂_trans : Transcendental R.carrier x₂)

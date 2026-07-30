@@ -66,26 +66,33 @@ private lemma coeff_mapRange_scaled_rat {n : ℕ} (F : RatPoly n) (N : ℕ)
     (hdiv : ∀ s ∈ MvPolynomial.support F, (MvPolynomial.coeff s F).den ∣ N)
     (s : Fin n →₀ ℕ) :
     let P : MvPolynomial (Fin n) ℤ :=
-      Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map F
+      AddMonoidAlgebra.ofCoeff <|
+        Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
+          (AddMonoidAlgebra.coeff F)
     (Int.cast (MvPolynomial.coeff s P) : ℚ) = (N : ℚ) * MvPolynomial.coeff s F := by
   intro P
   change
     (Int.cast (MvPolynomial.coeff s
-      (Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map F)) :
+      (AddMonoidAlgebra.ofCoeff <|
+        Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
+          (AddMonoidAlgebra.coeff F))) :
         ℚ) =
       (N : ℚ) * MvPolynomial.coeff s F
   by_cases hs : s ∈ MvPolynomial.support F
   · have hdiv_s := hdiv s hs
     have h1 :
         MvPolynomial.coeff s
-          (Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map F) =
+          (AddMonoidAlgebra.ofCoeff <|
+            Finsupp.mapRange (fun q : ℚ => (N : ℤ) / (q.den : ℤ) * q.num) hf_map
+              (AddMonoidAlgebra.coeff F)) =
             (N / (MvPolynomial.coeff s F).den : ℤ) * (MvPolynomial.coeff s F).num := by
       simp [MvPolynomial.coeff, Finsupp.mapRange_apply]
     rw [h1]
     exact rat_scaled_num_den_cast_eq N (MvPolynomial.coeff s F) hdiv_s
-  · have hq : F s = 0 := by
+  · have hq : MvPolynomial.coeff s F = 0 := by
       rwa [MvPolynomial.notMem_support_iff] at hs
-    simp [MvPolynomial.coeff, Finsupp.mapRange_apply, hq]
+    unfold MvPolynomial.coeff at hq ⊢
+    simp [Finsupp.mapRange_apply, hq]
 
 private lemma map_intPoly_eq_nat_smul_of_coeff {n : ℕ}
     (F : RatPoly n) (P : MvPolynomial (Fin n) ℤ) (N : ℕ)
@@ -204,7 +211,9 @@ theorem single_intValued_parametrization_yields_finite_intPoly_parametrization
     exact dvd_trans (hD_div i s hs) (Finset.dvd_prod_of_mem _ (Finset.mem_univ i))
   have hf_map : (fun q : ℚ => (D_total / q.den : ℤ) * q.num) 0 = 0 := by simp
   let P : Fin k → MvPolynomial (Fin n) ℤ := fun i =>
-    Finsupp.mapRange (fun q => (D_total / q.den : ℤ) * q.num) hf_map (F i)
+    AddMonoidAlgebra.ofCoeff <|
+      Finsupp.mapRange (fun q : ℚ => (D_total / q.den : ℤ) * q.num) hf_map
+        (AddMonoidAlgebra.coeff (F i))
   have hP_coeff :
       ∀ (i : Fin k) (s : Fin n →₀ ℕ),
         (Int.cast (MvPolynomial.coeff s (P i)) : ℚ) =

@@ -230,9 +230,7 @@ theorem fourier_complexTartarWeight_convolution (ξ : ℝ) :
   -- v4.32's `fourier_mul_convolution_eq` also asks for continuity of both
   -- factors; v4.33 dropped those hypotheses.
   rw [Real.fourier_mul_convolution_eq complexTartarWeight_integrable
-    complexTartarWeight_integrable
-    (RCLike.continuous_ofReal.comp tartarWeight_continuous)
-    (RCLike.continuous_ofReal.comp tartarWeight_continuous),
+    complexTartarWeight_integrable ξ,
     fourier_complexTartarWeight]
   simp only [Tartar.testFunction, Complex.ofReal_pow]
   push_cast

@@ -61,7 +61,7 @@ lemma normalize_neg (f : FloatRep C) :
   (FloatRep.neg f).normalize = FloatRep.neg f.normalize := by
   rcases f with ⟨s, e, m⟩
   simp only [FloatRep.normalize, FloatRep.neg]
-  split_ifs <;> simp
+  split_ifs with h' <;> simp [h']
 
 /-- Round a rational to a normal representation using the rounder `r`. -/
 def roundf (r : IntRounder) (q : ℚ) : FloatRep C :=

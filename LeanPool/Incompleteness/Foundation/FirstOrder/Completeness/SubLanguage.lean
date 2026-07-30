@@ -8,7 +8,6 @@ import LeanPool.Incompleteness.Foundation.FirstOrder.Basic
 
 /-! # SubLanguage -/
 
-
 namespace LO
 
 namespace FirstOrder
@@ -75,7 +74,26 @@ def toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop
 @[simp] lemma lMap_toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop)
   (t : Semiterm L μ n) (h : ∀ k f, ⟨k, f⟩ ∈ t.lang → pf k f) :
     (t.toSubLanguage' pf pr h).lMap L.ofSubLanguage = t :=
-  by induction t <;> simp[*, toSubLanguage', lMap_func]
+  by
+    induction t with
+    | bvar x => rfl
+    | fvar x => rfl
+    | func f v ih =>
+      have hv : (fun i => (toSubLanguage' pf pr (v i)
+          (fun k' f' h' => h k' f' (lang_func_ss f v i h'))).lMap L.ofSubLanguage) = v := by
+        funext i
+        exact ih i _
+      calc
+        (toSubLanguage' pf pr (func f v) h).lMap L.ofSubLanguage =
+            func ((L.ofSubLanguage).func ⟨f, h _ f (lang_func f v)⟩)
+              (fun i => (toSubLanguage' pf pr (v i)
+                (fun k' f' h' => h k' f' (lang_func_ss f v i h'))).lMap
+                  L.ofSubLanguage) := rfl
+        _ = func f (fun i => (toSubLanguage' pf pr (v i)
+              (fun k' f' h' => h k' f' (lang_func_ss f v i h'))).lMap
+                L.ofSubLanguage) := by
+          rfl
+        _ = func f v := congrArg (func f) hv
 
 end Semiterm
 
@@ -142,7 +160,52 @@ def toSubLanguage' (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop
   (pf : ∀ k, L.Func k → Prop) (pr : ∀ k, L.Rel k → Prop) {n} (φ : Semiformula L μ n)
   (hf : ∀ k f, ⟨k, f⟩ ∈ φ.langFunc → pf k f) (hr : ∀ k r, ⟨k, r⟩ ∈ φ.langRel → pr k r) :
     lMap L.ofSubLanguage (φ.toSubLanguage' pf pr hf hr) = φ := by
-  induction φ using rec' <;> simp[*, toSubLanguage', lMap_rel, lMap_nrel]
+  induction φ using rec'
+  case hrel r v =>
+    have hv : (fun i => ((v i).toSubLanguage' pf pr
+        (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap L.ofSubLanguage) = v := by
+      funext i
+      exact Semiterm.lMap_toSubLanguage' pf pr (v i) _
+    calc
+      lMap L.ofSubLanguage (toSubLanguage' pf pr (rel r v) hf hr) =
+          rel (L.ofSubLanguage.rel
+            ⟨r, hr _ r (by simp only [langRel, Finset.mem_singleton])⟩)
+            (fun i => ((v i).toSubLanguage' pf pr
+              (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap
+                L.ofSubLanguage) := rfl
+      _ = rel r (fun i => ((v i).toSubLanguage' pf pr
+            (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap
+              L.ofSubLanguage) := by
+        rfl
+      _ = rel r v := congrArg (rel r) hv
+  case hnrel r v =>
+    have hv : (fun i => ((v i).toSubLanguage' pf pr
+        (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap L.ofSubLanguage) = v := by
+      funext i
+      exact Semiterm.lMap_toSubLanguage' pf pr (v i) _
+    calc
+      lMap L.ofSubLanguage (toSubLanguage' pf pr (nrel r v) hf hr) =
+          nrel (L.ofSubLanguage.rel
+            ⟨r, hr _ r (by simp only [langRel, Finset.mem_singleton])⟩)
+            (fun i => ((v i).toSubLanguage' pf pr
+              (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap
+                L.ofSubLanguage) := rfl
+      _ = nrel r (fun i => ((v i).toSubLanguage' pf pr
+            (fun k f h => hf k f (langFunc_rel_ss r v i h))).lMap
+              L.ofSubLanguage) := by
+        rfl
+      _ = nrel r v := congrArg (nrel r) hv
+  case hall φ ih =>
+    calc
+      lMap L.ofSubLanguage (toSubLanguage' pf pr (∀' φ) hf hr) =
+          ∀' lMap L.ofSubLanguage (toSubLanguage' pf pr φ hf hr) := rfl
+      _ = ∀' φ := congrArg Semiformula.all (ih hf hr)
+  case hex φ ih =>
+    calc
+      lMap L.ofSubLanguage (toSubLanguage' pf pr (∃' φ) hf hr) =
+          ∃' lMap L.ofSubLanguage (toSubLanguage' pf pr φ hf hr) := rfl
+      _ = ∃' φ := congrArg Semiformula.ex (ih hf hr)
+  all_goals simp_all [toSubLanguage']
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def languageFuncIndexed (φ : Semiformula L μ n) (k) : Finset (L.Func k) :=

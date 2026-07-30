@@ -671,7 +671,6 @@ If x ∈ T satisfies:
 - x + P is transcendental over R/(R ∩ P) for all P ∈ C
 Then S = R[x]_{R[x] ∩ M} is an N-subring with |S| = sup(ℵ₀, |R|). -/
 theorem adjoin_transcendental_isNSubring
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : NSubring T)
     (x : T)
     (hx_trans : Transcendental R.carrier x)

@@ -88,7 +88,7 @@ theorem misereOutcome_add_shift [ClosedUnderAdd A] [IntegerInvertible A] {g h : 
   misereOutcome_eq_of_misereEQ (misereEQ_shift hg hh n)
 
 theorem misereOutcome_add_neg_NTippingPoint_N_of_misereOutcome_R {g : GameForm}
-    [OutcomeStable A] [PFree A] [ClosedUnderAddNat A] [HasInt A] [ClosedUnderNeg A]
+    [PFree A]
     (hA : A g) (hsg : IsShort g) (hR : MisereOutcome g = .R) :
     MisereOutcome (g + (-(NTippingPoint hsg : GameForm))) = .N := by
   have := NTippingPoint_spec hsg

@@ -296,7 +296,9 @@ lemma conjFactorCompCoeff_comp_comp₂
     conv_rhs => rw [this, _root_.mul_assoc]
     simp
   conv_lhs => rw [conjFactorCompCoeff_spec (z := xστ), ← _root_.mul_assoc, eq1]
-  conv_rhs => rw [_root_.mul_assoc, ← conjFactorCompCoeff_spec, ← _root_.mul_assoc]
+  simpa only [_root_.mul_assoc] using
+    congrArg (fun z => A.ι (ρ (conjFactorCompCoeff xσ xτ xστ)) * z)
+      (conjFactorCompCoeff_spec (A := A) xρ xστ xρστ)
 
 lemma conjFactorCompCoeff_comp_comp₃
     (xρ : A.conjFactor ρ) (xσ : A.conjFactor σ) (xτ : A.conjFactor τ)
@@ -593,6 +595,7 @@ lemma RelativeBrGroup.toSnd_wd (X : RelativeBrGroup K F)
     toSnd X = A.toH2 x_ := by
   simp only [toSnd, GoodRep.toH2]
   change H2π _ _ = H2π _ _
+  unfold galAct
   rw [← sub_eq_zero, ← map_sub]
   rw [H2π_eq_zero_iff]
   set lhs := _; change lhs ∈ _
@@ -630,7 +633,7 @@ lemma conjFactor_linearIndependent (x_ : Π σ, A.conjFactor σ) :
     refine Finset.sum_congr rfl fun i _ => ?_
     simp only [SetLike.val_smul, smul_def]
     congr 1
-    simp only [B, Basis.span_apply]
+    simpa only [B] using Basis.coe_span_apply LI i
   simp only [smul_def] at eq0
   have eq1 (c : K) := calc A.ι (σ c) * (x_ σ).1.1
       _ = (x_ σ).1.1 * A.ι c := by
@@ -792,23 +795,27 @@ noncomputable def fromSnd :
         simp [hc])
       (by
         intro α β
+        change CrossProductAlgebra a at α β
+        change CrossProductAlgebra a ≃ₗ[K] CrossProductAlgebra b at φ0
         change φ0 ((⟨α.val⟩ : CrossProductAlgebra a) * (⟨β.val⟩ : CrossProductAlgebra a)) =
           φ0 (⟨α.val⟩ : CrossProductAlgebra a) * φ0 (⟨β.val⟩ : CrossProductAlgebra a)
         induction α.val using Finsupp.induction_linear with
         | zero => change φ0 (0 * _) = φ0 0 * _; simp
         | add f g hf hg =>
-          change φ0 ((_ + _) * _) = φ0 (_ + _) * φ0 _
-          rw [add_mul]
-          simpa [map_add, add_mul] using
-            congrArg (fun z => z) (by exact congrArg₂ HAdd.hAdd hf hg)
+          change φ0 (((⟨f⟩ : CrossProductAlgebra a) + ⟨g⟩) *
+              (⟨β.val⟩ : CrossProductAlgebra a)) =
+            φ0 ((⟨f⟩ : CrossProductAlgebra a) + ⟨g⟩) *
+              φ0 (⟨β.val⟩ : CrossProductAlgebra a)
+          rw [add_mul, map_add, hf, hg, map_add, add_mul]
         | single σ k1 =>
           induction β.val using Finsupp.induction_linear with
           | zero => change φ0 (_ * 0) = _ * φ0 0; simp
           | add f g hf hg =>
-            change φ0 (_ * (_ + _)) = φ0 _ * φ0 (_ + _)
-            rw [mul_add]
-            simpa [map_add, mul_add] using
-              congrArg (fun z => z) (by exact congrArg₂ HAdd.hAdd hf hg)
+            change φ0 ((⟨Finsupp.single σ k1⟩ : CrossProductAlgebra a) *
+                ((⟨f⟩ : CrossProductAlgebra a) + ⟨g⟩)) =
+              φ0 (⟨Finsupp.single σ k1⟩ : CrossProductAlgebra a) *
+                φ0 ((⟨f⟩ : CrossProductAlgebra a) + ⟨g⟩)
+            rw [mul_add, map_add, hf, hg, map_add, mul_add]
           | single τ k2 =>
             change φ0 (⟨mulLinearMap a _ _⟩ : CrossProductAlgebra a) = _
             simp only [mulLinearMap_single_single, *]
@@ -910,13 +917,13 @@ lemma toSnd_fromSnd : toSnd ∘ fromSnd F K ∘ (H2Iso (galAct F K)).hom = id :=
   rw [fromSnd_wd]
   rw [toSnd_wd _ _ y_]
   change H2π _ _ = H2π _ _
+  unfold galAct at a ⊢
   rw [← sub_eq_zero, ← map_sub, H2π_eq_zero_iff]
   suffices H : IsMulCoboundary₂ _ from
     (Amfix.coboundariesOfIsMulCoboundary₂ H).2
   refine ⟨fun _ => 1, ?_⟩
   intro σ τ
-  simp only [smul_one, div_self', _root_.mul_one, cocyclesOfIsMulCocycle₂_coe, Function.comp_apply,
-    cocycles₂.val_eq_coe]
+  simp only [smul_one, div_self', _root_.mul_one]
   erw [Equiv.symm_apply_apply]
   simp only [toCocycles₂, conjFactorCompCoeffAsUnit]
   ext : 1
@@ -945,12 +952,14 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
   rw [toSnd_wd (A := A) (x_ := A.arbitraryConjFactor)]
   ext : 1
   conv_rhs => rw [← A.quot_eq]
-  simp only [GoodRep.toH2, H2π, ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply,
+  simp only [GoodRep.toH2]
+  unfold galAct
+  simp only [H2π, ModuleCat.hom_comp, LinearMap.coe_comp, Function.comp_apply,
     π_comp_H2Iso_hom_apply,
     CategoryTheory.Iso.inv_hom_id_apply]
-  change (fromSnd F K
-    (Quotient.mk'' (cocyclesOfIsMulCocycle₂ (GoodRep.isMulCocycle₂
-      A.arbitraryConjFactor)))).1 = Quotient.mk'' A.toCSA
+  let z : cocycles₂ (galAct F K) :=
+    cocyclesOfIsMulCocycle₂ (GoodRep.isMulCocycle₂ A.arbitraryConjFactor)
+  change (fromSnd F K (Quotient.mk'' z)).1 = Quotient.mk'' A.toCSA
   rw [fromSnd_wd]
   rw [Quotient.eq'']
   apply IsBrauerEquivalent.iso_to_eqv
@@ -1037,7 +1046,7 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
           (φ0.map_smul ((b : K)) (CrossProductAlgebra.basis τ : CrossProductAlgebra f)).symm)
         erw [Basis.equiv_apply, Basis.equiv_apply, Basis.equiv_apply]
         simp only [Equiv.refl_apply]
-        simp only [f, Function.comp_apply, GoodRep.conjFactorBasis,
+        simp only [f, GoodRep.conjFactorBasis,
           coe_basisOfLinearIndependentOfCardEqFinrank, AlgEquiv.mul_apply, GoodRep.smul_def,
           map_mul]
         change _ * _ * A.ι (A.toCocycles₂ _ (σ, τ)) * _ = _

@@ -178,7 +178,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
       ≤ ∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t‖ :=
         norm_sum_le _ _
     _ ≤ ∑ k : Fin D, ‖a k‖ * |r| ^ (k.val + 1) := by
-        simp_all
+        simp_all [fourier_apply, Circle.norm_coe]
 
 /-- ‖polyEvalCircle a r t‖² ≤ D * ∑ ‖a_k‖² * r^{2(k+1)}, a convenient bound.
     Actually, we prove the simpler bound: ≤ (∑ ‖a_k‖ * |r|^{k+1})² . -/
@@ -563,20 +563,23 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
   -- By orthonormality of Fourier monomials: ∫ ‖∑ c_k e_k‖² = ∑ ‖c_k‖²
   -- Following the pattern from parseval_finite in LocalCircleEstimate.lean.
   -- Step 1: Build the continuous map and its L² representative
-  let E' := (Finset.univ : Finset (Fin D)).map
+  let e : Fin D ↪ ℤ :=
     ⟨fun k => ((k.val + 1 : ℕ) : ℤ), fun k₁ k₂ h => by
       simp only at h; exact Fin.ext (by omega)⟩
+  have he (k : Fin D) : e k = ((k.val + 1 : ℕ) : ℤ) := rfl
+  let E' := (Finset.univ : Finset (Fin D)).map e
   let b : ℤ → ℂ := fun n => ∑ k ∈ (Finset.univ : Finset (Fin D)).filter
-    (fun k => ((k.val + 1 : ℕ) : ℤ) = n), a k * (r : ℂ) ^ (k.val + 1)
+    (fun k => e k = n), a k * (r : ℂ) ^ (k.val + 1)
   -- The filter sum has at most one element, so b n = a_k * r^{k+1} when n = k+1
-  have hb_eq : ∀ k : Fin D, b ((k.val + 1 : ℕ) : ℤ) = a k * (r : ℂ) ^ (k.val + 1) := by
+  have hb_eq : ∀ k : Fin D, b (e k) = a k * (r : ℂ) ^ (k.val + 1) := by
     intro k
     simp only [b]
     rw [Finset.sum_filter]
-    have : ∀ j : Fin D, (((j.val + 1 : ℕ) : ℤ) = ((k.val + 1 : ℕ) : ℤ)) ↔ j = k := by
+    have : ∀ j : Fin D, e j = e k ↔ j = k := by
       intro j; constructor
-      · intro h; ext; omega
-      · intro h; rw [h]
+      · intro h
+        exact e.injective h
+      · exact congrArg e
     simp_all
   let c : ℤ → ℂ := fun n =>
     if h : ∃ k : Fin D, ((k.val + 1 : ℕ) : ℤ) = n
@@ -584,16 +587,17 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
     else 0
   -- Define the continuous map
   let Pcont : C(AddCircle T, ℂ) := ∑ k : Fin D,
-    (a k * (r : ℂ) ^ (k.val + 1)) • fourier ((k.val + 1 : ℕ) : ℤ)
+    (a k * (r : ℂ) ^ (k.val + 1)) • fourier (e k)
   have hPcont_eq : ∀ t : AddCircle T, (Pcont : AddCircle T → ℂ) t =
       polyEvalCircle a r t := by
     intro t
     simp only [Pcont, polyEvalCircle, ContinuousMap.coe_sum, Finset.sum_apply,
       ContinuousMap.coe_smul, Pi.smul_apply, smul_eq_mul]
+    simp_rw [he]
   -- Step 2: Build the Lp version
   let PLp := (ContinuousMap.toLp (α := AddCircle T) 2 AddCircle.haarAddCircle ℂ) Pcont
   have hPLp : PLp = ∑ k : Fin D,
-      (a k * (r : ℂ) ^ (k.val + 1)) • fourierLp 2 ((k.val + 1 : ℕ) : ℤ) := by
+      (a k * (r : ℂ) ^ (k.val + 1)) • fourierLp 2 (e k) := by
     simp only [PLp, Pcont, fourierLp, map_sum, map_smul]
   -- Step 3: Rewrite as a sum over E' for orthonormal_fourier.inner_sum
   have hPLp' : PLp = ∑ n ∈ E', b n • fourierLp 2 n := by
@@ -601,23 +605,20 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
     simp only [E', b]
     rw [Finset.sum_map]
     congr 1; ext k
-    simp only [Function.Embedding.coeFn_mk]
     rw [Finset.sum_filter]
-    have : ∀ j : Fin D, (((j.val + 1 : ℕ) : ℤ) = ((k.val + 1 : ℕ) : ℤ)) ↔ j = k := by
+    have : ∀ j : Fin D, e j = e k ↔ j = k := by
       intro j; constructor
-      · intro h; ext; omega
-      · intro h; rw [h]
+      · intro h
+        exact e.injective h
+      · exact congrArg e
     simp_all
   -- Step 4: Compute inner product via orthonormality
   have hinner_orth : @inner ℂ _ _ PLp PLp =
       Complex.ofReal (∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1)‖ ^ 2) := by
     rw [hPLp', orthonormal_fourier.inner_sum b b E']
-    rw [show E' = (Finset.univ : Finset (Fin D)).map
-      ⟨fun k => ((k.val + 1 : ℕ) : ℤ), fun k₁ k₂ h => by
-        simp only at h; exact Fin.ext (by omega)⟩ from rfl]
+    rw [show E' = (Finset.univ : Finset (Fin D)).map e from rfl]
     rw [Finset.sum_map, Complex.ofReal_sum]
     congr 1; ext k
-    simp only [Function.Embedding.coeFn_mk]
     rw [hb_eq k, mul_comm (starRingEnd ℂ _), mul_conj]
     congr 1; exact (Complex.sq_norm _).symm
   -- Step 5: Simplify ‖a_k * r^{k+1}‖² = ‖a_k‖² * r^{2(k+1)}

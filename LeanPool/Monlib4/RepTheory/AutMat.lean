@@ -403,8 +403,12 @@ theorem matrix_linearEquiv_iff_fintype_equiv {R n m : Type*} [Ring R]
         invFun := fun x i j => x (f i) (f j)
         left_inv := fun _ => by
           simp only [Equiv.symm_apply_apply]
+          funext i j
+          rfl
         right_inv := fun _ => by
           simp only [Equiv.apply_symm_apply]
+          funext i j
+          rfl
         map_add' := fun _ _ => by
           simp [Matrix.add_apply]
           rfl
@@ -422,7 +426,7 @@ theorem LinearEquiv.nonempty_of_equiv {K R S T : Type*} [Ring K]
     (h : R ≃ₗ[K] T) :
     Nonempty (R ≃ₗ[K] S) ↔ Nonempty (T ≃ₗ[K] S) := by
   have : Nonempty _ := ⟨h⟩
-  simp only [LinearEquiv.nonempty_equiv_iff_lift_rank_eq,
+  simp only [Module.nonempty_linearEquiv_iff_lift_rank_eq,
     ← Module.finrank_eq_rank, Cardinal.lift_natCast, Nat.cast_inj] at this ⊢
   rw [this]
 

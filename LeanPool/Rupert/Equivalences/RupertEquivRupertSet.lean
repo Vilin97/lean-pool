@@ -29,7 +29,7 @@ theorem rupert_imp_rupert_set {ι : Type} [Finite ι] (v : ι → ℝ³) :
   rw [closure_eq_iff_isClosed.mpr inner_shadow_closed]
   exact rupert
 
-theorem rupert_set_imp_rupert {ι : Type} [Finite ι] (v : ι → ℝ³) :
+theorem rupert_set_imp_rupert {ι : Type} (v : ι → ℝ³) :
     IsRupertSet (convexHull ℝ (Set.range v)) → IsRupert v := by
   intro ⟨ innerRot, inner_so3, innerOffset, outerRot, outer_so3, rupert⟩
   use innerRot, inner_so3, innerOffset, outerRot, outer_so3

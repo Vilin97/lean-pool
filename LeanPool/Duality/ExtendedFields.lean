@@ -66,7 +66,7 @@ omit [Field F] [IsStrictOrderedRing F] in
 lemma coe_le_coe_iff {x y : F} : (x : Extend F) ≤ (y : Extend F) ↔ x ≤ y :=
   coe_strictMono.le_iff_le
 
-lemma coe_le_coe_iff_F (F : Type) [Field F] [LinearOrder F] [IsStrictOrderedRing F]
+lemma coe_le_coe_iff_F (F : Type) [LinearOrder F]
     {x y : F} : (x : Extend F) ≤ (y : Extend F) ↔ x ≤ y := coe_strictMono.le_iff_le
 
 omit [Field F] [IsStrictOrderedRing F] in

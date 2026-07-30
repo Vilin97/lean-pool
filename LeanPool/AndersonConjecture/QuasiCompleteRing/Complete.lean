@@ -62,7 +62,7 @@ lemma krull_intersection_sup (J : Ideal R) :
     rw [this]
     exact (Ideal.mem_map_iff_of_surjective _ Ideal.Quotient.mk_surjective).mpr ⟨b, hb, rfl⟩
   · exact le_iInf fun _ => le_sup_left
-lemma comap_map_algebraMap_adicCompletion [IsDomain R] (I : Ideal R) :
+lemma comap_map_algebraMap_adicCompletion (I : Ideal R) :
     let M := IsLocalRing.maximalIdeal R
     Ideal.comap (algebraMap R (AdicCompletion M R))
       (Ideal.map (algebraMap R (AdicCompletion M R)) I) = I := by

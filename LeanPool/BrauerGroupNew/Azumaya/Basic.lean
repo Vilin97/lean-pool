@@ -66,19 +66,15 @@ lemma IsCentral.left_of_tensor (B C : Type*)
       map_add' := fun _ _ ↦ by ext; simp [add_tmul]
       commutes' := fun _ ↦ rfl}
   have f_surj : Function.Surjective f := fun ⟨bc, ⟨⟨b, hb⟩, h⟩⟩ ↦ ⟨⟨b, hb⟩, by
-    simp only [f, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-      Subtype.mk.injEq]
     change _ ⊗ₜ _ = _ at h
-    simp only [RingHom.coe_coe, Subalgebra.coe_val] at h⊢
-    exact h⟩
+    simp only [RingHom.coe_coe, Subalgebra.coe_val] at h
+    exact Subtype.ext h⟩
   have e : ((Algebra.TensorProduct.includeLeft (R := K) (B := C)).comp
     (Subalgebra.center K B).val).range ≃ₐ[K] (Subalgebra.center K B) :=
     (AlgEquiv.ofBijective f
     ⟨fun ⟨b1, hb1⟩ ⟨b2, hb2⟩ h12 ↦ by
-      simp only [AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-        Subtype.mk.injEq, f] at h12
       ext
-      exact TensorProduct.flip_mk_injective _ one_ne_zero h12,
+      exact TensorProduct.flip_mk_injective _ one_ne_zero (Subtype.ext_iff.1 h12),
     f_surj⟩).symm
   have e2 := Subalgebra.equivOfEq _ _ eq |>.trans <| Algebra.botEquiv K _
   have ee: Subalgebra.center K B ≃ₐ[K] K := e.symm.trans e2
@@ -200,7 +196,9 @@ abbrev matrixAlgEquivMatrixMop (n : ℕ) :
 /-- The opposite algebra of `R` identifies with the endomorphism algebra of `R` as a module. -/
 noncomputable abbrev mopAlgEquivEnd : Rᵐᵒᵖ ≃ₐ[R] Module.End R R :=
   AlgEquiv.ofRingEquiv (f := mopEquivEnd R) fun r ↦ by
-    ext; simp [mopEquivEnd]
+    ext
+    simp only [mopEquivEnd, Module.algebraMap_end_apply, smul_eq_mul, mul_one]
+    exact one_mul r
 
 /-- The tensor product `R ⊗[R] Rᵐᵒᵖ` identifies with `Module.End R R`. -/
 noncomputable abbrev tensorEquivEnd : R ⊗[R] Rᵐᵒᵖ ≃ₐ[R] Module.End R R :=
@@ -208,7 +206,11 @@ noncomputable abbrev tensorEquivEnd : R ⊗[R] Rᵐᵒᵖ ≃ₐ[R] Module.End R
 
 lemma equal_mulLeftRight : tensorEquivEnd R = AlgHom.mulLeftRight R R := by
   ext r
-  simp [mopEquivEnd, AlgHom.mulLeftRight_apply]
+  simp only [AlgHom.coe_comp, AlgHom.coe_restrictScalars', AlgEquiv.coe_toAlgHom,
+    AlgEquiv.coe_trans, Function.comp_apply, Algebra.TensorProduct.includeRight_apply,
+    Algebra.TensorProduct.lid_tmul, one_smul, AlgEquiv.ofRingEquiv_apply, mopEquivEnd,
+    AlgHom.mulLeftRight_apply, mul_one, one_mul]
+  exact one_mul _
 
 lemma bij_Rtensor : Function.Bijective (AlgHom.mulLeftRight R R) := by
   rw [← equal_mulLeftRight]

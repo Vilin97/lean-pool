@@ -248,9 +248,9 @@ def ofTendstoLocallyUniformlyContinuous
   (heq := by
     obtain ⟨_, h₁⟩ := Real_mk_of_TendstoLocallyUniformly' fImpl_l f hTLU_l hf x.lb
     obtain ⟨_, h₂⟩ := Real_mk_of_TendstoLocallyUniformly' fImpl_u f hTLU_u hf x.ub
-    simp only [hImplDef, ← Real.mk_eq]
+    simp only [hImplDef]
     rw [lb_eq_ub] at h₁
-    exact h₁.trans h₂.symm
+    exact Real.mk_eq.1 (h₁.trans h₂.symm)
   )
 
 @[simp]

@@ -438,6 +438,6 @@ lemma gaussian_pairing_square_integrable_real
   -- L² membership directly implies integrability of the square
   have h_integrable_CLM := h_memLp.integrable_sq
   -- Translate the statement from the continuous linear map to the scalar pairing
-  simpa [distributionPairingCLM_apply] using h_integrable_CLM
+  exact h_integrable_CLM
 
 end

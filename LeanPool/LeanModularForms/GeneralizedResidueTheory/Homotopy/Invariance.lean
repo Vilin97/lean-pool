@@ -382,7 +382,9 @@ private lemma smooth_winding_integral_continuousOn
       (ContinuousOn.inv₀
         ((hγ_cont.comp (continuous_id.prodMk continuous_const)).sub
           continuous_const).continuousOn
-        (fun t ht => by simp only [ne_eq, sub_eq_zero]; exact hγ_avoid t (hab' ▸ ht) s hs))
+        (fun t ht => by
+          change γ (t, s) - z₀ ≠ 0
+          exact sub_ne_zero.mpr (hγ_avoid t (hab' ▸ ht) s hs)))
       (hγ_deriv_cont.comp (continuous_id.prodMk continuous_const)).continuousOn
       |>.mono Ioc_subset_Icc_self).aestronglyMeasurable measurableSet_Ioc
   · apply eventually_of_mem self_mem_nhdsWithin
@@ -394,7 +396,8 @@ private lemma smooth_winding_integral_continuousOn
     exact ContinuousAt.mul
       ((hγ_cont.comp (continuous_const.prodMk continuous_id)).sub continuous_const
         |>.continuousAt |>.inv₀ (by
-        simp only [ne_eq, sub_eq_zero]
+        change γ (t, s₁) - z₀ ≠ 0
+        apply sub_ne_zero.mpr
         rw [Set.uIoc_of_le hab.le] at ht
         exact hγ_avoid t (Ioc_subset_Icc_self ht) s₁ hs₁))
       (hγ_deriv_cont.comp (continuous_const.prodMk continuous_id) |>.continuousAt)
