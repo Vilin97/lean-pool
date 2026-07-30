@@ -17,6 +17,8 @@ namespace GaleStewartGame.BorelDet.One
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
+
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 
 noncomputable section «Section1»

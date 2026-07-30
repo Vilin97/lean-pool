@@ -826,7 +826,7 @@ theorem val_safeInv_ne_zero {x : ComputableℝSeq} (hnz : x.val ≠ 0) : (x.safe
   rwa [val_safeInv, ne_eq, inv_eq_zero]
 
 /-- Subtype of sequences with nonzero values. These admit a (terminating) inverse function. -/
-@[reducible] def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
+def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
 /-- The inverse on the subtype of sequences with nonzero value. -/
 noncomputable def invNz : nzSeq → nzSeq :=
   fun x ↦ ⟨x.val.safeInv x.prop, val_safeInv_ne_zero _⟩

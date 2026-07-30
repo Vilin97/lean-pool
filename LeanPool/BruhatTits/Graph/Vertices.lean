@@ -37,7 +37,7 @@ variable {K : Type*} [Field K] (R : Subring K) [IsDiscreteValuationRing R]
 
 /-- The vertices of the Bruhat-Tits tree are `R`-lattices modulo the equivalence relation
 `IsSimilar`. -/
-@[reducible] def Vertices : Type _ :=
+def Vertices : Type _ :=
   Quotient (Lattice.IsSimilar.setoid R)
 
 variable {R}

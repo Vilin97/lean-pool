@@ -332,9 +332,9 @@ def colimIso (s : Setup.{w}) : Iso (s.T.obj ⟨s.Tok, colim s⟩) (⟨s.Tok, col
   isoOfEq (colimObj_eq s)
 
 /-- The colimit `𝒟` as a `T`-algebra, with structure map the iso `T(𝒟) → 𝒟`. -/
-@[implicit_reducible]
 def colimAlg (s : Setup.{w}) : TAlgebra s.T :=
   ⟨⟨s.Tok, colim s⟩, (colimIso s).hom⟩
+attribute [local implicit_reducible] colimAlg
 
 /-! ### Existence of homomorphisms (Theorem 6.9) -/
 

@@ -534,7 +534,21 @@ def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
 
 @[simp] lemma emb_toEmpty [DecidableEq ξ] (φ : Semiformula L ξ n) (hp : φ.freeVariables = ∅) :
     Rewriting.embedding (φ.toEmpty hp) = φ := by
-  induction φ using rec' <;> simp [toEmpty, rew_rel, rew_nrel, *] <;> aesop
+  induction φ using rec'
+  case hverum => simp [toEmpty]
+  case hfalsum => simp [toEmpty]
+  case hrel => simp [toEmpty, rew_rel]
+  case hnrel => simp [toEmpty, rew_nrel]
+  case hand ihp ihq => simp [toEmpty, ihp, ihq]
+  case hor ihp ihq => simp [toEmpty, ihp, ihq]
+  case hall =>
+    rename_i _ _ _ ih
+    simpa only [toEmpty, Rewriting.app_all, Rew.q_emb, all_inj] using
+      ih (by simpa using hp)
+  case hex =>
+    rename_i _ _ _ ih
+    simpa only [toEmpty, Rewriting.app_ex, Rew.q_emb, ex_inj] using
+      ih (by simpa using hp)
 
 @[simp] lemma toEmpty_verum [DecidableEq ξ] : (⊤ : Semiformula L ξ n).toEmpty (by simp) = ⊤ := rfl
 

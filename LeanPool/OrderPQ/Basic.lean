@@ -12,6 +12,9 @@ import LeanPool.OrderPQ.SemidirectProduct
 # LeanPool.OrderPQ.Basic
 -/
 
+attribute [local implicit_reducible]
+  MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod
+
 /-
 
 ## OrderPQ

@@ -21,6 +21,8 @@ import LeanPool.LowDimSolvClassification.Classification1
 
 open Module
 open Submodule
+attribute [local implicit_reducible] LieAlgebra.mkAbelian LieAlgebra.Dim2.Affine
+
 namespace LieAlgebra
 
 section classification_dim_2

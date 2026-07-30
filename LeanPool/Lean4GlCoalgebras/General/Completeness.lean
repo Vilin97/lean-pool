@@ -115,9 +115,10 @@ lemma rewind_history_in_cone {Γ} (g : coalgebraGame.Pos)
   simp [rewindHistory]
 
 /-- This is the type of the coalgebra we will use to build the proof of `Γ`. -/
-@[reducible]
 def proof_type (Γ : Sequent) (strat : Strategy coalgebraGame Prover) :=
  {g // inMyCone strat (startPos Γ) g ∧ coalgebraGame.turn g = Builder}
+
+attribute [local implicit_reducible] proof_type
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 def builderRuleApp (g : coalgebraGame.Pos) (h : coalgebraGame.turn g = Builder) : RuleApp :=

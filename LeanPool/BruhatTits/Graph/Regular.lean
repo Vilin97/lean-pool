@@ -33,6 +33,8 @@ variable {R : Subring K} [IsDiscreteValuationRing R] [IsFractionRing R K]
 
 namespace BruhatTits
 
+attribute [local implicit_reducible] Vertices
+
 /-- A basis putting a neighbour of `L` into standard form. -/
 def standardNeighbourBasis {L : Lattice R} {y : Vertices R} (h : IsNeighbour y ⟦L⟧) :
     Basis (Fin 2) K (Fin 2 → K) :=

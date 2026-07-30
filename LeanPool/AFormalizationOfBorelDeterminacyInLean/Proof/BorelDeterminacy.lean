@@ -23,6 +23,8 @@ open MeasureTheory CategoryTheory
 noncomputable section «Section1»
 
 namespace BorelDet
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
+
 variable {A : Type} {G : Game A} {k : ℕ} (hyp : Hyp G k)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev Gh : Games := ⟨A, G, hyp.pruned, hyp.nonempty⟩

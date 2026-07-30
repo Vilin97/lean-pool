@@ -40,7 +40,7 @@ open scoped unitInterval FundamentalCategory
 attribute [local instance] Dipath.Dihomotopic.setoid
 -- Lean 4.33 checks tactic goals at `.implicit` transparency; the categorical bundling and
 -- path-endpoint coercions below must unfold while those goals are transformed.
-attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of
+attribute [local implicit_reducible] CategoryTheory.Cat.of CategoryTheory.Bundled.of dTopCat.of
   Quiver.Hom Quotient Dipath.Dihomotopic.Quotient Dipath.coveredPartwise
   FundamentalCategory.fundamentalCategoryFunctor Dipath.cast SplitDipath.FirstPart
   SplitDipath.SecondPart SplitPath.FirstPart SplitPath.SecondPart Dipath.ofDirectedMap

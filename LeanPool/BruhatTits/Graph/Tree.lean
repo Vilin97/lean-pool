@@ -31,6 +31,8 @@ open Module
 
 namespace BruhatTits
 
+attribute [local implicit_reducible] Vertices
+
 variable {K : Type*} [Field K]
 variable {R : Subring K} [IsDiscreteValuationRing R] [IsFractionRing R K]
 

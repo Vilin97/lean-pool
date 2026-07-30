@@ -41,9 +41,6 @@ private def applyOrderHom : Cont R A →o ((A →ω𝒒 R) →ω𝒒 R) where
   toFun := apply
   monotone' _ _ h := h
 
-@[simp]
-private lemma applyOrderHom_apply (x : Cont R A) : applyOrderHom x = x.apply := rfl
-
 instance : OmegaCompletePartialOrder (Cont R A) := by
   refine OmegaCompletePartialOrder.lift applyOrderHom
     (fun c ↦ ⟨ωSup (c.map applyOrderHom)⟩) ?_ ?_

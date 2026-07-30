@@ -35,6 +35,8 @@ local notation "v" => ValuationRing.valuation R K
 
 namespace BruhatTits
 
+attribute [local implicit_reducible] Vertices
+
 section «Action»
 
 lemma isSimilar_smul_of_isSimilar (g : GL (Fin 2) K) (L M : Lattice R) (h : L.IsSimilar R M) :

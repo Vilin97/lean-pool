@@ -14,21 +14,22 @@ import Mathlib.RingTheory.ZMod.UnitsCyclic
 section MulZMod
 
 /-- `ZMod n` viewed as a multiplicative group. -/
-@[implicit_reducible]
 def MulZMod (n : ℕ) : Type := Multiplicative (ZMod n)
+
+attribute [local implicit_reducible] MulZMod
 
 instance {n : ℕ} : DecidableEq (MulZMod n) := instDecidableEqMultiplicative
 
 instance {n : ℕ} [NeZero n] : Fintype (MulZMod n) := Multiplicative.fintype
 
-@[implicit_reducible]
 instance {n : ℕ} : Mul (MulZMod n) := Multiplicative.mul
 
-@[implicit_reducible]
 instance {n : ℕ} : MulOneClass (MulZMod n) := Multiplicative.mulOneClass
 
-@[implicit_reducible]
 instance {n : ℕ} : Group (MulZMod n) := Multiplicative.group
+
+attribute [local implicit_reducible]
+  instMulMulZMod instMulOneClassMulZMod instGroupMulZMod
 
 instance {n : ℕ} : IsCyclic (MulZMod n) := isCyclic_multiplicative
 

@@ -20,6 +20,9 @@ import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 -/
 
 namespace FirstOrder.Language
+
+attribute [local implicit_reducible] peano
+
 open BoundedFormula
 
 open Lean Elab Tactic Command

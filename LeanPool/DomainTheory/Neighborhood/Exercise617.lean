@@ -133,11 +133,11 @@ genuine three-way
 separated sum `𝟙 + D + D` (Example 6.2's `sum3`, with `𝟙 = unitSys`), again
 `∅`-free by
 `sum3_nonempty`. -/
-@[implicit_reducible]
 def tcObj (D : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := Option (Unit ⊕ D.carrier ⊕ D.carrier)
   sys := sum3 unitSys D.sys D.sys Example62C.unitSys_nonempty D.nonempty D.nonempty
   nonempty := sum3_nonempty
+attribute [local implicit_reducible] tcObj
 
 @[simp] theorem tcObj_sys (D : StrictDomainObj.{w}) :
     (tcObj D).sys =
@@ -677,7 +677,6 @@ domains and
 strict
 maps. On objects, `T(D) = 𝟙 + D + D` (Example 6.2's three-way sum); on maps, `T(f)
 = I_𝟙 + f + f`. -/
-@[implicit_reducible]
 def Tc : Endofunctor StrictDomainObj.{w} where
   obj := tcObj
   map := tcMapHom
@@ -693,6 +692,7 @@ def Tc : Endofunctor StrictDomainObj.{w} where
       (idMap unitSys) g.1 g.1 (idMap unitSys) f.1 f.1
     rw [idMap_comp] at h
     exact h)
+attribute [local implicit_reducible] Tc
 
 @[simp] theorem Tc_obj (D : StrictDomainObj.{w}) : Tc.obj D = tcObj D := rfl
 

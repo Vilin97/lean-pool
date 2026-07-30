@@ -319,9 +319,10 @@ namespace Sheaf
 open Presheaf
 
 /-- Sheafification of the integer-valued zero-outside presheaf. -/
-@[implicit_reducible]
 def zeroOutsideInt {X : TopCat.{u}} (U : Opens X) : Sheaf AddCommGrpCat.{u} X :=
   (presheafToSheaf _ _).obj (Presheaf.constZ.zeroOutside U)
+
+attribute [local implicit_reducible] zeroOutsideInt
 
 namespace zeroOutsideInt
 

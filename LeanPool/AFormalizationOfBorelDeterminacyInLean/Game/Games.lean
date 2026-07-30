@@ -57,11 +57,20 @@ namespace Game
         simp [residual, hy, hx, hxy]
     · by_cases hx : x.length % 2 = 0
       · have hxy : (x.length + y.length) % 2 = 1 := by omega
-        simp [residual, hy, hx, hxy]
+        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true, one_ne_zero]
+        ext a
+        simp only [Set.preimage_compl, Set.image_val_compl, subAt_append, subAt_body,
+          Stream'.append_append_stream, subAt_body_image, subAtInf_append, Set.mem_sdiff,
+          Set.mem_preimage, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right,
+          not_exists]
       · have hx1 : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp hx
         have hy1 : y.length % 2 = 1 := Nat.mod_two_ne_zero.mp hy
         have hxy : (x.length + y.length) % 2 = 0 := by omega
-        simp [residual, hy, hx, hxy]
+        simp only [residual, List.length_append, hxy, hy, hx, if_false, if_true]
+        ext a
+        simp only [Set.preimage_compl, compl_compl, subAt_body_image, subAtInf_append,
+          Stream'.append_append_stream, Set.mem_preimage, Set.mem_image, Subtype.exists,
+          exists_and_right, exists_eq_right]
 lemma empty_of_tree (G : Game A) (h : G.tree = ⊥) : G = ⟨⊥, ∅⟩ := by
   ext1 <;> simp [Set.eq_empty_iff_forall_notMem, h]
 lemma residual_notMem (G : Game A) (x : List A) (h : x ∉ G.tree) : G.residual x = ⟨⊥, ∅⟩ := by

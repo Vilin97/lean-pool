@@ -72,7 +72,13 @@ def projr [hB : Inhabited B] (c : Chain (A ⊕ B)) : Chain B :=
 @[simp]
 lemma projr_coe [Inhabited B] (c : Chain (A ⊕ B)) (n : ℕ) :
     projr c n = Sum.elim (fun _ ↦ default) id (c n) := by
-  cases h : c n <;> simp [projr, h]
+  cases h : c n with
+  | inl _ =>
+    simp only [projr, projl_coe, coe_map, Function.comp_apply, h, swapOrderHom_apply,
+      Sum.swap_inl, Sum.elim_inr, Sum.elim_inl]
+  | inr _ =>
+    simp only [projr, projl_coe, coe_map, Function.comp_apply, h, swapOrderHom_apply,
+      Sum.swap_inr, Sum.elim_inl, id_eq, Sum.elim_inr]
 
 /-- Splits a chain of sums into a sum of chains. -/
 def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=

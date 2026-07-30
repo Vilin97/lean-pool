@@ -37,7 +37,7 @@ instance : CoeSort dTopCat (Type u) := ⟨dTopCat.carrier⟩
 attribute [coe] dTopCat.carrier
 
 /-- Construct a bundled `dTopCat` from the underlying type and the typeclass. -/
-@[reducible] def of (X : Type u) [DirectedSpace X] : dTopCat := ⟨X⟩
+def of (X : Type u) [DirectedSpace X] : dTopCat := ⟨X⟩
 
 @[simp]
 lemma coe_of (X : Type u) [DirectedSpace X] : (of X : Type u) = X := rfl

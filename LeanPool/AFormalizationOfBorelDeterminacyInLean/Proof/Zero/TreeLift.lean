@@ -17,6 +17,8 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
+
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -171,7 +173,6 @@ lemma conShort : H.preLift.ConShort := by
     · change (List.take (2 * k) H.x.val).length ≤ 2 * k
       exact List.length_take_le (2 * k) H.x.val
   simp [stratMap', stratMap, ResStrategy.fromMap, harg]
-  rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps toPreLift] def lift (h : 2 * k + 2 ≤ H.x.val.length) : Lift hyp where
   toPreLift := H.preLift
@@ -288,7 +289,9 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
     case e'_1 => rfl
     case e'_2 =>
       ext1
-      simp [take_coe, ExtensionsAt.valT', ExtensionsAt.val', h.le]
+      simp only [lift_toPreLift, take_take, add_le_add_iff_right, h.le,
+        inf_of_le_left, take_coe, preLift_x_coe,
+        ExtensionsAt.valT', ExtensionsAt.val', subtreeIncl_coe, List.take_append_getElem]
     case e'_3 =>
       have hcancel :
           treeHom hyp

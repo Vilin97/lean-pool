@@ -51,7 +51,6 @@ variable {X : TopCat.{u}} [NoetherianSpace X]
 
 /-- The functor `Finset(SectionIndex K) ⥤ Sheaf(X)` sending `S ↦ finsetGeneratedSheaf S`.
     Transition maps are the canonical image inclusions, which are monomorphisms. -/
-@[implicit_reducible]
 noncomputable def finsetGenFunctor :
     Finset
         (TopCat.Presheaf.SectionIndex K) ⥤
@@ -67,8 +66,9 @@ noncomputable def finsetGenFunctor :
       TopCat.Presheaf.finsetImageInclGen_comp_ι,
       TopCat.Presheaf.finsetImageInclGen_comp_ι]
 
+attribute [local implicit_reducible] finsetGenFunctor
+
 /-- Cocone with vertex `K`: the cocone maps are `image.ι : finsetGeneratedSheaf S ⟶ K`. -/
-@[implicit_reducible]
 noncomputable def finsetGenCocone :
     Cocone (finsetGenFunctor hK) :=
   Cocone.mk (TopCat.Presheaf.sheafOfIsSheaf hK)
@@ -80,6 +80,8 @@ noncomputable def finsetGenCocone :
             𝟙 (TopCat.Presheaf.sheafOfIsSheaf hK)
         rw [TopCat.Presheaf.finsetImageInclGen_comp_ι]
         exact (Category.comp_id _).symm }
+
+attribute [local implicit_reducible] finsetGenCocone
 
 /-- The cocone is a colimit: `K` is the filtered colimit of its finitely generated subsheaves.
     Proof: the canonical map `colim → K` is mono (by AB5 + mono transitions) and epi

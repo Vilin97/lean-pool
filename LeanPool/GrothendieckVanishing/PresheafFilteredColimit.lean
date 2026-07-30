@@ -18,6 +18,11 @@ universe u
 
 open CategoryTheory TopologicalSpace Abelian Limits Opposite TopCat
 
+attribute [local implicit_reducible]
+  sheafHFilteredColimitSuccInjCocone sheafHFilteredColimitSuccShortComplex
+  sheafHFilteredColimitSuccQuotient sheafHFilteredColimitSuccQuotientCocone
+  sheafHFilteredColimitSuccShiftCodomainIso sheafHFilteredColimitComparison
+
 /-- The global-sections functor used in the degree-`1` filtered-colimit boundary
 construction. -/
 @[implicit_reducible]

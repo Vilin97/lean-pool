@@ -17,6 +17,8 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
+
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -164,13 +166,6 @@ lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
   have hm : H.x.val[2 * k + 1] :: (((hW.toWLift'.extensionMap hp R).val').drop (2 * k + 2))
     ∈ H.game.tree := by
     have hm' := by simpa using (mem_getTree (hW.toWLift'.extension hp R).valT').2
-    have htake := ExtensionsAt.valT'_take_of_le (hW.toWLift'.extension hp R)
-      (n := 2 * k + 2) (by
-        change 2 * k + 2 ≤ H.toWLift.liftVal.length
-        simp_all)
-    erw [show List.take (2 * k + 2) (hW.toWLift'.extension hp R).val' =
-        (Tree.take (2 * k + 2) hW.toWLift'.lift).val by
-      exact congrArg Subtype.val htake] at hm'
     conv at hm' => simp [toWLift]
     have hsub := hm'.1
     have hval' : (hW.toWLift'.extensionMap hp R).val' =

@@ -19,8 +19,10 @@ classical `ComputableℝSeq.sign` and are `noncomputable`.
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence
   relation of having the same converged value. This is similar to how reals are quotients of Cauchy
   sequence (without any guarantees on lower/upper bounds). -/
-@[reducible] def Computableℝ :=
+def Computableℝ :=
   @Quotient ComputableℝSeq ComputableℝSeq.equiv
+
+attribute [local implicit_reducible] Computableℝ ComputableℝSeq.nzSeq
 
 namespace Computableℝ
 

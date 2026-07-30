@@ -17,6 +17,8 @@ namespace GaleStewartGame.BorelDet.One
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
+
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 
 noncomputable section «Section1»
@@ -157,7 +159,12 @@ variable (hp : IsPosition H.x.val Player.one)
           rfl
 attribute [simp_lengths] extensionLift_x extensionLift'_toLift
 lemma extensionLift'_game : (H.extensionLift' hp R hR).game = H.game := by
-  ext x <;> simp [PreLift.game]
+  change (H.extensionLift hp R).game = H.game
+  rw [← PreLift.game_take (H := (H.extensionLift hp R).toPreLift)
+    (n := H.x.val.length) (by simp)]
+  rw [show ((H.extensionLift hp R).toPreLift.take H.x.val.length (by simp)).game =
+      ((H.extensionLift hp R).take H.x.val.length (by simp)).game from rfl]
+  rw [H.extensionLift_take hp R]
 @[simp] lemma extensionLift'_take :
   (H.extensionLift' hp R hR).take (H.x.val.length (α := no_index _)) (by simp) = H := by
   ext1; apply extensionLift_take
@@ -250,30 +257,33 @@ lemma concat_mem_tree {y a} (hp : IsPosition y Player.zero)
   have hpz : IsPosition z.val Player.one := by
     change IsPosition (H.toLift.liftShort.val[2 * k + 1].1 :: y) Player.one
     synthIsPosition
-  change z.val ++ [a] ∈ H.S.1.subtree
-  rw [H.S.1.subtree_compatible_iff z hpz]
-  have hx : (H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a] ∈ H.game.tree := by
-    change H.x.val.take (2 * k + 1) ++
-      ((H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a]) ∈ G.tree
-    simpa [List.cons_append, List.append_assoc] using ha
-  refine ⟨hx, ?_⟩
-  change ⟨a, hx⟩ ∈
-    (if {b : ExtensionsAt (H.S.fst.subtreeIncl
-        ⟨H.toLift.liftShort.val[2 * k + 1].1 :: y, hyS⟩) |
-          ¬ H.game.WinningPosition
-            (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [b.val]))}.Nonempty then
-      {b : ExtensionsAt (H.S.fst.subtreeIncl
-        ⟨H.toLift.liftShort.val[2 * k + 1].1 :: y, hyS⟩) |
-          ¬ H.game.WinningPosition
-            (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [b.val]))}
-    else Set.univ)
-  rw [if_pos ⟨⟨a, hx⟩, by
+  have hz : z.val ++ [a] ∈ H.S.1.subtree := by
+    rw [H.S.1.subtree_compatible_iff z hpz]
+    have hx : (H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a] ∈ H.game.tree := by
+      change H.x.val.take (2 * k + 1) ++
+        ((H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a]) ∈ G.tree
+      simpa [List.cons_append, List.append_assoc] using ha
+    refine ⟨hx, ?_⟩
+    change ⟨a, hx⟩ ∈
+      (if {b : ExtensionsAt (H.S.fst.subtreeIncl
+          ⟨H.toLift.liftShort.val[2 * k + 1].1 :: y, hyS⟩) |
+            ¬ H.game.WinningPosition
+              (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [b.val]))}.Nonempty then
+        {b : ExtensionsAt (H.S.fst.subtreeIncl
+            ⟨H.toLift.liftShort.val[2 * k + 1].1 :: y, hyS⟩) |
+            ¬ H.game.WinningPosition
+              (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [b.val]))}
+      else Set.univ)
+    rw [if_pos ⟨⟨a, hx⟩, by
+      change ¬ H.game.WinningPosition
+        (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [a]))
+      exact hw⟩]
     change ¬ H.game.WinningPosition
       (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [a]))
-    exact hw⟩]
-  change ¬ H.game.WinningPosition
-    (H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [a]))
-  exact hw
+    exact hw
+  exact (getTree_concat (hyp := hyp)
+    (pInvTreeHomMap hyp (List.take (2 * k) H.x.val))
+    ((H.x.val[2 * k], H.S.fst.subtree) : upA hyp)).symm ▸ hz
 end LLift
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def Losable (H : PreLift hyp) := ∃ h : H.Losable', (LLift.mk _ h).toLift.Con

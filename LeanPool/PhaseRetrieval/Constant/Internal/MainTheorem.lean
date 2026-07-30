@@ -50,13 +50,12 @@ private lemma rhoFockNormSq_nonneg {D : ℕ} (a : Fin D → ℂ) : 0 ≤ rhoFock
 
 /-! ## Auxiliary lemmas for polar decomposition -/
 
-private lemma filter_cast_eq_singleton {D : ℕ} (k : Fin D) :
+private lemma filter_embedding_eq_singleton {D : ℕ} (e : Fin D ↪ ℤ) (k : Fin D) :
     (Finset.univ : Finset (Fin D)).filter
-      (fun j => ((j.val + 1 : ℕ) : ℤ) = ((k.val + 1 : ℕ) : ℤ)) = {k} := by
-  ext j; constructor
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-    intro h; ext; omega
-  · simp_all
+      (fun j => e j = e k) = {k} := by
+  ext j
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
+  exact ⟨fun h ↦ e.injective h, congrArg e⟩
 
 private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
@@ -95,14 +94,7 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
       b (e k) = a k * (r : ℂ) ^ (k.val + 1) := by
     intro k
     simp only [b]
-    rw [Finset.sum_filter]
-    have : ∀ j : Fin D, e j = e k ↔ j = k := by
-      intro j
-      constructor
-      · intro h
-        exact e.injective h
-      · exact congrArg e
-    simp_all
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   let Pcont : C(AddCircle T, ℂ) := ∑ k : Fin D,
     (a k * (r : ℂ) ^ (k.val + 1)) • fourier (e k)
   have hPcont_eq : ∀ t : AddCircle T, (Pcont : AddCircle T → ℂ) t =
@@ -114,14 +106,7 @@ private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ
   have hPLp' : PLp = ∑ n ∈ E', b n • fourierLp 2 n := by
     simp only [PLp, Pcont, fourierLp, map_sum, map_smul, E', b]
     rw [Finset.sum_map]; congr 1; ext k
-    rw [Finset.sum_filter]
-    have : ∀ j : Fin D, e j = e k ↔ j = k := by
-      intro j
-      constructor
-      · intro h
-        exact e.injective h
-      · exact congrArg e
-    simp_all
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   have hinner_orth : @inner ℂ _ _ PLp PLp =
       Complex.ofReal (∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1)‖ ^ 2) := by
     rw [hPLp', orthonormal_fourier.inner_sum b b E']

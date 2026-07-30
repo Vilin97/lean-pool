@@ -172,16 +172,17 @@ private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
     simp_all
   · simp_all
 
-private lemma filter_natCast_eq_singleton {D : ℕ} (k : Fin D) :
+private lemma filter_embedding_eq_singleton {D : ℕ} {α : Type*} [DecidableEq α]
+    (e : Fin D ↪ α) (k : Fin D) :
     (Finset.univ : Finset (Fin D)).filter
-      (fun j => ((j.val : ℕ) : ℤ) = ((k.val : ℕ) : ℤ)) = {k} := by
+      (fun j => e j = e k) = {k} := by
   ext j
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
   constructor
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-    intro h
-    have h' : j.val = k.val := by omega
-    exact Fin.ext h'
-  · simp_all
+  · intro h
+    exact e.injective h
+  · intro h
+    exact congrArg e h
 
 private lemma circleL2Sq_finFourierPoly {D : ℕ} (c : Fin D → ℂ) :
     circleL2Sq (fun t : Circle => ∑ k : Fin D, c k * fourier (k.val : ℤ) t) =
@@ -197,14 +198,7 @@ private lemma circleL2Sq_finFourierPoly {D : ℕ} (c : Fin D → ℂ) :
   have hb_eq : ∀ k : Fin D, b (e k) = c k := by
     intro k
     simp only [b]
-    rw [Finset.sum_filter]
-    have : ∀ j : Fin D, e j = e k ↔ j = k := by
-      intro j
-      constructor
-      · intro h
-        exact e.injective h
-      · exact congrArg e
-    simp_all
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   let Pcont : C(Circle, ℂ) := ∑ k : Fin D, c k • fourier (e k)
   have hPcont_eq : ∀ t : Circle, (Pcont : Circle → ℂ) t = ∑ k : Fin D, c k * fourier (k.val : ℤ) t
       := by
@@ -218,14 +212,7 @@ private lemma circleL2Sq_finFourierPoly {D : ℕ} (c : Fin D → ℂ) :
     rw [Finset.sum_map]
     congr 1
     ext k
-    rw [Finset.sum_filter]
-    have : ∀ j : Fin D, e j = e k ↔ j = k := by
-      intro j
-      constructor
-      · intro h
-        exact e.injective h
-      · exact congrArg e
-    simp_all
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   have hinner_orth : @inner ℂ _ _ PLp PLp = Complex.ofReal (∑ k : Fin D, ‖c k‖ ^ 2) := by
     rw [hPLp', orthonormal_fourier.inner_sum b b E']
     rw [show E' = (Finset.univ : Finset (Fin D)).map e from rfl]

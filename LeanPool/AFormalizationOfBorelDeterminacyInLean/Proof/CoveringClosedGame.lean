@@ -27,9 +27,11 @@ structure Hyp (G : Game A) (k : ℕ) where
 variable {G : Game A} {k : ℕ} (hyp : Hyp G k)
 --the second component is the residual tree of valid extensions
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-abbrev upA (hyp : Hyp G k) :=
+def upA (hyp : Hyp G k) :=
   let _ : IsClosed G.payoff := hyp.closed
   A × tree A
+attribute [local implicit_reducible] upA
+
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev A' {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} := upA hyp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -113,11 +115,15 @@ def gameTree : tree (upA hyp) where
   val := {x | List.reverseRecOn x True (fun x a hx ↦ hx ∧ ValidExt x a)}
   property _ := by simp; tauto
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] abbrev oldAsTrees (hyp : Hyp G k) : Trees :=
+@[simps] def oldAsTrees (hyp : Hyp G k) : Trees :=
   let _ : IsClosed G.payoff := hyp.closed
   ⟨A, G.tree⟩
+attribute [local implicit_reducible] oldAsTrees
+
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] abbrev gameAsTrees (hyp : Hyp G k) : Trees := ⟨upA hyp, gameTree hyp⟩
+@[simps] def gameAsTrees (hyp : Hyp G k) : Trees := ⟨upA hyp, gameTree hyp⟩
+attribute [local implicit_reducible] gameAsTrees
+
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev T {A : Type*} {G : Game A} : tree A := G.tree
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

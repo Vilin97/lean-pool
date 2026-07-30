@@ -25,8 +25,10 @@ inductive memRel : ℕ → Type
 
 open FirstOrder in
 /-- The first-order language of ZF set theory, with a single binary membership relation. -/
-@[reducible] def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
+def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
 deriving IsRelational
+
+attribute [local implicit_reducible] 𝓛ZF
 
 namespace FirstOrder.Language.BoundedFormula
 

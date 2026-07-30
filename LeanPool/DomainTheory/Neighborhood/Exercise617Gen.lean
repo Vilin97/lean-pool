@@ -747,11 +747,11 @@ end SumMapSig
 /-! ## The endofunctor `Tsig(X) = 𝟙 + Σ_a X` on the `∅`-free category. -/
 
 /-- `Tsig` on objects: `Tsig(D) = 𝟙 + Σ_a D`, again `∅`-free (`sumSig_nonempty`). -/
-@[implicit_reducible]
 def tsigObj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) : StrictDomainObj.{0} where
   carrier := SigTok A D.carrier
   sys := sumSig A D.sys D.nonempty
   nonempty := sumSig_nonempty
+attribute [local implicit_reducible] tsigObj
 
 @[simp] theorem tsigObj_sys (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) :
     (tsigObj A D).sys = sumSig A D.sys D.nonempty := rfl
@@ -768,12 +768,12 @@ def tsigMapHom (A : Type) [DecidableEq A] {D E : StrictDomainObj.{0}} (f : Categ
 /-- **The functor `Tsig(X) = 𝟙 + Σ_{a:A} X`** on the category of `∅`-free domains
 and strict
 maps. -/
-@[implicit_reducible]
 def Tsig (A : Type) [DecidableEq A] : Endofunctor StrictDomainObj.{0} where
   obj := tsigObj A
   map := tsigMapHom A
   map_id _D := Subtype.ext sumMapSig_id
   map_comp {_D _E _F} g f := Subtype.ext (sumMapSig_comp g.1 f.1)
+attribute [local implicit_reducible] Tsig
 
 @[simp] theorem Tsig_obj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) :
     (Tsig A).obj D = tsigObj A D := rfl

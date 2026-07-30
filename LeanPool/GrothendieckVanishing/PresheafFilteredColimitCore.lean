@@ -155,10 +155,11 @@ theorem sheafH_filtered_colimit_succ_eta_mono (j : J') :
   exact ffData.hi ((sheafHFilteredColimitSuccToArrow Y').obj j)
 
 /-- The colimit cocone of the injective replacement diagram. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitSuccInjCocone :
     Cocone (sheafHFilteredColimitSuccInj Y') :=
   colimit.cocone (sheafHFilteredColimitSuccInj Y')
+
+attribute [local implicit_reducible] sheafHFilteredColimitSuccInjCocone
 
 /-- The cocone obtained by composing the original cocone maps with the injective
 replacement. -/
@@ -196,12 +197,13 @@ noncomputable instance sheafH_filtered_colimit_succ_iota_mono
     (sheafH_filtered_colimit_succ_iota_fac Y' c' hc')
 
 /-- The short exact sequence on colimit objects obtained from the injective replacement. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitSuccShortComplex
     (c' : Cocone Y') (hc' : IsColimit c') :
     ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
   let ι' := sheafHFilteredColimitSuccIota Y' c' hc'
   ShortComplex.mk ι' (cokernel.π ι') (cokernel.condition ι')
+
+attribute [local implicit_reducible] sheafHFilteredColimitSuccShortComplex
 
 theorem sheafH_filtered_colimit_succ_shortExact
     (c' : Cocone Y') (hc' : IsColimit c') :
@@ -212,7 +214,6 @@ theorem sheafH_filtered_colimit_succ_shortExact
     (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel ι')) inferInstance inferInstance
 
 /-- The quotient diagram obtained by objectwise cokernels of the injective replacement maps. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitSuccQuotient :
     J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X :=
   { obj := fun j ↦ cokernel ((sheafHFilteredColimitSuccEta Y').app j)
@@ -223,8 +224,9 @@ noncomputable def sheafHFilteredColimitSuccQuotient :
     map_id := fun j ↦ by aesop_cat
     map_comp := fun {j j' j''} f g ↦ by ext; simp [cokernel.map, Functor.map_comp] }
 
+attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotient
+
 /-- The quotient cocone on the cokernel diagram induced by the colimit short exact sequence. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitSuccQuotientCocone
     (c' : Cocone Y') (hc' : IsColimit c') :
     Cocone (sheafHFilteredColimitSuccQuotient Y') :=
@@ -242,6 +244,8 @@ noncomputable def sheafHFilteredColimitSuccQuotientCocone
         conv_rhs =>
           simp [sheafHFilteredColimitSuccQuotient, cokernel.map, Category.assoc]
         }
+
+attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotientCocone
 
 @[implicit_reducible]
 private noncomputable def sheafH_filtered_colimit_succ_liftedCocone
@@ -464,7 +468,6 @@ noncomputable def sheafHFilteredColimitSuccShiftDomainIso
 
 /-- The colimit-level dimension-shift isomorphism for the short exact sequence obtained from
     the injective replacement of the filtered colimit cocone. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitSuccShiftCodomainIso
     (c' : Cocone Y') (hc' : IsColimit c') (n : ℕ)
     (h_colim_n :
@@ -476,6 +479,8 @@ noncomputable def sheafHFilteredColimitSuccShiftCodomainIso
       (sheafCohomologyFunctor X (n + 1)).obj c'.pt :=
   sheafHSuccIsoOfSubsingletonMiddle
     (sheafH_filtered_colimit_succ_shortExact Y' c' hc') n h_colim_n h_colim_succ
+
+attribute [local implicit_reducible] sheafHFilteredColimitSuccShiftCodomainIso
 
 /-- The filtered-colimit successor-step vanishing lemma for the injective replacement:
 the middle term of the induced short exact sequence has trivial cohomology in degree `n + 1`. -/
@@ -500,7 +505,6 @@ theorem sheafH_filtered_colimit_succ_inj_subsingleton
 end SheafHFilteredColimitSucc
 
 /-- The canonical comparison morphism `colim H^n(F_j) ⟶ H^n(colim F_j)` induced by a cocone. -/
-@[implicit_reducible]
 noncomputable def sheafHFilteredColimitComparison
     {X : TopCat.{u}}
     {J' : Type u} [SmallCategory J']
@@ -509,6 +513,8 @@ noncomputable def sheafHFilteredColimitComparison
     colimit (Y' ⋙ sheafCohomologyFunctor X n) ⟶
       (sheafCohomologyFunctor X n).obj c'.pt :=
   colimit.desc _ ((sheafCohomologyFunctor X n).mapCocone c')
+
+attribute [local implicit_reducible] sheafHFilteredColimitComparison
 
 @[simp] theorem colimit_ι_sheafH_filtered_colimit_comparison
     {X : TopCat.{u}}

@@ -16,6 +16,8 @@ inconsistency development.
 
 noncomputable section
 
+attribute [local implicit_reducible] 𝓛ZF
+
 variable {M N M₀ : Type _} [ZFStructure M] [ZFStructure N] [ZFStructure M₀]
 
 open Subtype in

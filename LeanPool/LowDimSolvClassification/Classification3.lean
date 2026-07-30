@@ -23,6 +23,9 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 
 open Module
 open Submodule
+attribute [local implicit_reducible] LieAlgebra.mkAbelian LieAlgebra.Dim3.Heisenberg
+  LieAlgebra.Dim3.AffinePlusAbelian LieAlgebra.Dim3.Hyperbolic LieAlgebra.Dim3.Family
+
 namespace LieAlgebra.Dim3
 
 variable {K L : Type*} [Field K] [LieRing L] [LieAlgebra K L]

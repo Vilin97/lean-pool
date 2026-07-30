@@ -51,7 +51,7 @@ instance trace_isFaithfulPosMap {n : Type _} [Fintype n] {𝕜 : Type _} [RCLike
 theorem traceModuleDual_matrix {n : Type _} [Fintype n] [DecidableEq n] :
     (traceModuleDual : Module.Dual ℂ (Matrix n n ℂ)).matrix = 1 := by
   refine Eq.symm (Module.Dual.apply_eq_of _ 1 (fun _ => ?_))
-  simp_all [traceModuleDual]
+  simp only [traceModuleDual, traceLinearMap_apply, one_mul]
 
 open scoped BigOperators
 
