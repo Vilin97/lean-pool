@@ -34,6 +34,7 @@ class Collection (β : outParam Type*) (α : Type*) extends Membership β α, Ha
 attribute [simp] Collection.not_mem_empty Collection.mem_cons_iff
 
 instance Set.collection : Collection α (Set α) where
+  Subset a b := a ⊆ b
   subset_iff := iff_of_eq Set.subset_def
   not_mem_empty := by simp
   mem_cons_iff := by simp [Cons.cons]
@@ -49,6 +50,7 @@ instance Multiset.collection : Collection α (Multiset α) where
   mem_cons_iff := by simp [Cons.cons]
 
 instance Finset.collection [DecidableEq α] : Collection α (Finset α) where
+  Subset a b := a ⊆ b
   subset_iff := Finset.subset_iff
   not_mem_empty := by simp
   mem_cons_iff := by simp [Cons.cons]

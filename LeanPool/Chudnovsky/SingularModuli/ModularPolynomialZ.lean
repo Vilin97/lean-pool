@@ -280,7 +280,7 @@ theorem diagPhiZ_eval_eq_zero [NeZero m] {PhiZ : Polynomial (Polynomial ℤ)}
 (a CM relation `(B8)`, from `CMRelations.lean` via `diagPhiZ_eval_eq_zero`), then `j τ` is
 integral over `ℤ`. This is exactly the shape `Integrality.lean` needs for `isIntegral_j_τ₁₆₃` at
 `m = 41`. The `±1` monic-up-to-sign annihilator argument is proved here in full. -/
-theorem isIntegral_of_kronecker [NeZero m] {PhiZ : Polynomial (Polynomial ℤ)}
+theorem isIntegral_of_kronecker {PhiZ : Polynomial (Polynomial ℤ)}
     (hlead : (diagPhiZ PhiZ).leadingCoeff = 1 ∨ (diagPhiZ PhiZ).leadingCoeff = -1)
     {τ : ℍ}
     (hroot : (diagPhiZ PhiZ).eval₂ (Int.castRingHom ℂ) (j τ) = 0) :

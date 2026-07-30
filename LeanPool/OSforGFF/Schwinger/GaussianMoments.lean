@@ -74,10 +74,10 @@ lemma gaussian_complex_pairing_abs_sq_integrable
   -- Convert the MemLp statements to integrability of the square magnitudes
   have hRe_sq : Integrable (fun ω => (distributionPairing ω φRe) ^ 2)
       (gaussianFreeFieldFree m).toMeasure := by
-    simpa [distributionPairingCLM_apply] using hRe_mem.integrable_sq
+    exact hRe_mem.integrable_sq
   have hIm_sq : Integrable (fun ω => (distributionPairing ω φIm) ^ 2)
       (gaussianFreeFieldFree m).toMeasure := by
-    simpa [distributionPairingCLM_apply] using hIm_mem.integrable_sq
+    exact hIm_mem.integrable_sq
   -- Assemble the complex absolute square from the real and imaginary components
   have h_pointwise :
       (fun ω => ‖distributionPairingℂReal ω φ‖ ^ 2) =
@@ -137,21 +137,21 @@ theorem gaussian_pairing_product_integrable_free_2point
     m).toMeasure := by
     have h_le : (1 : ENNReal) ≤ 2 := by norm_num
     have h_int := MemLp.integrable h_le hφRe_mem
-    simpa [distributionPairingCLM_apply] using h_int
+    exact h_int
   have hφIm_int : Integrable (fun ω => distributionPairing ω φIm) (gaussianFreeFieldFree
     m).toMeasure := by
     have h_le : (1 : ENNReal) ≤ 2 := by norm_num
     have h_int := MemLp.integrable h_le hφIm_mem
-    simpa [distributionPairingCLM_apply] using h_int
+    exact h_int
   have hψRe_int : Integrable (fun ω => distributionPairing ω ψRe) (gaussianFreeFieldFree
     m).toMeasure := by
     have h_le : (1 : ENNReal) ≤ 2 := by norm_num
     have h_int := MemLp.integrable h_le hψRe_mem
-    simpa [distributionPairingCLM_apply] using h_int
+    exact h_int
   have hψIm_int : Integrable (fun ω => distributionPairing ω ψIm) (gaussianFreeFieldFree
     m).toMeasure := by
     have h_le : (1 : ENNReal) ≤ 2 := by norm_num
-    simpa [distributionPairingCLM_apply] using MemLp.integrable h_le hψIm_mem
+    exact MemLp.integrable h_le hψIm_mem
   -- Expand the complex product: (a+bi)(c+di) = (ac-bd) + i(ad+bc)
   have h_pointwise : (fun ω => distributionPairingℂReal ω φ * distributionPairingℂReal ω ψ) =
     (fun ω => (distributionPairing ω φRe * distributionPairing ω ψRe - distributionPairing ω φIm *
@@ -183,18 +183,18 @@ theorem gaussian_pairing_product_integrable_free_2point
     · -- L² × L² → L¹ by Hölder's inequality
       have h_mem_φRe : MemLp (fun ω => distributionPairing ω φRe) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hφRe_mem
+        exact hφRe_mem
       have h_mem_ψRe : MemLp (fun ω => distributionPairing ω ψRe) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hψRe_mem
+        exact hψRe_mem
       exact MemLp.integrable_mul h_mem_φRe h_mem_ψRe
     · -- L² × L² → L¹ by Hölder's inequality
       have h_mem_φIm : MemLp (fun ω => distributionPairing ω φIm) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hφIm_mem
+        exact hφIm_mem
       have h_mem_ψIm : MemLp (fun ω => distributionPairing ω ψIm) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hψIm_mem
+        exact hψIm_mem
       exact MemLp.integrable_mul h_mem_φIm h_mem_ψIm
   have h_ad_bc : Integrable (fun ω => distributionPairing ω φRe * distributionPairing ω ψIm +
     distributionPairing ω φIm * distributionPairing ω ψRe)
@@ -203,18 +203,18 @@ theorem gaussian_pairing_product_integrable_free_2point
     · -- L² × L² → L¹ by Hölder's inequality
       have h_mem_φRe : MemLp (fun ω => distributionPairing ω φRe) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hφRe_mem
+        exact hφRe_mem
       have h_mem_ψIm : MemLp (fun ω => distributionPairing ω ψIm) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hψIm_mem
+        exact hψIm_mem
       exact MemLp.integrable_mul h_mem_φRe h_mem_ψIm
     · -- L² × L² → L¹ by Hölder's inequality
       have h_mem_φIm : MemLp (fun ω => distributionPairing ω φIm) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hφIm_mem
+        exact hφIm_mem
       have h_mem_ψRe : MemLp (fun ω => distributionPairing ω ψRe) 2 (gaussianFreeFieldFree
         m).toMeasure := by
-        simpa [distributionPairingCLM_apply] using hψRe_mem
+        exact hψRe_mem
       exact MemLp.integrable_mul h_mem_φIm h_mem_ψRe
   -- The complex function is integrable if both real and imaginary parts are integrable
   rw [h_pointwise]

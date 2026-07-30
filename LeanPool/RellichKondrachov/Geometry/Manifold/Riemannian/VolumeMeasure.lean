@@ -31,8 +31,8 @@ namespace Geometry
 namespace Manifold
 namespace Riemannian
 
-open Set Filter Manifold MeasureTheory Bundle
-open scoped ENNReal MeasureTheory Topology Manifold
+open Set Filter _root_.Manifold MeasureTheory Bundle
+open scoped ENNReal MeasureTheory Topology _root_.Manifold
 
 local notation "n∞" => (⊤ : WithTop ℕ∞)
 

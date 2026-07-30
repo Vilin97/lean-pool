@@ -78,7 +78,7 @@ positive at every entry (since `(t • Q)^k₀ = t^k₀ • Q^k₀` via
 `MetzlerExp.nonneg_matrix_exp_nonneg`; conclusion via
 `Summable.tsum_pos`. -/
 theorem nonneg_irreducible_matrix_exp_pos
-    [Nonempty n] {Q : Matrix n n ℝ} (hQ_irr : Matrix.IsIrreducible Q)
+    {Q : Matrix n n ℝ} (hQ_irr : Matrix.IsIrreducible Q)
     {t : ℝ} (ht : 0 < t) (x y : n) :
     0 < (NormedSpace.exp (t • Q) : Matrix n n ℝ) x y := by
   obtain ⟨k₀, _hk₀_pos, hk₀_all⟩ := hQ_irr.exists_pos_power
@@ -130,7 +130,7 @@ Both factors are strictly positive: `Real.exp_pos` for the scalar,
 `nonneg_irreducible_matrix_exp_pos` for the matrix. Mirrors the
 structure of `MetzlerExp.metzler_exp_nonneg` (non-strict version). -/
 theorem mmatrix_exp_neg_pos
-    [Nonempty n] {M : Matrix n n ℝ} {α : ℝ}
+    {M : Matrix n n ℝ} {α : ℝ}
     (hQ_irr : Matrix.IsIrreducible (α • (1 : Matrix n n ℝ) - M))
     {t : ℝ} (ht : 0 < t) (x y : n) :
     0 < (NormedSpace.exp ((-t) • M) : Matrix n n ℝ) x y := by
@@ -303,7 +303,7 @@ The full discharge using:
 Only the `α : ℝ` parameter and `hα` are vestigial in this final form
 (carried for API stability with the original axiom shape). -/
 theorem Matrix.MMatrix.inverse_pos
-    {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    {n : Type*} [Fintype n] [DecidableEq n]
     (M : Matrix n n ℝ) (hM_pd : M.PosDef)
     (_hM_off : ∀ i j, i ≠ j → M i j ≤ 0)
     {α : ℝ} (_hα : ∀ i, M i i ≤ α)

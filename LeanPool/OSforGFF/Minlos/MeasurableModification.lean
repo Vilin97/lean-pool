@@ -60,9 +60,7 @@ private lemma continuous_finset_sup_seminorm (p : ℕ → Seminorm ℝ E)
     (hp_top : WithSeminorms (fun n => p n)) (s : Finset ℕ) :
     Continuous (fun x : E => (s.sup p) x) := by
   refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
-  change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
-  simp_rw [map_sum, Finset.sum_apply]
-  exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
+  exact Seminorm.continuous_finsetSum (fun i _ => hp_top.continuous_seminorm i)
 
 /-! ## Embedding: WeakDual ℝ E → (E → ℝ) -/
 
@@ -518,7 +516,7 @@ theorem extensionCLM_eq_on_dense [SeparableSpace E] [IsHilbertNuclear E] [Nonemp
     Proof: l is ℝ-linear (hence ℚ-linear on all Finsupp combinations),
     and bounded by continuity.
 -/
-lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+lemma embed_mem_goodPaths
     (d : ℕ → E) (p : ℕ → Seminorm ℝ E)
     (hp_top : WithSeminorms (fun n => p n))
     (l : WeakDual ℝ E) :
@@ -541,8 +539,7 @@ lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     refine ⟨s, ⌈(C : ℝ)⌉₊, fun c => ?_⟩
     set x := c.sum fun i a => (a : ℝ) • d i
     have h := hC x
-    simp only [Seminorm.comp_apply, coe_normSeminorm, Seminorm.smul_apply,
-      NNReal.smul_def] at h
+    simp only [Seminorm.comp_apply, coe_normSeminorm, _root_.smul_apply] at h
     calc |weakDualEmbed E l x| = ‖l x‖ := (Real.norm_eq_abs _).symm
       _ ≤ (C : ℝ) * (s.sup p) x := h
       _ ≤ (↑⌈(C : ℝ)⌉₊ : ℝ) * (s.sup p) x := by
@@ -730,7 +727,7 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 
     Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3.
 -/
-theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+theorem qLinearPaths_ae [SeparableSpace E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
       ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
@@ -836,7 +833,7 @@ private lemma boundedPaths_tail_bound [SeparableSpace E] [IsHilbertNuclear E] [N
   set x := c.sum fun i a => (a : ℝ) • d i
   have h_pm_bound : (p' m) x ≤ C' * (s₀.sup p) x := by
     have := hC' x
-    simp only [Seminorm.smul_apply, NNReal.smul_def] at this
+    simp only [_root_.smul_apply] at this
     exact this
   calc |ω x| ≤ ↑C * (p' m) x := h_le
     _ ≤ ↑C * (C' * (s₀.sup p) x) :=

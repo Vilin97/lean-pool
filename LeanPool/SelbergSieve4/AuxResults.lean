@@ -31,7 +31,7 @@ noncomputable section
 local macro_rules | `($x ^ $y)   => `(HPow.hPow $x $y)
 open scoped BigOperators ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega
 
-open Nat ArithmeticFunction Finset Tactic.Interactive
+open Nat ArithmeticFunction Finset
 
 namespace Aux
 

@@ -38,14 +38,14 @@ abbrev IsCommonBeliefAt {ι : Type*} (P : ι → Partition Ω) (μ : Measure Ω)
   ∃ E : Set Ω, ω ∈ E ∧ (∀ i, (P i).IsEvidentBelief μ p E) ∧ ∀ i, E ⊆ (P i).belief μ p C
 
 /-- Monotonicity of belief: `X ⊆ Y` implies `P.belief μ p X ⊆ P.belief μ p Y`. -/
-lemma Partition.belief_mono (P : Partition Ω) (μ : Measure Ω) [IsProbabilityMeasure μ]
+lemma Partition.belief_mono (P : Partition Ω) (μ : Measure Ω)
     (p : ENNReal) {X Y : Set Ω} (hXY : X ⊆ Y) :
     P.belief μ p X ⊆ P.belief μ p Y := fun _ hω ↦
   hω.trans (ENNReal.div_le_div_right (measure_mono (inter_subset_inter_left _ hXY)) _)
 
 /-- The belief set equals a union over partition atoms with sufficient conditional probability. -/
 lemma Partition.belief_eq_biUnion {P : Partition Ω}
-    (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (μ : Measure Ω)
     (p : ENNReal) (X : Set Ω) :
     P.belief μ p X = ⋃ s ∈ {s : Set Ω | s ∈ P ∧ p ≤ μ (X ∩ s) / μ s}, s := by
   ext ω
@@ -58,12 +58,13 @@ lemma Partition.belief_eq_biUnion {P : Partition Ω}
 
 /-- For a measurable countable partition `P`, the belief set `P.belief μ p X` is measurable. -/
 lemma Partition.measurableSet_belief {P : Partition Ω} (hP : P.Measurable)
-    (hPc : P.val.Countable) (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (hPc : P.val.Countable) (μ : Measure Ω)
     (p : ENNReal) (X : Set Ω) :
     MeasurableSet (P.belief μ p X) := by
   rw [Partition.belief_eq_biUnion]
   exact MeasurableSet.biUnion (hPc.mono fun _ hs ↦ hs.1) (fun s hs ↦ hP s hs.1)
 
+omit [IsProbabilityMeasure μ] in
 /-- The downward step of belief idempotence. -/
 lemma Partition.belief_belief_subset {P : Partition Ω}
     {p : ENNReal} (hp : 0 < p) (X : Set Ω) :
@@ -107,6 +108,7 @@ omit [IsProbabilityMeasure μ] in
 lemma nonempty_of_measure_pos {s : Set Ω} (h : 0 < μ s) : s.Nonempty :=
   Set.nonempty_iff_ne_empty.mpr fun he ↦ by simp [he] at h
 
+omit [IsProbabilityMeasure μ] in
 /-- If `A ⊆ P.belief μ p {ω | P.probabilityAt μ E ω = r}`, then probability equals r on A. -/
 lemma probabilityAt_eq_of_belief_const
     {P : Partition Ω} {p : ENNReal} (hp : 0 < p) {E A : Set Ω} {r : ENNReal}

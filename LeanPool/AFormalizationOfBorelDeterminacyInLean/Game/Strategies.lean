@@ -133,7 +133,9 @@ variable (T p) in
 def QuasiStrategy := PSigma (@PreStrategy.IsQuasi A T p)
 @[ext] lemma QuasiStrategy.ext {f g : QuasiStrategy T p} (h : f.1 = g.1) : f = g := by
   obtain ⟨f, hf⟩ := f; obtain ⟨g, hg⟩ := g
-  simp_all --make general lemma?
+  have h' : f = g := h
+  subst h'
+  rfl
 variable (T p) in
 /-- A quasistrategy is a `PreStrategy` that allows exactly one move in every position -/
 def Strategy := ∀ x : T, IsPosition x.val p → ExtensionsAt x

@@ -17,6 +17,7 @@ Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Jar`.
 open TopCat
 open scoped Topology unitInterval
 
+universe u v
 
 namespace HEP
 
@@ -68,18 +69,17 @@ noncomputable def midProjToFun (n : ℕ) : mid.{u} n → disk.{u} n := fun p ↦
 lemma continuous_midProjToFun (n : ℕ) : Continuous (midProjToFun.{u} n) := by
   refine continuous_uliftUp.comp ?_
   refine Continuous.subtype_mk ?_ _
-  exact continuous_smul.comp <| Continuous.prodMk
-    (continuous_const.div ((continuous_sub_left _).comp <| continuous_subtype_val.comp <|
-      continuous_snd.comp <| continuous_subtype_val) fun ⟨⟨ _, ⟨y, _, _⟩ ⟩, _⟩ ↦ by
-        dsimp only [Function.comp_apply, ne_eq]; linarith)
-    (continuous_subtype_val.comp <| continuous_uliftDown.comp <| continuous_fst.comp <|
-      continuous_subtype_val)
+  have denominator_ne_zero : ∀ p : mid n, (2 : ℝ) - p.val.snd.val ≠ 0 := by
+    rintro ⟨⟨_, ⟨y, _, _⟩⟩, _⟩
+    dsimp
+    linarith
+  fun_prop (disch := exact denominator_ne_zero _)
 
 /-- `midProj` -/
-noncomputable def midProj (n : ℕ) : C(mid n, 𝔻 n) :=
-  ⟨midProjToFun n, continuous_midProjToFun n⟩
+noncomputable def midProj (n : ℕ) : C(mid.{u} n, disk.{u} n) :=
+  ⟨midProjToFun.{u} n, continuous_midProjToFun n⟩
 
-lemma rim_fst_ne_zero (n : ℕ) : ∀ p : rim n, ‖p.val.fst.down.val‖ ≠ 0 :=
+lemma rim_fst_ne_zero (n : ℕ) : ∀ p : rim.{u} n, ‖p.val.fst.down.val‖ ≠ 0 :=
   fun ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _, _⟩ ⟩, hxy⟩ ↦ by
     conv => lhs; arg 1; dsimp
     change ‖x‖ ≥ 1 - y / 2 at hxy
@@ -95,22 +95,18 @@ noncomputable def rimProjFstToFun (n : ℕ) : rim.{u} n → diskBoundary.{u} n :
     change ‖x‖ ≥ 1 - y / 2 at hxy
     exact inv_mul_cancel₀ (by linarith) }⟩
 
-lemma continuous_rimProjFstToFun (n : ℕ) : Continuous (rimProjFstToFun n) := by
+lemma continuous_rimProjFstToFun (n : ℕ) : Continuous (rimProjFstToFun.{u} n) := by
   refine continuous_uliftUp.comp ?_
   refine Continuous.subtype_mk ?_ _
-  exact continuous_smul.comp <| Continuous.prodMk
-    (Continuous.div continuous_const (continuous_norm.comp <| continuous_subtype_val.comp <|
-      continuous_uliftDown.comp <| continuous_fst.comp <| continuous_subtype_val) <|
-        rim_fst_ne_zero n)
-    (continuous_subtype_val.comp <| continuous_uliftDown.comp <| continuous_fst.comp <|
-      continuous_subtype_val)
+  have denominator_ne_zero : ∀ p : rim n, ‖p.val.fst.down.val‖ ≠ 0 := rim_fst_ne_zero n
+  fun_prop (disch := exact denominator_ne_zero _)
 
 /-- `rimProjFst` -/
-noncomputable def rimProjFst (n : ℕ) : C(rim n, ∂𝔻 n) :=
-  ⟨rimProjFstToFun n, continuous_rimProjFstToFun n⟩
+noncomputable def rimProjFst (n : ℕ) : C(rim.{u} n, diskBoundary.{u} n) :=
+  ⟨rimProjFstToFun.{u} n, continuous_rimProjFstToFun n⟩
 
 /-- `rimProjSndToFun` -/
-noncomputable def rimProjSndToFun (n : ℕ) : rim n → I := fun p ↦ {
+noncomputable def rimProjSndToFun (n : ℕ) : rim.{u} n → I := fun p ↦ {
   val := match p with
     | ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩, _⟩ => (y - 2) / ‖x‖ + 2
   property := by
@@ -125,7 +121,7 @@ noncomputable def rimProjSndToFun (n : ℕ) : rim n → I := fun p ↦ {
       rw [← neg_div, neg_sub, div_le_iff₀ (by assumption)]; linarith
     · rw [add_assoc, add_neg_cancel, add_zero, div_le_iff₀ (by assumption)]; linarith}
 
-lemma continuous_rimProjSndToFun (n : ℕ) : Continuous (rimProjSndToFun n) := by
+lemma continuous_rimProjSndToFun (n : ℕ) : Continuous (rimProjSndToFun.{u} n) := by
   refine Continuous.subtype_mk ?_ _
   exact (continuous_add_const _).comp <| Continuous.div
     ((continuous_sub_right _).comp <| continuous_subtype_val.comp <|
@@ -134,79 +130,91 @@ lemma continuous_rimProjSndToFun (n : ℕ) : Continuous (rimProjSndToFun n) := b
       continuous_fst.comp <| continuous_subtype_val) <| rim_fst_ne_zero n
 
 /-- `rimProjSnd` -/
-noncomputable def rimProjSnd (n : ℕ) : C(rim n, I) :=
-  ⟨rimProjSndToFun n, continuous_rimProjSndToFun n⟩
+noncomputable def rimProjSnd (n : ℕ) : C(rim.{u} n, I) :=
+  ⟨rimProjSndToFun.{u} n, continuous_rimProjSndToFun n⟩
 
 /-- `rimProj` -/
-noncomputable def rimProj (n : ℕ) : C(rim n, ∂𝔻 n × I) :=
-  ContinuousMap.prodMk (rimProjFst n) (rimProjSnd n)
+noncomputable def rimProj (n : ℕ) : C(rim.{u} n, diskBoundary.{u} n × I) :=
+  ContinuousMap.prodMk (rimProjFst.{u} n) (rimProjSnd.{u} n)
 
 /-- `proj` -/
-noncomputable def proj (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) : ∀ i, C(closedCover n i, Y) :=
-  Fin.cons (f.comp (midProj n)) <| Fin.cons (H.comp (rimProj n)) finZeroElim
+noncomputable def proj (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y)) :
+    ∀ i, C(closedCover.{u} n i, Y) :=
+  Fin.cons (f.comp (midProj.{u} n)) <| Fin.cons (H.comp (rimProj.{u} n)) finZeroElim
 
-lemma proj_compatible (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) :
-    ∀ (p : Jar n) (hp0 : p ∈ closedCover n 0) (hp1 : p ∈ closedCover n 1),
+lemma proj_compatible (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y))
+    (hf : f ∘ diskBoundaryIncl.{u} n = H ∘ (·, 0)) :
+    ∀ (p : Jar.{u} n) (hp0 : p ∈ closedCover.{u} n 0) (hp1 : p ∈ closedCover.{u} n 1),
     proj n f H 0 ⟨p, hp0⟩ = proj n f H 1 ⟨p, hp1⟩ :=
   fun ⟨⟨⟨x, hx⟩⟩, ⟨y, hy0, hy1⟩⟩ hp0 hp1 ↦ by
     change f (midProj n _) = H (rimProj n _)
     change ‖x‖ ≤ 1 - y / 2 at hp0
     change ‖x‖ ≥ 1 - y / 2 at hp1
     have : ‖x‖ = 1 - y / 2 := by linarith only [hp0, hp1]
-    let q : ∂𝔻 n := ⟨ (2 / (2 - y)) • x, by
+    let q : diskBoundary.{u} n := ⟨ (2 / (2 - y)) • x, by
       simp only [mem_sphere_iff_norm, sub_zero, norm_smul, norm_div, RCLike.norm_ofNat,
         Real.norm_eq_abs]
       rw [this, abs_of_pos (by linarith), div_mul_eq_mul_div, div_eq_iff (by linarith)]
       rw [mul_sub, mul_one, ← mul_comm_div, div_self (by norm_num), one_mul, one_mul] ⟩
-    conv in midProj n _ => equals diskBoundaryIncl n q =>
-      unfold diskBoundaryIncl midProj midProjToFun
-      simp only [Fin.isValue, ContinuousMap.coe_mk]
-      congr
-    conv in rimProj n _ => equals (q, 0) =>
-      unfold rimProj rimProjFst rimProjFstToFun rimProjSnd rimProjSndToFun
-      dsimp only [Int.ofNat_eq_natCast, ContinuousMap.prod_eval, ContinuousMap.coe_mk]
-      conv => rhs; change (q, ⟨0, by norm_num, by norm_num⟩)
-      congr 2
-      · congr 2
-        rw [this, div_eq_div_iff (by linarith) (by linarith)]
-        rw [one_mul, mul_sub, mul_one, ← mul_comm_div, div_self (by norm_num), one_mul]
-      · rw [this, ← eq_sub_iff_add_eq, zero_sub, div_eq_iff (by linarith), mul_sub, mul_one]
+    have hmid :
+        midProj n ⟨(⟨⟨x, hx⟩⟩, ⟨y, hy0, hy1⟩), hp0⟩ = diskBoundaryIncl n q := by
+      apply ULift.ext
+      apply Subtype.ext
+      rfl
+    have hrim :
+        rimProj n ⟨(⟨⟨x, hx⟩⟩, ⟨y, hy0, hy1⟩), hp1⟩ = (q, 0) := by
+      apply Prod.ext
+      · change rimProjFst n _ = q
+        apply ULift.ext
+        apply Subtype.ext
+        change (1 / ‖x‖) • x = (2 / (2 - y)) • x
+        rw [this]
+        field_simp
+      · change rimProjSnd n _ = (0 : I)
+        apply Subtype.ext
+        change (y - 2) / ‖x‖ + 2 = 0
+        rw [this, ← eq_sub_iff_add_eq, zero_sub, div_eq_iff (by linarith), mul_sub, mul_one]
         rw [mul_div, mul_div_right_comm, neg_div_self (by norm_num), ← neg_eq_neg_one_mul]
-        rw [sub_neg_eq_add, add_comm]; rfl
-    change (f ∘ diskBoundaryIncl n) q = (H ∘ (·, 0)) q
-    rw [hf]
+        rw [sub_neg_eq_add, add_comm]
+        ring
+    exact (congrArg f hmid).trans <| (congrFun hf q).trans (congrArg H hrim).symm
 
-lemma proj_compatible' (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) :
-    ∀ (i j) (p : Jar n) (hpi : p ∈ closedCover n i) (hpj : p ∈ closedCover n j),
+lemma proj_compatible' (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y))
+    (hf : f ∘ diskBoundaryIncl.{u} n = H ∘ (·, 0)) :
+    ∀ (i j) (p : Jar.{u} n) (hpi : p ∈ closedCover.{u} n i)
+      (hpj : p ∈ closedCover.{u} n j),
     proj n f H i ⟨p, hpi⟩ = proj n f H j ⟨p, hpj⟩ := by
   intro ⟨i, hi⟩ ⟨j, hj⟩ p hpi hpj
   interval_cases i <;> (interval_cases j <;> (try simp only [Fin.zero_eta, Fin.mk_one]))
   · exact proj_compatible n f H hf p hpi hpj
   · exact Eq.symm <| proj_compatible n f H hf p hpj hpi
 
-lemma closedCover_isCover (n : ℕ) : ∀ (p : Jar n), ∃ i, p ∈ closedCover n i :=
+lemma closedCover_isCover (n : ℕ) :
+    ∀ (p : Jar.{u} n), ∃ i, p ∈ closedCover.{u} n i :=
   fun ⟨⟨x, _⟩, ⟨y, _⟩⟩ ↦ by
     by_cases h : ‖x‖ ≤ 1 - y / 2
     · use 0; exact h
     · use 1; change ‖x‖ ≥ 1 - y / 2; linarith
 
-lemma closedCover_isClosed (n : ℕ) : ∀ i, IsClosed (closedCover n i) := fun ⟨i, hi⟩ ↦ by
+lemma closedCover_isClosed (n : ℕ) :
+    ∀ i, IsClosed (closedCover.{u} n i) := fun ⟨i, hi⟩ ↦ by
   interval_cases i
   exacts [isClosed_mid n, isClosed_rim n]
 
 /-- `homotopyExtension` -/
-noncomputable def homotopyExtension (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y))
-    (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) : C(Jar n, Y) :=
+noncomputable def homotopyExtension (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y))
+    (hf : f ∘ diskBoundaryIncl.{u} n = H ∘ (·, 0)) : C(Jar.{u} n, Y) :=
   ContinuousMap.liftCoverClosed (closedCover n) (proj n f H) (proj_compatible' n f H hf)
     (closedCover_isCover n) (closedCover_isClosed n)
 
 -- The triangle involving the bottom (i.e., `𝔻 (n + 1)`) of the jar commutes.
-lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) :
+lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y))
+    (hf : f ∘ diskBoundaryIncl.{u} n = H ∘ (·, 0)) :
     ⇑f = homotopyExtension n f H hf ∘ (·, 0) := by
   ext p
   change _ = homotopyExtension n f H hf (p, 0)
@@ -215,17 +223,17 @@ lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type*} [TopologicalSpace 
     change ‖x‖ ≤ 1 - 0 / 2
     simp_all
   conv_rhs => equals (proj n f H 0) ⟨(p, 0), hp⟩ => apply ContinuousMap.liftCoverClosed_coe'
-  simp only [proj, Fin.succ_zero_eq_one, Fin.cons_zero,
-    ContinuousMap.comp_apply]
-  congr
-  change p = midProjToFun n ⟨(p, 0), hp⟩
+  simp only [proj, Fin.succ_zero_eq_one, Fin.cons_zero]
+  change f p = f (midProj n ⟨(p, 0), hp⟩)
+  apply congrArg f
   obtain ⟨x, hx⟩ := p
-  simp only [midProjToFun, sub_zero, ne_eq, OfNat.ofNat_ne_zero,
-    not_false_eq_true, div_self, one_smul]
+  apply ULift.ext
+  simp [midProj, midProjToFun]
 
 -- The triangle involving the wall (i.e., `𝕊 n × I`) of the jar commutes.
-lemma homotopyExtension_wall_commutes (n : ℕ) {Y : Type*} [TopologicalSpace Y]
-    (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) :
+lemma homotopyExtension_wall_commutes (n : ℕ) {Y : Type v} [TopologicalSpace Y]
+    (f : C(disk.{u} n, Y)) (H : C(diskBoundary.{u} n × I, Y))
+    (hf : f ∘ diskBoundaryIncl.{u} n = H ∘ (·, 0)) :
     ⇑H = homotopyExtension n f H hf ∘ Prod.map (diskBoundaryIncl n) id := by
   ext ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
   let q := diskBoundaryIncl n ⟨x, hx⟩

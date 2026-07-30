@@ -16,6 +16,8 @@ section MulZMod
 /-- `ZMod n` viewed as a multiplicative group. -/
 def MulZMod (n : ℕ) : Type := Multiplicative (ZMod n)
 
+attribute [local implicit_reducible] MulZMod
+
 instance {n : ℕ} : DecidableEq (MulZMod n) := instDecidableEqMultiplicative
 
 instance {n : ℕ} [NeZero n] : Fintype (MulZMod n) := Multiplicative.fintype
@@ -25,6 +27,9 @@ instance {n : ℕ} : Mul (MulZMod n) := Multiplicative.mul
 instance {n : ℕ} : MulOneClass (MulZMod n) := Multiplicative.mulOneClass
 
 instance {n : ℕ} : Group (MulZMod n) := Multiplicative.group
+
+attribute [local implicit_reducible]
+  instMulMulZMod instMulOneClassMulZMod instGroupMulZMod
 
 instance {n : ℕ} : IsCyclic (MulZMod n) := isCyclic_multiplicative
 

@@ -309,10 +309,12 @@ lemma separatesPoints_iff_unit_injective
       have hms : MeasurableSet (φ ⁻¹' ({k x} : Set _)) := by
         apply hφ
         apply measurableSet_eq
-      convert hms using 1
-      ext r
-      change k x = φ r ↔ r ∈ φ ⁻¹' {k x}
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, eq_comm]
+      have hset : {r | k x = φ r} = φ ⁻¹' {k x} := by
+        ext r
+        simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_singleton_iff, eq_comm]
+      change MeasurableSet ({r | k x = φ r} : Set ℝ)
+      rw [hset]
+      exact hms
     · rfl
 
 /-! ### `bind` -/

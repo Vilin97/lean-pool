@@ -32,7 +32,7 @@ lemma mem_thickening : a ∈ thickening u s ↔ ∃ x ∈ s, (x, a) ∈ u := by
 @[simp] lemma monotone_thickening : Monotone (thickening · s) := by
   intro u v huv
   apply iUnion₂_mono
-  simp only [ball, le_eq_subset] at huv ⊢
+  simp only [ball] at huv ⊢
   exact fun _ _ => preimage_mono huv
 
 lemma thickening_mono : Monotone (thickening u) :=

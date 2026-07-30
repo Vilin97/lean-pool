@@ -192,7 +192,7 @@ noncomputable def chain [∀ i, Preorder (P i)] (φ : Chain (Var I P)) : Var I f
     (index := Set.rangeFactorization _)
     (var := fun i r ↦ {
       toFun n :=
-        if h : i.val = ((φ n).apply r).fst then
+        if h : i.val = (φ n).embed ((φ n).index r) then
           h ▸ (φ n).var ((φ n).index r) r
         else
           have : Nonempty (P i) := by
@@ -202,26 +202,29 @@ noncomputable def chain [∀ i, Preorder (P i)] (φ : Chain (Var I P)) : Var I f
       monotone' i₁ i₂ hi := by
         classical
         have h₀ := (OrderHomClass.mono φ) hi r
-        simp only [Sigma.le_def, apply_fst, apply_snd] at h₀
-        change (if h : (i : I) = ((φ i₁).apply r).fst then _ else _) ≤
-               (if h : (i : I) = ((φ i₂).apply r).fst then _ else _)
-        by_cases h₁ : (i : I) = ((φ i₁).apply r).fst
-        · by_cases h₂ : (i : I) = ((φ i₂).apply r).fst
+        change (⟨(φ i₁).embed ((φ i₁).index r),
+          (φ i₁).var ((φ i₁).index r) r⟩ : Sigma P) ≤
+            ⟨(φ i₂).embed ((φ i₂).index r), (φ i₂).var ((φ i₂).index r) r⟩ at h₀
+        simp only [Sigma.le_def] at h₀
+        rcases h₀ with ⟨h₀fst, h₀snd⟩
+        change (if h : (i : I) = (φ i₁).embed ((φ i₁).index r) then _ else _) ≤
+               (if h : (i : I) = (φ i₂).embed ((φ i₂).index r) then _ else _)
+        by_cases h₁ : (i : I) = (φ i₁).embed ((φ i₁).index r)
+        · by_cases h₂ : (i : I) = (φ i₂).embed ((φ i₂).index r)
           · rw [dif_pos h₁, dif_pos h₂]
             rw [eqRec_eq_cast, eqRec_eq_cast]
-            have hkey := cast_mono h₂.symm h₀.snd
-            simp only [eqRec_eq_cast] at hkey
+            have hkey := cast_mono h₂.symm h₀snd
             convert hkey using 2
-            exact (cast_heq _ _).symm
+            exact (eqRec_heq _ _).symm
           · exfalso
             apply h₂
-            simp only [apply_fst] at h₁ h₂ ⊢
-            rw [← h₀.fst]; exact h₁
-        · by_cases h₂ : (i : I) = ((φ i₂).apply r).fst
+            rw [← h₀fst]
+            exact h₁
+        · by_cases h₂ : (i : I) = (φ i₂).embed ((φ i₂).index r)
           · exfalso
             apply h₁
-            simp only [apply_fst] at h₁ h₂ ⊢
-            rw [h₀.fst]; exact h₂
+            rw [h₀fst]
+            exact h₂
           · simp only [h₁, h₂, ↓reduceDIte, le_refl]
     })
     (isHom_var := by
@@ -281,8 +284,10 @@ lemma chain_apply [∀ i, Preorder (P i)] (φ : Chain (Var I P)) (r)
   classical
   simp only [
     chain, apply_fst, apply_mk', Set.rangeFactorization_coe, Function.comp_apply,
-    Chain.Sigma.distrib, Chain.coe_map, OrderHom.coe_mk, apply_snd, Sigma.mk.injEq,
-    heq_eq_eq, true_and]
+    Chain.Sigma.distrib, Chain.coe_map]
+  apply Sigma.ext
+  · rfl
+  apply heq_of_eq
   apply Chain.ext
   funext n
   have hfst : (φ 0).embed ((φ 0).index r) = (φ n).embed ((φ n).index r) := by
@@ -490,13 +495,12 @@ lemma isHom_chain_distrib : IsHom (Chain.Sigma.distrib (I := I) (P := P)) := by
   }
   intro r
   simp only [
-    Sigma.Var.chain_apply, Chain.Sigma.distrib, Chain.coe_map, OrderHom.coe_mk,
-    Function.comp_apply, Sigma.Var.apply_fst, Sigma.Var.apply_snd, Sigma.mk.injEq]
+    Sigma.Var.chain_apply, Chain.Sigma.distrib, Chain.coe_map, Function.comp_apply]
   have hfst : ∀ k, ((φ r) k).fst = (ψ k).embed ((ψ k).index r) := by
     intro k
     rw [hψ k r]
     rfl
-  refine ⟨hfst 0, ?_⟩
+  apply Sigma.ext (hfst 0)
   apply heq_ext (P := P) (i := ((φ r) 0).fst) (j := (ψ 0).embed ((ψ 0).index r)) (h := hfst 0)
   intro k
   apply HEq.trans (eqRec_heq _ _)

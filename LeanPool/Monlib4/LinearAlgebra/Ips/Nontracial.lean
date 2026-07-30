@@ -896,29 +896,22 @@ theorem pi_lmul_toMatrix [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k
         Matrix (Σ i, s i × s i) (Σ i, s i × s i) ℂ) =
       blockDiagonal' fun i => (x i ⊗ₖ 1) := by
   ext r l
+  rcases r with ⟨ri, ⟨r₁, r₂⟩⟩
+  rcases l with ⟨li, ⟨l₁, l₂⟩⟩
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.toMatrix_apply', lmul_apply, hMul_includeBlock]
   rw [blockDiagonal'_apply]
-  let x' : PiMat ℂ k s := fun a =>
-    if h : a = l.fst then (x a * ((hψ a).basis) (by rw [h]; exact l.snd)) else 0
-  have hx' : x' l.fst = x l.fst * (hψ l.fst).basis l.snd := by aesop
-  rw [← hx', includeBlock_apply', ite_mul, zero_mul]
-  simp_rw [kroneckerMap_apply, one_apply, mul_boole, @eq_comm _ r.fst]
-  simp_rw [x', Module.Dual.IsFaithfulPosMap.basis_apply, dite_hMul,
-    zero_mul, Matrix.mul_assoc, PosDef.rpow_mul_rpow, neg_add_cancel,
-    PosDef.rpow_zero, Matrix.mul_one, Matrix.single_eq]
-  split_ifs with h hh hhh
-  · simp only [mul_apply, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_one, ite_and]
-    simp_all
-  · rw [eq_comm] at h
-    simp only [eq_mpr_eq_cast, mul_apply, mul_ite, mul_one, mul_zero, ite_and,
-      Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte, ite_eq_right_iff]
-    intro ha
-    rw [eq_comm] at ha
-    contradiction
-  · rw [eq_comm] at h; contradiction
-  · rfl
-  · rfl
+  by_cases h : ri = li
+  · subst li
+    simp only [one_div, includeBlock_apply, ↓reduceDIte, eq_mp_eq_cast, cast_eq,
+      Module.Dual.IsFaithfulPosMap.basis_apply, kroneckerMap_apply]
+    rw [Matrix.mul_assoc, Matrix.mul_assoc, PosDef.rpow_mul_rpow, neg_add_cancel]
+    simp only [PosDef.rpow_zero, Matrix.mul_one]
+    by_cases h₂ : r₂ = l₂
+    · subst r₂
+      simp [Matrix.mul_apply, Matrix.single]
+    · simp [Matrix.mul_apply, Matrix.single, h₂, Ne.symm h₂]
+  · simp only [includeBlock_apply]
+    simp [h, Ne.symm h]
 
 example [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k s) :
     (Module.Dual.pi.IsFaithfulPosMap.toMatrix hψ (lmul x) :
@@ -931,31 +924,23 @@ theorem pi_rmul_toMatrix [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k
         Matrix (Σ i, s i × s i) (Σ i, s i × s i) ℂ) =
       blockDiagonal' fun i => (1 ⊗ₖ ((hψ i).sig (1 / 2) (x i))ᵀ) := by
   ext r l
+  rcases r with ⟨ri, ⟨r₁, r₂⟩⟩
+  rcases l with ⟨li, ⟨l₁, l₂⟩⟩
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.toMatrix_apply', rmul_apply, includeBlock_hMul]
   rw [blockDiagonal'_apply]
-  let x' : PiMat ℂ k s := fun a =>
-    if h : a = l.fst then (((hψ a).basis) (by rw [h]; exact l.snd) * x a) else 0
-  have hx' : x' l.fst = (hψ l.fst).basis l.snd * x l.fst := by aesop
-  rw [← hx', includeBlock_apply', ite_mul, zero_mul]
-  simp_rw [kroneckerMap_apply, one_apply, boole_mul, @eq_comm _ r.fst]
-  simp_rw [x', Module.Dual.IsFaithfulPosMap.basis_apply, dite_hMul,
-    zero_mul, Matrix.mul_assoc, ← Matrix.mul_assoc (PosDef.rpow _ (- (1 / 2))),
-    ← Module.Dual.IsFaithfulPosMap.sig_apply, Matrix.single_eq, Matrix.transpose_apply]
-  split_ifs with h hh hhh
-  · simp only [mul_apply, ite_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, ite_and, one_mul,
-      Finset.sum_ite_irrel, Finset.sum_const_zero]
-    simp_all
-  · rw [eq_comm] at h
-    simp only [eq_mpr_eq_cast, one_div, sig_apply, mul_apply, ite_mul, one_mul,
-      zero_mul, ite_and, Finset.sum_ite_irrel, Finset.sum_ite_eq, Finset.mem_univ,
-      ↓reduceIte, Finset.sum_const_zero, ite_eq_right_iff]
-    intro ha
-    rw [eq_comm] at ha
-    contradiction
-  · rw [eq_comm] at h; contradiction
-  · rfl
-  · rfl
+  by_cases h : ri = li
+  · subst li
+    simp only [includeBlock_apply, ↓reduceDIte, eq_mp_eq_cast, cast_eq,
+      kroneckerMap_apply, one_apply, boole_mul, Matrix.transpose_apply,
+      Module.Dual.IsFaithfulPosMap.basis_apply, Matrix.mul_assoc]
+    rw [← Matrix.mul_assoc (PosDef.rpow _ (- (1 / 2))),
+      ← Module.Dual.IsFaithfulPosMap.sig_apply (hψ ri) (1 / 2) (x ri)]
+    by_cases h₁ : r₁ = l₁
+    · subst r₁
+      simp [Matrix.mul_apply, Matrix.single]
+    · simp [Matrix.mul_apply, Matrix.single, h₁, Ne.symm h₁]
+  · simp only [includeBlock_apply]
+    simp [h, Ne.symm h]
 
 omit [Fintype k] [DecidableEq k] in
 theorem unitary.coe_pi (U : ∀ i, unitaryGroup (s i) ℂ) :

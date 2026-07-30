@@ -107,7 +107,7 @@ lemma continuousOn_pv_base (f : ℂ → ℂ) (γ : ℝ → ℂ)
 
 /-- If `f =ᶠ g` along a filter, their `limUnder` values agree. -/
 theorem limUnder_eventually_eq {α : Type*} [TopologicalSpace α] [Nonempty α]
-    {f g : ℝ → α} {l : Filter ℝ} [l.NeBot] (h : ∀ᶠ x in l, f x = g x) :
+    {f g : ℝ → α} {l : Filter ℝ} (h : ∀ᶠ x in l, f x = g x) :
     limUnder l f = limUnder l g := by simp only [limUnder, Filter.map_congr h]
 
 private theorem aEStronglyMeasurable_pv_integrand

@@ -70,8 +70,7 @@ namespace Real
 
 /-- Every real number has some Caucy sequence converging to it. -/
 theorem exists_CauSeq (x : ℝ) : ∃ s, Real.mk s = x :=
-  let ⟨y,hy⟩ := Quot.exists_rep x.cauchy
-  ⟨y, by rwa [Real.mk, CauSeq.Completion.mk, Quotient.mk'', Real.ofCauchy.injEq]⟩
+  x.ind_mk fun y ↦ ⟨y, rfl⟩
 
 end Real
 

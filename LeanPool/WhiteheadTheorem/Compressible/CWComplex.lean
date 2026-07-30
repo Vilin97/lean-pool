@@ -385,7 +385,6 @@ theorem relCWComplex_of_diskBoundaryIncl
             ext x
             apply ContinuousMap.ext
             intro t
-            simp only [hom_comp, ContinuousMap.comp_apply]
             exact IsCompressible.relCWComplex.H_skInclSucc jcom_sk sq n 0 n (by omega) x t ) }
     let H' : X.toTopCat ⟶ TopCat.of C(I, Y) :=
       Limits.colimit.desc (Functor.ofSequence X.skInclSucc) ccH
@@ -397,8 +396,7 @@ theorem relCWComplex_of_diskBoundaryIncl
       simp only [H']
       refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
       unfold ccH
-      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
-        NatTrans.ofSequence_app]
+      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk]
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
       exact (H n).map_zero_left x
@@ -408,8 +406,7 @@ theorem relCWComplex_of_diskBoundaryIncl
       simp only [H']
       refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
       unfold ccH
-      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
-        NatTrans.ofSequence_app]
+      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk]
       simp only [L]
       refine Eq.trans ?_ (Limits.colimit.ι_desc_assoc ccL n j).symm
       ext x
@@ -425,8 +422,7 @@ theorem relCWComplex_of_diskBoundaryIncl
       simp only [H']
       refine (Limits.colimit.ι_desc_assoc ccH 0 _).trans ?_
       unfold ccH
-      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
-        NatTrans.ofSequence_app]
+      simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk]
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
       rfl

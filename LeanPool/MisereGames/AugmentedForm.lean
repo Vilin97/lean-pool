@@ -62,19 +62,31 @@ private theorem map_def {α β} (f : α → β) (s : AugmentedFunctor α) :
 private instance : QPF AugmentedFunctor where
   P := ⟨(Player → Type u) × (Player → Prop), fun ⟨x, _⟩ ↦ Σ p, PLift (x p)⟩
   abs x := ⟨⟨fun p ↦ Set.range (x.2 ∘ .mk p ∘ PLift.up), fun _ ↦ inferInstance⟩, x.1.2⟩
-  repr x := ⟨⟨fun p ↦ Shrink (x.1.1 p), x.2⟩, Sigma.rec (fun _ y ↦ ((equivShrink _).symm y.1).1)⟩
+  repr x := ⟨⟨fun p ↦ Shrink.{u, u + 1} (x.1.1 p), x.2⟩,
+    Sigma.rec (fun _ y ↦ ((equivShrink.{u, u + 1} _).symm y.1).1)⟩
   abs_repr x := by
     cases x with | mk s b =>
     refine AugmentedFunctor.ext ?_ rfl
     apply Subtype.ext; funext p; ext y; constructor
-    · rintro ⟨x, hx⟩; exact hx ▸ ((equivShrink ↑(s.1 p)).symm x).2
-    · intro hy; exact ⟨equivShrink ↑(s.1 p) ⟨y, hy⟩,
-        congrArg Subtype.val ((equivShrink ↑(s.1 p)).left_inv ⟨y, hy⟩)⟩
+    · rintro ⟨x, hx⟩
+      exact hx ▸ ((@equivShrink.{u, u + 1} ↑(s.1 p) (s.2 p)).symm x).2
+    · intro hy; exact ⟨@equivShrink.{u, u + 1} ↑(s.1 p) (s.2 p) ⟨y, hy⟩,
+        congrArg Subtype.val
+          ((@equivShrink.{u, u + 1} ↑(s.1 p) (s.2 p)).left_inv ⟨y, hy⟩)⟩
   abs_map f := by
     intro ⟨⟨x, b⟩, g⟩
-    ext
-    · simp [PFunctor.map, map_def]
-    · simp [PFunctor.map, map_def]
+    apply AugmentedFunctor.ext
+    · apply Subtype.ext
+      funext p
+      ext z
+      change (∃ y, f (g ⟨p, PLift.up y⟩) = z) ↔
+        z ∈ f '' Set.range (g ∘ Sigma.mk p ∘ PLift.up)
+      constructor
+      · rintro ⟨y, rfl⟩
+        exact ⟨_, ⟨y, rfl⟩, rfl⟩
+      · rintro ⟨_, ⟨y, rfl⟩, rfl⟩
+        exact ⟨y, rfl⟩
+    · rfl
 
 end AugmentedFunctor
 
@@ -88,6 +100,11 @@ namespace AugmentedForm
 
 open Form
 
+private theorem dest_mk_augmented (options : AugmentedFunctor AugmentedForm) :
+    (QPF.Fix.mk options : AugmentedForm).dest = options := by
+  unfold AugmentedForm at options
+  exact QPF.Fix.dest_mk options
+
 private def moves' (p : Player) (x : AugmentedForm.{u}) : Set AugmentedForm.{u} :=
   x.dest.1.1 p
 
@@ -100,9 +117,16 @@ private def moves' (p : Player) (x : AugmentedForm.{u}) : Set AugmentedForm.{u} 
     rintro _ ⟨⟨st, hst⟩, rfl⟩
     constructor
     rintro y hy
-    rw [QPF.Fix.dest_mk, Set.mem_iUnion] at hy
-    obtain ⟨_, ⟨_, h⟩, _, rfl⟩ := hy
-    exact h
+    obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hy
+    rw [QPF.Fix.dest_mk] at hp
+    have hcomponent := congrArg
+      (fun options : AugmentedFunctor AugmentedForm ↦ options.1.1 p)
+      (AugmentedFunctor.map_def (β := AugmentedForm) Subtype.val
+        ((st, hst) : AugmentedFunctor _))
+    have hp' : y ∈ Subtype.val '' st.1 p :=
+      Eq.mp (congrArg (fun options : Set AugmentedForm ↦ y ∈ options) hcomponent) hp
+    obtain ⟨option, _, rfl⟩ := hp'
+    exact option.property
 
 /--
 Check if a given `Player` has a tombstone.
@@ -125,27 +149,43 @@ instance : OfSets AugmentedForm fun _ ↦ True where
 private theorem moves_ofSets' (p) (st :
     Player → Set AugmentedForm) [Small.{u} (st .left)] [Small.{u} (st .right)] :
     moves p !{st} = st p := by
-  dsimp [ofSets, ofSetsWithTombs, moves]; rw [moves', QPF.Fix.dest_mk]
+  let options : AugmentedFunctor AugmentedForm := ⟨⟨st, fun
+    | .left => inferInstance
+    | .right => inferInstance⟩, fun _ ↦ False⟩
+  change (QPF.Fix.mk options).dest.1.1 p = st p
+  exact congrArg (fun choices ↦ choices.1.1 p) (dest_mk_augmented options)
 
 @[simp]
 theorem moves_ofSetsWithTombs (p) (st : Player → Set AugmentedForm) (tomb : Player → Prop)
     [Small.{u} (st .left)] [Small.{u} (st .right)] :
     moves p (ofSetsWithTombs st tomb) = st p := by
-  dsimp [ofSetsWithTombs, moves]; rw [moves', QPF.Fix.dest_mk]
+  let options : AugmentedFunctor AugmentedForm := ⟨⟨st, fun
+    | .left => inferInstance
+    | .right => inferInstance⟩, tomb⟩
+  change (QPF.Fix.mk options).dest.1.1 p = st p
+  exact congrArg (fun choices ↦ choices.1.1 p) (dest_mk_augmented options)
 
 @[simp]
 theorem hasTombstone_ofSets
     (st : Player → Set AugmentedForm) [Small.{u} (st .left)] [Small.{u} (st .right)]
     (p : Player) : ¬!{st}.hasTombstone p := by
-  dsimp [ofSets, ofSetsWithTombs]
-  rw [hasTombstone, QPF.Fix.dest_mk]
-  cases p <;> simp only [not_false_eq_true]
+  let options : AugmentedFunctor AugmentedForm := ⟨⟨st, fun
+    | .left => inferInstance
+    | .right => inferInstance⟩, fun _ ↦ False⟩
+  change ¬(QPF.Fix.mk options).dest.2 p
+  rw [congrArg (fun choices ↦ choices.2 p) (dest_mk_augmented options)]
+  change ¬False
+  exact not_false
 
 @[simp]
 theorem hasTombstone_ofSetsWithTombs (p : Player) (st : Player → Set AugmentedForm)
     [Small.{u} (st .left)] [Small.{u} (st .right)] (tomb : Player → Prop)
     : (ofSetsWithTombs st tomb).hasTombstone p = tomb p := by
-  simp only [hasTombstone, ofSetsWithTombs, QPF.Fix.dest_mk]
+  let options : AugmentedFunctor AugmentedForm := ⟨⟨st, fun
+    | .left => inferInstance
+    | .right => inferInstance⟩, tomb⟩
+  change (QPF.Fix.mk options).dest.2 p = tomb p
+  exact congrArg (fun choices ↦ choices.2 p) (dest_mk_augmented options)
 
 instance (p : Player) (x : AugmentedForm.{u}) : Small.{u} (moves p x) := x.dest.1.2 p
 
@@ -154,13 +194,12 @@ theorem ofSets_moves_tombs (x : AugmentedForm) :
     ofSetsWithTombs (fun p => moves p x) (fun p => x.hasTombstone p) = x := by
   simp only [ofSetsWithTombs, moves, moves', hasTombstone]
   unfold AugmentedForm at x
-  have h1 : (fun x_1 ↦
-        match x_1 with
-        | Player.left => x.dest.2 Player.left
-        | Player.right => x.dest.2 Player.right) = x.dest.2 := by
-       funext p
-       cases p <;> rfl
-  simp only [Subtype.coe_eta, Prod.mk.eta, QPF.Fix.mk_dest]
+  apply (congrArg QPF.Fix.mk ?_).trans x.mk_dest
+  apply AugmentedFunctor.ext
+  · apply Subtype.ext
+    rfl
+  · funext p
+    rfl
 
 /--
 Two `AugmentedForm`s are equal if they have the same options and tombstones.
@@ -702,8 +741,7 @@ theorem ofGameFormHom_injective : Function.Injective ofGameFormHom := by
 
 theorem hasTombstone_neg_iff {g : AugmentedForm} {p : Player}
     : hasTombstone p (-g) ↔ hasTombstone (-p) g := by
-  rw [neg_eq']
-  exact Eq.to_iff rfl
+  simp only [neg_eq', hasTombstone_ofSetsWithTombs]
 
 @[simp]
 theorem hasTombstone_add {x y : AugmentedForm} {p : Player} :

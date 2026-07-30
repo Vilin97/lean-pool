@@ -447,7 +447,7 @@ lemma subset_addNullables (p : Finset g.NT) : p ⊆ (addNullables p) := by
 lemma generators_limits_nullable {p : Finset g.NT}
     (hpg : p ⊆ g.generators) (hne : p ≠ addNullables p) :
     (g.generators).card - (addNullables p).card < (g.generators).card - p.card := by
-  have hp := HasSubset.Subset.ssubset_of_ne (subset_addNullables p) hne
+  have hp := LE.le.ssubset_of_ne (subset_addNullables p) hne
   apply Nat.sub_lt_sub_left
   · apply Nat.lt_of_lt_of_le
     · exact Finset.card_lt_card hp
@@ -872,7 +872,7 @@ lemma derivesIn_non_empty_to_nullableRelated_derives {u v : List (Symbol T g.NT)
   cases m with
   | zero =>
     cases huv
-    use u
+    exact ⟨u, NullableRelated.refl u, Derives.refl (g := g.eliminateEmpty) u⟩
   | succ n =>
     obtain ⟨u'', huu'', hvn⟩ := huv.head_of_succ
     obtain ⟨u', hru'', huw'⟩ := derivesIn_non_empty_to_nullableRelated_derives hv hvn

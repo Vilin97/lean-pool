@@ -619,7 +619,6 @@ include T in theorem build_union_isNSubring_nat
 
 /- ω-iteration: given a one-pass close-up procedure, iterate it to close all f.g. ideals. -/
 include T in theorem close_up_all_omega
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : NSubring T)
     (hR_card : Cardinal.mk R.carrier < Cardinal.mk T)
     (_hT_card : Cardinal.mk T = Cardinal.mk (IsLocalRing.ResidueField T))

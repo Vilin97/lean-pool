@@ -529,8 +529,8 @@ class Stationary (μ : S → ℝ) (P : Matrix S S ℝ) : Prop where
 variable [DecidableEq S]
 
 lemma multi_step_stationary
-  (μ : S → ℝ) [StochasticVec μ]
-  (P : Matrix S S ℝ) [RowStochastic P]
+  (μ : S → ℝ)
+  (P : Matrix S S ℝ)
   (n : ℕ) [Stationary μ P] :
   Stationary μ (P ^ n) := by
   constructor

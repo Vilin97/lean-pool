@@ -10,6 +10,9 @@ import LeanPool.OrderPQ.Basic
 # LeanPool.OrderPQ.Main
 -/
 
+attribute [local implicit_reducible]
+  MulZMod instMulMulZMod instMulOneClassMulZMod instGroupMulZMod
+
 namespace OrderPQ
 
 -- Let `p` and `q` be prime numbers.

@@ -136,7 +136,7 @@ lemma isCoprod_type_iff {J : Type u1} {F : Discrete J ⥤ Type (max u1 v1)} (t :
     have : IsIso f := by
       rw [isIso_iff_bijective]; constructor
       · intro ⟨i, x⟩ ⟨j, y⟩ h; have he := ((pairwiseDisjoint_iff _).mp h2) h
-        subst he; suffices x = y by simp [this]
+        subst he; suffices x = y by subst this; rfl
         simp only [TypeCat.hom_ofHom, TypeCat.Fun.coe_mk, f] at h
         exact (mono_iff_injective _).mp (h1 i) h
       · intro y

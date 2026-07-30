@@ -26,7 +26,7 @@ universe u v w
 open Module
 variable (K : Type u) [Field K]
 open Matrix in
-instance MatrixRing.isCentral (ι : Type) [Fintype ι] [Nonempty ι] [DecidableEq ι] :
+instance MatrixRing.isCentral (ι : Type) [Fintype ι] [DecidableEq ι] :
     Algebra.IsCentral K (Matrix ι ι K) where
   out _ h := mem_range_scalar_of_commute_single fun _ _ _ =>
     Subalgebra.mem_center_iff.mp h _
@@ -522,7 +522,7 @@ instance _root_.IsCentralSimple.TensorProduct.simple
 instance baseChange
     (D L : Type u) [Ring D] [Algebra K D]
     [Field L] [Algebra K L]
-    [h : Algebra.IsCentral K D] [IsSimpleRing D] :
+    [h : Algebra.IsCentral K D] :
     Algebra.IsCentral L (L ⊗[K] D) where
   out:= by
     intro _ H
@@ -561,7 +561,7 @@ lemma _root_.AlgEquiv.isCentral {K B C : Type*}
     exact ⟨k, by simpa [Algebra.ofId_apply] using congr(e $hk)⟩
 theorem CSA_implies_CSA (K : Type*) (B : Type*) [Field K] [Ring B] [Algebra K B]
     (n : ℕ) (D : Type*) [NeZero n] (h : DivisionRing D) [Algebra K D]
-    (Wdb : B ≃ₐ[K] (Matrix (Fin n) (Fin n) D)) [Algebra.IsCentral K B] [IsSimpleRing B] :
+    (Wdb : B ≃ₐ[K] (Matrix (Fin n) (Fin n) D)) [Algebra.IsCentral K B] :
     Algebra.IsCentral K D := by
   refine ⟨fun d hd => ?_⟩
   obtain ⟨k, hk⟩ := Wdb.isCentral.1

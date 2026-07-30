@@ -92,10 +92,11 @@ lemma tendsto_zero_weakSpace_of_orthonormal {e : ℕ → E} (he : Orthonormal �
     (tendsto_zero_iff_norm_tendsto_zero).2 hnorm
   have : Tendsto (fun n => l (e n)) atTop (𝓝 (0 : 𝕜)) := by
     simpa [hl] using hinner
-  have h0 : ((topDualPairing 𝕜 E).flip (0 : WeakSpace 𝕜 E)) l = 0 := by
-    simp only [LinearMap.flip_apply, topDualPairing_apply]
-    exact map_zero l
-  simpa [ew, topDualPairing_apply, h0] using this
+  -- `flip_apply`/`topDualPairing_apply` are definitional, but `simp` cannot match them through
+  -- the `WeakSpace 𝕜 E` synonym, so discharge this by defeq instead.
+  have h0 : ((topDualPairing 𝕜 E).flip (0 : WeakSpace 𝕜 E)) l = 0 := map_zero l
+  rw [h0]
+  exact this
 
 /-- A compact operator sends an orthonormal sequence to a strongly-null sequence. -/
 lemma tendsto_zero_apply_of_isCompactOperator_of_orthonormal (T : E →L[𝕜] E)

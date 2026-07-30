@@ -98,8 +98,8 @@ theorem routerOfSetFamily_measurable {X : Type u} [MeasurableSpace X]
 
 /-- interpClassFixed equals the range of patchEval with routerOfSet. -/
 theorem interpClassFixed_eq_range_patchEval
-    {X : Type u} [MeasurableSpace X]
-    {Θ₁ Θ₂ : Type*} [MeasurableSpace Θ₁] [MeasurableSpace Θ₂]
+    {X : Type u}
+    {Θ₁ Θ₂ : Type*}
     (e₁ : Θ₁ → Concept X Bool) (e₂ : Θ₂ → Concept X Bool)
     (A : Set X) :
     interpClassFixed (Set.range e₁) (Set.range e₂) A =
@@ -118,8 +118,8 @@ theorem interpClassFixed_eq_range_patchEval
 
 /-- interpClassCountable equals the range of patchEval with routerOfSetFamily. -/
 theorem interpClassCountable_eq_range_patchEval
-    {X : Type u} [MeasurableSpace X]
-    {Θ₁ Θ₂ : Type*} [MeasurableSpace Θ₁] [MeasurableSpace Θ₂]
+    {X : Type u}
+    {Θ₁ Θ₂ : Type*}
     (e₁ : Θ₁ → Concept X Bool) (e₂ : Θ₂ → Concept X Bool)
     (A : ℕ → Set X) :
     interpClassCountable (Set.range e₁) (Set.range e₂) A =
@@ -205,7 +205,7 @@ structure BorelRouterCode (X : Type u) [MeasurableSpace X] where
 /-- The range of patchEval with a BorelRouterCode is contained in interpClass. -/
 theorem range_patchEval_sub_interpClass
     {X : Type u} [MeasurableSpace X]
-    {Θ₁ Θ₂ : Type*} [MeasurableSpace Θ₁] [MeasurableSpace Θ₂]
+    {Θ₁ Θ₂ : Type*}
     (e₁ : Θ₁ → Concept X Bool) (e₂ : Θ₂ → Concept X Bool)
     (R : BorelRouterCode X) :
     Set.range (letI := R.instMeasΡ; patchEval e₁ e₂ R.eval) ⊆

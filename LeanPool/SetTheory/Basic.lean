@@ -16,6 +16,8 @@ inconsistency development.
 
 noncomputable section
 
+attribute [local implicit_reducible] 𝓛ZF
+
 variable {M N M₀ : Type _} [ZFStructure M] [ZFStructure N] [ZFStructure M₀]
 
 open Subtype in
@@ -222,7 +224,7 @@ namespace ToZFSet
 
 @[toZFSet_simps] lemma subset {x : M} {y : M} : x ⊆ y ↔ ⇓x ⊆ ⇓y := by
   rw [← ToV.reduce_subset]
-  simp [Subset, ZFSet.Subset, toZFSet_simps]
+  simp [HasSubset.Subset, ZFSet.subset_def, toZFSet_simps]
 
 @[toZFSet_simps] lemma eq {x y : M} : x = y ↔ ⇓x = ⇓y := by
   split_vonNeumann hM
@@ -413,7 +415,7 @@ instance instSingletonMM : Singleton M M where singleton := SetTheory.singleton
 lemma Singleton.singleton.eq_iff (x y : M) : ({x} : M) = y ↔ ∀ z, z ∈ y ↔ z = x :=
   SetTheory.singleton.eq_iff ..
 /-- The `formula` declaration. -/
-def Singleton.singleton.formula := SetTheory.singleton.formula
+noncomputable def Singleton.singleton.formula := SetTheory.singleton.formula
 @[realize_simps] lemma Singleton.singleton.realize_iff (v : Fin 2 → M) :
     formula.Realize v ↔ {v 0} = v 1 := SetTheory.singleton.realize_iff v
 @[realize] lemma Singleton.singleton.eu (x : M) : IsSet {y | y = x} :=
@@ -425,7 +427,7 @@ instance instInsertMM : Insert M M where insert := SetTheory.insert
 lemma Insert.insert.eq_iff (x y z : M) : Insert.insert x y = z ↔ ∀ w, w ∈ z ↔ w = x ∨ w ∈ y :=
   SetTheory.insert.eq_iff ..
 /-- The `formula` declaration. -/
-def Insert.insert.formula := SetTheory.insert.formula
+noncomputable def Insert.insert.formula := SetTheory.insert.formula
 @[realize_simps] lemma Insert.insert.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ insert (v 0) (v 1) = v 2 := SetTheory.insert.realize_iff v
 @[realize] lemma Insert.insert.eu (x y : M) : IsSet {z | z = x ∨ z ∈ y} :=
@@ -582,7 +584,7 @@ instance instUnionM : Union M where union := SetTheory.union
 lemma Union.union.eq_iff (x y z : M) : x ∪ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∨ w ∈ y :=
   SetTheory.union.eq_iff ..
 /-- The `formula` declaration. -/
-def Union.union.formula := SetTheory.union.formula
+noncomputable def Union.union.formula := SetTheory.union.formula
 @[realize_simps] lemma Union.union.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∪ v 1 = v 2 := SetTheory.union.realize_iff v
 @[realize] lemma Union.union.eu (x y : M) : IsSet {z | z ∈ x ∨ z ∈ y} :=
@@ -593,7 +595,7 @@ instance instInterM : Inter M where inter := SetTheory.inter
 lemma Inter.inter.eq_iff (x y z : M) : x ∩ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∧ w ∈ y :=
   SetTheory.inter.eq_iff ..
 /-- The `formula` declaration. -/
-def Inter.inter.formula := SetTheory.inter.formula
+noncomputable def Inter.inter.formula := SetTheory.inter.formula
 @[realize_simps] lemma Inter.inter.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∩ v 1 = v 2 := SetTheory.inter.realize_iff v
 @[realize] lemma Inter.inter.eu (x y : M) : IsSet {z | z ∈ x ∧ z ∈ y} :=
@@ -639,7 +641,7 @@ instance instOrderBotM : OrderBot M where
 
 @[simp] lemma lt_succ {α : M} : α < succ α := by
   simpa only [
-    lt_iff_le_and_exists, toZFSet_simps, ZFSet.le_def, subset_def, mem_insert_iff
+    lt_iff_le_and_exists, toZFSet_simps, subset_def, mem_insert_iff
   ] using ⟨by tauto, α, by simp, mem_irrefl _⟩
 
 @[realize] lemma pair.eu (x y : M) : ∃! z, z = ({{x}, {x, y}} : M) := by simp
@@ -875,13 +877,11 @@ lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
     IsInjective (funcToSet f) ↔ Injective f := by
   simp +contextual only [IsInjective, isFunc_funcToSet, true_and, dom_funcToSet, Injective,
     Subtype.forall, Subtype.mk.injEq, apply_funcToSet, Subtype.coe_inj]
-  exact Iff.rfl
 
 lemma nonempty_iff (x : M) : Nonempty x ↔ x ≠ ∅ := by
   simp only [nonempty_subtype, ne_eq]
   rw [eq_comm, EmptyCollection.emptyCollection.eq_iff]
   simp only [not_forall, not_not]
-  exact Iff.rfl
 
 /-- The `cardLE` declaration. -/
 @[realize] def cardLE (x y : M) := ∃ f ∈ Func x y, IsInjective f
@@ -936,7 +936,7 @@ lemma iUnion_funcToSet {A B : M} {f : A → B} : iUnion (funcToSet f) = ⨆ x : 
   rw [iUnion.eq_iff]
   intro x
   erw [mem_sSup_iff]
-  · simp only [Set.mem_range, Subtype.exists, mem_Ran_funcToSet_iff]; rfl
+  · simp only [Set.mem_range, Subtype.exists, mem_Ran_funcToSet_iff]
   · refine ⟨iUnion (funcToSet f), ?_⟩
     intro x
     simp only [Set.mem_range, Subtype.exists, forall_exists_index]

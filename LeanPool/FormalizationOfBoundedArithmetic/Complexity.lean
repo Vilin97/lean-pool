@@ -24,6 +24,8 @@ variable {L : Language} {α β : Type u} {n : Nat}
 
 namespace FirstOrder.Language
 
+attribute [local implicit_reducible] zambella
+
 namespace BoundedFormula.IsAtomic
 variable {φ : L.BoundedFormula α n}
 

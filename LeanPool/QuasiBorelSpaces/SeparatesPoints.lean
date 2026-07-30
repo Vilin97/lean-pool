@@ -106,7 +106,7 @@ instance [SeparatesPoints A] [SeparatesPoints B] : SeparatesPoints (A ⊕ B) whe
         intro p hp hx
         apply h (Sum.elim (fun _ ↦ False) p) (by fun_prop) hx
 
-instance [SeparatesPoints A] [SeparatesPoints B] : SeparatesPoints (QuasiBorelHom A B) where
+instance [SeparatesPoints B] : SeparatesPoints (QuasiBorelHom A B) where
   separates f g h := by
     ext x
     apply separatesPoints_def

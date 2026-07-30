@@ -47,6 +47,7 @@ noncomputable instance {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) : Fintype (
 
 /-- Free coordinates for the intersection number `N[k][a][d]`: positions `j` where `v_j` is neither
 a base symbol (`a`) nor a reused symbol from `u` (`d`). -/
+@[implicit_reducible]
 def FreeCoord (a d : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none }
 
@@ -99,6 +100,7 @@ private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
 
 /-- Available symbols for new coordinates: those not in `baseSet` and not used by `u` on
 its free columns. -/
+@[implicit_reducible]
 def AvailFor {k : DirIdx} (u : BaseOrbit k) : Type :=
   { x : SymN // x ∉ (baseSet ∪ freeSyms (k := k) u) }
 
@@ -117,8 +119,9 @@ theorem card_availFor {k : DirIdx} (u : BaseOrbit k) :
   have hcompl :
       Fintype.card (AvailFor u)
         = Fintype.card SymN - Fintype.card (↑used) := by
-    simpa [AvailFor,
-      used] using (Fintype.card_subtype_compl (α := SymN) (p := fun x : SymN => x ∈ used))
+    change Fintype.card {x : SymN // ¬x ∈ used} =
+      Fintype.card SymN - Fintype.card {x : SymN // x ∈ used}
+    exact Fintype.card_subtype_compl (α := SymN) (p := fun x : SymN => x ∈ used)
   simp_all
 
 theorem card_embedding_freeCoord_availFor {k a d : DirIdx} (u : BaseOrbit k) :
@@ -183,8 +186,9 @@ private lemma u_coord_mem_usedSet {k : DirIdx} (u : BaseOrbit k) (j : Fin 3) :
   by_cases hcol : colMatch (maskAt k) j = none
   · -- `j` is a free column, so `u_j ∈ freeSyms`.
     have : u.1.1 j ∈ freeSyms (k := k) u := by
+      let jf : FreeCol k := ⟨j, hcol⟩
       refine Finset.mem_image.2 ?_
-      refine ⟨⟨j, hcol⟩, by simp, rfl⟩
+      exact ⟨jf, Finset.mem_univ jf, rfl⟩
     exact Finset.mem_union_right _ this
   · -- `j` is fixed, so `u_j` is one of the base symbols.
     rcases (Option.ne_none_iff_exists').1 hcol with ⟨i, hi⟩
@@ -358,7 +362,6 @@ theorem gOfEmbeddingVal_val_of_rowMatch_some {k : DirIdx} (u : BaseOrbit k) (a d
     Option.some_injective _ (hspec.symm.trans hrow)
   dsimp [gOfEmbeddingVal]
   rw [dif_neg hne]
-  -- Only the first component matters; avoid simplifying proof fields.
   simp [hchoose]
 
 theorem gOfEmbeddingVal_val_of_rowMatch_none {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
@@ -584,7 +587,12 @@ theorem encode_decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                 (e ⟨j.1, ⟨hjcol, hjrow⟩⟩).1 :=
             gOfEmbeddingVal_val_of_rowMatch_none (u := u) (a := a) (d := d) (hcons := hcons)
               (e := e) (j := (⟨j.1, hjcol⟩ : FreeCol a)) hjrow
-          simpa [gOfEmbedding] using h0
+          have hj : (⟨j.1, ⟨hjcol, hjrow⟩⟩ : FreeCoord a d) = j := Subtype.ext rfl
+          rw [hj] at h0
+          change
+            (gOfEmbeddingVal (u := u) (a := a) (d := d) hcons e ⟨j.1, hjcol⟩).1 =
+              (e j).1
+          exact h0
 
 theorem decode_encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
     (hcons : consistent (maskAt k) (maskAt a) (maskAt d) = true)
@@ -632,7 +640,10 @@ theorem decode_encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
             (gOfEmbeddingVal_val_of_rowMatch_none (u := u) (a := a) (d := d) (hcons := hcons)
               (e := encodeInter (u := u) (a := a) (d := d) w) (j := (⟨j, hcol⟩ : FreeCol a)) hrow)
         rw [hv0, hg]
-        simp [encodeInter]
+        change
+          (encodeInter (u := u) (a := a) (d := d) w
+            (⟨j, ⟨hcol, hrow⟩⟩ : FreeCoord a d)).1 = w.1.1 j
+        rfl
   · -- fixed column: evaluate via `decodeTuple_of_colMatch_some` and use
     -- `base_eq_of_colMatch` for `w`.
     rcases (Option.ne_none_iff_exists').1 hcol with ⟨i, hi⟩

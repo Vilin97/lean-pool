@@ -174,7 +174,6 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
   apply Limits.pushout.hom_ext
   · rw [deformRetrEvalAt, Limits.pushout.inl_desc]
     ext y
-    simp only [hom_comp, ContinuousMap.comp_apply]
     change ((inl f ≫ curriedDeformRetr f) y) t = _  -- curriedDeformRetrEvalAt_hom_apply
     rw [curriedDeformRetr]
     change ((ConcreteCategory.hom (Limits.pushout.inl f (Cyl.i₀ X) ≫

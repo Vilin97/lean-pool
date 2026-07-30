@@ -77,15 +77,19 @@ end BodySystemObj
   invFun x := ⟨fun n ↦ (x.res (n + 1)).val.get ⟨n, by simp⟩, by
     intro y h; suffices y = (x.res y.length).val by simp only [this, resEq_mem]
     apply List.ext_getElem (by simp); intro n hn
-    rw [principalOpen_index] at h
+    replace h := (principalOpen_index _ _).mp h
     conv => simp [hn]; rw [← h _ hn]
     apply List.IsPrefix.getElem; rw [bodySystem_con']; omega⟩
   left_inv x := by ext n; simp [Stream'.get]
   right_inv x := by
-    ext1; ext1 n; ext1; apply List.ext_getElem (by simp); intro m hm
-    simp only [Set.mem_setOf_eq, resEq_len, List.get_eq_getElem, Stream'.take_get] at *
-    intro _; apply List.IsPrefix.getElem
-    rw [bodySystem_con']; omega
+    ext1; ext1 n; ext1
+    apply List.ext_getElem (by rw [Stream'.length_take, resEq_len])
+    intro m hm h₂
+    have hmn : m < n := by rwa [resEq_len] at h₂
+    refine Eq.trans (Stream'.take_get m n _ ?_) ?_
+    · rw [Stream'.length_take]; exact hmn
+    · exact List.IsPrefix.getElem (xs := (x.res (m + 1)).val) (ys := (x.res n).val)
+        ((bodySystem_con' x).mpr (by omega)) (by rw [resEq_len]; omega)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps! -isSimp] def bodyEquivSystem : bodyFunctor ≅ bodySystem := NatIso.ofComponents
   (fun T ↦ eqToIso (by rfl : bodyFunctor.obj T = body T.2) ≪≫
@@ -266,11 +270,11 @@ lemma strategy_body (f : Strategy T p) : y ∈ body f.pre.subtree ↔ y ∈ body
   ∀ (x : T), (hp : IsPosition x.val p) → y ∈ principalOpen x.val →
   y.get x.val.length = (f x hp).val := by
   rw [preStrategy_body]
-  simp only [Set.mem_singleton_iff]
   constructor
   · rintro ⟨hy, h⟩
     exact ⟨hy, fun x hp hx ↦ congrArg Subtype.val (h x hp hx)⟩
-  · simp_all
+  · rintro ⟨hy, h⟩
+    exact ⟨hy, fun x hp hx ↦ ExtensionsAt.ext (h x hp hx)⟩
 end «Section2»
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def consistent (x : bodySystem.obj T) (S : StrategySystem T p) :=
@@ -281,18 +285,20 @@ lemma mem_principalOpen_iff_bodySystem_contains {T : Trees} (x : List T.1) (y : 
     (BodySystemObj.ofObj (bodyEquivSystem.hom.app _ y)).contains x := by
   constructor <;> intro h
   · apply List.ext_getElem?; intro n; rw [principalOpen_iff_restrict] at h
-    simp_rw [bodyEquivSystem_hom_app_res_coe, ← h]
-  · rw [h]; simp_rw [bodyEquivSystem_hom_app_res_coe, extend_sub]
+    exact congrArg (fun l ↦ l[n]?) h
+  · rw [h]; exact extend_sub _ _
 lemma bodyEquivSystem_strat {x} (S : StrategySystem T p) :
   x.val ∈ body (strategyEquivSystem.symm S).pre.subtree
   ↔ consistent (bodyEquivSystem.hom.app _ x) S := by
-  simp only [strategy_body, Subtype.coe_prop, true_and, consistent]
+  simp only [strategy_body, consistent]
+  rw [and_iff_right x.prop]
   -- `congr!` needs the quantified form exposed here.
   change (∀ x : T, _) ↔ _
-  congr! with y _ hc
+  congr! with y hp hc
   · apply mem_principalOpen_iff_bodySystem_contains
-  · rw [← mem_principalOpen_iff_bodySystem_contains, ExtensionsAt.val', principalOpen_concat]
-    simp only [(mem_principalOpen_iff_bodySystem_contains y.val x).mpr hc, true_and]
+  · rw [← mem_principalOpen_iff_bodySystem_contains (S.str y.val.length y hp le_rfl).val' x,
+      ExtensionsAt.val', principalOpen_concat,
+      and_iff_right ((mem_principalOpen_iff_bodySystem_contains y.val x).mpr hc)]
     rfl
 lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   (bodyEquivSystem.inv.app _ x).val ∈ body (strategyEquivSystem.symm S).pre.subtree

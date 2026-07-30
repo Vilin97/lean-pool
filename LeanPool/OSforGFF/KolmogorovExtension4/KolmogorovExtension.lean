@@ -124,10 +124,9 @@ theorem _root_.MeasureTheory.projectiveFamilyContent_sigma_additive
   exact fun J ↦ MeasureTheory.innerRegular_isCompact_isClosed_measurableSet_of_finite (P J)
 
 theorem _root_.MeasureTheory.projectiveFamilyContent_iUnion_le_sum
-    (hP : IsProjectiveMeasureFamily P)
-    ⦃f : ℕ → Set (Π i, α i)⦄
-    (hf : ∀ i, f i ∈ measurableCylinders α) (hf_Union : (⋃ i, f i) ∈ measurableCylinders α) :
-    projectiveFamilyContent hP (⋃ i, f i) ≤ ∑' i, projectiveFamilyContent hP (f i) := by
+    (hP : IsProjectiveMeasureFamily P) :
+    (projectiveFamilyContent hP).IsSigmaSubadditive := by
+  intro f hf hf_Union
   refine projectiveFamilyContent_iUnion_le_sum_of_innerRegular hP ?_ hf hf_Union
   exact fun J ↦ MeasureTheory.innerRegular_isCompact_isClosed_measurableSet_of_finite (P J)
 

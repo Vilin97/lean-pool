@@ -47,6 +47,42 @@ namespace Lean4Itree
 
 open Lean Lean.Elab
 
+private def mkRewriteProof (theoremName : Name) (target : Expr) : MetaM Expr := do
+  let theoremExpr ← Meta.mkConstWithFreshMVarLevels theoremName
+  let (theoremArguments, _, conclusion) ←
+    Meta.forallMetaTelescopeReducing (← Meta.inferType theoremExpr)
+  let some (_, leftHandSide, _) := conclusion.eq?
+    | throwError "{theoremName} does not prove an equality"
+  let target := target.cleanupAnnotations
+  let leftHandSideArgumentCount := leftHandSide.getAppArgs.size
+  let targetArguments := target.getAppArgs
+  unless leftHandSideArgumentCount ≤ targetArguments.size do
+    throwError "{target} does not match the left-hand side of {theoremName}"
+  -- A fixed-point value may be further applied to relation arguments. Derive the
+  -- prefix length from the rewrite theorem instead of its current binder layout.
+  let targetPrefix :=
+    mkAppN target.getAppFn targetArguments[:leftHandSideArgumentCount].toArray
+  unless ← Meta.isDefEq leftHandSide targetPrefix do
+    throwError "{target} does not match the left-hand side of {theoremName}"
+  instantiateMVars (mkAppN theoremExpr theoremArguments)
+
+private def mkPlfpInitProof (target : Expr) : MetaM Expr :=
+  mkRewriteProof ``plfp_init target
+
+private def mkPlfpUnfoldProof (target : Expr) : MetaM Expr :=
+  mkRewriteProof ``plfp_unfold target
+
+private def rewriteTargetWith (mvarId : MVarId) (proof : Expr) : MetaM (List MVarId) := do
+  let result ← mvarId.rewrite (← mvarId.getType) proof
+  let mvarId ← mvarId.replaceTargetEq result.eNew result.eqProof
+  return mvarId :: result.mvarIds
+
+private def rewriteLocalWith (mvarId : MVarId) (fvarId : FVarId)
+    (proof : Expr) : MetaM (List MVarId) := do
+  let result ← mvarId.rewrite (← fvarId.getType) proof
+  let replacement ← mvarId.replaceLocalDecl fvarId result.eNew result.eqProof
+  return replacement.mvarId :: result.mvarIds
+
 /-- Initialise a parameterized-coinduction proof: mark the context and unfold the
 goal's `lfp_monotone` fixed point so the Paco combinators can act on it. -/
 elab "pinit" : tactic =>
@@ -64,6 +100,12 @@ elab "pinit" : tactic =>
       throwError "{expanded} is not constructed with lfp_monotone"
     let mvarId ← mvarId.deltaTarget (c == ·)
     return [mvarId]
+
+/-- Rewrite an initialized fixed point to its parameterized form while preserving
+the complete-lattice instance already present in the goal. -/
+elab "pinitPlfp" : tactic =>
+  Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+    rewriteTargetWith mvarId (← mkPlfpInitProof (← mvarId.getType))
 
 /-- Introduce the `plfp_acc` accumulation hypothesis for the current goal,
 threading the goal's complete-lattice instance and monotonicity proof. -/
@@ -186,7 +228,10 @@ elab "destructLastAnd" : tactic =>
 /-- The Paco coinduction tactic: starts a parameterized-coinduction proof and
 introduces the coinduction hypothesis under the name `cih`. -/
 macro "pcofix" cih:ident : tactic => `(tactic|(
-  pinit; rw [@plfp_init] at *; pcofixIntroAcc; pcofixWrap
+  pinit
+  pinitPlfp
+  pcofixIntroAcc
+  pcofixWrap
   rename_i x; exists x -- proof for plfp_acc
   intros; constructor -- proof for converter
   · intro h x; apply h; exists x
@@ -197,18 +242,24 @@ macro "pcofix" cih:ident : tactic => `(tactic|(
   intro $(mkIdent `φ) dummy _h
   have $cih := (converter _).mp _h
   refine ((converter ?_).mpr ?_)
-  rw [unpacker] at *
   simp only at *
   clear unpacker converter dummy _h
 ))
 
 /-- Unfold the parameterized least fixed point once in the goal. -/
-macro "pfold" : tactic => `(tactic|(rw [@plfp_unfold]))
+elab "pfold" : tactic =>
+  Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+    rewriteTargetWith mvarId (← mkPlfpUnfoldProof (← mvarId.getType))
+
 /-- Unfold the parameterized least fixed point once in a hypothesis. -/
 syntax "punfold" " at " ident : tactic
-macro_rules
+elab_rules : tactic
 | `(tactic| punfold at $h:ident) =>
-  `(tactic| rw [@plfp_unfold] at $h:ident)
+    Tactic.liftMetaTactic fun mvarId => mvarId.withContext do
+      let some decl := (← getLCtx).findDecl? fun decl =>
+        if decl.userName == h.getId then some decl else none
+        | throwError "Cannot find hypothesis of name {h.getId}"
+      rewriteLocalWith mvarId decl.fvarId (← mkPlfpUnfoldProof decl.type)
 
 /-- Initialise a parameterized-coinduction proof from a fixed-point hypothesis `h`. -/
 elab "pinit" " at " h:ident : tactic =>
@@ -216,6 +267,7 @@ elab "pinit" " at " h:ident : tactic =>
     let some hyp := (← getLCtx).findDecl? (λ ldecl =>
       if ldecl.userName == h.getId then some ldecl.fvarId
       else none) | throwError "Cannot find hypothesis of name {h.getId}"
+    let hypName := (← hyp.getDecl).userName
     let hypType ← hyp.getType
     let hypType ← instantiateMVars hypType.cleanupAnnotations
     let hypHead := hypType.getAppFn
@@ -225,8 +277,11 @@ elab "pinit" " at " h:ident : tactic =>
       throwError "{expanded} is not constructed with lfp_monotone"
     Tactic.liftMetaTactic λ mvarId => do
       let mvarId ← mvarId.deltaLocalDecl hyp (c == ·)
-      return [mvarId]
-    Tactic.evalTactic <| ← `(tactic|rw [@plfp_init] at $h:ident)
+      mvarId.withContext do
+        let some hypDecl := (← getLCtx).findFromUserName? hypName
+          | throwError "Cannot find hypothesis of name {hypName}"
+        rewriteLocalWith mvarId hypDecl.fvarId
+          (← mkPlfpInitProof hypDecl.type)
 
 /-- Clear the residual `⊤ₚ` meet from a `uplfp` hypothesis, leaving the plain
 parameterized fixed point. -/
@@ -374,5 +429,31 @@ elab "ptop" : tactic =>
     Tactic.liftMetaTactic λ mvarId => do
       let mvarIds ← mvarId.apply le_top
       return mvarIds
+
+section TacticTests
+
+private def tacticTestPredicate (x : Unit) : Prop :=
+  tacticTestPredicate x
+  coinductive_fixpoint monotonicity fun _ _ hsim => hsim
+
+example (x : Unit) : tacticTestPredicate x := by
+  revert x
+  pcofix coinductionHypothesis
+  intro x
+  pfold
+  pleft
+  exact coinductionHypothesis x
+
+example {α : Type} (lattice : Lean.Order.CompleteLattice (α → Prop))
+    (f : (α → Prop) → α → Prop)
+    (monotonicityProof :
+      @Lean.Order.monotone _ lattice.toPartialOrder _ lattice.toPartialOrder f)
+    (r : α → Prop) (x : α)
+    (hypothesis : (@plfp _ lattice f monotonicityProof r) x) :
+    f (@uplfp _ lattice f monotonicityProof r) x := by
+  punfold at hypothesis
+  exact hypothesis
+
+end TacticTests
 
 end Lean4Itree

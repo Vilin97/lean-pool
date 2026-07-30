@@ -56,6 +56,7 @@ noncomputable def lubellMultiplicity (t j : ℕ) : ℕ :=
   M t / Nat.choose (t - 1) (j - 1)
 
 /-- The constant capacity vector of the Lubell frame. -/
+@[implicit_reducible]
 noncomputable def lubellCap (t : ℕ) : Fin t → ℕ := Function.const (Fin t) (M t)
 
 /-- Embed a `j`-subset of `[t]` into the type of support patterns. -/
@@ -92,6 +93,12 @@ noncomputable def lubellFrame (t : ℕ) : Multiset (SupportPattern t) :=
 /-- The explicit cardinality expression for the Lubell frame. -/
 noncomputable def lubellCardSum (t : ℕ) : ℕ :=
   (Finset.Icc 2 t).sum (fun j => Nat.choose t j * lubellMultiplicity t j)
+
+private abbrev shiftTwoEmbedding : ℕ ↪ ℕ :=
+  ⟨fun x => x + 2, fun _ _ h => Nat.add_right_cancel h⟩
+
+@[simp]
+private lemma shiftTwoEmbedding_apply (x : ℕ) : shiftTwoEmbedding x = x + 2 := rfl
 
 private lemma supportPatternsOfCard_card (t j : ℕ) (hj : 2 ≤ j) :
     (supportPatternsOfCard t j).card = Nat.choose t j := by
@@ -515,13 +522,17 @@ private lemma lubell_omega_bound (t : ℕ) (ht : 2 ≤ t)
       -- Reindex: (Icc 2 (z+1)).sum (fun j => f(j-1)) = (range z).sum (fun i => f(i+1))
       -- Use Finset.sum_map with embedding (· + 2)
       have h_map : Finset.Icc 2 (z + 1) =
-          (Finset.range z).map ⟨(· + 2), fun a b h => Nat.add_right_cancel h⟩ := by
-        ext j; simp only [Finset.mem_map, Finset.mem_range, Finset.mem_Icc,
-          Function.Embedding.coeFn_mk]
+          (Finset.range z).map shiftTwoEmbedding := by
+        ext j
+        simp only [Finset.mem_map, Finset.mem_range, Finset.mem_Icc, shiftTwoEmbedding_apply]
         constructor
         · intro ⟨h1, h2⟩; exact ⟨j - 2, by omega, by omega⟩
         · rintro ⟨i, hi, rfl⟩; omega
-      simp_all
+      rw [h_map, Finset.sum_map]
+      apply Finset.sum_congr rfl
+      intro i _
+      change f ((i + 2) - 1) = f (i + 1)
+      congr 1
     -- Final calc
     calc omegaCount (lubellFrame t) T I
         ≤ I.card * tail_sum := hoc_le
@@ -536,8 +547,9 @@ theorem lubell_is_frame (t : ℕ) (ht : 2 ≤ t) :
   constructor
   · -- Frame property: IsFrame (lubellFrame t) (lubellCap t)
     intro T I hIT
-    simpa [lubellCap, Finset.sum_const, smul_eq_mul] using
-      lubell_omega_bound t ht T I hIT
+    change omegaCount (lubellFrame t) T I ≤ (T \ I).sum (fun _ => M t)
+    rw [Finset.sum_const_nat (fun _ _ => rfl)]
+    exact lubell_omega_bound t ht T I hIT
   · -- Cardinality
     change Multiset.card ((Finset.Icc 2 t).val.bind (lubellLayer t)) = lubellCardSum t
     rw [lubellCardSum]
@@ -558,6 +570,7 @@ termination_by n => n
 decreasing_by simp_all; omega
 
 /-- The prefix sum of binary digit counts appearing in the formula for `k n`. -/
+@[implicit_reducible]
 def digitSumPrefix (n : ℕ) : ℕ :=
   (Finset.range n).sum s2
 
@@ -849,13 +862,17 @@ private lemma fixedTCoeff_lower (t : ℕ) (ht : 2 ≤ t) :
           exact (div_le_div_of_nonneg_right hmul hlogt_pos.le)
     _ = fixedTCoeff t := (fixedTCoeff_eq_log_ratio t ht).symm
 
+@[implicit_reducible]
 private noncomputable def lubellQ (t n : ℕ) : ℕ := n / (t * M t)
 
+@[implicit_reducible]
 private noncomputable def lubellR (t n : ℕ) : ℕ := n % (t * M t)
 
+@[implicit_reducible]
 private noncomputable def lubellRem (t n : ℕ) (i : Fin t) : ℕ :=
   lubellR t n / t + if i.1 < lubellR t n % t then 1 else 0
 
+@[implicit_reducible]
 private noncomputable def lubellPart (t n : ℕ) (i : Fin t) : ℕ :=
   lubellQ t n * M t + lubellRem t n i
 
@@ -1387,7 +1404,8 @@ private theorem digitSumPrefix_upper (n : ℕ) (hn : 1 ≤ n) :
             (digitSumPrefix r : ℝ) ≤
               (r : ℝ) * (((k - 1 : ℕ) : ℝ) / 2 + 1) := by
           by_cases hr0 : r = 0
-          · simp [hr0]
+          · rw [hr0, digitSumPrefix]
+            norm_num
           · have hr_pos : 1 ≤ r := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hr0)
             have hr_lt_n : r < n := by
               exact Nat.lt_of_lt_of_le hr_lt_pow hk_pow_le

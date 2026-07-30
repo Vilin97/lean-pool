@@ -81,8 +81,7 @@ theorem TensorProduct.star_is_involutive [StarModule 𝕜 E] [StarModule 𝕜 F]
 theorem TensorProduct.map_real {A B E F : Type _} [AddCommGroup A] [AddCommGroup B] [AddCommGroup E]
     [AddCommGroup F] [StarAddMonoid A] [StarAddMonoid B] [StarAddMonoid E] [StarAddMonoid F]
     [Module 𝕜 A] [Module 𝕜 B] [Module 𝕜 E] [Module 𝕜 F] [StarModule 𝕜 A] [StarModule 𝕜 B]
-    [StarModule 𝕜 E] [StarModule 𝕜 F] [Module.Finite 𝕜 A] [Module.Finite 𝕜 B]
-    [Module.Finite 𝕜 E] [Module.Finite 𝕜 F] (f : E →ₗ[𝕜] F) (g : A →ₗ[𝕜] B) :
+    [StarModule 𝕜 E] [StarModule 𝕜 F] (f : E →ₗ[𝕜] F) (g : A →ₗ[𝕜] B) :
     (TensorProduct.map f g).real = TensorProduct.map f.real g.real :=
   TensorProduct.ext' fun x y => by
   simp only [LinearMap.real_apply, TensorProduct.star_tmul, TensorProduct.map_tmul]
@@ -230,5 +229,6 @@ lemma StarAlgEquiv.lTensor_symm_tmul {R A B C : Type*} [RCLike R]
   [StarModule R A] [StarModule R B] [StarModule R C]
   (f : A ≃⋆ₐ[R] B) (x : C) (y : B) :
   (StarAlgEquiv.lTensor C f).symm (x ⊗ₜ[R] y) = x ⊗ₜ f.symm (y) := by
-  simpa [StarAlgEquiv.lTensor, StarAlgEquiv.toAlgEquiv_symm] using
-    AlgEquiv.lTensor_symm_tmul (C := C) f.toAlgEquiv x y
+  change (AlgEquiv.lTensor C f.toAlgEquiv).symm (x ⊗ₜ[R] y) =
+    x ⊗ₜ[R] f.toAlgEquiv.symm y
+  exact AlgEquiv.lTensor_symm_tmul (C := C) f.toAlgEquiv x y

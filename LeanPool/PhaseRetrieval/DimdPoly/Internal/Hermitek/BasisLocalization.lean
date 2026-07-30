@@ -749,7 +749,7 @@ private lemma intervalIntegrable_basisRadialTerm
           (((continuous_Phi k n).comp hcircle0).norm.pow 2))
     convert h using 1
     ext r
-    simp only [Function.comp_apply, Pi.mul_apply, id_eq]
+    simp only [Function.comp_apply, Pi.mul_apply, Pi.pow_apply, id_eq]
     ring
   have hgi :
       IntervalIntegrable g volume (j : ℝ) (((j + 1 : ℕ) : ℝ)) := Continuous.intervalIntegrable
@@ -917,7 +917,8 @@ private theorem phi0_polar_norm_formula
   have hnorm : ‖circlePoint r (QuotientAddGroup.mk θ : Circle)‖ = r := by
     rw [hcircle, Complex.norm_polarCoord_symm, abs_of_pos hr]
   rw [hnorm]
-  simp [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hsqrt_nonneg, abs_of_pos hr]
+  simp [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hsqrt_nonneg, abs_of_pos hr,
+    fourier_apply, Circle.norm_coe]
   ring
 
 private def phi0AnnulusIntegrand (k : ℕ) (g0normsq : ℝ) (r : ℝ) : ℝ :=

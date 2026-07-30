@@ -22,6 +22,7 @@ from `L` to the Lie algebra of derivations of `J`. The homomorphism `φ` indexes
 not appear in the underlying carrier; consuming it via `id` keeps the linter happy. -/
 def LieSemidirectProduct (φ : L →ₗ⁅K⁆ LieDerivation K J J) : Type _ :=
   (id φ : L →ₗ⁅K⁆ LieDerivation K J J) |> fun _ ↦ L × J
+attribute [local implicit_reducible] LieSemidirectProduct
 
 variable {K : Type*} {L J : Type*} [CommRing K] [LieRing L] [LieRing J] [LieAlgebra K L]
     [LieAlgebra K J]
@@ -384,9 +385,11 @@ def rightIdealEquivRight : rightIdeal K L J ≃ₗ⁅K⁆ J := {
 def Prod.toLieSemidirectProduct : (L × J) ≃ₗ⁅K⁆ L ⋉[(0 : L →ₗ⁅K⁆ LieDerivation K J J)] J := {
   LinearEquiv.refl K (L × J) with
   map_lie' := by
-    simp only [LinearEquiv.refl_toLinearMap, bracket_def, AddHom.toFun_eq_coe,
-      LinearMap.coe_toAddHom, LinearMap.id_coe, id_eq, LieSemidirectProduct.bracket_def,
-      LieHom.coe_zero, Pi.zero_apply, LieDerivation.coe_zero, sub_self, zero_add, implies_true]
+    rintro x y
+    change (⁅x.1, y.1⁆, ⁅x.2, y.2⁆) = (⁅x.1, y.1⁆, _)
+    simp only [LinearEquiv.refl_toLinearMap, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
+      LinearMap.id_coe, id_eq, LieHom.coe_zero, Pi.zero_apply, LieDerivation.coe_zero, sub_self,
+      zero_add]
 }
 
 end lie_direct

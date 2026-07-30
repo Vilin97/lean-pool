@@ -200,9 +200,19 @@ lemma transvectionGL_hasIntEntries {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
 lemma transvectionGL_mem_SLnZ {i j : Fin n} (hij : i ≠ j) (c : ℤ) :
     transvectionGL n hij c ∈ SLnZSubgroup n := by
   rw [MonoidHom.mem_range]
-  refine ⟨⟨(Matrix.TransvectionStruct.mk i j hij c).toMatrix,
-    (Matrix.TransvectionStruct.mk i j hij c).det⟩, ?_⟩; apply Units.ext
-  simp [mapGL_coe_matrix, algebraMap_int_eq, transvectionGL]
+  let transvection : SpecialLinearGroup (Fin n) ℤ :=
+    ⟨(Matrix.TransvectionStruct.mk i j hij c).toMatrix,
+      (Matrix.TransvectionStruct.mk i j hij c).det⟩
+  refine ⟨transvection, ?_⟩
+  apply Units.ext
+  change (((mapGL ℚ) transvection : GL (Fin n) ℚ) : Matrix (Fin n) (Fin n) ℚ) =
+    (Matrix.TransvectionStruct.mk i j hij c).toMatrix.map (Int.cast : ℤ → ℚ)
+  calc
+    _ = ((SpecialLinearGroup.map (Int.castRingHom ℚ)) transvection).val :=
+      mapGL_coe_matrix (S := ℚ) transvection
+    _ = transvection.val.map (Int.castRingHom ℚ) :=
+      SpecialLinearGroup.map_apply_coe (Int.castRingHom ℚ) transvection
+    _ = _ := by rfl
 
 end Transvections
 

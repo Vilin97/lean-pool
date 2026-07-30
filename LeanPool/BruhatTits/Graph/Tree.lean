@@ -31,6 +31,8 @@ open Module
 
 namespace BruhatTits
 
+attribute [local implicit_reducible] Vertices
+
 variable {K : Type*} [Field K]
 variable {R : Subring K} [IsDiscreteValuationRing R] [IsFractionRing R K]
 
@@ -200,7 +202,7 @@ lemma BTgraph_isAcyclic : (BTgraph (R := R)).IsAcyclic := by
   -- of the endpoints, which yields a contradiction
   have hlen : c.length = inv x x := length_eq_inv h.isCircuit.isTrail
   rw [inv_self] at hlen
-  have : 3 ≤ 0 := hlen ▸ SimpleGraph.Walk.IsCycle.three_le_length h
+  have : 3 ≤ 0 := hlen ▸ SimpleGraph.Walk.IsCircuit.three_le_length h.isCircuit
   contradiction
 
 end «Acyclic»

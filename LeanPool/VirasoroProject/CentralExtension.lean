@@ -180,7 +180,8 @@ def _root_.VirasoroProject.LieOneCochain.bdryHom :
   map_smul' c Z := by
     ext
     · rfl
-    · simp_all
+    · change c • Z.2 + β (c • Z.1) = c • (Z.2 + β Z.1)
+      rw [map_smul, smul_add]
   map_lie' := by
     intro Z W
     ext <;> rfl
@@ -198,7 +199,7 @@ def congr {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) :
   map_lie' := by
     intro Z₁ Z₂
     ext <;>
-    · simp only [lie_def, h, Prod.mk.eta]; rfl
+    · simp only [lie_def, h]; rfl
   invFun := fun Z ↦ ⟨Z.1, Z.2⟩
   left_inv := by
     intro Z
@@ -229,8 +230,8 @@ lemma hom_of_coboundary_add (γ₁ γ₂ γ₃ : LieTwoCocycle 𝕜 𝓰 𝓪)
           ((β₁ + β₂).bdryHom γ₁) := by
   ext Z
   · rfl
-  · simp only [LieTwoCocycle.CentralExtension.congr, Prod.mk.eta, LieOneCochain.bdryHom,
-               LieHom.comp_apply, LieHom.coe_mk]
+  · change (Z.2 + β₁ Z.1) + β₂ Z.1 = Z.2 + (β₁ + β₂) Z.1
+    rw [LieOneCochain.add_apply]
     ac_rfl
 
 /-- A Lie algebra isomorphism between two central extensions determined by cocycles
@@ -247,29 +248,17 @@ noncomputable def equivOfLieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
       (f := (LieTwoCocycle.CentralExtension.congr obs).toLieHom.comp <| β.bdryHom γ)
       (g := (LieTwoCocycle.CentralExtension.congr obs').toLieHom.comp <| (-β).bdryHom γ')
       (by
-        convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add γ γ' γ β (-β) obs obs'
-        all_goals try first
-          | exact (LieOneCochain.neg_bdry β).symm
-          | rw [LieOneCochain.neg_bdry]
-          | rfl
-        ext1 Z
-        simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr, Prod.mk.eta,
-                  LieOneCochain.bdryHom, add_neg_cancel, LieHom.comp_apply, LieHom.coe_mk]
-        ext
+        ext Z
         · rfl
-        · simp only [left_eq_add]; rfl)
+        · change (Z.2 + β Z.1) + (-β) Z.1 = Z.2
+          rw [LieOneCochain.neg_apply]
+          exact add_neg_cancel_right Z.2 (β Z.1))
       (by
-        convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add γ' γ γ' (-β) β obs' obs
-        all_goals try first
-          | exact (LieOneCochain.neg_bdry β).symm
-          | rw [LieOneCochain.neg_bdry]
-          | rfl
-        ext1 Z
-        simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr, Prod.mk.eta,
-                  LieOneCochain.bdryHom, LieHom.comp_apply, LieHom.coe_mk]
-        ext
+        ext Z
         · rfl
-        · simp only [neg_add_cancel, left_eq_add]; rfl)
+        · change (Z.2 + (-β) Z.1) + β Z.1 = Z.2
+          rw [LieOneCochain.neg_apply]
+          exact neg_add_cancel_right Z.2 (β Z.1))
 
 end CentralExtension -- namespace
 

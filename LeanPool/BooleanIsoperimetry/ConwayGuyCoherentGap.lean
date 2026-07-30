@@ -357,7 +357,10 @@ lemma correctionFor_target (offset : ℕ)
   congr 1
   · apply congrArg basis
     apply Fin.ext
-    simp [correctionFor, negativeIndex]
+    suffices
+        offset + 2 - triangular index.val - index.val - 3 + (index.val + 2) =
+          offset + 2 - triangular index.val - 1 by
+      simpa [correctionFor, negativeIndex]
     have hdeep := correction_deep_bound (dimension := offset + 2)
       (index := index.val) (by omega) index.isLt
     omega

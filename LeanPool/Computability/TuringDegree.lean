@@ -47,6 +47,20 @@ Computability, Turing Degrees, Reducibility, Equivalence Relation
 
 namespace Computability
 
+/-- `Part.bind_some` restated for a bound function of type `ℕ →. ℕ`. `PFun` is not reducible, so
+`simp` cannot instantiate the `α → Part β` form of the lemma against such a goal. -/
+private lemma pfun_bind_some (a : ℕ) (f : ℕ →. ℕ) : (Part.some a) >>= f = f a :=
+  Part.bind_some a f
+
+/-- `Part.bind_none` restated for a bound function of type `ℕ →. ℕ`; see `pfun_bind_some`. -/
+private lemma pfun_bind_none (f : ℕ →. ℕ) : (Part.none : Part ℕ) >>= f = Part.none :=
+  Part.bind_none f
+
+/-- `Part.bind_some_eq_map` restated for a total function coerced to `ℕ →. ℕ`; see
+`pfun_bind_some`. -/
+private lemma pfun_bind_coe (x : Part ℕ) (h : ℕ → ℕ) : x >>= (h : ℕ →. ℕ) = Part.map h x :=
+  Part.bind_some_eq_map h x
+
 /--
 `f` is Turing reducible to `g` if `f` is partial recursive given access to the oracle `g`
 -/
@@ -160,7 +174,7 @@ private lemma le_join_aux (j h : ℕ →. ℕ) (q : ℕ → ℕ)
     refine RecursiveIn.of_primrec (Primrec.nat_iff.1 ?_)
     simpa using (Primrec.nat_div2 : Primrec Nat.div2)
   have hquery : RecursiveIn {j} (fun n => j (q n)) :=
-    RecursiveIn.of_eq (RecursiveIn.comp hj hq) fun n => by simp [Part.bind_some]
+    RecursiveIn.of_eq (RecursiveIn.comp hj hq) fun n => Part.bind_some (q n) j
   exact RecursiveIn.of_eq (RecursiveIn.comp hdiv2 hquery) hdec
 
 lemma left_le_join (f g : ℕ →. ℕ) : f ≤ᵀ (f ⊕ g) := by
@@ -213,7 +227,7 @@ theorem RecursiveIn_cond_const {O : Set (ℕ →. ℕ)} {c : ℕ → Bool} {f : 
   have hEq : mainFn = (fun n => bif (c n) then f n else Part.some k) := by
     funext n
     cases h : c n <;>
-      simp [mainFn, pairFn, precFn, base, step, h, Seq.seq, Nat.unpair_pair]
+      simp [mainFn, pairFn, precFn, base, step, h, Seq.seq, Nat.unpair_pair, pfun_bind_some]
   simpa [hEq] using hmain
 
 
@@ -260,7 +274,7 @@ theorem eq01_rfind_none :
   refine Nat.rfind_zero_none
     (p := fun k => (fun m : ℕ => m = 0) <$>
       ((Nat.pair <$> (Part.none : Part ℕ) <*> Part.some k) >>= eq01)) ?_
-  simp [Seq.seq]
+  simp [Seq.seq, pfun_bind_none]
 
 theorem eq01_rfind_some (n : ℕ) :
     Nat.rfind
@@ -272,10 +286,10 @@ theorem eq01_rfind_some (n : ℕ) :
   refine Part.mem_right_unique ?_ (Part.mem_some n)
   refine (Nat.mem_rfind).2 ?_
   constructor
-  · simp [eq01, Nat.unpair_pair, Seq.seq]
+  · simp [eq01, Nat.unpair_pair, Seq.seq, pfun_bind_some]
   · intro m hm
     have hne : n ≠ m := Nat.ne_of_gt hm
-    simp [eq01, Nat.unpair_pair, Seq.seq, hne]
+    simp [eq01, Nat.unpair_pair, Seq.seq, hne, pfun_bind_some]
 
 theorem eq01_rfind (v : Part ℕ) :
     Nat.rfind
@@ -347,7 +361,7 @@ theorem RecursiveIn_cond_core_rfind {O : Set (ℕ →. ℕ)} {c : ℕ → Bool} 
         funext k
         have hcmpk : cmp (Nat.pair n k) = ((Nat.pair <$> f n <*> Part.some k) >>= eq01) := by
           simp [cmp, t1, t2, c1, c2, eqF, eqG, mulPair, hn, Nat.unpair_pair, Nat.unpaired,
-            Seq.seq, Part.bind_assoc, Part.bind_some, Part.bind_some_right]
+            Seq.seq, Part.bind_some_right, pfun_bind_some, pfun_bind_coe]
         simp [hcmpk]
       rw [hpred]
       exact eq01_rfind (v := f n)
@@ -359,7 +373,8 @@ theorem RecursiveIn_cond_core_rfind {O : Set (ℕ →. ℕ)} {c : ℕ → Bool} 
         funext k
         have hcmpk : cmp (Nat.pair n k) = ((Nat.pair <$> g n <*> Part.some k) >>= eq01) := by
           simp [cmp, t1, t2, c1, c2, eqF, eqG, mulPair, hn, Nat.unpair_pair, Nat.unpaired,
-            Seq.seq, Part.bind_assoc, Part.bind_some, Part.bind_some_right]
+            Seq.seq, Part.bind_some, pfun_bind_some, pfun_bind_coe, Part.map_map,
+            Function.comp_def, Part.map_id']
         simp [hcmpk]
       rw [hpred]
       exact eq01_rfind (v := g n)
@@ -415,7 +430,8 @@ theorem turingJoin_recursiveIn_pair (f g : ℕ →. ℕ) :
   refine (RecursiveIn.of_eq (O := O) hcond ?_)
   intro n
   by_cases hbn : Nat.bodd n <;>
-    simp [turingJoin, payload, dbl, dbl1, evenBranch, oddBranch, hbn, Part.bind_some_eq_map]
+    simp [turingJoin, payload, dbl, dbl1, evenBranch, oddBranch, hbn, Part.bind_some_eq_map,
+      pfun_bind_some]
 
 
 theorem join_le (f g h : ℕ →. ℕ) (hf : TuringReducible f h) (hg : TuringReducible g h) :

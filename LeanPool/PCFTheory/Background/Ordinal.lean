@@ -44,7 +44,10 @@ def relIsoNatOmega0 : ℕ ≃o Iio ω where
   left_inv n := by
     simp_all
   right_inv n := Subtype.ext (Classical.choose_spec (lt_omega0.1 n.2)).symm
-  map_rel_iff' := by simp
+  map_rel_iff' := by
+    intro a b
+    change (a : Ordinal) ≤ (b : Ordinal) ↔ a ≤ b
+    exact Nat.cast_le
 
 @[simp]
 theorem relIso_nat_omega0_coe_symm_apply (o : Iio ω) : relIsoNatOmega0.symm o = o.1 := by
@@ -101,32 +104,48 @@ theorem boundedRec_eq {l} {C} (H o) :
 `boundedLimitRecOn` API used in PCF-theory. -/
 @[elab_as_elim]
 def boundedLimitRec' {l : Ordinal} (lLim : IsSuccLimit l) {motive : Iio l → Sort*} (o : Iio l)
-    (zero : motive ⟨0, lLim.bot_lt⟩)
-    (succAux : (o : Iio l) → motive o → motive ⟨Order.succ o.1, lLim.succ_lt o.2⟩)
+    (zero : motive ⟨0, by rw [mem_Iio]; exact lLim.bot_lt⟩)
+    (succAux : (o : Iio l) → motive o →
+      motive ⟨o.1 + 1, by
+        rw [mem_Iio]
+        simpa only [Order.succ_eq_add_one] using
+          lLim.succ_lt (by simpa only [mem_Iio] using o.2)⟩)
     (limit : (o : Iio l) → IsSuccLimit o.1 → (Π o' < o, motive o') → motive o) :
     motive o := by
-  obtain ⟨o, ho⟩ := o
-  induction o using limitRecOn with
-  | zero => exact zero
-  | add_one o IH =>
-    have ho' : o < l := (lt_succ o).trans ho
-    exact succAux ⟨o, ho'⟩ (IH ho')
-  | limit o ho' IH => exact limit ⟨o, ho⟩ ho' fun a ha ↦ IH a.1 ha (ha.trans (c := l) ho)
+  obtain ⟨o, hoMem⟩ := o
+  apply limitRecOn (motive := fun p ↦
+    (hp : p < l) → motive ⟨p, by rw [mem_Iio]; exact hp⟩) o
+  · intro
+    exact zero
+  · intro p IH hp
+    have hp' : p < l := (lt_succ p).trans hp
+    exact succAux ⟨p, by rw [mem_Iio]; exact hp'⟩ (IH hp')
+  · intro p hpLim IH hp
+    exact limit ⟨p, by rw [mem_Iio]; exact hp⟩ hpLim fun a ha ↦ by
+      have ha' : a.1 < p := ha
+      exact IH a.1 ha' (ha'.trans hp)
+  · simpa only [mem_Iio] using hoMem
 
 theorem boundedLimitRec'_zero {l} (lLim : IsSuccLimit l) {motive} (H₁ H₂ H₃) :
-    @boundedLimitRec' l lLim motive ⟨0, lLim.bot_lt⟩ H₁ H₂ H₃ = H₁ := by
+    @boundedLimitRec' l lLim motive
+      ⟨0, by rw [mem_Iio]; exact lLim.bot_lt⟩ H₁ H₂ H₃ = H₁ := by
   unfold boundedLimitRec'
-  simp_all
+  dsimp only
+  rw [limitRecOn_zero]
 
 theorem boundedLimitRec'_succ {l} (lLim : IsSuccLimit l) {motive} (o H₁ H₂ H₃) :
-    @boundedLimitRec' l lLim motive ⟨Order.succ o.1, lLim.succ_lt o.2⟩ H₁ H₂ H₃ = H₂ o
+    @boundedLimitRec' l lLim motive
+      ⟨o.1 + 1, by
+        rw [mem_Iio]
+        simpa only [Order.succ_eq_add_one] using
+          lLim.succ_lt (by simpa only [mem_Iio] using o.2)⟩ H₁ H₂ H₃ = H₂ o
     (@boundedLimitRec' l lLim motive o H₁ H₂ H₃) := by
+    rcases o with ⟨o, ho⟩
     unfold boundedLimitRec'
     dsimp
     change limitRecOn (motive := fun p ↦ (hp : p < l) → motive ⟨p, hp⟩)
-      (o.1 + 1) _ _ _ _ = _
+      (o + 1) _ _ _ _ = _
     rw [limitRecOn_add_one]
-    rfl
 
 /-- There doesn't exist a chain of subsets of `S` of length longer than `#S`. -/
 theorem not_exists_ssubset_chain_lift {α : Type u} {S : Set α} {ℓ : Ordinal.{v}}

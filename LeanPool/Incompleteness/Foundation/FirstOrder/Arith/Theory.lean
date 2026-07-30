@@ -179,7 +179,9 @@ lemma indScheme_subset (h : ∀ {φ : Semiformula ℒₒᵣ ℕ 1}, C φ → C' 
 lemma iSigma_subset_mono {s₁ s₂} (h : s₁ ≤ s₂) : 𝐈Sg s₁ ⊆ 𝐈Sg s₂ :=
   Set.union_subset_union_right _ (indScheme_subset (fun H ↦ H.mono h))
 
-instance : 𝐏𝐀⁻ wkn 𝐈𝐍𝐃Γ n := Entailment.WeakerThan.ofSubset (by simp [indH, Theory.add_def])
+instance : 𝐏𝐀⁻ wkn 𝐈𝐍𝐃Γ n := Entailment.WeakerThan.ofSubset (by
+  rw [indH, Theory.add_def]
+  exact Set.subset_union_left)
 
 instance : 𝐄𝐐 wkn 𝐑₀ := Entailment.WeakerThan.ofSubset <| fun φ hp ↦ CobhamR0.equal φ hp
 

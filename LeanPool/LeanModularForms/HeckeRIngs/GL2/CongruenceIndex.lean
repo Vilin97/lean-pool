@@ -140,14 +140,18 @@ omit hp in
 private lemma lowerTriRep_diff_entry (k : ℕ) (c₁ c₂ : Fin p) :
     ((lowerTriRep p k c₁)⁻¹ * lowerTriRep p k c₂).1 1 0 =
     ((c₂ : ℤ) - (c₁ : ℤ)) * (p : ℤ) ^ k := by
-  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]; ring
+  change (Matrix.adjugate (!![1, 0; (c₁ : ℤ) * (p : ℤ) ^ k, 1]) *
+    !![1, 0; (c₂ : ℤ) * (p : ℤ) ^ k, 1]) 1 0 = _
+  simp [Matrix.adjugate_fin_two, Matrix.mul_apply]
+  ring
 
 omit hp in
 private lemma lowerTriRep_inv_mul_10 (k : ℕ) (c : Fin p) (σ : SL(2, ℤ)) :
     ((lowerTriRep p k c)⁻¹ * σ).1 1 0 =
     σ.1 1 0 - (c : ℤ) * (p : ℤ) ^ k * σ.1 0 0 := by
-  rw [SL2_entry_mul]
-  simp [lowerTriRep, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]; ring
+  change (Matrix.adjugate (!![1, 0; (c : ℤ) * (p : ℤ) ^ k, 1]) * σ.val) 1 0 = _
+  simp [Matrix.adjugate_fin_two, Matrix.mul_apply]
+  ring
 
 private noncomputable def relindexRep (k : ℕ) (hk : 0 < k) (c : Fin p) :
     ↥(Gamma0 (p ^ k)) :=

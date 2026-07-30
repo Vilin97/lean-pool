@@ -174,8 +174,7 @@ def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
       Subtype.mk.injEq, toZFSet_strictMono.injective.eq_iff]
     refine ⟨fun m n eq => ?_, fun α hα => ?_⟩
     · simp_all
-    · replace hα : ⇓α ∈ ωₛ := MemOmega.toZFSet _ |>.mp (ωₘ.spec _ |>.mp hα)
-      simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
+    · simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
 
 instance {n : ℕ} : OfNat (Ordinals M) n where
   ofNat := ⟨(n : M), memOmega_natCast.1⟩

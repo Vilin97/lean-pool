@@ -134,7 +134,7 @@ lemma count_hits_D (D : ℕ) [NeZero D] (r0 : ℕ) (x : ZMod D) :
       ring
   rw [h_unique, Finset.card_singleton]
 
-lemma count_hits_lt_D (D : ℕ) [NeZero D] (r0 N : ℕ) (h : N < D) (x : ZMod D) :
+lemma count_hits_lt_D (D : ℕ) (r0 N : ℕ) (h : N < D) (x : ZMod D) :
     countHits D r0 N x ≤ 1 := by
   dsimp [countHits]
   rw [Finset.card_le_one]
@@ -154,7 +154,7 @@ lemma sum_count_hits (D : ℕ) [NeZero D] (r0 N : ℕ) :
   rw [← h]
   exact Finset.card_range N
 
-lemma count_hits_succ (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) :
+lemma count_hits_succ (D : ℕ) (r0 N : ℕ) (x : ZMod D) :
     countHits D r0 (N + 1) x = countHits D r0 N x + if (r0 + N : ZMod D) = x then 1 else 0 := by
   dsimp [countHits]
   rw [Finset.range_add_one, Finset.filter_insert]
@@ -163,7 +163,7 @@ lemma count_hits_succ (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) :
     simp
   · rfl
 
-lemma count_hits_add (D : ℕ) [NeZero D] (r0 N M : ℕ) (x : ZMod D) :
+lemma count_hits_add (D : ℕ) (r0 N M : ℕ) (x : ZMod D) :
     countHits D r0 (N + M) x = countHits D r0 N x + countHits D (r0 + N) M x := by
   induction M with
   | zero =>
@@ -290,7 +290,7 @@ theorem non_uniform_residue_distribution_of_not_dvd
     Nat.pos_of_ne_zero (fun h_eq => h (Nat.dvd_of_mod_eq_zero h_eq))
   exact ⟨h_pos, (residue_distribution D r0 N).1, (residue_distribution D r0 N).2⟩
 
-lemma count_hits_zero (D : ℕ) [NeZero D] (r0 : ℕ) (x : ZMod D) :
+lemma count_hits_zero (D : ℕ) (r0 : ℕ) (x : ZMod D) :
     countHits D r0 0 x = 0 := by
   dsimp [countHits]
   rw [Finset.filter_empty, Finset.card_empty]
@@ -326,7 +326,7 @@ progression `r0 + i` against `u⁻¹ * x`. Multiplication by a unit is a
 bijection of `ZMod D`, so the two counts agree pointwise.
 -/
 lemma count_hits_unit_eq_count_hits
-    (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r0 N : ℕ) (x : ZMod D) :
+    (D : ℕ) (u : (ZMod D)ˣ) (r0 N : ℕ) (x : ZMod D) :
     countHitsUnit D u r0 N x = countHits D r0 N ((u⁻¹ : (ZMod D)ˣ) * x) := by
   unfold countHitsUnit countHits
   congr 1
@@ -343,7 +343,7 @@ lemma count_hits_unit_eq_count_hits
 Specialisation of `count_hits_unit_eq_count_hits` to `u = 1`:
 the unit-aware count with trivial multiplier reduces to `countHits`.
 -/
-lemma count_hits_unit_one (D : ℕ) [NeZero D] (r0 N : ℕ) (x : ZMod D) :
+lemma count_hits_unit_one (D : ℕ) (r0 N : ℕ) (x : ZMod D) :
     countHitsUnit D 1 r0 N x = countHits D r0 N x := by
   rw [count_hits_unit_eq_count_hits]
   simp
@@ -409,7 +409,7 @@ section Minimality
 def cyclicInterval (D s : ℕ) (x0 : ZMod D) : Finset (ZMod D) :=
   (Finset.range s).image (fun (i : ℕ) => x0 + (i : ZMod D))
 
-lemma cyclic_interval_mem (D s : ℕ) [NeZero D] (x0 : ZMod D) (x : ZMod D) :
+lemma cyclic_interval_mem (D s : ℕ) (x0 : ZMod D) (x : ZMod D) :
     x ∈ cyclicInterval D s x0 ↔ ∃ (i : ℕ), i < s ∧ x = x0 + (i : ZMod D) := by
   dsimp [cyclicInterval]
   simp only [Finset.mem_image, Finset.mem_range]
@@ -419,7 +419,7 @@ lemma cyclic_interval_mem (D s : ℕ) [NeZero D] (x0 : ZMod D) (x : ZMod D) :
   · rintro ⟨i, hi, rfl⟩
     exact ⟨i, hi, rfl⟩
 
-lemma count_hits_lt_D_eq_one (D s : ℕ) [NeZero D] (r0 : ℕ) (h_s_lt : s < D) (x : ZMod D) :
+lemma count_hits_lt_D_eq_one (D s : ℕ) (r0 : ℕ) (h_s_lt : s < D) (x : ZMod D) :
     countHits D r0 s x = 1 ↔ x ∈ cyclicInterval D s (r0 : ZMod D) := by
   dsimp [countHits]
   rw [Finset.card_eq_one]
@@ -491,7 +491,7 @@ lemma heavy_set_unit_is_cyclic_interval (D : ℕ) [NeZero D] (u : (ZMod D)ˣ) (r
   exact heavy_set_is_cyclic_interval D r0 N ((u⁻¹ : (ZMod D)ˣ) * x)
 
 
-lemma right_boundary_exists (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < s) (h_s_lt : s < D) :
+lemma right_boundary_exists (D s : ℕ) (x0 : ZMod D) (h_s_pos : 0 < s) (h_s_lt : s < D) :
     (x0 + (s - 1 : ℕ) : ZMod D) ∈ cyclicInterval D s x0 ∧
     (x0 + (s - 1 : ℕ) + 1 : ZMod D) ∉ cyclicInterval D s x0 := by
   constructor
@@ -516,7 +516,7 @@ lemma right_boundary_exists (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < 
     have h_eq3 : s = i := Nat.ModEq.eq_of_lt_of_lt h_mod h_s_lt (lt_trans hi h_s_lt)
     omega
 
-lemma right_boundary_unique (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < s)
+lemma right_boundary_unique (D s : ℕ) (x0 : ZMod D) (h_s_pos : 0 < s)
     (_h_s_lt : s < D) (y : ZMod D)
     (hy_in : y ∈ cyclicInterval D s x0) (hy_next_notin : y + 1 ∉ cyclicInterval D s x0) :
     y = x0 + (s - 1 : ℕ) := by
@@ -538,7 +538,7 @@ lemma right_boundary_unique (D s : ℕ) [NeZero D] (x0 : ZMod D) (h_s_pos : 0 < 
 Lemma (Minimality): A cyclic interval of length `s` with `0 < s < D`
 cannot be invariant under any non-zero translation `τ`.
 -/
-lemma cyclic_interval_stabilizer_trivial (D s : ℕ) [NeZero D] (x0 : ZMod D) (τ : ZMod D)
+lemma cyclic_interval_stabilizer_trivial (D s : ℕ) (x0 : ZMod D) (τ : ZMod D)
     (h_s_pos : 0 < s) (h_s_lt : s < D)
     (h_inv : ∀ x, x ∈ cyclicInterval D s x0 ↔ (x + τ) ∈ cyclicInterval D s x0) :
     τ = 0 := by
@@ -622,7 +622,7 @@ lemma generic_minimality (α β : ℕ) (ω : ℝ) (seq : ℤ → ℤ) [NeZero (�
     rw [← h_heavy_eq x, ← h_heavy_eq (x + (σ : ZMod D))]
     rw [h_inv_count x]
   have h_sigma_mod : (σ : ZMod D) = 0 :=
-    @cyclic_interval_stabilizer_trivial D s hD ((r0 + q * D : ℕ) : ZMod D) (σ : ZMod D)
+    @cyclic_interval_stabilizer_trivial D s ((r0 + q * D : ℕ) : ZMod D) (σ : ZMod D)
       h_s_pos h_s_lt h_inv
   have h_sigma_dvd : D ∣ σ := by
     have h_cast : (σ : ZMod D) = 0 := h_sigma_mod
@@ -723,7 +723,7 @@ noncomputable def differenceSequenceUnit (α β : ℕ) (ω : ℝ)
   sortedMultisetUnit α β ω u (i + 1) - sortedMultisetUnit α β ω u i
 
 /-- `u = 1` specialisation: the unit-aware cumulative count agrees with `cumulativeHits`. -/
-lemma cumulative_hits_unit_one (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)] (x : ℕ) :
+lemma cumulative_hits_unit_one (α β : ℕ) (ω : ℝ) (x : ℕ) :
     cumulativeHitsUnit α β ω 1 x = cumulativeHits α β ω x := by
   unfold cumulativeHitsUnit cumulativeHits
   apply Finset.sum_congr rfl
@@ -735,7 +735,7 @@ lemma N_pos_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) : 0 < (⌊ω * �
   have h2 : 0 ≤ ⌊ω * β⌋ := Int.floor_nonneg.mpr (mul_nonneg h_ω (Nat.cast_nonneg β))
   omega
 
-lemma period_N_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] :
+lemma period_N_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
     IsPeriod (differenceSequence α β ω) N := by
   intro N
@@ -783,7 +783,7 @@ lemma period_N_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^
 /--
 Helper: sortedMultiset shifts by D when index shifts by N.
 -/
-lemma sorted_multiset_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) :
+lemma sorted_multiset_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) (i : ℤ) :
     let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
     let D := α ^ 2 + β ^ 2
     sortedMultiset α β ω (i + ↑N) = sortedMultiset α β ω i + ↑D := by
@@ -816,7 +816,7 @@ Unit-aware analogue of `sorted_multiset_add_N`. Purely structural — only
 uses the `q*N + r` decomposition that defines `sortedMultisetUnit`.
 -/
 lemma sorted_multiset_unit_add_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) :
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) :
     let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
     let D := α ^ 2 + β ^ 2
     sortedMultisetUnit α β ω u (i + ↑N) = sortedMultisetUnit α β ω u i + ↑D := by
@@ -848,7 +848,7 @@ Proof idea: Define f(i) = sortedMultiset(i+L) - sortedMultiset(i).
 Then f(i+1) - f(i) = differenceSequence(i+L) - differenceSequence(i) = 0
 by periodicity. So f is constant = f(0).
 -/
-lemma sorted_shift_constant (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+lemma sorted_shift_constant (α β : ℕ) (ω : ℝ)
     (L : ℕ) (hL : IsPeriod (differenceSequence α β ω) L) (i : ℤ) :
     sortedMultiset α β ω (i + ↑L) - sortedMultiset α β ω i =
     sortedMultiset α β ω ↑L - sortedMultiset α β ω 0 := by
@@ -902,7 +902,7 @@ Helper: N * shift = L * D.
 From sortedMultiset(i+N) = sortedMultiset(i) + D and
 sortedMultiset(i+L) = sortedMultiset(i) + σ, applied NL times both ways.
 -/
-lemma shift_times_N_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma shift_times_N_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     (L : ℕ) (hL : IsPeriod (differenceSequence α β ω) L) :
     let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
     let D := α ^ 2 + β ^ 2
@@ -942,7 +942,7 @@ lemma shift_times_N_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 
 /--
 Helper: the shift σ is nonneg (sortedMultiset is non-decreasing).
 -/
-lemma shift_nonneg (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma shift_nonneg (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (differenceSequence α β ω) L) :
     0 ≤ sortedMultiset α β ω ↑L - sortedMultiset α β ω 0 := by
   -- N * σ = L * D with L, D, N > 0, so σ ≥ 0.
@@ -960,7 +960,7 @@ Generalization of sorted_multiset_add_N to multiple N-steps:
 sortedMultiset(i + m*N) = sortedMultiset(i) + m*D.
 -/
 lemma sorted_multiset_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (i : ℤ) (m : ℕ) :
+    (i : ℤ) (m : ℕ) :
     sortedMultiset α β ω (i + ↑m * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
       sortedMultiset α β ω i + ↑m * ↑(α ^ 2 + β ^ 2) := by
   induction m with
@@ -982,7 +982,7 @@ lemma sorted_multiset_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 sortedMultiset mod D depends only on the index mod N.
 -/
 lemma sorted_multiset_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (k L : ℕ) :
+    (k L : ℕ) :
     (sortedMultiset α β ω ↑(k + L) : ZMod (α ^ 2 + β ^ 2)) =
     (sortedMultiset α β ω ↑((k + L) %
       (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
@@ -1003,7 +1003,7 @@ lemma sorted_multiset_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 /-- Unit-aware analogue of `sorted_shift_constant`. Structural — identical
 to the untwisted proof with `differenceSequenceUnit`/`sortedMultisetUnit`
 substituted. -/
-lemma sorted_shift_constant_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+lemma sorted_shift_constant_unit (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (L : ℕ) (hL : IsPeriod (differenceSequenceUnit α β ω u) L) (i : ℤ) :
     sortedMultisetUnit α β ω u (i + ↑L) - sortedMultisetUnit α β ω u i =
@@ -1048,7 +1048,7 @@ lemma sorted_shift_constant_unit (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^
     exact h_neg (n + 1)
 
 /-- Unit-aware analogue of `shift_times_N_eq`. -/
-lemma shift_times_N_eq_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma shift_times_N_eq_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (L : ℕ) (hL : IsPeriod (differenceSequenceUnit α β ω u) L) :
     let N := (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat
@@ -1081,7 +1081,7 @@ lemma shift_times_N_eq_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (
   rw [h3] at h1; linarith
 
 /-- Unit-aware analogue of `shift_nonneg`. -/
-lemma shift_nonneg_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma shift_nonneg_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (L : ℕ) (hL_pos : 0 < L) (hL : IsPeriod (differenceSequenceUnit α β ω u) L) :
     0 ≤ sortedMultisetUnit α β ω u ↑L - sortedMultisetUnit α β ω u 0 := by
@@ -1096,7 +1096,7 @@ lemma shift_nonneg_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^
 
 /-- Unit-aware analogue of `sorted_multiset_add_mul_N`. -/
 lemma sorted_multiset_unit_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) (m : ℕ) :
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (i : ℤ) (m : ℕ) :
     sortedMultisetUnit α β ω u (i + ↑m * ↑(⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) =
       sortedMultisetUnit α β ω u i + ↑m * ↑(α ^ 2 + β ^ 2) := by
   induction m with
@@ -1116,7 +1116,7 @@ lemma sorted_multiset_unit_add_mul_N (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 
 /-- Unit-aware analogue of `sorted_multiset_mod_D_eq`. -/
 lemma sorted_multiset_unit_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (k L : ℕ) :
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ) (k L : ℕ) :
     (sortedMultisetUnit α β ω u ↑(k + L) : ZMod (α ^ 2 + β ^ 2)) =
     (sortedMultisetUnit α β ω u ↑((k + L) %
       (⌊ω * ↑α⌋ + ⌊ω * ↑β⌋ + 1).toNat) :
@@ -1140,7 +1140,6 @@ lemma sorted_multiset_unit_mod_D_eq (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 Key residue shift: sortedMultiset((j+L)%N) ≡ sortedMultiset(j) + σ (mod D).
 -/
 lemma sorted_residue_shift (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)]
     (L : ℕ) (hL : IsPeriod (differenceSequence α β ω) L) (j : ℕ) :
     let D := α ^ 2 + β ^ 2
     let σ_ℤ := sortedMultiset α β ω ↑L - sortedMultiset α β ω 0
@@ -1471,7 +1470,7 @@ lemma count_hits_shift_invariant (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
 
 /-- Unit-aware analogue of `sorted_residue_shift`. -/
 lemma sorted_residue_shift_unit (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
-    [NeZero (α ^ 2 + β ^ 2)] (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
+    (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (L : ℕ) (hL : IsPeriod (differenceSequenceUnit α β ω u) L) (j : ℕ) :
     let D := α ^ 2 + β ^ 2
     let σ_ℤ := sortedMultisetUnit α β ω u ↑L - sortedMultisetUnit α β ω u 0
@@ -2171,7 +2170,7 @@ noncomputable def setDifferenceSequence (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2
 
 /-- Under `N < D`, the indicator and the multiplicity coincide pointwise. -/
 lemma set_indicator_eq_count_hits_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (y : ℕ) :
     setIndicator α β ω y =
       countHits (α ^ 2 + β ^ 2)
@@ -2187,7 +2186,7 @@ lemma set_indicator_eq_count_hits_of_lt
 
 /-- Under `N < D`, `setCumulativeHits` and `cumulativeHits` agree. -/
 lemma set_cumulative_hits_eq_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
     setCumulativeHits α β ω x = cumulativeHits α β ω x := by
   change (Finset.range (x + 1)).sum (setIndicator α β ω) = _
@@ -2197,7 +2196,7 @@ lemma set_cumulative_hits_eq_of_lt
 
 /-- Under `N < D`, `setV` and `V` agree. -/
 lemma set_V_eq_V_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (k : ℕ) :
     setV α β ω k = V α β ω k := by
   have h_funeq : setCumulativeHits α β ω = cumulativeHits α β ω :=
@@ -2447,7 +2446,7 @@ private lemma difference_sequence_unit_eq_difference_sequence_of_dvd
       sorted_multiset_unit_eq_sorted_multiset_of_dvd α β ω u h_dvd]
 
 /-- Unit-aware analogue of `period_N_concrete`. -/
-lemma period_N_unit_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω) [NeZero (α ^ 2 + β ^ 2)]
+lemma period_N_unit_concrete (α β : ℕ) (ω : ℝ) (h_ω : 0 ≤ ω)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ) :
     let N := (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat
     IsPeriod (differenceSequenceUnit α β ω u) N := by
@@ -2622,7 +2621,7 @@ Bridge lemma to the paper's cR formula. The Lean `multiplier` equals
 matches equation `eq:residue` of the paper verbatim.
 -/
 lemma c_r_eq_multiplier_mul_r (α β : ℕ) (h_coprime : Nat.Coprime α β)
-    [NeZero (α ^ 2 + β ^ 2)] (r : ℤ) :
+    (r : ℤ) :
     cR α β h_coprime r =
       -((alphaUnit α β h_coprime : (ZMod (α ^ 2 + β ^ 2))ˣ) :
           ZMod (α ^ 2 + β ^ 2)) *
@@ -2642,7 +2641,7 @@ formalisation of `main_theorem_geometric_concrete` an honest statement
 about the geometric cR enumeration.
 -/
 lemma count_hits_unit_multiplier_eq_c_r_count
-    (α β : ℕ) (h_coprime : Nat.Coprime α β) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (h_coprime : Nat.Coprime α β)
     (r0 N : ℕ) (x : ZMod (α ^ 2 + β ^ 2)) :
     countHitsUnit (α ^ 2 + β ^ 2) (multiplier α β h_coprime) r0 N x =
     ((Finset.range N).filter
@@ -2727,7 +2726,7 @@ noncomputable def setDifferenceSequenceUnit (α β : ℕ) (ω : ℝ) [NeZero (α
 /-! ### Unit-aware Phase C, branch `N < D`: agreement with `differenceSequenceUnit` -/
 
 lemma set_indicator_unit_eq_count_hits_unit_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (y : ℕ) :
     setIndicatorUnit α β ω u y =
@@ -2747,7 +2746,7 @@ lemma set_indicator_unit_eq_count_hits_unit_of_lt
   · push Not at hge; omega
 
 lemma set_cumulative_hits_unit_eq_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (x : ℕ) :
     setCumulativeHitsUnit α β ω u x = cumulativeHitsUnit α β ω u x := by
@@ -2757,7 +2756,7 @@ lemma set_cumulative_hits_unit_eq_of_lt
   exact set_indicator_unit_eq_count_hits_unit_of_lt α β ω u h y
 
 lemma set_V_unit_eq_V_unit_of_lt
-    (α β : ℕ) (ω : ℝ) [NeZero (α ^ 2 + β ^ 2)]
+    (α β : ℕ) (ω : ℝ)
     (u : (ZMod (α ^ 2 + β ^ 2))ˣ)
     (h : (⌊ω * α⌋ + ⌊ω * β⌋ + 1).toNat < α ^ 2 + β ^ 2) (k : ℕ) :
     setVUnit α β ω u k = VUnit α β ω u k := by

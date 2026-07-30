@@ -81,8 +81,8 @@ def equivGenLoop (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
   toFun f := ⟨f, fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ∂I^0) ⟩
   invFun f := ⟨f, ⟨fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ∂I^0),
     fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ⊔I^0) ⟩ ⟩
-  left_inv y := by simp only [Subtype.coe_eta]
-  right_inv y := by simp only [Subtype.coe_eta]
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 end RelGenLoop
 

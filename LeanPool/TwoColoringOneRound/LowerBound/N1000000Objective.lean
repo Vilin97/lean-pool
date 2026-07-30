@@ -150,7 +150,7 @@ private lemma orbitProdStabilizerEquivGroup_smul_fst
   -- Evaluate the orbit element as `g • b`.
   have hx_smul :
       ((MulAction.orbitEquivQuotientStabilizer G b).symm g : Emb4) = g • b := by
-    exact MulAction.orbitEquivQuotientStabilizer_symm_apply (α := G) (b := b) g
+    exact MulAction.orbitEquivQuotientStabilizer_symm_apply (G := G) (b := b) g
   -- Put everything together.
   simpa [hg, g] using (hx_smul.trans hx_val)
 
@@ -204,7 +204,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
       _ =
           ∑ x : ↑(MulAction.orbit G b),
             (Fintype.card (MulAction.stabilizer G b) : Q) * corrEmb f x.1 := by
-            simp_all
+            simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
       _ =
           (Fintype.card (MulAction.stabilizer G b) : Q) *
             ∑ x : ↑(MulAction.orbit G b), corrEmb f x.1 := by
@@ -218,7 +218,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
       Fintype.card (↑(MulAction.orbit G b)) * Fintype.card (MulAction.stabilizer G b) =
         Fintype.card G := by
     simpa using
-      (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (α := G) (β := Emb4) b)
+      (MulAction.card_orbit_mul_card_stabilizer_eq_card_group (G := G) (X := Emb4) b)
   have hcardG :
       (Fintype.card G : Q) =
         (Fintype.card Emb4 : Q) * (Fintype.card (MulAction.stabilizer G b) : Q) := by

@@ -42,6 +42,7 @@ lemma RecursiveIn_pair_total {O : Set (ℕ →. ℕ)} {f g : ℕ → ℕ}
   (hg : RecursiveIn O (fun n => Part.some (g n))) :
   RecursiveIn O (fun n => Part.some (Nat.pair (f n) (g n))) := by
     convert RecursiveIn.pair hf hg using 1
+    refine iff_of_eq (congrArg (RecursiveIn O) ?_)
     ext
     simp only [Part.mem_some_iff, Part.map_eq_map, Part.map_some]
     erw [Part.mem_bind_iff]
@@ -97,7 +98,9 @@ theorem RecursiveIn.rfind' {f : ℕ →. ℕ} (hf : RecursiveIn O f) :
       have h_g' : RecursiveIn O (fun p =>
           f (Nat.pair (p.unpair.1.unpair.1) (p.unpair.1.unpair.2 + p.unpair.2))) := by
         convert RecursiveIn.comp hf h_g using 1
-        aesop
+        refine iff_of_eq (congrArg (RecursiveIn O) ?_)
+        funext p
+        exact (Part.bind_some _ f).symm
       simpa only [add_comm] using h_g'
     have hH : RecursiveIn O (fun p => Nat.rfind (fun n => let x := Nat.pair p n; (fun m =>
         Decidable.decide (m = 0)) <$>
@@ -109,6 +112,7 @@ theorem RecursiveIn.rfind' {f : ℕ →. ℕ} (hf : RecursiveIn O f) :
         (Nat.unpair p).2) := by
       have h_add : RecursiveIn O (fun p => (Nat.unpair p).2) := right
       convert RecursiveIn_add.comp (hH.pair h_add) using 1
+      refine iff_of_eq (congrArg (RecursiveIn O) ?_)
       ext
       simp_all only [Nat.unpair_pair, Part.map_eq_map, Part.coe_some, Part.bind_eq_bind,
         Part.mem_bind_iff, Part.mem_some_iff]
@@ -133,12 +137,13 @@ theorem RecursiveIn.rfind' {f : ℕ →. ℕ} (hf : RecursiveIn O f) :
         obtain ⟨n, hn⟩ : ∃ n, (Nat.rfind (fun n => Part.map (fun m => Decidable.decide (m = 0))
             (f (Nat.pair (Nat.unpair a).1 (n + (Nat.unpair a).2))))) = Part.some n
             ∧ w = Nat.pair n (Nat.unpair a).2 := by
-          cases left; aesop
+          simpa [Seq.seq, Part.mem_bind_iff, Part.eq_some_iff] using left
         simp_all only [Part.map_some, Nat.unpair_pair]
         obtain ⟨left_1, right⟩ := hn
         subst right
         simp [Part.some, Part.add_def]
     convert h_target using 1
+    refine iff_of_eq (congrArg (RecursiveIn O) ?_)
     funext p
     simp only [Nat.unpaired, Part.map_eq_map, Nat.unpair_pair, Part.coe_some]
     cases h : Nat.rfind (fun n => Part.map (fun m => Decidable.decide (m = 0))
@@ -438,8 +443,7 @@ theorem exists_code_rel {α : Type} [Primcodable α] (g : α → ℕ →. ℕ) (
         simp [Part.map_some, Part.bind_some]
       change (evalo g (idCode.pair codeo.zero) a >>= evalo g cg.rfind') = _
       rw [key]
-      change (Part.bind (Part.some (Nat.pair a 0)) (evalo g cg.rfind')) = _
-      rw [Part.bind_some]
+      refine (Part.bind_some (Nat.pair a 0) (evalo g cg.rfind')).trans ?_
       simp only [evalo, Nat.unpaired, Nat.unpair_pair, add_zero, h]
       exact Part.map_id' (fun _ => rfl) _
   · rintro ⟨c, rfl⟩

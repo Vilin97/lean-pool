@@ -258,17 +258,9 @@ instance addCommMonoidBlockDiagonal {k : Type _} [DecidableEq k] {s : k → Type
   add_comm a b := by
     ext
     simp only [IsBlockDiagonal.coe_add, add_comm]
-  nsmul n x := (n : R) • x
-  nsmul_zero x := by
-    ext
-    simp only [IsBlockDiagonal.coe_smul, Nat.cast_zero, zero_smul]
-    rfl
-  nsmul_succ n x := by
-    ext
-    simp only [IsBlockDiagonal.coe_smul, Nat.cast_succ, add_smul, one_smul, add_comm]
-    simp only [IsBlockDiagonal.coe_add, add_apply]
-    rw [add_comm]
-    rfl
+  nsmul := nsmulRec
+  nsmul_zero _ := rfl
+  nsmul_succ _ _ := rfl
 
 
 private theorem IsBlockDiagonal.coe_sum_aux {k : Type _} [DecidableEq k] {s : k → Type _} {n : ℕ}
@@ -701,12 +693,13 @@ open scoped Kronecker
 theorem kronecker_hMul {R : Type _} [CommSemiring R] {k : Type _} [DecidableEq k] {s : k → Type _}
     {x y : Matrix (Σ i, s i) (Σ i, s i) R} (hx : x.IsBlockDiagonal) :
     IsBlockDiagonal fun i j => (x ⊗ₖ y) (sigmaProdSigma.symm i) (sigmaProdSigma.symm j) := by
-  rw [Matrix.IsBlockDiagonal, blockDiagonal'_ext]
-  intro a b c d
-  simp only [blockDiagonal'_apply', blockDiag'_apply, kroneckerMap_apply,
+  apply (blockDiagonal'_ext _ _).mpr
+  rintro a ⟨b, ai, bj⟩ c ⟨d, ci, dj⟩
+  simp only [blockDiagonal'_apply', kroneckerMap_apply,
     sigmaProdSigma_symm_apply]
   split_ifs with h
-  · congr <;> simp [h]
+  · subst c
+    rfl
   · rw [hx.apply_of_ne, MulZeroClass.zero_mul]
     simpa [ne_eq]
 

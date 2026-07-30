@@ -18,4 +18,5 @@ import Mathlib.Data.Fintype.Parity
 theorem ModularGroup.modular_S_sq : S * S = -1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [S, Matrix.SpecialLinearGroup.coe_mul, Matrix.SpecialLinearGroup.coe_neg]
+    simp [ModularGroup.coe_S, Matrix.SpecialLinearGroup.coe_mul,
+      Matrix.SpecialLinearGroup.coe_neg]

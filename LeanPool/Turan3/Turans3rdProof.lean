@@ -1003,7 +1003,7 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
   obtain ⟨⟨⟨abAdj,Q⟩,abSupp⟩,abnot⟩ := hab
   rcases Q with Q | Q
   · dsimp [Enhance]
-    rw [Quot.liftOn_mk]
+    dsimp only [Quot.liftOn]
     rw [if_neg (show ¬ a = loose by intro con; rw [Q,← con] at h_lt; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
     rw [if_neg (show ¬ b = loose by
@@ -1020,7 +1020,7 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
       · simp_all
     simp_all
   · dsimp [Enhance]
-    rw [Quot.liftOn_mk]
+    dsimp only [Quot.liftOn]
     rw [if_neg (show ¬ b = loose by intro con; rw [Q,← con] at h_lt; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
     rw [if_neg (show ¬ a = loose by intro con;rw [Q,← con] at abnot; apply abnot; rfl)]
@@ -1036,7 +1036,7 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
       · exact q.2
     have tec' : Sym2.Mem.other' (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = a
         := by simpa [Sym2.other_eq_other'] using tec
-    rw [Quot.liftOn_mk, tec']
+    rw [tec']
     have hgain : W.w gain = W.w b := by simp [Q]
     simp [hgain, mul_comm]
 
@@ -1145,7 +1145,7 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
       simp_all
     dsimp [Enhance] at *
     subst Q1
-    rw [Quot.liftOn_mk]
+    dsimp only [Quot.liftOn]
     simp only [↓reduceIte, nb, ng, Sym2.other_eq_other']
     have tec : Sym2.Mem.other' (helper_gain_mem G s(loose, b) (small_helpI G (in_sdiff_left hab))) =
         b := by
@@ -1161,7 +1161,7 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
       simp_all
     dsimp [Enhance] at *
     subst Q2
-    rw [Quot.liftOn_mk]
+    dsimp only [Quot.liftOn]
     simp only [na, ↓reduceIte, ng, Sym2.other_eq_other']
     have tec : Sym2.Mem.other' (helper_gain_mem G s(a, loose) (small_helpI G (in_sdiff_left hab))) =
         a := by

@@ -128,6 +128,8 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
       ∀ x ∈ Metric.ball m δ,
         x ∈ Set.range ι ↔
           ∃ v : V, x = m + (v : E d) + (φ v : E d) := by
+  letI : AddCommGroup (E d) := NormedAddCommGroup.toAddCommGroup
+  letI : Module ℝ (E d) := NormedSpace.toModule
   -- Step 1: Obtain a preimage p of m under ι
   obtain ⟨p, hp⟩ := hm
   -- Step 2: Set up chart composition
@@ -254,7 +256,7 @@ private abbrev smooth_embedding_local_graph {d n : ℕ}
         hFp.codChart_mem_maximalAtlas
         (mem_chart_source (E d) (ι p)) hFp.mem_codChart_source
       simp only [modelWithCornersSelf_coe, Set.range_id, contDiffWithinAt_univ] at h
-      simpa [extChartAt_model_space_eq_id, PartialEquiv.refl_coe] using
+      simpa [chartAt_self_eq, extChartAt_model_space_eq_id, PartialEquiv.refl_coe] using
         h.differentiableAt (by norm_num)
     rw [fderiv_comp (x := a) hcodchart_diff hg_diff'] at hrhs_inj
     intro x y hxy

@@ -113,8 +113,8 @@ def toEnd : A ⊗[K] Aᵐᵒᵖ →ₐ[K] Module.End K A :=
         show a * (algebraMap K A) k = k • _ by
           rw [Algebra.smul_def, Algebra.commutes]
           rfl }
-    fun a a' => show _ = _ from DFunLike.ext _ _ fun x ↦ show a * (x * a'.unop) = a * x * a'.unop
-      from mul_assoc _ _ _ |>.symm
+    fun a a' => (commute_iff_eq _ _).2 <| DFunLike.ext _ _ fun x ↦
+      show a * (x * a'.unop) = a * x * a'.unop from mul_assoc _ _ _ |>.symm
 
 instance : FiniteDimensional K Aᵐᵒᵖ := LinearEquiv.finiteDimensional
   (MulOpposite.opLinearEquiv K : A ≃ₗ[K] Aᵐᵒᵖ)
@@ -300,7 +300,8 @@ def matrixEquivForward (m n : Type*) [Fintype m] [Fintype n] [DecidableEq m] [De
 
 open scoped Kronecker in
 lemma matrixEquivForward_tmul (m n : Type*) [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (M : Matrix m m K) (N : Matrix n n K) : matrixEquivForward m n (M ⊗ₜ N) = M ⊗ₖ N := rfl
+    (M : Matrix m m K) (N : Matrix n n K) :
+    matrixEquivForward (K := K) m n (M ⊗ₜ N) = M ⊗ₖ N := rfl
 
 lemma matrixEquivForward_surjective
     (n m : Type*) [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] :
@@ -308,7 +309,7 @@ lemma matrixEquivForward_surjective
   intro x
   rw [Matrix.matrix_eq_sum_single x]
   suffices H :
-      ∀ (i j : m × n), ∃ a, (matrixEquivForward m n) a = Matrix.single i j (x i j) by
+      ∀ (i j : m × n), ∃ a, (matrixEquivForward (K := K) m n) a = Matrix.single i j (x i j) by
     choose a ha using H
     use ∑ i : m × n, ∑ j : m × n, a i j
     simp_all
@@ -318,14 +319,9 @@ lemma matrixEquivForward_surjective
   use (x i j) • ((Matrix.single i.1 j.1 1) ⊗ₜ (Matrix.single i.2 j.2 1))
   rw [_root_.map_smul (f := (matrixEquivForward (K := K) m n)) (x i j)]
   congr 1
-  simp only [matrixEquivForward, Algebra.TensorProduct.algHomOfLinearMapTensorProduct_apply,
-    TensorProduct.lift.tmul]
+  rw [matrixEquivForward_tmul]
   ext a b
-  erw [Matrix.kroneckerMapBilinear_apply_apply]
-  erw [Matrix.kroneckerMap_apply]
-  erw [Algebra.coe_lmul_eq_mul]
-  rw [LinearMap.mul]
-  simp only [LinearMap.mk₂_apply]
+  rw [Matrix.kroneckerMap_apply]
   simp only [Matrix.single, Matrix.of_apply, mul_ite, mul_one, mul_zero]
   split_ifs with h1 h2 h3 h4 h5
   · rfl
@@ -661,7 +657,8 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
           rw [TensorProduct.smul_tmul (R := K), TensorProduct.tmul_smul,
             TensorProduct.tmul_smul, Algebra.TensorProduct.one_def,
             Algebra.TensorProduct.one_def] } fun e a =>
-            show (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) = (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) by simp)
+            (commute_iff_eq _ _).2 <|
+              show (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) = (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) by simp)
     (Algebra.TensorProduct.lift
       { toFun e := e ⊗ₜ[K] (1 ⊗ₜ 1)
         map_one' := rfl
@@ -681,8 +678,9 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
             Algebra.algebraMap_eq_smul_one (R := K) (A := B)]
           rw [TensorProduct.tmul_smul, TensorProduct.tmul_smul,
             Algebra.TensorProduct.one_def, Algebra.TensorProduct.one_def] }
-    fun e b => show (_ ⊗ₜ _) * (_ ⊗ₜ _) = (_ ⊗ₜ _) * (_ ⊗ₜ _) by simp)
-      fun x y => show _ = _ by
+    fun e b => (commute_iff_eq _ _).2 <|
+      show (_ ⊗ₜ _) * (_ ⊗ₜ _) = (_ ⊗ₜ _) * (_ ⊗ₜ _) by simp)
+      fun x y => (commute_iff_eq _ _).2 <| show _ = _ by
         induction x using TensorProduct.induction_on with
         | zero => simp only [map_zero, zero_mul, mul_zero]
         | add x x' hx hx' => simp only [map_add, mul_add, hx, hx', add_mul]

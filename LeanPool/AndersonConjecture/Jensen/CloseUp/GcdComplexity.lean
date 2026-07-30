@@ -31,7 +31,7 @@ noncomputable def gcdComplexity {R : Subring T}
   @Finset.sum _ _ _ s fun x =>
     @Multiset.card _
       (@UniqueFactorizationMonoid.normalizedFactors
-        R _ UniqueFactorizationMonoid.normalizationMonoid _ x)
+        R _ UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid _ x)
 
 /-- `gcdComplexity` for a finite set in an N-subring, supplying the domain and
 UFD instances from the N-subring structure. -/
@@ -48,8 +48,10 @@ lemma normalizedFactors_card_inclusion
     letI : UniqueFactorizationMonoid R.carrier := R.isUFD
     letI : IsDomain S₁.carrier := NSubring.isDomain S₁
     letI : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
-    letI : NormalizationMonoid R.carrier := UniqueFactorizationMonoid.normalizationMonoid
-    letI : NormalizationMonoid S₁.carrier := UniqueFactorizationMonoid.normalizationMonoid
+    letI : NormalizationMonoid R.carrier :=
+      UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
+    letI : NormalizationMonoid S₁.carrier :=
+      UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
     (UniqueFactorizationMonoid.normalizedFactors
       (Subring.inclusion hle x)).card =
     (UniqueFactorizationMonoid.normalizedFactors x).card := by
@@ -57,8 +59,10 @@ lemma normalizedFactors_card_inclusion
   letI : UniqueFactorizationMonoid R.carrier := R.isUFD
   letI : IsDomain S₁.carrier := NSubring.isDomain S₁
   letI : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
-  letI : NormalizationMonoid R.carrier := UniqueFactorizationMonoid.normalizationMonoid
-  letI : NormalizationMonoid S₁.carrier := UniqueFactorizationMonoid.normalizationMonoid
+  letI : NormalizationMonoid R.carrier :=
+    UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
+  letI : NormalizationMonoid S₁.carrier :=
+    UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
   have h_inj : Function.Injective (Subring.inclusion hle) :=
     Subring.inclusion_injective hle
   change (UniqueFactorizationMonoid.normalizedFactors (Subring.inclusion hle x)).card =
@@ -236,7 +240,8 @@ lemma gcdComplexity_div_le {R₀ : Subring T}
     (hdiv : ∀ x ∈ s, x = q * div_f x)
     (hinj : Set.InjOn div_f ↑s) :
     gcdComplexity (s.image div_f) ≤ gcdComplexity s := by
-  letI : NormalizationMonoid R₀ := UniqueFactorizationMonoid.normalizationMonoid
+  letI : NormalizationMonoid R₀ :=
+    UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
   unfold gcdComplexity
   rw [Finset.sum_image hinj]
   apply Finset.sum_le_sum

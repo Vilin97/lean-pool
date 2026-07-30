@@ -5,9 +5,12 @@ Authors: Julius Marx
 -/
 import LeanPool.MRiscX.Basic
 import LeanPool.MRiscX.Tactics.ApplySpec
+
 /-!
 New Code Proofs
 -/
+
+attribute [local implicit_reducible] Registers Memory
 
 /-
 An example of the first block of the otp implementation from `OtpProof.lean`.

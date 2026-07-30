@@ -281,8 +281,19 @@ of heartbeats. -/
 private abbrev extendedFarkas.I' (A : Matrix I J F∞) (b : I → F∞) : Type _ :=
   { i : I // b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥ }
 
+/- Instance resolution does not look through the `Matrix` definition when the entry access
+`A i j` sits under a binder it has yet to introduce, so the decidability of the predicates
+carving out `I'` and `J'` has to be supplied explicitly. -/
+private instance extendedFarkas.decidablePredI' (A : Matrix I J F∞) (b : I → F∞) :
+    DecidablePred (fun i : I => b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) :=
+  fun _ => inferInstance
+
 private abbrev extendedFarkas.J' (A : Matrix I J F∞) (b : I → F∞) : Type _ :=
   { j : J // ∀ i' : extendedFarkas.I' A b, A i'.val j ≠ ⊤ }
+
+private instance extendedFarkas.decidablePredJ' (A : Matrix I J F∞) (b : I → F∞) :
+    DecidablePred (fun j : J => ∀ i' : extendedFarkas.I' A b, A i'.val j ≠ ⊤) :=
+  fun _ => inferInstance
 
 private def extendedFarkas.A' (A : Matrix I J F∞) (b : I → F∞) :
     Matrix (extendedFarkas.I' A b) (extendedFarkas.J' A b) F :=

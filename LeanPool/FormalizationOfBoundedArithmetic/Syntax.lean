@@ -121,14 +121,19 @@ by
 theorem comp_inv {L : Language} {α β} {m} {φ : L.BoundedFormula α m} (f : α ≃ β)
   : (relabelEquiv f.symm ((relabelEquiv f) φ)) = φ :=
 by
-  unfold relabelEquiv mapTermRelEquiv
-  dsimp only [Equiv.coe_refl, Equiv.coe_fn_mk]
-  rw [mapTermRel_mapTermRel]
-  unfold Function.comp
-  unfold Equiv.sumCongr
-  simp only [Equiv.coe_refl, _root_.Equiv.symm_symm, Equiv.refl_symm, Term.relabelEquiv_apply,
-    Equiv.coe_fn_mk, Term.relabel_relabel, Sum.map_comp_map, _root_.Equiv.symm_comp_self,
-    Function.comp_id, Sum.map_id_id, Term.relabel_id_eq_id, id_eq]
+  have hfun : ∀ x : ℕ,
+      (⇑(f.symm.sumCongr (_root_.Equiv.refl (Fin x))) ∘
+        ⇑(f.sumCongr (_root_.Equiv.refl (Fin x)))) = id := by
+    intro x
+    funext a
+    cases a <;> simp
+  have hcomp : ∀ x : ℕ,
+      (⇑(Term.relabelEquiv (L := L) (f.symm.sumCongr (_root_.Equiv.refl (Fin x)))) ∘
+        ⇑(Term.relabelEquiv (f.sumCongr (_root_.Equiv.refl (Fin x))))) = id := by
+    intro x
+    funext t
+    simp [Term.relabel_relabel, hfun x]
+  simp only [relabelEquiv, mapTermRelEquiv, Equiv.coe_fn_mk, mapTermRel_mapTermRel, hcomp]
   apply mapTermRel_id_id_id
 
 end relabelEquiv
@@ -236,12 +241,12 @@ theorem relabel_relabelSum [enum : IsEnum β] (g : α ≃ γ) :
   induction φ with
   | falsum => rfl
   | equal t1 t2 =>
-      dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
+      simp only [BoundedFormula.relabelEquiv, mapTermRelEquiv_apply,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
       simp_all
   | rel R ts =>
-      dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
+      simp only [BoundedFormula.relabelEquiv, mapTermRelEquiv_apply,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
       simp_all

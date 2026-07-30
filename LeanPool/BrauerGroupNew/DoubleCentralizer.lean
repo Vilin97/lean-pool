@@ -380,9 +380,12 @@ AlgEquiv.symm <| AlgEquiv.ofBijective
       simp only [algebraMap_end_apply, Algebra.smul_def, Algebra.commutes] } <| by
   constructor
   · intro x y hxy
-    simp_all
+    have h0 : LinearMap.mulRight F x.unop = LinearMap.mulRight F y.unop := Subtype.ext_iff.1 hxy
+    have h1 := congr($h0 (1 : B))
+    simp only [LinearMap.mulRight_apply, one_mul] at h1
+    exact MulOpposite.unop_injective h1
   · rintro ⟨_, ⟨x, rfl⟩⟩
-    simp_all
+    exact ⟨MulOpposite.op x, rfl⟩
 
 lemma centralizer_mulLeft :
     Subalgebra.centralizer F (Module.End.leftMul F B : Set <| Module.End F B) =
@@ -522,10 +525,13 @@ lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
         simp_all)
       (by
         rintro ⟨_, ⟨a, ha, rfl⟩⟩ ⟨_, ⟨b, hb, rfl⟩⟩ ⟨c, hc1, hc2⟩
-        simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-          Subtype.mk.injEq, Units.mul_left_inj, Units.mul_right_inj] at hc2
         refine ⟨⟨a, ha⟩ * ⟨b, hb⟩, J.mul_mem_right _ _ <| by
-          simp_rw [← hc2]; exact hc1, ?_⟩
+          have h : (x : A) * (c : A) * (↑x⁻¹ : A) = (x : A) * a * (↑x⁻¹ : A) :=
+            Subtype.ext_iff.1 hc2
+          rw [Units.mul_left_inj, Units.mul_right_inj] at h
+          have hac : (⟨a, ha⟩ : B) = c := Subtype.ext h.symm
+          rw [hac]
+          exact hc1, ?_⟩
         ext
         simp only [toConj, MulMemClass.mk_mul_mk, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
           OneHom.coe_mk, mul_assoc]
@@ -534,7 +540,14 @@ lemma Subalgebra.conj_simple_iff {B : Subalgebra F A} {x : Aˣ} :
       intro J
       ext ⟨_, ⟨a, ha, rfl⟩⟩
       simp only [toConj, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-      simp_all
+      simp_all only [TwoSidedIdeal.mem_mk', Set.mem_image, SetLike.mem_coe,
+        TwoSidedIdeal.mem_comap, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk,
+        OneHom.coe_mk, Subtype.exists]
+      constructor
+      · rintro ⟨b, _, hbJ, hbe⟩
+        exact hbe ▸ hbJ
+      · intro h
+        exact ⟨a, ha, h, rfl⟩
     right_inv := by
       intro J
       ext ⟨a, ha⟩

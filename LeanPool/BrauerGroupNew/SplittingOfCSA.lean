@@ -41,7 +41,7 @@ private lemma subsingleton_tensor [Subsingleton A] : Subsingleton (K ⊗[k] A) :
   simp
 
 theorem central_over_extension_iff_subsingleton
-    [Subsingleton A] [FiniteDimensional k A] [FiniteDimensional k K] :
+    [Subsingleton A] :
     Algebra.IsCentral k A ↔ Algebra.IsCentral K (K ⊗[k] A) := by
   have : Subsingleton (K ⊗[k] A) := subsingleton_tensor k A K
   constructor <;>
@@ -51,7 +51,7 @@ theorem central_over_extension_iff_subsingleton
     exact Subalgebra.zero_mem ⊥
 
 theorem isSimple_over_extension_iff_subsingleton
-    [Subsingleton A] [FiniteDimensional k A] [FiniteDimensional k K] :
+    [Subsingleton A] [FiniteDimensional k K] :
     IsSimpleRing A ↔ IsSimpleRing (K ⊗[k] A) := by
   have : Subsingleton (K ⊗[k] A) := subsingleton_tensor k A K
   constructor <;>

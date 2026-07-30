@@ -313,7 +313,7 @@ lemma exists_consistent_maximal_of_consistent (T_consis : Consistent 𝓢 T)
       exact Set.subset_sUnion_of_mem a;
   ) T T_consis;
   use Z;
-  simp_all only [Set.mem_setOf_eq, Set.le_eq_subset, true_and];
+  simp_all only [Set.mem_setOf_eq, true_and];
   constructor;
   · assumption;
   · intro U hU hZU;

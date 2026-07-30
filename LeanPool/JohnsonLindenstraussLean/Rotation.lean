@@ -140,7 +140,7 @@ theorem jlMap_concentration {k n : ℕ} (hk : 0 < k) (w : Fin n → ℝ)
   have hPeq : ∀ A : Fin k → Fin n → ℝ,
       ∑ i, (∑ j, A i j * w j) ^ 2 = (k : ℝ) * ∑ i, (jlMap k n A w i) ^ 2 := by
     intro A
-    rw [jlMap_sq_norm]
+    rw [jlMap_sq_norm k n A w]
     field_simp
   have hchidiv : ∀ A : Fin k → Fin n → ℝ,
       chiSq k (gmap A) / (k : ℝ) = Nw⁻¹ * ∑ i, (jlMap k n A w i) ^ 2 := by

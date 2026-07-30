@@ -109,7 +109,7 @@ theorem N_bot_mem {X : Set ℕ} : N.bot.mem X ↔ X = Set.univ := NeighborhoodSy
 
 /-- Scott's total element `n̂ = ↑{n} = {{n}, ℕ}`, the principal filter of the
 singleton `{n}`. -/
-def natElem (n : ℕ) : N.Element := N.principal (memN_singleton n)
+def natElem (n : ℕ) : N.Element := N.principal (N_mem.mpr (memN_singleton n))
 
 /-- A neighbourhood belongs to `n̂` iff it is `ℕ` (the master) or the singleton
 `{n}`. -/

@@ -464,7 +464,7 @@ noncomputable instance QuantumSet.tensorOpSelf {A :
   QuantumSet (A ⊗[ℂ] Aᵐᵒᵖ) :=
 QuantumSet.tensorProduct (h := Fact.mk rfl)
 
-theorem MulOpposite.norm_eq {𝕜 H : Type*} [RCLike 𝕜] [NormedAddCommGroup H]
+theorem MulOpposite.norm_eq {H : Type*} [NormedAddCommGroup H]
   (x : Hᵐᵒᵖ) : ‖x‖ = ‖x.unop‖ :=
 rfl
 
@@ -481,7 +481,8 @@ theorem Coalgebra.comul_mul (a b : A) :
   ext i
   rw [QuantumSet.toSubset_onb 0]
   simp only [zero_div, neg_zero, add_zero]
-  rw [← QuantumSet.toSubsetAlgEquiv_isReal]
+  rw [← QuantumSet.toSubsetAlgEquiv_isReal (A := A) 0
+    (modAut (k A / 2) (hA.onb i))]
   simp_all
 
 open scoped ComplexOrder
@@ -617,7 +618,7 @@ theorem QuantumGraph.Real_conj_starAlgEquiv
 
 theorem Submodule.eq_iff_orthogonalProjection_eq
   {E : Type u_1} [NormedAddCommGroup E] [InnerProductSpace ℂ E] {U : Submodule ℂ E}
-  {V : Submodule ℂ E} [CompleteSpace E] [CompleteSpace ↥U] [CompleteSpace ↥V] :
+  {V : Submodule ℂ E} [CompleteSpace ↥U] [CompleteSpace ↥V] :
   U = V ↔ orthogonalProjection' U = orthogonalProjection' V :=
 by simp_rw [le_antisymm_iff, orthogonalProjection.is_le_iff_subset]
 
@@ -641,7 +642,7 @@ theorem orthogonalProjection_submoduleMap {E E' :
     Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
   {U : Submodule ℂ E}
-  [FiniteDimensional ℂ E] [FiniteDimensional ℂ E'] (f : E ≃ₗᵢ[ℂ] E') :
+  [FiniteDimensional ℂ E] (f : E ≃ₗᵢ[ℂ] E') :
   (orthogonalProjection' (Submodule.map (f.toLinearEquiv : E →ₗ[ℂ] E') U)).toLinearMap
     = f.toLinearMap
       ∘ₗ (orthogonalProjection' U).toLinearMap
@@ -653,7 +654,7 @@ theorem orthogonalProjection_submoduleMap_isometry {E E' :
     Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
   {U : Submodule ℂ E}
-  [FiniteDimensional ℂ E] [FiniteDimensional ℂ E']
+  [FiniteDimensional ℂ E]
   {f : E ≃ₗ[ℂ] E'} (hf : Isometry f) :
   (orthogonalProjection' (Submodule.map f.toLinearMap U)).toLinearMap
     = f.toLinearMap
@@ -665,9 +666,8 @@ theorem orthogonalProjection_submoduleMap_isometry {E E' :
 instance
    StarAlgEquivClass.instLinearMapClass
   {R A B : Type*} [Semiring R] [AddCommMonoid A] [AddCommMonoid B]
-  [Mul A] [Mul B] [Module R A] [Module R B] [Star A] [Star B]
-  {F : Type*} [EquivLike F A B] [NonUnitalAlgEquivClass F R A B]
-  [StarHomClass F A B] :
+  [Mul A] [Mul B] [Module R A] [Module R B]
+  {F : Type*} [EquivLike F A B] [NonUnitalAlgEquivClass F R A B] :
   LinearMapClass F R A B :=
 SemilinearMapClass.mk
 
@@ -676,7 +676,7 @@ theorem orthogonalProjection_submoduleMap_isometry_starAlgEquiv
   [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
   {U : Submodule ℂ E}
   [Mul E] [Mul E'] [Star E] [Star E']
-  [FiniteDimensional ℂ E] [FiniteDimensional ℂ E']
+  [FiniteDimensional ℂ E]
   {f : E ≃⋆ₐ[ℂ] E'} (hf : Isometry f) :
   (orthogonalProjection' (Submodule.map f.toLinearMap U)).toLinearMap
     = f.toLinearMap
@@ -693,7 +693,7 @@ theorem orthogonalProjection_submoduleMap' {E E' :
     Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [NormedAddCommGroup E'] [InnerProductSpace ℂ E']
   {U : Submodule ℂ E}
-  [FiniteDimensional ℂ E] [FiniteDimensional ℂ E'] (f : E' ≃ₗᵢ[ℂ] E) :
+  [FiniteDimensional ℂ E] (f : E' ≃ₗᵢ[ℂ] E) :
   (orthogonalProjection' (Submodule.map (f.symm.toLinearEquiv : E →ₗ[ℂ] E') U)).toLinearMap
     = f.symm.toLinearMap
       ∘ₗ (orthogonalProjection' U).toLinearMap
@@ -753,7 +753,6 @@ stdOrthonormalBasis ℂ (upsilonSubmodule gns hf)
 theorem OrthonormalBasis.tensorProduct_toBasis {𝕜 E F : Type*}
   [RCLike 𝕜] [NormedAddCommGroup E] [NormedAddCommGroup F]
   [InnerProductSpace 𝕜 E] [InnerProductSpace 𝕜 F]
-  [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F]
   {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂]
   (b₁ : OrthonormalBasis ι₁ 𝕜 E) (b₂ : OrthonormalBasis ι₂ 𝕜 F) :
   (b₁.tensorProduct b₂).toBasis = b₁.toBasis.tensorProduct b₂.toBasis :=
@@ -905,7 +904,6 @@ theorem QuantumSet.starAlgEquiv_commutes_with_modAut_of_isometry''
 theorem LinearMap.tensorProduct_map_isometry_of {𝕜 A B C D : Type*} [RCLike 𝕜]
   [NormedAddCommGroup A] [NormedAddCommGroup B] [NormedAddCommGroup C] [NormedAddCommGroup D]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [InnerProductSpace 𝕜 D]
-  [FiniteDimensional 𝕜 A] [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C] [FiniteDimensional 𝕜 D]
   {f : A →ₗ[𝕜] B} (hf : Isometry f) {g : C →ₗ[𝕜] D} (hg : Isometry g) :
   Isometry (f ⊗ₘ g) := by
   rw [isometry_iff_inner] at hf hg
@@ -930,7 +928,6 @@ LinearMap.tensorProduct_map_isometry_of hf hg
 noncomputable def LinearIsometryEquiv.TensorProduct.map {𝕜 A B C D : Type*} [RCLike 𝕜]
   [NormedAddCommGroup A] [NormedAddCommGroup B] [NormedAddCommGroup C] [NormedAddCommGroup D]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [InnerProductSpace 𝕜 D]
-  [FiniteDimensional 𝕜 A] [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C] [FiniteDimensional 𝕜 D]
   (f : A ≃ₗᵢ[𝕜] B) (g : C ≃ₗᵢ[𝕜] D) :
     A ⊗[𝕜] C ≃ₗᵢ[𝕜] B ⊗[𝕜] D where
   toLinearEquiv := LinearEquiv.TensorProduct.map f.toLinearEquiv g.toLinearEquiv
@@ -942,7 +939,6 @@ theorem LinearIsometryEquiv.TensorProduct.map_tmul
   {𝕜 A B C D : Type*} [RCLike 𝕜]
   [NormedAddCommGroup A] [NormedAddCommGroup B] [NormedAddCommGroup C] [NormedAddCommGroup D]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C] [InnerProductSpace 𝕜 D]
-  [FiniteDimensional 𝕜 A] [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C] [FiniteDimensional 𝕜 D]
   (f : A ≃ₗᵢ[𝕜] B) (g : C ≃ₗᵢ[𝕜] D) (x : A) (y : C) :
   (LinearIsometryEquiv.TensorProduct.map f g) (x ⊗ₜ y) = f x ⊗ₜ g y :=
 rfl

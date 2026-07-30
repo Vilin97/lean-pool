@@ -137,6 +137,7 @@ def tcObj (D : StrictDomainObj.{w}) : StrictDomainObj.{w} where
   carrier := Option (Unit ⊕ D.carrier ⊕ D.carrier)
   sys := sum3 unitSys D.sys D.sys Example62C.unitSys_nonempty D.nonempty D.nonempty
   nonempty := sum3_nonempty
+attribute [local implicit_reducible] tcObj
 
 @[simp] theorem tcObj_sys (D : StrictDomainObj.{w}) :
     (tcObj D).sys =
@@ -691,6 +692,7 @@ def Tc : Endofunctor StrictDomainObj.{w} where
       (idMap unitSys) g.1 g.1 (idMap unitSys) f.1 f.1
     rw [idMap_comp] at h
     exact h)
+attribute [local implicit_reducible] Tc
 
 @[simp] theorem Tc_obj (D : StrictDomainObj.{w}) : Tc.obj D = tcObj D := rfl
 
@@ -1056,7 +1058,7 @@ def descAlgHom : AlgHom Calg B where
   hom := descStrict B
   comm := by
     apply Subtype.ext
-    simp only [StrictDomainObj.comp_val, Tc_map_val]
+    simp only [StrictDomainObj.comp_val]
     exact descComm B
 
 /-- **Uniqueness.** Any `T`-algebra homomorphism out of `(C, i)` equals

@@ -75,7 +75,7 @@ lemma _root_.LO.FirstOrder.Derivation2.Sequent.subset_of_quote_subset_quote {Γ 
   Sequent.mem_codeIn_iff.mp <| h <| Sequent.mem_codeIn_iff.mpr hp
 
 omit [L.DecidableEq] in
-@[simp] lemma _root_.LO.FirstOrder.Derivation2.Sequent.codeIn_singleton [L.DecidableEq] (φ :
+@[simp] lemma _root_.LO.FirstOrder.Derivation2.Sequent.codeIn_singleton (φ :
     SyntacticFormula L) :
     (⌜({φ} : Finset (SyntacticFormula L))⌝ : V) = {⌜φ⌝} := by simp [Sequent.codeIn_def]; rfl
 

@@ -548,6 +548,23 @@ private lemma mkChainGate_eval_ge2_succ {W base : Nat} (op : AONOp) {k : Nat} (h
   rw [andOr2_eval]
   simp_all
 
+/-- The chain gate built from an original gate depends only on the gate, the chain base
+    and the chain index — never on the accompanying proof arguments. This lets a chain gate
+    obtained through `segLookup` be identified with the one built directly from `(i, j)`. -/
+private lemma mkChainGate_gate_congr (c : Circuit Basis.unboundedAON N M G)
+    {g g' : Gate Basis.unboundedAON (N + G)} {base base' j j' : Nat}
+    {hW hW' : 0 < N + G' c}
+    {hj : j < chainLen g.fanIn} {hj' : j' < chainLen g'.fanIn}
+    {hb : base + chainLen g.fanIn ≤ N + G' c} {hb' : base' + chainLen g'.fanIn ≤ N + G' c}
+    (hg : g = g') (hbase : base = base') (hjj : j = j') :
+    mkChainGate hW g.op g.fanIn (fun p => remapWire c (g.inputs p)) g.negated base j hj hb =
+      mkChainGate hW' g'.op g'.fanIn (fun p => remapWire c (g'.inputs p)) g'.negated
+        base' j' hj' hb' := by
+  subst hg
+  subst hbase
+  subst hjj
+  rfl
+
 /-- The eval of the compiled gate at `iOffset c i + j` equals the chain gate's eval.
     This requires showing that `segLookup` at `iOffset c i + j` returns `(i, j)` and
     the resulting gate components match. -/
@@ -563,26 +580,22 @@ private lemma compileGate_eval_at_iOffset (c : Circuit Basis.unboundedAON N M G)
         (c.gates ⟨i, hi⟩).negated
         (N + iOffset c i) j hj
         (by have := iOffset_chain_le_iTotal c hi; unfold G'; omega)).eval wv := by
-  -- Both sides compute the same Bool value. The compiled gate at this index uses
-  -- segLookup which returns (i, j), giving the same op/inputs/negated.
-  -- The technical challenge is that segLookup produces Fin G values with different
-  -- proof terms than hi. We handle this by unfolding to AONOp.eval, then showing
-  -- the function arguments agree at each Fin 2 element.
+  -- The compiled gate at this index looks its gate up through `segLookup`, which returns
+  -- `(i, j)`; the two chain gates then differ only in proof terms.
   have hInternal : iOffset c i + j < iTotal c := by
     have := iOffset_chain_le_iTotal c hi; omega
   have hSeg := iSegLookup_eq c i hi j hj hInternal
   have hSeg1 : (segLookup G (iChainF c) (iOffset c i + j) hInternal).1 = i := by rw [hSeg]
   have hSeg2 : (segLookup G (iChainF c) (iOffset c i + j) hInternal).2 = j := by rw [hSeg]
-  -- All differences are segLookup results vs (i, j). Use convert at high depth
-  -- and close subgoals with Fin.ext + iSegLookup_eq.
   unfold compileGates
   simp only [compileGateOp, compileGateInputs, compileGateNeg, Fin.val_mk,
              dif_pos hInternal, mkChainGate]
-  convert rfl using 8
-  all_goals first
-    | rfl
-    | exact (Fin.ext (by simp [iSegLookup_eq c i hi j hj])).symm
-    | (simp [iSegLookup_eq c i hi j hj])
+  refine congrArg (fun g => Gate.eval g wv) ?_
+  exact mkChainGate_gate_congr c
+    (g := c.gates ⟨(segLookup G (iChainF c) (iOffset c i + j) hInternal).1,
+      segLookup_fst_lt G _ _ hInternal⟩)
+    (g' := c.gates ⟨i, hi⟩)
+    (congrArg c.gates (Fin.ext hSeg1)) (by rw [hSeg1]) hSeg2
 
 /-- Generic chain collapse: given a gate `gate` over the original wire space whose
     fan-in-2 chain starts at offset `off`, if every chain wire evaluates to its
@@ -609,7 +622,7 @@ private theorem chainCollapse (c : Circuit Basis.unboundedAON N M G) (input : Bi
   · trans gate.op.identity
     · simp only [hk0, chainLen_zero, Nat.sub_self,
                  mkChainGate, mkChainOp, mkChainInputs, mkChainNeg,
-                 dite_true, ite_true, Gate.eval, Basis.andOr2, fin2]
+                 dite_true, Gate.eval, Basis.andOr2, fin2]
       exact AONOp.dual_const _ _
     · simp only [Gate.eval, Basis.unboundedAON, AONOp.eval_eq_foldl, hk0, Fin.foldl_zero]
   · rcases Nat.eq_or_lt_of_le hk_pos with hk1 | hk_ge2
@@ -640,20 +653,21 @@ private theorem chainCollapse (c : Circuit Basis.unboundedAON N M G) (input : Bi
         intro j hj
         induction j with
         | zero =>
-          rw [mkChainGate_eval_ge2_zero _ (by omega : 2 ≤ _)]
+          rw [mkChainGate_eval_ge2_zero (base := N + off) gate.op (by omega : 2 ≤ gate.fanIn)
+            (fun p => remapWire c (gate.inputs p)) gate.negated hoff hj (by omega)]
           rw [hvx ⟨0, by omega⟩, hvx ⟨1, by omega⟩]
-          rw [partialFold_two _ v (by omega)]
-          rw [AONOp.identity_binOp]
+          rw [partialFold_two gate.op v (by omega)]
+          rw [AONOp.identity_binOp gate.op]
         | succ j' ih =>
-          rw [mkChainGate_eval_ge2_succ _ (by omega : 2 ≤ _) _ _
-            (by omega) hj (by omega)]
+          rw [mkChainGate_eval_ge2_succ (base := N + off) gate.op (by omega : 2 ≤ gate.fanIn)
+            (fun p => remapWire c (gate.inputs p)) gate.negated hoff hj (by omega)]
           rw [hvx ⟨j' + 2, by rw [hcl] at hj; omega⟩]
           rw [chain_wire j' (by rw [hcl] at hj ⊢; omega),
               ih (by rw [hcl] at hj ⊢; omega)]
-          rw [partialFold_succ _ v (j' + 2) (by rw [hcl] at hj; omega)]
+          rw [partialFold_succ gate.op v (j' + 2) (by rw [hcl] at hj; omega)]
       rw [h_fold _ (by omega)]
       have hk_eq : chainLen gate.fanIn - 1 + 2 = gate.fanIn := by omega
-      rw [hk_eq, partialFold_full]
+      rw [hk_eq, partialFold_full gate.op v]
       simp only [Gate.eval, Basis.unboundedAON, AONOp.eval_eq_foldl]
       rfl
 
@@ -744,15 +758,27 @@ private lemma compileGate_eval_at_oOffset (c : Circuit Basis.unboundedAON N M G)
     := by omega
   have hoff_lt : prefixSum (oChainF c) j' + p < oTotal c := by
     have := oOffset_chain_le_G' c hj'; unfold G' oOffset oTotal at *; omega
-  have hSeg := oSegLookup_eq c j' hj' p hp hoff_lt
+  -- `compileGateInputs` looks the segment up at `idx - iTotal c`, so state the lookup at
+  -- that (unreduced) index; quantifying over the bound lets `hoff` rewrite under it.
+  have hSegAt : ∀ h : iTotal c + prefixSum (oChainF c) j' + p - iTotal c < oTotal c,
+      segLookup M (oChainF c) (iTotal c + prefixSum (oChainF c) j' + p - iTotal c) h = (j', p) := by
+    rw [hoff]
+    exact fun h => oSegLookup_eq c j' hj' p hp h
+  have hlt : iTotal c + prefixSum (oChainF c) j' + p - iTotal c < oTotal c := by omega
+  have hSeg1 : (segLookup M (oChainF c)
+      (iTotal c + prefixSum (oChainF c) j' + p - iTotal c) hlt).1 = j' := by rw [hSegAt hlt]
+  have hSeg2 : (segLookup M (oChainF c)
+      (iTotal c + prefixSum (oChainF c) j' + p - iTotal c) hlt).2 = p := by rw [hSegAt hlt]
   unfold compileGates
   simp only [compileGateOp, compileGateInputs, compileGateNeg, Fin.val_mk,
              dif_neg hNotInternal, mkChainGate]
-  convert rfl using 8
-  all_goals first
-    | rfl
-    | (simp only [hoff]; exact (Fin.ext (by simp [oSegLookup_eq c j' hj' p hp])).symm)
-    | (simp only [hoff]; simp [oSegLookup_eq c j' hj' p hp])
+  refine congrArg (fun g => Gate.eval g wv) ?_
+  exact mkChainGate_gate_congr c
+    (g := c.outputs ⟨(segLookup M (oChainF c)
+      (iTotal c + prefixSum (oChainF c) j' + p - iTotal c) hlt).1,
+      segLookup_fst_lt M _ _ hlt⟩)
+    (g' := c.outputs ⟨j', hj'⟩)
+    (congrArg c.outputs (Fin.ext hSeg1)) (by rw [hSeg1]) hSeg2
 
 /-- The last chain gate for output `j` evaluates to the original output gate's eval. -/
 private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (input : BitString N)

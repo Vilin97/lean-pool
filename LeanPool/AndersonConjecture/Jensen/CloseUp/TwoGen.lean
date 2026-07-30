@@ -259,7 +259,7 @@ theorem isAExtension_trans' {R S U : NSubring T}
       _ = max Cardinal.aleph0 (Cardinal.mk R.carrier) := by
           rw [← max_assoc, max_self]
 
-lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S] [IsDomain S]
+lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
     ∃ q : S, Prime q ∧ q ∈ Q := by

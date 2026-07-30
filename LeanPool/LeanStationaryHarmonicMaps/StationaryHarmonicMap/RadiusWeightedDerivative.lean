@@ -58,7 +58,7 @@ theorem integrable_indicatorConst_norm_mul_of_integrableOn_ball
 /-- A bounded interval-indicator radius coefficient preserves integrability of
 the derivative of the ball-integral radius function on `(0, R0)`. -/
 theorem integrable_indicatorConst_mul_deriv_ballIntegral_on_radiusInterval
-    {n : ℕ} [NeZero n]
+    {n : ℕ}
     {f : Domain n → ℝ} {a b R0 k : ℝ}
     (ha : 0 ≤ a) (hab : a ≤ b) (hb : b ≤ R0)
     (hac : BallIntegralRadiusAbsolutelyContinuous f R0) :
@@ -96,7 +96,7 @@ theorem integrable_indicatorConst_mul_deriv_ballIntegral_on_radiusInterval
 /-- An arbitrary admissible radius weight preserves integrability of the
 derivative of the ball-integral radius function on `(0, R0)`. -/
 theorem RadiusWeightOn.integrable_mul_deriv_ballIntegral_on_radiusInterval
-    {n : ℕ} [NeZero n]
+    {n : ℕ}
     {f : Domain n → ℝ} {R0 : ℝ} {c : ℝ → ℝ}
     (hc : RadiusWeightOn R0 c)
     (hR0_nonneg : 0 ≤ R0)

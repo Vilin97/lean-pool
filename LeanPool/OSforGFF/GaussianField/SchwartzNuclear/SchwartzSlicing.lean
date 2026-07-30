@@ -591,12 +591,13 @@ lemma integral_euclidean_snoc (d : ℕ) (g : EuclideanSpace ℝ (Fin (d + 2)) �
   congr 1; funext t
   -- Show the composed function equals g (euclideanSnoc ...)
   change F (t, y') = g (euclideanSnoc (d + 1) ((MeasurableEquiv.toLp 2 _) y') t)
-  simp only [F, e, MeasurableEquiv.piFinSuccAbove_symm_apply, MeasurableEquiv.toLp,
-    MeasurableEquiv.coe_mk]
+  simp only [F, e, MeasurableEquiv.piFinSuccAbove_symm_apply]
   congr 1
   ext i
-  simp only [euclideanSnoc, WithLp.equiv_symm_apply]
-  simp_all
+  simp only [MeasurableEquiv.toLp_apply, PiLp.toLp_apply, euclideanSnoc,
+    WithLp.equiv_symm_apply]
+  rw [Fin.insertNthEquiv_last]
+  rfl
 
 /-! ### Scalarization helpers for seminorm control
 
@@ -816,7 +817,7 @@ lemma schwartz_partial_hermiteCoeff_iteratedFDeriv (d : ℕ)
       iteratedFDeriv_const_smul_apply'
         (((schwartz_slice_y d f t).smooth'.of_le
           (WithTop.coe_le_coe.mpr le_top)).contDiffAt)
-    rw [h_smul, ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_comm]
+    rw [h_smul, _root_.smul_apply, smul_eq_mul, mul_comm]
     -- schwartz_slice_y d f t = f ∘ euclideanSnoc · t (definitional)
     rfl
   -- Step 3: Pull evaluation at v inside the integral using integral_apply

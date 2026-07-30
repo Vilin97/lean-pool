@@ -39,14 +39,26 @@ abbrev toEndMap : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ] →ₗ[ℝ] Module.End ℝ (ℍ[ℝ
 lemma toEndMap.map_mul (x1 x2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) : toEndMap (x1 * x2) =
     toEndMap x1 * toEndMap x2 := by
   induction x1 using TensorProduct.induction_on with
-  | zero => simp
+  | zero =>
+    have e : (0 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * x2 = 0 := by
+      exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).zero_mul _
+    rw [e, map_zero, zero_mul]
   | tmul q1 q2 =>
     induction x2 using TensorProduct.induction_on with
-    | zero => simp
+    | zero =>
+      have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * 0 = 0 := by
+        exact (inferInstance : MulZeroClass (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).mul_zero _
+      rw [e, map_zero, mul_zero]
     | tmul q3 q4 => ext : 1; simp [← _root_.mul_assoc]
     | add x y h1 h2 =>
-      rw [mul_add, map_add, map_add, mul_add, h1, h2]
-  | add x y h1 h2 => rw [add_mul, map_add, map_add, add_mul, h1, h2]
+      have e : (q1 ⊗ₜ[ℝ] q2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) * (x + y) =
+          q1 ⊗ₜ[ℝ] q2 * x + q1 ⊗ₜ[ℝ] q2 * y := by
+        exact (inferInstance : Distrib (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).left_distrib _ _ _
+      rw [e, map_add, map_add, mul_add, h1, h2]
+  | add x y h1 h2 =>
+    have e : ((x + y) * x2 : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ]) = x * x2 + y * x2 := by
+      exact (inferInstance : Distrib (ℍ[ℝ] ⊗[ℝ] ℍ[ℝ])).right_distrib _ _ _
+    rw [e, map_add, map_add, add_mul, h1, h2]
 
 /-- The algebra homomorphism `ℍ ⊗ ℍ → End_R(ℍ)` from two-sided quaternion multiplication. -/
 abbrev toEnd : ℍ[ℝ] ⊗[ℝ] ℍ[ℝ] →ₐ[ℝ] Module.End ℝ (ℍ[ℝ]) where
@@ -70,12 +82,24 @@ instance : Algebra.IsCentral ℝ ℍ[ℝ] := ⟨fun q hq ↦ by
   obtain ⟨_, _, eq13, eq14⟩ := eq1
   obtain ⟨_, eq22, _, eq24⟩ := eq2
   obtain ⟨_, eq32, eq33, _⟩ := eq3
-  simp only [re_mul, zero_mul, _root_.one_mul, zero_sub, sub_zero, mul_zero, _root_.mul_one,
-    imI_mul, zero_add, add_zero, imJ_mul, sub_self, imK_mul, AlgHom.toRingHom_eq_coe,
-    RingHom.coe_coe] at *
-  have hI : q.imI = 0 := by linarith [eq33]
-  have hJ : q.imJ = 0 := by linarith [eq14]
-  have hK : q.imK = 0 := by linarith [eq13]
+  have hI : q.imI = 0 := by
+    have hleft := Quaternion.imJ_mul (⟨0, 0, 0, 1⟩ : ℍ[ℝ]) q
+    have hright := Quaternion.imJ_mul q (⟨0, 0, 0, 1⟩ : ℍ[ℝ])
+    norm_num at hleft hright
+    have hx : q.imI = -q.imI := hleft.symm.trans (eq33.trans hright)
+    linarith
+  have hJ : q.imJ = 0 := by
+    have hleft := Quaternion.imK_mul (⟨0, 1, 0, 0⟩ : ℍ[ℝ]) q
+    have hright := Quaternion.imK_mul q (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
+    norm_num at hleft hright
+    have hx : q.imJ = -q.imJ := hleft.symm.trans (eq14.trans hright)
+    linarith
+  have hK : q.imK = 0 := by
+    have hleft := Quaternion.imJ_mul (⟨0, 1, 0, 0⟩ : ℍ[ℝ]) q
+    have hright := Quaternion.imJ_mul q (⟨0, 1, 0, 0⟩ : ℍ[ℝ])
+    norm_num at hleft hright
+    have hx : -q.imK = q.imK := hleft.symm.trans (eq13.trans hright)
+    linarith
   change (⟨q.re, 0, 0, 0⟩ : ℍ[ℝ]) = q
   ext <;> simp [hI, hJ, hK]⟩
 
@@ -227,7 +251,7 @@ abbrev C2toBrauerOverR : ZMod 2 →+ Additive (BrauerGroup ℝ) where
   map_zero' := by simp only [↓reduceDIte]; rfl
   map_add' x y := by
     let H : CSA ℝ := ⟨.of ℝ ℍ[ℝ]⟩
-    fin_cases x <;> fin_cases y <;> simp only [dite_eq_ite]
+    fin_cases x <;> fin_cases y
     · change (1 : BrauerGroup ℝ) = 1 * 1
       simp
     · change ((Quotient.mk'' H : BrauerGroup ℝ)) = 1 * Quotient.mk'' H
@@ -244,8 +268,10 @@ lemma toC2.left_inv : Function.LeftInverse C2toBrauerOverR toC2 := fun A ↦ by
   induction A using Quotient.inductionOn' with | h A
   obtain h1 | h2 := BrauerOverR A
   · change IsBrauerEquivalent A oneIn' at h1
-    simp only [AddMonoidHom.coe_mk, dite_eq_ite, ZeroHom.coe_mk, Quotient.lift_mk, h1, ↓reduceIte]
-    rw [Quotient.sound']; exact h1.symm
+    change C2toBrauerOverR
+      (if IsBrauerEquivalent A oneIn' then (0 : ZMod 2) else 1) = Quotient.mk'' A
+    rw [if_pos h1]
+    exact Quotient.sound h1.symm
   · have : ¬ (IsBrauerEquivalent A oneIn') := fun h ↦ QuaternionNotEquivR <| h2.symm.trans h
     change C2toBrauerOverR (if IsBrauerEquivalent A oneIn' then (0 : ZMod 2) else 1) =
       Quotient.mk'' A
@@ -259,13 +285,10 @@ lemma toC2.right_inv : Function.RightInverse C2toBrauerOverR toC2 := fun x ↦ b
   classical
   let H : CSA ℝ := ⟨.of ℝ ℍ[ℝ]⟩
   fin_cases x
-  · change toC2 (if ((0 : ZMod 2) = 0) then Quotient.mk'' oneIn' else Quotient.mk'' H) = 0
-    rw [if_pos rfl]
-    simp [toC2, IsBrauerEquivalent.refl]
-  · change toC2 (if ((1 : ZMod 2) = 0) then Quotient.mk'' oneIn' else Quotient.mk'' H) = 1
-    have hone : ¬ ((1 : ZMod 2) = 0) := by norm_num
-    rw [if_neg hone]
-    change toC2 (Quotient.mk'' H) = (1 : ZMod 2)
+  · change toC2 (C2toBrauerOverR 0) = 0
+    change (if IsBrauerEquivalent oneIn' oneIn' then (0 : ZMod 2) else 1) = 0
+    rw [if_pos (IsBrauerEquivalent.refl _)]
+  · change toC2 (C2toBrauerOverR 1) = 1
     change (if IsBrauerEquivalent H oneIn' then (0 : ZMod 2) else 1) = 1
     have hH : ¬ IsBrauerEquivalent H oneIn' := QuaternionNotEquivR
     rw [if_neg hH]

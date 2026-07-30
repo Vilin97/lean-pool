@@ -204,10 +204,19 @@ theorem colSupp_projH_le_one (m : ℕ) (j : Fin (2 * m)) :
     (Finset.univ.filter (fun i : Fin m => projH m i j ≠ 0)).card ≤ 1 := by
   rw [Finset.card_le_one]
   intro a ha b hb
-  simp only [projH, Matrix.of_apply, Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
+  have ha' : projH m a j ≠ 0 := (Finset.mem_filter.mp ha).2
+  have hb' : projH m b j ≠ 0 := (Finset.mem_filter.mp hb).2
+  change (if (j : ℕ) = (a : ℕ) then (1 : ZMod 2) else 0) ≠ 0 at ha'
+  change (if (j : ℕ) = (b : ℕ) then (1 : ZMod 2) else 0) ≠ 0 at hb'
   -- projH a j ≠ 0 ⟹ (j = a); likewise (j = b); hence a = b
-  have hja : (j : ℕ) = (a : ℕ) := by by_contra h; rw [if_neg h] at ha; exact ha rfl
-  have hjb : (j : ℕ) = (b : ℕ) := by by_contra h; rw [if_neg h] at hb; exact hb rfl
+  have hja : (j : ℕ) = (a : ℕ) := by
+    by_contra h
+    rw [if_neg h] at ha'
+    exact ha' rfl
+  have hjb : (j : ℕ) = (b : ℕ) := by
+    by_contra h
+    rw [if_neg h] at hb'
+    exact hb' rfl
   exact Fin.ext (hja ▸ hjb)
 
 /-- **colBound (projH m) = 1** for `m > 0`: every column has ≤ 1 nonzero, and column `0`
@@ -225,8 +234,7 @@ theorem colBound_projH (m : ℕ) (hm : 0 < m) : colBound (projH m) = 1 := by
       (Finset.univ.filter (fun i : Fin m => projH m i j ≠ 0)).card) hj0)
     -- the column-0 support contains row 0
     rw [Nat.one_le_iff_ne_zero, ← Nat.pos_iff_ne_zero, Finset.card_pos]
-    refine ⟨⟨0, hm⟩, ?_⟩
-    simp only [projH, Matrix.of_apply, Finset.mem_filter, Finset.mem_univ, true_and]
+    refine ⟨⟨0, hm⟩, Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩⟩
     -- projH ⟨0,hm⟩ ⟨0,_⟩ = if (0 = 0) then 1 else 0 = 1 ≠ 0
     change (if ((⟨0, by omega⟩ : Fin (2 * m)) : ℕ) = ((⟨0, hm⟩ : Fin m) : ℕ)
             then (1 : ZMod 2) else 0) ≠ 0

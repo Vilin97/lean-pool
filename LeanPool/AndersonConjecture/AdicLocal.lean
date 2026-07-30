@@ -31,9 +31,10 @@ variable (I : Ideal R)
 `factorPow I hmn (evalₐ I n x) = evalₐ I m x`. -/
 lemma factorPow_comp_evalₐ {m n : ℕ} (hmn : m ≤ n) (x : AdicCompletion I R) :
     Quotient.factorPow I hmn (evalₐ I n x) = evalₐ I m x := by
-  simp only [evalₐ, AlgHom.comp_apply, AlgHom.ofLinearMap_apply, eval_apply]
-  rw [← x.property hmn]
-  induction x.val n using Quotient.inductionOn' with | _ r => rfl
+  induction x using AdicCompletion.induction_on with
+  | h f =>
+    rw [evalₐ_mk, evalₐ_mk, Ideal.Quotient.factor_mk, Ideal.Quotient.mk_eq_mk_iff_sub_mem]
+    simpa using (Submodule.Quotient.eq _).mp (AdicCauchySequence.mk_eq_mk hmn f)
 
 end AdicCompletion
 end Compat
@@ -168,6 +169,6 @@ end AdicCompletion
 end Main
 
 theorem adicCompletion_isLocalRing
-    (R : Type*) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] :
+    (R : Type*) [CommRing R] [IsLocalRing R] :
     IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
   AdicCompletion.adicCompletion_isLocalRing R

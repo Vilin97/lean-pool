@@ -277,7 +277,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
         ≤ ∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1) * fourier ((k.val + 1 : ℕ) : ℤ) t‖ :=
           norm_sum_le _ _
     _ ≤ ∑ k : Fin D, ‖a k‖ * |r| ^ (k.val + 1) := by
-          simp_all
+          simp_all [fourier_apply, Circle.norm_coe]
 
 private lemma norm_sq_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t : AddCircle T) :
     ‖polyEvalCircle a r t‖ ^ 2 ≤

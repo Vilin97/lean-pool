@@ -68,7 +68,7 @@ end Basis
 
 namespace Perm
 
-open Basis
+open _root_.LeanPool.CencovPetz.TangentFin.Basis
 
 /-- The deterministic Markov morphism induced by a permutation of `Fin n`. -/
 noncomputable abbrev κ (σ : Equiv.Perm (Fin n)) : MarkovMorphism (Fin n) (Fin n) :=
@@ -131,7 +131,8 @@ end Perm
 
 namespace Bilin
 
-open Basis Perm
+open _root_.LeanPool.CencovPetz.TangentFin.Basis
+open Perm
 
 variable {n : ℕ} (G : MonotoneMetricFamily) [Nonempty (Fin n)]
 

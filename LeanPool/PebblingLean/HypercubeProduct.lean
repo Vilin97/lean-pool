@@ -81,7 +81,11 @@ theorem dist_appendVertex {a m : ℕ}
             rw [← hj_eq]
             exact Nat.le_add_right a j
           exact (Nat.not_lt_of_ge hge) hlt
-        simp [leftDiff, rightDiff, appendVertex, hnot_right]
+        have happend : appendVertex (x, z) (Fin.castAdd m i) = x i :=
+          Fin.append_left x z i
+        have happend' : appendVertex (x', z') (Fin.castAdd m i) = x' i :=
+          Fin.append_left x' z' i
+        simp [leftDiff, rightDiff, hnot_right, happend, happend']
     | right j =>
         have hnot_left : Fin.natAdd a j ∉ leftDiff := by
           intro hk
@@ -92,7 +96,11 @@ theorem dist_appendVertex {a m : ℕ}
             rw [← hi_eq]
             exact i.isLt
           exact (Nat.not_lt_of_ge hge) hlt
-        simp [leftDiff, rightDiff, appendVertex, hnot_left]
+        have happend : appendVertex (x, z) (Fin.natAdd a j) = z j :=
+          Fin.append_right x z j
+        have happend' : appendVertex (x', z') (Fin.natAdd a j) = z' j :=
+          Fin.append_right x' z' j
+        simp [leftDiff, rightDiff, hnot_left, happend, happend']
   have hdisjoint : Disjoint leftDiff rightDiff := by
     rw [Finset.disjoint_left]
     intro k hk_left hk_right

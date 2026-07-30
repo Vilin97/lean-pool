@@ -82,14 +82,16 @@ theorem sHom_stalk_bijective_at
       (TopCat.Sheaf.zeroOutsideInt.sHomVal hRsh s).app (op U)
         (TopCat.Sheaf.zeroOutsideInt.generator U) = s :=
     TopCat.Sheaf.zeroOutsideInt.sHomVal_app_generator hRsh s
-  have h_sHom_gen : sHom_x ((TopCat.Sheaf.zeroOutsideInt U).presheaf.germ U x hxU
+  have h_sHom_gen : sHom_x (TopCat.Presheaf.germ
+      (TopCat.Sheaf.zeroOutsideInt U).obj U x hxU
       (TopCat.Sheaf.zeroOutsideInt.generator U)) = R.germ U x hxU s := by
     change T.map (TopCat.Sheaf.zeroOutsideInt.sHomVal hRsh s) _ = _
     rw [TopCat.Presheaf.stalkFunctor_map_germ_apply]
     simp_all
+    rfl
   have h_surj : Function.Surjective sHom_x := by
     intro a; obtain ⟨k, hk⟩ := hgen a
-    refine ⟨k • (TopCat.Sheaf.zeroOutsideInt U).presheaf.germ U x hxU
+    refine ⟨k • TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt U).obj U x hxU
       (TopCat.Sheaf.zeroOutsideInt.generator U), ?_⟩
     exact (map_zsmul sHom_x k _).trans
       ((congrArg (fun y ↦ k • y) h_sHom_gen).trans hk.symm)
@@ -98,11 +100,11 @@ theorem sHom_stalk_bijective_at
     obtain ⟨n, rfl⟩ := stalk_zeroOutsideInt_eq_zsmul_generator U x hxU a
     obtain ⟨m, rfl⟩ := stalk_zeroOutsideInt_eq_zsmul_generator U x hxU b
     have h_left :
-        sHom_x (n • (TopCat.Sheaf.zeroOutsideInt U).presheaf.germ U x hxU
+        sHom_x (n • TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt U).obj U x hxU
             (TopCat.Sheaf.zeroOutsideInt.generator U)) = n • R.germ U x hxU s :=
       (map_zsmul sHom_x n _).trans (congrArg (fun y ↦ n • y) h_sHom_gen)
     have h_right :
-        sHom_x (m • (TopCat.Sheaf.zeroOutsideInt U).presheaf.germ U x hxU
+        sHom_x (m • TopCat.Presheaf.germ (TopCat.Sheaf.zeroOutsideInt U).obj U x hxU
             (TopCat.Sheaf.zeroOutsideInt.generator U)) = m • R.germ U x hxU s :=
       (map_zsmul sHom_x m _).trans (congrArg (fun y ↦ m • y) h_sHom_gen)
     have hab' : n • R.germ U x hxU s = m • R.germ U x hxU s :=
@@ -111,7 +113,8 @@ theorem sHom_stalk_bijective_at
         m • i_x (R.germ U x hxU s) :=
       (map_zsmul i_x n _).symm.trans
         ((congrArg i_x hab').trans (map_zsmul i_x m _))
-    let genV := (TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x (hUV hxU)
+    let genV := TopCat.Presheaf.germ
+      (TopCat.Sheaf.zeroOutsideInt V).obj V x (hUV hxU)
       (TopCat.Sheaf.zeroOutsideInt.generator V)
     have hncmul : n • (c • genV) = (n * c) • genV :=
       (mul_zsmul genV n c).symm
@@ -175,7 +178,7 @@ theorem exists_nonzero_stalk_in_V
     (2) every stalk element of `R` at `x` is an integer multiple of `germ(s, x)`.
     This is the hard "Noetherian shrinking" step of Hartshorne III.2.7, Step 4. -/
 theorem exists_section_generating_stalks
-    {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]
+    {X : TopCat.{u}}
     {V : Opens X} {R : TopCat.Presheaf AddCommGrpCat.{u} X} (hRsh : R.IsSheaf)
     (i : R ⟶ (TopCat.Sheaf.zeroOutsideInt V).obj)
     [Mono i]
@@ -186,13 +189,19 @@ theorem exists_section_generating_stalks
         (R.germ V' x hx s ≠ 0) ∧
         (∀ (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj R),
           ∃ k : ℤ, a = k • R.germ V' x hx s) := by
-  let i_x (x : X) := ConcreteCategory.hom ((Presheaf.stalkFunctor AddCommGrpCat.{u} x).map i)
+  let i_x (x : X) :
+      (TopCat.Presheaf.stalk (C := AddCommGrpCat.{u}) R x) →+
+        (TopCat.Presheaf.stalk (C := AddCommGrpCat.{u})
+          (Sheaf.zeroOutsideInt V).obj x) :=
+    ConcreteCategory.hom ((Presheaf.stalkFunctor AddCommGrpCat.{u} x).map i)
   have hi_inj (x : X) : Function.Injective (i_x x) :=
     Presheaf.stalkFunctor_map_injective_of_app_injective (f := i) (fun U ↦
       (ConcreteCategory.mono_iff_injective_of_preservesPullback (i.app (op U))).mp
         ((NatTrans.mono_iff_mono_app i).mp (inferInstanceAs (Mono i)) (op U))) x
-  let gen_at (x : X) (hx : x ∈ V) :=
-    (Sheaf.zeroOutsideInt V).presheaf.germ V x hx
+  let gen_at (x : X) (hx : x ∈ V) :
+      TopCat.Presheaf.stalk (C := AddCommGrpCat.{u})
+        (Sheaf.zeroOutsideInt V).obj x :=
+    Presheaf.germ (Sheaf.zeroOutsideInt V).obj V x hx
       (Sheaf.zeroOutsideInt.generator V)
   let H_at (x : X) (hx : x ∈ V) : AddSubgroup ℤ :=
     (i_x x).range.comap
@@ -225,6 +234,7 @@ theorem exists_section_generating_stalks
   classical
   let d : ℤ := Nat.find hP
   obtain ⟨hd_nat_pos, x₀, hx₀V, ⟨a₁, ha₁⟩, _⟩ := Nat.find_spec hP
+  change i_x x₀ a₁ = (Nat.find hP : ℤ) • gen_at x₀ hx₀V at ha₁
   have hd_pos : 0 < d := Int.ofNat_lt.mpr hd_nat_pos
   obtain ⟨W₀, hx₀W₀, s₀, hs₀⟩ := R.exists_germ_eq a₁
   let V₁ := W₀ ⊓ V
@@ -239,7 +249,10 @@ theorem exists_section_generating_stalks
         (Sheaf.zeroOutsideInt.generator V)) (by
       rw [← Presheaf.stalkFunctor_map_germ_apply V₁ x₀ hx₀V₁ i s₁,
         (Presheaf.germ_res_apply R (homOfLE inf_le_left) x₀ hx₀V₁ s₀).trans hs₀]
-      simpa [i_x, gen_at, d, map_zsmul, Presheaf.germ_res_apply] using ha₁)
+      rw [show ConcreteCategory.hom
+          ((Presheaf.stalkFunctor AddCommGrpCat.{u} x₀).map i) a₁ =
+        i_x x₀ a₁ from rfl, ha₁]
+      simp [gen_at, d, Presheaf.germ_res_apply])
   have hWV : W ≤ V := le_trans (leOfHom iW1) hV₁V
   refine ⟨W, hWV, fun h ↦ (Opens.mem_bot (x := x₀)).mp (h ▸ hx₀W),
     ConcreteCategory.hom (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁,
@@ -248,22 +261,24 @@ theorem exists_section_generating_stalks
       i_x x (R.germ W x hxW
         (ConcreteCategory.hom (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) =
         d • gen_at x (hWV hxW) := by
-    calc
-      i_x x (R.germ W x hxW (ConcreteCategory.hom
-          (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) =
-          (Sheaf.zeroOutsideInt V).presheaf.germ W x hxW ((i.app (op W))
-            (ConcreteCategory.hom (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) := by
-        simpa [i_x] using
-          (Presheaf.stalkFunctor_map_germ_apply W x hxW i
-            (ConcreteCategory.hom (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁))
-      _ = (Sheaf.zeroOutsideInt V).presheaf.germ W x hxW
-          (ConcreteCategory.hom ((Sheaf.zeroOutsideInt V).obj.map
-            (homOfLE (leOfHom iW1 : W ≤ V₁)).op)
-            ((ConcreteCategory.hom (i.app (op V₁))) s₁)) := by
-        simp_all
-      _ = d • gen_at x (hWV hxW) := by
-        simpa [gen_at, map_zsmul, Presheaf.germ_res_apply] using
-          congrArg ((Sheaf.zeroOutsideInt V).presheaf.germ W x hxW) hW_eq
+    rw [show i_x x (R.germ W x hxW (ConcreteCategory.hom
+        (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) =
+        Presheaf.germ (Sheaf.zeroOutsideInt V).obj W x hxW
+          (ConcreteCategory.hom (i.app (op W))
+            (ConcreteCategory.hom
+              (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) from by
+      simp [i_x]]
+    have hnatural :
+        ConcreteCategory.hom (i.app (op W))
+            (ConcreteCategory.hom
+              (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁) =
+          ConcreteCategory.hom ((Sheaf.zeroOutsideInt V).obj.map
+              (homOfLE (leOfHom iW1 : W ≤ V₁)).op)
+            (ConcreteCategory.hom (i.app (op V₁)) s₁) := by
+      simp_all
+    rw [hnatural]
+    simpa [gen_at, map_zsmul, Presheaf.germ_res_apply] using
+      congrArg (Presheaf.germ (Sheaf.zeroOutsideInt V).obj W x hxW) hW_eq
   refine ⟨fun h_zero ↦ ne_of_gt hd_pos (zsmul_generator_injective V x (hWV hxW) (by
     have hcoeff_zero : d • gen_at x (hWV hxW) = 0 := by
       calc
@@ -272,7 +287,11 @@ theorem exists_section_generating_stalks
               (R.map (homOfLE (leOfHom iW1 : W ≤ V₁)).op) s₁)) := hcoeff_x.symm
         _ = i_x x 0 := congrArg (i_x x) h_zero
         _ = 0 := map_zero (i_x x)
-    simpa [gen_at] using hcoeff_zero)), fun a ↦ ?_⟩
+    change d • Presheaf.germ (Sheaf.zeroOutsideInt V).obj V x (hWV hxW)
+        (Sheaf.zeroOutsideInt.generator V) =
+      (0 : ℤ) • Presheaf.germ (Sheaf.zeroOutsideInt V).obj V x (hWV hxW)
+        (Sheaf.zeroOutsideInt.generator V)
+    simpa only [zero_smul] using hcoeff_zero)), fun a ↦ ?_⟩
   obtain ⟨n, hn⟩ := stalk_zeroOutsideInt_eq_zsmul_generator V x (hWV hxW) (i_x x a)
   obtain ⟨d_x, hd_x_pos, hd_x_mem, hd_x_gen⟩ := cyclic_generator_of_coeff (ne_of_gt hd_pos) hcoeff_x
   exact (hd_x_gen n ⟨a, hn⟩).imp fun k₀ hkn ↦ by
@@ -301,7 +320,7 @@ theorem exists_section_generating_stalks
     `sHom s : zeroOutsideInt V' ⟶ R` is a stalk-isomorphism on V'.
     Uses: minimum-index point, generator section, locally constant germ shrinking. -/
 theorem exists_good_section
-    {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]
+    {X : TopCat.{u}}
     {V : Opens X} {R : TopCat.Presheaf AddCommGrpCat.{u} X} (hRsh : R.IsSheaf)
     (i : R ⟶ (TopCat.Sheaf.zeroOutsideInt V).obj)
     [Mono i]
@@ -322,7 +341,7 @@ theorem exists_good_section
     stalks of `R` are `d_x·ℤ ⊆ ℤ`, and after shrinking to an open where the multiplicity
     `d_x` is constant and minimal, `R` restricts to `d·Z_{V'}` ≅ `Z_{V'}`. -/
 theorem subsheaf_contains_zeroOutsideInt
-    {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]
+    {X : TopCat.{u}}
     {V : Opens X} {R : TopCat.Presheaf AddCommGrpCat.{u} X} (hRsh : R.IsSheaf)
     (i : R ⟶ (TopCat.Sheaf.zeroOutsideInt V).obj)
     [Mono i]
@@ -420,7 +439,7 @@ theorem closedComplementVanishing
     degree `m + 1`. Uses the SES `0 → zeroOutsideInt V → zeroOutsideInt ⊤ → cokernel → 0`
     where `zeroOutsideInt ⊤ = Z_X` (constant sheaf, flasque on irreducible spaces). -/
 theorem zeroOutsideInt_vanishing
-    {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]
+    {X : TopCat.{u}} [IrreducibleSpace X]
     (V : Opens X) (m : ℕ)
     (hCoker : Subsingleton (Sheaf.H (Limits.cokernel
       (TopCat.Sheaf.zeroOutsideInt.openHom (le_top : V ≤ ⊤))) m)) :
@@ -533,22 +552,22 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
     (hf : TopCat.Presheaf.IsLocallySurjective f)
     (ih : VanishingIH.{u} (topologicalKrullDim X))
     (m : ℕ) (hm : m > topologicalKrullDim X) :
-    Subsingleton (Sheaf.H (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) := by
+    Subsingleton (Sheaf.H (TopCat.Presheaf.sheafOfIsSheaf hG) m) := by
   letI : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
       AddCommGrpCat.{u}) := balanced_of_strongEpiCategory
   by_cases hV : V = ⊥
   · subst hV
     let fshBot : TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X) ⟶
-        (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk f
+        TopCat.Presheaf.sheafOfIsSheaf hG := ObjectProperty.homMk f
     have hEpiBot : Epi fshBot := by
       rw [← TopCat.Sheaf.isLocallySurjective_iff_epi fshBot]
       change TopCat.Presheaf.IsLocallySurjective f
       exact hf
-    have hZero : IsZero ((⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)) :=
+    have hZero : IsZero (TopCat.Presheaf.sheafOfIsSheaf hG) :=
       @IsZero.of_epi _ _ _ _ _ fshBot hEpiBot (isZero_zeroOutsideInt_bot X)
     simpa using sheafH_subsingleton_of_isZero hZero m
   · let fsh : TopCat.Sheaf.zeroOutsideInt V ⟶
-        (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk f
+        TopCat.Presheaf.sheafOfIsSheaf hG := ObjectProperty.homMk f
     have hkernel : Subsingleton (Sheaf.H (kernel fsh) (m + 1)) := by
       have hMonoKernel : Mono (kernel.ι fsh) := by
         change Mono (equalizer.ι fsh 0)
@@ -565,7 +584,9 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
           (inferInstanceAs (Mono (kernel.ι fsh).hom)) ih (m + 1)
           (lt_trans hm (by exact_mod_cast Nat.lt_succ_of_le le_rfl))
     simpa using
-      sheafH_dimension_shift_X₃_of_locallySurjective fsh (by simpa [fsh] using hf) m
+      sheafH_dimension_shift_X₃_of_locallySurjective fsh (by
+        change TopCat.Presheaf.IsLocallySurjective f
+        exact hf) m
         (zeroOutsideInt_cohomology_vanishing V hV ih m hm)
         hkernel
 

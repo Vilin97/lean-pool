@@ -99,9 +99,9 @@ theorem expLb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ expLb₀ x n 
   rw [Finset.sum_insert (by simp)]
   apply one_le_pow₀
   have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
-  have hsum : (0 : ℚ) ≤ ∑ i ∈ Finset.range n, (x / ↑⌈x⌉.toNat) ^ (i + 1) / ↑(i + 1).factorial :=
-    Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
-  simpa using hsum
+  rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one]
+  exact le_add_of_nonneg_right
+    (Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity))
 
 theorem expLb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : expLb₀ x n ≤ Real.exp x := by
   rw [expLb₀, List_foldr_eq_finset_sum]

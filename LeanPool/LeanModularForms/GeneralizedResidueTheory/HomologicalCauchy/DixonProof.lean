@@ -281,7 +281,7 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
       ∀ x ∈ Metric.ball w ε, ‖dixonH2_F' f γ x t‖ ≤ M_f * ε⁻¹ ^ 2 * M_d :=
     dixonH2_deriv_bound f γ M_f M_d ε hM_f hM_d _hM_f_nn hε_pos w _hdist_lb
   have hbound_int : IntervalIntegrable (fun _ => M_f * ε⁻¹ ^ 2 * M_d)
-      volume γ.a γ.b := intervalIntegral.intervalIntegrable_const
+      volume γ.a γ.b := intervalIntegrable_const
   have h_diff : ∀ᵐ t ∂volume, t ∈ Set.uIoc γ.a γ.b →
       ∀ x ∈ Metric.ball w ε,
         HasDerivAt (fun x => dixonH2_F f γ x t) (dixonH2_F' f γ x t) x := by
@@ -604,7 +604,7 @@ theorem dixonH1_differentiableOn (hU : IsOpen U) (hf : DifferentiableOn ℂ f U)
     exact ((hdslope_diff t ht_Icc).differentiableAt (hU.mem_nhds hx_U) |>.hasDerivAt).mul_const _
   exact ((intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (Metric.ball_mem_nhds w₀ hε_pos) hF_meas hF_int hF'_meas h_bound
-    intervalIntegral.intervalIntegrable_const h_diff).2).differentiableAt
+    intervalIntegrable_const h_diff).2).differentiableAt
 
 open Classical in
 /-- The Dixon function: h1 on U, h2 on C \ U. -/

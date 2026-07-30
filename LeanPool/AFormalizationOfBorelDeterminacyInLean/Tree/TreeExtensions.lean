@@ -58,9 +58,10 @@ def extensionsRes T :
       change T.2.val.take (T.2.val.length + 1) = T.2.val
       exact List.take_of_length_le (Nat.le_succ T.2.val.length)
     exact (by
-      dsimp only [Set.mem_setOf_eq]
-      have hlist := congrArg (fun x ↦ x ++ [a.val]) hbase
-      exact hlist ▸ a.prop.1)⟩
+      obtain ⟨av, hav⟩ := a
+      have hmem : ((pointedRes (T.2.val.length + 1)).obj T).2.val ++ [av] ∈ T.1.2 := hav.1
+      rw [hbase] at hmem
+      exact hmem)⟩
   left_inv _ := rfl
   right_inv _ := rfl
 @[simp] lemma extensionsRes_val' {T : Trees} {x : T} (a : ExtensionsAt x) :

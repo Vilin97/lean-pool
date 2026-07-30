@@ -18,6 +18,7 @@ Imported Lean Pool material for `LeanPool.ZFLean.Sum`.
 universe u v
 
 namespace ZFSet
+
 /-- Imported ZFLean declaration. -/
 def Sum (A B : ZFSet) :=
   {x // x ∈ (ZFSet.prod { ZFBool.false.val } A) ∪ (ZFSet.prod { ZFBool.true.val } B)}
@@ -193,7 +194,10 @@ theorem casesOn {S : ZFSet} (x : Option S) : x = none ∨ (∃ y, x = some y) :=
     rw [mem_union, pair_mem_prod] at hx)
   · left
     unfold none Sum.inl
-    simp_all
+    rw [mem_singleton] at hval
+    subst val
+    apply Subtype.ext
+    rfl
   · right
     rcases hx with hx | hx
     · rw [mem_singleton] at hx
@@ -369,21 +373,43 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       specialize hinj (Option.some ⟨x, hx⟩).val (Option.some ⟨y, hy⟩).val (Option.some ⟨z, hz⟩).val
         (SetLike.coe_mem _) (SetLike.coe_mem _) (SetLike.coe_mem _) ?_ ?_
       · rw [flift, lambda_spec]
-        simp only [SetLike.coe_mem, ↓reduceDIte, Subtype.coe_eta, some.injEq, exists_eq',
-          Classical.choose_eq', SetLike.coe_eq_coe, true_and]
-        change (ZFSet.Option.some ⟨z, hz⟩ : ZFSet.Option B) =
-          ZFSet.Option.some (@ᶻf ⟨x, by rwa [ZFSet.is_func_dom_eq]⟩)
-        rw [ZFSet.Option.some.injEq]
-        symm
-        exact fapply.of_pair _ xz
+        have hsome_x_mem :
+            (Option.some ⟨x, hx⟩).val ∈ Option.toZFSet A := SetLike.coe_mem _
+        have hsome_z_mem :
+            (Option.some ⟨z, hz⟩).val ∈ Option.toZFSet B := SetLike.coe_mem _
+        refine ⟨hsome_x_mem, hsome_z_mem, ?_⟩
+        rw [dite_cond_eq_true (eq_true hsome_x_mem)]
+        split_ifs with isSome
+        · have chosen_eq : Classical.choose isSome = ⟨x, hx⟩ :=
+            (some_val_injEq.mp
+              (congrArg Subtype.val (Classical.choose_spec isSome))).symm
+          rw [chosen_eq]
+          apply congrArg Subtype.val
+          apply ZFSet.Option.some.injEq.mpr
+          symm
+          exact fapply.of_pair _ xz
+        · exfalso
+          apply isSome
+          exact ⟨⟨x, hx⟩, Subtype.ext rfl⟩
       · rw [flift, lambda_spec]
-        simp only [SetLike.coe_mem, ↓reduceDIte, Subtype.coe_eta, some.injEq, exists_eq',
-          Classical.choose_eq', SetLike.coe_eq_coe, true_and]
-        change (ZFSet.Option.some ⟨z, hz⟩ : ZFSet.Option B) =
-          ZFSet.Option.some (@ᶻf ⟨y, by rwa [ZFSet.is_func_dom_eq]⟩)
-        rw [ZFSet.Option.some.injEq]
-        symm
-        exact fapply.of_pair _ yz
+        have hsome_y_mem :
+            (Option.some ⟨y, hy⟩).val ∈ Option.toZFSet A := SetLike.coe_mem _
+        have hsome_z_mem :
+            (Option.some ⟨z, hz⟩).val ∈ Option.toZFSet B := SetLike.coe_mem _
+        refine ⟨hsome_y_mem, hsome_z_mem, ?_⟩
+        rw [dite_cond_eq_true (eq_true hsome_y_mem)]
+        split_ifs with isSome
+        · have chosen_eq : Classical.choose isSome = ⟨y, hy⟩ :=
+            (some_val_injEq.mp
+              (congrArg Subtype.val (Classical.choose_spec isSome))).symm
+          rw [chosen_eq]
+          apply congrArg Subtype.val
+          apply ZFSet.Option.some.injEq.mpr
+          symm
+          exact fapply.of_pair _ yz
+        · exfalso
+          apply isSome
+          exact ⟨⟨y, hy⟩, Subtype.ext rfl⟩
       · have hxy : (⟨x, hx⟩ : {x // x ∈ A}) = ⟨y, hy⟩ := some_val_injEq.mp hinj
         exact Subtype.ext_iff.mp hxy
     · intro y hy
@@ -410,9 +436,10 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       dsimp [none, Sum.inl] at eq_val
       obtain rfl := eq_val
       use (@none A).val
+      have hnone_mem : (@none A).val ∈ Option.toZFSet A := SetLike.coe_mem _
       and_intros
       · apply SetLike.coe_mem
-      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true (SetLike.coe_mem _))]
+      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true hnone_mem)]
         and_intros
         · apply SetLike.coe_mem
         · exact hy
@@ -436,9 +463,11 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
       obtain rfl := eq_val
       obtain ⟨x, ⟨hx, fxy⟩, x_unq⟩ := hbij y ‹_›
       use (Option.some ⟨x, hx⟩).val
+      have hsome_mem : (Option.some ⟨x, hx⟩).val ∈ Option.toZFSet A :=
+        SetLike.coe_mem _
       and_intros
       · apply SetLike.coe_mem
-      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true (SetLike.coe_mem _))]
+      · rw [flift, lambda_spec, dite_cond_eq_true (eq_true hsome_mem)]
         and_intros
         · apply SetLike.coe_mem
         · exact hy

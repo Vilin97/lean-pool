@@ -72,16 +72,15 @@ instance (free : Fin 3 → Bool) : Decidable (clauseCoverable free) :=
 
 /-! ### The polarity bridge (substantive — USES the VarWheel free-tip predicates).
 
-    `posTipFree`/`negTipFree` live under `variable {m : ℕ} [NeZero m]` in `VarWheel`, so the bridge
-    defs/theorems carry the same `{m} [NeZero m]` binders. -/
+    These simplifications hold for every wheel size. -/
 
 /-- A positive tip under the constant wheel `σ = fun _ => !ai` is free iff `ai = true`. -/
-theorem posTipFree_const_iff (ai : Bool) {m : ℕ} [NeZero m] (j : Fin m) :
+theorem posTipFree_const_iff (ai : Bool) {m : ℕ} (j : Fin m) :
     posTipFree (fun _ => !ai) j ↔ ai = true := by
   unfold posTipFree; cases ai <;> simp
 
 /-- A negative tip under the constant wheel `σ = fun _ => !ai` is free iff `ai = false`. -/
-theorem negTipFree_const_iff (ai : Bool) {m : ℕ} [NeZero m] (j : Fin m) :
+theorem negTipFree_const_iff (ai : Bool) {m : ℕ} (j : Fin m) :
     negTipFree (fun _ => !ai) j ↔ ai = false := by
   unfold negTipFree; cases ai <;> simp
 
@@ -94,7 +93,7 @@ def litTipFree (a : Assignment n) (l : Literal n) {m : ℕ} (j : Fin m) : Prop :
 /-- **THE BRIDGE** (discharges milestone 2's deferred labeling): the tip of literal `l` is free
     exactly when `l` evaluates to `true`.  Case on the sign `l.2`; both sides split in lockstep on
     the same `if l.2`, the positive/negative tip branch matching the `evalLiteral` branch. -/
-theorem litTipFree_iff_eval (a : Assignment n) (l : Literal n) {m : ℕ} [NeZero m] (j : Fin m) :
+theorem litTipFree_iff_eval (a : Assignment n) (l : Literal n) {m : ℕ} (j : Fin m) :
     litTipFree a l j ↔ evalLiteral a l = true := by
   unfold litTipFree evalLiteral
   cases hl : l.2 <;> simp [posTipFree_const_iff, negTipFree_const_iff]

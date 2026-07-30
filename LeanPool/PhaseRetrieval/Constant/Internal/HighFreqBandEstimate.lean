@@ -467,7 +467,9 @@ private lemma deriv_norm_le_circleNormSq {N L : ℕ} (hN : 1 ≤ N)
   have h_haar := haar_eq_sum_intervals hN (hQ'_cont.norm.pow 2)
   have h_lhs : (1 / T) * ∑ k : Fin N,
       ∫ t in iLeft N k.val..iLeft N (k.val + 1), ‖Q' t‖ ^ 2 =
-      circleNormSq Q'_circle := by unfold circleNormSq; rw [h_haar, smul_eq_mul]
+      circleNormSq Q'_circle := by
+    unfold circleNormSq
+    simpa only [Pi.pow_apply, hQ'_eq, smul_eq_mul] using h_haar.symm
   rw [h_lhs]
   -- Rewrite Q'_circle as a Fourier sum with
   -- coefficients c(m) = b(m) * (2πim/T)

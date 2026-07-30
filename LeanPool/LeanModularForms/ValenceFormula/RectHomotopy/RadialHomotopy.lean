@@ -133,7 +133,7 @@ lemma polygonToCircleRadial_continuous (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re 
   have h_norm_dir : Continuous (fun (ts : ℝ × ℝ) => ‖fdPolygon ts.1 - p‖) :=
     continuous_norm.comp h_dir
   apply Continuous.add continuous_const
-  apply Continuous.smul
+  apply Continuous.smul (M := ℝ)
   · apply Continuous.add
     · exact (continuous_const.sub continuous_snd).mul h_norm_dir
     · exact continuous_snd

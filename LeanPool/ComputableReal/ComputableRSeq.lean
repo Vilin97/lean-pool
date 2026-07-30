@@ -320,9 +320,11 @@ def mul (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq where
   hcl := mul'_fst_iscau
   hcu := mul'_snd_iscau
   heq' := by
-    convert lb_ub_mul_equiv x y using 2
-    · exact Subtype.ext fst_mul'_eq_mulLb
-    · exact Subtype.ext snd_mul'_eq_mulUb
+    have h₁ : mulLb x y = ⟨fun n ↦ (mul' x y n).fst, mul'_fst_iscau⟩ :=
+      Subtype.ext fst_mul'_eq_mulLb.symm
+    have h₂ : mulUb x y = ⟨fun n ↦ (mul' x y n).snd, mul'_snd_iscau⟩ :=
+      Subtype.ext snd_mul'_eq_mulUb.symm
+    exact h₂ ▸ h₁ ▸ lb_ub_mul_equiv x y
   hlub n :=
     let h₀ : Real.mk _ = x.val * y.val := by
       apply val_uniq' (mulLb_is_lb x y) (mulUb_is_ub x y)
@@ -438,26 +440,18 @@ theorem val_neg : (-x).val = -x.val :=
 
 @[simp]
 theorem lb_sub : (x - y).lb = x.lb - y.ub := by
-  suffices (sub x y).lb = x.lb - y.ub by
-    exact this
-  rw [sub, add, neg]
-  ext
-  simp [mk, lb, ub, sub_eq_add_neg]
+  change (x + -y).lb = x.lb - y.ub
+  rw [lb_add, lb_neg, sub_eq_add_neg]
 
 @[simp]
 theorem ub_sub : (x - y).ub = x.ub - y.lb := by
-  suffices (sub x y).ub = x.ub - y.lb by
-    exact this
-  rw [sub, add, neg]
-  ext
-  simp [mk, lb, ub, sub_eq_add_neg]
+  change (x + -y).ub = x.ub - y.lb
+  rw [ub_add, ub_neg, sub_eq_add_neg]
 
 @[simp]
 theorem val_sub : (x - y).val = x.val - y.val := by
-  suffices (sub x y).val = x.val - y.val by
-    exact this
-  rw [sub, add, neg, mk_val_eq_val, mk_val_eq_val]
-  rfl
+  change (x + -y).val = x.val - y.val
+  rw [val_add, val_neg, sub_eq_add_neg]
 
 theorem lb_mul : (x * y).lb = ((x.lb * y.lb) ⊓ (x.ub * y.lb)) ⊓ ((x.lb * y.ub) ⊓ (x.ub * y.ub)) :=
   by
@@ -708,15 +702,18 @@ def ubInv (x : ComputableℝSeq) (hnz : x.val ≠ 0) : CauSeq ℚ abs :=
 theorem lbInv_correct {x : ComputableℝSeq} (hnz : x.val ≠ 0) : ∀n,
     (x.dropTilSigned hnz).lbInv (dropTilSigned_nz hnz) n ≤ x.val⁻¹ := by
   intro n
-  rw [lbInv]
-  split_ifs with hp
-  · simp only [CauSeq.inv_apply, Rat.cast_inv]
+  by_cases hp : isPos (dropTilSigned_nz hnz)
+  · rw [show (x.dropTilSigned hnz).lbInv (dropTilSigned_nz hnz) =
+      (x.dropTilSigned hnz).ub.inv (neg_LimZero_ub_of_val (dropTilSigned_nz hnz)) from dif_pos hp]
+    simp only [CauSeq.inv_apply, Rat.cast_inv]
     rw [isPos_iff, val_dropTilSigned] at hp
     apply inv_anti₀ hp
     apply hub
   · have hv : val x < 0 := by
       rw [isPos_iff, val_dropTilSigned] at hp; linarith (config:={splitNe:=true})
-    dsimp
+    rw [show (x.dropTilSigned hnz).lbInv (dropTilSigned_nz hnz) n =
+      if (x.dropTilSigned hnz).ub n ≥ 0 then ((x.dropTilSigned hnz).ub 0)⁻¹
+      else ((x.dropTilSigned hnz).ub n)⁻¹ from congrFun (congrArg Subtype.val (dif_neg hp)) n]
     split_ifs with h
     <;> simp only [Rat.cast_inv]
     <;> apply (inv_le_inv_of_neg ?_ hv).2 (hub x _)
@@ -727,17 +724,21 @@ theorem lbInv_correct {x : ComputableℝSeq} (hnz : x.val ≠ 0) : ∀n,
 theorem ubInv_correct {x : ComputableℝSeq} (hnz : x.val ≠ 0) : ∀n,
     (x.dropTilSigned hnz).ubInv (dropTilSigned_nz hnz) n ≥ x.val⁻¹ := by
   intro n
-  rw [ubInv]
-  split_ifs with hp
+  by_cases hp : isPos (dropTilSigned_nz hnz)
   · have hv : val x > 0 := by
       rw [isPos_iff, val_dropTilSigned] at hp; linarith (config:={splitNe:=true})
-    dsimp
+    rw [show (x.dropTilSigned hnz).ubInv (dropTilSigned_nz hnz) n =
+      if (x.dropTilSigned hnz).lb n ≤ 0 then ((x.dropTilSigned hnz).lb 0)⁻¹
+      else ((x.dropTilSigned hnz).lb n)⁻¹ from
+      congrFun (congrArg Subtype.val (dif_neg (not_not_intro hp))) n]
     split_ifs with h
     <;> simp only [Rat.cast_inv]
     <;> apply inv_anti₀ ?_ ((val_dropTilSigned hnz) ▸ hlb _ _)
     · exact_mod_cast (dropTilSigned_pos hnz).1 hv
     · exact_mod_cast not_le.1 h
-  · simp only [CauSeq.inv_apply, Rat.cast_inv]
+  · rw [show (x.dropTilSigned hnz).ubInv (dropTilSigned_nz hnz) =
+      (x.dropTilSigned hnz).lb.inv (neg_LimZero_lb_of_val (dropTilSigned_nz hnz)) from dif_pos hp]
+    simp only [CauSeq.inv_apply, Rat.cast_inv]
     replace hp := val_dropTilSigned _ ▸ neg_of_not_pos hp
     rw [ge_iff_le, inv_le_inv_of_neg]
     · exact ((val_dropTilSigned hnz) ▸ hlb _ _)
@@ -750,9 +751,9 @@ theorem lbInv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
     Real.mk (x.lbInv hnz) = x.val⁻¹ := by
   apply Real.ext_cauchy
   rw [Real.cauchy_inv, Real.cauchy, Real.cauchy, Real.mk, val_eq_mk_ub, Real.mk,
-    CauSeq.Completion.inv_mk (neg_LimZero_ub_of_val hnz), CauSeq.Completion.mk_eq, lbInv]
-  split_ifs with h
-  · rw [sub_self]
+    CauSeq.Completion.inv_mk (neg_LimZero_ub_of_val hnz), CauSeq.Completion.mk_eq]
+  by_cases h : isPos hnz
+  · rw [show x.lbInv hnz = x.ub.inv (neg_LimZero_ub_of_val hnz) from dif_pos h, sub_self]
     exact CauSeq.zero_limZero
   · exact fun _ hε ↦
       have hxv : x.val < 0 := by
@@ -761,7 +762,10 @@ theorem lbInv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
       let ⟨q, q0, ⟨i, H⟩⟩ := pos_neg_ub_of_val hxv
       ⟨i, fun j hj ↦
         have : ¬x.ub j ≥ 0 := by linarith [CauSeq.neg_apply x.ub _ ▸ H _ hj]
-        by simp [this, hε]⟩
+        by
+          rw [CauSeq.sub_apply, show x.lbInv hnz j = if x.ub j ≥ 0 then (x.ub 0)⁻¹
+            else (x.ub j)⁻¹ from congrFun (congrArg Subtype.val (dif_neg h)) j]
+          simp [this, hε]⟩
 
 /-- When applied to a `dropTilSigned`, `lbInv` is converges to x⁻¹. -/
 theorem lbInv_signed_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
@@ -773,8 +777,8 @@ theorem ubInv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
     Real.mk (x.ubInv hnz) = x.val⁻¹ := by
   apply Real.ext_cauchy
   rw [Real.cauchy_inv, Real.cauchy, Real.cauchy, Real.mk, val_eq_mk_lb, Real.mk,
-    CauSeq.Completion.inv_mk (neg_LimZero_lb_of_val hnz), CauSeq.Completion.mk_eq, ubInv]
-  split_ifs with h
+    CauSeq.Completion.inv_mk (neg_LimZero_lb_of_val hnz), CauSeq.Completion.mk_eq]
+  by_cases h : isPos hnz
   · exact fun _ hε ↦
       have hxv : x.val > 0 := by
         rw [isPos_iff] at h
@@ -782,8 +786,11 @@ theorem ubInv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
       let ⟨q, q0, ⟨i, H⟩⟩ := pos_lb_of_val hxv
       ⟨i, fun j hj ↦
         have : ¬x.lb j ≤ 0 := by linarith [H _ hj]
-        by simp [this, hε]⟩
-  · rw [sub_self]
+        by
+          rw [CauSeq.sub_apply, show x.ubInv hnz j = if x.lb j ≤ 0 then (x.lb 0)⁻¹
+            else (x.lb j)⁻¹ from congrFun (congrArg Subtype.val (dif_neg (not_not_intro h))) j]
+          simp [this, hε]⟩
+  · rw [show x.ubInv hnz = x.lb.inv (neg_LimZero_lb_of_val hnz) from dif_pos h, sub_self]
     exact CauSeq.zero_limZero
 
 /-- When applied to a `dropTilSigned`, `ubInv` is converges to x⁻¹.

@@ -389,10 +389,12 @@ private def pairSupport : SupportPattern 2 :=
 private def binarySupports (c : ℕ) : Multiset (SupportPattern 2) :=
   List.replicate c pairSupport
 
+@[implicit_reducible]
 private def binaryCap (a b : ℕ) : Fin 2 → ℕ
   | ⟨0, _⟩ => a
   | ⟨1, _⟩ => b
 
+@[implicit_reducible]
 private def binaryValues (a b : ℕ) : Fin 2 → ℕ
   | ⟨0, _⟩ => a
   | ⟨1, _⟩ => b

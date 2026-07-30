@@ -74,7 +74,7 @@ theorem norm_translateL2_sub_h1ToL2_le (a : E) (u : ↥(h1 (μ := μ) (E := E)))
       have hsub :
           Continuous fun v : V =>
             translateL2 (μ := μ) (F := ℝ) a v.1 - v.1 := by
-        simpa [sub_eq_add_neg] using htr.sub hfst
+        exact htr.sub hfst
       exact (continuous_norm.comp hsub)
     have hg :
         Continuous fun v : V =>

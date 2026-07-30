@@ -67,7 +67,7 @@ protected theorem Config.Cup.extend_left {l : List α} (l_cup : C.Cup l) {a b : 
       rw [Cup.cons3]
       refine ⟨hab, ?_, l_cup⟩
       have hc : c ∈ S := l_in_S.2.1
-      have hbc : b' < c := l_cup.left.rel_head
+      have hbc : b' < c := l_cup.left.rel
       exact label.extend_left ha l_in_S.1 hab s_ab hc hbc
 
 protected theorem Config.Cup.extend_right {l : List α} (l_cup : C.Cup l) {a b : α}

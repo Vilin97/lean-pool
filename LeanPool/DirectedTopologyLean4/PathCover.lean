@@ -364,9 +364,8 @@ lemma covered_partwise_trans {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
   intros i hi
   have h_lt : n.succ < (n + n).succ.succ := by linarith
   have h₁ : Fraction (Nat.succ_pos (n + n).succ) (le_of_lt h_lt) = Fraction.ofPos two_pos := by
-    simp only [Nat.succ_eq_add_one, Subtype.mk.injEq, Nat.cast_add, Nat.cast_one, zero_add,
-      Nat.cast_ofNat, one_div]
-    rw [←one_div]
+    rw [← Subtype.coe_inj]
+    simp only [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, zero_add, Nat.cast_ofNat]
     apply (div_eq_div_iff (by positivity) (by positivity)).mpr
     have : (n : ℝ) ≥ 0 := Nat.cast_nonneg n
     ring

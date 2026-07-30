@@ -166,7 +166,7 @@ lemma continuous_landau_quadratic
           intro p hp_ne
           have h_cont_A : ContinuousAt (fun z => landauMatrix coulombKernel z) (p.1 - p.2) := by
             change ContinuousAt
-              (fun z => coulombKernel (eucNorm z) • innerLandauMatrix z) (p.1 - p.2)
+              ((fun z => coulombKernel (eucNorm z)) • innerLandauMatrix) (p.1 - p.2)
             apply ContinuousAt.smul
             · have h_cont_eucNorm : ContinuousAt (fun z => eucNorm z) (p.1 - p.2) :=
                 Continuous.continuousAt

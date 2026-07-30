@@ -70,7 +70,7 @@ lemma ker_evalₐ_le_smul_top (I : Ideal R) [IsNoetherianRing R] (n : ℕ)
   -- Step 1: map I (mkQ p) x = 0, since R/p is I-adically complete
   have h_ker : map I p.mkQ x = 0 := by
     have h_eval : eval I R n x = 0 := by
-      simp only [evalₐ, AlgHom.coe_comp, AlgHom.ofLinearMap_apply, Function.comp_apply] at hx
+      simp only [evalₐ, AlgHom.coe_comp, Function.comp_apply] at hx
       exact (AlgEquiv.injective _) hx
     suffices key : (of I (R ⧸ p)).comp (eval I R n) =
         ((map I p.mkQ).restrictScalars R :

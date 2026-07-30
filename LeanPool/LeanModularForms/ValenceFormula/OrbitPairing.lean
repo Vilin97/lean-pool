@@ -214,7 +214,10 @@ def sRightArc (S : Finset ℍ) : Finset ℍ :=
   S.filter (fun p => ‖(p : ℂ)‖ = 1 ∧ (p : ℂ).re > 0)
 
 private lemma S_mul_S : ModularGroup.S * ModularGroup.S = -1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> simp [ModularGroup.S]
+  apply Subtype.ext
+  change (!![0, -1; 1, 0] : Matrix (Fin 2) (Fin 2) ℤ) * !![0, -1; 1, 0] = -1
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply]
 
 /-- S² acts as the identity on ℍ. -/
 lemma S_smul_S_smul (p : ℍ) : ModularGroup.S • (ModularGroup.S • p) = p := by

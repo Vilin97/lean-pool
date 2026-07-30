@@ -153,10 +153,10 @@ lemma plancherel_theorem_custom (n : ℕ) (f g : ZMod (q n) → ℂ) :
       convert h_ortho using 1
       refine Finset.sum_bij ( fun h _ => h.val ) ?_ ?_ ?_ ?_ <;> simp +decide only
         [Finset.mem_univ, ZMod.val, Finset.mem_range, forall_const]
-      · cases h : q n <;> simp_all only [neg_mul, ZMod.natCast_val, Nat.cast_add, Nat.cast_one,
-        Fin.is_lt, implies_true]
-        exact absurd h <| ne_of_gt <| Finset.prod_pos fun p hp =>
-          Nat.Prime.pos <| Finset.mem_filter.mp hp |>.2.2
+      · cases h : q n <;> simp_all only [neg_mul, ZMod.natCast_val, Nat.cast_add, Nat.cast_one]
+        · exact absurd h <| ne_of_gt <| Finset.prod_pos fun p hp =>
+            Nat.Prime.pos <| Finset.mem_filter.mp hp |>.2.2
+        · exact fun a => Fin.is_lt a
       · rcases k : q n with ( _ | _ | k ) <;> simp_all +decide only [ZMod, neg_mul,
         ZMod.natCast_val, Nat.cast_add, Nat.cast_one]
         · exact absurd k <| ne_of_gt <| Finset.prod_pos fun p hp =>

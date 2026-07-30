@@ -41,7 +41,12 @@ noncomputable def birthdayFinset : ℕ → Finset GameForm.{u}
 
 theorem mem_birthdayFinset_succ {x : GameForm} {n : ℕ} : x ∈ birthdayFinset (n + 1) ↔
     ∃ l r, (l ⊆ birthdayFinset n ∧ r ⊆ birthdayFinset n) ∧ !{l | r} = x := by
-  simp [birthdayFinset]
+  simp only [birthdayFinset, Finset.mem_map, Finset.mem_product, Finset.mem_powerset, Prod.exists]
+  constructor
+  · rintro ⟨l, r, h, rfl⟩
+    exact ⟨l, r, h, rfl⟩
+  · rintro ⟨l, r, h, rfl⟩
+    exact ⟨l, r, h, rfl⟩
 
 @[simp]
 theorem birthdayFinset_zero : birthdayFinset 0 = {0} := by rfl

@@ -78,7 +78,7 @@ linear functional `φ` attaining `q` at `f` and bounded by `q` everywhere.
 -/
 lemma exists_CLF_le_seminorm
     {E : Type*} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    [TopologicalSpace E] [IsTopologicalAddGroup E]
     (q : Seminorm ℝ E) (hq : Continuous q) (f : E) :
     ∃ φ : E →L[ℝ] ℝ, φ f = q f ∧ ∀ x, |φ x| ≤ q x := by
   by_cases hf : f = 0
@@ -99,8 +99,8 @@ lemma exists_CLF_le_seminorm
           _ = q (c • f) := by rw [map_smul_eq_mul]; simp)
     -- g(f) = q(f)
     have hg_f : g f = q f := by
-      have h := hg_ext ⟨f, Submodule.mem_span_singleton.mpr ⟨1, one_smul _ _⟩⟩
-      simpa only [f₀, LinearPMap.mkSpanSingleton'_apply_self] using h
+      rw [← f₀.domain.coe_mk f (Submodule.mem_span_singleton_self _), hg_ext]
+      exact LinearPMap.mkSpanSingleton'_apply_self _ _ _ _
     -- |g(x)| ≤ q(x) from g(x) ≤ q(x) and g(-x) ≤ q(-x) = q(x)
     have hg_abs : ∀ x, |g x| ≤ q x := by
       intro x; rw [abs_le]
@@ -421,7 +421,7 @@ theorem _root_.GaussianField.DyninMityaginSpace.toNuclearSpace (E : Type*)
       have h2 : (0 : ℝ) ≤ (C₂nn • s₂.sup hN.p) x := apply_nonneg _ x
       calc p x ≤ (C₁nn • s₁.sup hN.p) x := h1
         _ ≤ (C₁nn • s₁.sup hN.p) x + (C₂nn • s₂.sup hN.p) x := le_add_of_nonneg_right h2
-        _ = q x := (Seminorm.add_apply _ _ x).symm
+        _ = q x := (add_apply _ _ x).symm
     -- Define CLFs: f_m = (1+m)^{S+2} • coeff m
     let f : ℕ → (E →L[ℝ] ℝ) := fun m => ((1 + (m : ℝ)) ^ (S + 2)) • hN.coeff m
     -- c_m = C₁nn * sup_p(ψ_m) / (1+m)^{S+2}
@@ -470,7 +470,7 @@ theorem _root_.GaussianField.DyninMityaginSpace.toNuclearSpace (E : Type*)
         _ = (C₂nn • s₂.sup hN.p) x := by simp [NNReal.smul_def]
         _ ≤ (C₁nn • s₁.sup hN.p) x + (C₂nn • s₂.sup hN.p) x :=
             le_add_of_nonneg_left (apply_nonneg _ x)
-        _ = q x := (Seminorm.add_apply _ _ x).symm
+        _ = q x := (add_apply _ _ x).symm
     -- p x ≤ ∑' m, ‖f m x‖ * c m
     · intro x
       have hexpand := seminorm_le_nuclear_expansion (s₁.sup hN.p) hsup₁_cont x

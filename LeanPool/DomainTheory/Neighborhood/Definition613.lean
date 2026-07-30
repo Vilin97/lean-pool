@@ -168,7 +168,7 @@ theorem continuousOnDomains_id : ContinuousOnDomains (idEndofunctor DomainObj.{w
   intro α E ℱ hℱ _hne _hdir U hUE hU
   apply Set.ext
   intro Y
-  simp only [targetFam, Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+  simp only [targetFam, Set.mem_iUnion, exists_prop]
   exact hU Y
 
 end Domain.Neighborhood
