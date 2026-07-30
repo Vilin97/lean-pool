@@ -18,8 +18,6 @@ namespace GaleStewartGame.BorelDet.One
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 
 noncomputable section «Section1»
@@ -37,12 +35,14 @@ variable (H : PreLift hyp)
 attribute [simp] hlvl
 lemma hlvl_le : 2 * k + 1 ≤ H.x.val.length (α := no_index _) := by simp
 @[simp] lemma hlvl' : 2 * k ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_take_length :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) = 2 * k := by
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length = 2 * k
     simp_all
   · simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma gameTree_eq :
     subAt (getTree' hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val)
       [H.x.val[2 * k]'H.hlvl] =
@@ -103,6 +103,7 @@ variable (hyp) in
   le_trans _ _ _ := le_trans (α := PreLift hyp)
 namespace Lift
 variable (H : Lift hyp)
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftVeryShort : gameTree hyp where
   val := (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val ++
@@ -125,6 +126,7 @@ def liftVeryShort : gameTree hyp where
         · simp
       · rw [H.gameTree_eq]
         exact H.htree
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp, simp_lengths] lemma liftVeryShort_length :
   H.liftVeryShort.val.length (α := no_index _) = 2 * k + 1 := by
   simp only [liftVeryShort]
@@ -132,6 +134,7 @@ def liftVeryShort : gameTree hyp where
     [⟨H.x.val[2 * k]'H.hlvl, H.liftTree⟩]) = 2 * k + 1
   rw [List.length_append, H.toPreLift.pInv_take_length]
   rfl
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVeryShort_val_map :
   H.liftVeryShort.val.map (α := no_index _) Prod.fst = H.x.val.take (2 * k + 1) := by
   calc
@@ -182,6 +185,7 @@ def liftVal := if H.x.val.length = 2 * k + 1 then H.liftVeryShort.val
     (fun a y ↦ ⟨a, subAt (getTree' hyp H.liftShort.val) y⟩)
 lemma liftVal_very_short (h : H.x.val.length = 2 * k + 1) : H.liftVal = H.liftVeryShort.val := by
   unfold liftVal; split_ifs; rfl
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp, simp_lengths] lemma liftVal_length :
   H.liftVal.length (α := no_index _) = H.x.val.length := by
   have := H.hlvl; simp_rw [liftVal]; split_ifs <;> synthIsPosition
@@ -199,6 +203,7 @@ lemma liftVal_very_short (h : H.x.val.length = 2 * k + 1) : H.liftVal = H.liftVe
       change 2 * k + 1 ≤ H.liftShort.val.length
       simp_all)]
     exact H.liftShort_val_take
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVal_take_init (h : n ≤ 2 * k) :
   H.liftVal.take (α := no_index _) n = pInvTreeHomMap hyp (H.x.val.take n) := by
   have hmin : n = min n (2 * k + 1) := by omega
@@ -244,6 +249,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
   ext1
   · simp
   · rfl
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVeryShort_take h : (H.take n h).liftVeryShort = H.liftVeryShort := by
   ext1
   simp only [liftVeryShort, take_toPreLift, take_liftTree, PreLift.take_x, take_coe]
@@ -256,11 +262,13 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
       · simp_all
     · simp_all
   · simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftShort_take h : (H.take n h).liftShort = H.liftShort := by
   apply tree_ext
   simpa [liftShort] using congrArg Subtype.val
     (ResStrategy.eval_valT'_congr' H.R H.R rfl
       (H.take n h).liftVeryShort H.liftVeryShort (H.liftVeryShort_take h) _ _)
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVal_take n h :
   (H.take n h).liftVal = H.liftVal.take n := by
   unfold Lift.liftVal; split_ifs
@@ -352,6 +360,7 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
         simp
       _ = H.x.val := by
         simp_all
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVal_lift_get (h : n < H.x.val.length) :
   (H.liftVal[n]'(by simp [h])).1 = H.x.val[n]'(by simpa) := by
   have hlift : n < H.liftVal.length := by simpa [H.liftVal_length] using h
@@ -375,6 +384,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
 @[simp] lemma take_trans hm hn : (H.take m hm).take n hn = H.take (min m n) (by simp [*]) := by
   ext1; simp
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def lift : gameTree hyp where
   val := H.liftVal

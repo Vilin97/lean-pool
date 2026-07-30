@@ -17,8 +17,6 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -62,6 +60,7 @@ include hW in lemma take n h : (H.take n h).Winnable := by
   have : 2 * k + 1 + (min (2 * k + 1 + m) n - (2 * k + 1)) = min (2 * k + 1 + m) n := by omega
   simpa only [List.take_drop, this, Lift.take_toPreLift, PreLift.game_take,
     PreLift.take_x, take_coe, List.take_take] using hm
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
   dsimp [WLLift.liftMediumVal, Lift.liftNode]
   simp_rw [gameTree_concat]; use (H.R _ _ _).prop
@@ -110,6 +109,7 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
         rw [← H.x.val.take_concat_get' (2 * k + 1) (by simp)]
         simp [Lift.liftNode]]
       simp [x, body.append]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps toWLLift] def toWLift' : WLLift' hyp where
   toWLLift := H.toWLift
@@ -162,6 +162,7 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
             rw [List.getElem_drop'])]
           rw [← List.take_concat_get' (List.drop (2 * k + 2) H.x.val) n hdrop]
 attribute [simp_lengths] toWLift'_toWLLift
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
   have hm : H.x.val[2 * k + 1] :: (((hW.toWLift'.extensionMap hp R).val').drop (2 * k + 2))
     ∈ H.game.tree := by
@@ -344,6 +345,7 @@ lemma extend {h} (hL : (H.take n h).Lost) : H.Lost := by
   simpa using hL.2
 lemma lost_of_le {H H' : Lift hyp} (h : H.Lost) (h' : H ≤ H') : H'.Lost := by
   simp_rw (config := {singlePass := true}) [← Lift.eq_take_of_le h'] at h; exact h.extend
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma liftMedium_mem : hL.1.mk.toWLLift.liftMediumVal ∈ T' := by
   dsimp [WLLift.liftMediumVal, Lift.liftNode, gameAsTrees]
   simp_rw [gameTree_concat]; use SetLike.coe_mem _; constructor
@@ -374,6 +376,7 @@ lemma liftMedium_mem : hL.1.mk.toWLLift.liftMediumVal ∈ T' := by
     · conv => simp [LLift.toWLLift]
       rw [List.append_cons, List.take_concat_get', List.drop_take, ← List.take_add]
       simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lift_mem n : hL.1.mk.toWLLift.liftMediumVal ++
   ((H.x.val.drop (2 * k + 2)).take n).zipInitsMap
   (fun a y ↦ ⟨a, subAt hL.1.mk.toWLLift.liftTree y⟩) ∈ T' := by

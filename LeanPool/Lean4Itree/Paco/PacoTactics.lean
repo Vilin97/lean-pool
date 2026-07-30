@@ -47,19 +47,30 @@ namespace Lean4Itree
 
 open Lean Lean.Elab
 
-private def mkPlfpInitProof (type : Expr) : MetaM Expr := do
-  let args := type.cleanupAnnotations.getAppArgs
-  unless type.cleanupAnnotations.getAppFn.isConstOf ``Lean.Order.lfp_monotone && args.size ≥ 4 do
-    throwError "{type} is not constructed with lfp_monotone"
-  Meta.mkAppOptM ``plfp_init
-    #[some args[0]!, some args[1]!, some args[2]!, some args[3]!]
+private def mkRewriteProof (theoremName : Name) (target : Expr) : MetaM Expr := do
+  let theoremExpr ← Meta.mkConstWithFreshMVarLevels theoremName
+  let (theoremArguments, _, conclusion) ←
+    Meta.forallMetaTelescopeReducing (← Meta.inferType theoremExpr)
+  let some (_, leftHandSide, _) := conclusion.eq?
+    | throwError "{theoremName} does not prove an equality"
+  let target := target.cleanupAnnotations
+  let leftHandSideArgumentCount := leftHandSide.getAppArgs.size
+  let targetArguments := target.getAppArgs
+  unless leftHandSideArgumentCount ≤ targetArguments.size do
+    throwError "{target} does not match the left-hand side of {theoremName}"
+  -- A fixed-point value may be further applied to relation arguments. Derive the
+  -- prefix length from the rewrite theorem instead of its current binder layout.
+  let targetPrefix :=
+    mkAppN target.getAppFn targetArguments[:leftHandSideArgumentCount].toArray
+  unless ← Meta.isDefEq leftHandSide targetPrefix do
+    throwError "{target} does not match the left-hand side of {theoremName}"
+  instantiateMVars (mkAppN theoremExpr theoremArguments)
 
-private def mkPlfpUnfoldProof (type : Expr) : MetaM Expr := do
-  let args := type.cleanupAnnotations.getAppArgs
-  unless type.cleanupAnnotations.getAppFn.isConstOf ``plfp && args.size ≥ 5 do
-    throwError "{type} is not constructed with plfp"
-  Meta.mkAppOptM ``plfp_unfold
-    #[some args[0]!, some args[4]!, some args[1]!, some args[2]!, some args[3]!]
+private def mkPlfpInitProof (target : Expr) : MetaM Expr :=
+  mkRewriteProof ``plfp_init target
+
+private def mkPlfpUnfoldProof (target : Expr) : MetaM Expr :=
+  mkRewriteProof ``plfp_unfold target
 
 private def rewriteTargetWith (mvarId : MVarId) (proof : Expr) : MetaM (List MVarId) := do
   let result ← mvarId.rewrite (← mvarId.getType) proof
@@ -418,5 +429,31 @@ elab "ptop" : tactic =>
     Tactic.liftMetaTactic λ mvarId => do
       let mvarIds ← mvarId.apply le_top
       return mvarIds
+
+section TacticTests
+
+private def tacticTestPredicate (x : Unit) : Prop :=
+  tacticTestPredicate x
+  coinductive_fixpoint monotonicity fun _ _ hsim => hsim
+
+example (x : Unit) : tacticTestPredicate x := by
+  revert x
+  pcofix coinductionHypothesis
+  intro x
+  pfold
+  pleft
+  exact coinductionHypothesis x
+
+example {α : Type} (lattice : Lean.Order.CompleteLattice (α → Prop))
+    (f : (α → Prop) → α → Prop)
+    (monotonicityProof :
+      @Lean.Order.monotone _ lattice.toPartialOrder _ lattice.toPartialOrder f)
+    (r : α → Prop) (x : α)
+    (hypothesis : (@plfp _ lattice f monotonicityProof r) x) :
+    f (@uplfp _ lattice f monotonicityProof r) x := by
+  punfold at hypothesis
+  exact hypothesis
+
+end TacticTests
 
 end Lean4Itree

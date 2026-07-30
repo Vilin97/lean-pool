@@ -18,8 +18,6 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -38,12 +36,14 @@ attribute [simp] hlvl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 lemma hlvl_le : 2 * k + 1 ≤ H.x.val.length (α := no_index _) := by simp
 @[simp] lemma hlvl' : 2 * k ≤ H.x.val.length (α := no_index _) := by linarith [H.hlvl]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_take_length :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) = 2 * k := by
   rw [pInv_treeHom_val]
   · change (pInvTreeHomMap hyp (List.take (2 * k) H.x.val)).length = 2 * k
     simp_all
   · simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_take_position :
     IsPosition (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val Player.zero := by
   rw [pInv_treeHom_val]
@@ -51,12 +51,15 @@ lemma pInv_take_position :
       Player.zero.toNat
     simp_all
   · simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_take_length_le :
     (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.length (α := no_index _) ≤ 2 * k := by
   rw [H.pInv_take_length]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftShort : gameTree hyp := (H.R (pInv (treeHom hyp) (Tree.take (2 * k) H.x))
   H.pInv_take_position H.pInv_take_length_le).valT'
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp, simp_lengths] lemma liftShort_length :
   H.liftShort.val.length (α := no_index _) = 2 * k + 1 := by
   have hlen := ExtensionsAt.val'_length
@@ -100,6 +103,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
 @[simp] lemma take_trans hm hn : (H.take m hm).take n hn
   = H.take (min m n) (by as_aux_lemma => omega) := by
   ext1 <;> simp [min_comm]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftShort_take h : (H.take n h).liftShort = H.liftShort := by
   have harg : pInv (treeHom hyp) (Tree.take (2 * k) (H.take n h).x) =
       pInv (treeHom hyp) (Tree.take (2 * k) H.x) := by
@@ -186,6 +190,7 @@ lemma Winnable.conLong (h : H.Winnable) : H.ConLong := Classical.byContradiction
 
 attribute [simp] h'lvl
 @[simp] lemma h'lvl_le : 2 * k + 2 ≤ H.x.val.length (α := no_index _) := by have := H.h'lvl; omega
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftShort_val_map :
   H.liftShort.val.map (α := no_index _) Prod.fst = H.x.val.take (2 * k + 1) := by
   rw [H.liftShort.val.eq_take_concat (2 * k) (by simp)]
@@ -250,8 +255,10 @@ namespace WLLift
 variable (H : WLLift hyp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def liftMediumVal : List (upA hyp) := H.liftShort.val ++ [⟨H.liftNode, H.liftTree⟩]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp, simp_lengths] lemma liftMediumVal_length :
   H.liftMediumVal.length (α := no_index _) = 2 * k + 2 := by simp [liftMediumVal]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma getTree_liftMediumVal : getTree' hyp H.liftMediumVal = H.liftTree := by
   simp [liftMediumVal]
 @[simp] lemma liftMediumVal_map : H.liftMediumVal.map Prod.fst = H.x.val.take (2 * k + 2) := by
@@ -293,6 +300,7 @@ def liftVal := H.liftMediumVal ++
   = H.x.val.length := by
   rw [← H.liftVal_lift]
   exact (List.length_map (f := Prod.fst) (as := H.liftVal)).symm
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 @[simp] lemma liftVal_lift_get (h : n < H.liftVal.length) :
   H.liftVal[n].1 = H.x.val[n]'(by simpa using h) := by
   have hget := congrArg (fun xs => xs[n]?) H.liftVal_lift
@@ -303,6 +311,7 @@ def liftVal := H.liftMediumVal ++
   have hget' := Option.some.inj hget
   rw [List.getElem_map] at hget'
   exact hget'
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma liftVal_take_eq_of_tree {H H' : WLLift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTree) :
   H.liftVal = H'.liftVal.take H.x.val.length := by
   simp_rw [WLLift.liftVal]

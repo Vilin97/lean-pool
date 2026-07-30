@@ -17,8 +17,6 @@ namespace GaleStewartGame.BorelDet.One
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 
 noncomputable section «Section1»
@@ -79,6 +77,7 @@ variable (hp : IsPosition H.x.val Player.one)
 @[simp] lemma extensionLift_wonPos : (H.extensionLift hp R).WonPos = H.WonPos := by
   rw [← extensionLift_take]
   conv => simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps! toLift] def extensionLift' : Lift' hyp where
   toLift := H.extensionLift hp R
@@ -196,6 +195,7 @@ lemma toLift_mono {H H' : LLift hyp} (h : H.toPreLift ≤ H'.toPreLift) :
     rw [← h]
     ext x <;> simp [PreLift.game, List.take_take]
   exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma winning_condition : WinningCondition H.toLift.liftShort.val (by simp) := by
   rw [← not_losing]; apply _root_.not_imp_self.mp; intro hlos
   unfold LosingCondition; conv => simp [Set.eq_empty_iff_forall_notMem]
@@ -237,6 +237,7 @@ lemma winning_condition : WinningCondition H.toLift.liftShort.val (by simp) := b
   change (H.toLift.liftShort.val[2 * k + 1].1 :: u) ++ₛ a.val ∈
     principalOpen (H.toLift.liftShort.val[2 * k + 1].1 :: u)
   exact principalOpen_append_nil _ _
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma concat_mem_tree {y a} (hp : IsPosition y Player.zero)
   (ha : H.x.val.take (2 * k + 1) ++ H.toLift.liftShort.val[2 * k + 1].1 :: (y ++ [a]) ∈
     G.tree)

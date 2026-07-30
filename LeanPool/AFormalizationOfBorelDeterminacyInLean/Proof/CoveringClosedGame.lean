@@ -30,8 +30,6 @@ variable {G : Game A} {k : ℕ} (hyp : Hyp G k)
 def upA (hyp : Hyp G k) :=
   let _ : IsClosed G.payoff := hyp.closed
   A × tree A
-attribute [local implicit_reducible] upA
-
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev A' {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} := upA hyp
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -118,11 +116,8 @@ def gameTree : tree (upA hyp) where
 @[simps] def oldAsTrees (hyp : Hyp G k) : Trees :=
   let _ : IsClosed G.payoff := hyp.closed
   ⟨A, G.tree⟩
-attribute [local implicit_reducible] oldAsTrees
-
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def gameAsTrees (hyp : Hyp G k) : Trees := ⟨upA hyp, gameTree hyp⟩
-attribute [local implicit_reducible] gameAsTrees
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev T {A : Type*} {G : Game A} : tree A := G.tree
@@ -138,6 +133,7 @@ lemma gameTree_ne : [] ∈ gameTree hyp := by
   change List.reverseRecOn (x ++ [a]) True (fun x a hx ↦ hx ∧ ValidExt x a) ↔
     List.reverseRecOn x True (fun x a hx ↦ hx ∧ ValidExt x a) ∧ ValidExt x a
   rw [List.reverseRecOn_concat]
+attribute [local implicit_reducible] upA in
 lemma getTree_sub (x : gameTree hyp) :
   getTree' hyp x.val ≤ subAt G.tree (x.val.map Prod.fst) := by
   have ⟨x, h⟩ := x
@@ -248,6 +244,7 @@ lemma treeHom_body (x : body (gameTree hyp)) :
   exact (List.getElem_map ..).trans
     ((congrArg Prod.fst (Stream'.take_get n (n + 1) x.val (by simp))).trans
       (Stream'.get_map Prod.fst n x.val).symm)
+attribute [local implicit_reducible] upA in
 lemma T'_snd_small' (x : gameTree hyp) (h : x.val.length ≤ 2 * k) :
   getTree' hyp x.val = subAt G.tree (x.val.map Prod.fst) := by
   have ⟨x, hx⟩ := x
@@ -428,6 +425,7 @@ variable (hyp) in
   payoff := (bodyFunctor.map (treeHom hyp))⁻¹' G.payoff
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev G' {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} : Game (upA hyp) := game hyp
+attribute [local implicit_reducible] upA in
 lemma getTree_eq' (x : List (upA hyp)) (h : x ∈ gameTree hyp) : getTree' hyp x
   = subAt (getTree' hyp (x.take (2 * k + 2))) ((x.drop (2 * k + 2)).map Prod.fst) := by
   rcases le_or_gt x.length (2 * k + 2) with h | h
@@ -456,6 +454,7 @@ lemma getTree_eq' (x : List (upA hyp)) (h : x ∈ gameTree hyp) : getTree' hyp x
 lemma getTree_eq (x : gameTree hyp) : getTree' hyp x.val
   = subAt (getTree' hyp (x.val.take (2 * k + 2))) ((x.val.drop (2 * k + 2)).map Prod.fst) :=
   getTree_eq' x.val x.prop
+attribute [local implicit_reducible] upA in
 lemma mem_getTree (x : gameTree hyp) : x.val.map Prod.fst ∈
   pullSub (getTree' hyp (x.val.take (2 * k + 2))) ((x.val.take (2 * k + 2)).map Prod.fst) := by
   have h := by simpa [getTree_eq] using (getTree_ne_and_pruned x).1
@@ -617,6 +616,7 @@ lemma extensionsAt_ext_fst {x : (game hyp).tree} (a b : ExtensionsAt x)
   have ha := a.prop; have hb := b.prop
   simp_all
 
+attribute [local implicit_reducible] upA in
 lemma getTree_lost
   {x : (game hyp).tree} (y : (game hyp).tree) (h : x.val <+: y.val)
   (hxl : x.val.length = 2 * k + 2) --TODO synth le fails since update
@@ -718,6 +718,7 @@ lemma getTree_lost
     have hpay : (bodyFunctor.map (treeHom hyp) ⟨a, ha2⟩) ∈ G.payoff :=
       Subtype.val_injective.mem_set_image.mp (hW.1 hbody)
     exact Subtype.val_injective.mem_set_image.mpr (hp.symm ▸ hpay)
+attribute [local implicit_reducible] upA in
 lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ x.val.length)
   (H : LosingCondition (Tree.take (2 * k + 2) x).val (by simpa))
   (hnL : ¬ G.WonPosition (x.val.map Prod.fst) (Player.one.residual x.val)) :
@@ -763,6 +764,7 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
         Player.one.residual x.val := by
     simp [Player.residual, List.length_map]
   exact hres ▸ hUz
+attribute [local implicit_reducible] upA in
 lemma extensionsAt_eq_of_lost
   {x : (game hyp).tree} (y : (game hyp).tree) (h : x.val <+: y.val)
   (hxl : 2 * k + 2 ≤ x.val.length)

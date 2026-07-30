@@ -17,8 +17,6 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -251,6 +249,7 @@ lemma lost_of_losable n (h : (takeLift y n).Losable) : ∃ m, (takeLift y m).Los
   · exact h'
   · exact lost_of_body_lost y (body_lost_of_losable y n h (by push Not at h'; exact h'))
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def wonLift (h : ∀ n, (takeLift y n).Winnable) : body R.pre.subtree :=
   bodyEquivSystem.inv.app ⟨_, R.pre.subtree⟩ ⟨fun k ↦
@@ -263,6 +262,7 @@ def wonLift (h : ∀ n, (takeLift y n).Winnable) : body R.pre.subtree :=
         using 1
       · simp only [List.take_take, min_eq_left (Nat.le_succ k)]
       · congr 1)⟩
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma wonLift_map h :
   (bodyFunctor.map π ⟨(wonLift y h).val, body_mono R.pre.subtree_sub (wonLift y h).prop⟩).val
   = y.val := by
@@ -273,6 +273,7 @@ lemma wonLift_map h :
   change ((List.take (n' + 1) hlong.toWLift'.liftVal)[n']).1 = y.val n'
   rw [List.getElem_take]
   rw [WLLift.liftVal_lift_get]; simp [Stream'.get]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def lostLift (h : (takeLift y n).Lost) : body R.pre.subtree :=
   have h' k : (takeLift y (n + k)).Lost := h.lost_of_le ((takeLift_mono y).mpr (by omega))
@@ -287,6 +288,7 @@ def lostLift (h : (takeLift y n).Lost) : body R.pre.subtree :=
       (by
         convert List.take_prefix k (List.take (k + 1) (h' (k + 1)).toLLift'.liftVal) using 1
         · simp [List.take_take])⟩
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lostLift_map (h : (takeLift y n).Lost) :
   (bodyFunctor.map π ⟨(lostLift y h).val, body_mono R.pre.subtree_sub (lostLift y h).prop⟩).val
   = y.val := by

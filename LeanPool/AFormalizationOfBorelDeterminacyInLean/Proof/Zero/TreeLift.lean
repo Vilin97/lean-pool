@@ -17,8 +17,6 @@ namespace GaleStewartGame.BorelDet.Zero
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} {m n : ℕ}
 
 noncomputable section «Section1»
@@ -82,6 +80,7 @@ lemma pInv_fixing (h : n ≤ 2 * k) :
     Fixing (((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x)).val.length) (treeHom hyp) := by
     apply Fixing.mon (f := treeHom hyp) (k := 2 * k) inferInstance
     simp only [subtreeIncl_coe, take_coe, List.length_take, min_le_iff, h, true_or]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.take n) p) :
     IsPosition
       ((pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -97,6 +96,7 @@ lemma pInv_fixing_short :
       (treeHom hyp) := by
     apply Fixing.mon (f := treeHom hyp) (k := 2 * k) inferInstance
     simp [take_coe]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_isPosition_short :
       IsPosition
         ((pInv (treeHom hyp) (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x))
@@ -122,6 +122,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by e
   · change List.take n (List.take m H.x.val) = List.take (min m n) H.x.val
     rw [List.take_take, min_comm]
 @[simp] lemma preLift_take hk : (H.take n hk).preLift = H.preLift.take n hk := by ext <;> simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma conShort : H.preLift.ConShort := by
   dsimp [PreLift.ConShort, strategyEquivSystem, preLift,
     PreLift.liftShort, ResStrategy.res, res.val', ExtensionsAt.val']
@@ -190,6 +191,7 @@ def extension (hp : IsPosition H.x.val Player.zero) :=
   = (H.lift (by as_aux_lemma => synthIsPosition)).take n
       (by as_aux_lemma => synthIsPosition) := by
   ext1; simp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma stratMap'_extend : stratMap' H.R (subtreeIncl _ H.x) = H.extension := by
   ext hp; dsimp [stratMap', stratMap]; split_ifs with h h'
   · change H.x.val.length ≤ 2 * k at h
@@ -267,6 +269,7 @@ lemma lost_of_lost' {h} (hL : (H.lift h).Lost') : (H.lift h).Lost := by
       simp [Lift.LLift.takeMin]; congr; simpa using hL.mk.minLength_le
     · exact h'.2
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Player.zero) :
     Tree.take (n + 1) (H.lift h').liftShort =
     (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -368,6 +371,7 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
         (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take (2 * k) H.x))
           (H.pInv_fixing h)) (H.pInv_isPosition h hp)).val
       exact hlast.trans ((congrArg Subtype.val hsystem).trans hval)
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) Player.zero) :
     (H.lift h').liftShort.val[n]'(by simpa [Nat.lt_iff_add_one_le]) =
     (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -424,6 +428,7 @@ lemma lLift'_eq_wLLift' {h} (hL : (H.lift h).Lost) :
   · cases h (hL.1.mk.losable h.conLong).2
   · rfl
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lift_mem_tree_short n (hn : n < 2 * k + 1) hp :
   (H.wLLift' hWL).liftVal[n]'(by as_aux_lemma => simp; have := H.hlvl; omega) =
   (H.R (Tree.take n ((H.wLLift' hWL).lift)) hp).val := by
@@ -468,6 +473,7 @@ lemma get_eq_get_take (hn : n < H.x.val.length) (hk : 2 * k ≤ n) : H.x.val[n] 
   (H.take (n + 1) (by as_aux_lemma => omega)).x.val[
     (H.take (n + 1) (by as_aux_lemma => omega)).x.val.length - 1]'
     (by as_aux_lemma => simp; omega) := by simp; congr; omega
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma wLift_mem_tree h (hW : (H.lift h).Winnable) : hW.toWLift'.liftVal ∈ H.R.pre.subtree := by
   apply subtree_induction (S := ⊤) (by simpa using hW.toWLift'.hlift)
   intro n hn _ hp _; rcases lt_or_ge n (2 * k + 1) with hn' | hn'
@@ -514,6 +520,7 @@ lemma wLift_mem_tree h (hW : (H.lift h).Winnable) : hW.toWLift'.liftVal ∈ H.R.
         List.take_eq_take_iff]
       synthIsPosition
 --show statements about extension map in common setting?
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lLift_mem_tree h (hL : (H.lift h).Lost) : hL.toLLift'.liftVal ∈ H.R.pre.subtree := by
   apply subtree_induction (S := ⊤) (by simpa using hL.toLLift'.hlift)
   intro n hn _ hp _

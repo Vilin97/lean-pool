@@ -17,8 +17,6 @@ namespace GaleStewartGame.BorelDet.One
 open Stream'.Discrete Descriptive Tree Game PreStrategy Covering
 open CategoryTheory
 
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type*} {G : Game A} {k m n : ℕ} {hyp : Hyp G k}
 
 noncomputable section «Section1»
@@ -35,6 +33,7 @@ def stratMap (lvl : ℕ) (R : ResStrategy (gameAsTrees hyp) Player.one lvl) :
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def stratMap' (R : Strategy (gameTree hyp) Player.one) : Strategy G.tree Player.one :=
   fun x hp ↦ stratMap x.val.length ((strategyEquivSystem R).str _) x hp le_rfl
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma stratMap'_short R x hp (hx : x.val.length ≤ 2 * k) :
   stratMap' R x hp = (ResStrategy.fromMap (treeHom hyp))
     ((strategyEquivSystem («T» := gameAsTrees hyp) R).str x.val.length)
@@ -90,6 +89,7 @@ def extension hp := H.preLift.extension hp ((strategyEquivSystem H.R).str _)
   (H.extension hp).val = (H'.extension (by subst h; exact hp)).val := by
   subst h
   rfl
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma stratMap'_extend : stratMap' H.R (subtreeIncl _ H.x) = H.extension := by
   ext hp; dsimp [stratMap', stratMap]; split_ifs with h
   · change H.x.val.length ≤ 2 * k at h
@@ -122,6 +122,7 @@ lemma pInv_fixing (h : n ≤ 2 * k) :
     Fixing (((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x)).val.length) (treeHom hyp) := by
   apply Fixing.mon (f := treeHom hyp) (k := 2 * k) inferInstance
   simp only [subtreeIncl_coe, take_coe, List.length_take, min_le_iff, h, true_or]
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma pInv_isPosition (h : n ≤ 2 * k) {p : Player} (hp : IsPosition (H.x.val.take n) p) :
     IsPosition
       ((pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -213,6 +214,7 @@ lemma losable_or_winnable :
           exact Game.defensiveQuasi_subtree (hG := hG) (hp := rfl) _
     · exact Or.inr (ih.winnable_of_le (by simp [Ht, dropLast]))
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player.one) :
   Tree.take (n + 1) (pInv (treeHom hyp)
     (Tree.take (2 * k) ((stratMap' H.R).pre.subtreeIncl H.x)) H.pInv_fixing_short) =
@@ -258,6 +260,7 @@ lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player
       (h := hcancel)
       (a := H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
         (H.pInv_fixing h.le)) (H.pInv_isPosition h.le hp))
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma x_mem_tree_short (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player.one) :
   (pInvTreeHomMap hyp (H.x.val.take (2 * k)))[n]'(by simpa) =
   (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -297,6 +300,7 @@ lemma get_eq_get_take (hn : n < H.x.val.length) (hk : 2 * k ≤ n) : H.x.val[n] 
   (H.take (n + 1) (by as_aux_lemma => omega)).x.val[
     (H.take (n + 1) (by as_aux_lemma => omega)).x.val.length - 1]'
     (by as_aux_lemma => simp; omega) := by simp; congr; omega
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree := by
   apply subtree_induction (S := ⊤) (by simpa using h.lift'.lift.prop)
   have := H.hlvl; intro n hnLift _ hp _; rcases lt_or_ge n (2 * k + 1) with hn' | hn'
@@ -438,6 +442,7 @@ lemma wLift_mem_tree (h : H.preLift.Won) : h.lift'.liftVal ∈ H.R.pre.subtree :
       rw [min_eq_left hnX.le, min_eq_left (by omega)]
       omega
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lLift_mem_tree (h : H.preLift.Losable) :
   h.lift'.liftVal ∈ H.R.pre.subtree := by
   apply subtree_induction (S := ⊤) (by simpa using h.lift'.lift.prop)
@@ -743,6 +748,7 @@ lemma won_of_winnable n (h : (bodyTake y n).preLift.Winnable) :
     conv => rhs; rhs; rw [← Stream'.drop_drop q (2 * k + 1) y.val]
     exact (Stream'.append_take_drop q (Stream'.drop (2 * k + 1) y.val)).symm
 
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def wonLift (h : (bodyTake y n).preLift.Won) : body R.pre.subtree :=
   have h' k : (bodyTake y (n + k)).preLift.Won := h.won_of_le ((takeLift_mono y).mpr (by omega))
@@ -756,6 +762,7 @@ def wonLift (h : (bodyTake y n).preLift.Won) : body R.pre.subtree :=
       ((Lift.liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))
         (PreLift.WLift.toLift_mono ((takeLift_mono y).mpr (Nat.le_succ _)))).take k).trans
       ((h' (k + 1)).lift'.liftVal.take_prefix_take_left (Nat.le_succ _))⟩
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma wonLift_map (h : (bodyTake y n).preLift.Won) :
   (bodyFunctor.map π ⟨(wonLift y h).val, body_mono R.pre.subtree_sub (wonLift y h).prop⟩).val
   = y.val := by
@@ -767,6 +774,7 @@ lemma wonLift_map (h : (bodyTake y n).preLift.Won) :
   change ((List.take (n' + 1) hlong.lift'.liftVal)[n']).1 = y.val n'
   rw [List.getElem_take]
   rw [Lift'.liftVal_lift_get] <;> simp [Stream'.get]; omega
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
   def lostLift (h : ∀ n, (bodyTake y n).preLift.Losable) : body R.pre.subtree :=
     bodyEquivSystem.inv.app ⟨_, R.pre.subtree⟩ ⟨fun k ↦
@@ -778,6 +786,7 @@ lemma wonLift_map (h : (bodyTake y n).preLift.Won) :
       ((Lift.liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))
         (PreLift.LLift.toLift_mono ((takeLift_mono y).mpr (Nat.le_succ _)))).take k).trans
       ((h (k + 1)).lift'.liftVal.take_prefix_take_left (Nat.le_succ _))⟩
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma lostLift_map (h : ∀ n, (bodyTake y n).preLift.Losable) :
   (bodyFunctor.map π ⟨(lostLift y h).val, body_mono R.pre.subtree_sub (lostLift y h).prop⟩).val
   = y.val := by

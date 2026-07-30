@@ -23,8 +23,6 @@ open MeasureTheory CategoryTheory
 noncomputable section «Section1»
 
 namespace BorelDet
-attribute [local implicit_reducible] upA oldAsTrees gameAsTrees
-
 variable {A : Type} {G : Game A} {k : ℕ} (hyp : Hyp G k)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev Gh : Games := ⟨A, G, hyp.pruned, hyp.nonempty⟩
@@ -47,6 +45,7 @@ def treeCov : (G'h hyp).tree ⟶ (Gh hyp).tree where
 def gameCov : Games.GameCovering (G'h hyp) (Gh hyp) where
   toCovering := treeCov hyp
   hpre := game_payoff hyp
+attribute [local implicit_reducible] upA oldAsTrees gameAsTrees in
 lemma main_lemma {G : Games} (hC : IsClosed G.2.1.payoff) : G.IsUnravelable :=
   fun k ↦ ⟨G'h (k := k) ⟨hC, G.2.2.1, G.2.2.2⟩, gameCov _, by
     unfold gameCov treeCov
