@@ -452,6 +452,130 @@ def _solved_entry() -> dict[str, object]:
     }
 
 
+def test_solution_claims_detect_open_to_solved_transition() -> None:
+    """PR #301's registry transition is a comparator-comment claim."""
+    solved = _solved_entry()
+
+    claims = challenge.solution_claims([solved], [CHALLENGE_ENTRY])
+
+    assert claims == [challenge.SolutionClaim(slug="widget", module="Solution.Widget")]
+
+
+def test_solution_claims_detect_new_solved_entry() -> None:
+    """A challenge added in solved state still makes an explicit claim."""
+    claims = challenge.solution_claims([_solved_entry()], [])
+
+    assert [claim.slug for claim in claims] == ["widget"]
+
+
+def test_solution_claims_ignore_unchanged_historical_solution() -> None:
+    """Unrelated PRs are not credited with solutions already on the base."""
+    base = _solved_entry()
+    head = {
+        **base,
+        "solution": {
+            **base["solution"],
+            "authors": ["A corrected attribution"],
+            "verified": "2026-07-29",
+        },
+    }
+
+    assert challenge.solution_claims([head], [base]) == []
+
+
+def test_solution_claims_detect_changed_historical_proof() -> None:
+    """Editing a recorded solution renews the claim and its comparator comment."""
+    solved = _solved_entry()
+
+    claims = challenge.solution_claims([solved], [solved], {"Solution/Widget.lean"})
+
+    assert claims == [challenge.SolutionClaim(slug="widget", module="Solution.Widget")]
+
+
+def test_solution_claims_detect_replaced_solution_module() -> None:
+    """Replacing the proof module is a fresh claim that comparator must judge."""
+    base = _solved_entry()
+    head = {
+        **base,
+        "solution": {**base["solution"], "module": "Solution.WidgetAlternative"},
+    }
+
+    claims = challenge.solution_claims([head], [base])
+
+    assert claims == [
+        challenge.SolutionClaim(slug="widget", module="Solution.WidgetAlternative")
+    ]
+
+
+def test_solution_claims_reject_mutated_challenge_contract() -> None:
+    """Lifecycle may change in a solution PR, but the target theorem may not."""
+    head = {
+        **_solved_entry(),
+        "statements": [
+            {
+                "declaration": "Challenge.Widget.easier",
+                "informal": "An easier statement.",
+            }
+        ],
+    }
+
+    claims = challenge.solution_claims([head], [CHALLENGE_ENTRY])
+
+    assert len(claims) == 1
+    assert claims[0].contract_unchanged is False
+
+
+def test_solution_claims_detect_contract_change_on_historical_solution() -> None:
+    """A solved entry still claims its proof covers any newly mutated target."""
+    base = _solved_entry()
+    head = {
+        **base,
+        "statements": [
+            {
+                "declaration": "Challenge.Widget.easier",
+                "informal": "An easier statement.",
+            }
+        ],
+    }
+
+    claims = challenge.solution_claims([head], [base])
+
+    assert claims == [
+        challenge.SolutionClaim(
+            slug="widget",
+            module="Solution.Widget",
+            contract_unchanged=False,
+        )
+    ]
+
+
+def test_solution_claim_without_module_is_not_silently_dropped() -> None:
+    """External solution pointers receive an explicit non-verification comment."""
+    solved = {
+        **CHALLENGE_ENTRY,
+        "status": "solved",
+        "solution": {"url": "https://example.invalid/proof"},
+    }
+
+    claims = challenge.solution_claims([solved], [CHALLENGE_ENTRY])
+
+    assert claims == [challenge.SolutionClaim(slug="widget", module=None)]
+
+
+def test_solution_claims_return_every_transition() -> None:
+    """One PR can claim several challenges and every claim must be reported."""
+    first = _solved_entry()
+    second = {
+        **_solved_entry(),
+        "slug": "second-widget",
+        "solution": {"module": "Solution.SecondWidget"},
+    }
+
+    claims = challenge.solution_claims([first, second], [CHALLENGE_ENTRY])
+
+    assert [claim.slug for claim in claims] == ["widget", "second-widget"]
+
+
 def _write_solution(root: Path, *, body: str = SOLUTION_BODY) -> None:
     """Add a solution library answering the fixture challenge."""
     (root / "Solution").mkdir(exist_ok=True)

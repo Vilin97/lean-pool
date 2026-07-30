@@ -23,17 +23,7 @@ on:
   # solution to the Odlyzko challenge) got no verification at all because it
   # targeted `bump/v4.33.0-rc1`.
   pull_request:
-    paths:
-      - 'Challenge/**'
-      - 'Challenge.lean'
-      - 'Solution/**'
-      - 'Solution.lean'
-      - 'lean-toolchain'
-      - 'lake-manifest.json'
-      - 'lakefile.toml'
-      - 'scripts/challenge/**'
-      - 'python/lean_pool/challenge.py'
-      - '.github/workflows/challenge-verify.yml'
+    types: [opened, reopened, synchronize, edited, ready_for_review]
   push:
     branches:
       - main
@@ -57,15 +47,85 @@ jobs:
     runs-on: ubuntu-latest
     name: Verify challenge solutions
     steps:
+      # A fork PR cannot post its own comment. Stage immutable event identity
+      # before any setup work, then upload it with the results for the
+      # privileged companion workflow. That workflow validates both fields
+      # against the triggering run before it writes anything.
+      - name: Stage comparator report identity
+        if: github.event_name == 'pull_request'
+        env:
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          MERGE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$REPORT_DIRECTORY"
+          printf '%s\n' "$PR_NUMBER" > "$REPORT_DIRECTORY/pr-number.txt"
+          printf '%s\n' "$HEAD_SHA" > "$REPORT_DIRECTORY/head-sha.txt"
+          printf '%s\n' "$BASE_SHA" > "$REPORT_DIRECTORY/base-sha.txt"
+          printf '%s\n' "$MERGE_SHA" > "$REPORT_DIRECTORY/merge-sha.txt"
+          printf '%s\n' "pending" > "$REPORT_DIRECTORY/claims-state.txt"
+          printf '[]\n' > "$REPORT_DIRECTORY/claims.json"
+          printf '[]\n' > "$REPORT_DIRECTORY/results.json"
+
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          # A pull_request run must not consume a cache that an earlier,
+          # attacker-controlled revision of the same PR could have poisoned.
+          enable-cache: ${{ github.event_name != 'pull_request' }}
+
+      # `solved` lists the whole historical board. A PR comment must instead
+      # name only the solutions this PR claims, or an unrelated challenge/tool
+      # change would be credited with every previously merged solution.
+      - name: Identify solution claims in this PR
+        id: claims
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+          BASE_REGISTRY: ${{ runner.temp }}/base-challenges.yml
+          CHANGED_PATHS: ${{ runner.temp }}/challenge-changed-paths.txt
+        run: |
+          set -euo pipefail
+          git rev-parse 'HEAD^{tree}' > "$REPORT_DIRECTORY/merge-tree.txt"
+          git fetch --no-tags --depth=1 origin "$BASE_SHA"
+          if git cat-file -e "$BASE_SHA:Challenge/challenges.yml"; then
+            git show "$BASE_SHA:Challenge/challenges.yml" > "$BASE_REGISTRY"
+          else
+            printf 'challenges: []\n' > "$BASE_REGISTRY"
+          fi
+          git diff --no-renames --name-only "$BASE_SHA" HEAD > "$CHANGED_PATHS"
+          (
+            cd python
+            uv run python -m lean_pool.challenge --repo .. claims \
+              --base-registry "$BASE_REGISTRY" \
+              --changed-paths "$CHANGED_PATHS" \
+              --out "$REPORT_DIRECTORY/claims.json"
+          )
+          printf '%s\n' "complete" > "$REPORT_DIRECTORY/claims-state.txt"
+          verify=false
+          if [ "$(jq 'length' "$REPORT_DIRECTORY/claims.json")" -gt 0 ] ||
+              grep -Eq \
+                '^(Challenge(/|\.lean$)|Solution(/|\.lean$)|lean-toolchain$|lake-manifest\.json$|lakefile\.toml$|scripts/challenge/|python/lean_pool/challenge(_report)?\.py$|\.github/workflows/challenge-verify(-comment)?\.yml$)' \
+                "$CHANGED_PATHS"; then
+            verify=true
+          fi
+          echo "verify=$verify" >> "$GITHUB_OUTPUT"
 
       # `make comparator` reads the same file, so a local verification and a
       # CI verification run the same judge.
       - name: Load tool pins
+        if: github.event_name != 'pull_request' || steps.claims.outputs.verify == 'true'
         run: cat scripts/challenge/pins.env | grep -E '^[A-Z0-9_]+=' >> "$GITHUB_ENV"
 
       - name: Restore caches
+        if: github.event_name != 'pull_request'
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -77,18 +137,15 @@ jobs:
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
+        if: github.event_name != 'pull_request' || steps.claims.outputs.verify == 'true'
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
         with:
           auto-config: false
           use-github-cache: false
           use-mathlib-cache: false
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
-        with:
-          enable-cache: true
-
       - name: Install Mathlib cache
+        if: github.event_name != 'pull_request' || steps.claims.outputs.verify == 'true'
         run: |
           if [ ! -d ".lake/packages/mathlib" ]; then
             ~/.elan/bin/lake exe cache get
@@ -98,6 +155,7 @@ jobs:
 
       - name: Cache verification tools
         id: tools
+        if: github.event_name != 'pull_request'
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
@@ -111,13 +169,20 @@ jobs:
       # actions/setup-go pinned to d35c59ab (= refs/tags/v5.5.0), the pin
       # leanprover/lean-eval uses to build the same landrun commit.
       - name: Set up Go
-        if: steps.tools.outputs.cache-hit != 'true'
+        if: >-
+          (github.event_name != 'pull_request' ||
+           steps.claims.outputs.verify == 'true') &&
+          steps.tools.outputs.cache-hit != 'true'
         uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5
         with:
           go-version: '1.24.0'
+          cache: false
 
       - name: Build landrun
-        if: steps.tools.outputs.cache-hit != 'true'
+        if: >-
+          (github.event_name != 'pull_request' ||
+           steps.claims.outputs.verify == 'true') &&
+          steps.tools.outputs.cache-hit != 'true'
         run: go install "github.com/zouuup/landrun/cmd/landrun@$LANDRUN_COMMIT"
 
       # lean4export reads the oleans this repository's build produced, so its
@@ -126,6 +191,7 @@ jobs:
       # export, with an error about the file format rather than the pin. Say
       # it here instead, with the replacement SHA already resolved.
       - name: Check the lean4export pin matches the toolchain
+        if: github.event_name != 'pull_request' || steps.claims.outputs.verify == 'true'
         run: |
           set -euo pipefail
           toolchain="$(cut -d: -f2 lean-toolchain)"
@@ -152,7 +218,10 @@ jobs:
           echo "lean4export pin matches $toolchain."
 
       - name: Build lean4export
-        if: steps.tools.outputs.cache-hit != 'true'
+        if: >-
+          (github.event_name != 'pull_request' ||
+           steps.claims.outputs.verify == 'true') &&
+          steps.tools.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           git clone https://github.com/leanprover/lean4export.git .ci/lean4export
@@ -161,7 +230,10 @@ jobs:
           ~/.elan/bin/lake build lean4export
 
       - name: Build comparator
-        if: steps.tools.outputs.cache-hit != 'true'
+        if: >-
+          (github.event_name != 'pull_request' ||
+           steps.claims.outputs.verify == 'true') &&
+          steps.tools.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           git clone https://github.com/leanprover/comparator.git .ci/comparator
@@ -170,21 +242,66 @@ jobs:
           ~/.elan/bin/lake build comparator
 
       - name: Verify every solved challenge
+        if: github.event_name != 'pull_request' || steps.claims.outputs.verify == 'true'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
         run: |
-          set -euo pipefail
+          set -uo pipefail
           # The pinned comparator hardcodes `landrun` and `lean4export` as
           # PATH lookups — the COMPARATOR_* environment variables are a newer
           # feature — so the binaries have to be *on PATH*, not merely passed.
           export PATH="$PWD/.ci/lean4export/.lake/build/bin:$HOME/go/bin:$HOME/.elan/bin:$PATH"
-          slugs=$(cd python && uv run python -m lean_pool.challenge --repo .. solved)
-          if [ -z "$slugs" ]; then
+          slugs_file="$RUNNER_TEMP/solved-challenges.txt"
+          if ! (cd python && uv run python -m lean_pool.challenge --repo .. solved) \
+              > "$slugs_file"; then
+            echo "::error::Could not enumerate solved challenges."
+            exit 1
+          fi
+          if [ ! -s "$slugs_file" ]; then
             echo "No solved challenges to verify."
             exit 0
           fi
-          for slug in $slugs; do
+
+          overall_status=0
+          while IFS= read -r slug; do
+            if [ -z "$slug" ]; then
+              continue
+            fi
             echo "::group::comparator: $slug"
-            scripts/challenge/verify-solution.sh "$slug" \
-              --comparator "$PWD/.ci/comparator/.lake/build/bin/comparator" \
-              --lean4export "$PWD/.ci/lean4export/.lake/build/bin/lean4export"
+            if scripts/challenge/verify-solution.sh "$slug" \
+                --comparator "$PWD/.ci/comparator/.lake/build/bin/comparator" \
+                --lean4export "$PWD/.ci/lean4export/.lake/build/bin/lean4export"; then
+              result_status="passed"
+            else
+              result_status="failed"
+              overall_status=1
+            fi
             echo "::endgroup::"
-          done
+            if [ "$EVENT_NAME" = "pull_request" ]; then
+              if ! (
+                cd python
+                uv run python -m lean_pool.challenge_report record \
+                  "$REPORT_DIRECTORY/results.json" \
+                  --slug "$slug" --status "$result_status"
+              ); then
+                echo "::error::Could not record comparator result for $slug."
+                overall_status=1
+              fi
+            fi
+          done < "$slugs_file"
+          exit "$overall_status"
+
+      # The companion workflow runs in the base-repository context with a
+      # writable token. It never executes this PR's code: it only validates
+      # and renders this small report using code from the default branch.
+      - name: Upload comparator comment report
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          # Rerun attempts retain earlier artifacts, and upload-artifact v4
+          # rejects duplicate names within one workflow run.
+          name: challenge-comparator-report-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/challenge-comparator-report
+          if-no-files-found: error
+          retention-days: 7

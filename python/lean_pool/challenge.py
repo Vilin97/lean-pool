@@ -33,6 +33,8 @@ import argparse
 import json
 import sys
 import textwrap
+from collections.abc import Collection
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -77,6 +79,15 @@ SOURCE_KEY_ORDER = ("arxiv", "doi", "url")
 # Mathlib's style linter caps lines at 100 columns and the card is checked
 # byte-for-byte, so wrapping has to be deterministic.
 CARD_WIDTH = 100
+
+
+@dataclass(frozen=True)
+class SolutionClaim:
+    """A challenge solution newly claimed by a change to the registry."""
+
+    slug: str
+    module: str | None
+    contract_unchanged: bool = True
 
 
 def registry_path(root: Path) -> Path:
@@ -135,9 +146,20 @@ def load_challenges(root: Path) -> tuple[list[Any], list[tuple[Path, str]]]:
         list — entries are validated separately by :func:`registry_errors`
         — and is empty whenever ``errors`` is non-empty.
     """
-    path = registry_path(root)
+    return load_challenges_file(registry_path(root))
+
+
+def load_challenges_file(path: Path) -> tuple[list[Any], list[tuple[Path, str]]]:
+    """Load a challenge registry from an explicit path.
+
+    Args:
+        path: YAML registry to load.
+
+    Returns:
+        ``(challenges, errors)`` with the same shape as :func:`load_challenges`.
+    """
     if not path.exists():
-        return [], [(path, f"missing {REGISTRY_RELATIVE_PATH}")]
+        return [], [(path, f"missing {path}")]
     try:
         data = yaml.safe_load(path.read_text()) or {}
     except yaml.YAMLError as error:
@@ -148,6 +170,90 @@ def load_challenges(root: Path) -> tuple[list[Any], list[tuple[Path, str]]]:
     if not isinstance(challenges, list):
         return [], [(path, "`challenges` must be a list")]
     return challenges, []
+
+
+def solution_claims(
+    challenges: list[Any],
+    base_challenges: list[Any],
+    changed_paths: Collection[str] = (),
+) -> list[SolutionClaim]:
+    """Return solution claims introduced relative to a base registry.
+
+    A claim is a challenge that is solved in ``challenges`` and was open or
+    absent in ``base_challenges``, points at a different solution, changes its
+    proof module, or mutates the challenge contract its recorded proof claims
+    to solve. Descriptive solution metadata such as authors and verification
+    dates does not create a new claim.
+
+    Args:
+        challenges: Registry entries from the proposed head.
+        base_challenges: Registry entries from the pull request base.
+        changed_paths: Repository-relative paths changed by the pull request.
+            Changing a recorded solution module renews its claim even when the
+            registry pointer itself is unchanged.
+
+    Returns:
+        Claims in head-registry order.
+    """
+    base_by_slug = {
+        entry["slug"]: entry
+        for entry in base_challenges
+        if isinstance(entry, dict) and isinstance(entry.get("slug"), str)
+    }
+    claims = []
+    for entry in challenges:
+        if (
+            not isinstance(entry, dict)
+            or not isinstance(entry.get("slug"), str)
+            or not is_solved(entry)
+        ):
+            continue
+        module = solution_module(entry)
+        module_path = (
+            "/".join(module.split(".")) + ".lean" if module is not None else None
+        )
+        solution_changed = module_path is not None and module_path in changed_paths
+        base_entry = base_by_slug.get(entry["slug"])
+        contract_unchanged = base_entry is not None and _challenge_contract(
+            base_entry
+        ) == _challenge_contract(entry)
+        if (
+            base_entry is not None
+            and is_solved(base_entry)
+            and _solution_identity(base_entry) == _solution_identity(entry)
+            and not solution_changed
+            and contract_unchanged
+        ):
+            continue
+        claims.append(
+            SolutionClaim(
+                slug=entry["slug"],
+                module=module,
+                contract_unchanged=contract_unchanged,
+            )
+        )
+    return claims
+
+
+def _solution_identity(challenge: dict[str, Any]) -> tuple[str, str] | None:
+    """Return the proof-bearing identity of a registry solution pointer."""
+    solution = challenge.get("solution")
+    if not isinstance(solution, dict):
+        return None
+    for key in ("module", "project", "url"):
+        value = solution.get(key)
+        if isinstance(value, str) and value.strip():
+            return key, value
+    return None
+
+
+def _challenge_contract(challenge: dict[str, Any]) -> dict[str, Any]:
+    """Return immutable challenge fields, excluding only lifecycle metadata."""
+    return {
+        key: value
+        for key, value in challenge.items()
+        if key not in ("status", "solution")
+    }
 
 
 def find_challenge(root: Path, slug: str) -> dict[str, Any] | None:
@@ -712,6 +818,29 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help="Print the slug of every challenge with an in-repo solution, one "
         "per line — the set CI hands to comparator.",
     )
+    claims_parser = subparsers.add_parser(
+        "claims",
+        help="Emit solution claims introduced relative to a base registry.",
+    )
+    claims_parser.add_argument(
+        "--base-registry",
+        required=True,
+        type=Path,
+        help="Challenge registry from the pull request base.",
+    )
+    claims_parser.add_argument(
+        "--head-registry",
+        type=Path,
+        help="Optional head registry path; defaults to the registry under --repo.",
+    )
+    claims_parser.add_argument(
+        "--out", type=Path, help="Write the JSON claim list here instead of stdout."
+    )
+    claims_parser.add_argument(
+        "--changed-paths",
+        type=Path,
+        help="Optional newline-delimited paths changed by the pull request.",
+    )
     configuration_parser = subparsers.add_parser(
         "config", help="Emit a comparator JSON configuration for one challenge."
     )
@@ -738,19 +867,52 @@ def main(argv: list[str] | None = None) -> int:
     """Run the challenge CLI."""
     args = _parse_args(sys.argv[1:] if argv is None else argv)
     root = args.repo.resolve()
-    if args.command in ("list", "solved"):
-        if not registry_path(root).exists():
+    if args.command in ("list", "solved", "claims"):
+        if args.command in ("list", "solved") and not registry_path(root).exists():
             # An installed but empty board: nothing to list, nothing to
             # verify. Only the quality gate treats a missing registry as an
             # error, and only once a statement file exists.
             if args.command == "list":
                 print("No challenges registered.")
             return 0
-        challenges, errors = load_challenges(root)
+        if args.command == "claims":
+            head_registry = (
+                args.head_registry.resolve()
+                if args.head_registry is not None
+                else registry_path(root)
+            )
+            challenges, errors = load_challenges_file(head_registry)
+            base_challenges, base_errors = load_challenges_file(
+                args.base_registry.resolve()
+            )
+            errors.extend(base_errors)
+        else:
+            challenges, errors = load_challenges(root)
         for path, message in errors:
             print(f"{path}: {message}", file=sys.stderr)
         if errors:
             return 1
+        if args.command == "claims":
+            changed_paths = (
+                args.changed_paths.read_text().splitlines()
+                if args.changed_paths is not None
+                else []
+            )
+            rendered = json.dumps(
+                [
+                    asdict(claim)
+                    for claim in solution_claims(
+                        challenges, base_challenges, changed_paths
+                    )
+                ],
+                indent=2,
+            )
+            rendered += "\n"
+            if args.out is not None:
+                args.out.write_text(rendered)
+            else:
+                print(rendered, end="")
+            return 0
         if args.command == "solved":
             for entry in challenges:
                 if isinstance(entry, dict) and solution_module(entry) is not None:

@@ -1,0 +1,888 @@
+name: Challenge Comparator Comment
+
+# The verifier executes pull-request code with a read-only token. This trusted
+# companion detects claims immediately, posts a sticky placeholder, then
+# validates the verifier's report and replaces the placeholder with a
+# standalone comparator verdict. It uses only read-only Git plumbing to inspect
+# PR commits; writable jobs never check out or execute contributor code.
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+  workflow_run:
+    workflows: ["Verify challenge solutions"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
+jobs:
+  pending:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    name: Challenge comparator pending comment
+    concurrency:
+      # The final writer resolves this same PR number before it starts. One
+      # writer per PR makes the read/check/update sequence race-free.
+      group: challenge-comparator-write-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    steps:
+      - name: Resolve current PR target
+        id: target
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_FROM_EVENT: ${{ github.event.pull_request.number }}
+          EVENT_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          pr_number="$PR_FROM_EVENT"
+          case "$pr_number" in
+            ''|*[!0-9]*)
+              echo "::error::Could not resolve a valid PR number."
+              exit 1
+              ;;
+          esac
+
+          pull_request=$(gh api "repos/$REPO/pulls/$pr_number")
+          head_sha=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+          base_sha=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+          base_repository=$(printf '%s\n' "$pull_request" \
+            | jq -r '.base.repo.full_name')
+          if [ "$base_repository" != "$REPO" ]; then
+            echo "::error::Resolved PR does not target this repository."
+            exit 1
+          fi
+
+          stale=false
+          if [ -n "$EVENT_HEAD_SHA" ] && [ "$head_sha" != "$EVENT_HEAD_SHA" ]; then
+            stale=true
+          fi
+          {
+            echo "number=$pr_number"
+            echo "head_sha=$head_sha"
+            echo "base_sha=$base_sha"
+            echo "stale=$stale"
+          } >> "$GITHUB_OUTPUT"
+
+      # `pull_request_target` supplies a writable token, so check out only
+      # trusted default-branch code. PR registries are read as data below.
+      - name: Checkout trusted claim detector
+        if: steps.target.outputs.stale != 'true'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Install uv
+        if: steps.target.outputs.stale != 'true'
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Derive claims from the PR merge result
+        if: steps.target.outputs.stale != 'true'
+        id: claims
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.target.outputs.number }}
+          BASE_SHA: ${{ steps.target.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.target.outputs.head_sha }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-pending-report
+          BASE_REGISTRY: ${{ runner.temp }}/pending-base-challenges.yml
+          MERGE_REGISTRY: ${{ runner.temp }}/pending-merge-challenges.yml
+          CURRENT_PATHS: ${{ runner.temp }}/pending-current-paths.txt
+          PREVIOUS_PATHS: ${{ runner.temp }}/pending-previous-paths.txt
+        run: |
+          set -uo pipefail
+          mkdir -p "$REPORT_DIRECTORY"
+          printf '%s\n' "$HEAD_SHA" > "$REPORT_DIRECTORY/head-sha.txt"
+          printf '%s\n' "$BASE_SHA" > "$REPORT_DIRECTORY/base-sha.txt"
+          printf '%s\n' "pending" > "$REPORT_DIRECTORY/claims-state.txt"
+          printf '[]\n' > "$REPORT_DIRECTORY/claims.json"
+          state=failed
+          merge_tree=unknown
+
+          if ! pull_request=$(gh api "repos/$REPO/pulls/$PR_NUMBER"); then
+            echo "::error::Could not refresh PR metadata."
+          else
+            current_head=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+            current_base=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+            expected_count=$(printf '%s\n' "$pull_request" \
+              | jq -r '.changed_files')
+            if [ "$current_head" != "$HEAD_SHA" ] ||
+                [ "$current_base" != "$BASE_SHA" ]; then
+              state=stale
+            elif ! gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
+                --jq '.[].filename' > "$CURRENT_PATHS"; then
+              echo "::error::Could not list current PR paths."
+            elif ! gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
+                --jq '.[] | .previous_filename // empty' > "$PREVIOUS_PATHS"; then
+              echo "::error::Could not list renamed PR paths."
+            else
+              returned_count=$(grep -c . "$CURRENT_PATHS" || true)
+              {
+                cat "$CURRENT_PATHS"
+                cat "$PREVIOUS_PATHS"
+              } | { grep -v '^$' || true; } \
+                > "$REPORT_DIRECTORY/changed-paths.txt"
+
+              if [ "$returned_count" -ne "$expected_count" ]; then
+                echo "::error::GitHub did not return the complete PR file list."
+              elif ! git fetch --no-tags --depth=2 origin \
+                  "refs/pull/$PR_NUMBER/merge"; then
+                echo "::error::Could not fetch the PR merge result."
+              else
+                merge_sha=$(git rev-parse FETCH_HEAD)
+                merge_parents=$(git show -s --format='%P' "$merge_sha")
+                merge_tree=$(git rev-parse "$merge_sha^{tree}")
+                printf '%s\n' "$merge_sha" \
+                  > "$REPORT_DIRECTORY/merge-sha.txt"
+                printf '%s\n' "$merge_tree" \
+                  > "$REPORT_DIRECTORY/merge-tree.txt"
+                if [ "$merge_parents" != "$BASE_SHA $HEAD_SHA" ]; then
+                  echo "::error::PR merge result does not match its base and head."
+                elif ! git show "$BASE_SHA:Challenge/challenges.yml" \
+                    > "$BASE_REGISTRY" ||
+                    ! git show "$merge_sha:Challenge/challenges.yml" \
+                    > "$MERGE_REGISTRY"; then
+                  echo "::error::Could not read the base and merge registries."
+                elif [ "$(wc -c < "$BASE_REGISTRY")" -gt 1048576 ] ||
+                    [ "$(wc -c < "$MERGE_REGISTRY")" -gt 1048576 ]; then
+                  echo "::error::Challenge registry exceeds the trusted size limit."
+                elif (
+                  cd python
+                  uv run python -m lean_pool.challenge --repo .. claims \
+                    --base-registry "$BASE_REGISTRY" \
+                    --head-registry "$MERGE_REGISTRY" \
+                    --changed-paths "$REPORT_DIRECTORY/changed-paths.txt" \
+                    --out "$REPORT_DIRECTORY/claims.json"
+                ); then
+                  if ! latest=$(gh api "repos/$REPO/pulls/$PR_NUMBER"); then
+                    echo "::error::Could not recheck the PR after claim detection."
+                  else
+                    latest_head=$(printf '%s\n' "$latest" | jq -r '.head.sha')
+                    latest_base=$(printf '%s\n' "$latest" | jq -r '.base.sha')
+                    if [ "$latest_head" != "$HEAD_SHA" ] ||
+                        [ "$latest_base" != "$BASE_SHA" ]; then
+                      state=stale
+                    else
+                      state=complete
+                      printf '%s\n' "complete" \
+                        > "$REPORT_DIRECTORY/claims-state.txt"
+                    fi
+                  fi
+                fi
+              fi
+            fi
+          fi
+          {
+            echo "state=$state"
+            echo "merge_tree=$merge_tree"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Render pending comparator comment
+        if: >-
+          steps.target.outputs.stale != 'true' &&
+          steps.claims.outputs.state != 'stale'
+        working-directory: python
+        env:
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-pending-report
+          COMMENT_FILE: ${{ runner.temp }}/challenge-pending-comment.md
+          DETECTION_STATE: ${{ steps.claims.outputs.state }}
+          HEAD_SHA: ${{ steps.target.outputs.head_sha }}
+          BASE_SHA: ${{ steps.target.outputs.base_sha }}
+          MERGE_TREE: ${{ steps.claims.outputs.merge_tree }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ "$DETECTION_STATE" = "complete" ] &&
+              python3 -m lean_pool.challenge_report pending "$REPORT_DIRECTORY" \
+                --out "$COMMENT_FILE"; then
+            :
+          else
+            {
+              printf '%s\n' '<!-- challenge-comparator-comment -->'
+              printf '%s\n\n' '## ❌ Challenge comparator — failed'
+              printf '%s\n\n' \
+                "The trusted workflow could not determine this PR's challenge claims. No success verdict was produced."
+              printf 'Current head: <code>%s</code> · [Detection run](%s)\n' \
+                "$HEAD_SHA" "$RUN_URL"
+            } > "$COMMENT_FILE"
+          fi
+          if [ -s "$COMMENT_FILE" ]; then
+            sed -i \
+              "1a<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase=pending -->" \
+              "$COMMENT_FILE"
+          fi
+
+      - name: Post sticky pending comment
+        if: >-
+          steps.target.outputs.stale != 'true' &&
+          steps.claims.outputs.state != 'stale'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.target.outputs.number }}
+          BASE_SHA: ${{ steps.target.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.target.outputs.head_sha }}
+          MERGE_TREE: ${{ steps.claims.outputs.merge_tree }}
+          COMMENT_FILE: ${{ runner.temp }}/challenge-pending-comment.md
+        run: |
+          set -euo pipefail
+          pull_request=$(gh api "repos/$REPO/pulls/$PR_NUMBER")
+          current_head=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+          current_base=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+          if [ "$current_head" != "$HEAD_SHA" ] ||
+              [ "$current_base" != "$BASE_SHA" ]; then
+            echo "PR moved before the pending comment was posted; skipping."
+            exit 0
+          fi
+
+          marker="<!-- challenge-comparator-comment -->"
+          existing_json=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --paginate --slurp | jq -c --arg marker "$marker" \
+            '[.[][] | select(.user.login == "github-actions[bot]") |
+              select(.body | startswith($marker))] | first // {}')
+          existing=$(printf '%s\n' "$existing_json" | jq -r '.id // empty')
+          existing_body=$(printf '%s\n' "$existing_json" | jq -r '.body // ""')
+          final_state="<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase=final -->"
+          if printf '%s\n' "$existing_body" | grep -Fq "$final_state"; then
+            echo "A final verdict already covers this exact PR merge; keeping it."
+            exit 0
+          fi
+          if [ ! -s "$COMMENT_FILE" ]; then
+            if [ -z "$existing" ]; then
+              echo "This PR introduces no challenge solution claim; nothing to post."
+              exit 0
+            fi
+            {
+              printf '%s\n' "$marker"
+              printf '%s\n' \
+                "<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase=none -->"
+              printf '%s\n\n' '## ⚪ Challenge comparator — no current claim'
+              printf '%s\n\n' \
+                'This PR no longer claims a challenge solution. The earlier verdict is withdrawn.'
+              printf 'Current head: <code>%s</code>\n' "$HEAD_SHA"
+            } > "$COMMENT_FILE"
+          fi
+          latest=$(gh api "repos/$REPO/pulls/$PR_NUMBER")
+          if [ "$(printf '%s\n' "$latest" | jq -r '.head.sha')" != "$HEAD_SHA" ] ||
+              [ "$(printf '%s\n' "$latest" | jq -r '.base.sha')" != "$BASE_SHA" ]; then
+            echo "PR moved while the pending comment was prepared; skipping."
+            exit 0
+          fi
+          if [ -n "$existing" ]; then
+            jq -n --rawfile body "$COMMENT_FILE" '{body: $body}' \
+              | gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input -
+          else
+            gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file "$COMMENT_FILE"
+          fi
+
+  resolve:
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.event == 'pull_request'
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    name: Resolve comparator PR
+    outputs:
+      number: ${{ steps.target.outputs.number }}
+      head_sha: ${{ steps.target.outputs.head_sha }}
+      base_sha: ${{ steps.target.outputs.base_sha }}
+    steps:
+      - name: Find the comparator report
+        id: artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -uo pipefail
+          artifact_name="challenge-comparator-report-$RUN_ATTEMPT"
+          artifact=$(gh api -X GET \
+            "repos/$REPO/actions/runs/$RUN_ID/artifacts" \
+            -f name="$artifact_name" -f per_page=100 --jq \
+            'if .total_count == 1 and (.artifacts | length) == 1
+              then .artifacts[0] else empty end')
+          id=$(printf '%s\n' "$artifact" | jq -r '.id // empty')
+          size=$(printf '%s\n' "$artifact" | jq -r '.size_in_bytes // 0')
+          if [ -n "$id" ] && { [ "$size" -lt 1 ] || [ "$size" -gt 1048576 ]; }; then
+            echo "::warning::Comparator report artifact has an invalid size."
+            id=""
+          fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout trusted PR resolver
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
+      - name: Read report identity
+        id: download
+        working-directory: python
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ARTIFACT_ID: ${{ steps.artifact.outputs.id }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+        run: |
+          set -uo pipefail
+          mkdir -p "$REPORT_DIRECTORY"
+          downloaded=false
+          if [ -n "$ARTIFACT_ID" ]; then
+            if gh api "repos/$REPO/actions/artifacts/$ARTIFACT_ID/zip" \
+                > "$RUNNER_TEMP/comparator-report.zip" &&
+                python3 -m lean_pool.challenge_report extract \
+                  "$RUNNER_TEMP/comparator-report.zip" "$REPORT_DIRECTORY"; then
+              downloaded=true
+            else
+              echo "::warning::Could not validate the comparator report."
+            fi
+          else
+            echo "::warning::Verifier run produced no comparator report."
+          fi
+          echo "downloaded=$downloaded" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve exact PR
+        id: target
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_FROM_RUN: ${{ github.event.workflow_run.pull_requests[0].number }}
+          HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          REPORT_DOWNLOADED: ${{ steps.download.outputs.downloaded }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+        run: |
+          set -euo pipefail
+          candidate_pr="$PR_FROM_RUN"
+
+          # Fork runs commonly omit workflow_run.pull_requests. Prefer the
+          # report's immutable PR identity, then use an exact head lookup only
+          # when no validated report was uploaded.
+          if [ -z "$candidate_pr" ] &&
+              [ "$REPORT_DOWNLOADED" = "true" ] &&
+              [ -f "$REPORT_DIRECTORY/pr-number.txt" ] &&
+              [ -f "$REPORT_DIRECTORY/head-sha.txt" ]; then
+            reported_pr=$(tr -d '\r\n' < "$REPORT_DIRECTORY/pr-number.txt")
+            reported_head=$(tr -d '\r\n' < "$REPORT_DIRECTORY/head-sha.txt")
+            if printf '%s\n' "$reported_pr" | grep -Eq '^[0-9]+$' &&
+                [ "$reported_head" = "$RUN_HEAD_SHA" ]; then
+              candidate_pr="$reported_pr"
+            fi
+          fi
+
+          if [ -z "$candidate_pr" ]; then
+            candidates=$(gh api -X GET "repos/$REPO/pulls" \
+              -f state=all -f "head=$HEAD_OWNER:$HEAD_BRANCH" -f per_page=100 \
+              --paginate --slurp)
+            candidate_pr=$(printf '%s\n' "$candidates" | jq -r \
+              --arg sha "$RUN_HEAD_SHA" \
+              --arg repository "$HEAD_REPOSITORY" \
+              --arg branch "$HEAD_BRANCH" \
+              '[.[][] | select(.head.sha == $sha and
+                  .head.repo.full_name == $repository and
+                  .head.ref == $branch) | .number] | unique |
+                if length == 1 then .[0] else empty end')
+          fi
+
+          case "$candidate_pr" in
+            ''|*[!0-9]*)
+              echo "::warning::Could not resolve one exact PR for this run."
+              exit 0
+              ;;
+          esac
+          pull_request=$(gh api "repos/$REPO/pulls/$candidate_pr")
+          head_sha=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+          head_repository=$(printf '%s\n' "$pull_request" \
+            | jq -r '.head.repo.full_name')
+          head_branch=$(printf '%s\n' "$pull_request" | jq -r '.head.ref')
+          base_sha=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+          base_repository=$(printf '%s\n' "$pull_request" \
+            | jq -r '.base.repo.full_name')
+          if [ "$head_sha" != "$RUN_HEAD_SHA" ] ||
+              [ "$head_repository" != "$HEAD_REPOSITORY" ] ||
+              [ "$head_branch" != "$HEAD_BRANCH" ] ||
+              [ "$base_repository" != "$REPO" ]; then
+            echo "::notice::The triggering PR moved; a newer event will cover it."
+            exit 0
+          fi
+          {
+            echo "number=$candidate_pr"
+            echo "head_sha=$head_sha"
+            echo "base_sha=$base_sha"
+          } >> "$GITHUB_OUTPUT"
+
+  comment:
+    needs: resolve
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      needs.resolve.result == 'success' &&
+      needs.resolve.outputs.number != ''
+    runs-on: ubuntu-latest
+    name: Challenge comparator comment
+    concurrency:
+      group: challenge-comparator-write-${{ needs.resolve.outputs.number }}
+      cancel-in-progress: false
+    steps:
+      - name: Find the comparator report
+        id: artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -uo pipefail
+          artifact_name="challenge-comparator-report-$RUN_ATTEMPT"
+          artifact=$(gh api -X GET \
+            "repos/$REPO/actions/runs/$RUN_ID/artifacts" \
+            -f name="$artifact_name" -f per_page=100 --jq \
+            'if .total_count == 1 and (.artifacts | length) == 1
+              then .artifacts[0] else empty end')
+          id=$(printf '%s\n' "$artifact" | jq -r '.id // empty')
+          size=$(printf '%s\n' "$artifact" | jq -r '.size_in_bytes // 0')
+          if [ -n "$id" ] && { [ "$size" -lt 1 ] || [ "$size" -gt 1048576 ]; }; then
+            echo "::warning::Comparator report artifact has an invalid size."
+            id=""
+          fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout trusted comment renderer
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Download comparator report
+        id: download
+        working-directory: python
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ARTIFACT_ID: ${{ steps.artifact.outputs.id }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+        run: |
+          set -uo pipefail
+          mkdir -p "$REPORT_DIRECTORY"
+          downloaded=false
+          if [ -n "$ARTIFACT_ID" ]; then
+            if gh api "repos/$REPO/actions/artifacts/$ARTIFACT_ID/zip" \
+                > "$RUNNER_TEMP/comparator-report.zip" &&
+                python3 -m lean_pool.challenge_report extract \
+                  "$RUNNER_TEMP/comparator-report.zip" "$REPORT_DIRECTORY"; then
+              downloaded=true
+            else
+              echo "::warning::Could not validate the comparator report."
+            fi
+          else
+            echo "::warning::Verifier run produced no comparator report."
+          fi
+          echo "downloaded=$downloaded" >> "$GITHUB_OUTPUT"
+
+      # Fork runs leave `workflow_run.pull_requests` empty (PR #301 is the
+      # motivating example). The read-only resolver above obtains its exact
+      # PR number before this writer enters per-PR concurrency. Artifact
+      # identity is accepted only when it also matches that PR and merge tree.
+      - name: Resolve PR and validate report identity
+        id: pull_request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          CANDIDATE_PR: ${{ needs.resolve.outputs.number }}
+          RESOLVED_HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+          RESOLVED_BASE_SHA: ${{ needs.resolve.outputs.base_sha }}
+          HEAD_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          REPORT_DOWNLOADED: ${{ steps.download.outputs.downloaded }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+          CURRENT_PATHS: ${{ runner.temp }}/comparator-current-paths.txt
+          PREVIOUS_PATHS: ${{ runner.temp }}/comparator-previous-paths.txt
+        run: |
+          set -euo pipefail
+          report_available=false
+          reported_pr=""
+          reported_head=""
+          reported_base=""
+          reported_merge=""
+          reported_tree=""
+          if [ "$REPORT_DOWNLOADED" = "true" ] &&
+              [ -f "$REPORT_DIRECTORY/pr-number.txt" ] &&
+              [ -f "$REPORT_DIRECTORY/head-sha.txt" ] &&
+              [ -f "$REPORT_DIRECTORY/base-sha.txt" ] &&
+              [ -f "$REPORT_DIRECTORY/merge-sha.txt" ] &&
+              [ -f "$REPORT_DIRECTORY/merge-tree.txt" ]; then
+            reported_pr=$(tr -d '\r\n' < "$REPORT_DIRECTORY/pr-number.txt")
+            reported_head=$(tr -d '\r\n' < "$REPORT_DIRECTORY/head-sha.txt")
+            reported_base=$(tr -d '\r\n' < "$REPORT_DIRECTORY/base-sha.txt")
+            reported_merge=$(tr -d '\r\n' < "$REPORT_DIRECTORY/merge-sha.txt")
+            reported_tree=$(tr -d '\r\n' < "$REPORT_DIRECTORY/merge-tree.txt")
+            if printf '%s\n' "$reported_pr" | grep -Eq '^[0-9]+$' &&
+                printf '%s\n' "$reported_head" | grep -Eq '^[0-9a-f]{40}$' &&
+                printf '%s\n' "$reported_base" | grep -Eq '^[0-9a-f]{40}$' &&
+                printf '%s\n' "$reported_merge" | grep -Eq '^[0-9a-f]{40}$' &&
+                printf '%s\n' "$reported_tree" | grep -Eq '^[0-9a-f]{40}$' &&
+                [ "$reported_head" = "$RUN_HEAD_SHA" ]; then
+              report_available=true
+            else
+              echo "::warning::Comparator report identity is malformed."
+            fi
+          fi
+
+          candidate_pr="$CANDIDATE_PR"
+          if [ "$report_available" = "true" ] &&
+              [ "$reported_pr" != "$candidate_pr" ]; then
+            echo "::warning::Report does not belong to the resolved PR."
+            report_available=false
+          fi
+          case "$candidate_pr" in
+            ''|*[!0-9]*)
+              echo "::error::Could not resolve one exact PR for this run."
+              exit 1
+              ;;
+          esac
+
+          pull_request=$(gh api "repos/$REPO/pulls/$candidate_pr")
+          current_head=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+          current_head_repository=$(printf '%s\n' "$pull_request" \
+            | jq -r '.head.repo.full_name')
+          current_head_branch=$(printf '%s\n' "$pull_request" | jq -r '.head.ref')
+          current_base=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+          current_base_repository=$(printf '%s\n' "$pull_request" \
+            | jq -r '.base.repo.full_name')
+          if [ "$current_head" != "$RUN_HEAD_SHA" ] ||
+              [ "$current_head" != "$RESOLVED_HEAD_SHA" ] ||
+              [ "$current_base" != "$RESOLVED_BASE_SHA" ] ||
+              [ "$current_head_repository" != "$HEAD_REPOSITORY" ] ||
+              [ "$current_head_branch" != "$HEAD_BRANCH" ] ||
+              [ "$current_base_repository" != "$REPO" ]; then
+            echo "::error::Triggering PR moved or does not match this run."
+            exit 1
+          fi
+
+          if [ "$report_available" = "true" ] &&
+              { [ "$reported_pr" != "$candidate_pr" ] ||
+                [ "$reported_base" != "$current_base" ]; }; then
+            echo "::warning::Comparator report base or PR does not match."
+            report_available=false
+          fi
+
+          # Recompute the merge tree from the exact current base/head. Unlike
+          # refs/pull/<n>/merge, those objects remain available after a PR is
+          # merged, so an asynchronous commenter cannot lose its final update.
+          git fetch --no-tags origin "$current_base"
+          git fetch --no-tags origin "refs/pull/$candidate_pr/head"
+          fetched_head=$(git rev-parse FETCH_HEAD)
+          if [ "$fetched_head" != "$current_head" ]; then
+            echo "::error::PR head ref does not match the triggering run."
+            exit 1
+          fi
+          if ! merge_tree=$(git merge-tree --write-tree \
+              "$current_base" "$current_head"); then
+            echo "::error::Could not reconstruct the PR merge tree."
+            exit 1
+          fi
+          if ! printf '%s\n' "$merge_tree" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::Reconstructed PR merge tree is invalid."
+            exit 1
+          fi
+
+          merge_sha="$reported_merge"
+          if git fetch --no-tags origin "refs/pull/$candidate_pr/merge"; then
+            live_merge=$(git rev-parse FETCH_HEAD)
+            live_parents=$(git show -s --format='%P' "$live_merge")
+            live_tree=$(git rev-parse "$live_merge^{tree}")
+            if [ "$live_parents" != "$current_base $current_head" ] ||
+                [ "$live_tree" != "$merge_tree" ]; then
+              echo "::error::GitHub's PR merge ref has unexpected contents."
+              exit 1
+            fi
+            merge_sha="$live_merge"
+            if [ "$report_available" = "true" ] &&
+                [ "$reported_merge" != "$live_merge" ]; then
+              echo "::warning::Comparator report did not judge the current merge."
+              report_available=false
+            fi
+          else
+            echo "::notice::Live PR merge ref is absent; using reconstructed tree."
+          fi
+          if [ "$report_available" = "true" ] &&
+              [ "$reported_tree" != "$merge_tree" ]; then
+            echo "::warning::Comparator report merge tree does not match."
+            report_available=false
+          fi
+          if [ -z "$merge_sha" ]; then
+            merge_sha=unavailable
+          fi
+
+          gh api "repos/$REPO/pulls/$candidate_pr/files" --paginate \
+            --jq '.[].filename' > "$CURRENT_PATHS"
+          gh api "repos/$REPO/pulls/$candidate_pr/files" --paginate \
+            --jq '.[] | .previous_filename // empty' > "$PREVIOUS_PATHS"
+          expected_file_count=$(printf '%s\n' "$pull_request" \
+            | jq -r '.changed_files')
+          returned_file_count=$(grep -c . "$CURRENT_PATHS" || true)
+          {
+            cat "$CURRENT_PATHS"
+            cat "$PREVIOUS_PATHS"
+          } | { grep -v '^$' || true; } \
+            > "$REPORT_DIRECTORY/changed-paths.txt"
+
+          latest=$(gh api "repos/$REPO/pulls/$candidate_pr")
+          latest_head=$(printf '%s\n' "$latest" | jq -r '.head.sha')
+          latest_base=$(printf '%s\n' "$latest" | jq -r '.base.sha')
+          if [ "$latest_head" != "$current_head" ] ||
+              [ "$latest_base" != "$current_base" ]; then
+            echo "::error::PR moved while its files were inspected."
+            exit 1
+          fi
+
+          verifier_trusted=true
+          paths_complete=true
+          if [ "$returned_file_count" -ne "$expected_file_count" ]; then
+            verifier_trusted=false
+            paths_complete=false
+            echo "::warning::GitHub did not return the complete PR file list."
+          fi
+
+          # A green artifact is authoritative only when the PR could not
+          # alter the verifier, recorder, challenge statement, or workflow.
+          content_path_re='^(LeanPool\.lean|LeanPool/.+\.lean|LeanPool/projects\.yml|Challenge/challenges\.yml|Solution\.lean|Solution/.+\.lean)$'
+          unsafe_paths=$(cat "$REPORT_DIRECTORY/changed-paths.txt" \
+            | { grep -Ev "$content_path_re" || true; })
+          if [ -n "$unsafe_paths" ]; then
+            verifier_trusted=false
+            echo "::warning::PR changes verifier infrastructure or a challenge statement."
+          fi
+
+          # The producer may run against a repository-owned non-default base
+          # (for example a Lean bump), but its verifier implementation must
+          # still match the trusted default branch. The base branch's
+          # toolchain, manifest, and lakefile remain an explicit repository
+          # trust root because bump branches intentionally change them; the
+          # content allowlist above still rejects PR-head changes to any of
+          # those files.
+          if ! git diff --quiet "$current_base" HEAD -- \
+              .github/workflows/challenge-verify.yml \
+              scripts/challenge python; then
+            verifier_trusted=false
+            echo "::warning::PR base does not use the trusted verifier implementation."
+          fi
+
+          printf '%s\n' "$candidate_pr" \
+            > "$REPORT_DIRECTORY/pr-number.txt"
+          printf '%s\n' "$current_head" \
+            > "$REPORT_DIRECTORY/head-sha.txt"
+          printf '%s\n' "$current_base" \
+            > "$REPORT_DIRECTORY/base-sha.txt"
+          printf '%s\n' "$merge_sha" \
+            > "$REPORT_DIRECTORY/merge-sha.txt"
+          printf '%s\n' "$merge_tree" \
+            > "$REPORT_DIRECTORY/merge-tree.txt"
+          if [ "$report_available" != "true" ]; then
+            printf '%s\n' "pending" \
+              > "$REPORT_DIRECTORY/claims-state.txt"
+            printf '[]\n' > "$REPORT_DIRECTORY/claims.json"
+            printf '[]\n' > "$REPORT_DIRECTORY/results.json"
+          fi
+          {
+            echo "number=$candidate_pr"
+            echo "head_sha=$current_head"
+            echo "base_sha=$current_base"
+            echo "merge_sha=$merge_sha"
+            echo "merge_tree=$merge_tree"
+            echo "report_available=$report_available"
+            echo "paths_complete=$paths_complete"
+            echo "verifier_trusted=$verifier_trusted"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Install uv for trusted claim detection
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      # Never trust the artifact to say which challenge was claimed. Compare
+      # the base registry with the exact synthetic merge tree comparator saw.
+      - name: Derive trusted solution claims
+        env:
+          BASE_SHA: ${{ steps.pull_request.outputs.base_sha }}
+          MERGE_TREE: ${{ steps.pull_request.outputs.merge_tree }}
+          PATHS_COMPLETE: ${{ steps.pull_request.outputs.paths_complete }}
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+          BASE_REGISTRY: ${{ runner.temp }}/trusted-base-challenges.yml
+          MERGE_REGISTRY: ${{ runner.temp }}/trusted-merge-challenges.yml
+        run: |
+          set -uo pipefail
+          printf '%s\n' "pending" > "$REPORT_DIRECTORY/claims-state.txt"
+          claim_status=0
+          if [ "$PATHS_COMPLETE" != "true" ]; then
+            echo "::error::Cannot derive claims from an incomplete PR file list."
+            claim_status=1
+          elif ! git show "$BASE_SHA:Challenge/challenges.yml" > "$BASE_REGISTRY" ||
+              ! git show "$MERGE_TREE:Challenge/challenges.yml" \
+                > "$MERGE_REGISTRY"; then
+            echo "::error::Could not read registries for trusted claim detection."
+            claim_status=1
+          elif [ "$(wc -c < "$BASE_REGISTRY")" -gt 1048576 ] ||
+              [ "$(wc -c < "$MERGE_REGISTRY")" -gt 1048576 ]; then
+            echo "::error::Challenge registry exceeds the trusted size limit."
+            claim_status=1
+          elif ! (
+            cd python
+            uv run python -m lean_pool.challenge --repo .. claims \
+              --base-registry "$BASE_REGISTRY" \
+              --head-registry "$MERGE_REGISTRY" \
+              --changed-paths "$REPORT_DIRECTORY/changed-paths.txt" \
+              --out "$REPORT_DIRECTORY/claims.json"
+          ); then
+            echo "::error::Could not derive trusted challenge claims."
+            claim_status=1
+          fi
+          if [ "$claim_status" -eq 0 ]; then
+            printf '%s\n' "complete" > "$REPORT_DIRECTORY/claims-state.txt"
+          fi
+
+      - name: Render comparator comment
+        working-directory: python
+        env:
+          REPORT_DIRECTORY: ${{ runner.temp }}/challenge-comparator-report
+          COMMENT_FILE: ${{ runner.temp }}/challenge-comparator-comment.md
+          WORKFLOW_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          REPORT_AVAILABLE: ${{ steps.pull_request.outputs.report_available }}
+          VERIFIER_TRUSTED: ${{ steps.pull_request.outputs.verifier_trusted }}
+          HEAD_SHA: ${{ steps.pull_request.outputs.head_sha }}
+          BASE_SHA: ${{ steps.pull_request.outputs.base_sha }}
+          MERGE_TREE: ${{ steps.pull_request.outputs.merge_tree }}
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/attempts/${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          effective_conclusion="$WORKFLOW_CONCLUSION"
+          if [ "$REPORT_AVAILABLE" != "true" ]; then
+            effective_conclusion=failure
+          fi
+          if ! python3 -m lean_pool.challenge_report render "$REPORT_DIRECTORY" \
+              --workflow-conclusion "$effective_conclusion" \
+              --verifier-trusted "$VERIFIER_TRUSTED" \
+              --run-url "$RUN_URL" --out "$COMMENT_FILE"; then
+            {
+              printf '%s\n' '<!-- challenge-comparator-comment -->'
+              printf '%s\n\n' '## ❌ Challenge comparator — failed'
+              printf '%s\n\n' \
+                'The comparator report could not be validated. No success verdict was produced.'
+              printf 'Reviewed head: <code>%s</code> · [Comparator run](%s)\n' \
+                "$HEAD_SHA" "$RUN_URL"
+            } > "$COMMENT_FILE"
+          fi
+          if [ -s "$COMMENT_FILE" ]; then
+            sed -i \
+              "1a<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase=final -->" \
+              "$COMMENT_FILE"
+            sed -i \
+              "2a<!-- challenge-comparator-order workflow=$WORKFLOW_ID run=$RUN_NUMBER attempt=$RUN_ATTEMPT -->" \
+              "$COMMENT_FILE"
+          fi
+
+      - name: Post sticky comparator comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pull_request.outputs.number }}
+          BASE_SHA: ${{ steps.pull_request.outputs.base_sha }}
+          HEAD_SHA: ${{ steps.pull_request.outputs.head_sha }}
+          MERGE_TREE: ${{ steps.pull_request.outputs.merge_tree }}
+          COMMENT_FILE: ${{ runner.temp }}/challenge-comparator-comment.md
+          PRODUCER_RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW_ID: ${{ github.event.workflow_run.workflow_id }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/attempts/${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          pull_request=$(gh api "repos/$REPO/pulls/$PR_NUMBER")
+          current_head=$(printf '%s\n' "$pull_request" | jq -r '.head.sha')
+          current_base=$(printf '%s\n' "$pull_request" | jq -r '.base.sha')
+          if [ "$current_head" != "$HEAD_SHA" ] ||
+              [ "$current_base" != "$BASE_SHA" ]; then
+            echo "PR moved before the comparator comment was posted; skipping."
+            exit 0
+          fi
+          marker="<!-- challenge-comparator-comment -->"
+          existing_json=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --paginate --slurp | jq -c --arg marker "$marker" \
+            '[.[][] | select(.user.login == "github-actions[bot]") |
+              select(.body | startswith($marker))] | first // {}')
+          existing=$(printf '%s\n' "$existing_json" | jq -r '.id // empty')
+          existing_body=$(printf '%s\n' "$existing_json" | jq -r '.body // ""')
+          state_identity="<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase="
+          existing_workflow=$(printf '%s\n' "$existing_body" | sed -n \
+            's/^<!-- challenge-comparator-order workflow=\([0-9][0-9]*\) run=[0-9][0-9]* attempt=[0-9][0-9]* -->$/\1/p' \
+            | head -n1)
+          existing_run=$(printf '%s\n' "$existing_body" | sed -n \
+            's/^<!-- challenge-comparator-order workflow=[0-9][0-9]* run=\([0-9][0-9]*\) attempt=[0-9][0-9]* -->$/\1/p' \
+            | head -n1)
+          existing_attempt=$(printf '%s\n' "$existing_body" | sed -n \
+            's/^<!-- challenge-comparator-order workflow=[0-9][0-9]* run=[0-9][0-9]* attempt=\([0-9][0-9]*\) -->$/\1/p' \
+            | head -n1)
+          if printf '%s\n' "$existing_body" | grep -Fq "$state_identity" &&
+              [ "$existing_workflow" = "$WORKFLOW_ID" ] &&
+              [ -n "$existing_run" ] &&
+              { [ "$existing_run" -gt "$RUN_NUMBER" ] ||
+                { [ "$existing_run" -eq "$RUN_NUMBER" ] &&
+                  [ "$existing_attempt" -ge "$RUN_ATTEMPT" ]; }; }; then
+            echo "A newer comparator attempt already covers this PR state."
+            exit 0
+          fi
+
+          if [ ! -s "$COMMENT_FILE" ]; then
+            if [ -z "$existing" ]; then
+              echo "This PR introduces no challenge solution claim; nothing to post."
+              exit 0
+            fi
+            {
+              printf '%s\n' "$marker"
+              printf '%s\n' \
+                "<!-- challenge-comparator-state head=$HEAD_SHA base=$BASE_SHA merge=$MERGE_TREE phase=none -->"
+              printf '%s\n' \
+                "<!-- challenge-comparator-order workflow=$WORKFLOW_ID run=$RUN_NUMBER attempt=$RUN_ATTEMPT -->"
+              printf '%s\n\n' '## ⚪ Challenge comparator — no current claim'
+              printf '%s\n\n' \
+                'This PR no longer claims a challenge solution. The earlier verdict is withdrawn.'
+              printf 'Reviewed head: <code>%s</code> · [Comparator run](%s)\n' \
+              "$HEAD_SHA" "$RUN_URL"
+            } > "$COMMENT_FILE"
+          fi
+
+          latest=$(gh api "repos/$REPO/pulls/$PR_NUMBER")
+          if [ "$(printf '%s\n' "$latest" | jq -r '.head.sha')" != "$HEAD_SHA" ] ||
+              [ "$(printf '%s\n' "$latest" | jq -r '.base.sha')" != "$BASE_SHA" ]; then
+            echo "PR moved while the comparator comment was prepared; skipping."
+            exit 0
+          fi
+          current_attempt=$(gh api \
+            "repos/$REPO/actions/runs/$PRODUCER_RUN_ID" --jq '.run_attempt')
+          if [ "$current_attempt" != "$RUN_ATTEMPT" ]; then
+            echo "A newer attempt of this comparator run has started; skipping."
+            exit 0
+          fi
+          if [ -n "$existing" ]; then
+            jq -n --rawfile body "$COMMENT_FILE" '{body: $body}' \
+              | gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input -
+          else
+            gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file "$COMMENT_FILE"
+          fi

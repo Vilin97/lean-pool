@@ -8,6 +8,8 @@ on:
       - 'python/**'
       - 'NOTICE'
       - 'NOTICE.extra.yml'
+      - '.github/workflows/challenge-verify.yml'
+      - '.github/workflows/challenge-verify-comment.yml'
       - '.github/workflows/python_ci.yml'
   pull_request:
     branches:
@@ -22,6 +24,8 @@ on:
       # after merge instead.
       - 'NOTICE'
       - 'NOTICE.extra.yml'
+      - '.github/workflows/challenge-verify.yml'
+      - '.github/workflows/challenge-verify-comment.yml'
       - '.github/workflows/python_ci.yml'
   workflow_dispatch:
 
