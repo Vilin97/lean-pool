@@ -115,8 +115,9 @@ end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :
   Subtype.val '' (p.payoff G) = Subtype.val '' (p'.payoff G') := by congr!
 
-/-- a PreStrategy is winning if all compatible plays are won -/
-abbrev PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
+/-- A pre-strategy is winning if all compatible plays are won. Keeping this as a definition
+lets API-level simp lemmas remain stated in terms of winning strategies. -/
+def PreStrategy.IsWinning (s : PreStrategy G.tree p) := body s.subtree ⊆ p.payoff G
 lemma PreStrategy.sub_winning {s t : PreStrategy G.tree p} (h : s ≤ t) (h' : t.IsWinning) :
   s.IsWinning := subset_trans (by gcongr) h'
 lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning)

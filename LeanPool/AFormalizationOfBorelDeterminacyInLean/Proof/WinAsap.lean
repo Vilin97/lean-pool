@@ -42,7 +42,7 @@ lemma mem_defensiveQuasi (x : G.tree) (h : ¬ WinningPrefix G p.swap x.val) hpr 
   x.val ∈ (defensiveQuasi G p hpr).1.subtree := by
   apply subtree_induction (S := ⊤) (by simp)
   intro n hn hx hp _
-  conv => simp [defensiveQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
+  conv => simp [defensiveQuasi, extQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
   split_ifs with hne
   · refine Set.mem_of_subset_of_mem (if_pos hne).ge ?_
     intro hW; apply h; use n + 1

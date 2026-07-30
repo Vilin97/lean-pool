@@ -85,14 +85,17 @@ lemma _root_.GaleStewartGame.Game.AllWinning.existsWinning
   {G : Game A} (h : G.AllWinning p) (hP : IsPruned G.tree) :
   G.ExistsWinning p := existsWinning_iff_quasi.mpr ⟨⟨⊤, top_isQuasi hP⟩,
   subset_trans (by simp) (Set.image_mono h.superset)⟩
-/-- Auxiliary declaration for the Borel determinacy formalization. -/
-abbrev extQuasi (S : PreStrategy T p) (h : IsPruned T) : QuasiStrategy T p :=
+/-- Extend a pre-strategy to a quasi-strategy. The definition boundary keeps API-level simp
+lemmas stated through `extQuasi` instead of exposing the `tryAndElse` implementation. -/
+def extQuasi (S : PreStrategy T p) (h : IsPruned T) : QuasiStrategy T p :=
   ⟨tryAndElse S ⊤, quasi_of_planB <| top_isQuasi h⟩
 lemma eq_extQuasi (S : PreStrategy T p) (hT : IsPruned T)
   (h : ∀ (x : S.subtree) (hp : IsPosition x.val p), ∃ a, a ∈ S (S.subtreeIncl x) hp) :
   (S.extQuasi hT).1.subtree = S.subtree := eq_planA h
 @[simp] lemma extQuasi_residual (S : PreStrategy T p) (h : IsPruned T) (x : List A) :
-  (S.extQuasi h).residual x = (S.residual x).extQuasi (h.sub x) := by ext1; simp
+  (S.extQuasi h).residual x = (S.residual x).extQuasi (h.sub x) := by
+  ext1
+  simp [extQuasi, QuasiStrategy.residual]
 end «void»
 
 section «sew»
@@ -184,7 +187,8 @@ noncomputable def firstMove : PreStrategy T Player.zero := by
       rw [firstMove_subtree]; exact ⟨rfl, h _ hy⟩
 variable {G : Game A} (h : [a] ∈ G.tree) (s : PreStrategy (G.residual [a]).tree Player.one)
 @[simp] lemma firstMove_isWinning :
-  body (s.firstMove a h).subtree ⊆ Subtype.val '' G.payoff ↔ s.IsWinning := by
+  (s.firstMove a h).IsWinning ↔ s.IsWinning := by
+  change body (s.firstMove a h).subtree ⊆ Subtype.val '' G.payoff ↔ s.IsWinning
   constructor
   · intro hw b hb
     have hb' : Stream'.cons a b ∈ body (s.firstMove a h).subtree :=
@@ -216,11 +220,10 @@ lemma firstMove_extQuasi_tree (hs : s.IsQuasi) (hT : IsPruned G.tree) :
       simp only [firstMove, subtreeIncl, ↓reduceDIte]
       rfl⟩
 @[simp] lemma firstMove_extQuasi_isWinning (hT : IsPruned G.tree) (hs : s.IsQuasi) :
-  body ((s.firstMove a h).tryAndElse ⊤).subtree ⊆ Subtype.val '' G.payoff ↔ s.IsWinning := by
+  ((s.firstMove a h).extQuasi hT).1.IsWinning ↔ s.IsWinning := by
   unfold IsWinning
   rw [firstMove_extQuasi_tree a h s hs]
-  · apply firstMove_isWinning a h s
-  · exact hT
+  apply firstMove_isWinning a h s
 end «firstMove»
 
 section «PreserveProp»
