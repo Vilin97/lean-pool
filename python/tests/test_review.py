@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import types
 
 # The stub registered by tests/conftest.py; its exception classes carry
@@ -34,7 +35,7 @@ def test_render_comment_includes_marker_and_reviewed_head() -> None:
                 "level": "graduate",
                 "branch": "analysis",
                 "mode": "theory_building",
-                "obscure_problem": False,
+                "proves_the_claim": "proves_it",
                 "code_quality": 4,
                 "significance_one_sentence": "A named theorem is formalized.",
             },
@@ -93,11 +94,283 @@ def test_classify_pr_module_split_is_refactor() -> None:
     assert classify_pr(files) == "refactor"
 
 
-def test_classify_pr_without_project_files_defaults_to_project() -> None:
-    """Infra-only diffs fall back to the conservative project review."""
+def test_classify_pr_tooling_lean_is_not_a_project() -> None:
+    """A `.lean` file outside the content trees is infra, not a project.
+
+    `scripts/exposition/Extract.lean` clears the workflow's "touches
+    Lean?" filter, so PRs #279, #282, and #283 reached the project rules
+    and were graded for mathematical fit — inconsistently, since the
+    first two came back `not_a_fit` and the third `good_fit`/`approve`.
+    All three merged.
+    """
     from lean_pool.review import classify_pr
 
-    assert classify_pr([("README.md", "modified")]) == "project"
+    files = [
+        ("scripts/exposition/Extract.lean", "modified"),
+        ("python/lean_pool/exposition/generate.py", "modified"),
+    ]
+    assert classify_pr(files) == "infra"
+
+
+def test_classify_pr_without_any_lean_is_infra() -> None:
+    """A diff with no Lean at all has no contribution to judge."""
+    from lean_pool.review import classify_pr
+
+    assert classify_pr([("README.md", "modified")]) == "infra"
+
+
+def test_classify_pr_project_root_module_still_counts_as_content() -> None:
+    """A project's own root module is content even at depth two."""
+    from lean_pool.review import classify_pr, touches_reviewable_content
+
+    assert touches_reviewable_content([("Challenge/TwinPrimes.lean", "added")])
+    assert touches_reviewable_content([("Solution/Widget.lean", "added")])
+    assert touches_reviewable_content([("LeanPool/Foo/A.lean", "added")])
+    # The generated root index alone is not somebody's contribution.
+    assert not touches_reviewable_content([("LeanPool.lean", "modified")])
+    assert classify_pr([("LeanPool/NewProj/A.lean", "added")]) == "project"
+
+
+def test_classify_pr_new_challenge_is_challenge() -> None:
+    """Putting an open statement on the board gets the challenge review."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/TwinPrimes.lean", "added"),
+        ("Challenge/challenges.yml", "modified"),
+        ("Challenge.lean", "modified"),
+    ]
+    assert classify_pr(files) == "challenge"
+
+
+def test_classify_pr_edited_challenge_is_challenge() -> None:
+    """Editing a live statement is reviewed as a challenge, not a refactor."""
+    from lean_pool.review import classify_pr
+
+    assert classify_pr([("Challenge/TwinPrimes.lean", "modified")]) == "challenge"
+
+
+def test_classify_pr_challenge_plus_pool_content_is_not_challenge() -> None:
+    """A bump repairing both libraries keeps the content classification."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/TwinPrimes.lean", "modified"),
+        ("LeanPool/Foo/A.lean", "modified"),
+    ]
+    assert classify_pr(files) == "refactor"
+
+
+def test_classify_pr_answer_is_solution() -> None:
+    """Adding an answer to a challenge already on the board is a solution."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Solution/TwoPlusTwo.lean", "added"),
+        ("Solution.lean", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "solution"
+
+
+def test_classify_pr_new_challenge_with_its_answer_is_challenge() -> None:
+    """A new board entry is judged as one even when its proof rides along."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Challenge/Widget.lean", "added"),
+        ("Solution/Widget.lean", "added"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "challenge"
+
+
+def test_classify_pr_delegated_solution_is_solution() -> None:
+    """A solution backed by a pooled project is still a solution PR."""
+    from lean_pool.review import classify_pr
+
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("LeanPool/WidgetProof/A.lean", "added"),
+        ("LeanPool/projects.yml", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+    assert classify_pr(files) == "solution"
+
+
+def test_plain_solution_pr_skips_the_model(tmp_path) -> None:
+    """Nothing but an answer and its registry entry: nothing to review."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text(
+        "challenges:\n"
+        "  - slug: widget\n"
+        "    entry_module: Challenge.Widget\n"
+        "    statements:\n"
+        "      - declaration: Challenge.Widget.widget_exists\n"
+        "        informal: A widget exists.\n"
+        "    solution:\n"
+        "      module: Solution.Widget\n"
+    )
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("Solution.lean", "modified"),
+        ("Challenge/challenges.yml", "modified"),
+    ]
+
+    assert solution_needs_llm_review(files, tmp_path) is None
+
+
+def test_solution_pr_touching_the_statement_is_reviewed(tmp_path) -> None:
+    """Anything beyond the answer itself gets a reading."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text("challenges: []\n")
+    files = [
+        ("Solution/Widget.lean", "added"),
+        ("Challenge/Widget.lean", "modified"),
+    ]
+
+    reason = solution_needs_llm_review(files, tmp_path)
+
+    assert reason is not None
+    assert "Challenge/Widget.lean" in reason
+
+
+def test_solution_pr_for_a_definition_hole_is_reviewed(tmp_path) -> None:
+    """Comparator matches a hole by name and type only, so a human looks."""
+    from lean_pool.review import solution_needs_llm_review
+
+    (tmp_path / "Challenge").mkdir()
+    (tmp_path / "Challenge" / "challenges.yml").write_text(
+        "challenges:\n"
+        "  - slug: widget\n"
+        "    entry_module: Challenge.Widget\n"
+        "    statements:\n"
+        "      - declaration: Challenge.Widget.widget_bound\n"
+        "        informal: The answer exceeds 37.\n"
+        "    definitions:\n"
+        "      - declaration: Challenge.Widget.answer\n"
+        "        informal: The answer.\n"
+        "    solution:\n"
+        "      module: Solution.Widget\n"
+    )
+    files = [("Solution/Widget.lean", "added")]
+
+    reason = solution_needs_llm_review(files, tmp_path)
+
+    assert reason is not None
+    assert "definition hole" in reason
+
+
+def test_render_comment_solution_mode() -> None:
+    """A solution review defers correctness to the comparator check."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_comment
+
+    body = render_comment(
+        {
+            "summary": "Proves the two-plus-two fixture by decide.",
+            "assessment": {
+                "touches_challenge_statement": False,
+                "definition_hole_risk": "none",
+                "proof_quality": 4,
+                "assessment_one_sentence": "One-line proof, nothing to flag.",
+            },
+            "verdict": "approve",
+            "findings": [],
+        },
+        model="gpt-5.5",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="deadbeef",
+        kind="solution",
+    )
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "LLM review — challenge solution" in body
+    assert "Correctness is decided by" in body
+    assert "| Touches the challenge statement | ✅ no |" in body
+    assert "| Definition-hole risk | ✅ `none` |" in body
+    assert "SOLUTION_REVIEW_RULES.md" in body
+    assert "| Fit |" not in body
+
+
+def test_render_solution_skip_comment_is_sticky_and_explains_itself() -> None:
+    """The skip note replaces the review and says what did the checking."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_solution_skip_comment
+
+    body = render_solution_skip_comment("deadbeef")
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "skipped" in body
+    assert "Correctness is decided by" in body
+    assert "deadbeef" in body
+
+
+def test_render_comment_challenge_mode() -> None:
+    """A challenge review shows faithfulness, vacuity, and a size estimate."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_comment
+
+    body = render_comment(
+        {
+            "summary": "Adds the twin prime conjecture as an open statement.",
+            "assessment": {
+                "significance": "high",
+                "faithfulness": "faithful",
+                "faithfulness_note": "Set.Infinite over {p | p.Prime ∧ (p+2).Prime}.",
+                "source_match": "matches",
+                "vacuity_risk": "none",
+                "difficulty": "open_problem",
+                "estimated_lines": 25000,
+                "estimate_basis": "No known proof; Zhang-style machinery is absent.",
+                "already_formalized": "",
+                "assessment_one_sentence": "A correctly stated famous open problem.",
+            },
+            "verdict": "approve",
+            "findings": [],
+        },
+        model="gpt-5.5",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="deadbeef",
+        kind="challenge",
+    )
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "LLM review — challenge" in body
+    assert "| Faithful to the prose | ✅ `faithful` |" in body
+    assert "| Vacuity risk | ✅ `none` |" in body
+    assert "~25,000 lines" in body
+    assert "Zhang-style machinery is absent" in body
+    assert "CHALLENGE_REVIEW_RULES.md" in body
+    # Project- and refactor-only fields must not leak into a challenge review.
+    assert "| Fit |" not in body
+    assert "| Brittleness |" not in body
+
+
+def test_render_challenge_assessment_flags_existing_formalization() -> None:
+    """A challenge that duplicates existing work says so in the table."""
+    from lean_pool.review import render_challenge_assessment
+
+    table = render_challenge_assessment(
+        {
+            "assessment": {
+                "significance": "low",
+                "faithfulness": "mismatch",
+                "source_match": "unverifiable",
+                "vacuity_risk": "possible",
+                "difficulty": "exercise",
+                "estimated_lines": 40,
+                "already_formalized": "Nat.exists_infinite_primes",
+            }
+        }
+    )
+
+    assert "🛑 `mismatch`" in table
+    assert "🛑 `Nat.exists_infinite_primes`" in table
+    assert "~40 lines" in table
 
 
 def test_render_comment_refactor_mode() -> None:
@@ -258,13 +531,15 @@ def test_request_review_refits_after_token_overflow(monkeypatch) -> None:
     small = _file_patch("LeanPool/Tiny/Card.lean", ["KEEP_ME"] * 10)
     diff = "\n".join([big, small]) + "\n"
 
-    payload, usage, tier, truncation = review.request_review(
+    result = review.request_review(
         model="gpt-5.5", rules="R" * 200, diff=diff, system_prompt="Review."
     )
 
-    assert payload == {"summary": "ok", "verdict": "approve", "findings": []}
-    assert usage is None
-    assert tier == "flex"
+    assert result.payload == {"summary": "ok", "verdict": "approve", "findings": []}
+    assert result.usage is None
+    assert result.tier == "flex"
+    # The stubbed response reports no model, so the requested one stands.
+    assert result.model == "gpt-5.5"
     # First attempt sent the full diff; the retry elided the big file.
     assert len(calls) == 2
     assert review.ELISION_MARKER not in calls[0]
@@ -272,8 +547,8 @@ def test_request_review_refits_after_token_overflow(monkeypatch) -> None:
     assert review.ELISION_MARKER in calls[1]
     assert len(calls[1]) < len(calls[0])
     assert "+KEEP_ME" in calls[1]
-    assert truncation is not None
-    assert truncation.elided_files == 1
+    assert result.truncation is not None
+    assert result.truncation.elided_files == 1
 
 
 def test_request_review_reraises_unrelated_bad_request(monkeypatch) -> None:
@@ -307,6 +582,129 @@ def test_request_review_reraises_unrelated_bad_request(monkeypatch) -> None:
         )
 
 
+def test_request_review_sends_effort_and_reports_resolved_model(monkeypatch) -> None:
+    """The effort knob reaches the API; the serving snapshot is reported."""
+    from lean_pool import review
+
+    seen: list[dict] = []
+
+    class _FakeCompletions:
+        """Answers like the OpenAI client, resolving the model alias."""
+
+        def create(self, **kwargs):
+            """Record kwargs and answer with a dated snapshot name."""
+            seen.append(kwargs)
+            message = types.SimpleNamespace(content='{"summary": "ok"}')
+            return types.SimpleNamespace(
+                choices=[types.SimpleNamespace(message=message)],
+                usage=None,
+                model="gpt-5.6-sol-2026-06-17",
+            )
+
+    class _FakeClient:
+        """Stub OpenAI client exposing chat.completions.create."""
+
+        def __init__(self) -> None:
+            """Wire up the fake chat.completions endpoint."""
+            self.chat = types.SimpleNamespace(completions=_FakeCompletions())
+
+    monkeypatch.setattr(review, "OpenAI", lambda timeout: _FakeClient())
+
+    result = review.request_review(
+        model="gpt-5.6",
+        rules="rules",
+        diff="diff --git a/x b/x\n",
+        system_prompt="s",
+        effort="xhigh",
+    )
+
+    assert seen[0]["reasoning_effort"] == "xhigh"
+    assert result.model == "gpt-5.6-sol-2026-06-17"
+    assert result.effort == "xhigh"
+
+
+def test_request_review_drops_rejected_effort(monkeypatch) -> None:
+    """An unsupported effort value retries at the model's default effort."""
+    from lean_pool import review
+
+    seen: list[dict] = []
+
+    class _FakeCompletions:
+        """Rejects the effort parameter once, then answers."""
+
+        def create(self, **kwargs):
+            """Refuse reasoning_effort; accept the parameterless retry."""
+            seen.append(kwargs)
+            if "reasoning_effort" in kwargs:
+                raise openai.BadRequestError(
+                    "Unsupported value: 'xhigh' is not one of the supported "
+                    "values for parameter 'reasoning_effort'."
+                )
+            message = types.SimpleNamespace(content='{"summary": "ok"}')
+            return types.SimpleNamespace(
+                choices=[types.SimpleNamespace(message=message)], usage=None
+            )
+
+    class _FakeClient:
+        """Stub OpenAI client exposing chat.completions.create."""
+
+        def __init__(self) -> None:
+            """Wire up the fake chat.completions endpoint."""
+            self.chat = types.SimpleNamespace(completions=_FakeCompletions())
+
+    monkeypatch.setattr(review, "OpenAI", lambda timeout: _FakeClient())
+
+    result = review.request_review(
+        model="gpt-5.6",
+        rules="rules",
+        diff="diff --git a/x b/x\n",
+        system_prompt="s",
+        effort="xhigh",
+    )
+
+    assert len(seen) == 2
+    assert "reasoning_effort" not in seen[1]
+    assert result.payload == {"summary": "ok"}
+    assert result.effort is None
+
+
+def test_pricing_rates_prefix_match_and_long_context() -> None:
+    """Snapshot names price by family prefix; big inputs hit the long rate."""
+    from lean_pool import review
+
+    short = review.pricing_rates("gpt-5.6-sol-2026-06-17", "flex", 10_000)
+    long = review.pricing_rates(
+        "gpt-5.6-sol-2026-06-17", "flex", review.LONG_CONTEXT_INPUT_TOKENS
+    )
+    assert short is not None and long is not None
+    assert long[0] > short[0] and long[1] > short[1]
+    # The bare alias prices like the Sol model it routes to.
+    assert review.pricing_rates("gpt-5.6", "standard", 10_000) == (
+        review.pricing_rates("gpt-5.6-sol", "standard", 10_000)
+    )
+    assert review.pricing_rates("some-unknown-model", "flex", 10_000) is None
+    assert review.pricing_rates("gpt-5.6-sol", "batch", 10_000) is None
+
+
+def test_render_usage_shows_effort_and_long_context_rate() -> None:
+    """The footer names the effort and flags long-context pricing."""
+    from lean_pool import review
+
+    usage = types.SimpleNamespace(prompt_tokens=400_000, completion_tokens=20_000)
+    line = review.render_usage(usage, "gpt-5.6-sol-2026-06-17", "flex", "xhigh")
+
+    assert "**Effort:** `xhigh`" in line
+    # 400k in at $5/M plus 20k out at $22.50/M — the long-context rate.
+    assert "**Cost:** $2.4500 (long-context rate)" in line
+
+    small = types.SimpleNamespace(prompt_tokens=100_000, completion_tokens=10_000)
+    short_line = review.render_usage(small, "gpt-5.6-sol", "flex")
+    assert "long-context" not in short_line
+    assert "**Effort:**" not in short_line
+    # 100k in at $2.50/M plus 10k out at $15/M.
+    assert "**Cost:** $0.4000" in short_line
+
+
 def test_render_comment_notes_truncation() -> None:
     """A truncated review states the elision clearly, keeping the contract."""
     from lean_pool.review import LLM_REVIEW_MARKER, DiffTruncation, render_comment
@@ -331,3 +729,474 @@ def test_render_comment_notes_truncation() -> None:
     assert "Partial review" in body
     assert "250" in body and "317" in body
     assert "3,112,190" in body
+
+
+def test_every_review_mode_asks_for_literal_unicode(monkeypatch) -> None:
+    """The notation rule reaches the model whichever mode is reviewing.
+
+    PR #289's challenge review came back with `over ^R09` where `over ℚ`
+    belonged, so a Lean review that cannot render its own notation is a
+    regression worth a test.
+    """
+    from lean_pool import review
+
+    captured: list[dict] = []
+
+    class _Message:
+        content = '{"summary": "s", "verdict": "approve", "findings": []}'
+
+    class _Choice:
+        message = _Message()
+
+    class _Response:
+        choices = [_Choice()]
+        usage = None
+
+    class _Completions:
+        def create(self, **kwargs):
+            captured.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        completions = _Completions()
+
+    class _Client:
+        chat = _Chat()
+
+        def __init__(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(review, "OpenAI", _Client)
+
+    for _rules_path, system_prompt in review.REVIEW_MODES.values():
+        captured.clear()
+        review.request_review(
+            model="gpt-5.5",
+            rules="rules",
+            diff="diff --git a/A b/A",
+            system_prompt=system_prompt,
+        )
+        sent = captured[0]["messages"][0]["content"]
+        assert "copy the characters exactly" in sent
+        assert "ℚ" in sent
+
+
+def test_every_review_mode_holds_the_trust_boundary(monkeypatch) -> None:
+    """Contributor text is evidence in every mode, never instruction.
+
+    The diff and the PR description are written by the contributor, and
+    the pool accepts AI-generated projects by design, so a review kind
+    that skipped this rule would take orders from the thing it reviews.
+    """
+    from lean_pool import review
+
+    captured: list[dict] = []
+
+    class _Message:
+        content = '{"summary": "s", "verdict": "approve", "findings": []}'
+
+    class _Choice:
+        message = _Message()
+
+    class _Response:
+        choices = [_Choice()]
+        usage = None
+
+    class _Completions:
+        def create(self, **kwargs):
+            captured.append(kwargs)
+            return _Response()
+
+    class _Chat:
+        completions = _Completions()
+
+    class _Client:
+        chat = _Chat()
+
+        def __init__(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(review, "OpenAI", _Client)
+
+    for _rules_path, system_prompt in review.REVIEW_MODES.values():
+        captured.clear()
+        review.request_review(
+            model="gpt-5.5",
+            rules="rules",
+            diff="diff --git a/A b/A",
+            system_prompt=system_prompt,
+        )
+        sent = captured[0]["messages"][0]["content"]
+        assert "Trust boundary" in sent
+        assert "prompt-injection" in sent
+
+
+def test_pr_context_reaches_the_model_as_a_claim_to_verify() -> None:
+    """The description is shown, and framed as something to check."""
+    from lean_pool.review import PullRequestContext, build_user_content
+
+    content = build_user_content(
+        rules="RULES",
+        diff="diff --git a/A b/A",
+        truncation=None,
+        context=PullRequestContext(
+            title="Import the Widget formalization",
+            body="Formalizes Theorem 3 of arXiv:2401.00001.",
+        ),
+    )
+
+    assert "Import the Widget formalization" in content
+    assert "arXiv:2401.00001" in content
+    # The source anchor REVIEW_RULES.md allows in the PR description is
+    # only usable if it is presented as a claim, not as a finding.
+    assert "claim to verify against the diff" in content
+    # Rules still lead; the diff still arrives.
+    assert content.index("RULES") < content.index("arXiv:2401.00001")
+    assert "## PR diff" in content
+
+
+def test_build_user_content_without_context_is_unchanged() -> None:
+    """A review with no PR metadata still sends rules and diff alone."""
+    from lean_pool.review import build_user_content
+
+    content = build_user_content("RULES", "diff --git a/A b/A", None)
+
+    assert "What the PR says about itself" not in content
+    assert "## Review rules" in content
+
+
+def test_render_pr_context_truncates_a_huge_description() -> None:
+    """A release-note-sized body is capped without losing the opening."""
+    from lean_pool.review import (
+        MAX_PR_BODY_CHARS,
+        PullRequestContext,
+        render_pr_context,
+    )
+
+    rendered = render_pr_context(
+        PullRequestContext(title="T", body="OPENING CLAIM. " + "x" * 40_000)
+    )
+
+    assert rendered is not None
+    assert "OPENING CLAIM." in rendered
+    assert "description truncated" in rendered
+    assert len(rendered) < MAX_PR_BODY_CHARS + 1_000
+
+
+def test_fetch_pr_context_round_trips_markdown(monkeypatch) -> None:
+    """Newlines and backslashes in a description survive the fetch."""
+    from lean_pool import review
+
+    body = "Line one\n\n```\nlatex \\alpha\ttab\n```\nEnd."
+    monkeypatch.setattr(
+        review,
+        "run_gh",
+        lambda *a, **k: json.dumps({"title": "T", "body": body}),
+    )
+
+    context = review.fetch_pr_context("1", "o/r")
+
+    assert context.title == "T"
+    assert context.body == body
+
+
+def test_fetch_pr_context_tolerates_a_null_description(monkeypatch) -> None:
+    """A PR opened with no description yields an empty body, not None."""
+    from lean_pool import review
+
+    monkeypatch.setattr(
+        review, "run_gh", lambda *a, **k: json.dumps({"title": "T", "body": ""})
+    )
+
+    assert review.fetch_pr_context("1", "o/r").body == ""
+
+
+def _outcome(key, verdict="pass", payload=None, usage=None):
+    """Build one RubricOutcome for rendering/aggregation tests."""
+    from lean_pool import review
+
+    spec = next(s for s in review.PROJECT_RUBRICS if s.key == key)
+    result = review.ReviewResult(
+        payload=payload or {"verdict": verdict, "bottom_line": f"{key} fine."},
+        usage=usage,
+        tier="flex",
+        truncation=None,
+        model="gpt-5.6-sol-2026-06-17",
+        effort="xhigh",
+    )
+    return review.RubricOutcome(spec=spec, result=result, verdict=verdict)
+
+
+def test_advisory_rubric_block_is_recorded_as_discuss() -> None:
+    """Code quality informs the maintainer; it does not veto a merge."""
+    from lean_pool import review
+
+    quality = next(s for s in review.PROJECT_RUBRICS if not s.blocking)
+    faithfulness = next(s for s in review.PROJECT_RUBRICS if s.blocking)
+
+    assert review.normalize_rubric_verdict(quality, {"verdict": "block"}) == "discuss"
+    assert (
+        review.normalize_rubric_verdict(faithfulness, {"verdict": "block"}) == "block"
+    )
+    # An unreadable verdict is a review for a human, never a silent pass.
+    assert review.normalize_rubric_verdict(faithfulness, {}) == "discuss"
+    assert (
+        review.normalize_rubric_verdict(faithfulness, {"verdict": "approve"})
+        == "discuss"
+    )
+
+
+def test_aggregate_verdict_is_deterministic() -> None:
+    """Block beats discuss beats pass, and a partial diff cannot approve."""
+    from lean_pool.review import aggregate_verdict
+
+    all_pass = [_outcome("faithfulness"), _outcome("novelty")]
+    one_block = [_outcome("faithfulness", "block"), _outcome("novelty")]
+    one_discuss = [_outcome("faithfulness"), _outcome("quality", "discuss")]
+
+    assert aggregate_verdict(all_pass, truncated=False) == "approve"
+    assert aggregate_verdict(one_block, truncated=False) == "request_changes"
+    assert aggregate_verdict(one_discuss, truncated=False) == "needs_discussion"
+    # Nobody read the elided files, so clean rubrics still cannot approve.
+    assert aggregate_verdict(all_pass, truncated=True) == "needs_discussion"
+    assert aggregate_verdict(one_block, truncated=True) == "request_changes"
+
+
+def test_rubric_comment_carries_table_facts_and_findings() -> None:
+    """The combined comment shows each rubric, the facts, and evidence."""
+    from lean_pool.review import render_rubric_comment
+
+    outcomes = [
+        _outcome(
+            "faithfulness",
+            payload={
+                "verdict": "pass",
+                "bottom_line": "Headline matches the card.",
+                "proves_the_claim": "proves_it",
+                "claim_note": "Proves the n = 14 case exactly as stated.",
+                "assumed_inputs": "",
+                "findings": [],
+            },
+        ),
+        _outcome(
+            "novelty",
+            verdict="block",
+            payload={
+                "verdict": "block",
+                "bottom_line": "Already in Mathlib.",
+                "already_formalized": "SimpleGraph.nonempty_hom",
+                "findings": [
+                    {
+                        "file": "LeanPool/X/A.lean",
+                        "line": 12,
+                        "rule": "duplicate-of-mathlib",
+                        "comment": "The headline follows from Finsubgraph.",
+                        "evidence": "SimpleGraph.nonempty_hom states the same.",
+                    }
+                ],
+            },
+        ),
+        _outcome("quality", verdict="discuss"),
+    ]
+
+    body = render_rubric_comment(
+        outcomes,
+        verdict="request_changes",
+        model="gpt-5.6-sol-2026-06-17",
+        reviewed_head_sha="abc123",
+        effort="xhigh",
+    )
+
+    assert body.startswith("<!-- lean-pool-llm-review -->")
+    assert "**Reviewed head:** `abc123`" in body
+    assert "computed from the rubric verdicts" in body
+    assert "| Faithfulness | " in body and "| Novelty | " in body
+    assert "Code quality _(advisory)_" in body
+    assert "🛑 `SimpleGraph.nonempty_hom`" in body
+    assert "### Novelty findings (1)" in body
+    assert "_Evidence:_ SimpleGraph.nonempty_hom states the same." in body
+    assert "an ask, not a close" in body
+    assert "review-rubrics" in body
+
+
+def test_rubric_facts_render_a_prior_art_hedge_as_a_hedge() -> None:
+    """Prose in already_formalized must not wear the duplicate stop icon."""
+    from lean_pool.review import _rubric_facts_table
+
+    hedged = _rubric_facts_table(
+        [
+            _outcome(
+                "novelty",
+                payload={
+                    "verdict": "pass",
+                    "already_formalized": "unverifiable from the supplied diff",
+                },
+            )
+        ]
+    )
+
+    assert "🛑" not in hedged
+    assert "🟡 unverifiable from the supplied diff" in hedged
+
+
+def test_run_project_rubrics_isolates_the_angles(monkeypatch, tmp_path) -> None:
+    """Each rubric gets the core plus its own file; only novelty gets search."""
+    from lean_pool import review
+
+    calls: list[dict] = []
+
+    def _fake_request_review(**kwargs):
+        calls.append(kwargs)
+        return review.ReviewResult(
+            payload={"verdict": "pass", "bottom_line": "ok"},
+            usage=None,
+            tier="flex",
+            truncation=None,
+            model="gpt-5.6-sol",
+            effort="xhigh",
+        )
+
+    monkeypatch.setattr(review, "request_review", _fake_request_review)
+
+    outcomes = review.run_project_rubrics(
+        model="gpt-5.6",
+        diff="diff --git a/x b/x",
+        effort="xhigh",
+        context=None,
+        prior_art_section="PRIOR-ART-EVIDENCE",
+    )
+
+    assert [o.spec.key for o in outcomes] == [s.key for s in review.PROJECT_RUBRICS]
+    by_key = dict(zip([s.key for s in review.PROJECT_RUBRICS], calls, strict=True))
+    # Every call shares the core rules and carries its own rubric.
+    for key, call in by_key.items():
+        assert "shared core" in call["rules"]
+        assert f"Rubric: {key}" in call["rules"]
+        assert call["system_prompt"] == review.SYSTEM_PROMPT_RUBRIC
+    # The search evidence goes only to the rubric that judges novelty.
+    assert by_key["novelty"]["prior_art_section"] == "PRIOR-ART-EVIDENCE"
+    assert by_key["faithfulness"]["prior_art_section"] is None
+    assert by_key["quality"]["prior_art_section"] is None
+
+
+def test_rubric_usage_sums_cost_across_calls() -> None:
+    """The footer prices each call at its own tier and adds them up."""
+    from lean_pool.review import _render_rubric_usage
+
+    usage = types.SimpleNamespace(prompt_tokens=10_000, completion_tokens=2_000)
+    outcomes = [
+        _outcome("faithfulness", usage=usage),
+        _outcome("novelty", usage=usage),
+    ]
+
+    line = _render_rubric_usage(outcomes, "xhigh")
+
+    assert "20,000 in / 4,000 out across 2 rubric calls" in line
+    assert "**Tier:** `flex`" in line
+    assert "**Effort:** `xhigh`" in line
+    # 2 x (10k x $2.50/M + 2k x $15/M) = 2 x $0.055 = $0.11 on flex.
+    assert "**Cost:** $0.1100" in line
+
+
+def test_rubric_usage_without_pricing_says_so_instead_of_free() -> None:
+    """No usage data must read as unknown, not as $0.0000."""
+    from lean_pool.review import _render_rubric_usage
+
+    line = _render_rubric_usage([_outcome("faithfulness")], None)
+
+    assert "$0.0000" not in line
+    assert "no pricing recorded" in line
+
+
+def test_request_changes_comment_says_it_is_not_a_close() -> None:
+    """39% of past `request_changes` verdicts were merged after a human look."""
+    from lean_pool.review import render_comment
+
+    body = render_comment(
+        {"summary": "s", "verdict": "request_changes", "findings": []},
+        model="gpt-5.6-sol",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="abc123",
+    )
+    approved = render_comment(
+        {"summary": "s", "verdict": "approve", "findings": []},
+        model="gpt-5.6-sol",
+        usage=None,
+        tier="flex",
+        reviewed_head_sha="abc123",
+    )
+
+    assert "an ask, not a close" in body
+    assert "an ask, not a close" not in approved
+
+
+def test_infra_skip_comment_is_sticky_and_explains_itself() -> None:
+    """A tooling PR gets a note, not a mathematical-fit verdict."""
+    from lean_pool.review import LLM_REVIEW_MARKER, render_infra_skip_comment
+
+    body = render_infra_skip_comment("abc123")
+
+    assert body.startswith(LLM_REVIEW_MARKER)
+    assert "**Reviewed head:** `abc123`" in body
+    assert "no project, challenge, or solution here to judge" in body
+    # No verdict, because there is no contribution to have a verdict about.
+    assert "**Verdict:**" not in body
+
+
+def test_render_pr_context_handles_an_empty_description() -> None:
+    """An author who wrote no description is reported as such, not blank."""
+    from lean_pool.review import PullRequestContext, render_pr_context
+
+    rendered = render_pr_context(PullRequestContext(title="T", body="   "))
+
+    assert rendered is not None
+    assert "no description provided" in rendered
+
+
+def test_fetch_file_at_requests_raw_bytes_without_a_jq_filter(monkeypatch) -> None:
+    """The raw media type and `--jq` are mutually exclusive.
+
+    Asking for `application/vnd.github.raw+json` returns the file bytes,
+    so a `--jq` filter makes gh parse YAML as JSON and exit 1. That is
+    caught, yields "", and turns every prior-art search into "this PR
+    adds no new headline" — a silent, total failure of the feature.
+    """
+    from lean_pool import review
+
+    seen: list[tuple[str, ...]] = []
+
+    def _capture(*args, **kwargs):
+        seen.append(args)
+        return "projects: []\n"
+
+    monkeypatch.setattr(review, "run_gh", _capture)
+
+    text = review.fetch_file_at("LeanPool/projects.yml", "abc123", "o/r")
+
+    assert text == "projects: []\n"
+    assert "--jq" not in seen[0]
+    assert "Accept: application/vnd.github.raw+json" in seen[0]
+    assert "repos/o/r/contents/LeanPool/projects.yml?ref=abc123" in seen[0]
+
+
+def test_gather_prior_art_flags_an_unreadable_registry(monkeypatch) -> None:
+    """A failed head fetch is reported, not silently read as "nothing new"."""
+    from lean_pool import review
+
+    monkeypatch.setattr(review, "fetch_file_at", lambda *a, **k: "")
+
+    section = review.gather_prior_art("project", "abc12345", "o/r")
+
+    assert section is not None
+    assert "did not run" in section
+    assert "adds no new headline" not in section
+
+
+def test_gather_prior_art_skips_kinds_with_nothing_new_to_check(monkeypatch) -> None:
+    """A refactor re-opens prior art that was settled at merge time."""
+    from lean_pool import review
+
+    assert review.gather_prior_art("refactor", "abc123", "o/r") is None
+    assert review.gather_prior_art("solution", "abc123", "o/r") is None
+    assert review.gather_prior_art("infra", "abc123", "o/r") is None

@@ -8,11 +8,12 @@ Lean Pool uses deterministic CI for mechanical quality checks and LLM review for
 
 [`lean_action_ci.yml`](workflows/lean_action_ci.yml) currently runs:
 
-- `lake exe mk_all --check`
+- `lake exe mk_all --check` (all three library indexes)
 - `lake build LeanPool`
 - a warning scan over the build log
-- `lake exe runLinter LeanPool`
-- `lake exe lint-style LeanPool`
+- [`scripts/ci/build-challenges.sh`](../scripts/ci/build-challenges.sh) — `lake build Challenge Solution` with a warning scan that tolerates only Lean's `declaration uses 'sorry'` notices, which challenge statements are expected to emit
+- `lake exe runLinter` on `LeanPool`, `Challenge`, and `Solution`
+- `lake exe lint-style` on `LeanPool`, `Challenge`, and `Solution`
 - `python -m lean_pool.quality --repo ..`
 
 The Lean workflow runs on Lean, Lake, project metadata, quality-checker, and workflow changes. It restores and saves Lake caches and pulls Mathlib oleans with `lake exe cache get` when the cache is cold.
@@ -47,7 +48,28 @@ Current checks:
 - public declarations depend only on the allowed axiom set: `Classical.choice`, `propext`, and `Quot.sound`
 - a Lean environment audit (run via `lake env lean --run` with extensions disabled, so project notation cannot interfere) walks **every** declaration compiled into a pool module — including elaborator auxiliaries and generated declarations the textual scans cannot see — and rejects any that references option-manipulating constants, embeds a gated option-name literal (however the `Name` was assembled), directly references an axiom-injecting constant (`sorryAx`, `ofReduceBool`, ...), or is itself an axiom declared inside a pool module (which is how `native_decide` and `addDecl`-of-an-axiom backdoors surface)
 
-The checker also has `--write-project-cards` to regenerate entry-point module docstrings from `LeanPool/projects.yml`.
+Challenge-mode checks (the `Challenge/` library — open statements awaiting a proof, see [Challenge mode](../CONTRIBUTING.md#challenge-mode)):
+
+- every rule above applies to `Challenge/**/*.lean` too — header, no `set_option`, no `nolint`, no programmatic option manipulation, no unchecked declarations, no diagnostic commands, reachability from `Challenge.lean`, proof-size cap, and the environment backdoor audit
+- `sorry` is allowed **only** in `Challenge/`, and only as the whole proof body of a declaration (`:= sorry`); a `sorry` buried in a larger term is rejected, and `admit` is rejected everywhere
+- challenge statement files cap at 500 code lines and may import only `Mathlib.*` modules, so a statement never rests on pool code that could be refactored underneath it
+- `Challenge/challenges.yml` exists and every entry carries `slug`, `title`, `summary`, `branch`, `entry_module`, `proposers`, `source` (at least one of `arxiv`/`doi`/`url`), `license`, `provenance`, `status`, `statements` (each with `declaration` and a nonempty `informal` statement), `tags`, and `msc`; `definitions` (definition holes) and a positive `estimated_lines` are optional
+- `status` is `open` or `solved`; a solved challenge carries a `solution` block naming an in-repo `module`, a pool `project`, or a `url`, and an open one carries none
+- slugs, entry modules, and open declaration names are unique; every declaration named in the registry lives in that challenge's namespace and is declared in its file; every statement file is registered
+- generated challenge cards match `Challenge/challenges.yml` — the card carries the informal statement next to the Lean, which is what the [challenge review](CHALLENGE_REVIEW_RULES.md) judges faithfulness against
+- a challenge card carries no lifecycle: no `status`, no solution pointer. A statement file must not change once merged, and the PR guard rejects a solution PR that edits one — so a card that moved with the status would make solving a challenge impossible (regenerate it and the guard refuses the PR; leave it stale and the card check refuses it). The solved state lives in the registry, on the answering module's card, and in `make challenges`
+- `#print axioms` over the challenge library: declarations the registry lists as open must depend on `sorryAx` (a statement quietly proved in place is rejected — the statement is the contract solvers work against), every other declaration must not, and nothing may use an axiom outside the allowed set
+- the environment audit tolerates a `sorryAx` reference only for registered open declarations and their generated companions; combined findings (`sorryAx` plus an axiom declaration, an option backdoor, ...) still fail
+
+Solution checks (the `Solution/` library — answers to challenges, see [Solving a challenge](../CONTRIBUTING.md#solving-a-challenge)):
+
+- solutions are held to the pool's rules, `sorry` included: a solution is a proof
+- a solution may not import the challenge module it answers — comparator exports the two environments separately and compares them, and importing would inherit the statement instead of restating it
+- every file under `Solution/` is the recorded `solution.module` of some challenge, and a solved challenge's solution module exists and declares every registered statement name (comparator matches challenge and solution by declaration name)
+- `#print axioms` over the solution library, run in its own Lean process because a solution declares the same names as its challenge: no `sorryAx`, no axiom outside the allowed set. The environment backdoor audit runs separately over `Solution` for the same reason
+- generated solution cards match the registry
+
+The checker also has `--write-project-cards` and `--write-challenge-cards` to regenerate entry-point module docstrings from `LeanPool/projects.yml` and `Challenge/challenges.yml` (the latter writes challenge *and* solution cards).
 
 ### 3. PR Separation
 
@@ -58,8 +80,17 @@ Content files are:
 - `LeanPool.lean`
 - `LeanPool/**/*.lean`
 - `LeanPool/projects.yml`
+- `Challenge.lean`
+- `Challenge/**/*.lean`
+- `Challenge/challenges.yml`
+- `Solution.lean`
+- `Solution/**/*.lean`
 
-A PR may touch only content files or only non-content files. Mixing these categories fails CI, except that a Lean/Mathlib version bump may pair content with the toolchain, manifest, lakefile, their `docbuild/` equivalents, and this workflow. Branch protection to require this check before merge is future work.
+A PR may touch only content files or only non-content files. Mixing these categories fails CI, except that a Lean/Mathlib version bump may pair content with the toolchain, manifest, lakefile, their `docbuild/` equivalents, and this workflow. Challenge statements and solutions count as content, so a PR that solves a challenge can add the answer, a pooled project, and the registry flip together.
+
+The same workflow enforces one challenge-mode rule: **a PR may not modify a challenge statement and touch a solution at the same time.** The merged statement is the text comparator judges a solution against, so editing it in the PR that claims to meet it is the one way to fake a solution past the kernel. Statement repairs land on their own.
+
+Branch protection to require these checks before merge is future work.
 
 ### 4. Python CI
 
@@ -77,7 +108,18 @@ A PR may touch only content files or only non-content files. Mixing these catego
 
 ### 6. LLM Review
 
-[`llm-review.yml`](workflows/llm-review.yml) runs after successful Lean Action CI on a PR head, or manually through `/review` and `workflow_dispatch`. It fetches the PR diff with `gh`, applies [`.github/REVIEW_RULES.md`](REVIEW_RULES.md), and posts a sticky PR comment containing the reviewed head SHA, structured assessment, verdict, findings, token counts, tier, and estimated cost.
+[`llm-review.yml`](workflows/llm-review.yml) runs after successful Lean Action CI on a PR head, or manually through `/review` and `workflow_dispatch`. It fetches the PR diff with `gh`, classifies the PR, and posts a sticky PR comment containing the reviewed head SHA, structured assessment, verdict, findings, token counts, tier, and estimated cost.
+
+The rules applied depend on what the PR does:
+
+| PR kind | Detected by | Rules |
+|---|---|---|
+| project | adds a project directory that appears only through added `.lean` files | [`REVIEW_RULES.md`](REVIEW_RULES.md) — fit and significance |
+| refactor | only touches projects already in the pool | [`REFACTOR_REVIEW_RULES.md`](REFACTOR_REVIEW_RULES.md) — tech debt and maintainability |
+| challenge | adds a `Challenge/**/*.lean` statement, or edits one without touching pooled Lean content | [`CHALLENGE_REVIEW_RULES.md`](CHALLENGE_REVIEW_RULES.md) — significance, faithfulness of the Lean to the prose, source fidelity, vacuity/gameability, and the estimated size of a solution |
+| solution | touches `Solution/**/*.lean` | [`SOLUTION_REVIEW_RULES.md`](SOLUTION_REVIEW_RULES.md) — statement tampering, definition-hole gaming, and proof quality. Correctness belongs to comparator (§11), not to the model |
+
+A solution PR is **not** sent to the model at all when it touches nothing but the answer, the generated index, and its registry entry, and the challenge leaves no definition hole: everything about such a PR is machine-checked, so the workflow posts a short note saying so instead. See `solution_needs_llm_review` in [`review.py`](../python/lean_pool/review.py).
 
 The review workflow checks out the base branch only. It does not execute PR-head code.
 
@@ -89,7 +131,7 @@ Current behavior:
 
 - checks out the PR head
 - restores Lake caches and fetches Mathlib cache if needed
-- profiles new and modified Lean files under `LeanPool/`
+- profiles new and modified Lean files under `LeanPool/`, `Challenge/`, and `Solution/`
 - posts or updates a sticky PR comment
 - uploads the raw profile log as an artifact
 
@@ -118,12 +160,47 @@ Scheduled update checks are future work.
 check. Pushes to `main` build `LeanPool:docs` and deploy
 `docbuild/.lake/build/doc` to GitHub Pages.
 
+### 11. Challenge Solution Verification
+
+[`challenge-verify.yml`](workflows/challenge-verify.yml) runs
+[`leanprover/comparator`](https://github.com/leanprover/comparator) over every
+challenge the registry records as solved. Comparator exports the challenge and
+solution environments separately with `lean4export`, checks that the statements
+agree, and replays the proof through the Lean kernel accepting no axiom beyond
+`propext`, `Quot.sound`, and `Classical.choice`. This is what makes
+`status: solved` a verified claim, and it is the check the solution review
+defers to.
+
+The three external tools are pinned to exact commits in
+[`scripts/challenge/pins.env`](../scripts/challenge/pins.env), which both this
+workflow and `make comparator` read — so a local verification and a CI
+verification run the same judge. They once did not, and the difference hid a
+real failure: comparator's `main` resolves its tools from `COMPARATOR_*`
+environment variables, while the pinned commit hardcodes `landrun` and
+`lean4export` as PATH lookups, so passing paths worked locally and failed in
+CI. The pins are:
+
+- `landrun` (the sandbox comparator runs builds under), built with Go from
+  `zouuup/landrun`
+- `lean4export`, pinned to the tag matching [`lean-toolchain`](../lean-toolchain)
+  — it reads this repository's oleans, so its Lean version has to match
+- `comparator` itself, which builds at its own (newer) toolchain
+
+Bumping any pin is a deliberate change: they are part of the trusted base for
+every "solved" claim. The same pins are used by
+[`leanprover/lean-eval`](https://github.com/leanprover/lean-eval).
+
+Like the Lean build, this workflow compiles pull-request code. It runs on
+`pull_request`, so the token is read-only and no secret is in scope; landrun is
+defence in depth on top of the ephemeral runner.
+
 ## Future Work
 
 The following items are documented goals but are not fully implemented or enforced yet:
 
 - branch protection requiring the CI gates before merge
 - scheduled Lean/Mathlib update checks
+- doc-gen4 pages for the `Challenge` and `Solution` libraries, so the board is browsable on the docs site alongside the pool
 - LeanExplore semantic dedup comments in PRs; the prototype CLI is [`python/lean_pool/semantic_dedup.py`](../python/lean_pool/semantic_dedup.py)
 - controlled tag vocabulary for `LeanPool/projects.yml`; tags are currently only checked as nonempty strings
 - generated domain/status indexes

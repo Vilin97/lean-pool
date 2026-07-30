@@ -1,0 +1,60 @@
+name: NOTICE
+
+# NOTICE is generated from LeanPool/projects.yml + NOTICE.extra.yml, so it can
+# never drift out of step with the pool: every import PR that registers a
+# project makes this job rewrite the attribution list on merge.
+#
+# The refresh commit below touches NOTICE only, which is NOT in the paths
+# filter, so it cannot re-trigger this workflow (no commit loop). The same
+# reason it is not a PR gate: a content PR may not touch NOTICE (it is
+# non-content under content-pr-guard), so requiring an up-to-date NOTICE on
+# the PR itself would be unsatisfiable. Regenerating after merge avoids that
+# deadlock. Hand-edits to NOTICE in non-content PRs are still caught, by
+# test_notice.py::test_repository_notice_is_current in Python CI.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'LeanPool/projects.yml'
+      - 'NOTICE.extra.yml'
+      - 'python/lean_pool/notice.py'
+      - '.github/workflows/notice.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    name: Regenerate NOTICE
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: cd python && uv sync --locked
+
+      - name: Regenerate NOTICE
+        run: cd python && uv run python -m lean_pool.notice --repo ..
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- NOTICE; then
+            echo "NOTICE already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add NOTICE
+          git commit -m "chore: regenerate NOTICE [skip ci]"
+          git push

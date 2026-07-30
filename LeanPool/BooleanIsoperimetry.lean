@@ -1,21 +1,23 @@
 /-
-Copyright (c) 2026 Alexey Milovanov. All rights reserved.
+Copyright (c) 2026 Alexey Milovanov and Egor Lyfar. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Alexey Milovanov
+Authors: Alexey Milovanov, Egor Lyfar
 -/
 
+import LeanPool.BooleanIsoperimetry.CoherentGap
+import LeanPool.BooleanIsoperimetry.ConwayGuyOrderBridge
 import LeanPool.BooleanIsoperimetry.Harper
 import LeanPool.BooleanIsoperimetry.MacaulayMin
 import LeanPool.BooleanIsoperimetry.SetFamilyShadow
 
 /-!
-# Harper's Vertex-Isoperimetric Theorem on the Boolean Cube
+# Boolean Isoperimetry and Conway--Guy Coherent Gaps
 
-Source: doi:10.1016/S0021-9800(66)80059-5
-Authors: Alexey Milovanov
+Source: doi:10.1016/S0021-9800(66)80059-5, url:https://doi.org/10.1090/S0002-9939-96-03653-2
+Authors: Alexey Milovanov, Egor Lyfar
 Status: verified
-Main declarations: `BooleanIsoperimetry.harper_theorem`
-Tags: extremal-combinatorics, isoperimetry, boolean-cube
+Main declarations: `BooleanIsoperimetry.harper_theorem`, `BooleanIsoperimetry.conwayGuyGapRigidity`
+Tags: additive-combinatorics, isoperimetry, boolean-cube, subset-sums, coherent-orders
 MSC: 05D05, 05C35
 -/
 
@@ -34,6 +36,13 @@ development includes the required binomial-cascade identities, Kruskal--Katona
 shadow estimates, coordinate compressions, and the final induction over cube
 dimension.
 
+For the Conway--Guy distinct-subset-sum sequence, the development also proves
+an all-dimension certificate recurrence. Every real row whose consecutive
+subset-sum gaps in the Conway--Guy order are at least one dominates the
+Conway--Guy row coordinatewise. Bohman's theorem that the sequence has
+distinct subset sums remains the external input showing that its subset-sum
+comparison is a total coherent Boolean term order.
+
 ## Provenance
 
 Imported from <https://github.com/AlexeyMilovanov/BooleanIsoperimetry>, branch
@@ -42,4 +51,9 @@ P. Frankl and Z. Füredi, "A short proof for a theorem of Harper about
 Hamming-spheres," *Discrete Mathematics* 34 (1981),
 doi:10.1016/0012-365X(81)90009-1. The formalization was developed with extensive
 LLM assistance under the author's supervision.
+
+The Conway--Guy recurrence follows T. Bohman, "A sum packing problem of Erdős
+and the Conway--Guy sequence," *Proceedings of the AMS* 124 (1996), 3627--3636,
+doi:10.1090/S0002-9939-96-03653-2. Its normalized chamber-rigidity certificate
+induction was added by Egor Lyfar with AI assistance.
 -/

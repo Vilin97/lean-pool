@@ -7,6 +7,7 @@ on:
     paths:
       - '**/*.lean'
       - 'LeanPool/projects.yml'
+      - 'Challenge/challenges.yml'
       - 'lakefile.toml'
       - 'lake-manifest.json'
       - 'lean-toolchain'
@@ -19,6 +20,7 @@ on:
     paths:
       - '**/*.lean'
       - 'LeanPool/projects.yml'
+      - 'Challenge/challenges.yml'
       - 'lakefile.toml'
       - 'lake-manifest.json'
       - 'lean-toolchain'
@@ -153,9 +155,15 @@ jobs:
             echo "Mathlib already present from cache"
           fi
 
+      # The challenge board is documented alongside the pool: each statement's
+      # card carries the informal statement it is judged against, which is
+      # worth reading on the docs site. `Solution:docs` is deliberately not
+      # built — a solution restates its challenge's declarations under the same
+      # names, so rendering both into one doc tree would produce two pages
+      # claiming the same declaration.
       - name: Build documentation
         id: build
-        run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs
+        run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs Challenge:docs
 
       - name: Add exposition site
         # Wait for the parallel `exposition` job's artifact and merge it into

@@ -1,4 +1,17 @@
-"""Deterministic repository quality checks for Lean Pool."""
+"""Deterministic repository quality checks for Lean Pool.
+
+Two Lean libraries are checked, under almost the same rules:
+
+- ``LeanPool`` — completed formalizations. No ``sorry``, ever.
+- ``Challenge`` — open statements awaiting a proof (see
+  :mod:`lean_pool.challenge`). ``sorry`` is allowed here and nowhere else,
+  and only as the whole proof body of a declaration registered in
+  ``Challenge/challenges.yml``. Every other rule (headers, narrow imports,
+  no ``set_option``, no axioms, size caps, the environment backdoor audit)
+  applies unchanged, and the Lean-backed audits additionally verify that
+  the registered open declarations are the *only* ones resting on
+  ``sorryAx``.
+"""
 
 from __future__ import annotations
 
@@ -13,7 +26,14 @@ from typing import Any
 
 import yaml
 
-ALLOWED_AXIOMS = {"Classical.choice", "propext", "Quot.sound"}
+from lean_pool import challenge
+
+# Derived from the challenge module so the pool gate and the axiom list
+# handed to the external comparator judge cannot drift apart.
+ALLOWED_AXIOMS = set(challenge.PERMITTED_AXIOMS)
+# The `sorry` tactic/term compiles to this axiom. Permitted only for the
+# declarations a challenge registers as open.
+SORRY_AXIOM = "sorryAx"
 CODE_QUALITY_URL = (
     "https://github.com/Vilin97/lean-pool/blob/main/.github/CODE_QUALITY.md"
 )
@@ -87,6 +107,17 @@ HEADER_PATTERN = re.compile(
     r"Authors: [^\n]+\n"
     r"-/\n"
 )
+# A `sorry` in a challenge file may only be the entire proof body — either
+# `:= sorry` closing the declaration line, or a lone `sorry` on its own
+# line after a `:=`. This rules out partially open proofs like
+# `⟨sorry, trivial⟩` or `by simp [sorry]`, which would leave a challenge
+# quietly easier than its statement suggests.
+WHOLE_BODY_SORRY = re.compile(r"(?::=\s*sorry|^\s*sorry)\s*$")
+# Challenge statements are read by every would-be solver and by the LLM
+# reviewer judging faithfulness, so they stay small; a challenge needing
+# more setup than this belongs in the pool as a project first.
+CHALLENGE_CODE_LINE_LIMIT = 500
+POOL_CODE_LINE_LIMIT = 10000
 
 
 @dataclass(frozen=True)
@@ -184,6 +215,30 @@ def _lean_content_files(root: Path) -> list[Path]:
     return [path for path in files if path.exists()]
 
 
+def _challenge_files(root: Path) -> list[Path]:
+    """Return every Lean file of the challenge library, index included."""
+    return challenge.challenge_files(root)
+
+
+def _solution_files(root: Path) -> list[Path]:
+    """Return every Lean file of the solution library, index included."""
+    return challenge.solution_files(root)
+
+
+def _all_lean_files(root: Path) -> list[Path]:
+    """Return the Lean files of all three libraries."""
+    return [*_lean_content_files(root), *_challenge_files(root), *_solution_files(root)]
+
+
+def _generated_index_files(root: Path) -> set[Path]:
+    """Return the `mk_all`-generated library index files."""
+    return {
+        root / "LeanPool.lean",
+        root / f"{challenge.LIBRARY_NAME}.lean",
+        root / f"{challenge.SOLUTION_LIBRARY_NAME}.lean",
+    }
+
+
 def _module_to_path(root: Path, module: str) -> Path:
     return root.joinpath(*module.split(".")).with_suffix(".lean")
 
@@ -201,6 +256,7 @@ def _parse_imports(text: str) -> list[str]:
 def _reachable_leanpool_files(root: Path, entry_module: str = "LeanPool") -> set[Path]:
     reachable: set[Path] = set()
     pending = [entry_module]
+    root_module = entry_module.split(".")[0]
 
     while pending:
         module = pending.pop()
@@ -212,26 +268,41 @@ def _reachable_leanpool_files(root: Path, entry_module: str = "LeanPool") -> set
         pending.extend(
             imported
             for imported in _parse_imports(text)
-            if imported.startswith("LeanPool")
+            if imported.startswith(root_module)
         )
 
     return reachable
 
 
 def _check_reachability(root: Path) -> list[_QualityError]:
-    expected = set(_lean_content_files(root))
-    reachable = _reachable_leanpool_files(root)
-    missing = sorted(expected - reachable)
+    errors = _unreachable_errors(root, "LeanPool", _lean_content_files(root))
+    errors.extend(
+        _unreachable_errors(root, challenge.LIBRARY_NAME, _challenge_files(root))
+    )
+    errors.extend(
+        _unreachable_errors(
+            root, challenge.SOLUTION_LIBRARY_NAME, _solution_files(root)
+        )
+    )
+    return errors
+
+
+def _unreachable_errors(
+    root: Path, entry_module: str, expected: list[Path]
+) -> list[_QualityError]:
+    """Report library files the generated index does not import."""
+    reachable = _reachable_leanpool_files(root, entry_module)
     return [
-        _QualityError(path, 1, "Lean file is not reachable from LeanPool.lean")
-        for path in missing
+        _QualityError(path, 1, f"Lean file is not reachable from {entry_module}.lean")
+        for path in sorted(set(expected) - reachable)
     ]
 
 
 def _check_headers(root: Path) -> list[_QualityError]:
     errors: list[_QualityError] = []
-    for path in _lean_content_files(root):
-        if path == root / "LeanPool.lean":
+    generated = _generated_index_files(root)
+    for path in _all_lean_files(root):
+        if path in generated:
             continue
         text = path.read_text()
         if not HEADER_PATTERN.match(text):
@@ -249,55 +320,96 @@ def _check_headers(root: Path) -> list[_QualityError]:
 
 
 def _check_forbidden_lean_text(root: Path) -> list[_QualityError]:
+    """Scan both libraries for forbidden tokens.
+
+    Identical rules either side of the split, except that a challenge file
+    may use `sorry` — and only as a whole proof body, checked by
+    :func:`_sorry_errors`.
+    """
     errors: list[_QualityError] = []
     for path in _lean_content_files(root):
-        stripped = _strip_lean_comments(path.read_text())
-        for line_number, line in enumerate(stripped.splitlines(), start=1):
-            if re.search(r"\bset_option\b", line):
-                errors.append(
-                    _QualityError(path, line_number, "set_option is forbidden")
-                )
-            if re.search(r"\bnolint\b", line):
-                errors.append(
-                    _QualityError(path, line_number, "nolint waiver is forbidden")
-                )
-            if FORBIDDEN_OPTION_APIS.search(line):
-                errors.append(
-                    _QualityError(
-                        path,
-                        line_number,
-                        "programmatic option manipulation is forbidden",
-                    )
-                )
-            if FORBIDDEN_OPTION_NAMES.search(line):
-                errors.append(
-                    _QualityError(
-                        path,
-                        line_number,
-                        "gated option name in code is forbidden",
-                    )
-                )
-            if re.match(r"^\s*(?:public\s+)?import\s+Mathlib\s*$", line):
-                errors.append(
-                    _QualityError(
-                        path, line_number, "broad import Mathlib is forbidden"
-                    )
-                )
-            if re.search(r"\b(?:sorry|admit)\b", line):
-                errors.append(
-                    _QualityError(path, line_number, "sorry/admit is forbidden")
-                )
-            if FORBIDDEN_SOUNDNESS.search(line):
-                errors.append(
-                    _QualityError(
-                        path, line_number, "unchecked declaration is forbidden"
-                    )
-                )
-            if FORBIDDEN_DIAGNOSTICS.search(line):
-                errors.append(
-                    _QualityError(path, line_number, "diagnostic command is forbidden")
-                )
+        errors.extend(_forbidden_text_errors(path, allow_sorry=False))
+    for path in _challenge_files(root):
+        errors.extend(_forbidden_text_errors(path, allow_sorry=True))
+    # A solution is a proof, so it is held to the pool's rules exactly.
+    for path in _solution_files(root):
+        errors.extend(_forbidden_text_errors(path, allow_sorry=False))
     return errors
+
+
+def _forbidden_text_errors(path: Path, *, allow_sorry: bool) -> list[_QualityError]:
+    errors: list[_QualityError] = []
+    stripped = _strip_lean_comments(path.read_text())
+    for line_number, line in enumerate(stripped.splitlines(), start=1):
+        if re.search(r"\bset_option\b", line):
+            errors.append(_QualityError(path, line_number, "set_option is forbidden"))
+        if re.search(r"\bnolint\b", line):
+            errors.append(
+                _QualityError(path, line_number, "nolint waiver is forbidden")
+            )
+        if FORBIDDEN_OPTION_APIS.search(line):
+            errors.append(
+                _QualityError(
+                    path,
+                    line_number,
+                    "programmatic option manipulation is forbidden",
+                )
+            )
+        if FORBIDDEN_OPTION_NAMES.search(line):
+            errors.append(
+                _QualityError(
+                    path,
+                    line_number,
+                    "gated option name in code is forbidden",
+                )
+            )
+        if re.match(r"^\s*(?:public\s+)?import\s+Mathlib\s*$", line):
+            errors.append(
+                _QualityError(path, line_number, "broad import Mathlib is forbidden")
+            )
+        errors.extend(_sorry_errors(path, line_number, line, allow_sorry=allow_sorry))
+        if FORBIDDEN_SOUNDNESS.search(line):
+            errors.append(
+                _QualityError(path, line_number, "unchecked declaration is forbidden")
+            )
+        if FORBIDDEN_DIAGNOSTICS.search(line):
+            errors.append(
+                _QualityError(path, line_number, "diagnostic command is forbidden")
+            )
+    return errors
+
+
+def _sorry_errors(
+    path: Path, line_number: int, line: str, *, allow_sorry: bool
+) -> list[_QualityError]:
+    """Apply the `sorry` rule for one comment-stripped line.
+
+    `admit` is forbidden everywhere: challenge statements use one spelling
+    so the open declarations stay easy to eyeball.
+    """
+    if re.search(r"\badmit\b", line):
+        return [_QualityError(path, line_number, "admit is forbidden")]
+    if not re.search(r"\bsorry\b", line):
+        return []
+    if not allow_sorry:
+        return [
+            _QualityError(
+                path,
+                line_number,
+                "sorry is forbidden outside "
+                f"{challenge.LIBRARY_NAME}/ (see CONTRIBUTING.md#challenge-mode)",
+            )
+        ]
+    if not WHOLE_BODY_SORRY.search(line):
+        return [
+            _QualityError(
+                path,
+                line_number,
+                "sorry must be the whole proof body of an open declaration "
+                "(`:= sorry`), not part of a larger term",
+            )
+        ]
+    return []
 
 
 def _check_lake_options(root: Path) -> list[_QualityError]:
@@ -350,13 +462,22 @@ def _non_comment_code_lines(text: str) -> int:
 
 
 def _check_file_sizes(root: Path) -> list[_QualityError]:
+    errors = _file_size_errors(_lean_content_files(root), POOL_CODE_LINE_LIMIT)
+    errors.extend(_file_size_errors(_challenge_files(root), CHALLENGE_CODE_LINE_LIMIT))
+    # A solution that needs more than this is really a pooled project; it
+    # should live in `LeanPool/` with a thin bridge module here.
+    errors.extend(_file_size_errors(_solution_files(root), CHALLENGE_CODE_LINE_LIMIT))
+    return errors
+
+
+def _file_size_errors(paths: list[Path], limit: int) -> list[_QualityError]:
     errors: list[_QualityError] = []
-    for path in _lean_content_files(root):
+    for path in paths:
         code_lines = _non_comment_code_lines(path.read_text())
-        if code_lines > 10000:
+        if code_lines > limit:
             errors.append(
                 _QualityError(
-                    path, 1, f"file has {code_lines} code lines; limit is 10000"
+                    path, 1, f"file has {code_lines} code lines; limit is {limit}"
                 )
             )
     return errors
@@ -373,7 +494,7 @@ def _declaration_starts(stripped: str) -> list[tuple[int, str]]:
 
 def _check_proof_sizes(root: Path) -> list[_QualityError]:
     errors: list[_QualityError] = []
-    for path in _lean_content_files(root):
+    for path in _all_lean_files(root):
         original_lines = path.read_text().splitlines()
         stripped = _strip_lean_comments("\n".join(original_lines))
         starts = _declaration_starts(stripped)
@@ -404,6 +525,12 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
 
 
 def _parse_declarations(root: Path) -> list[_Declaration]:
+    return _declarations_in(_lean_content_files(root))
+
+
+def _declarations_in(
+    paths: list[Path], *, include_private: bool = False
+) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     keyword_pattern = "|".join(DECLARATION_KEYWORDS)
     # Use a negative lookahead instead of `\b`: `\b` does not treat `'` as a
@@ -413,7 +540,7 @@ def _parse_declarations(root: Path) -> list[_Declaration]:
         rf"^\s*{DECLARATION_PREFIX}({keyword_pattern})\s+"
         rf"({LEAN_IDENT})(?![\w'.])"
     )
-    for path in _lean_content_files(root):
+    for path in paths:
         # Track `namespace` and `section` opens together so that an
         # `end <section>` pops the section rather than the enclosing namespace.
         # Each entry is (is_namespace, name); only namespace entries qualify a
@@ -437,7 +564,7 @@ def _parse_declarations(root: Path) -> list[_Declaration]:
                     scope_stack.pop()
                 continue
             match = decl_pattern.match(line)
-            if match and _is_private_declaration_line(line):
+            if match and not include_private and _is_private_declaration_line(line):
                 continue
             if match and not match.group(2).startswith(":"):
                 namespace_stack = [
@@ -550,12 +677,12 @@ def gatedLiteral? (e : Expr) : Option String :=
   | some (.lit (.strVal s)) => some s
   | _ => none
 
-def auditEnv (env : Environment) : IO Unit := do
+def auditEnv (env : Environment) (roots : List Name) : IO Unit := do
   let manipulators := manipulatorCandidates.filter env.contains
   let injectors := axiomInjectorCandidates.filter env.contains
   let mut visited : NameSet := NameSet.empty
   for (moduleName, data) in env.header.moduleNames.zip env.header.moduleData do
-    unless moduleName.getRoot == `LeanPool do continue
+    unless roots.contains moduleName.getRoot do continue
     for declName in data.constNames do
       unless visited.contains declName do
         visited := visited.insert declName
@@ -590,22 +717,44 @@ def main (args : List String) : IO UInt32 := do
   Lean.initSearchPath (<- Lean.findSysroot)
   let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
   let env <- Lean.importModules imports {} (trustLevel := 1024)
-  LeanPoolQuality.OptionAudit.auditEnv env
+  LeanPoolQuality.OptionAudit.auditEnv env (modules.map (·.getRoot))
   return 0
 """
+# Detail emitted by the audit when a declaration is a `sorry`. Tolerated
+# for — and only for — the declarations a challenge registers as open.
+_SORRY_INJECTOR_DETAIL = (
+    f"references forbidden axiom-injecting constants: {SORRY_AXIOM}"
+)
 
 
 def _check_option_backdoors(root: Path) -> list[_QualityError]:
-    """Audit every declaration compiled into the pool for backdoors."""
+    """Audit every declaration compiled into the libraries for backdoors.
+
+    Two passes, because a solution declares the same names as the challenge
+    it answers: importing `Challenge` and `Solution` into one environment is
+    a name clash by construction.
+    """
+    pool_modules = ["LeanPool"]
+    if (root / f"{challenge.LIBRARY_NAME}.lean").exists():
+        pool_modules.append(challenge.LIBRARY_NAME)
+    errors = _run_option_audit(root, pool_modules)
+    if (root / f"{challenge.SOLUTION_LIBRARY_NAME}.lean").exists():
+        errors.extend(_run_option_audit(root, [challenge.SOLUTION_LIBRARY_NAME]))
+    return errors
+
+
+def _run_option_audit(root: Path, modules: list[str]) -> list[_QualityError]:
+    """Run the environment audit over one set of importable modules."""
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as temp_file:
         temp_path = Path(temp_file.name)
         temp_file.write(_OPTION_AUDIT_LEAN)
         temp_file.flush()
 
+    index_path = root / f"{modules[0]}.lean"
     try:
         try:
             process = subprocess.run(
-                ["lake", "env", "lean", "--run", str(temp_path)],
+                ["lake", "env", "lean", "--run", str(temp_path), *modules],
                 cwd=root,
                 check=False,
                 capture_output=True,
@@ -616,7 +765,7 @@ def _check_option_backdoors(root: Path) -> list[_QualityError]:
             # than crashing the whole quality run.
             return [
                 _QualityError(
-                    root / "LeanPool.lean",
+                    index_path,
                     1,
                     "option-manipulation audit skipped: `lake` not found",
                 )
@@ -624,28 +773,76 @@ def _check_option_backdoors(root: Path) -> list[_QualityError]:
     finally:
         temp_path.unlink(missing_ok=True)
 
-    return _parse_option_audit_output(root, process.stdout, process.stderr)
+    return _parse_option_audit_output(
+        root,
+        process.stdout,
+        process.stderr,
+        open_declarations=_open_declarations(root),
+        index_path=index_path,
+    )
+
+
+def _open_declarations(root: Path) -> set[str]:
+    """Return every declaration the challenge registry leaves open."""
+    challenges, errors = challenge.load_challenges(root)
+    if errors:
+        return set()
+    return {
+        name
+        for entry in challenges
+        if isinstance(entry, dict)
+        for name in challenge.open_declaration_names(entry)
+    }
+
+
+def _is_open_declaration(name: str, open_declarations: set[str]) -> bool:
+    """Whether ``name`` is a registered open declaration or its companion.
+
+    Lean generates companions for a sorried declaration (`foo.eq_def`,
+    equation lemmas, hygienic auxiliaries); they carry the same `sorryAx`
+    reference and live under the same name prefix.
+    """
+    return any(
+        name == declaration or name.startswith(f"{declaration}.")
+        for declaration in open_declarations
+    )
 
 
 def _parse_option_audit_output(
-    root: Path, stdout: str, stderr: str
+    root: Path,
+    stdout: str,
+    stderr: str,
+    open_declarations: set[str] | None = None,
+    index_path: Path | None = None,
 ) -> list[_QualityError]:
-    """Turn environment-audit findings (and non-completion) into errors."""
+    """Turn environment-audit findings (and non-completion) into errors.
+
+    A finding that says nothing but "this declaration is a `sorry`" is
+    dropped for declarations the challenge registry lists as open — that is
+    the whole point of a challenge. Findings that combine `sorryAx` with
+    anything else still surface.
+    """
+    permitted = open_declarations or set()
     errors: list[_QualityError] = []
     for match in _OPTION_AUDIT_FINDING_RE.finditer(stdout):
         module, declaration, detail = match.groups()
+        detail = detail.strip()
+        if detail == _SORRY_INJECTOR_DETAIL and _is_open_declaration(
+            declaration, permitted
+        ):
+            continue
         errors.append(
             _QualityError(
                 _module_to_path(root, module),
                 1,
-                f"{declaration} {detail.strip()}",
+                f"{declaration} {detail}",
             )
         )
     if _OPTION_AUDIT_COMPLETE_MARKER not in stdout:
         snippet = stderr.strip().splitlines()
         errors.append(
             _QualityError(
-                root / "LeanPool.lean",
+                index_path or root / "LeanPool.lean",
                 1,
                 "option-manipulation audit did not complete: "
                 f"{snippet[0] if snippet else '(no stderr)'}",
@@ -655,11 +852,61 @@ def _parse_option_audit_output(
 
 
 def _check_axioms(root: Path) -> list[_QualityError]:
-    declarations = _parse_declarations(root)
+    """Audit pooled declarations: allowlisted axioms only, never `sorry`."""
+    return _audit_axioms(root, _parse_declarations(root), "LeanPool", set())
+
+
+def _check_challenge_axioms(root: Path) -> list[_QualityError]:
+    """Audit the challenge library's declarations.
+
+    A registered open declaration must actually rest on `sorryAx` — the
+    statement file is the trusted text every solution is compared against,
+    so it stays open and stable, and a solution lives elsewhere. Every
+    other declaration in the library (the definitions a statement is
+    phrased in terms of) must be closed, or the challenge would be resting
+    on unproved scaffolding nobody declared.
+    """
+    files = challenge.statement_files(root)
+    if not files:
+        return []
+    return _audit_axioms(
+        root,
+        _declarations_in(files),
+        challenge.LIBRARY_NAME,
+        _open_declarations(root),
+    )
+
+
+def _check_solution_axioms(root: Path) -> list[_QualityError]:
+    """Audit the solution library: real proofs, allowed axioms, no `sorry`.
+
+    Run in its own Lean process, never alongside `Challenge`: a solution
+    declares the same names as the challenge it answers, so importing both
+    environments at once is a name clash by construction.
+    """
+    files = challenge.solution_proof_files(root)
+    if not files:
+        return []
+    return _audit_axioms(
+        root,
+        _declarations_in(files),
+        challenge.SOLUTION_LIBRARY_NAME,
+        set(),
+    )
+
+
+def _audit_axioms(
+    root: Path,
+    declarations: list[_Declaration],
+    import_module: str,
+    open_declarations: set[str],
+) -> list[_QualityError]:
+    """Run `#print axioms` over ``declarations`` and grade the results."""
     if not declarations:
         return []
 
-    commands = "import LeanPool\n" + "\n".join(
+    index_path = root / f"{import_module}.lean"
+    commands = f"import {import_module}\n" + "\n".join(
         f"#print axioms _root_.{declaration.name}" for declaration in declarations
     )
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as temp_file:
@@ -681,7 +928,7 @@ def _check_axioms(root: Path) -> list[_QualityError]:
             # than crashing the whole quality run.
             return [
                 _QualityError(
-                    root / "LeanPool.lean",
+                    index_path,
                     1,
                     "axiom audit skipped: `lake` not found",
                 )
@@ -689,7 +936,7 @@ def _check_axioms(root: Path) -> list[_QualityError]:
     finally:
         temp_path.unlink(missing_ok=True)
 
-    errors = _parse_axiom_output(root, declarations, process.stdout)
+    errors = _parse_axiom_output(root, declarations, process.stdout, open_declarations)
     resolved = _axiom_audit_resolved(process.stdout)
     missing = [
         declaration for declaration in declarations if declaration.name not in resolved
@@ -700,7 +947,7 @@ def _check_axioms(root: Path) -> list[_QualityError]:
     if missing and not resolved and process.returncode != 0:
         return errors + [
             _QualityError(
-                root / "LeanPool.lean",
+                index_path,
                 1,
                 f"axiom audit failed before any declaration was checked: "
                 f"{process.stderr.strip() or '(no stderr)'}",
@@ -714,7 +961,9 @@ def _parse_axiom_output(
     root: Path,
     declarations: list[_Declaration],
     output: str,
+    open_declarations: set[str] | None = None,
 ) -> list[_QualityError]:
+    permitted = open_declarations or set()
     errors: list[_QualityError] = []
     by_name = {declaration.name: declaration for declaration in declarations}
     by_name.update(
@@ -722,20 +971,73 @@ def _parse_axiom_output(
     )
     # Names may contain `'` (e.g. `foo'`); see _axiom_audit_resolved comment.
     pattern = re.compile(r"^'(.+?)' depends on axioms: \[(.*)\]$", re.MULTILINE)
+    seen: set[str] = set()
     for match in pattern.finditer(output):
         name = match.group(1)
+        if name not in by_name:
+            continue
+        declaration = by_name[name]
+        seen.add(declaration.name)
         axioms = {item.strip() for item in match.group(2).split(",") if item.strip()}
-        extra_axioms = sorted(axioms - ALLOWED_AXIOMS)
-        if extra_axioms and name in by_name:
-            declaration = by_name[name]
-            errors.append(
-                _QualityError(
-                    declaration.path,
-                    declaration.line,
-                    f"{name} depends on unallowlisted axioms: "
-                    f"{', '.join(extra_axioms)}",
-                )
+        errors.extend(
+            _axiom_errors(
+                declaration, name, axioms, is_open=declaration.name in permitted
             )
+        )
+    # Only for declarations Lean actually resolved: an unresolved name is
+    # already reported once by `_axiom_audit_missing`.
+    resolved = _axiom_audit_resolved(output)
+    errors.extend(
+        _not_open_error(declaration)
+        for declaration in declarations
+        if declaration.name in permitted
+        and declaration.name not in seen
+        and declaration.name in resolved
+    )
+    return errors
+
+
+def _not_open_error(declaration: _Declaration) -> _QualityError:
+    """Report a registered challenge statement that is no longer open."""
+    return _QualityError(
+        declaration.path,
+        declaration.line,
+        f"{declaration.name} is registered as an open challenge declaration "
+        f"but does not depend on `{SORRY_AXIOM}`; challenge statements keep "
+        "their `sorry` and solutions live outside the statement file",
+    )
+
+
+def _axiom_errors(
+    declaration: _Declaration, name: str, axioms: set[str], *, is_open: bool
+) -> list[_QualityError]:
+    """Grade one declaration's axiom set."""
+    allowed = ALLOWED_AXIOMS | ({SORRY_AXIOM} if is_open else set())
+    extra_axioms = sorted(axioms - allowed)
+    errors: list[_QualityError] = []
+    if is_open and SORRY_AXIOM not in axioms:
+        # Proved in place, using nothing worse than the allowed axioms — so
+        # the checks below are all happy, and the challenge has silently
+        # stopped being one.
+        errors.append(_not_open_error(declaration))
+    if SORRY_AXIOM in extra_axioms:
+        extra_axioms.remove(SORRY_AXIOM)
+        errors.append(
+            _QualityError(
+                declaration.path,
+                declaration.line,
+                f"{name} depends on `{SORRY_AXIOM}` but is not registered as an "
+                "open declaration in Challenge/challenges.yml",
+            )
+        )
+    if extra_axioms:
+        errors.append(
+            _QualityError(
+                declaration.path,
+                declaration.line,
+                f"{name} depends on unallowlisted axioms: {', '.join(extra_axioms)}",
+            )
+        )
     return errors
 
 
@@ -1137,18 +1439,228 @@ def _check_project_card(
 ) -> list[_QualityError]:
     if not entry_path.exists():
         return []
-    text = entry_path.read_text()
-    expected = _project_card(project)
-    # The project card is the first module docstring (`/-!`) after the file
-    # header. Mathlib convention places imports between the header and the
-    # module docstring, so we skip past those.
-    body = text[_initial_header_end(text) :]
-    idx = body.find("/-!")
-    if idx >= 0 and body[idx:].startswith(expected):
+    if _card_is_current(entry_path.read_text(), _project_card(project)):
         return []
     return [
         _QualityError(
             metadata_path, 1, f"project card for {project['slug']} is out of date"
+        )
+    ]
+
+
+def _card_is_current(text: str, expected: str) -> bool:
+    """Whether a file's generated card matches ``expected``.
+
+    The card is the first module docstring (`/-!`) after the file header.
+    Mathlib convention places imports between the header and the module
+    docstring, so we skip past those.
+    """
+    body = text[_initial_header_end(text) :]
+    index = body.find("/-!")
+    return index >= 0 and body[index:].startswith(expected)
+
+
+def _check_challenges(root: Path) -> list[_QualityError]:
+    """Validate the challenge registry, its cards, and its imports.
+
+    These are the checks that need no Lean subprocess; the axiom side of
+    challenge mode lives in :func:`_check_challenge_axioms`.
+    """
+    registry = challenge.registry_path(root)
+    if not challenge.statement_files(root) and not registry.exists():
+        # An empty board is fine: the libraries can exist with nothing on
+        # them, which is how challenge mode ships before its first entry.
+        return []
+    errors = [
+        _QualityError(path, 1, message)
+        for path, message in challenge.registry_errors(root)
+    ]
+    if errors:
+        return errors
+    errors.extend(_check_challenge_imports(root))
+    errors.extend(_check_challenge_open_declarations(root))
+    errors.extend(_check_solution_imports(root))
+    challenges, _ = challenge.load_challenges(root)
+    for entry in challenges:
+        if not isinstance(entry, dict):
+            continue
+        entry_path = _module_to_path(root, str(entry["entry_module"]))
+        errors.extend(_check_challenge_statements(entry_path, registry, entry))
+        errors.extend(_check_challenge_card(entry_path, registry, entry))
+        errors.extend(_check_solution(root, registry, entry))
+    return errors
+
+
+def _check_solution_imports(root: Path) -> list[_QualityError]:
+    """Forbid a solution from importing the challenge it answers.
+
+    Comparator exports the challenge and solution environments separately
+    and compares the statements. A solution that imports the challenge
+    module would inherit the statement (and its `sorry`) instead of
+    restating it, which is precisely the check being skipped.
+    """
+    errors: list[_QualityError] = []
+    prefix = f"{challenge.LIBRARY_NAME}."
+    for path in challenge.solution_proof_files(root):
+        stripped = _strip_lean_comments(path.read_text())
+        for line_number, line in enumerate(stripped.splitlines(), start=1):
+            match = re.match(r"^\s*(?:public\s+)?import\s+([A-Za-z0-9_'.]+)\s*$", line)
+            if match and match.group(1).startswith(prefix):
+                errors.append(
+                    _QualityError(
+                        path,
+                        line_number,
+                        f"a solution may not import the challenge module "
+                        f"({match.group(1)}); restate the statement and prove it",
+                    )
+                )
+    return errors
+
+
+def _check_solution(
+    root: Path,
+    registry: Path,
+    entry: dict[str, Any],
+) -> list[_QualityError]:
+    """Check the in-repo solution module of a solved challenge."""
+    module = challenge.solution_module(entry)
+    if module is None:
+        return []
+    path = _module_to_path(root, module)
+    if not path.exists():
+        return [_QualityError(registry, 1, f"solution module {module} does not exist")]
+    errors: list[_QualityError] = []
+    declared = {declaration.name for declaration in _declarations_in([path])}
+    errors.extend(
+        _QualityError(
+            registry,
+            1,
+            f"solution {module} does not declare {name}; comparator compares the "
+            "challenge and solution environments by declaration name",
+        )
+        for name in challenge.open_declaration_names(entry)
+        if name not in declared
+    )
+    if not _card_is_current(path.read_text(), challenge.solution_card(entry)):
+        errors.append(
+            _QualityError(
+                registry,
+                1,
+                f"solution card for {entry['slug']} is out of date; regenerate with "
+                "`python -m lean_pool.quality --write-challenge-cards`",
+            )
+        )
+    return errors
+
+
+def _check_challenge_imports(root: Path) -> list[_QualityError]:
+    """Require challenge statements to be phrased in Mathlib vocabulary.
+
+    A challenge is a contract: whoever attempts it, and whoever reviews the
+    attempt, has to be able to read the statement without auditing pool
+    code. Restricting imports to Mathlib keeps that boundary small and
+    keeps a statement from resting on a pooled project that may later be
+    refactored underneath it.
+    """
+    errors: list[_QualityError] = []
+    for path in challenge.statement_files(root):
+        text = path.read_text()
+        stripped = _strip_lean_comments(text)
+        for line_number, line in enumerate(stripped.splitlines(), start=1):
+            match = re.match(r"^\s*(?:public\s+)?import\s+([A-Za-z0-9_'.]+)\s*$", line)
+            if match and not match.group(1).startswith("Mathlib."):
+                errors.append(
+                    _QualityError(
+                        path,
+                        line_number,
+                        f"challenge statements may import only Mathlib modules; "
+                        f"found {match.group(1)}",
+                    )
+                )
+    return errors
+
+
+def _check_challenge_open_declarations(root: Path) -> list[_QualityError]:
+    """Require every `sorry` to belong to a declaration the registry lists.
+
+    The Lean-backed audits establish this from the compiled environment,
+    which is the authoritative check. Doing it textually as well points at
+    the offending line for a contributor running without Lean, and covers
+    `private` declarations that `#print axioms` never enumerates.
+    """
+    permitted = _open_declarations(root)
+    errors: list[_QualityError] = []
+    for path in challenge.statement_files(root):
+        declarations = _declarations_in([path], include_private=True)
+        stripped = _strip_lean_comments(path.read_text())
+        for line_number, line in enumerate(stripped.splitlines(), start=1):
+            if not WHOLE_BODY_SORRY.search(line):
+                continue
+            owner = _enclosing_declaration(declarations, line_number)
+            if owner is not None and owner.name in permitted:
+                continue
+            owner_name = owner.name if owner is not None else "no declaration"
+            errors.append(
+                _QualityError(
+                    path,
+                    line_number,
+                    f"sorry belongs to {owner_name}, which "
+                    f"{challenge.REGISTRY_RELATIVE_PATH} does not list as an open "
+                    "declaration",
+                )
+            )
+    return errors
+
+
+def _enclosing_declaration(
+    declarations: list[_Declaration], line_number: int
+) -> _Declaration | None:
+    """Return the declaration a line belongs to, or ``None`` before the first."""
+    enclosing = None
+    for declaration in declarations:
+        if declaration.line > line_number:
+            break
+        enclosing = declaration
+    return enclosing
+
+
+def _check_challenge_statements(
+    entry_path: Path,
+    registry: Path,
+    entry: dict[str, Any],
+) -> list[_QualityError]:
+    """Require every registered open declaration to exist in the file."""
+    if not entry_path.exists():
+        return []
+    declared = {declaration.name for declaration in _declarations_in([entry_path])}
+    return [
+        _QualityError(
+            registry,
+            1,
+            f"challenge {entry['slug']} declares {name}, which is not declared "
+            f"in {entry['entry_module']}",
+        )
+        for name in challenge.open_declaration_names(entry)
+        if name not in declared
+    ]
+
+
+def _check_challenge_card(
+    entry_path: Path,
+    registry: Path,
+    entry: dict[str, Any],
+) -> list[_QualityError]:
+    """Keep the generated challenge card in sync with the registry."""
+    if not entry_path.exists():
+        return []
+    if _card_is_current(entry_path.read_text(), challenge.challenge_card(entry)):
+        return []
+    return [
+        _QualityError(
+            registry,
+            1,
+            f"challenge card for {entry['slug']} is out of date; regenerate with "
+            "`python -m lean_pool.quality --write-challenge-cards`",
         )
     ]
 
@@ -1206,12 +1718,33 @@ def _write_project_cards(root: Path) -> None:
             _write_project_card(entry_path, _project_card(project))
 
 
+def _write_challenge_cards(root: Path) -> None:
+    """Regenerate challenge and solution cards from the registry."""
+    challenges, errors = challenge.load_challenges(root)
+    if errors:
+        raise SystemExit("\n".join(f"{path}: {message}" for path, message in errors))
+    for entry in challenges:
+        if not isinstance(entry, dict) or "entry_module" not in entry:
+            continue
+        entry_path = _module_to_path(root, str(entry["entry_module"]))
+        if entry_path.exists():
+            _write_project_card(entry_path, challenge.challenge_card(entry))
+        module = challenge.solution_module(entry)
+        if module is None:
+            continue
+        solution_path = _module_to_path(root, module)
+        if solution_path.exists():
+            _write_project_card(solution_path, challenge.solution_card(entry))
+
+
 _PROJECT_CARD_RE = re.compile(
-    # A project card is a `/-! ... -/` block whose first content line is an
-    # h1 heading and which contains a `Source:` line. Matching on `Source:`
+    # A generated card is a `/-! ... -/` block whose first content line is an
+    # h1 heading and which contains a `Source:` line (projects and
+    # challenges) or a `Challenge:` line (solutions). Matching on those keys
     # distinguishes it from sibling docstrings like `/-! ## Mathematical
     # overview ... -/`. Non-greedy + DOTALL so we capture exactly one block.
-    r"/-!\s*\n#\s+[^\n]+\n(?:[^\n]*\n)*?Source:[^\n]+\n(?:[^\n]*\n)*?-/\n*",
+    r"/-!\s*\n#\s+[^\n]+\n(?:[^\n]*\n)*?(?:Source|Challenge):[^\n]+\n"
+    r"(?:[^\n]*\n)*?-/\n*",
     re.MULTILINE,
 )
 _IMPORT_LINE_RE = re.compile(r"^\s*(?:public\s+)?import\s+\S+\s*$")
@@ -1281,10 +1814,13 @@ def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityEr
         _check_file_sizes,
         _check_proof_sizes,
         _check_projects,
+        _check_challenges,
     ]
     errors = [error for check in checks for error in check(root)]
     if not skip_lean_axioms:
         errors.extend(_check_axioms(root))
+        errors.extend(_check_challenge_axioms(root))
+        errors.extend(_check_solution_axioms(root))
         errors.extend(_check_option_backdoors(root))
     return sorted(
         errors, key=lambda error: (str(error.path), error.line, error.message)
@@ -1310,6 +1846,11 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         action="store_true",
         help="Rewrite project-card module docstrings from LeanPool/projects.yml.",
     )
+    parser.add_argument(
+        "--write-challenge-cards",
+        action="store_true",
+        help="Rewrite challenge-card module docstrings from Challenge/challenges.yml.",
+    )
     return parser.parse_args(argv)
 
 
@@ -1319,6 +1860,8 @@ def main(argv: list[str] | None = None) -> int:
     root = args.repo.resolve()
     if args.write_project_cards:
         _write_project_cards(root)
+    if args.write_challenge_cards:
+        _write_challenge_cards(root)
 
     errors = run_checks(root, skip_lean_axioms=args.skip_lean_axioms)
     if errors:
