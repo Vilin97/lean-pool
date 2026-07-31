@@ -17,7 +17,7 @@ variable [BraidedCategory C]
 @[simps!]
 def tensorLeftIsoTensorRight (X : C) :
     tensorLeft X ≅ tensorRight X :=
-  NatIso.ofComponents (fun _ ↦ β_ _ _)
+  NatIso.ofComponents (fun _ ↦ β_ _ _) (fun f ↦ BraidedCategory.braiding_naturality_right X f)
 
 end MonoidalCategory
 
@@ -31,7 +31,7 @@ instance (X : C) [Closed X] : (tensorLeft X).IsLeftAdjoint :=
 instance (X : C) [Closed X] : (ihom X).IsRightAdjoint :=
   (ihom.adjunction X).isRightAdjoint
 
-instance (X : C) [Closed X] [BraidedCategory C]: (tensorRight X).IsLeftAdjoint :=
+instance (X : C) [Closed X] [BraidedCategory C] : (tensorRight X).IsLeftAdjoint :=
   Functor.isLeftAdjoint_of_iso (tensorLeftIsoTensorRight X)
 
 instance (X : C) [MonoidalClosed C] : (tensorLeft X).IsLeftAdjoint :=
@@ -42,8 +42,7 @@ variable {A B X Y : C} [Closed A] [Closed B]
 @[reassoc]
 lemma whiskerRight_comp_uncurry (f : A ⟶ B) (g : X ⟶ (ihom B).obj Y) :
     f ▷ X ≫ uncurry g = uncurry (g ≫ (pre f).app Y) := by
-  rw [uncurry_natural_left, uncurry_pre, whisker_exchange_assoc]
-  rfl
+  rw [uncurry_pre_app]
 
 @[reassoc]
 lemma curry_whiskerRight_comp (f : A ⟶ B) (g : B ⊗ X ⟶ Y) :

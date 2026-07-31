@@ -127,7 +127,7 @@ lemma strictMono_iff {α : Type*} [PartialOrder α] {n : ℕ} (f : Fin (n + 1) �
     StrictMono f ↔ ∀ (i : Fin n), f i.castSucc < f i.succ := by
   constructor
   · intro hf i
-    exact hf (castSucc_lt_succ i)
+    exact hf (castSucc_lt_succ (i := i))
   · intro h
     let φ : Fin (n + 1) →o α :=
       { toFun := f
@@ -193,10 +193,6 @@ lemma orderHom_ext_of_injective {α : Type*} [PartialOrder α] [DecidableEq α]
     · exact orderHom_ext_of_injective_aux hf h.symm _
         (fun k hk ↦ (hi k hk (by omega)).symm)
 
-@[simp]
-lemma range_succAboveOrderEmb {n : ℕ} (i : Fin (n + 1)) :
-    Set.range (Fin.succAboveOrderEmb i).toOrderHom = {i}ᶜ := by aesop
-
 lemma eq_id_of_strictMono {n : ℕ} (f : Fin (n + 1) →o Fin (n + 1)) (hf : StrictMono f) :
     f = .id := by
   apply orderHom_ext_of_injective
@@ -240,7 +236,7 @@ lemma insert_last_castSucc (x : α) (i : Fin n) :
   dsimp [insert]
   have : i.castSucc ≠ last n := fun h ↦ by
     rw [Fin.ext_iff] at h
-    simp only [coe_castSucc, val_last] at h
+    simp only [val_castSucc, val_last] at h
     omega
   rw [dif_neg this, dif_pos (castSucc_lt_last i)]
 
@@ -260,7 +256,7 @@ lemma insert_apply_succAbove (i : Fin (n + 1)) (x : α) (j : Fin n) :
   rw [dif_neg (succAbove_ne i j)]
   by_cases h : j.castSucc < i
   · simp only [Fin.succAbove_of_castSucc_lt i j h, dif_pos h,
-      coe_castSucc, Fin.eta]
+      val_castSucc, Fin.eta]
   · simp only [not_lt] at h
     simp only [Fin.succAbove_of_le_castSucc i j h,
       dif_neg (not_lt.2 (h.trans j.castSucc_le_succ)), pred_succ]
@@ -276,7 +272,7 @@ lemma monotone_insert_zero (f : Fin (n + 1) →o α) (x : α) (hx : x ≤ f 0) :
   rw [monotone_iff]
   intro i
   obtain rfl | ⟨j, rfl⟩ := i.eq_zero_or_eq_succ
-  · simpa [insert_zero_succ f x 0] using hx
+  · simpa only [Fin.castSucc_zero, insert_self, insert_zero_succ] using hx
   · simpa only [← succ_castSucc, insert_zero_succ]
       using f.monotone (castSucc_le_succ j)
 
@@ -291,7 +287,7 @@ lemma monotone_insert_last (f : Fin (n + 1) →o α) (x : α)
       using f.monotone (castSucc_le_succ j)
 
 lemma monotone_insert (f : Fin (n + 1) →o α) (i : Fin n) (x : α)
-    (hx₁ : f i.castSucc ≤ x) (hx₂ : x ≤ f i.succ):
+    (hx₁ : f i.castSucc ≤ x) (hx₂ : x ≤ f i.succ) :
     Monotone (insert f i.succ.castSucc x) := by
   rw [monotone_iff]
   intro j
@@ -301,7 +297,7 @@ lemma monotone_insert (f : Fin (n + 1) →o α) (i : Fin n) (x : α)
     apply f.monotone
     apply predAbove_right_monotone
     exact castSucc_le_succ j
-  · simp only [Classical.not_and_iff_or_not_not,
+  · simp only [not_and_or,
       Decidable.not_not, succ_inj] at hj
     conv_lhs at hj => rw [succ_castSucc, castSucc_inj]
     obtain rfl | rfl := hj
@@ -319,15 +315,15 @@ section
 
 variable [PartialOrder α] {n : ℕ}
 
-lemma strictMono_insert_zero(f : Fin (n + 1) → α) (hf : StrictMono f)
+lemma strictMono_insert_zero (f : Fin (n + 1) → α) (hf : StrictMono f)
     (x : α) (hx : x < f 0) :
     StrictMono (insert f 0 x) := by
   rw [strictMono_iff]
   intro i
   obtain rfl | ⟨j, rfl⟩ := i.eq_zero_or_eq_succ
-  · simpa [insert_zero_succ f x 0] using hx
+  · simpa only [Fin.castSucc_zero, insert_self, insert_zero_succ] using hx
   · simpa only [← succ_castSucc, insert_zero_succ]
-      using hf (castSucc_lt_succ j)
+      using hf (castSucc_lt_succ (i := j))
 
 lemma strictMono_insert_last (f : Fin (n + 1) → α) (hf : StrictMono f)
     (x : α) (hx : f (Fin.last _) < x) :
@@ -337,7 +333,7 @@ lemma strictMono_insert_last (f : Fin (n + 1) → α) (hf : StrictMono f)
   obtain rfl | ⟨j, rfl⟩ := i.eq_last_or_eq_castSucc
   · simpa
   · simpa only [insert_last_castSucc, succ_castSucc]
-      using hf (castSucc_lt_succ j)
+      using hf (castSucc_lt_succ (i := j))
 
 lemma predAbove_eq_predAdove_iff_of_lt (i : Fin n) (j k : Fin (n + 1))
     (hjk : j < k) :
@@ -368,7 +364,7 @@ lemma predAbove_eq_predAdove_iff_of_lt (i : Fin n) (j k : Fin (n + 1))
 
 lemma strictMono_insert (f : Fin (n + 1) → α) (hf : StrictMono f)
     (i : Fin n) (x : α)
-    (hx₁ : f i.castSucc < x) (hx₂ : x < f i.succ):
+    (hx₁ : f i.castSucc < x) (hx₂ : x < f i.succ) :
     StrictMono (insert f i.succ.castSucc x) := by
   rw [strictMono_iff]
   intro j
@@ -378,10 +374,10 @@ lemma strictMono_insert (f : Fin (n + 1) → α) (hf : StrictMono f)
     apply hf
     obtain h | h := (i.castSucc.predAbove_right_monotone (castSucc_le_succ j)).lt_or_eq
     · exact h
-    · rw [predAbove_eq_predAdove_iff_of_lt _ _ _ (castSucc_lt_succ j)] at h
+    · rw [predAbove_eq_predAdove_iff_of_lt _ _ _ (castSucc_lt_succ (i := j))] at h
       simp only [castSucc_inj, succ_inj, and_self, ne_eq] at h hj
       tauto
-  · simp only [Classical.not_and_iff_or_not_not,
+  · simp only [not_and_or,
       Decidable.not_not, succ_inj] at hj
     conv_lhs at hj => rw [succ_castSucc, castSucc_inj]
     obtain rfl | rfl := hj
