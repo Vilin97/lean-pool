@@ -36,10 +36,10 @@ lemma exists_img {j : SimplexCategoryᵒᵖ} (x : X.obj j) :
   obtain ⟨z, rfl, rfl⟩ := Types.exists_of_isPullback
     ((IsPullback.of_hasPullback p p).map ((evaluation _ _).obj j))
     y y₀ hy
-  exact congr_fun (congr_app (hf _ _ pullback.condition) j) z
+  exact ConcreteCategory.congr_hom (congr_app (hf _ _ pullback.condition) j) z
 
 noncomputable def descApp (j : SimplexCategoryᵒᵖ) : X.obj j ⟶ T.obj j :=
-  fun x ↦ (exists_img f hf x).choose
+  ↾(fun x ↦ (exists_img f hf x).choose)
 
 lemma descApp_eq {j : SimplexCategoryᵒᵖ} (y : Y.obj j) :
     descApp f hf j (p.app _ y) = f.app _ y :=
@@ -67,8 +67,8 @@ noncomputable def effectiveEpiStructOfEpi : EffectiveEpiStruct p where
     ext j x
     dsimp
     obtain ⟨y, rfl⟩ := surjective_app p x
-    rw [descApp_eq, ← hl]
-    dsimp
+    rw [desc_app, descApp_eq, ← hl]
+    rfl
 
 lemma effectiveEpi_of_epi : EffectiveEpi p where
   effectiveEpi := ⟨effectiveEpiStructOfEpi p⟩
@@ -85,6 +85,8 @@ noncomputable def isCoequalizerOfEpiOfIsPullback {Z : SSet.{u}} {p₁ p₂ : Z �
     (fun s ↦ (effectiveEpiStructOfEpi p).fac _ _)
     (fun s m hm ↦ by
       dsimp at m hm ⊢
-      rw [← cancel_epi p, hm, (effectiveEpiStructOfEpi p).fac])
+      apply (cancel_epi p).1
+      rw [(effectiveEpiStructOfEpi p).fac]
+      exact hm)
 
 end SSet
