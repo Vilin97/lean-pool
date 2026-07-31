@@ -1,7 +1,7 @@
 /-
-Copyright (c) 2026 Jack McKoen. All rights reserved.
+Copyright (c) 2026 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Jack McKoen
+Authors: Joël Riou
 -/
 import Mathlib.AlgebraicTopology.SimplexCategory.Basic
 
