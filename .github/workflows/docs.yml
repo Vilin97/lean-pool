@@ -112,6 +112,7 @@ jobs:
         with:
           name: exposition-site
           path: exposition-site
+          if-no-files-found: error
           retention-days: 3
 
   build:
@@ -175,6 +176,7 @@ jobs:
         with:
           name: documentation-site
           path: docbuild/.lake/build/doc
+          if-no-files-found: error
           retention-days: 3
 
       - name: Save caches
@@ -218,6 +220,25 @@ jobs:
           name: exposition-site
           path: site/exposition
 
+      - name: Validate assembled Pages tree
+        run: |
+          set -euo pipefail
+          test -s site/index.html
+          test -s site/exposition/index.html
+          test -s site/exposition/decls/index.html
+          test -s site/exposition/assets/landing.js
+          test -s site/exposition/data/decls.json
+          jq -e --arg commit "$GITHUB_SHA" '
+            .commit == $commit
+            and (.projects | length > 0)
+            and (.totals.projects == (.projects | length))
+            and (.totals.decls > 0)
+          ' site/exposition/data/index.json > /dev/null
+          first_project=$(jq -r '.projects[0].slug' site/exposition/data/index.json)
+          test -s "site/exposition/p/${first_project}/index.html"
+          mkdir -p site/deployments
+          printf '%s\n' "$GITHUB_SHA" > "site/deployments/${GITHUB_SHA}.txt"
+
       - name: Configure Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
 
@@ -229,3 +250,17 @@ jobs:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+      - name: Verify deployed site
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --silent --show-error \
+            --retry 30 --retry-delay 10 --retry-all-errors --retry-max-time 300 \
+            --output deployed-commit.txt \
+            "${PAGE_URL%/}/deployments/${GITHUB_SHA}.txt"
+          cmp "site/deployments/${GITHUB_SHA}.txt" deployed-commit.txt
+          curl --fail --silent --show-error \
+            --retry 30 --retry-delay 10 --retry-all-errors --retry-max-time 300 \
+            --output /dev/null \
+            "${PAGE_URL%/}/exposition/index.html"
