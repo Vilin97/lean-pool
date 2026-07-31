@@ -64,7 +64,7 @@ def adj : tensorLeft F ⊣ rightAdj F where
     naturality := fun G H f ↦ by
       dsimp [rightAdj]
       ext _
-      simp [FunctorToTypes.naturality] }
+      simp [NatTrans.naturality_apply] }
   counit := { app := fun G ↦ functorHomEquiv F _ G (𝟙 _) }
 
 instance closed : Closed F where

@@ -135,13 +135,13 @@ include hf₁ hy₁ hy₂
 
 lemma map_g_op_y₂ : X.map (g hf₁ f₂).op y₂ = y₁ := by
   dsimp [g]
-  rw [FunctorToTypes.map_comp_apply, ← hy₂, hy₁, ← FunctorToTypes.map_comp_apply, ← op_comp,
-    SplitEpi.id, op_id, FunctorToTypes.map_id_apply]
+  rw [Functor.map_comp_apply, ← hy₂, hy₁, ← Functor.map_comp_apply, ← op_comp,
+    SplitEpi.id, op_id, Functor.map_id_apply]
 
 lemma isIso_factorThruImage_g :
     IsIso (factorThruImage (g hf₁ f₂)) := by
   have := map_g_op_y₂ hf₁ hy₁ hy₂
-  rw [← image.fac (g hf₁ f₂), op_comp, FunctorToTypes.map_comp_apply] at this
+  rw [← image.fac (g hf₁ f₂), op_comp, Functor.map_comp_apply] at this
   exact X.isIso_of_non_degenerate y₁ (factorThruImage (g hf₁ f₂)) _ this
 
 lemma mono_g : Mono (g hf₁ f₂) := by
@@ -235,8 +235,8 @@ lemma mem_degenerate_iff {n : ℕ} (x : A.obj (op (.mk n))) :
     rintro ⟨m, hm, f, _, ⟨y, rfl⟩⟩
     refine ⟨m, hm, f, inferInstance, ⟨⟨y, ?_⟩, rfl⟩⟩
     have := isSplitEpi_of_epi f
-    simpa only [Set.mem_preimage, ← op_comp, ← FunctorToTypes.map_comp_apply,
-      IsSplitEpi.id, op_id, FunctorToTypes.map_id_apply] using A.map (section_ f).op hx
+    simpa only [Set.mem_preimage, ← op_comp, ← Functor.map_comp_apply,
+      IsSplitEpi.id, op_id, Functor.map_id_apply] using A.map (section_ f).op hx
 
 lemma mem_nonDegenerate_iff {n : ℕ} (x : A.obj (op (.mk n))) :
     x ∈ nonDegenerate A n ↔ x.1 ∈ X.nonDegenerate n := by
@@ -291,7 +291,7 @@ variable {X} {Y : SSet.{u}}
 lemma degenerate_map {n : ℕ} {x : X _⦋n⦌} (hx : x ∈ X.degenerate n) (f : X ⟶ Y) :
     f.app _ x ∈ Y.degenerate n := by
   obtain ⟨m, hm, g, y, rfl⟩ := hx
-  exact ⟨m, hm, g, f.app _ y, by rw [FunctorToTypes.naturality]⟩
+  exact ⟨m, hm, g, f.app _ y, by rw [NatTrans.naturality_apply]⟩
 
 lemma degenerate_le_preimage (f : X ⟶ Y) (n : ℕ) :
     X.degenerate n ⊆ Set.preimage (f.app _) (Y.degenerate n) :=

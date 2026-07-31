@@ -334,7 +334,7 @@ section
 variable {X Y}
 variable (f : X ⟶ Y)
 
-attribute [local simp] FunctorToTypes.naturality
+attribute [local simp] NatTrans.naturality_apply
 
 abbrev Subcomplex.range : Y.Subcomplex := Subpresheaf.range f
 
@@ -426,7 +426,7 @@ variable {Y}
 def preimage (A : X.Subcomplex) (p : Y ⟶ X) : Y.Subcomplex where
   obj n := p.app n ⁻¹' (A.obj n)
   map f := (Set.preimage_mono (A.map f)).trans (by
-    simp only [Set.preimage_preimage, FunctorToTypes.naturality _ _ p f]
+    simp only [Set.preimage_preimage, NatTrans.naturality_apply _ _ p f]
     rfl)
 
 @[simp]
@@ -453,7 +453,7 @@ def fromPreimage (A : X.Subcomplex) (p : Y ⟶ X) :
     ext ⟨y, hy⟩
     dsimp
     ext
-    exact FunctorToTypes.naturality _ _ p f y
+    exact NatTrans.naturality_apply _ _ p f y
 
 lemma ofSimplex_eq_range {X : SSet.{u}} {n : ℕ} (x : X _⦋n⦌) :
     Subcomplex.ofSimplex x = range (yonedaEquiv.symm x) := by
@@ -611,7 +611,7 @@ lemma preimage_image_of_isIso {X Y : SSet.{u}} (f : X ⟶ Y) (B : Y.Subcomplex) 
   apply le_antisymm
   · rw [image_le_iff]
   · intro n y hy
-    exact ⟨(inv f).app _ y, by simpa [← FunctorToTypes.comp]⟩
+    exact ⟨(inv f).app _ y, by simpa [← NatTrans.comp_app_apply]⟩
 
 @[simp]
 lemma image_preimage_of_isIso {X Y : SSet.{u}} (f : X ⟶ Y) (A : X.Subcomplex) [IsIso f] :

@@ -52,8 +52,8 @@ noncomputable def desc : X ⟶ T where
     ext x
     obtain ⟨y, rfl⟩ := surjective_app p x
     dsimp
-    rw [descApp_eq, ← FunctorToTypes.naturality, descApp_eq,
-      FunctorToTypes.naturality]
+    rw [descApp_eq, ← NatTrans.naturality_apply, descApp_eq,
+      NatTrans.naturality_apply]
 
 end effectiveEpiStructOfEpi
 

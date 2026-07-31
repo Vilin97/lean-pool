@@ -17,7 +17,7 @@ def const {X Y : SSet.{u}} (y : Y _[0]) : X ⟶ Y where
   naturality n m f := by
     ext
     dsimp
-    rw [← FunctorToTypes.map_comp_apply]
+    rw [← Functor.map_comp_apply]
     rfl
 
 @[reassoc (attr := simp)]
@@ -28,7 +28,7 @@ lemma comp_const {X Y Z : SSet.{u}} (f : X ⟶ Y) (z : Z _[0]) :
 lemma const_comp {X Y Z : SSet.{u}} (y : Y _[0]) (g : Y ⟶ Z) :
     const (X := X) y ≫ g = const (g.app _ y) := by
   ext m x
-  simp [FunctorToTypes.naturality]-/
+  simp [NatTrans.naturality_apply]-/
 
 @[deprecated (since := "2025-03-19")]
 alias yonedaEquiv_apply_comp := yonedaEquiv_comp

@@ -28,7 +28,7 @@ lemma yonedaEquiv_map_comp {n m : SimplexCategory} (f : n ⟶ m) {X : SSet.{u}}
     yonedaEquiv (stdSimplex.map f ≫ g) =
       X.map f.op (yonedaEquiv g) := by
   dsimp [yonedaEquiv, yonedaCompUliftFunctorEquiv]
-  rw [← FunctorToTypes.naturality]
+  rw [← NatTrans.naturality_apply]
   rfl
 
 @[simp]
@@ -140,7 +140,7 @@ lemma map_yonedaEquiv {X : SSet.{u}} {n m : SimplexCategory} (f : n ⟶ m)
     (g : stdSimplex.obj m ⟶ X) :
     X.map f.op (yonedaEquiv g) = g.app _ (yonedaEquiv (stdSimplex.map f)) := by
   dsimp [yonedaEquiv, yonedaCompUliftFunctorEquiv]
-  rw [← FunctorToTypes.naturality]
+  rw [← NatTrans.naturality_apply]
   rfl
 
 instance (n : SimplexCategory) : (stdSimplex.{u}.obj n).StrictSegal where
@@ -192,7 +192,7 @@ lemma mono_iff (n : ℕ) (f : Δ[n] ⟶ Y) :
     ext i : 2
     apply hf
     dsimp [StrictSegal.spineEquiv, spine]
-    simp only [FunctorToTypes.naturality, h]
+    simp only [NatTrans.naturality_apply, h]
 
 variable {n : ℕ}
 
@@ -655,7 +655,7 @@ noncomputable def ofSimplexRepresentableBy :
       erw [Equiv.apply_symm_apply]
       rw [yonedaEquiv_symm_comp]
       conv_rhs => erw [Equiv.apply_symm_apply]
-      rw [← FunctorToTypes.naturality]
+      rw [← NatTrans.naturality_apply]
       rfl }
 
 @[simp]
@@ -664,7 +664,7 @@ lemma ofSimplexRepresentableBy_id :
   dsimp [ofSimplexRepresentableBy]
   rw [Category.id_comp, yonedaEquiv_symm_comp]
   erw [Equiv.apply_symm_apply]
-  apply FunctorToTypes.map_id_apply
+  apply Functor.map_id_apply
 
 @[simp]
 lemma yonedaEquiv_isoOfRepresentableBy_ofSimplexRepresentableBy_hom :

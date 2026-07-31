@@ -87,7 +87,7 @@ def map {A' : C ⥤ Type w} (f : A' ⟶ A) (x : HomObj F G A) : HomObj F G A' wh
   app Δ a := x.app Δ (f.app Δ a)
   naturality {Δ Δ'} φ a := by
     dsimp
-    rw [← x.naturality φ (f.app Δ a), FunctorToTypes.naturality _ _ f φ a]
+    rw [← x.naturality φ (f.app Δ a), NatTrans.naturality_apply _ _ f φ a]
 
 end HomObj
 
@@ -129,7 +129,7 @@ def functorHomEquiv (A : C ⥤ Type max u v v') : (A ⟶ F.functorHom G) ≃ Hom
       naturality := fun X Y f => by
         ext
         dsimp only [types_comp_apply]
-        rw [← FunctorToTypes.map_comp_apply]
+        rw [← Functor.map_comp_apply]
         rfl }
   left_inv φ := by
     ext X a Y f

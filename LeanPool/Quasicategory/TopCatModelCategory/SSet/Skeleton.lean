@@ -19,7 +19,7 @@ lemma mono_of_nonDegenerate {X : SSet.{u}} {d d' : ℕ} (x : X _⦋d⦌)
     (h : X.map f.op x ∈ X.nonDegenerate d') : Mono f := by
   have := isIso_of_nonDegenerate _ ⟨_, h⟩ (factorThruImage f)
     (X.map (image.ι f).op x) (by
-      rw [← FunctorToTypes.map_comp_apply, ← op_comp, image.fac])
+      rw [← Functor.map_comp_apply, ← op_comp, image.fac])
   rw [← image.fac f]
   infer_instance
 
@@ -223,7 +223,7 @@ lemma preimage_skeletonOfMono_eq (x : ι i d) :
     have := h.symm.le _ (show stdSimplex.objEquiv.symm (𝟙 ⦋d⦌)  ∈ _ by simp)
     simp only [Subpresheaf.range_obj, Subcomplex.preimage_obj, Set.mem_preimage] at this
     change Y.map (𝟙 _) x.1.1 ∈ (skeletonOfMono i d).obj _ at this
-    simp only [Subpresheaf.range_obj, FunctorToTypes.map_id_apply,
+    simp only [Subpresheaf.range_obj, Functor.map_id_apply,
       mem_skeletonOfMono_obj_iff_of_nonDegenerate, Set.mem_range, lt_self_iff_false,
       or_false] at this
     exact x.2 this
@@ -278,7 +278,7 @@ lemma sup_range_r_range_b :
   · exact Or.inl ⟨x, hx, rfl⟩
   · refine Or.inr ⟨(ιB ⟨⟨y, hy₁⟩, by simpa⟩).app _
       (stdSimplex.objEquiv.symm f), ?_⟩
-    rw [← FunctorToTypes.comp, ιB_b]
+    rw [← NatTrans.comp_app_apply, ιB_b]
     rfl
 
 lemma range_r_app_union_range_b_app (n : SimplexCategoryᵒᵖ) :
@@ -309,15 +309,15 @@ lemma isPullback : IsPullback (t i d) (m i d) (r i d) (b i d) where
         rw [Subtype.ext_iff] at h
         dsimp at h
         subst h
-        rwa [← FunctorToTypes.comp, ιB_b] at hy
+        rwa [← NatTrans.comp_app_apply, ιB_b] at hy
       refine ⟨(ιA x).app _ ⟨b, hb⟩, ?_, ?_⟩
       · rw [Subtype.ext_iff] at h
         dsimp at h
-        rw [← FunctorToTypes.comp, ιA_t]
-        rw [← FunctorToTypes.comp, ιB_b] at h
+        rw [← NatTrans.comp_app_apply, ιA_t]
+        rw [← NatTrans.comp_app_apply, ιB_b] at h
         ext
         exact h
-      · rw [← FunctorToTypes.comp, ιA_m, comp_app, types_comp_apply,
+      · rw [← NatTrans.comp_app_apply, ιA_m, comp_app, types_comp_apply,
           Subpresheaf.ι_app])⟩
 
 
@@ -328,7 +328,7 @@ lemma exists_epi {n : ℕ} (y : (B i d) _⦋n⦌)
     (ιB x).app (op ⦋n⦌) (stdSimplex.objEquiv.symm f) = y := by
   obtain ⟨x, s, rfl⟩ := ιB_jointly_surjective y
   have hs : s ∉ ∂Δ[d].obj _ := fun hs ↦ hy (⟨(ιA x).app _ ⟨s, hs⟩, by
-    rw [← FunctorToTypes.comp, ιA_m, comp_app, types_comp_apply, Subpresheaf.ι_app]⟩)
+    rw [← NatTrans.comp_app_apply, ιA_m, comp_app, types_comp_apply, Subpresheaf.ι_app]⟩)
   refine ⟨x, stdSimplex.objEquiv (m := op ⦋n⦌) s,
     by simpa [SimplexCategory.epi_iff_surjective, boundary] using hs,
     by simp⟩
@@ -348,7 +348,7 @@ lemma isPushout : IsPushout (t i d) (m i d) (r i d) (b i d) where
       obtain ⟨x₁, f₁, _, rfl⟩ := exists_epi y₁ hy₁
       obtain ⟨x₂, f₂, _, rfl⟩ := exists_epi y₂ hy₂
       have h' : Y.map f₁.op x₁.1.1 = Y.map f₂.op x₂.1.1 := by
-        rwa [← FunctorToTypes.comp, ← FunctorToTypes.comp, ιB_b, ιB_b,
+        rwa [← NatTrans.comp_app_apply, ← NatTrans.comp_app_apply, ιB_b, ιB_b,
           Subtype.ext_iff] at h
       obtain rfl : x₁ = x₂ := by
         rw [Subtype.ext_iff]

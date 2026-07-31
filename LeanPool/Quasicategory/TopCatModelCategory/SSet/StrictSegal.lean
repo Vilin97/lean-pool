@@ -24,27 +24,28 @@ variable {X Y : SSet.{u}} (f : X ⟶ Y)
 lemma σ_injective {n : ℕ} (i : Fin (n + 1)) : Function.Injective (X.σ i) := fun x₁ x₂ h ↦ by
   rw [← δ_comp_σ_self_apply i x₁, ← δ_comp_σ_self_apply i x₂, h]
 
-lemma mono_iff_of_strictSegal [StrictSegal X] :
+lemma mono_iff_of_strictSegal [IsStrictSegal X] :
     Mono f ↔ Function.Injective (f.app (op (.mk 1))) := by
+  have sx := StrictSegal.ofIsStrictSegal X
   rw [NatTrans.mono_iff_mono_app]
   simp only [mono_iff_injective]
   refine ⟨fun hf ↦ hf _, fun hf ⟨k⟩ ↦ ?_⟩
-  induction' k using SimplexCategory.rec with k
+  induction k using SimplexCategory.rec with | _ k => ?_
   obtain _ | k := k
   · intro x y h
     apply σ_injective 0
-    apply StrictSegal.spineInjective
+    apply sx.spineInjective
     ext i
     fin_cases i
     apply hf
     dsimp [StrictSegal.spineEquiv]
-    simp only [Fin.isValue, SimplexCategory.mkOfSucc_zero, op_id, FunctorToTypes.map_id_apply,
+    simp only [Fin.isValue, SimplexCategory.mkOfSucc_zero, op_id, Functor.map_id_apply,
       σ_naturality_apply, h]
   · intro x y h
-    apply StrictSegal.spineInjective
+    apply sx.spineInjective
     ext i
     apply hf
     dsimp [StrictSegal.spineEquiv]
-    simp only [FunctorToTypes.naturality, h]
+    simp only [NatTrans.naturality_apply, h]
 
 end SSet
