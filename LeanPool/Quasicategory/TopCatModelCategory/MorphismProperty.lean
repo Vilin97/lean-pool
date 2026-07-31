@@ -12,8 +12,8 @@ local instance Cardinal.aleph0_isRegular : Fact Cardinal.aleph0.{w}.IsRegular wh
   out := Cardinal.isRegular_aleph0
 
 noncomputable local instance Cardinal.orderbot_aleph0_ord_to_type :
-    OrderBot Cardinal.aleph0.ord.toType :=
-  toTypeOrderBot Cardinal.isRegular_aleph0.ne_zero
+    OrderBot Cardinal.aleph0.ord.ToType :=
+  Cardinal.orderBotAleph0OrdToType
 
 namespace CategoryTheory.MorphismProperty
 
@@ -33,33 +33,12 @@ lemma min_iff (W₁ W₂ : MorphismProperty C) {X Y : C} (f : X ⟶ Y) :
     (W₁ ⊓ W₂) f ↔ W₁ f ∧ W₂ f := Iff.rfl
 
 @[simp]
-lemma sInf_iff (S : Set (MorphismProperty C)) {X Y : C} (f : X ⟶ Y) :
-    sInf S f ↔ ∀ (W : S), W.1 f := by
-  dsimp [sInf, iInf]
-  aesop
-
-@[simp]
 lemma max_iff (W₁ W₂ : MorphismProperty C) {X Y : C} (f : X ⟶ Y) :
     (W₁ ⊔ W₂) f ↔ W₁ f ∨ W₂ f := Iff.rfl
 
-instance isSmall_iSup {ι : Type w'} (W : ι → MorphismProperty C) [∀ i, IsSmall.{w} (W i)]
-    [Small.{w} ι] :
-    IsSmall.{w} (⨆ i, W i) := by
-  have : ⨆ i, W i = .ofHoms (fun (j : Σ (i : ι), (W i).toSet) ↦ j.2.1.hom) := by
-    ext
-    simp [ofHoms_iff]
-  rw [this]
-  infer_instance
-
 section
 
-variable {ι : Sort*} (W : ι → MorphismProperty C)
-
-@[simp]
-lemma iInf_iff {X Y : C} (f : X ⟶ Y) :
-    iInf W f ↔ ∀ i, W i f := by
-  dsimp [sInf, iInf]
-  aesop
+variable {ι : Type*} (W : ι → MorphismProperty C)
 
 instance [∀ i, (W i).ContainsIdentities] : (⨅ (i : ι), W i).ContainsIdentities where
   id_mem X := by
@@ -108,15 +87,6 @@ instance [W₁.HasTwoOutOfThreeProperty] [W₂.HasTwoOutOfThreeProperty] :
 
 end
 
-section
-
-variable (W : MorphismProperty D) (F : C ⥤ D)
-
-instance [W.IsStableUnderRetracts] : (W.inverseImage F).IsStableUnderRetracts where
-  of_retract r h := W.of_retract (r.map F.mapArrow) h
-
-end
-
 instance (W : MorphismProperty C) :
     IsStableUnderTransfiniteComposition.{w} W.llp where
   isStableUnderTransfiniteCompositionOfShape J _ _ _ _ :=
@@ -148,13 +118,12 @@ lemma map_colimitsOfShape (W : MorphismProperty C)
     [PreservesColimitsOfShape J F] :
     (W.map F).colimitsOfShape J (F.map f) := by
   obtain ⟨_, _, c₁, c₂, hc₁, hc₂, φ, hφ⟩ := hf
-  let hc₁' := isColimitOfPreserves F hc₁
-  have : F.map (hc₁.desc { ι := φ ≫ c₂.ι }) =
-    hc₁'.desc { ι := whiskerRight φ F ≫ (F.mapCocone c₂).ι } :=
-      hc₁'.hom_ext (fun j ↦ by
-        rw [IsColimit.fac]
-        dsimp
-        rw [← F.map_comp, IsColimit.fac, NatTrans.comp_app, Functor.map_comp] )
+  have : F.map (hc₁.desc (Cocone.mk _ (φ ≫ c₂.ι))) =
+      (isColimitOfPreserves F hc₁).desc
+        (Cocone.mk _ (Functor.whiskerRight φ F ≫ (F.mapCocone c₂).ι)) := by
+    refine (isColimitOfPreserves F hc₁).hom_ext (fun j ↦ ?_)
+    erw [(isColimitOfPreserves F hc₁).fac, ← F.map_comp, hc₁.fac]
+    exact F.map_comp _ _
   rw [this]
   exact ⟨_, _, _, _, _, isColimitOfPreserves F hc₂, _,
     fun j ↦ W.map_mem_map F (φ.app j) (hφ j)⟩
