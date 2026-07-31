@@ -165,54 +165,17 @@ jobs:
         id: build
         run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs Challenge:docs
 
-      - name: Add exposition site
-        # Wait for the parallel `exposition` job's artifact and merge it into
-        # the Pages tree. Fail-soft: if that job failed or timed out, deploy
-        # the docs without the exposition rather than blocking the site.
+      - name: Remove cached exposition
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # Drop any exposition tree restored from the Docs-Lake cache so the
-          # deploy matches the fresh artifact exactly (or omits the exposition
-          # entirely on the fail-soft paths) — never a stale mixture.
-          rm -rf docbuild/.lake/build/doc/exposition
-          deadline=$((SECONDS + 2700))
-          while [ "$SECONDS" -lt "$deadline" ]; do
-            found=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
-              --jq '[.artifacts[] | select(.name == "exposition-site" and .expired == false)] | length' || echo 0)
-            if [ "$found" -ge 1 ]; then
-              if gh run download "${{ github.run_id }}" --repo "${{ github.repository }}" \
-                  --name exposition-site --dir docbuild/.lake/build/doc/exposition; then
-                echo "Exposition site merged into Pages tree."
-              else
-                echo "::warning::Exposition artifact download failed; deploying docs without it."
-              fi
-              exit 0
-            fi
-            conclusion=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs" \
-              --jq '.jobs[] | select(.name == "Build exposition site") | .conclusion' || echo "")
-            if [ "$conclusion" = "failure" ] || [ "$conclusion" = "cancelled" ]; then
-              echo "::warning::Exposition job concluded with '$conclusion'; deploying docs without it."
-              exit 0
-            fi
-            sleep 20
-          done
-          echo "::warning::Timed out waiting for the exposition artifact; deploying docs without it."
+        run: rm -rf docbuild/.lake/build/doc/exposition
 
-      - name: Configure Pages
+      - name: Upload documentation artifact
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
-
-      - name: Upload Pages artifact
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
+          name: documentation-site
           path: docbuild/.lake/build/doc
-
-      - name: Deploy Pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+          retention-days: 3
 
       - name: Save caches
         # Only persist the doc cache when the build step actually succeeded.
@@ -228,3 +191,41 @@ jobs:
             .lake/build
             docbuild/.lake/build
           key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
+
+  # The two expensive sites build in parallel. Let the Actions dependency
+  # graph join them instead of racing one job against a polling timeout.
+  # If either build fails, no incomplete Pages tree replaces the live site.
+  deploy:
+    needs:
+      - exposition
+      - build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    name: Deploy documentation
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download documentation artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: documentation-site
+          path: site
+
+      - name: Download exposition artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: exposition-site
+          path: site/exposition
+
+      - name: Configure Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: site
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
