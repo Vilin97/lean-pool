@@ -31,7 +31,9 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # PR updates should supersede stale work, but the first main build after a
+  # toolchain bump must be allowed to finish and seed the new caches.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
   contents: read
@@ -40,28 +42,106 @@ permissions:
   actions: read
 
 jobs:
-  # Runs in parallel with the doc-gen4 build; its (small) artifact is merged
-  # into the Pages tree by the `build` job just before deployment. Restores
-  # the same cache as `build` but never saves it — `build` owns cache writes.
-  exposition:
+  # Fail cheap consistency checks before either multi-hour documentation job
+  # starts. In particular, a stale generated root should not spend runner time
+  # building documentation that cannot be merged.
+  preflight:
     runs-on: ubuntu-latest
-    name: Build exposition site
+    name: Documentation preflight
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Restore caches
+      # docbuild deliberately reuses the root workspace's compiled artifacts.
+      # Fail before restoring anything if those workspaces ever diverge.
+      - name: Check documentation workspace compatibility
+        run: |
+          set -euo pipefail
+          if ! cmp lean-toolchain docbuild/lean-toolchain; then
+            echo "::error::Root and documentation workspaces use different Lean toolchains."
+            exit 1
+          fi
+          root_mathlib=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          docs_mathlib=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' docbuild/lake-manifest.json)
+          if [ -z "$root_mathlib" ] || [ "$root_mathlib" = "null" ]; then
+            echo "::error::Root lake-manifest.json has no Mathlib revision."
+            exit 1
+          fi
+          if [ -z "$docs_mathlib" ] || [ "$docs_mathlib" = "null" ]; then
+            echo "::error::docbuild/lake-manifest.json has no Mathlib revision."
+            exit 1
+          fi
+          if [ "$root_mathlib" != "$docs_mathlib" ]; then
+            echo "::error::Root Mathlib revision $root_mathlib does not match docbuild ($docs_mathlib)."
+            exit 1
+          fi
+
+      # This is deliberately identical to Lean Action CI's cache lookup (key,
+      # paths, and ordering). Documentation can therefore start from the
+      # root build that CI already produced instead of compiling the
+      # entire pool again under a separate cache namespace.
+      - name: Restore Lean build cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
             .lake/build
-            docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
-            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
-            Docs-Lake-${{ runner.os }}-
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      # A package directory from a restored cache does not prove that its
+      # oleans match the current manifest. `cache get` is incremental, so run it
+      # unconditionally and then verify the checkout revision.
+      - name: Install and verify Mathlib cache
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          expected=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          actual=$(git -C .lake/packages/mathlib rev-parse HEAD)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Mathlib checkout $actual does not match lake-manifest.json ($expected)."
+            exit 1
+          fi
+
+      - name: Check generated roots
+        run: ~/.elan/bin/lake exe mk_all --check
+
+  # Runs in parallel with the doc-gen4 build; its (small) artifact is merged
+  # into the Pages tree by the `deploy` job. Restores the root build cache but
+  # never saves it — Lean Action CI owns that cache, while the documentation
+  # jobs own doc-gen's separate caches.
+  exposition:
+    # On a cold toolchain boundary, Mathlib docInfo gives Lean Action CI time
+    # to seed the new root cache before this job restores it. Without that
+    # boundary, exposition's pool rebuild plus extraction approached six hours.
+    needs:
+      - preflight
+      - mathlib_doc_info
+    runs-on: ubuntu-latest
+    name: Build exposition site
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore Lean build cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -72,10 +152,13 @@ jobs:
 
       - name: Install Mathlib cache
         run: |
-          if [ ! -d ".lake/packages/mathlib" ]; then
-            ~/.elan/bin/lake exe cache get
-          else
-            echo "Mathlib already present from cache"
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          expected=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          actual=$(git -C .lake/packages/mathlib rev-parse HEAD)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Mathlib checkout $actual does not match lake-manifest.json ($expected)."
+            exit 1
           fi
 
       - name: Build pool
@@ -115,31 +198,150 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-  build:
+  # Mathlib dominates a cold doc-gen bootstrap. Give it a separate job and
+  # persist the verified SQLite checkpoint immediately, before any pool module
+  # can consume the remainder of GitHub's six-hour job limit.
+  mathlib_doc_info:
+    needs: preflight
     runs-on: ubuntu-latest
-    name: Build doc-gen4 site
+    name: Build Mathlib documentation data
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Restore caches
-        id: cache
+      - name: Restore Lean build cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
             .lake/build
-            docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
-          # The doc tree builds incrementally per module, so unchanged Mathlib
-          # modules are reused from cache and only changed/new modules re-render.
-          # Both PR and main fall back to the latest doc cache and build only the
-          # delta, so adding a project no longer triggers a full Mathlib re-render
-          # on main (the previous exact-key-only behaviour cost ~4h per merge).
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
-            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
-            Docs-Lake-${{ runner.os }}-
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      # Only doc-gen's own state is cached here. Root oleans stay in the
+      # Lean Action cache above, so the two namespaces do not duplicate them.
+      - name: Restore Mathlib documentation checkpoint
+        id: mathlib-doc-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            docbuild/.lake/build
+            .lake/packages/doc-gen4
+            .lake/packages/leansqlite
+            .lake/packages/UnicodeBasic
+            .lake/packages/BibtexQuery
+            .lake/packages/MD4Lean
+          key: DocsInfoMathlib-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install and verify Mathlib cache
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          expected=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          actual=$(git -C .lake/packages/mathlib rev-parse HEAD)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Mathlib checkout $actual does not match lake-manifest.json ($expected)."
+            exit 1
+          fi
+
+      # Lake materializes the exact dependencies in docbuild/lake-manifest.json;
+      # do not run `lake update`, which can re-resolve and rewrite that lockfile.
+      - name: Build Mathlib documentation data
+        run: cd docbuild && ~/.elan/bin/lake build Mathlib:docInfo
+
+      - name: Validate Mathlib documentation checkpoint
+        run: |
+          set -euo pipefail
+          test -s docbuild/.lake/build/api-docs.db
+          test -n "$(find docbuild/.lake/build/doc-data -type f -name 'Mathlib*.doc' -print -quit)"
+          python3 - <<'PY'
+          import sqlite3
+
+          with sqlite3.connect("docbuild/.lake/build/api-docs.db") as connection:
+              checkpoint = connection.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+              integrity = connection.execute("PRAGMA quick_check").fetchone()
+          if checkpoint is None or checkpoint[0] != 0:
+              raise SystemExit(f"SQLite WAL checkpoint failed: {checkpoint!r}")
+          if integrity != ("ok",):
+              raise SystemExit(f"SQLite quick_check failed: {integrity!r}")
+          PY
+
+      # PR caches remain scoped to refs/pull/N/merge, so saving here safely
+      # hands the cold checkpoint to this workflow's downstream job and reruns.
+      - name: Save Mathlib documentation checkpoint
+        if: steps.mathlib-doc-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            docbuild/.lake/build
+            .lake/packages/doc-gen4
+            .lake/packages/leansqlite
+            .lake/packages/UnicodeBasic
+            .lake/packages/BibtexQuery
+            .lake/packages/MD4Lean
+          key: DocsInfoMathlib-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}
+
+  build:
+    needs:
+      - preflight
+      - mathlib_doc_info
+    runs-on: ubuntu-latest
+    name: Build doc-gen4 site
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore Lean build cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      # Prefer the latest complete docInfo database from this compatibility
+      # boundary. On a cold boundary, the preceding job has just produced the
+      # Mathlib-only checkpoint used by the conditional fallback below.
+      - name: Restore pool documentation checkpoint
+        id: pool-doc-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            docbuild/.lake/build
+            .lake/packages/doc-gen4
+            .lake/packages/leansqlite
+            .lake/packages/UnicodeBasic
+            .lake/packages/BibtexQuery
+            .lake/packages/MD4Lean
+          key: DocsInfo-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            DocsInfo-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}-
+
+      - name: Restore Mathlib documentation checkpoint
+        if: steps.pool-doc-cache.outputs.cache-matched-key == ''
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            docbuild/.lake/build
+            .lake/packages/doc-gen4
+            .lake/packages/leansqlite
+            .lake/packages/UnicodeBasic
+            .lake/packages/BibtexQuery
+            .lake/packages/MD4Lean
+          key: DocsInfoMathlib-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}
+          fail-on-cache-miss: true
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -150,11 +352,52 @@ jobs:
 
       - name: Install Mathlib cache
         run: |
-          if [ ! -d ".lake/packages/mathlib" ]; then
-            ~/.elan/bin/lake exe cache get
-          else
-            echo "Mathlib already present from cache"
+          set -euo pipefail
+          ~/.elan/bin/lake exe cache get
+          expected=$(jq -r '.packages[] | select(.name == "mathlib") | .rev' lake-manifest.json)
+          actual=$(git -C .lake/packages/mathlib rev-parse HEAD)
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Mathlib checkout $actual does not match lake-manifest.json ($expected)."
+            exit 1
           fi
+
+      # This incrementally extends either a previous pool checkpoint or the
+      # Mathlib checkpoint produced by the preceding job. doc-gen serializes
+      # writes through one WAL database, so these targets intentionally share a
+      # single job instead of unsafe parallel shards.
+      - name: Build documentation data
+        run: cd docbuild && ~/.elan/bin/lake build LeanPool:docInfo Challenge:docInfo
+
+      - name: Validate pool documentation checkpoint
+        run: |
+          set -euo pipefail
+          test -s docbuild/.lake/build/api-docs.db
+          test -n "$(find docbuild/.lake/build/doc-data -type f -name 'LeanPool*.doc' -print -quit)"
+          test -n "$(find docbuild/.lake/build/doc-data -type f -name 'Challenge*.doc' -print -quit)"
+          python3 - <<'PY'
+          import sqlite3
+
+          with sqlite3.connect("docbuild/.lake/build/api-docs.db") as connection:
+              checkpoint = connection.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+              integrity = connection.execute("PRAGMA quick_check").fetchone()
+          if checkpoint is None or checkpoint[0] != 0:
+              raise SystemExit(f"SQLite WAL checkpoint failed: {checkpoint!r}")
+          if integrity != ("ok",):
+              raise SystemExit(f"SQLite quick_check failed: {integrity!r}")
+          PY
+
+      - name: Save pool documentation checkpoint
+        if: steps.pool-doc-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            docbuild/.lake/build
+            .lake/packages/doc-gen4
+            .lake/packages/leansqlite
+            .lake/packages/UnicodeBasic
+            .lake/packages/BibtexQuery
+            .lake/packages/MD4Lean
+          key: DocsInfo-v3-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lakefile.toml', 'lake-manifest.json', 'docbuild/lean-toolchain', 'docbuild/lakefile.toml', 'docbuild/lake-manifest.json') }}-${{ github.sha }}
 
       # The challenge board is documented alongside the pool: each statement's
       # card carries the informal statement it is judged against, which is
@@ -163,8 +406,15 @@ jobs:
       # names, so rendering both into one doc tree would produce two pages
       # claiming the same declaration.
       - name: Build documentation
-        id: build
         run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs Challenge:docs
+
+      - name: Validate documentation site
+        run: |
+          set -euo pipefail
+          test -s docbuild/.lake/build/doc/index.html
+          test -s docbuild/.lake/build/doc/LeanPool.html
+          test -s docbuild/.lake/build/doc/Challenge.html
+          test -s docbuild/.lake/build/doc/declarations/declaration-data.bmp
 
       - name: Remove cached exposition
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -179,29 +429,50 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-      - name: Save caches
-        # Only persist the doc cache when the build step actually succeeded.
-        # A cancelled or failed build (common when a merge train supersedes an
-        # in-progress run) would otherwise save a partial .lake/build tree that
-        # the next run restores via restore-keys, poisoning downstream builds.
-        if: steps.build.outcome == 'success' && github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: |
-            ~/.elan
-            .lake/packages
-            .lake/build
-            docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
-
-  # The two expensive sites build in parallel. Let the Actions dependency
-  # graph join them instead of racing one job against a polling timeout.
-  # If either build fails, no incomplete Pages tree replaces the live site.
-  deploy:
+  # Main bootstrap runs are intentionally not cancelled because they may be
+  # the only producer of a new compatibility cache. If main advanced while a
+  # run was building, retain those caches but never enter the Pages environment
+  # or deploy stale HTML.
+  deployment_freshness:
     needs:
       - exposition
       - build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    name: Check deployment freshness
+    outputs:
+      deploy: ${{ steps.check.outputs.deploy }}
+    steps:
+      - name: Compare with latest Documentation run
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          latest_run=$(gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/docs.yml/runs" \
+            -f branch=main -F exclude_pull_requests=true -F per_page=1 \
+            --jq '.workflow_runs[0].run_number')
+          if ! [[ "$latest_run" =~ ^[0-9]+$ ]]; then
+            echo "::error::Could not determine the latest Documentation run on main."
+            exit 1
+          fi
+          if (( latest_run > GITHUB_RUN_NUMBER )); then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping superseded Documentation run $GITHUB_RUN_NUMBER; main has run $latest_run."
+          else
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  # The two expensive sites build in parallel after the Mathlib checkpoint.
+  # Let the dependency graph join them instead of racing one job against a
+  # polling timeout. If either build fails, no incomplete tree is deployed.
+  deploy:
+    needs:
+      - exposition
+      - build
+      - deployment_freshness
+    if: needs.deployment_freshness.outputs.deploy == 'true'
     runs-on: ubuntu-latest
     name: Deploy documentation
     environment:
@@ -247,11 +518,37 @@ jobs:
         with:
           path: site
 
+      # Narrow the race between the gate job and the irreversible deployment.
+      # Comparing workflow runs (rather than raw main HEAD) deliberately ignores
+      # newer commits that do not match this workflow's path filters.
+      - name: Recheck deployment freshness
+        id: final-freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          latest_run=$(gh api --method GET \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/docs.yml/runs" \
+            -f branch=main -F exclude_pull_requests=true -F per_page=1 \
+            --jq '.workflow_runs[0].run_number')
+          if ! [[ "$latest_run" =~ ^[0-9]+$ ]]; then
+            echo "::error::Could not determine the latest Documentation run on main."
+            exit 1
+          fi
+          if (( latest_run > GITHUB_RUN_NUMBER )); then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping superseded Documentation run $GITHUB_RUN_NUMBER; main has run $latest_run."
+          else
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy Pages
         id: deployment
+        if: steps.final-freshness.outputs.deploy == 'true'
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
 
       - name: Verify deployed site
+        if: steps.final-freshness.outputs.deploy == 'true'
         env:
           PAGE_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
