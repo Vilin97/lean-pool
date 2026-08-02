@@ -67,6 +67,10 @@ jobs:
             echo "::error::Root lake-manifest.json has no Mathlib revision."
             exit 1
           fi
+          if [ -z "$docs_mathlib" ] || [ "$docs_mathlib" = "null" ]; then
+            echo "::error::docbuild/lake-manifest.json has no Mathlib revision."
+            exit 1
+          fi
           if [ "$root_mathlib" != "$docs_mathlib" ]; then
             echo "::error::Root Mathlib revision $root_mathlib does not match docbuild ($docs_mathlib)."
             exit 1
@@ -116,6 +120,9 @@ jobs:
   # never saves it — Lean Action CI owns that cache, while the documentation
   # jobs own doc-gen's separate caches.
   exposition:
+    # On a cold toolchain boundary, Mathlib docInfo gives Lean Action CI time
+    # to seed the new root cache before this job restores it. Without that
+    # boundary, exposition's pool rebuild plus extraction approached six hours.
     needs:
       - preflight
       - mathlib_doc_info
