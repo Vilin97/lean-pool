@@ -162,7 +162,7 @@ lemma backFlrCover_cover (n : ℕ) :
 
 lemma flr_eq_sprod (n : ℕ) : flr n = cubeBoundary.jar n ×ˢ Set.univ := by
   ext x : 1
-  simp_all only [Set.mem_setOf_eq, Set.mem_prod, Set.mem_univ, and_true]
+  simp_all only [Set.mem_ofPred_eq, Set.mem_prod, Set.mem_univ, and_true]
 
 lemma isClosed_back (n : ℕ) : IsClosed (back n) :=
   isClosed_eq ((continuous_apply _).comp (by fun_prop)) continuous_const
@@ -184,7 +184,7 @@ def backIsoCube (n : ℕ) : back n ≃ₜ (I^ Fin (n + 1)) where
   left_inv := by
     intro ⟨⟨⟨y, hyb⟩, t⟩, hyl⟩
     change y ∈ Cube.boundaryLid (n + 1) at hyl
-    simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.apply_symm_apply, Subtype.mk.injEq]
+    simp only [Set.coe_ofPred, Set.mem_ofPred_eq, Homeomorph.apply_symm_apply, Subtype.mk.injEq]
     congr 2
     apply Subtype.ext
     funext i
@@ -195,7 +195,7 @@ def backIsoCube (n : ℕ) : back n ≃ₜ (I^ Fin (n + 1)) where
   right_inv y := by
     simp only [Homeomorph.apply_symm_apply, Prod.mk.eta, Homeomorph.symm_apply_apply]
   continuous_toFun := by fun_prop
-  continuous_invFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
+  continuous_invFun := by simp only [Set.coe_ofPred, Set.mem_ofPred_eq]; fun_prop
 
 
 variable {n : ℕ} {Y : Type u} [TopologicalSpace Y]
@@ -214,7 +214,7 @@ def jarBotMap : C(bot n, Y) where
       use Fin.last _; right; unfold y'; rw [Cube.splitAtLast_symm_apply_last]
     f ⟨⟨y', ‹_›⟩⟩
   continuous_toFun := by
-    simp only [Set.coe_setOf]
+    simp only [Set.coe_ofPred]
     exact f.continuous_toFun.comp (by fun_prop)
 
 /-- `jarSidesMap` -/
@@ -228,7 +228,7 @@ def jarSidesMap : C(sides n, Y) where
       rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.lt_last_iff_ne_last.mp hin)]
     h ⟨⟨⟨y', ‹_›⟩⟩, (Cube.splitAtLast y).fst⟩
   continuous_toFun := by
-    simp only [Set.coe_setOf]
+    simp only [Set.coe_ofPred]
     exact h.continuous_toFun.comp (by fun_prop)
 
 /-- `botSidesCoverMapVec` -/
@@ -291,7 +291,7 @@ noncomputable def backMap
     let yt' := r.r (backIsoCube n yt)
     jarMap f h fh <| ULift.up.{u} ⟨yt', Set.range_subset_iff.mp r.r_range _⟩
   continuous_toFun := by
-    simp only [Set.coe_setOf]
+    simp only [Set.coe_ofPred]
     exact (jarMap f h fh).continuous_toFun.comp (by fun_prop)
 
 /-- `flrMap` -/
@@ -411,14 +411,14 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       have := ContinuousMap.liftCoverClosed_coe' _ _ (backFlrCover_mapVec_compatible f h fh)
         (backFlrCover_cover n) (backFlrCover_closed n) _
         (show yb_t ∈ backFlrCover n 0 by exact hyn)
-      simp only [Fin.isValue, Matrix.cons_val_zero, Set.coe_setOf, Set.mem_setOf_eq] at this
+      simp only [Fin.isValue, Matrix.cons_val_zero, Set.coe_ofPred, Set.mem_ofPred_eq] at this
       rw [this]
       let r := Cube.strongDeformRetrToBoundaryJar n
       let yt_back : back n := ⟨yb_t, hyn⟩
       let yt' := r.r (backIsoCube n yt_back)
       change f yb = backMap f h fh yt_back
       unfold backMap
-      simp only [Set.coe_setOf, Set.mem_setOf_eq]
+      simp only [Set.coe_ofPred, Set.mem_ofPred_eq]
       change _ = jarMap f h fh ⟨⟨yt', _⟩⟩
       replace : backIsoCube n yt_back ∈ ⊔I^ (n + 1) := by
         change Cube.splitAtLast.symm ⟨0, (Cube.splitAtLast y).snd⟩ ∈ ⊔I^ (n + 1)
@@ -441,7 +441,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
         rw [Cube.splitAtLast_symm_apply_last]
       replace := ContinuousMap.liftCoverClosed_coe' _ _ (botSidesCoverMapVec_compatible f h fh)
         (cubeBoundaryJar.botSidesCover_cover n) (cubeBoundaryJar.botSidesCover_closed n) _ this
-      simp only [Fin.isValue, Matrix.cons_val_zero, Set.coe_setOf, Set.mem_setOf_eq] at this
+      simp only [Fin.isValue, Matrix.cons_val_zero, Set.coe_ofPred, Set.mem_ofPred_eq] at this
       rw [jarMap, this]
       change _ = jarBotMap f _
       unfold jarBotMap yt_jar yb
@@ -473,12 +473,12 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       have := ContinuousMap.liftCoverClosed_coe' _ _ (backFlrCover_mapVec_compatible f h fh)
         (backFlrCover_cover n) (backFlrCover_closed n) _
         (show yb_t ∈ backFlrCover n 1 by assumption)
-      simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero, Set.coe_setOf,
-        Set.mem_setOf_eq] at this
+      simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero, Set.coe_ofPred,
+        Set.mem_ofPred_eq] at this
       rw [this]
       change _ = flrMap h _
       unfold flrMap yb_t yb
-      simp only [Set.coe_setOf, Set.mem_setOf_eq]
+      simp only [Set.coe_ofPred, Set.mem_ofPred_eq]
       change f yb = h ⟨yj, 0⟩
       replace := congrFun fh yj
       simp only [Function.comp_apply] at this
@@ -491,8 +491,8 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
     have := ContinuousMap.liftCoverClosed_coe' _ _ (backFlrCover_mapVec_compatible f h fh)
       (backFlrCover_cover n) (backFlrCover_closed n) _
       (show yb_t ∈ backFlrCover n 1 by exact hy)
-    simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero, Set.coe_setOf,
-      Set.mem_setOf_eq] at this
+    simp only [Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero, Set.coe_ofPred,
+      Set.mem_ofPred_eq] at this
     rw [this]
     rfl
 

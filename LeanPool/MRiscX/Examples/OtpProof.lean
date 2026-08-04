@@ -349,7 +349,7 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
                           ¬st.terminated = true)
                     s' ∧
                   s'.pc ∉ {n | n ≠ 14} := by
-            simp only [ne_eq, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_setOf_eq,
+            simp only [ne_eq, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_ofPred_eq,
               Decidable.not_not, forall_exists_index, and_imp]
             intros s' h_ex h_fo h_ter h_pc
             exists s'

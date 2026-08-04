@@ -448,7 +448,7 @@ private lemma homotopy_uniform_bound
   filter_upwards with t ht s' hs'
   have h_mem_K : (t, s') ∈ K := ⟨h_uIoc_subset ht, h_ball_subset hs'⟩
   have h_le := hM_pt_max h_mem_K
-  simp only [Set.mem_setOf_eq, Function.comp_apply] at h_le
+  simp only [Set.mem_ofPred_eq, Function.comp_apply] at h_le
   exact h_le
 
 /-- Continuity of `t ↦ f(H(t,s')) * ∂H/∂t(t,s')` for fixed s'. -/

@@ -57,7 +57,7 @@ lemma validate_Grz_of_refl_trans_wcwf
     -- TODO: need more refactor
     have := Set.not_nonempty_iff_eq_empty.mpr this;
     have := Set.nonempty_def.not.mp this; push Not at this;
-    simp only [X, Set.mem_setOf_eq, not_and, not_not] at this; exact this;
+    simp only [X, Set.mem_ofPred_eq, not_and, not_not] at this; exact this;
   rintro w (⟨hw₁, hw₂⟩ | ⟨hw₁, hw₂, hw₃⟩);
   · have := hw₁ _ (by exact hRefl.refl w);
     have := not_imp_not.mpr this hw₂;

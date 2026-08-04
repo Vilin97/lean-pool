@@ -236,7 +236,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
     · constructor
       · simp
       · simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
-          Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
+          Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq, not_or, Decidable.not_not,
           not_and_self, imp_false, not_and]
         simp only [← MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep MState.jump
@@ -245,7 +245,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
           h_label, true_and]
         zeroLtNeZero
   case right =>
-    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_ofPred_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
     simp_all
@@ -279,7 +279,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
     · constructor
       · simp
       · simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
-          Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
+          Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq, not_or, Decidable.not_not,
           not_and_self, imp_false, not_and]
         simp only [← MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep MState.jump
@@ -288,7 +288,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
           h_label, true_and]
         zeroLtNeZero
   case right =>
-    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_ofPred_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
     simp_all
@@ -391,7 +391,7 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
     · simp
     · repeat (constructor <;> try
         (simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff,
-          ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or,
+          ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq, not_or,
           Decidable.not_not, not_and_self, imp_false, not_and]))
     -- . constructor; simp
       · simp only [← MState.run_one_step_eq_run_n_1]
@@ -402,7 +402,7 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
         simp
       · zeroLtNeZero
   case right =>
-    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_ofPred_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jif' MState.jump
     rw [h_terminated]
     simp only [Bool.false_eq_true, ↓reduceIte, MState.currInstruction_unfold,
@@ -458,7 +458,7 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
     · simp
     · repeat (constructor <;> try
         (simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff,
-          ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or,
+          ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq, not_or,
           Decidable.not_not, not_and_self, imp_false, not_and]))
       · simp only [← MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep MState.jif' MState.jump
@@ -466,7 +466,7 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
         simp [h_curr, h_cond]
       · zeroLtNeZero
   case right =>
-    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_ofPred_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jif' MState.jump
     rw [h_terminated, ← h_pc]
     simp only [Bool.false_eq_true, ↓reduceIte, MState.currInstruction_unfold,

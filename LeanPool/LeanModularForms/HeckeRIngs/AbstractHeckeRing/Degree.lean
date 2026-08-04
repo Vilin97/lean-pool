@@ -54,8 +54,8 @@ noncomputable def HeckeCosetDeg (D : HeckeCoset P) : ℤ :=
 
 /-- The degree of the identity double coset is 1. -/
 @[simp] lemma HeckeCoset_deg_T_one : HeckeCosetDeg P (HeckeCoset.one P) = 1 := by
-  simp only [HeckeCosetDeg]; haveI := subsingleton_decompQuot_T_one P
-  haveI : Unique (decompQuot P (HeckeCoset.one P).rep) :=
+  simp only [HeckeCosetDeg]; have := subsingleton_decompQuot_T_one P
+  have : Unique (decompQuot P (HeckeCoset.one P).rep) :=
     uniqueOfSubsingleton (one_in_decompQuot_T_one P).some
   simp [Fintype.card_unique]
 

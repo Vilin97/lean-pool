@@ -183,7 +183,7 @@ private theorem eq_on_Ioo_of_deriv_zero
     (hf_cont.continuousWithinAt (Ico_subset_Icc_self ht)).mono
       (fun x hx => ⟨le_of_lt (lt_of_le_of_lt ht.1 hx.1),
         le_of_lt (lt_of_lt_of_le hx.2 h_smin_le_b)⟩)
-  haveI : (𝓝[Ioo t s_min] t).NeBot := by
+  have : (𝓝[Ioo t s_min] t).NeBot := by
     rw [← mem_closure_iff_nhdsWithin_neBot,
       closure_Ioo (ne_of_lt ht_lt_s)]
     exact ⟨le_refl t, le_of_lt ht_lt_s⟩

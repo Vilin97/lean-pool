@@ -162,7 +162,7 @@ theorem mixedTracePairing_mixedEmbedding (x y : K) :
   have hemb :
       (∑ σ : K →ₐ[ℚ] ℂ, σ (x * y)) =
         ∑ φ : K →+* ℂ, φ (x * y) := by
-    rw [Fintype.sum_equiv RingHom.equivRatAlgHom]
+    rw [Fintype.sum_equiv (RingHom.equivRatAlgHom K ℂ)]
     simp
   have htrace :
       ((Algebra.trace ℚ K (x * y) : ℚ) : ℂ) =

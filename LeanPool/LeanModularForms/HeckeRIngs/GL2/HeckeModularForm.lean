@@ -82,7 +82,7 @@ noncomputable def heckeOperatorLinear (k : ℤ) (D : HeckeCoset (GLPair 2)) :
     ModularForm 𝒮ℒ k →ₗ[ℂ] ModularForm 𝒮ℒ k where
   toFun := heckeOperator k D
   map_add' f g := by
-    ext z; simp only [ModularForm.add_apply]
+    ext z; simp only [_root_.add_apply]
     change heckeSlash k D (↑f + ↑g) z = heckeSlash k D (↑f) z + heckeSlash k D (↑g) z
     rw [heckeSlash_add]; rfl
   map_smul' c f := by
@@ -306,7 +306,7 @@ private theorem heckeSlash_comp (k : ℤ) (D₁ D₂ : HeckeCoset (GLPair 2)) (f
   change (∑ p : decompQuot (GLPair 2) (HeckeCoset.rep D₁) ×
       decompQuot (GLPair 2) (HeckeCoset.rep D₂),
       f ∣[k] (tRep D₂ p.2 * tRep D₁ p.1)) = _
-  letI : DecidableEq (HeckeCoset (GLPair 2)) := Classical.decEq _
+  let : DecidableEq (HeckeCoset (GLPair 2)) := Classical.decEq _
   rw [← Finset.sum_fiberwise_of_maps_to
     (g := fun p => mulMap (GLPair 2) (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) (p.1, p.2))
     (fun p _ => Finset.mem_image_of_mem _ (Finset.mem_univ _)),

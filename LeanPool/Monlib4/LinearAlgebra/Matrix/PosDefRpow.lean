@@ -135,7 +135,7 @@ theorem _root_.Matrix.PosDef.rpow_neg_one_eq_inv_self {Q : Matrix n n 𝕜}
   simp only [innerAut_coe, EmbeddingLike.apply_eq_iff_eq, diagonal_eq_diagonal_iff,
     Function.comp_apply]
   intro i
-  letI := hQ.eigenvaluesInvertible'
+  let := hQ.eigenvaluesInvertible'
   simp_rw [Ring.inverse_invertible]
   rfl
 

@@ -76,7 +76,7 @@ theorem QuantumGraph.Real.innerOne_map_one_eq_zero_iff_of_kms
 theorem QuantumGraph.Real.innerOne_map_one_eq_zero_iff
   {A : Type*} [starAlgebra A] [QuantumSet A] {f : A →ₗ[ℂ] A} (h : QuantumGraph.Real A f) :
     ⟪1, f 1⟫_ℂ = 0 ↔ f = 0 := by
-  letI := QuantumSet.instSubset (A := A) (by infer_instance) (-(1 / 2))
+  let := QuantumSet.instSubset (A := A) (by infer_instance) (-(1 / 2))
   have kms : Fact (k (QuantumSet.subset (-(1/2)) A) = -(1/2)) := Fact.mk rfl
   let f' := LinearMap.toSubsetQuantumSet f (-(1/2)) (-(1/2))
   rw [QuantumSet.innerOne_map_one_toSubset_eq (- (1/2)) (- (1/2)),
@@ -112,7 +112,7 @@ theorem QuantumGraph.Real.innerOne_map_one_eq_norm_pow_four_iff_of_kms
 theorem QuantumGraph.Real.innerOne_map_one_eq_norm_pow_four_iff
   {A : Type*} [starAlgebra A] [QuantumSet A] {f : A →ₗ[ℂ] A} (h : QuantumGraph.Real A f) :
     ⟪1, f 1⟫_ℂ = ‖(1 : A)‖ ^ 4 ↔ f = rankOne ℂ (1 : A) (1 : A) := by
-  letI := QuantumSet.instSubset (A := A) (by infer_instance) (-(1 / 2))
+  let := QuantumSet.instSubset (A := A) (by infer_instance) (-(1 / 2))
   have kms : Fact (k (QuantumSet.subset (-(1/2)) A) = -(1/2)) := Fact.mk rfl
   let f' := LinearMap.toSubsetQuantumSet f (-(1/2)) (-(1/2))
   rw [QuantumSet.innerOne_map_one_toSubset_eq (- (1/2)) (- (1/2)), QuantumSet.normOne_toSubset]
@@ -416,16 +416,16 @@ theorem Coalgebra.comul_comp_mul_quantumSetSubset
       ∘ₗ (LinearMap.mul' ℂ A))
       ∘ₗ (TensorProduct.map (QuantumSet.toSubsetAlgEquiv r).symm.toLinearMap
           (QuantumSet.toSubsetAlgEquiv r).symm.toLinearMap) := by
-  letI subsetA : QuantumSet (QuantumSet.subset r A) :=
+  let subsetA : QuantumSet (QuantumSet.subset r A) :=
     QuantumSet.instSubset (A := A) (by infer_instance) r
-  letI frobSubsetA : FrobeniusAlgebra ℂ (QuantumSet.subset r A) :=
+  let frobSubsetA : FrobeniusAlgebra ℂ (QuantumSet.subset r A) :=
     QuantumSet.isFrobeniusAlgebra
-  letI coalgebraSubsetA : Coalgebra ℂ (QuantumSet.subset r A) :=
+  let coalgebraSubsetA : Coalgebra ℂ (QuantumSet.subset r A) :=
     FrobeniusAlgebra.toCoalgebra
-  letI : Fact (k A = k A) := Fact.mk rfl
-  letI tensorA : QuantumSet (A ⊗[ℂ] A) :=
+  let : Fact (k A = k A) := Fact.mk rfl
+  let tensorA : QuantumSet (A ⊗[ℂ] A) :=
     QuantumSet.tensorProduct (A := A) (B := A) (h := Fact.mk rfl)
-  letI subsetTensorA : QuantumSet (QuantumSet.subset r (A ⊗[ℂ] A)) :=
+  let subsetTensorA : QuantumSet (QuantumSet.subset r (A ⊗[ℂ] A)) :=
     QuantumSet.instSubset (A := A ⊗[ℂ] A) (by infer_instance) r
   calc
     Coalgebra.comul ∘ₗ LinearMap.mul' ℂ (QuantumSet.subset r A)
@@ -475,14 +475,14 @@ lemma QuantumGraph.zero_le_degree_le_norm_one_sq
   (h₁ : ∀ ⦃a : A⦄, 0 ≤ a ↔ ∃ (b : A), a = star b * b)
   {f : A →ₗ[ℂ] A} (h : QuantumGraph.Real A f) (d : ℂ) (h2 : (h.toQuantumGraph).IsRegular d) :
     0 ≤ d ∧ d ≤ ‖(1 : A)‖ ^ 2 := by
-  letI subsetStarAlgebra : starAlgebra (QuantumSet.subset 0 A) :=
+  let subsetStarAlgebra : starAlgebra (QuantumSet.subset 0 A) :=
     QuantumSet.subsetStarAlgebra 0
-  letI subsetQuantumSet : QuantumSet (QuantumSet.subset 0 A) :=
+  let subsetQuantumSet : QuantumSet (QuantumSet.subset 0 A) :=
     QuantumSet.instSubset (A := A) (by infer_instance) 0
-  letI : NonUnitalNonAssocSemiring (QuantumSet.subset 0 A) := inferInstance
-  letI : NonUnitalSemiring (QuantumSet.subset 0 A) := inferInstance
-  letI : StarRing (QuantumSet.subset 0 A) := inferInstance
-  letI subsetStarOrderedRing : StarOrderedRing (QuantumSet.subset 0 A) := inferInstance
+  let : NonUnitalNonAssocSemiring (QuantumSet.subset 0 A) := inferInstance
+  let : NonUnitalSemiring (QuantumSet.subset 0 A) := inferInstance
+  let : StarRing (QuantumSet.subset 0 A) := inferInstance
+  let subsetStarOrderedRing : StarOrderedRing (QuantumSet.subset 0 A) := inferInstance
   rw [QuantumSet.normOne_toSubset 0]
   exact @QuantumGraph.zero_le_degree_le_norm_one_sq_of_gns
     (QuantumSet.subset 0 A) subsetStarAlgebra subsetQuantumSet inferInstance inferInstance

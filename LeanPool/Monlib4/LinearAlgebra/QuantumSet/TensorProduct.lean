@@ -131,9 +131,9 @@ theorem QuantumSet.tensorProduct.k_eq₂ [hA : QuantumSet A] [hB : QuantumSet B]
 theorem comul_real [hA : QuantumSet A] :
     (Coalgebra.comul : A →ₗ[ℂ] A ⊗[ℂ] A).real =
       (TensorProduct.comm ℂ A A).toLinearMap ∘ₗ Coalgebra.comul := by
-  letI := Fact.mk (rfl : hA.k = hA.k)
-  letI : starAlgebra (A ⊗[ℂ] A) := by infer_instance
-  letI : QuantumSet (A ⊗[ℂ] A) := QuantumSet.tensorProduct
+  let := Fact.mk (rfl : hA.k = hA.k)
+  let : starAlgebra (A ⊗[ℂ] A) := by infer_instance
+  let : QuantumSet (A ⊗[ℂ] A) := QuantumSet.tensorProduct
   rw [Coalgebra.comul_eq_mul_adjoint, LinearMap.adjoint_real_eq (f := LinearMap.mul' ℂ A),
     LinearMap.mul'_real, LinearMap.adjoint_comp, TensorProduct.comm_adjoint,
     LinearMap.comp_assoc, ← LinearMap.comp_assoc, modAut_tensor,

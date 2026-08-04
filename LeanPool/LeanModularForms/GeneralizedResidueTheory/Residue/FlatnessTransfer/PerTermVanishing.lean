@@ -307,13 +307,13 @@ lemma measurableSet_goodSet_Icc
   rw [h_eq]; apply MeasurableSet.diff isClosed_Icc.measurableSet
   have h_eq2 : {t | ∃ s' ∈ S0, ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b =
       ⋃ s' ∈ S0, ({t | ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b) := by
-    ext t; simp only [mem_inter_iff, mem_setOf_eq, mem_iUnion, exists_prop]
+    ext t; simp only [mem_inter_iff, mem_ofPred_eq, mem_iUnion, exists_prop]
     exact ⟨fun ⟨⟨s', hs', h⟩, ht⟩ => ⟨s', hs', h, ht⟩,
            fun ⟨s', hs', h, ht⟩ => ⟨⟨s', hs', h⟩, ht⟩⟩
   rw [h_eq2]; apply Finset.measurableSet_biUnion; intro s' _
   have : {t | ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b =
       Icc γ.a γ.b \ ({t | ε < ‖γ.toFun t - s'‖} ∩ Icc γ.a γ.b) := by
-    ext t; simp only [mem_inter_iff, mem_setOf_eq, Set.mem_sdiff, not_and]; constructor
+    ext t; simp only [mem_inter_iff, mem_ofPred_eq, Set.mem_sdiff, not_and]; constructor
     · intro ⟨h_le, ht⟩; exact ⟨ht, fun h_gt => absurd h_gt (not_lt.mpr h_le)⟩
     · intro ⟨ht, h_not⟩; exact ⟨le_of_not_gt (fun h => (h_not h) ht), ht⟩
   rw [this]; exact isClosed_Icc.measurableSet.diff

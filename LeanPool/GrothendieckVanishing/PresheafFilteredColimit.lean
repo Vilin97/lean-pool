@@ -63,7 +63,7 @@ private theorem sheafH_filtered_colimit_succ_Inj_obj_injective (j : J') :
     letI : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) :=
       Limits.HasZeroObject.zero' (TopCat.Sheaf AddCommGrpCat.{u} X)
     Injective ((sheafHFilteredColimitSuccInj Y').obj j) := by
-  letI : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+  let : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     Limits.HasZeroObject.zero' (TopCat.Sheaf AddCommGrpCat.{u} X)
   change
     Injective
@@ -357,7 +357,7 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
     (sheafH_filtered_colimit_comparison_one_iso
       (Ysh := Ysh) (csh := csh) (hcsh := hcsh)).hom =
       sheafHFilteredColimitComparison Ysh 1 csh := by
-  letI : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) := Limits.HasZeroObject.zero' _
+  let : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) := Limits.HasZeroObject.zero' _
   let Inj := sheafHFilteredColimitSuccInj Ysh
   let toPsh := sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
   let evTop := (CategoryTheory.evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op ⊤)
@@ -369,8 +369,8 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
     @sheafH_subsingleton_of_injective
       (Opens X) _ (Opens.grothendieckTopology X) _ _ (Inj.obj j) (hInj j) 0
   have h_colim := sheafH_filtered_colimit_succ_inj_subsingleton (Y' := Ysh) 0 hInj
-  haveI : CreatesColimit Inj toPsh := createsFilteredColimit Inj
-  haveI hPresInj : PreservesColimit Inj toPsh :=
+  have : CreatesColimit Inj toPsh := createsFilteredColimit Inj
+  have hPresInj : PreservesColimit Inj toPsh :=
     preservesColimit_of_createsColimit_and_hasColimit Inj toPsh
   have hc_psh_inj : IsColimit (toPsh.mapCocone (colimit.cocone Inj)) :=
     (hPresInj.preserves (colimit.isColimit Inj)).some
@@ -378,9 +378,9 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
       IsColimit
         (sectionsFunctor.mapCocone (sheafHFilteredColimitSuccInjCocone Ysh)) :=
     isColimitOfPreserves evTop hc_psh_inj
-  haveI : CreatesColimit (sheafHFilteredColimitSuccQuotient Ysh) toPsh :=
+  have : CreatesColimit (sheafHFilteredColimitSuccQuotient Ysh) toPsh :=
     createsFilteredColimit (sheafHFilteredColimitSuccQuotient Ysh)
-  haveI hPresQ : PreservesColimit (sheafHFilteredColimitSuccQuotient Ysh) toPsh :=
+  have hPresQ : PreservesColimit (sheafHFilteredColimitSuccQuotient Ysh) toPsh :=
     preservesColimit_of_createsColimit_and_hasColimit
       (sheafHFilteredColimitSuccQuotient Ysh) toPsh
   have hc_psh_q :
@@ -425,7 +425,6 @@ private noncomputable def sheafH_filtered_colimit_comparison_one_iso :
     exact sheafH1_cokernel_iso_of_subsingleton_middle_natural
       (sheafH_filtered_colimit_succ_stage_shortExact (Y' := Ysh) j)
       (sheafH_filtered_colimit_succ_shortExact Ysh csh hcsh) stageHom (h_mid j) h_colim
-  simp only [Iso.trans_hom, Iso.symm_hom]
   rw [HasColimit.isoOfNatIso_ι_inv_assoc, HasColimit.isoOfNatIso_ι_hom_assoc,
     colimit_ι_sheafH_filtered_colimit_comparison]
   have hright :
@@ -565,9 +564,9 @@ private noncomputable def sheafH_filtered_colimit_comparison_zero_iso :
       sheafHFilteredColimitComparison Ysh 0 csh := by
   let sectionsFunctor := sheafH_filtered_colimit_h1_sectionsFunctor (X := X)
   let toPsh := sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}
-  haveI : CreatesColimit Ysh toPsh :=
+  have : CreatesColimit Ysh toPsh :=
     createsFilteredColimit Ysh
-  haveI hPres : PreservesColimit Ysh toPsh :=
+  have hPres : PreservesColimit Ysh toPsh :=
     preservesColimit_of_createsColimit_and_hasColimit Ysh toPsh
   have hc_psh : IsColimit (toPsh.mapCocone csh) :=
     (hPres.preserves hcsh).some
@@ -652,11 +651,11 @@ private theorem sheafH_filtered_colimit_comparison_isIso_succ_succ
         (csh : Cocone Ysh) (_ : IsColimit csh),
         IsIso (sheafHFilteredColimitComparison Ysh (m + 1) csh)) :
     IsIso (sheafHFilteredColimitComparison Ysh (m + 1 + 1) csh) := by
-  letI : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) := Limits.HasZeroObject.zero' _
+  let : Zero (TopCat.Sheaf AddCommGrpCat.{u} X) := Limits.HasZeroObject.zero' _
   let Inj := sheafHFilteredColimitSuccInj Ysh
   let injCocone := sheafHFilteredColimitSuccInjCocone Ysh
   let qCocone := sheafHFilteredColimitSuccQuotientCocone Ysh csh hcsh
-  haveI :
+  have :
       IsIso
         (sheafHFilteredColimitComparison
           (sheafHFilteredColimitSuccQuotient Ysh) (m + 1) qCocone) :=

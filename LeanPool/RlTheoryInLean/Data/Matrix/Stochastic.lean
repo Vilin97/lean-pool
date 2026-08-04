@@ -74,7 +74,7 @@ instance : IsClosed (Simplex S) := by
       have half : IsClosed {x : ℝ | 0 ≤ x} :=
         isClosed_le continuous_const continuous_id
       simpa [Set.preimage] using half.preimage hev
-    simpa [Set.setOf_forall] using isClosed_iInter hcl
+    simpa [Set.ofPred_forall] using isClosed_iInter hcl
   have h2 : IsClosed {f : l1Space | (∑ s, f.ofLp s) = 1} := by
     have hsum : Continuous (fun f : l1Space => ∑ s, f.ofLp s) := by
       apply continuous_finsetSum
@@ -83,7 +83,7 @@ instance : IsClosed (Simplex S) := by
     have htarget : IsClosed ({x : ℝ | x = 1} : Set ℝ) := by simp
     simpa [Set.preimage] using htarget.preimage hsum
   have h := IsClosed.inter h1 h2
-  rw [← Set.setOf_and] at h
+  rw [← Set.ofPred_and] at h
   have : {x : l1Space | StochasticVec x.ofLp} =
     {x | (∀ s, 0 ≤ x.ofLp s) ∧ (∑ s, x.ofLp s = 1)} := by
     ext1
@@ -224,7 +224,7 @@ noncomputable def returnTimes (P : Matrix S S ℝ) (i : S)
 lemma return_times_add_mem (P : Matrix S S ℝ) [RowStochastic P] (i : S)
     {a b : ℕ} (ha : a ∈ returnTimes P i) (hb : b ∈ returnTimes P i) :
     a + b ∈ returnTimes P i := by
-  simp only [returnTimes, Set.mem_setOf_eq] at ha hb ⊢
+  simp only [returnTimes, Set.mem_ofPred_eq] at ha hb ⊢
   obtain ⟨ha1, ha2⟩ := ha
   obtain ⟨hb1, hb2⟩ := hb
   constructor
@@ -466,7 +466,6 @@ theorem smat_contraction_in_simplex
       refine ⟨?hKlt1, ?hLip⟩
       case hLip =>
         intro x y
-        simp only [Set.coe_setOf, Set.mem_setOf_eq]
         have hxB : x.val.ofLp ᵥ* broadcast ν = ν := by
           funext j; simp [vecMul_broadcast, (x.property).rowsum]
         have hyB : y.val.ofLp ᵥ* broadcast ν = ν := by
@@ -761,7 +760,7 @@ theorem stationary_distribution_uniquely_exists
   obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
   have fixed : ∀ (σ : S → ℝ) (hσ : StochasticVec σ), Stationary σ P →
       IsFixedPt f ⟨WithLp.toLp 1 σ, hσ⟩ := fun σ hσ hσst => by
-    haveI := hσst
+    have := hσst
     simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
     exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary σ P N).stationary
   have hμfixed := fixedPoint_unique hf (fixed μ hμ hμstationary)

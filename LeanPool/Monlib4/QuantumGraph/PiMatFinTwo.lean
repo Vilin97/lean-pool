@@ -34,13 +34,13 @@ macro_rules
   | `(tactic| withPiBlockQuantumCtx[$ψ]) =>
       `(tactic|
         withPiQuantumCtx[$ψ];
-        letI := fun i => Matrix.isStarAlgebra (φ := $ψ i);
-        letI := fun i => Module.Dual.IsFaithfulPosMap.quantumSet (φ := $ψ i);
-        letI := fun i => Module.Dual.NormedAddCommGroup ($ψ i);
-        letI := fun i => (Module.Dual.NormedAddCommGroup ($ψ
+        let := fun i => Matrix.isStarAlgebra (φ := $ψ i);
+        let := fun i => Module.Dual.IsFaithfulPosMap.quantumSet (φ := $ψ i);
+        let := fun i => Module.Dual.NormedAddCommGroup ($ψ i);
+        let := fun i => (Module.Dual.NormedAddCommGroup ($ψ
           i)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace;
-        letI := fun i => (Module.Dual.NormedAddCommGroup ($ψ i)).toSeminormedAddCommGroup;
-        letI := fun i => Module.Dual.InnerProductSpace (φ := $ψ i))
+        let := fun i => (Module.Dual.NormedAddCommGroup ($ψ i)).toSeminormedAddCommGroup;
+        let := fun i => Module.Dual.InnerProductSpace (φ := $ψ i))
 
 /-- Elaborate a product-of-blocks statement with blockwise quantum and coalgebra instances. -/
 syntax "withPiBlockCoalgebraQuantum[" term "] " term : term
@@ -56,7 +56,7 @@ macro_rules
   | `(tactic| withPiBlockCoalgebraQuantumCtx[$ψ]) =>
       `(tactic|
         withPiBlockQuantumCtx[$ψ];
-        letI := PiMat.finiteDimensionalHilbertCoalgebraStruct (φ := $ψ))
+        let := PiMat.finiteDimensionalHilbertCoalgebraStruct (φ := $ψ))
 
 /-- The algebra equivalence between a two-block product of matrix algebras and the matching
   `PiMat`. -/
@@ -254,7 +254,7 @@ theorem QuantumGraph.Real.dimOfPiMatSubmodule_eq
       hA.toQuantumGraph.dimOfPiMatSubmodule =
         ∑ i, Module.finrank ℂ (hA.PiMatSubmodule i) := by
   withPiBlockQuantumCtx[φ]
-  letI : CoalgebraStruct ℂ (PiMat ℂ ι p) :=
+  let : CoalgebraStruct ℂ (PiMat ℂ ι p) :=
     PiMat.finiteDimensionalHilbertCoalgebraStruct (φ := φ)
   intro A hA
   rw [← Nat.cast_inj (R := ℂ), QuantumGraph.dimOfPiMatSubmodule_eq_trace]
@@ -728,7 +728,7 @@ lemma schurMul_comp_proj
   withPiBlockCoalgebraQuantumCtx[φ]
   intro i
   withMatrixQuantumCtx[φ i]
-  letI := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
+  let := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
     Mat ℂ (p i))).toCoalgebraStruct
   intro f g
   simp only [schurMul_apply_apply, TensorProduct.map_comp]
@@ -767,7 +767,7 @@ by
   withPiBlockCoalgebraQuantumCtx[φ]
   intro f g i
   withMatrixQuantumCtx[φ i]
-  letI := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
+  let := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
     Mat ℂ (p i))).toCoalgebraStruct
   simp only [LinearMap.proj_adjoint, ← NonUnitalAlgHom.single_toLinearMap,
     schurMul_apply_apply, TensorProduct.map_comp]
@@ -815,7 +815,7 @@ theorem QuantumGraph.isReal_iff_conj_proj_adjoint_isReal
   withPiBlockCoalgebraQuantumCtx[φ]
   intro i
   withMatrixQuantumCtx[φ i]
-  letI := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
+  let := (Coalgebra.ofFiniteDimensionalHilbertAlgebra (R := ℂ) (A :=
     Mat ℂ (p i))).toCoalgebraStruct
   intro f
   simp only [QuantumGraph.real_iff, LinearMap.isReal_iff, LinearMap.real_comp]

@@ -163,7 +163,7 @@ lemma hadamardOne_hMul_left (R : Matrix ι ι ℝ) : Matrix.hadamard (hadamardOn
 lemma hadamardPow_posDef_of_posDef
   [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosDef) : ∀ n, 1 ≤ n → (hadamardPow R n).PosDef := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   intro n hn
   -- write n = k+1
   obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.pos_iff_ne_zero.mp hn)
@@ -306,7 +306,7 @@ lemma posDef_entrywiseExp_hadamardSeries_of_posDef
   [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosDef) :
   (entrywiseExpHadamardSeries (ι:=ι) R).PosDef := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   -- Extract Hermitian part from PosDef
   have hHermR : R.IsHermitian := hR.isHermitian
   -- Each Hadamard power is Hermitian
@@ -405,7 +405,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
   [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosSemidef) :
   (entrywiseExpHadamardSeries (ι:=ι) R).PosSemidef := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   -- Step 1: For any ε > 0, R + εI is positive definite
   have h_perturb_posDef : ∀ (ε : ℝ), ε > 0 → (R + ε • (1 : Matrix ι ι ℝ)).PosDef := by
     intro ε hε

@@ -167,7 +167,7 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
     have hset : {t : ℝ | ∀ s ∈ S_arc, ε ≤ ‖γ t - s‖} =
         ⋂ (s : ℂ) (_ : s ∈ S_arc), {t : ℝ | ε ≤ ‖γ t - s‖} := by
       ext t
-      simp only [Set.mem_iInter, Set.mem_setOf]
+      simp only [Set.mem_iInter, Set.mem_ofPred]
     rw [hset]
     exact this
   set K := {t ∈ Set.uIoc (1 : ℝ) 3 | ¬∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε}
@@ -224,7 +224,7 @@ private lemma cpv_integrand_intervalIntegrable_arc (S : Finset UpperHalfPlane)
       have hset : {t : ℝ | ∃ s ∈ (↑S_arc : Set ℂ), ‖γ t - s‖ ≤ ε} =
           ⋃ s ∈ (↑S_arc : Set ℂ), {t : ℝ | ‖γ t - s‖ ≤ ε} := by
         ext t
-        simp only [Set.mem_iUnion, Set.mem_setOf, Finset.mem_coe, exists_prop]
+        simp only [Set.mem_iUnion, Set.mem_ofPred, Finset.mem_coe, exists_prop]
       rw [hset]
       exact h.measurableSet
     exact S_arc.finite_toSet.isClosed_biUnion fun s _ =>

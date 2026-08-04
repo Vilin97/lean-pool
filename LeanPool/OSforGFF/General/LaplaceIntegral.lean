@@ -391,14 +391,14 @@ lemma glasser_image_eq_univ (c : ℝ) (hc : 0 < c) :
   have hatTop_le : (atTop : Filter ℝ) ≤ 𝓟 (Ioi 0) := le_principal_iff.mpr (Ioi_mem_atTop 0)
   by_cases hw : w ≤ 0
   · -- Case w ≤ 0: use IVT from √c to +∞ (where f goes from 0 to -∞)
-    haveI : (atTop : Filter ℝ).NeBot := atTop_neBot
+    have : (atTop : Filter ℝ).NeBot := atTop_neBot
     have h_ivt : Iic (f (sqrt c)) ⊆ f '' Ioi 0 :=
       hpc.intermediate_value_Iic h_sqrt_pos hatTop_le hcont hbot
     rw [h_at_sqrt] at h_ivt
     exact h_ivt (mem_Iic.mpr hw)
   · -- Case w > 0: use IVT from 0⁺ to √c (where f goes from +∞ to 0)
     push Not at hw
-    haveI : (nhdsWithin (0 : ℝ) (Ioi 0)).NeBot := nhdsWithin_Ioi_neBot (le_refl 0)
+    have : (nhdsWithin (0 : ℝ) (Ioi 0)).NeBot := nhdsWithin_Ioi_neBot (le_refl 0)
     have hnhds_le : nhdsWithin (0 : ℝ) (Ioi 0) ≤ 𝓟 (Ioi 0) :=
       inf_le_right.trans (le_refl _)
     have h_ivt : Ici (f (sqrt c)) ⊆ f '' Ioi 0 :=

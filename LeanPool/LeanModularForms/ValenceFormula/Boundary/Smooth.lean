@@ -572,7 +572,7 @@ noncomputable def fdBoundaryHCurve (H : ℝ) :
     intro x hx
     simp only [fdBoundaryFullPartition, Finset.coe_insert, Finset.coe_singleton,
       Set.mem_insert_iff] at hx
-    simp only [Icc, Set.mem_setOf_eq]
+    simp only [Icc, Set.mem_ofPred_eq]
     rcases hx with rfl | rfl | rfl | rfl | rfl | rfl <;> constructor <;> norm_num
   endpoints_in_partition := ⟨by simp [fdBoundaryFullPartition], by simp [fdBoundaryFullPartition]⟩
   continuous_toFun := (fdBoundary_H_continuous H).continuousOn
@@ -657,7 +657,7 @@ noncomputable def fdBoundaryCurve : PiecewiseC1Curve where
     intro x hx
     simp only [fdBoundaryFullPartition, Finset.coe_insert, Finset.coe_singleton,
       Set.mem_insert_iff] at hx
-    simp only [Icc, Set.mem_setOf_eq]
+    simp only [Icc, Set.mem_ofPred_eq]
     rcases hx with rfl | rfl | rfl | rfl | rfl | rfl <;> constructor <;> norm_num
   endpoints_in_partition := ⟨by simp [fdBoundaryFullPartition], by simp [fdBoundaryFullPartition]⟩
   continuous_toFun := fdBoundary_continuous.continuousOn

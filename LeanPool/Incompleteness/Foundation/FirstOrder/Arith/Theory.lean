@@ -165,7 +165,7 @@ variable {L}
 
 lemma coe_indH_subset_indH : (indScheme ℒₒᵣ (Arith.Hierarchy Γ ν) :
     Theory L) ⊆ indScheme L (Arith.Hierarchy Γ ν) := by
-  simp only [indScheme, Set.image_subset_iff, Set.preimage_setOf_eq, Set.setOf_subset_setOf,
+  simp only [indScheme, Set.image_subset_iff, Set.preimage_ofPred_eq, Set.ofPred_subset_ofPred,
     forall_exists_index, and_imp]
   rintro _ φ Hp rfl
   exact ⟨Semiformula.lMap (Language.oringEmb : ℒₒᵣ →ᵥ L) φ, Hierarchy.oringEmb Hp,

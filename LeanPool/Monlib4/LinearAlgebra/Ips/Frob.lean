@@ -102,20 +102,20 @@ theorem Matrix.kroneckerToTensorProduct_adjoint [hφ : φ.IsFaithfulPosMap]
         Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] Matrix (n × p) (n × p) ℂ) =
       LinearMap.adjoint (kroneckerToTensorProduct :
           Matrix (n × p) (n × p) ℂ →ₗ[ℂ] Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ) := by
-  letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
-  letI : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
+  let : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
+  let : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
     (Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace φ
-  letI : _root_.NormedAddCommGroup (Matrix p p ℂ) := Module.Dual.NormedAddCommGroup ψ
-  letI : _root_.SeminormedAddCommGroup (Matrix p p ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace φ
+  let : _root_.NormedAddCommGroup (Matrix p p ℂ) := Module.Dual.NormedAddCommGroup ψ
+  let : _root_.SeminormedAddCommGroup (Matrix p p ℂ) :=
     (Module.Dual.NormedAddCommGroup ψ).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix p p ℂ) := Module.Dual.InnerProductSpace ψ
-  letI : _root_.NormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix p p ℂ) := Module.Dual.InnerProductSpace ψ
+  let : _root_.NormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
     Module.Dual.NormedAddCommGroup ((φ.tensorMul ψ).comp kroneckerToTensorProduct)
-  letI : _root_.SeminormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.SeminormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
     (Module.Dual.NormedAddCommGroup
       ((φ.tensorMul ψ).comp kroneckerToTensorProduct)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix (n × p) (n × p) ℂ) :=
     Module.Dual.InnerProductSpace ((φ.tensorMul ψ).comp kroneckerToTensorProduct)
   rw [TensorProduct.ext_iff']
   intro x y
@@ -176,20 +176,20 @@ theorem TensorProduct.toKronecker_adjoint [hφ : φ.IsFaithfulPosMap]
     (kroneckerToTensorProduct : Matrix (n × p) (n × p) ℂ →ₗ[ℂ] Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ) =
       LinearMap.adjoint (@TensorProduct.toKronecker ℂ n p _ _ _ _ _ :
           Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] Matrix (n × p) (n × p) ℂ) := by
-  letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
-  letI : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
+  let : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
+  let : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
     (Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace φ
-  letI : _root_.NormedAddCommGroup (Matrix p p ℂ) := Module.Dual.NormedAddCommGroup ψ
-  letI : _root_.SeminormedAddCommGroup (Matrix p p ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace φ
+  let : _root_.NormedAddCommGroup (Matrix p p ℂ) := Module.Dual.NormedAddCommGroup ψ
+  let : _root_.SeminormedAddCommGroup (Matrix p p ℂ) :=
     (Module.Dual.NormedAddCommGroup ψ).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix p p ℂ) := Module.Dual.InnerProductSpace ψ
-  letI : _root_.NormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix p p ℂ) := Module.Dual.InnerProductSpace ψ
+  let : _root_.NormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
     Module.Dual.NormedAddCommGroup ((φ.tensorMul ψ).comp kroneckerToTensorProduct)
-  letI : _root_.SeminormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.SeminormedAddCommGroup (Matrix (n × p) (n × p) ℂ) :=
     (Module.Dual.NormedAddCommGroup
       ((φ.tensorMul ψ).comp kroneckerToTensorProduct)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (Matrix (n × p) (n × p) ℂ) :=
+  let : _root_.InnerProductSpace ℂ (Matrix (n × p) (n × p) ℂ) :=
     Module.Dual.InnerProductSpace ((φ.tensorMul ψ).comp kroneckerToTensorProduct)
   rw [@Matrix.kroneckerToTensorProduct_adjoint n p _ _ _ _ φ ψ hφ hψ, LinearMap.adjoint_adjoint]
 

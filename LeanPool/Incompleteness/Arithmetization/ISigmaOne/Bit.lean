@@ -631,7 +631,7 @@ private lemma finset_comprehension_aux (Γ : Polarity) {P : V → Prop} (hP : Γ
     V) :
     haveI : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
     ∃ s < exp a, ∀ i < a, i ∈ s ↔ P i := by
-  haveI : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
+  have : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
   have : ∃ s < exp a, ∀ i < a, P i → i ∈ s :=
     ⟨under a, pred_lt_self_of_pos (by simp), fun i hi _ ↦ by simpa [mem_under_iff] using hi⟩
   rcases this with ⟨s, hsn, hs⟩
@@ -668,7 +668,7 @@ theorem finset_comprehension {Γ} {P : V → Prop} (hP : Γ-[m]-Predicate P) (a 
 theorem finset_comprehension_exists_unique {P : V → Prop} (hP : Γ-[m]-Predicate P) (a : V) :
     haveI : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
     ∃! s, s < exp a ∧ ∀ i < a, i ∈ s ↔ P i := by
-  haveI : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
+  have : V ⊧ₘ* 𝐈Sg1 := mod_ISigma_of_le (show 1 ≤ m from Fact.out)
   rcases finset_comprehension hP a with ⟨s, hs, Hs⟩
   exact ExistsUnique.intro s ⟨hs, Hs⟩ (by
     intro t ⟨ht, Ht⟩

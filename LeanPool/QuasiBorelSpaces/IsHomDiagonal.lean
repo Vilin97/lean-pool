@@ -64,7 +64,7 @@ instance : IsHomDiagonal ℝ where
     intro φ hφ
     simp only [Prod.isHom_iff, isHom_ofMeasurableSpace] at ⊢ hφ
     rcases hφ with ⟨hφ₁, hφ₂⟩
-    rw [←measurableSet_setOf]
+    rw [←measurableSet_setOfPred]
     apply measurableSet_eq_fun <;> fun_prop
 
 instance : IsHomDiagonal ENNReal where
@@ -73,7 +73,7 @@ instance : IsHomDiagonal ENNReal where
     intro φ hφ
     simp only [Prod.isHom_iff, isHom_ofMeasurableSpace] at ⊢ hφ
     rcases hφ with ⟨hφ₁, hφ₂⟩
-    rw [←measurableSet_setOf]
+    rw [←measurableSet_setOfPred]
     apply measurableSet_eq_fun <;> fun_prop
 
 end QuasiBorelSpace
