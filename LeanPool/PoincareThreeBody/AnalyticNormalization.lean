@@ -108,6 +108,53 @@ theorem domainMassNormalizedCandidate_eq_massNormalizedCandidate
   · rw [domainMassNormalizedCandidate_eq_div hmass,
       massNormalizedCandidate_eq_div hmass hzero]
 
+/-- Away from the removable hypersurface `mass = 0`, the domain-correct normalized candidate is
+jointly analytic by ordinary analytic division.  Thus the genuinely parameterized content of the
+Hadamard division step is confined to points whose mass coordinate is zero. -/
+theorem analyticAt_uncurry_domainMassNormalizedCandidate_of_mass_ne
+    {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ}
+    {z : ℝ × PhaseSpace}
+    (hmass : z.1 ≠ 0)
+    (hcandidate : AnalyticAt ℝ (Function.uncurry F) z)
+    (hhamiltonian : AnalyticAt ℝ (Function.uncurry hamiltonian) z)
+    (henergyFunction : AnalyticAt ℝ energyFunction (hamiltonian z.1 z.2)) :
+    AnalyticAt ℝ
+      (Function.uncurry (domainMassNormalizedCandidate F energyFunction)) z := by
+  have hresidual : AnalyticAt ℝ
+      (fun w : ℝ × PhaseSpace ↦
+        normalizationResidual F energyFunction w.1 w.2) z := by
+    exact hcandidate.sub (henergyFunction.comp
+      (f := Function.uncurry hamiltonian) hhamiltonian)
+  have hquotient : AnalyticAt ℝ
+      (fun w : ℝ × PhaseSpace ↦
+        normalizationResidual F energyFunction w.1 w.2 / w.1) z :=
+    hresidual.div analyticAt_fst hmass
+  have heventual : ∀ᶠ w in nhds z, w.1 ≠ 0 :=
+    continuousAt_fst.eventually_ne hmass
+  apply hquotient.congr
+  filter_upwards [heventual] with w hw
+  exact (domainMassNormalizedCandidate_eq_div hw w.2).symm
+
+/-- To prove joint analyticity of the normalized family on the full parameter domain, it is
+enough to prove the removable extension at the mass-zero slice.  All nonzero-mass points follow
+from ordinary analytic division. -/
+theorem isJointlyAnalytic_domainMassNormalizedCandidate_of_mass_zero
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ}
+    (hanalytic : IsJointlyAnalytic δ F)
+    (henergyFunction : ∀ energy, AnalyticAt ℝ energyFunction energy)
+    (hmassZero : ∀ state, (0, state) ∈ collisionFree →
+      AnalyticAt ℝ
+        (Function.uncurry (domainMassNormalizedCandidate F energyFunction)) (0, state)) :
+    IsJointlyAnalytic δ (domainMassNormalizedCandidate F energyFunction) := by
+  rintro z hz
+  rcases z with ⟨mass, state⟩
+  by_cases hmass : mass = 0
+  · subst hmass
+    exact hmassZero state hz.2
+  · exact analyticAt_uncurry_domainMassNormalizedCandidate_of_mass_ne
+      hmass (hanalytic (mass, state) hz) (hamiltonian_analyticAt hz.2)
+      (henergyFunction (hamiltonian mass state))
+
 /-- Exact reconstruction for the domain-correct normalization. -/
 theorem mass_mul_domainMassNormalizedCandidate
     {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ} {state : PhaseSpace}

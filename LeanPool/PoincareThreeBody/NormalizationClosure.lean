@@ -51,6 +51,30 @@ def JointAnalyticMassDivisionPrinciple : Prop :=
         F 0 state = energyFunction (hamiltonian 0 state)) →
       IsJointlyAnalytic δ (domainMassNormalizedCandidate F energyFunction)
 
+/-- Pointwise form of analytic Hadamard division on the only nontrivial slice.  Ordinary
+division already handles every point with nonzero mass, so this is equivalent to the global
+joint-analytic division principle above. -/
+def MassZeroAnalyticDivisionPrinciple : Prop :=
+  ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ},
+    0 < δ → IsJointlyAnalytic δ F →
+      (∀ energy, AnalyticAt ℝ energyFunction energy) →
+      (∀ state, (0, state) ∈ collisionFree →
+        F 0 state = energyFunction (hamiltonian 0 state)) →
+      ∀ state, (0, state) ∈ collisionFree →
+        AnalyticAt ℝ
+          (Function.uncurry (domainMassNormalizedCandidate F energyFunction)) (0, state)
+
+/-- Parameterized analytic division is reduced exactly to the removable mass-zero slice. -/
+theorem jointAnalyticMassDivisionPrinciple_iff_massZero :
+    JointAnalyticMassDivisionPrinciple ↔ MassZeroAnalyticDivisionPrinciple := by
+  constructor
+  · intro hdivision δ F energyFunction hδ hanalytic henergy hcancel state hcollision
+    exact hdivision hδ hanalytic henergy hcancel (0, state)
+      ⟨by simpa using hδ, hcollision⟩
+  · intro hdivision δ F energyFunction _hδ hanalytic henergy hcancel
+    exact isJointlyAnalytic_domainMassNormalizedCandidate_of_mass_zero
+      hanalytic henergy (hdivision _hδ hanalytic henergy hcancel)
+
 /-- The functional-dependence and analytic-division halves together give the reusable one-step
 closure theorem; preservation of the first-integral equation is already formal. -/
 theorem classicalNormalizationStep_of_zerothCoefficient_of_massDivision
