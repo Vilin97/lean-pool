@@ -19,6 +19,7 @@ import LeanPool.PoincareThreeBody.KeplerFlow
 import LeanPool.PoincareThreeBody.KeplerHamiltonian
 import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.OneTwoResonance
+import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance

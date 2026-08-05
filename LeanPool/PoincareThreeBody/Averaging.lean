@@ -31,6 +31,28 @@ theorem intervalIntegral_derivative_eq_zero_of_endpoints_eq
     ∫ time in 0..period, correctionDerivative time = 0 := by
   rw [intervalIntegral.integral_eq_sub_of_hasDerivAt hderiv hintegrable, hperiodic, sub_self]
 
+/-- If a first homological equation is a periodic total derivative plus a forcing term, then the
+forcing has zero average over the period. -/
+theorem intervalIntegral_forcing_eq_zero_of_homologicalEquation
+    {correction correctionDerivative forcing : ℝ → ℝ} {period : ℝ}
+    (hderiv : ∀ time ∈ uIcc 0 period,
+      HasDerivAt correction (correctionDerivative time) time)
+    (hcorrectionIntegrable : IntervalIntegrable correctionDerivative volume 0 period)
+    (hforcingIntegrable : IntervalIntegrable forcing volume 0 period)
+    (hperiodic : correction period = correction 0)
+    (hequation : ∀ time ∈ uIcc 0 period,
+      correctionDerivative time + forcing time = 0) :
+    ∫ time in 0..period, forcing time = 0 := by
+  have hderivativeIntegral : ∫ time in 0..period, correctionDerivative time = 0 :=
+    intervalIntegral_derivative_eq_zero_of_endpoints_eq hderiv hcorrectionIntegrable hperiodic
+  have hequationIntegral :
+      ∫ time in 0..period, correctionDerivative time + forcing time = 0 := by
+    rw [intervalIntegral.integral_congr fun time htime ↦ hequation time htime]
+    simp
+  rw [intervalIntegral.integral_add hcorrectionIntegrable hforcingIntegrable,
+    hderivativeIntegral, zero_add] at hequationIntegral
+  exact hequationIntegral
+
 /-- Averaging a scalar first homological equation over a periodic orbit kills its correction
 term. -/
 theorem coefficient_eq_zero_of_averaged_homologicalEquation

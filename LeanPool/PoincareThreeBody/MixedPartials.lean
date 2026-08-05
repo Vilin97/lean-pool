@@ -25,6 +25,27 @@ noncomputable def parameterCoefficient
     (G : ℝ × B → ℝ) (b : B) : ℝ :=
   fderiv ℝ G (0, b) (1, 0)
 
+/-- A jointly `C²` function has a differentiable first parameter coefficient in the remaining
+variables. -/
+theorem differentiableAt_parameterCoefficient
+    {B : Type*} [NormedAddCommGroup B] [NormedSpace ℝ B]
+    {G : ℝ × B → ℝ} {b : B} (hG : ContDiffAt ℝ 2 G (0, b)) :
+    DifferentiableAt ℝ (parameterCoefficient G) b := by
+  have hfderiv : DifferentiableAt ℝ (fderiv ℝ G) (0, b) := by
+    exact (hG.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
+  unfold parameterCoefficient
+  fun_prop
+
+/-- A jointly `C²` function has a continuously differentiable first parameter coefficient. -/
+theorem contDiffAt_parameterCoefficient
+    {B : Type*} [NormedAddCommGroup B] [NormedSpace ℝ B]
+    {G : ℝ × B → ℝ} {b : B} (hG : ContDiffAt ℝ 2 G (0, b)) :
+    ContDiffAt ℝ 1 (parameterCoefficient G) b := by
+  have hfderiv : ContDiffAt ℝ 1 (fderiv ℝ G) (0, b) :=
+    hG.fderiv_right (m := 1) (by norm_num)
+  unfold parameterCoefficient
+  fun_prop
+
 /-- The phase derivative of a slice of a jointly differentiable function is its joint derivative
 in the pure phase direction. -/
 theorem fderiv_curry_right_apply
@@ -116,11 +137,8 @@ theorem fderiv_parameterCoefficient
       iteratedFDeriv ℝ 2 G (0, b) ![(0, v), (1, 0)] := by
   have hiterated : DifferentiableAt ℝ (iteratedFDeriv ℝ 1 G) (0, b) :=
     hG.differentiableAt_iteratedFDeriv (m := 1) (by norm_num)
-  have hfderiv : DifferentiableAt ℝ (fderiv ℝ G) (0, b) := by
-    exact (hG.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)
-  have hcoefficient : DifferentiableAt ℝ (parameterCoefficient G) b := by
-    unfold parameterCoefficient
-    fun_prop
+  have hcoefficient : DifferentiableAt ℝ (parameterCoefficient G) b :=
+    differentiableAt_parameterCoefficient hG
   have hline : HasDerivAt (fun t : ℝ ↦ b + t • v) v 0 := by
     have h := (hasDerivAt_const (x := (0 : ℝ)) b).add
       ((hasDerivAt_id (0 : ℝ)).smul_const v)

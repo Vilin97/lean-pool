@@ -49,6 +49,81 @@ noncomputable def orientedResonantKeplerPhasePoint
     (orientedResonantEllipsePosition p q eccentricity orientation time)
     (orientedResonantEllipseMomentum p q eccentricity orientation time)
 
+/-- Every coordinate of the true rotating-frame momentum is analytic in time. -/
+theorem analyticAt_orientedResonantEllipseMomentum_coordinate
+    (p q : ℕ) {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (coordinate : Fin 2) :
+    AnalyticAt ℝ (fun argument ↦
+      orientedResonantEllipseMomentum p q eccentricity orientation argument coordinate) time := by
+  let anomaly : ℝ → ℝ := resonantEccentricAnomaly p q eccentricity
+  let denominator : ℝ → ℝ := fun argument ↦
+    1 - eccentricity * Real.cos (anomaly argument)
+  have hanomaly : AnalyticAt ℝ anomaly time :=
+    analyticAt_resonantEccentricAnomaly p q heccentricity heccentricityOne
+  have hsinAnomaly : AnalyticAt ℝ (fun argument ↦ Real.sin (anomaly argument)) time :=
+    Real.analyticAt_sin.comp hanomaly
+  have hcosAnomaly : AnalyticAt ℝ (fun argument ↦ Real.cos (anomaly argument)) time :=
+    Real.analyticAt_cos.comp hanomaly
+  have hdenominator : AnalyticAt ℝ denominator time := by
+    exact analyticAt_const.sub (analyticAt_const.mul hcosAnomaly)
+  have hdenominatorNe : denominator time ≠ 0 :=
+    (one_sub_eccentricity_mul_cos_pos heccentricity heccentricityOne).ne'
+  have hinverseDenominator : AnalyticAt ℝ (fun argument ↦ (denominator argument)⁻¹) time :=
+    hdenominator.inv hdenominatorNe
+  let velocityX : ℝ → ℝ := fun argument ↦
+    -resonantFirstAction p q ^ 2 * resonantMeanMotion p q *
+      Real.sin (anomaly argument) * (denominator argument)⁻¹
+  let velocityY : ℝ → ℝ := fun argument ↦
+    resonantFirstAction p q ^ 2 * resonantMeanMotion p q *
+      Real.sqrt (1 - eccentricity ^ 2) * Real.cos (anomaly argument) *
+        (denominator argument)⁻¹
+  have hvelocityX : AnalyticAt ℝ velocityX time := by
+    dsimp only [velocityX]
+    exact ((hsinAnomaly.const_smul
+      (c := -resonantFirstAction p q ^ 2 * resonantMeanMotion p q)).congr (by
+        filter_upwards [] with argument
+        simp [smul_eq_mul])).mul hinverseDenominator
+  have hvelocityY : AnalyticAt ℝ velocityY time := by
+    dsimp only [velocityY]
+    exact ((hcosAnomaly.const_smul
+      (c := resonantFirstAction p q ^ 2 * resonantMeanMotion p q *
+        Real.sqrt (1 - eccentricity ^ 2))).congr (by
+        filter_upwards [] with argument
+        simp [smul_eq_mul])).mul hinverseDenominator
+  have hangle : AnalyticAt ℝ (fun argument ↦ argument - orientation) time :=
+    analyticAt_id.sub analyticAt_const
+  have hcosAngle : AnalyticAt ℝ (fun argument ↦ Real.cos (argument - orientation)) time :=
+    Real.analyticAt_cos.comp hangle
+  have hsinAngle : AnalyticAt ℝ (fun argument ↦ Real.sin (argument - orientation)) time :=
+    Real.analyticAt_sin.comp hangle
+  fin_cases coordinate
+  · change AnalyticAt ℝ (fun argument ↦
+      Real.cos (argument - orientation) * velocityX argument +
+        Real.sin (argument - orientation) * velocityY argument) time
+    exact (hcosAngle.mul hvelocityX).add (hsinAngle.mul hvelocityY)
+  · change AnalyticAt ℝ (fun argument ↦
+      -Real.sin (argument - orientation) * velocityX argument +
+        Real.cos (argument - orientation) * velocityY argument) time
+    exact (hsinAngle.neg.mul hvelocityX).add (hcosAngle.mul hvelocityY)
+
+/-- The genuine full resonant phase-space trajectory is analytic in time. -/
+theorem analyticAt_orientedResonantKeplerPhasePoint
+    (p q : ℕ) {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
+    AnalyticAt ℝ (orientedResonantKeplerPhasePoint p q eccentricity orientation) time := by
+  rw [analyticAt_pi_iff]
+  intro coordinate
+  fin_cases coordinate
+  · exact analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 0
+  · exact analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 1
+  · exact analyticAt_orientedResonantEllipseMomentum_coordinate p q heccentricity
+      heccentricityOne 0
+  · exact analyticAt_orientedResonantEllipseMomentum_coordinate p q heccentricity
+      heccentricityOne 1
+
 theorem hasDerivAt_resonantMeanAnomaly (p q : ℕ) (time : ℝ) :
     HasDerivAt (resonantMeanAnomaly p q) (resonantMeanMotion p q) time := by
   have h := (hasDerivAt_id time).const_mul (resonantMeanMotion p q)
