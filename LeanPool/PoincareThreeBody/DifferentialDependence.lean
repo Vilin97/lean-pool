@@ -25,6 +25,34 @@ def phaseCovectorMinor
   first (coordinateVector i) * second (coordinateVector j) -
     first (coordinateVector j) * second (coordinateVector i)
 
+/-- A differentiable scalar function of an observable has zero coordinate minors with that
+observable. -/
+theorem phaseCovectorMinor_comp_self_eq_zero
+    {observable : PhaseSpace → ℝ} {scalarFunction : ℝ → ℝ} {state : PhaseSpace}
+    (hobservable : DifferentiableAt ℝ observable state)
+    (hscalar : DifferentiableAt ℝ scalarFunction (observable state))
+    (i j : Fin 4) :
+    phaseCovectorMinor (fderiv ℝ observable state)
+      (fderiv ℝ (fun candidate ↦ scalarFunction (observable candidate)) state) i j = 0 := by
+  have hchain := fderiv_comp state hscalar hobservable
+  let coefficient := fderiv ℝ scalarFunction (observable state) 1
+  have hscalarDerivative (value : ℝ) :
+      fderiv ℝ scalarFunction (observable state) value =
+        value * coefficient := by
+    calc
+      fderiv ℝ scalarFunction (observable state) value =
+          fderiv ℝ scalarFunction (observable state) (value • (1 : ℝ)) := by simp
+      _ = value • fderiv ℝ scalarFunction (observable state) 1 := by rw [map_smul]
+      _ = value * coefficient := by rfl
+  unfold phaseCovectorMinor
+  rw [show fderiv ℝ (fun candidate ↦ scalarFunction (observable candidate)) state =
+      (fderiv ℝ scalarFunction (observable state)).comp
+        (fderiv ℝ observable state) by
+    simpa only [Function.comp_def] using hchain]
+  simp only [ContinuousLinearMap.comp_apply]
+  simp_rw [hscalarDerivative]
+  ring
+
 /-- A phase covector vanishing on all four coordinate vectors is zero. -/
 theorem phaseCovector_eq_zero_of_coordinates_eq_zero
     {covector : PhaseSpace →L[ℝ] ℝ}
