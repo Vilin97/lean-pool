@@ -73,6 +73,13 @@ lemma positionInRotatingFrame_sq (time : ℝ) (position : ActionSpace) :
   simp only [positionInRotatingFrame, Matrix.cons_val_zero, Matrix.cons_val_one]
   linear_combination ((position 0) ^ 2 + (position 1) ^ 2) * htrig
 
+lemma positionInRotatingFrame_add (firstAngle secondAngle : ℝ) (position : ActionSpace) :
+    positionInRotatingFrame (firstAngle + secondAngle) position =
+      positionInRotatingFrame firstAngle (positionInRotatingFrame secondAngle position) := by
+  unfold positionInRotatingFrame
+  funext coordinate
+  fin_cases coordinate <;> simp [Real.cos_add, Real.sin_add] <;> ring
+
 lemma rotatingEllipsePosition_sq {firstAction eccentricity anomaly time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity ≤ 1) :
     (rotatingEllipsePosition firstAction eccentricity anomaly time 0) ^ 2 +

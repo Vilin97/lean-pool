@@ -61,6 +61,55 @@ lemma orientedResonantEllipsePosition_zero_orientation
   simp [orientedResonantEllipsePosition, resonantRotatingEllipsePosition,
     rotatingEllipsePosition]
 
+lemma orientedResonantEllipsePosition_eq_fixedRotation
+    (p q : ℕ) (eccentricity orientation time : ℝ) :
+    orientedResonantEllipsePosition p q eccentricity orientation time =
+      positionInRotatingFrame (-orientation)
+        (resonantRotatingEllipsePosition p q eccentricity time) := by
+  unfold orientedResonantEllipsePosition resonantRotatingEllipsePosition
+    rotatingEllipsePosition
+  rw [← positionInRotatingFrame_add]
+  congr 1
+  ring
+
+theorem analyticAt_orientedResonantEllipsePosition_coordinate
+    (p q : ℕ) {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (coordinate : Fin 2) :
+    AnalyticAt ℝ (fun argument ↦
+      orientedResonantEllipsePosition p q eccentricity orientation argument coordinate) time := by
+  have hx := analyticAt_resonantRotatingEllipsePosition_coordinate p q
+    (time := time) heccentricity heccentricityOne 0
+  have hy := analyticAt_resonantRotatingEllipsePosition_coordinate p q
+    (time := time) heccentricity heccentricityOne 1
+  have hfunction :
+      (fun argument ↦
+        orientedResonantEllipsePosition p q eccentricity orientation argument coordinate) =
+      (fun argument ↦ positionInRotatingFrame (-orientation)
+        (resonantRotatingEllipsePosition p q eccentricity argument) coordinate) := by
+    funext argument
+    rw [orientedResonantEllipsePosition_eq_fixedRotation]
+  rw [hfunction]
+  fin_cases coordinate
+  · change AnalyticAt ℝ (fun argument ↦
+      Real.cos (-orientation) *
+          resonantRotatingEllipsePosition p q eccentricity argument 0 +
+        Real.sin (-orientation) *
+          resonantRotatingEllipsePosition p q eccentricity argument 1) time
+    exact (hx.const_smul (c := Real.cos (-orientation))).add
+      (hy.const_smul (c := Real.sin (-orientation))) |>.congr (by
+        filter_upwards [] with argument
+        simp [smul_eq_mul])
+  · change AnalyticAt ℝ (fun argument ↦
+      -Real.sin (-orientation) *
+          resonantRotatingEllipsePosition p q eccentricity argument 0 +
+        Real.cos (-orientation) *
+          resonantRotatingEllipsePosition p q eccentricity argument 1) time
+    exact (hx.const_smul (c := -Real.sin (-orientation))).add
+      (hy.const_smul (c := Real.cos (-orientation))) |>.congr (by
+        filter_upwards [] with argument
+        simp [smul_eq_mul])
+
 lemma orientedResonantEllipsePosition_sq {p q : ℕ} {eccentricity orientation time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity ≤ 1) :
     (orientedResonantEllipsePosition p q eccentricity orientation time 0) ^ 2 +
@@ -189,6 +238,78 @@ theorem hasDerivAt_resonantDisturbingFunction_orientation
   · simp [resonantDisturbingOrientationDerivative, x, y]
     ring
 
+theorem analyticAt_resonantDisturbingOrientationDerivative
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    AnalyticAt ℝ
+      (resonantDisturbingOrientationDerivative p q eccentricity orientation) time := by
+  let x : ℝ → ℝ := fun argument ↦
+    orientedResonantEllipsePosition p q eccentricity orientation argument 0
+  let y : ℝ → ℝ := fun argument ↦
+    orientedResonantEllipsePosition p q eccentricity orientation argument 1
+  have hx : AnalyticAt ℝ x time :=
+    analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 0
+  have hy : AnalyticAt ℝ y time :=
+    analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 1
+  have horiginSq : AnalyticAt ℝ (fun argument ↦ x argument ^ 2 + y argument ^ 2)
+      time := (hx.pow 2).add (hy.pow 2)
+  have hfirstAction : resonantFirstAction p q ≠ 0 :=
+    (resonantFirstAction_pos hp hq).ne'
+  have hradius := eccentricRadius_pos (anomaly :=
+      resonantEccentricAnomaly p q eccentricity time) hfirstAction heccentricity
+    heccentricityOne
+  have horiginPositive : 0 < x time ^ 2 + y time ^ 2 := by
+    change 0 <
+      (orientedResonantEllipsePosition p q eccentricity orientation time 0) ^ 2 +
+        (orientedResonantEllipsePosition p q eccentricity orientation time 1) ^ 2
+    rw [orientedResonantEllipsePosition_sq heccentricity heccentricityOne.le]
+    exact sq_pos_of_pos hradius
+  have hinverseOrigin : AnalyticAt ℝ
+      (fun argument ↦ 1 / Real.sqrt (x argument ^ 2 + y argument ^ 2)) time := by
+    change AnalyticAt ℝ
+      ((fun value : ℝ ↦ 1 / Real.sqrt value) ∘
+        (fun argument ↦ x argument ^ 2 + y argument ^ 2)) time
+    exact (analyticAt_inv_sqrt horiginPositive).comp
+      (f := fun argument ↦ x argument ^ 2 + y argument ^ 2) horiginSq
+  have hone : AnalyticAt ℝ (fun _ : ℝ ↦ (1 : ℝ)) time := analyticAt_const
+  have hprimarySq : AnalyticAt ℝ
+      (fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2) time :=
+    ((hx.sub hone).pow 2).add (hy.pow 2)
+  have hprimaryNe : (x time - 1) ^ 2 + y time ^ 2 ≠ 0 :=
+    rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one heccentricity
+      heccentricityOne hapoapsis
+  have hprimaryPositive : 0 < (x time - 1) ^ 2 + y time ^ 2 :=
+    lt_of_le_of_ne (by positivity) (Ne.symm hprimaryNe)
+  have hinversePrimary : AnalyticAt ℝ
+      (fun argument ↦ 1 / Real.sqrt ((x argument - 1) ^ 2 + y argument ^ 2)) time := by
+    change AnalyticAt ℝ
+      ((fun value : ℝ ↦ 1 / Real.sqrt value) ∘
+        (fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2)) time
+    exact (analyticAt_inv_sqrt hprimaryPositive).comp
+      (f := fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2) hprimarySq
+  have hraw := (hy.neg.mul (hinverseOrigin.pow 3)).add
+    (hy.mul (hinversePrimary.pow 3))
+  apply hraw.congr
+  filter_upwards [] with argument
+  simp [resonantDisturbingOrientationDerivative, x, y, div_eq_mul_inv]
+
+theorem intervalIntegrable_resonantDisturbingOrientationDerivative
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity orientation start finish : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    IntervalIntegrable
+      (resonantDisturbingOrientationDerivative p q eccentricity orientation)
+      volume start finish := by
+  apply Continuous.intervalIntegrable _ start finish
+  rw [continuous_iff_continuousAt]
+  intro time
+  exact (analyticAt_resonantDisturbingOrientationDerivative hp hq heccentricity
+    heccentricityOne hapoapsis).continuousAt
+
 lemma orientedResonantEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
     {p q : ℕ} {eccentricity orientation time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
@@ -271,5 +392,29 @@ theorem resonantDisturbingAverage_obstruction
   exact averagedHomologicalEquation_obstruction (resonanceVector_ne_zero hp)
     (resonantFirstAction_is_resonant hp hq) hderiv hcorrectionIntegrable
       hforcingIntegrable hperiodic hforcing hequation
+
+/-- Collision-free interior ellipses automatically satisfy the integrability hypothesis in the
+concrete averaged obstruction. -/
+theorem resonantDisturbingAverage_obstruction_of_apoapsis_lt_one
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {differential : ActionSpace}
+    {eccentricity orientation : ℝ} {correction correctionDerivative : ℝ → ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1)
+    (hderiv : ∀ time ∈ Set.uIcc 0 (resonantOrbitPeriod p),
+      HasDerivAt correction (correctionDerivative time) time)
+    (hcorrectionIntegrable : IntervalIntegrable correctionDerivative volume 0
+      (resonantOrbitPeriod p))
+    (hperiodic : correction (resonantOrbitPeriod p) = correction 0)
+    (hforcing : ∫ time in 0..resonantOrbitPeriod p,
+      resonantDisturbingOrientationDerivative p q eccentricity orientation time ≠ 0)
+    (hequation : ∀ time ∈ Set.uIcc 0 (resonantOrbitPeriod p),
+      correctionDerivative time + dot (resonanceVector p q) differential *
+        resonantDisturbingOrientationDerivative p q eccentricity orientation time = 0) :
+    ¬LinearIndependent ℝ
+      ![delaunayFrequency (resonantFirstAction p q), differential] := by
+  apply resonantDisturbingAverage_obstruction hp hq hderiv hcorrectionIntegrable
+    (intervalIntegrable_resonantDisturbingOrientationDerivative hp hq heccentricity
+      heccentricityOne hapoapsis)
+    hperiodic hforcing hequation
 
 end LeanPool.PoincareThreeBody
