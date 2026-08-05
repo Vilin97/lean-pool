@@ -117,6 +117,13 @@ lemma eccentricMeanAnomaly_add_two_pi (eccentricity anomaly : ℝ) :
   simp [eccentricMeanAnomaly]
   ring
 
+lemma eccentricMeanAnomaly_add_nat_mul_two_pi
+    (eccentricity anomaly : ℝ) (turns : ℕ) :
+    eccentricMeanAnomaly eccentricity (anomaly + turns * (2 * Real.pi)) =
+      eccentricMeanAnomaly eccentricity anomaly + turns * (2 * Real.pi) := by
+  simp [eccentricMeanAnomaly]
+  ring
+
 lemma eccentricMeanAnomaly_lower_bound {eccentricity anomaly : ℝ}
     (heccentricity : 0 ≤ eccentricity) :
     anomaly - eccentricity ≤ eccentricMeanAnomaly eccentricity anomaly := by
@@ -201,6 +208,16 @@ theorem eccentricAnomaly_add_two_pi {eccentricity meanAnomaly : ℝ}
     eccentricMeanAnomaly_add_two_pi,
     eccentricMeanAnomaly_eccentricAnomaly heccentricity]
 
+theorem eccentricAnomaly_add_nat_mul_two_pi
+    {eccentricity meanAnomaly : ℝ} (turns : ℕ)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
+    eccentricAnomaly eccentricity (meanAnomaly + turns * (2 * Real.pi)) =
+      eccentricAnomaly eccentricity meanAnomaly + turns * (2 * Real.pi) := by
+  apply (strictMono_eccentricMeanAnomaly heccentricity heccentricityOne).injective
+  rw [eccentricMeanAnomaly_eccentricAnomaly heccentricity,
+    eccentricMeanAnomaly_add_nat_mul_two_pi,
+    eccentricMeanAnomaly_eccentricAnomaly heccentricity]
+
 theorem continuous_eccentricAnomaly {eccentricity : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
     Continuous (eccentricAnomaly eccentricity) := by
@@ -263,6 +280,15 @@ lemma delaunayRadius_add_two_pi {firstAction eccentricity meanAnomaly : ℝ}
       delaunayRadius firstAction eccentricity meanAnomaly := by
   unfold delaunayRadius eccentricRadius
   rw [eccentricAnomaly_add_two_pi heccentricity heccentricityOne]
+  simp
+
+lemma delaunayRadius_add_nat_mul_two_pi
+    {firstAction eccentricity meanAnomaly : ℝ} (turns : ℕ)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
+    delaunayRadius firstAction eccentricity (meanAnomaly + turns * (2 * Real.pi)) =
+      delaunayRadius firstAction eccentricity meanAnomaly := by
+  unfold delaunayRadius eccentricRadius
+  rw [eccentricAnomaly_add_nat_mul_two_pi turns heccentricity heccentricityOne]
   simp
 
 theorem analyticAt_delaunayRadius {firstAction eccentricity meanAnomaly : ℝ}

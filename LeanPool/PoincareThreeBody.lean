@@ -12,6 +12,7 @@ import LeanPool.PoincareThreeBody.KeplerOrbit
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
+import LeanPool.PoincareThreeBody.ResonantOrbit
 import LeanPool.PoincareThreeBody.RotatingEllipse
 
 /-!
