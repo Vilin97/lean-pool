@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.AnalyticNormalization
+import LeanPool.PoincareThreeBody.AnalyticMinors
 import LeanPool.PoincareThreeBody.ActionFactorization
 import LeanPool.PoincareThreeBody.ActionPoisson
 import LeanPool.PoincareThreeBody.Averaging
@@ -34,6 +35,7 @@ import LeanPool.PoincareThreeBody.LeadingObstruction
 import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
+import LeanPool.PoincareThreeBody.ParameterDomainTopology
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.PoincareSet
 import LeanPool.PoincareThreeBody.PoissonNormalization
