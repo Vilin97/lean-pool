@@ -38,6 +38,7 @@ import LeanPool.PoincareThreeBody.NormalizationClosure
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.ParameterDomainTopology
+import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.PoincareSet
 import LeanPool.PoincareThreeBody.PoissonNormalization
