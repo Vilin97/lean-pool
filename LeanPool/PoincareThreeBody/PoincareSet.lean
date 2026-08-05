@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.DenseResonantObstruction
 import LeanPool.PoincareThreeBody.AnalyticDensity
+import LeanPool.PoincareThreeBody.DisturbingAverageAnalytic
 
 /-!
 # The classical Poincaré set
@@ -95,6 +96,27 @@ def HasAnalyticSeparatingResonantAverages : Prop :=
       ∃ witness ∈ admissibleResonantEccentricitySet p q,
         resonantDisturbingAverage p q witness phaseA -
           resonantDisturbingAverage p q witness phaseB ≠ 0
+
+/-- The remaining classical disturbing-function calculation, stripped of analyticity: at every
+positive rational resonance, two orientations give different averaged perturbations at one
+admissible eccentricity. -/
+def HasSeparatingResonantAverages : Prop :=
+  ∀ p q : ℕ, 0 < p → 0 < q →
+    ∃ phaseA phaseB : ℝ, ∃ witness ∈ admissibleResonantEccentricitySet p q,
+      resonantDisturbingAverage p q witness phaseA -
+        resonantDisturbingAverage p q witness phaseB ≠ 0
+
+/-- Compact parameter integration supplies the analytic clause automatically, so the classical
+Fourier calculation only has to provide a separating value at each resonance. -/
+theorem hasAnalyticSeparatingResonantAverages_of_separation
+    (hseparation : HasSeparatingResonantAverages) :
+    HasAnalyticSeparatingResonantAverages := by
+  intro p q hp hq
+  rcases hseparation p q hp hq with
+    ⟨phaseA, phaseB, witness, hwitness, hvalues⟩
+  refine ⟨phaseA, phaseB, ?_, witness, hwitness, hvalues⟩
+  exact (analyticOnNhd_resonantDisturbingAverage_eccentricity hp hq phaseA).sub
+    (analyticOnNhd_resonantDisturbingAverage_eccentricity hp hq phaseB)
 
 /-- The admissible eccentricity domain is open. -/
 theorem isOpen_admissibleResonantEccentricitySet (p q : ℕ) :

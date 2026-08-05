@@ -422,4 +422,14 @@ theorem nonintegrability_of_analytic_separation
   nonintegrability_of_denseClassicalPoincareSet
     (hasDenseClassicalPoincareSet_of_analytic_separation hseparation)
 
+/-- Final reduction after proving analyticity of the averaged disturbing function: it remains
+only to exhibit one separating eccentricity and two orientations at every positive resonance. -/
+theorem nonintegrability_of_separation
+    (hseparation : HasSeparatingResonantAverages) :
+    ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
+      IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
+        IsIndependentSomewhere δ F :=
+  nonintegrability_of_analytic_separation
+    (hasAnalyticSeparatingResonantAverages_of_separation hseparation)
+
 end LeanPool.PoincareThreeBody
