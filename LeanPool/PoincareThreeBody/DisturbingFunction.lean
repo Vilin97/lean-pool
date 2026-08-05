@@ -609,6 +609,33 @@ theorem deriv_resonantDisturbingAverage
         resonantDisturbingOrientationDerivative p q eccentricity orientation time :=
   (hasDerivAt_resonantDisturbingAverage hp hq heccentricity heccentricityOne hapoapsis).deriv
 
+theorem differentiable_resonantDisturbingAverage
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    Differentiable ℝ (resonantDisturbingAverage p q eccentricity) := by
+  intro orientation
+  exact (hasDerivAt_resonantDisturbingAverage hp hq heccentricity heccentricityOne
+    hapoapsis).differentiableAt
+
+/-- Distinct certified values of the Poincaré average imply a nonzero resonant forcing integral at
+some orientation. This is the interface intended for exact analytic estimates or validated finite
+computation. -/
+theorem exists_deriv_resonantDisturbingAverage_ne_zero_of_values_ne
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity phaseA phaseB : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1)
+    (hvalues : resonantDisturbingAverage p q eccentricity phaseA ≠
+      resonantDisturbingAverage p q eccentricity phaseB) :
+  ∃ orientation,
+      deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0 := by
+  by_contra hderivative
+  push Not at hderivative
+  apply hvalues
+  exact is_const_of_deriv_eq_zero
+    (differentiable_resonantDisturbingAverage hp hq heccentricity heccentricityOne hapoapsis)
+    hderivative phaseA phaseB
+
 /-- The averaged homological obstruction specialized to the explicit resonant disturbing
 function. The remaining concrete input is nonvanishing of its orientation derivative integral. -/
 theorem resonantDisturbingAverage_obstruction
