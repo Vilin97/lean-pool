@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.ParameterDomainTopology
 import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
 
 /-!
 # A global analytic section of the mass-zero energy map
@@ -146,5 +147,44 @@ theorem IsJointlyAnalytic.analyticAt_globalEnergyCoefficient
     analyticAt_const.prod (analyticAt_globalEnergySection energy)
   exact (hanalytic (0, globalEnergySection energy) hdomain).comp
     (f := fun candidateEnergy ↦ ((0 : ℝ), globalEnergySection candidateEnergy)) hcurve
+
+/-- Intrinsic form of the classical zeroth-coefficient conclusion: the coefficient at a phase
+point equals its value on the canonical section at the same Kepler energy. -/
+def GlobalZerothCoefficientFactorization : Prop :=
+  ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
+    0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
+      ∀ state, (0, state) ∈ collisionFree →
+        F 0 state = globalEnergyCoefficient F (hamiltonian 0 state)
+
+/-- The canonical-section formulation is exactly equivalent to the energy-function formulation
+used by the normalization induction. -/
+theorem globalZerothCoefficientFactorization_iff_classicalPrinciple :
+    GlobalZerothCoefficientFactorization ↔ ClassicalZerothCoefficientPrinciple := by
+  constructor
+  · intro hfactor δ F hδ hanalytic hfirstIntegral
+    refine ⟨globalEnergyCoefficient F,
+      IsJointlyAnalytic.analyticAt_globalEnergyCoefficient hδ hanalytic,
+      hfactor hδ hanalytic hfirstIntegral⟩
+  · intro hprinciple δ F hδ hanalytic hfirstIntegral state hcollision
+    obtain ⟨energyFunction, _henergy, hcancel⟩ :=
+      hprinciple hδ hanalytic hfirstIntegral
+    have hsection (energy : ℝ) :
+        globalEnergyCoefficient F energy = energyFunction energy := by
+      unfold globalEnergyCoefficient
+      rw [hcancel (globalEnergySection energy)
+        (globalEnergySection_collisionFree energy),
+        hamiltonian_zero_globalEnergySection]
+    rw [hcancel state hcollision, hsection]
+
+/-- With analytic mass division now proved, the exact challenge is reduced to the intrinsic
+classical factorization statement alone. -/
+theorem nonintegrability_of_globalZerothCoefficientFactorization
+    (hfactor : GlobalZerothCoefficientFactorization) :
+    ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
+      IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
+        IsIndependentSomewhere δ F := by
+  apply nonintegrability_of_zerothCoefficient_of_massDivision
+  · exact globalZerothCoefficientFactorization_iff_classicalPrinciple.mp hfactor
+  · exact jointAnalyticMassDivisionPrinciple
 
 end LeanPool.PoincareThreeBody
