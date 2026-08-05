@@ -8,6 +8,7 @@ import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.Delaunay
+import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
 import LeanPool.PoincareThreeBody.KeplerOrbit
@@ -16,6 +17,7 @@ import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
 import LeanPool.PoincareThreeBody.ResonantOrbit
 import LeanPool.PoincareThreeBody.RotatingEllipse
+import LeanPool.PoincareThreeBody.ValidatedQuadrature
 
 /-!
 # Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
