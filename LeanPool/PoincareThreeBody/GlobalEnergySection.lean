@@ -7,6 +7,7 @@ Authors: Gershon Bialer
 import LeanPool.PoincareThreeBody.ParameterDomainTopology
 import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.ParameterizedAnalyticDivision
+import LeanPool.PoincareThreeBody.DelaunaySection
 
 /-!
 # A global analytic section of the mass-zero energy map
@@ -92,6 +93,98 @@ theorem hamiltonian_zero_globalEnergySection (energy : ℝ) :
   norm_num only [zero_pow, zero_add, zero_mul, one_mul, sub_zero, zero_div]
   rw [hsqrtRadius]
   rw [hinverse] at hspeed ⊢
+  nlinarith
+
+@[simp] theorem globalEnergyRadius_neg_two :
+    globalEnergyRadius (-2) = (1 / 6 : ℝ) := by
+  norm_num [globalEnergyRadius]
+
+@[simp] theorem globalEnergyRadicand_neg_two :
+    globalEnergyRadicand (-2) = (289 / 36 : ℝ) := by
+  norm_num [globalEnergyRadicand, globalEnergyRadius]
+
+@[simp] theorem globalEnergySpeed_neg_two :
+    globalEnergySpeed (-2) = (17 / 6 : ℝ) := by
+  rw [globalEnergySpeed, globalEnergyRadicand_neg_two]
+  have hnonneg : (0 : ℝ) ≤ 17 / 6 := by norm_num
+  rw [show (289 / 36 : ℝ) = (17 / 6) ^ 2 by norm_num,
+    Real.sqrt_sq hnonneg]
+
+/-- A rational phase-space anchor for the global section. -/
+theorem globalEnergySection_neg_two :
+    globalEnergySection (-2) = ![(0 : ℝ), 1 / 6, -3, 0] := by
+  funext coordinate
+  fin_cases coordinate <;>
+    norm_num [globalEnergySection]
+
+theorem cartesianKeplerEnergy_globalEnergySection_neg_two :
+    cartesianKeplerEnergy (globalEnergySection (-2)) = (-3 / 2 : ℝ) := by
+  rw [globalEnergySection_neg_two]
+  simp only [cartesianKeplerEnergy, Matrix.cons_val_two, Matrix.cons_val_three]
+  norm_num
+  rw [show (36 : ℝ) = 6 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  norm_num
+
+theorem cartesianAngularAction_globalEnergySection_neg_two :
+    cartesianAngularAction (globalEnergySection (-2)) = (1 / 2 : ℝ) := by
+  rw [globalEnergySection_neg_two]
+  simp only [cartesianAngularAction, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.cons_val_two, Matrix.cons_val_three]
+  norm_num
+
+theorem cartesianDelaunayActions_globalEnergySection_neg_two :
+    cartesianDelaunayActions (globalEnergySection (-2)) =
+      ![1 / Real.sqrt 3, (1 / 2 : ℝ)] := by
+  funext coordinate
+  fin_cases coordinate
+  · simp only [cartesianDelaunayActions, cartesianFirstAction,
+      cartesianKeplerEnergy_globalEnergySection_neg_two]
+    norm_num
+  · change cartesianAngularAction (globalEnergySection (-2)) = (1 / 2 : ℝ)
+    exact cartesianAngularAction_globalEnergySection_neg_two
+
+theorem globalEnergySection_neg_two_action_prograde :
+    cartesianDelaunayActions (globalEnergySection (-2)) ∈
+      ProgradeEllipticActions := by
+  rw [cartesianDelaunayActions_globalEnergySection_neg_two]
+  constructor
+  · norm_num
+  · have hsqrtPos : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+    have hsqrtSq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+    rw [show (![1 / Real.sqrt 3, (1 / 2 : ℝ)] : ActionSpace) 1 = 1 / 2 by rfl,
+      show (![1 / Real.sqrt 3, (1 / 2 : ℝ)] : ActionSpace) 0 =
+        1 / Real.sqrt 3 by rfl]
+    apply (lt_div_iff₀ hsqrtPos).2
+    nlinarith
+
+theorem eccentricityFromActions_globalEnergySection_neg_two :
+    eccentricityFromActions
+      (cartesianDelaunayActions (globalEnergySection (-2))) = (1 / 2 : ℝ) := by
+  rw [cartesianDelaunayActions_globalEnergySection_neg_two]
+  unfold eccentricityFromActions
+  have hsqrtPos : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  have hsqrtSq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have hratio :
+      ((![1 / Real.sqrt 3, (1 / 2 : ℝ)] : ActionSpace) 1 /
+        (![1 / Real.sqrt 3, (1 / 2 : ℝ)] : ActionSpace) 0) ^ 2 = 3 / 4 := by
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+    field_simp [hsqrtPos.ne']
+    nlinarith
+  rw [hratio]
+  norm_num
+  rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  norm_num
+
+theorem globalEnergySection_neg_two_action_apoapsis :
+    let action := cartesianDelaunayActions (globalEnergySection (-2))
+    action 0 ^ 2 * (1 + eccentricityFromActions action) < 1 := by
+  dsimp only
+  rw [eccentricityFromActions_globalEnergySection_neg_two,
+    cartesianDelaunayActions_globalEnergySection_neg_two]
+  have hsqrtPos : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  have hsqrtSq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  simp only [Matrix.cons_val_zero]
+  field_simp [hsqrtPos.ne']
   nlinarith
 
 theorem analyticAt_globalEnergyRadius (energy : ℝ) :
