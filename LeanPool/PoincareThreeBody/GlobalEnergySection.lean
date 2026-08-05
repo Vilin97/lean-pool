@@ -1,0 +1,150 @@
+/-
+Copyright (c) 2026 Gershon Bialer. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gershon Bialer
+-/
+
+import LeanPool.PoincareThreeBody.ParameterDomainTopology
+import LeanPool.PoincareThreeBody.Analytic
+
+/-!
+# A global analytic section of the mass-zero energy map
+
+The rotating Kepler Hamiltonian admits a collision-free analytic phase-space section over every
+real energy.  This supplies a canonical globally analytic one-variable representative for the
+mass-zero coefficient of any jointly analytic family.
+-/
+
+namespace LeanPool.PoincareThreeBody
+
+open Challenge.PoincareThreeBody
+
+/-- A small positive radius chosen so that the remaining kinetic radicand is positive for every
+real energy. -/
+noncomputable def globalEnergyRadius (energy : ℝ) : ℝ :=
+  1 / (energy ^ 2 + 2)
+
+theorem globalEnergyRadius_pos (energy : ℝ) : 0 < globalEnergyRadius energy := by
+  unfold globalEnergyRadius
+  positivity
+
+theorem one_div_globalEnergyRadius (energy : ℝ) :
+    1 / globalEnergyRadius energy = energy ^ 2 + 2 := by
+  unfold globalEnergyRadius
+  field_simp
+
+/-- The squared shifted momentum needed to realize the prescribed energy. -/
+noncomputable def globalEnergyRadicand (energy : ℝ) : ℝ :=
+  2 * (energy + globalEnergyRadius energy ^ 2 / 2 +
+    1 / globalEnergyRadius energy)
+
+theorem globalEnergyRadicand_pos (energy : ℝ) :
+    0 < globalEnergyRadicand energy := by
+  rw [globalEnergyRadicand, one_div_globalEnergyRadius]
+  have hsquare : 0 ≤ (energy + 1 / 2 : ℝ) ^ 2 := sq_nonneg _
+  have hradius : 0 ≤ globalEnergyRadius energy ^ 2 := sq_nonneg _
+  nlinarith
+
+/-- Positive shifted momentum along the global section. -/
+noncomputable def globalEnergySpeed (energy : ℝ) : ℝ :=
+  Real.sqrt (globalEnergyRadicand energy)
+
+theorem globalEnergySpeed_sq (energy : ℝ) :
+    globalEnergySpeed energy ^ 2 = globalEnergyRadicand energy := by
+  exact Real.sq_sqrt (globalEnergyRadicand_pos energy).le
+
+/-- An explicit collision-free phase point with mass-zero Hamiltonian equal to `energy`. -/
+noncomputable def globalEnergySection (energy : ℝ) : PhaseSpace :=
+  ![0, globalEnergyRadius energy,
+    globalEnergySpeed energy - globalEnergyRadius energy, 0]
+
+theorem globalEnergySection_collisionFree (energy : ℝ) :
+    (0, globalEnergySection energy) ∈ collisionFree := by
+  constructor
+  · simp only [firstPrimaryDistanceSq, globalEnergySection,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    positivity
+  · simp only [secondPrimaryDistanceSq, globalEnergySection,
+      Matrix.cons_val_zero, Matrix.cons_val_one]
+    intro hzero
+    norm_num at hzero
+    exact (globalEnergyRadius_pos energy).ne' hzero
+
+/-- The explicit section is a right inverse of the mass-zero Hamiltonian. -/
+theorem hamiltonian_zero_globalEnergySection (energy : ℝ) :
+    hamiltonian 0 (globalEnergySection energy) = energy := by
+  let radius := globalEnergyRadius energy
+  let speed := globalEnergySpeed energy
+  have hradius : 0 < radius := globalEnergyRadius_pos energy
+  have hinverse : 1 / radius = energy ^ 2 + 2 :=
+    one_div_globalEnergyRadius energy
+  have hspeed : speed ^ 2 =
+      2 * (energy + radius ^ 2 / 2 + 1 / radius) := by
+    exact globalEnergySpeed_sq energy
+  have hsqrtRadius : Real.sqrt (radius ^ 2) = radius := by
+    rw [Real.sqrt_sq_eq_abs, abs_of_pos hradius]
+  unfold hamiltonian potential globalEnergySection
+  change ((speed - radius) ^ 2 + 0 ^ 2) / 2 +
+      (speed - radius) * radius - 0 * 0 -
+        (0 / Real.sqrt ((0 - 1 + 0) ^ 2 + radius ^ 2) +
+          (1 - 0) / Real.sqrt ((0 + 0) ^ 2 + radius ^ 2)) = energy
+  norm_num only [zero_pow, zero_add, zero_mul, one_mul, sub_zero, zero_div]
+  rw [hsqrtRadius]
+  rw [hinverse] at hspeed ⊢
+  nlinarith
+
+theorem analyticAt_globalEnergyRadius (energy : ℝ) :
+    AnalyticAt ℝ globalEnergyRadius energy := by
+  unfold globalEnergyRadius
+  exact analyticAt_const.div ((analyticAt_id.pow 2).add analyticAt_const)
+    (by positivity)
+
+theorem analyticAt_globalEnergyRadicand (energy : ℝ) :
+    AnalyticAt ℝ globalEnergyRadicand energy := by
+  unfold globalEnergyRadicand
+  have hradius := analyticAt_globalEnergyRadius energy
+  have hone : AnalyticAt ℝ (fun _ : ℝ ↦ (1 : ℝ)) energy := analyticAt_const
+  have htwo : AnalyticAt ℝ (fun _ : ℝ ↦ (2 : ℝ)) energy := analyticAt_const
+  apply (htwo.mul
+    (analyticAt_id.add (((hradius.pow 2).div_const (c := (2 : ℝ))).add
+      (hone.div hradius (globalEnergyRadius_pos energy).ne')))).congr
+  filter_upwards [] with candidate
+  simp only [Pi.mul_apply, Pi.add_apply, Pi.pow_apply, Pi.div_apply, id_eq]
+  ring
+
+theorem analyticAt_globalEnergySpeed (energy : ℝ) :
+    AnalyticAt ℝ globalEnergySpeed energy := by
+  unfold globalEnergySpeed
+  exact (analyticAt_sqrt_of_pos (globalEnergyRadicand_pos energy)).comp
+    (analyticAt_globalEnergyRadicand energy)
+
+theorem analyticAt_globalEnergySection (energy : ℝ) :
+    AnalyticAt ℝ globalEnergySection energy := by
+  apply AnalyticAt.pi
+  intro coordinate
+  fin_cases coordinate
+  · exact analyticAt_const
+  · exact analyticAt_globalEnergyRadius energy
+  · exact (analyticAt_globalEnergySpeed energy).sub
+      (analyticAt_globalEnergyRadius energy)
+  · exact analyticAt_const
+
+/-- Evaluate the mass-zero coefficient along the global energy section. -/
+noncomputable def globalEnergyCoefficient
+    (F : ℝ → PhaseSpace → ℝ) (energy : ℝ) : ℝ :=
+  F 0 (globalEnergySection energy)
+
+/-- Joint analyticity makes the global energy representative analytic at every real energy. -/
+theorem IsJointlyAnalytic.analyticAt_globalEnergyCoefficient
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F) (energy : ℝ) :
+    AnalyticAt ℝ (globalEnergyCoefficient F) energy := by
+  have hdomain : (0, globalEnergySection energy) ∈ parameterDomain δ :=
+    ⟨by simpa using hδ, globalEnergySection_collisionFree energy⟩
+  have hcurve : AnalyticAt ℝ
+      (fun candidateEnergy ↦ ((0 : ℝ), globalEnergySection candidateEnergy)) energy :=
+    analyticAt_const.prod (analyticAt_globalEnergySection energy)
+  exact (hanalytic (0, globalEnergySection energy) hdomain).comp
+    (f := fun candidateEnergy ↦ ((0 : ℝ), globalEnergySection candidateEnergy)) hcurve
+
+end LeanPool.PoincareThreeBody

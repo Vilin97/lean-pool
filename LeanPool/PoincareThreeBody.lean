@@ -24,6 +24,7 @@ import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.EnergyLeafObstruction
 import LeanPool.PoincareThreeBody.GeneratingFunction
+import LeanPool.PoincareThreeBody.GlobalEnergySection
 import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
 import LeanPool.PoincareThreeBody.HomologicalEquation
 import LeanPool.PoincareThreeBody.IrrationalTorusFlow
