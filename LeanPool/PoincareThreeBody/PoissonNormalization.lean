@@ -326,4 +326,76 @@ theorem IsFirstIntegralFamily.massNormalizedCandidate_poissonBracket_eq_zero_at_
     tendsto_const_nhds
   exact tendsto_nhds_unique_of_eventuallyEq hlimit hzeroLimit hzero
 
+/-- Joint analyticity of the domain-correct removable quotient upgrades the pointwise
+normalization algebra to a first-integral family on the whole parameter domain. -/
+theorem IsFirstIntegralFamily.domainMassNormalizedCandidate_isFirstIntegralFamily
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F)
+    (henergy : ∀ energy, AnalyticAt ℝ energyFunction energy)
+    (hcancel : ∀ state, (0, state) ∈ collisionFree →
+      F 0 state = energyFunction (hamiltonian 0 state))
+    (hnormalized : IsJointlyAnalytic δ
+      (domainMassNormalizedCandidate F energyFunction)) :
+    IsFirstIntegralFamily δ (domainMassNormalizedCandidate F energyFunction) := by
+  intro z hz
+  by_cases hmass : z.1 = 0
+  · rw [hmass]
+    have hz0 : (0, z.2) ∈ parameterDomain δ := by
+      refine ⟨by simpa using hδ, ?_⟩
+      have hcollision := hz.2
+      change firstPrimaryDistanceSq z.1 z.2 ≠ 0 ∧
+        secondPrimaryDistanceSq z.1 z.2 ≠ 0 at hcollision
+      rw [hmass] at hcollision
+      exact hcollision
+    have hfirstCollision : ∀ᶠ state in nhds z.2,
+        firstPrimaryDistanceSq 0 state ≠ 0 := by
+      have hcontinuous : Continuous (firstPrimaryDistanceSq 0) := by
+        unfold firstPrimaryDistanceSq
+        fun_prop
+      exact hcontinuous.continuousAt.eventually_ne hz0.2.1
+    have hsecondCollision : ∀ᶠ state in nhds z.2,
+        secondPrimaryDistanceSq 0 state ≠ 0 := by
+      have hcontinuous : Continuous (secondPrimaryDistanceSq 0) := by
+        unfold secondPrimaryDistanceSq
+        fun_prop
+      exact hcontinuous.continuousAt.eventually_ne hz0.2.2
+    have hcancelEventually : ∀ᶠ state in nhds z.2,
+        F 0 state = energyFunction (hamiltonian 0 state) := by
+      filter_upwards [hfirstCollision, hsecondCollision] with state hfirst hsecond
+      exact hcancel state ⟨hfirst, hsecond⟩
+    have hstateProjection : ContinuousAt
+        (fun w : ℝ × PhaseSpace ↦ w.2) (0, z.2) := continuousAt_snd
+    have hfirstJoint : ∀ᶠ w in nhds ((0 : ℝ), z.2),
+        firstPrimaryDistanceSq 0 w.2 ≠ 0 :=
+      hstateProjection.eventually hfirstCollision
+    have hsecondJoint : ∀ᶠ w in nhds ((0 : ℝ), z.2),
+        secondPrimaryDistanceSq 0 w.2 ≠ 0 :=
+      hstateProjection.eventually hsecondCollision
+    have hlocalEquality :
+        Function.uncurry (massNormalizedCandidate F energyFunction) =ᶠ[nhds (0, z.2)]
+          Function.uncurry (domainMassNormalizedCandidate F energyFunction) := by
+      filter_upwards [hfirstJoint, hsecondJoint] with w hfirst hsecond
+      exact (domainMassNormalizedCandidate_eq_massNormalizedCandidate
+        (hcancel w.2 ⟨hfirst, hsecond⟩)).symm
+    have hdomainNormalizedSmooth : ContDiffAt ℝ 1
+        (Function.uncurry (domainMassNormalizedCandidate F energyFunction)) (0, z.2) :=
+      (hnormalized (0, z.2) hz0).contDiffAt
+    have hnormalizedSmooth : ContDiffAt ℝ 1
+        (Function.uncurry (massNormalizedCandidate F energyFunction)) (0, z.2) :=
+      hdomainNormalizedSmooth.congr_of_eventuallyEq hlocalEquality
+    rw [show domainMassNormalizedCandidate F energyFunction 0 =
+        massNormalizedCandidate F energyFunction 0 by
+      funext state
+      simp]
+    exact IsFirstIntegralFamily.massNormalizedCandidate_poissonBracket_eq_zero_at_mass_zero
+      hδ hanalytic hfirstIntegral hz0.2 (henergy _) hcancelEventually
+      hnormalizedSmooth
+  · rw [show domainMassNormalizedCandidate F energyFunction z.1 =
+        fun state ↦ normalizationResidual F energyFunction z.1 state / z.1 by
+      funext state
+      exact domainMassNormalizedCandidate_eq_div hmass state]
+    exact IsFirstIntegralFamily.normalizationResidual_div_mass_poissonBracket_eq_zero
+      hanalytic hfirstIntegral hmass hz (henergy _)
+
 end LeanPool.PoincareThreeBody

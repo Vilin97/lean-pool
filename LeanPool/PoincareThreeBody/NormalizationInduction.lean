@@ -25,7 +25,7 @@ noncomputable def iteratedMassNormalization
     (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℕ → ℝ → ℝ) :
     ℕ → ℝ → PhaseSpace → ℝ
   | 0 => F
-  | n + 1 => massNormalizedCandidate
+  | n + 1 => domainMassNormalizedCandidate
       (iteratedMassNormalization F energyFunction n) (energyFunction n)
 
 @[simp] theorem iteratedMassNormalization_zero
@@ -35,7 +35,7 @@ noncomputable def iteratedMassNormalization
 @[simp] theorem iteratedMassNormalization_succ
     (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℕ → ℝ → ℝ) (n : ℕ) :
     iteratedMassNormalization F energyFunction (n + 1) =
-      massNormalizedCandidate (iteratedMassNormalization F energyFunction n)
+      domainMassNormalizedCandidate (iteratedMassNormalization F energyFunction n)
         (energyFunction n) := rfl
 
 /-- The finite sum of energy-dependent terms accumulated through order `n - 1`. -/
@@ -59,10 +59,11 @@ theorem accumulatedEnergy_succ
 exact expansion through every finite order, with the next normalized candidate as remainder. -/
 theorem iteratedMassNormalization_exact_expansion
     {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℕ → ℝ → ℝ}
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state))
-    (n : ℕ) (mass : ℝ) (state : PhaseSpace) :
+    (n : ℕ) (mass : ℝ) (state : PhaseSpace)
+    (hcollision : (0, state) ∈ collisionFree) :
     F mass state =
       accumulatedEnergy energyFunction n mass (hamiltonian mass state) +
         mass ^ n * iteratedMassNormalization F energyFunction n mass state := by
@@ -70,14 +71,14 @@ theorem iteratedMassNormalization_exact_expansion
   | zero => simp
   | succ n ih =>
       rw [ih, accumulatedEnergy_succ]
-      have hreconstruct := mass_mul_massNormalizedCandidate
+      have hreconstruct := mass_mul_domainMassNormalizedCandidate
         (F := iteratedMassNormalization F energyFunction n)
         (energyFunction := energyFunction n) (state := state)
-        (hcancel n state) mass
+        (hcancel n state hcollision) mass
       have hstep :
           iteratedMassNormalization F energyFunction n mass state =
             energyFunction n (hamiltonian mass state) +
-              mass * massNormalizedCandidate
+              mass * domainMassNormalizedCandidate
                 (iteratedMassNormalization F energyFunction n)
                 (energyFunction n) mass state := by
         unfold normalizationResidual at hreconstruct
@@ -90,14 +91,15 @@ theorem iteratedMassNormalization_exact_expansion
 of the Hamiltonian. -/
 theorem iteratedMassNormalization_remainder
     {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℕ → ℝ → ℝ}
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state))
-    (n : ℕ) (mass : ℝ) (state : PhaseSpace) :
+    (n : ℕ) (mass : ℝ) (state : PhaseSpace)
+    (hcollision : (0, state) ∈ collisionFree) :
     F mass state -
         accumulatedEnergy energyFunction n mass (hamiltonian mass state) =
       mass ^ n * iteratedMassNormalization F energyFunction n mass state := by
-  rw [iteratedMassNormalization_exact_expansion hcancel n mass state]
+  rw [iteratedMassNormalization_exact_expansion hcancel n mass state hcollision]
   ring
 
 /-- Differentiability of each energy coefficient makes their finite accumulated sum
@@ -113,10 +115,11 @@ theorem differentiableAt_accumulatedEnergy
 power of the mass times the corresponding minor of the normalized remainder. -/
 theorem massDifferentialMinor_eq_pow_mul_iteratedNormalization
     {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℕ → ℝ → ℝ}
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state))
     {n : ℕ} {mass : ℝ} {state : PhaseSpace}
+    (hcollision : (0, state) ∈ collisionFree)
     (hhamiltonian : DifferentiableAt ℝ (hamiltonian mass) state)
     (hnormalized : DifferentiableAt ℝ
       (iteratedMassNormalization F energyFunction n mass) state)
@@ -136,15 +139,27 @@ theorem massDifferentialMinor_eq_pow_mul_iteratedNormalization
   have hscaled : DifferentiableAt ℝ
       (fun candidate ↦ mass ^ n * normalized candidate) state :=
     hnormalized.const_mul _
-  have hfunction : F mass = fun candidate ↦
+  have hfirstCollision : ∀ᶠ candidate in nhds state,
+      firstPrimaryDistanceSq 0 candidate ≠ 0 := by
+    have hcontinuous : Continuous (firstPrimaryDistanceSq 0) := by
+      unfold firstPrimaryDistanceSq
+      fun_prop
+    exact hcontinuous.continuousAt.eventually_ne hcollision.1
+  have hsecondCollision : ∀ᶠ candidate in nhds state,
+      secondPrimaryDistanceSq 0 candidate ≠ 0 := by
+    have hcontinuous : Continuous (secondPrimaryDistanceSq 0) := by
+      unfold secondPrimaryDistanceSq
+      fun_prop
+    exact hcontinuous.continuousAt.eventually_ne hcollision.2
+  have hfunction : F mass =ᶠ[nhds state] fun candidate ↦
       accumulated (hamiltonian mass candidate) + mass ^ n * normalized candidate := by
-    funext candidate
+    filter_upwards [hfirstCollision, hsecondCollision] with candidate hfirst hsecond
     exact iteratedMassNormalization_exact_expansion
-      hcancel n mass candidate
+      hcancel n mass candidate ⟨hfirst, hsecond⟩
   have hderivative : fderiv ℝ (F mass) state =
       fderiv ℝ (fun candidate ↦ accumulated (hamiltonian mass candidate)) state +
         mass ^ n • fderiv ℝ normalized state := by
-    rw [hfunction]
+    rw [hfunction.fderiv_eq]
     change fderiv ℝ
       ((fun candidate ↦ accumulated (hamiltonian mass candidate)) +
         fun candidate ↦ mass ^ n * normalized candidate) state = _
@@ -187,7 +202,7 @@ theorem massDifferentialMinor_flat_of_iterated_normalizations
     (hnormalized : ∀ n,
       IsJointlyAnalytic δ (iteratedMassNormalization F energyFunction n))
     (henergy : ∀ n energy, AnalyticAt ℝ (energyFunction n) energy)
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state))
     {state : PhaseSpace} (hcollision : (0, state) ∈ collisionFree)
@@ -243,7 +258,7 @@ theorem massDifferentialMinor_flat_of_iterated_normalizations
         (f := fun candidate : PhaseSpace ↦ (mass, candidate))
         hembedding).differentiableAt
     exact massDifferentialMinor_eq_pow_mul_iteratedNormalization
-      hcancel hhamiltonian hnormalizedPhase
+      hcancel hcollision hhamiltonian hnormalizedPhase
       (fun k _ ↦ (henergy k (hamiltonian mass state)).differentiableAt) i j
   exact iteratedDeriv_eq_zero_of_eventually_eq_pow_mul
     (by simp [power]) hremainderSmooth hfactor
@@ -258,7 +273,7 @@ theorem not_linearIndependent_of_iterated_normalizations_of_vertical_ne_zero
     (hnormalized : ∀ n,
       IsJointlyAnalytic δ (iteratedMassNormalization F energyFunction n))
     (henergy : ∀ n energy, AnalyticAt ℝ (energyFunction n) energy)
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state))
     {mass : ℝ} (hmass : |mass| < δ) {state : PhaseSpace}
@@ -320,7 +335,7 @@ theorem not_isIndependentSomewhere_of_iterated_normalizations
     (hnormalized : ∀ n,
       IsJointlyAnalytic δ (iteratedMassNormalization F energyFunction n))
     (henergy : ∀ n energy, AnalyticAt ℝ (energyFunction n) energy)
-    (hcancel : ∀ n state,
+    (hcancel : ∀ n state, (0, state) ∈ collisionFree →
       iteratedMassNormalization F energyFunction n 0 state =
         energyFunction n (hamiltonian 0 state)) :
     ¬IsIndependentSomewhere δ F := by
@@ -427,7 +442,7 @@ def ClassicalNormalizationPrinciple : Prop :=
         (∀ n, IsJointlyAnalytic δ
           (iteratedMassNormalization F energyFunction n)) ∧
         (∀ n energy, AnalyticAt ℝ (energyFunction n) energy) ∧
-        (∀ n state,
+        (∀ n state, (0, state) ∈ collisionFree →
           iteratedMassNormalization F energyFunction n 0 state =
             energyFunction n (hamiltonian 0 state))
 

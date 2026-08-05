@@ -34,6 +34,7 @@ import LeanPool.PoincareThreeBody.KeplerHamiltonian
 import LeanPool.PoincareThreeBody.LeadingObstruction
 import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.NormalizationInduction
+import LeanPool.PoincareThreeBody.NormalizationClosure
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.ParameterDomainTopology

@@ -48,6 +48,28 @@ noncomputable def massNormalizedCandidate
   dslope (fun candidateMass ↦
     normalizationResidual F energyFunction candidateMass state) 0 mass
 
+/-- Domain-correct normalization.  Away from zero it is the literal residual quotient, so its
+value does not depend on the unconstrained values of `F 0` at the two states excluded from the
+mass-zero domain.  At zero it uses the removable `dslope` value. -/
+noncomputable def domainMassNormalizedCandidate
+    (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℝ → ℝ)
+    (mass : ℝ) (state : PhaseSpace) : ℝ :=
+  if mass = 0 then massNormalizedCandidate F energyFunction 0 state
+  else normalizationResidual F energyFunction mass state / mass
+
+@[simp] theorem domainMassNormalizedCandidate_zero
+    (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℝ → ℝ) (state : PhaseSpace) :
+    domainMassNormalizedCandidate F energyFunction 0 state =
+      massNormalizedCandidate F energyFunction 0 state := by
+  simp [domainMassNormalizedCandidate]
+
+theorem domainMassNormalizedCandidate_eq_div
+    {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ}
+    {mass : ℝ} (hmass : mass ≠ 0) (state : PhaseSpace) :
+    domainMassNormalizedCandidate F energyFunction mass state =
+      normalizationResidual F energyFunction mass state / mass := by
+  simp [domainMassNormalizedCandidate, hmass]
+
 /-- Exact reconstruction of a residual whose zeroth mass coefficient has been cancelled. -/
 theorem mass_mul_massNormalizedCandidate
     {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ} {state : PhaseSpace}
@@ -71,6 +93,29 @@ theorem massNormalizedCandidate_eq_div
       normalizationResidual F energyFunction mass state / mass := by
   rw [massNormalizedCandidate, dslope_of_ne _ hmass]
   simp [slope, normalizationResidual, hzero, div_eq_mul_inv, mul_comm]
+
+/-- On a phase point where the zeroth coefficient cancels, the domain-correct and `dslope`
+normalizations coincide. -/
+theorem domainMassNormalizedCandidate_eq_massNormalizedCandidate
+    {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ}
+    {mass : ℝ} {state : PhaseSpace}
+    (hzero : F 0 state = energyFunction (hamiltonian 0 state)) :
+    domainMassNormalizedCandidate F energyFunction mass state =
+      massNormalizedCandidate F energyFunction mass state := by
+  by_cases hmass : mass = 0
+  · subst hmass
+    simp
+  · rw [domainMassNormalizedCandidate_eq_div hmass,
+      massNormalizedCandidate_eq_div hmass hzero]
+
+/-- Exact reconstruction for the domain-correct normalization. -/
+theorem mass_mul_domainMassNormalizedCandidate
+    {F : ℝ → PhaseSpace → ℝ} {energyFunction : ℝ → ℝ} {state : PhaseSpace}
+    (hzero : F 0 state = energyFunction (hamiltonian 0 state)) (mass : ℝ) :
+    mass * domainMassNormalizedCandidate F energyFunction mass state =
+      normalizationResidual F energyFunction mass state := by
+  rw [domainMassNormalizedCandidate_eq_massNormalizedCandidate hzero]
+  exact mass_mul_massNormalizedCandidate hzero mass
 
 /-- Joint analyticity of the candidate and analyticity of the energy function make every fixed
 phase slice of the residual analytic in mass. -/
