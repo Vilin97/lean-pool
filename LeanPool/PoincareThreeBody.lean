@@ -18,6 +18,7 @@ import LeanPool.PoincareThreeBody.DelaunayChart
 import LeanPool.PoincareThreeBody.DelaunayFlow
 import LeanPool.PoincareThreeBody.DelaunaySection
 import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.DifferentialDependence
 import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.EnergyLeafObstruction
@@ -35,6 +36,7 @@ import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.PoincareSet
+import LeanPool.PoincareThreeBody.PoissonNormalization
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
 import LeanPool.PoincareThreeBody.ResonantActionObstruction

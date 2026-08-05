@@ -20,15 +20,6 @@ namespace LeanPool.PoincareThreeBody
 
 open Challenge.PoincareThreeBody
 
-/-- The classical nondegeneracy input for Poincaré's set: every interior positive rational
-resonance has a nonconstant disturbing average as the relative apsidal orientation varies. -/
-def ClassicalDisturbingNondegeneracy : Prop :=
-  ∀ {eccentricity : ℝ}, 0 < eccentricity → eccentricity < 1 →
-    ∀ {p q : ℕ}, 0 < p → 0 < q →
-      resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1 →
-      ∃ orientation,
-        deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0
-
 /-- Pulling two dependent Euclidean action covectors back along any linear map cannot make them
 linearly independent. -/
 theorem not_linearIndependent_actionCovector_comp_of_wedge_eq_zero

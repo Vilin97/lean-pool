@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
 
-import LeanPool.PoincareThreeBody.ResonantActionObstruction
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
 
 /-!
 # The classical Poincaré set
@@ -43,6 +43,15 @@ def classicalPoincareSet : Set InteriorProgradeEllipticAction :=
 /-- The exact classical celestial-mechanics input used by the density argument. -/
 def HasDenseClassicalPoincareSet : Prop :=
   Dense classicalPoincareSet
+
+/-- A stronger sufficient condition: every interior positive rational resonance has a
+nonconstant disturbing average as the relative apsidal orientation varies. -/
+def ClassicalDisturbingNondegeneracy : Prop :=
+  ∀ {eccentricity : ℝ}, 0 < eccentricity → eccentricity < 1 →
+    ∀ {p q : ℕ}, 0 < p → 0 < q →
+      resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1 →
+      ∃ orientation,
+        deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0
 
 /-- The Kepler frequency varies continuously on the full interior action subtype. -/
 theorem continuous_interiorDelaunayFrequency :
@@ -131,5 +140,71 @@ theorem IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_densePo
       IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_mem_poincareSet
         hδ hanalytic hfirstIntegral resonant hresonant)
     action
+
+/-- Nonvanishing at every interior rational resonance implies density of the classical Poincaré
+set.  The proof uses density of rational Kepler frequencies along the fixed-eccentricity curve
+through each action. -/
+theorem hasDenseClassicalPoincareSet_of_nondegeneracy
+    (hnondegenerate : ClassicalDisturbingNondegeneracy) :
+    HasDenseClassicalPoincareSet := by
+  apply Subtype.dense_iff.mpr
+  intro action haction
+  let eccentricity := eccentricityFromActions action
+  have heccentricity : 0 < eccentricity :=
+    eccentricityFromActions_pos haction.1
+  have heccentricityOne : eccentricity < 1 :=
+    eccentricityFromActions_lt_one haction.1
+  let source : InteriorPositiveAction eccentricity :=
+    ⟨⟨action 0, haction.1.1.trans haction.1.2⟩, haction.2⟩
+  let curve : InteriorPositiveAction eccentricity → ActionSpace :=
+    fun firstAction ↦
+      fixedEccentricityAction eccentricity firstAction.1.1
+  have hcurve : Continuous curve := by
+    unfold curve fixedEccentricityAction angularActionFromEccentricity
+    fun_prop
+  have hsourceClosure :
+      source ∈ closure (resonantInteriorPositiveActions eccentricity) := by
+    rw [(resonantInteriorPositiveActions_dense eccentricity).closure_eq]
+    exact Set.mem_univ source
+  have hmaps : Set.MapsTo curve
+      (resonantInteriorPositiveActions eccentricity)
+      ((↑) '' classicalPoincareSet) := by
+    intro resonant hresonant
+    rcases hresonant with ⟨p, q, hp, hq, hfirst⟩
+    have hcurveAction : curve resonant ∈ InteriorProgradeEllipticActions := by
+      have hprograde : curve resonant ∈ ProgradeEllipticActions := by
+        exact ⟨angularActionFromEccentricity_pos resonant.1.2
+            heccentricity heccentricityOne,
+          angularActionFromEccentricity_lt_firstAction resonant.1.2
+            heccentricity⟩
+      have heRecover : eccentricityFromActions (curve resonant) = eccentricity := by
+        exact eccentricityFromActions_angularActionFromEccentricity
+          resonant.1.2 heccentricity.le heccentricityOne
+      refine ⟨hprograde, ?_⟩
+      change resonant.1.1 ^ 2 *
+        (1 + eccentricityFromActions (curve resonant)) < 1
+      rw [heRecover]
+      exact resonant.2
+    let certifiedAction : InteriorProgradeEllipticAction :=
+      ⟨curve resonant, hcurveAction⟩
+    have heRecover :
+        eccentricityFromActions certifiedAction.1 = eccentricity := by
+      exact eccentricityFromActions_angularActionFromEccentricity
+        resonant.1.2 heccentricity.le heccentricityOne
+    have hapoapsis :
+        resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1 := by
+      rw [← hfirst]
+      exact resonant.2
+    have hderivative := hnondegenerate heccentricity heccentricityOne
+      hp hq hapoapsis
+    refine ⟨certifiedAction, ?_, rfl⟩
+    exact ⟨p, q, hp, hq, by
+      simpa only [certifiedAction, curve, fixedEccentricityAction,
+        Matrix.cons_val_zero] using hfirst,
+      by simpa only [heRecover] using hderivative⟩
+  have himage := map_mem_closure hcurve hsourceClosure hmaps
+  have hrecover : curve source = action := by
+    exact actions_from_eccentricityFromActions haction.1
+  rwa [hrecover] at himage
 
 end LeanPool.PoincareThreeBody
