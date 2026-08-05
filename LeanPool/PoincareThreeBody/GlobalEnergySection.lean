@@ -57,7 +57,7 @@ theorem globalEnergySpeed_sq (energy : ℝ) :
 /-- An explicit collision-free phase point with mass-zero Hamiltonian equal to `energy`. -/
 noncomputable def globalEnergySection (energy : ℝ) : PhaseSpace :=
   ![0, globalEnergyRadius energy,
-    globalEnergySpeed energy - globalEnergyRadius energy, 0]
+    -globalEnergySpeed energy - globalEnergyRadius energy, 0]
 
 theorem globalEnergySection_collisionFree (energy : ℝ) :
     (0, globalEnergySection energy) ∈ collisionFree := by
@@ -85,8 +85,8 @@ theorem hamiltonian_zero_globalEnergySection (energy : ℝ) :
   have hsqrtRadius : Real.sqrt (radius ^ 2) = radius := by
     rw [Real.sqrt_sq_eq_abs, abs_of_pos hradius]
   unfold hamiltonian potential globalEnergySection
-  change ((speed - radius) ^ 2 + 0 ^ 2) / 2 +
-      (speed - radius) * radius - 0 * 0 -
+  change ((-speed - radius) ^ 2 + 0 ^ 2) / 2 +
+      (-speed - radius) * radius - 0 * 0 -
         (0 / Real.sqrt ((0 - 1 + 0) ^ 2 + radius ^ 2) +
           (1 - 0) / Real.sqrt ((0 + 0) ^ 2 + radius ^ 2)) = energy
   norm_num only [zero_pow, zero_add, zero_mul, one_mul, sub_zero, zero_div]
@@ -126,7 +126,7 @@ theorem analyticAt_globalEnergySection (energy : ℝ) :
   fin_cases coordinate
   · exact analyticAt_const
   · exact analyticAt_globalEnergyRadius energy
-  · exact (analyticAt_globalEnergySpeed energy).sub
+  · exact (analyticAt_globalEnergySpeed energy).neg.sub
       (analyticAt_globalEnergyRadius energy)
   · exact analyticAt_const
 
