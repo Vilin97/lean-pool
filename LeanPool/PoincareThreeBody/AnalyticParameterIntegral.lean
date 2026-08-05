@@ -34,7 +34,7 @@ theorem hasFPowerSeriesOnBall_integral_of_uniform
     (μ : Measure α) {integrand : ℝ → α → ℝ} {center : ℝ} {radius : NNReal}
     {series : α → FormalMultilinearSeries ℝ ℝ ℝ}
     (hradius : 0 < radius)
-    (hseries : ∀ parameter,
+    (hseries : ∀ᵐ parameter ∂μ,
       HasFPowerSeriesOnBall (fun value ↦ integrand value parameter)
         (series parameter) center radius)
     (hcoeffIntegrable : ∀ degree, Integrable (fun parameter ↦ series parameter degree) μ)
@@ -96,14 +96,13 @@ theorem hasFPowerSeriesOnBall_integral_of_uniform
       unfold integralFormalMultilinearSeries term
       exact ContinuousMultilinearMap.integral_apply
         (hcoeffIntegrable degree) (fun _ : Fin degree ↦ displacement)
-    have hpointwiseSum : ∀ parameter,
+    have hpointwiseSum : ∀ᵐ parameter ∂μ,
         ∑' degree, term degree parameter = integrand (center + displacement) parameter := by
-      intro parameter
-      exact ((hseries parameter).hasSum hdisplacement).tsum_eq
+      filter_upwards [hseries] with parameter hparameter
+      exact (hparameter.hasSum hdisplacement).tsum_eq
     convert hintegralSum using 1
     · ext degree
       exact hcoefficientIntegral degree
-    · exact integral_congr_ae
-        (Filter.Eventually.of_forall fun parameter ↦ (hpointwiseSum parameter).symm)
+    · exact integral_congr_ae (Filter.EventuallyEq.symm hpointwiseSum)
 
 end LeanPool.PoincareThreeBody
