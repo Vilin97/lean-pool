@@ -122,6 +122,19 @@ lemma hamiltonian_isFirstIntegralFamily (δ : ℝ) :
   intro z hz
   exact poissonBracket_self (hamiltonian z.1) z.2
 
+lemma hamiltonian_zero (s : PhaseSpace) :
+    hamiltonian 0 s =
+      ((s 2) ^ 2 + (s 3) ^ 2) / 2 + s 2 * s 1 - s 3 * s 0 -
+        1 / Real.sqrt ((s 0) ^ 2 + (s 1) ^ 2) := by
+  simp [hamiltonian, potential, firstPrimaryDistanceSq, secondPrimaryDistanceSq]
+
+lemma IsFirstIntegralFamily.poissonBracket_zero_at_mass_zero {δ : ℝ}
+    {F : ℝ → PhaseSpace → ℝ} (hδ : 0 < δ) (hF : IsFirstIntegralFamily δ F)
+    {s : PhaseSpace} (hs : (0, s) ∈ collisionFree) :
+    poissonBracket (F 0) (hamiltonian 0) s = 0 := by
+  apply hF (0, s)
+  exact ⟨by simpa using hδ, hs⟩
+
 lemma hamiltonian_not_independent (δ : ℝ) : ¬IsIndependentSomewhere δ hamiltonian := by
   rintro ⟨z, hz, hlinear⟩
   have hindex : (0 : Fin 2) = 1 := hlinear.injective (by simp)

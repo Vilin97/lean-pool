@@ -141,4 +141,32 @@ theorem hamiltonian_analyticOn_collisionFree :
     AnalyticOnNhd ℝ (Function.uncurry hamiltonian) collisionFree :=
   fun _ hz ↦ hamiltonian_analyticAt hz
 
+/-- Joint analyticity supplies an ordinary analytic mass-parameter germ at every collision-free
+phase point over `μ = 0`. -/
+theorem analyticAt_mass_zero_of_jointlyAnalytic {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hF : IsJointlyAnalytic δ F) {s : PhaseSpace}
+    (hs : (0, s) ∈ collisionFree) : AnalyticAt ℝ (fun μ ↦ F μ s) 0 := by
+  have hdomain : (0, s) ∈ parameterDomain δ := by
+    exact ⟨by simpa using hδ, hs⟩
+  have hjoint : AnalyticAt ℝ (Function.uncurry F) (0, s) := hF (0, s) hdomain
+  have hembedding : AnalyticAt ℝ (fun μ : ℝ ↦ (μ, s)) 0 :=
+    analyticAt_id.prod analyticAt_const
+  simpa [Function.comp_def] using hjoint.comp (f := fun μ : ℝ ↦ (μ, s)) hembedding
+
+/-- A jointly analytic candidate integral has a convergent mass-parameter power series at every
+collision-free phase point over the Kepler limit. -/
+theorem exists_massPowerSeries_of_jointlyAnalytic {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hF : IsJointlyAnalytic δ F) {s : PhaseSpace}
+    (hs : (0, s) ∈ collisionFree) :
+    ∃ series : FormalMultilinearSeries ℝ ℝ ℝ,
+      HasFPowerSeriesAt (fun μ ↦ F μ s) series 0 :=
+  analyticAt_mass_zero_of_jointlyAnalytic hδ hF hs
+
+theorem hamiltonian_analyticAt_mass_zero {s : PhaseSpace} (hs : (0, s) ∈ collisionFree) :
+    AnalyticAt ℝ (fun μ ↦ hamiltonian μ s) 0 := by
+  have hjoint := hamiltonian_analyticAt hs
+  have hembedding : AnalyticAt ℝ (fun μ : ℝ ↦ (μ, s)) 0 :=
+    analyticAt_id.prod analyticAt_const
+  simpa [Function.comp_def] using hjoint.comp (f := fun μ : ℝ ↦ (μ, s)) hembedding
+
 end LeanPool.PoincareThreeBody

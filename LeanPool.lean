@@ -2265,6 +2265,7 @@ import LeanPool.PoincareThreeBody
 import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.Delaunay
+import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Resonance
 import LeanPool.PointwiseBirkhoff
 import LeanPool.PointwiseBirkhoff.Main
