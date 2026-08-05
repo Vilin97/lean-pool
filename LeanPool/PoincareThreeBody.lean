@@ -11,6 +11,7 @@ import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
+import LeanPool.PoincareThreeBody.HomologicalEquation
 import LeanPool.PoincareThreeBody.KeplerOrbit
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.Perturbation
