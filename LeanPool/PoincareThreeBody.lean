@@ -15,6 +15,7 @@ import LeanPool.PoincareThreeBody.CoefficientNormalization
 import LeanPool.PoincareThreeBody.CertifiedPoincareSet
 import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DelaunayActions
+import LeanPool.PoincareThreeBody.DelaunayAnchorChart
 import LeanPool.PoincareThreeBody.DelaunayChart
 import LeanPool.PoincareThreeBody.DelaunayFlow
 import LeanPool.PoincareThreeBody.DelaunaySection
