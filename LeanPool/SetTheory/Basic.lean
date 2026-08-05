@@ -135,7 +135,7 @@ successor-limit case and discharging the `V` case, then registering the limit fa
 macro "split_vonNeumann" h:ident : tactic => do
   let μ := Lean.mkIdent `μ
   let hμ := Lean.mkIdent `hμ
-  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
+  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; have _ := Fact.mk $hμ))
 
 /-- Like `split_vonNeumann`, but for `IsVonNeumannWithOmega M`, additionally
 introducing the hypothesis `omega_lt_μ` that `ω < μ`. -/

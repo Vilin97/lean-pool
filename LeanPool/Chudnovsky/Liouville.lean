@@ -1801,7 +1801,8 @@ theorem IsEllipticWith.finite_order_ne_zero (hf : L.IsEllipticWith f)
     exact MeromorphicOn.meromorphicOrderAt_ne_top_of_isPreconnected (meromorphicOn_univ.mpr hf.1)
       isPreconnected_univ (Set.mem_univ z₀) (Set.mem_univ y) hz₀
   have hcod0 : {z : ℂ | meromorphicOrderAt f z = 0} ∈ Filter.codiscrete ℂ := by
-    have h := (meromorphicOn_univ.mpr hf.1).codiscreteWithin_setOfPred_meromorphicOrderAt_eq_zero_or_top
+    have h :=
+      (meromorphicOn_univ.mpr hf.1).codiscreteWithin_setOfPred_meromorphicOrderAt_eq_zero_or_top
       (fun u _ => hforall u)
     refine Filter.mem_of_superset h (fun z hz => ?_)
     simp only [Set.mem_ofPred_eq, Set.mem_univ, true_and] at hz ⊢

@@ -100,8 +100,8 @@ lemma f_injective : Function.Injective (f k e) := by
   apply this at h
   simp_all
 
-@[simp]
 omit hD' in
+@[simp]
 lemma f_apply (x : k) : f k e x = e.symm (conj (e x)) := rfl
 
 omit hD' in

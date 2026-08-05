@@ -19,7 +19,10 @@ import Mathlib.Tactic.Measurability
 import Mathlib.Tactic.Abel
 import Mathlib.FieldTheory.Finite.GaloisField
 import Mathlib.NumberTheory.NumberField.Norm
-import Mathlib.NumberTheory.RamificationInertia.Basic
+import Mathlib.LinearAlgebra.Dimension.DivisionRing
+import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+import Mathlib.RingTheory.RamificationInertia.Basic
+import Mathlib.FieldTheory.Galois.IsGaloisGroup
 import Mathlib.NumberTheory.RamificationInertia.Ramification
 import Mathlib.NumberTheory.RamificationInertia.Inertia
 
@@ -730,13 +733,32 @@ theorem inertiaDeg_eq_inertiaDegOfIsGalois [IsGalois K L] :
   rw [inertiaDegOfIsGalois]
   exact inertiaDeg_eq_of_isGalois p P _
 
+/-- The fundamental identity `∑ P, e_P * f_P = [L : K]` over the `Finset` of primes above `p`,
+in the Galois case. Restates the retired `Ideal.sum_ramification_inertia` via the current
+Mathlib form `Ideal.sum_ramification_inertia_eq_card` applied to the Galois group. -/
+private theorem sum_ramification_inertia_of_isGalois (L : Type*) [Field L] [NumberField L]
+    [Algebra K L] [IsGalois K L] (hp0 : p ≠ ⊥) :
+    ∑ P ∈ primesOver p L, ramificationIdx' p P * inertiaDeg' p P = Module.finrank K L := by
+  classical
+  have : Fintype (p.primesOver (𝓞 L)) := (Algebra.QuasiFinite.finite_primesOver p).fintype
+  rw [← IsGaloisGroup.card_eq_finrank (L ≃ₐ[K] L) K L,
+    ← Ideal.sum_ramification_inertia_eq_card p (𝓞 L) (G := L ≃ₐ[K] L),
+    ← Finset.sum_coe_sort (s := primesOver p L)]
+  refine Fintype.sum_equiv (Equiv.subtypeEquivRight fun Q => ?_) _ _ fun Q => ?_
+  · exact IsDedekindDomain.mem_primesOverFinset_iff hp0 (𝓞 L)
+  · obtain ⟨Q, hQ⟩ := Q
+    have h1 : Q.IsMaximal := ((primesOver_mem p Q).mp hQ).1
+    have h2 : Q lies_over p := ((primesOver_mem p Q).mp hQ).2
+    rw [ramificationIdx'_eq_ramificationIdx p Q hp0, inertiaDeg'_eq_inertiaDeg p Q]
+    rfl
+
 /-- The form of the **fundamental identity** in the case of Galois extension. -/
 theorem ramificationIdx_mul_inertiaDegOfIsGalois (L : Type*) [Field L] [NumberField L]
     [Algebra K L] [IsGalois K L] :
     Finset.card (primesOver p L) * (ramificationIdxOfIsGalois p L * inertiaDegOfIsGalois p L) =
     Module.finrank K L := by
   rw [← smul_eq_mul, ← Finset.sum_const,
-    ← sum_ramification_inertia (R := 𝓞 K) (S := 𝓞 L) (K := K) (L := L) (ne_bot_ofIsMaximal p)]
+    ← sum_ramification_inertia_of_isGalois p L (ne_bot_ofIsMaximal p)]
   apply Finset.sum_congr rfl
   intro P hp
   let := ((primesOver_mem p P).mp hp).1

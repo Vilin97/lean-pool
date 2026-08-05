@@ -188,7 +188,8 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
       rw [show Nat.gcd 4 7 = 1 from by decide] at h_dvd_gcd
       rw [← Int.natAbs_dvd]
       exact_mod_cast h_dvd_gcd
-    exact hp.not_isUnit (QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr (isUnit_of_dvd_one h_np_dvd_one))
+    exact hp.not_isUnit
+      (QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr (isUnit_of_dvd_one h_np_dvd_one))
 
 /-- If `α = ±1`, then `α - β` has im-component 0, but `2θ - 1` has im 2. -/
 lemma factor_not_unit_left (α β : R) (m : ℕ)
