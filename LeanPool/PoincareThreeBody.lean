@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.Core
+import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.Resonance
 
 /-!
