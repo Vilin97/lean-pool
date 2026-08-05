@@ -113,8 +113,82 @@ theorem summable_coefficientBound_mul_pow
     simpa only [jointBallFiberCoefficientBound, NNReal.tsum_mul_right] using hdegrees
   simpa only [NNReal.coe_mul, NNReal.coe_pow] using NNReal.summable_coe.mpr hnnreal
 
-/-- Integrating over a closed time interval contained in a joint analytic slab preserves a
+/-- Integrating over a finite measurable time set contained in a joint analytic slab preserves a
 uniform parameter power series. -/
+theorem hasFPowerSeriesOnBall_setIntegral_of_joint_ball_of_measurableSet
+    {function : ℝ × ℝ → ℝ}
+    {jointSeries : FormalMultilinearSeries ℝ (ℝ × ℝ) ℝ}
+    {centerParameter centerTime : ℝ} {timeSet : Set ℝ}
+    {jointRadius timeBound fiberRadius : NNReal}
+    (hjoint : HasFPowerSeriesOnBall function jointSeries
+      (centerParameter, centerTime) jointRadius)
+    (hfiberRadius : 0 < fiberRadius)
+    (hradii : timeBound + fiberRadius < jointRadius)
+    (htimeSet : MeasurableSet timeSet) (htimeFinite : volume timeSet < ⊤)
+    (hinterval : ∀ time ∈ timeSet,
+      |time - centerTime| ≤ (timeBound : ℝ)) :
+    HasFPowerSeriesOnBall
+      (fun parameter ↦ ∫ time in timeSet, function (parameter, time))
+      (integralFormalMultilinearSeries (volume.restrict timeSet)
+        (jointBallFiberSeries jointSeries centerTime))
+      centerParameter fiberRadius := by
+  have htimeRadius : (timeBound : ENNReal) < jointSeries.radius := by
+    exact (ENNReal.coe_lt_coe.mpr
+      ((lt_of_le_of_lt (le_add_right (le_refl timeBound)) hradii))).trans_le hjoint.r_le
+  have hsumRadius : ((timeBound + fiberRadius : NNReal) : ENNReal) <
+      jointSeries.radius := (ENNReal.coe_lt_coe.mpr hradii).trans_le hjoint.r_le
+  have hseries : ∀ᵐ time ∂(volume.restrict timeSet),
+      HasFPowerSeriesOnBall (fun parameter ↦ function (parameter, time))
+        (jointBallFiberSeries jointSeries centerTime time)
+        centerParameter fiberRadius := by
+    filter_upwards [ae_restrict_mem htimeSet] with time htime
+    exact hasFPowerSeriesOnBall_fiber_of_joint_ball hjoint
+      (hinterval time htime) hfiberRadius hradii
+  have hcoeffIntegrable : ∀ degree,
+      Integrable (fun time ↦ jointBallFiberSeries jointSeries centerTime time degree)
+        (volume.restrict timeSet) := by
+    intro degree
+    apply IntegrableOn.of_bound htimeFinite
+      (((continuousOn_jointBallFiberSeries_degree jointSeries centerTime degree htimeRadius).mono
+        (fun time htime ↦ hinterval time htime)).aestronglyMeasurable htimeSet)
+      (jointBallFiberCoefficientBound jointSeries timeBound degree : ℝ)
+    filter_upwards [ae_restrict_mem htimeSet] with time htime
+    exact_mod_cast nnnorm_jointBallFiberSeries_le_coefficientBound
+      jointSeries centerTime time degree htimeRadius (hinterval time htime)
+  have hcoeffSummable : Summable (fun degree ↦
+      (∫ time in timeSet,
+        ‖jointBallFiberSeries jointSeries centerTime time degree‖) *
+          (fiberRadius : ℝ) ^ degree) := by
+    have hmajorant := summable_coefficientBound_mul_pow jointSeries hsumRadius
+    have hmajorantScaled := hmajorant.mul_left
+      (volume timeSet).toReal
+    apply hmajorantScaled.of_nonneg_of_le
+    · intro degree
+      positivity
+    · intro degree
+      rw [← mul_assoc]
+      apply mul_le_mul_of_nonneg_right _ (pow_nonneg fiberRadius.2 degree)
+      have hconstant : Integrable
+          (fun _ : ℝ ↦ (jointBallFiberCoefficientBound
+            jointSeries timeBound degree : ℝ))
+          (volume.restrict timeSet) := integrableOn_const htimeFinite.ne
+      calc
+        (∫ time in timeSet,
+            ‖jointBallFiberSeries jointSeries centerTime time degree‖) ≤
+            ∫ _time : ℝ in timeSet,
+              (jointBallFiberCoefficientBound jointSeries timeBound degree : ℝ) := by
+          apply integral_mono_ae (hcoeffIntegrable degree).norm hconstant
+          filter_upwards [ae_restrict_mem htimeSet] with time htime
+          exact_mod_cast nnnorm_jointBallFiberSeries_le_coefficientBound
+            jointSeries centerTime time degree htimeRadius (hinterval time htime)
+        _ = (volume timeSet).toReal *
+              (jointBallFiberCoefficientBound jointSeries timeBound degree : ℝ) := by
+          simp [Measure.real]
+  exact hasFPowerSeriesOnBall_integral_of_uniform
+    (volume.restrict timeSet) hfiberRadius hseries
+      hcoeffIntegrable hcoeffSummable
+
+/-- Closed intervals are the principal special case of measurable time sets. -/
 theorem hasFPowerSeriesOnBall_setIntegral_of_joint_ball
     {function : ℝ × ℝ → ℝ}
     {jointSeries : FormalMultilinearSeries ℝ (ℝ × ℝ) ℝ}
@@ -131,55 +205,10 @@ theorem hasFPowerSeriesOnBall_setIntegral_of_joint_ball
       (integralFormalMultilinearSeries (volume.restrict (Icc start finish))
         (jointBallFiberSeries jointSeries centerTime))
       centerParameter fiberRadius := by
-  have htimeRadius : (timeBound : ENNReal) < jointSeries.radius := by
-    exact (ENNReal.coe_lt_coe.mpr
-      ((lt_of_le_of_lt (le_add_right (le_refl timeBound)) hradii))).trans_le hjoint.r_le
-  have hsumRadius : ((timeBound + fiberRadius : NNReal) : ENNReal) <
-      jointSeries.radius := (ENNReal.coe_lt_coe.mpr hradii).trans_le hjoint.r_le
-  have hseries : ∀ᵐ time ∂(volume.restrict (Icc start finish)),
-      HasFPowerSeriesOnBall (fun parameter ↦ function (parameter, time))
-        (jointBallFiberSeries jointSeries centerTime time)
-        centerParameter fiberRadius := by
-    filter_upwards [ae_restrict_mem measurableSet_Icc] with time htime
-    exact hasFPowerSeriesOnBall_fiber_of_joint_ball hjoint
-      (hinterval time htime) hfiberRadius hradii
-  have hcoeffIntegrable : ∀ degree,
-      Integrable (fun time ↦ jointBallFiberSeries jointSeries centerTime time degree)
-        (volume.restrict (Icc start finish)) := by
-    intro degree
-    exact ((continuousOn_jointBallFiberSeries_degree jointSeries centerTime degree htimeRadius).mono
-      (fun time htime ↦ hinterval time htime)).integrableOn_Icc
-  have hcoeffSummable : Summable (fun degree ↦
-      (∫ time in Icc start finish,
-        ‖jointBallFiberSeries jointSeries centerTime time degree‖) *
-          (fiberRadius : ℝ) ^ degree) := by
-    have hmajorant := summable_coefficientBound_mul_pow jointSeries hsumRadius
-    have hmajorantScaled := hmajorant.mul_left
-      (volume (Icc start finish)).toReal
-    apply hmajorantScaled.of_nonneg_of_le
-    · intro degree
-      positivity
-    · intro degree
-      rw [← mul_assoc]
-      apply mul_le_mul_of_nonneg_right _ (pow_nonneg fiberRadius.2 degree)
-      have hconstant : Integrable
-          (fun _ : ℝ ↦ (jointBallFiberCoefficientBound
-            jointSeries timeBound degree : ℝ))
-          (volume.restrict (Icc start finish)) := integrable_const _
-      calc
-        (∫ time in Icc start finish,
-            ‖jointBallFiberSeries jointSeries centerTime time degree‖) ≤
-            ∫ _time : ℝ in Icc start finish,
-              (jointBallFiberCoefficientBound jointSeries timeBound degree : ℝ) := by
-          apply integral_mono_ae (hcoeffIntegrable degree).norm hconstant
-          filter_upwards [ae_restrict_mem measurableSet_Icc] with time htime
-          exact_mod_cast nnnorm_jointBallFiberSeries_le_coefficientBound
-            jointSeries centerTime time degree htimeRadius (hinterval time htime)
-        _ = (volume (Icc start finish)).toReal *
-              (jointBallFiberCoefficientBound jointSeries timeBound degree : ℝ) := by
-          simp [Measure.real]
-  exact hasFPowerSeriesOnBall_integral_of_uniform
-    (volume.restrict (Icc start finish)) hfiberRadius hseries
-      hcoeffIntegrable hcoeffSummable
+  apply hasFPowerSeriesOnBall_setIntegral_of_joint_ball_of_measurableSet
+    hjoint hfiberRadius hradii measurableSet_Icc
+  · rw [Real.volume_Icc]
+    finiteness
+  · exact hinterval
 
 end LeanPool.PoincareThreeBody
