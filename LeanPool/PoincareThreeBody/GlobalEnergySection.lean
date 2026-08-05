@@ -276,6 +276,51 @@ theorem IsFirstIntegralFamily.globalEnergyCoefficient_neg_two_eq_leadingActionCo
   rw [globalEnergySection_neg_two_eq_liftedDelaunayPhasePoint]
   exact hvalue.symm
 
+/-- Energies near the rational anchor remain in the same interior prograde Delaunay chart. -/
+theorem eventually_globalEnergySection_interiorPrograde :
+    ∀ᶠ energy in nhds (-2 : ℝ),
+      let action := cartesianDelaunayActions (globalEnergySection energy)
+      action ∈ ProgradeEllipticActions ∧
+        action 0 ^ 2 * (1 + eccentricityFromActions action) < 1 := by
+  let actionCurve : ℝ → ActionSpace := fun energy ↦
+    cartesianDelaunayActions (globalEnergySection energy)
+  have hposition :
+      (globalEnergySection (-2)) 0 ^ 2 + (globalEnergySection (-2)) 1 ^ 2 ≠ 0 := by
+    rw [globalEnergySection_neg_two]
+    norm_num
+  have henergy : cartesianKeplerEnergy (globalEnergySection (-2)) < 0 := by
+    rw [cartesianKeplerEnergy_globalEnergySection_neg_two]
+    norm_num
+  have hactionAnalytic : AnalyticAt ℝ actionCurve (-2) := by
+    exact (analyticAt_cartesianDelaunayActions hposition henergy).comp
+      (f := globalEnergySection) (analyticAt_globalEnergySection (-2))
+  have hbaseAction : actionCurve (-2) ∈ ProgradeEllipticActions := by
+    exact globalEnergySection_neg_two_action_prograde
+  have hprograde : ∀ᶠ energy in nhds (-2 : ℝ),
+      actionCurve energy ∈ ProgradeEllipticActions :=
+    hactionAnalytic.continuousAt.eventually
+      (isOpen_progradeEllipticActions.mem_nhds hbaseAction)
+  have hcoordinate : AnalyticAt ℝ
+      (fun action : ActionSpace ↦ action 0) (actionCurve (-2)) :=
+    (ContinuousLinearMap.proj 0 : ActionSpace →L[ℝ] ℝ).analyticAt _
+  have heccentricity : AnalyticAt ℝ eccentricityFromActions (actionCurve (-2)) :=
+    analyticAt_eccentricityFromActions hbaseAction
+  have hapoapsisContinuous : ContinuousAt
+      (fun energy ↦ (actionCurve energy) 0 ^ 2 *
+        (1 + eccentricityFromActions (actionCurve energy))) (-2) := by
+    exact (((hcoordinate.pow 2).mul
+      (analyticAt_const.add heccentricity)).comp hactionAnalytic).continuousAt
+  have hbaseApoapsis :
+      (actionCurve (-2)) 0 ^ 2 *
+        (1 + eccentricityFromActions (actionCurve (-2))) < 1 := by
+    exact globalEnergySection_neg_two_action_apoapsis
+  have hapoapsis : ∀ᶠ energy in nhds (-2 : ℝ),
+      (actionCurve energy) 0 ^ 2 *
+        (1 + eccentricityFromActions (actionCurve energy)) < 1 :=
+    hapoapsisContinuous.eventually_lt continuousAt_const hbaseApoapsis
+  filter_upwards [hprograde, hapoapsis] with energy haction hapo
+  exact ⟨haction, hapo⟩
+
 /-- Joint analyticity makes the global energy representative analytic at every real energy. -/
 theorem IsJointlyAnalytic.analyticAt_globalEnergyCoefficient
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
