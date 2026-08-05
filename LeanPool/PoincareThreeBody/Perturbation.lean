@@ -20,7 +20,6 @@ homological equation.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 lemma hasDerivAt_firstPrimaryDistanceSq (μ : ℝ) (s : PhaseSpace) :
     HasDerivAt (fun mass ↦ firstPrimaryDistanceSq mass s) (2 * (s 0 - 1 + μ)) μ := by

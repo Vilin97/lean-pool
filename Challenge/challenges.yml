@@ -186,7 +186,12 @@ challenges:
       url: https://arxiv.org/abs/2111.11031
     license: Apache-2.0
     provenance: AI
-    status: open
+    status: solved
+    solution:
+      module: Solution.PoincareThreeBody
+      authors:
+        - Gershon Bialer
+      project: poincare-three-body-nonintegrability
     estimated_lines: 100000
     statements:
       - declaration: Challenge.PoincareThreeBody.nonintegrability

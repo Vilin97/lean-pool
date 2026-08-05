@@ -20,7 +20,6 @@ propagates that equality along any connected collision-free mass fiber.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- A coordinate minor of the Hamiltonian and candidate phase differentials at fixed mass and
 phase. -/

@@ -19,7 +19,6 @@ be obtained from joint analyticity.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Differentiating the canonical Poisson bracket with respect to a parameter gives the two cross
 brackets.  The derivative hypotheses are stated coordinatewise to isolate the required interchange

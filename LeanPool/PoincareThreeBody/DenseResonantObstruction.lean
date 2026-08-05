@@ -53,9 +53,9 @@ theorem resonantInteriorPositiveActions_dense (eccentricity : ℝ) :
 /-- Conditional classical density step: nonconstant resonant averages force the frequency and
 leading differential to have zero wedge at every interior action of fixed eccentricity. -/
 theorem IsFirstIntegralFamily.wedge_leadingActionDifferentialAtEccentricity_eq_zero
-    {δ : ℝ} {F : ℝ → Challenge.PoincareThreeBody.PhaseSpace → ℝ}
-    (hδ : 0 < δ) (hanalytic : Challenge.PoincareThreeBody.IsJointlyAnalytic δ F)
-    (hfirstIntegral : Challenge.PoincareThreeBody.IsFirstIntegralFamily δ F)
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F)
     {eccentricity : ℝ} (heccentricity : 0 < eccentricity)
     (heccentricityOne : eccentricity < 1)
     (hnonconstant : ∀ {p q : ℕ} (_hp : 0 < p) (_hq : 0 < q),
@@ -95,9 +95,9 @@ theorem IsFirstIntegralFamily.wedge_leadingActionDifferentialAtEccentricity_eq_z
 /-- Under the same resonant nonconstancy input, the two differentials are dependent at every
 interior fixed-eccentricity action. -/
 theorem IsFirstIntegralFamily.leadingActionDifferentialAtEccentricity_obstruction
-    {δ : ℝ} {F : ℝ → Challenge.PoincareThreeBody.PhaseSpace → ℝ}
-    (hδ : 0 < δ) (hanalytic : Challenge.PoincareThreeBody.IsJointlyAnalytic δ F)
-    (hfirstIntegral : Challenge.PoincareThreeBody.IsFirstIntegralFamily δ F)
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F)
     {eccentricity : ℝ} (heccentricity : 0 < eccentricity)
     (heccentricityOne : eccentricity < 1)
     (hnonconstant : ∀ {p q : ℕ} (_hp : 0 < p) (_hq : 0 < q),

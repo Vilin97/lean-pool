@@ -20,7 +20,6 @@ leading-coefficient obstruction.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Prograde, noncircular elliptic actions whose entire ellipse stays inside the unit primary
 orbit. -/

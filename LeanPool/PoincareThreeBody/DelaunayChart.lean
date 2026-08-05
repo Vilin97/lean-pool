@@ -17,7 +17,6 @@ to real numbers; periodicity will allow the chart to descend to the angle torus.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Eccentric anomaly in the lifted Delaunay chart. -/
 noncomputable def liftedDelaunayEccentricAnomaly

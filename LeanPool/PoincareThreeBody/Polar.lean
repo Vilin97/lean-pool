@@ -21,7 +21,6 @@ change on the route to Delaunay action-angle variables.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Polar canonical state ordered as `(r, φ, pᵣ, pφ)`. -/
 abbrev PolarState := Fin 4 → ℝ

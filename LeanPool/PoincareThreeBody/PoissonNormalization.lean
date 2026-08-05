@@ -17,7 +17,6 @@ zeroth coefficient cancellation holds locally in phase space.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- A differentiable scalar function of an observable Poisson-commutes with that observable. -/
 theorem poissonBracket_comp_self_eq_zero

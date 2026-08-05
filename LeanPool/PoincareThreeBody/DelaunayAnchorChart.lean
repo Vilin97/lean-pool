@@ -18,7 +18,6 @@ contains a phase-space neighborhood of the anchor.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Action and angle variables for the local four-dimensional chart. -/
 abbrev DelaunayAnchorParameters := ActionSpace × (ℝ × ℝ)
@@ -266,7 +265,7 @@ theorem phaseHamiltonianVector_fderiv_hamiltonian_zero
   funext coordinate
   fin_cases coordinate <;>
     simp [phaseHamiltonianVector, rotatingKeplerDifferential,
-      rotatingKeplerVectorField, coordinateVector] <;> ring
+      rotatingKeplerVectorField, coordinateVector]; ring
 
 /-- The second angle direction is the Hamiltonian vector of angular momentum. -/
 theorem fderiv_delaunayAnchorMeanAngleChart_orientation :

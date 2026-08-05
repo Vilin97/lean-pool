@@ -17,7 +17,6 @@ iteration of Poincaré's subtract-and-divide argument.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- On a connected local Kepler energy leaf, the mass-zero candidate is the analytic energy
 function constructed from any reference first action on that leaf. -/
@@ -25,7 +24,7 @@ theorem IsFirstIntegralFamily.mass_zero_eq_leadingEnergyCoefficient_hamiltonian
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
     (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet)
+    (_hdense : HasDenseClassicalPoincareSet)
     {firstAction eccentricity meanAnomaly periapsisAngle referenceFirstAction : ℝ}
     (hfirstAction : 0 < firstAction)
     (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
@@ -54,7 +53,7 @@ theorem IsFirstIntegralFamily.mass_zero_eq_leadingEnergyCoefficient_hamiltonian
     ![firstAction, angularActionFromEccentricity firstAction eccentricity]
   have hactionCoefficient :=
     IsFirstIntegralFamily.leadingActionCoefficient_eq_leadingEnergyCoefficient
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
       (action := action) (referenceFirstAction := referenceFirstAction)
       hactionLeaf hapoapsisLeaf
   have hsectionValue :=

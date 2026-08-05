@@ -26,14 +26,20 @@ set.  The second-derivative field is intended to be discharged by interval arith
 last inequality is a finite trapezoidal computation. -/
 structure ClassicalPoincareCertificate
     (action : InteriorProgradeEllipticAction) where
+  /-- Numerator of the certified rational resonance. -/
   p : ℕ
+  /-- Denominator of the certified rational resonance. -/
   q : ℕ
   hp : 0 < p
   hq : 0 < q
   firstAction_eq : action.1 0 = resonantFirstAction p q
+  /-- First resonant orientation used in the certified comparison. -/
   phaseA : ℝ
+  /-- Second resonant orientation used in the certified comparison. -/
   phaseB : ℝ
+  /-- Certified uniform bound on the absolute second derivative. -/
   errorBound : ℝ
+  /-- Number of subintervals in the certified trapezoidal sum. -/
   steps : ℕ
   secondDerivative : ∀ time,
     |iteratedDerivWithin 2

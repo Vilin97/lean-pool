@@ -15,7 +15,6 @@ the Kepler frequency with the two Poisson brackets against the Cartesian actions
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Canonical symplectic pairing of two phase covectors. -/
 def phasePoissonPairing

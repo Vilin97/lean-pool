@@ -17,7 +17,6 @@ orders automatically.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The one-step statement needed from the Poincaré-set obstruction and analytic Hadamard
 division. -/
@@ -91,6 +90,7 @@ theorem classicalNormalizationStep_of_zerothCoefficient_of_massDivision
 
 /-- A jointly analytic first integral, bundled so a normalization step can be iterated. -/
 structure NormalizationState (δ : ℝ) where
+  /-- The parameterized phase-space function at the current normalization stage. -/
   family : ℝ → PhaseSpace → ℝ
   analytic : IsJointlyAnalytic δ family
   firstIntegral : IsFirstIntegralFamily δ family

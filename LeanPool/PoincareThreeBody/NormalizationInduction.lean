@@ -17,7 +17,6 @@ arbitrarily high power of the mass parameter.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The sequence obtained by repeatedly subtracting a chosen energy function and dividing by the
 mass parameter. -/

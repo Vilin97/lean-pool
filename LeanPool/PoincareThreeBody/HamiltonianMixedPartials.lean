@@ -17,7 +17,6 @@ Poincaré's first homological equation.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Near a collision-free phase point, the joint parameter coefficient of the Hamiltonian is the
 explicit first mass perturbation. -/

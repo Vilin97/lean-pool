@@ -58,7 +58,7 @@ import LeanPool.PoincareThreeBody.ValidatedQuadrature
 Source: arxiv:2111.11031, doi:10.1063/5.0266087, url:https://arxiv.org/abs/2111.11031
 Authors: Gershon Bialer
 Status: verified
-Main declarations: `LeanPool.PoincareThreeBody.delaunayHomological_obstruction`
+Main declarations: `LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand`
 Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrability
 MSC: 70F07, 37J30, 37J40
 -/

@@ -19,7 +19,6 @@ Hamiltonian is exactly differentiation along a Kepler flow line.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Explicit differential of the rotating Kepler Hamiltonian. -/
 noncomputable def rotatingKeplerDifferential (s : PhaseSpace) : PhaseSpace →L[ℝ] ℝ :=

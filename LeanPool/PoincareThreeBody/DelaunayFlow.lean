@@ -18,7 +18,6 @@ Hamilton equations for the mass-zero rotating Kepler Hamiltonian.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Mean anomaly along a general lifted Delaunay flow line. -/
 noncomputable def liftedDelaunayMeanAnomalyAlongFlow

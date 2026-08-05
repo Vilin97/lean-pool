@@ -32,7 +32,7 @@ noncomputable def orientedResonantEllipsePosition
 /-- The oriented resonant position embedded in phase space. -/
 noncomputable def orientedResonantEllipsePhasePoint
     (p q : ℕ) (eccentricity orientation time : ℝ) :
-    Challenge.PoincareThreeBody.PhaseSpace :=
+    PhaseSpace :=
   positionPhasePoint (orientedResonantEllipsePosition p q eccentricity orientation time)
 
 /-- The first-order disturbing function along an oriented resonant ellipse. -/

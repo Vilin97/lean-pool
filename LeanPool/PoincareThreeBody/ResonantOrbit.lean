@@ -44,7 +44,7 @@ noncomputable def resonantRotatingEllipsePosition
 
 /-- The resonant position embedded into the four-dimensional phase space. -/
 noncomputable def resonantEllipsePhasePoint
-    (p q : ℕ) (eccentricity time : ℝ) : Challenge.PoincareThreeBody.PhaseSpace :=
+    (p q : ℕ) (eccentricity time : ℝ) : PhaseSpace :=
   positionPhasePoint (resonantRotatingEllipsePosition p q eccentricity time)
 
 lemma resonantMeanMotion_eq_delaunayFrequency {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :
@@ -252,9 +252,9 @@ lemma resonantEllipsePhasePoint_collisionFree_mass_zero
       (resonantRotatingEllipsePosition p q eccentricity time 0 - 1) ^ 2 +
           (resonantRotatingEllipsePosition p q eccentricity time 1) ^ 2 ≠ 0) :
     (0, resonantEllipsePhasePoint p q eccentricity time) ∈
-      Challenge.PoincareThreeBody.collisionFree := by
+      collisionFree := by
   constructor
-  · simpa [Challenge.PoincareThreeBody.firstPrimaryDistanceSq,
+  · simpa [firstPrimaryDistanceSq,
       resonantEllipsePhasePoint, positionPhasePoint] using hprimary
   · have hfirstAction : resonantFirstAction p q ≠ 0 :=
       (resonantFirstAction_pos hp hq).ne'
@@ -271,7 +271,7 @@ lemma resonantEllipsePhasePoint_collisionFree_mass_zero
             (resonantEccentricAnomaly p q eccentricity time) time 1) ^ 2 ≠ 0
       rw [rotatingEllipsePosition_sq heccentricity heccentricityOne.le]
       exact (sq_pos_of_pos hradius).ne'
-    simpa [Challenge.PoincareThreeBody.secondPrimaryDistanceSq,
+    simpa [secondPrimaryDistanceSq,
       resonantEllipsePhasePoint, positionPhasePoint] using horigin
 
 /-- A rational Kepler resonance gives a genuinely periodic orbit in the rotating frame. -/

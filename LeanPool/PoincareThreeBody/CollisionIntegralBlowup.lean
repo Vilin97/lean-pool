@@ -16,7 +16,7 @@ becomes unbounded when an aligned apoapsis approaches the unit primary.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody Filter MeasureTheory Set Topology
+open Filter MeasureTheory Set Topology
 
 /-- Reciprocal distance from the resonant position to the unit primary. -/
 noncomputable def resonantPrimaryInverse
@@ -66,14 +66,14 @@ theorem continuous_resonantPrimaryInverse
 /-- On the one-sided time interval where time displacement dominates eccentricity displacement,
 the collision inverse is bounded below by a reciprocal linear function. -/
 theorem one_div_two_mul_constant_mul_time_le_resonantPrimaryInverse
-    {p q : ℕ} {constant neighborhoodRadius eccentricity time : ℝ}
+    {p q : ℕ} {lipConstant neighborhoodRadius eccentricity time : ℝ}
     (hlocal : ∀ parameters : ℝ × ℝ,
       dist parameters
           (resonantCollisionEccentricity p q, resonantApoapsisTime p q) <
             neighborhoodRadius →
       ‖orientedResonantEllipsePosition p q parameters.1
             (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)]‖ ≤
-        constant *
+        lipConstant *
           ‖parameters -
             (resonantCollisionEccentricity p q, resonantApoapsisTime p q)‖)
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
@@ -85,7 +85,7 @@ theorem one_div_two_mul_constant_mul_time_le_resonantPrimaryInverse
         time - resonantApoapsisTime p q)
     (htimeDisplacementUpper :
       time - resonantApoapsisTime p q < neighborhoodRadius) :
-    1 / (2 * constant * (time - resonantApoapsisTime p q)) ≤
+    1 / (2 * lipConstant * (time - resonantApoapsisTime p q)) ≤
       resonantPrimaryInverse p q eccentricity
         (resonantCollisionOrientation p q) time := by
   let center : ℝ × ℝ :=
@@ -109,7 +109,7 @@ theorem one_div_two_mul_constant_mul_time_le_resonantPrimaryInverse
   let position := orientedResonantEllipsePosition p q eccentricity
     (resonantCollisionOrientation p q) time
   let offset : ActionSpace := position - ![(1 : ℝ), (0 : ℝ)]
-  have hoffsetNorm : ‖offset‖ ≤ constant * displacement := by
+  have hoffsetNorm : ‖offset‖ ≤ lipConstant * displacement := by
     have hbound := hlocal parameters hparametersNear
     rw [hparameterNorm] at hbound
     exact hbound
@@ -132,29 +132,29 @@ theorem one_div_two_mul_constant_mul_time_le_resonantPrimaryInverse
     simp
   have hdistanceBound :
       Real.sqrt ((position 0 - 1) ^ 2 + position 1 ^ 2) ≤
-        2 * constant * displacement := by
+        2 * lipConstant * displacement := by
     calc
       Real.sqrt ((position 0 - 1) ^ 2 + position 1 ^ 2) =
           Real.sqrt (offset 0 ^ 2 + offset 1 ^ 2) := by
         rw [hoffsetZero, hoffsetOne]
       _ ≤ 2 * ‖offset‖ := sqrt_sq_add_sq_le_two_norm offset
-      _ ≤ 2 * (constant * displacement) := by gcongr
-      _ = 2 * constant * displacement := by ring
+      _ ≤ 2 * (lipConstant * displacement) := by gcongr
+      _ = 2 * lipConstant * displacement := by ring
   unfold resonantPrimaryInverse
   dsimp only
   exact one_div_le_one_div_of_le hdistancePositive hdistanceBound
 
 /-- Integrating the pointwise collision estimate gives the explicit logarithmic lower bound. -/
 theorem log_lower_bound_resonantPrimaryInverse_local_integral
-    {p q : ℕ} {constant neighborhoodRadius eccentricity window : ℝ}
-    (hconstant : 0 < constant)
+    {p q : ℕ} {lipConstant neighborhoodRadius eccentricity window : ℝ}
+    (hconstant : 0 < lipConstant)
     (hlocal : ∀ parameters : ℝ × ℝ,
       dist parameters
           (resonantCollisionEccentricity p q, resonantApoapsisTime p q) <
             neighborhoodRadius →
       ‖orientedResonantEllipsePosition p q parameters.1
             (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)]‖ ≤
-        constant *
+        lipConstant *
           ‖parameters -
             (resonantCollisionEccentricity p q, resonantApoapsisTime p q)‖)
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
@@ -162,7 +162,7 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
     (hdelta : 0 < resonantCollisionEccentricity p q - eccentricity)
     (hdeltaWindow : resonantCollisionEccentricity p q - eccentricity < window)
     (hwindow : window < neighborhoodRadius) :
-    (1 / (2 * constant)) *
+    (1 / (2 * lipConstant)) *
         Real.log (window / (resonantCollisionEccentricity p q - eccentricity)) ≤
       ∫ time in
           resonantApoapsisTime p q +
@@ -172,7 +172,7 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
           (resonantCollisionOrientation p q) time := by
   let apoapsisTime := resonantApoapsisTime p q
   let delta := resonantCollisionEccentricity p q - eccentricity
-  let lower : ℝ → ℝ := fun time ↦ 1 / (2 * constant * (time - apoapsisTime))
+  let lower : ℝ → ℝ := fun time ↦ 1 / (2 * lipConstant * (time - apoapsisTime))
   have hbounds : apoapsisTime + delta ≤ apoapsisTime + window := by
     linarith
   have hlowerIntegrable : IntervalIntegrable lower volume
@@ -203,7 +203,7 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
     · linarith [htime.1]
     · linarith [htime.2]
   calc
-    (1 / (2 * constant)) * Real.log (window / delta) =
+    (1 / (2 * lipConstant)) * Real.log (window / delta) =
         ∫ time in apoapsisTime + delta..apoapsisTime + window, lower time := by
       have hshift := intervalIntegral.integral_comp_sub_right
         (f := fun value : ℝ ↦ 1 / value) (a := apoapsisTime + delta)
@@ -215,7 +215,7 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
         rw [show apoapsisTime + delta - apoapsisTime = delta by ring,
           show apoapsisTime + window - apoapsisTime = window by ring]
         exact integral_one_div_of_pos hdelta (hdelta.trans hdeltaWindow)
-      rw [show lower = fun time ↦ (1 / (2 * constant)) *
+      rw [show lower = fun time ↦ (1 / (2 * lipConstant)) *
           (1 / (time - apoapsisTime)) by
         funext time
         dsimp [lower]
@@ -226,15 +226,15 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
 /-- The local logarithmic estimate also bounds the inverse-distance integral over the whole
 resonant period, provided the comparison window lies inside that period. -/
 theorem log_lower_bound_resonantPrimaryInverse_period_integral
-    {p q : ℕ} {constant neighborhoodRadius eccentricity window : ℝ}
-    (hconstant : 0 < constant)
+    {p q : ℕ} {lipConstant neighborhoodRadius eccentricity window : ℝ}
+    (hconstant : 0 < lipConstant)
     (hlocal : ∀ parameters : ℝ × ℝ,
       dist parameters
           (resonantCollisionEccentricity p q, resonantApoapsisTime p q) <
             neighborhoodRadius →
       ‖orientedResonantEllipsePosition p q parameters.1
             (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)]‖ ≤
-        constant *
+        lipConstant *
           ‖parameters -
             (resonantCollisionEccentricity p q, resonantApoapsisTime p q)‖)
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
@@ -243,7 +243,7 @@ theorem log_lower_bound_resonantPrimaryInverse_period_integral
     (hdeltaWindow : resonantCollisionEccentricity p q - eccentricity < window)
     (hwindow : window < neighborhoodRadius)
     (hwindowPeriod : resonantApoapsisTime p q + window ≤ resonantOrbitPeriod p) :
-    (1 / (2 * constant)) *
+    (1 / (2 * lipConstant)) *
         Real.log (window / (resonantCollisionEccentricity p q - eccentricity)) ≤
       ∫ time in 0..resonantOrbitPeriod p,
         resonantPrimaryInverse p q eccentricity

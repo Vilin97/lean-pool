@@ -5530,8 +5530,10 @@ projects:
       Formalizes Poincaré's classical parameter-analytic nonintegrability
       theorem for the planar circular restricted three-body problem. The
       development defines the rotating-frame Hamiltonian on its collision-free
-      domain and builds the resonant, perturbative, action-angle, and Fourier
-      machinery needed to exclude an additional analytic first integral.
+      domain, proves logarithmic blow-up of the resonant disturbing average at
+      an apoapsis collision boundary, and analytically propagates the resulting
+      dense resonant obstruction to exclude an additional analytic first
+      integral.
     branch: dynamical systems
     entry_module: LeanPool.PoincareThreeBody
     authors:
@@ -5548,8 +5550,14 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.PoincareThreeBody.delaunayHomological_obstruction
+      - LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
     main_results:
+      - declaration: LeanPool.PoincareThreeBody.nonintegrability_of_collisionBand
+        informal: >-
+          No jointly real-analytic family near zero mass can be an additional
+          first integral of the planar circular restricted three-body
+          Hamiltonian with phase differential independent from the Hamiltonian
+          differential anywhere on the uniform collision-free domain.
       - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
         informal: >-
           If the first homological equation holds and its perturbing Fourier

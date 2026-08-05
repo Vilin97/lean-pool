@@ -16,7 +16,7 @@ that averaging over one resonant period preserves real analyticity in eccentrici
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody Filter MeasureTheory Set Topology
+open Filter MeasureTheory Set Topology
 
 /-- The resonant disturbing average is analytic in eccentricity throughout the collision-free
 interior range. -/

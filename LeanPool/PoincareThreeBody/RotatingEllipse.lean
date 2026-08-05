@@ -20,7 +20,6 @@ the first mass perturbation to a resonant Kepler orbit.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Cartesian position on an inertial Kepler ellipse, with periapsis on the positive x-axis. -/
 noncomputable def inertialEllipsePosition

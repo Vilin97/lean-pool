@@ -18,7 +18,6 @@ nonconstant at every rational resonance under consideration.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Pulling two dependent Euclidean action covectors back along any linear map cannot make them
 linearly independent. -/

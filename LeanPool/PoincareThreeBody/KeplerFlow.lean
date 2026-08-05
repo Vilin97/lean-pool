@@ -18,7 +18,6 @@ that curve.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Explicit rotating Kepler vector field away from the origin. -/
 noncomputable def rotatingKeplerVectorField (s : PhaseSpace) : PhaseSpace :=

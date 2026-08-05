@@ -213,21 +213,21 @@ theorem exists_collisionAlignedPosition_local_bound
     {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
     (haxisHalf : 1 / 2 < resonantSemimajorAxis p q)
     (haxisOne : resonantSemimajorAxis p q < 1) :
-    ∃ constant : ℝ, 0 < constant ∧ ∃ radius : ℝ, 0 < radius ∧
+    ∃ lipConstant : ℝ, 0 < lipConstant ∧ ∃ radius : ℝ, 0 < radius ∧
       ∀ parameters : ℝ × ℝ,
         dist parameters
             (resonantCollisionEccentricity p q, resonantApoapsisTime p q) < radius →
         ‖orientedResonantEllipsePosition p q parameters.1
               (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)]‖ ≤
-          constant *
+          lipConstant *
             ‖parameters -
               (resonantCollisionEccentricity p q, resonantApoapsisTime p q)‖ := by
   rcases (collisionAlignedPosition_isBigO hp hq haxisHalf haxisOne).exists_pos with
-    ⟨constant, hconstant, hbound⟩
+    ⟨lipConstant, hconstant, hbound⟩
   rcases Metric.eventually_nhds_iff.mp
       (Asymptotics.isBigOWith_iff.mp hbound) with
     ⟨radius, hradius, hlocal⟩
-  exact ⟨constant, hconstant, radius, hradius, fun parameters hparameters ↦
+  exact ⟨lipConstant, hconstant, radius, hradius, fun parameters hparameters ↦
     hlocal hparameters⟩
 
 /-- The Euclidean distance used by the Newtonian potential is controlled by twice the ambient

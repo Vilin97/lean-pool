@@ -17,7 +17,6 @@ identities naturally produced by coefficient induction into failure of the chall
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- A two-by-two coordinate minor of a pair of phase covectors. -/
 def phaseCovectorMinor

@@ -16,7 +16,6 @@ phase differential is the pullback of the differential of the action-space repre
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The rows of the derivative of the physical action map are the derivatives of its two scalar
 components. -/

@@ -15,7 +15,6 @@ resonant ellipse approaches its apoapsis collision boundary.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The part of the resonant disturbing function which is regular at the unit primary. -/
 noncomputable def resonantRegularPart

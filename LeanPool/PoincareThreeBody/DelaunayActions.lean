@@ -18,7 +18,6 @@ Hamiltonian.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- A frequency vector regarded as the corresponding Euclidean action covector. -/
 noncomputable def actionCovector (vector : ActionSpace) : ActionSpace →L[ℝ] ℝ :=

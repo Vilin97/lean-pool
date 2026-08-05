@@ -18,7 +18,6 @@ each phase-space slice of the normalized residual.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The differentiable slope of an analytic one-variable function is analytic at its base point.
 This is the analytic form of division by a linear factor. -/

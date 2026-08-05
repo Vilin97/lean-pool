@@ -18,7 +18,7 @@ path-connected whenever the mass interval is nonempty.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody Set
+open Set
 
 /-- A two-dimensional real coordinate plane. -/
 abbrev Plane := Fin 2 → ℝ

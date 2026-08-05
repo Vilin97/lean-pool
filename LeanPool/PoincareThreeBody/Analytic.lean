@@ -59,7 +59,6 @@ theorem analyticAt_sqrt_of_pos {x₀ : ℝ} (hx₀ : 0 < x₀) :
   filter_upwards [lt_mem_nhds hx₀] with x hx
   exact (Real.sqrt_eq_rpow x).symm
 
-open Challenge.PoincareThreeBody
 
 lemma mass_analyticAt (z : ℝ × PhaseSpace) : AnalyticAt ℝ (fun w : ℝ × PhaseSpace ↦ w.1) z :=
   analyticAt_fst

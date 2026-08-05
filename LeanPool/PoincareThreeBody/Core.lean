@@ -20,7 +20,7 @@ establishes their elementary structural properties. It deliberately does not imp
 module: the solution and challenge environments must remain separately exportable for comparator.
 -/
 
-namespace Challenge.PoincareThreeBody
+namespace LeanPool.PoincareThreeBody
 
 open Set
 
@@ -140,4 +140,4 @@ lemma hamiltonian_not_independent (δ : ℝ) : ¬IsIndependentSomewhere δ hamil
   have hindex : (0 : Fin 2) = 1 := hlinear.injective (by simp)
   norm_num at hindex
 
-end Challenge.PoincareThreeBody
+end LeanPool.PoincareThreeBody

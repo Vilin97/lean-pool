@@ -17,7 +17,6 @@ parameter-integral argument.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 theorem analyticAt_resonantEccentricAnomaly_eccentricity
     (p q : ℕ) {eccentricity time : ℝ}
@@ -209,12 +208,14 @@ theorem analyticAt_orientedResonantEllipsePosition_eccentricity_time_coordinate
     exact ((Real.analyticAt_sin.comp htime).neg.mul hx).add
       ((Real.analyticAt_cos.comp htime).mul hy)
 
-/-- The collision-free disturbing function is jointly analytic in eccentricity and time. -/
-theorem analyticAt_resonantDisturbingFunction_eccentricity_time
+/-- The disturbing function is jointly analytic at every point away from the unit primary. -/
+theorem analyticAt_resonantDisturbingFunction_eccentricity_time_of_primaryDistance_ne_zero
     {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
     {eccentricity orientation time : ℝ}
     (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
-    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    (hprimaryNe :
+      (orientedResonantEllipsePosition p q eccentricity orientation time 0 - 1) ^ 2 +
+        orientedResonantEllipsePosition p q eccentricity orientation time 1 ^ 2 ≠ 0) :
     AnalyticAt ℝ (fun parameters : ℝ × ℝ ↦
       resonantDisturbingFunction p q parameters.1 orientation parameters.2)
       (eccentricity, time) := by
@@ -249,10 +250,6 @@ theorem analyticAt_resonantDisturbingFunction_eccentricity_time
   have hprimarySq : AnalyticAt ℝ
       (fun parameters ↦ (x parameters - 1) ^ 2 + y parameters ^ 2)
       (eccentricity, time) := ((hx.sub analyticAt_const).pow 2).add (hy.pow 2)
-  have hprimaryNe :
-      (x (eccentricity, time) - 1) ^ 2 + y (eccentricity, time) ^ 2 ≠ 0 :=
-    rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
-      heccentricity.le heccentricityOne hapoapsis
   have hprimaryPositive : 0 <
       (x (eccentricity, time) - 1) ^ 2 + y (eccentricity, time) ^ 2 :=
     lt_of_le_of_ne (by positivity) (Ne.symm hprimaryNe)
@@ -267,6 +264,20 @@ theorem analyticAt_resonantDisturbingFunction_eccentricity_time
   filter_upwards [] with parameters
   simp [x, y, resonantDisturbingFunction, orientedResonantEllipsePhasePoint,
     positionPhasePoint, firstMassPerturbation, div_eq_mul_inv]
+
+/-- The collision-free disturbing function is jointly analytic in eccentricity and time. -/
+theorem analyticAt_resonantDisturbingFunction_eccentricity_time
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity orientation time : ℝ}
+    (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    AnalyticAt ℝ (fun parameters : ℝ × ℝ ↦
+      resonantDisturbingFunction p q parameters.1 orientation parameters.2)
+      (eccentricity, time) := by
+  apply analyticAt_resonantDisturbingFunction_eccentricity_time_of_primaryDistance_ne_zero
+    hp hq heccentricity heccentricityOne
+  exact orientedResonantEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
+    heccentricity.le heccentricityOne hapoapsis
 
 /-- Joint analyticity assembled over the full admissible eccentricity/time cylinder. -/
 theorem analyticOnNhd_resonantDisturbingFunction_eccentricity_time

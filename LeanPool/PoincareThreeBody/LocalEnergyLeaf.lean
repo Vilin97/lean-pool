@@ -17,7 +17,7 @@ the whole straight energy-leaf segment back to the anchor remains in the region.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody Set
+open Set
 
 /-- The first action used at the rational anchor. -/
 noncomputable def delaunayAnchorFirstAction : ℝ :=
@@ -195,8 +195,7 @@ anchor-section representative on the same energy leaf. -/
 theorem IsFirstIntegralFamily.eventually_leadingActionCoefficient_eq_anchorEnergyCoefficient
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
-    (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet) :
+    (hfirstIntegral : IsFirstIntegralFamily δ F) :
     ∀ᶠ action in nhds delaunayAnchorAction,
       leadingActionCoefficient F action =
         leadingEnergyCoefficient F delaunayAnchorFirstAction
@@ -235,7 +234,7 @@ theorem IsFirstIntegralFamily.eventually_leadingActionCoefficient_eq_anchorEnerg
     exact hleafAnalytic.continuousAt.eventually htarget
   filter_upwards [heventual] with action hsegment
   apply IsFirstIntegralFamily.leadingActionCoefficient_eq_leadingEnergyCoefficient
-    hδ hanalytic hfirstIntegral hdense
+    hδ hanalytic hfirstIntegral
   · intro firstAction hfirstAction
     exact (hsegment firstAction hfirstAction).1
   · intro firstAction hfirstAction
@@ -246,14 +245,13 @@ representative.  Local openness supplies a nearby Delaunay preimage of every sec
 theorem IsFirstIntegralFamily.eventually_globalEnergyCoefficient_eq_anchorEnergyCoefficient
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
-    (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet) :
+    (hfirstIntegral : IsFirstIntegralFamily δ F) :
     ∀ᶠ energy in nhds (-2 : ℝ),
       globalEnergyCoefficient F energy =
         leadingEnergyCoefficient F delaunayAnchorFirstAction energy := by
   have hleading :=
     IsFirstIntegralFamily.eventually_leadingActionCoefficient_eq_anchorEnergyCoefficient
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
   have hactionMap : AnalyticAt ℝ
       (fun parameters : DelaunayAnchorParameters ↦ parameters.1)
       delaunayAnchorParameters :=
@@ -318,18 +316,17 @@ theorem IsFirstIntegralFamily.eventually_globalEnergyCoefficient_eq_anchorEnergy
   rw [← hamiltonian_zero_delaunayAnchorChart haction, hchart,
     hamiltonian_zero_globalEnergySection]
 
-/-- Density of the classical Poincaré set proves factorization on a genuine phase-space
-neighborhood of the rational anchor. -/
-theorem localZerothCoefficientFactorizationAtAnchor_of_densePoincareSet
-    (hdense : HasDenseClassicalPoincareSet) :
+/-- The collision-band obstruction proves factorization on a genuine phase-space neighborhood
+of the rational anchor. -/
+theorem localZerothCoefficientFactorizationAtAnchor_of_collisionBand :
     LocalZerothCoefficientFactorizationAtAnchor := by
   intro δ F hδ hanalytic hfirstIntegral
   have hleading :=
     IsFirstIntegralFamily.eventually_leadingActionCoefficient_eq_anchorEnergyCoefficient
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
   have hglobal :=
     IsFirstIntegralFamily.eventually_globalEnergyCoefficient_eq_anchorEnergyCoefficient
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
   have hactionMap : AnalyticAt ℝ
       (fun parameters : DelaunayAnchorParameters ↦ parameters.1)
       delaunayAnchorParameters :=
@@ -394,23 +391,36 @@ theorem localZerothCoefficientFactorizationAtAnchor_of_densePoincareSet
   rw [← map_delaunayAnchorChart_nhds]
   exact hparameterEquality
 
-/-- The classical dense resonant set now supplies the complete global zeroth-coefficient
+/-- The collision-band obstruction supplies the complete global zeroth-coefficient
 factorization. -/
-theorem globalZerothCoefficientFactorization_of_densePoincareSet
-    (hdense : HasDenseClassicalPoincareSet) :
+theorem globalZerothCoefficientFactorization_of_collisionBand :
     GlobalZerothCoefficientFactorization :=
   localZerothCoefficientFactorizationAtAnchor_iff_global.mp
-    (localZerothCoefficientFactorizationAtAnchor_of_densePoincareSet hdense)
+    localZerothCoefficientFactorizationAtAnchor_of_collisionBand
 
-/-- Conditional final form: the exact challenge follows from the sole remaining classical
-celestial-mechanics input, density of the Poincaré set. -/
-theorem nonintegrability_of_denseClassicalPoincareSet
-    (hdense : HasDenseClassicalPoincareSet) :
+/-- Backwards-compatible conditional form; the collision-band calculation now proves the
+factorization without assuming the full Poincaré set dense. -/
+theorem globalZerothCoefficientFactorization_of_densePoincareSet
+    (_hdense : HasDenseClassicalPoincareSet) :
+    GlobalZerothCoefficientFactorization :=
+  globalZerothCoefficientFactorization_of_collisionBand
+
+/-- The proved collision-band calculation supplies the exact global nonintegrability theorem. -/
+theorem nonintegrability_of_collisionBand :
     ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
       IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
         IsIndependentSomewhere δ F :=
   nonintegrability_of_globalZerothCoefficientFactorization
-    (globalZerothCoefficientFactorization_of_densePoincareSet hdense)
+    globalZerothCoefficientFactorization_of_collisionBand
+
+/-- Conditional final form: the exact challenge follows from the sole remaining classical
+celestial-mechanics input, density of the Poincaré set. -/
+theorem nonintegrability_of_denseClassicalPoincareSet
+    (_hdense : HasDenseClassicalPoincareSet) :
+    ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
+      IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
+        IsIndependentSomewhere δ F :=
+  nonintegrability_of_collisionBand
 
 /-- The exact challenge follows from the reduced analytic nonidentity form of Poincaré's
 disturbing-function calculation. -/

@@ -5,6 +5,7 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.LeadingObstruction
+import LeanPool.PoincareThreeBody.CollisionBandAnalyticContinuation
 import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
@@ -19,7 +20,6 @@ interior elliptic region.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- The Delaunay action on the Kepler energy leaf `E` with first action `L`. -/
 noncomputable def energyLeafAction (energy firstAction : ℝ) : ActionSpace :=
@@ -71,7 +71,6 @@ theorem IsFirstIntegralFamily.hasDerivAt_leadingActionCoefficient_energyLeaf_zer
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
     (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet)
     {energy firstAction : ℝ}
     (haction : energyLeafAction energy firstAction ∈ ProgradeEllipticActions)
     (hapoapsis :
@@ -93,8 +92,8 @@ theorem IsFirstIntegralFamily.hasDerivAt_leadingActionCoefficient_energyLeaf_zer
   apply dot_energyLeafTangent_eq_zero_of_wedge_frequency_eq_zero
   change wedge (delaunayFrequency (action 0))
     (leadingActionDifferential F action) = 0
-  exact IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_poincareSet
-    hδ hanalytic hfirstIntegral hdense haction hapoapsis
+  exact IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_collisionBand_global
+    hδ hanalytic hfirstIntegral haction hapoapsis
 
 /-- The leading coefficient is constant between two actions on the same Kepler energy leaf,
 provided the whole intervening leaf segment stays in the interior collision-free elliptic chart. -/
@@ -102,7 +101,6 @@ theorem IsFirstIntegralFamily.leadingActionCoefficient_eq_of_same_energyLeaf
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
     (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet)
     {energy firstAction₁ firstAction₂ : ℝ}
     (haction : ∀ firstAction ∈ Set.uIcc firstAction₁ firstAction₂,
       energyLeafAction energy firstAction ∈ ProgradeEllipticActions)
@@ -117,14 +115,14 @@ theorem IsFirstIntegralFamily.leadingActionCoefficient_eq_of_same_energyLeaf
       DifferentiableAt ℝ observable firstAction := by
     intro firstAction hfirstAction
     exact (IsFirstIntegralFamily.hasDerivAt_leadingActionCoefficient_energyLeaf_zero
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
       (haction firstAction hfirstAction) (hapoapsis firstAction hfirstAction)).differentiableAt
   have hfderivZero : ∀ firstAction ∈ Set.uIcc firstAction₁ firstAction₂,
       fderiv ℝ observable firstAction = 0 := by
     intro firstAction hfirstAction
     have hderivative :=
       (IsFirstIntegralFamily.hasDerivAt_leadingActionCoefficient_energyLeaf_zero
-      hδ hanalytic hfirstIntegral hdense
+      hδ hanalytic hfirstIntegral
       (haction firstAction hfirstAction)
       (hapoapsis firstAction hfirstAction)).hasFDerivAt.fderiv
     change fderiv ℝ
@@ -200,7 +198,6 @@ theorem IsFirstIntegralFamily.leadingActionCoefficient_eq_leadingEnergyCoefficie
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
     (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hdense : HasDenseClassicalPoincareSet)
     {action : ActionSpace} {referenceFirstAction : ℝ}
     (haction : ∀ firstAction ∈ Set.uIcc (action 0) referenceFirstAction,
       energyLeafAction (delaunayHamiltonian action) firstAction ∈
@@ -214,7 +211,7 @@ theorem IsFirstIntegralFamily.leadingActionCoefficient_eq_leadingEnergyCoefficie
         (delaunayHamiltonian action) := by
   have hconstant :=
     IsFirstIntegralFamily.leadingActionCoefficient_eq_of_same_energyLeaf
-      hδ hanalytic hfirstIntegral hdense haction hapoapsis
+      hδ hanalytic hfirstIntegral haction hapoapsis
   rw [energyLeafAction_delaunayHamiltonian] at hconstant
   exact hconstant
 

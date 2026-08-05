@@ -18,7 +18,7 @@ the physical Delaunay action map.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody MeasureTheory Set
+open MeasureTheory Set
 open scoped Interval
 
 /-- The perturbation's two Poisson brackets with the physical actions along a resonant ellipse. -/

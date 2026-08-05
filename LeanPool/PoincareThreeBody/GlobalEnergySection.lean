@@ -19,7 +19,6 @@ mass-zero coefficient of any jointly analytic family.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- A small positive radius chosen so that the remaining kinetic radicand is positive for every
 real energy. -/
@@ -202,8 +201,9 @@ theorem globalEnergySection_neg_two_eq_liftedDelaunayPhasePoint :
   rw [hanomaly]
   funext coordinate
   fin_cases coordinate <;>
-    simp [positionInRotatingFrame, inertialEllipsePosition,
-      inertialEllipseVelocity]
+    simp only [positionInRotatingFrame, inertialEllipsePosition,
+      inertialEllipseVelocity, Nat.succ_eq_add_one, Nat.reduceAdd, one_div,
+      Fin.reduceFinMk, Matrix.cons_val, Fin.isValue, inv_pow, div_inv_eq_mul, one_mul]
   all_goals norm_num
   rw [show Real.sqrt 4 = 2 by
     rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]]

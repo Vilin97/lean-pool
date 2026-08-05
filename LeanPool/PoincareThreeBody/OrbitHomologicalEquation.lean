@@ -18,7 +18,7 @@ period vanishes.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody MeasureTheory Set
+open MeasureTheory Set
 open scoped Interval
 
 /-- The first mass coefficient of a candidate integral, restricted to a resonant Kepler orbit. -/

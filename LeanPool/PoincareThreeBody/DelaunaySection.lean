@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.DelaunayActions
 import LeanPool.PoincareThreeBody.DelaunayFlow
+import Mathlib.Analysis.Calculus.FDeriv.Analytic
 
 /-!
 # An analytic periapsis section of the planar Delaunay action map
@@ -19,7 +20,6 @@ integral.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Eccentricity reconstructed from prograde planar actions `(L,G)`. -/
 noncomputable def eccentricityFromActions (action : ActionSpace) : ℝ :=
@@ -573,6 +573,23 @@ theorem IsJointlyAnalytic.continuousAt_leadingActionDifferential
   fin_cases coordinate
   · exact continuousAt_clm_apply.mp hderivative (actionCoordinateVector 0)
   · exact continuousAt_clm_apply.mp hderivative (actionCoordinateVector 1)
+
+/-- The represented leading differential is itself analytic on the interior action region. -/
+theorem IsJointlyAnalytic.analyticAt_leadingActionDifferential
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} (hδ : 0 < δ)
+    (hanalytic : IsJointlyAnalytic δ F)
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (hapoapsis : action 0 ^ 2 * (1 + eccentricityFromActions action) < 1) :
+    AnalyticAt ℝ (leadingActionDifferential F) action := by
+  have hderivative := (IsJointlyAnalytic.analyticAt_leadingActionCoefficient
+    hδ hanalytic haction hapoapsis).fderiv
+  rw [analyticAt_pi_iff]
+  intro coordinate
+  fin_cases coordinate
+  · exact ((ContinuousLinearMap.apply ℝ ℝ (actionCoordinateVector 0)).analyticAt _).comp
+      hderivative
+  · exact ((ContinuousLinearMap.apply ℝ ℝ (actionCoordinateVector 1)).analyticAt _).comp
+      hderivative
 
 /-- The action pair `(L, L sqrt(1-e²))` along a fixed-eccentricity family. -/
 noncomputable def fixedEccentricityAction

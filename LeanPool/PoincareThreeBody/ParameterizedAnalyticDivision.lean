@@ -19,10 +19,10 @@ coordinate to integration of the mass partial derivative along `0 ≤ t ≤ 1`.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 open TopologicalSpace
 open scoped Interval
 
+/-- Product of the perturbing mass parameter and the phase space. -/
 abbrev ParameterPhase := ℝ × PhaseSpace
 
 /-- Scale the mass coordinate while leaving every phase coordinate fixed. -/
@@ -123,9 +123,11 @@ noncomputable def massPartialTerm
     massPartialTerm p x n t = massPartialSeries p t n (fun _ ↦ x) :=
   rfl
 
+/-- The unoriented unit interval, bundled as a compact set. -/
 def unitIntervalCompact : Compacts ℝ :=
   ⟨Set.uIcc (0 : ℝ) 1, isCompact_uIcc⟩
 
+/-- A mass-partial power-series coefficient restricted to the compact unit interval. -/
 noncomputable def massPartialTermUnit
     (p : FormalMultilinearSeries ℝ ParameterPhase ℝ)
     (x : ParameterPhase) (n : ℕ) : C(unitIntervalCompact, ℝ) :=

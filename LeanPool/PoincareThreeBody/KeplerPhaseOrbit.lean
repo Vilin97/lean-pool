@@ -19,7 +19,6 @@ four-dimensional phase space.
 
 namespace LeanPool.PoincareThreeBody
 
-open Challenge.PoincareThreeBody
 
 /-- Inertial Cartesian velocity of the eccentric-anomaly ellipse when the mean anomaly advances
 at rate `meanMotion`. -/
