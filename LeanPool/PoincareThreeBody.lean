@@ -12,6 +12,7 @@ import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
 import LeanPool.PoincareThreeBody.KeplerOrbit
+import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
