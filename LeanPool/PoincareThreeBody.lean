@@ -9,6 +9,7 @@ import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DelaunayChart
+import LeanPool.PoincareThreeBody.DelaunayFlow
 import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
