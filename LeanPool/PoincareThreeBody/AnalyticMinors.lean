@@ -30,6 +30,27 @@ noncomputable def massDifferentialMinor
   phaseCovectorMinor (fderiv ℝ (hamiltonian mass) state)
     (fderiv ℝ (F mass) state) i j
 
+/-- Coordinate-minor form of the physical leading obstruction, suitable for analytic
+continuation. -/
+theorem IsFirstIntegralFamily.mass_zero_differentialMinor_eq_zero_on_liftedEllipse
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F)
+    (hdense : HasDenseClassicalPoincareSet)
+    {firstAction eccentricity meanAnomaly periapsisAngle : ℝ}
+    (hfirstAction : 0 < firstAction)
+    (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : firstAction ^ 2 * (1 + eccentricity) < 1)
+    (i j : Fin 4) :
+    massDifferentialMinor F i j 0
+      (liftedDelaunayPhasePoint
+        firstAction eccentricity meanAnomaly periapsisAngle) = 0 := by
+  unfold massDifferentialMinor
+  apply phaseCovectorMinor_eq_zero_of_not_linearIndependent
+    (IsFirstIntegralFamily.mass_zero_differentials_dependent_on_liftedEllipse
+      hδ hanalytic hfirstIntegral hdense hfirstAction heccentricity
+      heccentricityOne hapoapsis)
+
 /-- The same phase-coordinate minor, expressed using the joint mass/phase differentials.  This
 form is analytic on the full parameter domain, so the several-variable identity principle can
 propagate a local Poincaré obstruction between different phase points as well as different
@@ -93,6 +114,60 @@ theorem IsJointlyAnalytic.analyticOnNhd_jointDifferentialMinor
         hhamiltonianDerivative
   exact ((hhamiltonian i).mul (hcandidate j)).sub
     ((hhamiltonian j).mul (hcandidate i))
+
+/-- At mass zero, every phase differential minor is analytic on the full collision-free phase
+domain. -/
+theorem IsJointlyAnalytic.analyticOnNhd_massZeroDifferentialMinor
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F) (i j : Fin 4) :
+    AnalyticOnNhd ℝ (fun state ↦ massDifferentialMinor F i j 0 state)
+      massZeroCollisionFree := by
+  intro state hcollision
+  have hdomain : (0, state) ∈ parameterDomain δ :=
+    ⟨by simpa using hδ, hcollision⟩
+  have hembedding : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦ ((0 : ℝ), candidate)) state :=
+    analyticAt_const.prod analyticAt_id
+  have hjoint : AnalyticAt ℝ
+      (fun candidate ↦ jointDifferentialMinor F i j ((0 : ℝ), candidate)) state :=
+    ((IsJointlyAnalytic.analyticOnNhd_jointDifferentialMinor hanalytic i j)
+      (0, state) hdomain).comp
+      (f := fun candidate : PhaseSpace ↦ ((0 : ℝ), candidate)) hembedding
+  have hfirstCollision : ∀ᶠ candidate in nhds state,
+      firstPrimaryDistanceSq 0 candidate ≠ 0 := by
+    have hcontinuous : Continuous (firstPrimaryDistanceSq 0) := by
+      unfold firstPrimaryDistanceSq
+      fun_prop
+    exact hcontinuous.continuousAt.eventually_ne hcollision.1
+  have hsecondCollision : ∀ᶠ candidate in nhds state,
+      secondPrimaryDistanceSq 0 candidate ≠ 0 := by
+    have hcontinuous : Continuous (secondPrimaryDistanceSq 0) := by
+      unfold secondPrimaryDistanceSq
+      fun_prop
+    exact hcontinuous.continuousAt.eventually_ne hcollision.2
+  have heq :
+      (fun candidate ↦ jointDifferentialMinor F i j ((0 : ℝ), candidate)) =ᶠ[nhds state]
+        fun candidate ↦ massDifferentialMinor F i j 0 candidate := by
+    filter_upwards [hfirstCollision, hsecondCollision] with candidate hfirst hsecond
+    exact jointDifferentialMinor_eq_massDifferentialMinor hanalytic
+      ⟨by simpa using hδ, hfirst, hsecond⟩ i j
+  exact hjoint.congr heq
+
+/-- A mass-zero minor that vanishes near one collision-free phase point vanishes on the entire
+connected mass-zero phase domain. -/
+theorem IsJointlyAnalytic.massZeroDifferentialMinor_eq_zero
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    {base : PhaseSpace} (hbase : base ∈ massZeroCollisionFree)
+    (i j : Fin 4)
+    (hlocal : ∀ᶠ state in nhds base,
+      massDifferentialMinor F i j 0 state = 0) :
+    Set.EqOn (fun state ↦ massDifferentialMinor F i j 0 state) 0
+      massZeroCollisionFree := by
+  have hminorAnalytic :=
+    IsJointlyAnalytic.analyticOnNhd_massZeroDifferentialMinor hδ hanalytic i j
+  exact hminorAnalytic.eqOn_of_preconnected_of_eventuallyEq
+    analyticOnNhd_const isPreconnected_massZeroCollisionFree hbase hlocal
 
 /-- A joint minor which vanishes near one point vanishes throughout a connected parameter
 domain.  Unlike continuation along a fixed-state mass fiber, this permits paths which move around

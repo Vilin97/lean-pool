@@ -142,4 +142,86 @@ theorem isPreconnected_parameterDomain {δ : ℝ} (hδ : 0 < δ) :
   exact (parameterCoordinateHomeomorph.isPathConnected_preimage.mpr
     (isPathConnected_straightenedParameterDomain hδ)).isConnected.isPreconnected
 
+/-- Split a phase point into its position and momentum planes. -/
+def phaseCoordinateEquiv : PhaseSpace ≃ (Plane × Plane) where
+  toFun state := (![state 0, state 1], ![state 2, state 3])
+  invFun coordinates :=
+    ![coordinates.1 0, coordinates.1 1, coordinates.2 0, coordinates.2 1]
+  left_inv state := by
+    funext i
+    fin_cases i <;> simp
+  right_inv coordinates := by
+    apply Prod.ext <;> funext i <;> fin_cases i <;> simp
+
+/-- Position/momentum splitting as a homeomorphism. -/
+noncomputable def phaseCoordinateHomeomorph : PhaseSpace ≃ₜ (Plane × Plane) :=
+  Homeomorph.mk phaseCoordinateEquiv (by fun_prop) (by fun_prop)
+
+/-- The mass-zero phase domain, excluding both fixed primary positions. -/
+def massZeroCollisionFree : Set PhaseSpace :=
+  {state | (0, state) ∈ collisionFree}
+
+/-- The mass-zero collision-free phase domain is a twice-punctured position plane times the
+unrestricted momentum plane. -/
+lemma phaseCoordinateHomeomorph_preimage_primaryConfigurations :
+    phaseCoordinateHomeomorph ⁻¹' (primaryConfigurationsᶜ ×ˢ Set.univ) =
+      massZeroCollisionFree := by
+  ext state
+  dsimp [phaseCoordinateHomeomorph, phaseCoordinateEquiv, massZeroCollisionFree,
+    collisionFree]
+  simp only [Set.mem_preimage, Set.mem_prod, Set.mem_compl_iff, Set.mem_univ,
+    and_true]
+  change ((![state 0, state 1] : Plane) ∉ primaryConfigurations) ↔
+    firstPrimaryDistanceSq 0 state ≠ 0 ∧ secondPrimaryDistanceSq 0 state ≠ 0
+  constructor
+  · intro hposition
+    constructor
+    · intro hfirst
+      apply hposition
+      right
+      funext i
+      fin_cases i
+      · dsimp [firstPrimaryDistanceSq] at hfirst ⊢
+        nlinarith [sq_nonneg (state 1)]
+      · dsimp [firstPrimaryDistanceSq] at hfirst ⊢
+        nlinarith [sq_nonneg (state 0 - 1)]
+    · intro hsecond
+      apply hposition
+      left
+      funext i
+      fin_cases i
+      · dsimp [secondPrimaryDistanceSq] at hsecond ⊢
+        nlinarith [sq_nonneg (state 1)]
+      · dsimp [secondPrimaryDistanceSq] at hsecond ⊢
+        nlinarith [sq_nonneg (state 0)]
+  · rintro ⟨hfirst, hsecond⟩ hposition
+    rcases hposition with hzero | hone
+    · apply hsecond
+      have hx : state 0 = 0 := by
+        have := congrFun hzero 0
+        simpa using this
+      have hy : state 1 = 0 := by
+        have := congrFun hzero 1
+        simpa using this
+      simp [secondPrimaryDistanceSq, hx, hy]
+    · apply hfirst
+      have hx : state 0 = 1 := by
+        have := congrFun hone 0
+        simpa using this
+      have hy : state 1 = 0 := by
+        have := congrFun hone 1
+        simpa using this
+      simp [firstPrimaryDistanceSq, hx, hy]
+
+/-- The full mass-zero collision-free phase domain is path-connected. -/
+theorem isPathConnected_massZeroCollisionFree :
+    IsPathConnected massZeroCollisionFree := by
+  rw [← phaseCoordinateHomeomorph_preimage_primaryConfigurations]
+  apply phaseCoordinateHomeomorph.isPathConnected_preimage.mpr
+  exact isPathConnected_primaryConfigurations_compl.prod isPathConnected_univ
+
+theorem isPreconnected_massZeroCollisionFree :
+    IsPreconnected massZeroCollisionFree :=
+  isPathConnected_massZeroCollisionFree.isConnected.isPreconnected
+
 end LeanPool.PoincareThreeBody

@@ -123,6 +123,39 @@ theorem not_linearIndependent_phaseCovectors_of_minors_eq_zero
       simp only [smul_apply, smul_eq_mul]
     exact not_linearIndependent_pair_of_eq_smul hdependent
 
+/-- One nonzero coordinate minor certifies linear independence of a pair of covectors. -/
+theorem linearIndependent_phaseCovectors_of_minor_ne_zero
+    {first second : PhaseSpace →L[ℝ] ℝ} {i j : Fin 4}
+    (hminor : phaseCovectorMinor first second i j ≠ 0) :
+    LinearIndependent ℝ ![first, second] := by
+  rw [LinearIndependent.pair_iffₛ]
+  intro s t s' t' hequality
+  have hi := congrArg (fun covector : PhaseSpace →L[ℝ] ℝ ↦
+    covector (coordinateVector i)) hequality
+  have hj := congrArg (fun covector : PhaseSpace →L[ℝ] ℝ ↦
+    covector (coordinateVector j)) hequality
+  simp only [add_apply, smul_apply, smul_eq_mul] at hi hj
+  have hs : (s - s') * phaseCovectorMinor first second i j = 0 := by
+    unfold phaseCovectorMinor
+    linear_combination (second (coordinateVector j)) * hi -
+      (second (coordinateVector i)) * hj
+  have ht : (t - t') * phaseCovectorMinor first second i j = 0 := by
+    unfold phaseCovectorMinor
+    linear_combination -(first (coordinateVector j)) * hi +
+      (first (coordinateVector i)) * hj
+  exact ⟨sub_eq_zero.mp ((mul_eq_zero.mp hs).resolve_right hminor),
+    sub_eq_zero.mp ((mul_eq_zero.mp ht).resolve_right hminor)⟩
+
+/-- For a pair of concrete phase covectors, dependence is equivalent to vanishing of all
+coordinate minors. -/
+theorem phaseCovectorMinor_eq_zero_of_not_linearIndependent
+    {first second : PhaseSpace →L[ℝ] ℝ}
+    (hdependent : ¬LinearIndependent ℝ ![first, second]) :
+    ∀ i j : Fin 4, phaseCovectorMinor first second i j = 0 := by
+  intro i j
+  by_contra hminor
+  exact hdependent (linearIndependent_phaseCovectors_of_minor_ne_zero hminor)
+
 /-- Coordinate-minor formulation for differentials of two observables. -/
 theorem not_linearIndependent_fderiv_of_minors_eq_zero
     {first second : PhaseSpace → ℝ} {state : PhaseSpace}
