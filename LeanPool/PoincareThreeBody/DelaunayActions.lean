@@ -20,6 +20,20 @@ namespace LeanPool.PoincareThreeBody
 
 open Challenge.PoincareThreeBody
 
+/-- A frequency vector regarded as the corresponding Euclidean action covector. -/
+noncomputable def actionCovector (vector : ActionSpace) : ActionSpace →L[ℝ] ℝ :=
+  ((ContinuousLinearMap.proj 0 : ActionSpace →L[ℝ] ℝ).smulRight (vector 0)) +
+    ((ContinuousLinearMap.proj 1 : ActionSpace →L[ℝ] ℝ).smulRight (vector 1))
+
+lemma actionCovector_apply (vector direction : ActionSpace) :
+    actionCovector vector direction = dot vector direction := by
+  rw [dot_eq]
+  simp [actionCovector, mul_comm]
+
+/-- Coordinate tangent vectors in the two-dimensional action space. -/
+def actionCoordinateVector (coordinate : Fin 2) : ActionSpace :=
+  fun index ↦ if index = coordinate then 1 else 0
+
 /-- Inertial Kepler energy written in rotating Cartesian canonical variables. -/
 noncomputable def cartesianKeplerEnergy (state : PhaseSpace) : ℝ :=
   ((state 2) ^ 2 + (state 3) ^ 2) / 2 -
@@ -36,6 +50,71 @@ def cartesianAngularAction (state : PhaseSpace) : ℝ :=
 /-- Both Cartesian Delaunay actions, ordered as `(L, G)`. -/
 noncomputable def cartesianDelaunayActions (state : PhaseSpace) : ActionSpace :=
   ![cartesianFirstAction state, cartesianAngularAction state]
+
+/-- The inertial Kepler energy is analytic away from the central collision. -/
+theorem analyticAt_cartesianKeplerEnergy
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0) :
+    AnalyticAt ℝ cartesianKeplerEnergy state := by
+  have hcoordinate : ∀ coordinate : Fin 4,
+      AnalyticAt ℝ (fun candidate : PhaseSpace ↦ candidate coordinate) state :=
+    fun coordinate ↦
+      (ContinuousLinearMap.proj coordinate : PhaseSpace →L[ℝ] ℝ).analyticAt state
+  have hnormSq : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦ candidate 0 ^ 2 + candidate 1 ^ 2) state :=
+    ((hcoordinate 0).pow 2).add ((hcoordinate 1).pow 2)
+  have hnormSqPos : 0 < state 0 ^ 2 + state 1 ^ 2 := by positivity
+  have hinverseRadius : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦
+        1 / Real.sqrt (candidate 0 ^ 2 + candidate 1 ^ 2)) state :=
+    (analyticAt_inv_sqrt hnormSqPos).comp
+      (f := fun candidate : PhaseSpace ↦ candidate 0 ^ 2 + candidate 1 ^ 2) hnormSq
+  have hkinetic : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦
+        ((candidate 2) ^ 2 + (candidate 3) ^ 2) / 2) state := by
+    exact ((((hcoordinate 2).pow 2).add ((hcoordinate 3).pow 2)).const_smul
+      (c := (1 / 2 : ℝ))).congr (by
+        filter_upwards [] with candidate
+        simp [smul_eq_mul]
+        ring)
+  unfold cartesianKeplerEnergy
+  exact hkinetic.sub hinverseRadius
+
+/-- Angular action is an analytic polynomial in Cartesian phase variables. -/
+theorem analyticAt_cartesianAngularAction (state : PhaseSpace) :
+    AnalyticAt ℝ cartesianAngularAction state := by
+  have hcoordinate : ∀ coordinate : Fin 4,
+      AnalyticAt ℝ (fun candidate : PhaseSpace ↦ candidate coordinate) state :=
+    fun coordinate ↦
+      (ContinuousLinearMap.proj coordinate : PhaseSpace →L[ℝ] ℝ).analyticAt state
+  unfold cartesianAngularAction
+  exact ((hcoordinate 0).mul (hcoordinate 3)).sub
+    ((hcoordinate 1).mul (hcoordinate 2))
+
+/-- The reconstructed first action is analytic wherever the central distance is nonzero and the
+inertial Kepler energy is negative. -/
+theorem analyticAt_cartesianFirstAction
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0) :
+    AnalyticAt ℝ cartesianFirstAction state := by
+  have henergyAnalytic := analyticAt_cartesianKeplerEnergy hposition
+  have hargument : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦ -2 * cartesianKeplerEnergy candidate) state :=
+    analyticAt_const.mul henergyAnalytic
+  have hpositive : 0 < -2 * cartesianKeplerEnergy state := by linarith
+  unfold cartesianFirstAction
+  exact (analyticAt_inv_sqrt hpositive).comp
+    (f := fun candidate : PhaseSpace ↦ -2 * cartesianKeplerEnergy candidate) hargument
+
+/-- The Cartesian Delaunay action map is analytic on the negative-energy, noncollision region. -/
+theorem analyticAt_cartesianDelaunayActions
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0) :
+    AnalyticAt ℝ cartesianDelaunayActions state := by
+  rw [analyticAt_pi_iff]
+  intro coordinate
+  fin_cases coordinate
+  · exact analyticAt_cartesianFirstAction hposition henergy
+  · exact analyticAt_cartesianAngularAction state
 
 /-- A common planar rotation preserves the determinant of two vectors. -/
 lemma positionInRotatingFrame_cross
@@ -203,6 +282,121 @@ theorem cartesianDelaunayActions_liftedDelaunayPhasePoint
   · exact cartesianAngularAction_liftedDelaunayPhasePoint hfirstAction.ne'
       heccentricity heccentricityOne
 
+/-- The Cartesian action map is analytic at every nondegenerate lifted elliptic point. -/
+theorem analyticAt_cartesianDelaunayActions_liftedDelaunayPhasePoint
+    {firstAction eccentricity meanAnomaly periapsisAngle : ℝ}
+    (hfirstAction : 0 < firstAction)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
+    AnalyticAt ℝ cartesianDelaunayActions
+      (liftedDelaunayPhasePoint
+        firstAction eccentricity meanAnomaly periapsisAngle) := by
+  let anomaly := liftedDelaunayEccentricAnomaly eccentricity meanAnomaly
+  let state := liftedDelaunayPhasePoint
+    firstAction eccentricity meanAnomaly periapsisAngle
+  have hradius : 0 < eccentricRadius firstAction eccentricity anomaly :=
+    eccentricRadius_pos hfirstAction.ne' heccentricity heccentricityOne
+  have hpositionSq : state 0 ^ 2 + state 1 ^ 2 =
+      eccentricRadius firstAction eccentricity anomaly ^ 2 := by
+    unfold state liftedDelaunayPhasePoint liftedDelaunayPosition
+      positionMomentumPhasePoint
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+    rw [positionInRotatingFrame_sq,
+      inertialEllipsePosition_sq heccentricity heccentricityOne.le]
+  have hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0 := by
+    rw [hpositionSq]
+    positivity
+  have henergyIdentity : cartesianKeplerEnergy state =
+      -1 / (2 * firstAction ^ 2) :=
+    cartesianKeplerEnergy_liftedDelaunayPhasePoint hfirstAction.ne'
+      heccentricity heccentricityOne
+  have henergy : cartesianKeplerEnergy state < 0 := by
+    rw [henergyIdentity]
+    exact div_neg_of_neg_of_pos (by norm_num)
+      (mul_pos (by norm_num) (sq_pos_of_pos hfirstAction))
+  exact analyticAt_cartesianDelaunayActions hposition henergy
+
+/-- The Delaunay Hamiltonian is analytic whenever its first action is nonzero. -/
+theorem analyticAt_delaunayHamiltonian
+    {action : ActionSpace} (hfirstAction : action 0 ≠ 0) :
+    AnalyticAt ℝ delaunayHamiltonian action := by
+  have hcoordinate : ∀ coordinate : Fin 2,
+      AnalyticAt ℝ (fun candidate : ActionSpace ↦ candidate coordinate) action :=
+    fun coordinate ↦
+      (ContinuousLinearMap.proj coordinate : ActionSpace →L[ℝ] ℝ).analyticAt action
+  have hdenominator : AnalyticAt ℝ
+      (fun candidate : ActionSpace ↦ 2 * candidate 0 ^ 2) action :=
+    analyticAt_const.mul ((hcoordinate 0).pow 2)
+  have hdenominatorNe : 2 * action 0 ^ 2 ≠ 0 := by positivity
+  unfold delaunayHamiltonian
+  exact (analyticAt_const.div hdenominator hdenominatorNe).sub (hcoordinate 1)
+
+/-- The Fréchet differential of the Delaunay Hamiltonian is the covector represented by its
+frequency vector. -/
+theorem fderiv_delaunayHamiltonian_eq_actionCovector
+    {action : ActionSpace} (hfirstAction : action 0 ≠ 0) :
+    fderiv ℝ delaunayHamiltonian action =
+      actionCovector (delaunayFrequency (action 0)) := by
+  have hdifferentiable : DifferentiableAt ℝ delaunayHamiltonian action :=
+    (analyticAt_delaunayHamiltonian hfirstAction).differentiableAt
+  have hlineZero : HasDerivAt
+      (fun value : ℝ ↦ ![value, action 1]) (actionCoordinateVector 0) (action 0) := by
+    rw [hasDerivAt_pi]
+    intro coordinate
+    fin_cases coordinate
+    · simpa [actionCoordinateVector] using hasDerivAt_id' (action 0)
+    · simpa [actionCoordinateVector] using hasDerivAt_const (action 0) (action 1)
+  have hlineOne : HasDerivAt
+      (fun value : ℝ ↦ ![action 0, value]) (actionCoordinateVector 1) (action 1) := by
+    rw [hasDerivAt_pi]
+    intro coordinate
+    fin_cases coordinate
+    · simpa [actionCoordinateVector] using hasDerivAt_const (action 1) (action 0)
+    · simpa [actionCoordinateVector] using hasDerivAt_id' (action 1)
+  have hvectorZero : ![action 0, action 1] = action := by
+    funext coordinate
+    fin_cases coordinate <;> simp
+  have houterZero : HasFDerivAt delaunayHamiltonian
+      (fderiv ℝ delaunayHamiltonian action) ![action 0, action 1] := by
+    rw [hvectorZero]
+    exact hdifferentiable.hasFDerivAt
+  have hzeroChain := houterZero.comp_hasDerivAt (action 0) hlineZero
+  have honeChain := houterZero.comp_hasDerivAt (action 1) hlineOne
+  have hzero : fderiv ℝ delaunayHamiltonian action (actionCoordinateVector 0) =
+      1 / action 0 ^ 3 := by
+    have hchainDeriv := hzeroChain.deriv
+    have hexplicit := deriv_delaunayHamiltonian_firstAction hfirstAction (action 1)
+    have hfunction :
+        (delaunayHamiltonian ∘ fun value : ℝ ↦ ![value, action 1]) =
+          fun value ↦ -1 / (2 * value ^ 2) - action 1 := by
+      funext value
+      rfl
+    rw [hfunction] at hchainDeriv
+    rw [hexplicit] at hchainDeriv
+    exact hchainDeriv.symm
+  have hone : fderiv ℝ delaunayHamiltonian action (actionCoordinateVector 1) = -1 := by
+    have hchainDeriv := honeChain.deriv
+    have hexplicit := deriv_delaunayHamiltonian_secondAction (action 0) (action 1)
+    have hfunction :
+        (delaunayHamiltonian ∘ fun value : ℝ ↦ ![action 0, value]) =
+          fun value ↦ -1 / (2 * action 0 ^ 2) - value := by
+      funext value
+      rfl
+    rw [hfunction] at hchainDeriv
+    rw [hexplicit] at hchainDeriv
+    exact hchainDeriv.symm
+  apply ContinuousLinearMap.ext
+  intro direction
+  have hdecompose : direction =
+      direction 0 • actionCoordinateVector 0 +
+        direction 1 • actionCoordinateVector 1 := by
+    funext coordinate
+    fin_cases coordinate <;> simp [actionCoordinateVector]
+  rw [hdecompose, map_add, map_smul, map_smul, hzero, hone]
+  simp only [actionCovector_apply, dot_eq, delaunayFrequency,
+    Matrix.cons_val_zero, Matrix.cons_val_one, smul_eq_mul]
+  simp [actionCoordinateVector]
+  ring
+
 /-- At every noncentral phase point, the zero-mass rotating Hamiltonian is inertial Kepler energy
 minus angular action. -/
 theorem hamiltonian_zero_eq_cartesianKeplerEnergy_sub_angularAction
@@ -229,6 +423,65 @@ theorem delaunayHamiltonian_cartesianDelaunayActions
   field_simp [hroot.ne']
   ring_nf at hrootSquare ⊢
   nlinarith
+
+/-- The physical and action-coordinate zero-mass Hamiltonians agree on a whole neighborhood of
+every negative-energy, noncentral phase point. -/
+theorem hamiltonian_zero_eventuallyEq_delaunayHamiltonian_comp_actions
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0) :
+    hamiltonian 0 =ᶠ[nhds state]
+      fun candidate ↦ delaunayHamiltonian (cartesianDelaunayActions candidate) := by
+  have henergyContinuous :=
+    (analyticAt_cartesianKeplerEnergy hposition).continuousAt
+  have heventually : ∀ᶠ candidate in nhds state,
+      cartesianKeplerEnergy candidate < 0 :=
+    henergyContinuous.eventually (Iio_mem_nhds henergy)
+  filter_upwards [heventually] with candidate hcandidate
+  exact (delaunayHamiltonian_cartesianDelaunayActions hcandidate).symm
+
+/-- Differential form of the action-coordinate normal form for the zero-mass Hamiltonian. -/
+theorem fderiv_hamiltonian_zero_eq_delaunay_comp_actions
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0) :
+    fderiv ℝ (hamiltonian 0) state =
+      (fderiv ℝ delaunayHamiltonian (cartesianDelaunayActions state)).comp
+        (fderiv ℝ cartesianDelaunayActions state) := by
+  have hactionFirst : cartesianDelaunayActions state 0 ≠ 0 := by
+    change 1 / Real.sqrt (-2 * cartesianKeplerEnergy state) ≠ 0
+    have hpositive : 0 < -2 * cartesianKeplerEnergy state := by linarith
+    positivity
+  have houter : DifferentiableAt ℝ delaunayHamiltonian
+      (cartesianDelaunayActions state) :=
+    (analyticAt_delaunayHamiltonian hactionFirst).differentiableAt
+  have hinner : DifferentiableAt ℝ cartesianDelaunayActions state :=
+    (analyticAt_cartesianDelaunayActions hposition henergy).differentiableAt
+  calc
+    fderiv ℝ (hamiltonian 0) state =
+        fderiv ℝ
+          (fun candidate ↦ delaunayHamiltonian (cartesianDelaunayActions candidate)) state :=
+      (hamiltonian_zero_eventuallyEq_delaunayHamiltonian_comp_actions
+        hposition henergy).fderiv_eq
+    _ = (fderiv ℝ delaunayHamiltonian (cartesianDelaunayActions state)).comp
+          (fderiv ℝ cartesianDelaunayActions state) := by
+      rw [show (fun candidate ↦
+        delaunayHamiltonian (cartesianDelaunayActions candidate)) =
+          delaunayHamiltonian ∘ cartesianDelaunayActions by rfl]
+      exact fderiv_comp state houter hinner
+
+/-- The physical Hamiltonian differential is the pullback of the Kepler frequency covector by the
+Cartesian action map. -/
+theorem fderiv_hamiltonian_zero_eq_frequencyCovector_comp_actions
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0) :
+    fderiv ℝ (hamiltonian 0) state =
+      (actionCovector (delaunayFrequency (cartesianDelaunayActions state 0))).comp
+        (fderiv ℝ cartesianDelaunayActions state) := by
+  rw [fderiv_hamiltonian_zero_eq_delaunay_comp_actions hposition henergy]
+  have hfirstAction : cartesianDelaunayActions state 0 ≠ 0 := by
+    change 1 / Real.sqrt (-2 * cartesianKeplerEnergy state) ≠ 0
+    have hpositive : 0 < -2 * cartesianKeplerEnergy state := by linarith
+    positivity
+  rw [fderiv_delaunayHamiltonian_eq_actionCovector hfirstAction]
 
 /-- The physical zero-mass Hamiltonian pulls back to the Delaunay Hamiltonian. -/
 theorem hamiltonian_zero_liftedDelaunayPhasePoint
