@@ -167,12 +167,18 @@ challenges:
       real-analytic in the mass parameter and all collision-free phase
       variables on a uniform interval about μ = 0, to Poisson-commute with the
       Hamiltonian throughout that domain, and to have phase differential
-      independent of the Hamiltonian differential somewhere. Poincaré's
+      independent of the Hamiltonian differential somewhere. This is the
+      fixed-coordinate, global uniform-domain special case of the planar part
+      of Yagasaki's Theorem 1.1 (p. 2). His precise local obstruction near
+      resonant unperturbed elliptic orbits is Theorem 3.1 (p. 8). A family on
+      the challenge's global domain restricts to those local neighborhoods;
+      connected-domain analyticity turns independence somewhere into
+      nontrivial independence on every such neighborhood. Poincaré's
       perturbative proof expands the integral in μ, changes to Delaunay
       action-angle variables at the Kepler limit, and uses a dense set of
-      effective resonances in the first disturbing function. The estimate
-      includes the analytic-family, Fourier, Kepler/Delaunay, and explicit
-      disturbing-function infrastructure currently absent from Mathlib.
+      effective resonances in the first disturbing function. The estimate is
+      based on the completed formalization, including the analytic-family,
+      Fourier, Kepler/Delaunay, and disturbing-function infrastructure.
     branch: dynamical systems
     entry_module: Challenge.PoincareThreeBody
     proposers:
@@ -187,7 +193,7 @@ challenges:
     license: Apache-2.0
     provenance: AI
     status: open
-    estimated_lines: 100000
+    estimated_lines: 17000
     statements:
       - declaration: Challenge.PoincareThreeBody.nonintegrability
         informal: >-
