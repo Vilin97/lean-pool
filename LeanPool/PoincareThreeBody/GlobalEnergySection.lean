@@ -187,6 +187,29 @@ theorem globalEnergySection_neg_two_action_apoapsis :
   field_simp [hsqrtPos.ne']
   nlinarith
 
+/-- The rational anchor is the periapsis point of the explicit interior Delaunay ellipse with
+`L = 1 / √3`, eccentricity `1/2`, and apsidal angle `π/2`. -/
+theorem globalEnergySection_neg_two_eq_liftedDelaunayPhasePoint :
+    globalEnergySection (-2) =
+      liftedDelaunayPhasePoint (1 / Real.sqrt 3) (1 / 2) 0 (Real.pi / 2) := by
+  have hsqrtPos : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  have hsqrtSq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have hanomaly : eccentricAnomaly (1 / 2 : ℝ) 0 = 0 :=
+    eccentricAnomaly_zero (by norm_num) (by norm_num)
+  rw [globalEnergySection_neg_two]
+  unfold liftedDelaunayPhasePoint liftedDelaunayPosition liftedDelaunayMomentum
+    liftedDelaunayEccentricAnomaly positionMomentumPhasePoint
+  rw [hanomaly]
+  funext coordinate
+  fin_cases coordinate <;>
+    simp [positionInRotatingFrame, inertialEllipsePosition,
+      inertialEllipseVelocity]
+  all_goals norm_num
+  rw [show Real.sqrt 4 = 2 by
+    rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]]
+  field_simp [hsqrtPos.ne']
+  nlinarith
+
 theorem analyticAt_globalEnergyRadius (energy : ℝ) :
     AnalyticAt ℝ globalEnergyRadius energy := by
   unfold globalEnergyRadius
@@ -227,6 +250,31 @@ theorem analyticAt_globalEnergySection (energy : ℝ) :
 noncomputable def globalEnergyCoefficient
     (F : ℝ → PhaseSpace → ℝ) (energy : ℝ) : ℝ :=
   F 0 (globalEnergySection energy)
+
+/-- At the rational anchor, the global energy representative agrees with the Delaunay action
+representative used by the classical Poincaré-set obstruction. -/
+theorem IsFirstIntegralFamily.globalEnergyCoefficient_neg_two_eq_leadingActionCoefficient
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F) :
+    globalEnergyCoefficient F (-2) =
+      leadingActionCoefficient F
+        ![1 / Real.sqrt 3,
+          angularActionFromEccentricity (1 / Real.sqrt 3) (1 / 2)] := by
+  have hsqrtPos : 0 < Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  have hsqrtSq : (Real.sqrt 3) ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+  have hfirstAction : 0 < (1 / Real.sqrt 3 : ℝ) := one_div_pos.mpr hsqrtPos
+  have hapoapsis :
+      (1 / Real.sqrt 3 : ℝ) ^ 2 * (1 + (1 / 2 : ℝ)) < 1 := by
+    field_simp [hsqrtPos.ne']
+    nlinarith
+  have hvalue :=
+    IsFirstIntegralFamily.leadingActionCoefficient_eq_liftedDelaunayPhasePoint
+      hδ hanalytic hfirstIntegral hfirstAction (by norm_num) (by norm_num)
+      hapoapsis ((0 : ℝ), Real.pi / 2)
+  unfold globalEnergyCoefficient
+  rw [globalEnergySection_neg_two_eq_liftedDelaunayPhasePoint]
+  exact hvalue.symm
 
 /-- Joint analyticity makes the global energy representative analytic at every real energy. -/
 theorem IsJointlyAnalytic.analyticAt_globalEnergyCoefficient
