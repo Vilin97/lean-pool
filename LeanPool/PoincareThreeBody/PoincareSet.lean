@@ -128,6 +128,47 @@ theorem isOpen_admissibleResonantEccentricitySet (p q : ℕ) :
     ((isOpen_lt continuous_id continuous_const).and
       (isOpen_lt (by fun_prop) continuous_const))
 
+/-- A positive resonance admits an interior eccentric ellipse exactly when its semimajor axis is
+strictly inside the unit primary orbit. -/
+theorem admissibleResonantEccentricitySet_nonempty_iff
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :
+    (admissibleResonantEccentricitySet p q).Nonempty ↔
+      resonantFirstAction p q ^ 2 < 1 := by
+  let semimajorAxis : ℝ := resonantFirstAction p q ^ 2
+  have hsemimajorPositive : 0 < semimajorAxis := by
+    dsimp [semimajorAxis]
+    exact sq_pos_of_pos (resonantFirstAction_pos hp hq)
+  constructor
+  · rintro ⟨eccentricity, heccentricity, _, hapoapsis⟩
+    have hone : 1 < 1 + eccentricity := by linarith
+    have hstrict : semimajorAxis < semimajorAxis * (1 + eccentricity) := by
+      nlinarith
+    exact hstrict.trans hapoapsis
+  · intro hsemimajorOne
+    have hsemimajorOne' : semimajorAxis < 1 := hsemimajorOne
+    let eccentricity : ℝ :=
+      (1 - semimajorAxis) / (2 * (semimajorAxis + 1))
+    have hdenominator : 0 < 2 * (semimajorAxis + 1) := by positivity
+    have heccentricity : 0 < eccentricity := by
+      dsimp [eccentricity]
+      positivity
+    have heccentricityOne : eccentricity < 1 := by
+      dsimp [eccentricity]
+      rw [div_lt_one hdenominator]
+      nlinarith
+    have hapoapsis : semimajorAxis * (1 + eccentricity) < 1 := by
+      dsimp [eccentricity]
+      rw [mul_add]
+      rw [show semimajorAxis * 1 +
+          semimajorAxis * ((1 - semimajorAxis) / (2 * (semimajorAxis + 1))) =
+          (semimajorAxis * (2 * (semimajorAxis + 1)) +
+            semimajorAxis * (1 - semimajorAxis)) /
+              (2 * (semimajorAxis + 1)) by
+        field_simp [hdenominator.ne']]
+      rw [div_lt_iff₀ hdenominator]
+      nlinarith
+    exact ⟨eccentricity, heccentricity, heccentricityOne, hapoapsis⟩
+
 /-- A nonempty admissible eccentricity domain is connected. -/
 theorem isConnected_admissibleResonantEccentricitySet
     {p q : ℕ} (hnonempty : (admissibleResonantEccentricitySet p q).Nonempty) :
