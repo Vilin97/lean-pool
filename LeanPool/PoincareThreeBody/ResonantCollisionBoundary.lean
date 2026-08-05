@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
 
-import LeanPool.PoincareThreeBody.DisturbingFunction
+import LeanPool.PoincareThreeBody.DisturbingParameterAnalytic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
 
@@ -17,6 +17,8 @@ time, and orientation at which the limiting ellipse meets the primary exactly.
 -/
 
 namespace LeanPool.PoincareThreeBody
+
+open Filter Topology
 
 /-- Semimajor axis of the normalized Kepler ellipse at the `(p,q)` resonance. -/
 noncomputable def resonantSemimajorAxis (p q : ℕ) : ℝ :=
@@ -165,5 +167,34 @@ theorem orientedResonantEllipsePosition_collisionBoundary
   fin_cases coordinate <;>
     simp [resonantCollisionEccentricity]
   field_simp [haxisPositive.ne']
+
+/-- The collision-aligned position approaches the unit primary at most linearly in the joint
+eccentricity/time displacement.  This is the local estimate behind the logarithmic blowup of the
+averaged Newtonian singularity. -/
+theorem collisionAlignedPosition_isBigO
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    (haxisHalf : 1 / 2 < resonantSemimajorAxis p q)
+    (haxisOne : resonantSemimajorAxis p q < 1) :
+    (fun parameters : ℝ × ℝ ↦
+      orientedResonantEllipsePosition p q parameters.1
+        (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)])
+      =O[𝓝 (resonantCollisionEccentricity p q, resonantApoapsisTime p q)]
+    (fun parameters : ℝ × ℝ ↦
+      parameters -
+        (resonantCollisionEccentricity p q, resonantApoapsisTime p q)) := by
+  have heccentricity := resonantCollisionEccentricity_pos hp hq haxisOne
+  have heccentricityOne := resonantCollisionEccentricity_lt_one hp hq haxisHalf
+  have hdifferentiable : DifferentiableAt ℝ
+      (fun parameters : ℝ × ℝ ↦
+        orientedResonantEllipsePosition p q parameters.1
+          (resonantCollisionOrientation p q) parameters.2)
+      (resonantCollisionEccentricity p q, resonantApoapsisTime p q) := by
+    rw [differentiableAt_pi]
+    intro coordinate
+    exact (analyticAt_orientedResonantEllipsePosition_eccentricity_time_coordinate
+      p q heccentricity heccentricityOne coordinate).differentiableAt
+  have hbound := hdifferentiable.isBigO_sub
+  rw [orientedResonantEllipsePosition_collisionBoundary hp hq haxisHalf haxisOne] at hbound
+  exact hbound
 
 end LeanPool.PoincareThreeBody
