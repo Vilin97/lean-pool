@@ -310,6 +310,76 @@ theorem intervalIntegrable_resonantDisturbingOrientationDerivative
   exact (analyticAt_resonantDisturbingOrientationDerivative hp hq heccentricity
     heccentricityOne hapoapsis).continuousAt
 
+theorem analyticAt_resonantDisturbingFunction_time
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    AnalyticAt ℝ (resonantDisturbingFunction p q eccentricity orientation) time := by
+  let x : ℝ → ℝ := fun argument ↦
+    orientedResonantEllipsePosition p q eccentricity orientation argument 0
+  let y : ℝ → ℝ := fun argument ↦
+    orientedResonantEllipsePosition p q eccentricity orientation argument 1
+  have hx : AnalyticAt ℝ x time :=
+    analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 0
+  have hy : AnalyticAt ℝ y time :=
+    analyticAt_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 1
+  have horiginSq : AnalyticAt ℝ (fun argument ↦ x argument ^ 2 + y argument ^ 2)
+      time := (hx.pow 2).add (hy.pow 2)
+  have hfirstAction : resonantFirstAction p q ≠ 0 :=
+    (resonantFirstAction_pos hp hq).ne'
+  have hradius := eccentricRadius_pos (anomaly :=
+      resonantEccentricAnomaly p q eccentricity time) hfirstAction heccentricity
+    heccentricityOne
+  have horiginPositive : 0 < x time ^ 2 + y time ^ 2 := by
+    change 0 <
+      (orientedResonantEllipsePosition p q eccentricity orientation time 0) ^ 2 +
+        (orientedResonantEllipsePosition p q eccentricity orientation time 1) ^ 2
+    rw [orientedResonantEllipsePosition_sq heccentricity heccentricityOne.le]
+    exact sq_pos_of_pos hradius
+  have hinverseOrigin : AnalyticAt ℝ
+      (fun argument ↦ 1 / Real.sqrt (x argument ^ 2 + y argument ^ 2)) time := by
+    change AnalyticAt ℝ
+      ((fun value : ℝ ↦ 1 / Real.sqrt value) ∘
+        (fun argument ↦ x argument ^ 2 + y argument ^ 2)) time
+    exact (analyticAt_inv_sqrt horiginPositive).comp
+      (f := fun argument ↦ x argument ^ 2 + y argument ^ 2) horiginSq
+  have hone : AnalyticAt ℝ (fun _ : ℝ ↦ (1 : ℝ)) time := analyticAt_const
+  have hprimarySq : AnalyticAt ℝ
+      (fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2) time :=
+    ((hx.sub hone).pow 2).add (hy.pow 2)
+  have hprimaryNe : (x time - 1) ^ 2 + y time ^ 2 ≠ 0 :=
+    rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one heccentricity
+      heccentricityOne hapoapsis
+  have hprimaryPositive : 0 < (x time - 1) ^ 2 + y time ^ 2 :=
+    lt_of_le_of_ne (by positivity) (Ne.symm hprimaryNe)
+  have hinversePrimary : AnalyticAt ℝ
+      (fun argument ↦ 1 / Real.sqrt ((x argument - 1) ^ 2 + y argument ^ 2)) time := by
+    change AnalyticAt ℝ
+      ((fun value : ℝ ↦ 1 / Real.sqrt value) ∘
+        (fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2)) time
+    exact (analyticAt_inv_sqrt hprimaryPositive).comp
+      (f := fun argument ↦ (x argument - 1) ^ 2 + y argument ^ 2) hprimarySq
+  have hraw := hinverseOrigin.add (hx.mul (hinverseOrigin.pow 3)) |>.sub hinversePrimary
+  apply hraw.congr
+  filter_upwards [] with argument
+  simp [resonantDisturbingFunction, orientedResonantEllipsePhasePoint,
+    positionPhasePoint, firstMassPerturbation, x, y, div_eq_mul_inv]
+
+theorem intervalIntegrable_resonantDisturbingFunction
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity orientation start finish : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    IntervalIntegrable (resonantDisturbingFunction p q eccentricity orientation)
+      volume start finish := by
+  apply Continuous.intervalIntegrable _ start finish
+  rw [continuous_iff_continuousAt]
+  intro time
+  exact (analyticAt_resonantDisturbingFunction_time hp hq heccentricity
+    heccentricityOne hapoapsis).continuousAt
+
 lemma orientedResonantEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
     {p q : ℕ} {eccentricity orientation time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
