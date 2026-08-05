@@ -52,6 +52,13 @@ theorem analyticAt_inv_sqrt {x₀ : ℝ} (hx₀ : 0 < x₀) :
   rw [Real.sqrt_eq_rpow, Real.rpow_neg hx.le]
   simp
 
+/-- The square-root function is analytic at every positive real number. -/
+theorem analyticAt_sqrt_of_pos {x₀ : ℝ} (hx₀ : 0 < x₀) :
+    AnalyticAt ℝ Real.sqrt x₀ := by
+  apply (analyticAt_rpow_of_pos (1 / 2 : ℝ) hx₀).congr
+  filter_upwards [lt_mem_nhds hx₀] with x hx
+  exact (Real.sqrt_eq_rpow x).symm
+
 open Challenge.PoincareThreeBody
 
 lemma mass_analyticAt (z : ℝ × PhaseSpace) : AnalyticAt ℝ (fun w : ℝ × PhaseSpace ↦ w.1) z :=
