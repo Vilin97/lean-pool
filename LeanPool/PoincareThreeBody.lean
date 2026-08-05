@@ -11,8 +11,10 @@ import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
+import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
 import LeanPool.PoincareThreeBody.HomologicalEquation
 import LeanPool.PoincareThreeBody.KeplerOrbit
+import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
