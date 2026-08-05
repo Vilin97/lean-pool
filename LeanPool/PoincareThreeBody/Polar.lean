@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gershon Bialer
 -/
 
+import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.Perturbation
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.FieldSimp
@@ -35,6 +36,39 @@ noncomputable def polarToCartesian (state : PolarState) : PhaseSpace :=
 /-- The rotating Kepler Hamiltonian in canonical polar coordinates. -/
 noncomputable def polarKeplerHamiltonian (state : PolarState) : ℝ :=
   ((state 2) ^ 2 + (state 3) ^ 2 / (state 0) ^ 2) / 2 - 1 / state 0 - state 3
+
+/-- The inertial Kepler energy in canonical polar coordinates. -/
+noncomputable def polarKeplerEnergy (state : PolarState) : ℝ :=
+  ((state 2) ^ 2 + (state 3) ^ 2 / (state 0) ^ 2) / 2 - 1 / state 0
+
+/-- The squared radial momentum prescribed by a Kepler energy
+`-1 / (2 * firstAction²)` and angular momentum `secondAction`. -/
+noncomputable def delaunayRadialMomentumSq
+    (radius firstAction secondAction : ℝ) : ℝ :=
+  2 / radius - 1 / firstAction ^ 2 - secondAction ^ 2 / radius ^ 2
+
+lemma polarKeplerHamiltonian_eq_energy_sub_angularMomentum (state : PolarState) :
+    polarKeplerHamiltonian state = polarKeplerEnergy state - state 3 := by
+  rfl
+
+/-- On a negative Kepler energy shell, the radial momentum satisfies the radicand appearing in
+the Delaunay generating function. -/
+theorem polarKeplerEnergy_eq_delaunay_iff {radius radialMomentum firstAction secondAction : ℝ}
+    (hradius : radius ≠ 0) (hfirstAction : firstAction ≠ 0) :
+    (radialMomentum ^ 2 + secondAction ^ 2 / radius ^ 2) / 2 - 1 / radius =
+        -1 / (2 * firstAction ^ 2) ↔
+      radialMomentum ^ 2 =
+        delaunayRadialMomentumSq radius firstAction secondAction := by
+  unfold delaunayRadialMomentumSq
+  field_simp [hradius, hfirstAction]
+  constructor <;> intro h <;> linarith
+
+/-- The Delaunay Hamiltonian is the inertial Kepler energy minus angular momentum. -/
+lemma delaunayHamiltonian_eq_keplerEnergy_sub_angularMomentum
+    (firstAction secondAction : ℝ) :
+    delaunayHamiltonian ![firstAction, secondAction] =
+      -1 / (2 * firstAction ^ 2) - secondAction := by
+  rfl
 
 lemma polar_position_sq (state : PolarState) :
     (polarToCartesian state 0) ^ 2 + (polarToCartesian state 1) ^ 2 = (state 0) ^ 2 := by
