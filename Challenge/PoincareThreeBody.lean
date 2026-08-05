@@ -17,13 +17,23 @@ Proposed by: Gershon Bialer
 Open declarations: `Challenge.PoincareThreeBody.nonintegrability`
 Tags: dynamical-systems, celestial-mechanics, hamiltonian-systems, nonintegrability
 MSC: 70F07, 37J30, 37J40
-Estimated size: ~100000 lines of Lean
+Estimated size: ~17000 lines of Lean
 
 Informal statement:
 * `Challenge.PoincareThreeBody.nonintegrability` — There is no positive interval about zero on which
   the planar circular restricted three-body Hamiltonian admits a first integral that is jointly
   real-analytic in the mass parameter and all collision-free phase variables and whose phase
   differential is independent of the Hamiltonian differential at some point of that domain.
+-/
+
+/-
+Source correspondence: Yagasaki states the classical planar result as Theorem 1.1 on page 2 of
+arXiv:2111.11031v2. Theorem 3.1 on page 8 gives the paper's precise local meromorphic obstruction
+near resonant unperturbed elliptic orbits. The Lean statement is the fixed-coordinate, global
+uniform-domain special case: a jointly real-analytic family on `parameterDomain δ` restricts and
+complexifies on each of those local neighborhoods. Since that real domain is connected, a minor
+witnessing functional independence at one point cannot vanish on a nonempty open neighborhood, so
+the local obstruction rules out the global family asserted here.
 -/
 
 namespace Challenge.PoincareThreeBody
