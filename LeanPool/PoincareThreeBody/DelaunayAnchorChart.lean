@@ -653,4 +653,22 @@ theorem map_delaunayAnchorChart_nhds :
   apply (hsmooth.hasStrictFDerivAt (by norm_num)).map_nhds_eq_of_surj
   exact LinearMap.range_eq_top.mpr surjective_fderiv_delaunayAnchorChart
 
+/-- Every sufficiently nearby phase point has a chart preimage in any prescribed parameter
+neighborhood of the anchor. -/
+theorem eventually_exists_delaunayAnchorChart_preimage
+    {parameterNeighborhood : Set DelaunayAnchorParameters}
+    (hneighborhood : parameterNeighborhood ∈ nhds delaunayAnchorParameters) :
+    ∀ᶠ state in nhds (globalEnergySection (-2)),
+      ∃ parameters ∈ parameterNeighborhood,
+        delaunayAnchorChart parameters = state := by
+  have himage : delaunayAnchorChart '' parameterNeighborhood ∈
+      Filter.map delaunayAnchorChart (nhds delaunayAnchorParameters) := by
+    rw [Filter.mem_map]
+    exact Filter.mem_of_superset hneighborhood
+      (Set.subset_preimage_image delaunayAnchorChart parameterNeighborhood)
+  rw [map_delaunayAnchorChart_nhds] at himage
+  filter_upwards [himage] with state hstate
+  rcases hstate with ⟨parameters, hparameters, rfl⟩
+  exact ⟨parameters, hparameters, rfl⟩
+
 end LeanPool.PoincareThreeBody
