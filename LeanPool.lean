@@ -2261,6 +2261,10 @@ import LeanPool.PhaseRetrieval.DimdPoly.Internal.OrthogonalReduction.OrthogonalR
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.PhaseStability
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.ProductAnnulusLocalization
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.TensorBasis
+import LeanPool.PoincareThreeBody
+import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.Core
+import LeanPool.PoincareThreeBody.Resonance
 import LeanPool.PointwiseBirkhoff
 import LeanPool.PointwiseBirkhoff.Main
 import LeanPool.PolyaEnumerationTheorem

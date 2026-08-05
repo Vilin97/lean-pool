@@ -5524,3 +5524,49 @@ projects:
     msc:
       - "11R29"
       - "11R42"
+  - slug: poincare-three-body-nonintegrability
+    title: Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
+    summary: >-
+      Formalizes Poincaré's classical parameter-analytic nonintegrability
+      theorem for the planar circular restricted three-body problem. The
+      development defines the rotating-frame Hamiltonian on its collision-free
+      domain and builds the resonant, perturbative, action-angle, and Fourier
+      machinery needed to exclude an additional analytic first integral.
+    branch: dynamical systems
+    entry_module: LeanPool.PoincareThreeBody
+    authors:
+      - Gershon Bialer
+    source:
+      title: A new proof of Poincaré's result on the restricted three-body problem
+      authors:
+        - Kazuyuki Yagasaki
+      arxiv: "2111.11031"
+      doi: "10.1063/5.0266087"
+      url: https://arxiv.org/abs/2111.11031
+      github_repo: gersh/lean-pool
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - LeanPool.PoincareThreeBody.homologicalEquation_obstruction
+    main_results:
+      - declaration: LeanPool.PoincareThreeBody.homologicalEquation_obstruction
+        informal: >-
+          At a resonant action in two degrees of freedom, a nonzero perturbing
+          Fourier mode and the first homological equation force the
+          unperturbed frequency and the differential of a putative leading
+          first-integral coefficient to be linearly dependent.
+      - declaration: LeanPool.PoincareThreeBody.denseResonance_obstruction
+        informal: >-
+          If the resonant obstruction holds on a dense set of actions and the
+          frequency and differential vary continuously, then they are linearly
+          dependent at every action.
+    tags:
+      - dynamical-systems
+      - celestial-mechanics
+      - hamiltonian-systems
+      - nonintegrability
+    msc:
+      - "70F07"
+      - "37J30"
+      - "37J40"
