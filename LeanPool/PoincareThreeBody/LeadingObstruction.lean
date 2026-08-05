@@ -5,6 +5,7 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.PoincareSet
 
 /-!
 # The classical obstruction for the leading coefficient
@@ -90,13 +91,27 @@ theorem IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero
       (fixedEccentricityAction eccentricity (action 0))) = 0 at hfixed
   rwa [hrecover] at hfixed
 
+/-- Natural classical form of the full action obstruction, assuming only density of the
+Poincaré set rather than nonvanishing at every rational resonance. -/
+theorem IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_poincareSet
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
+    (hfirstIntegral : IsFirstIntegralFamily δ F)
+    (hdense : HasDenseClassicalPoincareSet)
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (hapoapsis : action 0 ^ 2 * (1 + eccentricityFromActions action) < 1) :
+    wedge (delaunayFrequency (action 0))
+      (leadingActionDifferential F action) = 0 := by
+  exact IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_densePoincareSet
+    hδ hanalytic hfirstIntegral hdense ⟨action, haction, hapoapsis⟩
+
 /-- Physical form of the leading-coefficient obstruction on every noncircular lifted ellipse:
 the phase differentials of the zero-mass Hamiltonian and leading candidate are dependent. -/
 theorem IsFirstIntegralFamily.mass_zero_differentials_dependent_on_liftedEllipse
     {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
     (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F)
     (hfirstIntegral : IsFirstIntegralFamily δ F)
-    (hnondegenerate : ClassicalDisturbingNondegeneracy)
+    (hdense : HasDenseClassicalPoincareSet)
     {firstAction eccentricity meanAnomaly periapsisAngle : ℝ}
     (hfirstAction : 0 < firstAction)
     (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
@@ -120,8 +135,8 @@ theorem IsFirstIntegralFamily.mass_zero_differentials_dependent_on_liftedEllipse
     simpa only [action, Matrix.cons_val_zero, heRecover] using hapoapsis
   have hwedge : wedge (delaunayFrequency (action 0))
       (leadingActionDifferential F action) = 0 :=
-    IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero
-      hδ hanalytic hfirstIntegral hnondegenerate haction hactionApoapsis
+    IsFirstIntegralFamily.wedge_leadingActionDifferential_eq_zero_of_poincareSet
+      hδ hanalytic hfirstIntegral hdense haction hactionApoapsis
   have hpulled := not_linearIndependent_actionCovector_comp_of_wedge_eq_zero
     (fderiv ℝ cartesianDelaunayActions state) hwedge
   have hcollision : (0, state) ∈ collisionFree :=

@@ -5,6 +5,7 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.AnalyticNormalization
 import LeanPool.PoincareThreeBody.ActionFactorization
 import LeanPool.PoincareThreeBody.ActionPoisson
 import LeanPool.PoincareThreeBody.Averaging
@@ -31,6 +32,7 @@ import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.OneTwoResonance
 import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.Perturbation
+import LeanPool.PoincareThreeBody.PoincareSet
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
 import LeanPool.PoincareThreeBody.ResonantActionObstruction
