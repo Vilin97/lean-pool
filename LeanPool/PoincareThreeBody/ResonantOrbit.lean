@@ -211,6 +211,40 @@ theorem intervalIntegrable_firstMassPerturbation_resonantOrbit
   exact (analyticAt_firstMassPerturbation_resonantOrbit hp hq heccentricity
     heccentricityOne (hprimary time htime)).continuousAt.continuousWithinAt
 
+lemma resonantRotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
+    {p q : ℕ} {eccentricity time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    (resonantRotatingEllipsePosition p q eccentricity time 0 - 1) ^ 2 +
+        (resonantRotatingEllipsePosition p q eccentricity time 1) ^ 2 ≠ 0 := by
+  exact rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one heccentricity
+    heccentricityOne hapoapsis
+
+theorem analyticAt_firstMassPerturbation_resonantOrbit_of_apoapsis_lt_one
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    AnalyticAt ℝ (fun argument ↦ firstMassPerturbation
+      (resonantEllipsePhasePoint p q eccentricity argument)) time := by
+  exact analyticAt_firstMassPerturbation_resonantOrbit hp hq heccentricity
+    heccentricityOne
+    (resonantRotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
+      heccentricity heccentricityOne hapoapsis)
+
+theorem intervalIntegrable_firstMassPerturbation_resonantOrbit_of_apoapsis_lt_one
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity start finish : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    IntervalIntegrable
+      (fun time ↦ firstMassPerturbation
+        (resonantEllipsePhasePoint p q eccentricity time))
+      MeasureTheory.volume start finish := by
+  apply intervalIntegrable_firstMassPerturbation_resonantOrbit hp hq heccentricity
+    heccentricityOne
+  intro time _
+  exact resonantRotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
+    heccentricity heccentricityOne hapoapsis
+
 lemma resonantEllipsePhasePoint_collisionFree_mass_zero
     {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)

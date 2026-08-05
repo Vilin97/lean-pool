@@ -81,6 +81,32 @@ lemma rotatingEllipsePosition_sq {firstAction eccentricity anomaly time : ℝ}
   rw [rotatingEllipsePosition, positionInRotatingFrame_sq,
     inertialEllipsePosition_sq heccentricity heccentricityOne]
 
+/-- An ellipse whose apoapsis is strictly inside the unit circle cannot meet the unit primary. -/
+lemma rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one
+    {firstAction eccentricity anomaly time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : firstAction ^ 2 * (1 + eccentricity) < 1) :
+    (rotatingEllipsePosition firstAction eccentricity anomaly time 0 - 1) ^ 2 +
+        (rotatingEllipsePosition firstAction eccentricity anomaly time 1) ^ 2 ≠ 0 := by
+  let x := rotatingEllipsePosition firstAction eccentricity anomaly time 0
+  let y := rotatingEllipsePosition firstAction eccentricity anomaly time 1
+  let radius := eccentricRadius firstAction eccentricity anomaly
+  have hradiusUpper : radius < 1 :=
+    lt_of_le_of_lt (eccentricRadius_le_apoapsis_bound heccentricity) hapoapsis
+  have hradiusNonneg : 0 ≤ radius := by
+    unfold radius eccentricRadius
+    exact mul_nonneg (sq_nonneg firstAction)
+      (one_sub_eccentricity_mul_cos_pos heccentricity heccentricityOne).le
+  have hpositionSq : x ^ 2 + y ^ 2 = radius ^ 2 :=
+    rotatingEllipsePosition_sq heccentricity heccentricityOne.le
+  intro hcollision
+  have hxSquare : (x - 1) ^ 2 = 0 := by nlinarith [sq_nonneg y]
+  have hySquare : y ^ 2 = 0 := by nlinarith [sq_nonneg (x - 1)]
+  have hx : x = 1 := by nlinarith [sq_eq_zero_iff.mp hxSquare]
+  have hy : y = 0 := sq_eq_zero_iff.mp hySquare
+  rw [hx, hy] at hpositionSq
+  nlinarith
+
 lemma primaryDistanceSq_positionPhasePoint (position : ActionSpace) :
     ((positionPhasePoint position 0 - 1) ^ 2 + (positionPhasePoint position 1) ^ 2) =
       ((position 0) ^ 2 + (position 1) ^ 2) - 2 * position 0 + 1 := by

@@ -66,6 +66,15 @@ lemma eccentricRadius_pos {firstAction eccentricity anomaly : ℝ}
   exact mul_pos (sq_pos_of_ne_zero hfirstAction)
     (one_sub_eccentricity_mul_cos_pos heccentricity heccentricityOne)
 
+lemma eccentricRadius_le_apoapsis_bound {firstAction eccentricity anomaly : ℝ}
+    (heccentricity : 0 ≤ eccentricity) :
+    eccentricRadius firstAction eccentricity anomaly ≤
+      firstAction ^ 2 * (1 + eccentricity) := by
+  have hcos := mul_le_mul_of_nonneg_left (Real.neg_one_le_cos anomaly) heccentricity
+  unfold eccentricRadius
+  apply mul_le_mul_of_nonneg_left _ (sq_nonneg firstAction)
+  linarith
+
 theorem hasDerivAt_eccentricMeanAnomaly (eccentricity anomaly : ℝ) :
     HasDerivAt (eccentricMeanAnomaly eccentricity)
       (1 - eccentricity * Real.cos anomaly) anomaly := by
