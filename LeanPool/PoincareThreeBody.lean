@@ -12,6 +12,7 @@ import LeanPool.PoincareThreeBody.KeplerOrbit
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
+import LeanPool.PoincareThreeBody.RotatingEllipse
 
 /-!
 # Poincaré's Nonintegrability Theorem for the Restricted Three-Body Problem
