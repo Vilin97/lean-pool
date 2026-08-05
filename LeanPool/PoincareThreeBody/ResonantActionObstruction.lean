@@ -375,6 +375,39 @@ theorem IsFirstIntegralFamily.resonantCombinedHomologicalEquation
   field_simp [hpReal]
   linear_combination -(q : ℝ) * hhomological
 
+/-- A nonzero derivative of Poincaré's disturbing average forces the leading action differential
+to annihilate the integer resonance vector. -/
+theorem IsFirstIntegralFamily.resonantLeadingDifferential_orthogonal
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} (hδ : 0 < δ)
+    (hanalytic : IsJointlyAnalytic δ F) (hfirstIntegral : IsFirstIntegralFamily δ F)
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity orientation : ℝ}
+    (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1)
+    (haverageDeriv : deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0) :
+    dot (resonanceVector p q)
+      (resonantLeadingActionDifferential F p q eccentricity) = 0 := by
+  apply coefficient_eq_zero_of_averaged_homologicalEquation
+    (correction := resonantCombinedCorrection F p q eccentricity orientation)
+    (correctionDerivative :=
+      resonantCombinedCorrectionDerivative F p q eccentricity orientation)
+    (forcing := resonantDisturbingOrientationDerivative
+      p q eccentricity orientation)
+    (period := resonantOrbitPeriod p)
+  · intro time _
+    exact IsJointlyAnalytic.hasDerivAt_resonantCombinedCorrection
+      hδ hanalytic hp hq heccentricity.le heccentricityOne hapoapsis
+  · exact (continuous_resonantCombinedCorrectionDerivative hδ hanalytic hp hq
+      heccentricity.le heccentricityOne hapoapsis).intervalIntegrable _ _
+  · exact intervalIntegrable_resonantDisturbingOrientationDerivative hp hq
+      heccentricity.le heccentricityOne hapoapsis
+  · exact resonantCombinedCorrection_periodic F hp heccentricity.le heccentricityOne
+  · rwa [← deriv_resonantDisturbingAverage hp hq heccentricity.le
+      heccentricityOne hapoapsis]
+  · intro time _
+    exact IsFirstIntegralFamily.resonantCombinedHomologicalEquation
+      hδ hanalytic hfirstIntegral hp hq heccentricity heccentricityOne hapoapsis
+
 /-- A nonzero derivative of Poincaré's disturbing average forces dependence of the Hamiltonian
 and leading-integral differentials at that resonant action. -/
 theorem IsFirstIntegralFamily.resonantLeadingDifferential_obstruction
@@ -388,20 +421,9 @@ theorem IsFirstIntegralFamily.resonantLeadingDifferential_obstruction
     ¬LinearIndependent ℝ
       ![delaunayFrequency (resonantFirstAction p q),
         resonantLeadingActionDifferential F p q eccentricity] := by
-  apply resonantDisturbingAverage_deriv_obstruction hp hq heccentricity.le
-    heccentricityOne hapoapsis
-    (correction := resonantCombinedCorrection F p q eccentricity orientation)
-    (correctionDerivative :=
-      resonantCombinedCorrectionDerivative F p q eccentricity orientation)
-  · intro time _
-    exact IsJointlyAnalytic.hasDerivAt_resonantCombinedCorrection
-      hδ hanalytic hp hq heccentricity.le heccentricityOne hapoapsis
-  · exact (continuous_resonantCombinedCorrectionDerivative hδ hanalytic hp hq
-      heccentricity.le heccentricityOne hapoapsis).intervalIntegrable _ _
-  · exact resonantCombinedCorrection_periodic F hp heccentricity.le heccentricityOne
-  · exact haverageDeriv
-  · intro time _
-    exact IsFirstIntegralFamily.resonantCombinedHomologicalEquation
-      hδ hanalytic hfirstIntegral hp hq heccentricity heccentricityOne hapoapsis
+  apply rationalKeplerResonance_obstruction hp hq
+  exact IsFirstIntegralFamily.resonantLeadingDifferential_orthogonal
+    hδ hanalytic hfirstIntegral hp hq heccentricity heccentricityOne
+    hapoapsis haverageDeriv
 
 end LeanPool.PoincareThreeBody

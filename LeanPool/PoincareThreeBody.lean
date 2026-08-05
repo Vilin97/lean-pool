@@ -14,6 +14,7 @@ import LeanPool.PoincareThreeBody.DelaunayActions
 import LeanPool.PoincareThreeBody.DelaunayChart
 import LeanPool.PoincareThreeBody.DelaunayFlow
 import LeanPool.PoincareThreeBody.DelaunaySection
+import LeanPool.PoincareThreeBody.DenseResonantObstruction
 import LeanPool.PoincareThreeBody.DisturbingCertificate
 import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
