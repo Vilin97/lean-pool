@@ -6,6 +6,7 @@ Authors: Gershon Bialer
 
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.ResonantOrbit
+import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Tactic.Ring
 
@@ -110,6 +111,29 @@ theorem analyticAt_orientedResonantEllipsePosition_coordinate
         filter_upwards [] with argument
         simp [smul_eq_mul])
 
+theorem continuous_orientedResonantEllipsePosition_coordinate
+    (p q : ℕ) {eccentricity : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (coordinate : Fin 2) :
+    Continuous (fun parameters : ℝ × ℝ ↦
+      orientedResonantEllipsePosition p q eccentricity parameters.1 parameters.2 coordinate) := by
+  have hmean : Continuous (fun parameters : ℝ × ℝ ↦
+      resonantMeanAnomaly p q parameters.2) := by
+    unfold resonantMeanAnomaly resonantMeanMotion
+    fun_prop
+  have hanomaly : Continuous (fun parameters : ℝ × ℝ ↦
+      resonantEccentricAnomaly p q eccentricity parameters.2) := by
+    unfold resonantEccentricAnomaly
+    exact (continuous_eccentricAnomaly heccentricity heccentricityOne).comp hmean
+  unfold orientedResonantEllipsePosition positionInRotatingFrame inertialEllipsePosition
+  fin_cases coordinate
+  · simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one, neg_mul, Fin.zero_eta]
+    fun_prop
+  · simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one, neg_mul, Fin.mk_one]
+    fun_prop
+
 lemma orientedResonantEllipsePosition_sq {p q : ℕ} {eccentricity orientation time : ℝ}
     (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity ≤ 1) :
     (orientedResonantEllipsePosition p q eccentricity orientation time 0) ^ 2 +
@@ -118,6 +142,67 @@ lemma orientedResonantEllipsePosition_sq {p q : ℕ} {eccentricity orientation t
         (resonantEccentricAnomaly p q eccentricity time)) ^ 2 := by
   rw [orientedResonantEllipsePosition, positionInRotatingFrame_sq,
     inertialEllipsePosition_sq heccentricity heccentricityOne]
+
+theorem continuous_resonantDisturbingOrientationDerivative
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    Continuous (fun parameters : ℝ × ℝ ↦
+      resonantDisturbingOrientationDerivative p q eccentricity parameters.1 parameters.2) := by
+  let x : ℝ × ℝ → ℝ := fun parameters ↦
+    orientedResonantEllipsePosition p q eccentricity parameters.1 parameters.2 0
+  let y : ℝ × ℝ → ℝ := fun parameters ↦
+    orientedResonantEllipsePosition p q eccentricity parameters.1 parameters.2 1
+  have hx : Continuous x :=
+    continuous_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 0
+  have hy : Continuous y :=
+    continuous_orientedResonantEllipsePosition_coordinate p q heccentricity
+      heccentricityOne 1
+  have horiginSq : Continuous (fun parameters ↦ x parameters ^ 2 + y parameters ^ 2) :=
+    (hx.pow 2).add (hy.pow 2)
+  have hfirstAction : resonantFirstAction p q ≠ 0 :=
+    (resonantFirstAction_pos hp hq).ne'
+  have horiginPositive : ∀ parameters, 0 < x parameters ^ 2 + y parameters ^ 2 := by
+    intro parameters
+    change 0 <
+      (orientedResonantEllipsePosition p q eccentricity parameters.1 parameters.2 0) ^ 2 +
+        (orientedResonantEllipsePosition p q eccentricity parameters.1 parameters.2 1) ^ 2
+    rw [orientedResonantEllipsePosition_sq heccentricity heccentricityOne.le]
+    exact sq_pos_of_pos (eccentricRadius_pos hfirstAction heccentricity heccentricityOne)
+  have hinverseOrigin : Continuous
+      (fun parameters ↦ 1 / Real.sqrt (x parameters ^ 2 + y parameters ^ 2)) := by
+    have hroot := horiginSq.sqrt
+    have hrootNe : ∀ parameters,
+        Real.sqrt (x parameters ^ 2 + y parameters ^ 2) ≠ 0 := fun parameters ↦
+      Real.sqrt_ne_zero'.mpr (horiginPositive parameters)
+    apply hroot.inv₀ hrootNe |>.congr
+    intro parameters
+    simp [one_div]
+  have hone : Continuous (fun _ : ℝ × ℝ ↦ (1 : ℝ)) := continuous_const
+  have hprimarySq : Continuous
+      (fun parameters ↦ (x parameters - 1) ^ 2 + y parameters ^ 2) :=
+    ((hx.sub hone).pow 2).add (hy.pow 2)
+  have hprimaryNe : ∀ parameters,
+      (x parameters - 1) ^ 2 + y parameters ^ 2 ≠ 0 := by
+    intro parameters
+    exact rotatingEllipse_primaryDistance_ne_zero_of_apoapsis_lt_one heccentricity
+      heccentricityOne hapoapsis
+  have hinversePrimary : Continuous
+      (fun parameters ↦ 1 / Real.sqrt ((x parameters - 1) ^ 2 + y parameters ^ 2)) := by
+    have hroot := hprimarySq.sqrt
+    have hrootNe : ∀ parameters,
+        Real.sqrt ((x parameters - 1) ^ 2 + y parameters ^ 2) ≠ 0 := fun parameters ↦
+      Real.sqrt_ne_zero'.mpr (lt_of_le_of_ne (by positivity)
+        (Ne.symm (hprimaryNe parameters)))
+    apply hroot.inv₀ hrootNe |>.congr
+    intro parameters
+    simp [one_div]
+  have hraw := (hy.neg.mul (hinverseOrigin.pow 3)).add
+    (hy.mul (hinversePrimary.pow 3))
+  apply hraw.congr
+  intro parameters
+  simp [resonantDisturbingOrientationDerivative, x, y, div_eq_mul_inv]
 
 theorem hasDerivAt_orientedResonantEllipsePosition_zero_orientation
     (p q : ℕ) (eccentricity orientation time : ℝ) :
@@ -439,6 +524,91 @@ lemma resonantDisturbingAverage_add_orientation_two_pi
   intro time _
   exact resonantDisturbingFunction_add_orientation_two_pi p q eccentricity orientation time
 
+/-- Differentiation under the period integral identifies the derivative of the Poincaré
+disturbing average with the integral of the explicit orientation forcing. -/
+theorem hasDerivAt_resonantDisturbingAverage
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity orientation : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    HasDerivAt (resonantDisturbingAverage p q eccentricity)
+      (∫ time in 0..resonantOrbitPeriod p,
+        resonantDisturbingOrientationDerivative p q eccentricity orientation time)
+      orientation := by
+  let phaseInterval : Set ℝ := Set.Icc (orientation - 1) (orientation + 1)
+  let timeInterval : Set ℝ := Set.uIcc 0 (resonantOrbitPeriod p)
+  let parameterRectangle : Set (ℝ × ℝ) := phaseInterval ×ˢ timeInterval
+  have hrectangleCompact : IsCompact parameterRectangle :=
+    isCompact_Icc.prod isCompact_uIcc
+  have hforcingContinuous :=
+    continuous_resonantDisturbingOrientationDerivative hp hq heccentricity
+      heccentricityOne hapoapsis
+  obtain ⟨bound, hbound⟩ := hrectangleCompact.bddAbove_image
+    hforcingContinuous.norm.continuousOn
+  have hnormBound : ∀ phase ∈ phaseInterval, ∀ time ∈ timeInterval,
+      ‖resonantDisturbingOrientationDerivative p q eccentricity phase time‖ ≤ bound := by
+    intro phase hphase time htime
+    apply hbound
+    exact ⟨⟨phase, time⟩, ⟨hphase, htime⟩, rfl⟩
+  have hphaseNhd : phaseInterval ∈ nhds orientation := by
+    change Set.Icc (orientation - 1) (orientation + 1) ∈ nhds orientation
+    exact Icc_mem_nhds (by linarith) (by linarith)
+  have hfunctionMeasurable : ∀ᶠ phase in nhds orientation,
+      AEStronglyMeasurable
+        (resonantDisturbingFunction p q eccentricity phase)
+        (volume.restrict (Set.uIoc 0 (resonantOrbitPeriod p))) := by
+    filter_upwards [] with phase
+    have hcontinuous : Continuous (resonantDisturbingFunction p q eccentricity phase) := by
+      rw [continuous_iff_continuousAt]
+      intro time
+      exact (analyticAt_resonantDisturbingFunction_time hp hq heccentricity
+        heccentricityOne hapoapsis).continuousAt
+    exact hcontinuous.aestronglyMeasurable.restrict
+  have hfunctionIntegrable : IntervalIntegrable
+      (resonantDisturbingFunction p q eccentricity orientation) volume 0
+      (resonantOrbitPeriod p) :=
+    intervalIntegrable_resonantDisturbingFunction hp hq heccentricity
+      heccentricityOne hapoapsis
+  have hderivativeMeasurable : AEStronglyMeasurable
+      (resonantDisturbingOrientationDerivative p q eccentricity orientation)
+      (volume.restrict (Set.uIoc 0 (resonantOrbitPeriod p))) := by
+    have hcontinuous : Continuous
+        (resonantDisturbingOrientationDerivative p q eccentricity orientation) := by
+      rw [continuous_iff_continuousAt]
+      intro time
+      exact (analyticAt_resonantDisturbingOrientationDerivative hp hq heccentricity
+        heccentricityOne hapoapsis).continuousAt
+    exact hcontinuous.aestronglyMeasurable.restrict
+  have hboundAE : ∀ᵐ time ∂volume, time ∈ Set.uIoc 0 (resonantOrbitPeriod p) →
+      ∀ phase ∈ phaseInterval,
+        ‖resonantDisturbingOrientationDerivative p q eccentricity phase time‖ ≤ bound := by
+    filter_upwards [] with time htime phase hphase
+    exact hnormBound phase hphase time (Set.uIoc_subset_uIcc htime)
+  have hboundIntegrable : IntervalIntegrable (fun _ : ℝ ↦ bound) volume 0
+      (resonantOrbitPeriod p) := intervalIntegrable_const
+  have hderivative : ∀ᵐ time ∂volume, time ∈ Set.uIoc 0 (resonantOrbitPeriod p) →
+      ∀ phase ∈ phaseInterval,
+        HasDerivAt (fun parameter ↦
+          resonantDisturbingFunction p q eccentricity parameter time)
+          (resonantDisturbingOrientationDerivative p q eccentricity phase time) phase := by
+    filter_upwards [] with time _ phase _
+    exact hasDerivAt_resonantDisturbingFunction_orientation hp hq heccentricity
+      heccentricityOne hapoapsis
+  exact (intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
+    (F := fun phase time ↦ resonantDisturbingFunction p q eccentricity phase time)
+    (F' := fun phase time ↦
+      resonantDisturbingOrientationDerivative p q eccentricity phase time)
+    (bound := fun _ ↦ bound) hphaseNhd hfunctionMeasurable hfunctionIntegrable
+      hderivativeMeasurable hboundAE hboundIntegrable hderivative).2
+
+theorem deriv_resonantDisturbingAverage
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {eccentricity orientation : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1) :
+    deriv (resonantDisturbingAverage p q eccentricity) orientation =
+      ∫ time in 0..resonantOrbitPeriod p,
+        resonantDisturbingOrientationDerivative p q eccentricity orientation time :=
+  (hasDerivAt_resonantDisturbingAverage hp hq heccentricity heccentricityOne hapoapsis).deriv
+
 /-- The averaged homological obstruction specialized to the explicit resonant disturbing
 function. The remaining concrete input is nonvanishing of its orientation derivative integral. -/
 theorem resonantDisturbingAverage_obstruction
@@ -486,5 +656,30 @@ theorem resonantDisturbingAverage_obstruction_of_apoapsis_lt_one
     (intervalIntegrable_resonantDisturbingOrientationDerivative hp hq heccentricity
       heccentricityOne hapoapsis)
     hperiodic hforcing hequation
+
+/-- Equivalent concrete obstruction using nonvanishing of the derivative of the Poincaré
+disturbing average. -/
+theorem resonantDisturbingAverage_deriv_obstruction
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) {differential : ActionSpace}
+    {eccentricity orientation : ℝ} {correction correctionDerivative : ℝ → ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1)
+    (hderiv : ∀ time ∈ Set.uIcc 0 (resonantOrbitPeriod p),
+      HasDerivAt correction (correctionDerivative time) time)
+    (hcorrectionIntegrable : IntervalIntegrable correctionDerivative volume 0
+      (resonantOrbitPeriod p))
+    (hperiodic : correction (resonantOrbitPeriod p) = correction 0)
+    (haverageDeriv :
+      deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0)
+    (hequation : ∀ time ∈ Set.uIcc 0 (resonantOrbitPeriod p),
+      correctionDerivative time + dot (resonanceVector p q) differential *
+        resonantDisturbingOrientationDerivative p q eccentricity orientation time = 0) :
+    ¬LinearIndependent ℝ
+      ![delaunayFrequency (resonantFirstAction p q), differential] := by
+  apply resonantDisturbingAverage_obstruction_of_apoapsis_lt_one hp hq heccentricity
+    heccentricityOne hapoapsis hderiv hcorrectionIntegrable hperiodic
+  · rwa [← deriv_resonantDisturbingAverage hp hq heccentricity heccentricityOne
+      hapoapsis]
+  · exact hequation
 
 end LeanPool.PoincareThreeBody
