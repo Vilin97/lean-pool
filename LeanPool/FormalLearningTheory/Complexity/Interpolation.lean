@@ -219,6 +219,7 @@ theorem range_patchEval_sub_interpClass
     exact hm (measurableSet_singleton true)
   · funext x
     simp only [patchEval, piecewiseConcept, Set.mem_ofPred_eq]
+    split <;> rfl
 
 /-- Conditional interpolation via BorelRouterCode is well-behaved:
     the range of patchEval with a Borel router satisfies WellBehavedVCMeasTarget. -/

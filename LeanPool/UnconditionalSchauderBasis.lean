@@ -30,10 +30,10 @@ criterion for constructing unconditional Schauder bases.
 
 The main ingredients are:
 
-* `SchauderBasis` and `UnconditionalSchauderBasis`, the usual `ℕ`-indexed
+* `SchauderBasis'` and `UnconditionalSchauderBasis'`, the usual `ℕ`-indexed
   notions. A Schauder expansion is ordered, so its convergence is expressed by
   initial partial sums.
-* Rearrangement criteria for `SchauderBasis.IsUnconditional`, including
+* Rearrangement criteria for `SchauderBasis'.IsUnconditional`, including
   `HasSum` reindexing, convergence over the finite-set filter, and the
   classical ordered partial-sum criterion for every permutation of `ℕ`.
 * `UnconditionalSchauderBasisAbstractIndex` is indexed by an arbitrary type.
@@ -81,7 +81,7 @@ For each vector `x`, the initial partial sums of the coordinate expansion
 converge to `x`, and this expansion is unique. The coordinate maps are stored
 as continuous linear maps.
 -/
-structure SchauderBasis (𝕜 E : Type*) [NontriviallyNormedField 𝕜]
+structure SchauderBasis' (𝕜 E : Type*) [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E] where
   /-- Basis vectors. -/
   basis : ℕ → E
@@ -94,17 +94,17 @@ structure SchauderBasis (𝕜 E : Type*) [NontriviallyNormedField 𝕜]
     ∀ (x : E) (a : ℕ → 𝕜), HasSchauderSum basis a x →
       a = fun n : ℕ => coeff n x
 
-namespace SchauderBasis
+namespace SchauderBasis'
 
 variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
 
 /-- The `n`th coordinate of `x` in the basis `b`. -/
-def coord (b : SchauderBasis 𝕜 E) (n : ℕ) (x : E) : 𝕜 :=
+def coord (b : SchauderBasis' 𝕜 E) (n : ℕ) (x : E) : 𝕜 :=
   b.coeff n x
 
 @[simp]
-private theorem hasSchauderSum_repr_apply (b : SchauderBasis 𝕜 E) (x : E) :
+private theorem hasSchauderSum_repr_apply (b : SchauderBasis' 𝕜 E) (x : E) :
     HasSchauderSum b.basis (fun n : ℕ => b.coeff n x) x :=
   b.hasSchauderSum_repr x
 
@@ -323,9 +323,9 @@ A Schauder basis is unconditional if every basis expansion has a `HasSum`.
 
 Since `HasSum` is Lean's unconditional finite-set notion of summability, this
 immediately implies ordered convergence of every permuted expansion; see
-`SchauderBasis.isUnconditional_tendsto_rearranged`.
+`SchauderBasis'.isUnconditional_tendsto_rearranged`.
 -/
-def IsUnconditional (b : SchauderBasis 𝕜 E) : Prop :=
+def IsUnconditional (b : SchauderBasis' 𝕜 E) : Prop :=
   ∀ x : E, HasSum (fun n : ℕ => b.coeff n x • b.basis n) x
 
 /--
@@ -333,9 +333,9 @@ def IsUnconditional (b : SchauderBasis 𝕜 E) : Prop :=
 
 This is a useful technical form of unconditionality, but it is still phrased in
 terms of `HasSum`, so it is mostly a reindexing statement.  For the ordered
-partial-sum formulation, see `SchauderBasis.isUnconditional_tendsto_rearranged`.
+partial-sum formulation, see `SchauderBasis'.isUnconditional_tendsto_rearranged`.
 -/
-theorem isUnconditional_iff_hasSum_rearranged (b : SchauderBasis 𝕜 E) :
+theorem isUnconditional_iff_hasSum_rearranged (b : SchauderBasis' 𝕜 E) :
     b.IsUnconditional ↔
       ∀ (x : E) (σ : Equiv.Perm ℕ),
         HasSum (fun n : ℕ => b.coeff (σ n) x • b.basis (σ n)) x := by
@@ -352,12 +352,12 @@ Unconditionality is equivalent to strong convergence of all rearranged finite
 partial-sum nets.
 
 This is the same mathematical content as
-`SchauderBasis.isUnconditional_iff_hasSum_rearranged`, but it exposes the
+`SchauderBasis'.isUnconditional_iff_hasSum_rearranged`, but it exposes the
 underlying `Filter.Tendsto` statement instead of the abbreviation `HasSum`.
 The filter is `atTop` on `Finset ℕ`, so finite sets eventually contain any
 prescribed finite set of indices.
 -/
-theorem isUnconditional_iff_tendsto_rearranged (b : SchauderBasis 𝕜 E) :
+theorem isUnconditional_iff_tendsto_rearranged (b : SchauderBasis' 𝕜 E) :
     b.IsUnconditional ↔
       ∀ (x : E) (σ : Equiv.Perm ℕ),
         Filter.Tendsto
@@ -382,7 +382,7 @@ For every vector `x` and permutation `σ`, the initial partial sums
 topology.  This is the direct Lean version of the usual statement that every
 rearrangement of the Schauder expansion converges to the same vector.
 -/
-theorem isUnconditional_tendsto_rearranged (b : SchauderBasis 𝕜 E) :
+theorem isUnconditional_tendsto_rearranged (b : SchauderBasis' 𝕜 E) :
     b.IsUnconditional →
       ∀ (x : E) (σ : Equiv.Perm ℕ),
         Filter.Tendsto
@@ -404,7 +404,7 @@ This is the classical rearrangement formulation: for every vector `x` and every
 permutation `σ : Equiv.Perm ℕ`, the initial partial sums over `Finset.range N`
 of the permuted expansion converge to `x`.
 -/
-theorem isUnconditional_iff_tendsto_ordered_rearranged (b : SchauderBasis 𝕜 E) :
+theorem isUnconditional_iff_tendsto_ordered_rearranged (b : SchauderBasis' 𝕜 E) :
     b.IsUnconditional ↔
       ∀ (x : E) (σ : Equiv.Perm ℕ),
         Filter.Tendsto
@@ -422,19 +422,19 @@ theorem isUnconditional_iff_tendsto_ordered_rearranged (b : SchauderBasis 𝕜 E
         simpa [f] using h x σ)
     simpa [f] using hf
 
-end SchauderBasis
+end SchauderBasis'
 
 /--
 An unconditional Schauder basis with the usual `ℕ` index set.
 
 This is a Schauder basis together with unconditional summability of every basis
 expansion. The classical ordered rearrangement criterion is available as
-`SchauderBasis.isUnconditional_iff_tendsto_ordered_rearranged`.
+`SchauderBasis'.isUnconditional_iff_tendsto_ordered_rearranged`.
 -/
-structure UnconditionalSchauderBasis (𝕜 E : Type*) [NontriviallyNormedField 𝕜]
+structure UnconditionalSchauderBasis' (𝕜 E : Type*) [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E] where
   /-- Underlying Schauder basis. -/
-  toSchauderBasis : SchauderBasis 𝕜 E
+  toSchauderBasis : SchauderBasis' 𝕜 E
   /-- Every basis expansion converges unconditionally to the same sum. -/
   unconditional : toSchauderBasis.IsUnconditional
 
@@ -557,7 +557,7 @@ coefficients.
 -/
 noncomputable def toUnconditionalSchauderBasis
     (b : UnconditionalSchauderBasisAbstractIndex 𝕜 Index E) (e : ℕ ≃ Index) :
-    UnconditionalSchauderBasis 𝕜 E :=
+    UnconditionalSchauderBasis' 𝕜 E :=
 {
   toSchauderBasis :=
   {
@@ -650,7 +650,7 @@ theorem range_coeff_toUnconditionalSchauderBasis
 
 end UnconditionalSchauderBasisAbstractIndex
 
-namespace UnconditionalSchauderBasis
+namespace UnconditionalSchauderBasis'
 
 variable {𝕜 E : Type*} [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
@@ -663,28 +663,28 @@ coordinate maps, plus the reverse conversion from the usual `ℕ`-indexed notion
 to the abstract-index notion with `Index = ℕ`.
 -/
 
-instance : Coe (UnconditionalSchauderBasis 𝕜 E) (SchauderBasis 𝕜 E) where
+instance : Coe (UnconditionalSchauderBasis' 𝕜 E) (SchauderBasis' 𝕜 E) where
   coe b := b.toSchauderBasis
 
 /-- Basis vectors of an unconditional Schauder basis. -/
-def basis (b : UnconditionalSchauderBasis 𝕜 E) : ℕ → E :=
+def basis (b : UnconditionalSchauderBasis' 𝕜 E) : ℕ → E :=
   b.toSchauderBasis.basis
 
 /-- Continuous coordinate maps of an unconditional Schauder basis. -/
-def coeff (b : UnconditionalSchauderBasis 𝕜 E) : ℕ → E →L[𝕜] 𝕜 :=
+def coeff (b : UnconditionalSchauderBasis' 𝕜 E) : ℕ → E →L[𝕜] 𝕜 :=
   b.toSchauderBasis.coeff
 
 @[simp]
-private theorem hasSchauderSum_repr_apply (b : UnconditionalSchauderBasis 𝕜 E) (x : E) :
+private theorem hasSchauderSum_repr_apply (b : UnconditionalSchauderBasis' 𝕜 E) (x : E) :
     HasSchauderSum b.basis (fun n : ℕ => b.coeff n x) x :=
   b.toSchauderBasis.hasSchauderSum_repr x
 
 @[simp]
-private theorem hasSum_repr_apply (b : UnconditionalSchauderBasis 𝕜 E) (x : E) :
+private theorem hasSum_repr_apply (b : UnconditionalSchauderBasis' 𝕜 E) (x : E) :
     HasSum (fun n : ℕ => b.coeff n x • b.basis n) x :=
   b.unconditional x
 
-private theorem hasSum_rearranged (b : UnconditionalSchauderBasis 𝕜 E)
+private theorem hasSum_rearranged (b : UnconditionalSchauderBasis' 𝕜 E)
     (x : E) (σ : Equiv.Perm ℕ) :
     HasSum (fun n : ℕ => b.coeff (σ n) x • b.basis (σ n)) x :=
   by
@@ -700,7 +700,7 @@ The `HasSum` part of unconditionality becomes the representation theorem for
 the abstract basis, while uniqueness is inherited from the ordered Schauder
 basis by passing a `HasSum` to its ordered partial sums.
 -/
-def toUnconditionalSchauderBasisAbstractIndex (b : UnconditionalSchauderBasis 𝕜 E) :
+def toUnconditionalSchauderBasisAbstractIndex (b : UnconditionalSchauderBasis' 𝕜 E) :
     UnconditionalSchauderBasisAbstractIndex 𝕜 ℕ E :=
 {
   basis := b.basis
@@ -716,12 +716,12 @@ def toUnconditionalSchauderBasisAbstractIndex (b : UnconditionalSchauderBasis �
 /-- Every unconditional Schauder basis gives an abstractly indexed one over `ℕ`
 with the same basis vectors and coordinate maps. -/
 theorem exists_unconditionalSchauderBasisAbstractIndex_nat
-    (b : UnconditionalSchauderBasis 𝕜 E) :
+    (b : UnconditionalSchauderBasis' 𝕜 E) :
     ∃ b' : UnconditionalSchauderBasisAbstractIndex 𝕜 ℕ E,
       b'.basis = b.basis ∧ b'.coeff = b.coeff :=
   ⟨b.toUnconditionalSchauderBasisAbstractIndex, rfl, rfl⟩
 
-end UnconditionalSchauderBasis
+end UnconditionalSchauderBasis'
 
 /-!
 ## Finite sign criterion
@@ -1388,7 +1388,7 @@ private noncomputable def unconditionalSchauderBasis_of_finiteSignBound
     (C : ℝ)
     (hC : 0 ≤ C)
     (h_sign : HasFiniteSignBound (𝕜 := 𝕜) x C) :
-    UnconditionalSchauderBasis 𝕜 E :=
+    UnconditionalSchauderBasis' 𝕜 E :=
   let b := unconditionalSchauderBasisAbstractIndex_of_finiteSignBound
     x hx_dense hx_ne C hC h_sign
   b.toUnconditionalSchauderBasis (Equiv.refl ℕ)
@@ -1431,7 +1431,7 @@ theorem exists_unconditionalSchauderBasis_of_finiteSignBound
     (C : ℝ)
     (hC : 0 ≤ C)
     (h_sign : HasFiniteSignBound (𝕜 := 𝕜) x C) :
-    ∃ b : UnconditionalSchauderBasis 𝕜 E, b.basis = x := by
+    ∃ b : UnconditionalSchauderBasis' 𝕜 E, b.basis = x := by
   refine ⟨unconditionalSchauderBasis_of_finiteSignBound x hx_dense hx_ne C hC h_sign, ?_⟩
   rfl
 
