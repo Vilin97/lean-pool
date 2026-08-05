@@ -141,6 +141,26 @@ theorem delaunayDenseResonance_obstruction {differential : PositiveAction → Ac
   exact wedge_eq_zero_of_resonance (resonanceVector_ne_zero hp)
     (resonantFirstAction_is_resonant hp hq) (hresonant hp hq)
 
+/-- The first homological equation and nonvanishing perturbing modes at all rational resonances
+exclude an independent leading integral throughout the positive Delaunay action axis. -/
+theorem delaunayHomological_obstruction {differential : PositiveAction → ActionSpace}
+    (hdifferential : Continuous differential) (correction perturbation : ℕ → ℕ → ℝ)
+    (hperturbation : ∀ p q, 0 < p → 0 < q → perturbation p q ≠ 0)
+    (hequation : ∀ p q (hp : 0 < p) (hq : 0 < q),
+      dot (resonanceVector p q) (delaunayFrequency (resonantFirstAction p q)) *
+          correction p q +
+        dot (resonanceVector p q)
+            (differential
+              ⟨resonantFirstAction p q, resonantFirstAction_pos hp hq⟩) *
+          perturbation p q = 0)
+    (action : PositiveAction) :
+    ¬LinearIndependent ℝ ![delaunayFrequency action.1, differential action] := by
+  apply delaunayDenseResonance_obstruction hdifferential
+  intro p q hp hq
+  have h := hequation p q hp hq
+  rw [resonantFirstAction_is_resonant hp hq, zero_mul, zero_add] at h
+  exact (mul_eq_zero.mp h).resolve_right (hperturbation p q hp hq)
+
 /-- The abstract linear-algebra obstruction at every positive rational Kepler resonance. -/
 theorem rationalKeplerResonance_obstruction {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
     {differential : ActionSpace} (hdifferential :

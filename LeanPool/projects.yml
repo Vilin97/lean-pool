@@ -5548,8 +5548,20 @@ projects:
     status: verified
     provenance: AI
     main_declarations:
-      - LeanPool.PoincareThreeBody.homologicalEquation_obstruction
+      - LeanPool.PoincareThreeBody.delaunayHomological_obstruction
     main_results:
+      - declaration: LeanPool.PoincareThreeBody.delaunayHomological_obstruction
+        informal: >-
+          If the first homological equation holds and its perturbing Fourier
+          coefficient is nonzero at every positive rational Kepler resonance,
+          then the leading differential of a putative analytic first integral
+          is nowhere independent of the unperturbed Hamiltonian frequency.
+      - declaration: LeanPool.PoincareThreeBody.delaunayDenseResonance_obstruction
+        informal: >-
+          For the rotating Kepler frequency in Delaunay actions, orthogonality
+          of a continuous candidate differential to every positive rational
+          resonance vector forces dependence with the Hamiltonian frequency
+          at every positive action.
       - declaration: LeanPool.PoincareThreeBody.homologicalEquation_obstruction
         informal: >-
           At a resonant action in two degrees of freedom, a nonzero perturbing
