@@ -5,6 +5,9 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.Resonance
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Inv
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.FinCases
@@ -39,6 +42,54 @@ noncomputable def resonantFirstAction (p q : ℕ) : ℝ :=
 /-- The integer resonance vector, regarded as a real vector. -/
 def resonanceVector (p q : ℕ) : ActionSpace :=
   ![(p : ℝ), (q : ℝ)]
+
+theorem hasDerivAt_delaunayHamiltonian_firstAction {firstAction : ℝ}
+    (hfirstAction : firstAction ≠ 0) (secondAction : ℝ) :
+    HasDerivAt (fun action ↦ -1 / (2 * action ^ 2) - secondAction)
+      (1 / firstAction ^ 3) firstAction := by
+  have hsquare := hasDerivAt_pow 2 firstAction
+  have hdenominator := hsquare.const_mul 2
+  have hinverse := hdenominator.inv
+    (mul_ne_zero (by norm_num) (pow_ne_zero 2 hfirstAction))
+  have hraw := (HasDerivAt.neg hinverse).sub_const secondAction
+  apply (hraw.congr_deriv ?_).congr_of_eventuallyEq
+  · filter_upwards [] with action
+    simp [div_eq_mul_inv]
+  · field_simp [hfirstAction]
+    ring
+
+theorem hasDerivAt_delaunayHamiltonian_secondAction (firstAction secondAction : ℝ) :
+    HasDerivAt (fun action ↦ -1 / (2 * firstAction ^ 2) - action) (-1) secondAction := by
+  have hraw := (hasDerivAt_const secondAction (-1 / (2 * firstAction ^ 2))).sub
+    (hasDerivAt_id secondAction)
+  apply (hraw.congr_deriv (by ring)).congr_of_eventuallyEq
+  filter_upwards [] with action
+  rfl
+
+theorem deriv_delaunayHamiltonian_firstAction {firstAction : ℝ}
+    (hfirstAction : firstAction ≠ 0) (secondAction : ℝ) :
+    deriv (fun action ↦ -1 / (2 * action ^ 2) - secondAction) firstAction =
+      1 / firstAction ^ 3 :=
+  (hasDerivAt_delaunayHamiltonian_firstAction hfirstAction secondAction).deriv
+
+theorem deriv_delaunayHamiltonian_secondAction (firstAction secondAction : ℝ) :
+    deriv (fun action ↦ -1 / (2 * firstAction ^ 2) - action) secondAction = -1 :=
+  (hasDerivAt_delaunayHamiltonian_secondAction firstAction secondAction).deriv
+
+/-- The displayed Kepler frequency is the coordinate gradient of the Delaunay Hamiltonian. -/
+theorem delaunayFrequency_eq_coordinateDerivatives {firstAction : ℝ}
+    (hfirstAction : firstAction ≠ 0) (secondAction : ℝ) :
+    delaunayFrequency firstAction =
+      ![deriv (fun action ↦ delaunayHamiltonian ![action, secondAction]) firstAction,
+        deriv (fun action ↦ delaunayHamiltonian ![firstAction, action]) secondAction] := by
+  funext i
+  fin_cases i
+  · change 1 / firstAction ^ 3 =
+      deriv (fun action ↦ -1 / (2 * action ^ 2) - secondAction) firstAction
+    exact (deriv_delaunayHamiltonian_firstAction hfirstAction secondAction).symm
+  · change (-1 : ℝ) =
+      deriv (fun action ↦ -1 / (2 * firstAction ^ 2) - action) secondAction
+    exact (deriv_delaunayHamiltonian_secondAction firstAction secondAction).symm
 
 lemma resonantFirstAction_pos {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :
     0 < resonantFirstAction p q := by
