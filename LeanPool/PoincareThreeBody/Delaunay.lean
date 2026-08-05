@@ -16,6 +16,7 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
 import Mathlib.Topology.Algebra.Order.Archimedean
+import Mathlib.Topology.Instances.Irrational
 
 /-!
 # Delaunay frequencies and resonant actions
@@ -147,6 +148,57 @@ theorem exists_resonantFirstAction_between {a b : ℝ} (ha : 0 < a) (hab : a < b
 
 /-- The positive first Delaunay action axis. -/
 abbrev PositiveAction := Set.Ioi (0 : ℝ)
+
+/-- The positive actions whose Kepler frequency is irrational. -/
+def irrationalFrequencyPositiveActions : Set PositiveAction :=
+  {action | Irrational (1 / action.1 ^ 3)}
+
+/-- Actions with irrational Kepler frequency occur in every positive open interval. -/
+theorem exists_irrationalFrequencyAction_between {a b : ℝ}
+    (ha : 0 < a) (hab : a < b) :
+    ∃ action : ℝ, a < action ∧ action < b ∧
+      Irrational (1 / action ^ 3) := by
+  have hb : 0 < b := ha.trans hab
+  have hacube : 0 < a ^ 3 := pow_pos ha 3
+  have hbcube : 0 < b ^ 3 := pow_pos hb 3
+  have hfrequencyInterval : 1 / b ^ 3 < 1 / a ^ 3 := by
+    exact one_div_lt_one_div_of_lt hacube (by
+      exact (show Odd 3 by decide).pow_lt_pow.mpr hab)
+  obtain ⟨frequency, hirrational, hfrequencyLower, hfrequencyUpper⟩ :=
+    exists_irrational_btwn hfrequencyInterval
+  have hfrequency : 0 < frequency :=
+    (by positivity : 0 < 1 / b ^ 3).trans hfrequencyLower
+  let action : ℝ := (1 / frequency) ^ ((3 : ℝ)⁻¹)
+  have hactionCube : action ^ 3 = 1 / frequency := by
+    dsimp only [action]
+    exact Real.rpow_inv_natCast_pow (by positivity) (by norm_num)
+  have haCubeLt : a ^ 3 < action ^ 3 := by
+    rw [hactionCube]
+    apply (lt_div_iff₀ hfrequency).2
+    have := (lt_div_iff₀ hacube).1 hfrequencyUpper
+    simpa [mul_comm] using this
+  have hcubeLtB : action ^ 3 < b ^ 3 := by
+    rw [hactionCube]
+    apply (div_lt_iff₀ hfrequency).2
+    have := (div_lt_iff₀ hbcube).1 hfrequencyLower
+    simpa [mul_comm] using this
+  have haAction : a < action := (show Odd 3 by decide).pow_lt_pow.mp haCubeLt
+  have hactionB : action < b := (show Odd 3 by decide).pow_lt_pow.mp hcubeLtB
+  refine ⟨action, haAction, hactionB, ?_⟩
+  have hfrequencyIdentity : 1 / action ^ 3 = frequency := by
+    rw [hactionCube]
+    field_simp
+  rwa [hfrequencyIdentity]
+
+/-- Positive actions with irrational Kepler frequency form a dense set. -/
+theorem irrationalFrequencyPositiveActions_dense :
+    Dense irrationalFrequencyPositiveActions := by
+  apply dense_of_exists_between
+  intro a b hab
+  obtain ⟨action, ha, hb, hirrational⟩ :=
+    exists_irrationalFrequencyAction_between a.2 (show a.1 < b.1 from hab)
+  let positiveAction : PositiveAction := ⟨action, a.2.trans ha⟩
+  exact ⟨positiveAction, hirrational, ha, hb⟩
 
 /-- The positive actions with a rational Kepler frequency ratio. -/
 def resonantPositiveActions : Set PositiveAction :=

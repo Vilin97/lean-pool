@@ -474,6 +474,57 @@ lemma liftedDelaunayFlowLine_collisionFree_mass_zero
     rw [hpositionSq]
     exact (sq_pos_of_pos hradius).ne'
 
+/-- Collision-freeness of a static lifted Delaunay chart point. -/
+lemma liftedDelaunayPhasePoint_collisionFree_mass_zero
+    {firstAction eccentricity meanAnomaly periapsisAngle : ℝ}
+    (hfirstAction : firstAction ≠ 0)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : firstAction ^ 2 * (1 + eccentricity) < 1) :
+    (0, liftedDelaunayPhasePoint
+      firstAction eccentricity meanAnomaly periapsisAngle) ∈ collisionFree := by
+  simpa [liftedDelaunayFlowLine] using
+    (liftedDelaunayFlowLine_collisionFree_mass_zero
+      (firstAction := firstAction) (eccentricity := eccentricity)
+      (meanAnomaly := meanAnomaly) (periapsisAngle := periapsisAngle) (time := 0)
+      hfirstAction heccentricity heccentricityOne hapoapsis)
+
+/-- Positive first actions whose Kepler ellipses stay strictly inside the unit primary orbit. -/
+abbrev InteriorPositiveAction (eccentricity : ℝ) :=
+  {action : PositiveAction // action.1 ^ 2 * (1 + eccentricity) < 1}
+
+/-- The interior actions with irrational Kepler frequency. -/
+def irrationalFrequencyInteriorPositiveActions (eccentricity : ℝ) :
+    Set (InteriorPositiveAction eccentricity) :=
+  {action | Irrational (1 / action.1.1 ^ 3)}
+
+/-- Irrational Kepler tori are dense among the ellipses staying inside the primary orbit. -/
+theorem irrationalFrequencyInteriorPositiveActions_dense
+    (eccentricity : ℝ) :
+    Dense (irrationalFrequencyInteriorPositiveActions eccentricity) := by
+  apply Subtype.dense_iff.mpr
+  intro action haction
+  have hopen : IsOpen
+      {candidate : PositiveAction |
+        candidate.1 ^ 2 * (1 + eccentricity) < 1} := by
+    exact isOpen_lt ((continuous_subtype_val.pow 2).mul continuous_const)
+      continuous_const
+  have hclosure :=
+    irrationalFrequencyPositiveActions_dense.open_subset_closure_inter hopen haction
+  have himage :
+      ((↑) : InteriorPositiveAction eccentricity → PositiveAction) ''
+          irrationalFrequencyInteriorPositiveActions eccentricity =
+        {candidate : PositiveAction |
+            candidate.1 ^ 2 * (1 + eccentricity) < 1} ∩
+          irrationalFrequencyPositiveActions := by
+    ext candidate
+    constructor
+    · rintro ⟨interiorAction, hirrational, rfl⟩
+      exact ⟨interiorAction.2, hirrational⟩
+    · rintro ⟨hinterior, hirrational⟩
+      exact ⟨⟨candidate, hinterior⟩, hirrational, rfl⟩
+  have hclosures := congrArg closure himage
+  exact hclosures.symm ▸ hclosure
+
 /-- The mass-zero member of an exact analytic first-integral family is invariant along every
 interior lifted Delaunay flow line. -/
 theorem IsFirstIntegralFamily.liftedDelaunayFlowLine_invariant
@@ -517,5 +568,128 @@ theorem IsFirstIntegralFamily.liftedDelaunayFlowLine_invariant
   have hderivativeZero : ∀ t, deriv observable t = 0 :=
     fun t ↦ (hderiv t).deriv
   exact is_const_of_deriv_eq_zero hdifferentiable hderivativeZero time 0
+
+/-- On every irrational interior Kepler torus, the mass-zero term of a candidate exact analytic
+first integral is independent of both Delaunay angles. -/
+theorem IsFirstIntegralFamily.mass_zero_liftedDelaunayPhasePoint_eq_of_irrational
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} (hδ : 0 < δ)
+    (hanalytic : IsJointlyAnalytic δ F) (hfirstIntegral : IsFirstIntegralFamily δ F)
+    {firstAction eccentricity : ℝ}
+    (hfirstAction : firstAction ≠ 0)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : firstAction ^ 2 * (1 + eccentricity) < 1)
+    (hirrational : Irrational (1 / firstAction ^ 3))
+    (firstAngles secondAngles : ℝ × ℝ) :
+    F 0 (liftedDelaunayPhasePoint
+        firstAction eccentricity firstAngles.1 firstAngles.2) =
+      F 0 (liftedDelaunayPhasePoint
+        firstAction eccentricity secondAngles.1 secondAngles.2) := by
+  let pullback : ℝ × ℝ → ℝ := fun angles ↦
+    F 0 (liftedDelaunayPhasePoint
+      firstAction eccentricity angles.1 angles.2)
+  have hpullback : Continuous pullback := by
+    rw [continuous_iff_continuousAt]
+    intro angles
+    let state := liftedDelaunayPhasePoint
+      firstAction eccentricity angles.1 angles.2
+    have hcollision : (0, state) ∈ collisionFree :=
+      liftedDelaunayPhasePoint_collisionFree_mass_zero hfirstAction
+        heccentricity heccentricityOne hapoapsis
+    have hdomain : (0, state) ∈ parameterDomain δ :=
+      ⟨by simpa using hδ, hcollision⟩
+    have hcandidate : ContinuousAt (F 0) state := by
+      have hjoint := hanalytic (0, state) hdomain
+      have hembedding : AnalyticAt ℝ
+          (fun phase : PhaseSpace ↦ ((0 : ℝ), phase)) state :=
+        analyticAt_const.prod analyticAt_id
+      exact (hjoint.comp hembedding).continuousAt
+    exact hcandidate.comp
+      (continuous_liftedDelaunayPhasePoint_angles
+        heccentricity heccentricityOne).continuousAt
+  have hmeanPeriod : ∀ mean periapsis,
+      pullback (mean + 2 * Real.pi, periapsis) = pullback (mean, periapsis) := by
+    intro mean periapsis
+    unfold pullback
+    rw [liftedDelaunayPhasePoint_add_mean_period heccentricity heccentricityOne]
+  have hperiapsisPeriod : ∀ mean periapsis,
+      pullback (mean, periapsis + 2 * Real.pi) = pullback (mean, periapsis) := by
+    intro mean periapsis
+    unfold pullback
+    rw [liftedDelaunayPhasePoint_add_periapsis_period]
+  have hinvariant : ∀ mean periapsis time,
+      pullback (mean + (1 / firstAction ^ 3) * time, periapsis - time) =
+        pullback (mean, periapsis) := by
+    intro mean periapsis time
+    have hflow := IsFirstIntegralFamily.liftedDelaunayFlowLine_invariant
+      hδ hanalytic hfirstIntegral hfirstAction heccentricity heccentricityOne
+      hapoapsis (meanAnomaly := mean) (periapsisAngle := periapsis) time
+    simpa [pullback, liftedDelaunayFlowLine, div_eq_mul_inv,
+      mul_comm] using hflow
+  exact eq_of_continuous_periodic_rotatingFlow_invariant hirrational hpullback
+    hmeanPeriod hperiapsisPeriod hinvariant firstAngles secondAngles
+
+/-- On every interior Kepler torus, including the rationally resonant ones, the mass-zero term of
+an exact analytic first-integral family is independent of both Delaunay angles.  This is the
+continuity extension of the irrational-torus theorem. -/
+theorem IsFirstIntegralFamily.mass_zero_liftedDelaunayPhasePoint_eq
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ} (hδ : 0 < δ)
+    (hanalytic : IsJointlyAnalytic δ F) (hfirstIntegral : IsFirstIntegralFamily δ F)
+    {firstAction eccentricity : ℝ}
+    (hfirstAction : 0 < firstAction)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : firstAction ^ 2 * (1 + eccentricity) < 1)
+    (firstAngles secondAngles : ℝ × ℝ) :
+    F 0 (liftedDelaunayPhasePoint
+        firstAction eccentricity firstAngles.1 firstAngles.2) =
+      F 0 (liftedDelaunayPhasePoint
+        firstAction eccentricity secondAngles.1 secondAngles.2) := by
+  let left : InteriorPositiveAction eccentricity → ℝ := fun action ↦
+    F 0 (liftedDelaunayPhasePoint
+      action.1.1 eccentricity firstAngles.1 firstAngles.2)
+  let right : InteriorPositiveAction eccentricity → ℝ := fun action ↦
+    F 0 (liftedDelaunayPhasePoint
+      action.1.1 eccentricity secondAngles.1 secondAngles.2)
+  have hcontinuous : ∀ angles : ℝ × ℝ, Continuous
+      (fun action : InteriorPositiveAction eccentricity ↦
+        F 0 (liftedDelaunayPhasePoint
+          action.1.1 eccentricity angles.1 angles.2)) := by
+    intro angles
+    rw [continuous_iff_continuousAt]
+    intro action
+    let state := liftedDelaunayPhasePoint
+      action.1.1 eccentricity angles.1 angles.2
+    have hcollision : (0, state) ∈ collisionFree :=
+      liftedDelaunayPhasePoint_collisionFree_mass_zero action.1.2.ne'
+        heccentricity heccentricityOne action.2
+    have hdomain : (0, state) ∈ parameterDomain δ :=
+      ⟨by simpa using hδ, hcollision⟩
+    have hcandidate : ContinuousAt (F 0) state := by
+      have hjoint := hanalytic (0, state) hdomain
+      have hembedding : AnalyticAt ℝ
+          (fun phase : PhaseSpace ↦ ((0 : ℝ), phase)) state :=
+        analyticAt_const.prod analyticAt_id
+      exact (hjoint.comp hembedding).continuousAt
+    have haction : ContinuousAt
+        (fun candidate : InteriorPositiveAction eccentricity ↦ candidate.1.1)
+        action := by
+      fun_prop
+    have hchart : ContinuousAt
+        (fun candidate : InteriorPositiveAction eccentricity ↦
+          liftedDelaunayPhasePoint
+            candidate.1.1 eccentricity angles.1 angles.2) action :=
+      (continuousAt_liftedDelaunayPhasePoint_firstAction action.1.2.ne').comp haction
+    exact hcandidate.comp hchart
+  have hleft : Continuous left := hcontinuous firstAngles
+  have hright : Continuous right := hcontinuous secondAngles
+  have heq : left = right := by
+    apply hleft.ext_on
+      (irrationalFrequencyInteriorPositiveActions_dense eccentricity) hright
+    intro action hirrational
+    exact IsFirstIntegralFamily.mass_zero_liftedDelaunayPhasePoint_eq_of_irrational
+      hδ hanalytic hfirstIntegral action.1.2.ne' heccentricity
+      heccentricityOne action.2 hirrational firstAngles secondAngles
+  let action : InteriorPositiveAction eccentricity :=
+    ⟨⟨firstAction, hfirstAction⟩, hapoapsis⟩
+  simpa [left, right, action] using congrFun heq action
 
 end LeanPool.PoincareThreeBody

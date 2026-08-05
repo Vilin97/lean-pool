@@ -173,4 +173,98 @@ theorem continuous_family_rotatingAngleFlow_invariant_eq_base
   exact eq_of_continuous_family_rotatingAngleFlow_invariant hf hinvariant
     state.1 state.2 base
 
+/-- A continuous periodic real function descends continuously to the corresponding additive
+circle. -/
+theorem Function.Periodic.continuous_lift
+    {f : ℝ → ℝ} {period : ℝ} (hperiodic : Function.Periodic f period)
+    (hcontinuous : Continuous f) :
+    Continuous hperiodic.lift := by
+  apply isQuotientMap_quotient_mk'.continuous_iff.mpr
+  convert hcontinuous using 1
+  funext argument
+  exact hperiodic.lift_coe argument
+
+/-- A continuous real function with an ordinary period and an incommensurable second period is
+constant. -/
+theorem eq_of_continuous_two_periods_of_irrational_ratio
+    {f : ℝ → ℝ} {period shift : ℝ}
+    (hcontinuous : Continuous f) (hperiod : Function.Periodic f period)
+    (hshift : Function.Periodic f shift) (hirrational : Irrational (shift / period))
+    (first second : ℝ) : f first = f second := by
+  let descended : AddCircle period → ℝ := hperiod.lift
+  let fiber : AddCircle period → ℝ := fun displacement ↦
+    descended ((first : AddCircle period) + displacement)
+  have hdescended : Continuous descended :=
+    Function.Periodic.continuous_lift hperiod hcontinuous
+  have hfiber : Continuous fiber := by
+    dsimp only [fiber]
+    fun_prop
+  have hdense : DenseRange (fun n : ℤ ↦ n • ((shift : ℝ) : AddCircle period)) :=
+    AddCircle.denseRange_zsmul_coe_iff.mpr hirrational
+  have hfiberDense : ∀ n : ℤ,
+      fiber (n • ((shift : ℝ) : AddCircle period)) = fiber 0 := by
+    intro n
+    simp only [fiber, descended, ← AddCircle.coe_zsmul, ← AddCircle.coe_add,
+      Function.Periodic.lift_coe, add_zero]
+    simpa [add_comm] using hshift.zsmul n first
+  have hfiberConstant : fiber = fun _ ↦ fiber 0 := by
+    apply hfiber.ext_on hdense continuous_const
+    intro displacement hdisplacement
+    rcases hdisplacement with ⟨n, rfl⟩
+    exact hfiberDense n
+  have hvalue := congrFun hfiberConstant
+    (((second : AddCircle period) - (first : AddCircle period)))
+  have hcircle : (first : AddCircle period) +
+      ((second : AddCircle period) - (first : AddCircle period)) = second := by
+    abel
+  dsimp only [fiber] at hvalue
+  rw [hcircle] at hvalue
+  simp only [descended, Function.Periodic.lift_coe, add_zero] at hvalue
+  exact hvalue.symm
+
+/-- Real-lift form of the irrational two-torus argument: a continuous function, periodic in both
+angles and invariant under `(ω, -1)` translation, is constant when `ω` is irrational. -/
+theorem eq_of_continuous_periodic_rotatingFlow_invariant
+    {ω : ℝ} (hω : Irrational ω) {f : ℝ × ℝ → ℝ} (hf : Continuous f)
+    (hmeanPeriod : ∀ mean periapsis,
+      f (mean + 2 * Real.pi, periapsis) = f (mean, periapsis))
+    (hperiapsisPeriod : ∀ mean periapsis,
+      f (mean, periapsis + 2 * Real.pi) = f (mean, periapsis))
+    (hinvariant : ∀ mean periapsis time,
+      f (mean + ω * time, periapsis - time) = f (mean, periapsis))
+    (first second : ℝ × ℝ) : f first = f second := by
+  have hsameSecond : ∀ firstMean secondMean periapsis,
+      f (firstMean, periapsis) = f (secondMean, periapsis) := by
+    intro firstMean secondMean periapsis
+    let meanFiber : ℝ → ℝ := fun mean ↦ f (mean, periapsis)
+    have hcontinuous : Continuous meanFiber :=
+      hf.comp (continuous_id.prodMk continuous_const)
+    have hperiod : Function.Periodic meanFiber (2 * Real.pi) :=
+      fun mean ↦ hmeanPeriod mean periapsis
+    have hshift : Function.Periodic meanFiber (2 * Real.pi * ω) := by
+      intro mean
+      have hflow := hinvariant mean periapsis (2 * Real.pi)
+      have hperi := hperiapsisPeriod (mean + ω * (2 * Real.pi))
+        (periapsis - 2 * Real.pi)
+      have hreturn : f (mean + ω * (2 * Real.pi), periapsis - 2 * Real.pi) =
+          f (mean + ω * (2 * Real.pi), periapsis) := by
+        simpa only [sub_add_cancel] using hperi.symm
+      change f (mean + 2 * Real.pi * ω, periapsis) = f (mean, periapsis)
+      rw [show mean + 2 * Real.pi * ω = mean + ω * (2 * Real.pi) by ring,
+        ← hreturn]
+      exact hflow
+    have hratio : Irrational ((2 * Real.pi * ω) / (2 * Real.pi)) := by
+      convert hω using 1
+      field_simp [Real.pi_ne_zero]
+    exact eq_of_continuous_two_periods_of_irrational_ratio
+      hcontinuous hperiod hshift hratio firstMean secondMean
+  obtain ⟨time, htime⟩ : ∃ time : ℝ, first.2 - time = second.2 :=
+    ⟨first.2 - second.2, by ring⟩
+  calc
+    f first = f (first.1 + ω * time, first.2 - time) :=
+      (hinvariant first.1 first.2 time).symm
+    _ = f (second.1, first.2 - time) :=
+      hsameSecond (first.1 + ω * time) second.1 (first.2 - time)
+    _ = f second := by rw [htime]
+
 end LeanPool.PoincareThreeBody
