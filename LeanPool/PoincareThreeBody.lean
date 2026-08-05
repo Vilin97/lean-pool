@@ -13,6 +13,7 @@ import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
 import LeanPool.PoincareThreeBody.HamiltonianMixedPartials
 import LeanPool.PoincareThreeBody.HomologicalEquation
+import LeanPool.PoincareThreeBody.IrrationalTorusFlow
 import LeanPool.PoincareThreeBody.KeplerOrbit
 import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
 import LeanPool.PoincareThreeBody.KeplerFlow
