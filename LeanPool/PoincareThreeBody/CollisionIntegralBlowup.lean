@@ -223,4 +223,64 @@ theorem log_lower_bound_resonantPrimaryInverse_local_integral
       rw [intervalIntegral.integral_const_mul, hinverse]
     _ ≤ _ := hintegralLower
 
+/-- The local logarithmic estimate also bounds the inverse-distance integral over the whole
+resonant period, provided the comparison window lies inside that period. -/
+theorem log_lower_bound_resonantPrimaryInverse_period_integral
+    {p q : ℕ} {constant neighborhoodRadius eccentricity window : ℝ}
+    (hconstant : 0 < constant)
+    (hlocal : ∀ parameters : ℝ × ℝ,
+      dist parameters
+          (resonantCollisionEccentricity p q, resonantApoapsisTime p q) <
+            neighborhoodRadius →
+      ‖orientedResonantEllipsePosition p q parameters.1
+            (resonantCollisionOrientation p q) parameters.2 - ![(1 : ℝ), (0 : ℝ)]‖ ≤
+        constant *
+          ‖parameters -
+            (resonantCollisionEccentricity p q, resonantApoapsisTime p q)‖)
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantSemimajorAxis p q * (1 + eccentricity) < 1)
+    (hdelta : 0 < resonantCollisionEccentricity p q - eccentricity)
+    (hdeltaWindow : resonantCollisionEccentricity p q - eccentricity < window)
+    (hwindow : window < neighborhoodRadius)
+    (hwindowPeriod : resonantApoapsisTime p q + window ≤ resonantOrbitPeriod p) :
+    (1 / (2 * constant)) *
+        Real.log (window / (resonantCollisionEccentricity p q - eccentricity)) ≤
+      ∫ time in 0..resonantOrbitPeriod p,
+        resonantPrimaryInverse p q eccentricity
+          (resonantCollisionOrientation p q) time := by
+  let start := resonantApoapsisTime p q +
+    (resonantCollisionEccentricity p q - eccentricity)
+  let finish := resonantApoapsisTime p q + window
+  have hstart : 0 ≤ start := by
+    dsimp [start, resonantApoapsisTime]
+    have hratio : 0 ≤ (p : ℝ) / (q : ℝ) := div_nonneg (by positivity) (by positivity)
+    positivity
+  have hstartFinish : start ≤ finish := by
+    dsimp [start, finish]
+    linarith
+  have hfullIntegrable : IntervalIntegrable
+      (resonantPrimaryInverse p q eccentricity (resonantCollisionOrientation p q)) volume
+      0 (resonantOrbitPeriod p) :=
+    (continuous_resonantPrimaryInverse
+      (p := p) (q := q) (eccentricity := eccentricity)
+      (orientation := resonantCollisionOrientation p q)
+      heccentricity heccentricityOne hapoapsis).intervalIntegrable (μ := volume)
+        0 (resonantOrbitPeriod p)
+  have hlocalLeFull :
+      (∫ time in start..finish,
+          resonantPrimaryInverse p q eccentricity
+            (resonantCollisionOrientation p q) time) ≤
+        ∫ time in 0..resonantOrbitPeriod p,
+          resonantPrimaryInverse p q eccentricity
+            (resonantCollisionOrientation p q) time := by
+    apply intervalIntegral.integral_mono_interval hstart hstartFinish hwindowPeriod
+    · exact Filter.Eventually.of_forall (fun time ↦ by
+        unfold resonantPrimaryInverse
+        dsimp only
+        exact one_div_nonneg.mpr (Real.sqrt_nonneg _))
+    · exact hfullIntegrable
+  exact (log_lower_bound_resonantPrimaryInverse_local_integral
+    hconstant hlocal heccentricity heccentricityOne hapoapsis hdelta hdeltaWindow
+      hwindow).trans hlocalLeFull
+
 end LeanPool.PoincareThreeBody

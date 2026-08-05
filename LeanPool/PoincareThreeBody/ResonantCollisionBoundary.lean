@@ -76,6 +76,17 @@ theorem resonantEccentricAnomaly_apoapsisTime
     (eccentricAnomaly_eccentricMeanAnomaly
       heccentricity heccentricityOne Real.pi)
 
+theorem resonantApoapsisTime_lt_orbitPeriod
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q) :
+    resonantApoapsisTime p q < resonantOrbitPeriod p := by
+  have hpReal : 0 < (p : ℝ) := by positivity
+  have hqReal : 0 < (q : ℝ) := by positivity
+  have hqOne : (1 : ℝ) ≤ q := by exact_mod_cast hq
+  unfold resonantApoapsisTime resonantOrbitPeriod
+  rw [div_lt_iff₀ hqReal]
+  have hpiP : 0 < Real.pi * (p : ℝ) := mul_pos Real.pi_pos hpReal
+  nlinarith [mul_le_mul_of_nonneg_left hqOne hpiP.le]
+
 /-- At the collision-aligned orientation, every admissible ellipse places its apoapsis on the
 positive rotating x-axis. -/
 theorem orientedResonantEllipsePosition_alignedApoapsis
