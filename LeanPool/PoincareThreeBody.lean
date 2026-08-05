@@ -5,6 +5,7 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.Analytic
+import LeanPool.PoincareThreeBody.ActionFactorization
 import LeanPool.PoincareThreeBody.ActionPoisson
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.Core

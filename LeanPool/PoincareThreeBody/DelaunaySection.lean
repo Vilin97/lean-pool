@@ -29,6 +29,10 @@ noncomputable def eccentricityFromActions (action : ActionSpace) : ℝ :=
 def ProgradeEllipticActions : Set ActionSpace :=
   {action | 0 < action 1 ∧ action 1 < action 0}
 
+lemma isOpen_progradeEllipticActions : IsOpen ProgradeEllipticActions := by
+  exact (isOpen_lt continuous_const (continuous_apply 1)).inter
+    (isOpen_lt (continuous_apply 1) (continuous_apply 0))
+
 lemma eccentricityFromActions_nonneg (action : ActionSpace) :
     0 ≤ eccentricityFromActions action :=
   Real.sqrt_nonneg _
@@ -110,6 +114,26 @@ theorem eccentricityFromActions_angularActionFromEccentricity
     hquotient, hsqrt]
   rw [show 1 - (1 - eccentricity ^ 2) = eccentricity ^ 2 by ring,
     Real.sqrt_sq_eq_abs, abs_of_nonneg heccentricity]
+
+/-- Reconstructing eccentricity from a prograde action pair and then rebuilding the angular
+action returns the original pair. -/
+theorem actions_from_eccentricityFromActions
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions) :
+    ![action 0,
+      angularActionFromEccentricity (action 0) (eccentricityFromActions action)] = action := by
+  have heSquare := eccentricityFromActions_sq haction
+  have hratioPos := ratio_actions_pos haction
+  have hsqrt : Real.sqrt (1 - eccentricityFromActions action ^ 2) =
+      action 1 / action 0 := by
+    rw [heSquare, show 1 - (1 - (action 1 / action 0) ^ 2) =
+      (action 1 / action 0) ^ 2 by ring,
+      Real.sqrt_sq_eq_abs, abs_of_pos hratioPos]
+  funext coordinate
+  fin_cases coordinate
+  · rfl
+  · change action 0 * Real.sqrt (1 - eccentricityFromActions action ^ 2) = action 1
+    rw [hsqrt]
+    field_simp [(haction.1.trans haction.2).ne']
 
 /-- Zero mean anomaly has zero eccentric anomaly throughout the elliptic range. -/
 lemma eccentricAnomaly_zero {eccentricity : ℝ}
@@ -229,6 +253,214 @@ theorem analyticAt_delaunayActionSection
             (1 - eccentricity candidate)) action
     exact ((((hfirstAction.pow 2).mul hinverseCube).mul hsqrt).div
       hdenominator hdenominatorNe)
+
+/-- An action section through a prescribed eccentric anomaly and periapsis angle.  Fixing the
+eccentric anomaly, rather than the mean anomaly, makes the dependence on the two actions
+explicitly analytic. -/
+noncomputable def delaunayActionSectionAtAnomaly
+    (anomaly periapsisAngle : ℝ) (action : ActionSpace) : PhaseSpace :=
+  let eccentricity := eccentricityFromActions action
+  positionMomentumPhasePoint
+    (positionInRotatingFrame (-periapsisAngle)
+      (inertialEllipsePosition (action 0) eccentricity anomaly))
+    (positionInRotatingFrame (-periapsisAngle)
+      (inertialEllipseVelocity (action 0) eccentricity
+        (1 / action 0 ^ 3) anomaly))
+
+/-- The fixed-eccentric-anomaly section is a lifted Delaunay point whose mean anomaly is obtained
+from Kepler's equation. -/
+theorem delaunayActionSectionAtAnomaly_eq_liftedDelaunayPhasePoint
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (anomaly periapsisAngle : ℝ) :
+    delaunayActionSectionAtAnomaly anomaly periapsisAngle action =
+      liftedDelaunayPhasePoint (action 0) (eccentricityFromActions action)
+        (eccentricMeanAnomaly (eccentricityFromActions action) anomaly)
+        periapsisAngle := by
+  have heccentricity := eccentricityFromActions_nonneg action
+  have heccentricityOne := eccentricityFromActions_lt_one haction
+  have hinverse := eccentricAnomaly_eccentricMeanAnomaly
+    heccentricity heccentricityOne anomaly
+  unfold delaunayActionSectionAtAnomaly liftedDelaunayPhasePoint
+    liftedDelaunayPosition liftedDelaunayMomentum liftedDelaunayEccentricAnomaly
+  rw [hinverse]
+
+/-- Every fixed-eccentric-anomaly section is a right inverse of the Cartesian action map. -/
+theorem cartesianDelaunayActions_delaunayActionSectionAtAnomaly
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (anomaly periapsisAngle : ℝ) :
+    cartesianDelaunayActions
+        (delaunayActionSectionAtAnomaly anomaly periapsisAngle action) = action := by
+  have hfirstAction : 0 < action 0 := haction.1.trans haction.2
+  have heccentricity := eccentricityFromActions_nonneg action
+  have heccentricityOne := eccentricityFromActions_lt_one haction
+  rw [delaunayActionSectionAtAnomaly_eq_liftedDelaunayPhasePoint haction,
+    cartesianDelaunayActions_liftedDelaunayPhasePoint hfirstAction
+      heccentricity heccentricityOne]
+  funext coordinate
+  fin_cases coordinate
+  · rfl
+  · change angularActionFromEccentricity
+      (action 0) (eccentricityFromActions action) = action 1
+    unfold angularActionFromEccentricity
+    have heSquare := eccentricityFromActions_sq haction
+    have hratioPos := ratio_actions_pos haction
+    have hsqrt : Real.sqrt (1 - eccentricityFromActions action ^ 2) =
+        action 1 / action 0 := by
+      rw [heSquare, show 1 - (1 - (action 1 / action 0) ^ 2) =
+        (action 1 / action 0) ^ 2 by ring,
+        Real.sqrt_sq_eq_abs, abs_of_pos hratioPos]
+    rw [hsqrt]
+    field_simp
+
+/-- With anomaly and periapsis held fixed, the moving action section is analytic throughout the
+prograde elliptic action region. -/
+theorem analyticAt_delaunayActionSectionAtAnomaly
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (anomaly periapsisAngle : ℝ) :
+    AnalyticAt ℝ (delaunayActionSectionAtAnomaly anomaly periapsisAngle) action := by
+  let eccentricity : ActionSpace → ℝ := eccentricityFromActions
+  let firstAction : ActionSpace → ℝ := fun candidate ↦ candidate 0
+  let denominator : ActionSpace → ℝ := fun candidate ↦
+    1 - eccentricity candidate * Real.cos anomaly
+  let sqrtOneMinusSquare : ActionSpace → ℝ := fun candidate ↦
+    Real.sqrt (1 - eccentricity candidate ^ 2)
+  let inverseCube : ActionSpace → ℝ := fun candidate ↦
+    1 / firstAction candidate ^ 3
+  have heccentricity : AnalyticAt ℝ eccentricity action :=
+    analyticAt_eccentricityFromActions haction
+  have hfirstAction : AnalyticAt ℝ firstAction action :=
+    (ContinuousLinearMap.proj 0 : ActionSpace →L[ℝ] ℝ).analyticAt action
+  have hfirstActionNe : firstAction action ≠ 0 :=
+    (haction.1.trans haction.2).ne'
+  have hdenominator : AnalyticAt ℝ denominator action := by
+    dsimp only [denominator]
+    exact analyticAt_const.sub (heccentricity.mul analyticAt_const)
+  have hdenominatorNe : denominator action ≠ 0 := by
+    dsimp only [denominator, eccentricity]
+    exact (one_sub_eccentricity_mul_cos_pos
+      (eccentricityFromActions_nonneg action)
+      (eccentricityFromActions_lt_one haction)).ne'
+  have hsqrt : AnalyticAt ℝ sqrtOneMinusSquare action := by
+    have hargument : AnalyticAt ℝ
+        (fun candidate : ActionSpace ↦ 1 - eccentricity candidate ^ 2) action :=
+      analyticAt_const.sub (heccentricity.pow 2)
+    have hargumentPos : 0 < 1 - eccentricity action ^ 2 := by
+      have heNonneg := eccentricityFromActions_nonneg action
+      have heOne := eccentricityFromActions_lt_one haction
+      dsimp only [eccentricity]
+      nlinarith
+    exact (analyticAt_sqrt_of_pos hargumentPos).comp
+      (f := fun candidate : ActionSpace ↦ 1 - eccentricity candidate ^ 2)
+      hargument
+  have hinverseCube : AnalyticAt ℝ inverseCube action := by
+    dsimp only [inverseCube]
+    exact analyticAt_const.div (hfirstAction.pow 3)
+      (pow_ne_zero 3 hfirstActionNe)
+  let positionX : ActionSpace → ℝ := fun candidate ↦
+    firstAction candidate ^ 2 * (Real.cos anomaly - eccentricity candidate)
+  let positionY : ActionSpace → ℝ := fun candidate ↦
+    firstAction candidate ^ 2 * sqrtOneMinusSquare candidate * Real.sin anomaly
+  let momentumX : ActionSpace → ℝ := fun candidate ↦
+    -firstAction candidate ^ 2 * inverseCube candidate * Real.sin anomaly /
+      denominator candidate
+  let momentumY : ActionSpace → ℝ := fun candidate ↦
+    firstAction candidate ^ 2 * inverseCube candidate *
+      sqrtOneMinusSquare candidate * Real.cos anomaly / denominator candidate
+  have hpositionX : AnalyticAt ℝ positionX action := by
+    dsimp only [positionX]
+    exact (hfirstAction.pow 2).mul (analyticAt_const.sub heccentricity)
+  have hpositionY : AnalyticAt ℝ positionY action := by
+    dsimp only [positionY]
+    exact ((hfirstAction.pow 2).mul hsqrt).mul analyticAt_const
+  have hmomentumX : AnalyticAt ℝ momentumX action := by
+    dsimp only [momentumX]
+    exact ((((hfirstAction.pow 2).neg.mul hinverseCube).mul
+      analyticAt_const).div hdenominator hdenominatorNe)
+  have hmomentumY : AnalyticAt ℝ momentumY action := by
+    dsimp only [momentumY]
+    exact (((((hfirstAction.pow 2).mul hinverseCube).mul hsqrt).mul
+      analyticAt_const).div hdenominator hdenominatorNe)
+  rw [analyticAt_pi_iff]
+  intro coordinate
+  fin_cases coordinate
+  · change AnalyticAt ℝ
+      (fun candidate ↦ Real.cos (-periapsisAngle) * positionX candidate +
+        Real.sin (-periapsisAngle) * positionY candidate) action
+    exact (analyticAt_const.mul hpositionX).add (analyticAt_const.mul hpositionY)
+  · change AnalyticAt ℝ
+      (fun candidate ↦ -Real.sin (-periapsisAngle) * positionX candidate +
+        Real.cos (-periapsisAngle) * positionY candidate) action
+    exact (analyticAt_const.mul hpositionX).add (analyticAt_const.mul hpositionY)
+  · change AnalyticAt ℝ
+      (fun candidate ↦ Real.cos (-periapsisAngle) * momentumX candidate +
+        Real.sin (-periapsisAngle) * momentumY candidate) action
+    exact (analyticAt_const.mul hmomentumX).add (analyticAt_const.mul hmomentumY)
+  · change AnalyticAt ℝ
+      (fun candidate ↦ -Real.sin (-periapsisAngle) * momentumX candidate +
+        Real.cos (-periapsisAngle) * momentumY candidate) action
+    exact (analyticAt_const.mul hmomentumX).add (analyticAt_const.mul hmomentumY)
+
+/-- Choosing the anomaly of a lifted point makes the moving action section pass through that
+point. -/
+theorem delaunayActionSectionAtAnomaly_liftedDelaunayActions
+    {firstAction eccentricity meanAnomaly periapsisAngle : ℝ}
+    (hfirstAction : 0 < firstAction)
+    (heccentricity : 0 < eccentricity) (heccentricityOne : eccentricity < 1) :
+    delaunayActionSectionAtAnomaly
+        (eccentricAnomaly eccentricity meanAnomaly) periapsisAngle
+        ![firstAction, angularActionFromEccentricity firstAction eccentricity] =
+      liftedDelaunayPhasePoint firstAction eccentricity meanAnomaly periapsisAngle := by
+  let action : ActionSpace :=
+    ![firstAction, angularActionFromEccentricity firstAction eccentricity]
+  have haction : action ∈ ProgradeEllipticActions :=
+    ⟨angularActionFromEccentricity_pos hfirstAction heccentricity heccentricityOne,
+      angularActionFromEccentricity_lt_firstAction hfirstAction heccentricity⟩
+  have heRecover : eccentricityFromActions action = eccentricity :=
+    eccentricityFromActions_angularActionFromEccentricity hfirstAction
+      heccentricity.le heccentricityOne
+  rw [delaunayActionSectionAtAnomaly_eq_liftedDelaunayPhasePoint haction]
+  change liftedDelaunayPhasePoint firstAction (eccentricityFromActions action)
+      (eccentricMeanAnomaly (eccentricityFromActions action)
+        (eccentricAnomaly eccentricity meanAnomaly)) periapsisAngle = _
+  rw [heRecover, eccentricMeanAnomaly_eccentricAnomaly heccentricity.le]
+
+/-- The derivative of every moving action section is a linear right inverse of the derivative of
+the physical action map. -/
+theorem fderiv_cartesianDelaunayActions_comp_sectionAtAnomaly
+    {action : ActionSpace} (haction : action ∈ ProgradeEllipticActions)
+    (anomaly periapsisAngle : ℝ) :
+    (fderiv ℝ cartesianDelaunayActions
+      (delaunayActionSectionAtAnomaly anomaly periapsisAngle action)).comp
+        (fderiv ℝ (delaunayActionSectionAtAnomaly anomaly periapsisAngle) action) =
+      ContinuousLinearMap.id ℝ ActionSpace := by
+  let movingSection := delaunayActionSectionAtAnomaly anomaly periapsisAngle
+  let state := movingSection action
+  have hsection : AnalyticAt ℝ movingSection action :=
+    analyticAt_delaunayActionSectionAtAnomaly haction anomaly periapsisAngle
+  have hfirstAction : 0 < action 0 := haction.1.trans haction.2
+  have heccentricity := eccentricityFromActions_nonneg action
+  have heccentricityOne := eccentricityFromActions_lt_one haction
+  have hstate : state = liftedDelaunayPhasePoint (action 0)
+      (eccentricityFromActions action)
+      (eccentricMeanAnomaly (eccentricityFromActions action) anomaly)
+      periapsisAngle :=
+    delaunayActionSectionAtAnomaly_eq_liftedDelaunayPhasePoint haction _ _
+  have hactions : AnalyticAt ℝ cartesianDelaunayActions state :=
+    hstate.symm ▸ analyticAt_cartesianDelaunayActions_liftedDelaunayPhasePoint
+      hfirstAction heccentricity heccentricityOne
+  have hcomp := hactions.differentiableAt.hasFDerivAt.comp action
+    hsection.differentiableAt.hasFDerivAt
+  have heventual : (fun candidate ↦ cartesianDelaunayActions (movingSection candidate))
+      =ᶠ[nhds action] id := by
+    filter_upwards [isOpen_progradeEllipticActions.mem_nhds haction] with candidate hcandidate
+    exact cartesianDelaunayActions_delaunayActionSectionAtAnomaly
+      hcandidate anomaly periapsisAngle
+  rw [show (fderiv ℝ cartesianDelaunayActions state).comp
+      (fderiv ℝ movingSection action) =
+        fderiv ℝ (fun candidate ↦ cartesianDelaunayActions (movingSection candidate)) action by
+      exact hcomp.fderiv.symm]
+  rw [heventual.fderiv_eq]
+  exact fderiv_id
 
 /-- The leading, mass-zero candidate integral represented on the explicit action section. -/
 noncomputable def leadingActionCoefficient

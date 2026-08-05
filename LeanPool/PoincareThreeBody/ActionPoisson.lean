@@ -25,6 +25,271 @@ def phasePoissonPairing
     (first (coordinateVector 1) * second (coordinateVector 3) -
       first (coordinateVector 3) * second (coordinateVector 1))
 
+/-- The canonical Hamiltonian vector associated with a phase covector. -/
+def phaseHamiltonianVector (covector : PhaseSpace →L[ℝ] ℝ) : PhaseSpace :=
+  ![covector (coordinateVector 2), covector (coordinateVector 3),
+    -covector (coordinateVector 0), -covector (coordinateVector 1)]
+
+lemma phasePoissonPairing_eq_apply_phaseHamiltonianVector
+    (first second : PhaseSpace →L[ℝ] ℝ) :
+    phasePoissonPairing first second = first (phaseHamiltonianVector second) := by
+  have hvector : phaseHamiltonianVector second =
+      second (coordinateVector 2) • coordinateVector 0 +
+        second (coordinateVector 3) • coordinateVector 1 +
+        (-second (coordinateVector 0)) • coordinateVector 2 +
+        (-second (coordinateVector 1)) • coordinateVector 3 := by
+    funext coordinate
+    fin_cases coordinate <;> simp [phaseHamiltonianVector, coordinateVector]
+  rw [hvector, map_add, map_add, map_add, map_smul, map_smul, map_smul, map_smul]
+  unfold phasePoissonPairing
+  ring
+
+lemma phaseHamiltonianVector_add (first second : PhaseSpace →L[ℝ] ℝ) :
+    phaseHamiltonianVector (first + second) =
+      phaseHamiltonianVector first + phaseHamiltonianVector second := by
+  funext coordinate
+  fin_cases coordinate <;> simp [phaseHamiltonianVector] <;> ring
+
+lemma phaseHamiltonianVector_smul (scalar : ℝ) (covector : PhaseSpace →L[ℝ] ℝ) :
+    phaseHamiltonianVector (scalar • covector) =
+      scalar • phaseHamiltonianVector covector := by
+  funext coordinate
+  fin_cases coordinate <;> simp [phaseHamiltonianVector]
+
+/-- The canonical sharp map from covectors to Hamiltonian vectors is injective. -/
+theorem phaseHamiltonianVector_injective :
+    Function.Injective phaseHamiltonianVector := by
+  intro first second hequal
+  apply ContinuousLinearMap.ext
+  intro direction
+  have hdecompose : direction =
+      direction 0 • coordinateVector 0 + direction 1 • coordinateVector 1 +
+        direction 2 • coordinateVector 2 + direction 3 • coordinateVector 3 := by
+    funext coordinate
+    fin_cases coordinate <;> simp [coordinateVector]
+  have hcoordinates : ∀ coordinate,
+      first (coordinateVector coordinate) = second (coordinateVector coordinate) := by
+    intro coordinate
+    fin_cases coordinate
+    · have := congrFun hequal 2
+      simpa [phaseHamiltonianVector] using congrArg Neg.neg this
+    · have := congrFun hequal 3
+      simpa [phaseHamiltonianVector] using congrArg Neg.neg this
+    · simpa [phaseHamiltonianVector] using congrFun hequal 0
+    · simpa [phaseHamiltonianVector] using congrFun hequal 1
+  rw [hdecompose, map_add, map_add, map_add, map_add, map_add, map_add,
+    map_smul, map_smul, map_smul, map_smul, map_smul, map_smul, map_smul, map_smul]
+  rw [hcoordinates 0, hcoordinates 1, hcoordinates 2, hcoordinates 3]
+
+lemma phasePoissonPairing_skew
+    (first second : PhaseSpace →L[ℝ] ℝ) :
+    phasePoissonPairing first second = -phasePoissonPairing second first := by
+  unfold phasePoissonPairing
+  ring
+
+lemma phasePoissonPairing_self (covector : PhaseSpace →L[ℝ] ℝ) :
+    phasePoissonPairing covector covector = 0 := by
+  unfold phasePoissonPairing
+  ring
+
+/-- A coordinate row of a phase-to-action linear map. -/
+def actionDerivativeCovector
+    (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) (coordinate : Fin 2) :
+    PhaseSpace →L[ℝ] ℝ :=
+  (ContinuousLinearMap.proj coordinate).comp actionDerivative
+
+lemma actionDerivativeCovector_apply
+    (actionDerivative : PhaseSpace →L[ℝ] ActionSpace)
+    (coordinate : Fin 2) (direction : PhaseSpace) :
+    actionDerivativeCovector actionDerivative coordinate direction =
+      actionDerivative direction coordinate :=
+  rfl
+
+/-- The two Hamiltonian tangent vectors associated with the rows of an action derivative. -/
+def actionHamiltonianTangentMap
+    (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) : ActionSpace →ₗ[ℝ] PhaseSpace where
+  toFun vector :=
+    vector 0 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0) +
+      vector 1 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 1)
+  map_add' first second := by
+    simp only [Pi.add_apply, add_smul]
+    abel
+  map_smul' scalar vector := by
+    ext coordinate
+    fin_cases coordinate <;> simp [smul_eq_mul] <;> ring
+
+lemma actionHamiltonianTangentMap_apply
+    (actionDerivative : PhaseSpace →L[ℝ] ActionSpace) (vector : ActionSpace) :
+    actionHamiltonianTangentMap actionDerivative vector =
+      vector 0 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0) +
+        vector 1 • phaseHamiltonianVector (actionDerivativeCovector actionDerivative 1) :=
+  rfl
+
+/-- A right inverse makes the two Hamiltonian row vectors linearly independent. -/
+theorem actionHamiltonianTangentMap_injective_of_rightInverse
+    {actionDerivative : PhaseSpace →L[ℝ] ActionSpace}
+    {actionSectionDerivative : ActionSpace →L[ℝ] PhaseSpace}
+    (hright : actionDerivative.comp actionSectionDerivative =
+      ContinuousLinearMap.id ℝ ActionSpace) :
+    Function.Injective (actionHamiltonianTangentMap actionDerivative) := by
+  intro first second hequal
+  let rowZero := actionDerivativeCovector actionDerivative 0
+  let rowOne := actionDerivativeCovector actionDerivative 1
+  let difference : ActionSpace := first - second
+  have htangentZero : actionHamiltonianTangentMap actionDerivative difference = 0 := by
+    change actionHamiltonianTangentMap actionDerivative (first - second) = 0
+    rw [map_sub, hequal, sub_self]
+  have hhamiltonian : phaseHamiltonianVector
+      (difference 0 • rowZero + difference 1 • rowOne) = 0 := by
+    rw [phaseHamiltonianVector_add, phaseHamiltonianVector_smul,
+      phaseHamiltonianVector_smul]
+    exact htangentZero
+  have hcovector : difference 0 • rowZero + difference 1 • rowOne = 0 := by
+    apply phaseHamiltonianVector_injective
+    simpa [phaseHamiltonianVector] using hhamiltonian
+  have hcoordinate (input output : Fin 2) :
+      actionDerivativeCovector actionDerivative output
+          (actionSectionDerivative (actionCoordinateVector input)) =
+        if output = input then 1 else 0 := by
+    have happly := congrArg
+      (fun derivative : ActionSpace →L[ℝ] ActionSpace ↦
+        derivative (actionCoordinateVector input) output) hright
+    simpa [actionDerivativeCovector, actionCoordinateVector] using happly
+  have hzero : difference 0 = 0 := by
+    have happly := congrArg
+      (fun covector : PhaseSpace →L[ℝ] ℝ ↦
+        covector (actionSectionDerivative (actionCoordinateVector 0))) hcovector
+    simp only [add_apply, smul_apply, zero_apply, smul_eq_mul] at happly
+    rw [hcoordinate 0 0, hcoordinate 0 1] at happly
+    simpa using happly
+  have hone : difference 1 = 0 := by
+    have happly := congrArg
+      (fun covector : PhaseSpace →L[ℝ] ℝ ↦
+        covector (actionSectionDerivative (actionCoordinateVector 1))) hcovector
+    simp only [add_apply, smul_apply, zero_apply, smul_eq_mul] at happly
+    rw [hcoordinate 1 0, hcoordinate 1 1] at happly
+    simpa using happly
+  apply sub_eq_zero.mp
+  funext coordinate
+  fin_cases coordinate
+  · exact hzero
+  · exact hone
+
+/-- In four-dimensional canonical phase space, an isotropic surjective two-action derivative has
+kernel exactly the span of its two Hamiltonian row vectors. -/
+theorem range_actionHamiltonianTangentMap_eq_ker
+    {actionDerivative : PhaseSpace →L[ℝ] ActionSpace}
+    {actionSectionDerivative : ActionSpace →L[ℝ] PhaseSpace}
+    (hright : actionDerivative.comp actionSectionDerivative =
+      ContinuousLinearMap.id ℝ ActionSpace)
+    (hisotropic : phasePoissonPairing
+      (actionDerivativeCovector actionDerivative 0)
+      (actionDerivativeCovector actionDerivative 1) = 0) :
+    LinearMap.range (actionHamiltonianTangentMap actionDerivative) =
+      LinearMap.ker actionDerivative.toLinearMap := by
+  let tangentMap := actionHamiltonianTangentMap actionDerivative
+  have hrangeLe : LinearMap.range tangentMap ≤
+      LinearMap.ker actionDerivative.toLinearMap := by
+    rintro direction ⟨vector, rfl⟩
+    rw [LinearMap.mem_ker]
+    funext coordinate
+    fin_cases coordinate
+    · dsimp only [tangentMap]
+      simp only [actionHamiltonianTangentMap_apply, map_add, map_smul,
+        Pi.add_apply, Pi.smul_apply, Pi.zero_apply, smul_eq_mul]
+      change vector 0 * actionDerivativeCovector actionDerivative 0
+          (phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0)) +
+        vector 1 * actionDerivativeCovector actionDerivative 0
+          (phaseHamiltonianVector (actionDerivativeCovector actionDerivative 1)) = 0
+      rw [← phasePoissonPairing_eq_apply_phaseHamiltonianVector,
+        ← phasePoissonPairing_eq_apply_phaseHamiltonianVector,
+        phasePoissonPairing_self, hisotropic]
+      simp
+    · dsimp only [tangentMap]
+      simp only [actionHamiltonianTangentMap_apply, map_add, map_smul,
+        Pi.add_apply, Pi.smul_apply, Pi.zero_apply, smul_eq_mul]
+      change vector 0 * actionDerivativeCovector actionDerivative 1
+          (phaseHamiltonianVector (actionDerivativeCovector actionDerivative 0)) +
+        vector 1 * actionDerivativeCovector actionDerivative 1
+          (phaseHamiltonianVector (actionDerivativeCovector actionDerivative 1)) = 0
+      rw [← phasePoissonPairing_eq_apply_phaseHamiltonianVector,
+        ← phasePoissonPairing_eq_apply_phaseHamiltonianVector,
+        phasePoissonPairing_skew, phasePoissonPairing_self, hisotropic]
+      simp
+  have htangentInjective : Function.Injective tangentMap :=
+    actionHamiltonianTangentMap_injective_of_rightInverse hright
+  have htangentRank := tangentMap.finrank_range_add_finrank_ker
+  have htangentKer : LinearMap.ker tangentMap = ⊥ :=
+    LinearMap.ker_eq_bot.mpr htangentInjective
+  have htangentFinrank : Module.finrank ℝ (LinearMap.range tangentMap) = 2 := by
+    rw [htangentKer] at htangentRank
+    simpa [Module.finrank_fin_fun] using htangentRank
+  have hactionSurjective : Function.Surjective actionDerivative :=
+    fun vector ↦ ⟨actionSectionDerivative vector, by
+      have happly := congrArg
+        (fun derivative : ActionSpace →L[ℝ] ActionSpace ↦ derivative vector) hright
+      simpa using happly⟩
+  have hactionRange : LinearMap.range actionDerivative.toLinearMap = ⊤ :=
+    LinearMap.range_eq_top.mpr hactionSurjective
+  have hactionRank := actionDerivative.toLinearMap.finrank_range_add_finrank_ker
+  have hkernelFinrank : Module.finrank ℝ
+      (LinearMap.ker actionDerivative.toLinearMap) = 2 := by
+    rw [hactionRange] at hactionRank
+    have : 2 + Module.finrank ℝ
+        (LinearMap.ker actionDerivative.toLinearMap) = 4 := by
+      simpa [Module.finrank_fin_fun] using hactionRank
+    omega
+  exact Submodule.eq_of_le_of_finrank_eq hrangeLe
+    (htangentFinrank.trans hkernelFinrank.symm)
+
+/-- A phase covector which Poisson-annihilates both rows of an isotropic action derivative factors
+through that derivative.  The factor is computed by any linear right inverse. -/
+theorem phaseCovector_eq_comp_actionDerivative
+    {actionDerivative : PhaseSpace →L[ℝ] ActionSpace}
+    {actionSectionDerivative : ActionSpace →L[ℝ] PhaseSpace}
+    (hright : actionDerivative.comp actionSectionDerivative =
+      ContinuousLinearMap.id ℝ ActionSpace)
+    (hisotropic : phasePoissonPairing
+      (actionDerivativeCovector actionDerivative 0)
+      (actionDerivativeCovector actionDerivative 1) = 0)
+    (phaseCovector : PhaseSpace →L[ℝ] ℝ)
+    (hzero : ∀ coordinate : Fin 2, phasePoissonPairing phaseCovector
+      (actionDerivativeCovector actionDerivative coordinate) = 0) :
+    phaseCovector = (phaseCovector.comp actionSectionDerivative).comp actionDerivative := by
+  have hkernel := range_actionHamiltonianTangentMap_eq_ker hright hisotropic
+  apply ContinuousLinearMap.ext
+  intro direction
+  let vertical := direction - actionSectionDerivative (actionDerivative direction)
+  have hvertical : vertical ∈ LinearMap.ker actionDerivative.toLinearMap := by
+    rw [LinearMap.mem_ker]
+    dsimp only [vertical]
+    rw [map_sub]
+    have happly := congrArg
+      (fun derivative : ActionSpace →L[ℝ] ActionSpace ↦
+        derivative (actionDerivative direction)) hright
+    simpa using congrArg (fun value ↦ actionDerivative direction - value) happly
+  have hverticalRange : vertical ∈
+      LinearMap.range (actionHamiltonianTangentMap actionDerivative) := by
+    rwa [hkernel]
+  obtain ⟨vector, hvector⟩ := hverticalRange
+  have hphaseVertical : phaseCovector vertical = 0 := by
+    rw [← hvector]
+    simp only [actionHamiltonianTangentMap_apply, map_add, map_smul]
+    rw [← phasePoissonPairing_eq_apply_phaseHamiltonianVector,
+      ← phasePoissonPairing_eq_apply_phaseHamiltonianVector, hzero 0, hzero 1]
+    simp
+  have hdecompose : direction =
+      vertical + actionSectionDerivative (actionDerivative direction) := by
+    dsimp only [vertical]
+    abel
+  calc
+    phaseCovector direction = phaseCovector
+        (vertical + actionSectionDerivative (actionDerivative direction)) :=
+      congrArg phaseCovector hdecompose
+    _ = phaseCovector (actionSectionDerivative (actionDerivative direction)) := by
+      rw [map_add, hphaseVertical, zero_add]
+    _ = ((phaseCovector.comp actionSectionDerivative).comp actionDerivative) direction := rfl
+
 lemma poissonBracket_eq_phasePoissonPairing
     (f g : PhaseSpace → ℝ) (state : PhaseSpace) :
     poissonBracket f g state =
