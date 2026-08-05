@@ -34,6 +34,7 @@ import LeanPool.PoincareThreeBody.KeplerPhaseOrbit
 import LeanPool.PoincareThreeBody.KeplerFlow
 import LeanPool.PoincareThreeBody.KeplerHamiltonian
 import LeanPool.PoincareThreeBody.LeadingObstruction
+import LeanPool.PoincareThreeBody.LocalEnergyLeaf
 import LeanPool.PoincareThreeBody.MixedPartials
 import LeanPool.PoincareThreeBody.NormalizationInduction
 import LeanPool.PoincareThreeBody.NormalizationClosure
