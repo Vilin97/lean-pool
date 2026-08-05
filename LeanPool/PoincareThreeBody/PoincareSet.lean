@@ -53,6 +53,25 @@ def ClassicalDisturbingNondegeneracy : Prop :=
       ∃ orientation,
         deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0
 
+/-- Admissible noncircular eccentricities for one fixed positive rational resonance. -/
+abbrev AdmissibleResonantEccentricity (p q : ℕ) :=
+  {eccentricity : ℝ // 0 < eccentricity ∧ eccentricity < 1 ∧
+    resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1}
+
+/-- Eccentricities at a fixed resonance where the resonant disturbing average is nonconstant. -/
+def nondegenerateResonantEccentricities (p q : ℕ) :
+    Set (AdmissibleResonantEccentricity p q) :=
+  {eccentricity | ∃ orientation,
+    deriv (resonantDisturbingAverage p q eccentricity.1) orientation ≠ 0}
+
+/-- A one-dimensional sufficient form of the classical perturbing-function calculation: at
+every rational resonance, nondegenerate eccentricities are dense in their admissible interval.
+Unlike `ClassicalDisturbingNondegeneracy`, this permits isolated zeros of individual Fourier
+coefficients. -/
+def HasDenseNondegenerateResonantEccentricities : Prop :=
+  ∀ p q : ℕ, 0 < p → 0 < q →
+    Dense (nondegenerateResonantEccentricities p q)
+
 /-- The Kepler frequency varies continuously on the full interior action subtype. -/
 theorem continuous_interiorDelaunayFrequency :
     Continuous (fun action : InteriorProgradeEllipticAction ↦
@@ -206,5 +225,106 @@ theorem hasDenseClassicalPoincareSet_of_nondegeneracy
   have hrecover : curve source = action := by
     exact actions_from_eccentricityFromActions haction.1
   rwa [hrecover] at himage
+
+/-- Density in eccentricity on each rational resonance is enough to make the full classical
+Poincaré set dense in the two-dimensional interior action region. -/
+theorem hasDenseClassicalPoincareSet_of_dense_resonant_eccentricities
+    (hdense : HasDenseNondegenerateResonantEccentricities) :
+    HasDenseClassicalPoincareSet := by
+  apply Subtype.dense_iff.mpr
+  intro action haction
+  let eccentricity := eccentricityFromActions action
+  have heccentricity : 0 < eccentricity :=
+    eccentricityFromActions_pos haction.1
+  have heccentricityOne : eccentricity < 1 :=
+    eccentricityFromActions_lt_one haction.1
+  let source : InteriorPositiveAction eccentricity :=
+    ⟨⟨action 0, haction.1.1.trans haction.1.2⟩, haction.2⟩
+  let actionCurve : InteriorPositiveAction eccentricity → ActionSpace :=
+    fun firstAction ↦ fixedEccentricityAction eccentricity firstAction.1.1
+  have hactionCurve : Continuous actionCurve := by
+    unfold actionCurve fixedEccentricityAction angularActionFromEccentricity
+    fun_prop
+  have hsourceClosure :
+      source ∈ closure (resonantInteriorPositiveActions eccentricity) := by
+    rw [(resonantInteriorPositiveActions_dense eccentricity).closure_eq]
+    exact Set.mem_univ source
+  have hresonantMaps : Set.MapsTo actionCurve
+      (resonantInteriorPositiveActions eccentricity)
+      (closure ((↑) '' classicalPoincareSet)) := by
+    intro resonant hresonant
+    rcases hresonant with ⟨p, q, hp, hq, hfirst⟩
+    have hapoapsis :
+        resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1 := by
+      rw [← hfirst]
+      exact resonant.2
+    let sourceEccentricity : AdmissibleResonantEccentricity p q :=
+      ⟨eccentricity, heccentricity, heccentricityOne, hapoapsis⟩
+    let eccentricityCurve : AdmissibleResonantEccentricity p q → ActionSpace :=
+      fun candidate ↦ fixedEccentricityAction
+        candidate.1 (resonantFirstAction p q)
+    have heccentricityCurve : Continuous eccentricityCurve := by
+      unfold eccentricityCurve fixedEccentricityAction
+        angularActionFromEccentricity
+      fun_prop
+    have hsourceEccentricityClosure : sourceEccentricity ∈
+        closure (nondegenerateResonantEccentricities p q) := by
+      rw [(hdense p q hp hq).closure_eq]
+      exact Set.mem_univ sourceEccentricity
+    have heccentricityMaps : Set.MapsTo eccentricityCurve
+        (nondegenerateResonantEccentricities p q)
+        ((↑) '' classicalPoincareSet) := by
+      intro candidate hcandidate
+      have hprograde : eccentricityCurve candidate ∈
+          ProgradeEllipticActions := by
+        exact ⟨angularActionFromEccentricity_pos
+            (resonantFirstAction_pos hp hq) candidate.2.1 candidate.2.2.1,
+          angularActionFromEccentricity_lt_firstAction
+            (resonantFirstAction_pos hp hq) candidate.2.1⟩
+      have heRecover : eccentricityFromActions (eccentricityCurve candidate) =
+          candidate.1 := by
+        exact eccentricityFromActions_angularActionFromEccentricity
+          (resonantFirstAction_pos hp hq) candidate.2.1.le candidate.2.2.1
+      have hinside : eccentricityCurve candidate ∈
+          InteriorProgradeEllipticActions := by
+        refine ⟨hprograde, ?_⟩
+        change resonantFirstAction p q ^ 2 *
+          (1 + eccentricityFromActions (eccentricityCurve candidate)) < 1
+        rw [heRecover]
+        exact candidate.2.2.2
+      let poincareAction : InteriorProgradeEllipticAction :=
+        ⟨eccentricityCurve candidate, hinside⟩
+      refine ⟨poincareAction, ?_, rfl⟩
+      rcases hcandidate with ⟨orientation, horientation⟩
+      refine ⟨p, q, hp, hq, ?_, orientation, ?_⟩
+      · rfl
+      · simpa only [poincareAction, heRecover] using horientation
+    have himage := map_mem_closure heccentricityCurve
+      hsourceEccentricityClosure heccentricityMaps
+    have hcurvesAgree : eccentricityCurve sourceEccentricity =
+        actionCurve resonant := by
+      unfold eccentricityCurve actionCurve sourceEccentricity
+      rw [hfirst]
+    rwa [hcurvesAgree] at himage
+  have himage := map_mem_closure hactionCurve hsourceClosure hresonantMaps
+  rw [closure_closure] at himage
+  have hrecover : actionCurve source = action := by
+    exact actions_from_eccentricityFromActions haction.1
+  rwa [hrecover] at himage
+
+/-- The original pointwise nondegeneracy condition implies the more flexible fiberwise density
+condition. -/
+theorem hasDenseNondegenerateResonantEccentricities_of_nondegeneracy
+    (hnondegenerate : ClassicalDisturbingNondegeneracy) :
+    HasDenseNondegenerateResonantEccentricities := by
+  intro p q hp hq
+  apply dense_iff_closure_eq.mpr
+  apply Set.Subset.antisymm (closure_minimal (by
+    intro eccentricity _
+    exact Set.mem_univ eccentricity) isClosed_univ)
+  intro eccentricity _
+  apply subset_closure
+  exact hnondegenerate eccentricity.2.1 eccentricity.2.2.1 hp hq
+    eccentricity.2.2.2
 
 end LeanPool.PoincareThreeBody
