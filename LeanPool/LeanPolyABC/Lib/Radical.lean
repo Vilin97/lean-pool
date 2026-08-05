@@ -135,7 +135,7 @@ theorem radical_isUnit_iff {a : α} (h : a ≠ 0) : IsUnit (radical a) ↔ IsUni
     rcases exists_mem_factors h ha with ⟨p, hpf⟩
     have hpp := prime_of_factor _ hpf
     have hpd := dvd_of_mem_factors hpf
-    exact not_isUnit_of_not_isUnit_dvd hpp.not_unit ((prime_dvd_radical_iff h hpp).mpr hpd)
+    exact not_isUnit_of_not_isUnit_dvd hpp.not_isUnit ((prime_dvd_radical_iff h hpp).mpr hpd)
   · intro ha
     rw [radical_unit_eq_one ha]
     exact isUnit_one
@@ -155,7 +155,7 @@ private theorem disjoint_normalizedFactors {a b : R} (hc : IsCoprime a b) :
   have x_dvd_a := dvd_of_mem_normalizedFactors hxa
   have x_dvd_b := dvd_of_mem_normalizedFactors hxb
   have xp := prime_of_normalized_factor x hxa
-  exact xp.not_unit (hc.isUnit_of_dvd' x_dvd_a x_dvd_b)
+  exact xp.not_isUnit (hc.isUnit_of_dvd' x_dvd_a x_dvd_b)
 
 omit [IsDomain R] in
 -- coprime polynomials have disjoint prime factors (as finsets)

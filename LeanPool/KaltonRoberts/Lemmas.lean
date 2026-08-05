@@ -48,7 +48,7 @@ theorem finite_boolean_algebra_bound_of_powerset
     (f : α → ℝ) (hf : IsApproxAdditiveBA f 1) :
     ∃ μ : α → ℝ, IsFinitelyAdditiveBA μ ∧ ∀ A : α, |f A - μ A| ≤ C := by
   classical
-  letI := Fintype.ofFinite α
+  let := Fintype.ofFinite α
   let Atom := {a : α // IsAtom a}
   let e : Finset Atom ≃o α := finiteBoolOrderIso α
   let f' : Finset Atom → ℝ := fun S => f (e S)
@@ -123,8 +123,8 @@ lemma booleanSubalgebra_closure_finite_of_finite {α : Type*} [BooleanAlgebra α
     · exact BooleanSubalgebra.closure_le.mpr hL0_sub_closure_s
   rw [hclosure_eq]
   let β := L0
-  haveI : Fintype β := hL0fin.fintype
-  haveI : DecidableEq β := Classical.decEq β
+  have : Fintype β := hL0fin.fintype
+  have : DecidableEq β := Classical.decEq β
   let rep : Finset (β × β) → α := fun t => t.sup fun x => (x.1.1 \ x.2.1)
   refine Set.Finite.subset (Set.finite_range rep) ?_
   intro x hx
@@ -197,7 +197,7 @@ theorem compact_reduction_from_local {α : Type*} [BooleanAlgebra α]
       exact Or.inr ⟨i, hi, rfl⟩
     have hadd := hνadd (i.1.1) hA (i.1.2) hB i.2 hU
     simp [addCondition, x, hA, hB, hU, hadd]
-  haveI : ∀ A : α, CompactSpace (ApproxCoord f C A) := fun A => by
+  have : ∀ A : α, CompactSpace (ApproxCoord f C A) := fun A => by
     exact isCompact_iff_compactSpace.mp isCompact_Icc
   obtain ⟨x, hx⟩ := CompactSpace.iInter_nonempty (t := addCondition f C) hclosed hfip
   let μ : α → ℝ := fun A => (x A : ℝ)
@@ -237,7 +237,7 @@ theorem local_approximation_of_finite_boolean_algebras {α : Type u} [BooleanAlg
   let L : BooleanSubalgebra α := BooleanSubalgebra.closure (T : Set α)
   have hLfin_set : (L : Set α).Finite := by
     exact booleanSubalgebra_closure_finite_of_finite (s := (T : Set α)) T.finite_toSet
-  haveI : Fintype L := hLfin_set.fintype
+  have : Fintype L := hLfin_set.fintype
   let fL : L → ℝ := fun A => f A
   have hfL : IsApproxAdditiveBA fL 1 := by
     constructor

@@ -278,7 +278,7 @@ lemma outwardEdgeCone_eq_union (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty
     X.outwardEdgeCone v₀ w = { X.distinguishedEdge v₀ w hw } ∪
         { e | e ∈ X.outwardEdgeCone v₀ w ∧ X.distinguishedEdge v₀ w hw ≠ e } := by
   ext e
-  simp_rw [Finset.mem_coe, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq]
+  simp_rw [Finset.mem_coe, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_ofPred_eq]
   constructor
   · intro h
     by_cases hde : e = distinguishedEdge v₀ w hw

@@ -53,7 +53,7 @@ lemma Mhat_isMaximal
     intro x
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨f r, AdicCompletion.evalₐ_of M 1 r⟩
-  haveI : (⊥ : Ideal (R ⧸ M ^ 1)).IsMaximal := by
+  have : (⊥ : Ideal (R ⧸ M ^ 1)).IsMaximal := by
     rw [hM1]
     exact @Ideal.bot_isMaximal (R ⧸ M)
       (Ideal.Quotient.field M).toDivisionSemiring
@@ -86,9 +86,9 @@ lemma iInf_comap_add_pow_eq_comap
       (A ⊔ (Ideal.map (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R))
         (IsLocalRing.maximalIdeal R)) ^ n)) =
     Ideal.comap (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R)) A := by
-  haveI : IsNoetherianRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+  have : IsNoetherianRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
     adicCompletion_isNoetherianRing R
-  haveI : IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+  have : IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
     adicCompletion_isLocalRing R
   set f := algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R)
   set Mhat := Ideal.map f (IsLocalRing.maximalIdeal R)
@@ -195,8 +195,8 @@ lemma not_wqc_exists_maximal_zero_contraction
         rwa [comap_map_algebraMap_adicCompletion] at hmem
       rw [← hBinf]
       exact (Submodule.mem_iInf _).mpr this
-    haveI : IsNoetherianRing (AdicCompletion M R) := adicCompletion_isNoetherianRing R
-    haveI : IsLocalRing (AdicCompletion M R) := adicCompletion_isLocalRing R
+    have : IsNoetherianRing (AdicCompletion M R) := adicCompletion_isNoetherianRing R
+    have : IsLocalRing (AdicCompletion M R) := adicCompletion_isLocalRing R
     have hMhat_max : Mhat.IsMaximal := Mhat_isMaximal R
     have hMhat_eq : Mhat = IsLocalRing.maximalIdeal (AdicCompletion M R) :=
       IsLocalRing.eq_maximalIdeal hMhat_max
@@ -345,7 +345,7 @@ theorem IsWeaklyQuasiComplete.isAnalyticallyIrreducible
   unfold IsAnalyticallyIrreducible
   by_contra hnotdom
   have hf_inj : Function.Injective f := AdicCompletion.of_injective M R
-  haveI : Nontrivial Rhat := hf_inj.nontrivial
+  have : Nontrivial Rhat := hf_inj.nontrivial
   have hnoNZD : ¬NoZeroDivisors Rhat := fun h => hnotdom (NoZeroDivisors.to_isDomain Rhat)
   -- Every minimal prime of R̂ is nonzero (since ⊥ is not prime)
   have hP_exists : ∃ P ∈ (⊥ : Ideal Rhat).minimalPrimes, P ≠ ⊥ := by
@@ -366,7 +366,7 @@ theorem IsWeaklyQuasiComplete.isAnalyticallyIrreducible
   have hfr_P : f r ∈ P := Ideal.mem_comap.mp hr
   have hr_nzd : r ∈ nonZeroDivisors R := mem_nonZeroDivisors_of_ne_zero hrne
   -- Flatness of R̂ over R makes f(r) SMul-regular, hence a nonzero divisor in R̂
-  haveI : Module.Flat R Rhat := AdicCompletion.flat_of_isNoetherian M
+  have : Module.Flat R Rhat := AdicCompletion.flat_of_isNoetherian M
   have hfr_reg : IsSMulRegular Rhat r :=
     Module.Flat.isSMulRegular_of_nonZeroDivisors hr_nzd
   have hfr_nzd : f r ∈ nonZeroDivisors Rhat := by
@@ -432,26 +432,26 @@ lemma dim1_ai_nonzero_prime_contracts
     exact hfm_notin m hm hm_ne (hle (Ideal.mem_map_of_mem f hm))
   have hMhat_max : Mhat.IsMaximal := Mhat_isMaximal R
   have hcomap_Mhat : Ideal.comap f Mhat = M := comap_map_algebraMap_adicCompletion M
-  haveI : IsLocalRing (AdicCompletion M R) := adicCompletion_isLocalRing R
+  have : IsLocalRing (AdicCompletion M R) := adicCompletion_isLocalRing R
   have hMhat_eq : Mhat = IsLocalRing.maximalIdeal (AdicCompletion M R) :=
     IsLocalRing.eq_maximalIdeal hMhat_max
   have hP_le_Mhat : P ≤ Mhat := by
     rw [hMhat_eq]
     exact IsLocalRing.le_maximalIdeal hPprime.ne_top
   -- Height contradiction: ⊥ ⊊ P ⊊ Mhat but height(Mhat) = height(M) = 1
-  haveI : IsDomain (AdicCompletion M R) := hAI
-  haveI : IsNoetherianRing (AdicCompletion M R) := adicCompletion_isNoetherianRing R
+  have : IsDomain (AdicCompletion M R) := hAI
+  have : IsNoetherianRing (AdicCompletion M R) := adicCompletion_isNoetherianRing R
   have hP_lt_Mhat : P < Mhat :=
     lt_of_le_of_ne hP_le_Mhat (fun h => hMhat_not_le_P (h ▸ le_refl P))
   have hbot_lt_P : (⊥ : Ideal (AdicCompletion M R)) < P := bot_lt_iff_ne_bot.mpr hPne
-  letI : Mhat.LiesOver M := ⟨hcomap_Mhat.symm⟩
+  let : Mhat.LiesOver M := ⟨hcomap_Mhat.symm⟩
   have hht_eq := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown M Mhat
   have hfiber_bot : Ideal.map
       (Ideal.Quotient.mk (Ideal.map (algebraMap R (AdicCompletion M R)) M))
       Mhat = ⊥ := by
     change Ideal.map (Ideal.Quotient.mk Mhat) Mhat = ⊥
     exact Ideal.map_quotient_self Mhat
-  haveI : Nontrivial (AdicCompletion M R ⧸ Mhat) :=
+  have : Nontrivial (AdicCompletion M R ⧸ Mhat) :=
     Ideal.Quotient.nontrivial_iff.mpr hMhat_max.ne_top
   have hfiber_ht : (Ideal.map
       (Ideal.Quotient.mk
@@ -464,7 +464,7 @@ lemma dim1_ai_nonzero_prime_contracts
     rw [hdim] at this
     exact_mod_cast this
   rw [hM_ht] at hht_eq
-  haveI : (⊥ : Ideal (AdicCompletion M R)).IsPrime := Ideal.isPrime_bot
+  have : (⊥ : Ideal (AdicCompletion M R)).IsPrime := Ideal.isPrime_bot
   have h1 : (⊥ : Ideal (AdicCompletion M R)).height < P.height :=
     Ideal.height_strict_mono_of_isPrime hbot_lt_P
   have h2 : P.height < Mhat.height := Ideal.height_strict_mono_of_isPrime hP_lt_Mhat
@@ -516,11 +516,11 @@ theorem dim1_qc_iff_wqc
       have hdim_I : ringKrullDim (R ⧸ I) ≤ 0 :=
         (ringKrullDim_le_of_surjective (Ideal.Quotient.factor hle_span)
           (Ideal.Quotient.factor_surjective hle_span)).trans hdim_span_le
-      haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI_top
-      haveI : IsLocalRing (R ⧸ I) :=
+      have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI_top
+      have : IsLocalRing (R ⧸ I) :=
         IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-      haveI : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_iff.mpr hdim_I
-      haveI : IsArtinianRing (R ⧸ I) := IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
+      have : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_iff.mpr hdim_I
+      have : IsArtinianRing (R ⧸ I) := IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
       set mk := Ideal.Quotient.mk I
       set B : ℕ → Ideal (R ⧸ I) := fun n => Ideal.map mk (A n)
       have hB_anti : Antitone B := fun _ _ hmn => Ideal.map_mono (hA hmn)
@@ -581,12 +581,12 @@ theorem isQuasiComplete_iff_quotients_wqc
     set I := ⨅ n, A n
     by_cases hI_top : I = ⊤
     · simp_all
-    · letI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI_top
-      letI : IsLocalRing (R ⧸ I) :=
+    · let : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI_top
+      let : IsLocalRing (R ⧸ I) :=
         IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
       set mk := Ideal.Quotient.mk I
       have hmk_surj := Ideal.Quotient.mk_surjective (I := I)
-      haveI : IsLocalHom mk := IsLocalHom.of_surjective mk hmk_surj
+      have : IsLocalHom mk := IsLocalHom.of_surjective mk hmk_surj
       have hM_eq : IsLocalRing.maximalIdeal (R ⧸ I) =
           Ideal.map mk (IsLocalRing.maximalIdeal R) := by
         apply le_antisymm

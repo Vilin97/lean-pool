@@ -118,7 +118,7 @@ lemma Scount_bot_le {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U)
     {u : ZMod (d * m)} (hu : u ∈ U) :
     Scount U (u.val % m) u.val ≤ u.val / m - 1 := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   -- key arithmetic facts about u.val
   have hdm : u.val % m + (u.val / m) * m = u.val := Nat.mod_add_div' u.val m
   have hφ : u.val % m < m := Nat.mod_lt _ hm
@@ -229,7 +229,7 @@ noncomputable def betaParentVal {d m : ℕ} (U : Finset (ZMod (d * m))) (u : ZMo
 lemma betaParentVal_lt {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} {u : ZMod (d * m)} (hlu : 1 ≤ u.val / m) :
     betaParentVal U u < d * m := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   unfold betaParentVal
   have hφ : u.val % m < m := Nat.mod_lt _ hm
   have hlud : u.val / m < d := by
@@ -260,7 +260,7 @@ noncomputable def betaParent {d m : ℕ} (U : Finset (ZMod (d * m))) (u : ZMod (
 lemma betaParent_val {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} {u : ZMod (d * m)} (hlu : 1 ≤ u.val / m) :
     (betaParent U u).val = betaParentVal U u := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   unfold betaParent
   exact ZMod.val_natCast_of_lt (betaParentVal_lt hd hm hlu)
 
@@ -447,7 +447,7 @@ lemma betaParent_inj {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U)
     {u1 u2 : ZMod (d * m)} (hu1 : u1 ∈ U) (hu2 : u2 ∈ U)
     (heq : betaParent U u1 = betaParent U u2) : u1 = u2 := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   have hlu1 : 1 ≤ u1.val / m := survivor_level_pos hd hcanon hu1
   have hlu2 : 1 ≤ u2.val / m := survivor_level_pos hd hcanon hu2
   -- same fiber
@@ -687,7 +687,7 @@ lemma minVal_betaBlock {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {x : ZMod (d * m)}
     (hx : x ∈ bVerts U) :
     minVal (betaBlock U x) (betaBlock_nonempty hx) = betaRoot hd hm hcanon x := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   set h := betaBlock_nonempty hx
   -- minVal ≤ root.val and root.val ≤ minVal.val (root is min)
   have h1 : (minVal (betaBlock U x) h).val ≤ (betaRoot hd hm hcanon x).val :=
@@ -723,7 +723,7 @@ lemma mem_beta_iff {d m : ℕ} {U : Finset (ZMod (d * m))} {S : Finset (ZMod (d 
 /-- **The load-bearing spec.** `T(β U) = U` for canonical `U`. -/
 theorem T_beta {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZMod (d * m))}
     (hcanon : LevelCanonical d m U) : T (beta U) = U := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   ext x
   rw [mem_T]
   constructor
@@ -768,7 +768,7 @@ lemma betaBlock_sameFiber {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
 lemma betaBlock_two_le {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {v : ZMod (d * m)}
     (hv : v ∈ bVerts U) : 2 ≤ (betaBlock U v).card := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   -- find a U-point u with u in the block (u = v if v ∈ U, else v = betaParent u)
   rcases Finset.mem_union.mp hv with hvU | hvImg
   · -- v ∈ U: block contains v and betaParent v, distinct
@@ -822,7 +822,7 @@ lemma betaBlock_two_le {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
 lemma betaBlock_critical {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {U : Finset (ZMod (d * m))} (hcanon : LevelCanonical d m U) {v : ZMod (d * m)}
     (hv : v ∈ bVerts U) : IsCriticalSet d m (betaBlock U v) := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   refine ⟨⟨v.val % m, Nat.mod_lt _ hm, ?_⟩, betaBlock_two_le hd hm hcanon hv⟩
   intro y hy
   exact betaBlock_sameFiber hd hm hcanon hy
@@ -866,7 +866,7 @@ lemma beta_pairwise_disjoint {d m : ℕ} {U : Finset (ZMod (d * m))} :
 lemma beta_weight {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZMod (d * m))}
     (hcard : U.card = d - 1) (hcanon : LevelCanonical d m U) :
     ∑ S ∈ beta U, (S.card - 1) = d - 1 := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   -- pairwise disjoint eraseMin
   have hpd : (↑(beta U) : Set (Finset (ZMod (d*m)))).PairwiseDisjoint eraseMin := by
@@ -957,7 +957,7 @@ lemma GPRE {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {u : ZMod (d * m)} (hu : u ∈ U) (hlu : 1 ≤ u.val / m) {j : ℕ}
     (hj1 : betaK U u < j) (hj2 : j ≤ u.val / m) :
     (Scount U (betaParent U u).val (u.val % m + j * m) : ℤ) ≤ (j : ℤ) - (betaK U u : ℤ) - 1 := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   set φ := u.val % m with hφ
   set lu := u.val / m with hludef
@@ -1001,7 +1001,7 @@ lemma N0 {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {u : ZMod (d * m)} (hu : u ∈ U) (hlu : 1 ≤ u.val / m)
     {t : ZMod (d * m)} (htU : t ∈ U)
     (hlo : (betaParent U u).val < t.val) (hhi : t.val < (betaParent U u).val + m) : False := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   set φ := u.val % m with hφ
   set lu := u.val / m with hludef
@@ -1048,7 +1048,7 @@ lemma Q {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     (hwlo : (betaParent U u).val ≤ s.val % m + ly * m)
     (hwhi : s.val % m + ly * m < (betaParent U u).val + m) :
     Defc U (s.val % m) (s.val / m) s.val ly ≤ 0 := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   set φ := u.val % m with hφdef
   set ψ := s.val % m with hψdef
@@ -1188,7 +1188,7 @@ lemma noEscape {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {u s : ZMod (d * m)} (hu : u ∈ U) (hs : s ∈ U)
     (hslo : (betaParent U u).val < s.val) (hshi : s.val < u.val) :
     (betaParent U u).val ≤ (betaParent U s).val := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   have hlu : 1 ≤ u.val / m := survivor_level_pos hd hcanon hu
   have hls : 1 ≤ s.val / m := survivor_level_pos hd hcanon hs
@@ -1276,7 +1276,7 @@ lemma root_ge {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     ∀ w : ZMod (d*m), w ∈ bVerts U →
       (betaParent U u).val < w.val → w.val < u.val →
       (betaParent U u).val ≤ (betaRoot hd hm hcanon w).val := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   intro w
   induction hn : w.val using Nat.strong_induction_on generalizing w with
   | _ n ih =>
@@ -1346,7 +1346,7 @@ lemma beta_interval_closed {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZM
     (hhi : p.val < (maxVal (betaBlock U x) (betaBlock_nonempty hx)).val) :
     ∀ q ∈ betaBlock U z, (minVal (betaBlock U x) (betaBlock_nonempty hx)).val ≤ q.val ∧
       q.val ≤ (maxVal (betaBlock U x) (betaBlock_nonempty hx)).val := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   classical
   set Xne := betaBlock_nonempty hx with hXne
   set minX := minVal (betaBlock U x) Xne with hminX
@@ -1456,7 +1456,7 @@ lemma beta_interval_closed {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZM
 lemma beta_unlinked {d m : ℕ} (hd : 0 < d) (hm : 0 < m) {U : Finset (ZMod (d * m))}
     (hcanon : LevelCanonical d m U) :
     ∀ A ∈ beta U, ∀ B ∈ beta U, A ≠ B → Unlinked A B := by
-  haveI : NeZero (d*m) := ⟨by positivity⟩
+  have : NeZero (d*m) := ⟨by positivity⟩
   intro A hA B hB hAB
   rw [mem_beta_iff] at hA hB
   obtain ⟨x, hx, hAx⟩ := hA

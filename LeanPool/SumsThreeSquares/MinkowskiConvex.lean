@@ -40,7 +40,7 @@ private lemma euclideanSpace_F_measurableSet :
     (MeasurableEquiv.toLp 2 (Fin n → ℝ)) ''
       Set.pi Set.univ (fun _ => Set.Ico (0 : ℝ) 1) from by
     ext x
-    simp only [Set.mem_Ico, Set.mem_setOf_eq, MeasurableEquiv.toLp_apply, Set.mem_image,
+    simp only [Set.mem_Ico, Set.mem_ofPred_eq, MeasurableEquiv.toLp_apply, Set.mem_image,
       Set.mem_pi, Set.mem_univ, forall_const]
     exact ⟨fun h => ⟨x, h, rfl⟩, fun ⟨_, hy, hyx⟩ => hyx ▸ hy⟩]
   exact (MeasurableEquiv.toLp 2 (Fin n → ℝ)).measurableSet_image.mpr
@@ -61,14 +61,14 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
       intro a ha i; obtain ⟨m, hm⟩ := ha i
       exact ⟨-m, by push_cast [hm]; rfl⟩ }
   let F : Set E := {x | ∀ i, x i ∈ Set.Ico (0 : ℝ) 1}
-  haveI : Countable L := by
+  have : Countable L := by
     let f : L → (Fin n → ℤ) := fun x i => (x.property i).choose
     exact (show Function.Injective f from fun x y hxy => by
       ext1; ext i
       calc (x : E) i = (f x i : ℝ) := (x.property i).choose_spec.symm
         _ = (f y i : ℝ) := by rw [congr_fun hxy i]
         _ = (y : E) i := (y.property i).choose_spec).countable
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     rw [discreteTopology_iff_isOpen_singleton_zero]
     have eq : ({(0 : L)} : Set L) = Subtype.val ⁻¹' Metric.ball (0 : E) (1/2) := by
       ext ⟨x, hx⟩

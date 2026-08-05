@@ -81,7 +81,7 @@ theorem euclidean_growth_five (α : Fin 2 → ℝ) (q : ℕ → ℤ) (p : ℕ �
   -- the exact remainder norm equals the defect
   have hnorm_eq : ∀ k, euclNorm 2 (rem α (q k) (p k)) = deltaN (euclNorm 2) α (q k) := fun k =>
     le_antisymm (hattain k) (deltaN_le (euclNorm 2) euclNorm_nonneg α (q k) (p k))
-  haveI : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2) := ⟨finrank_euclideanSpace_fin⟩
+  have : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2) := ⟨finrank_euclideanSpace_fin⟩
   -- the six remainder vectors in the Euclidean plane
   set w : Fin 6 → EuclideanSpace ℝ (Fin 2) :=
     fun i => (EuclideanSpace.equiv (Fin 2) ℝ).symm (rem α (q (N + i.val)) (p (N + i.val))) with hw

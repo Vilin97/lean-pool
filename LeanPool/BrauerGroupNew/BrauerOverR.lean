@@ -123,13 +123,13 @@ lemma QuaternionTensorEquivOne : IsBrauerEquivalent (K := ℝ) ⟨.of ℝ (ℍ[�
 lemma QuaternionNotEquivR : ¬ IsBrauerEquivalent (K := ℝ) ⟨.of ℝ ℍ[ℝ]⟩ ⟨.of ℝ ℝ⟩ := by
   intro h
   obtain ⟨n, m, hn, hm, ⟨e⟩⟩ := h
-  letI : NeZero n := ⟨hn⟩
-  letI : NeZero m := ⟨hm⟩
+  let : NeZero n := ⟨hn⟩
+  let : NeZero m := ⟨hm⟩
   obtain ⟨e'⟩ := WedderburnArtin_uniqueness₀ ℝ (Matrix (Fin n) (Fin n) ℍ[ℝ])
     n m ℍ[ℝ] AlgEquiv.refl ℝ e
   have eq2 := e'.toLinearEquiv.finrank_eq
   simp only [Module.finrank_self] at eq2
-  haveI := eq2.symm.trans <| Quaternion.finrank_eq_four (R := ℝ)
+  have := eq2.symm.trans <| Quaternion.finrank_eq_four (R := ℝ)
   norm_num at this
 
 lemma BrauerOverR (A : CSA.{0, 0} ℝ) :
@@ -138,16 +138,16 @@ lemma BrauerOverR (A : CSA.{0, 0} ℝ) :
   else
   right
   obtain ⟨n, hn, D, _, _, ⟨e⟩⟩ := WedderburnArtin_algebra_version.{0, 0} ℝ A
-  letI := A.4
-  letI : FiniteDimensional ℝ D := is_fin_dim_of_wdb ℝ A hn D e
+  let := A.4
+  let : FiniteDimensional ℝ D := is_fin_dim_of_wdb ℝ A hn D e
   obtain ⟨⟨e'⟩⟩ | hD2 | hD3 := FrobeniusTheorem D
   · have := is_central_of_wdb ℝ A n D hn e|>.center_eq_bot
     have e2 : Subalgebra.center ℝ D ≠ ⊥ := by
       refine ne_of_gt ?_
-      letI : Algebra ℂ D := RingHom.toAlgebra' e'.symm fun z d ↦ by
+      let : Algebra ℂ D := RingHom.toAlgebra' e'.symm fun z d ↦ by
         simp only [RingHom.coe_coe]
         rw [← e'.symm_apply_apply d, ← map_mul, mul_comm, map_mul]
-      letI : IsScalarTower ℝ ℂ D := {
+      let : IsScalarTower ℝ ℂ D := {
         smul_assoc := fun r z d ↦ by
           change e'.symm _  * _ = _ • (e'.symm z * d)
           rw [map_smul, Algebra.smul_mul_assoc]
@@ -190,7 +190,7 @@ abbrev toC2 : Additive (BrauerGroup ℝ) →+ ZMod 2 where
         simp [h]
         have : ¬ IsBrauerEquivalent B (BrauerGroup.oneIn') := by
           by_contra!
-          haveI := hAB.trans this
+          have := hAB.trans this
           tauto
         simpa using this
   map_zero' := by
@@ -221,7 +221,7 @@ abbrev toC2 : Additive (BrauerGroup ℝ) →+ ZMod 2 where
           IsBrauerEquivalent.iso_to_eqv _ _ (Algebra.TensorProduct.lid ℝ B)
       -- rw [this]
       by_contra! hBB
-      haveI := this.symm.trans hBB
+      have := this.symm.trans hBB
       tauto
     else
     if hB : IsBrauerEquivalent B oneIn' then
@@ -230,7 +230,7 @@ abbrev toC2 : Additive (BrauerGroup ℝ) →+ ZMod 2 where
       (eqv_tensor_eqv A A B oneIn' (IsBrauerEquivalent.refl A) hB).trans <|
         IsBrauerEquivalent.iso_to_eqv _ _ (Algebra.TensorProduct.rid ℝ ℝ A)
     by_contra! hAA
-    haveI := this.symm.trans hAA
+    have := this.symm.trans hAA
     tauto
     else
     simp only [hA, ↓reduceIte, hB]

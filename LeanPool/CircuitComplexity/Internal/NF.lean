@@ -358,12 +358,12 @@ theorem DNF.flip_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     (fun x => φ.terms.findIdx (fun t => t.all (fun l => l.eval x)))
   · -- MapsTo: findIdx lands in range
     intro x hx
-    simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_setOf, true_and] at hx
+    simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_ofPred, true_and] at hx
     simp only [Finset.coe_range, Set.mem_Iio, DNF.complexity]
     simp_all
   · -- InjOn: two true assignments with same findIdx must be equal
     intro x₁ hx₁ x₂ hx₂ heq
-    simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_setOf, true_and] at hx₁ hx₂
+    simp only [Finset.coe_filter, Finset.mem_univ, Set.mem_ofPred, true_and] at hx₁ hx₂
     set k := φ.terms.findIdx (fun t => t.all (fun l => l.eval x₂))
     have hlt : k < φ.terms.length := by
       rw [List.findIdx_lt_length]; exact hfind x₂ hx₂

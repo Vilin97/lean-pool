@@ -168,9 +168,9 @@ private theorem corrAvg_tgt_eq_xFromColoring
       have hIdx : aIdx = bIdx := hinjTgt hGet
       simpa [aIdx, bIdx] using congrArg Fin.val hIdx⟩
   -- A permutation sending `srcEmb` to `tgtEmb`.
-  letI : MulAction.IsMultiplyPretransitive G (Sym n) t :=
+  let : MulAction.IsMultiplyPretransitive G (Sym n) t :=
     Equiv.Perm.isMultiplyPretransitive (α := Sym n) t
-  letI : MulAction.IsPretransitive G (Fin t ↪ Sym n) := by infer_instance
+  let : MulAction.IsPretransitive G (Fin t ↪ Sym n) := by infer_instance
   rcases
     (MulAction.IsPretransitive.exists_smul_eq (M := G) (α := Fin t ↪ Sym n)
       srcEmb tgtEmb)

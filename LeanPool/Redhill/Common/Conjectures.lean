@@ -54,11 +54,11 @@ lemma nConjecture_3_iff_ABC : NConjecture 3 ↔ ABCConjecture := by
   norm_num [NConjecture, ABCConjecture, nConjectureTuples]
   suffices hf : {a : Fin 3 → ℤ | ¬SSC a ∧ ∑ i, a i = 0 ∧ univ.gcd a = 1}.Finite by
     have := quality_union_finite (A := {a : Fin 3 → ℤ | SSC a ∧ ∑ i, a i = 0 ∧ univ.gcd a = 1}) hf
-    simp_rw [← Set.setOf_or, ← or_and_right, or_not, true_and] at this
+    simp_rw [← Set.ofPred_or, ← or_and_right, or_not, true_and] at this
     simp [this, and_left_comm]
   set E := {a : Fin 3 → ℤ | ¬SSC a ∧ ∑ i, a i = 0 ∧ univ.gcd a = 1}
   have r₀ {a} (ma : a ∈ E) : 0 ∈ Set.range a := by
-    simp_rw [E, Set.mem_setOf, SSC] at ma
+    simp_rw [E, Set.mem_ofPred, SSC] at ma
     push Not at ma
     obtain ⟨⟨q, nq, nqc, sq⟩, sqc, -⟩ := ma
     rw [← sum_add_sum_compl q, sq, zero_add] at sqc

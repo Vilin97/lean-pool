@@ -223,7 +223,7 @@ def σS (m : ℕ) [Fact m.Prime] : Equiv.Perm (Option (ZMod m)) := sSfun_involut
 This is what makes the elementary symmetric functions of the orbit `SL(2,ℤ)`-invariant. -/
 lemma f_S_smul [Fact m.Prime] (i : Option (ZMod m)) (τ : ℍ) :
     f m i (ModularGroup.S • τ) = f m (σS m i) τ := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   cases i with
   | none =>
     have htarget : σS m none = some 0 := rfl
@@ -366,14 +366,14 @@ lemma sum_orbit_T_smul [NeZero m] {M : Type*} [AddCommMonoid M] (g : ℂ → M) 
 /-- Any product over the orbit is `S`-invariant. -/
 lemma prod_orbit_S_smul [Fact m.Prime] {M : Type*} [CommMonoid M] (g : ℂ → M) (τ : ℍ) :
     ∏ i, g (f m i (ModularGroup.S • τ)) = ∏ i, g (f m i τ) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   simp_rw [f_S_smul]
   exact Equiv.prod_comp (σS m) (fun i ↦ g (f m i τ))
 
 /-- Any sum over the orbit is `S`-invariant (e.g. the power sums `∑ (f i)^k`). -/
 lemma sum_orbit_S_smul [Fact m.Prime] {M : Type*} [AddCommMonoid M] (g : ℂ → M) (τ : ℍ) :
     ∑ i, g (f m i (ModularGroup.S • τ)) = ∑ i, g (f m i τ) := by
-  haveI : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
+  have : NeZero m := ⟨(Fact.out : m.Prime).ne_zero⟩
   simp_rw [f_S_smul]
   exact Equiv.sum_comp (σS m) (fun i ↦ g (f m i τ))
 

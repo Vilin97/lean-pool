@@ -722,7 +722,7 @@ private lemma md_minor_middle_block_det (n : ℕ) (a j : Fin (n + 1)) :
   intro M
   set B := (M.toSquareBlockProp (fun x => ¬(x.val < a.val))).toSquareBlockProp
     (fun x => x.val.val < j.val)
-  rw [Matrix.det_of_lowerTriangular B (md_middle_block_B_lower_triangular n a j)]
+  rw [Matrix.det_of_isLowerTriangular B (md_middle_block_B_lower_triangular n a j)]
   simp_rw [show ∀ i, B i i = -1 from fun w =>
     md_middle_block_diag_entry n a j (md_middleBlockEquivFlat n a j w)]
   rw [Finset.prod_const, Finset.card_univ, md_nested_subtype_card n a j]

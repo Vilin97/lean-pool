@@ -35,7 +35,7 @@ lemma IsCentral.left_of_tensor (B C : Type*)
     [Ring B] [Ring C] [Nontrivial B] [Nontrivial C] [Algebra K C] [Algebra K B]
     [FiniteDimensional K B] [hbc : Algebra.IsCentral K (B ⊗[K] C)] :
     Algebra.IsCentral K B := by
-  letI : Nontrivial (B ⊗[K] C) := Module.FaithfullyFlat.lTensor_nontrivial _ _ _
+  let : Nontrivial (B ⊗[K] C) := Module.FaithfullyFlat.lTensor_nontrivial _ _ _
   have h := (Subalgebra.equivOfEq (R := K) (A := B ⊗[K] C) _ _ <|
     hbc.center_eq_bot K (B ⊗[K] C)) |>.trans <| Algebra.botEquiv K (B ⊗[K] C)
   have : (Algebra.TensorProduct.includeLeft.comp (Subalgebra.center K B).val).range ≤
@@ -105,7 +105,7 @@ theorem IsAzumaya_iff_CentralSimple [Nontrivial A] : IsAzumaya K A ↔ FiniteDim
       Algebra.IsCentral_ofAlgEquiv K _ _ e.symm <| Algebra.IsCentral.matrix K K
         (Fin (Module.finrank K A))
     exact IsCentral.left_of_tensor K A Aᵐᵒᵖ, by
-    haveI := IsSimpleRing.matrix (Fin (Module.finrank K A)) K
+    have := IsSimpleRing.matrix (Fin (Module.finrank K A)) K
     have sim : IsSimpleRing (A ⊗[K] Aᵐᵒᵖ) := IsSimpleRing.ofAlgEquiv K _ _ e.symm this
     exact IsSimpleRing.left_of_tensor K A Aᵐᵒᵖ⟩⟩,
     fun ⟨fin, cen, sim⟩ ↦ {
@@ -135,16 +135,16 @@ lemma IsMorita_iff_IsBrauer' (R : Type u) [CommRing R] (A B : Type v) [Ring A] [
   by
     obtain ⟨n, hn, D, _, _, ⟨e⟩⟩ := WedderburnArtin_algebra_version' R A
     obtain ⟨m, hm, E, _, _, ⟨e'⟩⟩ := WedderburnArtin_algebra_version' R B
-    letI e1 := MoritaEquivalence.ofAlgEquiv e
-    letI e2 := MoritaEquivalence.ofAlgEquiv e'
+    let e1 := MoritaEquivalence.ofAlgEquiv e
+    let e2 := MoritaEquivalence.ofAlgEquiv e'
     have : NeZero m := ⟨hm⟩
     have : NeZero n := ⟨hn⟩
-    haveI := MoritaEquivalence.matrix' R D n |>.symm
+    have := MoritaEquivalence.matrix' R D n |>.symm
     have ww := MoritaEquivalence.trans R e1 this |>.symm
-    haveI := MoritaEquivalence.matrix' R E m |>.symm
+    have := MoritaEquivalence.matrix' R E m |>.symm
     have ww' := MoritaEquivalence.trans R e2 this
-    haveI h := MoritaEquivalence.trans R ww hAB.cond.some
-    haveI h' := MoritaEquivalence.trans R h ww'
+    have h := MoritaEquivalence.trans R ww hAB.cond.some
+    have h' := MoritaEquivalence.trans R h ww'
     have := MoritaEquivalence.algEquivOfDivisionRing R D E h'
     refine ⟨m, n, hm, hn, ⟨e.mapMatrix.trans <| Matrix.compAlgEquiv _ _ _ _ |>.trans <|
       Matrix.reindexAlgEquiv _ _ finProdFinEquiv |>.trans <| this.mapMatrix.trans <|

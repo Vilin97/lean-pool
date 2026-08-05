@@ -396,7 +396,7 @@ private def adicCompletion_ideal_fg_proof : PLift (
     change x ∈ Mi ^ n • (⊤ : Submodule R R)
     rw [Ideal.smul_top_eq_map]
     exact Ideal.mem_map_of_mem _ (hFN_le n hx)
-  haveI : Module.Finite R R := Module.Finite.self R
+  have : Module.Finite R R := Module.Finite.self R
   have hF_stable : F_filt.Stable := (Ideal.stableFiltration_stable Mi ⊤).of_le hF_le
   -- Stability: ∃ n0, FN(n0+k) = M^k * FN(n0)
   obtain ⟨n0, hn0_pow⟩ := hF_stable.exists_pow_smul_eq

@@ -175,8 +175,8 @@ private lemma measurableSet_productAnnulus
       measurableSet_le measurable_const (measurable_norm.comp (continuous_apply q).measurable)
     have hlt : MeasurableSet {z : CSpace d | ‖z q‖ < (j q : ℝ) + 1} :=
       measurableSet_lt (measurable_norm.comp (continuous_apply q).measurable) measurable_const
-    simpa [Set.setOf_and] using hge.inter hlt
-  simpa [productAnnulus, Set.setOf_forall] using h
+    simpa [Set.ofPred_and] using hge.inter hlt
+  simpa [productAnnulus, Set.ofPred_forall] using h
 
 private lemma productAnnulus_eq_of_mem
     {d : ℕ} {j ℓ : MultiIndex d} {z : CSpace d}
@@ -642,7 +642,7 @@ private lemma gaussianMeasure_map_eq_of_density
     withDensity_apply _ hs', withDensity_apply _ hs]
   rw [← MeasureTheory.lintegral_indicator (hs := hs'),
     ← MeasureTheory.lintegral_indicator (hs := hs)]
-  simpa [Set.preimage, Set.indicator, Set.mem_setOf_eq, dens, hdens] using
+  simpa [Set.preimage, Set.indicator, Set.mem_ofPred_eq, dens, hdens] using
     (hvol.lintegral_comp_emb hmeas (fun x => if x ∈ s then dens x else 0))
 
 private lemma gaussian_lintegral_rotate_eq
@@ -830,7 +830,7 @@ theorem annulusRotationAveraging
   classical
   let G : CSpace d → ENNReal := fun z => if z ∈ productAnnulus j then F z else 0
   have hG : Measurable G := hF.piecewise (measurableSet_productAnnulus j) measurable_const
-  letI : MeasureTheory.SFinite (gaussianMeasure d) := by
+  let : MeasureTheory.SFinite (gaussianMeasure d) := by
     change MeasureTheory.SFinite
       ((volume : Measure (CSpace d)).withDensity (fun z => ENNReal.ofReal (gaussianDensity d z)))
     infer_instance

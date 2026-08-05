@@ -188,7 +188,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
       rw [show Nat.gcd 4 7 = 1 from by decide] at h_dvd_gcd
       rw [← Int.natAbs_dvd]
       exact_mod_cast h_dvd_gcd
-    exact hp.not_unit (QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr (isUnit_of_dvd_one h_np_dvd_one))
+    exact hp.not_isUnit (QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr (isUnit_of_dvd_one h_np_dvd_one))
 
 /-- If `α = ±1`, then `α - β` has im-component 0, but `2θ - 1` has im 2. -/
 lemma factor_not_unit_left (α β : R) (m : ℕ)
@@ -497,7 +497,7 @@ private lemma j_gt_padicValNat_two_mul_add_one (j : ℕ) (hj : j ≥ 1) :
 private lemma higher_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
     (h_div : 7 ^ l ∣ d) (hk : 2 * j + 1 ≤ d) :
     7 ^ (l + 1) ∣ d.choose (2 * j + 1) * 7 ^ j := by
-  haveI : Fact (Nat.Prime 7) := ⟨by decide⟩
+  have : Fact (Nat.Prime 7) := ⟨by decide⟩
   set C := d.choose (2 * j + 1) with hC_def
   set k := 2 * j + 1 with hk_def
   have hC_pos : C > 0 := Nat.choose_pos hk
@@ -564,7 +564,7 @@ noncomputable def binomialA' (d : ℕ) : ℤ :=
 private lemma higher_even_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
     (h_div : 7 ^ l ∣ d) (hk : 2 * (j + 1) ≤ d) :
     7 ^ (l + 1) ∣ d.choose (2 * (j + 1)) * 7 ^ j := by
-  haveI : Fact (Nat.Prime 7) := ⟨by decide⟩
+  have : Fact (Nat.Prime 7) := ⟨by decide⟩
   set C := d.choose (2 * (j + 1)) with hC_def
   set k := 2 * (j + 1) with hk_def
   have hC_pos : C > 0 := Nat.choose_pos hk
@@ -846,7 +846,7 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
     exact (Nat.modEq_iff_dvd' h_lt.le).mp h_cong
   have h_7_dvd : (7 : ℕ) ∣ d := Nat.dvd_trans (by norm_num : 7 ∣ 42) h_42_dvd
   set l := padicValNat 7 d with hl_def
-  haveI : Fact (Nat.Prime 7) := ⟨by decide⟩
+  have : Fact (Nat.Prime 7) := ⟨by decide⟩
   have hl_pos : l ≥ 1 := one_le_padicValNat_of_dvd (by omega) h_7_dvd
   have h_div : (7 : ℤ) ^ l ∣ ↑d := by exact_mod_cast pow_padicValNat_dvd
   have h_ndiv : ¬ (7 : ℤ) ^ (l + 1) ∣ ↑d := by

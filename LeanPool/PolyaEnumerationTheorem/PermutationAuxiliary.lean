@@ -89,7 +89,7 @@ same element. If `fⁿ⁺¹ x = x`, then for any `k ∈ ℤ`, we have `fᵏ x = 
 lemma exists_perm_pow [Finite X] (f : Equiv.Perm X) (x : X) :
     ∃ n, (f ^ (n + 1)) x = x := by
   classical
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Fintype X := Fintype.ofFinite X
   by_cases hx : x ∈ f.support
   · refine ⟨(f.cycleOf x).support.card - 1, ?_⟩
     rw [Nat.sub_add_cancel (by simp [Equiv.Perm.mem_support.1 hx]),

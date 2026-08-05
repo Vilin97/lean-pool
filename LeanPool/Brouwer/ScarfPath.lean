@@ -615,7 +615,7 @@ theorem maximal_component_path_no_escape_of_degree_le_two
     have hp' : p'.IsPath := (SimpleGraph.Walk.cons_isPath_iff hxy.symm p).2 ⟨hp, hyNot⟩
     have hp'_sub : {z : α | z ∈ p'.support} ⊆ component.supp := by
       intro z hz
-      simp only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_setOf_eq, p'] at hz
+      simp only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_ofPred_eq, p'] at hz
       rcases hz with rfl | hz
       · exact hycomp
       · exact hp_sub hz
@@ -628,7 +628,7 @@ theorem maximal_component_path_no_escape_of_degree_le_two
     have hp'_sub : {z : α | z ∈ p'.support} ⊆ component.supp := by
       intro z hz
       simp only [SimpleGraph.Walk.support_concat, List.mem_append, List.mem_cons,
-        List.not_mem_nil, or_false, Set.mem_setOf_eq, p'] at hz
+        List.not_mem_nil, or_false, Set.mem_ofPred_eq, p'] at hz
       rcases hz with hz | rfl
       · exact hp_sub hz
       · exact hycomp
@@ -722,12 +722,12 @@ theorem component_cycle_of_maximal_path_closes
     ext x
     constructor
     · intro hx
-      simp only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_setOf_eq] at hx
+      simp only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_ofPred_eq] at hx
       rcases hx with rfl | hx
       · exact p.end_mem_support
       · exact hx
     · intro hx
-      simpa only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_setOf_eq] using Or.inr hx
+      simpa only [SimpleGraph.Walk.support_cons, List.mem_cons, Set.mem_ofPred_eq] using Or.inr hx
 
 /-- A path whose support is exactly a component represents that component as a path. -/
 theorem component_path_of_support_eq_component

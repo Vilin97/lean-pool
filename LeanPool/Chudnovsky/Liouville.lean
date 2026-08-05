@@ -85,7 +85,7 @@ lemma residue_congr {f₁ f₂ : ℂ → ℂ} {c : ℂ} (h : f₁ =ᶠ[𝓝[≠]
         simp only [Set.mem_compl_iff, Set.mem_singleton_iff]
         exact circleMap_ne_center (ne_of_gt hr)⟩
     have heq := hball hmem
-    simp only [Set.mem_setOf_eq] at heq
+    simp only [Set.mem_ofPred_eq] at heq
     change deriv (circleMap c r) θ • f₁ (circleMap c r θ)
       = deriv (circleMap c r) θ • f₂ (circleMap c r θ)
     rw [heq]
@@ -314,7 +314,7 @@ theorem IsEllipticWith.finite_nonAnalytic (hf : L.IsEllipticWith f) :
   have hcod : {z : ℂ | AnalyticAt ℂ f z} ∈ Filter.codiscrete ℂ :=
     MeromorphicOn.eventually_codiscreteWithin_analyticAt f (meromorphicOn_univ.mpr hf.1)
   have hcd : {z : ℂ | ¬AnalyticAt ℂ f z}ᶜ ∈ Filter.codiscrete ℂ := by
-    simpa only [Set.compl_setOf, not_not] using hcod
+    simpa only [Set.compl_ofPred, not_not] using hcod
   obtain ⟨hclosed, hdisc⟩ := compl_mem_codiscrete_iff.mp hcd
   exact (finite_fundamentalParallelogram_inter hclosed hdisc).subset (fun z hz => ⟨hz.1, hz.2⟩)
 
@@ -1801,15 +1801,15 @@ theorem IsEllipticWith.finite_order_ne_zero (hf : L.IsEllipticWith f)
     exact MeromorphicOn.meromorphicOrderAt_ne_top_of_isPreconnected (meromorphicOn_univ.mpr hf.1)
       isPreconnected_univ (Set.mem_univ z₀) (Set.mem_univ y) hz₀
   have hcod0 : {z : ℂ | meromorphicOrderAt f z = 0} ∈ Filter.codiscrete ℂ := by
-    have h := (meromorphicOn_univ.mpr hf.1).codiscreteWithin_setOf_meromorphicOrderAt_eq_zero_or_top
+    have h := (meromorphicOn_univ.mpr hf.1).codiscreteWithin_setOfPred_meromorphicOrderAt_eq_zero_or_top
       (fun u _ => hforall u)
     refine Filter.mem_of_superset h (fun z hz => ?_)
-    simp only [Set.mem_setOf_eq, Set.mem_univ, true_and] at hz ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_univ, true_and] at hz ⊢
     rcases hz with h' | h'
     · exact h'
     · exact absurd h' (hforall z)
   have hcd : {z : ℂ | meromorphicOrderAt f z ≠ 0}ᶜ ∈ Filter.codiscrete ℂ := by
-    simpa only [Set.compl_setOf, not_ne_iff] using hcod0
+    simpa only [Set.compl_ofPred, not_ne_iff] using hcod0
   obtain ⟨hclosed, hdisc⟩ := compl_mem_codiscrete_iff.mp hcd
   exact (finite_fundamentalParallelogram_inter hclosed hdisc).subset (fun z hz => ⟨hz.1, hz.2⟩)
 
@@ -1948,7 +1948,7 @@ theorem IsEllipticWith.exists_const_mul_of_meromorphicOrderAt_eq (hf : L.IsEllip
           rwa [Filter.disjoint_principal_right, compl_compl] at hm
         refine (hev.mono ?_).frequently
         rintro z ⟨hz1, hz2⟩
-        simp only [Set.mem_preimage, Set.mem_setOf_eq] at hz1 hz2
+        simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hz1 hz2
         have hper : (f / g) (z + (l : ℂ)) = (f / g) z := by
           simp only [Pi.div_apply, hf.2 z l, hg.2 z l]
         change H (z + (l : ℂ)) = H z
@@ -1964,10 +1964,10 @@ theorem IsEllipticWith.exists_const_mul_of_meromorphicOrderAt_eq (hf : L.IsEllip
     refine ⟨c, hcne, ?_⟩
     have hgord0 : {z : ℂ | meromorphicOrderAt g z = 0} ∈ Filter.codiscrete ℂ := by
       have hh :=
-        (meromorphicOn_univ.mpr hg.1).codiscreteWithin_setOf_meromorphicOrderAt_eq_zero_or_top
+        (meromorphicOn_univ.mpr hg.1).codiscreteWithin_setOfPred_meromorphicOrderAt_eq_zero_or_top
           (fun u _ ↦ hforall_g u)
       refine Filter.mem_of_superset hh (fun z hz => ?_)
-      simp only [Set.mem_setOf_eq, Set.mem_univ, true_and] at hz ⊢
+      simp only [Set.mem_ofPred_eq, Set.mem_univ, true_and] at hz ⊢
       rcases hz with h' | h'
       · exact h'
       · exact absurd h' (hforall_g z)

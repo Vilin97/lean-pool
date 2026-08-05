@@ -118,7 +118,7 @@ fidelity-kernel Gram matrix `K_{ij} = k(xᵢ, xⱼ)` is positive semidefinite, h
 theorem quantumKernel_gram_posSemidef {ι : Type*} [Finite ι]
     (φ : X → PureState n) (x : ι → X) :
     (Matrix.of fun i j => quantumKernel φ (x i) (x j)).PosSemidef := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   have hK : (Matrix.of fun i j => quantumKernel φ (x i) (x j))
       = (Matrix.of fun (k : Fin (2 ^ (n + n))) (i : ι) => featureTensor φ (x i) k).conjTranspose
         * Matrix.of fun (k : Fin (2 ^ (n + n))) (i : ι) => featureTensor φ (x i) k := by

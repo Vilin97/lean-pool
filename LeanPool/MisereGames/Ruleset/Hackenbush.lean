@@ -174,7 +174,7 @@ def remove (hack : Hackenbush V) (e : Sym2 V) : Hackenbush V where
     (fun v => v ∈ (groundComp hack.graph hack.ground e).support)
   supportFinset_coe := by
     ext v
-    simp only [Finset.coe_filter, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq]
     constructor
     · exact fun ⟨_, hv⟩ => hv
     · intro hv
@@ -413,7 +413,7 @@ theorem toGameForm_eq_zero_iff {hack : Hackenbush V} :
       intro p
       ext hack'
       simp only [Hackenbush.moves, h, SimpleGraph.edgeSet_bot,
-                 Set.mem_empty_iff_false, false_and, exists_false, Set.setOf_false]
+                 Set.mem_empty_iff_false, false_and, exists_false, Set.ofPred_false]
     apply GameForm.leftEnd_rightEnd_eq_zero
     · rw [isEnd_def, moves_toGameForm, Set.image_eq_empty]
       exact h_empty_moves .left
@@ -434,7 +434,7 @@ theorem exists_ground_edge {hack : Hackenbush V} (h_ne : hack.graph ≠ ⊥) :
     obtain ⟨v, w, hvw⟩ : ∃ v w, hack.graph.Adj v w := SimpleGraph.ne_bot_iff_exists_adj.mp h_ne
     by_cases h : v = hack.ground
     <;> by_cases h' : w = hack.ground
-    <;> simp_all only [ne_eq, SimpleGraph.support, SetRel.mem_dom, Set.mem_setOf_eq,
+    <;> simp_all only [ne_eq, SimpleGraph.support, SetRel.mem_dom, Set.mem_ofPred_eq,
       SimpleGraph.irrefl]
     · exact ⟨w, ⟨hack.ground, hvw.symm⟩, hvw.symm.reachable, h'⟩
     · exact ⟨v, ⟨hack.ground, hvw⟩, hvw.reachable, h⟩
@@ -577,7 +577,7 @@ theorem not_isSolved_of_groundCount_pos {hack : Hackenbush V} {p : Player}
       refine absurd ?_ (GameForm.isSolved_not_isEnd h_solved hne0)
       rw [isEnd_def, moves_toGameForm, Set.image_eq_empty]
       ext
-      simp only [Hackenbush.moves, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      simp only [Hackenbush.moves, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
       simp_all
 
 /--
@@ -694,7 +694,7 @@ def starPos (l r : ℕ) : Hackenbush ℕ where
     v ∈ (Hackenbush.starGraph (l + r)).support)
   supportFinset_coe := by
     ext v
-    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_setOf_eq, SimpleGraph.mem_support,
+    simp only [Finset.coe_filter, Finset.mem_range, Set.mem_ofPred_eq, SimpleGraph.mem_support,
       starGraph]
     constructor
     · intro ⟨_, hv⟩; exact hv

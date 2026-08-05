@@ -62,8 +62,8 @@ theorem close_up_two_gen_coprime
       ∃ (hle : R.carrier ≤ S.carrier) (x₁ : S.carrier),
         (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * ⟨(y₁ : T), hle y₁.2⟩ ∈
           Ideal.span {⟨(y₂ : T), hle y₂.2⟩} := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   /- Strategy (Heitmann Lemma 4, coprime case — Krull domain intersection):
      Handle degenerate cases first (y₂=0, M=⊥, y₁=0), then delegate to
      intersection_close_up from KrullDomain.lean for the main case. -/
@@ -122,8 +122,8 @@ theorem close_up_two_gen_key
       ∃ (hle : R.carrier ≤ S.carrier) (x₁ : S.carrier),
         (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * ⟨(y₁ : T), hle y₁.2⟩ ∈
           Ideal.span {⟨(y₂ : T), hle y₂.2⟩} := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   revert y₂ c hc
   apply wellFounded_dvdNotUnit.induction y₁
   intro y₁ ih y₂ c hc
@@ -177,7 +177,7 @@ theorem close_up_two_gen_key
         simp_all
       simp only [Subring.coe_mul]
       rw [hpc, hc'_val, mul_assoc]
-    · have hdvd : DvdNotUnit a (p * a) := ⟨ha, ⟨p, hp.not_unit, mul_comm p a⟩⟩
+    · have hdvd : DvdNotUnit a (p * a) := ⟨ha, ⟨p, hp.not_isUnit, mul_comm p a⟩⟩
       obtain ⟨S, hAext, hle, x₁, hrem⟩ := ih a hdvd b c' hc'_ab
       refine ⟨S, hAext, hle, x₁, ?_⟩
       have hpa_S : (⟨((p * a : R.carrier) : T), hle (p * a).2⟩ : S.carrier) =
@@ -276,6 +276,6 @@ lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S]
   · exact ⟨p, hp_irr.prime, hp_Q⟩
   · have hb_ne : b ≠ 0 := right_ne_zero_of_mul (hxpb ▸ hx_ne)
     have hb_nu : ¬IsUnit b := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q hb_Q hu)
-    exact ih b ⟨hb_ne, p, hp_irr.prime.not_unit, by rw [hxpb, mul_comm]⟩ hb_ne hb_nu hb_Q
+    exact ih b ⟨hb_ne, p, hp_irr.prime.not_isUnit, by rw [hxpb, mul_comm]⟩ hb_ne hb_nu hb_Q
 
 end

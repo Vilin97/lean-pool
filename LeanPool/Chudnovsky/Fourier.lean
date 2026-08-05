@@ -770,7 +770,7 @@ theorem weierstrassSigma_Lτ (τ : ℍ) (z : ℂ) :
     simpa using h
   have hsub : {w : ℂ | H w = c} ⊆ {w : ℂ | φfun τ w = c * gfun τ w} := by
     intro w hw
-    simp only [Set.mem_setOf_eq, hH, Pi.div_apply] at hw ⊢
+    simp only [Set.mem_ofPred_eq, hH, Pi.div_apply] at hw ⊢
     by_cases hg : gfun τ w = 0
     · exact absurd (by rw [hg, div_zero] at hw; exact hw.symm) hcne
     · exact (div_eq_iff hg).mp hw

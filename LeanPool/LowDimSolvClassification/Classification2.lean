@@ -176,7 +176,7 @@ theorem _root_.LieAlgebra.Dim2.solvable (dim2 : finrank K L = 2) :
           (span K {B 1}).smul_mem' (-1 • (B.repr n) 0 • (B.repr x) 1 + (B.repr n) 1 • (B.repr x) 0)
             ?h.mp.intro.intro.a
         simp_all
-      · simp only [Fin.isValue, carrier_eq_coe, SetLike.mem_coe, Set.mem_setOf_eq]
+      · simp only [Fin.isValue, carrier_eq_coe, SetLike.mem_coe, Set.mem_ofPred_eq]
         intro hy
         apply mem_span_singleton.mp at hy
         obtain ⟨α, hα⟩ := hy

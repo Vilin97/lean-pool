@@ -61,7 +61,7 @@ theorem prime_of_image_prime (p : R₀) (hp : Prime p) (q : R₀)
   -- Lift primality from R[p⁻¹] to R by clearing denominators
   have hinj := nagata_algebraMap_injective p hp
   refine ⟨fun h => by simp [h] at hq_loc,
-    fun hu => hq_loc.not_unit (IsUnit.map (algebraMap R₀ (Localization.Away p)) hu),
+    fun hu => hq_loc.not_isUnit (IsUnit.map (algebraMap R₀ (Localization.Away p)) hu),
     fun a b hab => ?_⟩
   have hab' : algebraMap R₀ (Localization.Away p) q ∣
       algebraMap R₀ _ a * algebraMap R₀ _ b := by
@@ -129,7 +129,7 @@ theorem nagata_criterion [WfDvdMonoid R₀]
       · exact (IsUnit.pow _ (IsLocalization.Away.algebraMap_isUnit (R := R₀)
           (S := Localization.Away p) p)).ne_zero h1
     -- Factor out the maximal power of p from r to get r = p^k · r' with p ∤ r'
-    obtain ⟨k, r', hpr', hr_eq⟩ := WfDvdMonoid.max_power_factor' hr_ne hp.not_unit
+    obtain ⟨k, r', hpr', hr_eq⟩ := WfDvdMonoid.max_power_factor' hr_ne hp.not_isUnit
     have hr'_in_P : r' ∈ P := by
       rw [hr_eq] at hr_in_P
       exact (hPprime.mem_or_mem hr_in_P).resolve_left

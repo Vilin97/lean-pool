@@ -628,7 +628,7 @@ lemma exists_simple_module_directSum [IsGalois F K] :
     rw [rank_lt_aleph0_iff]; infer_instance
   rw [eq] at ineq
   simp only [Cardinal.lift_id] at ineq
-  haveI : Nontrivial S := IsSimpleModule.nontrivial C S
+  have : Nontrivial S := IsSimpleModule.nontrivial C S
   have ineq2 := @Cardinal.le_mul_left (Cardinal.mk ι) (Module.rank F S)
     (by
       suffices 0 < Module.rank F S by exact Ne.symm (ne_of_lt this)
@@ -789,7 +789,7 @@ lemma M_directSum : ∃ (ιM : Type) (_ : Fintype ιM), Nonempty (M α β ≃ₗ
     assumption
   rw [eq] at ineq
   simp only [Cardinal.lift_id] at ineq
-  haveI : Nontrivial SM := IsSimpleModule.nontrivial C SM
+  have : Nontrivial SM := IsSimpleModule.nontrivial C SM
   have ineq2 := @Cardinal.le_mul_left (Cardinal.mk ιM) (Module.rank F SM)
     (by
       suffices 0 < Module.rank F SM by exact Ne.symm (ne_of_lt this)
@@ -950,7 +950,7 @@ lemma isBrauerEquivalent : IsBrauerEquivalent (⟨.of F (A ⊗[F] B)⟩ : CSA F)
     (Matrix.reindexAlgEquiv _ _ finProdFinEquiv)
   let iso2 := φ4 (α := α) (β := β)
   let iso3 := iso11.trans iso2.symm
-  haveI : NeZero (finrank F K) := ⟨by have : 0 < finrank F K := finrank_pos; omega⟩
+  have : NeZero (finrank F K) := ⟨by have : 0 < finrank F K := finrank_pos; omega⟩
   exact ⟨1, finrank F K, one_ne_zero, (NeZero.ne' (finrank F K)).symm,
     ⟨(BrauerGroup.dimOneIso (⟨.of F (A ⊗[F] B)⟩ : CSA F)).trans iso3.symm⟩⟩
 

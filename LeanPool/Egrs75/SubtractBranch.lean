@@ -97,7 +97,7 @@ theorem pow_lowPDigitIndex_dvd {p n : ℕ} (_hp : 1 < p) (_hn : n ≠ 0) :
 theorem not_pow_succ_lowPDigitIndex_dvd {p n : ℕ} (hp : p.Prime) (hn : n ≠ 0) :
     ¬ p ^ (lowPDigitIndex p n + 1) ∣ n := by
   unfold lowPDigitIndex
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   exact Nat.pow_succ_factorization_not_dvd hn hp
 
 /-- The base-`p` digit of `n` at the lowest-nonzero index `m` is nonzero:

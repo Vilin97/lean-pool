@@ -43,7 +43,7 @@ abbrev flipFunc (f : ℤ → ℤ) : ℤ → ℤ := fun k => -1 - f (-1 - k)
 lemma flip_quadrant (f : ℤ → ℤ) (a b : ℤ) :
   (-1 - ·) '' (southeastSet f a b) = northwestSet (flipFunc f) (-a) (-b) := by
   ext n
-  simp only [Set.mem_image, southeastSet, northwestSet, Set.mem_setOf_eq, flipFunc]
+  simp only [Set.mem_image, southeastSet, northwestSet, Set.mem_ofPred_eq, flipFunc]
   constructor
   · rintro ⟨m, ⟨hm1, hm2⟩, rfl⟩
     constructor
@@ -144,7 +144,7 @@ lemma asp_of_finite_quadrants {τ : ℤ → ℤ} (h_inj : Function.Injective τ)
   unfold isAsp
   have : { n : ℤ | n * (τ n) < 0 } ⊆ (southeastSet τ 0 1) ∪ (northwestSet τ 1 0) := by
     intro n hn
-    simp only [Set.mem_setOf_eq] at hn
+    simp only [Set.mem_ofPred_eq] at hn
     have := mul_neg_iff.mp hn
     rcases this with (pos_neg | neg_pos)
     · left
@@ -261,7 +261,7 @@ noncomputable def inv (τ : AspPerm) : AspPerm where
       exact τ.asp
     ext n
     have := Function.leftInverse_invFun τ.injective n
-    simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq, this, mul_comm]
+    simp only [Set.preimage_ofPred_eq, Set.mem_ofPred_eq, this, mul_comm]
 
 /-- The identity ASP permutation. -/
 def id : AspPerm where
@@ -269,7 +269,7 @@ def id : AspPerm where
   bijective := ⟨Function.injective_id, Function.surjective_id⟩
   asp := by
     have : {n:ℤ | n * _root_.id n < 0} = ∅ := by
-      ext n; simp only [id_eq, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_lt]
+      ext n; simp only [id_eq, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_lt]
       exact mul_self_nonneg n
     unfold isAsp; simp_all
 
@@ -356,7 +356,7 @@ private lemma dual_inverse_raw : τ.s'_raw = (τ⁻¹).s_raw := by
       ext n
       constructor
       · intro h; unfold southeastSet
-        rcases h with ⟨m, hm, rfl⟩; simp only [Set.mem_setOf_eq, inv_mul_cancel_eval]
+        rcases h with ⟨m, hm, rfl⟩; simp only [Set.mem_ofPred_eq, inv_mul_cancel_eval]
         exact ⟨hm.2, hm.1⟩
       · intro h
         use τ⁻¹ n
@@ -1051,7 +1051,7 @@ lemma inset_eq_nw (v : ℤ) : τ.inset v = northwestSet τ (τ v) v := by
     exact (τ.inv_iff_le u_lt_v).mpr τv_le_τu
 
 lemma invset_iff_inset (u v : ℤ) : ⟨u, v⟩ ∈ invSet τ ↔ u ∈ τ.inset v := by
-  simp only [inset_eq_nw, northwestSet, Set.mem_setOf_eq]
+  simp only [inset_eq_nw, northwestSet, Set.mem_ofPred_eq]
   constructor
   · intro ⟨u_lt, τ_le⟩
     exact ⟨u_lt, le_of_lt τ_le⟩
@@ -1076,7 +1076,7 @@ lemma outset_eq_se (u : ℤ) : τ.outset u = southeastSet τ (τ u) u := by
     exact (τ.inv_iff_lt u_le_v).mpr τv_lt_τu
 
 lemma invset_iff_outset (u v : ℤ) : ⟨u, v⟩ ∈ invSet τ ↔ v ∈ τ.outset u := by
-  simp only [outset_eq_se, southeastSet, Set.mem_setOf_eq]
+  simp only [outset_eq_se, southeastSet, Set.mem_ofPred_eq]
   constructor
   · intro ⟨u_lt, τ_le⟩
     exact ⟨le_of_lt u_lt, τ_le⟩
@@ -1130,16 +1130,16 @@ theorem eq_id_of_inv_set_eq_empty_of_chi_eq_zero (τ : AspPerm)
   rw [reconstruction τ n, h_χ]
   have h_out : τ.outset n = ∅ := by
     ext v
-    simp only [outset, h_inv, Set.mem_empty_iff_false, Set.setOf_false]
+    simp only [outset, h_inv, Set.mem_empty_iff_false, Set.ofPred_false]
   have h_in : τ.inset n = ∅ := by
     ext v
-    simp only [inset, h_inv, Set.mem_empty_iff_false, Set.setOf_false]
+    simp only [inset, h_inv, Set.mem_empty_iff_false, Set.ofPred_false]
   simp only [sub_zero, h_out, Set.ncard_empty, Nat.cast_zero, add_zero, h_in, id, id_eq]
 
 @[simp]
 lemma inv_set_id : invSet AspPerm.id = ∅ := by
   ext ⟨u, v⟩
-  simp only [invSet, id, id_eq, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and,
+  simp only [invSet, id, id_eq, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and,
     not_lt]
   intro u_lt_v
   exact le_of_lt u_lt_v
@@ -1168,7 +1168,7 @@ lemma bend_set_sf (β : AspPerm) (b : ℤ) :
     SlipFace.bendSet β.s b = {l : ℤ | β⁻¹ (l - 1) < b ∧ b ≤ β⁻¹ l} := by
   -- Proof written by GPT 5.5.
   ext l
-  simp only [SlipFace.bendSet, Set.mem_setOf_eq]
+  simp only [SlipFace.bendSet, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hflat, hne⟩
     constructor
@@ -1222,7 +1222,7 @@ lemma Delta_eq (a b : ℤ) : τ.s.Δ a b = if τ b = a then 1 else 0 := by
 lemma Γ_eq : τ.s.Γ = { ⟨a, b⟩ | τ b = a } := by
   ext ⟨a, b⟩
   simp only [SlipFace.Γ, τ.Delta_eq, ite_eq_left_iff, zero_ne_one, imp_false,
-    Decidable.not_not, Set.mem_setOf_eq]
+    Decidable.not_not, Set.mem_ofPred_eq]
 
 /-- The slipface of an ASP permutation is submodular.
 *Proposition 4.3* (`prop:imageASP`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227), one direction. -/
@@ -1313,7 +1313,7 @@ private def L : Set ℤ := {a : ℤ | τ⁻¹.s b a ≥ n}
 
 private lemma L_nonnempty : (L τ b n).Nonempty := by
   use b - n - τ.χ
-  unfold L; simp only [ge_iff_le, Set.mem_setOf_eq]
+  unfold L; simp only [ge_iff_le, Set.mem_ofPred_eq]
   refine le_trans ?_ (τ⁻¹.s_ge b (b - n - τ.χ))
   rw [τ.chi_dual]
   omega
@@ -1323,7 +1323,7 @@ private lemma L_bddAbove (n_pos : n > 0) : ∃ A : ℤ, ∀ a ∈ L τ b n, A �
   obtain ⟨a, ha⟩ := this
   use a
   intro a' a'_L
-  unfold L at a'_L; simp only [ge_iff_le, Set.mem_setOf_eq] at a'_L
+  unfold L at a'_L; simp only [ge_iff_le, Set.mem_ofPred_eq] at a'_L
   contrapose! a'_L with a_lt_a'
   have := (τ⁻¹.s_noninc b (le_of_lt a_lt_a')).1
   omega
@@ -1497,7 +1497,7 @@ theorem inv_ramp_correspondence (b : ℤ) {m n : ℤ} (m_pos : m > 0) (n_pos : n
   have u_lt_b : u < b := τ.u_lt b n_pos
   have v_gt_b : b ≤ v := τ.v_ge b m_pos
   have inv_simp : ⟨u, v⟩ ∈ invSet τ ↔ τ v < τ u := by
-    simp only [invSet, Set.mem_setOf_eq, lt_of_lt_of_le u_lt_b v_gt_b, true_and]
+    simp only [invSet, Set.mem_ofPred_eq, lt_of_lt_of_le u_lt_b v_gt_b, true_and]
   suffices ⟨m, n⟩ ∈ τ.ramp b ↔ τ v < τ u by
     rw [this, inv_simp]
   let a := b + m - n - τ.χ

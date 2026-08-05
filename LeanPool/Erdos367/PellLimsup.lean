@@ -312,7 +312,7 @@ lemma euler_two_mod (p : ℕ) (hp : p.Prime) (hp5 : p % 8 = 5) :
     simp [hp2, hp5]
   -- By Euler's criterion, we have $2^{p/2} \equiv jacobiSym 2 p \pmod p$.
   have h_euler : 2 ^ (p / 2) ≡ jacobiSym 2 p [ZMOD p] := by
-    haveI := Fact.mk hp; simp +decide [ ← ZMod.intCast_eq_intCast_iff, jacobiSym ] ;
+    have := Fact.mk hp; simp +decide [ ← ZMod.intCast_eq_intCast_iff, jacobiSym ] ;
     simp +decide [ Nat.primeFactorsList_prime hp, legendreSym.eq_pow ];
   simpa [ h_legendre ] using h_euler.symm.dvd
 
@@ -649,7 +649,7 @@ lemma generalized_boost_pellN (p : ℕ) (hp : p.Prime) (hp5 : p % 8 = 5)
 /-- Infinitely many primes are ≡ 5 mod 8. -/
 lemma infinite_primes_5_mod_8 : Set.Infinite {p : ℕ | p.Prime ∧ p % 8 = 5} := by
   have hinf : Set.Infinite {p : ℕ | p.Prime ∧ (p : ZMod 8) = 5} :=
-    Nat.infinite_setOf_prime_and_eq_mod (by decide)
+    Nat.infinite_setOfPred_prime_and_eq_mod (by decide)
   apply hinf.mono
   intro p ⟨hp, hp5⟩
   refine ⟨hp, ?_⟩

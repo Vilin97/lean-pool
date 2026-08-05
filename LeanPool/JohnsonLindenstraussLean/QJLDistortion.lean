@@ -323,7 +323,7 @@ theorem isPerRowSubgaussian_of_unit {d : ℕ} (u q : EuclideanSpace ℝ (Fin d))
   classical
   set μ : Measure (EuclideanSpace ℝ (Fin d)) :=
     ProbabilityTheory.stdGaussian (EuclideanSpace ℝ (Fin d)) with hμ
-  haveI hμprob : IsProbabilityMeasure μ := by rw [hμ]; infer_instance
+  have hμprob : IsProbabilityMeasure μ := by rw [hμ]; infer_instance
   set s0 : ℝ := Real.sqrt (π / 2) with hs0
   have hs0nn : (0 : ℝ) ≤ s0 := Real.sqrt_nonneg _
   have hs0sq : s0 ^ 2 = π / 2 := Real.sq_sqrt (by positivity)
@@ -611,7 +611,7 @@ theorem qjlEstimator_concentration_exp {m d : ℕ} (hm : 0 < m)
       = {S | ε ≤ qjlEstimator key q S - ⟪‖key‖⁻¹ • key, q⟫}
         ∪ {S | ε ≤ -(qjlEstimator key q S - ⟪‖key‖⁻¹ • key, q⟫)} := by
     ext S
-    simp only [Set.mem_setOf_eq, Set.mem_union, le_abs]
+    simp only [Set.mem_ofPred_eq, Set.mem_union, le_abs]
   rw [hset]
   refine (measureReal_union_le _ _).trans ?_
   calc (Measure.pi

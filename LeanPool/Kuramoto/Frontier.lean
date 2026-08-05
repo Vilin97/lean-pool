@@ -549,7 +549,7 @@ private lemma finite_max_stays_below' {ι : Type*} [Finite ι] [Nonempty ι]
     (hg_strict : ∀ t i, 0 ≤ t → (∀ j, g j t ≤ C) → g i t = C → (∀ j, g j t ≤ g i t) → deriv (g i) t
      < 0) :
     ∀ t, 0 ≤ t → ∀ i, g i t ≤ C := by
-  letI := Fintype.ofFinite ι;
+  let := Fintype.ofFinite ι;
   intro t ht i;
   convert finite_max_stays_below ( Fintype.card_pos )
     ( fun j => g ( Fintype.equivFin ι |>.symm j ) ) C ( fun j => hg_diff _ ) ( fun j => hg_init _ )
@@ -588,7 +588,7 @@ private theorem semicircle_preserved
   -- Show all signed differences stay ≤ C < π
   suffices h_all : ∀ s, 0 ≤ s → ∀ p : Fin N × Fin N, θ s p.1 - θ s p.2 ≤ C by
     exact abs_lt.mpr ⟨by linarith [h_all t ht (b, a)], by linarith [h_all t ht (a, b)]⟩
-  haveI : Nonempty (Fin N × Fin N) := ⟨(⟨0, by omega⟩, ⟨0, by omega⟩)⟩
+  have : Nonempty (Fin N × Fin N) := ⟨(⟨0, by omega⟩, ⟨0, by omega⟩)⟩
   exact finite_max_stays_below'
     (fun p : Fin N × Fin N => fun s => θ s p.1 - θ s p.2) C
     (fun p => Differentiable.sub
@@ -867,7 +867,7 @@ private theorem semicircle_preserved_uniform
   have hC_lt_pi : C < Real.pi := by simp only [C]; linarith
   have hC_gt_D₀ : D₀ < C := by simp only [C]; linarith [Real.pi_pos]
   have h_all : ∀ s, 0 ≤ s → ∀ p : Fin N × Fin N, θ s p.1 - θ s p.2 ≤ C := by
-    haveI : Nonempty (Fin N × Fin N) := ⟨(⟨0, by omega⟩, ⟨0, by omega⟩)⟩
+    have : Nonempty (Fin N × Fin N) := ⟨(⟨0, by omega⟩, ⟨0, by omega⟩)⟩
     exact finite_max_stays_below'
       (fun p : Fin N × Fin N => fun s => θ s p.1 - θ s p.2) C
       (fun p => Differentiable.sub

@@ -91,7 +91,7 @@ lemma exists_prime_aux (m : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3) :
         rw [ha_p]
         simpa [jacobiSym.mod_left] using hx₁
       · intro h
-        haveI := Fact.mk hp_prime
+        have := Fact.mk hp_prime
         simp_all +decide [← ZMod.intCast_eq_intCast_iff]
         simp_all +decide [← Nat.dvd_iff_mod_eq_zero, ← ZMod.natCast_eq_zero_iff]
     -- Translate `a_p` modulo `p` so that also `a_p ≡ 1 (mod 4)`.
@@ -185,7 +185,7 @@ lemma exists_odd_sq_mod_prime_of_jacobi_eq_one (m q : ℕ) (hq_prime : Nat.Prime
     (h_jacobi : jacobiSym (-m) q = 1) :
     ∃ b : ℤ, b ^ 2 ≡ -↑m [ZMOD ↑q] ∧ b % 2 = 1 := by
   obtain ⟨b₀, hb₀⟩ : ∃ b₀ : ℤ, b₀ ^ 2 ≡ -(m : ℤ) [ZMOD q] := by
-    haveI := Fact.mk hq_prime
+    have := Fact.mk hq_prime
     norm_num [← ZMod.intCast_eq_intCast_iff, jacobiSym] at *
     norm_num [Nat.primeFactorsList_prime hq_prime] at h_jacobi
     rw [legendreSym.eq_one_iff] at h_jacobi
@@ -211,7 +211,7 @@ lemma jacobi_neg_m_q (m : ℕ) (q : ℕ) (hm_mod : m % 8 = 3) (hq_mod : q % 4 = 
       intro x a
       simp_all only [Int.reduceNeg, neg_mul, List.mem_pmap, Nat.mem_primeFactorsList', ne_eq]
       obtain ⟨w, ⟨left, left_1, _⟩, rfl⟩ := a
-      haveI := Fact.mk left
+      have := Fact.mk left
       simp_all +decide [jacobiSym]
       specialize h_jacobi w left_1 left
       simp_all +decide [Nat.primeFactorsList_prime left]
@@ -267,7 +267,7 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
     have h_exists_tp (p : ℕ) (hp : p ∈ Nat.primeFactors m) :
         ∃ t_p : ℤ, 2 * q * t_p ^ 2 ≡ -1 [ZMOD p] := by
       obtain ⟨t, ht⟩ : ∃ t : ℤ, t ^ 2 ≡ -2 * q [ZMOD p] := by
-        haveI := Fact.mk (Nat.prime_of_mem_primeFactors hp)
+        have := Fact.mk (Nat.prime_of_mem_primeFactors hp)
         simp_all +decide only [jacobiSym, Int.reduceNeg, neg_mul, Nat.mem_primeFactors,
           ne_eq, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_neg,
           Int.cast_mul, Int.cast_ofNat, Int.cast_natCast]
@@ -752,7 +752,7 @@ lemma jacobi_neg_d_of_dvd_sq_add (p : ℕ) (a d b' : ℤ)
     (hp_not_dvd_d : ¬ (p : ℤ) ∣ d)
     (hp_not_dvd_b : ¬ (p : ℤ) ∣ b') :
     jacobiSym (-d) p = 1 := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   rw [jacobiSym]
   norm_num [Nat.primeFactorsList_prime hp]
   simp_all +decide only [ne_eq, ← ZMod.intCast_zmod_eq_zero_iff_dvd, Int.cast_add,
@@ -766,7 +766,7 @@ lemma jacobi_neg_d_of_odd_padicVal (p : ℕ) (a d b' : ℤ)
     (hp_not_dvd_d : ¬ (p : ℤ) ∣ d)
     (h_odd_val : ¬ Even (padicValInt p (a ^ 2 + d * b' ^ 2))) :
     jacobiSym (-d) p = 1 := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hpp : (p : ℤ) ≠ 0 := Int.natCast_ne_zero.mpr hp.ne_zero
   -- Strong induction on `|a| + |b'|`.
   suffices H : ∀ n : ℕ, ∀ a b' : ℤ, a.natAbs + b'.natAbs = n →
@@ -832,12 +832,12 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
       refine dvd_mul_of_dvd_right ?_ _
       contrapose! hpv
       simp_all +decide [padicValInt.eq_zero_of_not_dvd]
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     simp_all +decide only [ne_eq, Nat.not_even_iff_odd, ← ZMod.intCast_eq_intCast_iff,
       Int.cast_pow, jacobiSym]
     simp +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil, List.prod_cons,
       List.prod_nil, mul_one]
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [legendreSym.eq_one_iff]
     · aesop
     · rwa [← ZMod.intCast_zmod_eq_zero_iff_dvd] at hpm
@@ -846,7 +846,7 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
     · have hb_sq_mod_p : b ^ 2 ≡ -m [ZMOD p] := by
         exact Int.modEq_iff_dvd.mpr ⟨-4 * h * hpq.choose, by
           linear_combination -hbqm - 4 * h * hpq.choose_spec⟩
-      haveI := Fact.mk hp
+      have := Fact.mk hp
       simp_all +decide only [jacobiSym, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow,
         Int.cast_neg]
       simp_all +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
@@ -857,7 +857,7 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
       · simp_all +decide [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     · have h_jacobi_neg_m_odd : ¬ Even (padicValInt p ((2 * q * x + b * y) ^ 2 + m * y ^ 2)) := by
         have h_jacobi_neg_m_odd : padicValInt p (4 * q * v) = padicValInt p v := by
-          haveI := Fact.mk hp
+          have := Fact.mk hp
           rw [padicValInt.mul, padicValInt.mul] <;> norm_num
           · exact ⟨Or.inr <| mod_cast fun h => hp_odd <| by
                 have := Nat.le_of_dvd (by decide) h
@@ -899,7 +899,7 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
         linear_combination hbqm * y ^ 2
       rw [heq]
       exact hpv.mul_left (4 * q)
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     simp_all +decide [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     obtain ⟨k, hk⟩ := hpm
     simp_all
@@ -922,13 +922,13 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
       obtain ⟨k, hk⟩ := h_div_p
       use k
       nlinarith [hp.two_le, Int.ediv_mul_cancel (show (p : ℤ) ∣ m from mod_cast hpm)]
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     simp_all +decide [← ZMod.intCast_eq_intCast_iff]
     cases h_div_p <;> simp_all +decide [ZMod.intCast_zmod_eq_zero_iff_dvd]
     norm_cast at *
     simp_all +decide [Nat.squarefree_iff_prime_squarefree]
   have h_jacobi_2q_p : jacobiSym (2 * q) p = 1 := by
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     simp_all +decide only [jacobiSym, Int.reduceNeg, neg_mul,
       ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_mul, Int.cast_ofNat,
       Int.cast_natCast]
@@ -938,7 +938,7 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
     · exact ⟨y, by simpa [sq, ← ZMod.intCast_eq_intCast_iff] using h_y_sq_mod_p.symm⟩
     · intro H
       simp_all +decide [legendreSym]
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   simp_all +decide only [Int.reduceNeg, neg_mul, ← ZMod.intCast_eq_intCast_iff,
     Int.cast_pow, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast, jacobiSym.mul_left]
   rw [jacobiSym.neg] at hjac

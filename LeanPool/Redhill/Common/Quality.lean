@@ -45,7 +45,7 @@ lemma quality_empty : quality (n := n) ∅ = 0 := quality_finite Set.finite_empt
 
 lemma quality_union_finite (h : B.Finite) : quality (A ∪ B) = quality A := by
   refine le_antisymm (sInf_le_sInf fun q mq ↦ ?_) (quality_mono Set.subset_union_left)
-  simp only [Set.mem_setOf, Set.mem_union, Set.sep_union, Set.finite_union] at mq ⊢
+  simp only [Set.mem_ofPred, Set.mem_union, Set.sep_union, Set.finite_union] at mq ⊢
   refine ⟨mq, h.subset (Set.sep_subset ..)⟩
 
 open Filter in

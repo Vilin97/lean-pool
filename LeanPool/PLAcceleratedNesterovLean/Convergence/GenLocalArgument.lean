@@ -97,7 +97,7 @@ private abbrev localConvergenceAtBasePointGenProof
           π ((nesterovSeqGen f η ρ s₀ j).lookahead η) +
             t • ((nesterovSeqGen f η ρ s₀ j).lookahead η -
                   π ((nesterovSeqGen f η ρ s₀ j).lookahead η)) ∈ U) := by
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   let η := 1 / (L : ℝ)
   let ρ := (1 - Real.sqrt (μ_minus * η)) / (1 + Real.sqrt (μ_minus * η))
   have hS_argmin : S = argminSet f := hrange

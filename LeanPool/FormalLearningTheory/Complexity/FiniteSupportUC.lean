@@ -53,7 +53,7 @@ private lemma trueErrorReal_extend_false
   -- Key: under ⊤, toMeasure = toOuterMeasure for any PMF
   have hto : @PMF.toMeasure (H ⊕ ℕ) ⊤ (μ.toPMF.map Sum.inl) S =
       (μ.toPMF.map Sum.inl).toOuterMeasure S := by
-    letI : MeasurableSpace (H ⊕ ℕ) := ⊤
+    let : MeasurableSpace (H ⊕ ℕ) := ⊤
     exact @PMF.toMeasure_apply_eq_toOuterMeasure (H ⊕ ℕ) ⊤ (μ.toPMF.map Sum.inl)
       ⟨fun _ => trivial⟩ S
   change (@PMF.toMeasure (H ⊕ ℕ) ⊤ (μ.toPMF.map Sum.inl) S).toReal = _
@@ -69,7 +69,7 @@ private lemma trueErrorReal_extend_false
   rw [PMF.toMeasure_apply_fintype]
   -- Convert ENNReal sum to Real sum
   have hne_top : ∀ h ∈ Finset.univ, Set.indicator {h : H | a h ≠ false} (⇑μ.toPMF) h ≠ ⊤ := by
-    intro h _; simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    intro h _; simp only [Set.indicator_apply, Set.mem_ofPred_eq]
     split_ifs
     · show μ.toPMF h ≠ ⊤
       simp [FinitePMF.toPMF, PMF.ofFintype_apply, ENNReal.ofReal_ne_top]
@@ -78,7 +78,7 @@ private lemma trueErrorReal_extend_false
   -- Simplify each term and match boolTestExpectation
   simp only [boolTestExpectation, trueExpectation]
   congr 1; ext h
-  simp only [Set.indicator_apply, Set.mem_setOf_eq, FinitePMF.toPMF, PMF.ofFintype_apply]
+  simp only [Set.indicator_apply, Set.mem_ofPred_eq, FinitePMF.toPMF, PMF.ofFintype_apply]
   by_cases hah : a h = true
   · simp [hah, ENNReal.toReal_ofReal (μ.prob_nonneg h)]
   · simp_all
@@ -155,13 +155,13 @@ private theorem liftClass_growth_bound
   rintro k ⟨⟨S, hSn⟩, rfl⟩
   change { f : ↥S → Bool | ∃ c ∈ C, ∀ x : ↥S, c ↑x = f x }.ncard ≤
     ∑ i ∈ Finset.range (v + 1), n.choose i
-  haveI : DecidableEq X := Classical.decEq X
+  have : DecidableEq X := Classical.decEq X
   set RS : Set (↥S → Bool) := { f | ∃ c ∈ C, ∀ x : ↥S, c ↑x = f x }
   have hRS_fin : Set.Finite RS := Set.Finite.subset Set.finite_univ (Set.subset_univ _)
   set RS_fs := hRS_fin.toFinset
   rw [Set.ncard_eq_toFinset_card RS hRS_fin]
-  haveI : DecidableEq ↥S := Classical.typeDecidableEq _
-  haveI : DecidableEq (Finset ↥S) := Classical.typeDecidableEq _
+  have : DecidableEq ↥S := Classical.typeDecidableEq _
+  have : DecidableEq (Finset ↥S) := Classical.typeDecidableEq _
   let toSub : (↥S → Bool) → Finset ↥S :=
     fun f => Finset.univ.filter (fun x => f x = true)
   have h_inj : Function.Injective toSub := by
@@ -240,7 +240,7 @@ theorem finite_support_vc_approx
   by_cases hbig : 1 ≤ ε
   · refine ⟨1, Nat.one_pos, ?_⟩
     intro H _ _ A hvc μ
-    haveI : Nonempty H := by
+    have : Nonempty H := by
       by_contra hemp; rw [not_nonempty_iff] at hemp
       have := μ.prob_sum_one; simp [Finset.eq_empty_of_isEmpty] at this
     refine ⟨fun _ => Classical.arbitrary H, ?_⟩
@@ -259,18 +259,18 @@ theorem finite_support_vc_approx
     have hTpos : 0 < Tnat := lt_of_lt_of_le Nat.zero_lt_one (Nat.le_max_left 1 _)
     refine ⟨Tnat, hTpos, ?_⟩
     intro H _ _ A hvc μ
-    haveI : Nonempty H := by
+    have : Nonempty H := by
       by_contra hemp; rw [not_nonempty_iff] at hemp
       have := μ.prob_sum_one; simp [Finset.eq_empty_of_isEmpty] at this
-    letI : MeasurableSpace (H ⊕ ℕ) := ⊤
-    haveI : MeasurableSingletonClass (H ⊕ ℕ) := ⟨fun _ => trivial⟩
-    haveI : Infinite (H ⊕ ℕ) := Sum.infinite_of_right
-    letI : MeasurableSpace H := ⊤
-    haveI : MeasurableSingletonClass H := ⟨fun _ => trivial⟩
+    let : MeasurableSpace (H ⊕ ℕ) := ⊤
+    have : MeasurableSingletonClass (H ⊕ ℕ) := ⟨fun _ => trivial⟩
+    have : Infinite (H ⊕ ℕ) := Sum.infinite_of_right
+    let : MeasurableSpace H := ⊤
+    have : MeasurableSingletonClass H := ⟨fun _ => trivial⟩
     let X := H ⊕ ℕ
     let C : ConceptClass X Bool := liftClass A
     let D : Measure X := @PMF.toMeasure X ⊤ (μ.toPMF.map Sum.inl)
-    haveI : IsProbabilityMeasure D := PMF.toMeasure.isProbabilityMeasure _
+    have : IsProbabilityMeasure D := PMF.toMeasure.isProbabilityMeasure _
     have hgrowth : ∀ n : ℕ, v ≤ n →
         GrowthFunction X C n ≤ ∑ i ∈ Finset.range (v + 1), Nat.choose n i :=
       liftClass_growth_bound (A := A) (v := v) rfl hvc
@@ -280,8 +280,8 @@ theorem finite_support_vc_approx
     have hc_meas : @Measurable X Bool ⊤ _ (fun _ => false) :=
       fun _ _ => @MeasurableSpace.measurableSet_top X _
     -- NullMeasurableSet: under ⊤, discrete measurability gives all sets measurable
-    haveI : Countable X := inferInstance
-    haveI : DiscreteMeasurableSpace X :=
+    have : Countable X := inferInstance
+    have : DiscreteMeasurableSpace X :=
       MeasurableSingletonClass.toDiscreteMeasurableSpace
     have hnull : NullMeasurableSet
         {p : (Fin Tnat → X) × (Fin Tnat → X) | ∃ f ∈ C,
@@ -355,7 +355,7 @@ theorem finite_support_vc_approx
     have hallInl_compl_zero : Measure.pi (fun _ : Fin Tnat => D) allInlᶜ = 0 := by
       have hsub : allInlᶜ ⊆ ⋃ i : Fin Tnat, {xs | xs i ∉ Set.range Sum.inl} := by
         intro xs hxs
-        simp only [allInl, Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hxs
+        simp only [allInl, Set.mem_compl_iff, Set.mem_ofPred_eq, not_forall] at hxs
         simp_all
       have hzero : ∀ i : Fin Tnat,
           Measure.pi (fun _ => D) {xs | xs i ∉ Set.range Sum.inl} = 0 := by

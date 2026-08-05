@@ -24,7 +24,7 @@ variable (K D : Type u) [Field K] [DivisionRing D] [Algebra K D] [FiniteDimensio
 /-- A maximal subfield of a finite-dimensional central division algebra has square dimension. -/
 theorem dim_max_subfield (k : SubField K D) (hk : IsMax k) :
     Module.finrank K D = Module.finrank K k * Module.finrank K k := by
-  letI : Field k.1 := inferInstanceAs <| Field k
+  let : Field k.1 := inferInstanceAs <| Field k
   have dimdim := dim_centralizer K (A := D) k.1 |>.symm
   have := Subalgebra.le_centralizer_self.2 k.2
   have eq : k.1 = Subalgebra.centralizer K (A := D) k.1 := by
@@ -32,7 +32,7 @@ theorem dim_max_subfield (k : SubField K D) (hk : IsMax k) :
     have lt := LE.le.lt_iff_ne this |>.2 hneq
     obtain ⟨a, ha1, ha2⟩ : ∃ a ∈ Subalgebra.centralizer K (A := D) k.1, a ∉ k.1 :=
       Set.ssubset_iff_of_subset this |>.1 lt
-    letI : CommRing (Algebra.adjoin K (insert a k.1) : Subalgebra K D) :=
+    let : CommRing (Algebra.adjoin K (insert a k.1) : Subalgebra K D) :=
     { mul_comm := by
         rintro ⟨x, hx⟩ ⟨y, hy⟩
         simp only [MulMemClass.mk_mul_mk, Subtype.mk.injEq]
@@ -100,12 +100,12 @@ lemma cor_two_1to2 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
     Subalgebra.centralizer K L.1 = L.1 ↔
       Module.finrank K A = Module.finrank K L * Module.finrank K L where
   mp h := by
-    letI : Field L.1 := inferInstanceAs <| Field L
+    let : Field L.1 := inferInstanceAs <| Field L
     have := dim_centralizer K (A := A) L.1
     rw [h] at this
     exact this.symm
   mpr h := by
-    letI : Field L.1 := inferInstanceAs <| Field L
+    let : Field L.1 := inferInstanceAs <| Field L
     have := dim_centralizer K (A := A) L.1
     rw [h] at this
     erw [mul_eq_mul_right_iff] at this
@@ -122,7 +122,7 @@ lemma cor_two_2to3 (A : Type u) [Ring A] [Algebra K A] [FiniteDimensional K A]
     (∀ (L' : Subalgebra K A) (_ : ∀ x ∈ L', ∀ y ∈ L',  x * y = y * x), L.1 ≤ L' →
       L.1 = L') :=
   fun hrank L' hL' hLL ↦ by
-  letI : Field L.1 := inferInstanceAs <| Field L
+  let : Field L.1 := inferInstanceAs <| Field L
   have := dim_centralizer K (A := A) L.1 |>.symm
   simp only [this, SubField.coe_toSubalgebra] at hrank
   erw [mul_eq_mul_right_iff] at hrank

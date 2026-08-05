@@ -75,7 +75,7 @@ instance hereditaryClosure_closedUnderNeg {A : G → Prop} [ClosedUnderNeg A] :
     ClosedUnderNeg (Hereditary.closure A) where
   neg_of {g} hg := by
     let B : G → Prop := fun g => Hereditary.closure A (-g)
-    haveI : Hereditary B := {
+    have : Hereditary B := {
       has_option {g g'} hg h :=
         Hereditary.has_option_mem_closure hg (neg_isOption_of_isOption h)
     }
@@ -91,7 +91,7 @@ instance closedUnderNegClosure_hereditary {A : G → Prop} [Hereditary A] :
     Hereditary (ClosedUnderNeg.closure A) where
   has_option {g g'} hg h := by
     let B : G → Prop := fun g => ∀ g', Moves.IsOption g' g → ClosedUnderNeg.closure A g'
-    haveI : ClosedUnderNeg B := {
+    have : ClosedUnderNeg B := {
       neg_of {g} hg g' h' := by
         have hneg : Moves.IsOption (-g') g := by
           simpa using neg_isOption_of_isOption h'
@@ -122,7 +122,7 @@ instance closedUnderSumClosure_hereditary {A : G → Prop} [Hereditary A] :
   has_option {g g'} hg h := by
     let B : G → Prop := fun g =>
       ClosedUnderAdd.closure A g ∧ ∀ g', Moves.IsOption g' g → ClosedUnderAdd.closure A g'
-    haveI : ClosedUnderAdd B := {
+    have : ClosedUnderAdd B := {
       has_add g h hg hh := by
         constructor
         · exact ClosedUnderAdd.add_mem_closure hg.1 hh.1
@@ -144,7 +144,7 @@ instance closedUnderSumClosure_closedUnderNeg {A : G → Prop} [ClosedUnderNeg A
     ClosedUnderNeg (ClosedUnderAdd.closure A) where
   neg_of {g} hg := by
     let B : G → Prop := fun g => ClosedUnderAdd.closure A (-g)
-    haveI : ClosedUnderAdd B := {
+    have : ClosedUnderAdd B := {
       has_add g h hg hh := by
         change ClosedUnderAdd.closure A (-(g + h))
         rw [neg_add']
@@ -164,7 +164,7 @@ instance closedUnderDicoticClosure_hereditary {IsAmbient A : G → Prop} [Heredi
     let B' : G → Prop := fun g =>
       ClosedUnderDicotic.closure IsAmbient A g ∧
         ∀ g', Moves.IsOption g' g → ClosedUnderDicotic.closure IsAmbient A g'
-    haveI : ClosedUnderDicotic IsAmbient B' := {
+    have : ClosedUnderDicotic IsAmbient B' := {
       closed_dicotic B C _ _ hB hC hBne hCne hAmbient := by
         constructor
         · exact ClosedUnderDicotic.dicotic_mem_closure B C
@@ -192,7 +192,7 @@ instance closedUnderDicoticClosure_closedUnderNeg {IsAmbient A : G → Prop}
     ClosedUnderNeg (ClosedUnderDicotic.closure IsAmbient A) where
   neg_of {g} hg := by
     let B' : G → Prop := fun g => ClosedUnderDicotic.closure IsAmbient A (-g)
-    haveI : ClosedUnderDicotic IsAmbient B' := {
+    have : ClosedUnderDicotic IsAmbient B' := {
       closed_dicotic B C _ _ hB hC hBne hCne hAmbient := by
         change ClosedUnderDicotic.closure IsAmbient A (-!{B | C})
         rw [neg_ofSets]
@@ -224,7 +224,7 @@ where it is end-like and recurse on options otherwise.
 private theorem closedUnderDicoticClosure_le_ambient {IsAmbient A : G → Prop}
     (hA : A ≤ IsAmbient) :
     ClosedUnderDicotic.closure IsAmbient A ≤ IsAmbient := by
-  haveI : ClosedUnderDicotic IsAmbient IsAmbient := {
+  have : ClosedUnderDicotic IsAmbient IsAmbient := {
     closed_dicotic _ _ _ _ _ _ _ _ hAmbient := hAmbient
   }
   exact ClosedUnderDicotic.closure_min hA
@@ -236,7 +236,7 @@ private theorem mem_of_mem_closedUnderDicoticClosure_of_isEndLike {IsAmbient A :
     (hg : ClosedUnderDicotic.closure IsAmbient A g) (hEnd : IsEndLike p g) : A g := by
   let B' : G → Prop := fun g =>
     ClosedUnderDicotic.closure IsAmbient A g ∧ (IsEndLike p g → A g)
-  haveI : ClosedUnderDicotic IsAmbient B' := {
+  have : ClosedUnderDicotic IsAmbient B' := {
     closed_dicotic B C _ _ hB hC hBne hCne hAmbient := by
       constructor
       · exact ClosedUnderDicotic.dicotic_mem_closure B C
@@ -340,7 +340,7 @@ theorem closureChain_universe {IsAmbient A : G → Prop} [Universe IsAmbient IsA
   have hB2 : ClosedUnderAdd.closure (Hereditary.closure (ClosedUnderNeg.closure A))
       ≤ IsAmbient :=
     ClosedUnderAdd.closure_min (Hereditary.closure_min (ClosedUnderNeg.closure_min hA))
-  haveI : ClosedUnderAdd (closureChain IsAmbient A) :=
+  have : ClosedUnderAdd (closureChain IsAmbient A) :=
     closedUnderDicoticClosure_closedUnderSum hB2
   exact {
     zero_mem := ClosedUnderDicotic.mem_closure_of_mem
@@ -359,7 +359,7 @@ theorem closureChain_eq_universeClosure {IsAmbient A : G → Prop} [Universe IsA
   · exact ClosedUnderDicotic.closure_min (ClosedUnderAdd.closure_min
       (Hereditary.closure_min (ClosedUnderNeg.closure_min
         (Universe.subset_closure IsAmbient hA))))
-  · haveI : Universe IsAmbient (closureChain IsAmbient A) :=
+  · have : Universe IsAmbient (closureChain IsAmbient A) :=
       closureChain_universe hA h0
     exact Universe.closure_min IsAmbient hA fun g hg =>
       ClosedUnderDicotic.mem_closure_of_mem (ClosedUnderAdd.mem_closure_of_mem
@@ -450,7 +450,7 @@ variable {p : Player} {A : G → Prop}
 private theorem mem_of_mem_closedUnderNegClosure_of_isEndLike [EndLikeClosed p A] {g : G}
     (hg : ClosedUnderNeg.closure A g) (hEnd : IsEndLike p g) : A g := by
   let C : G → Prop := fun g => A g ∨ A (-g)
-  haveI : ClosedUnderNeg C := {
+  have : ClosedUnderNeg C := {
     neg_of {g} hg := by
       rcases hg with hg | hg
       · exact Or.inr (by simpa)
@@ -470,7 +470,7 @@ private theorem subposition_mem_of_mem_closedUnderNegClosure [EndLikeClosed p A]
     (∀ h, Subposition h g → IsEndLike p h → A h) ∧
       (∀ h, Subposition h g → IsEndLike (-p) h → A (-h)) := by
   let C : G → Prop := fun g => A g ∨ ∃ a, A a ∧ g = -a
-  haveI : ClosedUnderNeg C := {
+  have : ClosedUnderNeg C := {
     neg_of {g} hg := by
       rcases hg with hg | ⟨a, ha, rfl⟩
       · exact Or.inr ⟨g, hg, rfl⟩
@@ -505,7 +505,7 @@ private theorem mem_of_mem_hereditaryClosure_of_isEndLike [EndLikeClosed p A] {g
     (IsEndLike p g → A g) ∧
       (∀ h, Subposition h g → IsEndLike p h → A h) ∧
         (∀ h, Subposition h g → IsEndLike (-p) h → A (-h))
-  haveI : Hereditary D := {
+  have : Hereditary D := {
     has_option {g g'} hg hopt := by
       constructor
       · intro hEnd
@@ -528,7 +528,7 @@ private theorem mem_of_mem_closedUnderSumClosure_of_isEndLike [EndLikeSeed p A] 
     (hg : ClosedUnderAdd.closure (Hereditary.closure (ClosedUnderNeg.closure A)) g)
     (hEnd : IsEndLike p g) : A g := by
   let C : G → Prop := fun g => IsEndLike p g → A g
-  haveI : ClosedUnderAdd C := {
+  have : ClosedUnderAdd C := {
     has_add g h hg hh hEnd :=
       ClosedUnderAdd.has_add g h
         (hg (IsEndLike.add_iff.mp hEnd).1)
@@ -591,7 +591,7 @@ private theorem mem_universeClosure_endLikePart_of_mem_universe {p : Player}
     Universe.closure IsAmbient (endLikePart p A) (endLikePart_le_ambient p) g := by
   let U : G → Prop := Universe.closure IsAmbient (endLikePart p A) (endLikePart_le_ambient p)
   change U g
-  haveI : Universe IsAmbient U :=
+  have : Universe IsAmbient U :=
     Universe.closure_universe IsAmbient (endLikePart_le_ambient p)
   by_cases hp : IsEndLike p g
   · exact Universe.mem_closure_of_mem IsAmbient (endLikePart_le_ambient p) ⟨hg, hp⟩
@@ -686,12 +686,12 @@ noncomputable def endLikeSeedEquivUniverse {IsAmbient : G → Prop}
   toFun := endLikeSeedToUniverse G IsAmbient p
   invFun := universeToEndLikeSeed G IsAmbient p
   left_inv A := by
-    haveI : EndLikeSeed p A.1 := A.2.1
+    have : EndLikeSeed p A.1 := A.2.1
     apply Subtype.ext
     dsimp [universeToEndLikeSeed, endLikeSeedToUniverse]
     exact endLikePart_universeClosure_eq_of_seed A.2.2
   right_inv U := by
-    haveI : Universe IsAmbient U.1 := U.2
+    have : Universe IsAmbient U.1 := U.2
     apply Subtype.ext
     dsimp [universeToEndLikeSeed, endLikeSeedToUniverse]
     exact universeClosure_endLikePart_eq_of_universe

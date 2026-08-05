@@ -134,7 +134,7 @@ instance instFinitePortrait (d m : ℕ) :
       intro a b _
       exact Subtype.ext ((portrait_eq_empty_of_degenerate d m h0 a.1 a.2).trans
         (portrait_eq_empty_of_degenerate d m h0 b.1 b.2).symm))
-  · haveI : NeZero (d * m) := ⟨hpos.ne'⟩
+  · have : NeZero (d * m) := ⟨hpos.ne'⟩
     infer_instance
 
 noncomputable instance instFintypePortrait (d m : ℕ) :
@@ -251,7 +251,7 @@ theorem minVal_level_le {d m : ℕ} {S : Finset (ZMod (d * m))}
 theorem minVal_lt_survivor {d m : ℕ} (hd : 0 < d) (hm : 0 < m)
     {S : Finset (ZMod (d * m))} (hS : IsCriticalSet d m S) (h : S.Nonempty) :
     ∀ x ∈ eraseMin S, (minVal S h).val / m < x.val / m := by
-  haveI : NeZero (d * m) := ⟨by positivity⟩
+  have : NeZero (d * m) := ⟨by positivity⟩
   obtain ⟨⟨r, hr, hfib⟩, hcard⟩ := hS
   intro x hx
   have hxS : x ∈ S := eraseMin_subset S hx

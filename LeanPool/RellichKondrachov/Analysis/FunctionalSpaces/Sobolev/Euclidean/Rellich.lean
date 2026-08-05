@@ -160,7 +160,7 @@ theorem isCompactOperator_h1OnToL2 {K : Set E} (_hK : IsCompact K) (hKm : Measur
           ‖(translateL2 (μ := (volume : Measure E)) (-t)) (T x) - T x‖ ≤ ε / 2 := by
       intro t ht
       have ht' : ‖t‖ ≤ ε / 2 := le_of_lt (by
-        simpa [Metric.ball, dist_eq_norm, mem_setOf_eq] using ht)
+        simpa [Metric.ball, dist_eq_norm, mem_ofPred_eq] using ht)
       have hgrad_le :
           ‖h1ToL2Grad (μ := (volume : Measure E)) (E := E) (x : H1vol)‖ ≤ ‖(x : H1vol)‖ := by
         let V : Type _ := (E →₂[(volume : Measure E)] ℝ) × (E →₂[(volume : Measure E)] E)

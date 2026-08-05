@@ -104,7 +104,7 @@ theorem measurableSet_isFirstConsistent
       IsSampleConsistent (enum n) S ∧ ∀ k, k < n → ¬IsSampleConsistent (enum k) S}
       = {S | IsSampleConsistent (enum n) S} ∩
         (⋂ k, ⋂ (_ : k < n), {S | IsSampleConsistent (enum k) S}ᶜ) := by
-    ext S; simp [mem_inter_iff, mem_iInter, mem_compl_iff, mem_setOf_eq]
+    ext S; simp [mem_inter_iff, mem_iInter, mem_compl_iff]
   rw [this]
   refine (measurableSet_isConsistent enum h_meas m n).inter ?_
   exact MeasurableSet.iInter fun k => MeasurableSet.iInter fun _ =>
@@ -134,7 +134,7 @@ theorem measurableSet_versionSpace_true
       = ⋃ n, ({S : Fin m → X × Bool | IsFirstConsistent enum S n} ×ˢ
                {x : X | enum n x = true}) := by
     ext ⟨S, x⟩
-    simp only [mem_preimage, mem_singleton_iff, mem_iUnion, mem_prod, mem_setOf_eq]
+    simp only [mem_preimage, mem_singleton_iff, mem_iUnion, mem_prod, mem_ofPred_eq]
     constructor
     · intro hlearn
       show ∃ i, IsFirstConsistent enum S i ∧ enum i x = true
