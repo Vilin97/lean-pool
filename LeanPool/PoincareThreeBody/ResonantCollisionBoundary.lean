@@ -94,6 +94,59 @@ theorem orientedResonantEllipsePosition_alignedApoapsis
     ring
   · simp [positionInRotatingFrame, inertialEllipsePosition]
 
+/-- The distance from aligned apoapsis to the unit primary is the remaining apoapsis gap. -/
+theorem alignedApoapsis_primaryDistance
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity : ℝ} (heccentricity : 0 ≤ eccentricity)
+    (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantSemimajorAxis p q * (1 + eccentricity) < 1) :
+    Real.sqrt
+        ((orientedResonantEllipsePosition p q eccentricity
+              (resonantCollisionOrientation p q) (resonantApoapsisTime p q) 0 - 1) ^ 2 +
+          (orientedResonantEllipsePosition p q eccentricity
+              (resonantCollisionOrientation p q) (resonantApoapsisTime p q) 1) ^ 2) =
+      1 - resonantSemimajorAxis p q * (1 + eccentricity) := by
+  rw [orientedResonantEllipsePosition_alignedApoapsis hp hq
+    heccentricity heccentricityOne]
+  norm_num only [Matrix.cons_val_zero, Matrix.cons_val_one, zero_pow, add_zero]
+  rw [Real.sqrt_sq_eq_abs, abs_of_nonpos]
+  · ring
+  · linarith
+
+/-- At aligned apoapsis the singular part of the disturbing function is exactly the reciprocal
+of the remaining gap to collision. -/
+theorem resonantDisturbingFunction_alignedApoapsis
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity : ℝ} (heccentricity : 0 ≤ eccentricity)
+    (heccentricityOne : eccentricity < 1)
+    (hapoapsis : resonantSemimajorAxis p q * (1 + eccentricity) < 1) :
+    resonantDisturbingFunction p q eccentricity
+        (resonantCollisionOrientation p q) (resonantApoapsisTime p q) =
+      let radius := resonantSemimajorAxis p q * (1 + eccentricity)
+      1 / radius + 1 / radius ^ 2 - 1 / (1 - radius) := by
+  let radius := resonantSemimajorAxis p q * (1 + eccentricity)
+  have hradiusPositive : 0 < radius := by
+    dsimp [radius]
+    exact mul_pos (resonantSemimajorAxis_pos hp hq) (by linarith)
+  have hposition := orientedResonantEllipsePosition_alignedApoapsis hp hq
+    heccentricity heccentricityOne
+  unfold resonantDisturbingFunction orientedResonantEllipsePhasePoint
+    firstMassPerturbation
+  rw [hposition]
+  change 1 / Real.sqrt (radius ^ 2 + 0 ^ 2) +
+      radius / (Real.sqrt (radius ^ 2 + 0 ^ 2)) ^ 3 -
+        1 / Real.sqrt ((radius - 1) ^ 2 + 0 ^ 2) =
+    1 / radius + 1 / radius ^ 2 - 1 / (1 - radius)
+  norm_num only [zero_pow, add_zero]
+  have hrootRadius : Real.sqrt (radius ^ 2) = radius := by
+    rw [Real.sqrt_sq_eq_abs, abs_of_pos hradiusPositive]
+  have hrootGap : Real.sqrt ((radius - 1) ^ 2) = 1 - radius := by
+    rw [Real.sqrt_sq_eq_abs, abs_of_nonpos (by linarith : radius - 1 ≤ 0)]
+    ring
+  rw [hrootRadius, hrootGap]
+  have hgap : 1 - radius ≠ 0 := (sub_pos.mpr hapoapsis).ne'
+  field_simp [hradiusPositive.ne', hgap]
+
 /-- At the boundary eccentricity and aligned orientation, apoapsis is exactly the unit primary. -/
 theorem orientedResonantEllipsePosition_collisionBoundary
     {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
