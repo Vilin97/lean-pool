@@ -151,6 +151,148 @@ theorem hasDerivAt_orientedResonantKeplerPhasePoint_position
       dsimp [xInertial, yInertial, vxInertial, vyInertial, denominator, anomaly, angle]
       ring
 
+/-- In inertial coordinates, the resonant ellipse satisfies Newton's inverse-square acceleration
+law. -/
+theorem hasDerivAt_inertialEllipseVelocity_resonant
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1)
+    (coordinate : Fin 2) :
+    HasDerivAt
+      (fun t ↦ inertialEllipseVelocity (resonantFirstAction p q) eccentricity
+        (resonantMeanMotion p q) (resonantEccentricAnomaly p q eccentricity t) coordinate)
+      (-inertialEllipsePosition (resonantFirstAction p q) eccentricity
+          (resonantEccentricAnomaly p q eccentricity time) coordinate /
+        eccentricRadius (resonantFirstAction p q) eccentricity
+          (resonantEccentricAnomaly p q eccentricity time) ^ 3) time := by
+  let firstAction := resonantFirstAction p q
+  let meanMotion := resonantMeanMotion p q
+  let anomaly : ℝ → ℝ := resonantEccentricAnomaly p q eccentricity
+  let denominator : ℝ → ℝ := fun t ↦ 1 - eccentricity * Real.cos (anomaly t)
+  have hfirstAction : firstAction ≠ 0 := (resonantFirstAction_pos hp hq).ne'
+  have hmeanMotion : meanMotion = 1 / firstAction ^ 3 := by
+    simpa [meanMotion, firstAction, delaunayFrequency] using
+      resonantMeanMotion_eq_delaunayFrequency hp hq
+  have hdenominator : denominator time ≠ 0 :=
+    (one_sub_eccentricity_mul_cos_pos heccentricity heccentricityOne).ne'
+  have hanomaly : HasDerivAt anomaly (meanMotion / denominator time) time :=
+    hasDerivAt_resonantEccentricAnomaly p q heccentricity heccentricityOne
+  have hsin := (Real.hasDerivAt_sin (anomaly time)).comp time hanomaly
+  have hcos := (Real.hasDerivAt_cos (anomaly time)).comp time hanomaly
+  have hdenominatorDeriv : HasDerivAt denominator
+      (eccentricity * Real.sin (anomaly time) * (meanMotion / denominator time)) time := by
+    have hraw := (hasDerivAt_const time 1).sub (hcos.const_mul eccentricity)
+    apply (hraw.congr_deriv (by ring)).congr_of_eventuallyEq
+    filter_upwards [] with t
+    simp [denominator]
+  fin_cases coordinate
+  · have hnumerator := hsin.const_mul (-firstAction ^ 2 * meanMotion)
+    have hquotient := hnumerator.div hdenominatorDeriv hdenominator
+    apply (hquotient.congr_deriv ?_).congr_of_eventuallyEq
+    · filter_upwards [] with t
+      rfl
+    · have halgebra :
+          ((-firstAction ^ 2 * meanMotion *
+                (Real.cos (anomaly time) * (meanMotion / denominator time)) *
+              denominator time -
+            (-firstAction ^ 2 * meanMotion * Real.sin (anomaly time)) *
+              (eccentricity * Real.sin (anomaly time) *
+                (meanMotion / denominator time))) / denominator time ^ 2) =
+            -(firstAction ^ 2 * (Real.cos (anomaly time) - eccentricity)) /
+              (firstAction ^ 2 * denominator time) ^ 3 := by
+        rw [hmeanMotion]
+        field_simp [hfirstAction, hdenominator]
+        dsimp [denominator]
+        nlinarith [Real.sin_sq_add_cos_sq (anomaly time)]
+      simpa [firstAction, meanMotion, anomaly, denominator,
+        inertialEllipsePosition, eccentricRadius] using halgebra
+  · have hnumerator := hcos.const_mul
+      (firstAction ^ 2 * meanMotion * Real.sqrt (1 - eccentricity ^ 2))
+    have hquotient := hnumerator.div hdenominatorDeriv hdenominator
+    apply (hquotient.congr_deriv ?_).congr_of_eventuallyEq
+    · filter_upwards [] with t
+      rfl
+    · have halgebra :
+          ((firstAction ^ 2 * meanMotion * Real.sqrt (1 - eccentricity ^ 2) *
+                (-Real.sin (anomaly time) * (meanMotion / denominator time)) *
+              denominator time -
+            (firstAction ^ 2 * meanMotion * Real.sqrt (1 - eccentricity ^ 2) *
+              Real.cos (anomaly time)) *
+              (eccentricity * Real.sin (anomaly time) *
+                (meanMotion / denominator time))) / denominator time ^ 2) =
+            -(firstAction ^ 2 * Real.sqrt (1 - eccentricity ^ 2) *
+                Real.sin (anomaly time)) /
+              (firstAction ^ 2 * denominator time) ^ 3 := by
+        rw [hmeanMotion]
+        field_simp [hfirstAction, hdenominator]
+        ring
+      simpa [firstAction, meanMotion, anomaly, denominator,
+        inertialEllipsePosition, eccentricRadius] using halgebra
+
+/-- The momentum part of the rotating resonant state satisfies the remaining two Kepler
+Hamilton equations. -/
+theorem hasDerivAt_orientedResonantKeplerPhasePoint_momentum
+    {p q : ℕ} (hp : 0 < p) (hq : 0 < q)
+    {eccentricity orientation time : ℝ}
+    (heccentricity : 0 ≤ eccentricity) (heccentricityOne : eccentricity < 1) :
+    let radius := eccentricRadius (resonantFirstAction p q) eccentricity
+      (resonantEccentricAnomaly p q eccentricity time)
+    HasDerivAt
+        (fun t ↦ orientedResonantKeplerPhasePoint p q eccentricity orientation t 2)
+        (orientedResonantKeplerPhasePoint p q eccentricity orientation time 3 -
+          orientedResonantKeplerPhasePoint p q eccentricity orientation time 0 / radius ^ 3)
+        time ∧
+      HasDerivAt
+        (fun t ↦ orientedResonantKeplerPhasePoint p q eccentricity orientation t 3)
+        (-orientedResonantKeplerPhasePoint p q eccentricity orientation time 2 -
+          orientedResonantKeplerPhasePoint p q eccentricity orientation time 1 / radius ^ 3)
+        time := by
+  let anomaly : ℝ → ℝ := resonantEccentricAnomaly p q eccentricity
+  let xInertial : ℝ → ℝ := fun t ↦
+    inertialEllipsePosition (resonantFirstAction p q) eccentricity (anomaly t) 0
+  let yInertial : ℝ → ℝ := fun t ↦
+    inertialEllipsePosition (resonantFirstAction p q) eccentricity (anomaly t) 1
+  let vxInertial : ℝ → ℝ := fun t ↦
+    inertialEllipseVelocity (resonantFirstAction p q) eccentricity
+      (resonantMeanMotion p q) (anomaly t) 0
+  let vyInertial : ℝ → ℝ := fun t ↦
+    inertialEllipseVelocity (resonantFirstAction p q) eccentricity
+      (resonantMeanMotion p q) (anomaly t) 1
+  let radius : ℝ := eccentricRadius (resonantFirstAction p q) eccentricity (anomaly time)
+  let angle : ℝ → ℝ := fun t ↦ t - orientation
+  have hvx : HasDerivAt vxInertial (-xInertial time / radius ^ 3) time :=
+    hasDerivAt_inertialEllipseVelocity_resonant hp hq heccentricity heccentricityOne 0
+  have hvy : HasDerivAt vyInertial (-yInertial time / radius ^ 3) time :=
+    hasDerivAt_inertialEllipseVelocity_resonant hp hq heccentricity heccentricityOne 1
+  have hangle : HasDerivAt angle 1 time := by
+    simpa [angle] using (hasDerivAt_id time).sub_const orientation
+  have hcos := (Real.hasDerivAt_cos (angle time)).comp time hangle
+  have hsin := (Real.hasDerivAt_sin (angle time)).comp time hangle
+  constructor
+  · have hraw := (hcos.mul hvx).add (hsin.mul hvy)
+    apply (hraw.congr_deriv ?_).congr_of_eventuallyEq
+    · filter_upwards [] with t
+      simp only [orientedResonantKeplerPhasePoint, positionMomentumPhasePoint,
+        orientedResonantEllipseMomentum, positionInRotatingFrame,
+        Matrix.cons_val_zero, Matrix.cons_val_one]
+      dsimp [vxInertial, vyInertial, anomaly, angle]
+    · simp only [orientedResonantKeplerPhasePoint, positionMomentumPhasePoint,
+        orientedResonantEllipsePosition, orientedResonantEllipseMomentum,
+        positionInRotatingFrame, Matrix.cons_val_zero, Matrix.cons_val_one]
+      dsimp [xInertial, yInertial, vxInertial, vyInertial, anomaly, radius, angle]
+      ring
+  · have hraw := (hsin.neg.mul hvx).add (hcos.mul hvy)
+    apply (hraw.congr_deriv ?_).congr_of_eventuallyEq
+    · filter_upwards [] with t
+      simp only [orientedResonantKeplerPhasePoint, positionMomentumPhasePoint,
+        orientedResonantEllipseMomentum, positionInRotatingFrame,
+        Matrix.cons_val_zero, Matrix.cons_val_one]
+      dsimp [vxInertial, vyInertial, anomaly, angle]
+    · simp only [orientedResonantKeplerPhasePoint, positionMomentumPhasePoint,
+        orientedResonantEllipsePosition, orientedResonantEllipseMomentum,
+        positionInRotatingFrame, Matrix.cons_val_zero, Matrix.cons_val_one]
+      dsimp [xInertial, yInertial, vxInertial, vyInertial, anomaly, radius, angle]
+      ring
 @[simp] lemma orientedResonantKeplerPhasePoint_position_zero
     (p q : ℕ) (eccentricity orientation time : ℝ) :
     orientedResonantKeplerPhasePoint p q eccentricity orientation time 0 =
