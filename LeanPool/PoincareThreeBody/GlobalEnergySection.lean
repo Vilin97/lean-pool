@@ -342,6 +342,79 @@ def GlobalZerothCoefficientFactorization : Prop :=
       ∀ state, (0, state) ∈ collisionFree →
         F 0 state = globalEnergyCoefficient F (hamiltonian 0 state)
 
+/-- Difference between the mass-zero coefficient and its value on the canonical section at the
+same Kepler energy. -/
+noncomputable def globalEnergyDefect
+    (F : ℝ → PhaseSpace → ℝ) (state : PhaseSpace) : ℝ :=
+  F 0 state - globalEnergyCoefficient F (hamiltonian 0 state)
+
+/-- The global energy defect is analytic throughout the mass-zero collision-free phase domain. -/
+theorem IsJointlyAnalytic.analyticOnNhd_globalEnergyDefect
+    {δ : ℝ} {F : ℝ → PhaseSpace → ℝ}
+    (hδ : 0 < δ) (hanalytic : IsJointlyAnalytic δ F) :
+    AnalyticOnNhd ℝ (globalEnergyDefect F) massZeroCollisionFree := by
+  intro state hcollision
+  have hdomain : (0, state) ∈ parameterDomain δ :=
+    ⟨by simpa using hδ, hcollision⟩
+  have hembedding : AnalyticAt ℝ
+      (fun candidate : PhaseSpace ↦ ((0 : ℝ), candidate)) state :=
+    analyticAt_const.prod analyticAt_id
+  have hcandidate : AnalyticAt ℝ (F 0) state :=
+    (hanalytic (0, state) hdomain).comp
+      (f := fun candidate : PhaseSpace ↦ ((0 : ℝ), candidate)) hembedding
+  have hhamiltonian : AnalyticAt ℝ (hamiltonian 0) state :=
+    (hamiltonian_analyticAt hcollision).comp
+      (f := fun candidate : PhaseSpace ↦ ((0 : ℝ), candidate)) hembedding
+  have hcoefficient : AnalyticAt ℝ
+      (globalEnergyCoefficient F) (hamiltonian 0 state) :=
+    IsJointlyAnalytic.analyticAt_globalEnergyCoefficient hδ hanalytic _
+  exact hcandidate.sub (hcoefficient.comp (f := hamiltonian 0) hhamiltonian)
+
+/-- Local version of the classical factorization obligation at the rational elliptic anchor. -/
+def LocalZerothCoefficientFactorizationAtAnchor : Prop :=
+  ∀ {δ : ℝ} {F : ℝ → PhaseSpace → ℝ},
+    0 < δ → IsJointlyAnalytic δ F → IsFirstIntegralFamily δ F →
+      ∀ᶠ state in nhds (globalEnergySection (-2)),
+        F 0 state = globalEnergyCoefficient F (hamiltonian 0 state)
+
+/-- Analytic continuation turns factorization on the anchor patch into factorization on the full
+connected mass-zero collision-free phase domain. -/
+theorem localZerothCoefficientFactorizationAtAnchor_iff_global :
+    LocalZerothCoefficientFactorizationAtAnchor ↔
+      GlobalZerothCoefficientFactorization := by
+  constructor
+  · intro hlocal δ F hδ hanalytic hfirstIntegral state hcollision
+    have hdefectAnalytic :=
+      IsJointlyAnalytic.analyticOnNhd_globalEnergyDefect hδ hanalytic
+    have hbase : globalEnergySection (-2) ∈ massZeroCollisionFree :=
+      globalEnergySection_collisionFree (-2)
+    have hdefectZero : ∀ᶠ candidate in nhds (globalEnergySection (-2)),
+        globalEnergyDefect F candidate = 0 := by
+      filter_upwards [hlocal hδ hanalytic hfirstIntegral] with candidate heq
+      exact sub_eq_zero.mpr heq
+    have hglobal : Set.EqOn (globalEnergyDefect F) 0 massZeroCollisionFree :=
+      hdefectAnalytic.eqOn_of_preconnected_of_eventuallyEq
+        analyticOnNhd_const isPreconnected_massZeroCollisionFree hbase hdefectZero
+    exact sub_eq_zero.mp (hglobal hcollision)
+  · intro hglobal δ F hδ hanalytic hfirstIntegral
+    have hfirst : ∀ᶠ candidate in nhds (globalEnergySection (-2)),
+        firstPrimaryDistanceSq 0 candidate ≠ 0 := by
+      have hcontinuous : Continuous (firstPrimaryDistanceSq 0) := by
+        unfold firstPrimaryDistanceSq
+        fun_prop
+      exact hcontinuous.continuousAt.eventually_ne
+        (globalEnergySection_collisionFree (-2)).1
+    have hsecond : ∀ᶠ candidate in nhds (globalEnergySection (-2)),
+        secondPrimaryDistanceSq 0 candidate ≠ 0 := by
+      have hcontinuous : Continuous (secondPrimaryDistanceSq 0) := by
+        unfold secondPrimaryDistanceSq
+        fun_prop
+      exact hcontinuous.continuousAt.eventually_ne
+        (globalEnergySection_collisionFree (-2)).2
+    filter_upwards [hfirst, hsecond] with state hstateFirst hstateSecond
+    exact hglobal hδ hanalytic hfirstIntegral state
+      ⟨hstateFirst, hstateSecond⟩
+
 /-- The canonical-section formulation is exactly equivalent to the energy-function formulation
 used by the normalization induction. -/
 theorem globalZerothCoefficientFactorization_iff_classicalPrinciple :
