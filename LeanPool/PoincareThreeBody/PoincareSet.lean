@@ -87,6 +87,7 @@ The classical high-rank Fourier-coefficient calculation is precisely what suppli
 orientations and the nonzero witness. -/
 def HasAnalyticSeparatingResonantAverages : Prop :=
   ∀ p q : ℕ, 0 < p → 0 < q →
+    (admissibleResonantEccentricitySet p q).Nonempty →
     ∃ phaseA phaseB : ℝ,
       AnalyticOnNhd ℝ
         (fun eccentricity ↦
@@ -102,6 +103,7 @@ positive rational resonance, two orientations give different averaged perturbati
 admissible eccentricity. -/
 def HasSeparatingResonantAverages : Prop :=
   ∀ p q : ℕ, 0 < p → 0 < q →
+    (admissibleResonantEccentricitySet p q).Nonempty →
     ∃ phaseA phaseB : ℝ, ∃ witness ∈ admissibleResonantEccentricitySet p q,
       resonantDisturbingAverage p q witness phaseA -
         resonantDisturbingAverage p q witness phaseB ≠ 0
@@ -111,8 +113,8 @@ Fourier calculation only has to provide a separating value at each resonance. -/
 theorem hasAnalyticSeparatingResonantAverages_of_separation
     (hseparation : HasSeparatingResonantAverages) :
     HasAnalyticSeparatingResonantAverages := by
-  intro p q hp hq
-  rcases hseparation p q hp hq with
+  intro p q hp hq hnonempty
+  rcases hseparation p q hp hq hnonempty with
     ⟨phaseA, phaseB, witness, hwitness, hvalues⟩
   refine ⟨phaseA, phaseB, ?_, witness, hwitness, hvalues⟩
   exact (analyticOnNhd_resonantDisturbingAverage_eccentricity hp hq phaseA).sub
@@ -393,7 +395,12 @@ theorem hasDenseNondegenerateResonantEccentricities_of_analytic_separation
     (hseparation : HasAnalyticSeparatingResonantAverages) :
     HasDenseNondegenerateResonantEccentricities := by
   intro p q hp hq
-  rcases hseparation p q hp hq with
+  by_cases hnonempty : (admissibleResonantEccentricitySet p q).Nonempty
+  swap
+  · apply dense_iff_closure_eq.mpr
+    ext eccentricity
+    exact hnonempty.elim ⟨eccentricity.1, eccentricity.2⟩
+  rcases hseparation p q hp hq hnonempty with
     ⟨phaseA, phaseB, hanalytic, witness, hwitness, hvalues⟩
   let difference : ℝ → ℝ := fun eccentricity ↦
     resonantDisturbingAverage p q eccentricity phaseA -
