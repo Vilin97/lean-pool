@@ -10,6 +10,8 @@ import LeanPool.PoincareThreeBody.ActionFactorization
 import LeanPool.PoincareThreeBody.ActionPoisson
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.Core
+import LeanPool.PoincareThreeBody.CoefficientNormalization
+import LeanPool.PoincareThreeBody.CertifiedPoincareSet
 import LeanPool.PoincareThreeBody.Delaunay
 import LeanPool.PoincareThreeBody.DelaunayActions
 import LeanPool.PoincareThreeBody.DelaunayChart
