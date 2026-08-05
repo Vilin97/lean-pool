@@ -149,6 +149,22 @@ theorem phasePoissonPairing_actionDerivativeCovector_eq_actionPoissonVector
   · rfl
   · rfl
 
+/-- Once an observable differential factors through the action map, its bracket with any second
+observable is contraction against the negative action Poisson vector of that observable. -/
+theorem poissonBracket_eq_neg_dot_actionPoissonVector_of_fderiv_factors
+    {state : PhaseSpace} (hposition : state 0 ^ 2 + state 1 ^ 2 ≠ 0)
+    (henergy : cartesianKeplerEnergy state < 0)
+    {f h : PhaseSpace → ℝ} {differential : ActionSpace}
+    (hfactor : fderiv ℝ f state =
+      (actionCovector differential).comp
+        (fderiv ℝ cartesianDelaunayActions state)) :
+    poissonBracket f h state =
+      -dot differential (actionPoissonVector h state) := by
+  rw [poissonBracket_eq_phasePoissonPairing, hfactor,
+    phasePoissonPairing_skew,
+    phasePoissonPairing_actionCovector_comp_actions hposition henergy]
+  rfl
+
 /-- The differential of the leading integral factors through the physical action derivative at
 every interior noncircular lifted elliptic point.  This form records the factor using an explicit
 moving action section through the point. -/

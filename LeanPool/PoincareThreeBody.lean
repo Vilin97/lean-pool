@@ -30,6 +30,7 @@ import LeanPool.PoincareThreeBody.OrbitHomologicalEquation
 import LeanPool.PoincareThreeBody.Perturbation
 import LeanPool.PoincareThreeBody.Polar
 import LeanPool.PoincareThreeBody.Resonance
+import LeanPool.PoincareThreeBody.ResonantActionObstruction
 import LeanPool.PoincareThreeBody.ResonantOrbit
 import LeanPool.PoincareThreeBody.RotatingEllipse
 import LeanPool.PoincareThreeBody.ValidatedQuadrature
