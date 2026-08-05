@@ -5,6 +5,7 @@ Authors: Gershon Bialer
 -/
 
 import LeanPool.PoincareThreeBody.DenseResonantObstruction
+import LeanPool.PoincareThreeBody.AnalyticDensity
 
 /-!
 # The classical Poincaré set
@@ -53,10 +54,15 @@ def ClassicalDisturbingNondegeneracy : Prop :=
       ∃ orientation,
         deriv (resonantDisturbingAverage p q eccentricity) orientation ≠ 0
 
-/-- Admissible noncircular eccentricities for one fixed positive rational resonance. -/
-abbrev AdmissibleResonantEccentricity (p q : ℕ) :=
-  {eccentricity : ℝ // 0 < eccentricity ∧ eccentricity < 1 ∧
+/-- The open interval of admissible noncircular eccentricities for one fixed positive rational
+resonance. -/
+def admissibleResonantEccentricitySet (p q : ℕ) : Set ℝ :=
+  {eccentricity | 0 < eccentricity ∧ eccentricity < 1 ∧
     resonantFirstAction p q ^ 2 * (1 + eccentricity) < 1}
+
+/-- An admissible noncircular eccentricity for one fixed positive rational resonance. -/
+abbrev AdmissibleResonantEccentricity (p q : ℕ) :=
+  {eccentricity : ℝ // eccentricity ∈ admissibleResonantEccentricitySet p q}
 
 /-- Eccentricities at a fixed resonance where the resonant disturbing average is nonconstant. -/
 def nondegenerateResonantEccentricities (p q : ℕ) :
@@ -71,6 +77,52 @@ coefficients. -/
 def HasDenseNondegenerateResonantEccentricities : Prop :=
   ∀ p q : ℕ, 0 < p → 0 < q →
     Dense (nondegenerateResonantEccentricities p q)
+
+/-- A sharply localized analytic form of the classical disturbing-function input.  For every
+positive rational resonance, two fixed orientations separate at one admissible eccentricity and
+their averaged-value difference is analytic throughout the admissible eccentricity interval.
+
+The classical high-rank Fourier-coefficient calculation is precisely what supplies the two
+orientations and the nonzero witness. -/
+def HasAnalyticSeparatingResonantAverages : Prop :=
+  ∀ p q : ℕ, 0 < p → 0 < q →
+    ∃ phaseA phaseB : ℝ,
+      AnalyticOnNhd ℝ
+        (fun eccentricity ↦
+          resonantDisturbingAverage p q eccentricity phaseA -
+            resonantDisturbingAverage p q eccentricity phaseB)
+        (admissibleResonantEccentricitySet p q) ∧
+      ∃ witness ∈ admissibleResonantEccentricitySet p q,
+        resonantDisturbingAverage p q witness phaseA -
+          resonantDisturbingAverage p q witness phaseB ≠ 0
+
+/-- The admissible eccentricity domain is open. -/
+theorem isOpen_admissibleResonantEccentricitySet (p q : ℕ) :
+    IsOpen (admissibleResonantEccentricitySet p q) := by
+  unfold admissibleResonantEccentricitySet
+  exact (isOpen_lt continuous_const continuous_id).and
+    ((isOpen_lt continuous_id continuous_const).and
+      (isOpen_lt (by fun_prop) continuous_const))
+
+/-- A nonempty admissible eccentricity domain is connected. -/
+theorem isConnected_admissibleResonantEccentricitySet
+    {p q : ℕ} (hnonempty : (admissibleResonantEccentricitySet p q).Nonempty) :
+    IsConnected (admissibleResonantEccentricitySet p q) := by
+  refine ⟨hnonempty, Set.OrdConnected.isPreconnected ?_⟩
+  rw [Set.ordConnected_iff]
+  intro x hx z hz hxz y hy
+  change 0 < x ∧ x < 1 ∧ resonantFirstAction p q ^ 2 * (1 + x) < 1 at hx
+  change 0 < z ∧ z < 1 ∧ resonantFirstAction p q ^ 2 * (1 + z) < 1 at hz
+  change 0 < y ∧ y < 1 ∧ resonantFirstAction p q ^ 2 * (1 + y) < 1
+  have hscale : 0 ≤ resonantFirstAction p q ^ 2 := sq_nonneg _
+  have hapoapsisMono :=
+    mul_le_mul_of_nonneg_left (add_le_add_left hy.2 1) hscale
+  constructor
+  · exact hx.1.trans_le hy.1
+  constructor
+  · exact hy.2.trans_lt hz.2.1
+  · simpa [add_comm] using
+      hapoapsisMono.trans_lt (by simpa [add_comm] using hz.2.2)
 
 /-- The Kepler frequency varies continuously on the full interior action subtype. -/
 theorem continuous_interiorDelaunayFrequency :
@@ -311,6 +363,42 @@ theorem hasDenseClassicalPoincareSet_of_dense_resonant_eccentricities
   have hrecover : actionCurve source = action := by
     exact actions_from_eccentricityFromActions haction.1
   rwa [hrecover] at himage
+
+/-- Analyticity plus one separating value at each resonance makes the nondegenerate
+eccentricities dense.  Thus the classical calculation need only prove a nonidentity statement,
+not pointwise nonvanishing at every eccentricity. -/
+theorem hasDenseNondegenerateResonantEccentricities_of_analytic_separation
+    (hseparation : HasAnalyticSeparatingResonantAverages) :
+    HasDenseNondegenerateResonantEccentricities := by
+  intro p q hp hq
+  rcases hseparation p q hp hq with
+    ⟨phaseA, phaseB, hanalytic, witness, hwitness, hvalues⟩
+  let difference : ℝ → ℝ := fun eccentricity ↦
+    resonantDisturbingAverage p q eccentricity phaseA -
+      resonantDisturbingAverage p q eccentricity phaseB
+  have hdense : Dense
+      {eccentricity : AdmissibleResonantEccentricity p q |
+        difference eccentricity.1 ≠ 0} := by
+    apply dense_nonzero_of_analyticOnNhd
+      (isOpen_admissibleResonantEccentricitySet p q)
+      (isConnected_admissibleResonantEccentricitySet ⟨witness, hwitness⟩)
+      (f := difference) (witness := witness)
+    · exact hanalytic
+    · exact hwitness
+    · exact hvalues
+  apply hdense.mono
+  intro eccentricity heccentricity
+  apply exists_deriv_resonantDisturbingAverage_ne_zero_of_values_ne
+    hp hq eccentricity.2.1.le eccentricity.2.2.1 eccentricity.2.2.2
+  exact sub_ne_zero.mp heccentricity
+
+/-- The analytic nonidentity statement at each rational resonance supplies the full dense
+classical Poincaré set. -/
+theorem hasDenseClassicalPoincareSet_of_analytic_separation
+    (hseparation : HasAnalyticSeparatingResonantAverages) :
+    HasDenseClassicalPoincareSet :=
+  hasDenseClassicalPoincareSet_of_dense_resonant_eccentricities
+    (hasDenseNondegenerateResonantEccentricities_of_analytic_separation hseparation)
 
 /-- The original pointwise nondegeneracy condition implies the more flexible fiberwise density
 condition. -/

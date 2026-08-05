@@ -412,4 +412,14 @@ theorem nonintegrability_of_denseClassicalPoincareSet
   nonintegrability_of_globalZerothCoefficientFactorization
     (globalZerothCoefficientFactorization_of_densePoincareSet hdense)
 
+/-- The exact challenge follows from the reduced analytic nonidentity form of Poincaré's
+disturbing-function calculation. -/
+theorem nonintegrability_of_analytic_separation
+    (hseparation : HasAnalyticSeparatingResonantAverages) :
+    ¬∃ δ : ℝ, 0 < δ ∧ ∃ F : ℝ → PhaseSpace → ℝ,
+      IsJointlyAnalytic δ F ∧ IsFirstIntegralFamily δ F ∧
+        IsIndependentSomewhere δ F :=
+  nonintegrability_of_denseClassicalPoincareSet
+    (hasDenseClassicalPoincareSet_of_analytic_separation hseparation)
+
 end LeanPool.PoincareThreeBody
