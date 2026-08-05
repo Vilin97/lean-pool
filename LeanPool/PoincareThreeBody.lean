@@ -8,6 +8,7 @@ import LeanPool.PoincareThreeBody.Analytic
 import LeanPool.PoincareThreeBody.Averaging
 import LeanPool.PoincareThreeBody.Core
 import LeanPool.PoincareThreeBody.Delaunay
+import LeanPool.PoincareThreeBody.DisturbingFunction
 import LeanPool.PoincareThreeBody.GeneratingFunction
 import LeanPool.PoincareThreeBody.KeplerOrbit
 import LeanPool.PoincareThreeBody.Perturbation
