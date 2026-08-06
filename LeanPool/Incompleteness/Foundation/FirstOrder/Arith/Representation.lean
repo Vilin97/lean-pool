@@ -11,7 +11,6 @@ import Mathlib.Computability.Primrec.List
 
 /-! # Representation -/
 
-
 namespace Part
 
 lemma _root_.Part.unit_dom_iff (x : Part Unit) : x.Dom ↔ () ∈ x := by simp [dom_iff_mem, show ∀ x :
@@ -396,7 +395,7 @@ private lemma models_codeAux {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc :
     LogicalConnective.Prop.and_eq, LogicalConnective.HomClass.map_neg,
     LogicalConnective.Prop.neg_eq, LogicalConnective.Prop.or_eq, Structure.LT.lt, not_lt,
     List.Vector.get_ofFn, Part.coe_some, Part.some_inj, Semiformula.eval_exClosure,
-    Matrix.conj_hom_prop, Part.bind_eq_bind, Matrix.zero_cons_succ_eq_self, Nat.reduceAdd,
+    Matrix.conj_hom_prop, Matrix.zero_cons_succ_eq_self, Nat.reduceAdd,
     Fin.isValue, Semiformula.eval_ball, Semiterm.val_bvar, Semiformula.eval_ex,
     Nat.exists_ne_zero]
   case zero =>
@@ -418,13 +417,21 @@ private lemma models_codeAux {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc :
       Matrix.comp_vecCons', Semiterm.val_fvar, Matrix.vecCons_zero, Semiterm.val_bvar,
       Matrix.vecCons_succ]
     constructor
-    · simp_all
+    · rintro ⟨x, hfx, hgx⟩
+      apply Part.eq_some_iff.mpr
+      exact Part.mem_bind (a := List.Vector.ofFn x)
+        (Part.mem_vector_mOfFn.mpr fun i => by
+          rw [List.Vector.get_ofFn]
+          exact Part.eq_some_iff.mp ((ihg i (x i) v).mp (hgx i)))
+        (Part.eq_some_iff.mp ((ihf y x).mp hfx))
     · intro h
-      have : ∃ w, (∀ i, List.Vector.get w i ∈ g i (List.Vector.ofFn v)) ∧ y ∈ f w := by
-        simpa using Part.eq_some_iff.mp h
-      rcases this with ⟨w, hw, hy⟩
-      exact ⟨w.get, (ihf y w.get).mpr (by simpa[Part.eq_some_iff] using hy),
-        fun i => (ihg i (w.get i) v).mpr (by simpa[Part.eq_some_iff] using hw i)⟩
+      have hy := Part.eq_some_iff.mp h
+      rcases Part.mem_bind_iff.mp hy with ⟨w, hw, hyf⟩
+      have hw' := Part.mem_vector_mOfFn.mp hw
+      refine ⟨w.get, (ihf y w.get).mpr ?_, fun i => (ihg i (w.get i) v).mpr ?_⟩
+      · rw [List.Vector.ofFn_get]
+        exact Part.eq_some_iff.mpr hyf
+      · exact Part.eq_some_iff.mpr (hw' i)
   case rfind c f _ ihf =>
     simp only [Semiformula.eval_rew, Matrix.empty_eq, Function.comp_def, Rew.bind_fvar,
       Matrix.comp_vecCons', Semiterm.val_const, Structure.numeral_eq_numeral,
@@ -433,10 +440,14 @@ private lemma models_codeAux {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc :
       Matrix.vecCons_succ, Nat.exists_eq_add_one]
     constructor
     · rintro ⟨hy, h⟩
-      simp only [Part.eq_some_iff, Nat.mem_rfind, Part.mem_some_iff, true_eq_decide_iff,
-        false_eq_decide_iff]
-      exact ⟨by simpa using hy, by intro z hz; exact Nat.ne_zero_of_lt (h z hz)⟩
-    · intro h; simpa [pos_iff_ne_zero] using Nat.mem_rfind.mp (Part.eq_some_iff.mp h)
+      apply Part.eq_some_iff.mpr
+      apply Nat.mem_rfind.mpr
+      exact ⟨Part.mem_some_iff.mpr (true_eq_decide_iff.mpr hy), fun {z} hz =>
+        Part.mem_some_iff.mpr (false_eq_decide_iff.mpr (Nat.ne_of_gt (h z hz)))⟩
+    · intro h
+      rcases Nat.mem_rfind.mp (Part.eq_some_iff.mp h) with ⟨hy, hz⟩
+      exact ⟨true_eq_decide_iff.mp (Part.mem_some_iff.mp hy), fun z hzy =>
+        Nat.pos_of_ne_zero (false_eq_decide_iff.mp (Part.mem_some_iff.mp (hz hzy)))⟩
 
 lemma _root_.LO.FirstOrder.Arith.models_code
     {c : Code k} {f : List.Vector ℕ k →. ℕ} (hc : c.eval f) (y :

@@ -807,7 +807,7 @@ private lemma schwartz_bilinear_kernel_convolution_continuous
     · exact hf_int.norm.const_mul M_tail
     · by_cases hnt : Nontrivial E
       · haveI := hnt
-        haveI : NoAtoms (volume : Measure E) := inferInstance
+        haveI : NullSingletonClass (volume : Measure E) := inferInstance
         have h_vol_sphere : volume (Metric.sphere y₀ R₀) = 0 :=
           MeasureTheory.Measure.addHaar_sphere volume y₀ R₀
         have h_vol_singleton : volume {y₀} = 0 := measure_singleton y₀

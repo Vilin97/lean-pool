@@ -183,7 +183,7 @@ private lemma prob_ge_one_sub_compl' {Ω : Type*} [MeasurableSpace Ω]
     ALL hypotheses h simultaneously satisfy
     TrueErr(h) ≤ EmpErr(h,S) + √(log(1/(P(h)·δ))/(2m)). -/
 theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
-    {H : Type*} [Fintype H] [Nonempty H]
+    {H : Type*} [Fintype H]
     (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
     (c : Concept X Bool) (hc_meas : Measurable c)
     (hs : H → Concept X Bool) (hhs_meas : ∀ h, Measurable (hs h))
@@ -409,7 +409,7 @@ private lemma gibbs_bound_of_pointwise {X : Type u} [MeasurableSpace X]
 
     Reference: McAllester, COLT 1999. -/
 theorem pac_bayes_finite {X : Type u} [MeasurableSpace X]
-    {H : Type*} [Fintype H] [Nonempty H]
+    {H : Type*} [Fintype H]
     (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
     (c : Concept X Bool) (hc_meas : Measurable c)
     (hs : H → Concept X Bool) (hhs_meas : ∀ h, Measurable (hs h))

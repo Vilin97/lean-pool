@@ -58,7 +58,9 @@ private lemma denom_at_I (g : SL(2, ℤ)) :
       ((Matrix.SpecialLinearGroup.map (Int.castRingHom ℝ)) g)) (Complex.I) =
     ↑((g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 : ℤ) * Complex.I +
     ↑((g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 : ℤ) := by
-  simp [UpperHalfPlane.denom, Matrix.SpecialLinearGroup.toGL, Matrix.SpecialLinearGroup.map]
+  simp only [UpperHalfPlane.denom, Matrix.SpecialLinearGroup.coe_GL_coe_matrix]
+  rw [Matrix.SpecialLinearGroup.map_apply_coe (Int.castRingHom ℝ) g]
+  simp [RingHom.mapMatrix_apply]
 
 private lemma normSq_denom_at_I (g : SL(2, ℤ)) :
     Complex.normSq (UpperHalfPlane.denom (Matrix.SpecialLinearGroup.toGL
@@ -158,8 +160,9 @@ private lemma denom_at_rho (g : SL(2, ℤ)) :
     ↑((g : Matrix (Fin 2) (Fin 2) ℤ) 1 0 : ℤ) *
       (-1/2 + (Real.sqrt 3 / 2) * I) +
     ↑((g : Matrix (Fin 2) (Fin 2) ℤ) 1 1 : ℤ) := by
-  simp [UpperHalfPlane.denom, Matrix.SpecialLinearGroup.toGL,
-    Matrix.SpecialLinearGroup.map, ellipticPointRho']
+  simp only [UpperHalfPlane.denom, Matrix.SpecialLinearGroup.coe_GL_coe_matrix]
+  rw [Matrix.SpecialLinearGroup.map_apply_coe (Int.castRingHom ℝ) g]
+  simp [RingHom.mapMatrix_apply, ellipticPointRho']
 
 private lemma normSq_denom_at_rho (g : SL(2, ℤ)) :
     Complex.normSq (UpperHalfPlane.denom (Matrix.SpecialLinearGroup.toGL

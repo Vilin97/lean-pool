@@ -126,7 +126,7 @@ theorem tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail := by
 
 end Chain3'
 
-theorem chain3'_mirror [LinearOrder α] {l : List α} :
+theorem chain3'_mirror {l : List α} :
     Chain3' (Mirror3 R) l.Mirror ↔ Chain3' R l := by
   induction l with
   | nil => simp only [List.Mirror, map_nil, reverse_nil, chain3'_nil]

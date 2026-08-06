@@ -104,17 +104,28 @@ def toContinuousHom (f : X →ω𝒒 Y) : X →𝒄 Y where
 def toQuasiBorelHom (f : X →ω𝒒 Y) : X →𝒒 Y where
   toFun := f
 
+/-- The underlying pointwise function as an order homomorphism. -/
+private def coeOrderHom : (X →ω𝒒 Y) →o (X → Y) where
+  toFun f := f
+  monotone' _ _ h := h
+
+@[simp]
+private lemma coeOrderHom_apply (f : X →ω𝒒 Y) (x : X) : coeOrderHom f x = f x := rfl
+
 /-- The ωCPO structure on the exponential is the pointwise order. -/
 @[simps!]
 instance : OmegaCompletePartialOrder (X →ω𝒒 Y) :=
   OmegaCompletePartialOrder.lift
-    ⟨DFunLike.coe, fun _ _ h ↦ h⟩
+    coeOrderHom
     (fun c ↦ {
-      toFun := ωSup (c.map ⟨DFunLike.coe, fun _ _ h ↦ h⟩)
+      toFun := ωSup (c.map coeOrderHom)
       isHom' := by
+        apply isHom_ωSup'
         simp only [
-          ωSup, Chain.isHom_iff, Chain.coe_map, Pi.evalOrderHom_coe, OrderHom.coe_mk,
-          Function.comp_apply, Function.eval, isHom_coe, implies_true, isHom_ωSup']
+          Chain.isHom_iff, Chain.coe_map, Pi.evalOrderHom_coe,
+          Function.comp_apply, Function.eval, coeOrderHom_apply]
+        intro i
+        exact (c i).isHom'
       ωScottContinuous' := by
         let c' : Chain (X →𝒄 Y) := {
           toFun n := (c n).toContinuousHom
@@ -124,7 +135,10 @@ instance : OmegaCompletePartialOrder (X →ω𝒒 Y) :=
         apply ContinuousHom.ωScottContinuous
     })
     (fun _ _ h ↦ h)
-    (by simp only [OrderHom.coe_mk, coe_mk, implies_true])
+    (by
+      intro c
+      funext x
+      rfl)
 
 /-- The QBS structure on the ωHoms is identical to normal QBS Homs. -/
 instance : QuasiBorelSpace (X →ω𝒒 Y) where
@@ -170,23 +184,24 @@ lemma ωScottContinuous_eval : ωScottContinuous (fun p : (X →ω𝒒 Y) × X �
   · simp only [Prod.ωSup_fst, Prod.ωSup_snd, ωSup_coe]
     apply le_antisymm
     · simp only [
-        ωSup, ωSup_le_iff, Chain.coe_map, Pi.evalOrderHom_coe, OrderHom.coe_mk,
+        ωSup, ωSup_le_iff, Chain.coe_map, Pi.evalOrderHom_coe,
         Function.comp_apply, Function.eval, OrderHom.fst_coe]
       intro i
+      change (c i).1 (ωSup (c.map OrderHom.snd)) ≤ _
       rw [(c i).1.ωScottContinuous_coe.map_ωSup]
       simp only [ωSup_le_iff, Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, OrderHom.snd_coe]
       intro j
       apply le_ωSup_of_le (i ⊔ j)
-      simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
+      simp only [Chain.coe_map, Function.comp_apply]
       trans
       · apply (c.monotone (by grind : i ≤ i ⊔ j)).1
       · apply (c (i ⊔ j)).1.monotone_coe
         apply (c.monotone (by grind : j ≤ i ⊔ j)).2
-    · simp only [ωSup_le_iff, Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
+    · simp only [ωSup_le_iff, Chain.coe_map, Function.comp_apply]
       intro i
       apply le_ωSup_of_le i
       simp only [
-        Chain.coe_map, Pi.evalOrderHom_coe, OrderHom.coe_mk,
+        Chain.coe_map, Pi.evalOrderHom_coe,
         Function.comp_apply, Function.eval, OrderHom.fst_coe]
       apply (c i).1.monotone_coe
       apply le_ωSup_of_le i
@@ -252,7 +267,8 @@ lemma ωScottContinuous_mk
     ext n
     simp only [
       Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, Chain.zip_apply,
-      Chain.const_apply, ωSup_const, Pi.evalOrderHom_coe, Function.eval, coe_mk]
+      Chain.const_apply, ωSup_const, Pi.evalOrderHom_coe, Function.eval]
+    rfl
 
 /-- The exponential object is an ωQBS. -/
 instance : OmegaQuasiBorelSpace (X →ω𝒒 Y) where
@@ -261,7 +277,7 @@ instance : OmegaQuasiBorelSpace (X →ω𝒒 Y) where
     apply isHom_ωSup'
     simp only [
       Chain.isHom_iff, Chain.coe_map, Pi.evalOrderHom_coe,
-      OrderHom.coe_mk, Function.comp_apply, Function.eval]
+      Function.comp_apply, Function.eval]
     intro i
     apply isHom_comp'
         (f := fun x : (X →ω𝒒 Y) × X ↦ x.1 x.2)

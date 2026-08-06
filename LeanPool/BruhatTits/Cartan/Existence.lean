@@ -526,11 +526,10 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
   use l₁' * h₁
   use h₂ * l₂'
   simp only [Units.val_mul, Matrix.map_mul]
-  have he : g' = Matrix.fromBlocks h 0 0 (fun _ _ ↦ (g' (Sum.inr ()) (Sum.inr ()))) := by
+  have he : g' = Matrix.fromBlocks h 0 0 g'.toBlocks₂₂ := by
     rw [Matrix.ext_iff_blocks]
     simp only [toBlocks_fromBlocks₁₁, hh.isTwoBlockDiagonal.left, toBlocks_fromBlocks₁₂,
       hh.isTwoBlockDiagonal.right, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, true_and, g', h]
-    rfl
   convert_to IsBlockMonotoneDiag (R := R) ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K))
     ∧ ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K)).coeffsSup v = g.coeffsSup v
   · simp only [g']
@@ -560,15 +559,21 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
       simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
         _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one,
         fromBlocks_apply₂₂]
-      simp only [g', hh.monotone, coeffs_sup_fromBlocks, coeffs_sup_zero]
+      simp only [g', coeffs_sup_fromBlocks, coeffs_sup_zero]
       simp only [zero_le, sup_of_le_left]
       rw [hv, coeffs_sup_unique (n := Unit)]
-      simp only [hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup, sup_of_le_right, h, g']
+      simp only [toBlocks₂₂, of_apply, hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup,
+        sup_of_le_right, h, g']
     · simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
       rw [Matrix.fromBlocks_map, Matrix.fromBlocks_multiply, Matrix.fromBlocks_map,
         Matrix.fromBlocks_multiply]
-      simpa [coeffs_sup_fromBlocks, coeffs_sup_zero, hv, coeffs_sup_unique (n := Unit), g',
-        hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup, h]
+      simp only [map_zero, Matrix.map_zero, Matrix.mul_zero, add_zero, Matrix.zero_mul,
+        _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one]
+      simp only [toBlocks₂₂, coeffs_sup_fromBlocks, hv, coeffs_sup_zero, zero_le, sup_of_le_left,
+        coeffs_sup_unique (n := Unit), PUnit.default_eq_unit, of_apply, hh.monotone, hvc,
+        sup_eq_right, h, g']
+      rw [← hvc]
+      exact coeffs_sup_toBlock₁₁_le_coeffs_sup v _
 
 lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
     ∃ (k₁ k₂ : GL (Fin k) R),
@@ -584,38 +589,37 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
       simp only [Units.val_one]
       rw [Matrix.map_one, one_mul, mul_one] <;> rfl
   | succ n ih =>
-      let e : Fin (n + 1) ≃ Fin n ⊕ Unit := Fin.succEquivUnit n
+      let e : Fin ↑(n + 1) ≃ Fin n ⊕ Unit := Fin.succEquivUnit n
       let g' : Matrix (Fin n ⊕ Unit) (Fin n ⊕ Unit) K :=
         Matrix.reindex e e g
       obtain ⟨k₁', k₂', hk, hc⟩ := exists_trafo_isDiag_induction_step g' ih
       use GL.reindex e.symm k₁'
       use GL.reindex e.symm k₂'
-      convert_to IsMonotoneDiag (n := Fin (n + 1)) (R := R)
+      convert_to IsMonotoneDiag (n := Fin ↑(n + 1)) (R := R)
           (Matrix.reindex e.symm e.symm (k₁'.val * g' * k₂'.val)) ∧
           (Matrix.reindex e.symm e.symm
             ((k₁'.val : Matrix _ _ K) * g' * (k₂'.val : Matrix _ _ K))).coeffsSup v
             = g.coeffsSup v
-      · simp only [PNat.add_coe, PNat.val_ofNat, GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
+      · simp only [GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_map, Matrix.submatrix_map, Matrix.submatrix_submatrix]
         apply iff_of_eq
         congr
-        simp_all
-      · simp only [PNat.add_coe, PNat.val_ofNat, GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
+        rw [Equiv.symm_comp_self, Matrix.submatrix_id_id]
+      · simp only [GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_map, Matrix.submatrix_map, Matrix.submatrix_submatrix]
         apply iff_of_eq
         congr
-        simp_all
+        rw [Equiv.symm_comp_self, Matrix.submatrix_id_id]
       · refine ⟨⟨?_, ?_⟩, ?_⟩
         · simp only [reindex_apply, Equiv.symm_symm]
           apply IsDiag.submatrix hk.isDiag (Equiv.injective e)
         · simp only [reindex_apply, Equiv.symm_symm, submatrix_apply]
           apply monotone_of_isBlockMonotoneDiag _ hk
         · simp only [g', coeffs_sup_reindex, hc]
-          rfl
 
 -- From here onwards we work with a DVR
 
@@ -654,7 +658,11 @@ lemma exists_normalization_of_isMonotoneDiag [IsDiscreteValuationRing R] (g : GL
     · apply valuation_lt_one_of_irreducible ϖ hϖ
     · rw [Valuation.ne_zero_iff]
       exact coe_uniformizer_ne_zero hϖ
-  · simp_all
+  · intro j
+    simp only [Units.val_mul, GL.val_map, RingHom.mapMatrix_apply, GL.val_diagonal]
+    rw [Matrix.diagonal_map (map_zero _), Matrix.diagonal_mul, hd j, ← mul_assoc,
+      Subring.coe_subtype, ← Submonoid.coe_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one,
+      OneMemClass.coe_one, one_mul]
 
 /-- The cartan diagonal for a tuple of integers `f` is the diagonal matrix
 where the diagonal entries are given by `ϖ ^ f i`. -/
@@ -741,7 +749,10 @@ theorem cartan_decomposition [IsDiscreteValuationRing R] (g : GL (Fin k) K) :
   simp only [mul_assoc, mul_assoc, diagonal_mul]
   rw [← mul_assoc]
   by_cases hij : i = j
-  · simp_all
+  · subst hij
+    rw [diagonal_apply_eq, ← hd i]
+    simp only [Units.val_mul, GL.val_map, RingHom.mapMatrix_apply, GL.val_diagonal,
+      Matrix.diagonal_map (map_zero _), Matrix.diagonal_mul]
   · simp [diagonal_apply_ne _ hij, hk.isDiag hij]
 
 /-- Variant of `cartan_decomposition` where `g` is written as a product. -/

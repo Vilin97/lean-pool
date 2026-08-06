@@ -225,6 +225,14 @@ variable (k : Type*) [CommRing k]
 /-- Carrier: forests with k-coefficients (product = forest concatenation). -/
 abbrev _root_.CK.H := MonoidAlgebra k (FreeMonoid RTree)
 
+/-- Extensionality for linear maps out of `H k`, tested on the forest basis. A `Forest`-indexed
+    repackaging of `MonoidAlgebra.lhom_ext'` (`Forest` and `FreeMonoid RTree` are definitionally
+    but not reducibly equal, and `rw` needs the former). -/
+theorem _root_.CK.lhom_ext {N : Type*} [AddCommMonoid N] [Module k N] ⦃φ ψ : H k →ₗ[k] N⦄
+    (h : ∀ (f : Forest) (b : k),
+      φ (MonoidAlgebra.single f b) = ψ (MonoidAlgebra.single f b)) : φ = ψ :=
+  MonoidAlgebra.lhom_ext' fun f => LinearMap.ext fun b => h (FreeMonoid.toList f) b
+
 /-- Pure 2-tensor of a cut `(p, r)`. -/
 noncomputable def _root_.CK.e2 (pr : Forest × Forest) : H k ⊗[k] H k :=
   MonoidAlgebra.single pr.1 (1 : k) ⊗ₜ[k] MonoidAlgebra.single pr.2 (1 : k)
@@ -242,7 +250,7 @@ noncomputable def _root_.CK.E3 (l : Tens3) : H k ⊗[k] (H k ⊗[k] H k) := (l.m
 
 /-- Comultiplication. -/
 noncomputable def _root_.CK.Δ : H k →ₗ[k] H k ⊗[k] H k :=
-  Finsupp.linearCombination k (Δ₀ k)
+  Finsupp.linearCombination k (Δ₀ k) ∘ₗ (MonoidAlgebra.coeffLinearEquiv k).toLinearMap
 
 theorem _root_.CK.Δ_single (f : Forest) (b : k) :
     Δ k (MonoidAlgebra.single f b) = b • Δ₀ k f := by
@@ -338,12 +346,12 @@ theorem _root_.CK.coassoc_map :
     (TensorProduct.assoc k (H k) (H k) (H k)).toLinearMap ∘ₗ
         LinearMap.rTensor (H k) (Δ k) ∘ₗ Δ k
       = LinearMap.lTensor (H k) (Δ k) ∘ₗ Δ k := by
-  apply Finsupp.lhom_ext
+  apply CK.lhom_ext
   intro f b
   change (TensorProduct.assoc k (H k) (H k) (H k))
-        (LinearMap.rTensor (H k) (Δ k) (Δ k (Finsupp.single f b)))
-      = LinearMap.lTensor (H k) (Δ k) (Δ k (Finsupp.single f b))
-  rw [show (Finsupp.single f b : H k) = MonoidAlgebra.single f b from rfl, Δ_single]
+        (LinearMap.rTensor (H k) (Δ k) (Δ k (MonoidAlgebra.single f b)))
+      = LinearMap.lTensor (H k) (Δ k) (Δ k (MonoidAlgebra.single f b))
+  rw [Δ_single]
   simp only [map_smul]
   rw [lhs_core, rhs_core, perm_E3]
 
@@ -357,9 +365,8 @@ def _root_.CK.εmon : FreeMonoid RTree →* k := FreeMonoid.lift (fun _ => (0 : 
 @[simp] theorem _root_.CK.εmon_of (a : RTree) : εmon k (FreeMonoid.of a) = 0 := rfl
 
 @[simp] theorem _root_.CK.εmon_cons (a : RTree) (l : Forest) : εmon k (a :: l) = 0 := by
-  simp only [εmon, FreeMonoid.lift_apply,
-    show FreeMonoid.toList (a :: l : FreeMonoid RTree) = a :: l from rfl,
-    List.map_cons, List.prod_cons, zero_mul]
+  change εmon k (FreeMonoid.of a * FreeMonoid.ofList l) = 0
+  rw [map_mul, εmon_of, zero_mul]
 
 theorem _root_.CK.εmon_append (p p' : Forest) : εmon k (p ++ p') = εmon k p * εmon k p' := by
   induction p with
@@ -375,8 +382,10 @@ noncomputable def _root_.CK.ε : H k →ₗ[k] k := (εalg k).toLinearMap
 
 theorem _root_.CK.ε_single (f : Forest) (b : k) :
     ε k (MonoidAlgebra.single f b) = b * εmon k f := by
-  change εalg k (MonoidAlgebra.single f b) = b * εmon k f
-  rw [εalg, MonoidAlgebra.lift_single, smul_eq_mul]
+  have h : εalg k (MonoidAlgebra.single (FreeMonoid.ofList f) b)
+      = b * εmon k (FreeMonoid.ofList f) := by
+    rw [εalg, MonoidAlgebra.lift_single, smul_eq_mul]
+  exact h
 
 /-- Scalar smul commutes with a `List.sum`. -/
 theorem _root_.CK.smul_list_sum {M : Type*} [AddCommMonoid M] [Module k M] (c : k) (l : List M) :
@@ -531,22 +540,22 @@ noncomputable instance : CoalgebraStruct k (H k) where
 noncomputable instance _root_.CK.instCKCoalg : Coalgebra k (H k) where
   coassoc := coassoc_map k
   rTensor_counit_comp_comul := by
-    apply Finsupp.lhom_ext
+    apply CK.lhom_ext
     intro f b
-    change LinearMap.rTensor (H k) (ε k) (Δ k (Finsupp.single f b))
-        = (TensorProduct.mk k k (H k)) 1 (Finsupp.single f b)
-    rw [show (Finsupp.single f b : H k) = MonoidAlgebra.single f b from rfl, Δ_single, map_smul,
+    change LinearMap.rTensor (H k) (ε k) (Δ k (MonoidAlgebra.single f b))
+        = (TensorProduct.mk k k (H k)) 1 (MonoidAlgebra.single f b)
+    rw [Δ_single, map_smul,
         rTensor_ε_Δ₀, TensorProduct.mk_apply, single_smul_one (k := k) (f := f) (b := b)]
-    exact (TensorProduct.tmul_smul b (1 : k) (MonoidAlgebra.single f 1)).symm
+    exact (TensorProduct.tmul_smul b (1 : k) (MonoidAlgebra.single f 1 : H k)).symm
   lTensor_counit_comp_comul := by
-    apply Finsupp.lhom_ext
+    apply CK.lhom_ext
     intro f b
-    change LinearMap.lTensor (H k) (ε k) (Δ k (Finsupp.single f b))
-        = (TensorProduct.mk k (H k) k).flip 1 (Finsupp.single f b)
-    rw [show (Finsupp.single f b : H k) = MonoidAlgebra.single f b from rfl, Δ_single, map_smul,
+    change LinearMap.lTensor (H k) (ε k) (Δ k (MonoidAlgebra.single f b))
+        = (TensorProduct.mk k (H k) k).flip 1 (MonoidAlgebra.single f b)
+    rw [Δ_single, map_smul,
         lTensor_ε_Δ₀, LinearMap.flip_apply, TensorProduct.mk_apply,
         single_smul_one (k := k) (f := f) (b := b)]
-    exact TensorProduct.smul_tmul' b (MonoidAlgebra.single f 1) (1 : k)
+    exact TensorProduct.smul_tmul' b (MonoidAlgebra.single f 1 : H k) (1 : k)
 
 /-! ### Bialgebra: `Δ` and `ε` are algebra homs. -/
 
@@ -554,7 +563,11 @@ noncomputable instance _root_.CK.instCKCoalg : Coalgebra k (H k) where
 theorem _root_.CK.single_append (p p' : Forest) :
     (MonoidAlgebra.single (p ++ p') (1 : k) : H k)
       = (MonoidAlgebra.single p 1 : H k) * (MonoidAlgebra.single p' 1 : H k) := by
-  rw [MonoidAlgebra.single_mul_single, mul_one]; rfl
+  have h : (MonoidAlgebra.single (FreeMonoid.ofList p * FreeMonoid.ofList p') (1 : k) : H k)
+      = (MonoidAlgebra.single (FreeMonoid.ofList p) (1 : k) : H k) *
+        (MonoidAlgebra.single (FreeMonoid.ofList p') (1 : k) : H k) := by
+    rw [MonoidAlgebra.single_mul_single, mul_one]
+  exact h
 
 /-- `e2` is multiplicative across leg-wise concatenation. -/
 theorem _root_.CK.e2_mul (pr pr' : Forest × Forest) :
@@ -588,6 +601,10 @@ theorem _root_.CK.Δ_mul (a b : H k) : Δ k (a * b) = Δ k a * Δ k b := by
     induction b using MonoidAlgebra.induction_on with
     | hM G =>
       simp only [MonoidAlgebra.of_apply]
+      change Δ k ((MonoidAlgebra.single (FreeMonoid.toList F) (1 : k) : H k) *
+            (MonoidAlgebra.single (FreeMonoid.toList G) (1 : k) : H k))
+          = Δ k (MonoidAlgebra.single (FreeMonoid.toList F) (1 : k) : H k) *
+            Δ k (MonoidAlgebra.single (FreeMonoid.toList G) (1 : k) : H k)
       rw [← single_append, Δ_single, Δ_single, Δ_single, one_smul, one_smul, one_smul]
       exact Δ₀_mul k F G
     | hadd b1 b2 h1 h2 => rw [mul_add, map_add, map_add, h1, h2, mul_add]
@@ -597,8 +614,8 @@ theorem _root_.CK.Δ_mul (a b : H k) : Δ k (a * b) = Δ k a * Δ k b := by
 
 /-- `Δ 1 = 1`. -/
 theorem _root_.CK.Δ_one : Δ k (1 : H k) = 1 := by
-  rw [MonoidAlgebra.one_def, Δ_single, one_smul]
-  change Δ₀ k [] = 1
+  rw [show (1 : H k) = MonoidAlgebra.single (M := FreeMonoid RTree) ([] : Forest) (1 : k) from rfl,
+      Δ_single, one_smul]
   rw [Δ₀, show coprodForest ([] : Forest) = [([], [])] from rfl]
   simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, add_zero, e2]
   rfl
@@ -698,7 +715,7 @@ decreasing_by
 
 /-- The antipode linear map obtained by extending `antipodeF` from the forest basis. -/
 noncomputable def _root_.CK.antipode : H k →ₗ[k] H k :=
-  Finsupp.linearCombination k (antipodeF k)
+  Finsupp.linearCombination k (antipodeF k) ∘ₗ (MonoidAlgebra.coeffLinearEquiv k).toLinearMap
 
 theorem _root_.CK.antipode_single (f : Forest) (b : k) :
     antipode k (MonoidAlgebra.single f b) = b • antipodeF k f := by
@@ -886,7 +903,7 @@ theorem _root_.CK.rightConvF' (f : Forest) :
 
 /-- The mirrored antipode candidate used to prove the right convolution identity. -/
 noncomputable def _root_.CK.antipode' : H k →ₗ[k] H k :=
-  Finsupp.linearCombination k (antipodeF' k)
+  Finsupp.linearCombination k (antipodeF' k) ∘ₗ (MonoidAlgebra.coeffLinearEquiv k).toLinearMap
 
 theorem _root_.CK.antipode'_single (f : Forest) (b : k) :
     antipode' k (MonoidAlgebra.single f b) = b • antipodeF' k f := by
@@ -918,11 +935,12 @@ theorem _root_.CK.lTensor_antipode'_Δ₀ (f : Forest) :
 theorem _root_.CK.leftAntipode_eq :
     LinearMap.mul' k (H k) ∘ₗ LinearMap.rTensor (H k) (antipode k) ∘ₗ Δ k
       = Algebra.linearMap k (H k) ∘ₗ ε k := by
-  apply Finsupp.lhom_ext
+  apply CK.lhom_ext
   intro f b
-  change LinearMap.mul' k (H k) (LinearMap.rTensor (H k) (antipode k) (Δ k (Finsupp.single f b)))
-      = Algebra.linearMap k (H k) (ε k (Finsupp.single f b))
-  rw [show (Finsupp.single f b : H k) = MonoidAlgebra.single f b from rfl, Δ_single, map_smul,
+  change LinearMap.mul' k (H k)
+        (LinearMap.rTensor (H k) (antipode k) (Δ k (MonoidAlgebra.single f b)))
+      = Algebra.linearMap k (H k) (ε k (MonoidAlgebra.single f b))
+  rw [Δ_single, map_smul,
       map_smul,
       show LinearMap.mul' k (H k) (LinearMap.rTensor (H k) (antipode k) (Δ₀ k f))
         = εmon k f • (1 : H k) from rTensor_antipode_Δ₀ k f,
@@ -932,11 +950,12 @@ theorem _root_.CK.leftAntipode_eq :
 theorem _root_.CK.rightAntipode'_eq :
     LinearMap.mul' k (H k) ∘ₗ LinearMap.lTensor (H k) (antipode' k) ∘ₗ Δ k
       = Algebra.linearMap k (H k) ∘ₗ ε k := by
-  apply Finsupp.lhom_ext
+  apply CK.lhom_ext
   intro f b
-  change LinearMap.mul' k (H k) (LinearMap.lTensor (H k) (antipode' k) (Δ k (Finsupp.single f b)))
-      = Algebra.linearMap k (H k) (ε k (Finsupp.single f b))
-  rw [show (Finsupp.single f b : H k) = MonoidAlgebra.single f b from rfl, Δ_single, map_smul,
+  change LinearMap.mul' k (H k)
+        (LinearMap.lTensor (H k) (antipode' k) (Δ k (MonoidAlgebra.single f b)))
+      = Algebra.linearMap k (H k) (ε k (MonoidAlgebra.single f b))
+  rw [Δ_single, map_smul,
       map_smul,
       show LinearMap.mul' k (H k) (LinearMap.lTensor (H k) (antipode' k) (Δ₀ k f))
         = εmon k f • (1 : H k) from lTensor_antipode'_Δ₀ k f,
@@ -1048,8 +1067,8 @@ theorem _root_.CK.adamsUnit_inv_val : (adamsUnit k)⁻¹.val = WithConv.toConv (
 
 /-- `Δ` on a basis forest, packaged for `sf`. -/
 theorem _root_.CK.Δ_sf (f : Forest) : Δ k (sf k f) = Δ₀ k f := by
-  change Finsupp.linearCombination k (Δ₀ k) (sf k f) = Δ₀ k f
-  rw [show sf k f = Finsupp.single f (1 : k) from rfl, Finsupp.linearCombination_single, one_smul]
+  change Finsupp.linearCombination k (Δ₀ k) (Finsupp.single f (1 : k)) = Δ₀ k f
+  rw [Finsupp.linearCombination_single, one_smul]
 
 /-- `ε` on a basis forest: the counit of `sf f` is `εmon f`. -/
 theorem _root_.CK.ε_sf (p : Forest) : ε k (sf k p) = εmon k p := by
@@ -1223,11 +1242,11 @@ noncomputable def _root_.CK.eulerian1F (f : Forest) : H k :=
 
 /-- The first Eulerian idempotent `e⁽¹⁾ : H → H`, linear extension of `eulerian1F`. -/
 noncomputable def _root_.CK.eulerian1 : H k →ₗ[k] H k :=
-  Finsupp.linearCombination k (eulerian1F k)
+  Finsupp.linearCombination k (eulerian1F k) ∘ₗ (MonoidAlgebra.coeffLinearEquiv k).toLinearMap
 
 theorem _root_.CK.eulerian1_sf (f : Forest) : eulerian1 k (sf k f) = eulerian1F k f := by
-  change Finsupp.linearCombination k (eulerian1F k) (sf k f) = eulerian1F k f
-  rw [show sf k f = Finsupp.single f (1 : k) from rfl, Finsupp.linearCombination_single, one_smul]
+  change Finsupp.linearCombination k (eulerian1F k) (Finsupp.single f (1 : k)) = eulerian1F k f
+  rw [Finsupp.linearCombination_single, one_smul]
 
 /-- `e⁽¹⁾` kills the unit: there are no positive-degree terms on the empty forest. -/
 @[simp] theorem _root_.CK.eulerian1_one : eulerian1 k (1 : H k) = 0 := by
@@ -1354,27 +1373,29 @@ omit [Algebra ℚ k] in
 /-- A linear endomorphism of `H` is the basis-sum of its values on the singletons (proved by
     `exact`, sidestepping the `MonoidAlgebra`/`Finsupp` syntactic wall in `rw`). -/
 theorem _root_.CK.lmap_eq_sum (g : H k →ₗ[k] H k) (y : H k) :
-    g y = y.sum (fun a b => g (Finsupp.single a b)) := by
-  conv_lhs => rw [← Finsupp.sum_single y]
-  exact map_finsuppSum g y Finsupp.single
+    g y = y.coeff.sum (fun a b => g (MonoidAlgebra.single a b)) := by
+  conv_lhs => rw [← MonoidAlgebra.sum_coeff_single y]
+  exact map_finsuppSum g y.coeff MonoidAlgebra.single
 
 /-- `e⁽¹⁾` agrees with the truncation `logTrunc N` on any element supported in degrees `≤ N`. -/
 theorem _root_.CK.eulerian1_eq_logTrunc (x : H k) (N : ℕ)
-    (hN : ∀ f ∈ x.support, sizeF f ≤ N) :
+    (hN : ∀ f ∈ x.coeff.support, sizeF f ≤ N) :
     eulerian1 k x = logTrunc k N x := by
   rw [lmap_eq_sum k (eulerian1 k) x, lmap_eq_sum k (logTrunc k N) x]
   refine Finsupp.sum_congr (fun a ha => ?_)
-  have hsf : (Finsupp.single a (x a) : H k) = (x a) • sf k a := by
-    change (Finsupp.single a (x a) : H k) = (x a) • Finsupp.single a (1 : k)
-    rw [Finsupp.smul_single, smul_eq_mul, mul_one]
-  rw [hsf, map_smul, map_smul, eulerian1_sf, eulerian1F_eq_logTrunc k a N (hN a ha)]
+  have hsf : (MonoidAlgebra.single a (x.coeff a) : H k)
+      = (x.coeff a) • sf k (FreeMonoid.toList a) := by
+    rw [sf, FreeMonoid.ofList_toList]
+    exact single_smul_one (k := k) (f := a) (b := x.coeff a)
+  rw [hsf, map_smul, map_smul, eulerian1_sf,
+      eulerian1F_eq_logTrunc k (FreeMonoid.toList a) N (hN a ha)]
 
 /-- **`e⁽¹⁾` fixes every primitive**: `e⁽¹⁾(x) = x` for primitive `x`. Only the `j=1` term of the
     log series survives (`J(x)=x`; `j=0` has coefficient `0`; `j≥2` vanish), so `e⁽¹⁾(x)=x`. The
     primitives are exactly the eigenvalue-`1` eigenspace of `e⁽¹⁾`. -/
 theorem _root_.CK.eulerian1_primitive {x : H k} (hx : IsPrimitive k x) : eulerian1 k x = x := by
-  set N := x.support.sup sizeF + 1 with hNdef
-  have hbound : ∀ f ∈ x.support, sizeF f ≤ N := by
+  set N := x.coeff.support.sup sizeF + 1 with hNdef
+  have hbound : ∀ f ∈ x.coeff.support, sizeF f ≤ N := by
     intro f hf
     exact le_trans (Finset.le_sup (f := sizeF) hf) (by rw [hNdef]; exact Nat.le_succ _)
   rw [eulerian1_eq_logTrunc k x N hbound, logTrunc_apply]
@@ -1968,7 +1989,8 @@ theorem _root_.CK.JcAb_pow_ofConv_eq_adams_sum (j : ℕ) (x : Hab k) :
       = ∑ i ∈ Finset.range (j + 1),
           ((-1 : k) ^ (j - i) * (j.choose i : k)) • adamsAb k i x := by
   have hcomm : Commute (WithConv.toConv (LinearMap.id (R := k) (M := Hab k)))
-      (-1 : WithConv (Hab k →ₗ[k] Hab k)) := Commute.neg_one_right _
+      (-1 : WithConv (Hab k →ₗ[k] Hab k)) :=
+    Commute.neg_one_right (WithConv.toConv (LinearMap.id (R := k) (M := Hab k)))
   have key : ∀ (e c : ℕ),
       (-1 : WithConv (Hab k →ₗ[k] Hab k)) ^ e * (c : WithConv (Hab k →ₗ[k] Hab k))
         = ((-1 : k) ^ e * (c : k)) • (1 : WithConv (Hab k →ₗ[k] Hab k)) := by
@@ -1999,7 +2021,8 @@ theorem _root_.CK.Jc_pow_ofConv_eq_adams_sum (j : ℕ) (z : H k) :
       = ∑ i ∈ Finset.range (j + 1),
           ((-1 : k) ^ (j - i) * (j.choose i : k)) • adams k i z := by
   have hcomm : Commute (WithConv.toConv (LinearMap.id (R := k) (M := H k)))
-      (-1 : WithConv (H k →ₗ[k] H k)) := Commute.neg_one_right _
+      (-1 : WithConv (H k →ₗ[k] H k)) :=
+    Commute.neg_one_right (WithConv.toConv (LinearMap.id (R := k) (M := H k)))
   have key : ∀ (e c : ℕ),
       (-1 : WithConv (H k →ₗ[k] H k)) ^ e * (c : WithConv (H k →ₗ[k] H k))
         = ((-1 : k) ^ e * (c : k)) • (1 : WithConv (H k →ₗ[k] H k)) := by
@@ -2223,7 +2246,7 @@ theorem _root_.CK.star_identity (p N : ℕ) (w : Hab k)
 
 /-- `π(e⁽¹⁾ y)` as a truncated convolution-log sum on `H_ab`, for any degree bound
     `M ≥ deg(y)`. -/
-theorem _root_.CK.pi_eulerian1_eq (y : H k) (M : ℕ) (hMy : ∀ a ∈ y.support, sizeF a ≤ M) :
+theorem _root_.CK.pi_eulerian1_eq (y : H k) (M : ℕ) (hMy : ∀ a ∈ y.coeff.support, sizeF a ≤ M) :
     π k (eulerian1 k y)
       = ∑ j ∈ Finset.range (M + 1),
           PowerSeries.coeff j (PowerSeries.log k) • ((JcAb k ^ j).ofConv (π k y)) := by
@@ -2235,7 +2258,7 @@ theorem _root_.CK.pi_eulerian1_eq (y : H k) (M : ℕ) (hMy : ∀ a ∈ y.support
     `Ψᵖ(π(e⁽¹⁾(sf f))) = p · π(e⁽¹⁾(sf f))`. -/
 theorem _root_.CK.adamsAb_eigen_basis (p : ℕ) (f : Forest) :
     adamsAb k p (π k (eulerian1 k (sf k f))) = (p : k) • π k (eulerian1 k (sf k f)) := by
-  have hMy : ∀ a ∈ (sf k f).support, sizeF a ≤ sizeF f := by
+  have hMy : ∀ a ∈ (sf k f).coeff.support, sizeF a ≤ sizeF f := by
     intro a ha
     have ha' : a = FreeMonoid.ofList f :=
       Finset.mem_singleton.mp (Finsupp.support_single_subset ha)
@@ -2256,7 +2279,7 @@ theorem _root_.CK.adamsAb_eigen_basis (p : ℕ) (f : Forest) :
     `x`. -/
 theorem _root_.CK.adamsAb_eigen (p : ℕ) (x : H k) :
     adamsAb k p (π k (eulerian1 k x)) = (p : k) • π k (eulerian1 k x) := by
-  induction x using Finsupp.induction_linear with
+  induction x using MonoidAlgebra.induction_linear with
   | zero =>
     change adamsAb k p (π k (eulerian1 k (0 : H k)))
       = (p : k) • π k (eulerian1 k (0 : H k))
@@ -2267,7 +2290,7 @@ theorem _root_.CK.adamsAb_eigen (p : ℕ) (x : H k) :
       map_add (eulerian1 k) (f : H k) (g : H k)
     simp_all
   | single a b =>
-    have hsa : (Finsupp.single a b : H k) = b • sf k (FreeMonoid.toList a) := by
+    have hsa : (MonoidAlgebra.single a b : H k) = b • sf k (FreeMonoid.toList a) := by
       rw [sf, FreeMonoid.ofList_toList]
       exact single_smul_one (k := k) (f := a) (b := b)
     rw [hsa]
@@ -2316,8 +2339,8 @@ theorem _root_.CK.brickC (v : Hab k) (M : ℕ) (hM : 1 ≤ M)
     eigen-relation `adamsAb_eigen`, and the Brick-C collapse. -/
 theorem _root_.CK.eulerian1_idem_ab (x : H k) :
     π k (eulerian1 k (eulerian1 k x)) = π k (eulerian1 k x) := by
-  set M := (eulerian1 k x).support.sup sizeF + 1 with hMdef
-  have hMy : ∀ a ∈ (eulerian1 k x).support, sizeF a ≤ M := fun a ha =>
+  set M := (eulerian1 k x).coeff.support.sup sizeF + 1 with hMdef
+  have hMy : ∀ a ∈ (eulerian1 k x).coeff.support, sizeF a ≤ M := fun a ha =>
     le_trans (Finset.le_sup ha) (by rw [hMdef]; omega)
   rw [pi_eulerian1_eq k (eulerian1 k x) M hMy]
   exact brickC k (π k (eulerian1 k x)) M (by rw [hMdef]; omega) (fun i => adamsAb_eigen k i x)

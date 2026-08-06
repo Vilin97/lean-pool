@@ -33,8 +33,9 @@ lemma inl_l_r_eq_relCWComplex_skInclSucc_zero :
     ((IProd.skZeroIsoSkOne X).symm.trans <| asIso <| Limits.pushout.inl
         (Limits.Sigma.desc fun a ↦ isEmptyElim a)
         (Limits.Sigma.map fun _ ↦ diskBoundaryIncl 0) ).inv
-  simp only [Nat.reduceAdd, Iso.trans_inv, asIso_inv, Iso.symm_inv, IsIso.hom_inv_id_assoc]
-  rfl
+  simp only [Nat.reduceAdd, Iso.trans_inv, Iso.symm_inv]
+  change _ = _ ≫ _ ≫ _
+  exact (Iso.hom_inv_id_assoc _ _).symm
 
 lemma skInclSucc_eq_relCWComplex_skInclSucc (n : ℕ) :
     IProd.skInclSucc X n = RelCWComplex.skInclSucc X.IProd (n + 1) := by
@@ -43,10 +44,8 @@ lemma skInclSucc_eq_relCWComplex_skInclSucc (n : ℕ) :
   change _ = Limits.pushout.inl .. ≫ (IProd.pushoutSkSk X n).isoPushout.inv
   rw [IsPushout.inl_isoPushout_inv]
   apply Limits.pushout.hom_ext
-  · simp only [Limits.pushout.inl_desc]
-    exact (IProd.inl_skInclSucc X).symm
-  · simp only [Limits.pushout.inr_desc]
-    exact (IProd.inr_skInclSucc X).symm
+  · exact (Limits.pushout.inl_desc _ _ _).trans (IProd.inl_skInclSucc X).symm
+  · exact (Limits.pushout.inr_desc _ _ _).trans (IProd.inr_skInclSucc X).symm
 
 /-- Two maps from `X.IProd.sk 0 = TopCat.of (zeroOne × X.toTopCat)`
 to `X.IProd.sk (n + 1)` are equal. -/
@@ -141,7 +140,6 @@ noncomputable def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBi
         have := Z.ι.naturality (homOfLE (n + 1).le_succ)
         simp only [homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ,
           Functor.const_obj_map] at this
-        rw [← Category.assoc]
         refine (IProd.inr_skInclSucc_assoc X (Z.ι.app (n + 1 + 1))).symm.trans ?_
         rw [skInclSucc_eq_relCWComplex_skInclSucc]
         change Limits.pushout.inr (l X n) (r X n) ≫
@@ -185,8 +183,6 @@ lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app
   obtain ht | ht := zeroOne.eq_zero_or_eq_one t
   all_goals
     subst ht
-    simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.prodMap_apply,
-      ContinuousMap.coe_mk, ContinuousMap.coe_id, Prod.map_apply, id_eq]
     change (iIX ≫ desc X Z) x = (i01X ≫ Z.ι.app 0) x
     congr 2
     -- Goal: prove two maps of type `X.toTopCat ⟶ Z.pt` are equal.
@@ -198,9 +194,8 @@ lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app
         iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1) := by
       change (iIsk n ≫ (IX X).cocone.ι.app n) ≫ (IX X).isColimit.desc (IXZ X Z) =
         iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1)
-      rw [Category.assoc]
-      congr 1
-      exact (IX X).isColimit.fac (IXZ X Z) n
+      exact (Category.assoc _ _ _).trans
+        (congrArg (fun k ↦ iIsk n ≫ k) ((IX X).isColimit.fac (IXZ X Z) n))
     rw [hfac]
     change iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1) = _
     replace := Z.ι.naturality (homOfLE (by omega : 0 ≤ n + 1))
@@ -221,12 +216,17 @@ lemma fac : incl X n ≫ desc X Z = Z.ι.app n :=
   | n + 1 => by
       change Limits.pushout.desc .. ≫ _ = _
       apply Limits.pushout.hom_ext
-      · rw [Limits.pushout.inl_desc_assoc, zeroOneProdInclIProd_desc]
-        have := Z.ι.naturality (homOfLE (by omega : 0 ≤ n + 1))
-        change _ = Z.ι.app 0 at this
-        rw [← this, skInclSucc_map_zero_le]
+      · have hdesc := Limits.pushout.inl_desc_assoc X.zeroOneProdInclIProd
+          (r' X n) (w' X n) (desc X Z)
+        refine hdesc.trans ?_
+        rw [zeroOneProdInclIProd_desc]
+        have hnat := Z.ι.naturality (homOfLE (by omega : 0 ≤ n + 1))
+        change _ = Z.ι.app 0 at hnat
+        rw [← hnat, skInclSucc_map_zero_le]
         rfl
-      · rw [Limits.pushout.inr_desc_assoc]
+      · have hdesc := Limits.pushout.inr_desc_assoc X.zeroOneProdInclIProd
+          (r' X n) (w' X n) (desc X Z)
+        refine hdesc.trans ?_
         change (IX X).cocone.ι.app n ≫ desc X Z = _
         rw [desc]
         exact (IX X).isColimit.fac (IXZ X Z) n
@@ -276,7 +276,6 @@ noncomputable def arrowIso : Arrow.mk (X.IProd.skIncl 0) ≅ Arrow.mk X.zeroOneP
       (colimitCocone X).isColimit 0
     refine Eq.trans ?_ h.symm
     change 𝟙 (X.IProd.sk 0) ≫ X.zeroOneProdInclIProd = (colimitCocone X).cocone.ι.app 0
-    rw [Category.id_comp]
-    rfl
+    exact (Category.id_comp _).trans rfl
 
 end CWComplex.IProd

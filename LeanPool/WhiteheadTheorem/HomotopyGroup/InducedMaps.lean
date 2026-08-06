@@ -187,23 +187,28 @@ end GenLoop
 
 namespace HomotopyGroup
 
+private theorem inducedMap'_respects (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y)
+    {α β : Ω^ (Fin n) X.as X.point} (hαβ : α ≈ β) :
+    GenLoop.inducedMap' n f α ≈ GenLoop.inducedMap' n f β := by
+  let H := hαβ.some
+  have := H.toHomotopy
+  exact Nonempty.intro <|
+    { toHomotopy := (ContinuousMap.Homotopy.refl f.right.hom).comp H.toHomotopy
+      prop' t y hy := by
+        simp only [GenLoop.inducedMap', ContinuousMap.toFun_eq_coe,
+          ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
+          ContinuousMap.Homotopy.refl_apply, ContinuousMap.coe_mk, ContinuousMap.comp_apply]
+        have hprop : H.toHomotopy (t, y) = α.val y := by
+          have := H.prop' t y hy
+          simpa using this
+        rw [hprop] }
+
 /-- The map between homotopy groups (as sets)
 induced by a morphism `f : X ⟶ Y` of pointed topological spaces -/
 def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
-  Quotient.map (GenLoop.inducedMap' n f) fun α β hαβ ↦ by
-    let H := hαβ.some
-    have := H.toHomotopy
-    exact Nonempty.intro <|
-      { toHomotopy := (ContinuousMap.Homotopy.refl f.right.hom).comp H.toHomotopy
-        prop' t y hy := by
-          simp only [GenLoop.inducedMap', ContinuousMap.toFun_eq_coe,
-            ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
-            ContinuousMap.Homotopy.refl_apply, ContinuousMap.coe_mk, ContinuousMap.comp_apply]
-          have hprop : H.toHomotopy (t, y) = α.val y := by
-            have := H.prop' t y hy
-            simpa using this
-          rw [hprop] }
+  Quotient.map (GenLoop.inducedMap' n f) fun {α β} hαβ ↦
+    inducedMap'_respects n f (α := α) (β := β) hαβ
 
 lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     inducedMap' n f (default : π_ n X.as X.point) = (default : π_ n Y.as Y.point) := by

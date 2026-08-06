@@ -799,7 +799,7 @@ theorem coeff_single_mul_coe_powerSeries
     conv_lhs => rw [show (n - s) = ((n - s).toNat : ℤ) by omega]
     rw [LaurentSeries.coeff_coe_powerSeries]
   · next h =>
-    rw [HahnSeries.ofPowerSeries_apply, HahnSeries.embDomain_notin_range]
+    rw [HahnSeries.ofPowerSeries_apply, HahnSeries.embDomain_of_notMem_range]
     rintro ⟨m, hm⟩
     simp at hm
     omega

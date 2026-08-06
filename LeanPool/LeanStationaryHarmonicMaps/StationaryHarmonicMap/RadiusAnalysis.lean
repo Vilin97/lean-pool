@@ -416,7 +416,7 @@ theorem radialOpenShell_subset_uIoc {n : ℕ} (r s : ℝ) :
 
 /-- A single radial shell has volume controlled by the variation of the ball
 volume radius function across its two endpoints. -/
-theorem radialOpenShell_volume_le_ballVolume_dist {n : ℕ} [NeZero n]
+theorem radialOpenShell_volume_le_ballVolume_dist {n : ℕ}
     (r s : ℝ) :
     volume (RadialOpenShell (n := n) r s) ≤
       ENNReal.ofReal
@@ -531,7 +531,7 @@ theorem radialOpenShells_measurable {n : ℕ} (E : ℕ × (ℕ → ℝ × ℝ)) 
 
 /-- A finite union of radial shells is controlled by the corresponding
 variation sum of the ball-volume radius function. -/
-theorem radialOpenShells_volume_le_ballVolume_variation {n : ℕ} [NeZero n]
+theorem radialOpenShells_volume_le_ballVolume_variation {n : ℕ}
     (E : ℕ × (ℕ → ℝ × ℝ)) :
     volume (RadialOpenShells (n := n) E) ≤
       ENNReal.ofReal

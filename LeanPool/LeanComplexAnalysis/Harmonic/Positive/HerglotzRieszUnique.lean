@@ -68,7 +68,7 @@ lemma continuous_zpow_on_unit_circle (n : ℤ) :
        simp only [zpow_negSucc]
        apply Continuous.inv₀
        · exact continuous_subtype_val.pow (m + 1)
-       · simp_all
+       · exact fun x => pow_ne_zero _ (ne_zero_of_mem_unit_sphere x)
 
 /-- The span of moments is dense in the space of continuous functions on the unit circle. -/
 lemma span_moments_dense : (Submodule.span ℂ (Set.range (fun n : ℤ => ContinuousMap.mk (
@@ -137,8 +137,7 @@ lemma span_moments_dense : (Submodule.span ℂ (Set.range (fun n : ℤ => Contin
     refine Submodule.smul_mem _ _ (Submodule.subset_span ⟨i + j, ?_⟩)
     ext x
     simp only [ContinuousMap.coe_mk, ContinuousMap.mul_apply]
-    rw [zpow_add₀]
-    simp_all
+    rw [zpow_add₀ (ne_zero_of_mem_unit_sphere x)]
   | star =>
     rename_i h₁ h₂ h₃
     refine Submodule.span_induction ?_ ?_ ?_ ?_ h₃

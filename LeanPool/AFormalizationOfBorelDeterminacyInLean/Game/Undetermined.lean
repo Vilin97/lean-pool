@@ -35,10 +35,13 @@ def Player.ownTree (p : Player) (a : Stream' A) : Strategy (⊤ : tree A) p :=
   | nil => simp
   | append_singleton xr b ih =>
     specialize ih (principalOpen_sub xr [b] hx); by_cases hp : IsPosition xr p
-    · apply (subtree_compatible_iff _ ⟨_, ih⟩ hp).mpr
-      simp_rw [Set.mem_singleton_iff, ownTree, subtreeIncl_coe, ← h (xr.length / 2)]
-      suffices b = x.get xr.length by cases p <;> (simp_all [IsPosition]; congr; omega)
-      obtain ⟨_, _, rfl⟩ := hx; simp
+    · refine (subtree_compatible_iff _ ⟨_, ih⟩ hp).mpr ⟨by simp, ExtensionsAt.ext ?_⟩
+      change b = a.get (xr.length / 2)
+      have hb : b = x.get xr.length := by obtain ⟨_, _, rfl⟩ := hx; simp
+      rw [hb, ← h (xr.length / 2)]
+      congr 1
+      simp only [IsPosition] at hp
+      omega
     · rw [subtree_fair _ ⟨_, ih⟩ (by synthIsPosition)]; trivial
 lemma Player.ownTree.disjoint {p} {a b : Stream' A} (h : a ≠ b) :
   body (ownTree p a).pre.subtree ∩ body (ownTree p b).pre.subtree = ∅ := by
@@ -83,7 +86,9 @@ lemma Game.exists_undetermined :
     use fun ⟨p, f, _⟩ ↦ ⟨p, fun x ↦
       if h : IsPosition x p then Subtype.val '' f ⟨_, CompleteSublattice.mem_top⟩ h else ∅⟩
     intro ⟨p, ⟨s, hs⟩⟩ ⟨q, ⟨t, ht⟩⟩ h; simp_rw [Prod.mk.injEq] at h; obtain ⟨rfl, h⟩ := h
-    congr!; ext x hp a
+    refine congrArg (Sigma.mk p) (QuasiStrategy.ext ?_)
+    change s = t
+    ext x hp a
     have hsets := congr_fun h x.val
     simp only [hp, ↓reduceDIte] at hsets
     have hmem := congr_fun hsets a.val

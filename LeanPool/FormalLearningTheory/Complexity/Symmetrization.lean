@@ -550,7 +550,7 @@ theorem per_hypothesis_gap_bound {X : Type u} [MeasurableSpace X]
     For z : Fin n → X, define patterns(z) as the set of `p : Fin n → Bool`
     realized by some `h ∈ C` through `p i = (h (z i) ≠ c (z i))`.
     Then patterns(z).ncard ≤ GrowthFunction X C n by definition of GrowthFunction. -/
-theorem restriction_pattern_count {X : Type u} [MeasurableSpace X] [Infinite X]
+theorem restriction_pattern_count {X : Type u} [Infinite X]
     (C : ConceptClass X Bool) (c : Concept X Bool)
     (n : ℕ) (z : Fin n → X) :
     Set.ncard {p : Fin n → Bool | ∃ h ∈ C, ∀ i, p i = decide (h (z i) ≠ c (z i))} ≤

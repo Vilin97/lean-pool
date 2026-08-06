@@ -17,7 +17,7 @@ namespace Hilbert
 namespace GL
 namespace Kripke
 
-open Kripke
+open _root_.LO.Modal.Kripke
 open Entailment
 open Formula
 open Entailment Entailment.FiniteContext

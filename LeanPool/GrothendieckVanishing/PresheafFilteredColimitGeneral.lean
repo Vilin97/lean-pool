@@ -21,7 +21,7 @@ open CategoryTheory TopologicalSpace Abelian Limits Opposite TopCat
 /-- Zero is preserved under filtered transitions: if restricting a transition to an open
     gives 0, then restricting any further transition also gives 0. -/
 lemma transition_preserves_zero
-    {X : TopCat.{u}} {J' : Type u} [SmallCategory J'] [IsFiltered J']
+    {X : TopCat.{u}} {J' : Type u} [SmallCategory J']
     (Y' : J' ⥤ (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u})
     {j₀ j j' : J'} (f : j₀ ⟶ j) (g : j ⟶ j')
     {U V : Opens X} (φ : U ⟶ V)
@@ -42,7 +42,7 @@ lemma transition_preserves_zero
 
 /-- Pairwise compatibility is preserved under filtered transitions. -/
 lemma transition_preserves_compat
-    {X : TopCat.{u}} {J' : Type u} [SmallCategory J'] [IsFiltered J']
+    {X : TopCat.{u}} {J' : Type u} [SmallCategory J']
     (Y' : J' ⥤ (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u})
     {j₀ j j' : J'} (f : j₀ ⟶ j) (g : j ⟶ j')
     {U V : Opens X} (a : ToType ((Y'.obj j₀).obj (op U)))
@@ -297,7 +297,7 @@ theorem filtered_colimit_exists_compatible_representatives
     glues to a section of any cocone point with the prescribed finite restrictions. -/
 theorem colimit_exists_gluing_of_compatible_finite_subcover
     {X : TopCat.{u}}
-    {J' : Type u} [SmallCategory J'] [IsFiltered J']
+    {J' : Type u} [SmallCategory J']
     (P : J' ⥤ (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u})
     (hP : ∀ j, TopCat.Presheaf.IsSheaf (P.obj j))
     {c : Cocone P}

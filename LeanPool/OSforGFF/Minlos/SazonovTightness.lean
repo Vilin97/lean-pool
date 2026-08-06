@@ -247,6 +247,7 @@ lemma gaussDensity_mul_charFun_re_integrable' (μ : ProbabilityMeasure V)
     (((by fun_prop : Measurable (gaussDensity (V := V) σ)).mul
       (Measurable.re measurable_charFun)).aestronglyMeasurable)
   filter_upwards with x
+  change ‖gaussDensity σ x * (charFun μ.toMeasure x).re‖ ≤ gaussDensity σ x
   rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (gaussDensity_nonneg' σ x)]
   exact mul_le_of_le_one_right (gaussDensity_nonneg' σ x)
     (abs_re_le_norm _ |>.trans (norm_charFun_le_one (μ := μ.toMeasure) x))
@@ -262,7 +263,8 @@ private lemma gaussDensity_mul_charFun_integrable' (μ : ProbabilityMeasure V)
     ((Complex.measurable_ofReal.comp (by fun_prop : Measurable (gaussDensity (V := V) σ))
       |>.mul measurable_charFun).aestronglyMeasurable)
   filter_upwards with x
-  simp only [Function.comp_apply, norm_mul, Complex.norm_real, Real.norm_eq_abs,
+  change ‖(gaussDensity σ x : ℂ) * charFun μ.toMeasure x‖ ≤ gaussDensity σ x
+  simp only [norm_mul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (gaussDensity_nonneg' σ x)]
   exact mul_le_of_le_one_right (gaussDensity_nonneg' σ x)
     (norm_charFun_le_one (μ := μ.toMeasure) x)
@@ -356,12 +358,24 @@ private lemma gaussian_real_formula' (b : ℝ) (hb : 0 < b) (w : V) (c : ℝ) :
       ∫ x : V, cexp (-(b : ℂ) * ‖x‖ ^ 2 + ↑c * ↑⟪w, x⟫_ℝ) := by
     change ofRealLI (∫ x, _) = _
     rw [← ofRealLI.integral_comp_comm]
-    congr 1; ext x; simp [ofRealLI, Complex.ofReal_exp]
+    congr 1
+    ext x
+    change (↑(rexp (-b * ‖x‖ ^ 2 + c * ⟪w, x⟫_ℝ)) : ℂ) = _
+    rw [Complex.ofReal_exp]
+    congr 1
+    push_cast
+    ring
   have lift0 : (↑(∫ x : V, rexp (-b * ‖x‖ ^ 2)) : ℂ) =
       ∫ x : V, cexp (-(b : ℂ) * ‖x‖ ^ 2) := by
     change ofRealLI (∫ x, _) = _
     rw [← ofRealLI.integral_comp_comm]
-    congr 1; ext x; simp [ofRealLI, Complex.ofReal_exp]
+    congr 1
+    ext x
+    change (↑(rexp (-b * ‖x‖ ^ 2)) : ℂ) = _
+    rw [Complex.ofReal_exp]
+    congr 1
+    push_cast
+    ring
   rw [lift1, lift0]
   rw [GaussianFourier.integral_cexp_neg_mul_sq_norm_add hb_re (c : ℂ) w,
     GaussianFourier.integral_cexp_neg_mul_sq_norm hb_re]
@@ -736,7 +750,7 @@ theorem gaussian_averaging_bound
       exact mul_le_mul_of_nonneg_left h1 hg_nn
     have h3 : ‖2 * g x‖ = g x * 2 := by
       rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (by positivity) hg_nn)]; ring
-    linarith
+    simpa only [Pi.mul_apply, Pi.sub_apply, Pi.one_apply] using h2.trans_eq h3.symm
   have hprod2_int : Integrable (fun x => g x * (ε + 2 * quadForm S x)) volume := by
     have : (fun x => g x * (ε + 2 * quadForm S x)) =
         (fun x => ε * g x + 2 * (g x * quadForm S x)) := by ext x; ring

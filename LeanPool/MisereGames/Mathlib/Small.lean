@@ -32,7 +32,10 @@ private theorem small_level (x : α) : ∀ n, Small.{u} (level r x n)
     refine @small_sUnion _ _ ?_ ?_
     · have := small_level x n
       exact small_image ..
-    · simp_all
+    · intro successors
+      obtain ⟨a, _, ha⟩ := successors.property
+      rw [← ha]
+      exact H a
 
 private theorem small_sUnion_level (x : α) : Small.{u} (⋃₀ range (level r x)) := by
   refine @small_sUnion _ _ ?_ ?_

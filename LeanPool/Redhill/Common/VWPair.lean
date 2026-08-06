@@ -131,7 +131,9 @@ lemma crtShift_not_dvd {k : ℕ} (hk : k ∈ Icc 3 m) :
       have d2i : 2 ^ 2 ∣ 2 ^ i := pow_dvd_pow_iff_le_right'.mpr hi
       exact this.imp (d2i.trans ·) (d2i.trans ·)
     have meq : crtShift v w m ≡ nonDividingShift v w 4 [MOD 4] := by
-      simp [crtShift_modEq, fourAndOddPrimes]
+      apply crtShift_modEq
+      rw [fourAndOddPrimes]
+      exact mem_insert_self 4 _
     rw [dvd_iff_mod_eq_zero, add_mod, meq, ← add_mod, dvd_iff_mod_eq_zero, add_mod w, meq,
       ← add_mod, ← dvd_iff_mod_eq_zero, ← dvd_iff_mod_eq_zero]
     exact not_dvd_nonDividingShift_of_three_le (by decide)
@@ -154,7 +156,9 @@ lemma odd_add_crtShift : Odd (w + crtShift v w m) := by
   rw [← not_even_iff_odd, even_iff_two_dvd]
   have meq : crtShift v w m ≡ nonDividingShift v w 4 [MOD 2] := by
     apply ModEq.of_dvd (show 2 ∣ 4 by decide)
-    simp [crtShift_modEq, fourAndOddPrimes]
+    apply crtShift_modEq
+    rw [fourAndOddPrimes]
+    exact mem_insert_self 4 _
   rw [dvd_iff_mod_eq_zero, add_mod, meq, ← add_mod, ← dvd_iff_mod_eq_zero]
   simp only [nonDividingShift, ↓reduceIte]
   have key := min'_mem _ (nonempty_double_not_dvd_four v w)

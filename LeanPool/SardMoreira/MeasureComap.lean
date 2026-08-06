@@ -21,7 +21,7 @@ theorem _root_.MeasureTheory.nullMeasurableSet_sum {ι α : Type*} {_ : Measurab
     NullMeasurableSet s (.sum μ) ↔ ∀ i, NullMeasurableSet s (μ i) := by
   refine ⟨fun hs i ↦ hs.mono <| Measure.le_sum _ _, fun h ↦ ?_⟩
   use ⋂ i, toMeasurable (μ i) s, by measurability
-  rw [EventuallyEq, Measure.ae_sum_iff]
+  apply Measure.ae_sum_iff.mpr
   intro i
   refine (subset_iInter fun i ↦ subset_toMeasurable (μ i) s).eventuallyLE.antisymm ?_
   exact (iInter_subset _ i).eventuallyLE.trans (h i).toMeasurable_ae_eq.le

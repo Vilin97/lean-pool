@@ -75,7 +75,7 @@ private theorem commutes_with_mul''_adjoint [hφ : φ.IsFaithfulPosMap] [Nontriv
     rw [LinearMap.commutes_with_mul_adjoint_iff f.toLinearMap]
     have :=
       (List.TFAE.out
-            (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f)
+            (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f)
             0 1).mp
         hf
     simp_rw [this, StarAlgEquiv.toLinearMap_apply, _root_.map_mul, implies_true])
@@ -86,7 +86,7 @@ private theorem innerAutStarAlg_symm_eq_star (U : unitaryGroup n ℂ) :
     (innerAutStarAlg U).symm = innerAutStarAlg (star U) := by
   simp_all
 
-theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap]
     (U : unitaryGroup n ℂ) :
     withMatrixQuantum[φ]
     (LinearMap.adjoint (innerAut U) = innerAut (star U) ↔ Commute φ.matrix U) :=
@@ -96,7 +96,7 @@ theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
     have hf' : innerAut (star U) = (innerAutStarAlg U).symm.toLinearMap := by
       rw [innerAutStarAlg_symm_eq_star, hf]
     have := List.TFAE.out
-        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ hφ _
+        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ hφ
           (innerAutStarAlg U))
         1 0
     rw [hf, hf', this,
@@ -122,7 +122,7 @@ theorem Qam.mul'_commutes_with_innerAut_lm (x : Matrix.unitaryGroup n ℂ) :
     m ∘ₗ ((innerAut x) ⊗ₘ (innerAut x)) = innerAut x ∘ₗ m :=
 by simp_rw [commutes_with_mul'_iff, innerAut.map_mul, forall₂_true_iff]
 
-theorem Qam.unit_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem Qam.unit_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap]
     {U : Matrix.unitaryGroup n ℂ} (hU : Commute φ.matrix U) :
   withMatrixQuantum[φ]
   (
@@ -170,7 +170,7 @@ theorem InnerAut.toMatrix [hφ : φ.IsFaithfulPosMap] (U : unitaryGroup n ℂ) :
     nth_rw 1 [mul_rotate', ← mul_assoc]
     rw [mul_comm _ (PosDef.rpow _ (1 / 2) _ _), mul_assoc])
 
-theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosMap) [Nontrivial n]
+theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosMap)
     (U : unitaryGroup n ℂ) :
     letI : φ.IsFaithfulPosMap := hφ
     withMatrixQuantum[φ]
@@ -181,7 +181,7 @@ theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosM
     rw [← innerAut_adjoint_eq_iff, ← innerAutStarAlg_equiv_toLinearMap, ←
       innerAut_inv_eq_star, ← innerAutStarAlg_equiv_symm_toLinearMap]
     have := List.TFAE.out
-        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _
+        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
           (innerAutStarAlg U))
         1 4
     change LinearMap.adjoint (innerAutStarAlg U).toLinearMap =
@@ -190,7 +190,7 @@ theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosM
     rw [this, StarAlgEquiv.IsIsometry, iff_comm]
     exact isometry_iff_norm _)
 
-theorem Qam.symm_apply_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem Qam.symm_apply_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
     {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)}
     (hf : StarAlgEquiv.IsIsometry f) (A : l((Matrix n n ℂ))) :
     withMatrixQuantum[φ]
@@ -199,7 +199,7 @@ theorem Qam.symm_apply_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
       f.toLinearMap ∘ₗ (symmMap ℂ (Matrix n n ℂ) _ A) ∘ₗ f.symm.toLinearMap) :=
   withMatrixQuantum[φ] (by
     have := List.TFAE.out
-      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f) 4 1
+      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 1
     rw [StarAlgEquiv.IsIsometry, isometry_iff_norm, this] at hf
     change LinearMap.adjoint f.toAlgEquiv.toLinearMap = f.symm.toAlgEquiv.toLinearMap at hf
     change LinearMap.adjoint
@@ -210,7 +210,7 @@ theorem Qam.symm_apply_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
     nth_rw 1 [← hf]
     rw [LinearMap.adjoint_comp, LinearMap.adjoint_adjoint, LinearMap.comp_assoc])
 
-theorem InnerAut.symmetric_eq [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (A : l((Matrix n n ℂ)))
+theorem InnerAut.symmetric_eq [hφ : φ.IsFaithfulPosMap] (A : l((Matrix n n ℂ)))
     {U : Matrix.unitaryGroup n ℂ} (hU : Commute φ.matrix U) :
     withMatrixQuantum[φ]
     (
@@ -233,7 +233,7 @@ theorem StarAlgEquiv.commutes_with_mul' (f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Ma
   simp_all
 
 theorem StarAlgEquiv.IsIsometry.commutes_with_mul'_adjoint
-  [hφ : φ.IsFaithfulPosMap] [Nontrivial n] {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)}
+  [hφ : φ.IsFaithfulPosMap] {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)}
     (hf : StarAlgEquiv.IsIsometry f) :
     withMatrixQuantum[φ]
     (
@@ -241,14 +241,14 @@ theorem StarAlgEquiv.IsIsometry.commutes_with_mul'_adjoint
       LinearMap.adjoint (LinearMap.mul' ℂ (Matrix n n ℂ)) ∘ₗ f.toLinearMap) :=
   withMatrixQuantum[φ] (by
     have := List.TFAE.out
-      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f) 4 1
+      (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 1
     rw [StarAlgEquiv.IsIsometry, isometry_iff_norm, this] at hf
     rw [← LinearMap.adjoint_adjoint (f.toLinearMap ⊗ₘ f.toLinearMap), ←
       LinearMap.adjoint_comp, TensorProduct.map_adjoint, hf,
       StarAlgEquiv.commutes_with_mul' f.symm, LinearMap.adjoint_comp, ← hf,
       LinearMap.adjoint_adjoint])
 
-theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap]
     {f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ)}
     (hf : StarAlgEquiv.IsIsometry f) (A B : l((Matrix n n ℂ))) :
     withMatrixQuantum[φ]
@@ -261,11 +261,11 @@ theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontri
     have hsymm : StarAlgEquiv.IsIsometry f.symm := by
       simp_rw [StarAlgEquiv.IsIsometry, isometry_iff_norm] at hf ⊢
       have := List.TFAE.out
-          (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f.symm)
+          (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f.symm)
           4 1
       rw [this]
       have this' := List.TFAE.out
-          (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f)
+          (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f)
           4 1
       rw [this'] at hf
       rw [StarAlgEquiv.symm_symm, ← hf, LinearMap.adjoint_adjoint]
@@ -281,7 +281,7 @@ theorem Qam.reflIdempotent_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontri
 
 
 theorem InnerAut.reflIdempotent [hφ : φ.IsFaithfulPosMap]
-  [Nontrivial n] {U : unitaryGroup n ℂ} (hU : Commute φ.matrix U)
+  {U : unitaryGroup n ℂ} (hU : Commute φ.matrix U)
     (A B : l((Matrix n n ℂ))) :
     withMatrixQuantum[φ]
     (
@@ -298,7 +298,7 @@ def Qam.Iso (A B : l((Matrix n n ℂ))) : Prop :=
   ∃ f : (Matrix n n ℂ) ≃⋆ₐ[ℂ] (Matrix n n ℂ),
     A ∘ₗ f.toLinearMap = f.toLinearMap ∘ₗ B ∧ f φ.matrix = φ.matrix
 
-theorem Qam.iso_iff [hφ : φ.IsFaithfulPosMap] {A B : l((Matrix n n ℂ))} [Nontrivial n] :
+theorem Qam.iso_iff [hφ : φ.IsFaithfulPosMap] {A B : l((Matrix n n ℂ))} :
     @Qam.Iso n _ _ φ A B ↔
       ∃ U : unitaryGroup n ℂ, A ∘ₗ innerAut U = innerAut U ∘ₗ B ∧ Commute φ.matrix U :=
   withMatrixQuantum[φ] (by
@@ -307,7 +307,7 @@ theorem Qam.iso_iff [hφ : φ.IsFaithfulPosMap] {A B : l((Matrix n n ℂ))} [Non
       fun _ => rfl
     have := fun U =>
       List.TFAE.out
-        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _
+        (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _
           (innerAutStarAlg U))
         1 0
     simp_rw [hf, ← innerAutStarAlg_symm_eq_star, this]
@@ -334,7 +334,7 @@ theorem Qam.iso_preserves_spectrum (A B : l((Matrix n n ℂ))) (h : @Qam.Iso n _
     hh'', LinearMap.comp_id]
 
 -- MOVE:
-theorem innerAut_lm_rankOne [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
+theorem innerAut_lm_rankOne [hφ : φ.IsFaithfulPosMap]
     {U : Matrix.unitaryGroup n ℂ} (hU : Commute φ.matrix U) (x y : (Matrix n n ℂ)) :
     withMatrixQuantum[φ]
     (

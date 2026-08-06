@@ -124,7 +124,7 @@ lemma Valuation.sum_eq_zero_implies_val_eq
 /-- Elements with valuations in strictly distinct cosets modulo v(K×) are linearly independent
 over K. -/
 lemma Valuation.linearIndependent_of_val_distinct_coset
-    {I : Type*} [Nonempty I]
+    {I : Type*}
     (z : I → L)
     (hz_nz : ∀ i, z i ≠ 0)
     (hz_dist : ∀ i j, i ≠ j → ∀ (c d : K), c ≠ 0 → d ≠ 0 →
@@ -214,7 +214,7 @@ lemma Valuation.linearIndependent_of_val_no_cancel
 If elements have valuations in distinct cosets and residues that are linearly independent,
 then their products are linearly independent over K. -/
 lemma Valuation.valuation_independence
-    {I J : Type*} [Finite I] [Fintype J] [Nonempty I]
+    {I J : Type*} [Finite I] [Fintype J]
     (z : I → L) (hz_nz : ∀ i, z i ≠ 0)
     (hz_dist : ∀ i j, i ≠ j → ∀ (c d : K), c ≠ 0 → d ≠ 0 →
       vL (algebraMap K L c * z i) ≠ vL (algebraMap K L d * z j))

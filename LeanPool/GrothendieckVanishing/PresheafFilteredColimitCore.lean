@@ -159,6 +159,8 @@ noncomputable def sheafHFilteredColimitSuccInjCocone :
     Cocone (sheafHFilteredColimitSuccInj Y') :=
   colimit.cocone (sheafHFilteredColimitSuccInj Y')
 
+attribute [local implicit_reducible] sheafHFilteredColimitSuccInjCocone
+
 /-- The cocone obtained by composing the original cocone maps with the injective
 replacement. -/
 noncomputable def sheafHFilteredColimitSuccIotaCocone : Cocone Y' :=
@@ -201,6 +203,8 @@ noncomputable def sheafHFilteredColimitSuccShortComplex
   let ι' := sheafHFilteredColimitSuccIota Y' c' hc'
   ShortComplex.mk ι' (cokernel.π ι') (cokernel.condition ι')
 
+attribute [local implicit_reducible] sheafHFilteredColimitSuccShortComplex
+
 theorem sheafH_filtered_colimit_succ_shortExact
     (c' : Cocone Y') (hc' : IsColimit c') :
     (sheafHFilteredColimitSuccShortComplex Y' c' hc').ShortExact := by
@@ -220,6 +224,8 @@ noncomputable def sheafHFilteredColimitSuccQuotient :
     map_id := fun j ↦ by aesop_cat
     map_comp := fun {j j' j''} f g ↦ by ext; simp [cokernel.map, Functor.map_comp] }
 
+attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotient
+
 /-- The quotient cocone on the cokernel diagram induced by the colimit short exact sequence. -/
 noncomputable def sheafHFilteredColimitSuccQuotientCocone
     (c' : Cocone Y') (hc' : IsColimit c') :
@@ -237,21 +243,11 @@ noncomputable def sheafHFilteredColimitSuccQuotientCocone
           simp [sheafHFilteredColimitSuccQuotient, cokernel.map, Category.assoc]
         conv_rhs =>
           simp [sheafHFilteredColimitSuccQuotient, cokernel.map, Category.assoc]
-        change
-          (sheafHFilteredColimitSuccInj Y').map f ≫
-              (cokernel.π ((sheafHFilteredColimitSuccEta Y').app j') ≫
-                cokernel.desc ((sheafHFilteredColimitSuccEta Y').app j')
-                  (((sheafHFilteredColimitSuccInjCocone Y').ι.app j') ≫
-                    cokernel.π ι') _) =
-            cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫
-              cokernel.desc ((sheafHFilteredColimitSuccEta Y').app j)
-                (((sheafHFilteredColimitSuccInjCocone Y').ι.app j) ≫
-                  cokernel.π ι') _
-        rw [cokernel.π_desc]
-        rw [cokernel.π_desc]
-        exact congrArg (fun t ↦ t ≫ cokernel.π ι')
-          ((sheafHFilteredColimitSuccInjCocone Y').w f) }
+        }
 
+attribute [local implicit_reducible] sheafHFilteredColimitSuccQuotientCocone
+
+@[implicit_reducible]
 private noncomputable def sheafH_filtered_colimit_succ_liftedCocone
     (s : Cocone (sheafHFilteredColimitSuccQuotient Y')) :
     Cocone (sheafHFilteredColimitSuccInj Y') :=
@@ -284,7 +280,9 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
   let injCocone := sheafHFilteredColimitSuccInjCocone Y'
   let qCocone := sheafHFilteredColimitSuccQuotientCocone Y' c' hc'
   let ι' := sheafHFilteredColimitSuccIota Y' c' hc'
-  let injColim := colimit.isColimit Inj
+  let injColim : IsColimit (sheafHFilteredColimitSuccInjCocone Y') := by
+    dsimp [injCocone, sheafHFilteredColimitSuccInjCocone]
+    exact colimit.isColimit Inj
   have hπ (j) : cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j =
       injCocone.ι.app j ≫ cokernel.π ι' := cokernel.π_desc _ _ _
   exact
@@ -352,33 +350,35 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
             injColim.desc lifted := by
         rw [cokernel.π_desc]
       exact (congrArg (fun t ↦ injCocone.ι.app j ≫ t) hdesc).trans hfac_lifted)
-    uniq := fun s m hm ↦ (cancel_epi (cokernel.π ι')).mp (by
-      rw [cokernel.π_desc]
+    uniq := fun s m hm ↦ by
       let lifted := sheafH_filtered_colimit_succ_liftedCocone Y' s
-      exact injColim.hom_ext fun j ↦ by
-        have hπ' :
-            (colimit.cocone Inj).ι.app j ≫ cokernel.π ι' =
-              cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j := by
-          change injCocone.ι.app j ≫ cokernel.π ι' =
-            cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j
-          exact (hπ j).symm
-        have hfac_lifted' :
-            (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted =
-              cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ s.ι.app j := by
-          simpa [lifted] using injColim.fac lifted j
-        change ((colimit.cocone Inj).ι.app j ≫ cokernel.π ι') ≫ m =
-          (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted
-        rw [hπ']
-        have hmq : qCocone.ι.app j ≫ m = s.ι.app j := by
-          simpa [qCocone] using hm j
-        have htarget :
-            cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫
-                (qCocone.ι.app j ≫ m) =
-              (colimit.cocone Inj).ι.app j ≫ injColim.desc lifted :=
-          (congrArg
-            (fun t ↦ cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ t)
-            hmq).trans hfac_lifted'.symm
-        exact htarget) }
+      apply (cancel_epi (cokernel.π ι')).mp
+      change cokernel.π ι' ≫ m =
+        cokernel.π ι' ≫ cokernel.desc ι' (injColim.desc lifted) _
+      rw [cokernel.π_desc]
+      apply injColim.hom_ext
+      intro j
+      have hπ' :
+          injCocone.ι.app j ≫ cokernel.π ι' =
+            cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ qCocone.ι.app j := by
+        exact (hπ j).symm
+      have hfac_lifted' :
+          injCocone.ι.app j ≫ injColim.desc lifted =
+            cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ s.ι.app j := by
+        simp [lifted, injCocone]
+      change (injCocone.ι.app j ≫ cokernel.π ι') ≫ m =
+        injCocone.ι.app j ≫ injColim.desc lifted
+      rw [hπ']
+      have hmq : qCocone.ι.app j ≫ m = s.ι.app j := by
+        simpa [qCocone] using hm j
+      have htarget :
+          cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫
+              (qCocone.ι.app j ≫ m) =
+            injCocone.ι.app j ≫ injColim.desc lifted :=
+        (congrArg
+          (fun t ↦ cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ t)
+          hmq).trans hfac_lifted'.symm
+      exact htarget }
 
 omit [IsFiltered J'] in
 theorem sheafH_filtered_colimit_succ_stage_shortExact (j : J') :
@@ -474,11 +474,13 @@ noncomputable def sheafHFilteredColimitSuccShiftCodomainIso
       Subsingleton (Sheaf.H (sheafHFilteredColimitSuccInjCocone Y').pt n))
     (h_colim_succ :
       Subsingleton (Sheaf.H (sheafHFilteredColimitSuccInjCocone Y').pt (n + 1))) :
-    AddCommGrpCat.of
-        (Sheaf.H (sheafHFilteredColimitSuccQuotientCocone Y' c' hc').pt n) ≅
-      AddCommGrpCat.of (Sheaf.H c'.pt (n + 1)) :=
+    (sheafCohomologyFunctor X n).obj
+        (sheafHFilteredColimitSuccQuotientCocone Y' c' hc').pt ≅
+      (sheafCohomologyFunctor X (n + 1)).obj c'.pt :=
   sheafHSuccIsoOfSubsingletonMiddle
     (sheafH_filtered_colimit_succ_shortExact Y' c' hc') n h_colim_n h_colim_succ
+
+attribute [local implicit_reducible] sheafHFilteredColimitSuccShiftCodomainIso
 
 /-- The filtered-colimit successor-step vanishing lemma for the injective replacement:
 the middle term of the induced short exact sequence has trivial cohomology in degree `n + 1`. -/
@@ -508,8 +510,11 @@ noncomputable def sheafHFilteredColimitComparison
     {J' : Type u} [SmallCategory J']
     (Y' : J' ⥤ TopCat.Sheaf AddCommGrpCat.{u} X)
     (n : ℕ) (c' : Cocone Y') :
-    colimit (Y' ⋙ sheafCohomologyFunctor X n) ⟶ AddCommGrpCat.of (Sheaf.H c'.pt n) :=
+    colimit (Y' ⋙ sheafCohomologyFunctor X n) ⟶
+      (sheafCohomologyFunctor X n).obj c'.pt :=
   colimit.desc _ ((sheafCohomologyFunctor X n).mapCocone c')
+
+attribute [local implicit_reducible] sheafHFilteredColimitComparison
 
 @[simp] theorem colimit_ι_sheafH_filtered_colimit_comparison
     {X : TopCat.{u}}
@@ -568,8 +573,7 @@ theorem sheafH_filtered_colimit_comparison_succ_compatibility
       (sheafHFilteredColimitSuccShiftCodomainIso Ysh csh hcsh n
         h_colim_n h_colim_succ).hom from by
     rw [← Category.assoc]
-    rw [colimit_ι_sheafH_filtered_colimit_comparison]
-    rfl]
+    rw [colimit_ι_sheafH_filtered_colimit_comparison]]
   change
     (sheafHSuccIsoOfSubsingletonMiddle
         (sheafH_filtered_colimit_succ_stage_shortExact (Y' := Ysh) j) n

@@ -23,6 +23,9 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 
 open Module
 open Submodule
+attribute [local implicit_reducible] LieAlgebra.mkAbelian LieAlgebra.Dim3.Heisenberg
+  LieAlgebra.Dim3.AffinePlusAbelian LieAlgebra.Dim3.Hyperbolic LieAlgebra.Dim3.Family
+
 namespace LieAlgebra.Dim3
 
 variable {K L : Type*} [Field K] [LieRing L] [LieAlgebra K L]
@@ -315,7 +318,6 @@ theorem classification (dim3 : finrank K L = 3) (hs : IsSolvable L) :
         intro x y
         simp only [trivial_lie_zero, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom,
           LinearEquiv.coe_coe, Basis.equivFun_apply, map_zero]
-        rfl
     })
   · right -- dim commutator is 1
     by_cases cc : IsTwoStepNilpotent K L

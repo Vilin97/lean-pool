@@ -245,7 +245,7 @@ instance [Module.Finite R A] [Module.Finite R B] :
     Module.Finite R (A ⊗[R] B) := Module.Finite.tensorProduct R A B
 
 variable {R A B} in
-instance faithfulSMulTensor [Module.Projective R A] [Module.Projective R B]
+instance faithfulSMulTensor [Module.Projective R A]
     [FaithfulSMul R A] [FaithfulSMul R B] :
     FaithfulSMul R (A ⊗[R] B) where
   eq_of_smul_eq_smul {r1 r2} eq := by

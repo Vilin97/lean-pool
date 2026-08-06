@@ -326,7 +326,7 @@ lemma iff_intro_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] :
     𝓢 ⊢! φ <=> ψ ↔ 𝓢 ⊢! φ ==> ψ ∧ 𝓢 ⊢! ψ ==> φ :=
   ⟨fun h ↦ ⟨and_left! h, and_right! h⟩, fun h ↦ and_intro! h.1 h.2⟩
 
-lemma provable_iff_of_iff [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] (h : 𝓢 ⊢! φ <=> ψ) :
+lemma provable_iff_of_iff [HasAxiomAndElim 𝓢] (h : 𝓢 ⊢! φ <=> ψ) :
     𝓢 ⊢! φ ↔ 𝓢 ⊢! ψ :=
   ⟨fun hp ↦ and_left! h ⨀ hp, fun hq ↦ and_right! h ⨀ hq⟩
 
@@ -431,7 +431,7 @@ lemma «iff_trans''!»
   ⟨iffTrans'' h₁.some h₂.some⟩
 
 lemma «unprovable_iff!»
-    [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (H :
+    [HasAxiomAndElim 𝓢] (H :
     𝓢 ⊢! φ <=> ψ) : 𝓢 ⊬ φ ↔ 𝓢 ⊬ ψ := by
   constructor;
   · intro hp hq; have := and₂'! H ⨀ hq; contradiction;

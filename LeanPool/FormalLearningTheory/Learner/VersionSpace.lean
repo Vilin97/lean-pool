@@ -121,7 +121,7 @@ theorem nat_find_eq_iff_isFirstConsistent
 /-- The preimage of {true} under the evaluation map is measurable.
     Core lemma: decompose as countable union of measurable rectangles. -/
 theorem measurableSet_versionSpace_true
-    {X : Type u} [MeasurableSpace X] [MeasurableSingletonClass X]
+    {X : Type u} [MeasurableSpace X]
     (enum : ℕ → Concept X Bool)
     (h_meas : ∀ n, Measurable (enum n))
     (m : ℕ) :
@@ -169,7 +169,7 @@ theorem measurableSet_versionSpace_true
     preimage is MeasurableSet. For `{true}`, decompose as ⋃ₙ (Aₙ ×ˢ Bₙ).
     For `{false}`, take the complement. -/
 theorem versionSpaceLearner_measurableBatchLearner
-    {X : Type u} [MeasurableSpace X] [MeasurableSingletonClass X]
+    {X : Type u} [MeasurableSpace X]
     (enum : ℕ → Concept X Bool)
     (h_meas : ∀ n, Measurable (enum n)) :
     MeasurableBatchLearner X (versionSpaceLearner enum) := by

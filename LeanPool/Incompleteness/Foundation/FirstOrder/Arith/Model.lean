@@ -301,7 +301,7 @@ end Arith
 
 namespace Theory
 
-open Arith
+open _root_.LO.FirstOrder.Arith
 
 instance _root_.LO.FirstOrder.Theory.CobhamR0.consistent : Entailment.Consistent 𝐑₀ :=
   Sound.consistent_of_satisfiable ⟨_, (inferInstance : ℕ ⊧ₘ* 𝐑₀)⟩

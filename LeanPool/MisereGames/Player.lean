@@ -6,6 +6,7 @@ Authors: Yuyang Zhao
 module
 
 public import Mathlib.Data.Fintype.Defs
+public import Mathlib.Data.Fintype.OfMap
 import Mathlib.Tactic.DeriveFintype
 public import Mathlib.Algebra.Group.Defs
 
@@ -24,7 +25,12 @@ inductive Player where
   | left  : Player
   /-- The Right player. -/
   | right : Player
-deriving DecidableEq, Fintype, Inhabited
+deriving DecidableEq, Inhabited
+
+instance : Fintype Player :=
+  Fintype.ofList [Player.left, Player.right] (by
+    intro player
+    cases player <;> simp)
 
 namespace Player
 
@@ -69,7 +75,9 @@ instance : Neg Player where
 @[simp] lemma neg_right : -right = left := rfl
 
 instance : InvolutiveNeg Player where
-  neg_neg := by decide
+  neg_neg := by
+    intro player
+    cases player <;> rfl
 
 @[simp]
 theorem ne_iff_eq_neg {a b : Player} : (a ≠ b ↔ a = -b) := by

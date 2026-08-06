@@ -61,7 +61,8 @@ theorem Crot_pos : 0 < Crot := by
 noncomputable def zeta (x : Circle) : ℂ :=
   AddCircle.toCircle x
 
-theorem norm_zeta (x : Circle) : ‖zeta x‖ = 1 := by simp [zeta]
+theorem norm_zeta (x : Circle) : ‖zeta x‖ = 1 := by
+  simp [zeta, Circle.norm_coe]
 
 /-- `circleChar`: circle Char. -/
 noncomputable def circleChar (n : Nat) : Circle -> ℂ :=
@@ -1248,8 +1249,11 @@ theorem dist_translateL2 {d : Nat} (a : RealVec d) (f g : L2Real d) :
 theorem continuous_translateL2_apply {d : Nat} (f : L2Real d) :
     Continuous fun a : RealVec d => translateL2 a f := by
   haveI : Fact (Ne (2 : ENNReal) ⊤) := ⟨by norm_num⟩
-  simpa [translateL2] using
-    (DomAddAct.continuous_mk.vadd (continuous_const : Continuous fun _ : RealVec d => f))
+  unfold translateL2
+  refine (DomAddAct.continuous_mk.vadd
+    (continuous_const : Continuous fun _ : RealVec d => f)).congr ?_
+  intro a
+  rfl
 
 /-- `modulationPhase`: modulation Phase. -/
 noncomputable def modulationPhase {d : Nat} (ω : RealVec d) (t : RealVec d) : ℂ :=

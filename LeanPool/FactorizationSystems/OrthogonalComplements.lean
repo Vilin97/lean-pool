@@ -66,17 +66,16 @@ def coneSourceTrivConeArrow {J : Type u} [Category.{v} J] (f : J ⥤ Arrow C)
       app := fun i =>
         Arrow.homMk (s.π.app i) (s.π.app i ≫ (f.obj i).hom) (by
           change s.π.app i ≫ (f.obj i).hom = 𝟙 s.pt ≫ s.π.app i ≫ (f.obj i).hom
-          rw [Category.id_comp]
-          rfl)
+          rw [Category.id_comp])
       naturality := fun i j α => by
         have naturality' := s.π.naturality α
         apply Arrow.hom_ext
-        · simp only [Arrow.comp_left, Arrow.homMk_left, Functor.const_obj_map,
-            Functor.comp_map, leftFunc_map] at naturality' ⊢
+        · simp only [Arrow.comp_left, Functor.const_obj_map,
+            Functor.comp_map] at naturality' ⊢
           exact naturality'
         · have hnat : s.π.app j = s.π.app i ≫ (f.map α).left :=
             (Category.id_comp (s.π.app j)).symm.trans naturality'
-          simp only [Arrow.comp_right, Arrow.homMk_right, Functor.const_obj_map,
+          simp only [Arrow.comp_right, Functor.const_obj_map,
             Arrow.id_right]
           change 𝟙 s.pt ≫ s.π.app j ≫ (f.obj j).hom
             = (s.π.app i ≫ (f.obj i).hom) ≫ Hom.right (f.map α)
@@ -115,9 +114,10 @@ def sourceLimitConeArrowLimitCone {J : Type u} [Category.{v} J] (f : J ⥤ Arrow
             · aesop_cat
             · have hcomm :
                   (m ≫ Cf.cone.pt.hom) ≫ (Cf.cone.π.app j).right =
-                    (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom := by
-                rw [Category.assoc, Category.assoc]
-                exact congrArg (m ≫ ·) (Cf.cone.π.app j).w.symm
+                    (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom :=
+                (Category.assoc m Cf.cone.pt.hom _).trans
+                  ((congrArg (m ≫ ·) (Cf.cone.π.app j).w.symm).trans
+                    (Category.assoc m _ (f.obj j).hom).symm)
               have hp :
                   (m ≫ (Cf.cone.π.app j).left) ≫ (f.obj j).hom =
                     s.π.app j ≫ (f.obj j).hom :=
@@ -196,10 +196,8 @@ def targetLimitConeArrowLimitCone {J : Type u} [Category.{v} J]
             · aesop_cat
         have uniq' := Cf.isLimit.uniq (coneTargetTrivConeArrow f s)
             (mapTrivMapArrowTarget Cf.cone.pt s.pt m) p'
-        calc
-          m = (mapTrivMapArrowTarget Cf.cone.pt s.pt m).right := by rfl
-          _ = (Cf.isLimit.lift (coneTargetTrivConeArrow f s)).right := by
-            simp_all}
+        exact congrArg
+          (fun h : Arrow.mk (Limits.initial.to s.pt) ⟶ Cf.cone.pt => h.right) uniq'}
   }
 
 /- We now proceed to prove that the right orthogonal complement of a class of morphisms is closed
@@ -255,7 +253,7 @@ def coneLimitIsClosedUnderLimitsROrtComplement (W : MorphismProperty C) {A B : C
         let sq_i := squareCompletionIsClosedUnderLimitsROrtComplement f s m sq_lim i
         let m_ort_fj : orthogonal m (f.obj j).hom := homOrthogonalImpliesOrthogonal ((p j) m Wm)
         let sq_j := squareCompletionIsClosedUnderLimitsROrtComplement f s m sq_lim j
-        simp only [Functor.comp_map, leftFunc_map]
+        simp only [Functor.comp_map]
         have nat_eq : s.cone.π.app i ≫ f.map α = s.cone.π.app j := s.cone.w α
         let d : diagonalFiller sq_j := {
           map := (m_ort_fj.diagonal sq_j).map
@@ -358,14 +356,12 @@ lemma diagonal_comm_bot_limit_is_closed_under_limits_r_ort_complement (W : Morph
     sq_lim.bot ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i
   have hleft :
       (d ≫ s.cone.pt.hom) ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i =
-        d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-    rw [Category.assoc]
-    exact congrArg (d ≫ ·) (s.cone.π.app i).w.symm
-  rw [hleft]
-  change d ≫ ((sourceLimitConeArrowLimitCone f s).cone.π.app i ≫ (f.obj i).hom) =
-    sq_lim.bot ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i
-  rw [← Category.assoc, hd]
-  exact (m_ort_fi.diagonal sq_i).comm_bot
+        d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) :=
+    (Category.assoc d s.cone.pt.hom _).trans
+      (congrArg (d ≫ ·) (s.cone.π.app i).w.symm)
+  exact hleft.trans
+    (((Category.assoc d _ (f.obj i).hom).symm.trans
+      (congrArg (· ≫ (f.obj i).hom) hd)).trans (m_ort_fi.diagonal sq_i).comm_bot)
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
@@ -417,7 +413,7 @@ def diagonalPostcompIsDiagonal {J : Type u}
   }
 
 lemma diagonal_unique_limit_is_closed_under_limits_r_ort_complement (W : MorphismProperty C)
-  {A B : C} {J : Type u} [Category.{v} J] [CategoryTheory.Limits.HasInitial C] (f : J ⥤ Arrow C)
+  {A B : C} {J : Type u} [Category.{v} J] [_inst : Limits.HasInitial C] (f : J ⥤ Arrow C)
   (s : Limits.LimitCone f) (m : A ⟶ B) (Wm : W m)
   (p : ∀ i : J , (rightOrthogonalComplement W) (f.obj i).hom)
   (sq_lim : squareCompletion m s.cone.pt.hom) (d d' : diagonalFiller sq_lim) :

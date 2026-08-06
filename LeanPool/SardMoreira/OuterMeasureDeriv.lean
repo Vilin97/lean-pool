@@ -428,7 +428,7 @@ lemma hasudorffMeasure_image_le_mul {X : Type*} [MetricSpace X] [MeasurableSpace
     · rw [image_singleton, ← closedBall_zero (x := a), ← NNReal.coe_zero, hμ_dim]
       rcases hdim.eq_or_lt with rfl | hdimImg_pos
       · simp [ENNReal.inv_mul_cancel, *]
-      · have := MeasureTheory.Measure.noAtoms_hausdorff X hdimImg_pos
+      · have := MeasureTheory.Measure.nullSingletonClass_hausdorff X hdimImg_pos
         simp
     · have := calc
         μBall + μBall = μ {a} + μ {b} := by

@@ -95,7 +95,7 @@ For any CLM `T : E →L[ℝ] H` and `w : H`, the map `f ↦ ⟪w, T f⟫` is a s
 CLF, so the intrinsic `DyninMityaginSpace.expansion` applies.
 -/
 theorem _root_.GaussianField.DyninMityaginSpace.expansion_H
-    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (T : E →L[ℝ] H) (w : H) (f : E) :
     @inner ℝ H _ w (T f) =
     ∑' m, (DyninMityaginSpace.coeff m f) * @inner ℝ H _ w (T (DyninMityaginSpace.basis m)) := by

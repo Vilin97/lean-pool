@@ -128,7 +128,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
             refine ⟨?_, ?_, ?_⟩
             · rw [← eq_cl]; exact cl_cup
             · exact hpqr
-            · rw [Cup.pair]; exact cr_cap.left.rel_head
+            · rw [Cup.pair]; exact cr_cap.left.rel
           · rw [List.length_append, List.length_singleton, cl_length]
           · rw [List.append_in, List.cons_in]
             refine ⟨?_, ?_, List.nil_in⟩

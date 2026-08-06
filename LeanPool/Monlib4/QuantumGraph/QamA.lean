@@ -213,8 +213,9 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
     simp [hφ.inner_coord]]
   rw [hφ.inner_coord, ← PosDef.rpow_neg_one_eq_inv_self hφ.matrixIsPosDef]
   simp only [Matrix.sum_apply, kroneckerMap_apply, transpose_apply, starAlgebra.modAut_zero,
-    AlgEquiv.one_apply, Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, mul_apply,
-    single_eq, boole_mul]
+    AlgEquiv.one_apply, Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply]
+  simp only [mul_apply]
+  simp only [single_eq, boole_mul]
   simp_rw [ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
     Finset.mem_univ, if_true, ite_mul, zero_mul, Prod.swap, mul_ite, mul_zero,
     Finset.sum_product_univ, Finset.sum_ite_irrel, Finset.sum_const_zero,
@@ -933,7 +934,7 @@ private theorem star_alg_equiv.is_isometry_iff [hφ : φ.IsFaithfulPosMap] [Nont
   withMatrixQuantumCtx[φ]
   rw [StarAlgEquiv.IsIsometry, isometry_iff_norm]
   exact List.TFAE.out
-    (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ _ f) 4 0
+    (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ _ f) 4 0
 
 -- The conjugation normal form produces large matrix expressions before simplification.
 theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial n]

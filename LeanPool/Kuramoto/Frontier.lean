@@ -436,7 +436,9 @@ private lemma finite_max_stays_below {n : ℕ} (hn : 0 < n)
               ⟨ _, Finset.mem_image_of_mem ε_j ( Finset.mem_univ i ) ⟩, by
             have := Finset.min'_mem ( Finset.univ.image ε_j )
               ⟨ _, Finset.mem_image_of_mem ε_j ( Finset.mem_univ i ) ⟩
-            aesop, fun t ht₁ ht₂ j => hε_j j t ht₁ <| lt_of_lt_of_le ht₂ <|
+            obtain ⟨ j, -, hj ⟩ := Finset.mem_image.mp this
+            exact lt_of_lt_of_le ( hε_j_pos j ) hj.le, fun t ht₁ ht₂ j =>
+            hε_j j t ht₁ <| lt_of_lt_of_le ht₂ <|
             Finset.min'_le _ _ <| Finset.mem_image_of_mem ε_j <| Finset.mem_univ j ⟩
         obtain ⟨ ε', hε'_pos, hε' ⟩ := h_deriv_neg_all
         use min ε ε';
@@ -460,7 +462,9 @@ private lemma finite_max_stays_below {n : ℕ} (hn : 0 < n)
             ⟨ _, Finset.mem_image_of_mem ε ( Finset.mem_univ ⟨ 0, hn ⟩ ) ⟩, by
           have := Finset.min'_mem ( Finset.univ.image ε )
             ⟨ _, Finset.mem_image_of_mem ε ( Finset.mem_univ ⟨ 0, hn ⟩ ) ⟩
-          aesop, fun t ht₁ ht₂ i => le_of_lt ( hε i t ht₁ ( lt_of_lt_of_le ht₂
+          obtain ⟨ i, -, hi ⟩ := Finset.mem_image.mp this
+          exact lt_of_lt_of_le ( hε_pos i ) hi.le,
+          fun t ht₁ ht₂ i => le_of_lt ( hε i t ht₁ ( lt_of_lt_of_le ht₂
             ( Finset.min'_le _ _ ( Finset.mem_image_of_mem ε ( Finset.mem_univ i ) ) ) ) ) ⟩;
     obtain ⟨ ε, ε_pos, hε ⟩ := hs_pos
     exact lt_of_lt_of_le ε_pos <| le_csInf ⟨ t, ht, by push Not at h_contra; tauto ⟩
@@ -570,8 +574,8 @@ private theorem semicircle_preserved
     ⟨(⟨0, by omega⟩, ⟨0, by omega⟩), Finset.mem_univ _⟩
     (fun p : Fin N × Fin N => θ 0 p.1 - θ 0 p.2) with hD₀_def
   have hD₀_lt_pi : D₀ < Real.pi := by
-    rw [Finset.sup'_lt_iff]
-    exact fun p _ => lt_of_le_of_lt (le_abs_self _) (hsemi0 p.1 p.2)
+    rw [hD₀_def]
+    exact (Finset.sup'_lt_iff _).mpr fun p _ => lt_of_le_of_lt (le_abs_self _) (hsemi0 p.1 p.2)
   have hD₀_init : ∀ p : Fin N × Fin N, θ 0 p.1 - θ 0 p.2 ≤ D₀ :=
     fun p => Finset.le_sup' (fun p : Fin N × Fin N => θ 0 p.1 - θ 0 p.2) (Finset.mem_univ p)
   -- Use C = (D₀ + π) / 2 which is always in (0, π)
@@ -853,8 +857,8 @@ private theorem semicircle_preserved_uniform
     ⟨(⟨0, by omega⟩, ⟨0, by omega⟩), Finset.mem_univ _⟩
     (fun p : Fin N × Fin N => θ 0 p.1 - θ 0 p.2) with hD₀_def
   have hD₀_lt_pi : D₀ < Real.pi := by
-    rw [Finset.sup'_lt_iff]
-    exact fun p _ => lt_of_le_of_lt (le_abs_self _) (hsemi0 p.1 p.2)
+    rw [hD₀_def]
+    exact (Finset.sup'_lt_iff _).mpr fun p _ => lt_of_le_of_lt (le_abs_self _) (hsemi0 p.1 p.2)
   have hD₀_init : ∀ p : Fin N × Fin N, θ 0 p.1 - θ 0 p.2 ≤ D₀ :=
     fun p => Finset.le_sup' (fun p : Fin N × Fin N => θ 0 p.1 - θ 0 p.2) (Finset.mem_univ p)
   set C := (D₀ + Real.pi) / 2 with hC_def

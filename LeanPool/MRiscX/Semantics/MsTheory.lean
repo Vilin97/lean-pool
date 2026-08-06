@@ -65,8 +65,8 @@ theorem addRegister_getRegister_neq :
   ((ms.addRegister r1 v).getRegisterAt r2) = (ms.getRegisterAt r2)
   := by
   intros ms r1 r2 v H
-  unfold MState.addRegister MState.getRegisterAt
-  simp_all
+  simp only [MState.addRegister, MState.getRegisterAt]
+  exact t_update_neq _ _ _ _ _ _ H
 
 theorem addRegister_getRegister_eq :
   ∀(ms:MState) (r1 r2 v : UInt64),
@@ -74,8 +74,8 @@ theorem addRegister_getRegister_eq :
   ((ms.addRegister r1 v).getRegisterAt r2) = v
   := by
   intros ms r1 r2 v H
-  unfold MState.addRegister MState.getRegisterAt
-  rw [H, t_update_eq]
+  simp only [MState.addRegister, MState.getRegisterAt, H]
+  exact t_update_eq _ _ _ _ _
 
 
 theorem setPc_getRegister_indep :

@@ -276,7 +276,7 @@ theorem besselK1_tendsto_atTop_at_zero :
           setIntegral_mono_set (h_int z hz)
             (Filter.Eventually.of_forall fun t =>
               mul_nonneg (Real.exp_nonneg _) (Real.cosh_pos t).le)
-            (HasSubset.Subset.eventuallyLE fun t (ht : t ∈ Set.Icc 0 T) => ht.1)
+            (LE.le.eventuallyLE fun t (ht : t ∈ Set.Icc 0 T) => ht.1)
   -- As z → 0⁺, T * exp(-z cosh T) → T > M, so eventually K₁(z) ≥ M
   have h_open : IsOpen {z : ℝ | M < T * Real.exp (-z * Real.cosh T)} :=
     isOpen_lt continuous_const (by fun_prop)

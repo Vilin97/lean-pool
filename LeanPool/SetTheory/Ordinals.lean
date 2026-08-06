@@ -40,7 +40,7 @@ namespace SetTheory
 
 lemma _root_.ZFSet.IsOrdinal.mem_iff_lt
     {x y : ZFSet} (hx : x.IsOrdinal) (hy : y.IsOrdinal) : x ∈ y ↔ x < y := by
-  simp only [lt_iff_le_not_ge, ZFSet.le_def]
+  simp only [lt_iff_le_not_ge]
   rw [hy.not_subset_iff_mem hx, iff_and_self]
   exact hy.isTransitive _
 
@@ -186,8 +186,7 @@ instance : LinearOrder (Ordinals M) where
   toDecidableLE := by infer_instance
   le_total := by
     simp (config := {contextual := true}) only [
-      Subtype.forall, Subtype.mk_le_mk, toZFSet_simps, ZFSet.le_def,
-      IsOrdinal.subset_iff_eq_or_mem
+      Subtype.forall, Subtype.mk_le_mk, toZFSet_simps, IsOrdinal.subset_iff_eq_or_mem
     ]
     intro x hx y hy
     have := hx.mem_trichotomous hy
@@ -201,7 +200,7 @@ instance : WellFoundedLT (Ordinals M) where
     rw [this]
     refine RelEmbedding.wellFounded ⟨⟨(⇓·.1), ?_⟩, ?_⟩ ZFSet.mem_wf
     · simp [Injective, toZFSet_simps]
-    · simp
+    · rfl
 
 instance : OrderBot (Ordinals M) where
   bot := ⟨∅, isOrdinal_empty⟩

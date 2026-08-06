@@ -129,7 +129,7 @@ lemma FLT_shift [𝔅.FormalizedLoeb] : T ⊢!. 𝔅 ((𝔅 σ) ==> σ) ==> (�
 
 omit [L.DecidableEq] [T₀ wkn T] [𝔅.HBL] in
 /-- Imported declaration from the Incompleteness formalization. -/
-lemma D2' [𝔅.HBL2] [Entailment.ModusPonens T] : T₀ ⊢!. 𝔅 (σ ==> τ) → T₀ ⊢!. (𝔅 σ) ==> (𝔅 τ) := by
+lemma D2' [𝔅.HBL2] : T₀ ⊢!. 𝔅 (σ ==> τ) → T₀ ⊢!. (𝔅 σ) ==> (𝔅 τ) := by
   intro h;
   exact D2 ⨀ h;
 
@@ -292,7 +292,7 @@ local notation "γ" => 𝔅.goedel
 
 /-- Formalized First Incompleteness Theorem -/
 theorem _root_.LO.FirstOrder.DerivabilityCondition.formalized_unprovable_goedel
-    [L.DecidableEq] [T₀ wkn T] :
+    [T₀ wkn T] :
     T ⊢!. 𝔅.con ==> ∼𝔅 γ := by
   have h₁ : T₀ ⊢!. 𝔅 γ ==> 𝔅 (𝔅 γ) := D3;
   have h₂ : T ⊢!. 𝔅 γ ==> ∼γ := WeakerThan.pbl <| contra₁'! <| and₁'! goedel_spec;
@@ -376,7 +376,7 @@ instance : 𝔅.Loeb := ⟨loeb_theorm (T := T)⟩
 
 omit [L.DecidableEq] in
 theorem _root_.LO.FirstOrder.DerivabilityCondition.formalized_loeb_theorem
-    [L.DecidableEq] : T₀ ⊢!. 𝔅 ((𝔅 σ) ==> σ) ==> (𝔅 σ) := by
+    : T₀ ⊢!. 𝔅 ((𝔅 σ) ==> σ) ==> (𝔅 σ) := by
   have hκ₁ : T₀ ⊢!. 𝔅 (κ(σ)) ==> (𝔅 σ) := kreisel_specAux₁ σ;
   have : T₀ ⊢!. ((𝔅 σ) ==> σ) ==> (𝔅 κ(σ) ==> σ) := replace_imply_left! hκ₁;
   have : T ⊢!. ((𝔅 σ) ==> σ) ==> κ(σ) :=

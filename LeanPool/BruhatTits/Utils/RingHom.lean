@@ -81,14 +81,19 @@ lemma GL.mem_range_map_iff {f : R →+* S} (hf : Function.Injective f)
         ↑g.det⁻¹ ∈ Set.range f := by
   refine ⟨fun ⟨k, hk⟩ ↦ hk ▸ by simp [Matrix.GeneralLinearGroup.map_det], fun ⟨h1, ⟨u, hu⟩⟩ ↦ ?_⟩
   choose r hr using h1
-  refine ⟨.mk'' r ?_, by ext; simp [Matrix.GeneralLinearGroup.mk'', Matrix.nonsingInvUnit, hr]⟩
+  refine ⟨.mk'' r ?_, by ext; simp [Matrix.GeneralLinearGroup.mk'', Matrix.nonsingInvUnit,
+    unitOfInvertible, hr]⟩
   rw [isUnit_iff_exists_inv]
   use u
   apply hf
-  simp only [_root_.map_mul, RingHom.map_det, RingHom.mapMatrix_apply, _root_.map_one]
+  simp only [_root_.map_mul, _root_.map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  · congr; ext; simp [hr]
+  · change f (Matrix.det (Matrix.of r)) = _
+    rw [RingHom.map_det, Matrix.GeneralLinearGroup.val_det_apply]
+    congr 1
+    ext i j
+    simp [hr]
   · exact (Units.inv_eq_val_inv _).symm
 
 variable {K : Type*} [CommRing K] (R : Subring K)

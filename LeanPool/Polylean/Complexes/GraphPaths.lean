@@ -277,8 +277,7 @@ theorem induct_homotopy_inverse_cancel {G : Graph V E} (ey ey' : E) {x w y : V}
            homotopy p (multiply p (cons ey h₁ h₂ (cons ey' h₃ h₄ (single y)) )) := by
            induction p with
            | single x =>
-             simp [multiply, homotopy, htclass,
-               Quot.sound (basicht.cancel ey ey' (single x) h₁ h₂ t)]
+             exact Quot.sound (basicht.cancel ey ey' (single x) h₁ h₂ t)
            | cons ex t₁ t₂ exy ih =>
             let x := ih h₁ h₄
             have p₁ :
@@ -389,7 +388,7 @@ def homotopyLeftMultiplication {G : Graph V E} {x y z : V}
     exact htclass (multiply p₁ p)
   have g : (q₁ q₂ : EdgePath G y z) → basicht q₁ q₂ → func q₁ = func q₂ := by
           intro q₁ q₂ h
-          have h' : homotopy q₁ q₂ := by simp[homotopy, htclass, Quot.sound h ]
+          have h' : homotopy q₁ q₂ := Quot.sound h
           apply homotopy_left_mult q₁ q₂ p₁ h'
   apply Quot.lift func g
 
@@ -398,7 +397,7 @@ def homotopyLeftMultiplication {G : Graph V E} {x y z : V}
 theorem homotopy_left_multiplication_class {G : Graph V E} {x y z : V}
     (p₁ : EdgePath G x y) (p₂ : EdgePath G y z) :
     homotopyLeftMultiplication p₁ (htclass p₂) = htclass (multiply p₁ p₂) := by
-  simp[htclass, homotopyLeftMultiplication]
+  rfl
 
 
 /-- defines multiplication of homotopy -/
@@ -413,7 +412,7 @@ def homotopyMultiplication : ht G x y → ht G y z → ht G x z := by
         intro p
         have g'' : (p' : EdgePath G y z) → crop (htclass p') := by
           intro p'
-          have h' : homotopy q₁ q₂ := by simp[homotopy, htclass, Quot.sound h]
+          have h' : homotopy q₁ q₂ := Quot.sound h
           have : htclass (multiply q₁ p') = htclass (multiply q₂ p') := by
             exact homotopy_right_mult q₁ q₂ p' h'
           exact this
@@ -508,7 +507,7 @@ theorem homotopy_reducePath [DecidableEq V] [DecidableEq E] {G : Graph V E} {x y
     (p₁ : EdgePath G x y) : homotopy p₁ (reducePath p₁) := by
         induction p₁ with
         | single x =>
-          simp [homotopy, htclass, reducePath]
+          simpa only [reducePath] using (homotopy_rfl (G := G) (single x))
         | cons ex h₁ h₂ exy ih' =>
           let p₃ := reducePath exy
           let q := p₃.1

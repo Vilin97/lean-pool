@@ -224,7 +224,8 @@ private theorem circle_series_norm_eq_of_modulus_eq
   have hUrep := finiteHermiteSum_circle (k := k) (a := a) (r := r) hr t
   have hnorm := hmod (circlePoint r t)
   rw [hGrep, hUrep] at hnorm
-  exact norm_circleLeadingFactor_mul_cancel hr (by simp) hnorm
+  exact norm_circleLeadingFactor_mul_cancel hr
+    (by simp [fourier_apply, Circle.norm_coe]) hnorm
 
 private theorem qkn_ratio_tendsto_zero {k i d : ℕ} (hi : i < d) :
     Filter.Tendsto (fun r : ℝ => ((qkn k i r : ℂ) / (qkn k d r : ℂ))) Filter.atTop (𝓝 (0 : ℂ)) := by
@@ -520,7 +521,8 @@ theorem growth_forces_finite :
         _ ≤ ∑ i : Fin (d + 1), ‖a i‖ * Cmax * r ^ d := by
               refine Finset.sum_le_sum ?_
               intro i hi
-              have hfour : ‖(fourier (i.1 : ℤ)) t‖ = 1 := by simp [fourier_apply]
+              have hfour : ‖(fourier (i.1 : ℤ)) t‖ = 1 := by
+                simp [fourier_apply, Circle.norm_coe]
               rw [hfour, mul_one]
               have hmul := mul_le_mul_of_nonneg_left (hqmax i) (norm_nonneg (a i))
               simpa [mul_assoc] using hmul
@@ -536,7 +538,8 @@ theorem growth_forces_finite :
         refine Filter.Eventually.of_forall ?_
         intro t
         rw [norm_smul]
-        have hfour : ‖(fourier (-(n : ℤ))) t‖ = 1 := by simp [fourier_apply]
+        have hfour : ‖(fourier (-(n : ℤ))) t‖ = 1 := by
+          simp [fourier_apply, Circle.norm_coe]
         rw [hfour, one_mul]
         rw [circle_series_norm_eq_of_modulus_eq (k := k) (d := d) (a := a) (G := G) hG hmod r
           hr_pos t]
@@ -747,7 +750,8 @@ theorem finite_modulus_rigidity :
     have hA := finiteHermiteSum_circle (k := k) (a := a) (r := r) hr t
     have hnorm := hmod (circlePoint r t)
     rw [hB, hA] at hnorm
-    exact norm_circleLeadingFactor_mul_cancel hr (by simp) hnorm
+    exact norm_circleLeadingFactor_mul_cancel hr
+      (by simp [fourier_apply, Circle.norm_coe]) hnorm
   have hcoeff_rel : ∀ n : Fin (d + 1), topA * star (a n) = topB * star (b n) :=
     finite_modulus_coeff_rel a b topA topB rfl rfl
       (fun c t => finiteSeries_mul_star_expand c t)
@@ -1129,7 +1133,7 @@ private theorem circleSeries_star_finiteCirclePoly_add_star_eq_zero
   have hc : star c = c := by simp [c, circleLeadingFactor]
   have hf : star f * f = 1 := by
     have hmul : star f * f = ‖f‖ ^ 2 := by simpa [sq] using (RCLike.conj_mul f)
-    rw [hmul, show ‖f‖ = 1 by simp [f]]
+    rw [hmul, show ‖f‖ = 1 by simp [f, fourier_apply, Circle.norm_coe]]
     norm_num
   have hcc : star (c * c) = c * c := by simp [hc]
   have hx : (c * f * s) * star (c * f * p) = (c * c) * (s * star p) :=

@@ -396,7 +396,7 @@ lemma tailCount_succ_slice {N : ℕ} (k : ℕ) (A : Finset (Cube (N + 1))) :
   conv_lhs => rw [h_decomp, Finset.filter_union]
   rw [Finset.card_union_of_disjoint, Finset.card_filter, Finset.card_filter]
   · rw [Finset.sum_image, Finset.sum_image]
-    · simp +decide [Finset.card_image_of_injective, Function.Injective,
+    · simp +decide [Finset.card_image_of_injective _ (Fin.castSucc_injective N),
         Finset.card_insert_of_notMem]
     · intro x hx y hy
       simp +decide only [Finset.ext_iff, mem_union, mem_image, mem_insert, SetLike.mem_coe] at *

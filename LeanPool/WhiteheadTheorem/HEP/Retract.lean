@@ -196,10 +196,10 @@ noncomputable def strongDeformRetrToBoundaryJar (n : ℕ) :
               (by simp only [unitInterval.coe_symm_eq, sub_add_cancel]) ⟩
         continuous_toFun := by
           refine continuous_pi fun i ↦ Continuous.subtype_mk (Continuous.add ?_ ?_) _
-          · apply Continuous.smul
+          · apply Continuous.mul
             · exact Continuous.subtype_val <| unitInterval.continuous_symm.comp continuous_fst
             · exact Continuous.subtype_val <| (continuous_apply i).comp continuous_snd
-          · apply Continuous.smul
+          · apply Continuous.mul
             · exact Continuous.subtype_val continuous_fst
             · refine Continuous.subtype_val <| (continuous_apply i).comp ?_
               exact Continuous.subtype_val <| r'.continuous.comp continuous_snd

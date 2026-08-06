@@ -639,7 +639,7 @@ theorem cen_proj_left :
         relSym
     have x_eq_yy : x = yy := by exact x_in_yy
     have ψy_eq_yy : ψ y = yy := by exact ψy_in_yy
-    simp_all
+    rw [x_eq_yy, ψy_eq_yy]
 
 theorem cen_proj_bij :
     Function.Bijective φ := by

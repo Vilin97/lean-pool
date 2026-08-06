@@ -32,12 +32,12 @@ variable [Ring R] {I : TwoSidedIdeal R}
 
 instance instModuleMulOppositeSubtypeMemLeanPool : Module Rᵐᵒᵖ I where
   smul r x := ⟨x.1 * r.unop, I.mul_mem_right _ _ x.2⟩
-  one_smul x := by ext; simp
-  mul_smul x y z := by ext; simp [mul_assoc]
-  smul_zero x := by ext; simp
-  zero_smul x := by ext; simp
-  add_smul x y z := by ext; simp [left_distrib]
-  smul_add x y z := by ext; simp
+  one_smul _ := Subtype.ext <| mul_one _
+  mul_smul _ _ _ := Subtype.ext <| (mul_assoc _ _ _).symm
+  smul_zero _ := Subtype.ext <| zero_mul _
+  zero_smul _ := Subtype.ext <| mul_zero _
+  add_smul _ _ _ := Subtype.ext <| mul_add _ _ _
+  smul_add _ _ _ := Subtype.ext <| add_mul _ _ _
 
 end Ring
 

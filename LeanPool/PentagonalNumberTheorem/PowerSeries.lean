@@ -58,7 +58,7 @@ end Pentagonal
 open Pentagonal
 
 theorem summable_pentagonalRhs_powerSeries
-    [Nontrivial R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] :
+    [Nontrivial R] [TopologicalSpace R] :
     Summable (fun (k : ℕ) ↦
     ((-1) ^ k * (X ^ (k * (3 * k + 1) / 2) - X ^ ((k + 1) * (3 * k + 2) / 2)) : R⟦X⟧)) := by
   apply PowerSeries.WithPiTopology.summable_of_tendsto_order_atTop_nhds_top
@@ -98,7 +98,7 @@ theorem pentagonalNumberTheorem_powerSeries
     apply Nat.mul_le_mul <;> linarith
 
 theorem summable_pentagonalRhs_intNeg_powerSeries
-    [Nontrivial R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] :
+    [Nontrivial R] [TopologicalSpace R] [IsTopologicalRing R] :
     Summable (fun (k : ℤ) ↦ (Int.negOnePow k : R⟦X⟧) * X ^ (k * (3 * k + 1) / 2).toNat) := by
   apply Summable.of_add_one_of_neg_add_one
   all_goals
@@ -127,7 +127,7 @@ theorem pentagonalNumberTheorem_intNeg_powerSeries
   · norm_cast
 
 theorem summable_pentagonalRhs_intPos_powerSeries
-    [Nontrivial R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] :
+    [Nontrivial R] [TopologicalSpace R] [IsTopologicalRing R] :
     Summable (fun (k : ℤ) ↦ (Int.negOnePow k : R⟦X⟧) * X ^ (k * (3 * k - 1) / 2).toNat) := by
   rw [← neg_injective.summable_iff (by intro x hx; contrapose! hx; use -x; simp)]
   convert summable_pentagonalRhs_intNeg_powerSeries R

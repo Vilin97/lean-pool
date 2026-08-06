@@ -299,7 +299,12 @@ lemma lmarginal_AD (x : Samples 4) :
                   if a ∈ aSlice (x 1) (x 2) then ENNReal.ofReal (z0I (x 1) (x 2))
                   else ENNReal.ofReal (1 - (z0I (x 1) (x 2) : ℝ)) := by
               funext a
-              simp [aSlice]
+              change
+                (if x 2 < z0I a (x 1) then ENNReal.ofReal (z0I (x 1) (x 2))
+                  else ENNReal.ofReal (1 - (z0I (x 1) (x 2) : ℝ))) =
+                if x 2 < z0I a (x 1) then ENNReal.ofReal (z0I (x 1) (x 2))
+                  else ENNReal.ofReal (1 - (z0I (x 1) (x 2) : ℝ))
+              rfl
           -- Now apply the `lintegral` computation lemma.
           simpa [this] using
             (lintegral_ite_const (μ := (volume : Measure Rand)) (s := aSlice (x 1) (x 2)) hs

@@ -103,7 +103,10 @@ def LvlStratHom.global (p : Player) : PTreesS ⥤ Type where
   map_id _ := rfl
   map_comp f g := by
     apply ConcreteCategory.hom_ext
-    simp_all
+    simp_all only [Functor.map_comp, comp_apply, TypeCat.ofHom_apply, TypeCat.hom_ofHom,
+      TypeCat.Fun.coe_mk, Equiv.apply_symm_apply, EmbeddingLike.apply_eq_iff_eq]
+    intro _
+    rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev LvlStratHom.globalToObj {T : PTreesS} (S : Strategy T.tree.1.2 p) :
     (LvlStratHom.global p).obj T :=
@@ -139,8 +142,10 @@ lemma bodyLiftExists_iff_system
     constructor
     · exact (bodyEquivSystem_strat _).mp x.prop
     apply ((isIso_iff_bijective (bodyEquivSystem.inv.app _)).mp inferInstance).1
-    rw [← naturality_apply_types, Iso.hom_inv_id_app_apply]
-    exact Subtype.ext hx
+    have hnat := naturality_apply_types bodyEquivSystem.hom toHom
+      (⟨x.val, body_mono S.pre.subtree_sub x.prop⟩ : bodyFunctor.obj T.1)
+    exact ((congrArg (fun z ↦ bodyEquivSystem.inv.app U.1 z) hnat.symm).trans
+      (Iso.hom_inv_id_app_apply bodyEquivSystem U.1 _)).trans (Subtype.ext hx)
   · let y' : Tree.bodyFunctor.obj U.1 := ⟨y.val, body_mono (PreStrategy.subtree_sub _) y.prop⟩
     obtain ⟨x, ⟨hxc, hxe⟩⟩ := h
       (bodyEquivSystem.hom.app _ y') <| (bodyEquivSystem_strat _).mp y.prop
@@ -151,7 +156,7 @@ lemma bodyLiftExists_iff_system
     have hmap : (bodyFunctor.map toHom) (bodyEquivSystem.inv.app T.1 x) = y' := by
       apply ((isIso_iff_bijective (bodyEquivSystem.hom.app U.1)).mp inferInstance).1
       simp_all
-    simpa [y'] using congrArg Subtype.val hmap
+    exact congrArg Subtype.val hmap
 
 end Covering
 /-- a covering used in the proof of Borel determinacy, given by a length preserving map of nodes
@@ -167,24 +172,36 @@ namespace Covering
 instance : Category PTrees where
   Hom := Covering
   id T := ⟨𝟙 T.1, LvlStratHom.id _, fun {p} {S} y ↦ ⟨y, by
-    simp_all⟩⟩
+    simp only [CategoryTheory.Functor.map_id]
+    rfl⟩⟩
   comp f g := ⟨f.toHom ≫ g.toHom, f.str ≫ g.str, fun {p} {S} x ↦ by as_aux_lemma =>
+    have hsub : (LvlStratHom.globalOfObj
+        (ConcreteCategory.hom ((LvlStratHom.global p).map (f.str ≫ g.str))
+          (LvlStratHom.globalToObj S))).pre.subtree
+        = (LvlStratHom.globalOfObj
+        (ConcreteCategory.hom ((LvlStratHom.global p).map g.str)
+          (LvlStratHom.globalToObj (LvlStratHom.globalOfObj
+            (ConcreteCategory.hom ((LvlStratHom.global p).map f.str)
+              (LvlStratHom.globalToObj S)))))).pre.subtree := by
+      simp only [CategoryTheory.Functor.map_comp, ConcreteCategory.comp_apply]
+      rfl
     obtain ⟨y, hy⟩ := g.h_body (S :=
       LvlStratHom.globalOfObj
         (ConcreteCategory.hom ((LvlStratHom.global p).map f.str)
-          (LvlStratHom.globalToObj S))) (cast (by simp) x)
+          (LvlStratHom.globalToObj S)))
+      ⟨x.val, hsub ▸ x.prop⟩
     obtain ⟨z, hz⟩ := f.h_body y
     use z
     have hy' :
         ((ConcreteCategory.hom (bodyFunctor.map g.toHom))
           ⟨↑y, body_mono (PreStrategy.subtree_sub _) y.prop⟩).val = x.val := by
       simpa using hy
-    rw [← hy']
     have hybody :
         (bodyFunctor.map f.toHom) ⟨↑z, body_mono S.pre.subtree_sub z.prop⟩ =
           ⟨↑y, body_mono (PreStrategy.subtree_sub _) y.prop⟩ :=
       Subtype.ext hz
-    simp_all⟩
+    rw [CategoryTheory.Functor.map_comp]
+    exact (congrArg (fun w ↦ ((bodyFunctor.map g.toHom) w).val) hybody).trans hy'⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def PTreeForget : PTrees ⥤ Trees where
   obj T := T.1
@@ -230,15 +247,15 @@ instance (G : Games) : DiscreteTopology G.1 where eq_bot := rfl
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev Games.tree (G : Games) : PTrees := ⟨⟨G.1, G.2.1.tree⟩, G.2.2⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[ext] structure Games.Covering (G' : Games) (G : Games) extends
+@[ext] structure Games.GameCovering (G' : Games) (G : Games) extends
   GaleStewartGame.Covering G'.tree G.tree where
   hpre : (Tree.bodyFunctor.map toHom)⁻¹' (G.2.1.payoff) = G'.2.1.payoff
-lemma covering_hpre_pl {G' G} (f : Games.Covering G' G) (p : Player) :
+lemma covering_hpre_pl {G' G} (f : Games.GameCovering G' G) (p : Player) :
   (Tree.bodyFunctor.map f.toHom)⁻¹' (p.payoff G.2.1) = p.payoff G'.2.1 := by
   cases p
   · simpa using f.hpre
   · exact congrArg (fun s => sᶜ) f.hpre
-lemma covering_winning {G' G} (f : Games.Covering G' G) {p : Player}
+lemma covering_winning {G' G} (f : Games.GameCovering G' G) {p : Player}
   {S : Strategy G'.tree.1.2 p} (h : S.pre.IsWinning) :
   (LvlStratHom.globalOfObj
     (ConcreteCategory.hom ((LvlStratHom.global p).map f.str)
@@ -257,7 +274,7 @@ lemma covering_winning {G' G} (f : Games.Covering G' G) {p : Player}
     hxpre, rfl⟩
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.Covering G' G),
+def Games.IsUnravelable G := ∀ k, ∃ (G' : Games) (f : Games.GameCovering G' G),
   Fixing k f.toCovering ∧ IsClopen G'.2.1.payoff
 lemma Games.IsUnravelable.isDetermined {G : Games} (h : G.IsUnravelable) :
   G.2.1.IsDetermined :=

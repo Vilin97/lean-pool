@@ -222,8 +222,7 @@ theorem rademacherComplexity_le_one (X : Type u) [MeasurableSpace X]
     _ = 1 := by simp [MeasureTheory.integral_const]
 
 theorem rademacherComplexity_nonneg (X : Type u) [MeasurableSpace X]
-    (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (m : ℕ) (hm : 0 < m)
-    [MeasureTheory.IsProbabilityMeasure (MeasureTheory.Measure.pi (fun _ : Fin m => D))] :
+    (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (m : ℕ) (hm : 0 < m) :
     0 ≤ RademacherComplexity X C D m := by
   unfold RademacherComplexity
   apply MeasureTheory.integral_nonneg
@@ -232,7 +231,6 @@ theorem rademacherComplexity_nonneg (X : Type u) [MeasurableSpace X]
 
 theorem rademacher_gen_bound (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (D : MeasureTheory.Measure X)
-    [MeasureTheory.IsProbabilityMeasure D]
     (m : ℕ) (hm : 0 < m) (c : Concept X Bool) (_hcC : c ∈ C)
     (ε : ℝ) (hε : 0 < ε) :
     ∃ (bound : ℝ), bound = 2 * RademacherComplexity X C D m + ε ∧ bound ≥ 0 := by
@@ -1285,7 +1283,7 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
   have hTpos : 0 < Fintype.card ↥T := by rw [Fintype.card_coe]; exact hT_card_pos
   let D_sub := @uniformMeasure ↥T ⊤ _ hTne_type
   have hD_sub_prob : @MeasureTheory.IsProbabilityMeasure ↥T ⊤ D_sub :=
-    @uniformMeasure_isProbability ↥T ⊤ _ ⟨fun _ => trivial⟩ hTne_type hTpos
+    @uniformMeasure_isProbability ↥T ⊤ _ hTne_type hTpos
   have hval_meas : @Measurable ↥T X ⊤ _ Subtype.val :=
     fun _ _ => MeasurableSpace.measurableSet_top
   let D := @MeasureTheory.Measure.map ↥T X ⊤ _ Subtype.val D_sub

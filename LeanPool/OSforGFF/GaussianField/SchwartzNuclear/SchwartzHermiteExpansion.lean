@@ -596,7 +596,7 @@ private lemma clm_finset_sup_seminorm_bound
     have h_a : ∀ f : SchwartzMap ℝ ℝ, SchwartzMap.seminorm ℝ a.1 a.2 (T f) ≤
         (C_a : ℝ) * s_a.sup snf f := fun f => by
       have := hle_a f
-      simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def] at this
+      simp only [Seminorm.comp_apply, smul_apply, NNReal.smul_def] at this
       exact this
     -- Take q large enough
     set q₁ := max q_s.1 (s_a.sup Prod.fst)
@@ -1447,11 +1447,11 @@ lemma schwartz_hermite_hasSum (f : SchwartzMap ℝ ℝ) :
     _ < ε := half_lt_self hε
 
 theorem schwartz_hermite_expansion_1D :
-    ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
        (T : (SchwartzMap ℝ ℝ) →L[ℝ] H) (f : SchwartzMap ℝ ℝ) (w : H),
        @inner ℝ H _ w (T f) =
          ∑' n, hermiteCoeff1D n f * @inner ℝ H _ w (T (schwartzHermiteBasis1D n)) := by
-  intro H _ _ _ T f w
+  intro H _ _ T f w
   -- Apply CLM T to Schwartz HasSum
   have h_T := (schwartz_hermite_hasSum f).map T T.continuous
   simp only [Function.comp_def, map_smul] at h_T

@@ -6,6 +6,8 @@ Authors: Yury G. Kudryashov
 
 import Mathlib.Analysis.Calculus.FDeriv.Comp
 import Mathlib.Analysis.Calculus.Implicit
+import Mathlib.Analysis.LocallyConvex.HahnBanach
+import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 import LeanPool.SardMoreira.ImplicitFunction
 import LeanPool.SardMoreira.LocalEstimates
@@ -188,7 +190,9 @@ theorem fst_implicitFunction_chartImplicitDataEventuallyEq {f : E × F → ℝ} 
     (chartImplicitData f a hfa hk hdf).rightFun_implicitFunction
   rw [chartImplicitData_pt] at this
   filter_upwards [this] with x hx
-  simpa using congr($hx |>.1)
+  change ((chartImplicitData f a hfa hk hdf).implicitFunction (f a) x).1 = x.1
+  simpa only [fst_rightFun_chartImplicitData, chartImplicitData_leftFun, id_eq] using
+    congrArg Prod.fst hx
 
 theorem map_implicitFunction_chartImplicitData_nhdsWithin_preimage {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0)

@@ -788,7 +788,6 @@ positive eigenvalue. If all eigenvalues were `≤ 0`, then `⟨f, Tf⟩ ≤ 0` f
 every `f` by the spectral decomposition, contradicting `⟨|b j|, T|b j|⟩ > 0`
 which holds because `T` is positivity-improving. -/
 theorem exists_pos_eigenvalue {Ω : Type*} [MeasureSpace Ω]
-    [(ae (volume : Measure Ω)).NeBot]
     (T : Lp ℝ 2 (volume : Measure (Ω)) →L[ℝ] Lp ℝ 2 (volume : Measure (Ω)))
     (hT_pi : IsPositivityImproving' T) {ι : Type}
     (b : HilbertBasis ι ℝ (Lp ℝ 2 (volume : Measure (Ω)))) (eigenval : ι → ℝ)

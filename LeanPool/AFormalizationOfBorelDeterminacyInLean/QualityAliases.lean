@@ -56,7 +56,7 @@ alias exists_undetermined := GaleStewartGame.Game.exists_undetermined
 end Game
 
 namespace Games
-alias Covering := GaleStewartGame.Covering.Games.Covering
+alias Covering := GaleStewartGame.Covering.Games.GameCovering
 alias IsUnravelable := GaleStewartGame.Covering.Games.IsUnravelable
 alias borel_determinacy := GaleStewartGame.Games.borel_determinacy
 alias tree := GaleStewartGame.Covering.Games.tree

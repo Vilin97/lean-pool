@@ -327,7 +327,7 @@ lemma openRectangle_is_interior (xmin xmax ymin ymax : ℝ) :
        obtain ⟨w, ⟨left, ⟨left_1, ⟨w_3, ⟨w_4, ⟨left_3, right⟩⟩⟩⟩⟩⟩ := h
        obtain ⟨w_1, ⟨w_2, ⟨left_2, right_1⟩⟩⟩ := hx1_in_X
        subst right right_1
-       simp_all only [Fin.isValue, cons_val_zero, cons_val_one, cons_val_fin_one]
+       exact left_2
      · let hplp := PiLp.homeomorph (ι := Fin 2) (β := fun _ ↦ ℝ) 2
        let hplp' : (PiLp (ι := Fin 2) 2 fun x ↦ ℝ) ≃ₜ ℝ × ℝ :=
          hplp.trans Homeomorph.finTwoArrow
@@ -339,7 +339,7 @@ lemma openRectangle_is_interior (xmin xmax ymin ymax : ℝ) :
          extract, cons_val_zero, cons_val_one, cons_val_fin_one, and_true]
        let ⟨_, ⟨_, ⟨_, ⟨_, ⟨_, ⟨_, right⟩⟩⟩⟩⟩⟩ := h
        subst right
-       simp_all only [Fin.isValue, cons_val_zero, cons_val_one, cons_val_fin_one]
+       exact p_in_U
      · apply vector_ext
    · intro h
      simp only [inject, Set.mem_image, Prod.exists, mem_interior] at h ⊢

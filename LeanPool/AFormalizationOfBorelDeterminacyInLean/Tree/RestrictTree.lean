@@ -195,6 +195,7 @@ def pInv (y : T) (h : Fixing y.val.length f := by as_aux_lemma => synthFixing) :
   ext1
   change (inv ((res x.val.length).map (𝟙 S)) ⟨x.val, ⟨x.prop, le_rfl⟩⟩).val = x.val
   simp
+  rfl
 @[simp] lemma pInv_comp y (hg : Fixing y.val.length g := by as_aux_lemma => synthFixing)
   (hf : Fixing y.val.length f := by as_aux_lemma => synthFixing) :
   pInv (f ≫ g) y = pInv f (pInv g y hg) := by

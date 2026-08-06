@@ -190,7 +190,7 @@ noncomputable def perm321aEquivTfas :
     constructor
     · cases I
       case mk toAspSet prop_321a =>
-        rw [tfas.mk.injEq]
+        congr 1
         apply SetLike.coe_injective
         exact toAspSet.invSet_of_toAspPerm χ
     · exact I.chi_of_toAspPerm χ

@@ -53,7 +53,7 @@ instance : Preorder BelnapLevel where
   le_trans
 
 lemma le_antisymm : ∀ (a b : BelnapLevel), a ≤ b → b ≤ a → a = b := by
-  rintro (_ | (_ | a)) (_ | (_ | b)) hab hba <;> simp_all [LE.le, le]
+  rintro (_ | (_ | a)) (_ | (_ | b)) hab hba <;> simp_all [LE.le, le] <;> rfl
 
 /-- The join (least upper bound) on Belnap levels in the information order. -/
 def sup : BelnapLevel → BelnapLevel → BelnapLevel
@@ -64,14 +64,13 @@ def sup : BelnapLevel → BelnapLevel → BelnapLevel
   | .some (.some x), .some (.some y) => if x == y then .some (.some x) else .some .none
 
 lemma le_sup_left : ∀ (a b : BelnapLevel), a ≤ a.sup b:= by
-  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> simp_all [LE.le, le, sup]
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> trivial
 
 lemma le_sup_right : ∀ (a b : BelnapLevel), b ≤ a.sup b := by
-  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> simp_all [LE.le, le, sup]
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) <;> trivial
 
 lemma sup_le : ∀ (a b c : BelnapLevel), a ≤ c → b ≤ c → a.sup b ≤ c  := by
-  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) hac hbc <;>
-    simp_all [LE.le, le, sup]
+  rintro (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) (_ | (_ | (_ | _))) hac hbc <;> trivial
 
 instance : SemilatticeSup BelnapLevel where
   le_antisymm

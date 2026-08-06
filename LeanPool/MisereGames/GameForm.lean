@@ -58,7 +58,16 @@ instance : QPF GameFunctor where
     · intro hz
       exact ⟨equivShrink ↑(s p) ⟨z, hz⟩,
         congrArg Subtype.val ((equivShrink ↑(s p)).left_inv ⟨z, hz⟩)⟩
-  abs_map f := by intro ⟨x, f⟩; ext; simp [PFunctor.map, map_def]
+  abs_map g := by
+    intro ⟨x, f⟩
+    ext p z
+    change (∃ y, g (f ⟨p, PLift.up y⟩) = z) ↔
+      z ∈ g '' Set.range (f ∘ Sigma.mk p ∘ PLift.up)
+    constructor
+    · rintro ⟨y, rfl⟩
+      exact ⟨_, ⟨y, rfl⟩, rfl⟩
+    · rintro ⟨_, ⟨y, rfl⟩, rfl⟩
+      exact ⟨y, rfl⟩
 
 end GameFunctor
 
@@ -67,6 +76,11 @@ def GameForm : Type (u + 1) :=
   QPF.Fix GameFunctor
 
 namespace GameForm
+
+private theorem dest_mk_game (options : GameFunctor GameForm) :
+    (QPF.Fix.mk options : GameForm).dest = options := by
+  unfold GameForm at options
+  exact QPF.Fix.dest_mk options
 
 /--
 Construct a `GameForm` from its Left and Right options.
@@ -91,9 +105,14 @@ instance : Moves GameForm where
     rintro _ ⟨⟨st, hst⟩, rfl⟩
     constructor
     rintro y hy
-    rw [QPF.Fix.dest_mk, Set.mem_iUnion] at hy
-    obtain ⟨_, ⟨_, h⟩, _, rfl⟩ := hy
-    exact h
+    obtain ⟨p, hp⟩ := Set.mem_iUnion.mp hy
+    rw [QPF.Fix.dest_mk] at hp
+    have hcomponent := congrArg (fun options : GameFunctor GameForm ↦ options.1 p)
+      (GameFunctor.map_def (β := GameForm) Subtype.val (⟨st, hst⟩ : GameFunctor _))
+    have hp' : y ∈ Subtype.val '' st p :=
+      Eq.mp (congrArg (fun options : Set GameForm ↦ y ∈ options) hcomponent) hp
+    obtain ⟨option, _, rfl⟩ := hp'
+    exact option.property
 
 /--
 The set of Left options of the game.
@@ -110,7 +129,11 @@ instance instSmallElemMoves (p : Player) (x : GameForm.{u}) : Small.{u} (moves p
 private theorem moves_ofSets (p) (st :
     Player → Set GameForm) [Small.{u} (st .left)] [Small.{u} (st .right)] :
     moves p !{st} = st p := by
-  dsimp [ofSets]; ext; simp only [moves, moves', QPF.Fix.dest_mk]
+  let options : GameFunctor GameForm := ⟨st, fun
+    | .left => inferInstance
+    | .right => inferInstance⟩
+  change (QPF.Fix.mk options).dest.1 p = st p
+  exact congrArg (fun choices ↦ choices.1 p) (dest_mk_game options)
 
 @[simp]
 theorem ofSets_moves (x : GameForm) : !{fun p => moves p x} = x := x.mk_dest

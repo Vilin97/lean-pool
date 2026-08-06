@@ -45,14 +45,18 @@ def outerQuat : Quaternion ℝ := ⟨0.858732110, -0.148912807, -0.352436516, -0
 noncomputable def innerRot := matrixOfQuat innerQuat
 
 lemma innerRot_so3 : innerRot ∈ SO3 := by
-  have h : innerQuat.normSq ≠ 0 := by norm_num [innerQuat, Quaternion.normSq_def]
+  have h : innerQuat.normSq ≠ 0 := by
+    rw [Quaternion.normSq_def']
+    norm_num [innerQuat]
   exact matrixOfQuat_is_s03 h
 
 /-- Rotation matrix for the outer triakis tetrahedron. -/
 noncomputable def outerRot := matrixOfQuat outerQuat
 
 lemma outerRot_so3 : outerRot ∈ SO3 := by
-  have h : outerQuat.normSq ≠ 0 := by norm_num [outerQuat, Quaternion.normSq_def]
+  have h : outerQuat.normSq ≠ 0 := by
+    rw [Quaternion.normSq_def']
+    norm_num [outerQuat]
   exact matrixOfQuat_is_s03 h
 
 lemma outer_ball_subset :

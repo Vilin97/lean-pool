@@ -49,34 +49,34 @@ def pDiskBoundaryIncl (n : ℕ) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] :
 namespace pDisk
 
 -- Note: need to declare the instances manually because `pDisk` and `TopCat` are not `abbrev`s.
-instance instT1Space : T1Space (pDisk n p) :=
+instance instT1Space : T1Space (pDisk.{u} n p) :=
   letI : T1Space ↑(Metric.closedBall (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1) := inferInstance
   ULift.instT1Space
-instance boundaryInstT1Space : T1Space (pDiskBoundary n p) :=
+instance boundaryInstT1Space : T1Space (pDiskBoundary.{u} n p) :=
   letI : T1Space ↑(Metric.sphere (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1) := inferInstance
   ULift.instT1Space
 
-noncomputable instance instPseudoMetricSpace : PseudoMetricSpace (pDisk n p) :=
+noncomputable instance instPseudoMetricSpace : PseudoMetricSpace (pDisk.{u} n p) :=
   letI : PseudoMetricSpace (ULift _) := inferInstance; ‹_›
-noncomputable instance boundaryInstPseudoMetricSpace : PseudoMetricSpace (pDiskBoundary n p) :=
+noncomputable instance boundaryInstPseudoMetricSpace : PseudoMetricSpace (pDiskBoundary.{u} n p) :=
   letI : PseudoMetricSpace (ULift _) := inferInstance; ‹_›
 
-lemma dist_eq (x y : pDisk n p) : dist x y = dist x.down.val y.down.val :=
+lemma dist_eq (x y : pDisk.{u} n p) : dist x y = dist x.down.val y.down.val :=
   rfl
 
 /-- Use `0` to denote the center of the disk. -/
-instance : OfNat (pDisk n p) 0 where
+instance : OfNat (pDisk.{u} n p) 0 where
   ofNat := ⟨⟨0, Metric.mem_closedBall_self zero_le_one⟩⟩
 
-lemma zero_eq : 0 = (0 : pDisk n p).down.val :=
+lemma zero_eq : 0 = (0 : pDisk.{u} n p).down.val :=
   rfl
 
-lemma eq_zero_iff (x : pDisk n p) : x = 0 ↔ x.down.val = 0 :=
+lemma eq_zero_iff (x : pDisk.{u} n p) : x = 0 ↔ x.down.val = 0 :=
   ⟨fun h ↦ by subst h; rfl, fun h ↦ by obtain ⟨x, _⟩ := x; congr⟩
 
 /-- Map `x` to `(‖x‖_p / ‖x‖_q) • x`.
 Note that division by zero evaluates to zero (see `toQDisk_zero`). -/
-noncomputable def toQDisk : pDisk n p → pDisk n q
+noncomputable def toQDisk : pDisk.{u} n p → pDisk.{u} n q
   | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.toLp q (WithLp.ofLp x)‖⁻¹) • WithLp.toLp q (WithLp.ofLp x), by
       simp only [Metric.mem_closedBall, dist_zero_right] at *
       simp only [norm_smul, norm_mul, Real.norm_eq_abs, abs_norm, norm_inv]
@@ -88,16 +88,18 @@ noncomputable def toQDisk : pDisk n p → pDisk n q
 
 /-- `pDisk.toQDisk` maps `0` to `0`.
 Note that division by zero evaluates to zero, due to `GroupWithZero.inv_zero`. -/
-lemma toQDisk_zero : pDisk.toQDisk n p q 0 = 0 := by
+lemma toQDisk_zero : pDisk.toQDisk.{u} n p q 0 = 0 := by
   unfold toQDisk
   simp only [norm_zero, zero_mul, zero_smul]
   congr
 
 /-- The map `toQDisk` has a left inverse. -/
-lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
-  unfold toQDisk
+lemma toPDisk_comp_toQDisk (x : pDisk.{u} n p) :
+    toQDisk n q p (toQDisk n p q x) = x := by
   by_cases hx0 : x = 0
-  · simp only [hx0, norm_zero, zero_mul, zero_smul, eq_zero_iff]
+  · subst x
+    rw [toQDisk_zero, toQDisk_zero]
+  unfold toQDisk
   split; next _ y hy hfx =>
     rcases x with ⟨x, _⟩
     replace hx0 : x ≠ 0 := fun h ↦ hx0 (by congr)
@@ -114,55 +116,50 @@ lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
     simp_all
 
 /-- The map `toQDisk` is continuous at `0`. -/
-lemma continuousAt_toQDisk_zero : ContinuousAt (toQDisk n p q) 0 := by
+lemma continuousAt_toQDisk_zero :
+    ContinuousAt (toQDisk.{u} n p q) (0 : pDisk.{u} n p) := by
   apply continuousAt_of_locally_lipschitz (_ : 0 < (1 : ℝ)) 1
   on_goal 2 => norm_num
-  intro ⟨x, hx⟩ h
+  intro x h
   rw [toQDisk_zero]
-  simp only [dist_eq, ← zero_eq, dist_zero_right, one_mul] at *
+  simp only [pDisk.dist_eq, ← zero_eq, dist_zero_right, one_mul] at h ⊢
+  obtain ⟨x, hx⟩ := x
   simp only [toQDisk, norm_smul, norm_mul, norm_norm, norm_inv]
   by_cases hx0 : x = 0
-  · simp only [hx0, norm_zero, zero_mul, le_refl]
+  · subst x
+    simp
   simp_all
 
 /-- The map `toQDisk` is continuous on `{x | x ≠ 0}`. -/
-lemma continuousOn_toQDisk_nonzero : ContinuousOn (toQDisk n p q) {x | x ≠ 0} := by
+lemma continuousOn_toQDisk_nonzero :
+    ContinuousOn (toQDisk.{u} n p q) {x : pDisk.{u} n p | x ≠ 0} := by
   apply continuousOn_iff_continuous_restrict.mpr
   unfold Set.restrict toQDisk
   simp only [ne_eq, Set.coe_setOf, Set.mem_setOf_eq]
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
-  refine Continuous.smul ?_ <| (PiLp.continuous_toLp q _).comp <|
-    (PiLp.continuous_ofLp p _).comp <|
-      (continuous_uliftDown.comp continuous_subtype_val).subtype_val
-  apply Continuous.mul (continuous_uliftDown.comp continuous_subtype_val).subtype_val.norm
-  conv_rhs => intro x; rw [inv_eq_one_div]
-  apply Continuous.div continuous_const
-  · apply Continuous.norm
-    refine (PiLp.continuous_toLp q (fun _ : Fin n ↦ ℝ)).comp ?_
-    refine (PiLp.continuous_ofLp p _).comp ?_
-    exact continuous_uliftDown.comp continuous_subtype_val |>.subtype_val
-  intro ⟨x, hx0⟩ h
-  simp only [norm_eq_zero] at h
-  change WithLp.toLp q x.down.val.ofLp = 0 at h
-  have hxz : x.down.val = 0 := by
-    simp_all
-  rw [← eq_zero_iff] at hxz
-  exact hx0 hxz
+  have denominator_ne_zero :
+      ∀ x : {x : pDisk.{u} n p // x ≠ 0}, ‖WithLp.toLp q x.val.down.val.ofLp‖ ≠ 0 := by
+    intro ⟨x, hx0⟩
+    rw [norm_ne_zero_iff]
+    intro h
+    change WithLp.toLp q x.down.val.ofLp = 0 at h
+    have hxz : x.down.val = 0 := by simp_all
+    rw [← eq_zero_iff] at hxz
+    exact hx0 hxz
+  fun_prop (disch := exact denominator_ne_zero _)
 
 /-- The map `toQDisk` is continuous. -/
-lemma continuous_toQDisk : Continuous (toQDisk n p q) :=
-  continuous_iff_continuousAt.mpr fun ⟨x, hx⟩ ↦ by
+lemma continuous_toQDisk : Continuous (toQDisk.{u} n p q) :=
+  continuous_iff_continuousAt.mpr fun x ↦ by
     by_cases hx0 : x = 0
-    · subst hx0
+    · subst x
       exact continuousAt_toQDisk_zero n p q
     exact (continuousOn_toQDisk_nonzero n p q).continuousAt
-      (IsOpen.mem_nhds (IsClosed.not isClosed_singleton) fun h ↦ by
-        simp only [eq_zero_iff] at h
-        exact hx0 h)
+      (IsOpen.mem_nhds (IsClosed.not isClosed_singleton) hx0)
 
 /-- `pDisk n p` (the unit disk in `ℝⁿ` based on the `Lᵖ` norm) is homeomorphic to
 `pDisk n q` (the unit disk in `ℝⁿ` based on the `L^q` norm). -/
-noncomputable def homeoQDisk : pDisk n p ≃ₜ pDisk n q where
+noncomputable def homeoQDisk : pDisk.{u} n p ≃ₜ pDisk.{u} n q where
   toFun := toQDisk n p q
   invFun := toQDisk n q p
   left_inv := toPDisk_comp_toQDisk n p q
@@ -171,7 +168,7 @@ noncomputable def homeoQDisk : pDisk n p ≃ₜ pDisk n q where
   continuous_invFun := continuous_toQDisk n q p
 
 /-- `isoQDisk` -/
-noncomputable def isoQDisk : pDisk n p ≅ pDisk n q :=
+noncomputable def isoQDisk : pDisk.{u} n p ≅ pDisk.{u} n q :=
   isoOfHomeo (homeoQDisk n p q)
 
 end pDisk
@@ -179,19 +176,19 @@ end pDisk
 
 namespace pDiskBoundary
 
-instance instIsEmptyZero : IsEmpty (pDiskBoundary 0 p) where
+instance instIsEmptyZero : IsEmpty (pDiskBoundary.{u} 0 p) where
   false := fun ⟨p, p1⟩ ↦ by
     have p0 : p = 0 := Subsingleton.elim _ _
     simp_all
 
-lemma neq_zero (x : pDiskBoundary n p) : x.down.val ≠ 0 := fun xz ↦ by
+lemma neq_zero (x : pDiskBoundary.{u} n p) : x.down.val ≠ 0 := fun xz ↦ by
   have x0 : ‖x.down.val‖ = 0 := by rw [xz]; apply norm_zero
   have x1 : ‖x.down.val‖ = 1 := by
     simpa only [mem_sphere_iff_norm, sub_zero] using x.down.property
   exact (by norm_num : (0 : ℝ) ≠ 1) (x0.symm.trans x1)
 
 /-- `toQDiskBoundary` -/
-noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary n q
+noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary.{u} n q
   | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.toLp q (WithLp.ofLp x)‖⁻¹) • WithLp.toLp q (WithLp.ofLp x), by
       have xnz := neq_zero.{u} n p ⟨x, hx⟩
       simp only [mem_sphere_iff_norm, sub_zero] at hx ⊢
@@ -199,8 +196,8 @@ noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary n q
       simp_all ⟩
 
 /-- The map `boundaryToQDiskBoundary` has a left inverse. -/
-lemma toPDiskBoundary_comp_toQDiskBoundary x :
-    toQDiskBoundary n q p (toQDiskBoundary.{u, v} n p q x) = x := by
+lemma toPDiskBoundary_comp_toQDiskBoundary (x : pDiskBoundary.{u} n p) :
+    toQDiskBoundary n q p (toQDiskBoundary.{u} n p q x) = x := by
   unfold toQDiskBoundary
   split; next _ y hy hfx =>
     rcases x with ⟨x, hx⟩
@@ -215,35 +212,30 @@ lemma toPDiskBoundary_comp_toQDiskBoundary x :
     simp_all
 
 /-- The map `boundaryToQDiskBoundary` is continuous. -/
-lemma continuous_toQDiskBoundary : Continuous (toQDiskBoundary n p q) := by
+lemma continuous_toQDiskBoundary : Continuous (toQDiskBoundary.{u} n p q) := by
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
-  refine Continuous.smul ?_ <| (PiLp.continuous_toLp q _).comp <|
-    (PiLp.continuous_ofLp p _).comp <| continuous_induced_dom.comp continuous_induced_dom
-  apply Continuous.mul (by simp only [norm_eq_of_mem_sphere]; exact continuous_const)
-  conv_rhs => intro x; rw [inv_eq_one_div]
-  apply Continuous.div continuous_const
-  · apply Continuous.norm
-    refine (PiLp.continuous_toLp q (fun _ : Fin n ↦ ℝ)).comp ?_
-    refine (PiLp.continuous_ofLp p _).comp ?_
-    exact Continuous.subtype_val continuous_induced_dom
-  intro x h
-  rw [norm_eq_zero] at h
-  change WithLp.toLp q x.down.val.ofLp = 0 at h
-  have : x.down.val = 0 := by
-    simp_all
-  exact (neq_zero n p x) this
+  have denominator_ne_zero :
+      ∀ x : pDiskBoundary.{u} n p, ‖WithLp.toLp q x.down.val.ofLp‖ ≠ 0 := by
+    intro x
+    rw [norm_ne_zero_iff]
+    intro h
+    change WithLp.toLp q x.down.val.ofLp = 0 at h
+    have hxz : x.down.val = 0 := by simp_all
+    exact (neq_zero n p x) hxz
+  fun_prop (disch := exact denominator_ne_zero _)
 
 /-- `pDiskBounday n p` is homeomorphic to `pDiskBoundary n q`. -/
-noncomputable def homeoQDiskBoundary : pDiskBoundary n p ≃ₜ pDiskBoundary n q where
+noncomputable def homeoQDiskBoundary :
+    pDiskBoundary.{u} n p ≃ₜ pDiskBoundary.{u} n q where
   toFun := toQDiskBoundary n p q
   invFun := toQDiskBoundary n q p
-  left_inv := toPDiskBoundary_comp_toQDiskBoundary n p q
-  right_inv := toPDiskBoundary_comp_toQDiskBoundary n q p
-  continuous_toFun := continuous_toQDiskBoundary n p q
-  continuous_invFun := continuous_toQDiskBoundary n q p
+  left_inv := toPDiskBoundary_comp_toQDiskBoundary.{u} n p q
+  right_inv := toPDiskBoundary_comp_toQDiskBoundary.{u} n q p
+  continuous_toFun := continuous_toQDiskBoundary.{u} n p q
+  continuous_invFun := continuous_toQDiskBoundary.{u} n q p
 
 /-- `isoQDiskBoundary` -/
-noncomputable def isoQDiskBoundary : pDiskBoundary n p ≅ pDiskBoundary n q :=
+noncomputable def isoQDiskBoundary : pDiskBoundary.{u} n p ≅ pDiskBoundary.{u} n q :=
   isoOfHomeo (homeoQDiskBoundary n p q)
 
 end pDiskBoundary
@@ -296,7 +288,7 @@ noncomputable def largeCubeHomeoCube (n : ℕ) :
 
 /-- The n-disk `𝔻 n` is homeomorphic to the cube $[0, 1]^n$. -/
 noncomputable def diskHomeoCube (n : ℕ) : TopCat.disk.{u} n ≃ₜ (I^ Fin n) :=
-  (pDisk.homeoQDisk.{u, u} n 2 ∞).trans <|
+  (pDisk.homeoQDisk.{u} n 2 ∞).trans <|
     (largeCubeHomeoPDisk n).symm.trans (largeCubeHomeoCube n)
 
 /-- `largeCubeBoundaryHomeoPDiskBoundary` -/
@@ -373,7 +365,7 @@ noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
 /-- `diskBoundaryHomeoCubeBoundary` -/
 noncomputable def diskBoundaryHomeoCubeBoundary (n : ℕ) :
     TopCat.diskBoundary.{u} n ≃ₜ Cube.boundary (Fin n) :=
-  (pDiskBoundary.homeoQDiskBoundary.{u, u} n 2 ∞).trans <|
+  (pDiskBoundary.homeoQDiskBoundary.{u} n 2 ∞).trans <|
     (largeCubeBoundaryHomeoPDiskBoundary n).symm.trans (largeCubeBoundaryHomeoCubeBoundary n)
 
 --------------------------------------------------------------------------------------

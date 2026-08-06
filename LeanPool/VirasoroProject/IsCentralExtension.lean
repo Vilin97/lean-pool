@@ -81,9 +81,32 @@ then `LieTwoCocycle.CentralExtension.emb` gives the corresponding embedding `�
 def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.emb
     [IsLieAbelian 𝓪] : 𝓪 →ₗ⁅𝕜⁆ γ.CentralExtension where
   toFun := fun A ↦ ⟨0, A⟩
-  map_add' A₁ A₂ := by simp [add_def]
-  map_smul' c A := by simp [smul_def]
-  map_lie' := by intro A₁ A₂; ext <;> simp [lie_def, trivial_lie_zero]
+  map_add' A₁ A₂ := by
+    change (⟨0, A₁ + A₂⟩ : γ.CentralExtension) =
+      (⟨0, A₁⟩ : γ.CentralExtension) + (⟨0, A₂⟩ : γ.CentralExtension)
+    calc
+      (⟨0, A₁ + A₂⟩ : γ.CentralExtension) =
+          ⟨(0 : 𝓰) + 0, A₁ + A₂⟩ := by simp
+      _ = (⟨0, A₁⟩ : γ.CentralExtension) + (⟨0, A₂⟩ : γ.CentralExtension) :=
+        (CentralExtension.add_def (𝕜 := 𝕜) (γ := γ)
+          (⟨0, A₁⟩ : γ.CentralExtension)
+          (⟨0, A₂⟩ : γ.CentralExtension)).symm
+  map_smul' c A := by
+    change (⟨0, c • A⟩ : γ.CentralExtension) =
+      (RingHom.id 𝕜) c • (⟨0, A⟩ : γ.CentralExtension)
+    simp only [RingHom.id_apply]
+    calc
+      (⟨0, c • A⟩ : γ.CentralExtension) = ⟨c • (0 : 𝓰), c • A⟩ := by simp
+      _ = c • (⟨0, A⟩ : γ.CentralExtension) :=
+        (CentralExtension.smul_def (𝕜 := 𝕜) (γ := γ) c
+          (⟨0, A⟩ : γ.CentralExtension)).symm
+  map_lie' := by
+    intro A₁ A₂
+    apply CentralExtension.ext
+    · change 0 = ⁅(0 : 𝓰), 0⁆
+      simp
+    · change ⁅A₁, A₂⁆ = γ 0 0
+      simp [trivial_lie_zero]
 
 /-- If `𝓮` is the (central) extension of `𝓰` by `𝓪` defined by a 2-cocycle `γ ∈ Z²(𝓰,𝓪)`,
 then `LieTwoCocycle.CentralExtension.proj` gives the corresponding projection `𝓮 ⟶ 𝓰`. -/
@@ -107,11 +130,12 @@ lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.mem_range_emb_iff
   rw [LieHom.mem_range]
   refine ⟨?_, ?_⟩
   · intro ⟨A, hA⟩
-    simp [← hA, emb]
+    exact (congrArg (fun W : γ.CentralExtension ↦ W.1) hA).symm
   · intro h
-    use Z.2
-    simp only [emb, LieHom.coe_mk]
-    ext <;> simp_all
+    refine ⟨Z.2, ?_⟩
+    apply CentralExtension.ext
+    · exact h.symm
+    · rfl
 
 lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.mem_ker_proj_iff
     (Z : γ.CentralExtension) :
@@ -150,16 +174,25 @@ theorem _root_.VirasoroProject.LieTwoCocycle.CentralExtension.isCentralExtension
   __ := LieTwoCocycle.CentralExtension.isExtension γ
   central := by
     intro A Z
-    simp only [emb, LieHom.coe_mk, lie_def, zero_lie, map_zero, LinearMap.zero_apply]
-    rfl
+    apply CentralExtension.ext
+    · change ⁅(0 : 𝓰), Z.1⁆ = 0
+      simp
+    · change γ 0 Z.1 = 0
+      simp
 
 /-- A standard section of a Lie algebra central extension associated to a Lie 2-cocycle. -/
 noncomputable def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSection
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
     𝓰 →ₗ[𝕜] γ.CentralExtension where
   toFun X := ⟨X, 0⟩
-  map_add' X₁ X₂ := by rw [LieTwoCocycle.CentralExtension.add_def]; simp
-  map_smul' c X := by rw [LieTwoCocycle.CentralExtension.smul_def]; simp
+  map_add' X₁ X₂ := by
+    apply CentralExtension.ext
+    · rfl
+    · exact (zero_add (0 : 𝓪)).symm
+  map_smul' c X := by
+    apply CentralExtension.ext
+    · rfl
+    · exact (smul_zero c).symm
 
 lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.stdSection_prop
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) :
@@ -196,13 +229,17 @@ noncomputable def _root_.VirasoroProject.LieAlgebra.IsExtension.basis
     {ιA ιG : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG : Basis ιG 𝕜 𝓰)
     (ia : ιA) :
     basis ex σ hσ basA basG (Sum.inl ia) = i (basA ia) := by
-  simp [basis]
+  exact ses_basis_eq_of_left basA basG
+    (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (congr_arg LieSubalgebra.toSubmodule ex.exact) hσ ia
 
 @[simp] lemma _root_.VirasoroProject.LieAlgebra.IsExtension.basis_eq_of_right
     {ιA ιG : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG : Basis ιG 𝕜 𝓰)
     (ig : ιG) :
     basis ex σ hσ basA basG (Sum.inr ig) = σ (basG ig) := by
-  simp [basis]
+  exact ses_basis_eq_of_right basA basG
+    (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+    (congr_arg LieSubalgebra.toSubmodule ex.exact) hσ ig
 
 end LieAlgebra.IsExtension
 

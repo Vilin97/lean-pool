@@ -16,6 +16,7 @@ This module derives the entropy formula for distributions of the form
 It also includes a worked decomposition corresponding to Shannon's
 `(1/2, 1/3, 1/6)` narrative.
 -/
+
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section
@@ -180,8 +181,16 @@ lemma workedCompose_masses :
     workedCompose ⟨true, (0 : Fin 1)⟩ = (1 : ℝ) / 2 ∧
       workedCompose ⟨false, (0 : Fin 2)⟩ = (1 : ℝ) / 3 ∧
       workedCompose ⟨false, (1 : Fin 2)⟩ = (1 : ℝ) / 6 := by
-  refine ⟨?_, ?_, ?_⟩ <;>
-    norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
+  refine ⟨?_, ?_, ?_⟩
+  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
+    change (1 : ℝ) = 1
+    rfl
+  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
+    change (1 / 2 : ℝ) * (2 / 3) = 1 / 3
+    norm_num
+  · norm_num [workedCompose, composeProb, workedP, workedQ, workedFib, uniformPNat]
+    change (1 / 2 : ℝ) * (1 / 3) = 1 / 6
+    norm_num
 
 /--
 Worked grouping identity corresponding to Shannon's `(1/2, 1/3, 1/6)` narrative:

@@ -34,14 +34,14 @@ open scoped ArithmeticFunction.sigma
 namespace HeckeRing.GL2
 
 /-- `SL_n(ℤ) → GL_n(ℚ)` has determinant 1 (replaces removed `SLnZ_to_GLnQ_det`). -/
-lemma SLnZ_to_GLnQ_det {n : ℕ} [NeZero n] (S : Matrix.SpecialLinearGroup (Fin n) ℤ) :
+lemma SLnZ_to_GLnQ_det {n : ℕ} (S : Matrix.SpecialLinearGroup (Fin n) ℤ) :
     (S : GL (Fin n) ℚ).val.det = 1 := by
   show (Matrix.SpecialLinearGroup.mapGL ℚ S).val.det = 1
   rw [Matrix.SpecialLinearGroup.mapGL_coe_matrix]
   exact_mod_cast (Matrix.SpecialLinearGroup.map (algebraMap ℤ ℚ) S).prop
 
 /-- `SL_n(ℤ) → GL_n(ℚ)` coercion as a matrix (replaces removed `SLnZ_to_GLnQ_val`). -/
-lemma SLnZ_to_GLnQ_val {n : ℕ} [NeZero n] (S : Matrix.SpecialLinearGroup (Fin n) ℤ) :
+lemma SLnZ_to_GLnQ_val {n : ℕ} (S : Matrix.SpecialLinearGroup (Fin n) ℤ) :
     ((S : GL (Fin n) ℚ) : Matrix (Fin n) (Fin n) ℚ) = (S.val).map (algebraMap ℤ ℚ) := by
   show (Matrix.SpecialLinearGroup.mapGL ℚ S).val = _
   rw [Matrix.SpecialLinearGroup.mapGL_coe_matrix]; rfl
@@ -1063,8 +1063,12 @@ private lemma T_sum_mul_peel_prime_summand_rhs (q : ℕ) (hq : q.Prime) (a b : �
   rw [show (⟨q ^ (r + s - 2 * i), pow_pos hq.pos _⟩ : ℕ+).val = q ^ (r + s - 2 * i) from rfl,
     show TSumNat (q ^ (r + s - 2 * i)) * TSumNat (↑m' * ↑n' / (d' * d')) =
     TSumNat (q ^ (r + s - 2 * i) * (↑m' * ↑n' / (d' * d'))) from by
-      change TSum ⟨_, pow_pos hq.pos _⟩ * TSum ⟨_, h_quot_pos⟩ = _
-      rw [T_sum_mul_coprime _ _ ((Nat.Prime.coprime_pow_of_not_dvd hq hq_ndvd_quot).symm)]
+      let qPower : ℕ+ := ⟨q ^ (r + s - 2 * i), pow_pos hq.pos _⟩
+      let quotient : ℕ+ := ⟨↑m' * ↑n' / (d' * d'), h_quot_pos⟩
+      change TSum qPower * TSum quotient = _
+      rw [T_sum_mul_coprime qPower quotient (by
+        simpa [qPower, quotient] using
+          (Nat.Prime.coprime_pow_of_not_dvd hq hq_ndvd_quot).symm)]
       rfl]
   congr 1
   have hrs_eq : r + s = a + b := by subst hr; subst hs; simp [min_def, max_def]; split <;> ring

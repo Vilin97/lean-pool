@@ -223,7 +223,7 @@ lemma spatialPart_timeReflection_sub (x y : SpaceTime) :
 
     The exp(-sm²) factor combines with exp(-s|pbar|²) to give exp(-s(|pbar|² + m²)).
 -/
-theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
+theorem heatKernel_bilinear_fourier_form (m : ℝ) (f : TestFunctionℂ) :
     ∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *
       ∫ x : SpaceTime, ∫ y : SpaceTime,
         (starRingEnd ℂ (f x)) * f y * heatKernelPositionSpace s ‖timeReflection x - y‖ =

@@ -23,11 +23,14 @@ namespace TopCat
 namespace cubeBoundaryJar
 
 /-- `bot` -/
-abbrev bot (n : ℕ) : Set (⊔𝕀 (n + 1)) := { ⟨⟨y, _⟩⟩ | y (Fin.last _) = 0 }
+abbrev bot (n : ℕ) : Set (cubeBoundaryJar.{u} (n + 1)) :=
+  { y | y.down.val (Fin.last _) = 0 }
 /-- `sides` -/
-abbrev sides (n : ℕ) : Set (⊔𝕀 (n + 1)) := { ⟨⟨y, _⟩⟩ | ∃ i < Fin.last _, y i = 0 ∨ y i = 1 }
+abbrev sides (n : ℕ) : Set (cubeBoundaryJar.{u} (n + 1)) :=
+  { y | ∃ i < Fin.last _, y.down.val i = 0 ∨ y.down.val i = 1 }
 /-- `botSidesCover` -/
-abbrev botSidesCover (n : ℕ) : Fin 2 → Set (⊔𝕀 (n + 1)) := ![bot n, sides n]
+abbrev botSidesCover (n : ℕ) : Fin 2 → Set (cubeBoundaryJar.{u} (n + 1)) :=
+  ![bot n, sides n]
 
 lemma botSidesCover_cover (n : ℕ) : ∀ y : ⊔𝕀 (n + 1), ∃ k, y ∈ botSidesCover n k := by
   intro ⟨⟨y, hy⟩⟩
@@ -39,18 +42,27 @@ lemma botSidesCover_cover (n : ℕ) : ∀ y : ⊔𝕀 (n + 1), ∃ k, y ∈ botS
 
 lemma sides_eq_union (n : ℕ) :
     sides n =
-      (⋃ (i : Fin n), {⟨⟨y, _⟩⟩ | y i.castSucc = 0}) ∪
-      (⋃ (i : Fin n), {⟨⟨y, _⟩⟩ | y i.castSucc = 1}) := by
+      (⋃ (i : Fin n), {y | y.down.val i.castSucc = 0}) ∪
+      (⋃ (i : Fin n), {y | y.down.val i.castSucc = 1}) := by
   ext ⟨⟨y, hy⟩⟩
   constructor
-  · simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_iUnion, forall_exists_index, and_imp]
-    intro i hin hi; obtain hi | hi := hi
-    · left; use ⟨i, hin⟩; exact hi
-    · right; use ⟨i, hin⟩; exact hi
-  · simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq]
-    intro hi; obtain ⟨i, hi⟩ | ⟨i, hi⟩ := hi
-    · use i.castSucc, Fin.castSucc_lt_last _; left; exact hi
-    · use i.castSucc, Fin.castSucc_lt_last _; right; exact hi
+  · intro h
+    change ∃ i < Fin.last n, y i = 0 ∨ y i = 1 at h
+    obtain ⟨i, hin, hi⟩ := h
+    obtain hi | hi := hi
+    · apply Set.mem_union_left
+      apply Set.mem_iUnion.mpr
+      exact ⟨⟨i, hin⟩, hi⟩
+    · apply Set.mem_union_right
+      apply Set.mem_iUnion.mpr
+      exact ⟨⟨i, hin⟩, hi⟩
+  · intro h
+    change ∃ i < Fin.last n, y i = 0 ∨ y i = 1
+    obtain h | h := h
+    · obtain ⟨i, hi⟩ := Set.mem_iUnion.mp h
+      exact ⟨i.castSucc, Fin.castSucc_lt_last _, Or.inl hi⟩
+    · obtain ⟨i, hi⟩ := Set.mem_iUnion.mp h
+      exact ⟨i.castSucc, Fin.castSucc_lt_last _, Or.inr hi⟩
 
 lemma isClosed_bot (n : ℕ) : IsClosed (bot n) :=
   isClosed_eq ((continuous_apply _).comp (by fun_prop)) continuous_const
@@ -70,33 +82,50 @@ end cubeBoundaryJar
 namespace cubeBoundary
 
 /-- `Cube.boundaryJar` as a subset of `Cube.boundary` -/
-abbrev jar (n : ℕ) : Set (∂𝕀 (n + 1)) := {y | y.down.val ∈ Cube.boundaryJar (n + 1)}
+abbrev jar (n : ℕ) : Set (cubeBoundary.{u} (n + 1)) :=
+  {y | y.down.val ∈ Cube.boundaryJar (n + 1)}
 
 /-- `jar n` can be written as the union of `2 * n + 1` surfaces of the `(n + 1)`-cube. -/
 lemma jar_eq_union (n : ℕ) :
     jar n =
-      (⋃ (i : Fin n), {⟨⟨y, _⟩⟩ | y i.castSucc = 0}) ∪
-      (⋃ (i : Fin n), {⟨⟨y, _⟩⟩ | y i.castSucc = 1}) ∪
-      {⟨⟨y, _⟩⟩ | y (Fin.last _) = 0} := by
+      (⋃ (i : Fin n), {y | y.down.val i.castSucc = 0}) ∪
+      (⋃ (i : Fin n), {y | y.down.val i.castSucc = 1}) ∪
+      {y | y.down.val (Fin.last _) = 0} := by
   ext ⟨x, ⟨i, hi⟩⟩
   constructor
-  all_goals simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq]
-  · intro ⟨_, hxn⟩
+  · intro h
+    change (∃ j, x j = 0 ∨ x j = 1) ∧
+      (x (Fin.last n) = 1 → ∃ j < Fin.last n, x j = 0 ∨ x j = 1) at h
+    obtain ⟨_, hxn⟩ := h
     by_cases hin : i = Fin.last _
     · subst hin; obtain hi | hi := hi
-      · right; exact hi
+      · apply Set.mem_union_right
+        exact hi
       · obtain ⟨j, hjn, hj⟩ := hxn hi
-        left; obtain hj | hj := hj
-        · left; use ⟨j, hjn⟩; exact hj
-        · right; use ⟨j, hjn⟩; exact hj
-    · left; obtain hi | hi := hi
-      · left; use ⟨i, Fin.lt_last_iff_ne_last.mpr hin⟩; exact hi
-      · right; use ⟨i, Fin.lt_last_iff_ne_last.mpr hin⟩; exact hi
+        apply Set.mem_union_left
+        obtain hj | hj := hj
+        · apply Set.mem_union_left
+          exact Set.mem_iUnion.mpr ⟨⟨j, hjn⟩, hj⟩
+        · apply Set.mem_union_right
+          exact Set.mem_iUnion.mpr ⟨⟨j, hjn⟩, hj⟩
+    · apply Set.mem_union_left
+      obtain hi | hi := hi
+      · apply Set.mem_union_left
+        exact Set.mem_iUnion.mpr ⟨⟨i, Fin.lt_last_iff_ne_last.mpr hin⟩, hi⟩
+      · apply Set.mem_union_right
+        exact Set.mem_iUnion.mpr ⟨⟨i, Fin.lt_last_iff_ne_last.mpr hin⟩, hi⟩
   · intro hx
-    obtain (⟨i, hi⟩ | ⟨i, hi⟩) | hx := hx
-    · apply Cube.mem_boundaryJar_of_lt_last; use i.castSucc, Fin.castSucc_lt_last _; left; exact hi
-    · apply Cube.mem_boundaryJar_of_lt_last; use i.castSucc, Fin.castSucc_lt_last _; right; exact hi
-    · apply Cube.mem_boundaryJar_of_exists_eq_zero; use Fin.last _
+    change x ∈ Cube.boundaryJar (n + 1)
+    obtain hx | hx := hx
+    · obtain hx | hx := hx
+      · obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
+        apply Cube.mem_boundaryJar_of_lt_last
+        exact ⟨i.castSucc, Fin.castSucc_lt_last _, Or.inl hi⟩
+      · obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
+        apply Cube.mem_boundaryJar_of_lt_last
+        exact ⟨i.castSucc, Fin.castSucc_lt_last _, Or.inr hi⟩
+    · apply Cube.mem_boundaryJar_of_exists_eq_zero
+      exact ⟨Fin.last _, hx⟩
 
 lemma isClosed_jar (n : ℕ) : IsClosed (jar n) := by
   rw [jar_eq_union]
@@ -112,14 +141,17 @@ end cubeBoundary
 namespace cubeBoundaryProdI  -- ∂𝕀 (n + 1) × I
 
 /-- The back surface of `∂𝕀 (n + 1) × I` -/
-abbrev back (n : ℕ) : Set (∂𝕀 (n + 1) × I) := { pt | pt.fst.down.val ∈ Cube.boundaryLid (n + 1) }
+abbrev back (n : ℕ) : Set (cubeBoundary.{u} (n + 1) × I) :=
+  { pt | pt.fst.down.val ∈ Cube.boundaryLid (n + 1) }
 -- abbrev back (n : ℕ) : Set (∂𝕀 (n + 1) × I) := { ⟨⟨⟨y, _⟩⟩, _⟩ | y (Fin.last _) = 1 }
 
 /-- The front, left, and right surfaces of `∂𝕀 (n + 1) × I` -/
-abbrev flr (n : ℕ) : Set (∂𝕀 (n + 1) × I) := { pt | pt.fst.down.val ∈ Cube.boundaryJar (n + 1) }
+abbrev flr (n : ℕ) : Set (cubeBoundary.{u} (n + 1) × I) :=
+  { pt | pt.fst.down.val ∈ Cube.boundaryJar (n + 1) }
 
 /-- `backFlrCover` -/
-abbrev backFlrCover (n : ℕ) : Fin 2 → Set (∂𝕀 (n + 1) × I) := ![back n, flr n]
+abbrev backFlrCover (n : ℕ) : Fin 2 → Set (cubeBoundary.{u} (n + 1) × I) :=
+  ![back n, flr n]
 
 lemma backFlrCover_cover (n : ℕ) :
     ∀ pt : ∂𝕀 (n + 1) × I, ∃ k, pt ∈ backFlrCover n k := by
@@ -152,14 +184,14 @@ def backIsoCube (n : ℕ) : back n ≃ₜ (I^ Fin (n + 1)) where
   left_inv := by
     intro ⟨⟨⟨y, hyb⟩, t⟩, hyl⟩
     change y ∈ Cube.boundaryLid (n + 1) at hyl
-    simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.apply_symm_apply, Subtype.mk.injEq,
-      Prod.mk.injEq, and_true]
+    simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.apply_symm_apply, Subtype.mk.injEq]
     congr 2
-    ext i
-    congr 1
+    apply Subtype.ext
+    funext i
     by_cases hin : i = Fin.last _
-    · rw [hin, Cube.splitAtLast_symm_apply_last, hyl]
-    · rw [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ hin]; rfl
+    · subst i
+      exact (Cube.splitAtLast_symm_apply_last 1 (Cube.splitAtLast y).2).trans hyl.symm
+    · exact (Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ hin).trans rfl
   right_inv y := by
     simp only [Homeomorph.apply_symm_apply, Prod.mk.eta, Homeomorph.symm_apply_apply]
   continuous_toFun := by fun_prop
@@ -167,8 +199,8 @@ def backIsoCube (n : ℕ) : back n ≃ₜ (I^ Fin (n + 1)) where
 
 
 variable {n : ℕ} {Y : Type u} [TopologicalSpace Y]
-variable (f : C(∂𝕀 (n + 1), Y))
-variable (h : C(⊔𝕀 (n + 1) × I, Y))
+variable (f : C(cubeBoundary.{u} (n + 1), Y))
+variable (h : C(cubeBoundaryJar.{u} (n + 1) × I, Y))
 
 
 
@@ -181,7 +213,9 @@ def jarBotMap : C(bot n, Y) where
     haveI : y' ∈ ∂I^ (n + 1) := by
       use Fin.last _; right; unfold y'; rw [Cube.splitAtLast_symm_apply_last]
     f ⟨⟨y', ‹_›⟩⟩
-  continuous_toFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
+  continuous_toFun := by
+    simp only [Set.coe_setOf]
+    exact f.continuous_toFun.comp (by fun_prop)
 
 /-- `jarSidesMap` -/
 def jarSidesMap : C(sides n, Y) where
@@ -193,7 +227,9 @@ def jarSidesMap : C(sides n, Y) where
       unfold y'
       rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.lt_last_iff_ne_last.mp hin)]
     h ⟨⟨⟨y', ‹_›⟩⟩, (Cube.splitAtLast y).fst⟩
-  continuous_toFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
+  continuous_toFun := by
+    simp only [Set.coe_setOf]
+    exact h.continuous_toFun.comp (by fun_prop)
 
 /-- `botSidesCoverMapVec` -/
 def botSidesCoverMapVec : (k : Fin 2) → C(botSidesCover n k, Y) :=
@@ -222,10 +258,9 @@ lemma botSidesCoverMapVec_compatible_01
   change f ⟨y', _⟩ = h ⟨⟨y', _⟩, (Cube.splitAtLast y).1⟩
   rw [hsplit]
   generalize_proofs
-  have := congrFun fh ⟨y', ‹_›⟩
-  simp only [Function.comp_apply] at this
-  rw [← this]
-  rfl
+  let yj : cubeBoundaryJar.{u} (n + 1) := ⟨⟨y', ‹_›⟩⟩
+  have hfh := congrFun fh yj
+  exact hfh
 
 lemma botSidesCoverMapVec_compatible
     (fh : f ∘ (cubeBoundaryJarInclToBoundary (n + 1)) = h ∘ fun x ↦ (x, 0)) :
@@ -255,7 +290,9 @@ noncomputable def backMap
     let r := Cube.strongDeformRetrToBoundaryJar n
     let yt' := r.r (backIsoCube n yt)
     jarMap f h fh <| ULift.up.{u} ⟨yt', Set.range_subset_iff.mp r.r_range _⟩
-  continuous_toFun := by simp only [Set.coe_setOf]; fun_prop
+  continuous_toFun := by
+    simp only [Set.coe_setOf]
+    exact (jarMap f h fh).continuous_toFun.comp (by fun_prop)
 
 /-- `flrMap` -/
 def flrMap : C(flr n, Y) where
@@ -312,7 +349,6 @@ lemma backFlrCover_mapVec_compatible_01
   replace : yt_jar ∈ cubeBoundaryJar.botSidesCover n 1 := by
     obtain ⟨i, hin, hi⟩ := hy1.right hy0
     use i, hin
-    unfold backIsoCube yt
     change Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 0 ∨
         Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 1
     rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.lt_last_iff_ne_last.mp hin)]
@@ -360,9 +396,9 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
   use H
   constructor
   · ext ⟨y, ⟨i, hyi⟩⟩
-    simp only [Function.comp_apply]
-    let yb : cubeBoundary.{u} (n + 1) := ⟨y, ⟨i, hyi⟩⟩
+    let yb : cubeBoundary.{u} (n + 1) := ULift.up.{u} ⟨y, ⟨i, hyi⟩⟩
     let yb_t : cubeBoundary.{u} (n + 1) × I := ⟨yb, 0⟩
+    change f yb = H yb_t
     by_cases hyn : y (Fin.last _) = 1
     · --     __________
       --    /|        /|
@@ -449,7 +485,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       rw [← this]
       rfl
   · ext ⟨⟨y, hy⟩, t⟩
-    simp only [Function.comp_apply, Prod.map_apply, id_eq]
+    simp only [Function.comp_apply]
     let yb_t : cubeBoundary.{u} (n + 1) × I := ⟨⟨y, Cube.boundaryJar_subset_boundary _ hy⟩, t⟩
     change _ = H yb_t
     have := ContinuousMap.liftCoverClosed_coe' _ _ (backFlrCover_mapVec_compatible f h fh)

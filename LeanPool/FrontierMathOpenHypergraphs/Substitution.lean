@@ -622,11 +622,9 @@ theorem substitution_theorem {t : ℕ}
       intro x hx hy
       rcases Finset.mem_image.mp hx with ⟨v, hv, rfl⟩
       simp_all
-  have hOldLe : ∀ i, oldCount i ≤ cap i := by
-    intro i
-    simpa [oldCount, uniqueCoverage, oldUniqueVerticesOnBlock, selectedOldVertexCount] using
-      hBlocks.partitionBound i (selectedBlockEdges F blocks P i)
-        (selectedBlockEdges_subset F blocks P i)
+  have hOldLe : ∀ i, oldCount i ≤ cap i := fun i =>
+    hBlocks.partitionBound i (selectedBlockEdges F blocks P i)
+      (selectedBlockEdges_subset F blocks P i)
   have hOldZero : ∀ i ∈ T \ I, oldCount i = 0 := by
     intro i hi
     have hle : selectedBlockCount F blocks P i ≤ 1 :=

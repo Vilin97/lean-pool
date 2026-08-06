@@ -620,7 +620,7 @@ variable {𝓢 : S} {T : Set F} [Sound 𝓢 (Semantics.models M T)]
 
 lemma consequence_of_provable {f : F} : 𝓢 ⊢! f → T ⊨[M] f := sound
 
-lemma consistent_of_satisfiable [LogicalConnective F] [∀ 𝓜 : M, Semantics.Meaningful 𝓜] :
+lemma consistent_of_satisfiable [∀ 𝓜 : M, Semantics.Meaningful 𝓜] :
     Semantics.Satisfiable M T → Entailment.Consistent 𝓢 :=
   fun H ↦ consistent_of_meaningful (Semantics.meaningful_iff_satisfiableSet.mp H)
 
@@ -657,14 +657,17 @@ section «lp_section_13»
 
 variable [LogicalConnective F] [∀ 𝓜 : M, Semantics.Meaningful 𝓜]
 
+omit [LogicalConnective F] in
 lemma satisfiable_of_consistent :
     Entailment.Consistent 𝓢 → Semantics.Satisfiable M s :=
   fun H ↦ Semantics.meaningful_iff_satisfiableSet.mpr (meaningful_of_consistent H)
 
+omit [LogicalConnective F] in
 lemma inconsistent_of_unsatisfiable :
     ¬Semantics.Satisfiable M s → Entailment.Inconsistent 𝓢 := by
   contrapose; simpa [←Entailment.not_consistent_iff_inconsistent] using satisfiable_of_consistent
 
+omit [LogicalConnective F] in
 lemma consistent_iff_satisfiable [Sound 𝓢 (Semantics.models M s)] :
     Entailment.Consistent 𝓢 ↔ Semantics.Satisfiable M s :=
   ⟨satisfiable_of_consistent, Sound.consistent_of_satisfiable⟩

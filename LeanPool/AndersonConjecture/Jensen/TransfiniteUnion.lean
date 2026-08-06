@@ -70,7 +70,6 @@ end NSubringChain
 
 /-- Prime elements of any R_α remain prime in the union. -/
 theorem transfinite_union_primes_preserved
-    [Nonempty ι]
     (chain : NSubringChain T ι)
     (S : Subring T)
     (hS : ∀ (α : ι), (chain.ring α).carrier ≤ S)
@@ -138,7 +137,6 @@ theorem transfinite_union_primes_preserved
 If x is irreducible in ⋃ R_α, then x ∈ R_β for some β, and x is prime
 in R_β (since R_β is a UFD), hence x | a or x | b in R_β ⊆ ⋃ R_α. -/
 theorem transfinite_union_isUFD
-    [Nonempty ι]
     (chain : NSubringChain T ι)
     (S : Subring T)
     (hS : ∀ (α : ι), (chain.ring α).carrier ≤ S)

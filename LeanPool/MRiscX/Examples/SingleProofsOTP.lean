@@ -16,6 +16,9 @@ import LeanPool.MRiscX.Tactics.CodeProofTactics
 
 This module provides the per-instruction lemmas of the One-Time-Pad proof.
 -/
+
+attribute [local implicit_reducible] Registers Memory
+
 -- import Mathlib.Algebra.Order.Sub.Unbundled.Basic
 
 open Lean Elab Parser Meta Tactic

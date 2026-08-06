@@ -50,13 +50,12 @@ private lemma rhoFockNormSq_nonneg {D : ℕ} (a : Fin D → ℂ) : 0 ≤ rhoFock
 
 /-! ## Auxiliary lemmas for polar decomposition -/
 
-private lemma filter_cast_eq_singleton {D : ℕ} (k : Fin D) :
+private lemma filter_embedding_eq_singleton {D : ℕ} (e : Fin D ↪ ℤ) (k : Fin D) :
     (Finset.univ : Finset (Fin D)).filter
-      (fun j => ((j.val + 1 : ℕ) : ℤ) = ((k.val + 1 : ℕ) : ℤ)) = {k} := by
-  ext j; constructor
-  · simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
-    intro h; ext; omega
-  · simp_all
+      (fun j => e j = e k) = {k} := by
+  ext j
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_singleton]
+  exact ⟨fun h ↦ e.injective h, congrArg e⟩
 
 private lemma integrable_pow_mul_exp_neg_sq (n : ℕ) :
     Integrable (fun r : ℝ => r ^ n * Real.exp (-r ^ 2)) volume := by
@@ -84,35 +83,35 @@ private lemma radial_gaussian_integral (n : ℕ) :
 private lemma circleNormSq_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r : ℝ) :
     ∫ t : AddCircle T, ‖polyEvalCircle a r t‖ ^ 2 ∂AddCircle.haarAddCircle =
     ∑ k : Fin D, ‖a k‖ ^ 2 * (r ^ 2) ^ (k.val + 1) := by
-  let E' := (Finset.univ : Finset (Fin D)).map
+  let e : Fin D ↪ ℤ :=
     ⟨fun k => ((k.val + 1 : ℕ) : ℤ), fun k₁ k₂ h => by
       simp only at h; exact Fin.ext (by omega)⟩
+  have he (k : Fin D) : e k = ((k.val + 1 : ℕ) : ℤ) := rfl
+  let E' := (Finset.univ : Finset (Fin D)).map e
   let b : ℤ → ℂ := fun n => ∑ k ∈ (Finset.univ : Finset (Fin D)).filter
-    (fun k => ((k.val + 1 : ℕ) : ℤ) = n), a k * (r : ℂ) ^ (k.val + 1)
+    (fun k => e k = n), a k * (r : ℂ) ^ (k.val + 1)
   have hb_eq : ∀ k : Fin D,
-      b ((k.val + 1 : ℕ) : ℤ) = a k * (r : ℂ) ^ (k.val + 1) := by
-    intro k; simp only [b]
-    rw [filter_cast_eq_singleton, Finset.sum_singleton]
+      b (e k) = a k * (r : ℂ) ^ (k.val + 1) := by
+    intro k
+    simp only [b]
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   let Pcont : C(AddCircle T, ℂ) := ∑ k : Fin D,
-    (a k * (r : ℂ) ^ (k.val + 1)) • fourier ((k.val + 1 : ℕ) : ℤ)
+    (a k * (r : ℂ) ^ (k.val + 1)) • fourier (e k)
   have hPcont_eq : ∀ t : AddCircle T, (Pcont : AddCircle T → ℂ) t =
       polyEvalCircle a r t := by
     intro t; simp only [Pcont, polyEvalCircle, ContinuousMap.coe_sum, Finset.sum_apply,
       ContinuousMap.coe_smul, Pi.smul_apply, smul_eq_mul]
+    simp_rw [he]
   let PLp := (ContinuousMap.toLp (α := AddCircle T) 2 AddCircle.haarAddCircle ℂ) Pcont
   have hPLp' : PLp = ∑ n ∈ E', b n • fourierLp 2 n := by
     simp only [PLp, Pcont, fourierLp, map_sum, map_smul, E', b]
     rw [Finset.sum_map]; congr 1; ext k
-    simp only [Function.Embedding.coeFn_mk]
-    rw [filter_cast_eq_singleton, Finset.sum_singleton]
+    rw [filter_embedding_eq_singleton e k, Finset.sum_singleton]
   have hinner_orth : @inner ℂ _ _ PLp PLp =
       Complex.ofReal (∑ k : Fin D, ‖a k * (r : ℂ) ^ (k.val + 1)‖ ^ 2) := by
     rw [hPLp', orthonormal_fourier.inner_sum b b E']
-    rw [show E' = (Finset.univ : Finset (Fin D)).map
-      ⟨fun k => ((k.val + 1 : ℕ) : ℤ), fun k₁ k₂ h => by
-        simp only at h; exact Fin.ext (by omega)⟩ from rfl]
+    rw [show E' = (Finset.univ : Finset (Fin D)).map e from rfl]
     rw [Finset.sum_map, Complex.ofReal_sum]; congr 1; ext k
-    simp only [Function.Embedding.coeFn_mk]
     rw [hb_eq k, mul_comm (starRingEnd ℂ _), mul_conj]
     congr 1; exact (Complex.sq_norm _).symm
   have hnorm_eq : ∀ k : Fin D,

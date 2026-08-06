@@ -68,9 +68,8 @@ private lemma tailCutoffCoeff_partialSum {y n : ℕ} (hy0 : 1 ≤ y) (hy : y ≤
   calc
     (Finset.Icc 0 n).sum (tailCutoffCoeff y)
         = ((Finset.Icc 0 n).filter (fun q => y ≤ q)).sum (fun q => Λ q / (q : ℝ)) := by
-            simpa [tailCutoffCoeff] using
-              (Finset.sum_filter (s := Finset.Icc 0 n) (p := fun q => y ≤ q)
-                (f := fun q => Λ q / (q : ℝ))).symm
+            rw [Finset.sum_filter]
+            exact Finset.sum_congr rfl fun q _ => rfl
     _ = (Finset.Icc y n).sum (fun q => Λ q / (q : ℝ)) := by rw [hfilter]
     _ = (Finset.Icc 0 n).sum (fun q => Λ q / (q : ℝ)) -
           (Finset.Icc 0 (y - 1)).sum (fun q => Λ q / (q : ℝ)) := by

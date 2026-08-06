@@ -509,8 +509,7 @@ theorem maximal_not_assoc_local
 IT ∩ R = I for all f.g. ideals, then R is Noetherian.
 (Local copy of the first conjunct of Construction.heitmann_prop1.) -/
 theorem heitmann_prop1_noetherian
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
-    (R : Subring T) [IsLocalRing R]
+    (R : Subring T)
     (h_closed : ∀ (I : Ideal R), I.FG →
       ∀ (c : R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :
     IsNoetherianRing R := by
@@ -561,7 +560,6 @@ theorem heitmann_prop1_noetherian
     h_closed _ hJ_fg c (hJT_eq ▸ Ideal.mem_map_of_mem R.subtype hc))⟩
 
 lemma jensen_map_maxIdeal_le_of_closed
-    [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
     (R : Subring T) [IsLocalRing ↥R]
     (h_closed : ∀ (I : Ideal ↥R), I.FG →
       ∀ (c : ↥R), (c : T) ∈ Ideal.map R.subtype I → c ∈ I) :

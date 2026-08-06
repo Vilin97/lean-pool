@@ -70,7 +70,7 @@ lemma exists_repr_le_of_isNeighbour (M : Lattice R) (x : Vertices R)
   refine ⟨(b.ntwist₂ hϖ (inv ⟦M⟧ x) 0).toLattice, hL, ?_, ?_⟩
   · rw [← hM, Basis.toLattice_module]
     apply b.ntwist₂_toSubmodule_le
-  · rw [isNeighbour_def] at h
+  · replace h : inv ⟦M⟧ x = 1 := h
     rw [h, ← hM, Basis.ntwist₂, Nat.cast_one, CharP.cast_eq_zero, ← Nat.cast_inj (R := ℤ),
       dist_twist₂ b hϖ]
     simp
@@ -189,7 +189,7 @@ theorem isNeighbour_iff (L M : Vertices R) :
           maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
         exact hϖlt
     }
-    rw [← hL, ← hM, isNeighbour_symm]
+    rw [isNeighbour_symm, ← hL, ← hM]
     exact isNeighbour_of_isStandardNeighbour hstd
 
 end «StandardNeighbour»
@@ -504,7 +504,7 @@ lemma _root_.BruhatTits.Lattice.exists_GL_smul_eq_ntwist₂_of_isSimpleChain_con
   simp at hl
   have hstd : IsStandardNeighbour M (b.ntwist₂ hϖ (l.length + 1) 0).toLattice := by
     rw [← hl.left]
-    exact hMl.isStandardNeighbour.rel_head
+    exact hMl.isStandardNeighbour.rel
   refine hstd.exists_unipotent_smul_eq_ntwist₂ hϖ l.length M b fun heq ↦ ?_
   have hϖ' : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
   have hsim : Lattice.IsSimilar R L₂ M := ⟨Units.mk0 ϖ.val hϖ', by

@@ -40,12 +40,16 @@ theorem ker_jStar_supset_im_iStar (f : π_ (n + 1) X a) :
   change _ = ⟦RelGenLoop.const⟧
   let f' := Quotient.out f   -- pick a representative of the homotopy class `f`
   let g' := Quotient.out g
-  have : iStar (n + 1) X A a ⟦g'⟧ = ⟦f'⟧ := by simp only [Quotient.out_eq, hgf, g', f']
+  have hf : (⟦f'⟧ : π_ (n + 1) X a) = f := Quotient.out_eq f
+  have hg : (⟦g'⟧ : π_ (n + 1) A a) = g := Quotient.out_eq g
+  have : iStar (n + 1) X A a ⟦g'⟧ = ⟦f'⟧ :=
+    (congrArg (iStar (n + 1) X A a) hg).trans (hgf.trans hf.symm)
   replace : iStar' (n + 1) X A a g' = ⟦f'⟧ := this
   have H : ContinuousMap.HomotopicRel _ f'.val (∂I^(n+1)) := Quotient.eq.mp this
   have : jStar (n + 1) X A a ⟦f'⟧ = ⟦RelGenLoop.const⟧ :=
     compression_criterion_1_subtype n X A a _ g'.val H.some.symm
-  rw [← this]; simp only [f', Quotient.out_eq]
+  rw [← this]
+  exact congrArg (jStar (n + 1) X A a) hf.symm
 
 /-- `Ker j* ⊆ Im i*` in
 `⋯ πₙ(A, a) ---i*ₙ---> πₙ(X, a) ---j*ₙ---> πₙ(X, A, a) ⋯` -/
@@ -53,7 +57,10 @@ theorem ker_jStar_subset_im_iStar (f : π_ n X a) :
     jStar n X A a f = default → ∃ g, iStar n X A a g = f := fun hf0 ↦ by
   change _ = ⟦RelGenLoop.const⟧ at hf0
   let f' := Quotient.out f
-  replace hf0 : jStar n X A a ⟦f'⟧ = ⟦RelGenLoop.const⟧ := by rw [← hf0, Quotient.out_eq f]
+  have hf : (⟦f'⟧ : π_ n X a) = f := Quotient.out_eq f
+  replace hf0 : jStar n X A a ⟦f'⟧ = ⟦RelGenLoop.const⟧ := by
+    rw [hf]
+    exact hf0
   replace hf0 : jStar' n X A a f' = ⟦RelGenLoop.const⟧ := hf0
   have ⟨g', H⟩ := compression_criterion_2_subtype n X A a _ hf0
   -- `f'` is homotopic rel `∂I^n` to a map `g'`.
@@ -63,9 +70,10 @@ theorem ker_jStar_subset_im_iStar (f : π_ n X a) :
     simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.apply_one, coe_mk,
       Function.comp_apply] at this
     exact SetCoe.ext <| this.trans <| f'.property y hy
-  use ⟦⟨g', g'_prop⟩⟧
-  suffices iStar n X A a _ = ⟦f'⟧ by rw [this, Quotient.out_eq f]
-  change iStar' n X A a _ = ⟦f'⟧
+  let gLoop : Ω^ (Fin n) A a := ⟨g', g'_prop⟩
+  use ⟦gLoop⟧
+  suffices iStar n X A a ⟦gLoop⟧ = ⟦f'⟧ from this.trans hf
+  change iStar' n X A a gLoop = ⟦f'⟧
   exact Quotient.eq.mpr <| Nonempty.intro H.some.symm
 
 /-- `Ker j* = Im i*` (for `n ≥ 1`) in
@@ -81,7 +89,8 @@ theorem ker_bd_supset_im_jStar (f : π_rel (n + 1) X A a) :
     (∃ g, jStar (n+1) X A a g = f) → bd n X A a f = default := fun ⟨g, hgf⟩ ↦ by
   change _ = ⟦GenLoop.const⟧
   let g' := Quotient.out g
-  rw [(by simp only [g', Quotient.out_eq] : g = ⟦g'⟧)] at hgf
+  have hg : (⟦g'⟧ : π_ (n + 1) X a) = g := Quotient.out_eq g
+  rw [← hg] at hgf
   rw [← hgf]
   change bd' .. = _
   exact Quotient.eq.mpr <| Nonempty.intro <|  -- just use the const homotopy of the const map
@@ -250,7 +259,8 @@ theorem kerBdSubsetImJStar (f : π_rel (n + 1) X A a) :
     bd n X A a f = default → ∃ g, jStar (n+1) X A a g = f := fun hf0 ↦ by
   change _ = ⟦GenLoop.const⟧ at hf0
   let f' := Quotient.out f
-  rw [(by simp only [f', Quotient.out_eq] : f = ⟦f'⟧)] at hf0 ⊢
+  have hf : (⟦f'⟧ : π_rel (n + 1) X A a) = f := Quotient.out_eq f
+  rw [← hf] at hf0 ⊢
   change bd' .. = _ at hf0
   let H : HomotopyRel .. := Quotient.eq.mp hf0 |>.some
   let g' : Ω^ (Fin (n+1)) X a := kerBdSubsetImJStar.g' _ _ _ _ f' hf0
@@ -349,7 +359,8 @@ theorem ker_iStar_supset_im_bd (f : π_ n A a) :
     (∃ g, bd n X A a g = f) → iStar n X A a f = default := fun ⟨g, hgf⟩ ↦ by
   change _ = ⟦GenLoop.const⟧
   let g' := Quotient.out g
-  rw [(by simp only [g', Quotient.out_eq] : g = ⟦g'⟧)] at hgf
+  have hg : (⟦g'⟧ : π_rel (n + 1) X A a) = g := Quotient.out_eq g
+  rw [← hg] at hgf
   rw [← hgf]
   change iStar' .. = _
   apply Eq.symm
@@ -388,7 +399,8 @@ theorem ker_iStar_subset_im_bd (f : π_ n A a) :
     iStar n X A a f = default → ∃ g, bd n X A a g = f := fun hf0 ↦ by
   change _ = ⟦GenLoop.const⟧ at hf0
   let f' := Quotient.out f
-  rw [(by simp only [f', Quotient.out_eq] : f = ⟦f'⟧)] at hf0 ⊢
+  have hf : (⟦f'⟧ : π_ n A a) = f := Quotient.out_eq f
+  rw [← hf] at hf0 ⊢
   change iStar' .. = _ at hf0
   let H' : HomotopyRel .. := Quotient.eq.mp hf0.symm |>.some
   let H : RelGenLoop (n + 1) X A a :=

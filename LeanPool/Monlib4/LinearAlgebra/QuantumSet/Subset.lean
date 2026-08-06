@@ -50,10 +50,10 @@ lemma QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv {A : Type*} [Ring A] [Al
 variable {A : Type*} [ha : starAlgebra A]
 
 instance QuantumSet.subsetStarAlgebra (k : ℝ) :
-    _root_.starAlgebra (QuantumSet.subset k A) where
-  modAut r := (toSubsetAlgEquiv k).symm.trans ((ha.modAut r).trans (toSubsetAlgEquiv k))
-  modAut_trans := ha.modAut_trans
-  modAut_star := ha.modAut_star
+    _root_.starAlgebra (QuantumSet.subset k A) :=
+  @starAlgebra.mk _ ha.toRing ha.toAlgebra ha.toStarRing ha.toStarModule
+    (fun r => (toSubsetAlgEquiv k).symm.trans ((ha.modAut r).trans (toSubsetAlgEquiv k)))
+    ha.modAut_trans ha.modAut_star
 
 lemma QuantumSet.subsetStarAlgebra_modAut_apply (r : ℝ) (x : QuantumSet.subset new_k A) :
   (QuantumSet.subsetStarAlgebra new_k).modAut r x =
@@ -337,13 +337,14 @@ noncomputable def QuantumSet.subsetTensorAlgEquiv {A B : Type*} [starAlgebra A]
     (QuantumSet.toSubsetAlgEquiv r).symm).trans (QuantumSet.toSubsetAlgEquiv r)
 theorem QuantumSet.subsetTensorAlgEquiv_tmul {A B : Type*} [starAlgebra A] [starAlgebra B]
   (r : ℝ) (x : QuantumSet.subset r A) (y : QuantumSet.subset r B) :
-  QuantumSet.subsetTensorAlgEquiv r (x ⊗ₜ[ℂ] y)
+  (QuantumSet.subsetTensorAlgEquiv (A := A) (B := B) r) (x ⊗ₜ[ℂ] y)
     = QuantumSet.toSubsetAlgEquiv r
       ((QuantumSet.toSubsetAlgEquiv r).symm x ⊗ₜ[ℂ] (QuantumSet.toSubsetAlgEquiv r).symm y) :=
 rfl
 theorem QuantumSet.subsetTensorAlgEquiv_symm_tmul {A B : Type*} [starAlgebra A] [starAlgebra B]
   (r : ℝ) (a : A) (b : B) :
-  (QuantumSet.subsetTensorAlgEquiv r).symm (QuantumSet.toSubsetAlgEquiv r (a ⊗ₜ[ℂ] b))
+  (QuantumSet.subsetTensorAlgEquiv (A := A) (B := B) r).symm
+    (QuantumSet.toSubsetAlgEquiv r (a ⊗ₜ[ℂ] b))
     = (QuantumSet.toSubsetAlgEquiv r)
       ((QuantumSet.toSubsetAlgEquiv r a) ⊗ₜ[ℂ] (QuantumSet.toSubsetAlgEquiv r b)) :=
 rfl
@@ -518,19 +519,24 @@ theorem QuantumSet.innerOne_map_one_toSubset_eq
 instance {A : Type*} [hA : PartialOrder A] (r : ℝ) :
     PartialOrder (QuantumSet.subset r A) :=
 hA
-instance {A : Type*} [hA : NonUnitalNonAssocSemiring A] (r : ℝ) :
+instance (priority := low) {A : Type*} [hA : NonUnitalNonAssocSemiring A] (r : ℝ) :
   NonUnitalNonAssocSemiring (QuantumSet.subset r A) :=
 hA
-instance {A : Type*} [hA : NonUnitalSemiring A] (r : ℝ) :
+instance (priority := low) {A : Type*} [hA : NonUnitalSemiring A] (r : ℝ) :
   NonUnitalSemiring (QuantumSet.subset r A) :=
 hA
-instance {A : Type*} [NonUnitalNonAssocSemiring A] [hA : StarRing A] (r : ℝ) :
+instance (priority := low) {A : Type*} [NonUnitalNonAssocSemiring A] [hA : StarRing A]
+    (r : ℝ) :
   StarRing (QuantumSet.subset r A) :=
 hA
-instance {A : Type*} [NonUnitalSemiring A] [PartialOrder A] [StarRing A]
+instance {A : Type*} [hSemiring : NonUnitalSemiring A] [hOrder : PartialOrder A]
+    [hStar : StarRing A] [hA : StarOrderedRing A] (r : ℝ) :
+    @StarOrderedRing (QuantumSet.subset r A) hSemiring hOrder hStar :=
+  hA
+instance (priority := high) {A : Type*} [Ring A] [PartialOrder A] [StarRing A]
     [hA : StarOrderedRing A] (r : ℝ) :
-  StarOrderedRing (QuantumSet.subset r A) :=
-hA
+    StarOrderedRing (QuantumSet.subset r A) :=
+  hA
 instance {A : Type*} [hA : Nontrivial A] (r : ℝ) :
   Nontrivial (QuantumSet.subset r A) :=
 hA
@@ -542,11 +548,11 @@ theorem QuantumSet.normOne_toSubset {A : Type*} [starAlgebra A] [QuantumSet A] (
   simp_rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), QuantumSet.subset_inner_eq,
     ← QuantumSet.toSubsetAlgEquiv_symm_eq_toSubsetEquiv, map_one]
 
-instance {A : Type*} [h : AddCommMonoid A] (r : ℝ) :
+instance (priority := low) {A : Type*} [h : AddCommMonoid A] (r : ℝ) :
     AddCommMonoid (QuantumSet.subset r A) :=
   h
 
-instance {A : Type*} [AddCommMonoid A] [h : Module ℂ A] (r : ℝ) :
+instance (priority := low) {A : Type*} [AddCommMonoid A] [h : Module ℂ A] (r : ℝ) :
     Module ℂ (QuantumSet.subset r A) :=
   h
 

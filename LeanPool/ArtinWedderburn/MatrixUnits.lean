@@ -168,8 +168,9 @@ theorem ring_to_matrix_ring_additive (a b : R) :
     (ringToMatrixRing R n hn mu) (a + b) =
       (ringToMatrixRing R n hn mu) a + (ringToMatrixRing R n hn mu) b := by
   ext i j
-  unfold ringToMatrixRing
-  simp only [ijCorner, Matrix.add_apply, NonUnitalSubring.val_add]
+  rw [Matrix.add_apply]
+  change (ijCorner R i j (a + b) : R) = (ijCorner R i j a : R) + (ijCorner R i j b : R)
+  simp only [ijCorner]
   noncomm_ring
 
 theorem matrixunit_iz_zi_eq_ii :
@@ -196,14 +197,13 @@ theorem ring_to_matrix_ring_multiplicative (a b : R) :
     (ringToMatrixRing R n hn mu) (a * b) =
       (ringToMatrixRing R n hn mu) a * (ringToMatrixRing R n hn mu) b := by
   ext i j
-  unfold ringToMatrixRing
+  rw [Matrix.mul_apply, _lift_sum]
+  change (ijCorner R i j (a * b) : R) =
+    ∑ k : Fin n, (ijCorner R i k a : R) * (ijCorner R k j b : R)
+  simp only [ijCorner]
   have hab : a * b = a * 1 * b := by simp
   rw [hab]
   rw [one_eq_sum_es_00e_00e R n hn mu]
-  simp only [Matrix.mul_apply, SetLike.coe_eq_coe]
-  unfold ijCorner
-  apply Subtype.ext
-  simp only [MulMemClass.mk_mul_mk]
   calc
     es ⟨0, hn⟩ i * ((a * ∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * b) * es j ⟨0, hn⟩ =
         (es ⟨0, hn⟩ i * a) * (∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * (b * es j ⟨0, hn⟩) := by
@@ -220,8 +220,6 @@ theorem ring_to_matrix_ring_multiplicative (a b : R) :
       · simp
       · intro x hx
         rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
-  symm
-  rw [_lift_sum]
 
 -- auxiliary lemma to rewrite matrix 1
 theorem matrix_one (S : Type*) [One S] [Zero S] [DecidableEq (Fin n)] :
@@ -347,9 +345,7 @@ def ringToMatrixIso :
   refine ⟨?_, ?_⟩
   · refine (injective_iff_map_eq_zero (ringToMatrixRingHom R)).mpr ?_
     intro a
-    simp only [ringToMatrixRingHom]
-    unfold ringToMatrixRing
-    simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
+    simp only [ringToMatrixRingHom, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
     intro h
     apply @corner_matrix_zero_crit R _ n hn mu
     intro i j

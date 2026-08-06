@@ -96,9 +96,7 @@ open scoped FiniteDimensional
 
 lemma Qam.Nontracial.CompleteGraph.adjoint_eq {E₁ E₂ : Type _} [NormedAddCommGroupOfRing E₁]
     [NormedAddCommGroupOfRing E₂] [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂]
-    [FiniteDimensional ℂ E₁] [FiniteDimensional ℂ E₂]
-    [IsScalarTower ℂ E₁ E₁] [IsScalarTower ℂ E₂ E₂]
-    [SMulCommClass ℂ E₁ E₁] [SMulCommClass ℂ E₂ E₂] :
+    [FiniteDimensional ℂ E₁] [FiniteDimensional ℂ E₂] :
   LinearMap.adjoint (Qam.completeGraph E₁ E₂) = Qam.completeGraph E₂ E₁ :=
 by rw [completeGraph_eq, ContinuousLinearMap.linearMap_adjoint, rankOne_adjoint]; rfl
 
@@ -225,9 +223,7 @@ theorem Qam.Nontracial.Complement'.qam.isReal
 
 theorem Qam.complement'_complement' {E₁ E₂ : Type _} [NormedAddCommGroupOfRing E₁]
     [NormedAddCommGroupOfRing E₂]
-    [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂] [FiniteDimensional ℂ E₁]
-    [FiniteDimensional ℂ E₂] [IsScalarTower ℂ E₁ E₁] [IsScalarTower ℂ E₂ E₂] [SMulCommClass ℂ E₁ E₁]
-    [SMulCommClass ℂ E₂ E₂]
+    [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂]
     (x : E₁ →ₗ[ℂ] E₂) : Qam.complement' (Qam.complement' x) = x :=
   sub_sub_cancel _ _
 
@@ -349,9 +345,7 @@ theorem Qam.completeGraph_reflexiveComplement_eq_trivialGraph [QuantumSetDeltaFo
 
 theorem Qam.complement'_eq {E₁ E₂ : Type _} [NormedAddCommGroupOfRing E₁]
     [NormedAddCommGroupOfRing E₂]
-    [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂] [FiniteDimensional ℂ E₁]
-    [FiniteDimensional ℂ E₂] [IsScalarTower ℂ E₁ E₁] [IsScalarTower ℂ E₂ E₂] [SMulCommClass ℂ E₁ E₁]
-    [SMulCommClass ℂ E₂ E₂] (a : E₂ →ₗ[ℂ] E₁) :
+    [InnerProductSpace ℂ E₁] [InnerProductSpace ℂ E₂] (a : E₂ →ₗ[ℂ] E₁) :
     Qam.complement' a = Qam.completeGraph E₁ E₂ - a :=
   rfl
 

@@ -68,10 +68,13 @@ lemma ωScottContinuous_some
     }
     change _ = Option.map ωSup (Chain.Option.distrib c')
     have : c' = Chain.Option.some 0 (c.map ⟨f, hf.monotone⟩) := by
-      ext n
+      apply Chain.ext
+      funext n
+      change some (f (c n)) = _
       simp only [
-        Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, Option.some.injEq,
-        Chain.Option.some_coe, Nat.not_lt_zero, ↓reduceIte, Nat.sub_zero, c']
+        Chain.coe_map, Function.comp_apply, Option.some.injEq,
+        Chain.Option.some_coe, Nat.not_lt_zero, ↓reduceIte, Nat.sub_zero]
+      rfl
     simp only [this, Chain.Option.distrib_some, Option.map_some]
 
 @[fun_prop]
@@ -107,7 +110,10 @@ lemma ωScottContinuous_elim
       symm
       simp only [Chain.Option.distrib_none, Option.map_none, Option.elim_none]
       rw [eq_bot_iff, ωSup_le_iff]
-      simp_all
+      intro i
+      change (f (c i)).elim ⊥ (h (c i)) ≤ ⊥
+      rw [hc' i]
+      exact le_rfl
     | some i c'' =>
       simp only [
         Chain.ext_iff, Chain.coe_map, OrderHom.coe_mk, funext_iff,
@@ -121,21 +127,23 @@ lemma ωScottContinuous_elim
         apply le_ωSup_of_le (i + j)
         specialize hc' (i + j)
         simp only [add_lt_iff_neg_left, not_lt_zero, ↓reduceIte, add_tsub_cancel_left] at hc'
-        simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply, hc', Option.elim_some]
+        change h (c j) (c'' j) ≤ (f (c (i + j))).elim ⊥ (h (c (i + j)))
+        rw [hc']
         apply hh.monotone (_ : (_, _) ≤ (_, _))
         simp only [ge_iff_le, Prod.mk_le_mk, le_refl, and_true]
         apply c.monotone
         simp only [le_add_iff_nonneg_left, zero_le]
-      · simp only [ωSup_le_iff, Chain.coe_map, OrderHom.coe_mk, Function.comp_apply]
+      · simp only [ωSup_le_iff, Chain.coe_map, Function.comp_apply]
         intro j
         apply le_ωSup_of_le j
         specialize hc' j
         by_cases hji : j < i
-        · simp_all
+        · change (f (c j)).elim ⊥ (h (c j)) ≤ h (c j) (c'' j)
+          rw [hc']
+          simp only [hji, ↓reduceIte, Option.elim_none, bot_le]
         · simp only [hji, ↓reduceIte] at hc'
-          simp only [
-            hc', Option.elim_some, Chain.coe_map, OrderHom.coe_mk,
-            Function.comp_apply, Chain.zip_apply]
+          change (f (c j)).elim ⊥ (h (c j)) ≤ h (c j) (c'' j)
+          rw [hc']
           apply hh.monotone (_ : (_, _) ≤ (_, _))
           simp only [ge_iff_le, Prod.mk_le_mk, le_refl, true_and]
           apply c''.monotone

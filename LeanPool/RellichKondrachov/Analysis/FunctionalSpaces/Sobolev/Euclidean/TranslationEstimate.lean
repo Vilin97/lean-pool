@@ -86,7 +86,7 @@ lemma enorm_fderiv_apply_le_enorm_grad_mul (f : E → ℝ) (x a : E) :
   -- Use the operator norm bound, then identify `‖fderiv‖` with `‖grad‖` via the Riesz isometry.
   have h₁ :
       ‖fderiv ℝ f x a‖ₑ ≤ ‖fderiv ℝ f x‖ₑ * ‖a‖ₑ :=
-    (ContinuousLinearMap.le_opNorm_enorm (f := fderiv ℝ f x) a)
+    (ContinuousLinearMap.le_opENorm (f := fderiv ℝ f x) a)
   have h₂ : ‖grad (E := E) f x‖ₑ = ‖fderiv ℝ f x‖ₑ := by
     -- `grad f x = (toDual).symm (fderiv f x)` and `toDual.symm` is an isometry.
     simp only [grad]

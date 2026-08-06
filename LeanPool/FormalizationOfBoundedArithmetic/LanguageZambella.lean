@@ -47,6 +47,8 @@ def zambella : Language :=
   Relations := ZambellaRel
 }
 
+attribute [local implicit_reducible] zambella
+
 variable {a : Type u}
 
 instance : Language.IsOrdered zambella where

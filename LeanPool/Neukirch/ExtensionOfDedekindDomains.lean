@@ -45,19 +45,19 @@ theorem ramificationIdx_algebra_tower_of_eq [IsDedekindDomain S] [IsDedekindDoma
     {p : Ideal R} {P : Ideal S} {Q : Ideal T} [hpm : IsPrime P] [hqm : IsPrime Q]
     (_hf0 : map (algebraMap R S) p ≠ ⊥) (hg0 : map (algebraMap S T) P ≠ ⊥)
     (hfg : map (algebraMap R T) p ≠ ⊥) (_hp0 : P ≠ ⊥) (_hq0 : Q ≠ 0)
-    (hg : P = comap (algebraMap S T) Q) : ramificationIdx p Q =
-    ramificationIdx p P * ramificationIdx P Q :=
-  ramificationIdx_algebra_tower hg0 hfg (map_le_iff_le_comap.mpr (le_of_eq hg))
+    (hg : P = comap (algebraMap S T) Q) : ramificationIdx' p Q =
+    ramificationIdx' p P * ramificationIdx' P Q :=
+  ramificationIdx'_algebra_tower hg0 hfg (map_le_iff_le_comap.mpr (le_of_eq hg))
 
 /-- Multiplicativity of the inertia degree in a tower of Dedekind domains, stated with the
 hypotheses used by the Hilbert ramification development. -/
 theorem inertiaDeg_algebra_tower_of_eq {p : Ideal R} {P : Ideal S} {I : Ideal T} [IsMaximal p]
-    [IsMaximal P] [Nontrivial (T ⧸ I)] (hp : p = comap (algebraMap R S) P)
-    (hP : P = comap (algebraMap S T) I) : inertiaDeg p I =
-    inertiaDeg p P * inertiaDeg P I :=
+    [IsMaximal P] (hp : p = comap (algebraMap R S) P)
+    (hP : P = comap (algebraMap S T) I) : inertiaDeg' p I =
+    inertiaDeg' p P * inertiaDeg' P I :=
   letI : P.LiesOver p := ⟨hp⟩
   letI : I.LiesOver P := ⟨hP⟩
-  inertiaDeg_algebra_tower p P I
+  inertiaDeg'_algebra_tower p P I
 
 /-- The decomposition of a prime in a tower is `Nonsplit` when there is a unique prime above. -/
 class Nonsplit {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (p : Ideal R) : Prop where

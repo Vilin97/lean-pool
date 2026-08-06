@@ -100,11 +100,8 @@ lemma exists_embedding_of_isSplit [FiniteDimensional F K] (A : CSA F) (split : i
         }, by
         rintro _ ⟨x, rfl⟩
         refine LinearMap.ext fun v ↦ ?_
-        simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe,
-          AlgHom.coe_comp, AlgHom.coe_mk, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk,
-          Function.comp_apply,
-          Algebra.TensorProduct.includeRight_apply, Module.End.mul_apply, LinearMap.coe_mk,
-          AddHom.coe_mk, LinearMap.coe_restrictScalars, map_smul, emb]⟩
+        change (iso' (1 ⊗ₜ[F] x)) (r • v) = r • (iso' (1 ⊗ₜ[F] x)) v
+        exact (iso' (1 ⊗ₜ[F] x)).map_smul r v⟩
       map_one' := by
         ext
         simp only [one_smul, LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk,

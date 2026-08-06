@@ -95,7 +95,7 @@ lemma exists_path_eq_cons_of_isPath_of_mem_support {v w : V} (h : X.Adj w v) (p 
   have hr' : r'.IsPath := by simpa [r'] using h.ne
   let pr' : X.Path w v := ⟨r', hr'⟩
   let pr : X.Path w v := ⟨r, hr⟩
-  have : pr = pr' := X.isTree.isAcyclic.path_unique _ _
+  have : pr = pr' := (X.isTree.isAcyclic.subsingleton_path _ _).elim _ _
   have hrr' : r = r' := by rwa [Subtype.ext_iff] at this
   use s, hs
   rw [hrs, hrr']
@@ -115,12 +115,12 @@ lemma dist_ne_of_of_adj {v w : V} (h : X.Adj v w) : X.dist v₀ v ≠ X.dist v�
     intro hc
     obtain ⟨r, hr, hpr⟩ := X.exists_path_eq_cons_of_isPath_of_mem_support v₀ h.symm pw hc hpwpath
     let r' : X.Path v v₀ := ⟨r, hr⟩
-    have : pv' = r' := X.isTree.isAcyclic.path_unique _ _
+    have : pv' = r' := (X.isTree.isAcyclic.subsingleton_path _ _).elim _ _
     have : pv = r := by rwa [Subtype.ext_iff] at this
     have : pw.length = pv.length + 1 := by simp [this, hpr]
     omega
   let q' : X.Path v v₀ := ⟨q, hqpath⟩
-  have hpeq : pv' = q' := X.isTree.isAcyclic.path_unique _ _
+  have hpeq : pv' = q' := (X.isTree.isAcyclic.subsingleton_path _ _).elim _ _
   have heq : pv = q := congrArg Subtype.val hpeq
   have : q.length = pw.length + 1 := by simp [q]
   rw [← heq, hpvlength, dist_comm, hdist, dist_comm, ← hpwlength] at this
@@ -313,7 +313,7 @@ lemma exists_edge_dist_source_lt (w : V) (hw : 0 < X.dist v₀ w) :
     obtain ⟨q, hq, hqlen⟩ := X.isTree.connected.exists_path_of_dist y z
     let p' : X.Path y z := ⟨p, hp'⟩
     let q' : X.Path y z := ⟨q, hq⟩
-    have : p' = q' := X.isTree.isAcyclic.path_unique _ _
+    have : p' = q' := (X.isTree.isAcyclic.subsingleton_path _ _).elim _ _
     have hpq : p = q := by rwa [Subtype.ext_iff] at this
     have hdist : X.dist z y < X.dist z x := by
       rw [dist_comm, ← hqlen, ← hpq, dist_comm, ← hplen]
@@ -343,7 +343,7 @@ lemma edgeTowardsOrigin_target_eq (w : V) (hw : 0 < X.dist v₀ w) :
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma eq_of_isPath {x y : V} {p q : X.Walk x y} (hp : p.IsPath) (hq : q.IsPath) :
     p = q :=
-  congrArg Subtype.val (X.isTree.isAcyclic.path_unique ⟨p, hp⟩ ⟨q, hq⟩)
+  congrArg Subtype.val ((X.isTree.isAcyclic.subsingleton_path _ _).elim ⟨p, hp⟩ ⟨q, hq⟩)
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
 lemma dist_eq_of_isPath {x y : V} (p : X.Walk x y) (hp : p.IsPath) :
@@ -383,7 +383,7 @@ lemma source_eq_of_target_eq (e f : X.edgeSet) (h : X.target v₀ e = X.target v
     omega
   let p'' : X.Path (target v₀ e) v₀ := ⟨p', hp'⟩
   let q'' : X.Path (target v₀ e) v₀ := ⟨q', hq'⟩
-  have : p'' = q'' := X.isTree.isAcyclic.path_unique _ _
+  have : p'' = q'' := (X.isTree.isAcyclic.subsingleton_path _ _).elim _ _
   simp only [Subtype.mk.injEq, Walk.cons.injEq, p'', p', q'', q'] at this
   exact this.left
 
@@ -440,9 +440,9 @@ lemma outwardEdgeCone_nonempty_of_two_le_degree {v : V} (hv : 2 ≤ X.degree v) 
     apply eq_of_target_eq v₀
     rw [has, hbs]
   absurd hne
-  simp only [Subtype.mk.injEq, Sym2.eq, Sym2.rel_iff', Prod.mk.injEq, true_and, Prod.swap_prod_mk,
-    ea, eb] at this
-  rcases this with h | h
+  have hsym : s(v, a) = s(v, b) := congrArg Subtype.val this
+  simp only [Sym2.eq, Sym2.rel_iff', Prod.mk.injEq, true_and, Prod.swap_prod_mk] at hsym
+  rcases hsym with h | h
   · exact h
   · rw [← h.left, h.right]
 

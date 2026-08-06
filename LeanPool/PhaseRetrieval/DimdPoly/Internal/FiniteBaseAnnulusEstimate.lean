@@ -102,7 +102,10 @@ private def mulCircleLIE_annulus (ω : _root_.Circle) : ℂ ≃ₗᵢ[ℝ] ℂ :
     · intro z
       refine ⟨((ω⁻¹ : _root_.Circle) : ℂ) * z, ?_⟩
       simp
-  · simp_all
+  · intro x
+    change ‖(ω : ℂ) * x‖ = ‖x‖
+    have hω : ‖(ω : ℂ)‖ = 1 := Circle.norm_coe ω
+    rw [norm_mul, hω, one_mul]
 
 private lemma productAnnulus_rotate_one_iff_annulus
     {d : Nat} (j : Idx d) (q0 : Fin d) (ω : _root_.Circle) (z : Cd d) :
@@ -194,7 +197,9 @@ private lemma rotate_one_gamma_preserving_annulus
       refine Finset.sum_congr rfl ?_
       intro q hq
       by_cases h : q = q0
-      · simp_all
+      · subst q
+        have hω : ‖(ω : ℂ)‖ = 1 := Circle.norm_coe ω
+        simp [hω]
       · simp [Function.update, h]
     simp [dens, f, gaussianDensity, hsum]
   have hmap : Measure.map f (gammaD d) = gammaD d := by
@@ -1651,7 +1656,7 @@ private theorem corrected_fiber_circleL2Sq_eq_uncorrected_annulus
         evalPkappa kappa H
           (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by
   unfold circleL2Sq
-  simp_all
+  simp [fourier_apply, Circle.norm_coe]
 
 private theorem corrected_fiber_defectSq_eq_uncorrected_annulus
     {d : Nat} {kappa : MultiIndex d}
@@ -1683,7 +1688,8 @@ private theorem corrected_fiber_defectSq_eq_uncorrected_annulus
   let Hz : ℂ :=
     evalPkappa kappa H
       (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))
-  have hphase_norm : ‖phase‖ = 1 := by simp [phase]
+  have hphase_norm : ‖phase‖ = 1 := by
+    simp [phase, fourier_apply, Circle.norm_coe]
   have hadd : phase * Fz + phase * Hz = phase * (Fz + Hz) := by ring_nf
   calc
     (‖phase * Fz + phase * Hz‖ - ‖phase * Fz‖) ^ 2
@@ -2076,8 +2082,21 @@ private theorem highAnnulusMass_eq_tsum_high_annulus
   have hsub :
       (∑' j : {j // j ∉ lowAnnuli d J}, a j) =
         ∑' j : Idx d, Set.indicator {j : Idx d | j ∉ lowAnnuli d J} a j := by
-    simpa using
-      (tsum_subtype (s := {j : Idx d | j ∉ lowAnnuli d J}) (f := a))
+    let e :
+        {j // j ∉ lowAnnuli d J} ≃
+          ↑({j : Idx d | j ∉ lowAnnuli d J} : Set (Idx d)) :=
+      { toFun := fun j => ⟨j.1, j.2⟩
+        invFun := fun j => ⟨j.1, j.2⟩
+        left_inv := fun j => by rfl
+        right_inv := fun j => by rfl }
+    calc
+      (∑' j : {j // j ∉ lowAnnuli d J}, a j) =
+          ∑' j : {j // j ∉ lowAnnuli d J}, a (e j) :=
+        tsum_congr (fun j => by rfl)
+      _ = ∑' j : ↑({j : Idx d | j ∉ lowAnnuli d J} : Set (Idx d)), a j :=
+        e.tsum_eq (fun j => a j)
+      _ = ∑' j : Idx d, Set.indicator {j : Idx d | j ∉ lowAnnuli d J} a j :=
+        tsum_subtype (s := {j : Idx d | j ∉ lowAnnuli d J}) (f := a)
   have htail_max :
       (∑' j : Idx d, Set.indicator {j : Idx d | j ∉ lowAnnuli d J} a j) =
         ∑' j : Idx d,

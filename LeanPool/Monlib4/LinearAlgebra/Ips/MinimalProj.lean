@@ -424,7 +424,7 @@ theorem orthogonalProjection.sub_is_positive_of [InnerProductSpace ℂ E] {U V :
 /-- given orthogonal projections `Pᵤ,Pᵥ`,
   then if `Pᵥ - Pᵤ` is idempotent, then `Pᵤ Pᵥ = Pᵤ` -/
 theorem orthogonal_projection_commutes_of_is_idempotent [InnerProductSpace ℂ E]
-    {U V : Submodule ℂ E} [CompleteSpace U] [CompleteSpace V] [CompleteSpace E]
+    {U V : Submodule ℂ E} [CompleteSpace U] [CompleteSpace V]
     (h : IsIdempotentElem (↥P V - ↥P U)) : (↥P V).comp (↥P U) = ↥P U := by
   let p := ↥P U
   let q := ↥P V
@@ -491,7 +491,7 @@ theorem ContinuousLinearMap.hasLe_norm [InnerProductSpace 𝕜 E] [CompleteSpace
     isSelfAdjoint_iff'.mp hpa, isSelfAdjoint_iff'.mp hqa, inner_self_eq_norm_sq, sq_le_sq,
     abs_norm, ← _root_.mul_apply_eq_comp, hp.eq, hq.eq]
 
-theorem IsPositive.HasLe.sub [InnerProductSpace 𝕜 E] [CompleteSpace E] {p q : E →L[𝕜] E} :
+theorem IsPositive.HasLe.sub [InnerProductSpace 𝕜 E] {p q : E →L[𝕜] E} :
     p ≤ q ↔ 0 ≤ q - p := by simp only [LE.le, sub_zero]
 
 theorem self_adjoint_and_idempotent_is_positive_iff_commutes
@@ -531,7 +531,6 @@ theorem orthogonal_projection_is_le_iff_commutes [InnerProductSpace ℂ E]
     (orthogonalProjection_isSelfAdjoint V)
 
 theorem orthogonalProjection.is_le_iff_subset [InnerProductSpace ℂ E] {U V : Submodule ℂ E}
-    [CompleteSpace E]
     [CompleteSpace U] [CompleteSpace V] : ↥P U ≤ ↥P V ↔ U ≤ V :=
   Submodule.starProjection_le_starProjection_iff
 
@@ -595,7 +594,6 @@ theorem Submodule.le_finrank_one
   for any `Pᵥ` if `Pᵥ ≤ Pᵤ` and `Pᵥ ≠ 0`, then `Pᵥ = Pᵤ` -/
 theorem orthogonalProjection.isMinimalProjection_of
   [InnerProductSpace ℂ E]
-  [CompleteSpace E]
   (U W : Submodule ℂ E) [CompleteSpace U] [CompleteSpace W]
   [Module.Finite ℂ ↥U] [Module.Finite ℂ ↥W]
   (hU : orthogonalProjection.IsMinimalProjection U)
@@ -818,7 +816,7 @@ lemma ContinuousLinearMap.isOrthogonalProjection_iff
 open scoped FiniteDimensional
 theorem ContinuousLinearMap.isOrthogonalProjection_iff'
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    [FiniteDimensional ℂ E] [CompleteSpace E] {p : E →L[ℂ] E} :
+    [CompleteSpace E] {p : E →L[ℂ] E} :
     p.IsOrthogonalProjection
     ↔ IsIdempotentElem p ∧ IsSelfAdjoint p := by
   rw [isOrthogonalProjection_iff]
@@ -918,7 +916,7 @@ lemma ContinuousLinearMap.eq_comp_orthogonalProjection_ker_ortho
   [NormedAddCommGroup M₂] [InnerProductSpace 𝕜 M₂]
   {T : M₁ →L[𝕜] M₂} [HasOrthogonalProjection T.ker]
   [HasOrthogonalProjection T.range]
-  [CompleteSpace M₁] [CompleteSpace M₂] :
+  :
   T = T ∘L (orthogonalProjection' (T.ker)ᗮ)
   ∧
   T = (orthogonalProjection' T.range) ∘L T := by
@@ -933,7 +931,7 @@ lemma ContinuousLinearMap.eq_comp_orthogonalProjection_ker_ortho
       (LinearMap.mem_range_self (T : M₁ →ₗ[𝕜] M₂) x)).symm
 
 theorem orthogonalProjection_of_top {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
-    [InnerProductSpace 𝕜 E] [CompleteSpace ↥(⊤ : Submodule 𝕜 E)] :
+    [InnerProductSpace 𝕜 E] :
     orthogonalProjection' (⊤ : Submodule 𝕜 E) = 1 := by
   ext1
   simp_rw [one_apply_eq_self, orthogonalProjection'_apply]

@@ -131,9 +131,13 @@ theorem teleportation_premeasurement (α β : ℂ) :
       Gate.applyVec, HilbertOperator.applyVec, Gate.tensor, HilbertOperator.tensor,
       Gate.ofUnitary, Gate.ofPerm, H, HOp, X, Z, ZOp, CNOT, ket0, ket1,
       PureState.ket, StateVector.tensor, prodEquiv, Matrix.mulVec, Matrix.mul_apply,
-      finProdFinEquiv, Fin.divNat, Fin.modNat, Matrix.cons_val_zero,
+      finProdFinEquiv, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.one_apply, Equiv.Perm.permMatrix,
-      dotProduct, Pi.single_apply, Fin.sum_univ_eight, invSqrt2_mul_mul_invSqrt2]
+      dotProduct, Pi.single_apply, Fin.sum_univ_eight] <;>
+    -- `Fin.divNat`/`Fin.modNat` are unfolded only after `finProdFinEquiv.symm` has been
+    -- applied: unfolding them inside the equiv's structure literal leaves a term that is
+    -- not type-correct at `implicit` transparency, which stops `simp` in its tracks.
+    simp +decide [Fin.divNat, Fin.modNat, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 /-- Bob's branch-local correction is exact for every measurement outcome:
 after Alice sends `ab`, Bob's `X`-then-`Z` correction recovers

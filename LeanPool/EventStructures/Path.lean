@@ -310,10 +310,7 @@ lemma async_path_id_comp {c₁ c₂ : Conf es} (p : Async es c₁ c₂) :
 lemma async_path_comp_id {c₁ c₂ : Conf es} (p : Async es c₁ c₂) :
     asyncPathComp es p (asyncPathId es c₂) = p := by
   induction p using Quotient.ind
-  unfold asyncPathComp asyncPathId mk Path.pathId
-  simp only [Quotient.lift₂_mk]
-  congr 1
-  exact Path.path_comp_id es _
+  exact congrArg (mk es) (Path.path_comp_id es _)
 
 /-- Associativity law for asynchronous path composition. -/
 lemma assoc {c₁ c₂ c₃ c₄ : Conf es}
@@ -323,7 +320,6 @@ lemma assoc {c₁ c₂ c₃ c₄ : Conf es}
   induction p₁₂ using Quotient.ind
   induction p₂₃ using Quotient.ind
   induction p₃₄ using Quotient.ind
-  simp only [asyncPathComp, Quotient.lift₂_mk]
   exact congrArg (mk es) (Path.path_comp_assoc es _ _ _)
 
 end Async

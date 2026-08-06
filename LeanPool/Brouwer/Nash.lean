@@ -187,7 +187,7 @@ lemma reindex_right_inv :
     rw [reindex,reindexInv]
     have h1 : eI (eI.symm k) = k := eI.apply_symm_apply _
     apply eq_of_heq
-    rw [eqRec_heq_iff_heq]
+    rw [eqRec_heq_iff]
     rw [h1]
 
 
@@ -207,7 +207,7 @@ lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
     dsimp [reindex, reindexInv]
     have h1 : eI.symm (eI i) = i := eI.symm_apply_apply i
     apply eq_of_heq
-    rw [eqRec_heq_iff_heq]
+    rw [eqRec_heq_iff]
     rw [h1]
 
 /-- Lifts an equivalence `e : n ≃ m` to a function between simplices. -/
@@ -323,7 +323,7 @@ theorem Brouwer.mixedGame (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ 
       have h1 : eI (eI.symm (eI i)) = eI i := eI.apply_symm_apply _
       have h2 : eI.symm (eI (eI.symm (eI i))) = eI.symm (eI i) := eI.symm_apply_apply _
       apply eq_of_heq
-      rw [eqRec_heq_iff_heq]
+      rw [eqRec_heq_iff]
       congr
       · symm
         exact @eqRec_heq (Type _) (fun X => X) _ _ typeeq.symm (eS (eI i))

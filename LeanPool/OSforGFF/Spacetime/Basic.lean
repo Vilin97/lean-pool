@@ -128,7 +128,7 @@ lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : TestFunction) :
     -- The evaluation map is continuous by definition of WeakDual topology
     exact WeakDual.eval_continuous a
 
-@[simp] lemma distributionPairingCLM_apply (a : TestFunction) (ω : FieldConfiguration) :
+lemma distributionPairingCLM_apply (a : TestFunction) (ω : FieldConfiguration) :
     distributionPairingCLM a ω = distributionPairing ω a := rfl
 
 variable [SigmaFinite μ]

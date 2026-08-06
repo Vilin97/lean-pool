@@ -79,7 +79,10 @@ variable {T : Theory ℒₒᵣ} [𝐑₀ wkn T]
 /-- Imported declaration from the Incompleteness formalization. -/
 lemma add_cobhamR0' {φ} : T ⊢! φ ↔ T + 𝐑₀' ⊢! φ := by
   constructor
-  · intro h; exact Entailment.wk! (by simp [Theory.add_def]) h
+  · intro h
+    exact Entailment.wk! (by
+      rw [Theory.add_def]
+      exact Set.subset_union_left) h
   · intro h
     exact Entailment.StrongCut.cut!
       (by

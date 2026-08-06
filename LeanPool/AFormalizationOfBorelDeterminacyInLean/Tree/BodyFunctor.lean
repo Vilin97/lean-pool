@@ -123,13 +123,14 @@ lemma LenHom.bodyPre_map_restrict (f : S ⟶ T) (a : body S.2) n :
   map_id _ := by
     ext a n
     change (bodyPre.map (𝟙 _) a).val.get n = a.val.get n
-    rw [LenHom.bodyMap_spec_res]
-    simp
+    refine (LenHom.bodyMap_spec_res (𝟙 _) a n).trans ?_
+    simp [body.take]
   map_comp f g := by
     ext x n
     change (bodyPre.map (f ≫ g) x).val.get n =
       (bodyPre.map g (bodyPre.map f x)).val.get n
-    rw [LenHom.bodyMap_spec_res, LenHom.bodyMap_spec_res]
+    refine (LenHom.bodyMap_spec_res (f ≫ g) x n).trans
+      (Eq.trans ?_ (LenHom.bodyMap_spec_res g (bodyPre.map f x) n).symm)
     have htake : body.take (n + 1) (bodyPre.map f x) = f (body.take (n + 1) x) := by
       apply tree_ext
       exact LenHom.bodyPre_map_restrict f x (n + 1)

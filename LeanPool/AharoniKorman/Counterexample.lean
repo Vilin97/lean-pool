@@ -194,13 +194,18 @@ lemma induction_on_level {n : ℕ} {p : (x : Hollom) → x ∈ level n → Prop}
     ∀ {x : Hollom}, (h : x ∈ level n) → p x h := by
   simp_all
 
+private lemma embed_injective (n : ℕ) : Function.Injective fun x : ℕ × ℕ ↦ h(x.1, x.2, n) := by
+  intro x y hxy
+  have hxyz := congrArg ofHollom hxy
+  exact Prod.ext (congrArg (fun z ↦ z.1) hxyz) (congrArg (fun z ↦ z.2.1) hxyz)
+
 /--
 For each `n`, there is an order embedding from ℕ × ℕ (which has the product order) to the Hollom
 partial order.
 -/
 def embed (n : ℕ) : ℕ × ℕ ↪o Hollom where
   toFun x := h(x.1, x.2, n)
-  inj' x := by aesop
+  inj' := embed_injective n
   map_rel_iff' := by simp
 
 lemma embed_apply (n : ℕ) (x y : ℕ) : embed n (x, y) = h(x, y, n) := rfl

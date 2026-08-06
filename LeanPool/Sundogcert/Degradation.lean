@@ -113,20 +113,28 @@ theorem colSupp_bandLowerTri_le (m c : ℕ) (j : Fin m) :
     Finset.card_le_card_of_injOn (fun i => (i : ℕ) - (j : ℕ))
       (by
         intro i hi
-        simp only [bandLowerTri, Matrix.of_apply, Finset.coe_filter, Finset.mem_univ,
-          true_and, Set.mem_setOf_eq] at hi
+        have hi' : bandLowerTri m c i j ≠ 0 := (Finset.mem_filter.mp hi).2
+        change (if (j : ℕ) ≤ (i : ℕ) ∧ (i : ℕ) < (j : ℕ) + c
+          then (1 : ZMod 2) else 0) ≠ 0 at hi'
         by_cases hg : (j : ℕ) ≤ (i : ℕ) ∧ (i : ℕ) < (j : ℕ) + c
         · simp only [Finset.coe_range, Set.mem_Iio]; omega
-        · rw [if_neg hg] at hi; exact absurd rfl hi)
+        · rw [if_neg hg] at hi'
+          exact absurd rfl hi')
       (by
         intro a ha b hb hab
-        simp only [bandLowerTri, Matrix.of_apply, Finset.coe_filter, Finset.mem_univ,
-          true_and, Set.mem_setOf_eq] at ha hb
+        have ha' : bandLowerTri m c a j ≠ 0 := (Finset.mem_filter.mp ha).2
+        have hb' : bandLowerTri m c b j ≠ 0 := (Finset.mem_filter.mp hb).2
+        change (if (j : ℕ) ≤ (a : ℕ) ∧ (a : ℕ) < (j : ℕ) + c
+          then (1 : ZMod 2) else 0) ≠ 0 at ha'
+        change (if (j : ℕ) ≤ (b : ℕ) ∧ (b : ℕ) < (j : ℕ) + c
+          then (1 : ZMod 2) else 0) ≠ 0 at hb'
         by_cases hga : (j : ℕ) ≤ (a : ℕ) ∧ (a : ℕ) < (j : ℕ) + c
         · by_cases hgb : (j : ℕ) ≤ (b : ℕ) ∧ (b : ℕ) < (j : ℕ) + c
           · apply Fin.ext; simp only at hab; omega
-          · rw [if_neg hgb] at hb; exact absurd rfl hb
-        · rw [if_neg hga] at ha; exact absurd rfl ha)
+          · rw [if_neg hgb] at hb'
+            exact absurd rfl hb'
+        · rw [if_neg hga] at ha'
+          exact absurd rfl ha')
   rwa [Finset.card_range] at hle
 
 /-- Column `0` of `bandLowerTri m c` (for `c ≤ m`) has support cardinality exactly `c`: the
@@ -138,16 +146,21 @@ theorem colSupp_bandLowerTri_col0 (m c : ℕ) (hc : c ≤ m) (hc0 : 0 < c) :
       (fun i : Fin m => bandLowerTri m c i (⟨0, by omega⟩ : Fin m) ≠ 0))
       = (Finset.univ.filter (fun i : Fin m => (i : ℕ) < c)) := by
     ext i
-    simp only [bandLowerTri, Matrix.of_apply, Finset.mem_filter, Finset.mem_univ, true_and]
-    have hj0 : ((⟨0, by omega⟩ : Fin m) : ℕ) = 0 := rfl
     constructor
     · intro hne
-      by_cases hg : ((⟨0, by omega⟩ : Fin m) : ℕ) ≤ (i : ℕ) ∧
-          (i : ℕ) < ((⟨0, by omega⟩ : Fin m) : ℕ) + c
-      · omega
-      · rw [if_neg hg] at hne; exact absurd rfl hne
+      have hne' : bandLowerTri m c i (⟨0, by omega⟩ : Fin m) ≠ 0 :=
+        (Finset.mem_filter.mp hne).2
+      change (if 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c then (1 : ZMod 2) else 0) ≠ 0 at hne'
+      by_cases hg : 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c
+      · exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, by omega⟩
+      · rw [if_neg hg] at hne'
+        exact absurd rfl hne'
     · intro hlt
-      rw [if_pos ⟨by omega, by omega⟩]; exact one_ne_zero
+      have hlt' : (i : ℕ) < c := (Finset.mem_filter.mp hlt).2
+      refine Finset.mem_filter.mpr ⟨Finset.mem_univ _, ?_⟩
+      change (if 0 ≤ (i : ℕ) ∧ (i : ℕ) < 0 + c then (1 : ZMod 2) else 0) ≠ 0
+      rw [if_pos ⟨by omega, by omega⟩]
+      exact one_ne_zero
   rw [hset]
   -- The filter `(i:ℕ) < c` over `Fin m` has card `min m c = c` (since `c ≤ m`).
   have hcard : (Finset.univ.filter (fun i : Fin m => (i : ℕ) < c)).card = min m c :=
