@@ -131,7 +131,7 @@ None of the four sets contain `0`, so their union misses `0`.
 theorem union_card_le {m : ℕ} (hm : 2 ≤ m) {B : Finset ℕ} (hB : FoldedOK m B) (α β : ℕ) :
     haveI : NeZero m := ⟨by omega⟩
     (T1 m B ∪ T2 m B ∪ T3 m B α ∪ T4 m B β).card ≤ m - 1 := by
-  haveI : NeZero m := ⟨by omega⟩
+  have : NeZero m := ⟨by omega⟩
   have hsub : T1 m B ∪ T2 m B ∪ T3 m B α ∪ T4 m B β ⊆ Finset.univ.erase (0 : ZMod m) := by
     intro x hx
     rw [Finset.mem_erase]
