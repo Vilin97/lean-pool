@@ -75,7 +75,7 @@ lemma truncatedObtuseRegion_subset_box (n : ℕ) (η : ℝ) :
       (Set.Icc (⌈η * (n : ℝ)⌉ - 1 : ℤ) (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ)) ×ˢ
       (Set.Icc (⌈η * (n : ℝ)⌉ - 1 : ℤ) (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ)) := by
   intro ⟨p, q⟩ h
-  simp only [truncatedObtuseRegion, Set.mem_setOf_eq, Set.mem_prod, Set.mem_Icc] at h ⊢
+  simp only [truncatedObtuseRegion, Set.mem_ofPred_eq, Set.mem_prod, Set.mem_Icc] at h ⊢
   have h₁ : (η * (n : ℝ) : ℝ) ≤ (p : ℝ) := h.1
   have h₂ : (η * (n : ℝ) : ℝ) ≤ (q : ℝ) := h.2.1
   have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h.2.2.1
@@ -98,7 +98,7 @@ lemma coprime_triangle_subset_truncatedObtuseRegion (n : ℕ) (η : ℝ) :
       Int.gcd pq.1 pq.2 = 1}
     ⊆ truncatedObtuseRegion n η := by
   intro ⟨p, q⟩ h
-  simp only [Set.mem_setOf_eq, truncatedObtuseRegion] at h ⊢
+  simp only [Set.mem_ofPred_eq, truncatedObtuseRegion] at h ⊢
   simp_all
 
 lemma coprime_triangle_finite (n : ℕ) (η : ℝ) :
@@ -162,7 +162,7 @@ lemma rectangle_coprime_subset_target (n : ℕ) (η : ℝ) :
       (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 ∧
       Int.gcd pq.1 pq.2 = 1} := by
   intro ⟨p, q⟩ hpq
-  simp only [Set.mem_setOf_eq] at hpq ⊢
+  simp only [Set.mem_ofPred_eq] at hpq ⊢
   obtain ⟨h1, h2, h3, h4, h5⟩ := hpq
   refine ⟨?_, ?_, ?_, h5⟩
   · exact le_trans (Int.le_ceil _) (Int.cast_le.mpr h1)
@@ -352,7 +352,7 @@ lemma shift_div_toNat_injOn (A B : ℤ) (m : ℕ) (hm : 0 < m) :
     Set.InjOn (fun x => ((x - A) / (m : ℤ)).toNat)
       {x : ℤ | A ≤ x ∧ x ≤ B ∧ (m : ℤ) ∣ x} := by
   intro x₁ hx₁ x₂ hx₂ heq
-  simp only [Set.mem_setOf_eq] at hx₁ hx₂
+  simp only [Set.mem_ofPred_eq] at hx₁ hx₂
   have hm' : (m : ℤ) ≠ 0 := Int.natCast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hm)
   have hm_pos : (0 : ℤ) < m := Int.natCast_pos.mpr hm
   have h1_nn : 0 ≤ x₁ - A := Int.sub_nonneg.mpr hx₁.1
@@ -441,7 +441,7 @@ lemma non_coprime_subset_union (A B : ℤ) (_hAB : A ≤ B) (B' : ℕ)
     exact hnotC ⟨hAp, hpB, hAq, hqB, h⟩
   obtain ⟨ℓ, hprime, h2le, hleB', hdvdp, hdvdq⟩ :=
     exists_prime_dvd_both A B B' hB' pq.1 pq.2 hAp hpB hAq hqB hgcd
-  simp only [Set.mem_iUnion, Set.mem_prod, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Set.mem_prod, Set.mem_ofPred_eq]
   exact ⟨ℓ, Finset.mem_filter.mpr ⟨Finset.mem_Icc.mpr ⟨h2le, hleB'⟩, hprime⟩,
     ⟨hAp, hpB, hdvdp⟩, ⟨hAq, hqB, hdvdq⟩⟩
 
@@ -471,7 +471,7 @@ lemma non_coprime_ncard_le_sum (A B : ℤ) (hAB : A ≤ B) (B' : ℕ)
       ({x : ℤ | A ≤ x ∧ x ≤ B ∧ (ℓ : ℤ) ∣ x})).Finite := by
     apply Set.Finite.subset ((Set.finite_Icc A B).prod (Set.finite_Icc A B))
     intro ⟨x, y⟩ hxy
-    simp only [Set.mem_iUnion, Set.mem_prod, Set.mem_setOf_eq] at hxy ⊢
+    simp only [Set.mem_iUnion, Set.mem_prod, Set.mem_ofPred_eq] at hxy ⊢
     obtain ⟨ℓ, _, ⟨hx1, hx2, _⟩, hy1, hy2, _⟩ := hxy
     exact ⟨⟨hx1, hx2⟩, hy1, hy2⟩
   calc (S \ C).ncard
@@ -855,7 +855,7 @@ lemma fiber_empty_of_gcd_ne_one (n : ℕ) (η : ℝ) (q : ℤ)
     {p : ℤ | (p, q) ∈ residueBadPairs n η} = ∅ := by
   apply Set.eq_empty_of_forall_notMem
   intro p hp
-  simp only [Set.mem_setOf_eq, residueBadPairs, badPairsE, Set.mem_setOf_eq] at hp
+  simp only [Set.mem_ofPred_eq, residueBadPairs, badPairsE, Set.mem_ofPred_eq] at hp
   simp_all
 
 lemma snd_lt_half_of_mem_truncatedObtuseRegion_fb (n : ℕ) (η : ℝ)
@@ -925,7 +925,7 @@ lemma counting_large_implies_not_badPairsE (n : ℕ) (η : ℝ) (p q : ℤ)
     (h : (η ^ 2 / 2 : ℝ) * (Nat.totient n : ℝ) ≤ (countingFunctionS n p q : ℝ)) :
     (p, q) ∉ badPairsE n η := by
   intro h_in
-  simp only [Set.mem_setOf_eq, badPairsE, Set.mem_setOf_eq] at h_in
+  simp only [Set.mem_ofPred_eq, badPairsE, Set.mem_ofPred_eq] at h_in
   linarith [h_in.2.2]
 
 lemma fiber_div_injOn (n d : ℕ) (hd_pos : 0 < d) (b : ℕ)
@@ -1072,7 +1072,7 @@ lemma counting_as_indicator_product (n : ℕ) (p q : ℤ) (hn : 2 ≤ n)
       ∑ a : (ZMod n)ˣ,
         intervalIndicator n (2 * p - 1).toNat (a.val * (p : ZMod n)) *
         intervalIndicator n (2 * q - 1).toNat (a.val * (q : ZMod n)) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   simp only [countingFunctionS, dif_neg (by omega : ¬n = 0)]
   rw [← Finset.sum_boole]
   congr 1
@@ -1135,7 +1135,7 @@ lemma interchange_and_factor (n : ℕ) (p q : ℤ) (hn : 2 ≤ n)
       (∑ a : (ZMod n)ˣ,
         ZMod.stdAddChar (k * (a.val * (p : ZMod n))) *
         ZMod.stdAddChar (l * (a.val * (q : ZMod n))) : ℂ) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   simp_rw [fourier_inversion n (intervalIndicator n (2 * p - 1).toNat),
            fourier_inversion n (intervalIndicator n (2 * q - 1).toNat)]
   exact sum_product_interchange_units n
@@ -1173,7 +1173,7 @@ lemma counting_eq_fourier_ramanujan_sum
         normalizedDFT n (intervalIndicator n (2 * p - 1).toNat) k *
         normalizedDFT n (intervalIndicator n (2 * q - 1).toNat) l *
         ramanujanSum n (ZMod.val k * p + ZMod.val l * q) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   rw [counting_as_indicator_product n p q hn hp hq hpq]
   rw [interchange_and_factor n p q hn hp hq hpq]
   simp_rw [character_product_simplify n]
@@ -1281,7 +1281,7 @@ lemma card_intervalSet_filter (n : ℕ) [NeZero n] (m : ℕ) (hm2 : m < n) :
 
 lemma sum_intervalIndicator_eq (n : ℕ) [NeZero n] (m : ℕ) (_hm1 : 1 ≤ m) (hm2 : m < n) :
     ∑ x : ZMod n, intervalIndicator n m x = (m : ℂ) := by
-  simp only [intervalIndicator, intervalSet, Set.indicator_apply, Set.mem_setOf_eq,
+  simp only [intervalIndicator, intervalSet, Set.indicator_apply, Set.mem_ofPred_eq,
     Finset.sum_boole]
   exact_mod_cast card_intervalSet_filter n m hm2
 
@@ -1436,7 +1436,7 @@ lemma nonunitBwd_nonunitFwd {p : ℕ} [hp : Fact (Nat.Prime p)] {k : ℕ} (hk : 
 lemma p_dvd_val_of_not_isUnit {p : ℕ} [hp : Fact (Nat.Prime p)] {k : ℕ}
     (a : ZMod (p ^ k)) (ha : ¬ IsUnit a) : p ∣ a.val := by
   by_contra h
-  haveI := Fact.mk hp.1
+  have := Fact.mk hp.1
   have h₁ : IsUnit (a : ZMod (p ^ k)) ↔ Nat.Coprime a.val (p ^ k) := by
     simp [← ZMod.isUnit_iff_coprime]
   have h₂ : ¬Nat.Coprime a.val (p ^ k) := by
@@ -1694,14 +1694,14 @@ lemma ramanujan_vanish_low_valuation
   have hP_prime : Nat.Prime P := largest_prime_factor_prime n hn
   have ⟨hdecomp, hcoprime, hm_pos⟩ := decompose_largest_prime n hn
   set m := n / (P ^ α)
-  haveI hPα_ne : NeZero (P ^ α) := ⟨pow_ne_zero α (Nat.Prime.ne_zero hP_prime)⟩
-  haveI hm_ne : NeZero m := ⟨Nat.pos_iff_ne_zero.mp hm_pos⟩
+  have hPα_ne : NeZero (P ^ α) := ⟨pow_ne_zero α (Nat.Prime.ne_zero hP_prime)⟩
+  have hm_ne : NeZero m := ⟨Nat.pos_iff_ne_zero.mp hm_pos⟩
   have decomp_eq : n = P ^ α * m := hdecomp.symm
   conv_lhs =>
     arg 1
     rw [decomp_eq]
   rw [ramanujanSum_multiplicative hcoprime t]
-  haveI : Fact (Nat.Prime P) := ⟨hP_prime⟩
+  have : Fact (Nat.Prime P) := ⟨hP_prime⟩
   have vanish_comp : ramanujanSum (P ^ α) t = 0 :=
     ramanujanSum_prime_pow_eq_zero hα_pos ht
   rw [vanish_comp]
@@ -1790,7 +1790,7 @@ lemma fourier_sum_split_into_main_and_errors
     ((2 * p - 1).toNat : ℂ) * ((2 * q - 1).toNat : ℂ) *
       (Nat.totient n : ℂ) / (n : ℂ) ^ 2 =
     errorTermEP0 n p q + errorTermEPalpha n p q := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   rw [full_sum_split_zero_nonzero n
     (fun k l => normalizedDFT n (intervalIndicator n (2 * p - 1).toNat) k *
                 normalizedDFT n (intervalIndicator n (2 * q - 1).toNat) l *
@@ -1841,7 +1841,7 @@ lemma error_decomposition
       ((2 * p - 1).toNat : ℝ) * ((2 * q - 1).toNat : ℝ) *
       (Nat.totient n : ℝ) / (n : ℝ) ^ 2 =
     (errorTermEP0 n p q).re + (errorTermEPalpha n p q).re := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   have h_repr := counting_eq_fourier_ramanujan_sum n hn p q hp hq hpq
   have h_split := fourier_sum_split_into_main_and_errors n hn p q hp hq hpq
   have h_complex : (countingFunctionS n p q : ℂ) -
@@ -1907,9 +1907,9 @@ lemma ramanujanSum_EP0_norm_bound
   have hαge : α ≥ 1 := largest_prime_factor_multiplicity_pos n hn
   have hαpos : 0 < α := by linarith
   obtain ⟨hdecomp, hcop, hm_pos⟩ := decompose_largest_prime n hn
-  haveI hne_Pα : NeZero (P ^ α) := ⟨pow_ne_zero α (Nat.Prime.ne_zero hPprime)⟩
-  haveI hne_m : NeZero m := ⟨Nat.pos_iff_ne_zero.mp hm_pos⟩
-  haveI : Fact (Nat.Prime P) := ⟨hPprime⟩
+  have hne_Pα : NeZero (P ^ α) := ⟨pow_ne_zero α (Nat.Prime.ne_zero hPprime)⟩
+  have hne_m : NeZero m := ⟨Nat.pos_iff_ne_zero.mp hm_pos⟩
+  have : Fact (Nat.Prime P) := ⟨hPprime⟩
   have ht1 : (P : ℤ) ^ (α - 1) ∣ t := by exact_mod_cast hP0
   have ht2 : ¬ ((P : ℤ) ^ α ∣ t) := by exact_mod_cast hd
   have h_norm_Palpha : ‖@ramanujanSum (P ^ α) hne_Pα t‖ = (P : ℝ) ^ (α - 1) :=
@@ -1958,7 +1958,7 @@ lemma summand_reindex (n : ℕ) [NeZero n] (m : ℕ) (hm2 : m < n) (k : ZMod n) 
   · intro t ht
     have htm : t < m := Finset.mem_range.mp ht
     simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [intervalSet, Set.mem_setOf_eq]
+    simp only [intervalSet, Set.mem_ofPred_eq]
     rw [ZMod.val_natCast_of_lt (by omega : t + 1 < n)]
     exact ⟨by omega, by omega⟩
   · intro j hj
@@ -2140,7 +2140,7 @@ lemma sum_nonzero_reindex (n : ℕ) [NeZero n] (hn : 2 ≤ n) :
     simp only [Finset.coe_Icc, Set.mem_Icc] at hy
     have h1 : y < n := by omega
     refine ⟨(y : ZMod n), ?_, ZMod.val_cast_of_lt (by omega)⟩
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     intro h
     have hvy : ZMod.val (y : ZMod n) = y := ZMod.val_cast_of_lt (by omega)
     rw [h, ZMod.val_zero] at hvy
@@ -2576,7 +2576,7 @@ lemma error_EP0_universal_bound
     |(errorTermEP0 n p q).re| ≤
       (Nat.totient n : ℝ) * (1 + Real.log (n : ℝ)) ^ 2 /
         ((largestPrimeFactor n : ℝ) - 1) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   exact le_trans (Complex.abs_re_le_norm _) (norm_errorTermEP0_le n hn p q hp hq hpq)
 
 lemma summand_norm_le_aux (n : ℕ) [NeZero n] (_p _q : ℤ) (k l : ZMod n)
@@ -4022,7 +4022,7 @@ lemma exists_padic_valuation
     ∃ v, 1 ≤ v ∧ v < α ∧ p ^ v ∣ k_val ∧ ¬(p ^ (v + 1) ∣ k_val) := by
   by_cases hk : k_val = 0
   · simp_all
-  · haveI := Fact.mk hp
+  · have := Fact.mk hp
     have h1 : 1 ≤ padicValNat p k_val := one_le_padicValNat_of_dvd hk hk_dvd_p
     have h2 : padicValNat p k_val < α := by
       by_contra h_ge
@@ -4045,8 +4045,8 @@ lemma general_case_bound
   set M := p ^ (α - v) with hM_def
   have hM_pos : 0 < M := by
     simpa only [hM_def] using pow_pos hp.pos _
-  haveI : NeZero M := ⟨by omega⟩
-  haveI : NeZero (p ^ (α - v)) := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
+  have : NeZero (p ^ (α - v)) := ⟨by omega⟩
   have hM_ge : 2 ≤ M := by
     have : p ^ 1 ≤ M := by
       apply Nat.pow_le_pow_right hp.pos
@@ -4391,7 +4391,7 @@ lemma quotient_injOn (n d : ℕ) [NeZero n] (_hd_dvd : d ∣ n)
     Set.InjOn (fun l : ZMod n => (ZMod.val l - b) / d)
       (↑(Finset.univ.filter (fun l : ZMod n => ZMod.val l % d = b ∧ 2 * ZMod.val l ≤ n))) := by
   intro l₁ hl₁ l₂ hl₂ heq
-  simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hl₁ hl₂
+  simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hl₁ hl₂
   have hval := val_eq_of_mod_eq_and_quot_eq n d b hb_lt l₁ l₂ hl₁.1 hl₂.1 heq
   exact ZMod.val_injective n hval
 
@@ -4816,7 +4816,7 @@ lemma reindex_map_injOn
       (Finset.univ.filter (fun l : ZMod n =>
         ZMod.val l % d = b ∧ ¬(2 * ZMod.val l ≤ n)) : Set (ZMod n)) := by
   intro l₁ hl₁ l₂ hl₂ heq
-  simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hl₁ hl₂
+  simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hl₁ hl₂
   have hv₁_lt := ZMod.val_lt l₁
   have hv₂_lt := ZMod.val_lt l₂
   have hv₁_mod := hl₁.1
@@ -5874,7 +5874,7 @@ lemma double_sum_bad_set_construction
           else (0 : ℝ)) ≤
           7 * R * (1 + Real.log (n : ℝ)) ^ 2 / (P : ℝ) := by
   intro P d R
-  haveI hd_pos : NeZero d := ⟨by positivity [d_pos n hn]⟩
+  have hd_pos : NeZero d := ⟨by positivity [d_pos n hn]⟩
   have havg := average_S_bound n d hn rfl q hq_coprime hq_pos hq_bound
     ((2 * q - 1).toNat) rfl
   have hS_nonneg : ∀ u : (ZMod d)ˣ, 0 ≤
@@ -5937,7 +5937,7 @@ lemma error_EPalpha_markov
         |(errorTermEPalpha n p q).re| ≤
           7 * R * (Nat.totient n : ℝ) *
             (1 + Real.log (n : ℝ)) ^ 2 / (P : ℝ) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨B, hB_card, hB_good⟩ :=
     double_sum_bad_set_construction n hn q hq_coprime hq_pos hq_bound
   refine ⟨B, hB_card, fun p hp_coprime hp_pos hp_bound hp_notinB => ?_⟩
@@ -5980,7 +5980,7 @@ lemma error_split_bound
           ((largestPrimeFactor n : ℝ) - 1) +
         7 * ⌈Real.log (n : ℝ)⌉₊ * (Nat.totient n : ℝ) *
           (1 + Real.log (n : ℝ)) ^ 2 / (largestPrimeFactor n : ℝ) := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨B, hB_card, hB_bound⟩ :=
     error_EPalpha_markov n hn q hq_coprime hq_pos hq_bound
   refine ⟨B, hB_card, fun p hp_ndvd hp_pos hp_sum hp_notbad => ?_⟩
@@ -6108,7 +6108,7 @@ lemma fourier_bound_lt_target (η θ : ℝ)
 lemma region_implies_bounds (n : ℕ) (η : ℝ) (hη_pos : 0 < η) (hn : 2 ≤ n)
     (p q : ℤ) (hpq : (p, q) ∈ truncatedObtuseRegion n η) :
     1 ≤ p ∧ 1 ≤ q ∧ (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 ∧ (q : ℝ) < (n : ℝ) / 2 := by
-  simp only [truncatedObtuseRegion, Set.mem_setOf_eq] at hpq
+  simp only [truncatedObtuseRegion, Set.mem_ofPred_eq] at hpq
   have h₁ : (η : ℝ) * n ≤ (p : ℝ) := hpq.1
   have h₂ : (η : ℝ) * n ≤ (q : ℝ) := hpq.2.1
   have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := hpq.2.2.1
@@ -6333,7 +6333,7 @@ lemma snd_mem_Icc_of_mem_residueBadPairs (n : ℕ) (η : ℝ) (hη : 0 < η) (_h
 lemma fiber_pair_ncard_le (S : Set (ℤ × ℤ)) (q : ℤ) :
     {pq ∈ S | pq.2 = q}.ncard ≤ {p : ℤ | (p, q) ∈ S}.ncard := by
   have h₁ : {pq ∈ S | pq.2 = q} = Set.image (fun p : ℤ => (p, q)) {p : ℤ | (p, q) ∈ S} := by
-    ext ⟨a, b⟩; simp only [Set.mem_setOf_eq, Set.mem_image, Prod.mk.injEq]
+    ext ⟨a, b⟩; simp only [Set.mem_ofPred_eq, Set.mem_image, Prod.mk.injEq]
     constructor
     · rintro ⟨ha, rfl⟩; exact ⟨a, ha, rfl, rfl⟩
     · rintro ⟨_, hp, rfl, rfl⟩; exact ⟨hp, rfl⟩
@@ -6365,7 +6365,7 @@ lemma residueBadPairs_ncard_from_fibers (η : ℝ) (θ : ℝ)
   have hsub : residueBadPairs n η ⊆ ⋃ q ∈ Q, {pq : ℤ × ℤ | pq ∈ residueBadPairs n η ∧ pq.2 = q} :=
     by
     intro pq hpq
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨pq.2, snd_mem_Icc_of_mem_residueBadPairs n η hη_pos hn pq hpq, hpq, rfl⟩
   calc (residueBadPairs n η).ncard
       ≤ (⋃ q ∈ Q, {pq : ℤ × ℤ | pq ∈ residueBadPairs n η ∧ pq.2 = q}).ncard :=
@@ -6592,7 +6592,7 @@ lemma pdivPairs_subset_prod_half (n : ℕ) (η : ℝ) (hη_pos : 0 < η) :
       {x : ℤ | 0 ≤ x ∧ x ≤ (n / 2 : ℤ) ∧ (largestPrimeFactor n : ℤ) ∣ x} ×ˢ
       Set.Icc (0 : ℤ) (n / 2 : ℤ) := by
   intro ⟨a, b⟩ h
-  simp only [pdivPairs, truncatedObtuseRegion, Set.mem_setOf_eq, Set.mem_prod] at h ⊢
+  simp only [pdivPairs, truncatedObtuseRegion, Set.mem_ofPred_eq, Set.mem_prod] at h ⊢
   have h₁ : (η : ℝ) * (n : ℝ) ≤ (a : ℝ) := h.1.1
   have h₂ : (η : ℝ) * (n : ℝ) ≤ (b : ℝ) := h.1.2.1
   have h₃ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := h.1.2.2.1
@@ -6711,7 +6711,7 @@ lemma pdivPairs_ncard_bound (η : ℝ) (θ : ℝ)
 lemma badPairsE_subset_union (n : ℕ) (η : ℝ) :
     badPairsE n η ⊆ pdivPairs n η ∪ residueBadPairs n η := by
   intro ⟨p, q⟩ hpq
-  simp only [badPairsE, pdivPairs, residueBadPairs, Set.mem_setOf_eq,
+  simp only [badPairsE, pdivPairs, residueBadPairs, Set.mem_ofPred_eq,
              Set.mem_union] at hpq ⊢
   by_cases h : (largestPrimeFactor n : ℤ) ∣ p
   · simp_all

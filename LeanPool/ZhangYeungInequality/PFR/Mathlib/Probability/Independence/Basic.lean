@@ -365,7 +365,7 @@ theorem _root_.ProbabilityTheory.EventuallyEq.finite_iInter
   apply Filter.mem_of_superset h
   intro a ha
   change a ∈ ⋂ i ∈ s, E i ↔ a ∈ ⋂ i ∈ s, F i
-  simp only [mem_iInter, mem_setOf_eq] at ha ⊢
+  simp only [mem_iInter, mem_ofPred_eq] at ha ⊢
   change ∀ i ∈ s, a ∈ E i ↔ a ∈ F i at ha
   exact forall₂_congr ha
 

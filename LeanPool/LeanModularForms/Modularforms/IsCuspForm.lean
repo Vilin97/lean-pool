@@ -45,7 +45,7 @@ lemma ModForm_mk_inj (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : CuspForm Γ k) (h
   rw [@DFunLike.ne_iff] at *
   obtain ⟨x, hx⟩ := hf
   use x
-  simp only [CuspForm.zero_apply, ne_eq, ModFormMk, zero_apply] at *
+  simp only [_root_.zero_apply, ne_eq, ModFormMk] at *
   exact hx
 
 /-- The linear inclusion of cusp forms into modular forms. -/

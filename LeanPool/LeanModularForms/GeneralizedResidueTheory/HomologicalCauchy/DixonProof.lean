@@ -674,7 +674,7 @@ theorem dixonFunction_differentiable (hU : IsOpen U) (hf : DifferentiableOn ℂ 
         ⟨_, fun t ht => (piecewiseC1Immersion_deriv_bounded γ).choose_spec t ht⟩
     have hwn_zero_ball : ∀ w' ∈ Metric.ball w ε,
         generalizedWindingNumber' γ.toFun γ.a γ.b w' = 0 := by
-      haveI hpreconn : PreconnectedSpace (Metric.ball w ε) :=
+      have hpreconn : PreconnectedSpace (Metric.ball w ε) :=
         isPreconnected_iff_preconnectedSpace.mp
           (Metric.isConnected_ball hε_pos).isPreconnected
       have hwn_cts_sub : Continuous

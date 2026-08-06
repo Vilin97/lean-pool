@@ -7593,7 +7593,7 @@ private lemma dense_ne_zero_of_phaseSpace_polynomial
   let rootsReal : Set ℝ := {t : ℝ | qpoly.eval (t : ℂ) = 0}
   have hroots_countable : rootsReal.Countable := by
     have hroots_complex : ({z : ℂ | qpoly.IsRoot z}).Finite :=
-      Polynomial.finite_setOf_isRoot hq_ne
+      Polynomial.finite_setOfPred_isRoot hq_ne
     have hroots_complex_countable : ({z : ℂ | qpoly.IsRoot z}).Countable :=
       hroots_complex.countable
     have hpre : rootsReal = Complex.ofReal ⁻¹' {z : ℂ | qpoly.IsRoot z} := by
@@ -7602,7 +7602,7 @@ private lemma dense_ne_zero_of_phaseSpace_polynomial
     rw [hpre]
     exact hroots_complex_countable.preimage Complex.ofReal_injective
   have hnonroots_dense : Dense {t : ℝ | qpoly.eval (t : ℂ) ≠ 0} := by
-    simpa [rootsReal, Set.compl_setOf] using hroots_countable.dense_compl ℝ
+    simpa [rootsReal, Set.compl_ofPred] using hroots_countable.dense_compl ℝ
   have hline_cont : Continuous line := by fun_prop
   have hline0 : line 0 = ξ := by ext q <;> simp [line]
   have hpre_ball : line ⁻¹' Metric.ball ξ ε ∈ nhds (0 : ℝ) := by

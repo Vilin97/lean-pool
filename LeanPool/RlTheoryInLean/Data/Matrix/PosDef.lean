@@ -144,7 +144,7 @@ noncomputable instance [NegDefAsymm A] : Invertible A.det := by
   intro h
   have hdet := det_neg A
   rw [h, mul_zero] at hdet
-  haveI : PosDefAsymm (-A) := (inferInstance : NegDefAsymm A).nd
+  have : PosDefAsymm (-A) := (inferInstance : NegDefAsymm A).nd
   exact absurd hdet (inferInstance : Invertible (-A).det).ne_zero
 
 noncomputable instance [NegDefAsymm A] : Invertible A :=

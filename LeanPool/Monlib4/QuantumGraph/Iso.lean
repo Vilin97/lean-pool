@@ -176,7 +176,7 @@ theorem unitary_commutes_with_hφ_matrix_iff_isIsometry (hφ : φ.IsFaithfulPosM
     withMatrixQuantum[φ]
     (
     Commute φ.matrix U ↔ StarAlgEquiv.IsIsometry (innerAutStarAlg U)) := by
-  letI : φ.IsFaithfulPosMap := hφ
+  let : φ.IsFaithfulPosMap := hφ
   exact withMatrixQuantum[φ] (by
     rw [← innerAut_adjoint_eq_iff, ← innerAutStarAlg_equiv_toLinearMap, ←
       innerAut_inv_eq_star, ← innerAutStarAlg_equiv_symm_toLinearMap]

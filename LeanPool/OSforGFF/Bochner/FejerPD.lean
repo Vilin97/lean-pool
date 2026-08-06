@@ -438,7 +438,7 @@ private lemma integrable_indicator_prod (ψ : V → ℂ) (hcont : Continuous ψ)
     ext ⟨x, v⟩
     simp only [Function.uncurry, Set.indicator,
       Metric.mem_closedBall, Set.mem_inter_iff, Function.comp, dist_zero_right, S,
-      Set.mem_setOf_eq]
+      Set.mem_ofPred_eq]
   rw [hfeq]
   have hS_closed : IsClosed S :=
     (Metric.isClosed_closedBall.preimage continuous_fst).inter

@@ -266,32 +266,32 @@ omit [DecidableEq n'] [DecidableEq m'] in
 lemma coeffs_sup_reindex [Nonempty n] [Nonempty m] [Nonempty n'] [Nonempty m']
     (g : Matrix n m R) (e : n ≃ n') (f : m ≃ m') :
     (reindex e f g).coeffsSup v = g.coeffsSup v := by
-  letI : Fintype n := Fintype.ofFinite n
-  letI : Fintype m := Fintype.ofFinite m
-  letI : Fintype n' := Fintype.ofFinite n'
-  letI : Fintype m' := Fintype.ofFinite m'
+  let : Fintype n := Fintype.ofFinite n
+  let : Fintype m := Fintype.ofFinite m
+  let : Fintype n' := Fintype.ofFinite n'
+  let : Fintype m' := Fintype.ofFinite m'
   simp only [coeffsSup, coeffs_reindex]
 
 omit [DecidableEq n'] [DecidableEq m'] in
 lemma coeffs_sup_toBlock₁₁_le_coeffs_sup [Nonempty n] [Nonempty m']
     (g : Matrix (n ⊕ n') (m' ⊕ m) R) :
     g.toBlocks₁₁.coeffsSup v ≤ g.coeffsSup v := by
-  letI : Fintype n := Fintype.ofFinite n
-  letI : Fintype m := Fintype.ofFinite m
-  letI : Fintype n' := Fintype.ofFinite n'
-  letI : Fintype m' := Fintype.ofFinite m'
+  let : Fintype n := Fintype.ofFinite n
+  let : Fintype m := Fintype.ofFinite m
+  let : Fintype n' := Fintype.ofFinite n'
+  let : Fintype m' := Fintype.ofFinite m'
   rw [← coeffs_sup_at_sup]
   simp only [toBlocks₁₁, of_apply]
   apply coeff_le_coeffs_sup
 
 lemma coeffs_sup_zero [Nonempty n] [Nonempty m] :
     (0 : Matrix n m R).coeffsSup v = 0 := by
-  letI : Fintype n := Fintype.ofFinite n
-  letI : Fintype m := Fintype.ofFinite m
+  let : Fintype n := Fintype.ofFinite n
+  let : Fintype m := Fintype.ofFinite m
   simp [coeffsSup, coeffs_zero, map_zero]
 
 lemma coeffs_sup_one [Nonempty n] [DecidableEq n] : (1 : Matrix n n R).coeffsSup v = 1 := by
-  letI : Fintype n := Fintype.ofFinite n
+  let : Fintype n := Fintype.ofFinite n
   simp only [coeffsSup]
   apply le_antisymm
   · simp only [Finset.sup'_le_iff]
@@ -305,7 +305,7 @@ lemma coeffs_sup_one [Nonempty n] [DecidableEq n] : (1 : Matrix n n R).coeffsSup
 
 lemma coeffs_sup_unique [Unique n] (g : Matrix n n R) :
     g.coeffsSup v = v (g default default) := by
-  letI : Fintype n := Fintype.ofFinite n
+  let : Fintype n := Fintype.ofFinite n
   simp [coeffsSup, coeffs_unique]
 
 end «FiniteLemmas»
@@ -618,7 +618,7 @@ def _root_.Matrix.GeneralLinearGroup.upperTriangularSubgroup (R : Type*) [CommRi
   mul_mem' {x y} hx hy := hx.mul hy
   one_mem' := Matrix.blockTriangular_one
   inv_mem' {x} hx := by
-    letI : Invertible x.val := ⟨x.inv, x.4, x.3⟩
+    let : Invertible x.val := ⟨x.inv, x.4, x.3⟩
     convert Matrix.blockTriangular_inv_of_blockTriangular hx
     simp
 

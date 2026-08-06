@@ -1123,7 +1123,7 @@ lemma ValidELP.strongDuality_of_prim_feasible (P : ValidELP I J F) (hP : P.IsFea
 
 omit [Fintype I] in
 theorem ValidELP.optimum_neq_none [Finite I] (P : ValidELP I J F) : P.optimum ≠ none := by
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   if hP : P.IsFeasible then
     intro contr
     simpa [contr, OppositesOpt] using P.strongDuality_of_prim_feasible hP

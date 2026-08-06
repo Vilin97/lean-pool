@@ -602,7 +602,7 @@ private lemma clm_finset_sup_seminorm_bound
     set q₁ := max q_s.1 (s_a.sup Prod.fst)
     set q₂ := max q_s.2 (s_a.sup Prod.snd)
     refine ⟨(q₁, q₂), max C_s (C_a : ℝ) + 1, by positivity, fun f => ?_⟩
-    haveI : SMulCommClass ℝ ℝ (SchwartzMap ℝ ℝ) :=
+    have : SMulCommClass ℝ ℝ (SchwartzMap ℝ ℝ) :=
       ⟨fun r s f => by rw [← mul_smul, ← mul_smul, mul_comm]⟩
     rw [Finset.sup_insert]
     apply sup_le

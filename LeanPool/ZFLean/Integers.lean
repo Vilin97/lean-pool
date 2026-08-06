@@ -546,7 +546,7 @@ lemma induction_pos {P : ZFInt → Prop} (n : ZFInt) (n_pos : 0 ≤ n)
 lemma induction_neg {P : ZFInt → Prop} (n : ZFInt) (n_neg : n ≤ 0)
   (zero : P 0) (succ : ∀ k, P k → P (k - 1)) : P n := by
   have  : 0 ≤ -n := by rwa [← ZFInt.neg_zero, ZFInt.le_neg_iff, neg_neg n, neg_neg 0]
-  letI P' n := P (-n)
+  let P' n := P (-n)
   suffices P' (-n) by
     unfold P' at this
     rwa [ZFInt.neg_neg] at this

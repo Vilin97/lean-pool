@@ -396,7 +396,7 @@ lemma dirac_comb_nonzero (n : ℕ) (i : Fin (w n)) (k : Fin (p n i)) :
     refine Or.inl ( Finset.sum_bij ( fun x _ => x.val ) ?_ ?_ ?_ ?_ ) <;> norm_num
     · intro a; exact ZMod.val_lt a
     · intro a₁ a₂ h
-      haveI := Fact.mk (show Nat.Prime 2 from by decide)
+      have := Fact.mk (show Nat.Prime 2 from by decide)
       exact ZMod.val_injective _ h
     · exact fun b hb => ⟨ b, ZMod.val_cast_of_lt hb ⟩
     · unfold g; intro a; split
@@ -579,7 +579,7 @@ private lemma dirac_comb_zero_split_sum (n : ℕ) (i : Fin (w n)) (h : ZMod (q n
       Finset.mem_range, forall_const, exists_const, neg_mul, Nat.cast_mul, ZMod.natCast_val]
     · exact fun x => ZMod.val_lt x
     · intro a₁ a₂ h
-      haveI := Fact.mk (show 1 < q n from ?_)
+      have := Fact.mk (show 1 < q n from ?_)
       · exact ZMod.val_injective _ h
       refine lt_of_lt_of_le ?_ (Finset.prod_le_prod' fun x hx =>
         Nat.Prime.two_le <| Finset.mem_filter.mp hx |>.2.2)

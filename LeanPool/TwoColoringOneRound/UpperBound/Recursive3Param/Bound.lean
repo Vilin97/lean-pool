@@ -71,7 +71,7 @@ private lemma z0_eq_c_of_lt_t {b c : Rand}
   have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hc
   have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
   have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-    simpa [Set.mem_setOf_eq] using not_le_of_gt hcb
+    simpa [Set.mem_ofPred_eq] using not_le_of_gt hcb
   simp [z0_eq_zBase hsq, zBase, hyt, hxt, hle]
 
 /-- On the lower wedge `b, c < t` with `b ≤ c`, the base surface equals `t`. -/
@@ -80,7 +80,7 @@ private lemma z0_eq_t_of_lt_t_le {b c : Rand}
     (hc : (c : ℝ) < t) (hb : (b : ℝ) < t) (hbc : (b : ℝ) ≤ c) : z0 b c = (t : ℝ) := by
   have hyt : ¬ (c : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hc
   have hxt : ¬ (b : ℝ) ∈ Set.Ici (t : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
-  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_setOf_eq] using hbc
+  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_ofPred_eq] using hbc
   simp [z0_eq_zBase hsq, zBase, hyt, hxt, hle]
 
 /-- Inside the square, `c < t2 ≤ b`: the recursive surface equals `t1`. -/
@@ -106,7 +106,7 @@ private lemma z0_inSquare_eq_c {b c : Rand}
   have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc
   have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
   have hle : ¬ ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by
-    simpa [Set.mem_setOf_eq] using not_le_of_gt hcb
+    simpa [Set.mem_ofPred_eq] using not_le_of_gt hcb
   simp [z0, hsq, hy, hx, hle]
 
 /-- Inside the square, `c < t2`, `b < t2`, `b ≤ c`: the recursive surface equals `t2`. -/
@@ -115,7 +115,7 @@ private lemma z0_inSquare_eq_t2_diag {b c : Rand}
     (hc : (c : ℝ) < t2) (hb : (b : ℝ) < t2) (hbc : (b : ℝ) ≤ c) : z0 b c = (t2 : ℝ) := by
   have hy : (c : ℝ) ∈ Set.Iio (t2 : ℝ) := hc
   have hx : ¬ (b : ℝ) ∈ Set.Ici (t2 : ℝ) := by simpa [Set.mem_Ici] using not_le_of_gt hb
-  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_setOf_eq] using hbc
+  have hle : ((b : ℝ), (c : ℝ)) ∈ {p : ℝ × ℝ | p.1 ≤ p.2} := by simpa [Set.mem_ofPred_eq] using hbc
   simp [z0, hsq, hy, hx, hle]
 
 /-- Inside the square, `t2 ≤ c` and `b < t2`: the recursive surface equals `t`. -/

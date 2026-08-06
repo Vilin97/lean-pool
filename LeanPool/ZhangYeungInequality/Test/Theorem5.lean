@@ -78,13 +78,13 @@ example
   let X : ∀ i : Fin 2, Ω → S i
     | 0 => X₁
     | 1 => X₂
-  letI : ∀ i, MeasurableSpace (S i)
+  let : ∀ i, MeasurableSpace (S i)
     | 0 => inferInstance
     | 1 => inferInstance
-  letI : ∀ i, Finite (S i)
+  let : ∀ i, Finite (S i)
     | 0 => inferInstance
     | 1 => inferInstance
-  letI : ∀ i, MeasurableSingletonClass (S i)
+  let : ∀ i, MeasurableSingletonClass (S i)
     | 0 => inferInstance
     | 1 => inferInstance
   have hX : ∀ i : Fin 2, Measurable (X i)

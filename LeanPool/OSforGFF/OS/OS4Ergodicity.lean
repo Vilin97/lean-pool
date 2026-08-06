@@ -366,7 +366,7 @@ lemma gff_err_sq_integrable (m : ℝ) [Fact (0 < m)] (T : ℝ) (hT : T > 0) (f :
   have h_avg_L2 : MemLp (fun ω => (1/T : ℂ) * ∫ s in Set.Icc (0 : ℝ) T, A s ω) 2 μ :=
     time_average_memLp_two m f T hT
   -- Step 2: EA is constant, hence in L² (probability measure → finite measure)
-  haveI : IsProbabilityMeasure μ :=
+  have : IsProbabilityMeasure μ :=
     MeasureTheory.ProbabilityMeasure.instIsProbabilityMeasureToMeasure (gaussianFreeFieldFree m)
   have h_const_L2 : MemLp (fun _ : FieldConfiguration => EA) 2 μ := memLp_const EA
   -- Step 3: Difference is in L² (L² is a vector space)
@@ -640,7 +640,7 @@ lemma L2_time_average_variance_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
       (1 / T^2) * ∫ s in Set.Icc (0 : ℝ) T, ∫ u in Set.Icc (0 : ℝ) T, ‖Cov s u‖ := by
   intro μ A EA Cov
   -- GFF is a probability measure
-  haveI h_prob : IsProbabilityMeasure μ :=
+  have h_prob : IsProbabilityMeasure μ :=
     MeasureTheory.ProbabilityMeasure.instIsProbabilityMeasureToMeasure (gaussianFreeFieldFree m)
   -- Stationarity: E[A_s] = EA for all s (GFF is time-translation invariant)
   -- Uses: A s ω = exp(⟨T_s ω, f⟩) = exp(⟨ω, T_{-s} f⟩) by duality
@@ -863,7 +863,7 @@ lemma gff_covariance_norm_integrableOn_slice (m : ℝ) [Fact (0 < m)] (f : TestF
     let Cov := fun s' u => ∫ ω, A s' ω * starRingEnd ℂ (A u ω) ∂μ - EA * starRingEnd ℂ EA
     MeasureTheory.IntegrableOn (fun u => ‖Cov s u‖) (Set.Icc 0 T) := by
   intro μ A EA Cov
-  haveI : IsProbabilityMeasure μ :=
+  have : IsProbabilityMeasure μ :=
     MeasureTheory.ProbabilityMeasure.instIsProbabilityMeasureToMeasure (gaussianFreeFieldFree m)
   exact OSforGFF.gff_covariance_norm_integrableOn_slice_proved μ A EA s T
     (gff_covariance_continuous m f)
@@ -1171,7 +1171,7 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
     have h_err_meas : ∀ j, AEStronglyMeasurable (Err j T ·) μ := by
       intro j
       -- Use the parametric integral measurability theorem (proved in L2TimeIntegral)
-      haveI : IsProbabilityMeasure μ :=
+      have : IsProbabilityMeasure μ :=
         MeasureTheory.ProbabilityMeasure.instIsProbabilityMeasureToMeasure (gaussianFreeFieldFree
           m)
       let A_j := fun s ω => Complex.exp (distributionPairingℂReal (timeTranslationDistribution s

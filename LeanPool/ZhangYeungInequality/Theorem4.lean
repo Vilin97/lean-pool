@@ -590,9 +590,9 @@ the joint tuple is constant, and its entropy is zero.
 -/
 lemma entropyFn_empty : entropyFn X μ ∅ = 0 := by
   simp only [entropyFn, entropyFnN]
-  haveI : IsEmpty {j : Fin 4 // j ∈ (∅ : Finset (Fin 4))} :=
+  have : IsEmpty {j : Fin 4 // j ∈ (∅ : Finset (Fin 4))} :=
     ⟨fun ⟨j, hj⟩ => Finset.notMem_empty j hj⟩
-  haveI : Nonempty Ω := nonempty_of_isProbabilityMeasure μ
+  have : Nonempty Ω := nonempty_of_isProbabilityMeasure μ
   have h_eq : (fun ω : Ω => fun j : (∅ : Finset (Fin 4)) => X j.1 ω)
       = fun _ =>
         (fun j : (∅ : Finset (Fin 4)) => X j.1 (Classical.arbitrary Ω)) := by
@@ -609,7 +609,7 @@ over the single-element subset `{i}` is, up to a measurable bijection into `S i`
 -/
 lemma entropyFn_singleton (hX : ∀ i, Measurable (X i)) (i : Fin 4) :
     entropyFn X μ {i} = H[X i; μ] := by
-  letI : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
+  let : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
   simp only [entropyFn, entropyFnN]
   -- Projection π : (∀ j : {i}, S j.1) → S i sending g to its value at ⟨i, mem⟩.
   let π : (∀ j : ({i} : Finset (Fin 4)), S j.1) → S i :=
@@ -639,7 +639,7 @@ j`. The joint tuple over `{i, j}` is measurably bijective with the pair `(X i, X
 lemma entropyFn_pair (hX : ∀ i, Measurable (X i))
     {i j : Fin 4} (h : i ≠ j) :
     entropyFn X μ {i, j} = H[⟨X i, X j⟩; μ] := by
-  letI : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
+  let : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
   simp only [entropyFn, entropyFnN]
   -- Projection π : (∀ k : {i, j}, S k.1) → S i × S j evaluating at both indices.
   have hi : i ∈ ({i, j} : Finset (Fin 4)) := by simp
@@ -674,7 +674,7 @@ the triple `(X i, (X j, X k))`.
 lemma entropyFn_triple (hX : ∀ i, Measurable (X i))
     {i j k : Fin 4} (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     entropyFn X μ {i, j, k} = H[⟨X i, ⟨X j, X k⟩⟩; μ] := by
-  letI : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
+  let : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
   simp only [entropyFn, entropyFnN]
   have hi : i ∈ ({i, j, k} : Finset (Fin 4)) := by simp
   have hj : j ∈ ({i, j, k} : Finset (Fin 4)) := by simp
@@ -710,7 +710,7 @@ right-associated 4-tuple.
 lemma entropyFn_quad (hX : ∀ i, Measurable (X i)) :
     entropyFn X μ ({0, 1, 2, 3} : Finset (Fin 4))
       = H[⟨X 0, ⟨X 1, ⟨X 2, X 3⟩⟩⟩; μ] := by
-  letI : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
+  let : ∀ i, Fintype (S i) := fun i => Fintype.ofFinite (S i)
   simp only [entropyFn, entropyFnN]
   have h0 : (0 : Fin 4) ∈ ({0, 1, 2, 3} : Finset (Fin 4)) := by decide
   have h1 : (1 : Fin 4) ∈ ({0, 1, 2, 3} : Finset (Fin 4)) := by decide
@@ -975,11 +975,11 @@ private lemma entropyRegion_four_subset_zhangYeungRegion_4 :
     entropyRegionN.{u} 4 ⊆ zhangYeungRegion_4 := by
   intro F hF
   rcases hF with ⟨Ω, hΩ, μ, hμ, S, hS, hFin, hMSC, X, hX, h_eq⟩
-  letI : MeasurableSpace Ω := hΩ
-  letI : IsProbabilityMeasure μ := hμ
-  letI : ∀ i, MeasurableSpace (S i) := hS
-  letI : ∀ i, Fintype (S i) := hFin
-  letI : ∀ i, MeasurableSingletonClass (S i) := hMSC
+  let : MeasurableSpace Ω := hΩ
+  let : IsProbabilityMeasure μ := hμ
+  let : ∀ i, MeasurableSpace (S i) := hS
+  let : ∀ i, Fintype (S i) := hFin
+  let : ∀ i, MeasurableSingletonClass (S i) := hMSC
   rw [h_eq]
   simpa [zhangYeungRegion_4] using zhangYeungHolds_of_entropy hX μ
 

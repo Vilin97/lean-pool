@@ -310,7 +310,7 @@ private lemma shell_vol_le_of_small_eps {t₀ ε Δ L_norm : ℝ}
       ENNReal.ofReal (4 * Δ / L_norm) := by
   have h_sub : {t : ℝ | |L_norm * |t - t₀| - ε| ≤ Δ} ⊆
       {t : ℝ | |t - t₀| ≤ (ε + Δ) / L_norm} := by
-    intro t ht; simp only [Set.mem_setOf_eq] at ht ⊢
+    intro t ht; simp only [Set.mem_ofPred_eq] at ht ⊢
     calc |t - t₀| = (L_norm * |t - t₀|) / L_norm := by field_simp
       _ ≤ (ε + Δ) / L_norm := div_le_div_of_nonneg_right
           (by linarith [(abs_le.mp ht).2]) hL_pos.le
@@ -318,7 +318,7 @@ private lemma shell_vol_le_of_small_eps {t₀ ε Δ L_norm : ℝ}
       ≤ volume {t : ℝ | |t - t₀| ≤ (ε + Δ) / L_norm} :=
         MeasureTheory.measure_mono h_sub
     _ = volume (Set.Icc (t₀ - (ε + Δ) / L_norm) (t₀ + (ε + Δ) / L_norm)) := by
-        congr 1; ext t; simp only [Set.mem_setOf_eq, Set.mem_Icc, abs_le]
+        congr 1; ext t; simp only [Set.mem_ofPred_eq, Set.mem_Icc, abs_le]
         constructor <;> intro ⟨h1, h2⟩ <;> constructor <;> linarith
     _ = ENNReal.ofReal (2 * (ε + Δ) / L_norm) := by rw [Real.volume_Icc]; ring_nf
     _ ≤ ENNReal.ofReal (4 * Δ / L_norm) := by
@@ -331,7 +331,7 @@ private lemma shell_vol_le_of_small_eps {t₀ ε Δ L_norm : ℝ}
 private lemma volume_abs_eq_null {t₀ r₁ : ℝ} (hr₁_pos : 0 < r₁) :
     volume {t : ℝ | |t - t₀| = r₁} = 0 := by
   have h_sub : {t : ℝ | |t - t₀| = r₁} ⊆ {t₀ - r₁, t₀ + r₁} := by
-    intro t ht; simp only [Set.mem_setOf_eq] at ht
+    intro t ht; simp only [Set.mem_ofPred_eq] at ht
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
     rcases (abs_eq hr₁_pos.le).mp ht with h1 | h1
     · right; linarith
@@ -351,7 +351,7 @@ private lemma shell_vol_le_of_large_eps {t₀ ε Δ L_norm : ℝ}
     div_le_div_of_nonneg_right (by linarith) hL_pos.le
   have h_sub : {t : ℝ | |L_norm * |t - t₀| - ε| ≤ Δ} ⊆
       {t : ℝ | r₁ ≤ |t - t₀| ∧ |t - t₀| ≤ r₂} := by
-    intro t ht; simp only [Set.mem_setOf_eq] at ht
+    intro t ht; simp only [Set.mem_ofPred_eq] at ht
     have h_abs := abs_le.mp ht
     exact ⟨by calc r₁ = (ε - Δ) / L_norm := rfl
               _ ≤ (L_norm * |t - t₀|) / L_norm :=

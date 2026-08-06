@@ -1200,7 +1200,7 @@ def theBij (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
           · constructor
             · apply hc
               · simp_all
-              · simp only [coe_filter, mem_univ, true_and, Set.mem_setOf_eq]
+              · simp only [coe_filter, mem_univ, true_and, Set.mem_ofPred_eq]
                 apply inSupport_other
                 exact eSupp
               · contrapose! enot
@@ -2129,7 +2129,7 @@ lemma UniformBetter_constant_support (W : FunToMax G)
     have h_subset := UniformBetter_support_zero G W hW
     have h_eq : {i | (UniformBetter G W hW).w i > 0} = {i | W.w i > 0} := by
       ext i
-      simp only [Set.mem_setOf_eq, gt_iff_lt]
+      simp only [Set.mem_ofPred_eq, gt_iff_lt]
       rw [←not_iff_not]
       simp_all
     have card_eq : #(filter (fun i => (UniformBetter G W hW).w i > 0) univ) =
@@ -2264,8 +2264,8 @@ lemma UniformBetter_edges_value (W : FunToMax G)
     (inSupport_explicit (G:=G) (W:=W) (x:=x) (y:=y)).1 hsupp |>.1
   have hypos : W.w y > 0 :=
     (inSupport_explicit (G:=G) (W:=W) (x:=x) (y:=y)).1 hsupp |>.2
-  have hx := UniformBetter_constant_support G W hW x (by simpa [Set.mem_setOf_eq] using hxpos)
-  have hy := UniformBetter_constant_support G W hW y (by simpa [Set.mem_setOf_eq] using hypos)
+  have hx := UniformBetter_constant_support G W hW x (by simpa [Set.mem_ofPred_eq] using hxpos)
+  have hy := UniformBetter_constant_support G W hW y (by simpa [Set.mem_ofPred_eq] using hypos)
   simp [hx, hy, pow_two]
 
 omit [DecidableEq α] in
@@ -2571,7 +2571,7 @@ theorem turans {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) :
   rcases isEmpty_or_nonempty α with h | h
   · rw [Finset.eq_empty_of_isEmpty G.edgeFinset, Finset.univ_eq_empty]
     simp
-  · haveI := h
+  · have := h
     exact turans_of_nonempty G h0 h1
 
 end Turan3

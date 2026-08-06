@@ -740,7 +740,7 @@ abbrev BaseChange : BrauerGroup (K := K) →* BrauerGroup (K := E) where
 abbrev BaseChangeQToC := BaseChange (K := ℚ) (E := ℂ)
 
 lemma BaseChangeQToC_eq_one : BaseChangeQToC = 1 := by
-  haveI : IsAlgClosed ℂ := Complex.isAlgClosed
+  have : IsAlgClosed ℂ := Complex.isAlgClosed
   ext A; simp only [MonoidHom.coe_mk, OneHom.coe_mk, MonoidHom.one_apply]
   induction A using Quotient.inductionOn' with | h A;
   simp only [Quotient.map'_mk'']; apply Quotient.sound
@@ -845,9 +845,9 @@ def Br : FieldCat ⥤ CommGrpCat where
     simp only [← CommGrpCat.ofHom_comp]
     congr 1
     apply (config := { allowSynthFailures := true }) baseChangeIdem
-    letI : Algebra F E := RingHom.toAlgebra (f ≫ g).hom
-    letI : Algebra F K := RingHom.toAlgebra f.hom
-    letI : Algebra K E := RingHom.toAlgebra g.hom
+    let : Algebra F E := RingHom.toAlgebra (f ≫ g).hom
+    let : Algebra F K := RingHom.toAlgebra f.hom
+    let : Algebra K E := RingHom.toAlgebra g.hom
     exact IsScalarTower.of_algebraMap_smul (R := F) (A := K) (M := E) fun r ↦ congrFun rfl
 
 end Q_to_C

@@ -533,7 +533,7 @@ theorem isBoundedAtImInfty_H_slash : IsBoundedAtImInfty (H₂ ∣[(2 : ℤ)] γ)
       rw [H₃_negI_action, H₄_negI_action]
       exact h
   · intro s hs
-    simp_rw [Set.mem_setOf_eq, Set.mem_range] at hs
+    simp_rw [Set.mem_ofPred_eq, Set.mem_range] at hs
     obtain ⟨s, rfl⟩ := hs
     rw [Set.mem_iInter, SetLike.mem_coe]
     intro hs

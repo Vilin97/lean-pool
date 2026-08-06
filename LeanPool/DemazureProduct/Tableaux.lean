@@ -364,7 +364,7 @@ factorizations `τ = α ⋆ β`. -/
 noncomputable def linkEquivDprod :
   {L : Link | L.τ = τ } ≃ {⟨α, β⟩ : AspPerm × AspPerm | α ⋆ β = τ } where
   toFun L := ⟨⟨L.val.α, L.val.β⟩, by
-    simp only [AspPerm.ext, Set.mem_setOf_eq]
+    simp only [AspPerm.ext, Set.mem_ofPred_eq]
     rw [L.val.dprod, L.prop]⟩
   invFun x := ⟨linkOfDprod h_321a x.property, by
     rcases x with ⟨⟨α, β⟩, h_dprod⟩

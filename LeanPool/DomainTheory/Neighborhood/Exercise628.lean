@@ -155,7 +155,7 @@ the (finitely many) neighbourhoods it contains, so `x ↦ {p | x.mem p.1}` injec
 finite powerset `Set {X // D.mem X}`. -/
 theorem finite_element_of_isFinite {α : Type*} {D : NeighborhoodSystem α} (h : D.IsFinite) :
     Finite D.Element := by
-  haveI : Finite {X : Set α // D.mem X} := h
+  have : Finite {X : Set α // D.mem X} := h
   apply Finite.of_injective
     (β := Set {X : Set α // D.mem X}) (fun x => {p | x.mem p.1})
   intro x y hxy
@@ -171,8 +171,8 @@ theorem finite_element_of_isFinite {α : Type*} {D : NeighborhoodSystem α} (h :
 neighbourhood systems with `𝒟 ⊴ ℰ` and `ℰ ⊴ 𝒟`, then `𝒟 ≅ ℰ`. -/
 theorem isomorphic_of_finite_system (hD : D.IsFinite) (hE : E.IsFinite)
     (h₁ : D ⊴ E) (h₂ : E ⊴ D) : D ≅ᴰ E := by
-  haveI := finite_element_of_isFinite hD
-  haveI := finite_element_of_isFinite hE
+  have := finite_element_of_isFinite hD
+  have := finite_element_of_isFinite hE
   exact isomorphic_of_trianglelefteq_both h₁ h₂
 
 end Domain.Neighborhood

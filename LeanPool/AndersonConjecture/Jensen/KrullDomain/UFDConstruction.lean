@@ -51,8 +51,8 @@ include T in theorem build_R_prime_in_S
     (p : R.carrier) (hp : Prime p)
     (hp_M : (↑p : T) ∈ IsLocalRing.maximalIdeal T) :
     Prime (⟨(↑p : T), hR_le p.2⟩ : S_sub) := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   set Rbar := intersectionSet R x₁ x₂ y₁ y₂
   set S_carrier : Set T :=
     {t : T | ∃ (a : T) (b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
@@ -192,8 +192,8 @@ private def build_loc_away_ufd_proof
       (Localization.Away
         (Subring.inclusion hR_le y₁ *
           Subring.inclusion hR_le y₂)) ) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   set Rbar := intersectionSet R x₁ x₂ y₁ y₂
   set ι : R.carrier →+* S_sub := Subring.inclusion hR_le
   set s : S_sub := ι y₁ * ι y₂ with hs_def
@@ -217,7 +217,7 @@ private def build_loc_away_ufd_proof
     change s'.1 ∈ (S_sub : Set T) at this
     rw [hS_sub_eq] at this
     exact this
-  haveI : IsDomain (Localization.Away s) :=
+  have : IsDomain (Localization.Away s) :=
     IsLocalization.isDomain_localization hpow_le
   have hinj_loc :=
     IsLocalization.injective (Localization.Away s) hpow_le
@@ -281,7 +281,7 @@ private def build_loc_away_ufd_proof
     rw [show s = ι y₁ * ι y₂ from rfl,
       map_mul] at this
     exact isUnit_of_mul_isUnit_left this
-  letI : Algebra (Polynomial R.carrier)
+  let : Algebra (Polynomial R.carrier)
       (Localization.Away s) := φ.toAlgebra
   let M : Submonoid (Polynomial R.carrier) :=
     { carrier := {f | IsUnit (φ f)}
@@ -311,7 +311,7 @@ private def build_loc_away_ufd_proof
         Or.resolve_right (mul_eq_zero.mp h1)
           hφf_ne
       exact hφ_inj (by rw [this, map_zero])
-  haveI : IsLocalization M (Localization.Away s) := by
+  have : IsLocalization M (Localization.Away s) := by
     rw [isLocalization_iff]
     refine ⟨fun ⟨f, hf⟩ => hf,
       fun z => ?_, fun {a b} hab => ?_⟩
@@ -470,8 +470,8 @@ private def build_ufd_proof_proof
     (hx₁_Rbar : x₁ ∈ intersectionSet R x₁ x₂ y₁ y₂)
     (_hx₂_Rbar : x₂ ∈ intersectionSet R x₁ x₂ y₁ y₂) : PLift (
     UniqueFactorizationMonoid S_sub ) := ⟨by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   set Rbar := intersectionSet R x₁ x₂ y₁ y₂
   have hRbar_one : (1 : T) ∈ Rbar :=
     ⟨⟨C 1, 0, by simp⟩, ⟨C 1, 0, by simp⟩⟩
@@ -550,7 +550,7 @@ private def build_ufd_proof_proof
       rw [Set.disjoint_left]
       rintro x ⟨n, rfl⟩ hxP
       exact hs_avoids (hP_prime.mem_of_pow_mem n hxP)
-    haveI : IsDomain (Localization.Away s) :=
+    have : IsDomain (Localization.Away s) :=
       IsLocalization.isDomain_localization hpow_le
     set Q := Ideal.map (algebraMap S_sub (Localization.Away s)) P with hQ_def
     have hQ_prime : Q.IsPrime :=
@@ -664,7 +664,7 @@ private def build_ufd_proof_proof
             fun p hp => hclass p (List.mem_cons_of_mem q hp)
           rcases hclass q List.mem_cons_self with ⟨hq_prime, hq_avoid⟩ | hq_unit
           · obtain ⟨kq, a₁, hq_ndvd_a₁, ha_eq⟩ :=
-              WfDvdMonoid.max_power_factor' ha_ne hq_prime.not_unit
+              WfDvdMonoid.max_power_factor' ha_ne hq_prime.not_isUnit
             have ha₁_P : a₁ ∈ P := by
               rw [ha_eq] at ha_P
               exact (hP_prime.mem_or_mem ha_P).resolve_left
@@ -685,7 +685,7 @@ private def build_ufd_proof_proof
             refine ⟨a', d', ha_eq, ha'_P, ha'_ne, ?_⟩
             intro p hp hp_prime
             rcases List.mem_cons.mp hp with rfl | hp'
-            · exact absurd hq_unit hp_prime.not_unit
+            · exact absurd hq_unit hp_prime.not_isUnit
             · exact ha'_ndvd p hp' hp_prime
       -- Apply the stripping lemma to get r' ∈ P with no prime factor of s dividing r'
       obtain ⟨r', d_strip, hr_eq_strip, hr'_in_P, hr'_ne, hr'_ndvd⟩ :=
@@ -855,8 +855,8 @@ include T in theorem build_primes_preserved
       ∀ (d : T), t = (↑p : T) * d → d ∈ intersectionSet R x₁ x₂ y₁ y₂)
     (r : R.carrier) (hr : Prime r) :
     Prime (⟨(↑r : T), hR_le r.2⟩ : S_sub) := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   set Rbar := intersectionSet R x₁ x₂ y₁ y₂
   set S_carrier : Set T :=
     {t : T | ∃ (a : T) (b : T), a ∈ Rbar ∧ b ∈ Rbar ∧
@@ -890,7 +890,7 @@ include T in theorem build_primes_preserved
     have hr_M : (r : T) ∈ IsLocalRing.maximalIdeal T := by
       have hmem : r ∈ IsLocalRing.maximalIdeal R.carrier := by
         rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-        exact hr.not_unit
+        exact hr.not_isUnit
       rw [R.maximal_ideal_eq] at hmem
       exact Ideal.mem_comap.mp hmem
     have hunit_T : IsUnit (r' : T) := hu.map S_sub.subtype
@@ -937,7 +937,7 @@ include T in theorem build_primes_preserved
       have hr_M : (r : T) ∈ IsLocalRing.maximalIdeal T := by
         have hmem : r ∈ IsLocalRing.maximalIdeal R.carrier := by
           rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
-          exact hr.not_unit
+          exact hr.not_isUnit
         rw [R.maximal_ideal_eq] at hmem
         exact Ideal.mem_comap.mp hmem
       have hr_ne : (r : T) ≠ 0 := by

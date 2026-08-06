@@ -44,7 +44,7 @@ lemma exists_smul_eq_of_rank_one' {M : Type*} [AddCommGroup M] [Module ℂ M]
 /-- Convert smul equality of modular forms to pointwise equality. -/
 lemma smul_modularForm_eq_pointwise {Γ : Subgroup SL(2, ℤ)} {k : ℤ} {f g : ModularForm Γ k}
     {c : ℂ} (h : f = c • g) (z : ℍ) : (f : ℍ → ℂ) z = c * (g : ℍ → ℂ) z := by
-  simpa [ModularForm.coe_smul, smul_eq_mul] using
+  simpa [FunLike.coe_smul, smul_eq_mul] using
     congrFun (congrArg (↑· : ModularForm _ _ → ℍ → ℂ) h) z
 
 section Definitions
@@ -169,7 +169,7 @@ lemma cuspfunc_Zero [hn : NeZero n] [ModularFormClass F Γ(n) k] : cuspFunction 
   have hnpos : (0 : ℝ) < n := by have := hn.1; positivity
   have hΓ : (↑n : ℝ) ∈ (Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) Γ(n)).strictPeriods := by
     simp
-  haveI : Fact (IsCusp OnePoint.infty
+  have : Fact (IsCusp OnePoint.infty
       (Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) Γ(n))) :=
     ⟨(Subgroup.map (Matrix.SpecialLinearGroup.mapGL ℝ) Γ(n)).isCusp_of_mem_strictPeriods
       hnpos hΓ⟩
@@ -215,7 +215,7 @@ lemma modfom_q_exp_cuspfunc (c : ℕ → ℂ) (f : F) [ModularFormClass F Γ(n) 
           intro y hy
           simp only [smul_eq_mul, ne_eq, Decidable.not_not, one_div,
             mem_inter_iff, mem_ball, dist_zero_right, mem_compl_iff, mem_singleton_iff,
-            mem_setOf_eq] at *
+            mem_ofPred_eq] at *
           refine ⟨hy.2, hy.1⟩
         · intro y hy k
           simp only [norm_mul, norm_pow, one_div, inv_pow]

@@ -108,7 +108,7 @@ theorem not_powerful_of_large_g4 (hBlock : BlockRadLB4) {k n : ℕ}
 theorem g4_crude_finiteness (hBlock : BlockRadLB4) {k : ℕ} (hk : 4 ≤ k) :
     {n : ℕ | 1 ≤ n ∧ Powerful (F k n)}.Finite := by
   apply Set.Finite.subset (Set.finite_Iic (k ^ 4))
-  intro n hn; simp only [Set.mem_setOf_eq] at hn; simp only [Set.mem_Iic]
+  intro n hn; simp only [Set.mem_ofPred_eq] at hn; simp only [Set.mem_Iic]
   by_contra hcon; push Not at hcon
   exact not_powerful_of_large_g4 hBlock hk hcon hn.2
 

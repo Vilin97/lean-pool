@@ -92,9 +92,9 @@ lemma chartMeasure_restrict_le_hausdorff (i : dR.d.ι) :
         (μH[(Module.finrank ℝ E : ℝ)] : Measure E).restrict (chartBall (dR := dR) (I := I) i) := by
   classical
   -- Work in the emetric space structure induced by the Riemannian metric, so `μM = μH[dim]`.
-  letI : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
-  letI : BorelSpace M := ⟨rfl⟩
-  haveI : IsRiemannianManifold I M := by infer_instance
+  let : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
+  let : BorelSpace M := ⟨rfl⟩
+  have : IsRiemannianManifold I M := by infer_instance
   let μM : Measure M :=
     RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)
   let μE : Measure E := (μH[(Module.finrank ℝ E : ℝ)] : Measure E)
@@ -218,9 +218,9 @@ lemma hausdorff_restrict_le_chartMeasure (i : dR.d.ι) :
           (chartBall (dR := dR) (I := I) i) := by
   classical
   -- Work in the emetric space structure induced by the Riemannian metric, so `μM = μH[dim]`.
-  letI : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
-  letI : BorelSpace M := ⟨rfl⟩
-  haveI : IsRiemannianManifold I M := by infer_instance
+  let : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
+  let : BorelSpace M := ⟨rfl⟩
+  have : IsRiemannianManifold I M := by infer_instance
   let μM : Measure M :=
     RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)
   let μE : Measure E := (μH[(Module.finrank ℝ E : ℝ)] : Measure E)

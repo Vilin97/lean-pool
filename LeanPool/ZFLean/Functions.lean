@@ -71,7 +71,7 @@ abbrev Range (f : ZFSet) {A B : ZFSet} (hf : f ⊆ A.prod B := by zrel) :=
 
 theorem _root_.ZFSet.funs.nonempty {A B : ZFSet} (hB : B ≠ ∅) : ZFSet.funs A B ≠ ∅ := by
   obtain ⟨b, hb⟩ := nonempty_exists_iff.mp hB
-  letI f := (A.prod B).sep fun z ↦ ∃ x ∈ A, z = x.pair b
+  let f := (A.prod B).sep fun z ↦ ∃ x ∈ A, z = x.pair b
   have hf : ZFSet.IsFunc A B f := by
     refine ⟨sep_subset_self, fun x hx ↦ ?_⟩
     exists b
@@ -2428,8 +2428,8 @@ theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
       ext1 z
       constructor <;> intro hz
       · obtain ⟨a, ha, b, hb, rfl⟩ := ‹x ⊆ A.prod B› hz |> mem_prod.mp
-        letI φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-        letI ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
+        let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
+        let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
         specialize eq (φa.pair ψb) φa (fapply_mem_range _ _) ψb (fapply_mem_range _ _) rfl
         have := eq.mp ⟨a.pair b, hz, ?_⟩
         · obtain ⟨p, hp, p_def⟩ := this
@@ -2445,8 +2445,8 @@ theorem composition_fprod_Image_bijective {A B A' B' φ ψ : ZFSet}
           · use ha
           · use hb
       · obtain ⟨a, ha, b, hb, rfl⟩ := ‹y ⊆ A.prod B› hz |> mem_prod.mp
-        letI φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
-        letI ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
+        let φa : ZFSet := @ᶻφ ⟨a, by rwa [is_func_dom_eq hφ]⟩
+        let ψb : ZFSet := @ᶻψ ⟨b, by rwa [is_func_dom_eq hψ]⟩
         specialize eq (φa.pair ψb) φa (fapply_mem_range _ _) ψb (fapply_mem_range _ _) rfl
         have := eq.mpr ⟨a.pair b, hz, ?_⟩
         · obtain ⟨p, hp, p_def⟩ := this

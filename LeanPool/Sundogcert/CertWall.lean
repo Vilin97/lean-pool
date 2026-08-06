@@ -148,7 +148,7 @@ theorem wt_allOnesSynBody_le (m : ℕ) (hm : 0 < m) : wt (allOnesSynBody m) ≤ 
     refine Finset.card_le_card_of_injOn
       (fun j => (⟨(j : ℕ) % m, Nat.mod_lt _ hm⟩ : Fin m)) (fun j _ => Finset.mem_univ _) ?_
     · intro a ha b hb hab
-      simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_univ, true_and] at ha hb
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_univ, true_and] at ha hb
       -- a,b in support ⟹ nonzero ⟹ (·:ℕ) < m ⟹ %m is identity ⟹ injective.
       have ham : (a : ℕ) < m := by
         by_contra h; unfold allOnesSynBody at ha; simp [h] at ha

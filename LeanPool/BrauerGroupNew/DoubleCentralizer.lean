@@ -415,7 +415,7 @@ lemma centralizer_mulLeft :
       refine ⟨b, ?_⟩
       ext c
       exact congr($hb c)
-    haveI : Algebra.IsCentral (Subalgebra.center F B) B :=
+    have : Algebra.IsCentral (Subalgebra.center F B) B :=
     { out := by
         intro x hx
         rw [Algebra.mem_bot]
@@ -582,7 +582,7 @@ lemma Subalgebra.conj_centralizer (B : Subalgebra F A) {x : Aˣ} :
     Subalgebra.centralizer F (B.conj x : Set A) =
     (Subalgebra.centralizer F B).conj x := by
   ext a
-  simp only [coe_conj, mem_centralizer_iff, Set.mem_setOf_eq, forall_exists_index, and_imp,
+  simp only [coe_conj, mem_centralizer_iff, Set.mem_ofPred_eq, forall_exists_index, and_imp,
     mem_conj, SetLike.mem_coe]
   constructor
   · intro h
@@ -611,14 +611,14 @@ open FiniteDimensional
 
 instance :
     Algebra.IsCentral F (Matrix (Fin (Module.finrank F B)) (Fin (Module.finrank F B)) F) := by
-  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   infer_instance
 
 instance : Algebra.IsCentral F (Module.End F B) :=
   algEquivMatrix (Module.finBasis F B) |>.symm.isCentral
 
 instance : IsSimpleRing (Module.End F B) := by
-  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   constructor
   rw [TwoSidedIdeal.orderIsoOfRingEquiv
     (algEquivMatrix (Module.finBasis F B) |>.toRingEquiv) |>.isSimpleOrder_iff]
@@ -669,7 +669,7 @@ instance : IsSimpleRing (A ⊗[F] Module.End.rightMul F B) := by
       (Algebra.TensorProduct.comm F A Bᵐᵒᵖ)
   have := TwoSidedIdeal.orderIsoOfRingEquiv eqv.toRingEquiv
   rw [OrderIso.isSimpleOrder_iff this]
-  haveI : IsSimpleRing Bᵐᵒᵖ := by
+  have : IsSimpleRing Bᵐᵒᵖ := by
     constructor
     rw [← TwoSidedIdeal.opOrderIso.isSimpleOrder_iff]
     exact IsSimpleRing.simple
@@ -682,7 +682,7 @@ lemma step1 {ι : Type*} (ℬ : Basis ι F <| Module.End F B) :
       Subalgebra.conj
         (Algebra.TensorProduct.map (AlgHom.id F A)
           (Module.End.rightMul F B).val).range x:= by
-  haveI : Algebra.IsCentral F (A ⊗[F] Module.End F B) := inferInstance
+  have : Algebra.IsCentral F (A ⊗[F] Module.End F B) := inferInstance
   let f : B →ₐ[F] A ⊗[F] Module.End F B :=
     { toFun b := b.1 ⊗ₜ LinearMap.id
       map_one' := by rfl
@@ -795,9 +795,9 @@ variable (F) in
 lemma dim_centralizer :
     Module.finrank F (Subalgebra.centralizer F (B : Set A)) *
     Module.finrank F B = Module.finrank F A := by
-  letI (X : Subalgebra F (A ⊗[F] Module.End F B)) : Ring X :=
+  let (X : Subalgebra F (A ⊗[F] Module.End F B)) : Ring X :=
       Subalgebra.toRing (R := F) (A := A ⊗[F] Module.End F B) X
-  haveI : Module.Free F (Module.End.rightMul F B) := Module.Free.of_divisionRing F
+  have : Module.Free F (Module.End.rightMul F B) := Module.Free.of_divisionRing F
     ↥(Module.End.rightMul F ↥B)
   obtain ⟨x, ⟨eqv⟩⟩ := step1 B (Module.finBasis _ _)
   let leqv := eqv.toLinearEquiv
@@ -825,7 +825,7 @@ lemma double_centralizer :
   apply Subalgebra.eq_of_le_of_finrank_eq
   · intro x hx y hy
     exact hy x hx |>.symm
-  · haveI := centralizerIsSimple B (Module.finBasis F _)
+  · have := centralizerIsSimple B (Module.finBasis F _)
     have eq1 := dim_centralizer F B
     have eq2 := dim_centralizer F (A := A) (Subalgebra.centralizer F B)
     have eq3 := eq1.trans eq2.symm

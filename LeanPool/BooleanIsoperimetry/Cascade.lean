@@ -722,7 +722,7 @@ lemma rank_add_min_ge {n : ℕ} (w : Cube n) (h : w.Nonempty) :
     rw [Finset.card_image_of_injOn]
     · simp_all +decide [Finset.filter_le_eq_Ici]
     · intro x hx y hy; simp_all +decide only [Fin.val_fin_le, Finset.coe_filter,
-        Finset.mem_univ, true_and, Set.mem_setOf_eq, Finset.ext_iff]
+        Finset.mem_univ, true_and, Set.mem_ofPred_eq, Finset.ext_iff]
       intro h; have := h x; have := h y
       split_ifs at * <;> simp_all +decide [Finset.mem_erase, Finset.mem_insert]
       grind

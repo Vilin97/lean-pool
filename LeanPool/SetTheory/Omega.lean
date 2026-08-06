@@ -50,7 +50,7 @@ namespace SetTheory
   rw [← IsWellFoundedRevMem.toV]
   simp only [IsWellFoundedRevMem, isWellFounded_iff, WellFounded.wellFounded_iff_has_min,
     powerset.spec, toZFSet_simps, Subtype.forall, Subtype.exists,
-    Set.mem_setOf_eq, mem_inside_ZFSet, exists_and_left, exists_prop]
+    Set.mem_ofPred_eq, mem_inside_ZFSet, exists_and_left, exists_prop]
   conv =>
     enter [2, y, hy, ne, 1, z]
     rw [← and_assoc, and_iff_left_of_imp (@hy z)]
@@ -58,7 +58,7 @@ namespace SetTheory
     rw [← and_imp, and_iff_right_of_imp (@hy u)]
   congr! 4 with y hy sub
   simp only [ne_eq, ZFSet.ext_iff, notMem_empty, iff_false, not_forall, not_not, Set.Nonempty,
-    Set.mem_setOf_eq, Subtype.exists, exists_prop]
+    Set.mem_ofPred_eq, Subtype.exists, exists_prop]
   conv =>
     enter [2, 1, z]
     erw [and_iff_right_of_imp (@hy z)]
@@ -139,11 +139,11 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   split_vonNeumann_omega hM₀
   · refine ⟨⟨ωₛ, by simpa [ωₛ, mem_vonNeumann]⟩, ?_⟩
     intro y hy
-    rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
+    rw [Set.mem_ofPred_eq, MemOmega.toZFSet] at hy
     rwa [ToZFSet.mem, ToZFSet.toZFSet_vonNeumann]
   · refine ⟨↓ωₛ, ?_⟩
     intro y hy
-    rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
+    rw [Set.mem_ofPred_eq, MemOmega.toZFSet] at hy
     rwa [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
 
 @[simp] lemma natCast_mem_ωₘ {n : ℕ} : (n : M₀) ∈ (ωₘ : M₀) := by

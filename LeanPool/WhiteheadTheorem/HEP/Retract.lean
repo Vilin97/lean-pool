@@ -79,7 +79,7 @@ the homotopy extension property in `retrToBoundaryJar`.
 This function is `noncomputable` due to `Real.decidableEq`. -/
 noncomputable def projToBoundary {n : ℕ} : (I^ Fin (n + 1)) → ∂I^(n+1) := fun y ↦
   let _ : Decidable (y ∈ ∂I^(n+1)) := by
-    simp only [Cube.boundary, Set.mem_setOf_eq]
+    simp only [Cube.boundary, Set.mem_ofPred_eq]
     infer_instance
   if _ : y ∈ ∂I^(n+1)
     then ⟨y, ‹_›⟩

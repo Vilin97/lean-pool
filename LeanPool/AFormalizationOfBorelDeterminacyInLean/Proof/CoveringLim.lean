@@ -171,7 +171,7 @@ def limConeBodySystem (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩)
       inv ((resEq k).map (limConeπMap hF (n ⊔ k)))
       ((limConeBodyLifts hF S _ yc k).1.res k)
     con := by
-      intro k; simp only [Set.mem_setOf_eq]; rw [← limCone_body_is_lift]
+      intro k; simp only [Set.mem_ofPred_eq]; rw [← limCone_body_is_lift]
       have hnat := congr_arg (resEq k).map <| limConeπMap_nat hF (ineq_rec n k)
       simp_rw [Functor.map_comp] at hnat
       have htr : Tree.Fixing (k + 1) (limConeπMap hF (n ⊔ (k + 1))) := by synthFixing
@@ -253,7 +253,7 @@ lemma limConeBodySystem_map_contains (S : (LvlStratHom.system p).obj ⟨limConeP
       (((resEq x.val.length).map (limConeπMap hF (n ⊔ x.val.length)))
         ((limConeBodySystem hF S y yc).res x.val.length)) =
     resEq.val' ((limConeBodyLifts hF S y yc x.val.length).1.res x.val.length)
-  letI : Tree.Fixing x.val.length (limConeπMap hF (n ⊔ x.val.length)) := by
+  let : Tree.Fixing x.val.length (limConeπMap hF (n ⊔ x.val.length)) := by
     synthFixing
   change
     resEq.val'
@@ -276,7 +276,7 @@ lemma limConeBodySystem_project (S : (LvlStratHom.system p).obj ⟨limConePt hF�
       (((resEq k).map (limConeπMap hF (n ⊔ k)))
         ((limConeBodySystem hF S y yc).res k)) =
     resEq.val' ((limConeBodyLifts hF S y yc k).1.res k)
-  letI : Tree.Fixing k (limConeπMap hF (n ⊔ k)) := by
+  let : Tree.Fixing k (limConeπMap hF (n ⊔ k)) := by
     synthFixing
   change
     resEq.val'
@@ -427,8 +427,8 @@ lemma limCone_fixing n : Fixing (K + n) ((limCone hF).π.app (Opposite.op n)) :=
     rw [← ResStrategy.fromMap_comp' (K + n)
       (limConeπMap hF ((K + n) ⊔ n)) (F.map (homOfLE hle).op).toHom
       hπ htransition.1 S]
-    letI : Tree.Fixing (K + n) (limConeπMap hF ((K + n) ⊔ n)) := hπ
-    letI : Tree.Fixing (K + n) (F.map (homOfLE hle).op).toHom := htransition.1
+    let : Tree.Fixing (K + n) (limConeπMap hF ((K + n) ⊔ n)) := hπ
+    let : Tree.Fixing (K + n) (F.map (homOfLE hle).op).toHom := htransition.1
     have hcomp :
         Tree.Fixing (K + n)
           (limConeπMap hF ((K + n) ⊔ n) ≫ (F.map (homOfLE hle).op).toHom) :=

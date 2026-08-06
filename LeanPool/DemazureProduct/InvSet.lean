@@ -192,11 +192,11 @@ noncomputable abbrev outset (asps : AspSet) (n : ℤ) : Finset ℤ :=
 
 lemma mem_inset (asps : AspSet) (n x : ℤ) :
     x ∈ asps.inset n ↔ ⟨x, n⟩ ∈ asps := by
-  simp only [inset, Set.Finite.mem_toFinset, Set.mem_setOf_eq, mem_AspSet]
+  simp only [inset, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, mem_AspSet]
 
 lemma mem_outset (asps : AspSet) (n x : ℤ) :
     x ∈ asps.outset n ↔ ⟨n, x⟩ ∈ asps := by
-  simp only [outset, Set.Finite.mem_toFinset, Set.mem_setOf_eq, mem_AspSet]
+  simp only [outset, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, mem_AspSet]
 
 /-- The half-open interval for the order `post_lt`. These are the elements
 `l` with `m ≤ l < n` in the post-inversion order. -/
@@ -205,7 +205,7 @@ private lemma post_Ico_set_finite (asps : AspSet) (m n : ℤ) :
   -- Proof written by GPT 5.5.
   refine (Finset.finite_toSet (Finset.Ico m n ∪ (asps.inset m ∪ asps.outset n))).subset ?_
   intro l hl
-  simp only [Set.mem_setOf_eq] at hl
+  simp only [Set.mem_ofPred_eq] at hl
   simp only [Finset.mem_coe, Finset.mem_union, Finset.mem_Ico, mem_inset, mem_outset]
   rcases hl.1 with ⟨l_lt_n, ln_nI⟩ | ⟨n_lt_l, nl_I⟩
   · by_cases m_le_l : m ≤ l
@@ -222,7 +222,7 @@ private noncomputable def post_Ico (asps : AspSet) (m n : ℤ) : Finset ℤ :=
 
 @[simp] private lemma mem_post_Ico (asps : AspSet) (m n l : ℤ) :
     l ∈ asps.post_Ico m n ↔ asps.post_lt l n ∧ ¬ asps.post_lt l m := by
-  simp only [post_Ico, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  simp only [post_Ico, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
 
 private lemma post_Ico_swap_eq_empty_of_post_lt (asps : AspSet) {m n : ℤ} (hmn : asps.post_lt m n) :
     asps.post_Ico n m = ∅ := by
@@ -307,23 +307,23 @@ private lemma finsum_sigmaIndicator (m_le_n : m ≤ n) :
     (asps.inset m ∪ (asps.outset m ∪ (asps.inset n ∪ asps.outset n)))
   have hIco : Finset.Ico m n ⊆ U := by
     intro k hk
-    simp only [Finset.mem_union, hk, Set.Finite.mem_toFinset, Set.mem_setOf_eq, true_or, U]
+    simp only [Finset.mem_union, hk, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, true_or, U]
   have hin_m : asps.inset m ⊆ U := by
     intro k hk
     simp only [Finset.mem_union, Finset.mem_Ico, hk, Set.Finite.mem_toFinset,
-      Set.mem_setOf_eq, true_or, or_true, U]
+      Set.mem_ofPred_eq, true_or, or_true, U]
   have hout_m : asps.outset m ⊆ U := by
     intro k hk
     simp only [Finset.mem_union, Finset.mem_Ico, Set.Finite.mem_toFinset,
-      Set.mem_setOf_eq, hk, true_or, or_true, U]
+      Set.mem_ofPred_eq, hk, true_or, or_true, U]
   have hin_n : asps.inset n ⊆ U := by
     intro k hk
     simp only [Finset.mem_union, Finset.mem_Ico, Set.Finite.mem_toFinset,
-      Set.mem_setOf_eq, hk, true_or, or_true, U]
+      Set.mem_ofPred_eq, hk, true_or, or_true, U]
   have hout_n : asps.outset n ⊆ U := by
     intro k hk
     simp only [Finset.mem_union, Finset.mem_Ico, Set.Finite.mem_toFinset,
-      Set.mem_setOf_eq, hk, or_true, U]
+      Set.mem_ofPred_eq, hk, or_true, U]
   rw [finsum_eq_sum_of_support_subset
     (f := fun k : ℤ => sigmaIndicator asps m n k) (s := U)]
   · calc
@@ -533,7 +533,7 @@ private lemma inset_eq_nw (n : ℤ) : ↑(asps.inset n)
   unfold northwestSet
   have hmem : ⟨x, n⟩ ∈ asps ↔ ⟨x, n⟩ ∈ invSet (asps.σ χ) :=
     (Set.ext_iff.mp (invSet_func asps χ) ⟨x, n⟩).symm
-  simp only [Finset.mem_coe, mem_inset, Set.mem_setOf_eq]
+  simp only [Finset.mem_coe, mem_inset, Set.mem_ofPred_eq]
   constructor
   · intro hx
     rcases hmem.mp hx with ⟨hxn, hσ⟩
@@ -547,7 +547,7 @@ private lemma outset_eq_se (n : ℤ) : ↑(asps.outset n)
   unfold southeastSet
   have hmem : ⟨n, x⟩ ∈ asps ↔ ⟨n, x⟩ ∈ invSet (asps.σ χ) :=
     (Set.ext_iff.mp (invSet_func asps χ) ⟨n, x⟩).symm
-  simp only [Finset.mem_coe, mem_outset, Set.mem_setOf_eq]
+  simp only [Finset.mem_coe, mem_outset, Set.mem_ofPred_eq]
   constructor
   · intro hx
     rcases hmem.mp hx with ⟨hnx, hσ⟩
@@ -569,7 +569,7 @@ private lemma surj_helper_up (m : ℤ) (n : ℕ) :
   obtain ⟨y, y_gt_x, y_not_outset_x⟩ : ∃ y : ℤ, y > x ∧ y ∉ asps.outset x := by
     by_contra! hall
     have heq : {y : ℤ | y > x} = ↑(asps.outset x) := by
-      ext y; simp only [Set.mem_setOf_eq, Finset.mem_coe, mem_outset]
+      ext y; simp only [Set.mem_ofPred_eq, Finset.mem_coe, mem_outset]
       exact ⟨fun hy => (mem_outset asps x y).mp (hall y hy),
              fun hy => by linarith [asps.directed x y hy]⟩
     have hfin : ({y : ℤ | y > x}).Finite := heq ▸ Finset.finite_toSet _
@@ -577,7 +577,7 @@ private lemma surj_helper_up (m : ℤ) (n : ℕ) :
   use y
   constructor
   · omega
-  · simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at y_not_outset_x
+  · simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at y_not_outset_x
     have hlt := σ_inc asps x y χ y_gt_x y_not_outset_x
     simp only [Nat.cast_add, Nat.cast_one]; linarith [lt_of_le_of_lt fx_ge hlt]
 
@@ -592,7 +592,7 @@ private lemma surj_helper_down (m : ℤ) (n : ℕ) :
   obtain ⟨y, y_lt_x, y_not_inset_x⟩ : ∃ y : ℤ, y < x ∧ y ∉ asps.inset x := by
     by_contra! hall
     have heq : {y : ℤ | y < x} = ↑(asps.inset x) := by
-      ext y; simp only [Set.mem_setOf_eq, Finset.mem_coe, mem_inset]
+      ext y; simp only [Set.mem_ofPred_eq, Finset.mem_coe, mem_inset]
       exact ⟨fun hy => (mem_inset asps x y).mp (hall y hy),
              fun hy => by linarith [asps.directed y x hy]⟩
     have hfin : ({y : ℤ | y < x}).Finite := heq ▸ Finset.finite_toSet _
@@ -600,7 +600,7 @@ private lemma surj_helper_down (m : ℤ) (n : ℕ) :
   use y
   constructor
   · omega
-  · simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at y_not_inset_x
+  · simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at y_not_inset_x
     have hlt := σ_inc asps y x χ y_lt_x y_not_inset_x
     simp only [Nat.cast_add, Nat.cast_one, ge_iff_le]; linarith [lt_of_lt_of_le hlt fx_le]
 

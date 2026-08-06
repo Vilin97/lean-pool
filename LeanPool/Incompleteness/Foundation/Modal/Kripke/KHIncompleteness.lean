@@ -204,7 +204,7 @@ lemma exists_min_flat (h₁ : ∃ n, n♭ ∉ ‖φ‖) :
   · intro m hm;
     by_contra hC;
     have := Finset.lt_min'_iff _ _ |>.mp hm m <| by
-      simp only [Set.mem_setOf_eq, Finset.mem_filter, Finset.mem_Icc, zero_le, true_and, s];
+      simp only [Set.mem_ofPred_eq, Finset.mem_filter, Finset.mem_Icc, zero_le, true_and, s];
       constructor;
       · simp only [Finset.lt_min'_iff, s] at hm;
         have := hm n <| by simpa [s];
@@ -229,7 +229,7 @@ lemma either_finite_cofinite : (‖φ‖.Finite) ∨ (‖φ‖ᶜ.Finite) := by
       or_iff_not_imp_left.mp ihφ <| truthset.infinite_of_all_flat h;
       wlog tsφc_ne : ‖φ‖ᶜ.Nonempty;
       · have : ‖□φ‖ᶜ = ∅ := by
-          simp only [Set.compl_empty_iff, Set.eq_univ_iff_forall, Set.mem_setOf_eq];
+          simp only [Set.compl_empty_iff, Set.eq_univ_iff_forall, Set.mem_ofPred_eq];
           intro x y Rxy;
           match x, y with
           | m♯, k♯ =>

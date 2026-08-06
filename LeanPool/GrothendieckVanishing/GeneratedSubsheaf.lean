@@ -194,7 +194,7 @@ instance allSectionMap_epi {X : TopCat.{u}}
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     [HasCoproduct (fun σ : SectionIndex F ↦ TopCat.Sheaf.zeroOutsideInt σ.1)] :
     Epi (allSectionMap hF) := by
-  letI : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
+  let : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) :=
     balanced_of_strongEpiCategory
   rw [← TopCat.Sheaf.isLocallySurjective_iff_epi (allSectionMap hF)]
   rw [TopCat.Presheaf.isLocallySurjective_iff]

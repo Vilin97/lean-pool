@@ -701,7 +701,7 @@ private lemma one_le_untop₀_meromorphicOrderAt {c a : ℂ} (ha : a ∉ L.latti
   rw [hAn.meromorphicOrderAt_eq] at hne ⊢
   rw [Ne, ENat.map_eq_top_iff] at hne
   lift analyticOrderAt f a to ℕ using hne with n hn
-  rw [ENat.map_coe, WithTop.untop₀_coe]
+  rw [ENat.map_natCast, WithTop.untop₀_coe]
   have : n ≠ 0 := by exact_mod_cast hz0
   omega
 
@@ -2844,7 +2844,7 @@ theorem thmbaker_odd (m : ℕ) [NeZero m] (hm : Odd m) :
     rwa [Nat.cast_one, one_mul] at this
   have hprod := L.propfmprod m hz1
   have hfm := (L.propfmpm m hgen).1 hm
-  simp only [Set.mem_setOf_eq, Polynomial.eval_mul, Polynomial.eval_C,
+  simp only [Set.mem_ofPred_eq, Polynomial.eval_mul, Polynomial.eval_C,
     Polynomial.eval_prod, Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_pow]
   rw [← hfm]
   exact hprod.symm
@@ -2867,7 +2867,7 @@ theorem thmbaker_even (m : ℕ) [NeZero m] (hm : Even m) :
   have hprod := L.propfmprod m hz1
   have hfm := (L.propfmpm m hgen).2 hm
   have hode := L.derivWeierstrassP_sq z hz1
-  simp only [Set.mem_setOf_eq, Polynomial.eval_mul, Polynomial.eval_C,
+  simp only [Set.mem_ofPred_eq, Polynomial.eval_mul, Polynomial.eval_C,
     Polynomial.eval_prod, Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_pow]
   rw [← hprod, hfm]
   linear_combination ((L.Pc m).eval (L.weierstrassP z)) ^ 2 * hode

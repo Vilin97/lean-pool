@@ -628,7 +628,7 @@ theorem jensen_construction
     intro P hP hP_ne_M
     have hP_lt_M : P < IsLocalRing.maximalIdeal T :=
       lt_of_le_of_ne (IsLocalRing.le_maximalIdeal hP.ne_top) hP_ne_M
-    haveI : P.FiniteHeight := Ideal.finiteHeight_of_isNoetherianRing P
+    have : P.FiniteHeight := Ideal.finiteHeight_of_isNoetherianRing P
     have hP_ht_lt := Ideal.height_strict_mono_of_isPrime hP_lt_M
     have hM_ht : (IsLocalRing.maximalIdeal T).height = 2 := by
       have h := IsLocalRing.maximalIdeal_height_eq_ringKrullDim (R := T)

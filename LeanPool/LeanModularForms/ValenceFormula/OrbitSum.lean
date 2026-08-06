@@ -194,7 +194,7 @@ theorem finite_zeros_in_fd (hf : f ≠ 0) :
   have hre_bridge : UpperHalfPlane.re p = (↑p : ℂ).re := rfl
   have hre := abs_le.mp habs_re
   constructor
-  · simp only [fdBox, Set.mem_setOf_eq]
+  · simp only [fdBox, Set.mem_ofPred_eq]
     refine ⟨by linarith [hre_bridge], by linarith [hre_bridge], him_gt, ?_⟩
     by_contra h_ge; push Not at h_ge
     have : H₀ ≤ (↑p : ℂ).im := by linarith

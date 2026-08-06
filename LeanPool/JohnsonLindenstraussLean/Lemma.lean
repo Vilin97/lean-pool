@@ -79,7 +79,7 @@ theorem johnson_lindenstrauss {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω
   obtain ⟨ω, hω⟩ := exists_avoiding (μ := μ) s B hsum
   refine ⟨ω, fun a b hab => ?_⟩
   have hmem := hω (a, b) (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hab⟩)
-  simp only [hB, Set.mem_setOf_eq, not_le] at hmem
+  simp only [hB, Set.mem_ofPred_eq, not_le] at hmem
   exact hmem
 
 end JL

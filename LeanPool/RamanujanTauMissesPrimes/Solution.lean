@@ -122,7 +122,7 @@ lemma tauWitness_mem_oddPrimesSigned (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
   have habs := tauWitness_natAbs R k ℓ hw
   have hcases := Int.natAbs_eq (tauWitness R k ℓ)
   rw [habs] at hcases
-  simpa only [oddPrimesSigned, Set.mem_setOf_eq] using ⟨ℓ, hprime, hne2, hcases⟩
+  simpa only [oddPrimesSigned, Set.mem_ofPred_eq] using ⟨ℓ, hprime, hne2, hcases⟩
 
 lemma tauWitness_mem_X2k (R : RamanujanTau) (k : ℕ) (ℓ : ℕ)
     (hw : ∃ p : ℕ+, (p : ℕ).Prime ∧ (R.τ (p ^ (2 * k))).natAbs = ℓ) :
@@ -173,7 +173,7 @@ lemma per_k_odd_prime_ncard_le (R : RamanujanTau) (k : ℕ) (X : ℝ) (hX : 0 < 
   have hfin := target_set_finite R k X hX
   exact Set.ncard_le_ncard_of_injOn (tauWitness R k)
     (fun ℓ hℓ => by
-      simp only [Set.mem_setOf_eq] at hℓ
+      simp only [Set.mem_ofPred_eq] at hℓ
       obtain ⟨hprime, hne2, hle, hw⟩ := hℓ
       exact ⟨⟨tauWitness_mem_oddPrimesSigned R k ℓ hprime hne2 hw,
              tauWitness_mem_X2k R k ℓ hw⟩,
@@ -221,7 +221,7 @@ lemma target_subset_finite_union (R : RamanujanTau) (X : ℝ) (_hX : 0 < X)
     ⋃ k ∈ Finset.Icc 3 K, {ℓ : ℕ | Nat.Prime ℓ ∧ ℓ ≠ 2 ∧ (ℓ : ℝ) ≤ X ∧
       ∃ p : ℕ+, (p : ℕ).Prime ∧ (R.τ (p ^ (2 * k))).natAbs = ℓ} := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   obtain ⟨hprime, hne2, hle, p, hp, k, hk3, heq⟩ := hℓ
   have hkK : k ≤ K := k_le_K_of_prime_witness R X K hvanish ℓ hprime hle p hp k hk3 heq
   simp only [Set.mem_iUnion]
@@ -233,7 +233,7 @@ lemma biUnion_per_k_finite (R : RamanujanTau) (X : ℝ) (K : ℕ) :
         ∃ p : ℕ+, (p : ℕ).Prime ∧ (R.τ (p ^ (2 * k))).natAbs = ℓ}).Finite := by
   refine Set.Finite.subset (Set.finite_le_nat ⌊X⌋₊) ?_
   intro ℓ hℓ
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hℓ
   obtain ⟨k, _, _, _, hle, _⟩ := hℓ
   exact Nat.le_floor hle
 
@@ -293,7 +293,7 @@ lemma target_eq_union (R : RamanujanTau) (X : ℝ) :
         (R.τ (p ^ (2 * k))).natAbs = ℓ} := by
   apply Set.ext
   intro ℓ
-  simp only [Set.mem_setOf_eq, Set.mem_union]
+  simp only [Set.mem_ofPred_eq, Set.mem_union]
   constructor
   · intro h
     have h₁ : Nat.Prime ℓ := h.1
@@ -728,7 +728,7 @@ lemma S_set_subset_union (R : RamanujanTau) (X : ℝ) (_hX : 1 < X) :
         ∃ p : ℕ+, (p : ℕ).Prime ∧ ∃ k : ℕ, 3 ≤ k ∧
           (R.τ (p ^ (2 * k))).natAbs = ℓ} := by
   intro ℓ hℓ_mem
-  simp only [tauPrimeSet, Set.mem_setOf_eq] at hℓ_mem
+  simp only [tauPrimeSet, Set.mem_ofPred_eq] at hℓ_mem
   obtain ⟨hprime, hle, n, hτ⟩ := hℓ_mem
   rcases hprime.eq_two_or_odd' with rfl | hodd_ℓ
   · left; left; left
@@ -764,7 +764,7 @@ lemma A_sets_finite (X : ℝ) :
         (R.τ (p ^ (2 * k))).natAbs = ℓ}).Finite := by
   apply Set.Finite.subset (nat_bounded_by_real_finite X)
   intro ℓ hℓ
-  simp only [Set.mem_union, Set.mem_setOf_eq] at hℓ ⊢
+  simp only [Set.mem_union, Set.mem_ofPred_eq] at hℓ ⊢
   obtain (⟨-, hle, -⟩ | ⟨-, hle, -⟩) | ⟨-, hle, -⟩ := hℓ <;> exact hle
 
 lemma full_union_finite (R : RamanujanTau) (X : ℝ) :
@@ -873,7 +873,7 @@ lemma L_subset_union (R : RamanujanTau) (X : ℝ) :
 lemma bounded_nat_set_finite (X : ℝ) : {ℓ : ℕ | (ℓ : ℝ) ≤ X}.Finite := by
   apply Set.Finite.subset (Set.finite_Iio (⌊X⌋₊ + 1))
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   simpa only [Set.mem_Iio] using Nat.lt_of_le_of_lt (Nat.le_floor hℓ) (Nat.lt_succ_iff.mpr le_rfl)
 
 lemma L_union_finite (R : RamanujanTau) (X : ℝ) :
@@ -887,7 +887,7 @@ lemma L_union_finite (R : RamanujanTau) (X : ℝ) :
         (p : ℝ) ≤ X ^ ((2 : ℝ) / 11)}).Finite := by
   apply Set.Finite.subset (bounded_nat_set_finite X)
   intro ℓ hℓ
-  simp only [Set.mem_union, Set.mem_setOf_eq] at hℓ ⊢
+  simp only [Set.mem_union, Set.mem_ofPred_eq] at hℓ ⊢
   rcases hℓ with ⟨_, hle, _⟩ | ⟨_, hle, _⟩ <;> exact hle
 
 lemma ell_split_large_small (R : RamanujanTau) (X : ℝ) :
@@ -932,7 +932,7 @@ lemma bounded_nat_set_finite_real (B : ℝ) :
   by_cases hB : B < 0
   · convert Set.finite_empty
     ext n
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     linarith [Nat.cast_nonneg (α := ℝ) n]
   · push Not at hB
     exact Set.Finite.subset (Finset.finite_toSet (Finset.range (⌊B⌋₊ + 1)))
@@ -947,7 +947,7 @@ lemma bounded_pnat_int_subset (S : Set (ℕ+ × ℤ)) (N : ℕ) (M : ℕ)
     S ⊆ {q : ℕ+ | (q : ℝ) ≤ (N : ℝ)} ×ˢ Set.Icc (-(M : ℤ)) (M : ℤ) := by
   intro p hp
   obtain ⟨h1, h2⟩ := hS p hp
-  simp only [Set.mem_prod, Set.mem_setOf_eq, Set.mem_Icc]
+  simp only [Set.mem_prod, Set.mem_ofPred_eq, Set.mem_Icc]
   exact ⟨Nat.cast_le.mpr (Nat.cast_le.mpr h1), abs_le.mp h2⟩
 
 lemma bounded_pnat_int_set_finite (S : Set (ℕ+ × ℤ)) (N : ℕ) (M : ℕ)
@@ -2114,7 +2114,7 @@ lemma witnessMap_E2_mapsTo (R : RamanujanTau) (X : ℝ) :
         (p : ℝ) > X ^ ((2 : ℝ) / 11)},
     witnessMapE2 R X ℓ ∈ E2Set X := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   obtain ⟨hℓ_prime, hℓX, p, hp_prime, hτ, hpX⟩ := hℓ
   obtain ⟨hw_prime, hw_τ, hw_large⟩ :=
     witnessP_E2_spec R X ℓ ⟨p, hp_prime, hτ, hpX⟩
@@ -2163,7 +2163,7 @@ lemma target_subset_image_k1 (R : RamanujanTau) (X : ℝ) :
     (fun p : ℕ+ => (R.τ (p ^ 2)).natAbs) ''
       {p : ℕ+ | (p : ℕ).Prime ∧ (p : ℝ) ≤ X ^ ((2 : ℝ) / 11)} := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   obtain ⟨_, _, p, hp_prime, hp_eq, hp_bd⟩ := hℓ
   exact ⟨p, ⟨hp_prime, hp_bd⟩, hp_eq⟩
 
@@ -2182,14 +2182,14 @@ lemma pnat_bounded_finite_nat (M : ℕ) :
     {p : ℕ+ | (p : ℕ) ≤ M}.Finite := by
   apply Set.Finite.subset (pnat_bounded_finite_k1 (M : ℝ))
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   exact_mod_cast hp
 
 lemma witness_set_subset_bounded (X : ℝ) :
     {p : ℕ+ | (p : ℕ).Prime ∧ (p : ℝ) ≤ X ^ ((2 : ℝ) / 11)} ⊆
     {p : ℕ+ | (p : ℕ) ≤ ⌊X ^ ((2 : ℝ) / 11)⌋₊} := by
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   exact natLe_floor_of_cast_le _ _ hp.2
 
 lemma witness_set_finite_k1 (X : ℝ) :
@@ -2205,7 +2205,7 @@ lemma ncard_Icc_one_M (M : ℕ) :
 lemma pnat_val_mapsTo_Icc (M : ℕ) :
     ∀ a ∈ {p : ℕ+ | (p : ℕ) ≤ M}, (a : ℕ) ∈ (↑(Finset.Icc 1 M) : Set ℕ) := by
   intro a ha
-  simp only [Set.mem_setOf_eq] at ha
+  simp only [Set.mem_ofPred_eq] at ha
   simpa only [Finset.coe_Icc, Set.mem_Icc] using ⟨a.pos, ha⟩
 
 lemma pnat_bounded_ncard_le (M : ℕ) :
@@ -2305,7 +2305,7 @@ lemma target_subset_image (R : RamanujanTau) (X : ℝ) :
     (fun p : ℕ+ => (R.τ (p ^ 4)).natAbs) ''
       {p : ℕ+ | (p : ℕ).Prime ∧ (p : ℝ) ≤ X ^ ((1 : ℝ) / 11)} := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   obtain ⟨_, _, p, hp_prime, hp_bound, hp_eq⟩ := hℓ
   exact ⟨p, ⟨hp_prime, hp_bound⟩, hp_eq⟩
 
@@ -2319,7 +2319,7 @@ private lemma prime_set_subset_bounded (X : ℝ) :
     {p : ℕ+ | (p : ℕ).Prime ∧ (p : ℝ) ≤ X ^ ((1 : ℝ) / 11)} ⊆
     {p : ℕ+ | (p : ℕ) ≤ ⌊X ^ ((1 : ℝ) / 11)⌋₊} := by
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   exact Nat.le_floor hp.2
 
 lemma witness_set_ncard_le (X : ℝ) (_hX : 1 < X) :
@@ -2645,8 +2645,8 @@ private def neg_fiber (X : ℝ) (x : ℕ+) : Set ℤ :=
 lemma neg_maps_to_pos (X : ℝ) (x : ℕ+) :
     ∀ u ∈ neg_fiber X x, -u ∈ pos_fiber X x := by
   intro u hu
-  simp only [neg_fiber, Set.mem_setOf_eq] at hu
-  simp only [pos_fiber, Set.mem_setOf_eq]
+  simp only [neg_fiber, Set.mem_ofPred_eq] at hu
+  simp only [pos_fiber, Set.mem_ofPred_eq]
   obtain ⟨hu_neg, hu_lb, hu_ub⟩ := hu
   refine ⟨neg_pos.mpr hu_neg, ?_, ?_⟩
   · rwa [Int.cast_neg, neg_sq]
@@ -2663,7 +2663,7 @@ private lemma int_abs_le_ceil_sqrt (y : ℤ) (M : ℝ) (_hM : 0 ≤ M)
 lemma pos_fiber_subset_Icc (X : ℝ) (x : ℕ+) :
     pos_fiber X x ⊆ Set.Icc 1 ⌈Real.sqrt (5 * (↑↑x : ℝ) ^ 22 + 4 * X)⌉ := by
   intro u hu
-  simp only [pos_fiber, Set.mem_setOf_eq] at hu
+  simp only [pos_fiber, Set.mem_ofPred_eq] at hu
   obtain ⟨hu_pos, _, hu_sq_le⟩ := hu
   constructor
   · omega
@@ -3834,7 +3834,7 @@ private lemma witnessMap_mapsTo (R : RamanujanTau) (X : ℝ) :
         (R.τ (p ^ 4)).natAbs = ℓ},
     witnessMap R X ℓ ∈ E4Set X := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ
+  simp only [Set.mem_ofPred_eq] at hℓ
   obtain ⟨hℓ_prime, hℓ_le, hℓ_ex⟩ := hℓ
   have hspec := witnessP_spec R X ℓ hℓ_ex
   obtain ⟨hp_prime, hp_large, hp_eq⟩ := hspec
@@ -3884,7 +3884,7 @@ lemma k2_set_split (R : RamanujanTau) (X : ℝ) :
       ∃ p : ℕ+, (p : ℕ).Prime ∧ (p : ℝ) > X ^ ((1 : ℝ) / 11) ∧
         (R.τ (p ^ 4)).natAbs = ℓ} := by
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ ⊢
+  simp only [Set.mem_ofPred_eq] at hℓ ⊢
   obtain ⟨hprime, hle, p, hp, htau⟩ := hℓ
   by_cases h : (p : ℝ) ≤ X ^ ((1 : ℝ) / 11)
   · left
@@ -3899,7 +3899,7 @@ lemma k2_target_set_finite (R : RamanujanTau) (X : ℝ) :
         (R.τ (p ^ 4)).natAbs = ℓ} := by
   apply Set.Finite.subset (Set.finite_le_nat ⌊X⌋₊)
   intro ℓ hℓ
-  simp only [Set.mem_setOf_eq] at hℓ ⊢
+  simp only [Set.mem_ofPred_eq] at hℓ ⊢
   exact Nat.le_floor hℓ.2.1
 
 lemma k2_contribution_abc (R : RamanujanTau) (habc : ABC) :
@@ -4020,7 +4020,7 @@ lemma E2_fiber_subset_union (X : ℝ) (_hX : 2 < X) (x : ℕ+)
       {y : ℤ | (↑↑x : ℤ) ^ 11 + 1 ≤ y ^ 2 ∧
         ((y ^ 2 - (↑↑x : ℤ) ^ 11 : ℤ) : ℝ) ≤ X} := by
   intro y hy
-  simp only [Set.mem_setOf_eq, E2Set] at hy
+  simp only [Set.mem_ofPred_eq, E2Set] at hy
   obtain ⟨_, h_abs_ge, h_abs_le⟩ := hy
   rcases show y ^ 2 ≤ (↑↑x : ℤ) ^ 11 - 1 ∨ (↑↑x : ℤ) ^ 11 + 1 ≤ y ^ 2 from by
       rcases abs_cases ((↑↑x : ℤ) ^ 11 - y ^ 2) with ⟨h, _⟩ | ⟨h, _⟩ <;> omega
@@ -4231,7 +4231,7 @@ lemma natAbs_image_subset_nonneg_interval (X : ℝ) (hX : 2 < X) (x : ℕ+)
     {n : ℤ | 0 ≤ n ∧ Real.sqrt ((↑↑x : ℝ) ^ 11 - X) ≤ (n : ℝ) ∧
       (n : ℝ) ≤ Real.sqrt ((↑↑x : ℝ) ^ 11 - 1)} := by
   intro n hn
-  simp only [Set.mem_image, Set.mem_setOf_eq] at hn
+  simp only [Set.mem_image, Set.mem_ofPred_eq] at hn
   obtain ⟨m, ⟨y, ⟨hy_sq, hy_diff⟩, rfl⟩, rfl⟩ := hn
   refine ⟨Nat.cast_nonneg _, ?_, ?_⟩
   · exact lower_bound_from_diff_le x y X hX hx hy_diff
@@ -4412,7 +4412,7 @@ lemma caseB_nat_interval_subset_Iic (X : ℝ) (x : ℕ+) :
       (n : ℝ) ≤ Real.sqrt ((↑↑x : ℝ) ^ 11 + X)} ⊆
     {n : ℕ | n ≤ ⌈Real.sqrt ((↑↑x : ℝ) ^ 11 + X)⌉₊} := by
   intro n hn
-  simp only [Set.mem_setOf_eq] at hn ⊢
+  simp only [Set.mem_ofPred_eq] at hn ⊢
   exact Nat.cast_le.mp (hn.2.trans (Nat.le_ceil _))
 
 lemma caseB_nat_interval_finite (X : ℝ) (_hX : 2 < X) (x : ℕ+)
@@ -4916,7 +4916,7 @@ lemma E2_set_subset_bounded_prod (X B : ℝ) (hX : 2 < X) (hB : 0 < B)
       Set.Icc (-⌈Real.sqrt (↑⌈B⌉₊ ^ 11 + X)⌉) ⌈Real.sqrt (↑⌈B⌉₊ ^ 11 + X)⌉ := by
   intro ⟨x, y⟩ hp
   have h2 := hp.2.2
-  simp only [Set.mem_prod, Set.mem_setOf_eq]
+  simp only [Set.mem_prod, Set.mem_ofPred_eq]
   constructor
   · exact hxbound ⟨x, y⟩ hp
   · have hy_sq_real : (y : ℝ) ^ 2 ≤ (↑↑x : ℝ) ^ 11 + X :=
@@ -5151,7 +5151,7 @@ lemma E4_set_subset_prod (X B : ℝ) (hx : ∀ p ∈ E4Set X, (p.1 : ℝ) ≤ B)
       Set.Icc (-⌈Real.sqrt (5 * B ^ 22 + 4 * X)⌉)
               ⌈Real.sqrt (5 * B ^ 22 + 4 * X)⌉ := by
   intro p hp
-  simpa only [Set.mem_prod, Set.mem_setOf_eq] using ⟨hx p hp, u_in_Icc_of_E4 X B hx p hp⟩
+  simpa only [Set.mem_prod, Set.mem_ofPred_eq] using ⟨hx p hp, u_in_Icc_of_E4 X B hx p hp⟩
 
 lemma E4_set_finite_of_bounded (X B : ℝ) (hB : 0 < B) (_hX : 4 < X)
     (hx : ∀ p ∈ E4Set X, (p.1 : ℝ) ≤ B) :
@@ -5181,7 +5181,7 @@ lemma E4_filter_image_subset_fiber (X : ℝ) (hfin : (E4Set X).Finite) (x : ℕ+
 lemma E4_snd_injOn_filter (X : ℝ) (hfin : (E4Set X).Finite) (x : ℕ+) :
     Set.InjOn Prod.snd (↑(Finset.filter (fun a => a.1 = x) hfin.toFinset) : Set (ℕ+ × ℤ)) := by
   intro a ha b hb heq
-  simp only [Finset.coe_filter, Set.mem_setOf_eq] at ha hb
+  simp only [Finset.coe_filter, Set.mem_ofPred_eq] at ha hb
   exact Prod.ext (ha.2.trans hb.2.symm) heq
 
 lemma E4_filter_card_le_fiber_ncard (X : ℝ) (hfin : (E4Set X).Finite)

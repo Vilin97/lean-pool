@@ -646,7 +646,7 @@ theorem ket_toMatrix {𝕜 A : Type*} [RCLike 𝕜] [NormedAddCommGroup A]
     [InnerProductSpace 𝕜 A] {ι : Type*} [Finite ι] (b : Module.Basis ι 𝕜 A) (x : A) :
     LinearMap.toMatrix (Module.Basis.singleton Unit 𝕜) b (ket 𝕜 x) =
       Matrix.replicateCol Unit (b.repr x) := by
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   ext
   simp only [Matrix.replicateCol_apply, LinearMap.toMatrix_apply,
     Module.Basis.singleton_apply, ContinuousLinearMap.coe_coe, ket_apply_apply, one_smul]

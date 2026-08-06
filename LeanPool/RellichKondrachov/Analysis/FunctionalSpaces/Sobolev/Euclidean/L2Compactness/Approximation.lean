@@ -265,9 +265,9 @@ lemma smoothFun_sub_extendByZeroFun_sq_le_integral_sq
           ∂kernelMeasure (E := E) ψ := by
   classical
   let μ : Measure E := kernelMeasure (E := E) ψ
-  haveI : MeasureTheory.IsProbabilityMeasure μ :=
+  have : MeasureTheory.IsProbabilityMeasure μ :=
     isProbabilityMeasure_kernelMeasure (E := E) (ψ := ψ) hψc hψcs hψ0 hψint
-  haveI : MeasureTheory.IsFiniteMeasure μ := by infer_instance
+  have : MeasureTheory.IsFiniteMeasure μ := by infer_instance
   rcases kernelMeasure_le_smul_volume (E := E) (ψ := ψ) hψc hψcs hψ0 with ⟨c, hc_top, hμle⟩
   let f : E → ℝ := extendByZeroFun (E := E) (K := K) u
   have hf_vol : MeasureTheory.MemLp f (2 : ℝ≥0∞) (volume : Measure E) := by
@@ -341,10 +341,10 @@ lemma norm_sq_smoothL2_sub_extendByZeroL2_le_integral_norm_sq_translateL2_sub_ex
           ∂kernelMeasure (E := E) ψ := by
   classical
   let μ : Measure E := kernelMeasure (E := E) ψ
-  haveI : MeasureTheory.IsProbabilityMeasure μ :=
+  have : MeasureTheory.IsProbabilityMeasure μ :=
     isProbabilityMeasure_kernelMeasure (E := E) (ψ := ψ) hψc hψcs hψ0 hψint
-  haveI : MeasureTheory.IsFiniteMeasure μ := by infer_instance
-  haveI : MeasureTheory.SFinite μ := by infer_instance
+  have : MeasureTheory.IsFiniteMeasure μ := by infer_instance
+  have : MeasureTheory.SFinite μ := by infer_instance
   let F : (E →₂[(volume : Measure E)] ℝ) := extendByZeroL2 (E := E) (K := K) hKm u
   let f : E → ℝ := extendByZeroFun (E := E) (K := K) u
   let S : (E →₂[(volume : Measure E)] ℝ) := smoothL2 (E := E) (K := K) ψ hK hKm hψc hψcs u

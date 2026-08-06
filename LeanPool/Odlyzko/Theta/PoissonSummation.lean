@@ -732,7 +732,7 @@ theorem integral_eq_tsum_integral_pi_Ico
         ∫ x in {x : ι → ℝ | ∀ i, x i ∈ Ico 0 1},
           f ((fun i ↦ (n i : ℝ)) + x) := by
   classical
-  letI : VAddInvariantMeasure
+  let : VAddInvariantMeasure
       (span ℤ (Set.range (Pi.basisFun ℝ ι))) (ι → ℝ) volume :=
     ⟨fun c s _ ↦ measure_preimage_add volume (c : ι → ℝ) s⟩
   have hfund :=
@@ -808,8 +808,8 @@ private theorem continuous_coordinateFourierCharacter (n : ι → ℤ) :
 
 theorem measurableSet_pi_Ioc {κ : Type*} [Finite κ] :
     MeasurableSet {x : κ → ℝ | ∀ i, x i ∈ Ioc 0 1} := by
-  letI := Fintype.ofFinite κ
-  rw [setOf_forall]
+  let := Fintype.ofFinite κ
+  rw [ofPred_forall]
   apply MeasurableSet.iInter
   intro i
   have hi : Measurable (fun x : κ → ℝ ↦ x i) := measurable_pi_apply i
@@ -1272,7 +1272,7 @@ theorem latticeGaussian_poissonSummation_of_basis
             (Module.finrank ℝ E / 2 : ℂ) *
           dualLatticeTheta L (Real.pi ^ 2 / a)) := by
   classical
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   have hsummable :=
     summable_mFourierCoeff_gaussianTorusPeriodization L b ha
   have hseries :=

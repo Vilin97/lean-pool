@@ -59,14 +59,14 @@ theorem uniformScalar_eq_of_mul (G : MonotoneMetricFamily) {n m : ℕ} (hn : 2 �
   -- Notation.
   let α := Fin n
   let β := Fin n × Fin m
-  haveI : Nonempty α := ⟨⟨0, lt_of_lt_of_le Nat.zero_lt_two hn⟩⟩
-  haveI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
-  haveI : Nonempty β := by
+  have : Nonempty α := ⟨⟨0, lt_of_lt_of_le Nat.zero_lt_two hn⟩⟩
+  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
+  have : Nonempty β := by
     classical
     rcases (inferInstance : Nonempty α) with ⟨a0⟩
     exact ⟨(a0, ⟨0, hm⟩)⟩
   let N : ℕ := Fintype.card β
-  haveI : Nonempty (Fin N) := ⟨⟨0, Fintype.card_pos⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, Fintype.card_pos⟩⟩
   let e : β ≃ Fin N := Fintype.equivFin β
   let κ : MarkovMorphism α β := MarkovMorphism.replicate (α := α) m hm
   let δ : MarkovMorphism β (Fin N) :=

@@ -173,7 +173,7 @@ lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ 
     ∃ v : ℕ, v < p ^ 2 ∧ (p ^ 2) ∣ (b * v + d) := by
   have hcop : b.Coprime (p ^ 2) := b_coprime_p_sq p hp b hb hbp
   have hp2_pos : 0 < p ^ 2 := prime_sq_pos p hp
-  haveI : NeZero (p ^ 2) := ⟨Nat.pos_iff_ne_zero.mp hp2_pos⟩
+  have : NeZero (p ^ 2) := ⟨Nat.pos_iff_ne_zero.mp hp2_pos⟩
   let v_zmod : ZMod (p ^ 2) := (-↑d : ZMod (p ^ 2)) * (↑b : ZMod (p ^ 2))⁻¹
   refine ⟨v_zmod.val, ZMod.val_lt v_zmod, ?_⟩
   rw [← CharP.cast_eq_zero_iff (ZMod (p ^ 2)) (p ^ 2)]

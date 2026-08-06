@@ -89,7 +89,7 @@ noncomputable instance schwartzIsHilbertNuclear {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [Nontrivial E] :
     IsHilbertNuclear (SchwartzMap E ℝ) := by
   -- Step 1: Get NuclearSpace from DyninMityaginSpace (gaussian-field)
-  letI := GaussianField.DyninMityaginSpace.toNuclearSpace (SchwartzMap E ℝ)
+  let := GaussianField.DyninMityaginSpace.toNuclearSpace (SchwartzMap E ℝ)
   -- Step 2: Convert to bochner's IsNuclear
   have hIN := nuclearSpace_to_isNuclear (E := SchwartzMap E ℝ)
   -- Step 3: Get ℕ-indexed seminorms via Cantor pairing

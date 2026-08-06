@@ -113,7 +113,7 @@ lemma Module.Dual.eq_piOf_pi {k : Type _} [Fintype k] [DecidableEq k] {s : k →
   (φ : Π i, Module.Dual R (Matrix (s i) (s i) R)) :
   φ = piOf (pi φ) := by
   classical
-  letI : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
+  let : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
   ext i y
   simp_rw [Module.Dual.piOf_apply, pi_apply,
     Module.Dual.apply]
@@ -200,7 +200,7 @@ theorem Module.Dual.pi.apply_single_block {k : Type _} [Fintype k] [DecidableEq 
   (x : Π i, Matrix (s i) (s i) R) (i : k) :
   (Module.Dual.pi φ) (includeBlock (x i)) = φ i (x i) := by
   classical
-  letI : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
+  let : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
   simp_rw [Module.Dual.pi_apply, Module.Dual.apply]
   calc ∑ x_1 : k, trace (matrix (φ x_1) * includeBlock (x i) x_1)
       = ∑ x_1 : k, trace (if i = x_1 then matrix (φ x_1) * x x_1 else 0) := by
@@ -222,7 +222,7 @@ theorem Module.Dual.pi.apply_single_block' {k : Type _} [Fintype k] [DecidableEq
   {i : k} (x : Matrix (s i) (s i) R) :
   (Module.Dual.pi φ) (includeBlock x) = φ i x := by
   classical
-  letI : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
+  let : ∀ i, Fintype (s i) := fun i => Fintype.ofFinite (s i)
   let x' := includeBlock x
   have hx : includeBlock x = includeBlock (x' i) := by simp_rw [x', includeBlock_apply_same]
   rw [hx, apply_single_block]
@@ -264,7 +264,7 @@ lemma Module.Dual.piIsPosMap_iff {k : Type _} [Finite k]
   (φ : Module.Dual 𝕜 (PiMat 𝕜 k s)) :
   φ.IsPosMap ↔ ∀ i, (piOf φ i).IsPosMap := by
   classical
-  letI : Fintype k := Fintype.ofFinite k
+  let : Fintype k := Fintype.ofFinite k
   constructor
   · intro h i x
     specialize h (includeBlock x)
@@ -327,7 +327,7 @@ lemma Module.Dual.piIsFaithful_iff {k : Type _} [Finite k]
   {φ : Module.Dual 𝕜 (PiMat 𝕜 k s)} (hφ : φ.IsPosMap) :
   φ.IsFaithful ↔ ∀ i, (piOf φ i).IsFaithful := by
   classical
-  letI : Fintype k := Fintype.ofFinite k
+  let : Fintype k := Fintype.ofFinite k
   constructor
   · intro h i x
     specialize h (includeBlock x)
@@ -521,7 +521,7 @@ theorem Module.Dual.isTracial_pos_map_iff_of_matrix (φ : Module.Dual ℂ (Matri
     rintro ⟨hQ, h2⟩
     by_cases h : IsEmpty n
     · refine ⟨1, ?_⟩
-      haveI := h
+      have := h
       simp only [eq_iff_true_of_subsingleton]
     rw [not_isEmpty_iff] at h
     obtain ⟨hnn, heq⟩ := φ.tracial_posSemidef_matrix_eq_re_smul_one hQ h2 h.some

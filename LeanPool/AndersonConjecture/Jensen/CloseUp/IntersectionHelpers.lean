@@ -176,7 +176,7 @@ private def close_up_aux_factor_intersection_large_proof
           exact normalizedFactors_card_inclusion R S₁
             ⟨hAext₁.le, hAext₁.primes_preserved, hAext₁.card_le⟩ hle₁ x
         have hstrict : gcdComplexity (insert a rest'2) < gcdComplexity (insert a rest) := by
-          letI : NormalizationMonoid R.carrier :=
+          let : NormalizationMonoid R.carrier :=
             UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
           unfold gcdComplexity
           rw [Finset.sum_insert ha_rest'2, Finset.sum_insert ha_rest]
@@ -313,7 +313,7 @@ theorem gcdComplexity_div_prime_strict
   have ha_not_s' : a ∉ s' := by
     rw [hs'_def]
     simp [Finset.mem_erase]
-  letI : NormalizationMonoid R.carrier :=
+  let : NormalizationMonoid R.carrier :=
     UniqueFactorizationMonoid.strongNormalizationMonoid.toNormalizationMonoid
   unfold gcdComplexity
   rw [Finset.sum_insert ha_sdiv, hs_insert, Finset.sum_insert ha_not_s']

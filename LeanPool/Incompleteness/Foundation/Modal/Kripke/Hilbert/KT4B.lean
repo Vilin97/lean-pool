@@ -52,7 +52,7 @@ instance _root_.LO.Modal.Hilbert.KT4B.Kripke.finiteComplete :
   apply @filteration M φ.subformulas _ FM ?filterOf x φ (by simp) |>.mpr;
   · apply hp (by
       suffices Finite (FilterEqvQuotient M φ.subformulas) by
-        simp only [FiniteFrameClass.toFrameClass, Set.mem_image, Set.mem_setOf_eq];
+        simp only [FiniteFrameClass.toFrameClass, Set.mem_image, Set.mem_ofPred_eq];
         use ⟨FM.toFrame⟩;
         refine ⟨⟨?refl, transitive, ?symm⟩, rfl⟩;
         · exact reflexive_of_transitive_reflexive (by apply F_trans) F_refl;

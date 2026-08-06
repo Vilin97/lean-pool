@@ -255,7 +255,7 @@ theorem ContinuousLinearMap.centralizer [CompleteSpace E₁] :
 
 theorem ContinuousLinearMap.scalar_centralizer :
     {x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1}.centralizer = @Set.univ (E₁ →L[𝕜] E₁) := by
-  simp_rw [Set.centralizer, Set.ext_iff, Set.mem_setOf, Set.mem_univ, iff_true]
+  simp_rw [Set.centralizer, Set.ext_iff, Set.mem_ofPred, Set.mem_univ, iff_true]
   simp_all
 
 theorem ContinuousLinearMap.centralizer_centralizer [CompleteSpace E₁] :
@@ -359,8 +359,8 @@ theorem ContinuousLinearMap.exists_sum_rankOne
     ∃ (x : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₂)
       (y : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₁),
       T = ∑ i, rankOne 𝕜 (x i) (y i) := by
-  letI := FiniteDimensional.complete 𝕜 E₁
-  letI := FiniteDimensional.complete 𝕜 E₂
+  let := FiniteDimensional.complete 𝕜 E₁
+  let := FiniteDimensional.complete 𝕜 E₂
   let e₁ := stdOrthonormalBasis 𝕜 E₁
   let e₂ := stdOrthonormalBasis 𝕜 E₂
   let b : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₁ := fun ij =>

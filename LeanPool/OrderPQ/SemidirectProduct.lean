@@ -32,7 +32,7 @@ lemma Subgroup.comm_of_normal_and_inf_eq_bot
 then `G` is isomorphic to the semidirect product `N ⋊[φ] H` for `φ` the conjugation action. -/
 noncomputable def mulEquivSemidirectProduct
     {N H : Subgroup G} (h : Subgroup.Normal N) (inf_eq_bot : N ⊓ H = ⊥) (sup_eq_top : N ⊔ H = ⊤)
-    {φ : H →* MulAut N} (conj : φ = MulAut.conjNormal.restrict H) :
+    {φ : H →* MulAut N} (conj : φ = MulAut.conjNormal.domRestrict H) :
     G ≃* N ⋊[φ] H := by
   let f : N ⋊[φ] H → G := fun x => x.1 * x.2
   have inj : f.Injective := by
@@ -56,7 +56,7 @@ noncomputable def mulEquivSemidirectProduct
   refine MulEquiv.ofBijective (MulHom.mk f ?_) ⟨inj, surj⟩ |>.symm
   · intro _ _
     simp only [f, conj, SemidirectProduct.mul_left, SemidirectProduct.mul_right, Subgroup.coe_mul,
-      MonoidHom.restrict_apply, MulAut.conjNormal_apply]
+      MonoidHom.domRestrict_apply, MulAut.conjNormal_apply]
     group
 
 /-- If `H ≤ K` are subgroups of `G`, then `H.subgroupOf K` is canonically isomorphic to `H`. -/
@@ -78,10 +78,10 @@ theorem Subgroup.subgroupOf_inf {H K L : Subgroup G} :
 requiring `N ⊔ H = ⊤`. -/
 noncomputable def mulEquivSemidirectProduct'
     {N H : Subgroup G} (h : Subgroup.Normal N) (inf_eq_bot : N ⊓ H = ⊥)
-    {φ : H →* MulAut N} (conj : φ = MulAut.conjNormal.restrict H) :
+    {φ : H →* MulAut N} (conj : φ = MulAut.conjNormal.domRestrict H) :
     (N ⊔ H : Subgroup G) ≃* N ⋊[φ] H := by
   set NH : Subgroup G := N ⊔ H
-  let φ' : (H.subgroupOf NH) →* MulAut (N.subgroupOf NH) := MulAut.conjNormal.restrict _
+  let φ' : (H.subgroupOf NH) →* MulAut (N.subgroupOf NH) := MulAut.conjNormal.domRestrict _
   let fn : N ≃* (N.subgroupOf NH) := N.subgroupOfMulEquiv NH le_sup_left |>.symm
   let fh : H ≃* (H.subgroupOf NH) := H.subgroupOfMulEquiv NH le_sup_right |>.symm
   refine (mulEquivSemidirectProduct (φ := φ') (by infer_instance) ?_ ?_ rfl).trans
@@ -90,10 +90,10 @@ noncomputable def mulEquivSemidirectProduct'
   · rw [← Subgroup.subgroupOf_sup le_sup_left le_sup_right]; simp [NH]
   · refine SemidirectProduct.congr fn fh fun h =>
       MulEquiv.ext fun n => Subtype.ext <| Subtype.ext ?_
-    rw [MulEquiv.trans_apply, MulEquiv.trans_apply, MonoidHom.restrict_apply,
+    rw [MulEquiv.trans_apply, MulEquiv.trans_apply, MonoidHom.domRestrict_apply,
       MulAut.conjNormal_apply, Subgroup.coe_mul, Subgroup.coe_mul, InvMemClass.coe_inv, conj]
     repeat rw [Subgroup.subgroupOfMulEquiv_symm_apply_coe_coe]
-    rw [MonoidHom.restrict_apply, MulAut.conjNormal_apply]
+    rw [MonoidHom.domRestrict_apply, MulAut.conjNormal_apply]
 
 /-- If `N` and `H` are normal subgroups of `G` with trivial intersection that span `G`,
 then `G` is isomorphic to the direct product `N × H`. -/
@@ -102,7 +102,7 @@ noncomputable def mulEquivProd
     (inf_eq_bot : N ⊓ H = ⊥) (sup_eq_top : N ⊔ H = ⊤) :
     G ≃* N × H := by
   refine MulEquiv.trans (mulEquivSemidirectProduct hN inf_eq_bot sup_eq_top rfl) ?_
-  have : MulAut.conjNormal.restrict H = (1 : H →* MulAut N) := by
+  have : MulAut.conjNormal.domRestrict H = (1 : H →* MulAut N) := by
     ext
     simp [← Subgroup.comm_of_normal_and_inf_eq_bot N H hN hH inf_eq_bot]
   exact this ▸ SemidirectProduct.mulEquivProd

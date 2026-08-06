@@ -56,7 +56,7 @@ lemma measure_torus_eq_map :
             AEMeasurable (fun x : ℝ => QuotientAddGroup.mk x : ℝ → AddCircle (1 : ℝ))
               (MeasureTheory.MeasureSpace.volume.restrict (Set.Ioc 0 1)) :=
           fun _ => QuotientAddGroup.continuous_mk.aemeasurable
-        haveI hsf : ∀ i : Fin 3,
+        have hsf : ∀ i : Fin 3,
             SigmaFinite
               (((MeasureTheory.MeasureSpace.volume.restrict (Set.Ioc 0 1)).map
                 (fun x : ℝ => QuotientAddGroup.mk x : ℝ → AddCircle (1 : ℝ)))) := by

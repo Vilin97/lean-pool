@@ -167,7 +167,7 @@ omit [CompactSpace β] [PolishSpace α] [PolishSpace β] [BorelSpace α] [BorelS
   [OpensMeasurableSpace β] [IsFiniteMeasure ν] in
 lemma outputDensity_pos (h : ContinuousPositiveDensity k ν) (p : ProbabilityMeasure α) (b : β) :
     0 < h.outputDensity p b := by
-  letI : Nonempty α := p.nonempty
+  let : Nonempty α := p.nonempty
   have hcont : Continuous fun a : α => h.density a b := by
     have hpair : Continuous fun a : α => (a, b) := by
       fun_prop
@@ -221,8 +221,8 @@ lemma row_klDiv_le_outputPrior_bound
     (h : ContinuousPositiveDensity k ν) (p : ProbabilityMeasure α) :
     ∃ B : ℝ≥0∞, B ≠ ∞ ∧
       ∀ a : α, InformationTheory.klDiv (k a) (outputPrior k p).toMeasure ≤ B := by
-  letI : Nonempty α := p.nonempty
-  letI : Nonempty β := (outputPrior k p).nonempty
+  let : Nonempty α := p.nonempty
+  let : Nonempty β := (outputPrior k p).nonempty
   rcases h.exists_uniform_density_bounds with ⟨c, C, hc_pos, h_bounds⟩
   let Breal : ℝ := (((c : ENNReal)⁻¹ * (C : ENNReal)).toReal) ^ 2 + 1
   let B : ℝ≥0∞ := ENNReal.ofReal Breal
@@ -372,7 +372,7 @@ theorem hChainRule_of_outputMarginalReference
       InformationTheory.klDiv (jointLaw k p).toMeasure (independentJointLaw k p).toMeasure +
         InformationTheory.klDiv (outputPrior k p).toMeasure ν' := by
   rcases hRef with ⟨q, -, rfl⟩
-  letI : Nonempty α := p.nonempty
+  let : Nonempty α := p.nonempty
   simpa using
     klDiv_mutualInformation_chain (k := k) (p := p) (ν := (outputPrior k q).toMeasure)
 

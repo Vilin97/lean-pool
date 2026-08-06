@@ -858,7 +858,7 @@ theorem continuous_eq_of_ae_eq_gamma
   this packages the a.e.-to-everywhere uniqueness bridge for continuous
   representatives under the frozen Gaussian measure.
   -/
-  haveI := gamma_d_isOpenPosMeasure d
+  have := gamma_d_isOpenPosMeasure d
   exact MeasureTheory.Measure.eq_of_ae_eq hfg hf hg
 
 /-!
@@ -1248,7 +1248,7 @@ theorem dist_translateL2 {d : Nat} (a : RealVec d) (f g : L2Real d) :
 
 theorem continuous_translateL2_apply {d : Nat} (f : L2Real d) :
     Continuous fun a : RealVec d => translateL2 a f := by
-  haveI : Fact (Ne (2 : ENNReal) ⊤) := ⟨by norm_num⟩
+  have : Fact (Ne (2 : ENNReal) ⊤) := ⟨by norm_num⟩
   unfold translateL2
   refine (DomAddAct.continuous_mk.vadd
     (continuous_const : Continuous fun _ : RealVec d => f)).congr ?_

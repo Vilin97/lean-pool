@@ -130,9 +130,9 @@ lemma ConverseWellFounded.iff_has_max : ConverseWellFounded r ↔ (∀ (s :
 
 lemma Finite.converseWellFounded_of_trans_irrefl
     [Finite α] [IsTrans α rel] [Std.Irrefl rel] : ConverseWellFounded rel := by
-  haveI : IsTrans α (flip rel) :=
+  have : IsTrans α (flip rel) :=
     ⟨fun a b c rba rcb => IsTrans.trans c b a rcb rba⟩
-  haveI : Std.Irrefl (flip rel) :=
+  have : Std.Irrefl (flip rel) :=
     ⟨fun a h => Std.Irrefl.irrefl (r := rel) a h⟩
   exact Finite.wellFounded_of_trans_of_irrefl (flip rel)
 

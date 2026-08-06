@@ -21,7 +21,7 @@ lemma IsCompact_𝓙 [good_domain U] : IsCompact (𝓙 U) := by
   refine (isCompact_𝓜 hU).of_isClosed_subset ?_ (fun _ hf => hf.1)
   refine isClosed_iff_clusterPt.2 (fun f hf => ?_)
   set l := 𝓝 f ⊓ 𝓟 (𝓙 U) with hl_def
-  haveI hlne : l.NeBot := hf
+  have hlne : l.NeBot := hf
   obtain ⟨h1, h2⟩ := tendsto_inf.1 (@tendsto_id _ l)
   rw [tendsto_principal] at h2
   refine ⟨(IsClosed_𝓜 hU).mem_of_tendsto h1 (h2.mono (fun _ h => h.1)), ?_⟩

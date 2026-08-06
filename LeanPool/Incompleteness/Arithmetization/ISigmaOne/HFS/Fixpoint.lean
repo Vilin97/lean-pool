@@ -217,7 +217,7 @@ lemma mem_limSeq_self [c.StrongFinite] {u s : V} :
     have : c.Φ v {z | z ∈ c.limSeq v s ∧ z < u} u := StrongFinite.strong_finite Hu
     have : c.Φ v {z | z ∈ c.limSeq v u} u :=
       c.monotone (by
-        simp only [Set.setOf_subset_setOf, and_imp]
+        simp only [Set.ofPred_subset_ofPred, and_imp]
         intro z hz hzu
         exact c.limSeq_cumulative (succ_le_iff_lt.mpr hzu) (ih z hzu hz))
         this
@@ -273,7 +273,7 @@ theorem case [c.Finite] : c.fixedPoint v x ↔ c.Φ v {z | c.fixedPoint v z} x :
       exact c.monotone (fun z hx ↦ by exact ⟨u, hx⟩) this,
    by intro hx
       rcases Finite.finite hx with ⟨m, hm⟩
-      simp only [Set.mem_setOf_eq] at hm
+      simp only [Set.mem_ofPred_eq] at hm
       have : ∃ s, ∀ z < m, c.fixedPoint v z → z ∈ c.limSeq v s := c.finite_upperbound m
       rcases this with ⟨s, hs⟩
       have : c.Φ v {z | z ∈ c.limSeq v s} x :=

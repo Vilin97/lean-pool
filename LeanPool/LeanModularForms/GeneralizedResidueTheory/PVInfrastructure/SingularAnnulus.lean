@@ -108,7 +108,7 @@ private lemma singular_annulus_indicator_diff_zero
         ε₂ < ‖L‖ * |s - t₀| ∧ ‖L‖ * |s - t₀| ≤ ε₁})) :
     (if ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁ then (↑(t - t₀) : ℂ)⁻¹ else 0) -
       (if ε₂ < ‖L‖ * |t - t₀| ∧ ‖L‖ * |t - t₀| ≤ ε₁ then (↑(t - t₀) : ℂ)⁻¹ else 0) = 0 := by
-  rw [Set.mem_setOf_eq, Set.mem_setOf_eq, not_xor] at h_not_sd
+  rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq, not_xor] at h_not_sd
   by_cases hδ : |t - t₀| < δ₀'
   · simp_all
   · have hγ_fail : ¬(ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁) := by
@@ -479,7 +479,7 @@ private lemma symmDiff_ae_version_null
       {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < h' t ∧ h' t ≤ ε₁}
       {t | t ∈ Set.Icc a b ∧ |t - t₀| < δ₀' ∧ ε₂ < ‖γ t - γ t₀‖ ∧ ‖γ t - γ t₀‖ ≤ ε₁} ⊆
       {t | t ∈ Set.Icc a b ∧ h' t ≠ ‖γ t - γ t₀‖} := by
-    intro t ht; simp only [Set.mem_symmDiff, Set.mem_setOf_eq] at ht ⊢
+    intro t ht; simp only [Set.mem_symmDiff, Set.mem_ofPred_eq] at ht ⊢
     rcases ht with ⟨h_in, h_not⟩ | ⟨h_in, h_not⟩
     · exact ⟨h_in.1, fun heq => h_not ⟨h_in.1, h_in.2.1, heq ▸ h_in.2.2.1, heq ▸ h_in.2.2.2⟩⟩
     · exact ⟨h_in.1, fun heq => h_not ⟨h_in.1, h_in.2.1,
@@ -487,7 +487,7 @@ private lemma symmDiff_ae_version_null
   have h_null : volume {t | t ∈ Set.Icc a b ∧ h' t ≠ ‖γ t - γ t₀‖} = 0 := by
     rw [show {t | t ∈ Set.Icc a b ∧ h' t ≠ ‖γ t - γ t₀‖} =
         {t | ¬(‖γ t - γ t₀‖ = h' t)} ∩ Set.Icc a b from by
-      ext t; simp [Set.mem_setOf_eq, eq_comm, and_comm],
+      ext t; simp [eq_comm, and_comm],
       ← MeasureTheory.Measure.restrict_apply' measurableSet_Icc]
     exact MeasureTheory.ae_iff.mp hh'_ae
   exact le_antisymm (le_of_le_of_eq (MeasureTheory.measure_mono h_sd_subset) h_null) zero_le

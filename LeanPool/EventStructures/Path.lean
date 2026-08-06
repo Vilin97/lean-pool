@@ -140,7 +140,7 @@ lemma execList_target_eq_union {c₁ c₂ : Conf es} {t : List es.Event}
     simp_all
   | cons e h hnext ih =>
     ext x
-    simp [nextConf, ih, List.mem_cons, Set.mem_union, Set.mem_setOf_eq]
+    simp [nextConf, ih, List.mem_cons, Set.mem_union]
     tauto
 
 /-- Events executed in an exec list are not already in its source configuration. -/

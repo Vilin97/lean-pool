@@ -120,7 +120,7 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
       have hx2 := ne_zero (⟨x, hx⟩ : ℍ)
       norm_cast at *
     · intro y hy
-      simp only [mem_setOf_eq]
+      simp only [mem_ofPred_eq]
       have := UpperHalfPlane.im_inv_neg_coe_pos (⟨y, hy⟩ : ℍ)
       conv =>
         enter [2,1]

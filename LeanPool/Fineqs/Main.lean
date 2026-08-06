@@ -74,10 +74,10 @@ lemma card_projectivization_minus_point (n : ℕ) (α : Projectivization F (Fin 
     Nat.card {x : Projectivization F (Fin (n + 1) → F) // x ≠ α} =
     (Fintype.card F ^ (n + 1) - Fintype.card F) / (Fintype.card F - 1) := by
   classical
-  haveI : Fintype (Projectivization F (Fin (n + 1) → F)) := Fintype.ofFinite _
-  haveI : Nonempty (Projectivization F (Fin (n + 1) → F)) := ⟨α⟩
-  haveI : Fintype {x : Projectivization F (Fin (n + 1) → F) // x ≠ α} := Subtype.fintype _
-  haveI : Fintype {x : Projectivization F (Fin (n + 1) → F) // x = α} := Subtype.fintype _
+  have : Fintype (Projectivization F (Fin (n + 1) → F)) := Fintype.ofFinite _
+  have : Nonempty (Projectivization F (Fin (n + 1) → F)) := ⟨α⟩
+  have : Fintype {x : Projectivization F (Fin (n + 1) → F) // x ≠ α} := Subtype.fintype _
+  have : Fintype {x : Projectivization F (Fin (n + 1) → F) // x = α} := Subtype.fintype _
   rw [Nat.card_eq_fintype_card,
     Fintype.card_subtype_compl (p := (· = α)),
     Fintype.card_subtype_eq α]
@@ -105,7 +105,7 @@ lemma card_projectivization_eq_bound_add_one (n : ℕ) :
   have he : e ≠ 0 := fun h => by simpa [e] using congr_fun h 0
   let α : Projectivization F (Fin (n + 1) → F) := Projectivization.mk F e he
   have hcard := card_projectivization_minus_point (F := F) n α
-  haveI : Fintype (Projectivization F (Fin (n + 1) → F)) := Fintype.ofFinite _
+  have : Fintype (Projectivization F (Fin (n + 1) → F)) := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card] at hcard ⊢
   rw [Fintype.card_subtype_compl (p := (· = α)), Fintype.card_subtype_eq α] at hcard
   have hpos : 0 < Fintype.card (Projectivization F (Fin (n + 1) → F)) :=
@@ -138,12 +138,12 @@ lemma theorem_1_aux {X : Type*} [Finite X] (n : ℕ) (f : X → (Fin (n + 1) →
     ∃ M : (Fin (n + 1) → F) →ₗ[F] (Fin n → F),
       {x | M (f x) = 0} = {x | f x = 0} := by
   classical
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Fintype X := Fintype.ofFinite X
   let P := Projectivization F (Fin (n + 1) → F)
   let e : Fin (n + 1) → F := Pi.single 0 1
   have he : e ≠ 0 := fun h => by simpa [e] using congr_fun h 0
   let α : P := Projectivization.mk F e he
-  haveI : Fintype P := Fintype.ofFinite P
+  have : Fintype P := Fintype.ofFinite P
   have hbound_lt : (Fintype.card F ^ (n + 1) - Fintype.card F) /
       (Fintype.card F - 1) < Nat.card P := by
     have hcard := card_projectivization_minus_point (F := F) n α
@@ -201,8 +201,8 @@ lemma theorem_1_base_case {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F))
     ∃ T : Set (X → F),
       T ⊆ Submodule.span F S ∧ T.Finite ∧ T.ncard ≤ n ∧ ZeroSet T = ZeroSet S := by
   classical
-  haveI : Finite S := hS
-  haveI : Fintype S := Fintype.ofFinite S
+  have : Finite S := hS
+  have : Fintype S := Fintype.ofFinite S
   have hcard_subtype : Nat.card S = n + 1 := by
     rwa [← Set.ncard_univ S, Set.ncard_coe]
   let eS : S ≃ Fin (n + 1) := Finite.equivFinOfCardEq hcard_subtype
@@ -335,8 +335,8 @@ private lemma exists_lift_of_subset_span_image {K V W : Type*} [Field K]
     (hU_span : U ⊆ Submodule.span K (φ '' S)) :
     ∃ T : Set V, T.Finite ∧ T.ncard ≤ n ∧ T ⊆ Submodule.span K S ∧ φ '' T = U := by
   classical
-  haveI : Finite U := hU_finite
-  haveI : Fintype U := Fintype.ofFinite U
+  have : Finite U := hU_finite
+  have : Fintype U := Fintype.ofFinite U
   have hpre : ∀ y : U, ∃ v ∈ Submodule.span K S, φ v = y.1 := fun y => by
     have hyspan := hU_span y.2
     simp_all
@@ -360,7 +360,7 @@ theorem corollary_2 {K : Type*} [Field K] [Finite K] (n : ℕ) (hn : n > 0)
       T.Finite ∧ T.ncard ≤ n ∧ T ⊆ Submodule.span K S ∧
         ZeroSet (φ '' T) = ZeroSet (φ '' S) := by
   classical
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Fintype K := Fintype.ofFinite K
   let Y : Set ((Fin n → K) → K) := φ '' S
   have hY_finite : Y.Finite := hS.image φ
   have hX : Nat.card (Fin n → K) ≤
@@ -388,7 +388,7 @@ theorem corollary_3 {K : Type*} [Field K] [Finite K] (n : ℕ)
       T.Finite ∧ T.ncard ≤ n ∧ T ⊆ Submodule.span K S ∧
         ZeroSet (φ '' T) = ZeroSet (φ '' S) := by
   classical
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Fintype K := Fintype.ofFinite K
   let P := Projectivization K (Fin (n + 1) → K)
   obtain ⟨α, hα⟩ : (ZeroSet (φ '' S)).Nonempty := Set.nonempty_iff_ne_empty.2 h_nonempty
   let X' := {x : P // x ≠ α}

@@ -68,7 +68,7 @@ theorem reducible_vanishing
       ih (fun Z' hZ' ↦ hs_irred Z' (Finset.mem_insert_of_mem hZ')) S.X₁ fun x hx a ↦ by
         by_cases hxZ : x ∈ Z
         · -- closedIncl_unit_stalk_isIso: iso on stalks at z ∈ Z
-          haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
+          have : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
             change IsIso
               ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
                 ((ConcreteCategory.hom (TopCat.closedIncl hZ_closed)) ⟨x, hxZ⟩)).map S.g.hom)
@@ -78,7 +78,7 @@ theorem reducible_vanishing
           exact stalk_zero_of_ses_g_iso S hSE x inferInstance a
         · exact stalk_zero_of_shortExact_kernel S hSE x (hG_stalks x (by
             simp_all)) a
-    haveI : IrreducibleSpace (TopCat.of Z) := isIrreducible_iff_irreducibleSpace.mp hZ_comp.1
+    have : IrreducibleSpace (TopCat.of Z) := isIrreducible_iff_irreducibleSpace.mp hZ_comp.1
     exact subsingleton_sheafH_of_closedImmersion_middle
       (Z := Z) (hZ := hZ_closed) Gsh n hker
       (ih_irred (TopCat.of Z) GZ
@@ -112,7 +112,7 @@ theorem grothendieck_vanishing_of_irreducible
       Subsingleton (Sheaf.H G m)) :
     Subsingleton (Sheaf.H F n) := by
   by_cases hEmpty : IsEmpty X
-  · letI := hEmpty
+  · let := hEmpty
     simpa using sheafH_subsingleton_of_isEmpty F n
   · rw [not_isEmpty_iff] at hEmpty
     by_cases hIrred : IrreducibleSpace X

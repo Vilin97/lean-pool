@@ -130,7 +130,7 @@ theorem union_nonnegative_negativeUnitFundamentalParamSet :
   simp only [nonnegativeUnitFundamentalParamSet,
     negativeUnitFundamentalParamSet, nonnegativeRadialHalfSpace,
     negativeRadialHalfSpace, Set.mem_union, Set.mem_inter_iff,
-    Set.mem_setOf_eq]
+    Set.mem_ofPred_eq]
   grind
 
 open Classical in
@@ -227,7 +227,7 @@ theorem setIntegral_positive_comp_neg_eq_negSlab_negative
     simp only [Set.mem_preimage, Set.mem_inter_iff,
       negUnitFundamentalParamSet, negativeRadialHalfSpace,
       positiveUnitFundamentalParamSet, positiveRadialHalfSpace,
-      Set.mem_setOf_eq, Pi.neg_apply, neg_neg, neg_lt_zero]
+      Set.mem_ofPred_eq, Pi.neg_apply, neg_neg, neg_lt_zero]
   simp_all
 
 open Classical in
@@ -300,7 +300,7 @@ theorem integrableOn_negative_iff_positive_comp_neg
     simp only [Set.mem_preimage, Set.mem_inter_iff,
       negUnitFundamentalParamSet, negativeRadialHalfSpace,
       positiveUnitFundamentalParamSet, positiveRadialHalfSpace,
-      Set.mem_setOf_eq, Pi.neg_apply, neg_neg, neg_lt_zero]
+      Set.mem_ofPred_eq, Pi.neg_apply, neg_neg, neg_lt_zero]
   constructor
   · intro hneg
     have hFstandard : IntegrableOn F (unitFundamentalParamSet K) := by

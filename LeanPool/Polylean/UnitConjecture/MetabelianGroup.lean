@@ -66,13 +66,13 @@ above operations.
 @[aesop norm (rule_sets := [Metabelian])]
 lemma left_id : ∀ (g : K × Q), mul c e g = g
   | (k, q) => by
-    haveI : AutAction ccl.α := ccl.autAct
+    have : AutAction ccl.α := ccl.autAct
     simp [mul, Cocycle.left_id (c := c), AutAction.zero_apply]
 
 @[aesop norm (rule_sets := [Metabelian])]
 lemma right_id : ∀ (g : K × Q), mul c g e = g
   | (k, q) => by
-    haveI : AutAction ccl.α := ccl.autAct
+    have : AutAction ccl.α := ccl.autAct
     simp [mul, Cocycle.right_id (c := c), AutAction.apply_zero]
 
 @[aesop norm (rule_sets := [Metabelian])]

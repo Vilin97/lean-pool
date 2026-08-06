@@ -83,8 +83,8 @@ lemma hasSum_idealInverseNormPower_fiber (s : ℂ) (n : ℕ) :
       (fun I : {I : Ideal (𝓞 K) // absNorm I = n} ↦
         idealInverseNormPower K s I)
       (dedekindZetaSummand K s n) := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   have hf := hasSum_fintype
     (fun I : {I : Ideal (𝓞 K) // absNorm I = n} ↦
       idealInverseNormPower K s I)
@@ -117,8 +117,8 @@ private lemma summable_idealInverseNormPower_fiber (s : ℂ) (n : ℕ) :
     Summable
       (fun I : {I : Ideal (𝓞 K) // absNorm I = n} ↦
         idealInverseNormPower K s I) := by
-  letI : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
-    (Ideal.finite_setOf_absNorm_eq n).fintype
+  let : Fintype {I : Ideal (𝓞 K) // absNorm I = n} :=
+    (Ideal.finite_setOfPred_absNorm_eq n).fintype
   exact Summable.of_finite
 
 theorem hasSum_idealInverseNormPower {s : ℂ} (hs : 1 < s.re) :

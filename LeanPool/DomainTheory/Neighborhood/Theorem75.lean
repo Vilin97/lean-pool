@@ -205,7 +205,7 @@ theorem stepFun_funListOf_nonempty_iff (el : List ℕ) :
       intro X' hX'
       obtain ⟨nx, hnx⟩ := P₀.surj hX'
       obtain ⟨finc, _, hfinc⟩ := P₀.incl_computable
-      letI : DecidablePred (fun e : ℕ => X' ⊆ P₀.X e.unpair.1) := fun e =>
+      let : DecidablePred (fun e : ℕ => X' ⊆ P₀.X e.unpair.1) := fun e =>
         decidable_of_iff (finc (Nat.pair nx e.unpair.1) = 1) (by
           have h := hfinc (Nat.pair nx e.unpair.1)
           simp_all)

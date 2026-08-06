@@ -92,7 +92,7 @@ noncomputable def activeGenerators (f : Finset U → ℝ) (M : ℝ) : Set (U →
 omit [Fintype U] in
 lemma activeGenerators_finite [Finite U] (f : Finset U → ℝ) (M : ℝ) :
     (activeGenerators f M).Finite := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   apply Set.Finite.union
   · exact Set.Finite.image _ (Set.Finite.ofFinset (Finset.univ.filter (f · = M))
       (by simp))
@@ -115,7 +115,7 @@ lemma zero_mem_convexHull_of_best_approx [Finite U]
     (hMbound : ∀ S : Finset U, |f S| ≤ M)
     (hbest : ∀ a : U → ℝ, ∃ S : Finset U, |f S - additiveFunction a S| ≥ M) :
     (0 : U → ℝ) ∈ convexHull ℝ (activeGenerators f M) := by
-  letI := Fintype.ofFinite U
+  let := Fintype.ofFinite U
   by_contra h_contra;
   obtain ⟨Λ, u, hΛ, hu⟩ : ∃ Λ : (U → ℝ) →L[ℝ] ℝ, ∃ u : ℝ, (∀ c ∈ convexHull ℝ (activeGenerators f
     M), Λ c < u) ∧ u < Λ 0 := by
@@ -376,7 +376,7 @@ lemma dual_cert_from_convexHull
             simp_all +decide only [
               Set.mem_union,
               Set.mem_image,
-              Set.mem_setOf_eq,
+              Set.mem_ofPred_eq,
               sum_ite,
               sum_const_zero,
               add_zero,

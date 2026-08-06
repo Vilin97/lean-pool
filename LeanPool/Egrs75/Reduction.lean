@@ -97,7 +97,7 @@ theorem egrs_two_prime_of_crux {p q : ℕ} (hp : p.Prime) (hq : q.Prime)
       {n : ℕ | ¬ p ∣ Nat.centralBinom n ∧ ¬ q ∣ Nat.centralBinom n} =
         {n : ℕ | LowDigits p n ∧ LowDigits q n} := by
     ext n
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [not_dvd_centralBinom_iff_lowDigits hp hpo n,
         not_dvd_centralBinom_iff_lowDigits hq hqo n]
   rwa [hset]

@@ -48,9 +48,9 @@ private def close_up_avoidance_step_proof
       (⟨(c : T), hle c.2⟩ : S.carrier) ∈
         Ideal.map (Subring.inclusion hle)
           (span (insert (a : R.carrier) (↑s' : Set R.carrier))) ) := ⟨by
-  haveI : DecidableEq R.carrier := Classical.decEq _
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
+  have : DecidableEq R.carrier := Classical.decEq _
+  have : IsDomain R.carrier := NSubring.isDomain R
+  have : UniqueFactorizationMonoid R.carrier := R.isUFD
   rw [Ideal.span_insert, Ideal.map_sup] at hc
   obtain ⟨u, hu, v, hv, huv⟩ := Submodule.mem_sup.mp hc
   rw [Ideal.map_span, Set.image_singleton, Ideal.mem_span_singleton] at hu
@@ -157,16 +157,16 @@ private def close_up_avoidance_step_proof
             simp [Polynomial.IsRoot, Polynomial.aeval_def, Polynomial.eval_map,
               show algebraMap R.carrier T = R.carrier.subtype from rfl]
           rw [h_eq]
-          exact (Polynomial.finite_setOf_isRoot hmap_ne).countable
+          exact (Polynomial.finite_setOfPred_isRoot hmap_ne).countable
         -- Avoidance bound: countable or cardinal bound (Adjoin.lean pattern)
         have hCD_good_bound : Cardinal.mk (↑C_good × ↑D) <
             Cardinal.mk (IsLocalRing.ResidueField T) ∨
             (C_good.Countable ∧ D.Countable) := by
           by_cases hR_le : Cardinal.mk R.carrier ≤ Cardinal.aleph0
           · -- R countable: both C_good and D are countable
-            haveI : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
-            haveI : Countable (Polynomial R.carrier) := by
-              letI : Countable (AddMonoidAlgebra R.carrier ℕ) :=
+            have : Countable R.carrier := Cardinal.mk_le_aleph0_iff.mp hR_le
+            have : Countable (Polynomial R.carrier) := by
+              let : Countable (AddMonoidAlgebra R.carrier ℕ) :=
                 Countable.of_equiv _ AddMonoidAlgebra.coeffEquiv.symm
               exact Polynomial.toFinsupp_injective.countable
             have hC_good_countable : C_good.Countable :=
@@ -186,9 +186,9 @@ private def close_up_avoidance_step_proof
               apply Set.countable_iUnion
               intro hfne
               apply Set.Countable.image
-              haveI : P.IsPrime := hC_good_prime P hP
-              haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
-              exact (Polynomial.finite_setOf_isRoot hfne).countable
+              have : P.IsPrime := hC_good_prime P hP
+              have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+              exact (Polynomial.finite_setOfPred_isRoot hfne).countable
             right
             exact ⟨hC_good_countable,
               Set.Countable.union hD_base_countable hD_mod_countable⟩
@@ -261,8 +261,8 @@ private def close_up_avoidance_step_proof
                             apply Cardinal.mk_le_aleph0_iff.mpr
                             by_cases hfne : Polynomial.map (φ P) f = 0
                             · exact Set.Countable.to_subtype (by simp [hfne])
-                            · haveI : P.IsPrime := hC_good_prime P hP
-                              haveI : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
+                            · have : P.IsPrime := hC_good_prime P hP
+                              have : IsDomain (T ⧸ P) := Ideal.Quotient.isDomain P
                               apply Set.Countable.to_subtype
                               apply Set.Finite.countable
                               apply Set.Finite.subset
@@ -323,7 +323,7 @@ private def close_up_avoidance_step_proof
               rw [hx_zero, map_zero]
               exact (Submodule.mem_bot T).mpr rfl) bot_le)
           · -- P ∩ R ≠ ⊥: find q_P, contradiction from h_no_common
-            haveI : (P.comap R.carrier.subtype).IsPrime := hP_mem.isPrime.comap _
+            have : (P.comap R.carrier.subtype).IsPrime := hP_mem.isPrime.comap _
             obtain ⟨q_P, hqP_prime, hqP_in⟩ :=
               exists_prime_mem_of_ne_bot_closeup (P.comap R.carrier.subtype) hcomap
             have hQ_eq : Ideal.span {q_P} = P.comap R.carrier.subtype :=
@@ -406,7 +406,7 @@ private def close_up_avoidance_step_proof
                 exact Set.mem_iUnion.mpr ⟨r₀, Set.mem_iUnion.mpr
                   ⟨hr₀T_ne, hP_assoc, hI_s'_not_le_assoc r₀ hr₀T_ne P hP_assoc⟩⟩
               -- mk P (t+δ) is a root of f.map (φ P) in T/P
-              haveI := hP_prime
+              have := hP_prime
               have ht_root : (f.map (φ P)).IsRoot
                   (Ideal.Quotient.mk P (t + δ)) := by
                 rw [Polynomial.IsRoot, Polynomial.eval_map,
@@ -447,7 +447,7 @@ private def close_up_avoidance_step_proof
         have hrem_in_S₁ : (c : T) - (t + δ) * (a : T) ∈ S₁.carrier :=
           S₁.carrier.sub_mem (hle₁ c.2) (S₁.carrier.mul_mem ht'_S₁ (hle₁ a.2))
         let rem₁ : S₁.carrier := ⟨(c : T) - (t + δ) * (a : T), hrem_in_S₁⟩
-        haveI : DecidableEq S₁.carrier := Classical.decEq _
+        have : DecidableEq S₁.carrier := Classical.decEq _
         let liftR₁ := Subring.inclusion hle₁
         let s₁ : Finset S₁.carrier := s'.image liftR₁
         have hs₁_card : s₁.card ≤ m := Finset.card_image_le.trans hs'_card

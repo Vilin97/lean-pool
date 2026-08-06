@@ -188,7 +188,7 @@ theorem schwingerTwoPoint_measurable (m : ℝ) [Fact (0 < m)] :
     -- The complement of {0} has full measure, so {x ≠ 0} ∈ ae volume
     have h_mem : {x : SpaceTime | x ≠ 0} ∈ ae volume := by
       rw [MeasureTheory.mem_ae_iff]
-      simp only [ne_eq, Set.compl_setOf, not_not]
+      simp only [ne_eq, Set.compl_ofPred, not_not]
       exact h_singleton_null
     -- The functions agree on this set
     exact Filter.eventuallyEq_of_mem h_mem (fun x hx =>

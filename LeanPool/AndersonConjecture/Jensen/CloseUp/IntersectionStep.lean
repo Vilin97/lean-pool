@@ -92,8 +92,8 @@ private def close_up_aux_factor_intersection_proof
   obtain ⟨S₁, hAext₁, hle₁, x₁, hrem⟩ :=
     intersection_close_up R a q' c_n hc_n_aq'T hcoprime ha_zero hq'_ne hM_bot hM_not_assoc
       hAss_ht hR_card hT_card
-  haveI : IsDomain S₁.carrier := NSubring.isDomain S₁
-  haveI : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
+  have : IsDomain S₁.carrier := NSubring.isDomain S₁
+  have : UniqueFactorizationMonoid S₁.carrier := S₁.isUFD
   obtain ⟨w, hw_eq⟩ := Ideal.mem_span_singleton.mp hrem
   have hS₁_card : Cardinal.mk S₁.carrier < Cardinal.mk T :=
     lt_of_le_of_lt hAext₁.card_le (max_lt hT_aleph0 hR_card)
@@ -403,7 +403,7 @@ theorem close_up_aux_factor_no_factor
         have hmem := (IsLocalRing.mem_maximalIdeal _).mpr h
         rw [R.maximal_ideal_eq, Ideal.mem_comap, hM_bot, Submodule.mem_bot] at hmem
         exact hq'.ne_zero (Subtype.val_injective hmem)
-      exact hq'.not_unit hq'_unit
+      exact hq'.not_isUnit hq'_unit
     · -- M ≠ ⊥: use intersection_close_up
       by_cases ha_zero : (a : T) = 0
       · have ha_zero_R : a = 0 := by

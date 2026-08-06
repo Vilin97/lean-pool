@@ -34,10 +34,10 @@ lemma linearEquiv_of_isSimpleModule_over_simple_ring
   let e₂ : ModuleCat.{w} A ≌ ModuleCat (Matrix (Fin n) (Fin n) D) :=
     ModuleCat.restrictScalarsEquivalenceOfRingEquiv iso₁.symm.toRingEquiv
   let e₃ := e₂.trans e₁.symm
-  haveI : IsSimpleModule A (ModuleCat.of A M) := inferInstanceAs <| IsSimpleModule A M
-  haveI : IsSimpleModule A (ModuleCat.of A N) := inferInstanceAs <| IsSimpleModule A N
-  haveI := IsMoritaEquivalent.division_ring.IsSimpleModule.functor A D e₃ (ModuleCat.of A M)
-  haveI := IsMoritaEquivalent.division_ring.IsSimpleModule.functor A D e₃ (ModuleCat.of A N)
+  have : IsSimpleModule A (ModuleCat.of A M) := inferInstanceAs <| IsSimpleModule A M
+  have : IsSimpleModule A (ModuleCat.of A N) := inferInstanceAs <| IsSimpleModule A N
+  have := IsMoritaEquivalent.division_ring.IsSimpleModule.functor A D e₃ (ModuleCat.of A M)
+  have := IsMoritaEquivalent.division_ring.IsSimpleModule.functor A D e₃ (ModuleCat.of A N)
   obtain ⟨iso₂⟩ := IsMoritaEquivalent.division_ring.division_ring_exists_unique_isSimpleModule D
     (e₃.functor.obj (ModuleCat.of A M))
   obtain ⟨iso₃⟩ := IsMoritaEquivalent.division_ring.division_ring_exists_unique_isSimpleModule D
@@ -65,8 +65,8 @@ lemma directSum_simple_module_over_simple_ring
     ModuleCat.restrictScalarsEquivalenceOfRingEquiv iso₁.symm.toRingEquiv
   let e := e₂.trans e₁.symm
   let S := e.inverse.obj (ModuleCat.of D D)
-  haveI : IsSimpleModule D (ModuleCat.of D D) := inferInstanceAs <| IsSimpleModule D D
-  haveI : IsSimpleModule A S :=
+  have : IsSimpleModule D (ModuleCat.of D D) := inferInstanceAs <| IsSimpleModule D D
+  have : IsSimpleModule A S :=
     IsMoritaEquivalent.division_ring.IsSimpleModule.functor _ _ e.symm (ModuleCat.of D D)
   obtain ⟨b, hb⟩ : Module.Free D (e.functor.obj (ModuleCat.of A M)) := inferInstance
   refine ⟨S, inferInstance, inferInstance, inferInstance, b, ⟨?_⟩⟩
@@ -112,8 +112,8 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
     [Module.Finite A M] [Module.Finite A N] :
     Nonempty (M ≃ₗ[A] N) ↔
     Module.finrank k M = Module.finrank k N := by
-  haveI : FiniteDimensional k M := Module.Finite.trans A M
-  haveI : FiniteDimensional k N := Module.Finite.trans A N
+  have : FiniteDimensional k M := Module.Finite.trans A M
+  have : FiniteDimensional k N := Module.Finite.trans A N
   fconstructor
   · rintro ⟨iso⟩
     refine LinearEquiv.finrank_eq { iso with map_smul' := ?_ }
@@ -123,7 +123,7 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
     obtain ⟨ι', ⟨iso'⟩⟩ := directSum_simple_module_over_simple_ring' k A N S
     have HS : Nontrivial S := IsSimpleModule.nontrivial A S
     cases isEmpty_or_nonempty ι
-    · letI : Unique M := ⟨⟨0⟩, by
+    · let : Unique M := ⟨⟨0⟩, by
         intros a
         apply_fun iso using LinearEquiv.injective _
         apply Subsingleton.elim⟩
@@ -132,13 +132,13 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
         exact fun m ↦ ⟨1, one_ne_zero, Subsingleton.elim _ _⟩
       have eq' : Module.finrank k N = 0 := by
         rw [← h, eq]
-      haveI : Unique N := ⟨⟨0⟩, by
+      have : Unique N := ⟨⟨0⟩, by
         rw [Module.finrank_zero_iff] at eq'
         intro n
         exact Subsingleton.elim _ _⟩
       refine ⟨⟨0, 0, fun x ↦ Subsingleton.elim _ _, fun x ↦ Subsingleton.elim _ _⟩⟩
     cases isEmpty_or_nonempty ι'
-    · letI : Unique N := ⟨⟨0⟩, by
+    · let : Unique N := ⟨⟨0⟩, by
         intros a
         apply_fun iso' using LinearEquiv.injective _
         apply Subsingleton.elim⟩
@@ -147,12 +147,12 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
         exact fun m ↦ ⟨1, one_ne_zero, Subsingleton.elim _ _⟩
       have eq' : Module.finrank k M = 0 := by
         rw [h, eq]
-      haveI : Unique M := ⟨⟨0⟩, by
+      have : Unique M := ⟨⟨0⟩, by
         rw [Module.finrank_zero_iff] at eq'
         intro n
         exact Subsingleton.elim _ _⟩
       exact ⟨⟨0, 0, fun x ↦ Subsingleton.elim _ _, fun x ↦ Subsingleton.elim _ _⟩⟩
-    letI := Module.compHom S (Algebra.ofId k A).toRingHom
+    let := Module.compHom S (Algebra.ofId k A).toRingHom
     let ISO : M ≃ₗ[k] ι →₀ S :=
     { iso with
       map_smul' := by
@@ -175,9 +175,9 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
     have eq' := LinearEquiv.finrank_eq ISO'
     have EQ : Module.finrank k (ι →₀ S) = Module.finrank k (ι' →₀ S) := by
       rw [← eq, h, eq']
-    haveI : Module.Finite k (ι →₀ S) := Module.Finite.equiv ISO
-    haveI : Module.Finite k (ι' →₀ S) := Module.Finite.equiv ISO'
-    haveI : Module.Finite k S := by
+    have : Module.Finite k (ι →₀ S) := Module.Finite.equiv ISO
+    have : Module.Finite k (ι' →₀ S) := Module.Finite.equiv ISO'
+    have : Module.Finite k S := by
       suffices IsNoetherian k S from inferInstance
       rw [IsNoetherian.iff_rank_lt_aleph0]
       apply_fun ((↑) : ℕ → Cardinal) at eq
@@ -190,7 +190,7 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
         (by rw [Cardinal.mk_ne_zero_iff]; infer_instance)
       rw [mul_comm] at ineq2
       exact lt_of_le_of_lt ineq2 ineq
-    haveI : Fintype ι := by
+    have : Fintype ι := by
       refine (@Cardinal.lt_aleph0_iff_fintype ι).1 ?_ |>.some
       apply_fun ((↑) : ℕ → Cardinal) at eq
       rw [Module.finrank_eq_rank, Module.finrank_eq_rank, rank_finsupp] at eq
@@ -204,7 +204,7 @@ lemma linearEquiv_iff_finrank_eq_over_simple_ring
           apply rank_pos)
       rw [mul_comm] at ineq2
       exact lt_of_le_of_lt ineq2 ineq
-    haveI : Fintype ι' := by
+    have : Fintype ι' := by
       refine (@Cardinal.lt_aleph0_iff_fintype ι').1 ?_ |>.some
       apply_fun ((↑) : ℕ → Cardinal) at eq'
       rw [Module.finrank_eq_rank, Module.finrank_eq_rank, rank_finsupp] at eq'
@@ -237,12 +237,12 @@ lemma simple_mod_of_wedderburn {n : ℕ} (hn : n ≠ 0)
     (D : Type v) [DivisionRing D] [Algebra k D] (wdb : A ≃ₐ[k] Matrix (Fin n) (Fin n) D) :
     let _ : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
     IsSimpleModule A (Fin n → D) := by
-  letI : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
+  let : Module A (Fin n → D) := Module.compHom _ wdb.toRingEquiv.toRingHom
   have : NeZero n := ⟨hn⟩
   let e : ModuleCat.{v} A ≌ ModuleCat (Matrix (Fin n) (Fin n) D) :=
     ModuleCat.restrictScalarsEquivalenceOfRingEquiv wdb.toRingEquiv.symm
   have inst1 : IsSimpleModule (Matrix (Fin n) (Fin n) D) (Fin n → D) := by
-    haveI : IsSimpleModule D (ModuleCat.of D D) := inferInstanceAs <| IsSimpleModule D D
+    have : IsSimpleModule D (ModuleCat.of D D) := inferInstanceAs <| IsSimpleModule D D
     exact IsMoritaEquivalent.division_ring.IsSimpleModule.functor D (Matrix (Fin n) (Fin n) D)
       (moritaEquivalentToMatrix D (Fin n)) (ModuleCat.of D D)
   have := IsMoritaEquivalent.division_ring.IsSimpleModule.functor (Matrix (Fin n) (Fin n) D) A
@@ -426,17 +426,17 @@ lemma endSimpleModOfWedderburn' (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionR
   have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
   { smul_assoc a b x := by
       simp_all }
-  letI _ : IsScalarTower k A (Fin n → D) :=
+  let _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
       rw [map_smul, Algebra.smul_def, mul_smul, algebraMap_smul]
       rfl }
-  letI _ : SMulCommClass A k (Fin n → D) :=
+  let _ : SMulCommClass A k (Fin n → D) :=
     { smul_comm a b x := by
         change wdb a • b • x = b • wdb a • x
         ext i
         exact congrFun (smul_comm (wdb a) b x) i }
-  haveI : IsSimpleModule A (Fin n → D) := simple_mod_of_wedderburn k A hn D wdb
+  have : IsSimpleModule A (Fin n → D) := simple_mod_of_wedderburn k A hn D wdb
   obtain ⟨iso⟩ := linearEquiv_of_isSimpleModule_over_simple_ring k A M (Fin n → D)
   exact ⟨(iso.conjAlgEquiv k).trans e⟩
 
@@ -449,7 +449,7 @@ instance end_simple_mod_finite
   obtain ⟨iso⟩ := endSimpleModOfWedderburn' k A n hn D e M
   let E : Dᵐᵒᵖ ≃ₗ[k] D := MulOpposite.opLinearEquiv k |>.symm
   have : Module.Finite k D := by
-    haveI inst1 : Module.Finite k (Matrix (Fin n) (Fin n) D) := e.toLinearEquiv.finiteDimensional
+    have inst1 : Module.Finite k (Matrix (Fin n) (Fin n) D) := e.toLinearEquiv.finiteDimensional
     rw [← Module.rank_lt_aleph0_iff] at inst1 ⊢
     have eq1 := rank_mul_rank k D (Matrix (Fin n) (Fin n) D)
     simp only [rank_matrix', Cardinal.mk_fintype, Fintype.card_fin, Cardinal.lift_mul,
@@ -638,7 +638,7 @@ lemma isBalanced_of_simpleMod (k : Type u) (A : Type v) [Field k] [Ring A] [Alge
     [IsSimpleModule A M] : IsBalanced A M := by
   classical
   obtain ⟨ι, ⟨e⟩⟩ := directSum_simple_module_over_simple_ring' k A A M
-  haveI b : IsBalanced A (ι →₀ M) := by
+  have b : IsBalanced A (ι →₀ M) := by
     rw [← IsBalanced.congr A e]
     infer_instance
   refine ⟨fun g => ?_⟩
@@ -678,11 +678,11 @@ lemma isBalanced_of_simpleMod (k : Type u) (A : Type v) [Field k] [Ring A] [Alge
   obtain ⟨a, ha⟩ := b.1 G
   refine ⟨a, ?_⟩
   ext m
-  haveI : Nonempty ι := by
+  have : Nonempty ι := by
     refine isEmpty_or_nonempty ι |>.resolve_left ?_
     intro H
-    haveI : Subsingleton (ι →₀ M) := inferInstance
-    haveI : Subsingleton A := Equiv.subsingleton e.toEquiv
+    have : Subsingleton (ι →₀ M) := inferInstance
+    have : Subsingleton A := Equiv.subsingleton e.toEquiv
     have eq1 : (1 : A) = 0 := Subsingleton.elim _ _
     simp_all
   obtain ⟨j⟩ := this
@@ -710,17 +710,17 @@ lemma WedderburnArtin_uniqueness₀
   have : IsScalarTower k (Matrix (Fin n) (Fin n) D) (Fin n → D) :=
   { smul_assoc a b x := by
       simp_all }
-  letI _ : IsScalarTower k A (Fin n → D) :=
+  let _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
       rw [map_smul, Algebra.smul_def, mul_smul, algebraMap_smul]
       rfl }
-  letI _ : SMulCommClass A k (Fin n → D) :=
+  let _ : SMulCommClass A k (Fin n → D) :=
     { smul_comm a b x := by
         change wdb a • b • x = b • wdb a • x
         ext i
         exact congrFun (smul_comm (wdb a) b x) i }
-  haveI : IsSimpleModule A (Fin n → D) := simple_mod_of_wedderburn k A (NeZero.ne _) D wdb
+  have : IsSimpleModule A (Fin n → D) := simple_mod_of_wedderburn k A (NeZero.ne _) D wdb
   have ⟨iso⟩ := endSimpleModOfWedderburn' k A n (NeZero.ne _) D wdb (Fin n → D)
   have ⟨iso'⟩ := endSimpleModOfWedderburn' k A n' (NeZero.ne _) D' wdb' (Fin n → D)
   exact ⟨AlgEquiv.op.symm (iso.symm.trans iso')⟩
@@ -733,8 +733,8 @@ lemma WedderburnArtin_uniqueness₁
   have ⟨iso⟩ := WedderburnArtin_uniqueness₀ k A n n' D wdb D' wdb'
   let e : Matrix (Fin n) (Fin n) D ≃ₐ[k] Matrix (Fin n') (Fin n') D :=
     wdb.symm.trans (wdb'.trans iso.symm.mapMatrix)
-  haveI : Module.Finite k D := by
-    haveI inst1 : Module.Finite k (Matrix (Fin n) (Fin n) D) := wdb.toLinearEquiv.finiteDimensional
+  have : Module.Finite k D := by
+    have inst1 : Module.Finite k (Matrix (Fin n) (Fin n) D) := wdb.toLinearEquiv.finiteDimensional
     rw [← Module.rank_lt_aleph0_iff] at inst1 ⊢
     have eq1 := rank_mul_rank k D (Matrix (Fin n) (Fin n) D)
     simp only [rank_matrix', Cardinal.mk_fintype, Fintype.card_fin, Cardinal.lift_mul,
