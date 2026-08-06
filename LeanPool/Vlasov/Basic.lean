@@ -1088,7 +1088,7 @@ theorem exists_wasserstein1_limit_of_cauchy {d : ℕ}
     h_compact.tendsto_subseq (x := P) (fun n => subset_closure (Set.mem_range_self n))
   -- The limit measure.
   set μ : Measure (PhysSpace d) := (Plim : Measure (PhysSpace d)) with hμ_def
-  haveI : IsProbabilityMeasure μ := Plim.2
+  have : IsProbabilityMeasure μ := Plim.2
   -- === Step 3: narrow convergence in test-integral form. ===
   have h_narrow : ∀ g : BoundedContinuousFunction (PhysSpace d) ℝ,
       Filter.Tendsto (fun k => ∫ x, g x ∂(ν (φ k))) Filter.atTop
@@ -1500,7 +1500,7 @@ lemma continuousOn_integral_of_isLagrangianVlasovSolution
                     (fun y => norm_sub_le x y)
               _ = ‖x‖ + ∫ y, ‖y‖ ∂(ρ s) := by
                   have hρs : ρ s = spatialMarginal (f s) := rfl
-                  haveI : IsProbabilityMeasure (ρ s) := hρs ▸ inferInstance
+                  have : IsProbabilityMeasure (ρ s) := hρs ▸ inferInstance
                   have h_y_int_ρ : Integrable (fun y => ‖y‖) (ρ s) := hρs ▸ h_y_int s hs
                   rw [integral_add (integrable_const _) h_y_int_ρ, integral_const]
                   simp [measureReal_def]
@@ -1585,7 +1585,7 @@ lemma continuousOn_integral_of_isLagrangianVlasovSolution
       linarith
     linarith [h_flow_bound t ht z]
   · -- Integrable dominator
-    haveI : IsProbabilityMeasure (f 0) := hf_prob_0.1
+    have : IsProbabilityMeasure (f 0) := hf_prob_0.1
     have h_int_norm : Integrable (fun z : PhaseSpace d => ‖z‖) (f 0) := hf_prob_0.2
     have h_int_1 : Integrable (fun _ : PhaseSpace d => (1 : ℝ)) (f 0) :=
       integrable_const 1

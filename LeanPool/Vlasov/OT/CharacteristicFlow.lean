@@ -457,7 +457,7 @@ theorem integral_mild_bound
   have huIoc : Set.uIoc (0 : ℝ) t = Set.Ioc 0 t := Set.uIoc_of_le h0t
   have hvol_lt : MeasureTheory.volume (Set.uIoc (0 : ℝ) t) < ⊤ := by
     rw [huIoc, Real.volume_Ioc]; exact ENNReal.ofReal_lt_top
-  haveI hfin_restrict : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0 : ℝ) t)) := by
+  have hfin_restrict : IsFiniteMeasure (MeasureTheory.volume.restrict (Set.uIoc (0 : ℝ) t)) := by
     refine ⟨?_⟩
     rw [Measure.restrict_apply_univ]; exact hvol_lt
   -- `ε` is integrable over `volume.restrict (uIoc 0 t)`
@@ -4240,8 +4240,8 @@ lemma supW1On_le_two_moment_of_VlasovMeasureCurve {d : ℕ} [NeZero d]
   -- Pointwise: W₁(ρ_t, σ_t) ≤ ofReal(∫‖y‖d(ρ_t) + ∫‖y‖d(σ_t)) ≤ ofReal(M + M)
   have h_bound : wasserstein1 (ρ.ρ t) (σ.ρ t) ≤
       ENNReal.ofReal (∫ y, ‖y‖ ∂(ρ.ρ t) + ∫ y, ‖y‖ ∂(σ.ρ t)) := by
-    haveI : IsProbabilityMeasure (ρ.ρ t) := ρ.isProb t
-    haveI : IsProbabilityMeasure (σ.ρ t) := σ.isProb t
+    have : IsProbabilityMeasure (ρ.ρ t) := ρ.isProb t
+    have : IsProbabilityMeasure (σ.ρ t) := σ.isProb t
     exact wasserstein1_le_moments_sum (ρ.ρ t) (σ.ρ t)
       (ρ.yIntegrable t ht) (σ.yIntegrable t ht)
   refine h_bound.trans ?_
@@ -4278,7 +4278,7 @@ lemma vlasovMeasureCurve_convCont {d : ℕ} [NeZero d]
   -- composes with the hW1Cont field (W₁(ρ_s, ρ_t).toReal → 0 as t → s within
   -- [0, T]) to give ContinuousWithinAt at s.
   intro s hs
-  haveI hPs : IsProbabilityMeasure (ρ.ρ s) := ρ.isProb s
+  have hPs : IsProbabilityMeasure (ρ.ρ s) := ρ.isProb s
   rw [Metric.continuousWithinAt_iff]
   intro ε hε
   have hCont := ρ.hW1Cont s hs
@@ -4298,7 +4298,7 @@ lemma vlasovMeasureCurve_convCont {d : ℕ} [NeZero d]
   have hW1_nn : 0 ≤ (wasserstein1 (ρ.ρ s) (ρ.ρ t)).toReal := ENNReal.toReal_nonneg
   have hW1_lt : (wasserstein1 (ρ.ρ s) (ρ.ρ t)).toReal < η := by
     rwa [abs_of_nonneg hW1_nn] at hδb
-  haveI hPt : IsProbabilityMeasure (ρ.ρ t) := ρ.isProb t
+  have hPt : IsProbabilityMeasure (ρ.ρ t) := ρ.isProb t
   have h_finite : wasserstein1 (ρ.ρ s) (ρ.ρ t) ≠ ⊤ :=
     wasserstein1_ne_top_of_finite_moment _ _
       (ρ.yIntegrable s hs) (ρ.yIntegrable t ht)
@@ -5085,9 +5085,9 @@ theorem Phi_hW1Cont {d : ℕ}
   -- Goal: dist ((wasserstein1 (Phi s) (Phi t)).toReal) 0 < ε.
   rw [Real.dist_eq, sub_zero]
   -- |(W₁ s t).toReal| ≤ |∫ ...|.
-  haveI hΦs_prob : IsProbabilityMeasure (Phi charX f₀ s) :=
+  have hΦs_prob : IsProbabilityMeasure (Phi charX f₀ s) :=
     Phi_isProbabilityMeasure charX f₀ h_meas s
-  haveI hΦt_prob : IsProbabilityMeasure (Phi charX f₀ t) :=
+  have hΦt_prob : IsProbabilityMeasure (Phi charX f₀ t) :=
     Phi_isProbabilityMeasure charX f₀ h_meas t
   have h_yint_s : Integrable (fun y : PhysSpace d => ‖y‖) (Phi charX f₀ s) :=
     Phi_yIntegrable charX f₀ h_meas T hT C_T hC_T_nn h_growth h_f₀_int s hs
@@ -5609,7 +5609,7 @@ theorem Phi_step
       ∃ σ : VlasovMeasureCurve d T (fun _ => C_T * (M_f₀ + 1)),
         ∀ t ∈ Set.Icc (0 : ℝ) T,
           σ.ρ t = Measure.map (fun z : PhaseSpace d => charX t z) f₀ := by
-  haveI hExt_prob : ∀ t, IsProbabilityMeasure (ρ.extend t) :=
+  have hExt_prob : ∀ t, IsProbabilityMeasure (ρ.extend t) :=
     VlasovMeasureCurve.extend_isProb ρ
   have hρ_cont : ∀ x : PhysSpace d,
       Continuous (fun t => convolveFunctionMeasure gradW (ρ.extend t) x) := by
@@ -5781,7 +5781,7 @@ theorem Phi_step_envelope
       ∃ σ : VlasovMeasureCurve d T m,
         ∀ t ∈ Set.Icc (0 : ℝ) T,
           σ.ρ t = Measure.map (fun z : PhaseSpace d => charX t z) f₀ := by
-  haveI hExt_prob : ∀ t, IsProbabilityMeasure (ρ.extend t) :=
+  have hExt_prob : ∀ t, IsProbabilityMeasure (ρ.extend t) :=
     VlasovMeasureCurve.extend_isProb ρ
   have hρ_cont : ∀ x : PhysSpace d,
       Continuous (fun t => convolveFunctionMeasure gradW (ρ.extend t) x) := by
@@ -6399,9 +6399,9 @@ theorem Phi_supW1_contraction {d : ℕ}
                    (Measure.map (fun z => charX_σ t z) f₀) ≤
       ENNReal.ofReal C_T := by
     intro t ht
-    haveI hΦρ_t : IsProbabilityMeasure (Measure.map (fun z => charX_ρ t z) f₀) :=
+    have hΦρ_t : IsProbabilityMeasure (Measure.map (fun z => charX_ρ t z) f₀) :=
       MeasureTheory.Measure.isProbabilityMeasure_map (h_meas_ρ t ht)
-    haveI hΦσ_t : IsProbabilityMeasure (Measure.map (fun z => charX_σ t z) f₀) :=
+    have hΦσ_t : IsProbabilityMeasure (Measure.map (fun z => charX_σ t z) f₀) :=
       MeasureTheory.Measure.isProbabilityMeasure_map (h_meas_σ t ht)
     -- W₁ is finite (probability + finite first moment).
     have h_W1_t_ne_top :
@@ -6685,7 +6685,7 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
       ∫ y, ‖y‖ ∂μ ≤ M t ∧
       Filter.Tendsto (fun n => wasserstein1 ((x n).ρ t) μ) Filter.atTop (nhds 0) := by
     intro t ht
-    haveI : ∀ n, IsProbabilityMeasure ((x n).ρ t) := fun n => (x n).isProb t
+    have : ∀ n, IsProbabilityMeasure ((x n).ρ t) := fun n => (x n).isProb t
     exact exists_wasserstein1_limit_of_cauchy (fun n => (x n).ρ t) (M t)
       (fun n => (x n).hasMoment t ht) (fun n => (x n).yIntegrable t ht)
       (h_per_t_cauchy t ht)
@@ -6758,8 +6758,8 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
     have h_W1_third : wasserstein1 ((x N).ρ t) (ρ_lim t) ≤ ENNReal.ofReal (ε / 3) :=
       hN_uniform N le_rfl t ht
     -- Finiteness of the limit's W₁.
-    haveI hPs_inf : IsProbabilityMeasure (ρ_lim s) := h_isProb s
-    haveI hPt_inf : IsProbabilityMeasure (ρ_lim t) := h_isProb t
+    have hPs_inf : IsProbabilityMeasure (ρ_lim s) := h_isProb s
+    have hPt_inf : IsProbabilityMeasure (ρ_lim t) := h_isProb t
     have h_finite : wasserstein1 (ρ_lim s) (ρ_lim t) ≠ ⊤ :=
       wasserstein1_ne_top_of_finite_moment _ _
         (h_yIntegrable s hs) (h_yIntegrable t ht)
@@ -6785,8 +6785,8 @@ theorem picard_iterate_exists_limit {d : ℕ} [NeZero d]
       ne_top_of_le_ne_top ENNReal.ofReal_ne_top h_W1_first
     have h_W1_third_ne_top : wasserstein1 ((x N).ρ t) (ρ_lim t) ≠ ⊤ :=
       ne_top_of_le_ne_top ENNReal.ofReal_ne_top h_W1_third
-    haveI hPNs : IsProbabilityMeasure ((x N).ρ s) := (x N).isProb s
-    haveI hPNt : IsProbabilityMeasure ((x N).ρ t) := (x N).isProb t
+    have hPNs : IsProbabilityMeasure ((x N).ρ s) := (x N).isProb s
+    have hPNt : IsProbabilityMeasure ((x N).ρ t) := (x N).isProb t
     have h_mid_ne_top : wasserstein1 ((x N).ρ s) ((x N).ρ t) ≠ ⊤ :=
       wasserstein1_ne_top_of_finite_moment _ _
         ((x N).yIntegrable s hs) ((x N).yIntegrable t ht)

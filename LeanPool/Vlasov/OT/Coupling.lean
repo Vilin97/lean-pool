@@ -109,7 +109,7 @@ theorem wasserstein1_le_wasserstein1Coupling
   · rw [h_top]; exact le_top
   push Not at h_top
   -- Step 1: π inherits IsProbabilityMeasure from its first marginal μ.
-  haveI hπ_prob : IsProbabilityMeasure π := by
+  have hπ_prob : IsProbabilityMeasure π := by
     refine ⟨?_⟩
     have h_eq : π Set.univ = μ Set.univ := by
       rw [← hπ.1, Measure.map_apply measurable_fst MeasurableSet.univ,
@@ -288,19 +288,19 @@ theorem exists_coupling_glue
       ∫⁻ z, ENNReal.ofReal (c z.1 z.2) ∂π₃
         ≤ (∫⁻ z, ENNReal.ofReal (c z.1 z.2) ∂π₁)
           + (∫⁻ z, ENNReal.ofReal (c z.1 z.2) ∂π₂) := by
-  haveI : Nonempty α := nonempty_of_isProbabilityMeasure μ
-  haveI hπ₁ : IsProbabilityMeasure π₁ := by
+  have : Nonempty α := nonempty_of_isProbabilityMeasure μ
+  have hπ₁ : IsProbabilityMeasure π₁ := by
     constructor
     have h : π₁ Set.univ = μ Set.univ := by
       rw [← h₁.1, Measure.map_apply measurable_fst MeasurableSet.univ, Set.preimage_univ]
     rw [h, measure_univ]
-  haveI hπ₂ : IsProbabilityMeasure π₂ := by
+  have hπ₂ : IsProbabilityMeasure π₂ := by
     constructor
     have h : π₂ Set.univ = ρ Set.univ := by
       rw [← h₂.1, Measure.map_apply measurable_fst MeasurableSet.univ, Set.preimage_univ]
     rw [h, measure_univ]
   set κ₂ : Kernel α α := π₂.condKernel with hκ₂
-  haveI : IsMarkovKernel κ₂ := by rw [hκ₂]; infer_instance
+  have : IsMarkovKernel κ₂ := by rw [hκ₂]; infer_instance
   set κ₂' : Kernel (α × α) α := κ₂.comap Prod.snd measurable_snd with hκ₂'
   set glued : Measure ((α × α) × α) := π₁ ⊗ₘ κ₂' with hglued
   set proj : (α × α) × α → α × α := fun w => (w.1.1, w.2) with hproj
@@ -651,7 +651,7 @@ theorem exists_finiteRange_map_cost_le
     ∃ T : α → α, Measurable T ∧ (Set.range T).Finite ∧
       ∫⁻ x, ENNReal.ofReal (c x (T x)) ∂μ ≤ ENNReal.ofReal ε := by
   -- Step 1: get a dist-diameter partition (cells of diam ≤ ε/2)
-  haveI : TopologicalSpace.SeparableSpace α := inferInstance
+  have : TopologicalSpace.SeparableSpace α := inferInstance
   obtain ⟨As, hAs_mble, hAs_bdd, hAs_diam, hAs_cover, hAs_disj⟩ :=
     SeparableSpace.exists_measurable_partition_diam_le α (half_pos _hε)
   -- per-cell representatives (x₀ on empty cells)
@@ -768,14 +768,14 @@ theorem exists_transport_min
   -- closed: finite intersection of closed conditions
   have hFcl : IsClosed F := by
     have e1 : IsClosed {P : m → n → ℝ | ∀ i j, 0 ≤ P i j} := by
-      rw [Set.setOf_forall]; refine isClosed_iInter fun i => ?_
-      rw [Set.setOf_forall]; refine isClosed_iInter fun j => ?_
+      rw [Set.ofPred_forall]; refine isClosed_iInter fun i => ?_
+      rw [Set.ofPred_forall]; refine isClosed_iInter fun j => ?_
       exact isClosed_le continuous_const (by fun_prop)
     have e2 : IsClosed {P : m → n → ℝ | ∀ i, ∑ j, P i j = a i} := by
-      rw [Set.setOf_forall]; refine isClosed_iInter fun i => ?_
+      rw [Set.ofPred_forall]; refine isClosed_iInter fun i => ?_
       exact isClosed_eq (by fun_prop) continuous_const
     have e3 : IsClosed {P : m → n → ℝ | ∀ j, ∑ i, P i j = b j} := by
-      rw [Set.setOf_forall]; refine isClosed_iInter fun j => ?_
+      rw [Set.ofPred_forall]; refine isClosed_iInter fun j => ?_
       exact isClosed_eq (by fun_prop) continuous_const
     have hEq : F = {P : m → n → ℝ | ∀ i j, 0 ≤ P i j} ∩
         {P : m → n → ℝ | ∀ i, ∑ j, P i j = a i} ∩
@@ -820,7 +820,7 @@ theorem isClosed_transport_cone (Cost : m → n → ℝ) :
   apply IsSeqClosed.isClosed
   intro w p hw_mem hw_tend
   obtain ⟨p1, p2, p3⟩ := p
-  simp only [Set.mem_setOf_eq] at hw_mem
+  simp only [Set.mem_ofPred_eq] at hw_mem
   choose P s hPnn hsnn hweq using hw_mem
   -- componentwise convergence of `w`
   have hfst : Tendsto (fun k => (w k).1) atTop (𝓝 p1) := (continuous_fst.tendsto _).comp hw_tend
@@ -1143,13 +1143,13 @@ theorem finiteRange_transportation_dual
         ≤ ENNReal.ofReal ((∫ x, u x ∂(Measure.map T μ)) + ∫ x, v x ∂(Measure.map S ν))
           + ENNReal.ofReal ε := by
   classical
-  haveI hαne : Nonempty α := nonempty_of_isProbabilityMeasure μ
+  have hαne : Nonempty α := nonempty_of_isProbabilityMeasure μ
   -- finite index types = supports of the pushforwards
   obtain ⟨t₀, ht₀⟩ := Set.range_nonempty T
   obtain ⟨s₀, hs₀⟩ := Set.range_nonempty S
-  haveI : Nonempty (hTfin.toFinset) :=
+  have : Nonempty (hTfin.toFinset) :=
     ⟨⟨t₀, by rw [Set.Finite.mem_toFinset]; exact ht₀⟩⟩
-  haveI : Nonempty (hSfin.toFinset) :=
+  have : Nonempty (hSfin.toFinset) :=
     ⟨⟨s₀, by rw [Set.Finite.mem_toFinset]; exact hs₀⟩⟩
   -- weights and cost matrix over the finite supports
   set a : hTfin.toFinset → ℝ := fun i => ((Measure.map T μ) {(i : α)}).toReal with ha_def
@@ -1157,9 +1157,9 @@ theorem finiteRange_transportation_dual
   set Cost : hTfin.toFinset → hSfin.toFinset → ℝ := fun i j => c (i : α) (j : α) with hCost_def
   have ha_nn : ∀ i, 0 ≤ a i := fun _ => ENNReal.toReal_nonneg
   have hb_nn : ∀ j, 0 ≤ b j := fun _ => ENNReal.toReal_nonneg
-  haveI hμP : IsProbabilityMeasure (Measure.map T μ) :=
+  have hμP : IsProbabilityMeasure (Measure.map T μ) :=
     Measure.isProbabilityMeasure_map hT.aemeasurable
-  haveI hνP : IsProbabilityMeasure (Measure.map S ν) :=
+  have hνP : IsProbabilityMeasure (Measure.map S ν) :=
     Measure.isProbabilityMeasure_map hS.aemeasurable
   -- atom decompositions of the finite-range pushforwards
   have hμmap : Measure.map T μ
@@ -1344,7 +1344,7 @@ theorem cTransform_dual_witness
       (∫ x, u x ∂(Measure.map T μ)) + (∫ x, v x ∂(Measure.map S ν))
         ≤ ∫ x, g x ∂(Measure.map T μ) - ∫ x, g x ∂(Measure.map S ν) := by
   classical
-  haveI : Nonempty α := nonempty_of_isProbabilityMeasure μ
+  have : Nonempty α := nonempty_of_isProbabilityMeasure μ
   set A : Finset α := hTfin.toFinset with hA_def
   set B : Finset α := hSfin.toFinset with hB_def
   have hmemA : ∀ a ∈ Set.range T, a ∈ A := fun a ha => by
@@ -1648,8 +1648,8 @@ theorem wassersteinCostCoupling_le_dual
   obtain ⟨S, hS, hSfin, hScost⟩ :=
     exists_finiteRange_map_cost_le c hc_nonneg hc_le_dist ν x₀ hν_cm
       ((ε : ℝ) / 4) hε4
-  haveI : IsProbabilityMeasure (Measure.map T μ) := Measure.isProbabilityMeasure_map hT.aemeasurable
-  haveI : IsProbabilityMeasure (Measure.map S ν) := Measure.isProbabilityMeasure_map hS.aemeasurable
+  have : IsProbabilityMeasure (Measure.map T μ) := Measure.isProbabilityMeasure_map hT.aemeasurable
+  have : IsProbabilityMeasure (Measure.map S ν) := Measure.isProbabilityMeasure_map hS.aemeasurable
   set q : ℝ≥0∞ := ENNReal.ofReal ((ε : ℝ) / 4) with hq
   -- triangle through the two approximants
   have htri1 := wassersteinCostCoupling_triangle c hc_triangle hc_cont.measurable
@@ -1765,8 +1765,8 @@ lemma wasserstein1_pushforward_le_iInf
     wasserstein1 (Measure.map Φ μ) (Measure.map Ψ ν) ≤
       ⨅ (π : Measure (α × α)) (_ : IsCoupling π μ ν),
         ∫⁻ z, edist (Φ z.1) (Ψ z.2) ∂π := by
-  haveI := hΦμ_prob
-  haveI := hΨν_prob
+  have := hΦμ_prob
+  have := hΨν_prob
   -- Step 1: KR easy applied to (Φ_# μ, Ψ_# ν).
   have h_kr := wasserstein1_le_wasserstein1Coupling
     (Measure.map Φ μ) (Measure.map Ψ ν) x₀ hΦμ_fm hΨν_fm
