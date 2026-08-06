@@ -596,10 +596,12 @@ jobs:
       # base-repo context with a writable token. Here we only stage the
       # rendered profile and the PR number as an artifact for it to consume —
       # this keeps the untrusted, PR-code-executing jobs read-only while the
-      # privileged poster never runs PR code. Skipped when the direct post
-      # above already ran, so the companion cannot double-post.
+      # privileged poster never runs PR code. Staged whenever the direct
+      # post did not succeed — skipped (fork PR) or failed (API hiccup) — so
+      # the payload is never lost; the companion cannot double-post because
+      # a successful direct post stages nothing.
       - name: Stage comment payload for the companion workflow
-        if: steps.direct_post.outcome == 'skipped'
+        if: ${{ !cancelled() && steps.direct_post.outcome != 'success' }}
         env:
           PR_NUMBER: ${{ needs.plan.outputs.number }}
         run: |
@@ -609,7 +611,7 @@ jobs:
           printf '%s\n' "$PR_NUMBER" > proof-profile-pr.txt
 
       - name: Upload comment payload
-        if: steps.direct_post.outcome == 'skipped'
+        if: ${{ !cancelled() && steps.direct_post.outcome != 'success' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: proof-profile-comment
