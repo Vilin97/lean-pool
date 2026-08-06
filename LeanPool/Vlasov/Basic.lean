@@ -126,6 +126,26 @@ class AssW2 (W : PhysSpace d → ℝ) : Prop extends AssW W where
   gradContDiff : ContDiff ℝ 1 (fun x => fderiv ℝ W x)
 
 omit [NeZero d] in
+/-- The zero potential satisfies the standing assumption ass:W — a
+machine-checked witness that the hypothesis class `AssW` is non-vacuous
+(interaction-free transport is an admissible instance of every headline
+theorem). -/
+theorem assW_zero : AssW (fun _ : PhysSpace d => (0 : ℝ)) where
+  differentiable := differentiable_const 0
+  even _ := rfl
+  lipschitzGrad := ⟨0, by
+    simpa only [fderiv_fun_const, Pi.zero_apply] using
+      LipschitzWith.const (0 : PhysSpace d →L[ℝ] ℝ)⟩
+
+omit [NeZero d] in
+/-- The zero potential satisfies the strengthened assumption ass:W2 — a
+machine-checked witness that `AssW2` (and hence the hypothesis class of the
+weak ⟹ Lagrangian bridge) is non-vacuous. -/
+theorem assW2_zero : AssW2 (fun _ : PhysSpace d => (0 : ℝ)) where
+  toAssW := assW_zero
+  gradContDiff := by simpa only [fderiv_fun_const, Pi.zero_apply] using contDiff_const
+
+omit [NeZero d] in
 /-- Helper: under `[AssW W]` (even + differentiable), the gradient of `W`
 at the origin vanishes.
 
@@ -568,6 +588,88 @@ lemma diagonalCorrection_bound (N : ℕ) [NeZero N]
         field_simp
 
 omit [NeZero d] in
+/-- Derivative-identity core of prop:weak, without the `L^∞` boundedness
+hypotheses.  Along a Newton solution the map `t ↦ ⟨μ_t^N, φ⟩` is
+differentiable, with derivative the Vlasov pairing plus the explicit diagonal
+correction `(1/N²) Σᵢ ⟨∇W(0), ∇_v φ(zᵢ)⟩`.  The `BddAbove` hypotheses of
+`weakEvolutionEmpiricalMeasure` feed only its quantitative
+`(1/N)‖∇W‖_∞‖∇_vφ‖_∞` bound conjunct, not this identity — keeping them out
+here is what lets `empiricalMeasureSolvesVlasov` (and the packaged
+`empiricalMeasure_isVlasovSolution`) run hypothesis-free beyond ass:W. -/
+theorem weakEvolutionEmpiricalMeasure_hasDerivAt
+    (N : ℕ)
+    (W : PhysSpace d → ℝ) [AssW W]
+    (gradW : PhysSpace d → PhysSpace d)
+    (hgradW : ∀ x, gradW x = gradient W x)
+    (X V : ℝ → Fin N → PhysSpace d)
+    (hSol : IsNewtonSolution N gradW X V)
+    (φ : PhaseSpace d → ℝ)
+    (hφ_smooth : ContDiff ℝ (⊤ : ℕ∞) φ)
+    (gradXφ gradVφ : PhaseSpace d → PhysSpace d)
+    (hgradXφ : ∀ z, gradXφ z = gradient (fun x => φ (x, z.2)) z.1)
+    (hgradVφ : ∀ z, gradVφ z = gradient (fun v => φ (z.1, v)) z.2)
+    (t : ℝ) :
+    HasDerivAt (fun s => ∫ z, φ z ∂(empiricalMeasureCurve N X V s)) (
+      ∫ z, (@inner ℝ (PhysSpace d) _ z.2 (gradXφ z) -
+              @inner ℝ (PhysSpace d) _
+                (convolveFunctionMeasure gradW
+                  (spatialMarginal (empiricalMeasureCurve N X V t)) z.1)
+                (gradVφ z))
+            ∂(empiricalMeasureCurve N X V t)
+        + (1 / (N : ℝ)^2) * ∑ i : Fin N,
+            @inner ℝ (PhysSpace d) _ (gradW 0) (gradVφ (X t i, V t i))) t := by
+  have hderiv := hasDerivAt_empiricalIntegral_sum N gradW X V hSol φ
+    hφ_smooth gradXφ gradVφ hgradXφ hgradVφ t
+  -- Derive Measurable gradW from AssW W (Lipschitz fderiv ⇒ continuous gradient ⇒ measurable).
+  have hgradW_meas : Measurable gradW := by
+    have hext : gradW = fun x => gradient W x := funext hgradW
+    rw [hext]
+    obtain ⟨_, hLip⟩ := (inferInstance : AssW W).lipschitzGrad
+    exact ((InnerProductSpace.toDual ℝ (PhysSpace d)).symm.continuous.comp
+      hLip.continuous).measurable
+  have hcorr := diagonalCorrection_eq N gradW hgradW_meas X V gradVφ t
+  -- Rearrange: the derivative value from hderiv equals (integral term) + r
+  -- after applying hcorr to split the velocity inner products.
+  refine hderiv.congr_deriv ?_
+  -- Convert the integral on the goal's RHS into a finite sum so we can
+  -- match against hderiv's value plus hcorr.
+  have hint : (∫ z, (@inner ℝ (PhysSpace d) _ z.2 (gradXφ z) -
+                @inner ℝ (PhysSpace d) _
+                  (convolveFunctionMeasure gradW
+                    (spatialMarginal (empiricalMeasureCurve N X V t)) z.1)
+                  (gradVφ z))
+              ∂(empiricalMeasureCurve N X V t)) =
+      (1 / (N : ℝ)) * ∑ i : Fin N,
+        (@inner ℝ (PhysSpace d) _ (V t i) (gradXφ (X t i, V t i)) -
+         @inner ℝ (PhysSpace d) _
+           (convolveFunctionMeasure gradW
+             (spatialMarginal (empiricalMeasureCurve N X V t)) (X t i))
+           (gradVφ (X t i, V t i))) := by
+    simp only [empiricalMeasureCurve]
+    exact empiricalMeasure_integral_eq N (X t) (V t)
+      (fun z => @inner ℝ (PhysSpace d) _ z.2 (gradXφ z) -
+                @inner ℝ (PhysSpace d) _
+                  (convolveFunctionMeasure gradW
+                    (spatialMarginal (empiricalMeasureCurve N X V t)) z.1)
+                  (gradVφ z))
+  rw [hint]
+  -- Goal: D(t) = (1/N) * Σᵢ (Aᵢ - Cᵢ) + r
+  -- where D(t) = (1/N) * Σᵢ (Aᵢ + Bᵢ),
+  --   Aᵢ = ⟨V t i, gradXφ (X t i, V t i)⟩,
+  --   Bᵢ = ⟨-(1/N) • Σⱼ≠ᵢ gradW(Xᵢ-Xⱼ), gradVφᵢ⟩,
+  --   Cᵢ = ⟨conv_i, gradVφᵢ⟩,
+  --   r  = (1/N²) * Σᵢ ⟨gradW 0, gradVφᵢ⟩.
+  -- hcorr says: (1/N) * Σᵢ Bᵢ = -(1/N) * Σᵢ Cᵢ + r.
+  -- So (1/N) * Σ (A+B) = (1/N) Σ A + (1/N) Σ B
+  --                   = (1/N) Σ A − (1/N) Σ C + r       [by hcorr]
+  --                   = (1/N) Σ (A − C) + r              [recombine]
+  -- Distribute Σ over (+) and (−) on both sides (keeping (1/N) outside),
+  -- then split (1/N) * (sum + sum) into (1/N)*sum + (1/N)*sum.  hcorr fits
+  -- the resulting linear identity directly.
+  rw [Finset.sum_add_distrib, Finset.sum_sub_distrib, mul_add, mul_sub]
+  linarith [hcorr]
+
+omit [NeZero d] in
 /-- (tex: prop:weak)
 Weak evolution of the empirical measure.
 
@@ -634,61 +736,13 @@ theorem weakEvolutionEmpiricalMeasure
       -- pointwise remainder bound
       ∧ |r| ≤ (1 / (N : ℝ)) *
           ⨆ x, ‖gradW x‖ * ⨆ z, ‖gradVφ z‖ := by
-  -- Provide the explicit diagonal correction as the remainder witness.
+  -- Provide the explicit diagonal correction as the remainder witness; the
+  -- derivative identity is the boundedness-free core lemma above, and the
+  -- bound conjunct is where the two `BddAbove` hypotheses are consumed.
   refine ⟨(1 / (N : ℝ)^2) * ∑ i : Fin N,
       @inner ℝ (PhysSpace d) _ (gradW 0) (gradVφ (X t i, V t i)), rfl, ?_, ?_⟩
-  · -- HasDerivAt: use hasDerivAt_empiricalIntegral_sum and diagonalCorrection_eq
-    -- to relate the finite-sum derivative to the integral + remainder form.
-    have hderiv := hasDerivAt_empiricalIntegral_sum N gradW X V hSol φ
+  · exact weakEvolutionEmpiricalMeasure_hasDerivAt N W gradW hgradW X V hSol φ
       hφ_smooth gradXφ gradVφ hgradXφ hgradVφ t
-    -- Derive Measurable gradW from AssW W (Lipschitz fderiv ⇒ continuous gradient ⇒ measurable).
-    have hgradW_meas : Measurable gradW := by
-      have hext : gradW = fun x => gradient W x := funext hgradW
-      rw [hext]
-      obtain ⟨_, hLip⟩ := (inferInstance : AssW W).lipschitzGrad
-      exact ((InnerProductSpace.toDual ℝ (PhysSpace d)).symm.continuous.comp
-        hLip.continuous).measurable
-    have hcorr := diagonalCorrection_eq N gradW hgradW_meas X V gradVφ t
-    -- Rearrange: the derivative value from hderiv equals (integral term) + r
-    -- after applying hcorr to split the velocity inner products.
-    refine hderiv.congr_deriv ?_
-    -- Convert the integral on the goal's RHS into a finite sum so we can
-    -- match against hderiv's value plus hcorr.
-    have hint : (∫ z, (@inner ℝ (PhysSpace d) _ z.2 (gradXφ z) -
-                  @inner ℝ (PhysSpace d) _
-                    (convolveFunctionMeasure gradW
-                      (spatialMarginal (empiricalMeasureCurve N X V t)) z.1)
-                    (gradVφ z))
-                ∂(empiricalMeasureCurve N X V t)) =
-        (1 / (N : ℝ)) * ∑ i : Fin N,
-          (@inner ℝ (PhysSpace d) _ (V t i) (gradXφ (X t i, V t i)) -
-           @inner ℝ (PhysSpace d) _
-             (convolveFunctionMeasure gradW
-               (spatialMarginal (empiricalMeasureCurve N X V t)) (X t i))
-             (gradVφ (X t i, V t i))) := by
-      simp only [empiricalMeasureCurve]
-      exact empiricalMeasure_integral_eq N (X t) (V t)
-        (fun z => @inner ℝ (PhysSpace d) _ z.2 (gradXφ z) -
-                  @inner ℝ (PhysSpace d) _
-                    (convolveFunctionMeasure gradW
-                      (spatialMarginal (empiricalMeasureCurve N X V t)) z.1)
-                    (gradVφ z))
-    rw [hint]
-    -- Goal: D(t) = (1/N) * Σᵢ (Aᵢ - Cᵢ) + r
-    -- where D(t) = (1/N) * Σᵢ (Aᵢ + Bᵢ),
-    --   Aᵢ = ⟨V t i, gradXφ (X t i, V t i)⟩,
-    --   Bᵢ = ⟨-(1/N) • Σⱼ≠ᵢ gradW(Xᵢ-Xⱼ), gradVφᵢ⟩,
-    --   Cᵢ = ⟨conv_i, gradVφᵢ⟩,
-    --   r  = (1/N²) * Σᵢ ⟨gradW 0, gradVφᵢ⟩.
-    -- hcorr says: (1/N) * Σᵢ Bᵢ = -(1/N) * Σᵢ Cᵢ + r.
-    -- So (1/N) * Σ (A+B) = (1/N) Σ A + (1/N) Σ B
-    --                   = (1/N) Σ A − (1/N) Σ C + r       [by hcorr]
-    --                   = (1/N) Σ (A − C) + r              [recombine]
-    -- Distribute Σ over (+) and (−) on both sides (keeping (1/N) outside),
-    -- then split (1/N) * (sum + sum) into (1/N)*sum + (1/N)*sum.  hcorr fits
-    -- the resulting linear identity directly.
-    rw [Finset.sum_add_distrib, Finset.sum_sub_distrib, mul_add, mul_sub]
-    linarith [hcorr]
   · -- Bound: direct application of diagonalCorrection_bound.
     exact diagonalCorrection_bound N gradW X V gradVφ hgradW_bdd hgradVφ_bdd t
 
@@ -728,7 +782,7 @@ Vlasov equation eq:vlasov with remainder R_N ≡ 0: for every φ ∈ C_c^∞(ℝ
   d/dt ⟨μ_t^N, φ⟩ = ⟨μ_t^N, v · ∇_x φ − (∇W * ρ_t^N) · ∇_v φ⟩.
 -/
 theorem empiricalMeasureSolvesVlasov
-    (N : ℕ) [NeZero N]
+    (N : ℕ)
     (W : PhysSpace d → ℝ) [hW : AssW W]
     (gradW : PhysSpace d → PhysSpace d)
     (hgradW : ∀ x, gradW x = gradient W x)
@@ -736,35 +790,34 @@ theorem empiricalMeasureSolvesVlasov
     (hSol : IsNewtonSolution N gradW X V)
     (φ : PhaseSpace d → ℝ)
     (hφ_smooth : ContDiff ℝ (⊤ : ℕ∞) φ)
-    (hφ_compact : HasCompactSupport φ)
+    -- Carried to document the intended `C_c^∞` test class (and so the
+    -- statement matches `IsVlasovSolution`'s quantification); the identity
+    -- itself holds for any smooth φ.
+    (_hφ_compact : HasCompactSupport φ)
     (gradXφ gradVφ : PhaseSpace d → PhysSpace d)
     (hgradXφ : ∀ z, gradXφ z = gradient (fun x => φ (x, z.2)) z.1)
-    (hgradVφ : ∀ z, gradVφ z = gradient (fun v => φ (z.1, v)) z.2)
-    -- Threaded through from `weakEvolutionEmpiricalMeasure`'s bound conjunct.
-    -- Not used in this corollary's body (we destructure the bound and
-    -- ignore it), but required by the signature of the prop:weak call.
-    (hgradW_bdd : BddAbove (Set.range (fun x => ‖gradW x‖)))
-    (hgradVφ_bdd : BddAbove (Set.range (fun z => ‖gradVφ z‖))) :
+    (hgradVφ : ∀ z, gradVφ z = gradient (fun v => φ (z.1, v)) z.2) :
     WeakEvolutionEq gradW (empiricalMeasureCurve N X V) φ gradXφ gradVφ (fun _ => 0) := by
   -- WeakEvolutionEq unfolds to `∀ t, HasDerivAt ... (... + (fun _ => 0) t) t`.
   intro t
-  -- Invoke prop:weak at this `t` and destructure the now-explicit witness.
-  obtain ⟨r, hr_eq, hr_deriv, _hr_bound⟩ :=
-    weakEvolutionEmpiricalMeasure N W gradW hgradW X V hSol φ
-      hφ_smooth hφ_compact gradXφ gradVφ hgradXφ hgradVφ hgradW_bdd hgradVφ_bdd t
+  -- Invoke the boundedness-free derivative-identity core at this `t`.
+  have hr_deriv := weakEvolutionEmpiricalMeasure_hasDerivAt N W gradW hgradW X V
+    hSol φ hφ_smooth gradXφ gradVφ hgradXφ hgradVφ t
   -- Under [AssW W] we have gradW 0 = gradient W 0 = 0 (the latter via
   -- the even-implies-zero-gradient helper).
   have hgrad0 : gradW 0 = 0 := by
     rw [hgradW]; exact gradient_zero_of_even W
-  -- The explicit formula for `r` collapses to 0 once gradW 0 = 0:
+  -- The explicit diagonal correction collapses to 0 once gradW 0 = 0:
   -- each inner product becomes ⟨0, _⟩ = 0, the finite sum is 0, and
   -- the leading scalar multiplication is 0.
-  have hr_zero : r = 0 := by
-    rw [hr_eq, hgrad0]
+  have hr_zero : (1 / (N : ℝ)^2) * ∑ i : Fin N,
+      @inner ℝ (PhysSpace d) _ (gradW 0) (gradVφ (X t i, V t i)) = 0 := by
+    rw [hgrad0]
     simp [inner_zero_left]
-  -- Substitute r = 0 into the HasDerivAt witness; the conclusion's
-  -- `(fun _ => 0) t` is definitionally 0.
-  simpa [hr_zero] using hr_deriv
+  -- Substitute the vanished remainder into the HasDerivAt witness; the
+  -- conclusion's `(fun _ => 0) t` is definitionally 0.
+  rw [hr_zero, add_zero] at hr_deriv
+  simpa using hr_deriv
 
 /-! ## §8 Equation (Vlasov equation)  (`tex: eq:vlasov`) -/
 
@@ -791,6 +844,29 @@ def IsVlasovSolution (gradW : PhysSpace d → PhysSpace d)
       (∀ z, gradVφ z = gradient (fun v => φ (z.1, v)) z.2) →
       WeakEvolutionEq gradW f φ gradXφ gradVφ (fun _ => 0)
 
+omit [NeZero d] in
+/-- (tex: cor:empirical-vlasov, packaged)
+The empirical measure curve of a global Newton solution **is** a global
+(two-sided) weak Vlasov solution — `empiricalMeasureSolvesVlasov` quantified
+over the full `C_c^∞` test class of `IsVlasovSolution`, with no hypotheses
+beyond ass:W.  Together with `empiricalMeasureCurve_hasFiniteFirstMoment`
+this discharges the weak-PDE and moment sides of the solution predicates on
+empirical curves; the remaining gap to the `IsLagrangianVlasovSolution` that
+`dobrushin` consumes is the characteristic-flow witness (the linear flow of
+the empirical field, with atoms following characteristics), which is not yet
+formalized. -/
+theorem empiricalMeasure_isVlasovSolution
+    (N : ℕ)
+    (W : PhysSpace d → ℝ) [AssW W]
+    (gradW : PhysSpace d → PhysSpace d)
+    (hgradW : ∀ x, gradW x = gradient W x)
+    (X V : ℝ → Fin N → PhysSpace d)
+    (hSol : IsNewtonSolution N gradW X V) :
+    IsVlasovSolution gradW (empiricalMeasureCurve N X V) :=
+  fun φ hφ_smooth hφ_compact gradXφ gradVφ hgradXφ hgradVφ =>
+    empiricalMeasureSolvesVlasov N W gradW hgradW X V hSol φ
+      hφ_smooth hφ_compact gradXφ gradVφ hgradXφ hgradVφ
+
 /-! ## §9 Theorem (Existence and uniqueness for Vlasov)  (`tex: thm:vlasov-wp`) -/
 
 -- TODO(mathlib): `𝒫_1` (probability measures with finite first moment) is
@@ -800,6 +876,28 @@ def IsVlasovSolution (gradW : PhysSpace d → PhysSpace d)
 /-- Predicate: μ is a probability measure on PhaseSpace d with finite first moment. -/
 def HasFiniteFirstMoment (μ : Measure (PhaseSpace d)) : Prop :=
   IsProbabilityMeasure μ ∧ Integrable (fun z : PhaseSpace d => ‖z‖) μ
+
+omit [NeZero d] in
+/-- Empirical measures lie in `𝒫₁`: probability (for `N ≥ 1`) plus finite
+first moment — the latter because integration against a finite weighted sum
+of Dirac masses is a finite sum.  Discharges, pointwise in time, the moment
+hypotheses that the Dobrushin-type estimates place on empirical curves. -/
+lemma empiricalMeasure_hasFiniteFirstMoment
+    (N : ℕ) [NeZero N] (X V : Fin N → PhysSpace d) :
+    HasFiniteFirstMoment (empiricalMeasure N X V) := by
+  refine ⟨empiricalMeasure_isProbabilityMeasure N X V, ?_⟩
+  simp only [empiricalMeasure]
+  refine Integrable.smul_measure ?_ (by simpa using NeZero.ne N)
+  rw [integrable_finsetSum_measure]
+  exact fun i _ => integrable_dirac (by simp)
+
+omit [NeZero d] in
+/-- Curve version of `empiricalMeasure_hasFiniteFirstMoment`: the empirical
+measure of a particle configuration lies in `𝒫₁` at every time. -/
+lemma empiricalMeasureCurve_hasFiniteFirstMoment
+    (N : ℕ) [NeZero N] (X V : ℝ → Fin N → PhysSpace d) (t : ℝ) :
+    HasFiniteFirstMoment (empiricalMeasureCurve N X V t) :=
+  empiricalMeasure_hasFiniteFirstMoment N (X t) (V t)
 
 -- The §9 statement `vlasovWellPosedness` (tex: thm:vlasov-wp) lives in
 -- `LeanPool/Vlasov/OT/CharacteristicFlow.lean`, where it composes directly with the
@@ -873,10 +971,12 @@ Producers:
     (`LeanPool/Vlasov/OT/CharacteristicFlow.lean`) — takes the flow as a hypothesis,
     and the pushforward equation holds by `vlasovSolutionViaPushforward`'s
     definition.
-  * `vlasovWellPosedness` produces `IsLagrangianVlasovSolution` from a Banach
-    fixed-point construction on spatial marginals — the characteristic flow
-    falls out of the existence proof, so the stronger conclusion costs no
-    extra infrastructure.
+  * `vlasovWellPosedness` produces the **per-window family**
+    `IsLagrangianVlasovSolutionOn gradW f T` for every horizon `T > 0` (not
+    this global predicate — the flow witnesses may differ per window) from a
+    Banach fixed-point construction on spatial marginals; the characteristic
+    flow falls out of the existence proof, so the windowed Lagrangian
+    conclusion costs no extra infrastructure.
 
 `IsLagrangianVlasovSolution gradW f → IsVlasovSolution gradW f` by `.1`. -/
 def IsLagrangianVlasovSolution (gradW : PhysSpace d → PhysSpace d)

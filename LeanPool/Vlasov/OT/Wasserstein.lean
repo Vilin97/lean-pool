@@ -26,9 +26,11 @@ defined via the Kantorovich–Rubinstein dual formula
 
   W₁(μ, ν) = sup { ∫ f dμ − ∫ f dν | f : 1-Lipschitz, f : α → ℝ }.
 
-Returns `ℝ≥0∞` so that unbounded suprema (e.g. when a measure has no finite
-first moment) are represented honestly as `⊤` rather than collapsing to the
-conditional-sup junk value `0` that `⨆` produces on `ℝ`.  Negative
+Returns `ℝ≥0∞` so the supremum is not artificially capped at a real value.
+(Caveat: each summand is a Bochner integral, whose junk value `0` for
+non-integrable test functions means the dual sup is only guaranteed to agree
+with the classical formula under the finite-first-moment hypotheses that
+every property lemma below carries.)  Negative
 arguments to `ENNReal.ofReal` round up to `0`; that is consistent with the
 dual formula because the family of 1-Lipschitz `f` is closed under `f ↦ -f`,
 so the positive parts already realise the absolute value of the signed
@@ -487,11 +489,13 @@ example {α : Type*} [MeasurableSpace α] [PseudoMetricSpace α]
 
 /-! ### `wassersteinBar` — the truncated (cutoff) Wasserstein-1 distance Wbar
 
-`Wbar := wassersteinCost (min(dist, 1))` (Dobrushin 1979 §5).  The bounded cost
-makes the dual test class *bounded* 1-Lipschitz, so Wbar metrizes narrow
-convergence directly and is always finite (no moment hypotheses).  The property
-layer instantiates verbatim from the cost-generic lemmas: `min(dist, 1)` is a
-continuous pseudometric dominated by `dist`, so every hypothesis is met. -/
+`Wbar := wassersteinCost (min(dist, 1))` (Dobrushin 1979 §5).  The bounded
+cost makes the dual test class *bounded* 1-Lipschitz (oscillation ≤ 1); on
+probability measures this classically makes `Wbar` finite without moment
+hypotheses and lets it metrize narrow convergence — neither fact is needed,
+or proved, in this development.  The property layer below instantiates
+verbatim from the cost-generic lemmas: `min(dist, 1)` is a continuous
+pseudometric dominated by `dist`, so every hypothesis is met. -/
 
 /-- The **truncated Wasserstein-1 distance** `Wbar` (Dobrushin 1979 §5): the
 `c = min(dist, 1)` instance of `wassersteinCost`. -/
