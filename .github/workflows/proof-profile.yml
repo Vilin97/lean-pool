@@ -499,6 +499,13 @@ jobs:
       needs.plan.outputs.files != ''
     runs-on: ubuntu-latest
     name: Report profile
+    # `pull-requests: write` is only honored on runs whose token is writable
+    # anyway (same-repo `pull_request`, `/profile` comments, dispatch); fork
+    # `pull_request` tokens are capped read-only by the platform regardless
+    # of this declaration, and those runs take the companion path below.
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout PR head
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -547,14 +554,54 @@ jobs:
             || cp scripts/proof-profile/statements.py "$RUNNER_TEMP/statements.py"
           python3 "$RUNNER_TEMP/render.py"
 
+      # A run with a writable token (same-repo `pull_request`, a `/profile`
+      # comment, or a dispatch) posts the comment itself. The `workflow_run`
+      # companion cannot cover these reliably: GitHub never emits the event
+      # for re-run attempts, which silently lost the comment on a bot-opened
+      # PR whose first attempt sat waiting for approval (#326).
+      - name: Post sticky PR comment (writable-token runs)
+        id: direct_post
+        if: >-
+          github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ needs.plan.outputs.number }}
+        run: |
+          set -euo pipefail
+          if [ ! -f proof-profile.md ]; then
+            echo "No rendered profile; nothing to post."
+            exit 0
+          fi
+          # Same marker as the companion workflow, so either poster updates
+          # the other's comment instead of stacking a duplicate.
+          marker="<!-- proof-profile-comment -->"
+          {
+            printf '%s\n' "$marker"
+            cat proof-profile.md
+          } > comment-body.md
+          existing=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate \
+            --jq "[.[] | select(.body | startswith(\"$marker\"))] | first | .id // empty")
+          if [ -n "$existing" ]; then
+            jq -n --rawfile body comment-body.md '{body: $body}' \
+              | gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input -
+          else
+            gh pr comment "$PR_NUMBER" --repo "$REPO" --body-file comment-body.md
+          fi
+
       # A `pull_request` run from a fork gets a read-only GITHUB_TOKEN and
       # cannot post a PR comment, so the comment is posted by the separate
       # `Proof Profile Comment` workflow (workflow_run), which runs in the
       # base-repo context with a writable token. Here we only stage the
       # rendered profile and the PR number as an artifact for it to consume —
       # this keeps the untrusted, PR-code-executing jobs read-only while the
-      # privileged poster never runs PR code.
+      # privileged poster never runs PR code. Staged whenever the direct
+      # post did not succeed — skipped (fork PR) or failed (API hiccup) — so
+      # the payload is never lost; the companion cannot double-post because
+      # a successful direct post stages nothing.
       - name: Stage comment payload for the companion workflow
+        if: ${{ !cancelled() && steps.direct_post.outcome != 'success' }}
         env:
           PR_NUMBER: ${{ needs.plan.outputs.number }}
         run: |
@@ -564,6 +611,7 @@ jobs:
           printf '%s\n' "$PR_NUMBER" > proof-profile-pr.txt
 
       - name: Upload comment payload
+        if: ${{ !cancelled() && steps.direct_post.outcome != 'success' }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: proof-profile-comment
