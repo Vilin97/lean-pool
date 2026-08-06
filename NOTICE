@@ -100,6 +100,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/OSforGFF                  https://github.com/mrdouglasny/OSforGFF
   LeanPool/OddPrimeValuationDistribution
                                      https://github.com/lyfar/gkp-carry-lean
+  LeanPool/Odlyzko                   https://github.com/ImperialCollegeLondon/FLT
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
   LeanPool/PebblingLean              https://github.com/pachterlab/P_2026_2
   LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
@@ -134,6 +135,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/UnconditionalSchauderBasis
                                      https://github.com/SmaniaD/UnconditionalSchauderBasis
   LeanPool/VirasoroProject           https://github.com/kkytola/VirasoroProject
+  LeanPool/Vlasov                    https://github.com/Hydrodynamical/Vlasov_Meanfield_Formalization
   LeanPool/WhiteheadTheorem          https://github.com/jzxia/WhiteheadTheorem
   LeanPool/ZFLean                    https://github.com/VTrelat/ZFLean
   LeanPool/Zeta3Irrational           https://github.com/ahhwuhu/zeta_3_irrational
